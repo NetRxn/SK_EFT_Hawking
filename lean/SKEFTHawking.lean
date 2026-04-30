@@ -211,6 +211,18 @@ import SKEFTHawking.RiemannianConnection
 import SKEFTHawking.RiemannCoordinate
 import SKEFTHawking.RiemannDifferentialBianchi
 import SKEFTHawking.BundleRiemannAux
+import SKEFTHawking.BundleRiemann
+import SKEFTHawking.LeviCivita
+import SKEFTHawking.LorentzianBundle
+import SKEFTHawking.NullGeodesic
+import SKEFTHawking.RaychaudhuriEquation
+import SKEFTHawking.FocalPoint
+import SKEFTHawking.PenroseSingularityCurveTheoretic
+import SKEFTHawking.RiccatiComparison
+import SKEFTHawking.MazurSigmaModelRigidity
+import SKEFTHawking.HawkingPenroseSingularityCurveTheoretic
+import SKEFTHawking.AreaTheoremCurveTheoretic
+import SKEFTHawking.WaveEquation1D
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

@@ -1,0 +1,2369 @@
+{
+  "paper": "paper44_riemannian_connection",
+  "review_date": "2026-04-30T20:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+  "sentences": [
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:98264843",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "98264843",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 32,
+      "tex_line_end": 36,
+      "quote": "The Massot-Rothgang-Macbeth covariant-derivative API (\\texttt{Mathlib.Geometry.Manifold.VectorBundle.CovariantDerivative}) landed in Mathlib in April 2026, but Mathlib still has no Riemann, Ricci, or scalar curvature on a connection, and no indefinite-signature metric.",
+      "quote_normalized": "the massot-rothgang-macbeth covariant-derivative api (mathlib.geometry.manifold.vectorbundle.covariantderivative) landed in mathlib in april 2026, but mathlib still has no riemann, ricci, or scalar curvature on a connection, and no indefinite-signature metric.",
+      "type": "citation",
+      "finding_classes": [
+        "TP"
+      ],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "MassotRothgangMacbeth2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TP-WARN: 'April 2026' aligns with Mathlib commit 8850ed93 in lakefile.toml; cite key MassotRothgangMacbeth2025 not in CITATION_REGISTRY (paper-internal \\bibitem only). Lean toolchain v4.29.0 verified. Project memory project_bonn_covariant_derivative_landed.md confirms Bonn API is in pinned 8850ed93.",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:ae210e36",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "ae210e36",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 36,
+      "tex_line_end": 37,
+      "quote": "Both gaps are out of HALF-ERC scope.",
+      "quote_normalized": "both gaps are out of half-erc scope.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "Project-context claim about HALF-ERC scope; no internal artifact to cross-check.",
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:83ac0fb0",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "83ac0fb0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 37,
+      "tex_line_end": 38,
+      "quote": "We close them at the algebraic-precedent level with seven Lean modules:",
+      "quote_normalized": "we close them at the algebraic-precedent level with seven lean modules:",
+      "type": "metaclaim",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-PASS: 7 modules verified by direct grep \u2014 LorentzianMetric.lean, RiemannianConnection.lean, RiemannCoordinate.lean, RiemannDifferentialBianchi.lean, BundleRiemannAux.lean, BundleRiemann.lean, LeviCivita.lean all present in lean/SKEFTHawking/. Cardinality matches.",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:522c523f",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "522c523f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 38,
+      "tex_line_end": 44,
+      "quote": "\\texttt{LorentzianMetric.lean} ships an indefinite-signature metric typeclass with the Minkowski $\\Mink_{\\mu\\nu} = \\mathrm{diag}(-1,+1,+1,+1)$ witness and a Riemannian-Lorentzian signature falsifier;",
+      "quote_normalized": "lorentzianmetric.lean ships an indefinite-signature metric typeclass with the minkowski $\\mink_{\\mu\\nu} = diag(-1,+1,+1,+1)$ witness and a riemannian-lorentzian signature falsifier;",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsLorentzianSignature",
+            "module": "LorentzianMetric"
+          },
+          {
+            "kind": "theorem",
+            "target": "IsLorentzianMetric",
+            "module": "LorentzianMetric"
+          },
+          {
+            "kind": "theorem",
+            "target": "riemannian_lorentzian_falsifier",
+            "module": "LorentzianMetric"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: predicates IsLorentzianSignature + IsLorentzianMetric verified live in LorentzianMetric.lean (lean_deps.json is stale 2026-04-29 16:41 \u2014 predates W8 ship; live grep confirms). Note: lean_deps.json is stale relative to W8 ship \u2014 recommend re-running ExtractDeps before any reflexive CHECK in Stage 13.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:424bc01d",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "424bc01d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 41,
+      "tex_line_end": 50,
+      "quote": "\\texttt{RiemannianConnection.lean} ships the Christoffel-quadratic part of the Riemann tensor with an algebraic antisymmetry-in-($\\mu,\\nu$) proof, the Koszul-formula closed form for Levi-Civita Christoffels, and a torsion-freeness theorem under metric-partial symmetry",
+      "quote_normalized": "riemannianconnection.lean ships the christoffel-quadratic part of the riemann tensor with an algebraic antisymmetry-in-($\\mu,\\nu$) proof, the koszul-formula closed form for levi-civita christoffels, and a torsion-freeness theorem under metric-partial symmetry",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "riemannQuadraticTerm",
+            "module": "RiemannianConnection"
+          },
+          {
+            "kind": "theorem",
+            "target": "christoffelKoszul",
+            "module": "RiemannianConnection"
+          },
+          {
+            "kind": "theorem",
+            "target": "MetricPartialSymmetric",
+            "module": "RiemannianConnection"
+          },
+          {
+            "kind": "theorem",
+            "target": "IsTorsionFree",
+            "module": "RiemannianConnection"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: all four targets present.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:6c31e843",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "6c31e843",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 51,
+      "tex_line_end": 54,
+      "quote": "\\texttt{RiemannCoordinate.lean} ships the full coordinate Riemann tensor including the linear-in-$\\partial \\Gamma$ piece and the algebraic first Bianchi identity for the full Riemann under torsion-freeness on both the Christoffel and its partial-derivative array",
+      "quote_normalized": "riemanncoordinate.lean ships the full coordinate riemann tensor including the linear-in-$\\partial \\gamma$ piece and the algebraic first bianchi identity for the full riemann under torsion-freeness on both the christoffel and its partial-derivative array",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChristoffelPartialTorsionFree",
+            "module": "RiemannCoordinate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: ChristoffelPartialTorsionFree verified in RiemannCoordinate.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:a93e26c9",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "a93e26c9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 54,
+      "tex_line_end": 61,
+      "quote": "\\texttt{RiemannDifferentialBianchi.lean} ships the second-derivative carrier $\\partial^{2} \\Gamma$ with a Schwarz-symmetry hypothesis, the covariant-derivative operator $\\nabla_\\lambda R^\\rho{}_{\\sigma\\mu\\nu}$ on a generic Riemann tensor, the linear-piece differential second Bianchi identity under Schwarz alone, and the Group C+D quadratic cyclic cancellation under torsion-freeness plus \\texttt{AntisymLastTwo}",
+      "quote_normalized": "riemanndifferentialbianchi.lean ships the second-derivative carrier $\\partial^{2} \\gamma$ with a schwarz-symmetry hypothesis, the covariant-derivative operator $\\nabla_\\lambda r^\\rho{}_{\\sigma\\mu\\nu}$ on a generic riemann tensor, the linear-piece differential second bianchi identity under schwarz alone, and the group c+d quadratic cyclic cancellation under torsion-freeness plus antisymlasttwo",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsSchwarz",
+            "module": "RiemannDifferentialBianchi"
+          },
+          {
+            "kind": "theorem",
+            "target": "covRiemann",
+            "module": "RiemannDifferentialBianchi"
+          },
+          {
+            "kind": "theorem",
+            "target": "AntisymLastTwo",
+            "module": "Curvature"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: IsSchwarz + covRiemann verified in RiemannDifferentialBianchi.lean; AntisymLastTwo in Curvature.lean (cross-bridge to 6f.1).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:7c6eb3b2",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "7c6eb3b2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 61,
+      "tex_line_end": 70,
+      "quote": "\\texttt{BundleRiemannAux.lean} opens the Bonn-API bundle scope with a bare-function bundle Riemann curvature $R(X, Y)Z = \\nabla_{X}\\nabla_{Y}Z - \\nabla_{Y}\\nabla_{X}Z - \\nabla_{[X,Y]}Z$ consuming \\texttt{IsCovariantDerivativeOn} and \\texttt{VectorField.mlieBracket}, with the wave-headlines $R(X, X)Z = 0$ and $R(X, Y)Z = -R(Y, X)Z$, plus a commuting-vector-fields specialisation and zero-degeneracies for the section and the X-slot on Bonn's \\texttt{IsCovariantDerivativeOn.zero};",
+      "quote_normalized": "bundleriemannaux.lean opens the bonn-api bundle scope with a bare-function bundle riemann curvature $r(x, y)z = \\nabla_{x}\\nabla_{y}z - \\nabla_{y}\\nabla_{x}z - \\nabla_{[x,y]}z$ consuming iscovariantderivativeon and vectorfield.mliebracket, with the wave-headlines $r(x, x)z = 0$ and $r(x, y)z = -r(y, x)z$, plus a commuting-vector-fields specialisation and zero-degeneracies for the section and the x-slot on bonn's iscovariantderivativeon.zero;",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux",
+            "module": "BundleRiemannAux"
+          },
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux_self",
+            "module": "BundleRiemannAux"
+          },
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux_swap_apply",
+            "module": "BundleRiemannAux"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: bundleRiemannAux + bundleRiemannAux_self + bundleRiemannAux_swap_apply all live in BundleRiemannAux.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:419f5bd9",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "419f5bd9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 71,
+      "tex_line_end": 76,
+      "quote": "\\texttt{BundleRiemann.lean} ships pointwise cyclic Jacobi for $\\mathrm{mlieBracket}$, the abstract bundle-level first Bianchi identity for $V := \\mathrm{TangentSpace}\\,I$ under torsion-freeness, and root-namespace \\texttt{IsCovariantDerivativeOn.neg} / \\texttt{.sub} Mathlib-style helpers",
+      "quote_normalized": "bundleriemann.lean ships pointwise cyclic jacobi for $mliebracket$, the abstract bundle-level first bianchi identity for $v := tangentspace\\,i$ under torsion-freeness, and root-namespace iscovariantderivativeon.neg / .sub mathlib-style helpers",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "mlieBracket_cyclic_jacobi_apply",
+            "module": "BundleRiemann"
+          },
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux_first_bianchi_torsionfree_apply",
+            "module": "BundleRiemann"
+          },
+          {
+            "kind": "theorem",
+            "target": "_root_.IsCovariantDerivativeOn.neg",
+            "module": "BundleRiemann"
+          },
+          {
+            "kind": "theorem",
+            "target": "_root_.IsCovariantDerivativeOn.sub",
+            "module": "BundleRiemann"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: all four targets verified in BundleRiemann.lean (live grep). Per W8 Session 4a/4b ship memory.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:85f94457",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "85f94457",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 77,
+      "tex_line_end": 86,
+      "quote": "\\texttt{LeviCivita.lean} ships the substantive bundle-level Levi-Civita uniqueness theorem via the Wald \\S 3.1 / Kobayashi-Nomizu IV.2.2 Koszul-bilinear-form derivation $2\\,g(\\nabla_{X}Y, Z) = X g(Y,Z) + Y g(Z,X) - Z g(X,Y) + g([X,Y], Z) - g([X,Z], Y) - g([Y,Z], X)$ from $\\mathrm{IsCovariantDerivativeOn} + \\mathrm{torsion\\text{-}free} + \\mathrm{metric\\text{-}symmetric} + \\mathrm{metric\\text{-}compatible}$, plus the algebraic uniqueness kernel routing via bilinearity non-degeneracy and \\texttt{FiberBundle.extend}.",
+      "quote_normalized": "levicivita.lean ships the substantive bundle-level levi-civita uniqueness theorem via the wald \\s 3.1 / kobayashi-nomizu iv.2.2 koszul-bilinear-form derivation $2\\,g(\\nabla_{x}y, z) = x g(y,z) + y g(z,x) - z g(x,y) + g([x,y], z) - g([x,z], y) - g([y,z], x)$ from $iscovariantderivativeon + \\mathrm{torsion-free} + \\mathrm{metric-symmetric} + \\mathrm{metric-compatible}$, plus the algebraic uniqueness kernel routing via bilinearity non-degeneracy and fiberbundle.extend.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsLeviCivita",
+            "module": "LeviCivita"
+          },
+          {
+            "kind": "theorem",
+            "target": "koszul_identity_of_isLeviCivita",
+            "module": "LeviCivita"
+          },
+          {
+            "kind": "theorem",
+            "target": "leviCivita_unique_of_isLeviCivita",
+            "module": "LeviCivita"
+          },
+          {
+            "kind": "theorem",
+            "target": "leviCivita_pointwise_unique_of_koszul",
+            "module": "LeviCivita"
+          },
+          {
+            "kind": "theorem",
+            "target": "IsNondegenerateAt",
+            "module": "LeviCivita"
+          },
+          {
+            "kind": "citation",
+            "target": "Wald1984"
+          },
+          {
+            "kind": "citation",
+            "target": "KobayashiNomizu1963"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: all 5 LeviCivita.lean targets (IsLeviCivita, koszul_identity_of_isLeviCivita, leviCivita_unique_of_isLeviCivita, leviCivita_pointwise_unique_of_koszul, IsNondegenerateAt) verified live. Wald1984 in CITATION_REGISTRY; KobayashiNomizu1963 NOT in CITATION_REGISTRY (paper-internal \\bibitem only \u2014 see citations finding). Per W8 Session 5+5b ship memory.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:6920e2ea",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "6920e2ea",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 86,
+      "tex_line_end": 87,
+      "quote": "To our knowledge no proof assistant has previously formalized any of these.",
+      "quote_normalized": "to our knowledge no proof assistant has previously formalized any of these.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "No-prior-art claim per Roehm2026Wave6f memory; cannot verify exhaustively in agent. HOL Light/Coq/Isabelle survey deferred to Comparison subsection \u00a711.2.",
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:abstract:087a04a6",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "abstract",
+        "quote_hash": "087a04a6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 87,
+      "tex_line_end": 91,
+      "quote": "The library follows Mathlib upstream conventions for an eventual upstream port; \\texttt{BundleRiemannAux.lean} + \\texttt{BundleRiemann.lean} + \\texttt{LeviCivita.lean} together ship the bundle-Riemann + bundle-Levi-Civita backbone and are the deliverable nucleus of a Mathlib-shaped pull request.",
+      "quote_normalized": "the library follows mathlib upstream conventions for an eventual upstream port; bundleriemannaux.lean + bundleriemann.lean + levicivita.lean together ship the bundle-riemann + bundle-levi-civita backbone and are the deliverable nucleus of a mathlib-shaped pull request.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "Mathlib-PR readiness claim; the three named modules confirmed present.",
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:introduction:f0e555a3",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "introduction",
+        "quote_hash": "f0e555a3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 98,
+      "tex_line_end": 102,
+      "quote": "The 2025 Massot-Rothgang-Macbeth covariant-derivative library landed in Mathlib in early 2026 (commit \\texttt{8850ed93}, files dated April 13, 2026), supplying \\texttt{IsCovariantDerivativeOn}, \\texttt{CovariantDerivative}, and the torsion-tensor companion",
+      "quote_normalized": "the 2025 massot-rothgang-macbeth covariant-derivative library landed in mathlib in early 2026 (commit 8850ed93, files dated april 13, 2026), supplying iscovariantderivativeon, covariantderivative, and the torsion-tensor companion",
+      "type": "citation",
+      "finding_classes": [
+        "TP"
+      ],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "MassotRothgangMacbeth2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TP-PASS: lakefile.toml pin = 8850ed93; matches paper claim. Lean toolchain v4.29.0 confirmed. CITATION_REGISTRY does not contain MassotRothgangMacbeth2025 \u2014 paper-internal \\bibitem only (Mathlib commit reference, acceptable WARN-class).",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:introduction:8f023cbe",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "introduction",
+        "quote_hash": "8f023cbe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 102,
+      "tex_line_end": 106,
+      "quote": "The HALF-ERC project's published scope explicitly excludes Riemann, Ricci, and scalar curvature on a connection; on the metric side, Mathlib's \\texttt{IsRiemannianManifold} (Gou\\\"ezel) and \\texttt{IsContinuousRiemannianBundle} are positive-definite and offer no Lorentzian analog.",
+      "quote_normalized": "the half-erc project's published scope explicitly excludes riemann, ricci, and scalar curvature on a connection; on the metric side, mathlib's isriemannianmanifold (gou\\\"ezel) and iscontinuousriemannianbundle are positive-definite and offer no lorentzian analog.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "Mathlib-scope claim; not internally verifiable but consistent with project memory feedback_phase6g_mathlib_upstream_style.md.",
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:introduction:0fb17436",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "introduction",
+        "quote_hash": "0fb17436",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 108,
+      "tex_line_end": 124,
+      "quote": "The author's project SK-EFT-Hawking has formalized the algebraic Riemann tensor (\\texttt{SKEFTHawking.Curvature}, 2026-04-29 ship), the Einstein tensor (\\texttt{EinsteinTensor}), exact solutions (Minkowski, de Sitter, anti-de Sitter, Schwarzschild via Kerr-Schild form), the ADM 3+1 decomposition, the tetrad formalism, causal structure, the Penrose and Hawking-Penrose singularity hypothesis bundles, the classical area theorem in its monotone-mass form, and the no-hair-theorem Kerr-family substrate",
+      "quote_normalized": "the author's project sk-eft-hawking has formalized the algebraic riemann tensor (skefthawking.curvature, 2026-04-29 ship), the einstein tensor (einsteintensor), exact solutions (minkowski, de sitter, anti-de sitter, schwarzschild via kerr-schild form), the adm 3+1 decomposition, the tetrad formalism, causal structure, the penrose and hawking-penrose singularity hypothesis bundles, the classical area theorem in its monotone-mass form, and the no-hair-theorem kerr-family substrate",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Curvature.AntisymLastTwo",
+            "module": "Curvature"
+          },
+          {
+            "kind": "theorem",
+            "target": "Curvature.firstBianchi_lift",
+            "module": "Curvature"
+          },
+          {
+            "kind": "citation",
+            "target": "Roehm2026Wave6f"
+          },
+          {
+            "kind": "citation",
+            "target": "Roehm2026Wave6g"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: Curvature module present (lean_deps confirms). Roehm2026Wave6f/6g cite keys NOT in CITATION_REGISTRY (self-references for in-prep companion drafts; paper-internal \\bibitem). Project memories project_phase6f_w*_shipped.md confirm modules listed.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:introduction:beef2922",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "introduction",
+        "quote_hash": "beef2922",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 135,
+      "tex_line_end": 138,
+      "quote": "At this scope the library ships forty-four substantive theorems across seven modules, zero \\texttt{sorry}, zero new project axioms;",
+      "quote_normalized": "at this scope the library ships forty-four substantive theorems across seven modules, zero sorry, zero new project axioms;",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-WARN: claim '44 substantive theorems / 7 modules / 0 sorry / 0 new axioms'. Live grep gives totals theorem+lemma counts: LeviCivita=5, BundleRiemann=8, BundleRiemannAux=8, RiemannCoordinate=9, RiemannDifferentialBianchi=9, LorentzianMetric=6, RiemannianConnection=7 = 52 total decls. Excluding marker `_phase6f_w8_session4_module_summary_marker : True := trivial` (1 per W8 module: -3) and the W7 strengthening cuts already removed plus probable 1-marker-per-module convention -> ~44 substantive thms is plausible. lean_deps.json is stale (2026-04-29 16:41 predates W8 ship), so no authoritative count is available without re-running ExtractDeps. WARN: re-run `lake build SKEFTHawking.ExtractDeps` then re-verify before submission. Sorry/axiom counts confirmed (grep shows 0 sorry per module; no new `^axiom` declarations).",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:introduction:eddb953c",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "introduction",
+        "quote_hash": "eddb953c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 138,
+      "tex_line_end": 139,
+      "quote": "all load-bearing theorems verify against \\texttt{propext}, \\texttt{Classical.choice}, \\texttt{Quot.sound} only.",
+      "quote_normalized": "all load-bearing theorems verify against propext, classical.choice, quot.sound only.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-WARN: axiom-closure claim. lean_deps.json (stale) shows project axiom_deps_core baseline {propext, Classical.choice, Quot.sound}. Cannot fully verify W8 modules without re-running ExtractDeps. Project memory project_phase6f_w8_session4_5_shipped.md explicitly states zero new axioms.",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:introduction:65127093",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "introduction",
+        "quote_hash": "65127093",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 139,
+      "tex_line_end": 143,
+      "quote": "The two-cut delta from the post-Session-3 strengthening pass is documented in Section~\\ref{sec:strengthening}; both cuts retired predicate-level trivial-trans / corollary patterns that had no downstream consumers and whose substantive content lives elsewhere in the library.",
+      "quote_normalized": "the two-cut delta from the post-session-3 strengthening pass is documented in section~; both cuts retired predicate-level trivial-trans / corollary patterns that had no downstream consumers and whose substantive content lives elsewhere in the library.",
+      "type": "metaclaim",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-FAIL: stale 'two-cut delta' description. Per W8 Session 5+5b ship memory (project_phase6f_w8_session4_5_shipped.md) and post-wave audit (project_phase6f_w8_strengthening_pass_shipped.md), Sessions 4a+4b+5+5b applied a 4-cut audit (3 mlieBracket plumbing + 1 leviCivita_unique V-form) on top of the 2 inherited W7 cuts. Paper \u00a710 (lines 1075-1133) still presents 'two retroactive cuts' as the W8 total, missing the W8 Session-4+5 cuts described in the same paper at lines 823-836 (W8 Session 4a/4b) and 955-966 (W8 Session 5+5b). The paper text is internally inconsistent: \u00a79.4 + \u00a710.5 mention the W8 cuts, but \u00a711 (`sec:strengthening` close) summary 'After the cuts the library ships thirty-three substantive theorems across five modules' is pre-W8 and contradicts abstract '44 substantive theorems across seven modules'. Recommend rewriting \u00a710 closing summary to reconcile with W8 Session 4+5 ship.",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:lorentzian-metric:18ff0306",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "lorentzian-metric",
+        "quote_hash": "18ff0306",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lorentzian-metric",
+      "section_ordinal": 3,
+      "tex_line_start": 168,
+      "tex_line_end": 175,
+      "quote": "A metric matrix $g : \\mathrm{Fin}\\,4 \\to \\mathrm{Fin}\\,4 \\to \\mathbb{R}$ has Lorentzian signature if $g_{00} = -1$, $g_{ii} = +1$ for $i \\in \\{1,2,3\\}$, and $g_{\\mu\\nu} = 0$ for $\\mu \\neq \\nu$.",
+      "quote_normalized": "a metric matrix $g : fin\\,4 \\to fin\\,4 \\to \\mathbb{r}$ has lorentzian signature if $g_{00} = -1$, $g_{ii} = +1$ for $i \\in \\{1,2,3\\}$, and $g_{\\mu\\nu} = 0$ for $\\mu \\neq \\nu$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsLorentzianSignature",
+            "module": "LorentzianMetric"
+          },
+          {
+            "kind": "theorem",
+            "target": "LinearizedEFE.\u03b7_zero_zero",
+            "module": "LinearizedEFE"
+          },
+          {
+            "kind": "theorem",
+            "target": "LinearizedEFE.\u03b7_spatial_diag",
+            "module": "LinearizedEFE"
+          },
+          {
+            "kind": "theorem",
+            "target": "LinearizedEFE.\u03b7_off_diag",
+            "module": "LinearizedEFE"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: predicate IsLorentzianSignature live in LorentzianMetric.lean; three discharging lemmas \u03b7_zero_zero/\u03b7_spatial_diag/\u03b7_off_diag confirmed in LinearizedEFE (lean_deps).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:lorentzian-metric:bb76dd72",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "lorentzian-metric",
+        "quote_hash": "bb76dd72",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lorentzian-metric",
+      "section_ordinal": 3,
+      "tex_line_start": 177,
+      "tex_line_end": 181,
+      "quote": "Theorem (Riemannian-Lorentzian falsifier): No metric matrix simultaneously satisfies \\texttt{IsRiemannianSignature} and \\texttt{IsLorentzianSignature}.",
+      "quote_normalized": "theorem (riemannian-lorentzian falsifier): no metric matrix simultaneously satisfies isriemanniansignature and islorentziansignature.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsRiemannianSignature",
+            "module": "LorentzianMetric"
+          },
+          {
+            "kind": "theorem",
+            "target": "IsLorentzianSignature",
+            "module": "LorentzianMetric"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: both predicates live in LorentzianMetric.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:lorentzian-metric:31c1b75a",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "lorentzian-metric",
+        "quote_hash": "31c1b75a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lorentzian-metric",
+      "section_ordinal": 3,
+      "tex_line_start": 191,
+      "tex_line_end": 197,
+      "quote": "\\texttt{IsLorentzianMetric} bundles symmetry, the signature predicate, and (by consequence of the diagonal product) non-degeneracy: $\\det g = -1$ for the strict-diagonal Lorentzian, and $g_{00} = -1 \\neq 0$.",
+      "quote_normalized": "islorentzianmetric bundles symmetry, the signature predicate, and (by consequence of the diagonal product) non-degeneracy: $\\det g = -1$ for the strict-diagonal lorentzian, and $g_{00} = -1 \\neq 0$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsLorentzianMetric",
+            "module": "LorentzianMetric"
+          },
+          {
+            "kind": "theorem",
+            "target": "lorentzian_diagonal_product_neg_one",
+            "module": "LorentzianMetric"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: lorentzian_diagonal_product_neg_one verified live in LorentzianMetric.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:lorentzian-metric:46f97932",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "lorentzian-metric",
+        "quote_hash": "46f97932",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "lorentzian-metric",
+      "section_ordinal": 3,
+      "tex_line_start": 200,
+      "tex_line_end": 209,
+      "quote": "A family $g : B \\to \\mathrm{MetricMatrix}$ over a base type $B$ is continuously Lorentzian (notation: \\texttt{IsContinuousLorentzianFamily}) iff every fiber metric is \\texttt{IsLorentzianMetric}.",
+      "quote_normalized": "a family $g : b \\to metricmatrix$ over a base type $b$ is continuously lorentzian (notation: iscontinuouslorentzianfamily) iff every fiber metric is islorentzianmetric.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsContinuousLorentzianFamily",
+            "module": "LorentzianMetric"
+          },
+          {
+            "kind": "citation",
+            "target": "Gouezel2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: IsContinuousLorentzianFamily live in LorentzianMetric.lean. Gouezel2025 cite NOT in CITATION_REGISTRY (Mathlib commit reference, paper-internal \\bibitem).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:riemann-quad:10bc76e9",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "riemann-quad",
+        "quote_hash": "10bc76e9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "riemann-quad",
+      "section_ordinal": 4,
+      "tex_line_start": 222,
+      "tex_line_end": 229,
+      "quote": "Without modeling $\\partial_{\\mu}\\Gamma$ at the algebraic-precedent scope, we ship the quadratic part as a substantive object: $(\\Gamma\\Gamma)^{\\rho}{}_{\\sigma\\mu\\nu} := \\sum_{\\lambda} \\Gamma^{\\rho}{}_{\\mu\\lambda}\\Gamma^{\\lambda}{}_{\\nu\\sigma} - \\sum_{\\lambda} \\Gamma^{\\rho}{}_{\\nu\\lambda}\\Gamma^{\\lambda}{}_{\\mu\\sigma}$.",
+      "quote_normalized": "without modeling $\\partial_{\\mu}\\gamma$ at the algebraic-precedent scope, we ship the quadratic part as a substantive object: $(\\gamma\\gamma)^{\\rho}{}_{\\sigma\\mu\\nu} := \\sum_{\\lambda} \\gamma^{\\rho}{}_{\\mu\\lambda}\\gamma^{\\lambda}{}_{\\nu\\sigma} - \\sum_{\\lambda} \\gamma^{\\rho}{}_{\\nu\\lambda}\\gamma^{\\lambda}{}_{\\mu\\sigma}$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "riemannQuadraticTerm",
+            "module": "RiemannianConnection"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: riemannQuadraticTerm definition live.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:riemann-quad:d497c6b9",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "riemann-quad",
+        "quote_hash": "d497c6b9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "riemann-quad",
+      "section_ordinal": 4,
+      "tex_line_start": 231,
+      "tex_line_end": 236,
+      "quote": "Theorem (Christoffel-quadratic antisymmetry in $(\\mu,\\nu)$): $(\\Gamma\\Gamma)^{\\rho}{}_{\\sigma\\mu\\nu} = -(\\Gamma\\Gamma)^{\\rho}{}_{\\sigma\\nu\\mu}$.",
+      "quote_normalized": "theorem (christoffel-quadratic antisymmetry in $(\\mu,\\nu)$): $(\\gamma\\gamma)^{\\rho}{}_{\\sigma\\mu\\nu} = -(\\gamma\\gamma)^{\\rho}{}_{\\sigma\\nu\\mu}$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "riemannQuadraticTerm_AntisymLastTwo",
+            "module": "RiemannianConnection"
+          },
+          {
+            "kind": "theorem",
+            "target": "leviCivitaRiemannQuadratic_AntisymLastTwo",
+            "module": "RiemannianConnection"
+          },
+          {
+            "kind": "theorem",
+            "target": "Curvature.AntisymLastTwo",
+            "module": "Curvature"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: both live; cross-bridge Curvature.AntisymLastTwo confirmed.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:koszul:6d2e329e",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "koszul",
+        "quote_hash": "6d2e329e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "koszul",
+      "section_ordinal": 5,
+      "tex_line_start": 247,
+      "tex_line_end": 263,
+      "quote": "We encode \\eqref{eq:koszul} as \\texttt{christoffelKoszul gInv dg : Christoffel}, a noncomputable function (the $1/2$ factor depends on the noncomputable \\texttt{Real.instDivInvMonoid}).",
+      "quote_normalized": "we encode as christoffelkoszul ginv dg : christoffel, a noncomputable function (the $1/2$ factor depends on the noncomputable real.instdivinvmonoid).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "christoffelKoszul",
+            "module": "RiemannianConnection"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: christoffelKoszul live in RiemannianConnection.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:koszul:5b2ddff9",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "koszul",
+        "quote_hash": "5b2ddff9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "koszul",
+      "section_ordinal": 5,
+      "tex_line_start": 265,
+      "tex_line_end": 271,
+      "quote": "Theorem (Koszul Christoffel is torsion-free): Under \\texttt{MetricPartialSymmetric dg}, the Koszul Christoffel satisfies $\\Gamma^{\\rho}{}_{\\mu\\nu} = \\Gamma^{\\rho}{}_{\\nu\\mu}$.",
+      "quote_normalized": "theorem (koszul christoffel is torsion-free): under metricpartialsymmetric dg, the koszul christoffel satisfies $\\gamma^{\\rho}{}_{\\mu\\nu} = \\gamma^{\\rho}{}_{\\nu\\mu}$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MetricPartialSymmetric",
+            "module": "RiemannianConnection"
+          },
+          {
+            "kind": "theorem",
+            "target": "christoffelKoszul",
+            "module": "RiemannianConnection"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: MetricPartialSymmetric + christoffelKoszul live.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:koszul:22116736",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "koszul",
+        "quote_hash": "22116736",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "koszul",
+      "section_ordinal": 5,
+      "tex_line_start": 280,
+      "tex_line_end": 306,
+      "quote": "Levi-Civita uniqueness \u2014 strategic deferral. \u2026 The substantive Levi-Civita uniqueness \u2014 every torsion-free metric-compatible connection equals the Koszul Christoffel on smooth vector fields, by the Koszul-bilinear-form argument \u2014 needs the bundle-level \\texttt{IsCovariantDerivativeOn} API over arbitrary smooth sections, and is the deliverable of Wave 8 Session 5",
+      "quote_normalized": "levi-civita uniqueness -- strategic deferral. ... the substantive levi-civita uniqueness -- every torsion-free metric-compatible connection equals the koszul christoffel on smooth vector fields, by the koszul-bilinear-form argument -- needs the bundle-level iscovariantderivativeon api over arbitrary smooth sections, and is the deliverable of wave 8 session 5",
+      "type": "metaclaim",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KobayashiNomizu1963"
+          },
+          {
+            "kind": "theorem",
+            "target": "leviCivita_unique_of_isLeviCivita",
+            "module": "LeviCivita"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "IA-WARN: this paragraph describes Session 5 as future ('is the deliverable of Wave 8 Session 5'). Per project memory project_phase6f_w8_session4_5_shipped.md, Session 5+5b have SHIPPED \u2014 leviCivita_unique_of_isLeviCivita is live in LeviCivita.lean. The deferral language is now stale; should be rewritten to reflect that the substantive Levi-Civita uniqueness is now SHIPPED in \u00a710. KobayashiNomizu1963 cite key NOT in CITATION_REGISTRY (paper-internal \\bibitem only).",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:flat:fb76fd5f",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "flat",
+        "quote_hash": "fb76fd5f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "flat",
+      "section_ordinal": 6,
+      "tex_line_start": 313,
+      "tex_line_end": 317,
+      "quote": "Theorem (Constant-metric vanishing curvature): If \\texttt{MetricPartialZero dg}, then the Levi-Civita quadratic Riemann \\texttt{leviCivitaRiemannQuadratic gInv dg} equals the zero tensor.",
+      "quote_normalized": "theorem (constant-metric vanishing curvature): if metricpartialzero dg, then the levi-civita quadratic riemann levicivitariemannquadratic ginv dg equals the zero tensor.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "MetricPartialZero",
+            "module": "RiemannianConnection"
+          },
+          {
+            "kind": "theorem",
+            "target": "leviCivitaRiemannQuadratic",
+            "module": "RiemannianConnection"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: MetricPartialZero + leviCivitaRiemannQuadratic live in RiemannianConnection.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:full-riemann:4bb767fc",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "full-riemann",
+        "quote_hash": "4bb767fc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "full-riemann",
+      "section_ordinal": 7,
+      "tex_line_start": 371,
+      "tex_line_end": 376,
+      "quote": "Theorem (Linear-piece first Bianchi): Under \\texttt{ChristoffelPartialTorsionFree}, the cyclic sum of \\eqref{eq:dGamma} over $(\\sigma,\\mu,\\nu)$ vanishes.",
+      "quote_normalized": "theorem (linear-piece first bianchi): under christoffelpartialtorsionfree, the cyclic sum of over $(\\sigma,\\mu,\\nu)$ vanishes.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChristoffelPartialTorsionFree",
+            "module": "RiemannCoordinate"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: ChristoffelPartialTorsionFree live in RiemannCoordinate.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:full-riemann:73749dcb",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "full-riemann",
+        "quote_hash": "73749dcb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "full-riemann",
+      "section_ordinal": 7,
+      "tex_line_start": 382,
+      "tex_line_end": 386,
+      "quote": "Theorem (Quadratic-piece first Bianchi): Under \\texttt{IsTorsionFree}, the cyclic sum of \\eqref{eq:gg} over $(\\sigma,\\mu,\\nu)$ vanishes.",
+      "quote_normalized": "theorem (quadratic-piece first bianchi): under istorsionfree, the cyclic sum of over $(\\sigma,\\mu,\\nu)$ vanishes.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsTorsionFree",
+            "module": "RiemannianConnection"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:full-riemann:4e4f21a8",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "full-riemann",
+        "quote_hash": "4e4f21a8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "full-riemann",
+      "section_ordinal": 7,
+      "tex_line_start": 402,
+      "tex_line_end": 416,
+      "quote": "Theorem (Full-Riemann algebraic first Bianchi): \u2026 The result lifts to the cyclic-sum identity on the lowered $(0,4)$-tensor via SK-EFT-Hawking's \\texttt{Curvature.firstBianchi\\_lift} and combines with the metric-compatible-connection antisymmetry-in-first-pair to yield $R_{\\rho\\sigma\\mu\\nu} = R_{\\mu\\nu\\rho\\sigma}$ via \\texttt{Curvature.pair\\_symmetry\\_lowered}.",
+      "quote_normalized": "theorem (full-riemann algebraic first bianchi): ... the result lifts to the cyclic-sum identity on the lowered $(0,4)$-tensor via sk-eft-hawking's curvature.firstbianchi\\_lift and combines with the metric-compatible-connection antisymmetry-in-first-pair to yield $r_{\\rho\\sigma\\mu\\nu} = r_{\\mu\\nu\\rho\\sigma}$ via curvature.pair\\_symmetry\\_lowered.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Curvature.firstBianchi_lift",
+            "module": "Curvature"
+          },
+          {
+            "kind": "theorem",
+            "target": "Curvature.pair_symmetry_lowered",
+            "module": "Curvature"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: cross-bridge targets confirmed in Curvature module (lean_deps).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:diff-bianchi:442e37ee",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "diff-bianchi",
+        "quote_hash": "442e37ee",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "diff-bianchi",
+      "section_ordinal": 8,
+      "tex_line_start": 446,
+      "tex_line_end": 464,
+      "quote": "We model it as $d^{2}\\Gamma : \\mathrm{Fin}\\,4 \\to \\mathrm{Fin}\\,4 \\to \\mathrm{Fin}\\,4 \\to \\mathrm{Fin}\\,4 \\to \\mathrm{Fin}\\,4 \\to \\mathbb{R}$ \u2026 At our algebraic-precedent scope \\eqref{eq:schwarz} is encoded as the predicate \\texttt{IsSchwarz}",
+      "quote_normalized": "we model it as $d^{2}\\gamma : fin\\,4 \\to fin\\,4 \\to fin\\,4 \\to fin\\,4 \\to fin\\,4 \\to \\mathbb{r}$ ... at our algebraic-precedent scope is encoded as the predicate isschwarz",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsSchwarz",
+            "module": "RiemannDifferentialBianchi"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: IsSchwarz live in RiemannDifferentialBianchi.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:diff-bianchi:45a4659e",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "diff-bianchi",
+        "quote_hash": "45a4659e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "diff-bianchi",
+      "section_ordinal": 8,
+      "tex_line_start": 466,
+      "tex_line_end": 482,
+      "quote": "We implement this generically on a \\texttt{RiemannTensor} together with its partial $\\partial T : \\texttt{RiemannPartial}$ as the operator \\texttt{covRiemann}. The data-driven specialisation \\texttt{covRiemann\\_coord} feeds the partial computed from $(\\Gamma, d\\Gamma, d^{2}\\Gamma)$ via the product rule.",
+      "quote_normalized": "we implement this generically on a riemanntensor together with its partial $\\partial t : riemannpartial$ as the operator covriemann. the data-driven specialisation covriemann\\_coord feeds the partial computed from $(\\gamma, d\\gamma, d^{2}\\gamma)$ via the product rule.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "covRiemann",
+            "module": "RiemannDifferentialBianchi"
+          },
+          {
+            "kind": "theorem",
+            "target": "covRiemann_coord",
+            "module": "RiemannDifferentialBianchi"
+          },
+          {
+            "kind": "theorem",
+            "target": "RiemannPartial",
+            "module": "RiemannDifferentialBianchi"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: covRiemann + covRiemann_coord + RiemannPartial all live. Paper text says '\\texttt{RiemannTensor}' but live module uses inline structure; per spec, paper references should resolve to a live def. lean_deps stale, but live grep confirms RiemannPartial; RiemannTensor likely abbreviation/synonym in paper text \u2014 minor terminology risk, not a TN failure.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:diff-bianchi:d3b5b615",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "diff-bianchi",
+        "quote_hash": "d3b5b615",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "diff-bianchi",
+      "section_ordinal": 8,
+      "tex_line_start": 496,
+      "tex_line_end": 510,
+      "quote": "Theorem (Linear-piece differential second Bianchi): Under \\texttt{IsSchwarz} on $d^{2}\\Gamma$, the cyclic sum of the partial-of-linear-Riemann-piece over $(\\lambda,\\mu,\\nu)$ vanishes.",
+      "quote_normalized": "theorem (linear-piece differential second bianchi): under isschwarz on $d^{2}\\gamma$, the cyclic sum of the partial-of-linear-riemann-piece over $(\\lambda,\\mu,\\nu)$ vanishes.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsSchwarz",
+            "module": "RiemannDifferentialBianchi"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:diff-bianchi:55500a37",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "diff-bianchi",
+        "quote_hash": "55500a37",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "diff-bianchi",
+      "section_ordinal": 8,
+      "tex_line_start": 531,
+      "tex_line_end": 543,
+      "quote": "Theorem (Group C+D cyclic cancellation): For any $\\Gamma$ with \\texttt{IsTorsionFree} and any $R$ with \\texttt{AntisymLastTwo}, the cyclic sum vanishes.",
+      "quote_normalized": "theorem (group c+d cyclic cancellation): for any $\\gamma$ with istorsionfree and any $r$ with antisymlasttwo, the cyclic sum vanishes.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsTorsionFree",
+            "module": "RiemannianConnection"
+          },
+          {
+            "kind": "theorem",
+            "target": "Curvature.AntisymLastTwo",
+            "module": "Curvature"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-aux:1ae6f686",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-aux",
+        "quote_hash": "1ae6f686",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-aux",
+      "section_ordinal": 9,
+      "tex_line_start": 595,
+      "tex_line_end": 611,
+      "quote": "$R(X, Y) Z := \\nabla_{X} \\nabla_{Y} Z - \\nabla_{Y} \\nabla_{X} Z - \\nabla_{[X, Y]} Z$, unrolled into the Bonn-API argument-order convention, defines \\texttt{bundleRiemannAux}.",
+      "quote_normalized": "$r(x, y) z := \\nabla_{x} \\nabla_{y} z - \\nabla_{y} \\nabla_{x} z - \\nabla_{[x, y]} z$, unrolled into the bonn-api argument-order convention, defines bundleriemannaux.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux",
+            "module": "BundleRiemannAux"
+          },
+          {
+            "kind": "citation",
+            "target": "Klingenberg1995"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: bundleRiemannAux live; Klingenberg1995 cite NOT in CITATION_REGISTRY (textbook paper-internal \\bibitem only).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-aux:6ae97c37",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-aux",
+        "quote_hash": "6ae97c37",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-aux",
+      "section_ordinal": 9,
+      "tex_line_start": 617,
+      "tex_line_end": 622,
+      "quote": "The two wave-headlines of Session 3 are purely algebraic consequences of (a) the manifold Lie bracket lemmas \\texttt{VectorField.mlieBracket\\_self} and \\texttt{VectorField.mlieBracket\\_swap\\_apply} in \\cite{Gouezel2024LieBracket}, and (b) the type-level continuous-linearity of $\\mathrm{cov}\\,\\sigma\\,x : T_xM \\to_L V_x$.",
+      "quote_normalized": "the two wave-headlines of session 3 are purely algebraic consequences of (a) the manifold lie bracket lemmas vectorfield.mliebracket\\_self and vectorfield.mliebracket\\_swap\\_apply in , and (b) the type-level continuous-linearity of $cov\\,\\sigma\\,x : t_xm \\to_l v_x$.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Gouezel2024LieBracket"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TP-OK: Mathlib commit 8850ed93 includes mlieBracket lemmas in Mathlib.Geometry.Manifold.VectorField.LieBracket. Gouezel2024LieBracket NOT in CITATION_REGISTRY (paper-internal \\bibitem only \u2014 Mathlib commit reference).",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-aux:0a5175ac",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-aux",
+        "quote_hash": "0a5175ac",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-aux",
+      "section_ordinal": 9,
+      "tex_line_start": 624,
+      "tex_line_end": 628,
+      "quote": "Theorem ($R(X, X)Z = 0$): For any $\\mathrm{cov}$, any vector field $X$, any section $Z$, and any point $x$, $\\mathtt{bundleRiemannAux}\\,\\mathrm{cov}\\,X\\,X\\,Z\\,x = 0$.",
+      "quote_normalized": "theorem ($r(x, x)z = 0$): for any $cov$, any vector field $x$, any section $z$, and any point $x$, $\\mathtt{bundleriemannaux}\\,cov\\,x\\,x\\,z\\,x = 0$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux_self",
+            "module": "BundleRiemannAux"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-aux:e5cb0744",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-aux",
+        "quote_hash": "e5cb0744",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-aux",
+      "section_ordinal": 9,
+      "tex_line_start": 636,
+      "tex_line_end": 641,
+      "quote": "Theorem (Antisymmetry-$(X, Y)$ at a point): $\\mathtt{bundleRiemannAux}\\,\\mathrm{cov}\\,X\\,Y\\,Z\\,x = -\\,\\mathtt{bundleRiemannAux}\\,\\mathrm{cov}\\,Y\\,X\\,Z\\,x$.",
+      "quote_normalized": "theorem (antisymmetry-$(x, y)$ at a point): $\\mathtt{bundleriemannaux}\\,cov\\,x\\,y\\,z\\,x = -\\,\\mathtt{bundleriemannaux}\\,cov\\,y\\,x\\,z\\,x$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux_swap_apply",
+            "module": "BundleRiemannAux"
+          },
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux_swap",
+            "module": "BundleRiemannAux"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: both _apply and section-level versions live in BundleRiemannAux.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-aux:c5eda78c",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-aux",
+        "quote_hash": "c5eda78c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-aux",
+      "section_ordinal": 9,
+      "tex_line_start": 659,
+      "tex_line_end": 664,
+      "quote": "Theorem (Commuting-vector-fields specialisation): Under the hypothesis $\\mathrm{mlieBracket}\\,I\\,X\\,Y\\,x = 0$, $\\mathtt{bundleRiemannAux}\\,\\mathrm{cov}\\,X\\,Y\\,Z\\,x = \\mathrm{cov}(\\,y \\mapsto \\mathrm{cov}\\,Z\\,y\\,(Y\\,y)\\,)\\,x\\,(X\\,x) - \\mathrm{cov}(\\,y \\mapsto \\mathrm{cov}\\,Z\\,y\\,(X\\,y)\\,)\\,x\\,(Y\\,x)$.",
+      "quote_normalized": "theorem (commuting-vector-fields specialisation): under the hypothesis $mliebracket\\,i\\,x\\,y\\,x = 0$, $\\mathtt{bundleriemannaux}\\,cov\\,x\\,y\\,z\\,x = cov(\\,y \\mapsto cov\\,z\\,y\\,(y\\,y)\\,)\\,x\\,(x\\,x) - cov(\\,y \\mapsto cov\\,z\\,y\\,(x\\,y)\\,)\\,x\\,(y\\,x)$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux",
+            "module": "BundleRiemannAux"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: theorem present in BundleRiemannAux.lean by name pattern (one of 8 thms/lemmas).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-aux:c82fa820",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-aux",
+        "quote_hash": "c82fa820",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-aux",
+      "section_ordinal": 9,
+      "tex_line_start": 681,
+      "tex_line_end": 687,
+      "quote": "Theorem ($R(X, Y)\\,0 = 0$): \\texttt{bundleRiemannAux} on the zero section vanishes by composing $\\mathrm{cov}\\,0 = 0$ via Bonn's \\texttt{IsCovariantDerivativeOn.zero}.",
+      "quote_normalized": "theorem ($r(x, y)\\,0 = 0$): bundleriemannaux on the zero section vanishes by composing $cov\\,0 = 0$ via bonn's iscovariantderivativeon.zero.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "MassotRothgangMacbeth2025"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: Bonn IsCovariantDerivativeOn.zero confirmed in pinned Mathlib (project memory project_bonn_covariant_derivative_landed.md).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-aux:7def4860",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-aux",
+        "quote_hash": "7def4860",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-aux",
+      "section_ordinal": 9,
+      "tex_line_start": 689,
+      "tex_line_end": 697,
+      "quote": "Theorem ($R(0, Y)\\,Z = 0$): composing four distinct Mathlib lemmas: \\texttt{Pi.zero\\_apply}, $.\\mathtt{map\\_zero}$, \\texttt{IsCovariantDerivativeOn.zero}, \\texttt{mlieBracket\\_zero\\_left}.",
+      "quote_normalized": "theorem ($r(0, y)\\,z = 0$): composing four distinct mathlib lemmas: pi.zero\\_apply, $.\\mathtt{map\\_zero}$, iscovariantderivativeon.zero, mliebracket\\_zero\\_left.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "TN-OK: all four Mathlib lemmas verified to exist in pinned 8850ed93. mlieBracket_zero_left referenced in Gouezel2024LieBracket library section.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-bianchi:3b8f58f8",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-bianchi",
+        "quote_hash": "3b8f58f8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-bianchi",
+      "section_ordinal": 10,
+      "tex_line_start": 744,
+      "tex_line_end": 768,
+      "quote": "Cyclic Jacobi follows from one Leibniz instance plus three antisymmetry rewrites: outer swap via \\texttt{mlieBracket\\_swap\\_apply}; inner swap via section-level \\texttt{mlieBracket\\_swap}; and inner-negation distribution via the new \\texttt{mlieBracket\\_neg\\_right\\_apply}. The negation-distribution lemma is itself derived in $\\sim 5$ lines from \\texttt{mlieBracket\\_const\\_smul\\_right} at $c = (-1 : \\mathbb{K})$ plus \\texttt{neg\\_one\\_smul}. The slot-1 sibling \\texttt{mlieBracket\\_neg\\_left\\_apply} ships in parallel as a Mathlib-PR-shaped helper.",
+      "quote_normalized": "cyclic jacobi follows from one leibniz instance plus three antisymmetry rewrites: outer swap via mliebracket\\_swap\\_apply; inner swap via section-level mliebracket\\_swap; and inner-negation distribution via the new mliebracket\\_neg\\_right\\_apply. the negation-distribution lemma is itself derived in $\\sim 5$ lines from mliebracket\\_const\\_smul\\_right at $c = (-1 : \\mathbb{k})$ plus neg\\_one\\_smul. the slot-1 sibling mliebracket\\_neg\\_left\\_apply ships in parallel as a mathlib-pr-shaped helper.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "mlieBracket_neg_right_apply",
+            "module": "BundleRiemann"
+          },
+          {
+            "kind": "theorem",
+            "target": "mlieBracket_neg_left_apply",
+            "module": "BundleRiemann"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: both pointwise lemmas verified live. Section-level (funext) versions cut at post-wave audit per W8 4a/4b ship memory.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-bianchi:4d34d6ba",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-bianchi",
+        "quote_hash": "4d34d6ba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-bianchi",
+      "section_ordinal": 10,
+      "tex_line_start": 766,
+      "tex_line_end": 768,
+      "quote": "To our knowledge no proof assistant has previously formalised cyclic Jacobi for the manifold Lie bracket; Mathlib's Leibniz form is the closest precedent.",
+      "quote_normalized": "to our knowledge no proof assistant has previously formalised cyclic jacobi for the manifold lie bracket; mathlib's leibniz form is the closest precedent.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "No-prior-art claim per project memory project_phase6f_w8_session4_5_shipped.md.",
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-bianchi:17b3fcfa",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-bianchi",
+        "quote_hash": "17b3fcfa",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-bianchi",
+      "section_ordinal": 10,
+      "tex_line_start": 770,
+      "tex_line_end": 786,
+      "quote": "For $\\mathrm{cov}$ a covariant derivative on the tangent bundle that is torsion-free in the sense of Bonn, and additive in the section argument, the cyclic Bianchi sum vanishes. Three torsion-free regroupings collapse the inner double-derivative pairs into bracket-of-brackets terms; the cyclic sum then reduces to cyclic Jacobi.",
+      "quote_normalized": "for $cov$ a covariant derivative on the tangent bundle that is torsion-free in the sense of bonn, and additive in the section argument, the cyclic bianchi sum vanishes. three torsion-free regroupings collapse the inner double-derivative pairs into bracket-of-brackets terms; the cyclic sum then reduces to cyclic jacobi.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux_first_bianchi_torsionfree_apply",
+            "module": "BundleRiemann"
+          },
+          {
+            "kind": "theorem",
+            "target": "mlieBracket_cyclic_jacobi_apply",
+            "module": "BundleRiemann"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: both load-bearing theorems confirmed live.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-bianchi:e98762be",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-bianchi",
+        "quote_hash": "e98762be",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-bianchi",
+      "section_ordinal": 10,
+      "tex_line_start": 794,
+      "tex_line_end": 806,
+      "quote": "We ship two new root-namespace lemmas in Mathlib upstream-style: \\texttt{\\_root\\_.IsCovariantDerivativeOn.neg} (derived from Bonn's $.\\texttt{smul\\_const}$ at $a = -1$ plus \\texttt{neg\\_one\\_smul}), and \\texttt{\\_root\\_.IsCovariantDerivativeOn.sub}.",
+      "quote_normalized": "we ship two new root-namespace lemmas in mathlib upstream-style: \\_root\\_.iscovariantderivativeon.neg (derived from bonn's $.smul\\_const$ at $a = -1$ plus neg\\_one\\_smul), and \\_root\\_.iscovariantderivativeon.sub.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "_root_.IsCovariantDerivativeOn.neg",
+            "module": "BundleRiemann"
+          },
+          {
+            "kind": "theorem",
+            "target": "_root_.IsCovariantDerivativeOn.sub",
+            "module": "BundleRiemann"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: both _root_-namespaced helpers verified at lines 339+365 of BundleRiemann.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-bianchi:cee7cfdd",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-bianchi",
+        "quote_hash": "cee7cfdd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-bianchi",
+      "section_ordinal": 10,
+      "tex_line_start": 808,
+      "tex_line_end": 821,
+      "quote": "The wave-headline Session 4b deliverable \\texttt{bundleRiemannAux\\_first\\_bianchi\\_torsionfree\\_of\\_isCovariantDerivativeOn} re-expresses the abstract first Bianchi by consuming Bonn's \\texttt{IsCovariantDerivativeOn} directly.",
+      "quote_normalized": "the wave-headline session 4b deliverable bundleriemannaux\\_first\\_bianchi\\_torsionfree\\_of\\_iscovariantderivativeon re-expresses the abstract first bianchi by consuming bonn's iscovariantderivativeon directly.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "bundleRiemannAux_first_bianchi_torsionfree_of_isCovariantDerivativeOn",
+            "module": "BundleRiemann"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: theorem present in BundleRiemann.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:bundle-bianchi:fe1cc2f8",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "bundle-bianchi",
+        "quote_hash": "fe1cc2f8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "bundle-bianchi",
+      "section_ordinal": 10,
+      "tex_line_start": 823,
+      "tex_line_end": 836,
+      "quote": "Three section-level \\texttt{ext}/\\texttt{funext} lifts of the pointwise lemmas above were retroactively cut at the post-wave audit as P3 plumbing: \\texttt{mlieBracket\\_neg\\_right} / \\texttt{mlieBracket\\_neg\\_left} / \\texttt{mlieBracket\\_cyclic\\_jacobi} each had no internal or external consumer in the SK-EFT project, with substantive content living in the corresponding \\texttt{\\_apply} versions.",
+      "quote_normalized": "three section-level ext/funext lifts of the pointwise lemmas above were retroactively cut at the post-wave audit as p3 plumbing: mliebracket\\_neg\\_right / mliebracket\\_neg\\_left / mliebracket\\_cyclic\\_jacobi each had no internal or external consumer in the sk-eft project, with substantive content living in the corresponding \\_apply versions.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "Session 4a+4b strengthening cut documented per project memory project_phase6f_w8_session4_5_shipped.md; matches W8 ship memory's '3 mlieBracket plumbing cuts'.",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:levi-civita:8a41d7d2",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "levi-civita",
+        "quote_hash": "8a41d7d2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "levi-civita",
+      "section_ordinal": 11,
+      "tex_line_start": 851,
+      "tex_line_end": 871,
+      "quote": "The kernel theorem \\texttt{leviCivita\\_pointwise\\_unique\\_of\\_koszul} takes two abstract connections \u2026 plus the hypothesis that for every test section triple $(X, Y, Z)$ at the chosen point $x$, $g_x(\\mathrm{cov}\\,Y\\,x\\,(X\\,x), Z\\,x) = g_x(\\mathrm{cov}'\\,Y\\,x\\,(X\\,x), Z\\,x)$. The non-degeneracy hypothesis is encoded as the auxiliary def \\texttt{IsNondegenerateAt}\\,$g\\,x$.",
+      "quote_normalized": "the kernel theorem levicivita\\_pointwise\\_unique\\_of\\_koszul takes two abstract connections ... plus the hypothesis that for every test section triple $(x, y, z)$ at the chosen point $x$, $g_x(cov\\,y\\,x\\,(x\\,x), z\\,x) = g_x(cov'\\,y\\,x\\,(x\\,x), z\\,x)$. the non-degeneracy hypothesis is encoded as the auxiliary def isnondegenerateat\\,$g\\,x$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "leviCivita_pointwise_unique_of_koszul",
+            "module": "LeviCivita"
+          },
+          {
+            "kind": "theorem",
+            "target": "IsNondegenerateAt",
+            "module": "LeviCivita"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: both verified live in LeviCivita.lean.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:levi-civita:98968f02",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "levi-civita",
+        "quote_hash": "98968f02",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "levi-civita",
+      "section_ordinal": 11,
+      "tex_line_start": 873,
+      "tex_line_end": 889,
+      "quote": "The Levi-Civita predicate ships as a four-conjunct \\texttt{structure} on $(\\mathrm{cov}, g)$: is\\_cov, torsion\\_free, metric\\_symm, metric\\_compatible.",
+      "quote_normalized": "the levi-civita predicate ships as a four-conjunct structure on $(cov, g)$: is\\_cov, torsion\\_free, metric\\_symm, metric\\_compatible.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsLeviCivita",
+            "module": "LeviCivita"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: IsLeviCivita structure live in LeviCivita.lean. Four-conjunct claim verified by W8 Session 5+5b ship memory.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:levi-civita:65690165",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "levi-civita",
+        "quote_hash": "65690165",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "levi-civita",
+      "section_ordinal": 11,
+      "tex_line_start": 890,
+      "tex_line_end": 894,
+      "quote": "The metric-compat condition uses Mathlib's $\\mathrm{extDerivFun}$ (clean $\\mathbb{K}$-valued exterior derivative wrapper) rather than $\\mathrm{mfderiv}$ directly.",
+      "quote_normalized": "the metric-compat condition uses mathlib's $extderivfun$ (clean $\\mathbb{k}$-valued exterior derivative wrapper) rather than $mfderiv$ directly.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "extDerivFun is in pinned Mathlib 8850ed93 (project memory project_phase6f_w8_session4_5_shipped.md confirms substantive 4-conjunct uses Mathlib's extDerivFun).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:levi-civita:6b1f3717",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "levi-civita",
+        "quote_hash": "6b1f3717",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "levi-civita",
+      "section_ordinal": 11,
+      "tex_line_start": 901,
+      "tex_line_end": 928,
+      "quote": "Theorem \\texttt{koszul\\_identity\\_of\\_isLeviCivita} derives the Koszul bilinear-form identity from \\texttt{IsLeviCivita}: $2 \\cdot g_x(\\mathrm{cov}\\,Y\\,x\\,(X\\,x), Z\\,x) = \\mathrm{extDerivFun}(g(Y,Z))_x(X_x) + \\mathrm{extDerivFun}(g(Z,X))_x(Y_x) - \\mathrm{extDerivFun}(g(X,Y))_x(Z_x) + g_x([X,Y]_x, Z_x) - g_x([X,Z]_x, Y_x) - g_x([Y,Z]_x, X_x)$. The combined step closes via \\texttt{linear\\_combination} with derived coefficients $[-1, -1, +1, -1, -1, +1, -1, -1, +1]$ across the nine hypotheses.",
+      "quote_normalized": "theorem koszul\\_identity\\_of\\_islevicivita derives the koszul bilinear-form identity from islevicivita: $2 \\cdot g_x(cov\\,y\\,x\\,(x\\,x), z\\,x) = extderivfun(g(y,z))_x(x_x) + extderivfun(g(z,x))_x(y_x) - extderivfun(g(x,y))_x(z_x) + g_x([x,y]_x, z_x) - g_x([x,z]_x, y_x) - g_x([y,z]_x, x_x)$. the combined step closes via linear\\_combination with derived coefficients $[-1, -1, +1, -1, -1, +1, -1, -1, +1]$ across the nine hypotheses.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "koszul_identity_of_isLeviCivita",
+            "module": "LeviCivita"
+          },
+          {
+            "kind": "theorem",
+            "target": "IsLeviCivita",
+            "module": "LeviCivita"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: koszul_identity_of_isLeviCivita verified live; per ship memory uses linear_combination with derived coefficients (Wald \u00a73.1 derivation).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:levi-civita:3bb9ba69",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "levi-civita",
+        "quote_hash": "3bb9ba69",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "levi-civita",
+      "section_ordinal": 11,
+      "tex_line_start": 930,
+      "tex_line_end": 944,
+      "quote": "Composing the Koszul identity (Session 5b) with the algebraic uniqueness kernel (Session 5) gives the full uniqueness: \\texttt{leviCivita\\_unique\\_of\\_isLeviCivita}. \u2026 The cancellation step uses \\texttt{mul\\_left\\_cancel}\\textsubscript{0}.",
+      "quote_normalized": "composing the koszul identity (session 5b) with the algebraic uniqueness kernel (session 5) gives the full uniqueness: levicivita\\_unique\\_of\\_islevicivita. ... the cancellation step uses mul\\_left\\_cancel\\textsubscript{0}.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "leviCivita_unique_of_isLeviCivita",
+            "module": "LeviCivita"
+          },
+          {
+            "kind": "theorem",
+            "target": "leviCivita_pointwise_unique_of_koszul",
+            "module": "LeviCivita"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK: both targets confirmed. Per ship memory composition routes via `mul_left_cancel\u2080` for (2 \u2260 0).",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:levi-civita:8a69e2cd",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "levi-civita",
+        "quote_hash": "8a69e2cd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "levi-civita",
+      "section_ordinal": 11,
+      "tex_line_start": 946,
+      "tex_line_end": 953,
+      "quote": "This is the substantive Wald \\S 3.1 / Kobayashi-Nomizu IV.2.2 uniqueness theorem at bundle level, deferred from \\texttt{RiemannianConnection.lean}'s coordinate-scope predicate-level form (which was a P5 trivial-trans on the def-as-equality $\\Gamma = \\texttt{christoffelKoszul}$ and was retroactively cut at the W7+W8(S1-3) reflexive strengthening pass).",
+      "quote_normalized": "this is the substantive wald \\s 3.1 / kobayashi-nomizu iv.2.2 uniqueness theorem at bundle level, deferred from riemannianconnection.lean's coordinate-scope predicate-level form (which was a p5 trivial-trans on the def-as-equality $\\gamma = christoffelkoszul$ and was retroactively cut at the w7+w8(s1-3) reflexive strengthening pass).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Wald1984"
+          },
+          {
+            "kind": "citation",
+            "target": "KobayashiNomizu1963"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "Project memory project_phase6f_w8_strengthening_pass_shipped.md confirms W7+W8(S1-3) cut + W8 Session 5 substantive ship.",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:levi-civita:27aef158",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "levi-civita",
+        "quote_hash": "27aef158",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "levi-civita",
+      "section_ordinal": 11,
+      "tex_line_start": 951,
+      "tex_line_end": 953,
+      "quote": "To our knowledge no proof assistant has previously formalised bundle-level Levi-Civita uniqueness via the substantive Koszul-bilinear-form derivation.",
+      "quote_normalized": "to our knowledge no proof assistant has previously formalised bundle-level levi-civita uniqueness via the substantive koszul-bilinear-form derivation.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "No-prior-art claim per ship memory.",
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:levi-civita:6a99835a",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "levi-civita",
+        "quote_hash": "6a99835a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "levi-civita",
+      "section_ordinal": 11,
+      "tex_line_start": 955,
+      "tex_line_end": 966,
+      "quote": "The section-level \\texttt{leviCivita\\_unique} theorem (\\texttt{FiberBundle.extend} lift of the pointwise kernel from `section $X$ with $X\\,x = w$' to `arbitrary tangent vector $V \\in T_xM$') was retroactively cut at the post-wave audit as P3 plumbing.",
+      "quote_normalized": "the section-level levicivita\\_unique theorem (fiberbundle.extend lift of the pointwise kernel from `section $x$ with $x\\,x = w$' to `arbitrary tangent vector $v \\in t_xm$') was retroactively cut at the post-wave audit as p3 plumbing.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "W8 Session 5+5b strengthening cut per project memory; matches the documented 4-cut audit total (3 mlieBracket + 1 leviCivita_unique V-form).",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:unblocks:93a8de78",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "unblocks",
+        "quote_hash": "93a8de78",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "unblocks",
+      "section_ordinal": 12,
+      "tex_line_start": 968,
+      "tex_line_end": 976,
+      "quote": "The four new modules are infrastructure: they ship no new physics and no new submission-ready prediction.",
+      "quote_normalized": "the four new modules are infrastructure: they ship no new physics and no new submission-ready prediction.",
+      "type": "metaclaim",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-FAIL: claim 'four new modules' is stale. Abstract (line 37) and module list (lines 38-86) describe SEVEN new modules. The correct count after W8 Session 4+5 ship is seven (LorentzianMetric, RiemannianConnection, RiemannCoordinate, RiemannDifferentialBianchi, BundleRiemannAux, BundleRiemann, LeviCivita). Recommend rewriting to 'seven new modules' or 'the new modules'.",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:unblocks:f4e91412",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "unblocks",
+        "quote_hash": "f4e91412",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "unblocks",
+      "section_ordinal": 12,
+      "tex_line_start": 979,
+      "tex_line_end": 998,
+      "quote": "6f.2 second Bianchi: the W8 Session 2 module \\texttt{RiemannDifferentialBianchi.lean} ships the $\\partial^{2}\\Gamma$ carrier with the Schwarz hypothesis, the covariant-derivative operator on a generic Riemann tensor, the linear-piece differential second Bianchi under Schwarz alone, and the Group C+D quadratic cyclic cancellation under torsion-freeness plus \\texttt{AntisymLastTwo}.",
+      "quote_normalized": "6f.2 second bianchi: the w8 session 2 module riemanndifferentialbianchi.lean ships the $\\partial^{2}\\gamma$ carrier with the schwarz hypothesis, the covariant-derivative operator on a generic riemann tensor, the linear-piece differential second bianchi under schwarz alone, and the group c+d quadratic cyclic cancellation under torsion-freeness plus antisymlasttwo.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "IsSchwarz",
+            "module": "RiemannDifferentialBianchi"
+          },
+          {
+            "kind": "theorem",
+            "target": "covRiemann",
+            "module": "RiemannDifferentialBianchi"
+          },
+          {
+            "kind": "theorem",
+            "target": "Curvature.AntisymLastTwo",
+            "module": "Curvature"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_notes": "TN-OK.",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:conventions:d30024d3",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "conventions",
+        "quote_hash": "d30024d3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conventions",
+      "section_ordinal": 13,
+      "tex_line_start": 1036,
+      "tex_line_end": 1066,
+      "quote": "The five new Lean modules follow Mathlib upstream conventions: file header copyright + module imports + \\texttt{public} sections, no \\texttt{maxHeartbeats} overrides, no \\texttt{ring} on noncommutative contexts.",
+      "quote_normalized": "the five new lean modules follow mathlib upstream conventions: file header copyright + module imports + public sections, no maxheartbeats overrides, no ring on noncommutative contexts.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-FAIL: 'five new Lean modules' contradicts the abstract claim of SEVEN modules and the module list (lines 38-86). After W8 Session 4a/4b/5/5b, BundleRiemann.lean and LeviCivita.lean were added \u2014 total seven modules. The 'five' figure is inherited from a pre-W8 draft where only LorentzianMetric / RiemannianConnection / RiemannCoordinate / RiemannDifferentialBianchi / BundleRiemannAux were shipped. Recommend updating \u00a712 first sentence to 'The seven new Lean modules'.",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:conventions:a3790f75",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "conventions",
+        "quote_hash": "a3790f75",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conventions",
+      "section_ordinal": 13,
+      "tex_line_start": 1075,
+      "tex_line_end": 1086,
+      "quote": "W7 first-pass cut: The W7 wave applied a single retroactive cut at first-pass review: \\texttt{zeroChristoffel\\_isTorsionFree}, a pure-\\texttt{rfl} P3-trivial witness. W8 Sessions 1, 2, and 3 each shipped with zero retroactive cuts at first pass and after the ruthless audit.",
+      "quote_normalized": "w7 first-pass cut: the w7 wave applied a single retroactive cut at first-pass review: zerochristoffel\\_istorsionfree, a pure-rfl p3-trivial witness. w8 sessions 1, 2, and 3 each shipped with zero retroactive cuts at first pass and after the ruthless audit.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "Per project memory project_phase6f_w7_shipped.md: 1 retroactive cut. W8 Sessions 1-3 zero-cut record per project_phase6f_w8_session{1,2,3}_shipped.md.",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:conventions:16373795",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "conventions",
+        "quote_hash": "16373795",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conventions",
+      "section_ordinal": 13,
+      "tex_line_start": 1088,
+      "tex_line_end": 1120,
+      "quote": "W8 post-Session-3 strengthening pass (two retroactive cuts). \u2026 (1) \\texttt{IsLeviCivitaForKoszul} predicate def + \\texttt{leviCivita\\_unique\\_at\\_koszul} theorem \u2026 (2) \\texttt{lorentzian\\_metric\\_nonzero} theorem in \\texttt{LorentzianMetric.lean}.",
+      "quote_normalized": "w8 post-session-3 strengthening pass (two retroactive cuts). ... (1) islevicivitaforkoszul predicate def + levicivita\\_unique\\_at\\_koszul theorem ... (2) lorentzian\\_metric\\_nonzero theorem in lorentzianmetric.lean.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "Per project memory project_phase6f_w8_strengthening_pass_shipped.md: 2 retroactive cuts inherited from W7 (IsLeviCivitaForKoszul + leviCivita_unique_at_koszul + lorentzian_metric_nonzero). Verified that the cut symbols are NOT live (live grep on RiemannianConnection.lean and LorentzianMetric.lean returns no IsLeviCivitaForKoszul / lorentzian_metric_nonzero).",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:conventions:254d77cb",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "conventions",
+        "quote_hash": "254d77cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "conventions",
+      "section_ordinal": 13,
+      "tex_line_start": 1122,
+      "tex_line_end": 1133,
+      "quote": "After the cuts the library ships thirty-three substantive theorems across five modules, zero \\texttt{sorry}, zero new project axioms; all load-bearing theorems verify against \\texttt{propext, Classical.choice, Quot.sound} only.",
+      "quote_normalized": "after the cuts the library ships thirty-three substantive theorems across five modules, zero sorry, zero new project axioms; all load-bearing theorems verify against propext, classical.choice, quot.sound only.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-FAIL: '33 substantive theorems across 5 modules' is the pre-W8-Session-4+5 count and contradicts abstract (line 136: '44 substantive theorems across 7 modules'). After W8 Sessions 4a + 4b + 5 + 5b, the library expanded to seven modules totaling 52 raw theorem+lemma decls; the substantive count after the post-wave 4-cut audit (3 mlieBracket section-level + 1 leviCivita_unique V-form) needs an authoritative recount via `lake build SKEFTHawking.ExtractDeps` then `update_counts.py`. Most likely landing: ~44 substantive theorems / 7 modules, matching the abstract. **This is a primary blocker for cleanup-pass closure.** sorry/axiom counts (zero / zero new) are correct.",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:discussion:037279eb",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "discussion",
+        "quote_hash": "037279eb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 14,
+      "tex_line_start": 1166,
+      "tex_line_end": 1170,
+      "quote": "The bundle-level upgrade is now an explicit five-session plan tracked in the Phase 6f roadmap (Wave 8, sessions 1--5). Sessions 1, 2, and 3 ship the content reported in this paper.",
+      "quote_normalized": "the bundle-level upgrade is now an explicit five-session plan tracked in the phase 6f roadmap (wave 8, sessions 1--5). sessions 1, 2, and 3 ship the content reported in this paper.",
+      "type": "metaclaim",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "FAIL",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-FAIL: 'Sessions 1, 2, and 3 ship the content reported in this paper' is stale. After W8 Session 4a/4b/5/5b ship, the paper reports content from Sessions 1, 2, 3, 4a, 4b, 5, AND 5b \u2014 confirmed by \u00a79 (Sessions 4a + 4b) and \u00a710 (Sessions 5 + 5b) of the paper itself. The paper text contradicts itself: \u00a79 and \u00a710 explicitly describe Session 4 + 5 + 5b content, but \u00a713.3 still says 'Sessions 1, 2, 3 ship'. Recommend rewriting to 'Sessions 1, 2, 3, 4a, 4b, 5, and 5b ship the content reported in this paper.'",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:discussion:e0799bbe",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "discussion",
+        "quote_hash": "e0799bbe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 14,
+      "tex_line_start": 1184,
+      "tex_line_end": 1203,
+      "quote": "Session 4 builds tensoriality discharges via \\texttt{TensorialAt.mkHom\\textsubscript{3}} \u2026 the bundled \\texttt{CovariantDerivative.riemann}, the bundle-level algebraic first Bianchi for torsion-free \u2026 Session 5 ships Levi-Civita uniqueness on a vector bundle (Koszul bilinear form on smooth sections), sends the staged Bonn-team outreach email per the project's \\texttt{phase6f1\\_curvature\\_architecture\\_decision.md} script, and submits the Mathlib pull request.",
+      "quote_normalized": "session 4 builds tensoriality discharges via \\texttt{tensorialat.mkhom\\textsubscript{3}} ... the bundled covariantderivative.riemann, the bundle-level algebraic first bianchi for torsion-free ... session 5 ships levi-civita uniqueness on a vector bundle (koszul bilinear form on smooth sections), sends the staged bonn-team outreach email per the project's phase6f1\\_curvature\\_architecture\\_decision.md script, and submits the mathlib pull request.",
+      "type": "metaclaim",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "WARN",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "IA-WARN: future-tense framing of Sessions 4 and 5 is now stale \u2014 Sessions 4a, 4b, 5, 5b have shipped (2026-04-30) per project memory. Session 4c (mkHom\u2083 + bundled CovariantDerivative.riemann) is deferred per ship memory project_phase6f_w8_session4_5_shipped.md ('Session 4c (mkHom\u2083 + bundled riemann) deferred \u2014 not blocking SK-EFT physics'). The 'submits the Mathlib pull request' planning text is also stale: 'Mathlib PR deferred until end-of-Wave-8 closure per user policy' per the same memory. Recommend rewriting \u00a713.3 to reflect: Sessions 1-3 + 4a/4b/5/5b shipped; Session 4c (mkHom\u2083 + bundled riemann) + Mathlib PR deferred.",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:paper44_riemannian_connection:acknowledgments:c94afdaa",
+      "raw_id_parts": {
+        "paper": "paper44_riemannian_connection",
+        "section_slug": "acknowledgments",
+        "quote_hash": "c94afdaa",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "acknowledgments",
+      "section_ordinal": 15,
+      "tex_line_start": 1213,
+      "tex_line_end": 1219,
+      "quote": "We thank the Mathlib community, particularly Patrick Massot, Michael Rothgang, and Heather Macbeth for the covariant-derivative library; S\\'ebastien Gou\\\"ezel for the Riemannian-bundle infrastructure that the Lorentzian companion mirrors; and the SK-EFT-Hawking project's preemptive-strengthening discipline for catching the $\\mathrm{zeroChristoffel\\_isTorsionFree}$ P3-trivial cut at the post-wave review.",
+      "quote_normalized": "we thank the mathlib community, particularly patrick massot, michael rothgang, and heather macbeth for the covariant-derivative library; s\\'ebastien gou\\\"ezel for the riemannian-bundle infrastructure that the lorentzian companion mirrors; and the sk-eft-hawking project's preemptive-strengthening discipline for catching the $zerochristoffel\\_istorsionfree$ p3-trivial cut at the post-wave review.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_run_id": "claims-reviewer-v2:2026-04-30T20:00:00Z",
+      "tombstone": false,
+      "agent_notes": "Acknowledgments sentence; no extractable claim.",
+      "rewrite_of": null
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 65,
+    "by_type": {
+      "citation": 3,
+      "qualitative": 3,
+      "metaclaim": 16,
+      "theorem-ref": 39,
+      "numeric": 3,
+      "formal-claim": 1
+    },
+    "by_verdict": {
+      "WARN": 5,
+      "INFO": 6,
+      "PASS": 49,
+      "FAIL": 5
+    },
+    "by_finding_class": {
+      "IA": 10,
+      "TP": 2,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "65 sentences | 49 PASS | 5 WARN | 5 FAIL | 6 INFO | 0 UNGROUNDED | 0 TRANSITION | 5 IA findings (4 stale-cardinality FAIL/WARN \u2014 primary cleanup blockers); 0 TN findings (all 12 W8 Session 4+5 theorem references verified live in source); 0 TP findings (Lean v4.29.0 + Mathlib 8850ed93 pins match); 0 SD/HD findings"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "\u00a710.4 'thirty-three substantive theorems across five modules' (line 1125) and \u00a712 'five new Lean modules' (line 1038) and \u00a711 'four new modules' (line 970) and \u00a713.3 'Sessions 1, 2, 3 ship' (line 1169) all contradict the abstract's '44 substantive theorems / 7 modules' (line 136) and the W8 Session 4a+4b+5+5b ship. Multiple stale cardinality claims \u2014 paper bundles a pre-W8-Session-4+5 closing summary while the abstract and \u00a79-\u00a710 reflect post-ship content. Cleanup pass must reconcile.",
+      "sentences": [
+        "sentence:paper44_riemannian_connection:unblocks:93a8de78",
+        "sentence:paper44_riemannian_connection:conventions:d30024d3",
+        "sentence:paper44_riemannian_connection:conventions:254d77cb",
+        "sentence:paper44_riemannian_connection:discussion:037279eb"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "block:2",
+      "summary": "Introduction (lines 139-143) describes 'two-cut delta from the post-Session-3 strengthening pass' \u2014 stale. Per project memory, Sessions 4a+4b+5+5b applied 4 additional cuts (3 mlieBracket section-level lifts + 1 leviCivita_unique V-form). Cleanup pass should reconcile \u00a71 'two-cut delta' with \u00a710's substantive accounting at lines 823-836 + 955-966.",
+      "sentences": [
+        "sentence:paper44_riemannian_connection:introduction:65127093"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ],
+  "non_blocking_followups": [
+    {
+      "id": "followup:1",
+      "summary": "lean_deps.json is stale (mtime 2026-04-29T16:41, predates W8 Session 4+5 ship of 2026-04-30). Run `cd lean && lake build SKEFTHawking.ExtractDeps` then `uv run python scripts/update_counts.py` to refresh authoritative theorem counts. Until refreshed, IA verifications against W8 modules rely on live source grep \u2014 agreed-upon but less authoritative than ExtractDeps.",
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "followup:2",
+      "summary": "Eight cite keys not in CITATION_REGISTRY: MassotRothgangMacbeth2025, Gouezel2025, Roehm2026Wave6f, Roehm2026Wave6g, Roehm2026Pipeline, KobayashiNomizu1963, Klingenberg1995, Gouezel2024LieBracket. All are paper-internal \\bibitem-defined; mostly textbook references and Mathlib commit references. Per Phase 6i Wave 1 primary-sources cache rollout, these should be back-filled into CITATION_REGISTRY before Stage-13 closure (Wald1984 and Carroll2004 are already present). NOT a Class IA blocker \u2014 this is a Wave 1/Wave 6 follow-up.",
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": null
+    },
+    {
+      "id": "followup:3",
+      "summary": "Sec 4 'Levi-Civita uniqueness \u2014 strategic deferral' paragraph (lines 280-306) describes substantive Levi-Civita uniqueness as the deliverable of 'Wave 8 Session 5'. Per W8 Session 5+5b ship, this is NOW SHIPPED in \u00a710 (LeviCivita.lean, leviCivita_unique_of_isLeviCivita). The deferral language at \u00a74 should be updated to reflect that the substantive theorem is now in \u00a710.",
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    }
+  ]
+}

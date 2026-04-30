@@ -34,7 +34,7 @@ The Massot-Rothgang-Macbeth covariant-derivative API
 landed in Mathlib in April 2026, but Mathlib still has no Riemann,
 Ricci, or scalar curvature on a connection, and no indefinite-signature
 metric. Both gaps are out of HALF-ERC scope. We close them at the
-algebraic-precedent level with five Lean modules:
+algebraic-precedent level with seven Lean modules:
 \texttt{LorentzianMetric.lean} ships an indefinite-signature metric
 typeclass with the Minkowski $\Mink_{\mu\nu} = \mathrm{diag}(-1,+1,+1,+1)$
 witness and a Riemannian-Lorentzian signature falsifier;
@@ -58,7 +58,7 @@ covariant-derivative operator $\nabla_\lambda R^\rho{}_{\sigma\mu\nu}$
 on a generic Riemann tensor, the linear-piece differential second
 Bianchi identity under Schwarz alone, and the Group C+D quadratic
 cyclic cancellation under torsion-freeness plus
-\texttt{AntisymLastTwo}; and \texttt{BundleRiemannAux.lean} opens the
+\texttt{AntisymLastTwo}; \texttt{BundleRiemannAux.lean} opens the
 Bonn-API bundle scope with a bare-function bundle Riemann curvature
 $R(X, Y)Z = \nabla_{X}\nabla_{Y}Z - \nabla_{Y}\nabla_{X}Z -
 \nabla_{[X,Y]}Z$ consuming \texttt{IsCovariantDerivativeOn} and
@@ -67,12 +67,38 @@ $R(X, Y)Z = \nabla_{X}\nabla_{Y}Z - \nabla_{Y}\nabla_{X}Z -
 \texttt{mlieBracket\_swap\_apply} plus continuous-linearity of the
 $\mathrm{cov}\,\sigma\,x$ slot), plus a commuting-vector-fields
 specialisation and zero-degeneracies for the section and the X-slot
-on Bonn's \texttt{IsCovariantDerivativeOn.zero}. To our knowledge no
-proof assistant has previously formalized any of these. The library
-follows Mathlib upstream conventions for an eventual upstream port
-that turns the algebraic-precedent stubs into bundle-level theorems
-consuming the Bonn API directly; \texttt{BundleRiemannAux.lean} is
-the first such consumer and is a two-session step away from a
+on Bonn's \texttt{IsCovariantDerivativeOn.zero};
+\texttt{BundleRiemann.lean} ships pointwise cyclic Jacobi for
+$\mathrm{mlieBracket}$ (Mathlib has only the Leibniz form), the
+abstract bundle-level first Bianchi identity for $V :=
+\mathrm{TangentSpace}\,I$ under torsion-freeness, and root-namespace
+$\texttt{IsCovariantDerivativeOn.neg}$ / $\texttt{.sub}$ Mathlib-style
+helpers that discharge the abstract section-additivity hypothesis when
+the connection comes from Bonn; and \texttt{LeviCivita.lean} ships the
+substantive bundle-level Levi-Civita uniqueness theorem via the
+Wald \S 3.1 / Kobayashi-Nomizu IV.2.2 Koszul-bilinear-form derivation
+$2\,g(\nabla_{X}Y, Z) = X g(Y,Z) + Y g(Z,X) - Z g(X,Y)
++ g([X,Y], Z) - g([X,Z], Y) - g([Y,Z], X)$ from
+$\mathrm{IsCovariantDerivativeOn} + \mathrm{torsion\text{-}free}
++ \mathrm{metric\text{-}symmetric} + \mathrm{metric\text{-}compatible}$
+(plus $\mathrm{char}(\mathbb{K}) \neq 2$ for the $2$-cancellation in
+the composition uniqueness theorem), plus the algebraic uniqueness
+kernel routing via bilinearity non-degeneracy and
+\texttt{FiberBundle.extend}. To our knowledge no proof assistant has
+previously formalized cyclic Jacobi for the manifold Lie bracket
+(Mathlib4 ships only the Leibniz form), bundle-level first Bianchi
+torsion-free for $V := \mathrm{TangentSpace}\,I$, or substantive
+bundle-level Levi-Civita uniqueness via the Koszul-bilinear-form
+derivation; per-system search of Mathlib4, Mathcomp-Analysis,
+HOL Light Multivariate, HOL4, Isabelle/AFP, Mizar MML, and
+Agda agda-categories / agda-unimath (via web search +
+Phase 6f deep-research audit \S 3E) found no positive prior art
+through 2026-04-30, but the survey is not exhaustive and a per-system
+appendix is queued for Wave 8 closure. The library
+follows Mathlib upstream conventions for an eventual upstream port;
+\texttt{BundleRiemannAux.lean} + \texttt{BundleRiemann.lean} +
+\texttt{LeviCivita.lean} together ship the bundle-Riemann +
+bundle-Levi-Civita backbone and are the deliverable nucleus of a
 Mathlib-shaped pull request.
 \end{abstract}
 
@@ -108,8 +134,9 @@ identity, the Cartan structure equations in the tetrad formalism, and
 the 3D Riemannian Ricci on Cauchy slices. None can be discharged
 without the Mathlib gap above closed.
 
-This paper documents five new Lean modules that close both gaps at the
-algebraic-precedent level and open the bundle scope above the Bonn API. The treatment follows the project's
+This paper documents seven new Lean modules that close both gaps at
+the algebraic-precedent level and open the bundle scope above the
+Bonn API. The treatment follows the project's
 algebraic-precedent conventions established in the 6f and 6g programmes:
 metric matrices are $\mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to
 \mathbb{R}$, Christoffel symbols are $\mathrm{Fin}\,4 \to \mathrm{Fin}\,4
@@ -118,24 +145,35 @@ derivatives of the metric are passed as explicit input arrays
 $\partial g \in \mathrm{Fin}\,4 \to \mathrm{MetricMatrix}$
 (eventually replaced by the manifold \texttt{mfderiv} in the upstream
 port, but with the algebraic identities the same). At this scope the
-library ships thirty-three substantive theorems across five modules,
+library ships forty-four substantive theorems across seven modules,
 zero \texttt{sorry}, zero new project axioms; all load-bearing
 theorems verify against \texttt{propext}, \texttt{Classical.choice},
-\texttt{Quot.sound} only. The two-cut delta from the post-Session-3
-strengthening pass is documented in Section~\ref{sec:strengthening};
-both cuts retired predicate-level trivial-trans / corollary patterns
+\texttt{Quot.sound} only. The post-wave-strengthening cut history
+across Sessions 1-5b is documented in
+Section~\ref{sec:strengthening} (the W7+W8(S1-3) reflexive
+strengthening pass cut 2 retroactive theorems
+on 2026-04-30; a same-day ruthless audit on Sessions 4a/4b/5/5b cut
+4 additional section-level
+$\texttt{funext}$/$\texttt{FiberBundle.extend}$ lifts as P3 plumbing
+without consumers — see Section~\ref{sec:strengthening-w8-audit}).
+All cuts retired predicate-level trivial-trans / corollary patterns
 that had no downstream consumers and whose substantive content lives
 elsewhere in the library.
 
-We do not claim a complete formalization of the Levi-Civita theorem
-on a vector bundle; that target requires the full Bonn-API
-\texttt{TensorialAt.mkHom\textsubscript{2}} machinery already used by
-\texttt{IsCovariantDerivativeOn.torsion} and is parked as multi-session
-follow-up. What we do claim is the first formal closed-form Levi-Civita
-Christoffel via the Koszul formula in any proof assistant, with
-torsion-freeness and uniqueness under the only hypothesis it really
-needs (metric-partial symmetry, a consequence of metric symmetry that
-we expose as a separable algebraic predicate). On top of the
+As of W8 Sessions 5 + 5b (Section~\ref{sec:levi-civita}) we now
+claim the substantive bundle-level Levi-Civita uniqueness theorem
+itself: every torsion-free metric-compatible covariant derivative on
+the tangent bundle agrees pointwise with every other such connection,
+under $\mathrm{IsCovariantDerivativeOn} +
+\mathrm{torsion\text{-}free} + \mathrm{metric\text{-}symmetric}
++ \mathrm{metric\text{-}compatible}$ and
+$\mathrm{char}(\mathbb{K}) \neq 2$. The proof routes via the Wald
+\S 3.1 / Kobayashi-Nomizu IV.2.2 Koszul-bilinear-form derivation
+(Section~\ref{sec:levi-civita}.3), the algebraic uniqueness kernel
+(Section~\ref{sec:levi-civita}.1), and a $2$-cancellation step. We
+also retain the closed-form Levi-Civita Christoffel via the Koszul
+formula at coordinate scope, with torsion-freeness under
+metric-partial symmetry. On top of the
 Christoffel-quadratic content we ship the full coordinate Riemann
 tensor with the algebraic first Bianchi identity discharged at the
 Christoffel-formula level. W7's commutator-only quadratic part
@@ -281,14 +319,19 @@ encoding here. The substantive Levi-Civita uniqueness — every
 torsion-free metric-compatible connection equals the Koszul Christoffel
 on smooth vector fields, by the Koszul-bilinear-form argument
 \cite{KobayashiNomizu1963} — needs the bundle-level
-\texttt{IsCovariantDerivativeOn} API over arbitrary smooth sections, and
-is the deliverable of Wave 8 Session 5 (the upstream-port wave;
-Section~\ref{sec:disc} subsection on the multi-session plan). At the
-algebraic-precedent scope of this section,
+\texttt{IsCovariantDerivativeOn} API over arbitrary smooth sections,
+and SHIPPED in Wave 8 Sessions 5 + 5b
+(\S\ref{sec:levi-civita}: $\texttt{leviCivita\_pointwise\_unique\_of\_koszul}$
+algebraic uniqueness kernel + substantive $\texttt{IsLeviCivita}$
+predicate + $\texttt{koszul\_identity\_of\_isLeviCivita}$ Wald \S 3.1
+derivation + $\texttt{leviCivita\_unique\_of\_isLeviCivita}$
+composition theorem under $\mathrm{char}(\mathbb{K}) \neq 2$). At
+the algebraic-precedent scope of this section,
 Theorem~\ref{thm:koszul-tf} discharges the load-bearing half (the
 Koszul Christoffel \emph{is} torsion-free under metric-partial
 symmetry); the converse half (every torsion-free metric-compatible
-$\Christoffel$ \emph{is} the Koszul Christoffel) lands in Session 5.
+$\Christoffel$ \emph{is} the Koszul Christoffel) is now formalised at
+the bundle scope in \S\ref{sec:levi-civita}.
 
 \section{Cross-bridge: flat space has zero quadratic curvature}\label{sec:flat}
 
@@ -404,16 +447,23 @@ $\Riem_{\rho\sigma\mu\nu} = \Riem_{\mu\nu\rho\sigma}$ via
 This module's content is Session 1 of a five-session plan to a
 bundle-level Mathlib-PR-shaped Riemann curvature on the Bonn
 \texttt{CovariantDerivative} API. Session 2 adds
-$\partial^{2}\Christoffel$ + Schwarz symmetry + the differential second
-Bianchi $\nabla_{\lambda} \Riem + \nabla_{\mu}\Riem + \nabla_{\nu}\Riem
-= 0$ cyclically (which mechanically unblocks the
-$\nabla^{\mu}G_{\mu\nu} = 0$ identity in
-\texttt{EinsteinTensor.lean}). Sessions 3+4 build the bundle-level
-analog consuming \texttt{IsCovariantDerivativeOn} and
-\texttt{TensorialAt.mkHom\textsubscript{2}} (extended to
-\texttt{mkHom\textsubscript{3}} for the three-argument
-$\Riem(X,Y,Z)$). Session 5 ships Levi-Civita uniqueness on a vector
-bundle and submits the Mathlib PR.
+$\partial^{2}\Christoffel$ + Schwarz symmetry + the linear-piece
+differential second Bianchi $\nabla_{\lambda} \Riem +
+\nabla_{\mu}\Riem + \nabla_{\nu}\Riem = 0$ cyclically (which
+mechanically unblocks the $\nabla^{\mu}G_{\mu\nu} = 0$ identity in
+\texttt{EinsteinTensor.lean} once the Session 4c specialisation
+lands). Session 3 ships \texttt{BundleRiemannAux.lean} consuming
+$\texttt{IsCovariantDerivativeOn}$ + $\texttt{VectorField.mlieBracket}$.
+Sessions 4a + 4b ship \texttt{BundleRiemann.lean} with cyclic Jacobi
+for $\mathrm{mlieBracket}$ + the abstract bundle-level first Bianchi
++ root-namespace $\texttt{IsCovariantDerivativeOn.neg}$ /
+$\texttt{.sub}$ Bonn-API helpers. Sessions 5 + 5b ship
+\texttt{LeviCivita.lean} with the substantive bundle-level
+Levi-Civita uniqueness via the Koszul-bilinear-form derivation.
+Session 4c (deferred Mathlib-PR-track infrastructure) builds
+$\texttt{TensorialAt.mkHom}_{3}$ from existing $\texttt{mkHom}_{2}$
+for the three-argument $\Riem(X,Y,Z)$ and the specialisation
+to coordinate scope.
 
 \section{Differential second Bianchi machinery}
 \label{sec:diff-bianchi}
@@ -466,7 +516,7 @@ its partial $\partial T : \texttt{RiemannPartial}$ as the operator
 \texttt{covRiemann\_coord} feeds the partial computed from
 $(\Christoffel, d\Christoffel, d^{2}\Christoffel)$ via the product rule.
 
-The (μ,ν)-antisymmetry of $T$ lifts through the cov derivative
+The $(\mu,\nu)$-antisymmetry of $T$ lifts through the cov derivative
 \eqref{eq:cov-riemann}: each of the four
 $\Christoffel \times R$ correction terms preserves antisymmetry
 pairwise, the lower-index $\Christoffel$-correction pair
@@ -698,24 +748,261 @@ at bundle scope, $(\nabla_X R)(Y, Z) + (\nabla_Y R)(Z, X) + (\nabla_Z R)
 (X, Y) = 0$, falls out from Jacobi for $\mathrm{mlieBracket}$ and from
 $(\nabla_X R)$ being itself a tensor, also in three lines.
 
-These payoffs make Session 4's specialisation-from-bundle the right
-architecture: at coordinate scope the same identities require $\sim 500$
-monomials of \texttt{ring}-discharge after dozens of explicit rewrites
-(per Sessions 1+2 strategic deferrals). Session 4 will (a)~build
-$\texttt{TensorialAt.mkHom}_3$ (Bonn already has $\mathtt{mkHom}_2$
-for \texttt{torsion}), (b)~bundle $\mathtt{bundleRiemannAux}$ into a
-$\texttt{CovariantDerivative.riemann}$ whose value at each fiber is a
-trilinear $V_x \to_L V_x \to_L V_x \to_L V_x$ map, (c)~ship the
-bundle-level first and second Bianchi as the three-line Jacobi
-consequences, and (d)~specialise on $\mathrm{EuclideanSpace}\,
-\mathbb{R}\,(\mathrm{Fin}\,4)$ to deliver the Sessions-1+2
-coordinate-level identities together with the load-bearing
-$\nabla^{\mu}G_{\mu\nu} = 0$ discharge for
-\texttt{EinsteinTensor.lean}.
+These payoffs make the bundle-level Bianchi the right architecture:
+at coordinate scope the same identities require $\sim 500$ monomials
+of \texttt{ring}-discharge after dozens of explicit rewrites (per
+Sessions 1+2 strategic deferrals). Sessions 4a + 4b ship the abstract
+bundle-level first Bianchi as a $\sim 50$-line proof closing via cyclic
+Jacobi for $\mathrm{mlieBracket}$ and three torsion-free regroupings;
+the Bonn-API-discharged form lands in \S 9 below. Session 4c
+infrastructure ($\texttt{TensorialAt.mkHom}_3$ build + bundled
+$\texttt{CovariantDerivative.riemann}$ + tensoriality + specialisation
+to coordinate scope on $\mathrm{EuclideanSpace}\,\mathbb{R}\,(\mathrm{Fin}\,4)$
+delivering Sessions-1+2 identities together with the load-bearing
+$\nabla^{\mu}G_{\mu\nu} = 0$ discharge for \texttt{EinsteinTensor.lean})
+is deferred as a Mathlib-PR-track follow-on; the Session 4b
+Bonn-wrapped Bianchi is already directly applicable from
+$\texttt{IsCovariantDerivativeOn}$ at consumer sites.
+
+\section{Bundle-level cyclic Jacobi and abstract first Bianchi
+(Sessions 4a + 4b)}\label{sec:bundle-bianchi}
+
+\texttt{BundleRiemann.lean} extends the Session 3 bare-function
+$\mathtt{bundleRiemannAux}$ with the algebraic first Bianchi identity
+under torsion-freeness, when the bundle is the tangent bundle (so the
+cyclic permutation $R(X, Y) Z + R(Y, Z) X + R(Z, X) Y$ is well-typed).
+Two layers ship in this module: the abstract layer (Session 4a)
+parameterised by abstract torsion-free + section-additivity hypotheses,
+and the Bonn-API-discharged layer (Session 4b) consuming
+$\texttt{IsCovariantDerivativeOn}$ directly.
+
+\subsection{Pointwise cyclic Jacobi for $\mathrm{mlieBracket}$ (Session 4a)}
+
+The mathematical core of the bundle-level first Bianchi is the cyclic
+Jacobi identity
+\begin{equation*}
+[X, [Y, Z]]_x + [Y, [Z, X]]_x + [Z, [X, Y]]_x \;=\; 0
+\end{equation*}
+for the manifold Lie bracket. Mathlib4 at \texttt{8850ed93} ships only
+the Leibniz form, $[U, [V, W]]_x = [[U, V], W]_x + [V, [U, W]]_x$
+(\texttt{leibniz\_identity\_mlieBracket\_apply}). Cyclic Jacobi follows
+from one Leibniz instance plus three antisymmetry rewrites: outer
+swap $[[X, Y], Z]_x = -[Z, [X, Y]]_x$ via
+\texttt{mlieBracket\_swap\_apply}; inner swap $[X, Z] = -[Z, X]$ via
+section-level \texttt{mlieBracket\_swap}; and inner-negation
+distribution $[Y, -[Z, X]]_x = -[Y, [Z, X]]_x$ via the new
+\texttt{mlieBracket\_neg\_right\_apply} (which Mathlib also lacks at
+\texttt{8850ed93}). The negation-distribution lemma is itself derived
+in $\sim 5$ lines from $\texttt{mlieBracket\_const\_smul\_right}$ at
+$c = (-1 : \mathbb{K})$ plus $\texttt{neg\_one\_smul}$. The slot-1
+sibling \texttt{mlieBracket\_neg\_left\_apply} ships in parallel as a
+Mathlib-PR-shaped helper.
+
+To our knowledge no proof assistant has previously formalised cyclic
+Jacobi for the manifold Lie bracket; Mathlib's Leibniz form is the
+closest precedent.
+
+\subsection{Abstract bundle first Bianchi (Session 4a)}
+
+For $\mathrm{cov}$ a covariant derivative on the tangent bundle that is
+torsion-free in the sense of Bonn ($\mathrm{cov}\,W\,x\,(V\,x) -
+\mathrm{cov}\,V\,x\,(W\,x) = [V, W]_x$ for all sections $V, W$ at every
+point $x$), and additive in the section argument, the cyclic Bianchi
+sum vanishes:
+\begin{equation*}
+\mathtt{bundleRiemannAux}\,\mathrm{cov}\,X\,Y\,Z\,x +
+\mathtt{bundleRiemannAux}\,\mathrm{cov}\,Y\,Z\,X\,x +
+\mathtt{bundleRiemannAux}\,\mathrm{cov}\,Z\,X\,Y\,x = 0.
+\end{equation*}
+Three torsion-free regroupings (one per axis) collapse the inner
+double-derivative pairs into bracket-of-brackets terms; the cyclic
+sum then reduces to cyclic Jacobi. The proof closes via
+$\texttt{linear\_combination}\,(\texttt{norm} := \texttt{abel})$ of
+the three group equalities plus the cyclic-Jacobi instance. The
+Christoffel-style cancellation visible at coordinate scope is absorbed
+into the type-level continuous linearity of $\mathrm{cov}\,\sigma\,x :
+T_xM \to_L V_x$ and the Bonn-API shape of torsion-freeness.
+
+\subsection{Root-namespace $\mathrm{IsCovariantDerivativeOn}$ helpers
+(Session 4b)}
+
+The abstract first Bianchi requires section-additivity of the
+connection at the relevant evaluation points, which Bonn's
+$\texttt{IsCovariantDerivativeOn.add}$ supplies directly. To handle
+the $\mathrm{cov}(\sigma - \tau)\,x = \mathrm{cov}\,\sigma\,x -
+\mathrm{cov}\,\tau\,x$ form needed by the Bianchi proof, we ship two
+new root-namespace lemmas in Mathlib upstream-style (mirroring
+\texttt{\_root\_.ContMDiffAt.mlieBracket\_vectorField}):
+\texttt{\_root\_.IsCovariantDerivativeOn.neg} (derived from Bonn's
+$\texttt{.smul\_const}$ at $a = -1$ plus \texttt{neg\_one\_smul}), and
+\texttt{\_root\_.IsCovariantDerivativeOn.sub} (derived from
+$\texttt{.add}$ + $\texttt{.neg}$ + section-level
+\texttt{mdifferentiableAt\_neg\_section}).
+
+\subsection{Bonn-API-discharged bundle first Bianchi (Session 4b)}
+
+The wave-headline Session 4b deliverable
+\begin{equation*}
+\texttt{bundleRiemannAux\_first\_bianchi\_torsionfree\_of\_isCovariantDerivativeOn}
+\end{equation*}
+re-expresses the abstract first Bianchi by consuming Bonn's
+$\texttt{IsCovariantDerivativeOn}$ directly. The
+universally-quantified abstract section-additivity hypothesis is
+replaced by per-pair pointwise differentiability hypotheses on the six
+section pairs $(\mathrm{cov}\,\cdot\,(\cdot))$ that the proof actually
+uses; each is discharged via $\mathrm{hcov.sub}$. This
+gives consumers an interface that depends only on the connection
+being a Bonn covariant derivative plus pointwise smoothness of the
+test sections — no abstract additivity plumbing at the consumer site.
+
+\subsection{Strengthening cuts (Session 4a + 4b ruthless audit)}
+
+Three section-level $\texttt{ext}$/$\texttt{funext}$ lifts of the
+pointwise lemmas above were retroactively cut at the post-wave audit
+as P3 plumbing:
+$\texttt{mlieBracket\_neg\_right}$ /
+$\texttt{mlieBracket\_neg\_left}$ /
+$\texttt{mlieBracket\_cyclic\_jacobi}$ each had no internal or external
+consumer in the SK-EFT project, with substantive content living in the
+corresponding $\texttt{\_apply}$ versions. Per the project's audit
+discipline, when there is no immediate consumer and the substantive
+content is reachable through another lemma, the corollary is cut and
+re-added at Mathlib-PR-submission time.
+
+\section{Bundle-level Levi-Civita uniqueness via the Koszul
+bilinear-form argument (Sessions 5 + 5b)}\label{sec:levi-civita}
+
+\texttt{LeviCivita.lean} ships the substantive bundle-level
+Levi-Civita uniqueness theorem (Wald \S 3.1 / Kobayashi-Nomizu Thm
+IV.2.2): every torsion-free metric-compatible connection on the
+tangent bundle of a Riemannian (or non-degenerate Lorentzian) manifold
+agrees pointwise with every other such connection, and the equality
+follows from the Koszul-bilinear-form identity rather than from a
+predicate-level def-as-equality. Two layers ship: the algebraic
+uniqueness kernel (Session 5) and the substantive
+\texttt{IsLeviCivita} predicate plus Koszul-derivation +
+composition-uniqueness theorem (Session 5b).
+
+\subsection{Algebraic uniqueness kernel (Session 5)}
+
+The kernel theorem
+\begin{equation*}
+\texttt{leviCivita\_pointwise\_unique\_of\_koszul}
+\end{equation*}
+takes two abstract connections $\mathrm{cov}, \mathrm{cov}'$ on the
+tangent bundle and a non-degenerate bilinear form $g$, plus the
+hypothesis that for every test section triple $(X, Y, Z)$ at the
+chosen point $x$,
+\begin{equation*}
+g_x(\mathrm{cov}\,Y\,x\,(X\,x), Z\,x) = g_x(\mathrm{cov}'\,Y\,x\,(X\,x), Z\,x).
+\end{equation*}
+The conclusion is that $\mathrm{cov}\,Y\,x\,(X\,x) =
+\mathrm{cov}'\,Y\,x\,(X\,x)$ pointwise. The proof routes via
+bilinearity of $g_x$ ($g_x(v, w) = 0$ for all $w$ implies
+$v = 0$ at non-degenerate $g_x$) plus
+$\texttt{FiberBundle.extend}\,E\,w$ to realise an arbitrary tangent
+vector $w \in T_xM$ as the value at $x$ of some section $Z$. The
+non-degeneracy hypothesis is encoded as the auxiliary def
+$\texttt{IsNondegenerateAt}\,g\,x$.
+
+\subsection{Substantive $\mathrm{IsLeviCivita}$ predicate (Session 5b)}
+
+The Levi-Civita predicate ships as a four-conjunct \texttt{structure}
+on $(\mathrm{cov}, g)$:
+\begin{itemize}
+\item $\mathrm{is\_cov}$: $\mathrm{cov}$ is a covariant derivative
+  ($\texttt{IsCovariantDerivativeOn}\,E\,\mathrm{cov}\,\mathrm{Set.univ}$).
+\item $\mathrm{torsion\_free}$:
+  $\mathrm{cov}\,W\,x\,(V\,x) - \mathrm{cov}\,V\,x\,(W\,x) = [V, W]_x$
+  for all section pairs.
+\item $\mathrm{metric\_symm}$: $g_x(u, v) = g_x(v, u)$.
+\item $\mathrm{metric\_compatible}$: under sufficient smoothness of
+  the test sections and the scalar pairing
+  $y \mapsto g_y(Y\,y, Z\,y)$,
+  \[\mathrm{extDerivFun}\,(y \mapsto g_y(Y\,y, Z\,y))\,x\,(X\,x)
+  = g_x(\mathrm{cov}\,Y\,x\,(X\,x), Z\,x) + g_x(Y\,x, \mathrm{cov}\,Z\,x\,(X\,x)).\]
+\end{itemize}
+The metric-compat condition uses Mathlib's $\mathrm{extDerivFun}$
+(clean $\mathbb{K}$-valued exterior derivative wrapper) rather than
+$\mathrm{mfderiv}$ directly, which avoids the
+$\mathrm{TangentSpace}\,\mathcal{I}(\mathbb{K},\mathbb{K})\,v$
+type-elaboration friction at small cost in surface area.
+
+An in-session reflective strengthening cut earlier in Session 5
+removed an initial three-conjunct draft whose $\mathrm{metric\_symm}$
+conjunct was the only one constraining the $\mathrm{cov}$-$g$
+relationship; the substantive metric-compat conjunct was added in 5b.
+
+\subsection{Koszul identity from $\mathrm{IsLeviCivita}$ (Wald \S 3.1
+derivation)}
+
+The wave-headline theorem
+\begin{equation*}
+\texttt{koszul\_identity\_of\_isLeviCivita}
+\end{equation*}
+derives the Koszul bilinear-form identity from $\texttt{IsLeviCivita}$:
+\begin{align*}
+2 \cdot g_x(\mathrm{cov}\,Y\,x\,(X\,x), Z\,x)
+\;=\;& \;\mathrm{extDerivFun}\,(g(Y, Z))\,x\,(X\,x) \\
+& + \mathrm{extDerivFun}\,(g(Z, X))\,x\,(Y\,x) \\
+& - \mathrm{extDerivFun}\,(g(X, Y))\,x\,(Z\,x) \\
+& + g_x([X, Y]_x, Z\,x) - g_x([X, Z]_x, Y\,x) - g_x([Y, Z]_x, X\,x).
+\end{align*}
+The proof applies the metric-compat conjunct at three cyclic shifts
+$(X,Y,Z)$, $(Y,Z,X)$, $(Z,X,Y)$; rewrites the slot-2 connection terms
+to slot-1 via three metric-symmetry instances; and substitutes
+torsion-free at three cross-pairs to fold the $g(\nabla_\cdot \cdot,
+\cdot) - g(\nabla_\cdot \cdot, \cdot)$ differences into bracket
+pairings. The combined step closes via
+\texttt{linear\_combination} with derived coefficients $[-1, -1,
++1, -1, -1, +1, -1, -1, +1]$ across the nine hypotheses (three
+metric-compat, three symmetry rewrites, three torsion-free
+substitutions). The right-hand side depends only on $g$, $X$, $Y$, $Z$
+(not on $\mathrm{cov}$), so any two $\texttt{IsLeviCivita}$
+connections produce equal $g$-pairings of $\mathrm{cov}\,Y\,x\,(X\,x)$
+against $Z\,x$.
+
+\subsection{Composition uniqueness theorem (Session 5b)}
+
+Composing the Koszul identity (Session 5b) with the algebraic
+uniqueness kernel (Session 5) gives the full uniqueness:
+\begin{equation*}
+\texttt{leviCivita\_unique\_of\_isLeviCivita}.
+\end{equation*}
+For any two $\texttt{IsLeviCivita}$ connections $\mathrm{cov}$ and
+$\mathrm{cov}'$ of the same metric $g$, at any non-degenerate point
+$x$, $\mathrm{cov}\,Y\,x\,(X\,x) = \mathrm{cov}'\,Y\,x\,(X\,x)$. The
+$(2 : \mathbb{K}) \neq 0$ hypothesis is unavoidable: the Koszul
+derivation yields a factor of $2$ on the left-hand side, so two
+connections satisfying the same Koszul identity differ by an element
+annihilated by $2$, which is $0$ iff $\mathrm{char}(\mathbb{K}) \neq
+2$. The cancellation step uses $\texttt{mul\_left\_cancel}_0$.
+
+This is the substantive Wald \S 3.1 / Kobayashi-Nomizu IV.2.2
+uniqueness theorem at bundle level, deferred from
+$\texttt{RiemannianConnection.lean}$'s coordinate-scope predicate-level
+form (which was a P5 trivial-trans on the def-as-equality
+$\Christoffel = \texttt{christoffelKoszul}$ and was retroactively cut
+at the W7+W8(S1-3) reflexive strengthening pass). To our knowledge no
+proof assistant has previously formalised bundle-level Levi-Civita
+uniqueness via the substantive Koszul-bilinear-form derivation.
+
+\subsection{Strengthening cut (Session 5 + 5b ruthless audit)}
+
+The section-level $\texttt{leviCivita\_unique}$ theorem
+($\texttt{FiberBundle.extend}$ lift of the pointwise kernel from
+``section $X$ with $X\,x = w$'' to ``arbitrary tangent vector $V \in
+T_xM$'') was retroactively cut at the post-wave audit as P3 plumbing.
+Substantive content lives in
+$\texttt{leviCivita\_pointwise\_unique\_of\_koszul}$ (the kernel,
+X-form) and in $\texttt{leviCivita\_unique\_of\_isLeviCivita}$ (the
+composition theorem, which routes through the X-form). The V-form
+lift had no internal/external consumer; per audit discipline, cut and
+re-add at Mathlib-PR-submission time if needed.
 
 \section{What this unblocks}\label{sec:unblocks}
 
-The four new modules are infrastructure: they ship no new physics and
+The seven new modules are infrastructure: they ship no new physics and
 no new submission-ready prediction. Their value is in unblocking five
 deferred items in the Phase 6f programme that were previously parked
 behind the Mathlib indefinite-signature gap and the
@@ -781,9 +1068,73 @@ to ``mechanical pending an internal SK-EFT module" for several items:
   the Mathlib-side absence.
 \end{itemize}
 
+\subsection{2026-04-30 follow-on: Phase 6g.2 substantive curve-theoretic
+  Penrose shipped}\label{sec:6g2-curve-followon}
+
+The W8 Session 5+5b bundle-level Levi-Civita uniqueness backbone
+unlocked the substantive curve-theoretic Penrose chain as the natural
+Mathlib-PR-shape follow-on. A 5-session multi-session wave shipped this
+content on 2026-04-30, end-to-end, immediately following this paper's
+infrastructure delivery. The substantive content lifts as
+\textbf{D3 \S 24} (the headline correctness-push section, per the
+project bundle architecture in \texttt{docs/PAPER\_DRAFT\_MAPPING.md}),
+not as an extension of this paper's I1 sidebar / D3 \S 22.5 lift, so we
+do not absorb the curve-theoretic content here. We summarise the
+follow-on briefly:
+\begin{itemize}
+\item \textbf{LorentzianBundle.lean} (5 substantive theorems +
+  2 structures): bundle-level Lorentzian metric typeclass
+  \texttt{IsLorentzianBundle} (symmetric + non-degenerate fiber
+  bilinear form) with the wave-headline bridge
+  \texttt{leviCivita\_unique\_for\_lorentzianBundle} composing this
+  paper's \S~\ref{sec:bundle-leviCivita} composition theorem
+  \texttt{leviCivita\_unique\_of\_isLeviCivita}; bundle-level
+  Riemannian-vs-Lorentzian falsifier
+  \texttt{riemannianBundle\_not\_lorentzianBundle\_with\_negative\_self\_pairing}.
+\item \textbf{NullGeodesic.lean} (4 substantive theorems +
+  1 structure + 1 def): vector-field-level null auto-parallel
+  congruence with substantive metric-compatibility-driven preservation
+  of the null self-pairing along the flow
+  (\texttt{autoparallel\_self\_metric\_compat\_dir\_deriv\_zero}
+  consumes \S~\ref{sec:bundle-leviCivita}'s \texttt{IsLeviCivita.metric\_compatible}
+  directly).
+\item \textbf{RaychaudhuriEquation.lean} (5 substantive theorems +
+  1 structure): the substantive Raychaudhuri focusing inequality
+  $d_{k}\theta \leq -\theta^{2}/(n-1)$ at the abstracted-trace +
+  curve-level scope under hypersurface-orthogonal + non-negative shear
+  + NEC-controlled $R_{kk}$, with $n=4$ specialisation matching the
+  existing 6g.2 \S 1 Riccati form $d\theta/d\lambda \leq -\theta^{2}/3$.
+\item \textbf{FocalPoint.lean} (6 substantive theorems + 1 def):
+  focal-configuration predicate \texttt{IsFocalConfigurationFor} +
+  Riccati-comparison bridge to the 6g.2 \S 1 closed-form
+  \texttt{riccatiSolution\_neg} / \texttt{focusingTime\_pos}, with
+  substantive cross-bridge \texttt{focal\_obstructs\_extension} into
+  the existing 6g.2 \S 3 \texttt{IsNullGeodesicallyIncomplete}
+  predicate.
+\item \textbf{PenroseSingularityCurveTheoretic.lean} (5 substantive
+  theorems + 1 structure): the wave-completion composition theorem
+  \texttt{penrose\_singularity\_curve\_theoretic} producing
+  geodesic-incompleteness witness + strict-negativity-throughout-window
+  from the 3-conjunct hypothesis bundle
+  \texttt{IsCurveTheoreticPenroseHypothesis}.
+\end{itemize}
+
+\paragraph{Wave totals.} 5 new modules / 25 substantive theorems /
+5 structures / 2 defs / $\sim$1909 LOC / 0 sorry / 0 new axioms /
+library 8485 jobs PASS clean. 2-cut wave-end ruthless audit (in
+\texttt{LorentzianBundle.lean} only: \texttt{lorentzianBundle\_symm\_apply}
+P7 lift-without-consumer + \texttt{riemannianBundle\_implies\_lorentzian\_pairing\_pos}
+P3 trivial-projection-as-named-API; Sessions 2--5 maintained the
+0-retroactive-cut streak). The wave ships at \emph{two parallel
+substantive scopes} --- manifold-level abstract focusing inequality
+(Session 3) and curve-level Riccati-comparison + focal-point bridge
+(Sessions 4--5); the curve-pullback bridge between these scopes is
+parked as a Mathlib-PR follow-on and discharges via Mathlib's
+\texttt{Analysis.ODE.Gronwall}.
+
 \section{Conventions and conformance}\label{sec:conventions}
 
-The five new Lean modules follow Mathlib upstream conventions: file
+The seven new Lean modules follow Mathlib upstream conventions: file
 header copyright + module imports + \texttt{public} sections, no
 \texttt{maxHeartbeats} overrides, no \texttt{ring} on noncommutative
 contexts. Naming follows Mathlib snake-case for theorems and
@@ -869,16 +1220,54 @@ missed:
 
 Both cuts retired predicate-level trivial-trans / corollary patterns
 that had no downstream consumers and whose substantive content lives
-elsewhere in the library. After the cuts the library ships
-\textbf{thirty-three substantive theorems across five modules},
-zero \texttt{sorry}, zero new project axioms; all load-bearing
-theorems verify against \texttt{propext, Classical.choice, Quot.sound}
-only. The pattern lesson is logged in
+elsewhere in the library. The pattern lesson is logged in
 \texttt{feedback\_post\_wave\_strengthening\_audit.md}: predicate-as-
 equality definitions \emph{should not} appear with companion
 "uniqueness" theorems at the algebraic-precedent scope; defer
 substantive uniqueness to the bundle-level wave where the Koszul
 bilinear-form argument supplies the load-bearing content.
+
+\subsection{2026-04-30 ruthless audit (Sessions 4a / 4b / 5 / 5b)
+section-level lift cleanup}\label{sec:strengthening-w8-audit}
+
+A second ruthless post-wave audit on the same day cleaned up the
+W8 Sessions 4a / 4b / 5 / 5b first-pass declarations and applied four
+additional retroactive cuts. Each cut targets a section-level
+$\texttt{ext}$ / $\texttt{funext}$ / $\texttt{FiberBundle.extend}$ lift
+of a pointwise lemma without any internal or external consumer:
+\begin{enumerate}
+\item $\texttt{mlieBracket\_neg\_right}$ (BundleRiemann.lean §1) — 1-line
+    $\texttt{ext}\,x;\, \texttt{exact}\,...\_\texttt{apply}\,(h\,x)$ lift
+    of the pointwise version. The pointwise
+    $\texttt{mlieBracket\_neg\_right\_apply}$ is the internal consumer
+    (used by cyclic-Jacobi); the section-level lift had no consumer.
+\item $\texttt{mlieBracket\_neg\_left}$ — same pattern, slot-1.
+\item $\texttt{mlieBracket\_cyclic\_jacobi}$ (BundleRiemann.lean §2) —
+    2-line section-level lift of cyclic-Jacobi-pointwise. Internal
+    consumer is the pointwise version (used by both bundle-Bianchi
+    proofs); section-level form had no consumer.
+\item $\texttt{leviCivita\_unique}$ (LeviCivita.lean §3) —
+    $\texttt{FiberBundle.extend}$ lift from the pointwise X-form
+    kernel ("section $X$ with $X\,x = w$") to the V-form
+    ("arbitrary tangent vector $V \in T_xM$"). Substantive content
+    lives in $\texttt{leviCivita\_pointwise\_unique\_of\_koszul}$
+    (X-form kernel) and $\texttt{leviCivita\_unique\_of\_isLeviCivita}$
+    (composition theorem, which routes through the X-form). V-form
+    lift had no consumer.
+\end{enumerate}
+
+After the cuts the library ships \textbf{forty-four substantive
+theorems across seven modules}, zero \texttt{sorry}, zero new project
+axioms; the substantive declaration count includes
+$\texttt{IsLorentzianSignature}$ /
+$\texttt{IsLorentzianMetric}$ / $\texttt{IsContinuousLorentzianFamily}$
+/ $\texttt{Christoffel}$ / $\texttt{IsTorsionFree}$ /
+$\texttt{IsLeviCivita}$ etc.\ as \texttt{def} / \texttt{structure}
+declarations alongside the named theorems and lemmas. The pattern
+lesson logged: section-level $\texttt{funext}$/$\texttt{extend}$ lifts
+of pointwise lemmas without an internal/external consumer
+\emph{should not ship in SK-EFT}; defer the section-level companions
+to Mathlib-PR-submission time as a paired API completion.
 
 \section{Discussion and follow-up}\label{sec:disc}
 
@@ -912,15 +1301,16 @@ ports physics formulas but has no curvature library. The HALF-ERC
 audit report's no-prior-art finding therefore stands.
 
 \subsection{Multi-session plan and open work}
-The bundle-level upgrade is now an explicit five-session plan tracked
-in the Phase 6f roadmap (Wave 8, sessions 1--5). Sessions 1, 2, and 3
-ship the content reported in this paper.
+The bundle-level upgrade is an explicit five-session plan tracked
+in the Phase 6f roadmap (Wave 8, sessions 1--5b). Sessions 1, 2, 3,
+4a, 4b, 5, and 5b all ship the content reported in this paper.
 Session 2 adds \texttt{RiemannDifferentialBianchi.lean} with
 $\partial^{2}\Christoffel$ + Schwarz symmetry + the linear-piece
 differential second Bianchi identity
 $\nabla_{\lambda}\Riem + \nabla_{\mu}\Riem + \nabla_{\nu}\Riem = 0$,
 which mechanically discharges the
-\texttt{EinsteinTensor.}$\nabla^{\mu}G_{\mu\nu} = 0$ deferral.
+\texttt{EinsteinTensor.}$\nabla^{\mu}G_{\mu\nu} = 0$ deferral once the
+Session 4c specialisation lands.
 Session 3 (\S\ref{sec:bundle-aux}) adds \texttt{BundleRiemannAux.lean}
 opening the Bonn-API bundle scope: the bare-function
 \texttt{bundleRiemannAux} consuming Bonn
@@ -929,23 +1319,42 @@ opening the Bonn-API bundle scope: the bare-function
 vanishing on the diagonal from $\mathtt{mlieBracket\_self}$, with the
 commuting-vector-fields specialisation and the section/X-slot
 zero-degeneracies on $\texttt{IsCovariantDerivativeOn.zero}$ shipped
-in the same module). Session 4 builds tensoriality discharges via
-\texttt{TensorialAt.mkHom\textsubscript{3}} (which we will build from
-\texttt{mkHom\textsubscript{2}} if not already in Mathlib), the
-bundled \texttt{CovariantDerivative.riemann}, the bundle-level
-algebraic first Bianchi for torsion-free (a three-line consequence of
-the Jacobi identity for $\mathrm{mlieBracket}$), the bundle-level
-differential second Bianchi (also three-line via Jacobi), and a
-specialisation theorem bridging the bundle Riemann on
-\texttt{EuclideanSpace}\,$\mathbb{R}\,(\mathrm{Fin}\,4)$ to the
-coordinate Riemann from Sessions 1 and 2 (which delivers the full
-coordinate-level differential second Bianchi at top order plus the
-$\nabla^{\mu}G_{\mu\nu} = 0$ discharge as direct consequences).
-Session 5 ships Levi-Civita uniqueness on a vector bundle (Koszul
-bilinear form on smooth sections), sends the staged Bonn-team
-outreach email per the project's
-\texttt{phase6f1\_curvature\_architecture\_decision.md} script, and
-submits the Mathlib pull request. Each session updates the running
+in the same module).
+Sessions 4a + 4b (\S\ref{sec:bundle-bianchi}) ship
+\texttt{BundleRiemann.lean}: pointwise cyclic Jacobi for
+$\mathrm{mlieBracket}$, the abstract bundle-level first Bianchi for
+$V := \mathrm{TangentSpace}\,I$ (a $\sim$50-line proof closed via
+$\texttt{linear\_combination}\,(\texttt{norm} := \texttt{abel})$), and
+the Bonn-API-discharged form of the same theorem consuming
+$\texttt{IsCovariantDerivativeOn}$ directly through new
+$\texttt{.neg}$/$\texttt{.sub}$ root-namespace helpers.
+Sessions 5 + 5b (\S\ref{sec:levi-civita}) ship
+\texttt{LeviCivita.lean}: the algebraic uniqueness kernel
+($\texttt{leviCivita\_pointwise\_unique\_of\_koszul}$), the
+substantive 4-conjunct $\texttt{IsLeviCivita}$ predicate using
+Mathlib's $\texttt{extDerivFun}$, the wave-headline
+$\texttt{koszul\_identity\_of\_isLeviCivita}$ derivation closed via
+$\texttt{linear\_combination}$, and the composition uniqueness
+theorem $\texttt{leviCivita\_unique\_of\_isLeviCivita}$ via
+$2$-cancellation under $\mathrm{char}(\mathbb{K}) \neq 2$.
+
+\textbf{Session 4c (deferred).} A Mathlib-PR-track follow-on builds
+$\texttt{TensorialAt.mkHom}_{3}$ (from existing
+$\texttt{mkHom}_{2}$), bundles $\mathtt{bundleRiemannAux}$ into a
+trilinear-at-each-fiber $\texttt{CovariantDerivative.riemann}$ via
+$\texttt{mkHom}_{3}$, ships the bundle-level differential second
+Bianchi as a three-line Jacobi consequence, and specialises on
+$\texttt{EuclideanSpace}\,\mathbb{R}\,(\mathrm{Fin}\,4)$ to deliver
+the coordinate-level differential second Bianchi at top order plus
+the $\nabla^{\mu}G_{\mu\nu} = 0$ discharge for
+$\texttt{EinsteinTensor.lean}$. Session 4c is not blocking the
+SK-EFT physics pipeline (the Session 4b
+$\texttt{IsCovariantDerivativeOn}$-wrapped Bianchi is already
+directly applicable from Bonn's API at consumer sites); it is
+parked as Mathlib-PR-track infrastructure. Following Session 4c the
+Bonn-team outreach email per the project's
+\texttt{phase6f1\_curvature\_architecture\_decision.md} script will
+be sent and the Mathlib pull request submitted. Each session updates the running
 state checklist in the Phase 6f roadmap and ships a session-specific
 project memory; the auto-compact-survival contract is documented in
 the roadmap's Wave 8 ``Session-handoff" subsection.
