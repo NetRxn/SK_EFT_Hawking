@@ -1201,11 +1201,14 @@ def check_counts_fresh() -> CheckResult:
                               warning=True))
         # Run update_counts.py
         try:
+            # Timeout 1800s = 30 min (Phase 7a sub-wave 7a.0.4 bump from 600s).
+            # update_counts.py invokes ExtractDeps.lean which walks ~5000+ decls
+            # and runs collectAxioms on each — exceeds 600s on current project size.
             result = subprocess.run(
                 ["uv", "run", "python",
                  str(SCRIPT_DIR / "update_counts.py")],
                 cwd=str(PROJECT_ROOT),
-                capture_output=True, text=True, timeout=600,
+                capture_output=True, text=True, timeout=1800,
             )
             if result.returncode != 0:
                 details.append(Detail(
@@ -2348,6 +2351,83 @@ def check_bundle_consistency() -> CheckResult:
 
     return CheckResult(
         passed=all(d.passed for d in details),
+        details=details,
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════
+# CHECK 22: bundle source freshness (Phase 7a sub-wave 7a.1.4)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check(
+    "bundle_source_freshness",
+    "Bundle source-paper mtime ≤ bundle last_lift; flag stale bundles",
+)
+def check_bundle_source_freshness() -> CheckResult:
+    """For each bundle (per `papers/<bundle>/bundle_metadata.json`),
+    detect whether any of its source papers (per
+    `docs/PAPER_DRAFT_MAPPING.md`) has been modified since the bundle's
+    last lift. Stale bundles need Stage-13 re-invocation per
+    `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md`.
+
+    Default mode: advisory (every detail.warning=True passes the check).
+    Strict mode (`validate.py --strict`): freshness-stale bundles fail.
+
+    Phase 7a sub-wave 7a.1.4 deliverable. Schema reference:
+    `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
+    """
+    sys.path.insert(0, str(SCRIPT_DIR))
+    try:
+        from check_bundle_source_freshness import check as _run_check
+    except ImportError as exc:
+        return CheckResult(
+            passed=False,
+            error=f"check_bundle_source_freshness module unavailable: {exc}",
+        )
+
+    findings = _run_check()
+    if not findings:
+        return CheckResult(
+            passed=True,
+            details=[Detail(
+                "scope",
+                True,
+                "no bundle directories initialized yet (pre-Phase-7-execution state)",
+            )],
+        )
+
+    details: List[Detail] = []
+    n_warn = 0
+    n_fail = 0
+    for f in findings:
+        bundle = f["bundle"]
+        msg = f["message"]
+        passed = f["passed"]
+        warning = f.get("warning", False)
+        # In strict mode, WARN bundles fail
+        if STRICT_MODE and warning:
+            passed = False
+        details.append(Detail(
+            f"bundle:{bundle}",
+            passed,
+            msg,
+            warning=warning,
+        ))
+        if not passed:
+            n_fail += 1
+        elif warning:
+            n_warn += 1
+
+    summary_msg = (
+        f"{len(findings)} sub-findings: {n_fail} FAIL / {n_warn} WARN / "
+        f"{len(findings) - n_fail - n_warn} PASS"
+    )
+    if STRICT_MODE:
+        summary_msg += " (strict mode: WARN promoted to FAIL)"
+    details.insert(0, Detail("summary", n_fail == 0, summary_msg))
+
+    return CheckResult(
+        passed=(n_fail == 0),
         details=details,
     )
 

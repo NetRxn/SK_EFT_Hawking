@@ -1,0 +1,23 @@
+{
+  "bundle_target": "I1",
+  "tier": 3,
+  "title": "Verification methodology with worked cases",
+  "target_journal": "CPC | Phys. Rep.",
+  "phase7_subphase": "7a",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": true,
+  "freshness_stale": false,
+  "source_manifest_last_regen": "2026-05-01T13:09:42Z",
+  "last_lift": "2026-05-01T13:14:58Z",
+  "last_stage9_review": null,
+  "last_stage10_review": null,
+  "last_stage13_review": null,
+  "blockers_open": 0,
+  "advisories_open": 0,
+  "stage13_review_doc": null,
+  "audit_log_path": "papers/I1/audit_log.jsonl",
+  "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
+  "notes": "Phase 7a sub-wave 7a.2 initial draft 2026-05-01. \u00a71, \u00a72, \u00a76, \u00a77, \u00a714 substantive; \u00a73-\u00a75, \u00a78-\u00a713 stubbed with informative outlines. Reviewer triple deferred until stubs filled."
+}

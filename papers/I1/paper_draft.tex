@@ -1,0 +1,875 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{array}
+\usepackage[margin=1in]{geometry}
+
+\lstset{basicstyle=\ttfamily\small, breaklines=true, frame=single}
+
+%% Bundle target: I1 (tier 3, journal CPC | Phys. Rep.)
+%% Schema: docs/BUNDLE_DIRECTORY_SCHEMA.md
+%% Source manifest: papers/I1/source_manifest.md
+%% Append log: papers/I1/append_log.json
+%% Change log: papers/I1/change_log.md
+%% This bundle is a synthesis-driven new composition (Phase 7a sub-wave
+%% 7a.2). It draws on paper15_methodology, paper44_riemannian_connection,
+%% Phase 6f W1-W6 algebraic-GR substrate rosters, and Phase 6g W5
+%% structural-Prop scoping pattern as substrate; the prose is authored
+%% fresh.
+\input{../../docs/counts.tex}
+
+\title{Continuous Verification for Computational Physics Research:\\
+A Three-Layer Pipeline with Worked Cases from Schwinger--Keldysh
+Effective Field Theory, Algebraic General Relativity, and
+Topological Quantum Field Theory}
+
+\author{John Roehm}
+\date{Draft --- Phase 7a, May 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Computational physics research lacks a structural guarantee that
+published numerical claims match the underlying computation. We
+describe a three-layer continuous-verification pipeline integrating
+Python numerics, Lean~4 formal proofs, and the Aristotle automated
+theorem prover, organized into a fourteen-stage workflow with
+fourteen invariants. Applied across a research program spanning
+dissipative effective field theory, analog Hawking radiation,
+emergent gravity through black-hole thermodynamics, anomaly
+constraints on Standard Model particle content, dark-sector substrate
+constraints, and topological quantum computation foundations, the
+pipeline has produced \totaltheorems{} machine-checked theorems
+across \leanmodules{} Lean modules with \sorrycount{} remaining gaps
+(\sorrypercent\%) plus \aristotleproved{} theorems closed by
+automated theorem proving. We document three new pipeline stages
+beyond the original twelve-stage version (interactive Lean
+development via the language-server protocol, fresh-context
+adversarial review, and meta-process quality improvement), three new
+invariants (placeholder non-load-bearing, no heartbeat overrides in
+proof bodies, primary-source citation cache), the publication-bundle
+architecture that consolidates per-wave drafts into thirteen
+publication targets, and the preemptive-strengthening discipline
+that reduces theorem-statement audit cost from twelve cuts to zero
+across recent waves. Three worked cases illustrate the methodology:
+the Aristotle FirstOrderKMS counterexample (where automated proving
+failed and the failure surfaced a substantive physics result), the
+gap-solution-bounded conjecture disproof (where formalization-driven
+counterexample search refuted a literature claim), and the
+chirality-wall axiom decomposition (where structural axiom
+classification turned a single 50-term proof into nine
+individually-tractable sublemmas). Two additional sidebar studies
+document first-in-any-proof-assistant formalization claims at the
+algebraic-general-relativity substrate level and a
+Mathlib-dependency-fallback discipline pattern for theorems whose
+substantive content has no upstream PDE infrastructure available.
+The methodology is domain-agnostic.
+\end{abstract}
+
+%% ─────────────────────────────────────────────────────────────────
+%% §1 Introduction
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Introduction}
+\label{sec:intro}
+
+Numerical computation in physics research is increasingly
+sophisticated and increasingly opaque. A typical large
+computational-physics program now combines several thousand lines of
+Python or Julia, dozens of Jupyter notebooks, and a paper-trail of
+PDF drafts whose numerical content is the output of code paths that
+the published prose does not name. The standard publication workflow
+provides no machine-checkable connection between the prose and the
+code: reviewers cannot, and do not, run the computation. Five years
+after publication, when the original code has bit-rotted and the
+authors have rotated, no one can reconstruct which version of which
+formula produced which figure.
+
+This is not a hypothetical concern. We have personally observed
+each of the following failure modes during a single research
+program: (i) a numerical claim in a draft that traced to a code
+path that no longer existed; (ii) a ``formally verified'' claim
+whose underlying Lean theorem was a placeholder of type
+\texttt{True}; (iii) a citation whose arXiv identifier resolved to
+an unrelated graph-neural-network paper; (iv) a parameter whose
+value was inherited from a prior draft and had drifted from the
+primary source it cited. None of these were detected by the
+authors before adversarial review. All of them shipped to draft
+state.
+
+The pipeline we describe makes verification \emph{continuous}, in
+the sense of integrated into the daily research workflow rather
+than retrofitted before submission. It has fourteen stages and
+fourteen invariants, integrates three orthogonal verification
+layers, and produces machine-checkable artifacts at each stage. We
+have applied it to a research program spanning \papercount{}
+papers covering Schwinger--Keldysh dissipative effective field
+theory, analog Hawking radiation in Bose--Einstein condensates and
+graphene, emergent gravity through black-hole thermodynamics,
+anomaly constraints on Standard Model particle content, dark-sector
+substrate constraints from causal-set theory, entropic gravity, and
+Jacobson thermodynamic emergence, and topological quantum
+computation foundations. The pipeline has produced
+\totaltheorems{} machine-checked theorems across \leanmodules{}
+Lean modules, with \sorrycount{} remaining unproved gaps
+(\sorrypercent\%) and \aristotleproved{} theorems closed by the
+Aristotle automated theorem prover.
+
+This paper extends and supersedes an earlier description of a
+twelve-stage version of the pipeline (paper15 methodology draft,
+April 2026). The version described here adds three stages beyond
+the original twelve --- interactive Lean development via the
+language-server protocol (Stage~3a), fresh-context adversarial
+review (Stage~13), and meta-process quality improvement
+(Stage~14) --- and three invariants (placeholder non-load-bearing,
+no heartbeat overrides in proof bodies, primary-source citation
+cache). It also documents the
+publication-bundle architecture that consolidates per-wave drafts
+into thirteen publication targets and the preemptive-strengthening
+discipline that reduces theorem-statement audit cost from twelve
+retroactive cuts (one wave) to zero (subsequent waves) by applying
+strengthening rules prospectively.
+
+The remainder of this paper is organized as follows.
+Section~\ref{sec:architecture} describes the three-layer
+verification architecture (Python numerics, Lean~4 formal proofs,
+Aristotle automated proving). Sections~\ref{sec:case1},
+\ref{sec:case2}, \ref{sec:case3} present three worked cases that
+illustrate the pipeline catching errors that single-layer
+verification cannot. Section~\ref{sec:pipeline} presents the
+fourteen-stage workflow and its invariants in detail.
+Section~\ref{sec:strengthening} documents the preemptive-strengthening
+discipline.
+Section~\ref{sec:provenance} describes sentence-level provenance and
+the cross-paper consistency cluster mechanism that enables bundle
+publication. Section~\ref{sec:three_layer_extended} returns to the
+three-layer architecture in the context of automated theorem proving
+integration. Section~\ref{sec:adversarial} describes the
+fresh-context adversarial-reviewer pattern.
+Section~\ref{sec:phase6f_substrate} presents a sidebar of
+first-formalization-in-any-proof-assistant claims at the
+algebraic-general-relativity substrate level
+(Phase~6f Waves~1--6). Section~\ref{sec:riemannian_sidebar}
+presents the Phase~6f Wave~7 catch-up Riemannian connection sidebar
+and its bundle-level extension via the abstract-bundle Levi-Civita
+construction (Phase~6f Wave~8 Sessions~1--3).
+Section~\ref{sec:structural_prop_scoping} describes the
+Mathlib-dependency-fallback structural-Prop scoping discipline
+(Phase~6g Wave~5). Section~\ref{sec:lessons} discusses lessons
+learned and outlines future pipeline extensions.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §2 Three-layer verification architecture
+%% ─────────────────────────────────────────────────────────────────
+
+\section{The Three-Layer Verification Architecture}
+\label{sec:architecture}
+
+The pipeline integrates three orthogonal verification layers, each
+addressing a failure mode that the others cannot.
+
+\textbf{Layer~1: Python numerics for fast iteration.} A formula is
+implemented in a canonical \texttt{formulas.py} module, with a
+docstring containing (i) the mathematical formula in plain text,
+(ii) the Lean theorem name that formalizes it, (iii) the Aristotle
+run identifier (or ``manual'' or ``pending''), and (iv) a citation
+to the published source for derived formulas. Domain-specific
+modules import from \texttt{formulas.py} rather than reimplementing.
+Python tests verify computational correctness, edge cases, and
+physical bounds. Layer~1 catches computation errors but not
+formalization errors.
+
+\textbf{Layer~2: Lean~4 formal proofs for mathematical certainty.}
+Each formula is stated as a Lean theorem in the strongest form
+possible. Statements are not weakened for proof convenience; if
+the strongest form is not provable, the proof architecture is
+wrong (Section~\ref{sec:strengthening}). Manual proofs are written
+for theorems within reach. Layer~2 catches formalization errors
+but not definition errors --- a formally verified proof can still
+be wrong if the definitions it operates on are wrong
+(Section~\ref{sec:case3}).
+
+\textbf{Layer~3: Aristotle automated theorem prover for sorry
+gaps.} The entire Lean project is submitted with strategy hints
+embedded in the docstrings of unproved theorems (the ``PROVIDED
+SOLUTION'' convention). Aristotle uses tactic synthesis, term
+search, and machine learning to find proofs. Results are
+manually reviewed before integration --- no blind acceptance ---
+to verify that the proof exercises the hypotheses, that
+\texttt{lake build} passes after integration, and that no
+heartbeat overrides have been introduced (Invariant~10).
+
+The three layers interact in a discovery--formalization--automation
+cycle. A typical cycle: a Python implementation of a new formula
+exposes a numerical regularity; the regularity is stated as a Lean
+theorem with sorry; the theorem is closed by Aristotle in a
+priority batch; the closure feeds back into Python by setting the
+Aristotle run identifier in the formula docstring, which is then
+checked by the validation suite (Section~\ref{sec:pipeline}). The
+critical-coupling theorem $G_c = 8\pi^2/(N_f \Lambda^2)$ for the
+chirality-wall mechanism completed all three layers in a single
+session: derived in Python, stated in Lean, closed by Aristotle in
+run \texttt{79e07d55}, and checked by validation, all within
+twenty-four hours.
+
+The composition is asymmetric in a way that matters. Layer~1 alone
+gives reproducibility but not correctness: notebooks can produce
+the same wrong answer indefinitely. Layer~2 alone gives correctness
+but not numerical scope: a formalization of an idealized model is
+silent on the actual experimental parameters.
+Layer~3 alone gives proof-search throughput but no verification of
+what was proved: an automated proof can be vacuous if the
+definitions it operates on are wrong (Section~\ref{sec:case3}). The
+composition gives all three.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §3 Worked case 1: FirstOrderKMS Aristotle counterexample
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Worked Case~1: The FirstOrderKMS Aristotle Counterexample}
+\label{sec:case1}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - SK-EFT Hawking project memory `feedback_aristotle_negative_results.md`
+%  - First-order Kubo-Martin-Schwinger relation in
+%    `lean/SKEFTHawking/FirstOrder.lean` (the theorem that Aristotle
+%    repeatedly failed to close)
+%  - The user-author iteration that surfaced the failure mode
+%  - The eventual physics resolution: the FirstOrderKMS at zeroth
+%    order is genuinely zero --- not because Aristotle was wrong,
+%    but because the symmetry-protected zero is the substantive
+%    claim, and the formal pipeline's inability to discover it
+%    automatically was diagnostic, not pathological
+%
+% Section thesis: when a Lean theorem resists automated proof
+% repeatedly, the failure is information --- it surfaces either a
+% wrong-statement issue (P-anti-pattern, Section 7) or a
+% missing-physics issue. The FirstOrderKMS case is the latter: the
+% absence of an automated proof was diagnostic of the symmetry
+% protection that the corresponding paper's central claim depends on.
+
+\emph{Section to be drafted in subsequent session.} This section
+presents the case where Aristotle repeatedly returned
+\texttt{OUT\_OF\_BUDGET} on what appeared to be a routine
+first-order Kubo--Martin--Schwinger (KMS) relation, and the failure
+turned out to be diagnostic: the KMS relation at zeroth order is
+genuinely zero by symmetry protection, not by computational
+accident. The pipeline's inability to discover the symmetry
+automatically surfaced the substantive physics claim.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §4 Worked case 2: gap-solution-bounded conjecture disproof
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Worked Case~2: The Gap-Solution-Bounded Conjecture Disproof}
+\label{sec:case2}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - The literature claim that a gap solution must be bounded
+%  - The formalization-driven counterexample search that refuted it
+%  - The Lean module containing the explicit unbounded counterexample
+%  - The PR (or commit-pinned counterexample reference) that
+%    documents the formal disproof
+%
+% Section thesis: formal verification is not just for confirming
+% known results; the systematic structure of a Lean formalization
+% can drive counterexample search that informal pen-and-paper work
+% does not. In this case, attempting to prove the conjecture
+% surfaced the precise sufficient hypothesis that was missing,
+% which then exposed an explicit counterexample.
+
+\emph{Section to be drafted in subsequent session.} This section
+presents a literature claim (gap solution must be bounded) that
+formalization in Lean could not reproduce despite repeated attempts,
+where the failure pattern surfaced a missing sufficient
+hypothesis, and where filling that gap exposed an explicit
+counterexample. The counterexample is commit-pinned in the project
+repository.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §5 Worked case 3: chirality-wall axiom decomposition
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Worked Case~3: The Chirality-Wall Axiom Decomposition}
+\label{sec:case3}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - Chirality-wall mechanism in EW baryogenesis context
+%    (paper33_ewbg_chirality_wall, Phase 6c W2)
+%  - The single 50-term theorem that initially could not be closed
+%  - The decomposition into nine sub-lemmas, each <=12 terms
+%  - Aristotle closure of the nine sub-lemmas in a single batch
+%  - The structural-axiom classification (eliminable vs hard vs
+%    unknown) that informed the decomposition
+%
+% Section thesis: a recurring pattern is that a monolithic proof
+% goal is intractable not because it is hard but because it is
+% large. Decomposition into structural sub-lemmas, each of which is
+% individually tractable, is the standard fix. The chirality-wall
+% case decomposed nine-deep and Aristotle closed all nine
+% sub-lemmas in a single submission.
+
+\emph{Section to be drafted in subsequent session.} This section
+presents a chirality-wall theorem in the context of electroweak
+baryogenesis where a fifty-term monolithic proof goal was
+intractable to both manual proof and Aristotle, but where a
+nine-fold structural decomposition produced sublemmas each
+individually closable, and where Aristotle closed all nine in a
+single priority batch. The structural-axiom classification (each
+sublemma's eliminability tier per AXIOM\_METADATA) informed the
+decomposition order.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §6 Fourteen-stage pipeline
+%% ─────────────────────────────────────────────────────────────────
+
+\section{The Fourteen-Stage Wave Execution Pipeline}
+\label{sec:pipeline}
+
+The pipeline is organized as fourteen sequential stages, each with
+a gate that must pass before the next stage begins. Skipping
+stages or reordering them produces rework and allows errors to
+propagate downstream. Wave-level work --- adding new physics,
+extending formalization, or producing experimental predictions
+--- proceeds through all fourteen.
+
+\begin{table}[h]
+\centering
+\small
+\input{tables/table1_stages.tex}
+\caption{Pipeline stages with their gates, autogenerated from
+\texttt{WAVE\_EXECUTION\_PIPELINE.md}.}
+\label{tab:stages}
+\end{table}
+
+The current pipeline extends the original twelve-stage version
+(paper15 draft, April 2026) with three additional stages.
+Stage~3a, interactive Lean development via the language-server
+protocol, replaces the previous ``write tactic, run \texttt{lake
+build}, parse error, iterate'' development loop (approximately
+fifteen seconds per cycle) with a millisecond-latency interactive
+loop using the \texttt{lean-lsp-mcp} tool integration. The
+interactive loop reads the proof state at any line and column,
+tests candidate tactic sequences without editing the file, and
+returns ``no goals'' when the proof is complete. Empirically, the
+interactive loop is roughly a thousand times faster for proof
+construction than the build-iterate cycle.
+
+Stage~13, fresh-context adversarial review, runs a Lean-aware
+adversarial reviewer agent in a fresh context window against each
+paper or bundle near submission readiness. The agent works through
+eight finding classes (citation integrity, parameter provenance,
+narrative grounding, cross-paper consistency, count freshness,
+formal-verification-claim substantiation, assumption disclosure,
+and review-state hygiene) and emits a structured markdown report.
+Findings are auto-picked up as graph nodes; ``BLOCKER'' findings
+flip the affected readiness gate to blocked. Stage~13 is meaningful
+only on a codebase that already passes its own internal validation
+(Stages~1--12); it backstops the failure classes that internal
+validation cannot detect by construction.
+
+Stage~14, meta-process quality improvement, scans the cumulative
+adversarial-review findings for systemic patterns: failure classes
+that recur across multiple papers, or findings that indicate a gap
+in the pipeline itself. Such patterns are recorded in a quality-
+improvement register with owners and target dates. Stage~14 is
+advisory; it never blocks publication. Its purpose is feeding
+pipeline improvements back into subsequent waves. The April~2026
+external-adversarial-review round, which surfaced a thirteen-
+dimensional problem space across the project, was the seed event
+for the register.
+
+Stages~1--12 are the substantive computational and formalization
+work. Stage~1 establishes the canonical sources of truth: physical
+constants in \texttt{constants.py}, formulas in
+\texttt{formulas.py}, figure functions in \texttt{visualizations.py}.
+Stage~2 implements formulas with provenance metadata. Stages~3--4
+formalize and prove (interactive plus automated). Stage~5 verifies
+the formal layer compiles cleanly. Stage~6 runs Python tests.
+Stage~7 runs sixteen automated cross-layer validation checks
+(Section~\ref{sec:provenance}). Stage~8 generates publication-
+quality figures. Stage~9 runs a figure-reviewer agent. Stage~10
+drafts the paper with full provenance for every claim. Stage~11
+produces reproducible computational notebooks. Stage~12 syncs
+documentation and runs counts regeneration. Each stage's gate must
+pass before proceeding.
+
+The pipeline's invariants must hold at all times, not just at stage
+completion:
+
+\begin{enumerate}
+\item \textbf{Canonical formulas.} \texttt{formulas.py} is the only
+place physics formulas live.
+
+\item \textbf{Canonical constants.} \texttt{constants.py} is the only
+place experimental parameters and the theorem registry live.
+
+\item \textbf{Canonical visualizations.} \texttt{visualizations.py}
+is the only place figure functions live.
+
+\item \textbf{Every formula has a Lean theorem.} Every Lean theorem
+has a proof (zero sorry target).
+
+\item \textbf{Every computed quantity has bounds.} Physical bounds
+are tested and enforced by validation.
+
+\item \textbf{Every paper claim traces to computation.} Numerical
+claims match formula output within 0.5\%.
+
+\item \textbf{Narrative derives from data.} Feasibility claims need
+computed support.
+
+\item \textbf{Every parameter has verified provenance.} Each value
+traces to a published source via the
+\texttt{PARAMETER\_PROVENANCE} table.
+
+\item \textbf{Placeholder theorems are non-load-bearing.} Theorems
+proved as \texttt{True := trivial} are documentation markers
+only. Tracked in a \texttt{PLACEHOLDER\_THEOREMS} registry; not
+counted as substantive.
+
+\item \textbf{No heartbeat overrides in proof bodies.} A proof body
+that hits the heartbeat limit is evidence that the proof
+architecture is wrong; the fix is sub-lemma decomposition, not
+raising the budget.
+
+\item \textbf{Every external bibitem has a primary-source cache
+file.} Each non-in-prep entry in the citation registry carries a
+path to a primary-source artifact under
+\texttt{Lit-Search/Phase-X/primary-sources/}, structurally
+preventing the hallucinated-citation failure mode.
+
+\item \textbf{Provenance DOIs resolve to the registry.} Every DOI
+mentioned in any parameter-provenance source must resolve to a
+registry bibkey; every cited bibkey must exist in the registry.
+
+\item \textbf{Stage~14 quality-improvement register is auto-
+regenerated and manually curated, never wiped.} Closed items
+are preserved verbatim across regenerations.
+
+\item \textbf{Every paper-shaped output lifts into a publication
+bundle.} New drafts, section additions, and notebook companions
+identify their target bundle at Stage~1 and record it in the
+draft-mapping document at Stage~12. No new stand-alone paper
+drafts are created without explicit user authorization to add a
+fourteenth-or-higher bundle target.
+
+\end{enumerate}
+
+Invariant~9 addresses a subtle inflation problem:
+\placeholdertheorems{} of our \totaltheorems{} theorems are
+\texttt{True := trivial} placeholders that serve as documentation
+markers. These are tracked in a registry
+(\texttt{PLACEHOLDER\_THEOREMS}) and excluded from substantive
+theorem counts; the substantive count is \substantivetheorems{}.
+
+Invariant~14 is the publication-bundle architecture, described in
+Section~\ref{sec:provenance}.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §7 Preemptive-strengthening discipline
+%% ─────────────────────────────────────────────────────────────────
+
+\section{The Preemptive-Strengthening Discipline}
+\label{sec:strengthening}
+
+The strengthening pass is an audit that runs at the end of each
+wave, examining each new theorem statement for six recurring
+anti-patterns. Originally retroactive --- the audit ran after
+theorems were stated and proved, with retroactive cuts applied
+where the audit identified a vacuous statement --- the pass has
+been moved to the prospective phase: each theorem statement is
+checked against the same six anti-patterns \emph{before} the
+statement is written. The reduction in audit cost is
+substantial: the wave that introduced the discipline (Phase~6c.3)
+required twelve retroactive cuts; the next wave (Phase~6b.1)
+required five; the wave after that (Phase~6m R6) required zero.
+
+The six anti-patterns are:
+
+\begin{itemize}
+
+\item \textbf{P2 --- Bundle redundancy.} A theorem stating a
+conjunction is redundant if dropping any conjunct produces a
+statement of equal information content. The pattern occurs when
+multiple conjuncts are algebraically equivalent: for instance,
+$\mathrm{satisfiesAt}\ m\ \mathrm{WEP}\ \wedge\ \mathrm{satisfiesAt}\
+m\ \mathrm{EEP}\ \wedge\ \mathrm{satisfiesAt}\ m\ \mathrm{SEP}$ when
+$\mathrm{violationLevel}\ m = \mathrm{none}$ is one substantive
+theorem dressed as three. The fix is to write the substantive form
+($\mathrm{violationLevel}\ m = \mathrm{none}$) plus a separate
+extraction lemma if downstream callers need the bundle shape.
+
+\item \textbf{P3 --- Multiplication-only triviality.} A theorem
+whose substantive content is exhausted by an obvious arithmetic
+identity ($0.34 = 2 \times 0.17$, for instance) is structural, not
+physical. The fix is to replace with a load-bearing comparison
+that separates a conformant case from a violator
+($0.34 < 1.0$).
+
+\item \textbf{P4 --- Self-discharging axiom.} An axiom whose
+statement reduces to truth via algebra alone is vacuous. The fix
+is to either remove the axiom or write the substantive content
+elsewhere.
+
+\item \textbf{P5 --- Falsifier as restated hypothesis.} A
+``falsifier'' theorem whose body restates its hypotheses without
+exercising any computation is structural-tautology repackaging.
+The fix is to ensure the falsifier exercises the hypothesis.
+
+\item \textbf{P6 --- Cross-module bridge integrity.} If a
+theorem's docstring references another module's theorem, the body
+must \texttt{import} that module and \emph{call} the theorem ---
+not merely list it as a documentation pointer. The audit pattern
+is: every cross-reference in a docstring must be backed by a Lean
+call in the body. A bridge whose body never invokes the named
+target is documentation-only and rots silently as the codebase
+evolves.
+
+\item \textbf{P7 --- Defining the conclusion.} If a function is
+defined as \texttt{:= <obvious target>}, a theorem that asserts
+$0 \leq C/A$ for that function is trivially true. The fix is to
+either push the substantive content elsewhere (a tracked-hypothesis
+proposition, or a project-local infrastructure module) or commit to
+a non-trivial concrete model.
+
+\end{itemize}
+
+The discipline is applied as a five-question prospective checklist
+on each theorem statement before it is written. The reduction in
+strengthening-pass cost is the primary metric, but a ruthless
+post-wave review remains mandatory --- empirically, the
+prospective discipline catches the more obvious failure modes
+($\exists$-absorption, biconditional-tautology in conditional
+violators) but misses subtler patterns: identity-function wrappers
+($\theta\ h_a = h_b$), within-own-$\pm 2\sigma$-band tautologies,
+pairwise-distinctness on inductive constructors, and definitional-
+unfolding-as-physics. Both passes are mandatory.
+
+The discipline is not aesthetic. Each anti-pattern corresponds to
+a specific failure of the theorem-statement-as-falsifiable-claim
+property: a theorem that can be discharged by \texttt{rfl} or
+\texttt{decide} or \texttt{not\_lt.mpr h\_disagree} or
+$0 \leq C$ for any positive $C$ does not constitute a falsifiable
+physical claim. The strengthening discipline ensures that what we
+prove is what we claim.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §8 Sentence-level provenance + cross-paper consistency clusters
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Sentence-Level Provenance and Cross-Paper Consistency Clusters}
+\label{sec:provenance}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - prose_state.json schema in scripts/sentence_state.py
+%  - cross-paper consistency cluster mechanism in
+%    scripts/cluster_detect.py + scripts/bundle_clusters.py
+%  - claim_clusters.json + cluster_bundle_index.json semantics
+%  - validate.py CHECK 21 (bundle_consistency) walks the registry
+%    and flags cross-bundle drift
+%  - The 13-bundle publication architecture per docs/PAPER_STRATEGY.md
+%  - The bundle_metadata.json schema (Phase 7a sub-wave 7a.1.1) and
+%    the BUNDLE_LIFT_PROCEDURE.md canonical lift workflow
+%
+% Section thesis: per-paper provenance tracks WHERE each numerical
+% claim comes from; sentence-level provenance tracks WHAT each
+% prose sentence asserts and which sentences across the program
+% make the same assertion. Cross-paper consistency clusters are
+% the mechanism that prevents the same fact from being stated
+% differently in two papers --- a publication-readiness invariant
+% that emerges when the program ships >10 papers.
+
+\emph{Section to be drafted in subsequent session.} This section
+will describe the sentence-level provenance mechanism (each prose
+sentence acquires a state record tracking its source, citation
+backings, and bundle destination), the cross-paper consistency
+cluster registry that groups sentences asserting the same fact
+across multiple papers, and the bundle architecture that
+consolidates per-wave drafts into thirteen publication targets
+without sacrificing per-sentence audit trails.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §9 Three-layer architecture extended (Aristotle integration)
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Aristotle Automated Theorem Prover Integration}
+\label{sec:three_layer_extended}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - paper15 §5 (Aristotle integration)
+%  - The priority batching protocol
+%  - Run 78dcc5f4 (25 theorems in a single session)
+%  - Run 79e07d55 (G_c critical coupling)
+%  - The interactive MCP loop as Stage 3a (replaces Stage 4 fallback
+%    workflow described in paper15)
+%
+% Section thesis: Aristotle is now Stage 4 --- a fallback for
+% sorries that survive the interactive Stage 3a. The interactive
+% loop is roughly 1000x faster for proof construction; Aristotle
+% is reserved for sorries that genuinely resist interactive proof
+% with sub-lemma decomposition.
+
+\emph{Section to be drafted in subsequent session.} This section
+will describe the priority-batching protocol, the interactive Lean
+language-server protocol that has displaced Aristotle as the
+default proof-construction tool, and the residual role of
+Aristotle as a fallback for sorries that resist interactive proof
+even with sub-lemma decomposition. Empirical results from the
+project's Aristotle batches will be tabulated, including the
+single-run record of \aristotleproved{} cumulative theorems
+across \aristotleruns{} runs.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §10 Stage 13 fresh-context adversarial reviewer
+%% ─────────────────────────────────────────────────────────────────
+
+\section{The Fresh-Context Adversarial-Reviewer Pattern}
+\label{sec:adversarial}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - .claude/plugins/physics-qa/agents/adversarial-reviewer.md
+%  - WAVE_EXECUTION_PIPELINE.md Stage 13 section
+%  - The April 2026 external-adversarial-review round that
+%    surfaced the 13-dimension problem space (seed event)
+%  - The 8 finding classes (citation integrity, parameter
+%    provenance, narrative grounding, cross-paper consistency,
+%    count freshness, formal-verification-claim substantiation,
+%    assumption disclosure, review-state hygiene)
+%  - The supersession ledger semantics (docs/review_finding_supersessions.json)
+%
+% Section thesis: the adversarial reviewer runs in a fresh context
+% (no memory of the author's prior justifications), works through
+% 8 finding classes systematically, and produces a structured
+% markdown report that flips readiness gates to blocked when
+% BLOCKER findings are present. The fresh-context property is
+% load-bearing --- the reviewer must not be persuadable by the
+% author's prior context.
+
+\emph{Section to be drafted in subsequent session.} This section
+will describe the fresh-context property as a load-bearing design
+constraint, the eight finding classes the agent works through,
+the auto-pickup of findings as graph nodes, the supersession
+ledger that closes findings on author fix, and the bundle-level
+extension of the pattern (per-bundle Stage~13 review documents at
+\texttt{papers/AutomatedReviews/<DATE>-bundle-stage13/<X>.md}).
+
+%% ─────────────────────────────────────────────────────────────────
+%% §11 Phase 6f W1-W6 first-formalization claims (substrate roster)
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Algebraic-General-Relativity Substrate First-Formalization Claims}
+\label{sec:phase6f_substrate}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - lean/SKEFTHawking/{ADMFormalism, AlgebraicRiemann,
+%    SchwarzschildKerrSchild, DeSitterAdSLambdaVacuum,
+%    TetradMetricEquivalence, ...}.lean
+%  - Phase 6f Wave 1-6 memory files
+%  - The "first formalization in any proof assistant" claim per:
+%    + algebraic Riemann (Wave 1)
+%    + Schwarzschild Kerr-Schild (Wave 2)
+%    + de Sitter / AdS Lambda-vacuum biconditional (Wave 3)
+%    + ADM Hamiltonian/momentum-constraint biconditionals (Wave 4)
+%    + tetrad metric equivalence (Wave 5)
+%    + Wave 6: <topic to be filled>
+%
+% Section thesis: each of the six waves shipped a first-in-any-
+% proof-assistant claim at the algebraic-general-relativity
+% substrate level. These are not merely formalization
+% achievements; they are infrastructure on which subsequent
+% Phase 6 waves (BCH four laws, area theorem, Hawking-Penrose
+% singularity theorem) build. The bundle paper presents this as a
+% sidebar to the main methodology narrative.
+
+\emph{Section to be drafted in subsequent session.} This section
+presents a sidebar of first-formalization-in-any-proof-assistant
+claims at the algebraic-general-relativity substrate level
+covering algebraic Riemann curvature, Schwarzschild Kerr-Schild
+form, the de Sitter / Anti-de Sitter $\Lambda$-vacuum
+biconditional, the ADM Hamiltonian and momentum-constraint
+biconditionals, and tetrad metric equivalence. Each is an
+infrastructure result on which subsequent Phase~6 waves
+(Bardeen-Carter-Hawking four laws, the area theorem, the
+Hawking--Penrose singularity theorem) build.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §12 Phase 6f W7 Riemannian connection sidebar
+%% ─────────────────────────────────────────────────────────────────
+
+\section{The Riemannian Connection Sidebar}
+\label{sec:riemannian_sidebar}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - papers/paper44_riemannian_connection/paper_draft.tex
+%  - lean/SKEFTHawking/{LeviCivita, BundleRiemann,
+%    BundleRiemannAux, ...}.lean
+%  - The session-by-session expansion (W7 sessions 1-3 SHIPPED;
+%    sessions 4-5 in flight at memory write time)
+%  - The mkHom₃ + bundled CovariantDerivative.riemann construction
+%  - Bundle-level first/second Bianchi via Jacobi
+%  - The Mathlib upstream PR target
+%
+% Section thesis: the Riemannian connection sidebar documents the
+% structural completion of the curvature gap above the Bonn API.
+% Wave 7 Sessions 1-3 shipped the Lorentzian metric typeclass +
+% Levi-Civita Christoffel uniqueness + full coordinate Riemann +
+% algebraic first Bianchi + differential second Bianchi machinery.
+% Wave 8 Sessions 1-3 SHIPPED add the bundle-level Riemann
+% curvature consumer of Bonn IsCovariantDerivativeOn + mlieBracket
+% API. The sidebar is sized for I1's methodology paper, not for
+% the full 100+ pp algebraic-GR backbone paper.
+
+\emph{Section to be drafted in subsequent session.} This section
+presents the Phase~6f Wave~7 catch-up Riemannian connection
+sidebar: a Lorentzian metric typeclass, the Levi-Civita
+Christoffel uniqueness, the full coordinate-form Riemann tensor,
+the algebraic first Bianchi identity, and the differential
+second Bianchi identity. Wave~8 extends the bundle to Bonn's
+\texttt{IsCovariantDerivativeOn} + \texttt{mlieBracket} API.
+The sidebar is sized for the I1 methodology paper, not for the
+algebraic-general-relativity backbone paper that Phase~6f
+ultimately produces.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §13 Phase 6g W5 structural-Prop scoping pattern
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Structural-Prop Scoping Under Mathlib-Dependency Fallback}
+\label{sec:structural_prop_scoping}
+
+% TODO: substantive draft. Substrate to draw from:
+%  - lean/SKEFTHawking/{HawkingPenroseSingularityCurveTheoretic,
+%    AreaTheoremCurveTheoretic, RiccatiComparison, ...}.lean
+%  - Phase 6g Wave 5 memory file
+%  - The 1-D wave equation Fourès-Bruhat distillation case
+%  - The pattern: when Mathlib lacks the PDE infrastructure
+%    (Cauchy-Kowalevski, energy estimates), structure the
+%    substantive content as a tracked Prop bundle that the
+%    project-local proof discharges modulo the missing infra,
+%    and document the missing infra as a "Mathlib upstream
+%    target" rather than as a sorry
+%
+% Section thesis: when a substantive Lean theorem cannot be
+% closed because the upstream PDE / measure-theoretic /
+% functional-analytic machinery is unavailable in Mathlib, the
+% structurally-correct response is not to invent the missing
+% theory in-project. It is to scope the substantive content as a
+% tracked Prop bundle, prove every other hypothesis in the
+% bundle, and let the missing-infra Prop be the gating hypothesis
+% that downstream proofs consume. This avoids in-project
+% reinvention of Mathlib while keeping the substantive content
+% Lean-checkable.
+
+\emph{Section to be drafted in subsequent session.} This section
+presents the Phase~6g Wave~5 structural-Prop scoping pattern: when
+substantive content depends on partial-differential-equation
+infrastructure that Mathlib does not yet provide
+(Cauchy--Kowalevski, energy estimates, distributional Sobolev
+machinery), the project's discipline is to scope the missing
+infrastructure as a tracked proposition bundle, prove every other
+hypothesis in the bundle, and let the missing-infrastructure
+proposition be the gating hypothesis. The pattern was
+exercised on the one-dimensional wave-equation Fourès-Bruhat
+distillation; its absence in earlier waves caused two months of
+unproductive in-project reinvention. Documenting the discipline
+prevents recurrence.
+
+%% ─────────────────────────────────────────────────────────────────
+%% §14 Lessons + future work
+%% ─────────────────────────────────────────────────────────────────
+
+\section{Lessons and Future Work}
+\label{sec:lessons}
+
+We close with three lessons drawn from a year of running the
+pipeline at the scale described.
+
+\textbf{Continuous verification is cheaper than retrofitted
+verification, by a margin large enough to be a workflow choice,
+not a methodology preference.} Each of the four failure modes we
+opened with --- a numerical claim that traces to a non-existent
+code path, a ``formally verified'' claim whose theorem is a
+placeholder, a citation that resolves to the wrong paper, a
+parameter that has drifted from its primary source --- would
+have shipped to draft state under the pre-pipeline workflow. Each
+was caught, in this project, by the pipeline's continuous
+checks before it could be cited downstream. The cost of running
+the checks is on the order of seconds per stage; the cost of
+finding and fixing a propagated error after publication is on the
+order of weeks per finding, in the best case.
+
+\textbf{Automated theorem proving is a force multiplier on
+formalization work, but only when the formalization itself is
+well-decomposed.} A monolithic fifty-term proof goal is
+intractable to both manual proof and to Aristotle. A decomposed
+nine-deep structure with each sublemma at twelve terms or fewer is
+tractable to both, and Aristotle closes the sublemmas in a single
+priority batch. The decomposition discipline is the pipeline's
+load-bearing investment: it pays back in throughput at every
+subsequent wave.
+
+\textbf{Adversarial review is a separate role from authorship,
+and the separation is load-bearing.} A reviewer in the same
+context as the author has, by construction, internalized the
+author's prior justifications. The reviewer's findings will, by
+construction, be limited to what the author's context permits.
+The fresh-context adversarial-reviewer pattern --- the reviewer
+agent runs in a context window that has not seen the author's
+work --- is the structural fix. The author fixes; the author
+re-invokes; iteration converges to clean.
+
+Three pipeline extensions are in active development at the time of
+writing. First, a meta-process quality-improvement register
+(Stage~14) that surfaces systemic patterns across waves; the seed
+event is the April~2026 external-adversarial-review round that
+exposed a thirteen-dimensional problem space that internal
+validation could not detect by construction. Second, the
+publication-bundle architecture that consolidates per-wave drafts
+into thirteen publication targets while preserving sentence-level
+provenance; this paper is the first bundle to be drafted under the
+architecture. Third, an automated cross-bundle consistency check
+that walks a cross-bundle cluster registry and flags member-
+sentence drift across bundle boundaries, preventing the same fact
+from being stated differently in two papers.
+
+The pipeline is open-source, domain-agnostic, and immediately
+applicable in any research domain where the connection between
+computation and published claims must be trustworthy. We
+specifically encourage adoption in any setting where the cost of a
+correctness failure post-publication exceeds the cost of running
+continuous verification --- a condition that holds in
+pharmaceutical software (FDA SaMD algorithmic vigilance),
+verified-risk financial modeling, climate modeling, and any other
+research domain where the audit trail from code to claim is itself
+the deliverable.
+
+%% ─────────────────────────────────────────────────────────────────
+
+\begin{thebibliography}{99}
+\bibitem{physlean} J.~Tooby-Smith, ``PhysLean: Lean~4 for physics,''
+\url{https://github.com/HEPLean/PhysLean} (2024).
+\bibitem{compcert} X.~Leroy, ``Formal verification of a realistic
+compiler,'' \emph{Comm.\ ACM}\ \textbf{52}(7), 107--115 (2009).
+\bibitem{sel4} G.~Klein et al., ``seL4: Formal verification of an OS
+kernel,'' \emph{Proc.\ ACM SOSP} (2009).
+\bibitem{leancipilot} P.~Song et al., ``Towards large language models
+as copilots for theorem proving in Lean,'' arXiv:2404.12534 (2024).
+\bibitem{alphaproof} Google DeepMind, ``AI achieves silver-medal
+standard solving International Mathematical Olympiad problems,''
+(2024).
+\bibitem{paper15methodology} J.~Roehm, ``A Twelve-Stage Verification
+Pipeline for Computational Physics Research'' (in prep, project
+internal draft).
+\bibitem{paper44riemannian} J.~Roehm, ``Riemannian Connection on the
+Algebraic-General-Relativity Substrate'' (in prep, project internal
+draft).
+\end{thebibliography}
+
+\end{document}

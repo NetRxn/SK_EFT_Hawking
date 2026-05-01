@@ -46,9 +46,13 @@ def regenerate_lean_deps():
     """
     print("Regenerating lean_deps.json from Lean environment...")
     tmp_path = Path("/tmp/lean_deps_new.json")
+    # Timeout: 1800s = 30 min. ExtractDeps walks every declaration in the
+    # SKEFTHawking namespace (~5000+ decls post-Phase-6m) and runs
+    # `collectAxioms` on each — runtime scales with project size.
+    # Phase 7a sub-wave 7a.0.4 bump from 600s after observed timeout.
     result = subprocess.run(
         ["lake", "env", "lean", "--run", "SKEFTHawking/ExtractDeps.lean"],
-        capture_output=True, text=True, cwd=LEAN_DIR, timeout=600,
+        capture_output=True, text=True, cwd=LEAN_DIR, timeout=1800,
     )
     if result.returncode != 0:
         print(f"ERROR: ExtractDeps failed:\n{result.stderr[:500]}")

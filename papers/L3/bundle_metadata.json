@@ -1,0 +1,23 @@
+{
+  "bundle_target": "L3",
+  "tier": 2,
+  "title": "BCH four laws by regime",
+  "target_journal": "PRL",
+  "phase7_subphase": "7b",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": false,
+  "freshness_stale": false,
+  "source_manifest_last_regen": "2026-05-01T12:31:23Z",
+  "last_lift": null,
+  "last_stage9_review": null,
+  "last_stage10_review": null,
+  "last_stage13_review": null,
+  "blockers_open": 0,
+  "advisories_open": 0,
+  "stage13_review_doc": null,
+  "audit_log_path": "papers/L3/audit_log.jsonl",
+  "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
+  "notes": null
+}

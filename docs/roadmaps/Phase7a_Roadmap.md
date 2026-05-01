@@ -51,7 +51,7 @@
 
 ---
 
-### 7a.1 — Robustness infrastructure for late Phase 6 absorption [PRIORITY; new sub-wave inserted in Phase 7a]
+### 7a.1 — Robustness infrastructure for late Phase 6 absorption [PRIORITY; new sub-wave inserted in Phase 7a] **[SHIPPED 2026-05-01]**
 
 **Goal.** Build the **append-only bundle architecture** + tooling + validation + protocol *before* drafting any bundle, so that I1 + I2 (sub-waves 7a.2–7a.3) immediately use it. Validates the design on the lowest-stakes bundles before D3/D5/F apply it.
 
@@ -290,6 +290,14 @@ Step-by-step protocol for absorbing a new Phase 6X wave's output into already-dr
 - 7a.1.6: 0.25 person-week (protocol doc; iterates with 7a.2/7a.3)
 
 **Decision Gate 7a.1:** infrastructure is *ready*; design is validated by sub-waves 7a.2 + 7a.3 actually using it.
+
+**Status 2026-05-01:** GATE PASSED. All six sub-sub-waves shipped:
+- 7a.1.1 → `docs/BUNDLE_DIRECTORY_SCHEMA.md` (canonical schema for `bundle_metadata.json` + `append_log.json` + on-disk layout)
+- 7a.1.2 → `scripts/bundle_source_manifest.py` (smoke-tested; all 13 bundle directories initialized)
+- 7a.1.3 → `scripts/bundle_append.py` (smoke-tested with paper15+paper44 → I1 §1+§12)
+- 7a.1.4 → `scripts/check_bundle_source_freshness.py` + validate.py CHECK 22 registered (smoke-tested; passing with 1 expected WARN on I1)
+- 7a.1.5 → `docs/BUNDLE_LIFT_PROCEDURE.md` (14-step canonical procedure; Stages 9/10/13 separated)
+- 7a.1.6 → `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (Stages A-G with branches D.1/D.2/D.3 + worked synthetic example)
 
 ---
 

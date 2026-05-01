@@ -47,14 +47,14 @@ The 32 existing drafts in `papers/paperN_*/`. For each: title, status before str
 | `paper25_gravitational_waves` (Phase 6a W2) | GW170817 vs vestigial graviton | PRD | **L1** (PRL splash, voucher candidate) + **D3 §6** (GW propagation full content) + **F §6, §10** | Lift-letter |
 | `paper26_bh_entropy` (Phase 6a W3) | BH entropy from MTC counting | Annals | **D3 §7** (Bekenstein-Hawking + Kaul-Majumdar) + **F §6** | Lift-section |
 | `paper27_bh_thermodynamics_four_laws` (Phase 6a W5) | BCH four laws by regime | PRD (submission-ready) | **L3** (PRL splash, ships first wave with L1) + **D3 §8** (BCH four laws + regime partition full content) + **F §6** | Lift-letter |
-| `paper29_bbn` (Phase 6b W1) | BBN classification | (draft) | **D5 §4** (BBN classification of Phase 5x DM candidates) + **F §8** | Lift-section |
-| `paper32_strong_cp_topological_de` (Phase 6c W1) | Strong-CP + topological DE | (draft) | **D5 §5** (Zhitnitsky topological-DE absorption + combined-mechanism falsifier) + **F §8, §10** | Lift-section |
+| `paper29_bbn_unified` (Phase 6b W1) | BBN classification | (draft) | **D5 §4** (BBN classification of Phase 5x DM candidates) + **F §8** | Lift-section |
+| `paper32_strong_cp_de` (Phase 6c W1) | Strong-CP + topological DE | (draft) | **D5 §5** (Zhitnitsky topological-DE absorption + combined-mechanism falsifier) + **F §8, §10** | Lift-section |
 | `paper33_ewbg_chirality_wall` (Phase 6c W2) | EW baryogenesis ↔ chirality wall (doubly forbidden) | PRL | **D3 §13.5** (EWBG-doubly-forbidden bridge: chirality-wall × crossover, extending §13 EWPT) + **F §6, §10** | Lift-section |
 | `paper34_equivalence_principle` (Phase 6c W3) | Equivalence-principle classification | (draft) | **D5 §6** (EP-violation matrix; vestigial-only verdict) + **F §8** | Lift-section |
 | `paper35_qec_holography` (Phase 6c W4) | QEC-Holography bridge | (draft) | **D4 §7** (QEC + scrambling on horizon-MTC) + **D3 §9** (cross-bridge to BH entropy) + **F §6, §7** | Lift-section (split) |
-| `paper36_confinement` (Phase 6d W1) | Confinement (center symmetry) | (draft) | **D3 §14** (confinement + Polyakov loop + Svetitsky-Yaffe) + **F §6** | Lift-section |
-| `paper37_chiral_ssb_qcd` (Phase 6d W2) | Chiral SSB / GMOR | (draft) | **D3 §15** (chiral SSB + GMOR PDG-verified) + **F §6** | Lift-section |
-| `paper38_cfl_color_flavor_locking` (Phase 6d W3) | CFL color-flavor locking | (draft) | **D3 §16** (CFL ℤ_3 ≡ QCD center-ℤ_3 first formalization) + **F §6** | Lift-section |
+| `paper36_center_symmetry` (Phase 6d W1) | Confinement (center symmetry) | (draft) | **D3 §14** (confinement + Polyakov loop + Svetitsky-Yaffe) + **F §6** | Lift-section |
+| `paper37_chiral_ssb` (Phase 6d W2) | Chiral SSB / GMOR | (draft) | **D3 §15** (chiral SSB + GMOR PDG-verified) + **F §6** | Lift-section |
+| `paper38_cfl` (Phase 6d W3) | CFL color-flavor locking | (draft) | **D3 §16** (CFL ℤ_3 ≡ QCD center-ℤ_3 first formalization) + **F §6** | Lift-section |
 | `note_rt_ch_bounds` (Phase 6c W5) | RT / Casini-Huerta bounds | short note | **D4 §8** (RT/CH knife-edge biconditional + tracked Props) + **F §7** | Lift-section |
 | `paper39_heat_kernel_expansion` (Phase 6e W1) | Heat-kernel a₀, a₂, a₄ from Christensen-Duff Dirac | Annals | **D3 §17** (heat-kernel calibration + Sakharov-Adler ↔ G_N_emerg) + **F §6** | Lift-section |
 | `paper40_higher_curvature` (Phase 6e W2) | Higher-curvature Stelle-basis structure at order a₄ | (draft) | **D3 §18** (Stelle (α,β,γ) closed form + observational ceiling check) + **F §6** | Lift-section |

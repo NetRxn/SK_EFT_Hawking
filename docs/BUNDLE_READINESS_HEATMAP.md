@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-04-29
+**Auto-generated:** 2026-05-01
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable.
@@ -15,16 +15,16 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Verdict |
 |---|---:|---:|---:|---:|---|:---:|
-| **F** | 0 | 40 | 87 | 42 | 29 advisory, 29 critical, 13 major, 16 minor | 🔴 RED |
+| **F** | 0 | 41 | 103 | 50 | 33 advisory, 34 critical, 16 major, 20 minor | 🔴 RED |
 | **D1** | 1 | 5 | 16 | 0 | 16 advisory | 🟡 YELLOW |
 | **D2** | 1 | 4 | 6 | 0 | 6 advisory | 🟡 YELLOW |
-| **D3** | 1 | 21 | 52 | 32 | 7 advisory, 25 critical, 7 major, 13 minor | 🔴 RED |
+| **D3** | 1 | 22 | 67 | 40 | 10 advisory, 30 critical, 10 major, 17 minor | 🔴 RED |
 | **D4** | 1 | 7 | 7 | 1 | 4 advisory, 1 major, 2 minor | 🔴 RED |
-| **D5** | 1 | 5 | 12 | 10 | 5 critical, 5 major, 2 minor | 🔴 RED |
+| **D5** | 1 | 5 | 13 | 10 | 1 advisory, 5 critical, 5 major, 2 minor | 🔴 RED |
 | **L1** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L2** | 2 | 1 | 2 | 0 | 2 advisory | 🟢 GREEN |
 | **L3** | 2 | 1 | 3 | 1 | 2 advisory, 1 critical | 🔴 RED |
-| **I1** | 3 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **I1** | 3 | 2 | 1 | 1 | 1 critical | 🔴 RED |
 | **I2** | 3 | 0 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **E1** | 4 | 1 | 13 | 0 | 13 advisory | 🟡 YELLOW |
 | **E2** | 4 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
@@ -33,16 +33,16 @@
 
 | Bundle | CitationIntegrity | CountFreshness | ParameterProvenanc | unclassified |
 |---|---:|---:|---:|---:|
-| **F** | 55 | 6 | 7 | 19 |
+| **F** | 61 | 7 | 12 | 23 |
 | **D1** | 8 | 0 | 2 | 6 |
 | **D2** | 4 | 0 | 0 | 2 |
-| **D3** | 38 | 5 | 3 | 6 |
+| **D3** | 44 | 6 | 8 | 9 |
 | **D4** | 3 | 2 | 0 | 2 |
-| **D5** | 5 | 0 | 2 | 5 |
+| **D5** | 5 | 0 | 2 | 6 |
 | **L1** | 0 | 0 | 0 | 0 |
 | **L2** | 1 | 0 | 0 | 1 |
 | **L3** | 1 | 1 | 0 | 1 |
-| **I1** | 0 | 0 | 0 | 0 |
+| **I1** | 1 | 0 | 0 | 0 |
 | **I2** | 0 | 0 | 0 | 0 |
 | **E1** | 7 | 0 | 2 | 4 |
 | **E2** | 0 | 0 | 0 | 0 |

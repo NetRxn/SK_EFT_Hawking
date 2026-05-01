@@ -1,0 +1,29 @@
+{
+  "timestamp": "20260501T124624Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "counts_fresh": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "staleness",
+          "passed": true,
+          "message": "stale: lean_deps.json newer than counts.json",
+          "warning": true
+        },
+        {
+          "name": "regenerate",
+          "passed": false,
+          "message": "update_counts.py not runnable: Command '['uv', 'run', 'python', '/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/scripts/update_counts.py']' timed out after 600 seconds",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

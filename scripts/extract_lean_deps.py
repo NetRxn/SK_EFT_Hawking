@@ -51,12 +51,15 @@ def _run_extraction() -> None:
     """Run the Lean extraction script and write the JSON output."""
     logger.info("Lean deps stale — running ExtractDeps.lean...")
     try:
+        # Timeout: 1800s = 30 min. ExtractDeps walks every declaration in
+        # the SKEFTHawking namespace (~5000+ decls post-Phase-6m) and runs
+        # `collectAxioms` on each. Phase 7a sub-wave 7a.0.4 bump from 600s.
         result = subprocess.run(
             ["lake", "env", "lean", "--run", "SKEFTHawking/ExtractDeps.lean"],
             capture_output=True,
             text=True,
             cwd=str(LEAN_ROOT),
-            timeout=600,
+            timeout=1800,
         )
         if result.returncode != 0:
             logger.error("ExtractDeps.lean failed:\n%s", result.stderr[:500])
