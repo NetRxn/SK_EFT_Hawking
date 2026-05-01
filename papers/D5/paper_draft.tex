@@ -61,10 +61,16 @@ across all four admissible sprinkling prescriptions; the Barrow numerical
 upper bound is prescription-dependent at the $\geq 40\%$ level; and the BDG
 $\sigma_\Lambda(V) = \alpha_{\rm BDG}/\sqrt{V}$ first-principles
 decomposition. (b)~Track~B entropic-gravity DE (8 candidates) yields the
-\emph{first complete-mechanism-family unanimous NO-GO closure} in
-Phase~6m: all eight quantitative Bayesian bounds exceed the Jeffreys-decisive
-threshold $|\!\log\mathcal{B}| \geq 5$, and the closure is robust under
-the $r_d$-anchoring rescue. (c)~Track~C Jacobson-thermodynamic GR is the
+\emph{first complete-mechanism-family unanimous NO-GO closure} in Phase~6m
+via two structurally distinct routes: four candidates (Verlinde~2017,
+Tsallis~HDE, Barrow~HDE, Odintsov-D'Onofrio-Paul) yield quantitative
+Bayesian bounds with $|\!\log\mathcal{B}| \geq 5$ (Jeffreys-decisive),
+formalized in the Lean aggregator
+\texttt{all\_quantitative\_bounds\_exceed\_jeffreys\_decisive}; the
+remaining four (Padmanabhan/CosMIn no-Lagrangian-scalar; Hossenfelder-Verlinde
+post-Yoon-Guha; Cadoni-Tuveri DEC via the GD theorem; HDE event-horizon
+wrong-sign $w_a$) are structurally NO-GO via mechanism-specific
+obstructions. The closure is robust under the $r_d$-anchoring rescue. (c)~Track~C Jacobson-thermodynamic GR is the
 highest-survival track at R5 with at least five CLEARED-R5 candidates;
 the M3 $f(R)$ Exp and ArcTanh variants are the strongest CLEARED-R5
 of any Phase~6m track per Plaza-Kraiselburd ($\Delta\!\text{AIC} \simeq
@@ -162,9 +168,10 @@ SK--EFT spin--$\mathbb{Z}_4$ structure to carry exactly $+3 \bmod 16$ of
 hidden charge. The minimal Lagrangian solutions are Wang's topological
 order T-0 (a $K$-gauge TQFT with no propagating particle content) and
 three sterile Weyl fermions S-0; both are tagged by the
-\texttt{HiddenSectorMixedCharge.lean} substrate definition
+\texttt{DarkSectorSynthesis.lean} substrate definitions
 \texttt{candidate\_T0} / \texttt{candidate\_S0}. A third option C-1
-(Wan-Wang mixed-charge with a dark $\text{SU}(3)$) is shipped under the
+(Wan-Wang mixed-charge with a dark $\text{SU}(3)$, defined in
+\texttt{HiddenSectorMixedCharge.lean}) is shipped under the
 tracked hypothesis \texttt{H\_MixedChannelZ16Cancels} pending the Phase~6
 bordism upgrade of the Dai--Freed pairing
 ($\Omega_5^{\text{Spin}\times\mathbb{Z}_4} \to \mathbb{Z}/16$). The
@@ -282,11 +289,15 @@ and CDM (null). Five canonical mergers plotted as diamonds. Lean:
 \centering
 \includegraphics[width=\columnwidth]{figures/fig28_adw_effective_potential.png}
 \caption{\label{fig:adw-veff}
-ADW effective potential $V_{\rm eff}(C) = (C^4/4) \ln(C/\Lambda) -
-C^4/16$ from the gap equation. Critical point at $C_0 = \Lambda
-e^{-1/4}$ (Lean: \texttt{critical\_coupling\_pos}); depth
-$-\Lambda^4/(4e)$. In perfect Minkowski vacuum the Volovik tetrad
-self-tuning absorbs this to $\Lambda_{\rm eff} = 0$. Lifted from paper17.}
+ADW effective potential $V_{\rm eff}(C/\Lambda)/\Lambda^4$ from the
+Coleman--Weinberg gap equation, plotted for three coupling ratios:
+$G/G_c = 0.5$ (pre-geometric, dashed), $G/G_c = 1.0$ (critical, dotted),
+and $G/G_c = 2.0$ (full tetrad, solid). The full-tetrad branch develops
+a non-trivial minimum at $C/\Lambda \simeq 0.45$, signalling spontaneous
+emergence of the tetrad VEV. Critical-coupling positivity is established
+in Lean by \texttt{ADWMechanism.critical\_coupling\_pos}. In perfect
+Minkowski vacuum the Volovik tetrad-determinant self-tuning absorbs the
+condensate energy to $\Lambda_{\rm eff} = 0$. Lifted from paper17.}
 \end{figure}
 
 %% ─── End lift from paper17_dark_sector ───
@@ -300,7 +311,7 @@ This section consolidates the paper~29 BBN-classification deep paper
 (Phase~6b W1). The framework classifies the five Phase~5x emergent-gravity
 DM candidates by their consistency with Big Bang Nucleosynthesis (BBN)
 and Planck~2020 cosmological constraints, ships in
-\texttt{BBNUnified.lean} with $17$ substantive theorems / 0 sorry /
+\texttt{BBN.lean} with $17$ substantive theorems / 0 sorry /
 0 new axioms, and exposes a single $N_{\rm eff}$-mediated failure
 channel as the universal BBN falsifier across the candidate roster.
 
@@ -349,10 +360,11 @@ PARTIAL-VIABLE if the thermalization hypothesis is falsified in some
 mechanism-specific manner (e.g., the FG e-loops decoupling above
 $\SI{1}{\mega\electronvolt}$ via a substrate-level kinetic-blocking
 mechanism). The Lean theorem
-\texttt{phase5x\_dm\_bbn\_violators\_count\_two} establishes the
-2-of-5 falsification under default thermalization; the corresponding
-\texttt{phase5x\_dm\_bbn\_passers\_count\_three} closes the
-3-of-5 unconditional pass.
+\texttt{bbn\_violators\_share\_n\_eff\_failure\_mode} establishes the
+universal $N_{\rm eff}$-channel mode-of-failure across the violator
+subset under default thermalization; the corresponding
+\texttt{at\_least\_three\_phase5x\_candidates\_bbn\_conformant} closes the
+$\geq 3$-of-5 unconditional pass.
 
 \subsection{Cross-bridge to the SFDM cluster-merger forecast}
 \label{subsec:bbn-sfdm-cross-bridge}
@@ -466,15 +478,19 @@ and $M_P$.
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_zhitnitsky_de_theta_scan.png}
-\caption{\label{fig:zhitnitsky-theta-scan}
-Zhitnitsky topological-DE energy density scan: $\rho_{\rm DE} = \theta^2
-\Lambda_{\rm QCD}^6 / M_P^2$ versus the topological angle $\theta$. The
-naturally-$\mathcal{O}(1)$ value $\theta = 1$ (rightmost band) lies
-$\sim 240\times$ above the observed $\rho_{\rm DE,obs} = 2.8 \times
-10^{-11}\,\text{eV}^4$ (horizontal line); $|\theta| \lesssim 10^{-9}$
-constrained by the neutron-EDM bound (vertical line) gives
-$\rho_{\rm DE} \sim 10^{-29}\,\text{eV}^4$. Both bounds sit
-$\sim 120$ orders below the Planck-natural $M_P^4$. Lifted from paper32.}
+\caption{\label{fig:zhitnitsky-lambda-qcd-scan}
+Zhitnitsky topological-DE prediction across $\Lambda_{\rm QCD}$ with no
+free parameters. \emph{Left:} predicted $\rho_{\rm DE}(\Lambda_{\rm QCD})
+= \Lambda_{\rm QCD}^6 / M_P^2$ on log-log scale, $\Lambda_{\rm QCD} \in
+[1\text{ MeV},\,1\text{ GeV}]$. The amber band marks the observed
+$\rho_{\rm DE,obs} \simeq 2.8 \times 10^{-11}\,\text{eV}^4$ (Planck~2018);
+the vertical dotted line marks the PDG value
+$\Lambda_{\rm QCD} \approx 100\,\text{MeV}$. \emph{Right:} bar chart
+of the cosmological-constant-problem suppression: the Zhitnitsky-predicted
+$\rho_{\rm DE}$ at PDG $\Lambda_{\rm QCD}$ sits $\sim 120$ orders of
+magnitude below the Planck-natural $M_P^4$ estimate, with the observed
+$(2.3\,\text{meV})^4$ value sitting close to the prediction (within
+$\sim 2$ orders without free parameters). Lifted from paper32.}
 \end{figure}
 
 %% ─── End lift from paper32_strong_cp_de ───
@@ -487,8 +503,8 @@ $\sim 120$ orders below the Planck-natural $M_P^4$. Lifted from paper32.}
 This section consolidates the paper~34 EP-classification deep paper
 (Phase~6c W3). The framework classifies six distinct emergent-gravity
 mechanisms by their EP-violation level, encodes the classification as
-decidable predicates in Lean~4 (\texttt{EquivalencePrincipleClassification.lean}
-+ \texttt{VestigialPhaseEPViolation.lean}), and proves the structural
+decidable predicates in Lean~4 (\texttt{EquivalencePrinciple.lean}),
+and proves the structural
 consequence that EP violation in this substrate is
 \emph{vestigial-only}: any positive EP-violation result implies vestigial
 physics, and any null result at sub-$10^{-19}$ precision excludes
@@ -593,7 +609,7 @@ $10^{120}$. The classical cosmological-constant problem is
 \emph{reproduced} in the emergent-gravity formulation; no fine-tuning
 of $(\Lambda_{\rm UV}, N_f)$ resolves it within the natural high-energy
 parameter band. The Lean theorem and supporting closed-form expressions
-live in \texttt{CosmologicalConstantEmergent.lean} +
+live in \texttt{MicroscopicCoefficientMatch.lean} +
 \texttt{HeatKernelExpansion.lean}; the proof is closed at zero sorry
 and a companion Python pipeline reproduces the natural-parameter scan
 and verdict-band figure (resolved / intermediate / reproduced phases).
@@ -629,13 +645,22 @@ problem on this channel, leaving the §\ref{subsec:adw-cc} +
 \caption{\label{fig:lambda-emerg-scan}
 Emergent cosmological constant $\Lambda^{\rm emerg}(\Lambda_{\rm UV},
 N_f) = a_0(N_f) \cdot \Lambda_{\rm UV}^4$ from heat-kernel expansion
-across the natural $(\Lambda_{\rm UV}, N_f)$ parameter band. At
-$(\Lambda_{\rm UV} \simeq M_{\rm Pl},\ N_f = 16)$ the prediction
-exceeds $\Lambda_{\rm obs} \simeq 2.6 \times 10^{-47}\,\text{GeV}^4$ by
-$> 10^{120}$. Verdict bands: resolved (green; $\Lambda^{\rm emerg}
-\approx \Lambda_{\rm obs}$), intermediate (yellow), reproduced
-(red; classical CC problem regenerated at the natural microscopic
-point). Lifted from paper42b.}
+across the natural $(\Lambda_{\rm UV}, N_f)$ parameter band.
+\emph{Left panel:} log-log $\Lambda^{\rm emerg}(\Lambda_{\rm UV})$ at
+fixed $N_f \in \{1, 4, 16, 100\}$ (steel-blue solid / amber dashed /
+berry dotted / cool-grey dash-dotted), with $\Lambda_{\rm obs}
+\simeq 2.6 \times 10^{-47}\,\text{GeV}^4$ as a horizontal reference and
+$M_{\rm Pl}$ + the resolution locus as vertical reference lines.
+\emph{Right panel:} continuous Cividis heatmap of
+$\log_{10}(\Lambda^{\rm emerg}/\Lambda_{\rm obs})$ over the
+$(\Lambda_{\rm UV}, N_f)$ plane, with two contour overlays: the
+\emph{resolved} boundary $|\!\log_{10}(\Lambda^{\rm emerg}/\Lambda_{\rm obs})|
+= 1$ (steel-blue) and the \emph{reproduced} boundary
+$\log_{10}(\Lambda^{\rm emerg}/\Lambda_{\rm obs}) \simeq 60$ (amber).
+At $(\Lambda_{\rm UV} \simeq M_{\rm Pl},\ N_f = 16)$ the prediction
+exceeds $\Lambda_{\rm obs}$ by $> 10^{120}$ — the classical
+cosmological-constant problem reproduced in the emergent-gravity
+formulation. Lifted from paper42b.}
 \end{figure}
 
 %% ─── End lift from paper42b_cc_emergent ───
@@ -766,11 +791,17 @@ save any of the eight Class~(b) or Class~(d) mechanisms that the analysis
 distinguishes
 (\texttt{r\_d\_anchoring\_partial\_rescue\_does\_not\_save\_class\_b\_or\_class\_d}).
 
-\subsection{The eight quantitative bounds}
+\subsection{Per-mechanism Lean closures}
 \label{subsec:phase6m-track-b-bounds}
 
-All eight bounds individually exceed the Jeffreys-decisive threshold
-$|\!\log\mathcal{B}| \geq 5$. The Lean closures are:
+The eight Track~B mechanisms split into four with explicitly-quantitative
+$|\!\log\mathcal{B}|$ bounds (each individually exceeding the
+Jeffreys-decisive threshold $|\!\log\mathcal{B}| \geq 5$ and aggregated
+in \texttt{all\_quantitative\_bounds\_exceed\_jeffreys\_decisive}: Verlinde~2017,
+Tsallis~HDE, Barrow~HDE, Odintsov-D'Onofrio-Paul) and four structurally
+NO-GO mechanisms (Padmanabhan/CosMIn, Hossenfelder-Verlinde, Cadoni-Tuveri~DEC,
+HDE event-horizon). The 8 mechanism-level closures are listed first;
+two auxiliary supports for the Cadoni-Tuveri DEC entry follow.
 
 \begin{itemize}
 \item \texttt{verlinde\_2017\_no\_go\_via\_cmb\_bullet\_cluster\_halenka\_miller}:
@@ -787,14 +818,14 @@ $|\!\log\mathcal{B}| \geq 5$. The Lean closures are:
   reproduces $q \in [-0.95, -0.55]$).
 \item \texttt{cadoni\_tuveri\_dec\_no\_go\_via\_gd\_theorem\_w\_eq\_minus\_1}:
   Cadoni-Tuveri DEC is excluded via the GD theorem at
-  $w = -1$.
-\item \texttt{dec\_cpl\_excluded\_from\_desi\_dr2\_1sigma}:
-  the DEC CPL parameterization $(w_0, w_a) = (-1, 0)$ is excluded from
-  the DESI~DR2 $1\sigma$ confidence region; cross-bridge to Phase~5y
-  \texttt{desiDR2\_1sigma}.
-\item \texttt{dec\_fails\_orthogonality\_principle}:
-  DEC fails Phase~5y \texttt{IsViable} via the factor-\#1 chain through
-  the Phase~5y \texttt{viability\_iff\_all\_four} chain.
+  $w = -1$. Two auxiliary Lean supports back this closure:
+  \texttt{dec\_cpl\_excluded\_from\_desi\_dr2\_1sigma} (the DEC CPL
+  parameterization $(w_0, w_a) = (-1, 0)$ excluded from the DESI~DR2
+  $1\sigma$ confidence region; cross-bridge to Phase~5y
+  \texttt{desiDR2\_1sigma}) and
+  \texttt{dec\_fails\_orthogonality\_principle} (DEC fails Phase~5y
+  \texttt{IsViable} via the factor-\#1 chain through the Phase~5y
+  \texttt{viability\_iff\_all\_four} chain).
 \item \texttt{hde\_event\_horizon\_no\_go\_w\_a\_sign\_mismatch\_3sigma}:
   HDE event-horizon predicts $w_a > 0$, the wrong sign of the DESI~DR2
   best-fit at $3\sigma$.
@@ -1040,10 +1071,19 @@ content theorem (the witness is constructed explicitly, not
 \texttt{decide}-on-hardcoded-flags); it is the rigorous companion to
 DEC's failure-of-\texttt{IsViable} via the factor-\#1 chain.
 
-The Phase~6m mechanism count is
-\texttt{phase6m\_mechanism\_count}: 4 (Track~A) + 8 (Track~B) +
-9 (Track~C) = 21 mechanisms evaluated, with the 8/8 unanimous
-NO-GO closure on Track~B as the headline structural result.
+The Phase~6m mechanism count is established by the Lean theorem
+\texttt{phase6m\_mechanism\_count}, which proves
+$|\text{allEntropicGravityCandidates}| + |\text{allJacobsonCandidates}| =
+17$ — the lengths of the two enumerated lists for Tracks~B and~C
+respectively. Track~A's four candidates enter as inductive
+\texttt{CausalSetCandidate} constructors rather than as a
+\texttt{List}, so they are not summed by \texttt{phase6m\_mechanism\_count};
+counting them separately (via case-exhaustion on the inductive type)
+brings the full Phase~6m roster to $4 + 8 + 9 = 21$ mechanisms across
+all three tracks. All 21 classify into the unified 7-class GD
+taxonomy (\texttt{phase6m\_class\_admits\_tier\_assignment}), with the
+8/8 unanimous NO-GO closure on Track~B as the headline structural
+result.
 
 
 \section{Discussion and outlook}

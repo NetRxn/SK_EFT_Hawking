@@ -259,9 +259,16 @@ def phase6mMechanismClass : Phase6mMechanism → Phase6mGDClass
   | .trackB c => trackBClass c
   | .trackC c => trackCClass c
 
-/-- **DSCE9 — Phase 6m mechanism count: 4 (Track A) + 8 (Track B) +
-    9 (Track C) = 21 mechanism entries; all map onto the unified
-    7-class taxonomy.** -/
+/-- **DSCE9 — Phase 6m mechanism enumeration: |Track B| + |Track C| = 17.**
+
+    Track A's four causal-set candidates are encoded as constructors of
+    the inductive `CausalSetCandidate` type (in `CausalSetDarkEnergy`)
+    rather than as a `List`, so they are not summed by this length-based
+    aggregator. Counting them via case-exhaustion on the inductive type
+    brings the full Phase 6m roster to 4 + 8 + 9 = 21 mechanisms across
+    all three tracks; see the `Phase6mMechanism` umbrella above and
+    `phase6m_class_admits_tier_assignment` for the full-roster
+    classification into the unified 7-class GD taxonomy. -/
 theorem phase6m_mechanism_count :
     allEntropicGravityCandidates.length + allJacobsonCandidates.length = 17 := by
   unfold allEntropicGravityCandidates allJacobsonCandidates; rfl

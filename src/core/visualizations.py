@@ -7219,7 +7219,7 @@ def fig_phase5x_candidate_viability_matrix():
             tickmode='array',
             tickvals=[0, 1],
             ticktext=['NOT VIABLE', 'VIABLE'],
-            range=[-0.2, 2.2],
+            range=[-0.2, 5.5],
         ),
         yaxis=dict(title='', automargin=True),
         title=dict(
@@ -7227,7 +7227,8 @@ def fig_phase5x_candidate_viability_matrix():
                   '(Lean: <i>phase5x_candidates_viability_matrix</i>)'),
             font=TITLE_FONT,
         ),
-        height=420, width=820,
+        height=480, width=1500,
+        margin=dict(l=80, r=560, t=60, b=70),
     )
     return fig
 
@@ -10928,13 +10929,17 @@ def fig_lambda_emerg_parameter_scan():
 
     # ---------- Left panel: Λ^emerg vs Λ_UV at fixed N_f ----------
     N_f_values = [1, 4, 16, 100]
+    # Colorblind-safe palette per project rule (no red/green pairings).
+    # Each curve also gets a distinct linestyle so that overlapping log-log
+    # traces remain visually distinguishable.
     nf_colors = [
-        COLORS["steel_blue"],
-        COLORS["amber"],
-        COLORS.get("emerald", "#2ca02c"),
-        COLORS.get("plum", "#9467bd"),
+        COLORS["steel_blue"],   # #2E86AB
+        COLORS["amber"],        # #F18F01
+        COLORS["Heidelberg"],   # #A23B72 (berry)
+        COLORS["cross"],        # #8D99AE (cool grey)
     ]
-    for N_f, c in zip(N_f_values, nf_colors):
+    nf_dashes = ["solid", "dash", "dot", "dashdot"]
+    for N_f, c, d in zip(N_f_values, nf_colors, nf_dashes):
         Lambda_emerg_curve = np.array([
             lambda_emerg_microscopic(L, N_f) for L in Lambda_UV_grid
         ])
@@ -10943,7 +10948,7 @@ def fig_lambda_emerg_parameter_scan():
                 x=Lambda_UV_grid, y=Lambda_emerg_curve,
                 mode="lines",
                 name=f"N_f={N_f}",
-                line=dict(color=c, width=2.5),
+                line=dict(color=c, width=2.5, dash=d),
                 hovertemplate=(
                     "Λ_UV=%{x:.2e} GeV<br>"
                     "Λ^emerg=%{y:.2e} GeV⁴<extra></extra>"
@@ -10959,31 +10964,33 @@ def fig_lambda_emerg_parameter_scan():
         annotation_position="top right",
         row=1, col=1,
     )
-    # M_Pl anchor
+    # M_Pl anchor (palette-safe: berry, not red)
     fig.add_vline(
         x=M_Pl,
-        line=dict(color=COLORS.get("burgundy", "#a02050"),
+        line=dict(color=COLORS["Heidelberg"],
                   dash="dash", width=2),
         annotation_text="M_Pl",
         annotation_position="top",
         row=1, col=1,
     )
-    # Resolution locus
-    fig.add_vline(
-        x=locus,
-        line=dict(color=COLORS.get("emerald", "#2ca02c"),
-                  dash="dashdot", width=1),
-        annotation_text="locus",
-        annotation_position="bottom",
-        row=1, col=1,
-    )
+    # Resolution locus is at Λ_UV ≃ 2.83e-12 GeV — far below the displayed
+    # [10^0, 10^20] GeV range used for the natural high-energy band.
+    # Rendering the vline at that position causes a clipped-annotation
+    # artifact at the left margin in kaleido output, so the locus is
+    # not drawn here. The locus is documented in
+    # MICRO_MACRO_PARAMS["LAMBDA_UV_RESOLUTION_LOCUS_DIAGNOSTIC_GEV"]
+    # for cross-reference.
+    _ = locus  # mark intentional non-use
     fig.update_xaxes(
-        title_text="Λ_UV (GeV, log scale)",
-        type="log", exponentformat="power",
+        title_text="Λ_UV  [GeV]",
+        type="log",
+        autorange=False,
+        range=[0, 20],
+        exponentformat="power",
         row=1, col=1,
     )
     fig.update_yaxes(
-        title_text="Λ^emerg (GeV⁴, log scale)",
+        title_text="Λ^emerg  [GeV⁴]",
         type="log", exponentformat="power",
         row=1, col=1,
     )
@@ -11032,7 +11039,7 @@ def fig_lambda_emerg_parameter_scan():
                 coloring="lines",
                 showlabels=True,
             ),
-            line=dict(color=COLORS.get("emerald", "#2ca02c"), width=2),
+            line=dict(color=COLORS["steel_blue"], width=2),
             showscale=False,
             name="cc_resolved boundary",
             hoverinfo="skip",
@@ -11058,14 +11065,14 @@ def fig_lambda_emerg_parameter_scan():
     )
     fig.add_vline(
         x=M_Pl,
-        line=dict(color=COLORS.get("burgundy", "#a02050"),
+        line=dict(color=COLORS["Heidelberg"],
                   dash="dash", width=2),
         annotation_text="M_Pl",
         annotation_position="top",
         row=1, col=2,
     )
     fig.update_xaxes(
-        title_text="Λ_UV (GeV, log scale)",
+        title_text="Λ_UV  [GeV]",
         type="log", exponentformat="power",
         row=1, col=2,
     )
@@ -11143,13 +11150,15 @@ def fig_torsion_obs_bound():
 
     # ---------- Left panel: |T_EC| vs Λ_UV at fixed N_f ----------
     N_f_values = [1, 4, 16, 100]
+    # Palette-safe (no red/green) + linestyle-distinct N_f curves.
     nf_colors = [
-        COLORS["steel_blue"],
-        COLORS["amber"],
-        COLORS.get("emerald", "#2ca02c"),
-        COLORS.get("plum", "#9467bd"),
+        COLORS["steel_blue"],   # #2E86AB
+        COLORS["amber"],        # #F18F01
+        COLORS["Heidelberg"],   # #A23B72 (berry)
+        COLORS["cross"],        # #8D99AE (cool grey)
     ]
-    for N_f, c in zip(N_f_values, nf_colors):
+    nf_dashes = ["solid", "dash", "dot", "dashdot"]
+    for N_f, c, d in zip(N_f_values, nf_colors, nf_dashes):
         T_curve = np.array([
             torsion_amplitude_at_cosmological_background(L, N_f, 1.0)
             for L in Lambda_UV_grid
@@ -11159,7 +11168,7 @@ def fig_torsion_obs_bound():
                 x=Lambda_UV_grid, y=T_curve,
                 mode="lines",
                 name=f"N_f={N_f}",
-                line=dict(color=c, width=2.5),
+                line=dict(color=c, width=2.5, dash=d),
                 hovertemplate=(
                     "Λ_UV=%{x:.2e} GeV<br>"
                     "|T_EC|=%{y:.2e} GeV<extra></extra>"
@@ -11183,10 +11192,10 @@ def fig_torsion_obs_bound():
         annotation_position="bottom right",
         row=1, col=1,
     )
-    # M_Pl anchor
+    # M_Pl anchor (palette-safe: berry, not red)
     fig.add_vline(
         x=M_Pl,
-        line=dict(color=COLORS.get("burgundy", "#a02050"),
+        line=dict(color=COLORS["Heidelberg"],
                   dash="dash", width=2),
         annotation_text="M_Pl",
         annotation_position="top",
@@ -11248,7 +11257,7 @@ def fig_torsion_obs_bound():
         row=1, col=2,
     )
     fig.update_xaxes(
-        title_text="Λ_UV (GeV, log scale)",
+        title_text="Λ_UV  [GeV]",
         type="log", exponentformat="power",
         row=1, col=2,
     )
