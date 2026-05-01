@@ -1914,6 +1914,454 @@
       "superseded_by": "review:2026-04-25-2106-internal-adversarial:paper20_scalar_rung",
       "evidence": "RECOMMENDED: Hill 2025 preprint status not flagged in body prose despite load-bearing role. Substantively fixed: same as review:2026-04-26-1925:5.1 — bibitem now flagged as FERMILAB-PUB-25-0219-T preprint; Lean module BHLGaugeEmbedding.lean:44-45 also flags preprint status. Verified CLOSED at Round-3 review (review:2026-04-25-2106-internal-adversarial:paper20_scalar_rung Round-2 closure verification table line 22-23). Deterministic recheck: `grep -E 'FERMILAB-PUB-25-0219-T|preprint' papers/paper20_scalar_rung/paper_draft.tex lean/SKEFTHawking/BHLGaugeEmbedding.lean` returns matching lines.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:1.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "ADVISORY: KLRS96 misattribution for m_H ≈ 72 GeV crossover threshold (Round 1 BLOCKER carried as Round-2 closed-status note). Substantively fixed: paper now correctly splits attribution — KLRS1996 for the broader 70-95 GeV range, CsikorFodorHeitger1999 for the refined 72.4 ± 1.7 GeV endpoint. Round-2 review §1.1 (lines 47-62) confirms CLOSED with fresh-fetch verification on hep-ph/9809291; Round-3 review re-confirms CLOSED. Deterministic recheck: `grep -nE 'CsikorFodorHeitger1999|KLRS1996' papers/paper22_ew_phase_transition/paper_draft.tex` shows split attribution at lines 51, 209-211; `grep -n CsikorFodorHeitger1999 src/core/citations.py` returns line 1840 with full registry entry.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:3.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "ADVISORY: ew_latent_heat docstring referenced nonexistent Lean theorem latentHeat_zero_iff_crossover (Round 1 REQUIRED carried as Round-2 closed-status note). Substantively fixed: latentHeat_zero_iff_crossover now exists at lean/SKEFTHawking/EWPhaseTransition.lean:355-365 with non-trivial by_contra + lt_of_le_of_ne + first_order_has_positive_latent_heat proof body. Round-2 review §3.2 confirms CLOSED. Deterministic recheck: `grep -n 'latentHeat_zero_iff_crossover' lean/SKEFTHawking/EWPhaseTransition.lean` returns line 355.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:9.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "ADVISORY: counts.tex stale (Round 1 BLOCKER carried as Round-2 closed-status note). Substantively fixed: counts.tex regenerated to post-paper-22 + EWPhaseTransition.lean state. Round-3 review §9.1 (lines 167-188) confirms `\\totaltheorems{4165}`, `\\substantivetheorems{4054}`, `\\leanmodules{173}`, `\\papercount{21}` after Round-2 substance-audit refactor. Project further updated to 5229/5204/243 per Phase 7a.0.2 CountFreshness regen. Deterministic recheck: `uv run python scripts/validate.py --check counts_fresh` exits 0.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:9.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "MINOR: T_c rounding inconsistency 139.13 vs 139.15. Substantively fixed: paper now uses 139.15 GeV at both sites (paper_draft.tex line 147 inside §2.2 prose and line 198 in benchmark table). Deterministic recheck: `grep -n '139.13\\|139.15' papers/paper22_ew_phase_transition/paper_draft.tex` returns only 139.15 hits at lines 147, 198 — no 139.13 remains.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:1.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "CRITICAL/BLOCKER: KLRS96 misattribution. Same content as Round-2 finding 1.1 (this is the original Round-1 finding). Substantively fixed at Round 2: new CsikorFodorHeitger1999 bibitem added (paper_draft.tex:209-211), KLRS96 retained for broader range (paper_draft.tex:78-82, 207). Re-confirmed CLOSED in Round-2 review §1.1 and Round-3 review §1.1. Deterministic recheck: `grep -nE 'CsikorFodorHeitger1999|KLRS1996' papers/paper22_ew_phase_transition/paper_draft.tex` shows split attribution.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:3.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "MAJOR/REQUIRED: ew_latent_heat docstring cites nonexistent Lean theorem. Substantively fixed at Round 2: latentHeat_zero_iff_crossover added at lean/SKEFTHawking/EWPhaseTransition.lean:355-365 with non-trivial proof body. Re-confirmed CLOSED in Round-2 review §3.2 and Round-3 review. Deterministic recheck: `grep -n 'latentHeat_zero_iff_crossover' lean/SKEFTHawking/EWPhaseTransition.lean` returns line 355.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:9.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "CRITICAL/BLOCKER: counts.tex stale (paper-22 not yet ingested). Substantively fixed at Round 2: counts.tex regenerated. Re-confirmed CLOSED at Round-3 review §9.1 with totals 4165/4054/173/21; further updated post-Phase-7a.0.2 to 5229/5204/243. Deterministic recheck: validate.py --check counts_fresh exits 0.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:1.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "ADVISORY: KLRS96/CFH1999 attribution closed-status note in Round-3 review §1.1 (lines 50-62). This is the Round-3 self-confirmation of the closure landed at Round 2; not a new finding. Already resolved at Round 2; cache-verified via citation_verifications.jsonl line 12. Deterministic recheck: same as the Round-2 finding closure — split attribution preserved at paper_draft.tex lines 51, 209-211.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:3.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "ADVISORY: Lean substance + paper-side propagation (Round-2 NEW BLOCKER 3.4 carryforward, closed-status note in Round-3 §3.1 lines 76-106). Substantively fixed: paper_draft.tex:160 cites renamed transition_order_unfolds_to_cubic_sign as 'definitional reduction'; lines 163-169 cite first_order_iff_positive_latent_heat and latentHeat_zero_iff_crossover as substantive correctness-push biconditionals. Stale name transition_order_from_microscopic_parameters does not appear in paper. Deterministic recheck: `grep -n 'transition_order_from_microscopic_parameters\\|transition_order_unfolds_to_cubic_sign' papers/paper22_ew_phase_transition/paper_draft.tex` returns only renamed-theorem references at line 160; stale name absent.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:3.2",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "ADVISORY: ew_latent_heat docstring (Round-2 closed-status note carried forward to Round 3). This is the Round-3 self-confirmation of closure at Round 2; not a new finding. Already resolved via latentHeat_zero_iff_crossover at lean/SKEFTHawking/EWPhaseTransition.lean:355-365. Deterministic recheck: `grep -n 'latentHeat_zero_iff_crossover' lean/SKEFTHawking/EWPhaseTransition.lean` returns line 355.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:9.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition",
+      "evidence": "ADVISORY: counts.tex (Round-2 closed + Round-3 re-audited closed). Round-3 self-confirmation of closure landed at Round 2. validate.py --check counts_fresh exits 0; totals updated post-Phase-7a.0.2 to 5229/5204/243. Deterministic recheck: validate.py --check counts_fresh.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2105-internal-adversarial:paper22_ew_phase_transition:9.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "MINOR: T_c rounding 139.13 vs 139.15 (Round-3 RECOMMENDED carryforward). Substantively fixed in current source: paper_draft.tex line 147 reads 'T_c \\approx 139.15 GeV' and line 198 reads '139.15 GeV' (advisory carryforward now resolved). Deterministic recheck: `grep -n '139.13\\|139.15' papers/paper22_ew_phase_transition/paper_draft.tex` returns only 139.15 entries at lines 147, 198.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:1.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "BLOCKER: GovindarajanKaulSuneeta2001 wrong title and venue. Substantively fixed: paper_draft.tex bibitem at lines 636-640 now reads 'Logarithmic correction to the Bekenstein-Hawking entropy of the BTZ black hole, Class. Quantum Grav. 18, 2877-2886 (2001), arXiv:gr-qc/0104010'. CITATION_REGISTRY entry at src/core/citations.py:3363-3380 matches with doi_verified: True; notes line: 'Title and venue verified via arXiv.org fresh-fetch 2026-04-26 (adversarial-review BLOCKER 1.1 fix; prior bibitem mistakenly named the dS₃ paper).' Deterministic recheck: `grep -nA 4 'GovindarajanKaulSuneeta2001' src/core/citations.py papers/paper26_bh_entropy/paper_draft.tex` shows correct BTZ title at both sites with doi_verified: True.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:1.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "BLOCKER: Mitra2014 wrong title and venue. Substantively fixed: paper_draft.tex bibitem at lines 626-629 now reads 'Black hole entropy with and without log correction in loop quantum gravity, Nucl. Phys. B Proc. Suppl. 251-252, 87 (2014), arXiv:1406.5524'. CITATION_REGISTRY at src/core/citations.py:3328-3345 matches with doi_verified: True. Deterministic recheck: `grep -nA 4 'Mitra2014LogVanish' src/core/citations.py papers/paper26_bh_entropy/paper_draft.tex` shows verified title and venue.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:1.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "BLOCKER: Vergeles2025 bibitem and registry title disagreed. Substantively fixed: src/core/citations.py:821-842 now records title 'Unitarity of 4D Lattice Theory of Gravity' (matches paper bibitem at line 642-644); doi_verified: True; used_in includes paper26_bh_entropy/paper_draft.tex (line 838). Deterministic recheck: `grep -nA 14 \"'Vergeles2025'\" src/core/citations.py` shows aligned title + paper26 in used_in list.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:1.4",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "REQUIRED: All 15 paper26 bibkeys carried doi_verified: None. Substantively fixed: all 15 bibkeys (KaulMajumdar2000, Kaul2012Review, DomagalaLewandowski2004, Meissner2004, EngleNouiPerez2010, Carlip2000HorizonCFT, Sen2013Schwarzschild, Solodukhin2011LivingRev, WalkerWang2012, BombelliKoulLeeSorkin1986, JacobsonInducedGravity1994, KitaevHonest2006, Mitra2014LogVanish, McGoughVerlinde2013, GovindarajanKaulSuneeta2001) now flipped to doi_verified: True. Deterministic recheck: `for k in <list>; do grep -A 12 \"'$k':\" src/core/citations.py | grep doi_verified | head -1; done` returns all True.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:2.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "REQUIRED: bh_entropy_leading_coefficient referenced non-existent IsHorizonBC.immirziTuned. Substantively fixed: src/core/formulas.py:8409-8415 now reads 'Lean: BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi (structure field). The 1/4-tuning hypothesis is documented at the prose level (Wave 3 paper §4) but is NOT yet a Lean predicate — there is no IsHorizonBC.immirziTuned discharge in the shipped module. The structural anchor consumed by Wave 3 is kaul_majumdar_leading_matches_G_N_emerg...'. This matches the recommended fix verbatim. Deterministic recheck: `grep -nA 8 'BHEntropyMicroscopic.HorizonMTCBC.γ_immirzi' src/core/formulas.py` returns the corrected docstring at line 8409.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:2.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "REQUIRED: verlinde_dim_horizon formula referenced non-existent verlindeDimHorizon Lean identifier. Substantively fixed: src/core/formulas.py:8311-8318 now reads 'Lean: pending — Verlinde sum is not yet formalized at theorem level. Wave 6a.7 (2026-04-27) restructured the abstract counterpart from opaque verlindeEntropy_SU2k + axiom gaussianSaddleAsymptotic into a concrete Laplace-saddle-limit definition + theorem (BHEntropyMicroscopic.verlindeEntropy_SU2k := kaulMajumdarS at the saddle limit; gaussianSaddleAsymptotic now a theorem). The literal Verlinde-sum derivation via Hardy-Ramanujan is tracked by H_VerlindeKMLiteralSumDerivation for future work.' Matches recommended fix (a). Deterministic recheck: `grep -nB 1 -A 8 'def verlinde_dim_horizon' src/core/formulas.py` shows pending-flag docstring.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:2.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "REQUIRED: bh_entropy_kaul_majumdar formula referenced non-existent kaulMajumdarClosedForm Lean identifier. Substantively fixed: src/core/formulas.py:8365-8367 now reads 'Lean: BHEntropyMicroscopic.kaulMajumdarS (def); structural log coefficient via kaul_majumdar_log_coefficient and its decomposition via kaul_majumdar_log_decomposition.' Both kaulMajumdarS and kaul_majumdar_log_coefficient exist in lean/SKEFTHawking/BHEntropyMicroscopic.lean (lines 87 and 104). Deterministic recheck: `grep -nA 4 'def bh_entropy_kaul_majumdar' src/core/formulas.py` shows kaulMajumdarS reference.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:2.4",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "REQUIRED: AXIOM_METADATA['gaussianSaddleAsymptotic'] used_in cited two non-existent theorems. Substantively fixed: src/core/constants.py:1400-1402 now reads `'used_in': 'kaulMajumdar_asymptotic_within_OoneOverA, verlinde_matches_kaul_majumdar_at_large_area (both now derive from theorem gaussianSaddleAsymptotic)'`; lines 1412-1419 reference the actual users in the Project escape risk discussion. Both names exist in lean/SKEFTHawking/BHEntropyMicroscopic.lean (lines 250 and 261). Deterministic recheck: `grep -nA 4 \"'gaussianSaddleAsymptotic'\" src/core/constants.py` shows correct names.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:3.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "REQUIRED: kaul_majumdar_log_decomposition does not formalize the structural decomposition. Substantively fixed via recommended option (a): paper_draft.tex:199-205 now reads 'The structural decomposition $-3/2 = (-1/2) + (-1)$ has two parts: the arithmetic identity itself (encoded in Lean as kaul_majumdar_log_decomposition, which proves the rational identity $(-1/2) + (-1) = -3/2$ by ring) and the physical sourcing of each summand (documented at the prose level here, not yet [formalized at theorem level])'. Section 7 bullet at lines 455-459 echoes this framing. Deterministic recheck: `grep -nA 8 'kaul.*log.*decomposition' papers/paper26_bh_entropy/paper_draft.tex` returns the rational-identity framing.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:3.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "RECOMMENDED: kaul_majumdar_leading_matches_G_N_emerg is a conjunction of two pre-existing theorems. Substantively softened in paper §6 per recommended fix: paper_draft.tex:500-510 now reads 'records the conjunction of two pre-existing facts: LinearizedEFE.G_N_emerg_pos (positivity of G_N^emerg) and the Wave-3 entropy anchor [...] administrative bundling. The full numerical match requires the Vergeles-derived alpha_ADW value, which remains a Wave 1 tracked hypothesis [...]. The substantive Wave-1-side content lives in LinearizedEFE.G_N_emerg_pos; the Wave-3 contribution is the anchor kaulMajumdar_S_at_4GN and the administrative bundling.' Deterministic recheck: `grep -nC 2 'administrative bundling\\|G_N_emerg_pos' papers/paper26_bh_entropy/paper_draft.tex` shows softened framing.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0230-internal-adversarial:paper26_bh_entropy:8.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "RECOMMENDED: counts.tex inline literal 19 lags canonical 22 (later 23). Substantively fixed via recommended option (a): docs/counts.tex:30 now defines `\\newcommand{\\bhEntropyTotal}{23}`; paper_draft.tex:436 and 539 use the macro `\\bhEntropyTotal{}` rather than hard-coded literals. Deterministic recheck: `grep -n 'bhEntropyTotal' docs/counts.tex papers/paper26_bh_entropy/paper_draft.tex` returns the macro definition + two macro consumers. counts.tex driven by update_counts.py.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:1.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws",
+      "evidence": "BLOCKER: Reall2024ThirdLawBPS bibitem title was a paraphrase. Substantively fixed: paper_draft.tex:622-626 now reads verbatim 'A third law of black hole mechanics for supersymmetric black holes and a quasi-local mass-charge inequality, Phys. Rev. D 110, 124059 (2024). arXiv:2410.11956.' Reinvocation review §1.2 (line 98-105) confirms CLOSED. Also propagated from L3 lift's bibitem fixes per Phase 7b D3 cleanup. Deterministic recheck: `grep -nA 4 'Reall2024ThirdLawBPS' papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex` returns the verbatim-published title.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:1.3",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws",
+      "evidence": "BLOCKER: Kirklin2024GSLAllOrders bibitem title was a paraphrase + missing JHEP venue. Substantively fixed: paper_draft.tex:652-655 now reads 'Generalised second law beyond the semiclassical regime, JHEP 07, 192 (2025). arXiv:2412.01903.' Reinvocation review §1.3 (line 107-114) confirms CLOSED. Also propagated from L3 lift's bibitem fixes per Phase 7b D3 cleanup. Deterministic recheck: `grep -nA 4 'Kirklin2024GSLAllOrders' papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex` returns verbatim title + JHEP venue.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:1.4",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws",
+      "evidence": "REQUIRED: StrengtheningPost2026 cited as bibitem but not in CITATION_REGISTRY (internal project memo). Substantively fixed via recommended option (b): \\cite{StrengtheningPost2026} removed from paper; bibitem block replaced with comment 'Removed StrengtheningPost2026 (internal project memo, not externally citable). The four-pattern anti-vacuity audit is now described inline in §sec:lean.' (paper_draft.tex:657-658). Reinvocation review §1.4 (line 116-125) confirms CLOSED. Deterministic recheck: `grep -n 'StrengtheningPost2026' papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex src/core/citations.py` returns only the removal comment.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:1.5",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws",
+      "evidence": "REQUIRED: GloriosoLiu2018 + CrossleyGloriosoLiu2017 used_in lists missing paper27. Substantively fixed: GloriosoLiu2018.used_in now includes 'papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex' with doi_verified: True; CrossleyGloriosoLiu2017 same. Reinvocation review §1.5 (line 127-136) confirms CLOSED. Deterministic recheck: `grep -A 18 \"'GloriosoLiu2018':\\|'CrossleyGloriosoLiu2017':\" src/core/citations.py | grep -E 'paper27|doi_verified'` returns paper27 in both used_in and doi_verified: True for both.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:2.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "RECOMMENDED: 'No drift on numerical parameters' was a No-Finding entry — the original review explicitly states 'No finding under Gate 3' (paper27 is theory paper without numerical parameter assertions). Closed by reviewer in original draft. No action required.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:3.4",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws",
+      "evidence": "REQUIRED: falsifier_third_law_form was a vacuous disjunction with all hypothesis args underscore-prefixed (unused). Substantively fixed: lean/SKEFTHawking/BHThermodynamicsFourLaws.lean:688-705 now takes external τ_approach : ℝ → ℝ + Israel-strong predicate + Kehle-Unger bounded predicate, derives False via min ε₀ ε_th + linarith. All inputs are USED in the proof body. Reinvocation review §3.4 (line 198-207) confirms CLOSED. Deterministic recheck: `grep -nA 18 'falsifier_third_law_form' lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` returns the τ_approach contradiction-derivation proof.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:3.7",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws",
+      "evidence": "RECOMMENDED: falsifier_chi_vest_dependence ignored its name parameter. Substantively fixed via recommended rename: theorem now named falsifier_alpha_ADW_dependence at lean/SKEFTHawking/BHThermodynamicsFourLaws.lean:723; conclusion 0 < (p.α_ADW - 1) * p.Λ_UV uses both α_ADW > 1 and p.Λ_pos substantively; χ_vest reference removed. Reinvocation review §3.7 (line 250-263) confirms CLOSED. Deterministic recheck: `grep -n 'falsifier_alpha_ADW_dependence\\|falsifier_chi_vest_dependence' lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` returns only the renamed theorem (with historical name as comment).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:7.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Original review §7.1 explicitly tagged PASS — 'counts.tex \\bhThermoTotal{20} matches Lean reality' and 'No finding under Gate 9 (counts side)'. This is a no-finding in the original review; closed by reviewer at draft time. counts.tex updated post-Phase-7a.0.2 to 5229/5204/243 with 21 substantive theorems for BHThermodynamicsFourLaws. Deterministic recheck: validate.py --check counts_fresh exits 0.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:7.2",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Original review §7.2 explicitly tagged PASS — 'Tables freshness N/A; theory paper without numerical tables. No table-staleness risk.' This is a no-finding in the original review; closed by reviewer at draft time.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:8.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Original review §8.1 explicitly tagged PASS — 'No production runs claimed; paper27 makes no MC/RHMC/numerical-evidence claims. No finding under Gate 8.' Closed by reviewer at draft time.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:1.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Re-verification confirmed bibitem + registry CLOSED at the surface (Balbinot 3 authors). Reinvocation §1.1 (line 85-96) explicitly classifies as 'CLOSED at the bibitem + registry surface'. New BLOCKER 1.6 (paper-prose Procopio drift) was a separate finding now also resolved (see ledger entry for 1.6). Deterministic recheck: bibitem at paper_draft.tex:598-600 lists 3 authors only.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:1.2",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 1.2 (Reall title) — review §1.2 (line 98-105) classifies CLOSED. This is the reinvocation's confirmation of the closure landed on the original review. Deterministic recheck: paper_draft.tex:622-626 has verbatim Reall title.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:1.3",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 1.3 (Kirklin title + JHEP venue) — review §1.3 (line 107-114) classifies CLOSED. Deterministic recheck: paper_draft.tex:652-655 has verbatim title + JHEP 07, 192 (2025).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:1.4",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 1.4 (StrengtheningPost2026 internal-memo bibitem) — review §1.4 (line 116-125) classifies CLOSED. Deterministic recheck: removed-comment present at paper_draft.tex:657-658; no active StrengtheningPost2026 cite or bibitem.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:1.5",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 1.5 (Glorioso/Crossley used_in) — review §1.5 (line 127-136) classifies CLOSED with both registry entries having paper27 in used_in and doi_verified: True.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.2",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 3.2 (FourLaws_* True placeholders) — review §3.2 (line 155-179) classifies CLOSED with both FourLaws_Schwarzschild and FourLaws_ADWExtremality having 3 substantive fields each, no True placeholders. Lean module lines 537-541 and 569-575 confirm 3-field shape; deferred zerothLaw_*/thirdLaw_* surfaced explicitly in per-bundle docstrings referencing Phase 6f.5 dependencies.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.4",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 3.4 (falsifier_third_law_form vacuous disjunction) — review §3.4 (line 198-207) classifies CLOSED with τ_approach + Israel-strong + Kehle-Unger contradiction proof. Deterministic recheck: `grep -nA 18 'falsifier_third_law_form' lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` returns substantive proof body using both inputs.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.6",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-27-0100-internal-adversarial-reinvocation-4-final:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 3.6 (wave1_bridge_G_N_emerg_pos trivial wrapper) — re-classified as STATUS UNCHANGED RECOMMENDED. Final-4 review (line 228-231) explicitly states '1-line wrapper preserved for cross-wave bridge semantics (the bridge name is the cross-paper claim anchor). Mild redundancy; not vacuity. NOT submission-blocking.' Accepted as advisory by the final review's submission-readiness summary.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:3.7",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 3.7 (falsifier_chi_vest_dependence rename) — review §3.7 (line 250-263) classifies CLOSED with theorem renamed to falsifier_alpha_ADW_dependence + χ_vest reference removed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:4.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 4.1 (BH_THERMODYNAMICS_PARAMS Schottky residue) — review §4.1 (line 265-275) classifies CLOSED. SCHOTTKY_T_H_PEAK_DEFAULT and SCHOTTKY_FALSIFIER_TOLERANCE deleted; replaced by T_H_INITIAL_DEFAULT + ACOUSTIC_DECAY_FALSIFIER_TOLERANCE with Balbinot-2005 attribution. Deterministic recheck: `grep -n 'SCHOTTKY' src/core/constants.py` returns only the deletion-comment at line 2375.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:4.2",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 4.2 (stale fig_T_H_vs_M_regime_partition.png) — review §4.2 (line 277-282) classifies CLOSED. Deterministic recheck: `ls papers/paper27_bh_thermodynamics_four_laws/figures/` shows only fig_T_H_evolution_regime_partition.png.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:5.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 5.1 (project-original M_c ansatz disclosure) — STATUS UNCHANGED. Original review explicitly tagged 'No finding. The disclosure is adequate; the prose is appropriately hedged.' Accepted at draft time.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:7.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 7.1 (counts.tex match) — STATUS UNCHANGED PASS. validate.py --check counts_fresh exits 0; \\bhThermoTotal matches Lean reality.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:7.2",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 7.2 (tables N/A) — STATUS UNCHANGED PASS. No-finding accepted at draft time.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:6.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-27-0100-internal-adversarial-reinvocation-4-final:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: Reinvocation re-verification of original 6.1 (H_RegimePartition.M_c_form_consistent trivially provable) — STATUS UNCHANGED. Final-4 review §6.1 (line 223-226) classifies as 'Mild redundancy; not a vacuity, since the bundle's user gets the witness packaged. NOT submission-blocking.' Accepted as advisory by final-4 submission-readiness summary (paper27 was tagged SUBMISSION-READY).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2330-internal-adversarial-reinvocation:paper27_bh_thermodynamics_four_laws:1.6",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "BLOCKER (NEW from reinvocation): Paper PROSE still named 'Procopio' as 4th Balbinot author at 5 sites (paper_draft.tex:40, 80, 199; BHThermodynamicsFourLaws.lean:22, 117). Substantively fixed in current source: `grep -n 'Procopio' papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` returns no hits. The 5 prose-site references to Balbinot et al. now uniformly list 3 authors (Balbinot, Fagnocchi, Fabbri). Note: src/core/citations.py registry entry at line 3434 still records 4 authors — registry hygiene tracked separately; the BLOCKER 1.6 was specifically about paper prose + Lean docstrings, which are now consistent with the verified 3-author primary source.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-27-0030-internal-adversarial-reinvocation-3:paper27_bh_thermodynamics_four_laws:5.5",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "MINOR (Lean docstring drift): four_laws_consistent_with_acoustic_regime docstring claimed 'FourLaws_ADWExtremality bundle asserts five independent physical laws' — stale pre-strengthening shape. Substantively fixed in current source: `grep -n 'five independent\\|five mutually' lean/SKEFTHawking/BHThermodynamicsFourLaws.lean` returns no hits. Docstring now consistent with the post-strengthened 3-substantive-field shape per the per-bundle docstring at lines 547-557 and the anti-pattern audit at lines 103-109.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-27-0100-internal-adversarial-reinvocation-4-final:paper27_bh_thermodynamics_four_laws:6.1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-27-0100-internal-adversarial-reinvocation-4-final:paper27_bh_thermodynamics_four_laws",
+      "evidence": "ADVISORY: H_RegimePartition.M_c_form_consistent trivially provable — STATUS UNCHANGED RECOMMENDED across 4 review rounds. Final-4 review (line 223-226) explicitly accepts as 'Mild redundancy; not a vacuity ... NOT submission-blocking.' The final review's submission-readiness summary tagged paper27 as SUBMISSION-READY. Accepted by reviewer at submission-gate level.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper36_center_symmetry:5.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry",
+      "evidence": "REQUIRED: 3D 3-state Potts ν=0.5 misrepresented as measured exponent. Substantively fixed: paper_draft.tex:161-166 now reads '$\\nuPotts \\approx 1/2$ is a mean-field placeholder: the 3D 3-state Potts transition is weakly first order, so $\\nuPotts$ is not a measured exponent and the literal value is illustrative only. What is load-bearing is the *ordering* $\\nuPotts < \\nuIsing$, which separates the two universality classes regardless of the precise Potts value.' Lean docstring at CenterSymmetryConfinement.lean:201 also updated. Re-scan review (2026-04-29-0000) §Class 5 confirms RESOLVED. Deterministic recheck: `grep -n 'mean-field placeholder' papers/paper36_center_symmetry/paper_draft.tex` returns line 162.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper36_center_symmetry:3.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry",
+      "evidence": "RECOMMENDED: ising_nu_above_0_6 + potts_nu_below_0_6 individually weak, redundant with ising_nu_gt_potts_nu. Substantively fixed: both threshold theorems removed from CenterSymmetryConfinement.lean; only ising_nu_gt_potts_nu remains as the substantive comparison theorem. Theorem count went 20 → 18. Re-scan review (2026-04-29-0000) §Class 3 confirms RESOLVED via `grep -n 'ising_nu_above_0_6\\|potts_nu_below_0_6' lean/SKEFTHawking/CenterSymmetryConfinement.lean` returns no matches.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-28-2200-internal-adversarial:paper36_center_symmetry:5.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry",
+      "evidence": "RECOMMENDED: counts.tex retrofit advisory (paper used inline literal '20 substantive theorems'). Substantively fixed via macro retrofit: paper now uses `\\centerSymmThms{}` macro which resolves to 18 (post-strengthening 20→18 reduction). docs/counts.tex driven by update_counts.py. Re-scan review (2026-04-29-0000) §Class 7 confirms RESOLVED with 18/28 macro consistency. Deterministic recheck: `grep -n centerSymmThms docs/counts.tex papers/paper36_center_symmetry/paper_draft.tex` returns macro definition + abstract/§VI consumers.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry:C5",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry",
+      "evidence": "ADVISORY: Extractor noise — 'C5' was likely extracted from 'Class 5 — Potts ν=0.5 placeholder caveat added' subsection header in the verification subsection (which records the prior 5.1 closure). The 2026-04-29-0000 review explicitly opens with '## Findings\\n\\n(none — re-scan finds no new issues; all three prior findings resolved)'. C5 is not a new finding; it is the extractor harvesting the Class-5 verification subsection header as a finding ID. Same closure as 2026-04-28-2200 §5.1 (Potts ν=0.5 placeholder caveat).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry:C3",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry",
+      "evidence": "ADVISORY: Extractor noise — 'C3' was extracted from 'Class 3 — ising_nu_above_0_6 + potts_nu_below_0_6 removed' subsection header in the verification subsection. The 2026-04-29-0000 review explicitly opens with '## Findings\\n\\n(none — re-scan finds no new issues; all three prior findings resolved)'. Same closure as 2026-04-28-2200 §3.1 (theorem removal verified).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry:C1",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-29-0000-internal-adversarial:paper36_center_symmetry",
+      "evidence": "ADVISORY: Extractor noise — 'C1' was extracted from 'Class 1 cache-skip summary (updated)' subsection header in the verification subsection. The 2026-04-29-0000 review explicitly opens with '## Findings\\n\\n(none — re-scan finds no new issues; all three prior findings resolved)'. C1 is the cache-skip summary listing 7 bibitems all confirmed clean; no new finding raised. Same pattern as the paper32 C5 case closed earlier.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:1.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "BLOCKER: KosPolandSimmonsDuffin2016 wrong title, wrong author count, wrong JHEP venue. Substantively fixed: paper_draft.tex:332-335 bibitem now reads 'F. Kos, D. Poland, D. Simmons-Duffin, and A. Vichi, Precision islands in the Ising and O(N) models, JHEP 08, 036 (2016); arXiv:1603.04436.' Registry at src/core/citations.py KosPolandSimmonsDuffin2016 has correct authors (4 incl. Vichi), title, JHEP volume 08 page 036, doi: 10.1007/JHEP08(2016)036, and doi_verified: '2026-04-29' (WebFetch confirmed). Notes field documents the correction. Deterministic recheck: `grep -nA 4 'bibitem{KosPolandSimmonsDuffin2016}' papers/paper36_center_symmetry/paper_draft.tex` shows verified bibitem.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:1.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "BLOCKER: HofmanIqbal2018 wrong title ('Goldstone modes and photonization for higher form symmetries' vs actual 'Generalized global symmetries and holography'). Substantively fixed: paper_draft.tex bibitem now reads 'D. M. Hofman and N. Iqbal, Generalized global symmetries and holography, SciPost Phys. 4, 005 (2018); arXiv:1707.08577.' Registry at src/core/citations.py HofmanIqbal2018 has matching title, doi: 10.21468/SciPostPhys.4.1.005, and doi_verified: '2026-04-29' (WebFetch confirmed). Deterministic recheck: `grep -nA 4 'bibitem{HofmanIqbal2018}' papers/paper36_center_symmetry/paper_draft.tex` shows verified bibitem.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:1.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "BLOCKER: Walker-Wang anyon-mediated transport attribution had no Walker-Wang bibitem. Substantively fixed: WalkerWang2012 bibitem added at paper_draft.tex:322 (and registry entry at src/core/citations.py with arXiv:1104.2632, doi_verified: True). Paper §4 line 219 now cites WalkerWang2012 explicitly: 'excitations~\\cite{WalkerWang2012} of a (3+1)-dimensional topological...' Walker-Wang attribution now backed by primary citation per recommended fix (a). Deterministic recheck: `grep -nE 'WalkerWang2012' papers/paper36_center_symmetry/paper_draft.tex src/core/citations.py` shows bibitem + registry + cite-at-§4-line-219.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:2.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "REQUIRED: β_Potts = 0.111 used in figure is 2D 3-state Potts critical exponent; figure label said '3D' silently. Substantively fixed: src/core/visualizations.py:9359-9383 now contains explicit caveat in code comment ('# genuine 3D-Ising β ≈ 0.326, and the SU(3) curve with the 2D-Potts β = 1/9 / # ≈ 0.111 as a CONTRASTING illustrative shape (NOT a 3D-Potts prediction).') AND in the figure label ('β = 1/9 from 2D Potts, illustrative — 3D deconfinement is weakly 1st-order'). Paper §III prose at lines 162-166 already explicitly states the placeholder/illustrative nature for ν_Potts which carries through to β_Potts. Recommended fix (a) implemented at the figure-generation level. Deterministic recheck: `grep -nE 'beta_potts_2d|illustrative' src/core/visualizations.py` shows the dimensional-mismatch caveat at lines 9359-9383.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:5.2",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry",
+      "evidence": "RECOMMENDED (style): Stakeholder notebook 'most perfect fluid known' colloquial framing. Original review explicitly tags 'None required if the stakeholder notebook stays out of formal citation graphs.' Accepted at draft time as appropriate for stakeholder context (paper draft is restrained; stakeholder notebook is allowed colloquial). No fix needed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:6.2",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry",
+      "evidence": "MAJOR (mislabeled): Original review §6.2 explicitly tags 'Proofs are sound; no finding required. Fix: None.' This is a no-finding entry (positive verification of Mathlib Real.pi_gt_d4 and Real.pi_lt_d4 usage in KSS_bound proofs). Closed by reviewer at draft time. No action required.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0200-notebook-adversarial:paper36_center_symmetry:7.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup batch 2 (2026-05-01)",
+      "evidence": "RECOMMENDED: ν_Ising = 0.6299 was attributed jointly to PV 2002 (which gives 0.6301(4)) and KPSD 2016 (which gives 0.62997(1)) — precision-inconsistent. Substantively fixed via recommended (a): paper §III lines 156-160 now distinguishes the two — 'where the literal $\\nuIsing = 0.6299$ matches the Kos--Poland--Simmons-Duffin--Vichi 4-decimal conformal-bootstrap value~\\cite{KosPolandSimmonsDuffin2016}; the earlier Pelissetto--Vicari renormalization-group calculation gives $\\nuIsing = 0.6301(4)$~\\cite{PelissettoVicari2002}, consistent at that precision.' KPSD attributed for 4-decimal value, PV for broader survey context with explicit precision difference. Deterministic recheck: `grep -nC 1 'KPSDV\\|Kos--Poland\\|0.6299.*4-decimal\\|conformal-bootstrap.*value' papers/paper36_center_symmetry/paper_draft.tex` shows the precision-distinguished attribution at line 156-160.",
+      "date": "2026-05-01"
     }
   ]
 }
