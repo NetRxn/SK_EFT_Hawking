@@ -15,11 +15,11 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Verdict |
 |---|---:|---:|---:|---:|---|:---:|
-| **F** | 0 | 41 | 99 | 47 | 32 advisory, 31 critical, 16 major, 20 minor | 🔴 RED |
+| **F** | 0 | 41 | 98 | 46 | 32 advisory, 31 critical, 15 major, 20 minor | 🔴 RED |
 | **D1** | 1 | 5 | 16 | 0 | 16 advisory | 🟡 YELLOW |
 | **D2** | 1 | 4 | 4 | 0 | 4 advisory | 🟢 GREEN |
 | **D3** | 1 | 22 | 65 | 38 | 10 advisory, 28 critical, 10 major, 17 minor | 🔴 RED |
-| **D4** | 1 | 7 | 8 | 1 | 5 advisory, 1 major, 2 minor | 🔴 RED |
+| **D4** | 1 | 7 | 7 | 0 | 5 advisory, 2 minor | 🟡 YELLOW |
 | **D5** | 1 | 5 | 12 | 9 | 1 advisory, 4 critical, 5 major, 2 minor | 🔴 RED |
 | **L1** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L2** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
@@ -33,11 +33,11 @@
 
 | Bundle | CitationIntegrity | CountFreshness | ParameterProvenanc | unclassified |
 |---|---:|---:|---:|---:|
-| **F** | 59 | 7 | 12 | 21 |
+| **F** | 59 | 6 | 12 | 21 |
 | **D1** | 8 | 0 | 2 | 6 |
 | **D2** | 3 | 0 | 0 | 1 |
 | **D3** | 42 | 6 | 8 | 9 |
-| **D4** | 4 | 2 | 0 | 2 |
+| **D4** | 4 | 1 | 0 | 2 |
 | **D5** | 5 | 0 | 2 | 5 |
 | **L1** | 0 | 0 | 0 | 0 |
 | **L2** | 0 | 0 | 0 | 0 |
