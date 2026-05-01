@@ -233,6 +233,18 @@ not independently re-derive the underlying physics bound. Each MCC
 content item is sourced individually to its deep-research memo. Upgrading
 MCC entries to Derived is a Phase~6 target.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_phase5x_candidate_viability_matrix.png}
+\caption{\label{fig:phase5x_viability_matrix}
+Phase~5x candidate viability matrix: 4-of-5 candidates pass basic
+viability filters, the FG-torsion candidate is excluded (encoded as
+\texttt{phase5x\_candidates\_viability\_matrix} in
+\texttt{DarkSectorSynthesis.lean}; honesty-table label MCC since the
+flag values are hand-assigned per W2/W4/W7 deep-research bounds).
+Lifted from paper17.}
+\end{figure}
+
 \subsection{SFDM cluster-merger forecast (Money Plot)}
 \label{subsec:sfdm-merger}
 
@@ -254,6 +266,28 @@ $N \gtrsim 30$ radio-relic mergers reach the $3$--$5\sigma$ detection
 threshold, with the velocity-threshold step function at $M{=}1$ as the
 SFDM-unique smoking gun (\texttt{sfdm\_offset\_step\_function} in
 \texttt{SFDMMergerForecast.lean}).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_sfdm_velocity_threshold_step.png}
+\caption{\label{fig:sfdm-money-plot-left}
+Money plot (left): DM--galaxy offset vs $M = v_{\rm infall}/c_s$ for
+SFDM (step function at $M{=}1$, the defining signature), SIDM (smooth
+monotonic rise at $\sigma/m = \SI{1}{\centi\meter\squared\per\gram}$),
+and CDM (null). Five canonical mergers plotted as diamonds. Lean:
+\texttt{sfdm\_offset\_step\_function}. Lifted from paper17.}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig28_adw_effective_potential.png}
+\caption{\label{fig:adw-veff}
+ADW effective potential $V_{\rm eff}(C) = (C^4/4) \ln(C/\Lambda) -
+C^4/16$ from the gap equation. Critical point at $C_0 = \Lambda
+e^{-1/4}$ (Lean: \texttt{critical\_coupling\_pos}); depth
+$-\Lambda^4/(4e)$. In perfect Minkowski vacuum the Volovik tetrad
+self-tuning absorbs this to $\Lambda_{\rm eff} = 0$. Lifted from paper17.}
+\end{figure}
 
 %% ─── End lift from paper17_dark_sector ───
 
@@ -333,6 +367,19 @@ mutually consistent in the BK-fiducial parameter window. The framework
 is the program's \emph{expected-falsifier}: it disqualifies $\geq 1$
 Phase~5x DM candidate upon discharge of the thermalization tracked
 hypothesis, in line with the program's Phase~6 falsifier-driven discipline.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_bbn_conformance_matrix.png}
+\caption{\label{fig:bbn-conformance}
+BBN conformance matrix for the five Phase~5x DM candidates against
+Planck~$2\sigma$ slack $\Delta N_{\rm eff} \leq 0.34$: T-0, C-1, and
+FractonPWave pass unconditionally; S-0 (sterile) gives $\Delta N_{\rm
+eff} = 3.0$ (factor $\sim 7.8\times$ excess) and FGTorsion gives
+$\Delta N_{\rm eff} \geq 1.0$ as radiation-thermalized e-loops, both
+conditional on thermalization at $T_{\rm BBN} \approx
+\SI{1}{\mega\electronvolt}$. Lifted from paper29.}
+\end{figure}
 
 %% ─── End lift from paper29_bbn_unified ───
 
@@ -416,6 +463,20 @@ a CC-channel mechanism that does \emph{not} require fine-tuning of
 $\bar\theta$; the prediction is parameter-free given $\Lambda_{\rm QCD}$
 and $M_P$.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_zhitnitsky_de_theta_scan.png}
+\caption{\label{fig:zhitnitsky-theta-scan}
+Zhitnitsky topological-DE energy density scan: $\rho_{\rm DE} = \theta^2
+\Lambda_{\rm QCD}^6 / M_P^2$ versus the topological angle $\theta$. The
+naturally-$\mathcal{O}(1)$ value $\theta = 1$ (rightmost band) lies
+$\sim 240\times$ above the observed $\rho_{\rm DE,obs} = 2.8 \times
+10^{-11}\,\text{eV}^4$ (horizontal line); $|\theta| \lesssim 10^{-9}$
+constrained by the neutron-EDM bound (vertical line) gives
+$\rho_{\rm DE} \sim 10^{-29}\,\text{eV}^4$. Both bounds sit
+$\sim 120$ orders below the Planck-natural $M_P^4$. Lifted from paper32.}
+\end{figure}
+
 %% ─── End lift from paper32_strong_cp_de ───
 
 
@@ -489,6 +550,21 @@ applied at the EP-channel layer establishes that the
 vestigial-relic prediction is in a substrate channel distinct from the
 WEP-conformant channels of the other five mechanisms.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_ep_violation_matrix.png}
+\caption{\label{fig:ep-violation-matrix}
+EP-violation matrix across six emergent-gravity mechanisms vs three EP
+levels (WEP, EEP, SEP). Two violators (vestigial differential coupling at
+$\eta = 1$, already excluded by MICROSCOPE; vestigial relics at $\eta
+\sim 10^{-18}$, at STEP design sensitivity) plus four conformant
+mechanisms (Einstein-Cartan torsion-trace, fracton subdiffusion,
+Berezhiani-Khoury SFDM, $\mathbb{Z}_{16}$ singlets) all at
+\texttt{violationLevel = none}. Lean:
+\texttt{vestigial\_phase\_eta\_violates\_microscope\_bound}. Lifted
+from paper34.}
+\end{figure}
+
 %% ─── End lift from paper34_equivalence_principle ───
 
 
@@ -546,6 +622,21 @@ Gate~E.4 closes the structural assessment of the heat-kernel approach to
 the dark-sector CC channel: the program reproduces the classical CC
 problem on this channel, leaving the §\ref{subsec:adw-cc} +
 §\ref{sec:paper32} mechanisms as the load-bearing CC predictions.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_lambda_emerg_parameter_scan.png}
+\caption{\label{fig:lambda-emerg-scan}
+Emergent cosmological constant $\Lambda^{\rm emerg}(\Lambda_{\rm UV},
+N_f) = a_0(N_f) \cdot \Lambda_{\rm UV}^4$ from heat-kernel expansion
+across the natural $(\Lambda_{\rm UV}, N_f)$ parameter band. At
+$(\Lambda_{\rm UV} \simeq M_{\rm Pl},\ N_f = 16)$ the prediction
+exceeds $\Lambda_{\rm obs} \simeq 2.6 \times 10^{-47}\,\text{GeV}^4$ by
+$> 10^{120}$. Verdict bands: resolved (green; $\Lambda^{\rm emerg}
+\approx \Lambda_{\rm obs}$), intermediate (yellow), reproduced
+(red; classical CC problem regenerated at the natural microscopic
+point). Lifted from paper42b.}
+\end{figure}
 
 %% ─── End lift from paper42b_cc_emergent ───
 
