@@ -10,7 +10,7 @@
   "stage13_redo_required": true,
   "freshness_stale": false,
   "source_manifest_last_regen": "2026-05-01T13:09:42Z",
-  "last_lift": "2026-05-01T13:14:58Z",
+  "last_lift": "2026-05-01T15:30:00Z",
   "last_stage9_review": null,
   "last_stage10_review": null,
   "last_stage13_review": null,
@@ -19,5 +19,5 @@
   "stage13_review_doc": null,
   "audit_log_path": "papers/I1/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "Phase 7a sub-wave 7a.2 initial draft 2026-05-01. \u00a71, \u00a72, \u00a76, \u00a77, \u00a714 substantive; \u00a73-\u00a75, \u00a78-\u00a713 stubbed with informative outlines. Reviewer triple deferred until stubs filled."
+  "notes": "Phase 7a sub-wave 7a.2 stub-completion 2026-05-01T15:30Z. All 14 sections substantively authored: \u00a71-\u00a72 architecture; \u00a73-\u00a75 worked cases (FirstOrderKMS counterexample / gap-solution-bounded disproof / chirality-wall axiom decomposition); \u00a76 14-stage pipeline with 14 invariants; \u00a77 preemptive-strengthening discipline (P2-P7 anti-patterns); \u00a78 sentence-level provenance + bundle architecture; \u00a79 Aristotle integration; \u00a710 fresh-context adversarial-reviewer pattern; \u00a711 Phase 6f W1-W6 substrate first-formalizations sidebar; \u00a712 Riemannian connection sidebar; \u00a713 structural-Prop scoping discipline; \u00a714 lessons + future work. 1338 lines, 14 sections. Ready for reviewer triple (Stage 9/10/13)."
 }

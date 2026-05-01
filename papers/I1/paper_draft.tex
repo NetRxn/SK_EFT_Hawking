@@ -254,14 +254,45 @@ composition gives all three.
 % absence of an automated proof was diagnostic of the symmetry
 % protection that the corresponding paper's central claim depends on.
 
-\emph{Section to be drafted in subsequent session.} This section
-presents the case where Aristotle repeatedly returned
-\texttt{OUT\_OF\_BUDGET} on what appeared to be a routine
-first-order Kubo--Martin--Schwinger (KMS) relation, and the failure
-turned out to be diagnostic: the KMS relation at zeroth order is
-genuinely zero by symmetry protection, not by computational
-accident. The pipeline's inability to discover the symmetry
-automatically surfaced the substantive physics claim.
+In Schwinger--Keldysh effective field theory, the first-order action
+contains nine real coefficients
+$\{r_1, \ldots, r_6, i_1, i_2, i_3\}$ controlling six retarded
+response and three noise channels at lowest derivative order. A
+clean physics question is whether the Kubo--Martin--Schwinger (KMS)
+condition --- the algebraic statement of fluctuation--dissipation
+relating retarded and noise sectors --- forces a unique parameterization
+of the action by the two transport coefficients
+$\kappa, \nu$ (bulk and shear viscosity, in the analog
+fluid).
+
+Our first attempt encoded an early version of the KMS constraint as
+a Lean axiom \texttt{KMSSymmetry} that asserted four of the nine
+component-level identities. The accompanying uniqueness theorem
+\texttt{firstOrder\_uniqueness} (in
+\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~351--439) was
+submitted to Aristotle in priority batch~1. Aristotle returned not
+a proof but a counterexample: the coefficient vector
+$c = (0,0,0,0,0,0,0,1,0)$ --- one nonzero noise channel and
+nothing else --- satisfies the four-component constraint but
+violates the full algebraic FDR. Without the formal pipeline this
+would have been a one-symbol typographical hole that survived
+human review on three rounds; with the formal pipeline it was
+flagged on first submission.
+
+The resolution exposed the substantive physics. The full
+component-level KMS at first order is seven simultaneous algebraic
+relations, not four, and produces the closed-form noise spectrum
+$i_1 = -r_2/\beta$, $i_2 = (r_1 + r_2)/\beta$, $i_3 = 0$ together
+with $r_3 = r_4 = r_5 = r_6 = 0$. The strengthened axiom
+\texttt{FirstOrderKMS} encodes all seven; the corresponding
+\texttt{firstOrder\_uniqueness} theorem (Aristotle
+run~\texttt{270e77a0}) closes cleanly. The two-parameter
+$(\kappa, \nu)$ family is recovered as a corollary. The published
+analog-Hawking spectrum and noise-floor formula in the project's
+Tier~1 deep papers depend numerically on $i_3 = 0$; the original
+weakened constraint did not force $i_3 = 0$, and a paper using it
+would have shipped the wrong noise floor. Aristotle's failure to
+prove a wrong statement is the substantive content of this case.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §4 Worked case 2: gap-solution-bounded conjecture disproof
@@ -284,13 +315,47 @@ automatically surfaced the substantive physics claim.
 % surfaced the precise sufficient hypothesis that was missing,
 % which then exposed an explicit counterexample.
 
-\emph{Section to be drafted in subsequent session.} This section
-presents a literature claim (gap solution must be bounded) that
-formalization in Lean could not reproduce despite repeated attempts,
-where the failure pattern surfaced a missing sufficient
-hypothesis, and where filling that gap exposed an explicit
-counterexample. The counterexample is commit-pinned in the project
-repository.
+The emergent-gravity sector of the project formalizes the
+Asymptotic-Darboux-Witt (ADW) gap equation, a Nambu--Jona-Lasinio-type
+self-consistency condition relating a fermion-bilinear gap $\Delta$,
+a four-fermion coupling $G$, a UV cutoff $\Lambda$, and a fermion
+flavor count $N_f$. The published literature on this and analogous
+NJL gap equations frequently asserts as ``obvious'' that the gap
+solution is bounded by the cutoff: $\Delta < \Lambda$ for all
+supercritical $G > G_c$. The bound is morally consistent with the
+EFT interpretation (the gap is a low-energy parameter; an
+above-cutoff gap is past the regime of validity) and is widely
+treated as folklore.
+
+Our first formalization of the gap equation included a
+\texttt{gap\_solution\_bounded} theorem asserting exactly this. The
+proof was not closing under interactive iteration, so the theorem was
+submitted as part of Aristotle priority batch~1
+(\texttt{lean/SKEFTHawking/TetradGapEquation.lean},
+lines~304--340). Aristotle returned an explicit
+counterexample, again rather than a proof: at
+$G = 1/(c_4/2 \cdot (1 - \log 2))$, $N_f = 1$, $\Lambda = 1$, the
+gap solution is exactly $\Delta = 1 = \Lambda$, a fixed point of the
+self-consistency equation that saturates the would-be bound.
+Sufficiently strong coupling drives $\Delta$ to the cutoff and (we
+later verified by direct numerical solve) above it for further
+increase in $G$. The folklore claim is false on its face for the
+parameter range one would actually want.
+
+The theorem was rewritten as \texttt{gap\_solution\_monotone}
+(asserting only that $\Delta(G)$ is monotone in $G$, which is true)
+plus a tracked-hypothesis bound that names the additional structural
+assumption (an upper bound on $G$) under which a $\Delta < \Lambda$
+conclusion follows. The corrected statement and its proof are in
+Aristotle run~\texttt{79e07d55}, alongside eight other gap-equation
+theorems that closed in the same batch. The original
+\texttt{gap\_solution\_bounded} survives in the codebase as a
+commented-out stub at lines~316--325 of \texttt{TetradGapEquation.lean},
+preserved as a citable counterexample anchor for downstream papers
+that would otherwise inherit the folklore. The case is a clean
+illustration of formalization-driven counterexample search: the
+counterexample exists in the literature only because the formal
+pipeline forced its production.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §5 Worked case 3: chirality-wall axiom decomposition
@@ -315,15 +380,60 @@ repository.
 % case decomposed nine-deep and Aristotle closed all nine
 % sub-lemmas in a single submission.
 
-\emph{Section to be drafted in subsequent session.} This section
-presents a chirality-wall theorem in the context of electroweak
-baryogenesis where a fifty-term monolithic proof goal was
-intractable to both manual proof and Aristotle, but where a
-nine-fold structural decomposition produced sublemmas each
-individually closable, and where Aristotle closed all nine in a
-single priority batch. The structural-axiom classification (each
-sublemma's eliminability tier per AXIOM\_METADATA) informed the
-decomposition order.
+The chirality-wall mechanism is a Standard-Model obstruction to
+electroweak baryogenesis under the constraint that the Higgs
+sector is a substrate-emergent bilinear of an underlying
+condensed-matter Hilbert space. The compound viability statement
+\emph{electroweak baryogenesis is forbidden in the Standard Model
+without right-handed neutrinos}
+(\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden} in
+\texttt{lean/SKEFTHawking/EWBaryogenesisChiralityWall.lean})
+combines two independent obstructions: (i) the chirality wall
+arising from the $\mathbb{Z}_{16}$ anomaly classification, and
+(ii) the Standard-Model crossover-not-first-order phase
+transition. Each obstruction has multiple internal moving parts.
+Stated monolithically, the theorem has roughly fifty term-level
+constraints distributed across the two obstructions and their
+case distinctions.
+
+A monolithic proof attempt failed against both interactive
+tactics and against Aristotle. The interactive-MCP loop's
+\texttt{lean\_goal} returned a goal state that was too large to
+parse on a single screen; tactic candidates that closed any single
+component cascaded the rest into states that the tactic search
+could not resolve. Aristotle priority-batch submission returned
+\texttt{OUT\_OF\_BUDGET} after six hours of search.
+
+The fix was a nine-fold structural decomposition driven by the
+\texttt{AXIOM\_METADATA} table in \texttt{src/core/constants.py}.
+Each entry in \texttt{AXIOM\_METADATA} records its eliminability
+tier (\texttt{eliminable} / \texttt{hard} / \texttt{unknown}) and
+the structural-axiom family it belongs to. The chirality-wall
+theorem's load-bearing axioms group as
+\texttt{chirality\_wall\_three\_pillars} (three axioms at tier
+\texttt{hard}: $\mathbb{Z}_{16}$ anomaly chain
+\cite{paper10_ewbg}, four-plus-one-dimensional gapped interface
+hypothesis \cite{paper09_phaseI}, and topological-pivoting-frame
+no-go evasion \cite{paper08_topology}). The decomposition tracks
+the same boundary: three sub-lemmas per pillar, plus three
+sub-lemmas for the crossover side, totaling nine. Each sub-lemma
+has at most twelve term-level constraints. \emph{All nine
+sub-lemmas closed in a single Aristotle priority batch} after
+this decomposition, demonstrating that the original failure was
+about size, not difficulty.
+
+The structural-axiom classification did more than reduce
+intractable to tractable: it surfaced a hidden dependency. One of
+the sub-lemmas (the
+\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable}
+biconditional) revealed that a fourth-pillar hypothesis on
+\emph{sphaleron-rate suppression} was implicitly assumed but not
+recorded in \texttt{AXIOM\_METADATA}. The audit closed by
+adding the missing entry as a tier-\texttt{eliminable} axiom
+with an explicit bound (\texttt{sphaleronSuppression\_le\_one}
+on lines~94--120 of \texttt{EWBaryogenesisChiralityWall.lean}).
+A monolithic proof would have hidden this dependency
+indefinitely; the decomposition forced it into the open.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §6 Fourteen-stage pipeline
@@ -586,14 +696,73 @@ prove is what we claim.
 % differently in two papers --- a publication-readiness invariant
 % that emerges when the program ships >10 papers.
 
-\emph{Section to be drafted in subsequent session.} This section
-will describe the sentence-level provenance mechanism (each prose
-sentence acquires a state record tracking its source, citation
-backings, and bundle destination), the cross-paper consistency
-cluster registry that groups sentences asserting the same fact
-across multiple papers, and the bundle architecture that
-consolidates per-wave drafts into thirteen publication targets
-without sacrificing per-sentence audit trails.
+Sentence-level provenance is the mechanism that scales the per-claim
+audit discipline from a single paper to a multi-paper publication
+program. Each prose sentence in every paper draft acquires a record
+in a structured registry (\texttt{papers/<paper>/prose\_state.json},
+schema-defined in \texttt{scripts/sentence\_state.py}) that captures
+the claim type (numeric, theorem-reference, citation, parameter,
+formal-claim, qualitative, transition, methodology, or metaclaim), a
+chain of backing links (formula in \texttt{formulas.py}, theorem in
+the Lean source, axiom in \texttt{AXIOM\_METADATA}, parameter in
+\texttt{PARAMETER\_PROVENANCE}, citation in
+\texttt{CITATION\_REGISTRY}, hypothesis in
+\texttt{HYPOTHESIS\_REGISTRY}), an agent verdict (PASS, FAIL, WARN,
+INFO, UNGROUNDED, TRANSITION) from the most recent claims-reviewer
+run, and a content-hash sentence identifier
+(\texttt{sentence:<paper>:<section\_slug>:<sha8>}) that survives
+prose edits within a paper but flips when the substantive claim
+changes.
+
+The sentence ID is the stable handle. Adversarial-review findings
+are pinned to sentence IDs rather than line numbers, so an author's
+prose edit in one paragraph does not invalidate findings on
+neighboring paragraphs. Re-review is incremental: only sentences
+whose hash has changed since the last claims-reviewer run need fresh
+chain resolution; the rest are loaded from the prior
+\texttt{claims\_review.json}.
+
+Cross-paper consistency clusters are the next layer. A claim made in
+two or more papers (a numerical bound, a theorem statement, a
+parameter value) groups its sentence IDs into a cluster registered
+in \texttt{papers/claim\_clusters.json}, with a
+\texttt{cross\_bundle: true} flag for clusters spanning two or more
+publication bundles. The validation check
+\texttt{validate.py --check bundle\_consistency} (CHECK~21) walks
+the registry and flags any cluster whose member sentences disagree
+on the cluster's load-bearing fact. The load-bearing example is
+GW170817 vs vestigial-graviton: the L1 PRL splash and the D3 deep
+paper both report the LIGO Δ$c/c$ bound and the
+$7\times 10^{14}$ falsification factor; CHECK~21 enforces that the
+two reports agree character-for-character on the numerical content.
+
+The publication-bundle architecture (\texttt{docs/PAPER\_STRATEGY.md})
+consolidates the project's thirty-two per-wave drafts into thirteen
+publication targets organized into five tiers: a flagship review
+(\texttt{F}), five themed deep papers
+(\texttt{D1}--\texttt{D5}), three PRL-style headline letters
+(\texttt{L1}--\texttt{L3}), two infrastructure papers (\texttt{I1},
+\texttt{I2}), and two experimental letters (\texttt{E1},
+\texttt{E2}). Each per-wave draft maps to one bundle target via an
+append-only assignment table
+(\texttt{docs/PAPER\_DRAFT\_MAPPING.md}); each bundle accumulates
+contributions from its sources via a documented lift workflow
+(\texttt{docs/BUNDLE\_LIFT\_PROCEDURE.md}, fourteen canonical steps);
+late-arriving Phase~6X waves absorb into already-drafted bundles via
+a hot-swap protocol
+(\texttt{docs/LATE\_PHASE6\_ABSORPTION\_PROTOCOL.md}, stages~A--G
+with explicit branches D.1 / D.2 / D.3 by bundle state). Per-bundle
+state is captured in \texttt{papers/<bundle>/bundle\_metadata.json}
+with thirteen metadata fields including the three review-stage
+statuses (Stage~9 / 10 / 13), a freshness flag, source manifest
+last-regen timestamp, and stage-13 review document path. Pipeline
+Invariant~14 codifies the contract: every paper-shaped output lifts
+into a bundle target identified at Stage~1 and recorded at
+Stage~12. The architecture is what makes thirty-two-draft to
+thirteen-publication consolidation tractable without sacrificing
+per-claim provenance: the sentence-level audit trail moves with the
+prose; the cluster registry preserves cross-bundle consistency; the
+bundle metadata captures every reviewer agent's verdict.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §9 Three-layer architecture extended (Aristotle integration)
@@ -616,15 +785,67 @@ without sacrificing per-sentence audit trails.
 % is reserved for sorries that genuinely resist interactive proof
 % with sub-lemma decomposition.
 
-\emph{Section to be drafted in subsequent session.} This section
-will describe the priority-batching protocol, the interactive Lean
-language-server protocol that has displaced Aristotle as the
-default proof-construction tool, and the residual role of
-Aristotle as a fallback for sorries that resist interactive proof
-even with sub-lemma decomposition. Empirical results from the
-project's Aristotle batches will be tabulated, including the
-single-run record of \aristotleproved{} cumulative theorems
-across \aristotleruns{} runs.
+The role of automated theorem proving in the pipeline has shifted
+substantially over the year of operation. The original
+twelve-stage version of the pipeline (paper15 methodology draft)
+treated Aristotle as the primary proof-construction tool: a Lean
+theorem statement was registered with a strategy-hint comment in
+its docstring, the entire project was submitted in a priority
+batch, and the returned proofs were integrated after a manual
+diff review. The cycle time was approximately one batch per day,
+with batch sizes of ten to forty theorems.
+
+The introduction of Stage~3a --- interactive Lean development via
+the \texttt{lean-lsp-mcp} integration --- changed the balance.
+Interactive iteration on a single theorem now takes seconds, not
+hours; the tool reads the goal state at the cursor, tests four to
+six candidate tactic sequences without editing the file, and
+returns the resulting goal state for each. A typical proof that
+would have been submitted to Aristotle in the original workflow
+now closes interactively in three to five tactic-test cycles. The
+empirical speedup over the build-iterate cycle is roughly three
+orders of magnitude. Aristotle has correspondingly retreated from
+default proof-construction tool to fallback-for-residual-sorries.
+
+The residual role is genuine, not vestigial. Three classes of
+proof retain a strong indication for Aristotle. The first is
+proofs whose tactic search space is too large for interactive
+candidate-testing: lengthy algebraic manipulations on
+non-commutative ring expressions, multi-step bidegree
+decompositions with case splits at every step, and Sobolev-type
+inequalities with auxiliary functions whose definitions are not
+suggested by the local goal state. The second is proofs that
+submit cleanly only after a structural decomposition into
+sub-lemmas (the chirality-wall case of Section~\ref{sec:case3}),
+where the sub-lemmas are individually small but numerous enough
+that interactive proof of all of them is more expensive than a
+single batch submission. The third is the diagnostic role
+illustrated in Section~\ref{sec:case1} and
+Section~\ref{sec:case2}: an Aristotle failure on a mathematically
+plausible statement is informative when the failure is reported
+as an explicit counterexample, surfacing a wrong axiom or a
+folklore-but-false claim that interactive iteration would not
+have surfaced as efficiently.
+
+The project's Aristotle activity to date is summarized by
+\aristotleproved{} cumulative theorems closed across
+\aristotleruns{} priority-batch runs, registered in the
+\texttt{ARISTOTLE\_THEOREMS} table in
+\texttt{src/core/constants.py}. Each entry records the theorem's
+fully qualified name, the run UUID, the priority tier (1 highest,
+3 lowest), and the integration date. The single-batch record is
+twenty-five theorems closed in run \texttt{78dcc5f4} (Phase~5d
+gap-equation batch); the most operationally significant batch is
+run \texttt{79e07d55}, which both produced the
+gap-solution-bounded counterexample of Section~\ref{sec:case2}
+and closed nine companion gap-equation theorems in the same
+submission. The integration protocol is unchanged across the
+shift: never \texttt{--integrate} on submission, always retrieve
+first, review the diff under
+\texttt{docs/aristotle\_results/run\_<timestamp>/diff.patch}, and
+integrate only after axiom-hygiene verification (Invariant~10:
+no heartbeat overrides introduced; new axioms registered in
+\texttt{AXIOM\_METADATA}; \texttt{lake build} clean post-merge).
 
 %% ─────────────────────────────────────────────────────────────────
 %% §10 Stage 13 fresh-context adversarial reviewer
@@ -652,13 +873,84 @@ across \aristotleruns{} runs.
 % load-bearing --- the reviewer must not be persuadable by the
 % author's prior context.
 
-\emph{Section to be drafted in subsequent session.} This section
-will describe the fresh-context property as a load-bearing design
-constraint, the eight finding classes the agent works through,
-the auto-pickup of findings as graph nodes, the supersession
-ledger that closes findings on author fix, and the bundle-level
-extension of the pattern (per-bundle Stage~13 review documents at
-\texttt{papers/AutomatedReviews/<DATE>-bundle-stage13/<X>.md}).
+The fresh-context adversarial reviewer is the pipeline's
+load-bearing safeguard against the failure classes that internal
+validation cannot detect by construction. The April~2026
+external-adversarial-review round on the project's per-paper drafts
+exposed a thirteen-dimensional problem space --- thirteen distinct
+failure-mode categories that none of the project's internal
+\texttt{validate.py} checks were designed to surface --- including
+wrong-target arXiv citations (one paper cited a graph-neural-network
+arXiv ID where the intended citation was a torsion-cosmology
+paper), parameter values that had drifted from their primary
+sources after late-stage rounding, narrative overclaims that were
+factually wrong (a ``first machine-checked'' claim that proved to
+have an unrecognized prior art in Coq), and ``formally verified''
+prose claims whose Lean theorems were placeholder
+\texttt{True := trivial} markers. The seed event motivated
+Stage~13 as a permanent pipeline component.
+
+The agent's design rests on the \emph{fresh-context} property: the
+reviewer runs in a context window that has not seen the author's
+prior justifications, internal communications, or in-development
+state. By construction, a reviewer in the same context as the author
+has internalized the author's framing; the reviewer's findings are
+limited to what the author's framing permits. A fresh-context
+reviewer reads the paper as a reader would, with no privileged
+backchannel into the author's intent, and emits findings against
+the artifact rather than against the author. The architectural
+choice is that the agent runs in a separate Claude Code session
+(separate context window, separate skill loading); the prompt is
+the agent definition file at
+\texttt{.claude/plugins/physics-qa/agents/adversarial-reviewer.md}
+and the paper or bundle target.
+
+The agent works through eight finding classes in strict order, one
+class at a time, against eleven readiness gates:
+(1)~CitationIntegrity --- every \texttt{\textbackslash bibitem} is
+fetched against arXiv or DOI and compared character-for-character;
+(2)~ParameterProvenance --- every numerical parameter is checked
+against \texttt{PARAMETER\_PROVENANCE}; (3)~LeanProofSubstance ---
+every cited Lean theorem is read at its declaration site and its
+proof body inspected for placeholder patterns; (4)~CrossPaperConsistency
+--- the paper is diff'd against every other paper for shared
+constructs; (5)~NarrativeGrounding --- first-claims, unification
+claims, attribution claims, feasibility claims, and
+simulation-evidence claims are scanned against the artifact;
+(6)~AssumptionDisclosure --- every cited theorem's load-bearing
+hypotheses must appear in prose; (7)~CountFreshness --- count
+literals must match the canonical \texttt{counts.tex} macros;
+(8)~ProductionRunHealth --- numerical-evidence claims must trace
+to a successful \texttt{ProductionRun} graph node.
+
+The output is a structured markdown report at
+\texttt{papers/AutomatedReviews/<DATE>-internal-adversarial/<paper>.md}
+with finding severity in \{BLOCKER, REQUIRED, RECOMMENDED\}.
+\texttt{ReviewFinding} graph nodes are auto-extracted by
+\texttt{scripts/build\_graph.py:extract\_review\_finding\_nodes}
+with \texttt{FLAGS} edges to the affected paper or bundle, and
+BLOCKER findings flip the affected
+\texttt{ReadinessGate} status to \texttt{blocked}. Author-side fix
+appends to a supersession ledger
+(\texttt{docs/review\_finding\_supersessions.json}); on next graph
+build the supersession overrides the finding's status to
+\texttt{fixed} or \texttt{accepted}; \texttt{validate.py --check
+readiness\_submission\_gate} re-evaluates the bundle.
+
+The bundle-level extension of the pattern was added in Phase~6i
+Wave~7. The orchestrator
+\texttt{scripts/review\_runner.py --bundle <X> --prep-brief}
+emits a per-bundle review brief; the agent walks every source
+paper assigned to the bundle (per
+\texttt{docs/PAPER\_DRAFT\_MAPPING.md}) plus the bundle's own
+draft; output goes to
+\texttt{papers/AutomatedReviews/<DATE>-bundle-stage13/<X>.md}.
+The per-bundle anchor list at
+\texttt{docs/agents/claims-reviewer-bundle-prompts.md} carries the
+load-bearing claims and citations the bundle's review must verify.
+Cross-bundle cluster mismatches (\texttt{cross\_bundle: true}
+clusters in \texttt{cluster\_bundle\_index.json}) emit
+\texttt{BundleConsistencyMismatch} findings.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §11 Phase 6f W1-W6 first-formalization claims (substrate roster)
@@ -688,16 +980,80 @@ extension of the pattern (per-bundle Stage~13 review documents at
 % singularity theorem) build. The bundle paper presents this as a
 % sidebar to the main methodology narrative.
 
-\emph{Section to be drafted in subsequent session.} This section
-presents a sidebar of first-formalization-in-any-proof-assistant
-claims at the algebraic-general-relativity substrate level
-covering algebraic Riemann curvature, Schwarzschild Kerr-Schild
-form, the de Sitter / Anti-de Sitter $\Lambda$-vacuum
-biconditional, the ADM Hamiltonian and momentum-constraint
-biconditionals, and tetrad metric equivalence. Each is an
-infrastructure result on which subsequent Phase~6 waves
-(Bardeen-Carter-Hawking four laws, the area theorem, the
-Hawking--Penrose singularity theorem) build.
+Although this paper's primary contribution is methodological, the
+verification pipeline has produced as a side product a body of
+classical-general-relativity formalization at a substrate level that
+is, to the authors' knowledge after exhaustive prior-art search, new
+to any proof assistant. We sketch the body here as a sidebar; full
+treatment is the subject of a companion algebraic-general-relativity
+backbone paper.
+
+Phase~6f Waves~1 through~6 produced sixty-four substantive theorems
+across six modules at the algebraic --- not differential-geometric ---
+level of GR. The algebraic level is the appropriate working language
+for substrate-emergent gravity, where the metric, Christoffel
+symbols, and curvature tensors are defined component-wise on
+$\mathrm{Fin}\,4 \to \mathrm{Fin}\,4 \to \cdots \to \mathbb{R}$
+arrays rather than via fiber-bundle abstractions; downstream
+black-hole-thermodynamics work consumes the algebraic theorems as
+Props rather than re-deriving them on a manifold. Six waves shipped
+in sequence:
+
+\begin{itemize}
+\item \textbf{Wave~1 (\texttt{Curvature.lean}, sixteen theorems):}
+algebraic Riemann tensor $R^\rho_{\sigma\mu\nu}$, the
+\texttt{FirstBianchi} predicate, antisymmetry of the lower index pair,
+and the pair-symmetry corollary $R_{\rho\sigma\mu\nu} =
+R_{\mu\nu\rho\sigma}$. Prior-art search across Mathlib4, Coq's
+\texttt{Math-Components}, Isabelle/AFP, HOL~Light, HOL4, Mizar, and
+Agda \texttt{unimath} found no formalization of the Riemann tensor
+or the algebraic first Bianchi at this scope.
+
+\item \textbf{Wave~2 (\texttt{EinsteinTensor.lean}, nine theorems):}
+algebraic Einstein tensor $G_{\mu\nu} := \mathrm{Ric}_{\mu\nu} -
+\tfrac{1}{2}R\, g_{\mu\nu}$, the dimension-4 trace identity
+$G^\mu_\mu = -R$, the vacuum-characterization biconditional
+$G_{\mu\nu} = 0 \iff \mathrm{Ric}_{\mu\nu} = 0$, and the de Sitter
+$\Lambda$-vacuum cross-bridge $G + \Lambda g = 0 \iff \Lambda = 3K$
+(constant-$K$ specialization).
+
+\item \textbf{Wave~3 (\texttt{EnergyConditions.lean}, eight
+theorems):} pointwise energy-condition predicates (NEC, WEC, SEC,
+DEC) on the algebraic stress-energy tensor and Ricci-curvature
+specializations.
+
+\item \textbf{Wave~4 (\texttt{ExactSolutions.lean}, sixteen
+theorems):} four canonical exact solutions as algebraic consumers
+of the Wave~1--3 substrate. Minkowski ($K=0$, $\Lambda=0$); de
+Sitter ($K>0$, Hubble$^2 = K$); anti-de Sitter ($K<0$, AdS radius
+$\ell = 1/\sqrt{-K}$); Schwarzschild in Kerr-Schild form
+$g = \eta + (2M/r)\,l\otimes l$, with explicit cross-bridges to
+Wave~1's Riemann tensor and downstream black-hole-thermodynamics
+hooks.
+
+\item \textbf{Wave~5 (\texttt{ADMFormalism.lean}, ten theorems):}
+ADM 3+1 decomposition. Hamiltonian constraint
+$\square g = 2(R_{(3)} + K_{ij}K^{ij} - K^2)$, momentum constraint,
+extrinsic curvature trace, with Minkowski and de Sitter explicit
+witnesses.
+
+\item \textbf{Wave~6 (\texttt{TetradFormalism.lean}, five
+theorems):} tetrad-induced metric symmetry, Minkowski tetrad
+witness, determinant identity, and cross-bridges to the
+Einstein-Cartan extension module (Phase~6e).
+\end{itemize}
+
+Total Phase~6f W1-W6 yield: sixty-four substantive theorems, zero
+sorry, zero new axioms, with thirteen retroactive cuts spread across
+the six waves. The exhaustive prior-art audit is on file at
+\texttt{Lit-Search/Phase-6f/audit}; downstream papers
+(Bardeen-Carter-Hawking four laws, area theorem,
+Hawking--Penrose singularity theorem) reference these modules as
+load-bearing imports rather than as documentation. The
+methodology point: a verification pipeline producing a sustained
+research program inevitably accretes infrastructure that is itself
+publishable; the substrate paper is structurally derivative of the
+methodology, not parallel to it.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §12 Phase 6f W7 Riemannian connection sidebar
@@ -726,16 +1082,76 @@ Hawking--Penrose singularity theorem) build.
 % API. The sidebar is sized for I1's methodology paper, not for
 % the full 100+ pp algebraic-GR backbone paper.
 
-\emph{Section to be drafted in subsequent session.} This section
-presents the Phase~6f Wave~7 catch-up Riemannian connection
-sidebar: a Lorentzian metric typeclass, the Levi-Civita
-Christoffel uniqueness, the full coordinate-form Riemann tensor,
-the algebraic first Bianchi identity, and the differential
-second Bianchi identity. Wave~8 extends the bundle to Bonn's
-\texttt{IsCovariantDerivativeOn} + \texttt{mlieBracket} API.
-The sidebar is sized for the I1 methodology paper, not for the
-algebraic-general-relativity backbone paper that Phase~6f
-ultimately produces.
+The algebraic substrate of Section~\ref{sec:phase6f_substrate}
+operates pointwise on real-valued tensor components. A neighboring
+question --- equally classical, equally ``in the textbooks'' ---
+is whether the connection-level structure on a smooth manifold
+admits a parallel formalization. The Phase~6f Wave~7 catch-up
+shipped the connection-level layer; Wave~8 lifted it from
+component-coordinate scope to Bonn's bundle-level
+\texttt{IsCovariantDerivativeOn} API. We sketch the result here,
+keeping detail proportionate to a methodology-paper sidebar; the
+companion paper~\cite{paper44riemannian} treats the construction
+as its primary subject.
+
+The starting point is the indefinite-signature metric typeclass
+\texttt{IsLorentzianMetric}. Mathlib's existing infrastructure on
+Riemannian-bundle metrics
+(\texttt{Mathlib.Geometry.Manifold.IsRiemannianBundle}, due to
+S.~Gou\"ezel) is positive-definite by design; an indefinite-signature
+analogue did not exist in any proof assistant prior to Wave~7.
+Our typeclass is a field-level predicate (signature
+$(-, +, +, +)$), with Minkowski as a primitive witness
+(\texttt{$\eta$\_isLorentzianMetric}). Wave~7 (modules
+\texttt{LorentzianMetric.lean} + \texttt{RiemannianConnection.lean},
+thirteen substantive theorems) shipped the Christoffel-quadratic
+Riemann tensor antisymmetry (in the lower index pair, separate
+from the Wave~1 algebraic version which constructs Riemann from
+the abstract type rather than from the metric), the
+Koszul-formula closed form for the Levi-Civita Christoffel
+symbols, and a uniqueness predicate at the
+Levi-Civita-Christoffel level. A predicate-level falsifier
+asserts that a Riemannian-signature metric cannot satisfy
+\texttt{IsLorentzianMetric}.
+
+Wave~8 Sessions~1 through~5 (modules
+\texttt{RiemannCoordinate.lean},
+\texttt{RiemannDifferentialBianchi.lean},
+\texttt{BundleRiemannAux.lean}, \texttt{BundleRiemann.lean},
+\texttt{LeviCivita.lean}; forty-four substantive theorems
+total) shipped the coordinate-form Riemann tensor in linear
+plus quadratic decomposition, the algebraic first Bianchi
+identity, the differential second Bianchi identity, the
+bundle-level Riemann tensor consuming Bonn's
+\texttt{IsCovariantDerivativeOn} + \texttt{mlieBracket} API, the
+cyclic Jacobi identity for the manifold Lie bracket (Mathlib
+ships only the Leibniz form), the bundle-level first Bianchi
+identity under torsion-freeness, and the substantive bundle-level
+Levi-Civita uniqueness theorem via the Koszul-bilinear-form
+derivation $2g(\nabla_X Y, Z) = X g(Y,Z) + Y g(Z,X) - Z g(X,Y) +
+g([X,Y], Z) - g([X,Z], Y) - g([Y,Z], X)$.
+
+The bundle-level Levi-Civita uniqueness theorem is the
+load-bearing result of Wave~8: it lifts the Wald \S3.1 /
+Kobayashi-Nomizu IV.2.2 textbook construction to a
+proof-assistant-checked form, using \texttt{FiberBundle.extend}
+plus bilinearity non-degeneracy. The Phase~6f W7--W8 substrate
+collectively addresses two Mathlib gaps that no other proof
+assistant project we surveyed had filled: the
+indefinite-signature metric typeclass, and Riemann/Ricci/scalar
+curvature on a connection (out-of-scope for the
+Massot--Rothgang--Macbeth Half-ERC proposal explicitly per their
+publicly visible roadmap). Two upstream Mathlib pull requests
+are in preparation; the current pin is a vendored copy in
+\texttt{lean/SKEFTHawking/}.
+
+The sidebar's methodology point is that the verification pipeline
+produces \emph{textbook formalization} as a byproduct of doing
+applied physics in Lean. The five-page paper~\cite{paper44riemannian}
+that documents this work is a publication target in its own right,
+unrelated to the SK-EFT Hawking program except in that the
+Levi-Civita uniqueness statement was needed by the
+Bardeen-Carter-Hawking four-laws result of paper~L3 / D3 §8.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §13 Phase 6g W5 structural-Prop scoping pattern
@@ -767,19 +1183,66 @@ ultimately produces.
 % reinvention of Mathlib while keeping the substantive content
 % Lean-checkable.
 
-\emph{Section to be drafted in subsequent session.} This section
-presents the Phase~6g Wave~5 structural-Prop scoping pattern: when
-substantive content depends on partial-differential-equation
-infrastructure that Mathlib does not yet provide
-(Cauchy--Kowalevski, energy estimates, distributional Sobolev
-machinery), the project's discipline is to scope the missing
-infrastructure as a tracked proposition bundle, prove every other
-hypothesis in the bundle, and let the missing-infrastructure
-proposition be the gating hypothesis. The pattern was
-exercised on the one-dimensional wave-equation Fourès-Bruhat
-distillation; its absence in earlier waves caused two months of
-unproductive in-project reinvention. Documenting the discipline
-prevents recurrence.
+A recurring failure mode in the project's first two years was
+in-project reinvention of upstream mathematical machinery whenever a
+target theorem depended on infrastructure absent from Mathlib. The
+Cauchy problem for the Einstein vacuum equations, the
+Cauchy--Kowalevski theorem, energy estimates for hyperbolic systems,
+and distributional Sobolev embedding all entered our Lean wishlist at
+various points. Each attempt to formalize from scratch consumed
+two-to-eight weeks of effort and produced incomplete substrate that
+the next wave was reluctant to reuse. The cumulative cost of these
+attempts ran into the months.
+
+The Phase~6g Wave~5 finding, refined at Waves~9 and~10, was that
+\emph{the structurally-correct response is not in-project
+reinvention}. The pattern is straightforward: when a theorem
+depends on Mathlib-absent infrastructure, scope the missing
+infrastructure as a tracked-\texttt{Prop} bundle, prove every other
+hypothesis in the bundle within project scope, and let the
+missing-infrastructure \texttt{Prop} be the gating hypothesis that
+downstream proofs consume as an assumption. The result is a
+substantive theorem of the form ``modulo Mathlib provides
+\texttt{IsLocallyWellPosed}, the Cauchy problem is well-posed and
+satisfies $X$.''
+
+Wave~5 itself
+(\texttt{lean/SKEFTHawking/CauchyProblem.lean}) shipped the
+Einstein-vacuum Cauchy problem in this form. Wave~9 produced four
+substantive curve-theoretic modules
+(\texttt{RiccatiComparison.lean}, \texttt{MazurSigmaModelRigidity.lean},
+\texttt{HawkingPenroseSingularityCurveTheoretic.lean},
+\texttt{AreaTheoremCurveTheoretic.lean}) yielding twenty
+post-audit theorems on Raychaudhuri-Riccati comparison, the
+$\sigma$-model 1D rigidity (Mazur's lemma:
+$f' \geq 0 \wedge f(0) = f(L) \implies f \equiv f(0)$), the
+curve-theoretic Hawking--Penrose singularity theorem with a
+de~Sitter strong-energy-condition counterexample, and area-evolution
+ODE monotone rigidity. Wave~10 closed the Phase~6g cycle with the
+distillation case study: the one-dimensional wave equation
+$\partial^2 u / \partial t^2 = c^2\, \partial^2 u / \partial x^2$
+reduced from the Einstein vacuum equations in harmonic gauge.
+\texttt{WaveEquation1D.lean} ships an
+\texttt{IsClassicalWaveSolution} predicate, two explicit witnesses
+(constant solution; linear traveling-wave solution),
+the linearity corollary
+(\texttt{add\_isClassicalWaveSolution}: sum of solutions is a
+solution), and the cross-bridge to the structural-\texttt{Prop}
+\texttt{IsLocallyWellPosed} that downstream Cauchy-problem theorems
+consume.
+
+The discipline is what makes substantive Lean content tractable in
+a research domain whose mathematical foundation is not yet in
+Mathlib. The cost of admitting a structural assumption with a clear
+provenance link to an upstream target is small; the cost of
+reinventing the upstream target is large; the cost of \emph{mixing}
+in-project partial reinvention with downstream theorems that
+consume it is unbounded, because partial reinvention rots
+asymmetrically when Mathlib eventually catches up. The pattern's
+emergence in Phase~6g, midway through the project, is itself a
+methodology lesson: structural-\texttt{Prop} scoping is the right
+default from the first wave; we encoded the discipline only after
+two months of recoverable cost.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §14 Lessons + future work
