@@ -363,20 +363,40 @@ Step-by-step protocol for absorbing a new Phase 6X wave's output into already-dr
 
 ---
 
-### 7a.4 — `BUNDLE_LIFT_PROCEDURE.md` and `LATE_PHASE6_ABSORPTION_PROTOCOL.md` post-I1/I2 refinement [Pipeline: Stage 12]
+### 7a.4 — `BUNDLE_LIFT_PROCEDURE.md` and `LATE_PHASE6_ABSORPTION_PROTOCOL.md` post-I1/I2 refinement [Pipeline: Stage 12] **[SHIPPED 2026-05-01]**
 
 **Goal.** Capture lessons from sub-waves 7a.2 + 7a.3, refine the procedure documents drafted in sub-wave 7a.1.5/7a.1.6, and freeze them as canonical references for subsequent Phase 7b/7c/... waves.
 
 **Sub-sub-tasks:**
 
-- 7a.4.1: Audit `BUNDLE_LIFT_PROCEDURE.md` against actual I1 + I2 lift execution — flag steps that were overlooked, ambiguous, or out-of-order. Update document.
-- 7a.4.2: Audit `LATE_PHASE6_ABSORPTION_PROTOCOL.md` against the conceptual rehearsal of "what if a hypothetical Phase 6n landed during sub-wave 7a.2/7a.3." (No actual Phase 6n is required.) Document any gaps.
-- 7a.4.3: Update CLAUDE.md Tier-2 references to add `BUNDLE_LIFT_PROCEDURE.md` + `LATE_PHASE6_ABSORPTION_PROTOCOL.md` (reference #9 + #10).
-- 7a.4.4: Update `WAVE_EXECUTION_PIPELINE.md` Stage 10 section to note the bundle-lift procedure as the canonical Stage 10 activity for Phase 7+ waves.
+- 7a.4.1: Audit `BUNDLE_LIFT_PROCEDURE.md` against actual I1 + I2 lift execution — flag steps that were overlooked, ambiguous, or out-of-order. Update document. **[SHIPPED — 12 refinements absorbed]**
+- 7a.4.2: Audit `LATE_PHASE6_ABSORPTION_PROTOCOL.md` against the conceptual rehearsal of "what if a hypothetical Phase 6n landed during sub-wave 7a.2/7a.3." (No actual Phase 6n is required.) Document any gaps. **[SHIPPED — Stage A.alt + D.4 branch added for sourceless / Lean-only late absorption]**
+- 7a.4.3: Update CLAUDE.md Tier-2 references to add `BUNDLE_LIFT_PROCEDURE.md` + `LATE_PHASE6_ABSORPTION_PROTOCOL.md` (reference #9 + #10). **[SHIPPED]**
+- 7a.4.4: Update `WAVE_EXECUTION_PIPELINE.md` Stage 10 section to note the bundle-lift procedure as the canonical Stage 10 activity for Phase 7+ waves. **[SHIPPED]**
 
-**Effort:** ~0.5 person-week.
+**Effort:** ~0.5 person-week. **Actual: ~1 session (no surprises).**
 
-**Decision Gate 7a.4:** procedure documents frozen; CLAUDE.md + pipeline reference Phase 7a deliverables; subsequent Phase 7b can begin without procedure-document iteration.
+**Decision Gate 7a.4:** procedure documents frozen; CLAUDE.md + pipeline reference Phase 7a deliverables; subsequent Phase 7b can begin without procedure-document iteration. **GATE PASSED 2026-05-01.**
+
+**12 refinements to `BUNDLE_LIFT_PROCEDURE.md` (sub-wave 7a.4.1):**
+
+1. Hard-gated reviewer ordering — Stage 13 may not invoke until Stages 9 + 10 GREEN (preamble + §10).
+2. Sourceless-bundle path — §3b for I2-style bundles with no per-paper sources to lift.
+3. Unicode in figure source — `→` not `&rarr;` to avoid kaleido HTML-entity rendering bug (§6).
+4. Tier-3 reproducibility-anchor block — Aristotle run ID or commit-pinned counterexample mandatory in I-bundle figure captions (§6).
+5. LaTeX compile gate before Stage 9 — clean `pdflatex` mandatory; lifted source-paper tables can carry latent bugs (§7).
+6. 4-table cross-registry attribution audit — verify AXIOM_METADATA / PLACEHOLDER_THEOREMS / HYPOTHESIS_REGISTRY / BORDISM_HYPOTHESES table membership before citing (§7 gate 1).
+7. Hedging discipline — never hedge counts with "alt convention" without proving convention sensitivity (§7 gate 2).
+8. Cross-program prior-art verifiability — every UniMath/Agda/Isabelle/AFP claim resolves to a real ecosystem reference (§7 gate 3).
+9. Broadening categorical-consistency check — verify each addition belongs in the broadened category (§7 gate 4 + §11 round-broadening discipline).
+10. Plugin-agent fallback path — general-purpose Agent + agent definition file when `physics-qa:*` not available as `subagent_type` (§§8–10).
+11. Multi-bundle parallelism explicit — different bundles can run reviewers in parallel; same bundle must be sequential (§9).
+12. All-occurrence grep + supersession-ledger discipline — `git grep` before declaring referential fix complete; ledger entry must include deterministic-recheck evidence (§11 steps 3–4).
+
+**2 refinements to `LATE_PHASE6_ABSORPTION_PROTOCOL.md` (sub-wave 7a.4.2):**
+
+1. Stage A.alt — Lean-only Phase 6X output (no per-paper draft). Gate is `lake build` clean instead of per-paper Stage-13 GREEN. Promoted from hypothetical to real after I2's sourceless-bundle pattern in 7a.3.
+2. D.4 branch in Stage D — sourceless / Lean-only late absorption. Structurally identical to D.2 but uses synthetic source-paper key matching `BUNDLE_LIFT_PROCEDURE.md` §3b. Stage F re-review still mandatory.
 
 ---
 

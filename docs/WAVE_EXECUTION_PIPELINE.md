@@ -385,7 +385,12 @@ uv run python scripts/review_figures.py
 
 **Purpose:** Write the paper with full provenance for every claim.
 
-**Actions:**
+**Two paradigms apply, depending on phase:**
+
+- **Phase ≤ 6X (per-paper drafts in `papers/paperN_*/`):** the actions in this section are canonical.
+- **Phase 7+ (bundle drafts in `papers/<bundle>/` for I1, I2, D1–D5, L1–L3, F, E1, E2):** Stage 10 is implemented by the **canonical bundle-lift procedure** documented in `docs/BUNDLE_LIFT_PROCEDURE.md` (frozen at Phase 7a sub-wave 7a.4, 2026-05-01). The bundle-lift procedure is *the* Stage 10 activity for Phase 7+; the per-paper actions below remain as the substrate framework that bundle-lift §3a/§3b draws from. Late-Phase-6 absorption events follow `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (Stages A–G with branches D.1/D.2/D.3/D.4).
+
+**Actions (per-paper paradigm; substrate for bundle paradigm):**
 - Copy validated PNGs to `papers/paper<N>_<name>/figures/`
 - Write/update `.tex` with `\includegraphics` — NEVER use `\fbox` placeholders
 - Every numerical claim must trace to `formulas.py` or `constants.py`

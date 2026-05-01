@@ -1,12 +1,12 @@
 # Late-Phase-6 Absorption Protocol
 
-**Phase 7a sub-wave 7a.1.6 deliverable** (initial draft; updated with examples on first absorption event).
+**Phase 7a sub-wave 7a.1.6 initial draft (2026-05-01); audited and FROZEN at sub-wave 7a.4 (2026-05-01) via conceptual rehearsal of "what if a hypothetical Phase 6n landed during sub-wave 7a.2/7a.3."** Updated with worked-example examples on first real absorption event.
 
 Step-by-step protocol for absorbing a new Phase 6X wave's output (e.g., Phase 6n, 6o, ...) into already-drafted bundles after Phase 7 sub-phases have started. The load-bearing **robustness** document for the Phase 7 architecture.
 
 **Design rationale.** User direction 2026-04-30: *"i anticipate more phase 6 items being added, make sure the process you put in place for 7a's & the corresponding roadmap is robust to new items that may pop in past 6m."* The bundle architecture (`PAPER_STRATEGY.md` + `PAPER_DRAFT_MAPPING.md`) was designed assuming the source-paper roster is roughly stable; this protocol documents how *append-only* expansion happens with minimal re-work.
 
-**Default branch:** D.2 (additive append via `bundle_append.py`). D.1 is passive; D.3 requires manual author judgment.
+**Default branch:** D.2 (additive append via `bundle_append.py`). D.1 is passive; D.3 requires manual author judgment. **D.4** (sourceless / Lean-only late absorption) is added at sub-wave 7a.4 freeze after the I2 lift demonstrated that fully-sourceless bundles are a real pattern, not a hypothetical.
 
 ---
 
@@ -41,6 +41,22 @@ Phase 6X follows its own roadmap; produces Lean modules, per-paper drafts, worki
 
 **Gate:** `validate.py --check readiness_submission_gate` shows no RED papers among Phase 6X's contributions.
 
+#### Stage A.alt — Lean-only Phase 6X output (no per-paper draft)
+
+If Phase 6X output is purely Lean-module + working-docs synthesis with **no per-paper draft** (analogous to I2's sourceless pattern from Phase 7a sub-wave 7a.3), Stage A's per-paper Stage-13-closure precondition does not apply. Substitute:
+
+- **Gate (Lean-only):** the Phase 6X Lean modules build cleanly under `lake build` (zero sorry, zero new axioms, zero retroactive cuts) per `WAVE_EXECUTION_PIPELINE.md` Stage 5; substantive content is documented in a working-docs file under `temporary/working-docs/`; ARCHITECTURE_SCOPE.md updated.
+
+- **Stage B variant:** the `PAPER_DRAFT_MAPPING.md` row uses `Lift-action: Synthesize` (not `Lift-section`) and the source-paper key is the synthetic `<bundle>_initial_draft` form (matching `BUNDLE_LIFT_PROCEDURE.md` §3b sourceless path). Concretely:
+
+  ```markdown
+  | `<bundle>_initial_draft` | <Title> | Phase 6X W<wave> | **<Bundle> §<N>** | Synthesize |
+  ```
+
+- **Stage D variant:** the bundle treats this as **D.4** (sourceless append) rather than D.2 — see Stage D below.
+
+The remainder of the protocol (Stages C, E, F, G) applies unchanged.
+
 ### Stage B — Bundle assignment
 
 Phase 6X owner adds a row (or several) to `docs/PAPER_DRAFT_MAPPING.md` Table 1 per Pipeline Invariant #14:
@@ -71,7 +87,7 @@ Effects:
 
 ### Stage D — Branch by bundle state
 
-For each affected bundle, classify into one of three branches:
+For each affected bundle, classify into one of four branches:
 
 #### D.1 — Bundle not yet drafted (passive pickup)
 
@@ -121,6 +137,25 @@ Steps:
 **Owner:** Phase 7 sub-phase owner + lead author. **Stage F re-review is mandatory** (no advisory-only path).
 
 **Authorization gate:** if revision substantially changes bundle's published-claim profile, user authorization is required.
+
+#### D.4 — Sourceless / Lean-only late absorption
+
+`paper_draft.tex` exists AND new content is purely additive (D.2 form) but the contributing Phase 6X output has **no per-paper draft** — only Lean modules + working-docs synthesis. The bundle absorbs the Lean substrate directly.
+
+**Action:** structurally identical to D.2, but use the synthetic source-paper key:
+
+```bash
+uv run python scripts/bundle_append.py \
+    --bundle <X> \
+    --source-paper "<bundle>_phase6X_W<wave>_lean_only" \
+    --insertion-point '<§N>' \
+    --notes "Late absorption (sourceless): Phase 6X W<wave> <topic> — Lean-only substrate" \
+    --lean-modules "<Module1>,<Module2>,..."
+```
+
+Citations in §<N> reference Lean modules / theorem names directly (no `\cite{paperN_topic}` since no source per-paper draft exists). Stage F re-review is mandatory; the synthetic key is recorded in `append_log.json` for audit-trail purposes.
+
+**Owner:** Phase 7 sub-phase owner. Stage A.alt gate (Lean-only build clean) must have passed before invoking D.4.
 
 ---
 
@@ -179,13 +214,14 @@ uv run python scripts/bundle_clusters.py
 
 ---
 
-## Branch decision (D.1 vs D.2 vs D.3) — quick reference
+## Branch decision (D.1 vs D.2 vs D.3 vs D.4) — quick reference
 
-| Condition | Branch | Owner |
-|---|---|---|
-| `papers/<bundle>/paper_draft.tex` does not exist | **D.1** | passive (no action) |
-| `paper_draft.tex` exists AND new content is additive | **D.2** | Phase 7 sub-phase owner |
-| `paper_draft.tex` exists AND new content overturns/refines prior content | **D.3** | Phase 7 owner + lead author |
+| Condition | Branch | Owner | Stage A gate |
+|---|---|---|---|
+| `papers/<bundle>/paper_draft.tex` does not exist | **D.1** | passive (no action) | n/a (deferred) |
+| `paper_draft.tex` exists AND new content is additive AND Phase 6X has per-paper draft | **D.2** | Phase 7 sub-phase owner | A (per-paper Stage-13 GREEN) |
+| `paper_draft.tex` exists AND new content overturns/refines prior content | **D.3** | Phase 7 owner + lead author | A (per-paper Stage-13 GREEN) |
+| `paper_draft.tex` exists AND new content is additive AND Phase 6X is Lean-only | **D.4** | Phase 7 sub-phase owner | A.alt (Lean build clean) |
 
 ---
 
@@ -250,4 +286,4 @@ The following protocol stages may require explicit user authorization before pro
 
 ---
 
-*Created Phase 7a sub-wave 7a.1.6 (2026-05-01). Updated with worked-example examples on first real absorption event. Cross-referenced from `BUNDLE_LIFT_PROCEDURE.md`, `Phase7_Roadmap.md`, `Phase7a_Roadmap.md`, `WAVE_EXECUTION_PIPELINE.md`.*
+*Created Phase 7a sub-wave 7a.1.6 (2026-05-01). **FROZEN at sub-wave 7a.4 (2026-05-01)** via conceptual rehearsal of "what if a hypothetical Phase 6n landed during sub-wave 7a.2/7a.3." Two refinements absorbed: (1) Stage A.alt for Lean-only Phase 6X output (no per-paper draft) — promoted from hypothetical to real after I2's sourceless-bundle pattern; (2) D.4 branch in Stage D for sourceless late absorption. Stages F (re-review per `BUNDLE_LIFT_PROCEDURE.md` §8/§9/§10/§11/§13) and G (cross-bundle consistency) inherit the same hardened ordering and BLOCKER-resolution discipline frozen in `BUNDLE_LIFT_PROCEDURE.md` 7a.4. Updated with worked-example examples on first real absorption event. Cross-referenced from `BUNDLE_LIFT_PROCEDURE.md`, `Phase7_Roadmap.md`, `Phase7a_Roadmap.md`, `WAVE_EXECUTION_PIPELINE.md`.*

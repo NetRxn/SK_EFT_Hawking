@@ -1,10 +1,12 @@
 # Bundle Lift Procedure
 
-**Phase 7a sub-wave 7a.1.5 deliverable** (initial draft; refined post-I1/I2 in 7a.4).
+**Phase 7a sub-wave 7a.1.5 initial draft (2026-05-01); refined and FROZEN in sub-wave 7a.4 (2026-05-01) against actual I1 + I2 lift execution.**
 
 Canonical 14-step workflow for lifting per-paper draft content into a publication bundle (`papers/<X>/`). Consumed by all Phase 7 sub-phases (7a–7g) and by the late-Phase-6 absorption protocol (`docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md`).
 
 **Stages 9, 10, 13 are three distinct reviewer-agent invocations.** Each writes to its own output location; findings consolidate via the supersession ledger. Do not conflate them.
+
+**Reviewer-stage ordering is a hard gate.** Stage 13 (adversarial review) may not be invoked until **both** Stage 9 (figure review) AND Stage 10 (claims review) are GREEN, with all fixes from those stages applied. Stages 9 and 10 may run in parallel against the same bundle if the bundle has no figure-prose dependencies; otherwise sequence them. Across *different* bundles, all three stages may run in parallel — multi-bundle parallelism is encouraged when the work is independent.
 
 ---
 
@@ -46,9 +48,13 @@ Creates (idempotent):
 
 Schema: `docs/BUNDLE_DIRECTORY_SCHEMA.md`.
 
-### §3. Initial lift / append (per source paper)
+### §3. Initial lift / append (per source paper, OR sourceless synthesis)
 
 > **Framing (load-bearing).** Bundles are *synthesis-driven new compositions*, not stitched-together copies of source per-paper drafts. The per-paper material is **substrate** — raw research content the bundle draws from — but the bundle's narrative arc, section structure, and prose are **authored fresh** with cross-program synthesis as the goal. The `bundle_append.py` script registers a source as contributing to the bundle and inserts a structural anchor (a section heading + TODO comment) so the bookkeeping (`source_manifest.md`, `append_log.json`) stays accurate; it does NOT copy source prose. Section bodies are authored in §7 below.
+
+**Two paths:**
+
+#### §3a. Sourced bundle (typical case)
 
 For each contributing source:
 
@@ -63,6 +69,24 @@ uv run python scripts/bundle_append.py \
 ```
 
 The first invocation per bundle uses `--initial-lift` to create the `paper_draft.tex` skeleton. Subsequent calls register additional sources without copying their content.
+
+#### §3b. Sourceless bundle (fresh synthesis from Lean substrate; e.g. I2)
+
+Some bundles have no per-paper-draft sources to lift — their substrate is Lean modules + working-docs synthesis only. The canonical example from Phase 7a is **I2** (lean-tensor-categories + VerifiedJackknife software/methodology paper). For these:
+
+```bash
+uv run python scripts/bundle_append.py \
+    --bundle <X> \
+    --source-paper "<X>_initial_draft" \
+    --insertion-point '§1' \
+    --notes "Sourceless synthesis: substrate is <N> Lean modules + working-docs notes" \
+    --lean-modules "<comma-separated Lean module names>" \
+    --initial-lift
+```
+
+The synthetic source-paper key (`<X>_initial_draft`) registers the lift event in `append_log.json` even though no `papers/<key>/` directory exists. `bundle_metadata.json` should record `notes: "fresh-authored as a synthesis-driven new composition (no per-paper-draft sources to lift; sourceless per PAPER_DRAFT_MAPPING.md)"`.
+
+#### §3c. Common to §3a / §3b
 
 After append: `bundle_metadata.json.last_lift` = now; `stage13_redo_required` = true; `stage{9,10,13}_status` reset to `pending`.
 
@@ -92,6 +116,12 @@ Manual / scripted task (no script wraps this yet — defer to ad-hoc `bibtool` i
 - Copy each source's referenced figures from `papers/<source>/figures/` into `papers/<X>/figures/`.
 - Preserve `# viz-ref:` tags on the corresponding figure entries (else CHECK 6 / `viz_consistency` flags drift).
 - Bundle-specific re-renders (e.g., scale changes, multi-panel composites) go through `src/core/visualizations.py` per Pipeline Invariant #3.
+- **Use Unicode glyphs in figure source, not HTML entities.** kaleido renders HTML entities literally (e.g. `&rarr;` ships as the literal string `&rarr;` in the PNG, breaking review). Use `→`, `←`, `↔`, `⊗`, `⊕`, `≅`, `≃`, `∈`, etc. directly. Verified during I2 round-3 figure review (i2_fig5).
+- **Tier-3 reproducibility-anchor requirement (I-bundles only):** every worked-case figure in I1 / I2 must cite either an Aristotle run ID (e.g. `270e77a0`, `79e07d55`) **or** a commit-pinned counterexample (`commit:<sha>`) inside the figure's caption. Stage 13 will FAIL the figure if the anchor is missing or unresolvable. The reproducibility-anchor block has the form:
+  ```
+  Reproduces: Aristotle run <ID> (sealed YYYY-MM-DD)
+  ```
+  Batch-level Aristotle run IDs (one ID covering multiple sub-lemmas) are an advisory yellow, not a fail — Stage 10 will attempt registry pin in a follow-up round.
 
 ### §7. Paper-draft authoring (synthesis-driven)
 
@@ -101,10 +131,27 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 - Cite source per-paper drafts with `\cite{paperN_topic}` if/where the bundle's claim depends on a result derived in that source. Otherwise reference Lean modules / theorem names directly.
 - Replace inline numerical literals with `\input{tables/<spec_id>.tex}` per Phase 5v table-pipeline pattern.
 - Bundle headline claims should advance the program's synthesis: cross-program structural results, multi-mechanism falsifiers, methodology lessons that transcend any single wave, etc. — not just "results from waves X+Y bundled together."
-- Verify draft compiles:
+- **LaTeX compile gate (mandatory before §8).** Run:
   ```bash
   cd papers/<X>/ && pdflatex paper_draft.tex
   ```
+  After every substantive edit. The compile must produce a clean PDF with no `Missing $` / `Misplaced &` / `Undefined control sequence` errors. Lifted source-paper tables can carry latent bugs (e.g., during I1 sub-wave 7a.2 the lifted `tables/table1_stages.tex` had 4 cells in a 3-column tabular and was missing Stages 4 + 14 — caught by compile, not by Stage 9). **Stage 9 may not be invoked until LaTeX compiles cleanly.**
+
+**Substantive content gates (mandatory before §8):**
+
+1. **4-table cross-registry attribution audit.** When citing a registry entry, verify *which* of the four canonical tables in `src/core/constants.py` it lives in:
+   - `AXIOM_METADATA` — formal axioms with eliminability tier (currently 1: `gapped_interface_axiom`, hard)
+   - `PLACEHOLDER_THEOREMS` — sorry-free theorem stubs awaiting full proof
+   - `HYPOTHESIS_REGISTRY` — tracked-hypothesis Props (algebraic / model / cross-program tiers)
+   - `BORDISM_HYPOTHESES` — bordism-specific tracked hypotheses (e.g., Shapiro-style side-channels)
+
+   The four tables together form the *structural-axiom landscape*. A name found in HYPOTHESIS_REGISTRY misattributed to AXIOM_METADATA is a Stage 13 BLOCKER (caught during I1 sub-wave 7a.2 round-2). Use `git grep "<name>" src/core/constants.py` to verify table membership before writing the citation.
+
+2. **Hedging discipline on quantitative claims.** Never hedge a count or numerical literal with "alt convention" or "+N depending on convention" without proving the convention sensitivity. If counts disagree across tools, find the truth — convention drift framing masks actual content drift. (I2 sub-wave 7a.3 round-2 → round-3: §5 number-field count "161 ± 3 alt convention" was actually 164 canonical; the +3 was real drift, not convention sensitivity.)
+
+3. **Cross-program prior-art verifiability.** When claiming prior art in cross-language formalization ecosystems (Coq UniMath, Agda categories, Isabelle/AFP, HOL4, Mizar, Idris, Megalodon, etc.), every claim must resolve to a verifiable URL or canonical ecosystem reference. Hallucinated cross-language libraries (e.g., "Steinberg pivotal-Coq library", "Agda unimath" — UniMath is Coq, not Agda, "Isabelle/AFP Tensor Networks") are an attribution failure caught by Stage 13 (I2 sub-wave 7a.3 round-2). When in doubt, cite the ecosystem at the project level (UniMath; Mathlib4) rather than naming a specific library that may not exist.
+
+4. **Definition before broadening.** When broadening an attribution from a narrow to a wider class (e.g., "Microsoft" → "broader research community pursuing Majorana platforms"), verify each addition belongs in the broadened category. Surface code is *abelian-stabilizer-class* QEC, not non-Abelian-anyon TQC; do not group them in a non-Abelian-anyon parenthetical (I2 sub-wave 7a.3 round-2 → round-3).
 
 **Reviewer scope (per user direction 2026-05-01):** Stages 9 / 10 / 13 (§§8–10 below) review the **bundle paper**, not the source per-paper drafts. Findings on `papers/paperN_*/` are not in Phase 7's scope; per-paper material that gets synthesized into a bundle is reviewed via the bundle's own stage triple.
 
@@ -113,6 +160,8 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 **Agent:** `physics-qa:figure-reviewer` (plugin agent at `.claude/plugins/physics-qa/agents/figure-reviewer.md`).
 
 **Invocation:** direct via Skill tool with parameter `bundle_target=<X>`.
+
+**Plugin-agent fallback path.** If `physics-qa:figure-reviewer` is not available as a `subagent_type` in the current runtime (observed during Phase 7a 7a.2/7a.3 execution), fall back to a `general-purpose` Agent invocation prompted to load and follow the agent definition file at `.claude/plugins/physics-qa/agents/figure-reviewer.md`. The fallback path produces equivalent output to the direct Skill invocation but adds ~1 round-trip; prefer the direct path when available.
 
 **Output:**
 - `papers/<X>/figures/figure_review_report.json`
@@ -126,7 +175,9 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 
 **Agent:** `physics-qa:claims-reviewer` (plugin agent at `.claude/plugins/physics-qa/agents/claims-reviewer.md`).
 
-**Invocation:** direct via Skill tool with parameter `bundle_target=<X>`.
+**Invocation:** direct via Skill tool with parameter `bundle_target=<X>`. Plugin-agent fallback path same as §8.
+
+**Multi-bundle parallelism is fine** — two `claims-reviewer` invocations against *different* bundles (e.g., I1 + I2 simultaneously) run independently. Same-bundle invocations must be sequential. Verified during Phase 7a sub-waves 7a.2 + 7a.3 (user-confirmed: *"oh i see - good job scoping - multi-paper is fine."*).
 
 **Anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` row for `<X>` (per-bundle anchor of load-bearing claims + citations the bundle's review must verify).
 
@@ -143,6 +194,8 @@ This is the substantive bundle work. The `\section` skeleton from §3 is just st
 **Agent:** `adversarial-reviewer` (plugin agent at `.claude/plugins/physics-qa/agents/adversarial-reviewer.md`).
 
 **Orchestrator:** `scripts/review_runner.py --bundle <X> --prep-brief` (Phase 6i Wave 7.4 deliverable; bundle-aware Stage-13 entry point).
+
+**Hard pre-condition.** Stage 13 may not be invoked until Stages 9 and 10 are both GREEN with all fixes applied. Per user direction 2026-05-01: *"Claims & figure reviewers should always run and fixes should be implemented before adversarial review is conducted."* Invoking Stage 13 against a bundle still showing yellow/red on Stage 9 or 10 wastes the adversarial reviewer's budget on already-known issues.
 
 **Output:** `papers/AutomatedReviews/<DATE>-bundle-stage13/<X>.md` (structured markdown report).
 
@@ -165,9 +218,12 @@ For any BLOCKER surfaced in §8 / §9 / §10:
 
 1. Reviewer agent emits BLOCKER → `audit_log.jsonl` entry (Stage 9/10) or `ReviewFinding` graph node (Stage 13).
 2. **Author** (not reviewer) fixes via direct edit to `paper_draft.tex` / `figures/` / source paper / Lean module as appropriate.
-3. Append entry to `docs/review_finding_supersessions.json` with `meta.status: open → fixed | accepted` per closed finding.
-4. Re-invoke the *same* reviewer agent in fresh context with `bundle_target=<X>`.
-5. Confirm BLOCKER cleared. If clean: `bundle_metadata.json.<stage>_status` advances. If not: iterate from step 2.
+3. **All-occurrence verification.** Before declaring a referential fix complete, `git grep` for the old reference across the whole bundle directory and any cross-referencing files. Filenames, theorem names, and counts often appear multiple times in a single `paper_draft.tex` (one in §2 prose, another in §5 table, another in §9 footnote). I2 sub-wave 7a.3 round-2 caught a missed second occurrence of `tests/test_jackknife.py` at line 232 after the round-1 fix had only updated line 17. The grep must be empty before claiming fixed.
+4. Append entry to `docs/review_finding_supersessions.json` with `meta.status: open → fixed | accepted` per closed finding. The entry must include deterministic-recheck evidence (file:line + replacement text) so a future fresh-context reviewer can verify the closure without re-running the agent. As of 2026-05-01 the ledger has 174 entries spanning Phase 6i + Phase 7a; the disciplined append-only pattern is what allows multi-round Stage-13 cycles to converge.
+5. Re-invoke the *same* reviewer agent in fresh context with `bundle_target=<X>`.
+6. Confirm BLOCKER cleared. If clean: `bundle_metadata.json.<stage>_status` advances. If not: iterate from step 2.
+
+**Round-broadening discipline (post-7a.3 lesson).** When fixing a finding by *broadening* an attribution or citation list (e.g., "Microsoft Quantum" → "broader research community"), the round-2 broadening must not introduce *new* findings the round-1 narrow form did not have. Verify each new addition is categorically consistent with the surrounding parenthetical (see §7 substantive-content gate #4 above). Empirically, this pattern was observed in I2 sub-wave 7a.3 round-2 → round-3 (Google Quantum AI surface-code work introduced into a non-Abelian-anyon parenthetical) and is now a candidate Stage-14 ratified QI rule (`qi-round-broadening-introduces-new-issues`).
 
 Per `WAVE_EXECUTION_PIPELINE.md` Stage 13: *"The author fixes; the author re-invokes. Separation of the fix-and-review roles is the whole reason the agent exists."*
 
@@ -218,4 +274,4 @@ All four must succeed before bundle close. Commit the regenerated `docs/BUNDLE_R
 
 ---
 
-*Created Phase 7a sub-wave 7a.1.5 (2026-05-01). Initial draft. Refines after I1 + I2 lift execution per sub-wave 7a.4. Subsequent Phase 7b/7c/... waves consume the frozen procedure.*
+*Created Phase 7a sub-wave 7a.1.5 (2026-05-01). **FROZEN at sub-wave 7a.4 (2026-05-01)** after I1 + I2 lift execution. Twelve concrete refinements absorbed: (1) hard-gated reviewer ordering (§§ preamble + §10), (2) sourceless-bundle path (§3b), (3) Unicode in figure source (§6), (4) Tier-3 reproducibility-anchor block (§6), (5) LaTeX compile gate before Stage 9 (§7), (6) 4-table cross-registry attribution audit (§7 gate 1), (7) hedging discipline (§7 gate 2), (8) cross-program prior-art verifiability (§7 gate 3), (9) broadening categorical-consistency check (§7 gate 4 + §11 round-broadening discipline), (10) plugin-agent fallback path (§§8–10), (11) multi-bundle parallelism explicit (§9), (12) all-occurrence grep + supersession-ledger discipline (§11 steps 3–4). Subsequent Phase 7b/7c/... waves consume the frozen procedure without further iteration.*
