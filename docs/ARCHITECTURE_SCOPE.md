@@ -1,6 +1,6 @@
 # Architecture Scope — Three-Layer Predictive Boundary
 
-**Last updated:** 2026-04-23 (Phase 5y closure)
+**Last updated:** 2026-04-30 (Phase 6m closure — Lean formalization scope)
 
 This document defines the **predictive scope** of the SK-EFT Hawking
 research program's three-layer architecture — what the architecture
@@ -75,11 +75,96 @@ Phase 5y's closure **does not** claim:
   mathematically consistent and may find applications elsewhere)
 - No emergent dark energy is possible (obstruction covers
   Volovik-family mechanisms specifically; entropic gravity,
-  causal-set approaches, Jacobson-type thermodynamic GR are outside
-  the tested scope)
+  causal-set approaches, Jacobson-type thermodynamic GR were outside
+  the Phase 5y tested scope and are now closed by Phase 6m — see
+  Phase 6m closure block below)
 - The three-layer architecture is falsified (only the dark-sector
   predictive claim is scoped out; Layer-3 SM+GR-sector claims are
   unaffected)
+
+---
+
+## Phase 6m closure (2026-04-30) — Three-track Phase 5y reframe
+
+After three independent six-round deep-research probes of the
+mechanism families flagged out-of-scope by Phase 5y (Tracks A, B, C
+in `docs/roadmaps/Phase6m_Roadmap.md`), Phase 6m closes at the
+Lean-formalization scope. Project totals: ~4944 substantive theorems
+across 243 modules / 1 axiom / 0 sorry (verified `lake build` 8507
+jobs PASS, 2026-04-30).
+
+**Track-level verdicts (R5 + R6 Lean closure):**
+
+- **Track A — Causal-set DE** (`CausalSetDarkEnergy.lean`, 15 thms):
+  3 NO-GO-R5 phenomenological (Sorkin Models 1+2; BDG MYZ 2025) +
+  causal-set d'Alembertian NO-GO-R2 reaffirmed via 4D gradient
+  instability. **3 publishable structural caveats survive
+  independent of DESI**: (i) GD-inapplicability robust under all 4
+  sprinkling prescriptions; (ii) Barrow-bound prescription
+  dependence (CQG/JCAP Letter short-note candidate); (iii)
+  BDG σ_Λ = α_BDG/√V first-principles decomposition (CSDE7-8).
+
+- **Track B — Entropic-gravity DE**
+  (`EntropicGravityDarkEnergy.lean`, 14 thms): **8 NO-GO-R5
+  unanimous — first complete-mechanism-family NO-GO closure in
+  Phase 6m**. Verlinde 2017 / Padmanabhan-CosMIn /
+  Hossenfelder-Verlinde post-Yoon-Guha / Cadoni-Tuveri DEC / Li
+  2004 HDE / Tsallis HDE / Barrow HDE / Odintsov-D'Onofrio-Paul Ω_k
+  all closed with quantitative |log 𝓑| / σ thresholds exceeding
+  Jeffreys-decisive (5). 7-of-8 candidates have r_d-independent
+  NO-GO mechanism. **Paper-45 publication-novelty claim.**
+
+- **Track C — Jacobson-thermo-GR DE**
+  (`JacobsonThermoGRDarkEnergy.lean`, 12 thms): **highest-survival
+  track with 5+ R5 survivors**. M1 Jacobson 1995 + M2/M7
+  Padmanabhan/CosMIn (epistemic flag) + M9 Volovik-Jannes
+  PARTIAL-VIABLE under fixed-r_d Planck DR3 prior; M3 EGJ f(R)
+  Exp + ArcTanh **strongest CLEARED-R5 of any track in Phase 6m**
+  (Plaza-Kraiselburd 2504.05432: ΔAIC ≃ ΔBIC ≳ 20, Jeffreys "very
+  strong"); M3 Starobinsky marginal CLEARED-R5; M3 Hu-Sawicki
+  NO-GO-R5 via chameleon Solar-System constraint at b ≈ 0.21
+  (best-fit b > 100× chameleon bound, encoded as norm_num
+  inequality JTGR3); M4 Pure Lovelock NO-GO-R5 reaffirmed at
+  1σ-box edge of Quintom-B (|w₀+1| < 0.05, |α̃₂|_max ≤ 0.15,
+  encoded JTGR4); M8 KSS CLEARED-R5 conditional via R4 path-(a)
+  Arata-Liberati-Neri 2603.28851, OPEN-R6+ via path-(c).
+  Fixed-vs-floating r_d split = single empirical decider by ~2030.
+
+**Phase 6e cross-bridge final closure** (Wave 3f JTGR6-JTGR8):
+Sakharov four-condition criterion biconditional with Λ_J = Λ_HK
+validated on Volovik-Jannes ³He-A; falsified on
+Finazzi-Liberati-Sindoni acoustic-BEC (condition (ii) fails — only
+phonons have BEC effective metric). **First systematic Λ_J vs Λ_HK
+comparison on common substrate in literature** (CQG/PRD short-note
+candidate).
+
+**Wave 4 unified Phase 6m 7-class GD taxonomy**
+(`DarkSectorClassificationExtension.lean`, 10 thms): consolidates
+TA "combinatorial-vs-thermodynamic-scalar" + TB "a/b/c/d" + TC
+"b/b'/b''/OPEN" into single classification namespace (Class 0 +
+(a) + (b) + (b′) + (b″) + (c) + (d)) with 3-tier GD applicability
+gradient (Tier I outside-domain / Tier II inapplicable / Tier III
+applies / Tier S re-derive). M8 KSS uniquely populates Class (a).
+Unimodular reformulation as Λ_HK escape route admits 5/6 Track-C
+survivors except KSS (DSCE8).
+
+**Predictive-scope recalibration after Phase 6m.** Layer 3 dark-
+energy scope statement, sharpened from the Phase 5y formulation:
+- **NO-GO (machine-checked):** Volovik-family mechanisms (Phase 5y);
+  Track A causal-set DE phenomenological; Track B entropic-gravity
+  DE complete-class; Track C M3 Hu-Sawicki + M4 Pure Lovelock;
+  Track A causal-set d'Alembertian (R2 reaffirmed).
+- **PARTIAL-VIABLE (R5 cleared, requires monitoring):** Track C
+  M1 Jacobson 1995, M2/M7 Padmanabhan/CosMIn (epistemic flag),
+  M9 Volovik-Jannes (under fixed-r_d).
+- **CLEARED-R5 strongest (preferred over ΛCDM by ΔAIC ≳ 20):**
+  Track C M3 EGJ f(R) Exponential + ArcTanh (Plaza-Kraiselburd
+  2504.05432); Starobinsky marginal.
+- **CONDITIONAL CLEARED-R5 / OPEN-R6+:** Track C M8 KSS via path-(a)
+  PARTIAL closure; OPEN via path-(c) universal-horizon thermo.
+- **3 publishable structural caveats** (Track A; independent of DESI):
+  GD-inapplicability across prescriptions; Barrow-bound prescription
+  dependence; BDG σ_Λ first-principles decomposition.
 
 ---
 

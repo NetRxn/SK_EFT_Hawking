@@ -178,6 +178,10 @@ import SKEFTHawking.CondensedMatterAnalog
 import SKEFTHawking.VestigialMapping
 import SKEFTHawking.VestigialEOS
 import SKEFTHawking.ClassificationTableDark
+import SKEFTHawking.CausalSetDarkEnergy
+import SKEFTHawking.EntropicGravityDarkEnergy
+import SKEFTHawking.JacobsonThermoGRDarkEnergy
+import SKEFTHawking.DarkSectorClassificationExtension
 import SKEFTHawking.LinearizedEFE
 import SKEFTHawking.HeatKernelExpansion
 import SKEFTHawking.HigherCurvatureStructure
