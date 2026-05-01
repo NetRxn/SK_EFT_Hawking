@@ -1235,6 +1235,76 @@
       "superseded_by": "review:2026-05-01-1525-bundle-stage13:I2 (round-3 verified GREEN)",
       "evidence": "Phase 7a sub-wave 7a.3 round-2 RECOMMENDED 5.6: §8 broadening of round-1 Microsoft Quantum reference inadvertently included 'Google Quantum AI's surface-code work' inside a non-Abelian-anyon-platforms parenthetical (surface code is abelian-toric-code QEC, not non-Abelian-anyon TQC). Remediated by dropping the surface-code clause; remaining items (Microsoft Quantum's, academic/national-lab Majorana-detection experiments) are categorically consistent.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:1.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass (commit pending) — CITATION_REGISTRY entry added with software-attribution exemption per Pipeline Invariant #11 parallel",
+      "evidence": "MassotRothgangMacbeth2025 registered in src/core/citations.py L7009 (paper44_riemannian_connection paper section). Mathlib4-upstream attribution; pinned at commit 8850ed93 per CLAUDE.md. doi=arxiv=primary_source_path=None; software-attribution exemption (the Mathlib4 commit hash IS the canonical reference). Verified via grep src/core/citations.py for 'MassotRothgangMacbeth2025'.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:1.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass (commit pending)",
+      "evidence": "Gouezel2025 registered in src/core/citations.py L7029 with software-attribution exemption. Mathlib4 commit 8850ed93; Mathlib.Topology.VectorBundle.Riemannian + Mathlib.Geometry.Manifold.VectorBundle.Riemannian. doi=arxiv=primary_source_path=None; software-attribution exemption per Pipeline Invariant #11 parallel.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:1.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass (commit pending)",
+      "evidence": "Gouezel2024LieBracket registered in src/core/citations.py L7012 with software-attribution exemption. Mathlib4 commit 8850ed93; Mathlib.Geometry.Manifold.VectorField.LieBracket (mlieBracket, mlieBracket_self, mlieBracket_swap_apply, mlieBracket_zero_left, leibniz_identity_mlieBracket). doi=arxiv=primary_source_path=None.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:1.4",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass (commit pending)",
+      "evidence": "KobayashiNomizu1963 registered in src/core/citations.py L7060 + Klingenberg1995 registered L7077, both with Wave 6 textbook exemption per Pipeline Invariant #11 (doi=arxiv=primary_source_path=None). Canonical pre-DOI / textbook-class references verified via secondary academic citations. ISBNs documented in notes fields.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:1.5",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass (commit pending)",
+      "evidence": "Roehm2026Wave6f, Roehm2026Wave6g, Roehm2026Pipeline all registered in CITATION_REGISTRY with inprep=True. Pipeline Invariant #11 inprep clause exempts these from primary-source-cache requirement (no external source exists for project-internal in-preparation references). Verified: registered with doi=arxiv=primary_source_path=None and inprep=True per CITATION_REGISTRY structure.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:4.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass — count consistency restored",
+      "evidence": "The internal contradiction the 2026-04-30 review cited ('thirty-three substantive theorems across five modules' in §10.2) does not exist in current paper_draft.tex (verified via grep -E 'thirty-three|33 substantive' returns no match). Either the contradicting text was removed in interim edits or the review misattributed an unrelated wave-totals claim ('5 new modules / 25 substantive theorems' at L1122 referring to Phase 6g.2 W8 wave totals, not paper44 library totals). Paper44 abstract (L148) and §10.2 closing (L1259) both now use a single consistent verifiable count: '52 theorems and lemmas across seven modules' (line-start theorem|lemma grep over the seven new modules).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:5.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass — first-formalization claims appropriately hedged",
+      "evidence": "All four 'first formalization' claims in paper44 (L87, L206, L801, L986) already use 'to our knowledge' / 'we are aware of' epistemic hedging, the canonical discharge for first-formalization claims absent an exhaustive cross-prover lit search. The closest known precedent is explicitly disclosed at L802-803 (Mathlib's Leibniz form for the cyclic Jacobi claim) and at the abstract level (Mathlib's IsCovariantDerivativeOn for the bundle-level scope). Per Stage-13 guidance for first-formalization claims, the 'to our knowledge' hedge is the canonical wording when no published cross-prover survey exists; the burden of proving the negative does not fall on the formalization paper.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:6.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass — abstract already discloses the assumption",
+      "evidence": "RECOMMENDED-tier finding: undisclosed (2 : 𝕜) ≠ 0 hypothesis. Verified: paper44 abstract L82-85 already includes '+ char(K) ≠ 2 for the 2-cancellation in the composition uniqueness theorem' — the disclosure the finding asks for is in fact present in the abstract. Either the original review missed L82-85 or the disclosure was added in interim edits.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-30-internal-adversarial:paper44_riemannian_connection:7.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass — count updated to verifiable raw count",
+      "evidence": "Abstract count literal updated from 'forty-four substantive theorems across seven modules' to 'fifty-two theorems and lemmas across seven modules', with explicit framing 'counted by line-start theorem~/lemma~ grep'. The new count is deterministically reproducible: per-module grep -cE '^theorem |^lemma ' SKEFTHawking/{LorentzianMetric,RiemannianConnection,RiemannCoordinate,RiemannDifferentialBianchi,BundleRiemannAux,LeviCivita,BundleRiemann}.lean = 6+7+9+9+8+5+8 = 52. The old 'forty-four substantive' claim used a curated count basis (theorems+lemmas+selected def/struct minus retroactive cuts) that was hard to reconstruct after subsequent strengthening passes; the verifiable raw-count basis prevents future drift.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:1.5",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.2 round-1 fixes (already applied; ledger entry added 2026-05-01 in 7a.5 cleanup)",
+      "evidence": "REQUIRED finding: 5 external I1 bibkeys (physlean, compcert, sel4, leancipilot, alphaproof) had used_in lists containing only paper15/paper14 sources, missing papers/I1/paper_draft.tex. Verified all 5 entries now include 'papers/I1/paper_draft.tex' in their used_in lists (per `from src.core.citations import CITATION_REGISTRY; CITATION_REGISTRY[k]['used_in']`). The mechanical fix was applied during round-1 remediation but a supersession ledger entry was inadvertently omitted at the time; this entry closes that gap so the heatmap reflects the true bundle state.",
+      "date": "2026-05-01"
     }
   ]
 }

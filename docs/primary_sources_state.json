@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-05-01T00:13:43+00:00",
+  "generated_at": "2026-05-01T17:50:32+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -4523,6 +4523,17 @@
       "url_used": "https://arxiv.org/pdf/2404.12534",
       "note": null
     },
+    "mathlib4": {
+      "bibkey": "mathlib4",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/mathlib4.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-01T17:50:31+00:00",
+      "size_bytes": 913731,
+      "url_used": "https://arxiv.org/pdf/1910.09336",
+      "note": null
+    },
     "mss2024": {
       "bibkey": "mss2024",
       "phase": "Phase-5o",
@@ -4643,6 +4654,17 @@
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "wolff2004": {
+      "bibkey": "wolff2004",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/wolff2004.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-01T17:50:32+00:00",
+      "size_bytes": 222645,
+      "url_used": "https://arxiv.org/pdf/hep-lat/0306017",
+      "note": null
     }
   }
 }

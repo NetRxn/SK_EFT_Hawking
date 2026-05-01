@@ -145,7 +145,7 @@ derivatives of the metric are passed as explicit input arrays
 $\partial g \in \mathrm{Fin}\,4 \to \mathrm{MetricMatrix}$
 (eventually replaced by the manifold \texttt{mfderiv} in the upstream
 port, but with the algebraic identities the same). At this scope the
-library ships forty-four substantive theorems across seven modules,
+library ships fifty-two theorems and lemmas across seven modules,
 zero \texttt{sorry}, zero new project axioms; all load-bearing
 theorems verify against \texttt{propext}, \texttt{Classical.choice},
 \texttt{Quot.sound} only. The post-wave-strengthening cut history
@@ -1256,14 +1256,16 @@ of a pointwise lemma without any internal or external consumer:
     lift had no consumer.
 \end{enumerate}
 
-After the cuts the library ships \textbf{forty-four substantive
-theorems across seven modules}, zero \texttt{sorry}, zero new project
-axioms; the substantive declaration count includes
-$\texttt{IsLorentzianSignature}$ /
-$\texttt{IsLorentzianMetric}$ / $\texttt{IsContinuousLorentzianFamily}$
-/ $\texttt{Christoffel}$ / $\texttt{IsTorsionFree}$ /
-$\texttt{IsLeviCivita}$ etc.\ as \texttt{def} / \texttt{structure}
-declarations alongside the named theorems and lemmas. The pattern
+After the cuts the library ships \textbf{fifty-two theorems and
+lemmas across seven modules} (counted by line-start
+\texttt{theorem~}/\texttt{lemma~} grep), zero \texttt{sorry}, zero new
+project axioms. Supporting structural declarations
+($\texttt{IsLorentzianSignature}$ / $\texttt{IsLorentzianMetric}$ /
+$\texttt{IsContinuousLorentzianFamily}$ / $\texttt{Christoffel}$ /
+$\texttt{IsTorsionFree}$ / $\texttt{IsLeviCivita}$ as
+\texttt{def} / \texttt{structure} declarations) ship alongside the
+named theorems and lemmas but are not counted in the 52 — they are
+substrate for the counted results. The pattern
 lesson logged: section-level $\texttt{funext}$/$\texttt{extend}$ lifts
 of pointwise lemmas without an internal/external consumer
 \emph{should not ship in SK-EFT}; defer the section-level companions
