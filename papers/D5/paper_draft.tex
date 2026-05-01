@@ -498,21 +498,54 @@ WEP-conformant channels of the other five mechanisms.
 
 This section excerpts the cosmological-constant constraint contribution
 from the paper~42b emergent-CC deep paper (Phase~6e W5). The full
-treatment is in D3~§21; the D5 excerpt focuses on the dark-sector
-implication.
+Decision-Gate-E.4 closure is in D3~§21; the D5 excerpt focuses on the
+dark-sector implication.
 
-The substantive D5 content: the heat-kernel $a_0$ coefficient (computed
-in \texttt{HeatKernelExpansion.lean} for the Christensen--Duff Dirac
-operator) does not produce $\Lambda_{\rm obs}$ naturally. The
-Sakharov--Adler induced gravitational-Newton-constant calibration
-gives $G_N^{\rm emerg}$ at the right scale to within a $\mathcal{O}(1)$
-prefactor, but the cosmological-constant scale $\Lambda_{\rm obs} \sim
-\rho_{\rm vac}^{1/4} \sim \SI{}{\milli\electronvolt}$ requires either
-the §\ref{subsec:adw-cc} Volovik tetrad-determinant self-tuning or an
-analogous mechanism --- the heat-kernel expansion alone does not
-deliver it. This is the D5 ``CC-channel constraint'' verdict: the
-$a_0$ coefficient is not a substitute for the substrate-program
-$\rho_{\rm vac}$-from-$T_{\rm dS}$ mechanism.
+\subsection{Decision Gate E.4: the classical CC problem is reproduced}
+\label{subsec:42b-decision-gate-e4}
+
+The substantive paper~42b result is a quantitative Lean theorem: at the
+natural microscopic point $(\Lambda_{\rm UV} \simeq M_{\rm Pl},\
+N_f = 16)$, the heat-kernel-induced emergent cosmological constant
+\begin{equation}
+\Lambda^{\rm emerg}(\Lambda_{\rm UV}, N_f)
+= a_0(N_f) \cdot \Lambda_{\rm UV}^4
+\end{equation}
+\emph{exceeds} the Planck~2018 observed value
+$\Lambda_{\rm obs} \simeq 2.6 \times 10^{-47}\,\text{GeV}^4$ by more than
+$10^{120}$. The classical cosmological-constant problem is
+\emph{reproduced} in the emergent-gravity formulation; no fine-tuning
+of $(\Lambda_{\rm UV}, N_f)$ resolves it within the natural high-energy
+parameter band. The Lean theorem and supporting closed-form expressions
+live in \texttt{CosmologicalConstantEmergent.lean} +
+\texttt{HeatKernelExpansion.lean}; the proof is closed at zero sorry
+and a companion Python pipeline reproduces the natural-parameter scan
+and verdict-band figure (resolved / intermediate / reproduced phases).
+
+\subsection{D5 implication: heat-kernel $a_0$ does not substitute for
+ADW Volovik self-tuning}
+\label{subsec:42b-d5-implication}
+
+The Sakharov--Adler induced Newton-constant calibration
+($G_N^{\rm emerg}$ from heat-kernel $a_2$) gives $G_N$ at the right
+scale to within a $\mathcal{O}(1)$ prefactor (D3~§17 + Decision Gate~E.2).
+But the cosmological-constant scale
+$\Lambda_{\rm obs} \sim \rho_{\rm vac}^{1/4} \sim \SI{}{\milli\electronvolt}$
+\emph{requires} either the §\ref{subsec:adw-cc} Volovik
+tetrad-determinant self-tuning, the §\ref{sec:paper32} Zhitnitsky
+topological-DE mechanism, or an analogous substrate-level cancellation;
+the heat-kernel expansion alone does not deliver it. This is the D5
+``CC-channel constraint'' verdict: the $a_0$ coefficient is the
+\emph{wrong} candidate for the observed CC; the substrate program's
+positive predictions sit elsewhere (vestigial-tetrad self-tuning at
+meV; topological-vacuum suppression at 120 orders below $M_P^4$).
+
+Together with Wave~1's Decision Gate~E.2 (heat-kernel
+$\leftrightarrow$ linearized-EFE Newton-constant calibration), Decision
+Gate~E.4 closes the structural assessment of the heat-kernel approach to
+the dark-sector CC channel: the program reproduces the classical CC
+problem on this channel, leaving the §\ref{subsec:adw-cc} +
+§\ref{sec:paper32} mechanisms as the load-bearing CC predictions.
 
 %% ─── End lift from paper42b_cc_emergent ───
 
