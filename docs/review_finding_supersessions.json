@@ -1183,8 +1183,57 @@
     {
       "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:5.1",
       "status": "fixed",
-      "superseded_by": "Stage-13 round-3 expected (post-2026-05-01T22:30:00Z fix)",
-      "evidence": "Phase 7a sub-wave 7a.2 round-2 RECOMMENDED 5.1: Phase 6f audit filename em-dash drift (paper rendered '--' which is LaTeX en-dash; actual filename has true em-dash '—'). Remediated 2026-05-01T22:30Z by switching to '---' (LaTeX em-dash) and adding clarifying note in §11 prose that the filename contains a literal em-dash.",
+      "superseded_by": "review:2026-05-01-1507-bundle-stage13:I1 (round-3 verified GREEN, 0 BLOCKERs)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-2 RECOMMENDED 5.1: Phase 6f audit filename em-dash drift (paper rendered '--' which is LaTeX en-dash; actual filename has true em-dash '—'). Remediated 2026-05-01T22:30Z by switching to '---' (LaTeX em-dash) and adding clarifying note in §11 prose that the filename contains a literal em-dash. Round-3 verified clean.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:1.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-05-01-1518-bundle-stage13:I2 (round-2 verified) → review:2026-05-01-1525-bundle-stage13:I2 (round-3 verified GREEN)",
+      "evidence": "Phase 7a sub-wave 7a.3 round-1 REQUIRED 1.1: wolff2004 bibitem and CITATION_REGISTRY both attributed 'ALPHA Collaboration' but arXiv hep-lat/0306017 sole author is Ulli Wolff. Remediated by removing 'ALPHA Collaboration' from both bibitem and src/core/citations.py. Round-2 verified via fresh-fetched arXiv match record.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:4.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-05-01-1518-bundle-stage13:I2",
+      "evidence": "Phase 7a sub-wave 7a.3 round-1 REQUIRED 4.1: §2 line 232 cited tests/test_jackknife.py which does not exist (correct path: tests/test_verified_statistics.py). Remediated 2026-05-01T22:50Z; the round-1 fix had hit a different occurrence and missed this one. Round-2 verified.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:5.1-5.3",
+      "status": "fixed",
+      "superseded_by": "review:2026-05-01-1518-bundle-stage13:I2",
+      "evidence": "Phase 7a sub-wave 7a.3 round-1 REQUIRED 5.1+5.2+5.3: §9 attribution-claim hallucinations — 'Steinberg pivotal-category Coq library' (not findable on GitHub), 'Agda unimath' (UniMath is Coq, not Agda), 'Isabelle/AFP Tensor Networks submission' (no AFP entry). Remediated by replacing with verifiable citations: UniMath (Coq/Rocq, real) and Agda categories (real). §3 prior-art audit list updated correspondingly. Round-2 verified clean.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:5.4",
+      "status": "fixed",
+      "superseded_by": "review:2026-05-01-1518-bundle-stage13:I2",
+      "evidence": "Phase 7a sub-wave 7a.3 round-1 REQUIRED 5.4: Microsoft Quantum reference uncited despite softened attribution. Remediated by broadening to 'industrial proposals such as Microsoft Quantum's and academic/national-lab Majorana-detection experiments' (generic-community level, no single-source citation required). Round-2 verified; round-2 introduced new RECOMMENDED 5.6 (surface-code misattribution) which was remediated in round-3.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1456-bundle-stage13:I2:5.5",
+      "status": "fixed",
+      "superseded_by": "review:2026-05-01-1518-bundle-stage13:I2",
+      "evidence": "Phase 7a sub-wave 7a.3 round-1 RECOMMENDED 5.5: 'Fibonacci universality proof in FibonacciBraiding.lean' references a non-shipped theorem. Remediated by softening to 'universality infrastructure (R-matrix non-trivial-eigenvalue checks, sigma-matrix orders, density-of-image conditions)' with explicit deferral note. Round-2 verified.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1518-bundle-stage13:I2:7.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-05-01-1525-bundle-stage13:I2 (round-3 verified GREEN, 0 findings)",
+      "evidence": "Phase 7a sub-wave 7a.3 round-2 REQUIRED 7.1: §5 number-field count drift. Round-2 hedging clause about ~+3 alt-convention was incorrect — actual canonical sum is 164 (the +3 was real per-module drift, not convention sensitivity). Remediated 2026-05-01T23:30Z: per-module counts updated to QCyc3=12, QCyc15=19, QCyc15SqrtPhi=11; cumulative 161→164; hedging clause dropped. Round-3 verified the count reproduces exactly under the canonical convention 'theorem|lemma|def|noncomputable def|structure|class|inductive|abbrev'.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1518-bundle-stage13:I2:5.6",
+      "status": "fixed",
+      "superseded_by": "review:2026-05-01-1525-bundle-stage13:I2 (round-3 verified GREEN)",
+      "evidence": "Phase 7a sub-wave 7a.3 round-2 RECOMMENDED 5.6: §8 broadening of round-1 Microsoft Quantum reference inadvertently included 'Google Quantum AI's surface-code work' inside a non-Abelian-anyon-platforms parenthetical (surface code is abelian-toric-code QEC, not non-Abelian-anyon TQC). Remediated by dropping the surface-code clause; remaining items (Microsoft Quantum's, academic/national-lab Majorana-detection experiments) are categorically consistent.",
       "date": "2026-05-01"
     }
   ]

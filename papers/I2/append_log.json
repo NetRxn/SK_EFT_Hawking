@@ -62,6 +62,17 @@
       "stage13_redo_required": false,
       "agent_run_id": "phase7a-7a.3-review-round2-2026-05-01T22:50:00Z",
       "notes": "Stage-13 round-1 adversarial-reviewer remediation (5 REQUIRED + 1 RECOMMENDED). All addressed (no BLOCKERs surfaced; verdict was YELLOW). Fixes: (Gate 1) wolff2004 attribution corrected in bibitem and CITATION_REGISTRY (removed 'ALPHA Collaboration' — arxiv lists only Ulli Wolff); (Gate 4) §2 line 232 second occurrence of tests/test_jackknife.py → tests/test_verified_statistics.py (the round-1 fix had hit a different occurrence; this was the missed one); (Gate 7 — three §9 attribution-claim hallucinations) replaced with verifiable categorical-prior-art statements: removed fictitious 'Steinberg pivotal-category Coq library', 'Agda unimath' (UniMath is Coq, not Agda), and 'Isabelle/AFP Tensor Networks submission'; rewrote §9 to cite UniMath (Coq/Rocq, real) and Agda categories (real) as actual parallel ecosystems with documented scope; updated §3 prior-art audit list correspondingly; broadened Microsoft Quantum reference to 'broader research community pursuing Majorana-fermion-based non-Abelian-anyon platforms (including industrial proposals such as Microsoft Quantum's, Google Quantum AI's surface-code work, and academic/national-lab Majorana-detection experiments)'; (Gate 9) §5 number-field count clarified as ~161 declarations under the convention used in §3/§4, with explicit acknowledgment that broader counting conventions yield ~+3; (Gate 5 RECOMMENDED) Fibonacci universality reference softened from 'universality proof' to 'universality infrastructure (R-matrix non-trivial-eigenvalue checks, sigma-matrix orders, density-of-image conditions)' with explicit disclosure that the universality theorem itself is not yet shipped as a single named theorem. Ready for Stage-13 round 2 to verify."
+    },
+    {
+      "date": "2026-05-01T23:30:00Z",
+      "source_paper": "phase7a_7a3_review_round3_fixes",
+      "lift_action": "Revise",
+      "bundle_section_inserted": "§5, §8",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "phase7a-7a.3-review-round3-2026-05-01T23:30:00Z",
+      "notes": "Stage-13 round-2 adversarial-reviewer remediation (1 REQUIRED + 1 RECOMMENDED; verdict was YELLOW; round-2 verified 6/6 round-1 findings remediated cleanly). Fixes: (7.1 REQUIRED Gate 9) §5 per-module counts updated to canonical convention: QCyc3 11→12, QCyc15 18→19, QCyc15SqrtPhi 10→11; cumulative count 161→164; hedging clause about alt-convention +3 dropped (the +3 was actual count drift, not convention sensitivity). (5.6 RECOMMENDED Gate 7) §8 dropped the 'Google Quantum AI's surface-code work' clause from the Majorana-fermion non-Abelian-anyon parenthetical (surface code is abelian-toric-code-class stabilizer QEC, not non-Abelian-anyon TQC). Ready for Stage-13 round 3 to verify GREEN."
     }
   ]
 }

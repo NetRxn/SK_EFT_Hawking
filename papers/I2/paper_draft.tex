@@ -497,9 +497,9 @@ proposed Mathlib upstream PR (Section~\ref{sec:upstream}).
 
 \subsection{The cyclotomic family}
 
-\texttt{QCyc3.lean} (11), \texttt{QCyc5.lean} (29),
-\texttt{QCyc5Ext.lean} (36), \texttt{QCyc15.lean} (18),
-\texttt{QCyc15SqrtPhi.lean} (10), and \texttt{QCyc16.lean} (12)
+\texttt{QCyc3.lean} (12), \texttt{QCyc5.lean} (29),
+\texttt{QCyc5Ext.lean} (36), \texttt{QCyc15.lean} (19),
+\texttt{QCyc15SqrtPhi.lean} (11), and \texttt{QCyc16.lean} (12)
 implement the cyclotomic extensions $\mathbb{Q}(\zeta_n)$ for the
 specific $n$ values needed by the project's MTC instances:
 $\zeta_3$ for $\mathrm{SU}(3)_k=2$ centre, $\zeta_5$ for the
@@ -512,14 +512,8 @@ ratio), the smallest extension in which Fibonacci's
 $T$-matrix can be diagonalized over a single field with decidable
 arithmetic.
 
-The cumulative count is approximately 161 declarations
-(\texttt{theorem} + \texttt{lemma} + \texttt{def} +
-\texttt{noncomputable def} + \texttt{structure} + \texttt{class}
-+ \texttt{inductive}) across the nine algebraic-number-field
-modules under the same counting convention used in §\ref{sec:hopf}
-above; convention-sensitive recounts (e.g.\ counting
-\texttt{example} blocks or \texttt{instance} declarations) yield
-$\sim$+3 above this baseline. The decidability structure is
+The cumulative count is 164 declarations across the nine
+algebraic-number-field modules. The decidability structure is
 the first integrated decidable-cyclotomic-plus-quadratic-extension
 infrastructure in any proof-assistant library --- Mathlib provides
 each separately, but supporting both $\sqrt{2}$ and $\zeta_n$ in
@@ -787,8 +781,8 @@ Ising-anyon braid matrices in
 non-Abelian-anyon topological-quantum-computing roadmaps in the
 broader research community pursuing Majorana-fermion-based
 non-Abelian-anyon platforms (including industrial proposals such
-as Microsoft Quantum's, Google Quantum AI's surface-code work,
-and academic/national-lab Majorana-detection experiments); the
+as Microsoft Quantum's and academic/national-lab
+Majorana-detection experiments); the
 Fibonacci universality infrastructure in
 \texttt{FibonacciBraiding.lean} (R-matrix non-trivial-eigenvalue
 checks, $\sigma$-matrix orders, density-of-image conditions) is
