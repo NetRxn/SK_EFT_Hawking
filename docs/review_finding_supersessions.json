@@ -1613,6 +1613,83 @@
       "superseded_by": "Phase 7b sub-wave 7b.0 round-1 — count literals updated to verifiable raw values (defer macro-binding to future cross-paper pass)",
       "evidence": "REQUIRED finding: inline count literals (21 theorems, 49 pytest cases) recommended for macro-binding via counts.tex \\gravWavesTheorems / \\gravWavesTests. The recommended macro path requires extending scripts/update_counts.py to compute and emit per-Lean-module counts; currently counts.tex only has project-wide aggregate macros. The L1+paper25 inline literals are now verifiable raw counts consistent with grep — they are correct, will not silently rot the way curated 'substantive' counts do, and the user can cross-check at any time via the documented grep recipe in the supersession evidence for finding 5.1. Macro-binding is deferred to a project-wide count-literal pass (existing `count_literals` validate check warns on this pattern across multiple papers; it is not L1-specific). Severity: REQUIRED, not BLOCKER — does not gate the bundle's GREEN status.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:1.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Glodkowski2024 bibitem cited wrong-target arXiv:2406.12345 (a public-administration / fuzzy-knowledge-management paper). Substantively fixed in paper17 source: paper_draft.tex line 854 now reads `\\bibitem{Glodkowski2024} A.~G\\l{\\'o}dkowski, F.~Pe\\~na-Ben\\'itez, and P.~Sur\\'owka, 'Dissipative fracton superfluids,' arXiv:2401.01877 (2024).` matching the registry entry in src/core/citations.py with title 'Dissipative fracton superfluids'. Deterministic recheck: grep '^\\bibitem{Glodkowski2024}' papers/paper17_dark_sector/paper_draft.tex returns the correct arXiv ID and title.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:1.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: BK2025 page count claimed 118 pages but arXiv 2505.23900 metadata says 136 pages. Substantively fixed in paper17 source: paper_draft.tex line 425 reads 'The BK 2025 Physics Reports review~\\cite{BK2025}---136~pages---contains no quantitative merger forecast'. Deterministic recheck: grep '136~pages' papers/paper17_dark_sector/paper_draft.tex line 425.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:3.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: 'T_dS = 2 T_GH' numeric interpretation '(few) × T_dS ≈ 2.8 meV' / '20% agreement' was author-opinion not measurement. Substantively fixed in paper17 source: paper_draft.tex lines 235-249 now state 'rho_vac^(1/4) ≈ O(1) × T_dS ~ meV' (no specific 2.8 meV number; mathcal{O}(1) explicit), and line 246-249 explicitly withdraws the prior claim: 'Previous drafts quoted \"≈2.8 meV\" and \"20% agreement\" without disclosing that the O(1) prefactor is fit rather than computed; we withdraw that number in this revision (paper 17 Wave 10 remediation).' The substantive claim is reframed as scale-reproduction (meV level) without a tuned 2.8 meV number; the prefactor is deferred to Phase 6 with explicit cross-reference to CosmologicalConstant.lean L21-23 caution block. Deterministic recheck: grep '2.8.*meV\\|20%' papers/paper17_dark_sector/paper_draft.tex shows only the explicit-withdrawal sentence, no claim assertion.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:5.2",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: phase5x_candidates_viability_matrix is `decide` on hand-assigned Bool flags. Substantively addressed in paper17 source via Honesty Table refactor (paper_draft.tex lines 681-754): the theorem is now labeled 'MCC' (machine-checked classification / consistency) — explicitly distinguished from 'Derived' theorems via the new MCC-vs-Derived caveat paragraph at lines 726-754. Honesty table line 708-709 reads 'Four-of-five candidate viability flags & MCC (`phase5x_candidates_viability_matrix`; flags hand-assigned)'. The MCC paragraph (L726-754) explicitly states: 'A theorem is MCC---machine-checked classification---when its proof verifies only the internal consistency of an author-supplied lookup table or enum assignment.' This satisfies the review's 'Path B' fix recommendation ('weaken the paper's language' / move to 'MCC' classification rather than 'Derived'). Accepted as paper-architecture solution: the Lean theorem stays as a documentation marker, the paper claims are honestly classified per the MCC distinction.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:5.3",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: emergent_gravity_dm_invisible_collective is `decide` on hand-assigned ℤ caps. Substantively addressed in paper17 source via Honesty Table refactor: line 698-699 reads 'Every candidate has log10 σ_DD ≤ -50 & MCC (`emergent_gravity_dm_invisible_collective`; caps hand-assigned)'. The MCC-vs-Derived caveat paragraph (L726-754) uses this exact theorem as the worked example: 'The claim every candidate has log10(σ_DD) ≤ -50 is currently of this form: the per-kind cap is hand-assigned in `direct_detection_sigma_log10_cap`, citing the Phase 5x deep research for each entry, and Lean verifies that the supremum of the assignments is -50.' The deep-research-derived bounds remain in the Lean docstring (L242-251 of DarkSectorSynthesis.lean documents per-kind sourcing). Accepted as paper-architecture solution per same MCC pattern as 5.2.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:5.4",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: torsion_channels_distinct_sources_distinct is enum-distinctness on hand-assigned channel_of_source mapping, not Lorentz-irrep physics derivation. Substantively addressed via Honesty Table label: line 702-703 reads 'Two-torsion-channel orthogonality (BH, FG in distinct Lorentz irreps) & MCC (`torsion_channels_distinct_sources_distinct`; channel map hand-assigned)'. Honesty table demoted from 'Derived' to 'MCC' per review's recommended Path B. The underlying physics (Boos-Hehl 2019 + FG 2021 Lorentz-decomposition) remains documented in the Lean docstring (DarkSectorSynthesis.lean line 397-407) with primary-source citation chain.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:5.5",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: empirical_hook_ranking_strict verifies hand-chosen priorities via decide. Substantively addressed via Honesty Table label: line 706-707 reads 'Merger sonic boom is the top-ranked hook & MCC (`empirical_hook_ranking_strict`; priorities hand-assigned)'. Demoted from 'Derived' to 'MCC' per review Path B. The underlying detectability heuristic (Euclid/Roman S/N + DESI DR3 timeline + STEP sensitivity + DARWIN floor) remains in the Lean docstring (DarkSectorSynthesis.lean lines 506-528 document each EmpiricalHook with its source and timeline).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:5.6",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "RECOMMENDED: lambda_magnitude_ratio_exact cited at paper17 L215-216 proves only T/T = 1, not the Λ-magnitude claim. Substantively fixed in paper17 source: paper_draft.tex lines 249-256 explicitly retired the cross-reference and replaced it with a corrected pointer: 'Cross-reference: T_dS_double_TGH proves T_dS = 2 T_GH and lambda_magnitude_ratio_pos proves positivity of the magnitude ratio (for T_p, T_o > 0) in CosmologicalConstant.lean. The tautological lambda_magnitude_ratio_exact (Λ(T,T)/Λ(T,T) = 1 --- i.e., the magnitude-ratio function composed with equal arguments) does NOT support the physics agreement claim and was erroneously cited in a prior draft.' The honest-disclosure framing is the review's recommended fix Path B.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-28-1530-internal-adversarial:paper42b_cc_emergent:1.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Vergeles2025 paper42b bibitem had wrong title 'Self-consistent action of induced gravity from a free Dirac field on a lattice' (which is the title of arXiv:1903.09957, a different 2019 Vergeles paper at PRD 100, 104020). Substantively fixed in paper42b source: paper_draft.tex line 396 now reads 'S. N. Vergeles, ``Unitarity of 4D Lattice Theory of Gravity''' matching the registry-canonical title for arXiv:2506.00036 (PRD 112, 054509, 2025) and matching paper23/paper25/paper26 sibling-paper bibitems. Deterministic recheck: grep 'Unitarity of 4D Lattice' papers/paper42b_cc_emergent/paper_draft.tex line 396; cross-paper consistency verified by grep across all paper*_*/paper_draft.tex showing identical title string.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-29-0000-internal-adversarial:paper32_strong_cp_de:C5",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "Extractor noise: 'C5' is not an actual finding — it is the build_graph extractor parsing the document's '### Class 5 — Planck-natural θ=1 prose replaced' header (which is a *verification block* documenting a previously-made fix being re-verified, not a new finding). The 2026-04-29-0000 paper32 review document explicitly opens with '## Findings\\n(none — re-scan finds no new issues; all three prior findings resolved)' at lines 15-16. The 'Class N' subsection headers under '## Verification of strengthening-pass changes' (lines 21, 28, 34, 41) document re-checks of prior findings, which was the entire purpose of this re-review. Accepted as extractor false-positive; underlying paper32 strong-CP / topological-DE state is GREEN per the explicit '(none)' findings declaration.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:3.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: No PARAMETER_PROVENANCE entries for paper17 specific parameters (BK fiducial m_DM/Λ/c_s + 5 cluster-merger kinematics + condensate fraction + shock extent + Bullet D_L + per-survey SNR). Substantively fixed: (1) BK fiducial trio (SFDM.m_DM_BK, SFDM.Lambda_BK, SFDM.c_s_subcluster_BK) and merger kinematics (SFDM.merger_Mach_canonical) were already added in Phase 5x Wave-10 remediation 2026-04-24 with both LLM-verified (2026-04-24) and human-verified (2026-04-28) dates — provenance.py lines 849-932. (2) Phase 7b D5 source cleanup (2026-05-01) adds the 5 remaining paper17 parameters: SFDM.condensate_fraction_BK = 0.59, SFDM.shock_extent_Bullet_kpc = 400, SFDM.D_L_Bullet_Mpc = 830, SFDM.SNR_Bullet_Euclid = 0.83, SFDM.SNR_Bullet_Roman = 1.04. All 5 carry LLM verification (2026-05-01) with detailed sourcing chains; human verification gates submission (per Pipeline Invariant #8). Deterministic recheck: `from src.core.provenance import PARAMETER_PROVENANCE; [PARAMETER_PROVENANCE['SFDM.' + k] for k in ['condensate_fraction_BK', 'shock_extent_Bullet_kpc', 'D_L_Bullet_Mpc', 'SNR_Bullet_Euclid', 'SNR_Bullet_Roman']]` returns 5 valid entries. The 0.83/1.04 paper values match the new entries (paper17 lines 394-395); review's 1.03 figure was a stale snapshot from 2026-04-23 superseded by the current paper17 1.04.",
+      "date": "2026-05-01"
     }
   ]
 }
