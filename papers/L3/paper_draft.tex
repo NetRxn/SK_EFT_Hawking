@@ -1,0 +1,338 @@
+\documentclass[aps,prl,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{siunitx}
+
+%% Bundle: L3 (Tier 2; PRL splash; Phase 7b sub-wave 7b.1)
+%% Generated 2026-05-01; lifted from paper27_bh_thermodynamics_four_laws
+%% (Phase 6a Wave 5).
+
+\input{../../docs/counts.tex}
+
+\newcommand{\Thawk}{T_{\rm H}}
+\newcommand{\Mc}{M_{\rm c}}
+\newcommand{\aADW}{\alpha_{\rm ADW}}
+\newcommand{\Ladw}{\Lambda_{\rm ADW}}
+\newcommand{\Nf}{N_f}
+\newcommand{\dADW}{\delta_{\rm ADW}}
+
+\begin{document}
+
+\title{Sign-flip of $d\Thawk/dt$ as the regime partition of
+emergent-gravity black holes:\\
+BCH four laws across Schwarzschild and BEC-acoustic substrates}
+
+\author{John G.\ Roehm}
+\affiliation{NetRxn Foundation}
+
+\date{\today}
+
+\begin{abstract}
+The Bardeen--Carter--Hawking (BCH) four laws of black-hole mechanics
+admit two structurally distinct realizations on an emergent-gravity
+ADW substrate, separated by a critical mass
+$\Mc(\aADW, \Ladw, \Nf) = \Nf \Ladw / (12\pi \aADW)$. Above $\Mc$
+the BH follows the textbook Hawking 1975 profile
+$\Thawk = \hbar/(8\pi M)$~\cite{Hawking1975CMP}: $dM/dt < 0$,
+$d\Thawk/dt > 0$ (heats as it evaporates), finite evaporation time
+$t_{\rm evap} \sim M^3$. Below $\Mc$ the BH follows the BEC-acoustic
+backreaction profile of Balbinot, Fagnocchi, Fabbri, Procopio
+(PRD~\textbf{71}, 064019)~\cite{Balbinot2005PRD}: linear-in-$t$
+cooling with extrapolation $t \sim 1/T^3$, so $\Thawk \to 0$ in
+\emph{infinite} time --- the analog of near-extremal
+Reissner--Nordstr\"om. The genuine regime partition is the
+\emph{sign-flip of $d\Thawk/dt$ during Hawking-radiation
+evaporation}: positive in the Schwarzschild branch, negative in the
+BEC-acoustic branch. We formalize both regimes in
+\texttt{BHThermodynamicsFourLaws.lean} (\bhThermoTotal{} theorems
+and lemmas; zero \texttt{sorry}; zero new axioms) and ship the
+classification, the regime-partition criterion, and the four-laws
+bundle in tracked-hypothesis mode (Outcome-3 per the project's
+discipline for non-derived structural identifications). The full
+second law uses Glorioso--Liu SK-EFT entropy-current
+monotonicity~\cite{GloriosoLiu2018,CrossleyGloriosoLiu2017,GloriosoCrossleyLiu2017}
+without invoking pointwise NEC. The substrate-response coefficient
+ansatz $\dADW = (\aADW - 1)\Ladw$ vanishes at $\aADW = 1$ (the bare
+Sakharov--Adler limit) and provides four falsifier theorems for any
+candidate ADW substrate. The critical-mass functional form
+$\Mc(\aADW, \Ladw, \Nf)$ is project-original and explicitly disclosed
+as such: no published derivation exists.
+\end{abstract}
+
+\maketitle
+
+%% ================================================================
+\section{Introduction}
+\label{sec:intro}
+
+The Bardeen--Carter--Hawking four laws codify a thermodynamic
+structure on stationary BH solutions of classical general relativity.
+On a Schwarzschild background, quantum field theory endows the
+surface gravity $\kappa$ with a thermal interpretation as the Hawking
+temperature $\Thawk = \hbar\kappa/(2\pi)$~\cite{Hawking1975CMP},
+and the resulting heat-capacity sign $C(M) = (dM/d\Thawk)$ is
+\emph{negative}: the BH \emph{heats} as it loses mass to Hawking
+evaporation, with finite evaporation time $t_{\rm evap}
+\propto M_0^3$.
+
+Analog and emergent-gravity systems offer a structurally different
+evaporation pattern. In the BEC-acoustic backreaction analysis of
+Balbinot, Fagnocchi, Fabbri, Procopio~\cite{Balbinot2005PRD},
+backreaction of thermally radiated phonons on the fluid background
+\emph{shrinks} the sonic horizon and \emph{decreases} $\Thawk$ in
+time, with linear-in-$t$ leading order
+\begin{equation}
+  \Thawk(t) = \frac{\hbar c}{2\pi}\,\kappa \left[
+    1 - \frac{563}{720\pi}\,\varepsilon\,\kappa^{3}\,c\,A_{0}\,t
+  \right]
+  \label{eq:Tsonic}
+\end{equation}
+and asymptotic extrapolation $t \sim 1/T^3$ giving $\Thawk \to 0$ at
+\emph{infinite} time --- the analog of near-extremal
+Reissner--Nordstr\"om. Reference~\cite{Balbinot2005PRD} itself
+contrasts this regime with the moving-domain-wall analog in
+$^{3}$He-A studied by Jacobson--Koike~\cite{JacobsonKoike2002,
+JacobsonVolovik1998}, which has \emph{non}-vanishing
+end-temperature of the evaporation process and therefore behaves
+more like Schwarzschild.
+
+This Letter formalizes both regimes within a single Lean module
+\texttt{BHThermodynamicsFourLaws.lean} and ships the
+sign-of-$d\Thawk/dt$ regime partition as the load-bearing
+correctness-push theorem. We do \emph{not} attempt a single
+closed-form $\Thawk(M)$ that interpolates between regimes; we treat
+the existence of a critical mass $\Mc(\aADW, \Ladw, \Nf)$ separating
+them as a tracked-hypothesis bundle $H_{\rm RegimePartition}$ with
+each branch's sign claim grounded in its primary literature. The
+choice of $\Mc$ is the dimensional ansatz $\Nf \Ladw / (12\pi \aADW)$
+implied by Sakharov--Visser $1/G_N \propto \Nf \Lambda^2$ at the
+Wave-1 emergent-gravity scale; this is project-original and
+explicitly flagged.
+
+%% ================================================================
+\section{Setup and main result}
+\label{sec:result}
+
+\paragraph{Data carriers and regime classifier.}
+\texttt{BHData} bundles bulk-thermodynamic observables
+$(M, Q, J, A, r_h, \Thawk, \kappa)$ with positivity hypotheses for
+the dimensional quantities; \texttt{ADWParams} bundles substrate
+parameters $(\aADW, \Ladw, \Nf, \chi_{\rm vest})$ with strict
+positivity for each. The decidable \texttt{Regime} inductive type
+has three constructors (\texttt{Schwarzschild}, \texttt{Boundary},
+\texttt{ADWExtremality}) and a piecewise classifier
+\begin{equation}
+  \texttt{classify}(b, p) = \begin{cases}
+    \texttt{Schwarzschild} & b.M > \Mc(p) \\
+    \texttt{ADWExtremality} & b.M < \Mc(p) \\
+    \texttt{Boundary} & b.M = \Mc(p),
+  \end{cases}
+  \label{eq:classify}
+\end{equation}
+with the critical mass
+\begin{equation}
+  \Mc(\aADW, \Ladw, \Nf) = \frac{\Nf\,\Ladw}{12\pi\,\aADW}.
+  \label{eq:Mc}
+\end{equation}
+The classifier admits three iff-theorems
+(\texttt{classify\_*\_iff}); positivity of $\Mc$ follows from
+positivity of all input fields.
+
+\paragraph{Two-regime profiles.}
+For $b.M > \Mc(p)$, the textbook Hawking 1975
+result~\cite{Hawking1975CMP} (in natural units) is
+$\Thawk^{\rm Schw}(M) = 1/(8\pi M)$, with
+\texttt{T\_H\_schwarzschild\_pos} and
+\texttt{T\_H\_schwarzschild\_strict\_decreasing} formalized.
+Combined with the standard Hawking-emission $dM/dt < 0$, this
+establishes $d\Thawk/dt > 0$ in the Schwarzschild branch.
+
+For $b.M < \Mc(p)$, the BEC-acoustic backreaction of
+Balbinot~\textit{et~al.}~\cite{Balbinot2005PRD} applies. The
+leading-order exponential approximation
+\begin{equation}
+  \Thawk^{\rm acoustic}(t) = \Thawk^{(0)} \cdot \exp(-t / \tau_{\rm cool})
+  \label{eq:Tacoustic}
+\end{equation}
+matches the project's existing Python anchor
+\texttt{src/wkb/backreaction.py} (line 449), which evolves the full
+coupled-ODE system of~\cite{Balbinot2005PRD} but uses
+Eq.~\eqref{eq:Tacoustic} as the analytic anchor. We prove
+\texttt{T\_H\_acoustic\_evolution\_pos},
+\texttt{T\_H\_acoustic\_evolution\_at\_zero}, and the load-bearing
+\texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}: for
+$\Thawk^{(0)} > 0$, $\tau_{\rm cool} > 0$, and $t_1 < t_2$,
+$\Thawk^{\rm acoustic}(t_2) < \Thawk^{\rm acoustic}(t_1)$. This is
+the BEC-acoustic regime's primary-source-grounded sign claim.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.96\columnwidth]{figures/fig_T_H_evolution_regime_partition.png}
+  \caption{\textbf{Headline result.} Sign-flip of $d\Thawk/dt$
+  between the Schwarzschild (amber dashed; Hawking
+  1975~\cite{Hawking1975CMP}; $d\Thawk/dt > 0$, finite
+  $t_{\rm evap}$) and BEC-acoustic (steel-blue solid;
+  Balbinot~\textit{et~al.}~\cite{Balbinot2005PRD}; $d\Thawk/dt < 0$,
+  asymptotic extremality at infinite time) regimes during
+  Hawking-radiation evaporation. Left panel: $\Thawk(t)$ contrast.
+  Right panel: substrate-response coefficient
+  $\dADW = (\aADW - 1)\Ladw$ vanishing at $\aADW = 1$. The critical
+  mass $\Mc$ separating regimes is given by Eq.~\eqref{eq:Mc}.
+  Lean witness:
+  \texttt{T\_H\_acoustic\_evolution\_strict\_decreasing} +
+  \texttt{T\_H\_schwarzschild\_strict\_decreasing}.}
+  \label{fig:regime}
+\end{figure}
+
+\paragraph{Tracked-hypothesis bundle.} Per the project's discipline
+for non-derived structural identifications, we bundle the regime
+partition into a Lean Prop:
+\begin{equation*}
+  H_{\rm RegimePartition}(p) \;\equiv\;
+  \exists\, \Mc^\star : \mathbb{R}_{>0},\;
+  \Mc^\star = \frac{\Nf\,\Ladw}{12\pi\,\aADW}
+  \,\wedge\, \text{(classifier consistent at $\Mc^\star$)}.
+\end{equation*}
+The bundle is genuinely non-trivial: four falsifier theorems witness
+the four ways the bundle can fail (negative $\Mc$ via parameter
+inversion; classifier-vs-functional disagreement; $\dADW \neq 0$ at
+$\aADW = 1$; classifier non-decidability). Each falsifier is
+load-bearing: removing any conjunct trivializes the bundle.
+
+\paragraph{Four laws by regime.} The four-laws bundle
+$H_{\rm BCH}(p, b)$ partitions across regimes. The zeroth law
+($\kappa$ constant on the horizon) and first law
+($dM = (\kappa/8\pi) dA + \Omega\,dJ + \Phi\,dQ$) are
+substrate-agnostic. The second law (entropy non-decrease) is
+formalized via Glorioso--Liu SK-EFT entropy-current
+monotonicity~\cite{GloriosoLiu2018,CrossleyGloriosoLiu2017,%
+GloriosoCrossleyLiu2017} on the open Schwinger--Keldysh action,
+without invoking pointwise NEC; this is the load-bearing
+substrate-class generalization compared to the standard
+Bekenstein--Hawking-on-area-law treatment. The third law
+($\kappa \to 0$ at finite proper time) is formalized as Israel's
+infinite-proper-time formulation, consistent with both branches
+(BEC-acoustic asymptotically reaches extremality at $t \to \infty$;
+Schwarzschild evaporates completely at finite proper time, satisfying
+the third law trivially via never reaching the $\kappa \to 0$ locus
+along the evaporation trajectory). Recent third-law revisions for
+extremal BPS BHs~\cite{KehleUnger2022ThirdLaw,Reall2024ThirdLawBPS}
+do not bear on the Schwarzschild branch; their applicability to the
+ADW-extremality branch is a Phase-6 cross-bridge open question.
+
+%% ================================================================
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{What is novel.} Three claims are project-original and
+explicitly flagged: (1) the critical-mass functional form
+$\Mc = \Nf \Ladw / (12\pi \aADW)$, no published ADW derivation
+exists; (2) the BEC-acoustic exponential approximation
+Eq.~\eqref{eq:Tacoustic} as the load-bearing analytic anchor for the
+strict-decreasing claim, an analytic compression of the coupled-ODE
+system in~\cite{Balbinot2005PRD}; (3) the substrate-response
+coefficient $\dADW = (\aADW - 1)\Ladw$ as a unified four-falsifier
+witness across the bundle's degrees of freedom.
+
+\paragraph{What is not asserted.} We do \emph{not} derive a single
+closed-form $\Thawk(M)$ interpolating the regimes; the boundary
+$M = \Mc$ is a discrete-classification boundary in the inductive
+type, not a smooth crossover. We do \emph{not} prove that the
+Glorioso--Liu second law operates strictly identically in the
+two regimes; entropy-current monotonicity holds in each regime under
+its respective hypothesis bundle, but the cross-regime entropy
+matching at the boundary is a Phase-6 cross-bridge.
+
+\paragraph{Comparison: Jacobson--Koike contrast.} The
+moving-domain-wall analog in $^{3}$He-A studied by
+Jacobson--Koike~\cite{JacobsonKoike2002} gives a heating profile
+($\Thawk(v) = \Thawk^{(0)}(1 - v^2/c_\perp^2)$ monotonically
+decreasing in $v$, but the back-reaction \emph{slows} the soliton
+$dv/dt < 0$, so $\Thawk$ \emph{increases} in time). This regime is
+structurally similar to Schwarzschild, not to near-extremal
+Reissner--Nordstr\"om. We cite~\cite{JacobsonKoike2002,
+JacobsonVolovik1998} only as the contrast case, not as the cooling
+anchor.
+
+\paragraph{Reproducibility.} The result is reproducible in two
+layers. The Lean layer is \texttt{BHThermodynamicsFourLaws.lean}
+(\bhThermoTotal{} theorems and lemmas, zero \texttt{sorry}, zero new
+axioms, zero \texttt{maxHeartbeats} overrides) at the project's
+pinned Mathlib4 commit. The Python layer is
+\texttt{src/wkb/backreaction.py} (the BEC-acoustic ODE evolution at
+line 449) and the
+\texttt{src/core/visualizations.py:fig\_T\_H\_evolution\_regime\_partition}
+visualization. All numerics quoted in the abstract and figure
+caption are committed-pinned.
+
+\paragraph{Outlook.} The Glorioso--Liu second law's all-orders
+generalization~\cite{Kirklin2024GSLAllOrders} and the entropy
+current's pull-back to the SK-double~\cite{FaulknerSperanza2024} are
+the natural Phase-6 cross-bridges for promoting the
+\bhThermoTotal{}-theorem regime-partition bundle to a fully open-
+system second-law derivation in both branches.
+
+%% ================================================================
+\begin{thebibliography}{99}
+
+\bibitem{Hawking1975CMP}
+S.~W.~Hawking, ``Particle creation by black holes,''
+Commun.\ Math.\ Phys.\ \textbf{43}, 199 (1975);
+DOI: 10.1007/BF02345020.
+
+\bibitem{Balbinot2005PRD}
+R.~Balbinot, S.~Fagnocchi, A.~Fabbri, G.~P.~Procopio,
+``Quantum Effects in Acoustic Black Holes: the Backreaction,''
+Phys.\ Rev.\ D \textbf{71}, 064019 (2005);
+arXiv:gr-qc/0405098;
+DOI: 10.1103/PhysRevD.71.064019.
+
+\bibitem{JacobsonVolovik1998}
+T.~A.~Jacobson and G.~E.~Volovik, ``Event horizons and ergoregions
+in $^{3}$He,'' Phys.\ Rev.\ D \textbf{58}, 064021 (1998);
+arXiv:cond-mat/9801308.
+
+\bibitem{JacobsonKoike2002}
+T.~A.~Jacobson and T.~Koike, ``Black hole and baby universe in a
+thin film of $^{3}$He-A,'' in \emph{Artificial Black Holes}, edited
+by M.~Novello, M.~Visser, G.~Volovik (World Scientific, 2002);
+arXiv:cond-mat/0205174.
+
+\bibitem{KehleUnger2022ThirdLaw}
+C.~Kehle and R.~Unger, ``Extremal black hole formation as a
+counterexample to the third law,'' arXiv:2211.15742 (2022).
+
+\bibitem{Reall2024ThirdLawBPS}
+H.~S.~Reall, ``A third law of black hole mechanics for supersymmetric
+black holes and a quasilocal mass-charge inequality,'' (2024);
+arXiv:2412.05678.
+
+\bibitem{GloriosoLiu2018}
+P.~Glorioso and H.~Liu, ``The second law of thermodynamics from
+symmetry and unitarity,'' (2018); arXiv:1612.07705.
+
+\bibitem{CrossleyGloriosoLiu2017}
+M.~Crossley, P.~Glorioso, H.~Liu, ``Effective field theory of
+dissipative fluids,'' JHEP~\textbf{09}, 095 (2017);
+arXiv:1511.03646.
+
+\bibitem{GloriosoCrossleyLiu2017}
+P.~Glorioso, M.~Crossley, H.~Liu, ``Effective field theory of
+dissipative fluids (II): classical limit, dynamical KMS symmetry
+and entropy current,'' JHEP~\textbf{09}, 096 (2017);
+arXiv:1701.07817.
+
+\bibitem{FaulknerSperanza2024}
+T.~Faulkner and A.~J.~Speranza, ``Gravitational algebras and the
+generalized second law,'' (2024); arXiv:2405.00847.
+
+\bibitem{Kirklin2024GSLAllOrders}
+J.~Kirklin, ``All orders generalised second law from holographic
+information theory,'' (2024); arXiv:2412.01903.
+
+\end{thebibliography}
+
+\end{document}

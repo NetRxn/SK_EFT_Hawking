@@ -1,4 +1,18 @@
 {
   "bundle_target": "L3",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-01T18:36:23Z",
+      "source_paper": "paper27_bh_thermodynamics_four_laws",
+      "lift_action": "Lift-letter",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "BHThermodynamicsFourLaws"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T18:36:23Z",
+      "notes": "Initial lift: paper27 \u2192 L3 PRL splash (BCH four-laws regime partition + sign-flip of dT_H/dt; Phase 6a W5; ships first wave with L1)"
+    }
+  ]
 }
