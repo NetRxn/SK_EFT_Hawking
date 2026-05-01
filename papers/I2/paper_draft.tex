@@ -229,7 +229,7 @@ without the formal pipeline an off-by-one error in the prefactor
 is not caught structurally, only by a numerical regression test
 on a sample known to produce a small variance. The library
 includes such a numerical test for redundancy
-(\texttt{tests/test\_jackknife.py}).
+(\texttt{tests/test\_verified\_statistics.py}).
 
 \item \textbf{\texttt{autocovariance\_zero\_nonneg}}
 (\texttt{VerifiedJackknife.lean} lines~82--86). The autocovariance
@@ -358,7 +358,8 @@ category to a modular tensor category.
 
 To the best of our knowledge after an exhaustive prior-art search
 (Mathlib4, Mathcomp-Analysis, HOL~Light, HOL4, Isabelle/AFP, Mizar,
-Agda \texttt{unimath}, Coq's \texttt{Math-Components} as of 2026-04-30),
+Coq/Rocq \texttt{UniMath}, Agda \texttt{categories}, Coq's
+\texttt{Math-Components} as of 2026-04-30),
 \texttt{BalancedCategory}, \texttt{RibbonCategory}, and
 \texttt{ModularTensorData} are the first formalizations of these
 structures in any proof assistant.
@@ -511,8 +512,14 @@ ratio), the smallest extension in which Fibonacci's
 $T$-matrix can be diagonalized over a single field with decidable
 arithmetic.
 
-The cumulative count is 161 declarations across the nine
-algebraic-number-field modules. The decidability structure is
+The cumulative count is approximately 161 declarations
+(\texttt{theorem} + \texttt{lemma} + \texttt{def} +
+\texttt{noncomputable def} + \texttt{structure} + \texttt{class}
++ \texttt{inductive}) across the nine algebraic-number-field
+modules under the same counting convention used in §\ref{sec:hopf}
+above; convention-sensitive recounts (e.g.\ counting
+\texttt{example} blocks or \texttt{instance} declarations) yield
+$\sim$+3 above this baseline. The decidability structure is
 the first integrated decidable-cyclotomic-plus-quadratic-extension
 infrastructure in any proof-assistant library --- Mathlib provides
 each separately, but supporting both $\sqrt{2}$ and $\zeta_n$ in
@@ -634,8 +641,10 @@ This section documents the plan for transparency.
 architectural tiers: the categorical core (steel blue;
 Section~\ref{sec:categorical}), the Hopf-algebra layer (berry;
 Section~\ref{sec:hopf}), the decidable-algebraic-number-field family
-(steel blue, mid; Section~\ref{sec:numberfields}), and the eleven
-concrete MTC instances (amber; Section~\ref{sec:instances}). Sankey
+(steel blue, mid; Section~\ref{sec:numberfields}), and the ten
+concrete MTC-instance modules (amber; Section~\ref{sec:instances};
+the table-figure of Section~\ref{sec:instances} surveys the eight
+distinct anyon families covered by these ten files). Sankey
 flows go from each instance through the number-field and Hopf layers
 to the categorical foundation, illustrating how the layered
 architecture lets each MTC instance be expressed as a thin
@@ -776,12 +785,20 @@ library's MTC instances
 Ising-anyon braid matrices in
 \texttt{IsingGates.lean} match the structure of gates targeted by
 non-Abelian-anyon topological-quantum-computing roadmaps in the
-broader research community (including the Microsoft Quantum
-program's published Majorana-fermion-based proposals); the
-Fibonacci universality proof in \texttt{FibonacciBraiding.lean}
-is the formal counterpart of the universality result that
-motivates topological-QC research. A formally verified gate
-compiler can build on the library without re-deriving the
+broader research community pursuing Majorana-fermion-based
+non-Abelian-anyon platforms (including industrial proposals such
+as Microsoft Quantum's, Google Quantum AI's surface-code work,
+and academic/national-lab Majorana-detection experiments); the
+Fibonacci universality infrastructure in
+\texttt{FibonacciBraiding.lean} (R-matrix non-trivial-eigenvalue
+checks, $\sigma$-matrix orders, density-of-image conditions) is
+the formal substrate from which the textbook universality result
+that motivates topological-QC research can be assembled (the
+specific universality theorem itself is not yet shipped as a
+single named theorem in \texttt{FibonacciBraiding.lean}; it is
+a downstream consequence of the shipped infrastructure plus a
+density argument we have not yet formalized). A formally verified
+gate compiler can build on the library without re-deriving the
 categorical substrate.
 \item \textbf{Lattice statistics.} \texttt{VerifiedJackknife} is
 immediately usable by any lattice-Monte-Carlo project: the
@@ -818,15 +835,15 @@ deep paper (D2 in the project's bundle architecture).
 
 Mathlib's existing categorical infrastructure
 (\texttt{MonoidalCategory}, \texttt{BraidedCategory}, monoidal
-functors) is the substrate this library extends. Notable parallel
-efforts: Steinberg's pivotal-category Coq library
-(\texttt{Math-Components} extension, unmerged); the Agda
-\texttt{cubical} library's MTC partial implementation (covers ribbon
-fusion but not the modular non-degeneracy condition); the
-Isabelle/AFP submission \emph{Tensor Networks} (covers Penrose-style
-tensor diagrams, not the categorical hierarchy). To the best of
-our knowledge after the prior-art search documented in the
-SK--EFT Hawking project's
+functors) is the substrate this library extends. The Coq/Rocq
+ecosystem has \texttt{UniMath}, an extensive univalent-foundations
+library that includes monoidal and (some) bicategory infrastructure
+but does not (as of our 2026 prior-art sweep) ship a non-trivial
+Hopf algebra, a Ribbon Hopf algebra typeclass, or modular tensor
+categories \emph{as such}; the Agda \texttt{categories} library
+covers similar foundational categorical content with comparable
+scope. To the best of our knowledge after the prior-art search
+documented in the SK--EFT Hawking project's
 \texttt{Lit-Search/Phase-5o/} dossier, no other proof-assistant
 project has shipped: a non-trivial Hopf algebra (we ship
 $U_q(\mathfrak{sl}_2)$, $U_q(\widehat{\mathfrak{sl}}_2)$,
@@ -911,7 +928,7 @@ substrate that supports them.
 \bibitem{efron1982} B.~Efron, \emph{The Jackknife, the Bootstrap,
 and Other Resampling Plans}, SIAM CBMS-NSF Regional Conference
 Series in Applied Mathematics 38 (1982).
-\bibitem{wolff2004} U.~Wolff (ALPHA Collaboration), ``Monte Carlo
+\bibitem{wolff2004} U.~Wolff, ``Monte Carlo
 errors with less errors,''
 \emph{Comput. Phys. Commun.}\ \textbf{156}, 143--153 (2004).
 \bibitem{bakalov2001} B.~Bakalov and A.~Kirillov,

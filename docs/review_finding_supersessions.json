@@ -1172,6 +1172,20 @@
       "superseded_by": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z (round-2 re-review verified deterministically)",
       "evidence": "Phase 7a sub-wave 7a.2 round-1 BLOCKER 9.1: papers/I1/tables/table1_stages.tex did not exist; \\input was a dangling reference. Remediated in commit c25d15f: hand-authored table at papers/I1/tables/table1_stages.tex covering all 14 stages (paper15's lifted version had a parsing artifact on row 1 with 4 cells in a 3-column tabular plus missing Stages 4 and 14). Round-2 deterministically confirmed file existence.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:3.1-residual",
+      "status": "fixed",
+      "superseded_by": "Stage-13 round-3 expected (post-2026-05-01T22:30:00Z fix)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-2 BLOCKER 3.1-residual: §5 round-1 fix replaced fictitious chirality_wall_three_pillars with real entries but mis-attributed all to AXIOM_METADATA when in fact only gapped_interface_axiom (line 1351) is in AXIOM_METADATA; chirality_limitation_zero (line 1483) is in PLACEHOLDER_THEOREMS, c_minus_equals_8Nf (line 1590) and H_KLRS_SM_Crossover (line 1627) are in HYPOTHESIS_REGISTRY. The 6-tier eliminability vocabulary listed (algebraic/closed/hard/removed/topological/very_hard) is the union across AXIOM_METADATA + HYPOTHESIS_REGISTRY + BORDISM_HYPOTHESES, not AXIOM_METADATA alone. Remediated 2026-05-01T22:30Z: §5 paragraph at lines 472-497 rewritten to describe the four-table structural-axiom landscape (AXIOM_METADATA / PLACEHOLDER_THEOREMS / HYPOTHESIS_REGISTRY / BORDISM_HYPOTHESES) with per-registry tier sets cleanly attributed; each pillar's anchor identifies its actual registry: c_minus_equals_8Nf in HYPOTHESIS_REGISTRY (algebraic), gapped_interface_axiom in AXIOM_METADATA (hard), chirality_limitation_zero in PLACEHOLDER_THEOREMS (placeholder marker pointing at the EWBaryogenesisChiralityWall theorem suite whose hypothesis bundle includes H_KLRS_SM_Crossover in HYPOTHESIS_REGISTRY).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1500-bundle-stage13:I1:5.1",
+      "status": "fixed",
+      "superseded_by": "Stage-13 round-3 expected (post-2026-05-01T22:30:00Z fix)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-2 RECOMMENDED 5.1: Phase 6f audit filename em-dash drift (paper rendered '--' which is LaTeX en-dash; actual filename has true em-dash '—'). Remediated 2026-05-01T22:30Z by switching to '---' (LaTeX em-dash) and adding clarifying note in §11 prose that the filename contains a literal em-dash.",
+      "date": "2026-05-01"
     }
   ]
 }

@@ -470,28 +470,41 @@ could not resolve. Aristotle priority-batch submission returned
 \texttt{OUT\_OF\_BUDGET} after six hours of search.
 
 The fix was a nine-fold structural decomposition driven by the
-\texttt{AXIOM\_METADATA} table in \texttt{src/core/constants.py}.
-Each entry in \texttt{AXIOM\_METADATA} records its eliminability
-tier (\texttt{algebraic} / \texttt{closed} / \texttt{hard} /
-\texttt{removed} / \texttt{topological} / \texttt{very\_hard})
-and a \texttt{reason} or \texttt{evidence\_*} field documenting
-the structural rationale or evidence ladder. The chirality-wall theorem's
-load-bearing axioms decompose along three structural pillars,
-each anchored on one tier-\texttt{hard} entry of
-\texttt{AXIOM\_METADATA}: (i) the $\mathbb{Z}_{16}$ anomaly chain,
-backed by the chiral-central-charge axioms in
-\texttt{Z16AnomalyForcesThetaBar} (referenced from
-\texttt{AXIOM\_METADATA} via the \texttt{chiral\_central\_charge}
-group on lines around 1591); (ii) the
-four-plus-one-dimensional gapped-interface hypothesis, encoded
-verbatim as the \texttt{gapped\_interface\_axiom} entry in
-\texttt{AXIOM\_METADATA} (line 1351), with a tracked dimensional
-ladder of evidence (proven at $1{+}1$D and $2{+}1$D, conjectural
-at $3{+}1$D and $4{+}1$D); and (iii) the topological-pivoting-frame
-no-go evasion, anchored on the
-\texttt{chirality\_limitation\_zero} entry (line 1483) and on the
-EWBaryogenesisChiralityWall theorem suite cited in the same
-table (around line 1633). The decomposition tracks the same
+project's structural-axiom registries in
+\texttt{src/core/constants.py}: \texttt{AXIOM\_METADATA} (the
+true-axiom table; tier $\in \{\texttt{closed}, \texttt{hard},
+\texttt{removed}\}$), \texttt{PLACEHOLDER\_THEOREMS} (placeholder
+markers per Invariant~9), \texttt{HYPOTHESIS\_REGISTRY} (tracked
+\texttt{Prop} bundles; tier $\in \{\texttt{algebraic},
+\texttt{hard}, \texttt{very\_hard}, \texttt{open}\}$), and
+\texttt{BORDISM\_HYPOTHESES} (Lean Mathlib bordism-deferred
+hypotheses; tier $\in \{\texttt{topological}\}$). Together these
+form a four-table eliminability landscape covering six tier
+values; each entry carries a \texttt{reason} or
+\texttt{evidence\_*} field documenting the structural rationale.
+
+The chirality-wall theorem's load-bearing structural assumptions
+decompose along three pillars, each anchored on one entry of one
+of these tables: (i) the $\mathbb{Z}_{16}$ anomaly chain, backed
+by the chiral-central-charge entry
+\texttt{c\_minus\_equals\_8Nf} in
+\texttt{HYPOTHESIS\_REGISTRY} (line 1590, tier
+\texttt{algebraic}, derived from particle content);
+(ii) the four-plus-one-dimensional gapped-interface hypothesis,
+encoded verbatim as the
+\texttt{gapped\_interface\_axiom} entry in
+\texttt{AXIOM\_METADATA} (line 1351, tier \texttt{hard}, with
+a tracked dimensional ladder of evidence: proven at $1{+}1$D
+and $2{+}1$D, conjectural at $3{+}1$D and $4{+}1$D);
+(iii) the topological-pivoting-frame no-go evasion, anchored on
+the \texttt{chirality\_limitation\_zero} placeholder entry in
+\texttt{PLACEHOLDER\_THEOREMS} (line 1483; per Invariant~9, this
+is a non-load-bearing documentation marker pointing at the
+underlying GS / TPF / GT three-pillar synthesis whose substantive
+content lives in the EWBaryogenesisChiralityWall theorem suite,
+some of whose hypotheses --- e.g.\ \texttt{H\_KLRS\_SM\_Crossover}
+on line 1627 --- are themselves
+\texttt{HYPOTHESIS\_REGISTRY} entries). The decomposition tracks the same
 three-pillar boundary: three sub-lemmas per pillar, plus three
 sub-lemmas for the crossover side, totaling nine. Each
 sub-lemma has at most twelve term-level constraints.
@@ -1222,9 +1235,9 @@ Einstein-Cartan extension module (Phase~6e).
 Total Phase~6f W1-W6 yield: 73~theorems (64~substantive after
 strengthening), zero sorry, zero new axioms, with 13~retroactive
 cuts spread across the six waves. The exhaustive prior-art audit is on file at
-\texttt{Lit-Search/Phase-6f/Phase~6f~audit~--~Classical~GR~Lean~infrastructure.md}
+\texttt{Lit-Search/Phase-6f/Phase\,6f\,audit\,---\,Classical\,GR\,Lean\,infrastructure.md}
 (at the project root, not under
-\texttt{SK\_EFT\_Hawking/}); downstream papers
+\texttt{SK\_EFT\_Hawking/}; the filename contains a literal em-dash); downstream papers
 (Bardeen-Carter-Hawking four laws, area theorem,
 Hawking--Penrose singularity theorem) reference these modules as
 load-bearing imports rather than as documentation. The

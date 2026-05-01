@@ -1,26 +1,29 @@
 {
-  "review_date": "2026-05-01T20:35:00Z",
+  "review_date": "2026-05-01T21:05:00Z",
   "bundle_target": "I2",
   "bundle_tier": 3,
   "bundle_title": "Verified statistical estimators + lean-tensor-categories",
   "target_journal": "JOSS | CPC",
   "stage": 9,
-  "review_round": 2,
+  "review_round": 3,
   "review_class": "non-stub",
   "figures_reviewed": 5,
-  "overall_status": "issues_found",
+  "overall_status": "pass",
   "manifest_present": false,
   "structural_checks_present": false,
   "anchors_consulted": [
     "VerifiedJackknife test suite cross-references (Phase 5c)",
     "lean-tensor-categories Mathlib upstream cycle (Phase 5o Wave 4 + Wave 5)"
   ],
-  "round1_recommendations_status": {
-    "I2-FIG-1": "AUTHORED — pass",
-    "I2-FIG-2": "AUTHORED — pass with minor advisory",
-    "I2-FIG-3": "AUTHORED — pass with minor advisory",
-    "I2-FIG-4": "AUTHORED — pass with minor advisory",
-    "I2-FIG-5": "AUTHORED — FAIL (rendering, label clipping)"
+  "round2_blocker_status": {
+    "I2-FIGREV2-BLOCK-1": "RESOLVED — i2_fig5 re-authored with short in-node labels (R1/R2/R3, PR-1..PR-4+, F1/F2) and side-table legend mapping abbreviations to full descriptions; all labels now legible. Note: a plotly.js render bug was discovered during round-3 verification — the title text contained the HTML entity `&rarr;` which kaleido/plotly.js rejects with Error 525. Substituted Unicode arrow `→` and the PNG re-rendered cleanly. The previously-saved PNG (timestamped 09:36 in the figures dir) was the OLD long-label version because the kaleido write_image call had silently failed during the figure-author session; round-3 inspection caught and fixed both the source and the rendered artifact."
+  },
+  "round2_advisory_status": {
+    "I2-FIGREV2-ADV-1": "RESOLVED — i2_fig4 caption (paper line 269 area) revised to defer per-theorem test names to §2 (sec:jackknife) prose; figure no longer needs per-node test badges.",
+    "I2-FIGREV2-ADV-2": "DEFERRED (cosmetic) — i2_fig3 still has lower-canvas blank space; not load-bearing for JOSS submission, may be cropped pre-press.",
+    "I2-FIGREV2-ADV-3": "DEFERRED (cosmetic) — i2_fig3 column header 'Verlinde verified' vs caption 'Verlinde-formula' copy-edit; one-token edit pre-press.",
+    "I2-FIGREV2-ADV-4": "DEFERRED (cosmetic) — i2_fig2 Sankey label legibility at two-column layouts; depends on final journal layout choice.",
+    "I2-FIGREV2-ADV-5": "DEFERRED (optional) — i2_fig1 omits SphericalCategory as a separate node; §3 prose treats it as part of the Pivotal/Ribbon chain; not load-bearing."
   },
   "figures": [
     {
@@ -30,176 +33,163 @@
       "status": "pass",
       "rendering": {
         "status": "pass",
-        "issues": []
+        "issues": [],
+        "notes": "Unchanged from round 2. Hasse diagram clean, nodes well-spaced, arrows visible."
       },
       "physics": {
         "status": "pass",
         "issues": [],
-        "notes": "Hasse diagram correctly encodes the 7-tier categorical hierarchy. MonoidalCategory and BraidedCategory occupy the lower (Mathlib substrate) band; Balanced -> Pivotal -> Ribbon and Fusion form the two parallel routes that converge at ModularTensorData (the apex). Edge directions correct (subclass arrows pointing up/towards extension)."
+        "notes": "Two-route structure (Balanced→Pivotal→Ribbon AND Fusion→ModularTensorData) correct."
       },
       "style": {
         "status": "pass",
         "issues": [],
-        "notes": "Two-band coloring achieved (steel-blue Mathlib substrate vs amber library-original); colorblind-safe; clean layout; left-side annotations 'Library originals (this work)' and 'Mathlib substrate' clearly labeled. Sans-serif diagram typography appropriate for schematic."
+        "notes": "Two-band coloring (steel-blue Mathlib substrate / amber library-original) matches project conventions; LHS annotations 'Library originals (this work)' and 'Mathlib substrate' clearly placed; colorblind-safe."
       },
       "caption_match": true,
-      "notes": "Figure title 'Categorical hierarchy: Monoidal -> ... -> Modular' matches caption phrasing in §3. The two-route convergence (balanced->pivotal->ribbon AND fusion -> ModularTensorData) matches caption text exactly. SphericalCategory.lean is mentioned in the §3 prose as 22 declarations but does NOT appear as a separate node in fig 1; the round-1 advisory recommended it. Acceptable since SphericalCategory is treated as an aspect of the Pivotal/Ribbon chain in the body, but a strengthening pass could add it explicitly. Minor."
+      "notes": "Round-3 verdict matches round-2: PASS. Optional cosmetic strengthening (add SphericalCategory node) deferred."
     },
     {
       "name": "i2_fig2_module_dependencies.png",
       "section_anchor": "§7 Mathlib Upstream Coordination (line 608)",
       "priority": "P0",
-      "status": "warning",
+      "status": "pass",
       "rendering": {
-        "status": "issues",
-        "issues": [
-          "Sankey node labels render with small font; on the LHS (instance modules) labels like 'SU(3)_2 (F-symbols)' and 'SU(2)_3/SU2kSMatrix' are legible but require zoom at print scale. Acceptable at 0.95\\linewidth in a single-column journal but borderline in two-column."
-        ]
+        "status": "pass",
+        "issues": [],
+        "notes": "Unchanged from round 2. Plotly Sankey, 28 nodes, 4 architectural tiers; flow direction (instances → foundations) correct."
       },
       "physics": {
         "status": "pass",
         "issues": [],
-        "notes": "Four-tier architectural layering correct: amber instance modules (left) -> berry Hopf-algebra modules (mid-left, e.g. Uqsl2Hopf, Uqsl2AffineHopf, Uqsl3Hopf, QuantumGroupHopf) -> steel-blue number-field modules (mid-right, QCyc16, QSqrt2, QCyc5) -> right-most categorical-core modules (KLinearCategory, RibbonCategory, FusionCategory, SphericalCategory) plus the QSqrt5/QCyc5SqrtPhi/QCyc15/QCyc5Ext peripheral number-fields. Flow direction (instances -> foundations) matches paper §7 prose."
+        "notes": "Four-tier layering correct: amber instance modules (LHS) → berry Hopf-algebra modules → steel-blue number-field modules → categorical-core modules (RHS); 28-module count consistent with abstract."
       },
       "style": {
-        "status": "issues",
-        "issues": [
-          "The disconnected VerifiedJackknife island recommended in round-1 I2-FIG-2 rationale is NOT shown in this figure. VerifiedJackknife is covered separately in I2-FIG-4, so this is acceptable, but the round-1 advisory anticipated a single 'two pieces of independent infrastructure' visual. Since fig 4 satisfies the same constraint via a dedicated diagram, this is not a blocker."
-        ],
-        "notes": "Plotly Sankey; colorblind-safe palette respected (amber/berry/steel-blue); no red/green confusion."
+        "status": "pass",
+        "issues": [],
+        "notes": "Plotly Sankey; colorblind-safe palette; minor advisory I2-FIGREV2-ADV-4 (Sankey label legibility in two-column layout) deferred to journal-layout choice — not a round-3 blocker."
       },
       "caption_match": true,
-      "notes": "Caption (paper line 611-621) accurately describes the 4-tier architecture (categorical core / Hopf / number-fields / instances) and the Sankey direction. Caption claims '28 modules' which matches the 28-module count cited in the abstract."
+      "notes": "Round-3 verdict matches round-2: PASS. ADV-4 deferred."
     },
     {
       "name": "i2_fig3_mtc_instances.png",
       "section_anchor": "§6 Concrete MTC Instances (line 510)",
       "priority": "P1",
-      "status": "warning",
+      "status": "pass",
       "rendering": {
         "status": "pass",
         "issues": [],
-        "notes": "Plotly Table renders cleanly. 8 instance rows + header row. Steel-blue ✓ for shipped, amber 'partial' callouts (SU(2)_1 F-symbols, SU(2)_2 F-symbols, Fibonacci Verlinde), grey ✗ for not-yet-formalized. Number-field column shows Q, Q(√2), Q(ζ_n), Q(√2, e^{iπ/8}), Q(ζ_5)[√φ] correctly per §5/§6 narrative."
+        "notes": "Unchanged from round 2. Plotly Table, 8 instance rows × 7 columns. Color-coded ✓ shipped / 'partial' / ✗ not-yet-formalized."
       },
       "physics": {
         "status": "pass",
         "issues": [],
-        "notes": "Simple-object counts correct: SU(2)_k has rank k+1 (rows show 2, 3, 4, 5, 6 for k=1..5 — correct); SU(3)_2 has rank 6 (correct); Ising has rank 3 (correct); Fibonacci has rank 2 (correct). Quantum dimensions: SU(2)_1 (1,1) — correct (trivial fusion); SU(2)_2 (1, √2, 1) — correct; SU(2)_3 (1, φ, φ, 1) — correct (golden-ratio dimensions emerge at k=3). Fibonacci (1, φ) — correct."
+        "notes": "Simple-object counts and quantum-dimension entries verified: SU(2)_k rank k+1 (rows: 2,3,4,5,6 for k=1..5); SU(3)_2 rank 6; Ising rank 3 ({1,σ,ψ}); Fibonacci rank 2 ({1,τ}); Fibonacci q-dimensions (1, φ); SU(2)_3 q-dimensions (1, φ, φ, 1). Number-field column entries Q, Q(√2), Q(ζ_n), Q(√2, e^{iπ/8}), Q(ζ_5)[√φ] consistent with §5 ComputableAdjoinRoot infrastructure."
       },
       "style": {
-        "status": "issues",
-        "issues": [
-          "The figure's vertical extent leaves substantial blank space below the table (table fills only the upper ~30% of the canvas). For JOSS submission this wastes column-inches and would benefit from cropping or a tighter Plotly figure size. Cosmetic only."
-        ],
-        "notes": "Steel-blue / amber / grey palette consistent with project conventions."
+        "status": "pass",
+        "issues": [],
+        "notes": "Steel-blue / amber / grey palette consistent with project conventions. Cosmetic advisories ADV-2 (~70% blank canvas below table) and ADV-3 ('Verlinde verified' vs 'Verlinde-formula' copy-edit) deferred to pre-press; not blocking."
       },
       "caption_match": true,
-      "notes": "Caption (paper line 513-522) correctly describes column structure. Note: caption says 'Verlinde-formula' but figure header says 'Verlinde verified' — minor copy-edit consistency issue but not load-bearing. Round-1 I2-FIG-3 recommendation also asked for a parallel VerifiedJackknife row 'so both pieces of infrastructure are surveyed in one visual' — that suggestion was NOT incorporated, but I2-FIG-4 covers VerifiedJackknife independently, so this is a stylistic choice not a blocker."
+      "notes": "Round-3 verdict matches round-2: PASS. Cosmetic advisories deferred."
     },
     {
       "name": "i2_fig4_jackknife_dependencies.png",
       "section_anchor": "§2 VerifiedJackknife (line 249)",
       "priority": "P1",
-      "status": "warning",
+      "status": "pass",
       "rendering": {
         "status": "pass",
         "issues": [],
-        "notes": "Clean dependency micro-graph. 4 amber project theorems (jackknifeVariance_nonneg, autocovariance_zero_nonneg, intAutocorrTime_uncorrelated, intAutocorrTime_ge_half) at the top tier; 4 steel-blue Mathlib lemmas (mul_nonneg, Finset.sum_nonneg, sq_nonneg, mul_self_nonneg) at the bottom tier; one grey project def (autocovariance) shown right of center. Legend present in upper-right. Edge connectivity correct: jackknifeVariance_nonneg -> mul_nonneg + Finset.sum_nonneg + sq_nonneg; autocovariance_zero_nonneg -> Finset.sum_nonneg + sq_nonneg + mul_self_nonneg; intAutocorrTime_ge_half -> mul_self_nonneg via Finset.sum_nonneg; intAutocorrTime_uncorrelated -> autocovariance (def)."
+        "notes": "Unchanged from round 2. Two-tier dependency micro-graph; legend in upper-right (project theorem amber / Mathlib lemma steel-blue / project def grey)."
       },
       "physics": {
         "status": "pass",
         "issues": [],
-        "notes": "Theorem -> lemma reductions match VerifiedJackknife.lean structure (lines 50-58 jackknifeVariance_nonneg, 82-86 autocovariance_zero_nonneg, 109-114 intAutocorrTime_uncorrelated, 119-124 intAutocorrTime_ge_half — all line ranges agree with paper §2 prose)."
+        "notes": "Theorem→lemma reductions correct: jackknifeVariance_nonneg → mul_nonneg + Finset.sum_nonneg + sq_nonneg; autocovariance_zero_nonneg → Finset.sum_nonneg + sq_nonneg + mul_self_nonneg; intAutocorrTime_ge_half → Finset.sum_nonneg + mul_self_nonneg; intAutocorrTime_uncorrelated → autocovariance (def). Theorem line ranges (50–58, 82–86, 109–114, 119–124) match §2 prose."
       },
       "style": {
-        "status": "issues",
-        "issues": [
-          "Per round-1 I2-ADV-2 (caption ↔ test-name traceability), the figure caption (paper line 252-264) claims 'each project theorem is annotated with the corresponding test function in tests/test_jackknife.py'. The figure does NOT visibly show test-name badges on each theorem node. Either: (a) revise caption to drop the per-node-annotation claim and instead refer prose-readers to §2 for test references, or (b) re-author figure with test-name badges (e.g. 'jackknifeVariance_nonneg' node carries a small 'test_jackknife_variance_nonneg' badge). Option (a) is simpler; option (b) is what the round-1 advisory anticipated. Either is acceptable; current state is mildly inconsistent."
-        ],
-        "notes": "Sage-green / amber / steel-blue palette consistent with project conventions. Two-tier visual lanes (theorems above, lemmas below) match the round-1 style note."
+        "status": "pass",
+        "issues": [],
+        "notes": "Sage-green / amber / steel-blue palette consistent. Two-tier visual lanes (theorems above, lemmas below)."
       },
-      "caption_match": false,
-      "caption_match_notes": "Caption claims per-theorem test annotation but figure does not show test names per node. See style.issues above."
+      "caption_match": true,
+      "caption_match_notes": "RESOLVED. Caption now reads (paper around line 269): '...Each project theorem has a corresponding test in tests/test_verified_statistics.py that exercises its numerical instantiation; the test names are listed in the prose (Section sec:jackknife) rather than overlaid on each node to keep the dependency graph readable.' The caption no longer claims per-node annotations.",
+      "notes": "Round-3 verdict: upgraded from round-2 'warning' to 'pass'. Advisory I2-FIGREV2-ADV-1 RESOLVED via caption edit."
     },
     {
       "name": "i2_fig5_mathlib_upstream_flow.png",
       "section_anchor": "§7 Mathlib Upstream Coordination (line 689)",
       "priority": "P2",
-      "status": "fail",
+      "status": "pass",
       "rendering": {
-        "status": "issues",
-        "issues": [
-          "CRITICAL: Node labels are heavily clipped. Visible label fragments include 'athlib Zulip introd...', 'ool acceptance dis...', 'R strategy discus...', '12 + Co putable...', 'alCateg ry + Ribb...', 'ularBial gebra + R...', 'tances (SU(2)..'. The labels appear to be rendered INSIDE the squares/circles where the node shape is too small to contain the full text. The reader cannot determine which node is R1 vs R2 vs R3, nor identify which atomic PR is which (PR-1 QSqrt2+ComputableAdjoinRoot, PR-2 Pivotal+Ribbon, PR-3 Quasitriangular+RibbonHopf, PR-4 MTC instances). The diamond fallback nodes 'software-only JOSS' and 'update : etrofit upd...' are similarly clipped.",
-          "Recommendation: re-author with one of (i) increase node size by ~2x, (ii) place labels OUTSIDE node shapes (e.g. above/below), (iii) use abbreviated labels inside nodes with a legend table mapping abbreviation -> full description, or (iv) switch from circles/squares to wider rectangles with text-fitted bounding boxes."
-        ]
+        "status": "pass",
+        "issues": [],
+        "notes": "Re-authored. Visible elements: (i) bold title 'Mathlib upstream coordination: R1/R2/R3 gates → atomic-PR chain'; (ii) subtitle 'Steel-blue gates → amber PR sequence; cool-grey fallback for software-only release (paper I2 §7).'; (iii) top-right kind legend (R-gate / atomic Mathlib PR / software-only fallback); (iv) seven horizontal nodes on the upper rail — three steel-blue R-gate rectangles (R1, R2, R3) followed by four amber PR rectangles (PR-1, PR-2, PR-3, PR-4+), connected by colored arrows; (v) two cool-grey fallback rectangles (F1, F2) on a lower rail, with R3→F1 vertical fallback arrow and F1→F2 horizontal arrow; (vi) bottom side-table legend in two columns mapping each abbreviation to its full description (R1=Mathlib Zulip introduction, R2=AI-tool-assistance disclosure, R3=PR-strategy discussion, PR-1=QSqrt2+ComputableAdjoinRoot bridge, PR-2=PivotalCategory+RibbonCategory, PR-3=QuasitriangularBialgebra+RibbonHopfAlgebra, PR-4+=MTC instances (SU(2)_k, Ising, Fibonacci), F1=Software-only release (JOSS, this paper), F2=JOSS update (retrofit upstream PRs)) plus the italic note 'Fallback if Mathlib AI-content acceptance > 6 mo'. All node labels are bold white inside text-fitted rectangles and fully legible at native rendering width (1200 px × scale 2)."
       },
       "physics": {
         "status": "pass",
         "issues": [],
-        "notes": "Despite label clipping, the structural flow is correct: 3 R-gates (steel-blue squares) -> 4 PR nodes (amber circles) -> diamond decision -> 2 fallback nodes (grey diamonds). Annotation 'Fallback engages if Mathlib AI-content acceptance is delayed > 6 months' visible at the bottom and matches §7.4 prose. The 7-step flow + fallback branch is the structural content the round-1 advisory anticipated."
+        "notes": "Structural flow correct and identical to round-2 (which was passing on physics, only failing on rendering). Three R-gates → four atomic PR chain → fallback diamond logic preserved. The §7.4 prose anchor 'Fallback engages if Mathlib AI-content acceptance is delayed > 6 months' is reproduced in the side-table legend's italic footer line."
       },
       "style": {
-        "status": "issues",
-        "issues": [
-          "Label-clipping is a hard rendering bug, not a style preference. Fix required before submission."
-        ],
-        "notes": "Legend in upper-left correctly distinguishes R-gate (steel-blue) / atomic PR (amber) / software-only fallback (grey diamond)."
+        "status": "pass",
+        "issues": [],
+        "notes": "Colorblind-safe palette: steel-blue for R-gates (relationship-building), amber for atomic Mathlib PRs, cool-grey for software-only fallback. CMU Serif / Times font family consistent with project conventions. Bold white in-node labels readable against all three fill colors."
       },
       "caption_match": true,
-      "caption_match_notes": "Caption text (paper line 692-702) is accurate; the figure encodes the right structure but the rendering renders the labels unreadable. Caption-figure semantic match is OK; the FAIL is purely a rendering bug."
+      "caption_match_notes": "Caption (paper line 692-702) describes the R1/R2/R3 → atomic-PR chain + software-only fallback structure; figure now displays this content legibly.",
+      "notes": "Round-3 verdict: upgraded from round-2 FAIL to PASS. Re-author solution adopted: option (c) abbreviated in-node labels + legend table — exactly the round-2 remediation suggestion. Side-effect fix: a plotly.js render bug (HTML entity `&rarr;` in title triggering kaleido Error 525) was discovered and corrected in `src/core/visualizations.py::fig_i2_mathlib_upstream_flow` by substituting the Unicode arrow `→`. Without this fix the saved PNG would have remained the round-2 stale image regardless of source-code correctness."
     }
   ],
-  "summary": "Round-2 review of 5 newly-authored I2 figures. Four of five pass with minor advisories (i2_fig1 categorical hierarchy clean PASS; i2_fig2 module deps PASS with sub-pixel-density advisory; i2_fig3 MTC instances PASS with cosmetic blank-space advisory; i2_fig4 jackknife deps PASS with caption-vs-figure annotation inconsistency advisory). One figure FAILS: i2_fig5 mathlib upstream flow has heavily clipped node labels rendering R1/R2/R3 gates and PR-1..4 nodes unreadable. Overall verdict: issues_found (yellow). The two P0 figures (categorical hierarchy + module dependency) are publication-ready. The P1 figures (MTC table + VerifiedJackknife graph) are publication-ready with minor advisories. The P2 figure (Mathlib upstream flow) requires a rendering revision before JOSS submission. Bundle stage9_status set to yellow (advisories + 1 fail on lowest-priority figure; no P0/P1 blocker).",
-  "blockers": [
-    {
-      "id": "I2-FIGREV2-BLOCK-1",
-      "severity": "blocker",
-      "figure": "i2_fig5_mathlib_upstream_flow.png",
-      "description": "Node labels are clipped beyond legibility. Reader cannot identify R-gates or atomic PRs from the figure alone. Re-author the figure with larger nodes, external labels, or rectangular text-fitted shapes. Until fixed, the figure communicates only the structural flow (gates -> PRs -> fallback) without the substantive content (which gate, which PR). Per JOSS submission standards, unreadable labels in a process-flow diagram are a hard FAIL.",
-      "remediation": "Re-author papers/I2/figures/i2_fig5_mathlib_upstream_flow.png with one of: (a) larger nodes (~2x current size); (b) labels placed above/below nodes rather than inside; (c) abbreviated in-node labels + legend table; (d) text-fitted rectangular shapes. Re-invoke physics-qa:figure-reviewer for verification."
-    }
-  ],
+  "summary": "Round-3 review of 5 I2 figures. All five figures PASS. The round-2 blocker (I2-FIGREV2-BLOCK-1: i2_fig5 mathlib upstream flow node-label clipping) is RESOLVED via re-author with abbreviated in-node labels (R1/R2/R3, PR-1..PR-4+, F1/F2) plus a side-table legend mapping abbreviations to full descriptions; an incidental plotly.js render bug (Error 525 from the `&rarr;` HTML entity in the figure title) was caught during round-3 PNG verification and fixed by substituting Unicode `→`. The round-2 advisory I2-FIGREV2-ADV-1 (i2_fig4 caption ↔ figure mismatch) is RESOLVED via caption edit deferring per-theorem test-name annotations to §2 prose. The remaining four advisories (ADV-2 fig3 blank space, ADV-3 fig3 column header copy-edit, ADV-4 fig2 sankey legibility, ADV-5 fig1 SphericalCategory node) are cosmetic and deferred to pre-press finalization. Bundle stage9_status upgrades from 'yellow' to 'green'.",
+  "blockers": [],
   "advisories": [
-    {
-      "id": "I2-FIGREV2-ADV-1",
-      "severity": "advisory",
-      "figure": "i2_fig4_jackknife_dependencies.png",
-      "description": "Caption (paper line 252-264) claims 'each project theorem is annotated with the corresponding test function in tests/test_jackknife.py' but the figure shows no per-node test-name badges. Either revise caption to drop the per-theorem annotation claim and refer to §2 prose for test references (simpler), OR re-author the figure with test-name badges per theorem node (what round-1 I2-ADV-2 anticipated). Current state is a mild caption-figure mismatch; not load-bearing for the figure's structural content but should be reconciled before final submission.",
-      "remediation": "Edit caption to: '...the four project theorems reduce to a small set of elementary Mathlib lemmas. Each theorem's corresponding tests/test_jackknife.py test name is listed in §2.' OR re-author figure with badges."
-    },
     {
       "id": "I2-FIGREV2-ADV-2",
       "severity": "advisory",
       "figure": "i2_fig3_mtc_instances.png",
-      "description": "Plotly Table figure has substantial blank space below the table (table fills upper ~30% of canvas). Cosmetic only — wastes column inches in JOSS layout. Crop or set tighter Plotly figure dimensions.",
-      "remediation": "Reduce Plotly figure 'height' parameter or set explicit margins to crop the unused lower region. No content change needed."
+      "status": "deferred (cosmetic)",
+      "description": "Plotly Table figure has substantial blank space below the table (~70% of canvas). Cosmetic only — wastes column inches in JOSS layout. Defer to pre-press; reduce Plotly figure 'height' parameter or set explicit margins.",
+      "remediation": "One-line edit to fig_i2_mtc_instances() to crop height; or post-export crop tool."
     },
     {
       "id": "I2-FIGREV2-ADV-3",
       "severity": "advisory",
       "figure": "i2_fig3_mtc_instances.png",
-      "description": "Header column reads 'Verlinde verified' but caption phrasing is 'Verlinde-formula' (paper line 518). Minor copy-edit consistency issue. Either rename column header to 'Verlinde-formula verified' or update caption to use 'Verlinde verified'.",
-      "remediation": "One-token edit in either the figure regeneration script or the caption."
+      "status": "deferred (cosmetic)",
+      "description": "Header column reads 'Verlinde verified' but caption phrasing is 'Verlinde-formula' (paper line 518). Minor copy-edit consistency. Defer to pre-press; one-token edit in either the figure regen or the caption.",
+      "remediation": "One-token edit."
     },
     {
       "id": "I2-FIGREV2-ADV-4",
       "severity": "advisory",
       "figure": "i2_fig2_module_dependencies.png",
-      "description": "Sankey labels are legible at 0.95\\linewidth in single-column layout but borderline in two-column. If JOSS submission is intended at single-column, this is fine; if a CPC two-column variant is anticipated, increase Plotly font size or split into two sub-figures (foundations + instances).",
+      "status": "deferred (depends on journal layout)",
+      "description": "Sankey labels legible at 0.95\\linewidth single-column; borderline in two-column. JOSS is single-column so this is fine for the primary submission target; CPC two-column variant would need font-size bump or split.",
       "remediation": "Verify target journal column layout; adjust Plotly font_size if two-column."
     },
     {
       "id": "I2-FIGREV2-ADV-5",
       "severity": "advisory",
       "figure": "i2_fig1_categorical_hierarchy.png",
-      "description": "Round-1 I2-FIG-1 recommendation explicitly listed 'SphericalCategory' as a library-original tier to surface as a node. Current figure omits SphericalCategory as a separate node; the §3 prose treats it as part of the Pivotal->Ribbon chain. Strengthening pass could add SphericalCategory as a node between Pivotal and Ribbon (or as a parallel branch off Pivotal) for completeness.",
-      "remediation": "Optional. Either add SphericalCategory node to fig 1, or update §3 prose to explicitly state 'SphericalCategory.lean is treated as the pivotal-spherical specialization stage and is not shown as a separate node in Fig 1'."
+      "status": "deferred (optional)",
+      "description": "Round-1 I2-FIG-1 recommendation listed SphericalCategory as a library-original tier; current figure omits it as a separate node. §3 prose treats it as part of Pivotal/Ribbon chain. Optional strengthening only.",
+      "remediation": "Either add SphericalCategory node to fig 1 or update §3 prose to explicitly note the omission."
     }
   ],
+  "round2_to_round3_diff": {
+    "i2_fig1": "unchanged — PASS → PASS",
+    "i2_fig2": "unchanged — PASS w/ adv → PASS (ADV-4 deferred)",
+    "i2_fig3": "unchanged — PASS w/ 3 adv → PASS (ADV-2, ADV-3 deferred)",
+    "i2_fig4": "caption edited — PASS w/ 1 adv → PASS (ADV-1 RESOLVED)",
+    "i2_fig5": "re-authored + render-bug fix — FAIL → PASS (BLOCK-1 RESOLVED)"
+  },
   "next_actions": [
-    "REQUIRED: Re-author papers/I2/figures/i2_fig5_mathlib_upstream_flow.png to fix label clipping; re-invoke physics-qa:figure-reviewer with bundle_target=I2 for verification.",
-    "Reconcile i2_fig4 caption (paper line 252-264) with the figure: either drop per-theorem test-annotation claim or add test-name badges to each theorem node.",
-    "Optional cleanup: crop fig 3 vertical extent; rename fig 3 column header for caption-consistency; consider adding SphericalCategory node to fig 1.",
-    "Once fig 5 fixed, expect overall_status to upgrade from 'issues_found' to 'pass' and bundle_metadata.stage9_status from 'yellow' to 'green'."
+    "Bundle stage9_status upgrades from 'yellow' to 'green'.",
+    "Stage 10 claims-reviewer round-2 still pending; orthogonal to figure review.",
+    "Pre-press: address remaining 4 cosmetic advisories (ADV-2, ADV-3, ADV-4, ADV-5) before final journal submission."
   ]
 }

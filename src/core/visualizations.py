@@ -14084,8 +14084,8 @@ def fig_i2_mathlib_upstream_flow() -> "go.Figure":
         font=FONT,
         title=dict(
             text=(
-                "<b>Mathlib upstream coordination: R1/R2/R3 gates &rarr; "
-                "atomic-PR chain</b><br><sub>Steel-blue gates &rarr; amber "
+                "<b>Mathlib upstream coordination: R1/R2/R3 gates → "
+                "atomic-PR chain</b><br><sub>Steel-blue gates → amber "
                 "PR sequence; cool-grey fallback for software-only release "
                 "(paper I2 §7).</sub>"
             ),

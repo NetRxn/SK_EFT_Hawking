@@ -6609,7 +6609,7 @@ CITATION_REGISTRY = {
     },
 
     'wolff2004': {
-        'authors': 'U.~Wolff (ALPHA Collaboration)',
+        'authors': 'U.~Wolff',
         'title': 'Monte Carlo errors with less errors',
         'journal': 'Comput. Phys. Commun.',
         'volume': 156,
