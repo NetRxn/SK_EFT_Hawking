@@ -1,89 +1,309 @@
-# I1 Bundle — Stage 9 Figure Review (Stub-Class)
+# I1 Bundle Stage-9 Figure Review (Round 2)
 
 **Bundle:** I1 — Verification methodology with worked cases
-**Tier:** 3 (Infrastructure — CPC | Phys. Rep.)
-**Reviewer agent:** `physics-qa:figure-reviewer`
-**Run mode:** stub-class (bundle has zero figures authored)
-**Review date (UTC):** 2026-05-01T13:40:02Z
-**Phase / Sub-wave:** Phase 7a, sub-wave 7a.2 (I1 lift execution)
+**Tier:** 3 (software/methodology — CPC | Phys. Rep.)
+**Review date:** 2026-05-01T16:30:00Z
+**Round:** 2 (round-1 stub at 2026-05-01T13:40:02Z established the 6-figure recommendation set; all 6 figures now authored and reviewed)
+**Reviewer:** physics-qa:figure-reviewer (bundle-aware mode, bundle_target=I1)
+**Output paths:**
+- `papers/I1/figures/figure_review_report.json` (JSON-structured per-figure verdict)
+- `papers/AutomatedReviews/2026-05-01-bundle-stage13/I1-figures.md` (this document)
 
 ---
 
-## Verdict
+## 1. Summary
 
-`pending-figures` (non-FAIL).
+All six figures recommended in the round-1 stub review have been authored
+and pass Stage-9 review at the round-2 pass. Four figures pass cleanly;
+two carry minor advisories that are Stage-9 → Stage-10 handoff items, not
+blockers.
 
-The I1 paper draft (`papers/I1/paper_draft.tex`, 1338 lines, 14 sections) is currently text-only. The `papers/I1/figures/` directory contains no PNG, SVG, or PDF assets. The draft body contains zero `\includegraphics` calls and zero `figure` environments. There is therefore nothing to review for rendering quality, physics accuracy, or style consistency.
+| Figure | Section | Round-1 Rec | Status | Aristotle Run / Type |
+|--------|---------|-------------|--------|----------------------|
+| `i1_fig1_three_layer_architecture.png` | §2 | I1-FIG-1 (P0) | **PASS** | Architecture schematic |
+| `i1_fig2_pipeline_14_stages.png` | §6 | I1-FIG-2 (P0) | **PASS w/ advisory** | Process flow |
+| `i1_fig3_sentence_state_clusters.png` | §8 | I1-FIG-3 (P1) | **PASS** | Schematic (validate.py CHECK 21) |
+| `i1_fig4_firstorderkms_grid.png` | §3 | I1-FIG-4 (P1) | **PASS** | Worked case — Aristotle run `270e77a0` |
+| `i1_fig5_gap_counterexample.png` | §4 | I1-FIG-5 (P2) | **PASS** | Worked case — Aristotle run `79e07d55` |
+| `i1_fig6_chirality_wall_tree.png` | §5 | I1-FIG-6 (P2) | **WARNING** | Worked case — batch-level only |
 
-This is the expected state for a Phase 7a sub-wave 7a.2 stub-completion. Stage 9 records `pending-figures` and surfaces a recommendations list of figures the bundle should add before Stage 13 sign-off.
-
-## Anchors consulted (per `docs/agents/claims-reviewer-bundle-prompts.md` §I1)
-
-1. FirstOrderKMS Aristotle counterexample case (Phase 1)
-2. Gap-solution-bounded counterexample case (Phase 5d)
-3. Chirality-wall axiom decomposition case (Phase 5h)
-4. The 14-stage Wave Execution Pipeline
-5. The supersession ledger pattern + Pipeline Invariant #13 (Wave 6)
-
-Bundle source: paper15 substantially expanded + worked-case curated set. Stage-13 profile is software/methodology — each worked case must trace to a reproducible Aristotle run ID or commit-pinned counterexample (this constrains future caption content for figures I1-FIG-4 through I1-FIG-6).
-
-## Figures reviewed
-
-0.
-
-## Recommendations — figures the bundle should add
-
-Priority labels: **P0** = required for the bundle's central pedagogical claim; **P1** = strongly recommended; **P2** = strengthening (not strictly required by anchor list but materially raises Phys. Rep. readiness).
-
-### P0 — required
-
-- **I1-FIG-1. Three-layer Python ↔ Lean ↔ Aristotle architecture diagram** (§2, line 171)
-  Schematic of the bidirectional formula ↔ theorem correspondence. Single most-cited concept in the draft and the canonical entry-point figure for the physicist audience the paper targets. Must encode pipeline invariants #1 (`formulas.py` canonical) and #4 (every formula has a Lean theorem) as labeled edges.
-
-- **I1-FIG-2. 14-stage Wave Execution Pipeline diagram** (§6, line 442)
-  Bundle anchor #4. The pipeline is the core methodological contribution and is described over ~150 lines of prose; one figure is essential. Must show feedback loops (Stage 13 BLOCKER → supersession-ledger → Stage 6 redo) and label which stages are LLM-driven vs human-gated vs automated.
-
-### P1 — strongly recommended
-
-- **I1-FIG-3. Sentence-state cluster diagram** (§8, line 677)
-  PAPER_STRATEGY.md §2.4 lists this as the third planned figure. Node-link graph showing sentences → formulas → theorems with cross-paper consistency edges in a distinct color. Makes the n-to-many provenance abstraction concrete via one Tier-1 paper's worked example.
-
-- **I1-FIG-4. FirstOrderKMS counterexample 9-component grid** (§3, line 235)
-  Bundle anchor #1. 3×3 KMS-component grid; binary coloring (originally-constrained 4 cells vs originally-missing 5 cells). Caption must cite the Aristotle run ID and commit hash per the Stage-13 anchor profile.
-
-### P2 — strengthening
-
-- **I1-FIG-5. Gap-solution-bounded counterexample witness plot** (§4, line 301)
-  Bundle anchor #2. Literal data plot of the explicit unbounded-in-G witness function. Only worked-case figure that is a true physics plot rather than a schematic, so it carries disproportionate weight for empirical character. Caption must cite the Aristotle counterexample-extraction run ID + commit hash.
-
-- **I1-FIG-6. Chirality-wall axiom decomposition tree** (§5, line 364)
-  Bundle anchor #3. Top-down tree: root = original opaque axiom; leaves = 4 focused hypotheses + 1 4+1D gapped-interface assumption. Each leaf annotated with evidential status (`1+1D verified`, `2+1D verified`, `4+1D conjectural`).
-
-## Style requirements (apply to all six recommended figures)
-
-Per `CLAUDE.md` Key Conventions:
-
-- **Plotly only** (not matplotlib).
-- **Colorblind-accessible** palette (blue/amber, not red/green).
-- Project canonical palette where applicable (Steinhauer/Rb87 steel-blue `#2E86AB`, Heidelberg/K39 berry `#A23B72`, Trento/Na23 amber `#F18F01`, dispersive sage-green `#5C946E`, dissipative carmine `#E63946`). For abstract/diagrammatic figures (I1-FIG-1, I1-FIG-2, I1-FIG-3, I1-FIG-6) the palette is more flexible but should remain colorblind-safe.
-- Serif fonts (CMU/Times family) preferred for axes; sans-serif acceptable for purely schematic diagrams.
-
-## Blockers
-
-None. (Stub-class run; absence of figures is the expected state at sub-wave 7a.2 stub-completion, not a blocker against Stage 9.)
-
-## Advisories
-
-- **I1-ADV-1.** `stage9_status = pending-figures` until at least the three P0/P1 architecture/pipeline/provenance figures (I1-FIG-1, I1-FIG-2, I1-FIG-3) exist and pass rendering + style checks.
-- **I1-ADV-2.** Captions for I1-FIG-4 through I1-FIG-6 must cite the corresponding Aristotle run IDs and project commit hashes per the bundle's Stage-13 profile (\"each worked case must trace to a reproducible Aristotle run ID OR commit-pinned counterexample\"). Coordinate with the Stage 10 `physics-qa:claims-reviewer` pass for caption ↔ `ARISTOTLE_THEOREMS` registry consistency.
-
-## Next actions
-
-1. Author I1-FIG-1, I1-FIG-2, I1-FIG-3 (P0/P1 core) into `papers/I1/figures/`.
-2. Add `\begin{figure}\includegraphics` blocks at the section anchors above (lines 171, 442, 677).
-3. Re-invoke `physics-qa:figure-reviewer` with `bundle_target=I1` for a non-stub Stage 9 review once figures land.
-4. Coordinate with Stage 10 `physics-qa:claims-reviewer` so caption claims trace to Aristotle run IDs and commit hashes.
+**Overall verdict:** PASS with two non-blocking advisories
+(`I1-FIG-2-ADV`, `I1-FIG-6-ADV`). Recommend
+`bundle_metadata.json: stage9_status = "yellow"` to reflect the open
+advisories, with promotion to `green` after the Stage-10 round-2 pass
+resolves the fig6 caption/labeling and Aristotle batch-ID pinning.
 
 ---
 
-*JSON sibling artifact:* `papers/I1/figures/figure_review_report.json`
+## 2. Round-1 Recommendation Disposition
+
+| Round-1 ID | Round-1 Priority | Title | Round-2 Status |
+|------------|-------------------|-------|----------------|
+| I1-FIG-1 | P0 | Three-layer architecture diagram | Authored, PASS |
+| I1-FIG-2 | P0 | 14-stage pipeline diagram | Authored, PASS w/ advisory |
+| I1-FIG-3 | P1 | Sentence-state cluster diagram | Authored, PASS |
+| I1-FIG-4 | P1 | FirstOrderKMS counterexample grid | Authored, PASS |
+| I1-FIG-5 | P2 | Gap-equation counterexample plot | Authored, PASS |
+| I1-FIG-6 | P2 | Chirality-wall decomposition tree | Authored, WARNING |
+
+All 6/6 round-1 recommendations addressed. 0 P0/P1 blockers remain.
+
+---
+
+## 3. Per-Figure Findings
+
+### 3.1 `i1_fig1_three_layer_architecture.png` — PASS
+
+**§2, paper_draft.tex line 240–254. Round-1 rec: I1-FIG-1 (P0).**
+
+Three stacked colored bands (Layer 1 Python — steel blue; Layer 2 Lean
+— amber; Layer 3 Aristotle — sage). Vertical labels "formalize" /
+"automate" annotate the downward arrows; the curved carmine arrow on
+the right marks "counterexample or refinement" feedback flow back to
+Layer 1. Each band's metadata strip lists canonical-module pointers
+consistent with CLAUDE.md Pipeline Invariants #1–4:
+- Layer 1: `formulas.py (canonical) · constants.py · visualizations.py · tests/ · domain modules (wkb/, adw/, vestigial/)`
+- Layer 2: `lean/SKEFTHawking/*.lean · zero sorry · 1 axiom · 5229 theorems · ExtractDeps.olean axiom-closure graph`
+- Layer 3: `submit_to_aristotle.py · ARISTOTLE_THEOREMS registry · priority batch plan · zero-sorry closures (e.g. run 270e77a0)`
+
+The 5229 / 1 axiom / zero sorry counts match the Phase 7a.0.2 counts.json
+regen baseline (memory: 5229 theorems / 5204 substantive / 0 sorry / 1
+axiom). The Layer 3 cross-reference to run `270e77a0` ties the figure
+to §3's worked case. **No rendering, physics, style, or caption issues.**
+
+### 3.2 `i1_fig2_pipeline_14_stages.png` — PASS w/ advisory
+
+**§6, paper_draft.tex line 550–564. Round-1 rec: I1-FIG-2 (P0).**
+
+5×3 grid layout shows all 15 cells (S1, S2, S3a, S3b, S4–S14). New
+stages (3a Lean MCP loop, 13 Adversarial review, 14 Meta-process QI)
+correctly highlighted in amber per the legend; existing stages in steel
+blue. Stage labels match WAVE_EXECUTION_PIPELINE.md.
+
+**Advisory `I1-FIG-2-ADV` (rendering — minor):** Several gate-text
+strings appear truncated at cell boundaries:
+- S1 "Constants & param[s]"
+- S2 "Lean-theorem ref pre[…]"
+- S8 "[ga]te: fig functions registered" (left edge crowded)
+- S10 "claims-reviewer pas[s]"
+- S12 "Inventory + Heatmap" (acceptably tight)
+
+The truncation is a layout-tightness issue, not a missing-content issue.
+Mitigation: Table 1 (`tables/table1_stages.tex`, `\input` on line 569)
+is auto-generated from `WAVE_EXECUTION_PIPELINE.md` and carries full
+gate text — figure plus table together carry the load. **Non-blocking.**
+
+**Suggested fix (deferrable):** widen each cell ~12% or shorten gate
+strings ("Constants & params" → "Constants", "claims-reviewer pass" →
+"claims pass").
+
+### 3.3 `i1_fig3_sentence_state_clusters.png` — PASS
+
+**§8, paper_draft.tex line 801–816. Round-1 rec: I1-FIG-3 (P1).**
+
+Three-paper layout (Paper A Tier 1, Paper B Tier 1, Paper C Tier 2)
+with six sentences each. Cluster C2 (amber, `cross_bundle: true`)
+spans all three papers per the §8 caption claim. Single-bundle
+clusters C1 (steel blue, paper A internal) and C3 (sage, paper B
+internal) are distinct. Edge style (dashed for single-bundle, solid
+for cross-bundle) helps disambiguate the `cross_bundle: true` semantic.
+
+Faint-grey "unclustered sentence" nodes (B2, B5, A4, A6, C5, C6) match
+the legend's fourth row — intentional encoding, not a rendering issue.
+
+Schematic figure (caption explicitly says "schematic") so no specific
+Aristotle run ID is required. **No issues.**
+
+### 3.4 `i1_fig4_firstorderkms_grid.png` — PASS
+
+**§3, paper_draft.tex line 322–336. Round-1 rec: I1-FIG-4 (P1).
+Worked-case figure — Aristotle run `270e77a0` cited.**
+
+Two 3×3 grids of nine real coefficients `{r1..r6, i1, i2, i3}`:
+
+- **Left panel (original weak axiom, "4 constrained / 5 unconstrained,
+  counterexample c = (0,0,0,0,0,0,0,1,0)"):** four cells colored
+  steel-blue ("constrained"): r1, r2, i1, i2. Five cells in grey
+  ("free"): r3, r4, r5, r6, i3. Cell i2 highlighted in carmine with
+  "counterexample i2 = 1" annotation.
+- **Right panel (corrected FirstOrderKMS, "all 9 constrained, i3 = 0
+  explicit"):** all nine cells amber ("constrained").
+
+The Aristotle run ID `270e77a0` is cited in the figure title, which
+satisfies the Tier-3 reproducibility anchor requirement ("each worked
+case must trace to a reproducible Aristotle run ID"). **No issues.**
+
+### 3.5 `i1_fig5_gap_counterexample.png` — PASS
+
+**§4, paper_draft.tex line 403–418. Round-1 rec: I1-FIG-5 (P2).
+Worked-case figure — Aristotle run `79e07d55` cited.**
+
+Single-curve plot of Δ(G) on G ∈ [0, 12] with parameterization
+N_f = 1, Λ = 1, c_4 = 1 stated in the title:
+- Trivial branch Δ = 0 for G < G_c (dotted grey, near origin).
+- Non-trivial branch (steel-blue solid) rises monotonically.
+- Cutoff line Λ = 1 (dashed black horizontal).
+- Saturation marker at G* ≈ 6.518 = 2/(1 - log 2) where Δ = Λ
+  (amber filled circle).
+- Amber-shaded region G ≥ G* with annotation "folklore claim Δ < Λ
+  fails for G ≥ G*" and subtitle "Aristotle run 79e07d55: corrected
+  statement adds G < G* hypothesis."
+
+The numerical value G* = 2/(1 - log 2) ≈ 6.518 matches the saturation
+point shown on the plot. Aristotle run ID `79e07d55` cited in caption
+— Tier-3 anchor met. **No issues.**
+
+This is the only literal physics-data plot in the bundle (per
+round-1's note that this "carries disproportionate weight in
+establishing the paper's empirical character").
+
+### 3.6 `i1_fig6_chirality_wall_tree.png` — WARNING
+
+**§5, paper_draft.tex line 502–518. Round-1 rec: I1-FIG-6 (P2).
+Worked-case figure — batch-level Aristotle citation only.**
+
+Treemap (nested-rectangles) layout. Root: carmine bar
+`sm_no_nu_R_ewbg_doubly_forbidden`. Two amber obstruction blocks:
+"Z₁₆ chirality wall" (left+center) and "Crossover (sphaleron
+suppression)" (right). Three sage-green pillar boxes:
+- Pillar A — anomaly (containing Sublemma A.1 "z16-anomaly orthogonality")
+- Pillar B — fermion content (containing Sublemma B.1 "no-vR ⇒ Pillar B intact")
+- Pillar C — wall form (containing Sublemma C.1 "wall-form ⇒ EWBG forbidden")
+
+The Crossover obstruction contains three steel-blue sublemma boxes
+(2.1 sphaleronSuppression ∈ [0,1], 2.2 ¬viable ⇒ EWBG forbidden, 2.3
+wall ∨ ¬viable ⇒ EWBG forbidden).
+
+**Substantive content correct.** The figure successfully conveys
+"monolithic root → two obstruction layers → three structural pillars
++ crossover side → tractable sublemmas" which is the §5 claim.
+
+**Advisory `I1-FIG-6-ADV` (style — three sub-issues):**
+
+1. **Layout deviation from round-1 spec.** Round-1 recommended
+   "Top-down tree; root labeled with the original opaque axiom; leaves
+   labeled with the 4 focused hypotheses + 1 dimensional assumption."
+   The implementation chose a treemap layout instead. Treemap is a
+   reasonable visualization for hierarchical decomposition data; the
+   caption explicitly says "treemap layout" so the deviation is
+   disclosed. **Acceptable but flagged.**
+
+2. **Visible-vs-stated leaf count mismatch.** §5 prose (line 498–500)
+   and the figure caption both reference *nine* sub-lemmas. The figure
+   exposes only six labeled leaves (A.1, B.1, C.1, 2.1, 2.2, 2.3). The
+   gap appears to be that Pillar C contains a large unlabeled region
+   that may represent two further sublemmas (C.2, C.3) and Pillar A or
+   B may absorb a third. Either:
+   - **(a)** annotate the 3 currently-unlabeled treemap regions with
+     their sublemma names; or
+   - **(b)** revise the caption to read "9 sub-lemmas across 6 labeled
+     leaf groups" or equivalent.
+
+   The Tier-3 reproducibility claim ("all 9 sub-lemmas closed in a
+   single Aristotle priority batch") is intact in the prose; only the
+   figure-caption visual contract is loose.
+
+3. **Aristotle batch-ID pinning.** The caption says "all 9 closed in
+   a single Aristotle priority batch" without pinning a specific run
+   ID. Tier-3 profile permits batch-level citation when the batch is
+   registry-resolvable; flag for Stage-10 claims-reviewer (round 2)
+   to pin a specific batch identifier from `ARISTOTLE_THEOREMS` if
+   available, else leave batch-level.
+
+**Non-blocking.** Recommend fix at Stage 10 round 2.
+
+---
+
+## 4. Tier-3 Reproducibility Audit
+
+Per the Stage-13 anchor profile for I1: "each worked case must trace
+to a reproducible Aristotle run ID OR commit-pinned counterexample."
+
+| Figure | Type | Run ID / Source | Status |
+|--------|------|-----------------|--------|
+| fig1 | Architecture schematic | n/a (illustrative cross-ref to 270e77a0 in metadata strip) | PASS |
+| fig2 | Process flow | n/a | PASS |
+| fig3 | Provenance schematic | n/a (validate.py CHECK 21 reference in caption) | PASS |
+| fig4 | Worked case 1 | Aristotle run `270e77a0` (cited in title) | PASS |
+| fig5 | Worked case 2 | Aristotle run `79e07d55` (cited in caption) | PASS |
+| fig6 | Worked case 3 | Batch-level only — specific run ID not pinned | ADVISORY (Stage-10 to resolve) |
+
+Schematic figures (fig1, fig2, fig3) appropriately do not cite
+Aristotle run IDs (their content is architecture/process, not
+worked-case proof artifacts). The Tier-3 anchor scopes the run-ID
+requirement to worked-case figures.
+
+---
+
+## 5. Cross-Bundle Consistency Walk
+
+I1 is a Tier-3 single-paper bundle (no parallel bundle members), so
+intra-bundle figure-claim drift checks are vacuous. Cross-bundle
+checks are limited to the worked-case anchors that overlap with other
+bundles:
+
+- **§3 FirstOrderKMS (Phase 1):** numerical claim i_3 = 0 in the
+  noise-floor formula referenced in Tier-1 D2/D3 deep papers. Stage-10
+  round 2 should verify the noise-floor constant in fig4 caption ↔
+  D2/D3 §6 numerical content via `validate.py` CHECK 21 cluster walk.
+- **§4 gap-solution-bounded (Phase 5d):** the saturation coupling
+  G* = 2/(1 - log 2) is referenced in Tier-1 deep papers covering the
+  gap equation. Stage-10 to confirm cluster cross-reference.
+- **§5 chirality-wall (Phase 5h, EWBaryogenesisChiralityWall):** the
+  9-sublemma decomposition is cited in Phase 6c.1/6c.2 papers (paper33
+  EWBG); Stage-10 to confirm cluster cross-reference for the
+  sphaleron-suppression hypothesis surfaced in §5.
+
+No `BundleFigureMismatch` findings detected at the figure-rendering
+level. Numerical-content cross-bundle consistency is the Stage-10
+claims-reviewer's domain.
+
+---
+
+## 6. Recommendations and Next Actions
+
+1. **Stage-10 round-2 hand-off (claims-reviewer, bundle_target=I1):**
+   - Verify fig4 caption ↔ ARISTOTLE_THEOREMS registry consistency
+     for run `270e77a0`.
+   - Verify fig5 caption ↔ ARISTOTLE_THEOREMS registry consistency
+     for run `79e07d55`.
+   - Attempt to pin fig6 to a specific Aristotle batch ID from
+     `ARISTOTLE_THEOREMS`; if not available, accept the batch-level
+     citation.
+   - Walk validate.py CHECK 21 (`bundle_consistency`) to confirm
+     fig4 i_3 = 0 ↔ D2/D3 noise-floor cluster, fig5 G* ↔ Tier-1
+     gap-equation cluster, fig6 sphaleron-suppression ↔ paper33 cluster.
+
+2. **Optional figure refinements (non-blocking):**
+   - fig2: widen cells ~12% or shorten gate strings to eliminate
+     truncation.
+   - fig6: either label 3 missing leaves OR update caption to read
+     "9 sub-lemmas across 6 labeled leaf groups".
+
+3. **Bundle metadata update:**
+   - `stage9_status = "yellow"` (advisories only; no blockers).
+   - `last_stage9_review = "2026-05-01T16:30:00Z"`.
+   - `advisories_open` adjusted to reflect resolution of round-1
+     "pending-figures" advisories plus the two new figure-level
+     advisories `I1-FIG-2-ADV` and `I1-FIG-6-ADV`.
+
+4. **Promotion path to `stage9_status = "green"`:** resolve fig6
+   advisory at Stage-10 round 2 (caption + batch-ID), plus optional
+   fig2 cell-width tweak. Both are paper-pass items, not full-redo
+   items.
+
+---
+
+## 7. Verdict
+
+**Stage 9 round 2 verdict: PASS with advisories.**
+
+All six round-1 figure recommendations addressed. Tier-3 reproducibility
+anchors met for fig4 and fig5 worked-case figures. fig6 carries a
+batch-level citation that requires Stage-10 confirmation to upgrade to
+a specific run ID. fig2 has minor cell-text truncation that is
+non-blocking. Schematic figures (fig1, fig2, fig3) all clear style
+checks per CLAUDE.md colorblind-accessibility convention.
+
+Recommend `bundle_metadata.json: stage9_status = "yellow"` (advisories
+only). `green` promotion deferred to post-Stage-10 round 2.

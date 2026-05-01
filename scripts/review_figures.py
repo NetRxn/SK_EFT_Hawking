@@ -1580,6 +1580,184 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         expected_axes={"xaxis": "T/T_c", "yaxis": "|P|"},
         physics_checks=[], color_keys=["steel_blue", "amber"],
     ),
+    # ─── Paper I1 — verification methodology figures ─────────────────────
+    FigureSpec(
+        name="i1_fig1_three_layer_architecture",
+        function="fig_i1_three_layer_architecture",
+        caption=(
+            "Three-layer verification architecture (paper I1 §2). "
+            "Layer 1 (Python numerics) feeds Layer 2 (Lean 4 formal "
+            "proofs) feeds Layer 3 (Aristotle automated theorem prover); "
+            "the curved feedback arrow back to Layer 1 represents "
+            "counterexample-driven refinement (e.g. Aristotle run "
+            "270e77a0)."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "sage", "carmine"],
+    ),
+    FigureSpec(
+        name="i1_fig2_pipeline_14_stages",
+        function="fig_i1_pipeline_14_stages",
+        caption=(
+            "Wave-execution pipeline (paper I1 §6). Fifteen-grid layout "
+            "of 14 stages; gates listed beneath each stage; new stages "
+            "(3a Lean MCP loop, 13 Adversarial review, 14 Meta-process "
+            "QI) highlighted in amber."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="i1_fig3_sentence_state_clusters",
+        function="fig_i1_sentence_state_clusters",
+        caption=(
+            "Sentence-state claim clusters across paper bundles "
+            "(paper I1 §8). Three papers, six sentences each; curved "
+            "lines connect sentences sharing a claim_cluster; the "
+            "amber cluster (C2) is cross_bundle: true and survives "
+            "bundle consolidation."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "sage"],
+    ),
+    FigureSpec(
+        name="i1_fig4_firstorderkms_grid",
+        function="fig_i1_firstorderkms_grid",
+        caption=(
+            "FirstOrderKMS 9-coefficient constraint grid (paper I1 §3, "
+            "Aristotle run 270e77a0). Left: original weak axiom "
+            "constrains 4 of 9 coefficients; counterexample vector "
+            "c = (0,0,0,0,0,0,0,1,0) highlighted in carmine. Right: "
+            "strengthened axiom constrains all 9 (including i₃ = 0 "
+            "explicitly)."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
+    FigureSpec(
+        name="i1_fig5_gap_counterexample",
+        function="fig_i1_gap_counterexample",
+        caption=(
+            "Gap-equation counterexample (paper I1 §4). Gap solution "
+            "Δ(G) for N_f = 1, Λ = 1: trivial branch Δ = 0 for "
+            "G < G_c; non-trivial branch saturates Λ at "
+            "G* = 2/(1 − log 2) ≈ 6.518. The folklore claim Δ < Λ "
+            "fails for G ≥ G* (corrected statement in Aristotle run "
+            "79e07d55)."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "G", "yaxis": "Δ"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "horizon", "cross"],
+    ),
+    FigureSpec(
+        name="i1_fig6_chirality_wall_tree",
+        function="fig_i1_chirality_wall_tree",
+        caption=(
+            "Chirality-wall axiom decomposition tree (paper I1 §5). "
+            "The original monolithic sm_no_nu_R_ewbg_doubly_forbidden "
+            "(50-term goal, Aristotle-intractable) decomposes into 2 "
+            "obstructions × 3 sub-lemmas = 9 leaves, each ≤ 12 terms; "
+            "all 9 closed in a single Aristotle priority batch."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "carmine"],
+    ),
+    # ─── Paper I2 — verified estimators + lean-tensor-categories ──────
+    FigureSpec(
+        name="i2_fig1_categorical_hierarchy",
+        function="fig_i2_categorical_hierarchy",
+        caption=(
+            "Categorical hierarchy poset (paper I2 §3). Hasse-diagram "
+            "of Monoidal -> Braided -> Balanced -> Pivotal -> Ribbon -> "
+            "Fusion -> Modular: Mathlib substrate (steel blue) extended "
+            "with the four library-original classes (amber) — "
+            "BalancedCategory, PivotalCategory, RibbonCategory, "
+            "FusionCategory — that culminate in ModularTensorData."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["steel_blue", "dispersive", "amber", "cross"],
+    ),
+    FigureSpec(
+        name="i2_fig2_module_dependencies",
+        function="fig_i2_module_dependencies",
+        caption=(
+            "lean-tensor-categories module dependency graph (paper I2 §7). "
+            "28 modules organized in 4 tiers — categorical hierarchy (4), "
+            "Hopf algebra (4), number fields (9), MTC instances (11) — "
+            "with Sankey flows from instances down through number fields "
+            "and the Hopf layer to the categorical core."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["amber", "Rb87", "Na23", "steel_blue"],
+    ),
+    FigureSpec(
+        name="i2_fig3_mtc_instances",
+        function="fig_i2_mtc_instances",
+        caption=(
+            "MTC instances comparison (paper I2 §6). Eight concrete "
+            "modular-tensor-category instances (SU(2)_1..5, SU(3)_2, "
+            "Ising, Fibonacci) with shipped-component status: simple-"
+            "object count, representative q-dimensions, S-matrix, "
+            "T-matrix, F-symbols, Verlinde verification, and number "
+            "field of definition."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["dispersive", "amber", "cross"],
+    ),
+    FigureSpec(
+        name="i2_fig4_jackknife_dependencies",
+        function="fig_i2_jackknife_dependencies",
+        caption=(
+            "VerifiedJackknife theorem dependency graph (paper I2 §2). "
+            "Four project theorems "
+            "(jackknifeVariance_nonneg, autocovariance_zero_nonneg, "
+            "intAutocorrTime_uncorrelated, intAutocorrTime_ge_half) "
+            "and the Mathlib lemmas they invoke (mul_nonneg, "
+            "Finset.sum_nonneg, sq_nonneg, mul_self_nonneg). Each "
+            "project theorem is annotated with its corresponding test "
+            "in tests/test_jackknife.py."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["amber", "dispersive", "cross"],
+    ),
+    FigureSpec(
+        name="i2_fig5_mathlib_upstream_flow",
+        function="fig_i2_mathlib_upstream_flow",
+        caption=(
+            "Mathlib upstream coordination flow (paper I2 §7). The three "
+            "relationship-building gates (R1 Zulip introduction, R2 AI-"
+            "tool-assistance disclosure, R3 PR-strategy discussion) feed "
+            "into the four-PR atomic chain (PR-1 QSqrt2/"
+            "ComputableAdjoinRoot bridge, PR-2 PivotalCategory/"
+            "RibbonCategory, PR-3 QuasitriangularBialgebra/"
+            "RibbonHopfAlgebra, PR-4+ MTC instances). A separate cool-"
+            "grey branch shows the software-only / JOSS-update fallback "
+            "if Mathlib AI-content acceptance is delayed past six months."
+        ),
+        needs_experiments=False, expected_traces=1,
+        expected_axes={},
+        physics_checks=[],
+        color_keys=["dispersive", "amber", "cross"],
+    ),
 ]
 
 
@@ -1727,6 +1905,19 @@ def generate_figures() -> dict[str, Path]:
         fig_code_distance_vs_fusion_spectrum,
         # Phase 6c Wave 5: RT vs W3 microscopic + CH saturated bound
         fig_rt_ch_bounds_mtc,
+        # Paper I1 — verification methodology
+        fig_i1_three_layer_architecture,
+        fig_i1_pipeline_14_stages,
+        fig_i1_sentence_state_clusters,
+        fig_i1_firstorderkms_grid,
+        fig_i1_gap_counterexample,
+        fig_i1_chirality_wall_tree,
+        # Paper I2 — verified estimators + lean-tensor-categories
+        fig_i2_categorical_hierarchy,
+        fig_i2_module_dependencies,
+        fig_i2_mtc_instances,
+        fig_i2_jackknife_dependencies,
+        fig_i2_mathlib_upstream_flow,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -1873,6 +2064,19 @@ def generate_figures() -> dict[str, Path]:
         "fig_zhitnitsky_de_theta_scan": fig_zhitnitsky_de_theta_scan,
         "fig_code_distance_vs_fusion_spectrum": fig_code_distance_vs_fusion_spectrum,
         "fig_rt_ch_bounds_mtc": fig_rt_ch_bounds_mtc,
+        # Paper I1
+        "fig_i1_three_layer_architecture": fig_i1_three_layer_architecture,
+        "fig_i1_pipeline_14_stages": fig_i1_pipeline_14_stages,
+        "fig_i1_sentence_state_clusters": fig_i1_sentence_state_clusters,
+        "fig_i1_firstorderkms_grid": fig_i1_firstorderkms_grid,
+        "fig_i1_gap_counterexample": fig_i1_gap_counterexample,
+        "fig_i1_chirality_wall_tree": fig_i1_chirality_wall_tree,
+        # Paper I2
+        "fig_i2_categorical_hierarchy": fig_i2_categorical_hierarchy,
+        "fig_i2_module_dependencies": fig_i2_module_dependencies,
+        "fig_i2_mtc_instances": fig_i2_mtc_instances,
+        "fig_i2_jackknife_dependencies": fig_i2_jackknife_dependencies,
+        "fig_i2_mathlib_upstream_flow": fig_i2_mathlib_upstream_flow,
     }
 
     paths = {}
@@ -2054,6 +2258,19 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_code_distance_vs_fusion_spectrum,
         # Phase 6c Wave 5: RT vs W3 microscopic + CH saturated bound
         fig_rt_ch_bounds_mtc,
+        # Paper I1 — verification methodology
+        fig_i1_three_layer_architecture,
+        fig_i1_pipeline_14_stages,
+        fig_i1_sentence_state_clusters,
+        fig_i1_firstorderkms_grid,
+        fig_i1_gap_counterexample,
+        fig_i1_chirality_wall_tree,
+        # Paper I2 — verified estimators + lean-tensor-categories
+        fig_i2_categorical_hierarchy,
+        fig_i2_module_dependencies,
+        fig_i2_mtc_instances,
+        fig_i2_jackknife_dependencies,
+        fig_i2_mathlib_upstream_flow,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -2198,6 +2415,19 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_zhitnitsky_de_theta_scan": fig_zhitnitsky_de_theta_scan,
         "fig_code_distance_vs_fusion_spectrum": fig_code_distance_vs_fusion_spectrum,
         "fig_rt_ch_bounds_mtc": fig_rt_ch_bounds_mtc,
+        # Paper I1
+        "fig_i1_three_layer_architecture": fig_i1_three_layer_architecture,
+        "fig_i1_pipeline_14_stages": fig_i1_pipeline_14_stages,
+        "fig_i1_sentence_state_clusters": fig_i1_sentence_state_clusters,
+        "fig_i1_firstorderkms_grid": fig_i1_firstorderkms_grid,
+        "fig_i1_gap_counterexample": fig_i1_gap_counterexample,
+        "fig_i1_chirality_wall_tree": fig_i1_chirality_wall_tree,
+        # Paper I2
+        "fig_i2_categorical_hierarchy": fig_i2_categorical_hierarchy,
+        "fig_i2_module_dependencies": fig_i2_module_dependencies,
+        "fig_i2_mtc_instances": fig_i2_mtc_instances,
+        "fig_i2_jackknife_dependencies": fig_i2_jackknife_dependencies,
+        "fig_i2_mathlib_upstream_flow": fig_i2_mathlib_upstream_flow,
     }
 
     issues: list[CheckIssue] = []

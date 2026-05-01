@@ -1130,6 +1130,48 @@
       "superseded_by": "docs/phase6i_wave5_close.md + docs/phase6i_wave6_close.md",
       "evidence": "Wave 6 supersession: Wave 5 chiPT-NLO-band disclosure in Phase6d2_ChiralSSB_Technical.ipynb cell p37t-3-md addresses the precision concern: 'It is leading-order in chiral perturbation theory. Higher-order chiPT corrections at the ~1% level are known to exist (NLO and beyond); the ~0.01% relative match reported here at the PDG-rounded central values sits within the NLO band, so it is consistent rather than tighter than chiPT precision.' The values 0.137, 0.092, 0.0035, -0.0227 are explicitly described as 'PDG-rounded central values' in the same disclosure. The Lean theorem gmor_pdg_match's 1e-4 tolerance is consistent with the NLO band rather than tighter than chiPT precision; the notebook makes this honest-scope disclosure paralleling Stakeholder §6.",
       "date": "2026-04-29"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:1.1",
+      "status": "fixed",
+      "superseded_by": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z (round-2 re-review verified deterministically)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-1 BLOCKER 1.1: bibkey 'paper15methodology' not in CITATION_REGISTRY. Remediated in commit c25d15f: bibitem removed from papers/I1/paper_draft.tex (was at lines 1330+ before deletion); §1 prose rephrased from '(paper15 methodology draft, April 2026)' to '(an earlier internal draft of this pipeline, April 2026)'; §9 prose rephrased from 'paper15 methodology draft' to 'an earlier internal draft, April 2026'. Round-2 claims-reviewer confirmed remediation deterministically: zero \\cite{paper15methodology} invocations remaining, no orphan bibitem. Phase 7a sub-wave 7a.2.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:1.2",
+      "status": "fixed",
+      "superseded_by": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z (round-2 re-review verified deterministically)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-1 BLOCKER 1.2: bibkey 'paper44riemannian' not in CITATION_REGISTRY. Remediated in commit c25d15f: bibitem removed; §12 prose at lines 1094 + 1150 rephrased to 'a companion paper currently in preparation as a project-internal draft' and 'The five-page companion paper that documents this work (in preparation as a project-internal draft; target journal a Mathlib-aligned formal-verification venue)'. Round-2 claims-reviewer confirmed deterministically.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:1.3",
+      "status": "fixed",
+      "superseded_by": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z (round-2 re-review verified deterministically)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-1 BLOCKER 1.3: 3 dangling \\cite{paper10_ewbg / paper09_phaseI / paper08_topology} references in §5 with no matching \\bibitem. Remediated in commit c25d15f: §5 fully rewritten to remove the 3 dangling cites; the chirality-wall three pillars are now described via real AXIOM_METADATA entry references (gapped_interface_axiom L1351, chirality_limitation_zero L1483, chiral-central-charge group L1591, EWBaryogenesisChiralityWall theorem suite L1633). Round-2 claims-reviewer confirmed: zero \\cite{paper10_ewbg|paper09_phaseI|paper08_topology} invocations.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:3.1",
+      "status": "fixed",
+      "superseded_by": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z (round-2 re-review verified deterministically)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-1 BLOCKER 3.1: chirality_wall_three_pillars claimed as AXIOM_METADATA group but only exists in CHAIN_MILESTONES (line 3132, integer-mapping table). Remediated in commit c25d15f: §5 rewritten to cite real AXIOM_METADATA entries (gapped_interface_axiom L1351 with full evidence ladder; chirality_limitation_zero L1483; the chiral-central-charge axioms in Z16AnomalyForcesThetaBar around L1591; the EWBaryogenesisChiralityWall theorem suite around L1633). Eliminability tier values corrected to actual taxonomy: algebraic/closed/hard/removed/topological/very_hard (round-2 claims-reviewer additionally caught 'open' was not in registry; that was patched 2026-05-01T18:00:00Z+ in a follow-on edit). Round-2 deterministically confirmed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:4.1",
+      "status": "fixed",
+      "superseded_by": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z (round-2 re-review verified deterministically against ARISTOTLE_THEOREMS table)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-1 BLOCKER 4.1: §9 mis-attributed Aristotle run 78dcc5f4 as 'Phase 5d gap-equation batch'. Run 78dcc5f4 is a Phase 5c Wave 1-7 multi-domain batch covering S-matrix unitarity (SU2kSMatrix lines 1271-1280), E8 lattice, ribbon-category modularity, spin bordism Rokhlin, restricted Uq, jackknife, and Hopf-algebra axioms (per ARISTOTLE_THEOREMS in src/core/constants.py lines 1271-1300). The Phase 5d gap-equation batch is run 79e07d55 (lines 1303-1312). Remediated in commit c25d15f: §9 rewritten with the correct multi-domain coverage description. Round-2 deterministically confirmed against ARISTOTLE_THEOREMS table.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-1345-bundle-stage13:I1:9.1",
+      "status": "fixed",
+      "superseded_by": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z (round-2 re-review verified deterministically)",
+      "evidence": "Phase 7a sub-wave 7a.2 round-1 BLOCKER 9.1: papers/I1/tables/table1_stages.tex did not exist; \\input was a dangling reference. Remediated in commit c25d15f: hand-authored table at papers/I1/tables/table1_stages.tex covering all 14 stages (paper15's lifted version had a parsing artifact on row 1 with 4 cells in a 3-column tabular plus missing Stages 4 and 14). Round-2 deterministically confirmed file existence.",
+      "date": "2026-05-01"
     }
   ]
 }

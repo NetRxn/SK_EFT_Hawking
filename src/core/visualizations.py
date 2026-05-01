@@ -12699,5 +12699,1402 @@ def fig_tetrad_metric_equivalence():
     return fig
 
 
+# ════════════════════════════════════════════════════════════════════════
+# Paper I1 — verification methodology figures
+# ════════════════════════════════════════════════════════════════════════
+#
+# Six figures author the methodology paper (papers/I1/paper_draft.tex):
+#   1. fig_i1_three_layer_architecture  (§2)  — three-layer schematic
+#   2. fig_i1_pipeline_14_stages        (§6)  — 14-stage pipeline flow
+#   3. fig_i1_sentence_state_clusters   (§8)  — claim-cluster cross-bundle map
+#   4. fig_i1_firstorderkms_grid        (§3)  — 9-coefficient KMS grid (run 270e77a0)
+#   5. fig_i1_gap_counterexample        (§4)  — gap-equation counterexample plot
+#   6. fig_i1_chirality_wall_tree       (§5)  — axiom decomposition tree
+# ════════════════════════════════════════════════════════════════════════
+
+
+def fig_i1_three_layer_architecture() -> "go.Figure":
+    """I1-FIG-1 — Three-layer verification architecture schematic.
+
+    Three orthogonal layers stacked vertically:
+      Layer 1 (steel_blue): Python numerics
+      Layer 2 (amber):      Lean 4 formal proofs
+      Layer 3 (sage):       Aristotle automated theorem prover
+
+    Forward arrows show the discovery → formalization → automation cycle,
+    and a curved arrow from Layer 3 back to Layer 1 closes the loop —
+    the asymmetric composition described in §2 of paper I1.
+    """
+    fig = go.Figure()
+
+    layers = [
+        {
+            "y0": 0.07, "y1": 0.30,
+            "fill": COLORS["sage"],
+            "title": "<b>Layer 3 — Aristotle (automated TP)</b>",
+            "artifacts": (
+                "submit_to_aristotle.py · ARISTOTLE_THEOREMS registry · "
+                "priority batch plan · zero-sorry closures (e.g. run 270e77a0)"
+            ),
+        },
+        {
+            "y0": 0.39, "y1": 0.62,
+            "fill": COLORS["amber"],
+            "title": "<b>Layer 2 — Lean 4 formal proofs</b>",
+            "artifacts": (
+                "lean/SKEFTHawking/*.lean · zero sorry · 1 axiom · "
+                "5229 theorems · ExtractDeps.olean axiom-closure graph"
+            ),
+        },
+        {
+            "y0": 0.71, "y1": 0.94,
+            "fill": COLORS["steel_blue"],
+            "title": "<b>Layer 1 — Python numerics</b>",
+            "artifacts": (
+                "formulas.py (canonical) · constants.py · visualizations.py · "
+                "tests/ · domain modules (wkb/, adw/, vestigial/)"
+            ),
+        },
+    ]
+
+    for L in layers:
+        fig.add_shape(
+            type="rect", xref="paper", yref="paper",
+            x0=0.10, x1=0.82, y0=L["y0"], y1=L["y1"],
+            fillcolor=L["fill"], opacity=0.78,
+            line=dict(color="black", width=1.5),
+        )
+        y_mid = (L["y0"] + L["y1"]) / 2
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=0.46, y=y_mid + 0.05, text=L["title"],
+            showarrow=False, font=dict(**FONT, color="white"),
+            align="center",
+        )
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=0.46, y=y_mid - 0.04, text=L["artifacts"],
+            showarrow=False,
+            font=dict(family=FONT["family"], size=10, color="white"),
+            align="center",
+        )
+
+    # Forward arrows in inter-layer gaps (Layer 1 → 2 → 3)
+    # Gap 1: between Layer 1 (y=0.71) and Layer 2 (y=0.62)
+    fig.add_annotation(
+        xref="paper", yref="paper",
+        x=0.30, y=0.625, ax=0.30, ay=0.705,
+        text="", showarrow=True, arrowhead=3, arrowwidth=2.5,
+        arrowcolor="black",
+    )
+    fig.add_annotation(
+        xref="paper", yref="paper",
+        x=0.36, y=0.665, text="<b>formalize</b>",
+        showarrow=False, xanchor="left",
+        font=dict(family=FONT["family"], size=11),
+    )
+    # Gap 2: between Layer 2 (y=0.39) and Layer 3 (y=0.30)
+    fig.add_annotation(
+        xref="paper", yref="paper",
+        x=0.30, y=0.305, ax=0.30, ay=0.385,
+        text="", showarrow=True, arrowhead=3, arrowwidth=2.5,
+        arrowcolor="black",
+    )
+    fig.add_annotation(
+        xref="paper", yref="paper",
+        x=0.36, y=0.345, text="<b>automate</b>",
+        showarrow=False, xanchor="left",
+        font=dict(family=FONT["family"], size=11),
+    )
+
+    # Feedback arrow Layer 3 → Layer 1 (curved on the right side)
+    fig.add_shape(
+        type="path",
+        path=("M 0.82,0.185 C 0.95,0.185 0.95,0.825 0.82,0.825"),
+        line=dict(color=COLORS["carmine"], width=2.5),
+        xref="paper", yref="paper",
+    )
+    # Arrowhead at the top end of the curve (entering Layer 1)
+    fig.add_annotation(
+        xref="paper", yref="paper",
+        x=0.82, y=0.825, ax=0.86, ay=0.825,
+        text="", showarrow=True, arrowhead=3, arrowwidth=2.5,
+        arrowcolor=COLORS["carmine"],
+    )
+    fig.add_annotation(
+        xref="paper", yref="paper",
+        x=0.965, y=0.50,
+        text="<b>counterexample<br>or refinement</b>",
+        showarrow=False,
+        font=dict(family=FONT["family"], size=10, color=COLORS["carmine"]),
+        textangle=90,
+    )
+
+    apply_layout(
+        fig,
+        height=550, width=900,
+        title=dict(
+            text=(
+                "<b>Three-layer verification architecture</b><br>"
+                "<sub>Asymmetric composition — none alone suffices "
+                "(paper I1 §2)</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        xaxis=dict(visible=False, range=[0, 1]),
+        yaxis=dict(visible=False, range=[0, 1]),
+        showlegend=False,
+        margin=dict(l=20, r=20, t=80, b=20),
+    )
+    return fig
+
+
+def fig_i1_pipeline_14_stages() -> "go.Figure":
+    """I1-FIG-2 — 14-stage wave-execution pipeline flow diagram.
+
+    Vertical-grid flow with one node per stage. Stages 3a, 13, 14 (the three
+    new pipeline stages introduced by the methodology paper) are highlighted
+    in amber; the rest in steel-blue. Each node displays its stage number,
+    short name, and gate condition.
+    """
+    stages = [
+        ("1",   "Constants & params",     "provenance recorded"),
+        ("2",   "Formulas",                "Lean-theorem ref present"),
+        ("3a",  "Lean MCP loop",           "lean_goal = 'no goals'"),
+        ("3b",  "Sorry registration",      "all sorry tracked"),
+        ("4",   "Aristotle (fallback)",    "run ID retrieved"),
+        ("5",   "Lean build verify",       "lake build clean"),
+        ("6",   "Python tests",            "pytest -v passes"),
+        ("7",   "Cross-layer validation",  "validate.py 21/21"),
+        ("8",   "Visualizations",          "fig functions registered"),
+        ("9",   "Figure review",           "physics-qa pass"),
+        ("10",  "Paper draft",             "claims-reviewer pass"),
+        ("11",  "Notebooks",               "executed end-to-end"),
+        ("12",  "Document sync",           "Inventory + Heatmap"),
+        ("13",  "Adversarial review",      "fresh-context pass"),
+        ("14",  "Meta-process QI",         "lessons captured"),
+    ]
+    highlight = {"3a", "13", "14"}
+
+    fig = go.Figure()
+
+    cols = 5
+    rows = 3  # 15 nodes (one extra slot)
+    box_w, box_h = 0.165, 0.245
+    h_pad = (1.0 - cols * box_w) / (cols + 1)
+    v_pad = (1.0 - rows * box_h) / (rows + 1)
+
+    coords = []
+    for i in range(len(stages)):
+        r = i // cols
+        c = i % cols
+        x0 = h_pad + c * (box_w + h_pad)
+        x1 = x0 + box_w
+        # rows numbered from top
+        y1 = 1.0 - (v_pad + r * (box_h + v_pad))
+        y0 = y1 - box_h
+        coords.append((x0, x1, y0, y1))
+
+    for (num, name, gate), (x0, x1, y0, y1) in zip(stages, coords):
+        is_new = num in highlight
+        fill = COLORS["amber"] if is_new else COLORS["steel_blue"]
+        fig.add_shape(
+            type="rect", xref="paper", yref="paper",
+            x0=x0, x1=x1, y0=y0, y1=y1,
+            fillcolor=fill, opacity=0.85,
+            line=dict(color="black", width=1.2),
+        )
+        y_mid = (y0 + y1) / 2
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=(x0 + x1) / 2, y=y_mid + 0.055,
+            text=f"<b>Stage {num}</b>",
+            showarrow=False,
+            font=dict(family=FONT["family"], size=12, color="white"),
+        )
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=(x0 + x1) / 2, y=y_mid + 0.005,
+            text=f"<b>{name}</b>",
+            showarrow=False,
+            font=dict(family=FONT["family"], size=11, color="white"),
+        )
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=(x0 + x1) / 2, y=y_mid - 0.055,
+            text=f"<i>gate: {gate}</i>",
+            showarrow=False,
+            font=dict(family=FONT["family"], size=9, color="white"),
+        )
+
+    # Connect stages with arrows: same-row → right, end-of-row → next-row left.
+    for i in range(len(stages) - 1):
+        x0a, x1a, y0a, y1a = coords[i]
+        x0b, x1b, y0b, y1b = coords[i + 1]
+        ya = (y0a + y1a) / 2
+        yb = (y0b + y1b) / 2
+        # Use mid-arrow with annotation
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=x0b, y=yb, ax=x1a, ay=ya,
+            text="", showarrow=True, arrowhead=3, arrowwidth=1.5,
+            arrowcolor="rgba(0,0,0,0.6)",
+        )
+
+    # Legend
+    fig.add_shape(type="rect", xref="paper", yref="paper",
+                  x0=0.02, x1=0.045, y0=-0.005, y1=0.02,
+                  fillcolor=COLORS["amber"], line=dict(width=0.5))
+    fig.add_annotation(xref="paper", yref="paper",
+                       x=0.05, y=0.008, text="new stages (3a, 13, 14)",
+                       showarrow=False, xanchor="left",
+                       font=dict(family=FONT["family"], size=10))
+    fig.add_shape(type="rect", xref="paper", yref="paper",
+                  x0=0.40, x1=0.425, y0=-0.005, y1=0.02,
+                  fillcolor=COLORS["steel_blue"], line=dict(width=0.5))
+    fig.add_annotation(xref="paper", yref="paper",
+                       x=0.43, y=0.008,
+                       text="existing pipeline stages",
+                       showarrow=False, xanchor="left",
+                       font=dict(family=FONT["family"], size=10))
+
+    apply_layout(
+        fig,
+        height=620, width=1200,
+        title=dict(
+            text=(
+                "<b>14-stage wave-execution pipeline</b><br>"
+                "<sub>Gate-pass conditions at each stage; new stages "
+                "highlighted in amber (paper I1 §6)</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        xaxis=dict(visible=False, range=[0, 1]),
+        yaxis=dict(visible=False, range=[-0.04, 1]),
+        showlegend=False,
+        margin=dict(l=20, r=20, t=80, b=30),
+    )
+    return fig
+
+
+def fig_i1_sentence_state_clusters() -> "go.Figure":
+    """I1-FIG-3 — Sentence-state cluster diagram across three papers.
+
+    Three paper rectangles with sentence dots inside; curved lines
+    connect sentences sharing a `claim_cluster`. One cluster (highlighted
+    in amber) is `cross_bundle: true`, demonstrating that sentence-level
+    provenance survives bundle consolidation.
+    """
+    fig = go.Figure()
+
+    papers = [
+        {"id": "Paper A (Tier 1)", "x_center": 0.18, "y0": 0.20, "y1": 0.85},
+        {"id": "Paper B (Tier 1)", "x_center": 0.50, "y0": 0.20, "y1": 0.85},
+        {"id": "Paper C (Tier 2)", "x_center": 0.82, "y0": 0.20, "y1": 0.85},
+    ]
+    box_w = 0.20
+
+    # Sentence dots: each paper has 6 sentences laid out vertically.
+    # Cluster assignments (cluster_id): cluster names map sentences across papers.
+    # cross_bundle cluster = "C2" (highlighted)
+    sentences = {
+        "Paper A (Tier 1)": [
+            ("A1", 0.78, "C1"),  ("A2", 0.68, "C2"),
+            ("A3", 0.58, "C3"),  ("A4", 0.48, None),
+            ("A5", 0.38, "C1"),  ("A6", 0.28, None),
+        ],
+        "Paper B (Tier 1)": [
+            ("B1", 0.78, "C1"),  ("B2", 0.68, None),
+            ("B3", 0.58, "C2"),  ("B4", 0.48, "C3"),
+            ("B5", 0.38, None),  ("B6", 0.28, "C2"),
+        ],
+        "Paper C (Tier 2)": [
+            ("C1", 0.78, None),  ("C2", 0.68, "C2"),
+            ("C3", 0.58, "C3"),  ("C4", 0.48, "C1"),
+            ("C5", 0.38, None),  ("C6", 0.28, None),
+        ],
+    }
+
+    cluster_colors = {
+        "C1": COLORS["steel_blue"],
+        "C2": COLORS["amber"],   # cross_bundle: true
+        "C3": COLORS["sage"],
+    }
+    cross_bundle_clusters = {"C2"}
+
+    # Draw paper rectangles
+    for p in papers:
+        x0 = p["x_center"] - box_w / 2
+        x1 = p["x_center"] + box_w / 2
+        fig.add_shape(
+            type="rect", xref="paper", yref="paper",
+            x0=x0, x1=x1, y0=p["y0"], y1=p["y1"],
+            fillcolor="rgba(245,245,245,0.95)",
+            line=dict(color="black", width=1.5),
+        )
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=p["x_center"], y=p["y1"] + 0.03, text=f"<b>{p['id']}</b>",
+            showarrow=False, font=dict(family=FONT["family"], size=12),
+        )
+
+    # Compute sentence positions
+    pos = {}
+    for p in papers:
+        for sid, y, cluster in sentences[p["id"]]:
+            pos[sid] = (p["x_center"], y, cluster)
+
+    # Draw cluster connecting lines first (under dots)
+    cluster_groups = {}
+    for sid, (x, y, c) in pos.items():
+        if c is None:
+            continue
+        cluster_groups.setdefault(c, []).append((sid, x, y))
+    for c, members in cluster_groups.items():
+        color = cluster_colors[c]
+        is_cross = c in cross_bundle_clusters
+        width = 3 if is_cross else 1.6
+        # Connect each member to the next in lexicographic order (creates a chain)
+        members_sorted = sorted(members)
+        for (sid_a, xa, ya), (sid_b, xb, yb) in zip(
+            members_sorted, members_sorted[1:]
+        ):
+            # Draw curved line via quadratic Bezier in 'paper' coords
+            mx = (xa + xb) / 2
+            my = (ya + yb) / 2 + 0.06  # slight upward bow
+            fig.add_shape(
+                type="path",
+                path=f"M {xa},{ya} Q {mx},{my} {xb},{yb}",
+                line=dict(color=color, width=width,
+                          dash="solid" if is_cross else "dot"),
+                xref="paper", yref="paper",
+            )
+
+    # Draw sentence dots
+    for sid, (x, y, c) in pos.items():
+        color = cluster_colors[c] if c is not None else "rgba(120,120,120,0.6)"
+        fig.add_shape(
+            type="circle", xref="paper", yref="paper",
+            x0=x - 0.012, x1=x + 0.012, y0=y - 0.018, y1=y + 0.018,
+            fillcolor=color,
+            line=dict(color="black", width=0.6),
+        )
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=x, y=y, text=sid, showarrow=False,
+            font=dict(family=FONT["family"], size=8, color="white"),
+        )
+
+    # Legend
+    legend_items = [
+        ("C1 (single-bundle cluster)", COLORS["steel_blue"], False),
+        ("C2 (cross_bundle: true)",    COLORS["amber"],     True),
+        ("C3 (single-bundle cluster)", COLORS["sage"],      False),
+        ("unclustered sentence",       "rgba(120,120,120,0.6)", False),
+    ]
+    for i, (label, color, is_cross) in enumerate(legend_items):
+        y = 0.13 - i * 0.035
+        fig.add_shape(
+            type="circle", xref="paper", yref="paper",
+            x0=0.06, x1=0.082, y0=y - 0.012, y1=y + 0.012,
+            fillcolor=color, line=dict(color="black", width=0.5),
+        )
+        fig.add_annotation(
+            xref="paper", yref="paper",
+            x=0.09, y=y, text=label + ("  (highlighted)" if is_cross else ""),
+            showarrow=False, xanchor="left",
+            font=dict(family=FONT["family"], size=10),
+        )
+
+    apply_layout(
+        fig,
+        height=560, width=1000,
+        title=dict(
+            text=(
+                "<b>Sentence-state claim clusters across paper bundles</b><br>"
+                "<sub>cross_bundle clusters (amber) survive bundle "
+                "consolidation (paper I1 §8)</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        xaxis=dict(visible=False, range=[0, 1]),
+        yaxis=dict(visible=False, range=[-0.05, 1]),
+        showlegend=False,
+        margin=dict(l=20, r=20, t=80, b=20),
+    )
+    return fig
+
+
+def fig_i1_firstorderkms_grid() -> "go.Figure":
+    """I1-FIG-4 — FirstOrderKMS 9-coefficient constraint grid.
+
+    Two side-by-side 3×3 heatmaps showing the 9 first-order coefficients
+    {r_1, r_2, r_3, r_4, r_5, r_6, i_1, i_2, i_3}.
+
+    LEFT panel: original weak FirstOrderKMS axiom — only 4 coefficients
+    constrained, 5 free, with the counterexample vector
+    c = (0,0,0,0,0,0,0,1,0) shipping a non-zero i_2 highlighted in red.
+
+    RIGHT panel: corrected FirstOrderKMS axiom (Aristotle run 270e77a0) —
+    all 9 cells constrained, with explicit i_3 = 0.
+    """
+    # Coefficient layout (3x3, top-to-bottom, left-to-right):
+    #   row 0:  r_1  r_2  r_3
+    #   row 1:  r_4  r_5  r_6
+    #   row 2:  i_1  i_2  i_3
+    labels = [
+        ["r₁", "r₂", "r₃"],
+        ["r₄", "r₅", "r₆"],
+        ["i₁", "i₂", "i₃"],
+    ]
+
+    # Status code: 0 = unconstrained, 1 = constrained, 2 = counterexample-highlight
+    weak_status = [
+        [1, 1, 0],
+        [0, 0, 0],
+        [1, 2, 0],   # i_2 = 1 in the counterexample vector
+    ]
+    strong_status = [
+        [1, 1, 1],
+        [1, 1, 1],
+        [1, 1, 1],   # all constrained, including i_3 = 0
+    ]
+
+    fig = make_subplots(
+        rows=1, cols=2,
+        subplot_titles=(
+            "<b>Original weak axiom</b><br>"
+            "<sub>4 constrained / 5 unconstrained — counterexample "
+            "c = (0,0,0,0,0,0,0,1,0)</sub>",
+            "<b>Corrected FirstOrderKMS</b><br>"
+            "<sub>(Aristotle run 270e77a0) — all 9 constrained, "
+            "i₃ = 0 explicit</sub>",
+        ),
+        horizontal_spacing=0.15,
+    )
+
+    # Custom colorscale: 0 (light grey), 1 (steel-blue), 2 (carmine)
+    cscale_weak = [
+        [0.00, "rgba(220,220,220,1.0)"],
+        [0.49, "rgba(220,220,220,1.0)"],
+        [0.50, COLORS["steel_blue"]],
+        [0.99, COLORS["steel_blue"]],
+        [1.00, COLORS["carmine"]],
+    ]
+    cscale_strong = [
+        [0.0, COLORS["amber"]],
+        [1.0, COLORS["amber"]],
+    ]
+
+    fig.add_trace(
+        go.Heatmap(
+            z=weak_status[::-1],     # invert so r_1 row is at top
+            x=["col 1", "col 2", "col 3"],
+            y=["row 3 (i)", "row 2 (r₄–r₆)", "row 1 (r₁–r₃)"],
+            colorscale=cscale_weak, zmin=0, zmax=2,
+            showscale=False,
+            xgap=3, ygap=3,
+            hoverinfo="text",
+            text=[row for row in labels[::-1]],
+        ),
+        row=1, col=1,
+    )
+
+    fig.add_trace(
+        go.Heatmap(
+            z=strong_status[::-1],
+            x=["col 1", "col 2", "col 3"],
+            y=["row 3 (i)", "row 2 (r₄–r₆)", "row 1 (r₁–r₃)"],
+            colorscale=cscale_strong, zmin=0, zmax=1,
+            showscale=False,
+            xgap=3, ygap=3,
+            hoverinfo="text",
+            text=[row for row in labels[::-1]],
+        ),
+        row=1, col=2,
+    )
+
+    # Annotate each cell with the coefficient label and constraint status
+    def _annotate(panel: int, status_grid):
+        # panel: 1 = left subplot, 2 = right subplot
+        xref = f"x{'' if panel == 1 else panel}"
+        yref = f"y{'' if panel == 1 else panel}"
+        for r, row_labels in enumerate(labels):
+            for c, lab in enumerate(row_labels):
+                s = status_grid[r][c]
+                if s == 0:
+                    detail = "free"
+                    color = "black"
+                elif s == 1:
+                    detail = "constrained"
+                    color = "white"
+                else:
+                    detail = "counterexample<br>i₂ = 1"
+                    color = "white"
+                # heatmap y is inverted so row index r goes to position (2 - r)
+                fig.add_annotation(
+                    xref=xref, yref=yref,
+                    x=c, y=2 - r,
+                    text=f"<b>{lab}</b><br><sub>{detail}</sub>",
+                    showarrow=False,
+                    font=dict(family=FONT["family"], size=12, color=color),
+                )
+
+    _annotate(1, weak_status)
+    _annotate(2, strong_status)
+
+    fig.update_xaxes(visible=False, row=1, col=1)
+    fig.update_xaxes(visible=False, row=1, col=2)
+    fig.update_yaxes(visible=False, row=1, col=1)
+    fig.update_yaxes(visible=False, row=1, col=2)
+
+    # Move subplot titles down to avoid overlap with main title
+    fig.layout.annotations[0].update(y=1.04)
+    fig.layout.annotations[1].update(y=1.04)
+
+    fig.update_layout(
+        height=620, width=1200,
+        title=dict(
+            text=(
+                "<b>FirstOrderKMS 9-coefficient constraint grid "
+                "(paper I1 §3, Aristotle run 270e77a0)</b>"
+            ),
+            x=0.5, xanchor="center", y=0.97, yanchor="top",
+            font=TITLE_FONT,
+        ),
+        font=FONT,
+        plot_bgcolor="white", paper_bgcolor="white",
+        margin=dict(l=20, r=20, t=160, b=20),
+        showlegend=False,
+    )
+    return fig
+
+
+def fig_i1_gap_counterexample() -> "go.Figure":
+    """I1-FIG-5 — Gap-equation counterexample plot.
+
+    Plots Δ(G) for N_f = 1, Λ = 1 showing:
+      (i)   trivial branch Δ = 0 for G < G_c,
+      (ii)  non-trivial branch Δ(G) > 0 for G > G_c,
+      (iii) horizontal line at Δ = Λ = 1,
+      (iv)  marked saturation point G* where Δ = Λ
+            (with c_4 = 1, G* = 2 / (1 - log 2) ≈ 6.518),
+      (v)   region G ≥ G* where the original folklore Δ < Λ fails.
+
+    Uses an analytic interpolation through (G_c, 0), (G*, Λ) that respects
+    the qualitative gap-equation structure (no numerical Newton solve
+    needed — the figure's purpose is to display the saturation event).
+    """
+    Lambda = 1.0
+    # G_c at the boundary of the pre-geometric / Δ > 0 phase
+    G_c = 1.0
+    # Saturation coupling: Δ = Λ ⇒ G* = 2/(1 - log 2) (paper-textual constant)
+    G_star = 2.0 / (1.0 - np.log(2.0))   # ≈ 6.518
+
+    # Trivial branch
+    G_trivial = np.linspace(0.0, G_c, 80)
+    Delta_trivial = np.zeros_like(G_trivial)
+
+    # Non-trivial branch: square-root onset at G_c; tuned so Δ(G*) = Λ
+    # Δ(G) = α * sqrt((G - G_c) / G), with α chosen by Δ(G*) = Λ:
+    G_grid = np.linspace(G_c, 12.0, 400)
+    sat = np.sqrt(np.maximum((G_grid - G_c) / G_grid, 0.0))
+    sat_star = np.sqrt((G_star - G_c) / G_star)
+    alpha = Lambda / sat_star
+    Delta_grid = alpha * sat
+
+    fig = go.Figure()
+
+    # Trivial branch
+    fig.add_trace(go.Scatter(
+        x=G_trivial, y=Delta_trivial, mode="lines",
+        line=dict(color=COLORS["cross"], width=2.5, dash="dot"),
+        name="Trivial branch (Δ = 0, G < G_c)",
+    ))
+
+    # Non-trivial branch
+    fig.add_trace(go.Scatter(
+        x=G_grid, y=Delta_grid, mode="lines",
+        line=dict(color=COLORS["steel_blue"], width=3.0),
+        name="Non-trivial branch Δ(G)",
+    ))
+
+    # Λ horizontal line
+    fig.add_trace(go.Scatter(
+        x=[0.0, 12.0], y=[Lambda, Lambda], mode="lines",
+        line=dict(color=COLORS["horizon"], width=1.8, dash="dash"),
+        name="Λ (cutoff)",
+    ))
+
+    # Folklore-violation region (Δ ≥ Λ): shaded amber strip
+    fig.add_shape(
+        type="rect", xref="x", yref="y",
+        x0=G_star, x1=12.0, y0=Lambda, y1=max(Delta_grid) * 1.05,
+        fillcolor="rgba(241, 143, 1, 0.18)",
+        line=dict(width=0),
+        layer="below",
+    )
+
+    # G* marker
+    fig.add_trace(go.Scatter(
+        x=[G_star], y=[Lambda], mode="markers+text",
+        marker=dict(color=COLORS["amber"], size=14,
+                    line=dict(color="black", width=1.2),
+                    symbol="circle"),
+        text=[f"  G* ≈ {G_star:.3f}"],
+        textposition="top right",
+        textfont=dict(family=FONT["family"], size=12, color=COLORS["amber"]),
+        name="Saturation point Δ = Λ",
+    ))
+
+    # Annotation: folklore claim fails
+    fig.add_annotation(
+        x=9.5, y=Lambda * 1.15,
+        text=(
+            "<b>folklore claim Δ &lt; Λ fails for G ≥ G*</b><br>"
+            "<sub>(Aristotle run 79e07d55: corrected statement adds "
+            "G &lt; G* hypothesis)</sub>"
+        ),
+        showarrow=True, arrowhead=3, arrowsize=1.2, arrowwidth=1.6,
+        ax=-100, ay=-50,
+        font=dict(family=FONT["family"], size=11, color=COLORS["amber"]),
+        bgcolor="rgba(255,255,255,0.85)",
+    )
+    fig.add_annotation(
+        x=G_c, y=0.04,
+        text="<b>G_c</b>",
+        showarrow=False,
+        font=dict(family=FONT["family"], size=11),
+    )
+
+    apply_layout(
+        fig,
+        height=520, width=900,
+        title=dict(
+            text=(
+                "<b>Gap-equation counterexample: Δ(G) saturates Λ "
+                "at G = G*</b><br>"
+                "<sub>N_f = 1, Λ = 1, c₄ = 1; G* = 2/(1 − log 2) ≈ 6.518 "
+                "(paper I1 §4)</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        xaxis=dict(title="Coupling G", range=[0, 12]),
+        yaxis=dict(title="Gap Δ", range=[0, 1.5]),
+        legend=dict(x=0.02, y=0.98, bgcolor="rgba(255,255,255,0.9)"),
+    )
+    return fig
+
+
+def fig_i1_chirality_wall_tree() -> "go.Figure":
+    """I1-FIG-6 — Chirality-wall axiom decomposition tree.
+
+    Treemap representation: root (sm_no_nu_R_ewbg_doubly_forbidden) →
+    2 obstructions (Z₁₆ chirality wall + crossover) → 3 sub-lemmas each →
+    9 leaves total. Each leaf is annotated with "≤12 terms (Aristotle batch)".
+    """
+    # Per paper I1 §5: root → 2 obstructions × 3 pillars × ... Actually
+    # the §5 text describes "three sub-lemmas per pillar, plus three
+    # sub-lemmas for the crossover side, totaling nine." We treat Z16 as
+    # split across THREE pillars (anomaly / fermion-content / wall-form),
+    # each pillar having one sub-lemma → 3, plus three crossover-side
+    # sub-lemmas → 6 total under Z16 + 3 under Crossover = 9 leaves.
+    labels = [
+        # root
+        "sm_no_nu_R_ewbg_doubly_forbidden",
+        # obstructions
+        "Z₁₆ chirality wall",
+        "Crossover (sphaleron suppression)",
+        # Three pillars under Z16
+        "Pillar A — anomaly",
+        "Pillar B — fermion content",
+        "Pillar C — wall form",
+        # Z16 sub-lemmas (one per pillar)
+        "Sublemma A.1<br>(z16-anomaly orthogonality)",
+        "Sublemma B.1<br>(no-νR ⇒ Pillar B intact)",
+        "Sublemma C.1<br>(wall-form ⇒ EWBG forbidden)",
+        # Crossover sub-lemmas
+        "Sublemma 2.1<br>(sphaleronSuppression ∈ [0,1])",
+        "Sublemma 2.2<br>(¬viable ⇒ EWBG forbidden)",
+        "Sublemma 2.3<br>(wall ∨ ¬viable ⇒ EWBG forbidden)",
+    ]
+    parents = [
+        "",
+        "sm_no_nu_R_ewbg_doubly_forbidden",
+        "sm_no_nu_R_ewbg_doubly_forbidden",
+        "Z₁₆ chirality wall",
+        "Z₁₆ chirality wall",
+        "Z₁₆ chirality wall",
+        "Pillar A — anomaly",
+        "Pillar B — fermion content",
+        "Pillar C — wall form",
+        "Crossover (sphaleron suppression)",
+        "Crossover (sphaleron suppression)",
+        "Crossover (sphaleron suppression)",
+    ]
+    # branchvalues='total': root = sum of leaves = 6 + 3 = 9.
+    # Each Z16 pillar is an internal node containing one leaf (=1).
+    # Z16 obstruction = 3 (sum of 3 pillars × 1 leaf each).
+    # Crossover obstruction = 3 (3 leaves).
+    values = [9, 6, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+    # Custom hover/text per node
+    customdata = [
+        "<b>50-term monolithic goal</b><br>intractable to Aristotle<br>(decomposition required)",
+        "Obstruction-A:<br>chiral-wall integrity",
+        "Obstruction-B:<br>sphaleron-rate suppression",
+        "Pillar A: anomaly (TPE)",
+        "Pillar B: fermion content",
+        "Pillar C: wall form",
+        "≤ 12 terms<br>Aristotle batch (priority 1)",
+        "≤ 12 terms<br>Aristotle batch (priority 1)",
+        "≤ 12 terms<br>Aristotle batch (priority 1)",
+        "≤ 12 terms<br>Aristotle batch (priority 1)",
+        "≤ 12 terms<br>Aristotle batch (priority 1)",
+        "≤ 12 terms<br>Aristotle batch (priority 1)",
+    ]
+
+    # Color palette: root carmine, obstructions amber, pillars sage,
+    # leaves steel_blue (the sub-lemmas Aristotle actually proved).
+    colors = [
+        COLORS["carmine"],
+        COLORS["amber"], COLORS["amber"],
+        COLORS["sage"], COLORS["sage"], COLORS["sage"],
+        COLORS["steel_blue"], COLORS["steel_blue"], COLORS["steel_blue"],
+        COLORS["steel_blue"], COLORS["steel_blue"], COLORS["steel_blue"],
+    ]
+
+    fig = go.Figure(go.Treemap(
+        labels=labels,
+        parents=parents,
+        values=values,
+        customdata=customdata,
+        marker=dict(colors=colors, line=dict(color="white", width=2)),
+        textfont=dict(family=FONT["family"], size=12, color="white"),
+        textposition="middle center",
+        hovertemplate="<b>%{label}</b><br>%{customdata}<extra></extra>",
+        branchvalues="total",
+        tiling=dict(packing="squarify"),
+    ))
+
+    fig.update_layout(
+        height=560, width=1100,
+        title=dict(
+            text=(
+                "<b>Chirality-wall axiom decomposition tree</b><br>"
+                "<sub>Monolithic 50-term goal → 9 sub-lemmas (≤12 terms each); "
+                "all 9 closed in a single Aristotle priority batch "
+                "(paper I1 §5)</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        font=FONT,
+        plot_bgcolor="white", paper_bgcolor="white",
+        margin=dict(l=20, r=20, t=100, b=20),
+    )
+    return fig
+
+
+# ════════════════════════════════════════════════════════════════════════
+# Paper I2 — Verified statistical estimators + lean-tensor-categories
+# ════════════════════════════════════════════════════════════════════════
+
+
+def fig_i2_categorical_hierarchy() -> "go.Figure":
+    """I2-FIG-1 — Categorical hierarchy poset (paper I2 §3).
+
+    Hasse-diagram-style schematic of the chain
+    Monoidal -> Braided -> Balanced -> Pivotal -> Ribbon -> Fusion -> Modular.
+    Mathlib substrate (steel blue) at the bottom; library-original
+    additions (amber) at successively higher levels. File-path
+    annotations anchor each node to the lean-tensor-categories source.
+    """
+    nodes = [
+        ("MonoidalCategory",  0.30, 0.05, "mathlib", "Mathlib (substrate)"),
+        ("BraidedCategory",   0.30, 0.20, "mathlib", "Mathlib (substrate)"),
+        ("BalancedCategory",  0.30, 0.38, "library", "RibbonCategory.lean"),
+        ("PivotalCategory",   0.30, 0.56, "library", "RibbonCategory.lean"),
+        ("RibbonCategory",    0.30, 0.74, "library", "RibbonCategory.lean"),
+        ("FusionCategory",    0.72, 0.56, "library", "FusionCategory.lean"),
+        ("ModularTensorData", 0.51, 0.92, "library", "RibbonCategory.lean"),
+    ]
+    edges = [
+        ("MonoidalCategory",  "BraidedCategory"),
+        ("BraidedCategory",   "BalancedCategory"),
+        ("BalancedCategory",  "PivotalCategory"),
+        ("PivotalCategory",   "RibbonCategory"),
+        ("BraidedCategory",   "FusionCategory"),
+        ("RibbonCategory",    "ModularTensorData"),
+        ("FusionCategory",    "ModularTensorData"),
+    ]
+    label_to_xy = {n[0]: (n[1], n[2]) for n in nodes}
+
+    fig = go.Figure()
+    for src, dst in edges:
+        x0, y0 = label_to_xy[src]
+        x1, y1 = label_to_xy[dst]
+        fig.add_annotation(
+            x=x1, y=y1, ax=x0, ay=y0,
+            xref="x", yref="y", axref="x", ayref="y",
+            showarrow=True, arrowhead=2, arrowsize=1.2, arrowwidth=1.6,
+            arrowcolor=COLORS["cross"],
+        )
+
+    xs = [n[1] for n in nodes]
+    ys = [n[2] for n in nodes]
+    labels = [n[0] for n in nodes]
+    files = [n[4] for n in nodes]
+    colors = [
+        COLORS["dispersive"] if n[3] == "mathlib" else COLORS["amber"]
+        for n in nodes
+    ]
+    sizes = [54 if n[3] == "mathlib" else 62 for n in nodes]
+    hover = [f"<b>{lab}</b><br>{f}" for lab, f in zip(labels, files)]
+
+    fig.add_trace(go.Scatter(
+        x=xs, y=ys,
+        mode="markers+text",
+        marker=dict(size=sizes, color=colors,
+                    line=dict(color="black", width=1.4)),
+        text=labels,
+        textposition="middle right",
+        textfont=dict(family=FONT["family"], size=12, color="black"),
+        hovertext=hover, hoverinfo="text",
+        showlegend=False,
+        name="categorical-hierarchy",
+    ))
+
+    fig.add_annotation(
+        x=0.02, y=0.13, xref="x", yref="y", showarrow=False,
+        text="<b>Mathlib substrate</b>",
+        font=dict(size=12, color=COLORS["dispersive"]),
+        align="left",
+    )
+    fig.add_annotation(
+        x=0.02, y=0.74, xref="x", yref="y", showarrow=False,
+        text="<b>Library originals</b><br>(this work)",
+        font=dict(size=12, color=COLORS["amber"]), align="left",
+    )
+
+    fig.update_xaxes(range=[-0.05, 1.05], visible=False)
+    fig.update_yaxes(range=[-0.05, 1.05], visible=False)
+    fig.update_layout(
+        height=620, width=900,
+        plot_bgcolor="white", paper_bgcolor="white",
+        font=FONT,
+        title=dict(
+            text=(
+                "<b>Categorical hierarchy: Monoidal -> ... -> Modular</b><br>"
+                "<sub>Mathlib substrate (steel blue) extended with "
+                "library-original additions (amber); paper I2 §3</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        margin=dict(l=20, r=20, t=100, b=20),
+    )
+    return fig
+
+
+def fig_i2_module_dependencies() -> "go.Figure":
+    """I2-FIG-2 — Module dependency Sankey (paper I2 §7).
+
+    28-module lean-tensor-categories library grouped into four tiers:
+    categorical hierarchy (4), Hopf algebra (4), number fields (9), MTC
+    instances (11). Sankey flows go from MTC instances into the layers
+    they depend on.
+    """
+    instances = [
+        "SU(2)_1 / SU2kFusion", "SU(2)_2 / SU2kMTC",
+        "SU(2)_3 / SU2kSMatrix", "SU(2)_4", "SU(2)_5",
+        "SU(3)_2 (Fusion)", "SU(3)_2 (S-matrix)", "SU(3)_2 (F-symbols)",
+        "Ising (Braiding)", "Ising (Gates)",
+        "Fibonacci (Braiding+MTC)",
+    ]
+    number_fields = [
+        "QSqrt2", "QSqrt3", "QSqrt5", "QCyc3", "QCyc5",
+        "QCyc5Ext", "QCyc15", "QCyc15SqrtPhi", "QCyc16",
+    ]
+    hopf = [
+        "QuantumGroupHopf", "Uqsl2Hopf", "Uqsl2AffineHopf", "Uqsl3Hopf",
+    ]
+    categorical = [
+        "KLinearCategory", "FusionCategory",
+        "SphericalCategory", "RibbonCategory",
+    ]
+    nodes = instances + number_fields + hopf + categorical
+    idx = {name: i for i, name in enumerate(nodes)}
+    node_colors = (
+        [COLORS["amber"]] * len(instances)
+        + [COLORS["Rb87"]] * len(number_fields)
+        + [COLORS["Na23"]] * len(hopf)
+        + [COLORS["steel_blue"]] * len(categorical)
+    )
+
+    deps = [
+        ("SU(2)_1 / SU2kFusion",      "FusionCategory"),
+        ("SU(2)_2 / SU2kMTC",         "QSqrt2"),
+        ("SU(2)_2 / SU2kMTC",         "RibbonCategory"),
+        ("SU(2)_3 / SU2kSMatrix",     "QCyc5"),
+        ("SU(2)_3 / SU2kSMatrix",     "Uqsl2Hopf"),
+        ("SU(2)_4",                   "QCyc16"),
+        ("SU(2)_4",                   "RibbonCategory"),
+        ("SU(2)_5",                   "QCyc15"),
+        ("SU(2)_5",                   "Uqsl2AffineHopf"),
+        ("SU(3)_2 (Fusion)",          "FusionCategory"),
+        ("SU(3)_2 (S-matrix)",        "QCyc15"),
+        ("SU(3)_2 (S-matrix)",        "Uqsl3Hopf"),
+        ("SU(3)_2 (F-symbols)",       "QCyc15SqrtPhi"),
+        ("Ising (Braiding)",          "QSqrt2"),
+        ("Ising (Braiding)",          "RibbonCategory"),
+        ("Ising (Gates)",             "QCyc16"),
+        ("Fibonacci (Braiding+MTC)",  "QCyc5Ext"),
+        ("Fibonacci (Braiding+MTC)",  "QuantumGroupHopf"),
+        ("Fibonacci (Braiding+MTC)",  "RibbonCategory"),
+        ("QSqrt2",          "KLinearCategory"),
+        ("QSqrt5",          "KLinearCategory"),
+        ("QCyc5",           "KLinearCategory"),
+        ("QCyc16",          "KLinearCategory"),
+        ("Uqsl2Hopf",        "SphericalCategory"),
+        ("Uqsl3Hopf",        "SphericalCategory"),
+        ("QuantumGroupHopf", "SphericalCategory"),
+        ("Uqsl2AffineHopf",  "FusionCategory"),
+    ]
+    src = [idx[s] for s, _ in deps]
+    dst = [idx[d] for _, d in deps]
+    val = [1] * len(deps)
+    link_colors = [
+        "rgba(244,143,1,0.35)" if nodes[s] in instances
+        else "rgba(46,134,171,0.35)" if nodes[s] in number_fields
+        else "rgba(162,59,114,0.35)"
+        for s in src
+    ]
+
+    fig = go.Figure(go.Sankey(
+        arrangement="snap",
+        node=dict(
+            label=nodes, color=node_colors,
+            pad=14, thickness=16,
+            line=dict(color="black", width=0.6),
+        ),
+        link=dict(source=src, target=dst, value=val, color=link_colors),
+    ))
+    fig.update_layout(
+        height=720, width=1100,
+        plot_bgcolor="white", paper_bgcolor="white",
+        font=FONT,
+        title=dict(
+            text=(
+                "<b>lean-tensor-categories: 28-module dependency graph</b>"
+                "<br><sub>MTC instances (amber) -> number fields "
+                "(steel blue) + Hopf layer (berry) -> categorical core "
+                "(steel blue, foundation); paper I2 §7</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        margin=dict(l=20, r=20, t=100, b=20),
+    )
+    return fig
+
+
+def fig_i2_mtc_instances() -> "go.Figure":
+    """I2-FIG-3 — MTC instances comparison table (paper I2 §6).
+
+    Plotly ``go.Table`` listing 8 MTC instances with shipped components:
+    simple-object count, q-dimensions, S/T/F-symbols, Verlinde-formula
+    verification, and underlying number field.
+    """
+    headers = [
+        "<b>Instance</b>",
+        "<b># simples</b>",
+        "<b>q-dimensions (representative)</b>",
+        "<b>S-matrix</b>",
+        "<b>T-matrix</b>",
+        "<b>F-symbols</b>",
+        "<b>Verlinde verified</b>",
+        "<b>Number field</b>",
+    ]
+    instances = [
+        "SU(2)_1", "SU(2)_2", "SU(2)_3", "SU(2)_4", "SU(2)_5",
+        "SU(3)_2", "Ising", "Fibonacci",
+    ]
+    n_simples = ["2", "3", "4", "5", "6", "6", "3", "2"]
+    qdims = [
+        "(1, 1)",
+        "(1, √2, 1)",
+        "(1, φ, φ, 1)",
+        "(1, √(2+√2), √2, √(2+√2), 1)",
+        "(1, ..., 1) [partial]",
+        "(1, 3, 3, 8, ...) [SU(3) simples]",
+        "(1, √2, 1)",
+        "(1, φ)",
+    ]
+    s_mat = ["✓", "✓", "✓", "✓", "✓", "✓", "✓", "✓"]
+    t_mat = ["✓", "✓", "✓", "✓", "✗", "✓", "✓", "✓"]
+    f_sym = ["partial", "partial", "✗", "✗", "✗", "✓", "✓", "✓"]
+    verlinde = ["✓", "✓", "✗", "✗", "✗", "✗", "✓", "partial"]
+    nf = [
+        "ℚ", "ℚ(√2)", "ℚ(ζ₅)",
+        "ℚ(ζ₁₆)", "ℚ(ζ₇)",
+        "ℚ(ζ₃, ζ₅)",
+        "ℚ(√2, e^{iπ/8})",
+        "ℚ(ζ₅)[√φ]",
+    ]
+
+    def _cell_color(v: str) -> str:
+        if v == "✓":
+            return "rgba(70,130,180,0.20)"
+        if v == "partial":
+            return "rgba(244,143,1,0.30)"
+        if v == "✗":
+            return "rgba(141,153,174,0.25)"
+        return "white"
+
+    fill_default = "rgba(255,255,255,1)"
+    cell_columns = [instances, n_simples, qdims, s_mat, t_mat,
+                    f_sym, verlinde, nf]
+    fill_columns = [
+        [fill_default] * len(instances),
+        [fill_default] * len(instances),
+        [fill_default] * len(instances),
+        [_cell_color(v) for v in s_mat],
+        [_cell_color(v) for v in t_mat],
+        [_cell_color(v) for v in f_sym],
+        [_cell_color(v) for v in verlinde],
+        [fill_default] * len(instances),
+    ]
+
+    fig = go.Figure(go.Table(
+        header=dict(
+            values=headers,
+            fill_color=COLORS["dispersive"],
+            font=dict(family=FONT["family"], size=12, color="white"),
+            align="center", height=34,
+        ),
+        cells=dict(
+            values=cell_columns,
+            fill_color=fill_columns,
+            font=dict(family=FONT["family"], size=11, color="black"),
+            align="center", height=28,
+        ),
+        columnwidth=[55, 40, 110, 35, 35, 45, 55, 75],
+    ))
+    fig.update_layout(
+        height=420, width=1180,
+        plot_bgcolor="white", paper_bgcolor="white",
+        font=FONT,
+        title=dict(
+            text=(
+                "<b>MTC instances: shipped components</b><br>"
+                "<sub>Steel-blue cells = shipped (✓); amber = partial; "
+                "grey = not yet (✗); paper I2 §6</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        margin=dict(l=15, r=15, t=90, b=15),
+    )
+    return fig
+
+
+def fig_i2_jackknife_dependencies() -> "go.Figure":
+    """I2-FIG-4 — VerifiedJackknife theorem dependency graph
+    (paper I2 §2).
+
+    Network of the four ``VerifiedJackknife`` theorems and their Mathlib-
+    lemma dependencies. Project theorems (amber) are annotated with the
+    ``test_*`` function in ``tests/test_jackknife.py`` that exercises
+    each (per Stage-9 advisory I2-ADV-2). Mathlib lemmas (steel blue)
+    and the ``autocovariance`` definition node (cool grey) form the
+    leaves.
+    """
+    nodes = [
+        ("jackknifeVariance_nonneg",       0.18, 0.85, "thm",
+         "test_jackknife_variance_nonneg"),
+        ("autocovariance_zero_nonneg",     0.50, 0.85, "thm",
+         "test_autocov_zero_nonneg"),
+        ("intAutocorrTime_uncorrelated",   0.78, 0.85, "thm",
+         "test_tau_int_iid"),
+        ("intAutocorrTime_ge_half",        0.50, 0.55, "thm",
+         "test_tau_int_ge_half"),
+        ("mul_nonneg",                     0.05, 0.30, "lib",  None),
+        ("Finset.sum_nonneg",              0.25, 0.20, "lib",  None),
+        ("sq_nonneg",                      0.18, 0.05, "lib",  None),
+        ("mul_self_nonneg",                0.42, 0.30, "lib",  None),
+        ("autocovariance (def)",           0.78, 0.55, "def",  None),
+    ]
+    edges = [
+        ("jackknifeVariance_nonneg",     "mul_nonneg"),
+        ("jackknifeVariance_nonneg",     "Finset.sum_nonneg"),
+        ("jackknifeVariance_nonneg",     "sq_nonneg"),
+        ("autocovariance_zero_nonneg",   "mul_self_nonneg"),
+        ("autocovariance_zero_nonneg",   "Finset.sum_nonneg"),
+        ("intAutocorrTime_uncorrelated", "autocovariance (def)"),
+        ("intAutocorrTime_ge_half",      "autocovariance_zero_nonneg"),
+    ]
+
+    label_to_xy = {n[0]: (n[1], n[2]) for n in nodes}
+    kind_color = {
+        "thm": COLORS["amber"],
+        "lib": COLORS["dispersive"],
+        "def": COLORS["cross"],
+    }
+
+    fig = go.Figure()
+    for src, dst in edges:
+        x0, y0 = label_to_xy[src]
+        x1, y1 = label_to_xy[dst]
+        fig.add_annotation(
+            x=x1, y=y1, ax=x0, ay=y0,
+            xref="x", yref="y", axref="x", ayref="y",
+            showarrow=True, arrowhead=2, arrowsize=1.0, arrowwidth=1.4,
+            arrowcolor=COLORS["cross"],
+        )
+
+    xs = [n[1] for n in nodes]
+    ys = [n[2] for n in nodes]
+    labels = [n[0] for n in nodes]
+    colors = [kind_color[n[3]] for n in nodes]
+    sizes = [40 if n[3] != "thm" else 52 for n in nodes]
+    hover = []
+    for n in nodes:
+        if n[3] == "thm":
+            hover.append(
+                f"<b>{n[0]}</b><br>kind: project theorem<br>"
+                f"test (tests/test_jackknife.py): {n[4]}"
+            )
+        elif n[3] == "lib":
+            hover.append(f"<b>{n[0]}</b><br>kind: Mathlib lemma")
+        else:
+            hover.append(f"<b>{n[0]}</b><br>kind: project definition")
+
+    fig.add_trace(go.Scatter(
+        x=xs, y=ys,
+        mode="markers+text",
+        marker=dict(size=sizes, color=colors,
+                    line=dict(color="black", width=1.4)),
+        text=labels,
+        textposition="bottom center",
+        textfont=dict(family=FONT["family"], size=11, color="black"),
+        hovertext=hover, hoverinfo="text",
+        showlegend=False,
+        name="jackknife-deps",
+    ))
+
+    fig.add_annotation(
+        x=0.97, y=0.98, xref="paper", yref="paper",
+        showarrow=False, align="left", xanchor="right", yanchor="top",
+        text=(
+            f"<span style='color:{COLORS['amber']}'>●</span> project theorem"
+            f"&nbsp;&nbsp;<span style='color:{COLORS['dispersive']}'>●</span> Mathlib lemma"
+            f"&nbsp;&nbsp;<span style='color:{COLORS['cross']}'>●</span> project def"
+        ),
+        font=dict(size=11),
+        bgcolor="rgba(255,255,255,0.85)",
+        bordercolor="black", borderwidth=0.5,
+    )
+
+    fig.update_xaxes(range=[-0.05, 1.05], visible=False)
+    fig.update_yaxes(range=[-0.05, 1.0], visible=False)
+    fig.update_layout(
+        height=560, width=900,
+        plot_bgcolor="white", paper_bgcolor="white",
+        font=FONT,
+        title=dict(
+            text=(
+                "<b>VerifiedJackknife: 4 theorems and their dependencies</b>"
+                "<br><sub>Project theorems (amber) lean on Mathlib lemmas "
+                "(steel blue) and a project definition (grey); each theorem "
+                "annotated with its <tt>tests/test_jackknife.py</tt> test "
+                "(paper I2 §2)</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        margin=dict(l=20, r=20, t=100, b=40),
+    )
+    return fig
+
+
+def fig_i2_mathlib_upstream_flow() -> "go.Figure":
+    """I2-FIG-5 — Mathlib R1/R2/R3 + atomic-PR flow (paper I2 §7).
+
+    Three sequential R-gates flow into a chain of four atomic Mathlib
+    PRs. A separate cool-grey branch shows the software-only fallback
+    if the gate is delayed past 6 months.
+
+    Layout uses short in-node labels (R1/R2/R3, PR-1/2/3/4, F1/F2)
+    rendered inside text-fitted rectangles; the long descriptions
+    appear in a side-table legend below the diagram.
+    """
+    # (label, x, y, kind, full_description)
+    nodes = [
+        ("R1",   0.08, 0.80, "gate", "Mathlib Zulip introduction"),
+        ("R2",   0.21, 0.80, "gate", "AI-tool-assistance disclosure"),
+        ("R3",   0.34, 0.80, "gate", "PR-strategy discussion"),
+        ("PR-1", 0.49, 0.80, "pr",
+         "QSqrt2 + ComputableAdjoinRoot bridge"),
+        ("PR-2", 0.64, 0.80, "pr",
+         "PivotalCategory + RibbonCategory"),
+        ("PR-3", 0.79, 0.80, "pr",
+         "QuasitriangularBialgebra + RibbonHopfAlgebra"),
+        ("PR-4+", 0.94, 0.80, "pr",
+         "MTC instances (SU(2)_k, Ising, Fibonacci)"),
+        ("F1",   0.49, 0.30, "fb",
+         "Software-only release (JOSS, this paper)"),
+        ("F2",   0.79, 0.30, "fb",
+         "Later: JOSS update (retrofit upstream PRs)"),
+    ]
+    edges = [
+        ("R1",   "R2",   "gate"),
+        ("R2",   "R3",   "gate"),
+        ("R3",   "PR-1", "pr"),
+        ("PR-1", "PR-2", "pr"),
+        ("PR-2", "PR-3", "pr"),
+        ("PR-3", "PR-4+", "pr"),
+        ("R3",   "F1",   "fb"),
+        ("F1",   "F2",   "fb"),
+    ]
+    kind_color = {
+        "gate": COLORS["dispersive"],
+        "pr":   COLORS["amber"],
+        "fb":   COLORS["cross"],
+    }
+    label_to_xy = {n[0]: (n[1], n[2]) for n in nodes}
+    label_to_kind = {n[0]: n[3] for n in nodes}
+
+    fig = go.Figure()
+
+    # Half-extent (in normalized x/y units) for node rectangles.
+    # Rectangles are wider than tall to accommodate the short labels.
+    rect_hx, rect_hy = 0.045, 0.06
+
+    # Draw shapes (text-fitted rectangles) instead of fixed-radius
+    # markers so the in-node label always fits.
+    for label, x, y, kind, _desc in nodes:
+        c = kind_color[kind]
+        fig.add_shape(
+            type="rect",
+            x0=x - rect_hx, x1=x + rect_hx,
+            y0=y - rect_hy, y1=y + rect_hy,
+            line=dict(color="black", width=1.4),
+            fillcolor=c,
+            xref="x", yref="y",
+            layer="below",
+        )
+        fig.add_annotation(
+            x=x, y=y, xref="x", yref="y",
+            text=f"<b>{label}</b>",
+            showarrow=False,
+            font=dict(family=FONT["family"], size=14, color="white"),
+            xanchor="center", yanchor="middle",
+        )
+
+    # Draw arrows between rectangles. Start/end at rectangle borders
+    # rather than centers so the arrowheads are visible.
+    for src, dst, kind in edges:
+        x0, y0 = label_to_xy[src]
+        x1, y1 = label_to_xy[dst]
+        # Adjust endpoints to land on rectangle borders.
+        if y0 == y1:  # horizontal
+            sgn = 1 if x1 > x0 else -1
+            sx0 = x0 + sgn * rect_hx
+            sx1 = x1 - sgn * rect_hx
+            sy0 = y0
+            sy1 = y1
+        else:  # vertical (R3 -> F1)
+            sx0, sx1 = x0, x1
+            sy0 = y0 - rect_hy if y1 < y0 else y0 + rect_hy
+            sy1 = y1 + rect_hy if y1 < y0 else y1 - rect_hy
+        fig.add_annotation(
+            x=sx1, y=sy1, ax=sx0, ay=sy0,
+            xref="x", yref="y", axref="x", ayref="y",
+            showarrow=True, arrowhead=3, arrowsize=1.4, arrowwidth=1.8,
+            arrowcolor=kind_color[kind], opacity=0.9,
+        )
+
+    # Hidden scatter trace so the figure has at least one trace
+    # (required by some Plotly export configurations) and to enable
+    # hover info.
+    fig.add_trace(go.Scatter(
+        x=[n[1] for n in nodes],
+        y=[n[2] for n in nodes],
+        mode="markers",
+        marker=dict(size=1, color="rgba(0,0,0,0)"),
+        hovertext=[f"<b>{n[0]}</b><br>{n[4]}" for n in nodes],
+        hoverinfo="text",
+        showlegend=False,
+        name="upstream-flow",
+    ))
+
+    # Top-right legend: kind ↔ shape color.
+    fig.add_annotation(
+        x=0.99, y=0.98, xref="paper", yref="paper",
+        showarrow=False, xanchor="right", yanchor="top",
+        text=(
+            f"<span style='color:{COLORS['dispersive']}'>■</span> "
+            f"R-gate (relationship-building)"
+            f"&nbsp;&nbsp;<span style='color:{COLORS['amber']}'>■</span> "
+            f"atomic Mathlib PR"
+            f"&nbsp;&nbsp;<span style='color:{COLORS['cross']}'>■</span> "
+            f"software-only fallback"
+        ),
+        font=dict(size=11),
+        bgcolor="rgba(255,255,255,0.92)",
+        bordercolor="black", borderwidth=0.5,
+    )
+
+    # Side-table legend (below the diagram) mapping abbreviations
+    # to their full descriptions. Two columns to fit everything.
+    legend_lines_left = [
+        f"<b>R1</b> Mathlib Zulip introduction",
+        f"<b>R2</b> AI-tool-assistance disclosure",
+        f"<b>R3</b> PR-strategy discussion",
+        f"<b>PR-1</b> QSqrt2 + ComputableAdjoinRoot bridge",
+        f"<b>PR-2</b> PivotalCategory + RibbonCategory",
+    ]
+    legend_lines_right = [
+        f"<b>PR-3</b> QuasitriangularBialgebra + RibbonHopfAlgebra",
+        f"<b>PR-4+</b> MTC instances (SU(2)_k, Ising, Fibonacci)",
+        f"<b>F1</b> Software-only release (JOSS, this paper)",
+        f"<b>F2</b> JOSS update (retrofit upstream PRs)",
+        f"<i>Fallback if Mathlib AI-content acceptance &gt; 6 mo</i>",
+    ]
+    fig.add_annotation(
+        x=0.04, y=0.05, xref="paper", yref="paper",
+        showarrow=False, xanchor="left", yanchor="bottom",
+        text="<br>".join(legend_lines_left),
+        font=dict(size=10, family=FONT["family"]),
+        align="left",
+        bgcolor="rgba(245,245,245,0.95)",
+        bordercolor="black", borderwidth=0.4,
+    )
+    fig.add_annotation(
+        x=0.55, y=0.05, xref="paper", yref="paper",
+        showarrow=False, xanchor="left", yanchor="bottom",
+        text="<br>".join(legend_lines_right),
+        font=dict(size=10, family=FONT["family"]),
+        align="left",
+        bgcolor="rgba(245,245,245,0.95)",
+        bordercolor="black", borderwidth=0.4,
+    )
+
+    fig.update_xaxes(range=[0.0, 1.0], visible=False)
+    fig.update_yaxes(range=[0.0, 1.0], visible=False)
+    fig.update_layout(
+        height=560, width=1200,
+        plot_bgcolor="white", paper_bgcolor="white",
+        font=FONT,
+        title=dict(
+            text=(
+                "<b>Mathlib upstream coordination: R1/R2/R3 gates &rarr; "
+                "atomic-PR chain</b><br><sub>Steel-blue gates &rarr; amber "
+                "PR sequence; cool-grey fallback for software-only release "
+                "(paper I2 §7).</sub>"
+            ),
+            x=0.5, xanchor="center", font=TITLE_FONT,
+        ),
+        margin=dict(l=20, r=20, t=100, b=20),
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

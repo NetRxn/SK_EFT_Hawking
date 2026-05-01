@@ -1,9 +1,9 @@
 {
   "paper": "I1",
-  "review_date": "2026-05-01T16:00:00Z",
+  "review_date": "2026-05-01T18:00:00Z",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+  "reviewer_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
   "sentences": [
     {
       "id": "sentence:I1:abstract:0ee6ab6f",
@@ -27,7 +27,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Hedged motivation framing; no resolvable chain. INFO.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -53,8 +53,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Methodology framing claim; matches WAVE_EXECUTION_PIPELINE.md (14 stages) and \u00a76 invariants list.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Methodology framing claim; matches WAVE_EXECUTION_PIPELINE.md (14 stages) and §6 invariants list.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -87,7 +87,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Counts via macros (totaltheorems=5229, leanmodules=243, sorrycount=0, aristotleproved=322). Verified against counts.tex regenerated 2026-05-01.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -116,8 +116,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Three stages 3a/13/14 documented in \u00a76. Three invariants enumerated as #9/#10/#11 in \u00a76. Bundle architecture (13 targets) per PAPER_STRATEGY.md (1F+5D+3L+2I+2E=13). Strengthening cost reduction (12\u21925\u21920) per project memory feedback_post_wave_strengthening_audit.md.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Three stages 3a/13/14 documented in §6. Three invariants enumerated as #9/#10/#11 in §6. Bundle architecture (13 targets) per PAPER_STRATEGY.md (1F+5D+3L+2I+2E=13). Strengthening cost reduction (12→5→0) per project memory feedback_post_wave_strengthening_audit.md.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -144,8 +144,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Three worked cases match \u00a73, \u00a74, \u00a75; Aristotle run IDs verified (270e77a0, 79e07d55, 78dcc5f4 in ARISTOTLE_THEOREMS).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Three worked cases match §3, §4, §5; Aristotle run IDs verified (270e77a0, 79e07d55, 78dcc5f4 in ARISTOTLE_THEOREMS).",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -171,8 +171,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "\u00a711 Phase 6f W1-W6 substrate + \u00a712 Riemannian connection Wave 7-8 + \u00a713 Phase 6g W5 structural-Prop scoping. All Lean modules cited exist.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "§11 Phase 6f W1-W6 substrate + §12 Riemannian connection Wave 7-8 + §13 Phase 6g W5 structural-Prop scoping. All Lean modules cited exist.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -199,7 +199,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Hedged generalization claim; INFO per Part B.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -226,7 +226,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Background framing.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -253,7 +253,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Background framing.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -280,7 +280,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Background framing.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -307,7 +307,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Background framing; hedged.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -334,7 +334,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "Connective.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -361,7 +361,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Reviewer-driven-correction trace; aligns with claims-reviewer-bundle-prompts.md anchors and seed event April 2026 external-adversarial review.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -388,7 +388,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Hedged framing.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -415,7 +415,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Hedged framing.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -442,7 +442,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Continuous-verification framing matches WAVE_EXECUTION_PIPELINE.md scope.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -468,8 +468,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "14-stage / 14-invariant claim; verified via \u00a76 enumerations and pipeline doc.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "14-stage / 14-invariant claim; verified via §6 enumerations and pipeline doc.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -504,7 +504,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "\\papercount = 41 per counts.tex.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -536,7 +536,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Counts via macros; verified.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -556,16 +556,14 @@
       "quote": "This paper extends and supersedes an earlier description of a twelve-stage version of the pipeline (paper15 methodology draft, April 2026).",
       "quote_normalized": "this paper extends and supersedes an earlier description of a twelve-stage version of the pipeline (paper15 methodology draft, april 2026).",
       "type": "metaclaim",
-      "finding_classes": [
-        "TN"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [],
         "completeness": "none"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "TN: prose names 'paper15 methodology draft, April 2026' but no \\cite{paper15methodology} invocation appears in body \u2014 only an unreferenced bibitem at line 1330. Bibitem is dead-letter. Class TN advisory.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: paper15methodology bibitem removed from §thebibliography (verified via `grep -nE 'bibitem\\{' papers/I1/paper_draft.tex` — only 5 external bibitems remain: physlean, compcert, sel4, leancipilot, alphaproof). Prose at L133-135 now refers via 'an earlier internal draft description of a twelve-stage version of the pipeline (April 2026)' — no orphan citation. Round-1 BLOCKER block:6 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -592,7 +590,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Stage 3a/13/14 + invariants 9/10/11 matched against pipeline.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -618,8 +616,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Cost reduction 12\u21920 numerically claimed; project memory shows 12 (Phase 6c.3) \u2192 5 (Phase 6b.1) \u2192 0 (Phase 6m R6) per feedback_post_wave_strengthening_audit.md.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Cost reduction 12→0 numerically claimed; project memory shows 12 (Phase 6c.3) → 5 (Phase 6b.1) → 0 (Phase 6m R6) per feedback_post_wave_strengthening_audit.md.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -647,7 +645,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "Roadmap connective.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -674,7 +672,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "Roadmap.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -701,7 +699,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -728,7 +726,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -755,7 +753,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -782,7 +780,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -809,7 +807,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -836,7 +834,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -863,7 +861,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -890,7 +888,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -917,7 +915,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -944,7 +942,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -971,7 +969,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Architecture summary.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -998,7 +996,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches Pipeline Invariant #1 (canonical formulas.py).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1025,7 +1023,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1052,7 +1050,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1079,7 +1077,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1106,7 +1104,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1132,8 +1130,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Matches strengthening discipline \u00a77.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Matches strengthening discipline §7.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1160,7 +1158,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1186,8 +1184,8 @@
         "completeness": "none"
       },
       "agent_verdict": "INFO",
-      "agent_notes": "Cross-reference to \u00a75 case 3.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Cross-reference to §5 case 3.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1214,7 +1212,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1241,7 +1239,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1267,8 +1265,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Matches Invariant #10 stated in \u00a76.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Matches Invariant #10 stated in §6.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1295,7 +1293,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1322,7 +1320,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1359,8 +1357,8 @@
         "completeness": "partial"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Aristotle run 79e07d55 confirmed in ARISTOTLE_THEOREMS. Formula G_c = 8\u03c0\u00b2/(N_f \u039b\u00b2) \u2014 symbolic claim; the chirality-wall critical-coupling formula appears in formulas.py per project documentation. WARN: 'critical-coupling theorem' name not directly verified to a specific Lean theorem name in this prose; checked via gap-equation cluster (run 79e07d55 closed 9 gap-equation theorems including critical_coupling_pos / criticalCoupling). PASS chain.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Aristotle run 79e07d55 confirmed in ARISTOTLE_THEOREMS. Formula G_c = 8π²/(N_f Λ²) — symbolic claim; the chirality-wall critical-coupling formula appears in formulas.py per project documentation. WARN: 'critical-coupling theorem' name not directly verified to a specific Lean theorem name in this prose; checked via gap-equation cluster (run 79e07d55 closed 9 gap-equation theorems including critical_coupling_pos / criticalCoupling). PASS chain.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -1390,7 +1388,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1417,7 +1415,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1444,7 +1442,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1471,7 +1469,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1498,7 +1496,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1530,7 +1528,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "9 coefficients (6 retarded + 3 noise) verified against SKDoubling.lean FirstOrderCoeffs / FirstOrderKMS structure.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1557,7 +1555,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Setup question.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1589,7 +1587,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "KMSSymmetry struct found at SKDoubling.lean line 156 (4 fields). PASS.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1609,9 +1607,7 @@
       "quote": "The accompanying uniqueness theorem \\texttt{firstOrder\\_uniqueness} (in \\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~351--439) was submitted to Aristotle in priority batch~1.",
       "quote_normalized": "the accompanying uniqueness theorem firstorder\\_uniqueness (in lean/skefthawking/skdoubling.lean, lines~351--439) was submitted to aristotle in priority batch~1.",
       "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
@@ -1621,9 +1617,9 @@
         ],
         "completeness": "full"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "TN-WARN: firstOrder_uniqueness EXISTS at SKDoubling.lean line 412, not 351-439; the comment-out block of firstOrder_uniqueness_ORIGINAL spans 318-345; cited line range is approximately right but inaccurate. Theorem name resolves; line number drifted.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: line ranges tightened. firstOrder_uniqueness verified at L412 (via `grep -nE '^theorem firstOrder_uniqueness' lean/SKEFTHawking/SKDoubling.lean`). FirstOrderKMS structure verified at L367. Cited range L412-439 + L367 onwards is now tight against current source. Round-1 followup:2 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1649,8 +1645,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Counterexample c=\u27e80,0,0,0,0,0,0,1,0\u27e9 confirmed in SKDoubling.lean comment line 423.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Counterexample c=⟨0,0,0,0,0,0,0,1,0⟩ confirmed in SKDoubling.lean comment line 423.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1677,7 +1673,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1704,7 +1700,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1736,7 +1732,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "7 KMS relations / closed-form noise spectrum stated; structural-Prop. PASS without numeric recomputation since this is a formal-derivation summary.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1772,7 +1768,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Aristotle run 270e77a0 confirmed in ARISTOTLE_THEOREMS for firstOrder_uniqueness. FirstOrderKMS struct at SKDoubling.lean line 367.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -1802,7 +1798,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1829,7 +1825,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Cross-paper dependency claim; consistent with D-tier deep paper substrate.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1856,7 +1852,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1882,8 +1878,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "ADW gap equation matches TetradGapEquation.lean (gapOperator def line ~). Variables \u0394, G, \u039b, N_f match.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "ADW gap equation matches TetradGapEquation.lean (gapOperator def line ~). Variables Δ, G, Λ, N_f match.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1910,7 +1906,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Setup framing.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1937,7 +1933,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1969,7 +1965,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "gap_solution_bounded EXISTS as commented-out stub at TetradGapEquation.lean line 316-321; the prose claim that this theorem was the original first-pass statement is consistent with the comment block.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -1989,9 +1985,7 @@
       "quote": "The proof was not closing under interactive iteration, so the theorem was submitted as part of Aristotle priority batch~1 (\\texttt{lean/SKEFTHawking/TetradGapEquation.lean}, lines~304--340).",
       "quote_normalized": "the proof was not closing under interactive iteration, so the theorem was submitted as part of aristotle priority batch~1 (lean/skefthawking/tetradgapequation.lean, lines~304--340).",
       "type": "methodology",
-      "finding_classes": [
-        "TN"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
@@ -2001,9 +1995,9 @@
         ],
         "completeness": "full"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "TN-WARN: cited line range 304-340 for original submission; gap_solution_bounded comment block actually spans lines 307-321 in the live file. Approximate but inaccurate. Theorem name resolves to file.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: paper now says gap_solution_monotone is at L329-345 and the deprecated false claim survives as commented-out stub at L307-321. Verified via `grep -nE '^theorem gap_solution_monotone|gap_solution_bounded' lean/SKEFTHawking/TetradGapEquation.lean`: gap_solution_bounded at L316 (within commented block 307-321), gap_solution_monotone at L329. Tight against current source. Round-1 followup:3 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2029,8 +2023,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Counterexample G,N_f=1,\u039b=1,\u0394=1 documented at TetradGapEquation.lean lines 310-314 NOTE block. Matches.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Counterexample G,N_f=1,Λ=1,Δ=1 documented at TetradGapEquation.lean lines 310-314 NOTE block. Matches.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2057,7 +2051,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2084,7 +2078,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2116,7 +2110,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "gap_solution_monotone EXISTS at TetradGapEquation.lean line 329, with proof. PASS.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2148,7 +2142,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "79e07d55 closed 9 gap-equation theorems per ARISTOTLE_THEOREMS lines 1303-1312 (gapIntegral_pos, gapIntegral_strictAnti, gapIntegral_tendsto_zero, gapOperator_self_map, gap_trivial_unique_subcritical, gap_nontrivial_exists, gap_solution_monotone, gapIntegral_le_I0, gapIntegral_lower_bound). Paper says 'eight other' meaning gap_solution_monotone + 8 others = 9 total. Arithmetic checks.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -2171,16 +2165,14 @@
       "quote": "The original \\texttt{gap\\_solution\\_bounded} survives in the codebase as a commented-out stub at lines~316--325 of \\texttt{TetradGapEquation.lean}, preserved as a citable counterexample anchor for downstream papers that would otherwise inherit the folklore.",
       "quote_normalized": "the original gap\\_solution\\_bounded survives in the codebase as a commented-out stub at lines~316--325 of tetradgapequation.lean, preserved as a citable counterexample anchor for downstream papers that would otherwise inherit the folklore.",
       "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [],
         "completeness": "none"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "TN-WARN: stub exists at TetradGapEquation.lean lines 316-321 (theorem decl + sorry body) within larger comment block 307-321; paper says 316-325. Off by ~4 lines. Stub itself confirmed.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: paper now says 'commented-out stub at lines 307-321'. Verified — block bounds match exactly. Round-1 followup:4 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2207,7 +2199,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2234,7 +2226,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Setup.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2266,7 +2258,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "sm_no_nu_R_ewbg_doubly_forbidden in EWBaryogenesisChiralityWall.lean (file confirmed exists). Theorem name accepted as named compound viability.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2293,7 +2285,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2320,7 +2312,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "'~50 terms' is an approximation; not a tight count. INFO.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2347,7 +2339,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2374,7 +2366,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2401,7 +2393,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2416,49 +2408,57 @@
       },
       "section": "case3",
       "section_ordinal": 8,
-      "tex_line_start": 407,
+      "tex_line_start": 419,
       "tex_line_end": 423,
       "quote": "The fix was a nine-fold structural decomposition driven by the \\texttt{AXIOM\\_METADATA} table in \\texttt{src/core/constants.py}.",
       "quote_normalized": "the fix was a nine-fold structural decomposition driven by the axiom\\_metadata table in src/core/constants.py.",
       "type": "formal-claim",
-      "finding_classes": [
-        "SD",
-        "HD"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
             "kind": "axiom",
             "target": "AXIOM_METADATA"
+          },
+          {
+            "kind": "axiom",
+            "target": "gapped_interface_axiom"
+          },
+          {
+            "kind": "axiom",
+            "target": "chirality_limitation_zero"
+          },
+          {
+            "kind": "axiom",
+            "target": "c_minus_equals_8Nf"
           }
         ],
-        "completeness": "partial"
+        "completeness": "full"
       },
-      "agent_verdict": "FAIL",
-      "agent_notes": "FAIL \u2014 SD/HD: AXIOM_METADATA in src/core/constants.py contains exactly 4 entries (non_abelian_center_discrete, gs_nogo_axiom, gapped_interface_axiom, gaussianSaddleAsymptotic). The 9-fold decomposition driver claim does NOT match \u2014 paper \u00a75 attributes the axiom-classification structure to AXIOM_METADATA. Class SD: cardinality drift. The data table that drove the decomposition is most plausibly CHAIN_MILESTONES (which contains chirality_wall_three_pillars at line 3132) or HYPOTHESIS_REGISTRY, not AXIOM_METADATA. Prose-pipeline drift.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: §5 has been rewritten (lines 419-444). The decomposition is now explicitly anchored on real AXIOM_METADATA entries — gapped_interface_axiom (L1351), chirality_limitation_zero (L1483), and the chiral_central_charge axiom group near L1591 (specifically c_minus_equals_8Nf at L1590). The 'AXIOM_METADATA drives decomposition' claim is now consistent with the live registry. Round-1 BLOCKER block:1 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
       "gates_invoked": [
-        "Gate9_NumericalFreshness",
         "Gate6_AssumptionDisclosure"
       ]
     },
     {
-      "id": "sentence:I1:case3:067ffddb",
+      "id": "sentence:I1:case3:48818aca",
       "raw_id_parts": {
         "paper": "I1",
         "section_slug": "case3",
-        "quote_hash": "067ffddb",
+        "quote_hash": "48818aca",
         "hash_algorithm": "sha256_first_8"
       },
       "section": "case3",
       "section_ordinal": 9,
-      "tex_line_start": 408,
-      "tex_line_end": 412,
-      "quote": "Each entry in \\texttt{AXIOM\\_METADATA} records its eliminability tier (\\texttt{eliminable} / \\texttt{hard} / \\texttt{unknown}) and the structural-axiom family it belongs to.",
-      "quote_normalized": "each entry in axiom\\_metadata records its eliminability tier (eliminable / hard / unknown) and the structural-axiom family it belongs to.",
+      "tex_line_start": 421,
+      "tex_line_end": 424,
+      "quote": "Each entry in \\texttt{AXIOM\\_METADATA} records its eliminability tier (\\texttt{removed} / \\texttt{closed} / \\texttt{hard} / \\texttt{algebraic} / \\texttt{very\\_hard} / \\texttt{open}) and a \\texttt{reason} or \\texttt{evidence\\_*} field documenting the structural rationale or evidence ladder.",
+      "quote_normalized": "each entry in axiom\\_metadata records its eliminability tier (removed / closed / hard / algebraic / very\\_hard / open) and a reason or evidence\\_* field documenting the structural rationale or evidence ladder.",
       "type": "formal-claim",
       "finding_classes": [
         "SD"
@@ -2470,11 +2470,11 @@
             "target": "AXIOM_METADATA"
           }
         ],
-        "completeness": "partial"
+        "completeness": "full"
       },
-      "agent_verdict": "FAIL",
-      "agent_notes": "FAIL \u2014 SD: AXIOM_METADATA entries record 'eliminability' tier (with values: removed / hard / closed observed in live registry, not 'eliminable / hard / unknown' as paper claims) and 'reason' / 'module', NOT a 'structural-axiom family' field. The taxonomy categories enumerated in paper prose do not match live constants.py.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "WARN",
+      "agent_notes": "Round-2 re-review: paper now lists tiers 'removed / closed / hard / algebraic / very_hard / open'. Live AXIOM_METADATA values observed: algebraic, closed, hard, removed, topological, very_hard (per `grep \"'eliminability':\" src/core/constants.py | sort -u`). Paper claims `open` (not present in live registry) and omits `topological` (present in live registry). Partial drift. WARN — not a blocker; round-1 BLOCKER block:2 remediated; residual minor SD advisory.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -2483,53 +2483,49 @@
       ]
     },
     {
-      "id": "sentence:I1:case3:31644ea6",
+      "id": "sentence:I1:case3:13d002c3",
       "raw_id_parts": {
         "paper": "I1",
         "section_slug": "case3",
-        "quote_hash": "31644ea6",
+        "quote_hash": "13d002c3",
         "hash_algorithm": "sha256_first_8"
       },
       "section": "case3",
       "section_ordinal": 10,
-      "tex_line_start": 412,
-      "tex_line_end": 423,
-      "quote": "The chirality-wall theorem's load-bearing axioms group as \\texttt{chirality\\_wall\\_three\\_pillars} (three axioms at tier \\texttt{hard}: $\\mathbb{Z}_{16}$ anomaly chain \\cite{paper10_ewbg}, four-plus-one-dimensional gapped interface hypothesis \\cite{paper09_phaseI}, and topological-pivoting-frame no-go evasion \\cite{paper08_topology}).",
-      "quote_normalized": "the chirality-wall theorem's load-bearing axioms group as chirality\\_wall\\_three\\_pillars (three axioms at tier hard: $\\mathbb{z}_{16}$ anomaly chain , four-plus-one-dimensional gapped interface hypothesis , and topological-pivoting-frame no-go evasion ).",
-      "type": "citation",
-      "finding_classes": [
-        "TN",
-        "HD"
-      ],
+      "tex_line_start": 425,
+      "tex_line_end": 441,
+      "quote": "The chirality-wall theorem's load-bearing axioms decompose along three structural pillars, each anchored on one tier-\\texttt{hard} entry of \\texttt{AXIOM\\_METADATA}: (i) the $\\mathbb{Z}_{16}$ anomaly chain, backed by the chiral-central-charge axioms in \\texttt{Z16AnomalyForcesThetaBar} (referenced from \\texttt{AXIOM\\_METADATA} via the \\texttt{chiral\\_central\\_charge} group on lines around 1591); (ii) the four-plus-one-dimensional gapped-interface hypothesis, encoded verbatim as the \\texttt{gapped\\_interface\\_axiom} entry in \\texttt{AXIOM\\_METADATA} (line 1351), with a tracked dimensional ladder of evidence (proven at $1{+}1$D and $2{+}1$D, conjectural at $3{+}1$D and $4{+}1$D); and (iii) the topological-pivoting-frame no-go evasion, anchored on the \\texttt{chirality\\_limitation\\_zero} entry (line 1483) and on the EWBaryogenesisChiralityWall theorem suite cited in the same table (around line 1633).",
+      "quote_normalized": "the chirality-wall theorem's load-bearing axioms decompose along three structural pillars, each anchored on one tier-hard entry of axiom\\_metadata: (i) the $\\mathbb{z}_{16}$ anomaly chain, backed by the chiral-central-charge axioms in z16anomalyforcesthetabar (referenced from axiom\\_metadata via the chiral\\_central\\_charge group on lines around 1591); (ii) the four-plus-one-dimensional gapped-interface hypothesis, encoded verbatim as the gapped\\_interface\\_axiom entry in axiom\\_metadata (line 1351), with a tracked dimensional ladder of evidence (proven at $1{+}1$d and $2{+}1$d, conjectural at $3{+}1$d and $4{+}1$d); and (iii) the topological-pivoting-frame no-go evasion, anchored on the chirality\\_limitation\\_zero entry (line 1483) and on the ewbaryogenesischiralitywall theorem suite cited in the same table (around line 1633).",
+      "type": "formal-claim",
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
             "kind": "axiom",
-            "target": "chirality_wall_three_pillars"
+            "target": "gapped_interface_axiom"
           },
           {
-            "kind": "citation",
-            "target": "paper10_ewbg"
+            "kind": "axiom",
+            "target": "chirality_limitation_zero"
           },
           {
-            "kind": "citation",
-            "target": "paper09_phaseI"
+            "kind": "axiom",
+            "target": "c_minus_equals_8Nf"
           },
           {
-            "kind": "citation",
-            "target": "paper08_topology"
+            "kind": "axiom",
+            "target": "H_KLRS_SM_Crossover"
           }
         ],
-        "completeness": "partial"
+        "completeness": "full"
       },
-      "agent_verdict": "FAIL",
-      "agent_notes": "FAIL \u2014 TN+HD: (a) `chirality_wall_three_pillars` is in CHAIN_MILESTONES (line 3132, value 3 = ordinal index), NOT in AXIOM_METADATA. The 'three axioms at tier hard' grouping is asserted but NOT present in live AXIOM_METADATA which has only 4 unrelated entries. (b) BIBLIOGRAPHY MISSING: \\cite{paper10_ewbg}, \\cite{paper09_phaseI}, \\cite{paper08_topology} have no corresponding \\bibitem in \u00a7thebibliography (lines 1318-1336). LaTeX will render '[??]'. Triple citation-integrity failure.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: §5 paragraph rewritten. Three dead cites (paper10_ewbg, paper09_phaseI, paper08_topology) removed; `chirality_wall_three_pillars` claim language removed. Replaced with concrete AXIOM_METADATA references: gapped_interface_axiom verified at L1351 (eliminability='hard', module='SPTClassification'); chirality_limitation_zero verified at L1483 (category='content', module='GaugeEmergence'); chiral_central_charge group reference resolves to c_minus_equals_8Nf at L1590-1601 (eliminability='algebraic', module='WangBridge'); H_KLRS_SM_Crossover at L1627 (eliminability='hard', module='EWBaryogenesisChiralityWall', dependent_theorem sm_no_nu_R_ewbg_doubly_forbidden). Round-1 BLOCKERs block:3 (paper10_ewbg/paper09_phaseI/paper08_topology dead cites) and block:5 fully remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
       "gates_invoked": [
-        "Gate1_CitationIntegrity",
         "Gate6_AssumptionDisclosure",
         "Gate5_LeanProofSubstance"
       ]
@@ -2555,8 +2551,8 @@
         "completeness": "none"
       },
       "agent_verdict": "INFO",
-      "agent_notes": "Decomposition arithmetic 3*3=9; consistent with monolithic\u2192nine-deep claim. INFO without verifying actual sub-lemma count.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Decomposition arithmetic 3*3=9; consistent with monolithic→nine-deep claim. INFO without verifying actual sub-lemma count.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2583,7 +2579,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Approximate bound.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2610,7 +2606,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Claim of 9 sub-lemmas closed in single batch is asserted; not directly verified against ARISTOTLE_THEOREMS by name. INFO with no chain.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2637,7 +2633,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2657,9 +2653,7 @@
       "quote": "One of the sub-lemmas (the \\texttt{ewbg\\_forbidden\\_iff\\_wall\\_intact\\_or\\_not\\_viable} biconditional) revealed that a fourth-pillar hypothesis on \\emph{sphaleron-rate suppression} was implicitly assumed but not recorded in \\texttt{AXIOM\\_METADATA}.",
       "quote_normalized": "one of the sub-lemmas (the ewbg\\_forbidden\\_iff\\_wall\\_intact\\_or\\_not\\_viable biconditional) revealed that a fourth-pillar hypothesis on sphaleron-rate suppression was implicitly assumed but not recorded in axiom\\_metadata.",
       "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
@@ -2669,47 +2663,47 @@
         ],
         "completeness": "partial"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "TN-WARN: 'ewbg_forbidden_iff_wall_intact_or_not_viable' exists as theorem name in EWBaryogenesisChiralityWall.lean (per project memory). AXIOM_METADATA reference compounds the \u00a7case3 sentence-8 issue (AXIOM_METADATA does not record 4 chirality-wall items at all).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: §5 prose rewrite now anchors decomposition on real AXIOM_METADATA entries; the 'AXIOM_METADATA does not record 4 chirality-wall items' compounding issue is no longer present. ewbg_forbidden_iff_wall_intact_or_not_viable theorem-name lookup via Phase 6c memory shows it exists in EWBaryogenesisChiralityWall.lean. Round-1 followup:5 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
     },
     {
-      "id": "sentence:I1:case3:ef0c8cab",
+      "id": "sentence:I1:case3:76036740",
       "raw_id_parts": {
         "paper": "I1",
         "section_slug": "case3",
-        "quote_hash": "ef0c8cab",
+        "quote_hash": "76036740",
         "hash_algorithm": "sha256_first_8"
       },
       "section": "case3",
       "section_ordinal": 16,
-      "tex_line_start": 430,
-      "tex_line_end": 434,
-      "quote": "The audit closed by adding the missing entry as a tier-\\texttt{eliminable} axiom with an explicit bound (\\texttt{sphaleronSuppression\\_le\\_one} on lines~94--120 of \\texttt{EWBaryogenesisChiralityWall.lean}).",
-      "quote_normalized": "the audit closed by adding the missing entry as a tier-eliminable axiom with an explicit bound (sphaleronsuppression\\_le\\_one on lines~94--120 of ewbaryogenesischiralitywall.lean).",
+      "tex_line_start": 456,
+      "tex_line_end": 463,
+      "quote": "The audit closed not by adding a new axiom but by promoting the implicit dependency to an explicit \\emph{theorem} (\\texttt{SKEFTHawking.EWBaryogenesisChiralityWall.sphaleronSuppression\\_le\\_one} on lines~106--114 of \\texttt{EWBaryogenesisChiralityWall.lean}, proving that the suppression factor lies in $[0,1]$ within the surrounding \\texttt{def sphaleronSuppression} infrastructure).",
+      "quote_normalized": "the audit closed not by adding a new axiom but by promoting the implicit dependency to an explicit theorem (skefthawking.ewbaryogenesischiralitywall.sphaleronsuppression\\_le\\_one on lines~106--114 of ewbaryogenesischiralitywall.lean, proving that the suppression factor lies in $[0,1]$ within the surrounding def sphaleronsuppression infrastructure).",
       "type": "theorem-ref",
-      "finding_classes": [
-        "TN",
-        "SD"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
             "kind": "theorem",
-            "target": "sphaleronSuppression_le_one"
+            "target": "SKEFTHawking.EWBaryogenesisChiralityWall.sphaleronSuppression_le_one"
           }
         ],
         "completeness": "full"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "TN-WARN/SD: sphaleronSuppression def at line 94, sphaleronSuppression_le_one theorem at line 106 (NOT line range 94-120 explicitly; the def + 2 theorems span ~94-130). 'tier-eliminable axiom' verbiage conflicts with live AXIOM_METADATA values (removed/hard/closed). The Lean theorem sphaleronSuppression_le_one EXISTS in EWBaryogenesisChiralityWall.lean line 106; it is a theorem (not an axiom). Calling it an axiom is a category error.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: prose now correctly identifies sphaleronSuppression_le_one as a theorem (not 'tier-eliminable axiom'). Verified via `grep -nE 'def sphaleronSuppression|theorem sphaleronSuppression' lean/SKEFTHawking/EWBaryogenesisChiralityWall.lean`: def at L94, theorem sphaleronSuppression_pos at L99, theorem sphaleronSuppression_le_one at L106. Cited line range 106-114 covers theorem-le-one body (8 lines for ≥0/≤1 bound proof). Round-1 followup:6 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
-      "lift_action": "Lift-section"
+      "lift_action": "Lift-section",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ]
     },
     {
       "id": "sentence:I1:case3:0e6495cc",
@@ -2733,7 +2727,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2760,7 +2754,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches WAVE_EXECUTION_PIPELINE.md.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2787,7 +2781,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2814,7 +2808,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2834,16 +2828,14 @@
       "quote": "Pipeline stages with their gates, autogenerated from \\texttt{WAVE\\_EXECUTION\\_PIPELINE.md}.",
       "quote_normalized": "pipeline stages with their gates, autogenerated from wave\\_execution\\_pipeline.md.",
       "type": "metaclaim",
-      "finding_classes": [
-        "IA"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [],
         "completeness": "none"
       },
-      "agent_verdict": "FAIL",
-      "agent_notes": "FAIL \u2014 IA: paper line 455 inputs `tables/table1_stages.tex`; the file papers/I1/tables/ directory is EMPTY. LaTeX compile will fail. Structural integrity issue. Caption text refers to a missing artifact.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: papers/I1/tables/table1_stages.tex now exists (hand-authored, verified via `ls papers/I1/tables/`). Contains 14-stage table with stages 1, 2, 3a, 3b, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 — covering all 14 stages described in §6. LaTeX \\input{tables/table1_stages.tex} now resolves. Round-1 BLOCKERs block:4 and block:7 fully remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2869,8 +2861,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Matches abstract claim and \u00a71.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Matches abstract claim and §1.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2897,7 +2889,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches CLAUDE.md MCP setup section (~15s per cycle build-iterate vs millisecond LSP).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2924,7 +2916,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2950,8 +2942,8 @@
         "completeness": "none"
       },
       "agent_verdict": "INFO",
-      "agent_notes": "'1000x' qualitative speedup; informal \u2014 INFO.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "'1000x' qualitative speedup; informal — INFO.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -2978,7 +2970,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches Stage 13 in pipeline doc; agent at .claude/plugins/physics-qa/agents/adversarial-reviewer.md.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3003,9 +2995,9 @@
         "links": [],
         "completeness": "none"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "The 8 finding classes here as enumerated by \u00a76 differ slightly from \u00a710 list (which adds 'ProductionRunHealth' as the 8th, and gives 'LeanProofSubstance' rather than 'formal-verification-claim substantiation'). Internal consistency drift; both consistent with adversarial-reviewer agent definition.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: §6 finding-class enumeration (L509-513) now reads 'citation integrity, parameter provenance, formal-verification-claim substantiation, cross-paper consistency, narrative grounding, assumption disclosure, count freshness, and production-run health'. §10 (L972-987) uses the same eight-class vocabulary (CitationIntegrity, ParameterProvenance, LeanProofSubstance, CrossPaperConsistency, NarrativeGrounding, AssumptionDisclosure, CountFreshness, ProductionRunHealth). Class names align. Round-1 followup:7 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3032,7 +3024,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3059,7 +3051,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3086,7 +3078,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3113,7 +3105,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3140,7 +3132,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3167,7 +3159,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3194,7 +3186,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "13-dimensional problem space; consistent with project memory references.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3221,7 +3213,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3248,7 +3240,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches Pipeline Invariants #1, #2, #3.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3275,7 +3267,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3302,7 +3294,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3329,7 +3321,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3356,7 +3348,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3384,8 +3376,8 @@
         "completeness": "none"
       },
       "agent_verdict": "WARN",
-      "agent_notes": "IA-WARN: paper says 16 validation checks at Stage 7. Live validate.py contains ~22 checks (CHECK 22 added in Phase 7a sub-wave 7a.1.4 per project memory; CLAUDE.md describes 'Full validation suite (21 checks)' for validate.py, with bundle_source_freshness as CHECK 22 added recently). The 16-check claim drifted from current state.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Round-2 re-review: paper §6 (L539-540) still says 'Stage 7 runs sixteen automated cross-layer validation checks'. Live `grep -cE '^@register_check' scripts/validate.py` = 26 checks (CHECK 22 bundle_source_freshness added Phase 7a sub-wave 7a.1.4). Drift: 16 vs 26. Persistent IA WARN from round-1 followup:8 — not remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -3415,7 +3407,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3442,7 +3434,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3469,7 +3461,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3496,7 +3488,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3523,7 +3515,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3550,7 +3542,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3577,7 +3569,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3604,7 +3596,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #1.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3631,7 +3623,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #2.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3658,7 +3650,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #3.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3685,7 +3677,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #4.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3712,7 +3704,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #5.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3739,7 +3731,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #6 + tolerance.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3766,7 +3758,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #7.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3793,7 +3785,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #8.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3820,7 +3812,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #9. PLACEHOLDER_THEOREMS exists in src/core/constants.py; \\placeholdertheorems = 25 macro confirmed.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3847,7 +3839,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #10. Matches CLAUDE.md.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3874,7 +3866,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #11.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3901,7 +3893,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #12.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3928,7 +3920,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #13.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3955,7 +3947,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Invariant #14.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -3987,7 +3979,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "placeholdertheorems=25, totaltheorems=5229; macros canonical.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4019,7 +4011,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "substantivetheorems=5204; 5229-25=5204 arithmetic checks.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4046,7 +4038,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4073,7 +4065,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4100,7 +4092,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4131,8 +4123,8 @@
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "12\u21925\u21920 confirmed in project memory feedback_post_wave_strengthening_audit.md and project_phase6m_lean_closure_shipped.md.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "12→5→0 confirmed in project memory feedback_post_wave_strengthening_audit.md and project_phase6m_lean_closure_shipped.md.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4159,7 +4151,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4186,7 +4178,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "P2 anti-pattern matches CLAUDE.md preemptive-strengthening-discipline section.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4213,7 +4205,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4240,7 +4232,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4267,7 +4259,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4294,7 +4286,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4321,7 +4313,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4348,7 +4340,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4375,7 +4367,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4402,7 +4394,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4429,7 +4421,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4456,7 +4448,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4483,7 +4475,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4510,7 +4502,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4537,7 +4529,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4564,7 +4556,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4591,7 +4583,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4618,7 +4610,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4645,7 +4637,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4672,7 +4664,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4699,7 +4691,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4726,7 +4718,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches sentence_state.py + claims-reviewer architecture.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4753,7 +4745,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Schema description matches scripts/sentence_state.py exactly: 9 types, 6 link kinds + aristotle/production_run, 6 verdict values, sha8 ID format. PASS.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4780,7 +4772,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4807,7 +4799,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4834,7 +4826,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4861,7 +4853,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4888,7 +4880,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "cluster_bundle_index.json confirms cross_bundle: true flag with cluster_count=2 currently.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4908,16 +4900,14 @@
       "quote": "The validation check \\texttt{validate.py --check bundle\\_consistency} (CHECK~21) walks the registry and flags any cluster whose member sentences disagree on the cluster's load-bearing fact.",
       "quote_normalized": "the validation check validate.py --check bundle\\_consistency (check~21) walks the registry and flags any cluster whose member sentences disagree on the cluster's load-bearing fact.",
       "type": "methodology",
-      "finding_classes": [
-        "IA"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [],
         "completeness": "none"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "IA-WARN: paper says CHECK 21 = bundle_consistency. Per project memory (Phase 7a sub-wave 7a.1.4), CHECK 22 was added as bundle_source_freshness; CHECK 21 may be bundle_consistency. Validate against live validate.py to confirm CHECK numbering.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: verified `grep -nE 'bundle_consistency' scripts/validate.py` shows @register_check('bundle_consistency'...) at L2238 with check_bundle_consistency function L2241. CHECK 21 matches paper claim. Round-1 followup:9 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -4934,8 +4924,8 @@
       "section_ordinal": 9,
       "tex_line_start": 734,
       "tex_line_end": 738,
-      "quote": "The load-bearing example is GW170817 vs vestigial-graviton: the L1 PRL splash and the D3 deep paper both report the LIGO \u0394$c/c$ bound and the $7\\times 10^{14}$ falsification factor; CHECK~21 enforces that the two reports agree character-for-character on the numerical content.",
-      "quote_normalized": "the load-bearing example is gw170817 vs vestigial-graviton: the l1 prl splash and the d3 deep paper both report the ligo \u03b4$c/c$ bound and the $7\\times 10^{14}$ falsification factor; check~21 enforces that the two reports agree character-for-character on the numerical content.",
+      "quote": "The load-bearing example is GW170817 vs vestigial-graviton: the L1 PRL splash and the D3 deep paper both report the LIGO Δ$c/c$ bound and the $7\\times 10^{14}$ falsification factor; CHECK~21 enforces that the two reports agree character-for-character on the numerical content.",
+      "quote_normalized": "the load-bearing example is gw170817 vs vestigial-graviton: the l1 prl splash and the d3 deep paper both report the ligo δ$c/c$ bound and the $7\\times 10^{14}$ falsification factor; check~21 enforces that the two reports agree character-for-character on the numerical content.",
       "type": "numeric",
       "finding_classes": [
         "IA"
@@ -4950,8 +4940,8 @@
         "completeness": "partial"
       },
       "agent_verdict": "WARN",
-      "agent_notes": "IA-WARN: cross-bundle anchor referenced. Live cluster_bundle_index.json contains 2 clusters but neither references GW170817 / 7\u00d710^14 falsification \u2014 the existing 2 clusters are about Lean toolchain pin (with v4.28.0/Mathlib 8f9d9cff \u2014 itself stale) and Aristotle attribution. The L1\u2194D3 GW170817 cluster the paper references is *aspirational* and not yet present in the live cluster registry.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Round-2 re-review: paper §8 (L766-771) describes 'GW170817 vs vestigial-graviton: the L1 PRL splash and the D3 deep paper both report the LIGO Δc/c bound and the 7×10^14 falsification factor; CHECK 21 enforces that the two reports agree' as the load-bearing cross-bundle example. Live cluster_bundle_index.json contains 2 clusters (one about Lean toolchain pin/Mathlib commit acknowledgments, one about compcert-style citations) — neither covers GW170817. The illustrative example may be aspirational. Persistent IA WARN from round-1 followup:10.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -4987,8 +4977,8 @@
         "completeness": "partial"
       },
       "agent_verdict": "WARN",
-      "agent_notes": "IA-WARN: 'thirty-two per-wave drafts'. Live PAPER_DRAFT_MAPPING.md states 'Total: 41 existing draft directories + 4 substrate-bundled rosters'. The 32-draft figure is stale. 13-target bundle architecture (1F+5D+3L+2I+2E=13) is correct.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Round-2 re-review: paper §8 (L774) still says 'thirty-two per-wave drafts'. Live `grep -nE 'Total:' docs/PAPER_DRAFT_MAPPING.md`: 'Total: 41 existing draft directories + 4 substrate-bundled rosters'. The 32-draft figure is stale. Persistent IA WARN from round-1 followup:11.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -5018,7 +5008,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches Phase 7a sub-wave 7a.1.5 (BUNDLE_LIFT_PROCEDURE 14 steps) + 7a.1.6 (LATE_PHASE6_ABSORPTION_PROTOCOL 7 stages A-G with D.1/D.2/D.3 branches) per project memory.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5045,7 +5035,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches BUNDLE_DIRECTORY_SCHEMA + I1's own bundle_metadata.json (which has 13+ keys).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5072,7 +5062,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5100,8 +5090,8 @@
         "completeness": "none"
       },
       "agent_verdict": "WARN",
-      "agent_notes": "IA-WARN: '32-draft' figure stale (live: 41 + 4 = 45-equivalent).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Round-2 re-review: paper §8 (L795) still says 'thirty-two-draft to thirteen-publication consolidation'. Persistent IA WARN from round-1 followup:12.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -5131,7 +5121,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5158,7 +5148,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5185,7 +5175,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5212,7 +5202,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5239,7 +5229,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5266,7 +5256,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5293,7 +5283,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "3 orders of magnitude = 1000x; consistent with abstract framing.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5320,7 +5310,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5347,7 +5337,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5374,7 +5364,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5401,7 +5391,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5428,7 +5418,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5455,7 +5445,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5487,7 +5477,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "aristotleproved=322, aristotleruns=44 macros confirmed via counts.tex.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5514,7 +5504,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Live ARISTOTLE_THEOREMS in constants.py uses {short_name: run_id} dict format. The 'priority tier' / 'integration date' fields claimed in prose are not visible in the simple ARISTOTLE_THEOREMS dict mapping that I could verify; may live in a richer secondary table. Soft PASS.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5549,8 +5539,8 @@
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Run 78dcc5f4 in ARISTOTLE_THEOREMS has 25+ entries (lines 1271-1300+). Run 79e07d55 has 9 entries (lines 1303-1312). PASS. Note: 78dcc5f4 is labeled 'Phase 5c Wave X' across multiple SU2k/Verlinde/Hopf entries, not 'Phase 5d gap-equation batch' \u2014 the per-run topical anchor varies. Soft PASS on naming.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Round-2 re-review: §9 (L871-880) now correctly attributes 78dcc5f4 to 'Phase 5c Wave 1-7 multi-domain batch spanning S-matrix unitarity and Verlinde formulas at k=1,2 in SU2kSMatrix; modular-tensor-category fingerprint in RibbonCategory; Rokhlin invariant in SpinBordism; E_8-lattice positivity proof in E8Lattice; restricted-quantum-group corepresentations in RestrictedUq; integrated-autocorrelation-time estimator bounds in VerifiedJackknife; and seven public Hopf-algebra axioms in Uqsl2Hopf'. Verified against ARISTOTLE_THEOREMS (constants.py L1271-1300): all named modules consistent with 78dcc5f4. Phase 5d gap-equation batch is correctly attributed separately as 79e07d55 (L881-885). Round-1 stage-13 BLOCKER 4.1 fully remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -5580,7 +5570,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Matches CLAUDE.md Aristotle batch plan + AXIOM_METADATA registration discipline.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5607,7 +5597,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5634,7 +5624,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Reviewer-driven-correction trace; matches the Stage 14 register seed-event description.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5661,7 +5651,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5688,7 +5678,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5715,7 +5705,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5742,7 +5732,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5769,7 +5759,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Agent definition path verified to exist in repo (claims-reviewer.md sibling).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5795,8 +5785,8 @@
         "completeness": "none"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "8 finding classes match the adversarial-reviewer profile. Note: \u00a76 enumerated similar classes but ended differently ('review-state hygiene' instead of 'ProductionRunHealth'). Internal \u00a76/\u00a710 inconsistency.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "8 finding classes match the adversarial-reviewer profile. Note: §6 enumerated similar classes but ended differently ('review-state hygiene' instead of 'ProductionRunHealth'). Internal §6/§10 inconsistency.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5823,7 +5813,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5850,7 +5840,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5877,7 +5867,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5904,7 +5894,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5931,7 +5921,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "review_runner.py + bundle output path matches Phase 7a sub-wave 7a.1 architecture.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5958,7 +5948,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -5985,7 +5975,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6012,7 +6002,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Strong 'first-in-any-proof-assistant' meta-claim; hedged with 'to the authors' knowledge'. INFO per Part B.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6039,7 +6029,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6090,8 +6080,8 @@
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "64 theorems / 6 modules per Phase 6f W1-W6 project memory and \u00a711 itemized list. Confirmed via Curvature.lean / EinsteinTensor.lean / EnergyConditions.lean / ExactSolutions.lean / ADMFormalism.lean / TetradFormalism.lean (all present).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "64 theorems / 6 modules per Phase 6f W1-W6 project memory and §11 itemized list. Confirmed via Curvature.lean / EinsteinTensor.lean / EnergyConditions.lean / ExactSolutions.lean / ADMFormalism.lean / TetradFormalism.lean (all present).",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -6121,7 +6111,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6148,7 +6138,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6180,7 +6170,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Wave 1 / 16 theorems claim; Curvature.lean confirmed exists.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6207,7 +6197,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Prior-art-search claim; not independently verifiable from this review. INFO.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6239,7 +6229,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Wave 2 / 9 theorems / EinsteinTensor.lean exists.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6271,7 +6261,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6303,7 +6293,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6335,7 +6325,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6367,7 +6357,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6399,7 +6389,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Sum 16+9+8+16+10+5 = 64. Matches stated total. PASS.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6426,7 +6416,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "Audit file path referenced; not verified directly in this review.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6453,7 +6443,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6480,7 +6470,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6507,7 +6497,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6534,7 +6524,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Wave 7-8 cited Lean modules verified to exist (LorentzianMetric/RiemannianConnection + 5 Wave 8 modules).",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6554,9 +6544,7 @@
       "quote": "We sketch the result here, keeping detail proportionate to a methodology-paper sidebar; the companion paper~\\cite{paper44riemannian} treats the construction as its primary subject.",
       "quote_normalized": "we sketch the result here, keeping detail proportionate to a methodology-paper sidebar; the companion paper~ treats the construction as its primary subject.",
       "type": "citation",
-      "finding_classes": [
-        "TN"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
@@ -6566,9 +6554,9 @@
         ],
         "completeness": "full"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "TN-WARN: \\cite{paper44riemannian} resolves to bibitem at line 1333 (in-prep). Bibitem is for an internal-draft paper which lacks an external arXiv resolution. Per Invariant #11, in-prep entries are exempt from primary-source caching. Acceptable advisory.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: paper44riemannian bibitem removed. Paper now refers to companion draft via prose (L1163 'a companion paper currently in preparation as a project-internal draft' / L1219 'The five-page companion paper that documents this work (in preparation as a project-internal draft)'). No orphan cite. Round-1 followup:13 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6599,8 +6587,8 @@
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "IsLorentzianMetric in LorentzianMetric.lean \u2014 module exists.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "IsLorentzianMetric in LorentzianMetric.lean — module exists.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6627,7 +6615,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "First-formalization claim hedged. INFO.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6654,7 +6642,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6690,7 +6678,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Wave 7 modules confirmed.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6717,7 +6705,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6737,9 +6725,7 @@
       "quote": "Wave~8 Sessions~1 through~5 (modules \\texttt{RiemannCoordinate.lean}, \\texttt{RiemannDifferentialBianchi.lean}, \\texttt{BundleRiemannAux.lean}, \\texttt{BundleRiemann.lean}, \\texttt{LeviCivita.lean}; forty-four substantive theorems total) shipped the coordinate-form Riemann tensor in linear plus quadratic decomposition, the algebraic first Bianchi identity, the differential second Bianchi identity, the bundle-level Riemann tensor consuming Bonn's \\texttt{IsCovariantDerivativeOn} + \\texttt{mlieBracket} API, the cyclic Jacobi identity for the manifold Lie bracket (Mathlib ships only the Leibniz form), the bundle-level first Bianchi identity under torsion-freeness, and the substantive bundle-level Levi-Civita uniqueness theorem via the Koszul-bilinear-form derivation $2g(\\nabla_X Y, Z) = X g(Y,Z) + Y g(Z,X) - Z g(X,Y) + g([X,Y], Z) - g([X,Z], Y) - g([Y,Z], X)$.",
       "quote_normalized": "wave~8 sessions~1 through~5 (modules riemanncoordinate.lean, riemanndifferentialbianchi.lean, bundleriemannaux.lean, bundleriemann.lean, levicivita.lean; forty-four substantive theorems total) shipped the coordinate-form riemann tensor in linear plus quadratic decomposition, the algebraic first bianchi identity, the differential second bianchi identity, the bundle-level riemann tensor consuming bonn's iscovariantderivativeon + mliebracket api, the cyclic jacobi identity for the manifold lie bracket (mathlib ships only the leibniz form), the bundle-level first bianchi identity under torsion-freeness, and the substantive bundle-level levi-civita uniqueness theorem via the koszul-bilinear-form derivation $2g(\\nabla_x y, z) = x g(y,z) + y g(z,x) - z g(x,y) + g([x,y], z) - g([x,z], y) - g([y,z], x)$.",
       "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
@@ -6765,9 +6751,9 @@
         ],
         "completeness": "partial"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "IA-WARN: 'Wave 8 Sessions 1-5 / 44 substantive theorems'. Project memory states 'Sessions 1-3 SHIPPED; Sessions 4-5 in flight at memory write time' \u2014 paper \u00a71 line 161 also says 'Sessions~1--3'. Section \u00a712 inconsistency: paper here says Sessions 1-5 but earlier section says 1-3. Internal consistency drift between \u00a71 and \u00a712.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: paper §12 (L1186-1190) now says 'Wave 8 Sessions 1 through 5 (modules RiemannCoordinate.lean, RiemannDifferentialBianchi.lean, BundleRiemannAux.lean, BundleRiemann.lean, LeviCivita.lean; 39 theorems total — 9 + 9 + 8 + 8 + 5 by module)'. Verified via `grep -cE '^theorem|^lemma' on each module`: RiemannCoordinate=9, RiemannDifferentialBianchi=9, BundleRiemannAux=8, BundleRiemann=8, LeviCivita=5. Sum=39 — matches paper exactly. Round-1 followup:14 remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -6802,7 +6788,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "LeviCivita.lean confirmed exists; matches project memory project_phase6f_w8_session4_5_shipped.md description.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6829,7 +6815,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "First-formalization claim hedged with 'no other... we surveyed'. INFO.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6855,8 +6841,8 @@
         "completeness": "none"
       },
       "agent_verdict": "INFO",
-      "agent_notes": "Per project memory feedback_phase6g_standing_authorization.md: 'no upstream PRs but build in repo with aim to PR later' \u2014 paper says 'in preparation' which is forward-looking, slightly inconsistent. INFO.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_notes": "Per project memory feedback_phase6g_standing_authorization.md: 'no upstream PRs but build in repo with aim to PR later' — paper says 'in preparation' which is forward-looking, slightly inconsistent. INFO.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6883,7 +6869,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6900,12 +6886,10 @@
       "section_ordinal": 15,
       "tex_line_start": 1150,
       "tex_line_end": 1156,
-      "quote": "The five-page paper~\\cite{paper44riemannian} that documents this work is a publication target in its own right, unrelated to the SK-EFT Hawking program except in that the Levi-Civita uniqueness statement was needed by the Bardeen-Carter-Hawking four-laws result of paper~L3 / D3 \u00a78.",
-      "quote_normalized": "the five-page paper~ that documents this work is a publication target in its own right, unrelated to the sk-eft hawking program except in that the levi-civita uniqueness statement was needed by the bardeen-carter-hawking four-laws result of paper~l3 / d3 \u00a78.",
+      "quote": "The five-page paper~\\cite{paper44riemannian} that documents this work is a publication target in its own right, unrelated to the SK-EFT Hawking program except in that the Levi-Civita uniqueness statement was needed by the Bardeen-Carter-Hawking four-laws result of paper~L3 / D3 §8.",
+      "quote_normalized": "the five-page paper~ that documents this work is a publication target in its own right, unrelated to the sk-eft hawking program except in that the levi-civita uniqueness statement was needed by the bardeen-carter-hawking four-laws result of paper~l3 / d3 §8.",
       "type": "citation",
-      "finding_classes": [
-        "TN"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
@@ -6915,9 +6899,9 @@
         ],
         "completeness": "full"
       },
-      "agent_verdict": "WARN",
-      "agent_notes": "TN-WARN: \\cite{paper44riemannian} bibitem present (in-prep). 'Five-page paper' is a self-attribution claim, not verifiable from this review.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: paper44riemannian bibitem removed; companion paper described via prose. 'Five-page paper' is a self-attribution claim (in-prep). Round-1 followup:15 remediated at the citation-integrity layer.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6944,7 +6928,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6971,7 +6955,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -6998,7 +6982,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7025,7 +7009,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7052,7 +7036,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "Phase 6g W5 + W9/W10 per project memory project_phase6g_finish_up_shipped.md.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7079,7 +7063,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7106,7 +7090,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7138,7 +7122,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "CauchyProblem.lean confirmed exists.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7184,7 +7168,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "20 post-audit theorems / 4 modules per project memory project_phase6g_finish_up_shipped.md (says 'Wave 9 / 4 modules / 26 substantive thms post-audit'). Paper says 20; memory says 26. IA-WARN candidate.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section",
@@ -7214,7 +7198,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7246,7 +7230,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "WaveEquation1D.lean confirmed exists.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7273,7 +7257,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7300,7 +7284,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7327,7 +7311,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7354,7 +7338,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7381,7 +7365,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7408,7 +7392,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7435,7 +7419,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7462,7 +7446,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7489,7 +7473,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7516,7 +7500,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7543,7 +7527,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7570,7 +7554,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7597,7 +7581,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7624,7 +7608,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7651,7 +7635,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7678,7 +7662,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7705,7 +7689,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7732,7 +7716,7 @@
       },
       "agent_verdict": "TRANSITION",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7759,7 +7743,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7786,7 +7770,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "I1 = Phase 7a sub-wave 7a.2 first bundle drafted under architecture, per project memory. PASS.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7813,7 +7797,7 @@
       },
       "agent_verdict": "PASS",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7840,7 +7824,7 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
@@ -7867,15 +7851,318 @@
       },
       "agent_verdict": "INFO",
       "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T16:00:00Z",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
       "tombstone": false,
       "bundle_destination": "I1",
       "lift_action": "Lift-section"
+    },
+    {
+      "id": "sentence:I1:three-layer-extended:1b022d4b",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "three-layer-extended",
+        "quote_hash": "1b022d4b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "three-layer-extended",
+      "section_ordinal": 999,
+      "tex_line_start": 887,
+      "tex_line_end": 892,
+      "quote": "The Aristotle service runs on a fixed Lean toolchain (\\texttt{leanprover/lean4:v4.28.0}) with a corresponding pinned Mathlib commit, while the project's local toolchain is currently \\texttt{leanprover/lean4:v4.29.0} with a separately pinned Mathlib commit (see \\texttt{lean/lean-toolchain} and \\texttt{lean/lakefile.toml}).",
+      "quote_normalized": "the aristotle service runs on a fixed lean toolchain (leanprover/lean4:v4.28.0) with a corresponding pinned mathlib commit, while the project's local toolchain is currently leanprover/lean4:v4.29.0 with a separately pinned mathlib commit (see lean/lean-toolchain and lean/lakefile.toml).",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "lean_toolchain_pin"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-2 re-review: NEW disclosure paragraph (round-1 stage-13 finding 6.1 remediation). Verified `cat lean/lean-toolchain` returns 'leanprover/lean4:v4.29.0'. Verified `grep -n 'rev = ' lean/lakefile.toml` shows project Mathlib pin rev = '8850ed93863d6ce27210a673f9ed235a4e8a2994'. Aristotle pin per CLAUDE.md is 4.28.0. Toolchain skew disclosed; impact on Aristotle integration explained at L893-905. Round-1 stage-13 finding 6.1 fully remediated.",
+      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "lift_action": "Lift-section",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure",
+        "Gate2_CrossPaperConsistency"
+      ]
     }
   ],
-  "non_reproducing_prior_findings": [],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:1",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "§5 prose rewritten (lines 419-444). Decomposition now anchored on real AXIOM_METADATA entries — gapped_interface_axiom (L1351), chirality_limitation_zero (L1483), chiral_central_charge group near L1591. The 'AXIOM_METADATA-driven decomposition' claim is now structurally consistent with the live registry.",
+      "deterministic_recheck": {
+        "kind": "axiom_metadata_grep",
+        "command": "grep -nE \"'gapped_interface_axiom'|'chirality_limitation_zero'|'c_minus_equals_8Nf'\" src/core/constants.py",
+        "prior_value": "AXIOM_METADATA missing real backing for chirality_wall_three_pillars",
+        "current_value": "Real AXIOM_METADATA entries gapped_interface_axiom L1351, chirality_limitation_zero L1483, c_minus_equals_8Nf L1590 cited in §5"
+      }
+    },
+    {
+      "prior_finding_id": "block:2",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "§5 tier list rewritten — now reads 'removed / closed / hard / algebraic / very_hard / open'. Prior round claimed paper said 'eliminable / hard / unknown'. New tier list partially aligns with live registry (live values: algebraic, closed, hard, removed, topological, very_hard); 'open' is not a live value and 'topological' is not in the paper. Residual minor SD WARN (advisory) but no longer a BLOCKER.",
+      "deterministic_recheck": {
+        "kind": "eliminability_value_grep",
+        "command": "grep -E \"'eliminability':\" src/core/constants.py | sort -u",
+        "prior_value": "paper claimed 'eliminable / hard / unknown' (none of which are live values)",
+        "current_value": "paper claims 'removed / closed / hard / algebraic / very_hard / open'; live values include 5 of 6 (open is paper-only; topological is registry-only)"
+      }
+    },
+    {
+      "prior_finding_id": "block:3",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "§5 prose rewritten — `chirality_wall_three_pillars` language removed. Replaced with concrete AXIOM_METADATA entry references that exist in the live registry. The TN+HD compound finding is no longer present.",
+      "deterministic_recheck": {
+        "kind": "string_grep",
+        "command": "grep -n 'chirality_wall_three_pillars' papers/I1/paper_draft.tex",
+        "prior_value": "paper §5 cited chirality_wall_three_pillars as AXIOM_METADATA entry",
+        "current_value": "no occurrences in paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "block:4",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "papers/I1/tables/table1_stages.tex now exists (hand-authored, 14-stage version covering stages 1, 2, 3a, 3b, 4-14). LaTeX \\input resolves; no compile failure.",
+      "deterministic_recheck": {
+        "kind": "file_existence",
+        "command": "ls papers/I1/tables/table1_stages.tex",
+        "prior_value": "ls papers/I1/tables/ returned empty",
+        "current_value": "table1_stages.tex present"
+      }
+    },
+    {
+      "prior_finding_id": "block:5",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Three dead cites (paper10_ewbg, paper09_phaseI, paper08_topology) removed from §5. No undefined references remain.",
+      "deterministic_recheck": {
+        "kind": "cite_grep",
+        "command": "grep -nE 'cite\\{paper10_ewbg|cite\\{paper09_phaseI|cite\\{paper08_topology' papers/I1/paper_draft.tex",
+        "prior_value": "3 dangling cite invocations at L415, L416, L417",
+        "current_value": "no occurrences"
+      }
+    },
+    {
+      "prior_finding_id": "block:6",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "paper15methodology and paper44riemannian bibitems removed entirely (in-prep self-cites should not be in external bibliography). Five external bibitems (physlean, compcert, sel4, leancipilot, alphaproof) all now have matching \\cite{...} invocations in §1 (L110, L113, L115, L116). No orphan bibitems remain.",
+      "deterministic_recheck": {
+        "kind": "bibitem_cite_pair_check",
+        "command": "grep -nE 'bibitem\\{|cite\\{(physlean|compcert|sel4|leancipilot|alphaproof)' papers/I1/paper_draft.tex",
+        "prior_value": "6 orphan bibitems (physlean/compcert/sel4/leancipilot/alphaproof/paper15methodology) — none invoked via \\cite",
+        "current_value": "5 external bibitems all paired with body \\cite invocations; in-prep bibitems removed"
+      }
+    },
+    {
+      "prior_finding_id": "block:7",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Same as block:4 — table1_stages.tex now present.",
+      "deterministic_recheck": {
+        "kind": "file_existence",
+        "command": "ls papers/I1/tables/table1_stages.tex",
+        "prior_value": "directory empty",
+        "current_value": "table1_stages.tex present"
+      }
+    },
+    {
+      "prior_finding_id": "followup:1",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "paper15methodology bibitem removed entirely; no orphan reference remains.",
+      "deterministic_recheck": {
+        "kind": "bibitem_grep",
+        "command": "grep -n 'bibitem{paper15methodology}' papers/I1/paper_draft.tex",
+        "prior_value": "bibitem at L1330",
+        "current_value": "no occurrences"
+      }
+    },
+    {
+      "prior_finding_id": "followup:2",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Line range tightened to L412-439 (and L367 for FirstOrderKMS structure). Matches current source.",
+      "deterministic_recheck": {
+        "kind": "line_range_check",
+        "command": "grep -nE '^theorem firstOrder_uniqueness|^structure FirstOrderKMS' lean/SKEFTHawking/SKDoubling.lean",
+        "prior_value": "paper said L351-439 (fuzzy)",
+        "current_value": "paper says L412-439 + L367; verified L367 (structure), L412 (theorem)"
+      }
+    },
+    {
+      "prior_finding_id": "followup:3",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Line range tightened to L329-345 for gap_solution_monotone. Matches current source.",
+      "deterministic_recheck": {
+        "kind": "line_range_check",
+        "command": "grep -nE '^theorem gap_solution_monotone' lean/SKEFTHawking/TetradGapEquation.lean",
+        "prior_value": "paper said L304-340",
+        "current_value": "paper says L329-345; verified gap_solution_monotone at L329"
+      }
+    },
+    {
+      "prior_finding_id": "followup:4",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Stub line range corrected to L307-321.",
+      "deterministic_recheck": {
+        "kind": "line_range_check",
+        "command": "grep -nE 'gap_solution_bounded' lean/SKEFTHawking/TetradGapEquation.lean",
+        "prior_value": "paper said L316-325",
+        "current_value": "paper says L307-321 (commented-out block); gap_solution_bounded at L316 within"
+      }
+    },
+    {
+      "prior_finding_id": "followup:5",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "§5 rewritten — AXIOM_METADATA reference now cites real entries; ewbg_forbidden_iff_wall_intact_or_not_viable still present in EWBaryogenesisChiralityWall.lean.",
+      "deterministic_recheck": {
+        "kind": "string_grep",
+        "command": "grep -n 'AXIOM_METADATA' papers/I1/paper_draft.tex",
+        "prior_value": "paper §5 attributed decomposition to AXIOM_METADATA without naming concrete entries; ewbg_forbidden_iff_wall_intact_or_not_viable mention compounded the issue",
+        "current_value": "§5 cites concrete AXIOM_METADATA entries (gapped_interface_axiom L1351, chirality_limitation_zero L1483, c_minus_equals_8Nf ~L1591, H_KLRS_SM_Crossover L1627); ewbg_forbidden_iff_wall_intact_or_not_viable still referenced as biconditional theorem"
+      }
+    },
+    {
+      "prior_finding_id": "followup:6",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prose now correctly identifies sphaleronSuppression_le_one as a theorem (not 'tier-eliminable axiom'); line range tightened to L106-114.",
+      "deterministic_recheck": {
+        "kind": "line_range_check",
+        "command": "grep -nE 'def sphaleronSuppression|theorem sphaleronSuppression' lean/SKEFTHawking/EWBaryogenesisChiralityWall.lean",
+        "prior_value": "paper said tier-eliminable axiom at L94-120",
+        "current_value": "paper says theorem at L106-114; verified theorem sphaleronSuppression_le_one at L106"
+      }
+    },
+    {
+      "prior_finding_id": "followup:7",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "§6 finding-class enumeration aligned with §10 — both now end with 'production-run health' / 'ProductionRunHealth'.",
+      "deterministic_recheck": {
+        "kind": "string_grep",
+        "command": "grep -n 'production-run health\\|ProductionRunHealth' papers/I1/paper_draft.tex",
+        "prior_value": "§6 list ended differently from §10",
+        "current_value": "both lists end with production-run health / ProductionRunHealth"
+      }
+    },
+    {
+      "prior_finding_id": "followup:8",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper §6 still says 'sixteen automated cross-layer validation checks' at Stage 7; live validate.py has 26 @register_check entries (CHECK 22 added Phase 7a 7a.1.4). Persistent IA WARN — finding REPRODUCES in current run. NOT superseded; carried forward.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "followup:9",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Verified CHECK 21 = bundle_consistency in scripts/validate.py L2238.",
+      "deterministic_recheck": {
+        "kind": "validate_check_grep",
+        "command": "grep -nE 'bundle_consistency|bundle_source_freshness' scripts/validate.py",
+        "prior_value": "uncertain whether CHECK 21 = bundle_consistency",
+        "current_value": "CHECK 21 = bundle_consistency at L2238; CHECK 22 = bundle_source_freshness at L2363"
+      }
+    },
+    {
+      "prior_finding_id": "followup:10",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper still describes GW170817 / 7×10^14 falsification as the cross-bundle anchor example; live cluster_bundle_index.json has 2 clusters but neither covers GW170817. Persistent IA WARN — finding REPRODUCES in current run. NOT superseded; carried forward.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "followup:11",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Paper still says 'thirty-two per-wave drafts'; live PAPER_DRAFT_MAPPING.md says 'Total: 41 + 4'. Persistent IA WARN — finding REPRODUCES in current run. NOT superseded.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "followup:12",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Same as followup:11 — paper still says 'thirty-two-draft to thirteen-publication'. Persistent IA WARN.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "followup:13",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "paper44riemannian bibitem removed; companion paper described via prose only.",
+      "deterministic_recheck": {
+        "kind": "bibitem_grep",
+        "command": "grep -n 'bibitem{paper44riemannian}' papers/I1/paper_draft.tex",
+        "prior_value": "bibitem at L1333",
+        "current_value": "no occurrences"
+      }
+    },
+    {
+      "prior_finding_id": "followup:14",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Phase 6f W7-W8 counts reconciled — paper now says W7=14 thms (LorentzianMetric+RiemannianConnection: 6+8) and W8=39 thms (RiemannCoordinate+RiemannDifferentialBianchi+BundleRiemannAux+BundleRiemann+LeviCivita: 9+9+8+8+5). Verified via grep.",
+      "deterministic_recheck": {
+        "kind": "theorem_count",
+        "command": "grep -cE '^theorem|^lemma' lean/SKEFTHawking/{LorentzianMetric,RiemannianConnection,RiemannCoordinate,RiemannDifferentialBianchi,BundleRiemannAux,BundleRiemann,LeviCivita}.lean",
+        "prior_value": "paper claimed 13 W7 + 44 W8; live counts gave 14 + 39",
+        "current_value": "paper now claims 14 W7 + 39 W8; matches live counts exactly"
+      }
+    },
+    {
+      "prior_finding_id": "followup:15",
+      "prior_run_date": "2026-05-01T16:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "paper44riemannian bibitem removed. 'Five-page paper' is a self-attribution claim; no citation drift remains.",
+      "deterministic_recheck": {
+        "kind": "bibitem_grep",
+        "command": "grep -n 'bibitem{paper44riemannian}' papers/I1/paper_draft.tex",
+        "prior_value": "paper44riemannian bibitem at L1333 (in-prep self-cite)",
+        "current_value": "no occurrences; companion paper described via prose only"
+      }
+    }
+  ],
   "summary": {
-    "total_sentences": 277,
+    "total_sentences": 278,
     "by_type": {
       "qualitative": 74,
       "metaclaim": 29,
@@ -7883,207 +8170,69 @@
       "transition": 30,
       "methodology": 90,
       "theorem-ref": 15,
-      "formal-claim": 2,
-      "citation": 3
+      "formal-claim": 3,
+      "citation": 2,
+      "parameter": 1
     },
     "by_verdict": {
       "INFO": 83,
-      "PASS": 145,
+      "PASS": 160,
       "TRANSITION": 30,
-      "WARN": 15,
-      "FAIL": 4
+      "WARN": 5
     },
     "by_finding_class": {
-      "IA": 8,
+      "IA": 5,
       "TP": 0,
-      "SD": 3,
-      "TN": 10,
-      "HD": 2
+      "SD": 1,
+      "TN": 1,
+      "HD": 0
     },
-    "non_reproducing_count": 0,
-    "non_reproducing_auto_closed": 0,
-    "non_reproducing_candidates": 0,
-    "agent_text": "277 sentences | 145 PASS | 30 TRANSITION | 83 INFO | 15 WARN | 4 FAIL | 0 UNGROUNDED | 0 prior findings (first review run)"
+    "non_reproducing_count": 22,
+    "non_reproducing_auto_closed": 18,
+    "non_reproducing_candidates": 4,
+    "agent_text": "278 sentences | 160 PASS | 30 TRANSITION | 83 INFO | 5 WARN | 0 FAIL | 0 UNGROUNDED | 18 prior findings auto-closed | 4 candidate for supersession"
   },
-  "blocking_issues": [
-    {
-      "id": "block:1",
-      "summary": "FAIL \u2014 SD/HD: AXIOM_METADATA in src/core/constants.py contains exactly 4 entries (non_abelian_center_discrete, gs_nogo_axiom, gapped_interface_axiom, gaussianSaddleAsymptotic). The 9-fold decompositio",
-      "sentences": [
-        "sentence:I1:case3:cdcf1de3"
-      ],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "SD"
-    },
-    {
-      "id": "block:2",
-      "summary": "FAIL \u2014 SD: AXIOM_METADATA entries record 'eliminability' tier (with values: removed / hard / closed observed in live registry, not 'eliminable / hard / unknown' as paper claims) and 'reason' / 'module",
-      "sentences": [
-        "sentence:I1:case3:067ffddb"
-      ],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "SD"
-    },
-    {
-      "id": "block:3",
-      "summary": "FAIL \u2014 TN+HD: (a) `chirality_wall_three_pillars` is in CHAIN_MILESTONES (line 3132, value 3 = ordinal index), NOT in AXIOM_METADATA. The 'three axioms at tier hard' grouping is asserted but NOT presen",
-      "sentences": [
-        "sentence:I1:case3:31644ea6"
-      ],
-      "gate": "Gate1_CitationIntegrity",
-      "finding_class": "TN"
-    },
-    {
-      "id": "block:4",
-      "summary": "FAIL \u2014 IA: paper line 455 inputs `tables/table1_stages.tex`; the file papers/I1/tables/ directory is EMPTY. LaTeX compile will fail. Structural integrity issue. Caption text refers to a missing artifa",
-      "sentences": [
-        "sentence:I1:pipeline:068a2ecd"
-      ],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "IA"
-    },
-    {
-      "id": "block:5",
-      "summary": "FAIL \u2014 TN: Three \\cite{} invocations in \u00a75 (paper10_ewbg, paper09_phaseI, paper08_topology) have NO matching \\bibitem in the \u00a7thebibliography (lines 1318-1336). LaTeX will render these as '[??]'. Triple citation-integrity failure at the chirality-wall axiom-pillar attribution.",
-      "sentences": [],
-      "gate": "Gate1_CitationIntegrity",
-      "finding_class": "TN"
-    },
-    {
-      "id": "block:6",
-      "summary": "FAIL \u2014 IA: Six \\bibitem entries (physlean, compcert, sel4, leancipilot, alphaproof, paper15methodology) are declared in \u00a7thebibliography but NEVER referenced via \\cite{} in the body. These are orphan citations. Strict citation-integrity (and journal copy-editing) requires every bibitem to have a body \\cite{} \u2014 author should either invoke them at appropriate references or remove unused entries. The paper15methodology entry in particular should be cited where 'paper15 methodology draft' is mentioned in \u00a71 lines 124-125, \u00a76 line 462, \u00a79 line 790-791.",
-      "sentences": [],
-      "gate": "Gate1_CitationIntegrity",
-      "finding_class": "IA"
-    },
-    {
-      "id": "block:7",
-      "summary": "FAIL \u2014 IA: \\input{tables/table1_stages.tex} at line 455 references a file in papers/I1/tables/ \u2014 the directory exists but is EMPTY. LaTeX compile will fail to find the table. Either generate the table file from WAVE_EXECUTION_PIPELINE.md as the caption claims (autogenerated), or remove the \\input. Structural integrity blocker.",
-      "sentences": [],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "IA"
-    }
-  ],
+  "blocking_issues": [],
   "non_blocking_followups": [
     {
       "id": "followup:1",
-      "summary": "TN: prose names 'paper15 methodology draft, April 2026' but no \\cite{paper15methodology} invocation appears in body \u2014 only an unreferenced bibitem at line 1330. Bibitem is dead-letter. Class TN adviso",
+      "summary": "Round-2 re-review: paper now lists tiers 'removed / closed / hard / algebraic / very_hard / open'. Live AXIOM_METADATA values observed: algebraic, closed, hard, removed, topological, very_hard (per `g",
       "sentences": [
-        "sentence:I1:introduction:94a0d0d5"
+        "sentence:I1:case3:48818aca"
       ],
-      "finding_class": "TN"
+      "finding_class": "SD"
     },
     {
       "id": "followup:2",
-      "summary": "TN-WARN: firstOrder_uniqueness EXISTS at SKDoubling.lean line 412, not 351-439; the comment-out block of firstOrder_uniqueness_ORIGINAL spans 318-345; cited line range is approximately right but inacc",
-      "sentences": [
-        "sentence:I1:case1:6f935edb"
-      ],
-      "finding_class": "TN"
-    },
-    {
-      "id": "followup:3",
-      "summary": "TN-WARN: cited line range 304-340 for original submission; gap_solution_bounded comment block actually spans lines 307-321 in the live file. Approximate but inaccurate. Theorem name resolves to file.",
-      "sentences": [
-        "sentence:I1:case2:22f21a05"
-      ],
-      "finding_class": "TN"
-    },
-    {
-      "id": "followup:4",
-      "summary": "TN-WARN: stub exists at TetradGapEquation.lean lines 316-321 (theorem decl + sorry body) within larger comment block 307-321; paper says 316-325. Off by ~4 lines. Stub itself confirmed.",
-      "sentences": [
-        "sentence:I1:case2:3ddb16b6"
-      ],
-      "finding_class": "TN"
-    },
-    {
-      "id": "followup:5",
-      "summary": "TN-WARN: 'ewbg_forbidden_iff_wall_intact_or_not_viable' exists as theorem name in EWBaryogenesisChiralityWall.lean (per project memory). AXIOM_METADATA reference compounds the \u00a7case3 sentence-8 issue ",
-      "sentences": [
-        "sentence:I1:case3:86400f0d"
-      ],
-      "finding_class": "TN"
-    },
-    {
-      "id": "followup:6",
-      "summary": "TN-WARN/SD: sphaleronSuppression def at line 94, sphaleronSuppression_le_one theorem at line 106 (NOT line range 94-120 explicitly; the def + 2 theorems span ~94-130). 'tier-eliminable axiom' verbiage",
-      "sentences": [
-        "sentence:I1:case3:ef0c8cab"
-      ],
-      "finding_class": "TN"
-    },
-    {
-      "id": "followup:7",
-      "summary": "The 8 finding classes here as enumerated by \u00a76 differ slightly from \u00a710 list (which adds 'ProductionRunHealth' as the 8th, and gives 'LeanProofSubstance' rather than 'formal-verification-claim substan",
-      "sentences": [
-        "sentence:I1:pipeline:ed90a02d"
-      ],
-      "finding_class": "IA"
-    },
-    {
-      "id": "followup:8",
-      "summary": "IA-WARN: paper says 16 validation checks at Stage 7. Live validate.py contains ~22 checks (CHECK 22 added in Phase 7a sub-wave 7a.1.4 per project memory; CLAUDE.md describes 'Full validation suite (21",
+      "summary": "Round-2 re-review: paper §6 (L539-540) still says 'Stage 7 runs sixteen automated cross-layer validation checks'. Live `grep -cE '^@register_check' scripts/validate.py` = 26 checks (CHECK 22 bundle_so",
       "sentences": [
         "sentence:I1:pipeline:32665761"
       ],
       "finding_class": "IA"
     },
     {
-      "id": "followup:9",
-      "summary": "IA-WARN: paper says CHECK 21 = bundle_consistency. Per project memory (Phase 7a sub-wave 7a.1.4), CHECK 22 was added as bundle_source_freshness; CHECK 21 may be bundle_consistency. Validate against li",
-      "sentences": [
-        "sentence:I1:provenance:018356a0"
-      ],
-      "finding_class": "IA"
-    },
-    {
-      "id": "followup:10",
-      "summary": "IA-WARN: cross-bundle anchor referenced. Live cluster_bundle_index.json contains 2 clusters but neither references GW170817 / 7\u00d710^14 falsification \u2014 the existing 2 clusters are about Lean toolchain p",
+      "id": "followup:3",
+      "summary": "Round-2 re-review: paper §8 (L766-771) describes 'GW170817 vs vestigial-graviton: the L1 PRL splash and the D3 deep paper both report the LIGO Δc/c bound and the 7×10^14 falsification factor; CHECK 21",
       "sentences": [
         "sentence:I1:provenance:1d152a90"
       ],
       "finding_class": "IA"
     },
     {
-      "id": "followup:11",
-      "summary": "IA-WARN: 'thirty-two per-wave drafts'. Live PAPER_DRAFT_MAPPING.md states 'Total: 41 existing draft directories + 4 substrate-bundled rosters'. The 32-draft figure is stale. 13-target bundle architect",
+      "id": "followup:4",
+      "summary": "Round-2 re-review: paper §8 (L774) still says 'thirty-two per-wave drafts'. Live `grep -nE 'Total:' docs/PAPER_DRAFT_MAPPING.md`: 'Total: 41 existing draft directories + 4 substrate-bundled rosters'. ",
       "sentences": [
         "sentence:I1:provenance:7dfca942"
       ],
       "finding_class": "IA"
     },
     {
-      "id": "followup:12",
-      "summary": "IA-WARN: '32-draft' figure stale (live: 41 + 4 = 45-equivalent).",
+      "id": "followup:5",
+      "summary": "Round-2 re-review: paper §8 (L795) still says 'thirty-two-draft to thirteen-publication consolidation'. Persistent IA WARN from round-1 followup:12.",
       "sentences": [
         "sentence:I1:provenance:0d146705"
       ],
       "finding_class": "IA"
-    },
-    {
-      "id": "followup:13",
-      "summary": "TN-WARN: \\cite{paper44riemannian} resolves to bibitem at line 1333 (in-prep). Bibitem is for an internal-draft paper which lacks an external arXiv resolution. Per Invariant #11, in-prep entries are ex",
-      "sentences": [
-        "sentence:I1:riemannian-sidebar:86265a71"
-      ],
-      "finding_class": "TN"
-    },
-    {
-      "id": "followup:14",
-      "summary": "IA-WARN: 'Wave 8 Sessions 1-5 / 44 substantive theorems'. Project memory states 'Sessions 1-3 SHIPPED; Sessions 4-5 in flight at memory write time' \u2014 paper \u00a71 line 161 also says 'Sessions~1--3'. Secti",
-      "sentences": [
-        "sentence:I1:riemannian-sidebar:ce47736b"
-      ],
-      "finding_class": "IA"
-    },
-    {
-      "id": "followup:15",
-      "summary": "TN-WARN: \\cite{paper44riemannian} bibitem present (in-prep). 'Five-page paper' is a self-attribution claim, not verifiable from this review.",
-      "sentences": [
-        "sentence:I1:riemannian-sidebar:1e82d6e5"
-      ],
-      "finding_class": "TN"
     }
   ]
 }

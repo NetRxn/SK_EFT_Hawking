@@ -46,8 +46,10 @@ non-negatively correlated data. The estimators are implemented
 purely as deterministic functions on finite samples, using neither
 probability theory nor measure theory, with proofs that exercise
 only finite-arithmetic Lean tactics. \textbf{(2)
-\texttt{lean-tensor-categories}}: a 28-module, 192-declaration
-library covering the categorical hierarchy
+\texttt{lean-tensor-categories}}: a 28-module library
+($\sim$640 declarations across theorems, definitions,
+structures, classes, and inductives) covering the categorical
+hierarchy
 (Pivotal $\to$ Spherical $\to$ Balanced $\to$ Ribbon $\to$
 Semisimple $\to$ Fusion $\to$ Modular), Hopf-algebra extensions
 (Quasitriangular bialgebras, Ribbon Hopf algebras, the standard
@@ -55,7 +57,8 @@ quantum groups $U_q(\mathfrak{sl}_2)$, $U_q(\widehat{\mathfrak{sl}}_2)$,
 $U_q(\mathfrak{sl}_3)$), nine decidable algebraic number fields
 (including $\mathbb{Q}(\sqrt{2})$, $\mathbb{Q}(\sqrt{5})$,
 $\mathbb{Q}(\zeta_5)$, $\mathbb{Q}(\zeta_{16})$ and a
-\texttt{ComputableAdjoinRoot} bridge to Mathlib), and concrete
+\texttt{ComputableAdjoinRoot}-style bridge to Mathlib's abstract
+\texttt{AdjoinRoot} planned for atomic upstream PR), and concrete
 modular-tensor-category instances ($\mathrm{SU}(2)_k$ fusion at
 $k=1{\ldots}5$, $\mathrm{SU}(3)_k$ at $k=1, 2$, the Ising MTC, and
 the Fibonacci MTC).
@@ -94,7 +97,9 @@ infrastructure for topological quantum computation
 (modular tensor categories, fusion categories, ribbon categories,
 quantum groups, $S$- and $T$-matrices, Verlinde formulas) has been
 the subject of a thirty-year mathematical literature anchored on
-Bakalov--Kirillov, Turaev, and EGNO; here too the formalization has
+Bakalov--Kirillov~\cite{bakalov2001},
+Turaev~\cite{turaev2010}, EGNO~\cite{egno2015}, and
+Kassel~\cite{kassel1995}; here too the formalization has
 been absent --- not for lack of mathematical maturity but because
 the immediate audience for the formalization (formal-verification
 researchers) and the immediate audience for the mathematical content
@@ -156,9 +161,11 @@ limitations, and future extensions.
 The \texttt{VerifiedJackknife} module
 (\texttt{lean/SKEFTHawking/VerifiedJackknife.lean}) implements
 seven definitions and four theorems covering the jackknife variance
-estimator and the integrated-autocorrelation-time estimator, the
-two estimators that dominate practical lattice-Monte-Carlo error
-analysis.
+estimator (Efron~\cite{efron1982}) and the
+integrated-autocorrelation-time estimator with the
+Madras--Sokal--Wolff window prescription
+(Wolff~\cite{wolff2004}), the two estimators that dominate
+practical lattice-Monte-Carlo error analysis.
 
 \subsection{Definitions}
 
@@ -195,8 +202,9 @@ proofs that arise during induction collapse into automation
 \texttt{Fin}, while a separate \texttt{Vector} type would require
 manual length-tracking lemmas. The downside is that \texttt{Fin}
 arithmetic is slightly less ergonomic for lattice-style traversal;
-we expose convenience wrappers in
-\texttt{VerifiedJackknife.Helpers} for the common patterns.
+a planned \texttt{VerifiedJackknife.Helpers} sub-module is
+intended to expose convenience wrappers for the common patterns
+(future extension, not currently shipped).
 
 \subsection{Theorems}
 
@@ -246,6 +254,26 @@ analysis: positive autocorrelation cannot reduce the variance
 below the uncorrelated case.
 \end{enumerate}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/i2_fig4_jackknife_dependencies.png}
+\caption{\texttt{VerifiedJackknife} theorem dependency graph. The four
+project theorems
+(\texttt{jackknifeVariance\_nonneg},
+\texttt{autocovariance\_zero\_nonneg},
+\texttt{intAutocorrTime\_uncorrelated},
+\texttt{intAutocorrTime\_ge\_half}; amber) reduce to a small set of
+elementary Mathlib lemmas (\texttt{mul\_nonneg},
+\texttt{Finset.sum\_nonneg}, \texttt{sq\_nonneg},
+\texttt{mul\_self\_nonneg}; steel blue) and one project definition
+(\texttt{autocovariance}; cool grey). Each project theorem has a
+corresponding test in \texttt{tests/test\_verified\_statistics.py}
+that exercises its numerical instantiation; the test names are
+listed in the prose (Section~\ref{sec:jackknife}) rather than
+overlaid on each node to keep the dependency graph readable.}
+\label{fig:i2-jackknife-deps}
+\end{figure}
+
 \subsection{What is \emph{not} formalized}
 
 The library is deliberately probability-theory-free. The estimators
@@ -277,14 +305,34 @@ The four files of the categorical core are
 \texttt{KLinearCategory.lean} (23 declarations),
 \texttt{FusionCategory.lean} (20 declarations including 14 theorems),
 \texttt{SphericalCategory.lean} (22 declarations), and
-\texttt{RibbonCategory.lean} (12 declarations). Together they
-encode the standard mathematical hierarchy from Bakalov--Kirillov
+\texttt{RibbonCategory.lean} (14 declarations). Together they
+encode the standard mathematical hierarchy from
+Bakalov--Kirillov~\cite{bakalov2001}, Kassel~\cite{kassel1995},
 \emph{Lectures on Tensor Categories and Modular Functor} and the
 Etingof--Gelaki--Nikshych--Ostrik (EGNO) text \emph{Tensor
-Categories}. The library uses Mathlib's existing
+Categories}~\cite{egno2015}. The library uses
+Mathlib's~\cite{mathlib4} existing
 \texttt{MonoidalCategory} and \texttt{BraidedCategory} as
 substrate; everything above the braided layer is original to this
 library.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.75\linewidth]{figures/i2_fig1_categorical_hierarchy.png}
+\caption{Categorical hierarchy as a Hasse-diagram poset. Mathlib's
+existing \texttt{MonoidalCategory} and \texttt{BraidedCategory} (steel
+blue, lower) provide the substrate. The library-original additions
+\texttt{BalancedCategory}, \texttt{PivotalCategory},
+\texttt{RibbonCategory}, and \texttt{FusionCategory} (amber) extend
+the braided layer along two routes that converge in
+\texttt{ModularTensorData}: one through the
+balanced$\to$pivotal$\to$ribbon chain in
+\texttt{RibbonCategory.lean}, and one through fusion (finite
+semisimplicity) in \texttt{FusionCategory.lean}. An MTC is a fusion
+category with ribbon structure satisfying the non-degeneracy
+condition $\det S \neq 0$.}
+\label{fig:i2-categorical-hierarchy}
+\end{figure}
 
 \subsection{Ribbon and modular tensor categories}
 
@@ -346,7 +394,7 @@ files; see Section~\ref{sec:instances}).
 The library extends Mathlib's \texttt{HopfAlgebra} typeclass with
 three quantum-group instances and two structural extensions
 (quasitriangularity and the ribbon Hopf-algebra structure). Total
-yield across four files: 86 declarations.
+yield across four files: 101 declarations.
 
 \subsection{$U_q(\mathfrak{sl}_2)$}
 
@@ -393,16 +441,24 @@ assistant.
 \subsection{Structural extensions: Quasitriangular bialgebras and
 Ribbon Hopf algebras}
 
-\texttt{QuantumGroupHopf.lean} (18 theorems) defines
-\texttt{class QuasitriangularBialgebra} as a Hopf algebra equipped
-with an $R$-matrix satisfying the Yang--Baxter and
-quasi-cocommutativity axioms, and \texttt{class RibbonHopfAlgebra}
-extending \texttt{QuasitriangularBialgebra} with a central ribbon
-element compatible with the antipode and the $R$-matrix. The
-library proves that $U_q(\mathfrak{sl}_2)$ instantiates
+\texttt{QuantumGroupHopf.lean} (16 theorems) defines the generic
+quantum-group Hopf-algebra interface and structural lemmas. The
+project's planned upstream PR-3 (Section~\ref{sec:upstream}) will
+extract a typeclass \texttt{QuasitriangularBialgebra} (a Hopf
+algebra equipped with an $R$-matrix satisfying the Yang--Baxter
+and quasi-cocommutativity axioms) and a typeclass
+\texttt{RibbonHopfAlgebra} (extending
+\texttt{QuasitriangularBialgebra} with a central ribbon element
+compatible with the antipode and the $R$-matrix). The Mathlib
+PR will be accompanied by an instance proving that
+$U_q(\mathfrak{sl}_2)$ satisfies
 \texttt{QuasitriangularBialgebra} with the explicit $R$-matrix
 $R = q^{H \otimes H/2} \sum_{n \geq 0} \frac{(q - q^{-1})^n}{[n]_q!}
-q^{n(n-1)/2} (E^n \otimes F^n)$ in the universal closure.
+q^{n(n-1)/2} (E^n \otimes F^n)$ in the universal closure. The
+project-internal version of this content lives within
+\texttt{QuantumGroupHopf.lean} as supporting lemmas; the
+typeclass extraction is the upstream-PR target rather than a
+shipped project artifact.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §5 Decidable algebraic number fields
@@ -429,11 +485,13 @@ modules.
 \texttt{QSqrt3.lean} (20 declarations), and \texttt{QSqrt5.lean}
 (14 declarations) implement the quadratic-extension fields with
 explicit decidable equality. \texttt{QSqrt2} additionally exposes
-a \texttt{ComputableAdjoinRoot} bridge to Mathlib's abstract
-\texttt{AdjoinRoot} that allows downstream code to use
+decidable-arithmetic primitives that allow downstream code to use
 \texttt{decide}-blocked equality on
 $\mathbb{Q}(\sqrt{2})$-coefficient $S$-matrix entries without
-opening the abstract Mathlib API. This bridge is the first
+opening Mathlib's abstract \texttt{AdjoinRoot} API. The planned
+\texttt{ComputableAdjoinRoot}-style bridge between these two
+representations --- not yet shipped as a separate file but
+implicit in \texttt{QSqrt2.lean}'s structure --- is the first
 proposed Mathlib upstream PR (Section~\ref{sec:upstream}).
 
 \subsection{The cyclotomic family}
@@ -453,7 +511,7 @@ ratio), the smallest extension in which Fibonacci's
 $T$-matrix can be diagonalized over a single field with decidable
 arithmetic.
 
-The cumulative count is 162 declarations across the nine
+The cumulative count is 161 declarations across the nine
 algebraic-number-field modules. The decidability structure is
 the first integrated decidable-cyclotomic-plus-quadratic-extension
 infrastructure in any proof-assistant library --- Mathlib provides
@@ -468,7 +526,23 @@ the same library with composable decidable equality is original.
 \label{sec:instances}
 
 The instances are organized by anyon family. Total yield across
-eleven files: 265 declarations.
+ten files: 295 declarations.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/i2_fig3_mtc_instances.png}
+\caption{Shipped-component status across the eight concrete
+modular-tensor-category instances in the library:
+$\mathrm{SU}(2)_{k}$ for $k = 1, \ldots, 5$, $\mathrm{SU}(3)_2$, the
+Ising MTC, and the Fibonacci MTC. Columns track simple-object count,
+representative quantum dimensions, and which of the
+$S$-matrix, $T$-matrix, $F$-symbols, and Verlinde-formula are
+formalized; the final column lists the underlying decidable algebraic
+number field (Section~\ref{sec:numberfields}). Steel-blue cells mark
+shipped components ($\checkmark$); amber, partial; cool grey, not yet
+formalized.}
+\label{fig:i2-mtc-instances}
+\end{figure}
 
 \subsection{$\mathrm{SU}(2)_k$ at $k = 1, \ldots, 5$}
 
@@ -487,9 +561,9 @@ our knowledge, the first MTC fusion-rule instance computed
 \emph{from} a quantum group (rather than postulated) in any proof
 assistant.
 
-\texttt{SU2kMTC.lean} (16 declarations) instantiates
+\texttt{SU2kMTC.lean} (17 declarations) instantiates
 \texttt{ModularTensorData} for each $k$. \texttt{SU2kSMatrix.lean}
-(18 declarations) computes the explicit $S$-matrix
+(20 declarations) computes the explicit $S$-matrix
 $S_{j_1 j_2} = \sqrt{\frac{2}{k+2}}
 \sin\!\frac{(2j_1+1)(2j_2+1)\pi}{k+2}$ and proves the Verlinde
 formula
@@ -498,7 +572,7 @@ $N_{j_1 j_2}^{j_3} = \sum_{j} \frac{S_{j_1 j} S_{j_2 j}
 
 \subsection{$\mathrm{SU}(3)_k$ at $k = 1, 2$}
 
-\texttt{SU3kFusion.lean} (27 declarations) ships the rank-2 fusion
+\texttt{SU3kFusion.lean} (29 declarations) ships the rank-2 fusion
 rules. \texttt{SU3k2SMatrix.lean} (27 declarations) and
 \texttt{SU3k2FSymbols.lean} (12 declarations) ship the
 $\mathrm{SU}(3)_k=2$ specialization, including the F-symbols
@@ -533,7 +607,7 @@ $\mathbb{Q}(\zeta_5)[\sqrt{\varphi}]$ via the
 \texttt{QCyc5Ext.lean} infrastructure of
 Section~\ref{sec:numberfields}; the file proves the hexagon and
 pentagon identities by \texttt{decide} on the explicit eigenvalues.
-\texttt{FibonacciMTC.lean} (16 declarations) wraps the result as a
+\texttt{FibonacciMTC.lean} (18 declarations) wraps the result as a
 \texttt{ModularTensorData} instance.
 
 %% ─────────────────────────────────────────────────────────────────
@@ -551,6 +625,23 @@ and mirrored in the open-source extraction repository
 under Apache~2.0. The mid-term plan is to upstream the
 content into Mathlib through a sequence of atomic pull requests.
 This section documents the plan for transparency.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/i2_fig2_module_dependencies.png}
+\caption{Dependency graph of the 28 modules that comprise the
+\texttt{lean-tensor-categories} library, organized into four
+architectural tiers: the categorical core (steel blue;
+Section~\ref{sec:categorical}), the Hopf-algebra layer (berry;
+Section~\ref{sec:hopf}), the decidable-algebraic-number-field family
+(steel blue, mid; Section~\ref{sec:numberfields}), and the eleven
+concrete MTC instances (amber; Section~\ref{sec:instances}). Sankey
+flows go from each instance through the number-field and Hopf layers
+to the categorical foundation, illustrating how the layered
+architecture lets each MTC instance be expressed as a thin
+specialization of the substrate.}
+\label{fig:i2-module-deps}
+\end{figure}
 
 \subsection{Relationship-building gate}
 
@@ -616,6 +707,23 @@ as for unassisted ones --- the standard is correctness, mathematical
 relevance, and engineering quality, not the provenance of the
 typing.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/i2_fig5_mathlib_upstream_flow.png}
+\caption{Mathlib upstream coordination flow. Three sequential
+relationship-building gates --- R1 (Mathlib Zulip introduction),
+R2 (AI-tool-assistance disclosure), R3 (PR-strategy discussion with
+maintainers) --- precede the atomic-PR chain: PR-1 \texttt{QSqrt2 +
+ComputableAdjoinRoot} bridge, PR-2 \texttt{PivotalCategory +
+RibbonCategory}, PR-3 \texttt{QuasitriangularBialgebra +
+RibbonHopfAlgebra}, and PR-4+ MTC instances. The cool-grey branch
+shows the fallback path: if the gate is delayed beyond approximately
+six months, the library ships as a software-only artifact through
+this paper, with the Mathlib-acceptance hook handled later as a
+separate JOSS-record update.}
+\label{fig:i2-mathlib-upstream-flow}
+\end{figure}
+
 \subsection{Conditional path: software-only release}
 
 If Mathlib's AI-content acceptance is delayed beyond approximately
@@ -661,16 +769,20 @@ The intended downstream applications include:
 \begin{itemize}
 \item \textbf{Topological-QFT formalization.} Anyon-Wilson-line
 algebras, partition-function evaluations on closed 3-manifolds,
-Reshetikhin--Turaev surgery formulas. The library's MTC instances
+Reshetikhin--Turaev surgery formulas~\cite{turaev2010}. The
+library's MTC instances
 (Ising, Fibonacci, $\mathrm{SU}(2)_k$) are the standard testbeds.
 \item \textbf{Fault-tolerant quantum-computing certification.} The
 Ising-anyon braid matrices in
-\texttt{IsingGates.lean} are exactly the gates implemented by
-Microsoft's Majorana-anyon roadmap; the Fibonacci universality
-proof in \texttt{FibonacciBraiding.lean} is the formal counterpart
-of the universality result that motivates topological-QC research.
-A formally verified gate compiler can build on the library without
-re-deriving the categorical substrate.
+\texttt{IsingGates.lean} match the structure of gates targeted by
+non-Abelian-anyon topological-quantum-computing roadmaps in the
+broader research community (including the Microsoft Quantum
+program's published Majorana-fermion-based proposals); the
+Fibonacci universality proof in \texttt{FibonacciBraiding.lean}
+is the formal counterpart of the universality result that
+motivates topological-QC research. A formally verified gate
+compiler can build on the library without re-deriving the
+categorical substrate.
 \item \textbf{Lattice statistics.} \texttt{VerifiedJackknife} is
 immediately usable by any lattice-Monte-Carlo project: the
 estimators are deterministic functions on finite samples, so
@@ -681,9 +793,13 @@ Kaul--Majumdar SU$(2)_k$ decomposition of the
 Bekenstein--Hawking entropy can be formalized using
 \texttt{SU2kMTC.lean} as the substrate; the
 $-\frac{3}{2} \log(A/(4G_N))$ correction term is then a
-consequence of the formal MTC structure rather than a
-postulate. Section~\ref{sec:reusability} of the SK--EFT Hawking
-flagship paper documents this dependency.
+consequence of the formal MTC structure modulo the
+\texttt{IsolatedHorizonHypotheses} tracked-Prop bundle
+(Phase~6j Wave~1 of the SK-EFT Hawking project, which scopes
+the loop-quantum-gravity isolated-horizon assumptions explicitly
+rather than treating them as hidden inputs to the MTC
+calculation). Section~\ref{sec:reusability} of the SK--EFT
+Hawking flagship paper documents this dependency.
 \item \textbf{Anomaly classification.} The
 $\mathbb{Z}_{16}$-graded structure on
 $\mathrm{SU}(2)_4 \times \mathrm{SU}(2)_4$ is encoded via
@@ -727,7 +843,8 @@ arithmetic identities used in lattice analysis; this does not
 include the jackknife or autocorrelation estimators themselves.
 Outside the proof-assistant world, the lattice-QCD community
 operates on extensively-tested but unverified C++ implementations
-(Lüscher's primary chroma codebase being the dominant example);
+(the SciDAC/USQCD Chroma codebase being a representative example
+of unverified production lattice-QCD software);
 \texttt{VerifiedJackknife} is an addition to that ecosystem, not
 a replacement.
 
@@ -810,11 +927,6 @@ Graduate Texts in Mathematics 155 (1995).
 \bibitem{mathlib4} The Mathlib Community, ``The Lean Mathematical
 Library,'' \emph{Proc.\ CPP 2020} (2020); current pin in
 SK--EFT Hawking's \texttt{lean/lakefile.toml}.
-\bibitem{paper15methodology} J.~Roehm, ``Continuous Verification
-for Computational Physics Research'' (in prep, project bundle~I1).
-\bibitem{paper44riemannian} J.~Roehm, ``Riemannian Connection on
-the Algebraic-General-Relativity Substrate'' (in prep, project
-internal draft).
 \end{thebibliography}
 
 \end{document}

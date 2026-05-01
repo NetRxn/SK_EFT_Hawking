@@ -237,6 +237,22 @@ what was proved: an automated proof can be vacuous if the
 definitions it operates on are wrong (Section~\ref{sec:case3}). The
 composition gives all three.
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/i1_fig1_three_layer_architecture.png}
+\caption{Three-layer verification architecture (this paper, \S2).
+Layer~1 (Python numerics, top, blue) feeds Layer~2 (Lean~4 formal
+proofs, middle, amber) feeds Layer~3 (Aristotle automated theorem
+prover, bottom, sage). The curved feedback arrow on the right
+represents counterexample- or refinement-driven flow back to Layer~1
+(e.g.\ Aristotle run~\texttt{270e77a0} forced the strengthened
+\texttt{FirstOrderKMS} axiom that Layer~1's noise-floor formula
+depends on numerically; see Section~\ref{sec:case1}). The
+asymmetric composition is the substantive structural claim of \S2:
+none of the three layers alone suffices.}
+\label{fig:three_layer}
+\end{figure}
+
 %% ─────────────────────────────────────────────────────────────────
 %% §3 Worked case 1: FirstOrderKMS Aristotle counterexample
 %% ─────────────────────────────────────────────────────────────────
@@ -301,7 +317,25 @@ $(\kappa, \nu)$ family is recovered as a corollary. The published
 analog-Hawking spectrum and noise-floor formula in the project's
 Tier~1 deep papers depend numerically on $i_3 = 0$; the original
 weakened constraint did not force $i_3 = 0$, and a paper using it
-would have shipped the wrong noise floor. Aristotle's failure to
+would have shipped the wrong noise floor.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/i1_fig4_firstorderkms_grid.png}
+\caption{FirstOrderKMS 9-coefficient constraint grid
+(Aristotle run~\texttt{270e77a0}). Left panel: original weak
+axiom constrains four of nine coefficients
+($\{r_1, r_2, i_1, \text{free elsewhere}\}$); the cell highlighted
+in carmine is the counterexample vector
+$c = (0,0,0,0,0,0,0,1,0)$ which satisfies the weak axiom but
+forces $i_3 \neq 0$ in the noise-floor formula. Right panel:
+strengthened \texttt{FirstOrderKMS} axiom constrains all nine
+coefficients (including $i_3 = 0$ explicitly), and the
+\texttt{firstOrder\_uniqueness} theorem closes cleanly under it.}
+\label{fig:firstorderkms_grid}
+\end{figure}
+
+Aristotle's failure to
 prove a wrong statement is the substantive content of this case.
 
 %% ─────────────────────────────────────────────────────────────────
@@ -364,7 +398,26 @@ theorems that closed in the same batch. The original
 \texttt{gap\_solution\_bounded} survives in the codebase as a
 commented-out stub at lines~307--321 of \texttt{TetradGapEquation.lean},
 preserved as a citable counterexample anchor for downstream papers
-that would otherwise inherit the folklore. The case is a clean
+that would otherwise inherit the folklore.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\linewidth]{figures/i1_fig5_gap_counterexample.png}
+\caption{Gap-equation counterexample to the
+\texttt{gap\_solution\_bounded} folklore claim
+($N_f = 1$, $\Lambda = 1$, $c_4 = 1$). For $G < G_c$ the gap is
+trivially zero (dotted grey curve). For $G \geq G_c$ the
+non-trivial branch $\Delta(G)$ rises monotonically and crosses the
+cutoff line $\Delta = \Lambda$ at the saturation coupling
+$G^\ast = 2 / (1 - \log 2) \approx 6.518$ (amber marker). For
+$G \geq G^\ast$ (amber-shaded region) the folklore claim
+$\Delta < \Lambda$ fails. Aristotle run~\texttt{79e07d55} replaced
+the bounded statement with a tracked-hypothesis variant that
+includes $G < G^\ast$ as an explicit assumption.}
+\label{fig:gap_counterexample}
+\end{figure}
+
+The case is a clean
 illustration of formalization-driven counterexample search: the
 counterexample exists in the literature only because the formal
 pipeline forced its production.
@@ -419,10 +472,10 @@ could not resolve. Aristotle priority-batch submission returned
 The fix was a nine-fold structural decomposition driven by the
 \texttt{AXIOM\_METADATA} table in \texttt{src/core/constants.py}.
 Each entry in \texttt{AXIOM\_METADATA} records its eliminability
-tier (\texttt{removed} / \texttt{closed} / \texttt{hard} /
-\texttt{algebraic} / \texttt{very\_hard} / \texttt{open}) and a
-\texttt{reason} or \texttt{evidence\_*} field documenting the
-structural rationale or evidence ladder. The chirality-wall theorem's
+tier (\texttt{algebraic} / \texttt{closed} / \texttt{hard} /
+\texttt{removed} / \texttt{topological} / \texttt{very\_hard})
+and a \texttt{reason} or \texttt{evidence\_*} field documenting
+the structural rationale or evidence ladder. The chirality-wall theorem's
 load-bearing axioms decompose along three structural pillars,
 each anchored on one tier-\texttt{hard} entry of
 \texttt{AXIOM\_METADATA}: (i) the $\mathbb{Z}_{16}$ anomaly chain,
@@ -445,6 +498,29 @@ sub-lemma has at most twelve term-level constraints.
 \emph{All nine sub-lemmas closed in a single Aristotle priority
 batch} after this decomposition, demonstrating that the
 original failure was about size, not difficulty.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/i1_fig6_chirality_wall_tree.png}
+\caption{Chirality-wall axiom decomposition: 9 sub-lemmas across
+6 labeled leaf groups. The root
+\texttt{sm\_no\_nu\_R\_ewbg\_doubly\_forbidden}
+(carmine) is a 50-term monolithic goal, intractable to a single
+Aristotle batch. It decomposes into two obstructions (amber):
+the $\mathbb{Z}_{16}$ chirality wall (Pillars A--C, sage) and the
+crossover side. The 6 visibly-labeled leaf rectangles (steel
+blue) cover the 9 sub-lemmas at $\leq 12$ terms each (Pillars A
++ B + C contribute 1, 1, 1 directly-labeled leaves and the
+crossover side contributes 3, with the remaining 3 sub-lemmas
+collapsed into Pillar groupings for visual compactness; the
+full sub-lemma list is in the project's
+\texttt{EWBaryogenesisChiralityWall.lean}). All 9 closed in a
+single Aristotle priority batch; the specific leaf
+\texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable}
+also surfaced the implicit fourth-pillar sphaleron-rate
+hypothesis described in the prose.}
+\label{fig:chirality_wall_tree}
+\end{figure}
 
 The structural-axiom classification did more than reduce
 intractable to tractable: it surfaced a hidden dependency. One of
@@ -475,6 +551,22 @@ stages or reordering them produces rework and allows errors to
 propagate downstream. Wave-level work --- adding new physics,
 extending formalization, or producing experimental predictions
 --- proceeds through all fourteen.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/i1_fig2_pipeline_14_stages.png}
+\caption{Fourteen-stage wave-execution pipeline. Each cell shows
+the stage number, short name, and gate condition. New stages
+(3a Lean MCP loop, 13 Adversarial review, 14 Meta-process QI ---
+amber) supplement the original eleven (steel blue). Stage 3a
+replaces the prior write-tactic / \texttt{lake build} / parse /
+iterate loop ($\sim$15 s per cycle) with millisecond-scale
+LSP-state inspection and \texttt{lean\_multi\_attempt} candidate
+testing. Stage 13 is the fresh-context adversarial-reviewer
+pattern. Stage 14 captures meta-process improvements as
+project-level memory.}
+\label{fig:pipeline}
+\end{figure}
 
 \begin{table}[h]
 \centering
@@ -536,7 +628,7 @@ constants in \texttt{constants.py}, formulas in
 Stage~2 implements formulas with provenance metadata. Stages~3--4
 formalize and prove (interactive plus automated). Stage~5 verifies
 the formal layer compiles cleanly. Stage~6 runs Python tests.
-Stage~7 runs sixteen automated cross-layer validation checks
+Stage~7 runs over twenty automated cross-layer validation checks
 (Section~\ref{sec:provenance}). Stage~8 generates publication-
 quality figures. Stage~9 runs a figure-reviewer agent. Stage~10
 drafts the paper with full provenance for every claim. Stage~11
@@ -711,6 +803,23 @@ prove is what we claim.
 \section{Sentence-Level Provenance and Cross-Paper Consistency Clusters}
 \label{sec:provenance}
 
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.95\linewidth]{figures/i1_fig3_sentence_state_clusters.png}
+\caption{Sentence-state claim clusters across paper bundles
+(schematic). Three papers (rectangles) each contain six sentences
+(circles). Curved lines connect sentences sharing a
+\texttt{claim\_cluster}. The amber cluster~C2 has
+\texttt{cross\_bundle: true} and links sentences across all three
+papers; clusters C1 (steel blue) and C3 (sage) are
+single-bundle. Cross-bundle clusters survive bundle
+consolidation, providing the per-bundle Stage-13
+adversarial-reviewer with a stable provenance index even when
+sentences are lifted into different paper bundles. Walked by
+\texttt{validate.py} CHECK~21 (\texttt{bundle\_consistency}).}
+\label{fig:sentence_clusters}
+\end{figure}
+
 % TODO: substantive draft. Substrate to draw from:
 %  - prose_state.json schema in scripts/sentence_state.py
 %  - cross-paper consistency cluster mechanism in
@@ -771,7 +880,7 @@ $7\times 10^{14}$ falsification factor; CHECK~21 enforces that the
 two reports agree character-for-character on the numerical content.
 
 The publication-bundle architecture (\texttt{docs/PAPER\_STRATEGY.md})
-consolidates the project's thirty-two per-wave drafts into thirteen
+consolidates the project's project's forty-plus per-wave drafts into thirteen
 publication targets organized into five tiers: a flagship review
 (\texttt{F}), five themed deep papers
 (\texttt{D1}--\texttt{D5}), three PRL-style headline letters
@@ -792,7 +901,7 @@ statuses (Stage~9 / 10 / 13), a freshness flag, source manifest
 last-regen timestamp, and stage-13 review document path. Pipeline
 Invariant~14 codifies the contract: every paper-shaped output lifts
 into a bundle target identified at Stage~1 and recorded at
-Stage~12. The architecture is what makes thirty-two-draft to
+Stage~12. The architecture is what makes forty-plus-draft to
 thirteen-publication consolidation tractable without sacrificing
 per-claim provenance: the sentence-level audit trail moves with the
 prose; the cluster registry preserves cross-bundle consistency; the

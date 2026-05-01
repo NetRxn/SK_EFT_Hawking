@@ -40,6 +40,17 @@
       "stage13_redo_required": true,
       "agent_run_id": "phase7a-7a.3-initial-2026-05-01T16:30:00Z",
       "notes": "I2 fresh-authored as a synthesis-driven new composition from Lean-module substrate (no per-paper-draft sources to lift; sourceless per PAPER_DRAFT_MAPPING.md). 28 referenced Lean modules. 820 lines / 9 sections. Mathlib upstream coordination plan §7 is conditional on R1/R2/R3 gate. AI-tool-assistance disclosure protocol documented. Software-only fallback path documented for Mathlib-acceptance delay scenario. Ready for reviewer triple (Stage 9/10/13)."
+    },
+    {
+      "date": "2026-05-01T19:00:00Z",
+      "source_paper": "phase7a_7a3_review_round1_fixes",
+      "lift_action": "Revise",
+      "bundle_section_inserted": "§2, §3, §4, §5, §6, §8, §9, bibliography, src/core/citations.py registry",
+      "lean_modules_referenced": [],
+      "citation_count_added": 7,
+      "stage13_redo_required": false,
+      "agent_run_id": "phase7a-7a.3-review-round1-2026-05-01T19:00:00Z",
+      "notes": "Round 1 claims-reviewer remediation (5 BLOCKERs + 5 advisories addressed). BLOCKER fixes: (1) softened 4 not-shipped declaration claims to 'planned' / 'project-internal supporting lemmas' framing — VerifiedJackknife.Helpers (§2.1), QuasitriangularBialgebra/RibbonHopfAlgebra typeclasses (§4.4), ComputableAdjoinRoot bridge (§5.1, abstract); (2) test filename corrected from tests/test_jackknife.py → tests/test_verified_statistics.py with 4 test names cited; (3) per-module count drifts reconciled (§3 RibbonCategory 12→14; §4 QuantumGroupHopf 18→16 thm; §6 SU2kMTC 16→17, SU2kSMatrix 18→20, SU3kFusion 27→29, FibonacciMTC 16→18); aggregate counts reconciled (§4 86→101, §5 162→161, §6 11 files→10 files / 265→295 declarations; abstract 192-declaration → ~640 declarations); (4) bibliography reconciled — paper15methodology + paper44riemannian self-cites removed; 7 textbook/software bibitems (efron1982, wolff2004, bakalov2001, egno2015, turaev2010, kassel1995, mathlib4) added to src/core/citations.py CITATION_REGISTRY (Wave 6 textbook exemption applied; paper entries got DOI + arxiv where known). Advisory fixes: Lüscher chroma misattribution corrected (now 'SciDAC/USQCD Chroma codebase' descriptor); Microsoft Majorana attribution softened to 'broader research community'; Kaul-Majumdar emergent-MTC dependency now discloses IsolatedHorizonHypotheses tracked-Prop bundle (Phase 6j W1) per advisory #5. All 7 bibitems now have at least one \\cite{} invocation in body. Ready for round-2 claims-reviewer + round-2 figure-reviewer (after figure-author subagent's PNGs verified)."
     }
   ]
 }
