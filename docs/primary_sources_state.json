@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-05-01T17:50:32+00:00",
+  "generated_at": "2026-05-01T18:16:34+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -74,7 +74,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/AdamsonWallden2025BDG.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:37+00:00",
+      "fetched_at": "2026-05-01T18:14:38+00:00",
       "size_bytes": 799977,
       "url_used": "https://arxiv.org/pdf/2505.22217",
       "note": null
@@ -85,7 +85,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/AdhikaryDasOdintsovPaul2025.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:59+00:00",
+      "fetched_at": "2026-05-01T18:15:20+00:00",
       "size_bytes": 1098125,
       "url_used": "https://arxiv.org/pdf/2507.15273",
       "note": null
@@ -118,7 +118,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/AhmedDodelsonGreeneSorkin2004.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:24+00:00",
+      "fetched_at": "2026-05-01T18:14:19+00:00",
       "size_bytes": 202126,
       "url_used": "https://arxiv.org/pdf/astro-ph/0209274",
       "note": null
@@ -129,7 +129,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/AhmedSorkin2013.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:25+00:00",
+      "fetched_at": "2026-05-01T18:14:21+00:00",
       "size_bytes": 241885,
       "url_used": "https://arxiv.org/pdf/1210.2589",
       "note": null
@@ -195,7 +195,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/AlonsoSerranoLiska2020Unimodular.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:20+00:00",
+      "fetched_at": "2026-05-01T18:15:59+00:00",
       "size_bytes": 378039,
       "url_used": "https://arxiv.org/pdf/2008.04805",
       "note": null
@@ -206,7 +206,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/AlonsoSerranoLiska2022Unimodular.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:21+00:00",
+      "fetched_at": "2026-05-01T18:16:01+00:00",
       "size_bytes": 289379,
       "url_used": "https://arxiv.org/pdf/2112.06301",
       "note": null
@@ -239,7 +239,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/AlvarezGonzalezMartin2012Unimodular.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:23+00:00",
+      "fetched_at": "2026-05-01T18:16:05+00:00",
       "size_bytes": 366398,
       "url_used": "https://arxiv.org/pdf/1401.2941",
       "note": null
@@ -349,7 +349,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/AslanbeigiSaravaniSorkin2014.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:38+00:00",
+      "fetched_at": "2026-05-01T18:14:40+00:00",
       "size_bytes": 659906,
       "url_used": "https://arxiv.org/pdf/1403.1622",
       "note": null
@@ -459,7 +459,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Barrow2007EverpresentBound.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:39+00:00",
+      "fetched_at": "2026-05-01T18:14:42+00:00",
       "size_bytes": 89004,
       "url_used": "https://arxiv.org/pdf/gr-qc/0612128",
       "note": null
@@ -492,7 +492,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/BenincasaDowker2010.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:33+00:00",
+      "fetched_at": "2026-05-01T18:14:29+00:00",
       "size_bytes": 123675,
       "url_used": "https://arxiv.org/pdf/1001.2725",
       "note": null
@@ -613,7 +613,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/BombelliHensonSorkin2009.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:41+00:00",
+      "fetched_at": "2026-05-01T18:14:46+00:00",
       "size_bytes": 125089,
       "url_used": "https://arxiv.org/pdf/gr-qc/0605006",
       "note": null
@@ -668,7 +668,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/BrusteinGorbonosHadad2009.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:16+00:00",
+      "fetched_at": "2026-05-01T18:15:53+00:00",
       "size_bytes": 209186,
       "url_used": "https://arxiv.org/pdf/0712.3206",
       "note": null
@@ -690,7 +690,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/BurrageSakstein2017Chameleon.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:19+00:00",
+      "fetched_at": "2026-05-01T18:15:57+00:00",
       "size_bytes": 4120387,
       "url_used": "https://arxiv.org/pdf/1709.09071",
       "note": null
@@ -734,7 +734,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/CadoniCasadioGiustiMuckTuveri2018.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:43+00:00",
+      "fetched_at": "2026-05-01T18:14:50+00:00",
       "size_bytes": 252830,
       "url_used": "https://arxiv.org/pdf/1707.09945",
       "note": null
@@ -745,7 +745,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/CadoniCasadioGiustiTuveri2018PRD.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:44+00:00",
+      "fetched_at": "2026-05-01T18:14:52+00:00",
       "size_bytes": 356268,
       "url_used": "https://arxiv.org/pdf/1801.10374",
       "note": null
@@ -756,7 +756,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/CadoniSanna2020.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:47+00:00",
+      "fetched_at": "2026-05-01T18:14:58+00:00",
       "size_bytes": 537261,
       "url_used": "https://arxiv.org/pdf/2012.08335",
       "note": null
@@ -767,7 +767,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/CadoniSannaTuveri2020.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:46+00:00",
+      "fetched_at": "2026-05-01T18:14:56+00:00",
       "size_bytes": 753329,
       "url_used": "https://arxiv.org/pdf/2002.06988",
       "note": null
@@ -778,7 +778,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/CadoniTuveri2019.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:45+00:00",
+      "fetched_at": "2026-05-01T18:14:54+00:00",
       "size_bytes": 1584966,
       "url_used": "https://arxiv.org/pdf/1812.01545",
       "note": null
@@ -789,7 +789,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/CaiCao2007Lovelock.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:34+00:00",
+      "fetched_at": "2026-05-01T18:16:18+00:00",
       "size_bytes": 177483,
       "url_used": "https://arxiv.org/pdf/hep-th/0612144",
       "note": null
@@ -833,7 +833,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/CapozzielloTsujikawa2008.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:17+00:00",
+      "fetched_at": "2026-05-01T18:15:55+00:00",
       "size_bytes": 145549,
       "url_used": "https://arxiv.org/pdf/0712.2268",
       "note": null
@@ -899,7 +899,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/ChakrabortyBCH2015.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:33+00:00",
+      "fetched_at": "2026-05-01T18:16:16+00:00",
       "size_bytes": 430525,
       "url_used": "https://arxiv.org/pdf/1505.07272",
       "note": null
@@ -921,7 +921,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/ChiangSchiveChiueh2021EridanusII.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:43+00:00",
+      "fetched_at": "2026-05-01T18:16:34+00:00",
       "size_bytes": 2914660,
       "url_used": "https://arxiv.org/pdf/2104.13359",
       "note": null
@@ -965,7 +965,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/CloweEtAl2006Bullet.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:06+00:00",
+      "fetched_at": "2026-05-01T18:15:35+00:00",
       "size_bytes": 331113,
       "url_used": "https://arxiv.org/pdf/astro-ph/0608407",
       "note": null
@@ -987,7 +987,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/ColgainEtAl2025DESI.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:41+00:00",
+      "fetched_at": "2026-05-01T18:16:30+00:00",
       "size_bytes": 1175917,
       "url_used": "https://arxiv.org/pdf/2504.04417",
       "note": null
@@ -1163,7 +1163,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/DadhichPonsPrabhu2012LovelockEntropy.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:35+00:00",
+      "fetched_at": "2026-05-01T18:16:20+00:00",
       "size_bytes": 109023,
       "url_used": "https://arxiv.org/pdf/1110.0673",
       "note": null
@@ -1174,7 +1174,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/DaiStojkovic2017.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:02+00:00",
+      "fetched_at": "2026-05-01T18:15:26+00:00",
       "size_bytes": 79824,
       "url_used": "https://arxiv.org/pdf/1706.07854",
       "note": null
@@ -1196,7 +1196,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/DasNasiriYazdi2023.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:30+00:00",
+      "fetched_at": "2026-05-01T18:14:25+00:00",
       "size_bytes": 11509814,
       "url_used": "https://arxiv.org/pdf/2304.03819",
       "note": null
@@ -1207,7 +1207,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/DasNasiriYazdi2024.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:32+00:00",
+      "fetched_at": "2026-05-01T18:14:27+00:00",
       "size_bytes": 5615936,
       "url_used": "https://arxiv.org/pdf/2307.13743",
       "note": null
@@ -1273,7 +1273,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/DowkerGlaser2013.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:34+00:00",
+      "fetched_at": "2026-05-01T18:14:31+00:00",
       "size_bytes": 341111,
       "url_used": "https://arxiv.org/pdf/1305.2588",
       "note": null
@@ -1306,7 +1306,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/ElingGuedensJacobson2006fR.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:10+00:00",
+      "fetched_at": "2026-05-01T18:15:43+00:00",
       "size_bytes": 120175,
       "url_used": "https://arxiv.org/pdf/gr-qc/0602001",
       "note": null
@@ -1317,7 +1317,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/EllisVanElstMuruganUzan2011Unimodular.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:22+00:00",
+      "fetched_at": "2026-05-01T18:16:03+00:00",
       "size_bytes": 144193,
       "url_used": "https://arxiv.org/pdf/1008.1196",
       "note": null
@@ -1460,7 +1460,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/FengGongLiuYanChen2025fR.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:13+00:00",
+      "fetched_at": "2026-05-01T18:15:47+00:00",
       "size_bytes": 2230455,
       "url_used": "https://arxiv.org/pdf/2510.23105",
       "note": null
@@ -1713,7 +1713,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Glaser2014BDG.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:35+00:00",
+      "fetched_at": "2026-05-01T18:14:34+00:00",
       "size_bytes": 357989,
       "url_used": "https://arxiv.org/pdf/1311.1701",
       "note": null
@@ -1845,7 +1845,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/HarveyEtAl2015Bullet.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:07+00:00",
+      "fetched_at": "2026-05-01T18:15:37+00:00",
       "size_bytes": 2275401,
       "url_used": "https://arxiv.org/pdf/1503.07675",
       "note": null
@@ -2021,7 +2021,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Hossenfelder2017Covariant.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:00+00:00",
+      "fetched_at": "2026-05-01T18:15:22+00:00",
       "size_bytes": 146944,
       "url_used": "https://arxiv.org/pdf/1703.01415",
       "note": null
@@ -2087,7 +2087,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Jacobson2016EntanglementEquilibrium.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:09+00:00",
+      "fetched_at": "2026-05-01T18:15:41+00:00",
       "size_bytes": 394757,
       "url_used": "https://arxiv.org/pdf/1505.04753",
       "note": null
@@ -2175,7 +2175,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/JannesVolovik2012.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:14+00:00",
+      "fetched_at": "2026-05-01T18:15:49+00:00",
       "size_bytes": 178712,
       "url_used": "https://arxiv.org/pdf/1108.5086",
       "note": null
@@ -2329,7 +2329,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/KhourySaksteinSolomon2018KSS.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:15+00:00",
+      "fetched_at": "2026-05-01T18:15:51+00:00",
       "size_bytes": 454646,
       "url_used": "https://arxiv.org/pdf/1805.05937",
       "note": null
@@ -2626,7 +2626,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Li2004HDE.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:51+00:00",
+      "fetched_at": "2026-05-01T18:15:06+00:00",
       "size_bytes": 93616,
       "url_used": "https://arxiv.org/pdf/hep-th/0403127",
       "note": null
@@ -2637,7 +2637,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/LiWang2010HDE.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:52+00:00",
+      "fetched_at": "2026-05-01T18:15:08+00:00",
       "size_bytes": 157573,
       "url_used": "https://arxiv.org/pdf/1001.4466",
       "note": null
@@ -2648,7 +2648,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/LiuLeeRobustnessFixedRd2025.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:25+00:00",
+      "fetched_at": "2026-05-01T18:16:09+00:00",
       "size_bytes": 477647,
       "url_used": "https://arxiv.org/pdf/2507.01380",
       "note": null
@@ -2659,7 +2659,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/LodhaCompanion2025DESI.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:36+00:00",
+      "fetched_at": "2026-05-01T18:16:22+00:00",
       "size_bytes": 3479327,
       "url_used": "https://arxiv.org/pdf/2503.14743",
       "note": null
@@ -2692,7 +2692,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/LucianoPaliathanasisSaridakis2025.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:55+00:00",
+      "fetched_at": "2026-05-01T18:15:12+00:00",
       "size_bytes": 639375,
       "url_used": "https://arxiv.org/pdf/2504.12205",
       "note": null
@@ -2703,7 +2703,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/LucianoPaliathanasisSaridakis2506.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:56+00:00",
+      "fetched_at": "2026-05-01T18:15:14+00:00",
       "size_bytes": 601691,
       "url_used": "https://arxiv.org/pdf/2506.03019",
       "note": null
@@ -2736,7 +2736,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Markevitch2004Bullet.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:05+00:00",
+      "fetched_at": "2026-05-01T18:15:33+00:00",
       "size_bytes": 246485,
       "url_used": "https://arxiv.org/pdf/astro-ph/0309303",
       "note": null
@@ -2747,7 +2747,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/MarshNiemeyer2019EridanusII.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:08+00:00",
+      "fetched_at": "2026-05-01T18:15:39+00:00",
       "size_bytes": 541177,
       "url_used": "https://arxiv.org/pdf/1810.08543",
       "note": null
@@ -2813,7 +2813,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/MirpoorianJedamzikPogosian2025Recombination.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:32+00:00",
+      "fetched_at": "2026-05-01T18:16:14+00:00",
       "size_bytes": 1461582,
       "url_used": "https://arxiv.org/pdf/2504.15274",
       "note": null
@@ -2846,7 +2846,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/MoradiYazdiZilhao2025BDG.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:36+00:00",
+      "fetched_at": "2026-05-01T18:14:36+00:00",
       "size_bytes": 511783,
       "url_used": "https://arxiv.org/pdf/2407.03395",
       "note": null
@@ -2967,7 +2967,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/OdintsovDOnofrioPaul2025.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:58+00:00",
+      "fetched_at": "2026-05-01T18:15:18+00:00",
       "size_bytes": 1131115,
       "url_used": "https://arxiv.org/pdf/2504.03470",
       "note": null
@@ -3055,7 +3055,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Padmanabhan2010RPP.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:48+00:00",
+      "fetched_at": "2026-05-01T18:15:00+00:00",
       "size_bytes": 741848,
       "url_used": "https://arxiv.org/pdf/0911.5004",
       "note": null
@@ -3066,7 +3066,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Padmanabhan2014IJMPD.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:49+00:00",
+      "fetched_at": "2026-05-01T18:15:02+00:00",
       "size_bytes": 499892,
       "url_used": "https://arxiv.org/pdf/1404.2284",
       "note": null
@@ -3077,7 +3077,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/PadmanabhanPadmanabhan2013CosMIn.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:50+00:00",
+      "fetched_at": "2026-05-01T18:15:04+00:00",
       "size_bytes": 132461,
       "url_used": "https://arxiv.org/pdf/1302.3226",
       "note": null
@@ -3143,7 +3143,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/ParkRatra2025rd.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:30+00:00",
+      "fetched_at": "2026-05-01T18:16:12+00:00",
       "size_bytes": 34190634,
       "url_used": "https://arxiv.org/pdf/2501.03480",
       "note": null
@@ -3220,7 +3220,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/PlazaKraiselburd2025fR.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:11+00:00",
+      "fetched_at": "2026-05-01T18:15:45+00:00",
       "size_bytes": 1421937,
       "url_used": "https://arxiv.org/pdf/2504.05432",
       "note": null
@@ -3341,7 +3341,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/SahEtAl2025DESI.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:37+00:00",
+      "fetched_at": "2026-05-01T18:16:24+00:00",
       "size_bytes": 1989157,
       "url_used": "https://arxiv.org/pdf/2504.06118",
       "note": null
@@ -3374,7 +3374,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Sandvik2004GCG.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:04+00:00",
+      "fetched_at": "2026-05-01T18:15:30+00:00",
       "size_bytes": 140480,
       "url_used": "https://arxiv.org/pdf/astro-ph/0212114",
       "note": null
@@ -3385,7 +3385,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/SaridakisTsallis2018.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:53+00:00",
+      "fetched_at": "2026-05-01T18:15:10+00:00",
       "size_bytes": 418558,
       "url_used": "https://arxiv.org/pdf/1806.01301",
       "note": null
@@ -3561,7 +3561,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:21+00:00",
+      "fetched_at": "2026-05-01T18:14:13+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3572,7 +3572,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Sorkin1997Everpresent.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:22+00:00",
+      "fetched_at": "2026-05-01T18:14:15+00:00",
       "size_bytes": 205744,
       "url_used": "https://arxiv.org/pdf/gr-qc/9706002",
       "note": null
@@ -3583,7 +3583,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Sorkin2007Everpresent.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:23+00:00",
+      "fetched_at": "2026-05-01T18:14:17+00:00",
       "size_bytes": 141726,
       "url_used": "https://arxiv.org/pdf/0710.1675",
       "note": null
@@ -3770,7 +3770,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Turyshev2026DESI.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:42+00:00",
+      "fetched_at": "2026-05-01T18:16:32+00:00",
       "size_bytes": 767200,
       "url_used": "https://arxiv.org/pdf/2602.05368",
       "note": null
@@ -3781,7 +3781,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/TyagiHaridasuBasak2025.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:57+00:00",
+      "fetched_at": "2026-05-01T18:15:16+00:00",
       "size_bytes": 2017458,
       "url_used": "https://arxiv.org/pdf/2504.11308",
       "note": null
@@ -3858,7 +3858,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Verlinde2017dSEmergent.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:42+00:00",
+      "fetched_at": "2026-05-01T18:14:48+00:00",
       "size_bytes": 3907879,
       "url_used": "https://arxiv.org/pdf/1611.02269",
       "note": null
@@ -3968,7 +3968,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Volovik2010Relaxation.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:24+00:00",
+      "fetched_at": "2026-05-01T18:16:07+00:00",
       "size_bytes": 614499,
       "url_used": "https://arxiv.org/pdf/1004.0597",
       "note": null
@@ -4144,7 +4144,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/WangYinTension2025rd.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:40+00:00",
+      "fetched_at": "2026-05-01T18:16:28+00:00",
       "size_bytes": 3765973,
       "url_used": "https://arxiv.org/pdf/2504.15222",
       "note": null
@@ -4298,7 +4298,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/YinWang2025SNSystematics.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:38+00:00",
+      "fetched_at": "2026-05-01T18:16:26+00:00",
       "size_bytes": 1995174,
       "url_used": "https://arxiv.org/pdf/2502.04212",
       "note": null
@@ -4309,7 +4309,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/YoonGuha2023.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:01+00:00",
+      "fetched_at": "2026-05-01T18:15:24+00:00",
       "size_bytes": 363767,
       "url_used": "https://arxiv.org/pdf/2304.07301",
       "note": null
@@ -4353,7 +4353,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Zeng2017BAOAmplitude.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:13:03+00:00",
+      "fetched_at": "2026-05-01T18:15:28+00:00",
       "size_bytes": 413998,
       "url_used": "https://arxiv.org/pdf/1701.00690",
       "note": null
@@ -4386,7 +4386,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/Zuntz2008.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:40+00:00",
+      "fetched_at": "2026-05-01T18:14:44+00:00",
       "size_bytes": 156643,
       "url_used": "https://arxiv.org/pdf/0711.2904",
       "note": null
@@ -4397,7 +4397,7 @@
       "tier_achieved": "arxiv-pdf",
       "primary_source_path": "Lit-Search/Phase-6m/primary-sources/ZwaneAfshordiSorkin2018.pdf",
       "verdict": "success",
-      "fetched_at": "2026-05-01T00:12:26+00:00",
+      "fetched_at": "2026-05-01T18:14:23+00:00",
       "size_bytes": 1183855,
       "url_used": "https://arxiv.org/pdf/1703.06265",
       "note": null

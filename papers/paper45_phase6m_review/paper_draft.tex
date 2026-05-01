@@ -1,0 +1,82 @@
+\documentclass[aps,prd,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+
+%% =====================================================================
+%% paper45_phase6m_review — Phase 6m comprehensive review (PLACEHOLDER)
+%%
+%% STATUS: stub. Phase 6m R6 Lean closure is SHIPPED (memory entry
+%% project_phase6m_lean_closure_shipped.md, 2026-04-30). The
+%% comprehensive review paper synthesizing Phase 6m's three-track
+%% findings (TA causal-set DE, TB entropic-gravity DE, TC Jacobson-
+%% thermo-GR DE) into a single dark-energy-substrate-comparison paper
+%% remains TO BE DRAFTED.
+%%
+%% Two short-notes also remain (Barrow prescription-dependence +
+%% Sakharov 4-criterion comparison) — those will be separate papers
+%% in their own directories when drafted.
+%%
+%% Citation-registry attribution: 70 Phase 6m bibkeys are pre-registered
+%% in src/core/citations.py with `used_in` pointing to this paper's
+%% paper_draft.tex (lines 7134+ in citations.py). Once the substantive
+%% draft is authored, those citations become live.
+%%
+%% Bundle assignment: per docs/PAPER_DRAFT_MAPPING.md, paper45's
+%% content lifts into D5 §8–§12 + §10.5/§11.5 (already mapped from
+%% the Phase 6m R6 Lean module roster). The comprehensive review
+%% paper is itself the Phase 6m capstone publication; D5 is the
+%% Tier-1 deep-paper bundle that absorbs the comprehensive review's
+%% substrate via the canonical bundle-lift procedure.
+%%
+%% This stub exists to satisfy:
+%%   (i)  tests/test_phase6i_wave1.py::test_paper_to_phase_keys_exist_on_disk
+%%        — PAPER_TO_PHASE['paper45_phase6m_review'] requires this dir
+%%   (ii) src/core/citations.py used_in fields citing this paper_draft.tex
+%%        — the file must exist to satisfy citation-graph integrity
+%% =====================================================================
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath, amssymb}
+
+\begin{document}
+
+\title{Dark-energy substrate constraints across the causal-set,
+entropic-gravity, and Jacobson-thermodynamic-GR families:
+a Phase 6m comprehensive review}
+
+\author{John G.\ Roehm}
+\affiliation{NetRxn Foundation}
+
+\date{TBD --- placeholder draft}
+
+\begin{abstract}
+\textbf{PLACEHOLDER:} this paper is a stub. The comprehensive Phase~6m
+review will synthesize the three-track structural verdict on dark-energy
+substrate constraints: Track A (causal-set DE; 3 publishable structural
+caveats survive), Track B (entropic-gravity DE; first complete-mechanism-
+family NO-GO closure with 8/8 Bayesian-decisive disfavor), and Track C
+(Jacobson-thermo-GR DE; 5+ R5-cleared survivors plus Sakharov-4-criterion
+biconditional comparison on \textsuperscript{3}He-A vs FLS BEC).
+The Lean-formalization scope is closed (50 substantive theorems across
+4 modules; commit pending). This paper draft itself is to be authored
+in a future Phase~6n session; for the substrate-comparison results
+themselves, see the D5 bundle (\texttt{papers/D5/}) which absorbs the
+review's content via the canonical bundle-lift procedure.
+\end{abstract}
+
+\maketitle
+
+\section{Status}
+
+This paper is a placeholder stub. Substantive content is to be authored.
+For the load-bearing Phase 6m results, see:
+
+\begin{itemize}
+\item \texttt{lean/SKEFTHawking/CausalSetDarkEnergy.lean} (Track A; 15 thms)
+\item \texttt{lean/SKEFTHawking/EntropicGravityDarkEnergy.lean} (Track B; 14 thms)
+\item \texttt{lean/SKEFTHawking/JacobsonThermoGRDarkEnergy.lean} (Track C; 12 thms)
+\item \texttt{lean/SKEFTHawking/DarkSectorClassificationExtension.lean} (taxonomy; 10 thms)
+\item \texttt{papers/D5/paper\_draft.tex} (Tier-1 deep paper consuming this
+review's content via bundle-lift; not yet drafted as of Phase 7a close)
+\end{itemize}
+
+\end{document}

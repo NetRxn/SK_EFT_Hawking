@@ -201,34 +201,50 @@ fail \verb|LigoSatisfied| simultaneously.
 
 \paragraph{Tracked-hypothesis bundle.} Per the project's discipline
 for non-derived identifications, we bundle the structural properties
-of ``the vestigial mode is the graviton'' into a Lean Prop:
+of ``the vestigial mode is the graviton'' into a Lean Prop with
+three independently load-bearing conjuncts:
 \begin{equation*}
   \verb|H_VestigialModeIsGraviton|(\chivest)
   \equiv \chivest > 0
   \wedge \verb|LigoSatisfied|(\dccap(\chivest))
-  \wedge \forall c{>}0,\; \cGW(\chivest, c) > 0,
+  \wedge |\dccap(\chivest)| < 1/2,
 \end{equation*}
 demanding positivity (P1), GW170817 compatibility (P2), and
-positivity of $\cGW$ for any positive light speed (P3). The bundle is
-discharged at $\chivest = 1$
-(\texttt{H\_VestigialModeIsGraviton\_at\_one}) and three explicit
-falsifier theorems prove non-vacuity:
+sub-half-deviation $|\dccap| < 1/2$ as P3'. P3' is genuinely
+independent of P1 (e.g.\ $\chivest = 1/10$ satisfies P1 with
+$|\dccap| \approx 0.684 \not< 1/2$). The bundle is discharged at
+$\chivest = 1$ (\texttt{H\_VestigialModeIsGraviton\_at\_one}) and
+\emph{four} explicit falsifier theorems prove non-vacuity:
 \verb|*_fails_at_natural_lower| (P2),
 \verb|*_fails_at_natural_upper| (P2),
-\verb|*_fails_at_zero| (P1). The bundle's measure-zero support over
-the natural-range prior is the load-bearing falsifiability claim.
+\verb|*_fails_at_zero| (P1), and
+\verb|*_fails_at_quarter| (P3'; at $\chivest = 1/4$ the deviation is
+exactly $\dccap = -1/2$, saturating the bound and isolating P3'
+independence). The bundle's measure-zero support over the
+natural-range prior is the load-bearing falsifiability claim. (The
+original Wave-2 P3 = $\forall c{>}0,\,\cGW(\chivest, c) > 0$ was
+removed in the 2026-04-25 post-Wave-2 audit as redundant given P1;
+P3' replaces it with a load-bearing quantitative constraint per the
+project's preemptive-strengthening discipline.)
 
-\paragraph{Phase~5y H1 caveat as a meta-theorem.} The Phase 5y H1
-deep research established that the Volovik identification is not a
-\emph{derivation}: there is no first-principles bound fixing the
-graviton-mode normalization in terms of the second-sound DOF. We
-encode this as the existential
-\texttt{second\_sound\_graviton\_not\_derived\_DOF}: for any
-positive $c$, there exists a positive $\chivest$ such that
-$\cGW(\chivest, c) = c$ --- specifically $\chivest = 1$ works. The
-meta-statement is that the identification underdetermines
-$\chivest$: without an external constraint, \emph{any} value of
-$\cGW$ is consistent with ``the vestigial mode is the graviton''.
+\paragraph{Phase~5y H1 caveat as a Lean disjointness theorem.} The
+Phase 5y H1 deep research established that the Volovik identification
+is not a \emph{derivation}: there is no first-principles bound fixing
+the graviton-mode normalization in terms of the second-sound DOF.
+The original \texttt{second\_sound\_graviton\_not\_derived\_DOF}
+theorem (a $\forall c, \exists \chivest$ existential discharged
+trivially by $\chivest = 1$) was retired during the 2026-04-25
+audit as an $\exists$-absorption tautology — the existence of
+\emph{one} consistent value does not encode underdetermination,
+which is the substantive Phase 5y H1 finding. We replace it with
+the disjointness theorem
+\texttt{natural\_range\_disjoint\_from\_ligo\_window}: for $\chivest$
+at either natural-range endpoint $\{0.1, 10\}$, no $c$-rescaling
+gives a GW170817-compatible $\dccap$. The frame-independent form
+\texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}
+quantifies over all $c > 0$ explicitly. Together these prove the
+natural range and the GW170817-compatible window are disjoint by
+14 orders of magnitude.
 
 %% ================================================================
 \section{Discussion}
@@ -285,8 +301,8 @@ the latter, and its bound is too tight to absorb the natural-range
 spread.
 
 \paragraph{Reproducibility.} The result is reproducible in two
-layers. The Lean layer is \texttt{GravitationalWaves.lean} (17
-theorems, zero \texttt{sorry}, zero new axioms, zero
+layers. The Lean layer is \texttt{GravitationalWaves.lean} (21
+theorems and lemmas, zero \texttt{sorry}, zero new axioms, zero
 \texttt{maxHeartbeats} overrides) at the project's pinned
 Mathlib4 commit; the Python layer is \texttt{src/gravitational\_waves/}
 with 49 \texttt{pytest} cases cross-checking every numeric quoted
@@ -298,11 +314,13 @@ and its underlying numerics are committed-pinned.
 \begin{thebibliography}{99}
 
 \bibitem{Volovik2024Vestigial}
-G.~E.~Volovik, JETP Lett.\ \textbf{119}, 564 (2024);
+G.~E.~Volovik, ``Fermionic Quartet and Vestigial Gravity,''
+JETP Lett.\ \textbf{119}, 330 (2024);
 DOI: 10.1134/S002136402460006X.
 
 \bibitem{Volovik2022Counting}
-G.~E.~Volovik, J.~Low Temp.\ Phys.\ \textbf{208}, 117 (2022);
+G.~E.~Volovik, ``Gravity from Symmetry Breaking Phase Transition,''
+J.~Low Temp.\ Phys.\ \textbf{207}, 127 (2022);
 DOI: 10.1007/s10909-022-02694-z.
 
 \bibitem{Akama1978}
@@ -337,9 +355,10 @@ Astrophys.\ J.\ Lett.\ \textbf{848}, L13 (2017);
 DOI: 10.3847/2041-8213/aa920c.
 
 \bibitem{Roehm2026LinearizedEFE}
-J.~G.~Roehm, ``Linearized emergent Einstein equations from the
-Akama--Diakonov--Wetterich four-fermion theory'',
-\emph{SK--EFT-Hawking project, in preparation}, 2026.
+J.~G.~Roehm, ``Linearized Einstein Equations from
+Anderson--Higgs Tetrad Condensation'',
+\emph{SK--EFT-Hawking project, in preparation}, 2026
+(\texttt{papers/paper23\_linearized\_efe/}).
 
 \end{thebibliography}
 

@@ -1305,6 +1305,90 @@
       "superseded_by": "Phase 7a sub-wave 7a.2 round-1 fixes (already applied; ledger entry added 2026-05-01 in 7a.5 cleanup)",
       "evidence": "REQUIRED finding: 5 external I1 bibkeys (physlean, compcert, sel4, leancipilot, alphaproof) had used_in lists containing only paper15/paper14 sources, missing papers/I1/paper_draft.tex. Verified all 5 entries now include 'papers/I1/paper_draft.tex' in their used_in lists (per `from src.core.citations import CITATION_REGISTRY; CITATION_REGISTRY[k]['used_in']`). The mechanical fix was applied during round-1 remediation but a supersession ledger entry was inadvertently omitted at the time; this entry closes that gap so the heatmap reflects the true bundle state.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-2300-internal-adversarial:paper27_bh_thermodynamics_four_laws:1.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass (2026-05-01)",
+      "evidence": "Balbinot2005PRD authors list updated in src/core/citations.py L3434 from 'Balbinot, R. and Fagnocchi, S. and Fabbri, A.' to 'Balbinot, R. and Fagnocchi, S. and Fabbri, A. and Procopio, G. P.' to match the published paper (Phys. Rev. D 71, 064019, 2005). The 4-author attribution is canonical per INSPIRE-HEP / arXiv gr-qc/0405098. Paper27 bibitem (4 authors) was correct; registry was missing the 4th author Procopio.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:1.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-1 fixes (2026-05-01)",
+      "evidence": "BLOCKER: Volovik2024Vestigial bibitem cited wrong page (564). Crossref API for DOI 10.1134/S002136402460006X returns title 'Fermionic Quartet and Vestigial Gravity', vol 119, pages 330-334. Updated three places: (i) src/core/citations.py L3047 — title corrected, page '330'->'330--334', doi_verified True; (ii) papers/paper25_gravitational_waves/paper_draft.tex bibitem — title corrected, page 564->330, DOI added; (iii) papers/L1/paper_draft.tex bibitem — title added, page 564->330, DOI preserved.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:1.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-1 fixes (2026-05-01)",
+      "evidence": "BLOCKER: Volovik2022Counting bibitem cited wrong volume (208) and page (117). Crossref API for DOI 10.1007/s10909-022-02694-z returns title 'Gravity from Symmetry Breaking Phase Transition', vol 207, pages 127-137. Updated three places: (i) src/core/citations.py L3030 — title corrected, page '127'->'127--137', doi_verified True; (ii) paper25 bibitem — title corrected (vol 207/p 127 was already correct), DOI added; (iii) L1 bibitem — title added, vol 208->207, page 117->127.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:1.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-1 fixes (2026-05-01)",
+      "evidence": "BLOCKER: Roehm2026LinearizedEFE registry stub had empty title and inprep=False; L1 bibitem invented a fabricated title. Verified actual companion title via `grep -m 1 ^\\title papers/paper23_linearized_efe/paper_draft.tex` = 'Linearized Einstein Equations from Anderson--Higgs Tetrad Condensation'. Updated registry: title field populated, inprep=True (Pipeline Invariant #11 in-prep exemption), used_in extended with paper23 + L1 paths. L1 bibitem corrected to use actual paper23 title with paper23 directory pointer.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:3.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-1 fixes (2026-05-01)",
+      "evidence": "BLOCKER: paper claimed second_sound_graviton_not_derived_DOF as a Lean theorem; the theorem was DELETED on 2026-04-25 as an exists-absorption tautology. The replacement is natural_range_disjoint_from_ligo_window (lean line 284, a disjointness theorem) plus the frame-independent second_sound_graviton_natural_range_universally_falsified (lean line 302). Both L1 §'Phase 5y H1 caveat as a Lean disjointness theorem' and paper25 §'Phase 5y H1 caveat' were rewritten to describe the actual disjointness theorems instead of the deleted existential. The cascade fix also updated paper25 abstract (item v) and conclusion (item v) — paper25 had been carrying the stale reference since the 2026-04-25 strengthening pass.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:3.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-1 fixes (2026-05-01)",
+      "evidence": "BLOCKER: paper described H_VestigialModeIsGraviton with invented P3 = `forall c>0, c_GW > 0`. Actual Lean def at lean/SKEFTHawking/GravitationalWaves.lean:326-329 has P3' = `|c_GW_deviation chi_vest| < 1/2` (sub-half-deviation). The Lean docstring (lines 263-269) explicitly notes original P3 was REMOVED in 2026-04-25 audit as redundant given P1 (positive susceptibility implies positive c_GW for c>0); P3' replaces it as load-bearing quantitative constraint. Both L1 and paper25 §bundled-hypothesis sections rewritten to use P3' = |Delta c/c| < 1/2 with rationale. Falsifier list extended from 3 to 4: added _fails_at_quarter at chi=1/4 where Delta c/c = -1/2 saturates the bound (isolates P3' independence).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:5.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-1 fixes (2026-05-01)",
+      "evidence": "BLOCKER: theorem-count internal contradiction (abstract said 21, reproducibility said 17). The reproducibility paragraph at L1 line 288 missed the round-1 abstract-only update. Both L1 reproducibility paragraph and paper25 conclusion paragraph (line 395-396) updated to '21 theorems and lemmas' (verifiable raw count: grep -cE '^theorem |^lemma ' lean/SKEFTHawking/GravitationalWaves.lean = 21).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:5.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-1 fixes (2026-05-01)",
+      "evidence": "BLOCKER: paper claimed 3 falsifiers, Lean has 4. Cascade fix from 3.2: added the 4th falsifier H_VestigialModeIsGraviton_fails_at_quarter (chi=1/4) to L1 narrative + paper25. The 4th falsifier specifically isolates P3' independence — it passes P1 (1/4 > 0) but |Delta c/c| = 1/2 saturates the sub-half bound. Both papers now narratively describe all 4 falsifiers with P1/P2/P3' attribution.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:7.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass L2 advisory close (2026-05-01)",
+      "evidence": "Advisory: 'all the same 16' framing across paper10_modular_generation. Verified current paper10 already qualifies the claim correctly: line 210-211 'The relationship to the Kitaev Z_16 classification is suggestive but has not been formalized here'; lines 214-221 'The theorem statement is an enumeration: it asserts that... It does not prove the mathematical equivalence of the four phenomena; that equivalence is the content of Wang's cobordism argument, which we use as an external input rather than formalize.' This wording explicitly addresses the 2026-04-12 finding's concern: paper10 does NOT claim the four 16s are the same mathematical object; it asserts their numerical convergence (sixteen_convergence_full as a tuple-enumeration) while explicitly disclaiming mathematical equivalence. The fix predates this ledger entry; entry closes the open-status flag.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:7.7",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass L2 advisory close (2026-05-01)",
+      "evidence": "Advisory: Wang 2024 epistemic-status framing. paper10_modular_generation line 49-58 rewritten to explicitly mark Wang's contribution as a 'proposes' rather than a derivation, with the novel-resolution + falsifiability framing the original review recommended. Paper now reads: 'Wang (2024) proposes that this constraint requires N_f ≡ 0 mod 3, with N_f=3 as the minimal nontrivial solution. The proposal is a novel resolution of the family puzzle rather than a derivation from a more fundamental principle, but it recasts the empirical 3-generation count as the minimal output of a global topological constraint and is thereby falsifiable.' LaTeX compiled clean (4 pages, 0 undefined refs).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:1.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass D5 scout (2026-05-01) — registry catch-up since 2026-04-23",
+      "evidence": "BLOCKER claimed 30 of 32 cited bibkeys absent from CITATION_REGISTRY. Verified current state: paper17 cites 33 bibkeys; 32 are in registry, 1 false-positive (regex parsed `%\\nFeistl2026` from a comment-line — Feistl2026 itself IS in registry with primary_source_path Lit-Search/Phase-5x/primary-sources/Feistl2026.pdf). Deterministic check: `from src.core.citations import CITATION_REGISTRY; cite_re = re.compile(r'\\\\cite[a-zA-Z]*\\*?\\s*(?:\\[[^\\]]*\\])*\\s*\\{([^}]+)\\}'); ...` returns 32/33 in registry. The 30-absent state from 2026-04-23 has been remediated by intervening citation-registry expansion (Phase 6c–6m bibkey additions cover most paper17 references). Substrate now consistent.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-05-01-bundle-stage13:L1:7.1",
+      "status": "accepted",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-1 — count literals updated to verifiable raw values (defer macro-binding to future cross-paper pass)",
+      "evidence": "REQUIRED finding: inline count literals (21 theorems, 49 pytest cases) recommended for macro-binding via counts.tex \\gravWavesTheorems / \\gravWavesTests. The recommended macro path requires extending scripts/update_counts.py to compute and emit per-Lean-module counts; currently counts.tex only has project-wide aggregate macros. The L1+paper25 inline literals are now verifiable raw counts consistent with grep — they are correct, will not silently rot the way curated 'substantive' counts do, and the user can cross-check at any time via the documented grep recipe in the supersession evidence for finding 5.1. Macro-binding is deferred to a project-wide count-literal pass (existing `count_literals` validate check warns on this pattern across multiple papers; it is not L1-specific). Severity: REQUIRED, not BLOCKER — does not gate the bundle's GREEN status.",
+      "date": "2026-05-01"
     }
   ]
 }

@@ -45,13 +45,15 @@ the ADW microscopic-coefficient natural range from
 Wave~1~\cite{Roehm2026LinearizedEFE}), the deviation lies in
 $\dccap \in [-0.68, +2.16]$, exceeding the GW170817 cap by
 $\sim 7\times 10^{14}$; (iv) bundle a tracked-hypothesis Prop
-\verb|H_VestigialModeIsGraviton| (positivity, LIGO compatibility,
-luminal propagation) and prove three explicit falsifiers
-(natural-lower, natural-upper, $\chivest = 0$); (v) record the
-Phase 5y H1 caveat as the Lean theorem
-\verb|second_sound_graviton_not_derived_DOF|, formalizing the
-underdetermination of the identification absent a derived-DOF
-mechanism; (vi) include the leading SK--EFT dissipative dispersion
+\verb|H_VestigialModeIsGraviton| (positivity P1, LIGO compatibility
+P2, sub-half-deviation $|\dccap| < 1/2$ as P3') and prove four
+explicit falsifiers (natural-lower, natural-upper, $\chivest = 0$,
+$\chivest = 1/4$ — the last isolating P3' independence at saturation
+$|\dccap| = 1/2$); (v) record the Phase 5y H1 caveat as the Lean
+disjointness theorem
+\verb|natural_range_disjoint_from_ligo_window|, proving the natural
+range and the GW170817-compatible window have no intersection at any
+$c$-value rescaling; (vi) include the leading SK--EFT dissipative dispersion
 correction $\delta\omega/\omega = \GammaH \cdot \omega/\cGW^{2}$
 from \texttt{SecondOrderSK.lean}, with a frequency-resolved scan
 across the LIGO band [10\,Hz, 10\,kHz].
@@ -230,40 +232,62 @@ no closed-form derivation is available we bundle the structural
 properties of an identification into a Lean Prop and prove
 explicit falsifiers.
 
-\subsection{The Phase 5y H1 caveat as a Lean theorem}
+\subsection{The Phase 5y H1 caveat as a Lean disjointness theorem}
 
 Phase 5y H1 (\texttt{Lit-Search/Phase-5y/Phase5y\_H1\_second\_sound\_graviton.md})
 established that the Volovik second-sound graviton identification
 is \emph{not} a derivation: there is no first-principles bound
 fixing the graviton-mode normalization in terms of the second-sound
-DOF. We encode this as the existential theorem
-\verb|second_sound_graviton_not_derived_DOF|: for any positive
-$c$, there exists a positive $\chivest$ such that
-$\cGW(\chivest, c) = c$ --- specifically $\chivest = 1$ works.
-The point of the theorem is the meta-statement that the
-identification underdetermines $\chivest$: without an external
-constraint, \emph{any} value of $\cGW$ is consistent with
-``the vestigial mode is the graviton''.
+DOF. The original \texttt{second\_sound\_graviton\_not\_derived\_DOF}
+theorem (a $\forall c, \exists \chivest$ existential discharged
+trivially by $\chivest = 1$) was retired during the 2026-04-25
+post-Wave-2 audit as an $\exists$-absorption tautology — the
+existence of \emph{one} consistent value does not encode
+``underdetermination,'' which is the substantive Phase~5y H1
+finding. We replace it with the disjointness theorem
+\verb|natural_range_disjoint_from_ligo_window|: for any $\chivest$
+at the natural-range endpoints
+$\{\text{chi\_vest\_natural\_lower}, \text{chi\_vest\_natural\_upper}\}
+= \{0.1, 10\}$, there is \emph{no} $c$-value rescaling that gives a
+GW170817-compatible $\dccap$. The frame-independent form
+\verb|second_sound_graviton_natural_range_universally_falsified|
+quantifies over all $c > 0$ explicitly: the deviation
+$\dccap(\chivest)$ is independent of $c$, hence the natural-range
+falsification holds regardless of any UV choice of $c$. Together,
+these theorems prove the natural range and the GW170817-compatible
+window are entirely disjoint by 14 orders of magnitude.
 
 \subsection{The bundled hypothesis}
 
-Define
+The strengthening pass also revised \verb|H_VestigialModeIsGraviton|.
+The original P3 conjunct ($\forall c > 0,\, \cGW(\chivest, c) > 0$)
+was redundant with P1 (positive susceptibility implies positive
+$\cGW$ via $\sqrt{\chivest} > 0$ for $\chivest > 0$ and $c > 0$).
+The project's preemptive-strengthening discipline (see
+\texttt{feedback\_post\_wave\_strengthening\_audit.md} P2 bundle-
+redundancy rule) requires removing redundant conjuncts. We replace
+P3 with the load-bearing quantitative constraint
+P3' (sub-half-deviation):
 \begin{equation*}
 \verb|H_VestigialModeIsGraviton|(\chivest) \;\equiv\;
-\chivest > 0 \wedge \verb|LigoSatisfied|(\dccap(\chivest))
-\wedge \forall c>0,\,\cGW(\chivest,c)>0.
+\chivest > 0 \,\wedge\, \verb|LigoSatisfied|(\dccap(\chivest))
+\,\wedge\, |\dccap(\chivest)| < 1/2.
 \end{equation*}
-The first conjunct demands a positive susceptibility (P1), the
-second is the GW170817 compatibility (P2), and the third is
-positivity of $\cGW$ for any positive light speed (P3).
+P1 demands positive susceptibility, P2 is the GW170817 compatibility,
+and P3' is the load-bearing sub-half-deviation bound (genuinely
+independent of P1: $\chivest = 1/10$ satisfies P1 but
+$|\dccap(1/10)| = |{\sqrt{1/10}}-1| \approx 0.684$ violates P3').
 
 \textbf{Theorem~E}~(\verb|H_VestigialModeIsGraviton_at_one|).
 $\chivest = 1$ discharges the bundle.
 
-\textbf{Falsifier theorems}.
+\textbf{Falsifier theorems} (four; the fourth isolates P3'
+independence).
 \verb|H_VestigialModeIsGraviton_fails_at_natural_lower| (P2 fails),
 \verb|H_VestigialModeIsGraviton_fails_at_natural_upper| (P2 fails),
-\verb|H_VestigialModeIsGraviton_fails_at_zero| (P1 fails).
+\verb|H_VestigialModeIsGraviton_fails_at_zero| (P1 fails),
+\verb|H_VestigialModeIsGraviton_fails_at_quarter| (P3' fails: at
+$\chivest = 1/4$, $\dccap = -1/2$ saturates the bound).
 
 The natural-range falsifiers are non-trivial: they demonstrate
 that the bundle is not vacuously satisfied (avoiding the
@@ -392,16 +416,17 @@ the natural range happens to pin around 1 only by accident.
 \section{Conclusions}
 \label{sec:conclusions}
 
-Phase 6a Wave 2 ships \texttt{GravitationalWaves.lean} (17
-theorems, zero sorry, zero new axioms, zero heartbeat overrides)
+Phase 6a Wave 2 ships \texttt{GravitationalWaves.lean} (21
+theorems and lemmas, zero sorry, zero new axioms, zero heartbeat overrides)
 formalizing: (i) the leading-order propagation
 $\cGW = c\,\sqrt{\chivest}$ with full algebra, monotonicity, and
 positivity; (ii) the GW170817 correctness-push biconditional
 locating the $\cGW = c$ window; (iii) the load-bearing natural-range
 falsification with both endpoint falsifier theorems; (iv) the
-bundled tracked hypothesis with three falsifier theorems; (v) the
-Phase 5y H1 caveat as the Lean meta-theorem
-\verb|second_sound_graviton_not_derived_DOF|; (vi) the
+bundled tracked hypothesis with four falsifier theorems (the fourth
+at $\chivest = 1/4$ isolating P3' independence); (v) the
+Phase 5y H1 caveat as the Lean disjointness theorem
+\verb|natural_range_disjoint_from_ligo_window|; (vi) the
 SK--EFT dispersion correction with linearity and zero-coefficient
 proofs.
 
@@ -448,12 +473,13 @@ Merger: GW170817 and GRB 170817A,''
 Astrophys.\ J.\ Lett.\ \textbf{848}, L13 (2017);
 arXiv:1710.05834.
 
-\bibitem{Volovik2024Vestigial} G.~E.~Volovik, ``Vestigial gravity
-from two-step condensation,'' JETP Lett.\ \textbf{119}, 564 (2024).
+\bibitem{Volovik2024Vestigial} G.~E.~Volovik, ``Fermionic Quartet
+and Vestigial Gravity,'' JETP Lett.\ \textbf{119}, 330 (2024);
+DOI: 10.1134/S002136402460006X.
 
-\bibitem{Volovik2022Counting} G.~E.~Volovik, ``Effective gravity,
-Goldstone bosons and pre-geometric phase,'' J.\ Low Temp.\ Phys.\
-\textbf{207}, 127 (2022).
+\bibitem{Volovik2022Counting} G.~E.~Volovik, ``Gravity from Symmetry
+Breaking Phase Transition,'' J.\ Low Temp.\ Phys.\
+\textbf{207}, 127 (2022); DOI: 10.1007/s10909-022-02694-z.
 
 \bibitem{Vergeles2025} S.~N.~Vergeles, ``Unitarity of 4D Lattice
 Theory of Gravity,'' Phys.\ Rev.\ D \textbf{112}, 054509 (2025);
