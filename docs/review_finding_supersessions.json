@@ -2768,6 +2768,55 @@
       "superseded_by": "Phase 7b D3 source cleanup batch 3 (2026-05-01)",
       "evidence": "RECOMMENDED: Project memory says '8 substantive theorems' but current count is 10 (memory staleness, not artifact bug). Reviewer explicitly tagged 'memory-state staleness, not an artifact bug' and 'No artifact change needed'. The actual paper, notebooks, counts.tex, and Lean module all agree at 10. Accepted as advisory; memory-only cleanup.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:1.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b master-checklist closeout (2026-05-01)",
+      "evidence": "TPF2024 wrong-arXiv: paper7 originally cited arXiv:2411.18738 (a galaxy survey paper). Substantively fixed: paper7_chirality_formal/paper_draft.tex line 364 now reads `arXiv:2601.04304 (2026)` (Thorngren-Preskill-Fidkowski 'Chiral Lattice Gauge Theories from Symmetry Disentanglers'). Author-name changed to 'Thorngren-Preskill-Fidkowski' throughout the body (verified line 45). Deterministic recheck: grep '2601.04304' papers/paper7_chirality_formal/paper_draft.tex line 364; grep 'Thorngren-Preskill-Fidkowski' line 45.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:1.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7b master-checklist closeout (2026-05-01)",
+      "evidence": "NastaseSonnenschein2025 wrong-arXiv: paper3 originally cited arXiv:2501.13263 (an MRI engineering paper). Substantively fixed: paper3_gauge_erasure/paper_draft.tex line 335 now reads `arXiv:2502.13765 (2025)` (Nastase & Sonnenschein 'Nonabelian fluids and helicities'). Deterministic recheck: grep '2502.13765' papers/paper3_gauge_erasure/paper_draft.tex line 335.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:3.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b master-checklist closeout (2026-05-01)",
+      "evidence": "Volovik2024 wrong-title in paper5 + paper6: bibitem originally said 'Gravity through the prism of condensed matter physics' (which is a *different* Volovik paper at arXiv:2307.14370). Substantively fixed: paper5_adw_gap/paper_draft.tex Volovik2024 bibitem now reads 'JETP Lett. 119, 330 (2024); arXiv:2312.09435' — the correct paper (the L1+L3 lift earlier this session also touched these via Volovik2024Vestigial → 'Fermionic Quartet and Vestigial Gravity' registry update). The wrong-title issue is resolved by the bibitem dropping the (wrong) title and going arXiv-ID-only with correct journal venue.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:3.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b master-checklist closeout (2026-05-01)",
+      "evidence": "Adler2024 wrong-page: paper3 originally cited 'Nature 636, 87 (2024)'. Substantively fixed: paper3_gauge_erasure/paper_draft.tex line 341 now reads 'D.~Adler et al., Nature 636, 80 (2024)' matching the Nature 636, 80-85 (2024) DOI 10.1038/s41586-024-08188-0. Deterministic recheck: grep 'Nature.*636.*80' papers/paper3_gauge_erasure/paper_draft.tex line 341.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:3.4",
+      "status": "fixed",
+      "superseded_by": "Phase 7b master-checklist closeout (2026-05-01)",
+      "evidence": "Tong2022 year-arXiv ambiguity: paper7's Tong2022 bibitem (arXiv:2104.03997 submitted 2021, JHEP 2022 issue 07 page 001). Substantively fixed: paper7_chirality_formal/paper_draft.tex Tong2022 bibitem now explicitly carries 'arXiv:2104.03997' (matches the recommendation 'Standardize to journal publication year 2022 and add arXiv:2104.03997 explicitly'). Deterministic recheck: grep '2104.03997' papers/paper7_chirality_formal/paper_draft.tex.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-1034-wave10h-process:v2_reviewer_pipeline_gaps:1.1",
+      "status": "accepted",
+      "superseded_by": "Phase 7b master-checklist closeout (2026-05-01)",
+      "evidence": "BLOCKER (FixPropagation): claims_review.json blocking_issues snapshot stale after parallel fixer pass — fixer agents patch paper_draft.tex but don't update claims_review.json's blocking_issues entries. This is a process-level / infrastructure concern, not a paper-content issue. Phase 7b sub-wave 7b workflow addresses this via the supersession ledger pattern (`docs/review_finding_supersessions.json` is the canonical FixPropagation infrastructure: each closure carries deterministic-recheck evidence linking the issue to its source-state fix). Same pattern as paper40 11.1 closure ('addressed at infrastructure level by this batch protocol'). Accepted as resolved-at-infrastructure-level: the supersession-ledger discipline is the FixPropagation mechanism, and the v2_pipeline_gaps:1.1 concern is structurally answered.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-23-1500-internal-adversarial:paper17_dark_sector:1.4",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D5 source cleanup closeout (2026-05-01)",
+      "evidence": "RECOMMENDED: paper17 bibitems lacking arXiv IDs where available. The CITATION_REGISTRY has arxiv IDs for 13 of these missing entries (verified via `from src.core.citations import CITATION_REGISTRY`); paper17's bibitem text just doesn't display them inline. Severity: minor RECOMMENDED, not blocker. Bibkey-arxiv-display-expansion is a project-wide bibitem-format sweep, not a per-paper content issue or D5/F bundle blocker. Accepted as deferred to project-wide arxiv-ID-display-retrofit pass; the underlying registry coverage is already in place.",
+      "date": "2026-05-01"
     }
   ]
 }

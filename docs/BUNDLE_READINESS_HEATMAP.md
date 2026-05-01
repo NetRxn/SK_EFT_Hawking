@@ -15,12 +15,12 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Verdict |
 |---|---:|---:|---:|---:|---|:---:|
-| **F** | 0 | 41 | 7 | 1 | 5 advisory, 1 critical, 1 minor | 🔴 RED |
+| **F** | 0 | 41 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **D1** | 1 | 5 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **D2** | 1 | 4 | 2 | 0 | 2 advisory | 🟢 GREEN |
-| **D3** | 1 | 22 | 4 | 1 | 3 advisory, 1 critical | 🔴 RED |
+| **D2** | 1 | 4 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D3** | 1 | 22 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **D4** | 1 | 7 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **D5** | 1 | 6 | 1 | 0 | 1 minor | 🟢 GREEN |
+| **D5** | 1 | 6 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L1** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L2** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L3** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
@@ -31,21 +31,21 @@
 
 ## Gate × Bundle distribution (open findings)
 
-| Bundle | CitationIntegrity | CountFreshness |
-|---|---:|---:|
-| **F** | 6 | 1 |
-| **D1** | 0 | 0 |
-| **D2** | 2 | 0 |
-| **D3** | 3 | 1 |
-| **D4** | 0 | 0 |
-| **D5** | 1 | 0 |
-| **L1** | 0 | 0 |
-| **L2** | 0 | 0 |
-| **L3** | 0 | 0 |
-| **I1** | 0 | 0 |
-| **I2** | 0 | 0 |
-| **E1** | 0 | 0 |
-| **E2** | 0 | 0 |
+| Bundle |  |
+|---||
+| **F** |  |
+| **D1** |  |
+| **D2** |  |
+| **D3** |  |
+| **D4** |  |
+| **D5** |  |
+| **L1** |  |
+| **L2** |  |
+| **L3** |  |
+| **I1** |  |
+| **I2** |  |
+| **E1** |  |
+| **E2** |  |
 
 ## Notes
 
