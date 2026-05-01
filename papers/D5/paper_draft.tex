@@ -408,30 +408,35 @@ the DESI~DR2 + sound-horizon-anchored falsifier program at R5
 \item \emph{Sorkin everpresent-$\Lambda$ M1 + M2}: NO-GO at R5 via
   the sharpened $f_{\rm DESI}$ upper bound at $95\%$ C.L.
   ($f_{\rm DESI} < 10^{-4}$ post-Tier-(4) conditioning, sharper than
-  the raw Tier-(1) bound by at least $100\times$;
-  \texttt{CSDE1}, \texttt{CSDE2}, \texttt{CSDE3} in
-  \texttt{CausalSetDarkEnergy.lean}).
+  the raw Tier-(1) bound by at least $100\times$; Lean theorems
+  \texttt{fDESI\_R5\_sharpened\_below\_raw} (label CSDE1),
+  \texttt{fDESI\_R5\_sharpened\_below\_1em4} (label CSDE2), and
+  \texttt{everpresent\_lambda\_tier4\_sharpening\_factor\_100x} (label
+  CSDE3) in \texttt{CausalSetDarkEnergy.lean}).
 \item \emph{Phenomenological BDG} (Barrow-Diakonov-Gielen
   ``$\sigma_\Lambda(V) = \alpha_{\rm BDG}/\sqrt{V}$''): NO-GO via the
   Tier-1 raw upper bound itself; the BDG mechanism violates the
   Bayesian-decisive threshold without conditioning. Publishable structural
   caveat: $\sigma_\Lambda$ is monotone-decreasing in volume for fixed
-  $\alpha_{\rm BDG} > 0$ (\texttt{CSDE7}, \texttt{CSDE8}).
+  $\alpha_{\rm BDG} > 0$ (\texttt{bdg\_sigma\_lambda\_alpha\_bdg\_over\_sqrt\_v}
+  / \texttt{bdg\_sigma\_lambda\_decreasing}, labels CSDE7 / CSDE8).
 \item \emph{Causet d'Alembertian DE}: NO-GO via 4D gradient instability
   --- the effective $c_s^2 < 0$ for the delta-correlated kinetic term
-  drives a sub-Hubble inconsistency (\texttt{CSDE4} in
-  \texttt{CausalSetDarkEnergy.lean}; cross-references the
+  drives a sub-Hubble inconsistency
+  (\texttt{causet\_dalembertian\_4d\_gradient\_instability}, label CSDE4,
+  in \texttt{CausalSetDarkEnergy.lean}; cross-references the
   Krishna 2024 review).
 \end{itemize}
 
 The Track~A NO-GO is recorded in \texttt{track\_a\_fully\_no\_go\_at\_r5}
-(\texttt{CSDE10}) as the conjunction of the four per-candidate verdicts.
+(label CSDE10) as the conjunction of the four per-candidate verdicts.
 
 \subsection{Caveat 1: GD obstruction inapplicable to causal-set DE}
 \label{subsec:phase6m-track-a-caveat-gd}
 
-The Phase~5y Gibbons--Duhem (GD) obstruction theorem
-(\texttt{GibbsDuhemTheorem} in \texttt{DESIComparison.lean}) does not
+The Phase~5y Gibbons--Duhem (GD) obstruction theorem (Lean namespace
+\texttt{SKEFTHawking.GibbsDuhemTheorem}; principal theorem
+\texttt{GibbsDuhemTheorem.gibbs\_duhem\_obstruction\_main}) does not
 apply to causal-set DE \emph{across all four admissible sprinkling
 prescriptions} (Lorentz-invariant Poisson, Krioukov causet, Bombelli-Henson
 fan, percolation lattice). The substantive obstruction is at the
@@ -439,10 +444,11 @@ substrate-d.o.f. level: causal-set DE is built on combinatorial degrees
 of freedom (sprinkled events plus their causal partial order), not the
 Lagrangian scalar field on which GD operates. The result is encoded as
 \texttt{gibbs\_duhem\_inapplicable\_causal\_set\_robust\_under\_prescriptions}
-(\texttt{CSDE5}) and the cross-bridge
-\texttt{track\_a\_outside\_gibbs\_duhem\_domain} (\texttt{CSDE5b}) which
-calls the Phase~5y \texttt{InDESIRegion} machinery directly: Track~A is
-outside the Phase~5y \texttt{GibbsDuhemTheorem} applicability domain.
+(label CSDE5) and the cross-bridge
+\texttt{track\_a\_outside\_gibbs\_duhem\_domain} (label CSDE5b) which
+calls the Phase~5y \texttt{DESIComparison.InDESIRegion} +
+\texttt{DarkEnergyObstructionPrinciple.IsViable} machinery directly:
+Track~A is outside the Phase~5y GD applicability domain.
 
 This is a structural finding distinct from the NO-GO verdict: even if a
 new causal-set DE mechanism cleared DESI bounds, GD would still not bind
@@ -454,8 +460,8 @@ toolkit, and the Phase~5y orthogonality machinery is silent on them.
 
 The Barrow numerical upper bound on $\Lambda$ is prescription-dependent at
 the $\geq 40\%$ level. Different sprinkling prescriptions evaluated in
-\texttt{barrow\_bound\_prescription\_dependent} (\texttt{CSDE6}) and
-\texttt{barrow\_bound\_gap\_at\_least\_40\_percent} (\texttt{CSDE6\textquotesingle})
+\texttt{barrow\_bound\_prescription\_dependent} (label CSDE6) and
+\texttt{barrow\_bound\_gap\_at\_least\_40\_percent} (label CSDE6\textquotesingle)
 produce numerically different upper bounds with at least $40\%$ relative
 gap. This is a publishable short-note finding (originally outlined as
 a stand-alone CQG/JCAP Letter; embedded here as the §10.5 D5 subsection
@@ -472,9 +478,9 @@ The phenomenological BDG fit form
 $\sigma_\Lambda(V) = \alpha_{\rm BDG}/\sqrt{V}$ is recovered from a
 first-principles substrate decomposition: $\alpha_{\rm BDG} = \sqrt{K(M)/V}$
 where $K(M)$ is the substrate-level mode-counting parameter
-\texttt{CSDE7}. The Lean theorem
+CSDE7 (\texttt{bdg\_sigma\_lambda\_alpha\_bdg\_over\_sqrt\_v}). The Lean theorem
 \texttt{bdg\_sigma\_lambda\_alpha\_bdg\_over\_sqrt\_v} establishes the
-defining property; \texttt{bdg\_sigma\_lambda\_decreasing} (\texttt{CSDE8})
+defining property; \texttt{bdg\_sigma\_lambda\_decreasing} (label CSDE8)
 proves monotone-decrease in $V$ for fixed $\alpha_{\rm BDG} > 0$. The
 first-principles decomposition recasts BDG from a phenomenological fit
 to a substrate-derivable structural prediction, with the prescription
@@ -496,7 +502,7 @@ short-note outline lives at
 Pipeline Invariant~\#14 default rather than spawning a stand-alone
 CQG/JCAP Letter. The narrative covers: (i)~the four admissible sprinkling
 prescriptions and their differential mode-counting; (ii)~the
-quantitative $\geq 40\%$ gap from \texttt{CSDE6\textquotesingle};
+quantitative $\geq 40\%$ gap from CSDE6\textquotesingle (\texttt{barrow\_bound\_gap\_at\_least\_40\_percent});
 (iii)~implications for the Barrow program's DE phenomenology; (iv)~
 the substrate-level selection rule needed to disambiguate the four
 prescriptions. User authorization for a 14th bundle target would

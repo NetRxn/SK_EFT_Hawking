@@ -1690,6 +1690,230 @@
       "superseded_by": "Phase 7b D5 source cleanup (2026-05-01)",
       "evidence": "REQUIRED: No PARAMETER_PROVENANCE entries for paper17 specific parameters (BK fiducial m_DM/Λ/c_s + 5 cluster-merger kinematics + condensate fraction + shock extent + Bullet D_L + per-survey SNR). Substantively fixed: (1) BK fiducial trio (SFDM.m_DM_BK, SFDM.Lambda_BK, SFDM.c_s_subcluster_BK) and merger kinematics (SFDM.merger_Mach_canonical) were already added in Phase 5x Wave-10 remediation 2026-04-24 with both LLM-verified (2026-04-24) and human-verified (2026-04-28) dates — provenance.py lines 849-932. (2) Phase 7b D5 source cleanup (2026-05-01) adds the 5 remaining paper17 parameters: SFDM.condensate_fraction_BK = 0.59, SFDM.shock_extent_Bullet_kpc = 400, SFDM.D_L_Bullet_Mpc = 830, SFDM.SNR_Bullet_Euclid = 0.83, SFDM.SNR_Bullet_Roman = 1.04. All 5 carry LLM verification (2026-05-01) with detailed sourcing chains; human verification gates submission (per Pipeline Invariant #8). Deterministic recheck: `from src.core.provenance import PARAMETER_PROVENANCE; [PARAMETER_PROVENANCE['SFDM.' + k] for k in ['condensate_fraction_BK', 'shock_extent_Bullet_kpc', 'D_L_Bullet_Mpc', 'SNR_Bullet_Euclid', 'SNR_Bullet_Roman']]` returns 5 valid entries. The 0.83/1.04 paper values match the new entries (paper17 lines 394-395); review's 1.03 figure was a stale snapshot from 2026-04-23 superseded by the current paper17 1.04.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `ADW` not in CITATION_REGISTRY. Substantively fixed: src/core/citations.py line 1611 now contains 'ADW' entry (Akama 1978, PTP 60:1900, DOI 10.1143/PTP.60.1900) with doi_verified=True; verification cache record at docs/citation_verifications.jsonl (bibkey:ADW, verdict:match, 2026-04-25T02:59:50). Deterministic recheck: `grep -n \"^    'ADW':\" src/core/citations.py` returns line 1611; `grep '\"bibkey\":\"ADW\"' docs/citation_verifications.jsonl` returns the cached match record.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `WetterichSpinor` not in CITATION_REGISTRY. Substantively fixed: bibitem split into WetterichSpinor2013 (Lect.Notes.Phys. 863:67) at registry line 1633 + WetterichSpinor2022 (JHEP 06:069) at registry line 1655; both doi_verified=True. Paper20 bibitems lines 603, 608 split accordingly. Verification cache records at docs/citation_verifications.jsonl for both bibkeys (verdict:match, 2026-04-25T02:59:50; arXiv corrections 1206.3392→1201.2871 and 2110.13863→2101.11519 noted in fetch detail). Deterministic recheck: `grep -nE \"^    'WetterichSpinor(2013|2022)':\" src/core/citations.py` returns lines 1633, 1655.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.3",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `WetterichNJL` not in CITATION_REGISTRY. Substantively fixed: registry entry at src/core/citations.py line 1676 with doi_verified=True. NB: 2026-04-26 citation-verification round identified the original PLB 901:136223 (2024) as a hallucinated DOI; replaced with the canonical Wetterich 2012 lattice spinor-gravity paper (arXiv:1201.6505 / Ann. Phys. 327:2184, DOI 10.1016/j.aop.2012.04.005). Verification cache record at docs/citation_verifications.jsonl (bibkey:WetterichNJL, verdict:match, 2026-04-25T02:59:50). Deterministic recheck: `grep -n \"^    'WetterichNJL':\" src/core/citations.py` returns line 1676.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.4",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `Fierz` not in CITATION_REGISTRY. Substantively fixed: registry entry at src/core/citations.py line 1705 (Fierz 1937, Z.Phys. 104:553, DOI 10.1007/BF01330070) with doi_verified=True. Verification cache record at docs/citation_verifications.jsonl (bibkey:Fierz, verdict:match, 2026-04-25T02:59:50; verified via NASA ADS bibcode 1937ZPhy..104..553F). Deterministic recheck: `grep -n \"^    'Fierz':\" src/core/citations.py` returns line 1705.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.5",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `NJL61` not in CITATION_REGISTRY. Substantively fixed: registry entry at src/core/citations.py line 1724 (Nambu-Jona-Lasinio 1961, Phys.Rev. 122:345, DOI 10.1103/PhysRev.122.345) with doi_verified=True. Verification cache record at docs/citation_verifications.jsonl (bibkey:NJL61, verdict:match, 2026-04-25T02:59:50). Deterministic recheck: `grep -n \"^    'NJL61':\" src/core/citations.py` returns line 1724.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.6",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `GiesScherer` not in CITATION_REGISTRY + likely-wrong attribution. Substantively fixed: registry entry at src/core/citations.py line 1745 with doi_verified=True. NB: 2026-04-26 citation-verification round corrected arXiv ID 1305.6940→1303.4253 (registered actual Gies-Lippoldt 2013 paper, PRD 87:104026, DOI 10.1103/PhysRevD.87.104026); bibkey retained as project-local shorthand. Verification cache record at docs/citation_verifications.jsonl (bibkey:GiesScherer, verdict:match, 2026-04-25T02:59:50). Deterministic recheck: `grep -n \"^    'GiesScherer':\" src/core/citations.py` returns line 1745.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.7",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `BardeenHillLindner` not in CITATION_REGISTRY. Substantively fixed: registry entry at src/core/citations.py line 1770 (Bardeen-Hill-Lindner 1990, PRD 41:1647, DOI 10.1103/PhysRevD.41.1647) with doi_verified=True. Verification cache record at docs/citation_verifications.jsonl (bibkey:BardeenHillLindner, verdict:match, 2026-04-25T02:59:50; verified via NASA ADS 1990PhRvD..41.1647B). Deterministic recheck: `grep -n \"^    'BardeenHillLindner':\" src/core/citations.py` returns line 1770.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.8",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `PDG2024` not in CITATION_REGISTRY. Substantively fixed: registry entry at src/core/citations.py line 1942 (Navas et al. (PDG) 2024, PRD 110:030001, DOI 10.1103/PhysRevD.110.030001) with doi_verified=True. Verification cache record at docs/citation_verifications.jsonl (bibkey:PDG2024, verdict:match, 2026-04-25T02:59:50; verified via pdg.lbl.gov authors page). Deterministic recheck: `grep -n \"^    'PDG2024':\" src/core/citations.py` returns line 1942.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.9",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Bibkey `PeskinSchroeder` not in CITATION_REGISTRY. Substantively fixed: registry entry at src/core/citations.py line 1964 (Peskin-Schroeder 1995, ISBN 978-0201503975) with doi_verified=True (textbook ISBN-only verification). Verification cache record at docs/citation_verifications.jsonl (bibkey:PeskinSchroeder, verdict:match-partial, 2026-04-25T02:59:50; verified via OpenLibrary search title+year, no DOI for textbook). Deterministic recheck: `grep -n \"^    'PeskinSchroeder':\" src/core/citations.py` returns line 1964.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.10",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: `WetterichSpinor` bibitem combined two distinct references. Substantively fixed: paper20_scalar_rung/paper_draft.tex now contains separate `\\bibitem{WetterichSpinor2013}` (line 603) and `\\bibitem{WetterichSpinor2022}` (line 608); both bibkeys are independently registered in src/core/citations.py at lines 1633 and 1655. Body \\cite calls disambiguated. Deterministic recheck: `grep -nE '\\\\bibitem\\{WetterichSpinor[0-9]+\\}' papers/paper20_scalar_rung/paper_draft.tex` returns 2 distinct lines.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:1.11",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung",
+      "evidence": "REQUIRED: Citation arXiv/DOI verifications not performed (WebFetch denied). Substantively fixed: 2026-04-26 citation-verification round (llm-webfetch:2026-04-26 reviewer) executed fresh fetches against all 10 paper20 bibkeys; 10 verification records appended to docs/citation_verifications.jsonl (lines 2-11) with verdicts match/match-partial; all 10 entries flipped to doi_verified=True in src/core/citations.py. Three Class-1 wrong-arXiv corrections (WetterichSpinor2013/2022, GiesScherer) and one Class-2 hallucinated-DOI replacement (WetterichNJL) were made during this round. Deterministic recheck: `grep -c '\"paper\":\"paper20_scalar_rung\"' docs/citation_verifications.jsonl` returns 10.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:3.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md",
+      "evidence": "BLOCKER: Paper cited removed Lean theorem `mexican_hat_is_tetrad_bifurcation`. Substantively fixed: papers/paper20_scalar_rung/paper_draft.tex now describes the tracked-hypothesis bridge pattern (lines 177-198) citing the current load-bearing consequence theorem `mexican_hat_vev_under_supercritical_bridge` (line 187) and contrapositive `bridge_excludes_super_uv_vev` (line 191) plus the tracked Prop `H_ScalarChannelIsTetradBifurcationOutput` (line 184) — all of which exist in lean/SKEFTHawking/ScalarRungInterpretation.lean (lines 170, 179, 190). Deterministic recheck: `grep -c 'mexican_hat_is_tetrad_bifurcation' papers/paper20_scalar_rung/paper_draft.tex` returns 0; `grep -c 'mexican_hat_vev_under_supercritical_bridge' papers/paper20_scalar_rung/paper_draft.tex` returns 1.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:3.3",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md",
+      "evidence": "BLOCKER: Paper cited non-existent theorem `TetradGapEquation.gap_equation_supercritical`. Substantively fixed: papers/paper20_scalar_rung/paper_draft.tex now references the actual theorem name `TetradGapEquation.gap_nontrivial_exists` (line 195). Deterministic recheck: `grep -c 'gap_equation_supercritical' papers/paper20_scalar_rung/paper_draft.tex` returns 0; `grep -c 'gap_nontrivial_exists' papers/paper20_scalar_rung/paper_draft.tex` returns 1.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:5.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md",
+      "evidence": "REQUIRED: Numerical values 80.47/91.21 GeV in paper differ from earlier inventory log of 80.465/91.211. REINVOCATION review verified closed: paper20 retains 80.47/91.21 (lines 243) at 2-decimal display per paper convention; values are within 0.0006% of pipeline (80.465/91.211) — well within 0.5% rounding tolerance. The original finding's option (a) (accept rounding within tolerance) was applied. Deterministic recheck: `grep -nE '80.47|91.21' papers/paper20_scalar_rung/paper_draft.tex` returns line 243; `uv run python -c \"from src.scalar_rung.ew_mass_matrix import anderson_higgs_w_z_masses; print(anderson_higgs_w_z_masses())\"` confirms canonical pipeline values within tolerance.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:7.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md",
+      "evidence": "REQUIRED: Definition count inconsistent: paper said 'nine non-computable definitions' but module had 9 def + 3 structures + 3 Prop-level defs (incl. H_ScalarChannelIsTetradBifurcationOutput). REINVOCATION review verified closed (line 51): paper now reads 'three structures, nine non-computable definitions for VEV/mass/Yukawa formulas, and three Prop-level definitions'. Deterministic recheck: `grep -E 'three Prop-level' papers/paper20_scalar_rung/paper_draft.tex` returns matching prose. NB: post-Wave-1b the paper formal-verification-summary at lines 485-495 has been further updated to reflect Wave 1b additions (six structures, 24 noncomputable definitions, seven tracked-hypothesis Props) — original finding's underlying inconsistency stayed resolved through this update.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung:7.3",
+      "status": "accepted",
+      "superseded_by": "review:2026-04-25-0135-internal-adversarial:paper20_scalar_rung_REINVOCATION.md",
+      "evidence": "RECOMMENDED (informational): Project-totals macros `\\totaltheorems{}` / `\\substantivetheorems{}` were already correct per Phase 5v policy. REINVOCATION review verified closed (line 52). The recommendation to also macro-ize the per-module 20-theorem count is advisory and was not load-bearing; the inline literal currently matches the live module count (20 in ScalarRungInterpretation.lean, 23 in BHLGaugeEmbedding.lean). Accepted as advisory; no submission blocker.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-2106-internal-adversarial:paper20_scalar_rung:7.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Paper prose claimed `bhlBilinearBasisDim = 66`; Lean theorem certified value as 68. Substantively fixed: papers/paper20_scalar_rung/paper_draft.tex now uses 68 in both load-bearing locations — line 372 'gauge-indexed Clifford basis is $68$-dimensional' and line 375 explicit block-sum '$2 + 2 + 4 + 4 + 12 + 4 + 12 + 4 + 12 + 12$' with line 376 '\\texttt{fierzBlockSum\\_eq\\_68}'. The 66 referenced at lines 377-378 is in the *correction-narrative* explaining the prior typo ('the listed blocks sum to 68, not the document's stated 66'), which is informational rather than load-bearing. Deterministic recheck: `grep -nE '66|68' papers/paper20_scalar_rung/paper_draft.tex` shows 68 at lines 372, 375-378 and only the corrective-narrative 66 references remain.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-25-2106-internal-adversarial:paper20_scalar_rung:1.1",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: Wave 1b registry entries Hill2025Redux, Cvetic1999 still doi_verified:None; MiranskyTanabashiYamawaki1989 not tracked in cache. Current state (2026-05-01): all three remain doi_verified:None (citations.py lines 1811, 1922, 1790). No verification records in docs/citation_verifications.jsonl for these three bibkeys. The original 10-bibkey paper20 verification batch (2026-04-26) was scoped to Wave 1 entries; Wave 1b additions arrived after that batch and have not yet had their fetches scheduled. Accepted as out-of-scope for D3 source cleanup (these are P1-tier, doi_verified flips not source content); a future authorized-WebFetch round should append fetch records for Hill2025Redux (verdict:match-preprint per Round-2 verification), Cvetic1999 (verdict:match per Round-2 verification), and MiranskyTanabashiYamawaki1989 (verdict:fetch_failed — World Scientific MPLA blocks WebFetch). Tracked at the Wave-1b-citations level rather than as a load-bearing source-cleanup finding.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung:C1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung",
+      "evidence": "BLOCKER: Class 1 — three wrong arXiv IDs (WetterichSpinor2013 1206.3392→1201.2871; WetterichSpinor2022 2110.13863→2101.11519 + DOI JHEP02(2022)169→JHEP06(2022)069; GiesScherer 1305.6940→1303.4253). Substantively fixed: all three corrections applied to src/core/citations.py and to paper20 bibitems (lines 603, 608, 633); verification cache records appended at docs/citation_verifications.jsonl with before/after context (lines 3, 4, 8). All three bibkeys now doi_verified=True. Deterministic recheck: `grep -E '\"arxiv_id\":\"(1201.2871|2101.11519|1303.4253)\"' docs/citation_verifications.jsonl` returns 3 records.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung:C2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung",
+      "evidence": "BLOCKER: Class 2 — hallucinated WetterichNJL citation (PLB 901:136223 2024 — DOI returns 404 in CrossRef; INSPIRE/arXiv have no matching paper; Phase-5z deep research never references it). Substantively fixed: registry entry replaced with canonical lattice spinor-gravity paper Wetterich 2012 (arXiv:1201.6505 / Ann. Phys. 327:2184, DOI 10.1016/j.aop.2012.04.005); paper20 bibitem (line 618) and lean/SKEFTHawking/WetterichNJL.lean docstring updated in lockstep; doi_verified=True. Verification cache record at docs/citation_verifications.jsonl line 5 documents the correction with detail. Deterministic recheck: `grep '\"bibkey\":\"WetterichNJL\"' docs/citation_verifications.jsonl` returns the corrected match record with arXiv 1201.6505.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung:C3",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-0130-citation-verification:paper20_scalar_rung",
+      "evidence": "BLOCKER (per registry comment record): Class 3 — title text minor drift on ADW bibitem (registry title 'An attempt at pregeometry: gauge fields'; actual PTP subtitle is 'Gravity with Composite Metric'). Substantively fixed: registry entry corrected; paper20 bibitem (line 598) author-initial typo `T.~Akama` corrected to `K.~Akama` (Keiichi Akama); doi_verified=True. Verification cache record at docs/citation_verifications.jsonl line 2 documents the title correction. Deterministic recheck: `grep '\"bibkey\":\"ADW\"' docs/citation_verifications.jsonl` returns match record with corrected title 'An Attempt at Pregeometry: --- Gravity with Composite Metric ---'.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:1.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung",
+      "evidence": "BLOCKER: AndrianovAndrianovAfonin2020 was a wrong-target citation (registry attributed authors/DOI/page that did not match the arXiv 1906.09579 metadata). Substantively fixed (Round 2 verification at 2026-04-26-1930): bibkey `AndrianovAndrianovAfonin2020` removed from both src/core/citations.py registry and from papers/paper20_scalar_rung/paper_draft.tex bibliography. Comment block at citations.py:1533-1538 documents the removal. Deterministic recheck: `grep -c 'AndrianovAndrianovAfonin' papers/paper20_scalar_rung/paper_draft.tex` returns 0; `grep -E \"^    'AndrianovAndrianovAfonin\" src/core/citations.py` returns no entry (only the documentary comment).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:1.2",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "BLOCKER: Four Wave 1b bibkeys carried doi_verified:None (MiranskyTanabashiYamawaki1989, Hill2025Redux, AndrianovAndrianovAfonin2020, Cvetic1999). Partially fixed: AndrianovAndrianovAfonin2020 removed entirely (per finding 1.1 closure). Three remaining (Hill2025Redux, Cvetic1999 verified match per Round-2 follow-up but registry flag not flipped; MTY1989 fetch_failed via World Scientific MPLA WebFetch block) remain doi_verified:None. Accepted as out-of-scope for D3 source cleanup — same scope as 2026-04-25-2106:1.1; future authorized-WebFetch round will append fetch records and flip the flags. The finding's primary substantive concern (registered presence of these bibkeys) was already met (all three appear in registry); the doi_verified flag flip is the remaining residual.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:1.3",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung",
+      "evidence": "RECOMMENDED: AndrianovAndrianovAfonin2020 cited but not used in body (orphan bibitem). Substantively fixed: AndrianovAndrianovAfonin2020 removed entirely from paper20 bibliography in lockstep with finding 1.1 closure. Lean docstring at BHLGaugeEmbedding.lean:44 also recommended for cleanup (covered by review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung:4.1). Deterministic recheck: `grep -c 'Andrianov' papers/paper20_scalar_rung/paper_draft.tex` returns 0.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:4.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung",
+      "evidence": "REQUIRED: Paper claimed 23 theorems in BHLGaugeEmbedding.lean but actual count was 22 (false positive at line 16 docstring). Substantively fixed: BHLGaugeEmbedding.lean was refactored during the Round 1→Round 2 cycle (66→68 dim correction added witness+falsifier theorems, bumping count to 23-24). Round 2 reverification (2026-04-26-1930 finding 3.1) verified theorem count = 24 at that time; subsequent strengthening pass landed at 23 (current stable count per `grep -cE \"^theorem [a-zA-Z_]\" lean/SKEFTHawking/BHLGaugeEmbedding.lean` = 23). Paper line 481 reads `BHLGaugeEmbedding.lean (Wave 1b) & 23` — matches live count exactly. Deterministic recheck: `grep -cE \"^theorem [a-zA-Z_]\" lean/SKEFTHawking/BHLGaugeEmbedding.lean` returns 23; `grep -E 'BHLGaugeEmbedding.lean.*23' papers/paper20_scalar_rung/paper_draft.tex` returns line 481.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1925-internal-adversarial:paper20_scalar_rung:5.1",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung + Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "RECOMMENDED: Hill2025Redux preprint status not flagged in body prose despite load-bearing role. Substantively fixed: papers/paper20_scalar_rung/paper_draft.tex bibitem at lines 650-654 explicitly flags `\\bibitem{Hill2025Redux}` as preprint (FERMILAB-PUB-25-0219-T). Lean module BHLGaugeEmbedding.lean:44-45 flagged 'FERMILAB-PUB-25-0219-T preprint; load-bearing for the bilocal-correction m_H = 125 GeV recovery — no journal venue at time of writing' per Round-2 review verification. Deterministic recheck: `grep -E 'FERMILAB-PUB-25-0219-T|preprint' papers/paper20_scalar_rung/paper_draft.tex` returns matching line(s).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung:1.1",
+      "status": "accepted",
+      "superseded_by": "Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: Two Wave 1b registry entries (Hill2025Redux, Cvetic1999) still carry doi_verified:None despite Round 2 fresh fetches confirming match. Accepted as out-of-scope for D3 source cleanup — same scope as 2026-04-25-2106:1.1 and 2026-04-26-1925:1.2. The fetches were performed and verdicts confirmed (match), but no records were appended to docs/citation_verifications.jsonl and doi_verified flags were not flipped to True in src/core/citations.py. Future authorized-WebFetch round will append cache records and flip the flags. Bibkey presence + body-cite usage are intact; this is residual P1-tier verification housekeeping, not source content.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung:2.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: EW.M_H_GEV provenance entry still carried old 125.25 value; constants.py and provenance.py disagreed. Substantively fixed: src/core/provenance.py line 1091-1102 PARAMETER_PROVENANCE['EW.M_H_GEV'] now records value: 125.20 with detail 'Higgs boson mass: m_H = 125.20 ± 0.11 GeV (PDG 2024; world average)' and llm_verified_notes 'PDG 2024 single canonical value: m_H = 125.20 ± 0.11. Updated 2026-04-26 from prior 125.25 ± 0.17 placeholder'. constants.py:1879 also has M_H_GEV=125.20. Deterministic recheck: `grep -nE \"'value': 125.20\" src/core/provenance.py` returns line 1092; `grep -E 'M_H_GEV.*125.20' src/core/constants.py` returns line 1879.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung:2.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: EW.M_TOP_GEV constant added but no PARAMETER_PROVENANCE entry; EW.Y_TOP still derived from 172.76. Substantively fixed: src/core/provenance.py line 1200-1218 adds PARAMETER_PROVENANCE['EW.M_TOP_GEV'] = 172.57 with detailed source 'Top quark mass: m_t = 172.57 ± 0.29 GeV (PDG 2024; world average)'; provenance.py line 1224-1235 updates EW.Y_TOP source to 'Derived from top-quark pole mass m_t = 172.57 GeV (PDG 2024)' with detail 'y_t = √2·172.57/246.22 ≈ 0.9912' and llm_verified_notes 'Updated 2026-04-26 from prior 0.9946 (which used 172.76 as central) to align with EW.M_TOP_GEV = 172.57'. constants.py:1880 has M_TOP_GEV=172.57. Deterministic recheck: `grep -nE \"'EW.M_TOP_GEV'\" src/core/provenance.py` returns line 1200; `grep -nE \"172.76\" src/core/provenance.py` returns 0.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung:3.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "REQUIRED: BHLGaugeEmbedding theorem count reported as 23 in paper, actual was 24 at Round-2 time. Substantively fixed: subsequent strengthening pass landed BHLGaugeEmbedding.lean at 23 theorems (stable count). Paper20 line 481 'BHLGaugeEmbedding.lean (Wave 1b) & 23' matches the live count exactly. Deterministic recheck: `grep -cE \"^theorem [a-zA-Z_]\" lean/SKEFTHawking/BHLGaugeEmbedding.lean` returns 23; `grep -E 'BHLGaugeEmbedding.lean.*23' papers/paper20_scalar_rung/paper_draft.tex` returns line 481. NB: paper20 line 508 still mentions '24 Wave 1 + 24 Wave 1b' for pytest test count — this is test count not theorem count, and pytest covers both Wave 1 (20 thms) and Wave 1b (23 thms) plus support tests; the '24 Wave 1' descriptor at line 508 is loose narrative not load-bearing arithmetic.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung:4.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7b D3 source cleanup (2026-05-01)",
+      "evidence": "RECOMMENDED: Lean docstring at BHLGaugeEmbedding.lean:44 still referenced removed AndrianovAndrianovAfonin2020. Substantively fixed: line 44-45 now reads 'FERMILAB-PUB-25-0219-T preprint…' (Hill 2025 disclosure block) per Round-3 verification at review:2026-04-25-2106-internal-adversarial:paper20_scalar_rung 4.1 closure (cited as CLOSED in that review's Round-2 closure verification table, line 22). Andrianov reference removed from the Lean docstring's References block. Deterministic recheck: `grep -c 'Andrianov' lean/SKEFTHawking/BHLGaugeEmbedding.lean` returns 0.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-26-1930-internal-adversarial:paper20_scalar_rung:4.2",
+      "status": "fixed",
+      "superseded_by": "review:2026-04-25-2106-internal-adversarial:paper20_scalar_rung",
+      "evidence": "RECOMMENDED: Hill 2025 preprint status not flagged in body prose despite load-bearing role. Substantively fixed: same as review:2026-04-26-1925:5.1 — bibitem now flagged as FERMILAB-PUB-25-0219-T preprint; Lean module BHLGaugeEmbedding.lean:44-45 also flags preprint status. Verified CLOSED at Round-3 review (review:2026-04-25-2106-internal-adversarial:paper20_scalar_rung Round-2 closure verification table line 22-23). Deterministic recheck: `grep -E 'FERMILAB-PUB-25-0219-T|preprint' papers/paper20_scalar_rung/paper_draft.tex lean/SKEFTHawking/BHLGaugeEmbedding.lean` returns matching lines.",
+      "date": "2026-05-01"
     }
   ]
 }
