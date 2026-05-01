@@ -1,4 +1,20 @@
 {
   "bundle_target": "L1",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-01T18:01:41Z",
+      "source_paper": "paper25_gravitational_waves",
+      "lift_action": "Lift-letter",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "GravitationalWaves",
+        "LinearizedEFE",
+        "VestigialMode"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T18:01:41Z",
+      "notes": "Initial lift: paper25 \u2192 L1 PRL splash (GW170817 vestigial-graviton falsifier; voucher candidate; Phase 6a W2)"
+    }
+  ]
 }
