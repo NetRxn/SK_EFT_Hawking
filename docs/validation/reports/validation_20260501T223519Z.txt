@@ -1,0 +1,21 @@
+SK-EFT Hawking Validation Report
+Generated: 20260501T223519Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] bundle_source_freshness
+  + summary — 13 sub-findings: 0 FAIL / 1 WARN / 12 PASS
+  + bundle:D1 — bundle initialized; no lifts yet (skip)
+  + bundle:D2 — bundle initialized; no lifts yet (skip)
+  + bundle:D3 — bundle initialized; no lifts yet (skip)
+  + bundle:D4 — bundle initialized; no lifts yet (skip)
+  + bundle:D5 — fresh: all 6 source paper(s) older than last_lift (2026-05-01)
+  + bundle:E1 — bundle initialized; no lifts yet (skip)
+  + bundle:E2 — bundle initialized; no lifts yet (skip)
+  + bundle:F — bundle initialized; no lifts yet (skip)
+  + bundle:I1 — freshness-stale: 1 of 2 source paper(s) modified after last_lift (2026-05-01); sample: paper44_riemannian_connection(2026-05-01)
+  + bundle:I2 — fresh: all 0 source paper(s) older than last_lift (2026-05-01)
+  + bundle:L1 — fresh: all 1 source paper(s) older than last_lift (2026-05-01)
+  + bundle:L2 — fresh: all 1 source paper(s) older than last_lift (2026-05-01)
+  + bundle:L3 — fresh: all 1 source paper(s) older than last_lift (2026-05-01)
+
+Overall: 1/1 passed

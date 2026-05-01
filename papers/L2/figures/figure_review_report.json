@@ -1,0 +1,30 @@
+{
+  "bundle_target": "L2",
+  "review_round": 2,
+  "review_date_utc": "2026-05-01T00:00:00Z",
+  "verdict": "GREEN",
+  "figures_reviewed": 2,
+  "figures_pass": 2,
+  "figures_fail": 0,
+  "figures_minor": 0,
+  "findings": [],
+  "round1_resolution": [
+    {
+      "figure_id": "fig75_modular_invariance_phase",
+      "round1_severity": "MINOR",
+      "round1_category": "CaptionFigureRangeMismatch",
+      "round1_summary": "Caption stated 'N_f = 1,...,9' but figure annotates groups through N_f = 12.",
+      "fix_applied": "Caption rewritten in paper_draft.tex (lines 155-160) to 'N_f = 1,...,12' with explicit modular-invariant set {3,6,9,12} and excluded set {1,2,4,5,7,8,10,11}.",
+      "round2_verification": "Figure (unchanged from r1) annotates blue ring 'N_f = 3, 6, 9, 12', top grey marker 'N_f = 1, 4, 7, 10', bottom grey marker 'N_f = 2, 5, 8, 11'. Caption set {1,2,4,5,7,8,10,11} = union of the two grey-marker groups. Caption-figure range now matches exactly. RESOLVED."
+    },
+    {
+      "figure_id": "fig73_sm_generation_constraint",
+      "round1_severity": "MINOR",
+      "round1_category": "LabelClippingAtRightMargin",
+      "round1_summary": "Dashed-line right-margin labels c_-=24/48/72 clipped and collided with the N_f=9 bar-top label 'c_-=72'.",
+      "fix_applied": "annotation=dict(...) removed from add_hline calls in src/core/visualizations.py:fig_sm_generation_constraint; explicit tickvals=[0, 8, 16, 24, 32, 40, 48, 56, 64, 72] added to the y-axis so threshold grid is conveyed by ticks. PNG regenerated.",
+      "round2_verification": "Regenerated PNG inspected. Right-margin dashed-line annotations are gone. y-axis ticks visible at 0, 8, 16, 24, 32, 40, 48, 56, 64, 72 (every multiple of 8); the threshold values 24, 48, 72 are present as ticks AND as horizontal dashed lines spanning the plot. Per-bar 'c_-=N' labels above each bar are clean and do not collide with anything. Title 'Generation Constraint: c_- = 8N_f = 0 mod 24' renders cleanly. Blue bars at N_f = 0, 3, 6, 9; grey bars elsewhere; caption mapping (blue = divisible by 3) intact. No clipping or new annotation artifacts. RESOLVED."
+    }
+  ],
+  "notes": "Round-2 verdict GREEN. Both round-1 MINORs are resolved by the recorded fixes; no new MINORs surfaced on either figure. Figures continue to use the project colorblind-safe steel-blue/grey palette with no red/green pairings, render without kaleido glitches, and remain consistent with the paper_draft.tex captions. Observation (non-blocking, not a finding): fig73 plots N_f = 0..9 while fig75 plots N_f = 1..12. The two ranges are independently appropriate (fig73 demonstrates the c_- = 8 N_f staircase against the c_- = 24 multiples; fig75 demonstrates the cube-roots-of-unity cycling) and neither caption claims a range tied to the other figure, so this is a stylistic choice rather than a drift. Bundle pass criterion satisfied (all figures PASS, no FAIL, no MINOR)."
+}

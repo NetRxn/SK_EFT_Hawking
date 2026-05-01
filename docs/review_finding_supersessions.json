@@ -2950,6 +2950,48 @@
       "superseded_by": "Phase 7b sub-wave 7b.X+ when D2 / D3 are lifted",
       "evidence": "ADVISORY: cross-bundle re-check (D5 §7 ↔ D3 §21 heat-kernel a_0 framework; D5 §2.1 ↔ D2 Z16 anomaly classification) deferred because D2 / D3 paper_drafts are not yet lifted (only D5 + I1 + I2 + L1 + L3 have authored drafts). Cross-bridge consistency MUST be re-verified when D2 + D3 are drafted; the bundle-consistency validator (validate.py --check bundle_consistency) walks the cross-bundle cluster index and will flag any divergence. Accepted as deferred dependency; intra-bundle consistency at GREEN.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "bundle-stage9:L2-2026-05-01-r1:fail-1:fig75-caption-range-mismatch",
+      "status": "fixed",
+      "superseded_by": "papers/L2/paper_draft.tex line 156-160 (caption rewritten N_f=1..9 -> 1..12 with explicit modular-invariant set {3,6,9,12} and excluded set {1,2,4,5,7,8,10,11})",
+      "evidence": "FIXED: caption text in fig75_modular_invariance_phase changed from 'N_f = 1,...,9' to 'N_f = 1,...,12' to match the figure's actual N_f range of 1..12 across three cube-roots-of-unity groups. Stage 9 round 2 verified caption-figure consistency.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "bundle-stage9:L2-2026-05-01-r1:fail-2:fig73-right-margin-clipping",
+      "status": "fixed",
+      "superseded_by": "src/core/visualizations.py:fig_sm_generation_constraint (dropped annotation= kwarg from add_hline calls; added tickvals=[0,8,16,24,32,40,48,56,64,72] so y-axis ticks convey threshold grid)",
+      "evidence": "FIXED: removed the right-margin dashed-line annotations 'c_- = 24/48/72' from fig73 figure source; the y-axis ticks at every multiple of 8 now convey the threshold grid implicitly. Right-edge label clipping against N_f=9 bar top eliminated. PNG regenerated. Stage 9 round 2 verified no new artifacts.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "bundle-stage10:L2-2026-05-01-r1:pass:24-checks-direct-green",
+      "status": "fixed",
+      "superseded_by": "papers/L2/paper_draft.tex (stable; no edits required)",
+      "evidence": "PASS: 24/24 Stage 10 claim-review checks passed direct-GREEN: 9 Lean modules + 10 load-bearing theorem-name resolutions + 12 bibitems + 5 numerical/arithmetic identities verified. Pre-flight Lean module + theorem name + bibitem verifications during authoring eliminated the module-name-drift class that was 6 of 8 D5 r1 BLOCKERs. No paper edits required.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "bundle-stage13:L2-2026-05-01-r1:advisory-1:cross-bundle-D2-deferred",
+      "status": "accepted",
+      "superseded_by": "Phase 7b sub-wave 7b.X+ when D2 is lifted",
+      "evidence": "ADVISORY: L2 ↔ D2 §2 cross-bridge re-check (Ext-computation chain consistency; 24|c_- + 8N_f modular discriminant) deferred because D2 paper_draft.tex is not yet lifted (D2 is source-layer green only). Cross-bridge consistency MUST be re-verified when D2 is drafted; the bundle-consistency validator (validate.py --check bundle_consistency) walks the cross-bundle cluster index. Accepted as deferred dependency; intra-bundle consistency at GREEN. L2-paper10 source consistency verified clean.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "bundle-stage13:L2-2026-05-01-r1:advisory-2:abstract-vs-body-first-claim-hedge",
+      "status": "accepted",
+      "superseded_by": "Stage 14 follow-up (qi-firstclaimhedge_consistency)",
+      "evidence": "ADVISORY: abstract uses conventional first-claim shorthand ('the first such computation in any proof assistant'); body §IV provides the load-bearing hedge ('We are not aware of any prior...'). Reviewer judged this acceptable when the body provides the hedge, but flagged as a recurring pattern across L1+L2 worth a programmatic abstract-vs-body first-claim hedge consistency validator. Non-blocking; QI candidate raised.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "bundle-stage13:L2-2026-05-01-r1:recommended-1:registry-stub-title-polish",
+      "status": "accepted",
+      "superseded_by": "Phase 7a robustness memory (pre-existing background pattern; not L2-introduced)",
+      "evidence": "RECOMMENDED: registry-stub-title polish (pre-existing background pattern documented in Phase 7a robustness memory); not L2-introduced. Non-blocking; deferred to a future registry-cleanup pass.",
+      "date": "2026-05-01"
     }
   ]
 }

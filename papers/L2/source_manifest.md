@@ -10,7 +10,7 @@
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
-| `paper10_modular_generation` | (see mapping) | Lift-letter | (see mapping) | 2026-04-25T22:22:49Z |
+| `paper10_modular_generation` | (see mapping) | Lift-letter | (see mapping) | 2026-05-01T18:57:16Z |
 
 ## Coverage notes
 

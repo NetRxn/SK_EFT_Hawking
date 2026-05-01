@@ -1,0 +1,355 @@
+\documentclass[aps,prl,twocolumn,superscriptaddress,nofootinbib]{revtex4-2}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{braket}
+
+%% Bundle: L2 (tier 2, target PRL)
+%% Source manifest: papers/L2/source_manifest.md
+%% Source paper: paper10_modular_generation
+%% Phase 7b sub-wave 7b.3 — L2 lift
+
+\begin{document}
+
+\title{Three Generations of Standard-Model Fermions from Modular Invariance:\\
+A Machine-Checked Derivation}
+
+\author{J.~Roehm}
+\affiliation{Independent Researcher}
+
+\date{\today}
+
+\begin{abstract}
+We present the first formally verified derivation that the number of
+Standard-Model fermion generations satisfies $N_f \equiv 0 \pmod{3}$,
+following the global modular constraint of Wang~\cite{Wang2024}. The
+chain combines two independent ingredients machine-checked in Lean~4:
+the chiral central charge $c_- = 8 N_f$ derived from $16$ left-handed
+Weyl components per generation in the with-$\nu_R$ convention, and
+the framing-anomaly constraint $24 \mid c_-$ following from
+$\eta(\tau+1) = e^{2\pi i/24}\,\eta(\tau)$ via Mathlib's
+\texttt{Complex.exp\_add}. The minimal nontrivial solution is
+$N_f = 3$. Without right-handed neutrinos, $c_- = 15/2$ is fractional,
+giving a formal independent argument for $\nu_R$ from modular
+invariance alone. The algebraic core of the Rokhlin bound is verified
+through homological degree~5 by an explicit minimal free resolution
+$\dim \mathrm{Ext}^n_{A(1)}(\mathbb{F}_2,\mathbb{F}_2) =
+1,2,2,2,3,4$ together with a change-of-rings adjunction
+$\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$,
+the first such computation in any proof assistant. Three textbook
+topology results (ko cohomology, ASS convergence, ABP splitting) enter
+as tracked hypotheses. The verification is fully automated by
+\texttt{lake build} on a $5229$-theorem $243$-module library with one
+axiom and zero \texttt{sorry}.
+\end{abstract}
+
+\maketitle
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Introduction}
+
+The Standard Model has three generations of fermions, and the
+perturbative gauge anomalies cancel within each generation
+independently~\cite{GrossJackiw1972}. The question of why nature
+chose three rather than one, two, or four is therefore unresolved at
+the perturbative level. Wang~\cite{Wang2024} proposed that a
+\emph{global} modular constraint --- $24 \mid c_-$ on the chiral
+central charge of the partition function under the modular
+$T$-transformation $\tau \to \tau+1$ --- combined with the SM's
+fermion content $c_- = 8 N_f$, forces $N_f \equiv 0 \pmod{3}$. The
+proposal recasts the empirical three-generation count as the minimal
+output of a topological consistency requirement and is therefore
+falsifiable by any internally consistent SM extension violating the
+constraint.
+
+This Letter records the first machine-checked formalization of this
+chain in Lean~4 with Mathlib. Every coefficient on the path from
+modular forms to particle counting is either derived from Mathlib
+infrastructure or registered as a tracked assumption with explicit
+hypothesis status. The two independent pieces converge through the
+arithmetic identity $24 = 8 \times 3$, where $8$ is fixed by the SM
+fermion content and $24$ is fixed by the Dedekind eta function.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{The chiral central charge from SM fermion content}
+\label{sec:central_charge}
+
+In the with-$\nu_R$ convention each SM generation contains $16$
+left-handed Weyl components:
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+Multiplet & $SU(3) \times SU(2)$ & Components & $c$ \\
+\hline
+$Q_L$ & $(\mathbf{3}, \mathbf{2})$ & 6 & 3 \\
+$\bar{u}_R$ & $(\bar{\mathbf{3}}, \mathbf{1})$ & 3 & 3/2 \\
+$\bar{d}_R$ & $(\bar{\mathbf{3}}, \mathbf{1})$ & 3 & 3/2 \\
+$L$ & $(\mathbf{1}, \mathbf{2})$ & 2 & 1 \\
+$\bar{e}_R$ & $(\mathbf{1}, \mathbf{1})$ & 1 & 1/2 \\
+$\bar{\nu}_R$ & $(\mathbf{1}, \mathbf{1})$ & 1 & 1/2 \\
+\hline
+Total & & 16 & 8 \\
+\hline
+\end{tabular}
+\end{center}
+
+Each Weyl fermion contributes $c = 1/2$ to the chiral central charge
+upon $4 \to 2$ dimensional reduction~\cite{AlvarezGaumeWitten1984}.
+The coefficient $8$ in $c_- = 8 N_f$ is therefore not free: it is
+\emph{derived} from the count
+$\texttt{total\_components\_with\_nu\_R} = 16$ by the Lean theorem
+\texttt{WangBridge.fermion\_count\_gives\_central\_charge}.
+
+\paragraph{Without $\nu_R$.} Removing right-handed neutrinos drops
+the Weyl count to $15$ and gives $c_- = 15/2$ per generation. A
+fractional central charge is a gravitational anomaly: the 2D theory
+is mathematically inconsistent~\cite{AlvarezGaumeWitten1984}. The
+Lean theorem
+\texttt{WangBridge.central\_charge\_fractional\_without\_nu\_R}
+encodes this by constructing an explicit contradiction from the
+assumption $15/2 \in \mathbb{N}$, complementing the
+$\mathbb{Z}_{16}$ anomaly argument of
+Garc\'ia-Etxebarria and Montero~\cite{GarciaEtxebarria2019}.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{The framing anomaly from the Dedekind eta function}
+\label{sec:framing}
+
+The Dedekind eta function
+\begin{equation}
+\eta(\tau) = q^{1/24} \prod_{n=1}^{\infty}(1 - q^n),
+\quad q = e^{2\pi i \tau},
+\end{equation}
+satisfies $\eta(\tau+1) = e^{2\pi i/24}\,\eta(\tau)$. Under the
+$T$-transformation $\tau \to \tau+1$, the infinite product is
+invariant since $q(\tau+1) = q(\tau)$, while the prefactor $q^{1/24}$
+shifts by $e^{2\pi i / 24}$. The shift is verified in
+\texttt{ModularInvarianceConstraint.qParam\_shift} by reduction to
+Mathlib's \texttt{Complex.exp\_add}; no project-originated lemma is
+required. The ``24'' in the modular phase has two complementary
+origins: analytically, the exponent in the $q$-expansion of
+$\eta(\tau)$~\cite{Rademacher1973}; physically, the Casimir energy
+$E_0 = -c/24$ on a 2D conformal field theory torus, traceable to
+zeta regularization $\zeta(-1) = -1/12$ and the framing anomaly on a
+spin 3-manifold~\cite{diFrancesco1997}.
+
+The 2D partition function transforms as
+$Z(\tau+1) = e^{2\pi i c_-/24}\,Z(\tau)$. Modular invariance demands
+$e^{2\pi i c_-/24} = 1$, equivalently $24 \mid c_-$, formalized as
+\texttt{ModularInvarianceConstraint.framing\_anomaly\_constraint}.
+Combining with $c_- = 8 N_f$:
+\begin{equation}
+24 \mid 8 N_f \quad \Longleftrightarrow \quad 3 \mid N_f.
+\label{eq:gen_constraint}
+\end{equation}
+The constraint is sharp: $24 \nmid 8$ and $24 \nmid 16$, but
+$24 \mid 24$. The factorization $24 = 8 \times 3$ separates the
+mathematical input (zeta regularization gives $24$) from the physical
+input (fermion counting gives $8$); their ratio is the generation
+constraint.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig75_modular_invariance_phase.png}
+\caption{The $T$-transformation phase $e^{2\pi i c_-/24}$ at
+$c_- = 8 N_f$ for $N_f = 1,\ldots,12$. The phase cycles through cube
+roots of unity $\{1, \omega, \omega^2\}$, with phase $= 1$ (modular
+invariant, blue ring) only for $N_f \equiv 0 \pmod{3}$
+(i.e.\ $N_f \in \{3, 6, 9, 12\}$). Grey markers denote excluded
+generation counts $N_f \in \{1,2,4,5,7,8,10,11\}$.}
+\label{fig:phase}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig73_sm_generation_constraint.png}
+\caption{Chiral central charge $c_- = 8 N_f$ versus the modular
+invariance band $c_- \equiv 0 \pmod{24}$. Blue bars denote $N_f$
+divisible by three (modular invariant). Grey bars denote excluded
+generation counts.}
+\label{fig:gen_constraint}
+\end{figure}
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Machine-checked Ext computation over $A(1)$}
+\label{sec:ext}
+
+The algebraic core of the Rokhlin bound --- that
+$\sigma(M) \equiv 0 \pmod{16}$ on a closed spin 4-manifold rather than
+the weaker $\sigma \equiv 0 \pmod{8}$ --- is the input that
+distinguishes the $\mathbb{Z}_{16}$ anomaly classification from a
+purely $E_8$-lattice-driven $\mathbb{Z}_8$. To formalize this we
+compute the graded $\mathbb{F}_2$-dimensions of
+$\mathrm{Ext}^n_{A(1)}(\mathbb{F}_2, \mathbb{F}_2)$ through
+homological degree five, where $A(1) = \langle \mathrm{Sq}^1,
+\mathrm{Sq}^2 \rangle$ is the eight-dimensional sub-Hopf algebra of
+the Steenrod algebra. The computation is shipped in three modules.
+\texttt{A1Ring.lean} formalizes the left regular representation, the
+Adem relation $\mathrm{Sq}^1 \mathrm{Sq}^1 = 0$ and the Cartan
+relation $\mathrm{Sq}^1 \mathrm{Sq}^2 = \mathrm{Sq}^2 \mathrm{Sq}^1
++ \mathrm{Sq}^3$ via \texttt{native\_decide}.
+\texttt{A1Resolution.lean} constructs differentials $d^n$ with
+$d^2 = 0$ at every level and verifies exactness by enumeration of
+kernels and reduced row-echelon witnesses. \texttt{A1Ext.lean}
+certifies minimality and reads off
+\begin{equation}
+\dim_{\mathbb{F}_2} \mathrm{Ext}^n_{A(1)}(\mathbb{F}_2, \mathbb{F}_2)
+= 1, 2, 2, 2, 3, 4 \quad (n = 0, 1, 2, 3, 4, 5).
+\end{equation}
+The Hom-tensor adjunction
+$\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$
+is established in \texttt{ChangeOfRings.lean} as pure homological
+algebra, reducing the full Adams spectral sequence input from
+$\mathrm{Ext}_A$ to the finite $\mathrm{Ext}_{A(1)}$. We are not aware
+of any prior machine-checked Ext computation over a Steenrod
+sub-algebra in any proof assistant.
+
+Three textbook topology results enter as tracked hypotheses, not as
+project-originated axioms: ko cohomology of a point through degree
+five~\cite{Adams1974}, Adams spectral sequence
+convergence~\cite{BeaudryCampbell}, and the ABP splitting
+$\mathrm{MSpin} \cong \mathrm{ko} \vee \mathrm{ko}\langle 2 \rangle
+\vee \cdots$~\cite{ABP1967}. Each is cited at standard textbook depth
+and is independently verifiable by a topologist; closure to
+project-originated proofs depends on upstream Mathlib
+algebraic-topology development.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{The 16-convergence and the role of $\nu_R$}
+
+The number 16 appears in four formally distinct settings:
+\textit{(i)} the Weyl-component count per SM generation in the
+with-$\nu_R$ convention; \textit{(ii)} the bordism group
+$\Omega_5^{\mathrm{Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$
+classifying global anomalies of theories with a $\mathbb{Z}_4$
+symmetry~\cite{GarciaEtxebarria2019}; \textit{(iii)} the Rokhlin
+divisor in the signature of a closed spin 4-manifold,
+$\sigma(M) \equiv 0 \pmod{16}$~\cite{Rokhlin1952}; and \textit{(iv)}
+the period of the Kitaev periodic table of free-fermion topological
+superconductors in symmetry class~D~\cite{Kitaev2009}, reduced from
+$\mathbb{Z}$ to $\mathbb{Z}_{16}$ under
+interactions~\cite{FidkowskiKitaev2010}.
+
+Wang~\cite{Wang2024} establishes the algebraic-topology relationship
+between (i)--(iii) via the string-bordism $\mathbb{Z}_{24}$ class and
+the associated Smith homomorphism. We record the four occurrences as
+\texttt{RokhlinBridge.sixteen\_convergence\_full} without claiming a
+formal equivalence; the equivalence remains an external Wang input.
+The Kitaev relationship to (iv) is suggestive but not formalized.
+
+The constraints from the $\mathbb{Z}_{16}$ anomaly and modular
+invariance behave differently with respect to $\nu_R$:
+
+\begin{center}
+\begin{tabular}{lccc}
+\hline
+& $\mathbb{Z}_{16}$ ($\nu_R$ in) & $\mathbb{Z}_{16}$ ($\nu_R$ out) & Modular inv. \\
+\hline
+Constraint & none & $16 \mid N_f$ & $3 \mid N_f$ \\
+Minimal $N_f$ & --- & $16$ & $3$ \\
+Combined min & $\mathbf{3}$ & $\mathrm{lcm}(16,3) = \mathbf{48}$ & --- \\
+\hline
+\end{tabular}
+\end{center}
+
+With $\nu_R$, the $\mathbb{Z}_{16}$ anomaly cancels for every $N_f$
+(\texttt{RokhlinBridge.z16\_anomaly\_always\_cancels\_with\_nu\_R}),
+so the only remaining constraint is modular invariance and the
+minimal solution is $N_f = 3$. Without $\nu_R$, both constraints must
+hold simultaneously, forcing
+$N_f = \mathrm{lcm}(16,3) = 48$
+(\texttt{RokhlinBridge.constraints\_without\_nu\_R}). Since $N_f = 3$
+is observed, the joint constraint is direct evidence for $\nu_R$.
+The Rokhlin bound is sharp: the K3 surface saturates with
+$\sigma = -16$, while the $E_8$ manifold has $\sigma = 8$ but is not
+spin --- formalized as
+\texttt{RokhlinBridge.rokhlin\_strictly\_stronger}: $16 \nmid 8$.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Conclusion}
+
+Combining $c_- = 8 N_f$ from SM fermion counting with $24 \mid c_-$
+from Dedekind-eta modular invariance gives $N_f \equiv 0 \pmod{3}$,
+with $N_f = 3$ as the minimal nontrivial solution. The chain is
+machine-checked end to end: the coefficient $8$ via Mathlib finite
+sums in \texttt{SMFermionData.lean}; the modular factor $24$ via
+\texttt{Complex.exp\_add} in \texttt{ModularInvarianceConstraint.lean};
+the divisibility step via
+\texttt{Nat.Coprime.dvd\_of\_dvd\_mul\_left} in
+\texttt{GenerationConstraint.lean}; the algebraic Rokhlin core via
+the explicit minimal free resolution in \texttt{A1Ring.lean},
+\texttt{A1Resolution.lean}, and \texttt{A1Ext.lean}; and the
+change-of-rings step in \texttt{ChangeOfRings.lean}. The
+without-$\nu_R$ argument upgrades from suggestive to formal: a
+fractional central charge $c_- = 15/2$ is gravitationally anomalous;
+no fractional natural number exists; therefore $\nu_R$ exists if the
+modular framing-anomaly constraint applies to the SM. The full
+verification builds in $\sim 30~\mathrm{s}$ on commodity hardware
+under Lean~4 v4.29.0 against Mathlib commit \texttt{8850ed93}
+(library state: 5229 theorems across 243 modules, 1 axiom
+\texttt{gapped\_interface\_axiom} unused in this chain, zero
+\texttt{sorry}). The Mathlib infrastructure that formalizes modular
+forms for analytic number theory directly constrains the
+Standard-Model generation count.
+
+\begin{acknowledgments}
+Lean~4 proofs verified by \texttt{lake build} (v4.29.0, Mathlib
+commit \texttt{8850ed93}). Automated proofs by the Aristotle theorem
+prover (Harmonic).
+\end{acknowledgments}
+
+\begin{thebibliography}{99}
+\bibitem{Wang2024}
+J.~Wang, Phys.\ Rev.\ D \textbf{110}, 125028 (2024)
+[arXiv:2312.14928].
+
+\bibitem{AlvarezGaumeWitten1984}
+L.~Alvarez-Gaum\'e and E.~Witten,
+Nucl.\ Phys.\ B \textbf{234}, 269 (1984).
+
+\bibitem{GarciaEtxebarria2019}
+I.~Garc\'ia-Etxebarria and M.~Montero,
+JHEP \textbf{08}, 003 (2019) [arXiv:1808.00009].
+
+\bibitem{Rademacher1973}
+H.~Rademacher, \emph{Topics in Analytic Number Theory}
+(Springer, 1973).
+
+\bibitem{diFrancesco1997}
+P.~di~Francesco, P.~Mathieu, and D.~S\'en\'echal,
+\emph{Conformal Field Theory} (Springer, 1997).
+
+\bibitem{GrossJackiw1972}
+D.~Gross and R.~Jackiw,
+Phys.\ Rev.\ D \textbf{6}, 477 (1972).
+
+\bibitem{Rokhlin1952}
+V.~Rokhlin, Dokl.\ Akad.\ Nauk SSSR \textbf{84}, 221 (1952).
+
+\bibitem{Kitaev2009}
+A.~Kitaev,
+AIP Conf.\ Proc.\ \textbf{1134}, 22 (2009)
+[arXiv:0901.2686].
+
+\bibitem{FidkowskiKitaev2010}
+L.~Fidkowski and A.~Kitaev,
+Phys.\ Rev.\ B \textbf{81}, 134509 (2010)
+[arXiv:0904.2197].
+
+\bibitem{Adams1974}
+J.~F.~Adams,
+\emph{Stable Homotopy and Generalised Homology}
+(University of Chicago Press, 1974).
+
+\bibitem{ABP1967}
+D.~W.~Anderson, E.~H.~Brown~Jr., and F.~P.~Peterson,
+Ann.\ Math.\ \textbf{86}, 271 (1967).
+
+\bibitem{BeaudryCampbell}
+A.~Beaudry and J.~A.~Campbell,
+Contemp.\ Math.\ \textbf{718}, 89 (2018)
+[arXiv:1801.07530].
+\end{thebibliography}
+
+\end{document}

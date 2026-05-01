@@ -1,0 +1,180 @@
+{
+  "bundle_target": "L2",
+  "review_round": 1,
+  "review_date_utc": "2026-05-01T00:00:00Z",
+  "verdict": "GREEN",
+  "checks_run": 24,
+  "pass": 24,
+  "fail": 0,
+  "warn": 0,
+  "findings": [
+    {
+      "id": "L2-S10-r1-F1",
+      "severity": "PASS",
+      "category": "lean_module",
+      "summary": "All 9 \\texttt{<Module>.lean} references in paper resolve to existing files in lean/SKEFTHawking/: A1Ring.lean, A1Resolution.lean, A1Ext.lean, ChangeOfRings.lean, SMFermionData.lean, ModularInvarianceConstraint.lean, GenerationConstraint.lean, RokhlinBridge.lean, WangBridge.lean.",
+      "fix_recommendation": "None — all module references resolve."
+    },
+    {
+      "id": "L2-S10-r1-F2",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "WangBridge.fermion_count_gives_central_charge exists at WangBridge.lean:73.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F3",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "WangBridge.central_charge_fractional_without_nu_R exists at WangBridge.lean:109.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F4",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "ModularInvarianceConstraint.qParam_shift exists at ModularInvarianceConstraint.lean:79.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F5",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "ModularInvarianceConstraint.framing_anomaly_constraint exists at ModularInvarianceConstraint.lean:103.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F6",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "RokhlinBridge.sixteen_convergence_full exists at RokhlinBridge.lean:112.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F7",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "RokhlinBridge.z16_anomaly_always_cancels_with_nu_R exists at RokhlinBridge.lean:208.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F8",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "RokhlinBridge.constraints_without_nu_R exists at RokhlinBridge.lean:265.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F9",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "RokhlinBridge.rokhlin_strictly_stronger exists at RokhlinBridge.lean:160 with body 'omega' proving ¬(16 ∣ 8).",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F10",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "SMFermionData.total_components_with_nu_R exists at SMFermionData.lean:176.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F11",
+      "severity": "PASS",
+      "category": "theorem_name",
+      "summary": "GenerationConstraint canonical theorems exist: generation_mod3_constraint (line 77), generation_constraint_iff (line 106), generation_minimal_nontrivial (line 115). Paper cites Nat.Coprime.dvd_of_dvd_mul_left from Mathlib via GenerationConstraint.lean — chain consistent.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F12",
+      "severity": "PASS",
+      "category": "citation",
+      "summary": "All 12 bibitems (Wang2024, AlvarezGaumeWitten1984, GarciaEtxebarria2019, Rademacher1973, diFrancesco1997, GrossJackiw1972, Rokhlin1952, Kitaev2009, FidkowskiKitaev2010, Adams1974, ABP1967, BeaudryCampbell) present in src/core/citations.py CITATION_REGISTRY.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F13",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "Library-counts claim '5229-theorem 243-module library with one axiom and zero sorry' matches docs/counts.json (theorems_total=5229, modules=243, axioms=1, sorry_declarations=0). Axiom name 'gapped_interface_axiom' (paper line 291) matches counts.json axiom_names=['SKEFTHawking.gapped_interface_axiom'].",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F14",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "Ext dimensions sequence '1,2,2,2,3,4' for n=0..5 matches A1Ext.lean theorems ext_dim_0=1, ext_dim_1=2, ext_dim_2=2, ext_dim_3=2, ext_dim_4=3, ext_dim_5=4 (lines 88-103). ext_total_dim=14 corroborates sum.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F15",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "Arithmetic: c_- = 8 N_f and 24 | c_- ⇒ 3 | N_f. Verified — gcd(24,8)=8, 24/8=3, so 24|8N ⟺ 3|N. Matches Lean theorems div_24_8n_implies_div_3_n + div_3_n_implies_div_24_8n + generation_constraint_iff in GenerationConstraint.lean. Factorization 24=8×3 cited in paper line 70 is arithmetically correct.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F16",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "lcm(16,3) = 48 confirmed by python math.lcm. Without-ν_R combined-constraint claim N_f = lcm(16,3) = 48 is arithmetically correct. Matches RokhlinBridge.constraints_without_nu_R.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F17",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "Without-ν_R Weyl count 15 (16 - 1 right-handed neutrino) gives c_- = 15/2 fractional. Verified: 15 is odd, 15/2 ∉ ℕ. Matches WangBridge.central_charge_fractional_without_nu_R encoding.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F18",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "With-ν_R Weyl count 16 components per generation matches SMFermionData.total_components_with_nu_R (Q_L:6 + ū_R:3 + d̄_R:3 + L:2 + ē_R:1 + ν̄_R:1 = 16). Table at paper lines 81-94 internally consistent.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F19",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "Toolchain pin claims in acknowledgments: 'Lean 4 v4.29.0' matches lean/lean-toolchain ('leanprover/lean4:v4.29.0'); 'Mathlib commit 8850ed93' matches lean/lakefile.toml rev (8850ed93863d6ce27210a673f9ed235a4e8a2994).",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F20",
+      "severity": "PASS",
+      "category": "first_claim",
+      "summary": "First-claim verification: 'first machine-checked Ext computation over a Steenrod sub-algebra in any proof assistant' (paper §IV). Spot-check via knowledge of formal-verification literature: Steenrod algebra has Lean4 / Coq formalizations of Sq^i operations (e.g., Anantharaman et al. work on cohomology operations) but no public end-to-end machine-checked Ext^n_{A(1)}(F_2,F_2) computation through degree 5 in any proof assistant has been published. The claim is consistent with current state of the art and appropriately hedged ('We are not aware of any prior...'). PASS at registry-level spot-check; confirmation would require systematic literature review.",
+      "fix_recommendation": "Hedging language ('We are not aware of any prior') is appropriate; consider adding a footnote citing the Mathlib homological-algebra status as the closest existing infrastructure."
+    },
+    {
+      "id": "L2-S10-r1-F21",
+      "severity": "PASS",
+      "category": "first_claim",
+      "summary": "First-claim verification: 'first formally verified derivation that the number of Standard-Model fermion generations satisfies N_f ≡ 0 mod 3' (abstract). Wang2024 is the original mathematical claim; Lean formalization of the chain is novel to this project. No competing formal verification known. PASS.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F22",
+      "severity": "PASS",
+      "category": "lean_module",
+      "summary": "Mathlib lemma references in paper resolve: Complex.exp_add (paper line 31, 277) — standard Mathlib analytical lemma; Nat.Coprime.dvd_of_dvd_mul_left (paper line 279) — standard Mathlib number-theory lemma. Both used in GenerationConstraint.lean / ModularInvarianceConstraint.lean proofs.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F23",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "Phase cycle claim (Fig 1): e^{2πi c_-/24} at c_- = 8 N_f cycles through cube roots of unity {1, ω, ω²}. Verified: 8 N_f / 24 = N_f/3, so phase = e^{2πi N_f/3} which has period 3 in N_f, taking values 1, ω, ω². Phase = 1 iff N_f ≡ 0 mod 3, matching paper figure caption.",
+      "fix_recommendation": "None."
+    },
+    {
+      "id": "L2-S10-r1-F24",
+      "severity": "PASS",
+      "category": "numerical",
+      "summary": "Hypothesis disclosure (Class HD check): Three textbook tracked hypotheses (ko cohomology Adams1974, ASS convergence BeaudryCampbell, ABP splitting ABP1967) explicitly disclosed at paper §IV (lines 208-216) with citations and explanation that they are tracked hypotheses, not project-originated axioms. Single project axiom 'gapped_interface_axiom' explicitly disclosed in conclusion as 'unused in this chain'. No undisclosed tracked hypotheses detected.",
+      "fix_recommendation": "None."
+    }
+  ]
+}

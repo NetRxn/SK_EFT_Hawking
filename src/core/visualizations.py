@@ -4912,11 +4912,12 @@ def fig_sm_generation_constraint() -> go.Figure:
         customdata=['Yes' if s else 'No' for s in satisfies],
     ))
 
-    # Modular invariance lines at multiples of 24
+    # Modular invariance reference lines at multiples of 24 (no annotations:
+    # the y-axis ticks at 24/48/72 + the per-bar c₋ labels already convey the
+    # threshold grid; right-margin annotations clipped against the N_f=9 bar
+    # top in PRL twocolumn layout — Stage 9 round 1 advisory).
     for mult in [24, 48, 72]:
-        fig.add_hline(y=mult, line=dict(color=COLORS['Rb87'], width=1, dash='dash'),
-                      annotation=dict(text=f'c₋ = {mult}', x=0.98,
-                                      font=dict(size=11, color=COLORS['Rb87'])))
+        fig.add_hline(y=mult, line=dict(color=COLORS['Rb87'], width=1, dash='dash'))
 
     fig.update_layout(
         height=400, width=600,
@@ -4927,7 +4928,8 @@ def fig_sm_generation_constraint() -> go.Figure:
                    dtick=1, tickfont=dict(size=13, family=FONT['family'])),
         yaxis=dict(title=dict(text='Chiral Central Charge (c₋)',
                              font=dict(size=14, family=FONT['family'])),
-                   tickfont=dict(size=13, family=FONT['family'])),
+                   tickfont=dict(size=13, family=FONT['family']),
+                   tickvals=[0, 8, 16, 24, 32, 40, 48, 56, 64, 72]),
         plot_bgcolor='white', paper_bgcolor='white',
     )
     return fig

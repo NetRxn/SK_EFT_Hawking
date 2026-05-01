@@ -3,7 +3,7 @@
   "generated_by": "scripts/bundle_clusters.py",
   "source_clusters": "papers/claim_clusters.json",
   "source_mapping": "docs/PAPER_DRAFT_MAPPING.md",
-  "cluster_count": 2,
+  "cluster_count": 3,
   "cross_bundle_count": 2,
   "clusters": [
     {
@@ -97,6 +97,37 @@
         "L2"
       ],
       "cross_bundle": true
+    },
+    {
+      "id": "claim_cluster:norm:fb60352a",
+      "label": "The module is zero-sorry, introduces zero new axioms, and adds zero heartbeat overrides (Phase~3 pipeline invariant 10).",
+      "match_kind": "normalized",
+      "member_papers": [
+        "paper20_scalar_rung",
+        "paper33_ewbg_chirality_wall"
+      ],
+      "members": [
+        "sentence:paper20_scalar_rung:formal-verification-summary:2362ebe5",
+        "sentence:paper33_ewbg_chirality_wall:formal-verification:85511263"
+      ],
+      "per_paper_bundles": {
+        "paper20_scalar_rung": [
+          "D3",
+          "F"
+        ],
+        "paper33_ewbg_chirality_wall": [
+          "D3",
+          "F"
+        ]
+      },
+      "bundle_destinations": [
+        "D3",
+        "F"
+      ],
+      "bundle_destinations_excluding_flagship": [
+        "D3"
+      ],
+      "cross_bundle": false
     }
   ]
 }
