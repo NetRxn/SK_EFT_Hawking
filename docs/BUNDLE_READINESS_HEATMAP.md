@@ -15,8 +15,8 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Verdict |
 |---|---:|---:|---:|---:|---|:---:|
-| **F** | 0 | 41 | 92 | 46 | 28 advisory, 31 critical, 15 major, 18 minor | 🔴 RED |
-| **D1** | 1 | 5 | 16 | 0 | 16 advisory | 🟡 YELLOW |
+| **F** | 0 | 41 | 76 | 46 | 12 advisory, 31 critical, 15 major, 18 minor | 🔴 RED |
+| **D1** | 1 | 5 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **D2** | 1 | 4 | 2 | 0 | 2 advisory | 🟢 GREEN |
 | **D3** | 1 | 22 | 63 | 38 | 9 advisory, 28 critical, 10 major, 16 minor | 🔴 RED |
 | **D4** | 1 | 7 | 1 | 0 | 1 advisory | 🟢 GREEN |
@@ -26,15 +26,15 @@
 | **L3** | 2 | 1 | 2 | 0 | 2 advisory | 🟢 GREEN |
 | **I1** | 3 | 2 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **I2** | 3 | 0 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **E1** | 4 | 1 | 13 | 0 | 13 advisory | 🟡 YELLOW |
+| **E1** | 4 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **E2** | 4 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 
 ## Gate × Bundle distribution (open findings)
 
 | Bundle | CitationIntegrity | CountFreshness | ParameterProvenanc | unclassified |
 |---|---:|---:|---:|---:|
-| **F** | 55 | 5 | 12 | 20 |
-| **D1** | 8 | 0 | 2 | 6 |
+| **F** | 47 | 5 | 10 | 14 |
+| **D1** | 0 | 0 | 0 | 0 |
 | **D2** | 2 | 0 | 0 | 0 |
 | **D3** | 41 | 5 | 8 | 9 |
 | **D4** | 0 | 0 | 0 | 1 |
@@ -44,7 +44,7 @@
 | **L3** | 0 | 1 | 0 | 1 |
 | **I1** | 0 | 0 | 0 | 0 |
 | **I2** | 0 | 0 | 0 | 0 |
-| **E1** | 7 | 0 | 2 | 4 |
+| **E1** | 0 | 0 | 0 | 0 |
 | **E2** | 0 | 0 | 0 | 0 |
 
 ## Notes

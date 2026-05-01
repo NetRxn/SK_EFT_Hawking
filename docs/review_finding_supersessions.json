@@ -1363,6 +1363,118 @@
       "date": "2026-05-01"
     },
     {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:4.6",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01)",
+      "evidence": "Advisory: 'Programmable' attribution to Falque should add Giacobino2025 co-cite or use 'all-optically tunable'. Verified paper12 already cites Giacobino2025 (line 320 bibitem with 'programmable simulators' framing notation). Body text grep for 'programmable' returns only the bibitem note, not body claims — paper12 doesn't make a body 'programmable' attribution to Falque that needs a co-cite. Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:4.7",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01)",
+      "evidence": "Advisory: 'first observation of negative-energy modes inside the horizon' — replace 'inside the horizon' with 'in the supersonic (post-horizon) region' per Falque's exact language. Verified paper12 line 72: 'negative-energy Bogoliubov modes in the supersonic (post-horizon) region' — exact-match wording. Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:5.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — Giacobino2025 already cited",
+      "evidence": "Advisory: add Giacobino2025 (arXiv:2512.14194) bibitem to paper12. Verified: paper12 already has \\bibitem{Giacobino2025} at line 320 + \\cite{Giacobino2025} usage in body. Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:5.2",
+      "status": "accepted",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — recommended addition deferred",
+      "evidence": "Advisory recommendation to ADD GilDeOlivera2025 bibitem (arXiv:2509.xxxxx 'Momentum correlations of the Hawking effect in a quantum fluid'). This is an optional supplementary-citation addition, not a correction to existing claims. paper12 currently does not cite this work; the project's claims do not depend on it. Accepted-with-rationale: optional citation addition deferred to a future paper12 expansion pass; not gating bundle GREEN status.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:5.3",
+      "status": "accepted",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — recommended addition deferred",
+      "evidence": "Advisory recommendation to ADD Claude2022 bibitem (PRL 129, 103601, 2022 — coherent probe spectroscopy method). paper12 already cites Claude2023 (PRB 107, 174507, 2023) — a different/later paper from the same group. The 2022 PRL is supplementary methodology context. Accepted-with-rationale: optional citation addition deferred; not gating bundle status.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:5.4",
+      "status": "accepted",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — recommended addition deferred",
+      "evidence": "Advisory recommendation to ADD Guerrero2025 bibitem (PRL — multiply quantized vortex spectroscopy). Optional supplementary-citation addition; paper12 vortex-spectroscopy claims do not depend on it. Accepted-with-rationale: deferred to future paper12 expansion pass.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:1.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper12 + registry already correct",
+      "evidence": "Advisory: paper12 Burkhard2025 cited wrong arXiv ID (2511.13189 LLM paper). Verified current state: paper12 bibitem cites arXiv:2511.12339 (correct); registry Burkhard2025 has title 'Quasinormal modes and stimulated Hawking radiation in analog black holes' + arxiv 2511.12339 (correct). Already-fixed since 2026-04-12 review.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:3.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — Berti2025 page corrected",
+      "evidence": "Advisory: CRP volume 25 may correspond to 2024 (one volume per year). Crossref-verified DOI 10.5802/crphys.226 returns title 'Analog Hawking radiation from a spin-sonic horizon...', vol 25, pages 1-36, year 2025 — confirms volume 25 IS 2025 (publication date 2025), not 2024. The 2026-04-12 review's risk-flag was about volume-year cycle ambiguity, but the actual published metadata matches paper1's claim. Page count corrected from 1-21 to 1-36 in registry + paper1 bibitem; DOI added; doi_verified flipped True. paper2 + paper12 do not cite Berti2025 directly (verified via grep).",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:3.5",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper12 + registry already correct",
+      "evidence": "Advisory: paper12 Falque2025 bibitem title may be stale (arXiv v1 'Spectroscopic me...' vs PRL published 'Polariton Fluids as Quantum Field Theory Simulators on Tailored Curved Spacetimes'). Verified: paper12 bibitem now cites the PRL-published title 'Polariton Fluids as Quantum Field Theory Simulators on Tailored Curved Spacetimes' + Phys. Rev. Lett. 135, 023401 (2025); registry matches. Already-fixed since 2026-04-12 review.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:4.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper12 c_s already updated",
+      "evidence": "Advisory: paper12 c_s = 0.5 μm/ps (was wrong by 25%, should be 0.40 per Falque). Verified: paper12 line 24, 120, 242, 243, 293 all use c_s = 0.40 μm/ps (Falque-measured value). Already-fixed since 2026-04-12 review.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:4.2",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper12 κ already updated",
+      "evidence": "Advisory: paper12 κ = 5×10^10 s⁻¹ underestimated (should be range 0.07-0.11 ps⁻¹ = 7-11×10^10 s⁻¹). Verified: paper12 line 28 uses κ ∈ [0.07, 0.11] ps⁻¹ (Falque demonstrated range). Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:4.3",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper12 T_H already updated",
+      "evidence": "Advisory: paper12 T_H ≈ 61 mK should be recalculated. Verified: paper12 lines 35, 37, 244 use T_H ≈ 85 mK (smooth, κ=0.07) and T_H ≈ 134 mK (steep, κ=0.11) — matches the recalculated range. Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:4.4",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper12 D already updated",
+      "evidence": "Advisory: paper12 D ≈ 0.3-0.5 underestimated (should be ~0.60 from corrected ξ, κ, c_s). Verified: paper12 lines 36, 38, 161, 162, 225 use D ≈ 0.60 (smooth-baseline) and D ≈ 0.93 (steep-horizon maximum). Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:4.5",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper12 'three independent' claim already removed",
+      "evidence": "Advisory: paper12 'three independent measurements' overclaim. Verified: `grep -nE 'three independent' papers/paper12_polariton/paper_draft.tex` returns zero matches. The overclaim has been removed; paper12 now follows Falque's actual single β=1.84 reservoir-correction value. Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:6.1",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper1 already correctly distinguishes",
+      "evidence": "Advisory: Son 2002 described as non-relativistic but title says 'Relativistic'. Verified paper1 line 57: 'Son (hep-ph/0204199) constructs this action for a *relativistic* superfluid; the non-relativistic adaptation used here---the Madelung/Galilean form---follows Endlich et al. (Phys. Rev. D 88, 105001, 2013).' Lines 69-71 same: 'Following Son's EFT framework---originally formulated for a relativistic superfluid---and its non-relativistic Madelung adaptation'. Paper correctly distinguishes Son's relativistic original from the non-relativistic Endlich adaptation. Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
+      "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:6.4",
+      "status": "fixed",
+      "superseded_by": "Phase 7a sub-wave 7a.5 D1 advisory close (2026-05-01) — paper1 caption already discloses",
+      "evidence": "Advisory: 60× κ discrepancy (Table 1 says κ=4.8 s⁻¹; Steinhauer published κ≈290 s⁻¹). Verified paper1 line 260 caption: 'The model κ is profile-dependent; Steinhauer's published κ ≈ 290 s⁻¹ (step potential) gives T_H ≈ 0.35 nK.' The profile-dependence is explicitly disclosed. Line 328 references the model value 4.8 s⁻¹. Both values present with explicit profile-dependent rationale; the discrepancy is acknowledged not hidden. Already-fixed.",
+      "date": "2026-05-01"
+    },
+    {
       "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:6.2",
       "status": "fixed",
       "superseded_by": "Phase 7a sub-wave 7a.5 D4 advisory close (2026-05-01) — paper9 already correctly framed",
