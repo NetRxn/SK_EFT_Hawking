@@ -19,11 +19,14 @@ dependencies = [
     # Visualization
     "plotly>=6.0",
     "kaleido>=1.0",
-    # Notebooks
-    "jupyter>=1.1",
+    # Notebooks — explicit minimum set (we don't ship a UI; users open .ipynb
+    # with their own frontend). Avoids pulling jupyterlab/notebook/jupyter-console
+    # via the `jupyter` umbrella, and pins nbconvert past CVE-2026-39377/39378.
     "ipykernel>=6.29",
     "ipywidgets>=8.1",
     "nbformat>=5.10",
+    "nbclient>=0.10",       # validate.py CHECK 11 notebook execution
+    "nbconvert>=7.17.1",    # scripts/pre-commit-notebooks.sh CLI; CVE-patched
     # Testing
     "pytest>=9.0.3",
     # Rust RHMC extension (built automatically via maturin from rust/)
@@ -38,6 +41,10 @@ dependencies = [
     "psycopg[binary]>=3.2",
     # HTTP client (citation primary-source fetcher; arXiv + Crossref + ADS)
     "httpx>=0.28",
+    # Transitive floor for security: closes CVE-2026-4539 (ReDoS in AdlLexer).
+    # Pulled by ipython / nbconvert / jupyterlab-pygments unconstrained;
+    # pin here to force >=2.20.0 across the dep graph.
+    "pygments>=2.20",
 ]
 
 [project.optional-dependencies]

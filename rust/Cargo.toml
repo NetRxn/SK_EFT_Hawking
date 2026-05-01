@@ -13,7 +13,7 @@ crate-type = ["cdylib"]  # Python extension module
 [dependencies]
 pyo3 = { version = "0.24", features = ["extension-module"] }
 numpy = "0.24"       # PyO3 numpy integration for zero-copy array access
-rand = "0.9"
+rand = "0.9.3"       # 0.9.3+ closes RUSTSEC-2026-0097 (custom-logger soundness)
 rand_chacha = "0.9"  # deterministic seeded RNG (reproducible trajectories)
 
 [profile.release]
