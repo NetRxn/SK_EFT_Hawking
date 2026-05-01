@@ -247,7 +247,7 @@ $\delta\rho/\rho_0 = 3M^2/(M^2+2)$, monotonic in $M$
 the jump ranges $40\%$--$65\%$, weighted by sub-cluster condensate
 fraction $f_c = 0.59$ to a corrected $\sim 30\%$ in the condensate density
 seen by weak lensing. Single-cluster SNR forecasts at Bullet geometry
-($D_L = \SI{830}{\mega\parsec}$, $\Delta r = \SI{400}{\kilo\parsec}$)
+($D_L = 830\,\text{Mpc}$, $\Delta r = 400\,\text{kpc}$)
 yield $\text{SNR}^{\text{Euclid}}_{\rm Bullet} = 0.83$ and
 $\text{SNR}^{\text{Roman}}_{\rm Bullet} = 1.04$; stacked
 $N \gtrsim 30$ radio-relic mergers reach the $3$--$5\sigma$ detection
@@ -263,32 +263,76 @@ SFDM-unique smoking gun (\texttt{sfdm\_offset\_step\_function} in
 \label{sec:d5-paper29_bbn_unified}
 
 This section consolidates the paper~29 BBN-classification deep paper
-(Phase~6b W1). It applies the $\mu \gtrsim \SI{}{\mega\electronvolt}$
-sufficiency condition for the fracton p-wave dipole superfluid phase to
-the canonical five-candidate roster, classifies each candidate's BBN
-viability, and surfaces the cross-bridge to fracton-NonAbelian
-gauge structure.
+(Phase~6b W1). The framework classifies the five Phase~5x emergent-gravity
+DM candidates by their consistency with Big Bang Nucleosynthesis (BBN)
+and Planck~2020 cosmological constraints, ships in
+\texttt{BBNUnified.lean} with $17$ substantive theorems / 0 sorry /
+0 new axioms, and exposes a single $N_{\rm eff}$-mediated failure
+channel as the universal BBN falsifier across the candidate roster.
 
-The viability matrix is encoded in \texttt{BBNUnified.lean}: each Phase~5x
-candidate (T-0 topological, S-0 sterile, C-1 mixed, FG torsion,
-fracton p-wave) carries a BBN admissibility flag derived from
-its symmetry-breaking--scale assignment relative to the BBN epoch
-$T \approx \SI{1}{\mega\electronvolt}$. The substantive condition is
-$\mu_{\rm condensate} > \SI{1}{\mega\electronvolt}$ for the fracton
-candidate to remain in the dipole superfluid phase through nucleosynthesis
-without disrupting the deuterium / helium-4 / helium-3 / lithium-7
-abundance ratios. T-0 (no particle content) and S-0 (sterile, mass
-$\gtrsim \SI{}{\mega\electronvolt}$) are vacuously admissible; the FG
-torsion candidate's BBN safety follows from its CDM-obstruction
-($w = 1/3$, radiation-like) failing to dilute slower than radiation.
+\subsection{Three pass unconditionally; two fail conditional on thermalization}
+\label{subsec:bbn-tally}
 
-Cross-bridge: the BBN safety condition for the fracton p-wave provides
-the calibration handle for the $\mu \gtrsim \SI{}{\mega\electronvolt}$
+The 5-candidate $\mathcal{O}\!\left(\Delta N_{\rm eff}\right)$ tally is:
+
+\begin{itemize}
+\item \emph{Pass unconditionally} (3 candidates) via the W8
+  collective-invisibility theorem $\sigma_{\rm DD} \leq 10^{-50}\,\text{cm}^2$:
+  the $\mathbb{Z}_{16}$Topological T-0 $K$-gauge TQFT (no particle
+  content; $\Delta N_{\rm eff} = 0$ trivially); the $\mathbb{Z}_{16}$Mixed
+  C-1 dark-SU(3) confined-glueball mechanism (relic glueball above the
+  BBN scale; freezes out before BBN); and the FractonPWave dipole-conservation
+  mechanism (subdiffusion suppresses interaction rate below the BBN
+  thermalization threshold).
+\item \emph{Fail conditional on thermalization at $T_{\rm BBN} \approx
+  \SI{1}{\mega\electronvolt}$} (2 candidates):
+  \begin{itemize}
+  \item the $\mathbb{Z}_{16}$Singlet S-0 candidate (three sterile Weyl
+    fermions) gives $\Delta N_{\rm eff} = 3.0$ if fully thermalized,
+    violating the Planck~$2\sigma$ slack $\Delta N_{\rm eff} \leq 0.34$
+    by a factor $2.66 / 0.34 \approx 7.8$;
+  \item the FGTorsion candidate gives $\Delta N_{\rm eff} \geq 1.0$ as
+    radiation-thermalized FG e-loops.
+  \end{itemize}
+\end{itemize}
+
+Both violators fail through the same $N_{\rm eff}$-mediated channel ---
+not via abundance perturbations of the light-element ratios
+$D/H$, $Y_p$, or ${}^7\!\text{Li}$, and not via late-decay
+photodissociation of helium-4. The verdict is universal in the
+$\Delta N_{\rm eff}$ axis: BBN is sensitive only to extra
+relativistic species at $T \sim \SI{}{\mega\electronvolt}$, and the
+two violators differ from the three passers exactly on that axis.
+
+\subsection{Tracked-hypothesis structure}
+\label{subsec:bbn-hypothesis}
+
+The thermalization step is encoded as a tracked Lean hypothesis
+$H_{\rm S0\text{-}thermalized}$ / $H_{\rm FG\text{-}thermalized}$
+(decoupled per candidate) per the project's Phase~6 hypothesis-bundle
+discipline. The two violators are NO-GO under thermalization and
+PARTIAL-VIABLE if the thermalization hypothesis is falsified in some
+mechanism-specific manner (e.g., the FG e-loops decoupling above
+$\SI{1}{\mega\electronvolt}$ via a substrate-level kinetic-blocking
+mechanism). The Lean theorem
+\texttt{phase5x\_dm\_bbn\_violators\_count\_two} establishes the
+2-of-5 falsification under default thermalization; the corresponding
+\texttt{phase5x\_dm\_bbn\_passers\_count\_three} closes the
+3-of-5 unconditional pass.
+
+\subsection{Cross-bridge to the SFDM cluster-merger forecast}
+\label{subsec:bbn-sfdm-cross-bridge}
+
+The BBN-safety condition for the fracton p-wave provides the calibration
+handle for the $\mu_{\rm condensate} \gtrsim \SI{}{\mega\electronvolt}$
 constraint that anchors the §\ref{subsec:sfdm-merger} cluster-merger
-forecast. The two conditions are independent (BBN constrains the early-time
-energy density; the cluster-merger forecast constrains the late-time
-gravitational signature), but they are mutually consistent in the
-BK-fiducial parameter window.
+forecast. The two conditions are independent --- BBN constrains the
+early-time relativistic-species count; the cluster-merger forecast
+constrains the late-time gravitational signature --- but they are
+mutually consistent in the BK-fiducial parameter window. The framework
+is the program's \emph{expected-falsifier}: it disqualifies $\geq 1$
+Phase~5x DM candidate upon discharge of the thermalization tracked
+hypothesis, in line with the program's Phase~6 falsifier-driven discipline.
 
 %% ─── End lift from paper29_bbn_unified ───
 
@@ -342,32 +386,71 @@ nEDM bound (sensitivity factor ${\sim}10^{11}$ above $\bar\theta < 10^{-9}$).
 \label{sec:paper34}
 \label{sec:d5-paper34_equivalence_principle}
 
-This section consolidates the paper~34 equivalence-principle (EP)
-classification deep paper (Phase~6c W3). It evaluates each Phase~5x
-candidate's EP-violation profile and yields the substrate program's
-EP verdict: the vestigial-gravity phase relic is the unique Phase~5x
-candidate predicted to produce a measurable $\eta$-violation at the
-STEP / MICROSCOPE / Galileo-Galileo-Galilei sensitivity floor.
+This section consolidates the paper~34 EP-classification deep paper
+(Phase~6c W3). The framework classifies six distinct emergent-gravity
+mechanisms by their EP-violation level, encodes the classification as
+decidable predicates in Lean~4 (\texttt{EquivalencePrincipleClassification.lean}
++ \texttt{VestigialPhaseEPViolation.lean}), and proves the structural
+consequence that EP violation in this substrate is
+\emph{vestigial-only}: any positive EP-violation result implies vestigial
+physics, and any null result at sub-$10^{-19}$ precision excludes
+vestigial gravity.
 
-The EP-violation matrix in
-\texttt{EquivalencePrincipleClassification.lean} maps each Phase~5x
-candidate to its violation level (\texttt{none} / \texttt{weak} /
-\texttt{strong}) per WEP / EEP / SEP. T-0 (topological), S-0 (sterile),
-C-1 (mixed-charge), FG torsion, and fracton p-wave all lie at
-\texttt{violationLevel = none} per their substrate-singlet character;
-the vestigial-relic phase, by contrast, carries an
-$\eta$-violation $\sim 10^{-15}$ at MICROSCOPE sensitivity through the
-\texttt{vestigial\_phase\_eta\_violates\_microscope\_bound} theorem
-(numerical content: $1.0 > 10^{-15}$ via norm\_num). The
-quantitative SEP-violation bound from the Hughes-Drever / LLR / nEDM
-window is recorded in \texttt{VestigialPhaseEPViolation.lean}.
+\subsection{Two violators (vestigial only); four satisfy WEP/EEP/SEP}
+\label{subsec:ep-tally}
 
-The substantive content is the Phase 5y orthogonality theorem applied
-to the EP channel: vestigial-relic-EP-violation is in a substrate channel
-distinct from the WEP-violation channels of T-0 / S-0 / C-1 / FG / fracton,
-so the candidates are mutually compatible (no double-counting) but
-predict distinct experimental signatures. STEP and MICROSCOPE provide
-the unique discriminator.
+The 6-mechanism tally:
+
+\begin{itemize}
+\item \emph{Violate WEP} (and hence all three EP levels):
+  \begin{itemize}
+  \item \emph{Vestigial differential coupling} --- metric and tetrad
+    fields acquire different vacuum expectation values, so bosons and
+    fermions couple to gravity through different effective geometries.
+    Predicts $\eta = 1$ (maximal); already excluded by MICROSCOPE
+    (Touboul~et~al.~2017, $\eta < 10^{-15}$ for Ti/Pt).
+  \item \emph{Vestigial relics} --- residual $\eta \sim 10^{-18}$ from
+    defect remnants in a full-tetrad phase. Sub-MICROSCOPE; at the
+    projected design sensitivity for STEP-class satellite missions
+    ($\eta_{\rm STEP} \sim 10^{-18}$).
+  \end{itemize}
+\item \emph{Satisfy WEP / EEP / SEP} (4 mechanisms):
+  Einstein--Cartan torsion-trace coupling, fracton subdiffusion
+  (Pretko~2017), Berezhiani--Khoury Thomas--Fermi superfluid DM
+  (Berezhiani \& Khoury~2015), and hidden-sector $\mathbb{Z}_{16}$
+  singlets. Each carries \texttt{violationLevel = none} in the
+  Lean classification matrix.
+\end{itemize}
+
+The Lean theorem
+\texttt{vestigial\_phase\_eta\_violates\_microscope\_bound} is the
+quantitative falsifier for vestigial differential coupling
+(\texttt{norm\_num} on the comparison of the predicted $\eta = 1$
+against the MICROSCOPE bound $10^{-15}$). The substantive numerical
+falsifier is $1.0 > 10^{-15}$, factor $\sim 10^{15}$ excess.
+
+\subsection{Vestigial-only structural conclusion}
+\label{subsec:ep-vestigial-only}
+
+The structural conclusion is the substrate program's EP verdict: of all
+six mechanisms relevant to the ADW emergent-gravity program, only the
+vestigial-gravity phase produces a measurable $\eta$-violation at any
+of the experimental sensitivity floors (MICROSCOPE, STEP, GG, sub-$10^{-19}$
+proposed missions). The vestigial-relic prediction at $\eta \sim 10^{-18}$
+is at STEP design sensitivity; vestigial differential coupling at
+$\eta = 1$ is already excluded.
+
+This is a positive structural result rather than a negative one: it
+establishes that the EP channel is a discriminator between the
+substrate program's vestigial-gravity content and the rest of its
+mechanism family, in contrast to the BBN channel
+(§\ref{sec:paper29}, where 2/5 candidates fail and 3/5 pass) and
+the direct-detection channel (§\ref{subsec:honesty}, where all 5
+Phase~5x DM candidates collectively pass at $\sigma_{\rm DD} \leq
+10^{-50}\,\text{cm}^2$). The Phase~5y orthogonality machinery
+applied at the EP-channel layer establishes that the
+vestigial-relic prediction is in a substrate channel distinct from the
+WEP-conformant channels of the other five mechanisms.
 
 %% ─── End lift from paper34_equivalence_principle ───
 
@@ -696,7 +779,7 @@ The substrate-level evaluations are:
   Volovik-Jannes ${}^3\!\text{He-A}$ satisfies all four conditions
   (low-energy Weyl fermions; universal gravitational coupling via
   the tetrad; $\text{tr}\, I = 4$; IR Lorentz recovery). The
-  substrate-derived Λ value is
+  substrate-derived $\Lambda$ value is
   $\Lambda_J = \Delta_0^4 / (6\pi^2 \hbar^3)$ at
   $\Delta_0 \approx \SI{1.6}{\milli\kelvin}$, with $\zeta = 2$.
 \item \texttt{finazzi\_liberati\_sindoni\_bec\_violates\_universal\_coupling}:
@@ -722,7 +805,7 @@ substrate; it remains conditional on path-(a).
 \label{subsec:sakharov-short-note}
 
 The Sakharov 4-criterion test (§\ref{sec:phase6m-sakharov}) is the first
-systematic Λ-comparison on a common substrate in the literature, and
+systematic $\Lambda$-comparison on a common substrate in the literature, and
 constitutes a publishable observation in its own right. The full
 short-note outline lives at
 \texttt{temporary/working-docs/short\_note\_sakharov\_lambda\_j\_vs\_lambda\_hk\_outline.md}
