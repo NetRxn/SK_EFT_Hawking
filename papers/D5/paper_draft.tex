@@ -342,42 +342,79 @@ hypothesis, in line with the program's Phase~6 falsifier-driven discipline.
 \label{sec:d5-paper32_strong_cp_de}
 
 This section consolidates the paper~32 strong-CP / topological-DE deep
-paper (Phase~6c W1) into D5. The substrate program absorbs the
-Zhitnitsky--Van Waerbeke topological-DE mechanism: the cosmological constant
-acquires a contribution from the QCD topological susceptibility evaluated
-on a comoving Hubble volume, with a Planck-natural estimate
-$M_P^4 \approx 10^{112}\,\text{eV}^4$ for the bare scale and a
-naturally-$\mathcal{O}(1)$ value $\theta = 1$ for the topological angle
-(see \texttt{StrongCPTopologicalDE.lean} for the
-\texttt{zhitnitskyDE\_eV4} formula and the
-\texttt{zhitnitsky\_DE\_far\_below\_planck} bound at
-$10^{-8}\,\text{eV}^4$, approximately $120$ orders of magnitude below
-$M_P^4$).
+paper (Phase~6c W1) into D5. It formalises a structural bridge between
+two long-standing Standard-Model puzzles --- the smallness of the QCD
+topological angle $|\theta| \lesssim 10^{-9}$ (Pendlebury~2015 neutron
+EDM) and the observed cosmological-constant energy density
+$\rho_{\rm DE} \approx 2.8 \times 10^{-11}\,\text{eV}^4$
+(Planck~2018 + DESI~2024) --- via the Van Waerbeke--Zhitnitsky
+topological-DE mechanism. The bridge ships in
+\texttt{StrongCPTopologicalDE.lean} as $8$ substantive theorems
+(macro $\strongCpDeThms{}$).
 
-The combined-mechanism falsifier
-(\texttt{H\_BothActiveGivesInconsistency} tracked Prop) closes a
-substantive mutual-exclusivity gap: if both the substrate
-ADW-tetrad-condensation $\rho_{\rm vac}$ contribution and the Zhitnitsky
-topological contribution are simultaneously active and additive without
-cancellation, the combined dark-energy density exceeds
-$\rho_{\rm DE,obs}$ by at least one order of magnitude, falsifying the
-combined-mechanism scenario at submeV level. The Lean Prop body uses
+\subsection{Zhitnitsky topological-DE prediction (no free parameters)}
+\label{subsec:zhitnitsky}
+
+The mechanism predicts $\rho_{\rm DE} \sim \Lambda_{\rm QCD}^6 / M_P^2$
+with no tunable parameters. At the PDG QCD scale
+$\Lambda_{\rm QCD} = \SI{0.1}{\giga\electronvolt}$ and Planck mass
+$M_P = 1.22 \times 10^{19}\,\text{GeV}$, the prediction is
+$\rho_{\rm DE} \approx 6.7 \times 10^{-9}\,\text{eV}^4$, sitting within
+${\sim}240\times$ of the observed value (well within the
+three-orders-of-magnitude window quoted in the Zhitnitsky proposal),
+and approximately $120$ orders of magnitude below the Planck-natural
+estimate $M_P^4 \approx 10^{112}\,\text{eV}^4$. The 120-order
+suppression is the substantive structural payoff. The Lean formula
+\texttt{zhitnitskyDE\_eV4} encodes the prediction, and
+\texttt{zhitnitsky\_DE\_far\_below\_planck} bounds it strictly below
+$10^{-8}\,\text{eV}^4$ via \texttt{norm\_num}.
+
+\subsection{$\theta$-vacuum invariant + naturally-$\mathcal{O}(1)$ violation}
+\label{subsec:theta-vacuum-load-bearing-invariant}
+
+The $\theta$-vacuum is encoded as a Lean structure carrying the
+experimental neutron-EDM constraint as a load-bearing invariant. A
+naturally-$\mathcal{O}(1)$ value $\theta = 1$ violates this invariant
+by nine orders of magnitude relative to the
+$|\theta| \lesssim 10^{-9}$ bound. The Lean module
+\texttt{ThetaVacuumFiniteT.lean} adds the finite-temperature behaviour
+(cosine-based free energy global minimum at $\theta = 0$ via
+\texttt{Real.cos\_le\_one}; $\pi^2 / 3$ misalignment correction;
+SN1987A axion bound below the Planck-DM cosmological window).
+
+\subsection{Combined-mechanism falsifier (mutual-exclusivity)}
+\label{subsec:combined-mechanism-falsifier}
+
+The substrate program's ADW-tetrad-condensation $\rho_{\rm vac}$
+contribution (§\ref{subsec:adw-cc}) and the Zhitnitsky topological
+contribution are both candidates for the observed $\rho_{\rm DE}$. The
+Lean theorem \texttt{H\_BothActiveGivesInconsistency} (tracked Prop)
+encodes the mutual-exclusivity falsifier: if both mechanisms are
+simultaneously active and additive without cancellation, the combined
+DE density exceeds $\rho_{\rm DE,obs}$ by at least one order of
+magnitude. The Lean Prop body uses
 \texttt{rho\_DE\_combined > zhitnitskyDE\_eV4 0.1} as the strict
 threshold, with \texttt{linarith} discharge consuming a strict-positivity
-hypothesis on the QCD-topological contribution; this is a Derived
+hypothesis on the QCD-topological contribution. This is a Derived
 content theorem (load-bearing under the mutual-exclusivity hypothesis),
 not MCC.
 
-The $\theta$-vacuum finite-temperature behaviour is documented in
-\texttt{ThetaVacuumFiniteT.lean} (cosine-based free energy, global
-minimum at $\theta = 0$ via \texttt{Real.cos\_le\_one}; $\pi^2/3$
-misalignment correction; SN1987A axion bound below the Planck-DM
-cosmological window). The paper-43 anomaly cross-bridge
-(\texttt{Z16AnomalyForcesThetaBar.lean}) carries the substrate-silent
-verdict on $\bar\theta$: the substrate program's $\mathbb{Z}_{16}$
-machinery does not fix $\bar\theta$ via channel--flavour orthogonality;
-the Branch~$\gamma$ falsifier requires the CDVW + Abel-2020 PSI
-nEDM bound (sensitivity factor ${\sim}10^{11}$ above $\bar\theta < 10^{-9}$).
+\subsection{Substrate-silent on $\bar\theta$ (cross-bridge to paper~43)}
+\label{subsec:substrate-silent-thetabar}
+
+The paper-43 anomaly cross-bridge
+(\texttt{Z16AnomalyForcesThetaBar.lean}) carries the
+\emph{substrate-silent} verdict on $\bar\theta$: the substrate program's
+$\mathbb{Z}_{16}$ machinery does not fix $\bar\theta$ via
+channel--flavour orthogonality. Strong-CP is therefore isolated as the
+unique remaining BSM hierarchy that the program's $\mathbb{Z}_{16}$
+content cannot constrain; the Branch~$\gamma$ falsifier requires the
+CDVW + Abel-2020 PSI neutron-EDM bound (sensitivity factor
+${\sim}10^{11}$ above $\bar\theta < 10^{-9}$). The substantive D5
+implication: the substrate program admits Zhitnitsky topological-DE as
+a CC-channel mechanism that does \emph{not} require fine-tuning of
+$\bar\theta$; the prediction is parameter-free given $\Lambda_{\rm QCD}$
+and $M_P$.
 
 %% ─── End lift from paper32_strong_cp_de ───
 
