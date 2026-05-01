@@ -1,4 +1,96 @@
 {
   "bundle_target": "D5",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-01T19:30:07Z",
+      "source_paper": "paper17_dark_sector",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a72-\u00a73",
+      "lean_modules_referenced": [
+        "DarkSectorSynthesis",
+        "SFDMMergerForecast",
+        "FractonDarkMatter",
+        "Z16AnomalyComputation",
+        "ADWMechanism",
+        "CosmologicalConstant",
+        "HiddenSectorMixedCharge"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T19:30:07Z",
+      "notes": "Initial lift: paper17 dark-sector DM classification (\u00a72 SFDM merger) + DE structural NO-GO architecture (\u00a73 ADW + Volovik). Anchors D5 \u00a72-\u00a73 per PAPER_DRAFT_MAPPING.md row."
+    },
+    {
+      "date": "2026-05-01T19:30:48Z",
+      "source_paper": "paper29_bbn_unified",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a74",
+      "lean_modules_referenced": [
+        "BBNUnified"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T19:30:48Z",
+      "notes": "BBN classification of Phase 5x DM candidates"
+    },
+    {
+      "date": "2026-05-01T19:30:48Z",
+      "source_paper": "paper32_strong_cp_de",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a75",
+      "lean_modules_referenced": [
+        "StrongCPTopologicalDE",
+        "ThetaVacuumFiniteT",
+        "Z16AnomalyForcesThetaBar"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T19:30:48Z",
+      "notes": "Zhitnitsky topological-DE absorption + combined-mechanism falsifier"
+    },
+    {
+      "date": "2026-05-01T19:30:48Z",
+      "source_paper": "paper34_equivalence_principle",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "EquivalencePrincipleClassification",
+        "VestigialPhaseEPViolation"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T19:30:48Z",
+      "notes": "EP-violation matrix; vestigial-only verdict"
+    },
+    {
+      "date": "2026-05-01T19:30:48Z",
+      "source_paper": "paper42b_cc_emergent",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a77",
+      "lean_modules_referenced": [
+        "CosmologicalConstantEmergent",
+        "HeatKernelExpansion"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T19:30:48Z",
+      "notes": "CC-channel constraint contribution; secondary D5 (primary D3 \u00a721)"
+    },
+    {
+      "date": "2026-05-01T19:32:14Z",
+      "source_paper": "D5_phase6m_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a78-\u00a712",
+      "lean_modules_referenced": [
+        "CausalSetDarkEnergy",
+        "EntropicGravityDarkEnergy",
+        "JacobsonThermoGRDarkEnergy",
+        "DarkSectorClassificationExtension"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T19:32:14Z",
+      "notes": "D.4 sourceless late-absorption: Phase 6m three-track Lean closure (CSDE Track A NO-GO + 3 caveats incl. Barrow \u00a710.5 + EGDE Track B 8/8 unanimous NO-GO paper-45-equivalent novelty + JTGR Track C f(R) Exp+ArcTanh CLEARED-R5 strongest + Sakharov \u00a711.5 + DSCE 7-class GD taxonomy)"
+    }
+  ]
 }

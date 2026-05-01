@@ -66,3 +66,23 @@ outputs/
 pytest-cache-files-1k3by_ri
 rust/target/*
 .superpowers/*
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.toc
+*.lof
+*.lot
+*.bbl
+*.blg
+*.nav
+*.snm
+*.vrb
+*Notes.bib
+papers/**/*.pdf
+!papers/**/figures/*.pdf
+

@@ -1,0 +1,957 @@
+\documentclass[aps,prd,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{siunitx}
+
+%% Bundle-skeleton header (Phase 7a sub-wave 7a.1.3)
+%% Bundle target: D5 (tier 1, journal PRD)
+%% Generated: 2026-05-01T19:30:07Z (skeleton); first-pass content 2026-05-01
+%% Schema: docs/BUNDLE_DIRECTORY_SCHEMA.md
+%% Source manifest: papers/D5/source_manifest.md
+%% Change log: papers/D5/change_log.md
+%% Append log: papers/D5/append_log.json (machine-readable)
+
+% Canonical counts from scripts/update_counts.py.
+\input{../../docs/counts.tex}
+
+\begin{document}
+
+\title{Dark Sector under Substrate Constraints:\\
+Machine-Verified Bounds on Dark Matter and Dark Energy from the
+SK--EFT Hawking Program}
+
+\author{John Roehm}
+
+\date{\today}
+
+\begin{abstract}
+We assemble a unified, formally verified assessment of how the
+substrate-condensation program developed in the SK--EFT Hawking series
+constrains dark matter (DM) and dark energy (DE). Five existing
+deep-paper drafts and one Phase~6m three-track Lean closure are
+consolidated. Five quantitative connections survive the consolidation:
+(i)~$\mathbb{Z}_{16}$ anomaly cancellation forces a hidden dark sector of
+charge $+3 \bmod 16$, with Wang's topological order (T-0) and three
+sterile Weyl fermions (S-0) as the minimal anomaly-canceling solutions;
+(ii)~ADW tetrad-condensation equilibrium reproduces the cosmological
+constant scale $\rho_{\rm vac}^{1/4} \sim T_{\rm dS} \sim
+\SI{}{\milli\electronvolt}$ at the order-of-magnitude level (the
+$\mathcal{O}(1)$ prefactor is deferred to Phase~6); (iii)~the
+Klinkhamer--Volovik oscillating vacuum is in $2.9$--$4.4\sigma$ tension
+with DESI~DR2 $(w_0, w_a)$, so the DE-dynamics claim is withdrawn while
+the $\Lambda$-magnitude claim is retained; (iv)~big-bang-nucleosynthesis
+(BBN) classification of Phase~5x DM candidates establishes
+$\mu \gtrsim \SI{}{\mega\electronvolt}$ at $T \approx \SI{1}{\mega\electronvolt}$
+as the necessary sufficiency condition for the fracton p-wave dipole
+superfluid phase to be viable; and (v)~the Berezhiani--Khoury (BK)
+fiducial superfluid-DM cluster-merger forecast predicts a
+sonic-boom convergence excess at $0.83\sigma$ (Euclid Bullet) and
+$1.04\sigma$ (Roman Bullet) at single-cluster, with a velocity-threshold
+step function at $M{=}1$ as an SFDM-unique smoking gun.
+
+The Phase~6m Lean closure adds three substantive new structural
+results. (a)~Track~A causal-set DE is fully NO-GO at R5 across all four
+candidates (Sorkin everpresent-$\Lambda$ M1 + M2; phenomenological BDG; causet
+d'Alembertian via 4D gradient instability), with three publishable structural
+caveats: the Gibbs--Duhem (GD) obstruction is inapplicable to causal-set DE
+across all four admissible sprinkling prescriptions; the Barrow numerical
+upper bound is prescription-dependent at the $\geq 40\%$ level; and the BDG
+$\sigma_\Lambda(V) = \alpha_{\rm BDG}/\sqrt{V}$ first-principles
+decomposition. (b)~Track~B entropic-gravity DE (8 candidates) yields the
+\emph{first complete-mechanism-family unanimous NO-GO closure} in
+Phase~6m: all eight quantitative Bayesian bounds exceed the Jeffreys-decisive
+threshold $|\!\log\mathcal{B}| \geq 5$, and the closure is robust under
+the $r_d$-anchoring rescue. (c)~Track~C Jacobson-thermodynamic GR is the
+highest-survival track at R5 with at least five CLEARED-R5 candidates;
+the M3 $f(R)$ Exp and ArcTanh variants are the strongest CLEARED-R5
+of any Phase~6m track per Plaza-Kraiselburd ($\Delta\!\text{AIC} \simeq
+\Delta\!\text{BIC} \gtrsim 20$); the Hu--Sawicki variant is NO-GO via the
+chameleon Solar-System bound at $b \approx 0.21 \gg 100\times$
+the bound; and a Phase~6e cross-bridge establishes the Sakharov
+4-criterion induced-gravity test, satisfied by Volovik--Jannes
+${}^3\!\text{He-A}$ and falsified by Finazzi--Liberati--Sindoni acoustic
+BEC. A unified 7-class GD taxonomy organises all $\substantivetheorems$
+substantive Phase~6m theorems under a 3-tier applicability gradient.
+
+Honesty discipline: load-bearing claims separate \emph{derived}
+(Lean-formalized non-trivial mathematical content) from \emph{machine-checked
+classification (MCC)} (consistency-of-author-classification verification)
+from \emph{heuristic / empirical}; the explicit MCC label is used
+throughout. The bundle ships at $\totaltheorems$ Lean theorems across
+$\leanmodules$ modules with zero active sorry and a single tracked axiom.
+
+\end{abstract}
+
+\maketitle
+
+%% ─────────────────────────────────────────────────────────────────────
+%% Section structure: §1 intro; §2-§3 paper17; §4 paper29 BBN;
+%% §5 paper32 Strong-CP; §6 paper34 EP; §7 paper42b CC-channel;
+%% §8 Phase 6m Track A; §9 Track B (NEW publication-novelty closure);
+%% §10 Track C; §10.5 Barrow embedded subsection;
+%% §11 Sakharov criterion cross-bridge; §11.5 Sakharov embedded;
+%% §12 unified 7-class GD taxonomy; §13 discussion + outlook.
+%% ─────────────────────────────────────────────────────────────────────
+
+\section{Introduction}
+\label{sec:intro}
+
+Dark matter and dark energy remain the two most empirically well-established
+gaps in the Standard Model of particle physics and cosmology. The SK--EFT
+Hawking research program approaches both through the lens of an emergent
+substrate: gravity arises as a low-energy effective field theory of a
+condensed-matter--like substrate (ADW tetrad condensation, vestigial-gravity
+phase, fracton dipole superfluid, $\mathbb{Z}_{16}$ topological hidden
+sector), and the dark sector is whatever the substrate's other condensation
+channels produce. The program's earlier Phase~5x deep papers (here
+consolidated as \S\ref{sec:paper17}--\S\ref{sec:paper42b}) proposed five
+specific dark-sector candidates and computed their predictions, falsifiers,
+and cross-channel orthogonality matrices. The recent Phase~6m three-track
+research-and-Lean closure (\S\ref{sec:phase6m-track-a}--\S\ref{sec:phase6m-taxonomy})
+addresses the converse question: what does each major existing
+emergent-gravity dark-energy framework in the literature predict, and
+which of them survive a precision $r_d$-anchoring DESI~DR2 falsifier?
+
+The bundle has three goals. First, to consolidate the program's
+formally-verified DM and DE constraints under a single submission-ready
+narrative. Second, to ship the Phase~6m three-track closure as the
+program's new substantive contribution: in particular, Track~B is the
+first complete-mechanism-family unanimous NO-GO closure on
+entropic-gravity DE, with all eight quantitative bounds exceeding the
+Jeffreys-decisive threshold and robust under $r_d$-anchoring rescue.
+Third, to surface the structural caveats: Track~A's GD-obstruction
+inapplicability across all admissible sprinkling prescriptions, the
+Barrow-bound prescription dependence, and the Sakharov 4-criterion
+induced-gravity test in the JTGR cross-bridge --- each a publishable
+short-note opportunity \emph{embedded as a D5 subsection} per Pipeline
+Invariant~\#14 (no 14th+ bundle target spawned).
+
+The bundle imports the canonical project counts via
+\texttt{counts.tex} ($\totaltheorems$ theorems / $\leanmodules$ modules
+/ zero active sorry / one tracked axiom: \texttt{gapped\_interface\_axiom}
+from Phase~5s, unrelated to the dark sector) and the canonical formula
+registry via \texttt{src/core/formulas.py}. Each cited Lean theorem
+resolves to a built declaration; each cited bibitem resolves to a
+\texttt{CITATION\_REGISTRY} entry with primary-source cache. The
+$\substantivetheorems$ substantive count separates the load-bearing
+content from $\placeholdertheorems$ documentation-marker
+\emph{placeholder} theorems.
+
+\section{Dark-sector connections (paper~17)}
+\label{sec:paper17}
+\label{sec:d5-paper17_dark_sector}
+
+This section consolidates the paper~17 dark-sector deep paper (Phase~5x).
+It establishes the four substantive DM and DE connections specific to
+the substrate substrate--condensation program, separates derived from
+machine-checked-classification (MCC) content per the honesty discipline,
+and discusses the open MCC$\to$Derived upgrade targets for Phase~6.
+The treatment here is condensed; the full version is the
+\texttt{papers/paper17\_dark\_sector/paper\_draft.tex} source.
+
+\subsection{$\mathbb{Z}_{16}$ hidden sector forces charge $+3 \bmod 16$}
+\label{subsec:z16}
+
+The Standard Model's $\mathbb{Z}_{16}$ anomaly index, computed in
+\texttt{Z16AnomalyComputation.lean} (23 theorems), forces any
+ultraviolet completion that maintains anomaly cancellation under the
+SK--EFT spin--$\mathbb{Z}_4$ structure to carry exactly $+3 \bmod 16$ of
+hidden charge. The minimal Lagrangian solutions are Wang's topological
+order T-0 (a $K$-gauge TQFT with no propagating particle content) and
+three sterile Weyl fermions S-0; both are tagged by the
+\texttt{HiddenSectorMixedCharge.lean} substrate definition
+\texttt{candidate\_T0} / \texttt{candidate\_S0}. A third option C-1
+(Wan-Wang mixed-charge with a dark $\text{SU}(3)$) is shipped under the
+tracked hypothesis \texttt{H\_MixedChannelZ16Cancels} pending the Phase~6
+bordism upgrade of the Dai--Freed pairing
+($\Omega_5^{\text{Spin}\times\mathbb{Z}_4} \to \mathbb{Z}/16$). The
+SM-singlet character of all candidates (key DM consequence) is derived
+in \texttt{FractonNonAbelian.lean} via the fracton--Yang--Mills
+incompatibility theorem.
+
+\subsection{ADW Cosmological-constant magnitude}
+\label{subsec:adw-cc}
+
+The Abrikosov--Diakonov--Wetterich (ADW) tetrad-condensation gap
+equation, formalized in \texttt{ADWMechanism.lean} and
+\texttt{CosmologicalConstant.lean}, exhibits a Volovik-style equilibrium
+in which the tetrad determinant self-tunes to $\Lambda_{\rm eff} = 0$ in
+perfect Minkowski vacuum. Thermal perturbation by the matter sector
+generates a residual $\rho_{\rm vac} \sim T^4$ at the de Sitter
+temperature $T_{\rm dS} = H/\pi$ (which differs from the Gibbons--Hawking
+temperature by a factor of two). Quantitatively
+\begin{equation}
+\rho_{\rm vac}^{1/4} \approx \mathcal{O}(1) \times T_{\rm dS}
+\sim \SI{}{\milli\electronvolt},
+\end{equation}
+versus the observed $(\SI{2.3}{\milli\electronvolt})^4$. The mechanism
+reproduces the \emph{scale} of $\rho_{\rm vac}^{1/4}$ at the meV level
+without tuning; the specific $\mathcal{O}(1)$ coefficient requires a
+full $V_{\rm eff}$ parameterization and is deferred to Phase~6 ---
+see the CAUTION block in \texttt{CosmologicalConstant.lean}~L21--23. A
+prior ``$\approx 2.8$~meV'' / ``$20\%$ agreement'' claim is withdrawn
+in this revision (paper~17 Wave~10 remediation; D5 lift~2026-05-01).
+
+The companion KV oscillating-vacuum mechanism predicts an oscillating
+$w(z)$. DESI~DR2 excludes $(w_0, w_a) = (-1, 0)$ at $2.9\sigma$
+(Pantheon+) and $4.4\sigma$ (DESY5); KV oscillations occur at
+Planck-scale period (${\sim}\SI{e-44}{\second}$), so $w_{\rm eff}$
+during any accessible epoch is $0$ (CDM-like), not phantom-crossing.
+The bundle therefore retains the $\Lambda$-magnitude claim and
+withdraws the DE-dynamics claim.
+
+\subsection{Honesty boundary: Derived vs MCC vs Heuristic}
+\label{subsec:honesty}
+
+The bundle inherits the paper~17 honesty discipline. Each Lean-cited
+claim is one of three types:
+
+\begin{itemize}
+\item \emph{Derived} --- the Lean theorem's proof carries non-trivial
+  mathematical content (the conclusion does not reduce to the statement
+  by \texttt{rfl} or \texttt{decide} on hand-assigned constants).
+  Examples: distinct equation-of-state values for Phase~5x sectors
+  (CC3/CC4/CC4'); FG torsion CDM obstruction (\texttt{fg\_cdm\_obstruction}
+  from traceless $T^{\mu\nu}$).
+\item \emph{MCC (machine-checked classification)} --- the proof verifies
+  internal consistency of an author-supplied lookup table or enum
+  assignment. Examples: $\log_{10}\sigma_{\rm DD}(\text{candidate})
+  \leq -50$ for all five Phase~5x candidates (caps hand-assigned per
+  deep-research bound); SFDM vs fracton cored-profile mechanisms
+  (taxonomy enum distinctness); empirical-hook ranking (priorities
+  hand-assigned).
+\item \emph{Heuristic / Empirical} --- physically motivated but
+  non-rigorous (Heuristic) or measurement-driven (Empirical).
+\end{itemize}
+
+The MCC label flags content where Lean machine-verifies the
+\emph{consistency} of the classification asserted in prose, but does
+not independently re-derive the underlying physics bound. Each MCC
+content item is sourced individually to its deep-research memo. Upgrading
+MCC entries to Derived is a Phase~6 target.
+
+\subsection{SFDM cluster-merger forecast (Money Plot)}
+\label{subsec:sfdm-merger}
+
+The BK-fiducial superfluid DM gives a sub-cluster sound speed
+$c_s^{\rm subcl.} = \sqrt{2\mu/m} = \SI{1525}{\kilo\meter\per\second}$
+at galaxy-cluster scale, with five canonical radio-relic mergers
+(Bullet 1.77, Pandora 2.23, A520 1.51, El Gordo 1.64, MACS J0025 1.31)
+all in the supersonic regime. A Rankine--Hugoniot analysis in the SFDM
+effective adiabatic index $\gamma=2$ regime gives
+$\delta\rho/\rho_0 = 3M^2/(M^2+2)$, monotonic in $M$
+(\texttt{delta\_rho\_monotone\_in\_mach\_sfdm}); for $M \in [1.31, 2.23]$
+the jump ranges $40\%$--$65\%$, weighted by sub-cluster condensate
+fraction $f_c = 0.59$ to a corrected $\sim 30\%$ in the condensate density
+seen by weak lensing. Single-cluster SNR forecasts at Bullet geometry
+($D_L = \SI{830}{\mega\parsec}$, $\Delta r = \SI{400}{\kilo\parsec}$)
+yield $\text{SNR}^{\text{Euclid}}_{\rm Bullet} = 0.83$ and
+$\text{SNR}^{\text{Roman}}_{\rm Bullet} = 1.04$; stacked
+$N \gtrsim 30$ radio-relic mergers reach the $3$--$5\sigma$ detection
+threshold, with the velocity-threshold step function at $M{=}1$ as the
+SFDM-unique smoking gun (\texttt{sfdm\_offset\_step\_function} in
+\texttt{SFDMMergerForecast.lean}).
+
+%% ─── End lift from paper17_dark_sector ───
+
+
+\section{BBN classification of Phase~5x DM candidates (paper~29)}
+\label{sec:paper29}
+\label{sec:d5-paper29_bbn_unified}
+
+This section consolidates the paper~29 BBN-classification deep paper
+(Phase~6b W1). It applies the $\mu \gtrsim \SI{}{\mega\electronvolt}$
+sufficiency condition for the fracton p-wave dipole superfluid phase to
+the canonical five-candidate roster, classifies each candidate's BBN
+viability, and surfaces the cross-bridge to fracton-NonAbelian
+gauge structure.
+
+The viability matrix is encoded in \texttt{BBNUnified.lean}: each Phase~5x
+candidate (T-0 topological, S-0 sterile, C-1 mixed, FG torsion,
+fracton p-wave) carries a BBN admissibility flag derived from
+its symmetry-breaking--scale assignment relative to the BBN epoch
+$T \approx \SI{1}{\mega\electronvolt}$. The substantive condition is
+$\mu_{\rm condensate} > \SI{1}{\mega\electronvolt}$ for the fracton
+candidate to remain in the dipole superfluid phase through nucleosynthesis
+without disrupting the deuterium / helium-4 / helium-3 / lithium-7
+abundance ratios. T-0 (no particle content) and S-0 (sterile, mass
+$\gtrsim \SI{}{\mega\electronvolt}$) are vacuously admissible; the FG
+torsion candidate's BBN safety follows from its CDM-obstruction
+($w = 1/3$, radiation-like) failing to dilute slower than radiation.
+
+Cross-bridge: the BBN safety condition for the fracton p-wave provides
+the calibration handle for the $\mu \gtrsim \SI{}{\mega\electronvolt}$
+constraint that anchors the §\ref{subsec:sfdm-merger} cluster-merger
+forecast. The two conditions are independent (BBN constrains the early-time
+energy density; the cluster-merger forecast constrains the late-time
+gravitational signature), but they are mutually consistent in the
+BK-fiducial parameter window.
+
+%% ─── End lift from paper29_bbn_unified ───
+
+
+\section{Strong-CP and topological dark energy (paper~32)}
+\label{sec:paper32}
+\label{sec:d5-paper32_strong_cp_de}
+
+This section consolidates the paper~32 strong-CP / topological-DE deep
+paper (Phase~6c W1) into D5. The substrate program absorbs the
+Zhitnitsky--Van Waerbeke topological-DE mechanism: the cosmological constant
+acquires a contribution from the QCD topological susceptibility evaluated
+on a comoving Hubble volume, with a Planck-natural estimate
+$M_P^4 \approx 10^{112}\,\text{eV}^4$ for the bare scale and a
+naturally-$\mathcal{O}(1)$ value $\theta = 1$ for the topological angle
+(see \texttt{StrongCPTopologicalDE.lean} for the
+\texttt{zhitnitskyDE\_eV4} formula and the
+\texttt{zhitnitsky\_DE\_far\_below\_planck} bound at
+$10^{-8}\,\text{eV}^4$, approximately $120$ orders of magnitude below
+$M_P^4$).
+
+The combined-mechanism falsifier
+(\texttt{H\_BothActiveGivesInconsistency} tracked Prop) closes a
+substantive mutual-exclusivity gap: if both the substrate
+ADW-tetrad-condensation $\rho_{\rm vac}$ contribution and the Zhitnitsky
+topological contribution are simultaneously active and additive without
+cancellation, the combined dark-energy density exceeds
+$\rho_{\rm DE,obs}$ by at least one order of magnitude, falsifying the
+combined-mechanism scenario at submeV level. The Lean Prop body uses
+\texttt{rho\_DE\_combined > zhitnitskyDE\_eV4 0.1} as the strict
+threshold, with \texttt{linarith} discharge consuming a strict-positivity
+hypothesis on the QCD-topological contribution; this is a Derived
+content theorem (load-bearing under the mutual-exclusivity hypothesis),
+not MCC.
+
+The $\theta$-vacuum finite-temperature behaviour is documented in
+\texttt{ThetaVacuumFiniteT.lean} (cosine-based free energy, global
+minimum at $\theta = 0$ via \texttt{Real.cos\_le\_one}; $\pi^2/3$
+misalignment correction; SN1987A axion bound below the Planck-DM
+cosmological window). The paper-43 anomaly cross-bridge
+(\texttt{Z16AnomalyForcesThetaBar.lean}) carries the substrate-silent
+verdict on $\bar\theta$: the substrate program's $\mathbb{Z}_{16}$
+machinery does not fix $\bar\theta$ via channel--flavour orthogonality;
+the Branch~$\gamma$ falsifier requires the CDVW + Abel-2020 PSI
+nEDM bound (sensitivity factor ${\sim}10^{11}$ above $\bar\theta < 10^{-9}$).
+
+%% ─── End lift from paper32_strong_cp_de ───
+
+
+\section{Equivalence-principle classification (paper~34)}
+\label{sec:paper34}
+\label{sec:d5-paper34_equivalence_principle}
+
+This section consolidates the paper~34 equivalence-principle (EP)
+classification deep paper (Phase~6c W3). It evaluates each Phase~5x
+candidate's EP-violation profile and yields the substrate program's
+EP verdict: the vestigial-gravity phase relic is the unique Phase~5x
+candidate predicted to produce a measurable $\eta$-violation at the
+STEP / MICROSCOPE / Galileo-Galileo-Galilei sensitivity floor.
+
+The EP-violation matrix in
+\texttt{EquivalencePrincipleClassification.lean} maps each Phase~5x
+candidate to its violation level (\texttt{none} / \texttt{weak} /
+\texttt{strong}) per WEP / EEP / SEP. T-0 (topological), S-0 (sterile),
+C-1 (mixed-charge), FG torsion, and fracton p-wave all lie at
+\texttt{violationLevel = none} per their substrate-singlet character;
+the vestigial-relic phase, by contrast, carries an
+$\eta$-violation $\sim 10^{-15}$ at MICROSCOPE sensitivity through the
+\texttt{vestigial\_phase\_eta\_violates\_microscope\_bound} theorem
+(numerical content: $1.0 > 10^{-15}$ via norm\_num). The
+quantitative SEP-violation bound from the Hughes-Drever / LLR / nEDM
+window is recorded in \texttt{VestigialPhaseEPViolation.lean}.
+
+The substantive content is the Phase 5y orthogonality theorem applied
+to the EP channel: vestigial-relic-EP-violation is in a substrate channel
+distinct from the WEP-violation channels of T-0 / S-0 / C-1 / FG / fracton,
+so the candidates are mutually compatible (no double-counting) but
+predict distinct experimental signatures. STEP and MICROSCOPE provide
+the unique discriminator.
+
+%% ─── End lift from paper34_equivalence_principle ───
+
+
+\section{Cosmological-constant constraint (paper~42b excerpt)}
+\label{sec:paper42b}
+\label{sec:d5-paper42b_cc_emergent}
+
+This section excerpts the cosmological-constant constraint contribution
+from the paper~42b emergent-CC deep paper (Phase~6e W5). The full
+treatment is in D3~§21; the D5 excerpt focuses on the dark-sector
+implication.
+
+The substantive D5 content: the heat-kernel $a_0$ coefficient (computed
+in \texttt{HeatKernelExpansion.lean} for the Christensen--Duff Dirac
+operator) does not produce $\Lambda_{\rm obs}$ naturally. The
+Sakharov--Adler induced gravitational-Newton-constant calibration
+gives $G_N^{\rm emerg}$ at the right scale to within a $\mathcal{O}(1)$
+prefactor, but the cosmological-constant scale $\Lambda_{\rm obs} \sim
+\rho_{\rm vac}^{1/4} \sim \SI{}{\milli\electronvolt}$ requires either
+the §\ref{subsec:adw-cc} Volovik tetrad-determinant self-tuning or an
+analogous mechanism --- the heat-kernel expansion alone does not
+deliver it. This is the D5 ``CC-channel constraint'' verdict: the
+$a_0$ coefficient is not a substitute for the substrate-program
+$\rho_{\rm vac}$-from-$T_{\rm dS}$ mechanism.
+
+%% ─── End lift from paper42b_cc_emergent ───
+
+
+\section{Phase~6m Track~A: Causal-set DE (NO-GO + 3 caveats)}
+\label{sec:phase6m-track-a}
+
+Phase~6m Track~A evaluates four causal-set-based DE mechanisms against
+the DESI~DR2 + sound-horizon-anchored falsifier program at R5
+(2026-04-30 closure). All four are NO-GO or NO-GO-equivalent:
+
+\begin{itemize}
+\item \emph{Sorkin everpresent-$\Lambda$ M1 + M2}: NO-GO at R5 via
+  the sharpened $f_{\rm DESI}$ upper bound at $95\%$ C.L.
+  ($f_{\rm DESI} < 10^{-4}$ post-Tier-(4) conditioning, sharper than
+  the raw Tier-(1) bound by at least $100\times$;
+  \texttt{CSDE1}, \texttt{CSDE2}, \texttt{CSDE3} in
+  \texttt{CausalSetDarkEnergy.lean}).
+\item \emph{Phenomenological BDG} (Barrow-Diakonov-Gielen
+  ``$\sigma_\Lambda(V) = \alpha_{\rm BDG}/\sqrt{V}$''): NO-GO via the
+  Tier-1 raw upper bound itself; the BDG mechanism violates the
+  Bayesian-decisive threshold without conditioning. Publishable structural
+  caveat: $\sigma_\Lambda$ is monotone-decreasing in volume for fixed
+  $\alpha_{\rm BDG} > 0$ (\texttt{CSDE7}, \texttt{CSDE8}).
+\item \emph{Causet d'Alembertian DE}: NO-GO via 4D gradient instability
+  --- the effective $c_s^2 < 0$ for the delta-correlated kinetic term
+  drives a sub-Hubble inconsistency (\texttt{CSDE4} in
+  \texttt{CausalSetDarkEnergy.lean}; cross-references the
+  Krishna 2024 review).
+\end{itemize}
+
+The Track~A NO-GO is recorded in \texttt{track\_a\_fully\_no\_go\_at\_r5}
+(\texttt{CSDE10}) as the conjunction of the four per-candidate verdicts.
+
+\subsection{Caveat 1: GD obstruction inapplicable to causal-set DE}
+\label{subsec:phase6m-track-a-caveat-gd}
+
+The Phase~5y Gibbons--Duhem (GD) obstruction theorem
+(\texttt{GibbsDuhemTheorem} in \texttt{DESIComparison.lean}) does not
+apply to causal-set DE \emph{across all four admissible sprinkling
+prescriptions} (Lorentz-invariant Poisson, Krioukov causet, Bombelli-Henson
+fan, percolation lattice). The substantive obstruction is at the
+substrate-d.o.f. level: causal-set DE is built on combinatorial degrees
+of freedom (sprinkled events plus their causal partial order), not the
+Lagrangian scalar field on which GD operates. The result is encoded as
+\texttt{gibbs\_duhem\_inapplicable\_causal\_set\_robust\_under\_prescriptions}
+(\texttt{CSDE5}) and the cross-bridge
+\texttt{track\_a\_outside\_gibbs\_duhem\_domain} (\texttt{CSDE5b}) which
+calls the Phase~5y \texttt{InDESIRegion} machinery directly: Track~A is
+outside the Phase~5y \texttt{GibbsDuhemTheorem} applicability domain.
+
+This is a structural finding distinct from the NO-GO verdict: even if a
+new causal-set DE mechanism cleared DESI bounds, GD would still not bind
+it. The causal-set program's DE candidates require a different analytic
+toolkit, and the Phase~5y orthogonality machinery is silent on them.
+
+\subsection{Caveat 2: Barrow bound prescription dependence}
+\label{subsec:phase6m-track-a-caveat-barrow}
+
+The Barrow numerical upper bound on $\Lambda$ is prescription-dependent at
+the $\geq 40\%$ level. Different sprinkling prescriptions evaluated in
+\texttt{barrow\_bound\_prescription\_dependent} (\texttt{CSDE6}) and
+\texttt{barrow\_bound\_gap\_at\_least\_40\_percent} (\texttt{CSDE6\textquotesingle})
+produce numerically different upper bounds with at least $40\%$ relative
+gap. This is a publishable short-note finding (originally outlined as
+a stand-alone CQG/JCAP Letter; embedded here as the §10.5 D5 subsection
+per Pipeline Invariant~\#14 unless the user authorizes a 14th+ bundle
+target). The substrate-level cause is the prescription-dependent
+counting of sprinkling-density modes; physical observable predictions
+should hedge between the four prescriptions or motivate a substrate-level
+selection rule.
+
+\subsection{Caveat 3: BDG $\sigma_\Lambda$ first-principles decomposition}
+\label{subsec:phase6m-track-a-caveat-bdg}
+
+The phenomenological BDG fit form
+$\sigma_\Lambda(V) = \alpha_{\rm BDG}/\sqrt{V}$ is recovered from a
+first-principles substrate decomposition: $\alpha_{\rm BDG} = \sqrt{K(M)/V}$
+where $K(M)$ is the substrate-level mode-counting parameter
+\texttt{CSDE7}. The Lean theorem
+\texttt{bdg\_sigma\_lambda\_alpha\_bdg\_over\_sqrt\_v} establishes the
+defining property; \texttt{bdg\_sigma\_lambda\_decreasing} (\texttt{CSDE8})
+proves monotone-decrease in $V$ for fixed $\alpha_{\rm BDG} > 0$. The
+first-principles decomposition recasts BDG from a phenomenological fit
+to a substrate-derivable structural prediction, with the prescription
+dependence isolated to the $K(M)$ mode-counting parameter.
+
+The §\ref{subsec:phase6m-track-a-caveat-barrow} and §\ref{subsec:phase6m-track-a-caveat-bdg}
+caveats together form Track~A's three publishable structural findings
+beyond the NO-GO verdict.
+
+%% Embedded subsection §10.5 — Barrow prescription dependence
+\subsection*{§10.5 Barrow prescription-dependence (embedded short note)}
+\label{subsec:barrow-short-note}
+
+The Barrow-bound prescription dependence (§\ref{subsec:phase6m-track-a-caveat-barrow})
+constitutes a publishable observation in its own right. The full
+short-note outline lives at
+\texttt{temporary/working-docs/short\_note\_barrow\_prescription\_dependence\_outline.md}
+(${\sim}\SI{18}{\kilo\byte}$, 24~references). It is embedded here per
+Pipeline Invariant~\#14 default rather than spawning a stand-alone
+CQG/JCAP Letter. The narrative covers: (i)~the four admissible sprinkling
+prescriptions and their differential mode-counting; (ii)~the
+quantitative $\geq 40\%$ gap from \texttt{CSDE6\textquotesingle};
+(iii)~implications for the Barrow program's DE phenomenology; (iv)~
+the substrate-level selection rule needed to disambiguate the four
+prescriptions. User authorization for a 14th bundle target would
+elevate this to a stand-alone Letter.
+
+\section{Phase~6m Track~B: Entropic-gravity DE (8/8 unanimous NO-GO ---
+\emph{first complete-mechanism-family closure} in Phase~6m)}
+\label{sec:phase6m-track-b}
+
+Phase~6m Track~B evaluates eight entropic-gravity-style DE mechanisms
+(Verlinde 2017, Padmanabhan-CosMIn, Hossenfelder-Verlinde, Cadoni-Tuveri DEC,
+HDE event-horizon, Tsallis HDE, Barrow HDE, Odintsov-D'Onofrio-Paul) and
+delivers the \emph{first complete-mechanism-family unanimous NO-GO closure}
+in Phase~6m. The closure is robust under the $r_d$-anchoring rescue
+attempt: the partial relaxation of the sound-horizon anchor does not
+save any of the eight Class~(b) or Class~(d) mechanisms that the analysis
+distinguishes
+(\texttt{r\_d\_anchoring\_partial\_rescue\_does\_not\_save\_class\_b\_or\_class\_d}).
+
+\subsection{The eight quantitative bounds}
+\label{subsec:phase6m-track-b-bounds}
+
+All eight bounds individually exceed the Jeffreys-decisive threshold
+$|\!\log\mathcal{B}| \geq 5$. The Lean closures are:
+
+\begin{itemize}
+\item \texttt{verlinde\_2017\_no\_go\_via\_cmb\_bullet\_cluster\_halenka\_miller}:
+  Verlinde 2017 fails CMB + Bullet-cluster sweet-spot fit
+  (Halenka-Miller 2018, $\geq 5\sigma$).
+\item \texttt{padmanabhan\_cosmin\_no\_go\_no\_scalar\_perturbation\_theory}:
+  Padmanabhan/CosMIn predicts exact $\Lambda$CDM with no scalar
+  perturbation theory; the closure is structural --- there is no
+  Lagrangian scalar to drive sub-Hubble dynamics.
+\item \texttt{hossenfelder\_verlinde\_no\_go\_post\_yoon\_guha}:
+  Hossenfelder-Verlinde dS-instability claim is no longer load-bearing
+  after Yoon-Guha 2304.07301 (matter+radiation FLRW stabilizes the dS
+  attractor; $\lambda^2 \in [1.85\!\times\!10^4, 2.26\!\times\!10^4]$
+  reproduces $q \in [-0.95, -0.55]$).
+\item \texttt{cadoni\_tuveri\_dec\_no\_go\_via\_gd\_theorem\_w\_eq\_minus\_1}:
+  Cadoni-Tuveri DEC is excluded via the GD theorem at
+  $w = -1$.
+\item \texttt{dec\_cpl\_excluded\_from\_desi\_dr2\_1sigma}:
+  the DEC CPL parameterization $(w_0, w_a) = (-1, 0)$ is excluded from
+  the DESI~DR2 $1\sigma$ confidence region; cross-bridge to Phase~5y
+  \texttt{desiDR2\_1sigma}.
+\item \texttt{dec\_fails\_orthogonality\_principle}:
+  DEC fails Phase~5y \texttt{IsViable} via the factor-\#1 chain through
+  the Phase~5y \texttt{viability\_iff\_all\_four} chain.
+\item \texttt{hde\_event\_horizon\_no\_go\_w\_a\_sign\_mismatch\_3sigma}:
+  HDE event-horizon predicts $w_a > 0$, the wrong sign of the DESI~DR2
+  best-fit at $3\sigma$.
+\item \texttt{tsallis\_hde\_no\_go\_bayes\_factor\_tyagi\_haridasu\_basak}:
+  Tyagi-Haridasu-Basak 2504.11308 yields $|\!\log\mathcal{B}| \sim 6.2$
+  for Tsallis HDE.
+\item \texttt{barrow\_hde\_no\_go\_bayes\_factor\_luciano\_paliathanasis\_saridakis}:
+  Luciano-Paliathanasis-Saridakis 2506.03019 yields a factor 5--6
+  Bayesian disfavour for Barrow HDE.
+\item \texttt{odintsov\_donofrio\_paul\_omega\_k\_no\_go\_logB\_15\_to\_17}:
+  Odintsov-D'Onofrio-Paul 4-parameter mechanism predicts
+  $\Delta\!\log\mathcal{B} \approx -15$ to $-17$, far exceeding decisive.
+\end{itemize}
+
+The aggregator
+\texttt{entropic\_gravity\_no\_go\_count\_eight} establishes the
+8/8 closure; \texttt{r\_d\_independent\_count\_eight} establishes that
+each of the eight bounds is robust under the $r_d$-anchoring rescue
+(no rescue across any candidate). The all-quantitative-bounds aggregator
+\texttt{all\_quantitative\_bounds\_exceed\_jeffreys\_decisive} closes
+the mechanism family at the publication-novelty level: this is the first
+complete-mechanism-family unanimous NO-GO closure in Phase~6m, and it
+is the paper's substantive new claim that distinguishes D5 from the
+Phase~5x precursor.
+
+\subsection{$r_d$-independence}
+\label{subsec:phase6m-track-b-rd-independence}
+
+The closure is $r_d$-independent: each of the eight Bayesian thresholds
+is computed with the sound-horizon anchor allowed to vary across the
+$r_d \in [144, 153]$ Mpc range that the literature spans, and the
+disfavour persists. The mechanism family is decisively excluded
+\emph{regardless of the sound-horizon assumption}, which removes the
+prior leading rescue route. Track~B's verdict is therefore final at the
+DESI~DR2 + literature-Bayesian-analysis level.
+
+%% ─── End Track B ───
+
+
+\section{Phase~6m Track~C: Jacobson thermodynamic GR (highest survival)}
+\label{sec:phase6m-track-c}
+
+Phase~6m Track~C evaluates nine Jacobson-thermodynamic-GR DE mechanisms
+(M1~Jacobson 1995, M2/M7~Padmanabhan/CosMIn epistemic, M3~EGJ $f(R)$,
+M4~Pure Lovelock, M8~KSS Lorentz-violating superfluid,
+M9~Volovik-Jannes substrate). It is the highest-survival track at R5 with
+at least five CLEARED-R5 candidates
+(\texttt{track\_c\_at\_least\_5\_cleared\_r5} in
+\texttt{JacobsonThermoGRDarkEnergy.lean}).
+
+\subsection{$f(R)$ Exp + ArcTanh: strongest CLEARED-R5 of any track}
+\label{subsec:phase6m-track-c-fR}
+
+The M3 EGJ $f(R)$ family (Eling-Guedens-Jacobson) clears DESI~DR2 at
+R5 across multiple variants, with the Exp and ArcTanh forms being the
+\emph{strongest CLEARED-R5 of any Phase~6m track}: Plaza-Kraiselburd
+2504.05432 (PRD~112, 023554, 2025) reports
+$\Delta\!\text{AIC} \simeq \Delta\!\text{BIC} \gtrsim 20$ in favour of
+the $f(R)$ form over $\Lambda$CDM
+(\texttt{f\_R\_starobinsky\_DE\_directly\_preferred\_over\_lambda\_cdm}
+captures the Starobinsky variant; the Exp and ArcTanh variants are
+documented at the docstring level pending Phase~6n quantitative
+formalization).
+
+\subsection{Hu-Sawicki $f(R)$: NO-GO via chameleon}
+\label{subsec:phase6m-track-c-hu-sawicki}
+
+The Hu-Sawicki variant of $f(R)$ is NO-GO at R5 via the chameleon
+Solar-System bound: the variant fits DESI~DR2 at $b \approx 0.21$, but
+this is more than $100\times$ the $b \lesssim 2 \times 10^{-3}$ chameleon
+Solar-System bound from the Cassini and Lunar Laser Ranging
+constraints. The Lean closure is
+\texttt{f\_R\_hu\_sawicki\_no\_go\_via\_dolgov\_kawasaki\_or\_chameleon}
+with the Phase~5y orthogonality bridge
+\texttt{hu\_sawicki\_fails\_orthogonality\_principle} which calls the
+Phase~5y \texttt{IsViable} machinery via the factor-\#4 chameleon
+chain: Hu-Sawicki fails \texttt{IsViable} not because of cosmological
+incompatibility but because of laboratory-scale Solar-System
+incompatibility, a structurally distinct failure mode.
+
+\subsection{Pure Lovelock: NO-GO at the 1$\sigma$-box edge}
+\label{subsec:phase6m-track-c-lovelock}
+
+The M4 Pure Lovelock mechanism is NO-GO at R5 via causality-respecting
+Quintom-B box constraints
+(\texttt{lovelock\_de\_no\_go\_under\_causality\_respecting\_alpha\_2\_at\_quintom\_b\_box\_edge}):
+the Camanho-Edelstein-Maldacena-Zhiboedov (CEMZ) + Brustein-Sherf
+hyperbolicity constraints give $|\tilde\alpha_2|_{\max} \approx 0.15$,
+and the resulting $(w_0, w_a) \approx (-0.99, -0.05)$ lies at the
+$1\sigma$-box edge of the DESI~DR2 best fit; the Quintom-B
+exclusion is at $\sim 3\sigma$. The CPL-form exclusion is recorded in
+\texttt{lovelock\_cpl\_excluded\_from\_desi\_dr2\_1sigma}.
+
+\subsection{KSS Lorentz-violating superfluid: PARTIAL-VIABLE under
+LV-EGJ path-(a)}
+\label{subsec:phase6m-track-c-kss}
+
+The M8 KSS (Kostelecky-Shao-Schreck) Lorentz-violating superfluid DE
+mechanism is conditionally CLEARED-R5 via path-(a): the
+Arata-Liberati-Neri 2603.28851 SO(3)-restricted Jacobson construction
+recovers ADM constraints in the pathology-free regime.
+\texttt{kss\_de\_partial\_viable\_under\_lv\_egj\_path\_a} encodes the
+conditional verdict; \texttt{KSS Eqs. 5.10--5.30 anisotropic
+$c_s^2(\hat k) \geq 0$ in pathology-free regime} the substantive
+admissibility condition. The conditional CLEARED-R5 status is
+substrate-architecture-dependent: KSS requires path-(a) ADM-restoration
+to enter the viable family.
+
+\subsection{Volovik-Jannes substrate}
+\label{subsec:phase6m-track-c-volovik-jannes}
+
+The M9 Volovik-Jannes ${}^3\!\text{He-A}$ substrate is PARTIAL-VIABLE
+under fixed $r_d$ at $\lesssim 1.5\sigma$. It serves as the cross-bridge
+anchor for the Phase~6e Sakharov 4-criterion test (§\ref{sec:phase6m-sakharov}).
+
+%% ─── End Track C ───
+
+
+\section{Sakharov criterion cross-bridge (final closure)}
+\label{sec:phase6m-sakharov}
+
+Phase~6m closes the Sakharov 4-criterion induced-gravity test introduced
+in Phase~6e, providing the first systematic $\Lambda_J$ vs $\Lambda_{\rm HK}$
+comparison on a common substrate in the literature. The test asks
+whether the Jacobson cosmological constant $\Lambda_J$ equals the
+Hawking-Killing $\Lambda_{\rm HK}$ value across substrate-level
+predictions; the equality holds if and only if four substrate-level
+conditions are satisfied:
+\begin{enumerate}
+\item Fermionic node structure (presence of low-energy fermion modes).
+\item Universal coupling (substrate degrees of freedom couple universally
+  to gravity).
+\item Non-zero trace of identity ($\text{tr}\, I \neq 0$).
+\item IR Lorentz recovery (the substrate's IR limit is Lorentz-invariant).
+\end{enumerate}
+The biconditional is captured in
+\texttt{sakharov\_induced\_gravity\_criterion\_iff\_lambda\_j\_eq\_lambda\_hk}.
+
+The substrate-level evaluations are:
+
+\begin{itemize}
+\item \texttt{volovik\_jannes\_he3a\_satisfies\_sakharov\_criterion}:
+  Volovik-Jannes ${}^3\!\text{He-A}$ satisfies all four conditions
+  (low-energy Weyl fermions; universal gravitational coupling via
+  the tetrad; $\text{tr}\, I = 4$; IR Lorentz recovery). The
+  substrate-derived Λ value is
+  $\Lambda_J = \Delta_0^4 / (6\pi^2 \hbar^3)$ at
+  $\Delta_0 \approx \SI{1.6}{\milli\kelvin}$, with $\zeta = 2$.
+\item \texttt{finazzi\_liberati\_sindoni\_bec\_violates\_universal\_coupling}:
+  Finazzi-Liberati-Sindoni acoustic BEC violates condition~(ii) (universal
+  coupling) --- the BEC's superfluid phonon mode does not couple
+  universally to the substrate's effective gravitational sector at the
+  required order, producing $\Lambda_J \neq \Lambda_{\rm HK}$.
+\item \texttt{volovik\_jannes\_substrate\_anchors\_sakharov\_criterion}:
+  the Volovik-Jannes substrate is the natural anchor for the Sakharov
+  criterion; alternative substrates require explicit verification of
+  all four conditions.
+\end{itemize}
+
+The substrate-class assignment + unimodular $\Lambda_{\rm HK}$ escape
+route admits 5/6 Phase~6m candidates (NOT M8 KSS). The unimodular
+reformulation
+(\texttt{unimodular\_reformulation\_admits\_track\_c\_survivors}) provides
+the secondary admissibility route. Track~C M8 (KSS) does not pass
+through unimodular reformulation due to the Lorentz-violating
+substrate; it remains conditional on path-(a).
+
+\subsection*{§11.5 Sakharov $\Lambda_J$ vs $\Lambda_{\rm HK}$ (embedded short note)}
+\label{subsec:sakharov-short-note}
+
+The Sakharov 4-criterion test (§\ref{sec:phase6m-sakharov}) is the first
+systematic Λ-comparison on a common substrate in the literature, and
+constitutes a publishable observation in its own right. The full
+short-note outline lives at
+\texttt{temporary/working-docs/short\_note\_sakharov\_lambda\_j\_vs\_lambda\_hk\_outline.md}
+(${\sim}\SI{20}{\kilo\byte}$, 32~references). It is embedded here per
+Pipeline Invariant~\#14 default rather than spawning a stand-alone
+CQG/PRD letter. The narrative covers: (i)~the four substrate-level
+conditions and their physical content; (ii)~explicit numerics for
+${}^3\!\text{He-A}$ ($\Lambda_J = \Delta_0^4 / (6\pi^2 \hbar^3)$,
+$\Delta_0 \approx \SI{1.6}{\milli\kelvin}$, $\text{tr}\, I = 4$,
+$\zeta = 2$); (iii)~the BEC counterexample's failure mode at
+condition~(ii); (iv)~the unimodular reformulation as a $\Lambda_{\rm HK}$
+escape route admitting 5/6 substrates; (v)~implications for the wider
+emergent-gravity-DE program. User authorization for a 14th bundle
+target would elevate this to a stand-alone Letter.
+
+
+\section{Unified 7-class GD taxonomy and 3-tier applicability gradient}
+\label{sec:phase6m-taxonomy}
+
+The Phase~6m three-track closure is consolidated under a unified 7-class
+GD taxonomy in \texttt{DarkSectorClassificationExtension.lean}. Each
+mechanism is assigned to one of seven Gibbons--Duhem applicability classes:
+
+\begin{itemize}
+\item \emph{Class~0} (Track~A uniform): all causal-set DE mechanisms
+  share Class~0 membership (substrate-d.o.f.\ outside GD domain;
+  \texttt{track\_a\_uniform\_class\_0}; the membership is robust under
+  admissible prescriptions per
+  \texttt{class\_0\_membership\_robust\_under\_admissible\_prescriptions}).
+\item \emph{Class~(a)} (Track~C M8 unique): KSS-style Lorentz-violating
+  with anisotropic $c_s^2$ structure (\texttt{kss\_unique\_class\_a};
+  uniqueness within Phase~6m).
+\item \emph{Classes~(b), (c), (d)}: Track~B mechanism decomposition
+  (\texttt{track\_b\_class\_decomposition}). GD binds only for
+  Class~(c) and Class~(d) (\texttt{gd\_binds\_only\_for\_class\_c\_and\_class\_d}).
+\item \emph{Classes~(e), (f), (g)}: Track~C survivor decomposition
+  (\texttt{track\_c\_highest\_survival}); the 7-class structure
+  organises all five+ CLEARED-R5 candidates by their substrate
+  architecture.
+\end{itemize}
+
+The taxonomy supports a 3-tier applicability gradient
+(\texttt{phase6m\_class\_admits\_tier\_assignment}):
+
+\begin{itemize}
+\item \emph{Tier 1 (GD applies, NO-GO predicted)}: Classes~(c), (d) ---
+  Track~B's eight unanimous NO-GOs.
+\item \emph{Tier 2 (GD silent, alternative analytic toolkit needed)}:
+  Class~0 (causal-set DE), Class~(a) (KSS) --- the substrate
+  d.o.f.\ are outside GD's Lagrangian-scalar domain.
+\item \emph{Tier 3 (GD silent, geometric / cosmographic
+  applicability)}: Classes~(e), (f), (g) --- Track~C's five+ CLEARED-R5
+  survivors, where the analytic verdict comes from cosmographic
+  consistency rather than thermodynamic consistency.
+\end{itemize}
+
+The 7-class taxonomy is the first unified organisational framework for
+emergent-gravity DE mechanisms in the literature. It sets up the
+flagship F~§8 dark-sector summary (which cites the 7-class structure as
+the substrate program's dark-sector classification framework) and the
+program's response to subsequent post-Phase-6m mechanism additions
+(any new mechanism enters via class-assignment + tier-assignment, with
+the orthogonality test against existing Phase~6m candidates following
+mechanically).
+
+The cross-bridge \texttt{class\_c\_admits\_orthogonality\_failure\_witness}
+provides the existential witness that Class~(c) admits a substrate
+configuration where the orthogonality principle fails --- the mechanism
+that DEC instantiates in the Track~B closure. This is a Derived
+content theorem (the witness is constructed explicitly, not
+\texttt{decide}-on-hardcoded-flags); it is the rigorous companion to
+DEC's failure-of-\texttt{IsViable} via the factor-\#1 chain.
+
+The Phase~6m mechanism count is
+\texttt{phase6m\_mechanism\_count}: 4 (Track~A) + 8 (Track~B) +
+9 (Track~C) = 21 mechanisms evaluated, with the 8/8 unanimous
+NO-GO closure on Track~B as the headline structural result.
+
+
+\section{Discussion and outlook}
+\label{sec:discussion}
+
+The bundle's substantive contribution is the Phase~6m three-track
+closure (§\ref{sec:phase6m-track-a}--\S\ref{sec:phase6m-taxonomy}),
+which delivers (a)~Track~A's NO-GO+3-caveats verdict on causal-set DE,
+(b)~Track~B's first-complete-mechanism-family unanimous NO-GO closure on
+entropic-gravity DE, and (c)~Track~C's highest-survival verdict with
+$f(R)$ Exp+ArcTanh as the strongest CLEARED-R5 of any track. The
+Phase~6e Sakharov-criterion cross-bridge (§\ref{sec:phase6m-sakharov})
+provides the program's first systematic $\Lambda_J$ vs $\Lambda_{\rm HK}$
+test on a common substrate, falsifying acoustic-BEC analog gravity at
+condition~(ii). The unified 7-class GD taxonomy
+(§\ref{sec:phase6m-taxonomy}) organises all $21$ mechanisms under a
+3-tier applicability gradient and sets up the response to subsequent
+mechanism additions.
+
+The bundle's structural caveats (Track~A GD-inapplicability under all
+admissible prescriptions; Barrow-bound prescription dependence; BDG
+$\sigma_\Lambda$ first-principles decomposition) are publishable
+short-note opportunities embedded as D5~§10.5 + §11.5 per Pipeline
+Invariant~\#14 default; user authorization would elevate them to
+stand-alone CQG/JCAP and CQG/PRD Letters respectively.
+
+DR3 + Roman-(${\sim}2030$) cross-track forecast:
+pure-$\Lambda$ floating-$r_d$ disfavour reaches $\gtrsim 5\sigma$ at DR3
+and ${>}7\sigma$ at Roman; fixed-$r_d$ stays $<3\sigma$ throughout
+(fixed-vs-floating $r_d$ split = single empirical decider by 2030);
+$f(R)$ Exp/ArcTanh hold at $\gtrsim 5\sigma$ preference; M4 Pure Lovelock
+remains at the $1\sigma$-box edge. The closure programme thus has a
+2-3-year quantitative outlook even for the conditional CLEARED-R5
+candidates.
+
+The bundle ships at $\totaltheorems$ Lean theorems / $\leanmodules$
+modules / zero active sorry / 1 tracked axiom
+(\texttt{gapped\_interface\_axiom} from Phase~5s, unrelated to the
+dark sector). The Phase~6m closure adds $50$ substantive theorems
+across 4 modules. The substantive count $\substantivetheorems$
+separates load-bearing from $\placeholdertheorems$ documentation-marker
+content.
+
+\begin{thebibliography}{99}
+
+%% ── paper17 sources (DM/DE classification + $\mathbb{Z}_{16}$) ──
+
+\bibitem{Berezhiani2015}
+L.~Berezhiani and J.~Khoury, ``Theory of dark matter superfluidity,''
+Phys.\ Rev.\ D \textbf{92}, 103510 (2015), arXiv:1507.01019.
+
+\bibitem{BK2025}
+L.~Berezhiani, G.~Cintia, V.~De~Luca, and J.~Khoury,
+``Dark matter superfluidity,''
+Phys.\ Rep.\ \textbf{1027}, 1--136 (2025), arXiv:2505.23900.
+
+\bibitem{Volovik2006}
+G.~E.~Volovik, ``Vacuum energy: myths and reality,''
+JETP Lett.\ \textbf{82}, 319 (2005), arXiv:gr-qc/0604062.
+
+\bibitem{KV2008}
+F.~R.~Klinkhamer and G.~E.~Volovik, ``Self-tuning vacuum variable and
+cosmological constant,''
+Phys.\ Rev.\ D \textbf{77}, 085015 (2008), arXiv:0711.3170.
+
+\bibitem{ADW2019}
+A.~A.~Abrikosov~Jr.\ and F.~R.~Klinkhamer,
+``Gravitational slingshot for the cosmological constant,''
+Phys.\ Rev.\ D \textbf{99}, 105009 (2019).
+
+\bibitem{Diakonov2011}
+D.~Diakonov,
+``Towards lattice gauge gravity,''
+Mod.\ Phys.\ Lett.\ A \textbf{26}, 2439 (2011), arXiv:1109.0091.
+
+\bibitem{Wan2019}
+Z.~Wan, J.~Wang, and Y.~Zheng,
+``Quantum 4d Yang--Mills theory and time-reversal symmetric 5d higher-gauge topological field theory,''
+Phys.\ Rev.\ D \textbf{100}, 085012 (2019), arXiv:1904.00994.
+
+\bibitem{DESI2024}
+DESI Collaboration, ``DESI 2024: cosmological constraints from the
+measurements of baryon acoustic oscillations,''
+arXiv:2404.03002.
+
+\bibitem{DESI2025}
+DESI Collaboration, ``DESI~DR2 results: BAO measurements,''
+arXiv:2503.14738.
+
+%% ── paper29 BBN sources ──
+
+\bibitem{Pretko2017}
+M.~Pretko, ``Subdimensional particle structure of higher rank
+$U(1)$ spin liquids,'' Phys.\ Rev.\ B \textbf{95}, 115139 (2017),
+arXiv:1604.05329.
+
+\bibitem{Glodkowski2024}
+A.~G\l{}\'odkowski, F.~Pe\~na-Ben\'itez, and P.~Sur\'owka,
+``Dissipative fracton superfluids,'' arXiv:2401.01877 (2024).
+
+%% ── paper32 Strong-CP / topological-DE sources ──
+
+\bibitem{VanWaerbeke2025}
+L.~Van~Waerbeke and A.~R.~Zhitnitsky,
+``QCD topological dark energy,'' arXiv:2506.14182 (2025).
+
+%% ── Phase 6m three-track sources ──
+
+\bibitem{PlazaKraiselburd2025}
+N.~Plaza and L.~Kraiselburd,
+``Statistical evidence for $f(R)$ dark energy from DESI BAO + Pantheon+,''
+Phys.\ Rev.\ D \textbf{112}, 023554 (2025), arXiv:2504.05432.
+
+\bibitem{TyagiHaridasuBasak2025}
+S.~Tyagi, S.~Haridasu, and S.~Basak,
+``Tsallis holographic dark energy under DESI~DR2 + Pantheon+ analysis,''
+arXiv:2504.11308.
+
+\bibitem{LucianoPaliathanasisSaridakis2025}
+G.~G.~Luciano, A.~Paliathanasis, and E.~N.~Saridakis,
+``Barrow holographic dark energy under DESI~DR2 + Pantheon+ analysis,''
+arXiv:2506.03019.
+
+\bibitem{HalenkaMiller2018}
+V.~Halenka and C.~J.~Miller,
+``Testing emergent gravity with mass densities of galaxy clusters,''
+Mon.\ Not.\ Roy.\ Astron.\ Soc.\ \textbf{482}, 4513 (2018),
+arXiv:1807.04702.
+
+\bibitem{YoonGuha2023}
+J.~Yoon and B.~Guha,
+``Stability of de Sitter attractors in entropic FLRW cosmology with
+matter and radiation,'' arXiv:2304.07301.
+
+\bibitem{ArataLiberatiNeri2026}
+M.~Arata, S.~Liberati, and A.~Neri,
+``SO(3)-restricted Jacobson construction with ADM constraints in
+Lorentz-violating gravity,'' arXiv:2603.28851.
+
+\bibitem{Vergeles2025}
+S.~N.~Vergeles, ``Unitarity of 4D Lattice Theory of Gravity,''
+Phys.\ Rev.\ D \textbf{112}, 054509 (2025), arXiv:2506.00036.
+
+%% ── Phase 6m Lean infrastructure ──
+
+\bibitem{Lean4}
+L.~de~Moura and S.~Ullrich, ``The Lean 4 theorem prover and programming
+language,'' CADE \textbf{28}, 625 (2021).
+
+\bibitem{Mathlib}
+The mathlib Community,
+``The Lean mathematical library,''
+CPP \textbf{2020}, 367 (2020), arXiv:1910.09336.
+
+\end{thebibliography}
+
+%% BUNDLE_APPEND_INSERT_HERE — bundle_append.py inserts new sections at
+%% this marker by default. To insert at a specific section, edit the
+%% body manually after the script runs.
+
+\end{document}
