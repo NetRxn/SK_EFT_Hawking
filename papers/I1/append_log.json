@@ -93,6 +93,17 @@
       "stage13_redo_required": true,
       "agent_run_id": "phase7a-7a.2-stubs-2026-05-01T15:30:00Z",
       "notes": "All 9 stub sections (\u00a73-\u00a75 worked cases; \u00a78-\u00a713 substrate sidebars) authored substantively. Aristotle run IDs 270e77a0 (FirstOrderKMS), 79e07d55 (gap-bounded counterexample + nine companion gap-equation theorems), 78dcc5f4 (single-batch record 25 thms). Six anti-pattern preemptive checklist (P2-P7) and 14-stage / 14-invariant pipeline narratively complete. I1 ready for reviewer triple."
+    },
+    {
+      "date": "2026-05-01T17:00:00Z",
+      "source_paper": "phase7a_7a2_review_round1_fixes",
+      "lift_action": "Revise",
+      "bundle_section_inserted": "\u00a75, \u00a79, \u00a711, \u00a712, \u00a76 (table file lifted), bibliography, src/core/citations.py used_in propagation",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "phase7a-7a.2-review-round1-2026-05-01T17:00:00Z",
+      "notes": "Round 1 adversarial-review remediation. BLOCKER fixes: (1.1, 1.2) removed paper15methodology + paper44riemannian bibitems and rephrased \u00a71+\u00a79+\u00a712 to drop the cites; (1.3) removed three undefined references in \u00a75 (paper10_ewbg/paper09_phaseI/paper08_topology); (3.1) \u00a75 rewritten to cite real AXIOM_METADATA entries (gapped_interface_axiom L1351, chirality_limitation_zero L1483, chiral-central-charge group L1591) instead of fictitious chirality_wall_three_pillars; (4.1) \u00a79 corrected: 78dcc5f4 is Phase 5c W1-7 multi-domain batch (S-matrix, ribbon, spin bordism, E8, restricted Uq, jackknife, Hopf), not Phase 5d gap-equation; (9.1) papers/I1/tables/table1_stages.tex hand-authored with all 14 stages. REQUIRED fixes: (1.5) used_in field propagation in src/core/citations.py for physlean/compcert/sel4/leancipilot/alphaproof; (5.1) Lit-Search/Phase-6f audit path corrected to project-root location; (6.1) Aristotle Lean 4.28 vs project 4.29 toolchain skew disclosed in \u00a79; (7.1) Phase 6f W1-W6 + W7 + W8 theorem counts reconciled to actual file counts (73 raw / 64 substantive for W1-W6; 14 for W7; 39 for W8); (7.2) Lean line ranges tightened (firstOrder_uniqueness 412-439; gap_solution_monotone 329-345; commented stub 307-321; sphaleronSuppression_le_one 106-114). Recommended fix: 5.2 speedup-claim quantification deferred; 1.4 primary-source verification of 5 bibitems deferred (out of scope for round 1; non-blocking advisory). Ready for adversarial-reviewer round 2."
     }
   ]
 }

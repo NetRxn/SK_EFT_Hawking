@@ -7,10 +7,10 @@
   "stage9_status": "pending",
   "stage10_status": "pending",
   "stage13_status": "pending",
-  "stage13_redo_required": false,
+  "stage13_redo_required": true,
   "freshness_stale": false,
   "source_manifest_last_regen": "2026-05-01T12:31:23Z",
-  "last_lift": null,
+  "last_lift": "2026-05-01T16:30:00Z",
   "last_stage9_review": null,
   "last_stage10_review": null,
   "last_stage13_review": null,
@@ -19,5 +19,5 @@
   "stage13_review_doc": null,
   "audit_log_path": "papers/I2/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": null
+  "notes": "Phase 7a sub-wave 7a.3 initial draft 2026-05-01T16:30Z. 820 lines, 9 sections, fresh-authored from Lean-module substrate per PAPER_STRATEGY.md §2.4 I2 outline (sourceless from PAPER_DRAFT_MAPPING.md). §1 Intro; §2 VerifiedJackknife (4 thms / 7 defs); §3 Categorical hierarchy (4 modules / Pivotal/Spherical/Balanced/Ribbon/Fusion); §4 Hopf algebra extensions (4 modules / Uqsl2/Uqsl2Affine/Uqsl3 + Quasitriangular/Ribbon Hopf); §5 Decidable algebraic number fields (9 modules / 162 declarations); §6 Concrete MTC instances (11 modules / 265 decls / SU(2)_k k=1..5, SU(3)_k=2, Ising, Fibonacci); §7 Mathlib upstream coordination plan (R1/R2/R3 gate + 4 atomic PRs + AI-tool-assistance disclosure protocol + software-only fallback path); §8 Reusability and downstream applications; §9 Discussion. Ready for reviewer triple."
 }

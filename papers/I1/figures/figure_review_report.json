@@ -1,0 +1,114 @@
+{
+  "review_date": "2026-05-01T13:40:02Z",
+  "bundle_target": "I1",
+  "bundle_tier": 3,
+  "bundle_title": "Verification methodology with worked cases",
+  "stage": 9,
+  "review_class": "stub",
+  "figures_reviewed": 0,
+  "overall_status": "pending-figures",
+  "figures": [],
+  "manifest_present": false,
+  "structural_checks_present": false,
+  "anchors_consulted": [
+    "FirstOrderKMS Aristotle counterexample case (Phase 1)",
+    "Gap-solution-bounded counterexample case (Phase 5d)",
+    "Chirality-wall axiom decomposition case (Phase 5h)",
+    "The 14-stage Wave Execution Pipeline",
+    "The supersession ledger pattern + Pipeline Invariant #13 (Wave 6)"
+  ],
+  "draft_figure_references": {
+    "embedded_includegraphics_count": 0,
+    "embedded_figure_envs_count": 0,
+    "narrative_mentions": [
+      {
+        "line": 92,
+        "context": "...formula produced which figure (referring to provenance)..."
+      },
+      {
+        "line": 501,
+        "context": "formulas.py, figure functions in visualizations.py (canonical-module pointer)..."
+      },
+      {
+        "line": 507,
+        "context": "Stage 9 runs a figure-reviewer agent (pipeline description)..."
+      }
+    ]
+  },
+  "summary": "I1 is a Tier-3 methodology paper (CPC | Phys. Rep.) currently text-only at 1338 lines / 14 sections. The draft contains zero \\includegraphics calls and zero figure environments. The figures/ directory is empty. Per PAPER_STRATEGY.md §2.4, the bundle's planned figures are conceptual diagrams (architecture, pipeline, provenance clusters) that have not yet been authored. This is a stub-class Stage 9 run: no figures exist to review for rendering, physics accuracy, or style. Verdict: pending-figures (non-FAIL). Recommendations below enumerate the figures the bundle should add before paper submission.",
+  "recommendations": [
+    {
+      "id": "I1-FIG-1",
+      "title": "Three-layer Python ↔ Lean ↔ Aristotle architecture diagram",
+      "section_anchor": "§2 The Three-Layer Verification Architecture (line 171)",
+      "type": "architecture diagram",
+      "rationale": "The paper opens its substantive content with the three-layer architecture. A schematic showing the bidirectional formula ↔ theorem correspondence (Python formulas.py ↔ Lean SKEFTHawking module ↔ Aristotle proof artifact) is the single most-cited concept in the draft and is the canonical entry-point figure for the physicist audience the paper targets (per PAPER_STRATEGY.md: \"theorist who currently does not believe machine verification is worth the friction\"). Should depict: (i) numerical computation node (Python), (ii) formal-statement node (Lean), (iii) automated-proof node (Aristotle), with arrows labeled by the canonical-module invariants (Inv #1 formulas.py canonical, Inv #4 every formula has a Lean theorem).",
+      "priority": "P0",
+      "style_notes": "Colorblind-accessible palette per CLAUDE.md (blue/amber, not red/green). Plotly-only per project convention. Sans-serif diagram typography matching project figure family is acceptable for a schematic."
+    },
+    {
+      "id": "I1-FIG-2",
+      "title": "14-stage Wave Execution Pipeline diagram",
+      "section_anchor": "§6 The Fourteen-Stage Wave Execution Pipeline (line 442)",
+      "type": "process flow diagram",
+      "rationale": "Anchor #4 of the bundle is \"The 14-stage Wave Execution Pipeline.\" The pipeline is the core methodological contribution and is described over ~150 lines of prose; a single figure summarizing the 14 stages with their gates (especially Stage 4 Aristotle handoff, Stage 9 figure-reviewer, Stage 10 claims-reviewer, Stage 13 adversarial-reviewer) is essential for a Phys. Rep.-class methodology paper. Should label which stages are LLM-driven, which are human-gated, and which are automated (validate.py CHECK 1–22).",
+      "priority": "P0",
+      "style_notes": "Vertical or circular flow; show feedback loops (Stage 13 BLOCKER → supersession-ledger → Stage 6 redo). Use the bundle's review_finding_supersessions.json schema as the source of truth for the loop annotation."
+    },
+    {
+      "id": "I1-FIG-3",
+      "title": "Sentence-state cluster (sentence-level provenance) diagram",
+      "section_anchor": "§8 Sentence-Level Provenance and Cross-Paper Consistency Clusters (line 677)",
+      "type": "graph / cluster visualization",
+      "rationale": "PAPER_STRATEGY.md §2.4 lists the sentence-state cluster diagram as one of three planned figures. The provenance system is the project's most distinctive infrastructure contribution (sentence → computed-quantity → Lean theorem → Aristotle proof); a small worked example (e.g. one Tier-1 paper's claim cluster) showing the n-to-many mapping makes the abstraction concrete. Recommended as a node-link graph: sentences (sources) on the left, formulas (intermediate) center, theorems (right), with cross-paper consistency edges in a distinct color showing the cluster invariant.",
+      "priority": "P1",
+      "style_notes": "Force-directed or hierarchical layout. Edge color encodes consistency-cluster id (so the cross-paper drift detection is visible). Node-size optional (encode citation count or theorem complexity)."
+    },
+    {
+      "id": "I1-FIG-4",
+      "title": "FirstOrderKMS counterexample timeline / before-after",
+      "section_anchor": "§3 Worked Case 1: The FirstOrderKMS Aristotle Counterexample (line 235)",
+      "type": "annotated diagram or table-figure",
+      "rationale": "Bundle anchor #1. The original 4/9-component constraint vs the corrected 9/9-component formulation is the cleanest \"machine-verification caught what humans missed\" example in the project. A small figure depicting the 9-component KMS structure with the 4 originally-constrained vs 5 originally-missing components colored differently would land the case viscerally for a physicist audience. The Aristotle run ID should be cited in the caption per the Stage-13 anchor profile (\"each worked case must trace to a reproducible Aristotle run ID\").",
+      "priority": "P1",
+      "style_notes": "Could be a 3×3 grid of KMS-relation cells; binary coloring (originally-constrained vs originally-unconstrained); annotate with the Aristotle run ID and commit hash."
+    },
+    {
+      "id": "I1-FIG-5",
+      "title": "Gap-solution-bounded counterexample witness plot",
+      "section_anchor": "§4 Worked Case 2: The Gap-Solution-Bounded Conjecture Disproof (line 301)",
+      "type": "data plot",
+      "rationale": "Bundle anchor #2. A literal numerical plot of the explicit unbounded-in-G witness function (gap solution vs G) makes the disproof concrete in a way prose cannot. Y-axis: gap solution magnitude; X-axis: coupling G; clearly show the witness diverging as G → G_critical. This is the only worked-case figure that is genuinely a physics plot rather than a schematic, so it carries disproportionate weight in establishing the paper's empirical character.",
+      "priority": "P2",
+      "style_notes": "Colorblind palette; log-scale on y likely; explicit asymptote annotation; cite the Aristotle counterexample-extraction run ID and commit hash in the caption."
+    },
+    {
+      "id": "I1-FIG-6",
+      "title": "Chirality-wall axiom decomposition tree",
+      "section_anchor": "§5 Worked Case 3: The Chirality-Wall Axiom Decomposition (line 364)",
+      "type": "decomposition tree / hierarchical diagram",
+      "rationale": "Bundle anchor #3. The 1-axiom → 4-topology-hypotheses + 1-gapped-interface-assumption decomposition is structurally a tree and reads naturally as one. Caption should state the dimensional-evidence ladder (1+1D, 2+1D evidence; 4+1D assumption) explicitly, since this is the paper's strongest \"forced decomposition surfaces hidden assumptions\" example.",
+      "priority": "P2",
+      "style_notes": "Top-down tree; root labeled with the original opaque axiom; leaves labeled with the 4 focused hypotheses + 1 dimensional assumption; annotate each leaf with its evidential status (\"1+1D verified\", \"2+1D verified\", \"4+1D conjectural\")."
+    }
+  ],
+  "blockers": [],
+  "advisories": [
+    {
+      "id": "I1-ADV-1",
+      "severity": "advisory",
+      "description": "Bundle stage9_status set to pending-figures pending authoring of at least the three core figures (I1-FIG-1, I1-FIG-2, I1-FIG-3) per PAPER_STRATEGY.md §2.4. The three worked-case figures (I1-FIG-4 through I1-FIG-6) strengthen but are not strictly required by the bundle anchor list. Stage 9 cannot upgrade to \"pass\" until at least the three P0/P1 architecture/pipeline/provenance figures exist with passing rendering + style checks."
+    },
+    {
+      "id": "I1-ADV-2",
+      "severity": "advisory",
+      "description": "Per the Stage-13 profile (\"each worked case must trace to a reproducible Aristotle run ID OR commit-pinned counterexample\"), captions for figures I1-FIG-4 through I1-FIG-6 must cite the corresponding Aristotle run IDs and project commit hashes. Coordinate with the Stage 10 claims-reviewer pass to ensure caption ↔ ARISTOTLE_THEOREMS registry consistency."
+    }
+  ],
+  "next_actions": [
+    "Author I1-FIG-1, I1-FIG-2, I1-FIG-3 (core P0/P1 figures) into papers/I1/figures/.",
+    "Update papers/I1/paper_draft.tex with \\begin{figure} \\includegraphics blocks at the section anchors listed above.",
+    "Re-invoke physics-qa:figure-reviewer with bundle_target=I1 for a non-stub Stage 9 review once figures land.",
+    "Coordinate with Stage 10 claims-reviewer (bundle_target=I1) so caption claims trace to Aristotle run IDs."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "timestamp": "20260501T134344Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "counts_fresh": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "staleness",
+          "passed": true,
+          "message": "fresh",
+          "warning": false
+        },
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "theorems=5229 (substantive=5204, placeholder=25) | modules=243 | sorry=0 | papers=41 | aristotle_proved=322",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

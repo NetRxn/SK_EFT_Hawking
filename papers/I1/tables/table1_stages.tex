@@ -1,0 +1,24 @@
+% Hand-authored for paper I1; tracks docs/WAVE_EXECUTION_PIPELINE.md.
+% This is the 14-stage pipeline that supersedes paper15's 12-stage table.
+% If WAVE_EXECUTION_PIPELINE.md is updated, sync this table.
+\begin{tabular}{cll}
+\hline
+\textbf{Stage} & \textbf{Name} & \textbf{Gate} \\
+\hline
+1   & Constants \& parameters       & imports succeed; provenance verified \\
+2   & Formulas                       & every function has Lean ref \\
+3a  & Lean --- interactive MCP loop  & proof closes (or decomposed to sub-lemma stubs) \\
+3b  & Lean --- sorry registration    & lake build compiles, SORRY\_GAPS accurate \\
+4   & Aristotle (fallback)           & residual sorrys filled, lake build clean \\
+5   & Lean build verification        & zero sorry, counts match \\
+6   & Python tests                   & all tests pass \\
+7   & Cross-layer validation         & validate.py all checks pass \\
+8   & Visualizations                 & all PNGs generated \\
+9   & Figure review                  & LLM review all PASS \\
+10  & Paper draft                    & paper\_provenance check passes \\
+11  & Notebooks                      & notebook\_exec + viz\_consistency pass \\
+12  & Document sync                  & full validate.py passes, counts consistent \\
+13  & Adversarial review             & fresh-context Opus sweep shows zero BLOCKERs \\
+14  & Meta-process QI                & systemic findings logged to QI register (advisory) \\
+\hline
+\end{tabular}

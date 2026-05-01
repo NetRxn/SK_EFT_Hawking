@@ -105,10 +105,19 @@ state.
 
 The pipeline we describe makes verification \emph{continuous}, in
 the sense of integrated into the daily research workflow rather
-than retrofitted before submission. It has fourteen stages and
-fourteen invariants, integrates three orthogonal verification
-layers, and produces machine-checkable artifacts at each stage. We
-have applied it to a research program spanning \papercount{}
+than retrofitted before submission. Antecedents on the
+formal-verification side include landmark engineering verifications
+(CompCert~\cite{compcert} for a C compiler; seL4~\cite{sel4} for an
+operating-system kernel) and the more recent emergence of
+Lean-based physics infrastructure
+(PhysLean~\cite{physlean}). Antecedents on the
+proof-assistance side include large-language-model copilots for
+Lean theorem proving~\cite{leancipilot} and recent
+silver-medal IMO results from automated proving~\cite{alphaproof}.
+Our pipeline has fourteen stages and fourteen invariants, integrates
+three orthogonal verification layers, and produces
+machine-checkable artifacts at each stage. We have applied it to
+a research program spanning \papercount{}
 papers covering Schwinger--Keldysh dissipative effective field
 theory, analog Hawking radiation in Bose--Einstein condensates and
 graphene, emergent gravity through black-hole thermodynamics,
@@ -121,9 +130,9 @@ Lean modules, with \sorrycount{} remaining unproved gaps
 (\sorrypercent\%) and \aristotleproved{} theorems closed by the
 Aristotle automated theorem prover.
 
-This paper extends and supersedes an earlier description of a
-twelve-stage version of the pipeline (paper15 methodology draft,
-April 2026). The version described here adds three stages beyond
+This paper extends and supersedes an earlier internal draft
+description of a twelve-stage version of the pipeline (April
+2026). The version described here adds three stages beyond
 the original twelve --- interactive Lean development via the
 language-server protocol (Stage~3a), fresh-context adversarial
 review (Stage~13), and meta-process quality improvement
@@ -268,9 +277,10 @@ fluid).
 Our first attempt encoded an early version of the KMS constraint as
 a Lean axiom \texttt{KMSSymmetry} that asserted four of the nine
 component-level identities. The accompanying uniqueness theorem
-\texttt{firstOrder\_uniqueness} (in
-\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~351--439) was
-submitted to Aristotle in priority batch~1. Aristotle returned not
+\texttt{SKEFTHawking.SKDoubling.firstOrder\_uniqueness} (in
+\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~412--439, with
+the \texttt{FirstOrderKMS} structure preceding it from line~367)
+was submitted to Aristotle in priority batch~1. Aristotle returned not
 a proof but a counterexample: the coefficient vector
 $c = (0,0,0,0,0,0,0,1,0)$ --- one nonzero noise channel and
 nothing else --- satisfies the four-component constraint but
@@ -331,8 +341,10 @@ Our first formalization of the gap equation included a
 \texttt{gap\_solution\_bounded} theorem asserting exactly this. The
 proof was not closing under interactive iteration, so the theorem was
 submitted as part of Aristotle priority batch~1
-(\texttt{lean/SKEFTHawking/TetradGapEquation.lean},
-lines~304--340). Aristotle returned an explicit
+(\texttt{SKEFTHawking.TetradGapEquation.gap\_solution\_monotone}
+in \texttt{lean/SKEFTHawking/TetradGapEquation.lean},
+lines~329--345; the deprecated false claim survives as a
+commented-out stub at lines~307--321). Aristotle returned an explicit
 counterexample, again rather than a proof: at
 $G = 1/(c_4/2 \cdot (1 - \log 2))$, $N_f = 1$, $\Lambda = 1$, the
 gap solution is exactly $\Delta = 1 = \Lambda$, a fixed point of the
@@ -350,7 +362,7 @@ conclusion follows. The corrected statement and its proof are in
 Aristotle run~\texttt{79e07d55}, alongside eight other gap-equation
 theorems that closed in the same batch. The original
 \texttt{gap\_solution\_bounded} survives in the codebase as a
-commented-out stub at lines~316--325 of \texttt{TetradGapEquation.lean},
+commented-out stub at lines~307--321 of \texttt{TetradGapEquation.lean},
 preserved as a citable counterexample anchor for downstream papers
 that would otherwise inherit the folklore. The case is a clean
 illustration of formalization-driven counterexample search: the
@@ -407,20 +419,32 @@ could not resolve. Aristotle priority-batch submission returned
 The fix was a nine-fold structural decomposition driven by the
 \texttt{AXIOM\_METADATA} table in \texttt{src/core/constants.py}.
 Each entry in \texttt{AXIOM\_METADATA} records its eliminability
-tier (\texttt{eliminable} / \texttt{hard} / \texttt{unknown}) and
-the structural-axiom family it belongs to. The chirality-wall
-theorem's load-bearing axioms group as
-\texttt{chirality\_wall\_three\_pillars} (three axioms at tier
-\texttt{hard}: $\mathbb{Z}_{16}$ anomaly chain
-\cite{paper10_ewbg}, four-plus-one-dimensional gapped interface
-hypothesis \cite{paper09_phaseI}, and topological-pivoting-frame
-no-go evasion \cite{paper08_topology}). The decomposition tracks
-the same boundary: three sub-lemmas per pillar, plus three
-sub-lemmas for the crossover side, totaling nine. Each sub-lemma
-has at most twelve term-level constraints. \emph{All nine
-sub-lemmas closed in a single Aristotle priority batch} after
-this decomposition, demonstrating that the original failure was
-about size, not difficulty.
+tier (\texttt{removed} / \texttt{closed} / \texttt{hard} /
+\texttt{algebraic} / \texttt{very\_hard} / \texttt{open}) and a
+\texttt{reason} or \texttt{evidence\_*} field documenting the
+structural rationale or evidence ladder. The chirality-wall theorem's
+load-bearing axioms decompose along three structural pillars,
+each anchored on one tier-\texttt{hard} entry of
+\texttt{AXIOM\_METADATA}: (i) the $\mathbb{Z}_{16}$ anomaly chain,
+backed by the chiral-central-charge axioms in
+\texttt{Z16AnomalyForcesThetaBar} (referenced from
+\texttt{AXIOM\_METADATA} via the \texttt{chiral\_central\_charge}
+group on lines around 1591); (ii) the
+four-plus-one-dimensional gapped-interface hypothesis, encoded
+verbatim as the \texttt{gapped\_interface\_axiom} entry in
+\texttt{AXIOM\_METADATA} (line 1351), with a tracked dimensional
+ladder of evidence (proven at $1{+}1$D and $2{+}1$D, conjectural
+at $3{+}1$D and $4{+}1$D); and (iii) the topological-pivoting-frame
+no-go evasion, anchored on the
+\texttt{chirality\_limitation\_zero} entry (line 1483) and on the
+EWBaryogenesisChiralityWall theorem suite cited in the same
+table (around line 1633). The decomposition tracks the same
+three-pillar boundary: three sub-lemmas per pillar, plus three
+sub-lemmas for the crossover side, totaling nine. Each
+sub-lemma has at most twelve term-level constraints.
+\emph{All nine sub-lemmas closed in a single Aristotle priority
+batch} after this decomposition, demonstrating that the
+original failure was about size, not difficulty.
 
 The structural-axiom classification did more than reduce
 intractable to tractable: it surfaced a hidden dependency. One of
@@ -428,10 +452,13 @@ the sub-lemmas (the
 \texttt{ewbg\_forbidden\_iff\_wall\_intact\_or\_not\_viable}
 biconditional) revealed that a fourth-pillar hypothesis on
 \emph{sphaleron-rate suppression} was implicitly assumed but not
-recorded in \texttt{AXIOM\_METADATA}. The audit closed by
-adding the missing entry as a tier-\texttt{eliminable} axiom
-with an explicit bound (\texttt{sphaleronSuppression\_le\_one}
-on lines~94--120 of \texttt{EWBaryogenesisChiralityWall.lean}).
+recorded in \texttt{AXIOM\_METADATA}. The audit closed
+not by adding a new axiom but by promoting the implicit
+dependency to an explicit \emph{theorem}
+(\texttt{SKEFTHawking.EWBaryogenesisChiralityWall.sphaleronSuppression\_le\_one}
+on lines~106--114 of \texttt{EWBaryogenesisChiralityWall.lean},
+proving that the suppression factor lies in $[0,1]$ within the
+surrounding \texttt{def sphaleronSuppression} infrastructure).
 A monolithic proof would have hidden this dependency
 indefinitely; the decomposition forced it into the open.
 
@@ -468,16 +495,23 @@ loop using the \texttt{lean-lsp-mcp} tool integration. The
 interactive loop reads the proof state at any line and column,
 tests candidate tactic sequences without editing the file, and
 returns ``no goals'' when the proof is complete. Empirically, the
-interactive loop is roughly a thousand times faster for proof
-construction than the build-iterate cycle.
+interactive loop accelerates proof construction by roughly two
+to three orders of magnitude relative to the build-iterate
+cycle, with the exact factor depending on how many tactic-test
+cycles a typical proof requires (per-cycle speedup is roughly
+$15\,000\times$, $\sim\!15$\,s versus $\sim\!1$\,ms; end-to-end
+proof-construction time on a representative theorem is between
+two and four orders of magnitude faster).
 
 Stage~13, fresh-context adversarial review, runs a Lean-aware
 adversarial reviewer agent in a fresh context window against each
 paper or bundle near submission readiness. The agent works through
 eight finding classes (citation integrity, parameter provenance,
-narrative grounding, cross-paper consistency, count freshness,
-formal-verification-claim substantiation, assumption disclosure,
-and review-state hygiene) and emits a structured markdown report.
+formal-verification-claim substantiation, cross-paper
+consistency, narrative grounding, assumption disclosure, count
+freshness, and production-run health --- the same eight classes
+enumerated in detail in Section~\ref{sec:adversarial}) and emits
+a structured markdown report.
 Findings are auto-picked up as graph nodes; ``BLOCKER'' findings
 flip the affected readiness gate to blocked. Stage~13 is meaningful
 only on a codebase that already passes its own internal validation
@@ -786,9 +820,9 @@ bundle metadata captures every reviewer agent's verdict.
 % with sub-lemma decomposition.
 
 The role of automated theorem proving in the pipeline has shifted
-substantially over the year of operation. The original
-twelve-stage version of the pipeline (paper15 methodology draft)
-treated Aristotle as the primary proof-construction tool: a Lean
+substantially over the year of operation. The original twelve-stage version of the pipeline (an earlier
+internal draft, April 2026) treated Aristotle as the primary
+proof-construction tool: a Lean
 theorem statement was registered with a strategy-hint comment in
 its docstring, the entire project was submitted in a priority
 batch, and the returned proofs were integrated after a manual
@@ -802,9 +836,9 @@ hours; the tool reads the goal state at the cursor, tests four to
 six candidate tactic sequences without editing the file, and
 returns the resulting goal state for each. A typical proof that
 would have been submitted to Aristotle in the original workflow
-now closes interactively in three to five tactic-test cycles. The
-empirical speedup over the build-iterate cycle is roughly three
-orders of magnitude. Aristotle has correspondingly retreated from
+now closes interactively in three to five tactic-test cycles
+(see Section~\ref{sec:pipeline} for the per-cycle and end-to-end
+speedup figures). Aristotle has correspondingly retreated from
 default proof-construction tool to fallback-for-residual-sorries.
 
 The residual role is genuine, not vestigial. Three classes of
@@ -834,12 +868,41 @@ The project's Aristotle activity to date is summarized by
 \texttt{src/core/constants.py}. Each entry records the theorem's
 fully qualified name, the run UUID, the priority tier (1 highest,
 3 lowest), and the integration date. The single-batch record is
-twenty-five theorems closed in run \texttt{78dcc5f4} (Phase~5d
-gap-equation batch); the most operationally significant batch is
-run \texttt{79e07d55}, which both produced the
+twenty-five theorems closed in run \texttt{78dcc5f4}, a
+Phase~5c Wave~1--7 multi-domain batch spanning S-matrix
+unitarity and Verlinde formulas at $k = 1, 2$ in
+\texttt{SU2kSMatrix}; the modular-tensor-category fingerprint
+in \texttt{RibbonCategory}; the Rokhlin invariant in
+\texttt{SpinBordism}; the $E_8$-lattice positivity proof in
+\texttt{E8Lattice}; restricted-quantum-group corepresentations
+in \texttt{RestrictedUq}; the integrated-autocorrelation-time
+estimator bounds in \texttt{VerifiedJackknife}; and seven public
+Hopf-algebra axioms in \texttt{Uqsl2Hopf}. The operationally
+most significant batch is the Phase~5d gap-equation batch
+\texttt{79e07d55}, which both produced the
 gap-solution-bounded counterexample of Section~\ref{sec:case2}
 and closed nine companion gap-equation theorems in the same
-submission. The integration protocol is unchanged across the
+submission.
+
+The Aristotle service runs on a fixed Lean toolchain
+(\texttt{leanprover/lean4:v4.28.0}) with a corresponding pinned
+Mathlib commit, while the project's local toolchain is
+currently \texttt{leanprover/lean4:v4.29.0} with a separately
+pinned Mathlib commit (see
+\texttt{lean/lean-toolchain} and \texttt{lean/lakefile.toml}).
+Aristotle-returned proofs that exercise a 4.29.0-only feature
+in a tactic body fail at integration time on the project's
+toolchain; we run a \texttt{lake build} verification on every
+integrated batch (Stage~5 of the pipeline) before
+\texttt{ARISTOTLE\_THEOREMS} entries are added. The toolchain
+skew is the operational reason the project uses Aristotle
+\emph{sparingly}: every batch incurs a non-zero
+toolchain-compatibility audit cost, and when the cost dominates
+the proof-construction cost, the interactive Stage~3a loop is
+the better tool. All worked-case theorems referenced in
+Sections~\ref{sec:case1}--\ref{sec:case3} have been verified to
+compile cleanly on the project's local 4.29.0 toolchain
+post-integration. The integration protocol is unchanged across the
 shift: never \texttt{--integrate} on submission, always retrieve
 first, review the diff under
 \texttt{docs/aristotle\_results/run\_<timestamp>/diff.patch}, and
@@ -988,8 +1051,12 @@ to any proof assistant. We sketch the body here as a sidebar; full
 treatment is the subject of a companion algebraic-general-relativity
 backbone paper.
 
-Phase~6f Waves~1 through~6 produced sixty-four substantive theorems
-across six modules at the algebraic --- not differential-geometric ---
+Phase~6f Waves~1 through~6 produced 73~theorems (64~substantive
+after retroactive strengthening-pass cuts; the
+substantive--vs--total distinction is the
+\texttt{PLACEHOLDER\_THEOREMS} registry per Invariant~9 of
+Section~\ref{sec:pipeline}) across six modules at the
+algebraic --- not differential-geometric ---
 level of GR. The algebraic level is the appropriate working language
 for substrate-emergent gravity, where the metric, Christoffel
 symbols, and curvature tensors are defined component-wise on
@@ -1000,7 +1067,7 @@ Props rather than re-deriving them on a manifold. Six waves shipped
 in sequence:
 
 \begin{itemize}
-\item \textbf{Wave~1 (\texttt{Curvature.lean}, sixteen theorems):}
+\item \textbf{Wave~1 (\texttt{Curvature.lean}, 18 theorems):}
 algebraic Riemann tensor $R^\rho_{\sigma\mu\nu}$, the
 \texttt{FirstBianchi} predicate, antisymmetry of the lower index pair,
 and the pair-symmetry corollary $R_{\rho\sigma\mu\nu} =
@@ -1009,7 +1076,7 @@ R_{\mu\nu\rho\sigma}$. Prior-art search across Mathlib4, Coq's
 Agda \texttt{unimath} found no formalization of the Riemann tensor
 or the algebraic first Bianchi at this scope.
 
-\item \textbf{Wave~2 (\texttt{EinsteinTensor.lean}, nine theorems):}
+\item \textbf{Wave~2 (\texttt{EinsteinTensor.lean}, 11 theorems):}
 algebraic Einstein tensor $G_{\mu\nu} := \mathrm{Ric}_{\mu\nu} -
 \tfrac{1}{2}R\, g_{\mu\nu}$, the dimension-4 trace identity
 $G^\mu_\mu = -R$, the vacuum-characterization biconditional
@@ -1017,12 +1084,12 @@ $G_{\mu\nu} = 0 \iff \mathrm{Ric}_{\mu\nu} = 0$, and the de Sitter
 $\Lambda$-vacuum cross-bridge $G + \Lambda g = 0 \iff \Lambda = 3K$
 (constant-$K$ specialization).
 
-\item \textbf{Wave~3 (\texttt{EnergyConditions.lean}, eight
+\item \textbf{Wave~3 (\texttt{EnergyConditions.lean}, 9
 theorems):} pointwise energy-condition predicates (NEC, WEC, SEC,
 DEC) on the algebraic stress-energy tensor and Ricci-curvature
 specializations.
 
-\item \textbf{Wave~4 (\texttt{ExactSolutions.lean}, sixteen
+\item \textbf{Wave~4 (\texttt{ExactSolutions.lean}, 17
 theorems):} four canonical exact solutions as algebraic consumers
 of the Wave~1--3 substrate. Minkowski ($K=0$, $\Lambda=0$); de
 Sitter ($K>0$, Hubble$^2 = K$); anti-de Sitter ($K<0$, AdS radius
@@ -1031,22 +1098,24 @@ $g = \eta + (2M/r)\,l\otimes l$, with explicit cross-bridges to
 Wave~1's Riemann tensor and downstream black-hole-thermodynamics
 hooks.
 
-\item \textbf{Wave~5 (\texttt{ADMFormalism.lean}, ten theorems):}
+\item \textbf{Wave~5 (\texttt{ADMFormalism.lean}, 11 theorems):}
 ADM 3+1 decomposition. Hamiltonian constraint
 $\square g = 2(R_{(3)} + K_{ij}K^{ij} - K^2)$, momentum constraint,
 extrinsic curvature trace, with Minkowski and de Sitter explicit
 witnesses.
 
-\item \textbf{Wave~6 (\texttt{TetradFormalism.lean}, five
+\item \textbf{Wave~6 (\texttt{TetradFormalism.lean}, 7
 theorems):} tetrad-induced metric symmetry, Minkowski tetrad
 witness, determinant identity, and cross-bridges to the
 Einstein-Cartan extension module (Phase~6e).
 \end{itemize}
 
-Total Phase~6f W1-W6 yield: sixty-four substantive theorems, zero
-sorry, zero new axioms, with thirteen retroactive cuts spread across
-the six waves. The exhaustive prior-art audit is on file at
-\texttt{Lit-Search/Phase-6f/audit}; downstream papers
+Total Phase~6f W1-W6 yield: 73~theorems (64~substantive after
+strengthening), zero sorry, zero new axioms, with 13~retroactive
+cuts spread across the six waves. The exhaustive prior-art audit is on file at
+\texttt{Lit-Search/Phase-6f/Phase~6f~audit~--~Classical~GR~Lean~infrastructure.md}
+(at the project root, not under
+\texttt{SK\_EFT\_Hawking/}); downstream papers
 (Bardeen-Carter-Hawking four laws, area theorem,
 Hawking--Penrose singularity theorem) reference these modules as
 load-bearing imports rather than as documentation. The
@@ -1091,8 +1160,8 @@ shipped the connection-level layer; Wave~8 lifted it from
 component-coordinate scope to Bonn's bundle-level
 \texttt{IsCovariantDerivativeOn} API. We sketch the result here,
 keeping detail proportionate to a methodology-paper sidebar; the
-companion paper~\cite{paper44riemannian} treats the construction
-as its primary subject.
+a companion paper currently in preparation as a project-internal
+draft treats the construction as its primary subject.
 
 The starting point is the indefinite-signature metric typeclass
 \texttt{IsLorentzianMetric}. Mathlib's existing infrastructure on
@@ -1104,7 +1173,7 @@ Our typeclass is a field-level predicate (signature
 $(-, +, +, +)$), with Minkowski as a primitive witness
 (\texttt{$\eta$\_isLorentzianMetric}). Wave~7 (modules
 \texttt{LorentzianMetric.lean} + \texttt{RiemannianConnection.lean},
-thirteen substantive theorems) shipped the Christoffel-quadratic
+14 theorems) shipped the Christoffel-quadratic
 Riemann tensor antisymmetry (in the lower index pair, separate
 from the Wave~1 algebraic version which constructs Riemann from
 the abstract type rather than from the metric), the
@@ -1118,8 +1187,8 @@ Wave~8 Sessions~1 through~5 (modules
 \texttt{RiemannCoordinate.lean},
 \texttt{RiemannDifferentialBianchi.lean},
 \texttt{BundleRiemannAux.lean}, \texttt{BundleRiemann.lean},
-\texttt{LeviCivita.lean}; forty-four substantive theorems
-total) shipped the coordinate-form Riemann tensor in linear
+\texttt{LeviCivita.lean}; 39 theorems total --- 9 + 9 + 8 + 8 + 5
+by module) shipped the coordinate-form Riemann tensor in linear
 plus quadratic decomposition, the algebraic first Bianchi
 identity, the differential second Bianchi identity, the
 bundle-level Riemann tensor consuming Bonn's
@@ -1147,11 +1216,13 @@ are in preparation; the current pin is a vendored copy in
 
 The sidebar's methodology point is that the verification pipeline
 produces \emph{textbook formalization} as a byproduct of doing
-applied physics in Lean. The five-page paper~\cite{paper44riemannian}
-that documents this work is a publication target in its own right,
-unrelated to the SK-EFT Hawking program except in that the
-Levi-Civita uniqueness statement was needed by the
-Bardeen-Carter-Hawking four-laws result of paper~L3 / D3 §8.
+applied physics in Lean. The five-page companion paper that
+documents this work (in preparation as a project-internal draft;
+target journal a Mathlib-aligned formal-verification venue) is a
+publication target in its own right, unrelated to the SK-EFT
+Hawking program except in that the Levi-Civita uniqueness
+statement was needed by the Bardeen-Carter-Hawking four-laws
+result of paper~L3 / D3 §8.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §13 Phase 6g W5 structural-Prop scoping pattern
@@ -1327,12 +1398,6 @@ as copilots for theorem proving in Lean,'' arXiv:2404.12534 (2024).
 \bibitem{alphaproof} Google DeepMind, ``AI achieves silver-medal
 standard solving International Mathematical Olympiad problems,''
 (2024).
-\bibitem{paper15methodology} J.~Roehm, ``A Twelve-Stage Verification
-Pipeline for Computational Physics Research'' (in prep, project
-internal draft).
-\bibitem{paper44riemannian} J.~Roehm, ``Riemannian Connection on the
-Algebraic-General-Relativity Substrate'' (in prep, project internal
-draft).
 \end{thebibliography}
 
 \end{document}
