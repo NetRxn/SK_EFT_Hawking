@@ -1363,6 +1363,13 @@
       "date": "2026-05-01"
     },
     {
+      "finding_id": "review:2026-05-01-T1830-bundle-stage13:L1:3.1.b",
+      "status": "fixed",
+      "superseded_by": "Phase 7b sub-wave 7b.0 round-2 fix (2026-05-01)",
+      "evidence": "Round-2 BLOCKER (regression of round-1 3.1): L1 abstract lines 50-54 still cited the deleted second_sound_graviton_not_derived_DOF theorem. The round-1 3.1 fix patched the body sections (§Phase 5y H1 caveat as a Lean disjointness theorem at lines 230-247) but missed the abstract preview. Round-2 deterministic check caught the abstract-only stale reference. Fix: rewrote L1 abstract lines 50-56 to cite the disjointness theorem natural_range_disjoint_from_ligo_window with the disjointness statement (the natural range [0.1, 10] and the GW170817-compatible window are entirely disjoint at any speed-of-light rescaling). Verified: `grep -nE 'second_sound_graviton_not_derived_DOF' papers/L1/paper_draft.tex` returns zero matches. LaTeX recompiled clean (3 pages, 0 undefined refs).",
+      "date": "2026-05-01"
+    },
+    {
       "finding_id": "review:2026-04-12:SK_EFT_Hawking — Master Systematic Update Checklist:7.1",
       "status": "fixed",
       "superseded_by": "Phase 7a sub-wave 7a.5 cleanup pass L2 advisory close (2026-05-01)",
