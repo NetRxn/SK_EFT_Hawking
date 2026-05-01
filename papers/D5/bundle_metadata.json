@@ -19,5 +19,5 @@
   "stage13_review_doc": null,
   "audit_log_path": "papers/D5/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": null
+  "notes": "Phase 7b sub-wave 7b.2 first-pass draft SHIPPED 2026-05-01. 10-page substantive draft compiles clean (zero LaTeX errors). 6 sources lifted via bundle_append.py: paper17 §2-§3 + paper29 §4 + paper32 §5 + paper34 §6 + paper42b §7 + D5_phase6m_lean_only §8-§12 (D.4 sourceless pattern). All 19 bibitems registered in CITATION_REGISTRY with cached primary sources; bibitem-inheritance discipline applied (titles match registry verbatim per BUNDLE_LIFT_PROCEDURE.md refinement #12). Stage 9/10/13 reviewer triple is the next blocking step before bundle close. The Phase 6m three-track Lean closure (CSDE/EGDE/JTGR/DSCE) is the bundle's substantive new contribution: §9 Track B 8/8 unanimous NO-GO (first complete-mechanism-family closure in Phase 6m); §11 Sakharov 4-criterion cross-bridge (first systematic Λ_J vs Λ_HK on common substrate); §12 unified 7-class GD taxonomy + 3-tier applicability gradient. Embedded short-notes §10.5 (Barrow prescription dependence) + §11.5 (Sakharov comparison) per Pipeline Invariant #14 default."
 }
