@@ -2394,11 +2394,29 @@ PARAMETER_PROVENANCE = {
         'detail': 'Vestigial-phase metric-channel susceptibility natural lower bound. '
                   'χ_vest · Λ² ∈ [0.1, 10] is the natural range from VestigialSusceptibility.lean '
                   'chi_RPA closed form with O(Λ²/16π²) bubble integral.',
-        'doi': None,
+        'doi': '10.1103/PhysRevD.112.054509',
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_LOWER.',
         'human_verified_date': None,
-        'human_verified_notes': None,
+        'human_verified_notes': (
+            'PROPOSED HUMAN-VERIFY NOTE (Phase 7b sub-wave 7b.0 pre-fill, 2026-05-01) — '
+            'review and approve via provenance dashboard if accurate, else edit and approve. '
+            'The natural range χ_vest · Λ² ∈ [0.1, 10] is the half-decade convention '
+            '"within 1 order of magnitude of unity," rooted in three convergent lines: '
+            '(a) RPA bubble integral — Vergeles 2025 (Phys. Rev. D 112, 054509; '
+            'arXiv:2506.00036; cached at Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf) '
+            'derives χ_RPA = χ_0 / (1 − γ_★ χ_0) for the metric-channel susceptibility in the '
+            'vestigial fermionic-condensate phase, with χ_0 ~ Λ²/16π² from the loop integral by '
+            'dimensional analysis. (b) Half-decade convention — O(Λ²/16π²) places the natural '
+            'value within ~1 order of magnitude of unity in the dimensionless form χ_vest · Λ², '
+            'so the natural range is [0.1, 10] (half-decade about unity). (c) Cross-program '
+            'consistency — the same convention frames α_ADW ∈ [0.1, 10] in '
+            'GRAV.ALPHA_ADW_LOWER/UPPER (Wave 1 emergent-gravity ADW microscopic-coefficient) '
+            'and arises identically from the Sakharov–Adler kernel. Lower endpoint 0.1 is the '
+            'conservative half-decade edge; values < 0.1 would require fine-tuned suppression '
+            'below the natural RPA scale, which no mechanism in Volovik 2024 / Vergeles 2025 '
+            'provides. Cross-link: VestigialSusceptibility.chi_RPA (Lean).'
+        ),
         'notes': 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
     },
     'GW.CHI_VEST_NATURAL_UPPER': {
@@ -2407,11 +2425,24 @@ PARAMETER_PROVENANCE = {
         'tier': 'PROJECTED',
         'source': 'Vergeles 2025 RPA bubble-integral natural range, half-decade convention',
         'detail': 'Upper bound matching CHI_VEST_NATURAL_LOWER; ±1 order of magnitude window.',
-        'doi': None,
+        'doi': '10.1103/PhysRevD.112.054509',
         'llm_verified_date': '2026-04-25',
         'llm_verified_notes': 'PROJECTED. Same convention as GRAV.ALPHA_ADW_UPPER.',
         'human_verified_date': None,
-        'human_verified_notes': None,
+        'human_verified_notes': (
+            'PROPOSED HUMAN-VERIFY NOTE (Phase 7b sub-wave 7b.0 pre-fill, 2026-05-01) — '
+            'review and approve via provenance dashboard if accurate, else edit and approve. '
+            'Upper endpoint of the half-decade window centered on χ_vest · Λ² = 1; derivation '
+            'chain identical to CHI_VEST_NATURAL_LOWER. Upper value 10 is the conservative '
+            'half-decade edge of the natural-range prior; values χ_vest > 10 would imply a '
+            'metric-channel susceptibility 10× the RPA loop scale O(Λ²/16π²), requiring an '
+            'enhancement mechanism not present in the Vergeles 2025 closed form '
+            'χ_RPA = χ_0/(1 − γ_★ χ_0) under the natural γ_★ χ_0 < 1 RPA self-consistency '
+            'assumption. Cross-program: matches GRAV.ALPHA_ADW_UPPER half-decade upper bound '
+            'via the same Sakharov–Adler kernel. Primary source cached at '
+            'Lit-Search/Phase-5d/primary-sources/Vergeles2025.pdf. Cross-link: '
+            'VestigialSusceptibility.chi_RPA (Lean).'
+        ),
         'notes': 'Cross-link: VestigialSusceptibility.chi_RPA (Lean).',
     },
     'GW.CHI_VEST_DEFAULT': {

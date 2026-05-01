@@ -15,7 +15,7 @@
 \newcommand{\Thawk}{T_{\rm H}}
 \newcommand{\Mc}{M_{\rm c}}
 \newcommand{\aADW}{\alpha_{\rm ADW}}
-\newcommand{\Ladw}{\Lambda_{\rm ADW}}
+\newcommand{\Ladw}{\Lambda_{\rm UV}}
 \newcommand{\Nf}{N_f}
 \newcommand{\dADW}{\delta_{\rm ADW}}
 
@@ -151,22 +151,29 @@ Combined with the standard Hawking-emission $dM/dt < 0$, this
 establishes $d\Thawk/dt > 0$ in the Schwarzschild branch.
 
 For $b.M < \Mc(p)$, the BEC-acoustic backreaction of
-Balbinot~\textit{et~al.}~\cite{Balbinot2005PRD} applies. The
-leading-order exponential approximation
+Balbinot~\textit{et~al.}~\cite{Balbinot2005PRD} applies. Their
+leading-order result is the linear-in-$t$ form Eq.~\eqref{eq:Tsonic}
+with the rational extrapolation $t \sim 1/T^3$ giving
+$\Thawk \to 0$ in infinite time. The Lean module's analytic anchor
+for the strict-decreasing claim is the exponential alias
 \begin{equation}
-  \Thawk^{\rm acoustic}(t) = \Thawk^{(0)} \cdot \exp(-t / \tau_{\rm cool})
+  \Thawk^{\rm acoustic}(t) = \Thawk^{(0)} \cdot \exp(-t / \tau_{\rm cool}),
   \label{eq:Tacoustic}
 \end{equation}
-matches the project's existing Python anchor
-\texttt{src/wkb/backreaction.py} (line 449), which evolves the full
-coupled-ODE system of~\cite{Balbinot2005PRD} but uses
-Eq.~\eqref{eq:Tacoustic} as the analytic anchor. We prove
-\texttt{T\_H\_acoustic\_evolution\_pos},
+which matches the project's Python anchor
+\texttt{src/wkb/backreaction.py} (line 449) — note that
+\texttt{backreaction.py} evolves the full coupled-ODE system rather
+than assuming the exponential form, with Eq.~\eqref{eq:Tacoustic}
+serving as the strictly-decreasing analytic alias for proof purposes.
+We prove \texttt{T\_H\_acoustic\_evolution\_pos},
 \texttt{T\_H\_acoustic\_evolution\_at\_zero}, and the load-bearing
 \texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}: for
 $\Thawk^{(0)} > 0$, $\tau_{\rm cool} > 0$, and $t_1 < t_2$,
 $\Thawk^{\rm acoustic}(t_2) < \Thawk^{\rm acoustic}(t_1)$. This is
-the BEC-acoustic regime's primary-source-grounded sign claim.
+the BEC-acoustic regime's primary-source-grounded sign claim, with
+the exponential alias preserving the strictly-decreasing structure
+of the Balbinot 2005 linear-in-$t$ leading order plus the rational
+$t \sim 1/T^3$ asymptote.
 
 \begin{figure}[t]
   \centering
@@ -189,18 +196,33 @@ the BEC-acoustic regime's primary-source-grounded sign claim.
 
 \paragraph{Tracked-hypothesis bundle.} Per the project's discipline
 for non-derived structural identifications, we bundle the regime
-partition into a Lean Prop:
-\begin{equation*}
-  H_{\rm RegimePartition}(p) \;\equiv\;
-  \exists\, \Mc^\star : \mathbb{R}_{>0},\;
-  \Mc^\star = \frac{\Nf\,\Ladw}{12\pi\,\aADW}
-  \,\wedge\, \text{(classifier consistent at $\Mc^\star$)}.
-\end{equation*}
+partition into a Lean structure with five mutually-independent
+fields (anti-$\exists$-absorption-pattern audit clean):
+\begin{align*}
+  H_{\rm RegimePartition}(b, p, \Thawk^{(0)}, &\dot T_{\rm evap}, \delta) :=\\
+  &\quad M_{\rm c\_form\_consistent} \;:\; 0 < \Mc(p)\\
+  &\;\wedge\; T_{H0\_pos} \;:\; 0 < \Thawk^{(0)}\\
+  &\;\wedge\; \mathit{evap\_dT\_dt\_above} \;:\; b.M > \Mc(p) \to 0 < \dot T_{\rm evap}\\
+  &\;\wedge\; \mathit{evap\_dT\_dt\_below} \;:\; b.M < \Mc(p) \to \dot T_{\rm evap} < 0\\
+  &\;\wedge\; \delta\_\mathit{consistent\_with\_ansatz} \;:\;
+    \delta = (\aADW - 1) \cdot \Ladw.
+\end{align*}
 The bundle is genuinely non-trivial: four falsifier theorems witness
-the four ways the bundle can fail (negative $\Mc$ via parameter
-inversion; classifier-vs-functional disagreement; $\dADW \neq 0$ at
-$\aADW = 1$; classifier non-decidability). Each falsifier is
-load-bearing: removing any conjunct trivializes the bundle.
+the four independent ways the bundle's substantive content can be
+violated.
+\verb|falsifier_acoustic_decay_form| (the BEC-acoustic
+strictly-decreasing claim cannot be reproduced by a non-decreasing
+form);
+\verb|falsifier_schwarzschild_heating| (a positive heating rate at
+the Schwarzschild branch — sign claim for $b.M > \Mc$);
+\verb|falsifier_third_law_form| (the regime-partition bundle's third-
+law slot is not vacuous-true; $t \to \infty$ approach is required);
+\verb|falsifier_alpha_ADW_dependence| (the substrate-response
+coefficient $\delta$ must depend on $\aADW$ via the Wave-9 ansatz,
+not be a free parameter). The correctness-push theorem
+\verb|regime_partition_criterion| combines these with the classifier
+to produce the explicit sign-of-$d\Thawk/dt$-flips-at-$\Mc$
+statement.
 
 \paragraph{Four laws by regime.} The four-laws bundle
 $H_{\rm BCH}(p, b)$ partitions across regimes. The zeroth law
@@ -213,12 +235,14 @@ GloriosoCrossleyLiu2017} on the open Schwinger--Keldysh action,
 without invoking pointwise NEC; this is the load-bearing
 substrate-class generalization compared to the standard
 Bekenstein--Hawking-on-area-law treatment. The third law
-($\kappa \to 0$ at finite proper time) is formalized as Israel's
-infinite-proper-time formulation, consistent with both branches
-(BEC-acoustic asymptotically reaches extremality at $t \to \infty$;
-Schwarzschild evaporates completely at finite proper time, satisfying
-the third law trivially via never reaching the $\kappa \to 0$ locus
-along the evaporation trajectory). Recent third-law revisions for
+(Israel's strong form: $\kappa \to 0$ attainable only at infinite
+affine time; equivalently, no extremal-horizon formation in finite
+proper time) holds in both branches under the regime-specific
+asymptotics: the BEC-acoustic branch reaches the
+$\Thawk \to 0$ extremality only at $t \to \infty$ (Balbinot 2005
+$t \sim 1/T^3$ extrapolation), and the Schwarzschild branch
+evaporates completely at finite proper time without ever crossing
+the $\kappa \to 0$ locus along the evaporation trajectory. Recent third-law revisions for
 extremal BPS BHs~\cite{KehleUnger2022ThirdLaw,Reall2024ThirdLawBPS}
 do not bear on the Schwarzschild branch; their applicability to the
 ADW-extremality branch is a Phase-6 cross-bridge open question.
@@ -302,13 +326,17 @@ by M.~Novello, M.~Visser, G.~Volovik (World Scientific, 2002);
 arXiv:cond-mat/0205174.
 
 \bibitem{KehleUnger2022ThirdLaw}
-C.~Kehle and R.~Unger, ``Extremal black hole formation as a
-counterexample to the third law,'' arXiv:2211.15742 (2022).
+C.~Kehle and R.~Unger, ``Gravitational collapse to extremal black
+holes and the third law of black hole thermodynamics,''
+J.~Eur.~Math.~Soc.\ (2024); arXiv:2211.15742;
+DOI: 10.4171/JEMS/1591.
 
 \bibitem{Reall2024ThirdLawBPS}
-H.~S.~Reall, ``A third law of black hole mechanics for supersymmetric
-black holes and a quasilocal mass-charge inequality,'' (2024);
-arXiv:2412.05678.
+H.~S.~Reall, ``A third law of black hole mechanics for
+supersymmetric black holes and a quasi-local mass-charge inequality,''
+Phys.\ Rev.\ D \textbf{110}, 124059 (2024);
+arXiv:2410.11956;
+DOI: 10.1103/PhysRevD.110.124059.
 
 \bibitem{GloriosoLiu2018}
 P.~Glorioso and H.~Liu, ``The second law of thermodynamics from
@@ -330,8 +358,10 @@ T.~Faulkner and A.~J.~Speranza, ``Gravitational algebras and the
 generalized second law,'' (2024); arXiv:2405.00847.
 
 \bibitem{Kirklin2024GSLAllOrders}
-J.~Kirklin, ``All orders generalised second law from holographic
-information theory,'' (2024); arXiv:2412.01903.
+J.~Kirklin, ``Generalised second law beyond the semiclassical
+regime,'' JHEP~\textbf{07}, 192 (2025);
+arXiv:2412.01903;
+DOI: 10.1007/JHEP07(2025)192.
 
 \end{thebibliography}
 
