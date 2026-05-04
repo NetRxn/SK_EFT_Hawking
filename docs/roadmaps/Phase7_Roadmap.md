@@ -525,3 +525,40 @@ After the morning compaction, executed continuous bundle-lift work over 13 commi
 **Pre-compact prep state:** all 13 commits pushed to `origin/main` (HEAD `18f48e1`); 3 untracked review-archive files (`*_r1.md`, `*_r1.json`) will be added/committed by the in-flight Round-2 agents. Memory file `project_phase7c_d3_d4_first_pass.md` written. MEMORY.md index updated.
 
 *Next session compact-recovery: read `project_phase7c_d3_d4_first_pass.md` first, then poll the 3 Round-2 results from `papers/D3/claims_review.json`, `papers/D4/claims_review.json`, `papers/AutomatedReviews/2026-05-04-bundle-stage13/D1.md`. If any returns RED, address those BLOCKERs as the next priority. Else, proceed to D3 + D4 Stage-13 adversarial passes, then F substantive draft.*
+
+---
+
+## Status update 2026-05-04 (afternoon, "paper tiger" session) — Phase 7c sub-waves 7c.5–7c.7 progress
+
+Resumed after auto-mode-eligible session crash; processed the 3 in-flight reviewer agents whose verdicts were captured but not committed at crash time.
+
+**Phase 7c.5** (commit `3ebc42c`) — checkpoint of prior-session uncommitted leftovers (D1 Stage-13 r2 GREEN review file; D3 Stage-10 r2 AMBER claims_review.json with 4 BLOCKERs scoped; roadmap status update).
+
+**Phase 7c.6** (commit `6c25ee0`) — D3 Stage-10 r2 BLOCKERs 1-4 closed + D4 Stage-13 r1 BLOCKER closed in single batch:
+- D3 BLOCKER 1: `.HPCode.` sub-namespace prefix added to §9 line 823.
+- D3 BLOCKERs 2-3: §19 path-(b) theorem-names corrected (`NonlinearDiffInvariance.pathB_residual_a0/a2/a4`, `diff_invariance_a4_iff_dirac_basis_consistent`, `perturbed_pathB_residual_a4_eq_delta_R_sq`).
+- D3 BLOCKER 4: converted `\bibliography{paper_draftNotes}` to inline `\begin{thebibliography}{99}` with 61 alphabetical bibitem entries; added 38 new entries to `CITATION_REGISTRY`; renamed 2 cite-keys for accuracy (KaulMajumdar1998 → KaulMajumdar2000; SextyWetterich2009 → BergesSexty2008 with prose updated to "Berges--Sexty-type"). 51-page PDF compiles clean (0 undefined cites).
+- D4 B-1: same pattern of `\bibliography{}` + empty .bib + 0 bibcite entries; converted to inline thebibliography with 6 entries (all in registry already). 18-page PDF clean.
+- D4 REQUIRED 1.1: H_HorizonBoundaryCondition phrasing unified across abstract + §7.1 + §8.4 + §9.5 to "tracked-hypothesis Prop record".
+- D4 REQUIRED 1.2: abstract "Sixteen" count hedged to "the substrate's load-bearing claims" (recount unreliable across 7-thread structure).
+- D4 RECOMMENDED 1.3: 4 unprefixed HPCode names in §7.1/§7.4 prefixed with `QECHolographyBridge[.HPCode]`.
+- D4 RECOMMENDED 5.1: doublon-SWAP "first SPT gate" claim hedged with "to our knowledge without a published prior-art counterexample".
+
+**Phase 7c.7** (commit `9b0a6bf`) — D3 Stage-10 r3 GREEN + D4 Stage-13 r2 GREEN; D4 closed:
+- D3 Stage-10 r3 verdict: GREEN with 0 BLOCKERs. 4 round-2 BLOCKERs verified closed; 5 advisory follow-ups carry forward.
+- D4 Stage-13 r2 verdict: GREEN with 0 BLOCKERs. All 6 round-1 findings closed; 1 minor R-7 advisory (REVTEX runtime artifact `*Notes.bib` — gitignored, harmless). **D4 reviewer-triple-closed.**
+- 3 inprep self-cite stubs added to CITATION_REGISTRY (Roehm2026E1/E2/F) for F flagship drafting consumption. Registry now 500 entries (was 459 entering session).
+
+**QI register (commit `112171d`):** 2 new open items capturing this session's lessons:
+- `qi-bundle_skeleton_inline_bibliography` — bundle skeleton template should default to inline thebibliography (supersedes narrower `qi-bibfilename`).
+- `qi-citation_authoryear_metadata_match` — bibkey `<LastName><Year>` form should match registered paper's actual first-author + year.
+
+**Heatmap at session-end: 11 of 13 bundles reviewer-triple-closed** (D1 + D2 + D4 + D5 + I1 + I2 + L1 + L2 + L3 + E1 + E2).
+
+**Remaining critical-path work:**
+- D3 Stage 13 adversarial pass — IN FLIGHT at status-update time (agent `abc4a431a2b0d9c3c`).
+- F (flagship) substantive draft — gate clears once D3 Stage-13 closes GREEN. Synthesis brief shipped at `papers/F/SYNTHESIS_BRIEF.md` (~110pp target, 12 sections, 41 source papers, substrate-identity synthesis claim NEW to F).
+- Wave 14 cross-bundle final consistency pass.
+- Wave 15 pre-submission Stage-13 sweep.
+
+*Status update 2026-05-04 afternoon. Next session compact-recovery: read `papers/AutomatedReviews/2026-05-04-bundle-stage13/D3.md` for D3 Stage-13 r1 verdict, address any BLOCKERs, then begin F flagship substantive draft (synthesis brief at `papers/F/SYNTHESIS_BRIEF.md`).*
