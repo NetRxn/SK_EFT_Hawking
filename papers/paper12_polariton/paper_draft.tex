@@ -184,9 +184,18 @@ of the probe intensity.
 \centering
 \includegraphics[width=\columnwidth]{figures/fig_stimulated_hawking_spectrum.png}
 \caption{Stimulated Hawking gain $G(\omega)$ vs.\ normalized
-frequency $\omega/\kappa$. The dashed line marks $G = 0.01$,
-below which $>10^4$ probe photons per mode are needed for
-$5\sigma$ detection. The shaded region is the optimal probe window.}
+frequency $\omega/\kappa$. The dashed line marks the single-shot
+$5\sigma$ gain threshold $G = 0.5$ (equivalently
+$N_{\rm probe} = 25/G^2 = 100$ probe photons per mode); the
+threshold is crossed at the universal frequency
+$\omega/\kappa = \ln(3)/(2\pi) \approx 0.175$. The shaded region
+is the optimal probe window.
+%% [historical correction 2026-05-04: prior caption read "G = 0.01"
+%% and ">10^4 probe photons" — recompute G(0.175κ) =
+%% 1/(exp(2π·0.175)-1) = 1/2 = 0.5; recompute N_probe = 25/G²
+%% = 100 at G=0.5, not 10^4. Corrected post Stage-10 r1 review of
+%% E1 bundle lift; see docs/review_finding_supersessions.json.]
+}
 \label{fig:gain}
 \end{figure}
 

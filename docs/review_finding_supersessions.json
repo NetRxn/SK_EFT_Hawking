@@ -2992,6 +2992,13 @@
       "superseded_by": "Phase 7a robustness memory (pre-existing background pattern; not L2-introduced)",
       "evidence": "RECOMMENDED: registry-stub-title polish (pre-existing background pattern documented in Phase 7a robustness memory); not L2-introduced. Non-blocking; deferred to a future registry-cleanup pass.",
       "date": "2026-05-01"
+    },
+    {
+      "finding_id": "bundle-stage10:E1-2026-05-04-r1:block:E1:1:propagating-G-threshold-drift",
+      "status": "fixed",
+      "superseded_by": "bundle-stage10:E1-2026-05-04-r2:green",
+      "evidence": "BLOCKER (FAIL Class IA + SD): paper-quoted threshold G > 0.01 at omega/kappa = 0.175 was wrong. Recompute: G(0.175k) = 1/(exp(2*pi*0.175)-1) = 1/(3-1) = 0.5, not 0.01. The G > 0.01 threshold is at omega/kappa ~ 0.734, not at the published 0.175 value. Single-shot 5-sigma photon count: N_probe = 25/G^2 = 100 at G=0.5 (matches abstract's 'SNR ~ 11 for N_probe ~ 100' since at peak G=1.14, SNR = sqrt(100)*1.14 = 11.4). At G=0.01, N_probe = 250000 — paper's '~10^4 probe photons' was wrong by factor 25. Drift propagated across 4 sites: E1 abstract + body §4 + figure 1 caption + figure 1 dashed-line position. Source: paper12_polariton (figure caption only — body text in source did not have the drift). Fix applied 2026-05-04: papers/E1/paper_draft.tex 3 text sites + src/core/visualizations.py fig_stimulated_hawking_spectrum threshold y=0.01->0.5 and annotation 10^4->100 + papers/paper12_polariton/paper_draft.tex caption corrected with [historical correction] inline note pointing to this ledger entry. Stage 10 round 2 verified GREEN with internal consistency (G=0.5 single-shot 5-sigma <-> N_probe=100 <-> SNR=11.4 at peak G=1.14 <-> threshold crossing at omega/kappa = ln(3)/(2*pi)). QI candidate raised: pre-Stage-9 arithmetic verification step in BUNDLE_LIFT_PROCEDURE.md §7 LaTeX-compile gate to verify all paper-quoted numerical thresholds by direct re-computation. The provenance discipline log: G > 0.5 at omega/kappa = ln(3)/(2*pi) ~ 0.175 is now the canonical version; G > 0.01 was the historic incorrect value.",
+      "date": "2026-05-04"
     }
   ]
 }
