@@ -1,0 +1,141 @@
+{
+  "paper": "F",
+  "bundle_target": "F",
+  "review_round": 2,
+  "review_date": "2026-05-04T23:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:bundle-F:2026-05-04T23:30:00Z:r2",
+  "stage": 10,
+  "tier_profile": "Tier-0 flagship review (round-2 targeted reconciliation pass on r1 BLOCKERs + 4 closed advisories)",
+  "verdict": "amber",
+  "total_findings": 1,
+  "findings_by_class": {
+    "CI": 0,
+    "CP": 1,
+    "PP": 0,
+    "TN": 0,
+    "PR": 0,
+    "HD": 0,
+    "AS": 0,
+    "NO": 0,
+    "structural_completeness": 0
+  },
+  "blockers_open": 1,
+  "blockers_advisory": 0,
+  "round_1_blockers_status": {
+    "F-r1-block-1_BCH_regime_partition": {
+      "status": "CLOSED",
+      "verification": "F line 980-981 'Schottky-natural Schwarzschild branch. For BH masses M > M_c' (correct); F line 990 'ADW-extremality branch. For M < M_c' (correct). Cross-checked against L3 paper_draft.tex line 127-138 eq:classify (Schwarzschild b.M > M_c, ADWExtremality b.M < M_c) and D3 paper_draft.tex line 747-749 (Schwarzschild branch iff mass exceeds M_c, ADW-extremality otherwise). All three bundles now agree character-for-character. F line 1002-1006 cross-reference summary also agrees ('Schwarzschild branch above M_c, ADW-extremality branch below'). Substrate-register section (sec 10) does not inherit any inversion -- spot-checked surrounding context."
+    },
+    "F-r1-block-2_central_charge_factor_2": {
+      "status": "CLOSED",
+      "verification": "F line 705-720 sec 5.1 now reads: 'sixteen left-handed Weyl fermions per Standard-Model generation (the 15 chiral fermions plus the right-handed neutrino nu_R, each contributing c = 1/2 to the chiral central charge), the per-generation contribution is c_- = 8, so for N_f generations c_- = 8 N_f.' The framing-anomaly constraint 24 | c_- forces N_f = 0 mod 3 (correct; matches L2 + D2). The Rokhlin 16-convergence is anchored separately at lines 722-727 as Weyl species count (per-generation count of Weyl fermions = 16) NOT as central-charge value. Cross-checked against L2 line 27-29 (c_- = 8 N_f from 16 left-handed Weyl per generation) and L2 line 31 (24 | c_- forcing N_f = 3). Both bundles agree character-for-character."
+    },
+    "F-r1-block-3_Wen_non_Abelian_at_sec_10.2": {
+      "status": "CLOSED_AT_SEC_10.2_BUT_RECURS_AT_SEC_2.1",
+      "verification": "F line 1670-1678 sec 10.2 now reads: 'Wen-ADW factor-6000 deficit. ... The deficit closes the emergent-U(1)-string-net-extended-to-gravity channel of Wen at quantitative magnitude (the structurally-distinct emergent-non-Abelian-gauge-symmetry pathway is closed separately by gauge erasure; see sec:substrate-register structurally-blocked register).' Phrasing now consistent with F sec 6.2 line 894-895 derivation ('emergent-U(1)-from-string-net construction of Wen extends to gravity'). HOWEVER: the SAME mislabel pattern recurs at F line 176-177 in sec 2.1 NO-GO Results as First-Class Predictive Content (Falsified register list) -- this site was NOT updated by the round-2 fix and still reads 'the Wen-ADW factor-6000 deficit closing the emergent-non-Abelian-gauge-symmetry pathway (D3 sec:gauge-erasure)'. The round-2 patch was applied at the sec 10.2 falsified-register entry but missed the parallel earlier sec 2.1 falsified-register list. New BLOCKER F-r2-block-1 raised to track."
+    }
+  },
+  "round_1_advisories_status": {
+    "F-r1-adv-1_TheoremNameDrift": {
+      "status": "CLOSED",
+      "verification": "Bare 'ratio_to_critical_coupling' string is GONE from paper_draft.tex (grep returns nothing). Only canonical 'HeatKernelExpansion.G_N_sakharov_eq_ratio_critical_coupling' remains at line 953."
+    },
+    "F-r1-adv-2_NarrativeOverclaim_first_complete_mechanism_family": {
+      "status": "CLOSED",
+      "verification": "F line 362 now reads 'eight NO-GO-R5 unanimous --- to our knowledge the first complete-mechanism-family NO-GO closure in Phase 6m'; F line 1349-1351 now reads 'is, to our knowledge, the first complete-mechanism-family unanimous NO-GO closure in Phase 6m'. Both first-claim phrasing sites at sec 2.3 and sec 8.4 are hedged. Note: line 1697 in sec 10 falsified register restates the claim without the hedge -- standard rhetorical pattern (restating an earlier-hedged claim doesn't require re-hedging). Acceptable."
+    },
+    "F-r1-adv-3_ProductionRunBacking_WalkerWang": {
+      "status": "CLOSED",
+      "verification": "F line 1014-1019 sec 6.5 now reads: 'O(1) constant follows from the substrate's MTC and horizon-boundary structure (its detailed identification with a specific topological-order anomaly-match coefficient is downstream of the substrate's MTC choice and is not the load-bearing content of D3 sec 7).' Walker-Wang attribution removed in favor of MTC-and-horizon-boundary-structure phrasing. WalkerWang2012 bibitem is still cited downstream at line 1156 as part of the [HaydenPreskill, WalkerWang, PastawskiYoshidaHarlowPreskill] collection citation -- this is appropriate (general topological-order citation, not the specific O(1) entropy attribution)."
+    },
+    "F-r1-adv-4_CrossPaperConsistency_closure_list": {
+      "status": "CLOSED",
+      "verification": "F line 881-886 sec 6.2 now reads: '(D3 sec 4 originally enumerates the closure triad as Wen + fracton + GW170817; F lifts the gauge-erasure prerequisite of D3 sec 3 into the closure list as the structural pre-condition for the substrate-identity claim, and handles the fracton diff-invariance no-go separately as a structurally-blocked register entry in sec:substrate-register.)' Reorganization note explicitly preserves the cross-reading."
+    },
+    "F-r1-adv-5_structural_completeness_sec_11": {
+      "status": "CARRIED_FORWARD",
+      "verification": "Length-vs-target compression carry-forward; not a r2 fix target. Will be revisited at Stage 13 or expansion-pass time."
+    },
+    "F-r1-adv-6_NarrativeOverclaim_E.4_prime": {
+      "status": "CARRIED_FORWARD",
+      "verification": "Minor designator inconsistency (E.4 vs E.4-prime) carry-forward; not a r2 fix target. F is consistent on E.1-E.4 throughout the body and was not load-bearing. Acceptable to defer."
+    }
+  },
+  "blocking_issues": [
+    {
+      "id": "F-r2-block-1",
+      "class": "CrossPaperConsistency",
+      "severity": "blocker",
+      "section": "F sec 2.1 'NO-GO Results as First-Class Predictive Content' falsified-register list (line 176-177)",
+      "claim_in_F": "F line 176-177: 'the Wen-ADW factor-6000 deficit closing the emergent-non-Abelian-gauge-symmetry pathway (D3 sec:gauge-erasure)'.",
+      "siblings_anchor": "F sec 6.2 line 894-895 (own internal anchor): 'The emergent-U(1)-from-string-net construction of Wen ... extends to gravity by promoting the photon to a spin-2 graviton through a string-condensate'. F sec 10.2 line 1673-1678 (corrected by r2 patch): 'closes the emergent-U(1)-string-net-extended-to-gravity channel of Wen at quantitative magnitude (the structurally-distinct emergent-non-Abelian-gauge-symmetry pathway is closed separately by gauge erasure)'.",
+      "discrepancy": "The round-2 patch closed the F-r1-block-3 mislabel at the sec 10.2 falsified-register entry but did NOT update the parallel earlier appearance in the sec 2.1 NO-GO-as-predictive-content falsified-register list at line 176-177. The line 176-177 phrasing is the same logical error as F-r1-block-3: it labels the Wen-ADW deficit as closing the emergent-non-Abelian-gauge-symmetry pathway when (a) Wen's mechanism is U(1)-string-net to spin-2 (per F's own sec 6.2 + D3 sec 4), and (b) the non-Abelian-emergent-gauge channel is closed structurally by gauge erasure (per F's own sec 6.2 line 891-892), not by the Wen-ADW factor-6000 deficit. Additionally the section reference '(D3 sec:gauge-erasure)' at line 177 is incorrect: the Wen-ADW deficit lives in D3 sec 4 'Perturbative Wen-ADW deficit' (D3 paper_draft.tex line 418-436), not in D3's gauge-erasure section. So this is both a mislabel of the closure mechanism AND a misattribution of the D3 section reference -- the same dual-error structurally as F-r1-block-3.",
+      "fix_path": "Update F line 176-177 to mirror the corrected sec 10.2 phrasing: replace 'the Wen-ADW factor-6000 deficit closing the emergent-non-Abelian-gauge-symmetry pathway (D3 sec:gauge-erasure)' with 'the Wen-ADW factor-6000 deficit closing the emergent-U(1)-string-net-extended-to-gravity channel of Wen at quantitative magnitude (D3 sec 4)'. After fix, grep for any remaining 'non-Abelian-gauge-symmetry pathway' phrasing in connection with Wen-ADW to confirm no third occurrence exists."
+    }
+  ],
+  "non_blocking_followups": [
+    {
+      "id": "F-r1-adv-5",
+      "class": "structural_completeness",
+      "severity": "advisory",
+      "section": "F sec 11 'Phase 6 deferred targets' (carry-forward from r1)",
+      "issue": "Length-vs-target compression on Phase 8 outlook content. Brief substantive coverage present; expansion deferred to Stage 13 or full-target lift.",
+      "fix_path": "No fix required round-2; carry-forward."
+    },
+    {
+      "id": "F-r1-adv-6",
+      "class": "NarrativeOverclaim",
+      "severity": "advisory",
+      "section": "F sec 6 'Decision Gate E.4' designator (carry-forward from r1)",
+      "issue": "Minor designator drift between SYNTHESIS_BRIEF.md ('E.4-prime') and F draft ('E.4'). F is consistent on E.1-E.4 throughout. Not load-bearing.",
+      "fix_path": "No fix required round-2; carry-forward."
+    }
+  ],
+  "cross_bundle_consistency": {
+    "L1_to_F_GW170817": {"status": "GREEN", "anchor": "L1 line 42 '7 x 10^14' matches F line 73, 1647, 1958"},
+    "L3_to_F_BCH": {"status": "GREEN", "anchor": "L3 eq:classify regime partition NOW MATCHES F sec 6 (M > M_c -> Schwarzschild, M < M_c -> ADW-extremality) -- block-1 closed"},
+    "L2_to_F_modular": {"status": "GREEN", "anchor": "L2 line 27 c_- = 8 N_f NOW MATCHES F line 715 c_- = 8 N_f -- block-2 closed"},
+    "D2_to_F_anomaly": {"status": "GREEN", "anchor": "D2 line 461 c_- = 8 N_f NOW MATCHES F line 715 -- block-2 closed"},
+    "D3_to_F_emergent_gravity": {"status": "AMBER", "anchor": "Sakharov coefficient G_N^Sak = 12pi/(N_f Lambda_UV^2) matches D3 char-for-char; F sec 6 BCH regime now correct (block-1 closed); F sec 10.2 Wen-channel attribution now correct (block-3 closed) BUT F sec 2.1 line 176-177 retains pre-fix Wen-ADW non-Abelian mislabel -- new block-1 r2"},
+    "D3_to_F_EC_torsion": {"status": "GREEN", "anchor": "D3 line 43 |T_EC| = 2.05e-77 GeV matches F line 1045, 1626"},
+    "D3_to_F_CC_overshoot": {"status": "GREEN", "anchor": "D3 line 48 'gtrsim 10^100 (formal Lean lower bound; heuristically ~ 10^122)' matches F line 79, 1019, 1733"},
+    "D3_to_F_Wen_deficit": {"status": "AMBER", "anchor": "D3 line 428 1/6000 ratio matches F line 902 numerically; channel-attribution mislabel at F line 176-177 -- see new block-1 r2"},
+    "D4_to_F_first_formalisations": {"status": "GREEN", "anchor": "D4 line 26-31, 174 U_q(sl_2)+U_q(sl_3) and trefoil = -sqrt(2) match F line 1124-1127, 1196"},
+    "D4_to_F_one_MTC_four_faces": {"status": "GREEN", "anchor": "D4 line 1138-1184 Drinfeld + WRT + HP-QEC + RT/CH match F line 1138-1177"},
+    "D5_to_F_8of8_NO_GO": {"status": "GREEN", "anchor": "D5 line 64, 780-846 matches F line 1326-1352"},
+    "D5_to_F_fR_AIC_BIC": {"status": "GREEN", "anchor": "D5 sec 6 (Track C); F line 1366-1374 'DeltaAIC = DeltaBIC >= 20 Plaza-Kraiselburd' matches"},
+    "D5_to_F_Sakharov_criterion": {"status": "GREEN", "anchor": "D5 sec 11.5 first systematic Lambda_J vs Lambda_HK matches F line 248-253, 384-387"},
+    "D1_to_F_92_percent_reuse": {"status": "GREEN", "anchor": "D1 line 52, 161, 599, 609 92% Lean theorem reuse matches F line 63, 555, 674-678"},
+    "D1_to_F_polariton_gain": {"status": "GREEN", "anchor": "D1 line 66, 159, 524-528 G > 0.5 at omega/kappa ~ 0.175 with N_probe = 100 matches F line 638-642"},
+    "E1_to_F_polariton": {"status": "GREEN", "anchor": "E1 line 35-40, 144-159 stimulated-Hawking gain matches F line 631-642"},
+    "E2_to_F_graphene": {"status": "GREEN", "anchor": "E2 line 29, 88, 343 T_H ~ 2.4 K matches F line 655-665; D1 line 73 L/L_0 > 200 matches F line 664"}
+  },
+  "lean_theorem_resolution": {
+    "checked_count": 28,
+    "resolved": 28,
+    "drift": [],
+    "in_flight_acknowledged": [
+      "wen_adw_factor_6000 (F honestly hedges 'in flight as a single-line corollary' at line 909)"
+    ]
+  },
+  "stage10_round_2_verdict": {
+    "color": "amber",
+    "blockers_count": 1,
+    "rationale": "AMBER per agent-prompt criterion (1-3 BLOCKERs). All three round-1 BLOCKERs (BCH regime partition F-r1-block-1, central-charge factor-of-2 F-r1-block-2, Wen non-Abelian mislabel at sec 10.2 F-r1-block-3) are CLOSED at the patched sites and cross-verified against L3+D3 (block-1), L2+D2 (block-2), and F's own sec 6.2 (block-3). Four of six round-1 advisories are CLOSED (adv-1 TheoremNameDrift, adv-2 NarrativeOverclaim with 'to our knowledge' hedging at sec 2.3+sec 8.4, adv-3 Walker-Wang attribution rewrite, adv-4 closure-list reorganization note); two carry forward (adv-5 sec 11 length compression, adv-6 E.4 designator) as not load-bearing. ONE NEW BLOCKER F-r2-block-1: the round-2 patch for F-r1-block-3 was applied at F sec 10.2 falsified-register entry (line 1670-1678) but missed the parallel earlier appearance in the F sec 2.1 falsified-register list at line 176-177, which retains the pre-fix mislabel ('Wen-ADW factor-6000 deficit closing the emergent-non-Abelian-gauge-symmetry pathway') AND additionally has an incorrect D3 section reference (the cross-reference points to 'D3 sec:gauge-erasure' but the Wen-ADW deficit lives in D3 sec 4, not the gauge-erasure section). LaTeX compile is clean (PDF 13s newer than tex, 476KB). All 28 spot-checked Lean theorem names resolve in lean_deps.json (the round-1 ratio_to_critical_coupling drift is fixed). 52/52 bibitems still cited and defined with zero undefined.",
+    "next_round_gate": "Round 3 should be a one-line patch at F line 176-177 to mirror the corrected sec 10.2 phrasing, plus a final grep to ensure no third occurrence of the Wen-non-Abelian-gauge mislabel exists. Estimated round-3 cost: ~1 file edit + ~3 file reads + ~5 tool calls. After round-3 GREEN, F advances to Stage 13 with adv-5 + adv-6 carried forward as Stage-13 advisories."
+  },
+  "anchors_re_verified_round_2": [
+    "F sec 6 BCH regime partition (block-1 closed; matches L3+D3)",
+    "F sec 5.1 central charge c_- = 8 N_f (block-2 closed; matches L2+D2)",
+    "F sec 10.2 Wen-ADW U(1)-string-net channel attribution (block-3 closed at this site)",
+    "F sec 2.1 line 176-177 Wen-ADW falsified-register entry (NEW BLOCKER F-r2-block-1; same mislabel pattern as block-3 at parallel site)",
+    "F sec 6 'ratio_to_critical_coupling' bare prose drift (adv-1 closed; canonical name retained)",
+    "F sec 2.3 + sec 8.4 'to our knowledge' hedging (adv-2 closed)",
+    "F sec 6.5 Walker-Wang attribution rewrite (adv-3 closed)",
+    "F sec 6.2 closure-list reorganization note (adv-4 closed)",
+    "LaTeX compile freshness check (PDF newer than tex; clean compile)",
+    "Lean theorem name resolution (28/28 checked, 0 drift after r2 patch)"
+  ]
+}
