@@ -7198,6 +7198,39 @@ CITATION_REGISTRY = {
         'notes': 'In-preparation alias for Roehm2026Wave10 (Bundle L2 self-cite). Same content; the alias is used in D3 §1 narrative-level cross-reference.',
     },
 
+    'Roehm2026Wave7': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Chirality wall: lattice no-go and TPF evasion (paper7 in-prep)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/paper7_chirality_formal/paper_draft.tex'],
+        'provides': ['Chirality-wall pillar 1 — Golterman-Shamir lattice no-go (9 conditions C1-C6 + I1-I3) plus TPFEvasion-class round_not_continuous + rotor_hilbert_not_finite_dim closures.'],
+        'notes': 'In-preparation D2 source paper7 self-cite. Inprep exemption per Pipeline Invariant #11.',
+    },
+
+    'Roehm2026Wave8': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Chirality wall master synthesis: Onsager + Witten anomaly + 4+1D gapped interface (paper8 in-prep)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/paper8_chirality_master/paper_draft.tex'],
+        'provides': ['Chirality-wall master synthesis: Onsager algebra Z_2 -> Z_16; Witten anomaly element-8 identification; gapped_interface_axiom; SPTStacking 16-fold periodicity.'],
+        'notes': 'In-preparation D2 source paper8 self-cite. Inprep exemption per Pipeline Invariant #11.',
+    },
+
+    'Roehm2026Wave9': {
+        'authors': 'Roehm, J. G.',
+        'title': 'SM Z16 anomaly and minimal Drinfeld centre (paper9 in-prep)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/D4/paper_draft.tex', 'papers/paper9_sm_anomaly_drinfeld/paper_draft.tex'],
+        'provides': ['SM Z_16 anomaly + Drinfeld centre Z(Vec_S3) toric-code anchor; Spin^Z_4 5-bordism dai_freed_spin_z4 placeholder.'],
+        'notes': 'In-preparation D2/D4 source paper9 self-cite. Inprep exemption per Pipeline Invariant #11.',
+    },
+
     'Roehm2026Wave2': {
         'authors': 'Roehm, J. G.',
         'title': 'Second-order Schwinger--Keldysh effective field theory: counting, KMS optimality, and parity (paper2 in-prep)',
