@@ -652,7 +652,7 @@ target of the vestigial-metric Monte Carlo of \S\ref{sec:vestigial-mc}.
 
 The substrate's microscopic entropy account ships a Kaul--Majumdar
 SU(2)$_k$ logarithmic correction with an explicitly negative
-coefficient~\cite{KaulMajumdar1998}, and an abelian-MTC falsifier that
+coefficient~\cite{KaulMajumdar2000}, and an abelian-MTC falsifier that
 serves as a structural no-go on alternative microscopic theories.
 
 \subsection{Closed form and Kaul--Majumdar coefficient}
@@ -820,7 +820,7 @@ For a horizon QEC code with code distance $d$ and scrambling time
 $t_{\mathrm{scr}}$, the substrate's MTC structure satisfies $d \ge
 t_{\mathrm{scr}}/(\text{horizon-area-scaling})$ if and only if the
 admissibility predicate
-(\texttt{QECHolographyBridge.code\_distance\_scaling\_matches\_anyonic\_fusion\_iff\_fusion\_in\_admissible\_class},
+(\texttt{QECHolographyBridge.HPCode.code\_distance\_scaling\_matches\_anyonic\_fusion\_iff\_fusion\_in\_admissible\_class},
 which Bundle~D4~\S 7 ships as the load-bearing biconditional) holds.
 This is
 the substrate's QEC-MTC admissibility theorem, which fixes that the
@@ -874,8 +874,8 @@ $G_c^{\mathrm{ADW}}$ within statistical error.
 \subsection{$L \ge 8$ convergence: in flight}
 
 At $L = 8$ the autocorrelation time grows; convergence at $L = 8$ requires
-either a longer Markov chain or a Sexty--Wetterich-type complex-Langevin
-acceleration~\cite{SextyWetterich2009}. We treat the
+either a longer Markov chain or a Berges--Sexty-type complex-Langevin
+acceleration~\cite{BergesSexty2008}. We treat the
 $L \ge 8$ convergence as a tracked-hypothesis bundle for the
 first-order transition extrapolation. If RHMC converges, the
 quantitative bifurcation prediction of \S\ref{sec:adw-gap} is
@@ -1382,20 +1382,25 @@ order-by-order biconditional.
 
 The path-(b) framework decomposes the substrate's effective Lagrangian
 into a coefficient bundle that respects diffeomorphism invariance up to
-a residual anomaly term. The
-\texttt{nonlinearDiffInvariance.path\_b\_residual} is the order-by-order
-invariance failure; the central claim is that this residual vanishes
-order-by-order through $a_4$ on the Dirac bundle.
+a residual anomaly term. The order-by-order invariance failures are
+\texttt{NonlinearDiffInvariance.pathB\_residual\_a0},
+\texttt{NonlinearDiffInvariance.pathB\_residual\_a2}, and
+\texttt{NonlinearDiffInvariance.pathB\_residual\_a4}; the central claim
+is that
+\texttt{NonlinearDiffInvariance.pathB\_residual\_a4\_dirac\_eq\_zero}
+forces the residual to vanish order-by-order through $a_4$ on the
+Dirac bundle (the $a_0$ and $a_2$ residuals are identically zero by
+construction in this gauge).
 
 \subsection{Decision Gate~E.3 biconditional}
 
-\texttt{path\_b\_holds\_iff\_dirac\_bundle}: the order-by-order
-diffeomorphism-invariance biconditional closes for the substrate's
-Dirac-fermion bundle and fails for any perturbed bundle. The
-\texttt{perturbed\_bundle\_residual\_linear\_in\_delta} closure makes
-the failure constructive: any perturbation of the Dirac bundle
-introduces a path-(b) residual linear in the perturbation parameter,
-which fails the biconditional at first order.
+\texttt{NonlinearDiffInvariance.diff\_invariance\_a4\_iff\_dirac\_basis\_consistent}:
+the order-by-order diffeomorphism-invariance biconditional closes for the
+substrate's Dirac-fermion bundle and fails for any perturbed bundle. The
+\texttt{NonlinearDiffInvariance.perturbed\_pathB\_residual\_a4\_eq\_delta\_R\_sq}
+closure makes the failure constructive: any perturbation of the Dirac bundle
+introduces a path-(b) residual proportional to $\delta\,R^2$, which fails
+the biconditional at first order in the perturbation parameter.
 
 \subsection{Numerical companion: anomaly hunt passes}
 
@@ -2050,7 +2055,353 @@ the Phase~7 close-out window per the project strategy
 %% this marker. To insert at a specific section, edit body manually after
 %% the script runs.
 
-\bibliography{paper_draftNotes}
-\bibliographystyle{apsrev4-2}
+\begin{thebibliography}{99}
+
+\bibitem{Abbott2017GW170817}
+B.~P.~Abbott \emph{et al.} (LIGO+Virgo+EM partners),
+``Gravitational waves and gamma-rays from a binary neutron star merger:
+GW170817 and GRB 170817A,''
+Astrophys.\ J.\ Lett.\ \textbf{848}, L13 (2017),
+arXiv:1710.05834.
+
+\bibitem{ADM1962}
+R.~Arnowitt, S.~Deser, and C.~W.~Misner,
+``The dynamics of general relativity,''
+Gen.\ Rel.\ Grav.\ \textbf{40}, 1997 (2008),
+arXiv:gr-qc/0405109. Originally Chapter 7 in
+\emph{Gravitation: An Introduction to Current Research}, ed.\ Witten
+(Wiley, 1962).
+
+\bibitem{Adler1980}
+S.~L.~Adler,
+``Order-$R$ vacuum action functional in scalar-free unified theories
+with spontaneous scale breaking,''
+Phys.\ Rev.\ Lett.\ \textbf{44}, 1567 (1980).
+
+\bibitem{Akama1979}
+K.~Akama,
+``An attempt at pregeometry: gravity with composite metric,''
+Prog.\ Theor.\ Phys.\ \textbf{60}, 1900 (1978).
+
+\bibitem{AlfordRajagopalWilczek1999}
+M.~G.~Alford, K.~Rajagopal, and F.~Wilczek,
+``Color-flavor locking and chiral symmetry breaking in high density QCD,''
+Nucl.\ Phys.\ B \textbf{537}, 443 (1999),
+arXiv:hep-ph/9804403.
+
+\bibitem{AlmheiriMarolfPolchinskiSully2013}
+A.~Almheiri, D.~Marolf, J.~Polchinski, and J.~Sully,
+``Black holes: complementarity or firewalls?,''
+JHEP \textbf{02}, 062 (2013),
+arXiv:1207.3123.
+
+\bibitem{ArnoldMcLerran1987}
+P.~Arnold and L.~McLerran,
+``Sphalerons, small fluctuations, and baryon-number violation in
+electroweak theory,''
+Phys.\ Rev.\ D \textbf{36}, 581 (1987).
+
+\bibitem{Balbinot2005}
+R.~Balbinot, S.~Fagnocchi, A.~Fabbri, and G.~P.~Procopio,
+``Backreaction in acoustic black holes,''
+Phys.\ Rev.\ Lett.\ \textbf{94}, 161302 (2005),
+arXiv:gr-qc/0405096.
+
+\bibitem{BardeenCarterHawking1973}
+J.~M.~Bardeen, B.~Carter, and S.~W.~Hawking,
+``The four laws of black hole mechanics,''
+Commun.\ Math.\ Phys.\ \textbf{31}, 161 (1973).
+
+\bibitem{BardeenHillLindner1990}
+W.~A.~Bardeen, C.~T.~Hill, and M.~Lindner,
+``Minimal dynamical symmetry breaking of the standard model,''
+Phys.\ Rev.\ D \textbf{41}, 1647 (1990).
+
+\bibitem{BergesSexty2008}
+J.~Berges and D.~Sexty,
+``Real-time gauge theory simulations from stochastic quantization
+with optimized updating,''
+Nucl.\ Phys.\ B \textbf{799}, 306 (2008),
+arXiv:0708.0779.
+
+\bibitem{Carter1971}
+B.~Carter,
+``Axisymmetric black hole has only two degrees of freedom,''
+Phys.\ Rev.\ Lett.\ \textbf{26}, 331 (1971).
+
+\bibitem{ChristensenDuff1978}
+S.~M.~Christensen and M.~J.~Duff,
+``Axial and conformal anomalies for arbitrary spin in gravity and
+supergravity,''
+Phys.\ Lett.\ B \textbf{76}, 571 (1978).
+
+\bibitem{CohenKaplanNelson1991}
+A.~G.~Cohen, D.~B.~Kaplan, and A.~E.~Nelson,
+``Spontaneous baryogenesis at the weak phase transition,''
+Phys.\ Lett.\ B \textbf{263}, 86 (1991).
+
+\bibitem{Diakonov2011}
+D.~Diakonov,
+``Towards lattice-regularized quantum gravity,''
+arXiv:1109.0091 (2011).
+
+\bibitem{Eddington1919}
+F.~W.~Dyson, A.~S.~Eddington, and C.~Davidson,
+``A determination of the deflection of light by the Sun's gravitational
+field, from observations made at the total eclipse of May 29, 1919,''
+Philos.\ Trans.\ R.\ Soc.\ A \textbf{220}, 291 (1920).
+
+\bibitem{GellMannOakesRenner1968}
+M.~Gell-Mann, R.~J.~Oakes, and B.~Renner,
+``Behavior of current divergences under SU(3)$\times$SU(3),''
+Phys.\ Rev.\ \textbf{175}, 2195 (1968).
+
+\bibitem{GloriosoLiu2018}
+P.~Glorioso and H.~Liu,
+``The second law of thermodynamics from symmetry and unitarity,''
+arXiv:1612.07705 (2018).
+
+\bibitem{Hawking1971}
+S.~W.~Hawking,
+``Gravitational radiation from colliding black holes,''
+Phys.\ Rev.\ Lett.\ \textbf{26}, 1344 (1971).
+
+\bibitem{Hawking1972}
+S.~W.~Hawking,
+``Black holes in general relativity,''
+Commun.\ Math.\ Phys.\ \textbf{25}, 152 (1972).
+
+\bibitem{Hawking1975}
+S.~W.~Hawking,
+``Particle creation by black holes,''
+Commun.\ Math.\ Phys.\ \textbf{43}, 199 (1975).
+
+\bibitem{HawkingPenrose1970}
+S.~W.~Hawking and R.~Penrose,
+``The singularities of gravitational collapse and cosmology,''
+Proc.\ R.\ Soc.\ Lond.\ A \textbf{314}, 529 (1970).
+
+\bibitem{HaydenPreskill2007}
+P.~Hayden and J.~Preskill,
+``Black holes as mirrors: quantum information in random subsystems,''
+JHEP \textbf{09}, 120 (2007),
+arXiv:0708.4025.
+
+\bibitem{Hill2025bilocal}
+C.~T.~Hill,
+``The nontrivial vacuum structure of an extended $t\bar t$ BEH (Higgs)
+bound state,''
+arXiv:2512.16527 (2025).
+
+\bibitem{HironoTanizaki2018}
+Y.~Hirono and Y.~Tanizaki,
+``Quark-hadron continuity beyond the Ginzburg-Landau paradigm,''
+Phys.\ Rev.\ Lett.\ \textbf{122}, 212001 (2019),
+arXiv:1811.10608.
+
+\bibitem{HughesDrever1960}
+V.~W.~Hughes, H.~G.~Robinson, and V.~Beltran-Lopez,
+``Upper limit for the anisotropy of inertial mass from nuclear resonance
+experiments,''
+Phys.\ Rev.\ Lett.\ \textbf{4}, 342 (1960).
+
+\bibitem{Israel1967}
+W.~Israel,
+``Event horizons in static vacuum space-times,''
+Phys.\ Rev.\ \textbf{164}, 1776 (1967).
+
+\bibitem{Israel1986}
+W.~Israel,
+``Third law of black-hole dynamics: a formulation and proof,''
+Phys.\ Rev.\ Lett.\ \textbf{57}, 397 (1986).
+
+\bibitem{JacobsonKoike2002}
+T.~A.~Jacobson and T.~Koike,
+``Black hole and baby universe in a thin film of $^3$He-A,''
+in \emph{Artificial Black Holes} (World Scientific, 2002),
+arXiv:cond-mat/0205174.
+
+\bibitem{KamLANDZen2024}
+KamLAND-Zen Collaboration (S.~Abe \emph{et al.}),
+``KamLAND-Zen 800 final results on neutrinoless double-beta decay,''
+arXiv:2406.11438 (2024).
+
+\bibitem{KaulMajumdar2000}
+R.~K.~Kaul and P.~Majumdar,
+``Logarithmic correction to the Bekenstein-Hawking entropy,''
+Phys.\ Rev.\ Lett.\ \textbf{84}, 5255 (2000),
+arXiv:gr-qc/0002040.
+
+\bibitem{KehleUnger2024}
+C.~Kehle and R.~Unger,
+``Extremal black hole formation as a critical phenomenon,''
+arXiv:2402.10190 (2024).
+
+\bibitem{KlinkhamerManton1984}
+F.~R.~Klinkhamer and N.~S.~Manton,
+``A saddle-point solution in the Weinberg-Salam theory,''
+Phys.\ Rev.\ D \textbf{30}, 2212 (1984).
+
+\bibitem{KLRS1996}
+K.~Kajantie, M.~Laine, K.~Rummukainen, and M.~Shaposhnikov,
+``Is there a hot electroweak phase transition at $m_H \gtrsim m_W$?,''
+Phys.\ Rev.\ Lett.\ \textbf{77}, 2887 (1996),
+arXiv:hep-ph/9605288.
+
+\bibitem{KosteleckyRussellTasson2008}
+V.~A.~Kosteleck\'y, N.~Russell, and J.~D.~Tasson,
+``New constraints on torsion from Lorentz-violation searches,''
+Phys.\ Rev.\ Lett.\ \textbf{100}, 111102 (2008),
+arXiv:0712.4393.
+
+\bibitem{KSS2005}
+P.~Kovtun, D.~T.~Son, and A.~O.~Starinets,
+``Viscosity in strongly interacting quantum field theories from black hole
+physics,''
+Phys.\ Rev.\ Lett.\ \textbf{94}, 111601 (2005),
+arXiv:hep-th/0405231.
+
+\bibitem{LEGEND2024}
+LEGEND Collaboration (H.~Acharya \emph{et al.}),
+``First results on the search for lepton number violating neutrinoless
+double beta decay with the LEGEND-200 experiment,''
+arXiv:2505.10440 (2025); accepted Phys.\ Rev.\ Lett.\ (2025).
+
+\bibitem{Maldacena1997}
+J.~M.~Maldacena,
+``The large-$N$ limit of superconformal field theories and supergravity,''
+Adv.\ Theor.\ Math.\ Phys.\ \textbf{2}, 231 (1998),
+arXiv:hep-th/9711200.
+
+\bibitem{MohapatraSenjanovic1980}
+R.~N.~Mohapatra and G.~Senjanovic,
+``Neutrino mass and spontaneous parity nonconservation,''
+Phys.\ Rev.\ Lett.\ \textbf{44}, 912 (1980).
+
+\bibitem{PastawskiYoshidaHarlowPreskill2015}
+F.~Pastawski, B.~Yoshida, D.~Harlow, and J.~Preskill,
+``Holographic quantum error-correcting codes: toy models for the
+bulk/boundary correspondence,''
+JHEP \textbf{06}, 149 (2015),
+arXiv:1503.06237.
+
+\bibitem{PDG2024}
+S.~Navas \emph{et al.} (Particle Data Group),
+``Review of particle physics,''
+Phys.\ Rev.\ D \textbf{110}, 030001 (2024).
+
+\bibitem{Penrose1965}
+R.~Penrose,
+``Gravitational collapse and space-time singularities,''
+Phys.\ Rev.\ Lett.\ \textbf{14}, 57 (1965).
+
+\bibitem{Polyakov1978}
+A.~M.~Polyakov,
+``Thermal properties of gauge fields and quark liberation,''
+Phys.\ Lett.\ B \textbf{72}, 477 (1978).
+
+\bibitem{PretkoRadzihovsky2018}
+M.~Pretko and L.~Radzihovsky,
+``Fracton-elasticity duality,''
+Phys.\ Rev.\ Lett.\ \textbf{120}, 195301 (2018),
+arXiv:1711.11044.
+
+\bibitem{Robinson1975}
+D.~C.~Robinson,
+``Uniqueness of the Kerr black hole,''
+Phys.\ Rev.\ Lett.\ \textbf{34}, 905 (1975).
+
+\bibitem{Roehm2026Modular}
+J.~G.~Roehm,
+``Three Standard Model fermion generations from modular invariance,''
+in preparation (2026), Bundle L2 splash.
+
+\bibitem{Roehm2026Strategy}
+J.~G.~Roehm,
+``SK-EFT Hawking 13-bundle publication architecture,''
+project paper-strategy frame, in preparation (2026).
+
+\bibitem{Sakharov1967}
+A.~D.~Sakharov,
+``Violation of CP invariance, C asymmetry, and baryon asymmetry of the
+universe,''
+Pisma Zh.\ Eksp.\ Teor.\ Fiz.\ \textbf{5}, 32 (1967)
+[JETP Lett.\ \textbf{5}, 24 (1967)].
+
+\bibitem{Sakharov1968}
+A.~D.~Sakharov,
+``Vacuum quantum fluctuations in curved space and the theory of
+gravitation,''
+Sov.\ Phys.\ Dokl.\ \textbf{12}, 1040 (1968).
+
+\bibitem{Sen2013}
+A.~Sen,
+``Logarithmic corrections to Schwarzschild and other non-extremal black
+hole entropy in different dimensions,''
+JHEP \textbf{04}, 156 (2013),
+arXiv:1205.0971.
+
+\bibitem{Stelle1977}
+K.~S.~Stelle,
+``Renormalization of higher-derivative quantum gravity,''
+Phys.\ Rev.\ D \textbf{16}, 953 (1977).
+
+\bibitem{SvetitskyYaffe1982}
+B.~Svetitsky and L.~G.~Yaffe,
+``Critical behavior at finite-temperature confinement transitions,''
+Nucl.\ Phys.\ B \textbf{210}, 423 (1982).
+
+\bibitem{Vassilevich2003}
+D.~V.~Vassilevich,
+``Heat kernel expansion: user's manual,''
+Phys.\ Rep.\ \textbf{388}, 279 (2003),
+arXiv:hep-th/0306138.
+
+\bibitem{Volovik2024Vestigial}
+G.~E.~Volovik,
+``Fermionic quartet and vestigial gravity,''
+JETP Lett.\ \textbf{119}, 330 (2024).
+
+\bibitem{Wald1984}
+R.~M.~Wald,
+\emph{General Relativity}
+(University of Chicago Press, 1984).
+
+\bibitem{WalkerWang2012}
+K.~Walker and Z.~Wang,
+``(3+1)-TQFTs and topological insulators,''
+Front.\ Phys.\ \textbf{7}, 150 (2012),
+arXiv:1104.2632.
+
+\bibitem{Weinberg1989}
+S.~Weinberg,
+``The cosmological constant problem,''
+Rev.\ Mod.\ Phys.\ \textbf{61}, 1 (1989).
+
+\bibitem{Wen2003}
+X.-G.~Wen,
+``Quantum order from string-net condensations and the origin of light
+and massless fermions,''
+Phys.\ Rev.\ D \textbf{68}, 065003 (2003),
+arXiv:hep-th/0302201.
+
+\bibitem{Wetterich1990}
+C.~Wetterich,
+``Average action and the renormalization group equations,''
+Z.\ Phys.\ C \textbf{48}, 693 (1990).
+
+\bibitem{Wetterich2017}
+C.~Wetterich,
+``Cosmology and the fate of dilatation symmetry,''
+Phys.\ Lett.\ B \textbf{773}, 6 (2017),
+arXiv:1711.03844.
+
+\bibitem{Will2014}
+C.~M.~Will,
+``The confrontation between general relativity and experiment,''
+Living Rev.\ Relativity \textbf{17}, 4 (2014),
+arXiv:1403.7377.
+
+\end{thebibliography}
 
 \end{document}

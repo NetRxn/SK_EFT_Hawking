@@ -30,7 +30,8 @@ six hexagon equations, ribbon equations, and an explicit knot-invariant
 calculation $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$; the WRT topological
 quantum field theory partition function $Z(S^{2}\times S^{1}) = \mathrm{rk}\,\mathcal{C}$
 and surgery formula on three-manifolds; the doublon-SWAP gate as the
-substrate's first symmetry-protected topological gate, with Berry-phase
+substrate's first symmetry-protected topological gate (to our knowledge
+without a published prior-art counterexample), with Berry-phase
 gauge invariance; the Hayden--Preskill error-correcting-code structure
 on horizon modular-tensor categories, with a non-abelian-anyon admissibility
 biconditional; and the Ryu--Takayanagi / Casini--Huerta knife-edge
@@ -48,9 +49,9 @@ WRT TQFT (\S 5) and Ising braiding (\S 4); WRT TQFT underwrites BH
 partition-function counting (Bundle~D3 \S 7); doublon-SWAP gates exhibit
 the substrate's first concrete topological-quantum-information primitive;
 and the QEC--RT cross-bridge (\S\S 7--8) ties black-hole interior
-recovery to the same MTC as the boundary-entropy structure. Sixteen of
-the substrate's load-bearing claims here ship with Lean~4 modules at
-zero \texttt{sorry}; one tracked-hypothesis bundle
+recovery to the same MTC as the boundary-entropy structure. The
+substrate's load-bearing claims here ship with Lean~4 modules at
+zero \texttt{sorry}; one tracked-hypothesis Prop record
 (\texttt{H\_HorizonBoundaryCondition}) carries the boundary-condition
 choice; one true axiom carries over from Bundle~D2 (the 4+1D
 gapped-interface conjecture). The MTC-side first-formalisation claims
@@ -448,15 +449,16 @@ non-abelian-anyon support. We ship the complete QEC structure here.
 \subsection{Horizon-MTC boundary condition}
 
 The substrate's MTC at the horizon carries a boundary-condition
-local Prop record
+tracked-hypothesis Prop record
 \texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} (defined
 in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}, consumed here
 through the QEC-MTC cross-bridge to D3 \S 7). The boundary condition fixes
 the global dimension squared via
 \texttt{QECHolographyBridge.HPCode.one\_le\_globalDimSq}; the scrambling time
 is bounded below by a positivity guard
-(\texttt{scramblingTimeBound\_nonneg}); the code distance closes
-positive (\texttt{codeDistance\_nonneg}).
+(\texttt{QECHolographyBridge.HPCode.scramblingTimeBound\_nonneg}); the
+code distance closes positive
+(\texttt{QECHolographyBridge.HPCode.codeDistance\_nonneg}).
 
 \subsection{Code-distance / scrambling-time biconditional}
 
@@ -496,10 +498,11 @@ Bundle~D3 \S 7.
 
 \subsection{Fibonacci-anyon bound}
 
-\texttt{fibonacci\_HPCode\_codeDistance\_lt\_log\_two}: on the Fibonacci
-anyon model (the simplest universal-quantum-computation MTC), the
-Hayden--Preskill code distance is bounded below by $\log 2$ in
-appropriate units. \texttt{fibonacci\_HPCode\_scramblingTimeBound\_pos}
+\texttt{QECHolographyBridge.fibonacci\_HPCode\_codeDistance\_lt\_log\_two}:
+on the Fibonacci anyon model (the simplest universal-quantum-computation
+MTC), the Hayden--Preskill code distance is bounded below by $\log 2$
+in appropriate units.
+\texttt{QECHolographyBridge.fibonacci\_HPCode\_scramblingTimeBound\_pos}
 closes the corresponding scrambling-time positivity. The Fibonacci
 case is the substrate's quantitative-bound benchmark.
 
@@ -652,14 +655,17 @@ intersection of mechanisms (ii) and (iii) of D2). No new axioms are
 introduced in D4. The
 \texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} structure
 (defined in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}) is a
-local Prop record, not an axiom; D4 \S 7 consumes it through the
-QEC-MTC cross-bridge. The doublon-SWAP gate's adiabatic-drag premise
-will be encoded similarly as a local Prop record in the in-flight
+tracked-hypothesis Prop record, not an axiom; D4 \S 7 consumes it
+through the QEC-MTC cross-bridge. The doublon-SWAP gate's
+adiabatic-drag premise will be encoded similarly as a
+tracked-hypothesis Prop record in the in-flight
 \texttt{DoublonGate.lean} module.
-Across D4's seven threads, sixteen substantive claims close at zero
-\texttt{sorry}, one tracked-hypothesis bundle carries the
-boundary-condition choice, and one tracked-hypothesis premise carries
-the doublon-SWAP adiabatic-drag condition.
+Across D4's seven threads, the substrate's load-bearing claims close
+at zero \texttt{sorry} across the modules listed above; one
+tracked-hypothesis Prop record (\texttt{H\_HorizonBoundaryCondition})
+carries the boundary-condition choice, and one tracked-hypothesis
+premise (in flight in \texttt{DoublonGate.lean}) carries the
+doublon-SWAP adiabatic-drag condition.
 
 \subsection{What this paper is not}
 
@@ -696,7 +702,41 @@ must be cross-bundle-validated before submission; the QEC-MTC
 cross-bridge to Bundle~D3 (\S\ref{sec:qec-mtc}) must agree
 character-for-character with D3 \S 7 and \S 9.
 
-\bibliography{bibliography}
-\bibliographystyle{apsrev4-2}
+\begin{thebibliography}{99}
+
+\bibitem{FreedmanLarsenWang2002}
+M.~H.~Freedman, M.~J.~Larsen, and Z.~Wang,
+``A modular functor which is universal for quantum computation,''
+Commun.\ Math.\ Phys.\ \textbf{227}, 605 (2002),
+arXiv:quant-ph/0001108.
+
+\bibitem{Kitaev2003}
+A.~Kitaev,
+``Fault-tolerant quantum computation by anyons,''
+Ann.\ Phys.\ \textbf{303}, 2 (2003),
+arXiv:quant-ph/9707021.
+
+\bibitem{NayakSimonSternFreedmanDasSarma2008}
+C.~Nayak, S.~H.~Simon, A.~Stern, M.~Freedman, and S.~Das~Sarma,
+``Non-Abelian anyons and topological quantum computation,''
+Rev.\ Mod.\ Phys.\ \textbf{80}, 1083 (2008),
+arXiv:0707.1889.
+
+\bibitem{ReshetikhinTuraev1991}
+N.~Reshetikhin and V.~G.~Turaev,
+``Invariants of $3$-manifolds via link polynomials and quantum groups,''
+Invent.\ Math.\ \textbf{103}, 547 (1991).
+
+\bibitem{Roehm2026Strategy}
+J.~G.~Roehm,
+``SK-EFT Hawking 13-bundle publication architecture,''
+project paper-strategy frame, in preparation (2026).
+
+\bibitem{Witten1989}
+E.~Witten,
+``Quantum field theory and the Jones polynomial,''
+Commun.\ Math.\ Phys.\ \textbf{121}, 351 (1989).
+
+\end{thebibliography}
 
 \end{document}

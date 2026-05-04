@@ -1,9 +1,287 @@
 {
   "generated_by": "scripts/extract_missing_bibkeys.py",
-  "n_total_cited": 313,
-  "n_in_registry": 313,
-  "n_stubs": 0,
-  "n_orphans": 0,
-  "stubs": [],
-  "orphans": []
+  "n_total_cited": 382,
+  "n_in_registry": 341,
+  "n_stubs": 3,
+  "n_orphans": 38,
+  "stubs": [
+    {
+      "bibkey": "Roehm2026E1",
+      "authors": "J.~Roehm, ``A Falsifiable Hawking Spectrum for Polariton Microcavities at the Paris LKB Device Parameters'', PRL/PRR letter (2026)",
+      "title": "",
+      "journal": null,
+      "volume": null,
+      "page": null,
+      "year": 2026,
+      "doi": null,
+      "arxiv": null,
+      "raw_block": "\\bibitem{Roehm2026E1}\nJ.~Roehm, ``A Falsifiable Hawking Spectrum for Polariton\nMicrocavities at the Paris LKB Device Parameters'', PRL/PRR letter\n(2026).",
+      "cited_in": [
+        "D1"
+      ],
+      "bibitem_source": "D1"
+    },
+    {
+      "bibkey": "Roehm2026E2",
+      "authors": "J.~Roehm, ``Detecting Analog Hawking Radiation in the Bilayer-Graphene Dirac Fluid'', PRL/PRR letter (2026)",
+      "title": "",
+      "journal": null,
+      "volume": null,
+      "page": null,
+      "year": 2026,
+      "doi": null,
+      "arxiv": null,
+      "raw_block": "\\bibitem{Roehm2026E2}\nJ.~Roehm, ``Detecting Analog Hawking Radiation in the\nBilayer-Graphene Dirac Fluid'', PRL/PRR letter (2026).",
+      "cited_in": [
+        "D1"
+      ],
+      "bibitem_source": "D1"
+    },
+    {
+      "bibkey": "Roehm2026F",
+      "authors": "J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics --- A Formally Verified Survey'', RMP/Phys.~Rep.~flagship review (2026)",
+      "title": "",
+      "journal": null,
+      "volume": null,
+      "page": null,
+      "year": 2026,
+      "doi": null,
+      "arxiv": null,
+      "raw_block": "\\bibitem{Roehm2026F}\nJ.~Roehm, ``Fluid-Based Approaches to Fundamental Physics --- A\nFormally Verified Survey'', RMP/Phys.~Rep.~flagship review (2026).",
+      "cited_in": [
+        "D1"
+      ],
+      "bibitem_source": "D1"
+    }
+  ],
+  "orphans": [
+    {
+      "bibkey": "ADM1962",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Adler1980",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Akama1979",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "AlmheiriMarolfPolchinskiSully2013",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "ArnoldMcLerran1987",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Balbinot2005",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "BardeenCarterHawking1973",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "BardeenHillLindner1990",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Carter1971",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "ChristensenDuff1978",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "CohenKaplanNelson1991",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Eddington1919",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "GellMannOakesRenner1968",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Hawking1971",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Hawking1972",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Hawking1975",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "HawkingPenrose1970",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Hill2025bilocal",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "HughesDrever1960",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Israel1967",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Israel1986",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "KaulMajumdar1998",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "KehleUnger2024",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "KlinkhamerManton1984",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "LEGEND2024",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Maldacena1997",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "MohapatraSenjanovic1980",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "PastawskiYoshidaHarlowPreskill2015",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Penrose1965",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "PretkoRadzihovsky2018",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Robinson1975",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Sakharov1967",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Sen2013",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "SextyWetterich2009",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Weinberg1989",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Wetterich1990",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Wetterich2017",
+      "cited_in": [
+        "D3"
+      ]
+    },
+    {
+      "bibkey": "Will2014",
+      "cited_in": [
+        "D3"
+      ]
+    }
+  ]
 }
