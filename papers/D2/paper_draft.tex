@@ -502,11 +502,11 @@ substantive Lean propositions: the Brillouin zone via Mathlib's
 exterior-algebra-finite-dimensionality result documented in
 \texttt{GoltermanShamir.lean} (closed by Aristotle, graded-decomposition
 strategy); and the spectral gap and matrix
-exponential via standard Mathlib infrastructure. Two conditions
-(C4 — interpolating-fields completeness; C5 — spontaneous
-symmetry breaking) enter as well-typed but non-proven physics
-conjectures (axioms in our Lean library, not theorems). We
-discuss the implications of this in \S\ref{sec:outlook}.
+exponential via standard Mathlib infrastructure. Two conditions (C4 --- interpolating-fields completeness; C5 ---
+spontaneous symmetry breaking) enter as well-typed but non-proven
+physics conjectures, encoded as inductive-constructor Prop fields on
+the GS condition record (not as Lean \texttt{axiom} declarations).
+We discuss the implications of this in \S\ref{sec:outlook}.
 
 The Two-Particle Family (TPF) construction~\cite{TPF2026} evades
 the GS no-go by violating five of the nine conditions
@@ -763,12 +763,22 @@ convergence theorem.
 of ${\rm MSpin}$ at the prime 2~\cite{ABP1967}.
 \end{itemize}
 
-\textbf{H2} — Hom-tensor change-of-rings adjunction — is partially
+\textbf{H2} --- Hom-tensor change-of-rings adjunction --- is partially
 discharged at the dimension-equality level by
 \texttt{ChangeOfRings.hom\_tensor\_adjunction\_dim}; the full
 isomorphism statement~\eqref{eq:change-of-rings} remains a tracked
 sub-hypothesis pending a Mathlib upstream of the explicit
 isomorphism witness.
+
+The five active tracked Props underlying the chirality-wall + modular
+chain are registered in
+\texttt{src/core/constants.py::HYPOTHESIS\_REGISTRY} under the
+keys \texttt{rokhlin\_sigma\_mod\_16},
+\texttt{modular\_invariance\_framing}, \texttt{c\_minus\_equals\_8Nf},
+\texttt{characteristic\_square\_mod\_8}, and
+\texttt{spin\_bordism\_iso\_Z} (each carries its own falsifier set
+in the registry). Stage~14 audit invocations consume these keys
+through the project's standard hypothesis-disclosure pipeline.
 
 \subsection{What is conjectural and motivational}
 
