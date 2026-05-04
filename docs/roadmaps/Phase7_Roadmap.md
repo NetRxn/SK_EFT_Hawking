@@ -443,3 +443,39 @@ Every Phase 7 sub-phase (7a–7g) drives every bundle through a canonical three-
 ---
 
 *Created 2026-04-30. Active drafting roadmap. Updates atomically as bundles are lifted and Stage-13 closure is achieved per bundle.*
+
+---
+
+## Status update 2026-05-04 — Phase 7b sub-waves 7b.0 → 7c.0 progress
+
+Phase 7b sub-wave numbering evolved beyond the original Phase 7a §7b candidate-scope plan (which envisioned 7b.0 heatmap regen + 7b.1-3 D5/L1/L3 lifts + 7b.4 cross-bundle + 7b.5 procedure update + 7b.6 trigger gate). **Actual sub-wave execution through 2026-05-04:**
+
+- **7b.0** — heatmap regen + freshness check (memory `project_phase7b_session_close.md`).
+- **7b.1** — L1 (paper25) Tier-2 PRL splash lifted (memory `project_phase7b_0_l1_shipped.md`).
+- **7b.2** — D5 (Phase 6m roster + paper17/29/31/32/34/42b §7) Tier-1 deep paper closed at GREEN through reviewer triple (memory `project_phase7b_d5_closed.md`).
+- **7b.3** — L2 (paper10) Tier-2 PRL splash closed at GREEN through reviewer triple (memory `project_phase7b_l2_closed.md`).
+- **7b.4** — E1 (Paris-LKB polariton) + E2 (Dean-Kim-Lucas graphene) Tier-4 letters closed at GREEN through reviewer triples (memory `project_phase7b_e1_e2_closed.md`; commit `ea1d944`).
+- **7b.5** — D2 (Anomaly constraints SM) Tier-1 first-pass drafted at 8pp PRD reprint (commit `17a00c9`). Stage 9/10/13 reviewer triple deferred.
+- **7b.6** — D1 (Analog Hawking three platforms) Tier-1 first-pass drafted at 8pp PRD reprint (commit `d1f3700`). Stage 9/10/13 reviewer triple deferred.
+- **7c.0** — D3 (Emergent gravity through BH thermo) Tier-1 skeleton + 486-line synthesis brief at `papers/D3/SYNTHESIS_BRIEF.md` (commits `c99b9a1` + `5ee8d5a`). 22 sources lifted via `bundle_append.py`; substantive content drafting deferred to next session.
+
+**Reviewer-triple-closed bundle count (Stage 9 + 10 + 13 all GREEN):** 8 of 13 (L1+L2+L3+D5+I1+I2+E1+E2). Source-finding-layer GREEN: 13 of 13.
+
+**Remaining Phase 7 work:**
+- **D3 first-pass + reviewer triple** (next session priority; brief in hand at `papers/D3/SYNTHESIS_BRIEF.md`).
+- **D1 + D2 reviewer triple** (Stage 9 figure-reviewer + Stage 10 claims-reviewer + Stage 13 adversarial-reviewer for each); first-pass drafts compile clean and have NEW-to-bundle synthesis claims documented in commit messages.
+- **D4 first-pass + reviewer triple** (Topological QC, Tier 1, ~40pp). No synthesis brief yet.
+- **F first-pass + reviewer triple** (Flagship review, Tier 0, 80–150pp; ships LAST after all Tier-1+2+3+4 bundles closed). No synthesis brief yet.
+- **Wave 14 cross-bundle final pass** + **Wave 15 pre-submission Stage-13 sweep**.
+
+**Provenance corrections logged this session:**
+- `bundle-stage10:E1-2026-05-04-r1:block:E1:1:propagating-G-threshold-drift` in `docs/review_finding_supersessions.json` — historic incorrect value G > 0.01 / N_probe ~ 10⁴ propagated across paper12 + E1 abstract / body / fig caption / dashed line; canonical correct value G > 0.5 / N_probe = 100 at single-shot 5σ. Caught by E1 Stage 10 round 1 claims-reviewer; root-fix applied at source paper12_polariton + E1 visualization + supersessions ledger.
+
+**3 QI candidates raised (carry forward to Stage 14):**
+- **QI-VIZ-1:** project-wide visualization-discipline check for plotly `add_hrect` annotation positioning on log y-axes (annotations render outside their rects, shifted up one band; reliable workaround: `go.Scatter(mode="text", textposition="middle left")` with explicit y at geometric mean of each band).
+- **QI-CLAIM-1:** pre-Stage-9 arithmetic-verification step in `BUNDLE_LIFT_PROCEDURE.md` §7 LaTeX-compile gate to verify all paper-quoted numerical thresholds by direct re-computation.
+- **QI-LEAN-1:** prose theorem-name references should require explicit Lean theorem name match (E2 F4 caught a docstring-numeric vs theorem-literal drift).
+
+**Pre-compact prep state (2026-05-04):** all session work committed and pushed (HEAD `5ee8d5a` on origin/main). Memory index has 3 new entries this session (`project_phase7b_e1_e2_closed`, `project_phase7b_d1_d2_first_pass`, `project_phase7c_d3_initialized`). Dashboard running at localhost:8050 with stale `lean_deps.json` (non-blocking; refresh via `uv run python scripts/extract_lean_deps.py` recommended before next cross-bundle consistency check).
+
+*Status update 2026-05-04. Next compact-recovery: read `project_phase7c_d3_initialized.md` first, then SYNTHESIS_BRIEF.md, then resume D3 substantive content drafting.*
