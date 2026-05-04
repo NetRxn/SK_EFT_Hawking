@@ -1,4 +1,84 @@
 {
   "bundle_target": "D1",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-04T12:36:29Z",
+      "source_paper": "paper1_first_order",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a72",
+      "lean_modules_referenced": [
+        "FirstOrderKMS",
+        "CGLTransform",
+        "FDR",
+        "DispersiveCorrection",
+        "DissipativeCorrection"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:36:29Z",
+      "notes": "First-order SK-EFT corrections + CGL FDR derivation + parity alternation; BEC fiducial setup"
+    },
+    {
+      "date": "2026-05-04T12:36:29Z",
+      "source_paper": "paper2_second_order",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "SecondOrderPositivity",
+        "KMSOptimality",
+        "TransportCounting"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:36:29Z",
+      "notes": "Second-order: positivity-forced relations + KMS optimality + transport coefficient counting"
+    },
+    {
+      "date": "2026-05-04T12:36:29Z",
+      "source_paper": "paper4_wkb_connection",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a74",
+      "lean_modules_referenced": [
+        "WKBConnection",
+        "WKBSpectrum",
+        "GreybodyFactor",
+        "SpectralFloor"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:36:29Z",
+      "notes": "Exact WKB connection formula with three non-perturbative effects (broken unitarity, FDR-mandated noise floor, spectral floor 6 T_H)"
+    },
+    {
+      "date": "2026-05-04T12:36:29Z",
+      "source_paper": "paper12_polariton",
+      "lift_action": "Lift-companion",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "PolaritonTier1",
+        "StimulatedHawking",
+        "LKBDevice"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:36:29Z",
+      "notes": "Polariton Tier-1 platform predictions; stimulated-Hawking amplification; companion to E1 PRL letter (already shipped GREEN 2026-05-04)"
+    },
+    {
+      "date": "2026-05-04T12:36:30Z",
+      "source_paper": "paper16_graphene_sk_eft",
+      "lift_action": "Lift-companion",
+      "bundle_section_inserted": "\u00a77",
+      "lean_modules_referenced": [
+        "DiracFluidWKB",
+        "GrapheneDirac",
+        "WiedemannFranz",
+        "QuasiOneDReduction"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:36:30Z",
+      "notes": "Graphene Dirac-fluid Hawking; 92% Lean theorem reuse; W-F violation; closed-form noise from Keldysh FDT + Landauer-Buttiker; companion to E2 PRL letter (already shipped GREEN 2026-05-04)"
+    }
+  ]
 }

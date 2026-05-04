@@ -1,6 +1,6 @@
 # Bundle D1 — Source Manifest
 
-**Auto-generated:** 2026-05-01
+**Auto-generated:** 2026-05-04
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D1`
@@ -10,11 +10,11 @@
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
-| `paper12_polariton` | §6 | Lift-companion | (see mapping) | 2026-04-29T21:29:08Z |
+| `paper12_polariton` | §6 | Lift-companion | (see mapping) | 2026-05-01T12:57:51Z |
 | `paper16_graphene_sk_eft` | §7 | Lift-companion | (see mapping) | 2026-04-29T19:14:08Z |
-| `paper1_first_order` | §2 | Lift-section | (see mapping) | 2026-04-29T21:29:08Z |
-| `paper2_second_order` | §3 | Lift-section | (see mapping) | 2026-04-29T21:29:08Z |
-| `paper4_wkb_connection` | §4 | Lift-section | (see mapping) | 2026-04-29T21:29:08Z |
+| `paper1_first_order` | §2 | Lift-section | (see mapping) | 2026-05-01T19:02:28Z |
+| `paper2_second_order` | §3 | Lift-section | (see mapping) | 2026-05-01T12:57:51Z |
+| `paper4_wkb_connection` | §4 | Lift-section | (see mapping) | 2026-05-01T12:57:51Z |
 
 ## Coverage notes
 
