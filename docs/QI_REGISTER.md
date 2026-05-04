@@ -9,12 +9,42 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 ## Summary
 
 - **411** ReviewFinding nodes currently in the graph
-- **12** QI items tracked (0 auto-detected open + 12 closed via `## Closed Items` section)
-- **0** open, **12** closed
+- **15** QI items tracked (3 manually-curated open + 12 closed via `## Closed Items` section)
+- **3** open, **12** closed
+
+> The 3 currently-open items are manually-curated additions from Phase 7b sub-wave 7b.4 (E1+E2 reviewer triples, 2026-05-04). They are not auto-detected from `ReviewFinding` graph nodes (Stage 13 produced advisory-class findings only, none escalated to QI thresholds), but the operational lessons each flagged a process-level gap worth tracking for Stage 14 follow-up. See "Open Items" section.
 
 ## Open Items
 
-_(none)_
+### qi-vizdiscipline — opened 2026-05-04 by Phase 7b sub-wave 7b.4 (E1 lift)
+
+- **First observed:** 2026-05-04 during E1 Stage 9 round 1 figure review.
+- **Pattern summary:** Plotly `add_hrect(annotation_position=...)` annotation positioning is unreliable on log-scale y-axes. With `annotation_position="top left"` (default per project), labels render OUTSIDE the rect at the top — visually placing each band's label INSIDE the band ABOVE it (one-band shift). With `"inside top right"`, the same shift persists. The Stage 9 round 2 reviewer caught this as a "tier-assignment caption mismatch" FAIL, but the root cause was not a physics error — it was a plotly rendering behavior on log axes that no current visualization-discipline check enforces.
+- **Pipeline stage affected:** Stage 8 (visualizations) + Stage 9 (figure review).
+- **Reliable workaround:** drop the hrect annotation entirely; use a separate `go.Scatter(mode="text", textposition="middle left")` trace with x at the right edge of the data range and y at the geometric mean of each band. Validated in `src/core/visualizations.py` `fig_polariton_regime_map` (commit `ea1d944`).
+- **Owner:** unassigned. **Target:** Phase 7+ wave that touches visualizations.
+- **Evidence:** `papers/E1/figures/figure_review_report.json` round 2; `src/core/visualizations.py` diff in commit `ea1d944`; memory `project_phase7b_e1_e2_closed.md`.
+- **Severity:** advisory. Does not block submission directly, but if a future log-axis figure ships with hrect annotations, the misplaced labels can read as a content drift to a Stage-13 reviewer (as happened with E1 round 2). A `validate.py --check viz_consistency` extension scanning `visualizations.py` for `add_hrect` + `annotation_position` + log-yaxis combinations would prevent recurrence.
+
+### qi-numericalverification — opened 2026-05-04 by Phase 7b sub-wave 7b.4 (E1 Stage 10 r1)
+
+- **First observed:** 2026-05-04 during E1 Stage 10 round 1 claims review.
+- **Pattern summary:** A propagating arithmetic-drift in a paper-quoted threshold survived through paper12_polariton's full per-paper Stage-13 review and propagated unchanged into the E1 bundle lift. The paper claimed `G > 0.01` at `ω/κ = 0.175`, but recompute: `G(0.175κ) = 1/(exp(2π·0.175)−1) = 1/2 = 0.5`, not `0.01`. The companion photon-count claim (`>10⁴ probe photons` for `5σ`) was wrong by factor 25 (correct: `N_probe = 25/G² = 100` at `G=0.5`). The drift propagated across 4 sites: paper12 fig 1 caption + E1 abstract + body §4 + figure dashed-line position. The canonical project source (`provenance.py:3580`) had the correct value `G > 0.5` all along — the paper text just didn't follow it.
+- **Pipeline stage affected:** Stage 9 (figure review) + Stage 10 (claims review). Specifically: Stage 9 LaTeX-compile gate currently does NOT include arithmetic verification of paper-quoted numerical thresholds against direct re-computation.
+- **Proposed structural prevention:** add a pre-Stage-9 arithmetic-verification step to `BUNDLE_LIFT_PROCEDURE.md` §7 (LaTeX-compile gate). For every paper-quoted numerical threshold of the form "X ≈ value at parameter Y", verify by direct computation that the formula evaluation at Y produces value within tolerance. Could be implemented as a `validate.py --check threshold_arithmetic` that scans paper TeX for `≈|=`-quoted relations between named formula terms and numerical values, evaluates the formulas via `formulas.py`, and flags any > 0.5% disagreement.
+- **Owner:** unassigned. **Target:** before D3 Stage 9/10/13 reviewer triple (next session).
+- **Evidence:** `papers/E1/claims_review.json` round 1 finding `block:E1:1`; supersession ledger entry `bundle-stage10:E1-2026-05-04-r1:block:E1:1:propagating-G-threshold-drift`; commits `ea1d944` (E1 fix) + `ba3e329` (paper12 source fix); memory `project_phase7b_e1_e2_closed.md`.
+- **Severity:** advisory but high-impact. The drift survived a full per-paper Stage-13 review of paper12 (which closed at GREEN at the time); the bundle-lift Stage-10 claims-reviewer caught it on the FIRST round of E1 review, fixing it before submission would have been damaging. Without the structural prevention, the same class of drift can recur in any future paper that quotes a function value at a specific argument.
+
+### qi-leantheoremname — opened 2026-05-04 by Phase 7b sub-wave 7b.4 (E2 Stage 13 r1 finding F4)
+
+- **First observed:** 2026-05-04 during E2 Stage 13 round 1 adversarial review (RECOMMENDED finding F4).
+- **Pattern summary:** E2 paper text said "formally bounded at $\leq 1.8\%$ at $\omega_H$ in `QuasiOneDReduction.lean`" but the actual Lean theorem `quasi1D_validity_bound` (`QuasiOneDReduction.lean:233`) is a generic algebraic envelope; the `1.8%` lives in the docstring at line 226 as a numerical evaluation, not as a theorem literal. Prose theorem-name references should require explicit Lean theorem name match — i.e., the paper should either name the algebraic-envelope theorem T5 explicitly with the parameter set, or add a Dean-specialized `≤ 0.02` corollary as a substantive Lean theorem.
+- **Pipeline stage affected:** Stage 10 (claims review — Class TN theorem-name reference drift) + Stage 13 (adversarial review).
+- **Proposed structural prevention:** extend `claims-reviewer-v2` Class TN check to flag prose-quoted bounds (`"X ≤ Y" / "X = Y" / "X ≈ Y"`) that reference a Lean module by name but where the named module's theorems do not contain `Y` as a literal. Currently Class TN only checks that the theorem name resolves; it does not check that quoted numerical bounds are theorem-literal vs docstring-numeric.
+- **Owner:** unassigned. **Target:** before D3 Stage 10 reviewer pass (D3's 27 sections include numerous Lean-theorem-named bounds; this discipline is highest-leverage there).
+- **Evidence:** `papers/AutomatedReviews/2026-05-04-bundle-stage13/E2.md` finding F4; `lean/SKEFTHawking/QuasiOneDReduction.lean:226-233`; memory `project_phase7b_e1_e2_closed.md`.
+- **Severity:** advisory. Caught at Stage 13 r1 as RECOMMENDED (not BLOCKER); does not block E2 submission. But the same class of drift could escalate to BLOCKER if the prose quotes a number that disagrees with the docstring as well as not being a theorem literal — at which point both the Class IA (numerical-claim disagreement) and Class TN (theorem-name reference drift) checks would need to fire.
 
 ## Closed Items
 
