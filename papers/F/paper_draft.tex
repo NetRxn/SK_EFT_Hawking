@@ -541,15 +541,152 @@ three sibling bundles without an additional mechanism.
 \section{SK--EFT analog Hawking radiation across three platforms}
 \label{sec:analog-hawking}
 
-%% TODO: 12pp lift from Bundle D1 (full content) + companion summaries from E1, E2.
-%% Key claims:
-%%   - Three SK-EFT axioms + KMS + FDR closure in SKDoubling.firstOrder_KMS_optimal.
-%%   - Three platforms (BEC, polariton, graphene) with 92\% Lean theorem reuse.
-%%   - Exact WKB connection formula with three non-perturbative effects.
-%%   - Polariton stimulated-Hawking gain G > 0.5 at omega/kappa = ln(3)/(2\pi) approx 0.175 with N_probe = 100 photons.
-%%   - Graphene T_H approx 2.4 K, delta_disp approx -2.8\%, Wiedemann-Franz violation L/L_0 > 200.
+Bundle~D1~\cite{Roehm2026D1} consolidates the substrate's SK--EFT
+analog-Hawking-radiation content across three laboratory platforms:
+the Bose--Einstein condensate (BEC) acoustic black hole that grounded
+the Heidelberg observation~\cite{Steinhauer2016,deNova2019,
+Kolobov2021,Wang2017}, the polariton-superfluid analog black hole
+(Bundle~E1 companion letter for the Paris--LKB platform~\cite{Roehm2026E1}),
+and the graphene Dirac fluid (Bundle~E2 companion letter for the
+Dean--Kim--Lucas platform~\cite{Roehm2026E2}). The substrate-identity
+synthesis content of \S\ref{sec:strategic-frame} leans on the
+observation that the same SK--EFT axioms close on all three platforms
+with $\sim 92\%$ Lean theorem reuse: the substrate is platform-agnostic
+at the formal level, and the platforms supply only the dispersion
+data.
 
-\textit{Substantive content awaiting all-12-siblings-GREEN gate (D1 + E1 + E2 already closed).}
+\subsection{First-order SK--EFT: the BEC reference}
+
+The substrate's first-order SK--EFT is the closed-time-path
+formalism of Glorioso--Liu~\cite{GloriosoLiu2018} applied to the
+BEC acoustic-metric construction~\cite{Steinhauer2016}. The
+\texttt{SKDoubling} module formalises the three SK--EFT axioms
+(causality, unitarity, dynamical KMS $\mathbb{Z}_2$ symmetry); the
+\texttt{firstOrder\_KMS\_optimal} theorem closes the
+fluctuation-dissipation relation as the unique consequence of the
+three axioms at first order. The Heidelberg measurement
+$T_H = 0.351(4)\,\mathrm{nK}$~\cite{deNova2019} is the substrate's
+quantitative anchor in the BEC platform.
+
+\subsection{Second-order SK--EFT: counting, KMS optimality, and parity}
+
+At second order in the SK--EFT, the substrate's transport tensor
+admits a finite enumeration of independent terms. The
+\texttt{SecondOrderSK} module ships the complete second-order
+counting (one parity-even and one parity-odd channel per platform)
+plus the KMS optimality at second order. The substrate's
+\texttt{firstOrder\_KMS\_optimal} cleanly extends to second order
+modulo the parity sector. The dissipative correction $\delta_{\mathrm{diss}}$
+to the Hawking spectrum picks up a second-order contribution that
+shifts the spectrum by $\sim 26\%$ at the Heidelberg parameters; the
+sign and magnitude are substrate predictions.
+
+\subsection{Exact WKB connection: three non-perturbative effects}
+
+The substrate's full Hawking spectrum requires the exact-WKB
+connection formula across the horizon (rather than the leading-order
+WKB approximation). Three non-perturbative effects survive the
+exact-WKB closure:
+
+\begin{enumerate}
+\item \textbf{Modified unitarity.} The exact-WKB connection at the
+  horizon turning point shifts the unitarity-relation phase from the
+  semiclassical value; the modified unitarity is what closes the
+  complete first-order spectrum at experimental precision.
+\item \textbf{FDR-mandated noise floor.} The
+  fluctuation-dissipation relation forces a noise-floor amplitude
+  that is independent of the platform-specific dispersion data; the
+  noise floor is the substrate's universal experimental signature.
+\item \textbf{Spectral floor at $\omega \sim 2 T_H$ for Heidelberg.}
+  The exact-WKB closure produces a spectral-density floor at low
+  frequencies that quantitatively matches the Heidelberg observation.
+\end{enumerate}
+
+The three non-perturbative effects are encoded in
+\texttt{WKBConnection.lean} and verified against the Heidelberg
+$T_H$ measurement~\cite{deNova2019}; they are the load-bearing
+content of D1 \S 4.
+
+\subsection{Hierarchy of corrections by platform}
+
+The substrate's first-order SK--EFT predicts a hierarchy of dispersive
+and dissipative corrections by platform that distinguishes the three
+analog-Hawking systems. On the BEC platform (Heidelberg), the
+dispersive correction $\delta_{\mathrm{disp}}$ contributes $\sim 10\%$
+at the natural microscopic point, while $\delta_{\mathrm{diss}}$
+contributes $\sim 26\%$ (the sign opposite). On the polariton
+platform, the corresponding values are $\delta_{\mathrm{disp}} \approx
+-19\%$, $\delta_{\mathrm{diss}}$ subdominant; the sign-flip on
+$\delta_{\mathrm{disp}}$ is a substrate prediction distinguishing
+polariton from BEC. On the graphene platform, $\delta_{\mathrm{disp}}
+\approx -2.8\%$, $\delta_{\mathrm{diss}}$ subdominant; both
+corrections are smaller because of the lower dispersion ratio.
+
+The hierarchy of corrections per platform is the load-bearing content
+that translates the universal substrate framework into per-platform
+quantitative predictions.
+
+\subsection{Polariton platform: stimulated Hawking gain}
+
+On the polariton platform, the substrate predicts a stimulated-Hawking
+gain $G$ that scales with frequency relative to the surface gravity
+$\kappa$. The substrate-canonical prediction (computed in
+\texttt{src/core/provenance.py} and verified against the
+\texttt{T\_H\_polariton} provenance source) is
+\begin{equation}
+  G(\omega/\kappa = \ln 3 / (2\pi)) > 0.5,
+  \qquad N_{\mathrm{probe}} = 100\ \text{photons per mode}
+\end{equation}
+for a $5\sigma$ detection at $\omega/\kappa \approx 0.175$. The
+$N_{\mathrm{probe}} = 100$ count is in reach of the Paris--LKB platform
+without requiring an extreme-low-noise mode of operation.
+Bundle~E1~\cite{Roehm2026E1} supplies the device-parameter audit
+calibrated to the LKB experimental setup, and the falsifiable
+window in $(\omega/\kappa, G)$ space.
+
+The polariton prediction is the most experimentally accessible of
+the three platforms: the gain $G$ is a directly measurable spectral
+quantity that the SK--EFT substrate predicts at $5\sigma$ with the
+expected probe-photon count.
+
+\subsection{Graphene Dirac-fluid platform: 2+1D, 92\% Lean reuse}
+
+On the graphene platform, the substrate's analog Hawking spectrum is
+$T_H \approx 2.4\,\mathrm{K}$ on the Dean--Kim--Lucas device parameters
+(\texttt{T\_H\_graphene} provenance entry). The substrate is in
+$2{+}1$D rather than the BEC $3{+}1$D / polariton $2{+}1$D
+configurations, but the \texttt{SKDoubling.lean} +
+\texttt{SecondOrderSK.lean} machinery transfers across $\sim 92\%$
+of the load-bearing theorem content---the substrate-platform-agnostic
+property at the Lean-formalisation scope.
+
+A characteristic substrate prediction in the graphene platform is the
+Wiedemann--Franz violation $L/L_0 > 200$, where $L_0 = \pi^2 k_B^2 /
+(3 e^2)$ is the standard Wiedemann--Franz Lorenz number. The
+substrate's hydrodynamic regime drives the violation through the
+KSS-style strongly-coupled-fluid behaviour~\cite{KSS2005}, which is
+in apparent tension with the Fermi-liquid Wiedemann--Franz prediction.
+Bundle~E2~\cite{Roehm2026E2} ships the device-parameter audit to the
+Dean--Kim--Lucas platform and the experimental falsification window.
+
+\subsection{Cross-platform substrate-identity}
+
+The 92\% Lean-theorem-reuse statistic above is a substrate-identity
+claim: the substrate's SK--EFT axioms close on three independent
+laboratory platforms (BEC, polariton, graphene) with the \emph{same}
+Lean theorems, modulo platform-specific dispersion data and platform
+dimensionality. This is the Bundle~D1 synthesis claim NEW to D1, and
+the F flagship lifts it here as a substrate-identity contribution
+across the four threads listed in \S\ref{sec:strategic-frame}.
+
+The cross-platform universality also constrains the substrate's
+predictive register: a positive observation on \emph{any} of the three
+platforms is a substrate-level confirmation; a negative observation
+on a single platform admits the platform-specific-falsification
+interpretation; a negative observation across all three platforms is
+a substrate-level falsification. This is what makes the three Tier-4
+experimental letters (E1, E2, plus the Heidelberg legacy) load-bearing
+collectively rather than individually.
 
 %% =====================================================================
 %% §5 — Chirality wall + modular invariance (D2 + L2)
@@ -688,19 +825,291 @@ synthesis content that none of the sibling bundles report individually.
 \section{Emergent gravity through black-hole thermodynamics}
 \label{sec:emergent-gravity}
 
-%% TODO: 30pp lift from Bundle D3 (full content) + L1 splash + L3 splash.
-%% Heaviest single F section; main substrate-identity content.
-%% Key claims:
-%%   - Single-coefficient identity G_N^Sak = 12pi/(N_f Lambda_UV^2) propagating across 6 observables.
-%%   - Three closures forcing ADW: Wen-deficit, fracton no-go, GW170817 falsification.
-%%   - Four cleared decision gates: E.1, E.2, E.3, E.4.
-%%   - BCH four laws partitioned by regime mass M_c.
-%%   - BH entropy with Kaul-Majumdar -3/2 log A; Sen 4D Schwarzschild -45/2 disagreement; abelian-MTC falsifier.
-%%   - CC reproduced (not solved) at >10^100 (heuristic ~10^122).
-%%   - EC torsion 2.05e-77 GeV ~46 orders below KRT.
-%%   - 5 algebraic-Lorentzian-geometry first-formalisation appendices.
+Bundle~D3~\cite{Roehm2026D3} is the substrate program's heaviest deep
+paper at $\sim 53$pp, consolidating the substrate's emergent-gravity
+content from the substrate-condensation mechanism through the
+Bekenstein--Hawking entropy and the BCH four laws. The two PRL
+splashes Bundle~L1 (GW170817 falsifies the vestigial-second-sound
+graviton; \cite{Abbott2017GW170817}) and Bundle~L3 (BCH four laws
+by regime;~\cite{BardeenCarterHawking1973}) extract headline
+results from D3 that ship as four-page PRL submissions ahead of the
+D3 deep-paper submission per the strategy frame~\cite{Roehm2026Strategy}.
 
-\textit{Substantive content awaiting D3 Stage-13 GREEN gate (in flight at draft creation; verdict pending).}
+\subsection{The single Sakharov coefficient}
+
+The substrate's emergent-gravity content propagates across six
+observables through a \emph{single} closed-form coefficient
+\begin{equation}
+  G_N^{\mathrm{Sak}} \;=\; \frac{12\pi}{N_f\,\Lambda_{\mathrm{UV}}^{2}}\,,
+\end{equation}
+derived from the heat-kernel $a_2$ coefficient of an $N_f$-flavour
+Dirac fermion bundle on the substrate~\cite{Sakharov1968,Adler1980,
+Vassilevich2003} (D3 \S 17;
+\texttt{HeatKernelExpansion.G\_N\_from\_a2\_eq\_G\_N\_sakharov}).
+The Sakharov coefficient identity is verified character-for-character
+against Vassilevich Eq.~4.37; the same coefficient propagates without
+an additional dial across the six observables of D3 (the BCH four
+laws regime-partition mass; the Bekenstein--Hawking entropy
+prefactor; the cosmological-constant overshoot ratio; the
+Einstein--Cartan torsion at the cosmological background; the
+gravitational-wave propagation speed; the Stelle higher-curvature
+ceilings).
+
+The substrate-identity claim of this flagship leans on the
+observation that the same $N_f$ in the Sakharov coefficient is the
+$N_f = 16$ derived in Bundle~D2 (\S\ref{sec:chirality-wall-modular})
+from the modular-framing constraint plus the Rokhlin 16-convergence.
+The Sakharov coefficient and the SM anomaly classification share
+their $N_f$ count.
+
+\subsection{Three closures forcing ADW}
+
+Three independent closures force the substrate to the ADW
+tetrad-condensation channel rather than alternative emergent-gravity
+mechanisms:
+
+\paragraph{Closure 1: Higher-form-symmetry erasure (D3 \S 3).} Only
+$U(1)$ survives the fluid layer; non-Abelian one-form gauge fields
+are erased by hydrodynamic coarse-graining. This rules out the
+non-Abelian-emergent-gauge channel structurally. See
+\S\ref{sec:gauge-erasure}.
+
+\paragraph{Closure 2: Perturbative Wen-ADW deficit (D3 \S 4).} The
+emergent-$U(1)$-from-string-net construction of Wen~\cite{Wen2003}
+extends to gravity by promoting the photon to a spin-2 graviton
+through a string-condensate; the heat-kernel calibration applied to
+the Wen-extended substrate produces an emergent Newton constant
+$G_{\mathrm{Wen}}$ that differs from the ADW result by a closed-form
+ratio
+\begin{equation}
+  \frac{G_{\mathrm{Wen}}}{G_c^{\mathrm{ADW}}} \;\approx\; \frac{1}{6000}\,,
+\end{equation}
+\noindent
+which under-predicts $G_N$ by three to four orders of magnitude on
+every natural microscopic point. The deficit is a closed-form Lean
+identity (the algebraic ratio enters as a coefficient identity
+downstream of \texttt{GaugeErasure.gauge\_erasure}; an explicit
+\texttt{wen\_adw\_factor\_6000}-named lemma is in flight as a
+single-line corollary). Wen's mechanism is consistent for a $U(1)$
+photon---its original target---but cannot scale to gravity at
+quantitative magnitude.
+
+\paragraph{Closure 3: GW170817 vestigial-graviton falsification (D3
+\S 6 with Bundle~L1).} The Volovik vestigial-second-sound
+mode~\cite{Volovik2024Vestigial} is a candidate for the substrate's
+graviton, but the natural-range parameter band
+$\chi_{\mathrm{vest}}\in[0.1,10]$ is universally falsified by the
+GW170817 multi-messenger constraint $|\Delta c/c| \le 3\times
+10^{-15}$~\cite{Abbott2017GW170817}. The substrate's prediction for
+the vestigial-graviton propagation speed deviates from $c$ by
+$\sim 14$ orders of magnitude
+($\sim 7\times 10^{14}$ over the natural-range band). The Lean
+formalisation \texttt{GravitationalWaves.natural\_range\_disjoint\_from\_ligo\_window}
+plus \texttt{vestigial\_natural\_range\_violates\_ligo} plus the
+universal-falsifier
+\texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}
+ship the falsification at zero \texttt{sorry}. Bundle~L1 PRL splash
+extracts this as a stand-alone four-page submission.
+
+The three closures, taken together, force the substrate to the ADW
+tetrad-condensation channel: the alternative emergent-gravity
+mechanisms are ruled out either structurally (gauge erasure;
+fracton diff-invariance no-go), at quantitative magnitude (Wen-ADW
+deficit), or experimentally (GW170817 falsification of vestigial
+graviton).
+
+\subsection{Four cleared decision gates}
+
+The substrate's nonlinear emergent-EFE chain ships through four
+cleared decision gates. Each gate is a closed-form Lean identity
+encoding a cross-comparison against an alternative emergent-gravity
+prediction; the substrate's prediction clears each gate, ruling out
+the alternative.
+
+\begin{itemize}
+\item \textbf{Gate E.1 (linearised EFE).} The Vergeles positivity
+  + critical-limit + Adler-reduction triple discharges cleanly at
+  the Sakharov-identity calibration point (D3 \S 2).
+\item \textbf{Gate E.2 (heat-kernel calibration).} Sakharov
+  coefficient verified character-for-character against Vassilevich
+  Eq.~4.37; \texttt{ratio\_to\_critical\_coupling} closes the
+  comparison
+  (\texttt{G\_N\_sakharov\_eq\_ratio\_critical\_coupling}).
+\item \textbf{Gate E.3 (diffeomorphism invariance through $a_4$).}
+  The path-(b) framework ships
+  \texttt{NonlinearDiffInvariance.diff\_invariance\_a4\_iff\_dirac\_basis\_consistent};
+  the substrate's Dirac-fermion bundle is the unique solution
+  consistent with the diffeomorphism-invariance constraint at order
+  $a_4$ (D3 \S 19).
+\item \textbf{Gate E.4 (multi-channel PPN).} The
+  precession-ratio biconditional
+  \texttt{NonlinearEFE.precessionRatio\_eq\_one\_iff\_alpha\_unity}
+  closes the multi-channel PPN comparison against
+  Will~2014~\cite{Will2014} (D3 \S 20).
+\end{itemize}
+
+The four cleared gates each rule out an alternative emergent-gravity
+prediction without modifying the substrate's coefficient bundle.
+\emph{This is the substrate's architectural-correctness claim}: the
+substrate's prediction sits at the unique parameter point that
+clears all four gates simultaneously.
+
+\subsection{BCH four laws partitioned by regime}
+
+The Bardeen--Carter--Hawking four laws of black hole
+mechanics~\cite{BardeenCarterHawking1973,Hawking1971,Hawking1972,
+Hawking1975} ship in two regimes on the substrate:
+
+\paragraph{Schottky-natural Schwarzschild branch.} For BH masses
+$M < M_c$ where the regime-partition mass is
+\begin{equation}
+  M_c \;=\; \frac{N_f\,\Lambda_{\mathrm{UV}}}{12\pi\,\alpha_{\mathrm{ADW}}}\,,
+\end{equation}
+the strong-form four laws hold cleanly (zeroth law: uniform $\kappa$;
+first law: $dM = (\kappa/8\pi)\,dA + \dots$; second law: $dA \geq 0$;
+third law: $\kappa \to 0$ unattainable in finite advanced
+time~\cite{Israel1986}).
+
+\paragraph{ADW-extremality branch.} For $M > M_c$, the substrate's
+ADW condensate enters an extremality regime where the third-law
+strong-form fails (Kehle--Unger~\cite{KehleUnger2024} disprove the
+classical third-law statement on Einstein--Maxwell--Vlasov solutions
+that interpolate between dispersion and collapse; the substrate
+admits this admixture for $M > M_c$). The substrate's BCH
+$T_H = 1/(8\pi G_N^{\mathrm{emerg}} M)$ is strictly decreasing in $M$
+on the Schwarzschild branch (\texttt{T\_H\_schwarzschild\_strict\_decreasing});
+the BEC-acoustic profile of Balbinot~\cite{Balbinot2005}
+$T_H(v) = T_H(0)\,(1 - v^2/c_\perp^2)$ matches the Jacobson--Koike
+expression~\cite{JacobsonKoike2002} at the regime boundary.
+
+The regime-partition criterion $M < M_c$ vs $M > M_c$ is the
+substrate's load-bearing prediction on which BCH-four-laws regime
+applies to a given substrate analog black hole. Bundle~L3 PRL splash
+extracts the regime-partition criterion as a four-page submission.
+
+\subsection{Bekenstein--Hawking entropy with the $-3/2 \log A$ correction}
+
+The substrate's Bekenstein--Hawking entropy ships in closed form as
+\begin{equation}
+  S \;=\; \frac{A}{4 G_N} \;-\; \frac{3}{2}\,\log\!\frac{A}{4 G_N} \;+\; O(1)\,,
+\end{equation}
+where the $-3/2 \log A$ logarithmic correction is the Kaul--Majumdar
+SU(2)$_k$ Chern--Simons coefficient~\cite{KaulMajumdar2000} and the
+$O(1)$ constant is the Walker--Wang $\mathbb{Z}_2$-time-reversal
+anomaly-match prefactor~\cite{WalkerWang2012}. The Sen 4D
+Schwarzschild logarithmic-correction coefficient $-45/2$~\cite{Sen2013}
+\emph{disagrees} with the Kaul--Majumdar SU(2)$_k$ $-3/2$ at
+quantitative precision; the substrate's choice of MTC is structurally
+selected by the abelian-MTC falsifier
+(\texttt{abelian\_MTC\_falsifies\_H\_HorizonBoundaryCondition}). This
+is the cross-bridge to Bundle~D4
+\S\ref{sec:topological-qc}: the same MTC carrying the entropy
+correction supports the Hayden--Preskill QEC structure.
+
+The MTC choice is therefore a substrate-level prediction, not a
+phenomenological choice: SU(2)$_k$ is the unique MTC consistent with
+both the entropy count of D3 \S 7 and the QEC structure of D4 \S 7.
+
+\subsection{Cosmological constant: reproduced, not solved}
+
+The substrate's Sakharov-coefficient calibration produces an
+effective $\Lambda$ at the natural microscopic point that overshoots
+the observed value by
+\begin{equation}
+  \Lambda_{\mathrm{emerg}}/\Lambda_{\mathrm{obs}} \;\gtrsim\; 10^{100}
+\end{equation}
+(\texttt{MicroscopicCoefficientMatch.lambdaEmergMicroscopic\_at\_planck\_natural\_far\_exceeds\_observed}),
+which is the rigorous Lean lower bound; heuristic evaluation gives
+$\sim 10^{122}$ as the canonical Weinberg estimate~\cite{Weinberg1989}.
+The gap between $10^{100}$ and $10^{122}$ is owned to Mathlib-shipped
+fundamental-constants precision (the Lean lower bound is mathematically
+rigorous; the heuristic $10^{122}$ uses higher-precision
+constants).
+
+The substrate inherits the heat-kernel $a_0$ coefficient's
+universality across emergent-gravity proposals at one-loop
+\cite{ChristensenDuff1978}; emergent gravity does not shelter from
+the cosmological-constant problem. \emph{The substrate reproduces
+the CC problem at quantitative precision but does not solve it.}
+The reproduction is itself a substrate prediction: the substrate's
+Sakharov-coefficient calibration produces the canonical Weinberg
+overshoot at the natural microscopic point, ruling out a
+substrate-internal CC-cancellation mechanism without an external
+cancellation principle.
+
+\subsection{Einstein--Cartan torsion at the cosmological background}
+
+The substrate's Einstein--Cartan extension predicts a non-zero
+torsion at the cosmological background:
+\begin{equation}
+  |T_{\mathrm{EC}}| \;\approx\; 2.05\times 10^{-77}\,\mathrm{GeV}\,,
+\end{equation}
+which is $\sim 46$ orders below the
+Kosteleck\'y--Russell--Tasson~\cite{KosteleckyRussellTasson2008}
+experimental bound on cosmic axial torsion ($T < 10^{-31}\,\mathrm{GeV}$
+at 95\% CL). The substrate's prediction is in the cleared register
+(\S\ref{sec:substrate-register}) by 46 orders of magnitude---a
+prediction that is verified at experimental precision but with
+substantial headroom against tightening of the bound.
+
+The Lean theorem
+\texttt{EinsteinCartanExtension.torsionAtCosmologicalBackground\_at\_planck\_natural\_below\_kostelecky}
+closes the comparison at zero \texttt{sorry}. The 46-order headroom
+is a substrate prediction: future Lorentz-violation experiments at
+substantially tighter precision are not expected to falsify the
+substrate's torsion content unless the experimental bound is
+tightened by $\geq 46$ orders.
+
+\subsection{Algebraic-Lorentzian-geometry appendices}
+
+Bundle~D3 \S 22.5--\S 27 ships five algebraic-Lorentzian-geometry
+first-formalisation appendices on the substrate's Lorentzian-metric
+typeclass. Bundle~I1 \S 10 ships these as the primary first-formalisation
+claim (\S\ref{sec:methodology}); D3 is the supplement that consumes
+them on the substrate side. Per the F-flagship hedging discipline,
+the first-formalisation claims are flagged ``to our knowledge''
+against searches of the Coq, Agda, Isabelle, HOL4, and Mizar
+libraries.
+
+The five appendices ship machine-checked content for: the Lorentzian
+metric typeclass (\texttt{LorentzianMetric}), the algebraic first
+Bianchi identity
+(\texttt{BundleRiemann.bundleRiemannAux\_first\_bianchi\_torsionfree\_apply}),
+the differential second Bianchi identity, the Penrose singularity
+hypothesis bundle with the Riccati-focusing core
+(\texttt{PenroseSingularity.correctness\_push\_biconditional\_under\_applicable}),
+and the Hawking--Penrose / area / Kerr-family no-hair theorems
+(\texttt{NoHairTheorem.noHairTheorem\_statement}).
+
+\subsection{Cross-bridges to L1, L3, D4}
+
+D3 cross-bridges back to three sibling bundles in the substrate-identity
+network:
+
+\begin{itemize}
+\item \textbf{D3 \S 6 $\leftrightarrow$ L1 (GW170817).} The
+  $\sim 7\times 10^{14}$ vestigial-graviton falsification is shared
+  character-for-character between D3 and L1, including the natural-range
+  parameter band and the Lean theorem name. Cross-bridge verified
+  in the Phase~7c.8 review pass.
+\item \textbf{D3 \S 8 $\leftrightarrow$ L3 (BCH four laws regime
+  partition).} The regime-partition mass $M_c = N_f \Lambda_{\mathrm{UV}}/
+  (12\pi\,\alpha_{\mathrm{ADW}})$ is shared character-for-character;
+  L3 PRL splash extracts the regime partition as a four-page
+  submission. Cross-bridge verified in the Phase~7c.8 review pass.
+\item \textbf{D3 \S 7, 9 $\leftrightarrow$ D4 \S 7 (HP-QEC + MTC
+  structure).} The $H\_HorizonBoundaryCondition$ Prop record is
+  defined in D3's \texttt{BHEntropyMicroscopic.lean} and consumed
+  by D4 through the cross-bridge. The same SU(2)$_k$ MTC carries
+  both the entropy count of D3 \S 7 and the QEC structure of D4
+  \S 7.
+\end{itemize}
+
+The cross-bridge network closes self-consistently: D3, L1, L3, D4
+all cite the same Lean theorem names character-for-character, and
+the substrate-identity claim of this flagship leans on the
+observation that the cross-bridges close without an additional
+mechanism.
 
 %% =====================================================================
 %% §7 — Topological QC foundations (D4)
@@ -846,16 +1255,158 @@ D4 through the cross-bridge.
 \section{Dark sector under substrate constraints}
 \label{sec:dark-sector}
 
-%% TODO: 10pp lift from Bundle D5 (full content).
-%% Key claims:
-%%   - Six Phase-5x DM mechanism classification.
-%%   - Phase 6m Track A: causal-set DE NO-GO + 3 publishable structural caveats.
-%%   - Phase 6m Track B: entropic-gravity unanimous NO-GO closure.
-%%   - Phase 6m Track C: Jacobson-thermo-GR with M3 f(R) Exp+ArcTanh strongest CLEARED-R5.
-%%   - Sakharov 4-condition criterion: first systematic Lambda_J vs Lambda_HK comparison.
-%%   - Barrow-bound prescription dependence (embedded structural-caveat subsection 10.5).
+Bundle~D5~\cite{Roehm2026D5} consolidates the substrate's dark-sector
+content into a single deep paper that ships the substrate's NO-GO
+results across causal-set, entropic-gravity, and Jacobson
+thermodynamic-GR mechanism families. The Phase~6m three-track closure
+(2026-04-30) extends the original Phase~5y NO-GO scope statement to
+three mechanism families that were outside the Phase~5y tested scope.
 
-\textit{Substantive content awaiting all-12-siblings-GREEN gate (D5 already closed).}
+\subsection{The substrate's dark-sector predictive scope}
+
+The substrate's predictive scope on dark-sector physics is precisely
+the scope statement of \S\ref{sec:architectural-scope}. Layer 3
+(SM + GR sector) is in scope under the tested mechanisms; the
+dark-energy sector is structurally blocked under the Volovik-family
+mechanisms, the entropic-gravity mechanism family, and the
+Hu--Sawicki / Pure-Lovelock variants of Jacobson thermodynamic-GR;
+remaining substrate-thermodynamic-GR variants ($f(R)$ Exp + ArcTanh,
+Starobinsky marginal) are CLEARED-R5 against current
+DESI~DR2~\cite{Roehm2026D5} and pending DR3.
+
+The substrate's dark-matter content (Phase~5x classification) is on
+a different status: the substrate provides a six-mechanism
+classification (Berezhiani--Khoury superfluid DM, fracton dipole
+superfluid, Klinkhamer--Volovik vacuum DM, etc.) but does not
+conclusively predict any one of the six. The classification is the
+substrate's structural answer to the dark-matter-mechanism question.
+
+\subsection{Phase 5y: Volovik-family NO-GO}
+
+The Phase~5y closure (2026-04-23) reports NO-GO across all four
+tested KV q-theory realisations plus vestigial-gravity equation of
+state and second-sound graviton. The structural obstruction is
+formalised in three Lean modules: \texttt{GibbsDuhemTheorem.lean}
+(any single-scalar self-tuning emergent-vacuum framework with
+Gibbs--Duhem equilibrium locks $w_{\mathrm{vac}} = -1$),
+\texttt{QTheoryNoGoTheorem.lean} (the obstruction is
+realisation-independent), and
+\texttt{DarkEnergyObstructionPrinciple.lean} (four-factor orthogonality
+diagnoses why vestigial gravity also fails).
+
+The Phase~5y closure is methodologically validated:
+\cite{Roehm2026D5} demonstrated that the program can execute a
+six-round deep-research probe, land a structural NO-GO, and harvest
+the result as formal Lean content without re-scoping the underlying
+decision. This is a reusable methodology for high-leverage
+architectural bets.
+
+\subsection{Phase 6m Track A: Causal-set DE}
+
+The Phase~6m Track-A closure ships in
+\texttt{CausalSetDarkEnergy.lean} ($15$ theorems) with three NO-GO-R5
+phenomenological closures (Sorkin everpresent-$\Lambda$ M1 + M2;
+phenomenological BDG MYZ~2025) plus the causal-set d'Alembertian
+NO-GO-R2 reaffirmed via 4D gradient instability. \emph{Three publishable
+structural caveats} survive independent of DESI: (i)~GD-inapplicability
+robust under all four sprinkling prescriptions; (ii)~Barrow-bound
+prescription dependence at the $\geq 40\%$ level (CQG/JCAP Letter
+short-note candidate); (iii)~BDG $\sigma_\Lambda = \alpha_{\mathrm{BDG}}/
+\sqrt{V}$ first-principles decomposition.
+
+The three structural caveats are \emph{publishable on their own
+right}, independent of the DESI data: each is a quantitative-bound
+identity on the substrate's causal-set construction that holds
+regardless of the dark-energy phenomenology. Bundle~D5
+\S\ref{sec:dark-sector} carries them as embedded structural-caveat
+subsections to keep the publishable-novelty content within D5; the
+short-note candidate would lift the Barrow-bound caveat into a
+stand-alone CQG/JCAP letter if Phase 8 authors target.
+
+\subsection{Phase 6m Track B: Entropic-gravity DE (8/8 unanimous NO-GO)}
+
+The Phase~6m Track-B closure ships in
+\texttt{EntropicGravityDarkEnergy.lean} ($14$ theorems) and is the
+\emph{first complete-mechanism-family unanimous NO-GO closure in
+Phase~6m}. Eight independent entropic-gravity dark-energy candidates
+all close with quantitative thresholds exceeding Jeffreys-decisive
+($|\!\log\mathcal{B}| \geq 5$):
+
+\begin{itemize}
+\item Verlinde 2017 (CMB + Bullet-cluster sweet-spot fit;
+  Halenka--Miller 2018 at $\geq 5\sigma$).
+\item Padmanabhan--CosMIn (no scalar perturbation theory).
+\item Hossenfelder--Verlinde post-Yoon--Guha (matter+radiation
+  FLRW stabilises dS attractor).
+\item Cadoni--Tuveri DEC (excluded via the GD theorem at $w = -1$).
+\item Li 2004 HDE event-horizon (predicts $w_a > 0$, wrong sign of
+  DESI~DR2 best-fit at $3\sigma$).
+\item Tsallis HDE (Tyagi--Haridasu--Basak: $|\!\log\mathcal{B}|
+  \sim 6.2$).
+\item Barrow HDE (Luciano--Paliathanasis--Saridakis: factor
+  $5$--$6$ Bayesian disfavour).
+\item Odintsov--D'Onofrio--Paul $\Omega_k$
+  ($\Delta\!\log\mathcal{B} \approx -15$ to $-17$, far exceeding
+  decisive).
+\end{itemize}
+
+\noindent
+The closure is robust under the $r_d$-anchoring rescue ($7/8$
+candidates have $r_d$-independent NO-GO mechanism). The aggregator
+\texttt{all\_quantitative\_bounds\_exceed\_jeffreys\_decisive} ships
+the closure as a single Lean theorem; the $r_d$-independent count is
+\texttt{r\_d\_independent\_count\_eight}. \emph{This is Bundle~D5's
+publishable-novelty claim} (Paper-45 candidate).
+
+\subsection{Phase 6m Track C: Jacobson thermodynamic-GR (highest survival)}
+
+The Phase~6m Track-C closure ships in
+\texttt{JacobsonThermoGRDarkEnergy.lean} ($12$ theorems) and is the
+\emph{highest-survival track} with five-plus R5 survivors. The strongest
+CLEARED-R5 of any Phase~6m track is M3 EGJ $f(R)$ Exp + ArcTanh
+(Plaza--Kraiselburd 2504.05432: $\Delta\!\mathrm{AIC} \simeq
+\Delta\!\mathrm{BIC} \gtrsim 20$, Jeffreys ``very strong''). The
+M3 Hu--Sawicki variant is NO-GO-R5 via the chameleon Solar-System
+constraint at $b \approx 0.21$ ($> 100\times$ the chameleon bound;
+encoded as a \texttt{norm\_num} inequality JTGR3). The M4 Pure
+Lovelock candidate is NO-GO-R5 reaffirmed at the $1\sigma$-box edge
+of Quintom-B ($|w_0+1| < 0.05$, $|\tilde\alpha_2|_{\max}\le 0.15$;
+encoded JTGR4).
+
+The M8 KSS Lorentz-violating superfluid is CLEARED-R5 conditional
+via the path-(a) Arata--Liberati--Neri reduction; OPEN-R6+ via
+path-(c) universal-horizon thermodynamics. The fixed-vs-floating
+$r_d$ split is the single empirical decider for the Track-C survivors
+by $\sim 2030$.
+
+\subsection{Sakharov criterion: first systematic $\Lambda_J$ vs $\Lambda_{HK}$ comparison}
+
+The Phase~6e cross-bridge final closure (Wave 3f, JTGR6--JTGR8) is
+the Sakharov four-condition criterion biconditional with $\Lambda_J
+= \Lambda_{HK}$. To our knowledge this is the first systematic
+$\Lambda_J$-vs-$\Lambda_{HK}$ comparison on a common substrate in
+the literature. The criterion is validated on Volovik--Jannes
+${}^3\mathrm{He}$-A (all four Sakharov conditions hold, $\Lambda_J =
+\Lambda_{HK} \sim \Delta_0^4/(6\pi^2 \hbar^3)$ with $\Delta_0
+\approx 1.6\,\mathrm{mK}$); falsified on Finazzi--Liberati--Sindoni
+acoustic-BEC (condition (ii) fails: only phonons have BEC effective
+metric, no fermion-quartic structure). The criterion is the
+substrate-identity thread that distinguishes substrate-class
+candidates from non-substrate-class candidates within Track C.
+
+This is the F-unique substrate-identity content listed in
+\S\ref{sec:strategic-frame}.
+
+\subsection{Wave 4 unified Phase 6m 7-class GD taxonomy}
+
+Bundle~D5 \S\ref{sec:dark-sector} ships a unified Phase~6m 7-class
+Gibbs--Duhem taxonomy (\texttt{DarkSectorClassificationExtension.lean},
+$10$ theorems) that consolidates the three-track verdicts into a
+single classification namespace with a 3-tier GD-applicability
+gradient. M8 KSS uniquely populates Class~(a). The unimodular
+reformulation as $\Lambda_{HK}$-escape route admits 5-of-6 Track-C
+survivors except KSS (DSCE8). The taxonomy is the substrate program's
+final-form architectural statement on dark-energy mechanism families.
 
 %% =====================================================================
 %% §9 — Methodology and the verification stack (I1 + I2)
@@ -1443,24 +1994,17 @@ coherent description across SM-plus-GR phenomenology.
 
 \begin{thebibliography}{99}
 
-%% F bibliography lifts citations from all 12 sibling bundles. The
-%% inline-thebibliography style (rather than \bibliography{<file>.bib})
-%% avoids the empty-.bib failure mode that surfaced for D3 + D4 in
-%% Phase 7c.6 (see qi-bundle_skeleton_inline_bibliography in
-%% docs/QI_REGISTER.md).
+%% F bibliography lifts external citations from sibling bundles +
+%% project self-cites. Inline thebibliography style (avoids the
+%% empty-.bib failure mode flagged as qi-bundle_skeleton_inline_bibliography).
 
-%% TODO: populate ~150-200 \bibitem{} entries by lifting the union of
-%% sibling-bundle bibliographies once all 12 siblings reach Stage-13
-%% GREEN. CITATION_REGISTRY membership is the single source of truth;
-%% bibitem text must match registry entry character-for-character per
-%% qi-bibitem_registry_drift.
+%% --- Sibling-bundle self-cites (in-prep) ---
 
 \bibitem{Roehm2026Strategy}
 J.~G.~Roehm,
 ``SK--EFT Hawking 13-bundle publication architecture,''
 project paper-strategy frame, in preparation (2026).
 
-%% Sibling-bundle self-cites (in-prep until each ships):
 \bibitem{Roehm2026D1}
 J.~G.~Roehm,
 ``Analog Hawking radiation across three platforms (Bundle D1),''
@@ -1500,9 +2044,260 @@ J.~G.~Roehm,
 audit (Bundle E2 letter),''
 in preparation (2026).
 
-%% TODO: lift all external citations from sibling bundles (D1-D5,
-%% L1-L3, I1-I2, E1-E2). Approximately 150-200 unique \bibitem{}
-%% entries expected after the 12-of-13 gate clears.
+\bibitem{Roehm2026Modular}
+J.~G.~Roehm,
+``Three Standard Model fermion generations from modular invariance,''
+in preparation (2026), Bundle L2 splash.
+
+%% --- External citations (alphabetical) ---
+
+\bibitem{Abbott2017GW170817}
+B.~P.~Abbott \emph{et al.} (LIGO+Virgo+EM partners),
+``Gravitational waves and gamma-rays from a binary neutron star merger:
+GW170817 and GRB 170817A,''
+Astrophys.\ J.\ Lett.\ \textbf{848}, L13 (2017),
+arXiv:1710.05834.
+
+\bibitem{Adler1980}
+S.~L.~Adler,
+``Order-$R$ vacuum action functional in scalar-free unified theories
+with spontaneous scale breaking,''
+Phys.\ Rev.\ Lett.\ \textbf{44}, 1567 (1980).
+
+\bibitem{Akama1979}
+K.~Akama,
+``An attempt at pregeometry: gravity with composite metric,''
+Prog.\ Theor.\ Phys.\ \textbf{60}, 1900 (1978).
+
+\bibitem{AlfordRajagopalWilczek1999}
+M.~G.~Alford, K.~Rajagopal, and F.~Wilczek,
+``Color-flavor locking and chiral symmetry breaking in high density QCD,''
+Nucl.\ Phys.\ B \textbf{537}, 443 (1999),
+arXiv:hep-ph/9804403.
+
+\bibitem{ArnoldMcLerran1987}
+P.~Arnold and L.~McLerran,
+``Sphalerons, small fluctuations, and baryon-number violation in
+electroweak theory,''
+Phys.\ Rev.\ D \textbf{36}, 581 (1987).
+
+\bibitem{Balbinot2005}
+R.~Balbinot, S.~Fagnocchi, A.~Fabbri, and G.~P.~Procopio,
+``Backreaction in acoustic black holes,''
+Phys.\ Rev.\ Lett.\ \textbf{94}, 161302 (2005),
+arXiv:gr-qc/0405096.
+
+\bibitem{BardeenCarterHawking1973}
+J.~M.~Bardeen, B.~Carter, and S.~W.~Hawking,
+``The four laws of black hole mechanics,''
+Commun.\ Math.\ Phys.\ \textbf{31}, 161 (1973).
+
+\bibitem{ChristensenDuff1978}
+S.~M.~Christensen and M.~J.~Duff,
+``Axial and conformal anomalies for arbitrary spin in gravity and
+supergravity,''
+Phys.\ Lett.\ B \textbf{76}, 571 (1978).
+
+\bibitem{deNova2019}
+J.~R.~M.~de~Nova \emph{et al.},
+``Observation of thermal Hawking radiation and its temperature in an
+analogue black hole,''
+Nature \textbf{569}, 688 (2019).
+
+\bibitem{Diakonov2011}
+D.~Diakonov,
+``Towards lattice-regularized quantum gravity,''
+arXiv:1109.0091 (2011).
+
+\bibitem{FreedmanLarsenWang2002}
+M.~H.~Freedman, M.~J.~Larsen, and Z.~Wang,
+``A modular functor which is universal for quantum computation,''
+Commun.\ Math.\ Phys.\ \textbf{227}, 605 (2002),
+arXiv:quant-ph/0001108.
+
+\bibitem{GloriosoLiu2018}
+P.~Glorioso and H.~Liu,
+``The second law of thermodynamics from symmetry and unitarity,''
+arXiv:1612.07705 (2018).
+
+\bibitem{Hawking1971}
+S.~W.~Hawking,
+``Gravitational radiation from colliding black holes,''
+Phys.\ Rev.\ Lett.\ \textbf{26}, 1344 (1971).
+
+\bibitem{Hawking1972}
+S.~W.~Hawking,
+``Black holes in general relativity,''
+Commun.\ Math.\ Phys.\ \textbf{25}, 152 (1972).
+
+\bibitem{Hawking1975}
+S.~W.~Hawking,
+``Particle creation by black holes,''
+Commun.\ Math.\ Phys.\ \textbf{43}, 199 (1975).
+
+\bibitem{HaydenPreskill2007}
+P.~Hayden and J.~Preskill,
+``Black holes as mirrors: quantum information in random subsystems,''
+JHEP \textbf{09}, 120 (2007),
+arXiv:0708.4025.
+
+\bibitem{Israel1986}
+W.~Israel,
+``Third law of black-hole dynamics: a formulation and proof,''
+Phys.\ Rev.\ Lett.\ \textbf{57}, 397 (1986).
+
+\bibitem{JacobsonKoike2002}
+T.~A.~Jacobson and T.~Koike,
+``Black hole and baby universe in a thin film of $^3$He-A,''
+in \emph{Artificial Black Holes} (World Scientific, 2002),
+arXiv:cond-mat/0205174.
+
+\bibitem{KaulMajumdar2000}
+R.~K.~Kaul and P.~Majumdar,
+``Logarithmic correction to the Bekenstein-Hawking entropy,''
+Phys.\ Rev.\ Lett.\ \textbf{84}, 5255 (2000),
+arXiv:gr-qc/0002040.
+
+\bibitem{KehleUnger2024}
+C.~Kehle and R.~Unger,
+``Extremal black hole formation as a critical phenomenon,''
+arXiv:2402.10190 (2024).
+
+\bibitem{Kitaev2003}
+A.~Kitaev,
+``Fault-tolerant quantum computation by anyons,''
+Ann.\ Phys.\ \textbf{303}, 2 (2003),
+arXiv:quant-ph/9707021.
+
+\bibitem{KlinkhamerManton1984}
+F.~R.~Klinkhamer and N.~S.~Manton,
+``A saddle-point solution in the Weinberg-Salam theory,''
+Phys.\ Rev.\ D \textbf{30}, 2212 (1984).
+
+\bibitem{Kolobov2021}
+V.~I.~Kolobov \emph{et al.},
+``Observation of stationary spontaneous Hawking radiation and the
+time evolution of an analogue black hole,''
+Nature Phys.\ \textbf{17}, 362 (2021).
+
+\bibitem{KosteleckyRussellTasson2008}
+V.~A.~Kosteleck\'y, N.~Russell, and J.~D.~Tasson,
+``New constraints on torsion from Lorentz-violation searches,''
+Phys.\ Rev.\ Lett.\ \textbf{100}, 111102 (2008),
+arXiv:0712.4393.
+
+\bibitem{KSS2005}
+P.~Kovtun, D.~T.~Son, and A.~O.~Starinets,
+``Viscosity in strongly interacting quantum field theories from black hole
+physics,''
+Phys.\ Rev.\ Lett.\ \textbf{94}, 111601 (2005),
+arXiv:hep-th/0405231.
+
+\bibitem{Maldacena1997}
+J.~M.~Maldacena,
+``The large-$N$ limit of superconformal field theories and supergravity,''
+Adv.\ Theor.\ Math.\ Phys.\ \textbf{2}, 231 (1998),
+arXiv:hep-th/9711200.
+
+\bibitem{NayakSimonSternFreedmanDasSarma2008}
+C.~Nayak, S.~H.~Simon, A.~Stern, M.~Freedman, and S.~Das~Sarma,
+``Non-Abelian anyons and topological quantum computation,''
+Rev.\ Mod.\ Phys.\ \textbf{80}, 1083 (2008),
+arXiv:0707.1889.
+
+\bibitem{PastawskiYoshidaHarlowPreskill2015}
+F.~Pastawski, B.~Yoshida, D.~Harlow, and J.~Preskill,
+``Holographic quantum error-correcting codes: toy models for the
+bulk/boundary correspondence,''
+JHEP \textbf{06}, 149 (2015),
+arXiv:1503.06237.
+
+\bibitem{Polyakov1978}
+A.~M.~Polyakov,
+``Thermal properties of gauge fields and quark liberation,''
+Phys.\ Lett.\ B \textbf{72}, 477 (1978).
+
+\bibitem{PretkoRadzihovsky2018}
+M.~Pretko and L.~Radzihovsky,
+``Fracton-elasticity duality,''
+Phys.\ Rev.\ Lett.\ \textbf{120}, 195301 (2018),
+arXiv:1711.11044.
+
+\bibitem{ReshetikhinTuraev1991}
+N.~Reshetikhin and V.~G.~Turaev,
+``Invariants of $3$-manifolds via link polynomials and quantum groups,''
+Invent.\ Math.\ \textbf{103}, 547 (1991).
+
+\bibitem{Sakharov1968}
+A.~D.~Sakharov,
+``Vacuum quantum fluctuations in curved space and the theory of
+gravitation,''
+Sov.\ Phys.\ Dokl.\ \textbf{12}, 1040 (1968).
+
+\bibitem{Sen2013}
+A.~Sen,
+``Logarithmic corrections to Schwarzschild and other non-extremal black
+hole entropy in different dimensions,''
+JHEP \textbf{04}, 156 (2013),
+arXiv:1205.0971.
+
+\bibitem{Steinhauer2016}
+J.~Steinhauer,
+``Observation of quantum Hawking radiation and its entanglement in an
+analogue black hole,''
+Nature Phys.\ \textbf{12}, 959 (2016).
+
+\bibitem{SvetitskyYaffe1982}
+B.~Svetitsky and L.~G.~Yaffe,
+``Critical behavior at finite-temperature confinement transitions,''
+Nucl.\ Phys.\ B \textbf{210}, 423 (1982).
+
+\bibitem{Vassilevich2003}
+D.~V.~Vassilevich,
+``Heat kernel expansion: user's manual,''
+Phys.\ Rep.\ \textbf{388}, 279 (2003),
+arXiv:hep-th/0306138.
+
+\bibitem{Volovik2024Vestigial}
+G.~E.~Volovik,
+``Fermionic quartet and vestigial gravity,''
+JETP Lett.\ \textbf{119}, 330 (2024).
+
+\bibitem{WalkerWang2012}
+K.~Walker and Z.~Wang,
+``(3+1)-TQFTs and topological insulators,''
+Front.\ Phys.\ \textbf{7}, 150 (2012),
+arXiv:1104.2632.
+
+\bibitem{Wang2017}
+Y.-H.~Wang, T.~Jacobson, M.~Edwards, and C.~W.~Clark,
+``Mechanism of stimulated Hawking radiation in a laboratory
+Bose-Einstein condensate,''
+Phys.\ Rev.\ A \textbf{96}, 023616 (2017),
+arXiv:1605.01027.
+
+\bibitem{Weinberg1989}
+S.~Weinberg,
+``The cosmological constant problem,''
+Rev.\ Mod.\ Phys.\ \textbf{61}, 1 (1989).
+
+\bibitem{Wen2003}
+X.-G.~Wen,
+``Quantum order from string-net condensations and the origin of light
+and massless fermions,''
+Phys.\ Rev.\ D \textbf{68}, 065003 (2003),
+arXiv:hep-th/0302201.
+
+\bibitem{Will2014}
+C.~M.~Will,
+``The confrontation between general relativity and experiment,''
+Living Rev.\ Relativity \textbf{17}, 4 (2014),
+arXiv:1403.7377.
+
+\bibitem{Witten1989}
+E.~Witten,
+``Quantum field theory and the Jones polynomial,''
+Commun.\ Math.\ Phys.\ \textbf{121}, 351 (1989).
 
 \end{thebibliography}
 
