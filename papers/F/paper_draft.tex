@@ -359,8 +359,8 @@ $\sim \totalsubstantivetheorems$ substantive theorems across
   decomposition.
 \item \textbf{Track B --- Entropic-gravity DE}
   (\texttt{EntropicGravityDarkEnergy.lean}, 14 theorems): \emph{eight
-  NO-GO-R5 unanimous} --- the first complete-mechanism-family NO-GO
-  closure in Phase~6m. Verlinde~2017, Padmanabhan-CosMIn,
+  NO-GO-R5 unanimous} --- to our knowledge the first
+  complete-mechanism-family NO-GO closure in Phase~6m. Verlinde~2017, Padmanabhan-CosMIn,
   Hossenfelder--Verlinde post-Yoon--Guha, Cadoni--Tuveri DEC, Li~2004
   HDE, Tsallis HDE, Barrow HDE, and Odintsov-D'Onofrio-Paul
   $\Omega_k$ all closed with quantitative Bayesian thresholds
@@ -704,21 +704,33 @@ three Standard-Model fermion generations.
 
 \subsection{Modular framing and the central charge}
 
-The substrate's lattice fermion content carries a central charge
-$c$ that, on the modular-framing constraint, is required to be a
-consistent boundary condition for a $(2{+}1)$D topological field
-theory. The modular generation constraint (D2 \S 2) shows that with
-the Standard-Model fermion content (15 Weyl fermions per generation,
-plus the right-handed neutrino $\nu_R$) the central charge is
-$c = 16 g$ where $g$ is the number of generations. The 16-convergence
-follows from the Rokhlin theorem on $\mathrm{Spin}^{\mathbb{Z}_4}$
-4-manifolds: the signature divides by $16$, forcing $N_f = 16$ per
-generation as the unique consistent count.
+The substrate's lattice fermion content carries a chiral central
+charge $c_-$ that, on the modular-framing constraint, is required to
+be a consistent boundary condition for a $(2{+}1)$D topological field
+theory. With sixteen left-handed Weyl fermions per Standard-Model
+generation (the 15 chiral fermions plus the right-handed neutrino
+$\nu_R$, each contributing $c = 1/2$ to the chiral central charge),
+the per-generation contribution is $c_- = 8$, so for $N_f$ generations
+\begin{equation}
+  c_- \;=\; 8\,N_f\,.
+\end{equation}
+The framing-anomaly constraint $24 \mid c_-$ then forces $N_f \equiv
+0 \pmod 3$, with $N_f = 3$ the smallest non-trivial solution. Three
+Standard-Model fermion generations is therefore the unique minimal
+fermion-content solution to the modular-framing constraint.
 
-Without $\nu_R$, the central charge produces a fractional anomaly that
-fails to lift to a consistent topological boundary condition. With
-$\nu_R$, the lift is unique up to discrete data captured by the
-$\mathbb{Z}_{16}$ anomaly classification.
+The Rokhlin 16-convergence enters at a separate anchor: the signature
+divides by 16 on a $\mathrm{Spin}^{\mathbb{Z}_4}$ 4-manifold, forcing
+the per-generation Weyl-fermion count (the species count, not the
+central charge value) to be a multiple of 16. With the Standard-Model
+content of 15 chiral plus $\nu_R$ there are sixteen left-handed Weyl
+fermions per generation, exactly saturating the Rokhlin constraint.
+
+Without $\nu_R$, the per-generation Weyl count is 15 (off by one from
+the 16-convergence) and the central-charge sum produces a fractional
+anomaly that fails to lift to a consistent topological boundary
+condition. With $\nu_R$, the lift is unique up to discrete data
+captured by the $\mathbb{Z}_{16}$ anomaly classification.
 
 \subsection{The Standard-Model $\mathbb{Z}_{16}$ anomaly}
 
@@ -866,7 +878,12 @@ their $N_f$ count.
 
 Three independent closures force the substrate to the ADW
 tetrad-condensation channel rather than alternative emergent-gravity
-mechanisms:
+mechanisms. (D3 \S 4 originally enumerates the closure triad as
+Wen + fracton + GW170817; F lifts the gauge-erasure prerequisite
+of D3 \S 3 into the closure list as the structural pre-condition for
+the substrate-identity claim, and handles the fracton diff-invariance
+no-go separately as a structurally-blocked register entry in
+\S\ref{sec:substrate-register}.)
 
 \paragraph{Closure 1: Higher-form-symmetry erasure (D3 \S 3).} Only
 $U(1)$ survives the fluid layer; non-Abelian one-form gauge fields
@@ -932,9 +949,9 @@ the alternative.
   the Sakharov-identity calibration point (D3 \S 2).
 \item \textbf{Gate E.2 (heat-kernel calibration).} Sakharov
   coefficient verified character-for-character against Vassilevich
-  Eq.~4.37; \texttt{ratio\_to\_critical\_coupling} closes the
-  comparison
-  (\texttt{G\_N\_sakharov\_eq\_ratio\_critical\_coupling}).
+  Eq.~4.37;
+  \texttt{HeatKernelExpansion.G\_N\_sakharov\_eq\_ratio\_critical\_coupling}
+  closes the comparison.
 \item \textbf{Gate E.3 (diffeomorphism invariance through $a_4$).}
   The path-(b) framework ships
   \texttt{NonlinearDiffInvariance.diff\_invariance\_a4\_iff\_dirac\_basis\_consistent};
@@ -961,7 +978,7 @@ mechanics~\cite{BardeenCarterHawking1973,Hawking1971,Hawking1972,
 Hawking1975} ship in two regimes on the substrate:
 
 \paragraph{Schottky-natural Schwarzschild branch.} For BH masses
-$M < M_c$ where the regime-partition mass is
+$M > M_c$ where the regime-partition mass is
 \begin{equation}
   M_c \;=\; \frac{N_f\,\Lambda_{\mathrm{UV}}}{12\pi\,\alpha_{\mathrm{ADW}}}\,,
 \end{equation}
@@ -970,21 +987,22 @@ first law: $dM = (\kappa/8\pi)\,dA + \dots$; second law: $dA \geq 0$;
 third law: $\kappa \to 0$ unattainable in finite advanced
 time~\cite{Israel1986}).
 
-\paragraph{ADW-extremality branch.} For $M > M_c$, the substrate's
+\paragraph{ADW-extremality branch.} For $M < M_c$, the substrate's
 ADW condensate enters an extremality regime where the third-law
 strong-form fails (Kehle--Unger~\cite{KehleUnger2024} disprove the
 classical third-law statement on Einstein--Maxwell--Vlasov solutions
 that interpolate between dispersion and collapse; the substrate
-admits this admixture for $M > M_c$). The substrate's BCH
+admits this admixture for $M < M_c$). The substrate's BCH
 $T_H = 1/(8\pi G_N^{\mathrm{emerg}} M)$ is strictly decreasing in $M$
 on the Schwarzschild branch (\texttt{T\_H\_schwarzschild\_strict\_decreasing});
 the BEC-acoustic profile of Balbinot~\cite{Balbinot2005}
 $T_H(v) = T_H(0)\,(1 - v^2/c_\perp^2)$ matches the Jacobson--Koike
 expression~\cite{JacobsonKoike2002} at the regime boundary.
 
-The regime-partition criterion $M < M_c$ vs $M > M_c$ is the
+The regime-partition criterion $M > M_c$ vs $M < M_c$ is the
 substrate's load-bearing prediction on which BCH-four-laws regime
-applies to a given substrate analog black hole. Bundle~L3 PRL splash
+applies to a given substrate analog black hole (Schwarzschild branch
+above $M_c$, ADW-extremality branch below). Bundle~L3 PRL splash
 extracts the regime-partition criterion as a four-page submission.
 
 \subsection{Bekenstein--Hawking entropy with the $-3/2 \log A$ correction}
@@ -995,8 +1013,10 @@ The substrate's Bekenstein--Hawking entropy ships in closed form as
 \end{equation}
 where the $-3/2 \log A$ logarithmic correction is the Kaul--Majumdar
 SU(2)$_k$ Chern--Simons coefficient~\cite{KaulMajumdar2000} and the
-$O(1)$ constant is the Walker--Wang $\mathbb{Z}_2$-time-reversal
-anomaly-match prefactor~\cite{WalkerWang2012}. The Sen 4D
+$O(1)$ constant follows from the substrate's MTC and horizon-boundary
+structure (its detailed identification with a specific topological-order
+anomaly-match coefficient is downstream of the substrate's MTC choice
+and is not the load-bearing content of D3 \S 7). The Sen 4D
 Schwarzschild logarithmic-correction coefficient $-45/2$~\cite{Sen2013}
 \emph{disagrees} with the Kaul--Majumdar SU(2)$_k$ $-3/2$ at
 quantitative precision; the substrate's choice of MTC is structurally
@@ -1326,9 +1346,9 @@ stand-alone CQG/JCAP letter if Phase 8 authors target.
 \subsection{Phase 6m Track B: Entropic-gravity DE (8/8 unanimous NO-GO)}
 
 The Phase~6m Track-B closure ships in
-\texttt{EntropicGravityDarkEnergy.lean} ($14$ theorems) and is the
-\emph{first complete-mechanism-family unanimous NO-GO closure in
-Phase~6m}. Eight independent entropic-gravity dark-energy candidates
+\texttt{EntropicGravityDarkEnergy.lean} ($14$ theorems) and is, to
+our knowledge, the \emph{first complete-mechanism-family unanimous
+NO-GO closure in Phase~6m}. Eight independent entropic-gravity dark-energy candidates
 all close with quantitative thresholds exceeding Jeffreys-decisive
 ($|\!\log\mathcal{B}| \geq 5$):
 
@@ -1651,8 +1671,11 @@ following locations:
   perturbative-Wen extension to gravity under-predicts $G_N$ by a
   closed-form Lean ratio $G_{\mathrm{Wen}}/G_c^{\mathrm{ADW}} \approx
   1/6000$ (D3 \S 4 with~\cite{Wen2003}). The deficit closes the
-  emergent-non-Abelian-gauge-symmetry pathway to gravity at
-  quantitative magnitude.
+  emergent-$U(1)$-string-net-extended-to-gravity channel of Wen at
+  quantitative magnitude (the structurally-distinct
+  emergent-non-Abelian-gauge-symmetry pathway is closed separately
+  by gauge erasure; see \S\ref{sec:substrate-register} structurally-blocked
+  register).
 \item \textbf{Fracton diffeomorphism-invariance no-go.} The
   Pretko--Radzihovsky fracton hydrodynamics
   channel~\cite{PretkoRadzihovsky2018} fails to support full
