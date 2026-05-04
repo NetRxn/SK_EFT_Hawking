@@ -7130,6 +7130,91 @@ CITATION_REGISTRY = {
         'notes': 'In-preparation self-cite to project-canonical pipeline document (`docs/WAVE_EXECUTION_PIPELINE.md`) and bundle I1 (Methodology). Inprep exemption per Pipeline Invariant #11.',
     },
 
+    # Bundle self-cites (in-preparation; lifted via Phase 7b/7c).
+    # Inprep exemption per Pipeline Invariant #11.
+    'Roehm2026D4': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Topological quantum-computation foundations: Drinfeld centre, Hayden--Preskill, longest verified mathematical chain (Bundle D4)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/D3/paper_draft.tex'],
+        'provides': ['Bundle D4 (Topological QC foundations) self-cite. Drinfeld centre + QEC-MTC cross-bridge. Companion deep paper to L2 PRL splash.'],
+        'notes': 'In-preparation Bundle D4 self-cite. Phase 7f roadmap target.',
+    },
+
+    'Roehm2026Wave10': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Three generations from modular invariance: Spin$^{\\mathbb{Z}_4}$ five-bordism (Bundle L2 PRL splash)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/D3/paper_draft.tex', 'papers/L2/paper_draft.tex'],
+        'provides': ['Bundle L2 (PRL splash on three generations from modular invariance) self-cite. paper10_modular_generation source. Z_16 anomaly + Ext^n_{A(1)}(F2,F2) + 24|c_- modular derivation.'],
+        'notes': 'In-preparation Bundle L2 self-cite. Phase 7b sub-wave 7b.3 closed at GREEN.',
+    },
+
+    'Roehm2026I1': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Verification methodology with worked cases (Bundle I1, Tier 3)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/D3/paper_draft.tex', 'papers/I1/paper_draft.tex'],
+        'provides': ['Bundle I1 (Methodology paper with worked cases) self-cite. paper15 + paper44 + Phase 6f-6g substrate roster + Phase 6g W5 structural-Prop scoping pattern.'],
+        'notes': 'In-preparation Bundle I1 self-cite. Phase 7a sub-wave 7a.2 closed at GREEN.',
+    },
+
+    'Roehm2026I2': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Verified statistics + Lean tensor-categories: software paper (Bundle I2, Tier 3)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/I2/paper_draft.tex'],
+        'provides': ['Bundle I2 (Software paper) self-cite. Phase 5c VerifiedJackknife + Phase 5o Wave 4 lean-tensor-categories + Phase 5o Wave 5 Mathlib upstream coordination.'],
+        'notes': 'In-preparation Bundle I2 self-cite. Phase 7a sub-wave 7a.3 closed at GREEN.',
+    },
+
+    'Roehm2026Strategy': {
+        'authors': 'Roehm, J. G.',
+        'title': 'SK-EFT Hawking 13-bundle publication architecture (project paper-strategy frame)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': ['13-bundle publication architecture (1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 2 Tier-3 infrastructure + 2 Tier-4 experimental). NO-GO results as first-class publishable content.'],
+        'notes': 'In-preparation project strategy document (`docs/PAPER_STRATEGY.md`). Inprep exemption per Pipeline Invariant #11.',
+    },
+
+    'Roehm2026Modular': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Three Standard Model fermion generations from modular invariance (Bundle L2 splash)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D3/paper_draft.tex'],
+        'provides': ['N_f = 16 anchor for the Sakharov coefficient G_N = 12pi/(N_f Lambda_UV^2); modular-invariance derivation of three SM fermion generations.'],
+        'notes': 'In-preparation alias for Roehm2026Wave10 (Bundle L2 self-cite). Same content; the alias is used in D3 §1 narrative-level cross-reference.',
+    },
+
+    'DaiFreed1994': {
+        'authors': 'Dai, X. and Freed, D. S.',
+        'title': '$\\eta$-invariants and determinant lines',
+        'journal': 'Journal of Mathematical Physics',
+        'volume': '35',
+        'page': '5155-5194',
+        'year': 1994,
+        'doi': '10.1063/1.530747',
+        'arxiv': 'hep-th/9405012',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/paper10_modular_generation/paper_draft.tex'],
+        'provides': ['Dai-Freed eta-invariant + determinant-line construction underlying the Spin^Z_4 5-bordism Z_16 anomaly classification.'],
+        'notes': 'Foundational reference for the Spin^Z_4 cobordism classification of the SM Z_16 anomaly. Cited by Garcia-Etxebarria-Montero 2019 and the Z16AnomalyComputation Lean module via the dai_freed_spin_z4 placeholder.',
+    },
+
     # ════════════════════════════════════════════════════════════════
     # Phase 6m — Dark-energy review (causal-set / entropic / Jacobson-thermo-GR)
     # ════════════════════════════════════════════════════════════════

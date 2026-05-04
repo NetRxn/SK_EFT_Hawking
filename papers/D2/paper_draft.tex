@@ -119,7 +119,7 @@ the intersection of mechanisms (ii) and (iii), supported by
 machine-checked 1+1D and 2+1D evidence), three tracked
 algebraic-topology hypotheses (deferred to upstream Mathlib), and a
 single Mathlib-deferral placeholder
-(\texttt{dai\_freed\_spin\_z4}). Across the entire chain, $5229$
+(\texttt{Z16AnomalyComputation.dai\_freed\_spin\_z4}). Across the entire chain, $5229$
 theorems are machine-verified, $322$ of them closed automatically
 by the Aristotle automated prover, with zero \texttt{sorry}.
 
@@ -265,8 +265,12 @@ generation. (b) On the Rokhlin side, the signature of a closed
 spin 4-manifold is divisible by 16~\cite{Rokhlin1952}; the
 algebraic-Rokhlin Lean module establishes the corresponding
 $8 \mid \sigma$ refinement via the unimodular intersection form
-of $E_8$, with \texttt{E8Lattice.sigma\_E8\_eq\_8} discharged by
-\texttt{native\_decide}.
+of $E_8$, with \texttt{E8Lattice.e8\_sigma\_div\_8} discharging the
+divisibility ($\sigma = 8$) and
+\texttt{E8Lattice.e8\_sigma\_not\_div\_16} certifying non-divisibility
+by 16; the validity of the characteristic-square pairing on $E_8$
+itself is closed by
+\texttt{AlgebraicRokhlin.char\_sq\_valid\_e8}.
 
 The full chain is encoded in
 \texttt{RokhlinBridge.sixteen\_convergence\_full}. Crucially, the
@@ -330,17 +334,20 @@ algebra $A$. We have proved this adjunction at the Lean level:
 \mathrm{Hom}_{A(1)}(M, N)
 \label{eq:change-of-rings}
 \end{equation}
-in \texttt{ChangeOfRings.hom\_tensor\_adjunction}. The proof is
+at the dimension-equality level, encoded as
+\texttt{ChangeOfRings.hom\_tensor\_adjunction\_dim}. The proof is
 purely homological-algebra; it requires no algebraic-topology
 input. Together with the explicit $A$-module structure carried by
-the relevant ko-cohomology spectra, \eqref{eq:change-of-rings}
-discharges the H2 hypothesis listed as open in the L2
-splash~\cite{Roehm2026Wave10} as well as in the Wang construction
-itself: the only remaining Mathlib-side hypotheses for the full
-$\mathbb{Z}_{16}$ result are now H1 (ko-cohomology computation),
-H3 (Adams convergence), and H4 (Anderson-Brown-Peterson
-splitting) — none of which carry physics content beyond their
-homological-algebra statements. We catalog these in
+the relevant ko-cohomology spectra, the dimension-equality identity
+substantively discharges the H2 hypothesis listed as open in the L2
+splash~\cite{Roehm2026Wave10} at the dimensional level (the full
+isomorphism statement of~\eqref{eq:change-of-rings} remains a
+tracked-hypothesis claim pending a Mathlib-PR upstream of the
+explicit isomorphism witness): the only remaining Mathlib-side
+hypotheses for the full $\mathbb{Z}_{16}$ result are now H1
+(ko-cohomology computation), H3 (Adams convergence), and H4
+(Anderson-Brown-Peterson splitting) — none of which carry physics
+content beyond their homological-algebra statements. We catalog these in
 \S\ref{sec:outlook}.
 
 %% ══════════════════════════════════════════════════════════════════
@@ -410,7 +417,7 @@ identifies element 8 of $\mathbb{Z}_{16}$ as the Witten anomaly
 $\pi_4({\rm SU}(2)) = \mathbb{Z}_2$~\cite{Witten1982}; we return
 to this identification in \S\ref{sec:chirality-wall}.
 
-The Lean module \texttt{Z16Classification.dai\_freed\_spin\_z4}
+The Lean theorem \texttt{Z16AnomalyComputation.dai\_freed\_spin\_z4}
 asserts $\Omega_5^{{\rm Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$
 as a placeholder pending Mathlib's cobordism infrastructure. We
 disclose this explicitly in \S\ref{sec:outlook}: the placeholder
@@ -459,7 +466,7 @@ The element 8 of Z$_{16}$ (Witten anomaly, mutual braiding
 $B(e,m) = -1$) is the same 8 that appears in the
 algebraic-Rokhlin theorem $8 \mid \sigma$ and that underlies the
 $E_8$-lattice signature in
-\texttt{E8Lattice.sigma\_E8\_eq\_8}. We make this connection
+\texttt{E8Lattice.e8\_sigma\_div\_8}. We make this connection
 explicit in \S\ref{sec:chirality-wall} via the
 Onsager-algebra $\mathbb{Z}_2 \hookrightarrow \mathbb{Z}_{16}$
 embedding.
@@ -492,10 +499,9 @@ formalisation of these nine conditions in
 \texttt{LatticeHamiltonian} (28 theorems) encodes seven of them as
 substantive Lean propositions: the Brillouin zone via Mathlib's
 \texttt{AddCircle}; the fermionic Fock space via the
-exterior-algebra-finite-dimensionality theorem
-\texttt{LatticeHamiltonian.fock\_space\_finite\_dim}
-(closed by Aristotle, run \texttt{run\_20260328\_170451},
-graded-decomposition strategy); and the spectral gap and matrix
+exterior-algebra-finite-dimensionality result documented in
+\texttt{GoltermanShamir.lean} (closed by Aristotle, graded-decomposition
+strategy); and the spectral gap and matrix
 exponential via standard Mathlib infrastructure. Two conditions
 (C4 — interpolating-fields completeness; C5 — spontaneous
 symmetry breaking) enter as well-typed but non-proven physics
@@ -505,13 +511,14 @@ discuss the implications of this in \S\ref{sec:outlook}.
 The Two-Particle Family (TPF) construction~\cite{TPF2026} evades
 the GS no-go by violating five of the nine conditions
 explicitly: C1 via the discontinuity of \texttt{round} at $1/2$
-(the round-to-integer map is not continuous, formalised in
-\texttt{TPFEvasion.round\_not\_continuous\_at\_half});
-C2 via the bosonic-rotor ladder structure; I3 via the
-infinite-dimensionality of $\ell^2(\mathbb{Z})$
-(\texttt{TPFEvasion.rotor\_hilbert\_not\_finite\_dim}, closed by
-Aristotle); the extra-dimensional 4+1D SPT slab; and C3
-conditionally. The conjunction of these five evasion theorems is
+(the round-to-integer map is not continuous, formalised as
+\texttt{LatticeHamiltonian.round\_not\_continuous\_at\_half} and
+collected as a TPF-evasion driver in
+\texttt{TPFEvasion.lean}); C2 via the bosonic-rotor ladder structure;
+I3 via the infinite-dimensionality of $\ell^2(\mathbb{Z})$
+(\texttt{LatticeHamiltonian.rotor\_hilbert\_not\_finite\_dim}, closed
+by Aristotle and re-exported from \texttt{TPFEvasion.lean}); the
+extra-dimensional 4+1D SPT slab; and C3 conditionally. The conjunction of these five evasion theorems is
 collected in \texttt{TPFEvasion.tpf\_outside\_gs\_scope\_main}
 (12 theorems total in the module).
 
@@ -540,10 +547,13 @@ h_{\rm eff}(p) \;=\; r W(p)\, \mathbf{1}_2
 \label{eq:gt-heff}
 \end{equation}
 with $W(p) = 2 - \cos(p_1) - \cos(p_2)$ the Wilson mass. The
-Wilson-mass-zero condition is encoded in
-\texttt{WilsonMass.M\_zero\_iff\_zero\_momentum} as
-$M(k) = 0 \iff k = (0,0,0)$, with the proof using
-\texttt{Real.cos\_le\_one} for the cosine bounds.
+Wilson-mass-zero condition is encoded by the pair
+\texttt{WilsonMass.wilson\_mass\_at\_zero}
+($M(0,0,0) = 0$) and
+\texttt{WilsonMass.wilson\_mass\_zero\_iff\_cos\_eq\_one} (which
+together exhaust the $M(k) = 0 \iff k \in \{0,2\pi\}^3 \pmod{2\pi}$
+characterisation), with the proofs using \texttt{Real.cos\_le\_one}
+for the cosine bounds.
 
 The central commutation theorem
 \begin{equation}
@@ -725,7 +735,7 @@ machine-checked 1+1D evidence (\texttt{VillainHamiltonian}) and
 explicit $\Delta = 2$ spectral gap).
 
 A single Mathlib-deferral placeholder:
-\texttt{Z16Classification.dai\_freed\_spin\_z4} asserts
+\texttt{Z16AnomalyComputation.dai\_freed\_spin\_z4} asserts
 $\Omega_5^{{\rm Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$ as a
 trivially-discharged placeholder pending Mathlib's cobordism
 infrastructure.
@@ -753,10 +763,12 @@ convergence theorem.
 of ${\rm MSpin}$ at the prime 2~\cite{ABP1967}.
 \end{itemize}
 
-\textbf{H2} — Hom-tensor change-of-rings adjunction — is no
-longer tracked: it has been discharged in
-\texttt{ChangeOfRings.hom\_tensor\_adjunction}
-(Eq.~\ref{eq:change-of-rings}).
+\textbf{H2} — Hom-tensor change-of-rings adjunction — is partially
+discharged at the dimension-equality level by
+\texttt{ChangeOfRings.hom\_tensor\_adjunction\_dim}; the full
+isomorphism statement~\eqref{eq:change-of-rings} remains a tracked
+sub-hypothesis pending a Mathlib upstream of the explicit
+isomorphism witness.
 
 \subsection{What is conjectural and motivational}
 

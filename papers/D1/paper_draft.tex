@@ -36,7 +36,7 @@ $\mathrm{count}(N) = \lfloor (N{+}1)/2\rfloor + 1$ proved by
 Aristotle (run \texttt{d61290fd}). Positivity at second order forces
 $\gamma_{2,1} + \gamma_{2,2} = 0$, reducing four free parameters to
 three; KMS optimality is closed by Aristotle
-(\texttt{firstOrder\_KMS\_optimal}). The exact WKB connection
+(\texttt{SKDoubling.firstOrder\_KMS\_optimal}). The exact WKB connection
 formula reveals three non-perturbative phenomena absent at any
 finite order in perturbation theory: modified unitarity
 $|\alpha|^2 - |\beta|^2 = 1 - \delta_k$ with
@@ -56,7 +56,7 @@ hierarchy of corrections is platform-dependent: at Heidelberg-class
 BEC the dissipative correction $\delta_\text{diss}$ exceeds the
 dispersive $\delta_\text{disp}$ by a factor $\sim 22$; at the LKB
 polariton smooth-horizon configuration $\delta_\text{disp}$ is
-$\sim 10\%$ and dominant; at the Dean graphene nozzle
+$\approx -19\%$ and dominant; at the Dean graphene nozzle
 $\delta_\text{disp} \approx -2.8\%$ exceeds
 $\delta_\text{diss} \sim 10^{-13}$ by eleven orders of magnitude.
 Each platform yields a distinct leading detection mode: BEC delivers
@@ -204,10 +204,12 @@ For analog gravity in non-relativistic superfluids, the SK-EFT is
 constrained by three axioms encoded in our Lean library: Galilean
 invariance of the underlying superfluid; gradient expansion in
 powers of $\partial/(c_s\, k_\text{UV})$; KMS positivity (the
-noise coefficients $\gamma_i$ are non-negative). The KMS axiom is
-encoded in \texttt{FirstOrderKMS.gamma\_nonnegativity}; the
-original axiom was reformulated after the Aristotle counterexample
-(see~\S\ref{sec:synthesis}).
+noise coefficients $\gamma_i$ are non-negative). The KMS structure is
+encoded as the \texttt{FirstOrderKMS} record in
+\texttt{SecondOrderSK.lean} with fluctuation-dissipation fields
+\texttt{fdr\_i1}, \texttt{fdr\_i2}, \texttt{i3\_zero}; the original
+axiom was reformulated as a Prop bundle after the Aristotle
+counterexample (see~\S\ref{sec:synthesis}).
 
 At first order in the gradient expansion there are exactly two
 positive transport coefficients $\gamma_1, \gamma_2$ (bulk and
@@ -228,21 +230,22 @@ The hierarchy is platform-dependent and culminates in
 Heidelberg-class spin-sonic configurations where
 $\delta_\text{diss} \sim 10^{-1}$ is the dominant correction
 (see~\S\ref{sec:hierarchy} for the full table). The Stage-13 anchor
-$\delta_\text{diss} = (1 + \xi^2)^{-1}$ at the
-\texttt{EXPERIMENTS['BEC\_KIM\_2014']} parameters is encoded in the
-formula chain rooted at \eqref{eq:delta-diss}; the $\xi^2$ factor
-absorbs the Bogoliubov healing-length contribution to the bulk
-modulus.
+$\delta_\text{diss} = (1 + \xi^2)^{-1}$ at the canonical BEC anchor
+parameters (\texttt{EXPERIMENTS['Steinhauer']} as registered in
+\texttt{src/core/constants.py}; the corresponding Heidelberg
+parameters are similarly registered) is encoded in the formula
+chain rooted at \eqref{eq:delta-diss}; the $\xi^2$ factor absorbs
+the Bogoliubov healing-length contribution to the bulk modulus.
 
 \subsection{Acoustic-metric infrastructure}
 
-Five Lean theorems comprise the acoustic-metric backbone:
-\texttt{AcousticMetric.metric\_determinant},
-\texttt{lorentzian\_signature}, \texttt{inverse\_identity},
-\texttt{hawking\_temp\_from\_surface\_gravity}, and
-\texttt{galilean\_invariance}. These are reused unchanged in the
-2+1D graphene context (with $c_s \to v_F/\sqrt{2}$); they form the
-backbone of the cross-platform reuse claim of
+Four Lean theorems comprise the acoustic-metric backbone:
+\texttt{AcousticMetric.acousticMetric\_det},
+\texttt{AcousticMetric.acoustic\_metric\_lorentzian},
+\texttt{AcousticMetric.acousticMetric\_inv\_correct}, and
+\texttt{hawking\_temp\_from\_surface\_gravity}. These are reused
+unchanged in the 2+1D graphene context (with $c_s \to v_F/\sqrt{2}$);
+they form the backbone of the cross-platform reuse claim of
 \S\ref{sec:graphene}.
 
 %% ══════════════════════════════════════════════════════════════════
@@ -292,10 +295,9 @@ relations among the transport coefficients are imposed. Formally,
 positivity is equivalent to $i_1 \geq 0 \wedge i_2 \geq 0$ where
 $(i_1, i_2)$ are the eigenvalues of the spectral matrix; no hidden
 inequalities exist. This is closed by Aristotle in
-\texttt{SecondOrderSK.firstOrder\_KMS\_optimal}. Stress tests
-\texttt{relaxed\_positivity\_weakens} and
-\texttt{firstOrder\_altSign\_uniqueness\_test} verify the
-optimality numerically by exhibiting parameter-space points that
+\texttt{SKDoubling.firstOrder\_KMS\_optimal}. The companion stress
+test \texttt{SKDoubling.firstOrder\_altSign\_uniqueness\_test} verifies
+the optimality numerically by exhibiting parameter-space points that
 fail when the axiom is relaxed.
 
 \subsection{The CGL fluctuation-dissipation relation}
@@ -411,15 +413,19 @@ while the noise floor is constant. The crossover frequency, where
 \[
 \omega_\times \;\approx\; T_H \cdot \ln(2 / \delta_k).
 \]
-For Heidelberg-class BEC ($\delta_\text{diss} \approx 10^{-3}$),
-$\omega_\times \approx 6\, T_H$ --- well below the dispersive UV
-cutoff. The high-frequency spectrum becomes power-law
-($\omega^{-1}$ correction) rather than exponentially suppressed.
-This is, to our knowledge, the strongest-yet \emph{universal}
-prediction of dissipative analog Hawking radiation: a regime where
-the spectrum is thermal at $\omega \lesssim T_H$, transitions to a
-Planckian floor at $\omega \sim 2 T_H$, and bottoms out at the
-$\omega^{-1}$ spectral floor at $\omega \gtrsim 6 T_H$.
+For Heidelberg-class BEC ($\delta_\text{diss} \approx 0.26$;
+Tab.~\ref{tab:hierarchy}), $\omega_\times \approx T_H \ln(2/0.26)
+\approx 2.0\, T_H$ --- well below the dispersive UV cutoff. The
+high-frequency spectrum becomes power-law ($\omega^{-1}$ correction)
+rather than exponentially suppressed. This is, to our knowledge, the
+strongest-yet \emph{universal} prediction of dissipative analog
+Hawking radiation: a regime where the spectrum is thermal at
+$\omega \lesssim T_H$, transitions to a Planckian floor at
+$\omega \sim T_H$, and bottoms out at the $\omega^{-1}$ spectral
+floor at $\omega \gtrsim 2\, T_H$. (For Steinhauer-class
+$\delta_\text{diss} \approx 10^{-5}$ the crossover sits at
+$\omega_\times \approx T_H \ln(2\!\times\!10^{5}) \approx 12\, T_H$,
+well above the dispersive UV cutoff.)
 
 \subsection{Heidelberg as the unique BEC target}
 
@@ -638,14 +644,12 @@ power-spectral-density excess:
 \end{equation}
 where $\sigma_Q$ is the quantum unit of conductance, $\Gamma(\omega)$
 is the greybody factor, and $n_H(\omega)$ the Hawking occupation.
-Equation~\eqref{eq:graphene-noise} is derived independently from
-two distinct routes: Keldysh fluctuation-dissipation
-(\texttt{GrapheneNoiseFormula.fdt\_route}) and Landauer-Büttiker
-scattering (\texttt{landauer\_buttiker\_route}). The two
-derivations agree at the eight-theorem
-\texttt{GrapheneNoiseFormula.routes\_agree} bridge. The greybody
-factor $\Gamma_0 = 4 c_R v / (c_R + v)^2 \approx 0.99994$ at the
-Dean nozzle parameters~\cite{AndersonBFP2013}.
+Equation~\eqref{eq:graphene-noise} is derived through Keldysh
+fluctuation-dissipation, with the consistency-of-derivation closure
+\texttt{GrapheneNoiseFormula.fdt\_consistency} certifying internal
+agreement at the Lean level. The greybody factor
+$\Gamma_0 = 4 c_R v / (c_R + v)^2 \approx 0.99994$ at the Dean
+nozzle parameters~\cite{AndersonBFP2013}.
 
 \subsection{Wiedemann-Franz cross-check}
 
@@ -656,7 +660,7 @@ $> 200$~\cite{Majumdar2025}. The two-channel SK-EFT structure
 (charge and heat are independent) predicts giant Wiedemann-Franz
 violation as a structural consequence of the same noise structure
 that gives~\eqref{eq:graphene-noise}. This is captured in
-\texttt{DiracFluidSK.snr\_independent\_of\_sigma\_Q} (the
+\texttt{GrapheneNoiseFormula.snr\_independent\_of\_sigma\_Q} (the
 Lorenz-cancellation theorem). The Wiedemann-Franz violation is
 therefore a published, calibrated cross-check of the SK-EFT noise
 prediction --- if the framework gives the correct $L/L_0 > 200$
@@ -704,7 +708,7 @@ satisfied the original axiom but violated the dynamical KMS
 condition. Aristotle returned this counterexample within hours of
 submission. The corrected axiom constrains all nine components,
 and its KMS optimality is itself a theorem
-(\S\ref{sec:bec-second}, \texttt{firstOrder\_KMS\_optimal}).
+(\S\ref{sec:bec-second}, \texttt{SKDoubling.firstOrder\_KMS\_optimal}).
 This is, to our knowledge, the first documented case of an
 automated theorem prover correcting a load-bearing axiom in a
 field-theoretic effective action. The methodology paper
