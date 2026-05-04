@@ -7143,6 +7143,41 @@ CITATION_REGISTRY = {
         'notes': 'In-preparation Bundle D4 self-cite. Phase 7f roadmap target.',
     },
 
+    'Roehm2026E1': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Polariton stimulated-Hawking gain at modest probe-photon counts (Bundle E1 letter)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/F/paper_draft.tex'],
+        'provides': ['Bundle E1 (polariton experimental letter) self-cite. Companion to D1 §6 polariton platform. Paris-LKB target.'],
+        'notes': 'In-preparation Bundle E1 self-cite. Phase 7e roadmap target.',
+    },
+
+    'Roehm2026E2': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Graphene Dirac-fluid analog Hawking radiation: device-parameter audit (Bundle E2 letter)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/F/paper_draft.tex'],
+        'provides': ['Bundle E2 (graphene experimental letter) self-cite. Companion to D1 §6 graphene platform. Dean-Kim-Lucas target.'],
+        'notes': 'In-preparation Bundle E2 self-cite. Phase 7e roadmap target.',
+    },
+
+    'Roehm2026F': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Fluid-based approaches to fundamental physics: a formally verified survey (Bundle F flagship review)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex', 'papers/D2/paper_draft.tex',
+                    'papers/D3/paper_draft.tex', 'papers/D4/paper_draft.tex',
+                    'papers/D5/paper_draft.tex'],
+        'provides': ['Bundle F (Tier-0 flagship review) self-cite. ~110pp PRD-long-format integrating all 12 sibling-bundle threads. Substrate-identity synthesis claim.'],
+        'notes': 'In-preparation Bundle F self-cite. Phase 7g roadmap target. Drafted last after all 12 siblings reach Stage-13 GREEN.',
+    },
+
     'Roehm2026Wave10': {
         'authors': 'Roehm, J. G.',
         'title': 'Three generations from modular invariance: Spin$^{\\mathbb{Z}_4}$ five-bordism (Bundle L2 PRL splash)',

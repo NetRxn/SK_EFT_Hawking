@@ -1,377 +1,117 @@
 {
   "paper": "D3",
   "bundle_target": "D3",
-  "review_round": 2,
-  "review_date": "2026-05-04T20:00:00Z",
+  "review_round": 3,
+  "review_date": "2026-05-04T22:30:00Z",
   "reviewer_version": "claims-reviewer-v2-bundle-aware",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
-  "verdict": "amber",
-  "total_findings": 4,
+  "reviewer_run_id": "claims-reviewer-v2:D3:r3:2026-05-04T22:30:00Z",
+  "verdict": "green",
+  "total_findings": 0,
   "findings_by_class": {
-    "IA": 1,
+    "IA": 0,
     "TP": 0,
     "SD": 0,
-    "TN": 3,
+    "TN": 0,
     "HD": 0
   },
-  "blockers_open": 4,
+  "blockers_open": 0,
   "blockers_advisory": 5,
 
-  "round_2_summary": "Round-1 brought 15 BLOCKERs in commit 676aed3. Round-2 verification of those 15: 11 fully closed; 1 partially closed (QEC §9 cross-bridge — replacement name still missing the .HPCode. sub-namespace prefix, single-token fix); 2 newly surfaced after-fix scan (NonlinearDiffInvariance §19 lines 1386/1392/1395 carry three theorem-name drifts that survived the batch find/replace because the citations were unqualified \\texttt{path_b_holds_iff_dirac_bundle} / \\texttt{perturbed_bundle_residual_linear_in_delta} / lowercase-namespaced \\texttt{nonlinearDiffInvariance.path_b_residual} — all three names absent from lean_deps.json); 1 NOT closed (Class CI bibliography compile-gate — only the \\bibliography{} filename was renamed; the file paper_draftNotes.bib itself is empty (0 bytes / 0 entries) and 38 of 61 cited keys remain missing from CITATION_REGISTRY; .aux contains 0 \\bibcite entries; PDF still compiles citations as ??). Net round-2: 4 OPEN BLOCKERs (1 carryover-partial + 2 surfaced + 1 carryover Class CI). All 13 of the originally-flagged Class TN drifts whose corrected names existed are verified PRESENT in lean_deps.json. Stage-13 anchor coverage: §1 substrate-predictive-boundary OK; §4 three closures OK; §6 GW170817 OK; §7 BH entropy OK; §17 heat kernel + Sakharov OK; §18 Stelle now hedged via in-flight module reference (no longer a TN failure but the load-bearing claim is now informally framed); §20 PPN OK; §21 CC OK after 10^100 softening; §22.5 algebraic GR OK; §24-§26 Penrose/HP/Area OK. Verdict AMBER not RED because the 11 substantive Lean theorem-reference fixes closed cleanly; the 4 remaining issues are either single-token namespace prefixes or compile-gate (bib file population) — addressable in a tight round-3 patch. Verdict not GREEN because the Class CI bibliography failure is load-bearing for any real paper-submission gate, and the §19 path-(b) drift propagates to a load-bearing Decision-Gate-E.3 anchor.",
+  "round_3_summary": "Round-3 targeted reconciliation pass on commit 6c25ee0. All 4 round-2 BLOCKERs verified CLOSED. (1) block:r2:1 — line 823 prose now reads `QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class`; canonical name `SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` confirmed PRESENT in lean_deps.json. (2) block:r2:2 — §19 lines 1386-1390 now cite four explicit qualified names `NonlinearDiffInvariance.pathB_residual_a0`, `pathB_residual_a2`, `pathB_residual_a4`, `pathB_residual_a4_dirac_eq_zero`; all 4 confirmed PRESENT in lean_deps.json under `SKEFTHawking.NonlinearDiffInvariance`. (3) block:r2:3 — §19 lines 1397/1400 now cite `NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent` (biconditional) and `NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq` (constructive perturbation residual); both confirmed PRESENT in lean_deps.json. (4) block:r2:4 — paper_draft.tex now contains inline `\\begin{thebibliography}{99}` block with 61 \\bibitem entries; paper_draft.log scan returns 0 'Citation undefined' warnings; all 59 unique cite-keys used in body resolve to a bibitem; CITATION_REGISTRY membership check (re-run on src/core/citations.py) returns 0 missing of 59 unique cites (registry now 495 keys, was 459). 2 cite-key renames verified: `KaulMajumdar2000` and `BergesSexty2008` both appear correctly in body and bibitem block. Round-3 post-fix scan for new TN drifts: §19 region (lines 1370-1410) clean — only the 7 expected qualified names. Single in-body unqualified `CFL_emergent_Z3_matches_QCD_center_Z3` at line 1216 was already passing in round-2 (canonical CFLChiralLagrangian.CFL_emergent_Z3_matches_QCD_center_Z3 PRESENT) and is not a new drift introduced by round-3. Verdict GREEN: 0 BLOCKERs. The 5 carryover advisories from round-2 (HD HYPOTHESIS_REGISTRY enumeration; IA GW170817 14-orders vs 7×10^14 alternation; SD §18 ceilings citation; cross-bundle L1/L3 character-for-character; D4 §7 cross-anchor) all carry forward to non_blocking_followups.",
 
-  "sentences": [
-    {
-      "id": "sentence:D3:quantum-error-correction-holography-bridge:ed57a4f0",
-      "raw_id_parts": {"paper": "D3", "section_slug": "quantum-error-correction-holography-bridge", "quote_hash": "ed57a4f0", "hash_algorithm": "sha256_first_8"},
-      "section": "quantum-error-correction-holography-bridge",
-      "section_ordinal": 9,
-      "tex_line_start": 818,
-      "tex_line_end": 824,
-      "quote": "the substrate's MTC structure satisfies $d \\ge t_{\\mathrm{scr}}/(\\text{horizon-area-scaling})$ if and only if the admissibility predicate (\\texttt{QECHolographyBridge.code\\_distance\\_scaling\\_matches\\_anyonic\\_fusion\\_iff\\_fusion\\_in\\_admissible\\_class}, which Bundle~D4~\\S 7 ships as the load-bearing biconditional) holds.",
-      "quote_normalized": "the substrate's mtc structure satisfies admissibility predicate qecholographybridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class", "link_state": "missing_target"}
-        ],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN-PARTIAL-CLOSE: round-1 BLOCKER was `HoloQEC.admissible_iff` (entire module missing). Round-1 fix replaced HoloQEC with QECHolographyBridge — the module DOES exist with 80+ decls. However the cited theorem-name `QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` is missing the `.HPCode.` sub-namespace infix. The actual fully-qualified name is `SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` (HPCode is an inductive structure within QECHolographyBridge). Single-token fix: change paper line 823 to \\texttt{QECHolographyBridge.HPCode.code\\_distance\\_scaling\\_matches\\_anyonic\\_fusion\\_iff\\_fusion\\_in\\_admissible\\_class}.",
-      "agent_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:0b77edb0",
-      "raw_id_parts": {"paper": "D3", "section_slug": "order-by-order-diffeomorphism-invariance-through-a-4", "quote_hash": "0b77edb0", "hash_algorithm": "sha256_first_8"},
-      "section": "order-by-order-diffeomorphism-invariance-through-a-4",
-      "section_ordinal": 19,
-      "tex_line_start": 1383,
-      "tex_line_end": 1388,
-      "quote": "The path-(b) framework decomposes the substrate's effective Lagrangian into a coefficient bundle that respects diffeomorphism invariance up to a residual anomaly term. The \\texttt{nonlinearDiffInvariance.path\\_b\\_residual} is the order-by-order invariance failure",
-      "quote_normalized": "the nonlineardiffinvariance.path_b_residual is the order-by-order invariance failure",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "nonlinearDiffInvariance.path_b_residual", "link_state": "missing_target"}
-        ],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN-NEWLY-SURFACED: round-1 commit fixed two of the three §19 path-(b) drifts (intro line 152, §4 line 435), but missed three unqualified \\texttt{} citations in §19 itself. Lowercase-namespaced `nonlinearDiffInvariance.path_b_residual` is not a real Lean name (Lean conventions: namespace starts uppercase). The actual NonlinearDiffInvariance module ships `pathB_residual_a0`, `pathB_residual_a2`, `pathB_residual_a4`, and `pathB_residual_a4_dirac_eq_zero`. Replace the prose with one or more of the order-specific names, e.g.: 'the \\texttt{NonlinearDiffInvariance.pathB\\_residual\\_a0/a2/a4} are the order-by-order invariance failures'.",
-      "agent_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:f22348bd",
-      "raw_id_parts": {"paper": "D3", "section_slug": "order-by-order-diffeomorphism-invariance-through-a-4", "quote_hash": "f22348bd", "hash_algorithm": "sha256_first_8"},
-      "section": "order-by-order-diffeomorphism-invariance-through-a-4",
-      "section_ordinal": 19,
-      "tex_line_start": 1390,
-      "tex_line_end": 1398,
-      "quote": "\\texttt{path\\_b\\_holds\\_iff\\_dirac\\_bundle}: the order-by-order diffeomorphism-invariance biconditional closes for the substrate's Dirac-fermion bundle and fails for any perturbed bundle. The \\texttt{perturbed\\_bundle\\_residual\\_linear\\_in\\_delta} closure makes the failure constructive",
-      "quote_normalized": "path_b_holds_iff_dirac_bundle: the order-by-order diffeomorphism-invariance biconditional closes for the dirac bundle ... the perturbed_bundle_residual_linear_in_delta closure makes the failure constructive",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "path_b_holds_iff_dirac_bundle", "link_state": "missing_target"},
-          {"kind": "theorem", "target": "perturbed_bundle_residual_linear_in_delta", "link_state": "missing_target"}
-        ],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN-NEWLY-SURFACED: §19 Decision Gate~E.3 subsection cites two unqualified theorem names that don't exist anywhere in lean_deps.json. The round-1 commit's batch find-replace on h_path_b_holds_iff_dirac_bundle did NOT catch the unqualified bare-name occurrences in §19 (these don't carry the `h_` prefix). Likely-intended replacements: `NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent` for the biconditional (already used at lines 153 and 448); `NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq` for the perturbation-residual constructive failure.",
-      "agent_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:bibliography:d2a65476",
-      "raw_id_parts": {"paper": "D3", "section_slug": "bibliography", "quote_hash": "d2a65476", "hash_algorithm": "sha256_first_8"},
-      "section": "bibliography",
-      "section_ordinal": 99,
-      "tex_line_start": 2053,
-      "tex_line_end": 2053,
-      "quote": "\\bibliography{paper_draftNotes}",
-      "quote_normalized": "bibliography{paper_draftnotes}",
-      "type": "metaclaim",
-      "finding_classes": ["IA"],
-      "chain_proposed": {"links": [], "completeness": "none"},
-      "agent_verdict": "FAIL",
-      "agent_notes": "CI-NOT-CLOSED (Class IA in schema-enum since CI isn't a registered class; this is the citation-integrity bibliography compile-gate): round-1 BLOCKER #4 was `\\bibliography{bibliography}` references nonexistent bibliography.bib. Round-1 fix renamed to `\\bibliography{paper_draftNotes}` BUT the file paper_draftNotes.bib in papers/D3/ is EMPTY (0 bytes / 0 BibTeX entries). Re-checking: paper_draft.aux still contains 0 \\bibcite entries; no .bbl file present in papers/D3/. PDF compiles 47pp but every \\cite{} renders as ?? since bibtex has nothing to resolve. Plus the orthogonal CITATION_REGISTRY gap persists: 38 of 61 cited keys (ADM1962, Adler1980, Akama1979, AlmheiriMarolfPolchinskiSully2013, ArnoldMcLerran1987, Balbinot2005, BardeenCarterHawking1973, BardeenHillLindner1990, Carter1971, ChristensenDuff1978, CohenKaplanNelson1991, Eddington1919, GellMannOakesRenner1968, Hawking1971, Hawking1972, Hawking1975, HawkingPenrose1970, Hill2025bilocal, HughesDrever1960, Israel1967, Israel1986, KaulMajumdar1998, KehleUnger2024, KlinkhamerManton1984, LEGEND2024, Maldacena1997, MohapatraSenjanovic1980, PastawskiYoshidaHarlowPreskill2015, Penrose1965, PretkoRadzihovsky2018, Robinson1975, Sakharov1967, Sen2013, SextyWetterich2009, Weinberg1989, Wetterich1990, Wetterich2017, Will2014) are not in CITATION_REGISTRY — these need to land both in CITATION_REGISTRY and in the populated paper_draftNotes.bib. Round-2 reproduces this finding. Highest-leverage compile-gate failure remains.",
-      "agent_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
-      "gates_invoked": ["Gate1_CitationIntegrity", "Gate11_LaTeXCompileClean"],
-      "rewrite_of": null,
-      "tombstone": false
-    }
-  ],
+  "sentences": [],
 
   "reconciliation": [
     {
-      "prior_block_id": "block:1",
-      "prior_summary": "Class TN — `HoloQEC` module entirely missing; §9 cites `HoloQEC.admissible_iff`",
-      "round_2_status": "PARTIALLY_FIXED",
-      "round_2_finding_id": "sentence:D3:quantum-error-correction-holography-bridge:ed57a4f0",
-      "auto_closed": false,
-      "reason": "HoloQEC replaced with QECHolographyBridge (correct module). However the replacement name omits the `.HPCode.` sub-namespace prefix. Existing target is `QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class`. Single-token fix needed.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "module": "QECHolographyBridge", "symbol": "code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class", "current_value": "missing", "correct_value": "HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class"}
-    },
-    {
-      "prior_block_id": "block:2",
-      "prior_summary": "Class TN — `HigherCurvatureStelle` module missing (5 theorems cited)",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
+      "prior_block_id": "block:r2:1",
+      "prior_summary": "Class TN — QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class missing `.HPCode.` sub-namespace prefix at line 823. Single-token fix.",
+      "round_3_status": "FIXED",
+      "round_3_finding_id": null,
       "auto_closed": true,
-      "reason": "§18 prose now hedges: line 1330 references `\\texttt{HigherCurvatureStelle.lean}` as 'in flight as a standalone Lean module to be upstreamed in a subsequent iteration' (module-file reference only, not theorem citation). Line 1357-1360 attributes the prediction-vs-ceiling comparison to 'the HeatKernelExpansion $a_4$ closed forms' (existing) plus 'the explicit predictions_below_observational_ceilings closure ships in the in-flight HigherCurvatureStelle.lean module'. Line 1342 substitutes existing `HeatKernelExpansion.a4_R_sq_coef_neg`, `a4_Ricci_sq_coef_pos`, `a4_Riemann_sq_coef_neg`, `a4_gauss_bonnet_combination` (all four verified PRESENT in lean_deps.json). The §18 Stelle (alpha,beta,gamma) anchor is now informally framed but no longer cites missing theorems.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "module": "HeatKernelExpansion", "verified_substitutes": ["a4_R_sq_coef_neg", "a4_Ricci_sq_coef_pos", "a4_Riemann_sq_coef_neg", "a4_gauss_bonnet_combination"], "all_found": true}
+      "reason": "paper_draft.tex line 823 now reads `\\texttt{QECHolographyBridge.HPCode.code\\_distance\\_scaling\\_matches\\_anyonic\\_fusion\\_iff\\_fusion\\_in\\_admissible\\_class}`. Canonical fully-qualified name `SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` confirmed PRESENT via grep on lean/lean_deps.json.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "module": "QECHolographyBridge.HPCode", "symbol": "code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class", "current_value": "present", "tex_line": 823}
     },
     {
-      "prior_block_id": "block:3",
-      "prior_summary": "Class IA — Lean proves >10^100 not >10^122 (5 sites)",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
+      "prior_block_id": "block:r2:2",
+      "prior_summary": "Class TN — §19 line 1386 unqualified `nonlinearDiffInvariance.path_b_residual` not in lean_deps.json. Replace with NonlinearDiffInvariance.pathB_residual_a0/a2/a4.",
+      "round_3_status": "FIXED",
+      "round_3_finding_id": null,
       "auto_closed": true,
-      "reason": "Verified at all relevant sites (paper_draft.tex lines 49, 175, 1480, 1499, 1504, 1507, 1549, 1966): paper now consistently writes `\\gtrsim 10^{100}` (matching Lean MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed) with explicit hedge `(heuristically $\\sim 10^{122}$)` at the abstract (line 49-50) and §1 (line 176). Line 1480: `overshoots the observed value by $\\gtrsim 10^{100}$.` Line 1504: `more than a factor of $10^{100}$.` Line 1507: `the heuristic estimate $\\gtrsim 10^{100}$`. Line 1549: `$\\Lambda_{\\mathrm{emerg}}/\\Lambda_{\\mathrm{obs}} \\gtrsim 10^{100}$`. Line 1966 (conclusion): `$\\gtrsim 10^{100}$`. Formal-vs-heuristic distinction now coherent across all 5 sites.",
-      "deterministic_recheck": {"kind": "tex_grep", "pattern": "gtrsim 10\\^\\{100\\}", "site_count": 6}
+      "reason": "§19 lines 1383-1393 now cite four explicit qualified names: `NonlinearDiffInvariance.pathB_residual_a0` (line 1386), `pathB_residual_a2` (line 1387), `pathB_residual_a4` (line 1388), and `pathB_residual_a4_dirac_eq_zero` (line 1390). All four verified PRESENT in lean_deps.json. The replacement also adds substantive content (the central claim that residual vanishes order-by-order through a_4 on the Dirac bundle) over the previous lowercase placeholder.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["SKEFTHawking.NonlinearDiffInvariance.pathB_residual_a0", "SKEFTHawking.NonlinearDiffInvariance.pathB_residual_a2", "SKEFTHawking.NonlinearDiffInvariance.pathB_residual_a4", "SKEFTHawking.NonlinearDiffInvariance.pathB_residual_a4_dirac_eq_zero"], "all_found": true, "tex_lines": [1386, 1387, 1388, 1390]}
     },
     {
-      "prior_block_id": "block:4",
-      "prior_summary": "Class CI — \\bibliography{bibliography} → bibliography.bib does not exist; .aux has 0 \\bibcite; 38/61 cited keys missing from CITATION_REGISTRY",
-      "round_2_status": "NOT_FIXED",
-      "round_2_finding_id": "sentence:D3:bibliography:d2a65476",
-      "auto_closed": false,
-      "reason": "round-1 fix only renamed \\bibliography{} to {paper_draftNotes}. The file paper_draftNotes.bib is itself EMPTY (0 bytes verified via wc -l). paper_draft.aux still has 0 \\bibcite entries; no .bbl file exists. Same 38 cited keys remain absent from CITATION_REGISTRY (verified with re-run of ./src/core/citations.py CITATION_REGISTRY membership check). PDF still compiles citations as ??. Highest-leverage fix: (a) populate paper_draftNotes.bib with all 61 cited keys; (b) extend CITATION_REGISTRY with the 38 missing keys.",
-      "deterministic_recheck": {"kind": "bib_population_check", "bib_file_size_bytes": 0, "aux_bibcite_count": 0, "missing_from_citation_registry_count": 38}
-    },
-    {
-      "prior_block_id": "block:5",
-      "prior_summary": "Class TN — `NonlinearDiffInvariance.h_path_b_holds_iff_dirac_bundle` missing (4 sites)",
-      "round_2_status": "PARTIALLY_FIXED",
-      "round_2_finding_id": "sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:f22348bd",
-      "auto_closed": false,
-      "reason": "Lines 153 (intro) and 448 (§4 fracton) correctly replaced with `NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent` (verified PRESENT in lean_deps.json). But §19 Decision Gate~E.3 subsection retains three unqualified TN drifts: line 1386 \\texttt{nonlinearDiffInvariance.path_b_residual} (lowercase); line 1392 \\texttt{path_b_holds_iff_dirac_bundle} (no module qualifier); line 1395 \\texttt{perturbed_bundle_residual_linear_in_delta}. None of these names exist in lean_deps.json. Likely the round-1 batch find-replace pattern keyed on `h_path_b_holds_iff_dirac_bundle` (with prefix) and missed the unqualified §19 occurrences. NonlinearDiffInvariance has the actual decls `pathB_residual_a0/a2/a4`, `pathB_residual_a4_dirac_eq_zero`, `perturbed_pathB_residual_a4_eq_delta_R_sq`, `perturbed_residual_exceeds_path_b_tolerance`.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "missing_targets": ["nonlinearDiffInvariance.path_b_residual", "path_b_holds_iff_dirac_bundle", "perturbed_bundle_residual_linear_in_delta"], "available_substitutes": ["NonlinearDiffInvariance.pathB_residual_a4", "NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent", "NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq"]}
-    },
-    {
-      "prior_block_id": "block:6",
-      "prior_summary": "Class TN — ADWMechanism.{adwGapClosedForm, adwGapPos, bifurcation_at_critical} missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
+      "prior_block_id": "block:r2:3",
+      "prior_summary": "Class TN — §19 lines 1392-1395 unqualified `path_b_holds_iff_dirac_bundle` + `perturbed_bundle_residual_linear_in_delta` not in lean_deps.json. Replace with NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent + NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq.",
+      "round_3_status": "FIXED",
+      "round_3_finding_id": null,
       "auto_closed": true,
-      "reason": "Replaced with `ADWMechanism.critical_coupling_pos` (verified PRESENT) and `ADWMechanism.zero_C_no_fluct_gives_pregeometric` (verified PRESENT). Round-1 commit message lists complete substitution map.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["ADWMechanism.critical_coupling_pos", "ADWMechanism.zero_C_no_fluct_gives_pregeometric"], "all_found": true}
+      "reason": "§19 Decision Gate~E.3 subsection now correctly cites `NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent` at line 1397 (biconditional: order-by-order diffeomorphism-invariance closes for the Dirac bundle and fails for any perturbed bundle) and `NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq` at line 1400 (constructive perturbation residual proportional to δR^2). Both names verified PRESENT in lean_deps.json. The prose makes the failure constructive (any perturbation of the Dirac bundle introduces a path-(b) residual proportional to δR^2 which fails the biconditional at first order).",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["SKEFTHawking.NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent", "SKEFTHawking.NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq"], "all_found": true, "tex_lines": [1397, 1400]}
     },
     {
-      "prior_block_id": "block:7",
-      "prior_summary": "Class TN — GaugeErasure.only_U1_survives + wen_adw_factor_6000 missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
+      "prior_block_id": "block:r2:4",
+      "prior_summary": "Class CI/IA — paper_draftNotes.bib is EMPTY (0 bytes / 0 BibTeX entries). Bibliography filename rename in round-1 was insufficient. paper_draft.aux still has 0 \\bibcite entries; PDF compiles citations as ??. Plus 38 of 61 cited keys remain missing from CITATION_REGISTRY.",
+      "round_3_status": "FIXED",
+      "round_3_finding_id": null,
       "auto_closed": true,
-      "reason": "Replaced with `GaugeErasure.gauge_erasure` and `GaugeErasure.u1_survival` (both verified PRESENT in lean_deps.json). The wen_adw_factor_6000 specific Lean identity is hedged in §4 prose as 'closed-form structural deficit' rather than asserting a specific Lean theorem name (round-1 commit notes: 'deferred to in-flight corollary').",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["GaugeErasure.gauge_erasure", "GaugeErasure.u1_survival"], "all_found": true}
-    },
-    {
-      "prior_block_id": "block:8",
-      "prior_summary": "Class TN — VestigialGravity.natural_range_disjoint_from_ligo_window wrong module (lives in GravitationalWaves)",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
-      "auto_closed": true,
-      "reason": "§4 line 461 corrected to `GravitationalWaves.natural_range_disjoint_from_ligo_window` (verified PRESENT). §6 references also use GravitationalWaves module qualifier consistently. No surviving `VestigialGravity.*disjoint*` references in paper.",
-      "deterministic_recheck": {"kind": "tex_grep", "pattern": "VestigialGravity.natural_range_disjoint", "match_count": 0}
-    },
-    {
-      "prior_block_id": "block:9",
-      "prior_summary": "Class TN — ChiralityWall.predicate missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
-      "auto_closed": true,
-      "reason": "Line 1073 now references `\\texttt{ChiralityWall.lean}` as a module-file reference rather than asserting a specific theorem `ChiralityWall.predicate`. The 99 decls under GSCondition / ConjectureStatus / TPFIngredient now provide the formal backing without naming a load-bearing single theorem.",
-      "deterministic_recheck": {"kind": "tex_grep", "pattern": "ChiralityWall.predicate", "match_count": 0}
-    },
-    {
-      "prior_block_id": "block:10",
-      "prior_summary": "Class TN — CenterSymmetryConfinement.isConfining + isConfining_iff_zero_polyakov missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
-      "auto_closed": true,
-      "reason": "§14 now uses `Confining` def (verified PRESENT), `confining_iff_magnitude_zero` (PRESENT), `confining_iff_center_invariant` (PRESENT), `centerPhase_pow_N` (PRESENT), `centerPhase_norm_one` (PRESENT). All five references resolve.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["CenterSymmetryConfinement.Confining", "CenterSymmetryConfinement.confining_iff_magnitude_zero", "CenterSymmetryConfinement.confining_iff_center_invariant", "CenterSymmetryConfinement.centerPhase_pow_N", "CenterSymmetryConfinement.centerPhase_norm_one"], "all_found": true}
-    },
-    {
-      "prior_block_id": "block:11",
-      "prior_summary": "Class TN — NonlinearEFE.trace_residual_zero_iff_alpha_unity + ppn_decision_gate_passes missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
-      "auto_closed": true,
-      "reason": "§20 line 1437 corrected to `efeResidualTrace_eq_zero_iff_alpha_unity` (verified PRESENT). Line 1466 now cites `NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity` (verified PRESENT) for the PPN-collapse claim — substantive replacement that captures the actual PPN content.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["NonlinearEFE.efeResidualTrace_eq_zero_iff_alpha_unity", "NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity"], "all_found": true}
-    },
-    {
-      "prior_block_id": "block:12",
-      "prior_summary": "Class TN — BundleRiemann.firstBianchi + RiemannDifferentialBianchi.secondBianchi missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
-      "auto_closed": true,
-      "reason": "Replaced with `BundleRiemann.bundleRiemannAux_first_bianchi_torsionfree_apply` (verified PRESENT). DifferentialSecondBianchi is referenced via module-file `RiemannDifferentialBianchi.lean` reference per round-1 commit message.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["BundleRiemann.bundleRiemannAux_first_bianchi_torsionfree_apply"], "all_found": true}
-    },
-    {
-      "prior_block_id": "block:13",
-      "prior_summary": "Class TN — §24 Penrose IsGloballyHyperbolic + IsNECsatisfied wrong module / missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
-      "auto_closed": true,
-      "reason": "§24 now references `\\texttt{CausalStructure.lean}` for global-hyperbolicity (line 1767) and `\\texttt{EnergyConditions.lean}` for NEC (line 1769), as module-file references rather than asserting specific theorem names. The trapped-surface predicate `PenroseSingularity.IsTrappedSurface` (already verified PRESENT) is retained.",
-      "deterministic_recheck": {"kind": "tex_grep", "pattern_a": "PenroseSingularity.IsGloballyHyperbolic", "match_count_a": 0, "pattern_b": "PenroseSingularity.IsNECsatisfied", "match_count_b": 0}
-    },
-    {
-      "prior_block_id": "block:14",
-      "prior_summary": "Class TN — §25 HawkingPenroseSingularity.dS_violates_SEC missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
-      "auto_closed": true,
-      "reason": "Replaced with `HawkingPenroseSingularity.cosmologicalLambda_violates_HP_hypothesis` (verified PRESENT). The HP-hypothesis-violation framing is the canonical name in the module.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["HawkingPenroseSingularity.cosmologicalLambda_violates_HP_hypothesis"], "all_found": true}
-    },
-    {
-      "prior_block_id": "block:15",
-      "prior_summary": "Class TN — §26 AreaTheorem.schwarzschildHorizonArea missing",
-      "round_2_status": "FIXED",
-      "round_2_finding_id": null,
-      "auto_closed": true,
-      "reason": "Replaced with `AreaTheorem.schwarzschild_horizon_area_nonDecreasing` (verified PRESENT). Companion `schwarzschild_area_monotone` and `schwarzschild_area_strictly_increasing` (both PRESENT) retained.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["AreaTheorem.schwarzschild_horizon_area_nonDecreasing", "AreaTheorem.schwarzschild_area_monotone", "AreaTheorem.schwarzschild_area_strictly_increasing"], "all_found": true}
+      "reason": "(a) paper_draft.tex now uses inline `\\begin{thebibliography}{99}` block with 61 alphabetical \\bibitem entries (verified by grep -c '\\\\bibitem'); (b) paper_draft.log post-recompile (timestamp 10:32 May 4) returns 0 matches for 'Citation .* undefined' or 'Warning.*Citation'; (c) all 59 unique \\cite{...} keys extracted from the body have a corresponding \\bibitem entry (sort | comm -23 returns empty set); (d) CITATION_REGISTRY now has 495 keys (was 459); membership check on the 59 D3 cite-keys returns 0 missing; (e) cite-key renames verified PRESENT in body and bibitem: `KaulMajumdar2000` (was KaulMajumdar1998) and `BergesSexty2008` with prose 'Berges--Sexty-type' (was SextyWetterich2009). The empty paper_draftNotes.bib file (104 bytes, stub) remains in directory but is no longer referenced by \\bibliography{} — the paper now ships its own inline thebibliography block which is self-contained for compilation.",
+      "deterministic_recheck": {"kind": "bib_population_check", "bibitem_count": 61, "unique_cite_keys_in_body": 59, "missing_cites": 0, "log_undefined_citation_warnings": 0, "citation_registry_size": 495, "missing_from_citation_registry_count": 0, "cite_key_renames_applied": ["KaulMajumdar1998->KaulMajumdar2000", "SextyWetterich2009->BergesSexty2008"]}
     }
   ],
 
   "non_reproducing_prior_findings": [
     {
-      "prior_finding_id": "block:2",
-      "prior_run_date": "2026-05-04T13:42:58Z",
+      "prior_finding_id": "block:r2:1",
+      "prior_run_date": "2026-05-04T20:00:00Z",
       "status": "superseded",
       "auto_closed": true,
-      "reason": "HigherCurvatureStelle module no longer cited as theorem source; replaced with HeatKernelExpansion-based hedged framing.",
-      "deterministic_recheck": {"kind": "tex_grep_module_theorem_call", "module": "HigherCurvatureStelle", "theorem_calls_remaining": 0}
+      "reason": "QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class fully-qualified replacement applied at line 823.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "module": "QECHolographyBridge.HPCode", "symbol_present": true}
     },
     {
-      "prior_finding_id": "block:6",
-      "prior_run_date": "2026-05-04T13:42:58Z",
+      "prior_finding_id": "block:r2:2",
+      "prior_run_date": "2026-05-04T20:00:00Z",
       "status": "superseded",
       "auto_closed": true,
-      "reason": "ADWMechanism theorem-name drifts replaced with verified-present substitutes.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["ADWMechanism.critical_coupling_pos", "ADWMechanism.zero_C_no_fluct_gives_pregeometric"], "all_found": true}
+      "reason": "Three explicit qualified replacements applied (pathB_residual_a0/a2/a4 plus pathB_residual_a4_dirac_eq_zero); all 4 PRESENT in lean_deps.json.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "all_found": true}
     },
     {
-      "prior_finding_id": "block:7",
-      "prior_run_date": "2026-05-04T13:42:58Z",
+      "prior_finding_id": "block:r2:3",
+      "prior_run_date": "2026-05-04T20:00:00Z",
       "status": "superseded",
       "auto_closed": true,
-      "reason": "GaugeErasure theorem-name drifts replaced with gauge_erasure / u1_survival.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["GaugeErasure.gauge_erasure", "GaugeErasure.u1_survival"], "all_found": true}
+      "reason": "Biconditional + constructive-residual qualified names applied; both PRESENT in lean_deps.json.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "all_found": true}
     },
     {
-      "prior_finding_id": "block:8",
-      "prior_run_date": "2026-05-04T13:42:58Z",
+      "prior_finding_id": "block:r2:4",
+      "prior_summary": "Bibliography compile-gate: empty .bib + 38 missing keys",
+      "prior_run_date": "2026-05-04T20:00:00Z",
       "status": "superseded",
       "auto_closed": true,
-      "reason": "VestigialGravity wrong-module qualifier corrected to GravitationalWaves.",
-      "deterministic_recheck": {"kind": "tex_grep", "pattern": "VestigialGravity.natural_range_disjoint", "match_count": 0}
-    },
-    {
-      "prior_finding_id": "block:9",
-      "prior_run_date": "2026-05-04T13:42:58Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "ChiralityWall.predicate replaced with module-file reference.",
-      "deterministic_recheck": {"kind": "tex_grep", "pattern": "ChiralityWall.predicate", "match_count": 0}
-    },
-    {
-      "prior_finding_id": "block:10",
-      "prior_run_date": "2026-05-04T13:42:58Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "isConfining/isConfining_iff_zero_polyakov replaced with Confining/confining_iff_magnitude_zero/confining_iff_center_invariant.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["CenterSymmetryConfinement.Confining", "CenterSymmetryConfinement.confining_iff_magnitude_zero", "CenterSymmetryConfinement.confining_iff_center_invariant"], "all_found": true}
-    },
-    {
-      "prior_finding_id": "block:11",
-      "prior_run_date": "2026-05-04T13:42:58Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "trace_residual_zero_iff_alpha_unity → efeResidualTrace_eq_zero_iff_alpha_unity; ppn_decision_gate_passes → precessionRatio_eq_one_iff_alpha_unity.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["NonlinearEFE.efeResidualTrace_eq_zero_iff_alpha_unity", "NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity"], "all_found": true}
-    },
-    {
-      "prior_finding_id": "block:12",
-      "prior_run_date": "2026-05-04T13:42:58Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "BundleRiemann.firstBianchi → bundleRiemannAux_first_bianchi_torsionfree_apply; secondBianchi via module-file reference.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["BundleRiemann.bundleRiemannAux_first_bianchi_torsionfree_apply"], "all_found": true}
-    },
-    {
-      "prior_finding_id": "block:13",
-      "prior_run_date": "2026-05-04T13:42:58Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "Penrose IsGloballyHyperbolic / IsNECsatisfied moved to module-file references.",
-      "deterministic_recheck": {"kind": "tex_grep", "pattern": "PenroseSingularity.IsGloballyHyperbolic|PenroseSingularity.IsNECsatisfied", "match_count": 0}
-    },
-    {
-      "prior_finding_id": "block:14",
-      "prior_run_date": "2026-05-04T13:42:58Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "dS_violates_SEC → cosmologicalLambda_violates_HP_hypothesis.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["HawkingPenroseSingularity.cosmologicalLambda_violates_HP_hypothesis"], "all_found": true}
-    },
-    {
-      "prior_finding_id": "block:15",
-      "prior_run_date": "2026-05-04T13:42:58Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "schwarzschildHorizonArea → schwarzschild_horizon_area_nonDecreasing.",
-      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["AreaTheorem.schwarzschild_horizon_area_nonDecreasing"], "all_found": true}
-    },
-    {
-      "prior_finding_id": "block:3",
-      "prior_run_date": "2026-05-04T13:42:58Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "All 5 sites of CC-overshoot 10^122 softened to gtrsim 10^100 with heuristic 10^122 caveat at abstract + §1; matches Lean rigorous bound.",
-      "deterministic_recheck": {"kind": "tex_grep", "pattern": "gtrsim 10\\^\\{100\\}", "site_count": 6}
+      "reason": "Inline thebibliography{99} block with 61 entries replaces the empty .bib reference; CITATION_REGISTRY extended to 495 keys; 0 undefined-citation warnings in compile log.",
+      "deterministic_recheck": {"kind": "bib_population_check", "bibitem_count": 61, "log_undefined_citation_warnings": 0, "missing_from_citation_registry_count": 0}
     }
   ],
 
   "summary": {
-    "total_sentences_walked": "Round-2 spot-walk verifies the 15 round-1 BLOCKERs, plus a fresh scan of the §19 path-(b) framework subsections that generated the surfaced findings. Coverage prioritises the round-1 blocker reconciliation; not a full re-walk of the 47pp paper.",
-    "by_type": {"theorem-ref": 3, "metaclaim": 1},
-    "by_verdict": {"PASS": 0, "FAIL": 4, "WARN": 0, "INFO": 0, "UNGROUNDED": 0, "TRANSITION": 0},
-    "by_finding_class": {"IA": 0, "TP": 0, "SD": 0, "TN": 3, "HD": 0, "CI": 1},
-    "agent_text": "D3 Round-2 verdict AMBER. 4 OPEN BLOCKERs (down from 15). 11 of 15 round-1 BLOCKERs FULLY CLOSED. 1 PARTIAL CLOSE (QEC bridge: replacement name missing .HPCode. infix). 2 SURFACED §19 path-(b) drifts that escaped the round-1 batch find-replace. 1 NOT CLOSED: bibliography Class CI compile-gate (file paper_draftNotes.bib is empty; 38 keys missing from CITATION_REGISTRY) — only the \\bibliography{} filename was renamed. Round-3 path: (1) single-token QEC fix at line 823; (2) replace 3 §19 unqualified theorem names; (3) populate paper_draftNotes.bib with all 61 cited keys + add 38 missing keys to CITATION_REGISTRY. With these three patches D3 lands at GREEN."
+    "total_sentences_walked": "Round-3 targeted reconciliation pass on commit 6c25ee0 (the round-3 fix commit). Verified the 4 round-2 BLOCKERs at their specific tex line ranges (823, 1383-1393, 1397/1400, bibliography). Spot-scanned §19 region (lines 1370-1410) for new TN drifts introduced by the round-3 fix — none. Did NOT re-walk the full 51pp paper per the round-3 mandate.",
+    "by_type": {"theorem-ref": 0, "metaclaim": 0},
+    "by_verdict": {"PASS": 4, "FAIL": 0, "WARN": 0, "INFO": 0, "UNGROUNDED": 0, "TRANSITION": 0},
+    "by_finding_class": {"IA": 0, "TP": 0, "SD": 0, "TN": 0, "HD": 0, "CI": 0},
+    "agent_text": "D3 Round-3 verdict GREEN. 0 OPEN BLOCKERs (down from 4). All 4 round-2 BLOCKERs FULLY CLOSED on commit 6c25ee0: (1) QEC HPCode sub-namespace prefix added at line 823; (2) §19 line 1386 lowercase placeholder replaced with 4 qualified pathB_residual names; (3) §19 lines 1397/1400 unqualified theorem names replaced with NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent + perturbed_pathB_residual_a4_eq_delta_R_sq; (4) bibliography Class CI compile-gate resolved via inline thebibliography{99} block (61 \\bibitem entries, 0 undefined-citation warnings, CITATION_REGISTRY membership 100% on all 59 unique cite-keys, 2 cite-key renames KaulMajumdar1998->2000 / SextyWetterich2009->BergesSexty2008 propagated). 5 advisory follow-ups carry forward (HD HYPOTHESIS_REGISTRY enumeration; IA GW170817 7×10^14-vs-14-orders alternation; SD §18 ceilings citation; cross-bundle L1/L3 / D4 §7 anchor)."
   },
 
-  "blocking_issues": [
-    {"id": "block:r2:1", "summary": "Class TN — QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class missing `.HPCode.` sub-namespace prefix at line 823. Single-token fix.", "sentences": ["sentence:D3:quantum-error-correction-holography-bridge:ed57a4f0"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:r2:2", "summary": "Class TN — §19 line 1386 unqualified \\texttt{nonlinearDiffInvariance.path_b_residual} not in lean_deps.json. Replace with NonlinearDiffInvariance.pathB_residual_a0/a2/a4.", "sentences": ["sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:0b77edb0"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:r2:3", "summary": "Class TN — §19 lines 1392-1395 unqualified \\texttt{path_b_holds_iff_dirac_bundle} + \\texttt{perturbed_bundle_residual_linear_in_delta} not in lean_deps.json. Replace with NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent + NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq.", "sentences": ["sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:f22348bd"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:r2:4", "summary": "Class CI/IA — paper_draftNotes.bib is EMPTY (0 bytes / 0 BibTeX entries). Bibliography filename rename in round-1 was insufficient. paper_draft.aux still has 0 \\bibcite entries; PDF compiles citations as ??. Plus 38 of 61 cited keys remain missing from CITATION_REGISTRY (carryover from round-1). Tagged as IA in finding_classes since CI is not a registered v2 class.", "sentences": ["sentence:D3:bibliography:d2a65476"], "gate": "Gate1_CitationIntegrity", "finding_class": "IA", "severity": "blocker"}
-  ],
+  "blocking_issues": [],
 
   "non_blocking_followups": [
-    {"id": "advisory:r2:1", "summary": "Class HD — Python HYPOTHESIS_REGISTRY (7 keys, none from D3) still does not enumerate the 11 D3-side tracked-hypothesis Lean Props (Vergeles trio, H_HorizonBoundaryCondition, H_TopologicalOrderBeyondLG, H_TetradQuarkScalesNatural, H_RegimePartition, H_NonlinearEFEHolds, H_NonlinearDiffInvariance, H_EinsteinCartanExtensionHolds, H_MicroscopicCoefficientMatch, H_VestigialModeIsGraviton, H_VerlindeKMLiteralSumDerivation). Paper prose discloses tracked-Prop status correctly in §28 Outlook so the disclosure-gap discipline is satisfied; this is a Python-side traceability follow-up. Carry over from round-1.", "gate": "Gate6_AssumptionDisclosure", "finding_class": "HD"},
-    {"id": "advisory:r2:2", "summary": "Class IA — synthesis-brief 'approximately 7×10^14' GW170817 falsification factor vs paper '~14 orders' — still alternates; pick one usage. Carry over from round-1.", "gate": "Gate9_NumericalFreshness", "finding_class": "IA"},
-    {"id": "advisory:r2:3", "summary": "Class SD — §18 line 1352-1354 still asserts pulsar-timing-array ≤10^60 + binary-BH-inspiral ≤10^50 ceilings without citation. Either cite (Stein-Yagi-Yunes or similar) or hedge to 'order-of-magnitude estimate'. Carry over from round-1.", "gate": "Gate9_NumericalFreshness", "finding_class": "SD"},
-    {"id": "advisory:r2:4", "summary": "Cross-bundle bridge — §6 GW170817 Δc/c bound and §8 M_c regime-partition criterion still need character-for-character validation against L1 / L3 (both at GREEN per memory 2026-05-01). Carry over from round-1.", "gate": "Gate2_CrossBundleConsistency", "finding_class": "TN"},
-    {"id": "advisory:r2:5", "summary": "§9 / §22.5 Cross-bundle anchor — D3 §9 sets canonical QEC-MTC framing for D4 §7. D4 round-1 BLOCKERs noted in commit 676aed3 (6 BLOCKERs); round-2 cross-bundle re-validation pending D4 round-2. Carry over from round-1.", "gate": "Gate2_CrossBundleConsistency", "finding_class": "TN"}
+    {"id": "advisory:r3:1", "summary": "Class HD — Python HYPOTHESIS_REGISTRY (7 keys, none from D3) still does not enumerate the 11 D3-side tracked-hypothesis Lean Props (Vergeles trio, H_HorizonBoundaryCondition, H_TopologicalOrderBeyondLG, H_TetradQuarkScalesNatural, H_RegimePartition, H_NonlinearEFEHolds, H_NonlinearDiffInvariance, H_EinsteinCartanExtensionHolds, H_MicroscopicCoefficientMatch, H_VestigialModeIsGraviton, H_VerlindeKMLiteralSumDerivation). Paper prose discloses tracked-Prop status correctly in §28 Outlook so the disclosure-gap discipline is satisfied; this is a Python-side traceability follow-up. Carry over from round-1+round-2.", "gate": "Gate6_AssumptionDisclosure", "finding_class": "HD", "carried_from": ["advisory:r2:1"]},
+    {"id": "advisory:r3:2", "summary": "Class IA — synthesis-brief 'approximately 7×10^14' GW170817 falsification factor vs paper '~14 orders' — still alternates; pick one usage. Carry over from round-1+round-2.", "gate": "Gate9_NumericalFreshness", "finding_class": "IA", "carried_from": ["advisory:r2:2"]},
+    {"id": "advisory:r3:3", "summary": "Class SD — §18 line 1352-1354 still asserts pulsar-timing-array ≤10^60 + binary-BH-inspiral ≤10^50 ceilings without citation. Either cite (Stein-Yagi-Yunes or similar) or hedge to 'order-of-magnitude estimate'. Carry over from round-1+round-2.", "gate": "Gate9_NumericalFreshness", "finding_class": "SD", "carried_from": ["advisory:r2:3"]},
+    {"id": "advisory:r3:4", "summary": "Cross-bundle bridge — §6 GW170817 Δc/c bound and §8 M_c regime-partition criterion still need character-for-character validation against L1 / L3 (both at GREEN per memory 2026-05-01). Carry over from round-1+round-2.", "gate": "Gate2_CrossBundleConsistency", "finding_class": "TN", "carried_from": ["advisory:r2:4"]},
+    {"id": "advisory:r3:5", "summary": "§9 / §22.5 Cross-bundle anchor — D3 §9 sets canonical QEC-MTC framing for D4 §7. D4 round-1 BLOCKERs noted in commit 676aed3 (6 BLOCKERs); cross-bundle re-validation pending D4 round-2/3. Carry over from round-1+round-2.", "gate": "Gate2_CrossBundleConsistency", "finding_class": "TN", "carried_from": ["advisory:r2:5"]}
   ]
 }
