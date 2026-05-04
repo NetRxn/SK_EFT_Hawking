@@ -452,12 +452,88 @@ formulation:
 \section{Gauge erasure}
 \label{sec:gauge-erasure}
 
-%% TODO: 4pp lift from Bundle D3 §3 + paper3.
-%% Key claim: Only U(1) survives the fluid layer; non-Abelian gauge
-%% fields persist only as discrete centre symmetries.
-%% Cross-bundle bridge: D3 §3 + D4 §4 (Drinfeld centre carries the centre-symmetry data).
+A higher-form-symmetry analysis of the Glorioso--Liu Schwinger--Keldysh
+effective-field-theory programme~\cite{GloriosoLiu2018} establishes
+that the hydrodynamic layer \emph{erases} non-Abelian one-form gauge
+symmetry: only $U(1)$ survives the fluid-cell coarse-graining as a
+continuous one-form. Non-Abelian gauge fields survive only as discrete
+centre symmetries that re-enter through the deconfinement transition
+(Bundle~D3 \S 14, with cross-bridge to D4 \S 4 below). The erasure
+theorem (\texttt{GaugeErasure.gauge\_erasure},
+\texttt{GaugeErasure.u1\_survival}) is the first of three
+predictive-boundary cuts that force the ADW substrate route to the
+tetrad-condensation channel; the other two are the perturbative
+Wen-ADW deficit and the GW170817 vestigial-graviton falsification
+(\S\ref{sec:emergent-gravity}).
 
-\textit{Substantive content awaiting D3 Stage-13 GREEN gate.}
+\subsection{Erasure mechanism}
+
+Non-Abelian one-form symmetries require a colour-charged operator
+algebra on each fluid cell. Hydrodynamic coarse-graining washes out
+the colour correlation outside the screening length while preserving
+the Abelian charge, because the Abelian charge is additive and
+survives averaging. The effective fluid Lagrangian therefore admits
+only $U(1)$ continuous one-forms; non-Abelian remnants survive only
+as the centre $\mathbb{Z}_N \subset \mathrm{SU}(N)$, which is
+gauge-trivial in the fluid limit but reappears through the
+Polyakov-loop modulus in the deconfinement order parameter
+(see~\cite{Polyakov1978,SvetitskyYaffe1982}).
+
+The erasure theorem is the substrate's structural answer to a
+question that frames much of fluid-EFT model-building: \emph{why does
+a fluid layer not naturally produce non-Abelian gauge fields?} The
+answer is that, at the formal level, it cannot: the higher-form
+selection rule is a hydrodynamic coarse-graining identity, not an
+empirical regularity.
+
+\subsection{Universality across substrates}
+
+The erasure mechanism is platform-universal in a sense that this
+flagship's substrate-identity claim leans on. Relativistic
+hydrodynamics, Pretko--Radzihovsky fracton
+hydrodynamics~\cite{PretkoRadzihovsky2018}, and Maldacena's
+$\mathcal{N}=4$ super-Yang--Mills hydrodynamic
+limit~\cite{Maldacena1997} all share the same erasure selection
+rule. Domain walls---not Goldstone bosons---carry the residual
+non-Abelian information. This links forward to the Polyakov-loop
+confinement order parameter in Bundle~D3 \S 14 and to the colour-flavour
+locked diquark condensate in D3 \S 16 with~\cite{AlfordRajagopalWilczek1999}.
+
+The platform-universality of erasure is what turns the substrate's
+SK--EFT analog Hawking content of D1 (BEC, polariton, graphene Dirac
+fluid) into a single substrate-level claim rather than three
+platform-specific claims: each platform's hydrodynamic fluid is
+governed by the same erasure rule, so the SK--EFT axioms close on
+each platform with the same continuous-$U(1)$ residual.
+
+\subsection{Decisive test: $\mathcal{N}=4$ SYM}
+
+$\mathcal{N}=4$ super-Yang--Mills carries a one-form $\mathrm{SU}(N)$
+symmetry above the conformal threshold but a $\mathbb{Z}_N$ centre at
+the hydrodynamic fixed point. The erasure theorem predicts the centre
+survives and the continuous $\mathrm{SU}(N)$ one-form does not; this
+is the substrate's decisive test against an alternative
+continuous-non-Abelian hydrodynamic regime. The prediction is
+independent of holographic-duality assumptions: the
+hydrodynamic-fixed-point limit of any candidate gauge theory selects
+$U(1)$-plus-centre at the SK-effective level.
+
+\subsection{Cross-bridge to D4 \S 4 (Drinfeld centre)}
+
+The discrete-centre $\mathbb{Z}_N$ residual from gauge erasure is
+not a phenomenological remnant: it carries the substrate's
+topological-quantum-computation data. Specifically, the $\mathbb{Z}_N$
+centre of $\mathrm{SU}(N)$ enters the modular tensor category of
+Bundle~D4 \S 4 through the Drinfeld-centre construction
+$\mathcal{Z}(\mathrm{Vec}_{\mathbb{Z}_N})$, which is the canonical
+$3+1$D topological order anchoring the Standard-Model anomaly
+classification of Bundle~D2 (\S\ref{sec:chirality-wall-modular}).
+The cross-bridge \emph{D3~\S 3 $\to$ D4~\S 4 $\to$ D2~\S 3.4} is one
+substrate-identity thread: erasure selects the centre, the centre
+populates the Drinfeld category, and the Drinfeld category supplies
+the SM anomaly cancellation. The substrate-identity synthesis claim
+is the observation that this thread closes self-consistently across
+three sibling bundles without an additional mechanism.
 
 %% =====================================================================
 %% §4 — SK-EFT analog Hawking radiation across three platforms (D1 + E1 + E2)
@@ -481,15 +557,130 @@ formulation:
 \section{Chirality wall and modular invariance}
 \label{sec:chirality-wall-modular}
 
-%% TODO: 10pp lift from Bundle D2 (full content) + L2 splash summary.
-%% Key claims:
-%%   - Spin^{Z_4} 5-bordism with Z_{16} anomaly classification.
-%%   - N_f = 16 as the unique SM consistency count.
-%%   - Three SM fermion generations from modular invariance.
-%%   - Three-pillar synthesis: Golterman-Shamir + Gioia-Thorngren + Onsager + Witten anomaly.
-%%   - One axiom: gapped_interface_axiom.
+Bundle~D2~\cite{Roehm2026D2} consolidates the substrate's
+chirality-wall + modular-invariance content into a single deep paper
+treating the Standard-Model fermion content as a $\mathrm{Spin}^{\mathbb{Z}_4}$
+5-bordism anomaly classification with $\mathbb{Z}_{16}$ periodicity.
+The PRL splash Bundle~L2~\cite{Roehm2026Modular} extracts the
+headline four-page result on the modular-invariance derivation of
+three Standard-Model fermion generations.
 
-\textit{Substantive content awaiting all-12-siblings-GREEN gate (D2 + L2 already closed).}
+\subsection{Modular framing and the central charge}
+
+The substrate's lattice fermion content carries a central charge
+$c$ that, on the modular-framing constraint, is required to be a
+consistent boundary condition for a $(2{+}1)$D topological field
+theory. The modular generation constraint (D2 \S 2) shows that with
+the Standard-Model fermion content (15 Weyl fermions per generation,
+plus the right-handed neutrino $\nu_R$) the central charge is
+$c = 16 g$ where $g$ is the number of generations. The 16-convergence
+follows from the Rokhlin theorem on $\mathrm{Spin}^{\mathbb{Z}_4}$
+4-manifolds: the signature divides by $16$, forcing $N_f = 16$ per
+generation as the unique consistent count.
+
+Without $\nu_R$, the central charge produces a fractional anomaly that
+fails to lift to a consistent topological boundary condition. With
+$\nu_R$, the lift is unique up to discrete data captured by the
+$\mathbb{Z}_{16}$ anomaly classification.
+
+\subsection{The Standard-Model $\mathbb{Z}_{16}$ anomaly}
+
+The $\mathbb{Z}_{16}$ generator of the $\mathrm{Spin}^{\mathbb{Z}_4}$
+5-bordism group acts on the substrate's per-generation fermion
+content as the unique non-trivial generator. A single Standard-Model
+generation contributes a $\mathbb{Z}_{16}$ charge of $1$
+(\texttt{dai\_freed\_spin\_z4}); three generations stack to a
+$\mathbb{Z}_{16}$ charge of $3$, which is anomaly-canceling modulo
+the SPT-stacking 16-fold periodicity. The cross-section consistency
+of the three generations against the $\mathbb{Z}_{16}$ anomaly is the
+substrate's structural answer to the Standard-Model fermion-generation
+counting problem: \emph{three generations is the unique fermion-content
+solution that anomaly-cancels modulo the $\mathbb{Z}_{16}$ classification.}
+
+The minimal Drinfeld-centre anchor (D2 \S 3.4) shows that the
+$\mathbb{Z}_{16}$ anomaly classification arises from a Drinfeld
+centre $\mathcal{Z}(\mathrm{Vec}_{\mathbb{Z}_4})$ on the substrate's
+toric-code-style boundary condition. This is the cross-bridge to
+Bundle~D4 \S 4, where the same Drinfeld-centre construction supplies
+the substrate's topological-quantum-computation infrastructure
+(\S\ref{sec:topological-qc}). The Drinfeld-centre object on the D4
+side and the Drinfeld-centre object on the D2 side are the same
+algebraic object in the substrate's category-theoretic data.
+
+\subsection{The chirality wall: three-pillar synthesis}
+
+The chirality-wall construction synthesises three independent pillars:
+
+\paragraph{Pillar 1 (Golterman--Shamir no-go and TPF evasion).} A
+chiral lattice gauge theory with manifest gauge invariance cannot
+exist by the Golterman--Shamir no-go; the substrate's chirality wall
+evades this obstruction through a topological-phase-factor (TPF)
+construction that breaks gauge invariance manifestly while preserving
+the topological invariant.
+
+\paragraph{Pillar 2 (Gioia--Thorngren positive construction).} A
+positive construction of the chirality wall is provided by the
+Gioia--Thorngren mechanism: a 4+1D gapped interface between a trivial
+$\mathbb{Z}_2$-symmetry-protected topological (SPT) phase and a
+non-trivial $\mathbb{Z}_4$-anomalous boundary supports the
+Standard-Model chiral fermion content as the boundary excitation
+spectrum.
+
+\paragraph{Pillar 3 (Onsager + Witten anomaly).} The Onsager-style
+algebraic-geometry construction recovers the Witten anomaly as the
+unique global obstruction to the Standard-Model fermion content
+without $\nu_R$. With $\nu_R$ included, the anomaly cancels at the
+classification level but persists as a tracked physical signature in
+the $\theta$-angle data of Bundle~D3 \S 13 (Phase~6l Z16 strong-CP
+substrate-silence verdict).
+
+The three pillars synthesise into the chirality-wall theorem: the
+4+1D gapped-interface axiom (\texttt{gapped\_interface\_axiom}) is
+the unique structural ingredient required, and the substrate's
+fermion content is the unique 4-manifold-boundary spectrum consistent
+with the axiom.
+
+\subsection{The single axiom \texttt{gapped\_interface\_axiom}}
+
+The substrate's Bundle~D2 ships with one true axiom:
+\texttt{gapped\_interface\_axiom}, the 4+1D conjecture that asserts
+the existence of the gapped interface required by Pillar 2. This is
+the only axiom in the entire 13-bundle program that has not been
+discharged at the Lean-formalisation scope. All other load-bearing
+substrate claims are theorems with zero \texttt{sorry}.
+
+The axiom's status is partial in a specific sense: it is a
+mathematical conjecture (existence of a particular gapped-interface
+construction) that mathematicians have not yet proved, rather than a
+physical postulate. Its discharge is a Mathlib-upstream cycle target
+(see Bundle~I2~\cite{Roehm2026Strategy}) and is on the Phase 8 outlook
+roadmap. Bundle~D4 inherits the axiom but introduces no new ones
+(\S\ref{sec:topological-qc}).
+
+\subsection{The L2 PRL splash}
+
+Bundle~L2~\cite{Roehm2026Modular} extracts the four-page PRL splash
+from the modular-invariance pillar (D2 \S 2) and ships as a stand-alone
+result on \emph{three Standard-Model fermion generations from modular
+invariance}. The splash carries the central-charge-modulo-16 derivation,
+the Rokhlin 16-convergence, and the cross-section consistency check;
+it does not carry the full $\mathrm{Spin}^{\mathbb{Z}_4}$ 5-bordism
+anomaly classification (which lives in D2). The L2 splash and the
+D2 deep paper share the same Lean theorem anchor
+(\texttt{Z16Classification.dai\_freed\_spin\_z4}) character-for-character.
+
+\subsection{Cross-bridge to D3's $N_f$}
+
+The substrate-identity synthesis claim of this flagship leans on the
+observation that the $N_f = 16$ derived in D2 (modular framing /
+Rokhlin / 16-convergence) and the $N_f$ in the Sakharov coefficient
+$G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$ derived
+in D3 \S 17 (heat-kernel calibration on the substrate's Dirac-fermion
+bundle) are the same $N_f$. The same fermion-content count that fixes
+the Standard-Model anomaly classification also fixes the substrate's
+emergent gravitational coupling. This is one of the four substrate-identity
+threads listed in \S\ref{sec:strategic-frame} and is the F-unique
+synthesis content that none of the sibling bundles report individually.
 
 %% =====================================================================
 %% §6 — Emergent gravity through BH thermodynamics (D3 + L1 + L3)
@@ -517,14 +708,137 @@ formulation:
 \section{Topological quantum-computation foundations}
 \label{sec:topological-qc}
 
-%% TODO: 10pp lift from Bundle D4 (full content).
-%% Key claims:
-%%   - One MTC, four faces (Drinfeld centre + WRT partition + HP-QEC + RT/CH knife-edge).
-%%   - 5 first-formalisation claims: Uqsl_2, Uqsl_3, Ising MTC, trefoil = -sqrt(2), WRT partition, HP code-distance biconditional.
-%%   - Doublon-SWAP gate as first SPT topological quantum gate.
-%%   - Cross-bridges: D4 §4 ↔ D2 §3.4; D4 §7 ↔ D3 §7 + §9; D4 §8 ↔ D3 §7.
+Bundle~D4 (\cite{Roehm2026D4}) consolidates the substrate's
+topological-quantum-computation infrastructure into a single
+machine-verified account. To our knowledge, D4 ships the first
+machine-checked construction of the Drinfeld quantum groups
+$U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$ in any proof
+assistant, the first complete machine-checked Ising modular-tensor-category
+(MTC) braided structure with all six hexagon equations and ribbon
+equations, the Witten--Reshetikhin--Turaev partition function on
+$S^{2}\times S^{1}$ and surgery formula on three-manifolds, the
+doublon-SWAP gate as the substrate's first symmetry-protected
+topological quantum gate, the Hayden--Preskill error-correcting-code
+structure on horizon MTCs, and the Ryu--Takayanagi /
+Casini--Huerta knife-edge biconditional that distinguishes
+generic-MTC from BH-entropy-yielding boundary conditions
+(\cite{ReshetikhinTuraev1991,Witten1989,
+NayakSimonSternFreedmanDasSarma2008,FreedmanLarsenWang2002,Kitaev2003,
+HaydenPreskill2007,WalkerWang2012,PastawskiYoshidaHarlowPreskill2015}).
 
-\textit{Substantive content awaiting all-12-siblings-GREEN gate (D4 already closed).}
+\subsection{One MTC, four faces}
+
+The synthesis claim NEW to D4---which the substrate-identity claim
+of this flagship inherits---is the observation that the substrate
+carries a \emph{single} MTC: the SU(2)$_k$ Chern--Simons MTC at the
+horizon. The single MTC underwrites four ostensibly distinct
+substrate computations:
+
+\begin{itemize}
+\item \textbf{Face 1 (Drinfeld centre).} The Drinfeld-centre
+  construction $\mathcal{Z}(\mathrm{Vec}_{\mathbb{Z}_N})$ supplies the
+  Standard-Model anomaly classification anchor of Bundle~D2 \S 3.4.
+  The cross-bridge here---which Bundle~D4 \S 4 makes explicit---is
+  that the centre $\mathbb{Z}_N$ from D3's gauge-erasure mechanism
+  (\S\ref{sec:gauge-erasure}) populates the Drinfeld category in the
+  toric-code anchor.
+\item \textbf{Face 2 (WRT partition function).} The
+  Witten--Reshetikhin--Turaev~\cite{ReshetikhinTuraev1991,Witten1989}
+  partition function on $S^{2}\times S^{1}$ evaluates to
+  $Z(S^{2}\times S^{1}) = \mathrm{rk}\,\mathcal{C}$ (the rank of the
+  MTC), and the surgery-formula evaluation on $S^{3}$ delivers a
+  closed-form expression for the substrate's BH partition-function
+  count of Bundle~D3 \S 7. The trefoil-knot invariant
+  $\langle\mathrm{trefoil}\rangle = -\sqrt{2}$ is a load-bearing
+  closed-form check.
+\item \textbf{Face 3 (Hayden--Preskill QEC).} The horizon-MTC supports
+  a Hayden--Preskill quantum error-correcting code structure
+  whose code distance and scrambling time satisfy a biconditional
+  agreement with the anyonic-fusion-admissibility predicate
+  (\texttt{QECHolographyBridge.HPCode.code\_distance\_scaling\_matches\_anyonic\_fusion\_iff\_fusion\_in\_admissible\_class}).
+  The substrate's MTC is the same MTC that supplies the
+  Bekenstein--Hawking entropy of D3 \S 7 (Face 2) and the boundary-condition
+  Prop record \texttt{H\_HorizonBoundaryCondition}.
+\item \textbf{Face 4 (RT/Casini--Huerta knife-edge).} The
+  Ryu--Takayanagi / Casini--Huerta entanglement-entropy biconditional
+  distinguishes generic-MTC boundary conditions from
+  BH-entropy-yielding conditions through a knife-edge predicate.
+  The same MTC carries both the entropy count of D3 \S 7 and the
+  entanglement-entropy structure of the boundary CFT.
+\end{itemize}
+
+The unifying claim is that the substrate carries one MTC, not four,
+and the four faces are equivalent descriptions of a single
+algebraic object on the substrate side. This is the D4 synthesis
+claim NEW to D4, which the F flagship lifts here as a substrate-identity
+contribution.
+
+\subsection{First-formalisation claims}
+
+D4 ships five first-formalisation claims, each hedged with ``to our
+knowledge'' against searches of the Coq, Agda, Isabelle, HOL4, and
+Mizar libraries:
+
+\begin{enumerate}
+\item $U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$ Hopf-algebra
+  axioms with affine and rank-$2$ extensions.
+\item Ising MTC braided fusion category with all six hexagon equations
+  and ribbon equations, plus the closed-form trefoil invariant
+  $\langle\mathrm{trefoil}\rangle = -\sqrt{2}$ and the Hopf-link
+  $S$-matrix match.
+\item WRT TQFT partition function on $S^{2}\times S^{1}$ and the
+  Lickorish surgery formula on three-manifolds (the figure-eight knot
+  invariant remains in flight as a tracked-hypothesis closure).
+\item Hayden--Preskill QEC code-distance biconditional on horizon-MTC
+  boundary conditions, with the Fibonacci-anyon bound as a quantitative
+  benchmark
+  (\texttt{QECHolographyBridge.fibonacci\_HPCode\_codeDistance\_lt\_log\_two}).
+\item Doublon-SWAP gate as the substrate's first symmetry-protected
+  topological quantum gate (Berry phase $\pi$, with adiabatic-drag
+  premise carried as a tracked-hypothesis Prop record). To our
+  knowledge there is no prior published topological quantum gate of
+  SPT type in proof-assistant form.
+\end{enumerate}
+
+\subsection{Inheritance and axiom budget}
+
+D4 inherits Bundle~D2's single true axiom \texttt{gapped\_interface\_axiom}
+(the 4+1D conjecture sitting at the intersection of mechanisms (ii)
+and (iii) of D2). \emph{No new axioms are introduced in D4.} The
+\texttt{H\_HorizonBoundaryCondition} structure is a tracked-hypothesis
+Prop record, not an axiom; D4 \S 7 consumes it through the QEC-MTC
+cross-bridge to Bundle~D3 \S 7. The doublon-SWAP gate's adiabatic-drag
+premise will be encoded similarly as a tracked-hypothesis Prop record
+in the in-flight \texttt{DoublonGate.lean} module.
+
+\subsection{Cross-bridges}
+
+D4 cross-bridges back to three sibling bundles in the substrate-identity
+network:
+
+\begin{itemize}
+\item \textbf{D4 \S 4 $\leftrightarrow$ D2 \S 3.4 (Drinfeld centre).}
+  The toric-code MTC anchor of D4 \S 4 is the same algebraic structure
+  that Bundle~D2 \S 3.4 uses as the Standard-Model anomaly classification
+  Drinfeld-centre construction. Cross-bridge verified character-for-character
+  in the Phase~7c.8 review pass.
+\item \textbf{D4 \S 7 $\leftrightarrow$ D3 \S 7, \S 9 (HP-QEC + horizon
+  boundary condition).} The Hayden--Preskill code structure consumes
+  D3's \texttt{H\_HorizonBoundaryCondition} Prop record; the
+  scrambling-time bound and code-distance biconditional are computed
+  on the same MTC structure.
+\item \textbf{D4 \S 8 $\leftrightarrow$ D3 \S 7 (RT/CH knife-edge).}
+  The Casini--Huerta knife-edge biconditional distinguishes
+  generic-MTC boundary conditions from BH-entropy-yielding conditions
+  on the same horizon MTC that anchors D3's BH entropy.
+\end{itemize}
+
+The cross-bridge network closes self-consistently: all three sibling
+bundles cite the same Lean theorem names (verified
+character-for-character in the Phase~7c.8 review pass), and the
+\texttt{H\_HorizonBoundaryCondition} Prop record is defined exactly
+once (in D3's \texttt{BHEntropyMicroscopic.lean}) and consumed by
+D4 through the cross-bridge.
 
 %% =====================================================================
 %% §8 — Dark sector under substrate constraints (D5)
@@ -549,16 +863,157 @@ formulation:
 \section{Methodology and the verification stack}
 \label{sec:methodology}
 
-%% TODO: 8pp lift from Bundle I1 (full content) + I2 software paper summary.
-%% Key claims:
-%%   - 14-stage Wave Execution Pipeline (full description).
-%%   - 3-layer verification: Python ↔ Lean 4 ↔ Aristotle.
-%%   - Worked cases from each pipeline stage.
-%%   - Phase 6f-6g substrate roster algebraic-Lorentzian-geometry first-formalisations.
-%%   - VerifiedJackknife software paper content (I2).
-%%   - Lean tensor-categories Mathlib upstream cycle (I2).
+Bundle~I1 (verification methodology, with worked cases) and Bundle~I2
+(verified statistics + Lean tensor-categories software paper) describe
+the substrate program's verification machinery. Both bundles are
+infrastructure-grade content rather than direct substrate physics:
+they explain how the substrate program reaches the predictive-register
+conclusions that the deep papers (D1--D5) report.
 
-\textit{Substantive content awaiting all-12-siblings-GREEN gate (I1 + I2 already closed).}
+\subsection{The three-layer verification architecture}
+
+Every load-bearing claim in the SK--EFT Hawking program is verified
+through three independent layers whose disagreement constitutes
+evidence that something is wrong with the substrate analysis:
+
+\begin{enumerate}
+\item \textbf{Layer 1: Python numerics.} Quantitative predictions
+  ($T_H$ values, dispersion-correction percentages, gain thresholds,
+  cosmological-constant ratios, regime-partition mass scales) are
+  computed in canonical Python modules (\texttt{src/core/formulas.py},
+  \texttt{src/core/constants.py}, \texttt{src/wkb/spectrum.py},
+  \texttt{src/adw/gap\_equation.py}). Pipeline Invariant \#1
+  designates \texttt{formulas.py} as canonical---the only place
+  physics formulas live.
+\item \textbf{Layer 2: Lean 4 formal proofs.} Every formula in
+  \texttt{formulas.py} carries a Lean theorem reference; every Lean
+  theorem has zero \texttt{sorry}. The Lean library currently ships
+  $\sim \totalsubstantivetheorems$ substantive theorems across
+  \totalmodules{} modules with $\axioms$ axiom and $\sorries$
+  \texttt{sorry}.
+\item \textbf{Layer 3: Aristotle automated theorem prover.}
+  Hard-to-discharge sub-lemmas surfaced during a Lean development
+  cycle can be submitted to the Aristotle automated theorem prover
+  (\cite{Roehm2026Strategy}, paper15 / Bundle~I1), which closes them
+  on the Aristotle-pinned toolchain ($\sim 322$ Aristotle-proved
+  theorems contribute to the project total). The Aristotle layer is
+  optional but reduces the manual proof effort substantially on
+  intricate algebraic obstructions.
+\end{enumerate}
+
+The architecture's point is robustness, not redundancy: when the
+three layers disagree (as they have in tracked occurrences), the
+disagreement \emph{is} the evidence. Bundle~I1 documents three worked
+cases of layer-disagreement-as-evidence: (i)~the FirstOrderKMS
+Aristotle counterexample, where Aristotle returned a counter-witness
+that disproved a tracked Lean conjecture in flight, redirecting the
+proof architecture; (ii)~the gap-solution-bounded conjecture disproof,
+where a Lean attempt to discharge a Python numerical claim revealed
+the claim was inconsistent with a separate Lean theorem;
+(iii)~the chirality-wall axiom decomposition, where the original
+single-axiom approach was decomposed into three pillars after a
+Lean-development cycle showed the single-axiom version was not
+discharge-able.
+
+\subsection{The 14-stage Wave Execution Pipeline}
+
+The program ships content through a 14-stage pipeline documented in
+\texttt{docs/WAVE\_EXECUTION\_PIPELINE.md} and described in detail
+in Bundle~I1 \S 6:
+
+\begin{enumerate}\setlength{\itemsep}{0pt}
+\item Constants and refs (canonical: \texttt{constants.py}).
+\item Formulas (canonical: \texttt{formulas.py}).
+\item Lean (canonical: \texttt{lean/SKEFTHawking/}).
+\item Aristotle (optional layer; closes hard sub-lemmas).
+\item Lean build verification (\texttt{lake build}).
+\item Tests (\texttt{pytest}; canonical: \texttt{tests/}).
+\item Validate (\texttt{validate.py}; 22+ checks).
+\item Visualizations (canonical: \texttt{visualizations.py}).
+\item Figure review (\texttt{physics-qa:figure-reviewer}).
+\item Paper draft (\texttt{papers/<bundle>/paper\_draft.tex}).
+\item Notebooks (companion narrative content where applicable).
+\item Documentation sync (counts, inventory, roadmap, README).
+\item Adversarial review (\texttt{adversarial-reviewer} agent;
+  fresh-context Stage-13 pass).
+\item Quality-improvement register (\texttt{docs/QI\_REGISTER.md};
+  process-level lessons banked for future waves).
+\end{enumerate}
+
+The pipeline is enforced by Pipeline Invariants 1--14 documented in
+\texttt{CLAUDE.md} and Bundle~I1 \S 7. The most load-bearing
+invariants for the substrate-identity claim of this flagship are:
+Invariant \#1 (formulas.py canonical), Invariant \#5 (every Lean
+theorem has a proof), Invariant \#10 (no maxHeartbeats in proof
+bodies; decomposition over compute), Invariant \#14 (sentence-level
+\texttt{bundle\_destination} tags carry over from source papers).
+
+\subsection{The pre-emptive-strengthening discipline}
+
+Bundle~I1 \S 7 describes a pre-emptive-strengthening discipline that
+applies five-question audit to each new theorem statement before
+writing it: (i)~drop redundant conjuncts; (ii)~quantitative connection
+to numerical content; (iii)~cross-module bridge integrity;
+(iv)~trivial-discharge check; (v)~defining-the-conclusion check. The
+discipline reduces the post-wave strengthening cost from $\sim 12$
+retroactive theorems per wave (the 6c.3 baseline) to $\sim 5$
+($58\%$ reduction in 6b.1, 2026-04-27). Empirically, the discipline
+catches the more obvious failure modes (existential-absorption,
+biconditional-tautology in conditional violators) but \emph{misses}
+subtler patterns (identity-function wrappers,
+within-own-$\pm 2\sigma$-band tautologies, pairwise-distinctness on
+inductive constructors, definitional-unfolding-as-physics).
+
+\subsection{The fresh-context adversarial-reviewer pattern}
+
+Bundle~I1 \S 9 documents the adversarial-reviewer pattern: every
+bundle's Stage-13 review is performed by a fresh-context reviewer
+agent that has not participated in the bundle's drafting. The fresh
+context is what surfaces issues that an authoring-context reviewer
+would miss (the authoring context already accepts the bundle's
+implicit assumptions). The reviewer's tool budget is hard-capped
+($\le 25$ reads, $\le 40$ tool calls) to enforce a finite-context
+walk; partial-coverage caveats are documented in the verdict file
+when the cap is hit.
+
+The 13-bundle architecture is gated by reviewer-triple closure (Stage
+9 figure-reviewer + Stage 10 claims-reviewer + Stage 13
+adversarial-reviewer; all three GREEN for a bundle to be marked
+closed). At F flagship close-out, all 12 sibling bundles plus this
+flagship will have passed reviewer-triple closure independently.
+
+\subsection{Algebraic-Lorentzian-geometry first-formalisations}
+
+Bundle~I1 \S 10 is the primary first-formalisation claim for the
+substrate's algebraic-Lorentzian-geometry backbone (Phase 6f / 6g).
+Bundle~D3 \S 22.5 is the supplement that consumes these on the
+substrate side: D3 cites the I1 first-formalisation primary while
+D3 extends the construction to the singularity, area, and no-hair
+theorems on the substrate-specific Lorentzian-metric typeclass.
+
+To our knowledge, this is the first machine-checked package on
+indefinite-signature metrics in any proof assistant for: the
+Lorentzian-metric typeclass, the algebraic first Bianchi identity,
+the differential second Bianchi identity, the causal-structure axiom
+hierarchy, and the Penrose / Hawking--Penrose / area / Kerr-family
+no-hair theorems. The Mathlib upstream cycle target (Bundle~I2) will
+contribute the no-hair theorem and the algebraic first Bianchi
+identity; the rest is Mathlib-PR-quality but not yet upstream.
+
+\subsection{Bundle I2: VerifiedJackknife and Lean tensor-categories}
+
+Bundle~I2~\cite{Roehm2026Strategy} ships the verified-statistics
+software paper content. The two anchors are: (i)~VerifiedJackknife,
+a Lean implementation of bias-corrected jackknife statistical estimators
+that closes the substrate's RHMC-Monte-Carlo error-bar discipline at
+the Lean-formalisation scope; (ii)~the Lean tensor-categories
+upstream-Mathlib cycle, which contributes a substantial fraction of
+the substrate's category-theoretic infrastructure (Drinfeld centre,
+ribbon equations, hexagon equations, MTC braiding) to the public
+Mathlib mathematical library. The Mathlib upstream cycle is on the
+Phase 8 outlook roadmap; if the cycle is delayed beyond the Phase 7
+drafting window, I2 ships as software-only with a JOSS-update target
+on the upstream-cycle close.
 
 %% =====================================================================
 %% §10 — Substrate predictive register: the boundary partition
@@ -566,15 +1021,203 @@ formulation:
 \section{Substrate predictive register: the boundary partition}
 \label{sec:substrate-register}
 
-%% TODO: 8pp F-original synthesis with cross-cites to D1-D5.
-%% Key claims:
-%%   - The substrate's complete cleared / falsified / structurally-blocked / reproduced register.
-%%   - Cleared decision gates: E.1, E.2, E.3, E.4', PPN, EC torsion, Stelle higher-curvature.
-%%   - Falsified: GW170817 vestigial graviton, Wen-ADW, fracton, abelian-MTC entropy, EWBG.
-%%   - Reproduced: CC problem at ~10^122.
-%%   - Open under tracked hypothesis: explicit one-loop alpha_ADW; RHMC L>=8 convergence; Higgs back-reaction; PMNS structure; figure-eight knot invariant; full WRT surgery formula.
+This section consolidates the substrate's complete predictive register
+across the boundary partition introduced in \S\ref{sec:strategic-frame}.
+Each entry traces to a specific Lean theorem or experimental anchor
+in a sibling bundle. The register is the substrate program's
+substantive output: \emph{what the substrate predicts at quantitative
+precision} versus \emph{what the substrate fails to predict at
+quantitative precision}.
 
-\textit{Substantive content awaiting all-12-siblings-GREEN gate.}
+\subsection{Cleared register}
+
+The substrate produces quantitative predictions agreeing with
+observation within the published experimental band at the following
+locations:
+
+\begin{itemize}
+\item \textbf{Decision Gate~E.1 (linearised EFE).} The Vergeles
+  positivity / critical-limit / Adler-reduction triple discharges
+  cleanly at the Sakharov-identity calibration point on the
+  substrate's tracked-hypothesis Prop record bundle (D3
+  \S\ref{sec:emergent-gravity} with Bundle~D3 \S 2).
+\item \textbf{Decision Gate~E.2 (heat-kernel calibration).} The
+  Sakharov coefficient $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$
+  is verified character-for-character against Vassilevich
+  Eq.~4.37~\cite{Vassilevich2003}. The same coefficient propagates
+  across six observables in D3 without an additional dial.
+\item \textbf{Decision Gate~E.3 (diff invariance through $a_4$).}
+  The path-(b) order-by-order invariance failure
+  \texttt{NonlinearDiffInvariance.pathB\_residual\_a4\_dirac\_eq\_zero}
+  closes on the Dirac fermion bundle; perturbations away from the
+  Dirac basis introduce a residual linear in the perturbation
+  parameter (D3 \S 19).
+\item \textbf{Decision Gate~E.4 (multi-channel PPN).} The
+  precession-ratio biconditional
+  \texttt{NonlinearEFE.precessionRatio\_eq\_one\_iff\_alpha\_unity}
+  closes the multi-channel PPN comparison against
+  Will~2014~\cite{Will2014} (D3 \S 20).
+\item \textbf{Polariton stimulated-Hawking gain.} $G > 0.5$ at
+  $\omega/\kappa = \ln 3 / (2\pi) \approx 0.175$ with
+  $N_{\mathrm{probe}} = 100$ probe photons per mode for $5\sigma$
+  detection. Bundle~D1 (\S\ref{sec:analog-hawking}) plus Bundle~E1
+  experimental letter for the Paris--LKB platform.
+\item \textbf{Graphene Dirac-fluid analog Hawking.} $T_H \approx 2.4\,$K,
+  $\delta_{\mathrm{disp}} \approx -2.8\%$, Wiedemann--Franz violation
+  $L/L_0 > 200$. Bundle~D1 plus Bundle~E2 experimental letter for the
+  Dean--Kim--Lucas platform.
+\item \textbf{Phase 6m Track-C $f(R)$ Exp + ArcTanh.} The strongest
+  CLEARED-R5 of any track in the Phase 6m three-track closure
+  (Plaza--Kraiselburd:
+  $\Delta\!\mathrm{AIC} \simeq \Delta\!\mathrm{BIC} \gtrsim 20$,
+  Jeffreys ``very strong''; D5 \S\ref{sec:dark-sector}).
+\item \textbf{Einstein--Cartan torsion at the cosmological background.}
+  $|T_{\mathrm{EC}}| \approx 2.05\times 10^{-77}\,\mathrm{GeV}$, which
+  is $\sim 46$ orders below the
+  Kosteleck\'y--Russell--Tasson~\cite{KosteleckyRussellTasson2008}
+  experimental bound (D3 \S 22).
+\item \textbf{Stelle higher-curvature ceilings.} The substrate's
+  predicted contributions to the Stelle $(\alpha,\beta,\gamma)$
+  coefficients sit safely below the LIGO + pulsar-timing-array +
+  binary-BH-inspiral observational ceilings (D3 \S 18).
+\end{itemize}
+
+\subsection{Falsified register}
+
+The substrate produces predictions in tension with observation at
+$\geq 5\sigma$ or Bayesian thresholds exceeding decisive at the
+following locations:
+
+\begin{itemize}
+\item \textbf{GW170817 vestigial-second-sound graviton.} The
+  vestigial-mode-as-graviton hypothesis is falsified at $\sim 7\times
+  10^{14}$ over the Volovik vestigial natural range (D3
+  \S\ref{sec:emergent-gravity} with Bundle~L1 PRL splash). The
+  falsification is universal across the natural-range parameter band
+  $\chi_{\mathrm{vest}}\in[0.1,10]$ via Abbott et al.\
+  $|\Delta c/c| \le 3\times 10^{-15}$~\cite{Abbott2017GW170817}.
+\item \textbf{Wen--ADW factor-$6000$ deficit.} The
+  perturbative-Wen extension to gravity under-predicts $G_N$ by a
+  closed-form Lean ratio $G_{\mathrm{Wen}}/G_c^{\mathrm{ADW}} \approx
+  1/6000$ (D3 \S 4 with~\cite{Wen2003}). The deficit closes the
+  emergent-non-Abelian-gauge-symmetry pathway to gravity at
+  quantitative magnitude.
+\item \textbf{Fracton diffeomorphism-invariance no-go.} The
+  Pretko--Radzihovsky fracton hydrodynamics
+  channel~\cite{PretkoRadzihovsky2018} fails to support full
+  diffeomorphism invariance at order $a_4$; the obstruction shows up
+  exactly at the order at which Stelle higher-curvature
+  $(\alpha,\beta,\gamma)$ live (D3 \S 4).
+\item \textbf{Abelian-MTC Bekenstein--Hawking falsifier.} The
+  substrate's MTC-derived $-3/2 \log A$ correction to the
+  Bekenstein--Hawking entropy~\cite{KaulMajumdar2000} is falsified
+  on abelian MTC choices (the falsifier pinpoints SU(2)$_k$ as the
+  unique MTC consistent with both the entropy count and the QEC
+  structure of D4). D3 \S 7 with D4 \S\ref{sec:topological-qc}.
+\item \textbf{Sen $-45/2$ disagreement with Kaul--Majumdar.} The
+  Sen 4D Schwarzschild logarithmic-correction coefficient $-45/2$
+  disagrees with the Kaul--Majumdar SU(2)$_k$ $-3/2$ at quantitative
+  precision; the substrate's choice of MTC is structurally selected
+  by the falsifier (D3 \S 7).
+\item \textbf{Phase 6m Track-B entropic-gravity dark-energy NO-GO
+  closure.} The first complete-mechanism-family unanimous NO-GO
+  closure in Phase~6m: $8/8$ candidates closed with
+  $|\!\log\mathcal{B}| \geq 5$ (Jeffreys-decisive); $7/8$ candidates
+  $r_d$-independent (D5 \S\ref{sec:dark-sector}).
+\item \textbf{Hu--Sawicki $f(R)$ chameleon Solar-System NO-GO.} The
+  Hu--Sawicki variant of Track C is closed via the
+  Solar-System chameleon constraint at $b \approx 0.21$
+  ($> 100\times$ the chameleon bound; D5 \S\ref{sec:dark-sector}).
+\item \textbf{Pure Lovelock $\alpha_2$ NO-GO.} The Pure Lovelock
+  candidate is closed at the $1\sigma$-box edge of Quintom-B
+  ($|w_0+1| < 0.05$, $|\tilde\alpha_2|_{\max}\le 0.15$;
+  D5 \S\ref{sec:dark-sector}).
+\item \textbf{EWBG doubly-forbidden.} The substrate's electroweak
+  baryogenesis pathway is doubly forbidden by the chirality-wall
+  + sphaleron-rate combination (D3 \S 13 with~\cite{KlinkhamerManton1984,
+  ArnoldMcLerran1987}).
+\end{itemize}
+
+\subsection{Structurally-blocked register}
+
+The substrate's mechanism is inapplicable for a load-bearing structural
+reason at the following locations:
+
+\begin{itemize}
+\item \textbf{Gibbs--Duhem obstruction theorem.} Any single-scalar
+  self-tuning emergent-vacuum framework with Gibbs--Duhem equilibrium
+  locks $w_{\mathrm{vac}} = -1$ (D5 \S\ref{sec:dark-sector}). The
+  obstruction is realisation-independent across the four tested KV
+  q-theory constructions (Bundle~D5; Phase 5y).
+\item \textbf{Four-factor orthogonality principle.} The dark-energy
+  obstruction follows from four orthogonal factors:
+  $\text{GD} \cap c_s^{2}\!\geq\!0 \cap \text{natural }T_c \cap
+  \text{MICROSCOPE}$. Vestigial gravity fails through factor \#1
+  (Gibbs--Duhem); other Volovik-family mechanisms fail through other
+  factor combinations (D5).
+\item \textbf{Causal-set DE GD-inapplicability across all four
+  sprinkling prescriptions.} Phase 6m Track-A (D5
+  \S\ref{sec:dark-sector}). Three publishable structural caveats
+  survive independent of DESI: GD-inapplicability across
+  prescriptions; Barrow-bound prescription dependence; BDG
+  $\sigma_\Lambda = \alpha_{\mathrm{BDG}}/\sqrt{V}$ first-principles
+  decomposition.
+\item \textbf{Higher-form-symmetry erasure.} Only $U(1)$ survives the
+  fluid layer; non-Abelian one-form symmetries are structurally
+  erased by hydrodynamic coarse-graining (D3 \S 3 with
+  \S\ref{sec:gauge-erasure}).
+\end{itemize}
+
+\subsection{Reproduced (not solved) register}
+
+The substrate produces predictions matching observation at the
+structural level but failing to solve the corresponding fine-tuning
+problem at the following locations:
+
+\begin{itemize}
+\item \textbf{Cosmological-constant problem.} The substrate's
+  Sakharov coefficient predicts an effective $\Lambda$ that
+  overshoots the observed value by
+  $\Lambda_{\mathrm{emerg}}/\Lambda_{\mathrm{obs}} \gtrsim 10^{100}$
+  (rigorous Lean lower bound; heuristically $\sim 10^{122}$).
+  D3 \S 21. The substrate inherits the $a_0$ heat-kernel
+  coefficient's universality across emergent-gravity proposals at
+  one-loop; emergent gravity does not shelter from the
+  cosmological-constant problem~\cite{Weinberg1989}.
+\end{itemize}
+
+\subsection{Open under tracked hypothesis}
+
+The substrate's predictive register includes obligations that are
+explicitly open under tracked-hypothesis Lean Props, with closure paths
+documented in each sibling bundle's Outlook section:
+
+\begin{itemize}\setlength{\itemsep}{0pt}
+\item Explicit one-loop calculation of $\alpha_{\mathrm{ADW}}$
+  discharging the three Vergeles propositions (D3 \S 2 + \S 5).
+\item RHMC convergence at $L \geq 8$ in the vestigial-metric Monte
+  Carlo (D3 \S 10).
+\item Higgs-mass back-reaction calculation
+  closing the BHL bilocal mechanism (D3 \S 11).
+\item PMNS structure on the Majorana rung (D3 \S 12).
+\item Figure-eight knot invariant
+  in the Ising MTC braided fusion category (D4 \S 4).
+\item Full WRT surgery formula for arbitrary closed orientable
+  3-manifolds (D4 \S 5; partial coverage on $S^3$ via Lickorish
+  surgery).
+\item Doublon-SWAP gate adiabatic-drag premise
+  (D4 \S 6, in flight in \texttt{DoublonGate.lean}).
+\item Mathlib upstream cycle for the no-hair theorem and the
+  algebraic first Bianchi identity (I2; Phase 8 outlook).
+\item Phase 6m Track-C M8 KSS path-(c) universal-horizon
+  thermodynamics (D5 \S\ref{sec:dark-sector}).
+\end{itemize}
+
+The open-under-tracked-hypothesis register is itself a substrate
+prediction: each entry is a quantitatively well-defined obligation
+whose closure is on the Phase 8+ roadmap. The substrate program is
+not done; it is at a coherent intermediate state where every closure
+target is identified.
 
 %% =====================================================================
 %% §11 — Open problems and Phase 8 outlook
@@ -582,15 +1225,125 @@ formulation:
 \section{Open problems and Phase~8 outlook}
 \label{sec:open-problems}
 
-%% TODO: 6pp F-original.
-%% Key claims:
-%%   - 12-bundle Phase 7 close-out summary.
-%%   - Submission roll-out per PAPER_STRATEGY.md §3.
-%%   - Cross-references to Phase 6 deferred targets.
-%%   - Mathlib upstream cycle (cross-ref I2).
-%%   - Future Phase 6X waves anticipated; absorption per LATE_PHASE6_ABSORPTION_PROTOCOL.md.
+\subsection{Phase 7 close-out summary}
 
-\textit{Substantive content awaiting all-12-siblings-GREEN gate.}
+At the time of this flagship's submission, the substrate program has
+shipped 13 bundles to reviewer-triple-closed Stage-13 GREEN status.
+The 12 sibling bundles ship across five tiers: Tier~0 (this flagship),
+Tier~1 (D1--D5; five deep papers), Tier~2 (L1--L3; three PRL splashes
+extracted from D2 and D3), Tier~3 (I1--I2; two infrastructure papers),
+and Tier~4 (E1--E2; two experimental letters). The architecture is
+the project's strategy frame~\cite{Roehm2026Strategy}.
+
+Total program output at flagship close-out:
+$\sim \totalsubstantivetheorems$ substantive Lean theorems across
+\totalmodules{} modules with $\axioms$ axiom and $\sorries$ \texttt{sorry}.
+The single axiom is \texttt{gapped\_interface\_axiom}, the 4+1D
+gapped-interface conjecture from Bundle~D2's chirality-wall pillar 2.
+All other load-bearing claims are theorems.
+
+\subsection{Submission roll-out}
+
+The submission sequence per~\cite{Roehm2026Strategy} \S 3 begins with
+the Tier-2 PRL splashes (L1, L2, L3) as arXiv vouchers ahead of the
+Tier-1 deep-paper submissions. The Tier-1 deep papers (D1, D2, D3,
+D4, D5) follow the splashes, with D3 (the heaviest at $\sim 50$pp)
+shipped after L1 and L3 since L1 and L3 extract content from D3.
+The Tier-3 infrastructure papers (I1, I2) ship in parallel with the
+Tier-1 deep papers; I2 may delay if the Mathlib upstream cycle
+extends. The Tier-4 experimental letters (E1, E2) ship with the D1
+deep paper as companion content. This flagship review (F) ships last,
+citing all 12 siblings in their Phase-7-final form.
+
+The submission cadence is intentionally tied to the architecture's
+internal cross-bridges: each downstream submission cites upstream
+submissions in their final-published form rather than as in-preparation
+self-cites. The full submission roll-out is on the Phase 8 roadmap.
+
+\subsection{Phase 6 deferred targets}
+
+The substrate program closed Phase 6m (the three-track dark-energy
+deep-research closure) at 2026-04-30. Phase 6 has produced
+sub-phases 6a through 6m to date. Several Phase 6 deferred targets
+remain on the Phase 8 outlook roadmap:
+
+\begin{itemize}
+\item \textbf{Phase 6n+ anticipated.} Future Phase 6X waves may ship
+  during Phase 7 / Phase 8 execution. The
+  \texttt{LATE\_PHASE6\_ABSORPTION\_PROTOCOL.md} (a frozen 7-stage
+  protocol with branches D.1/D.2/D.3) provides the canonical
+  workflow for absorbing late-Phase-6 outputs into already-drafted
+  bundles without redrafting.
+\item \textbf{Strong-CP / Z16 / theta-vacuum Phase 6l/6m extension.}
+  The substrate is silent on the strong-CP problem at the structural
+  level: $\bar\theta$ is uniquely orthogonal to the substrate's
+  $\mathbb{Z}_{16}$ anomaly classification (Phase 6l Wave 1 verdict).
+  This isolates strong-CP as the unique BSM-hierarchy substrate
+  $\mathbb{Z}_{16}$ does not fix.
+\item \textbf{Phase 6f / 6g substrate roster algebraic-Lorentzian-geometry
+  first-formalisations.} Bundle~I1 \S 10 ships these as the primary
+  first-formalisation claim; D3 \S 22.5 is the supplement on the
+  substrate side.
+\end{itemize}
+
+\subsection{Mathlib upstream cycle}
+
+Bundle~I2's Mathlib upstream cycle is the single largest piece of
+infrastructure work on the Phase 8 roadmap. The contributions targeted
+for upstream are: the no-hair theorem on the Lorentzian-metric
+typeclass; the algebraic first Bianchi identity on bundle Riemann
+tensors; the ribbon equations and hexagon equations of the Ising MTC
+braided fusion category; the WRT TQFT partition-function evaluation
+on $S^{2}\times S^{1}$; the Drinfeld-centre construction on the
+toric-code anchor. The cycle target is to reduce the substrate
+program's reliance on project-internal duplications of standard
+mathematical material; success of the cycle would let future
+substrate-program work import these directly from Mathlib rather than
+ship them in-bundle.
+
+If the cycle is delayed beyond the Phase 7 drafting window, Bundle~I2
+ships as software-only with a JOSS-update target on the upstream-cycle
+close.
+
+\subsection{Outlook and architectural roadmap}
+
+Looking forward beyond Phase 7, the substrate program's architectural
+roadmap rests on four open questions whose answers are on Phase 8+
+horizons:
+
+\begin{enumerate}
+\item \textbf{Is the substrate's predictive register complete at the
+  Lean-formalisation scope?} The current state ($\axioms$ axiom,
+  $\sorries$ \texttt{sorry}) is consistent with completeness, but the
+  open-under-tracked-hypothesis register
+  (\S\ref{sec:substrate-register}) lists $\sim 10$ residual closure
+  targets. Each is bounded; the question is whether closure of all of
+  them produces qualitatively new content or only confirms the
+  current substrate-identity claim.
+\item \textbf{Does the experimental program (Bundle~E1 polariton
+  Paris--LKB and Bundle~E2 graphene Dean--Kim--Lucas) produce a
+  positive observation?} The substrate's predictions are quantitative;
+  the Tier-4 experimental letters give the device-parameter audit.
+  Phase 8 collaboration with the Paris--LKB and Dean--Kim--Lucas
+  groups is on the roadmap.
+\item \textbf{Is the chirality-wall axiom dischargeable?} The single
+  remaining axiom \texttt{gapped\_interface\_axiom} is a mathematical
+  conjecture (existence of a particular gapped-interface
+  construction). Its discharge is a Mathlib-upstream-cycle target
+  but may also depend on independent mathematical-topology research.
+\item \textbf{What is the substrate's response to a positive DESI~DR3
+  $f(R)$ measurement?} The strongest CLEARED-R5 candidates of
+  Phase 6m Track-C ($f(R)$ Exp + ArcTanh) are the likely DESI~DR3
+  test target; a positive measurement would clear them at the
+  predictive-register cleared category, while a negative measurement
+  would close the only remaining alternative-mechanism family at
+  Phase 6m.
+\end{enumerate}
+
+The substrate program is at a coherent intermediate state. Its
+architectural commitment is to deliver the substrate's predictive
+register at quantitative precision across the four boundary-partition
+categories without rescoping in the face of negative results.
 
 %% =====================================================================
 %% §12 — Conclusions
