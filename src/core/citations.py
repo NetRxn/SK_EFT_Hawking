@@ -7132,15 +7132,59 @@ CITATION_REGISTRY = {
 
     # Bundle self-cites (in-preparation; lifted via Phase 7b/7c).
     # Inprep exemption per Pipeline Invariant #11.
+    'Roehm2026D1': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Analog Hawking radiation across three platforms (Bundle D1)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/F/paper_draft.tex'],
+        'provides': ['Bundle D1 (Tier-1 deep paper) self-cite. SK-EFT analog Hawking across BEC/polariton/graphene with 92% Lean theorem reuse.'],
+        'notes': 'In-preparation Bundle D1 self-cite. Phase 7e roadmap target.',
+    },
+
+    'Roehm2026D2': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Anomaly constraints on Standard Model particle content (Bundle D2)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/F/paper_draft.tex'],
+        'provides': ['Bundle D2 (Tier-1 deep paper) self-cite. Spin^{Z_4} 5-bordism Z_{16} anomaly classification; N_f = 16 unique SM consistency count.'],
+        'notes': 'In-preparation Bundle D2 self-cite. Phase 7d roadmap target.',
+    },
+
+    'Roehm2026D3': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Emergent gravity through black-hole thermodynamics (Bundle D3)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/F/paper_draft.tex'],
+        'provides': ['Bundle D3 (Tier-1 heaviest deep paper) self-cite. Single Sakharov coefficient G_N^Sak = 12pi/(N_f Lambda_UV^2) propagating across 6 observables.'],
+        'notes': 'In-preparation Bundle D3 self-cite. Phase 7c roadmap target.',
+    },
+
     'Roehm2026D4': {
         'authors': 'Roehm, J. G.',
         'title': 'Topological quantum-computation foundations: Drinfeld centre, Hayden--Preskill, longest verified mathematical chain (Bundle D4)',
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
-        'used_in': ['papers/D2/paper_draft.tex', 'papers/D3/paper_draft.tex'],
+        'used_in': ['papers/D2/paper_draft.tex', 'papers/D3/paper_draft.tex', 'papers/F/paper_draft.tex'],
         'provides': ['Bundle D4 (Topological QC foundations) self-cite. Drinfeld centre + QEC-MTC cross-bridge. Companion deep paper to L2 PRL splash.'],
         'notes': 'In-preparation Bundle D4 self-cite. Phase 7f roadmap target.',
+    },
+
+    'Roehm2026D5': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Dark sector under substrate constraints (Bundle D5)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/F/paper_draft.tex'],
+        'provides': ['Bundle D5 (Tier-1 deep paper) self-cite. Phase 6m three-track closure: causal-set + entropic + Jacobson-thermo-GR.'],
+        'notes': 'In-preparation Bundle D5 self-cite. Phase 7b sub-wave 7b.2 closed.',
     },
 
     'Roehm2026E1': {
