@@ -1,0 +1,101 @@
+{
+  "timestamp": "20260504T121714Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "bundle_source_freshness": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "13 sub-findings: 0 FAIL / 1 WARN / 12 PASS",
+          "warning": false
+        },
+        {
+          "name": "bundle:D1",
+          "passed": true,
+          "message": "bundle initialized; no lifts yet (skip)",
+          "warning": false
+        },
+        {
+          "name": "bundle:D2",
+          "passed": true,
+          "message": "bundle initialized; no lifts yet (skip)",
+          "warning": false
+        },
+        {
+          "name": "bundle:D3",
+          "passed": true,
+          "message": "bundle initialized; no lifts yet (skip)",
+          "warning": false
+        },
+        {
+          "name": "bundle:D4",
+          "passed": true,
+          "message": "bundle initialized; no lifts yet (skip)",
+          "warning": false
+        },
+        {
+          "name": "bundle:D5",
+          "passed": true,
+          "message": "fresh: all 6 source paper(s) older than last_lift (2026-05-01)",
+          "warning": false
+        },
+        {
+          "name": "bundle:E1",
+          "passed": true,
+          "message": "fresh: all 1 source paper(s) older than last_lift (2026-05-01)",
+          "warning": false
+        },
+        {
+          "name": "bundle:E2",
+          "passed": true,
+          "message": "fresh: all 1 source paper(s) older than last_lift (2026-05-01)",
+          "warning": false
+        },
+        {
+          "name": "bundle:F",
+          "passed": true,
+          "message": "bundle initialized; no lifts yet (skip)",
+          "warning": false
+        },
+        {
+          "name": "bundle:I1",
+          "passed": true,
+          "message": "freshness-stale: 1 of 2 source paper(s) modified after last_lift (2026-05-01); sample: paper44_riemannian_connection(2026-05-01)",
+          "warning": true
+        },
+        {
+          "name": "bundle:I2",
+          "passed": true,
+          "message": "fresh: all 0 source paper(s) older than last_lift (2026-05-01)",
+          "warning": false
+        },
+        {
+          "name": "bundle:L1",
+          "passed": true,
+          "message": "fresh: all 1 source paper(s) older than last_lift (2026-05-01)",
+          "warning": false
+        },
+        {
+          "name": "bundle:L2",
+          "passed": true,
+          "message": "fresh: all 1 source paper(s) older than last_lift (2026-05-01)",
+          "warning": false
+        },
+        {
+          "name": "bundle:L3",
+          "passed": true,
+          "message": "fresh: all 1 source paper(s) older than last_lift (2026-05-01)",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

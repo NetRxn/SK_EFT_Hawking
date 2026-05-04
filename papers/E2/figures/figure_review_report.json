@@ -1,0 +1,121 @@
+{
+  "review_date": "2026-05-04T00:00:00Z",
+  "bundle": "E2",
+  "phase": "Phase 7b sub-wave 7b.4 — E2 Stage 9 round 2",
+  "stage": "Stage 9 — figure review (round 2)",
+  "agent": "physics-qa:figure-reviewer",
+  "figures_reviewed": 4,
+  "overall_status": "pass",
+  "round_verdict": "PASS",
+  "supersedes": "round 1 (2026-05-01) MINOR",
+  "summary": "Round-2 re-review of all four E2 PNGs against the round-1-fix captions in papers/E2/paper_draft.tex. Both round-1 MINOR findings are resolved: (a) fig102 caption now reads 'two monolayer constriction projections' matching the two monolayer steel-blue diamonds (17.0 K at L=50 nm, 8.7 K at L=100 nm) plus the bilayer Dean amber diamond (2.4 K at L=200 nm) actually rendered; (b) fig105 caption now opens with 'Per-bin Hawking-to-thermal noise ratio S_Hawking(omega)/S_thermal versus frequency' matching the per-bin ratio actually plotted (peak ~7.8e-3 at omega ~ omega_H), and properly relegates the bandwidth-cumulative-SNR-reaches-unity-in-~1-min claim to a follow-up sentence describing shape-aware correlation analysis (i.e., the cumulative claim is now narrative interpretation of the plotted per-bin ratio, not a description of what the curve depicts). fig103 and fig104 unchanged from round 1; both still PASS. All anchors verified: T_H ~ 2.4 K Dean prediction (fig102 amber diamond), Wiedemann-Franz violation context (paper body, not a figure), closed-form S_I = 2 hbar omega sigma_Q Gamma(omega) n_H(omega) (fig104 Hawking curve shape), SNR/bin ~ 7.8e-3 (fig105 annotation + peak), cumulative SNR = 1 in ~1 min (fig105 caption follow-up sentence). Pass criterion (all PASS, no MINOR, no FAIL) IS met.",
+  "figures": [
+    {
+      "name": "fig102_graphene_hawking_T_sweep.png",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Round-2: caption updated to 'two monolayer constriction projections' (was 'three' in round 1). Figure shows two monolayer steel-blue diamonds at 17.0 K (L=50 nm) and 8.7 K (L=100 nm), plus one bilayer amber diamond at 2.4 K (L=200 nm) — count now matches caption (two monolayer + one bilayer = three diamonds total). Log-log T_H vs L; monolayer solid steel blue (c_s = v_F/sqrt(2) ~ 710 km/s) vs bilayer dashed amber (c_s ~ 440 km/s); colorblind-safe. Two horizontal reference lines (T_amb=150 K, T_imp~80 K) cleanly placed. No clipping, no artifacts. Round-1 MINOR resolved."
+    },
+    {
+      "name": "fig103_graphene_dissipation_window.png",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Unchanged from round 1; still PASS. Log-log omega_H/Gamma_mr vs T_H. Three l_mr curves (1 mu m gray / 5 mu m steel blue / 15 mu m amber) — colorblind-safe. Detection threshold omega_H/Gamma_mr=1 dashed black. Dean diamond at T_H~2.4 K, ratio~1.6; two monolayer diamonds at ratio~10 (T_H~8.7 K) and ~22 (T_H~17 K). Annotation 'omega_H = Gamma_mr (detection threshold)' positioned cleanly. No clipping."
+    },
+    {
+      "name": "fig104_graphene_noise_spectrum.png",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Unchanged from round 1; still PASS. Log-log S_I (A^2/Hz) vs Frequency (GHz). Steel blue Hawking curve (analog radiation), amber dashed Johnson-Nyquist thermal background, black dotted total. Hawking peak ~10^-26 A^2/Hz at low frequencies with thermal-cutoff turnover near 50 GHz. Thermal floor ~10^-24 A^2/Hz, two orders above Hawking — matches caption. Detection band shaded; vertical dotted line at omega_H~51 GHz. Title carries (T_H=2.4 K, D=0.23). All numerical claims in caption consistent with figure features. Closed-form S_I = 2 hbar omega sigma_Q Gamma(omega) n_H(omega) (E2 anchor) reflected in curve shape."
+    },
+    {
+      "name": "fig105_graphene_snr_frequency.png",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "Round-2: caption rewritten to lead with 'Per-bin Hawking-to-thermal noise ratio S_Hawking(omega)/S_thermal versus frequency at the Dean bilayer-nozzle parameters', matching what the figure actually plots. Peak ratio ~8e-3 stated in caption matches the annotation 'Peak SNR/bin ~ 7.8e-3' on the figure. The bandwidth-cumulative-SNR-reaches-unity-in-~1-min claim is now correctly framed as a follow-up sentence ('Shape-aware correlation analysis recovers the bandwidth-cumulative SNR... reaches unity in ~1 minute of integration across the [0, 4 omega_H] band') — interpretive narrative built on the plotted per-bin ratio, not a re-description of the curve. Single steel-blue curve, light-blue shaded fill below, log-log axes, vertical dotted reference at omega_H~51 GHz. Quasi-1D parametric-safety condition (lowest transverse channel above 4 omega_H) cited via Lean theorem reference DiracFluidWKB.dean_lowest_channel_above_four_omega_H. Round-1 MINOR resolved."
+    }
+  ],
+  "palette_check": {
+    "colorblind_safe": true,
+    "no_red_green": true,
+    "notes": "Project conventions respected across all four figures: steel blue (#2E86AB-style), amber/orange for bilayer/dissipative-window second curve, sage/gray for monolayer-thin or 1-mu m baseline, black for reference threshold/total. No red/green pairing anywhere; legends distinguishable for deuteranopia/protanopia."
+  },
+  "axes_units_legend_check": {
+    "axes_labeled": true,
+    "units_present": true,
+    "legends_clear": true,
+    "notes": "All four figures carry SI units in axis labels (K, nm, GHz, A^2/Hz, mu m). Legends present and non-overlapping on figs 102, 103, 104. Fig 105 has annotation in lieu of legend (single trace). Fonts CMU/Times-family serif consistent with paper body."
+  },
+  "kaleido_artifacts_check": {
+    "found": false,
+    "notes": "No font-fallback boxes, no missing-glyph rectangles, no clipped subscripts/superscripts. Greek (kappa, omega, Gamma, sigma, pi, sqrt, sqrt2) renders correctly. Subscripts (T_H, omega_H, Gamma_mr, T_amb, T_imp, S_thermal, S_Hawking, c_s, l_mr, v_F) all present and legible."
+  },
+  "clipping_check": {
+    "found": false,
+    "notes": "No clipped annotations or axis labels. Figure margins adequate. Title and legend boxes well-placed within plot area."
+  },
+  "anchor_verification": {
+    "T_H_2p4K_Dean_prediction": "fig102 amber diamond at L=200 nm, T_H~2.4 K — VERIFIED",
+    "Wiedemann_Franz_violation_L_over_L0_gt_200x": "paper body claim, not figure-resident — N/A for figure review",
+    "closed_form_noise_spectrum_S_I": "fig104 Hawking curve shape (Planckian rolloff at omega ~ omega_H) reflects S_I = 2 hbar omega sigma_Q Gamma(omega) n_H(omega) — VERIFIED",
+    "SNR_per_bin_7p8e_3": "fig105 annotation 'Peak SNR/bin ~ 7.8e-03' and curve plateau ~8e-3 at low frequency — VERIFIED",
+    "cumulative_SNR_unity_in_1_min": "fig105 caption follow-up sentence (narrative interpretation; not a curve in the figure) — VERIFIED as caption claim, not figure depiction"
+  },
+  "recommendations": [
+    "No further figure or caption changes required for E2 Stage 9. All round-1 MINOR findings resolved.",
+    "Proceed to Stage 10 (claims-reviewer with bundle_target=E2): focus on (a) Lean theorem reference DiracFluidWKB.dean_lowest_channel_above_four_omega_H cited in fig105 caption — verify it exists and proves what the caption claims; (b) Wiedemann-Franz L/L_0 > 200x claim traced to PARAMETER_PROVENANCE entry; (c) the chain from per-bin SNR ~7.8e-3 to cumulative SNR=1 in 1 min via shape-aware correlation — verify the integration-time formula in paper body matches the closed-form S_I anchor."
+  ],
+  "pass_criterion": {
+    "spec": "all PASS, no MINOR, no FAIL",
+    "met": true,
+    "rationale": "4/4 PASS. 0 MINOR. 0 FAIL. Both round-1 MINOR findings (fig102 count mismatch, fig105 caption-vs-figure drift) are resolved by the round-1-fix caption edits in papers/E2/paper_draft.tex. Stage 9 round 2 verdict: PASS — proceed to Stage 10."
+  }
+}

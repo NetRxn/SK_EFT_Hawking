@@ -1,0 +1,690 @@
+{
+  "paper": "E1",
+  "bundle_target": "E1",
+  "review_date": "2026-05-04T00:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+  "tier_profile": "tier4_letter_lightweight",
+  "round": 2,
+
+  "sentences": [
+    {
+      "id": "sentence:E1:abstract:502052a3",
+      "raw_id_parts": {"paper": "E1", "section_slug": "abstract", "quote_hash": "502052a3", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 22,
+      "tex_line_end": 26,
+      "quote": "We give the SK-EFT-predicted analog Hawking spectrum, surface gravity kappa, dispersive parameter D, and stimulated-Hawking gain at the Paris-LKB exciton-polariton platform's published device parameters~\\cite{Falque2025}.",
+      "quote_normalized": "we give the sk-eft-predicted analog hawking spectrum, surface gravity kappa, dispersive parameter d, and stimulated-hawking gain at the paris-lkb exciton-polariton platform's published device parameters.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "citation", "target": "Falque2025"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Citation Falque2025 in CITATION_REGISTRY (line 270) with primary_source_path cached. Round-2 carry-forward.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:abstract:48244e73",
+      "raw_id_parts": {"paper": "E1", "section_slug": "abstract", "quote_hash": "48244e73", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 26,
+      "tex_line_end": 29,
+      "quote": "$T_H \\approx \\SI{85}{\\milli\\kelvin}$ at the smooth-horizon configuration ($\\kappa = \\SI{7e10}{\\per\\second}$, $D \\approx 0.60$)",
+      "quote_normalized": "t_h approx 85 mk at the smooth-horizon configuration kappa=7e10/s d approx 0.60",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "T_H = hbar*kappa/(2*pi*kB)", "computed_value": "85.10 mK", "delta_pct": 0.12},
+          {"kind": "theorem", "target": "AcousticMetric.hawking_temp_from_surface_gravity"},
+          {"kind": "parameter", "target": "Paris_long.kappa", "link_state": "human_verified"},
+          {"kind": "citation", "target": "Falque2025"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.12,
+      "agent_notes": "Carry-forward from r1: T_H = 1.054571817e-34 * 7e10 / (2*pi*1.380649e-23) = 0.0851 K = 85.10 mK; paper states 85 mK; delta 0.12%.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:abstract:5016bf2f",
+      "raw_id_parts": {"paper": "E1", "section_slug": "abstract", "quote_hash": "5016bf2f", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 29,
+      "tex_line_end": 31,
+      "quote": "$T_H \\approx \\SI{134}{\\milli\\kelvin}$ at the steep-horizon reach ($\\kappa = \\SI{1.1e11}{\\per\\second}$, $D \\approx 0.93$)",
+      "quote_normalized": "t_h approx 134 mk at the steep-horizon reach kappa=1.1e11/s d approx 0.93",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "T_H = hbar*kappa/(2*pi*kB)", "computed_value": "133.72 mK", "delta_pct": 0.21},
+          {"kind": "theorem", "target": "AcousticMetric.hawking_temp_from_surface_gravity"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.21,
+      "agent_notes": "Carry-forward from r1: Recomputed T_H at kappa=1.1e11: 133.72 mK; paper rounds to 134 mK; delta 0.21%.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:abstract:38b4bb56",
+      "raw_id_parts": {"paper": "E1", "section_slug": "abstract", "quote_hash": "38b4bb56", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 32,
+      "tex_line_end": 35,
+      "quote": "The leading dispersive correction $\\delta_{\\rm disp} = -\\pi D^2/6$ spans $\\sim$0.19--0.46 across the measured range",
+      "quote_normalized": "the leading dispersive correction delta_disp = -pi d^2/6 spans 0.19-0.46 across the measured range",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "delta_disp = -pi*D^2/6", "computed_value": "{D=0.60: -0.1885, D=0.93: -0.4529}", "delta_pct": 0.8}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.8,
+      "agent_notes": "Carry-forward from r1: -pi*0.60^2/6 = -0.1885 (paper -0.19), -pi*0.93^2/6 = -0.4529 (paper -0.46). Span matches; rounding within tolerance.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:abstract:fda96459",
+      "raw_id_parts": {"paper": "E1", "section_slug": "abstract", "quote_hash": "fda96459", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 35,
+      "tex_line_end": 39,
+      "quote": "The stimulated-Hawking gain $G(\\omega) = \\Gamma(\\omega) / (e^{2\\pi \\omega/\\kappa_{\\rm eff}} - 1)$ crosses the single-shot $5\\sigma$ threshold $G > 0.5$ at $\\omega < \\ln(3)/(2\\pi)\\,\\kappa \\approx 0.175\\,\\kappa$ (universal, $\\kappa$-independent)",
+      "quote_normalized": "g(omega) crosses the single-shot 5sigma threshold g > 0.5 at omega < ln(3)/(2pi) kappa approx 0.175 kappa universal kappa-independent",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "G(omega) = 1/(exp(2*pi*omega/kappa)-1) [Gamma=1]", "computed_value": "G(0.175 kappa) = 0.5", "delta_pct": 0.0},
+          {"kind": "parameter", "target": "src/core/provenance.py:3580 paper12_polariton.key_claims"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Round-2 fix verified. Paper now reads 'single-shot 5sigma threshold G > 0.5 at omega < ln(3)/(2pi) kappa approx 0.175 kappa'. Recomputation: 1/(exp(2*pi*ln(3)/(2*pi))-1) = 1/(exp(ln(3))-1) = 1/(3-1) = 0.5 EXACTLY. Matches canonical provenance.py:3580: 'Stimulated gain G(omega) > 0.5 for omega < ln(3)/(2*pi)*kappa ≈ 0.175 kappa'. ln(3)/(2*pi) = 0.174850 ≈ 0.175 (rounded). FAIL → PASS.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate9_NumericalFreshness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:abstract:6330cfbb",
+      "raw_id_parts": {"paper": "E1", "section_slug": "abstract", "quote_hash": "6330cfbb", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 39,
+      "tex_line_end": 42,
+      "quote": "$\\mathrm{SNR} \\approx 11$ for $N_{\\rm probe} \\sim 100$ probe photons per mode --- a $10^3$--$10^6$ improvement over spontaneous-correlation detection",
+      "quote_normalized": "snr approx 11 for n_probe ~ 100 probe photons per mode -- a 10^3--10^6 improvement over spontaneous-correlation detection",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "SNR = sqrt(N_probe) * G(omega)", "computed_value": "sqrt(100)*1.144 = 11.44", "delta_pct": 4.0},
+          {"kind": "citation", "target": "Grisins2016"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 4.0,
+      "agent_notes": "Carry-forward from r1, internal consistency reverified post-fix: SNR = sqrt(100)*G(0.1k) where G(0.1k) = 1/(exp(0.2*pi)-1) = 1.1436; SNR = 11.4357. Paper rounds to 11. Cross-check with new threshold: at G=0.5, single-shot 5sigma needs N_probe = (5/G)^2 = 100 — exactly matches the 'N_probe ~ 100' claim. Self-consistent.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:abstract:7937910d",
+      "raw_id_parts": {"paper": "E1", "section_slug": "abstract", "quote_hash": "7937910d", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 42,
+      "tex_line_end": 44,
+      "quote": "We emit one falsifiable spectral window: $\\omega/\\kappa \\in [0.05, 0.30]$ at the smooth-horizon configuration",
+      "quote_normalized": "we emit one falsifiable spectral window omega/kappa in [0.05, 0.30] at the smooth-horizon configuration",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "parameter", "target": "Paris_long.kappa", "link_state": "human_verified"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Falsifiable window [0.05, 0.30] is the headline scientific claim. ω/κ=0.05 → G≈2.74 (well above G=0.5); ω/κ=0.30 → G≈0.18 (below G=0.5 — the band brackets the threshold, providing the falsifiable shape). Verifiable against PolaritonTier1.attenuation_ge_one chain.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:abstract:66b43c36",
+      "raw_id_parts": {"paper": "E1", "section_slug": "abstract", "quote_hash": "66b43c36", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 44,
+      "tex_line_end": 47,
+      "quote": "The Lean~4 verification of the underlying chain (5229 theorems / 243 modules / 1 axiom / 0 sorry) is independent of platform parameters",
+      "quote_normalized": "lean 4 verification of underlying chain 5229 theorems / 243 modules / 1 axiom / 0 sorry independent of platform parameters",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "docs/counts.json: theorems_total=5229, modules=243, axioms=1, sorry_declarations=0"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Carry-forward from r1. docs/counts.json (generated 2026-05-01) reports theorems_total=5229, modules=243, axioms=1, sorry_declarations=0. Match.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate9_NumericalFreshness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:reservoir-corrected-device-parameters:a4e407d7",
+      "raw_id_parts": {"paper": "E1", "section_slug": "reservoir-corrected-device-parameters", "quote_hash": "a4e407d7", "hash_algorithm": "sha256_first_8"},
+      "section": "Reservoir-corrected device parameters",
+      "section_ordinal": 2,
+      "tex_line_start": 91,
+      "tex_line_end": 93,
+      "quote": "We adopt Falque et al.~\\cite{Falque2025} \\S IV.1's measured values directly: $c_s \\approx \\SI{0.40}{\\micro\\meter/\\pico\\second}$, upstream healing length $\\xi \\approx \\SI{3.4}{\\micro\\meter}$.",
+      "quote_normalized": "we adopt falque et al sec iv.1 measured values directly cs approx 0.40 um/ps upstream healing length xi approx 3.4 um",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Paris_long.c_s", "link_state": "human_verified"},
+          {"kind": "parameter", "target": "Paris_long.xi", "link_state": "human_verified"},
+          {"kind": "citation", "target": "Falque2025"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Paris_long.c_s = 4.0e5 m/s; xi = 3.4 um confirmed in PARAMETER_PROVENANCE. Both human_verified 2026-04-28. Citation cached.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate1_CitationIntegrity", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:reservoir-corrected-device-parameters:71e598f2",
+      "raw_id_parts": {"paper": "E1", "section_slug": "reservoir-corrected-device-parameters", "quote_hash": "71e598f2", "hash_algorithm": "sha256_first_8"},
+      "section": "Reservoir-corrected device parameters",
+      "section_ordinal": 2,
+      "tex_line_start": 97,
+      "tex_line_end": 106,
+      "quote": "Smooth horizon (baseline): kappa=7e10, D=0.60; Steep horizon (reach): kappa=1.1e11, D=0.93. D = xi*kappa/cs.",
+      "quote_normalized": "smooth horizon baseline kappa 7e10 d 0.60 steep horizon reach kappa 1.1e11 d 0.93",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "D = xi*kappa/cs", "computed_value": "{kappa=7e10: D=0.595, kappa=1.1e11: D=0.935}", "delta_pct": 0.83}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.83,
+      "agent_notes": "Carry-forward from r1. D = 3.4e-6*7e10/4.0e5 = 0.595 (paper rounds 0.60); 3.4e-6*1.1e11/4.0e5 = 0.935 (paper 0.93).",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:hawking-temperature-and-dispersive-correction:2d867a10",
+      "raw_id_parts": {"paper": "E1", "section_slug": "hawking-temperature-and-dispersive-correction", "quote_hash": "2d867a10", "hash_algorithm": "sha256_first_8"},
+      "section": "Hawking temperature and dispersive correction",
+      "section_ordinal": 3,
+      "tex_line_start": 119,
+      "tex_line_end": 126,
+      "quote": "$T_H = \\hbar \\kappa / (2\\pi k_B)$ formalized in \\texttt{AcousticMetric.hawking\\_temp\\_from\\_surface\\_gravity}",
+      "quote_normalized": "th = hbar kappa / 2 pi kb formalized in acousticmetric hawking_temp_from_surface_gravity",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "AcousticMetric.hawking_temp_from_surface_gravity"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity exists in lean_deps.json (line 3384).",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:hawking-temperature-and-dispersive-correction:44ee42ed",
+      "raw_id_parts": {"paper": "E1", "section_slug": "hawking-temperature-and-dispersive-correction", "quote_hash": "44ee42ed", "hash_algorithm": "sha256_first_8"},
+      "section": "Hawking temperature and dispersive correction",
+      "section_ordinal": 3,
+      "tex_line_start": 137,
+      "tex_line_end": 140,
+      "quote": "The steep-horizon prediction should be treated as leading-order, not all-orders.",
+      "quote_normalized": "the steep-horizon prediction should be treated as leading-order not all-orders",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Hedging discipline applied — D=0.93 is non-perturbative; paper correctly downgrades to leading-order.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:stimulated-hawking-gain-spectrum:67e2ac87",
+      "raw_id_parts": {"paper": "E1", "section_slug": "stimulated-hawking-gain-spectrum", "quote_hash": "67e2ac87", "hash_algorithm": "sha256_first_8"},
+      "section": "Stimulated-Hawking gain spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 148,
+      "tex_line_end": 154,
+      "quote": "$G(\\omega) = \\Gamma(\\omega)/(e^{2\\pi\\omega/\\kappa_{\\rm eff}} - 1)$ where $\\kappa_{\\rm eff} = \\kappa(1 - c_1 D^2)$",
+      "quote_normalized": "g(omega) = gamma(omega) / (e^(2 pi omega / kappa_eff) - 1) where gamma is greybody transmission factor and kappa_eff = kappa(1 - c1 d^2)",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "citation", "target": "Finazzi2012"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Finazzi2012 in CITATION_REGISTRY. Greybody-corrected stimulated-Hawking gain formula consistent with Bogoliubov scattering physics.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:stimulated-hawking-gain-spectrum:bced9d9e",
+      "raw_id_parts": {"paper": "E1", "section_slug": "stimulated-hawking-gain-spectrum", "quote_hash": "bced9d9e", "hash_algorithm": "sha256_first_8"},
+      "section": "Stimulated-Hawking gain spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 154,
+      "tex_line_end": 156,
+      "quote": "$G(0.1\\,\\kappa) \\approx 1.14$, $G(0.3\\,\\kappa) \\approx 0.18$, $G(\\kappa) \\approx 0.002$",
+      "quote_normalized": "g(0.1 kappa) approx 1.14 g(0.3 kappa) approx 0.18 g(kappa) approx 0.002",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "G(omega) = 1/(exp(2*pi*omega/kappa)-1) [Gamma=1]", "computed_value": "{0.1k: 1.144, 0.3k: 0.179, k: 0.0019}", "delta_pct": 0.55}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.55,
+      "agent_notes": "Carry-forward from r1. Recomputed: 1/(e^0.628-1)=1.1436, 1/(e^1.885-1)=0.1790, 1/(e^6.283-1)=0.00187. All within 5% rounding.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:stimulated-hawking-gain-spectrum:612e30ef",
+      "raw_id_parts": {"paper": "E1", "section_slug": "stimulated-hawking-gain-spectrum", "quote_hash": "612e30ef", "hash_algorithm": "sha256_first_8"},
+      "section": "Stimulated-Hawking gain spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 156,
+      "tex_line_end": 161,
+      "quote": "The single-shot $5\\sigma$ threshold $G > 0.5$ (i.e., $N_{\\rm probe} \\, G^2 \\geq 25$ for $N_{\\rm probe} = 100$) is crossed at $\\omega < \\ln(3)/(2\\pi)\\,\\kappa \\approx 0.175\\,\\kappa$, which is universal and independent of $\\kappa$",
+      "quote_normalized": "the single-shot 5sigma threshold g > 0.5 i.e. n_probe g^2 >= 25 for n_probe = 100 is crossed at omega < ln(3)/(2pi) kappa approx 0.175 kappa universal kappa-independent",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "G(omega) = 1/(exp(2*pi*omega/kappa)-1)", "computed_value": "G(0.175 kappa) = 0.5", "delta_pct": 0.0},
+          {"kind": "formula", "target": "single-shot 5sigma: sqrt(N_probe) * G >= 5  →  N_probe * G^2 >= 25", "computed_value": "100 * 0.5^2 = 25 ≥ 25", "delta_pct": 0.0},
+          {"kind": "parameter", "target": "src/core/provenance.py:3580 paper12_polariton.key_claims"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Round-2 fix verified. Body §4 now reads 'single-shot 5sigma threshold G > 0.5 (i.e., N_probe G^2 >= 25 for N_probe = 100) is crossed at omega < ln(3)/(2pi) kappa approx 0.175 kappa'. The explicit derivation N_probe·G²≥25 makes the falsifiable arithmetic visible: at G=0.5 with N_probe=100, N_probe·G²=25 exactly meets the 5σ threshold. Identity 0.175 = ln(3)/(2π) recomputed: 0.174850. G(0.175κ) = 1/(exp(2π·0.175)-1) = 1/(exp(1.0996)-1) = 1/(3-1) = 0.5 exactly. Matches canonical provenance.py:3580. FAIL → PASS.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate9_NumericalFreshness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:stimulated-hawking-gain-spectrum:ee5d1ff0",
+      "raw_id_parts": {"paper": "E1", "section_slug": "stimulated-hawking-gain-spectrum", "quote_hash": "ee5d1ff0", "hash_algorithm": "sha256_first_8"},
+      "section": "Stimulated-Hawking gain spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 161,
+      "tex_line_end": 164,
+      "quote": "Spatial attenuation is bounded below by 1 in \\texttt{PolaritonTier1.attenuation\\_ge\\_one} and is monotone in $\\Gamma$ via \\texttt{PolaritonTier1.attenuation\\_mono\\_Gamma}",
+      "quote_normalized": "spatial attenuation is bounded below by 1 in polaritontier1 attenuation_ge_one and is monotone in gamma via polaritontier1 attenuation_mono_gamma both are manual lean proofs with zero sorry",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "PolaritonTier1.attenuation_ge_one"},
+          {"kind": "theorem", "target": "PolaritonTier1.attenuation_mono_Gamma"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Both theorems exist in lean_deps.json (lines 61480 and 61491). PolaritonTier1.lean confirms both at lines 84 and 115.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:stimulated-hawking-gain-spectrum:a481f8ee",
+      "raw_id_parts": {"paper": "E1", "section_slug": "stimulated-hawking-gain-spectrum", "quote_hash": "a481f8ee", "hash_algorithm": "sha256_first_8"},
+      "section": "Stimulated-Hawking gain spectrum",
+      "section_ordinal": 4,
+      "tex_line_start": 169,
+      "tex_line_end": 178,
+      "quote": "Caption: dashed line marks the single-shot $5\\sigma$ gain threshold $G = 0.5$ (equivalently $N_{\\rm probe} = 25/G^2 = 100$ probe photons per mode); the threshold is crossed at the universal frequency $\\omega/\\kappa = \\ln(3)/(2\\pi) \\approx 0.175$",
+      "quote_normalized": "dashed line marks single-shot 5sigma gain threshold g = 0.5 equivalently n_probe = 25/g^2 = 100 probe photons per mode the threshold is crossed at the universal frequency omega/kappa = ln(3)/(2pi) approx 0.175",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "SNR = sqrt(N_probe) * G; for SNR=5 at G=0.5, N_probe = (5/0.5)^2 = 100", "computed_value": "100", "delta_pct": 0.0},
+          {"kind": "formula", "target": "G(omega) at omega/kappa = ln(3)/(2pi)", "computed_value": "0.5", "delta_pct": 0.0}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Round-2 fix verified. Figure 1 caption now reads 'single-shot 5sigma gain threshold G = 0.5 (equivalently N_probe = 25/G^2 = 100 probe photons per mode); the threshold is crossed at the universal frequency omega/kappa = ln(3)/(2pi) approx 0.175'. Recomputation: N_probe = 25/0.5^2 = 25/0.25 = 100. PNG regenerated at 07:03 (post-edit timestamp); dashed line now sits at y=0.5 (visually verified in fig_stimulated_hawking_spectrum.png), annotation reads 'G = 0.5 (5σ with 100 probe photons / mode)'. Crossing point of blue G(ω) curve and dashed threshold line occurs at ω/κ ≈ 0.175 (visually verified). All three drift sites resolved. FAIL → PASS.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:falsifiable-window-and-noise-floor:ca045ca5",
+      "raw_id_parts": {"paper": "E1", "section_slug": "falsifiable-window-and-noise-floor", "quote_hash": "ca045ca5", "hash_algorithm": "sha256_first_8"},
+      "section": "Falsifiable window and noise floor",
+      "section_ordinal": 5,
+      "tex_line_start": 200,
+      "tex_line_end": 204,
+      "quote": "$T_{\\rm noise} = m^* c_s^2 / k_B \\approx \\SI{0.81}{\\kelvin}$",
+      "quote_normalized": "t_noise = m_star c_s^2 / kb approx 0.81 k which exceeds t_h by an order of magnitude",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "T_noise = m_star * c_s^2 / k_B", "computed_value": "0.811 K", "delta_pct": 0.12},
+          {"kind": "parameter", "target": "Paris_long.m_star (7e-35 kg)", "link_state": "human_verified"},
+          {"kind": "parameter", "target": "Paris_long.c_s (4e5 m/s)", "link_state": "human_verified"},
+          {"kind": "citation", "target": "Amelio2020"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.12,
+      "agent_notes": "Carry-forward from r1. 7e-35 * (4e5)^2 / 1.380649e-23 = 0.811 K. Matches paper 0.81 K. m_star and c_s both human_verified.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:falsifiable-window-and-noise-floor:f2fac2ea",
+      "raw_id_parts": {"paper": "E1", "section_slug": "falsifiable-window-and-noise-floor", "quote_hash": "f2fac2ea", "hash_algorithm": "sha256_first_8"},
+      "section": "Falsifiable window and noise floor",
+      "section_ordinal": 5,
+      "tex_line_start": 213,
+      "tex_line_end": 215,
+      "quote": "$\\omega/\\kappa \\in [0.05, 0.30]$ at the smooth-horizon configuration",
+      "quote_normalized": "falsifiable window omega/kappa in [0.05, 0.30] at smooth-horizon configuration",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Paris_long (smooth-horizon kappa=7e10)", "link_state": "human_verified"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Headline falsifiable window. ω/κ=0.05 → G≈2.74; ω/κ=0.30 → G≈0.18. The band brackets the new G=0.5 threshold (crossed at ω/κ≈0.175), which is tighter than r1's framing — this makes the band both a positive-detection and falsification region, strengthening the headline claim.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:falsifiable-window-and-noise-floor:e62c6bbc",
+      "raw_id_parts": {"paper": "E1", "section_slug": "falsifiable-window-and-noise-floor", "quote_hash": "e62c6bbc", "hash_algorithm": "sha256_first_8"},
+      "section": "Falsifiable window and noise floor",
+      "section_ordinal": 5,
+      "tex_line_start": 227,
+      "tex_line_end": 245,
+      "quote": "Polariton Tier-1 regime map: $\\Gamma_{\\rm pol}/\\kappa$ versus cavity lifetime $\\tau$. Four tier bands (Intractable, $\\Gamma_{\\rm pol}/\\kappa \\in [1, 10]$; Borderline, $[0.1, 1]$; Perturbative (Tier 1), $[0.03, 0.1]$; Excellent, $[0.001, 0.03]$).",
+      "quote_normalized": "polariton tier-1 regime map normalized polariton decay gamma_pol/kappa versus cavity lifetime tau four tier bands",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "citation", "target": "Falque2025"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Figure 2 caption tier-band ranges align with Stage 9 round 3 GREEN closure. D vs Gamma_pol/kappa not conflated.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:falsifiable-window-and-noise-floor:4dc5dd86",
+      "raw_id_parts": {"paper": "E1", "section_slug": "falsifiable-window-and-noise-floor", "quote_hash": "4dc5dd86", "hash_algorithm": "sha256_first_8"},
+      "section": "Falsifiable window and noise floor",
+      "section_ordinal": 5,
+      "tex_line_start": 238,
+      "tex_line_end": 242,
+      "quote": "Smooth-horizon Paris ``long'' configuration sits inside the Borderline tier just above the Borderline--Perturbative boundary ($\\Gamma_{\\rm pol}/\\kappa \\approx 0.143 \\approx 1.43 \\times 0.1$)",
+      "quote_normalized": "smooth-horizon paris long configuration sits inside borderline tier just above borderline-perturbative boundary gamma_pol/kappa approx 0.143 approx 1.43 x 0.1",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "Gamma_pol/kappa = 1/(tau*kappa)"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Figure 2 placement: Paris_long with tau_cav ≈ 100 ps gives Gamma_pol = 1e10/s; ratio to kappa=7e10 is 0.143.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:cross-platform-context:23d5a5db",
+      "raw_id_parts": {"paper": "E1", "section_slug": "cross-platform-context", "quote_hash": "23d5a5db", "hash_algorithm": "sha256_first_8"},
+      "section": "Cross-platform context",
+      "section_ordinal": 6,
+      "tex_line_start": 249,
+      "tex_line_end": 252,
+      "quote": "polariton platform sits between BEC ($T_H \\sim \\SI{0.35}{\\nano\\kelvin}$) and graphene Dirac fluids ($T_H \\approx \\SI{2.4}{\\kelvin}$)",
+      "quote_normalized": "polariton platform sits between bec and graphene dirac fluids",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.T_H_K (2.4 K)", "link_state": "human_verified"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. Cross-platform T_H comparison consistent.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:cross-platform-context:30d6ce96",
+      "raw_id_parts": {"paper": "E1", "section_slug": "cross-platform-context", "quote_hash": "30d6ce96", "hash_algorithm": "sha256_first_8"},
+      "section": "Cross-platform context",
+      "section_ordinal": 6,
+      "tex_line_start": 257,
+      "tex_line_end": 261,
+      "quote": "the formal chain that proves $\\mathrm{Re}\\,G \\geq 0$ for the BEC carries cleanly to the polariton case via \\texttt{PolaritonTier1.attenuation\\_ge\\_one}",
+      "quote_normalized": "polaritontier1 attenuation_ge_one cross-platform universality structural payoff of sk-eft framework",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "PolaritonTier1.attenuation_ge_one"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. PolaritonTier1.attenuation_ge_one exists (lean_deps.json line 61480).",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:request-to-the-lkb-team:request01",
+      "raw_id_parts": {"paper": "E1", "section_slug": "request-to-the-lkb-team", "quote_hash": "request01", "hash_algorithm": "sha256_first_8"},
+      "section": "Request to the LKB team",
+      "section_ordinal": 7,
+      "tex_line_start": 276,
+      "tex_line_end": 280,
+      "quote": "the detection-band edges in Eq.~(boxed window) shift by amounts calculable from the same Lean chain",
+      "quote_normalized": "detection-band edges in eq boxed window shift by amounts calculable from the same lean chain",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "WARN",
+      "agent_notes": "Carry-forward from r1. Body refers to 'Eq.~(boxed window)' but the boxed equation lacks an \\label and the body lacks a \\eqref. Cosmetic. Non-blocking.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:acknowledgments:e7c46296",
+      "raw_id_parts": {"paper": "E1", "section_slug": "acknowledgments", "quote_hash": "e7c46296", "hash_algorithm": "sha256_first_8"},
+      "section": "Acknowledgments",
+      "section_ordinal": 9,
+      "tex_line_start": 299,
+      "tex_line_end": 301,
+      "quote": "Lean~4 proofs verified by \\texttt{lake build} (v4.29.0, Mathlib commit \\texttt{8850ed93})",
+      "quote_normalized": "lean 4 proofs verified by lake build v4.29.0 mathlib commit 8850ed93",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "lean-toolchain (leanprover/lean4:v4.29.0)"},
+          {"kind": "parameter", "target": "lakefile.toml mathlib rev=8850ed93863d6ce27210a673f9ed235a4e8a2994"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. lean-toolchain v4.29.0 + Mathlib 8850ed93 confirmed.",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate9_NumericalFreshness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:E1:acknowledgments:f9b2babc",
+      "raw_id_parts": {"paper": "E1", "section_slug": "acknowledgments", "quote_hash": "f9b2babc", "hash_algorithm": "sha256_first_8"},
+      "section": "Acknowledgments",
+      "section_ordinal": 9,
+      "tex_line_start": 301,
+      "tex_line_end": 304,
+      "quote": "Polariton-specific bounds in \\texttt{PolaritonTier1.lean}: \\texttt{attenuation\\_ge\\_one}, \\texttt{attenuation\\_mono\\_Gamma}, \\texttt{attenuation\\_eq\\_one\\_at\\_zero\\_decay}",
+      "quote_normalized": "polaritontier1 attenuation_ge_one attenuation_mono_gamma attenuation_eq_one_at_zero_decay",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "PolaritonTier1.attenuation_ge_one"},
+          {"kind": "theorem", "target": "PolaritonTier1.attenuation_mono_Gamma"},
+          {"kind": "theorem", "target": "PolaritonTier1.attenuation_eq_one_at_zero_decay"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Carry-forward from r1. All three theorems exist in lean_deps.json (lines 61458, 61480, 61491).",
+      "agent_run_id": "claims-reviewer-v2:E1:2026-05-04T00:00:00Z:r2",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:E1:1",
+      "prior_round": 1,
+      "prior_summary": "Stimulated-gain threshold value drift: paper repeats 'G > 0.01 at omega < 0.175 kappa' in 3 places; canonical project value (provenance.py:3580) is G > 0.5 at omega < 0.175 kappa.",
+      "current_status": "auto_closed",
+      "current_round": 2,
+      "evidence": "Round-2 fix verified at all 3 sites: abstract (line 37 'G > 0.5'), body §4 (line 157 'G > 0.5 (i.e., N_probe G^2 >= 25 for N_probe = 100)'), figure 1 caption (line 172 'G = 0.5 (equivalently N_probe = 25/G^2 = 100 probe photons per mode)'). Visualization PNG regenerated at 07:03 with dashed line at y=0.5 and annotation 'G = 0.5 (5σ with 100 probe photons / mode)'. Recompute G(0.175κ) = 1/(exp(2π·0.175)-1) = 1/2 = 0.5 EXACTLY, matching canonical provenance.py:3580. Drift fully resolved. PDF recompiled (3 pages, 373291 bytes)."
+    },
+    {
+      "prior_finding_id": "block:E1:2",
+      "prior_round": 1,
+      "prior_summary": "Figure 1 caption photon-count claim: 'G=0.01 below which ~10^4 probe photons per mode are needed for 5sigma'. At G=0.01, N_probe = (5/0.01)^2 = 250,000 not 10^4.",
+      "current_status": "auto_closed",
+      "current_round": 2,
+      "evidence": "Round-2 fix: caption now reads 'N_probe = 25/G^2 = 100 probe photons per mode' at G=0.5. Recompute: 25/(0.5)^2 = 100. Self-consistent with abstract's 'SNR ≈ 11 for N_probe ~ 100' (SNR = sqrt(100)·G(0.1k) = 10·1.144 = 11.44 ≈ 11)."
+    }
+  ],
+
+  "summary": {
+    "total_sentences": 26,
+    "by_type": {
+      "numeric": 14,
+      "theorem-ref": 5,
+      "parameter": 2,
+      "formal-claim": 1,
+      "qualitative": 2,
+      "metaclaim": 1,
+      "transition": 0,
+      "methodology": 0,
+      "citation": 0
+    },
+    "by_verdict": {
+      "PASS": 25,
+      "FAIL": 0,
+      "WARN": 1,
+      "INFO": 0,
+      "UNGROUNDED": 0,
+      "TRANSITION": 0
+    },
+    "by_finding_class": {
+      "IA": 0,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 2,
+    "non_reproducing_auto_closed": 2,
+    "non_reproducing_candidates": 0,
+    "agent_text": "Round 2 verdict GREEN. 26 representative sentences re-walked (Tier-4 lightweight). Round-1 propagating drift block:E1:1 (G>0.01 vs canonical G>0.5) and block:E1:2 (10^4 photon-count) both fully resolved across all 3 sites: abstract line 37, body §4 line 157 (with explicit derivation N_probe·G²≥25), figure 1 caption line 172. Visualization regenerated (dashed line at y=0.5, annotation updated). PDF recompiled (3 pages, 373KB). Internal consistency verified: at ω/κ=ln(3)/(2π)≈0.175, G=0.5 exactly; N_probe=25/G²=100 exactly; SNR=√100·G(0.1κ)=10·1.144=11.44 (paper rounds to 11). All round-1 PASS findings (Lean theorem refs, citation registry, parameter provenance, Lean toolchain pin, counts.json freshness) revalidated and still hold. Stage-9 carry-forward GREEN preserved. 1 WARN (cosmetic boxed-window \\label) carries forward as non-blocking advisory. Zero FAIL. stage10_status → GREEN."
+  },
+
+  "blocking_issues": [],
+
+  "non_blocking_followups": [
+    {
+      "id": "followup:E1:1",
+      "summary": "boxed equation (line 214) lacks \\label; body §7 'Eq.~(boxed window)' (line 277) is informal cross-reference. Cosmetic.",
+      "sentences": ["sentence:E1:request-to-the-lkb-team:request01"],
+      "gate": "Gate11_PaperPolish"
+    }
+  ]
+}

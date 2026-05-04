@@ -1,0 +1,92 @@
+{
+  "review_date": "2026-05-04T00:00:00Z",
+  "bundle_target": "E1",
+  "phase": "Phase 7b sub-wave 7b.4 — E1 Stage 9 round 3",
+  "figures_reviewed": 2,
+  "overall_status": "pass",
+  "round_verdict": "ALL PASS — both figures clean against current paper_draft.tex captions; no MINOR, no FAIL.",
+  "fail_count": 0,
+  "minor_count": 0,
+  "pass_count": 2,
+  "figures": [
+    {
+      "name": "fig_stimulated_hawking_spectrum.png",
+      "label": "fig:gain",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": [],
+        "round3_fix_verification": {
+          "subtitle_xaxis_collision": "RESOLVED — subtitle 'T_H = 85.1 mK | κ = 7e+10 s⁻¹ | Grisins PRB 94, 144518 (2016); Burkhard arXiv:2511.12339 (2025)' now sits clearly BELOW the 'ω / κ' axis title with visible vertical separation. The increased bottom margin (b=110) plus annotation y-offset (-0.22) gives a clean two-line layout: axis title on top, subtitle below. No glyph overlap.",
+          "x_range_whitespace": "RESOLVED — x-axis range tightened from [0, 3.0] to [0, 1.5] (effective; the visualizations.py edit specified [0, 1.6] but rendered tick marks terminate at 1.5 for tidy ticks). Data curve fills the full horizontal extent. No blank trailing region.",
+          "G_001_annotation_position": "ANNOTATION moved to x=1.0; reads cleanly at 'G = 0.01 (5σ with 10⁴ probe photons)' near the dashed amber threshold line, no longer pushed off-plot."
+        }
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "notes": "Curve shape and threshold crossings unchanged from round 2. G(0.1κ) ≈ 1, G(0.3κ) ≈ 0.18, G crosses 0.01 near ω/κ ≈ 0.7 — all consistent with body claims and Lean-verified G(ω) formula."
+      },
+      "style": {
+        "status": "pass",
+        "issues": [],
+        "notes": "Steel-blue curve (#2E86AB) + amber dashed threshold (#F18F01) — colorblind-safe blue/amber palette per CLAUDE.md convention. Serif font consistent. Optimal probe window shaded box at ω/κ ∈ [0, 0.3] visible and labeled."
+      },
+      "caption_match": true,
+      "caption_check_details": {
+        "kappa_value_in_caption": "7e10 /s — MATCHES subtitle '7e+10 s⁻¹'",
+        "D_value_in_caption": "0.60 — consistent with smooth-horizon baseline",
+        "threshold_line_in_caption": "G = 0.01 — MATCHES dashed amber line",
+        "shaded_region_in_caption": "optimal probe window ω < 0.3κ — MATCHES shaded box",
+        "G_at_specific_points": "G(0.1κ) ≈ 1.14 and G(0.3κ) ≈ 0.18 — visual readoff consistent within visual accuracy."
+      },
+      "notes": "Round-3 fixes applied as specified (xaxis.range → [0, 1.6], margin.b → 110, subtitle y → -0.22, G=0.01 annotation x → 1.0). All round-1/round-2 minors cleared. Figure is publication-ready."
+    },
+    {
+      "name": "fig_polariton_regime_map.png",
+      "label": "fig:regime",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": [],
+        "round3_fix_verification": {
+          "tier_label_collision": "RESOLVED — replacement of add_hrect annotation_position labels with explicit go.Scatter(mode='text') traces at the geometric mean of each band on the right edge (textposition='middle left') puts each of the 4 labels INSIDE its own band. Visual confirmation: 'Intractable' at top-right inside gray band (y ≈ √(1·10) ≈ 3.16); 'Borderline' inside amber band (y ≈ √(0.1·1) ≈ 0.316); 'Perturbative (Tier 1)' inside pale-blue band (y ≈ √(0.03·0.1) ≈ 0.0548); 'Excellent' inside deep-blue band (y ≈ √(0.001·0.03) ≈ 0.00548). All four labels readable; no overlap with each other or with markers.",
+          "tier_assignment_caption_match": "RESOLVED — caption rewritten to enumerate all four tier ranges explicitly (Intractable [1,10], Borderline [0.1,1], Perturbative (Tier 1) [0.03,0.1], Excellent [0.001,0.03]) and place the Paris 'long' configuration 'inside the Borderline tier just above the Borderline–Perturbative boundary (Γ_pol/κ ≈ 0.143 ≈ 1.43 × 0.1)'. Visual readoff: 'long' diamond marker sits at y ≈ 0.143, clearly INSIDE the amber Borderline band (y ∈ [0.1, 1.0]), just above the Borderline–Perturbative boundary at y = 0.1. Caption now MATCHES figure exactly. Ultralong placement at y ≈ 0.05 inside Perturbative tier also matches caption."
+        }
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "notes": "Tier-band edges align with body's perturbative-regime criterion. Diamond markers (Paris standard at top in Intractable, Paris long inside Borderline near boundary, Paris ultralong inside Perturbative tier near Excellent boundary) and the dashed cross-platform trend line correctly span the 4 tiers as cavity lifetime τ ∈ [1, 1000] ps."
+      },
+      "style": {
+        "status": "pass",
+        "issues": [],
+        "notes": "4-tier gray/amber/pale-blue/deep-blue gradient is colorblind-safe (no red/green). Marker palette: Paris standard gold diamond (Trento amber #F18F01-adjacent), Paris long orange diamond, Paris ultralong steel-blue diamond. Legend in upper-left reads cleanly with 3 entries. Log-log axes properly formatted with τ ∈ [1, 1000] ps and Γ_pol/κ ∈ [0.001, 10]."
+      },
+      "caption_match": true,
+      "caption_check_details": {
+        "x_axis": "Cavity lifetime τ [ps] — MATCHES",
+        "y_axis": "Γ_pol/κ — MATCHES",
+        "tier_band_ranges_in_caption": "Intractable [1,10] | Borderline [0.1,1] | Perturbative (Tier 1) [0.03,0.1] | Excellent [0.001,0.03] — all 4 MATCH figure bands by direct visual readoff",
+        "long_marker_in_caption": "'inside the Borderline tier just above the Borderline–Perturbative boundary (Γ_pol/κ ≈ 0.143 ≈ 1.43 × 0.1)' — MATCHES figure (orange diamond at y≈0.143, just above y=0.1 line, inside amber Borderline band)",
+        "ultralong_marker_in_caption": "'pushes the platform into the Perturbative tier (Γ_pol/κ ≈ 0.05)' — MATCHES figure (blue diamond at y≈0.05, inside pale-blue Perturbative band)",
+        "kappa_value": "κ = 7e10 /s — MATCHES smooth-horizon baseline"
+      },
+      "notes": "Round-3 fixes (Scatter-based tier labels + caption rewrite) cleared both round-2 FAIL findings. Figure is publication-ready and tier-assignment narrative is now self-consistent across figure + caption + body text (D ≈ 0.60 deep in perturbative regime characterization holds for the dispersive parameter D, separate from the dissipative tier-assignment via Γ_pol/κ; both are coherent)."
+    }
+  ],
+  "summary": "Stage 9 round 3 GREEN. Both figures pass against the current paper_draft.tex captions. Fig 1 round-1/round-2 carryover minors (subtitle/x-axis collision; excess x-range whitespace) are resolved by the visualizations.py xaxis.range tightening to [0, 1.6], bottom-margin increase to 110px, subtitle y-offset to -0.22, and G=0.01 annotation move to x=1.0. Fig 2 round-2 FAIL findings (tier-assignment caption mismatch + Perturbative/Excellent region-label collision) are resolved by (a) replacing add_hrect annotation_position labels with explicit go.Scatter(mode='text') traces at the geometric mean of each band on the right edge — placing all 4 labels INSIDE their own bands — and (b) rewriting the Fig 2 caption to enumerate the 4 tier ranges explicitly and correctly place the Paris 'long' marker inside the Borderline tier just above the Borderline–Perturbative boundary (Γ_pol/κ ≈ 0.143 ≈ 1.43 × 0.1). All visual placements verified against the regenerated PNGs. Stage 9 closed for E1 bundle.",
+  "recommendations": [],
+  "next_round_blockers": [],
+  "next_round_minors": [],
+  "stage10_handoff_focus": [
+    "Stage 10 (claims-reviewer with bundle_target=E1) should focus on: (a) verifying the body's two falsifiable predictions — falsifiable window ω/κ ∈ [0.05, 0.30] at smooth-horizon and the gain-threshold inequality G(ω) > 0.01 — trace cleanly to Lean theorems in PolaritonTier1 module (specifically attenuation_ge_one and the Tier-1 perturbative-regime lemmas); (b) verifying κ = 7e10 /s and T_H = 85.1 mK have provenance entries in PARAMETER_PROVENANCE keyed to Falque2025 + Grisins2016 + Burkhard2025; (c) checking that the body's D ≈ 0.60 perturbative-regime claim and the figure's Γ_pol/κ tier-assignment are not conflated as a single regime indicator (they characterize the dispersive and dissipative sectors respectively — distinct physics); (d) verifying the cross-platform PolaritonTier1.attenuation_ge_one Lean call referenced at lines 254-257 of paper_draft.tex actually exists in the Lean library; (e) checking that the Bibitems for Falque2025, Grisins2016, Amelio2020, and Burkhard2025 (arXiv:2511.12339) are present in the bundle's bibliography and have either cached PDFs or in-prep / textbook-exempt status per CitationIntegrity check."
+  ],
+  "review_caps_used": {
+    "file_reads": 5,
+    "tool_calls_total": 7,
+    "watchdog_triggered": false,
+    "time_boxed_minutes": "~3"
+  }
+}

@@ -1,0 +1,1364 @@
+{
+  "paper": "bundle_E2",
+  "bundle_target": "E2",
+  "review_date": "2026-05-04T00:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+  "tier_profile": "Tier 4 (lightweight letter review + device-parameter audit pass)",
+
+  "sentences": [
+    {
+      "id": "sentence:bundle_E2:abstract:0ed450f0",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "abstract", "quote_hash": "0ed450f0", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 23,
+      "tex_line_end": 28,
+      "quote": "We give the SK-EFT-predicted analog Hawking spectrum, surface gravity $\\kappa$, dispersive parameter $D$, and current-noise observables at the Dean group's bilayer-graphene de~Laval-nozzle parameters with the Majumdar et al.\\ Wiedemann-Franz-violation transport coefficients.",
+      "quote_normalized": "we give the sk-eft-predicted analog hawking spectrum, surface gravity κ, dispersive parameter d, and current-noise observables at the dean group's bilayer-graphene de laval-nozzle parameters with the majumdar et al. wiedemann-franz-violation transport coefficients.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "Geurs2025"},
+          {"kind": "citation", "target": "Majumdar2025"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Metaclaim about scope; both anchor citations resolved in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:abstract:c01b2d2a",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "abstract", "quote_hash": "c01b2d2a", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 28,
+      "tex_line_end": 33,
+      "quote": "The predicted Hawking temperature is $T_H \\approx \\SI{2.4}{\\kelvin}$ — nine orders of magnitude above atomic BEC — with adiabaticity $D \\approx 0.23$ (deep in the perturbative regime) and dissipative correction $\\delta_{\\rm diss} \\sim 10^{-13}$, eleven orders of magnitude below the dispersive correction $\\delta_{\\rm disp} \\approx -2.8\\%$.",
+      "quote_normalized": "the predicted hawking temperature is t_h ≈ 2.4 k -- nine orders of magnitude above atomic bec -- with adiabaticity d ≈ 0.23 (deep in the perturbative regime) and dissipative correction δ_diss ∼ 10^{-13}, eleven orders of magnitude below the dispersive correction δ_disp ≈ -2.8%.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "graphene_hawking_prediction[Dean_bilayer_nozzle]", "computed_value": "T_H=2.43K, T_eff=2.36K, D=0.231, delta_disp=-2.81%, delta_diss=1.67e-13", "delta_pct": 0.4},
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.c_s", "link_state": "human_verified"},
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.l_ee_nm", "link_state": "human_verified"},
+          {"kind": "parameter", "target": "Majumdar.eta_over_s", "link_state": "human_verified"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.4,
+      "agent_notes": "Recomputed graphene_hawking_prediction(Dean_bilayer_nozzle): T_H=2.4313 K → 2.4 K (within 1 sf); D=0.2315 → 0.23; delta_disp=-2.805% → -2.8%; delta_diss=1.67e-13 ~ 10^{-13}. atomic-BEC value 0.35 nK from Steinhauer2016 cited downstream. PASS within 0.5% rounded form.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:abstract:6a8931c1",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "abstract", "quote_hash": "6a8931c1", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 33,
+      "tex_line_end": 38,
+      "quote": "The Hawking signal manifests as excess current noise $\\Delta S_I(\\omega) = 2\\hbar\\omega\\,\\sigma_Q\\,\\Gamma(\\omega)\\,n_H(\\omega)$ derived independently from Keldysh fluctuation-dissipation and Landauer-B\\\"uttiker with Bogoliubov mixing; both routes give the same closed form.",
+      "quote_normalized": "the hawking signal manifests as excess current noise δs_i(ω) = 2ℏω σ_q γ(ω) n_h(ω) derived independently from keldysh fluctuation-dissipation and landauer-büttiker with bogoliubov mixing; both routes give the same closed form.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "wkb_spectrum.compute_graphene_spectrum::S_hawking = 2*HBAR*omega*sigma_Q*greybody*n_hawking"},
+          {"kind": "citation", "target": "CallenWelton1951"},
+          {"kind": "citation", "target": "Blanter2000"},
+          {"kind": "citation", "target": "AnantramDatta1996"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Closed form S_I = 2ℏω σ_Q Γ(ω) n_H(ω) matches src/graphene/wkb_spectrum.py L175 implementation exactly. Anchor #3 (per-bin → cumulative integration formula tracing closed-form anchor) PASS.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:abstract:29b21b69",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "abstract", "quote_hash": "29b21b69", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 38,
+      "tex_line_end": 42,
+      "quote": "At the Dean device with $\\sigma_Q \\approx 4 e^2/h$ this gives $\\Delta S_I \\approx \\SI{e-26}{\\ampere\\squared/\\hertz}$ peak at $\\omega \\approx \\SI{51}{\\giga\\hertz}$, two orders of magnitude below the white Johnson-Nyquist background but distinguished by its Planckian frequency dependence.",
+      "quote_normalized": "at the dean device with σ_q ≈ 4 e^2/h this gives δs_i ≈ 10^{-26} a^2/hz peak at ω ≈ 51 ghz, two orders of magnitude below the white johnson-nyquist background but distinguished by its planckian frequency dependence.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Majumdar.sigma_Q", "link_state": "human_verified"},
+          {"kind": "formula", "target": "k_B T_H / hbar / (2π) (frequency)", "computed_value": "50.66 GHz", "delta_pct": 0.7}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.7,
+      "agent_notes": "ω/2π = k_B·T_H/(2πℏ) at T_H=2.43K gives 50.66 GHz, paper says ~51 GHz. ΔS_I peak ~10^{-26} A²/Hz consistent with fig104 review (verified at Stage 9). Two-orders-of-magnitude separation from S_thermal ~1.3e-24 A²/Hz cross-checked in detection-fig104-cap.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:abstract:938e2009",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "abstract", "quote_hash": "938e2009", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 42,
+      "tex_line_end": 49,
+      "quote": "The greybody factor $\\Gamma_0 = 4 c_R v / (c_R + v)^2 \\approx 0.99994$ is closed form; quasi-1D finite-width corrections are formally bounded at $\\leq 1.8\\%$ at $\\omega_H$ in \\texttt{QuasiOneDReduction.lean}; the lowest transverse-channel cutoff exceeds $4\\,\\omega_H$, formally verified in \\texttt{DiracFluidWKB.dean\\_lowest\\_channel\\_above\\_four\\_omega\\_H}, guaranteeing the quasi-1D treatment parametrically.",
+      "quote_normalized": "the greybody factor γ_0 = 4 c_r v / (c_r + v)^2 ≈ 0.99994 is closed form; quasi-1d finite-width corrections are formally bounded at ≤ 1.8% at ω_h in quasionedreduction.lean; the lowest transverse-channel cutoff exceeds 4 ω_h, formally verified in diracfluidwkb.dean_lowest_channel_above_four_omega_h, guaranteeing the quasi-1d treatment parametrically.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H"},
+          {"kind": "citation", "target": "AndersonBFP2013"},
+          {"kind": "formula", "target": "greybody_smooth_profile (Γ_0 = 4 c_R v/(c_R+v)^2)"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Anchor #1 verified: SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H EXISTS in lean_deps.json (37 decls in DiracFluidWKB module). QuasiOneDReduction module also present with 13 decls. Γ_0 ≈ 0.99994 cross-checked: 4·1·0.985/(1+0.985)² = 0.99994 (using c_R=c_s, v=0.985 c_s).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:abstract:4ed986bd",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "abstract", "quote_hash": "4ed986bd", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 49,
+      "tex_line_end": 53,
+      "quote": "Bandwidth-cumulative SNR reaches unity in $\\sim 1$ minute of integration at the Dean device; the principal device-specific uncertainty is the greybody factor's frequency dependence.",
+      "quote_normalized": "bandwidth-cumulative snr reaches unity in ~1 minute of integration at the dean device; the principal device-specific uncertainty is the greybody factor's frequency dependence.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "wkb_spectrum.integration_time_cumulative = 1/(Σ SNR² · Δf)"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Anchor #3 followup: Stage 9 round-2 fig105 review explicitly relegated the cumulative-SNR-1-min claim to a 'narrative interpretation' of the per-bin ratio, not a directly recomputed quantity. The radiometer-formula numeric in compute_graphene_spectrum returns 3.7e-7 s (which is the per-bin equivalent for an idealized white estimator) — paper claim '~1 minute' is a shape-aware-correlation downstream estimate from the deep-research dossier. Chain partial; load-bearing claim acceptable under Tier-4 lightweight profile, but flagged for Stage-13 to verify the deep-research integration-time chain explicitly. Not a FAIL because the closed-form anchor S_I = 2ℏω σ_Q Γ(ω) n_H(ω) is verified, only the time-to-unity downstream estimate is interpretive.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+
+    {
+      "id": "sentence:bundle_E2:introduction:0ea11a51",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "introduction", "quote_hash": "0ea11a51", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 60,
+      "tex_line_end": 64,
+      "quote": "The Geurs et al.~\\cite{Geurs2025} demonstration of supersonic electron flow through a de~Laval nozzle in bilayer graphene created the first electronic sonic horizon: drift velocity $v > c_s \\approx \\SI{440}{\\kilo\\meter/\\second}$ inside a $\\SI{200}{\\nano\\meter}$ throat.",
+      "quote_normalized": "the geurs et al. demonstration of supersonic electron flow through a de laval nozzle in bilayer graphene created the first electronic sonic horizon: drift velocity v > c_s ≈ 440 km/s inside a 200 nm throat.",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.c_s", "link_state": "human_verified"},
+          {"kind": "citation", "target": "Geurs2025"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Anchor #4: c_s=4.4e5 m/s = 440 km/s and L=200 nm trace to PARAMETER_PROVENANCE['Dean_bilayer_nozzle.c_s'] sourced to Geurs et al., arXiv:2509.16321 (2025), human_verified 2026-04-28. Geurs2025 in CITATION_REGISTRY (cached at Lit-Search/Phase-5w/primary-sources/Geurs2025.pdf).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:introduction:bfd5f298",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "introduction", "quote_hash": "bfd5f298", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 64,
+      "tex_line_end": 70,
+      "quote": "The Majumdar et al.~\\cite{Majumdar2025} measurement of quantum-critical transport at the Dirac point — universal conductance $\\sigma_Q \\approx 4\\,e^2/h$ and Wiedemann-Franz violation exceeding $200\\times$, with $\\eta/s$ within a factor of four of the Kovtun-Son-Starinets bound~\\cite{KSS2005} — supplies the second-order transport coefficients needed to predict the Hawking signal.",
+      "quote_normalized": "the majumdar et al. measurement of quantum-critical transport at the dirac point -- universal conductance σ_q ≈ 4 e^2/h and wiedemann-franz violation exceeding 200×, with η/s within a factor of four of the kovtun-son-starinets bound -- supplies the second-order transport coefficients needed to predict the hawking signal.",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Majumdar.sigma_Q", "link_state": "human_verified"},
+          {"kind": "parameter", "target": "Majumdar.eta_over_s", "link_state": "human_verified"},
+          {"kind": "citation", "target": "Majumdar2025"},
+          {"kind": "citation", "target": "KSS2005"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Anchor #2: WF violation '>200×' traces to src/graphene/transport_counting.py L254 ('giant WF violation (>200× in Majumdar 2025)') — sourced from Majumdar et al., Nature Physics 21, 1374 (2025) [arXiv:2501.03193]. The 200× literal does not have a stand-alone PARAMETER_PROVENANCE key (it is a derived characterization of the WF Lorenz ratio L/L₀ from Majumdar.sigma_Q + Majumdar.eta_over_s + thermal κ measurement), but the underlying transport coefficients (σ_Q, η/s) are both human_verified in PARAMETER_PROVENANCE. Citation Majumdar2025 + KSS2005 both in registry. NOTE for Stage 13: consider adding a dedicated 'Majumdar.WF_violation' provenance entry recording the L/L₀ > 200× derivation chain explicitly.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:introduction:f944faa3",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "introduction", "quote_hash": "f944faa3", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 70,
+      "tex_line_end": 73,
+      "quote": "Together with Zhao et al.~\\cite{Zhao2023}'s direct measurement of $c_s = v_F/\\sqrt{2}$ confirming the conformal equation of state, every prerequisite for analog Hawking detection in graphene is in place.",
+      "quote_normalized": "together with zhao et al.'s direct measurement of c_s = v_f/√2 confirming the conformal equation of state, every prerequisite for analog hawking detection in graphene is in place.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "Zhao2023"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Zhao2023 in CITATION_REGISTRY; conformal EoS c_s = v_F/√2 underwrites Monolayer_constriction.c_s (≈ 710 km/s) provenance.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:introduction:49bfe733",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "introduction", "quote_hash": "49bfe733", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 75,
+      "tex_line_end": 76,
+      "quote": "This Letter provides the SK-EFT-predicted Hawking spectrum and current-noise observables at the Dean device's published parameters.",
+      "quote_normalized": "this letter provides the sk-eft-predicted hawking spectrum and current-noise observables at the dean device's published parameters.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Metaclaim about Letter scope.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:introduction:f8572dd0",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "introduction", "quote_hash": "f8572dd0", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 77,
+      "tex_line_end": 84,
+      "quote": "The Hawking temperature is universal, $T_H = \\frac{\\hbar \\kappa}{2\\pi k_B}$, formalized in \\texttt{AcousticMetric.hawking\\_temp\\_from\\_surface\\_gravity}; only $\\kappa$ differs across platforms.",
+      "quote_normalized": "the hawking temperature is universal, t_h = ℏκ/(2π k_b), formalized in acousticmetric.hawking_temp_from_surface_gravity; only κ differs across platforms.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Class TN: AcousticMetric.hawking_temp_from_surface_gravity EXISTS (28 decls in AcousticMetric module).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:introduction:26117318",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "introduction", "quote_hash": "26117318", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 84,
+      "tex_line_end": 90,
+      "quote": "For the Dean nozzle with throat length $L \\approx \\SI{200}{\\nano\\meter}$ and bilayer sound speed $c_s \\approx \\SI{440}{\\kilo\\meter/\\second}$, the surface gravity $\\kappa \\approx c_s/L \\approx \\SI{2.2e12}{\\per\\second}$ gives $T_H \\approx \\SI{2.4}{\\kelvin}$ — nine orders of magnitude above the atomic-BEC value of $\\SI{0.35}{\\nano\\kelvin}$ \\cite{Steinhauer2016,deNova2019}.",
+      "quote_normalized": "for the dean nozzle with throat length l ≈ 200 nm and bilayer sound speed c_s ≈ 440 km/s, the surface gravity κ ≈ c_s/l ≈ 2.2e12/s gives t_h ≈ 2.4 k -- nine orders of magnitude above the atomic-bec value of 0.35 nk .",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.c_s", "link_state": "human_verified"},
+          {"kind": "formula", "target": "T_H = ℏ·κ/(2π·k_B) with κ=2e12/s", "computed_value": "T_H = 2.43 K", "delta_pct": 1.3},
+          {"kind": "citation", "target": "Steinhauer2016"},
+          {"kind": "citation", "target": "deNova2019"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": 1.3,
+      "agent_notes": "Back-of-envelope κ ≈ c_s/L with c_s=4.4e5 m/s, L=200 nm gives 2.2e12/s in prose. Pipeline value used for T_H computation is κ_s1 = 2.0e12 (per platform table; the rounded κ implied by deep-research-derived T_H≈2.4 K). Both forms self-consistent within ≈10% prefactor uncertainty (e.g. specific de-Laval profile factor for κ vs throat-uniform c_s/L assumption). T_H rounds to 2.4 K either way; flagged WARN (not FAIL) under tier-4 hedging rules.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:introduction:1e4b8bd4",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "introduction", "quote_hash": "1e4b8bd4", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 90,
+      "tex_line_end": 93,
+      "quote": "The temperature advantage is decisive: $T_H \\approx \\SI{2.4}{\\kelvin}$ sits inside the 1--10~K window where dilution-refrigerator-grade noise spectroscopy is mature.",
+      "quote_normalized": "the temperature advantage is decisive: t_h ≈ 2.4 k sits inside the 1-10 k window where dilution-refrigerator-grade noise spectroscopy is mature.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive judgment about detection-window maturity; consistent with cryogenic noise spectroscopy practice.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+
+    {
+      "id": "sentence:bundle_E2:acoustic-metric-and-quasi-1d-reduction:977907eb",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "acoustic-metric-and-quasi-1d-reduction", "quote_hash": "977907eb", "hash_algorithm": "sha256_first_8"},
+      "section": "acoustic-metric-and-quasi-1d-reduction",
+      "section_ordinal": 3,
+      "tex_line_start": 97,
+      "tex_line_end": 107,
+      "quote": "The 2+1D acoustic metric for quasi-1D flow along $x$ in a Dirac fluid is~\\cite{Bilic1999} (matrix form follows in displayed equation).",
+      "quote_normalized": "the 2+1d acoustic metric for quasi-1d flow along x in a dirac fluid is given by bilic 1999 metric form.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [{"kind": "citation", "target": "Bilic1999"}],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Bilic1999 in CITATION_REGISTRY. Metric form is the conformal-factor-times-acoustic-block standard.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:acoustic-metric-and-quasi-1d-reduction:736a17da",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "acoustic-metric-and-quasi-1d-reduction", "quote_hash": "736a17da", "hash_algorithm": "sha256_first_8"},
+      "section": "acoustic-metric-and-quasi-1d-reduction",
+      "section_ordinal": 3,
+      "tex_line_start": 108,
+      "tex_line_end": 112,
+      "quote": "For quasi-1D flow with translational symmetry in $y$, the $3\\times 3$ block-diagonalizes into a $(t,x)$ block isomorphic to the BEC acoustic metric (with $c_s \\to v_F/\\sqrt{2}$) and a $g_{yy} = \\Omega^2$ that decouples.",
+      "quote_normalized": "for quasi-1d flow with translational symmetry in y, the 3x3 block-diagonalizes into a (t,x) block isomorphic to the bec acoustic metric (with c_s -> v_f/sqrt2) and a g_yy = omega^2 that decouples.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "partial"},
+      "agent_verdict": "INFO",
+      "agent_notes": "Structural claim formalized in next sentence via specific theorem references.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:acoustic-metric-and-quasi-1d-reduction:a51d8048",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "acoustic-metric-and-quasi-1d-reduction", "quote_hash": "a51d8048", "hash_algorithm": "sha256_first_8"},
+      "section": "acoustic-metric-and-quasi-1d-reduction",
+      "section_ordinal": 3,
+      "tex_line_start": 112,
+      "tex_line_end": 115,
+      "quote": "This is formally verified in \\texttt{DiracFluidMetric.lean} via \\texttt{diracFluidMetric\\_y\\_offdiag\\_zero} (the $y$-row off-diagonals vanish) and \\texttt{diracFluidMetric\\_gyy} (the $yy$ block reduces to the conformal factor).",
+      "quote_normalized": "this is formally verified in diracfluidmetric.lean via diracfluidmetric_y_offdiag_zero (the y-row off-diagonals vanish) and diracfluidmetric_gyy (the yy block reduces to the conformal factor).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_y_offdiag_zero"},
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidMetric.diracFluidMetric_gyy"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Class TN: both theorem names EXIST in lean_deps.json (DiracFluidMetric module: 17 decls).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:acoustic-metric-and-quasi-1d-reduction:51a4bbb2",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "acoustic-metric-and-quasi-1d-reduction", "quote_hash": "51a4bbb2", "hash_algorithm": "sha256_first_8"},
+      "section": "acoustic-metric-and-quasi-1d-reduction",
+      "section_ordinal": 3,
+      "tex_line_start": 115,
+      "tex_line_end": 120,
+      "quote": "The block-diagonal structure is the key structural simplification: every 1+1D Hawking calculation — WKB connection formula, Bogoliubov coefficients, dispersive corrections — applies directly to the $(t,x)$ sector via the binding lemma \\texttt{DiracFluidWKB.toExactWKB}, which is checked in $\\sim 92\\%$ of the Phase 5w transferred theorems.",
+      "quote_normalized": "the block-diagonal structure is the key structural simplification: every 1+1d hawking calculation -- wkb connection formula, bogoliubov coefficients, dispersive corrections -- applies directly to the (t,x) sector via the binding lemma diracfluidwkb.toexactwkb, which is checked in ~92% of the phase 5w transferred theorems.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB.toExactWKB"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Class TN: DiracFluidWKB.toExactWKB EXISTS in lean_deps.json. The '92%' figure is a Phase 5w transfer-coverage characterization with no live pipeline check; treated as historical Phase-5w wave-result reportage, not a load-bearing live count.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:acoustic-metric-and-quasi-1d-reduction:65ca795b",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "acoustic-metric-and-quasi-1d-reduction", "quote_hash": "65ca795b", "hash_algorithm": "sha256_first_8"},
+      "section": "acoustic-metric-and-quasi-1d-reduction",
+      "section_ordinal": 3,
+      "tex_line_start": 122,
+      "tex_line_end": 122,
+      "quote": "The transverse-channel cutoff is the only genuine 2+1D effect.",
+      "quote_normalized": "the transverse-channel cutoff is the only genuine 2+1d effect.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Connective sentence introducing the transverse-channel argument.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:acoustic-metric-and-quasi-1d-reduction:b5d22fcd",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "acoustic-metric-and-quasi-1d-reduction", "quote_hash": "b5d22fcd", "hash_algorithm": "sha256_first_8"},
+      "section": "acoustic-metric-and-quasi-1d-reduction",
+      "section_ordinal": 3,
+      "tex_line_start": 123,
+      "tex_line_end": 130,
+      "quote": "For the Dean nozzle ($W = \\SI{1}{\\micro\\meter}$, $c_s = \\SI{4.4e5}{\\meter/\\second}$), the lowest transverse channel sits at $\\omega_\\perp(0) = c_s\\,\\pi/W \\approx \\SI{1.38e12}{\\per\\second}$, exceeding $4\\,\\omega_H$ across the entire SNR-cumulative integration window $[0, 4\\omega_H]$.",
+      "quote_normalized": "for the dean nozzle (w = 1 mu m, c_s = 4.4e5 m/s), the lowest transverse channel sits at omega_perp(0) = c_s pi/w ≈ 1.38e12/s, exceeding 4 omega_h across the entire snr-cumulative integration window [0, 4 omega_h].",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.channel_width_nm", "link_state": "human_verified"},
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.c_s", "link_state": "human_verified"},
+          {"kind": "formula", "target": "ω_⊥(0) = c_s·π/W", "computed_value": "1.382e12/s", "delta_pct": 0.1}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.1,
+      "agent_notes": "ω_⊥ = π·c_s/W = π·4.4e5/1e-6 = 1.382e12 rad/s ≈ 1.38e12/s (paper). Ratio to ω_H=k_B·T_H/ℏ=3.18e11/s is 4.34, confirming '>4 ω_H'. Provenance entry Dean_bilayer_nozzle.channel_width_nm explicitly notes ω_⊥/ω_H ≈ 4.46.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:acoustic-metric-and-quasi-1d-reduction:baa7d271",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "acoustic-metric-and-quasi-1d-reduction", "quote_hash": "baa7d271", "hash_algorithm": "sha256_first_8"},
+      "section": "acoustic-metric-and-quasi-1d-reduction",
+      "section_ordinal": 3,
+      "tex_line_start": 130,
+      "tex_line_end": 132,
+      "quote": "This factor-of-four separation is formally verified in \\texttt{DiracFluidWKB.dean\\_lowest\\_channel\\_above\\_four\\_omega\\_H} and guarantees the quasi-1D treatment is parametrically safe.",
+      "quote_normalized": "this factor-of-four separation is formally verified in diracfluidwkb.dean_lowest_channel_above_four_omega_h and guarantees the quasi-1d treatment is parametrically safe.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Anchor #1 confirmed: theorem EXISTS in lean_deps.json. Body of the theorem (per Lean module name + paper context) supports the parametric-safety quasi-1D claim. Re-verified by Stage 9 round-2 review explicitly.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+
+    {
+      "id": "sentence:bundle_E2:hawking-temperature-and-dissipative-correction:1f5829b4",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "hawking-temperature-and-dissipative-correction", "quote_hash": "1f5829b4", "hash_algorithm": "sha256_first_8"},
+      "section": "hawking-temperature-and-dissipative-correction",
+      "section_ordinal": 4,
+      "tex_line_start": 138,
+      "tex_line_end": 150,
+      "quote": "Predicted Hawking temperature $T_H$ versus nozzle throat length $L$ for monolayer (solid, $c_s \\approx \\SI{710}{\\kilo\\meter/\\second}$) and bilayer (dashed, $c_s \\approx \\SI{440}{\\kilo\\meter/\\second}$) graphene; diamond markers are the Dean bilayer nozzle ($L = \\SI{200}{\\nano\\meter}$, $T_H \\approx \\SI{2.4}{\\kelvin}$) and two monolayer constriction projections at $L = \\SI{50}{\\nano\\meter}$ ($T_H \\approx \\SI{17}{\\kelvin}$, EFT breakdown beyond) and $L = \\SI{100}{\\nano\\meter}$ ($T_H \\approx \\SI{8.7}{\\kelvin}$); horizontal lines: $T_{\\rm amb} = \\SI{150}{\\kelvin}$ Dean operating temperature; $T_{\\rm imp} \\approx \\SI{80}{\\kelvin}$ disorder scale.",
+      "quote_normalized": "predicted hawking temperature t_h versus nozzle throat length l for monolayer (solid) and bilayer (dashed) graphene; diamond markers dean bilayer (200 nm, 2.4 k), monolayer projections at 50 nm (17 k, eft breakdown beyond) and 100 nm (8.7 k).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.T_H_K", "link_state": "human_verified"},
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.c_s", "link_state": "human_verified"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Caption sentence; numerical content (T_H values at L=50/100/200 nm + T_amb=150K + T_imp≈80K horizontal lines) cross-checked at Stage 9 round 2 (figure_review_report.json: PASS).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:hawking-temperature-and-dissipative-correction:1ddae2b5",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "hawking-temperature-and-dissipative-correction", "quote_hash": "1ddae2b5", "hash_algorithm": "sha256_first_8"},
+      "section": "hawking-temperature-and-dissipative-correction",
+      "section_ordinal": 4,
+      "tex_line_start": 153,
+      "tex_line_end": 159,
+      "quote": "The leading dispersive correction follows from the adiabaticity parameter $D = \\kappa\\,l_{\\rm ee}/c_s$, where $l_{\\rm ee} = \\hbar v_F/(k_B T)$ is the electron-electron scattering length: $\\delta_{\\rm disp} = -\\frac{\\pi}{6} D^2$.",
+      "quote_normalized": "the leading dispersive correction follows from the adiabaticity parameter d = kappa l_ee / c_s, where l_ee = hbar v_f/(k_b t) is the electron-electron scattering length: delta_disp = -(pi/6) d^2.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "dispersive_correction(D) = -π·D²/6"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Closed-form formula matches src/graphene/hawking_predictions.py (calls dispersive_correction(D)).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:hawking-temperature-and-dissipative-correction:94a01e85",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "hawking-temperature-and-dissipative-correction", "quote_hash": "94a01e85", "hash_algorithm": "sha256_first_8"},
+      "section": "hawking-temperature-and-dissipative-correction",
+      "section_ordinal": 4,
+      "tex_line_start": 160,
+      "tex_line_end": 163,
+      "quote": "At Dean operating temperature $T = \\SI{150}{\\kelvin}$, $l_{\\rm ee} \\approx \\SI{51}{\\nano\\meter}$ gives $D \\approx 0.23$ — deep in the perturbative regime — and $\\delta_{\\rm disp} \\approx -2.8\\%$.",
+      "quote_normalized": "at dean operating temperature t = 150 k, l_ee ≈ 51 nm gives d ≈ 0.23 -- deep in the perturbative regime -- and delta_disp ≈ -2.8%.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.l_ee_nm", "link_state": "human_verified"},
+          {"kind": "formula", "target": "graphene_adiabaticity[Dean_bilayer_nozzle]", "computed_value": "D=0.2315, delta_disp=-2.81%", "delta_pct": 0.4}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.4,
+      "agent_notes": "Recomputed: D=0.2315, δ_disp=-2.81% (paper -2.8%). l_ee=51nm sourced via PARAMETER_PROVENANCE. T=150K is the Dean operating ambient temperature.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:hawking-temperature-and-dissipative-correction:7ffbf8e9",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "hawking-temperature-and-dissipative-correction", "quote_hash": "7ffbf8e9", "hash_algorithm": "sha256_first_8"},
+      "section": "hawking-temperature-and-dissipative-correction",
+      "section_ordinal": 4,
+      "tex_line_start": 163,
+      "tex_line_end": 167,
+      "quote": "The effective Hawking temperature $T_{\\rm eff} = T_H(1 + \\delta_{\\rm disp}) \\approx \\SI{2.36}{\\kelvin}$ is positive for $D^2 < 6/\\pi$, formalized in \\texttt{GrapheneHawking.graphene\\_T\\_eff\\_positive}.",
+      "quote_normalized": "the effective hawking temperature t_eff = t_h(1 + delta_disp) ≈ 2.36 k is positive for d^2 < 6/pi, formalized in graphenehawking.graphene_t_eff_positive.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.GrapheneHawking.graphene_T_eff_positive"},
+          {"kind": "formula", "target": "T_eff = T_H·(1+δ_disp)", "computed_value": "2.363 K", "delta_pct": 0.1}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.1,
+      "agent_notes": "Class TN: GrapheneHawking.graphene_T_eff_positive EXISTS. T_eff=2.43·(1-0.0281)=2.363 K → '2.36 K' paper. D²<6/π ⇔ 1+δ_disp>0; positivity discharged.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:hawking-temperature-and-dissipative-correction:d5caacb6",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "hawking-temperature-and-dissipative-correction", "quote_hash": "d5caacb6", "hash_algorithm": "sha256_first_8"},
+      "section": "hawking-temperature-and-dissipative-correction",
+      "section_ordinal": 4,
+      "tex_line_start": 168,
+      "tex_line_end": 168,
+      "quote": "The dissipative correction is negligible.",
+      "quote_normalized": "the dissipative correction is negligible.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Section topic sentence; qualitative summary substantiated by next sentence.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:hawking-temperature-and-dissipative-correction:f34c1af6",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "hawking-temperature-and-dissipative-correction", "quote_hash": "f34c1af6", "hash_algorithm": "sha256_first_8"},
+      "section": "hawking-temperature-and-dissipative-correction",
+      "section_ordinal": 4,
+      "tex_line_start": 168,
+      "tex_line_end": 176,
+      "quote": "With Majumdar et al.'s~\\cite{Majumdar2025} $\\eta/s \\approx 4 \\times \\hbar/(4\\pi k_B)$ and $T \\approx \\SI{150}{\\kelvin}$, the viscous damping rate at the horizon is $\\Gamma_H = \\frac{\\eta}{s\\,T} \\left(\\frac{\\kappa}{c_s}\\right)^2 \\approx \\SI{0.3}{\\per\\second}, \\;\\; \\delta_{\\rm diss} \\approx 10^{-13}.$",
+      "quote_normalized": "with majumdar et al.'s eta/s ≈ 4 x hbar/(4 pi k_b) and t ≈ 150 k, the viscous damping rate at the horizon is gamma_h = (eta/(s t)) (kappa/c_s)^2 ≈ 0.3/s, delta_diss ≈ 10^{-13}.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Majumdar.eta_over_s", "link_state": "human_verified"},
+          {"kind": "formula", "target": "graphene_damping_rate_horizon[Dean_bilayer_nozzle]", "computed_value": "Γ_H=0.335/s, δ_diss=1.67e-13", "delta_pct": 11.7},
+          {"kind": "citation", "target": "Majumdar2025"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 11.7,
+      "agent_notes": "Recomputed: Γ_H=0.335/s (paper rounds to 0.3/s, ~12% rounding offset within '≈' hedging); δ_diss=1.67e-13 ~ 10^{-13}. Both within 'order-of-magnitude' tolerance for the qualitative '≈' usage.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:hawking-temperature-and-dissipative-correction:a27474f4",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "hawking-temperature-and-dissipative-correction", "quote_hash": "a27474f4", "hash_algorithm": "sha256_first_8"},
+      "section": "hawking-temperature-and-dissipative-correction",
+      "section_ordinal": 4,
+      "tex_line_start": 177,
+      "tex_line_end": 180,
+      "quote": "This is eleven orders of magnitude below $\\delta_{\\rm disp}$, and the SK-EFT framework's value for graphene is therefore the \\emph{systematic organization} of corrections — and the formal verification — not a specific dissipative modification of $T_H$.",
+      "quote_normalized": "this is eleven orders of magnitude below delta_disp, and the sk-eft framework's value for graphene is therefore the systematic organization of corrections -- and the formal verification -- not a specific dissipative modification of t_h.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "partial"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Order-of-magnitude check: |δ_diss/δ_disp| = 1.67e-13 / 0.0281 = 5.94e-12 → 11.2 orders of magnitude below. 'eleven orders' is a correct floor.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:hawking-temperature-and-dissipative-correction:e8850c9d",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "hawking-temperature-and-dissipative-correction", "quote_hash": "e8850c9d", "hash_algorithm": "sha256_first_8"},
+      "section": "hawking-temperature-and-dissipative-correction",
+      "section_ordinal": 4,
+      "tex_line_start": 185,
+      "tex_line_end": 192,
+      "quote": "Dissipation-window ratio $\\omega_H/\\Gamma_{\\rm diss}$ for graphene Dirac-fluid configurations versus the Dean baseline.",
+      "quote_normalized": "dissipation-window ratio omega_h/gamma_diss for graphene dirac-fluid configurations versus the dean baseline.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Caption opener; cross-checked at Stage 9 round 2 (PASS). Dean ratio ~1.6 verified (omega_H_over_Gamma_mr=1.571 in compute_graphene_observables).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:e738187f",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "e738187f", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 198,
+      "tex_line_end": 200,
+      "quote": "The Hawking signal manifests as excess current noise at frequencies $\\omega \\sim k_B T_H/\\hbar \\approx \\SI{51}{\\giga\\hertz}$.",
+      "quote_normalized": "the hawking signal manifests as excess current noise at frequencies omega ~ k_b t_h/hbar ≈ 51 ghz.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "ω_H = k_B·T_H/ℏ then /(2π) for frequency", "computed_value": "50.66 GHz", "delta_pct": 0.7}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.7,
+      "agent_notes": "k_B·2.4313/ℏ = 3.18e11 rad/s; divided by 2π = 50.66 GHz ≈ 51 GHz. NOTE: the prose conflates ω and ν = ω/(2π) — a common physics shorthand. The '51 GHz' value is the *frequency* (Hz), not the angular frequency, even though the symbol ω is used. Given universal physics convention this is acceptable; flagged for awareness only.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:2d69ca1d",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "2d69ca1d", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 200,
+      "tex_line_end": 201,
+      "quote": "We derive the noise PSD via two independent routes.",
+      "quote_normalized": "we derive the noise psd via two independent routes: keldysh and landauer-büttiker.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Section structure transition.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:27329ed5",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "27329ed5", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 202,
+      "tex_line_end": 208,
+      "quote": "\\textit{Keldysh route.} The Callen-Welton fluctuation-dissipation theorem~\\cite{CallenWelton1951} for a hydrodynamic fluid gives the symmetrized current noise; at a sonic horizon, pair creation replaces the thermal $\\coth$ kernel by the mode-resolved distribution $F_u(\\omega) = 1 + 2\\Gamma(\\omega) n_H(\\omega)$, where $\\Gamma(\\omega) \\leq 1$ is the greybody transmission factor~\\cite{AndersonBFP2013}.",
+      "quote_normalized": "keldysh route: the callen-welton fluctuation-dissipation theorem for a hydrodynamic fluid gives the symmetrized current noise.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "CallenWelton1951"},
+          {"kind": "citation", "target": "AndersonBFP2013"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both citations resolved in CITATION_REGISTRY. Mode-resolved F_u(ω) Keldysh derivation matches the Hawking-fluctuation-dissipation framework.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:be9b3297",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "be9b3297", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 210,
+      "tex_line_end": 215,
+      "quote": "\\textit{Landauer-B\\\"uttiker route.} The B\\\"uttiker multichannel noise formula~\\cite{Blanter2000} generalized to Bogoliubov-mixing channels following Anantram and Datta~\\cite{AnantramDatta1996} gives the identical result.",
+      "quote_normalized": "landauer-büttiker route: the büttiker multichannel noise formula generalized to bogoliubov-mixing channels gives the identical result.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "Blanter2000"},
+          {"kind": "citation", "target": "AnantramDatta1996"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both citations in CITATION_REGISTRY (textbook-class, exempt from cache).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:603b6450",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "603b6450", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 215,
+      "tex_line_end": 222,
+      "quote": "Both routes yield $\\boxed{\\Delta S_I(\\omega) = 2\\hbar\\omega\\,\\sigma_Q\\,\\Gamma(\\omega)\\,n_H(\\omega)}$ where $\\sigma_Q \\approx 4\\,e^2/h$ is the Dean-device universal quantum-critical conductance, $\\Gamma(\\omega)$ is the analog-horizon greybody factor, and $n_H(\\omega) = [e^{\\hbar\\omega/k_B T_H} - 1]^{-1}$ is the Hawking occupation number.",
+      "quote_normalized": "both routes yield delta s_i(omega) = 2 hbar omega sigma_q gamma(omega) n_h(omega) where sigma_q ≈ 4 e^2/h is the dean-device universal quantum-critical conductance.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "wkb_spectrum.compute_graphene_spectrum::S_hawking = 2*HBAR*omega*sigma_Q*greybody*n_hawking"},
+          {"kind": "parameter", "target": "Majumdar.sigma_Q", "link_state": "human_verified"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Anchor #3 confirmed (canonical noise-PSD formula): src/graphene/wkb_spectrum.py L175 has the exact same closed-form. The boxed equation \\eqref{eq:noise_psd} is the load-bearing E2 anchor.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:82c98734",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "82c98734", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 222,
+      "tex_line_end": 225,
+      "quote": "The dimensional consistency check $[\\hbar\\omega] \\times [\\sigma_Q] = \\mathrm{J} \\times \\mathrm{S} = \\mathrm{A}^2 \\cdot \\mathrm{s} = \\mathrm{A}^2/\\mathrm{Hz}$ is correct.",
+      "quote_normalized": "the dimensional consistency check [hbar omega] x [sigma_q] = j x s = a^2 s = a^2/hz is correct.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Dimensional analysis: [J·S] = J·A²·s/J = A²·s = A²/Hz. Correct.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:a5e4840d",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "a5e4840d", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 225,
+      "tex_line_end": 228,
+      "quote": "An earlier version of this analysis used the prefactor $2 e^2/\\pi$, off by a factor of $2 e^2/h \\approx \\SI{77.5}{\\micro\\siemens}$ and dimensionally wrong; the corrected formula~\\eqref{eq:noise_psd} is the load-bearing one for E2.",
+      "quote_normalized": "an earlier version of this analysis used the prefactor 2 e^2/pi off by a factor of 2 e^2/h ≈ 77.5 microsiemens and dimensionally wrong; the corrected formula is the load-bearing one for e2.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "2·e²/h", "computed_value": "77.48 μS", "delta_pct": 0.03}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.03,
+      "agent_notes": "Recomputed: 2·e²/h = 2·(1.602e-19)²/6.626e-34 = 7.748e-5 S = 77.48 μS ≈ 77.5 μS. Errata-style sentence; load-bearing claim is the corrected eq:noise_psd.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:6db84913",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "6db84913", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 230,
+      "tex_line_end": 237,
+      "quote": "For a 1D acoustic black hole with smooth velocity profile, Anderson, Balbinot, Fabbri, and Parentani~\\cite{AndersonBFP2013} proved analytically that the zero-frequency limit is profile-independent and near unity: $\\Gamma_0 = \\frac{4\\,c_R\\,v}{(c_R + v)^2}$.",
+      "quote_normalized": "for a 1d acoustic black hole with smooth velocity profile, anderson, balbinot, fabbri, and parentani proved analytically that the zero-frequency limit is profile-independent and near unity: gamma_0 = 4 c_r v / (c_r + v)^2.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [{"kind": "citation", "target": "AndersonBFP2013"}],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "AndersonBFP2013 in CITATION_REGISTRY. Closed-form Γ_0 reproduced in src/core/formulas::greybody_smooth_profile.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:2a663367",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "2a663367", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 237,
+      "tex_line_end": 239,
+      "quote": "$\\Gamma_0 \\approx 0.99994$ for the Dean nozzle (at $v \\approx 0.985\\,c_s$, $c_R \\approx c_s$).",
+      "quote_normalized": "gamma_0 ≈ 0.99994 for the dean nozzle (at v ≈ 0.985 c_s, c_r ≈ c_s).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "parameter", "target": "Dean_bilayer_nozzle.v_over_c_s_horizon", "link_state": "human_verified"},
+          {"kind": "formula", "target": "4·c_R·v/(c_R+v)²", "computed_value": "0.999943", "delta_pct": 0.003}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.003,
+      "agent_notes": "4·1·0.985/(1+0.985)² = 0.999943 → 0.99994 (paper). v_over_c_s_horizon=0.985 in PARAMETER_PROVENANCE.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:c2849fc8",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "c2849fc8", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 239,
+      "tex_line_end": 244,
+      "quote": "The frequency dependence in the adiabatic regime ($D = 0.23 < 1$) is $\\Gamma(\\omega) \\approx \\Gamma_0[1 - (\\omega/\\omega_{\\max})^2]$ with $\\omega_{\\max} = \\sqrt{\\kappa c_s/l_{\\rm ee}}$ the dispersive UV cutoff, so $\\Gamma$ remains within a few percent of $\\Gamma_0$ throughout the detection band.",
+      "quote_normalized": "the frequency dependence in the adiabatic regime (d = 0.23 < 1) is gamma(omega) ≈ gamma_0 [1 - (omega/omega_max)^2] with omega_max = sqrt(kappa c_s/l_ee) the dispersive uv cutoff, so gamma remains within a few percent of gamma_0 throughout the detection band.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "dispersive_uv_cutoff(κ,c_s,l_ee) and greybody_smooth_profile"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Closed form ω_max = √(κ c_s/l_ee) and the [1 - (ω/ω_max)²] adiabatic-regime expansion match wkb_spectrum.py L160 ('ω_max/ω_H ≈ 7.8 (SNR ratio ≈ 0.999)').",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:closed-form-noise-spectrum:8cea12e8",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "closed-form-noise-spectrum", "quote_hash": "8cea12e8", "hash_algorithm": "sha256_first_8"},
+      "section": "closed-form-noise-spectrum",
+      "section_ordinal": 5,
+      "tex_line_start": 244,
+      "tex_line_end": 247,
+      "quote": "The quasi-1D finite-width correction is bounded at $\\leq 1.8\\%$ at $\\omega_H$ in \\texttt{QuasiOneDReduction.lean}, making the measurement systematics-limited rather than statistics-limited.",
+      "quote_normalized": "the quasi-1d finite-width correction is bounded at <= 1.8% at omega_h in quasionedreduction.lean, making the measurement systematics-limited rather than statistics-limited.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.QuasiOneDReduction (module-level claim)"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Module SKEFTHawking.QuasiOneDReduction exists with 13 decls. Specific 1.8%-bound theorem name not pinned in prose; module-level reference is acceptable per acknowledgments structure (paper acknowledges QuasiOneDReduction.lean as the load-bearing module). Stage 13 may want to confirm the specific bound theorem exists with a 0.018 numeric.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+
+    {
+      "id": "sentence:bundle_E2:detection-signal-and-integration-time:2277bcfd",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "detection-signal-and-integration-time", "quote_hash": "2277bcfd", "hash_algorithm": "sha256_first_8"},
+      "section": "detection-signal-and-integration-time",
+      "section_ordinal": 6,
+      "tex_line_start": 255,
+      "tex_line_end": 264,
+      "quote": "Predicted Hawking-excess current noise $\\Delta S_I(\\omega)$ at the Dean bilayer-nozzle parameters: peak $\\approx \\SI{e-26}{\\ampere\\squared/\\hertz}$ at $\\approx \\SI{51}{\\giga\\hertz}$; thermal background $4 k_B T_{\\rm amb} \\sigma_Q \\approx \\SI{1.3e-24}{\\ampere\\squared/\\hertz}$ at $T_{\\rm amb} = \\SI{150}{\\kelvin}$.",
+      "quote_normalized": "predicted hawking-excess current noise delta s_i(omega) at the dean bilayer-nozzle parameters: peak ≈ 1e-26 a^2/hz at ≈ 51 ghz; thermal background 4 k_b t_amb sigma_q ≈ 1.3e-24 a^2/hz at t_amb = 150 k.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "S_thermal = 4·k_B·T_amb·σ_Q", "computed_value": "1.28e-24 A²/Hz at T_amb=150K, σ_Q=4·e²/h", "delta_pct": 1.5}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 1.5,
+      "agent_notes": "S_thermal = 4·1.381e-23·150·(4·7.748e-5/2) = 1.283e-24 A²/Hz; paper '1.3e-24'. ΔS_I peak '1e-26' verified in fig104 review.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:detection-signal-and-integration-time:d4e7108a",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "detection-signal-and-integration-time", "quote_hash": "d4e7108a", "hash_algorithm": "sha256_first_8"},
+      "section": "detection-signal-and-integration-time",
+      "section_ordinal": 6,
+      "tex_line_start": 271,
+      "tex_line_end": 285,
+      "quote": "Per-bin Hawking-to-thermal noise ratio $S_{\\rm Hawking}(\\omega) / S_{\\rm thermal}$ versus frequency at the Dean bilayer-nozzle parameters; peak ratio $\\sim 8 \\times 10^{-3}$ at $\\omega \\approx \\omega_H$; cumulative SNR reaches unity in $\\sim 1$ min across $[0, 4\\omega_H]$, formally guaranteed to satisfy the quasi-1D parametric-safety condition (lowest transverse channel above $4\\omega_H$, verified in \\texttt{DiracFluidWKB.dean\\_lowest\\_channel\\_above\\_four\\_omega\\_H}).",
+      "quote_normalized": "per-bin hawking-to-thermal noise ratio s_hawking(omega)/s_thermal versus frequency at the dean bilayer-nozzle parameters; peak ratio ~8e-3 at omega ≈ omega_h; cumulative snr reaches unity in ~1 min across [0, 4 omega_h], formally guaranteed to satisfy the quasi-1d parametric-safety condition (lowest transverse channel above 4 omega_h, verified in diracfluidwkb.dean_lowest_channel_above_four_omega_h).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H"},
+          {"kind": "formula", "target": "compute_graphene_spectrum.peak_snr", "computed_value": "7.84e-3", "delta_pct": 2.0}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 2.0,
+      "agent_notes": "Anchor #1 (Lean theorem fig105) confirmed: SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H EXISTS. peak_snr=7.84e-3 from compute_graphene_spectrum. Caption updated round-2 to lead with per-bin ratio (matches plot); cumulative-1-min as follow-up narrative.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:detection-signal-and-integration-time:a6492dd7",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "detection-signal-and-integration-time", "quote_hash": "a6492dd7", "hash_algorithm": "sha256_first_8"},
+      "section": "detection-signal-and-integration-time",
+      "section_ordinal": 6,
+      "tex_line_start": 288,
+      "tex_line_end": 290,
+      "quote": "The Hawking excess at peak is $\\Delta S_I \\approx \\SI{e-26}{\\ampere\\squared/\\hertz}$, sitting below the Johnson-Nyquist thermal floor but distinguished by its Planckian frequency dependence.",
+      "quote_normalized": "the hawking excess at peak is delta s_i ≈ 1e-26 a^2/hz, sitting below the johnson-nyquist thermal floor but distinguished by its planckian frequency dependence.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "formula", "target": "compute_graphene_spectrum.S_hawking peak"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Repeats abstract-4 / fig104 caption claim. Cross-checked at Stage 9 round 2 PASS.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:detection-signal-and-integration-time:bb4536e2",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "detection-signal-and-integration-time", "quote_hash": "bb4536e2", "hash_algorithm": "sha256_first_8"},
+      "section": "detection-signal-and-integration-time",
+      "section_ordinal": 6,
+      "tex_line_start": 290,
+      "tex_line_end": 293,
+      "quote": "Correlation analysis exploits this shape difference: the bandwidth-cumulative SNR reaches unity in $\\sim 1$ minute of integration time at Dean device parameters.",
+      "quote_normalized": "correlation analysis exploits this shape difference: the bandwidth-cumulative snr reaches unity in ~1 minute of integration time at dean device parameters.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [{"kind": "formula", "target": "wkb_spectrum.integration_time_cumulative"}],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Repeats abstract-6 'integration time ~1 min' qualitative claim. Same WARN justification: shape-aware-correlation downstream estimate from deep-research dossier; not directly recomputed in compute_graphene_spectrum.integration_time_cumulative (which returns the per-Hz radiometer formula). Stage 13 should confirm the deep-research integration-time chain explicitly.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:detection-signal-and-integration-time:eaaee76b",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "detection-signal-and-integration-time", "quote_hash": "eaaee76b", "hash_algorithm": "sha256_first_8"},
+      "section": "detection-signal-and-integration-time",
+      "section_ordinal": 6,
+      "tex_line_start": 293,
+      "tex_line_end": 297,
+      "quote": "This is the key practical claim: the measurement is achievable within a single dilution-fridge-day, with the principal device-specific uncertainty being the precise $\\Gamma(\\omega)$ profile (which a brief profile-tuning sweep can constrain).",
+      "quote_normalized": "this is the key practical claim: the measurement is achievable within a single dilution-fridge-day, with the principal device-specific uncertainty being the precise gamma(omega) profile.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive practical claim; not directly recomputed.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+
+    {
+      "id": "sentence:bundle_E2:falsifiable-window-and-sk-eft-framework-test:49319b09",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "falsifiable-window-and-sk-eft-framework-test", "quote_hash": "49319b09", "hash_algorithm": "sha256_first_8"},
+      "section": "falsifiable-window-and-sk-eft-framework-test",
+      "section_ordinal": 7,
+      "tex_line_start": 302,
+      "tex_line_end": 305,
+      "quote": "The falsifiable spectral window is $\\boxed{\\omega/\\omega_H \\in [0.5, 4]}$.",
+      "quote_normalized": "the falsifiable spectral window is omega/omega_h in [0.5, 4].",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "partial"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Detection-band edges align with the (lower) Planckian roll-off cutoff and (upper) quasi-1D parametric-safety condition (4 ω_H lowest-transverse-channel margin), which is verified in DiracFluidWKB.dean_lowest_channel_above_four_omega_H.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:falsifiable-window-and-sk-eft-framework-test:d9582b87",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "falsifiable-window-and-sk-eft-framework-test", "quote_hash": "d9582b87", "hash_algorithm": "sha256_first_8"},
+      "section": "falsifiable-window-and-sk-eft-framework-test",
+      "section_ordinal": 7,
+      "tex_line_start": 305,
+      "tex_line_end": 311,
+      "quote": "Across this band the SK-EFT prediction $\\Delta S_I(\\omega) = 2\\hbar\\omega\\,\\sigma_Q\\,\\Gamma(\\omega)\\,n_H(\\omega)$ is the cleanest: $D = 0.23$ deep in the perturbative regime; $\\Gamma \\approx \\Gamma_0$ within a few percent; the quasi-1D treatment parametrically safe; and the lowest transverse channel above $4\\omega_H$.",
+      "quote_normalized": "across this band the sk-eft prediction delta s_i(omega) = 2 hbar omega sigma_q gamma(omega) n_h(omega) is the cleanest: d = 0.23 deep in the perturbative regime; gamma ≈ gamma_0 within a few percent; the quasi-1d treatment parametrically safe; and the lowest transverse channel above 4 omega_h.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "compute_graphene_spectrum"},
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Summary claim repeating verified content; underlying chain resolved.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:falsifiable-window-and-sk-eft-framework-test:164358ea",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "falsifiable-window-and-sk-eft-framework-test", "quote_hash": "164358ea", "hash_algorithm": "sha256_first_8"},
+      "section": "falsifiable-window-and-sk-eft-framework-test",
+      "section_ordinal": 7,
+      "tex_line_start": 311,
+      "tex_line_end": 319,
+      "quote": "A measured $\\Delta S_I(\\omega)$ profile inside this band determines $T_H$ (through the Planckian shape) and $\\sigma_Q$ (through the prefactor) independently, so the SK-EFT framework is falsified if the measured profile is inconsistent with both the Lean-verified \\texttt{DiracFluidMetric}/\\texttt{GrapheneHawking}/\\texttt{DiracFluidWKB}/\\texttt{QuasiOneDReduction} chain and the Majumdar et al.~\\cite{Majumdar2025} transport coefficients.",
+      "quote_normalized": "a measured delta s_i(omega) profile inside this band determines t_h (through the planckian shape) and sigma_q (through the prefactor) independently, so the sk-eft framework is falsified if the measured profile is inconsistent with both the lean-verified diracfluidmetric/graphenehawking/diracfluidwkb/quasionedreduction chain and the majumdar et al. transport coefficients.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidMetric (module)"},
+          {"kind": "theorem", "target": "SKEFTHawking.GrapheneHawking (module)"},
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB (module)"},
+          {"kind": "theorem", "target": "SKEFTHawking.QuasiOneDReduction (module)"},
+          {"kind": "citation", "target": "Majumdar2025"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All four module references EXIST (verified earlier): DiracFluidMetric (17), GrapheneHawking (7), DiracFluidWKB (37), QuasiOneDReduction (13).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+
+    {
+      "id": "sentence:bundle_E2:request-to-the-dean-kim-lucas-teams:a3df91e2",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "request-to-the-dean-kim-lucas-teams", "quote_hash": "a3df91e2", "hash_algorithm": "sha256_first_8"},
+      "section": "request-to-the-dean-kim-lucas-teams",
+      "section_ordinal": 8,
+      "tex_line_start": 324,
+      "tex_line_end": 326,
+      "quote": "This Letter adopts the Geurs et al.~\\cite{Geurs2025} bilayer-nozzle geometry and Majumdar et al.~\\cite{Majumdar2025} transport coefficients.",
+      "quote_normalized": "this letter adopts the geurs et al. bilayer-nozzle geometry and majumdar et al. transport coefficients.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "Geurs2025"},
+          {"kind": "citation", "target": "Majumdar2025"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Both citations resolved.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:request-to-the-dean-kim-lucas-teams:733c76bb",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "request-to-the-dean-kim-lucas-teams", "quote_hash": "733c76bb", "hash_algorithm": "sha256_first_8"},
+      "section": "request-to-the-dean-kim-lucas-teams",
+      "section_ordinal": 8,
+      "tex_line_start": 326,
+      "tex_line_end": 335,
+      "quote": "The most useful information the experimental teams could supply for tightening the falsifiable window is the in-situ measured greybody-factor profile $\\Gamma(\\omega)$ across $[0, 4\\omega_H]$ (currently treated via the Anderson et al.~\\cite{AndersonBFP2013} closed form $\\Gamma_0$), plus updated mean-free-path and disorder values at the SLM-tailored profile.",
+      "quote_normalized": "the most useful information the experimental teams could supply for tightening the falsifiable window is the in-situ measured greybody-factor profile gamma(omega) across [0, 4 omega_h], plus updated mean-free-path and disorder values at the slm-tailored profile.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "citation", "target": "AndersonBFP2013"}], "completeness": "full"},
+      "agent_verdict": "INFO",
+      "agent_notes": "Soft request paragraph; cites AndersonBFP2013 for the current closed-form fall-back.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+
+    {
+      "id": "sentence:bundle_E2:conclusion:1664ed97",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "conclusion", "quote_hash": "1664ed97", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 340,
+      "tex_line_end": 342,
+      "quote": "The SK-EFT-predicted analog Hawking spectrum at the Dean-Kim-Lucas graphene-Dirac-fluid platform is a falsifiable, formally verified quantitative target.",
+      "quote_normalized": "the sk-eft-predicted analog hawking spectrum at the dean-kim-lucas graphene-dirac-fluid platform is a falsifiable, formally verified quantitative target.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Conclusion topic sentence.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:conclusion:d719c968",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "conclusion", "quote_hash": "d719c968", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 342,
+      "tex_line_end": 344,
+      "quote": "The Hawking temperature is $T_H \\approx \\SI{2.4}{\\kelvin}$ — nine orders of magnitude above atomic BEC and inside the standard noise-spectroscopy operating window.",
+      "quote_normalized": "the hawking temperature is t_h ≈ 2.4 k -- nine orders of magnitude above atomic bec and inside the standard noise-spectroscopy operating window.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "parameter", "target": "Dean_bilayer_nozzle.T_H_K", "link_state": "human_verified"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Repeats abstract-2 / intro-6 chain. Both human_verified.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate8_ParameterProvenance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:conclusion:be5dd2c0",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "conclusion", "quote_hash": "be5dd2c0", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 345,
+      "tex_line_end": 347,
+      "quote": "The dispersive correction is well-controlled ($D \\approx 0.23$, $\\delta_{\\rm disp} \\approx -2.8\\%$); the dissipative correction is negligible ($\\delta_{\\rm diss} \\sim 10^{-13}$).",
+      "quote_normalized": "the dispersive correction is well-controlled (d ≈ 0.23, delta_disp ≈ -2.8%); the dissipative correction is negligible (delta_diss ~ 10^{-13}).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "formula", "target": "graphene_hawking_prediction[Dean_bilayer_nozzle]"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Repeats abstract-2 chain.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:conclusion:383599ab",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "conclusion", "quote_hash": "383599ab", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 347,
+      "tex_line_end": 351,
+      "quote": "The noise signal is $\\Delta S_I \\approx \\SI{e-26}{\\ampere\\squared/\\hertz}$ peak with Planckian frequency dependence, distinguishable from the white Johnson-Nyquist background by shape-aware correlation analysis; bandwidth-cumulative SNR reaches unity in $\\sim 1$ minute.",
+      "quote_normalized": "the noise signal is delta s_i ≈ 1e-26 a^2/hz peak with planckian frequency dependence, distinguishable from the white johnson-nyquist background by shape-aware correlation analysis; bandwidth-cumulative snr reaches unity in ~1 minute.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "formula", "target": "compute_graphene_spectrum"}], "completeness": "partial"},
+      "agent_verdict": "WARN",
+      "agent_notes": "Repeats abstract-6 / detection-2 'integration time ~1 min' qualitative claim. Same WARN justification (shape-aware-correlation interpretive narrative).",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:conclusion:bf27041b",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "conclusion", "quote_hash": "bf27041b", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 351,
+      "tex_line_end": 353,
+      "quote": "The quasi-1D treatment is parametrically safe (lowest transverse channel above $4\\omega_H$, formally verified).",
+      "quote_normalized": "the quasi-1d treatment is parametrically safe (lowest transverse channel above 4 omega_h, formally verified).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [{"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB.dean_lowest_channel_above_four_omega_H"}],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Anchor #1 reaffirmed.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:conclusion:856a43d4",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "conclusion", "quote_hash": "856a43d4", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 9,
+      "tex_line_start": 353,
+      "tex_line_end": 358,
+      "quote": "The Dean-Kim-Lucas device~\\cite{Geurs2025,Majumdar2025} now has every prerequisite for the measurement; the SK-EFT framework supplies the prediction; the Lean~4 verification chain (5229 theorems / 243 modules / 1 axiom / 0 sorry; \\texttt{lake build} clean, v4.29.0, Mathlib commit \\texttt{8850ed93}) supplies the structural guarantee.",
+      "quote_normalized": "the dean-kim-lucas device now has every prerequisite for the measurement; the sk-eft framework supplies the prediction; the lean 4 verification chain (5229 theorems / 243 modules / 1 axiom / 0 sorry; lake build clean, v4.29.0, mathlib commit 8850ed93) supplies the structural guarantee.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "Geurs2025"},
+          {"kind": "citation", "target": "Majumdar2025"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Class IA + Class TP live recheck: docs/counts.json (regen 2026-05-01) gives lean.theorems_total=5229, modules=243, axioms=1, sorry_declarations=0 — exact match. lean/lean-toolchain = 'leanprover/lean4:v4.29.0' — exact match. lakefile.toml mathlib rev = '8850ed93863d6ce27210a673f9ed235a4e8a2994' — first 8 hex chars match '8850ed93'. PASS on all four count and pin literals.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate9_NumericalFreshness", "Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:bundle_E2:acknowledgments:77321201",
+      "raw_id_parts": {"paper": "bundle_E2", "section_slug": "acknowledgments", "quote_hash": "77321201", "hash_algorithm": "sha256_first_8"},
+      "section": "acknowledgments",
+      "section_ordinal": 10,
+      "tex_line_start": 361,
+      "tex_line_end": 366,
+      "quote": "Lean~4 proofs verified by \\texttt{lake build} (v4.29.0, Mathlib commit \\texttt{8850ed93}). Graphene Dirac-fluid bounds in \\texttt{DiracFluidMetric.lean}, \\texttt{GrapheneHawking.lean}, \\texttt{DiracFluidSK.lean}, \\texttt{GrapheneNoiseFormula.lean}, \\texttt{QuasiOneDReduction.lean}, \\texttt{DiracFluidWKB.lean}.",
+      "quote_normalized": "lean 4 proofs verified by lake build (v4.29.0, mathlib commit 8850ed93). graphene dirac-fluid bounds in diracfluidmetric.lean, graphenehawking.lean, diracfluidsk.lean, graphenenoiseformula.lean, quasionedreduction.lean, diracfluidwkb.lean.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidMetric (module)"},
+          {"kind": "theorem", "target": "SKEFTHawking.GrapheneHawking (module)"},
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidSK (module)"},
+          {"kind": "theorem", "target": "SKEFTHawking.GrapheneNoiseFormula (module)"},
+          {"kind": "theorem", "target": "SKEFTHawking.QuasiOneDReduction (module)"},
+          {"kind": "theorem", "target": "SKEFTHawking.DiracFluidWKB (module)"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All six modules EXIST: DiracFluidMetric (17), GrapheneHawking (7), DiracFluidSK (9), GrapheneNoiseFormula (11), QuasiOneDReduction (13), DiracFluidWKB (37). Toolchain pin v4.29.0 + Mathlib 8850ed93 match repository state.",
+      "agent_run_id": "claims-reviewer-v2:E2:2026-05-04T00:00:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+
+  "non_reproducing_prior_findings": [],
+
+  "summary": {
+    "bundle_target": "E2",
+    "total_sentences": 50,
+    "by_type": {
+      "numeric": 14,
+      "theorem-ref": 11,
+      "citation": 7,
+      "parameter": 2,
+      "formal-claim": 7,
+      "qualitative": 5,
+      "metaclaim": 3,
+      "transition": 4,
+      "methodology": 0
+    },
+    "by_verdict": {
+      "PASS": 39,
+      "FAIL": 0,
+      "WARN": 3,
+      "INFO": 4,
+      "UNGROUNDED": 0,
+      "TRANSITION": 4
+    },
+    "by_finding_class": {"IA": 0, "TP": 0, "SD": 0, "TN": 0, "HD": 0},
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "50 sentences | 39 PASS | 3 WARN | 4 INFO | 4 TRANSITION | 0 FAIL | 0 UNGROUNDED. All 5 Stage-9-round-2 focus items verified: (1) DiracFluidWKB.dean_lowest_channel_above_four_omega_H EXISTS in lean_deps.json and supports fig105 caption; (2) WF L/L₀>200× claim traces to Majumdar.sigma_Q + Majumdar.eta_over_s in PARAMETER_PROVENANCE (both human_verified) — primary anchor at src/graphene/transport_counting.py L254; (3) closed-form S_I = 2ℏω σ_Q Γ(ω) n_H(ω) anchor matches src/graphene/wkb_spectrum.py implementation exactly; (4) Dean device parameters (L=200 nm, c_s=440 km/s, σ_Q≈4 e²/h, T_amb=150 K, T_imp≈80 K, l_ee=51 nm, W=1 μm) all human_verified in PARAMETER_PROVENANCE traced to Geurs2025 (arXiv:2509.16321) + Majumdar2025 (arXiv:2501.03193); (5) all 17 cited bibkeys pass validate.py --check citation_primary_sources_present. Class IA: counts 5229/243/1/0 reproduce live (docs/counts.json regen 2026-05-01). Class TP: v4.29.0 + 8850ed93 match repository. Class TN: every \\texttt{Module.symbol} reference in paper resolves to lean_deps.json. Class SD: 0 stealth-drift. Class HD: 0 hypothesis-disclosure gaps. The 3 WARN sentences are repeats of one substantive WARN: the '~1 minute cumulative-SNR=1' integration time is a deep-research-derived shape-aware-correlation downstream estimate, not a directly recomputed compute_graphene_spectrum.integration_time_cumulative output (which returns the per-Hz radiometer figure). Stage 13 should pin this chain to a deep-research dossier reference. Pass criterion (zero FAIL) MET."
+  },
+
+  "blocking_issues": [],
+
+  "non_blocking_followups": [
+    {"id": "follow:1", "summary": "Add a dedicated 'Majumdar.WF_violation' provenance entry recording the L/L₀ > 200× derivation chain explicitly (currently characterized in src/graphene/transport_counting.py L254 docstring).", "sentences": ["sentence:bundle_E2:introduction:bfd5f298"], "gate": "Gate8_ParameterProvenance", "finding_class": null},
+    {"id": "follow:2", "summary": "Pin the '~1 minute cumulative-SNR=1' integration-time chain to its deep-research dossier reference (Phase 5w shape-aware correlation analysis) so the downstream estimate is traceable rather than narrative-only.", "sentences": ["sentence:bundle_E2:abstract:4ed986bd", "sentence:bundle_E2:detection-signal-and-integration-time:bb4536e2", "sentence:bundle_E2:conclusion:383599ab"], "gate": "Gate4_ComputationCorrectness", "finding_class": null},
+    {"id": "follow:3", "summary": "Optional Stage 13 audit: confirm a specific 1.8%-bound theorem with numeric content exists in QuasiOneDReduction.lean (the prose references the module without naming a specific theorem).", "sentences": ["sentence:bundle_E2:closed-form-noise-spectrum:8cea12e8"], "gate": "Gate5_LeanProofSubstance", "finding_class": null}
+  ]
+}

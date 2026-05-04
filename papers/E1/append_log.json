@@ -1,4 +1,21 @@
 {
   "bundle_target": "E1",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-01T22:41:33Z",
+      "source_paper": "paper12_polariton",
+      "lift_action": "Lift-companion",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "PolaritonPhase5u",
+        "DispersionAndPolariton",
+        "GrapheneHawking",
+        "WKBConnection"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T22:41:33Z",
+      "notes": "E1 PRL/PRR experimental letter: Paris-LKB polariton Hawking spectrum + stimulated-Hawking amplification + falsifiable frequency window at LKB device parameters"
+    }
+  ]
 }

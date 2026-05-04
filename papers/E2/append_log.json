@@ -1,4 +1,22 @@
 {
   "bundle_target": "E2",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-01T22:41:36Z",
+      "source_paper": "paper16_graphene_sk_eft",
+      "lift_action": "Lift-companion",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "GrapheneHawking",
+        "DiracFluidMetric",
+        "DiracFluidSK",
+        "GrapheneNoiseFormula",
+        "QuasiOneDReduction"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-01T22:41:36Z",
+      "notes": "E2 PRL/PRR experimental letter: Dean-Kim-Lucas bilayer-graphene Dirac-fluid analog Hawking + Wiedemann-Franz violation + closed-form noise spectrum from Keldysh FDT + Landauer-Buttiker"
+    }
+  ]
 }

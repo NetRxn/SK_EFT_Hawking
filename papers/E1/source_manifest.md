@@ -10,7 +10,7 @@
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
-| `paper12_polariton` | (see mapping) | Lift-companion | (see mapping) | 2026-04-29T21:29:08Z |
+| `paper12_polariton` | (see mapping) | Lift-companion | (see mapping) | 2026-05-01T12:57:51Z |
 
 ## Coverage notes
 

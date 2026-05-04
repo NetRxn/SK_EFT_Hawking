@@ -1,0 +1,368 @@
+\documentclass[aps,prl,twocolumn,superscriptaddress,nofootinbib]{revtex4-2}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{siunitx}
+
+%% Bundle: E1 (tier 4, target PRL | PRR)
+%% Source manifest: papers/E1/source_manifest.md
+%% Source paper: paper12_polariton (companion content) + Phase 5u Wave 21 cover-letter material
+%% Phase 7b sub-wave 7b.4 — E1 lift
+
+\begin{document}
+
+\title{A Falsifiable Hawking Spectrum for Polariton Microcavities at the Paris-LKB Device Parameters}
+
+\author{J.~Roehm}
+\affiliation{Independent Researcher}
+
+\date{\today}
+
+\begin{abstract}
+We give the SK-EFT-predicted analog Hawking spectrum, surface gravity
+$\kappa$, dispersive parameter $D$, and stimulated-Hawking gain at the
+Paris-LKB exciton-polariton platform's published device
+parameters~\cite{Falque2025}. The reservoir-corrected condensate sound
+speed $c_s \approx \SI{0.40}{\micro\meter/\pico\second}$ and upstream
+healing length $\xi \approx \SI{3.4}{\micro\meter}$ give
+$T_H \approx \SI{85}{\milli\kelvin}$ at the smooth-horizon configuration
+($\kappa = \SI{7e10}{\per\second}$, $D \approx 0.60$) and
+$T_H \approx \SI{134}{\milli\kelvin}$ at the steep-horizon reach
+($\kappa = \SI{1.1e11}{\per\second}$, $D \approx 0.93$). The leading
+dispersive correction $\delta_{\rm disp} = -\pi D^2/6$ spans
+$\sim$0.19--0.46 across the measured range; perturbative SK-EFT
+predictions are reliable in the smooth regime and leading-order at
+steep horizon. The stimulated-Hawking gain
+$G(\omega) = \Gamma(\omega) / (e^{2\pi \omega/\kappa_{\rm eff}} - 1)$
+crosses the single-shot $5\sigma$ threshold $G > 0.5$ at
+$\omega < \ln(3)/(2\pi)\,\kappa \approx 0.175\,\kappa$ (universal,
+$\kappa$-independent) — yielding
+$\mathrm{SNR} \approx 11$ for $N_{\rm probe} \sim 100$ probe photons
+per mode --- a $10^3$--$10^6$ improvement over spontaneous-correlation
+detection. We emit one falsifiable spectral window:
+$\omega/\kappa \in [0.05, 0.30]$ at the smooth-horizon configuration,
+where the SK-EFT noise-floor formula is the cleanest. The Lean~4
+verification of the underlying chain (5229 theorems / 243 modules / 1
+axiom / 0 sorry) is independent of platform parameters, so the
+prediction can be inverted: a measured $G(\omega)$ profile constrains
+$(c_s, \xi, \kappa)$ jointly and falsifies the SK-EFT framework if
+inconsistent. We close with a request to the LKB team for current
+device-parameter values to allow band-tightening before measurement.
+\end{abstract}
+
+\maketitle
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Introduction}
+
+Analog Hawking radiation has been confirmed in atomic Bose-Einstein
+condensates at $T_H \approx \SI{0.35}{\nano\kelvin}$
+\cite{Steinhauer2016,deNova2019} but has not yet been observed in any
+condensed-matter platform with a temperature advantage large enough to
+clear the systematics floor. Exciton-polariton condensates offer such
+an advantage: with stronger interactions and sharper spatial gradients
+than atomic BECs, predicted $T_H$ in microcavity polaritons sits in
+the $\SI{0.1}{\kelvin}$--$\SI{1}{\kelvin}$ range
+\cite{Gerace2012,Nguyen2015}. The 2025 Paris-LKB demonstration of
+all-optically tunable acoustic horizons with tailored curvature and
+the first observation of negative-energy Bogoliubov modes in the
+post-horizon region~\cite{Falque2025,Giacobino2025} establishes every
+prerequisite for Hawking detection in this platform.
+
+This Letter provides the quantitative SK-EFT prediction needed to
+guide the measurement. Three corrections distinguish our prediction
+from prior estimates: (i) the reservoir correction to $c_s$, where
+the excitonic reservoir absorbs 50--75\% of the polariton blueshift
+without contributing to the dynamical sound speed, reducing $c_s$ by
+a factor of $\sim$2--3 relative to reservoir-free Bogoliubov estimates
+\cite{Estrecho2021,Stepanov2019,Claude2023}; (ii) a stimulated-Hawking
+detection pathway via CW pump-probe spectroscopy~\cite{Grisins2016}
+that bypasses the quantum-noise floor by operating at the
+classical-mean-field level; (iii) formally verified spectral formulas
+derived from a Lean~4 chain (5229 theorems / 243 modules / 1 axiom /
+0 sorry; \texttt{lake build} clean).
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Reservoir-corrected device parameters}
+
+The polariton sound speed enters the acoustic metric as
+$c_s = \sqrt{g\,n_{\rm cond} / m^*}$, where only the condensate
+density $n_{\rm cond}$ (not the total density including dark
+excitons) contributes to the dynamical response. We adopt
+Falque et al.~\cite{Falque2025} \S IV.1's measured values directly:
+$c_s \approx \SI{0.40}{\micro\meter/\pico\second}$, upstream healing
+length $\xi \approx \SI{3.4}{\micro\meter}$. The downstream healing
+length is $\xi \approx \SI{4.0}{\micro\meter}$. Two configurations
+are reported by the primary source:
+
+\begin{center}
+\begin{tabular}{lcc}
+\hline
+Configuration & $\kappa$ ($\SI{}{\per\second}$) & $D = \xi\kappa/c_s$ \\
+\hline
+Smooth horizon (baseline) & $\SI{7e10}{}$ & 0.60 \\
+Steep horizon (reach) & $\SI{1.1e11}{}$ & 0.93 \\
+\hline
+\end{tabular}
+\end{center}
+
+The reservoir-correction protocol — adopting the measured
+$c_s = \SI{0.40}{\micro\meter/\pico\second}$ rather than the
+reservoir-free theoretical estimate of $\SI{1.0}{\micro\meter/\pico\second}$
+— was resolved via the project's Deep Research Reconciliation
+Protocol; three independent measurements
+\cite{Estrecho2021,Stepanov2019,Claude2023} are weighted against
+one theoretical projection~\cite{Jacquet2022}.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Hawking temperature and dispersive correction}
+
+The Hawking temperature is universal,
+\begin{equation}
+T_H = \frac{\hbar \kappa}{2\pi k_B},
+\label{eq:T_H}
+\end{equation}
+formalized in
+\texttt{AcousticMetric.hawking\_temp\_from\_surface\_gravity}.
+At the smooth-horizon baseline this gives
+$T_H \approx \SI{85}{\milli\kelvin}$; at the steep-horizon reach
+$T_H \approx \SI{134}{\milli\kelvin}$. The leading dispersive
+correction follows from the adiabaticity parameter $D$:
+\begin{equation}
+\delta_{\rm disp} = -\frac{\pi}{6} D^2,
+\label{eq:delta_disp}
+\end{equation}
+giving $\delta_{\rm disp} \approx -0.19$ (smooth) and
+$\delta_{\rm disp} \approx -0.46$ (steep). Perturbative SK-EFT is
+reliable in the smooth regime; at the steep-horizon reach,
+$D \approx 0.93$ pushes Eq.~\eqref{eq:delta_disp} into the leading-
+order regime where higher-derivative corrections become non-negligible.
+The steep-horizon prediction should be treated as leading-order,
+not all-orders.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Stimulated-Hawking gain spectrum}
+
+A coherent probe at frequency $\omega$ incident on the analog horizon
+undergoes anomalous Bogoliubov scattering with amplification
+\begin{equation}
+G(\omega) = \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_{\rm eff}} - 1},
+\label{eq:gain}
+\end{equation}
+where $\Gamma(\omega)$ is the greybody transmission factor and
+$\kappa_{\rm eff} \approx \kappa(1 - c_1 D^2)$ incorporates the
+leading dispersive correction~\cite{Finazzi2012}. The gain peaks at
+low frequencies: $G(0.1\,\kappa) \approx 1.14$,
+$G(0.3\,\kappa) \approx 0.18$, $G(\kappa) \approx 0.002$. The
+single-shot $5\sigma$ threshold $G > 0.5$ (i.e.,
+$N_{\rm probe} \, G^2 \geq 25$ for $N_{\rm probe} = 100$) is crossed
+at $\omega < \ln(3)/(2\pi)\,\kappa \approx 0.175\,\kappa$, which is
+universal and independent of $\kappa$ — a model-independent spectral
+signature of the SK-EFT prediction. Spatial attenuation is bounded below by 1 in
+\texttt{PolaritonTier1.attenuation\_ge\_one} and is monotone in
+$\Gamma$ via \texttt{PolaritonTier1.attenuation\_mono\_Gamma}; both
+are manual Lean proofs with zero \texttt{sorry}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_stimulated_hawking_spectrum.png}
+\caption{Stimulated-Hawking gain $G(\omega)$ versus normalized
+frequency $\omega/\kappa$ for the LKB smooth-horizon baseline
+($\kappa = \SI{7e10}{\per\second}$, $D \approx 0.60$). The dashed
+line marks the single-shot $5\sigma$ gain threshold $G = 0.5$
+(equivalently $N_{\rm probe} = 25/G^2 = 100$ probe photons per mode);
+the threshold is crossed at the universal frequency
+$\omega/\kappa = \ln(3)/(2\pi) \approx 0.175$. The shaded region is
+the optimal probe window $\omega < 0.3\kappa$, where the stimulated
+signal exceeds 10\% of the probe intensity.}
+\label{fig:gain}
+\end{figure}
+
+For shot-noise-limited detection,
+\begin{equation}
+\mathrm{SNR}(\omega) \approx
+\sqrt{N_{\rm shots} \cdot N_{\rm probe}} \cdot G(\omega).
+\end{equation}
+At $\omega = 0.1\,\kappa$ with $G \approx 1.14$, a single CW
+measurement with $N_{\rm probe} = 100$ probe photons per mode gives
+$\mathrm{SNR} \approx 11$ — a $10^3$--$10^6$ improvement over
+spontaneous-Hawking correlation analysis, which requires
+$\sim 10^9$ repetitions to resolve correlations at the
+$5 \times 10^{-5}$ level~\cite{Grisins2016,Jacquet2022}.
+Quasinormal-mode resonances unique to the driven-dissipative
+setting~\cite{Jacquet2023QNM,Burkhard2025} concentrate the
+stimulated signal at specific frequencies, providing additional
+detection windows.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Falsifiable window and noise floor}
+
+The polariton condensate carries an effective driven-dissipative
+noise temperature
+\begin{equation}
+T_{\rm noise} = \frac{m^* c_s^2}{k_B} \approx \SI{0.81}{\kelvin},
+\end{equation}
+which exceeds $T_H$ by an order of magnitude. This noise is spectrally
+featureless (frequency-independent in the hydrodynamic regime) and
+does not affect the stimulated measurement, which operates at the
+classical mean-field level~\cite{Amelio2020}. The Hawking signal in
+contrast has a distinct Planckian frequency dependence in $G(\omega)$.
+Correlation analysis exploits this shape difference.
+
+The falsifiable window is therefore
+\begin{equation}
+\boxed{\;\omega/\kappa \in [0.05, 0.30]\;}
+\end{equation}
+at the smooth-horizon configuration. Inside this band, the SK-EFT
+prediction $G(\omega) = \Gamma(\omega)/(e^{2\pi\omega/\kappa_{\rm eff}} - 1)$
+is the cleanest:
+$\delta_{\rm disp}$ is well-controlled ($D = 0.60$ deep in the
+perturbative regime); the noise floor is white; and the gain
+threshold is crossed (the stimulated signal exceeds the probe by
+$\geq 10\%$). A measured $G(\omega)$ profile inside this band
+constrains $(c_s, \xi, \kappa)$ jointly, with three sub-percent
+uncertainties anywhere on the band falsifying the framework.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_polariton_regime_map.png}
+\caption{Polariton Tier-1 regime map: normalized polariton decay
+$\Gamma_{\rm pol}/\kappa$ versus cavity lifetime $\tau$. Four tier
+bands (Intractable, $\Gamma_{\rm pol}/\kappa \in [1, 10]$;
+Borderline, $[0.1, 1]$; Perturbative (Tier 1), $[0.03, 0.1]$;
+Excellent, $[0.001, 0.03]$) classify device feasibility under the
+SK-EFT perturbative-regime criterion. Three Paris-LKB cavity-lifetime
+variants (standard, long, ultralong) are marked at
+$\kappa = \SI{7e10}{\per\second}$ (smooth-horizon baseline; Falque et
+al.~\cite{Falque2025}). The smooth-horizon Paris~``long''
+configuration sits inside the Borderline tier just above the
+Borderline--Perturbative boundary
+($\Gamma_{\rm pol}/\kappa \approx 0.143 \approx 1.43 \times 0.1$);
+the ultralong device pushes the platform into the Perturbative tier
+($\Gamma_{\rm pol}/\kappa \approx 0.05$).}
+\label{fig:regime}
+\end{figure}
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Cross-platform context}
+
+The polariton platform sits between BEC (cold, slow, $T_H \sim
+\SI{0.35}{\nano\kelvin}$) and graphene Dirac fluids (hot, fast,
+$T_H \approx \SI{2.4}{\kelvin}$). The Hawking temperature
+$T_H = \hbar\kappa/(2\pi k_B)$ is universal across all three: only
+$\kappa$ differs, set by the local velocity-gradient scale. The
+SK-EFT corrections all factor through the same dispersive parameter
+$D$ and dissipative ratio $\Gamma_{\rm pol}/\kappa$, so the formal
+chain that proves $\mathrm{Re}\,G \geq 0$ for the BEC carries
+cleanly to the polariton case via
+\texttt{PolaritonTier1.attenuation\_ge\_one}. This cross-platform
+universality is the structural payoff of the SK-EFT framework: the
+prediction here is not a phenomenological re-tuning of a BEC formula,
+but the same Lean-verified chain instantiated at LKB parameters.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Request to the LKB team}
+
+This Letter adopts Falque et al.~\cite{Falque2025} \S IV.1's
+published values for $(c_s, \xi, \kappa)$. The smooth- vs
+steep-horizon distinction is set by the SLM-tailored sound-speed
+profile; the platform's measured upper reach corresponds to the
+steep-horizon configuration. The most useful information the LKB
+team could supply for tightening the falsifiable window is the
+in-situ measured polariton decay rate $\Gamma_{\rm pol}$ and
+cavity lifetime $\tau_{\rm cav}$ at the SLM-tailored profile, plus
+any updated $\kappa$ values for ongoing long-cavity device
+generations beyond Falque~\cite{Falque2025}. With these, the
+detection-band edges in Eq.~(boxed window) shift by amounts
+calculable from the same Lean chain; we are happy to recompute on
+request and to share the updated PRL spectrum and noise floor in
+advance of publication.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Conclusion}
+
+The SK-EFT-predicted Hawking spectrum at the Paris-LKB
+exciton-polariton platform's measured device parameters is a
+falsifiable, formally verified quantitative target. We give explicit
+$T_H$ values at the smooth and steep horizons, the universal
+$\omega < 0.175\,\kappa$ stimulated-gain detection threshold, the
+$\mathrm{SNR} \approx 11$ achievable at $\omega = 0.1\,\kappa$ with
+$\sim 100$ probe photons per mode, and the falsifiable spectral
+window $\omega/\kappa \in [0.05, 0.30]$ at the smooth horizon. The
+LKB platform~\cite{Falque2025,Giacobino2025} now has every
+prerequisite for the measurement; the SK-EFT framework supplies the
+prediction; the formal verification chain (`lake build` clean,
+v4.29.0, Mathlib commit \texttt{8850ed93}) supplies the structural
+guarantee that the prediction is internally consistent.
+
+\begin{acknowledgments}
+Lean~4 proofs verified by \texttt{lake build} (v4.29.0, Mathlib
+commit \texttt{8850ed93}). Polariton-specific bounds in
+\texttt{PolaritonTier1.lean}: \texttt{attenuation\_ge\_one},
+\texttt{attenuation\_mono\_Gamma},
+\texttt{attenuation\_eq\_one\_at\_zero\_decay}.
+\end{acknowledgments}
+
+\begin{thebibliography}{99}
+\bibitem{Steinhauer2016}
+J.~Steinhauer, Nat.\ Phys.\ \textbf{12}, 959 (2016).
+
+\bibitem{deNova2019}
+J.~R.~M.~de~Nova \emph{et al.}, Nature \textbf{569}, 688 (2019).
+
+\bibitem{Gerace2012}
+D.~Gerace and I.~Carusotto,
+Phys.\ Rev.\ B \textbf{86}, 144505 (2012).
+
+\bibitem{Nguyen2015}
+H.~S.~Nguyen \emph{et al.},
+Phys.\ Rev.\ Lett.\ \textbf{114}, 036402 (2015).
+
+\bibitem{Falque2025}
+K.~Falque, A.~Delhom, Q.~Glorieux, E.~Giacobino, A.~Bramati,
+and M.~J.~Jacquet,
+Phys.\ Rev.\ Lett.\ \textbf{135}, 023401 (2025)
+[arXiv:2311.01392].
+
+\bibitem{Giacobino2025}
+E.~Giacobino and M.~J.~Jacquet,
+arXiv:2512.14194 (2025).
+
+\bibitem{Estrecho2021}
+E.~Estrecho \emph{et al.},
+Phys.\ Rev.\ Lett.\ \textbf{126}, 075301 (2021).
+
+\bibitem{Stepanov2019}
+P.~Stepanov \emph{et al.},
+Nat.\ Commun.\ \textbf{10}, 3869 (2019).
+
+\bibitem{Claude2023}
+F.~Claude \emph{et al.},
+Phys.\ Rev.\ B \textbf{107}, 174507 (2023).
+
+\bibitem{Grisins2016}
+P.~Grisins \emph{et al.},
+Phys.\ Rev.\ B \textbf{94}, 144518 (2016).
+
+\bibitem{Burkhard2025}
+M.~Burkhard \emph{et al.},
+arXiv:2511.12339 (2025).
+
+\bibitem{Jacquet2022}
+M.~Jacquet \emph{et al.},
+Eur.\ Phys.\ J.\ D \textbf{76}, 152 (2022).
+
+\bibitem{Finazzi2012}
+S.~Finazzi and R.~Parentani,
+Phys.\ Rev.\ D \textbf{85}, 124027 (2012).
+
+\bibitem{Amelio2020}
+I.~Amelio and I.~Carusotto,
+Phys.\ Rev.\ B \textbf{101}, 064505 (2020).
+
+\bibitem{Jacquet2023QNM}
+M.~Jacquet \emph{et al.},
+Phys.\ Rev.\ Lett.\ \textbf{130}, 111501 (2023).
+\end{thebibliography}
+
+\end{document}

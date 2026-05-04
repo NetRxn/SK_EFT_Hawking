@@ -3134,19 +3134,31 @@ def fig_polariton_regime_map():
 
     fig = go.Figure()
 
-    # Background regime bands
-    fig.add_hrect(y0=1.0, y1=10, fillcolor="rgba(230,57,70,0.15)",
-                  line_width=0, annotation_text="Intractable",
-                  annotation_position="top left")
-    fig.add_hrect(y0=0.1, y1=1.0, fillcolor="rgba(241,143,1,0.15)",
-                  line_width=0, annotation_text="Borderline",
-                  annotation_position="top left")
-    fig.add_hrect(y0=0.03, y1=0.1, fillcolor="rgba(92,148,110,0.15)",
-                  line_width=0, annotation_text="Perturbative (Tier 1)",
-                  annotation_position="top left")
-    fig.add_hrect(y0=0.001, y1=0.03, fillcolor="rgba(46,134,171,0.15)",
-                  line_width=0, annotation_text="Excellent",
-                  annotation_position="top left")
+    # Background regime bands — colorblind-safe palette
+    # (project discipline: no red/green pairings; steel-blue/amber gradient).
+    # Stage 9 r1 fixed red/green palette; r2 caught hrect annotation_position
+    # ("top left" / "inside top right") rendering labels above their rect on log
+    # scale. r3 fix: drop hrect annotations and place explicit add_annotation at
+    # each band's geometric mean (log-scale center) on the right side, away from
+    # the upper-left legend.
+    fig.add_hrect(y0=1.0, y1=10, fillcolor="rgba(70,70,70,0.18)", line_width=0)
+    fig.add_hrect(y0=0.1, y1=1.0, fillcolor="rgba(241,143,1,0.18)", line_width=0)
+    fig.add_hrect(y0=0.03, y1=0.1, fillcolor="rgba(46,134,171,0.13)", line_width=0)
+    fig.add_hrect(y0=0.001, y1=0.03, fillcolor="rgba(46,134,171,0.25)", line_width=0)
+
+    # Place band labels via Scatter mode="text" at the geometric-mean y of each
+    # band on the right edge of the τ-axis. This guarantees data-space placement
+    # on the log y-axis (plotly's add_annotation w/ inside-position is unreliable
+    # for hrect on log axes).
+    _band_x = 950.0  # near right edge of the [1, 1000] log τ-axis; text extends left
+    _band_ys = [3.16, 0.316, 0.0548, 0.00548]  # geom mean of each band
+    _band_labels = ["Intractable", "Borderline", "Perturbative (Tier 1)", "Excellent"]
+    fig.add_trace(go.Scatter(
+        x=[_band_x] * 4, y=_band_ys, mode="text",
+        text=_band_labels, textposition="middle left",
+        textfont=dict(size=11, family=FONT['family'], color="rgba(40,40,40,0.85)"),
+        showlegend=False, hoverinfo="skip",
+    ))
 
     # Polariton platforms
     regime_colors = {
@@ -5455,9 +5467,13 @@ def fig_stimulated_hawking_spectrum() -> go.Figure:
         name='G(ω) — stimulated gain',
     ))
 
-    # Detection threshold: G = 0.01 (need ~10^4 probe photons for 5σ)
-    fig.add_hline(y=0.01, line=dict(color=COLORS['dissipative'], width=1, dash='dot'))
-    fig.add_annotation(x=1.5, y=0.015, text="G = 0.01 (5σ with 10⁴ probe photons)",
+    # Single-shot 5σ gain threshold: G = 0.5 (equivalently N_probe = 25/G² = 100
+    # probe photons per mode). Crossed at the universal frequency
+    # ω/κ = ln(3)/(2π) ≈ 0.175. Stage 10 claims-review (2026-05-04) caught
+    # prior G = 0.01 / 10⁴-photons drift — at G(ω)=1/(exp(2πω/κ)−1), ω/κ=0.175
+    # gives G=0.5 not 0.01; G=0.01 is at ω/κ≈0.734.
+    fig.add_hline(y=0.5, line=dict(color=COLORS['dissipative'], width=1, dash='dot'))
+    fig.add_annotation(x=1.0, y=0.7, text="G = 0.5 (5σ with 100 probe photons / mode)",
         showarrow=False, font=dict(size=10, family=FONT['family'], color=COLORS['dissipative']))
 
     # Optimal probe window
@@ -5465,14 +5481,18 @@ def fig_stimulated_hawking_spectrum() -> go.Figure:
         annotation_text="optimal probe window", annotation_position="top left",
         annotation_font=dict(size=10))
 
-    apply_layout(fig, height=450, width=650,
+    # Stage 9 round 2: tighten x-range to [0, 1.6] (data ends near 1.5; round 1
+    # flagged ~50% blank whitespace beyond) and add bottom margin so the
+    # subtitle sits below the "ω/κ" axis title rather than colliding with it.
+    apply_layout(fig, height=480, width=650,
         title=dict(text="<b>Stimulated Hawking Gain Spectrum</b>",
                    font=TITLE_FONT),
-        xaxis=dict(title="ω / κ", range=[0, 3]),
+        xaxis=dict(title="ω / κ", range=[0, 1.6]),
         yaxis=dict(title="G(ω)", type="log", range=[-4, 1]),
+        margin=dict(b=110),
         legend=dict(x=0.55, y=0.95))
 
-    fig.add_annotation(x=0.5, y=-0.13, xref='paper', yref='paper',
+    fig.add_annotation(x=0.5, y=-0.22, xref='paper', yref='paper',
         text=f"T_H = {data['T_H_K']*1e3:.1f} mK | κ = {kappa:.0e} s⁻¹ | "
              "Grisins PRB 94, 144518 (2016); Burkhard arXiv:2511.12339 (2025)",
         showarrow=False, font=dict(size=9, family=FONT['family'], color='gray'))
