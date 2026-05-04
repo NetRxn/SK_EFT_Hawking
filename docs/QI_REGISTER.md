@@ -9,10 +9,10 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 ## Summary
 
 - **411** ReviewFinding nodes currently in the graph
-- **19** QI items tracked (7 manually-curated open + 12 closed via `## Closed Items` section)
-- **7** open, **12** closed
+- **21** QI items tracked (9 manually-curated open + 12 closed via `## Closed Items` section)
+- **9** open, **12** closed
 
-> 7 currently-open items: 3 from Phase 7b sub-wave 7b.4 (E1+E2 reviewer triples, 2026-05-04) and 4 from Phase 7c sub-waves 7c.1-7c.4 (D1+D2+D3+D4 reviewer triples, 2026-05-04). All are manually-curated additions; none auto-detected from `ReviewFinding` graph nodes. Each flagged a process-level gap worth tracking for Stage 14 follow-up. See "Open Items" section.
+> 9 currently-open items: 3 from Phase 7b sub-wave 7b.4 (E1+E2 reviewer triples, 2026-05-04), 4 from Phase 7c sub-waves 7c.1-7c.4 (D1+D2+D3+D4 reviewer triples, 2026-05-04), and 2 from Phase 7c sub-wave 7c.6 (D3 Stage-10 r3 prep + D4 Stage-13 r1, 2026-05-04). All are manually-curated additions; none auto-detected from `ReviewFinding` graph nodes. The latest pair (`qi-bundle_skeleton_inline_bibliography` + `qi-citation_authoryear_metadata_match`) supersedes the prior `qi-bibfilename` (which is now retained as a narrower precursor of the broader bundle-skeleton-template fix). See "Open Items" section.
 
 ## Open Items
 
@@ -55,6 +55,28 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 - **Owner:** unassigned. **Target:** before F flagship draft (which will lift bibitems from all 12 sibling bundles).
 - **Evidence:** `papers/AutomatedReviews/2026-05-04-bundle-stage13/D1.md` findings 1.1-1.4; commit `18f48e1` reconciliation.
 - **Severity:** moderate-to-high. Reader-facing trust issue.
+
+### qi-bundle_skeleton_inline_bibliography — opened 2026-05-04 by Phase 7c sub-wave 7c.6 (D3+D4 Stage-10/13 r2)
+
+- **First observed:** 2026-05-04 across D3 Stage-10 r2 (BLOCKER 4) and D4 Stage-13 r1 (BLOCKER B-1) — the same class of failure: bundle-skeleton template (`bundle_append.py` initialization) emits `\bibliography{paper_draftNotes}` (D3) or `\bibliography{bibliography}` (D4) plus an empty `paper_draftNotes.bib`. PDF compiles 47-51 pages but every `\cite{}` renders as `??`. `paper_draft.aux` has 0 `\bibcite` entries; no `.bbl` file. Generalises and supersedes `qi-bibfilename`: the deeper fix is not to point at the right bib filename — it is to eliminate the .bib-file vector entirely by defaulting bundle skeletons to inline `\begin{thebibliography}{99}`. Sister GREEN bundles (D5, L1-L3, E1, E2, I1, D2) already use the inline form successfully.
+- **Pattern summary:** any new bundle initialized via `bundle_append.py` ships with the `\bibliography{}` line and an empty .bib. Without an explicit population step, the compiled PDF carries `??` citations. The empty-bib state is silent on a `pdflatex` exit code; only `grep "Citation .* undefined" paper_draft.log` surfaces it.
+- **Pipeline stage affected:** Stage 7 (bundle initialization) + Stage 10 (LaTeX-compile gate of bundle-lift procedure) + Stage 13 (adversarial review compile gate).
+- **Proposed structural prevention:** (a) modify `bundle_append.py` initialization template to emit `\begin{thebibliography}{99}\n\n%% bibitems populated by per-bundle lift\n\n\end{thebibliography}` instead of `\bibliography{<name>}`; (b) add `validate.py --check bundle_latex_compile_clean_citations` that scans every `papers/<bundle>/paper_draft.log` for `Citation '.+' undefined` and `No file .+\.bbl` lines. Implements D4 reviewer's "QI-D4-1" suggestion. (c) optionally remove `\bibliographystyle{apsrev4-2}` from the skeleton since inline thebibliography doesn't need it.
+- **Owner:** unassigned. **Target:** before F flagship initialization (which inherits the same skeleton).
+- **Evidence:** `papers/D3/claims_review.json` round 2 `block:r2:4`; `papers/AutomatedReviews/2026-05-04-bundle-stage13/D4.md` round 1 B-1; commit `6c25ee0` fix for both. Subsumes prior `qi-bibfilename`.
+- **Severity:** moderate-to-high. Empty-bib state is silent; only auto-CI scanning of log can preempt the problem.
+
+### qi-citation_authoryear_metadata_match — opened 2026-05-04 by Phase 7c sub-wave 7c.6 (D3 Stage-10 r3 prep)
+
+- **First observed:** 2026-05-04 during D3 BLOCKER 4 fix-up; agent-A research surfaced 2 author/year slips:
+  - `KaulMajumdar1998` cited prose context references "logarithmic correction with explicitly negative coefficient" — canonical Kaul-Majumdar -3/2 log A coefficient is the 2000 PRL (`gr-qc/0002040`), not the 1998 PLB precursor. Bibkey-year mismatched the underlying canonical paper.
+  - `SextyWetterich2009` cited prose context references "Sexty-Wetterich-type complex-Langevin acceleration" — the actual canonical paper is **Berges-Sexty 2008** (NPB 799, 306, `arXiv:0708.0779`); Wetterich is **not** an author. Bibkey-author mismatched the underlying canonical paper.
+- **Pattern summary:** when a bibkey of form `<LastName1><Year>` (or `<LastName1><LastName2><Year>`) describes a paper whose first-author + year don't match the bibkey, registry-internal-consistency validators don't catch it. Reader following the bibkey expects paper metadata that disagrees with what's registered.
+- **Pipeline stage affected:** Stage 1 (constants/refs) + Stage 10 (claims review) + Stage 13 (adversarial review).
+- **Proposed structural prevention:** `validate.py --check citation_bibkey_form_matches_metadata` that for each `CITATION_REGISTRY[key]` parses the bibkey using a `<LastName>{<LastName>}*<Year>` regex, then verifies (a) the parsed last-name appears in the entry's `authors` field; (b) the parsed year matches `entry['year']` to within ±1 (allow arXiv-vs-journal year drift). Either fix the bibkey form or rename the cite in the using-paper to a more accurate bibkey. Both fixes happen with a single grep + Edit.
+- **Owner:** unassigned. **Target:** before F flagship draft (which will inherit cite-keys from all 12 sibling bundles; misnamed bibkeys propagate).
+- **Evidence:** D3 cite renames in commit `6c25ee0` (`KaulMajumdar1998` → `KaulMajumdar2000`; `SextyWetterich2009` → `BergesSexty2008` with prose updated to "Berges--Sexty-type"). Agent-A research dossier flagging both as uncertainty in metadata batch.
+- **Severity:** moderate. Reader-facing accuracy issue. Each occurrence is a single-Edit fix once flagged.
 
 ### qi-vizdiscipline — opened 2026-05-04 by Phase 7b sub-wave 7b.4 (E1 lift)
 
