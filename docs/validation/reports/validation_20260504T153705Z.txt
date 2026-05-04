@@ -1,0 +1,24 @@
+SK-EFT Hawking Validation Report
+Generated: 20260504T153705Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] bundle_source_freshness
+  + summary — 16 sub-findings: 0 FAIL / 6 WARN / 10 PASS
+  + bundle:D1 — stage13_redo_required=true (set by bundle_append.py); Stage-13 reviewer agent must re-clear before bundle close
+  + bundle:D1 — freshness-stale: 1 of 5 source paper(s) modified after last_lift (2026-05-04); sample: paper12_polariton(2026-05-04)
+  + bundle:D2 — stage13_redo_required=true (set by bundle_append.py); Stage-13 reviewer agent must re-clear before bundle close
+  + bundle:D2 — fresh: all 4 source paper(s) older than last_lift (2026-05-04)
+  + bundle:D3 — stage13_redo_required=true (set by bundle_append.py); Stage-13 reviewer agent must re-clear before bundle close
+  + bundle:D3 — fresh: all 22 source paper(s) older than last_lift (2026-05-04)
+  + bundle:D4 — bundle initialized; no lifts yet (skip)
+  + bundle:D5 — fresh: all 6 source paper(s) older than last_lift (2026-05-01)
+  + bundle:E1 — freshness-stale: 1 of 1 source paper(s) modified after last_lift (2026-05-01); sample: paper12_polariton(2026-05-04)
+  + bundle:E2 — fresh: all 1 source paper(s) older than last_lift (2026-05-01)
+  + bundle:F — bundle initialized; no lifts yet (skip)
+  + bundle:I1 — freshness-stale: 1 of 2 source paper(s) modified after last_lift (2026-05-01); sample: paper44_riemannian_connection(2026-05-01)
+  + bundle:I2 — fresh: all 0 source paper(s) older than last_lift (2026-05-01)
+  + bundle:L1 — fresh: all 1 source paper(s) older than last_lift (2026-05-01)
+  + bundle:L2 — fresh: all 1 source paper(s) older than last_lift (2026-05-01)
+  + bundle:L3 — fresh: all 1 source paper(s) older than last_lift (2026-05-01)
+
+Overall: 1/1 passed

@@ -3127,13 +3127,19 @@ CITATION_REGISTRY = {
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6a/primary-sources/KaulMajumdar2000.pdf',
-        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex'],
+        'used_in': ['papers/paper26_bh_entropy/paper_draft.tex',
+                    'papers/D3/paper_draft.tex'],
         'provides': ['SU(2)_k Verlinde-formula derivation of S = A/(4G) − (3/2)logA + c0',
                      'I₀ − I₁ singlet-projection cancellation (Lean: '
                      'singletProjectionGivesExtraInverseHessian)'],
         'notes': 'Load-bearing for Wave 3 Kaul-Majumdar SU(2)_k specialization. '
                  'The −3/2 log coefficient is the structural physics result; the '
-                 '1/4 prefactor is a γ tuning (`immirziTuning` hypothesis).',
+                 '1/4 prefactor is a γ tuning (`immirziTuning` hypothesis). '
+                 'D3 §7 cites under bibkey "KaulMajumdar2000" (originally cited '
+                 'as "KaulMajumdar1998" in early D3 first-pass; canonical -3/2 '
+                 'log A coefficient is the 2000 PRL, not the 1998 PLB precursor; '
+                 'bibkey corrected to KaulMajumdar2000 in 2026-05-04 D3 Stage-10 '
+                 'r3 fix per commit 6c25ee0).',
     },
     'Kaul2012Review': {
         'authors': 'Kaul, R. K.',
@@ -9061,22 +9067,6 @@ CITATION_REGISTRY = {
         'used_in': ['papers/D3/paper_draft.tex'],
         'provides': ['Third-law statement: cannot reach kappa=0 in finite advanced time with bounded stress-energy'],
         'notes': 'Pre-arXiv.',
-    },
-    'KaulMajumdar2000': {
-        'authors': 'Kaul, R. K., Majumdar, P.',
-        'title': 'Logarithmic correction to the Bekenstein-Hawking entropy',
-        'journal': 'Phys. Rev. Lett.',
-        'volume': 84,
-        'page': '5255',
-        'year': 2000,
-        'doi': '10.1103/PhysRevLett.84.5255',
-        'arxiv': 'gr-qc/0002040',
-        'doi_verified': None,
-        'inprep': False,
-        'primary_source_path': None,
-        'used_in': ['papers/D3/paper_draft.tex'],
-        'provides': ['Logarithmic correction -3/2 log(A/4) to Bekenstein-Hawking entropy from quantum geometry / SU(2) Chern-Simons boundary states'],
-        'notes': 'Originally cited under bibkey "KaulMajumdar1998"; canonical -3/2 log A coefficient is the 2000 PRL (gr-qc/0002040), not the 1998 PLB precursor. Bibkey corrected to KaulMajumdar2000 in 2026-05-04 r3 fix.',
     },
     'KehleUnger2024': {
         'authors': 'Kehle, C., Unger, R.',

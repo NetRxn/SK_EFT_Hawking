@@ -49,9 +49,12 @@ inside the same calculation: at the same natural point, $\Lambda_{\mathrm{emerg}
 \Lambda_{\mathrm{obs}} \gtrsim 10^{100}$ (the formal Lean lower bound;
 heuristically $\sim 10^{122}$), with no \emph{a priori} cancellation
 mechanism. Five appendices supply the algebraic-Lorentzian-geometry ground
-floor on which the singularity, area, and no-hair theorems then rest as the
-first machine-checked Penrose-hypothesis bundle, area theorem, and
-Kerr-family no-hair statement on indefinite-signature metrics. Sixteen of
+floor on which the singularity, area, and no-hair theorems then rest as,
+to our knowledge, the first machine-checked Penrose-hypothesis bundle,
+area theorem, and Kerr-family no-hair statement on indefinite-signature
+metrics; Bundle~I1 is the primary first-formalization claim and
+\S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} is the supplement
+that consumes them on the substrate side. Sixteen of
 the twenty-two threads ship with formally verified (zero-\texttt{sorry}) Lean~4
 modules; eight threads supply numerical or experimental falsifiers; the
 single shared coupling $N_f = 16$ also anchors the modular-invariance
@@ -1198,8 +1201,10 @@ carries an emergent $\mathbb{Z}_3$ from diquark condensation. The
 substrate's prediction, encoded in \texttt{CFLChiralLagrangian.lean}, is
 that this emergent $\mathbb{Z}_3$ is \emph{the same} as the
 $\mathbb{Z}_3$ centre of QCD that drives confinement
-(\S\ref{sec:confinement}). This is the first machine-checked
-formalisation of this identity in any proof assistant.
+(\S\ref{sec:confinement}). To our knowledge, this is the first
+machine-checked formalisation of this identity in any proof assistant
+(we have not located prior occurrences in the Coq, Agda, Isabelle, HOL4,
+or Mizar libraries).
 
 \subsection{CFL phase predicate}
 
@@ -1983,6 +1988,80 @@ back-reaction calculation that has not been completed. The
 PMNS structure on the Majorana rung (\S\ref{sec:majorana-rung}) is
 inherited but not closed-form predicted.
 
+\subsection{Tracked-hypothesis registry}
+
+For audit transparency, the tracked-hypothesis Lean Props referenced
+across the body are consolidated here by canonical module-qualified
+identifier with a one-line closure path:
+
+\begin{itemize}
+\item \texttt{LinearizedEFE.H\_VergelesPositivity} — Vergeles positivity
+  premise on the linearised gap-equation operator
+  (\S\ref{sec:linearized-efe}); closes when the explicit one-loop
+  calculation of $\alpha_{\mathrm{ADW}}$ is delivered.
+\item \texttt{LinearizedEFE.H\_CriticalLimitCollapse} — collapse of the
+  critical-limit functional onto a single coefficient at the
+  Sakharov-identity calibration point (\S\ref{sec:linearized-efe});
+  same closure path as \texttt{H\_VergelesPositivity}.
+\item \texttt{LinearizedEFE.H\_DeepGapReducesToAdler} — reduction of the
+  deep-gap variational regime to the Adler $R$ functional at the
+  Sakharov-identity point (\S\ref{sec:linearized-efe}); same closure
+  path as the Vergeles trio.
+\item \texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} — the
+  substrate's horizon-MTC boundary-condition Prop record
+  (\S\ref{sec:bh-entropy}); five falsifier theorems cover the
+  alternative-MTC closures (abelian-MTC, generic-MTC, etc.). Cross-bridge
+  to Bundle~D4 \S 7 (HP-QEC consumes the same Prop record).
+\item \texttt{CFLChiralLagrangian.H\_TopologicalOrderBeyondLG} — the
+  CFL-emergent-$\mathbb{Z}_3$ matching with QCD-centre $\mathbb{Z}_3$
+  beyond the Landau-Ginzburg paradigm (\S\ref{sec:cfl-z3-matching});
+  closes when an explicit topological-order-vs-Landau-Ginzburg
+  taxonomy bridge ships, currently in flight.
+\item \texttt{ChiralSSB\_QCD.H\_TetradQuarkScalesNatural} — the tetrad
+  scale as natural microscopic anchor for the QCD chiral-SSB chain
+  (\S\ref{sec:chiral-ssb}); closes when the Higgs-mass back-reaction
+  calculation is delivered.
+\item \texttt{NonlinearEFE.H\_RegimePartition} — regime-partition
+  criterion at $M_c = N_f \Lambda_{\mathrm{UV}}/(12\pi\,\alpha_{\mathrm{ADW}})$
+  separating the Schottky-natural and ADW-extremality branches
+  (\S\ref{sec:bch-four-laws}); shipped at the Lean-formalization scope
+  (no further closure required).
+\item \texttt{NonlinearEFE.H\_NonlinearEFEHolds} — nonlinear-EFE chain
+  through the path-(b) framework (\S\ref{sec:nonlinear-efe-ppn});
+  shipped at the Lean-formalization scope.
+\item \texttt{NonlinearDiffInvariance.H\_NonlinearDiffInvariance} —
+  diffeomorphism-invariance closure through $a_4$ on the Dirac bundle
+  (\S\ref{sec:diff-invariance}); shipped at the Lean-formalization
+  scope.
+\item \texttt{EinsteinCartanExtension.H\_EinsteinCartanExtensionHolds}
+  — Einstein-Cartan torsion bound at the cosmological background
+  (\S\ref{sec:einstein-cartan}); shipped at the Lean-formalization
+  scope; closes the KRT-passage gap of $\sim 46$ orders.
+\item \texttt{MicroscopicCoefficientMatch.H\_MicroscopicCoefficientMatch}
+  — microscopic-coefficient match between Sakharov-derived $G_N$ and
+  observation (\S\ref{sec:cc-emergent}); shipped at $\gtrsim 10^{100}$
+  rigorous lower bound (heuristic $\sim 10^{122}$ caveat).
+\item \texttt{GravitationalWaves.H\_VestigialModeIsGraviton} — the
+  vestigial-second-sound mode is identified with the graviton
+  (\S\ref{sec:gw170817}); falsifier shipped via
+  \texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}.
+\item \texttt{Verlinde2017.H\_VerlindeKMLiteralSumDerivation} — Verlinde
+  2017 KM literal-sum derivation as cited in \S\ref{sec:cfl-cross-bridge};
+  inherited from the published Verlinde 2017 derivation, no further
+  closure.
+\item \emph{In-flight numerical / non-Lean tracked premises:} RHMC
+  convergence at $L \ge 8$ (\S\ref{sec:vestigial-mc}); explicit
+  $\alpha_{\mathrm{ADW}}$ one-loop calculation (above);
+  \texttt{wen\_adw\_factor\_6000} closed-form corollary
+  (\S\ref{sec:wen-adw-deficit}; in-flight single-line discharge);
+  Hu-Sawicki BHL bilocal back-reaction (\S\ref{sec:scalar-rung});
+  PMNS structure on the Majorana rung (\S\ref{sec:majorana-rung}).
+\end{itemize}
+
+A reader with auditing intent can resolve every open obligation in this
+list against the corresponding module file in \texttt{lean/} and the
+provenance dashboard at \texttt{localhost:8050}.
+
 \subsection{Cross-bundle bridges}
 
 \S\ref{sec:gw170817} and Bundle~L1 share the same Lean theorem and
@@ -1998,9 +2077,10 @@ first-formalization claims; I1 is the primary, D3 the supplement.
 
 \subsection{Algebraic-Lorentzian-geometry first-formalization claims}
 
-\S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} is the first
-machine-checked package on indefinite-signature metrics in any proof
-assistant for: the indefinite-signature Lorentzian-metric typeclass,
+\S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} is, to our
+knowledge, the first machine-checked package on indefinite-signature
+metrics in any proof assistant for: the indefinite-signature
+Lorentzian-metric typeclass,
 Levi-Civita Christoffel uniqueness, the algebraic first Bianchi identity,
 the differential second Bianchi identity, the causal-structure axiom
 hierarchy, the Penrose singularity hypothesis bundle with the Riccati-focusing
