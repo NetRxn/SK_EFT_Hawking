@@ -301,7 +301,7 @@ emergent gravity, gauge erasure producing $U(1)$ from a non-Abelian
 lattice, fracton hydrodynamics producing subdiffusive emergent
 currents, and vestigial gravity as a distinct intermediate ordering.
 Layer-3 predictions in this sector are falsifiable, formalised
-(currently $\sim \totalsubstantivetheorems$ Lean theorems with zero
+(currently $\sim \substantivetheorems$ Lean theorems with zero
 \texttt{sorry} and one true axiom; see \S\ref{sec:methodology}), and
 actively tested against laboratory platforms (BEC, polariton, graphene
 Dirac fluid; D1, E1, E2).
@@ -345,8 +345,8 @@ dark-sector predictive claim is scoped out).
 After three independent six-round deep-research probes of the mechanism
 families flagged out-of-scope by Phase 5y (Tracks A, B, C in Phase~6m),
 Phase~6m closes at the Lean-formalisation scope. Project totals:
-$\sim \totalsubstantivetheorems$ substantive theorems across
-\totalmodules{} modules, $\axioms$ axiom, $\sorries$ \texttt{sorry}.
+$\sim \substantivetheorems$ substantive theorems across
+\leanmodules{} modules, $\axiomcount$ axiom, $\sorrycount$ \texttt{sorry}.
 
 \textbf{Track-level verdicts.}
 \begin{itemize}
@@ -424,8 +424,8 @@ formulation:
 \begin{enumerate}
 \item \textbf{Program value preserved.} The Lean backbone of the
   program continues to build cleanly across all 13 sub-phases.
-  $\sim \totalsubstantivetheorems$ theorems, $\sorries$ \texttt{sorry},
-  $\axioms$ axiom.
+  $\sim \substantivetheorems$ theorems, $\sorrycount$ \texttt{sorry},
+  $\axiomcount$ axiom.
 \item \textbf{Scope explicit.} The predictive-scope boundary is
   formally stated in Lean
   (\texttt{ClassificationTableDark.lean},
@@ -1217,8 +1217,10 @@ Mizar libraries:
   $\langle\mathrm{trefoil}\rangle = -\sqrt{2}$ and the Hopf-link
   $S$-matrix match.
 \item WRT TQFT partition function on $S^{2}\times S^{1}$ and the
-  Lickorish surgery formula on three-manifolds (the figure-eight knot
-  invariant remains in flight as a tracked-hypothesis closure).
+  Lickorish surgery formula on three-manifolds; the figure-eight knot
+  invariant ships closed at zero \texttt{sorry} via
+  \texttt{FigureEightKnot.figure\_eight\_trace\_neg\_one} and
+  \texttt{figure\_eight\_normalized} (\texttt{native\_decide}).
 \item Hayden--Preskill QEC code-distance biconditional on horizon-MTC
   boundary conditions, with the Fibonacci-anyon bound as a quantitative
   benchmark
@@ -1460,8 +1462,8 @@ evidence that something is wrong with the substrate analysis:
 \item \textbf{Layer 2: Lean 4 formal proofs.} Every formula in
   \texttt{formulas.py} carries a Lean theorem reference; every Lean
   theorem has zero \texttt{sorry}. The Lean library currently ships
-  $\sim \totalsubstantivetheorems$ substantive theorems across
-  \totalmodules{} modules with $\axioms$ axiom and $\sorries$
+  $\sim \substantivetheorems$ substantive theorems across
+  \leanmodules{} modules with $\axiomcount$ axiom and $\sorrycount$
   \texttt{sorry}.
 \item \textbf{Layer 3: Aristotle automated theorem prover.}
   Hard-to-discharge sub-lemmas surfaced during a Lean development
@@ -1695,8 +1697,8 @@ following locations:
   precision; the substrate's choice of MTC is structurally selected
   by the falsifier (D3 \S 7).
 \item \textbf{Phase 6m Track-B entropic-gravity dark-energy NO-GO
-  closure.} The first complete-mechanism-family unanimous NO-GO
-  closure in Phase~6m: $8/8$ candidates closed with
+  closure.} To our knowledge the first complete-mechanism-family
+  unanimous NO-GO closure in Phase~6m: $8/8$ candidates closed with
   $|\!\log\mathcal{B}| \geq 5$ (Jeffreys-decisive); $7/8$ candidates
   $r_d$-independent (D5 \S\ref{sec:dark-sector}).
 \item \textbf{Hu--Sawicki $f(R)$ chameleon Solar-System NO-GO.} The
@@ -1775,11 +1777,12 @@ documented in each sibling bundle's Outlook section:
 \item Higgs-mass back-reaction calculation
   closing the BHL bilocal mechanism (D3 \S 11).
 \item PMNS structure on the Majorana rung (D3 \S 12).
-\item Figure-eight knot invariant
-  in the Ising MTC braided fusion category (D4 \S 4).
 \item Full WRT surgery formula for arbitrary closed orientable
   3-manifolds (D4 \S 5; partial coverage on $S^3$ via Lickorish
-  surgery).
+  surgery; trefoil and figure-eight knot invariants ship closed at
+  zero \texttt{sorry} via
+  \texttt{Ising\_MTC.trefoil\_eq\_neg\_sqrt2} and
+  \texttt{FigureEightKnot.figure\_eight\_trace\_neg\_one}).
 \item Doublon-SWAP gate adiabatic-drag premise
   (D4 \S 6, in flight in \texttt{DoublonGate.lean}).
 \item Mathlib upstream cycle for the no-hair theorem and the
@@ -1811,8 +1814,8 @@ and Tier~4 (E1--E2; two experimental letters). The architecture is
 the project's strategy frame~\cite{Roehm2026Strategy}.
 
 Total program output at flagship close-out:
-$\sim \totalsubstantivetheorems$ substantive Lean theorems across
-\totalmodules{} modules with $\axioms$ axiom and $\sorries$ \texttt{sorry}.
+$\sim \substantivetheorems$ substantive Lean theorems across
+\leanmodules{} modules with $\axiomcount$ axiom and $\sorrycount$ \texttt{sorry}.
 The single axiom is \texttt{gapped\_interface\_axiom}, the 4+1D
 gapped-interface conjecture from Bundle~D2's chirality-wall pillar 2.
 All other load-bearing claims are theorems.
@@ -1888,8 +1891,8 @@ horizons:
 
 \begin{enumerate}
 \item \textbf{Is the substrate's predictive register complete at the
-  Lean-formalisation scope?} The current state ($\axioms$ axiom,
-  $\sorries$ \texttt{sorry}) is consistent with completeness, but the
+  Lean-formalisation scope?} The current state ($\axiomcount$ axiom,
+  $\sorrycount$ \texttt{sorry}) is consistent with completeness, but the
   open-under-tracked-hypothesis register
   (\S\ref{sec:substrate-register}) lists $\sim 10$ residual closure
   targets. Each is bounded; the question is whether closure of all of
