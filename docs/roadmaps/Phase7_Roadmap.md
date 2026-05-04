@@ -500,10 +500,12 @@ After the morning compaction, executed continuous bundle-lift work over 13 commi
 **Bundle F (flagship):**
 - Synthesis brief shipped at `papers/F/SYNTHESIS_BRIEF.md` (commit `2b1e826`). Substantive draft deferred per Phase 7 Wave 13 sequencing (must wait for all 12 sibling bundles GREEN at reviewer-triple level).
 
-**3 background reviewer agents still in flight at session-context-checkpoint:**
-- D3 Stage 10 round 2 (verifying 15 BLOCKER closure)
-- D4 Stage 10 round 2 (verifying 6 BLOCKER closure)
-- D1 Stage 13 round 2 (verifying 6 BLOCKER closure)
+**3 background reviewer agents at session-context-checkpoint (final verdicts):**
+- D3 Stage 10 round 2 — **AMBER** (4 OPEN BLOCKERs, down from 15; written to `papers/D3/claims_review.json` post-checkpoint). 11 of 15 round-1 BLOCKERs FULLY CLOSED. 4 OPEN: (1) §9 line 823 missing `.HPCode.` sub-namespace prefix on `QECHolographyBridge` theorem (single-token fix); (2) §19 line 1386 lowercase `nonlinearDiffInvariance.path_b_residual` not in lean_deps.json; (3) §19 lines 1392-1395 unqualified `path_b_holds_iff_dirac_bundle` + `perturbed_bundle_residual_linear_in_delta` (round-1 batch find/replace missed bare-name occurrences); (4) Class CI bibliography compile-gate — `paper_draftNotes.bib` is empty (0 bytes); 38 of 61 cited keys missing from `CITATION_REGISTRY`. Round-3 path documented in `claims_review.json` summary.
+- D4 Stage 10 round 2 — **GREEN** (commit `020a8d9`); all 6 BLOCKERs closed; 4 advisories
+- D1 Stage 13 round 2 — **GREEN**; all 6 BLOCKERs closed via `18f48e1` reconciliation; **D1 reviewer-triple-closed**
+
+**Heatmap at session-end: 10 of 13 bundles reviewer-triple-closed** (D1 + D2 + D5 + I1 + I2 + L1 + L2 + L3 + E1 + E2). D4 Stage-13 pending. D3 Stage-10 r3 pending (4 BLOCKER fixes scoped). F awaits all-12 gate.
 
 **Remaining critical-path work after these 3 close:**
 - D3 Stage 13 adversarial pass (after Stage 10 r2 GREEN)

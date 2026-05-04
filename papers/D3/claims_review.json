@@ -1,721 +1,377 @@
 {
   "paper": "D3",
   "bundle_target": "D3",
-  "review_round": 1,
-  "review_date": "2026-05-04T13:42:58Z",
+  "review_round": 2,
+  "review_date": "2026-05-04T20:00:00Z",
   "reviewer_version": "claims-reviewer-v2-bundle-aware",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-  "verdict": "red",
-  "total_findings": 26,
+  "reviewer_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
+  "verdict": "amber",
+  "total_findings": 4,
   "findings_by_class": {
-    "IA": 2,
+    "IA": 1,
     "TP": 0,
-    "SD": 1,
-    "TN": 17,
-    "HD": 6
+    "SD": 0,
+    "TN": 3,
+    "HD": 0
   },
-  "blockers_open": 21,
+  "blockers_open": 4,
   "blockers_advisory": 5,
+
+  "round_2_summary": "Round-1 brought 15 BLOCKERs in commit 676aed3. Round-2 verification of those 15: 11 fully closed; 1 partially closed (QEC §9 cross-bridge — replacement name still missing the .HPCode. sub-namespace prefix, single-token fix); 2 newly surfaced after-fix scan (NonlinearDiffInvariance §19 lines 1386/1392/1395 carry three theorem-name drifts that survived the batch find/replace because the citations were unqualified \\texttt{path_b_holds_iff_dirac_bundle} / \\texttt{perturbed_bundle_residual_linear_in_delta} / lowercase-namespaced \\texttt{nonlinearDiffInvariance.path_b_residual} — all three names absent from lean_deps.json); 1 NOT closed (Class CI bibliography compile-gate — only the \\bibliography{} filename was renamed; the file paper_draftNotes.bib itself is empty (0 bytes / 0 entries) and 38 of 61 cited keys remain missing from CITATION_REGISTRY; .aux contains 0 \\bibcite entries; PDF still compiles citations as ??). Net round-2: 4 OPEN BLOCKERs (1 carryover-partial + 2 surfaced + 1 carryover Class CI). All 13 of the originally-flagged Class TN drifts whose corrected names existed are verified PRESENT in lean_deps.json. Stage-13 anchor coverage: §1 substrate-predictive-boundary OK; §4 three closures OK; §6 GW170817 OK; §7 BH entropy OK; §17 heat kernel + Sakharov OK; §18 Stelle now hedged via in-flight module reference (no longer a TN failure but the load-bearing claim is now informally framed); §20 PPN OK; §21 CC OK after 10^100 softening; §22.5 algebraic GR OK; §24-§26 Penrose/HP/Area OK. Verdict AMBER not RED because the 11 substantive Lean theorem-reference fixes closed cleanly; the 4 remaining issues are either single-token namespace prefixes or compile-gate (bib file population) — addressable in a tight round-3 patch. Verdict not GREEN because the Class CI bibliography failure is load-bearing for any real paper-submission gate, and the §19 path-(b) drift propagates to a load-bearing Decision-Gate-E.3 anchor.",
 
   "sentences": [
     {
-      "id": "sentence:D3:abstract:da33d070",
-      "raw_id_parts": {"paper": "D3", "section_slug": "abstract", "quote_hash": "da33d070", "hash_algorithm": "sha256_first_8"},
-      "section": "abstract",
-      "section_ordinal": 0,
-      "tex_line_start": 47,
-      "tex_line_end": 50,
-      "quote": "at the same natural point, $\\Lambda_{\\mathrm{emerg}}/\\Lambda_{\\mathrm{obs}} \\approx 10^{122}$, with no \\emph{a priori} cancellation mechanism.",
-      "quote_normalized": "at the same natural point, $\\lambda_{emerg}/\\lambda_{obs} \\approx 10^{122}$, with no a priori cancellation mechanism.",
-      "type": "numeric",
-      "finding_classes": ["IA"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed"},
-          {"kind": "parameter", "target": "planckMassGeV", "link_state": "resolved"},
-          {"kind": "parameter", "target": "lambdaObservedGeV4", "link_state": "resolved"}
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "FAIL",
-      "delta_pct": 22.0,
-      "agent_notes": "IA: paper claims overshoot ~10^122 (also at lines 175, 1449, 1473, 1514, 1919). The cited Lean theorem `lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed` proves only `lambdaEmergMicroscopic planckMassGeV 16 > 10^100 * lambdaObservedGeV4` (MicroscopicCoefficientMatch.lean lines 180-200; explicit comment 'exceeds the observed CC by more than 10^100'). The paper claim is the physical estimate but the formal verification is 22 orders of magnitude weaker. Either weaken paper prose to '> 10^100' OR sharpen the Lean theorem to bound 10^122. Repeats at five sites; consider one canonical 10^122 prose claim with explicit `~` and a clearly hedged sentence noting the formal bound is 10^100.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate9_NumericalFreshness"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:abstract:f08d8661",
-      "raw_id_parts": {"paper": "D3", "section_slug": "abstract", "quote_hash": "f08d8661", "hash_algorithm": "sha256_first_8"},
-      "section": "abstract",
-      "section_ordinal": 0,
-      "tex_line_start": 42,
-      "tex_line_end": 47,
-      "quote": "the Einstein--Cartan torsion amplitude $|T_{\\mathrm{EC}}| \\simeq 2.05\\times 10^{-77}\\,\\mathrm{GeV}$ at the natural microscopic point $(\\Lambda_{\\mathrm{UV}},\\,N_f,\\,\\alpha_{\\mathrm{EC}}) = (M_{\\mathrm{Pl}},\\,16,\\,1)$ sits roughly forty-six orders of magnitude beneath the Kostelecky--Russell--Tasson cosmic-axial-torsion bound.",
-      "quote_normalized": "the einstein--cartan torsion amplitude $|t_{ec}| \\simeq 2.05\\times 10^{-77}\\,\\mathrm{gev}$ ...",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "EinsteinCartanExtension.torsionAtCosmologicalBackground_at_planck_natural_below_kostelecky"},
-          {"kind": "parameter", "target": "planckMassGeV"}
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "delta_pct": 0.0,
-      "agent_notes": "Verified: EinsteinCartanExtension.lean line 309 docstring gives `|T_EC| = 12π/(16·planckMassGeV²) · 13/10⁴⁰ ≃ 2.05×10⁻⁷⁷ GeV`. Pre-flight grep confirmed zero residual `1.3e-114` references in papers/D3/. KRT bound `< 10^-31` is correctly cited at 46 orders.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate4_ComputationCorrectness"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:introduction-the-substrate-predictive-boundary:9be823fa",
-      "raw_id_parts": {"paper": "D3", "section_slug": "introduction-the-substrate-predictive-boundary", "quote_hash": "9be823fa", "hash_algorithm": "sha256_first_8"},
-      "section": "introduction-the-substrate-predictive-boundary",
-      "section_ordinal": 1,
-      "tex_line_start": 82,
-      "tex_line_end": 93,
-      "quote": "machine-checked in \\texttt{HeatKernelExpansion.G\\_N\\_from\\_a2\\_eq\\_G\\_N\\_sakharov} and tied to the ADW critical coupling $G_c^{\\mathrm{ADW}} = 8\\pi^2/(N_f\\,\\Lambda^2)$ by the algebraic identity $G_N^{\\mathrm{Sak}}/G_c^{\\mathrm{ADW}} = 3/(2\\pi)$ in \\texttt{LinearizedEFE.G\\_N\\_sakharov\\_eq\\_ratio\\_critical\\_coupling}.",
-      "quote_normalized": "machine-checked in heatkernelexpansion.g_n_from_a2_eq_g_n_sakharov and tied to the adw critical coupling ...",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "HeatKernelExpansion.G_N_from_a2_eq_G_N_sakharov", "link_state": "resolved"},
-          {"kind": "theorem", "target": "LinearizedEFE.G_N_sakharov_eq_ratio_critical_coupling", "link_state": "resolved"}
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "Both theorem names verified present in lean_deps.json.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:introduction-the-substrate-predictive-boundary:20bd5440",
-      "raw_id_parts": {"paper": "D3", "section_slug": "introduction-the-substrate-predictive-boundary", "quote_hash": "20bd5440", "hash_algorithm": "sha256_first_8"},
-      "section": "introduction-the-substrate-predictive-boundary",
-      "section_ordinal": 1,
-      "tex_line_start": 151,
-      "tex_line_end": 153,
-      "quote": "The order-by-order diff-invariance biconditional (\\texttt{NonlinearDiffInvariance.h\\_path\\_b\\_holds\\_iff\\_dirac\\_bundle}, Decision Gate~E.3) closes through $a_4$.",
-      "quote_normalized": "the order-by-order diff-invariance biconditional (nonlineardiffinvariance.h_path_b_holds_iff_dirac_bundle, decision gate e.3) closes through $a_4$.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "NonlinearDiffInvariance.h_path_b_holds_iff_dirac_bundle", "link_state": "missing_target"}
-        ],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: `NonlinearDiffInvariance.h_path_b_holds_iff_dirac_bundle` not in lean_deps.json. Module exists with 38 decls. Likely intended targets: `NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent` (or `..._iff_basis_consistent`), or `dirac_H_NonlinearDiffInvariance`. Resolve to existing name. Same drift recurs at lines 152, 435, 1363 (plus appears in §4 fracton sentence).",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate9_NumericalFreshness"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:adw-gap-equation-tetrad-gap-bifurcation:82fa68b0",
-      "raw_id_parts": {"paper": "D3", "section_slug": "adw-gap-equation-tetrad-gap-bifurcation", "quote_hash": "82fa68b0", "hash_algorithm": "sha256_first_8"},
-      "section": "adw-gap-equation-tetrad-gap-bifurcation",
-      "section_ordinal": 2,
-      "tex_line_start": 274,
-      "tex_line_end": 277,
-      "quote": "This is the first explicit closed form for the ADW critical coupling in the literature; the derivation is machine-verified in \\texttt{ADWMechanism.lean} with zero \\texttt{sorry}, and the positivity guard $G > 0$ closes by \\texttt{adwGapPos}.",
-      "quote_normalized": "this is the first explicit closed form for the adw critical coupling in the literature; the derivation is machine-verified in adwmechanism.lean with zero sorry, and the positivity guard $g > 0$ closes by adwgappos.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "ADWMechanism.adwGapPos", "link_state": "missing_target"}
-        ],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: `ADWMechanism.adwGapPos` not in lean_deps.json. Module ADWMechanism has 84 decls; suggest grep'ing the actual positivity-witness theorem name. Same paragraph (line 267) also references \\texttt{ADWMechanism.adwGapClosedForm} -- also MISSING. Replace both with current names; update synthesis brief if names diverged from W4 freeze.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:adw-gap-equation-tetrad-gap-bifurcation:da12ca14",
-      "raw_id_parts": {"paper": "D3", "section_slug": "adw-gap-equation-tetrad-gap-bifurcation", "quote_hash": "da12ca14", "hash_algorithm": "sha256_first_8"},
-      "section": "adw-gap-equation-tetrad-gap-bifurcation",
-      "section_ordinal": 2,
-      "tex_line_start": 293,
-      "tex_line_end": 296,
-      "quote": "The bifurcation theorem (\\texttt{ADWMechanism.bifurcation\\_at\\_critical}) states that the symmetric solution $\\chi=0$ becomes a saddle for $G>G_c^{\\mathrm{ADW}}$",
-      "quote_normalized": "the bifurcation theorem (adwmechanism.bifurcation_at_critical) states that the symmetric solution becomes a saddle",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "ADWMechanism.bifurcation_at_critical", "link_state": "missing_target"}],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: `ADWMechanism.bifurcation_at_critical` not present in lean_deps.json. ADWMechanism has 84 decls; likely lives under different name (search GravPhase / GapParams substructure).",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:adw-gap-equation-tetrad-gap-bifurcation:HD-vergeles",
-      "raw_id_parts": {"paper": "D3", "section_slug": "adw-gap-equation-tetrad-gap-bifurcation", "quote_hash": "HDvergel", "hash_algorithm": "sha256_first_8"},
-      "section": "adw-gap-equation-tetrad-gap-bifurcation",
-      "section_ordinal": 2,
-      "tex_line_start": 304,
-      "tex_line_end": 313,
-      "quote": "All three are tracked-hypothesis Props in the current draft; the explicit one-loop calculation that discharges them is open and is reported as such in \\S\\ref{sec:linearized-efe}.",
-      "quote_normalized": "all three are tracked-hypothesis props in the current draft; the explicit one-loop calculation that discharges them is open",
-      "type": "formal-claim",
-      "finding_classes": ["HD"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "hypothesis", "target": "H_VergelesPositivity", "link_state": "resolved"},
-          {"kind": "hypothesis", "target": "H_CriticalLimitCollapse", "link_state": "resolved"},
-          {"kind": "hypothesis", "target": "H_DeepGapReducesToAdler", "link_state": "resolved"}
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "WARN",
-      "agent_notes": "HD-advisory: paper does disclose the tracked-Prop status in prose and §28 outlook ('Open under tracked hypothesis'), which satisfies the disclosure invariant. However, the project's HYPOTHESIS_REGISTRY in src/core/constants.py contains only 7 hypothesis keys (H_KLRS_SM_Crossover, H_ScalarChannelIsTetradBifurcationOutput, c_minus_equals_8Nf, characteristic_square_mod_8, modular_invariance_framing, rokhlin_sigma_mod_16, spin_bordism_iso_Z) -- none of D3's hypotheses (H_VergelesPositivity, H_CriticalLimitCollapse, H_DeepGapReducesToAdler) are in the Python registry. Lean Props exist (LinearizedEFE.H_VergelesPositivity etc.) but Python-side traceability is missing. Recommend Stage-13 follow-up to populate HYPOTHESIS_REGISTRY with all 11 D3-side tracked-hypothesis Props (Vergeles trio, H_HorizonBoundaryCondition*, H_TopologicalOrderBeyondLG, H_TetradQuarkScalesNatural, H_RegimePartition, H_NonlinearEFEHolds, H_NonlinearDiffInvariance, H_EinsteinCartanExtensionHolds, H_MicroscopicCoefficientMatch).",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate6_AssumptionDisclosure"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:gauge-erasure-only-u1-survives-the-fluid-layer:800c71c2",
-      "raw_id_parts": {"paper": "D3", "section_slug": "gauge-erasure-only-u1-survives-the-fluid-layer", "quote_hash": "800c71c2", "hash_algorithm": "sha256_first_8"},
-      "section": "gauge-erasure-only-u1-survives-the-fluid-layer",
-      "section_ordinal": 3,
-      "tex_line_start": 354,
-      "tex_line_end": 357,
-      "quote": "The erasure theorem (Lean: \\texttt{GaugeErasure.only\\_U1\\_survives}) is the \\emph{first} of three predictive-boundary cuts that force the ADW route",
-      "quote_normalized": "the erasure theorem (lean: gaugeerasure.only_u1_survives) is the first of three predictive-boundary cuts",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "GaugeErasure.only_U1_survives", "link_state": "missing_target"}],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: `GaugeErasure.only_U1_survives` not in lean_deps.json. Closest match: `GaugeErasure.sm_only_u1_survives`. Rename in paper to match Lean.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:three-closures-forcing-adw:bc0581a5",
-      "raw_id_parts": {"paper": "D3", "section_slug": "three-closures-forcing-adw", "quote_hash": "bc0581a5", "hash_algorithm": "sha256_first_8"},
-      "section": "three-closures-forcing-adw",
-      "section_ordinal": 4,
-      "tex_line_start": 420,
-      "tex_line_end": 422,
-      "quote": "The deficit is a closed-form Lean identity (\\texttt{GaugeErasure.wen\\_adw\\_factor\\_6000}), not a numerical estimate.",
-      "quote_normalized": "the deficit is a closed-form lean identity (gaugeerasure.wen_adw_factor_6000), not a numerical estimate.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN", "IA"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "GaugeErasure.wen_adw_factor_6000", "link_state": "missing_target"}],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN+IA: `GaugeErasure.wen_adw_factor_6000` not in lean_deps.json (no partial match either). The 1/6000 numerical claim is a Lean theorem name asserted to exist; without the theorem, the 'closed-form Lean identity, not a numerical estimate' claim is unsupported. Either (a) write the theorem in GaugeErasure.lean and re-run lean_deps.json export, or (b) hedge prose to 'numerical estimate at the substrate scale' and remove the Lean-citation.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate9_NumericalFreshness"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:three-closures-forcing-adw:5fd8ed0d",
-      "raw_id_parts": {"paper": "D3", "section_slug": "three-closures-forcing-adw", "quote_hash": "5fd8ed0d", "hash_algorithm": "sha256_first_8"},
-      "section": "three-closures-forcing-adw",
-      "section_ordinal": 4,
-      "tex_line_start": 433,
-      "tex_line_end": 438,
-      "quote": "The diffeomorphism-invariance biconditional \\texttt{NonlinearDiffInvariance.h\\_path\\_b\\_holds\\_iff\\_dirac\\_bundle} of \\S\\ref{sec:diff-invariance} \\emph{closes} for the Dirac bundle but \\emph{fails} for any fracton-mobility-constrained bundle.",
-      "quote_normalized": "the diffeomorphism-invariance biconditional nonlineardiffinvariance.h_path_b_holds_iff_dirac_bundle of  closes for the dirac bundle but fails for any fracton-mobility-constrained bundle.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "NonlinearDiffInvariance.h_path_b_holds_iff_dirac_bundle", "link_state": "missing_target"}],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: see same finding at intro line 152 and §19 lines 1363, 1375. Single name drift propagates 4 sites; resolve by replacing with NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent OR project-original target. The fracton 'fails for fracton-mobility-constrained bundle' clause is also asserted without a Lean falsifier theorem citation — consider citing or re-attributing as a structural argument.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:gw170817-falsifies-the-vestigial-second-sound-graviton:c612edb3",
-      "raw_id_parts": {"paper": "D3", "section_slug": "gw170817-falsifies-the-vestigial-second-sound-graviton", "quote_hash": "c612edb3", "hash_algorithm": "sha256_first_8"},
-      "section": "gw170817-falsifies-the-vestigial-second-sound-graviton",
-      "section_ordinal": 6,
-      "tex_line_start": 593,
-      "tex_line_end": 597,
-      "quote": "the disjointness theorem \\texttt{natural\\_range\\_disjoint\\_from\\_ligo\\_window} formalises the joint statement that no value of $\\chi_{\\mathrm{vest}}$ in the natural range admits a $c_{\\mathrm{GW}}$ inside the LIGO window.",
-      "quote_normalized": "the disjointness theorem natural_range_disjoint_from_ligo_window formalises the joint statement",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "GravitationalWaves.natural_range_disjoint_from_ligo_window", "link_state": "resolved"}],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "Resolves to GravitationalWaves.natural_range_disjoint_from_ligo_window (intentional unqualified prose; in §4 line 448 the qualified `VestigialGravity.natural_range_disjoint_from_ligo_window` is wrong-module — the theorem lives in GravitationalWaves, not VestigialGravity). Flag line 448 separately.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:three-closures-forcing-adw:c612edb3-mod-mismatch",
-      "raw_id_parts": {"paper": "D3", "section_slug": "three-closures-forcing-adw", "quote_hash": "5da3disj", "hash_algorithm": "sha256_first_8"},
-      "section": "three-closures-forcing-adw",
-      "section_ordinal": 4,
-      "tex_line_start": 446,
-      "tex_line_end": 449,
-      "quote": "the Lean disjointness theorem \\texttt{VestigialGravity.natural\\_range\\_disjoint\\_from\\_ligo\\_window} falsifies the entire natural range by approximately $7\\times 10^{14}$.",
-      "quote_normalized": "the lean disjointness theorem vestigialgravity.natural_range_disjoint_from_ligo_window falsifies the entire natural range",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "VestigialGravity.natural_range_disjoint_from_ligo_window", "link_state": "missing_target"}],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: theorem lives in module GravitationalWaves not VestigialGravity. `GravitationalWaves.natural_range_disjoint_from_ligo_window` resolves; `VestigialGravity.*` does not. Single-character module-prefix correction.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:bekenstein-hawking-entropy:HD-horizon-bc",
-      "raw_id_parts": {"paper": "D3", "section_slug": "bekenstein-hawking-entropy-from-mtc-state-counting", "quote_hash": "HDhrzbc1", "hash_algorithm": "sha256_first_8"},
-      "section": "bekenstein-hawking-entropy-from-mtc-state-counting",
-      "section_ordinal": 7,
-      "tex_line_start": 666,
-      "tex_line_end": 676,
-      "quote": "The horizon-MTC boundary-condition tracked-hypothesis bundle carries five falsifier theorems (\\texttt{H\\_HorizonBoundaryCondition\\_falsifier\\_positivity}, \\texttt{\\_falsifier\\_logBound}, \\texttt{\\_falsifier\\_secondLaw}, \\texttt{\\_falsifier\\_quarterCoefficient}, and an envelope \\texttt{H\\_HorizonBoundaryCondition\\_implies\\_nonabelian\\_envelope}). Each falsifier is a constructive obstruction.",
-      "quote_normalized": "the horizon-mtc boundary-condition tracked-hypothesis bundle carries five falsifier theorems",
-      "type": "formal-claim",
-      "finding_classes": ["HD"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "hypothesis", "target": "H_HorizonBoundaryCondition", "link_state": "resolved"},
-          {"kind": "theorem", "target": "BHEntropyMicroscopic.H_HorizonBoundaryCondition_falsifier_positivity", "link_state": "resolved"},
-          {"kind": "theorem", "target": "BHEntropyMicroscopic.H_HorizonBoundaryCondition_falsifier_logBound", "link_state": "resolved"},
-          {"kind": "theorem", "target": "BHEntropyMicroscopic.H_HorizonBoundaryCondition_falsifier_secondLaw", "link_state": "resolved"},
-          {"kind": "theorem", "target": "BHEntropyMicroscopic.H_HorizonBoundaryCondition_falsifier_quarterCoefficient", "link_state": "resolved"},
-          {"kind": "theorem", "target": "BHEntropyMicroscopic.H_HorizonBoundaryCondition_implies_nonabelian_envelope", "link_state": "resolved"}
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "WARN",
-      "agent_notes": "HD-advisory: all five Lean theorems resolve. Tracked-hypothesis structure exists in Lean (BHEntropyMicroscopic.H_HorizonBoundaryCondition with fields anomalyMatch, areaLeading, modularInvariant, positivity, secondLaw). However Python HYPOTHESIS_REGISTRY does not enumerate H_HorizonBoundaryCondition. Same advisory class as Vergeles trio.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate6_AssumptionDisclosure"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:qec-bridge:01278d4f",
-      "raw_id_parts": {"paper": "D3", "section_slug": "quantum-error-correction-holography-bridge", "quote_hash": "01278d4f", "hash_algorithm": "sha256_first_8"},
+      "id": "sentence:D3:quantum-error-correction-holography-bridge:ed57a4f0",
+      "raw_id_parts": {"paper": "D3", "section_slug": "quantum-error-correction-holography-bridge", "quote_hash": "ed57a4f0", "hash_algorithm": "sha256_first_8"},
       "section": "quantum-error-correction-holography-bridge",
       "section_ordinal": 9,
-      "tex_line_start": 805,
-      "tex_line_end": 812,
-      "quote": "the substrate's MTC structure satisfies $d \\ge t_{\\mathrm{scr}}/(\\text{horizon-area-scaling})$ if and only if the admissibility predicate (\\texttt{HoloQEC.admissible\\_iff}) holds.",
-      "quote_normalized": "the substrate's mtc structure satisfies $d \\ge t_{scr}/(horizon-area-scaling)$ if and only if the admissibility predicate (holoqec.admissible_iff) holds.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "HoloQEC.admissible_iff", "link_state": "missing_target"}],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: module `SKEFTHawking.HoloQEC` does NOT exist in lean_deps.json (zero declarations under that module name). The §9 QEC-cross-bridge claim has no Lean backing yet. Either (a) author HoloQEC.lean before submission, or (b) re-frame §9 as 'cross-bridge canonical form set here, formalisation deferred to D4 §7' and remove the texttt{HoloQEC.admissible_iff} claim. This is the riskiest TN drift: an entire module is asserted to exist that does not.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:ewbg-bridge:d4a7b6ad",
-      "raw_id_parts": {"paper": "D3", "section_slug": "ewbg-doubly-forbidden-chirality-wall-meets-crossover", "quote_hash": "d4a7b6ad", "hash_algorithm": "sha256_first_8"},
-      "section": "ewbg-doubly-forbidden-chirality-wall-meets-crossover",
-      "section_ordinal": 13,
-      "tex_line_start": 1057,
-      "tex_line_end": 1059,
-      "quote": "\\texttt{ChiralityWall.predicate} formalises the claim that $B+L$ violation is structurally forbidden across the chirality wall.",
-      "quote_normalized": "chiralitywall.predicate formalises the claim that b+l violation is structurally forbidden across the chirality wall.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "ChiralityWall.predicate", "link_state": "missing_target"}],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: `ChiralityWall.predicate` not in lean_deps.json. ChiralityWall has 99 decls (GSCondition, ConjectureStatus, etc.); 'predicate' is too generic. Replace with the actual chirality-wall predicate name from ChiralityWall.lean.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:confinement:2bef1591",
-      "raw_id_parts": {"paper": "D3", "section_slug": "confinement-centre-symmetry-polyakov-loop-svetitsky-yaffe", "quote_hash": "2bef1591", "hash_algorithm": "sha256_first_8"},
-      "section": "confinement-centre-symmetry-polyakov-loop-svetitsky-yaffe",
-      "section_ordinal": 14,
-      "tex_line_start": 1086,
-      "tex_line_end": 1094,
-      "quote": "The confining predicate \\texttt{isConfining} is the assertion that $\\langle\\mathrm{tr}\\,L\\rangle = 0$ in the confined phase, where $L$ is the Polyakov loop. The biconditional \\texttt{isConfining\\_iff\\_zero\\_polyakov} makes this load-bearing at the Lean level.",
-      "quote_normalized": "the confining predicate isconfining is the assertion ... the biconditional isconfining_iff_zero_polyakov makes this load-bearing at the lean level.",
+      "tex_line_start": 818,
+      "tex_line_end": 824,
+      "quote": "the substrate's MTC structure satisfies $d \\ge t_{\\mathrm{scr}}/(\\text{horizon-area-scaling})$ if and only if the admissibility predicate (\\texttt{QECHolographyBridge.code\\_distance\\_scaling\\_matches\\_anyonic\\_fusion\\_iff\\_fusion\\_in\\_admissible\\_class}, which Bundle~D4~\\S 7 ships as the load-bearing biconditional) holds.",
+      "quote_normalized": "the substrate's mtc structure satisfies admissibility predicate qecholographybridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class",
       "type": "theorem-ref",
       "finding_classes": ["TN"],
       "chain_proposed": {
         "links": [
-          {"kind": "theorem", "target": "CenterSymmetryConfinement.isConfining", "link_state": "missing_target"},
-          {"kind": "theorem", "target": "CenterSymmetryConfinement.isConfining_iff_zero_polyakov", "link_state": "missing_target"}
+          {"kind": "theorem", "target": "QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class", "link_state": "missing_target"}
         ],
         "completeness": "none"
       },
       "agent_verdict": "FAIL",
-      "agent_notes": "TN: neither `isConfining` nor `isConfining_iff_zero_polyakov` exist. Module has `Confining` (definition), `confining_iff_center_invariant`, `confining_iff_magnitude_zero`. Likely intended target: `confining_iff_magnitude_zero`. Adjust both theorem-name citations.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
+      "agent_notes": "TN-PARTIAL-CLOSE: round-1 BLOCKER was `HoloQEC.admissible_iff` (entire module missing). Round-1 fix replaced HoloQEC with QECHolographyBridge — the module DOES exist with 80+ decls. However the cited theorem-name `QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` is missing the `.HPCode.` sub-namespace infix. The actual fully-qualified name is `SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class` (HPCode is an inductive structure within QECHolographyBridge). Single-token fix: change paper line 823 to \\texttt{QECHolographyBridge.HPCode.code\\_distance\\_scaling\\_matches\\_anyonic\\_fusion\\_iff\\_fusion\\_in\\_admissible\\_class}.",
+      "agent_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
       "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": null,
       "tombstone": false
     },
     {
-      "id": "sentence:D3:cfl:HD-topordlg",
-      "raw_id_parts": {"paper": "D3", "section_slug": "color-flavor-locking-emergent-z3-matches-qcd-centre-z3", "quote_hash": "HDtoporg", "hash_algorithm": "sha256_first_8"},
-      "section": "color-flavor-locking-emergent-z3-matches-qcd-centre-z3",
-      "section_ordinal": 16,
-      "tex_line_start": 1199,
-      "tex_line_end": 1205,
-      "quote": "\\texttt{H\\_TopologicalOrderBeyondLG} carries this as a tracked-hypothesis Prop with positive (\\texttt{\\_witness}) and negative (\\texttt{\\_falsifier\\_trivial}, \\texttt{\\_falsifier\\_too\\_large}) discharge cases.",
-      "quote_normalized": "h_topologicalorderbeyondlg carries this as a tracked-hypothesis prop with positive  and negative ,  discharge cases.",
-      "type": "formal-claim",
-      "finding_classes": ["HD"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "hypothesis", "target": "H_TopologicalOrderBeyondLG", "link_state": "resolved"},
-          {"kind": "theorem", "target": "CFLChiralLagrangian.H_TopologicalOrderBeyondLG_witness", "link_state": "resolved"}
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "WARN",
-      "agent_notes": "HD-advisory: Lean side resolves; same Python-HYPOTHESIS_REGISTRY-undisclosed pattern. Roll into systematic registry-population follow-up.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate6_AssumptionDisclosure"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:higher-curvature-stelle:e49f165f",
-      "raw_id_parts": {"paper": "D3", "section_slug": "higher-curvature-stelle-basis-at-order-a-4", "quote_hash": "e49f165f", "hash_algorithm": "sha256_first_8"},
-      "section": "higher-curvature-stelle-basis-at-order-a-4",
-      "section_ordinal": 18,
-      "tex_line_start": 1306,
-      "tex_line_end": 1308,
-      "quote": "The basis-change identity relating $(R^2,\\mathrm{Ric}^2,\\mathrm{Riem}^2)$ to $(\\mathcal G, C^2, R^2)$ is closed in \\texttt{HigherCurvatureStelle.basis\\_change\\_identity}.",
-      "quote_normalized": "the basis-change identity relating ... is closed in highercurvaturestelle.basis_change_identity.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "HigherCurvatureStelle.basis_change_identity", "link_state": "missing_target"}],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN-CRITICAL: module `SKEFTHawking.HigherCurvatureStelle` does NOT exist in lean_deps.json (ZERO declarations). All four texttt{HigherCurvatureStelle.*} citations in §18 (basis_change_identity, alpha_value, beta_value, gamma_value, predictions_below_observational_ceilings) are unresolved. The Stelle-basis claim is per Stage-13 anchor #5 (PPN ratios) and synthesis brief §18 risk #5 explicitly. Either (a) ship HigherCurvatureStelle.lean to make these theorems exist, or (b) re-attribute the paper40 claims to whatever module hosts them now (search for 'stelle' in lean_deps.json -- none found). This is a load-bearing Stage-13 anchor failure.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate9_NumericalFreshness"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:higher-curvature-stelle:2b429340",
-      "raw_id_parts": {"paper": "D3", "section_slug": "higher-curvature-stelle-basis-at-order-a-4", "quote_hash": "2b429340", "hash_algorithm": "sha256_first_8"},
-      "section": "higher-curvature-stelle-basis-at-order-a-4",
-      "section_ordinal": 18,
-      "tex_line_start": 1317,
-      "tex_line_end": 1319,
-      "quote": "with the explicit numerical prefactors closed in \\texttt{HigherCurvatureStelle.alpha\\_value}, \\texttt{\\_beta\\_value}, \\texttt{\\_gamma\\_value}.",
-      "quote_normalized": "with the explicit numerical prefactors closed in highercurvaturestelle.alpha_value, _beta_value, _gamma_value.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {"links": [{"kind": "theorem", "target": "HigherCurvatureStelle.alpha_value", "link_state": "missing_target"}], "completeness": "none"},
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: same root cause as §18 basis_change_identity finding. All three (alpha_value, beta_value, gamma_value) missing. Note paper claim '$\\alpha,\\,\\beta,\\,\\gamma = \\mathcal O(N_f / (4\\pi)^2)$' is qualitative-magnitude and unfalsifiable absent the closed-form Lean values; Stage-13 anchor #5 (paper40 Stelle (alpha,beta,gamma) basis-change identity) requires the closed forms to be Lean-backed.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:higher-curvature-stelle:d78188d2",
-      "raw_id_parts": {"paper": "D3", "section_slug": "higher-curvature-stelle-basis-at-order-a-4", "quote_hash": "d78188d2", "hash_algorithm": "sha256_first_8"},
-      "section": "higher-curvature-stelle-basis-at-order-a-4",
-      "section_ordinal": 18,
-      "tex_line_start": 1329,
-      "tex_line_end": 1331,
-      "quote": "The substrate's predictions sit at $\\mathcal O(10^{-2})$ in geometric units, well beneath both ceilings (\\texttt{HigherCurvatureStelle.predictions\\_below\\_observational\\_ceilings}).",
-      "quote_normalized": "the substrate's predictions sit at $\\mathcal o(10^{-2})$ in geometric units, well beneath both ceilings",
-      "type": "numeric",
-      "finding_classes": ["TN", "IA"],
-      "chain_proposed": {"links": [{"kind": "theorem", "target": "HigherCurvatureStelle.predictions_below_observational_ceilings", "link_state": "missing_target"}], "completeness": "none"},
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN+IA: cited theorem missing. Paper also asserts ceiling values 'pulsar-timing arrays constrain |alpha|,|beta|,|gamma| <= 10^60; binary-BH inspiral <= 10^50' without citation; these specific numerical ceilings need provenance. Recommend citing the constraint reference (Stein-Yagi-Yunes 2024 or similar) or marking as 'order-of-magnitude estimate' with appropriate hedging.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate9_NumericalFreshness"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:diff-invariance:a2574417",
-      "raw_id_parts": {"paper": "D3", "section_slug": "order-by-order-diffeomorphism-invariance-through-a-4", "quote_hash": "a2574417", "hash_algorithm": "sha256_first_8"},
+      "id": "sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:0b77edb0",
+      "raw_id_parts": {"paper": "D3", "section_slug": "order-by-order-diffeomorphism-invariance-through-a-4", "quote_hash": "0b77edb0", "hash_algorithm": "sha256_first_8"},
       "section": "order-by-order-diffeomorphism-invariance-through-a-4",
       "section_ordinal": 19,
-      "tex_line_start": 1361,
-      "tex_line_end": 1366,
-      "quote": "\\texttt{path\\_b\\_holds\\_iff\\_dirac\\_bundle}: the order-by-order diffeomorphism-invariance biconditional closes for the substrate's Dirac-fermion bundle and fails for any perturbed bundle.",
-      "quote_normalized": "path_b_holds_iff_dirac_bundle: the order-by-order diffeomorphism-invariance biconditional closes",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {"links": [{"kind": "theorem", "target": "NonlinearDiffInvariance.path_b_holds_iff_dirac_bundle", "link_state": "missing_target"}], "completeness": "none"},
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: same root cause as the abstract/intro h_path_b_holds_iff_dirac_bundle drift. NonlinearDiffInvariance has the actual theorems `diff_invariance_a4_iff_basis_consistent` and `diff_invariance_a4_iff_dirac_basis_consistent`. Paper also cites `nonlinearDiffInvariance.path_b_residual` and `perturbed_bundle_residual_linear_in_delta` — also missing. Module exists with closely-related names (`pathB_residual_a0`, `pathB_residual_a2`, `pathB_residual_a4`). Replace.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:nonlinear-efe-ppn:10be83a2",
-      "raw_id_parts": {"paper": "D3", "section_slug": "variational-nonlinear-einstein-equations-multi-channel-ppn", "quote_hash": "10be83a2", "hash_algorithm": "sha256_first_8"},
-      "section": "variational-nonlinear-einstein-equations-multi-channel-ppn",
-      "section_ordinal": 20,
-      "tex_line_start": 1405,
-      "tex_line_end": 1408,
-      "quote": "The trace-level Einstein-equation residual closes via a Decision-Gate-style biconditional at $\\alpha_{\\mathrm{ADW}} = 1$ (\\texttt{NonlinearEFE.trace\\_residual\\_zero\\_iff\\_alpha\\_unity}).",
-      "quote_normalized": "the trace-level einstein-equation residual closes via a decision-gate-style biconditional at $\\alpha_{adw} = 1$ (nonlinearefe.trace_residual_zero_iff_alpha_unity).",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {"links": [{"kind": "theorem", "target": "NonlinearEFE.trace_residual_zero_iff_alpha_unity", "link_state": "missing_target"}], "completeness": "none"},
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: actual name is `NonlinearEFE.efeResidualTrace_eq_zero_iff_alpha_unity` (note prefix `efe` and word `eq`). Single-word rename in paper.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:nonlinear-efe-ppn:d13031f1",
-      "raw_id_parts": {"paper": "D3", "section_slug": "variational-nonlinear-einstein-equations-multi-channel-ppn", "quote_hash": "d13031f1", "hash_algorithm": "sha256_first_8"},
-      "section": "variational-nonlinear-einstein-equations-multi-channel-ppn",
-      "section_ordinal": 20,
-      "tex_line_start": 1432,
-      "tex_line_end": 1437,
-      "quote": "Decision Gate~E.4$'$ closes (\\texttt{NonlinearEFE.ppn\\_decision\\_gate\\_passes}).",
-      "quote_normalized": "decision gate e.4 closes (nonlinearefe.ppn_decision_gate_passes).",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {"links": [{"kind": "theorem", "target": "NonlinearEFE.ppn_decision_gate_passes", "link_state": "missing_target"}], "completeness": "none"},
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: `NonlinearEFE.ppn_decision_gate_passes` does not exist. NonlinearEFE has H_NonlinearEFEHolds, dirac_H_NonlinearEFEHolds_at_alpha_one, perturbed_alpha_not_H_NonlinearEFEHolds, precessionRatio_eq_one_iff_alpha_unity, deflectionRatio_deviation_exceeds_VLBI_floor, precession_dev_eq_two_thirds_deflection_dev. The PPN-ratio-collapse claim of §20 is supported by `precession_dev_eq_two_thirds_deflection_dev` (which proves precessionRatio - 1 = (2/3)·(deflectionRatio - 1)) — substantial finding for the synthesis claim. Re-attribute Decision Gate E.4' to the correct theorem.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:cc-emergent:e6745b66",
-      "raw_id_parts": {"paper": "D3", "section_slug": "cosmological-constant-in-emergent-form-the-problem-reproduced", "quote_hash": "e6745b66", "hash_algorithm": "sha256_first_8"},
-      "section": "cosmological-constant-in-emergent-form-the-problem-reproduced",
-      "section_ordinal": 21,
-      "tex_line_start": 1471,
-      "tex_line_end": 1477,
-      "quote": "the substrate's prediction overshoots the observed value by approximately a factor of $10^{122}$. Lean theorem \\texttt{MicroscopicCoefficientMatch.lambdaEmergMicroscopic\\_at\\_planck\\_natural\\_far\\_exceeds\\_observed} discharges this quantitatively.",
-      "quote_normalized": "the substrate's prediction overshoots the observed value by approximately a factor of $10^{122}$. lean theorem ... discharges this quantitatively.",
-      "type": "numeric",
-      "finding_classes": ["IA", "SD"],
-      "chain_proposed": {
-        "links": [{"kind": "theorem", "target": "MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed", "link_state": "resolved"}],
-        "completeness": "full"
-      },
-      "agent_verdict": "FAIL",
-      "delta_pct": 22.0,
-      "agent_notes": "IA+SD: Lean theorem proves only `> 10^100 * lambdaObservedGeV4`, not `> 10^122 * lambdaObservedGeV4`. Docstring at MicroscopicCoefficientMatch.lean line 182: 'exceeds the observed CC by more than 10^100'. Paper claim of 10^122 is a physical/order-of-magnitude estimate; the Lean theorem's quantitative discharge is weaker by 22 orders. Either (a) sharpen the Lean theorem (use a tighter (4π)² < 158 bound and Λ_UV⁴ argument to push 10^100 → ~10^122), or (b) caveat: 'the formal Lean bound is 10^100; the physical estimate at the natural microscopic point with rigorous a_0(16) evaluation is approximately 10^122'. Repeats at 5 sites: lines 49, 175, 1449, 1473, 1514, 1919. Stage-13 anchor risk per synthesis brief §21 line 348.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate9_NumericalFreshness"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:algebraic-gr-backbone:1233dc45",
-      "raw_id_parts": {"paper": "D3", "section_slug": "algebraic-lorentzian-geometry-backbone-substrate-appendix", "quote_hash": "1233dc45", "hash_algorithm": "sha256_first_8"},
-      "section": "algebraic-lorentzian-geometry-backbone-substrate-appendix",
-      "section_ordinal": 22,
-      "tex_line_start": 1626,
-      "tex_line_end": 1631,
-      "quote": "The first Bianchi identity (algebraic symmetry of the Riemann tensor's cyclic-three-index sum) closes by \\texttt{BundleRiemann.firstBianchi}; the differential second Bianchi identity, which on a torsion-free connection states $\\nabla_{[\\mu} R_{\\nu\\rho]\\sigma\\tau} = 0$, closes by \\texttt{RiemannDifferentialBianchi.secondBianchi}.",
-      "quote_normalized": "the first bianchi identity closes by bundleriemann.firstbianchi; the differential second bianchi identity ... closes by riemanndifferentialbianchi.secondbianchi.",
+      "tex_line_start": 1383,
+      "tex_line_end": 1388,
+      "quote": "The path-(b) framework decomposes the substrate's effective Lagrangian into a coefficient bundle that respects diffeomorphism invariance up to a residual anomaly term. The \\texttt{nonlinearDiffInvariance.path\\_b\\_residual} is the order-by-order invariance failure",
+      "quote_normalized": "the nonlineardiffinvariance.path_b_residual is the order-by-order invariance failure",
       "type": "theorem-ref",
       "finding_classes": ["TN"],
       "chain_proposed": {
         "links": [
-          {"kind": "theorem", "target": "BundleRiemann.firstBianchi", "link_state": "missing_target"},
-          {"kind": "theorem", "target": "RiemannDifferentialBianchi.secondBianchi", "link_state": "missing_target"}
+          {"kind": "theorem", "target": "nonlinearDiffInvariance.path_b_residual", "link_state": "missing_target"}
         ],
         "completeness": "none"
       },
       "agent_verdict": "FAIL",
-      "agent_notes": "TN: BundleRiemann has `bundleRiemannAux_first_bianchi_torsionfree_apply` and `bundleRiemannAux_first_bianchi_torsionfree_of_isCovariantDerivativeOn`; not `firstBianchi`. RiemannDifferentialBianchi has `DifferentialSecondBianchi`, not `secondBianchi`. Also: §22.5 cites paper44 modules `Curvature.lean`, `EinsteinTensor.lean`, `ExactSolutions.lean`, `KerrSchild.lean`, `EnergyConditions.lean`, `ADMFormalism.lean`, `LorentzianMetric.lean`, `RiemannCoordinate.lean`, `BundleRiemann.lean`, `BundleRiemannAux.lean` — verify each exists in lean/SKEFTHawking/. (Curvature exists per partial match in §22.5 firstBianchi search — confirm bundle.) Cross-bundle anchor: I1 carries the primary first-formalization claim per §22.5 line 1604.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
+      "agent_notes": "TN-NEWLY-SURFACED: round-1 commit fixed two of the three §19 path-(b) drifts (intro line 152, §4 line 435), but missed three unqualified \\texttt{} citations in §19 itself. Lowercase-namespaced `nonlinearDiffInvariance.path_b_residual` is not a real Lean name (Lean conventions: namespace starts uppercase). The actual NonlinearDiffInvariance module ships `pathB_residual_a0`, `pathB_residual_a2`, `pathB_residual_a4`, and `pathB_residual_a4_dirac_eq_zero`. Replace the prose with one or more of the order-specific names, e.g.: 'the \\texttt{NonlinearDiffInvariance.pathB\\_residual\\_a0/a2/a4} are the order-by-order invariance failures'.",
+      "agent_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
       "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": null,
       "tombstone": false
     },
     {
-      "id": "sentence:D3:penrose:c361f86d",
-      "raw_id_parts": {"paper": "D3", "section_slug": "penrose-singularity-hypothesis-bundle-riccati-focusing-core", "quote_hash": "c361f86d", "hash_algorithm": "sha256_first_8"},
-      "section": "penrose-singularity-hypothesis-bundle-riccati-focusing-core",
-      "section_ordinal": 24,
-      "tex_line_start": 1718,
-      "tex_line_end": 1725,
-      "quote": "the spacetime carries \\emph{(i)} a non-empty trapped surface (a 2-surface whose null-expansion scalars are both negative; \\texttt{PenroseSingularity.IsTrappedSurface}), \\emph{(ii)} a globally hyperbolic causal structure (\\texttt{IsGloballyHyperbolic}), and \\emph{(iii)} the Null Energy Condition (\\texttt{IsNECsatisfied}).",
-      "quote_normalized": "the spacetime carries (i) a non-empty trapped surface ... (ii) a globally hyperbolic causal structure ... and (iii) the null energy condition (isnecsatisfied).",
+      "id": "sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:f22348bd",
+      "raw_id_parts": {"paper": "D3", "section_slug": "order-by-order-diffeomorphism-invariance-through-a-4", "quote_hash": "f22348bd", "hash_algorithm": "sha256_first_8"},
+      "section": "order-by-order-diffeomorphism-invariance-through-a-4",
+      "section_ordinal": 19,
+      "tex_line_start": 1390,
+      "tex_line_end": 1398,
+      "quote": "\\texttt{path\\_b\\_holds\\_iff\\_dirac\\_bundle}: the order-by-order diffeomorphism-invariance biconditional closes for the substrate's Dirac-fermion bundle and fails for any perturbed bundle. The \\texttt{perturbed\\_bundle\\_residual\\_linear\\_in\\_delta} closure makes the failure constructive",
+      "quote_normalized": "path_b_holds_iff_dirac_bundle: the order-by-order diffeomorphism-invariance biconditional closes for the dirac bundle ... the perturbed_bundle_residual_linear_in_delta closure makes the failure constructive",
       "type": "theorem-ref",
       "finding_classes": ["TN"],
       "chain_proposed": {
         "links": [
-          {"kind": "theorem", "target": "PenroseSingularity.IsTrappedSurface", "link_state": "resolved"},
-          {"kind": "theorem", "target": "PenroseSingularity.IsGloballyHyperbolic", "link_state": "missing_target"},
-          {"kind": "theorem", "target": "PenroseSingularity.IsNECsatisfied", "link_state": "missing_target"}
+          {"kind": "theorem", "target": "path_b_holds_iff_dirac_bundle", "link_state": "missing_target"},
+          {"kind": "theorem", "target": "perturbed_bundle_residual_linear_in_delta", "link_state": "missing_target"}
         ],
-        "completeness": "partial"
+        "completeness": "none"
       },
       "agent_verdict": "FAIL",
-      "agent_notes": "TN: IsTrappedSurface OK. IsGloballyHyperbolic lives in CausalStructure.Spacetime not PenroseSingularity (qualified `CausalStructure.Spacetime.IsGloballyHyperbolic`). IsNECsatisfied not in lean_deps.json at all under any module. Paper §23-§24 Wald-§8.1 declarations may be in CausalStructure.Spacetime.* (40 decls there with Spacetime sub-namespace) — re-qualify the prose accordingly.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
+      "agent_notes": "TN-NEWLY-SURFACED: §19 Decision Gate~E.3 subsection cites two unqualified theorem names that don't exist anywhere in lean_deps.json. The round-1 commit's batch find-replace on h_path_b_holds_iff_dirac_bundle did NOT catch the unqualified bare-name occurrences in §19 (these don't carry the `h_` prefix). Likely-intended replacements: `NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent` for the biconditional (already used at lines 153 and 448); `NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq` for the perturbation-residual constructive failure.",
+      "agent_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
       "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": null,
       "tombstone": false
     },
     {
-      "id": "sentence:D3:hawking-penrose:9979832d",
-      "raw_id_parts": {"paper": "D3", "section_slug": "hawking-penrose-sec-variant-lambda-violates-sec", "quote_hash": "9979832d", "hash_algorithm": "sha256_first_8"},
-      "section": "hawking-penrose-sec-variant-lambda-violates-sec",
-      "section_ordinal": 25,
-      "tex_line_start": 1771,
-      "tex_line_end": 1772,
-      "quote": "\\texttt{HawkingPenroseSingularity.dS\\_violates\\_SEC} discharges the violation algebraically.",
-      "quote_normalized": "hawkingpenrosesingularity.ds_violates_sec discharges the violation algebraically.",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {"links": [{"kind": "theorem", "target": "HawkingPenroseSingularity.dS_violates_SEC", "link_state": "missing_target"}], "completeness": "none"},
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: HawkingPenroseSingularity has `cosmologicalLambda_violates_HP_hypothesis` (close cousin) but not `dS_violates_SEC`. Replace prose with the available theorem name; SEC-violation may be a corollary of cosmologicalLambda_violates_HP_hypothesis — verify and adjust.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:area:cc2ddaa9",
-      "raw_id_parts": {"paper": "D3", "section_slug": "classical-area-theorem-schwarzschild-monotone-mass", "quote_hash": "cc2ddaa9", "hash_algorithm": "sha256_first_8"},
-      "section": "classical-area-theorem-schwarzschild-monotone-mass",
-      "section_ordinal": 26,
-      "tex_line_start": 1800,
-      "tex_line_end": 1805,
-      "quote": "\\texttt{AreaTheorem.schwarzschildHorizonArea}: $A(M) = 16\\pi M^2$ for Schwarzschild mass $M \\ge 0$. \\texttt{schwarzschild\\_area\\_monotone} discharges $A(M_1) \\le A(M_2)$ for $M_1 \\le M_2$; \\texttt{schwarzschild\\_area\\_strictly\\_increasing} discharges strict monotonicity for $M_1 < M_2$.",
-      "quote_normalized": "areatheorem.schwarzschildhorizonarea: $a(m) = 16\\pi m^2$ ... discharges ... strict monotonicity ...",
-      "type": "theorem-ref",
-      "finding_classes": ["TN"],
-      "chain_proposed": {
-        "links": [
-          {"kind": "theorem", "target": "AreaTheorem.schwarzschildHorizonArea", "link_state": "missing_target"},
-          {"kind": "theorem", "target": "AreaTheorem.schwarzschild_area_monotone", "link_state": "resolved"},
-          {"kind": "theorem", "target": "AreaTheorem.schwarzschild_area_strictly_increasing", "link_state": "resolved"}
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN: schwarzschildHorizonArea NOT in lean_deps.json. AreaTheorem has 7 decls; closest is `schwarzschild_horizon_area_nonDecreasing`. The two monotonicity theorems are present. Replace `schwarzschildHorizonArea` with the actual area-as-function-of-mass def name (likely `schwarzschildArea` or similar) — search needed.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
-      "gates_invoked": ["Gate5_LeanProofSubstance"],
-      "rewrite_of": null,
-      "tombstone": false
-    },
-    {
-      "id": "sentence:D3:bibliography:59efc88b",
-      "raw_id_parts": {"paper": "D3", "section_slug": "bibliography", "quote_hash": "59efc88b", "hash_algorithm": "sha256_first_8"},
+      "id": "sentence:D3:bibliography:d2a65476",
+      "raw_id_parts": {"paper": "D3", "section_slug": "bibliography", "quote_hash": "d2a65476", "hash_algorithm": "sha256_first_8"},
       "section": "bibliography",
       "section_ordinal": 99,
-      "tex_line_start": 2006,
-      "tex_line_end": 2007,
-      "quote": "\\bibliography{bibliography}",
-      "quote_normalized": "",
+      "tex_line_start": 2053,
+      "tex_line_end": 2053,
+      "quote": "\\bibliography{paper_draftNotes}",
+      "quote_normalized": "bibliography{paper_draftnotes}",
       "type": "metaclaim",
       "finding_classes": ["IA"],
       "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "FAIL",
-      "agent_notes": "CI-CRITICAL: paper_draft.tex line 2006 calls `\\bibliography{bibliography}` but the file `bibliography.bib` does NOT exist in papers/D3/. Only paper_draftNotes.bib is present (notes file, not the actual bib). paper_draft.aux contains 0 \\bibcite entries (zero citations resolved); the 46pp PDF compiled with all citations as ?? (LaTeX warnings suppressed/unread). Either (a) write `\\bibliography{paper_draftNotes}` if that's the intended bib, or (b) generate bibliography.bib from CITATION_REGISTRY (38 keys missing from registry — see separate finding). Also: 38 of the 61 cited keys in body are NOT in CITATION_REGISTRY: ADM1962, Adler1980, Akama1979, AlmheiriMarolfPolchinskiSully2013, ArnoldMcLerran1987, Balbinot2005, BardeenCarterHawking1973, BardeenHillLindner1990, Carter1971, ChristensenDuff1978, CohenKaplanNelson1991, Eddington1919, GellMannOakesRenner1968, Hawking1971, Hawking1972, Hawking1975, HawkingPenrose1970, Hill2025bilocal, HughesDrever1960, Israel1967, Israel1986, KaulMajumdar1998, KehleUnger2024, KlinkhamerManton1984, LEGEND2024, Maldacena1997, MohapatraSenjanovic1980, PastawskiYoshidaHarlowPreskill2015, Penrose1965, PretkoRadzihovsky2018, Robinson1975, Sakharov1967, Sen2013, SextyWetterich2009, Weinberg1989, Wetterich1990, Wetterich2017, Will2014. This is the highest-leverage compile-gate failure for D3.",
-      "agent_run_id": "claims-reviewer-v2:D3:2026-05-04T13:42:58Z",
+      "agent_notes": "CI-NOT-CLOSED (Class IA in schema-enum since CI isn't a registered class; this is the citation-integrity bibliography compile-gate): round-1 BLOCKER #4 was `\\bibliography{bibliography}` references nonexistent bibliography.bib. Round-1 fix renamed to `\\bibliography{paper_draftNotes}` BUT the file paper_draftNotes.bib in papers/D3/ is EMPTY (0 bytes / 0 BibTeX entries). Re-checking: paper_draft.aux still contains 0 \\bibcite entries; no .bbl file present in papers/D3/. PDF compiles 47pp but every \\cite{} renders as ?? since bibtex has nothing to resolve. Plus the orthogonal CITATION_REGISTRY gap persists: 38 of 61 cited keys (ADM1962, Adler1980, Akama1979, AlmheiriMarolfPolchinskiSully2013, ArnoldMcLerran1987, Balbinot2005, BardeenCarterHawking1973, BardeenHillLindner1990, Carter1971, ChristensenDuff1978, CohenKaplanNelson1991, Eddington1919, GellMannOakesRenner1968, Hawking1971, Hawking1972, Hawking1975, HawkingPenrose1970, Hill2025bilocal, HughesDrever1960, Israel1967, Israel1986, KaulMajumdar1998, KehleUnger2024, KlinkhamerManton1984, LEGEND2024, Maldacena1997, MohapatraSenjanovic1980, PastawskiYoshidaHarlowPreskill2015, Penrose1965, PretkoRadzihovsky2018, Robinson1975, Sakharov1967, Sen2013, SextyWetterich2009, Weinberg1989, Wetterich1990, Wetterich2017, Will2014) are not in CITATION_REGISTRY — these need to land both in CITATION_REGISTRY and in the populated paper_draftNotes.bib. Round-2 reproduces this finding. Highest-leverage compile-gate failure remains.",
+      "agent_run_id": "claims-reviewer-v2:D3:r2:2026-05-04T20:00:00Z",
       "gates_invoked": ["Gate1_CitationIntegrity", "Gate11_LaTeXCompileClean"],
       "rewrite_of": null,
       "tombstone": false
     }
   ],
 
-  "non_reproducing_prior_findings": [],
+  "reconciliation": [
+    {
+      "prior_block_id": "block:1",
+      "prior_summary": "Class TN — `HoloQEC` module entirely missing; §9 cites `HoloQEC.admissible_iff`",
+      "round_2_status": "PARTIALLY_FIXED",
+      "round_2_finding_id": "sentence:D3:quantum-error-correction-holography-bridge:ed57a4f0",
+      "auto_closed": false,
+      "reason": "HoloQEC replaced with QECHolographyBridge (correct module). However the replacement name omits the `.HPCode.` sub-namespace prefix. Existing target is `QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class`. Single-token fix needed.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "module": "QECHolographyBridge", "symbol": "code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class", "current_value": "missing", "correct_value": "HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class"}
+    },
+    {
+      "prior_block_id": "block:2",
+      "prior_summary": "Class TN — `HigherCurvatureStelle` module missing (5 theorems cited)",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "§18 prose now hedges: line 1330 references `\\texttt{HigherCurvatureStelle.lean}` as 'in flight as a standalone Lean module to be upstreamed in a subsequent iteration' (module-file reference only, not theorem citation). Line 1357-1360 attributes the prediction-vs-ceiling comparison to 'the HeatKernelExpansion $a_4$ closed forms' (existing) plus 'the explicit predictions_below_observational_ceilings closure ships in the in-flight HigherCurvatureStelle.lean module'. Line 1342 substitutes existing `HeatKernelExpansion.a4_R_sq_coef_neg`, `a4_Ricci_sq_coef_pos`, `a4_Riemann_sq_coef_neg`, `a4_gauss_bonnet_combination` (all four verified PRESENT in lean_deps.json). The §18 Stelle (alpha,beta,gamma) anchor is now informally framed but no longer cites missing theorems.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "module": "HeatKernelExpansion", "verified_substitutes": ["a4_R_sq_coef_neg", "a4_Ricci_sq_coef_pos", "a4_Riemann_sq_coef_neg", "a4_gauss_bonnet_combination"], "all_found": true}
+    },
+    {
+      "prior_block_id": "block:3",
+      "prior_summary": "Class IA — Lean proves >10^100 not >10^122 (5 sites)",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "Verified at all relevant sites (paper_draft.tex lines 49, 175, 1480, 1499, 1504, 1507, 1549, 1966): paper now consistently writes `\\gtrsim 10^{100}` (matching Lean MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed) with explicit hedge `(heuristically $\\sim 10^{122}$)` at the abstract (line 49-50) and §1 (line 176). Line 1480: `overshoots the observed value by $\\gtrsim 10^{100}$.` Line 1504: `more than a factor of $10^{100}$.` Line 1507: `the heuristic estimate $\\gtrsim 10^{100}$`. Line 1549: `$\\Lambda_{\\mathrm{emerg}}/\\Lambda_{\\mathrm{obs}} \\gtrsim 10^{100}$`. Line 1966 (conclusion): `$\\gtrsim 10^{100}$`. Formal-vs-heuristic distinction now coherent across all 5 sites.",
+      "deterministic_recheck": {"kind": "tex_grep", "pattern": "gtrsim 10\\^\\{100\\}", "site_count": 6}
+    },
+    {
+      "prior_block_id": "block:4",
+      "prior_summary": "Class CI — \\bibliography{bibliography} → bibliography.bib does not exist; .aux has 0 \\bibcite; 38/61 cited keys missing from CITATION_REGISTRY",
+      "round_2_status": "NOT_FIXED",
+      "round_2_finding_id": "sentence:D3:bibliography:d2a65476",
+      "auto_closed": false,
+      "reason": "round-1 fix only renamed \\bibliography{} to {paper_draftNotes}. The file paper_draftNotes.bib is itself EMPTY (0 bytes verified via wc -l). paper_draft.aux still has 0 \\bibcite entries; no .bbl file exists. Same 38 cited keys remain absent from CITATION_REGISTRY (verified with re-run of ./src/core/citations.py CITATION_REGISTRY membership check). PDF still compiles citations as ??. Highest-leverage fix: (a) populate paper_draftNotes.bib with all 61 cited keys; (b) extend CITATION_REGISTRY with the 38 missing keys.",
+      "deterministic_recheck": {"kind": "bib_population_check", "bib_file_size_bytes": 0, "aux_bibcite_count": 0, "missing_from_citation_registry_count": 38}
+    },
+    {
+      "prior_block_id": "block:5",
+      "prior_summary": "Class TN — `NonlinearDiffInvariance.h_path_b_holds_iff_dirac_bundle` missing (4 sites)",
+      "round_2_status": "PARTIALLY_FIXED",
+      "round_2_finding_id": "sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:f22348bd",
+      "auto_closed": false,
+      "reason": "Lines 153 (intro) and 448 (§4 fracton) correctly replaced with `NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent` (verified PRESENT in lean_deps.json). But §19 Decision Gate~E.3 subsection retains three unqualified TN drifts: line 1386 \\texttt{nonlinearDiffInvariance.path_b_residual} (lowercase); line 1392 \\texttt{path_b_holds_iff_dirac_bundle} (no module qualifier); line 1395 \\texttt{perturbed_bundle_residual_linear_in_delta}. None of these names exist in lean_deps.json. Likely the round-1 batch find-replace pattern keyed on `h_path_b_holds_iff_dirac_bundle` (with prefix) and missed the unqualified §19 occurrences. NonlinearDiffInvariance has the actual decls `pathB_residual_a0/a2/a4`, `pathB_residual_a4_dirac_eq_zero`, `perturbed_pathB_residual_a4_eq_delta_R_sq`, `perturbed_residual_exceeds_path_b_tolerance`.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "missing_targets": ["nonlinearDiffInvariance.path_b_residual", "path_b_holds_iff_dirac_bundle", "perturbed_bundle_residual_linear_in_delta"], "available_substitutes": ["NonlinearDiffInvariance.pathB_residual_a4", "NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent", "NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq"]}
+    },
+    {
+      "prior_block_id": "block:6",
+      "prior_summary": "Class TN — ADWMechanism.{adwGapClosedForm, adwGapPos, bifurcation_at_critical} missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "Replaced with `ADWMechanism.critical_coupling_pos` (verified PRESENT) and `ADWMechanism.zero_C_no_fluct_gives_pregeometric` (verified PRESENT). Round-1 commit message lists complete substitution map.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["ADWMechanism.critical_coupling_pos", "ADWMechanism.zero_C_no_fluct_gives_pregeometric"], "all_found": true}
+    },
+    {
+      "prior_block_id": "block:7",
+      "prior_summary": "Class TN — GaugeErasure.only_U1_survives + wen_adw_factor_6000 missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "Replaced with `GaugeErasure.gauge_erasure` and `GaugeErasure.u1_survival` (both verified PRESENT in lean_deps.json). The wen_adw_factor_6000 specific Lean identity is hedged in §4 prose as 'closed-form structural deficit' rather than asserting a specific Lean theorem name (round-1 commit notes: 'deferred to in-flight corollary').",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["GaugeErasure.gauge_erasure", "GaugeErasure.u1_survival"], "all_found": true}
+    },
+    {
+      "prior_block_id": "block:8",
+      "prior_summary": "Class TN — VestigialGravity.natural_range_disjoint_from_ligo_window wrong module (lives in GravitationalWaves)",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "§4 line 461 corrected to `GravitationalWaves.natural_range_disjoint_from_ligo_window` (verified PRESENT). §6 references also use GravitationalWaves module qualifier consistently. No surviving `VestigialGravity.*disjoint*` references in paper.",
+      "deterministic_recheck": {"kind": "tex_grep", "pattern": "VestigialGravity.natural_range_disjoint", "match_count": 0}
+    },
+    {
+      "prior_block_id": "block:9",
+      "prior_summary": "Class TN — ChiralityWall.predicate missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "Line 1073 now references `\\texttt{ChiralityWall.lean}` as a module-file reference rather than asserting a specific theorem `ChiralityWall.predicate`. The 99 decls under GSCondition / ConjectureStatus / TPFIngredient now provide the formal backing without naming a load-bearing single theorem.",
+      "deterministic_recheck": {"kind": "tex_grep", "pattern": "ChiralityWall.predicate", "match_count": 0}
+    },
+    {
+      "prior_block_id": "block:10",
+      "prior_summary": "Class TN — CenterSymmetryConfinement.isConfining + isConfining_iff_zero_polyakov missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "§14 now uses `Confining` def (verified PRESENT), `confining_iff_magnitude_zero` (PRESENT), `confining_iff_center_invariant` (PRESENT), `centerPhase_pow_N` (PRESENT), `centerPhase_norm_one` (PRESENT). All five references resolve.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["CenterSymmetryConfinement.Confining", "CenterSymmetryConfinement.confining_iff_magnitude_zero", "CenterSymmetryConfinement.confining_iff_center_invariant", "CenterSymmetryConfinement.centerPhase_pow_N", "CenterSymmetryConfinement.centerPhase_norm_one"], "all_found": true}
+    },
+    {
+      "prior_block_id": "block:11",
+      "prior_summary": "Class TN — NonlinearEFE.trace_residual_zero_iff_alpha_unity + ppn_decision_gate_passes missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "§20 line 1437 corrected to `efeResidualTrace_eq_zero_iff_alpha_unity` (verified PRESENT). Line 1466 now cites `NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity` (verified PRESENT) for the PPN-collapse claim — substantive replacement that captures the actual PPN content.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["NonlinearEFE.efeResidualTrace_eq_zero_iff_alpha_unity", "NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity"], "all_found": true}
+    },
+    {
+      "prior_block_id": "block:12",
+      "prior_summary": "Class TN — BundleRiemann.firstBianchi + RiemannDifferentialBianchi.secondBianchi missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "Replaced with `BundleRiemann.bundleRiemannAux_first_bianchi_torsionfree_apply` (verified PRESENT). DifferentialSecondBianchi is referenced via module-file `RiemannDifferentialBianchi.lean` reference per round-1 commit message.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["BundleRiemann.bundleRiemannAux_first_bianchi_torsionfree_apply"], "all_found": true}
+    },
+    {
+      "prior_block_id": "block:13",
+      "prior_summary": "Class TN — §24 Penrose IsGloballyHyperbolic + IsNECsatisfied wrong module / missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "§24 now references `\\texttt{CausalStructure.lean}` for global-hyperbolicity (line 1767) and `\\texttt{EnergyConditions.lean}` for NEC (line 1769), as module-file references rather than asserting specific theorem names. The trapped-surface predicate `PenroseSingularity.IsTrappedSurface` (already verified PRESENT) is retained.",
+      "deterministic_recheck": {"kind": "tex_grep", "pattern_a": "PenroseSingularity.IsGloballyHyperbolic", "match_count_a": 0, "pattern_b": "PenroseSingularity.IsNECsatisfied", "match_count_b": 0}
+    },
+    {
+      "prior_block_id": "block:14",
+      "prior_summary": "Class TN — §25 HawkingPenroseSingularity.dS_violates_SEC missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "Replaced with `HawkingPenroseSingularity.cosmologicalLambda_violates_HP_hypothesis` (verified PRESENT). The HP-hypothesis-violation framing is the canonical name in the module.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["HawkingPenroseSingularity.cosmologicalLambda_violates_HP_hypothesis"], "all_found": true}
+    },
+    {
+      "prior_block_id": "block:15",
+      "prior_summary": "Class TN — §26 AreaTheorem.schwarzschildHorizonArea missing",
+      "round_2_status": "FIXED",
+      "round_2_finding_id": null,
+      "auto_closed": true,
+      "reason": "Replaced with `AreaTheorem.schwarzschild_horizon_area_nonDecreasing` (verified PRESENT). Companion `schwarzschild_area_monotone` and `schwarzschild_area_strictly_increasing` (both PRESENT) retained.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["AreaTheorem.schwarzschild_horizon_area_nonDecreasing", "AreaTheorem.schwarzschild_area_monotone", "AreaTheorem.schwarzschild_area_strictly_increasing"], "all_found": true}
+    }
+  ],
+
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:2",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "HigherCurvatureStelle module no longer cited as theorem source; replaced with HeatKernelExpansion-based hedged framing.",
+      "deterministic_recheck": {"kind": "tex_grep_module_theorem_call", "module": "HigherCurvatureStelle", "theorem_calls_remaining": 0}
+    },
+    {
+      "prior_finding_id": "block:6",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "ADWMechanism theorem-name drifts replaced with verified-present substitutes.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["ADWMechanism.critical_coupling_pos", "ADWMechanism.zero_C_no_fluct_gives_pregeometric"], "all_found": true}
+    },
+    {
+      "prior_finding_id": "block:7",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "GaugeErasure theorem-name drifts replaced with gauge_erasure / u1_survival.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["GaugeErasure.gauge_erasure", "GaugeErasure.u1_survival"], "all_found": true}
+    },
+    {
+      "prior_finding_id": "block:8",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "VestigialGravity wrong-module qualifier corrected to GravitationalWaves.",
+      "deterministic_recheck": {"kind": "tex_grep", "pattern": "VestigialGravity.natural_range_disjoint", "match_count": 0}
+    },
+    {
+      "prior_finding_id": "block:9",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "ChiralityWall.predicate replaced with module-file reference.",
+      "deterministic_recheck": {"kind": "tex_grep", "pattern": "ChiralityWall.predicate", "match_count": 0}
+    },
+    {
+      "prior_finding_id": "block:10",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "isConfining/isConfining_iff_zero_polyakov replaced with Confining/confining_iff_magnitude_zero/confining_iff_center_invariant.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["CenterSymmetryConfinement.Confining", "CenterSymmetryConfinement.confining_iff_magnitude_zero", "CenterSymmetryConfinement.confining_iff_center_invariant"], "all_found": true}
+    },
+    {
+      "prior_finding_id": "block:11",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "trace_residual_zero_iff_alpha_unity → efeResidualTrace_eq_zero_iff_alpha_unity; ppn_decision_gate_passes → precessionRatio_eq_one_iff_alpha_unity.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["NonlinearEFE.efeResidualTrace_eq_zero_iff_alpha_unity", "NonlinearEFE.precessionRatio_eq_one_iff_alpha_unity"], "all_found": true}
+    },
+    {
+      "prior_finding_id": "block:12",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "BundleRiemann.firstBianchi → bundleRiemannAux_first_bianchi_torsionfree_apply; secondBianchi via module-file reference.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["BundleRiemann.bundleRiemannAux_first_bianchi_torsionfree_apply"], "all_found": true}
+    },
+    {
+      "prior_finding_id": "block:13",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Penrose IsGloballyHyperbolic / IsNECsatisfied moved to module-file references.",
+      "deterministic_recheck": {"kind": "tex_grep", "pattern": "PenroseSingularity.IsGloballyHyperbolic|PenroseSingularity.IsNECsatisfied", "match_count": 0}
+    },
+    {
+      "prior_finding_id": "block:14",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "dS_violates_SEC → cosmologicalLambda_violates_HP_hypothesis.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["HawkingPenroseSingularity.cosmologicalLambda_violates_HP_hypothesis"], "all_found": true}
+    },
+    {
+      "prior_finding_id": "block:15",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "schwarzschildHorizonArea → schwarzschild_horizon_area_nonDecreasing.",
+      "deterministic_recheck": {"kind": "lean_deps_lookup", "verified_substitutes": ["AreaTheorem.schwarzschild_horizon_area_nonDecreasing"], "all_found": true}
+    },
+    {
+      "prior_finding_id": "block:3",
+      "prior_run_date": "2026-05-04T13:42:58Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "All 5 sites of CC-overshoot 10^122 softened to gtrsim 10^100 with heuristic 10^122 caveat at abstract + §1; matches Lean rigorous bound.",
+      "deterministic_recheck": {"kind": "tex_grep", "pattern": "gtrsim 10\\^\\{100\\}", "site_count": 6}
+    }
+  ],
 
   "summary": {
-    "total_sentences_walked": "Stage 10 round-1 spot-walked the load-bearing claims per Stage-13 anchor list (claims-reviewer-bundle-prompts.md §D3) and the synthesis-brief risk register; not the full sentence inventory. Coverage prioritises Class TN theorem-name references (load-bearing for the 'machine-checked' / 'first formalization' meta-claims), Class IA quantitative anchors (10^122 CC overshoot, 2.05e-77 EC torsion, 7e14 GW170817 falsification, 1/6000 Wen-deficit), Class HD tracked-hypothesis disclosure (Vergeles trio, H_HorizonBoundaryCondition, H_TopologicalOrderBeyondLG, H_TetradQuarkScalesNatural, H_RegimePartition), and Class CI citation registry consistency.",
-    "by_type": {"numeric": 4, "theorem-ref": 17, "formal-claim": 2, "qualitative": 0, "methodology": 0, "transition": 0, "metaclaim": 1, "citation": 0, "parameter": 0},
-    "by_verdict": {"PASS": 3, "FAIL": 21, "WARN": 3, "INFO": 0, "UNGROUNDED": 0, "TRANSITION": 0},
-    "by_finding_class": {"IA": 2, "TP": 0, "SD": 1, "TN": 17, "HD": 6},
-    "agent_text": "D3 Round-1 verdict RED. 21 BLOCKERs, 3 advisories. Three structural classes: (a) Class TN theorem-name drift across 17 sites including TWO ENTIRE MISSING MODULES (HoloQEC, HigherCurvatureStelle) plus a third (the wen_adw_factor_6000 theorem) whose existence is asserted but no decl found anywhere; module exists for ChiralityWall but `predicate` does not. (b) Class CI bibliography compile failure: \\bibliography{bibliography} references a nonexistent bibliography.bib; paper_draft.aux has zero \\bibcite entries; 38 of 61 cited keys also absent from CITATION_REGISTRY. (c) Class IA Lean-vs-prose 22-orders gap on the load-bearing CC overshoot claim: paper says ~10^122; Lean theorem proves only > 10^100. Class HD advisory: 11 D3-side tracked-hypothesis Lean Props are not enrolled in the Python HYPOTHESIS_REGISTRY (which carries only 7 keys, none from D3). 2.05e-77 EC torsion and 7e14 GW170817 anchors verified clean; pre-emptive grep confirmed zero stale 1.3e-114 references."
+    "total_sentences_walked": "Round-2 spot-walk verifies the 15 round-1 BLOCKERs, plus a fresh scan of the §19 path-(b) framework subsections that generated the surfaced findings. Coverage prioritises the round-1 blocker reconciliation; not a full re-walk of the 47pp paper.",
+    "by_type": {"theorem-ref": 3, "metaclaim": 1},
+    "by_verdict": {"PASS": 0, "FAIL": 4, "WARN": 0, "INFO": 0, "UNGROUNDED": 0, "TRANSITION": 0},
+    "by_finding_class": {"IA": 0, "TP": 0, "SD": 0, "TN": 3, "HD": 0, "CI": 1},
+    "agent_text": "D3 Round-2 verdict AMBER. 4 OPEN BLOCKERs (down from 15). 11 of 15 round-1 BLOCKERs FULLY CLOSED. 1 PARTIAL CLOSE (QEC bridge: replacement name missing .HPCode. infix). 2 SURFACED §19 path-(b) drifts that escaped the round-1 batch find-replace. 1 NOT CLOSED: bibliography Class CI compile-gate (file paper_draftNotes.bib is empty; 38 keys missing from CITATION_REGISTRY) — only the \\bibliography{} filename was renamed. Round-3 path: (1) single-token QEC fix at line 823; (2) replace 3 §19 unqualified theorem names; (3) populate paper_draftNotes.bib with all 61 cited keys + add 38 missing keys to CITATION_REGISTRY. With these three patches D3 lands at GREEN."
   },
 
   "blocking_issues": [
-    {"id": "block:1", "summary": "Class TN — `HoloQEC` module entirely missing from lean_deps.json. §9 QEC-cross-bridge claims `HoloQEC.admissible_iff` which does not exist.", "sentences": ["sentence:D3:quantum-error-correction-holography-bridge:01278d4f"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:2", "summary": "Class TN — `HigherCurvatureStelle` module entirely missing (zero decls). §18 cites 5 theorems in this module: basis_change_identity, alpha_value, beta_value, gamma_value, predictions_below_observational_ceilings.", "sentences": ["sentence:D3:higher-curvature-stelle-basis-at-order-a-4:e49f165f", "sentence:D3:higher-curvature-stelle-basis-at-order-a-4:2b429340", "sentence:D3:higher-curvature-stelle-basis-at-order-a-4:d78188d2"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:3", "summary": "Class IA — Lean theorem MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed proves > 10^100, not > 10^122 as paper repeatedly claims at 5 sites (lines 49, 175, 1449, 1473, 1514, 1919). 22-orders gap between formal bound and prose.", "sentences": ["sentence:D3:abstract:da33d070", "sentence:D3:cosmological-constant-in-emergent-form-the-problem-reproduced:e6745b66"], "gate": "Gate4_ComputationCorrectness", "finding_class": "IA", "severity": "blocker"},
-    {"id": "block:4", "summary": "Class CI — paper_draft.tex calls \\bibliography{bibliography} but bibliography.bib does not exist in papers/D3/; paper_draft.aux has 0 \\bibcite entries; PDF compiled with citations as ??. Plus 38 of 61 cited keys missing from CITATION_REGISTRY.", "sentences": ["sentence:D3:bibliography:59efc88b"], "gate": "Gate1_CitationIntegrity", "finding_class": "CI", "severity": "blocker"},
-    {"id": "block:5", "summary": "Class TN — `NonlinearDiffInvariance.h_path_b_holds_iff_dirac_bundle` (and unqualified variant `path_b_holds_iff_dirac_bundle`) does not exist. Cited at 4 sites (intro line 152, §4 line 435, §19 line 1363, plus closely related in §4 fracton claim). Module has the closely-related `diff_invariance_a4_iff_dirac_basis_consistent` and `pathB_residual_a{0,2,4}` theorems.", "sentences": ["sentence:D3:introduction-the-substrate-predictive-boundary:20bd5440", "sentence:D3:three-closures-forcing-adw:5fd8ed0d", "sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:a2574417"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:6", "summary": "Class TN — ADWMechanism theorem-name drift: adwGapClosedForm, adwGapPos, bifurcation_at_critical all missing. Module has 84 decls; correct names need lookup.", "sentences": ["sentence:D3:adw-gap-equation-tetrad-gap-bifurcation:82fa68b0", "sentence:D3:adw-gap-equation-tetrad-gap-bifurcation:da12ca14"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:7", "summary": "Class TN — GaugeErasure.only_U1_survives missing (closest: GaugeErasure.sm_only_u1_survives) and GaugeErasure.wen_adw_factor_6000 entirely missing. The latter is load-bearing for §4 'closed-form Lean identity' claim.", "sentences": ["sentence:D3:gauge-erasure-only-u1-survives-the-fluid-layer:800c71c2", "sentence:D3:three-closures-forcing-adw:bc0581a5"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:8", "summary": "Class TN — VestigialGravity.natural_range_disjoint_from_ligo_window wrong module qualifier (theorem lives in GravitationalWaves). §4 line 448 is the drift; §6 line 595 has the unqualified version that resolves correctly.", "sentences": ["sentence:D3:three-closures-forcing-adw:5da3disj"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:9", "summary": "Class TN — ChiralityWall.predicate missing; module has 99 decls under different names (GSCondition, ConjectureStatus, TPFIngredient).", "sentences": ["sentence:D3:ewbg-doubly-forbidden-chirality-wall-meets-crossover:d4a7b6ad"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:10", "summary": "Class TN — CenterSymmetryConfinement.isConfining + isConfining_iff_zero_polyakov missing; correct names `Confining` (def), `confining_iff_magnitude_zero` (likely intended), `confining_iff_center_invariant`.", "sentences": ["sentence:D3:confinement-centre-symmetry-polyakov-loop-svetitsky-yaffe:2bef1591"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:11", "summary": "Class TN — NonlinearEFE.trace_residual_zero_iff_alpha_unity missing; correct name `efeResidualTrace_eq_zero_iff_alpha_unity`. Plus NonlinearEFE.ppn_decision_gate_passes missing entirely (consider re-attribution to `precession_dev_eq_two_thirds_deflection_dev` which is the substantive PPN-collapse theorem).", "sentences": ["sentence:D3:variational-nonlinear-einstein-equations-multi-channel-ppn:10be83a2", "sentence:D3:variational-nonlinear-einstein-equations-multi-channel-ppn:d13031f1"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:12", "summary": "Class TN — paper44/Phase 6f-6g §22.5 references: BundleRiemann.firstBianchi missing (correct: bundleRiemannAux_first_bianchi_torsionfree_apply); RiemannDifferentialBianchi.secondBianchi missing (correct: DifferentialSecondBianchi).", "sentences": ["sentence:D3:algebraic-lorentzian-geometry-backbone-substrate-appendix:1233dc45"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:13", "summary": "Class TN — §24 Penrose: PenroseSingularity.IsGloballyHyperbolic and PenroseSingularity.IsNECsatisfied wrong-module / missing. IsGloballyHyperbolic lives in CausalStructure.Spacetime; IsNECsatisfied not in registry.", "sentences": ["sentence:D3:penrose-singularity-hypothesis-bundle-riccati-focusing-core:c361f86d"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:14", "summary": "Class TN — §25 HawkingPenroseSingularity.dS_violates_SEC missing; correct: cosmologicalLambda_violates_HP_hypothesis (close but not identical statement; verify the SEC-vs-HP-hypothesis substitution does not change semantic content).", "sentences": ["sentence:D3:hawking-penrose-sec-variant-lambda-violates-sec:9979832d"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
-    {"id": "block:15", "summary": "Class TN — §26 AreaTheorem.schwarzschildHorizonArea missing; module has 7 decls; closest: schwarzschild_horizon_area_nonDecreasing.", "sentences": ["sentence:D3:classical-area-theorem-schwarzschild-monotone-mass:cc2ddaa9"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"}
+    {"id": "block:r2:1", "summary": "Class TN — QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class missing `.HPCode.` sub-namespace prefix at line 823. Single-token fix.", "sentences": ["sentence:D3:quantum-error-correction-holography-bridge:ed57a4f0"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
+    {"id": "block:r2:2", "summary": "Class TN — §19 line 1386 unqualified \\texttt{nonlinearDiffInvariance.path_b_residual} not in lean_deps.json. Replace with NonlinearDiffInvariance.pathB_residual_a0/a2/a4.", "sentences": ["sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:0b77edb0"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
+    {"id": "block:r2:3", "summary": "Class TN — §19 lines 1392-1395 unqualified \\texttt{path_b_holds_iff_dirac_bundle} + \\texttt{perturbed_bundle_residual_linear_in_delta} not in lean_deps.json. Replace with NonlinearDiffInvariance.diff_invariance_a4_iff_dirac_basis_consistent + NonlinearDiffInvariance.perturbed_pathB_residual_a4_eq_delta_R_sq.", "sentences": ["sentence:D3:order-by-order-diffeomorphism-invariance-through-a-4:f22348bd"], "gate": "Gate5_LeanProofSubstance", "finding_class": "TN", "severity": "blocker"},
+    {"id": "block:r2:4", "summary": "Class CI/IA — paper_draftNotes.bib is EMPTY (0 bytes / 0 BibTeX entries). Bibliography filename rename in round-1 was insufficient. paper_draft.aux still has 0 \\bibcite entries; PDF compiles citations as ??. Plus 38 of 61 cited keys remain missing from CITATION_REGISTRY (carryover from round-1). Tagged as IA in finding_classes since CI is not a registered v2 class.", "sentences": ["sentence:D3:bibliography:d2a65476"], "gate": "Gate1_CitationIntegrity", "finding_class": "IA", "severity": "blocker"}
   ],
 
   "non_blocking_followups": [
-    {"id": "advisory:1", "summary": "Class HD — Python HYPOTHESIS_REGISTRY contains only 7 keys, none from D3. Eleven D3-side tracked-hypothesis Lean Props (Vergeles trio, H_HorizonBoundaryCondition, H_TopologicalOrderBeyondLG, H_TetradQuarkScalesNatural, H_RegimePartition, H_NonlinearEFEHolds, H_NonlinearDiffInvariance, H_EinsteinCartanExtensionHolds, H_MicroscopicCoefficientMatch, H_VestigialModeIsGraviton, H_VerlindeKMLiteralSumDerivation) need enrolling. Paper prose discloses tracked-Prop status correctly in §28 Outlook so the disclosure-gap discipline is satisfied; this is a Python-side traceability follow-up (validate.py CHECK 16 paper_hypothesis_disclosure may need an update once enrolled).", "sentences": ["sentence:D3:adw-gap-equation-tetrad-gap-bifurcation:HD-vergeles", "sentence:D3:bekenstein-hawking-entropy-from-mtc-state-counting:HD-horizon-bc", "sentence:D3:color-flavor-locking-emergent-z3-matches-qcd-centre-z3:HD-topordlg"], "gate": "Gate6_AssumptionDisclosure", "finding_class": "HD"},
-    {"id": "advisory:2", "summary": "Class IA — verify the synthesis-brief 'approximately 7×10^14' GW170817 falsification factor against the paper's 'approximately fourteen orders of magnitude'. 7e14 ≈ 14.85 orders; round-down to '14 orders' is consistent but the prose alternates between '~7×10^14' and '~14 orders' — pick one and use uniformly for clarity.", "sentences": [], "gate": "Gate9_NumericalFreshness", "finding_class": "IA"},
-    {"id": "advisory:3", "summary": "Class SD — paper §18 line 1327-1328 asserts pulsar-timing array bound `<= 10^60` and binary-BH bound `<= 10^50` for Stelle (alpha,beta,gamma) without citation. Either cite the constraint paper (Stein-Yagi-Yunes or similar) or hedge to 'order-of-magnitude estimate'.", "sentences": ["sentence:D3:higher-curvature-stelle-basis-at-order-a-4:d78188d2"], "gate": "Gate9_NumericalFreshness", "finding_class": "SD"},
-    {"id": "advisory:4", "summary": "Cross-bundle bridge — §6 GW170817 Δc/c bound and §8 M_c regime-partition criterion must match L1 / L3 character-for-character. Round-2 should validate cross-bundle consistency once L1 and L3 are reviewer-triple-closed (per memory both at GREEN as of 2026-05-01).", "sentences": [], "gate": "Gate2_CrossBundleConsistency", "finding_class": "TN"},
-    {"id": "advisory:5", "summary": "§9 §22.5 Cross-bundle anchor — D3 §9 sets canonical QEC-MTC cross-bridge framing for D4 §7 (D4 not yet drafted). Review-round-1 cannot validate against D4; flag as round-2 validation when D4 first-pass drafts.", "sentences": [], "gate": "Gate2_CrossBundleConsistency", "finding_class": "TN"}
+    {"id": "advisory:r2:1", "summary": "Class HD — Python HYPOTHESIS_REGISTRY (7 keys, none from D3) still does not enumerate the 11 D3-side tracked-hypothesis Lean Props (Vergeles trio, H_HorizonBoundaryCondition, H_TopologicalOrderBeyondLG, H_TetradQuarkScalesNatural, H_RegimePartition, H_NonlinearEFEHolds, H_NonlinearDiffInvariance, H_EinsteinCartanExtensionHolds, H_MicroscopicCoefficientMatch, H_VestigialModeIsGraviton, H_VerlindeKMLiteralSumDerivation). Paper prose discloses tracked-Prop status correctly in §28 Outlook so the disclosure-gap discipline is satisfied; this is a Python-side traceability follow-up. Carry over from round-1.", "gate": "Gate6_AssumptionDisclosure", "finding_class": "HD"},
+    {"id": "advisory:r2:2", "summary": "Class IA — synthesis-brief 'approximately 7×10^14' GW170817 falsification factor vs paper '~14 orders' — still alternates; pick one usage. Carry over from round-1.", "gate": "Gate9_NumericalFreshness", "finding_class": "IA"},
+    {"id": "advisory:r2:3", "summary": "Class SD — §18 line 1352-1354 still asserts pulsar-timing-array ≤10^60 + binary-BH-inspiral ≤10^50 ceilings without citation. Either cite (Stein-Yagi-Yunes or similar) or hedge to 'order-of-magnitude estimate'. Carry over from round-1.", "gate": "Gate9_NumericalFreshness", "finding_class": "SD"},
+    {"id": "advisory:r2:4", "summary": "Cross-bundle bridge — §6 GW170817 Δc/c bound and §8 M_c regime-partition criterion still need character-for-character validation against L1 / L3 (both at GREEN per memory 2026-05-01). Carry over from round-1.", "gate": "Gate2_CrossBundleConsistency", "finding_class": "TN"},
+    {"id": "advisory:r2:5", "summary": "§9 / §22.5 Cross-bundle anchor — D3 §9 sets canonical QEC-MTC framing for D4 §7. D4 round-1 BLOCKERs noted in commit 676aed3 (6 BLOCKERs); round-2 cross-bundle re-validation pending D4 round-2. Carry over from round-1.", "gate": "Gate2_CrossBundleConsistency", "finding_class": "TN"}
   ]
 }
