@@ -479,3 +479,47 @@ Phase 7b sub-wave numbering evolved beyond the original Phase 7a §7b candidate-
 **Pre-compact prep state (2026-05-04):** all session work committed and pushed (HEAD `5ee8d5a` on origin/main). Memory index has 3 new entries this session (`project_phase7b_e1_e2_closed`, `project_phase7b_d1_d2_first_pass`, `project_phase7c_d3_initialized`). Dashboard running at localhost:8050 with stale `lean_deps.json` (non-blocking; refresh via `uv run python scripts/extract_lean_deps.py` recommended before next cross-bundle consistency check).
 
 *Status update 2026-05-04. Next compact-recovery: read `project_phase7c_d3_initialized.md` first, then SYNTHESIS_BRIEF.md, then resume D3 substantive content drafting.*
+
+---
+
+## Status update 2026-05-04 (mid-day) — Phase 7c sub-waves 7c.1–7c.3 progress
+
+After the morning compaction, executed continuous bundle-lift work over 13 commits (`79276d0`→`18f48e1`):
+
+**Bundles closed at GREEN reviewer-triple (now 9 of 13):**
+- L1, L2, L3, D5, I1, I2, E1, E2 (carryover)
+- **D2 (NEW):** Stage 10 round 2 GREEN (`e75c3af`) + Stage 13 GREEN (D2.md review doc); reviewer-triple-closed.
+
+**Bundles substantive-shipped + reviewed at Stage 10:**
+- **D3 (NEW):** First-pass shipped (commit `79276d0`, 46pp PDF, 22 sections + 5 substrate appendices + outlook). Stage 10 r1 RED (15 BLOCKERs) -> r2 in flight after batch fix in `676aed3`.
+- **D4 (NEW):** First-pass shipped (commit `24c2d14`, 17pp PDF, 7 sources, "one MTC four faces" synthesis). Stage 10 r1 FAIL (6 BLOCKERs) -> r2 in flight after batch fix in `676aed3`.
+
+**Bundles at Stage 13 in flight:**
+- **D1:** Stage 10 round 2 GREEN (`6a0c8cf`); Stage 13 round 1 RED with 6 BLOCKERs (4 wrong-target citations + 4 missing bibkeys + first-claim hedging); fixes applied in `18f48e1`; round 2 in flight.
+
+**Bundle F (flagship):**
+- Synthesis brief shipped at `papers/F/SYNTHESIS_BRIEF.md` (commit `2b1e826`). Substantive draft deferred per Phase 7 Wave 13 sequencing (must wait for all 12 sibling bundles GREEN at reviewer-triple level).
+
+**3 background reviewer agents still in flight at session-context-checkpoint:**
+- D3 Stage 10 round 2 (verifying 15 BLOCKER closure)
+- D4 Stage 10 round 2 (verifying 6 BLOCKER closure)
+- D1 Stage 13 round 2 (verifying 6 BLOCKER closure)
+
+**Remaining critical-path work after these 3 close:**
+- D3 Stage 13 adversarial pass (after Stage 10 r2 GREEN)
+- D4 Stage 13 adversarial pass (after Stage 10 r2 GREEN)
+- F (flagship) substantive draft + reviewer triple
+- Wave 14 cross-bundle final consistency pass
+- Wave 15 pre-submission Stage-13 sweep
+
+**Operational lessons banked this session:**
+1. **Class TN drift dominant in first-pass drafts (~32 instances across D1+D2+D3+D4).** Drafts cited theorems by *intended* module rather than *actual* module. **Mitigation for Phase 7+ work:** pre-Stage-10 grep `lean_deps.json` for every `\texttt{ModuleX.theorem_name}` reference. **QI-LEAN-1 candidate validated as load-bearing.**
+2. **Bibliography filename drift** (D3 used `\bibliography{bibliography}` but actual is `paper_draftNotes.bib`). Mitigation: `validate.py --check bundle_bibliography_filename`.
+3. **Bundle-side prose-vs-Lean numerical-bound gap** (D3 §21 claimed `~10^122` but Lean proves `>10^100`; bridged by softening prose to formal bound + heuristic estimate caveat).
+4. **Wrong-target citation drift** (D1 4 bibitems vs registry — bibitem text described one paper, registry described another). Mitigation: bibitem-vs-registry-character-match validator.
+
+**Commits this session (13 total):** `79276d0 25d762b 24c2d14 6a0c8cf e75c3af 1ff2b4d 2b1e826 676aed3 18f48e1` plus the F synthesis-brief commit.
+
+**Pre-compact prep state:** all 13 commits pushed to `origin/main` (HEAD `18f48e1`); 3 untracked review-archive files (`*_r1.md`, `*_r1.json`) will be added/committed by the in-flight Round-2 agents. Memory file `project_phase7c_d3_d4_first_pass.md` written. MEMORY.md index updated.
+
+*Next session compact-recovery: read `project_phase7c_d3_d4_first_pass.md` first, then poll the 3 Round-2 results from `papers/D3/claims_review.json`, `papers/D4/claims_review.json`, `papers/AutomatedReviews/2026-05-04-bundle-stage13/D1.md`. If any returns RED, address those BLOCKERs as the next priority. Else, proceed to D3 + D4 Stage-13 adversarial passes, then F substantive draft.*
