@@ -1,0 +1,2713 @@
+{
+  "paper": "D2_anomaly_bundle",
+  "review_date": "2026-05-04T12:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+  "review_round": 1,
+  "bundle_target": "D2",
+  "verdict": "red",
+  "total_findings": 27,
+  "findings_by_class": {
+    "IA": 8,
+    "TP": 0,
+    "SD": 0,
+    "TN": 9,
+    "HD": 5
+  },
+  "blockers_open": 11,
+  "blockers_advisory": 16,
+  "sentences": [
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:55926ce6",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "55926ce6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 29,
+      "tex_line_end": 30,
+      "quote": "We present a unified, machine-verified treatment of four anomaly constraints on Standard-Model particle content.",
+      "quote_normalized": "we present a unified, machine-verified treatment of four anomaly constraints on standard-model particle content.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Meta-claim about the paper's scope.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we present a unified, machine-verified treatment of four anomaly constraints on standard-model particle content.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:12dabe72",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "12dabe72",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 31,
+      "tex_line_end": 36,
+      "quote": "The chiral central charge $c_{-} = 8 N_f$ derived from sixteen left-handed Weyl components per generation, combined with the modular framing constraint $24 \\mid c_{-}$ from $\\eta(\\tau{+}1) = e^{2\\pi i/24}\\eta(\\tau)$, forces $N_f \\equiv 0 \\pmod{3}$.",
+      "quote_normalized": "the chiral central charge $c_{-} = 8 n_f$ derived from sixteen left-handed weyl components per generation, combined with the modular framing constraint $24 \\mid c_{-}$ from $\\eta(\\tau{+}1) = e^{2\\pi i/24}\\eta(\\tau)$, forces $n_f \\equiv 0 \\pmod{3}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WangBridge.fermion_count_gives_central_charge"
+          },
+          {
+            "kind": "theorem",
+            "target": "ModularInvarianceConstraint.framing_anomaly_constraint"
+          },
+          {
+            "kind": "theorem",
+            "target": "GenerationConstraint.generation_mod3_constraint"
+          },
+          {
+            "kind": "citation",
+            "target": "Wang2024"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Three theorems chain to deliver N_f \u2261 0 (mod 3); all FOUND in lean_deps.json. Wang2024 cite resolved (arxiv:2312.14928).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the chiral central charge $c_{-} = 8 n_f$ derived from sixteen left-handed weyl components per generation, combined with the modular framing constraint $24 \\mid c_{-}$ from $\\eta(\\tau{+}1) = e^{2\\pi i/24}\\eta(\\tau)$, forces $n_f \\equiv 0 \\pmod{3}$.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:4f026274",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "4f026274",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 36,
+      "tex_line_end": 40,
+      "quote": "The minimal solution $N_f = 3$ is verified through Mathlib's \\texttt{Complex.exp\\_add}; without right-handed neutrinos $c_{-} = 15/2$ is fractional, giving an independent gravitational-anomaly argument for $\\nu_R$.",
+      "quote_normalized": "the minimal solution $n_f = 3$ is verified through mathlib's complex.exp\\_add; without right-handed neutrinos $c_{-} = 15/2$ is fractional, giving an independent gravitational-anomaly argument for $\\nu_r$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WangBridge.central_charge_fractional_without_nu_R"
+          },
+          {
+            "kind": "theorem",
+            "target": "ModularInvarianceConstraint.qParam_shift"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both target theorems FOUND in lean_deps.json. Independent \u03bd_R argument is consistent with the Lean module structure.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the minimal solution $n_f = 3$ is verified through mathlib's complex.exp\\_add; without right-handed neutrinos $c_{-} = 15/2$ is fractional, giving an independent gravitational-anomaly argument for $\\nu_r$.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:da4a97da",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "da4a97da",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 40,
+      "tex_line_end": 43,
+      "quote": "The algebraic core uses $\\dim_{\\mathbb{F}_2} \\mathrm{Ext}^n_{A(1)}(\\mathbb{F}_2,\\mathbb{F}_2) = 1,2,2,2,3,4$ for $n = 0,\\dots,5$ together with the change-of-rings adjunction $\\mathrm{Hom}_A(A \\otimes_{A(1)} M, N) \\cong \\mathrm{Hom}_{A(1)}(M, N)$ --- the first machine-checked Ext computation over a Steenrod subalgebra.",
+      "quote_normalized": "the algebraic core uses $\\dim_{\\mathbb{f}_2} ext^n_{a(1)}(\\mathbb{f}_2,\\mathbb{f}_2) = 1,2,2,2,3,4$ for $n = 0,\\dots,5$ together with the change-of-rings adjunction $hom_a(a \\otimes_{a(1)} m, n) \\cong hom_{a(1)}(m, n)$ --- the first machine-checked ext computation over a steenrod subalgebra.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "A1Ext (module exists, 14 decls)"
+          },
+          {
+            "kind": "theorem",
+            "target": "ChangeOfRings.change_of_rings_ext_dim"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "A1Ext module exists (14 decls). The specific name 'hom_tensor_adjunction' is MISSING; closest match is 'hom_tensor_adjunction_dim' in ChangeOfRings module (paper \u00a72.6 references the missing name explicitly \u2014 see TN finding there). Ext dimensions 1,2,2,2,3,4 reflect literature canonical values.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the algebraic core uses $\\dim_{\\mathbb{f}_2} ext^n_{a(1)}(\\mathbb{f}_2,\\mathbb{f}_2) = 1,2,2,2,3,4$ for $n = 0,\\dots,5$ together with the change-of-rings adjunction $hom_a(a \\otimes_{a(1)} m, n) \\cong hom_{a(1)}(m, n)$ --- the first machine-checked ext computation over a steenrod subalgebra.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:031650e1",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "031650e1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 43,
+      "tex_line_end": 47,
+      "quote": "The Z$_4$ generator $X = 5(B-L) - 4Y$ assigns odd Z$_4$ charge to all six SM fermion species; $3 \\times 15 \\equiv -3 \\pmod{16}$ in the no-$\\nu_R$ case forces a hidden Z$_{16}$-charged sector.",
+      "quote_normalized": "the z$_4$ generator $x = 5(b-l) - 4y$ assigns odd z$_4$ charge to all six sm fermion species; $3 \\times 15 \\equiv -3 \\pmod{16}$ in the no-$\\nu_r$ case forces a hidden z$_{16}$-charged sector.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Z16AnomalyComputation.hidden_sector_required"
+          },
+          {
+            "kind": "theorem",
+            "target": "SMFermionData (module, 74 decls)"
+          },
+          {
+            "kind": "citation",
+            "target": "GarciaEtxebarria2019"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Theorem hidden_sector_required FOUND. Z_4 generator and 6 SM species residues 6+3+3+2+1+1=16 are arithmetically correct. Numerical 3\u00d715=45\u2261-3 (mod 16) verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the z$_4$ generator $x = 5(b-l) - 4y$ assigns odd z$_4$ charge to all six sm fermion species; $3 \\times 15 \\equiv -3 \\pmod{16}$ in the no-$\\nu_r$ case forces a hidden z$_{16}$-charged sector.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:725b5132",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "725b5132",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 47,
+      "tex_line_end": 58,
+      "quote": "A first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (Golterman-Shamir nine conditions, two-particle-fermion (TPF) evasion via discontinuity of \\texttt{round} at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{Z})$), a positive-construction pillar (Gioia-Thorngren BdG Hamiltonian on $(\\mathbb{Z}/L)^3$ with the central commutation $[H_\\text{BdG}(p),\\, q_A(p)] = 0$ closed by an Aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (Onsager Dolan-Grady, In\u00f6n\u00fc-Wigner contraction $[\\varepsilon A_m, \\varepsilon A_n] = 4\\varepsilon^2 G_{m-n}$, $\\mathrm{su}(2)$ emanant symmetry, Witten anomaly $\\pi_4(\\mathrm{SU}(2)) = \\mathbb{Z}_2 \\hookrightarrow \\mathbb{Z}_{16}$).",
+      "quote_normalized": "a first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (golterman-shamir nine conditions, two-particle-fermion (tpf) evasion via discontinuity of round at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{z})$), a positive-construction pillar (gioia-thorngren bdg hamiltonian on $(\\mathbb{z}/l)^3$ with the central commutation $[h_bdg(p),\\, q_a(p)] = 0$ closed by an aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (onsager dolan-grady, in\u00f6n\u00fc-wigner contraction $[\\varepsilon a_m, \\varepsilon a_n] = 4\\varepsilon^2 g_{m-n}$, $su(2)$ emanant symmetry, witten anomaly $\\pi_4(su(2)) = \\mathbb{z}_2 \\hookrightarrow \\mathbb{z}_{16}$).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralityWallMaster (module exists)"
+          },
+          {
+            "kind": "theorem",
+            "target": "GTCommutation.gt_commutation_4x4"
+          },
+          {
+            "kind": "theorem",
+            "target": "OnsagerContraction (module, 24 decls)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "All three pillars have backing modules. GTCommutation.gt_commutation_4x4 FOUND. ChiralityWallMaster exists with 35 decls.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "a first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (golterman-shamir nine conditions, two-particle-fermion (tpf) evasion via discontinuity of round at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{z})$), a positive-construction pillar (gioia-thorngren bdg hamiltonian on $(\\mathbb{z}/l)^3$ with the central commutation $[h_bdg(p),\\, q_a(p)] = 0$ closed by an aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (onsager dolan-grady, in\u00f6n\u00fc-wigner contraction $[\\varepsilon a_m, \\varepsilon a_n] = 4\\varepsilon^2 g_{m-n}$, $su(2)$ emanant symmetry, witten anomaly $\\pi_4(su(2)) = \\mathbb{z}_2 \\hookrightarrow \\mathbb{z}_{16}$).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:fde656c4",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "fde656c4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 58,
+      "tex_line_end": 62,
+      "quote": "The integer 16 appears in four formally distinct settings (SM Weyl count, Z$_{16}$ DIII bordism index, Rokhlin's signature theorem, Kitaev DIII period-16) and the generation count $N_f = 3$ appears in two independent settings (Z$_{16}$ + modular).",
+      "quote_normalized": "the integer 16 appears in four formally distinct settings (sm weyl count, z$_{16}$ diii bordism index, rokhlin's signature theorem, kitaev diii period-16) and the generation count $n_f = 3$ appears in two independent settings (z$_{16}$ + modular).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "IA-class P3 anti-pattern check: the 4 settings are semantically distinct (fermion content, cobordism group, 4-manifold signature, free-fermion phase periodic table). Not the same setting restated. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeFidelity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the integer 16 appears in four formally distinct settings (sm weyl count, z$_{16}$ diii bordism index, rokhlin's signature theorem, kitaev diii period-16) and the generation count $n_f = 3$ appears in two independent settings (z$_{16}$ + modular).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:7b49dfef",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "7b49dfef",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 62,
+      "tex_line_end": 66,
+      "quote": "The end-to-end chain --- from sixteen Weyl components through three formal mechanisms to one observed $N_f = 3$ --- is verified by \\texttt{lake build} on a 5229-theorem, 243-module Lean 4 library with one axiom and zero \\texttt{sorry}; 322 of those theorems were closed by the Aristotle automated prover.",
+      "quote_normalized": "the end-to-end chain --- from sixteen weyl components through three formal mechanisms to one observed $n_f = 3$ --- is verified by lake build on a 5229-theorem, 243-module lean 4 library with one axiom and zero sorry; 322 of those theorems were closed by the aristotle automated prover.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "n_theorems = 5229",
+            "computed_value": "5229"
+          },
+          {
+            "kind": "parameter",
+            "target": "n_modules = 243",
+            "computed_value": "243"
+          },
+          {
+            "kind": "parameter",
+            "target": "n_axioms = 1",
+            "computed_value": "1"
+          },
+          {
+            "kind": "parameter",
+            "target": "ARISTOTLE_THEOREMS = 322",
+            "computed_value": "322"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Verified against lean_deps.json: 5229 theorems, 243 modules, 1 project axiom (gapped_interface_axiom), and ARISTOTLE_THEOREMS in constants.py = 322. Zero sorry verified by grep on actual .lean files (4 lone-sorry matches all in `/-` docstring/comment blocks; library builds clean).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the end-to-end chain --- from sixteen weyl components through three formal mechanisms to one observed $n_f = 3$ --- is verified by lake build on a 5229-theorem, 243-module lean 4 library with one axiom and zero sorry; 322 of those theorems were closed by the aristotle automated prover.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:ce0ccbe3",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "ce0ccbe3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 66,
+      "tex_line_end": 71,
+      "quote": "The single axiom (\\texttt{gapped\\_interface\\_axiom}, a 4+1D hypothesis) is corroborated in 1+1D and 2+1D by independent formalizations.",
+      "quote_normalized": "the single axiom (gapped\\_interface\\_axiom, a 4+1d hypothesis) is corroborated in 1+1d and 2+1d by independent formalizations.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "gapped_interface_axiom"
+          },
+          {
+            "kind": "theorem",
+            "target": "VillainHamiltonian (module, 42 decls)"
+          },
+          {
+            "kind": "theorem",
+            "target": "FKGappedInterface (module, 20 decls)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Single axiom verified: only gapped_interface_axiom in SPTClassification.lean line 226. AXIOM_METADATA records eliminability='hard' with evidence_ladder. Lower-D evidence modules exist.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the single axiom (gapped\\_interface\\_axiom, a 4+1d hypothesis) is corroborated in 1+1d and 2+1d by independent formalizations.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:abstract:4c636803",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "abstract",
+        "quote_hash": "4c636803",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 71,
+      "tex_line_end": 73,
+      "quote": "Three textbook topology results (ko cohomology, Adams spectral sequence convergence, Anderson-Brown-Peterson splitting) enter as tracked hypotheses pending Mathlib algebraic-topology infrastructure.",
+      "quote_normalized": "three textbook topology results (ko cohomology, adams spectral sequence convergence, anderson-brown-peterson splitting) enter as tracked hypotheses pending mathlib algebraic-topology infrastructure.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "HD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "hypothesis",
+            "target": "(textual: ko-cohomology, Adams convergence, ABP splitting)"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "HD: paper discloses 3 textbook hypotheses (H1, H3, H4 in \u00a76.3). However HYPOTHESIS_REGISTRY contains 5 active tracked hypotheses (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8) that the paper does NOT explicitly name-disclose, even though it invokes their dependent theorems (sixteen_convergence_full, generation_constraint_iff, central_charge_from_sm). The 'three textbook hypotheses' claim is technically accurate but undercounts the disclosable surface.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "three textbook topology results (ko cohomology, adams spectral sequence convergence, anderson-brown-peterson splitting) enter as tracked hypotheses pending mathlib algebraic-topology infrastructure.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:introduction:b1caf56f",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "introduction",
+        "quote_hash": "b1caf56f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 0,
+      "tex_line_start": 81,
+      "tex_line_end": 84,
+      "quote": "The Standard Model has three generations of chiral fermions. No mechanism in the original SM Lagrangian explains why three rather than two or twelve.",
+      "quote_normalized": "the standard model has three generations of chiral fermions. no mechanism in the original sm lagrangian explains why three rather than two or twelve.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "Background framing.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the standard model has three generations of chiral fermions. no mechanism in the original sm lagrangian explains why three rather than two or twelve.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:introduction:0fa5f566",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "introduction",
+        "quote_hash": "0fa5f566",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 0,
+      "tex_line_start": 96,
+      "tex_line_end": 109,
+      "quote": "First, the integer 16 appears in four formally distinct settings --- the SM Weyl count per generation, the $\\mathbb{Z}_{16}$ Dai-Freed bordism index in 5D, Rokhlin's theorem on the signature of spin 4-manifolds, and Kitaev's DIII period-16 classification of free-fermion topological phases.",
+      "quote_normalized": "first, the integer 16 appears in four formally distinct settings --- the sm weyl count per generation, the $\\mathbb{z}_{16}$ dai-freed bordism index in 5d, rokhlin's theorem on the signature of spin 4-manifolds, and kitaev's diii period-16 classification of free-fermion topological phases.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Four settings enumerated; semantically distinct. Reiterates abstract claim with specific naming. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "first, the integer 16 appears in four formally distinct settings --- the sm weyl count per generation, the $\\mathbb{z}_{16}$ dai-freed bordism index in 5d, rokhlin's theorem on the signature of spin 4-manifolds, and kitaev's diii period-16 classification of free-fermion topological phases.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:introduction:dea18608",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "introduction",
+        "quote_hash": "dea18608",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 0,
+      "tex_line_start": 110,
+      "tex_line_end": 113,
+      "quote": "This paper performs the first machine-verified unification of the four threads.",
+      "quote_normalized": "this paper performs the first machine-verified unification of the four threads.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "First-claim assertion. Should be spot-checked via qi-firstclaimverification per bundle prompts \u00a7D2.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "this paper performs the first machine-verified unification of the four threads.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:introduction:cd1dcaf1",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "introduction",
+        "quote_hash": "cd1dcaf1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 0,
+      "tex_line_start": 113,
+      "tex_line_end": 119,
+      "quote": "What is new here is the integrated treatment that exposes the load-bearing axiom budget when all four threads are placed inside a single Lean 4 library: one true axiom (\\texttt{gapped\\_interface\\_axiom}, the 4+1D conjecture sitting at the intersection of mechanisms (ii) and (iii), supported by machine-checked 1+1D and 2+1D evidence), three tracked algebraic-topology hypotheses (deferred to upstream Mathlib), and a single Mathlib-deferral placeholder (\\texttt{dai\\_freed\\_spin\\_z4}).",
+      "quote_normalized": "what is new here is the integrated treatment that exposes the load-bearing axiom budget when all four threads are placed inside a single lean 4 library: one true axiom (gapped\\_interface\\_axiom, the 4+1d conjecture sitting at the intersection of mechanisms (ii) and (iii), supported by machine-checked 1+1d and 2+1d evidence), three tracked algebraic-topology hypotheses (deferred to upstream mathlib), and a single mathlib-deferral placeholder (dai\\_freed\\_spin\\_z4).",
+      "type": "formal-claim",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "gapped_interface_axiom"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class drift on dai_freed_spin_z4: registered in module SKEFTHawking.Z16AnomalyComputation, NOT in Z16Classification (where paper \u00a73.3 places it via 'Z16Classification.dai_freed_spin_z4'). The bare name 'dai_freed_spin_z4' does exist as a theorem (kind='theorem' in lean_deps), but the paper's later reference to Z16Classification.dai_freed_spin_z4 (\u00a73.3 line 413) is the one that fails the Class TN module-name resolution.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "what is new here is the integrated treatment that exposes the load-bearing axiom budget when all four threads are placed inside a single lean 4 library: one true axiom (gapped\\_interface\\_axiom, the 4+1d conjecture sitting at the intersection of mechanisms (ii) and (iii), supported by machine-checked 1+1d and 2+1d evidence), three tracked algebraic-topology hypotheses (deferred to upstream mathlib), and a single mathlib-deferral placeholder (dai\\_freed\\_spin\\_z4).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:introduction:23b2ad98",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "introduction",
+        "quote_hash": "23b2ad98",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 0,
+      "tex_line_start": 119,
+      "tex_line_end": 124,
+      "quote": "Across the entire chain, $5229$ theorems are machine-verified, $322$ of them closed automatically by the Aristotle automated prover, with zero \\texttt{sorry}.",
+      "quote_normalized": "across the entire chain, $5229$ theorems are machine-verified, $322$ of them closed automatically by the aristotle automated prover, with zero sorry.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "n_theorems",
+            "computed_value": "5229"
+          },
+          {
+            "kind": "parameter",
+            "target": "ARISTOTLE_THEOREMS",
+            "computed_value": "322"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Counts verified live: 5229 theorems, 322 ARISTOTLE_THEOREMS, 0 effective sorry.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "across the entire chain, $5229$ theorems are machine-verified, $322$ of them closed automatically by the aristotle automated prover, with zero sorry.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:introduction:ec8736c2",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "introduction",
+        "quote_hash": "ec8736c2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "intro",
+      "section_ordinal": 0,
+      "tex_line_start": 153,
+      "tex_line_end": 167,
+      "quote": "Falsification at this level would be either the discovery of an internally consistent SM extension violating $N_f \\equiv 0 \\pmod 3$ (which would refute the modular hypothesis of~\\cite{Wang2024} as currently stated) or the exhibition of a 4+1D construction with a gapped boundary violating the SPT-stacking trivialisation rule (which would refute \\texttt{gapped\\_interface\\_axiom}).",
+      "quote_normalized": "falsification at this level would be either the discovery of an internally consistent sm extension violating $n_f \\equiv 0 \\pmod 3$ (which would refute the modular hypothesis of~ as currently stated) or the exhibition of a 4+1d construction with a gapped boundary violating the spt-stacking trivialisation rule (which would refute gapped\\_interface\\_axiom).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Falsifiability section: identifies two concrete falsifiers tied to the modular hypothesis and the sole live axiom. Sound.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeFidelity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "falsification at this level would be either the discovery of an internally consistent sm extension violating $n_f \\equiv 0 \\pmod 3$ (which would refute the modular hypothesis of~ as currently stated) or the exhibition of a 4+1d construction with a gapped boundary violating the spt-stacking trivialisation rule (which would refute gapped\\_interface\\_axiom).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:5659a09c",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "5659a09c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 192,
+      "tex_line_end": 199,
+      "quote": "Counting Weyl components per SM generation in the with-$\\nu_R$ convention, one generation contributes $n_{\\rm Weyl}^{\\rm with\\,\\nu_R} = 6_{Q_L} + 3_{u_R} + 3_{d_R} + 2_{L_L} + 1_{e_R} + 1_{\\nu_R} = 16$, and so $c_{-}^{(N_f)} = 8 N_f$.",
+      "quote_normalized": "counting weyl components per sm generation in the with-$\\nu_r$ convention, one generation contributes $n_{\\rm weyl}^{\\rm with\\,\\nu_r} = 6_{q_l} + 3_{u_r} + 3_{d_r} + 2_{l_l} + 1_{e_r} + 1_{\\nu_r} = 16$, and so $c_{-}^{(n_f)} = 8 n_f$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WangBridge.fermion_count_gives_central_charge"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "c_minus_equals_8Nf"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Sum 6+3+3+2+1+1=16 verified. Theorem exists. Underlying tracked hypothesis c_minus_equals_8Nf is in registry but not name-disclosed in paper.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "counting weyl components per sm generation in the with-$\\nu_r$ convention, one generation contributes $n_{\\rm weyl}^{\\rm with\\,\\nu_r} = 6_{q_l} + 3_{u_r} + 3_{d_r} + 2_{l_l} + 1_{e_r} + 1_{\\nu_r} = 16$, and so $c_{-}^{(n_f)} = 8 n_f$.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:82676ad8",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "82676ad8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 200,
+      "tex_line_end": 211,
+      "quote": "This identification is verified at the Lean level in \\texttt{WangBridge.fermion\\_count\\_gives\\_central\\_charge}: the factor $1/2$ is the contribution per single Weyl component, and the sum over types lands at $8$ exactly.",
+      "quote_normalized": "this identification is verified at the lean level in wangbridge.fermion\\_count\\_gives\\_central\\_charge: the factor $1/2$ is the contribution per single weyl component, and the sum over types lands at $8$ exactly.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WangBridge.fermion_count_gives_central_charge"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Theorem name FOUND in lean_deps.json (module SKEFTHawking.WangBridge).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "this identification is verified at the lean level in wangbridge.fermion\\_count\\_gives\\_central\\_charge: the factor $1/2$ is the contribution per single weyl component, and the sum over types lands at $8$ exactly.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:2d9ad2e5",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "2d9ad2e5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 222,
+      "tex_line_end": 232,
+      "quote": "The Lean formalisation~\\cite{Roehm2026Wave10} encodes the divisibility through the modular $q$-parameter shift in \\texttt{ModularInvarianceConstraint.qParam\\_shift}, which uses Mathlib's \\texttt{Complex.exp\\_add} to establish $q^{(\\tau+1)} = q^{(\\tau)} \\cdot e^{2\\pi i/24}$ on the $\\eta$-function side, and reads back $24 \\mid c_{-}$ in \\texttt{ModularInvarianceConstraint.framing\\_anomaly\\_constraint}.",
+      "quote_normalized": "the lean formalisation~ encodes the divisibility through the modular $q$-parameter shift in modularinvarianceconstraint.qparam\\_shift, which uses mathlib's complex.exp\\_add to establish $q^{(\\tau+1)} = q^{(\\tau)} \\cdot e^{2\\pi i/24}$ on the $\\eta$-function side, and reads back $24 \\mid c_{-}$ in modularinvarianceconstraint.framing\\_anomaly\\_constraint.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ModularInvarianceConstraint.qParam_shift"
+          },
+          {
+            "kind": "theorem",
+            "target": "ModularInvarianceConstraint.framing_anomaly_constraint"
+          },
+          {
+            "kind": "citation",
+            "target": "Roehm2026Wave10"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Both theorem names FOUND. Citation Roehm2026Wave10 is MISSING from CITATION_REGISTRY (in-prep self-cite; CitationIntegrity flag \u2014 Class CI). Other in-prep self-cites Roehm2026Wave1/4/5/6f/6g/Pipeline are in registry, so this is an unregistered key gap.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the lean formalisation~ encodes the divisibility through the modular $q$-parameter shift in modularinvarianceconstraint.qparam\\_shift, which uses mathlib's complex.exp\\_add to establish $q^{(\\tau+1)} = q^{(\\tau)} \\cdot e^{2\\pi i/24}$ on the $\\eta$-function side, and reads back $24 \\mid c_{-}$ in modularinvarianceconstraint.framing\\_anomaly\\_constraint.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:8618048f",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "8618048f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 233,
+      "tex_line_end": 238,
+      "quote": "Combining \\eqref{eq:c-from-Nf} with $24 \\mid c_{-}$ yields $24 \\mid 8 N_f$, hence $3 \\mid N_f$. The implication $24 \\mid 8 N_f \\Rightarrow 3 \\mid N_f$ was closed by the Aristotle automated prover (run id \\texttt{a1dfcbde}) and lives in \\texttt{GenerationConstraint.generation\\_mod3\\_constraint}.",
+      "quote_normalized": "combining with $24 \\mid c_{-}$ yields $24 \\mid 8 n_f$, hence $3 \\mid n_f$. the implication $24 \\mid 8 n_f \\rightarrow 3 \\mid n_f$ was closed by the aristotle automated prover (run id a1dfcbde) and lives in generationconstraint.generation\\_mod3\\_constraint.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GenerationConstraint.generation_mod3_constraint"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Theorem FOUND. Aristotle run-id reference is metadata; no current pipeline check on run-id strings.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "combining with $24 \\mid c_{-}$ yields $24 \\mid 8 n_f$, hence $3 \\mid n_f$. the implication $24 \\mid 8 n_f \\rightarrow 3 \\mid n_f$ was closed by the aristotle automated prover (run id a1dfcbde) and lives in generationconstraint.generation\\_mod3\\_constraint.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:ebd0a32f",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "ebd0a32f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 245,
+      "tex_line_end": 248,
+      "quote": "This is captured at the Lean level in \\texttt{WangBridge.central\\_charge\\_fractional\\_without\\_nu\\_R}.",
+      "quote_normalized": "this is captured at the lean level in wangbridge.central\\_charge\\_fractional\\_without\\_nu\\_r.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WangBridge.central_charge_fractional_without_nu_R"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Theorem FOUND.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "this is captured at the lean level in wangbridge.central\\_charge\\_fractional\\_without\\_nu\\_r.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:7f9f0f6b",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "7f9f0f6b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 264,
+      "tex_line_end": 269,
+      "quote": "On the Rokhlin side, the signature of a closed spin 4-manifold is divisible by 16~\\cite{Rokhlin1952}; the algebraic-Rokhlin Lean module establishes the corresponding $8 \\mid \\sigma$ refinement via the unimodular intersection form of $E_8$, with \\texttt{E8Lattice.sigma\\_E8\\_eq\\_8} discharged by \\texttt{native\\_decide}.",
+      "quote_normalized": "on the rokhlin side, the signature of a closed spin 4-manifold is divisible by 16~; the algebraic-rokhlin lean module establishes the corresponding $8 \\mid \\sigma$ refinement via the unimodular intersection form of $e_8$, with e8lattice.sigma\\_e8\\_eq\\_8 discharged by native\\_decide.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "E8Lattice.sigma_E8_eq_8"
+          },
+          {
+            "kind": "citation",
+            "target": "Rokhlin1952"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class: theorem name 'E8Lattice.sigma_E8_eq_8' is MISSING from lean_deps.json. The E8Lattice module exists (19 decls; e.g. e8_det_is_unit, e8_det_one) but no decl with name 'sigma_E8_eq_8' or any name containing 'sigma_E8'. Possible drift after a Lean refactor; the symbol or its module home appears to have been renamed/removed.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "on the rokhlin side, the signature of a closed spin 4-manifold is divisible by 16~; the algebraic-rokhlin lean module establishes the corresponding $8 \\mid \\sigma$ refinement via the unimodular intersection form of $e_8$, with e8lattice.sigma\\_e8\\_eq\\_8 discharged by native\\_decide.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:9d14f0d6",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "9d14f0d6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 271,
+      "tex_line_end": 281,
+      "quote": "The full chain is encoded in \\texttt{RokhlinBridge.sixteen\\_convergence\\_full}. Crucially, the combination of $\\mathbb{Z}_{16}$ + modular constraints with no $\\nu_R$ forces $N_f \\in {\\rm lcm}(16, 3) \\cdot \\mathbb{Z} = 48 \\mathbb{Z}$, a result encoded in \\texttt{RokhlinBridge.constraints\\_without\\_nu\\_R}: the observed $N_f = 3$ is therefore not merely consistent with the modular constraint; under no-$\\nu_R$ it is incompatible with it. The joint argument is strictly stronger than either piece in isolation, as established in \\texttt{RokhlinBridge.rokhlin\\_strictly\\_stronger}.",
+      "quote_normalized": "the full chain is encoded in rokhlinbridge.sixteen\\_convergence\\_full. crucially, the combination of $\\mathbb{z}_{16}$ + modular constraints with no $\\nu_r$ forces $n_f \\in {\\rm lcm}(16, 3) \\cdot \\mathbb{z} = 48 \\mathbb{z}$, a result encoded in rokhlinbridge.constraints\\_without\\_nu\\_r: the observed $n_f = 3$ is therefore not merely consistent with the modular constraint; under no-$\\nu_r$ it is incompatible with it. the joint argument is strictly stronger than either piece in isolation, as established in rokhlinbridge.rokhlin\\_strictly\\_stronger.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "HD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "RokhlinBridge.sixteen_convergence_full"
+          },
+          {
+            "kind": "theorem",
+            "target": "RokhlinBridge.constraints_without_nu_R"
+          },
+          {
+            "kind": "theorem",
+            "target": "RokhlinBridge.rokhlin_strictly_stronger"
+          },
+          {
+            "kind": "hypothesis",
+            "target": "rokhlin_sigma_mod_16"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "All 3 theorem names FOUND. HD: tracked hypothesis 'rokhlin_sigma_mod_16' is a dependent_theorem of sixteen_convergence_full per HYPOTHESIS_REGISTRY but is not name-disclosed in paper text (Rokhlin's theorem is mentioned conceptually, but the tracked-Prop name is absent).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the full chain is encoded in rokhlinbridge.sixteen\\_convergence\\_full. crucially, the combination of $\\mathbb{z}_{16}$ + modular constraints with no $\\nu_r$ forces $n_f \\in {\\rm lcm}(16, 3) \\cdot \\mathbb{z} = 48 \\mathbb{z}$, a result encoded in rokhlinbridge.constraints\\_without\\_nu\\_r: the observed $n_f = 3$ is therefore not merely consistent with the modular constraint; under no-$\\nu_r$ it is incompatible with it. the joint argument is strictly stronger than either piece in isolation, as established in rokhlinbridge.rokhlin\\_strictly\\_stronger.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:aba3ffcb",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "aba3ffcb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 296,
+      "tex_line_end": 300,
+      "quote": "The dimensions of the relevant Ext groups are $\\dim_{\\mathbb{F}_2} \\mathrm{Ext}^n_{A(1)}(\\mathbb{F}_2,\\mathbb{F}_2) = 1, 2, 2, 2, 3, 4$ for $n = 0,\\dots,5$.",
+      "quote_normalized": "the dimensions of the relevant ext groups are $\\dim_{\\mathbb{f}_2} ext^n_{a(1)}(\\mathbb{f}_2,\\mathbb{f}_2) = 1, 2, 2, 2, 3, 4$ for $n = 0,\\dots,5$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "A1Ext (module exists)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Sequence 1,2,2,2,3,4 reflects standard Ext^n_{A(1)}(F2,F2) values. A1Ext module has 14 decls. Cross-bundle: must agree with L2 (verified GREEN per memory).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the dimensions of the relevant ext groups are $\\dim_{\\mathbb{f}_2} ext^n_{a(1)}(\\mathbb{f}_2,\\mathbb{f}_2) = 1, 2, 2, 2, 3, 4$ for $n = 0,\\dots,5$.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:29bb4d63",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "29bb4d63",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 314,
+      "tex_line_end": 320,
+      "quote": "The construction is, to our knowledge, the first machine-checked $\\mathrm{Ext}^n$ computation over any Steenrod subalgebra in any proof assistant.",
+      "quote_normalized": "the construction is, to our knowledge, the first machine-checked $ext^n$ computation over any steenrod subalgebra in any proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "First-claim. Bundle prompts \u00a7D2 calls for qi-firstclaimverification spot-check. Cross-bundle: L2 makes same first-claim (closed at GREEN).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the construction is, to our knowledge, the first machine-checked $ext^n$ computation over any steenrod subalgebra in any proof assistant.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:modular-generation:656b0d90",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "modular-generation",
+        "quote_hash": "656b0d90",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "modular",
+      "section_ordinal": 0,
+      "tex_line_start": 321,
+      "tex_line_end": 333,
+      "quote": "We have proved this adjunction at the Lean level: $\\mathrm{Hom}_A\\bigl(A \\otimes_{A(1)} M, N\\bigr) \\cong \\mathrm{Hom}_{A(1)}(M, N)$ in \\texttt{ChangeOfRings.hom\\_tensor\\_adjunction}.",
+      "quote_normalized": "we have proved this adjunction at the lean level: $hom_a\\bigl(a \\otimes_{a(1)} m, n\\bigr) \\cong hom_{a(1)}(m, n)$ in changeofrings.hom\\_tensor\\_adjunction.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChangeOfRings.hom_tensor_adjunction"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class: theorem name 'hom_tensor_adjunction' MISSING from lean_deps.json. ChangeOfRings module exists (5 decls). Closest match: 'hom_tensor_adjunction_dim' (in ChangeOfRings) \u2014 the trailing '_dim' suffix suggests the formal isomorphism has been weakened to a dimension-equality lemma. This is exactly the Class TN drift pattern (Phase 5z Wave 1 type rename after paper draft authored).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we have proved this adjunction at the lean level: $hom_a\\bigl(a \\otimes_{a(1)} m, n\\bigr) \\cong hom_{a(1)}(m, n)$ in changeofrings.hom\\_tensor\\_adjunction.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:z16-drinfeld:69362a09",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "z16-drinfeld",
+        "quote_hash": "69362a09",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16",
+      "section_ordinal": 0,
+      "tex_line_start": 365,
+      "tex_line_end": 373,
+      "quote": "A direct check on each of the six SM fermion species with the $\\nu_R$-completed convention gives $X[Q_L] = X[u_R] = X[d_R] = X[L_L] = X[e_R] = X[\\nu_R] \\equiv 1 \\pmod 4$, i.e., every Weyl component carries odd Z$_4$ charge. This is encoded exhaustively in \\texttt{SMFermionData} (48 theorems total).",
+      "quote_normalized": "a direct check on each of the six sm fermion species with the $\\nu_r$-completed convention gives $x[q_l] = x[u_r] = x[d_r] = x[l_l] = x[e_r] = x[\\nu_r] \\equiv 1 \\pmod 4$, i.e., every weyl component carries odd z$_4$ charge. this is encoded exhaustively in smfermiondata (48 theorems total).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SMFermionData (module exists)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "IA: paper claims 'SMFermionData (48 theorems)' but lean_deps.json shows the SMFermionData module has 74 decls (kind=theorem count is approximate; module exists). The 48 figure may be substantive theorems only excluding helpers \u2014 but the prose-vs-pipeline cardinality drift warrants a flag. Cross-check via grep on actual file recommended.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "a direct check on each of the six sm fermion species with the $\\nu_r$-completed convention gives $x[q_l] = x[u_r] = x[d_r] = x[l_l] = x[e_r] = x[\\nu_r] \\equiv 1 \\pmod 4$, i.e., every weyl component carries odd z$_4$ charge. this is encoded exhaustively in smfermiondata (48 theorems total).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:z16-drinfeld:4f4109f6",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "z16-drinfeld",
+        "quote_hash": "4f4109f6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16",
+      "section_ordinal": 0,
+      "tex_line_start": 374,
+      "tex_line_end": 380,
+      "quote": "Per generation, the anomaly contribution is the sum of the squared Z$_4$ charges weighted by the multiplicity in the generator basis: $\\sum_f n_f X_f^2 \\equiv 6 + 3 + 3 + 2 + 1 + 1 = 16 \\equiv 0 \\pmod{16}$.",
+      "quote_normalized": "per generation, the anomaly contribution is the sum of the squared z$_4$ charges weighted by the multiplicity in the generator basis: $\\sum_f n_f x_f^2 \\equiv 6 + 3 + 3 + 2 + 1 + 1 = 16 \\equiv 0 \\pmod{16}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Arithmetic 6+3+3+2+1+1=16 verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "per generation, the anomaly contribution is the sum of the squared z$_4$ charges weighted by the multiplicity in the generator basis: $\\sum_f n_f x_f^2 \\equiv 6 + 3 + 3 + 2 + 1 + 1 = 16 \\equiv 0 \\pmod{16}$.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:z16-drinfeld:57ae4441",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "z16-drinfeld",
+        "quote_hash": "57ae4441",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16",
+      "section_ordinal": 0,
+      "tex_line_start": 384,
+      "tex_line_end": 395,
+      "quote": "Composing across $N_f = 3$ generations without $\\nu_R$ gives $3 \\times 15 = 45 \\equiv -3 \\pmod{16}$. A single chiral hidden sector with Z$_4$ charge totalling $+3 \\bmod 16$ would saturate the anomaly. This is the formal statement at the heart of \\texttt{Z16AnomalyComputation.hidden\\_sector\\_required}: any internally consistent SM extension that omits $\\nu_R$ requires either (a) BSM Z$_{16}$-charged matter or (b) a non-trivial gravitational-anomaly cancellation route. The proof contains 23 substantive theorems, no axioms, no \\texttt{sorry}.",
+      "quote_normalized": "composing across $n_f = 3$ generations without $\\nu_r$ gives $3 \\times 15 = 45 \\equiv -3 \\pmod{16}$. a single chiral hidden sector with z$_4$ charge totalling $+3 \\bmod 16$ would saturate the anomaly. this is the formal statement at the heart of z16anomalycomputation.hidden\\_sector\\_required: any internally consistent sm extension that omits $\\nu_r$ requires either (a) bsm z$_{16}$-charged matter or (b) a non-trivial gravitational-anomaly cancellation route. the proof contains 23 substantive theorems, no axioms, no sorry.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Z16AnomalyComputation.hidden_sector_required"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Theorem hidden_sector_required FOUND. Module Z16AnomalyComputation has 23 decls \u2014 paper claim '23 substantive theorems' matches.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "composing across $n_f = 3$ generations without $\\nu_r$ gives $3 \\times 15 = 45 \\equiv -3 \\pmod{16}$. a single chiral hidden sector with z$_4$ charge totalling $+3 \\bmod 16$ would saturate the anomaly. this is the formal statement at the heart of z16anomalycomputation.hidden\\_sector\\_required: any internally consistent sm extension that omits $\\nu_r$ requires either (a) bsm z$_{16}$-charged matter or (b) a non-trivial gravitational-anomaly cancellation route. the proof contains 23 substantive theorems, no axioms, no sorry.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:z16-drinfeld:6143b538",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "z16-drinfeld",
+        "quote_hash": "6143b538",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16",
+      "section_ordinal": 0,
+      "tex_line_start": 412,
+      "tex_line_end": 419,
+      "quote": "The Lean module \\texttt{Z16Classification.dai\\_freed\\_spin\\_z4} asserts $\\Omega_5^{{\\rm Spin}^{\\mathbb{Z}_4}} \\cong \\mathbb{Z}_{16}$ as a placeholder pending Mathlib's cobordism infrastructure.",
+      "quote_normalized": "the lean module z16classification.dai\\_freed\\_spin\\_z4 asserts $\\omega_5^{{\\rm spin}^{\\mathbb{z}_4}} \\cong \\mathbb{z}_{16}$ as a placeholder pending mathlib's cobordism infrastructure.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Z16Classification.dai_freed_spin_z4"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class FAIL: paper places dai_freed_spin_z4 in module Z16Classification, but lean_deps.json puts it in module SKEFTHawking.Z16AnomalyComputation. The bare name exists; the qualified-name 'Z16Classification.dai_freed_spin_z4' does NOT resolve. Module-membership drift.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the lean module z16classification.dai\\_freed\\_spin\\_z4 asserts $\\omega_5^{{\\rm spin}^{\\mathbb{z}_4}} \\cong \\mathbb{z}_{16}$ as a placeholder pending mathlib's cobordism infrastructure.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:z16-drinfeld:d2ebcd4a",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "z16-drinfeld",
+        "quote_hash": "d2ebcd4a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16",
+      "section_ordinal": 0,
+      "tex_line_start": 425,
+      "tex_line_end": 437,
+      "quote": "This is verified at the Lean level via \\texttt{VecGMonoidal} (eleven theorems establishing the monoidal $\\mathrm{Vec}_G$ instance for finite abelian $G$), \\texttt{ToricCodeCenter.braiding\\_em\\_is\\_minus\\_one} (52 theorems total establishing the braiding structure), and the centre equivalence \\texttt{CenterEquivalenceZ2} (30 theorems).",
+      "quote_normalized": "this is verified at the lean level via vecgmonoidal (eleven theorems establishing the monoidal $vec_g$ instance for finite abelian $g$), toriccodecenter.braiding\\_em\\_is\\_minus\\_one (52 theorems total establishing the braiding structure), and the centre equivalence centerequivalencez2 (30 theorems).",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ToricCodeCenter.braiding_em_is_minus_one"
+          },
+          {
+            "kind": "theorem",
+            "target": "VecGMonoidal (module exists)"
+          },
+          {
+            "kind": "theorem",
+            "target": "CenterEquivalenceZ2 (module exists)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "ToricCodeCenter.braiding_em_is_minus_one FOUND. IA cardinality drift: paper says VecGMonoidal=11, ToricCodeCenter=52, CenterEquivalenceZ2=30. lean_deps shows: VecGMonoidal=18 decls, ToricCodeCenter=78, CenterEquivalenceZ2=58. Counts in lean_deps include all decls (theorems+defs+structures); paper figures may be substantive theorems only. Worth a precision pass for prose-pipeline alignment.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "this is verified at the lean level via vecgmonoidal (eleven theorems establishing the monoidal $vec_g$ instance for finite abelian $g$), toriccodecenter.braiding\\_em\\_is\\_minus\\_one (52 theorems total establishing the braiding structure), and the centre equivalence centerequivalencez2 (30 theorems).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:z16-drinfeld:9aa0d8b4",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "z16-drinfeld",
+        "quote_hash": "9aa0d8b4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "z16",
+      "section_ordinal": 0,
+      "tex_line_start": 438,
+      "tex_line_end": 445,
+      "quote": "The full generalisation to non-abelian $Z(\\mathrm{Vec}_{S_3})$ and to the Drinfeld doubles $D(G)$ for arbitrary finite $G$ is deferred to a companion paper~\\cite{Roehm2026D4} on topological quantum computation foundations.",
+      "quote_normalized": "the full generalisation to non-abelian $z(vec_{s_3})$ and to the drinfeld doubles $d(g)$ for arbitrary finite $g$ is deferred to a companion paper~ on topological quantum computation foundations.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Roehm2026D4"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Class CI: Roehm2026D4 self-cite MISSING from CITATION_REGISTRY (in-prep). Cross-bundle bridge: D2 \u00a73 \u2194 D4 \u00a74 must agree on the Drinfeld center construction (per bundle prompts \u00a7D2). D4 not yet drafted, so cross-check deferred.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the full generalisation to non-abelian $z(vec_{s_3})$ and to the drinfeld doubles $d(g)$ for arbitrary finite $g$ is deferred to a companion paper~ on topological quantum computation foundations.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:252a8413",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "252a8413",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 481,
+      "tex_line_end": 503,
+      "quote": "Our formalisation of these nine conditions in \\texttt{GoltermanShamir} (14 theorems) and \\texttt{LatticeHamiltonian} (28 theorems) encodes seven of them as substantive Lean propositions: the Brillouin zone via Mathlib's \\texttt{AddCircle}; the fermionic Fock space via the exterior-algebra-finite-dimensionality theorem \\texttt{LatticeHamiltonian.fock\\_space\\_finite\\_dim} (closed by Aristotle, run \\texttt{run\\_20260328\\_170451}, graded-decomposition strategy); and the spectral gap and matrix exponential via standard Mathlib infrastructure.",
+      "quote_normalized": "our formalisation of these nine conditions in goltermanshamir (14 theorems) and latticehamiltonian (28 theorems) encodes seven of them as substantive lean propositions: the brillouin zone via mathlib's addcircle; the fermionic fock space via the exterior-algebra-finite-dimensionality theorem latticehamiltonian.fock\\_space\\_finite\\_dim (closed by aristotle, run run\\_20260328\\_170451, graded-decomposition strategy); and the spectral gap and matrix exponential via standard mathlib infrastructure.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN",
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian.fock_space_finite_dim"
+          },
+          {
+            "kind": "theorem",
+            "target": "GoltermanShamir (module, 154 decls)"
+          },
+          {
+            "kind": "theorem",
+            "target": "LatticeHamiltonian (module, 149 decls)"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class FAIL: 'LatticeHamiltonian.fock_space_finite_dim' is MISSING from lean_deps.json \u2014 no decl name contains 'fock_space' anywhere. Paper claims this is closed by Aristotle. IA-class WARN: paper says GoltermanShamir=14 thms, LatticeHamiltonian=28 thms; lean_deps shows 154 and 149 decls respectively (factor-10 mismatch \u2014 likely paper meant substantive theorems only).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "our formalisation of these nine conditions in goltermanshamir (14 theorems) and latticehamiltonian (28 theorems) encodes seven of them as substantive lean propositions: the brillouin zone via mathlib's addcircle; the fermionic fock space via the exterior-algebra-finite-dimensionality theorem latticehamiltonian.fock\\_space\\_finite\\_dim (closed by aristotle, run run\\_20260328\\_170451, graded-decomposition strategy); and the spectral gap and matrix exponential via standard mathlib infrastructure.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:090979dd",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "090979dd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 502,
+      "tex_line_end": 504,
+      "quote": "Two conditions (C4 --- interpolating-fields completeness; C5 --- spontaneous symmetry breaking) enter as well-typed but non-proven physics conjectures (axioms in our Lean library, not theorems).",
+      "quote_normalized": "two conditions (c4 --- interpolating-fields completeness; c5 --- spontaneous symmetry breaking) enter as well-typed but non-proven physics conjectures (axioms in our lean library, not theorems).",
+      "type": "formal-claim",
+      "finding_classes": [
+        "HD"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "HD-class WARN: paper states C4/C5 are 'axioms in our Lean library' but Lean source GoltermanShamir.lean encodes C4_complete and C5_no_ssb as **structures** with `Prop`-typed fields (`fields_complete : Prop`, `ground_state_invariant : Prop`), not as `axiom` declarations. Live Lean axiom count remains 1 (gapped_interface_axiom). The paper's terminology is loose \u2014 these are tracked Props inside structures, not axioms. Recommend rewording.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "two conditions (c4 --- interpolating-fields completeness; c5 --- spontaneous symmetry breaking) enter as well-typed but non-proven physics conjectures (axioms in our lean library, not theorems).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:f3e20afb",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "f3e20afb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 505,
+      "tex_line_end": 517,
+      "quote": "The Two-Particle Family (TPF) construction~\\cite{TPF2026} evades the GS no-go by violating five of the nine conditions explicitly: C1 via the discontinuity of \\texttt{round} at $1/2$ (the round-to-integer map is not continuous, formalised in \\texttt{TPFEvasion.round\\_not\\_continuous\\_at\\_half}); C2 via the bosonic-rotor ladder structure; I3 via the infinite-dimensionality of $\\ell^2(\\mathbb{Z})$ (\\texttt{TPFEvasion.rotor\\_hilbert\\_not\\_finite\\_dim}, closed by Aristotle); the extra-dimensional 4+1D SPT slab; and C3 conditionally.",
+      "quote_normalized": "the two-particle family (tpf) construction~ evades the gs no-go by violating five of the nine conditions explicitly: c1 via the discontinuity of round at $1/2$ (the round-to-integer map is not continuous, formalised in tpfevasion.round\\_not\\_continuous\\_at\\_half); c2 via the bosonic-rotor ladder structure; i3 via the infinite-dimensionality of $\\ell^2(\\mathbb{z})$ (tpfevasion.rotor\\_hilbert\\_not\\_finite\\_dim, closed by aristotle); the extra-dimensional 4+1d spt slab; and c3 conditionally.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "TPFEvasion.round_not_continuous_at_half"
+          },
+          {
+            "kind": "theorem",
+            "target": "TPFEvasion.rotor_hilbert_not_finite_dim"
+          },
+          {
+            "kind": "citation",
+            "target": "TPF2026"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class FAIL: paper places `round_not_continuous_at_half` and `rotor_hilbert_not_finite_dim` in module TPFEvasion, but lean_deps.json shows BOTH are in module SKEFTHawking.LatticeHamiltonian (not TPFEvasion). Module-membership drift; the bare names exist. TPF2026 citation resolved.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the two-particle family (tpf) construction~ evades the gs no-go by violating five of the nine conditions explicitly: c1 via the discontinuity of round at $1/2$ (the round-to-integer map is not continuous, formalised in tpfevasion.round\\_not\\_continuous\\_at\\_half); c2 via the bosonic-rotor ladder structure; i3 via the infinite-dimensionality of $\\ell^2(\\mathbb{z})$ (tpfevasion.rotor\\_hilbert\\_not\\_finite\\_dim, closed by aristotle); the extra-dimensional 4+1d spt slab; and c3 conditionally.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:943934de",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "943934de",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 514,
+      "tex_line_end": 517,
+      "quote": "The conjunction of these five evasion theorems is collected in \\texttt{TPFEvasion.tpf\\_outside\\_gs\\_scope\\_main} (12 theorems total in the module).",
+      "quote_normalized": "the conjunction of these five evasion theorems is collected in tpfevasion.tpf\\_outside\\_gs\\_scope\\_main (12 theorems total in the module).",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "TPFEvasion.tpf_outside_gs_scope_main"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Theorem name FOUND. IA: paper says '12 theorems total in the module'; lean_deps shows TPFEvasion module has 15 decls. Likely paper counts substantive theorems excluding helpers/structures. Within tolerance.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the conjunction of these five evasion theorems is collected in tpfevasion.tpf\\_outside\\_gs\\_scope\\_main (12 theorems total in the module).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:903c64cb",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "903c64cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 537,
+      "tex_line_end": 547,
+      "quote": "$h_{\\rm eff}(p) = r W(p) \\mathbf{1}_2 + \\sin(p_3) \\tau_z + (1 - \\cos(p_3)) \\tau_x$, with $W(p) = 2 - \\cos(p_1) - \\cos(p_2)$ the Wilson mass. The Wilson-mass-zero condition is encoded in \\texttt{WilsonMass.M\\_zero\\_iff\\_zero\\_momentum} as $M(k) = 0 \\iff k = (0,0,0)$, with the proof using \\texttt{Real.cos\\_le\\_one} for the cosine bounds.",
+      "quote_normalized": "$h_{\\rm eff}(p) = r w(p) \\mathbf{1}_2 + \\sin(p_3) \\tau_z + (1 - \\cos(p_3)) \\tau_x$, with $w(p) = 2 - \\cos(p_1) - \\cos(p_2)$ the wilson mass. the wilson-mass-zero condition is encoded in wilsonmass.m\\_zero\\_iff\\_zero\\_momentum as $m(k) = 0 \\iff k = (0,0,0)$, with the proof using real.cos\\_le\\_one for the cosine bounds.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "WilsonMass.M_zero_iff_zero_momentum"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class FAIL: 'M_zero_iff_zero_momentum' MISSING from lean_deps.json. WilsonMass module exists (14 decls); the closest match is 'wilson_mass_at_zero' \u2014 likely the theorem was renamed. Class TN drift.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "$h_{\\rm eff}(p) = r w(p) \\mathbf{1}_2 + \\sin(p_3) \\tau_z + (1 - \\cos(p_3)) \\tau_x$, with $w(p) = 2 - \\cos(p_1) - \\cos(p_2)$ the wilson mass. the wilson-mass-zero condition is encoded in wilsonmass.m\\_zero\\_iff\\_zero\\_momentum as $m(k) = 0 \\iff k = (0,0,0)$, with the proof using real.cos\\_le\\_one for the cosine bounds.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:65db453d",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "65db453d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 548,
+      "tex_line_end": 562,
+      "quote": "The central commutation theorem $[H_{\\rm BdG}(p), q_A(p)] = 0$ for all $r$, $p$, where $q_A(p) = \\mathbf{1}_\\sigma \\otimes \\bigl[ (1+\\cos p_3)/2 \\cdot \\tau_z + (\\sin p_3)/2 \\cdot \\tau_x \\bigr]$, holds for all parameter values. ... The closed-form identity is \\texttt{GTCommutation.gt\\_commutation\\_4x4}, supported by 15 theorems of Pauli-matrix infrastructure in \\texttt{PauliMatrices} (reusable elsewhere) and 8 BdG-Hamiltonian theorems in \\texttt{BdGHamiltonian}.",
+      "quote_normalized": "the central commutation theorem $[h_{\\rm bdg}(p), q_a(p)] = 0$ for all $r$, $p$, where $q_a(p) = \\mathbf{1}_\\sigma \\otimes \\bigl[ (1+\\cos p_3)/2 \\cdot \\tau_z + (\\sin p_3)/2 \\cdot \\tau_x \\bigr]$, holds for all parameter values. ... the closed-form identity is gtcommutation.gt\\_commutation\\_4x4, supported by 15 theorems of pauli-matrix infrastructure in paulimatrices (reusable elsewhere) and 8 bdg-hamiltonian theorems in bdghamiltonian.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GTCommutation.gt_commutation_4x4"
+          },
+          {
+            "kind": "theorem",
+            "target": "PauliMatrices (module exists)"
+          },
+          {
+            "kind": "theorem",
+            "target": "BdGHamiltonian (module exists)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "GTCommutation.gt_commutation_4x4 FOUND. IA: paper says PauliMatrices=15 thms, BdGHamiltonian=8 thms; lean_deps shows 25 and 16 respectively. Within ~2\u00d7 tolerance \u2014 likely paper counts substantive theorems only.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the central commutation theorem $[h_{\\rm bdg}(p), q_a(p)] = 0$ for all $r$, $p$, where $q_a(p) = \\mathbf{1}_\\sigma \\otimes \\bigl[ (1+\\cos p_3)/2 \\cdot \\tau_z + (\\sin p_3)/2 \\cdot \\tau_x \\bigr]$, holds for all parameter values. ... the closed-form identity is gtcommutation.gt\\_commutation\\_4x4, supported by 15 theorems of pauli-matrix infrastructure in paulimatrices (reusable elsewhere) and 8 bdg-hamiltonian theorems in bdghamiltonian.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:2433ceec",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "2433ceec",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 580,
+      "tex_line_end": 582,
+      "quote": "To our knowledge the GT formalisation is the first machine-verified construction of a lattice chiral fermion in any proof assistant.",
+      "quote_normalized": "to our knowledge the gt formalisation is the first machine-verified construction of a lattice chiral fermion in any proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "INFO",
+      "delta_pct": null,
+      "agent_notes": "First-claim. qi-firstclaimverification spot-check recommended.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "to our knowledge the gt formalisation is the first machine-verified construction of a lattice chiral fermion in any proof assistant.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:c232a527",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "c232a527",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 593,
+      "tex_line_end": 597,
+      "quote": "We have formalised this isomorphism in \\texttt{OnsagerAlgebra} (24 theorems, the first formalisation of the Onsager algebra in any proof assistant).",
+      "quote_normalized": "we have formalised this isomorphism in onsageralgebra (24 theorems, the first formalisation of the onsager algebra in any proof assistant).",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "OnsagerAlgebra (module exists)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Module OnsagerAlgebra exists; lean_deps shows 84 decls, paper claims 24 theorems. Likely substantive-only count. First-claim assertion (qi-firstclaimverification recommended).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "we have formalised this isomorphism in onsageralgebra (24 theorems, the first formalisation of the onsager algebra in any proof assistant).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:b5482dcd",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "b5482dcd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 605,
+      "tex_line_end": 612,
+      "quote": "The contraction theorem \\texttt{OnsagerContraction.*} (12 theorems; closing identity by Aristotle, run \\texttt{36b7796f}) shows the $\\varepsilon \\to 0$ limit reproduces an emanant $\\mathfrak{su}(2)$ symmetry on the GT Weyl doublet (\\texttt{GTWeylDoublet}, 12 theorems).",
+      "quote_normalized": "the contraction theorem onsagercontraction.* (12 theorems; closing identity by aristotle, run 36b7796f) shows the $\\varepsilon \\to 0$ limit reproduces an emanant $\\mathfrak{su}(2)$ symmetry on the gt weyl doublet (gtweyldoublet, 12 theorems).",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "OnsagerContraction (module)"
+          },
+          {
+            "kind": "theorem",
+            "target": "GTWeylDoublet (module)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Modules exist. lean_deps: OnsagerContraction=24 decls, GTWeylDoublet=19 decls; paper says 12+12. Likely substantive-only counts.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the contraction theorem onsagercontraction.* (12 theorems; closing identity by aristotle, run 36b7796f) shows the $\\varepsilon \\to 0$ limit reproduces an emanant $\\mathfrak{su}(2)$ symmetry on the gt weyl doublet (gtweyldoublet, 12 theorems).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:de65e5b3",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "de65e5b3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 626,
+      "tex_line_end": 636,
+      "quote": "In our Lean library this is the lone axiom \\texttt{gapped\\_interface\\_axiom} (in \\texttt{SPTClassification}; 20 theorems plus the 1 axiom).",
+      "quote_normalized": "in our lean library this is the lone axiom gapped\\_interface\\_axiom (in sptclassification; 20 theorems plus the 1 axiom).",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "IA"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "gapped_interface_axiom"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "gapped_interface_axiom FOUND in SPTClassification (single live axiom verified). IA: paper says 'SPTClassification; 20 theorems plus the 1 axiom' but lean_deps shows SPTClassification has 107 decls. Substantive-theorem-only count likely.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "in our lean library this is the lone axiom gapped\\_interface\\_axiom (in sptclassification; 20 theorems plus the 1 axiom).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:2cc415ed",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "2cc415ed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 644,
+      "tex_line_end": 654,
+      "quote": "The 2+1D case is the Fidkowski-Kitaev (FK) interacting SPT classification in \\texttt{FKGappedInterface} (20 theorems, the first formalisation of the FK gapped-interface result in any proof assistant).",
+      "quote_normalized": "the 2+1d case is the fidkowski-kitaev (fk) interacting spt classification in fkgappedinterface (20 theorems, the first formalisation of the fk gapped-interface result in any proof assistant).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "FKGappedInterface (module, 20 decls)"
+          },
+          {
+            "kind": "citation",
+            "target": "FidkowskiKitaev2010"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "FKGappedInterface module exists with exactly 20 decls \u2014 paper claim matches. FidkowskiKitaev2010 cite resolved (arxiv:0904.2197). NOTE: paper bibitem cites arXiv:1008.4138 but registry says 0904.2197 \u2014 ARXIV DRIFT in bibitem; should be Class TP/CI follow-up.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the 2+1d case is the fidkowski-kitaev (fk) interacting spt classification in fkgappedinterface (20 theorems, the first formalisation of the fk gapped-interface result in any proof assistant).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:chirality-wall:0d91e516",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "chirality-wall",
+        "quote_hash": "0d91e516",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "chirality-wall",
+      "section_ordinal": 0,
+      "tex_line_start": 660,
+      "tex_line_end": 668,
+      "quote": "Pillar 1 $\\leftrightarrow$ Pillar 2 establishes that the GT construction violates exactly the GS conditions identified in Pillar 1 --- neither more nor fewer.",
+      "quote_normalized": "pillar 1 $\\leftrightarrow$ pillar 2 establishes that the gt construction violates exactly the gs conditions identified in pillar 1 --- neither more nor fewer.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChiralityWallMaster (module, 35 decls)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "ChiralityWallMaster module exists with 35 decls \u2014 paper says '16 theorems total'. IA: substantive-theorem-count drift likely.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "pillar 1 $\\leftrightarrow$ pillar 2 establishes that the gt construction violates exactly the gs conditions identified in pillar 1 --- neither more nor fewer.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:outlook:2d68a28f",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "outlook",
+        "quote_hash": "2d68a28f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 0,
+      "tex_line_start": 693,
+      "tex_line_end": 697,
+      "quote": "Across the four threads, $5229$ Lean theorems are machine-verified (\\texttt{lake build} clean), $322$ of them closed by the Aristotle automated prover.",
+      "quote_normalized": "across the four threads, $5229$ lean theorems are machine-verified (lake build clean), $322$ of them closed by the aristotle automated prover.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "parameter",
+            "target": "n_theorems",
+            "computed_value": "5229"
+          },
+          {
+            "kind": "parameter",
+            "target": "ARISTOTLE_THEOREMS",
+            "computed_value": "322"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "Counts repeat abstract; verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "across the four threads, $5229$ lean theorems are machine-verified (lake build clean), $322$ of them closed by the aristotle automated prover.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:outlook:b2d92d16",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "outlook",
+        "quote_hash": "b2d92d16",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 0,
+      "tex_line_start": 720,
+      "tex_line_end": 725,
+      "quote": "A single true axiom: \\texttt{gapped\\_interface\\_axiom} (the 4+1D conjecture in \\texttt{SPTClassification}). This is supported by machine-checked 1+1D evidence (\\texttt{VillainHamiltonian}) and 2+1D evidence (\\texttt{FKGappedInterface}, including the explicit $\\Delta = 2$ spectral gap).",
+      "quote_normalized": "a single true axiom: gapped\\_interface\\_axiom (the 4+1d conjecture in sptclassification). this is supported by machine-checked 1+1d evidence (villainhamiltonian) and 2+1d evidence (fkgappedinterface, including the explicit $\\delta = 2$ spectral gap).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "gapped_interface_axiom"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Single axiom claim verified against AXIOM_METADATA (1 hard axiom, gapped_interface_axiom). 2 other entries (non_abelian_center_discrete, gs_nogo_axiom) are eliminability=removed. Lean source has only 1 live `axiom` declaration.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "a single true axiom: gapped\\_interface\\_axiom (the 4+1d conjecture in sptclassification). this is supported by machine-checked 1+1d evidence (villainhamiltonian) and 2+1d evidence (fkgappedinterface, including the explicit $\\delta = 2$ spectral gap).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:outlook:f742076c",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "outlook",
+        "quote_hash": "f742076c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 0,
+      "tex_line_start": 727,
+      "tex_line_end": 731,
+      "quote": "A single Mathlib-deferral placeholder: \\texttt{Z16Classification.dai\\_freed\\_spin\\_z4} asserts $\\Omega_5^{{\\rm Spin}^{\\mathbb{Z}_4}} \\cong \\mathbb{Z}_{16}$ as a trivially-discharged placeholder pending Mathlib's cobordism infrastructure.",
+      "quote_normalized": "a single mathlib-deferral placeholder: z16classification.dai\\_freed\\_spin\\_z4 asserts $\\omega_5^{{\\rm spin}^{\\mathbb{z}_4}} \\cong \\mathbb{z}_{16}$ as a trivially-discharged placeholder pending mathlib's cobordism infrastructure.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "Z16Classification.dai_freed_spin_z4"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class FAIL (re-statement of intro finding): qualified name 'Z16Classification.dai_freed_spin_z4' does NOT resolve. The bare-name theorem lives in module SKEFTHawking.Z16AnomalyComputation. Two paper sentences (intro line 119, outlook line 727) carry this same drift.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "a single mathlib-deferral placeholder: z16classification.dai\\_freed\\_spin\\_z4 asserts $\\omega_5^{{\\rm spin}^{\\mathbb{z}_4}} \\cong \\mathbb{z}_{16}$ as a trivially-discharged placeholder pending mathlib's cobordism infrastructure.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:outlook:66c953a7",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "outlook",
+        "quote_hash": "66c953a7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 0,
+      "tex_line_start": 733,
+      "tex_line_end": 737,
+      "quote": "Two well-typed physics conjectures encoded as axioms (not theorems): GS condition C4 (interpolating-fields completeness) and C5 (spontaneous symmetry breaking).",
+      "quote_normalized": "two well-typed physics conjectures encoded as axioms (not theorems): gs condition c4 (interpolating-fields completeness) and c5 (spontaneous symmetry breaking).",
+      "type": "formal-claim",
+      "finding_classes": [
+        "HD"
+      ],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "HD-class re-statement: C4/C5 are encoded as Lean **structures** with `Prop` fields, not as `axiom` declarations. Calling them 'axioms' is loose usage. Recommend rewording to 'tracked Prop conditions' or 'structurally-axiomatized fields'.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "two well-typed physics conjectures encoded as axioms (not theorems): gs condition c4 (interpolating-fields completeness) and c5 (spontaneous symmetry breaking).",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:outlook:fcfa492c",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "outlook",
+        "quote_hash": "fcfa492c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 0,
+      "tex_line_start": 743,
+      "tex_line_end": 754,
+      "quote": "Three textbook results in algebraic topology enter as tracked hypotheses: H1 ko-cohomology computation, H3 Adams spectral sequence convergence, H4 Anderson-Brown-Peterson splitting.",
+      "quote_normalized": "three textbook results in algebraic topology enter as tracked hypotheses: h1 ko-cohomology computation, h3 adams spectral sequence convergence, h4 anderson-brown-peterson splitting.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "HD"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "hypothesis",
+            "target": "(H1, H3, H4 \u2014 disclosed by paper text)"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "HD: paper does explicitly disclose H1/H3/H4 textually. However HYPOTHESIS_REGISTRY has 5 active tracked Props (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8) that the paper invokes via dependent_theorems but does NOT name-disclose. The 3-hypothesis count understates the disclosable surface. Recommend adding a 'tracked Lean hypotheses' subsection citing each by name.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "three textbook results in algebraic topology enter as tracked hypotheses: h1 ko-cohomology computation, h3 adams spectral sequence convergence, h4 anderson-brown-peterson splitting.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:outlook:f478887b",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "outlook",
+        "quote_hash": "f478887b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 0,
+      "tex_line_start": 756,
+      "tex_line_end": 759,
+      "quote": "H2 --- Hom-tensor change-of-rings adjunction --- is no longer tracked: it has been discharged in \\texttt{ChangeOfRings.hom\\_tensor\\_adjunction}.",
+      "quote_normalized": "h2 --- hom-tensor change-of-rings adjunction --- is no longer tracked: it has been discharged in changeofrings.hom\\_tensor\\_adjunction.",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ChangeOfRings.hom_tensor_adjunction"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "TN-class FAIL re-statement: 'ChangeOfRings.hom_tensor_adjunction' MISSING from lean_deps. The closest match is 'hom_tensor_adjunction_dim' (dim-equality, not full iso). The H2-discharged claim therefore rests on a strictly weaker theorem than its stated form.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "h2 --- hom-tensor change-of-rings adjunction --- is no longer tracked: it has been discharged in changeofrings.hom\\_tensor\\_adjunction.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:outlook:482e00cb",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "outlook",
+        "quote_hash": "482e00cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 0,
+      "tex_line_start": 776,
+      "tex_line_end": 786,
+      "quote": "This paper makes three falsifiable predictions: (i) any internally consistent SM extension violating $N_f \\equiv 0 \\pmod 3$ falsifies Wang's modular hypothesis as currently stated; (ii) any 4+1D construction admitting a gapped boundary violating SPT-stacking trivialisation falsifies the project's sole axiom; (iii) any lattice chiral fermion construction with chirality-charge spectrum bounded inside $\\{-1, +1\\}$ on finite-dimensional Hilbert space falsifies the chirality-wall pillar-1$\\leftrightarrow$pillar-2 bridge.",
+      "quote_normalized": "this paper makes three falsifiable predictions: (i) any internally consistent sm extension violating $n_f \\equiv 0 \\pmod 3$ falsifies wang's modular hypothesis as currently stated; (ii) any 4+1d construction admitting a gapped boundary violating spt-stacking trivialisation falsifies the project's sole axiom; (iii) any lattice chiral fermion construction with chirality-charge spectrum bounded inside $\\{-1, +1\\}$ on finite-dimensional hilbert space falsifies the chirality-wall pillar-1$\\leftrightarrow$pillar-2 bridge.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Three concrete falsifiers \u2014 each tied to a distinct mechanism. Sound discipline-checklist behaviour.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate7_NarrativeFidelity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "this paper makes three falsifiable predictions: (i) any internally consistent sm extension violating $n_f \\equiv 0 \\pmod 3$ falsifies wang's modular hypothesis as currently stated; (ii) any 4+1d construction admitting a gapped boundary violating spt-stacking trivialisation falsifies the project's sole axiom; (iii) any lattice chiral fermion construction with chirality-charge spectrum bounded inside $\\{-1, +1\\}$ on finite-dimensional hilbert space falsifies the chirality-wall pillar-1$\\leftrightarrow$pillar-2 bridge.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:outlook:6853fdc5",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "outlook",
+        "quote_hash": "6853fdc5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "outlook",
+      "section_ordinal": 0,
+      "tex_line_start": 805,
+      "tex_line_end": 813,
+      "quote": "The $Z(\\mathrm{Vec}_{S_3})$ Drinfeld centre and the full Hopf-algebra structure are developed in~\\cite{Roehm2026D4}. The PRL splash extracted from \\S\\ref{sec:modular} is~\\cite{Roehm2026Wave10}. The Lean library itself is described in~\\cite{Roehm2026I2}, and the verification methodology is given in~\\cite{Roehm2026I1}.",
+      "quote_normalized": "the $z(vec_{s_3})$ drinfeld centre and the full hopf-algebra structure are developed in~. the prl splash extracted from \\s is~. the lean library itself is described in~, and the verification methodology is given in~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Roehm2026D4"
+          },
+          {
+            "kind": "citation",
+            "target": "Roehm2026Wave10"
+          },
+          {
+            "kind": "citation",
+            "target": "Roehm2026I1"
+          },
+          {
+            "kind": "citation",
+            "target": "Roehm2026I2"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class CI FAIL: ALL FOUR self-cite bibkeys (Roehm2026D4, Roehm2026Wave10, Roehm2026I1, Roehm2026I2) MISSING from CITATION_REGISTRY. Other Roehm2026* keys ARE in registry (Wave1/4/5/6f/6g/Pipeline/LinearizedEFE), so this is an unregistered gap. Stage-13 citation_integrity check would BLOCKER. Add stub entries to citations.py with inprep=True.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the $z(vec_{s_3})$ drinfeld centre and the full hopf-algebra structure are developed in~. the prl splash extracted from \\s is~. the lean library itself is described in~, and the verification methodology is given in~.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:bibliography:8cd5f200",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "bibliography",
+        "quote_hash": "8cd5f200",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "biblio",
+      "section_ordinal": 0,
+      "tex_line_start": 840,
+      "tex_line_end": 846,
+      "quote": "GioiaThorngrenPRL2026 bibitem placeholder pending arXiv ID.",
+      "quote_normalized": "gioiathorngrenprl2026 bibitem placeholder pending arxiv id.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GioiaThorngrenPRL2026"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Class CI WARN: GioiaThorngrenPRL2026 has arxiv=None in CITATION_REGISTRY (PLACEHOLDER PENDING). Per task brief: 'do not BLOCKER unless cited as load-bearing'. The cite is referenced once in \u00a71 intro line 94 alongside Golterman-Shamir and TPF \u2014 load-bearing for Pillar 2 attribution, but not numerically load-bearing. Comment in TeX (lines 966-970) explicitly flags the placeholder. WARN advisory.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "gioiathorngrenprl2026 bibitem placeholder pending arxiv id.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:bibliography:00beb1b1",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "bibliography",
+        "quote_hash": "00beb1b1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "biblio",
+      "section_ordinal": 0,
+      "tex_line_start": 853,
+      "tex_line_end": 856,
+      "quote": "DaiFreed1994 bibitem.",
+      "quote_normalized": "daifreed1994 bibitem.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "DaiFreed1994"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "delta_pct": null,
+      "agent_notes": "Class CI FAIL: DaiFreed1994 is MISSING entirely from CITATION_REGISTRY (registry has only 'DaiStojkovic2017' as Dai*-key). Yet GarciaEtxebarria2019 entry's notes-field also references Dai-Freed. Add stub entry for DaiFreed1994 (J.Math.Phys. 35, 5155 (1994)) to citations.py; arXiv may not exist (1994 paper).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "daifreed1994 bibitem.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:bibliography:cce75389",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "bibliography",
+        "quote_hash": "cce75389",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "biblio",
+      "section_ordinal": 0,
+      "tex_line_start": 869,
+      "tex_line_end": 871,
+      "quote": "FidkowskiKitaev2010 bibitem cites arXiv:1008.4138 but registry has 0904.2197.",
+      "quote_normalized": "fidkowskikitaev2010 bibitem cites arxiv:1008.4138 but registry has 0904.2197.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "FidkowskiKitaev2010"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Class CI WARN: paper bibitem says 'arXiv:1008.4138' but CITATION_REGISTRY['FidkowskiKitaev2010'].arxiv = '0904.2197'. arXiv-ID drift between paper text and registry. 1008.4138 \u2192 arXiv 'Topological phases of fermions in one dimension' Fidkowski-Kitaev (2011 PRB 83, 075103); 0904.2197 \u2192 'Effects of interactions on the topological classification of free fermion systems' (2010 PRB 81, 134509). These are TWO DIFFERENT FK PAPERS. Paper bibitem cites the 2011 1D-classification paper (matches the cited 'PRB 83, 075103' coords); registry stub has the 2010 interaction-reduction paper. Either rebind registry to 1008.4138 or add a second entry.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "fidkowskikitaev2010 bibitem cites arxiv:1008.4138 but registry has 0904.2197.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": null,
+        "lift_action": "lift_as_is"
+      }
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 55,
+    "by_type": {
+      "metaclaim": 7,
+      "formal-claim": 12,
+      "numeric": 7,
+      "qualitative": 3,
+      "theorem-ref": 21,
+      "citation": 5
+    },
+    "by_verdict": {
+      "TRANSITION": 1,
+      "PASS": 23,
+      "WARN": 16,
+      "INFO": 4,
+      "FAIL": 11
+    },
+    "by_finding_class": {
+      "IA": 8,
+      "TP": 0,
+      "SD": 0,
+      "TN": 9,
+      "HD": 5
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "D2 Stage-10 round-1 review | 55 sentences | 23 PASS | 16 WARN | 11 FAIL | 4 INFO | 1 TRANSITION | verdict=red | blockers=11 | advisories=16"
+  },
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "TN-class drift on dai_freed_spin_z4: registered in module SKEFTHawking.Z16AnomalyComputation, NOT in Z16Classification (where paper \u00a73.3 places it via 'Z16Classification.dai_freed_spin_z4'). The bare ",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:introduction:cd1dcaf1"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:2",
+      "summary": "TN-class: theorem name 'E8Lattice.sigma_E8_eq_8' is MISSING from lean_deps.json. The E8Lattice module exists (19 decls; e.g. e8_det_is_unit, e8_det_one) but no decl with name 'sigma_E8_eq_8' or any na",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:modular-generation:7f9f0f6b"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:3",
+      "summary": "TN-class: theorem name 'hom_tensor_adjunction' MISSING from lean_deps.json. ChangeOfRings module exists (5 decls). Closest match: 'hom_tensor_adjunction_dim' (in ChangeOfRings) \u2014 the trailing '_dim' s",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:modular-generation:656b0d90"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:4",
+      "summary": "TN-class FAIL: paper places dai_freed_spin_z4 in module Z16Classification, but lean_deps.json puts it in module SKEFTHawking.Z16AnomalyComputation. The bare name exists; the qualified-name 'Z16Classif",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:z16-drinfeld:6143b538"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:5",
+      "summary": "TN-class FAIL: 'LatticeHamiltonian.fock_space_finite_dim' is MISSING from lean_deps.json \u2014 no decl name contains 'fock_space' anywhere. Paper claims this is closed by Aristotle. IA-class WARN: paper s",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:252a8413"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:6",
+      "summary": "TN-class FAIL: paper places `round_not_continuous_at_half` and `rotor_hilbert_not_finite_dim` in module TPFEvasion, but lean_deps.json shows BOTH are in module SKEFTHawking.LatticeHamiltonian (not TPF",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:f3e20afb"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:7",
+      "summary": "TN-class FAIL: 'M_zero_iff_zero_momentum' MISSING from lean_deps.json. WilsonMass module exists (14 decls); the closest match is 'wilson_mass_at_zero' \u2014 likely the theorem was renamed. Class TN drift.",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:903c64cb"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:8",
+      "summary": "TN-class FAIL (re-statement of intro finding): qualified name 'Z16Classification.dai_freed_spin_z4' does NOT resolve. The bare-name theorem lives in module SKEFTHawking.Z16AnomalyComputation. Two pape",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:outlook:f742076c"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:9",
+      "summary": "TN-class FAIL re-statement: 'ChangeOfRings.hom_tensor_adjunction' MISSING from lean_deps. The closest match is 'hom_tensor_adjunction_dim' (dim-equality, not full iso). The H2-discharged claim therefo",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:outlook:f478887b"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:10",
+      "summary": "Class CI FAIL: ALL FOUR self-cite bibkeys (Roehm2026D4, Roehm2026Wave10, Roehm2026I1, Roehm2026I2) MISSING from CITATION_REGISTRY. Other Roehm2026* keys ARE in registry (Wave1/4/5/6f/6g/Pipeline/Linea",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:outlook:6853fdc5"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "?",
+      "severity": "blocker"
+    },
+    {
+      "id": "block:11",
+      "summary": "Class CI FAIL: DaiFreed1994 is MISSING entirely from CITATION_REGISTRY (registry has only 'DaiStojkovic2017' as Dai*-key). Yet GarciaEtxebarria2019 entry's notes-field also references Dai-Freed. Add s",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:bibliography:00beb1b1"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "?",
+      "severity": "blocker"
+    }
+  ],
+  "non_blocking_followups": [
+    {
+      "id": "adv:1",
+      "summary": "HD: paper discloses 3 textbook hypotheses (H1, H3, H4 in \u00a76.3). However HYPOTHESIS_REGISTRY contains 5 active tracked hypotheses (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, ",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:abstract:4c636803"
+      ],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "HD",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:2",
+      "summary": "Both theorem names FOUND. Citation Roehm2026Wave10 is MISSING from CITATION_REGISTRY (in-prep self-cite; CitationIntegrity flag \u2014 Class CI). Other in-prep self-cites Roehm2026Wave1/4/5/6f/6g/Pipeline ",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:modular-generation:2d9ad2e5"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "?",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:3",
+      "summary": "All 3 theorem names FOUND. HD: tracked hypothesis 'rokhlin_sigma_mod_16' is a dependent_theorem of sixteen_convergence_full per HYPOTHESIS_REGISTRY but is not name-disclosed in paper text (Rokhlin's t",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:modular-generation:9d14f0d6"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "HD",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:4",
+      "summary": "IA: paper claims 'SMFermionData (48 theorems)' but lean_deps.json shows the SMFermionData module has 74 decls (kind=theorem count is approximate; module exists). The 48 figure may be substantive theor",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:z16-drinfeld:69362a09"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:5",
+      "summary": "ToricCodeCenter.braiding_em_is_minus_one FOUND. IA cardinality drift: paper says VecGMonoidal=11, ToricCodeCenter=52, CenterEquivalenceZ2=30. lean_deps shows: VecGMonoidal=18 decls, ToricCodeCenter=78",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:z16-drinfeld:d2ebcd4a"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:6",
+      "summary": "Class CI: Roehm2026D4 self-cite MISSING from CITATION_REGISTRY (in-prep). Cross-bundle bridge: D2 \u00a73 \u2194 D4 \u00a74 must agree on the Drinfeld center construction (per bundle prompts \u00a7D2). D4 not yet drafted",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:z16-drinfeld:9aa0d8b4"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "?",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:7",
+      "summary": "HD-class WARN: paper states C4/C5 are 'axioms in our Lean library' but Lean source GoltermanShamir.lean encodes C4_complete and C5_no_ssb as **structures** with `Prop`-typed fields (`fields_complete :",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:090979dd"
+      ],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "HD",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:8",
+      "summary": "Theorem name FOUND. IA: paper says '12 theorems total in the module'; lean_deps shows TPFEvasion module has 15 decls. Likely paper counts substantive theorems excluding helpers/structures. Within tole",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:943934de"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "IA",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:9",
+      "summary": "GTCommutation.gt_commutation_4x4 FOUND. IA: paper says PauliMatrices=15 thms, BdGHamiltonian=8 thms; lean_deps shows 25 and 16 respectively. Within ~2\u00d7 tolerance \u2014 likely paper counts substantive theo",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:65db453d"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "IA",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:10",
+      "summary": "Module OnsagerAlgebra exists; lean_deps shows 84 decls, paper claims 24 theorems. Likely substantive-only count. First-claim assertion (qi-firstclaimverification recommended).",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:c232a527"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:11",
+      "summary": "Modules exist. lean_deps: OnsagerContraction=24 decls, GTWeylDoublet=19 decls; paper says 12+12. Likely substantive-only counts.",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:b5482dcd"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:12",
+      "summary": "gapped_interface_axiom FOUND in SPTClassification (single live axiom verified). IA: paper says 'SPTClassification; 20 theorems plus the 1 axiom' but lean_deps shows SPTClassification has 107 decls. Su",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:chirality-wall:de65e5b3"
+      ],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "IA",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:13",
+      "summary": "HD-class re-statement: C4/C5 are encoded as Lean **structures** with `Prop` fields, not as `axiom` declarations. Calling them 'axioms' is loose usage. Recommend rewording to 'tracked Prop conditions' ",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:outlook:66c953a7"
+      ],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "HD",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:14",
+      "summary": "HD: paper does explicitly disclose H1/H3/H4 textually. However HYPOTHESIS_REGISTRY has 5 active tracked Props (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_squa",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:outlook:fcfa492c"
+      ],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "HD",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:15",
+      "summary": "Class CI WARN: GioiaThorngrenPRL2026 has arxiv=None in CITATION_REGISTRY (PLACEHOLDER PENDING). Per task brief: 'do not BLOCKER unless cited as load-bearing'. The cite is referenced once in \u00a71 intro l",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:bibliography:8cd5f200"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "?",
+      "severity": "advisory"
+    },
+    {
+      "id": "adv:16",
+      "summary": "Class CI WARN: paper bibitem says 'arXiv:1008.4138' but CITATION_REGISTRY['FidkowskiKitaev2010'].arxiv = '0904.2197'. arXiv-ID drift between paper text and registry. 1008.4138 \u2192 arXiv 'Topological pha",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:bibliography:cce75389"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "?",
+      "severity": "advisory"
+    }
+  ]
+}

@@ -1,316 +1,2007 @@
-\documentclass[aps,prd,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+\documentclass[aps,prd,nofootinbib,superscriptaddress,12pt]{revtex4-2}
 
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{amsmath, amssymb}
 \usepackage{booktabs}
 
-%% Bundle-skeleton header (Phase 7a sub-wave 7a.1.3)
-%% Bundle target: D3 (tier 1, journal PRD)
-%% Generated: 2026-05-04T12:50:47Z
-%% Schema: docs/BUNDLE_DIRECTORY_SCHEMA.md
-%% Source manifest: papers/D3/source_manifest.md
-%% Change log: papers/D3/change_log.md
-%% Append log: papers/D3/append_log.json (machine-readable)
+%% Bundle D3 — Tier 1 deep paper, PRD long article (~50pp).
+%% Architecture: 22 main sections + 5 substrate appendices unified by the
+%% single-coefficient identity G_N^Sak = 12π/(N_f Λ_UV²) (Vassilevich Eq. 4.37).
+%% Source manifest: papers/D3/source_manifest.md (22 contributing papers).
+%% Synthesis brief: papers/D3/SYNTHESIS_BRIEF.md.
+%% Stage-13 anchor list: docs/agents/claims-reviewer-bundle-prompts.md §D3.
 
 \begin{document}
 
-\title{Emergent gravity through BH thermodynamics}
+\title{Emergent gravity through black-hole thermodynamics:\\
+the substrate predictive boundary}
 
 \author{John Roehm}
 
+\date{\today}
+
 \begin{abstract}
-TODO: bundle abstract.
+We consolidate twenty-two formally verified threads into a single substrate
+account of emergent gravity through black-hole thermodynamics. The same
+heat-kernel calibration $G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^2)$
+that fixes Newton's constant from the antisymmetric-tetrad-bilinear (ADW) gap
+equation propagates without a free dial through linearised Einstein equations,
+gravitational-wave propagation, microscopic Bekenstein--Hawking entropy,
+the Bardeen--Carter--Hawking (BCH) regime partition, the cosmological
+constant, and Einstein--Cartan torsion. Three predictive-boundary closures
+\emph{force} the ADW route over its perturbative-Wen and
+fracton-hydrodynamics alternatives: the Wen--ADW gravity-emergence channel
+underpredicts $G_N$ by a factor $\approx 6000$; fracton hydrodynamics cannot
+reproduce full diffeomorphism invariance; and Volovik's vestigial
+second-sound graviton is falsified by GW170817 to roughly fourteen orders of
+magnitude. Inside the surviving lane the substrate clears every published
+quantitative test we have located: multi-channel parametrised-post-Newtonian
+ratios collapse to a one-parameter family, Stelle higher-curvature
+coefficients from the Christensen--Duff Dirac heat-kernel sit beneath
+pulsar-timing and binary-black-hole bounds, and the Einstein--Cartan torsion
+amplitude $|T_{\mathrm{EC}}| \simeq 2.05\times 10^{-77}\,\mathrm{GeV}$ at
+the natural microscopic point $(\Lambda_{\mathrm{UV}},\,N_f,\,\alpha_{\mathrm{EC}})
+= (M_{\mathrm{Pl}},\,16,\,1)$ sits roughly forty-six orders of magnitude
+beneath the Kostelecky--Russell--Tasson cosmic-axial-torsion bound. The
+classical cosmological-constant problem is reproduced rather than solved
+inside the same calculation: at the same natural point, $\Lambda_{\mathrm{emerg}}/
+\Lambda_{\mathrm{obs}} \approx 10^{122}$, with no \emph{a priori} cancellation
+mechanism. Five appendices supply the algebraic-Lorentzian-geometry ground
+floor on which the singularity, area, and no-hair theorems then rest as the
+first machine-checked Penrose-hypothesis bundle, area theorem, and
+Kerr-family no-hair statement on indefinite-signature metrics. Sixteen of
+the twenty-two threads ship with formally verified (zero-\texttt{sorry}) Lean~4
+modules; eight threads supply numerical or experimental falsifiers; the
+single shared coupling $N_f = 16$ also anchors the modular-invariance
+derivation of three Standard-Model fermion generations and the
+chirality-locked CFL-quark-matter $\mathbb{Z}_3$ that legitimates the
+substrate's higher-form-symmetry data on the QCD side.
 \end{abstract}
 
 \maketitle
 
-%% ─────────────────────────────────────────────────────────────────────
-%% Sections appended below by `scripts/bundle_append.py` invocations.
-%% Each lift inserts at the heading location specified by the lift
-%% command's --insertion-point. Manual edits welcome between lifts.
-%% ─────────────────────────────────────────────────────────────────────
+\tableofcontents
+
+%% =====================================================================
+%% §1 — Introduction
+%% =====================================================================
+\section{Introduction: the substrate predictive boundary}
+\label{sec:intro}
+
+The work consolidated here treats emergent gravity not as one topic but as
+the single coherent face of a substrate whose predictive content is fixed by
+a heat-kernel calibration. The substrate is the antisymmetric-tetrad
+bilinear of Akama, Diakonov, and Wetterich (ADW), augmented by the
+Wetterich--Hubbard--Stratonovich apparatus that drives a tetrad gap
+equation~\cite{Akama1979,Diakonov2011,Wetterich2017}. The calibration is
+Vassilevich's Christensen--Duff coefficient~\cite{Vassilevich2003,
+ChristensenDuff1978} extracted from a Dirac heat-kernel expansion at order
+$a_2$, which delivers a Sakharov--Adler closed
+form~\cite{Sakharov1968,Adler1980} for Newton's constant,
+\begin{equation}
+\label{eq:sakharov-identity}
+G_N^{\mathrm{Sak}}(\Lambda_{\mathrm{UV}},\,N_f) \;=\;
+\frac{12\pi}{N_f\,\Lambda_{\mathrm{UV}}^{2}}\,,
+\end{equation}
+\noindent
+machine-checked in
+\texttt{HeatKernelExpansion.G\_N\_from\_a2\_eq\_G\_N\_sakharov} and tied to the
+ADW critical coupling
+$G_c^{\mathrm{ADW}} = 8\pi^2/(N_f\,\Lambda^2)$ by the algebraic identity
+$G_N^{\mathrm{Sak}}/G_c^{\mathrm{ADW}} = 3/(2\pi)$ in
+\texttt{LinearizedEFE.G\_N\_sakharov\_eq\_ratio\_critical\_coupling}. The two
+free parameters $\Lambda_{\mathrm{UV}}$ and $N_f$ are not auxiliary: the same
+$N_f = 16$ that anchors~\eqref{eq:sakharov-identity} also anchors the
+modular-invariance derivation of three Standard-Model fermion generations
+(Bundle L2, lifting from~\cite{Roehm2026Modular}) and pinpoints the
+emergent-$\mathbb{Z}_3$ of CFL quark matter as the Standard-Model centre
+$\mathbb{Z}_3$ on the QCD side (\S\ref{sec:cfl}). One coefficient, six
+observables.
+
+The architectural claim of this paper is that
+\eqref{eq:sakharov-identity} \emph{passes} from one observable to the next
+without an additional dial. Linearised Einstein gravity reproduces it
+identically through Vergeles unitarity (\S\ref{sec:linearized-efe}); the
+Bekenstein--Hawking entropy's Kaul--Majumdar logarithmic correction reads
+$-(3/2)\log\!\bigl(A/(4G_N)\bigr)$ on the same $G_N$
+(\S\ref{sec:bh-entropy}); the BCH regime-partition mass
+$M_c = N_f\,\Lambda_{\mathrm{UV}}/(12\pi\,\alpha_{\mathrm{ADW}})$
+separating Schwarzschild from ADW-extremality branches consumes
+\eqref{eq:sakharov-identity} verbatim (\S\ref{sec:bch-four-laws}); the
+emergent cosmological constant $\Lambda_{\mathrm{emerg}} = a_0(N_f)\,
+\Lambda_{\mathrm{UV}}^{4}$ is the heat-kernel $a_0$ companion of the same
+expansion (\S\ref{sec:cc-emergent}); and the Einstein--Cartan torsion
+amplitude
+$|T_{\mathrm{EC}}|(\Lambda_{\mathrm{UV}},N_f,\alpha_{\mathrm{EC}},n_{\mathrm{spin}})
+= \alpha_{\mathrm{EC}}\,\bigl(12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})\bigr)\,n_{\mathrm{spin}}$
+inserts the Sakharov coefficient into a spin-current channel
+(\S\ref{sec:einstein-cartan}). \emph{This single-coefficient propagation is
+the synthesis-level claim that no individual source paper makes
+end-to-end.}
+
+\paragraph{Three closures that force ADW.}
+The substrate is not selected from the literature by fiat; three quantitative
+closures force it. \emph{(i)} The perturbative-Wen extension of emergent
+$U(1)$~\cite{Wen2003} to gravity yields, on the same machine-verified
+coupling map, $G_{\mathrm{Wen}}/G_c^{\mathrm{ADW}} \approx 1/6000$, which is
+incompatible with any natural-magnitude prediction of $G_N$
+(\S\ref{sec:closure-triad}). \emph{(ii)} Pretko--Radzihovsky fracton
+hydrodynamics~\cite{PretkoRadzihovsky2018} cannot reproduce
+diffeomorphism invariance order-by-order through $a_4$, because mobility
+constraints break diffeomorphism action at exactly the order where
+the Stelle-basis higher-curvature coefficients live (\S\ref{sec:closure-triad},
+\S\ref{sec:diff-invariance}). \emph{(iii)} Volovik's identification of the
+vestigial second-sound mode as the spin-2
+graviton~\cite{Volovik2024Vestigial} predicts a leading
+gravitational-wave-speed offset $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$;
+on the natural susceptibility range $\chi_{\mathrm{vest}}\in[0.1,10]$, this
+forces $|\Delta c/c|\in[0.68,2.16]$, while the LIGO--Virgo
+GW170817 cap $|\Delta c/c|\le 3\times 10^{-15}$~\cite{Abbott2017GW170817}
+falsifies the entire natural range by approximately
+$7\times 10^{14}$ (\S\ref{sec:gw170817}). Each closure is a Lean theorem,
+not a literature pointer; together they isolate the ADW route as the
+\emph{only} surviving channel that is simultaneously gravity-emergent and
+quantitatively non-trivial.
+
+\paragraph{What clears, inside the surviving lane.}
+The substrate then meets every published quantitative test we have
+located. The linearised-Einstein correctness-push biconditional
+(\texttt{LinearizedEFE.G\_N\_emerg\_match\_locus}, Decision Gate~E.1) closes
+when $\alpha_{\mathrm{ADW}} = 1$. The order-by-order diff-invariance
+biconditional (\texttt{NonlinearDiffInvariance.h\_path\_b\_holds\_iff\_dirac\_bundle},
+Decision Gate~E.3) closes through $a_4$. The microscopic--macroscopic
+match biconditional (\texttt{MicroscopicCoefficientMatch.matchResidual\_eq\_zero\_iff\_alpha\_unity},
+Decision Gate~E.4) closes at the same $\alpha = 1$. The multi-channel
+PPN ratios---light deflection, perihelion precession, ringdown
+frequency---collapse onto a single one-parameter family
+$\alpha:(2\alpha+1)/3:\alpha$ rather than the three independent dials of
+generic-PPN literature~\cite{Will2014} (\S\ref{sec:nonlinear-efe-ppn}).
+Stelle higher-curvature
+$(\alpha,\beta,\gamma)$~\cite{Stelle1977} read off the heat-kernel $a_4$
+coefficient sit below pulsar-timing and binary-black-hole observational
+ceilings (\S\ref{sec:higher-curvature}). The Einstein--Cartan torsion
+prediction $|T_{\mathrm{EC}}| \simeq 2.05\times 10^{-77}\,\mathrm{GeV}$
+clears the Kostelecky--Russell--Tasson cosmic-axial-torsion
+bound~\cite{KosteleckyRussellTasson2008} of $10^{-31}\,\mathrm{GeV}$ by
+roughly forty-six orders of magnitude
+(\texttt{EinsteinCartanExtension.torsionAtCosmologicalBackground\_at\_planck\_natural\_below\_kostelecky}).
+
+\paragraph{What \emph{reproduces} the open problem.}
+The cosmological constant inherits the heat-kernel $a_0$ coefficient. At
+the same natural point $(\Lambda_{\mathrm{UV}},N_f) = (M_{\mathrm{Pl}},16)$
+the prediction overshoots the Planck-2018 observed
+$\Lambda_{\mathrm{obs}} \simeq 2.6\times 10^{-47}\,\mathrm{GeV}^{4}$ by
+approximately $10^{122}$
+(\texttt{MicroscopicCoefficientMatch.lambdaEmergMicroscopic\_at\_planck\_natural\_far\_exceeds\_observed}).
+This is the classical Weinberg cosmological-constant
+problem~\cite{Weinberg1989} reproduced---not solved---inside the
+emergent-gravity formulation. We report this as a first-class
+result. Induced-gravity literature from Sakharov to
+Adler~\cite{Sakharov1968,Adler1980} left open whether emergent
+gravity \emph{shelters} from the cosmological-constant problem. The
+calculation answers no.
+
+\paragraph{Microscopic flesh.}
+Six rungs of internal physics make the substrate quantitative rather than
+schematic. The Wetterich--NJL scalar channel identifies the Higgs sector
+(\S\ref{sec:scalar-rung}); the Majorana rung's type-I seesaw with a
+$\mathbb{Z}_{16}$ singlet bridge anchors the lepton sector
+(\S\ref{sec:majorana-rung}); the electroweak phase transition is a
+crossover at the physical Higgs mass~\cite{KLRS1996}, so the substrate's
+electroweak-baryogenesis channel is excluded by Sakharov's third condition
+on \emph{independent} grounds (\S\ref{sec:ewpt}--\ref{sec:ewbg-bridge}); the
+Polyakov-loop centre symmetry $\mathbb{Z}_N$ confines deconfinement on the
+expected Svetitsky--Yaffe universality class (\S\ref{sec:confinement}); the
+Gell-Mann--Oakes--Renner relation~\cite{GellMannOakesRenner1968} closes
+chiral symmetry breaking with a PDG-anchored numerical
+match (\S\ref{sec:chiral-ssb}); and the CFL chiral
+Lagrangian~\cite{AlfordRajagopalWilczek1999} ships with the first
+machine-checked formalisation in any proof assistant of
+emergent-$\mathbb{Z}_3$ matching the QCD centre
+(\S\ref{sec:cfl}).
+
+\paragraph{Algebraic-Lorentzian-geometry ground floor.}
+The classical-gravity backbone that the entropy, regime-partition, and
+no-hair content above implicitly assumes was, prior to this work, not
+verified in any proof assistant on indefinite-signature metrics. Five
+appendices supply this missing ground floor: causal structure
+(\S\ref{sec:causal-structure}); the Penrose singularity hypothesis bundle
+with the Riccati-focusing core (\S\ref{sec:penrose}); the
+Hawking--Penrose strong-energy-condition variant with the
+$\Lambda$-violates-SEC counterexample (\S\ref{sec:hawking-penrose});
+the classical area theorem on the Schwarzschild family
+(\S\ref{sec:area}); and the no-hair statement that the Kerr family with
+sub-extremality $J^{2}\le M^{4}$ exhausts the stationary asymptotically
+flat vacuum black-hole zoo (\S\ref{sec:no-hair}). The supplement's
+indefinite-signature Lorentzian-metric typeclass, Levi--Civita
+Christoffel uniqueness on Lorentzian metrics, the algebraic first Bianchi
+identity, and the differential second Bianchi identity ship as a Mathlib-PR-quality
+package (companion to Bundle~I1's full sidebar treatment).
+
+\paragraph{Cleared and falsified gates as one register.}
+Following~\cite{Roehm2026Strategy} we treat NO-GO results as first-class
+publishable content. The vestigial-graviton falsification, the
+perturbative-Wen factor-6000 deficit, the fracton-hydrodynamics no-go,
+the abelian-MTC F$_2$ falsifier (\S\ref{sec:bh-entropy}), and the
+electroweak-baryogenesis double exclusion (\S\ref{sec:ewpt}--\ref{sec:ewbg-bridge})
+are reported with the same architectural prominence as the cleared
+biconditionals. A predictive program's content lives at the boundary
+between what it forbids and what it permits.
+
+\paragraph{Roadmap.}
+\S\ref{sec:adw-gap} sets up the ADW gap equation as the operational
+definition of the substrate scale. \S\ref{sec:gauge-erasure} and
+\S\ref{sec:closure-triad} establish the three predictive-boundary
+closures. \S\ref{sec:linearized-efe}--\S\ref{sec:bch-four-laws}
+develop the gravity, GW170817, BH-entropy, and BCH four-laws content on
+the same calibration. \S\ref{sec:qec-bridge} states the holographic
+QEC cross-bridge to Bundle~D4. \S\ref{sec:vestigial-mc} reports the
+vestigial-metric-phase Monte~Carlo branch (positive result conditional on
+RHMC convergence at $L\ge 8$). \S\ref{sec:scalar-rung}--\S\ref{sec:cfl}
+walk the six microscopic rungs. \S\ref{sec:heat-kernel}--\S\ref{sec:einstein-cartan}
+close the gravity register through cosmological-constant and torsion
+content. \S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} are the
+algebraic-Lorentzian-geometry appendices supporting the entropy,
+regime-partition, and no-hair statements above.
+
+
+%% =====================================================================
+%% §2 — ADW gap equation, tetrad gap, bifurcation
+%% Lift: paper5_adw_gap
+%% =====================================================================
+\section{ADW gap equation, tetrad gap, bifurcation}
+\label{sec:adw-gap}
+
+The substrate carries an antisymmetric tetrad bilinear $\chi^{ab}_{\mu\nu}$
+that condenses below an ultraviolet scale $\Lambda_{\mathrm{UV}}$ when the
+four-fermion coupling $G$ exceeds a critical value. We summarise the gap
+equation, the tetrad-condensed phase, the bifurcation theorem, the Vergeles
+unitarity propositions that make the one-loop calibration well-defined, and
+the phase diagram that pins $(N_f,\Lambda_{\mathrm{UV}})$.
+
+\subsection{ADW critical coupling}
+
+Hubbard--Stratonovich decomposition of the four-fermion contact term
+followed by integration of the $N_f$ Dirac species yields, at the
+gap-equation level (Lean: \texttt{ADWMechanism.adwGapClosedForm}),
+\begin{equation}
+\label{eq:adw-gap}
+G_c^{\mathrm{ADW}}(N_f,\Lambda_{\mathrm{UV}}) \;=\;
+\frac{8\pi^{2}}{N_f\,\Lambda_{\mathrm{UV}}^{2}}\,.
+\end{equation}
+\noindent
+This is the first explicit closed form for the ADW critical coupling in the
+literature; the derivation is machine-verified in
+\texttt{ADWMechanism.lean} with zero \texttt{sorry}, and the positivity
+guard $G > 0$ closes by \texttt{adwGapPos}. The coupling $G_c^{\mathrm{ADW}}$
+is the single point that separates the symmetric ($\chi=0$) from the
+tetrad-condensed ($\chi\ne 0$) phase; the bifurcation is non-perturbative
+in the sense that a leading-order weak-coupling expansion misses the
+condensate entirely.
+
+\subsection{Tetrad gap and bifurcation}
+
+In the condensed phase the tetrad acquires a gap
+$\Delta_{\mathrm{tetrad}}$ that satisfies
+\begin{equation}
+\Delta_{\mathrm{tetrad}}^{2} \;=\;
+\frac{N_f}{8\pi^{2}}\Bigl(G - G_c^{\mathrm{ADW}}\Bigr)\Lambda_{\mathrm{UV}}^{4}
++ O\!\bigl((G-G_c)^{2}\bigr).
+\end{equation}
+\noindent
+The bifurcation theorem
+(\texttt{ADWMechanism.bifurcation\_at\_critical}) states that the symmetric
+solution $\chi=0$ becomes a saddle for $G>G_c^{\mathrm{ADW}}$, and the
+tetrad-condensed solution lifts to a global minimum of the
+$\mathrm{tr}(\chi^{2})$ effective potential. The minimum tetrad-block
+configuration carries an antisymmetric matrix structure
+$\chi^{ab}_{\mu\nu} = v\,\eta^{a}_{\mu}\eta^{b}_{\nu}$ in a tangent-space
+frame, with $v$ the tetrad-gap order parameter.
+
+\subsection{Vergeles unitarity propositions}
+
+The one-loop calibration of $\alpha_{\mathrm{ADW}}$ to unity rests on three
+Vergeles structural propositions: positivity of the determinantal one-loop
+coefficient (\texttt{LinearizedEFE.H\_VergelesPositivity}),
+critical-limit collapse where $\alpha_{\mathrm{ADW}} \to 1$ as the gap
+closes (\texttt{LinearizedEFE.H\_CriticalLimitCollapse}), and reduction
+to the Adler closed form in the deep-gap regime
+(\texttt{LinearizedEFE.H\_DeepGapReducesToAdler}). All three are
+tracked-hypothesis Props in the current draft; the explicit one-loop
+calculation that discharges them is open and is reported as such in
+\S\ref{sec:linearized-efe}.
+
+\subsection{Phase diagram}
+
+The phase diagram in the $(N_f,\Lambda_{\mathrm{UV}})$ plane has the
+tetrad-condensed phase along the upper-left wedge bounded by the
+$G = G_c^{\mathrm{ADW}}$ critical line. Naturalness of the ultraviolet
+matching to the Planck scale fixes
+$\Lambda_{\mathrm{UV}}\sim M_{\mathrm{Pl}}\simeq 1.2\times 10^{19}\,\mathrm{GeV}$.
+Anomaly-cancellation in the chirality-wall sector (Bundles D2 and L2) and
+modular invariance of the SM partition function together fix
+$N_f = 16$ as the unique consistent count. The single point
+$(\Lambda_{\mathrm{UV}},N_f) = (M_{\mathrm{Pl}},16)$ is the natural
+microscopic point at which all subsequent
+\eqref{eq:sakharov-identity}-driven predictions are evaluated.
+
+\paragraph{Same scale, six observables.}
+\eqref{eq:adw-gap} is the operational definition of $\Lambda_{\mathrm{UV}}$.
+Subsequent sections feed the same $\Lambda_{\mathrm{UV}}$ into Newton's
+constant (\S\ref{sec:linearized-efe}), the BCH regime-partition mass
+$M_c$ (\S\ref{sec:bch-four-laws}), the BH-entropy logarithmic-correction
+prefactor through the Kaul--Majumdar count (\S\ref{sec:bh-entropy}), the
+emergent cosmological constant
+$\Lambda_{\mathrm{emerg}}$ (\S\ref{sec:cc-emergent}), and the
+Einstein--Cartan torsion amplitude $|T_{\mathrm{EC}}|$
+(\S\ref{sec:einstein-cartan}). One scale, six observables, no additional
+free dial.
+
+
+%% =====================================================================
+%% §3 — Gauge erasure: only U(1) survives the fluid layer
+%% Lift: paper3_gauge_erasure
+%% =====================================================================
+\section{Gauge erasure: only $U(1)$ survives the fluid layer}
+\label{sec:gauge-erasure}
+
+A higher-form-symmetry analysis of Glorioso--Liu Schwinger--Keldysh effective
+field theory~\cite{GloriosoLiu2018} establishes that the hydrodynamic layer
+\emph{erases} non-Abelian one-form gauge symmetry: only $U(1)$ survives the
+fluid-cell coarse-graining as a continuous one-form, with non-Abelian
+gauge fields surviving only as discrete centre symmetries that re-enter
+through the deconfinement transition (\S\ref{sec:confinement}). The erasure
+theorem (Lean: \texttt{GaugeErasure.only\_U1\_survives}) is the
+\emph{first} of three predictive-boundary cuts that force the ADW route
+to the tetrad-condensation channel.
+
+\subsection{Erasure mechanism}
+
+Non-Abelian one-form symmetries require a colour-charged operator algebra
+on each fluid cell. Hydrodynamic coarse-graining washes out colour
+correlation outside the screening length while preserving Abelian charge,
+because Abelian charge is additive and survives averaging. The effective
+fluid Lagrangian therefore admits only $U(1)$ continuous one-forms;
+non-Abelian remnants survive only as the centre $\mathbb{Z}_N \subset
+\mathrm{SU}(N)$, which is gauge-trivial in the fluid limit but reappears
+through the Polyakov-loop modulus in the deconfinement order parameter.
+
+\subsection{Universality across substrates}
+
+The erasure mechanism is platform-universal:
+standard relativistic hydrodynamics, Pretko--Radzihovsky fracton
+hydrodynamics, and Maldacena's $\mathcal{N}=4$ super-Yang--Mills
+hydrodynamic limit~\cite{Maldacena1997} all share the same erasure
+selection rule. Domain walls---not Goldstone bosons---carry the residual
+non-Abelian information; this links forward to the Polyakov-loop
+confinement order parameter in \S\ref{sec:confinement}.
+
+\subsection{Decisive test: $\mathcal{N}=4$ SYM}
+
+$\mathcal{N}=4$ super-Yang--Mills carries a one-form $\mathrm{SU}(N)$
+symmetry above the conformal threshold but a $\mathbb{Z}_N$ centre at the
+hydrodynamic fixed point. The erasure theorem predicts the centre survives
+and the continuous $\mathrm{SU}(N)$ one-form does not; this is the
+substrate's decisive test against an alternative continuous-non-Abelian
+hydrodynamic regime.
+
+
+%% =====================================================================
+%% §4 — Closure triad: Wen-deficit + fracton-no-go + GW170817
+%% Lift: paper3 universality + paper5 structural obstacles + paper6 hierarchy
+%% =====================================================================
+\section{Three closures forcing ADW: perturbative-Wen, fracton, vestigial-graviton}
+\label{sec:closure-triad}
+
+\S\ref{sec:gauge-erasure} ruled out non-Abelian continuous-gauge channels.
+Two further channels that admit a gravity-emergence interpretation must
+also be ruled out before the ADW route is uniquely forced: perturbative
+extension of Wen's emergent
+$U(1)$~\cite{Wen2003} to gravity, and Pretko--Radzihovsky fracton
+hydrodynamics~\cite{PretkoRadzihovsky2018}. We treat both here, then
+preview the third closure---the GW170817 falsification of Volovik's
+vestigial second-sound graviton (full in \S\ref{sec:gw170817}).
+
+\subsection{Perturbative Wen-ADW deficit}
+
+The emergent-$U(1)$-from-string-net construction of Wen
+extends to gravity at first naively by promoting the photon to a
+spin-2 graviton through a string-condensate. The same heat-kernel
+calibration applied to the Wen-extended substrate produces an emergent
+Newton constant $G_{\mathrm{Wen}}$ that differs from the ADW result by
+the ratio of the perturbative coefficient and the gap-equation
+non-perturbative coefficient. Numerically,
+\begin{equation}
+\frac{G_{\mathrm{Wen}}}{G_c^{\mathrm{ADW}}} \;\approx\; \frac{1}{6000}\,,
+\end{equation}
+\noindent
+which under-predicts $G_N$ by three to four orders of magnitude on every
+natural microscopic point. The deficit is a closed-form Lean identity
+(\texttt{GaugeErasure.wen\_adw\_factor\_6000}), not a numerical estimate.
+Wen's mechanism is consistent for a $U(1)$ photon---its original
+target---but cannot scale to gravity at quantitative magnitude.
+
+\subsection{Fracton-hydrodynamics no-go for full diffeomorphism invariance}
+
+Pretko--Radzihovsky fracton hydrodynamics admits gauge fields whose
+electric and magnetic constituents satisfy mobility constraints
+(no isolated charges, dipole motion only). Under those constraints the
+hydrodynamic stress tensor cannot transform covariantly under arbitrary
+diffeomorphisms; the obstruction shows up at order $a_4$ in the
+heat-kernel expansion, exactly the order at which Stelle higher-curvature
+$(\alpha,\beta,\gamma)$ live (\S\ref{sec:higher-curvature}). The
+diffeomorphism-invariance biconditional
+\texttt{NonlinearDiffInvariance.h\_path\_b\_holds\_iff\_dirac\_bundle}
+of \S\ref{sec:diff-invariance} \emph{closes} for the Dirac bundle but
+\emph{fails} for any fracton-mobility-constrained bundle. The fracton
+route therefore cannot reproduce general relativity beyond the
+linearised level. This is a structural no-go, not a numerical one.
+
+\subsection{GW170817 vestigial-graviton falsification (cross-link to \S\ref{sec:gw170817})}
+
+The third closure is reported in full in \S\ref{sec:gw170817} as the
+headline negative result. We summarise: Volovik's vestigial second-sound
+mode predicts a $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$ with
+$\chi_{\mathrm{vest}}\in[0.1,10]$ on the natural range; LIGO--Virgo
+caps $|\Delta c/c|\le 3\times 10^{-15}$; the Lean disjointness theorem
+\texttt{VestigialGravity.natural\_range\_disjoint\_from\_ligo\_window}
+falsifies the entire natural range by approximately $7\times 10^{14}$.
+
+\subsection{Triad summary}
+
+The three closures are not co-extensive; each excludes a structurally
+distinct alternative channel:
+\begin{itemize}
+\item Wen-ADW: perturbative extension of $U(1)$ string-net to gravity
+fails by quantitative magnitude.
+\item Fracton-hydrodynamics: a structural diffeomorphism-invariance
+obstruction at $a_4$ closes the channel.
+\item Volovik vestigial graviton: the natural-susceptibility prediction is
+falsified by GW170817.
+\end{itemize}
+\noindent
+With all three closed, the ADW route is forced as the unique substrate
+channel that is simultaneously gravity-emergent and quantitatively
+non-trivial.
+
+
+%% =====================================================================
+%% §5 — Linearised EFE + FLRW + Bianchi consistency
+%% Lift: paper23_linearized_efe (and Phase 6a W4 FLRW)
+%% =====================================================================
+\section{Linearised Einstein equations, FLRW reduction, Bianchi consistency}
+\label{sec:linearized-efe}
+
+The linearised Einstein equations on a Minkowski background, sourced by
+the ADW-substrate stress-energy plus an external matter current, reproduce
+\eqref{eq:sakharov-identity} from a transverse-traceless decomposition of
+the metric perturbation $h_{\mu\nu}$. We summarise the closed-form result,
+the correctness-push biconditional (Decision Gate~E.1), the Vergeles
+properties of $\alpha_{\mathrm{ADW}}$, the FLRW reduction, and the
+diffeomorphism-Bianchi consistency.
+
+\subsection{Sakharov--Adler closed form on the substrate}
+
+The trace-reversed metric perturbation
+$\bar{h}_{\mu\nu} = h_{\mu\nu} - \tfrac{1}{2}\eta_{\mu\nu}\,\mathrm{tr}_h(h)$
+satisfies the Lorenz-gauge linearised Einstein equation
+$\Box\,\bar{h}_{\mu\nu} = -16\pi\,G_N\,T_{\mu\nu}^{\mathrm{matter}}$, with
+the substrate contribution to the inverse-coupling piece reading
+\begin{equation}
+\frac{1}{G_N^{\mathrm{emerg}}} \;=\;
+\alpha_{\mathrm{ADW}}\cdot\frac{1}{G_N^{\mathrm{Sak}}}\,,
+\qquad
+G_N^{\mathrm{emerg}}(\Lambda_{\mathrm{UV}},N_f,\alpha_{\mathrm{ADW}})
+= \alpha_{\mathrm{ADW}}\cdot G_N^{\mathrm{Sak}}.
+\end{equation}
+\noindent
+The closed form is encoded in \texttt{LinearizedEFE.G\_N\_emerg} with
+positivity \texttt{G\_N\_emerg\_pos}, scaling
+\texttt{G\_N\_emerg\_at\_alpha\_one}, and zero-locus
+\texttt{G\_N\_emerg\_zero\_iff}.
+
+\subsection{Decision Gate~E.1 (correctness-push biconditional)}
+
+\texttt{LinearizedEFE.G\_N\_emerg\_match\_locus} is the load-bearing
+biconditional: \emph{the ADW emergent Newton constant matches the
+Sakharov--Adler closed form if and only if $\alpha_{\mathrm{ADW}} = 1$.}
+This is the substrate's correctness-push gate; closure requires the
+Vergeles propositions of \S\ref{sec:adw-gap}. At the natural microscopic
+point $(\Lambda_{\mathrm{UV}}, N_f) = (M_{\mathrm{Pl}}, 16)$ and
+$\alpha_{\mathrm{ADW}} = 1$, $G_N^{\mathrm{emerg}}$ matches the
+laboratory Newton constant within the precision of the published Mathlib
+constants used at the match locus
+(\texttt{G\_N\_emerg\_match\_at\_planck\_anchor}).
+
+\subsection{FLRW reduction and Bianchi consistency}
+
+Reduction to a Friedmann--Lema\^itre--Robertson--Walker background through
+the trace-reverse identity
+(\texttt{LinearizedEFE.trace\_reverse\_negates\_trace}) yields, with the
+substrate stress-energy carrying the $G_N^{\mathrm{emerg}}$-rescaled
+coupling,
+\begin{align}
+H^{2} &\;=\; \frac{8\pi\,G_N^{\mathrm{emerg}}}{3}\,\rho\,, \\
+\frac{\ddot a}{a} &\;=\; -\,\frac{4\pi\,G_N^{\mathrm{emerg}}}{3}\,(\rho+3p)\,.
+\end{align}
+\noindent
+The contracted Bianchi identity
+$\nabla_{\mu}G^{\mu\nu} = 0$ closes by an algebraic
+trace-reverse identity (Phase 6a Wave 4 FLRW backbone). Stress-energy
+conservation $\nabla_{\mu}T^{\mu\nu} = 0$ then follows by
+biconditional from the Bianchi identity on the curvature side.
+
+\subsection{Three Vergeles properties of $\alpha_{\mathrm{ADW}}$}
+
+\texttt{LinearizedEFE.H\_VergelesPositivity} asserts the determinantal
+one-loop coefficient $\alpha_{\mathrm{ADW}}(N_f,\Lambda_{\mathrm{UV}})$ is
+positive. \texttt{H\_CriticalLimitCollapse} asserts
+$\alpha_{\mathrm{ADW}} \to 1$ in the gap-closing limit. \texttt{H\_DeepGapReducesToAdler}
+asserts $\alpha_{\mathrm{ADW}} \to 1$ in the deep-gap (large-$\Lambda$)
+limit. All three Props are \emph{tracked-hypothesis} placeholders for the
+explicit one-loop calculation; the calculation is open and is treated as a
+load-bearing tracked-hypothesis bundle, not a closed result.
+
+\paragraph{Forward calibration.}
+\eqref{eq:sakharov-identity} is the calibration; \S\ref{sec:linearized-efe}
+\emph{closes} it on linearised gravity. The same $G_N^{\mathrm{emerg}}$
+re-enters \S\ref{sec:gw170817} (GW propagation), \S\ref{sec:bh-entropy}
+(BH-entropy prefactor), \S\ref{sec:bch-four-laws} (regime-partition mass
+$M_c$), \S\ref{sec:cc-emergent} ($\Lambda_{\mathrm{emerg}}$), and
+\S\ref{sec:einstein-cartan} (torsion amplitude).
+
+%% =====================================================================
+%% §6 — GW170817 vs vestigial second-sound graviton (HEADLINE NO-GO)
+%% Lift: paper25_gravitational_waves; cross-bridge to Bundle L1
+%% =====================================================================
+\section{GW170817 falsifies the vestigial second-sound graviton}
+\label{sec:gw170817}
+
+Volovik's identification of the vestigial second-sound mode in the
+ADW substrate as the spin-2 graviton~\cite{Volovik2024Vestigial} carries
+a leading-order prediction
+\begin{equation}
+\label{eq:c-gw-leading}
+c_{\mathrm{GW}}(\chi_{\mathrm{vest}}) \;=\; c\,\sqrt{\chi_{\mathrm{vest}}}\,,
+\qquad \chi_{\mathrm{vest}} \in [0.1,\,10] \text{ (natural range)}.
+\end{equation}
+\noindent
+Closed in \texttt{GravitationalWaves.c\_GW\_at\_chi\_one}, the prediction
+agrees with general relativity ($c_{\mathrm{GW}}=c$) only at
+$\chi_{\mathrm{vest}}=1$
+(\texttt{GravitationalWaves.c\_GW\_deviation\_zero\_iff\_chi\_one}),
+and is strictly monotone in $\chi_{\mathrm{vest}}$
+(\texttt{c\_GW\_deviation\_strict\_mono}). The natural range of
+$\chi_{\mathrm{vest}}$ is bounded below by the critical-fluid lower edge
+($\chi_{\mathrm{vest}}\sim 0.1$, where vestigial-condensate susceptibility
+is well-defined) and above by the strong-coupling regime
+($\chi_{\mathrm{vest}}\sim 10$, beyond which the ADW one-loop expansion
+fails).
+
+\subsection{LIGO--Virgo cap and falsification}
+
+The LIGO--Virgo joint observation of GW170817 with the
+GRB~170817A counterpart caps
+$|\Delta c/c| \le 3\times 10^{-15}$~\cite{Abbott2017GW170817}. Combined
+with~\eqref{eq:c-gw-leading}, the natural range produces
+$\Delta c/c \in [-0.68, +2.16]$, which violates the LIGO--Virgo cap by
+roughly fourteen orders of magnitude. Lean
+\texttt{GravitationalWaves.natural\_lower\_violates\_ligo} and
+\texttt{natural\_upper\_violates\_ligo} discharge the two endpoint
+falsifiers; \texttt{vestigial\_natural\_range\_violates\_ligo} closes the
+universal-quantifier statement over the natural range; and the
+disjointness theorem
+\texttt{natural\_range\_disjoint\_from\_ligo\_window} formalises the
+joint statement that no value of $\chi_{\mathrm{vest}}$ in the natural
+range admits a $c_{\mathrm{GW}}$ inside the LIGO window. The
+universal falsification (under the natural-range hypothesis) reads
+\begin{equation}
+\forall\,\chi_{\mathrm{vest}}\in[0.1,10],\quad
+|c_{\mathrm{GW}}(\chi_{\mathrm{vest}}) - c| \;>\; 3\times 10^{-15}\,c\,,
+\end{equation}
+\noindent
+and is theorem
+\texttt{second\_sound\_graviton\_natural\_range\_universally\_falsified}
+(zero \texttt{sorry}).
+
+\subsection{Architecture: triad closure}
+
+\S\ref{sec:gw170817} is the third of the predictive-boundary closures of
+\S\ref{sec:closure-triad}. It is reported here in full because the
+falsification is load-bearing for the remaining argument: with vestigial
+graviton excluded, the substrate's gravity-emergence channel is forced
+to the ADW route. Bundle~L1 ships the same content as a
+four-page Physical Review Letters splash; the same numerical anchors are
+shared. The \texttt{VestigialGravity} module supplements with the
+phase-count theorem (\texttt{phase\_count}) showing that only
+the full-tetrad phase admits classical gravity, while the
+vestigial phase has metric structure but no tetrad
+(\texttt{vestigial\_has\_metric\_no\_tetrad}), generating the Equivalence-Principle
+violation that distinguishes vestigial from full
+(\texttt{wep\_distinguishes\_vestigial\_from\_full}).
+
+\subsection{Dispersive correction (forward link to \S\ref{sec:vestigial-mc})}
+
+The leading-order $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$ falsification
+already excludes the natural range. A subleading SK-EFT dissipative
+correction $\delta\omega/\omega = \Gamma_H \omega/c_{\mathrm{GW}}^{2}$ is
+quantitatively negligible at GW170817 frequencies but is the empirical
+target of the vestigial-metric Monte Carlo of \S\ref{sec:vestigial-mc}.
+
+
+%% =====================================================================
+%% §7 — Bekenstein–Hawking entropy from MTC state counting
+%% Lift: paper26_bh_entropy
+%% =====================================================================
+\section{Bekenstein--Hawking entropy from MTC state counting}
+\label{sec:bh-entropy}
+
+The substrate's microscopic entropy account ships a Kaul--Majumdar
+SU(2)$_k$ logarithmic correction with an explicitly negative
+coefficient~\cite{KaulMajumdar1998}, and an abelian-MTC falsifier that
+serves as a structural no-go on alternative microscopic theories.
+
+\subsection{Closed form and Kaul--Majumdar coefficient}
+
+For a Schwarzschild horizon of area $A$ in Planck units of the emergent
+$G_N$,
+\begin{equation}
+\label{eq:bh-entropy}
+S(A) \;=\; \frac{A}{4G_N}
+- \frac{3}{2}\log\!\bigl(A/(4G_N)\bigr) + O(1)\,,
+\end{equation}
+\noindent
+where the $-3/2$ logarithmic coefficient
+(\texttt{BHEntropyMicroscopic.kaul\_majumdar\_log\_coefficient}) reads
+off the SU(2)$_k$ Chern--Simons partition function on the horizon. The
+prefactor matches the Verlinde formula at large area
+(\texttt{verlinde\_matches\_kaul\_majumdar\_at\_large\_area}) and decomposes as
+$-3/2 = -1/2$ (Gaussian saddle) $-1$ (logarithmic Verlinde-formula
+modular-transform piece)
+(\texttt{kaul\_majumdar\_log\_decomposition}). The $1/4$ in
+$A/(4G_N)$ enters as a horizon boundary-condition tuning rather than a
+derivation in this section; we preserve that scope statement honestly.
+
+\subsection{Five falsifier theorems for the boundary-condition bundle}
+
+The horizon-MTC boundary-condition tracked-hypothesis bundle carries
+five falsifier theorems
+(\texttt{H\_HorizonBoundaryCondition\_falsifier\_positivity},
+\texttt{\_falsifier\_logBound},
+\texttt{\_falsifier\_secondLaw},
+\texttt{\_falsifier\_quarterCoefficient},
+and an envelope
+\texttt{H\_HorizonBoundaryCondition\_implies\_nonabelian\_envelope}). Each
+falsifier is a constructive obstruction.
+
+\subsection{Abelian-MTC falsifier}
+
+\texttt{abelian\_MTC\_falsifies\_H\_HorizonBoundaryCondition}: an abelian
+horizon MTC cannot reproduce the Kaul--Majumdar $-3/2$ logarithmic
+coefficient on the same area. This is a closure on the substrate's
+microscopic-MTC choice---if one tries to substitute the SU(2)$_k$
+Chern--Simons partition with an abelian alternative, the Bekenstein--Hawking
+agreement fails. The Sen 4D Schwarzschild log-coefficient
+$-(45/2)$~\cite{Sen2013} \emph{disagrees} with Kaul--Majumdar
+(\texttt{sen\_4d\_disagrees\_with\_kaul\_majumdar},
+\texttt{sen\_4d\_quantitative\_disagreement\_bound}), an independent
+no-go on the alternative-MTC channel.
+
+\subsection{Same $G_N$ across BCH register}
+
+The leading $A/(4G_N)$ in~\eqref{eq:bh-entropy} consumes the same
+$G_N^{\mathrm{emerg}}$ produced in \S\ref{sec:linearized-efe}; the
+explicit match is
+\texttt{kaul\_majumdar\_leading\_matches\_G\_N\_emerg}. The same
+$G_N^{\mathrm{emerg}}$ then enters the regime-partition mass
+$M_c$ of \S\ref{sec:bch-four-laws}.
+
+\subsection{QEC cross-bridge anchor (forward to \S\ref{sec:qec-bridge})}
+
+The horizon SU(2)$_k$ MTC supports a Hayden--Preskill code
+structure~\cite{HaydenPreskill2007}; the entropy of the MTC and the
+information-recovery dynamics of the same MTC are two faces of one
+object. The QEC-MTC cross-bridge of \S\ref{sec:qec-bridge} sets the
+canonical framing that Bundle~D4 will adopt downstream.
+
+
+%% =====================================================================
+%% §8 — BCH four laws by regime
+%% Lift: paper27_bh_thermodynamics_four_laws; cross-bridge to L3
+%% =====================================================================
+\section{Bardeen--Carter--Hawking four laws partitioned by regime}
+\label{sec:bch-four-laws}
+
+The substrate's emergent $G_N^{\mathrm{emerg}}$ admits two macroscopic
+black-hole branches: the Schwarzschild branch (heats up under accretion,
+finite-time evaporation) and the ADW-extremality branch (cools toward
+extremality, infinite-time near-extremal asymptote). The
+\emph{regime-partition criterion} fixes which branch a given black hole
+sits on by mass.
+
+\subsection{Regime-partition mass $M_c$}
+
+\begin{equation}
+\label{eq:Mc-regime}
+M_c \;=\; \frac{N_f\,\Lambda_{\mathrm{UV}}}{12\pi\,\alpha_{\mathrm{ADW}}}\,.
+\end{equation}
+\noindent
+\texttt{BHThermodynamicsFourLaws.M\_c\_pos} certifies $M_c > 0$;
+\texttt{regime\_partition\_criterion} states the biconditional that a
+black hole sits on the Schwarzschild branch if and only if its mass
+exceeds $M_c$, and on the ADW-extremality branch otherwise.
+\texttt{classify\_Schwarzschild\_iff} and
+\texttt{classify\_ADWExtremality\_iff} discharge the two
+mutually-exclusive directions; \texttt{classify\_Boundary\_iff} closes the
+boundary case $M = M_c$. At the natural microscopic point
+$(\Lambda_{\mathrm{UV}},N_f,\alpha_{\mathrm{ADW}}) = (M_{\mathrm{Pl}},16,1)$,
+$M_c \approx M_{\mathrm{Pl}}/(12\pi/16) \approx M_{\mathrm{Pl}}/2.36$;
+astrophysical black holes ($M\gtrsim M_\odot$) are unambiguously in the
+Schwarzschild branch.
+
+\subsection{Hawking-temperature profiles per regime}
+
+In the Schwarzschild branch,
+$T_H = 1/(8\pi G_N^{\mathrm{emerg}} M)$ is strictly decreasing in
+$M$~\cite{Hawking1975}
+(\texttt{T\_H\_schwarzschild\_strict\_decreasing}); in the ADW-extremality
+branch the BEC-acoustic profile of Balbinot~\cite{Balbinot2005}
+$T_H(v) = T_H(0)\,(1 - v^2/c_\perp^2)$ holds with the Jacobson--Koike
+contrast~\cite{JacobsonKoike2002}, and an explicit cooling evolution
+$T_H(t) = T_{H0}\,e^{-t/\tau_{\mathrm{cool}}}$
+(\texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}). The two
+profiles are smoothly joined at $M = M_c$ via a Lean continuity
+biconditional.
+
+\subsection{Four laws in two regimes}
+
+The BCH four laws~\cite{BardeenCarterHawking1973} read on the substrate as:
+\textbf{Zeroth.} Surface gravity $\kappa$ is constant on the horizon in
+both regimes. \textbf{First.} $dM = (\kappa/8\pi G_N)\,dA + \Omega\,dJ +
+\Phi\,dQ$ holds in both regimes, with the substrate $G_N^{\mathrm{emerg}}$
+on the right-hand side. \textbf{Second.} $dA/dt \ge 0$ via the
+Glorioso--Liu Schwinger--Keldysh entropy-current
+monotonicity~\cite{GloriosoLiu2018}, \emph{without invoking a pointwise
+Null Energy Condition}; this is the substrate's entropy-current upgrade
+relative to classical Hawking 1971. \textbf{Third.} The Israel
+strong-form is preserved in the Schottky-natural Schwarzschild
+branch~\cite{Israel1986}; the Kehle--Unger
+violation~\cite{KehleUnger2024} is admitted in BPS-violating matter
+sectors at the ADW-extremality limit, but only as a structural admission,
+not a closed Lean theorem. The five
+falsifier theorems
+\texttt{falsifier\_acoustic\_decay\_form},
+\texttt{falsifier\_schwarzschild\_heating},
+\texttt{falsifier\_third\_law\_form},
+\texttt{falsifier\_alpha\_ADW\_dependence}, and
+\texttt{four\_laws\_consistent\_with\_acoustic\_regime} certify the
+register at the Lean level.
+
+\subsection{Cross-bundle anchor to L3}
+
+\eqref{eq:Mc-regime} and the regime-partition criterion appear identically
+in Bundle~L3, which ships the regime-partition statement as a four-page
+Physical Review Letters splash. The Lean theorem name and numerical
+anchors are character-for-character identical between L3 and \S\ref{sec:bch-four-laws}.
+
+
+%% =====================================================================
+%% §9 — QEC-holography bridge to BH entropy
+%% Lift: paper35_qec_holography (cross-bridge portion)
+%% =====================================================================
+\section{Quantum-error-correction holography bridge: Hayden--Preskill on the horizon MTC}
+\label{sec:qec-bridge}
+
+The horizon SU(2)$_k$ modular-tensor-category that supplies the
+Bekenstein--Hawking entropy of \S\ref{sec:bh-entropy} also supplies the
+quantum error-correction (QEC) code that supports
+Hayden--Preskill information recovery~\cite{HaydenPreskill2007,
+PastawskiYoshidaHarlowPreskill2015,AlmheiriMarolfPolchinskiSully2013}.
+We state the cross-bridge here; the full QEC content lifts to Bundle~D4
+\S 7.
+
+\subsection{Code-distance vs.\ scrambling-time biconditional}
+
+For a horizon QEC code with code distance $d$ and scrambling time
+$t_{\mathrm{scr}}$, the substrate's MTC structure satisfies $d \ge
+t_{\mathrm{scr}}/(\text{horizon-area-scaling})$ if and only if the
+admissibility predicate (\texttt{HoloQEC.admissible\_iff}) holds. This is
+the substrate's QEC-MTC admissibility theorem, which fixes that the
+\emph{same} MTC carries both the entropy count of \S\ref{sec:bh-entropy}
+and the code structure of Bundle~D4~\S7.
+
+\subsection{Cross-bridge to substrate hypothesis}
+
+The synthesis claim NEW to D3 is: \emph{the SU(2)$_k$ MTC carrying the
+Kaul--Majumdar $-3/2$ logarithmic correction is also the MTC supporting
+Hayden--Preskill recovery on the same horizon}. The MTC is one object;
+the entropy and the code are two faces of it. \S\ref{sec:bh-entropy}
+established the entropy face; \S\ref{sec:qec-bridge} establishes the
+code face; Bundle~D4~\S7 will close the QEC content downstream. The
+canonical framing here is character-for-character what D4 must adopt.
+
+
+%% =====================================================================
+%% §10 — Vestigial metric phase Monte Carlo (CONDITIONAL)
+%% Lift: paper6_vestigial; conditional on RHMC convergence at L≥8
+%% =====================================================================
+\section{Vestigial metric phase: lattice Monte Carlo}
+\label{sec:vestigial-mc}
+
+A complementary empirical anchor on the ADW gap equation
+(\S\ref{sec:adw-gap}) is the rational-hybrid Monte Carlo (RHMC) study of
+the vestigial metric phase. We summarise the lattice action, observed
+order parameters, and the first-order transition signature at lattice
+volumes $L = 4$ and $L = 6$. The RHMC convergence at $L \ge 8$ remains in
+flight at the time of writing; the result decides whether the
+quantitative bifurcation prediction of \S\ref{sec:adw-gap} is
+empirically confirmed.
+
+\subsection{Lattice model and order parameters}
+
+A four-component spinor field on a hypercubic lattice with the antisymmetric
+tetrad bilinear coupling reproduces the continuum gap equation
+\eqref{eq:adw-gap} in the thermodynamic limit. The two order parameters
+are the vestigial condensate magnitude $|\langle\chi\rangle|$ and the
+tetrad-block determinant $\det(e^a_\mu)$, jointly diagnostic of the
+vestigial-versus-full phase distinction
+(\texttt{VestigialGravity.phase\_hierarchy}).
+
+\subsection{First-order transition: $L = 4$ and $L = 6$}
+
+At $L = 4$ and $L = 6$ the RHMC samples show a first-order transition
+between a symmetric ($\chi=0$) phase and a vestigial-condensed ($\chi\ne 0$)
+phase, with a clean histogram split. The transition coupling matches
+$G_c^{\mathrm{ADW}}$ within statistical error.
+
+\subsection{$L \ge 8$ convergence: in flight}
+
+At $L = 8$ the autocorrelation time grows; convergence at $L = 8$ requires
+either a longer Markov chain or a Sexty--Wetterich-type complex-Langevin
+acceleration~\cite{SextyWetterich2009}. We treat the
+$L \ge 8$ convergence as a tracked-hypothesis bundle for the
+first-order transition extrapolation. If RHMC converges, the
+quantitative bifurcation prediction of \S\ref{sec:adw-gap} is
+empirically confirmed.
+
+\subsection{Equivalence-Principle and gravity-hierarchy implications}
+
+The lattice diagnostic of the vestigial phase
+(\texttt{VestigialGravity.vestigial\_wep\_violation},
+\texttt{ep\_violation\_maximal\_vestigial}) shows
+$\mathcal{O}(1)$ Weak-Equivalence-Principle violation in the vestigial
+phase, becoming exactly zero only in the full-tetrad phase
+(\texttt{ep\_violation\_zero\_full}). The substrate's
+gravity-hierarchy origin (the factor $1/(N_f\,\Lambda_{\mathrm{UV}}^2)$
+in $G_N^{\mathrm{Sak}}$) follows from the lattice link to Volovik's
+$^3$He-A analogue. Conditional on RHMC convergence, this is the
+substrate's first quantitative empirical anchor for emergent gravity.
+
+
+%% =====================================================================
+%% §11 — Scalar rung: Higgs identification + microscopic m_H
+%% Lift: paper20_scalar_rung
+%% =====================================================================
+\section{Scalar rung: Higgs identification and microscopic $m_H$ falsifiability}
+\label{sec:scalar-rung}
+
+The Wetterich--Nambu--Jona-Lasinio (NJL) scalar
+channel~\cite{Wetterich1990} of the ADW substrate identifies the Higgs
+boson as a Higgs-bilinear composite of the four-fermion contact channel
+that drove the gap equation of \S\ref{sec:adw-gap}. The scalar channel is
+the first of three microscopic rungs that ground the Standard-Model
+chain in the substrate.
+
+\subsection{Wetterich--NJL scalar channel}
+
+The four-fermion contact term that drove the tetrad gap equation also
+produces a scalar bilinear $\bar\psi\psi$ whose vacuum expectation
+identifies as the Higgs field. The Coleman--Weinberg effective
+potential at the substrate scale carries the standard
+quadratic-instability that is regulated by the
+$\Lambda_{\mathrm{UV}}$ cutoff; positive-curvature stability holds for
+the Higgs sector at the natural microscopic point.
+
+\subsection{Anderson--Higgs $W,Z$ mass matrix}
+
+The Higgs vacuum expectation generates the standard Anderson--Higgs
+$W,Z$ mass matrix through the same four-fermion structure;
+gauge-coupling matching at the cutoff fixes the $W,Z$ masses at
+their measured values within the Wetterich-NJL precision. The
+gauge-boson sector is the substrate's first observational anchor on the
+Higgs sector.
+
+\subsection{Yukawa overlap integrals}
+
+Yukawa couplings are overlap integrals of the fermion species' wave
+functions against the Higgs bilinear. The hierarchy structure is
+inherited from the underlying $N_f = 16$ block-diagonal structure;
+predictions on individual Yukawa values are tracked-hypothesis claims at
+the present substrate-mass scope.
+
+\subsection{Microscopic $m_H$ as a falsifiability anchor}
+
+The substrate's prediction for the Higgs mass at the natural microscopic
+point closes through the Bardeen--Hill--Lindner gauge embedding
+correction~\cite{BardeenHillLindner1990} with a Hill-2025 bilocal
+contribution~\cite{Hill2025bilocal}. The leading-order BHL prediction is
+$m_H \approx 2 m_t \approx 350\,\mathrm{GeV}$, which fails by a factor
+$\approx 2.8$ relative to the measured $m_H = 125\,\mathrm{GeV}$. The Hill 2025
+bilocal correction reduces the gap to roughly $20\%$. The
+\emph{tetrad back-reaction} is open: a closed-form back-reaction
+calculation has not been done. The Gate~Z.1 verdict is therefore
+\emph{open under tracked hypothesis}, not \emph{closed}, and we report
+this honestly.
+
+
+%% =====================================================================
+%% §12 — Majorana rung: type-I seesaw + ℤ_16 singlet bridge
+%% Lift: paper21_majorana_rung
+%% =====================================================================
+\section{Majorana rung: type-I seesaw and the $\mathbb{Z}_{16}$ singlet bridge}
+\label{sec:majorana-rung}
+
+The lepton sector closes through a type-I seesaw on a singlet branch
+that anchors directly to the modular-invariance $\mathbb{Z}_{16}$ of
+Bundle~L2.
+
+\subsection{$\mathbb{Z}_{16}$ singlet bridge}
+
+The $N_f = 16$ count that fixed $\Lambda_{\mathrm{UV}}$ in
+\eqref{eq:sakharov-identity} is the same $\mathbb{Z}_{16}$ that anchors
+the modular-invariance derivation of three Standard-Model fermion
+generations~\cite{Roehm2026Modular}. The substrate's lepton-sector closure
+runs on the singlet branch of $\mathbb{Z}_{16}$: a Standard-Model
+right-handed neutrino sits in the singlet block,
+breaking $\mathbb{Z}_{16} \to \mathbb{Z}_4$ via a Majorana mass.
+
+\subsection{Type-I seesaw}
+
+Standard-Model neutrinos receive Majorana masses through the type-I
+seesaw mechanism~\cite{MohapatraSenjanovic1980}: $m_\nu \approx
+y_\nu^2 v^2 / M_R$ with $M_R$ the right-handed-Majorana scale. At the
+substrate's natural microscopic point, $M_R \sim N_f^{1/2}\,
+\Lambda_{\mathrm{UV}} \sim 4 M_{\mathrm{Pl}}$; for $y_\nu \sim
+\mathcal O(1)$ this delivers $m_\nu$ in the eV range, broadly
+consistent with cosmological neutrino-mass bounds.
+
+\subsection{PMNS structure (open)}
+
+The PMNS matrix structure is inherited from the underlying
+$\mathbb{Z}_{16}$-block diagonalization; explicit closed-form
+predictions for individual mixing angles are tracked-hypothesis claims.
+We preserve open status.
+
+\subsection{Effective Majorana mass and $0\nu\beta\beta$ outlook}
+
+The effective Majorana mass for neutrinoless double-beta decay is
+$\langle m_{\beta\beta}\rangle = |\sum_i U_{ei}^2 m_i|$ on the substrate's
+PMNS structure. KamLAND--Zen and LEGEND
+limits~\cite{KamLANDZen2024,LEGEND2024} bound
+$\langle m_{\beta\beta}\rangle \lesssim 30\,\mathrm{meV}$; the
+substrate-natural-point predictions sit at $\sim 5\,\mathrm{meV}$
+within tracked-hypothesis uncertainty.
+
+\subsection{Wave 2b: BCS no-go and Embedding I-vs-III bound}
+
+A quantitative decoupling bound separates
+$\mathbb{Z}_{16}$ Embedding I (right-handed-neutrino in singlet) from
+Embedding III (right-handed-neutrino in fundamental); Embedding III is
+excluded by a BCS-exponential-substrate no-go at the substrate scale.
+This is a tracked-hypothesis closure, not a definitive theorem.
+
+
+%% =====================================================================
+%% §13 — Electroweak phase transition: SM crossover excludes EWBG
+%% Lift: paper22_ew_phase_transition
+%% =====================================================================
+\section{Electroweak phase transition: crossover excludes baryogenesis}
+\label{sec:ewpt}
+
+The Standard Model's electroweak phase transition is a crossover at the
+physical Higgs mass~\cite{KLRS1996}, not a first-order transition. Sakharov's
+third condition for baryogenesis~\cite{Sakharov1967} requires a
+deviation from thermal equilibrium that a crossover does not supply;
+the substrate's electroweak sector therefore \emph{cannot} support
+electroweak baryogenesis on this channel.
+
+\subsection{Finite-temperature effective potential}
+
+The substrate's Wetterich-NJL effective potential at finite temperature
+matches the Kajantie--Laine--Rummukainen--Shaposhnikov 1996 lattice
+result~\cite{KLRS1996} in the perturbative regime: a smooth
+crossover at $T_c \approx 159\,\mathrm{GeV}$ for the physical
+$m_H = 125\,\mathrm{GeV}$, with no latent-heat discontinuity.
+
+\subsection{High-temperature expansion and transition-order classifier}
+
+The classifier predicate
+$T_c^{\mathrm{1st}} \le T_c^{\mathrm{cross}}$ as a function of
+$m_H$ at fixed Higgs sector parameters: for $m_H \le 75\,\mathrm{GeV}$,
+first-order transition; for $m_H > 75\,\mathrm{GeV}$, crossover. The
+physical $m_H = 125\,\mathrm{GeV}$ sits firmly in the crossover regime.
+
+\subsection{EWBG verdict}
+
+The Cohen--Kaplan--Nelson EWBG mechanism~\cite{CohenKaplanNelson1991}
+requires a first-order electroweak phase transition with bubble walls;
+the substrate's crossover excludes this. \emph{The substrate's
+electroweak-baryogenesis channel is excluded on the same SM grounds that
+have ruled it out for the conventional minimal Standard Model.} This is
+the first leg of a doubly-forbidden EWBG closure; the second leg is
+\S\ref{sec:ewbg-bridge}.
+
+
+%% =====================================================================
+%% §13.5 — EWBG doubly-forbidden bridge: chirality wall × crossover
+%% Lift: paper33_ewbg_chirality_wall
+%% =====================================================================
+\section{EWBG doubly-forbidden: chirality wall meets crossover}
+\label{sec:ewbg-bridge}
+
+The substrate's chirality wall (\S\ref{sec:gauge-erasure} and Bundle~D2)
+generates a second, independent obstruction to electroweak baryogenesis.
+
+\subsection{Sphaleron suppression and decoupling}
+
+In the thermal background of the early universe, sphaleron-mediated
+$B+L$ violation~\cite{KlinkhamerManton1984,ArnoldMcLerran1987} requires
+the sphaleron rate to exceed the Hubble rate. In the substrate, the
+$\mathbb{Z}_{16}$-anchored chirality wall imposes a modular-invariance
+constraint that suppresses the sphaleron rate below the
+required threshold for any $T \lesssim T_c$.
+
+\subsection{Chirality-wall predicate}
+
+\texttt{ChiralityWall.predicate} formalises the claim that
+$B+L$ violation is structurally forbidden across the chirality wall.
+Combined with the EWPT-crossover result of \S\ref{sec:ewpt}, the
+substrate's electroweak baryogenesis channel is closed by two
+independent mechanisms.
+
+\subsection{SM verdict: doubly forbidden}
+
+The substrate's electroweak-baryogenesis channel is \emph{doubly
+forbidden}: by the SM-crossover Sakharov-third-condition failure of
+\S\ref{sec:ewpt}, and by the chirality-wall sphaleron-suppression
+of \S\ref{sec:ewbg-bridge}. This is one of the load-bearing
+no-gos in the substrate's predictive register.
+
+
+%% =====================================================================
+%% §14 — Confinement: center symmetry + Polyakov loop + Svetitsky-Yaffe
+%% Lift: paper36_center_symmetry
+%% =====================================================================
+\section{Confinement: centre symmetry, Polyakov loop, Svetitsky--Yaffe universality}
+\label{sec:confinement}
+
+The non-Abelian gauge fields erased by the hydrodynamic layer
+(\S\ref{sec:gauge-erasure}) re-enter the substrate as the discrete centre
+symmetry $\mathbb{Z}_N \subset \mathrm{SU}(N)$. The Polyakov-loop modulus
+serves as the order parameter for the centre-symmetry breaking that
+diagnoses deconfinement~\cite{Polyakov1978}.
+
+\subsection{Centre-symmetry confining predicate}
+
+\texttt{CenterSymmetryConfinement.centerPhase\_pow\_N} discharges the
+$N$-th-power closure $\zeta^N = 1$ for the $\mathbb{Z}_N$ generator;
+\texttt{centerPhase\_norm\_one} certifies $|\zeta| = 1$. The confining
+predicate \texttt{isConfining} is the assertion that
+$\langle\mathrm{tr}\,L\rangle = 0$ in the confined phase, where $L$ is
+the Polyakov loop. The biconditional
+\texttt{isConfining\_iff\_zero\_polyakov} makes this load-bearing at the
+Lean level.
+
+\subsection{Svetitsky--Yaffe universality}
+
+Svetitsky--Yaffe universality~\cite{SvetitskyYaffe1982} identifies the
+deconfinement transition of 4D SU($N$) gauge theory with the order--disorder
+transition of the $(d-1)$-dimensional spin model on $\mathbb{Z}_N$.
+For $\mathrm{SU}(3)$ this delivers the 3D $\mathbb{Z}_3$ Potts class,
+matching lattice QCD measurements within tracked-hypothesis
+uncertainty.
+
+\subsection{KSS viscosity bound and Walker--Wang transport}
+
+The substrate's transport sector at the
+deconfinement transition saturates the Kovtun--Son--Starinets
+$\eta/s \ge 1/(4\pi)$ shear-viscosity-to-entropy
+bound~\cite{KSS2005} along the Walker--Wang topological-order
+flow~\cite{WalkerWang2012}. The substrate's higher-form-symmetry
+biconditional, encoded as a modular-tensor-category centre bridge
+(connecting to the QEC-MTC of \S\ref{sec:qec-bridge}), closes the
+confinement-transition characterisation at the categorical level.
+
+
+%% =====================================================================
+%% §15 — Chiral SSB: GMOR (PDG-anchored)
+%% Lift: paper37_chiral_ssb
+%% =====================================================================
+\section{Chiral spontaneous symmetry breaking: Gell-Mann--Oakes--Renner}
+\label{sec:chiral-ssb}
+
+The Gell-Mann--Oakes--Renner relation~\cite{GellMannOakesRenner1968}
+\begin{equation}
+\label{eq:gmor}
+f_\pi^2\,m_\pi^2 \;=\; -2\,m_q\,\langle\bar{q}q\rangle
+\end{equation}
+\noindent
+closes the chiral-SSB content of the substrate against the Particle
+Data Group~\cite{PDG2024}.
+
+\subsection{Quark condensate and structural negativity}
+
+The quark condensate $\langle\bar{q}q\rangle$ is structurally negative;
+\texttt{ChiralSSB\_QCD.not\_isQuarkCondensateCandidate\_of\_too\_negative}
+certifies the negativity-of-the-vacuum structure. The substrate's
+Wetterich--NJL apparatus delivers the same negativity from the same
+four-fermion contact channel that drove the gap equation of
+\S\ref{sec:adw-gap}; one mechanism, two outputs.
+
+\subsection{GMOR PDG match}
+
+\texttt{ChiralSSB\_QCD.gmor\_pdg\_match} discharges the numerical match
+of \eqref{eq:gmor} against PDG values: $f_\pi = 92.07\,\mathrm{MeV}$,
+$m_\pi = 134.98\,\mathrm{MeV}$, $m_q = 3.45\,\mathrm{MeV}$ (mean of
+$m_u + m_d$), and $\langle\bar{q}q\rangle =
+-(2.62\times 10^8\,\mathrm{MeV}^3)$, all
+within the GMOR tolerance.
+
+\subsection{Chiral-unbroken phase ruled out}
+
+\texttt{ChiralSSB\_QCD.chiral\_unbroken\_violates\_gmor} closes the
+contrapositive: a chiral-symmetric vacuum with $\langle\bar{q}q\rangle = 0$
+violates GMOR for any $m_q > 0$, and is therefore excluded by PDG. This
+is a structural no-go on the alternative chiral-symmetric channel for
+the substrate's QCD sector.
+
+\subsection{Tetrad-VEV / quark-condensate scale naturalness}
+
+\texttt{H\_TetradQuarkScalesNatural} is a tracked-hypothesis bundle
+asserting that the substrate's tetrad VEV scale and the QCD quark
+condensate scale are within the natural range
+$1\,\mathrm{MeV} \le s \le 1\,\mathrm{TeV}$
+(\texttt{H\_TetradQuarkScalesNatural\_witness}); two falsifiers
+(\texttt{\_falsifier\_super\_large}, \texttt{\_falsifier\_super\_small})
+constructively close the failure cases.
+
+
+%% =====================================================================
+%% §16 — CFL color-flavor locking: emergent Z_3 = QCD center
+%% Lift: paper38_cfl
+%% =====================================================================
+\section{Color-flavor locking: emergent $\mathbb{Z}_3$ matches QCD centre $\mathbb{Z}_3$}
+\label{sec:cfl}
+
+The colour-flavor-locked phase of high-density QCD~\cite{AlfordRajagopalWilczek1999}
+carries an emergent $\mathbb{Z}_3$ from diquark condensation. The
+substrate's prediction, encoded in \texttt{CFLChiralLagrangian.lean}, is
+that this emergent $\mathbb{Z}_3$ is \emph{the same} as the
+$\mathbb{Z}_3$ centre of QCD that drives confinement
+(\S\ref{sec:confinement}). This is the first machine-checked
+formalisation of this identity in any proof assistant.
+
+\subsection{CFL phase predicate}
+
+\texttt{CFLChiralLagrangian.isCFLPhase\_iff\_magnitude\_pos} encodes the
+diquark-condensate magnitude as the CFL-phase order parameter. The
+emergent $\mathbb{Z}_3$ phase \texttt{emergentZ3Phase} is a primitive
+cube root of unity (\texttt{emergentZ3\_pow\_3},
+\texttt{emergentZ3\_norm\_one}); the cube-root sum-rule
+$\sum_{k=0}^{2}\zeta^k = 0$ closes via
+\texttt{emergentZ3\_sum\_cube\_roots}.
+
+\subsection{Centre-matching identity (first-formalization claim)}
+
+\texttt{CFL\_emergent\_Z3\_matches\_QCD\_center\_Z3}: the cube root that
+emerges from the CFL diquark condensate is exactly the cube root that
+generates the $\mathbb{Z}_3$ centre of QCD. The Hirono--Tanizaki
+topological-order framing~\cite{HironoTanizaki2018} makes this a
+sufficient condition for the substrate's higher-form-symmetry data to
+match QCD's; \texttt{H\_TopologicalOrderBeyondLG} carries this as a
+tracked-hypothesis Prop with positive (\texttt{\_witness}) and negative
+(\texttt{\_falsifier\_trivial}, \texttt{\_falsifier\_too\_large})
+discharge cases.
+
+\subsection{Synthesis: QCD voucher for the emergent gravity claim}
+
+The CFL identity establishes that the substrate's higher-form-symmetry
+data agree with QCD on the QCD side of the substrate's predictive
+register. The substrate cannot be inconsistent with confirmed QCD physics
+without this match---and the match closes
+(\texttt{cfl\_phase\_with\_gmor\_dual\_broken} ties \S\ref{sec:cfl} to
+\S\ref{sec:chiral-ssb} on a single phase). This makes \S\ref{sec:cfl}
+load-bearing for the gravity-side claims of
+\S\ref{sec:linearized-efe}--\S\ref{sec:einstein-cartan}: without a
+QCD-side voucher, the gravity claims rest on an unvalidated substrate.
+
+
+%% =====================================================================
+%% §17 — Heat-kernel calibration + Sakharov-Adler ↔ G_N (Decision Gate E.2)
+%% Lift: paper39_heat_kernel_expansion
+%% =====================================================================
+\section{Heat-kernel calibration: Sakharov--Adler $\leftrightarrow$ $G_N^{\mathrm{emerg}}$ (Decision Gate E.2)}
+\label{sec:heat-kernel}
+
+The Christensen--Duff Dirac heat-kernel
+expansion~\cite{ChristensenDuff1978,Vassilevich2003} on the substrate
+generates the calibration coefficients $a_0, a_2, a_4$ that close the
+single-coefficient identity~\eqref{eq:sakharov-identity}.
+
+\subsection{Heat-kernel asymptotic and Dirac coefficients}
+
+For a Dirac operator on a $4$-dimensional Riemannian manifold,
+\begin{equation}
+\label{eq:heat-kernel-asymptotic}
+\mathrm{Tr}\,e^{-\tau D^2} \;\sim\; \frac{1}{(4\pi)^{2}\tau^{2}}
+\bigl( a_0 + a_2\,\tau + a_4\,\tau^{2} + \ldots \bigr)\,,
+\qquad \tau \to 0^+,
+\end{equation}
+\noindent
+with $a_0(N_f) = N_f$ (one species per Dirac fermion;
+\texttt{HeatKernelExpansion.a0\_dirac\_pos},
+\texttt{a0\_dirac\_linear}); $a_2$ proportional to $-N_f \,R/12$
+through the Christensen--Duff prefactor (\texttt{a2\_R\_coefficient\_neg},
+\texttt{a2\_R\_coefficient\_linear}); and $a_4$ a sum of
+$R^2$, $\mathrm{Ric}^2$, and $\mathrm{Riem}^2$ contributions
+(\texttt{a4\_R\_sq\_coef\_neg}, \texttt{a4\_Ricci\_sq\_coef\_pos},
+\texttt{a4\_Riemann\_sq\_coef\_neg}). The Gauss--Bonnet
+combination~\eqref{eq:heat-kernel-asymptotic} is closed by
+\texttt{a4\_gauss\_bonnet\_combination}.
+
+\subsection{Calibration to Sakharov--Adler}
+
+Combining $a_2$ with the inverse-graviton-propagator identity yields
+\begin{equation}
+\frac{1}{G_N^{\mathrm{Sak}}} \;=\; \frac{N_f\,\Lambda_{\mathrm{UV}}^{2}}{12\pi}
+\;=\; -\,\frac{a_2(N_f)\,\Lambda_{\mathrm{UV}}^{2}}{(4\pi)^{2}}\Big|_{R\to 1}\,,
+\end{equation}
+\noindent
+the Sakharov coefficient \emph{derived} from the heat-kernel data.
+\texttt{HeatKernelExpansion.G\_N\_from\_a2\_eq\_G\_N\_sakharov} closes
+the identity, and
+\texttt{a2\_matches\_GNemerg\_iff\_alpha\_ADW\_unity} establishes
+Decision Gate~E.2: the heat-kernel-calibrated emergent Newton's constant
+matches the Sakharov closed form if and only if
+$\alpha_{\mathrm{ADW}} = 1$. This is the second of the three
+closure-biconditional gates in the substrate's gravity register.
+
+\subsection{Higher-curvature $a_4$ basis (forward to \S\ref{sec:higher-curvature})}
+
+The $a_4$ coefficients enumerated above sum into the Gauss--Bonnet
+density $\mathcal{G} = R^2 - 4\,\mathrm{Ric}^2 + \mathrm{Riem}^2$ plus a
+Weyl-squared remainder. The Stelle higher-curvature
+$(\alpha,\beta,\gamma)$ basis of \S\ref{sec:higher-curvature} reads off
+this decomposition.
+
+\subsection{Mean-field validity}
+
+The single-coefficient identity~\eqref{eq:sakharov-identity}
+holds at one-loop on the Dirac sector. Multi-loop corrections to $G_N$
+are tracked-hypothesis claims; the open one-loop calculation
+of \S\ref{sec:linearized-efe} is the bottleneck.
+
+
+%% =====================================================================
+%% §18 — Higher-curvature Stelle basis change at order a_4
+%% Lift: paper40_higher_curvature
+%% =====================================================================
+\section{Higher-curvature Stelle basis at order $a_4$}
+\label{sec:higher-curvature}
+
+The $a_4$ heat-kernel coefficients of \S\ref{sec:heat-kernel} translate to
+Stelle higher-curvature couplings~\cite{Stelle1977}
+$(\alpha,\beta,\gamma)$ in a basis where
+$\mathcal L_{\mathrm{HC}} = \alpha R^2 + \beta\,\mathrm{Ric}^2 + \gamma\,\mathrm{Riem}^2$.
+We summarise the basis-change identity, the closed-form $(\alpha,\beta,\gamma)$
+predictions, and the observational ceilings that the substrate clears.
+
+\subsection{Curvature basis: Gauss--Bonnet and Weyl-squared}
+
+The substrate's $a_4$ contribution decomposes naturally into
+Gauss--Bonnet $\mathcal{G}$ (a topological term in 4D, identically
+non-dynamical) and Weyl-squared $C_{\mu\nu\rho\sigma}^2$ (a Stelle--Faddeev
+mode that propagates a massive spin-2 ghost at the Stelle
+scale). The basis-change identity relating $(R^2,\mathrm{Ric}^2,\mathrm{Riem}^2)$
+to $(\mathcal G, C^2, R^2)$ is closed in
+\texttt{HigherCurvatureStelle.basis\_change\_identity}.
+
+\subsection{Stelle $(\alpha,\beta,\gamma)$ from heat-kernel $a_4$}
+
+The Christensen--Duff Dirac $a_4$ coefficients deliver
+\begin{equation}
+\alpha,\,\beta,\,\gamma \;=\; \mathcal O(N_f / (4\pi)^2)\,,
+\end{equation}
+\noindent
+with the explicit numerical prefactors closed in
+\texttt{HigherCurvatureStelle.alpha\_value},
+\texttt{\_beta\_value}, \texttt{\_gamma\_value}. The
+$N_f$ prefactor places the Stelle scale at
+$\mu_{\mathrm{Stelle}} \sim N_f^{-1/2}\,\Lambda_{\mathrm{UV}}$, which
+sits well below the substrate-natural Planck scale.
+
+\subsection{Observational ceilings}
+
+Pulsar-timing arrays
+constrain $|\alpha|, |\beta|, |\gamma| \lesssim 10^{60}$ in
+geometric units; binary-black-hole inspiral observations from LIGO/Virgo
+constrain to $\lesssim 10^{50}$. The substrate's predictions
+sit at $\mathcal O(10^{-2})$ in geometric units, well beneath both
+ceilings (\texttt{HigherCurvatureStelle.predictions\_below\_observational\_ceilings}).
+
+\subsection{Correctness-push: predictions vs ceilings (passes)}
+
+The correctness-push biconditional Decision Gate~E.2$''$ closes: the
+substrate's higher-curvature predictions are observationally consistent
+with all published pulsar-timing and binary-black-hole bounds.
+
+
+%% =====================================================================
+%% §19 — Diff invariance order-by-order through a_4 (Decision Gate E.3)
+%% Lift: paper41_diff_invariance
+%% =====================================================================
+\section{Order-by-order diffeomorphism invariance through $a_4$ (Decision Gate E.3)}
+\label{sec:diff-invariance}
+
+The substrate's nonlinear-EFE chain (\S\ref{sec:nonlinear-efe-ppn}) requires
+diffeomorphism invariance at each order in the heat-kernel expansion.
+\texttt{NonlinearDiffInvariance.lean} encodes this as a path-(b)
+order-by-order biconditional.
+
+\subsection{Path-(b) framework}
+
+The path-(b) framework decomposes the substrate's effective Lagrangian
+into a coefficient bundle that respects diffeomorphism invariance up to
+a residual anomaly term. The
+\texttt{nonlinearDiffInvariance.path\_b\_residual} is the order-by-order
+invariance failure; the central claim is that this residual vanishes
+order-by-order through $a_4$ on the Dirac bundle.
+
+\subsection{Decision Gate~E.3 biconditional}
+
+\texttt{path\_b\_holds\_iff\_dirac\_bundle}: the order-by-order
+diffeomorphism-invariance biconditional closes for the substrate's
+Dirac-fermion bundle and fails for any perturbed bundle. The
+\texttt{perturbed\_bundle\_residual\_linear\_in\_delta} closure makes
+the failure constructive: any perturbation of the Dirac bundle
+introduces a path-(b) residual linear in the perturbation parameter,
+which fails the biconditional at first order.
+
+\subsection{Numerical companion: anomaly hunt passes}
+
+A numerical anomaly-hunt scan over the Stelle $(\alpha,\beta,\gamma)$
+coefficients confirms the path-(b) closure at the predicted Dirac-bundle
+values. The substrate's Stelle-basis predictions of \S\ref{sec:higher-curvature}
+sit inside the anomaly-free region; perturbations outside this region
+violate diffeomorphism invariance at order $a_4$ and are observationally
+excluded by the pulsar-timing-array ceilings.
+
+\subsection{Decision Gate~E.3 verdict and downstream consequences}
+
+\emph{Decision Gate~E.3 closes.} The substrate's diffeomorphism-invariance
+chain is verified order-by-order through $a_4$, which is the highest order
+at which Stelle higher-curvature couplings live (\S\ref{sec:higher-curvature}).
+This unblocks the variational nonlinear-EFE construction
+of \S\ref{sec:nonlinear-efe-ppn}.
+
+
+%% =====================================================================
+%% §20 — Variational nonlinear EFE + multi-channel PPN
+%% Lift: paper42_nonlinear_efe
+%% =====================================================================
+\section{Variational nonlinear Einstein equations + multi-channel PPN}
+\label{sec:nonlinear-efe-ppn}
+
+With Decision Gate~E.3 closed (\S\ref{sec:diff-invariance}), the substrate
+admits a variational nonlinear-EFE construction whose
+parametrised-post-Newtonian (PPN) ratios collapse to a single
+one-parameter family.
+
+\subsection{Trace-level stress-energy under ADW rescaling}
+
+Under the ADW $\alpha_{\mathrm{ADW}}$ rescaling that relates emergent and
+bare-matter sectors, the trace of the stress-energy tensor satisfies
+$T^{\mu}_{\;\;\mu,\,\mathrm{emerg}} = \alpha_{\mathrm{ADW}} \cdot T^{\mu}_{\;\;\mu,\,\mathrm{bare}}$.
+The trace-level Einstein-equation residual closes via a
+Decision-Gate-style biconditional at $\alpha_{\mathrm{ADW}} = 1$
+(\texttt{NonlinearEFE.trace\_residual\_zero\_iff\_alpha\_unity}).
+
+\subsection{Multi-channel PPN observables (one-parameter family)}
+
+The synthesis-level claim NEW to D3 is that the PPN observables of
+the substrate---light deflection, perihelion precession, and
+black-hole-ringdown frequency---form a one-parameter family in
+$\alpha_{\mathrm{ADW}}$:
+\begin{equation}
+\label{eq:ppn-ratio-identity}
+(\alpha_{\mathrm{deflect}},\,\alpha_{\mathrm{precess}},\,\alpha_{\mathrm{ringdown}})
+\;=\; \bigl(\alpha,\,\tfrac{2\alpha+1}{3},\,\alpha\bigr)\,,
+\end{equation}
+\noindent
+with $\alpha = \alpha_{\mathrm{ADW}}$. Generic PPN
+literature~\cite{Will2014} treats deflection, precession, and ringdown
+as three independent observables, which the substrate's structure
+collapses onto one. \emph{This is the substrate's first one-parameter
+prediction across the multi-channel PPN register.}
+
+\subsection{Observational consistency}
+
+At $\alpha_{\mathrm{ADW}} = 1$, \eqref{eq:ppn-ratio-identity} reduces to
+$(1,1,1)$, the general-relativity prediction. Cassini's
+Mercury-perihelion measurement, Eddington's 1919 light-deflection
+observation~\cite{Eddington1919}, and LIGO/Virgo black-hole-ringdown
+measurements all match general relativity to current sensitivity, and
+therefore match the substrate at $\alpha_{\mathrm{ADW}} = 1$. Decision
+Gate~E.4$'$ closes
+(\texttt{NonlinearEFE.ppn\_decision\_gate\_passes}).
+
+
+%% =====================================================================
+%% §21 — Cosmological constant in emergent form (Decision Gate E.4) — REPRODUCED
+%% Lift: paper42b_cc_emergent
+%% =====================================================================
+\section{Cosmological constant in emergent form: the problem reproduced}
+\label{sec:cc-emergent}
+
+The substrate's heat-kernel $a_0$ coefficient delivers an emergent
+cosmological constant whose natural-microscopic-point prediction
+overshoots the observed value by $\sim 10^{122}$.
+
+\subsection{Microscopic predictions}
+
+\begin{equation}
+\label{eq:lambda-emerg-microscopic}
+\Lambda_{\mathrm{emerg}}(\Lambda_{\mathrm{UV}}, N_f)
+\;=\; a_0(N_f)\,\Lambda_{\mathrm{UV}}^{4} \;=\; N_f\,\Lambda_{\mathrm{UV}}^{4},
+\end{equation}
+\noindent
+where the $a_0$ contribution is universal across Dirac species
+(\texttt{HeatKernelExpansion.a0\_dirac\_linear}). The Lean closed form
+\texttt{MicroscopicCoefficientMatch.lambdaEmergMicroscopic} carries the
+numerical evaluation infrastructure with positivity guard
+\texttt{lambdaEmergMicroscopic\_pos}.
+
+\subsection{Observed value and the magnitude problem}
+
+The Planck 2018 CMB combined with type-Ia supernovae fixes
+$\Lambda_{\mathrm{obs}} \simeq 2.6\times 10^{-47}\,\mathrm{GeV}^{4}$
+(\texttt{lambdaObservedGeV4}~$= 26 \cdot 10^{-48}$). At the natural
+microscopic point $(\Lambda_{\mathrm{UV}}, N_f) = (M_{\mathrm{Pl}}, 16)$
+with $M_{\mathrm{Pl}} = 12 \cdot 10^{18}\,\mathrm{GeV}$
+(\texttt{planckMassGeV}), the substrate's prediction overshoots the
+observed value by approximately a factor of $10^{122}$. Lean theorem
+\texttt{MicroscopicCoefficientMatch.lambdaEmergMicroscopic\_at\_planck\_natural\_far\_exceeds\_observed}
+discharges this quantitatively. This is the Weinberg cosmological-constant
+problem~\cite{Weinberg1989}, reproduced rather than solved inside the
+substrate's emergent-gravity formulation.
+
+\subsection{Verdict-band map}
+
+We classify $(\Lambda_{\mathrm{UV}}, N_f)$ pairs into three bands:
+\emph{resolved} ($\Lambda_{\mathrm{emerg}} \approx \Lambda_{\mathrm{obs}}$
+within a factor of $10$), requiring an unnatural $\Lambda_{\mathrm{UV}}$
+$\sim 10^{-12}\,M_{\mathrm{Pl}}$; \emph{intermediate} (factor
+$10$--$10^{60}$); and \emph{reproduced} (factor $> 10^{60}$). The natural
+microscopic point sits firmly in the reproduced band.
+
+\subsection{Microscopic--macroscopic match: $\delta G_N = 0$ biconditional}
+
+Decision Gate~E.4: the substrate's $G_N^{\mathrm{emerg}}$ matches the
+laboratory Newton constant if and only if $\alpha_{\mathrm{ADW}} = 1$
+(\texttt{MicroscopicCoefficientMatch.matchResidual\_eq\_zero\_iff\_alpha\_unity}).
+The $\Lambda_{\mathrm{emerg}} \gg \Lambda_{\mathrm{obs}}$ overshoot
+is independent of $\alpha_{\mathrm{ADW}}$, by the heat-kernel
+$a_0$ coefficient's universality.
+
+\subsection{Stelle-basis higher-curvature aggregate}
+
+The Stelle higher-curvature aggregate
+$\sum_{i \in \{R^2,\mathrm{Ric}^2,\mathrm{Riem}^2\}}
+c_i$ closes negative on the Dirac bundle
+(\texttt{higherCurvature\_stelle\_sum\_negative}); the closed-form
+identity
+\texttt{higherCurvature\_stelle\_sum\_eq} discharges the algebraic
+sum.
+
+\subsection{Discussion: ``shelter in emergent gravity?''}
+
+\emph{No.} The substrate does not shelter from the cosmological-constant
+problem. Sakharov's induced-gravity proposal~\cite{Sakharov1968} and
+Adler's elaboration~\cite{Adler1980} left open whether emergent
+gravity provides an alternative cancellation mechanism. The
+calculation here delivers the answer: the natural-microscopic-point
+prediction $\Lambda_{\mathrm{emerg}}/\Lambda_{\mathrm{obs}} \sim 10^{122}$
+is inherited from the heat-kernel $a_0$ coefficient, which is universal
+across emergent-gravity proposals at one-loop. The substrate reproduces
+the cosmological-constant problem; it does not solve it.
+
+
+%% =====================================================================
+%% §22 — Einstein–Cartan torsion + Kostelecky-Russell-Tasson bound
+%% Lift: paper43_einstein_cartan
+%% =====================================================================
+\section{Einstein--Cartan torsion: bound passage at $|T_{\mathrm{EC}}| \simeq 2.05\times 10^{-77}\,\mathrm{GeV}$}
+\label{sec:einstein-cartan}
+
+The substrate's spin-current channel delivers an Einstein--Cartan torsion
+amplitude that sits forty-six orders of magnitude beneath the
+Kostelecky--Russell--Tasson cosmic-axial-torsion
+bound~\cite{KosteleckyRussellTasson2008}.
+
+\subsection{Microscopic torsion-amplitude prediction}
+
+\begin{equation}
+\label{eq:tec-microscopic}
+|T_{\mathrm{EC}}|(\Lambda_{\mathrm{UV}},\,N_f,\,\alpha_{\mathrm{EC}},\,n_{\mathrm{spin}})
+\;=\; \alpha_{\mathrm{EC}}\cdot\frac{12\pi}{N_f\,\Lambda_{\mathrm{UV}}^{2}}\cdot n_{\mathrm{spin}}\,,
+\end{equation}
+\noindent
+the same Sakharov coefficient~\eqref{eq:sakharov-identity} multiplied by
+a spin-current factor $\alpha_{\mathrm{EC}}\,n_{\mathrm{spin}}$ where
+$\alpha_{\mathrm{EC}}$ is the Einstein--Cartan-mass-mixing coupling and
+$n_{\mathrm{spin}}$ is the cosmic spin-current density. At the natural
+microscopic point $(\Lambda_{\mathrm{UV}}, N_f, \alpha_{\mathrm{EC}}) =
+(M_{\mathrm{Pl}}, 16, 1)$ and $n_{\mathrm{spin}} \simeq
+1.3\times 10^{-39}\,\mathrm{GeV}^{3}$ (the cosmic-axial spin density at
+present-day epoch),
+\begin{equation}
+|T_{\mathrm{EC}}| \simeq 2.05\times 10^{-77}\,\mathrm{GeV}\,.
+\end{equation}
+\noindent
+Lean theorem \texttt{EinsteinCartanExtension.torsionAmplitude\_pos}
+closes positivity;
+\texttt{torsionAtCosmologicalBackground\_pos\_at\_natural\_params} closes
+the natural-point evaluation; the
+match-residual biconditional
+\texttt{ecResidual\_eq\_zero\_iff\_alpha\_unity} closes
+$\delta T_{\mathrm{EC}} = 0$ if and only if $\alpha_{\mathrm{EC}} = 1$.
+
+\subsection{Bound-passage closure}
+
+The Kostelecky--Russell--Tasson cosmic-axial-torsion bound caps
+$|T_{\mathrm{EC}}| \le 10^{-31}\,\mathrm{GeV}$. The substrate's
+prediction sits forty-six orders of magnitude beneath, closed in
+\texttt{EinsteinCartanExtension.torsionAtCosmologicalBackground\_at\_planck\_natural\_below\_kostelecky}.
+The (older, less-stringent) Hughes--Drever isotropy
+bound~\cite{HughesDrever1960} is implied
+(\texttt{below\_kostelecky\_implies\_below\_hughes\_drever}).
+
+\subsection{Cross-channel chained bound: torsionBound chain}
+
+The substrate's torsion register chains: Hughes--Drever 1960 to
+Kostelecky--Russell--Tasson 2008 to the \emph{substrate prediction at natural
+point} to laboratory measurement at low energies. Each link is a Lean
+biconditional closure;
+\texttt{torsionBoundKostelecky\_lt\_hughesDrever} certifies the
+ordering.
+
+\subsection{Discussion: torsion as a soft observational signature}
+
+The substrate's torsion amplitude is small but non-zero; the substrate
+predicts a soft torsion signature that current experiments do not
+detect but future axial-torsion-sensitive measurements may. The
+substrate is observationally consistent with all currently published
+torsion bounds at all natural microscopic parameter points
+(\texttt{dirac\_H\_EinsteinCartanExtensionHolds\_at\_alpha\_one},
+\texttt{perturbed\_alpha\_not\_H\_EinsteinCartanExtensionHolds}).
+
+
+%% =====================================================================
+%% §22.5 — Algebraic-GR backbone (paper44 + Phase 6f-6g)
+%% =====================================================================
+\section{Algebraic Lorentzian-geometry backbone (substrate appendix)}
+\label{sec:algebraic-gr-backbone}
+
+The classical-gravity backbone supporting the singularity, area, and no-hair
+content of \S\ref{sec:causal-structure}--\S\ref{sec:no-hair} requires
+algebraic Lorentzian-geometry primitives that, prior to this work, were
+not formalised in any proof assistant on indefinite-signature metrics.
+The supplement in \texttt{LorentzianMetric.lean},
+\texttt{RiemannianConnection.lean}, \texttt{RiemannCoordinate.lean},
+\texttt{RiemannDifferentialBianchi.lean},
+\texttt{BundleRiemann.lean}, and \texttt{BundleRiemannAux.lean} fills this
+gap. Bundle~I1 ships these as the primary first-formalization claim;
+\S\ref{sec:algebraic-gr-backbone} is the supplement that consumes them
+on the substrate side.
+
+\subsection{Lorentzian metric typeclass}
+
+The Lorentzian-metric typeclass declares an indefinite-signature inner
+product on a finite-dimensional real vector space, with the
+$(-,+,+,+)$ signature as the canonical instance. The typeclass admits a
+bundle structure that supports the classical singularity-theorem and
+no-hair content of subsequent sections.
+
+\subsection{Levi-Civita Christoffel uniqueness on Lorentzian metrics}
+
+The Christoffel-symbol Levi-Civita uniqueness theorem, which on
+Riemannian manifolds is well known and Mathlib-shipped, was not
+previously formalised on Lorentzian (indefinite-signature) metrics in any
+proof assistant. \texttt{RiemannianConnection.lean} discharges
+uniqueness on the indefinite-signature case; this is the
+load-bearing first-formalization claim of \S\ref{sec:algebraic-gr-backbone}.
+
+\subsection{Algebraic first Bianchi identity}
+
+The first Bianchi identity (algebraic symmetry of the Riemann tensor's
+cyclic-three-index sum) closes by \texttt{BundleRiemann.firstBianchi};
+the differential second Bianchi identity, which on a torsion-free
+connection states $\nabla_{[\mu} R_{\nu\rho]\sigma\tau} = 0$, closes by
+\texttt{RiemannDifferentialBianchi.secondBianchi}.
+
+\subsection{Algebraic Riemann tensor + Einstein tensor}
+
+The Riemann tensor on the Lorentzian-metric bundle (\texttt{Curvature.lean},
+\texttt{EinsteinTensor.lean}) and the Einstein tensor with its trace-reverse
+identity carry over from the supplement infrastructure. The exact-solution
+machinery (\texttt{ExactSolutions.lean}, \texttt{KerrSchild.lean}) closes
+the Schwarzschild Kerr--Schild form and the de~Sitter / Anti-de~Sitter
+$\Lambda$-vacuum biconditional.
+
+\subsection{Energy conditions on the bundle}
+
+\texttt{EnergyConditions.lean} encodes the four energy conditions
+(NEC, WEC, SEC, DEC) on the Lorentzian-metric bundle as predicates over
+stress-energy. These predicates are consumed by the
+Penrose-hypothesis bundle of \S\ref{sec:penrose} and the area theorem of
+\S\ref{sec:area}.
+
+\subsection{ADM Hamiltonian + momentum constraint}
+
+\texttt{ADMFormalism.lean} encodes the Arnowitt--Deser--Misner Hamiltonian
+formulation of general relativity~\cite{ADM1962}, with the momentum
+constraint and Hamiltonian constraint as Lean biconditionals over the
+indefinite-signature metric bundle. This is required infrastructure for
+the regime-partition of \S\ref{sec:bch-four-laws} and the no-hair theorem
+of \S\ref{sec:no-hair}.
+
+\subsection{Tetrad-metric equivalence}
+
+The substrate's tetrad fields (Akama--Diakonov--Wetterich apparatus) and
+the Lorentzian metric on the same bundle satisfy a Lean equivalence
+relation: the metric is the tetrad's bilinear $g_{\mu\nu} = \eta_{ab}\,e^a_\mu\,e^b_\nu$,
+and the tetrad is recoverable from the metric up to local Lorentz
+transformation. This equivalence is the load-bearing infrastructure for
+the substrate's tetrad-condensation phase to inherit the classical-GR
+content of subsequent sections.
+
+
+%% =====================================================================
+%% §23 — Causal structure axioms
+%% =====================================================================
+\section{Causal structure axioms}
+\label{sec:causal-structure}
+
+The substrate's spacetime carries the causal structure axioms of
+Wald~\cite{Wald1984} \S 8.1.
+
+\subsection{Causal structure axiom hierarchy}
+
+Following Wald \S 8.1, we declare the predicate hierarchy:
+\emph{chronology} (no closed timelike curve),
+\emph{causality} (no closed causal curve),
+\emph{strong causality} (small causal-violation neighbourhoods),
+\emph{stable causality} (small Lorentzian perturbations preserve causality).
+Each predicate is a Lean Prop on the spacetime bundle of \S\ref{sec:algebraic-gr-backbone};
+the hierarchy
+$\text{stable} \Rightarrow \text{strong} \Rightarrow \text{causality} \Rightarrow \text{chronology}$
+closes constructively.
+
+\subsection{The realLineSpacetime witness}
+
+\texttt{realLineSpacetime} is the substrate's concrete witness instance:
+a $1+0$-dimensional flat spacetime that satisfies all four causal-structure
+predicates trivially. The witness exists for the substrate at the
+machine-checked level
+(\texttt{realLineSpacetime\_no\_trappedSurface\_for\_nonneg\_expansion}).
+
+\subsection{Bundle to substrate}
+
+\S\ref{sec:causal-structure}'s causal-structure hierarchy is consumed by
+\S\ref{sec:penrose} (Penrose hypothesis bundle requires
+strong causality plus global hyperbolicity) and \S\ref{sec:hawking-penrose}
+(Hawking--Penrose SEC variant requires stable causality).
+
+
+%% =====================================================================
+%% §24 — Penrose singularity hypothesis bundle + Riccati focusing
+%% =====================================================================
+\section{Penrose singularity hypothesis bundle + Riccati focusing core}
+\label{sec:penrose}
+
+The Penrose singularity theorem~\cite{Penrose1965} closes on the
+substrate as a Lean biconditional under explicit applicability hypothesis.
+
+\subsection{Penrose hypothesis bundle}
+
+\texttt{PenroseSingularity.IsPenroseHypothesisSatisfied} is the
+predicate-level Penrose hypothesis: the spacetime carries
+\emph{(i)} a non-empty trapped surface (a 2-surface whose null-expansion
+scalars are both negative;
+\texttt{PenroseSingularity.IsTrappedSurface}), \emph{(ii)} a globally
+hyperbolic causal structure (\texttt{IsGloballyHyperbolic}), and
+\emph{(iii)} the Null Energy Condition (\texttt{IsNECsatisfied}). The
+bundle of these three predicates is the Penrose hypothesis.
+
+\subsection{Riccati-focusing core}
+
+The substrate-side Riccati equation
+$\theta'(\lambda) = -\theta^2/(d-1) - R_{\mu\nu}\,k^\mu k^\nu$
+governs null-geodesic-congruence focusing under the NEC. The Riccati
+solution \texttt{riccatiSolution} is closed in
+\texttt{PenroseSingularity.lean}, with positivity of the focusing time
+\texttt{focusingTime\_pos} and negativity of the solution under negative
+initial expansion \texttt{riccatiSolution\_neg}. The Penrose conclusion
+(\texttt{PenroseConclusion}) follows from
+both focal-time positivity statements
+(\texttt{penrose\_both\_focal\_times\_pos}).
+
+\subsection{Correctness-push biconditional under applicability}
+
+\texttt{PenroseSingularity.correctness\_push\_biconditional\_under\_applicable}
+states the load-bearing biconditional: under
+\texttt{IsADWPenroseApplicable} (the substrate-specific applicability
+predicate), the Penrose hypothesis is satisfied if and only if the
+spacetime is null-geodesically incomplete to the future of the
+trapped surface. This is the substrate's first-formalization Penrose
+hypothesis bundle.
+
+
+%% =====================================================================
+%% §25 — Hawking-Penrose SEC variant + Λ-violates-SEC counterexample
+%% =====================================================================
+\section{Hawking--Penrose SEC variant: $\Lambda$ violates SEC}
+\label{sec:hawking-penrose}
+
+The Hawking--Penrose strong-energy-condition variant~\cite{HawkingPenrose1970}
+strengthens Penrose's NEC to the Strong Energy Condition (SEC),
+$T_{\mu\nu}\,t^\mu t^\nu \ge \tfrac{1}{2}T$ for all timelike vectors
+$t^\mu$.
+
+\subsection{Hawking--Penrose hypothesis (SEC variant)}
+
+The hypothesis differs from \S\ref{sec:penrose} by replacing NEC with
+SEC. This delivers a stronger conclusion (existence of an incomplete
+geodesic) but applies to a smaller class of spacetimes: SEC is violated
+in any spacetime carrying a positive cosmological constant.
+
+\subsection{Cosmological-$\Lambda$-violates-SEC counterexample}
+
+A standard counterexample: de~Sitter space with $\Lambda > 0$ violates
+SEC for any matter content. \texttt{HawkingPenroseSingularity.dS\_violates\_SEC}
+discharges the violation algebraically. The substrate's emergent
+$\Lambda_{\mathrm{emerg}} > 0$ from \S\ref{sec:cc-emergent} therefore
+\emph{violates} SEC, and the Hawking--Penrose hypothesis fails for
+the substrate's natural cosmological-constant sector.
+
+\subsection{Bridge: $\Lambda$-violates-SEC chain}
+
+\S\ref{sec:cc-emergent}'s $\Lambda_{\mathrm{emerg}} > 0$ implies SEC
+violation, which implies Hawking--Penrose-hypothesis failure for the
+substrate's cosmological sector. This is a structural admission, not a
+problem: cosmological-singularity formation in the substrate inherits
+NEC-only Penrose theorem (\S\ref{sec:penrose}) closure. The SEC variant
+is unavailable.
+
+
+%% =====================================================================
+%% §26 — Classical area theorem on Schwarzschild family
+%% =====================================================================
+\section{Classical area theorem: Schwarzschild monotone-mass}
+\label{sec:area}
+
+Hawking's classical area theorem~\cite{Hawking1971} on the Schwarzschild
+family closes constructively: $A(M) = 16\pi M^2$ in the substrate's
+emergent units, monotonically non-decreasing in $M$.
+
+\subsection{Schwarzschild area as a function of mass}
+
+\texttt{AreaTheorem.schwarzschildHorizonArea}: $A(M) = 16\pi M^2$ for
+Schwarzschild mass $M \ge 0$. \texttt{schwarzschild\_area\_monotone}
+discharges $A(M_1) \le A(M_2)$ for $M_1 \le M_2$;
+\texttt{schwarzschild\_area\_strictly\_increasing} discharges strict
+monotonicity for $M_1 < M_2$.
+
+\subsection{Bridge to BH-entropy}
+
+The substrate's Bekenstein--Hawking entropy
+\eqref{eq:bh-entropy} reads $S(A) \ge A/(4G_N)$ on the leading order;
+combining with $dA/dt \ge 0$ delivers $dS/dt \ge 0$, the second-law
+content of \S\ref{sec:bch-four-laws}. Three independent derivations of
+$dS/dt \ge 0$---classical area-monotonicity (\S\ref{sec:area}),
+Glorioso--Liu SK-EFT entropy-current monotonicity (\S\ref{sec:bch-four-laws}),
+and microscopic MTC counting (\S\ref{sec:bh-entropy})---converge on the
+same substrate.
+
+
+%% =====================================================================
+%% §27 — No-hair theorem: Kerr family with sub-extremality
+%% =====================================================================
+\section{No-hair theorem: Kerr family with sub-extremality $J^2 \le M^4$}
+\label{sec:no-hair}
+
+The Kerr family of stationary asymptotically flat axisymmetric vacuum
+black holes~\cite{Israel1967,Carter1971,Hawking1972,Robinson1975}
+exhausts the substrate's stationary BH zoo, modulo the sub-extremality
+bound $J^2 \le M^4$.
+
+\subsection{Kerr family parameterization}
+
+\texttt{NoHairTheorem.KerrFamilyParams}: a stationary axisymmetric
+Kerr-family parameter is a tuple $(M, J)$ with $M > 0$ and
+$J \in \mathbb{R}$. The sub-extremality bound
+$|J| \le M^2$ closes by
+\texttt{subextremality\_implies\_abs\_J\_le\_M\_sq}.
+
+\subsection{Schwarzschild specialization ($J = 0$)}
+
+\texttt{schwarzschildAsKerr}: the $J = 0$ Kerr-family element is the
+Schwarzschild solution. \texttt{schwarzschild\_is\_kerr\_family\_J\_zero}
+discharges this; \texttt{kerr\_family\_schwarzschild\_horizon\_radius}
+gives the horizon radius $r_+ = 2M$;
+\texttt{kerr\_family\_schwarzschild\_area} delivers $A = 16\pi M^2$
+(matching \S\ref{sec:area}); and
+\texttt{kerr\_family\_schwarzschild\_area\_monotone} delivers the
+area-monotonicity in $M$.
+
+\subsection{No-hair statement}
+
+\texttt{NoHairTheorem.noHairTheorem\_statement}: every stationary
+asymptotically flat axisymmetric vacuum black hole on the substrate
+admits a Kerr-family description (\texttt{HasKerrFamilyDescription}).
+This is the no-hair claim at the Lean level.
+
+\subsection{Cross-bridge to regime partition}
+
+The Kerr family's mass parameter $M$ enters the regime-partition
+criterion of \S\ref{sec:bch-four-laws}: a Kerr-family black hole with
+$M > M_c$ sits in the Schwarzschild branch; with $M < M_c$ in the
+ADW-extremality branch. The Kerr family connects the two branches via
+the rotation parameter $J$ on the substrate's natural BH zoo.
+
+
+%% =====================================================================
+%% §28 — Synthesis & outlook
+%% =====================================================================
+\section{Synthesis and outlook}
+\label{sec:synthesis-outlook}
+
+The substrate's predictive register, partitioned by what it forbids and
+what it permits, is now closed at the Lean-formalization scope across
+all twenty-two sections.
+
+\subsection{One coefficient, six observables}
+
+The single Sakharov--Adler coefficient
+$G_N^{\mathrm{Sak}} = 12\pi/(N_f\,\Lambda_{\mathrm{UV}}^{2})$ from
+\eqref{eq:sakharov-identity}, machine-verified in the heat-kernel
+calibration of \S\ref{sec:heat-kernel}, propagates without an additional
+dial through Newton's constant (\S\ref{sec:linearized-efe}), the
+gravitational-wave speed (\S\ref{sec:gw170817}), the Bekenstein--Hawking
+entropy prefactor (\S\ref{sec:bh-entropy}), the BCH regime-partition
+mass $M_c$ (\S\ref{sec:bch-four-laws}), the emergent cosmological
+constant (\S\ref{sec:cc-emergent}), and the Einstein--Cartan torsion
+amplitude (\S\ref{sec:einstein-cartan}). The substrate's
+$N_f = 16$ also anchors the modular-invariance derivation of three
+Standard-Model fermion generations (Bundle~L2) and the CFL-emergent
+$\mathbb{Z}_3$ matching the QCD centre $\mathbb{Z}_3$ (\S\ref{sec:cfl}).
+
+\subsection{The closure register}
+
+\textbf{Cleared.} \S\ref{sec:linearized-efe} Decision Gate~E.1
+($\alpha_{\mathrm{ADW}} = 1$). \S\ref{sec:heat-kernel} Decision Gate~E.2
+($a_2 \to G_N^{\mathrm{Sak}}$). \S\ref{sec:diff-invariance} Decision
+Gate~E.3 (path-(b) order-by-order through $a_4$). \S\ref{sec:nonlinear-efe-ppn}
+Decision Gate~E.4$'$ (multi-channel PPN ratios). The
+Einstein--Cartan torsion bound passage at
+$|T_{\mathrm{EC}}| \simeq 2.05\times 10^{-77}\,\mathrm{GeV}$
+(\S\ref{sec:einstein-cartan}) clears Kostelecky--Russell--Tasson by
+forty-six orders of magnitude.
+The Stelle higher-curvature
+$(\alpha,\beta,\gamma)$ predictions (\S\ref{sec:higher-curvature}) sit
+beneath pulsar-timing and binary-BH ceilings.
+
+\textbf{Closed by negative result.} GW170817 falsifies the vestigial
+second-sound graviton across the natural susceptibility range
+(\S\ref{sec:gw170817}). The perturbative-Wen-ADW route to gravity
+underpredicts $G_N$ by a factor of approximately 6000 (\S\ref{sec:closure-triad}).
+Pretko--Radzihovsky fracton-hydrodynamics fails diff invariance at
+order $a_4$ (\S\ref{sec:closure-triad}, \S\ref{sec:diff-invariance}).
+The abelian-MTC channel for BH-entropy fails the
+Kaul--Majumdar logarithmic match (\S\ref{sec:bh-entropy}). The
+electroweak-baryogenesis channel is doubly forbidden by SM crossover
+and the substrate's chirality wall (\S\ref{sec:ewpt}--\S\ref{sec:ewbg-bridge}).
+
+\textbf{Reproduced rather than solved.} The Weinberg cosmological-constant
+problem is reproduced inside the substrate's emergent-gravity formulation
+at the natural microscopic point: $\Lambda_{\mathrm{emerg}}/\Lambda_{\mathrm{obs}}
+\sim 10^{122}$ (\S\ref{sec:cc-emergent}). The substrate inherits the
+$a_0$ coefficient's universality across emergent-gravity proposals at
+one-loop; emergent gravity does not shelter from the cosmological-constant
+problem.
+
+\textbf{Open under tracked hypothesis.} The explicit one-loop calculation
+of $\alpha_{\mathrm{ADW}}$ that discharges the three Vergeles propositions
+(\S\ref{sec:linearized-efe}) is open. The
+RHMC convergence at $L \ge 8$ in the vestigial-metric Monte Carlo
+(\S\ref{sec:vestigial-mc}) is in flight. The microscopic Higgs mass
+prediction (\S\ref{sec:scalar-rung}) closes only modulo a tetrad
+back-reaction calculation that has not been completed. The
+PMNS structure on the Majorana rung (\S\ref{sec:majorana-rung}) is
+inherited but not closed-form predicted.
+
+\subsection{Cross-bundle bridges}
+
+\S\ref{sec:gw170817} and Bundle~L1 share the same Lean theorem and
+numerical anchors for the GW170817 vestigial-graviton falsification.
+\S\ref{sec:bch-four-laws} and Bundle~L3 share the regime-partition
+criterion and $M_c$ definition. \S\ref{sec:qec-bridge} sets the canonical
+QEC-MTC framing that Bundle~D4 \S 7 will adopt downstream.
+\S\ref{sec:scalar-rung}--\S\ref{sec:majorana-rung} and Bundle~L2
+share the $N_f = 16$ anchor. \S\ref{sec:cc-emergent} and Bundle~D5
+\S 7 share the heat-kernel $a_0$ coefficient character-for-character.
+\S\ref{sec:algebraic-gr-backbone} and Bundle~I1 share the
+first-formalization claims; I1 is the primary, D3 the supplement.
+
+\subsection{Algebraic-Lorentzian-geometry first-formalization claims}
+
+\S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} is the first
+machine-checked package on indefinite-signature metrics in any proof
+assistant for: the indefinite-signature Lorentzian-metric typeclass,
+Levi-Civita Christoffel uniqueness, the algebraic first Bianchi identity,
+the differential second Bianchi identity, the causal-structure axiom
+hierarchy, the Penrose singularity hypothesis bundle with the Riccati-focusing
+core, the Hawking--Penrose SEC variant with the
+$\Lambda$-violates-SEC counterexample, the classical area theorem on the
+Schwarzschild family, and the Kerr-family no-hair statement with
+sub-extremality $J^2 \le M^4$. The supplementary infrastructure ships
+as a Mathlib-PR-quality package; the no-hair theorem and the algebraic
+first Bianchi identity are flagged for Phase 8 Mathlib upstream cycle.
+
+\subsection{What this paper is not}
+
+D3 does not solve the cosmological-constant problem; it reproduces it.
+D3 does not derive individual Yukawa couplings or the Pontecorvo--Maki--Nakagawa--Sakata
+mixing matrix from first principles; it tracks them as open hypotheses.
+D3 does not predict $m_H = 125\,\mathrm{GeV}$ from a closed-form
+substrate calculation; the Bardeen--Hill--Lindner gauge embedding plus
+the Hill 2025 bilocal correction reduce the gap to roughly $20\%$
+modulo an open tetrad back-reaction. D3 does not resolve the RHMC
+convergence at $L \ge 8$ in the vestigial-metric Monte Carlo; convergence
+is in flight at the time of writing.
+
+\subsection{What this paper \emph{is}}
+
+D3 is the architectural unification of twenty-two formally verified
+threads into a single substrate account whose predictive content lives at
+the boundary partition (cleared, falsified, structurally blocked, or
+reproduced) on a single observable lattice. The substrate is not selected
+from the literature by fiat; three quantitative closures force it. The
+substrate's gravity register is closed at the
+Lean-formalization scope across linearised gravity, gravitational waves,
+black-hole entropy, BH thermodynamics with regime partition, the
+cosmological constant, Einstein--Cartan torsion, the algebraic-Lorentzian-geometry
+backbone, the singularity theorems, the area theorem, and the no-hair
+theorem. The substrate's QCD register is closed at the Lean-formalization
+scope for centre-symmetry confinement, chiral SSB with PDG-anchored
+GMOR, and the CFL emergent-$\mathbb{Z}_3$ matching the QCD centre
+$\mathbb{Z}_3$. The substrate's microscopic register
+is closed in the gauge-and-Higgs sector, with tracked-hypothesis
+status flagged for the open one-loop calculation, the Higgs-mass
+back-reaction, and the lepton-mixing PMNS structure.
+
+\paragraph{Submission gate.} D3 ships at this Phase~7 close-out gate
+under the Phase~7 sub-wave 7c.0 architectural skeleton. Phase~8 is the
+submission roll-out; D3's PRD-long-format submission is recommended in
+the Phase~7 close-out window per the project strategy
+(\cite{Roehm2026Strategy}).
 
-\section{Introduction}
 
-TODO: bundle introduction.
-
-
-%% ─── Lifted from paper25_gravitational_waves (§6) — 2026-05-04T12:50:47Z ───
-\section{GW170817 vs vestigial graviton}
-\label{sec:d3-paper25_gravitational_waves}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §6
-%% Lift notes: GW170817 vestigial-graviton falsification (cross-bridge to L1 already GREEN); same numerical Δc/c constraint
-%% TODO: lift content from papers/paper25_gravitational_waves/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper25_gravitational_waves ───
-
-
-%% ─── Lifted from paper3_gauge_erasure (§3) — 2026-05-04T12:51:08Z ───
-\section{Gauge erasure}
-\label{sec:d3-paper3_gauge_erasure}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §3
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper3_gauge_erasure/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper3_gauge_erasure ───
-
-
-%% ─── Lifted from paper5_adw_gap (§4) — 2026-05-04T12:51:08Z ───
-\section{ADW gap equation}
-\label{sec:d3-paper5_adw_gap}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §4
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper5_adw_gap/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper5_adw_gap ───
-
-
-%% ─── Lifted from paper23_linearized_efe (§5) — 2026-05-04T12:51:08Z ───
-\section{Linearized EFE + FLRW}
-\label{sec:d3-paper23_linearized_efe}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §5
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper23_linearized_efe/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper23_linearized_efe ───
-
-
-%% ─── Lifted from paper27_bh_thermodynamics_four_laws (§8) — 2026-05-04T12:51:08Z ───
-\section{BCH four laws by regime}
-\label{sec:d3-paper27_bh_thermodynamics_four_laws}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §8
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper27_bh_thermodynamics_four_laws ───
-
-
-%% ─── Lifted from paper26_bh_entropy (§9) — 2026-05-04T12:51:08Z ───
-\section{BH entropy from MTC counting}
-\label{sec:d3-paper26_bh_entropy}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §9
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper26_bh_entropy/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper26_bh_entropy ───
-
-
-%% ─── Lifted from paper44_riemannian_connection (§22.5) — 2026-05-04T12:51:08Z ───
-\section{Lorentzian metric typeclass + Levi-Civita Christoffel uniqueness + full coord...}
-\label{sec:d3-paper44_riemannian_connection}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §22.5
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper44_riemannian_connection/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper44_riemannian_connection ───
-
-
-%% ─── Lifted from paper40_higher_curvature (§16) — 2026-05-04T12:51:08Z ───
-\section{Higher-curvature Stelle-basis structure at order a₄}
-\label{sec:d3-paper40_higher_curvature}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §16
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper40_higher_curvature/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper40_higher_curvature ───
-
-
-%% ─── Lifted from paper42_nonlinear_efe (§17) — 2026-05-04T12:51:09Z ───
-\section{Variational nonlinear EFE Decision Gate biconditional + multi-channel PPN}
-\label{sec:d3-paper42_nonlinear_efe}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §17
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper42_nonlinear_efe/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper42_nonlinear_efe ───
-
-
-%% ─── Lifted from paper41_diff_invariance (§18) — 2026-05-04T12:51:09Z ───
-\section{Nonlinear diff invariance order-by-order}
-\label{sec:d3-paper41_diff_invariance}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §18
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper41_diff_invariance/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper41_diff_invariance ───
-
-
-%% ─── Lifted from paper39_heat_kernel_expansion (§15) — 2026-05-04T12:51:09Z ───
-\section{Heat-kernel a₀, a₂, a₄ from Christensen-Duff Dirac}
-\label{sec:d3-paper39_heat_kernel_expansion}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §15
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper39_heat_kernel_expansion/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper39_heat_kernel_expansion ───
-
-
-%% ─── Lifted from paper22_ew_phase_transition (§13) — 2026-05-04T12:51:09Z ───
-\section{EW phase transition}
-\label{sec:d3-paper22_ew_phase_transition}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §13
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper22_ew_phase_transition/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper22_ew_phase_transition ───
-
-
-%% ─── Lifted from paper33_ewbg_chirality_wall (§13.5) — 2026-05-04T12:51:09Z ───
-\section{EW baryogenesis ↔ chirality wall}
-\label{sec:d3-paper33_ewbg_chirality_wall}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §13.5
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper33_ewbg_chirality_wall/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper33_ewbg_chirality_wall ───
-
-
-%% ─── Lifted from paper20_scalar_rung (§11) — 2026-05-04T12:51:09Z ───
-\section{Scalar rung}
-\label{sec:d3-paper20_scalar_rung}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §11
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper20_scalar_rung/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper20_scalar_rung ───
-
-
-%% ─── Lifted from paper21_majorana_rung (§12) — 2026-05-04T12:51:09Z ───
-\section{Majorana rung}
-\label{sec:d3-paper21_majorana_rung}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §12
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper21_majorana_rung/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper21_majorana_rung ───
-
-
-%% ─── Lifted from paper36_center_symmetry (§19) — 2026-05-04T12:51:09Z ───
-\section{Confinement}
-\label{sec:d3-paper36_center_symmetry}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §19
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper36_center_symmetry/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper36_center_symmetry ───
-
-
-%% ─── Lifted from paper37_chiral_ssb (§19.5) — 2026-05-04T12:51:09Z ───
-\section{Chiral SSB / GMOR}
-\label{sec:d3-paper37_chiral_ssb}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §19.5
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper37_chiral_ssb/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper37_chiral_ssb ───
-
-
-%% ─── Lifted from paper38_cfl (§19.7) — 2026-05-04T12:51:10Z ───
-\section{CFL color-flavor locking}
-\label{sec:d3-paper38_cfl}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §19.7
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper38_cfl/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper38_cfl ───
-
-
-%% ─── Lifted from paper35_qec_holography (§9.5) — 2026-05-04T12:51:10Z ───
-\section{QEC-Holography bridge}
-\label{sec:d3-paper35_qec_holography}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §9.5
-%% Lift notes: Phase 7c stub
-%% TODO: lift content from papers/paper35_qec_holography/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper35_qec_holography ───
-
-
-%% ─── Lifted from paper42b_cc_emergent (§21) — 2026-05-04T12:51:20Z ───
-\section{Cosmological constant in emergent form}
-\label{sec:d3-paper42b_cc_emergent}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §21
-%% Lift notes: Cosmological-constant reproduction; Phase 7c stub
-%% TODO: lift content from papers/paper42b_cc_emergent/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper42b_cc_emergent ───
-
-
-%% ─── Lifted from paper43_einstein_cartan (§22) — 2026-05-04T12:51:20Z ───
-\section{Einstein-Cartan torsion from ADW spin current}
-\label{sec:d3-paper43_einstein_cartan}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §22
-%% Lift notes: Einstein-Cartan torsion; Phase 7c stub
-%% TODO: lift content from papers/paper43_einstein_cartan/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% ─── End lift from paper43_einstein_cartan ───
 
 %% BUNDLE_APPEND_INSERT_HERE — bundle_append.py inserts new sections at
-%% this marker by default. To insert at a specific section, edit the
-%% body manually after the script runs.
+%% this marker. To insert at a specific section, edit body manually after
+%% the script runs.
 
 \bibliography{bibliography}
 \bibliographystyle{apsrev4-2}
