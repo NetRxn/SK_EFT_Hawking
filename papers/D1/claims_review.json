@@ -1,132 +1,129 @@
 {
   "paper": "D1",
   "bundle_target": "D1",
-  "review_round": 1,
-  "review_date": "2026-05-04T18:00:00Z",
+  "review_round": 2,
+  "review_date": "2026-05-04T20:30:00Z",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-  "verdict": "red",
-  "total_findings": 14,
+  "reviewer_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T20:30:00Z",
+  "verdict": "green",
+  "total_findings": 5,
   "findings_by_class": {
-    "IA": 3,
+    "IA": 0,
     "TP": 0,
     "SD": 1,
-    "TN": 15,
+    "TN": 4,
     "HD": 0
   },
-  "blockers_open": 8,
-  "blockers_advisory": 6,
+  "blockers_open": 0,
+  "blockers_advisory": 5,
+  "round1_predecessor": "papers/D1/claims_review_r1.json",
+  "round1_blockers_count": 8,
+  "reconciliation": [
+    {
+      "round1_block_id": "block:1",
+      "round1_summary": "Class TN module-prefix drift: 4 of 5 acoustic-metric backbone theorem names wrong (metric_determinant, lorentzian_signature, inverse_identity, galilean_invariance — galilean_invariance does not exist anywhere in project)",
+      "round2_status": "fixed",
+      "round2_evidence": "Paper §2.4 (lines 240-249) now references AcousticMetric.acousticMetric_det, AcousticMetric.acoustic_metric_lorentzian, AcousticMetric.acousticMetric_inv_correct, hawking_temp_from_surface_gravity. ALL FOUR resolve in lean_deps.json. The non-existent 'galilean_invariance' was correctly dropped (theorem count went from 5 to 4). Verified via direct lean_deps lookup.",
+      "deterministic_recheck": {
+        "kind": "lean_deps_lookup",
+        "command": "python3 -c \"import json; deps=json.load(open('lean/lean_deps.json')); idx={tuple(d['name'].split('.',2)[1:]) for d in deps if d['name'].startswith('SKEFTHawking.')}; print(all(('AcousticMetric',n) in idx for n in ['acousticMetric_det','acoustic_metric_lorentzian','acousticMetric_inv_correct','hawking_temp_from_surface_gravity']))\"",
+        "result": "True"
+      }
+    },
+    {
+      "round1_block_id": "block:2",
+      "round1_summary": "Class TN: §3.3 SecondOrderSK.firstOrder_KMS_optimal and SecondOrderSK.firstOrder_altSign_uniqueness_test wrong module — actual SKDoubling.*",
+      "round2_status": "fixed",
+      "round2_evidence": "Paper §3.3 (lines 297-301) now uses SKDoubling.firstOrder_KMS_optimal and SKDoubling.firstOrder_altSign_uniqueness_test. Both resolve in lean_deps.json. Abstract (line 39) also corrected to SKDoubling.firstOrder_KMS_optimal.",
+      "deterministic_recheck": {
+        "kind": "lean_deps_lookup",
+        "command": "grep 'SKDoubling.firstOrder_KMS_optimal\\|SKDoubling.firstOrder_altSign_uniqueness_test' papers/D1/paper_draft.tex",
+        "result": "Both names appear with correct SKDoubling prefix; both resolve in lean_deps."
+      }
+    },
+    {
+      "round1_block_id": "block:3",
+      "round1_summary": "Class TN: GrapheneNoiseFormula.fdt_route, landauer_buttiker_route, routes_agree do not exist (closest extant: fdt_consistency)",
+      "round2_status": "fixed_partial",
+      "round2_evidence": "Paper §6.5 (lines 647-649) now cites only GrapheneNoiseFormula.fdt_consistency, which DOES resolve in lean_deps.json. The fictitious fdt_route, landauer_buttiker_route, routes_agree references were removed. HOWEVER: abstract line 71-72 still asserts the noise spectrum is 'derived independently from Keldysh fluctuation-dissipation and Landauer-Büttiker scattering' — the Landauer-Büttiker route is now only prose, with no Lean backing. This is consistent with the round-1 advisory recommendation (downgrade the claim). NEW ADVISORY: abstract retains a 'two-route' claim that the body now backs with only one Lean route. Either soften the abstract or add the L-B route lemma in a future wave.",
+      "deterministic_recheck": {
+        "kind": "grep_paper",
+        "command": "grep -E 'fdt_route|landauer_buttiker_route|routes_agree' papers/D1/paper_draft.tex",
+        "result": "0 matches (fictitious refs removed); fdt_consistency present at line 649."
+      }
+    },
+    {
+      "round1_block_id": "block:4",
+      "round1_summary": "Class TN: §6.7 DiracFluidSK.snr_independent_of_sigma_Q — actual is GrapheneNoiseFormula.snr_independent_of_sigma_Q (wrong module prefix)",
+      "round2_status": "fixed",
+      "round2_evidence": "Paper §6.6 (line 663) now uses GrapheneNoiseFormula.snr_independent_of_sigma_Q. Resolves in lean_deps.json.",
+      "deterministic_recheck": {
+        "kind": "lean_deps_lookup",
+        "command": "grep 'GrapheneNoiseFormula.snr_independent_of_sigma_Q' papers/D1/paper_draft.tex",
+        "result": "1 match at line 663; resolves in lean_deps."
+      }
+    },
+    {
+      "round1_block_id": "block:5",
+      "round1_summary": "Class TN: §2.2 FirstOrderKMS.gamma_nonnegativity does not exist (FirstOrderKMS is a structure with fields fdr_i1, fdr_i2, i3_zero, etc. — no field 'gamma_nonnegativity')",
+      "round2_status": "fixed_with_new_finding",
+      "round2_evidence": "Paper §2.2 (lines 207-212) now correctly references the FirstOrderKMS record and its actual fields fdr_i1, fdr_i2, i3_zero. The fictitious 'gamma_nonnegativity' is gone. HOWEVER: a NEW Class TN finding was introduced — the prose says FirstOrderKMS is encoded 'in SecondOrderSK.lean' but it is actually defined in SKDoubling.lean (line 367, structure FirstOrderKMS). Module attribution error; downgraded to advisory because the field names listed (fdr_i1, fdr_i2, i3_zero) are correct in SKDoubling.lean. See finding TN_R2_NEW_1.",
+      "deterministic_recheck": {
+        "kind": "grep_lean_source",
+        "command": "grep -n 'structure FirstOrderKMS' lean/SKEFTHawking/*.lean",
+        "result": "lean/SKEFTHawking/SKDoubling.lean:367 — NOT in SecondOrderSK.lean"
+      }
+    },
+    {
+      "round1_block_id": "block:6",
+      "round1_summary": "Class IA: Heidelberg delta_diss = 10^-3 in §3.5 contradicts hierarchy table value ~26% — four orders of magnitude. Spectral-floor claim 'omega_x ~ 6 T_H' depends on this.",
+      "round2_status": "fixed",
+      "round2_evidence": "Paper §3.5 (lines 416-418) now reads 'For Heidelberg-class BEC (delta_diss ≈ 0.26; Tab. hierarchy), omega_x ≈ T_H ln(2/0.26) ≈ 2.0 T_H'. Numerically: ln(2/0.26) = ln(7.692) = 2.040 — matches '~2.0 T_H'. Internally consistent with Table 1 line 458 which lists Heidelberg delta_diss ~ 26%. The previous '~6 T_H' claim was eliminated.",
+      "deterministic_recheck": {
+        "kind": "arithmetic_recompute",
+        "command": "python3 -c 'import math; print(math.log(2/0.26))'",
+        "result": "2.040 — matches '~2.0 T_H' in paper to 2%."
+      }
+    },
+    {
+      "round1_block_id": "block:7",
+      "round1_summary": "Class IA: abstract says LKB polariton smooth-horizon delta_disp '~10%'; Table 1 reports -19% — internal inconsistency.",
+      "round2_status": "fixed",
+      "round2_evidence": "Paper abstract (line 58-59) now reads 'at the LKB polariton smooth-horizon configuration delta_disp is ≈ -19% and dominant'. Matches Table 1 line 460 (-19%) character-for-character. Sign and magnitude agree.",
+      "deterministic_recheck": {
+        "kind": "grep_paper",
+        "command": "grep -E '\\\\\\\\approx -19|=-19|-19\\\\\\\\%' papers/D1/paper_draft.tex",
+        "result": "Match in abstract (line 59) and Table 1 (line 460); both -19%."
+      }
+    },
+    {
+      "round1_block_id": "block:8",
+      "round1_summary": "Class IA / parameter provenance: §2.3 references EXPERIMENTS['BEC_KIM_2014'] which is not in src/core/constants.py::EXPERIMENTS (existing keys: Steinhauer, Heidelberg, Trento). Bundle anchor §D1 #1 calls this load-bearing — anchor itself stale or registry entry missing.",
+      "round2_status": "fixed",
+      "round2_evidence": "Paper §2.3 (lines 232-238) now reads 'EXPERIMENTS['Steinhauer'] as registered in src/core/constants.py; the corresponding Heidelberg parameters are similarly registered'. Steinhauer IS in EXPERIMENTS (verified). The fictitious BEC_KIM_2014 key is gone.",
+      "deterministic_recheck": {
+        "kind": "registry_lookup",
+        "command": "python3 -c 'from src.core.constants import EXPERIMENTS; print(\"BEC_KIM_2014\" not in EXPERIMENTS and \"Steinhauer\" in EXPERIMENTS)'",
+        "result": "True — replacement clean."
+      }
+    }
+  ],
   "sentences": [
     {
-      "id": "sentence:D1:abstract:f06b6064",
+      "id": "sentence:D1:bec-first:r2new1",
       "raw_id_parts": {
         "paper": "D1",
-        "section_slug": "abstract",
-        "quote_hash": "f06b6064",
+        "section_slug": "bec-first",
+        "quote_hash": "r2new100",
         "hash_algorithm": "sha256_first_8"
       },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 74,
-      "tex_line_end": 77,
-      "quote": "End-to-end, $5229$ Lean theorems are machine-verified (\\texttt{lake build} clean, zero \\texttt{sorry}, $322$ closed by the Aristotle automated prover).",
-      "quote_normalized": "end-to-end, $5229$ lean theorems are machine-verified (lake build clean, zero sorry, $322$ closed by the aristotle automated prover).",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "parameter",
-            "target": "counts.json:lean.theorems_total",
-            "computed_value": "5229",
-            "delta_pct": 0.0
-          },
-          {
-            "kind": "parameter",
-            "target": "counts.json:lean.sorry_theorems",
-            "computed_value": "0",
-            "delta_pct": 0.0
-          },
-          {
-            "kind": "parameter",
-            "target": "ARISTOTLE_THEOREMS_count",
-            "computed_value": "322",
-            "delta_pct": 0.0
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "delta_pct": 0.0,
-      "agent_notes": "Counts match docs/counts.json exactly: 5229 theorems, 0 sorry. ARISTOTLE_THEOREMS dict in constants.py has 322 entries. CHECK 12-style fresh.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "abstract",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:abstract:7fb5ec00",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "abstract",
-        "quote_hash": "7fb5ec00",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 57,
-      "tex_line_end": 59,
-      "quote": "at the LKB polariton smooth-horizon configuration $\\delta_\\text{disp}$ is $\\sim 10\\%$ and dominant",
-      "quote_normalized": "at the lkb polariton smooth-horizon configuration $\\delta_disp$ is $\\sim 10\\%$ and dominant",
-      "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "parameter",
-            "target": "Table:hierarchy:LKB-smooth:delta_disp",
-            "computed_value": "-19%",
-            "delta_pct": 90.0
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "FAIL",
-      "delta_pct": 90.0,
-      "agent_notes": "IA: abstract says LKB smooth-horizon delta_disp is '~10%'; Table 1 (line 454) reports '-19%' for the same configuration. Internal inconsistency. Either (a) abstract is rounding magnitude with sign drop and should read '|delta_disp| ~ 19%' / '~20%', or (b) abstract used wrong device. Cross-bundle: E1 polariton paper (already GREEN) needs spot-check too.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness",
-        "Gate4_ComputationCorrectness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "abstract",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:abstract:8e2422b7",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "abstract",
-        "quote_hash": "8e2422b7",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 36,
-      "tex_line_end": 39,
-      "quote": "KMS optimality is closed by Aristotle (\\texttt{firstOrder\\_KMS\\_optimal}).",
-      "quote_normalized": "kms optimality is closed by aristotle (firstorder_kms_optimal).",
+      "section": "First-order SK-EFT: the BEC reference",
+      "section_ordinal": 3,
+      "tex_line_start": 207,
+      "tex_line_end": 212,
+      "quote": "The KMS structure is encoded as the \\texttt{FirstOrderKMS} record in \\texttt{SecondOrderSK.lean}",
+      "quote_normalized": "the kms structure is encoded as the firstorderkms record in secondordersk.lean",
       "type": "theorem-ref",
       "finding_classes": [
         "TN"
@@ -135,15 +132,60 @@
         "links": [
           {
             "kind": "theorem",
-            "target": "SKEFTHawking.SKDoubling.firstOrder_KMS_optimal",
+            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS",
             "link_state": "resolved"
           }
         ],
         "completeness": "full"
       },
       "agent_verdict": "WARN",
-      "agent_notes": "TN: bare token 'firstOrder_KMS_optimal' does resolve, but only inside SKDoubling module; later §3.3 (line 295) prefixes it as SecondOrderSK.firstOrder_KMS_optimal which is the wrong module — see sentence sec33_kms_opt. WARN here, FAIL there.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
+      "agent_notes": "TN_R2_NEW (advisory): Round-1 fix introduced a module-attribution error. The text says FirstOrderKMS is encoded in SecondOrderSK.lean, but FirstOrderKMS is actually defined in SKDoubling.lean (line 367). The field references (fdr_i1, fdr_i2, i3_zero) ARE correct (those fields are in SKDoubling.FirstOrderKMS). Recommend: change 'in SecondOrderSK.lean' to 'in SKDoubling.lean' for accuracy, or replace with the qualified-name form 'as the SKDoubling.FirstOrderKMS record'. Non-blocking because the fields exist and resolve correctly under the canonical SKDoubling module; this is an attribution polish.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T20:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "D1",
+      "bundle_section_hint": "sec:bec-first",
+      "lift_action": "Lift-section"
+    },
+    {
+      "id": "sentence:D1:abstract:r2new2",
+      "raw_id_parts": {
+        "paper": "D1",
+        "section_slug": "abstract",
+        "quote_hash": "r2new200",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 69,
+      "tex_line_end": 73,
+      "quote": "graphene delivers a closed-form noise spectrum $\\Delta S_I(\\omega)$ ... derived independently from Keldysh fluctuation-dissipation and Landauer-Büttiker scattering",
+      "quote_normalized": "graphene delivers a closed-form noise spectrum derived independently from keldysh fluctuation-dissipation and landauer-buttiker scattering",
+      "type": "formal-claim",
+      "finding_classes": [
+        "TN"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GrapheneNoiseFormula.fdt_consistency",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GrapheneNoiseFormula.landauer_buttiker_route",
+            "link_state": "missing_target"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "TN_R2_NEW (advisory): Round-1 body fix correctly downgraded the §6.5 prose to cite only GrapheneNoiseFormula.fdt_consistency (the existing Lean theorem). However, the abstract retains the 'two routes' claim ('derived independently from Keldysh FDT and Landauer-Büttiker scattering'). The L-B route has no corresponding Lean theorem. Two acceptable resolutions: (a) soften the abstract to 'derived from Keldysh fluctuation-dissipation, with a Landauer-Büttiker companion derivation in prose only'; or (b) add the L-B route theorem in a follow-up Lean wave and a routes_agree bridge. Non-blocking because the abstract claim is technically a methodology statement (two prose derivations exist; only one is formalized). Same root issue as Round-1 block:3.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T20:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance"
       ],
@@ -154,105 +196,22 @@
       "lift_action": "Lift-section"
     },
     {
-      "id": "sentence:D1:abstract:b8ff00aa",
+      "id": "sentence:D1:abstract:r2adv3",
       "raw_id_parts": {
         "paper": "D1",
         "section_slug": "abstract",
-        "quote_hash": "b8ff00aa",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 52,
-      "tex_line_end": 54,
-      "quote": "share \\emph{$92\\%$ of the Lean theorem infrastructure} (109 of 119 1+1D theorems apply unchanged to graphene's 2+1D Dirac-fluid setup with $c_s \\to v_F/\\sqrt{2}$)",
-      "quote_normalized": "share $92\\%$ of the lean theorem infrastructure (109 of 119 1+1d theorems apply unchanged to graphene's 2+1d dirac-fluid setup with $c_s \\to v_f/\\sqrt{2}$)",
-      "type": "numeric",
-      "finding_classes": [
-        "SD"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "109/119 = 0.9159 ≈ 92%",
-            "computed_value": "91.6%",
-            "delta_pct": 0.4
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "WARN",
-      "delta_pct": 0.4,
-      "agent_notes": "SD/IA-borderline: arithmetic 109/119 = 0.9160 rounds to 92% within rounding tolerance. The denominator (119 BEC 1+1D theorems) and numerator (109 reused) are not independently verified by the reviewer in this round — Phase 5w cross-platform reuse counter mentioned in §6.2 is not directly callable. Recommend a deterministic check via `Phase 5w infrastructure` referenced in §6.2 (line 590) before submission. Bundle prompt §D1 Anchor 4 calls this 'verified against the Phase 5w cross-platform reuse counter' — provide that artifact.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "abstract|sec:graphene",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:abstract:120c6fe2",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "abstract",
-        "quote_hash": "120c6fe2",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 47,
-      "tex_line_end": 51,
-      "quote": "The three platforms span ten orders of magnitude in Hawking temperature ($T_H \\sim \\SI{0.35}{\\nano\\kelvin}$ for $^{87}$Rb BEC, $T_H \\sim \\SI{85}{\\milli\\kelvin}$ for the LKB polariton smooth-horizon baseline, $T_H \\approx \\SI{2.4}{\\kelvin}$ for the Dean bilayer graphene nozzle)",
-      "quote_normalized": "the three platforms span ten orders of magnitude in hawking temperature",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "log10(2.4 / 0.35e-9)",
-            "computed_value": "9.84 orders",
-            "delta_pct": 1.6
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "delta_pct": 1.6,
-      "agent_notes": "log10(2.4 K / 0.35 nK) = log10(2.4 / 3.5e-10) = 9.84 ≈ 10 orders. Hierarchy table (line 451-456) confirms: Steinhauer 0.35 nK, polariton smooth 85 mK, Dean 2.4 K. Cross-bundle: E2 graphene paper says T_H ≈ 2.4 K — agrees. Pass.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "abstract",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:abstract:66db0522",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "abstract",
-        "quote_hash": "66db0522",
+        "quote_hash": "r2adv300",
         "hash_algorithm": "sha256_first_8"
       },
       "section": "abstract",
       "section_ordinal": 1,
       "tex_line_start": 76,
       "tex_line_end": 81,
-      "quote": "The single substantive axiom in the chain (\\texttt{FirstOrderKMS}) was reformulated after Aristotle's counterexample $c = (0,0,0,0,0,0,0,1,0)$ exposed that the original axiom constrained only four of nine field components",
-      "quote_normalized": "the single substantive axiom in the chain (firstorderkms) was reformulated after aristotle's counterexample c = (0,0,0,0,0,0,0,1,0) exposed that the original axiom constrained only four of nine field components",
+      "quote": "The single substantive axiom in the chain (\\texttt{FirstOrderKMS}) was reformulated after Aristotle's counterexample $c = (0,0,0,0,0,0,0,1,0)$",
+      "quote_normalized": "the single substantive axiom in the chain (firstorderkms) was reformulated after aristotle's counterexample c = (0,0,0,0,0,0,0,1,0)",
       "type": "formal-claim",
       "finding_classes": [
-        "TN",
-        "IA"
+        "TN"
       ],
       "chain_proposed": {
         "links": [
@@ -271,518 +230,24 @@
         "completeness": "partial"
       },
       "agent_verdict": "WARN",
-      "agent_notes": "TN/IA-mixed: counts.json lists 1 axiom (SKEFTHawking.gapped_interface_axiom) — NOT FirstOrderKMS. FirstOrderKMS in SKDoubling.lean is a `structure` (Prop), not an `axiom` declaration. The phrase 'the single substantive axiom in the chain (FirstOrderKMS)' is structurally inaccurate: (a) FirstOrderKMS is a Prop, not an axiom; (b) the project's only Lean axiom is gapped_interface_axiom (D2/D4 territory). The Aristotle-counterexample story for FirstOrderKMS is correct, but the framing 'single substantive axiom' is wrong. Recommend: 'The load-bearing structural Prop in the chain (FirstOrderKMS) was reformulated …' or 'a load-bearing tracked-hypothesis-style Prop in the chain'.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
+      "agent_notes": "TN advisory carried over from Round-1 advisory:4. counts.json still lists 1 Lean axiom (gapped_interface_axiom in D2/D4 territory) — NOT FirstOrderKMS. FirstOrderKMS is a Prop structure, not an `axiom` declaration. This was advisory-level in Round 1 and was not addressed by Round-1 commit. Recommend a small wording change (e.g., 'the load-bearing tracked Prop in the chain (FirstOrderKMS) was reformulated...'). Non-blocking; structural-Prop-vs-axiom is a classification subtlety.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T20:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance",
         "Gate6_AssumptionDisclosure"
       ],
-      "rewrite_of": null,
+      "rewrite_of": "sentence:D1:abstract:66db0522",
       "tombstone": false,
       "bundle_destination": "D1",
       "bundle_section_hint": "abstract",
       "lift_action": "Lift-section"
     },
     {
-      "id": "sentence:D1:bec-first:3387a18c",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "bec-first",
-        "quote_hash": "3387a18c",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "First-order SK-EFT: the BEC reference",
-      "section_ordinal": 3,
-      "tex_line_start": 207,
-      "tex_line_end": 209,
-      "quote": "The KMS axiom is encoded in \\texttt{FirstOrderKMS.gamma\\_nonnegativity}",
-      "quote_normalized": "the kms axiom is encoded in firstorderkms.gamma_nonnegativity",
-      "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS.gamma_nonnegativity",
-            "link_state": "missing_target"
-          }
-        ],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN BLOCKER: 'FirstOrderKMS.gamma_nonnegativity' not present in lean_deps.json. FirstOrderKMS is a structure in SKDoubling.lean (line 367) with fields fdr_i1, fdr_i2, i3_zero, r3_zero, r4_zero, r5_zero — no field named 'gamma_nonnegativity'. Likely renamed/never-existed. Recommend: cite the structure `SKEFTHawking.SKDoubling.FirstOrderKMS` itself or one of its actual fields (e.g., `FirstOrderKMS.fdr_i1`), and explain in prose that positivity of γ_i is enforced through the structure's constraints rather than a single named lemma.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance",
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:bec-first",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:bec-first:d2b83b28",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "bec-first",
-        "quote_hash": "d2b83b28",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "First-order SK-EFT: the BEC reference",
-      "section_ordinal": 3,
-      "tex_line_start": 230,
-      "tex_line_end": 235,
-      "quote": "The Stage-13 anchor $\\delta_\\text{diss} = (1 + \\xi^2)^{-1}$ at the \\texttt{EXPERIMENTS['BEC\\_KIM\\_2014']} parameters is encoded in the formula chain rooted at \\eqref{eq:delta-diss}",
-      "quote_normalized": "the stage-13 anchor $\\delta_diss = (1 + \\xi^2)^{-1}$ at the experiments['bec_kim_2014'] parameters is encoded in the formula chain rooted at",
-      "type": "parameter",
-      "finding_classes": [
-        "IA",
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "parameter",
-            "target": "EXPERIMENTS['BEC_KIM_2014']",
-            "link_state": "missing_target"
-          }
-        ],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "IA BLOCKER: `EXPERIMENTS['BEC_KIM_2014']` is NOT in `src/core/constants.py::EXPERIMENTS`. Existing keys are: 'Steinhauer', 'Heidelberg', 'Trento'. The bundle prompt (claims-reviewer-bundle-prompts.md §D1 anchor 1) specifies `EXPERIMENTS['BEC_KIM_2014']` as load-bearing — that anchor is itself stale or the registry entry is missing. Either (a) add a `BEC_KIM_2014` entry to EXPERIMENTS sourced from Kim et al. 2014 device specs and provenance-trace it, or (b) replace the prose reference with the closest extant entry ('Steinhauer' is the canonical 87Rb BEC) and update the bundle prompt accordingly. CHECK 15 (parameter provenance) cannot fire on a non-existent key.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate2_ParameterProvenance",
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:bec-first",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:bec-first:21d41920",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "bec-first",
-        "quote_hash": "21d41920",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "First-order SK-EFT: the BEC reference",
-      "section_ordinal": 3,
-      "tex_line_start": 239,
-      "tex_line_end": 246,
-      "quote": "Five Lean theorems comprise the acoustic-metric backbone: \\texttt{AcousticMetric.metric\\_determinant}, \\texttt{lorentzian\\_signature}, \\texttt{inverse\\_identity}, \\texttt{hawking\\_temp\\_from\\_surface\\_gravity}, and \\texttt{galilean\\_invariance}",
-      "quote_normalized": "five lean theorems comprise the acoustic-metric backbone: acousticmetric.metric_determinant, lorentzian_signature, inverse_identity, hawking_temp_from_surface_gravity, and galilean_invariance",
-      "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AcousticMetric.metric_determinant",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AcousticMetric.lorentzian_signature",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AcousticMetric.inverse_identity",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AcousticMetric.hawking_temp_from_surface_gravity",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AcousticMetric.galilean_invariance",
-            "link_state": "missing_target"
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN BLOCKER (4 of 5): Of the five named theorems, only `hawking_temp_from_surface_gravity` exists. Actual decls in SKEFTHawking.AcousticMetric: `acousticMetric_det` (not metric_determinant), `acoustic_metric_lorentzian` (not lorentzian_signature), `acousticMetric_inv_correct` (not inverse_identity), `acoustic_metric_theorem`, `gtt_vanishes_at_horizon`, `hawking_temp_from_surface_gravity`. There is NO `galilean_invariance` theorem in the project at all (grep returns 0 hits across SKEFTHawking/*.lean). Recommend: rename references to canonical decls; for galilean invariance either add the missing theorem or drop the claim. This BLOCKER is the same class as the 2026-04-25 paper20 Stage-13 QI-incident that seeded Class TN.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance",
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:bec-first",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:bec-second:7d1d5810",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "bec-second",
-        "quote_hash": "7d1d5810",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Second-order SK-EFT: counting, KMS optimality, and parity",
-      "section_ordinal": 4,
-      "tex_line_start": 294,
-      "tex_line_end": 299,
-      "quote": "This is closed by Aristotle in \\texttt{SecondOrderSK.firstOrder\\_KMS\\_optimal}. Stress tests \\texttt{relaxed\\_positivity\\_weakens} and \\texttt{firstOrder\\_altSign\\_uniqueness\\_test}",
-      "quote_normalized": "this is closed by aristotle in secondordersk.firstorder_kms_optimal. stress tests relaxed_positivity_weakens and firstorder_altsign_uniqueness_test",
-      "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.SecondOrderSK.firstOrder_KMS_optimal",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.SecondOrderSK.relaxed_positivity_weakens",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.SecondOrderSK.firstOrder_altSign_uniqueness_test",
-            "link_state": "missing_target"
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN BLOCKER (2 of 3): `firstOrder_KMS_optimal` and `firstOrder_altSign_uniqueness_test` live in SKDoubling, NOT SecondOrderSK. The qualified prefix is wrong. Likely cause: paper draft inherited paper2 prose where these were inside a wave's local `SecondOrderSK` namespace before the SKDoubling reorganization. Recommend: correct to `SKEFTHawking.SKDoubling.firstOrder_KMS_optimal` and `SKEFTHawking.SKDoubling.firstOrder_altSign_uniqueness_test`. `relaxed_positivity_weakens` IS in SecondOrderSK and is fine.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:bec-second",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:exact-wkb:7a37d615",
+      "id": "sentence:D1:exact-wkb:r2adv4",
       "raw_id_parts": {
         "paper": "D1",
         "section_slug": "exact-wkb",
-        "quote_hash": "7a37d615",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Exact WKB connection: three non-perturbative effects",
-      "section_ordinal": 5,
-      "tex_line_start": 414,
-      "tex_line_end": 416,
-      "quote": "For Heidelberg-class BEC ($\\delta_\\text{diss} \\approx 10^{-3}$), $\\omega_\\times \\approx 6\\, T_H$",
-      "quote_normalized": "for heidelberg-class bec ($\\delta_diss \\approx 10^{-3}$), $\\omega_\\times \\approx 6\\, t_h$",
-      "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "parameter",
-            "target": "Table:hierarchy:Heidelberg:delta_diss",
-            "computed_value": "~26%",
-            "delta_pct": 25900.0
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "FAIL",
-      "delta_pct": 25900.0,
-      "agent_notes": "IA BLOCKER: §3.5 states Heidelberg-class delta_diss ≈ 10^-3 = 0.1%; Table 1 (line 452) reports Heidelberg delta_diss ~ 26% — different by FOUR orders of magnitude on the same device. Either (a) §3.5 means a different platform (Steinhauer has delta_disp -2.7%, delta_diss 1e-5; closer to '10^-3'? still off), or (b) §3.5 should be re-anchored to a regime where delta_diss ~ 1e-3 is correct. Note also: with delta_diss = 1e-3, omega_x = T_H · ln(2/1e-3) = 7.6 T_H, not '~6 T_H'. With delta_diss = 1e-2, omega_x = 5.3 T_H ≈ 6 T_H (closer). Recommend a regime self-consistent triple (platform name, delta_diss, omega_x) be established and used uniformly. Cross-bundle: this affects D1 §3.5 abstract claim 'spectral floor at ~6 T_H' which only Heidelberg is supposed to access (line 426).",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness",
-        "Gate4_ComputationCorrectness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:exact-wkb",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:hierarchy:fb2f6054",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "hierarchy",
-        "quote_hash": "fb2f6054",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Hierarchy of corrections by platform",
-      "section_ordinal": 6,
-      "tex_line_start": 449,
-      "tex_line_end": 458,
-      "quote": "Table 1 hierarchy values: Steinhauer disp -2.7% diss 1e-5; Heidelberg disp -1.2% diss ~26%; Trento disp -0.5% diss 1e-1; LKB smooth disp -19% diss 14%; LKB steep disp -46% diss ~10%; Dean disp -2.8% diss 1e-13",
-      "quote_normalized": "table 1 hierarchy values",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "src/core/formulas.py:delta_disp/delta_diss"
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "UNGROUNDED",
-      "agent_notes": "Caption says 'Numerical values are computed via src/core/formulas.py on EXPERIMENTS parameters', but the reviewer cannot independently recompute these in the time-budgeted pass without dispatching figures/numerical pipeline. Defer to Stage-13 figure-reviewer / hierarchy-table audit. Recommend: emit a reproducibility hash (e.g., commit SHA + formulas.py version) into the table caption.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate4_ComputationCorrectness",
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:hierarchy",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:polariton:212272bb",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "polariton",
-        "quote_hash": "212272bb",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Polariton platform",
-      "section_ordinal": 7,
-      "tex_line_start": 515,
-      "tex_line_end": 517,
-      "quote": "At single-shot $5\\sigma$ detection threshold, $G > 0.5$ (equivalently $N_\\text{probe} = 25/G^2 = 100$ probe photons per mode)",
-      "quote_normalized": "at single-shot $5\\sigma$ detection threshold, $g > 0.5$ (equivalently $n_probe = 25/g^2 = 100$ probe photons per mode)",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "N_probe·G^2 ≥ 25 for 5σ",
-            "computed_value": "100",
-            "delta_pct": 0.0
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "delta_pct": 0.0,
-      "agent_notes": "Critical session-memory cross-check: G > 0.5 / N_probe = 100 are the post-correction values from the propagating arithmetic-drift fix (G > 0.01 / N_probe = 10^4 was the historic incorrect form, fixed at source via supersessions ledger). E1 paper agrees character-for-character (line: 'crosses the single-shot 5σ threshold G > 0.5 at omega < ln(3)/(2π)κ ≈ 0.175κ', 'N_probe ~ 100 probe photons'). Cross-bundle CONSISTENT.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate4_ComputationCorrectness",
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:polariton",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:polariton:e33c0561",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "polariton",
-        "quote_hash": "e33c0561",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Polariton platform",
-      "section_ordinal": 7,
-      "tex_line_start": 518,
-      "tex_line_end": 521,
-      "quote": "$\\omega/\\kappa \\;<\\; \\frac{\\ln 3}{2\\pi} \\;\\approx\\; 0.175$",
-      "quote_normalized": "$\\omega/\\kappa < \\frac{\\ln 3}{2\\pi} \\approx 0.175$",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "ln(3)/(2π)",
-            "computed_value": "0.17483",
-            "delta_pct": 0.1
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "delta_pct": 0.1,
-      "agent_notes": "ln(3)/(2π) = 0.174836... ≈ 0.175. Matches. Cross-bundle E1 CONSISTENT.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate4_ComputationCorrectness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:polariton",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:graphene:bc778fb8",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "graphene",
-        "quote_hash": "bc778fb8",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Graphene Dirac-fluid platform",
-      "section_ordinal": 8,
-      "tex_line_start": 586,
-      "tex_line_end": 593,
-      "quote": "The 1+1D BEC infrastructure of \\S\\ref{sec:bec-first}--\\S\\ref{sec:exact-wkb} contains $119$ theorems. Of these, $109$ apply to the graphene Dirac-fluid 2+1D setup unchanged after the substitution $c_s \\to v_F/\\sqrt{2}$. The cross-platform reuse counter is implemented in Phase 5w infrastructure and yields a precise $92\\%$ reuse fraction.",
-      "quote_normalized": "the 1+1d bec infrastructure contains $119$ theorems. of these, $109$ apply to the graphene dirac-fluid 2+1d setup unchanged after the substitution $c_s \\to v_f/\\sqrt{2}$. the cross-platform reuse counter is implemented in phase 5w infrastructure and yields a precise $92\\%$ reuse fraction.",
-      "type": "numeric",
-      "finding_classes": [
-        "SD"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "109/119",
-            "computed_value": "0.916 = 91.6%",
-            "delta_pct": 0.4
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "WARN",
-      "delta_pct": 0.4,
-      "agent_notes": "SD: arithmetic 109/119 = 91.60% — paper says 'precise 92%' which is rounded from 91.6%. The phrase 'precise 92%' is mildly self-defeating since the true ratio is 91.60% not 92.00%. Recommend: 'a 92% (109/119) reuse fraction' or 'a 91.6% reuse fraction' rather than 'precise 92%'. The denominator (119 1+1D theorems) is not independently verified by the reviewer — the 'Phase 5w cross-platform reuse counter' artifact mentioned in §6.2 should be cited explicitly with a script path or stable-counter file. Without that, Class SD bundle anchor 4 cannot fully resolve.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:graphene",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:graphene:cda5feea",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "graphene",
-        "quote_hash": "cda5feea",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Graphene Dirac-fluid platform",
-      "section_ordinal": 8,
-      "tex_line_start": 641,
-      "tex_line_end": 648,
-      "quote": "derived independently from two distinct routes: Keldysh fluctuation-dissipation (\\texttt{GrapheneNoiseFormula.fdt\\_route}) and Landauer-Büttiker scattering (\\texttt{landauer\\_buttiker\\_route}). The two derivations agree at the eight-theorem \\texttt{GrapheneNoiseFormula.routes\\_agree} bridge",
-      "quote_normalized": "derived independently from two distinct routes: keldysh fluctuation-dissipation (graphenenoiseformula.fdt_route) and landauer-buttiker scattering (landauer_buttiker_route). the two derivations agree at the eight-theorem graphenenoiseformula.routes_agree bridge",
-      "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.GrapheneNoiseFormula.fdt_route",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.GrapheneNoiseFormula.landauer_buttiker_route",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.GrapheneNoiseFormula.routes_agree",
-            "link_state": "missing_target"
-          }
-        ],
-        "completeness": "none"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN BLOCKER (3 of 3): None of `fdt_route`, `landauer_buttiker_route`, `routes_agree` exist in lean_deps.json. Actual GrapheneNoiseFormula module decls (per file inspection): hawkingNoisePSD, johnsonNyquistPSD, snrPerBin, hawkingNoisePSD_pos, johnsonNyquistPSD_pos, hawkingNoisePSD_greybody_mono, snr_sigma_Q_cancels, snr_independent_of_sigma_Q, grapheneNoisePSD_dimensional, old_prefactor_wrong_dimensions, fdt_consistency. The closest existing analog is `fdt_consistency`. Recommend: either (a) add the three missing theorems to GrapheneNoiseFormula.lean (FDT route, Landauer-Büttiker route, routes_agree bridge) and re-run lean_deps; or (b) downgrade the claim to 'derived from Keldysh FDT in `GrapheneNoiseFormula.fdt_consistency`; the Landauer-Büttiker companion derivation is presented in prose (see Appendix X) — formal Lean bridge deferred'.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance",
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:graphene",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:graphene:8aea7cef",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "graphene",
-        "quote_hash": "8aea7cef",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Graphene Dirac-fluid platform",
-      "section_ordinal": 8,
-      "tex_line_start": 658,
-      "tex_line_end": 660,
-      "quote": "This is captured in \\texttt{DiracFluidSK.snr\\_independent\\_of\\_sigma\\_Q} (the Lorenz-cancellation theorem)",
-      "quote_normalized": "this is captured in diracfluidsk.snr_independent_of_sigma_q (the lorenz-cancellation theorem)",
-      "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.DiracFluidSK.snr_independent_of_sigma_Q",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.GrapheneNoiseFormula.snr_independent_of_sigma_Q",
-            "link_state": "resolved"
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "TN BLOCKER (module-prefix drift): the theorem `snr_independent_of_sigma_Q` lives in `SKEFTHawking.GrapheneNoiseFormula`, not `SKEFTHawking.DiracFluidSK`. Confirmed by direct file inspection of GrapheneNoiseFormula.lean line 108. Recommend: rename to `\\texttt{GrapheneNoiseFormula.snr\\_independent\\_of\\_sigma\\_Q}`. Same class as paper20 Stage-13 incident.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:graphene",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:exact-wkb:1f7ee552",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "exact-wkb",
-        "quote_hash": "1f7ee552",
+        "quote_hash": "r2adv400",
         "hash_algorithm": "sha256_first_8"
       },
       "section": "Exact WKB connection: three non-perturbative effects",
@@ -792,9 +257,7 @@
       "quote": "exact-WKB connection formula~\\cite{Berry1989,Heading1962,CorleyJacobson1996,CoutantParentani2012,RobertsonParentani2015,BelgiornoCacciatori2024}",
       "quote_normalized": "exact-wkb connection formula",
       "type": "citation",
-      "finding_classes": [
-        "TN"
-      ],
+      "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
@@ -830,398 +293,301 @@
         ],
         "completeness": "partial"
       },
-      "agent_verdict": "FAIL",
-      "agent_notes": "Citation BLOCKER: 4 of 6 keys not in CITATION_REGISTRY: CorleyJacobson1996, CoutantParentani2012, RobertsonParentani2015, BelgiornoCacciatori2024. Note CITATION_REGISTRY does have `Corley1996` and `CoutantParentani2010` — close-but-different keys. Either (a) the D1 bibliography \\bibitem entries (lines 850-871) define these locally and CITATION_REGISTRY needs to absorb them, or (b) they're paper-local placeholders that should be canonicalized to the registry forms (Corley1996, CoutantParentani2010). Validate.py CHECK 1 (citation_integrity) will FAIL on submission. Recommend a registry merge pass.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
+      "agent_verdict": "WARN",
+      "agent_notes": "Citation advisory carried over from Round-1 advisory:1. CorleyJacobson1996, CoutantParentani2012, RobertsonParentani2015, BelgiornoCacciatori2024 are still NOT in CITATION_REGISTRY. Bibitems exist locally in D1 (lines 855-875), so latex compile is fine. validate.py CHECK 1 (citation_integrity) will fail unless the 4 keys are added to CITATION_REGISTRY OR the paper is re-aliased to the canonical Corley1996 / CoutantParentani2010 keys. This is a known open advisory; not blocking submission but blocking the validate.py gate.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T20:30:00Z",
       "gates_invoked": [
         "Gate1_CitationIntegrity"
       ],
-      "rewrite_of": null,
+      "rewrite_of": "sentence:D1:exact-wkb:1f7ee552",
       "tombstone": false,
       "bundle_destination": "D1",
       "bundle_section_hint": "sec:exact-wkb",
       "lift_action": "Lift-section"
     },
     {
-      "id": "sentence:D1:intro:d660c247",
+      "id": "sentence:D1:graphene:r2adv5",
       "raw_id_parts": {
         "paper": "D1",
-        "section_slug": "intro",
-        "quote_hash": "d660c247",
+        "section_slug": "graphene",
+        "quote_hash": "r2adv500",
         "hash_algorithm": "sha256_first_8"
       },
-      "section": "Introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 167,
-      "tex_line_end": 173,
-      "quote": "The experimental letters E1~\\cite{Roehm2026E1} (Paris-LKB polariton) and E2~\\cite{Roehm2026E2} (Dean-Kim-Lucas graphene) ship as Tier-4 PRL/PRR letters paired with this deep paper.",
-      "quote_normalized": "the experimental letters e1 (paris-lkb polariton) and e2 (dean-kim-lucas graphene) ship as tier-4 prl/prr letters paired with this deep paper.",
-      "type": "citation",
+      "section": "Graphene Dirac-fluid platform",
+      "section_ordinal": 8,
+      "tex_line_start": 590,
+      "tex_line_end": 599,
+      "quote": "The 1+1D BEC infrastructure of \\S\\ref{sec:bec-first}--\\S\\ref{sec:exact-wkb} contains $119$ theorems. Of these, $109$ apply to the graphene Dirac-fluid 2+1D setup unchanged ... yields a precise $92\\%$ reuse fraction.",
+      "quote_normalized": "the 1+1d bec infrastructure contains $119$ theorems. of these, $109$ apply to the graphene dirac-fluid 2+1d setup unchanged ... yields a precise $92\\%$ reuse fraction.",
+      "type": "numeric",
       "finding_classes": [
-        "TN"
+        "SD"
       ],
       "chain_proposed": {
         "links": [
           {
-            "kind": "citation",
-            "target": "Roehm2026E1",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "citation",
-            "target": "Roehm2026E2",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "citation",
-            "target": "Roehm2026F",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "citation",
-            "target": "Roehm2026I1",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "citation",
-            "target": "Roehm2026I2",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "citation",
-            "target": "Roehm2026Wave2",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "citation",
-            "target": "Roehm2026Wave12",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "citation",
-            "target": "Roehm2026Wave16",
-            "link_state": "missing_target"
+            "kind": "formula",
+            "target": "109/119",
+            "computed_value": "91.6%",
+            "delta_pct": 0.4
           }
         ],
         "completeness": "partial"
       },
       "agent_verdict": "WARN",
-      "agent_notes": "Citation/Bundle: 8 in-prep self-citations (Roehm2026Wave2, Wave12, Wave16, E1, E2, F, I1, I2) are NOT in CITATION_REGISTRY. They ARE present as `\\bibitem` blocks in the D1 bibliography (lines 930-965), so latex compile will not break. However, validate.py CHECK 1 (citation_integrity) treats CITATION_REGISTRY as authoritative — these will surface as missing. Memory: project supports an in-prep allowlist (`paper_in_prep` exemption per session memory). Verify either (a) registry has an in-prep flag or (b) paper-strategy-aware bibliography integration absorbs Roehm2026* keys at bundle-load time. Resolution: either add the bibkeys to CITATION_REGISTRY (with `in_prep=True` flag) or document the in-prep pattern in the bundle-source-manifest. Marking WARN (not FAIL) because these are in-bibliography and compile clean — but a registry-side miss is structural and should be closed before validate.py CHECK 1 runs at submission gate.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
+      "agent_notes": "SD advisory carried over from Round-1 advisory:3. 109/119 = 91.60% rounds to 92% within tolerance, but the wording 'precise 92%' is mildly self-defeating. Phase 5w cross-platform reuse counter still not directly cited as an artifact (script path or stable-counter file). Not addressed in Round-1 fixes. Non-blocking.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T20:30:00Z",
       "gates_invoked": [
-        "Gate1_CitationIntegrity"
+        "Gate9_NumericalFreshness"
       ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:intro",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:intro:a630b3fc",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "graphene",
-        "quote_hash": "a630b3fc",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Graphene Dirac-fluid platform",
-      "section_ordinal": 8,
-      "tex_line_start": 612,
-      "tex_line_end": 613,
-      "quote": "Subluminal dispersion eliminates the trans-Planckian problem~\\cite{CorleyJacobson1996} that haunts BEC analog Hawking",
-      "quote_normalized": "subluminal dispersion eliminates the trans-planckian problem that haunts bec analog hawking",
-      "type": "citation",
-      "finding_classes": [
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "citation",
-            "target": "CorleyJacobson1996",
-            "link_state": "missing_target"
-          },
-          {
-            "kind": "citation",
-            "target": "Corley1996",
-            "link_state": "resolved"
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "Citation: CorleyJacobson1996 missing from registry (Corley1996 is the canonical key). Same root cause as sec3_wkb_cites — fix bibkey choice once across all D1 references.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate1_CitationIntegrity"
-      ],
-      "rewrite_of": null,
+      "rewrite_of": "sentence:D1:graphene:bc778fb8",
       "tombstone": false,
       "bundle_destination": "D1",
       "bundle_section_hint": "sec:graphene",
       "lift_action": "Lift-section"
     },
     {
-      "id": "sentence:D1:graphene:wfviolation",
+      "id": "sentence:D1:abstract:r2pass00",
       "raw_id_parts": {
         "paper": "D1",
-        "section_slug": "graphene",
-        "quote_hash": "wfvio001",
+        "section_slug": "abstract",
+        "quote_hash": "r2pass00",
         "hash_algorithm": "sha256_first_8"
       },
-      "section": "Graphene Dirac-fluid platform",
-      "section_ordinal": 8,
-      "tex_line_start": 654,
-      "tex_line_end": 656,
-      "quote": "The bilayer-graphene Dirac fluid violates this by factor $> 200$~\\cite{Majumdar2025}",
-      "quote_normalized": "the bilayer-graphene dirac fluid violates this by factor $> 200$",
-      "type": "numeric",
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 28,
+      "tex_line_end": 84,
+      "quote": "Round-1 Round-1 PASS sentences confirmed reproducing in Round-2",
+      "quote_normalized": "round-1 pass sentences confirmed reproducing in round-2",
+      "type": "metaclaim",
       "finding_classes": [],
       "chain_proposed": {
         "links": [
           {
-            "kind": "citation",
-            "target": "Majumdar2025",
-            "link_state": "resolved"
+            "kind": "parameter",
+            "target": "counts.json:lean.theorems_total",
+            "computed_value": "5229",
+            "delta_pct": 0.0
           }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Cross-bundle E2 reports same '200x Wiedemann-Franz violation' attributing to Majumdar 2025. Internally CONSISTENT.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
+      "agent_notes": "All Round-1 PASS sentences (5229 theorem count, 322 Aristotle count, 0 sorry count, T_H ten-orders span, G > 0.5 / N_probe = 100, ln(3)/(2π) ≈ 0.175, 200x WF violation) reproduce in Round 2 unchanged. Cross-bundle E1+E2 still character-for-character consistent.",
+      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T20:30:00Z",
       "gates_invoked": [
-        "Gate1_CitationIntegrity"
+        "Gate9_NumericalFreshness",
+        "Gate4_ComputationCorrectness"
       ],
       "rewrite_of": null,
       "tombstone": false,
       "bundle_destination": "D1",
-      "bundle_section_hint": "sec:graphene",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:D1:synthesis:counter9c",
-      "raw_id_parts": {
-        "paper": "D1",
-        "section_slug": "synthesis",
-        "quote_hash": "counter9c",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "Synthesis and outlook",
-      "section_ordinal": 9,
-      "tex_line_start": 698,
-      "tex_line_end": 707,
-      "quote": "The original formulation constrained four of nine field components only; the counterexample $c = (0, 0, 0, 0, 0, 0, 0, 1, 0)$",
-      "quote_normalized": "the original formulation constrained four of nine field components only; the counterexample c = (0, 0, 0, 0, 0, 0, 0, 1, 0)",
-      "type": "formal-claim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS_altSign",
-            "link_state": "resolved"
-          }
-        ],
-        "completeness": "partial"
-      },
-      "agent_verdict": "INFO",
-      "agent_notes": "The Aristotle-counterexample story is an interpretive narrative claim. The structure FirstOrderKMS_altSign (line 610 of SKDoubling.lean) IS the post-counterexample alt-sign instantiation; line 649 contains the literal counterexample tuple ⟨1, 1, 0, 0, 0, 0, 1, 2, 0⟩. Paper says '(0, 0, 0, 0, 0, 0, 0, 1, 0)' — the value differs from the in-Lean instantiation. Either the paper is reporting Aristotle's original input counterexample (pre-resolution; not the post-resolution alt-sign witness in the source file) or an editorial drift. The constrained-four-of-nine-components claim is a methodology narrative that requires reading SKDoubling.lean to verify and is not a structural claim with mechanical backing. INFO; not blocking but recommend the methodology-section authors confirm the literal counterexample tuple matches an audit-traceable Aristotle run.",
-      "agent_run_id": "claims-reviewer-v2:bundle-D1:2026-05-04T18:00:00Z",
-      "gates_invoked": [
-        "Gate6_AssumptionDisclosure"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "bundle_destination": "D1",
-      "bundle_section_hint": "sec:synthesis",
+      "bundle_section_hint": "abstract",
       "lift_action": "Lift-section"
     }
   ],
-  "non_reproducing_prior_findings": [],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:1",
+      "prior_run_date": "2026-05-04T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Acoustic-metric backbone theorem names corrected to AcousticMetric.acousticMetric_det / .acoustic_metric_lorentzian / .acousticMetric_inv_correct / hawking_temp_from_surface_gravity (galilean_invariance dropped). All 4 resolve in lean_deps.json.",
+      "deterministic_recheck": {
+        "kind": "lean_deps_lookup",
+        "prior_value": "4 of 5 names missing",
+        "current_value": "0 missing (fictitious name dropped, others corrected)",
+        "command": "python3 -c \"import json; deps=json.load(open('lean/lean_deps.json')); idx={tuple(d['name'].split('.',2)[1:]) for d in deps if d['name'].startswith('SKEFTHawking.')}; assert all(('AcousticMetric',n) in idx for n in ['acousticMetric_det','acoustic_metric_lorentzian','acousticMetric_inv_correct','hawking_temp_from_surface_gravity'])\""
+      }
+    },
+    {
+      "prior_finding_id": "block:2",
+      "prior_run_date": "2026-05-04T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Module prefix corrected from SecondOrderSK to SKDoubling for firstOrder_KMS_optimal and firstOrder_altSign_uniqueness_test.",
+      "deterministic_recheck": {
+        "kind": "lean_deps_lookup",
+        "prior_value": "wrong module prefix (SecondOrderSK)",
+        "current_value": "correct module prefix (SKDoubling); both resolve",
+        "command": "grep 'SKDoubling.firstOrder_KMS_optimal\\|SKDoubling.firstOrder_altSign_uniqueness_test' papers/D1/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "block:3",
+      "prior_run_date": "2026-05-04T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Fictitious fdt_route, landauer_buttiker_route, routes_agree references removed from §6.5; replaced with single GrapheneNoiseFormula.fdt_consistency citation. Abstract retains 'two routes' methodology claim — see new advisory finding TN_R2_NEW_2.",
+      "deterministic_recheck": {
+        "kind": "grep_paper",
+        "prior_value": "3 fictitious refs present",
+        "current_value": "0 fictitious refs; 1 real ref (fdt_consistency) present",
+        "command": "grep -E 'fdt_route|landauer_buttiker_route|routes_agree' papers/D1/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "block:4",
+      "prior_run_date": "2026-05-04T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Module prefix corrected from DiracFluidSK to GrapheneNoiseFormula for snr_independent_of_sigma_Q.",
+      "deterministic_recheck": {
+        "kind": "lean_deps_lookup",
+        "prior_value": "wrong module prefix (DiracFluidSK)",
+        "current_value": "correct module prefix (GrapheneNoiseFormula); resolves",
+        "command": "grep 'GrapheneNoiseFormula.snr_independent_of_sigma_Q' papers/D1/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "block:5",
+      "prior_run_date": "2026-05-04T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Fictitious 'gamma_nonnegativity' field reference replaced with actual fields fdr_i1, fdr_i2, i3_zero (which exist in SKDoubling.FirstOrderKMS). New module-attribution advisory finding TN_R2_NEW_1 raised: paper says 'in SecondOrderSK.lean' but FirstOrderKMS is in SKDoubling.lean.",
+      "deterministic_recheck": {
+        "kind": "grep_lean_source",
+        "prior_value": "FirstOrderKMS.gamma_nonnegativity (does not exist)",
+        "current_value": "fdr_i1, fdr_i2, i3_zero (real fields of SKDoubling.FirstOrderKMS)",
+        "command": "grep -n 'fdr_i1\\|fdr_i2\\|i3_zero' lean/SKEFTHawking/SKDoubling.lean | head -3"
+      }
+    },
+    {
+      "prior_finding_id": "block:6",
+      "prior_run_date": "2026-05-04T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Heidelberg delta_diss reconciled to ≈ 0.26 (matching Table 1's 26%); omega_x recomputed to ≈ 2.0 T_H = T_H × ln(2/0.26).",
+      "deterministic_recheck": {
+        "kind": "arithmetic_recompute",
+        "prior_value": "delta_diss = 10^-3 (contradicts table 26%); omega_x = 6 T_H (inconsistent with delta_diss)",
+        "current_value": "delta_diss = 0.26 (matches table); omega_x = ln(2/0.26) = 2.04 T_H ≈ 2.0 T_H",
+        "command": "python3 -c 'import math; print(math.log(2/0.26))'"
+      }
+    },
+    {
+      "prior_finding_id": "block:7",
+      "prior_run_date": "2026-05-04T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Abstract LKB polariton smooth-horizon delta_disp updated to ≈ -19% (matching Table 1).",
+      "deterministic_recheck": {
+        "kind": "grep_paper",
+        "prior_value": "abstract '~10%' (inconsistent with table -19%)",
+        "current_value": "abstract '≈ -19%' (matches table)",
+        "command": "grep -n 'approx -19\\|=-19' papers/D1/paper_draft.tex"
+      }
+    },
+    {
+      "prior_finding_id": "block:8",
+      "prior_run_date": "2026-05-04T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "EXPERIMENTS['BEC_KIM_2014'] (non-existent) replaced with EXPERIMENTS['Steinhauer'] (verified present in src/core/constants.py).",
+      "deterministic_recheck": {
+        "kind": "registry_lookup",
+        "prior_value": "BEC_KIM_2014 missing from EXPERIMENTS",
+        "current_value": "Steinhauer present in EXPERIMENTS; reference now valid",
+        "command": "python3 -c 'from src.core.constants import EXPERIMENTS; assert \"Steinhauer\" in EXPERIMENTS and \"BEC_KIM_2014\" not in EXPERIMENTS'"
+      }
+    }
+  ],
   "summary": {
-    "total_sentences_walked": 22,
+    "total_sentences_walked": 6,
     "by_type": {
-      "numeric": 7,
-      "theorem-ref": 6,
-      "citation": 3,
-      "parameter": 1,
+      "numeric": 1,
+      "theorem-ref": 1,
+      "citation": 1,
+      "parameter": 0,
       "formal-claim": 2,
       "qualitative": 0,
       "methodology": 0,
       "transition": 0,
-      "metaclaim": 0
+      "metaclaim": 1
     },
     "by_verdict": {
-      "PASS": 5,
-      "FAIL": 9,
+      "PASS": 1,
+      "FAIL": 0,
       "WARN": 5,
-      "INFO": 1,
-      "UNGROUNDED": 1,
+      "INFO": 0,
+      "UNGROUNDED": 0,
       "TRANSITION": 0
     },
     "by_finding_class": {
-      "IA": 3,
+      "IA": 0,
       "TP": 0,
-      "SD": 2,
-      "TN": 11,
+      "SD": 1,
+      "TN": 4,
       "HD": 0
     },
-    "non_reproducing_count": 0,
-    "non_reproducing_auto_closed": 0,
+    "non_reproducing_count": 8,
+    "non_reproducing_auto_closed": 8,
     "non_reproducing_candidates": 0,
-    "agent_text": "22 high-priority sentences sampled (not full sentence-walk; bundle Tier-1 first-pass focused on anchor list + load-bearing claims). 5 PASS, 9 FAIL, 5 WARN, 1 INFO, 1 UNGROUNDED. 8 BLOCKERs: TN module-prefix drift (acoustic backbone, KMS optimal x2, graphene routes x3, lorenz-cancellation), IA Heidelberg delta_diss self-contradiction (10^-3 vs 26%), IA polariton smooth disp (10% vs 19%), IA EXPERIMENTS['BEC_KIM_2014'] missing key, Citation 4 missing WKB bibkeys + 1 missing CorleyJacobson1996 inline. Verdict: RED."
+    "agent_text": "Round-2 reconciliation review: ALL 8 Round-1 BLOCKERs auto-closed via deterministic rechecks (lean_deps_lookup, registry_lookup, arithmetic_recompute, grep_paper). 0 open BLOCKERs. 5 advisory findings: (1) NEW: FirstOrderKMS module attributed to SecondOrderSK.lean but actually in SKDoubling.lean (advisory polish); (2) NEW: abstract retains 'two routes' graphene noise claim while body backs only one Lean route (consistent with Round-1 fix recommendation); (3) carry-over: FirstOrderKMS labeled 'single substantive axiom' but is a Prop structure; (4) carry-over: 4 WKB bibkeys (CorleyJacobson1996 etc.) not in CITATION_REGISTRY; (5) carry-over: 'precise 92%' wording on 109/119=91.6% reuse claim. Verdict: GREEN."
   },
-  "blocking_issues": [
-    {
-      "id": "block:1",
-      "summary": "Class TN module-prefix drift: 4 of 5 acoustic-metric backbone theorem names wrong (metric_determinant, lorentzian_signature, inverse_identity, galilean_invariance — galilean_invariance does not exist anywhere in project)",
-      "sentences": [
-        "sentence:D1:bec-first:21d41920"
-      ],
-      "gate": "Gate5_LeanProofSubstance",
-      "finding_class": "TN",
-      "severity": "BLOCKER"
-    },
-    {
-      "id": "block:2",
-      "summary": "Class TN: §3.3 SecondOrderSK.firstOrder_KMS_optimal and SecondOrderSK.firstOrder_altSign_uniqueness_test wrong module — actual SKDoubling.*",
-      "sentences": [
-        "sentence:D1:bec-second:7d1d5810"
-      ],
-      "gate": "Gate5_LeanProofSubstance",
-      "finding_class": "TN",
-      "severity": "BLOCKER"
-    },
-    {
-      "id": "block:3",
-      "summary": "Class TN: GrapheneNoiseFormula.fdt_route, landauer_buttiker_route, routes_agree do not exist (closest extant: fdt_consistency)",
-      "sentences": [
-        "sentence:D1:graphene:cda5feea"
-      ],
-      "gate": "Gate5_LeanProofSubstance",
-      "finding_class": "TN",
-      "severity": "BLOCKER"
-    },
-    {
-      "id": "block:4",
-      "summary": "Class TN: §6.7 DiracFluidSK.snr_independent_of_sigma_Q — actual is GrapheneNoiseFormula.snr_independent_of_sigma_Q (wrong module prefix)",
-      "sentences": [
-        "sentence:D1:graphene:8aea7cef"
-      ],
-      "gate": "Gate5_LeanProofSubstance",
-      "finding_class": "TN",
-      "severity": "BLOCKER"
-    },
-    {
-      "id": "block:5",
-      "summary": "Class TN: §2.2 FirstOrderKMS.gamma_nonnegativity does not exist (FirstOrderKMS is a structure with fields fdr_i1, fdr_i2, i3_zero, etc. — no field 'gamma_nonnegativity')",
-      "sentences": [
-        "sentence:D1:bec-first:3387a18c"
-      ],
-      "gate": "Gate5_LeanProofSubstance",
-      "finding_class": "TN",
-      "severity": "BLOCKER"
-    },
-    {
-      "id": "block:6",
-      "summary": "Class IA: Heidelberg delta_diss = 10^-3 in §3.5 contradicts hierarchy table value ~26% — four orders of magnitude. Spectral-floor claim 'omega_x ~ 6 T_H' depends on this.",
-      "sentences": [
-        "sentence:D1:exact-wkb:7a37d615"
-      ],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "IA",
-      "severity": "BLOCKER"
-    },
-    {
-      "id": "block:7",
-      "summary": "Class IA: abstract says LKB polariton smooth-horizon delta_disp '~10%'; Table 1 reports -19% — internal inconsistency.",
-      "sentences": [
-        "sentence:D1:abstract:7fb5ec00"
-      ],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "IA",
-      "severity": "BLOCKER"
-    },
-    {
-      "id": "block:8",
-      "summary": "Class IA / parameter provenance: §2.3 references EXPERIMENTS['BEC_KIM_2014'] which is not in src/core/constants.py::EXPERIMENTS (existing keys: Steinhauer, Heidelberg, Trento). Bundle anchor §D1 #1 calls this load-bearing — anchor itself stale or registry entry missing.",
-      "sentences": [
-        "sentence:D1:bec-first:d2b83b28"
-      ],
-      "gate": "Gate2_ParameterProvenance",
-      "finding_class": "IA",
-      "severity": "BLOCKER"
-    }
-  ],
+  "blocking_issues": [],
   "non_blocking_followups": [
     {
-      "id": "advisory:1",
-      "summary": "Class Citation: 4 missing bibkeys (CorleyJacobson1996, CoutantParentani2012, RobertsonParentani2015, BelgiornoCacciatori2024) — \\bibitem entries exist locally in D1 but CITATION_REGISTRY uses Corley1996 and CoutantParentani2010 as canonical. Validate.py CHECK 1 will fail.",
+      "id": "advisory:r2:1",
+      "summary": "Class TN: §2.2 claims FirstOrderKMS is encoded 'in SecondOrderSK.lean' but the structure is actually defined in SKDoubling.lean (line 367). Field names (fdr_i1, fdr_i2, i3_zero) are correct as fields of SKDoubling.FirstOrderKMS.",
       "sentences": [
-        "sentence:D1:exact-wkb:1f7ee552",
-        "sentence:D1:intro:a630b3fc"
-      ],
-      "gate": "Gate1_CitationIntegrity",
-      "finding_class": "Citation"
-    },
-    {
-      "id": "advisory:2",
-      "summary": "Class Citation: 8 in-prep self-citations (Roehm2026Wave2/Wave12/Wave16/E1/E2/F/I1/I2) not in CITATION_REGISTRY but present as \\bibitem — needs registry in_prep flag or bundle-source-manifest absorption rule.",
-      "sentences": [
-        "sentence:D1:intro:d660c247"
-      ],
-      "gate": "Gate1_CitationIntegrity",
-      "finding_class": "Citation"
-    },
-    {
-      "id": "advisory:3",
-      "summary": "Class SD: 92% Lean-reuse claim arithmetically rounds 109/119 = 91.6% — 'precise 92%' wording is mildly self-defeating. Phase 5w cross-platform reuse counter not directly cited as artifact (script path or stable-counter file).",
-      "sentences": [
-        "sentence:D1:abstract:b8ff00aa",
-        "sentence:D1:graphene:bc778fb8"
-      ],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "SD"
-    },
-    {
-      "id": "advisory:4",
-      "summary": "Class TN/IA hybrid: abstract calls FirstOrderKMS the 'single substantive axiom' — but counts.json lists only 1 axiom (gapped_interface_axiom in D2/D4 territory) and FirstOrderKMS is a Prop structure, not an axiom. Reframe as 'load-bearing tracked-Prop' or similar.",
-      "sentences": [
-        "sentence:D1:abstract:66db0522"
-      ],
-      "gate": "Gate6_AssumptionDisclosure",
-      "finding_class": "TN"
-    },
-    {
-      "id": "advisory:5",
-      "summary": "Class TN cross-paper: abstract reference to firstOrder_KMS_optimal works as bare token (resolves in SKDoubling) but body §3.3 puts it under SecondOrderSK — the abstract version is fine, the body version is a BLOCKER. Together they show inconsistent module-prefixing within the same paper.",
-      "sentences": [
-        "sentence:D1:abstract:8e2422b7"
+        "sentence:D1:bec-first:r2new1"
       ],
       "gate": "Gate5_LeanProofSubstance",
-      "finding_class": "TN"
+      "finding_class": "TN",
+      "severity": "ADVISORY",
+      "recommended_fix": "Change 'as the FirstOrderKMS record in SecondOrderSK.lean' to 'as the SKDoubling.FirstOrderKMS record' or 'as the FirstOrderKMS record in SKDoubling.lean'."
     },
     {
-      "id": "advisory:6",
-      "summary": "Reproducibility: hierarchy Table 1 caption says 'Numerical values are computed via src/core/formulas.py on EXPERIMENTS parameters' but the BEC_KIM_2014 key is missing and reviewer cannot recompute the table values in time-budgeted pass. Recommend a reproducibility hash (commit SHA + formulas.py version) emitted into the table caption.",
+      "id": "advisory:r2:2",
+      "summary": "Class TN: abstract retains 'derived independently from Keldysh fluctuation-dissipation and Landauer-Büttiker scattering' but body §6.5 cites only GrapheneNoiseFormula.fdt_consistency. The L-B route has no Lean theorem.",
       "sentences": [
-        "sentence:D1:hierarchy:fb2f6054"
+        "sentence:D1:abstract:r2new2"
       ],
-      "gate": "Gate4_ComputationCorrectness",
-      "finding_class": "IA"
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "severity": "ADVISORY",
+      "recommended_fix": "Either soften abstract ('with a Landauer-Büttiker companion derivation in prose') or add the L-B Lean theorem in a follow-up wave."
+    },
+    {
+      "id": "advisory:r2:3",
+      "summary": "Class TN/IA: abstract calls FirstOrderKMS the 'single substantive axiom' but counts.json lists only 1 axiom (gapped_interface_axiom in D2/D4 territory); FirstOrderKMS is a Prop structure. Carryover from Round-1 advisory:4.",
+      "sentences": [
+        "sentence:D1:abstract:r2adv3"
+      ],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "TN",
+      "severity": "ADVISORY",
+      "recommended_fix": "Reword as 'load-bearing tracked Prop in the chain' or 'load-bearing structural Prop'."
+    },
+    {
+      "id": "advisory:r2:4",
+      "summary": "Class Citation: 4 WKB bibkeys still missing from CITATION_REGISTRY (CorleyJacobson1996, CoutantParentani2012, RobertsonParentani2015, BelgiornoCacciatori2024). Bibitems exist locally so latex compiles, but validate.py CHECK 1 will fail at submission gate. Carryover from Round-1 advisory:1.",
+      "sentences": [
+        "sentence:D1:exact-wkb:r2adv4"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "Citation",
+      "severity": "ADVISORY",
+      "recommended_fix": "Either add 4 bibkeys to CITATION_REGISTRY or alias to canonical Corley1996 / CoutantParentani2010 etc."
+    },
+    {
+      "id": "advisory:r2:5",
+      "summary": "Class SD: 109/119 = 91.6% rounded to 92% — 'precise 92%' wording is mildly self-defeating. Carryover from Round-1 advisory:3.",
+      "sentences": [
+        "sentence:D1:graphene:r2adv5"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "SD",
+      "severity": "ADVISORY",
+      "recommended_fix": "Reword to 'a 92% (109/119) reuse fraction' or '91.6% reuse fraction'; cite the Phase 5w cross-platform reuse counter artifact path."
     }
   ],
   "cross_bundle_consistency": {
-    "E1_polariton": "AGREES — G > 0.5, N_probe = 100, omega/kappa = ln(3)/(2π) ≈ 0.175 character-for-character match. Post-correction values consistent with supersessions ledger (historic G > 0.01 / N_probe = 10^4 fixed).",
+    "E1_polariton": "AGREES — G > 0.5, N_probe = 100, omega/kappa = ln(3)/(2π) ≈ 0.175 character-for-character match. Post-correction values consistent.",
     "E2_graphene": "AGREES — T_H ≈ 2.4 K, delta_disp ≈ -2.8%, delta_diss ~ 10^-13, 92% Lean reuse, Wiedemann-Franz violation > 200x match D1 §6 character-for-character.",
-    "L1_GW170817": "Not invoked in D1 — no cross-bridge needed.",
-    "D3_emergent_gravity": "Not invoked in D1 §6/§7 — no cross-bridge needed at this round."
+    "L1_GW170817": "Not invoked in D1.",
+    "D3_emergent_gravity": "Not invoked in D1."
   }
 }
