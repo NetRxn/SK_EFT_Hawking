@@ -130,7 +130,7 @@ modular $S$-matrix.
 The substrate's MTC at the horizon carries a Hayden--Preskill QEC
 code structure: the code distance is bounded by the scrambling time,
 and admissibility is biconditional with non-abelian-anyon support
-(\texttt{QECHolographyBridge.code\_distance\_scaling\_matches\_anyonic\_fusion\_iff\_fusion\_in\_admissible\_class}).
+(\texttt{QECHolographyBridge.HPCode.code\_distance\_scaling\_matches\_anyonic\_fusion\_iff\_fusion\_in\_admissible\_class}).
 A constructive trivial-abelian falsifier
 (\texttt{trivialAbelian\_violates\_admissibility}) closes the
 contrapositive: abelian MTCs cannot supply the Kaul--Majumdar
@@ -402,13 +402,16 @@ contribution from the slow drag of one doublon around the other.
 
 \subsection{Berry-phase calculation: $\pi$ accumulation}
 
-For the doublon-SWAP, the Berry phase is exactly $\pi$ (modulo $2\pi$).
-The accumulated phase is encoded in
-\texttt{DoublonGate.berryPhase\_eq\_pi}, with the slow-adiabatic
-condition encoded as a tracked-hypothesis Prop
-(\texttt{H\_AdiabaticDoublonDrag}). The biconditional
-\texttt{H\_AdiabaticDoublonDrag\_witness\_iff\_berry\_phase\_pi}
-ties the Berry phase to the adiabatic-drag premise.
+For the doublon-SWAP, the Berry phase is exactly $\pi$ (modulo $2\pi$)
+under a slow-adiabatic-drag hypothesis on the two-doublon
+configuration space. A dedicated Lean module
+(\texttt{DoublonGate.lean}) formalising the explicit
+\texttt{berryPhase\_eq\_pi} closure and the adiabatic-drag premise
+biconditional is in flight as a Phase~7+ supplement; the conceptual
+content (Berry phase $= \pi$, SPT robustness against local
+symmetry-preserving perturbations) draws on the standard treatment
+of two-doublon SWAP in Hubbard-model lattice
+physics~\cite{NayakSimonSternFreedmanDasSarma2008}.
 
 \subsection{Symmetry protection}
 
@@ -445,10 +448,12 @@ non-abelian-anyon support. We ship the complete QEC structure here.
 \subsection{Horizon-MTC boundary condition}
 
 The substrate's MTC at the horizon carries a boundary-condition
-tracked-hypothesis bundle
-$\texttt{H\_HorizonBoundaryCondition}$. The boundary condition fixes
+local Prop record
+\texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} (defined
+in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}, consumed here
+through the QEC-MTC cross-bridge to D3 \S 7). The boundary condition fixes
 the global dimension squared via
-\texttt{QECHolographyBridge.one\_le\_globalDimSq}; the scrambling time
+\texttt{QECHolographyBridge.HPCode.one\_le\_globalDimSq}; the scrambling time
 is bounded below by a positivity guard
 (\texttt{scramblingTimeBound\_nonneg}); the code distance closes
 positive (\texttt{codeDistance\_nonneg}).
@@ -458,21 +463,21 @@ positive (\texttt{codeDistance\_nonneg}).
 The substrate's central QEC theorem: the code distance scaling
 matches anyonic fusion if and only if the fusion algebra lies in the
 admissible class
-(\texttt{QECHolographyBridge.code\_distance\_scaling\_matches\_anyonic\_fusion\_iff\_fusion\_in\_admissible\_class}).
+(\texttt{QECHolographyBridge.HPCode.code\_distance\_scaling\_matches\_anyonic\_fusion\_iff\_fusion\_in\_admissible\_class}).
 The admissibility class is characterised by non-abelian fusion: the
 Hayden--Preskill recovery requires non-trivial braiding to scramble
 the bulk information across the boundary.
 
 \subsection{Recovery at the scrambling bound}
 
-\texttt{QECHolographyBridge.recovery\_at\_scrambling\_bound}: at the
+\texttt{QECHolographyBridge.HPCode.recovery\_at\_scrambling\_bound}: at the
 scrambling bound, the boundary entropy plus the code distance
 saturate the Hayden--Preskill recovery condition. This is the
 substrate's quantitative information-recovery statement.
 
 \subsection{Non-abelian-anyon support biconditional}
 
-\texttt{QECHolographyBridge.horizon\_BC\_implies\_HP\_admissible}:
+\texttt{QECHolographyBridge.HPCode.horizon\_BC\_implies\_HP\_admissible}:
 the horizon boundary condition implies the admissibility class.
 \texttt{nonabelian\_anyon\_implies\_codeDistance\_pos}: non-abelian
 anyon support implies positive code distance. Together these establish
@@ -619,10 +624,11 @@ braided-fusion-category $\mathrm{rk}$-and-$S$-matrix infrastructure
 (\S\ref{sec:wrt-tqft}). The non-abelian-Drinfeld-centre extension
 to $D(S_3)$ for the Standard-Model chirality wall full content
 ships in Bundle~D2 \S 3.4 (D4 here carries only the
-toric-code anchor). The doublon-SWAP gate's adiabatic-drag premise
-\texttt{H\_AdiabaticDoublonDrag} is a tracked-hypothesis Prop
-discharged in the slow-drag limit; explicit non-adiabatic corrections
-are open.
+toric-code anchor). The doublon-SWAP gate's dedicated Lean module
+(\texttt{DoublonGate.lean}) formalising the
+\texttt{berryPhase\_eq\_pi} closure and the adiabatic-drag-premise
+biconditional is in flight as a Phase~7+ supplement; explicit
+non-adiabatic corrections are open.
 
 \subsection{Cross-bundle bridges (Phase 7+ obligations)}
 
@@ -644,9 +650,12 @@ D4 inherits Bundle~D2's single true axiom
 \texttt{gapped\_interface\_axiom} (the 4+1D conjecture sitting at the
 intersection of mechanisms (ii) and (iii) of D2). No new axioms are
 introduced in D4. The
-\texttt{H\_HorizonBoundaryCondition} bundle is a tracked-hypothesis
-Prop, not an axiom. The
-\texttt{H\_AdiabaticDoublonDrag} premise is a tracked-hypothesis Prop.
+\texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} structure
+(defined in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}) is a
+local Prop record, not an axiom; D4 \S 7 consumes it through the
+QEC-MTC cross-bridge. The doublon-SWAP gate's adiabatic-drag premise
+will be encoded similarly as a local Prop record in the in-flight
+\texttt{DoublonGate.lean} module.
 Across D4's seven threads, sixteen substantive claims close at zero
 \texttt{sorry}, one tracked-hypothesis bundle carries the
 boundary-condition choice, and one tracked-hypothesis premise carries

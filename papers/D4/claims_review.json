@@ -1,0 +1,448 @@
+{
+  "paper": "D4",
+  "bundle_target": "D4",
+  "review_round": 1,
+  "review_date": "2026-05-04T00:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+  "verdict": "FAIL",
+  "total_findings": 9,
+  "findings_by_class": {
+    "IA": 1,
+    "TP": 0,
+    "SD": 0,
+    "TN": 5,
+    "HD": 2,
+    "CI": 1
+  },
+  "blockers_open": 6,
+  "blockers_advisory": 3,
+
+  "review_scope_note": "Time-boxed review (≤25 reads / ≤40 tools). Audit focused on highest-leverage Class TN, HD, IA, CI risks named in the bundle anchor list. Full sentence-walk deferred to round 2 after BLOCKERs are resolved; this round triages structural integrity of Lean-theorem name claims and cross-bundle/registry references.",
+
+  "sentences": [
+    {
+      "id": "sentence:D4:doublon-gate:b1d6c7a4",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "doublon-gate",
+        "quote_hash": "b1d6c7a4",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "doublon-gate",
+      "section_ordinal": 6,
+      "tex_line_start": 386,
+      "tex_line_end": 431,
+      "quote": "DoublonGate.berryPhase_eq_pi, DoublonGate.H_AdiabaticDoublonDrag, DoublonGate.H_AdiabaticDoublonDrag_witness_iff_berry_phase_pi (entire §6 of paper).",
+      "quote_normalized": "doublongate.berryphase_eq_pi doublongate.h_adiabaticdoublondrag doublongate.h_adiabaticdoublondrag_witness_iff_berry_phase_pi",
+      "type": "theorem-ref",
+      "finding_classes": ["TN", "HD"],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.DoublonGate.berryPhase_eq_pi", "link_state": "missing_target"},
+          {"kind": "theorem", "target": "SKEFTHawking.DoublonGate.H_AdiabaticDoublonDrag", "link_state": "missing_target"},
+          {"kind": "theorem", "target": "SKEFTHawking.DoublonGate.H_AdiabaticDoublonDrag_witness_iff_berry_phase_pi", "link_state": "missing_target"}
+        ],
+        "completeness": "none"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN+HD BLOCKER: The entire §6 (Doublon-SWAP gate) cites a Lean module SKEFTHawking.DoublonGate that does NOT EXIST in lean_deps.json (10330 declarations indexed). No file lean/SKEFTHawking/DoublonGate.lean is present (find -iname '*doublon*' returns nothing). All three theorem names referenced (berryPhase_eq_pi, H_AdiabaticDoublonDrag, H_AdiabaticDoublonDrag_witness_iff_berry_phase_pi) and the tracked-Prop H_AdiabaticDoublonDrag are absent. The corresponding hypothesis is also NOT in HYPOTHESIS_REGISTRY (which contains 7 entries: rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8, spin_bordism_iso_Z, H_KLRS_SM_Crossover, H_ScalarChannelIsTetradBifurcationOutput). Paper18 (the source for §6 per source_manifest.md) appears to have NOT been formalised in Lean at the doublon-gate level — only FermiHubbardDimer.lean exists. The paper claims this as 'the substrate's first symmetry-protected topological gate' with three formalised theorems, but none of them exist. Either the section must be marked openly as un-formalised or the formalisation must be produced.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate6_AssumptionDisclosure", "Gate9_NumericalFreshness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:rt-ch-bounds:8c2d4f93",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "rt-ch-bounds",
+        "quote_hash": "8c2d4f93",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "rt-ch-bounds",
+      "section_ordinal": 8,
+      "tex_line_start": 554,
+      "tex_line_end": 562,
+      "quote": "H_HorizonBoundaryCondition is the principal tracked Prop ... The same Prop reappears here as the RT/Casini--Huerta knife-edge anchor.",
+      "quote_normalized": "h_horizonboundarycondition is the principal tracked prop the same prop reappears here as the rt/casini--huerta knife-edge anchor",
+      "type": "theorem-ref",
+      "finding_classes": ["TN", "HD"],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.RTCasiniHuertaBounds.H_HorizonBoundaryCondition", "link_state": "missing_target"},
+          {"kind": "theorem", "target": "SKEFTHawking.BHEntropyMicroscopic.H_HorizonBoundaryCondition", "link_state": "resolved"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "TN: Both §1 abstract and §8 attribute H_HorizonBoundaryCondition to the RTCasiniHuertaBounds module, but the actual Lean structure SKEFTHawking.BHEntropyMicroscopic.H_HorizonBoundaryCondition lives in BHEntropyMicroscopic (a D3 module). lean_deps.json shows the only RTCasiniHuertaBounds tracked Props are H_CasiniHuerta_Bound_Valid and H_RT_Formula_Valid. The cross-bundle attribution must be corrected — D4 §8 should say 'the same H_HorizonBoundaryCondition Prop from D3's BHEntropyMicroscopic module', not present it as locally defined in RTCasiniHuertaBounds. HD: H_HorizonBoundaryCondition is also NOT in HYPOTHESIS_REGISTRY (7 entries; this name absent), so its disclosure status as a 'tracked-hypothesis Prop' is registry-orphan; either the registry must be extended or the paper must clarify it is a local Lean structure (not a project-wide tracked Prop with eliminability metadata).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate6_AssumptionDisclosure"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:qec-mtc:9a5b3c12",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "qec-mtc",
+        "quote_hash": "9a5b3c12",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "qec-mtc",
+      "section_ordinal": 7,
+      "tex_line_start": 437,
+      "tex_line_end": 510,
+      "quote": "QECHolographyBridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class, QECHolographyBridge.recovery_at_scrambling_bound, QECHolographyBridge.horizon_BC_implies_HP_admissible, etc.",
+      "quote_normalized": "qecholographybridge.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class qecholographybridge.recovery_at_scrambling_bound qecholographybridge.horizon_bc_implies_hp_admissible etc",
+      "type": "theorem-ref",
+      "finding_classes": ["TN"],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.QECHolographyBridge.HPCode.code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.QECHolographyBridge.HPCode.recovery_at_scrambling_bound", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.QECHolographyBridge.HPCode.horizon_BC_implies_HP_admissible", "link_state": "resolved"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "TN advisory (not a hard BLOCKER): The paper writes theorem names as 'QECHolographyBridge.<name>' but the Lean qualified names are SKEFTHawking.QECHolographyBridge.HPCode.<name> (the inner HPCode namespace is omitted in the paper). Theorems exist (verified in QECHolographyBridge.lean lines 100, 125, 142, 167, 208, 249, 265, 297, 326, 371). Recommendation: either include the HPCode namespace in the LaTeX (\\texttt{QECHolographyBridge.HPCode.code_distance_...}), or open the HPCode namespace at the start of QECHolographyBridge and re-prove these as top-level aliases. Otherwise readers grep'ing for the names will get false-negative 'theorem not found' answers. Same comment applies to QECHolographyBridge.fibonacci_HPCode_* and QECHolographyBridge.trivialAbelian_violates_admissibility — these are at SKEFTHawking.QECHolographyBridge.<name> (top-level, ok) but the HPCode-namespaced ones aren't.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:intro:7e3a91bd",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "intro",
+        "quote_hash": "7e3a91bd",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "intro",
+      "section_ordinal": 1,
+      "tex_line_start": 73,
+      "tex_line_end": 75,
+      "quote": "Topological quantum computation~\\cite{Kitaev2003,FreedmanLarsenWang2002,NayakSimonSternFreedmanDasSarma2008} relies on three pillars",
+      "quote_normalized": "topological quantum computation relies on three pillars",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "Kitaev2003", "link_state": "resolved"},
+          {"kind": "citation", "target": "FreedmanLarsenWang2002", "link_state": "missing_target"},
+          {"kind": "citation", "target": "NayakSimonSternFreedmanDasSarma2008", "link_state": "missing_target"},
+          {"kind": "citation", "target": "ReshetikhinTuraev1991", "link_state": "missing_target"},
+          {"kind": "citation", "target": "Witten1989", "link_state": "missing_target"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "FAIL",
+      "agent_notes": "CI BLOCKER: 4 of 6 citation keys NOT in CITATION_REGISTRY: FreedmanLarsenWang2002, NayakSimonSternFreedmanDasSarma2008, ReshetikhinTuraev1991, Witten1989. Only Kitaev2003 and Roehm2026Strategy resolve. The paper will fail validate.py CHECK 1 (citation_integrity) on submission. Add bibitems to src/core/citations.py CITATION_REGISTRY with arXiv IDs / DOIs (Kitaev2003 quant-ph/0506072 form; Witten 1989 CMP 121:351; Reshetikhin-Turaev 1991 Inv. Math. 103:547; Freedman-Larsen-Wang 2002 CMP 227:605; Nayak et al. 2008 RMP 80:1083). Paper15 / paper14 / paper16_wrt_tqft / paper11 source papers may already cache these — confirm via grep across src/core/citations.py before adding.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:abstract:1f4d2e80",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "abstract",
+        "quote_hash": "1f4d2e80",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "abstract",
+      "section_ordinal": 0,
+      "tex_line_start": 51,
+      "tex_line_end": 56,
+      "quote": "Sixteen of the substrate's load-bearing claims here ship with Lean~4 modules at zero \\texttt{sorry}; one tracked-hypothesis bundle (\\texttt{H\\_HorizonBoundaryCondition}) carries the boundary-condition choice; one true axiom carries over from Bundle~D2 (the 4+1D gapped-interface conjecture).",
+      "quote_normalized": "sixteen of the substrate's load-bearing claims here ship with lean 4 modules at zero sorry one tracked-hypothesis bundle h_horizonboundarycondition carries the boundary-condition choice one true axiom carries over from bundle d2",
+      "type": "numeric",
+      "finding_classes": ["IA"],
+      "chain_proposed": {
+        "links": [
+          {"kind": "formula", "target": "claim_count_sixteen", "link_state": "missing_target"}
+        ],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "IA advisory: Abstract claims 'Sixteen of the substrate's load-bearing claims here ship with Lean 4 modules at zero sorry' AND §9.7 says 'sixteen substantive claims close at zero sorry, one tracked-hypothesis bundle ... and one tracked-hypothesis premise'. The 'sixteen' is not enumerated in any one place; manually counting the unique theorem names cited by the paper (Uqsl2 ~5, IsingBraiding ~14, WRTInvariant ~4, QECHolographyBridge ~9, RTCasiniHuertaBounds ~3, plus Drinfeld* ~5) gives ~40 named theorems referenced. The 'sixteen' figure may be 'load-bearing' rather than 'all named'; either (a) make the count traceable to a list/table, or (b) rephrase to 'all load-bearing claims'. Also the §6 doublon claims are part of the asserted '16' but do NOT exist in Lean (see TN BLOCKER) — the count cannot be honoured if those proofs are missing.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate9_NumericalFreshness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:quantum-groups:5b8c1d77",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "quantum-groups",
+        "quote_hash": "5b8c1d77",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "quantum-groups",
+      "section_ordinal": 2,
+      "tex_line_start": 186,
+      "tex_line_end": 192,
+      "quote": "uq_K_mul_Kinv, uq_Kinv_mul_K, uq_KE, uq_KF, uq_serre",
+      "quote_normalized": "uq_k_mul_kinv uq_kinv_mul_k uq_ke uq_kf uq_serre",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.uq_K_mul_Kinv", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.uq_Kinv_mul_K", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.uq_KE", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.uq_KF", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.uq_serre", "link_state": "resolved"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All five Uqsl2 Drinfeld-Jimbo relation theorems resolve. They live at SKEFTHawking.uq_<name> (top-level, no Uqsl2 sub-namespace). Paper writes them un-namespaced via \\texttt{...}, which is fine. Module Uqsl2.lean confirmed present in lean_deps.json with 35 declarations. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:ising-mtc:c4e3a2b8",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "ising-mtc",
+        "quote_hash": "c4e3a2b8",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "ising-mtc",
+      "section_ordinal": 3,
+      "tex_line_start": 235,
+      "tex_line_end": 274,
+      "quote": "R1_sigma, Rpsi_sigma, theta_sigma, theta_psi, R_product, R1_sq, Rpsi_sq, hexagon_I/II/III/pss_psi/pss_one/spp, ribbon_ss_1/ss_psi/sp_sigma/pp_1, gauss_sum, quantum_trace_R3, trefoil_eq_neg_sqrt2, hopf_link_matches_S_matrix",
+      "quote_normalized": "ising braiding theorem suite",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.IsingBraiding.<all 21 names>", "link_state": "resolved"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All 21 IsingBraiding names referenced in §3 resolve in lean_deps.json under SKEFTHawking.IsingBraiding.<name> (or top-level SKEFTHawking.<name>). Includes R-matrix entries, all 6 hexagons, all 4 ribbons, gauss_sum, quantum_trace_R3, trefoil_eq_neg_sqrt2, hopf_link_matches_S_matrix. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:wrt-tqft:3a1f9c2e",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "wrt-tqft",
+        "quote_hash": "3a1f9c2e",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "wrt-tqft",
+      "section_ordinal": 5,
+      "tex_line_start": 337,
+      "tex_line_end": 369,
+      "quote": "WRTInvariant.wrtS2xS1, wrt_S2xS1_eq_rank, WRTInvariant.wrtS3, wrt_S3_formula",
+      "quote_normalized": "wrtinvariant.wrts2xs1 wrt_s2xs1_eq_rank wrtinvariant.wrts3 wrt_s3_formula",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.wrtS2xS1", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.wrt_S2xS1_eq_rank", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.wrtS3", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.wrt_S3_formula", "link_state": "resolved"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All 4 WRTInvariant names resolve in lean_deps.json (top-level SKEFTHawking namespace, module SKEFTHawking.WRTInvariant). The paper writes them as 'WRTInvariant.<name>' which is the module path; the actual qualified Lean name is just SKEFTHawking.<name>. The references are unambiguous and resolve. PASS. (Minor labeling style: same as QEC TN advisory; paper could prepend 'SKEFTHawking.' or note that WRTInvariant is the module not the namespace.)",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:rt-ch-bounds:6f1d8e95",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "rt-ch-bounds",
+        "quote_hash": "6f1d8e95",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "rt-ch-bounds",
+      "section_ordinal": 8,
+      "tex_line_start": 528,
+      "tex_line_end": 533,
+      "quote": "RTCasiniHuertaBounds.rt_entropy_pos discharges positivity; rt_kaulMajumdar_gap_at_reduced_area_two closes the Kaul--Majumdar matching at the reduced-area-2 critical point.",
+      "quote_normalized": "rtcasinihuertabounds.rt_entropy_pos rtcasinihuertabounds.rt_kaulmajumdar_gap_at_reduced_area_two",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.RTCasiniHuertaBounds.rt_entropy_pos", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.RTCasiniHuertaBounds.rt_kaulMajumdar_gap_at_reduced_area_two", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.RTCasiniHuertaBounds.rt_eq_kaulMajumdar_iff_trivial_reduced_area", "link_state": "resolved"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Three core RT/CH theorems verified in lean_deps.json under SKEFTHawking.RTCasiniHuertaBounds: rt_entropy_pos, rt_kaulMajumdar_gap_at_reduced_area_two, rt_eq_kaulMajumdar_iff_trivial_reduced_area. The knife-edge biconditional structure is confirmed. PASS for these three names.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:synthesis:2b9e7d34",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "synthesis",
+        "quote_hash": "2b9e7d34",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "synthesis",
+      "section_ordinal": 9,
+      "tex_line_start": 627,
+      "tex_line_end": 639,
+      "quote": "S 7 cross-bridge to Bundle D3 S 9 (QEC-bridge canonical form; D3 S 9 sets framing, D4 S 7 ships content). S 8 cross-bridge to Bundle D3 S 7 (same H_HorizonBoundaryCondition Prop carries the abelian-MTC-falsifier knife-edge).",
+      "quote_normalized": "cross-bundle bridges to d2 d3 sections",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "papers/D3/paper_draft.tex", "link_state": "stale"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "BCM (cross-bundle consistency advisory): D4 makes four explicit cross-bridge promises (D2 S 3.4 Drinfeld centre; D3 S 7 BH-entropy MTC; D3 S 9 QEC bridge; D3 S 7 RT/CH knife-edge). Verification: D2 S 3.4 (Drinfeld centre) PRESENT in D2 paper_draft.tex, mentions toric-code MTC consistently. D3 paper draft mentions 'Hayden' (6x) and 'Preskill' (7x), confirming D3 S 9 QEC bridge alignment. HOWEVER: D3 paper draft has 0 occurrences of 'Casini', 'Ryu', 'knife-edge', 'rt_eq_kaulMajumdar', 'abelian_MTC_falsifies', or 'H_HorizonBoundaryCondition'. The D4 S 8 cross-bridge to D3 S 7 (RT/CH knife-edge) is one-sided: D4 references D3 but D3 has no return reference. Either D3 needs a sub-section that picks up the abelian-MTC-falsifier (the BHEntropyMicroscopic.abelian_MTC_falsifies_H_HorizonBoundaryCondition theorem genuinely lives in D3's content area) or D4 should soften the claim to 'D4 S 8 builds on the D3 BHEntropyMicroscopic falsifier set'. Advisory blocker — not a hard fail because the underlying Lean object exists, but the bundle-level prose mismatch will trip the bundle_readiness cross-bridge check.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate1_CitationIntegrity", "Gate9_NumericalFreshness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:synthesis:8d3e1f4c",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "synthesis",
+        "quote_hash": "8d3e1f4c",
+        "hash_algorithm": "manual_summary"
+      },
+      "section": "synthesis",
+      "section_ordinal": 9,
+      "tex_line_start": 642,
+      "tex_line_end": 653,
+      "quote": "D4 inherits Bundle~D2's single true axiom \\texttt{gapped\\_interface\\_axiom}",
+      "quote_normalized": "d4 inherits bundle d2's single true axiom gapped_interface_axiom",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "axiom", "target": "gapped_interface_axiom", "link_state": "needs_verification"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Class IA spot-check: project-wide axiom count = 1 per CLAUDE.md+memory ('1 axiom'). The paper claims 'single true axiom gapped_interface_axiom'. The axiom name is plausible but not verified in this round; lookup in lean_deps.json was not performed for axiom-kind decls. Recommendation in round 2: grep 'axiom ' lean/SKEFTHawking/*.lean to confirm the exact axiom name + module location, then ensure D4 attribution to D2 matches ARCHITECTURE_SCOPE.md or the D2 paper.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-04T00:00:00Z:D4:r1",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+
+  "non_reproducing_prior_findings": [],
+
+  "summary": {
+    "total_sentences_audited_directly": 11,
+    "review_mode": "triaged_round_1_structural_integrity",
+    "by_verdict": {"PASS": 4, "FAIL": 3, "WARN": 4, "INFO": 0, "UNGROUNDED": 0, "TRANSITION": 0},
+    "by_finding_class": {"IA": 1, "TP": 0, "SD": 0, "TN": 5, "HD": 2, "CI": 1, "BCM": 1},
+    "agent_text": "11 spot-checks | 4 PASS | 3 FAIL | 4 WARN | 6 BLOCKERs across the bundle (3 hard FAIL + 3 advisory WARN BCM). Round 1 triages the highest-leverage TN/HD/CI risks named in the bundle anchor list. A full sentence-walk is deferred to round 2 once the BLOCKERs are addressed."
+  },
+
+  "blocking_issues": [
+    {
+      "id": "block:D4:r1:1",
+      "summary": "Class TN BLOCKER: Entire S 6 (Doublon-SWAP gate) cites Lean module DoublonGate that does NOT exist. No DoublonGate.lean file present; lean_deps.json (10330 entries) has zero matches for Doublon, berryPhase, or H_AdiabaticDoublonDrag.",
+      "sentences": ["sentence:D4:doublon-gate:b1d6c7a4"],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "fix": "Either (a) drop S 6 to an open-task / future-work paragraph, or (b) produce lean/SKEFTHawking/DoublonGate.lean before submission with the three named theorems and add H_AdiabaticDoublonDrag to HYPOTHESIS_REGISTRY in src/core/constants.py.",
+      "severity": "hard"
+    },
+    {
+      "id": "block:D4:r1:2",
+      "summary": "Class TN BLOCKER: H_HorizonBoundaryCondition module attribution wrong. Paper S 8 says it lives in RTCasiniHuertaBounds; actual location is BHEntropyMicroscopic.H_HorizonBoundaryCondition (a D3 module).",
+      "sentences": ["sentence:D4:rt-ch-bounds:8c2d4f93"],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "fix": "Update S 8 prose: 'D4 S 8 invokes the H_HorizonBoundaryCondition tracked-Prop bundle defined in D3's BHEntropyMicroscopic module' (with explicit cross-bundle attribution). Confirm the abelian-MTC-falsifier reference in S 7.5 also points to BHEntropyMicroscopic.abelian_MTC_falsifies_H_HorizonBoundaryCondition (it does in lean_deps.json).",
+      "severity": "hard"
+    },
+    {
+      "id": "block:D4:r1:3",
+      "summary": "Class CI BLOCKER: 4 of 6 cited bibkeys NOT in CITATION_REGISTRY: FreedmanLarsenWang2002, NayakSimonSternFreedmanDasSarma2008, ReshetikhinTuraev1991, Witten1989.",
+      "sentences": ["sentence:D4:intro:7e3a91bd"],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "CI",
+      "fix": "Add bibitems to src/core/citations.py CITATION_REGISTRY with arXiv IDs / DOIs (FLW 2002 CMP 227:605 quant-ph/0001108 ; Nayak et al. 2008 RMP 80:1083 0707.1889; Reshetikhin-Turaev 1991 Inv. Math. 103:547; Witten 1989 CMP 121:351). Then regenerate citation cache. Spot-check that paper14 / paper16_wrt_tqft / paper11 source papers may have already added these.",
+      "severity": "hard"
+    },
+    {
+      "id": "block:D4:r1:4",
+      "summary": "Class HD advisory: H_HorizonBoundaryCondition + H_AdiabaticDoublonDrag are paper-asserted as 'tracked-hypothesis Props' but neither is in HYPOTHESIS_REGISTRY (which has only 7 entries: rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8, spin_bordism_iso_Z, H_KLRS_SM_Crossover, H_ScalarChannelIsTetradBifurcationOutput).",
+      "sentences": ["sentence:D4:rt-ch-bounds:8c2d4f93", "sentence:D4:doublon-gate:b1d6c7a4"],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "HD",
+      "fix": "Either (a) add both Props to HYPOTHESIS_REGISTRY with eliminability metadata, or (b) clarify in the paper that they are local Lean structures (not project-wide tracked Props with eliminability records). Note: H_HorizonBoundaryCondition exists structurally in BHEntropyMicroscopic.lean (as a structure, not a Prop in the registry sense).",
+      "severity": "hard"
+    },
+    {
+      "id": "block:D4:r1:5",
+      "summary": "Class TN advisory: QECHolographyBridge theorems referenced via 'QECHolographyBridge.<name>' but actual qualified names are 'SKEFTHawking.QECHolographyBridge.HPCode.<name>' (HPCode sub-namespace omitted).",
+      "sentences": ["sentence:D4:qec-mtc:9a5b3c12"],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN",
+      "fix": "Update LaTeX to '\\texttt{QECHolographyBridge.HPCode.code_distance_...}' OR open the HPCode namespace at the QECHolographyBridge.lean top level so the names become reachable as QECHolographyBridge.<name>. Same fix needed for code_distance_scaling_matches_anyonic_fusion_iff_fusion_in_admissible_class, recovery_at_scrambling_bound, horizon_BC_implies_HP_admissible, nonabelian_anyon_implies_codeDistance_pos, one_le_globalDimSq, scramblingTimeBound_nonneg, codeDistance_nonneg.",
+      "severity": "advisory"
+    },
+    {
+      "id": "block:D4:r1:6",
+      "summary": "Class BCM advisory: D4 promises a S 8 cross-bridge to D3 S 7 (RT/CH knife-edge), but D3's paper_draft.tex has 0 mentions of 'Casini', 'Ryu', 'knife-edge', 'rt_eq_kaulMajumdar', 'abelian_MTC_falsifies', or 'H_HorizonBoundaryCondition'. Cross-bridge prose is one-sided.",
+      "sentences": ["sentence:D4:synthesis:2b9e7d34"],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "BCM",
+      "fix": "Either add a brief paragraph to D3 S 7 acknowledging the BHEntropyMicroscopic.abelian_MTC_falsifies_H_HorizonBoundaryCondition / RT-CH knife-edge connection (and pointing at D4 S 8), or soften D4 S 8's cross-bridge prose from 'cross-bridge' (implying bidirectional) to 'D4 S 8 builds on D3 BHEntropyMicroscopic'. Bundle_readiness cross-bridge cluster check will fail otherwise.",
+      "severity": "advisory"
+    }
+  ],
+
+  "non_blocking_followups": [
+    {
+      "id": "fu:D4:r1:1",
+      "summary": "Class IA advisory: 'Sixteen of the substrate's load-bearing claims' count is not enumerated. Round 2 should produce a table or list naming the 16, especially given that 3 of them (S 6 doublon claims) cannot be honoured per BLOCKER 1.",
+      "fix": "Add an enumerated list at the top of S 9 'First-formalisation register' OR rephrase to 'every load-bearing claim in this paper'."
+    },
+    {
+      "id": "fu:D4:r1:2",
+      "summary": "Class IA spot-check: gapped_interface_axiom name not directly verified in lean_deps.json this round (axiom-kind lookup not performed). Round 2 should confirm exact axiom name and module location.",
+      "fix": "grep '^axiom ' lean/SKEFTHawking/*.lean and cross-check D2 paper attribution."
+    },
+    {
+      "id": "fu:D4:r1:3",
+      "summary": "Round 2 should perform the full sentence-walk per claims-reviewer-v2 §A. This round was triaged to the bundle-anchor highest-leverage risks (Class TN, HD, CI, BCM, IA only); a full walk will surface qualitative claims, methodology audits, transition-record coverage, and the remaining named theorems.",
+      "fix": "Schedule round 2 after BLOCKERs 1-4 are resolved."
+    }
+  ]
+}
