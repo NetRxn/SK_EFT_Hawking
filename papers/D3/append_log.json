@@ -1,4 +1,239 @@
 {
   "bundle_target": "D3",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-04T12:50:47Z",
+      "source_paper": "paper25_gravitational_waves",
+      "lift_action": "Lift-letter",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "VestigialSecondSound",
+        "GW170817Falsifier"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:50:47Z",
+      "notes": "GW170817 vestigial-graviton falsification (cross-bridge to L1 already GREEN); same numerical \u0394c/c constraint"
+    },
+    {
+      "date": "2026-05-04T12:51:08Z",
+      "source_paper": "paper3_gauge_erasure",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:08Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:08Z",
+      "source_paper": "paper5_adw_gap",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a74",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:08Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:08Z",
+      "source_paper": "paper23_linearized_efe",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a75",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:08Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:08Z",
+      "source_paper": "paper27_bh_thermodynamics_four_laws",
+      "lift_action": "Lift-letter",
+      "bundle_section_inserted": "\u00a78",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:08Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:08Z",
+      "source_paper": "paper26_bh_entropy",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a79",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:08Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:08Z",
+      "source_paper": "paper44_riemannian_connection",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a722.5",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:08Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:08Z",
+      "source_paper": "paper40_higher_curvature",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a716",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:08Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper42_nonlinear_efe",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a717",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper41_diff_invariance",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a718",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper39_heat_kernel_expansion",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a715",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper22_ew_phase_transition",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a713",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper33_ewbg_chirality_wall",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a713.5",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper20_scalar_rung",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a711",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper21_majorana_rung",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a712",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper36_center_symmetry",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a719",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:09Z",
+      "source_paper": "paper37_chiral_ssb",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a719.5",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:09Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:10Z",
+      "source_paper": "paper38_cfl",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a719.7",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:10Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:10Z",
+      "source_paper": "paper35_qec_holography",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a79.5",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:10Z",
+      "notes": "Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:20Z",
+      "source_paper": "paper42b_cc_emergent",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a721",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:20Z",
+      "notes": "Cosmological-constant reproduction; Phase 7c stub"
+    },
+    {
+      "date": "2026-05-04T12:51:20Z",
+      "source_paper": "paper43_einstein_cartan",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a722",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:51:20Z",
+      "notes": "Einstein-Cartan torsion; Phase 7c stub"
+    }
+  ]
 }

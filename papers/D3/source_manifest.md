@@ -1,6 +1,6 @@
 # Bundle D3 — Source Manifest
 
-**Auto-generated:** 2026-05-01
+**Auto-generated:** 2026-05-04
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D3`
@@ -12,9 +12,9 @@
 |---|---|---|---|---|
 | `paper20_scalar_rung` | §11 | Lift-section | (see mapping) | 2026-04-25T21:08:47Z |
 | `paper21_majorana_rung` | §12 | Lift-section | (see mapping) | 2026-04-25T16:19:07Z |
-| `paper22_ew_phase_transition` | §13 | Lift-section | (see mapping) | 2026-04-29T19:39:17Z |
+| `paper22_ew_phase_transition` | §13 | Lift-section | (see mapping) | 2026-05-01T12:57:31Z |
 | `paper23_linearized_efe` | §5 | Lift-section | (see mapping) | 2026-04-28T01:18:32Z |
-| `paper25_gravitational_waves` | §6 | Lift-letter | (see mapping) | 2026-04-28T01:18:33Z |
+| `paper25_gravitational_waves` | §6 | Lift-letter | (see mapping) | 2026-05-01T18:23:19Z |
 | `paper26_bh_entropy` | §7 | Lift-section | (see mapping) | 2026-04-27T13:21:03Z |
 | `paper27_bh_thermodynamics_four_laws` | §8 | Lift-letter | (see mapping) | 2026-04-26T18:34:54Z |
 | `paper33_ewbg_chirality_wall` | §13.5 | Lift-section | (see mapping) | 2026-04-29T01:04:06Z |
@@ -24,12 +24,12 @@
 | `paper38_cfl` | §16 | Lift-section | (see mapping) | 2026-04-27T18:45:52Z |
 | `paper39_heat_kernel_expansion` | §17 | Lift-section | (see mapping) | 2026-04-28T01:58:15Z |
 | `paper3_gauge_erasure` | §3 | Lift-section | (see mapping) | 2026-04-25T07:44:43Z |
-| `paper40_higher_curvature` | §18 | Lift-section | (see mapping) | 2026-04-29T21:29:08Z |
+| `paper40_higher_curvature` | §18 | Lift-section | (see mapping) | 2026-05-01T12:57:51Z |
 | `paper41_diff_invariance` | §19 | Lift-section | (see mapping) | 2026-04-28T12:49:18Z |
 | `paper42_nonlinear_efe` | §20 | Lift-section | (see mapping) | 2026-04-28T14:32:28Z |
 | `paper42b_cc_emergent` | §21 | Lift-section | (see mapping) | 2026-04-28T23:51:08Z |
 | `paper43_einstein_cartan` | §22 | Lift-section | (see mapping) | 2026-04-28T20:51:38Z |
-| `paper44_riemannian_connection` | §22.5 | Lift-section | (see mapping) | 2026-04-30T16:13:53Z |
+| `paper44_riemannian_connection` | §22.5 | Lift-section | (see mapping) | 2026-05-01T17:56:24Z |
 | `paper5_adw_gap` | §2 | Lift-section | (see mapping) | 2026-04-26T02:41:38Z |
 | `paper6_vestigial` | §10 | Lift-section | (see mapping) | 2026-04-28T02:03:40Z |
 
