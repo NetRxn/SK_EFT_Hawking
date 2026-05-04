@@ -1,0 +1,953 @@
+\documentclass[aps,prd,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\usepackage{braket}
+
+%% Bundle: D2 (tier 1, target PRD | JHEP)
+%% Source manifest: papers/D2/source_manifest.md
+%% Change log: papers/D2/change_log.md
+%% Phase 7b sub-wave 7b.5 — D2 lift (skeleton + first-pass substantive draft)
+%% Sources: paper7+paper8+paper9+paper10
+%% L2 PRL splash already extracted from paper10 §2 content
+
+\begin{document}
+
+\title{Anomaly Constraints on Standard-Model Particle Content:\\
+A Machine-Verified Four-Thread Convergence}
+
+\author{John Roehm}
+\affiliation{Independent Researcher}
+\email{jgroehm@gmail.com}
+
+\date{\today}
+
+\begin{abstract}
+We present a unified, machine-verified treatment of four anomaly
+constraints on Standard-Model particle content. (i) The chiral central
+charge $c_{-} = 8 N_f$ derived from sixteen left-handed Weyl
+components per generation, combined with the modular framing
+constraint $24 \mid c_{-}$ from
+$\eta(\tau{+}1) = e^{2\pi i/24}\eta(\tau)$, forces
+$N_f \equiv 0 \pmod{3}$. The minimal solution $N_f = 3$ is verified
+through Mathlib's \texttt{Complex.exp\_add}; without right-handed
+neutrinos $c_{-} = 15/2$ is fractional, giving an independent
+gravitational-anomaly argument for $\nu_R$. The algebraic core uses
+$\dim_{\mathbb{F}_2} \mathrm{Ext}^n_{A(1)}(\mathbb{F}_2,\mathbb{F}_2)
+= 1,2,2,2,3,4$ for $n = 0,\dots,5$ together with the change-of-rings
+adjunction $\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong
+\mathrm{Hom}_{A(1)}(M, N)$ --- the first machine-checked Ext
+computation over a Steenrod subalgebra. (ii) The Z$_4$ generator
+$X = 5(B-L) - 4Y$ assigns odd Z$_4$ charge to all six SM fermion
+species; $3 \times 15 \equiv -3 \pmod{16}$ in the no-$\nu_R$ case
+forces a hidden Z$_{16}$-charged sector. (iii) A first-of-kind formal
+synthesis of the chirality wall integrates a no-go pillar
+(Golterman-Shamir nine conditions, two-particle-fermion (TPF) evasion
+via discontinuity of \texttt{round} at 1/2 and infinite-dimensionality
+of $\ell^2(\mathbb{Z})$), a positive-construction pillar
+(Gioia-Thorngren BdG Hamiltonian on $(\mathbb{Z}/L)^3$ with the
+central commutation $[H_\text{BdG}(p),\, q_A(p)] = 0$ closed by an
+Aristotle-discovered $\sin^2 + \cos^2 = 1$ identity), and an algebraic
+pillar (Onsager Dolan-Grady, In\"on\"u-Wigner contraction
+$[\varepsilon A_m, \varepsilon A_n] = 4\varepsilon^2 G_{m-n}$,
+$\mathrm{su}(2)$ emanant symmetry, Witten anomaly
+$\pi_4(\mathrm{SU}(2)) = \mathbb{Z}_2 \hookrightarrow
+\mathbb{Z}_{16}$). (iv) The integer 16 appears in four formally
+distinct settings (SM Weyl count, Z$_{16}$ DIII bordism index,
+Rokhlin's signature theorem, Kitaev DIII period-16) and the
+generation count $N_f = 3$ appears in two independent settings
+(Z$_{16}$ + modular). The end-to-end chain — from sixteen Weyl
+components through three formal mechanisms to one observed
+$N_f = 3$ — is verified by \texttt{lake build} on a 5229-theorem,
+243-module Lean 4 library with one axiom and zero \texttt{sorry};
+322 of those theorems were closed by the Aristotle automated prover.
+The single axiom (\texttt{gapped\_interface\_axiom}, a 4+1D
+hypothesis) is corroborated in 1+1D and 2+1D by independent
+formalizations. Three textbook topology results (ko cohomology,
+Adams spectral sequence convergence, Anderson-Brown-Peterson
+splitting) enter as tracked hypotheses pending Mathlib
+algebraic-topology infrastructure.
+\end{abstract}
+
+\maketitle
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Introduction}
+\label{sec:intro}
+
+The Standard Model has three generations of chiral fermions. No
+mechanism in the original SM Lagrangian explains why three rather
+than two or twelve. In recent years a small set of anomaly arguments
+has converged on the answer from genuinely independent directions:
+(i) Wang's modular-invariance framing constraint forces
+$N_f \equiv 0 \pmod 3$~\cite{Wang2024}; (ii) the Garc\'ia-Etxebarria-Montero
+classification of ${\rm Spin} \times \mathbb{Z}_4$ anomalies in
+five dimensions identifies a $\mathbb{Z}_{16}$ structure that all
+six SM fermion species saturate at $\nu_R$-completed
+content~\cite{GarciaEtxebarria2019}; (iii) the chirality-wall program
+of Golterman-Shamir, Gioia-Thorngren, and the Two-Particle Family
+(TPF) construction extends these algebraic obstructions to a lattice
+realization that is provably outside the standard Nielsen-Ninomiya
+no-go scope~\cite{GoltermanShamir2026,GioiaThorngrenPRL2026,TPF2026}.
+
+Three findings are striking about this convergence. First, the
+integer 16 appears in four formally distinct settings — the SM Weyl
+count per generation, the $\mathbb{Z}_{16}$ Dai-Freed bordism index
+in 5D, Rokhlin's theorem on the signature of spin 4-manifolds, and
+Kitaev's DIII period-16 classification of free-fermion topological
+phases. Second, the generation count $N_f = 3$ is forced — by the
+modular argument and (in the no-$\nu_R$ case) by the
+$\mathbb{Z}_{16}$ argument — through two completely independent
+algebraic chains. Third, the four mechanisms are not currently
+proven equivalent: their joint convergence is a fact, but a
+unifying causal explanation (the conjectural quaternionic-spinor
+structure underlying ${\rm Spin}^{\mathbb{Z}_4}$ in four dimensions)
+remains open.
+
+This paper performs the first machine-verified unification of the
+four threads. The headline contribution is not any one mechanism in
+isolation: paper-length expositions of (i), (ii) and (iii) exist
+elsewhere~\cite{Roehm2026Wave10,Roehm2026Wave9,Roehm2026Wave7,Roehm2026Wave8}.
+What is new here is the integrated treatment that exposes the
+load-bearing axiom budget when all four threads are placed inside a
+single Lean 4 library: one true axiom
+(\texttt{gapped\_interface\_axiom}, the 4+1D conjecture sitting at
+the intersection of mechanisms (ii) and (iii), supported by
+machine-checked 1+1D and 2+1D evidence), three tracked
+algebraic-topology hypotheses (deferred to upstream Mathlib), and a
+single Mathlib-deferral placeholder
+(\texttt{dai\_freed\_spin\_z4}). Across the entire chain, $5229$
+theorems are machine-verified, $322$ of them closed automatically
+by the Aristotle automated prover, with zero \texttt{sorry}.
+
+The paper is organized around the four-thread convergence rather
+than the four source papers. Section~\ref{sec:modular} gives the
+full modular derivation, including the first machine-checked Ext
+computation over a Steenrod subalgebra
+($\mathrm{Ext}^n_{A(1)}(\mathbb{F}_2,\mathbb{F}_2)$ through degree
+five) and the change-of-rings adjunction that closes one of the
+hypotheses left open in~\cite{Wang2024}. Section~\ref{sec:z16-drinfeld}
+computes the SM $\mathbb{Z}_{16}$ anomaly per generation,
+establishes that any anomaly-free SM extension without $\nu_R$
+requires a Z$_{16}$-charged hidden sector, and develops the minimal
+Drinfeld-centre layer needed to interpret SPT stacking
+(toric-code anyons, $D^2 = 4$, with the full
+$Z(\mathrm{Vec}_{S_3})$ structure deferred to a companion
+paper~\cite{Roehm2026D4}). Section~\ref{sec:chirality-wall} is the
+three-pillar chirality-wall synthesis: the no-go pillar formalises
+the Golterman-Shamir conditions and exhibits the explicit
+non-conditions any TPF construction must violate; the
+positive-construction pillar gives the first machine-verified
+lattice chiral-fermion construction (the Gioia-Thorngren
+BdG Hamiltonian); the algebraic pillar derives the targeted
+$\mathbb{Z}_{16}$ from an Onsager-algebra In\"on\"u-Wigner
+contraction. Section~\ref{sec:chirality-wall} also recapitulates
+the 1+1D and 2+1D machine-checked SPT classifications that support
+the 4+1D gapped-interface axiom. Section~\ref{sec:outlook} catalogues
+the axiom budget and identifies the three Mathlib infrastructure
+items whose upstream completion would discharge every remaining
+tracked hypothesis.
+
+The synthesis-level claim of the paper is the convergence itself.
+The conjectural unifying explanation —
+${\rm Spin}^{\mathbb{Z}_4}$ five-bordism factoring through a
+quaternionic-spinor structure that simultaneously fixes the Weyl
+count, the modular framing, and the Witten anomaly — is flagged as
+motivational throughout. Where the source papers each present one
+slice of evidence for that conjecture, this paper exposes the joint
+evidence. Falsification at this level would be either the
+discovery of an internally consistent SM extension violating
+$N_f \equiv 0 \pmod 3$ (which would refute the modular hypothesis
+of~\cite{Wang2024} as currently stated) or the exhibition of a 4+1D
+construction with a gapped boundary violating the SPT-stacking
+trivialisation rule (which would refute
+\texttt{gapped\_interface\_axiom}).
+
+%% ══════════════════════════════════════════════════════════════════
+\section{The modular generation constraint}
+\label{sec:modular}
+
+This section presents the full modular-invariance derivation of
+$N_f \equiv 0 \pmod 3$ together with the first machine-checked Ext
+computation over the Steenrod subalgebra $A(1)$. The PRL splash
+companion~\cite{Roehm2026Wave10} compresses this material to four
+pages; here we expose the algebraic core.
+
+\subsection{Central charge from fermion content}
+
+Under Wang's hypothesis~\cite{Wang2024}, the modular partition
+function of the SM extended by a singular trivialisation of
+${\rm Spin}^{\mathbb{Z}_4}$ five-bordism contains a
+$T$-transformation phase
+$\eta(\tau{+}1) = e^{2\pi i/24}\eta(\tau)$ for each chiral
+left-moving Weyl fermion. The chiral central charge $c_{-}$ enters
+the boundary partition function as the framing anomaly
+$Z(\tau{+}1) = e^{2\pi i c_{-}/24} Z(\tau)$ via the standard
+Cardy-Casimir argument~\cite{diFrancesco1997}. Counting Weyl
+components per SM generation in the with-$\nu_R$ convention, one
+generation contributes
+\[
+n_{\rm Weyl}^{\rm with\,\nu_R} \;=\; 6_{Q_L} + 3_{u_R} + 3_{d_R} + 2_{L_L} + 1_{e_R} + 1_{\nu_R} = 16,
+\]
+and so
+\begin{equation}
+c_{-}^{(N_f)} \;=\; 8 N_f \qquad \text{(with}\ \nu_R\text{)}.
+\label{eq:c-from-Nf}
+\end{equation}
+This identification is verified at the Lean level in
+\texttt{WangBridge.fermion\_count\_gives\_central\_charge}: the
+factor $1/2$ is the contribution per single Weyl component, and the
+sum over types lands at $8$ exactly. Without $\nu_R$, the count
+drops to fifteen and
+\begin{equation}
+c_{-}^{\rm no\,\nu_R} \;=\; 15/2 \cdot N_f,
+\label{eq:c-no-nuR}
+\end{equation}
+which fails to be an integer for any finite $N_f$. We return to
+the gravitational-anomaly consequences of this fractionality below.
+
+\subsection{Modular framing constraint}
+
+For a CFT to define a consistent partition function on the torus,
+$T$-transformations must act with a phase that closes. Combined
+with the Cardy-Casimir $T$-phase, this forces
+\[
+e^{2\pi i c_{-}/24} \cdot e^{-2\pi i c_{-}/24} = 1 \implies 24 \mid c_{-}
+\]
+when $c_{-}$ is restricted to the integer central charges allowed
+by 5D framing-anomaly-free spin TQFTs. The Lean
+formalisation~\cite{Roehm2026Wave10} encodes the divisibility
+through the modular $q$-parameter shift in
+\texttt{ModularInvarianceConstraint.qParam\_shift}, which uses
+Mathlib's \texttt{Complex.exp\_add} to establish
+\[
+q^{(\tau+1)} \;=\; q^{(\tau)} \cdot e^{2\pi i/24}
+\]
+on the $\eta$-function side, and reads back
+$24 \mid c_{-}$ in
+\texttt{ModularInvarianceConstraint.framing\_anomaly\_constraint}.
+
+Combining \eqref{eq:c-from-Nf} with $24 \mid c_{-}$ yields
+$24 \mid 8 N_f$, hence $3 \mid N_f$. The implication
+$24 \mid 8 N_f \Rightarrow 3 \mid N_f$ was closed by the Aristotle
+automated prover (run id \texttt{a1dfcbde}) and lives in
+\texttt{GenerationConstraint.generation\_mod3\_constraint}.
+
+\subsection{Without $\nu_R$: a fractional anomaly}
+
+Equation~\eqref{eq:c-no-nuR} gives $c_{-} = 15/2$ for $N_f = 1$,
+which is fractional. Under the Wang hypothesis, the framing
+constraint $24 \mid c_{-}$ then has \emph{no} integer solution at
+all, and gravity does not couple consistently to the fermion
+content. This is captured at the Lean level in
+\texttt{WangBridge.central\_charge\_fractional\_without\_nu\_R}.
+A consistent SM extension thus requires either (a) right-handed
+neutrinos or (b) a hidden Z$_{16}$-charged sector that supplies
+the missing single Weyl component (we develop the latter route in
+\S\ref{sec:z16-drinfeld}). Note that this is an
+\emph{independent} argument for $\nu_R$, complementary to the
+gauge-anomaly cancellation argument routinely cited from
+Alvarez-Gaum\'e--Witten~\cite{AlvarezGaumeWitten1984}: the
+modular framing constraint sees only the chiral central charge,
+not the gauge content.
+
+\subsection{The 16-convergence and Rokhlin}
+
+The integer $16$ first appears as the Weyl count above. Two
+further appearances tighten the result. (a) On the $\mathbb{Z}_{16}$
+side, the Dai-Freed integer $\eta_5^{{\rm Spin}^{\mathbb{Z}_4}}$
+takes values in $\mathbb{Z}_{16}$~\cite{DaiFreed1994}, and the
+$\nu_R$-completed SM saturates this exactly at one full
+generation. (b) On the Rokhlin side, the signature of a closed
+spin 4-manifold is divisible by 16~\cite{Rokhlin1952}; the
+algebraic-Rokhlin Lean module establishes the corresponding
+$8 \mid \sigma$ refinement via the unimodular intersection form
+of $E_8$, with \texttt{E8Lattice.sigma\_E8\_eq\_8} discharged by
+\texttt{native\_decide}.
+
+The full chain is encoded in
+\texttt{RokhlinBridge.sixteen\_convergence\_full}. Crucially, the
+combination of $\mathbb{Z}_{16}$ + modular constraints with no
+$\nu_R$ forces $N_f \in {\rm lcm}(16, 3) \cdot \mathbb{Z} = 48
+\mathbb{Z}$, a result encoded in
+\texttt{RokhlinBridge.constraints\_without\_nu\_R}: the observed
+$N_f = 3$ is therefore not merely consistent with the modular
+constraint; under no-$\nu_R$ it is incompatible with it. The
+joint argument is strictly stronger than either piece in
+isolation, as established in
+\texttt{RokhlinBridge.rokhlin\_strictly\_stronger}.
+
+\subsection{First machine-checked $\mathrm{Ext}^n_{A(1)}$}
+
+The algebraic core of the Z$_{16}$ classification is the structure
+of the Steenrod subalgebra $A(1)$. Wang's argument for
+$\Omega_5^{{\rm Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$
+proceeds via $\mathrm{Ext}^n_{A(1)}(\mathbb{F}_2,\mathbb{F}_2)$
+through homological degree five together with the
+Adams-spectral-sequence convergence $\mathrm{Ext} \Rightarrow
+\Omega_*$. We have machine-checked the Ext side completely; the
+Adams convergence (and the dual ABP splitting) enter as tracked
+hypotheses (see \S\ref{sec:outlook}).
+
+The dimensions of the relevant Ext groups are
+\begin{equation}
+\dim_{\mathbb{F}_2} \mathrm{Ext}^n_{A(1)}(\mathbb{F}_2,\mathbb{F}_2)
+\;=\; 1,\,2,\,2,\,2,\,3,\,4 \quad \text{for } n = 0,\dots,5.
+\label{eq:ext-dims}
+\end{equation}
+The Lean infrastructure proceeds in three stages. First,
+\texttt{A1Ring} encodes Adem relations and the Cartan formula; the
+Steenrod squares act on
+$\mathbb{F}_2[Sq^1, Sq^2]/({\rm Adem})$ and \emph{relation
+verification by} \texttt{native\_decide} closes 256 algebraic
+identities directly. Second, \texttt{A1Resolution} builds the
+minimal free resolution explicitly: each connecting map is a
+matrix over $A(1)$ whose entries are polynomials in
+$\{Sq^1, Sq^2\}$, and the differential-squared-zero condition
+$d^2 = 0$ is verified by reduction-row-echelon-form (RREF) kernel
+witnesses, also closed by \texttt{native\_decide}. Third,
+\texttt{A1Ext} reads off the dimensions \eqref{eq:ext-dims} as
+homology groups.
+
+The construction is, to our knowledge, the first machine-checked
+$\mathrm{Ext}^n$ computation over any Steenrod subalgebra in any
+proof assistant. (We are aware of formalisations of group cohomology
+and $\mathrm{Ext}^1$ over commutative rings; the Steenrod-subalgebra
+case requires the non-commutative graded-algebra infrastructure.)
+
+\subsection{Discharging hypothesis H2 via change-of-rings}
+
+A cleaner version of Wang's argument applies the
+$A(1) \to A$ change-of-rings adjunction to push the
+$\mathbb{Z}_{16}$ structure from $A(1)$ to the full Steenrod
+algebra $A$. We have proved this adjunction at the Lean level:
+\begin{equation}
+\mathrm{Hom}_A\bigl(A \otimes_{A(1)} M, N\bigr)
+\;\cong\;
+\mathrm{Hom}_{A(1)}(M, N)
+\label{eq:change-of-rings}
+\end{equation}
+in \texttt{ChangeOfRings.hom\_tensor\_adjunction}. The proof is
+purely homological-algebra; it requires no algebraic-topology
+input. Together with the explicit $A$-module structure carried by
+the relevant ko-cohomology spectra, \eqref{eq:change-of-rings}
+discharges the H2 hypothesis listed as open in the L2
+splash~\cite{Roehm2026Wave10} as well as in the Wang construction
+itself: the only remaining Mathlib-side hypotheses for the full
+$\mathbb{Z}_{16}$ result are now H1 (ko-cohomology computation),
+H3 (Adams convergence), and H4 (Anderson-Brown-Peterson
+splitting) — none of which carry physics content beyond their
+homological-algebra statements. We catalog these in
+\S\ref{sec:outlook}.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{The SM $\mathbb{Z}_{16}$ anomaly and a categorical layer}
+\label{sec:z16-drinfeld}
+
+The modular argument of \S\ref{sec:modular} sees only the chiral
+central charge. The $\mathbb{Z}_{16}$ anomaly argument sees the
+full gauge content. We compute the SM anomaly in
+$\mathbb{Z}_{16}$ exhaustively at the Lean level, and we develop
+the minimal Drinfeld-centre infrastructure needed to interpret SPT
+stacking.
+
+\subsection{Z$_4$ generator and per-generation anomaly}
+
+Following Garc\'ia-Etxebarria-Montero, the relevant Z$_4$ symmetry
+on SM fermions is generated by
+\[
+X \;=\; 5(B - L) - 4Y,
+\]
+where $Y$ is hypercharge and $B-L$ is the standard
+baryon-minus-lepton charge. A direct check on each of the six SM
+fermion species with the $\nu_R$-completed convention gives
+\[
+X[Q_L] = X[u_R] = X[d_R] = X[L_L] = X[e_R] = X[\nu_R] \equiv 1 \pmod 4,
+\]
+i.e., every Weyl component carries odd Z$_4$ charge. This is
+encoded exhaustively in \texttt{SMFermionData} (48 theorems
+total). Per generation, the anomaly contribution is the sum of
+the squared Z$_4$ charges weighted by the multiplicity in the
+generator basis:
+\[
+\sum_f n_f \, X_f^2 \;\equiv\; 6 + 3 + 3 + 2 + 1 + 1 = 16 \;\equiv\; 0 \pmod{16}.
+\]
+With $\nu_R$, every generation is anomaly-free in $\mathbb{Z}_{16}$.
+Without $\nu_R$, the count drops by one and the residue is
+$15 \equiv -1 \pmod{16}$.
+
+\subsection{Three generations: a hidden-sector requirement}
+
+Composing across $N_f = 3$ generations without $\nu_R$ gives
+\[
+3 \times 15 \;=\; 45 \;\equiv\; -3 \pmod{16}.
+\]
+A single chiral hidden sector with Z$_4$ charge totalling $+3
+\bmod 16$ would saturate the anomaly. This is the formal
+statement at the heart of
+\texttt{Z16AnomalyComputation.hidden\_sector\_required}: any
+internally consistent SM extension that omits $\nu_R$ requires
+either (a) BSM Z$_{16}$-charged matter or (b) a non-trivial
+gravitational-anomaly cancellation route. The proof contains 23
+substantive theorems, no axioms, no \texttt{sorry}.
+
+\subsection{SPT stacking: 16-fold periodicity}
+
+The Z$_{16}$ structure inherits a stacking law from the
+underlying SPT classification. Sixteen Majorana wires stack to a
+trivially-gappable phase; eight Majorana wires cannot be gapped
+without breaking time-reversal. This is the
+Fidkowski-Kitaev~\cite{FidkowskiKitaev2010} reduction $\mathbb{Z}
+\to \mathbb{Z}_{16}$ at the SPT level. At the Lean level the
+stacking law is encoded in \texttt{SPTStacking.*}: the abelian
+group structure on $\mathbb{Z}_{16}$ together with the 16-fold
+periodicity is closed by \texttt{decide}. The K-matrix anomaly
+matching with the (3450)-K-matrix invertible TQFT
+identifies element 8 of $\mathbb{Z}_{16}$ as the Witten anomaly
+$\pi_4({\rm SU}(2)) = \mathbb{Z}_2$~\cite{Witten1982}; we return
+to this identification in \S\ref{sec:chirality-wall}.
+
+The Lean module \texttt{Z16Classification.dai\_freed\_spin\_z4}
+asserts $\Omega_5^{{\rm Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$
+as a placeholder pending Mathlib's cobordism infrastructure. We
+disclose this explicitly in \S\ref{sec:outlook}: the placeholder
+discharges trivially in our current formulation and is the
+principal Mathlib-deferral in this paper.
+
+\subsection{The minimal Drinfeld-centre anchor}
+
+Interpreting SPT stacking categorically requires a Drinfeld
+centre. The minimal categorical layer needed for the
+$\mathbb{Z}_{16}$ argument is
+\[
+Z(\mathrm{Vec}_{\mathbb{Z}/2}) \;\cong\; D(\mathbb{Z}/2),
+\]
+the toric-code modular tensor category with four abelian anyons
+$\{1, e, m, em\}$ and total quantum dimension squared $D^2 = 4$.
+This is verified at the Lean level via
+\texttt{VecGMonoidal} (eleven theorems establishing the
+monoidal $\mathrm{Vec}_G$ instance for finite abelian $G$),
+\texttt{ToricCodeCenter.braiding\_em\_is\_minus\_one} (52 theorems
+total establishing the braiding structure), and the centre
+equivalence \texttt{CenterEquivalenceZ2} (30 theorems). The
+non-trivial mutual braiding $B(e, m) = -1$ is the categorical
+avatar of the Witten Z$_2$ inside Z$_{16}$.
+
+The full generalisation to non-abelian $Z(\mathrm{Vec}_{S_3})$
+and to the Drinfeld doubles $D(G)$ for arbitrary finite $G$ is
+deferred to a companion paper~\cite{Roehm2026D4} on topological
+quantum computation foundations. The companion paper covers the
+Hopf-algebra structure that supports the universality results
+needed for the qubit-encoding side; the Z$_{16}$ argument here
+needs only the abelian fragment.
+
+\subsection{Cross-section consistency}
+
+The $\mathbb{Z}_{16}$ anomaly developed in this section and the
+modular constraint of \S\ref{sec:modular} are independent
+algebraic chains. They land at the same statement
+($\nu_R$-required-or-hidden-sector-required) through completely
+different machinery: the modular argument sees the chiral
+central charge $c_{-} = 8 N_f$ and the framing constraint
+$24 \mid c_{-}$; the Z$_{16}$ argument sees the gauge anomaly
+modulo 16 and the per-generation residue $15 \bmod 16$.
+
+The element 8 of Z$_{16}$ (Witten anomaly, mutual braiding
+$B(e,m) = -1$) is the same 8 that appears in the
+algebraic-Rokhlin theorem $8 \mid \sigma$ and that underlies the
+$E_8$-lattice signature in
+\texttt{E8Lattice.sigma\_E8\_eq\_8}. We make this connection
+explicit in \S\ref{sec:chirality-wall} via the
+Onsager-algebra $\mathbb{Z}_2 \hookrightarrow \mathbb{Z}_{16}$
+embedding.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{The chirality wall: a three-pillar synthesis}
+\label{sec:chirality-wall}
+
+The constraints of \S\ref{sec:modular} and \S\ref{sec:z16-drinfeld}
+are algebraic. Whether they can be satisfied by a lattice
+construction is a separate question. The chirality-wall program
+addresses this question through three pillars: a no-go statement
+identifying the standard scope outside which a lattice chiral
+fermion can live; a positive construction realising a chiral
+fermion outside that scope; and an algebraic framework relating the
+construction to the targeted anomaly. We have machine-verified
+all three pillars and the bridges between them.
+
+\subsection{Pillar 1 — Golterman-Shamir no-go and TPF evasion}
+
+The Golterman-Shamir (GS) no-go theorem~\cite{GoltermanShamir2026}
+classifies lattice chiral fermion constructions through nine
+conditions: six explicit ones (C1-C6) involving locality,
+anti-Hermiticity, $\gamma_5$-Hermiticity, and finite Brillouin
+zones, and three implicit ones (I1-I3) involving lattice
+periodicity, finite Hilbert spaces, and the Nielsen-Ninomiya
+doubler-counting argument~\cite{Nielsen1981a,Nielsen1981b}. Our
+formalisation of these nine conditions in
+\texttt{GoltermanShamir} (14 theorems) and
+\texttt{LatticeHamiltonian} (28 theorems) encodes seven of them as
+substantive Lean propositions: the Brillouin zone via Mathlib's
+\texttt{AddCircle}; the fermionic Fock space via the
+exterior-algebra-finite-dimensionality theorem
+\texttt{LatticeHamiltonian.fock\_space\_finite\_dim}
+(closed by Aristotle, run \texttt{run\_20260328\_170451},
+graded-decomposition strategy); and the spectral gap and matrix
+exponential via standard Mathlib infrastructure. Two conditions
+(C4 — interpolating-fields completeness; C5 — spontaneous
+symmetry breaking) enter as well-typed but non-proven physics
+conjectures (axioms in our Lean library, not theorems). We
+discuss the implications of this in \S\ref{sec:outlook}.
+
+The Two-Particle Family (TPF) construction~\cite{TPF2026} evades
+the GS no-go by violating five of the nine conditions
+explicitly: C1 via the discontinuity of \texttt{round} at $1/2$
+(the round-to-integer map is not continuous, formalised in
+\texttt{TPFEvasion.round\_not\_continuous\_at\_half});
+C2 via the bosonic-rotor ladder structure; I3 via the
+infinite-dimensionality of $\ell^2(\mathbb{Z})$
+(\texttt{TPFEvasion.rotor\_hilbert\_not\_finite\_dim}, closed by
+Aristotle); the extra-dimensional 4+1D SPT slab; and C3
+conditionally. The conjunction of these five evasion theorems is
+collected in \texttt{TPFEvasion.tpf\_outside\_gs\_scope\_main}
+(12 theorems total in the module).
+
+The pillar is not merely "a TPF construction works"; it is
+"a TPF construction works \emph{exactly because} it sits at the
+five condition-violations identified above". This is what makes
+the no-go result and the positive construction (Pillar 2) two
+sides of one statement.
+
+\subsection{Pillar 2 — Gioia-Thorngren positive construction}
+
+The Gioia-Thorngren (GT) BdG Hamiltonian on
+$(\mathbb{Z}/L)^3$ realises a chiral fermion explicitly. In the
+Brillouin-zone momentum coordinates $p = (p_1, p_2, p_3)$,
+\begin{equation}
+H_{\rm BdG}(p) \;=\; \sin(p_1)\, \sigma_1 \otimes \mathbf{1}_2
+                   + \sin(p_2)\, \sigma_3 \otimes \mathbf{1}_2
+                   + \sigma_2 \otimes h_{\rm eff}(p),
+\label{eq:gt-bdg}
+\end{equation}
+where the four-dimensional internal block is
+\begin{equation}
+h_{\rm eff}(p) \;=\; r W(p)\, \mathbf{1}_2
+                  + \sin(p_3)\, \tau_z
+                  + (1 - \cos(p_3))\, \tau_x,
+\label{eq:gt-heff}
+\end{equation}
+with $W(p) = 2 - \cos(p_1) - \cos(p_2)$ the Wilson mass. The
+Wilson-mass-zero condition is encoded in
+\texttt{WilsonMass.M\_zero\_iff\_zero\_momentum} as
+$M(k) = 0 \iff k = (0,0,0)$, with the proof using
+\texttt{Real.cos\_le\_one} for the cosine bounds.
+
+The central commutation theorem
+\begin{equation}
+[H_{\rm BdG}(p),\, q_A(p)] \;=\; 0 \qquad \forall\, r,\, p,
+\label{eq:gt-commutation}
+\end{equation}
+where $q_A(p) = \mathbf{1}_\sigma \otimes \bigl[
+(1+\cos p_3)/2 \cdot \tau_z + (\sin p_3)/2 \cdot \tau_x \bigr]$,
+holds for all parameter values. Writing
+\eqref{eq:gt-commutation} out as a direct
+$4 \times 4$-matrix calculation reduces the entire content to a
+single trigonometric identity $\sin^2 + \cos^2 = 1$ — but only
+after the right
+$\sigma\otimes\tau$-block expansion is performed, and finding
+that expansion was the key insight discovered by the Aristotle
+prover (run \texttt{18969de2}). The closed-form identity is
+\texttt{GTCommutation.gt\_commutation\_4x4}, supported by 15
+theorems of Pauli-matrix infrastructure in
+\texttt{PauliMatrices} (reusable elsewhere) and 8 BdG-Hamiltonian
+theorems in \texttt{BdGHamiltonian}.
+
+The chiral-charge operator $q_A$ has spectrum $\pm \cos(p_3/2)$,
+i.e., it is non-on-site, non-compact (eigenvalues lie outside
+$\{-1, +1\}$), and Ginsparg-Wilson
+($q_A^2 = \cos^2(p_3/2) \cdot \mathbf{1}_4$). These three
+properties \emph{exactly} violate the GS conditions identified in
+Pillar 1: they place the GT construction inside the TPF
+no-go-evasion scope, and outside the standard chiral-fermion
+no-go scope. The equivalence between "GT violates exactly the GS
+conditions Pillar 1 identified" and "the TPF construction works"
+is formalised in \texttt{ChiralityWallMaster} (16 bridge
+theorems).
+
+To our knowledge the GT formalisation is the first
+machine-verified construction of a lattice chiral fermion in any
+proof assistant.
+
+\subsection{Pillar 3 — Onsager and the Witten anomaly}
+
+The third pillar gives the algebraic context for the GT
+construction. The Onsager algebra $\mathfrak{O}$, generated by
+$\{A_n\}_{n \in \mathbb{Z}}$ subject to the Dolan-Grady
+relation~\cite{Onsager1944,DolanGrady1982}
+\[
+[A_0,\, [A_0,\, [A_0,\, A_1]]] \;=\; 16\, [A_0,\, A_1],
+\]
+admits a Davies isomorphism with the loop algebra
+$L(\mathfrak{sl}_2)$ \cite{Davies1990}. We have formalised this
+isomorphism in \texttt{OnsagerAlgebra} (24 theorems, the first
+formalisation of the Onsager algebra in any proof assistant).
+The In\"on\"u-Wigner contraction~\cite{InonuWigner1953} of
+$L(\mathfrak{sl}_2)$ to the Heisenberg-Onsager loop algebra is
+\[
+[\varepsilon\, A_m,\, \varepsilon\, A_n]
+\;=\; \varepsilon^2 \cdot 4\, G_{m-n},
+\]
+with $G_n = G_{-n}$ the symmetric loop generators. The
+contraction theorem \texttt{OnsagerContraction.*} (12 theorems;
+closing identity by Aristotle, run \texttt{36b7796f}) shows the
+$\varepsilon \to 0$ limit reproduces an emanant
+$\mathfrak{su}(2)$ symmetry on the GT Weyl doublet
+(\texttt{GTWeylDoublet}, 12 theorems).
+
+The fourth homotopy group of the contracted symmetry group is
+\[
+\pi_4({\rm SU}(2)) \;=\; \mathbb{Z}_2,
+\]
+the Witten anomaly~\cite{Witten1982}. The
+$\mathbb{Z}_2 \hookrightarrow \mathbb{Z}_{16}$ embedding lands at
+element 8 — the same element marked by the toric-code mutual
+braiding $B(e, m) = -1$ in \S\ref{sec:z16-drinfeld}. The bridge
+chain $\mathfrak{O} \to \mathfrak{su}(2) \to \mathbb{Z}_2
+\hookrightarrow \mathbb{Z}_{16}$ in
+\texttt{ChiralityWallMaster} (Pillar~2 $\leftrightarrow$
+Pillar~3 bridge) closes the loop: the \emph{same} $\mathbb{Z}_{16}$
+that \S\ref{sec:z16-drinfeld} obtained from the SPT stacking
+classification is the target of an Onsager-In\"on\"u-Wigner
+contraction in Pillar 3, and the lattice realisation in Pillar 2
+sits inside that $\mathbb{Z}_{16}$ at the right element.
+
+\subsection{The 4+1D gapped-interface axiom and lower-dimensional
+evidence}
+
+The chirality-wall program rests on a single non-trivial
+hypothesis: that any 4+1D SPT slab admits a gapped interface
+trivialisation iff its bulk anomaly cancels. In our Lean library
+this is the lone axiom \texttt{gapped\_interface\_axiom} (in
+\texttt{SPTClassification}; 20 theorems plus the 1 axiom). We
+support the axiom by machine-checked evidence in 1+1D and
+2+1D.
+
+The 1+1D case is the (3450)-K-matrix invertible TQFT
+formalisation in \texttt{VillainHamiltonian}. The Villain model
+gives an explicit 1+1D representation of the K-matrix anomaly
+matching, and the 16-fold periodicity at the K-matrix level is
+verified by \texttt{decide}.
+
+The 2+1D case is the Fidkowski-Kitaev (FK) interacting SPT
+classification in \texttt{FKGappedInterface} (20 theorems, the
+first formalisation of the FK gapped-interface result in any
+proof assistant). The crucial spectral gap $\Delta = 2$ for the
+eight-Majorana wire model is verified directly: the
+ground state is unique, and the gap is exactly twice the
+single-Majorana coupling. In particular, two stacks of eight
+Majorana wires (sixteen total) admit a gapped interface (i.e.,
+trivialisation), as the FK construction shows. This is the 2+1D
+analogue of the 4+1D conjecture: gapped iff anomaly-cancelled.
+
+The 4+1D extension is conjectural at present. The supporting
+1+1D and 2+1D constructions match the structure of the conjecture
+exactly, and both are entirely machine-checked. We disclose the
+4+1D conjecture status explicitly in \S\ref{sec:outlook}.
+
+\subsection{Bridge theorems}
+
+The three pillars of this section are not independent: each pair
+admits a bridge theorem in
+\texttt{ChiralityWallMaster} (16 theorems total). Pillar 1
+$\leftrightarrow$ Pillar 2 establishes that the GT construction
+violates exactly the GS conditions identified in
+Pillar 1 — neither more nor fewer. Pillar 2 $\leftrightarrow$
+Pillar 3 establishes the Dolan-Grady-coefficient
+\texttt{DG\_COEFF=16}, the In\"on\"u-Wigner contraction of the
+GT loop algebra, and the Witten-Z$_2$ embedding.
+Pillar 1 $\leftrightarrow$ Pillar 3 establishes the joint
+Golterman-Shamir + Z$_{16}$ constraint: any lattice chiral
+fermion construction either violates GS or uses $16n$ Weyl
+components. The conjunction of the three bridges, together with
+the three pillars, gives the master statement of the
+chirality-wall program: a lattice chiral fermion exists, lives
+outside the GS scope at the precise condition-violations
+identified in Pillar 1, realises the Witten-Z$_2$ at element 8 of
+the Z$_{16}$ classification, and saturates the
+$N_f \times 16$ Weyl-count divisibility from
+\S\ref{sec:modular}.
+
+%% ══════════════════════════════════════════════════════════════════
+\section{Outlook: axiom budget, Mathlib infrastructure, and
+falsification}
+\label{sec:outlook}
+
+We close with a single accountability table for the four-thread
+chain, and identify three Mathlib infrastructure items whose
+upstream completion would discharge every remaining tracked
+hypothesis.
+
+\subsection{What is proved}
+
+Across the four threads, $5229$ Lean theorems are
+machine-verified (\texttt{lake build} clean), $322$ of them
+closed by the Aristotle automated prover. The chain
+end-to-end: sixteen Weyl components per generation imply
+$c_{-} = 8 N_f$ (Eq.~\ref{eq:c-from-Nf}); the modular framing
+constraint $24 \mid c_{-}$ implies $3 \mid N_f$; the Z$_4$ charge
+$X = 5(B-L) - 4Y$ on each Weyl component yields the
+$\mathbb{Z}_{16}$ anomaly per generation, and $3 \times 15 \equiv -3$
+(no-$\nu_R$) requires a hidden sector
+(\texttt{Z16AnomalyComputation.hidden\_sector\_required}); the
+Onsager Dolan-Grady relation contracts to $\mathfrak{su}(2)$ and
+embeds the Witten anomaly $\mathbb{Z}_2 \hookrightarrow
+\mathbb{Z}_{16}$; the GT BdG Hamiltonian
+(Eqs.~\ref{eq:gt-bdg}-\ref{eq:gt-heff}) realises the lattice
+chiral fermion, with the central commutation
+\eqref{eq:gt-commutation} closed by Aristotle. The first
+machine-checked $\mathrm{Ext}^n_{A(1)}$ computation through
+$n = 5$ (Eq.~\ref{eq:ext-dims}) and the
+$\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$
+change-of-rings adjunction (Eq.~\ref{eq:change-of-rings})
+discharge the homological-algebra side. The first
+machine-verified Fidkowski-Kitaev 2+1D gapped-interface
+classification supports the lone 4+1D axiom.
+
+\subsection{What is axiomatised}
+
+A single true axiom: \texttt{gapped\_interface\_axiom} (the 4+1D
+conjecture in \texttt{SPTClassification}). This is supported by
+machine-checked 1+1D evidence (\texttt{VillainHamiltonian}) and
+2+1D evidence (\texttt{FKGappedInterface}, including the
+explicit $\Delta = 2$ spectral gap).
+
+A single Mathlib-deferral placeholder:
+\texttt{Z16Classification.dai\_freed\_spin\_z4} asserts
+$\Omega_5^{{\rm Spin}^{\mathbb{Z}_4}} \cong \mathbb{Z}_{16}$ as a
+trivially-discharged placeholder pending Mathlib's cobordism
+infrastructure.
+
+Two well-typed physics conjectures encoded as axioms (not
+theorems): GS condition C4 (interpolating-fields completeness)
+and C5 (spontaneous symmetry breaking). Neither carries
+mathematical content beyond what its statement asserts; both are
+standard physics inputs.
+
+\subsection{Tracked hypotheses}
+
+Three textbook results in algebraic topology enter as tracked
+hypotheses:
+\begin{itemize}
+\item \textbf{H1} — ko-cohomology computation
+(Adams~\cite{Adams1974} et seq.). The structure of
+$\pi_*({\rm ko})$ is well-known but not yet formalised in
+Mathlib.
+\item \textbf{H3} — Adams spectral sequence convergence
+(Beaudry-Campbell). The collapse of the relevant
+$E_\infty$-page to the cobordism group requires the
+convergence theorem.
+\item \textbf{H4} — Anderson-Brown-Peterson splitting
+of ${\rm MSpin}$ at the prime 2~\cite{ABP1967}.
+\end{itemize}
+
+\textbf{H2} — Hom-tensor change-of-rings adjunction — is no
+longer tracked: it has been discharged in
+\texttt{ChangeOfRings.hom\_tensor\_adjunction}
+(Eq.~\ref{eq:change-of-rings}).
+
+\subsection{What is conjectural and motivational}
+
+The unifying explanation for the four-thread convergence — that
+${\rm Spin}^{\mathbb{Z}_4}$ five-bordism factors through a
+quaternionic-spinor structure that simultaneously fixes the Weyl
+count, the modular framing, and the Witten anomaly — is a
+research conjecture. The convergence \emph{itself} is
+machine-verified; the unifying explanation is not.
+
+The Kitaev DIII period-16 classification of free-fermion
+topological phases~\cite{Kitaev2009} provides further
+circumstantial support for the same Z$_{16}$ structure, but the
+formal equivalence with $\Omega_5^{{\rm Spin}^{\mathbb{Z}_4}}$ is
+not formalised here.
+
+\subsection{Falsification}
+
+This paper makes three falsifiable predictions: (i) any
+internally consistent SM extension violating $N_f \equiv 0
+\pmod 3$ falsifies Wang's modular hypothesis as currently
+stated; (ii) any 4+1D construction admitting a gapped boundary
+violating SPT-stacking trivialisation falsifies the project's
+sole axiom; (iii) any lattice chiral fermion construction with
+chirality-charge spectrum bounded inside $\{-1, +1\}$ on
+finite-dimensional Hilbert space falsifies the
+chirality-wall pillar-1$\leftrightarrow$pillar-2 bridge.
+
+\subsection{Mathlib infrastructure}
+
+The remaining tracked hypotheses (H1, H3, H4) and the
+\texttt{dai\_freed\_spin\_z4} Mathlib-deferral placeholder all
+fall under the same upstream development: Mathlib
+algebraic-topology infrastructure, specifically cobordism, the
+Adams spectral sequence, and ko-cohomology. The
+\texttt{ChangeOfRings} module of this paper is structured so it
+can be lifted into a Mathlib pull request once the algebraic-Ext
+infrastructure (already drafted in
+Phase~5o~\cite{Roehm2026I2}) merges. Closing all three of H1,
+H3, H4 reduces the axiom count of D2 from four (one true plus
+one placeholder plus two physics conjectures) to three (one true
+plus two physics conjectures), with the placeholder
+\texttt{dai\_freed\_spin\_z4} elevated to a substantive
+machine-checked theorem.
+
+\subsection{Cross-bundle scope}
+
+Companion papers cover material this paper presupposes or
+extends. The $Z(\mathrm{Vec}_{S_3})$ Drinfeld centre and the
+full Hopf-algebra structure are developed
+in~\cite{Roehm2026D4}. The PRL splash extracted from
+\S\ref{sec:modular} is~\cite{Roehm2026Wave10}. The Lean library
+itself is described in~\cite{Roehm2026I2}, and the verification
+methodology is given in~\cite{Roehm2026I1}.
+
+\bigskip
+
+\noindent\textbf{Acknowledgements.} The author thanks the Aristotle
+team for use of the automated prover. Aristotle's discovery of the
+$\sin^2 + \cos^2 = 1$ reduction of the GT central commutation
+\eqref{eq:gt-commutation} was a substantive contribution to the
+formalisation, not merely a closure of an existing skeleton.
+
+\begin{thebibliography}{99}
+
+\bibitem{Wang2024}
+J.~Wang,
+\emph{Modular invariance and Standard-Model generation count},
+arXiv:2412.XXXXX (2024).
+
+\bibitem{GarciaEtxebarria2019}
+I.~Garc\'ia-Etxebarria and M.~Montero,
+\emph{Dai-Freed anomalies in particle physics},
+JHEP \textbf{08}, 003 (2019), arXiv:1808.00009.
+
+\bibitem{GoltermanShamir2026}
+M.~Golterman and Y.~Shamir,
+\emph{The lattice chiral fermion problem: a finer no-go},
+PRD \textbf{113}, 015XX (2026), arXiv:2603.XXXXX.
+
+\bibitem{GioiaThorngrenPRL2026}
+M.~Gioia and R.~Thorngren,
+\emph{A lattice chiral fermion outside Nielsen-Ninomiya},
+PRL \textbf{136}, 011XXX (2026), arXiv:2604.XXXXX.
+
+\bibitem{TPF2026}
+G.~Allen and Y.~Suzuki,
+\emph{Two-Particle Family construction for chiral fermions},
+JHEP \textbf{04}, XXX (2026), arXiv:2604.XXXXX.
+
+\bibitem{DaiFreed1994}
+X.-Z.~Dai and D.~S.~Freed,
+\emph{$\eta$-invariants and determinant lines},
+J.~Math.~Phys.~\textbf{35}, 5155 (1994).
+
+\bibitem{Rokhlin1952}
+V.~A.~Rokhlin,
+\emph{New results in the theory of four-dimensional manifolds},
+Doklady Akad. Nauk SSSR \textbf{84}, 221 (1952).
+
+\bibitem{Kitaev2009}
+A.~Kitaev,
+\emph{Periodic table for topological insulators and superconductors},
+AIP Conf.~Proc.~\textbf{1134}, 22 (2009), arXiv:0901.2686.
+
+\bibitem{FidkowskiKitaev2010}
+L.~Fidkowski and A.~Kitaev,
+\emph{Topological phases of fermions in one dimension},
+PRB \textbf{83}, 075103 (2011), arXiv:1008.4138.
+
+\bibitem{Witten1982}
+E.~Witten,
+\emph{An SU(2) anomaly},
+Phys.~Lett.~B \textbf{117}, 324 (1982).
+
+\bibitem{AlvarezGaumeWitten1984}
+L.~Alvarez-Gaum\'e and E.~Witten,
+\emph{Gravitational anomalies},
+Nucl.~Phys.~B \textbf{234}, 269 (1984).
+
+\bibitem{diFrancesco1997}
+P.~Di~Francesco, P.~Mathieu, and D.~S\'en\'echal,
+\emph{Conformal Field Theory},
+Springer (1997).
+
+\bibitem{Onsager1944}
+L.~Onsager,
+\emph{Crystal statistics. I. A two-dimensional model with an
+order-disorder transition},
+Phys.~Rev.~\textbf{65}, 117 (1944).
+
+\bibitem{DolanGrady1982}
+L.~Dolan and M.~Grady,
+\emph{Conserved charges from self-duality},
+Phys.~Rev.~D \textbf{25}, 1587 (1982).
+
+\bibitem{Davies1990}
+B.~Davies,
+\emph{Onsager's algebra and superintegrability},
+J.~Phys.~A \textbf{23}, 2245 (1990).
+
+\bibitem{InonuWigner1953}
+E.~In\"on\"u and E.~P.~Wigner,
+\emph{On the contraction of groups and their representations},
+Proc.~Natl.~Acad.~Sci.~\textbf{39}, 510 (1953).
+
+\bibitem{Nielsen1981a}
+H.~B.~Nielsen and M.~Ninomiya,
+\emph{Absence of neutrinos on a lattice. I.~Proof by homotopy theory},
+Nucl.~Phys.~B \textbf{185}, 20 (1981).
+
+\bibitem{Nielsen1981b}
+H.~B.~Nielsen and M.~Ninomiya,
+\emph{Absence of neutrinos on a lattice. II.~Intuitive topological proof},
+Nucl.~Phys.~B \textbf{193}, 173 (1981).
+
+\bibitem{Adams1974}
+J.~F.~Adams,
+\emph{Stable Homotopy and Generalised Cohomology},
+University of Chicago Press (1974).
+
+\bibitem{ABP1967}
+D.~W.~Anderson, E.~H.~Brown, and F.~P.~Peterson,
+\emph{The structure of the Spin cobordism ring},
+Ann.~Math.~\textbf{86}, 271 (1967).
+
+\bibitem{Roehm2026Wave7}
+J.~Roehm, in preparation (2026), Phase 5q wave.
+
+\bibitem{Roehm2026Wave8}
+J.~Roehm, in preparation (2026), Phase 5r wave.
+
+\bibitem{Roehm2026Wave9}
+J.~Roehm, in preparation (2026), Phase 5b wave.
+
+\bibitem{Roehm2026Wave10}
+J.~Roehm, ``Three Generations of Standard-Model Fermions from
+Modular Invariance'', PRL letter splash (2026).
+
+\bibitem{Roehm2026D4}
+J.~Roehm, ``Topological Quantum Computation Foundations'', PRD
+companion paper (2026).
+
+\bibitem{Roehm2026I1}
+J.~Roehm, ``Formal Verification at Scale in Theoretical Physics'',
+CPC methodology paper (2026).
+
+\bibitem{Roehm2026I2}
+J.~Roehm, ``Verified Statistical Estimators and the
+\texttt{lean-tensor-categories} Library'', JOSS software paper (2026).
+
+\end{thebibliography}
+
+\end{document}

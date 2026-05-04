@@ -1,6 +1,6 @@
 # Bundle D2 — Source Manifest
 
-**Auto-generated:** 2026-05-01
+**Auto-generated:** 2026-05-04
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D2`
@@ -10,9 +10,9 @@
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
-| `paper10_modular_generation` | §2 | Lift-letter | (see mapping) | 2026-04-25T22:22:49Z |
-| `paper7_chirality_formal` | §4 | Lift-section | (see mapping) | 2026-04-29T21:29:08Z |
-| `paper8_chirality_master` | §4 | Lift-section | (see mapping) | 2026-04-29T21:29:08Z |
+| `paper10_modular_generation` | §2 | Lift-letter | (see mapping) | 2026-05-01T18:57:16Z |
+| `paper7_chirality_formal` | §4 | Lift-section | (see mapping) | 2026-05-01T12:57:51Z |
+| `paper8_chirality_master` | §4 | Lift-section | (see mapping) | 2026-05-01T12:57:52Z |
 | `paper9_sm_anomaly_drinfeld` | §3 | Lift-section | (see mapping) | 2026-04-25T07:48:13Z |
 
 ## Coverage notes

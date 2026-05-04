@@ -1,4 +1,86 @@
 {
   "bundle_target": "D2",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-04T12:25:34Z",
+      "source_paper": "paper10_modular_generation",
+      "lift_action": "Lift-letter",
+      "bundle_section_inserted": "\u00a72",
+      "lean_modules_referenced": [
+        "ModularInvarianceConstraint",
+        "WangBridge",
+        "RokhlinBridge",
+        "GenerationConstraint",
+        "A1Ring",
+        "A1Resolution",
+        "A1Ext",
+        "ChangeOfRings",
+        "SpinBordism",
+        "AlgebraicRokhlin",
+        "E8Lattice"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:25:34Z",
+      "notes": "L2 PRL splash already extracted from this source; D2 \u00a72 is the FULL derivation including Ext^n_{A(1)}(F2,F2) computation + change-of-rings discharge of H2"
+    },
+    {
+      "date": "2026-05-04T12:25:47Z",
+      "source_paper": "paper9_sm_anomaly_drinfeld",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "SMFermionData",
+        "Z16AnomalyComputation",
+        "SPTStacking",
+        "Z16Classification",
+        "VecGMonoidal",
+        "ToricCodeCenter",
+        "CenterEquivalenceZ2"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:25:47Z",
+      "notes": "Z16 anomaly + minimum Drinfeld center anchor (Z(Vec_Z2) toric code only); D4 \u00a74 owns full Z(Vec_S3) + D(G) Hopf"
+    },
+    {
+      "date": "2026-05-04T12:25:47Z",
+      "source_paper": "paper7_chirality_formal",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a74",
+      "lean_modules_referenced": [
+        "GoltermanShamir",
+        "LatticeHamiltonian",
+        "TPFEvasion"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:25:47Z",
+      "notes": "Pillar 1: GS no-go conditions formalized + TPF evasion; reorganized as part of three-pillar synthesis with paper8"
+    },
+    {
+      "date": "2026-05-04T12:25:47Z",
+      "source_paper": "paper8_chirality_master",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a74",
+      "lean_modules_referenced": [
+        "BdGHamiltonian",
+        "WilsonMass",
+        "GTCommutation",
+        "PauliMatrices",
+        "OnsagerAlgebra",
+        "OnsagerContraction",
+        "GTWeylDoublet",
+        "GaugingStep",
+        "SPTClassification",
+        "FKGappedInterface",
+        "VillainHamiltonian",
+        "ChiralityWallMaster"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-04T12:25:47Z",
+      "notes": "Pillars 2+3 + bridges + master TPF-evasion + 1+1D/2+1D gapped-interface evidence; merges with paper7 content under unified \u00a74"
+    }
+  ]
 }
