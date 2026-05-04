@@ -7198,6 +7198,39 @@ CITATION_REGISTRY = {
         'notes': 'In-preparation alias for Roehm2026Wave10 (Bundle L2 self-cite). Same content; the alias is used in D3 §1 narrative-level cross-reference.',
     },
 
+    'Roehm2026Wave2': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Second-order Schwinger--Keldysh effective field theory: counting, KMS optimality, and parity (paper2 in-prep)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex', 'papers/paper2_second_order/paper_draft.tex'],
+        'provides': ['Second-order SK-EFT counting; KMS optimality biconditional via SKDoubling.firstOrder_KMS_optimal; parity-classification of dispersive vs dissipative coefficients.'],
+        'notes': 'In-preparation D1 source paper2 self-cite. Inprep exemption per Pipeline Invariant #11.',
+    },
+
+    'Roehm2026Wave12': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Polariton platform: stimulated Hawking and reservoir coupling (paper12 in-prep)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex', 'papers/paper12_polariton/paper_draft.tex', 'papers/E1/paper_draft.tex'],
+        'provides': ['Polariton platform LKB-Paris configuration; stimulated-Hawking gain G > 0.5 at omega/kappa = 0.175 with N_probe = 100 photons per mode; reservoir-corrected sound speed; quasinormal-mode resonances.'],
+        'notes': 'In-preparation D1 source paper12 self-cite. E1 PRL splash extraction. Inprep exemption per Pipeline Invariant #11.',
+    },
+
+    'Roehm2026Wave16': {
+        'authors': 'Roehm, J. G.',
+        'title': 'Graphene Dirac-fluid SK-EFT analog Hawking radiation (paper16_graphene_sk_eft in-prep)',
+        'journal': 'in preparation',
+        'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex', 'papers/paper16_graphene_sk_eft/paper_draft.tex', 'papers/E2/paper_draft.tex'],
+        'provides': ['Graphene Dirac-fluid platform Dean-Kim-Lucas configuration; T_H ~ 2.4 K; 92% Lean theorem reuse with BEC modules; Wiedemann-Franz violation L/L_0 > 200; closed-form noise spectrum.'],
+        'notes': 'In-preparation D1 source paper16_graphene_sk_eft self-cite. E2 PRL splash extraction. Inprep exemption per Pipeline Invariant #11.',
+    },
+
     'DaiFreed1994': {
         'authors': 'Dai, X. and Freed, D. S.',
         'title': '$\\eta$-invariants and determinant lines',

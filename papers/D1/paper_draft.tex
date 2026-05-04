@@ -73,10 +73,13 @@ Landauer-Büttiker scattering, validated cross-platform by the
 giant Wiedemann-Franz violation $L/L_0 > 200$ measured at the same
 device. End-to-end, $5229$ Lean theorems are machine-verified
 (\texttt{lake build} clean, zero \texttt{sorry}, $322$ closed by the
-Aristotle automated prover). The single substantive axiom in the
-chain (\texttt{FirstOrderKMS}) was reformulated after Aristotle's
-counterexample $c = (0,0,0,0,0,0,0,1,0)$ exposed that the original
-axiom constrained only four of nine field components --- a
+Aristotle automated prover). The substrate's first-order KMS structure
+is encoded as the \texttt{FirstOrderKMS} Prop record (with fields
+\texttt{fdr\_i1}, \texttt{fdr\_i2}, \texttt{i3\_zero} in
+\texttt{SKDoubling.lean}); the original Prop was reformulated after
+Aristotle's counterexample $c = (0,0,0,0,0,0,0,1,0)$ exposed that
+the prior formulation constrained only four of nine field components
+--- a
 methodological showcase of the value of formal verification for
 EFT axiom design. Companion experimental letters E1 (Paris-LKB
 polariton) and E2 (Dean-Kim-Lucas graphene) carry the
@@ -205,8 +208,8 @@ constrained by three axioms encoded in our Lean library: Galilean
 invariance of the underlying superfluid; gradient expansion in
 powers of $\partial/(c_s\, k_\text{UV})$; KMS positivity (the
 noise coefficients $\gamma_i$ are non-negative). The KMS structure is
-encoded as the \texttt{FirstOrderKMS} record in
-\texttt{SecondOrderSK.lean} with fluctuation-dissipation fields
+encoded as the \texttt{FirstOrderKMS} Prop record (defined in
+\texttt{SKDoubling.lean}) with fluctuation-dissipation fields
 \texttt{fdr\_i1}, \texttt{fdr\_i2}, \texttt{i3\_zero}; the original
 axiom was reformulated as a Prop bundle after the Aristotle
 counterexample (see~\S\ref{sec:synthesis}).
