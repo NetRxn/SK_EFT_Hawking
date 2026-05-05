@@ -195,6 +195,17 @@ import SKEFTHawking.SymTFTAudit.DrinfeldCenter
 -- weakening cross-bridges to/from the unrestricted Wave 1b.5.9 form; cross-
 -- bridge to integer-mod-24 `WittClass.mk` quotient; closure summary.
 import SKEFTHawking.SymTFTAudit.PseudoUnitary
+-- Phase 6n Wave 1b.5.10a (Session 18, 2026-05-05): free k-linear envelope
+-- of an arbitrary category C, the substrate for Deligne's tensor product
+-- C ⊠ D as a Witt-group operation. `FreeKLinear C k` type synonym +
+-- `Category` instance built on `Finsupp` morphism k-modules + bilinear
+-- composition; `Preadditive` + `Linear k` instances; faithful inclusion
+-- `incl : C ⥤ FreeKLinear C k`; universal property `lift : (C ⥤ D) →
+-- (FreeKLinear C k ⥤ D)` for k-linear D, with `incl ⋙ lift F = F`.
+-- First-session deliverable; continuations: monoidal/braided extension
+-- (5.10b-d), Deligne ⊠ proper as quotient (5.10e), and cross-bridge to
+-- WittClass via central-charge additivity under ⊠ (5.10g).
+import SKEFTHawking.SymTFTAudit.FreeKLinearCategory
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
