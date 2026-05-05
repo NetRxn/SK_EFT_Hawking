@@ -3,7 +3,7 @@
   "clusters": [
     {
       "confidence": 1.0,
-      "constructed_at": "2026-04-29T13:13:30Z",
+      "constructed_at": "2026-05-04T17:04:44Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:d2c6aaa3",
@@ -23,7 +23,7 @@
     },
     {
       "confidence": 1.0,
-      "constructed_at": "2026-04-29T13:13:30Z",
+      "constructed_at": "2026-05-04T17:04:44Z",
       "constructed_by": "cluster_detect.py:exact",
       "human_confirmed_at": null,
       "id": "claim_cluster:exact:ce92f4a9",
@@ -45,7 +45,7 @@
     },
     {
       "confidence": 0.9,
-      "constructed_at": "2026-04-29T13:13:30Z",
+      "constructed_at": "2026-05-04T17:04:44Z",
       "constructed_by": "cluster_detect.py:normalized",
       "human_confirmed_at": null,
       "id": "claim_cluster:norm:fb60352a",
@@ -62,7 +62,7 @@
       "normalized_hash": "fb60352a"
     }
   ],
-  "constructed_at": "2026-04-29T13:13:30Z",
+  "constructed_at": "2026-05-04T17:04:44Z",
   "constructed_by": "cluster_detect.py:all",
   "paper_coverage": [
     "paper10_modular_generation",
