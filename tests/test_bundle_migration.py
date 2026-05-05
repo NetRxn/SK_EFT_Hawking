@@ -109,8 +109,11 @@ class TestSchemaAdditions:
             assert not errs, f"{b}: {errs}"
 
     def test_bundle_target_set_size(self):
-        # Lock the count: 1 flagship + 5 deep + 3 PRL + 2 infra + 2 expt = 13.
-        assert len(_VALID_BUNDLE_TARGETS) == 13
+        # Lock the count: 1 flagship + 5 deep + 3 PRL + 3 infra + 2 expt = 14.
+        # I3 added Phase 6n session 4 (commit a72ba68) under Pipeline Invariant #14
+        # user-auth — bundle architecture grew from 13 to 14 with I3 (verified-stochastic-
+        # calculus-for-Mathlib4 community contribution).
+        assert len(_VALID_BUNDLE_TARGETS) == 14
 
     def test_lift_action_set_size(self):
         # Lock the count: 6 actions per PAPER_DRAFT_MAPPING.md conventions.
