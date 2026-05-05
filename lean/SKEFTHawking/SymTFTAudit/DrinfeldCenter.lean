@@ -31,15 +31,18 @@ Stage 5.8+ continuation of `SymTFTAudit/WittClass.lean`).
   `chiralCentralCharge_wittTrivial_iff_three_dvd_N_f`; the cross-bridge in
   §3 feeds back into that apparatus.
 
-## Open continuations (Wave 1b.5.9+)
+## Open continuations (Wave 1b.5.10+)
 
-* Strengthen `Equivalence (Center C) (Center D)` to *braided* equivalence
-  (uses `BraidedCategory (Center C)` instance not yet in Mathlib).
+* (Wave 1b.5.9 — DONE in §5–§9 below.) Strengthened to a predicate-level
+  braided equivalence using Mathlib's `Functor.Braided` typeclass + the
+  `Center.braidedCategoryCenter` instance. Refined hypothesis schema
+  `CentralChargePreservesDrinfeldCenter_braided` is strictly weaker than
+  the §3 plain form and exactly matches the DMNO 2010 statement.
 * Construct the Witt group operation via Deligne tensor product `C ⊠ D`
-  (Wave 1b.5.10).
-* Discharge the central-charge-preservation hypothesis on the pseudo-unitary
-  pre-modular subclass (Wave 1b.5.11) — this is where the DMNO 2010 theorem
-  becomes a Lean theorem.
+  (Wave 1b.5.10) — produces a `Group` structure on Witt classes.
+* Discharge the (now braided) central-charge-preservation hypothesis on the
+  pseudo-unitary pre-modular subclass (Wave 1b.5.11) — this is where the
+  DMNO 2010 theorem becomes a Lean theorem.
 -/
 
 import Mathlib.CategoryTheory.Monoidal.Center
@@ -195,5 +198,250 @@ theorem stage5_8_drinfeldCenter_closure
   · intros C D _ _ _ _ h; exact WittEquivalentMTC_symm h
   · intros C D E _ _ _ _ _ _ h₁ h₂; exact WittEquivalentMTC_trans h₁ h₂
   · intros C D _ _ _ _ h; exact wittEquivalentMTC_implies_wittClass_eq hcc h
+
+/-! ## §5 Wave 1b.5.9 — Braided strengthening
+
+Davydov-Müger-Nikshych-Ostrik 2010 (arXiv:1009.2117) actually requires a
+*braided* equivalence of Drinfeld centers, not a plain categorical one. The
+Wave 1b.5.8 form `WittEquivalentMTC` strictly weakens DMNO 2010 by forgetting
+the braided structure on the Drinfeld center (Mathlib's
+`Center.braidedCategoryCenter`).
+
+This section refines the predicate to the genuine DMNO 2010 form and provides
+the strict-weakening bridge plus a refined hypothesis schema.
+
+### Mathlib infrastructure used
+
+* `CategoryTheory.Functor.Braided` — class on functors between braided
+  monoidal categories (extends `Functor.Monoidal` and `Functor.LaxBraided`).
+* `Functor.Braided.id` — the identity functor is braided.
+* The composition instance `(F ⋙ G).Braided` from `F.Braided` and
+  `G.Braided`.
+* `Center.braidedCategoryCenter` — `Center C` is a braided monoidal category
+  for any monoidal `C`.
+
+The braided structure on `Center C` is data, but for the predicate level we
+only need its *existence*; we use `Nonempty (F.Braided)`. -/
+
+/--
+**Predicate-level braided equivalence.** A categorical equivalence `e : C ≌ D`
+between braided monoidal categories is *braided* iff both `e.functor` and
+`e.inverse` carry braided-functor structure. Using `Nonempty` keeps the
+predicate in `Prop` while still expressing the genuine structural content. -/
+structure IsBraidedEquivalence
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C] [BraidedCategory C]
+    {D : Type u₂} [Category.{v₂, u₂} D] [MonoidalCategory D] [BraidedCategory D]
+    (e : C ≌ D) : Prop where
+  /-- The forward functor of `e` admits a braided structure. -/
+  functor_braided : Nonempty e.functor.Braided
+  /-- The inverse functor of `e` admits a braided structure. -/
+  inverse_braided : Nonempty e.inverse.Braided
+
+namespace IsBraidedEquivalence
+
+/-- Reflexivity: the identity equivalence is braided (identity functor is
+braided in Mathlib). -/
+theorem refl
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C] [BraidedCategory C] :
+    IsBraidedEquivalence (CategoryTheory.Equivalence.refl : C ≌ C) where
+  functor_braided := by
+    show Nonempty (𝟭 C).Braided
+    exact ⟨inferInstance⟩
+  inverse_braided := by
+    show Nonempty (𝟭 C).Braided
+    exact ⟨inferInstance⟩
+
+/-- Symmetry: swapping `functor`/`inverse` preserves the braided property
+because `e.symm.functor = e.inverse` and `e.symm.inverse = e.functor`
+definitionally. -/
+theorem symm
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C] [BraidedCategory C]
+    {D : Type u₂} [Category.{v₂, u₂} D] [MonoidalCategory D] [BraidedCategory D]
+    {e : C ≌ D} (h : IsBraidedEquivalence e) :
+    IsBraidedEquivalence e.symm where
+  functor_braided := by
+    show Nonempty e.inverse.Braided
+    exact h.inverse_braided
+  inverse_braided := by
+    show Nonempty e.functor.Braided
+    exact h.functor_braided
+
+/-- Transitivity: composing two braided equivalences yields a braided
+equivalence via Mathlib's `(F ⋙ G).Braided` typeclass instance. -/
+theorem trans
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C] [BraidedCategory C]
+    {D : Type u₂} [Category.{v₂, u₂} D] [MonoidalCategory D] [BraidedCategory D]
+    {E : Type u₃} [Category.{v₃, u₃} E] [MonoidalCategory E] [BraidedCategory E]
+    {e₁ : C ≌ D} {e₂ : D ≌ E}
+    (h₁ : IsBraidedEquivalence e₁) (h₂ : IsBraidedEquivalence e₂) :
+    IsBraidedEquivalence (e₁.trans e₂) where
+  functor_braided := by
+    show Nonempty (e₁.functor ⋙ e₂.functor).Braided
+    obtain ⟨b₁⟩ := h₁.functor_braided
+    obtain ⟨b₂⟩ := h₂.functor_braided
+    haveI := b₁
+    haveI := b₂
+    exact ⟨inferInstance⟩
+  inverse_braided := by
+    show Nonempty (e₂.inverse ⋙ e₁.inverse).Braided
+    obtain ⟨b₁⟩ := h₁.inverse_braided
+    obtain ⟨b₂⟩ := h₂.inverse_braided
+    haveI := b₁
+    haveI := b₂
+    exact ⟨inferInstance⟩
+
+end IsBraidedEquivalence
+
+/-! ## §6 Witt equivalence via *braided* Drinfeld-center equivalence -/
+
+/--
+**Strengthened Witt equivalence (DMNO 2010 form).** Two monoidal categories `C`
+and `D` are *braided-MTC-Witt-equivalent* iff there exists a braided
+equivalence of their Drinfeld centers `Z(C) ≃_{br} Z(D)`. This is the genuine
+Davydov-Müger-Nikshych-Ostrik 2010 statement; the Wave 1b.5.8 form
+`WittEquivalentMTC` is the strict weakening obtained by forgetting the braided
+structure (§7 below). -/
+def WittEquivalentMTC_braided
+    (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C]
+    (D : Type u₂) [Category.{v₂, u₂} D] [MonoidalCategory D] : Prop :=
+  ∃ e : Center C ≌ Center D, IsBraidedEquivalence e
+
+theorem WittEquivalentMTC_braided_refl
+    (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C] :
+    WittEquivalentMTC_braided C C :=
+  ⟨CategoryTheory.Equivalence.refl, IsBraidedEquivalence.refl⟩
+
+theorem WittEquivalentMTC_braided_symm
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C]
+    {D : Type u₂} [Category.{v₂, u₂} D] [MonoidalCategory D]
+    (h : WittEquivalentMTC_braided C D) : WittEquivalentMTC_braided D C := by
+  obtain ⟨e, he⟩ := h
+  exact ⟨e.symm, he.symm⟩
+
+theorem WittEquivalentMTC_braided_trans
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C]
+    {D : Type u₂} [Category.{v₂, u₂} D] [MonoidalCategory D]
+    {E : Type u₃} [Category.{v₃, u₃} E] [MonoidalCategory E]
+    (h₁ : WittEquivalentMTC_braided C D)
+    (h₂ : WittEquivalentMTC_braided D E) :
+    WittEquivalentMTC_braided C E := by
+  obtain ⟨e₁, he₁⟩ := h₁
+  obtain ⟨e₂, he₂⟩ := h₂
+  exact ⟨e₁.trans e₂, he₁.trans he₂⟩
+
+/-! ## §7 Strict weakening to plain MTC-Witt equivalence (Wave 1b.5.8) -/
+
+/--
+**Braided ⇒ plain.** Forgetting the braided structure on the Drinfeld-center
+equivalence yields the plain Wave 1b.5.8 predicate. This is the direction
+"DMNO target ⇒ working categorical Witt equivalence"; the converse fails in
+general because not every categorical equivalence of Drinfeld centers
+preserves the braiding. -/
+theorem WittEquivalentMTC_braided_implies_WittEquivalentMTC
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C]
+    {D : Type u₂} [Category.{v₂, u₂} D] [MonoidalCategory D]
+    (h : WittEquivalentMTC_braided C D) : WittEquivalentMTC C D := by
+  obtain ⟨e, _⟩ := h
+  exact ⟨e⟩
+
+/-! ## §8 Refined hypothesis schema and cross-bridge to integer `WittClass`
+
+DMNO 2010 establishes central-charge preservation under *braided* equivalence
+of Drinfeld centers; the Wave 1b.5.8 hypothesis schema demanded preservation
+under *any* categorical equivalence, which is strictly stronger. The braided
+form is the natural target for the Wave 1b.5.11 discharge on the pseudo-
+unitary subclass. -/
+
+/--
+**Refined hypothesis schema (braided form).** A central-charge assignment `cc`
+*preserves braided Drinfeld-center equivalence* if MTC-braided-Witt-equivalent
+monoidal categories carry integer-Witt-equivalent (mod 24) chiral central
+charges. Strictly weaker than the plain `CentralChargePreservesDrinfeldCenter`
+schema: easier to discharge, exactly matches the DMNO 2010 statement. -/
+def CentralChargePreservesDrinfeldCenter_braided
+    (cc : ∀ (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C], ℤ) : Prop :=
+  ∀ (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C]
+    (D : Type u₁) [Category.{v₁, u₁} D] [MonoidalCategory D],
+    WittEquivalentMTC_braided C D → WittEquivalent (cc C) (cc D)
+
+/--
+**Plain hypothesis implies braided hypothesis.** The plain Wave 1b.5.8 schema
+is a logically stronger hypothesis than the braided one; any `cc` satisfying
+the plain form automatically satisfies the braided form via the strict
+weakening of §7. -/
+theorem CentralChargePreservesDrinfeldCenter.toBraided
+    {cc : ∀ (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C], ℤ}
+    (h : CentralChargePreservesDrinfeldCenter cc) :
+    CentralChargePreservesDrinfeldCenter_braided cc := by
+  intros C _ _ D _ _ hbr
+  exact h C D (WittEquivalentMTC_braided_implies_WittEquivalentMTC hbr)
+
+/--
+**Cross-bridge: braided MTC-Witt-equivalence ⇒ integer Witt-equivalence.**
+Under the *braided* central-charge-preservation hypothesis, MTC-braided-Witt-
+equivalent categories carry integer-Witt-equivalent (mod 24) chiral central
+charges. -/
+theorem wittEquivalentMTC_braided_implies_wittEquivalent
+    {cc : ∀ (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C], ℤ}
+    (hcc : CentralChargePreservesDrinfeldCenter_braided cc)
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C]
+    {D : Type u₁} [Category.{v₁, u₁} D] [MonoidalCategory D]
+    (h : WittEquivalentMTC_braided C D) :
+    WittEquivalent (cc C) (cc D) :=
+  hcc C D h
+
+/--
+**Cross-bridge to `WittClass` (braided form).** Under the braided hypothesis,
+braided-Witt-equivalent categories project to the same `WittClass.mk` element
+of the integer-mod-24 quotient. -/
+theorem wittEquivalentMTC_braided_implies_wittClass_eq
+    {cc : ∀ (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C], ℤ}
+    (hcc : CentralChargePreservesDrinfeldCenter_braided cc)
+    {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C]
+    {D : Type u₁} [Category.{v₁, u₁} D] [MonoidalCategory D]
+    (h : WittEquivalentMTC_braided C D) :
+    WittClass.mk (cc C) = WittClass.mk (cc D) :=
+  Quotient.sound (wittEquivalentMTC_braided_implies_wittEquivalent hcc h)
+
+/-! ## §9 Stage 5.9 closure summary -/
+
+/--
+**Stage 5.9 closure summary.** Four substantive components, each load-bearing
+in a distinct way (no P2 bundle redundancy):
+
+1. `WittEquivalentMTC_braided` is an equivalence relation (refl/symm/trans
+   inherited from Mathlib's braided functor identity + composition instances).
+2. The braided form *strictly strengthens* the Wave 1b.5.8 plain form:
+   braided-Witt-equivalent ⇒ plain-Witt-equivalent. (Converse fails.)
+3. The plain hypothesis schema *strictly strengthens* the braided hypothesis
+   schema: any `cc` satisfying the Wave 1b.5.8 hypothesis satisfies the
+   refined braided hypothesis automatically.
+4. Under the braided hypothesis, braided-Witt-equivalent categories project
+   to the same `WittClass.mk` element in the integer-mod-24 quotient.
+
+This refines `stage5_8_drinfeldCenter_closure` from the plain to the braided
+substrate, exactly matching the DMNO 2010 statement. -/
+theorem stage5_9_drinfeldCenter_braided_closure
+    {cc : ∀ (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C], ℤ}
+    (hcc : CentralChargePreservesDrinfeldCenter_braided cc) :
+    (∀ (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C],
+      WittEquivalentMTC_braided C C) ∧
+    (∀ {C : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C]
+       {D : Type u₂} [Category.{v₂, u₂} D] [MonoidalCategory D],
+      WittEquivalentMTC_braided C D → WittEquivalentMTC C D) ∧
+    (∀ {cc' : ∀ (C : Type u₁) [Category.{v₁, u₁} C] [MonoidalCategory C], ℤ},
+      CentralChargePreservesDrinfeldCenter cc' →
+      CentralChargePreservesDrinfeldCenter_braided cc') ∧
+    (∀ {C D : Type u₁} [Category.{v₁, u₁} C] [MonoidalCategory C]
+       [Category.{v₁, u₁} D] [MonoidalCategory D],
+      WittEquivalentMTC_braided C D →
+      WittClass.mk (cc C) = WittClass.mk (cc D)) := by
+  refine ⟨fun C => WittEquivalentMTC_braided_refl C, ?_, ?_, ?_⟩
+  · intros C _ _ D _ _ h
+    exact WittEquivalentMTC_braided_implies_WittEquivalentMTC h
+  · intros cc' h
+    exact CentralChargePreservesDrinfeldCenter.toBraided h
+  · intros C D _ _ _ _ h
+    exact wittEquivalentMTC_braided_implies_wittClass_eq hcc h
 
 end SKEFTHawking.SymTFTAudit
