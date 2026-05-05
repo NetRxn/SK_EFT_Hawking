@@ -13,6 +13,14 @@ import SKEFTHawking.GloriosoLiu.LocalSecondLaw
 import SKEFTHawking.GloriosoLiu.OnsagerReciprocity
 import SKEFTHawking.GloriosoLiu.FirstOrderProjection
 import SKEFTHawking.GloriosoLiu.Phase1Reconciliation
+-- Phase 6n Session 9 (2026-05-05): Wave 2a × Wave 1b cross-track unification
+-- bridge — extends SKEFTAxioms to SKEFTAxiomsExt on the second-order
+-- extended field space and projects to γ_{2,1}+γ_{2,2}=0 parity-alternation
+-- that KMSParityAlternationCompatible (Wave 1b Stage 3) references.
+-- Substantive proof-body chain: SKEFTAxiomsExt → fullSecondOrder_uniqueness
+-- (Aristotle run c4d73ca8) → combined_positivity_constraint → parity-alternation
+-- → cross-track bridge to KMSParityAlternationCompatible.
+import SKEFTHawking.GloriosoLiu.SecondOrderProjection
 -- Phase 6n.α Wave (G2 Resurgence) Stage 1 substrate (sub-wave 6n.α.4):
 -- Borel transform + Gevrey-1 predicate + Λ_UV-from-IR predictor + Stokes
 -- constant + non-perturbative-content existence theorem. Python-side

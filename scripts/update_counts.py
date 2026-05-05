@@ -398,8 +398,12 @@ def main():
             print("Proceeding with stale/missing lean_deps.json")
     else:
         # Check if any .lean file is newer than lean_deps.json
+        # NOTE: rglob (not glob) — must walk subdirectories (GloriosoLiu/,
+        # CrooksAnalogHawking/, QuantumCrooks/, SymTFTAudit/, Resurgence/, etc.)
+        # so that changes inside namespace folders trigger regeneration. Same
+        # bug class as the Session-7 fix in extract_lean_deps.py:compute_lean_hash.
         lean_deps_mtime = LEAN_DEPS.stat().st_mtime
-        lean_files = list((LEAN_DIR / "SKEFTHawking").glob("*.lean"))
+        lean_files = list((LEAN_DIR / "SKEFTHawking").rglob("*.lean"))
         newest_lean = max(f.stat().st_mtime for f in lean_files) if lean_files else 0
         if newest_lean > lean_deps_mtime:
             print("Lean files changed since last extraction.")
