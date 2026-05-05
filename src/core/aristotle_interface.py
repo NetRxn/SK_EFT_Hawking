@@ -805,27 +805,31 @@ SORRY_GAPS: list[SorryGap] = [
                          "Stage 2-3 strengthens to substantive non-vacuous well-posedness).",
              strategy_hint="Construct each field with the trivial Stage 1 witness: ctp_structure ⟨rfl,rfl⟩, "
                            "largest_time fun _ => trivial, reflection_pos zero_le_one, hermiticity trivial, "
-                           "dynamical_KMS hβ, local_equilibrium rfl. Phase 6n.γ Stage 1 deliverable."),
+                           "dynamical_KMS hβ, local_equilibrium rfl. Phase 6n.γ Stage 1 deliverable.",
+             filled=True),  # Closed at Stage 1 trivial-discharge (placeholder defs); Stage 2-3 substantive replacement re-opens.
     SorryGap(module="SKEFTHawking.GloriosoLiu.DynamicalKMS",
              name="DynamicalKMS_realization_invariant",
              priority=2,
              description="Dynamical-KMS predicate preserved under UV-realization swap when both agree at IR. "
                          "Per Jain-Kovtun arXiv:2309.00511 §5 IR-equivalence.",
              strategy_hint="Both UV realizations (gloriosoLiuRealization, jainKovtunRealization) reduce to the same IR "
-                           "involution. For Stage 1, both placeholders trivially equal (both DynamicalKMSAt = 0 < β)."),
+                           "involution. For Stage 1, both placeholders trivially equal (both DynamicalKMSAt = 0 < β).",
+             filled=True),  # Closed at Stage 1 (Iff.rfl); Stage 2-3 substantive replacement re-opens.
     SorryGap(module="SKEFTHawking.GloriosoLiu.LocalEquilibrium",
              name="LocalEquilibrium_nonempty",
              priority=1,
              description="LE predicate non-vacuous for any conservation pattern with currentCount > 0.",
              strategy_hint="Case analysis on ConservationPattern; unfold LocalEquilibriumAt to currentCount > 0; "
-                           "apply hypothesis."),
+                           "apply hypothesis.",
+             filled=True),  # Closed at Stage 1 (h directly); Stage 2-3 substantive replacement re-opens.
     SorryGap(module="SKEFTHawking.GloriosoLiu.EntropyCurrent",
              name="entropy_current_exists",
              priority=3,
              description="Noether-style entropy current exists under GL axioms; reduces to thermodynamic entropy current "
                          "at zeroth order. Per Glorioso-Liu Prop. III.1 (arXiv:1612.07705).",
              strategy_hint="Stage 1: trivial use of thermodynamicEntropyCurrent placeholder. Stage 2-3: full Noether "
-                           "construction from dynamical-KMS Z₂. Stage 4 (Aristotle) fallback for substantive proof."),
+                           "construction from dynamical-KMS Z₂. Stage 4 (Aristotle) fallback for substantive proof.",
+             filled=True),  # Closed at Stage 1 (⟨thermodynamicEntropyCurrent Φ, rfl⟩); Stage 2-3 substantive replacement re-opens.
     SorryGap(module="SKEFTHawking.GloriosoLiu.LocalSecondLaw",
              name="Glorioso_Liu_local_second_law",
              priority=3,
@@ -833,7 +837,8 @@ SORRY_GAPS: list[SorryGap] = [
                          "load-bearing for Phase 6n.γ wave). Per Glorioso-Liu (arXiv:1612.07705).",
              strategy_hint="(i) Noether construction yields J^μ_S whose divergence is positive-definite quadratic in Im S; "
                            "(ii) reflection-positivity (SK-3) forces Im S ≥ 0; (iii) divergence pointwise non-negative. "
-                           "Mirror CGL II Theorem 3 derivation in classical limit (cleanest target per DR §5)."),
+                           "Mirror CGL II Theorem 3 derivation in classical limit (cleanest target per DR §5).",
+             filled=True),  # Closed at Stage 1 (divergence placeholder = 0 ⇒ 0 ≤ 0); Stage 2-3 substantive replacement re-opens.
     SorryGap(module="SKEFTHawking.GloriosoLiu.OnsagerReciprocity",
              name="OnsagerReciprocity_from_KMS",
              priority=2,
@@ -841,7 +846,8 @@ SORRY_GAPS: list[SorryGap] = [
                          "Per Glorioso-Liu §III.B.",
              strategy_hint="(i) Extract linear response from quadratic part of SK-EFT action; (ii) apply dynamical-KMS Z₂ "
                            "to response kernel; (iii) Z₂ symmetry forces kernel symmetric in indices. Risk axis 5: may "
-                           "surface implicit assumption (publishable finding either way)."),
+                           "surface implicit assumption (publishable finding either way).",
+             filled=True),  # Closed at Stage 1 (default ResponseMatrix.placeholder = ()); Stage 2-3 substantive replacement re-opens.
     SorryGap(module="SKEFTHawking.GloriosoLiu.FirstOrderProjection",
              name="FirstOrderProjection_yields_FirstOrderKMS",
              priority=2,
@@ -850,7 +856,8 @@ SORRY_GAPS: list[SorryGap] = [
              strategy_hint="(i) Take dynamical-KMS in Stage 2-3 unfolded form (Z₂ involution on SK contour); "
                            "(ii) project onto polynomial action with derivative count ≤1; "
                            "(iii) Z₂ orbit on each of 9 monomials yields one of seven relations. "
-                           "Verify against SKDoubling.lean lines 367-379 verbatim."),
+                           "Verify against SKDoubling.lean lines 367-379 verbatim.",
+             filled=True),  # Closed at Stage 1 (default all-zero coefficients trivially satisfy 7 relations); Stage 2-3 substantive replacement re-opens.
     SorryGap(module="SKEFTHawking.GloriosoLiu.Phase1Reconciliation",
              name="four_of_nine_partition_recovered",
              priority=2,
@@ -861,7 +868,8 @@ SORRY_GAPS: list[SorryGap] = [
                            "isTransformConstrained=true (the 4); rest have requiresSecondOrder=true (the 5). "
                            "Connect to FirstOrderProjection_yields_FirstOrderKMS to show the partition matches "
                            "transform-level vs algebraic-level KMS. If case analysis surfaces additional structure, "
-                           "failure mode is itself publishable per DR §12 caveat."),
+                           "failure mode is itself publishable per DR §12 caveat.",
+             filled=True),  # Closed at Stage 1 by `decide` on the inductive enum (P5 anti-pattern at definitional level; substantive partition-recovery requires Stage 2-3 unfolding to actual SKDoubling.FirstOrderCoeffs / KMSSymmetry connection — I1 R1 hold remains).
 
     SorryGap(module="SKEFTHawking.GoltermanShamir", name="tpf_violates_C2",
              description="TPF local dim exceeds any C2 finite dim: ∃ N > c.local_dim_finite",

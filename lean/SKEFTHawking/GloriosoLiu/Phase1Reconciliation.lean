@@ -102,6 +102,6 @@ theorem four_of_nine_partition_recovered
     (List.length (List.filter requiresSecondOrder
       [.psi_r, .psi_a, .dt_psi_r, .dx_psi_r,
        .dt_psi_a, .dx_psi_a, .dtt_psi_r, .dxx_psi_r, .dtx_psi_r]) = 5) := by
-  sorry
+  decide
 
 end SKEFTHawking.GloriosoLiu

@@ -82,7 +82,8 @@ theorem FirstOrderProjection_yields_FirstOrderKMS
     {M : SpacetimeManifold} {Φ : ContourField M} {β : ℝ}
     (hβ : 0 < β)
     (A : SKEFTAxioms M Φ β) :
-    ∃ P : FirstOrderProjection M Φ β, FirstOrderProjection_satisfies_KMS P := by
-  sorry
+    ∃ P : FirstOrderProjection M Φ β, FirstOrderProjection_satisfies_KMS P :=
+  ⟨{}, by
+    refine ⟨rfl, rfl, rfl, rfl, ?_, ?_, rfl⟩ <;> simp⟩
 
 end SKEFTHawking.GloriosoLiu

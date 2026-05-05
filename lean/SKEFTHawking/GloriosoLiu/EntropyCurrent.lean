@@ -50,7 +50,7 @@ the hydrodynamic velocity).
 theorem entropy_current_exists
     {M : SpacetimeManifold} {Φ : ContourField M} {β : ℝ}
     (_A : SKEFTAxioms M Φ β) :
-    ∃ J : EntropyCurrent M Φ, J = thermodynamicEntropyCurrent Φ := by
-  sorry
+    ∃ J : EntropyCurrent M Φ, J = thermodynamicEntropyCurrent Φ :=
+  ⟨thermodynamicEntropyCurrent Φ, rfl⟩
 
 end SKEFTHawking.GloriosoLiu

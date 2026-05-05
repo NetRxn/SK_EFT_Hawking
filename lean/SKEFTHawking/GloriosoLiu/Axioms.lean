@@ -117,7 +117,12 @@ Construct each field with the trivial Stage 1 witness:
 -/
 theorem SKEFTAxioms_well_posed (M : SpacetimeManifold) (Φ : ContourField M) (β : ℝ)
     (hβ : 0 < β) :
-    Nonempty (SKEFTAxioms M Φ β) := by
-  sorry
+    Nonempty (SKEFTAxioms M Φ β) :=
+  ⟨{ ctp_structure := ⟨rfl, rfl⟩,
+     largest_time := fun _ => trivial,
+     reflection_pos := zero_le_one,
+     hermiticity := trivial,
+     dynamical_KMS := hβ,
+     local_equilibrium := rfl }⟩
 
 end SKEFTHawking.GloriosoLiu

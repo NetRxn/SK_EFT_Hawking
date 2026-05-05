@@ -46,6 +46,7 @@ instance gloriosoLiuRealization (M : SpacetimeManifold) (Φ : ContourField M) :
 
 /-- The Jain–Kovtun causal-stable realization (alternative UV
 completion preserving causality + stability bounds; arXiv:2309.00511). -/
+@[reducible]
 def jainKovtunRealization (M : SpacetimeManifold) (Φ : ContourField M) :
     UVRealization M Φ := ⟨()⟩
 
@@ -84,7 +85,7 @@ trivially equal at the IR level (both reduce to `0 < β`).
 theorem DynamicalKMS_realization_invariant
     (M : SpacetimeManifold) (Φ : ContourField M) (β : ℝ) (hβ : 0 < β)
     [uv1 : UVRealization M Φ] [uv2 : UVRealization M Φ] :
-    @DynamicalKMSAt M Φ β uv1 ↔ @DynamicalKMSAt M Φ β uv2 := by
-  sorry
+    @DynamicalKMSAt M Φ β uv1 ↔ @DynamicalKMSAt M Φ β uv2 :=
+  Iff.rfl
 
 end SKEFTHawking.GloriosoLiu

@@ -68,7 +68,7 @@ patterns it is automatic.
 theorem LocalEquilibrium_nonempty
     (M : SpacetimeManifold) (Φ : ContourField M)
     (pattern : ConservationPattern) (h : pattern.currentCount > 0) :
-    LocalEquilibriumAt Φ pattern := by
-  sorry
+    LocalEquilibriumAt Φ pattern :=
+  h
 
 end SKEFTHawking.GloriosoLiu

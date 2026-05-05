@@ -1,4 +1,17 @@
 import SKEFTHawking.Basic
+-- Phase 6n.γ Stage 1 — Glorioso-Liu axiomatic skeleton
+-- Modules ship at trivial-discharge level; Stage 2-3 substantively
+-- replaces placeholder definitions. I1 §3 prose update HELD per user
+-- decision R1 (Phase 6n Session 4) until partition-recovery proves
+-- non-vacuous (which requires Stage 2-3 unfolding the placeholders).
+import SKEFTHawking.GloriosoLiu.Axioms
+import SKEFTHawking.GloriosoLiu.DynamicalKMS
+import SKEFTHawking.GloriosoLiu.LocalEquilibrium
+import SKEFTHawking.GloriosoLiu.EntropyCurrent
+import SKEFTHawking.GloriosoLiu.LocalSecondLaw
+import SKEFTHawking.GloriosoLiu.OnsagerReciprocity
+import SKEFTHawking.GloriosoLiu.FirstOrderProjection
+import SKEFTHawking.GloriosoLiu.Phase1Reconciliation
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
 import SKEFTHawking.SecondOrderSK
