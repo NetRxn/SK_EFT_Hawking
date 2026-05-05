@@ -86,7 +86,7 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 | **Wave 1c** | G8-W1 AS memo (no Lean) | ✅ **SHIPPED** (memo at `temporary/working-docs/phase6n/6n_eta_AS_reformulation_memo.md`; APS-η for analog horizons flagged as Phase 6o follow-up) | D2 + D3 + E1 appendix — **DEFERRED** | **D.2** | none |
 | **Track 2 — Foundational backing for fluctuation-theorem content** | | | | | |
 | **Wave 2a** | G10-6n.1 Glorioso-Liu axiomatic | ✅ **SHIPPED** (Stage-1 skeleton + Stage 2–3 substantive refactor + Stage 2–3b KMS framework refactor + R1 LIFTED; 8 GloriosoLiu/ modules) | D3 + L3 + I1 — **DEFERRED** (I1 reframing pre-draft EXISTS, on-hold) | **D.3** | **HELD** — I1 pre-draft at `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md` (on-hold per Session-5 user direction) |
-| **Wave 2b** | G10-QCrooks-α | ⏳ **NOT STARTED** | D1 cross-bridge / D5 — **DEFERRED** | **D.2** | none (Aristotle submission still requires user-auth at submission time) |
+| **Wave 2b** | G10-QCrooks-α | 🟡 **IN-PROGRESS** (Stage 1 SHIPPED: 6 QuantumCrooks/ modules + parametric Perarnau-Llobet no-go theorem proved + contrapositive forms; Stage 2-3 quantum substrate + concrete `h_disagree` witness pending) | D1 cross-bridge / D5 — **DEFERRED** | **D.2** | none (Aristotle submission still requires user-auth at submission time) |
 | **Wave 2c** | G10-6n.3 Crooks-on-analog-Hawking | ⏳ **NOT STARTED** (substrate now ready: Wave 2a closed) | E1 + D1 — **DEFERRED** | **D.2** | none |
 | **Wave 2d** | G10-6n.7 Sakharov ↔ horizon-Crooks | 📝 **WORKING DOC** (D3+L3 reframing pre-draft EXISTS at `temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md`; Lean module work UNBLOCKED, ready to start) | D3 + L3 — **DEFERRED** (pre-draft on-hold) | **D.3** | **HELD** — D3+L3 pre-draft on-hold per Session-5 user direction |
 
@@ -97,13 +97,14 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 - Wave 1c ✅ memo shipped; the AS-side translation of SymTFT anomaly content (Witten–Yonekura η-invariant) cross-references Wave 1b when Wave 1b closes.
 - Wave 2c does not strictly depend on Wave 2a closing for the substrate audit, but for theorem-statement form, Wave 2a's `SKEFTAxioms` typeclass is now available.
 
-**Recommended next-up order (Session-5 reset, per user direction "push forward on math"):**
-1. **Wave 2b** — start QCrooks-α parallel-axiomatization tableau (independent, no upstream blockers).
+**Recommended next-up order (Session-5+ reset, per user direction "push forward on math"):**
+1. ~~**Wave 2b**~~ — Stage 1 SHIPPED (Session 6): 6 QuantumCrooks/ modules + parametric Perarnau-Llobet no-go theorem (proved at Stage 1 via parametrization over `firstMoment` / `trueAverage` / `canonicalTPM` substrate functions; substantive `h_disagree` hypothesis carries the load-bearing physics). Stage 2-3 = quantum-substrate lift + concrete 2-level Perarnau-Llobet counterexample for `h_disagree`.
 2. **Wave 2c** — start Crooks-on-analog-Hawking (now unblocked by Wave 2a closure).
 3. **Wave 2d Lean module** — `HorizonDetailedBalance` + `Sakharov_iff_horizon_Crooks` Lean substrate (the working-doc pre-draft is for the *bundle absorption*; Lean substrate work proceeds independently).
 4. **Wave 1b Lean theorem-statement work** — once Stage-1 audit signs off internally (the audit verdict in the working doc identifies the next-step Lean structure).
-5. **Wave 1a.3 Path A precision** — pending user decision (per VERDICT doc §7); if NOT authorized, Wave 1a closes at 1a.4 + Path B.
-6. **Phase 6o opening** — APS-η analog-horizons sub-wave + the deferred-track items (G3 Carrollian, G4 Kerr-Schild, G1 Schellekens, G10-ETH-α, I3 community contribution).
+5. **Wave 2b Stage 2-3** — quantum-substrate lift (concrete `Matrix (Fin n) (Fin n) ℂ` finite-dim QM + substantive predicates + `h_disagree` proof for canonical 2-level Perarnau-Llobet counterexample).
+6. **Wave 1a.3 Path A precision** — pending user decision (per VERDICT doc §7); if NOT authorized, Wave 1a closes at 1a.4 + Path B.
+7. **Phase 6o opening** — APS-η analog-horizons sub-wave + the deferred-track items (G3 Carrollian, G4 Kerr-Schild, G1 Schellekens, G10-ETH-α, I3 community contribution).
 
 ---
 
@@ -224,11 +225,20 @@ SKEFTHawking/GloriosoLiu/
 
 ---
 
-## Wave 2b — G10-QCrooks-α productive-value Aristotle wave ⏳ NOT STARTED
+## Wave 2b — G10-QCrooks-α productive-value Aristotle wave 🟡 IN-PROGRESS
 
-**Status:** ready for dispatch. No upstream blockers. Substrate fully loaded into context: Phase 1 FirstOrderKMS template + program's MTC / quantum-group / fusion-category infrastructure + QCyc16 / QCyc5Ext / native_decide finite-dimensional sandboxes + Perarnau-Llobet et al. no-go anchor. Aristotle submission requires user-auth at submission time per CLAUDE.md "User gets first & last call on Aristotle submissions."
+**Sub-wave status (Session 6 close):**
+- ✅ **Stage 1 SHIPPED** (Session 6): 6 modules under `lean/SKEFTHawking/QuantumCrooks/` (Setup, Tasaki, Aberg, KafriDeffner, Quasiprobability, PerarnauLlobet) all imported into root. Substantive content includes:
+  - `IsCrooksRatio` predicate + `IsCrooksRatio.symm` symmetry theorem (forward/reverse roles symmetric — load-bearing for trajectory-Crooks downstream Wave 2c/2d).
+  - 4 candidate axiomatization predicates (Tasaki-TPM, Åberg-coherent, Kafri-Deffner-unital, Kirkwood-Dirac quasiprobability) at the Crooks-ratio-compatibility level. (Distinguishing structural content lives in Stage 2-3 schemes.)
+  - **Parametric Perarnau-Llobet no-go theorem** `perarnau_llobet_no_go_parametric`: proves that under `h_disagree : ∃ β, trueAverage β ≠ firstMoment (canonicalTPM β)`, no MS satisfies `ReproducesAverageEnergy ∧ RecoversTPMOnDiagonal`. The load-bearing physics content (TPM averages disagree with true averages on coherent states) is the `h_disagree` hypothesis; the algebraic obstruction is proved fully via direct rewriting.
+  - Contrapositive forms: `reproduces_avg_implies_fails_TPM` (Åberg-class result) + `recovers_TPM_implies_fails_avg` (Tasaki-class result).
+- 📝 **Stage 1 working doc** at `temporary/working-docs/phase6n/wave_2b_QCrooks_stage1.md`: substrate analysis + module decomposition + risk register + primary-source bibitems.
+- ⏳ **Stage 2-3 NOT STARTED**: quantum-substrate lift (`Matrix (Fin n) (Fin n) ℂ` finite-dim QM + substantive `firstMoment`/`trueAverage`/`canonicalTPM` constructions + concrete `h_disagree` proof for the canonical 2-level Perarnau-Llobet counterexample). Aristotle submission gated on user-auth at submission time per CLAUDE.md.
 
-**Recommended next-up order placement:** **#1** — independent of all other 6n waves, productive-value template directly transferable from Phase 1, no bundle-absorption pre-draft needed for substrate work.
+**Lake build state**: 8519 → 8525 jobs (+6 modules), all clean, zero sorry across new modules.
+
+**Substantive Stage-1 finding:** the parametric Perarnau-Llobet no-go is proved at Stage 1 (not deferred to Aristotle). The substantive Stage 2-3 work is to provide a concrete `h_disagree` witness on a 2-level Hilbert space — a single-instance counterexample suffices to specialize the parametric theorem to the substantive quantum no-go.
 
 - *Integrates with:* Phase 1 FirstOrderKMS template (parallel-axiomatization Aristotle refutation tableau); the program's MTC / quantum-group / fusion-category infrastructure (operator-algebra typing for TPM, work distributions, Petz recovery, quasiprobabilities); QCyc16 / QCyc5Ext / native_decide finite-dimensional sandboxes; existing `KMSCompatible` / `FDTCompatible` / `GloriosoLiuMonotoneCompatible` typeclasses; Perarnau-Llobet-Bäumer-Hovhannisyan-Huber-Acín no-go theorem (Phys. Rev. Lett. 118, 070601, 2017).
 - *New constraint adds:* (a) parallel-axiomatization tableau across at least four candidate quantum-Crooks axiomatizations — Tasaki-Crooks (Talkner-Hänggi 2007 arXiv:0705.1252) + Åberg fully-quantum (Phys. Rev. X 8, 011019, 2018) + Kafri-Deffner (Phys. Rev. A 86, 044302, 2012) + a quasiprobability axiomatization (Levy-Lostaglio or Francica); (b) Aristotle-driven concrete-witness search for finite-dimensional Hilbert-space counterexamples to each candidate's claimed equivalence with classical Crooks on diagonal states + average energy reproduction (the Perarnau-Llobet et al. no-go scheme); (c) the surviving axiomatizations connected to existing `KMSCompatible` / `FDTCompatible` content via typeclass hypothesis-bundle compatibility lemmas. **FirstOrderKMS² template** — the literature is more axiomatically unstable for quantum-Crooks than for first-order KMS; the program's Phase 1 productive-value methodology applies directly.

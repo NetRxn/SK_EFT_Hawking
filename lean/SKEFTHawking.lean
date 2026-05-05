@@ -20,6 +20,18 @@ import SKEFTHawking.GloriosoLiu.Phase1Reconciliation
 import SKEFTHawking.Resurgence.Basic
 import SKEFTHawking.Resurgence.BorelAction
 import SKEFTHawking.Resurgence.StokesBound
+-- Phase 6n Wave 2b (QCrooks-α; was 6n.δ) Stage 1 substrate: parallel-axiomatization
+-- tableau on quantum-Crooks fluctuation theorems. Setup + 4 candidate axiomatizations
+-- (Tasaki-TPM, Åberg-coherent, Kafri-Deffner-unital, Kirkwood-Dirac quasiprobability)
+-- + Perarnau-Llobet et al. obstruction predicates. Stage-1 ships predicate-level shapes
+-- + trivial-scheme well-posedness witnesses (zero sorry); Stage 2-3 + Aristotle ship
+-- substantive content + the no-go theorem itself per appendix §5.
+import SKEFTHawking.QuantumCrooks.Setup
+import SKEFTHawking.QuantumCrooks.Tasaki
+import SKEFTHawking.QuantumCrooks.Aberg
+import SKEFTHawking.QuantumCrooks.KafriDeffner
+import SKEFTHawking.QuantumCrooks.Quasiprobability
+import SKEFTHawking.QuantumCrooks.PerarnauLlobet
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
