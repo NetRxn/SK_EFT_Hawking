@@ -57,6 +57,11 @@ import SKEFTHawking.CrooksAnalogHawking.SakharovHorizonCrooks
 -- Bool-projection level; ³He-A and FLS BEC specializations.
 -- Verlinde-vs-Jacobson distinction preserved at every projection step.
 import SKEFTHawking.CrooksAnalogHawking.BiconditionalReformulation
+-- Phase 6n Wave 2c Stage 2-3 substantive bundling: third Sakharov-style
+-- biconditional candidate. AnalogHawkingEmissionScheme bundles HDB +
+-- LDP rate function; monotonicity ↔ GC biconditional shipped at
+-- predicate-bundle level (compat_hyp precondition).
+import SKEFTHawking.CrooksAnalogHawking.AnalogHawkingBiconditional
 -- Phase 6n Wave 1b Stage 3 substrate: SymTFT applicability verdict +
 -- discrete-sector predicates. The Stage-2 audit verdict (PartiallyApplicable
 -- per direct primary-source fetch of arXiv:2507.05350, Schäfer-Nameki et al.)
