@@ -51,6 +51,13 @@ import SKEFTHawking.CrooksAnalogHawking.GallavottiCohen
 -- Concrete witnesses: ³He-A (Jacobson-consistent) and FLS BEC (not).
 -- Verlinde-vs-Jacobson distinction preserved at every Lean statement.
 import SKEFTHawking.CrooksAnalogHawking.SakharovHorizonCrooks
+-- Phase 6n Wave 1b Stage 3 substrate: SymTFT applicability verdict +
+-- discrete-sector predicates. The Stage-2 audit verdict (PartiallyApplicable
+-- per direct primary-source fetch of arXiv:2507.05350, Schäfer-Nameki et al.)
+-- instantiates 3 ship-able discrete-sector candidates non-vacuously
+-- (chiralCentralChargeMod24, Z16AnomalyEta, KMSParityAlternation).
+-- Continuous-sector candidates deferred to Phase 6o.
+import SKEFTHawking.SymTFTAudit.Applicability
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling

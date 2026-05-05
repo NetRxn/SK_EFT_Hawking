@@ -82,7 +82,7 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 |---|---|---|---|---|---|
 | **Track 1 — Structural unification leverage** | | | | | |
 | **Wave 1a** | G2 Resurgence | 🟡 **IN-PROGRESS** (1a.1 + 1a.2 + 1a.4 SHIPPED; 1a.3 Path-B verdict shipped as working doc; 1a.3 Path-A precision pending user decision) | D1 §3-§4 (additive) — **DEFERRED** | **D.2** | none |
-| **Wave 1b** | G9 SymTFT audit + GD-4-factor sketch | 📝 **WORKING DOC** (Stage-1 audit draft at `temporary/working-docs/phase6n/6n_beta_symtft_audit.md`; Lean theorem-statement work next) | D2 + D3 + D5 + F (additive) — **DEFERRED** | **D.2** | none |
+| **Wave 1b** | G9 SymTFT audit + GD-4-factor sketch | 🟡 **IN-PROGRESS** (Stage 1 audit + Stage 2 verdict (`PartiallyApplicable` per direct primary-source fetch of arXiv:2507.05350) + Stage 3 Lean substrate (`SymTFTAudit/Applicability.lean`) all SHIPPED Session 6. Discrete dynamical-KMS Z₂ embeds; continuous entropic U(1)_T deferred to Phase 6o pending Brennan-Sun fusion.) | D2 + D3 + D5 + F (additive) — **DEFERRED** | **D.2** | none |
 | **Wave 1c** | G8-W1 AS memo (no Lean) | ✅ **SHIPPED** (memo at `temporary/working-docs/phase6n/6n_eta_AS_reformulation_memo.md`; APS-η for analog horizons flagged as Phase 6o follow-up) | D2 + D3 + E1 appendix — **DEFERRED** | **D.2** | none |
 | **Track 2 — Foundational backing for fluctuation-theorem content** | | | | | |
 | **Wave 2a** | G10-6n.1 Glorioso-Liu axiomatic | ✅ **SHIPPED** (Stage-1 skeleton + Stage 2–3 substantive refactor + Stage 2–3b KMS framework refactor + R1 LIFTED; 8 GloriosoLiu/ modules) | D3 + L3 + I1 — **DEFERRED** (I1 reframing pre-draft EXISTS, on-hold) | **D.3** | **HELD** — I1 pre-draft at `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md` (on-hold per Session-5 user direction) |
@@ -101,7 +101,7 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 1. ~~**Wave 2b**~~ — ✅ Stage 1 + Stage 2-3 SHIPPED (Session 6): 7 QuantumCrooks/ modules + substantive quantum Perarnau-Llobet no-go (canonical 2-level counterexample, MCP-proven, zero Aristotle).
 2. ~~**Wave 2c**~~ — ✅ Stage 1 SHIPPED (Session 6): 2 CrooksAnalogHawking/ modules + bridge to classical Crooks + GallavottiCohen LDP-symmetry predicate. Stage 2-3 = third Sakharov-style biconditional pending LDP infrastructure (Itô-deferred).
 3. ~~**Wave 2d Lean substrate**~~ — ✅ Stage 1 SHIPPED (Session 6): `SakharovHorizonCrooks.lean` bundles existing `SakharovConditions` (Phase 6m) with `HorizonDetailedBalance` (Wave 2c); ³He-A + FLS BEC witnesses + partition theorem with substantive cross-module proof. Stage 2-3 = full biconditional pending GLU monotonicity bridge.
-4. **Wave 1b Lean theorem-statement work** — once Stage-1 audit signs off internally (the audit verdict in the working doc identifies the next-step Lean structure).
+4. ~~**Wave 1b**~~ — ✅ Stage 1 + 2 + 3 SHIPPED (Session 6): primary-source audit verdict (PartiallyApplicable per direct fetch of arXiv:2507.05350) + 3 discrete-sector candidate predicates Lean substrate. Continuous-sector follow-on flagged for Phase 6o (Brennan-Sun fusion required).
 5. **Wave 2b Stage 2-3 extension targets** — generalize the concrete substrate to `Matrix (Fin n) (Fin n) ℂ` for arbitrary n; add reservoir-coupled forms; KMSCompatible/FDTCompatible typeclass connections.
 6. **Wave 1a.3 Path A precision** — pending user decision (per VERDICT doc §7); if NOT authorized, Wave 1a closes at 1a.4 + Path B.
 7. **Phase 6o opening** — APS-η analog-horizons sub-wave + the deferred-track items (G3 Carrollian, G4 Kerr-Schild, G1 Schellekens, G10-ETH-α, I3 community contribution).
@@ -140,11 +140,23 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 
 ---
 
-## Wave 1b — G9 SymTFT primary-source audit + GD-4-factor decomposition sketch 📝 WORKING DOC
+## Wave 1b — G9 SymTFT primary-source audit + GD-4-factor decomposition sketch 🟡 IN-PROGRESS
 
-**Sub-wave status (Session-5 close):**
-- 📝 **Stage-1 audit working doc SHIPPED (uncommitted)** at `temporary/working-docs/phase6n/6n_beta_symtft_audit.md`: substrate analysis + Choi-doubled SymTFT applicability decision matrix (APPLICABLE / PARTIALLY APPLICABLE / NOT APPLICABLE — verdict-pending) + cross-bridge audit + GD-4-factor decomposition sketch + risk register. arXiv:2507.05350 framework structure summarized; primary-source audit recommendation: 1–2 day paper-math task to map continuous-symmetry section §III against CGL §II dynamical KMS construction.
-- ⏳ **Stage 2 (Lean theorem-statement work) NOT STARTED**: pending Stage-1 verdict signoff (the working doc identifies the next-step Lean structure based on which of the three applicability verdicts lands).
+**Sub-wave status (Session 6 close):**
+- 📝 **Stage 1 audit working doc** at `temporary/working-docs/phase6n/6n_beta_symtft_audit.md`: substrate analysis + Choi-doubled SymTFT applicability decision matrix + cross-bridge audit + GD-4-factor decomposition sketch + risk register.
+- ✅ **Stage 2 audit verdict SHIPPED** (Session 6) at `temporary/working-docs/phase6n/wave_1b_symtft_audit_verdict.md`: direct primary-source fetch of arXiv:2507.05350 (Schäfer-Nameki et al., "SymTFT Approach for Mixed States with Non-Invertible Symmetries," July 2025). **Verdict: PARTIALLY APPLICABLE** — discrete dynamical-KMS Z₂ embeds in the Choi-doubled framework as a "weak symmetry" analog of the paper's Kramers-Wannier example; continuous entropic U(1)_T does NOT embed (paper does not handle continuous symmetries) and requires fusion with Brennan-Sun arXiv:2407.07951 BF technology — multi-wave research project per DR §6.2, deferred to Phase 6o.
+- ✅ **Stage 3 discrete-sector Lean substrate SHIPPED** (Session 6): `lean/SKEFTHawking/SymTFTAudit/Applicability.lean`:
+  - `SymTFTApplicability` inductive (Applicable / PartiallyApplicable / NotApplicable)
+  - `stage2Verdict := PartiallyApplicable` (the audit outcome)
+  - 3 ship-able discrete-sector candidate predicates: `chiralCentralChargeMod24Compatible`, `Z16AnomalyEtaCompatible`, `KMSParityAlternationCompatible`
+  - Substantive instantiation theorems for each (Stage-2 verdict instantiates each non-vacuously)
+  - `stage2_partition` substantive partition theorem
+- ⏳ **Stage 4+ (substantive cross-module bridges to existing program threads) NOT STARTED**: connect each of the 3 discrete-sector predicates to existing program content (`SpinBordism.Z16`, `SecondOrderSK.gamma_2_1+gamma_2_2=0`, modular-invariance / Schellekens content). Multi-wave research project; full Lean Witt-group / Anderson dual / Lagrangian algebra infrastructure absent in Mathlib (Stage 1 §6 risk register).
+- ⏳ **Continuous-sector follow-on**: `gauge_erasure` (Phase 3 W2) and `GD_orthogonality` (4-factor decomposition) candidates deferred per Stage 2 verdict §3 — speculative connections that need Brennan-Sun fusion or substantive (-1)-form work.
+
+**Lake build state**: 8529 → 8530 jobs (+1 module = SymTFTAudit), all clean, zero sorry.
+
+**Substantive Stage-1+2+3 finding:** the Stage 2 audit verdict is the load-bearing deliverable — direct primary-source fetch confirmed the framework handles discrete non-invertible symmetries in closed quantum systems but does NOT handle continuous, KMS, thermal, or Schwinger-Keldysh content. The PARTIALLY APPLICABLE verdict is the middle of three branches (per Stage 1 §2.2 matrix) and is the honest assessment — neither overconfident nor pessimistic. The Stage 3 Lean substrate operationalizes this verdict at the predicate level (zero sorry).
 
 - *Integrates with:* Phase 5o W5 lean-tensor-categories library (114 thms; Pivotal → ... → Modular); the program's ℤ₁₆ + modular invariance (`24 | c₋ → N_f = 3`) anchor in D2 / L2; Phase 5y GD-orthogonality 4-factor decomposition in D5; arXiv:2507.05350 (Schäfer-Nameki et al., Choi-doubled mixed-state SymTFT, July 2025) as the load-bearing primary-source audit target; arXiv:1511.03646 Crossley-Glorioso-Liu (CGL).
 - *New constraint adds:* (a) primary-source audit of arXiv:2507.05350 vs CGL — does the Choi-doubled mixed-state SymTFT framework apply to the dissipative SK-EFT contour, and if so, which Z₂ in the IR effective theory does the SymTFT pick out; (b) lift Z₁₆ / θ̄ + 24|c₋ + topological-order content into one categorical object via the audit's framework; (c) **GD-orthogonality 4-factor → SymTFT decomposition sketch** — the highest-leverage open structural problem flagged by the DR. If the GD 4 factors decompose cleanly inside one SymTFT, the program's anomaly content compresses into a single object instead of four parallel orthogonality-decomposition factors.
