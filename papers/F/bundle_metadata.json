@@ -1,14 +1,14 @@
 {
   "bundle_target": "F",
   "tier": 0,
-  "title": "Fluid-Based Approaches to Fundamental Physics — A Formally Verified Survey",
+  "title": "Fluid-Based Approaches to Fundamental Physics \u2014 A Formally Verified Survey",
   "target_journal": "Living Rev. Relativity | Phys. Rep.",
   "phase7_subphase": "7g",
   "stage9_status": "green",
   "stage10_status": "green",
   "stage13_status": "green",
   "stage13_redo_required": false,
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-01T12:31:23Z",
   "last_lift": "2026-05-04T17:00:00Z",
   "last_stage9_review": "2026-05-04T17:30:00Z",
@@ -19,5 +19,5 @@
   "stage13_review_doc": "papers/AutomatedReviews/2026-05-04-bundle-stage13/F.md",
   "audit_log_path": "papers/F/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "Phase 7g sub-waves 7g.1–7g.8 (commits 10f24d8→409af5f). 21pp first-pass; substrate-identity synthesis NEW to F across 4 cross-thread threads. Stage-10 r1→r2→r3 sequence with 4 BLOCKERs closed; Stage-13 r1→r2 sequence with 1 BLOCKER closed. 4 advisory carry-forwards remain non-blocking at draft tier."
+  "notes": "Phase 7g sub-waves 7g.1\u20137g.8 (commits 10f24d8\u2192409af5f). 21pp first-pass; substrate-identity synthesis NEW to F across 4 cross-thread threads. Stage-10 r1\u2192r2\u2192r3 sequence with 4 BLOCKERs closed; Stage-13 r1\u2192r2 sequence with 1 BLOCKER closed. 4 advisory carry-forwards remain non-blocking at draft tier."
 }
