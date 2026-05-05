@@ -1,10 +1,10 @@
 {
-  "generated": "2026-05-05T08:10:05.890251",
+  "generated": "2026-05-05T09:08:09.471906",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 10677,
-    "theorems_total": 5378,
-    "theorems_substantive": 5353,
+    "total_declarations": 10686,
+    "theorems_total": 5385,
+    "theorems_substantive": 5360,
     "theorems_placeholder": 25,
     "axioms": 1,
     "axiom_names": [
@@ -12,7 +12,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 270,
+    "modules": 271,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -57,6 +57,7 @@
       "SKEFTHawking.CrooksAnalogHawking.BiconditionalReformulation",
       "SKEFTHawking.CrooksAnalogHawking.GallavottiCohen",
       "SKEFTHawking.CrooksAnalogHawking.HorizonDetailedBalance",
+      "SKEFTHawking.CrooksAnalogHawking.SKEFTGallavottiCohen",
       "SKEFTHawking.CrooksAnalogHawking.SKEFTHorizonBridge",
       "SKEFTHawking.CrooksAnalogHawking.SakharovHorizonCrooks",
       "SKEFTHawking.Curvature",
@@ -285,7 +286,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 4718,
+    "definitions": 4720,
     "structures": 233,
     "instances": 267,
     "inductives": 80

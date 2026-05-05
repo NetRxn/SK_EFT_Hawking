@@ -71,6 +71,19 @@ import SKEFTHawking.CrooksAnalogHawking.AnalogHawkingBiconditional
 -- substantively Jacobson-consistent under any SKEFTAxioms; FLS BEC NOT
 -- (Sakharov-(ii) failure obstructs no matter the SKEFTAxioms).
 import SKEFTHawking.CrooksAnalogHawking.SKEFTHorizonBridge
+-- Phase 6n Wave 2c Stage 4 substantive substrate-level bridge: SKEFTAxioms
+-- machinery to W-form Gallavotti-Cohen rate-function symmetry. Ships the
+-- W-form GC predicate (`I(W) - I(-W) = -β·W`), the FDT-pinned linear-response
+-- Gaussian rate function (mean = β·σ²/2, variance = σ²) which satisfies
+-- W-form GC algebraically for any σ² ≠ 0, the load-bearing-A theorem
+-- extracting `c : FirstOrderCoeffs` from `A.dynamical_KMS` for the W-form
+-- GC at noise variance σ² = c.i₂, the concrete dissipative substrate
+-- witness (firstOrderDissipativeAction with γ₂ > 0 unconditionally yields
+-- W-form GC), and the composed Stage-4 substrate (FDR-pinned σ = β·W +
+-- Noether-density positivity + W-form GC together via single c extraction).
+-- Cross-bridge to existing σ-form GallavottiCohenSymmetry via change of
+-- variable σ = β·W and sign flip. Parallels Wave 2d Stage 4 SKEFTHorizonBridge.
+import SKEFTHawking.CrooksAnalogHawking.SKEFTGallavottiCohen
 -- Phase 6n Wave 1b Stage 3 substrate: SymTFT applicability verdict +
 -- discrete-sector predicates. The Stage-2 audit verdict (PartiallyApplicable
 -- per direct primary-source fetch of arXiv:2507.05350, Schäfer-Nameki et al.)
