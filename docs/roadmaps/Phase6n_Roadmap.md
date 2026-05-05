@@ -6,25 +6,41 @@
 
 **Trigger condition (no gate — autonomous):** Phase 6n can dispatch any time. It is independent of Phase 6m closure and runs in parallel with active Phase 7a–7g bundle work.
 
-**Status (2026-05-04):** **Roadmap initialized; first wave dispatch pending user confirmation of Shape D. No waves shipped yet.** Two D.3 user-authorization gates flagged in advance per `LATE_PHASE6_ABSORPTION_PROTOCOL.md` (waves 6n.γ and 6n.ζ refine prior published-claim profile and must not start before user-auth at Stage B of the absorption protocol).
+**Status (2026-05-04 Session 5 close):** **Sessions 4–5 shipped 12 commits across waves Wave 1a (Lean substrate + Path B numerical verdict + δ⁴–δ⁷ formulas), Wave 2a (Glorioso–Liu Lean skeleton + Stage 2–3 substantive refactor + Stage 2–3b KMS framework refactor + R1 LIFTED), Wave 1c (AS reformulation memo as working doc), and the I3 bundle infrastructure (Pipeline Invariant #14 user-auth granted; bundle architecture 13 → 14).** Lake build 8519 jobs clean; pytest 4048 fast tests pass; modules 244 → 248; 0 sorry; 1 axiom. Working tree clean, 12 commits ahead of origin/main.
 
-**Entry state (2026-05-04 Inventory_Index snapshot):** ~5229 substantive theorems / ~243 modules / 0 sorry / 1 axiom. Phase 6m FULLY CLOSED at Lean-formalization scope (R1–R6 + strengthening + cross-module proof-chain). Phase 7 in flight: 8 of 13 bundles reviewer-triple-closed at GREEN (I1, I2, L1, L2, L3, D5, E1, E2); F + D1 + D2 + D3 + D4 in active drafting. Phase 7c session shipped 12 of 13 reviewer-triple-closed plus F flagship 12-section first pass at HEAD `9fabdc8`.
+**User direction reaffirmed (2026-05-04 Session 5 close):** **Push forward on math/physics/infrastructure (6n + likely 6o) before drafting manuscripts or integrating into ≤ Phase 6m work.** Writing/verification overhead is non-trivial; the ≤ Phase 6m product surface is fairly stable. Bundle absorption (the D.2 / D.3 events listed below) is **deferred until the full Phase 6n + 6o picture lands**, at which point the absorption work runs as one coherent pass rather than incrementally per wave. The two D.3 user-auth pre-drafts (Wave 2a I1 reframing, Wave 2d D3+L3 reframing) **exist as working docs** at `temporary/working-docs/phase6n/` but are **on-hold for user review** — neither blocks further math/Lean work in Phase 6n.
+
+**Entry state (2026-05-04 Inventory_Index snapshot):** ~5229 substantive theorems / ~243 modules / 0 sorry / 1 axiom. Phase 6m FULLY CLOSED at Lean-formalization scope (R1–R6 + strengthening + cross-module proof-chain). Phase 7 in flight: 13 of 13 bundles reviewer-triple-closed at GREEN (I1, I2, L1, L2, L3, D1, D2, D3, D4, D5, E1, E2, F); flagship F all-12-section draft shipped HEAD `9fabdc8` (Phase 7c close). Phase 7 in stable hold pending Phase 6n + 6o math closure per user direction.
 
 **Anchors carried forward into Phase 6n:**
 - `FirstOrderKMS` (Phase 1) — Aristotle 4-of-9 productive-value disproof; the anchor case study Phase 6n.1 lifts to "axiom replaced by deeper structure that explains the disproof."
 - Phase 6e Sakharov-criterion biconditional (Λ_J = Λ_HK on ³He-A; falsified on FLS BEC) — substrate for Phase 6n.7's horizon-Crooks reformulation.
 - Phase 6m Track C JTGR survivors (M1, M2/M7, M3 Exp/ArcTanh, M4, M9; M8 conditional) — Sakharov-class assignment carries into 6n.7.
-- Phase 5o Wave 5 lean-tensor-categories library (Pivotal → Spherical → Balanced → Ribbon → Semisimple → Fusion → Modular; 114 thms) — substrate for Phase 6n.γ G9 SymTFT lift.
-- `δ_disp / δ_diss / δ^(2) / δ^(3)` SK-EFT gradient-expansion coefficients in `formulas.py` — substrate for Phase 6n.α G2 resurgence.
-- Phase 6e a_n + Phase 6m Sakharov tr(I) + Phase 5z Goldstino zero modes — substrate for Phase 6n.η G8-W1 AS memo (the heat-kernel ↔ Atiyah-Singer dictionary already implicit).
+- Phase 5o Wave 5 lean-tensor-categories library (Pivotal → Spherical → Balanced → Ribbon → Semisimple → Fusion → Modular; 114 thms) — substrate for Phase Wave 2a G9 SymTFT lift.
+- `δ_disp / δ_diss / δ^(2) / δ^(3)` SK-EFT gradient-expansion coefficients in `formulas.py` — substrate for Phase Wave 1a G2 resurgence.
+- Phase 6e a_n + Phase 6m Sakharov tr(I) + Phase 5z Goldstino zero modes — substrate for Phase Wave 1c G8-W1 AS memo (the heat-kernel ↔ Atiyah-Singer dictionary already implicit).
 - `WAVE_EXECUTION_PIPELINE.md` 14-stage process; `BUNDLE_LIFT_PROCEDURE.md`; `LATE_PHASE6_ABSORPTION_PROTOCOL.md` (D.2 / D.3 / D.4 branches).
 
-**Thesis.** Phase 6n loads the program's deepest unification-leverage tracks identified in the Session-1 conspicuous-gaps catalog and refined by Session-2 deep-research returns. Two threads run in parallel:
+**Thesis.** Phase 6n loads the program's deepest unification-leverage tracks identified in the Session-1 conspicuous-gaps catalog and refined by Session-2 deep-research returns. **Two parallelizable Tracks ship 7 waves:**
 
-1. **Structural unification leverage** (G2 resurgence; G9 SymTFT; G8-W1 AS reformulation memo) — compresses existing program content into deeper structural objects. First-mover where applicable.
-2. **Foundational backing for fluctuation-theorem content** (G10-6n.1 Glorioso-Liu axiomatic; G10-6n.3 Crooks-on-analog-Hawking; G10-QCrooks-α productive-value Aristotle wave; G10-6n.7 Sakharov ↔ horizon-Crooks reformulation) — replaces FirstOrderKMS-class anchors with deeper axiomatic + adds new falsifiable IR constraints.
+- **Track 1 — Structural unification leverage** (3 waves): **Wave 1a** G2 Resurgence; **Wave 1b** G9 SymTFT audit; **Wave 1c** G8-W1 Atiyah-Singer reformulation memo. Compresses existing program content into deeper structural objects. First-mover where applicable.
+- **Track 2 — Foundational backing for fluctuation-theorem content** (4 waves): **Wave 2a** G10-6n.1 Glorioso-Liu axiomatic; **Wave 2b** G10-QCrooks-α productive-value Aristotle wave; **Wave 2c** G10-6n.3 Crooks-on-analog-Hawking; **Wave 2d** G10-6n.7 Sakharov ↔ horizon-Crooks reformulation. Replaces FirstOrderKMS-class anchors with deeper axiomatic + adds new falsifiable IR constraints.
 
-The phase ships 7 waves; downstream Phase 6o picks up the heavier tracks (G3 boostless-soft, G4-Kerr-Schild, G1 Schellekens chain + NO-GO writeup, G10-ETH-α, Itô + LDP-α/β as I3 community contribution pending user authorization).
+Downstream Phase 6o picks up the heavier tracks (G3 boostless-soft, G4-Kerr-Schild, G1 Schellekens chain + NO-GO writeup, G10-ETH-α, Itô + LDP-α/β as I3 community contribution pending user authorization).
+
+**Naming-convention note (Session-5 rename).** Earlier working docs, brainstorm sessions, and memory entries refer to the same waves by Greek-letter labels. The Tracks/Waves convention here matches Phase 6m and is keyboard-friendly; the historical Greek labels remain in working docs at `temporary/working-docs/phase6n/` and in the MEMORY.md index. Cross-reference table:
+
+| New label | Historical (Greek) | Codename |
+|---|---|---|
+| Wave 1a | 6n.α | G2 Resurgence |
+| Wave 1b | 6n.β | G9 SymTFT audit + GD-4-factor |
+| Wave 1c | 6n.η | G8-W1 Atiyah-Singer memo |
+| Wave 2a | 6n.γ | G10-6n.1 Glorioso-Liu axiomatic |
+| Wave 2b | 6n.δ | G10-QCrooks-α |
+| Wave 2c | 6n.ε | G10-6n.3 Crooks-on-analog-Hawking |
+| Wave 2d | 6n.ζ | G10-6n.7 Sakharov ↔ horizon-Crooks |
+
+Sub-wave numbering (e.g., Wave 1a.1, 1a.2, 1a.3, 1a.4) replaces the Greek sub-wave labels (6n.α.1, etc.).
 
 **Project rule reaffirmed (Session-3 user direction 2026-05-04):** **No PM / time / phase-cost estimates anywhere in this roadmap.** Track readiness by content state (sorry count, reviewer-triple status, bundle absorption gate), not calendar.
 
@@ -37,14 +53,14 @@ The phase ships 7 waves; downstream Phase 6o picks up the heavier tracks (G3 boo
 > 3. **Critical predecessor modules — read source directly:**
 >    - `lean/SKEFTHawking/FirstOrderKMS.lean` (Phase 1) — the productive-value anchor for 6n.1.
 >    - `lean/SKEFTHawking/SakharovCriterion.lean` + Phase 6m Track C JTGR modules — substrate for 6n.7.
->    - `lean/SKEFTHawking/Substrate/HeatKernel.lean` + Phase 6e a_n / Phase 5z Goldstino content — substrate for 6n.η AS memo.
+>    - `lean/SKEFTHawking/Substrate/HeatKernel.lean` + Phase 6e a_n / Phase 5z Goldstino content — substrate for Wave 1c AS memo.
 >    - `Lit-Search/_Exploratory/Phase 6n+ Foundational Backing Assessment- Non-Equilibrium Fluctuation Theorems and Stochastic Thermodynamics, Formally Verified.md` — the original G10 DR; §5 has the Glorioso-Liu theorem-signature sketch for 6n.1; §7 has the Crooks-on-analog-Hawking framing for 6n.3; §8 has the Sakharov ↔ horizon-Crooks structure for 6n.7.
 >    - `Lit-Search/_Exploratory/Appendix- Re-assessment of Deferred Tracks for SK_EFT_Hawking Phase 6n+.md` — the calibration-rule appendix; QCrooks-α track structure §5; Itô deferral analysis §3.
->    - `Lit-Search/_Exploratory/Resurgence Theory and Schwinger–Keldysh EFT.md` — substrate for 6n.α.
->    - `Lit-Search/_Exploratory/SymTFT, Higher-Form, and Non-Invertible Symmetries Applied to the SK-EFT Hawking Program- A Structural Audit.md` — substrate for 6n.β; arXiv:2507.05350 (Schäfer-Nameki et al.) is the primary-source-audit target.
->    - `Lit-Search/_Exploratory/Atiyah–Singer Index Theorems as a Unifying Organizational Tool .md` — substrate for 6n.η.
+>    - `Lit-Search/_Exploratory/Resurgence Theory and Schwinger–Keldysh EFT.md` — substrate for Wave 1a.
+>    - `Lit-Search/_Exploratory/SymTFT, Higher-Form, and Non-Invertible Symmetries Applied to the SK-EFT Hawking Program- A Structural Audit.md` — substrate for Wave 1b; arXiv:2507.05350 (Schäfer-Nameki et al.) is the primary-source-audit target.
+>    - `Lit-Search/_Exploratory/Atiyah–Singer Index Theorems as a Unifying Organizational Tool .md` — substrate for Wave 1c.
 >    - `Lit-Search/_Exploratory/On-Shell Methods, Soft Theorems, and Spinor-Helicity Amplitudes for Dissipative Emergent Gauge : Gravity Sectors.md` — out-of-scope for Phase 6n (deferred to Phase 6o); read only if the wave's natural extension brushes against it.
-> 4. **`LATE_PHASE6_ABSORPTION_PROTOCOL.md` — load before any bundle-touching work.** Each Phase 6n wave's bundle absorption is pre-classified below as D.2 / D.3 / D.4 per the protocol's branch decision matrix. **Two waves carry mandatory user-authorization gates before drafting starts:** 6n.γ (Phase 1 FirstOrderKMS reframing in I1) and 6n.ζ (Phase 6e + 6m JTGR reformulation in D3 + L3).
+> 4. **`LATE_PHASE6_ABSORPTION_PROTOCOL.md` — load before any bundle-touching work.** Each Phase 6n wave's bundle absorption is pre-classified below as D.2 / D.3 / D.4 per the protocol's branch decision matrix. **Two waves carry mandatory user-authorization gates before drafting starts:** Wave 2a (Phase 1 FirstOrderKMS reframing in I1) and Wave 2d (Phase 6e + 6m JTGR reformulation in D3 + L3).
 > 5. **Apply preemptive-strengthening checklist** per `WAVE_EXECUTION_PIPELINE.md` Stage 3a + the five questions in `CLAUDE.md` "Preemptive-strengthening discipline" section. Do not skip the post-wave ruthless review either.
 > 6. **Do not delegate Lean theorem proving to subagents.** MCP loop is the default tooling. Aristotle is fallback only after MCP-loop exhaustion + decomposition + user authorization.
 > 7. **Bundle source freshness:** every wave that ships content into a drafted bundle must close with `validate.py --check bundle_source_freshness` re-run + Stage F reviewer-triple re-invocation per `LATE_PHASE6_ABSORPTION_PROTOCOL.md` Stage F.
@@ -52,31 +68,56 @@ The phase ships 7 waves; downstream Phase 6o picks up the heavier tracks (G3 boo
 
 ---
 
-## Wave catalog — Shape D (Session-3 finalized)
+## Wave catalog — Shape D (Session-3 finalized; Session-5 status)
 
-Seven waves, two threads. Five core tracks run in parallel (no inter-dependencies until reformulation closures). Two reformulation closures run after their substrates close.
+Seven waves across two parallelizable Tracks. Five core waves run in parallel (no inter-dependencies until reformulation closures); two reformulation closures (Wave 2c, Wave 2d) sequence after Wave 2a closes.
 
-| Wave | Codename | Substrate gap | Bundle absorption | Branch | User-auth gate |
+**Status legend:**
+- ✅ **SHIPPED** — Lean / numerical / memo deliverables committed; bundle absorption deferred per Session-5 user direction.
+- 🟡 **IN-PROGRESS** — partial deliverables shipped; remaining sub-stages identified.
+- 📝 **WORKING DOC** — Stage-1 substrate-analysis or audit draft exists; no Lean yet.
+- ⏳ **NOT STARTED** — substrate ready; awaiting dispatch.
+
+| Wave | Codename | Status | Bundle absorption | Branch | User-auth gate |
 |---|---|---|---|---|---|
-| **6n.α** | G2 Resurgence | Resurgence on SK-EFT gradient expansion | D1 §3-§4 (additive new section "Non-perturbative content of the SK-EFT") | **D.2** | none |
-| **6n.β** | G9 SymTFT audit + GD-4-factor sketch | Categorical / higher-form / non-invertible symmetry compression | D2 + D3 + D5 + F (additive cross-bridge sections) | **D.2** | none |
-| **6n.γ** | G10-6n.1 Glorioso-Liu axiomatic | SK-EFT axiomatic skeleton in Lean | D3 + L3 + I1 (refines FirstOrderKMS Phase 1 case study) | **D.3** | **YES — pre-draft I1 reframing for user review** |
-| **6n.δ** | G10-QCrooks-α | Productive-value Aristotle wave on quantum-Crooks axiomatizations | D1 cross-bridge / D5 (additive refutation tableau) | **D.2** | none |
-| **6n.ε** | G10-6n.3 Crooks-on-analog-Hawking | New falsifiable IR constraint on analog-Hawking spectrum | E1 + D1 (additive falsification window + cross-bridge) | **D.2** | none |
-| **6n.ζ** | G10-6n.7 Sakharov ↔ horizon-Crooks | Phase 6e + 6m Track C JTGR reformulation as one fluctuation-theorem result | D3 + L3 (refines Phase 6e biconditional + Phase 6m Track C published claim profile) | **D.3** | **YES — pre-draft D3/L3 reframing for user review** |
-| **6n.η** | G8-W1 AS memo (no Lean) | Heat-kernel ↔ Atiyah-Singer ↔ Bär-Strohmaier APS dictionary, physics-paper-grade memo | D2 + D3 + E1 appendix (re-reading; no prior verdict overturned) | **D.2** | none |
+| **Track 1 — Structural unification leverage** | | | | | |
+| **Wave 1a** | G2 Resurgence | 🟡 **IN-PROGRESS** (1a.1 + 1a.2 + 1a.4 SHIPPED; 1a.3 Path-B verdict shipped as working doc; 1a.3 Path-A precision pending user decision) | D1 §3-§4 (additive) — **DEFERRED** | **D.2** | none |
+| **Wave 1b** | G9 SymTFT audit + GD-4-factor sketch | 📝 **WORKING DOC** (Stage-1 audit draft at `temporary/working-docs/phase6n/6n_beta_symtft_audit.md`; Lean theorem-statement work next) | D2 + D3 + D5 + F (additive) — **DEFERRED** | **D.2** | none |
+| **Wave 1c** | G8-W1 AS memo (no Lean) | ✅ **SHIPPED** (memo at `temporary/working-docs/phase6n/6n_eta_AS_reformulation_memo.md`; APS-η for analog horizons flagged as Phase 6o follow-up) | D2 + D3 + E1 appendix — **DEFERRED** | **D.2** | none |
+| **Track 2 — Foundational backing for fluctuation-theorem content** | | | | | |
+| **Wave 2a** | G10-6n.1 Glorioso-Liu axiomatic | ✅ **SHIPPED** (Stage-1 skeleton + Stage 2–3 substantive refactor + Stage 2–3b KMS framework refactor + R1 LIFTED; 8 GloriosoLiu/ modules) | D3 + L3 + I1 — **DEFERRED** (I1 reframing pre-draft EXISTS, on-hold) | **D.3** | **HELD** — I1 pre-draft at `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md` (on-hold per Session-5 user direction) |
+| **Wave 2b** | G10-QCrooks-α | ⏳ **NOT STARTED** | D1 cross-bridge / D5 — **DEFERRED** | **D.2** | none (Aristotle submission still requires user-auth at submission time) |
+| **Wave 2c** | G10-6n.3 Crooks-on-analog-Hawking | ⏳ **NOT STARTED** (substrate now ready: Wave 2a closed) | E1 + D1 — **DEFERRED** | **D.2** | none |
+| **Wave 2d** | G10-6n.7 Sakharov ↔ horizon-Crooks | 📝 **WORKING DOC** (D3+L3 reframing pre-draft EXISTS at `temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md`; Lean module work UNBLOCKED, ready to start) | D3 + L3 — **DEFERRED** (pre-draft on-hold) | **D.3** | **HELD** — D3+L3 pre-draft on-hold per Session-5 user direction |
 
-**Wave dependencies:**
-- 6n.α / 6n.β / 6n.δ / 6n.ε / 6n.γ are independent — can run in any order, in parallel.
-- 6n.ζ (Sakharov ↔ horizon-Crooks reformulation) depends on **6n.γ** (Glorioso-Liu axiomatic) closing first — its statement reads off the SKEFTAxioms typeclass.
-- 6n.η (AS memo) is documentation-grade; it can run any time but is most coherent after 6n.β (which compresses anomaly content into SymTFT objects that the AS memo's index-theorem dictionary connects to).
-- 6n.ε (Crooks-on-analog-Hawking) does not strictly depend on 6n.γ closing, but its theorem-statement form should follow 6n.γ's path-measure infrastructure to avoid divergent typeclass shapes.
+**Wave dependencies (Session-5 status):**
+- Wave 1a / Wave 1b / Wave 2b / Wave 2c / Wave 2a are independent — can run in any order, in parallel.
+- Wave 2a ✅ closed at Lean-substrate level (Stage-1 + Stage-2–3 + Stage-2–3b shipped). This unblocks Wave 2d Lean module work AND Wave 2c's path-measure theorem-statement form.
+- Wave 2d Lean module work is now **unblocked** by Wave 2a closure; only the bundle absorption is deferred.
+- Wave 1c ✅ memo shipped; the AS-side translation of SymTFT anomaly content (Witten–Yonekura η-invariant) cross-references Wave 1b when Wave 1b closes.
+- Wave 2c does not strictly depend on Wave 2a closing for the substrate audit, but for theorem-statement form, Wave 2a's `SKEFTAxioms` typeclass is now available.
 
-Recommended start order (per Session-3 quality-priority criteria): **6n.γ + 6n.α + 6n.β in parallel**, since 6n.γ unblocks 6n.ζ and 6n.ε downstream. 6n.δ and 6n.η can join the parallel slate once their respective substrates are loaded into context.
+**Recommended next-up order (Session-5 reset, per user direction "push forward on math"):**
+1. **Wave 2b** — start QCrooks-α parallel-axiomatization tableau (independent, no upstream blockers).
+2. **Wave 2c** — start Crooks-on-analog-Hawking (now unblocked by Wave 2a closure).
+3. **Wave 2d Lean module** — `HorizonDetailedBalance` + `Sakharov_iff_horizon_Crooks` Lean substrate (the working-doc pre-draft is for the *bundle absorption*; Lean substrate work proceeds independently).
+4. **Wave 1b Lean theorem-statement work** — once Stage-1 audit signs off internally (the audit verdict in the working doc identifies the next-step Lean structure).
+5. **Wave 1a.3 Path A precision** — pending user decision (per VERDICT doc §7); if NOT authorized, Wave 1a closes at 1a.4 + Path B.
+6. **Phase 6o opening** — APS-η analog-horizons sub-wave + the deferred-track items (G3 Carrollian, G4 Kerr-Schild, G1 Schellekens, G10-ETH-α, I3 community contribution).
 
 ---
 
-## Wave 6n.α — G2 Resurgence on SK-EFT gradient expansion
+## Wave 1a — G2 Resurgence on SK-EFT gradient expansion 🟡 IN-PROGRESS
+
+**Sub-wave status (Session-5 close):**
+- ✅ **Wave 1a.1 SHIPPED** (commit `769ecc6`): `formulas.py` extended with δ⁴–δ⁷ symbolic coefficient generators (16 new coefficients across orders 4–7 per `count(N) = ⌊(N+1)/2⌋ + 1`).
+- ✅ **Wave 1a.2 SHIPPED** (commit `2eb461a`): Padé-Borel numerical infrastructure at `src/resurgence/borel.py` (ratio test, Padé approximant, Borel-singularity extraction, Λ_UV closed-form predictor).
+- 🟡 **Wave 1a.3 PARTIALLY CLOSED**: Path B (numerical run on Steinhauer-class BEC parameters via `borel.py`) **executed**; verdict shipped at `temporary/working-docs/phase6n/6n_alpha_3_VERDICT.md` + script at `6n_alpha_3_path_B_numerical_run.py` (uncommitted working docs). **Verdict: BEC SK-EFT in weak-coupling regime is geometrically convergent, NOT Gevrey-1** (super-geometric per Beliaev-style prefactors); comparable to GKST holographic linear-response. The Path B counterfactual Gevrey-1 model recovers Λ_UV = κ√A = 2500 Hz exactly via [1/1] Padé–Borel — pipeline validated; physical verdict is "no resurgence content for weak-coupling BEC." Path A precision (multi-session BdG self-energy through order 7) deferred pending user decision (VERDICT §7).
+- ✅ **Wave 1a.4 SHIPPED** (commit `0abd7d3`): Lean substrate at `lean/SKEFTHawking/Resurgence/{Basic,BorelAction,StokesBound}.lean` + count theorems at `HigherOrderSK.lean`. Formalizes `IsGevrey1` predicate, `StokesData` infrastructure, `lambdaUV_from_borelAction` conditional theorem, `deltaNP_pos_of_stokes_pos` non-perturbative-content existence statement.
+
+**Substantive math finding (Session 5):** the BEC SK-EFT geometric-convergence verdict is a substrate-structural classification result paralleling the Phase 6e Sakharov-criterion finding. A "third Sakharov-style biconditional" candidate framing flagged for user review at next bundle-absorption pass.
+
+**Open question for user:** ship Path B verdict alone (closes Wave 1a at substrate-level finding) vs. authorize Path A precision (multi-session BdG self-energy enumeration through order 7; would convert "suggestive" → "definitive" structural-classification claim of the same scale as Phase 6e Sakharov biconditional).
 
 **Three-question template (per `CLAUDE.md` Phase-6 wave format):**
 
@@ -98,7 +139,11 @@ Recommended start order (per Session-3 quality-priority criteria): **6n.γ + 6n.
 
 ---
 
-## Wave 6n.β — G9 SymTFT primary-source audit + GD-4-factor decomposition sketch
+## Wave 1b — G9 SymTFT primary-source audit + GD-4-factor decomposition sketch 📝 WORKING DOC
+
+**Sub-wave status (Session-5 close):**
+- 📝 **Stage-1 audit working doc SHIPPED (uncommitted)** at `temporary/working-docs/phase6n/6n_beta_symtft_audit.md`: substrate analysis + Choi-doubled SymTFT applicability decision matrix (APPLICABLE / PARTIALLY APPLICABLE / NOT APPLICABLE — verdict-pending) + cross-bridge audit + GD-4-factor decomposition sketch + risk register. arXiv:2507.05350 framework structure summarized; primary-source audit recommendation: 1–2 day paper-math task to map continuous-symmetry section §III against CGL §II dynamical KMS construction.
+- ⏳ **Stage 2 (Lean theorem-statement work) NOT STARTED**: pending Stage-1 verdict signoff (the working doc identifies the next-step Lean structure based on which of the three applicability verdicts lands).
 
 - *Integrates with:* Phase 5o W5 lean-tensor-categories library (114 thms; Pivotal → ... → Modular); the program's ℤ₁₆ + modular invariance (`24 | c₋ → N_f = 3`) anchor in D2 / L2; Phase 5y GD-orthogonality 4-factor decomposition in D5; arXiv:2507.05350 (Schäfer-Nameki et al., Choi-doubled mixed-state SymTFT, July 2025) as the load-bearing primary-source audit target; arXiv:1511.03646 Crossley-Glorioso-Liu (CGL).
 - *New constraint adds:* (a) primary-source audit of arXiv:2507.05350 vs CGL — does the Choi-doubled mixed-state SymTFT framework apply to the dissipative SK-EFT contour, and if so, which Z₂ in the IR effective theory does the SymTFT pick out; (b) lift Z₁₆ / θ̄ + 24|c₋ + topological-order content into one categorical object via the audit's framework; (c) **GD-orthogonality 4-factor → SymTFT decomposition sketch** — the highest-leverage open structural problem flagged by the DR. If the GD 4 factors decompose cleanly inside one SymTFT, the program's anomaly content compresses into a single object instead of four parallel orthogonality-decomposition factors.
@@ -118,11 +163,20 @@ Recommended start order (per Session-3 quality-priority criteria): **6n.γ + 6n.
 
 ---
 
-## Wave 6n.γ — G10-6n.1 Glorioso-Liu axiomatic skeleton
+## Wave 2a — G10-6n.1 Glorioso-Liu axiomatic skeleton ✅ SHIPPED (Lean substrate); ⏳ HELD (bundle absorption)
 
-**🚨 USER AUTHORIZATION GATE (D.3 absorption — Stage B of `LATE_PHASE6_ABSORPTION_PROTOCOL.md`):**
+**Sub-wave status (Session-5 close):**
+- ✅ **Stage-1 Lean module skeleton SHIPPED** (commit `fa2f54c`): all 8 modules (`Axioms.lean`, `DynamicalKMS.lean`, `LocalEquilibrium.lean`, `EntropyCurrent.lean`, `LocalSecondLaw.lean`, `OnsagerReciprocity.lean`, `FirstOrderProjection.lean`, `Phase1Reconciliation.lean`) under `lean/SKEFTHawking/GloriosoLiu/`.
+- ✅ **Stage-1 close** (commit `522155e`): 8 sorries trivial-discharge + root integration into `lean/SKEFTHawking.lean`.
+- ✅ **Stage 2–3 substantive refactor SHIPPED** (commit `1b87c4a`): all 7 modules parameterized over `SKDoubling.SKAction`; substantive content beyond placeholders.
+- ✅ **R1 LIFTED** (commit `bbb34ce`): substantive partition recovery via `SKDoubling.KMSSymmetry` projection + Aristotle counterexample + linarith. The 4-of-9 partition is now a **theorem** (`Phase1Reconciliation.four_of_nine_partition_recovered`) rather than an Aristotle-empirical observation.
+- ✅ **Stage 2–3b KMS framework refactor SHIPPED** (commit `d344c33`): non-trivial existence witness `SKEFTAxioms_zero_action` for the zero action; `dynamical_KMS := ⟨kmsForZeroAction β⟩` substantive witness shipped.
+- 📝 **KMS framework finding (working doc)** at `temporary/working-docs/phase6n/6n_gamma_kms_framework_finding.md`: structural finding that strict-invariance `KMSSymmetry` is generically incompatible with non-trivial dissipative SK-EFT actions (canonical KMS shift generates new monomials whose only cancellation requires γ_1 = γ_2 = 0). Recommends extending Stage 2–3b with the algebraic FDR form (`hasDynamicalKMS_algebraic`) for non-trivial existence witness `SKEFTAxioms_for_dissipative` — small-scope follow-up refactor (~50 lines Lean) flagged for next-session attention.
+- ⏳ **D.3 bundle absorption HELD per Session-5 user direction**: I1 reframing pre-draft EXISTS at `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md` (drop-in §3 replacement prose for `papers/I1/paper_draft.tex` lines 282–340 + D3+L3 incidental citation upgrades). On-hold for user review until Phase 6n + 6o math closure complete; absorption then runs as one coherent pass per user direction.
 
-I1's Phase 1 FirstOrderKMS case study is the program's anchor productive-value example. The 6n.γ reframing converts "Aristotle disproved 5/9" → "Aristotle disproved 5/9; deeper Glorioso-Liu axiomatic was formalized; the 5/9 disproof became a theorem of first/second-order separation." This substantially strengthens the case study but changes I1's framing. **Pre-draft the I1 reframing language for user review BEFORE shipping 6n.γ.**
+**🚨 USER AUTHORIZATION GATE (D.3 absorption — Stage B of `LATE_PHASE6_ABSORPTION_PROTOCOL.md`) — HELD:**
+
+I1's Phase 1 FirstOrderKMS case study is the program's anchor productive-value example. The Wave 2a reframing converts "Aristotle disproved 5/9" → "Aristotle disproved 5/9; deeper Glorioso-Liu axiomatic was formalized; the 5/9 disproof became a theorem of first/second-order separation." This substantially strengthens the case study but changes I1's framing. **Pre-draft EXISTS for user review when bundle-absorption pass begins.**
 
 D3 + L3 also absorb under D.3 (citation form on Glorioso-Liu monotonicity now points to the formalized `Glorioso_Liu_local_second_law` rather than the published derivation alone). D3 + L3 absorption is incremental enough that user-auth at the I1 review point covers all three.
 
@@ -170,7 +224,11 @@ SKEFTHawking/GloriosoLiu/
 
 ---
 
-## Wave 6n.δ — G10-QCrooks-α productive-value Aristotle wave
+## Wave 2b — G10-QCrooks-α productive-value Aristotle wave ⏳ NOT STARTED
+
+**Status:** ready for dispatch. No upstream blockers. Substrate fully loaded into context: Phase 1 FirstOrderKMS template + program's MTC / quantum-group / fusion-category infrastructure + QCyc16 / QCyc5Ext / native_decide finite-dimensional sandboxes + Perarnau-Llobet et al. no-go anchor. Aristotle submission requires user-auth at submission time per CLAUDE.md "User gets first & last call on Aristotle submissions."
+
+**Recommended next-up order placement:** **#1** — independent of all other 6n waves, productive-value template directly transferable from Phase 1, no bundle-absorption pre-draft needed for substrate work.
 
 - *Integrates with:* Phase 1 FirstOrderKMS template (parallel-axiomatization Aristotle refutation tableau); the program's MTC / quantum-group / fusion-category infrastructure (operator-algebra typing for TPM, work distributions, Petz recovery, quasiprobabilities); QCyc16 / QCyc5Ext / native_decide finite-dimensional sandboxes; existing `KMSCompatible` / `FDTCompatible` / `GloriosoLiuMonotoneCompatible` typeclasses; Perarnau-Llobet-Bäumer-Hovhannisyan-Huber-Acín no-go theorem (Phys. Rev. Lett. 118, 070601, 2017).
 - *New constraint adds:* (a) parallel-axiomatization tableau across at least four candidate quantum-Crooks axiomatizations — Tasaki-Crooks (Talkner-Hänggi 2007 arXiv:0705.1252) + Åberg fully-quantum (Phys. Rev. X 8, 011019, 2018) + Kafri-Deffner (Phys. Rev. A 86, 044302, 2012) + a quasiprobability axiomatization (Levy-Lostaglio or Francica); (b) Aristotle-driven concrete-witness search for finite-dimensional Hilbert-space counterexamples to each candidate's claimed equivalence with classical Crooks on diagonal states + average energy reproduction (the Perarnau-Llobet et al. no-go scheme); (c) the surviving axiomatizations connected to existing `KMSCompatible` / `FDTCompatible` content via typeclass hypothesis-bundle compatibility lemmas. **FirstOrderKMS² template** — the literature is more axiomatically unstable for quantum-Crooks than for first-order KMS; the program's Phase 1 productive-value methodology applies directly.
@@ -187,18 +245,22 @@ SKEFTHawking/GloriosoLiu/
 
 **Bundle absorption.** D.2 additive into D1 cross-bridge / D5 (refutation tableau as a section).
 
-**Risk axes.** Aristotle returns no refutation (low — Perarnau-Llobet bounds ≥ 1); quasiprobability axiomatization choice (Levy-Lostaglio vs Francica) may not span the literature's full axiom-space (medium — name it explicitly + flag); the productive-value paper venue varies on whether the refutation tableau is "FirstOrderKMS template" or "novel". Aristotle is *not* the load-bearing tool for 6n.γ but IS for 6n.δ — submission gating per CLAUDE.md "User gets first & last call on Aristotle submissions."
+**Risk axes.** Aristotle returns no refutation (low — Perarnau-Llobet bounds ≥ 1); quasiprobability axiomatization choice (Levy-Lostaglio vs Francica) may not span the literature's full axiom-space (medium — name it explicitly + flag); the productive-value paper venue varies on whether the refutation tableau is "FirstOrderKMS template" or "novel". Aristotle is *not* the load-bearing tool for Wave 2a but IS for Wave 2b — submission gating per CLAUDE.md "User gets first & last call on Aristotle submissions."
 
 ---
 
-## Wave 6n.ε — G10-6n.3 Crooks-on-analog-Hawking on polariton SK-EFT substrate
+## Wave 2c — G10-6n.3 Crooks-on-analog-Hawking on polariton SK-EFT substrate ⏳ NOT STARTED
+
+**Status:** ready for dispatch. **Now unblocked** by Wave 2a closure (path-measure infrastructure available via `SKDoubling.SKAction` typeclass + `SKEFTAxioms` skeleton). Substrate ready: Loganayagam–Martin arXiv:2403.10654 + Falasco–Esposito 2025 RMP framework + Steinhauer / Weinfurtner / Carusotto device-parameter spec.
+
+**Recommended next-up order placement:** **#2** after Wave 2b.
 
 - *Integrates with:* E1 polariton paper; D1 §3-§4 analog Hawking content; Carusotto-Gerace polariton analog black-hole literature (arXiv:1206.4276 + follow-ups); Steinhauer BEC analog black holes; Tettamanti-Parola-Cacciatori arXiv:1703.05041 exactly-solvable BEC; **Loganayagam-Martin Exterior EFT for Hawking Radiation arXiv:2403.10654** (JHEP 2025) — the cleanest substrate for trajectory-Crooks at the horizon; Banerjee et al. fluctuation-dissipation horizon-temperature derivation (Eur. Phys. J. C 80, 411, 2020) as the FDT-level prior art.
 - *New constraint adds:* an inequality on the analog-Hawking spectrum derived from trajectory-level Crooks detailed-balance, **beyond what FDT / Kubo gives**. Specifically: the LDP rate function I(σ) for entropy production must satisfy the GC/LS symmetry I(-σ) - I(σ) = -σ, which translates into specific bounds on the spectrum's higher cumulants of work / entropy-production fluctuations. Falsifiable on existing experimental platforms (Steinhauer BEC, Weinfurtner Vancouver surface-wave, Carusotto polariton). Comparable in character to Phase 6e Sakharov biconditional — third "Sakharov-style" biconditional in the program if non-trivial.
 - *Tension surfaces:* the DR's main flag — "if the inequality is satisfied trivially given the existing thermal spectrum, the contribution is FDT-level only and not novel." The work itself is *deriving* what trajectory-Crooks structure constrains beyond FDT; the output of the derivation determines (a) trivial = formalization-only contribution, or (b) non-trivial = third Sakharov-style biconditional + falsifiable predictions.
 
 **Substrate.** Two viable framings:
-- (a) Glorioso-Crossley-Liu SK-EFT effective action as the path measure (closer to existing program infrastructure; uses 6n.γ as substrate).
+- (a) Glorioso-Crossley-Liu SK-EFT effective action as the path measure (closer to existing program infrastructure; uses Wave 2a as substrate).
 - (b) Loganayagam-Martin exterior EFT for Hawking radiation (cleanest framework for trajectory-Crooks at the horizon specifically).
 
 DR recommends (b) on top of (a): state the trajectory-Crooks predicate on Loganayagam-Martin exterior EFT; derive the inequality; verify it specializes correctly to the program's existing SK-EFT polariton content.
@@ -212,27 +274,34 @@ Discrete-time / Markov-jump-process scope (Falasco-Esposito 2025 RMP framework) 
 - Specialize to Steinhauer / Weinfurtner / Carusotto device parameters; check against published spectrum + noise data.
 - Add E1 falsification-window section.
 
-**Bundle absorption.** D.2 additive into E1 (new section: "Trajectory-level Crooks constraint at the analog horizon"). D.2 cross-bridge into D1 only after 6n.γ closes (theorem-statement form follows 6n.γ's path-measure infrastructure).
+**Bundle absorption.** D.2 additive into E1 (new section: "Trajectory-level Crooks constraint at the analog horizon"). D.2 cross-bridge into D1 only after Wave 2a closes (theorem-statement form follows Wave 2a's path-measure infrastructure).
 
-**Risk axes.** Triviality risk (DR's main flag); continuous-vs-discrete-time framing (Markov-jump sufficient for falsifiability; cleaner version waits for Itô); Verlinde-Nagle contamination (Lean statements must invoke only Glorioso-Liu / Loganayagam-Martin substrate, not Verlinde — analogous discipline to 6n.ζ); open-vs-closed-system framing (Loganayagam-Martin exterior EFT is open; CGL is closed; cross-walk lemma needed); substrate-specific verifiability variance.
+**Risk axes.** Triviality risk (DR's main flag); continuous-vs-discrete-time framing (Markov-jump sufficient for falsifiability; cleaner version waits for Itô); Verlinde-Nagle contamination (Lean statements must invoke only Glorioso-Liu / Loganayagam-Martin substrate, not Verlinde — analogous discipline to Wave 2d); open-vs-closed-system framing (Loganayagam-Martin exterior EFT is open; CGL is closed; cross-walk lemma needed); substrate-specific verifiability variance.
 
 ---
 
-## Wave 6n.ζ — G10-6n.7 Sakharov ↔ horizon-Crooks reformulation
+## Wave 2d — G10-6n.7 Sakharov ↔ horizon-Crooks reformulation 📝 WORKING DOC; ⏳ Lean NOT STARTED
 
-**🚨 USER AUTHORIZATION GATE (D.3 absorption — Stage B of `LATE_PHASE6_ABSORPTION_PROTOCOL.md`):**
+**Sub-wave status (Session-5 close):**
+- 📝 **D3+L3 reframing pre-draft EXISTS (uncommitted)** at `temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md`. On-hold for user review per Session-5 user direction (bundle absorption deferred until full Phase 6n + 6o picture lands).
+- ✅ **Wave dependency Wave 2a closed** at Lean-substrate level (Stage 1 + 2-3 + 2-3b shipped). Wave 2d Lean module work is **unblocked**.
+- ⏳ **Lean module NOT STARTED**: `HorizonDetailedBalance` predicate + `Sakharov_iff_horizon_Crooks` biconditional theorem statement + Phase 6e + Phase 6m Track C JTGR specialization witnesses.
 
-D3 + L3 currently express the Phase 6e Sakharov-criterion biconditional and the Phase 6m Track C JTGR survivors as separate results. The 6n.ζ reformulation unifies them as one fluctuation-theorem result (`Sakharov_iff_horizon_Crooks` biconditional). This refines D3 + L3's published-claim profile — same content, deeper structural framing. **Pre-draft the D3 + L3 reframing language for user review BEFORE shipping 6n.ζ.**
+**Recommended next-up order placement (Lean substrate work):** **#3** after Wave 2b + Wave 2c; bundle absorption HELD per user direction. The pre-draft KMS framework finding (§6.2 of `6n_gamma_kms_framework_finding.md`) flags that the D3 reframing prose should reference the algebraic-FDR form of dynamical-KMS (`SKEFTHawking.SKDoubling.FirstOrderKMS`) rather than strict-invariance for technical accuracy — apply when bundle-absorption pass begins.
 
-**Wave dependency:** 6n.ζ blocks on 6n.γ (Glorioso-Liu axiomatic) closing first.
+**🚨 USER AUTHORIZATION GATE (D.3 absorption — Stage B of `LATE_PHASE6_ABSORPTION_PROTOCOL.md`) — HELD:**
 
-- *Integrates with:* Phase 6e Sakharov-criterion biconditional (Λ_J = Λ_HK on ³He-A; falsified on FLS BEC); Phase 6m Track C JTGR survivors (M1, M2/M7, M3 Exp/ArcTanh, M4, M9; M8 conditional); Eling-Guedens-Jacobson f(R) (gr-qc/0602001) entropy-production term; Chirco-Eling-Liberati gravitational-dissipation (PRD 81, 024016) heat decomposition; Alonso-Serrano + Liška unimodular-from-Clausius (arXiv:2008.04805); 6n.γ Glorioso-Liu axiomatic substrate.
+D3 + L3 currently express the Phase 6e Sakharov-criterion biconditional and the Phase 6m Track C JTGR survivors as separate results. The Wave 2d reformulation unifies them as one fluctuation-theorem result (`Sakharov_iff_horizon_Crooks` biconditional). This refines D3 + L3's published-claim profile — same content, deeper structural framing. **Pre-draft EXISTS for user review when bundle-absorption pass begins.**
+
+**Wave dependency:** Wave 2d blocks on Wave 2a (Glorioso-Liu axiomatic) closing first. ✅ **SATISFIED** (Session 5 close).
+
+- *Integrates with:* Phase 6e Sakharov-criterion biconditional (Λ_J = Λ_HK on ³He-A; falsified on FLS BEC); Phase 6m Track C JTGR survivors (M1, M2/M7, M3 Exp/ArcTanh, M4, M9; M8 conditional); Eling-Guedens-Jacobson f(R) (gr-qc/0602001) entropy-production term; Chirco-Eling-Liberati gravitational-dissipation (PRD 81, 024016) heat decomposition; Alonso-Serrano + Liška unimodular-from-Clausius (arXiv:2008.04805); Wave 2a Glorioso-Liu axiomatic substrate.
 - *New constraint adds:* Sakharov criterion expressed as horizon-Crooks-detailed-balance (`P_F[γ] / P_R[γ̄] = exp(σ[γ])` at the local Rindler horizon); unifies Phase 6e biconditional + Phase 6m Track C JTGR survivors as one fluctuation-theorem result; **explicitly distinguishes Jacobson-allowed (equilibrium-Clausius-on-Rindler-horizon) from Verlinde-falsified (gravity-as-entropic-force) entropic-gravity readings**. Cleanest non-trivial deliverable in any Phase 6n track per the original DR.
 - *Tension surfaces:* if the reformulation requires assumptions stronger than what Phase 6e + Phase 6m JTGR currently invoke, those extra assumptions become candidate sites for elimination-tournament probing. The Verlinde caveat is real: "fluctuation-theorem structure is present at the horizon (Jacobson level), not gravity *is* an entropic force (Verlinde level)" — this distinction must be carried through every Lean statement and bundle citation.
 
-**Substrate.** Phase 6e Sakharov + Phase 6m Track C JTGR + Glorioso-Liu axiomatic (6n.γ). Re-reading: not new derivation. Sakharov-class assignment from Phase 6m R5 (M1 + M9 in Sakharov-class; M2/M7 with epistemic flag; M3 in class-(b′); M4 in class-(b″); M8 OUTSIDE Sakharov-class).
+**Substrate.** Phase 6e Sakharov + Phase 6m Track C JTGR + Glorioso-Liu axiomatic (Wave 2a). Re-reading: not new derivation. Sakharov-class assignment from Phase 6m R5 (M1 + M9 in Sakharov-class; M2/M7 with epistemic flag; M3 in class-(b′); M4 in class-(b″); M8 OUTSIDE Sakharov-class).
 
-**Stage 1 actions (after 6n.γ closes):**
+**Stage 1 actions (after Wave 2a closes):**
 - State `HorizonDetailedBalance` predicate parameterized over the substrate.
 - State `Sakharov_iff_horizon_Crooks` biconditional theorem.
 - Specialize to Phase 6e biconditional witnesses (³He-A holds; FLS BEC fails).
@@ -241,11 +310,16 @@ D3 + L3 currently express the Phase 6e Sakharov-criterion biconditional and the 
 
 **Bundle absorption.** D.3 into D3 + L3 (refines biconditional + JTGR survivors' published-claim profile). User-auth REQUIRED pre-draft.
 
-**Risk axes.** Reformulation may surface stronger-than-current assumption (publishable as elimination-tournament target either way); Verlinde-vs-Jacobson distinction must not slip in any single Lean theorem statement (compositional discipline); 6n.γ blocks delays 6n.ζ start; D.3 absorption cascade across D3 + L3.
+**Risk axes.** Reformulation may surface stronger-than-current assumption (publishable as elimination-tournament target either way); Verlinde-vs-Jacobson distinction must not slip in any single Lean theorem statement (compositional discipline); Wave 2a blocks delays Wave 2d start; D.3 absorption cascade across D3 + L3.
 
 ---
 
-## Wave 6n.η — G8-W1 Atiyah-Singer reformulation memo (no Lean)
+## Wave 1c — G8-W1 Atiyah-Singer reformulation memo (no Lean) ✅ SHIPPED
+
+**Status (Session-5 close):**
+- ✅ **Stage-1 memo SHIPPED (uncommitted working doc)** at `temporary/working-docs/phase6n/6n_eta_AS_reformulation_memo.md`: heat-kernel ↔ AS dictionary written explicitly for the program's a₀, a₂, a₄ content; Sakharov tr(I) ≠ 0 identified as McKean–Singer supertrace nonvanishing condition; instanton zero modes identified as ker(D); Z₁₆ anomaly identified as Witten–Yonekura η/16 mod 1 (cross-bridge to Wave 1b SymTFT).
+- 🚩 **One potentially-new structural item flagged for Phase 6o**: APS eta-invariant for analog-horizon backgrounds (BEC-acoustic, ADW, ³He-A) — first systematic substrate-side APS-η computation on analog Hawking horizons would be publishable. Promoted to Phase 6o follow-up sub-wave per memo §6.3.
+- ⏳ **Bundle absorption (D2 + D3 + E1 appendix) DEFERRED** per Session-5 user direction. Memo is non-load-bearing for any current bundle; absorption runs as part of unified Phase 6n + 6o bundle-absorption pass.
 
 - *Integrates with:* Phase 6e a_n Seeley-DeWitt heat-kernel coefficients (Λ_HK derivation); Phase 6m Sakharov tr(I) ≠ 0 (the McKean-Singer supertrace nonvanishing condition); Phase 5z Goldstino zero modes (the APS boundary kernel `h(Σ)`); Bär-Strohmaier APS-index-theorem framework; Witten-Yonekura η-invariant content.
 - *New constraint adds:* a physics-paper-grade memo (no Lean) restating Phase 6e a_n + Phase 6m Sakharov tr(I) + Phase 5z Goldstino zero modes in Atiyah-Singer / Bär-Strohmaier APS / Witten-Yonekura η-invariant language. The heat-kernel ↔ Atiyah-Singer dictionary is **already implicit** in the program; the memo makes it explicit. Free Tier-1 deliverable. Unlocks D2 / D3 / E1 appendix narratives at zero Lean cost.
@@ -265,33 +339,36 @@ D3 + L3 currently express the Phase 6e Sakharov-criterion biconditional and the 
 
 ---
 
-## User authorization gates — consolidated
+## User authorization gates — consolidated (Session-5 status)
 
-Two D.3 user-auth gates per `LATE_PHASE6_ABSORPTION_PROTOCOL.md` Stage B:
+**Two D.3 user-auth gates HELD pending unified Phase 6n + 6o bundle-absorption pass** (Session-5 user direction: "push forward on math/physics/infrastructure first; bundle absorption runs as one coherent pass once full picture lands"):
 
-| Wave | Bundle(s) refined | Pre-draft deliverable for user review |
-|---|---|---|
-| **6n.γ** Glorioso-Liu axiomatic | I1 (anchor case study reframe) + D3 + L3 (citation form upgrade) | I1 reframing language; specifically: "FirstOrderKMS as Phase 1 anchor → first-order projection of Glorioso-Liu axiomatic; the 4-of-9 partition is now a theorem, not an Aristotle-empirical observation." |
-| **6n.ζ** Sakharov ↔ horizon-Crooks | D3 + L3 (Phase 6e + Phase 6m Track C JTGR survivors unified) | D3 + L3 reframing language; specifically: "Phase 6e Sakharov biconditional + Phase 6m Track C JTGR survivors as parallel results → unified `Sakharov_iff_horizon_Crooks` biconditional. Verlinde-vs-Jacobson distinction explicit at every Lean statement." |
+| Wave | Bundle(s) refined | Pre-draft deliverable | Status |
+|---|---|---|---|
+| **Wave 2a** Glorioso-Liu axiomatic | I1 (anchor case study reframe) + D3 + L3 (citation form upgrade) | `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md` — drop-in §3 replacement prose for `papers/I1/paper_draft.tex` lines 282–340; "FirstOrderKMS as Phase 1 anchor → first-order projection of Glorioso-Liu axiomatic; the 4-of-9 partition is now a theorem, not an Aristotle-empirical observation." | 📝 **HELD** — pre-draft EXISTS; on-hold for unified absorption pass |
+| **Wave 2d** Sakharov ↔ horizon-Crooks | D3 + L3 (Phase 6e + Phase 6m Track C JTGR survivors unified) | `temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md` — D3 + L3 reframing language; "Phase 6e Sakharov biconditional + Phase 6m Track C JTGR survivors as parallel results → unified `Sakharov_iff_horizon_Crooks` biconditional. Verlinde-vs-Jacobson distinction explicit at every Lean statement." Per KMS framework finding §6.2: technical-accuracy footnote needed referencing algebraic-FDR `FirstOrderKMS` rather than strict-invariance `KMSSymmetry`. | 📝 **HELD** — pre-draft EXISTS; on-hold for unified absorption pass |
 
 **Additional gates (standard per `WAVE_EXECUTION_PIPELINE.md`):**
-- Stage 4 Aristotle submission (6n.δ QCrooks-α specifically) — user gets first and last call.
-- Stage 13 adversarial review per absorbed bundle — fresh-context reviewer per `BUNDLE_LIFT_PROCEDURE.md` §11.
-- I3 bundle authorization (Phase 6o, deferred to that roadmap) — Pipeline Invariant #14 user-auth for new bundle target.
+- Stage 4 Aristotle submission (Wave 2b QCrooks-α specifically) — user gets first and last call. **Triggers when Wave 2b Lean substrate is decomposed and ready for batch.**
+- Stage 13 adversarial review per absorbed bundle — fresh-context reviewer per `BUNDLE_LIFT_PROCEDURE.md` §11. **Triggers in unified bundle-absorption pass at end of Phase 6n + 6o.**
+- ✅ **I3 bundle authorization GRANTED** (Session 4, 2026-05-04) — Pipeline Invariant #14 user-auth for new bundle target. Bundle architecture 13 → 14. Infrastructure shipped commit `a72ba68`: `papers/I3/{bundle_metadata.json, source_manifest.md, change_log.md, append_log.json}` + bundle-count test assertion fix commit `82e9aba` + PAPER_DRAFT_MAPPING.md row 69 fix commit `70f0dea`. Scoping doc at `temporary/working-docs/phase6n/i3_bundle_scoping.md` (working doc; substantive scoping pending Phase 6o opening).
 
 ---
 
 ## Phase 6o handoff (preview — full detail in `Phase6o_Roadmap.md` stub)
 
-Tracks deferred to Phase 6o per Session-3 quality-priority:
+Tracks deferred to Phase 6o per Session-3 quality-priority (and additions surfaced in Sessions 4–5):
 - **G3 boostless / Carrollian soft-theorem program** for emergent post-erasure U(1) + ADW graviton (Tier 1).
 - **G4-Kerr-Schild** classical double-copy on Petrov-D analog metrics (the draining-bathtub acoustic metric IS Petrov D; Tier 2).
 - **G1-Schellekens chain** (spin-bordism → anomaly polynomial → modular invariance → Niemeier → Schellekens c=24 holomorphic-VOA classification corollary; Tier 1).
 - **G1-NO-GO writeup** (dissipative SK-EFT bootstrap can't produce uniqueness with current axioms; Tier 4 NO-GO).
 - **G10-ETH-α** productive-value Aristotle wave on Inozemcev–Volovich gap (Tier 2).
-- **G10-Itô + LDP-α + LDP-β as I3 community contribution** (pending Pipeline Invariant #14 user-auth for new bundle target).
+- **G10-Itô + LDP-α + LDP-β as I3 community contribution** — ✅ Pipeline Invariant #14 user-auth GRANTED (Session 4); bundle infrastructure shipped; substantive scoping at `temporary/working-docs/phase6n/i3_bundle_scoping.md` awaits Phase 6o opening.
+- **APS-η for analog-horizon backgrounds** (NEW, surfaced by Wave 1c memo §6.3): first systematic substrate-side APS-η computation on BEC-acoustic / ADW / ³He-A horizons; would (a) sharpen L3 regime-partition with topological-invariant distinction, (b) connect to Wave 1b SymTFT via Witten–Yonekura η-invariant identification, (c) be publishable as first such calculation on analog Hawking horizons.
+- **Wave 1a.3 Path A precision** (multi-session BdG self-energy through order 7) — pending user decision per VERDICT §7. If authorized, runs as a Phase 6o sub-wave delivering definitive Gevrey-1-or-geometric verdict + numerical Λ_UV (or absence thereof) + structural-finding writeup.
+- **Unified Phase 6n + 6o → Phase 7 bundle-absorption pass** — runs at end of Phase 6o per Session-5 user direction. Absorbs all D.2/D.3 events from Phase 6n (Wave 1a + Wave 1b + Wave 2a I1 + Wave 2a D3+L3 + Wave 2b + Wave 2c + Wave 2d + Wave 1c) and Phase 6o (TBD) as one coherent pass per `LATE_PHASE6_ABSORPTION_PROTOCOL.md` Stages A–G. Two D.3 user-auth gates (Wave 2a I1, Wave 2d D3+L3) trigger at start of this pass.
 
-Phase 6o framing locks at the next user-input gate (after Phase 6n closes, or earlier if Phase 6n waves run in parallel and Phase 6o needs to start before Phase 6n closure).
+Phase 6o framing locks at the next user-input gate (after Phase 6n math closes — i.e., after Wave 2b + Wave 2c + Wave 2d Lean ship, plus optionally Wave 1b Stage-2 Lean and Wave 1a.3 Path A).
 
 ---
 
@@ -314,4 +391,4 @@ Phase 6o framing locks at the next user-input gate (after Phase 6n closes, or ea
 
 ---
 
-*Created Phase 6n initialization (2026-05-04). Roadmap initialized; first wave dispatch pending user confirmation of Shape D + I1 reframing pre-draft for 6n.γ user-auth gate. Updates atomically as waves close.*
+*Created Phase 6n initialization (2026-05-04). Sessions 1–5 closed 2026-05-04. Session 5 close: 12 commits ahead of origin/main; Wave 1a IN-PROGRESS (1a.1+1a.2+1a.4 SHIPPED, 1a.3 Path B verdict working doc, 1a.3 Path A pending user decision); Wave 1b WORKING DOC (Stage-1 audit); Wave 2a SHIPPED (Lean substrate, R1 LIFTED, KMS framework refactor); Wave 2b NOT STARTED (next-up #1); Wave 2c NOT STARTED (next-up #2, unblocked by Wave 2a); Wave 2d working doc + Lean NOT STARTED (next-up #3); Wave 1c SHIPPED (memo); I3 bundle infrastructure SHIPPED. **Bundle absorption HELD per Session-5 user direction** — runs as unified Phase 6n + 6o → Phase 7 absorption pass once full math/Lean picture lands. Updates atomically as waves close.*
