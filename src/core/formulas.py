@@ -278,6 +278,151 @@ def third_order_correction(k, omega, c_s, gamma_3_1, gamma_3_2, gamma_3_3, kappa
     return Gamma_3 / kappa
 
 
+def fourth_order_correction(k, omega, c_s, gamma_4_1, gamma_4_2, gamma_4_3, kappa):
+    """
+    Fourth-order dissipative correction to T_eff.
+
+    δ⁽⁴⁾(ω) = [γ_{4,1}·k⁵ + γ_{4,2}·ω²·k³/c_s² + γ_{4,3}·ω⁴·k/c_s⁴] / κ
+
+    SK-EFT order 4 has count(4) = ⌊5/2⌋+1 = 3 free transport coefficients.
+    The 3 m-even monomials at derivative level 5 are:
+      (m, n_x) = (0, 5), (2, 3), (4, 1)
+    yielding the dimensional structure k^5 / (ω²k³/c_s²) / (ω⁴k/c_s⁴).
+    All terms are odd in k overall (broken spatial parity, like δ⁽²⁾).
+
+    Phase 6n.α (G2 Resurgence) Stage 1 prerequisite — provides the order-4
+    coefficient sequence that the resurgence ratio test (DR §3 caveat-2)
+    needs to distinguish factorial vs geometric divergence in the SK-EFT
+    gradient expansion.
+
+    Lean: SKEFTHawking.HigherOrderSK.fourth_order_count_eq_3 (Phase 6n.α — pending)
+    Aristotle: pending
+    Source: Phase 6n.α Stage 1 deliverable; CGL Z₂ FDR + count(N) = ⌊(N+1)/2⌋+1 enumeration
+
+    Args:
+        k: wavenumber [m⁻¹]
+        omega: frequency [s⁻¹]
+        c_s: speed of sound [m/s]
+        gamma_4_1, gamma_4_2, gamma_4_3: fourth-order transport coefficients [m⁵/s]
+        kappa: surface gravity [s⁻¹]
+
+    Returns:
+        δ⁽⁴⁾(ω) (dimensionless)
+    """
+    Gamma_4 = (gamma_4_1 * k**5 +
+               gamma_4_2 * (omega**2 * k**3 / c_s**2) +
+               gamma_4_3 * (omega**4 * k / c_s**4))
+    return Gamma_4 / kappa
+
+
+def fifth_order_correction(k, omega, c_s,
+                           gamma_5_1, gamma_5_2, gamma_5_3, gamma_5_4,
+                           kappa):
+    """
+    Fifth-order dissipative correction to T_eff.
+
+    δ⁽⁵⁾(ω) = [γ_{5,1}·k⁶ + γ_{5,2}·ω²·k⁴/c_s² + γ_{5,3}·ω⁴·k²/c_s⁴
+              + γ_{5,4}·ω⁶/c_s⁶] / κ
+
+    SK-EFT order 5 has count(5) = ⌊6/2⌋+1 = 4 free transport coefficients.
+    The 4 m-even monomials at derivative level 6 are:
+      (m, n_x) = (0, 6), (2, 4), (4, 2), (6, 0)
+    All terms are even in k overall (parity-preserving, like δ⁽³⁾).
+
+    Phase 6n.α (G2 Resurgence) Stage 1 prerequisite.
+
+    Lean: SKEFTHawking.HigherOrderSK.fifth_order_count_eq_4 (Phase 6n.α — pending)
+    Aristotle: pending
+    Source: Phase 6n.α Stage 1 deliverable; CGL Z₂ FDR enumeration
+
+    Args:
+        k, omega, c_s, kappa: as above
+        gamma_5_1..gamma_5_4: fifth-order transport coefficients [m⁶/s]
+
+    Returns:
+        δ⁽⁵⁾(ω) (dimensionless)
+    """
+    Gamma_5 = (gamma_5_1 * k**6 +
+               gamma_5_2 * (omega**2 * k**4 / c_s**2) +
+               gamma_5_3 * (omega**4 * k**2 / c_s**4) +
+               gamma_5_4 * (omega**6 / c_s**6))
+    return Gamma_5 / kappa
+
+
+def sixth_order_correction(k, omega, c_s,
+                           gamma_6_1, gamma_6_2, gamma_6_3, gamma_6_4,
+                           kappa):
+    """
+    Sixth-order dissipative correction to T_eff.
+
+    δ⁽⁶⁾(ω) = [γ_{6,1}·k⁷ + γ_{6,2}·ω²·k⁵/c_s² + γ_{6,3}·ω⁴·k³/c_s⁴
+              + γ_{6,4}·ω⁶·k/c_s⁶] / κ
+
+    SK-EFT order 6 has count(6) = ⌊7/2⌋+1 = 4 free transport coefficients.
+    The 4 m-even monomials at derivative level 7 are:
+      (m, n_x) = (0, 7), (2, 5), (4, 3), (6, 1)
+    All terms are odd in k overall (broken spatial parity).
+
+    Phase 6n.α (G2 Resurgence) Stage 1 prerequisite.
+
+    Lean: SKEFTHawking.HigherOrderSK.sixth_order_count_eq_4 (Phase 6n.α — pending)
+    Aristotle: pending
+    Source: Phase 6n.α Stage 1 deliverable; CGL Z₂ FDR enumeration
+
+    Args:
+        k, omega, c_s, kappa: as above
+        gamma_6_1..gamma_6_4: sixth-order transport coefficients [m⁷/s]
+
+    Returns:
+        δ⁽⁶⁾(ω) (dimensionless)
+    """
+    Gamma_6 = (gamma_6_1 * k**7 +
+               gamma_6_2 * (omega**2 * k**5 / c_s**2) +
+               gamma_6_3 * (omega**4 * k**3 / c_s**4) +
+               gamma_6_4 * (omega**6 * k / c_s**6))
+    return Gamma_6 / kappa
+
+
+def seventh_order_correction(k, omega, c_s,
+                             gamma_7_1, gamma_7_2, gamma_7_3,
+                             gamma_7_4, gamma_7_5,
+                             kappa):
+    """
+    Seventh-order dissipative correction to T_eff.
+
+    δ⁽⁷⁾(ω) = [γ_{7,1}·k⁸ + γ_{7,2}·ω²·k⁶/c_s² + γ_{7,3}·ω⁴·k⁴/c_s⁴
+              + γ_{7,4}·ω⁶·k²/c_s⁶ + γ_{7,5}·ω⁸/c_s⁸] / κ
+
+    SK-EFT order 7 has count(7) = ⌊8/2⌋+1 = 5 free transport coefficients.
+    The 5 m-even monomials at derivative level 8 are:
+      (m, n_x) = (0, 8), (2, 6), (4, 4), (6, 2), (8, 0)
+    All terms are even in k overall (parity-preserving).
+
+    Phase 6n.α (G2 Resurgence) Stage 1 prerequisite — provides the
+    seventh-order coefficient sequence that, combined with orders 0–6,
+    enables an N=8 ratio test (well within the Mera-Pedersen-Nikolić
+    PRL 115 (2015) 143001 5-coefficient regime for percent-level
+    Padé–Borel reconstruction of the Borel action A).
+
+    Lean: SKEFTHawking.HigherOrderSK.seventh_order_count_eq_5 (Phase 6n.α — pending)
+    Aristotle: pending
+    Source: Phase 6n.α Stage 1 deliverable; CGL Z₂ FDR enumeration
+
+    Args:
+        k, omega, c_s, kappa: as above
+        gamma_7_1..gamma_7_5: seventh-order transport coefficients [m⁸/s]
+
+    Returns:
+        δ⁽⁷⁾(ω) (dimensionless)
+    """
+    Gamma_7 = (gamma_7_1 * k**8 +
+               gamma_7_2 * (omega**2 * k**6 / c_s**2) +
+               gamma_7_3 * (omega**4 * k**4 / c_s**4) +
+               gamma_7_4 * (omega**6 * k**2 / c_s**6) +
+               gamma_7_5 * (omega**8 / c_s**8))
+    return Gamma_7 / kappa
+
+
 def effective_temperature_ratio(omega, c_s, kappa, D,
                                  gamma_1, gamma_2,
                                  gamma_2_1=0.0, gamma_2_2=0.0):
