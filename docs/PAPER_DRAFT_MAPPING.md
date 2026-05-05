@@ -2,7 +2,7 @@
 
 **Companion document to** `PAPER_STRATEGY.md`.
 
-**Purpose:** Explicit per-draft assignment from the 32+ existing drafts in `papers/paperN_*/` to the 13 publication targets defined in the new strategy (1 flagship + 5 Tier 1 deep + 3 Tier 2 PRL + 2 Tier 3 infrastructure + 2 Tier 4 experimental).
+**Purpose:** Explicit per-draft assignment from the 32+ existing drafts in `papers/paperN_*/` to the 14 publication targets defined in the new strategy (1 flagship + 5 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure + 2 Tier 4 experimental). Bundle architecture went 13 → 14 in Phase 6n Session 4 with I3 ("Verified Stochastic Calculus for Mathlib4"; Pipeline Invariant #14 user-auth granted 2026-05-04).
 
 **Created:** 2026-04-28.
 

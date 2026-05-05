@@ -271,6 +271,39 @@ lean-tensor-categories.
 **Stage-13 profile:** software paper style; each function must trace
 to a passing test.
 
+### I3. Verified Stochastic Calculus for Mathlib4
+
+**Sources:** Phase 6o.ζ Lean module synthesis (no per-paper substrate;
+analogous to I2's lean-tensor-categories framing). See
+`temporary/working-docs/phase6n/i3_bundle_scoping.md` for the bundle
+scoping document.
+
+**Anchors:**
+
+1. **First-of-its-kind formalization claims.** Each "first
+   formalization in any proof assistant" claim (stochastic integral,
+   quadratic variation, Itô's lemma, Novikov, Cramér, Sanov, Varadhan)
+   must be supported by a literature search showing no prior
+   Lean/Coq/Isabelle/HOL Light/Mizar formalization exists.
+2. **Mathlib substrate consumed.** Claims about consuming Brownian
+   motion (Degenne et al. arXiv:2511.20118), Doob martingales
+   (Ying-Degenne 2022), Markov kernels (Marion 2025), sub-Gaussian
+   variables, must trace to the named upstream Mathlib commits.
+3. **Reproducibility.** Each Lean module must build (no sorry, except
+   documented stubs registered in `SORRY_GAPS`); the Mathlib upstream
+   coordination memo's PR list must be live and cite-able.
+4. **`LDPCompatibleSKEFT` typeclass cross-bridge.** Claims about D3 /
+   D5 / E1 downstream consumers must trace to specific Lean theorems
+   in those modules that explicitly invoke the typeclass.
+5. **Mathlib upstream coordination integrity.** Claims about
+   coordination with Degenne / Marion must trace to actual Zulip /
+   GitHub coordination artifacts (not unilateral assertions).
+
+**Stage-13 profile:** software/methodology paper style (Tier 3 — same
+profile as I1 / I2). Each first-of-its-kind claim must trace to a
+reproducible Aristotle run ID OR commit-pinned counterexample where
+applicable.
+
 ---
 
 ## Tier 4 — Experimental letters

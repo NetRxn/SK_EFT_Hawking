@@ -48,7 +48,7 @@ _TIER_OF = {
     "F": 0,
     "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1,
     "L1": 2, "L2": 2, "L3": 2,
-    "I1": 3, "I2": 3,
+    "I1": 3, "I2": 3, "I3": 3,
     "E1": 4, "E2": 4,
 }
 
@@ -64,6 +64,7 @@ _BUNDLE_TITLES = {
     "L3": "BCH four laws by regime",
     "I1": "Verification methodology with worked cases",
     "I2": "Verified statistical estimators + lean-tensor-categories",
+    "I3": "Verified Stochastic Calculus for Mathlib4 — Stochastic Integral, Quadratic Variation, Itô's Lemma, and Large-Deviation Foundations",
     "E1": "Paris-LKB polariton letter",
     "E2": "Dean-Kim-Lucas graphene letter",
 }
@@ -80,17 +81,19 @@ _BUNDLE_TARGET_JOURNAL = {
     "L3": "PRL",
     "I1": "CPC | Phys. Rep.",
     "I2": "JOSS",
+    "I3": "JOSS | CPC",
     "E1": "PRL | PRR",
     "E2": "PRL | PRR",
 }
 
 # Bundle-target → sub-phase scheduled (per Phase7_Roadmap.md). I1+I2 in 7a;
 # D5+L1+L3 in 7b; D3 in 7c; D2+L2 in 7d; D1+E1+E2 in 7e; D4 in 7f; F in 7g.
+# I3 in Phase 6o.ζ (community Mathlib4 contribution; out-of-band of the Phase 7 sub-phase ladder).
 _BUNDLE_SUBPHASE = {
     "F": "7g",
     "D1": "7e", "D2": "7d", "D3": "7c", "D4": "7f", "D5": "7b",
     "L1": "7b", "L2": "7d", "L3": "7b",
-    "I1": "7a", "I2": "7a",
+    "I1": "7a", "I2": "7a", "I3": "6o.zeta",
     "E1": "7e", "E2": "7e",
 }
 

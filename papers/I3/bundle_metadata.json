@@ -1,0 +1,23 @@
+{
+  "bundle_target": "I3",
+  "tier": 3,
+  "title": "Verified Stochastic Calculus for Mathlib4 — Stochastic Integral, Quadratic Variation, Itô's Lemma, and Large-Deviation Foundations",
+  "target_journal": "JOSS | CPC",
+  "phase7_subphase": "6o.zeta",
+  "stage9_status": "pending",
+  "stage10_status": "pending",
+  "stage13_status": "pending",
+  "stage13_redo_required": false,
+  "freshness_stale": false,
+  "source_manifest_last_regen": "2026-05-04T20:00:00Z",
+  "last_lift": null,
+  "last_stage9_review": null,
+  "last_stage10_review": null,
+  "last_stage13_review": null,
+  "blockers_open": 0,
+  "advisories_open": 0,
+  "stage13_review_doc": null,
+  "audit_log_path": "papers/I3/audit_log.jsonl",
+  "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
+  "notes": "Pipeline Invariant #14 user-auth granted 2026-05-04 (Phase 6n Session 4); scoping document at temporary/working-docs/phase6n/i3_bundle_scoping.md. Lean-only synthesis bundle (no per-paper source). Phase 6o.zeta-tagged because the Mathlib4 community-contribution timeline is out-of-band of the Phase 7 sub-phase ladder."
+}

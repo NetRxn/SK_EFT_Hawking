@@ -34,7 +34,7 @@ _TIER_OF = {
     "F": 0,
     "D1": 1, "D2": 1, "D3": 1, "D4": 1, "D5": 1,
     "L1": 2, "L2": 2, "L3": 2,
-    "I1": 3, "I2": 3,
+    "I1": 3, "I2": 3, "I3": 3,
     "E1": 4, "E2": 4,
 }
 
@@ -50,6 +50,7 @@ _BUNDLE_TITLES = {
     "L3": "BCH four laws by regime",
     "I1": "Verification methodology with worked cases",
     "I2": "Verified statistical estimators + lean-tensor-categories",
+    "I3": "Verified Stochastic Calculus for Mathlib4",
     "E1": "Paris-LKB polariton letter",
     "E2": "Dean-Kim-Lucas graphene letter",
 }

@@ -24,7 +24,7 @@ The paper strategy below is designed to fix all three.
 
 ## 2. Architecture — four-tier, falsifiability-led
 
-The new structure is **eleven publication targets**, organized as one flagship + five themed deep papers + three PRL-style headline letters + two infrastructure papers + two experimental letters. This is roughly a 3:1 collapse from the thirty-two drafts. Every existing draft maps cleanly into one of the eleven targets (see `PAPER_DRAFT_MAPPING.md`).
+The new structure is **fourteen publication targets**, organized as one flagship + five themed deep papers + three PRL-style headline letters + three infrastructure papers + two experimental letters. This is roughly a 2.3:1 collapse from the thirty-two drafts. Every existing draft maps cleanly into one of the fourteen targets (see `PAPER_DRAFT_MAPPING.md`). (Bundle architecture went 13 → 14 in Phase 6n Session 4 with the I3 authorization for "Verified Stochastic Calculus for Mathlib4"; original v1 figure of "eleven" headline drift was a long-standing miscount that this revision corrects in the same pass.)
 
 Three principles drive the architecture:
 
@@ -161,7 +161,7 @@ Why it ships early: Paper 27 is already submission-ready (cleared a 4-pass Stage
 
 Source: Paper 27 + Phase 6a Wave 5 material.
 
-### 2.4 Tier 3 — infrastructure papers (2 papers)
+### 2.4 Tier 3 — infrastructure papers (3 papers)
 
 **Paper I1: Formal Verification at Scale in Theoretical Physics — A Methodology with Worked Cases**
 
@@ -182,6 +182,16 @@ Audience: lattice physics, formal-verification community, mathematical-physics r
 Content: First verified jackknife and autocorrelation estimators (with the jackknife-variance-non-negative theorem); the 114-theorem lean-tensor-categories library covering the categorical hierarchy (Pivotal → Spherical → Balanced → Ribbon → Semisimple → Fusion → Modular), Hopf-algebra extensions (QuasitriangularBialgebra, RibbonHopfAlgebra), decidable algebraic number fields (Q(√2), Q(√5), Q(ζ₅), Q(ζ₁₆), Q(ζ₅) extensions, ComputableAdjoinRoot), and concrete instances (SU(2)_k fusion at k=1..5, Ising MTC, Fibonacci MTC, SU(3)_k k=1, 2). Mathlib upstream coordination memo. Reusable for any project needing verified MTC infrastructure (downstream: TPF construction, fault-tolerant-quantum-computing certification, anyonic-gate verification, conformal-field-theory partition functions).
 
 Source: Phase 5c VerifiedJackknife + Phase 5o Wave 5 lean-tensor-categories work.
+
+**Paper I3: Verified Stochastic Calculus for Mathlib4 — Stochastic Integral, Quadratic Variation, Itô's Lemma, and Large-Deviation Foundations**
+
+Target: *Journal of Open Source Software* (primary) or *Computer Physics Communications* (fallback); tertiary fallback is upstream Mathlib4 PR series + community blog post.
+
+Audience: the Mathlib probability working group (Degenne / Marion / Ledvinka / Pfaffelhuber); formal-verification community (Lean / ITP / CPP / FSCD); mathematical-probability-meets-formalization readers; the program's downstream physics consumers (D3 / D5 / E1) that will invoke the `LDPCompatibleSKEFT` typeclass.
+
+Content: First formalization in any proof assistant of (i) the stochastic integral against semi-martingales (`StochasticIntegral`, `ItoIsometry`); (ii) quadratic variation and covariation (`QuadraticVariation`, `Semimartingale`); (iii) Itô's lemma for vector semimartingales (`ItoLemma`); (iv) Novikov's condition and Girsanov sketch (`Novikov`); (v) the foundational large-deviation framework — Cramér-iid + Sanov via method-of-types + contraction principle (`CramerIID`, `Sanov`, `Contraction`); (vi) Cramér lower bound via Esscher tilting + Varadhan-style upper bound (`CramerLowerBound`, `Varadhan`); plus (vii) the `LDPCompatibleSKEFT` typeclass that surfaces LDP-rate-function content in the program's existing SK-EFT Glorioso-Liu monotonicity statements (cross-bridge to D3 / D5 / E1). Companion Mathlib upstream coordination memo documents PR cadence and the Degenne / Marion coordination plan. Builds on the recently-completed Mathlib Brownian-motion (Degenne et al. arXiv:2511.20118), Doob martingales (Ying–Degenne 2022), and Markov kernels (Marion arXiv:2510.04070) substrates; closes the four-to-five-module gap (stochastic integral / semimartingale / Itô / Novikov / Stratonovich) those substrates leave.
+
+Source: Phase 6n Session 4 I3 bundle authorization (Pipeline Invariant #14) + Phase 6o.ζ Lean module synthesis (no per-paper substrate; analogous to I2's lean-tensor-categories framing). Source manifest at `temporary/working-docs/phase6n/i3_bundle_scoping.md`.
 
 ### 2.5 Tier 4 — experimental letters (2 papers)
 

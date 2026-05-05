@@ -204,7 +204,7 @@ _VALID_BUNDLE_TARGETS = {
     'F',                                # Tier 0 flagship review
     'D1', 'D2', 'D3', 'D4', 'D5',       # Tier 1 deep papers
     'L1', 'L2', 'L3',                   # Tier 2 PRL splashes
-    'I1', 'I2',                         # Tier 3 infrastructure
+    'I1', 'I2', 'I3',                   # Tier 3 infrastructure (I3 added Phase 6n.4 / Phase 6o.ζ — Verified Stochastic Calculus for Mathlib4)
     'E1', 'E2',                         # Tier 4 experimental letters
 }
 # Lift-action enum per docs/PAPER_DRAFT_MAPPING.md conventions table.
