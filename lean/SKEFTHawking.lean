@@ -187,6 +187,14 @@ import SKEFTHawking.SymTFTAudit.WittClass
 -- Deligne tensor product as group operation in 5.10, DMNO theorem on
 -- pseudo-unitary subclass in 5.11).
 import SKEFTHawking.SymTFTAudit.DrinfeldCenter
+-- Phase 6n Wave 1b.5.11 (Session 17, 2026-05-05): pseudo-unitary substrate +
+-- DMNO 2010 Theorem 5.2 discharge restricted to the pseudo-unitary subclass.
+-- `IsPseudoUnitary` predicate at category level + concrete trivial witness;
+-- `S² = I` substantive consequence of unitarity + symmetry; restricted
+-- hypothesis schema `CentralChargePreservesDrinfeldCenter_pseudoUnitary` with
+-- weakening cross-bridges to/from the unrestricted Wave 1b.5.9 form; cross-
+-- bridge to integer-mod-24 `WittClass.mk` quotient; closure summary.
+import SKEFTHawking.SymTFTAudit.PseudoUnitary
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
