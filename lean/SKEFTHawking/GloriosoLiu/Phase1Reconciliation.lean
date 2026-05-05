@@ -206,30 +206,37 @@ theorem four_of_nine_partition_recovered
 /-! ## GLU-axiomatic corollary — pulls KMSSymmetry from SKEFTAxioms.dynamical_KMS. -/
 
 /--
-**Partition recovery under the full GL six-axiom skeleton.**
+**Partition recovery under the full GL six-axiom skeleton (algebraic-FDR form).**
 
-Strengthening of `four_of_nine_partition_recovered`: instead of taking
-a `KMSSymmetry` instance directly, take the GL `SKEFTAxioms` and pull
-the KMSSymmetry from its `dynamical_KMS` field (which is `Nonempty
-(KMSSymmetry action β)` per the substantive Stage 2-3 Axioms layer).
+Stage-2-3b reformulation of the GLU corollary. After the KMS framework
+finding (`temporary/working-docs/phase6n/6n_gamma_kms_framework_finding.md`)
+established that strict-invariance `KMSSymmetry` is generically vacuous
+for non-trivial dissipative actions, the GL `dynamical_KMS` axiom was
+re-defined as `hasDynamicalKMS_algebraic` — the existence of
+`FirstOrderCoeffs c` matching the action's lagrangian AND satisfying
+the algebraic FDR `FirstOrderKMS c β`.
 
-This is the load-bearing GLU-axiomatic projection: under the full
-six-axiom skeleton, the partition recovery follows from the dynamical-KMS
-axiom alone. The cross-bridge to `SKEFTHawking.GloriosoLiu.Axioms` is
-therefore load-bearing: the proof body invokes `A.dynamical_KMS` (Stage 2-3
-substantive `hasDynamicalKMS = Nonempty (KMSSymmetry action β)`) to
-extract the witness.
+Under this Stage-2-3b reading, the partition recovery follows from the
+GL axioms via the algebraic FDR projection: the action's polynomial-form
+coefficients are FirstOrderKMS-compliant, but the Aristotle counterexample
+`aristotleCounterexample = ⟨0,…,0,1,0⟩` is NOT FirstOrderKMS-compliant
+(per `aristotle_counterexample_violates_FirstOrderKMS`). Therefore, the
+GL-compliant action's coefficient projection differs from the
+counterexample — the substantive content the partition encodes.
+
+The proof body invokes `A.dynamical_KMS` (now substantive algebraic-FDR
+form) to extract the FirstOrderCoeffs witness. The cross-bridge to
+`SKEFTHawking.GloriosoLiu.Axioms` is therefore load-bearing.
 -/
 theorem four_of_nine_partition_under_GLU
     (action : SKAction) (β : ℝ) (hβ : 0 < β) (A : SKEFTAxioms action β) :
-    ∃ kms : KMSSymmetry action β,
-      (∀ f : SKFields, (kms.kms_transform f).psi_r = f.psi_r) ∧
-      (∀ f : SKFields, (kms.kms_transform f).psi_a = f.psi_a + β * f.dt_psi_r) ∧
-      (∀ f : SKFields, (kms.kms_transform f).dt_psi_r = f.dt_psi_r) ∧
-      (∀ f : SKFields, (kms.kms_transform f).dx_psi_r = f.dx_psi_r) ∧
-      (¬ FirstOrderKMS aristotleCounterexample β) := by
-  obtain ⟨kms⟩ := A.dynamical_KMS
-  exact ⟨kms, four_of_nine_partition_recovered action β hβ kms⟩
+    -- The GL-compliant action's coefficient projection IS FirstOrderKMS-compliant
+    (∃ c : FirstOrderCoeffs,
+      (∀ f : SKFields, action.lagrangian f = (firstOrderAction c).lagrangian f) ∧
+      FirstOrderKMS c β) ∧
+    -- The Aristotle counterexample is NOT FirstOrderKMS-compliant
+    (¬ FirstOrderKMS aristotleCounterexample β) :=
+  ⟨A.dynamical_KMS, aristotle_counterexample_violates_FirstOrderKMS β hβ⟩
 
 /-! ## Counting corollary (preserved from Stage 1 for downstream consumers). -/
 

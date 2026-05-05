@@ -75,22 +75,69 @@ def hasReflectionPositivity (action : SKAction) : Prop :=
     the data type. -/
 def hasHermiticity (_action : SKAction) : Prop := True
 
-/-- **Dynamical KMS Z₂ symmetry (KMS-dyn)**: there exists a
-    `SKDoubling.KMSSymmetry` instance for this action at inverse
-    temperature β. The hard kernel; carries the Jain–Kovtun
-    UV-realization ambiguity (typeclass-parameterized in `DynamicalKMS.lean`). -/
-def hasDynamicalKMS (action : SKAction) (β : ℝ) : Prop :=
+/-- **Dynamical KMS Z₂ symmetry — strict-invariance form (KMS-dyn-strict)**:
+    there exists a `SKDoubling.KMSSymmetry` instance for this action at
+    inverse temperature β. **This form is generically vacuous for non-trivial
+    dissipative actions** — the canonical KMS shift `ψ_a → ψ_a + β·∂_t ψ_r`
+    generates new monomials whose only cancellation requires either the
+    dissipative coefficients to vanish (degenerate) or a "modulo total
+    derivatives" weakening that strict-invariance doesn't capture. See
+    `temporary/working-docs/phase6n/6n_gamma_kms_framework_finding.md`
+    for the full analysis.
+
+    Kept here as a sanity primitive (e.g., for the zero-action witness),
+    but **not** used as the substantive `SKEFTAxioms.dynamical_KMS` field —
+    that role is taken by `hasDynamicalKMS_algebraic` below. -/
+def hasDynamicalKMS_strict (action : SKAction) (β : ℝ) : Prop :=
   Nonempty (KMSSymmetry action β)
+
+/-- **Dynamical KMS Z₂ symmetry — algebraic-FDR form (KMS-dyn-algebraic)**:
+    there exist `SKDoubling.FirstOrderCoeffs` whose `firstOrderAction`
+    reproduces this action's Lagrangian AND which satisfy the algebraic
+    fluctuation–dissipation relations of `SKDoubling.FirstOrderKMS`
+    (the strengthened axiom from Phase 1 Aristotle run 270e77a0).
+
+    This is the **substantive** form of dynamical-KMS for SK-EFT: it is
+    non-vacuous for `firstOrderDissipativeAction(coeffs, β)` whenever the
+    coefficients map to FDR-correct polynomial coefficients (see
+    `SKEFTAxioms_for_dissipative` below for the explicit construction).
+    It captures what the KMSSymmetry strict-invariance form cannot: the
+    coefficient relations $i_1 \cdot \beta = -r_2$, $i_2 \cdot \beta = r_1 + r_2$,
+    $r_3 = r_4 = r_5 = r_6 = i_3 = 0$ that the canonical KMS shift mandates
+    on FirstOrderCoeffs at first derivative order. -/
+def hasDynamicalKMS_algebraic (action : SKAction) (β : ℝ) : Prop :=
+  ∃ c : FirstOrderCoeffs,
+    (∀ f : SKFields, action.lagrangian f = (firstOrderAction c).lagrangian f) ∧
+    FirstOrderKMS c β
+
+/-- Backward-compat alias: `hasDynamicalKMS` defaults to the algebraic-FDR
+    form (the substantive one) per the Stage 2-3b finding. Existing references
+    in other GloriosoLiu modules continue to work. -/
+def hasDynamicalKMS (action : SKAction) (β : ℝ) : Prop :=
+  hasDynamicalKMS_algebraic action β
 
 /-- **Local equilibrium / hydrodynamic mode content (LE) — first-order layer**:
     the action is in the polynomial hydrodynamic-mode form at first order,
     i.e., there exist `FirstOrderCoeffs` whose `firstOrderAction` reproduces
     this action's Lagrangian on every `SKFields` configuration. (Higher
     orders extend via `FullSecondOrderCoeffs` etc.; deferred to Stage 2-3b
-    on the LE axiom front.) -/
+    on the LE axiom front.)
+
+    Note: the algebraic-FDR `hasDynamicalKMS_algebraic` already implies
+    `hasLocalEquilibrium` (the algebraic form bundles a polynomial-form
+    witness alongside the FDR constraint). The two predicates are kept
+    distinct because the GL physics literature treats LE and dynamical-KMS
+    as separate axioms with distinct semantic content. -/
 def hasLocalEquilibrium (action : SKAction) : Prop :=
   ∃ c : FirstOrderCoeffs,
     ∀ f : SKFields, action.lagrangian f = (firstOrderAction c).lagrangian f
+
+/-- The algebraic-FDR KMS implies LE (drops the FirstOrderKMS conjunct). -/
+theorem hasDynamicalKMS_algebraic_implies_hasLocalEquilibrium
+    {action : SKAction} {β : ℝ} (h : hasDynamicalKMS_algebraic action β) :
+    hasLocalEquilibrium action := by
+  obtain ⟨c, hL, _⟩ := h
+  exact ⟨c, hL⟩
 
 /-! ## The six-axiom skeleton structure. -/
 
@@ -155,15 +202,16 @@ witnesses:
   - `ctp_structure` / `hermiticity`: trivial (structural).
   - `largest_time`: zero Lagrangian satisfies normalization for any inputs.
   - `reflection_pos`: 0 ≥ 0 pointwise.
-  - `dynamical_KMS`: provided by `kmsForZeroAction β` — the canonical
-    KMS transform leaves the zero action invariant.
-  - `local_equilibrium`: provided by the all-zero `FirstOrderCoeffs`,
-    whose `firstOrderAction` is also identically (0, 0).
+  - `dynamical_KMS`: algebraic-FDR form. Witness = all-zero FirstOrderCoeffs;
+    polynomial-form clause matches zeroAction (both ≡ (0,0)); FirstOrderKMS
+    holds trivially on all-zero coeffs (every relation collapses to 0 = 0).
+  - `local_equilibrium`: same all-zero FirstOrderCoeffs witness.
 
-This is the substantive Stage-2-3 well-posedness proof: not only does
-SKEFTAxioms have a Nonempty instance, but the witness uses real
-SKDoubling structures (KMSSymmetry, FirstOrderCoeffs, satisfies_*).
--/
+This is the substantive Stage-2-3b well-posedness proof: SKEFTAxioms has
+a Nonempty instance, the witness uses real SKDoubling structures
+(FirstOrderCoeffs, firstOrderAction, FirstOrderKMS, satisfies_*), and
+`dynamical_KMS` is the substantive algebraic-FDR form (not the
+generically-vacuous strict-invariance form). -/
 theorem SKEFTAxioms_zero_action (β : ℝ) :
     Nonempty (SKEFTAxioms zeroAction β) := by
   refine ⟨{
@@ -171,15 +219,73 @@ theorem SKEFTAxioms_zero_action (β : ℝ) :
     largest_time := ?_,
     reflection_pos := ?_,
     hermiticity := trivial,
-    dynamical_KMS := ⟨kmsForZeroAction β⟩,
+    dynamical_KMS := ?_,
     local_equilibrium := ?_ }⟩
   · -- largest_time: zeroAction.lagrangian _ = (0, 0) regardless of normalization conditions
     intro f _ _ _; rfl
   · -- reflection_pos: (zeroAction.lagrangian f).2 = 0 ≥ 0
     intro _; exact le_refl 0
+  · -- dynamical_KMS_algebraic: ⟨0,...,0⟩ FirstOrderCoeffs matches zeroAction + satisfies FirstOrderKMS
+    refine ⟨⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩, ?_, ?_⟩
+    · intro f; simp [zeroAction, firstOrderAction]
+    · refine { r3_zero := rfl, r4_zero := rfl, r5_zero := rfl, r6_zero := rfl,
+               fdr_i1 := ?_, fdr_i2 := ?_, i3_zero := rfl }
+      · simp -- 0 * β = -0
+      · simp -- 0 * β = 0 + 0
   · -- local_equilibrium: ⟨0,...,0⟩ : FirstOrderCoeffs has firstOrderAction = zero
     refine ⟨⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩, ?_⟩
     intro f
     simp [zeroAction, firstOrderAction]
+
+/-! ## Substantive non-trivial existence witness — `firstOrderDissipativeAction`. -/
+
+/-- **The six-axiom skeleton is satisfied by `firstOrderDissipativeAction`
+    with non-negative dissipative coefficients and positive temperature.**
+
+This is the load-bearing Stage-2-3b non-trivial well-posedness theorem.
+Whereas `SKEFTAxioms_zero_action` shows GL axioms have a witness via the
+trivial degenerate action, this theorem shows the GL axioms have a
+substantive non-trivial witness — `firstOrderDissipativeAction(coeffs, β)`
+for any `coeffs : DissipativeCoeffs` (which already enforces `gamma_1 ≥ 0`,
+`gamma_2 ≥ 0`) and `0 < β`.
+
+The coefficient mapping (per `firstOrder_uniqueness` inverted):
+  $r_1 = \gamma_1 + \gamma_2$, $r_2 = -\gamma_1$, $r_3 = r_4 = r_5 = r_6 = 0$,
+  $i_1 = \gamma_1/\beta$, $i_2 = \gamma_2/\beta$, $i_3 = 0$.
+
+The FDR relations check out:
+  $i_1 \cdot \beta = \gamma_1 = -(-\gamma_1) = -r_2$ ✓
+  $i_2 \cdot \beta = \gamma_2 = (\gamma_1 + \gamma_2) - \gamma_1 = r_1 + r_2$ ✓
+
+This is the substantive reading of "GL axioms hold for the standard
+first-order dissipative SK-EFT action." -/
+theorem SKEFTAxioms_for_dissipative
+    (coeffs : DissipativeCoeffs) (β : ℝ) (hβ : 0 < β) :
+    Nonempty (SKEFTAxioms (firstOrderDissipativeAction coeffs β) β) := by
+  refine ⟨{
+    ctp_structure := trivial,
+    largest_time := firstOrder_normalization coeffs β,
+    reflection_pos := firstOrder_positivity coeffs β hβ,
+    hermiticity := trivial,
+    dynamical_KMS := ?_,
+    local_equilibrium := ?_ }⟩
+  · -- dynamical_KMS_algebraic: FirstOrderCoeffs match + FirstOrderKMS
+    refine ⟨⟨coeffs.gamma_1 + coeffs.gamma_2, -coeffs.gamma_1, 0, 0, 0, 0,
+            coeffs.gamma_1 / β, coeffs.gamma_2 / β, 0⟩, ?_, ?_⟩
+    · intro f
+      simp [firstOrderDissipativeAction, firstOrderAction]
+      ring
+    · refine { r3_zero := rfl, r4_zero := rfl, r5_zero := rfl, r6_zero := rfl,
+               fdr_i1 := ?_, fdr_i2 := ?_, i3_zero := rfl }
+      · -- (γ_1/β) * β = -(-γ_1) = γ_1
+        field_simp
+      · -- (γ_2/β) * β = (γ_1+γ_2) + (-γ_1) = γ_2
+        field_simp; ring
+  · -- local_equilibrium: same FirstOrderCoeffs match (drop the FDR clause)
+    refine ⟨⟨coeffs.gamma_1 + coeffs.gamma_2, -coeffs.gamma_1, 0, 0, 0, 0,
+            coeffs.gamma_1 / β, coeffs.gamma_2 / β, 0⟩, ?_⟩
+    intro f
+    simp [firstOrderDissipativeAction, firstOrderAction]
+    ring
 
 end SKEFTHawking.GloriosoLiu
