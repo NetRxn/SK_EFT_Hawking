@@ -1,9 +1,10 @@
 import SKEFTHawking.Basic
--- Phase 6n.γ Stage 1 — Glorioso-Liu axiomatic skeleton
--- Modules ship at trivial-discharge level; Stage 2-3 substantively
--- replaces placeholder definitions. I1 §3 prose update HELD per user
--- decision R1 (Phase 6n Session 4) until partition-recovery proves
--- non-vacuous (which requires Stage 2-3 unfolding the placeholders).
+-- Phase 6n.γ Stage 2-3 — Glorioso-Liu axiomatic skeleton
+-- (Phase 6n session 5: substantive Stage 2-3 refactor shipped — all 7
+-- modules now parameterized over SKDoubling.SKAction with substantive
+-- predicates and concrete zero-action existence witnesses.)
+-- Phase1Reconciliation: substantive partition recovery from KMSSymmetry
+-- (R1 hold LIFTED per session-5 commit `bbb34ce`).
 import SKEFTHawking.GloriosoLiu.Axioms
 import SKEFTHawking.GloriosoLiu.DynamicalKMS
 import SKEFTHawking.GloriosoLiu.LocalEquilibrium
@@ -12,6 +13,14 @@ import SKEFTHawking.GloriosoLiu.LocalSecondLaw
 import SKEFTHawking.GloriosoLiu.OnsagerReciprocity
 import SKEFTHawking.GloriosoLiu.FirstOrderProjection
 import SKEFTHawking.GloriosoLiu.Phase1Reconciliation
+-- Phase 6n.α Wave (G2 Resurgence) Stage 1 substrate (sub-wave 6n.α.4):
+-- Borel transform + Gevrey-1 predicate + Λ_UV-from-IR predictor + Stokes
+-- constant + non-perturbative-content existence theorem. Python-side
+-- numerical infrastructure at src/resurgence/borel.py (17 tests passing).
+import SKEFTHawking.Resurgence.Basic
+import SKEFTHawking.Resurgence.BorelAction
+import SKEFTHawking.Resurgence.StokesBound
+import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
 import SKEFTHawking.SecondOrderSK

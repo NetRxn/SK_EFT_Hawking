@@ -295,7 +295,7 @@ def fourth_order_correction(k, omega, c_s, gamma_4_1, gamma_4_2, gamma_4_3, kapp
     needs to distinguish factorial vs geometric divergence in the SK-EFT
     gradient expansion.
 
-    Lean: SKEFTHawking.HigherOrderSK.fourth_order_count_eq_3 (Phase 6n.α — pending)
+    Lean: SKEFTHawking.HigherOrderSK.fourth_order_count_eq_3 (Phase 6n.α.4)
     Aristotle: pending
     Source: Phase 6n.α Stage 1 deliverable; CGL Z₂ FDR + count(N) = ⌊(N+1)/2⌋+1 enumeration
 
@@ -331,7 +331,7 @@ def fifth_order_correction(k, omega, c_s,
 
     Phase 6n.α (G2 Resurgence) Stage 1 prerequisite.
 
-    Lean: SKEFTHawking.HigherOrderSK.fifth_order_count_eq_4 (Phase 6n.α — pending)
+    Lean: SKEFTHawking.HigherOrderSK.fifth_order_count_eq_4 (Phase 6n.α.4)
     Aristotle: pending
     Source: Phase 6n.α Stage 1 deliverable; CGL Z₂ FDR enumeration
 
@@ -365,7 +365,7 @@ def sixth_order_correction(k, omega, c_s,
 
     Phase 6n.α (G2 Resurgence) Stage 1 prerequisite.
 
-    Lean: SKEFTHawking.HigherOrderSK.sixth_order_count_eq_4 (Phase 6n.α — pending)
+    Lean: SKEFTHawking.HigherOrderSK.sixth_order_count_eq_4 (Phase 6n.α.4)
     Aristotle: pending
     Source: Phase 6n.α Stage 1 deliverable; CGL Z₂ FDR enumeration
 
@@ -404,7 +404,7 @@ def seventh_order_correction(k, omega, c_s,
     PRL 115 (2015) 143001 5-coefficient regime for percent-level
     Padé–Borel reconstruction of the Borel action A).
 
-    Lean: SKEFTHawking.HigherOrderSK.seventh_order_count_eq_5 (Phase 6n.α — pending)
+    Lean: SKEFTHawking.HigherOrderSK.seventh_order_count_eq_5 (Phase 6n.α.4)
     Aristotle: pending
     Source: Phase 6n.α Stage 1 deliverable; CGL Z₂ FDR enumeration
 
