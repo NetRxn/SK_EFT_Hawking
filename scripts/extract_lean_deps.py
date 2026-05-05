@@ -29,10 +29,21 @@ HASH_PATH = LEAN_ROOT / "lean_deps.json.hash"
 
 
 def compute_lean_hash() -> str:
-    """SHA-256 hash (16 hex chars) of all .lean source files."""
+    """SHA-256 hash (16 hex chars) of all .lean source files (recursive).
+
+    Uses ``rglob("*.lean")`` to walk every subdirectory under ``SKEFTHawking/``
+    so that changes inside namespace folders (e.g. ``GloriosoLiu/``,
+    ``CrooksAnalogHawking/``, ``QuantumCrooks/``, ``SymTFTAudit/``,
+    ``Resurgence/``) trigger re-extraction. The earlier non-recursive
+    ``glob`` missed sub-directory edits and let ``lean_deps.json`` go stale
+    silently — observed during Phase 6n session 7 when the new
+    ``CrooksAnalogHawking/SKEFTHorizonBridge.lean`` and modified
+    ``GloriosoLiu/{EntropyCurrent,OnsagerReciprocity}.lean`` did not refresh
+    counts because no top-level file changed.
+    """
     hasher = hashlib.sha256()
     if LEAN_DIR.is_dir():
-        for fp in sorted(LEAN_DIR.glob("*.lean")):
+        for fp in sorted(LEAN_DIR.rglob("*.lean")):
             hasher.update(fp.read_bytes())
     return hasher.hexdigest()[:16]
 

@@ -62,6 +62,15 @@ import SKEFTHawking.CrooksAnalogHawking.BiconditionalReformulation
 -- LDP rate function; monotonicity ↔ GC biconditional shipped at
 -- predicate-bundle level (compat_hyp precondition).
 import SKEFTHawking.CrooksAnalogHawking.AnalogHawkingBiconditional
+-- Phase 6n Wave 2d Stage 4 substantive substrate-level bridge: SKEFTAxioms
+-- (Wave 2a algebraic-FDR machinery) at horizon temperature β_H feeds the
+-- HorizonDetailedBalance predicate (Wave 2c) via load-bearing Noether
+-- entropy density extraction + reflection-positivity. Establishes the
+-- substrate-level (not Bool-projection) form of Sakharov ⇒ horizon-Crooks
+-- with FDR-pinned σ = β_H · W. Substrate concrete instances: ³He-A
+-- substantively Jacobson-consistent under any SKEFTAxioms; FLS BEC NOT
+-- (Sakharov-(ii) failure obstructs no matter the SKEFTAxioms).
+import SKEFTHawking.CrooksAnalogHawking.SKEFTHorizonBridge
 -- Phase 6n Wave 1b Stage 3 substrate: SymTFT applicability verdict +
 -- discrete-sector predicates. The Stage-2 audit verdict (PartiallyApplicable
 -- per direct primary-source fetch of arXiv:2507.05350, Schäfer-Nameki et al.)
