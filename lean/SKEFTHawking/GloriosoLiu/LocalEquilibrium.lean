@@ -2,15 +2,14 @@
 # Phase 6n.γ Wave (Glorioso–Liu axiomatic) — Module: LocalEquilibrium
 
 Local equilibrium / slow-mode infrastructure for the LE axiom of the
-GloriosoLiu six-axiom skeleton. The dynamical fields in the SK-EFT
-contour are slow modes associated to conserved currents; the LE
-predicate captures this hydrodynamic-mode-content requirement.
+GloriosoLiu six-axiom skeleton.
 
-**Stage 1 status.** Skeleton with sorry stubs. Stage 2-3 fills in the
-hydrodynamic-mode infrastructure (interfaces with the program's
-existing `SKDoubling`/`SecondOrderSK` machinery for the slow-mode
-content; Phase 6n Session 4 working doc identifies the specific
-interface points).
+**Stage 2-3 substantive form (Phase 6n session 5).** The placeholder
+`LocalEquilibriumAt (Φ : ContourField M) (pattern) := pattern.currentCount > 0`
+is superseded by parameterization over an actual `SKDoubling.SKAction`,
+with the LE predicate substantively tied to the polynomial-action shape
+via `hasLocalEquilibrium` (existence of `FirstOrderCoeffs` reproducing
+the action's Lagrangian).
 
 References:
 - Glorioso–Liu §II axiom (LE): arXiv:1612.07705
@@ -18,9 +17,12 @@ References:
 - Phase 6n DR §5 risk axis 3 (LE axiom too vague — predicate-design iteration)
 -/
 import SKEFTHawking.GloriosoLiu.Axioms
+import SKEFTHawking.SKDoubling
 import Mathlib.Tactic.Basic
 
 namespace SKEFTHawking.GloriosoLiu
+
+open SKEFTHawking.SKDoubling
 
 /-- The conservation pattern parameterizes the LE axiom. Different
 hydrodynamic theories (energy conservation only, energy+momentum,
@@ -29,7 +31,7 @@ inductive ConservationPattern
   | energy
   | energyMomentum
   | energyMomentumCharge
-  | custom (n : ℕ) -- n conserved currents
+  | custom (n : ℕ)
 
 /-- The conserved-current count for each pattern. -/
 def ConservationPattern.currentCount : ConservationPattern → ℕ
@@ -39,36 +41,33 @@ def ConservationPattern.currentCount : ConservationPattern → ℕ
   | .custom n => n
 
 /--
-**Local equilibrium predicate parameterized over conservation pattern.**
+**Local equilibrium predicate for a SKDoubling.SKAction at a given
+conservation pattern.**
 
-PROVIDED SOLUTION (Stage 2-3):
-Stage 2-3 unfolds to a substantive slow-mode predicate: the dynamical
-fields Φ are in 1-1 correspondence with the conserved currents of the
-pattern, and the EFT preserves the corresponding shift symmetries.
-For Stage 1, the predicate is a placeholder using the contour-field
-structure directly.
+Substantive content: (i) the action admits a polynomial first-order
+representation (via `hasLocalEquilibrium`); AND (ii) the conservation
+pattern carries at least one conserved current. Both clauses are
+load-bearing — (i) ties LE to the actual SKDoubling polynomial-action
+machinery, (ii) excludes the empty `custom 0` pattern.
 -/
-def LocalEquilibriumAt {M : SpacetimeManifold} (Φ : ContourField M)
-    (pattern : ConservationPattern) : Prop :=
-  pattern.currentCount > 0
+def LocalEquilibriumAt (action : SKAction) (pattern : ConservationPattern) : Prop :=
+  hasLocalEquilibrium action ∧ pattern.currentCount > 0
 
 /--
-**Local equilibrium is non-vacuous for any non-trivial conservation pattern.**
+**Local equilibrium holds for the zero action under any nontrivial pattern.**
 
-Stage 1 sanity check: every conservation pattern with at least one
-conserved current admits the local-equilibrium predicate. Stage 2-3
-strengthens to the substantive content (LE axiom forces the slow-mode
-identification).
-
-PROVIDED SOLUTION:
-By case analysis on `ConservationPattern` and unfolding `currentCount`.
-The `custom n` case requires `n > 0` as a hypothesis; for the named
-patterns it is automatic.
+Substantive existence theorem: the canonical zero-action witness from
+`Axioms.lean` admits LE for any conservation pattern with a nontrivial
+current count. Proof discharges the polynomial-form clause via the
+all-zero `FirstOrderCoeffs` witness (whose `firstOrderAction` is also
+identically (0, 0)) and the count clause via the hypothesis.
 -/
-theorem LocalEquilibrium_nonempty
-    (M : SpacetimeManifold) (Φ : ContourField M)
+theorem LocalEquilibrium_zero_action
     (pattern : ConservationPattern) (h : pattern.currentCount > 0) :
-    LocalEquilibriumAt Φ pattern :=
-  h
+    LocalEquilibriumAt zeroAction pattern := by
+  refine ⟨?_, h⟩
+  refine ⟨⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩, ?_⟩
+  intro f
+  simp [zeroAction, firstOrderAction]
 
 end SKEFTHawking.GloriosoLiu

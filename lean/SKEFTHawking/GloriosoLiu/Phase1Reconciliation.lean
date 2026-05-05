@@ -60,7 +60,6 @@ References:
   `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md`
 -/
 import SKEFTHawking.GloriosoLiu.Axioms
-import SKEFTHawking.GloriosoLiu.FirstOrderProjection
 import SKEFTHawking.SKDoubling
 import Mathlib.Tactic.Basic
 import Mathlib.Tactic.Linarith
@@ -203,6 +202,34 @@ theorem four_of_nine_partition_recovered
   · exact fun f => (kms.kms_transform_spec f).2.2.1
   · exact fun f => (kms.kms_transform_spec f).2.2.2
   · exact aristotle_counterexample_violates_FirstOrderKMS β hβ
+
+/-! ## GLU-axiomatic corollary — pulls KMSSymmetry from SKEFTAxioms.dynamical_KMS. -/
+
+/--
+**Partition recovery under the full GL six-axiom skeleton.**
+
+Strengthening of `four_of_nine_partition_recovered`: instead of taking
+a `KMSSymmetry` instance directly, take the GL `SKEFTAxioms` and pull
+the KMSSymmetry from its `dynamical_KMS` field (which is `Nonempty
+(KMSSymmetry action β)` per the substantive Stage 2-3 Axioms layer).
+
+This is the load-bearing GLU-axiomatic projection: under the full
+six-axiom skeleton, the partition recovery follows from the dynamical-KMS
+axiom alone. The cross-bridge to `SKEFTHawking.GloriosoLiu.Axioms` is
+therefore load-bearing: the proof body invokes `A.dynamical_KMS` (Stage 2-3
+substantive `hasDynamicalKMS = Nonempty (KMSSymmetry action β)`) to
+extract the witness.
+-/
+theorem four_of_nine_partition_under_GLU
+    (action : SKAction) (β : ℝ) (hβ : 0 < β) (A : SKEFTAxioms action β) :
+    ∃ kms : KMSSymmetry action β,
+      (∀ f : SKFields, (kms.kms_transform f).psi_r = f.psi_r) ∧
+      (∀ f : SKFields, (kms.kms_transform f).psi_a = f.psi_a + β * f.dt_psi_r) ∧
+      (∀ f : SKFields, (kms.kms_transform f).dt_psi_r = f.dt_psi_r) ∧
+      (∀ f : SKFields, (kms.kms_transform f).dx_psi_r = f.dx_psi_r) ∧
+      (¬ FirstOrderKMS aristotleCounterexample β) := by
+  obtain ⟨kms⟩ := A.dynamical_KMS
+  exact ⟨kms, four_of_nine_partition_recovered action β hβ kms⟩
 
 /-! ## Counting corollary (preserved from Stage 1 for downstream consumers). -/
 
