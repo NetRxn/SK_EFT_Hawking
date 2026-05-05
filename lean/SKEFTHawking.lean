@@ -64,6 +64,12 @@ import SKEFTHawking.CrooksAnalogHawking.BiconditionalReformulation
 -- (chiralCentralChargeMod24, Z16AnomalyEta, KMSParityAlternation).
 -- Continuous-sector candidates deferred to Phase 6o.
 import SKEFTHawking.SymTFTAudit.Applicability
+-- Phase 6n Wave 1b Stage 4 cross-bridges: predicate-level connections from
+-- the SymTFT discrete-sector candidate predicates to existing program
+-- threads (KMSParityAlternation ↔ SecondOrderSK.combined_positivity_constraint;
+-- Z16AnomalyEta ↔ Z16AnomalyForcesThetaBar.Z16AnomalyCancels).
+-- chiralCentralChargeMod24 cross-bridge deferred (requires Mathlib Witt-group).
+import SKEFTHawking.SymTFTAudit.CrossBridges
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
