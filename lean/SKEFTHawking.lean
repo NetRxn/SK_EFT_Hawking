@@ -32,6 +32,11 @@ import SKEFTHawking.QuantumCrooks.Aberg
 import SKEFTHawking.QuantumCrooks.KafriDeffner
 import SKEFTHawking.QuantumCrooks.Quasiprobability
 import SKEFTHawking.QuantumCrooks.PerarnauLlobet
+-- Phase 6n Wave 2b Stage 2-3 substantive lift: the canonical 2-level
+-- Perarnau-Llobet counterexample, made concrete. Specializes the parametric
+-- no-go to the substantive quantum no-go via direct Matrix (Fin 2) (Fin 2) ℝ
+-- computation + the disagreement witness `perarnau_h_disagree`.
+import SKEFTHawking.QuantumCrooks.Concrete
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
