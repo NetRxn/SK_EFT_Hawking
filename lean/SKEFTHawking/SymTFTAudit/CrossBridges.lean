@@ -58,6 +58,7 @@ References:
 - Phase 6n DR Wave 2c context scan (Session 6 explore-agent report)
 -/
 import SKEFTHawking.SymTFTAudit.Applicability
+import SKEFTHawking.SymTFTAudit.WittClass
 import SKEFTHawking.SecondOrderSK
 import SKEFTHawking.Z16AnomalyForcesThetaBar
 import SKEFTHawking.GenerationConstraint
@@ -240,5 +241,55 @@ theorem stage4_discrete_sector_bridges_partition (theta : ℝ) :
   ⟨KMSParityAlternation_bridges_to_SecondOrderSK,
    Z16AnomalyEta_bridges_to_Z16AnomalyCancels theta,
    chiralCentralCharge_bridges_to_GenerationConstraint⟩
+
+/-! ## Stage 5 (Session 10, 2026-05-05): Witt-class-grade partition. -/
+
+/--
+**Stage 5 closure: the Stage-4 partition LIFTED to Witt-invariant level
+on the third bridge.**
+
+Substantive Session 10 deliverable: combines the Stage-4 partition with
+the new `SymTFTAudit/WittClass.lean` infrastructure to ship the
+Witt-invariant-grade form of bridge 3. The previous Stage-4c bridge
+(`chiralCentralCharge_bridges_to_GenerationConstraint`) operated at the
+*integer-divisibility* level (`3 ∣ n ↔ 24 ∣ 8·n`); the Stage-5 form
+LIFTS this to the *abelian-group / Witt-invariant* level via the
+`WittInvariant.fromChiralCentralCharge : ℤ →+ ZMod 24` AddMonoidHom.
+
+The Stage-5 partition adds, for the third bridge:
+  - The Schellekens chain at Witt-invariant level
+    (`chiralCentralCharge_wittTrivial_iff_three_dvd_N_f`)
+  - The Standard-Model 3-generation Witt-trivial witness
+    (`standardModel_wittTrivial`: c₋ = 24 has trivial Witt invariant)
+  - The 1-generation and 2-generation explicit non-Witt-trivial
+    counterexamples
+
+This is the cleanest Lean-level statement of the Wave 1b cross-bridging
+deliverable at full Witt-class form. The Mathlib MTC + Witt-group
+infrastructure (a multi-year community project per Stage-1 §6) remains
+a Mathlib upstream-PR target; this project-local form captures the
+chiral-central-charge piece at exactly the level needed for the
+SymTFT-side `chiralCentralChargeMod24Compatible` predicate.
+
+P6 cross-module bridge: substantive (uses
+`stage4_discrete_sector_bridges_partition` from this module +
+`stage5_chiralCentralCharge_witt_bridge` from `WittClass.lean`). -/
+theorem stage5_witt_grade_partition (theta : ℝ) :
+    -- Stage-4 partition still holds (3 substantive bridges, predicate level)
+    ((KMSParityAlternationCompatible stage2Verdict ∧
+      (∀ (coeffs : CombinedDissipativeCoeffs) (beta : ℝ),
+        0 < beta →
+        satisfies_positivity_ext (combinedDissipativeAction coeffs beta) →
+        coeffs.gamma_2_1 + coeffs.gamma_2_2 = 0)) ∧
+     (Z16AnomalyEtaCompatible stage2Verdict ∧
+      Z16AnomalyCancels ⟨(16 : ZMod 16), theta⟩) ∧
+     (chiralCentralChargeMod24Compatible stage2Verdict ∧
+      (∀ n : ℕ, (3 ∣ n ↔ 24 ∣ (8 * n))))) ∧
+    -- Stage-5 lift: bridge 3 at Witt-invariant level
+    (chiralCentralChargeMod24Compatible stage2Verdict ∧
+      WittTrivial (8 * (3 : ℤ)) ∧
+      (∀ N_f : ℕ, WittTrivial (8 * (N_f : ℤ)) ↔ 3 ∣ N_f)) :=
+  ⟨stage4_discrete_sector_bridges_partition theta,
+   stage5_chiralCentralCharge_witt_bridge⟩
 
 end SKEFTHawking.SymTFTAudit

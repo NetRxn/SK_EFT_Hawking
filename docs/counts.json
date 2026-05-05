@@ -1,10 +1,10 @@
 {
-  "generated": "2026-05-05T09:41:55.834939",
+  "generated": "2026-05-05T10:20:50.418748",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 10713,
-    "theorems_total": 5402,
-    "theorems_substantive": 5377,
+    "total_declarations": 10762,
+    "theorems_total": 5433,
+    "theorems_substantive": 5408,
     "theorems_placeholder": 25,
     "axioms": 1,
     "axiom_names": [
@@ -12,7 +12,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 272,
+    "modules": 274,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -192,6 +192,7 @@
       "SKEFTHawking.QTheoryNoGoTheorem",
       "SKEFTHawking.QuantumCrooks.Aberg",
       "SKEFTHawking.QuantumCrooks.Concrete",
+      "SKEFTHawking.QuantumCrooks.ConcreteComplex",
       "SKEFTHawking.QuantumCrooks.KafriDeffner",
       "SKEFTHawking.QuantumCrooks.PerarnauLlobet",
       "SKEFTHawking.QuantumCrooks.Quasiprobability",
@@ -250,6 +251,7 @@
       "SKEFTHawking.SurgeryPresentation",
       "SKEFTHawking.SymTFTAudit.Applicability",
       "SKEFTHawking.SymTFTAudit.CrossBridges",
+      "SKEFTHawking.SymTFTAudit.WittClass",
       "SKEFTHawking.TPFDisentangler",
       "SKEFTHawking.TPFEvasion",
       "SKEFTHawking.TQFTPartition",
@@ -287,15 +289,15 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 4729,
+    "definitions": 4744,
     "structures": 234,
-    "instances": 267,
+    "instances": 270,
     "inductives": 80
   },
   "python": {
     "python_modules": 130,
     "test_files": 99,
-    "pytest_cases": 4124,
+    "pytest_cases": 4132,
     "notebooks": 87,
     "papers": 42,
     "figures": 154

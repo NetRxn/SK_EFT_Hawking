@@ -45,6 +45,12 @@ import SKEFTHawking.QuantumCrooks.PerarnauLlobet
 -- no-go to the substantive quantum no-go via direct Matrix (Fin 2) (Fin 2) ℝ
 -- computation + the disagreement witness `perarnau_h_disagree`.
 import SKEFTHawking.QuantumCrooks.Concrete
+-- Phase 6n Wave 2b Stage 2-3 ℂ-extension (Session 10, 2026-05-05):
+-- Matrix (Fin 2) (Fin 2) ℂ generalization of the canonical 2-level
+-- Perarnau-Llobet substrate. Includes σ_y (genuinely complex Hermitian
+-- Hamiltonian) as a non-trivial example, ℂ-form disagreement witness,
+-- ℂ-form quantum no-go theorem, and cross-bridge to the ℝ form.
+import SKEFTHawking.QuantumCrooks.ConcreteComplex
 -- Phase 6n Wave 2c (Crooks-on-analog-Hawking) Stage 1 substrate:
 -- HorizonDetailedBalance generalizes IsCrooksRatio to nonlinear entropy-
 -- production functionals σ : ℝ → ℝ; bridge to classical Crooks via the
@@ -105,6 +111,17 @@ import SKEFTHawking.SymTFTAudit.Applicability
 -- Z16AnomalyEta ↔ Z16AnomalyForcesThetaBar.Z16AnomalyCancels).
 -- chiralCentralChargeMod24 cross-bridge deferred (requires Mathlib Witt-group).
 import SKEFTHawking.SymTFTAudit.CrossBridges
+-- Phase 6n Wave 1b Stage 5 (Session 10, 2026-05-05) project-local
+-- Witt-class infrastructure: lifts the Stage-4c arithmetic biconditional
+-- (3 ∣ n ↔ 24 ∣ 8·n) to the abelian-group / Witt-invariant level via
+-- `WittInvariant := ZMod 24` + `fromChiralCentralCharge : ℤ →+ ZMod 24`
+-- AddMonoidHom. Closes the chiralCentralChargeMod24 ↔ Witt-class
+-- biconditional at predicate + abelian-group level. Mathlib upstream-PR
+-- candidate per `feedback_mathlib_upstream_pr_track_record.md` — full MTC
+-- Witt-group infrastructure (Davydov-Müger-Nikshych-Ostrik 2013) remains
+-- a multi-year community project; this project-local form captures the
+-- chiral-central-charge piece load-bearing for the Schellekens chain.
+import SKEFTHawking.SymTFTAudit.WittClass
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
