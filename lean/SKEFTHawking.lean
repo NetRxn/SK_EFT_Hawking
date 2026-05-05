@@ -37,6 +37,14 @@ import SKEFTHawking.QuantumCrooks.PerarnauLlobet
 -- no-go to the substantive quantum no-go via direct Matrix (Fin 2) (Fin 2) ℝ
 -- computation + the disagreement witness `perarnau_h_disagree`.
 import SKEFTHawking.QuantumCrooks.Concrete
+-- Phase 6n Wave 2c (Crooks-on-analog-Hawking) Stage 1 substrate:
+-- HorizonDetailedBalance generalizes IsCrooksRatio to nonlinear entropy-
+-- production functionals σ : ℝ → ℝ; bridge to classical Crooks via the
+-- σ(W) = β·W special case. GallavottiCohen LDP rate-function symmetry
+-- is the long-time limit. Stage 2-3 derives the analog-Hawking spectrum
+-- inequality (third Sakharov-style biconditional candidate).
+import SKEFTHawking.CrooksAnalogHawking.HorizonDetailedBalance
+import SKEFTHawking.CrooksAnalogHawking.GallavottiCohen
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling

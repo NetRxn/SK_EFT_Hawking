@@ -87,7 +87,7 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 | **Track 2 — Foundational backing for fluctuation-theorem content** | | | | | |
 | **Wave 2a** | G10-6n.1 Glorioso-Liu axiomatic | ✅ **SHIPPED** (Stage-1 skeleton + Stage 2–3 substantive refactor + Stage 2–3b KMS framework refactor + R1 LIFTED; 8 GloriosoLiu/ modules) | D3 + L3 + I1 — **DEFERRED** (I1 reframing pre-draft EXISTS, on-hold) | **D.3** | **HELD** — I1 pre-draft at `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md` (on-hold per Session-5 user direction) |
 | **Wave 2b** | G10-QCrooks-α | ✅ **SHIPPED** (Stage 1: 6 QuantumCrooks/ modules + parametric no-go theorem; Stage 2-3: 7th module Concrete.lean ships substantive quantum no-go via canonical 2-level Perarnau-Llobet counterexample on `Matrix (Fin 2) (Fin 2) ℝ`. All MCP-proven, zero Aristotle escalation, zero sorry.) | D1 cross-bridge / D5 — **DEFERRED** | **D.2** | none |
-| **Wave 2c** | G10-6n.3 Crooks-on-analog-Hawking | ⏳ **NOT STARTED** (substrate now ready: Wave 2a closed) | E1 + D1 — **DEFERRED** | **D.2** | none |
+| **Wave 2c** | G10-6n.3 Crooks-on-analog-Hawking | 🟡 **IN-PROGRESS** (Stage 1 SHIPPED: 2 CrooksAnalogHawking/ modules — `HorizonDetailedBalance` predicate generalizes `IsCrooksRatio` to nonlinear σ; bridge theorem to classical Crooks; `GallavottiCohenSymmetry` LDP rate-function predicate. Stage 2-3 = third Sakharov-style biconditional `HDB ↔ GC under GLU monotonicity` requires LDP infrastructure deferred via Itô.) | E1 + D1 — **DEFERRED** | **D.2** | none |
 | **Wave 2d** | G10-6n.7 Sakharov ↔ horizon-Crooks | 📝 **WORKING DOC** (D3+L3 reframing pre-draft EXISTS at `temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md`; Lean module work UNBLOCKED, ready to start) | D3 + L3 — **DEFERRED** (pre-draft on-hold) | **D.3** | **HELD** — D3+L3 pre-draft on-hold per Session-5 user direction |
 
 **Wave dependencies (Session-5 status):**
@@ -99,7 +99,7 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 
 **Recommended next-up order (Session 6+ reset, per user direction "push forward on math"):**
 1. ~~**Wave 2b**~~ — ✅ Stage 1 + Stage 2-3 SHIPPED (Session 6): 7 QuantumCrooks/ modules + substantive quantum Perarnau-Llobet no-go (canonical 2-level counterexample, MCP-proven, zero Aristotle).
-2. **Wave 2c** — start Crooks-on-analog-Hawking on polariton SK-EFT substrate (Loganayagam–Martin arXiv:2403.10654 substrate; unblocked by Wave 2a closure; ready for dispatch).
+2. ~~**Wave 2c**~~ — ✅ Stage 1 SHIPPED (Session 6): 2 CrooksAnalogHawking/ modules + bridge to classical Crooks + GallavottiCohen LDP-symmetry predicate. Stage 2-3 = third Sakharov-style biconditional pending LDP infrastructure (Itô-deferred).
 3. **Wave 2d Lean module** — `HorizonDetailedBalance` + `Sakharov_iff_horizon_Crooks` Lean substrate (the working-doc pre-draft is for the *bundle absorption*; Lean substrate work proceeds independently).
 4. **Wave 1b Lean theorem-statement work** — once Stage-1 audit signs off internally (the audit verdict in the working doc identifies the next-step Lean structure).
 5. **Wave 2b Stage 2-3 extension targets** — generalize the concrete substrate to `Matrix (Fin n) (Fin n) ℂ` for arbitrary n; add reservoir-coupled forms; KMSCompatible/FDTCompatible typeclass connections.
@@ -266,11 +266,22 @@ SKEFTHawking/GloriosoLiu/
 
 ---
 
-## Wave 2c — G10-6n.3 Crooks-on-analog-Hawking on polariton SK-EFT substrate ⏳ NOT STARTED
+## Wave 2c — G10-6n.3 Crooks-on-analog-Hawking on polariton SK-EFT substrate 🟡 IN-PROGRESS
 
-**Status:** ready for dispatch. **Now unblocked** by Wave 2a closure (path-measure infrastructure available via `SKDoubling.SKAction` typeclass + `SKEFTAxioms` skeleton). Substrate ready: Loganayagam–Martin arXiv:2403.10654 + Falasco–Esposito 2025 RMP framework + Steinhauer / Weinfurtner / Carusotto device-parameter spec.
+**Sub-wave status (Session 6 close):**
+- ✅ **Stage 1 SHIPPED** (Session 6): 2 modules under `lean/SKEFTHawking/CrooksAnalogHawking/`:
+  - `HorizonDetailedBalance.lean` — predicate `HorizonDetailedBalance P_F P_R σ := ∀ W, P_F.P W = exp(σ W) · P_R.P (-W)` generalizes `IsCrooksRatio` (Wave 2b substrate) to nonlinear entropy-production functional `σ : ℝ → ℝ`. Substantive theorems: `specialize_to_Crooks` (cross-module bridge: `σ(W) = β·W` ⇒ HDB ↔ IsCrooksRatio), `symm_neg` (forward/reverse symmetry under σ ↦ −σ ∘ neg, generalizing `IsCrooksRatio.symm`), `horizonDetailedBalance_zero` (well-posedness witness).
+  - `GallavottiCohen.lean` — predicate `GallavottiCohenSymmetry I := ∀ σ, I(-σ) - I(σ) = -σ` is the LDP rate-function symmetry (long-time / NESS limit of Crooks). Substantive theorems: `gallavottiCohen_linear_witness` (linear `I(σ) := σ/2` satisfies GC), `shift_invariant` (GC is gauge-invariant under constant shifts).
+- ⏳ **Stage 2-3 NOT STARTED**: derive the third Sakharov-style biconditional
+    ```
+    AnalogHawkingSubstrate.satisfies_GLU_monotonicity (Wave 2a substrate)
+      ↔ EmissionSpectrum.LDP_rate_function.satisfies_GallavottiCohen
+    ```
+  Requires the analog-Hawking spectrum substrate (Loganayagam–Martin or CGL-EFT) + LDP infrastructure (deferred via Itô per Phase 6n DR Appendix §3 — discrete-time Markov-jump version per Falasco–Esposito 2025 RMP suffices for analog-Hawking falsifiability).
 
-**Recommended next-up order placement:** **#2** after Wave 2b.
+**Lake build state**: 8526 → 8528 jobs (+2 modules), all clean, zero sorry.
+
+**Substantive Stage-1 finding:** `HorizonDetailedBalance` is definitionally a generalization of `IsCrooksRatio` — the linear case σ(W) = β·W IS the classical Crooks ratio. This makes Wave 2c a substantive *generalization* of Wave 2b's classical-Crooks structure rather than a separate framework. The substantive analog-Hawking content is the constraint on σ from GLU monotonicity (Stage 2-3).
 
 - *Integrates with:* E1 polariton paper; D1 §3-§4 analog Hawking content; Carusotto-Gerace polariton analog black-hole literature (arXiv:1206.4276 + follow-ups); Steinhauer BEC analog black holes; Tettamanti-Parola-Cacciatori arXiv:1703.05041 exactly-solvable BEC; **Loganayagam-Martin Exterior EFT for Hawking Radiation arXiv:2403.10654** (JHEP 2025) — the cleanest substrate for trajectory-Crooks at the horizon; Banerjee et al. fluctuation-dissipation horizon-temperature derivation (Eur. Phys. J. C 80, 411, 2020) as the FDT-level prior art.
 - *New constraint adds:* an inequality on the analog-Hawking spectrum derived from trajectory-level Crooks detailed-balance, **beyond what FDT / Kubo gives**. Specifically: the LDP rate function I(σ) for entropy production must satisfy the GC/LS symmetry I(-σ) - I(σ) = -σ, which translates into specific bounds on the spectrum's higher cumulants of work / entropy-production fluctuations. Falsifiable on existing experimental platforms (Steinhauer BEC, Weinfurtner Vancouver surface-wave, Carusotto polariton). Comparable in character to Phase 6e Sakharov biconditional — third "Sakharov-style" biconditional in the program if non-trivial.
