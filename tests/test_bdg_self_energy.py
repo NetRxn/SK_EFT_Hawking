@@ -402,3 +402,121 @@ def test_andreev_khalatnikov_stub_explicitly_raises_with_redirect() -> None:
     # The message should redirect to the proper Stage-3 anchor.
     assert "gamma_2_kinematic_dispersive_anchor" in str(exc_info.value)
     assert "finite-T" in str(exc_info.value)
+
+
+# ---------------------------------------------------------------------------
+# Stage 3 cross-module integration: kinematic sequence → Padé-Borel pipeline
+# (Session 12 cross-bridge between bdg_self_energy.py and borel.py)
+# ---------------------------------------------------------------------------
+
+
+def test_kinematic_sequence_ratio_test_signals_geometric_not_gevrey1() -> None:
+    """Ratio test on γ_n^(kin-disp) sequence signals geometric (not Gevrey-1).
+
+    Substantive Stage-3 cross-module integration: feed the closed-form
+    kinematic-dispersive sequence into ``borel.ratio_test``. Expected
+    behavior:
+
+    - For Gevrey-1 (a_n ~ n! / A^n): R_n = a_{n+1} / ((n+1)·a_n) → 1/A,
+      a nonzero positive constant.
+    - For geometric (a_n ~ C / A^n): R_n = a_{n+1} / ((n+1)·a_n)
+      ~ 1 / ((n+1)·A) → 0 monotonically.
+
+    The kinematic-dispersive sequence γ_n^(kin-disp) is geometric per
+    `gamma_kinematic_dispersive_sequence_asymptotic_ratio` above; its
+    ratio-test signature must therefore decay to zero. This test confirms
+    Wave 1a.2 Padé-Borel infrastructure correctly distinguishes the two
+    asymptotic-growth classes on the closed-form Stage-3 sequence.
+
+    For the kinematic piece specifically:
+        |R_n| = |γ_{n+1}^(kin-disp)| / ((n+1) · |γ_n^(kin-disp)|)
+              = (2n-1) / (8 n (n+1))   for n ≥ 1,
+        ∼ 1/(4n²) → 0.
+    """
+    from src.resurgence.bdg_self_energy import gamma_kinematic_dispersive_sequence
+    from src.resurgence.borel import ratio_test
+
+    seq = list(gamma_kinematic_dispersive_sequence(max_order=15))
+    R = ratio_test(seq)
+
+    # Initial ratio at n=1: γ_2^(kin-disp) / (2 · γ_1^(kin-disp)) = (-1/8) / 2 = -1/16
+    # Wait — ratio_test uses R_n = a_{n+1} / ((n+1) a_n) with n=0, 1, ..., len-2 indexing.
+    # So R[0] = γ_2 / (1 · γ_1) = -1/8 ≈ -0.125. Confirmed.
+    assert R[0] == pytest.approx(-1.0 / 8.0, rel=1e-9)
+
+    # Closed-form check at n=1 (= R[1]): γ_3 / (2 · γ_2) = (3/128) / (2 · (-1/8))
+    # = (3/128) / (-1/4) = -3/32 ≈ -0.09375
+    assert R[1] == pytest.approx(-3.0 / 32.0, rel=1e-9)
+
+    # Monotone decay to 0 in absolute value (geometric signature).
+    abs_R = [abs(r) for r in R]
+    for i in range(len(abs_R) - 1):
+        assert abs_R[i] >= abs_R[i + 1], (
+            f"|R[{i}]| = {abs_R[i]} should ≥ |R[{i+1}]| = {abs_R[i+1]}"
+        )
+
+    # Asymptotic decay: R[10] should be much smaller than R[0] (factor << 1).
+    # For Gevrey-1, R[10] would be ≈ R[0] (constant).
+    assert abs_R[10] < abs_R[0] / 4, (
+        f"|R[10]| = {abs_R[10]} should be << |R[0]| = {abs_R[0]} for geometric series"
+    )
+
+    # Final ratio must be small (decaying to 0).
+    assert abs_R[-1] < 0.05, (
+        f"|R[{len(R) - 1}]| = {abs_R[-1]} should be < 0.05 for clean geometric decay"
+    )
+
+
+def test_kinematic_sequence_borel_transform_has_no_finite_singularity() -> None:
+    """Padé-Borel applied to kinematic-dispersive γ_n returns no positive-real pole.
+
+    Substantive consequence of `kinDispSeq_borelTransform_bounded` (Lean,
+    Session 12) at the Python pipeline level: a geometric series Borel-
+    transforms to an entire function, which has no finite singularities.
+    `leading_borel_singularity` should therefore return None on the
+    kinematic-dispersive sequence (potentially modulo numerical noise from
+    the Padé approximant).
+
+    This is the load-bearing end-to-end verification that the Wave 1a.2
+    Padé-Borel infrastructure correctly classifies geometric vs Gevrey-1
+    sequences on the closed-form Stage-3 input.
+    """
+    from src.resurgence.bdg_self_energy import gamma_kinematic_dispersive_sequence
+    from src.resurgence.borel import leading_borel_singularity
+
+    seq = list(gamma_kinematic_dispersive_sequence(max_order=15))
+    # M=4 with N=4 ⇒ needs 9 ≤ 15 coefficients ✓
+    A = leading_borel_singularity(seq, M=4)
+    # Kinematic piece is geometric ⇒ Borel transform entire ⇒ no positive-real
+    # pole at finite distance. `leading_borel_singularity` returns None or a
+    # large-real / spurious-imaginary root that gets filtered by imag_tol.
+    assert A is None, (
+        f"Expected None (entire Borel transform) for geometric kinematic "
+        f"sequence; got A = {A}. If a finite positive-real pole was found, "
+        f"the kinematic piece is being mis-classified as Gevrey-1."
+    )
+
+
+def test_kinematic_sequence_lambda_uv_estimate_returns_none() -> None:
+    """λ_UV estimate from kinematic-only sequence: None (no resurgence content).
+
+    Direct cross-module consequence: with no Borel singularity from the
+    kinematic piece, there is no resurgence-theoretic Λ_UV from kinematic
+    content alone. Loop-piece (Stage 4) contributions may yield genuine
+    Gevrey-1 content with finite Borel action — but the kinematic piece
+    by itself doesn't.
+
+    This pins the substantive Stage-3 finding at the Python pipeline level:
+    the kinematic piece is Borel-summable; only Stage 4 can establish
+    whether the full γ_n verdict yields a finite Λ_UV from resurgence.
+    """
+    from src.resurgence.bdg_self_energy import gamma_kinematic_dispersive_sequence
+    from src.resurgence.borel import lambda_uv_estimate
+
+    kappa = 2.0 * math.pi * 100.0  # Steinhauer-class κ ≈ 628 Hz
+    seq = list(gamma_kinematic_dispersive_sequence(max_order=15))
+    Lambda_UV = lambda_uv_estimate(seq, kappa, M=4)
+    assert Lambda_UV is None, (
+        f"Expected None (no resurgence Λ_UV from kinematic-only sequence) "
+        f"for geometric series; got Λ_UV = {Lambda_UV}."
+    )

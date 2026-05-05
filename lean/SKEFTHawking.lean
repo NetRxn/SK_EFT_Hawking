@@ -28,6 +28,13 @@ import SKEFTHawking.GloriosoLiu.SecondOrderProjection
 import SKEFTHawking.Resurgence.Basic
 import SKEFTHawking.Resurgence.BorelAction
 import SKEFTHawking.Resurgence.StokesBound
+-- Phase 6n Wave 1a.3 Path A — Stage 3 Lean lift (Session 12, 2026-05-05):
+-- Closed-form kinematic-dispersive coefficient sequence γ_n^(kin-disp)/γ_1
+-- = (-1)^(n-1) · C(2(n-1), n-1) / 16^(n-1); central-binomial bound C(2k,k)
+-- ≤ 4^k via Nat.choose_le_two_pow → geometric-rate-1/4 theorem
+-- IsGeometric kinDispSeq 1 (1/4); convergence radius 2·Λ_UV. Python
+-- counterpart at src/resurgence/bdg_self_energy.py (Session 11).
+import SKEFTHawking.Resurgence.KinematicDispersive
 -- Phase 6n Wave 2b (QCrooks-α; was 6n.δ) Stage 1 substrate: parallel-axiomatization
 -- tableau on quantum-Crooks fluctuation theorems. Setup + 4 candidate axiomatizations
 -- (Tasaki-TPM, Åberg-coherent, Kafri-Deffner-unital, Kirkwood-Dirac quasiprobability)

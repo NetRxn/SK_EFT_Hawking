@@ -88,4 +88,68 @@ theorem borelTransform_bounded_of_isGevrey1
         exact div_le_div_of_nonneg_right hbound hn_pos.le
     _ = 1 / A ^ n := by field_simp
 
+/--
+**A coefficient sequence is `IsGeometric a M r`** if `|a n| ≤ M · r^n`
+for all `n` with `0 ≤ M` and `0 < r < 1`.
+
+This is the asymptotic-growth class complementary to `IsGevrey1`:
+the perturbative sum `Σ a_n · z^n` has radius of convergence at
+least `1/r` in the variable `z`. **Geometric ≠ Gevrey-1.**
+A Gevrey-1 sequence's Borel transform has finite radius `A`; a
+geometric sequence's Borel transform is *entire* (radius `∞`),
+so geometric sequences carry no transseries content `S₁` and have
+no resurgence-theoretic Λ_UV — they are Borel-summable.
+
+This predicate is the load-bearing structural distinction between
+the Path B verdict on weak-coupling BEC SK-EFT (geometric) and the
+Aniceto–Başar–Schiappa Gevrey-1 expectation generic to dissipative
+QFT. Cf. Phase 6n.α Wave 1a.3 Path B verdict
+(`temporary/working-docs/phase6n/6n_alpha_3_VERDICT.md`) and the
+Stage-3 closed-form kinematic-dispersive coefficients
+(`Resurgence/KinematicDispersive.lean`, Session 12).
+-/
+def IsGeometric (a : ℕ → ℝ) (M r : ℝ) : Prop :=
+  0 ≤ M ∧ 0 < r ∧ r < 1 ∧ ∀ n : ℕ, |a n| ≤ M * r ^ n
+
+/-- Extracts the non-negativity of `M` from `IsGeometric`. -/
+theorem IsGeometric.M_nonneg {a : ℕ → ℝ} {M r : ℝ}
+    (h : IsGeometric a M r) : 0 ≤ M :=
+  h.1
+
+/-- Extracts the positivity of `r` from `IsGeometric`. -/
+theorem IsGeometric.r_pos {a : ℕ → ℝ} {M r : ℝ}
+    (h : IsGeometric a M r) : 0 < r :=
+  h.2.1
+
+/-- Extracts the strict-less-than-one bound on `r` from `IsGeometric`. -/
+theorem IsGeometric.r_lt_one {a : ℕ → ℝ} {M r : ℝ}
+    (h : IsGeometric a M r) : r < 1 :=
+  h.2.2.1
+
+/-- Extracts the per-`n` geometric bound from `IsGeometric`. -/
+theorem IsGeometric.bound {a : ℕ → ℝ} {M r : ℝ}
+    (h : IsGeometric a M r) (n : ℕ) : |a n| ≤ M * r ^ n :=
+  h.2.2.2 n
+
+/--
+**The Borel transform of a geometric sequence is even more strongly bounded.**
+
+For `|a n| ≤ M · r^n` with `r < 1`, dividing by `n! ≥ 1` gives
+`|borelTransform a n| ≤ M · r^n / n!` — the Borel transform decays
+super-geometrically (factorially fast), so its sum is entire. This
+is the formal Lean analog of "geometric series Borel-transform to
+entire functions" (Aniceto–Başar–Schiappa, sub-Gevrey-1 case).
+-/
+theorem borelTransform_bounded_of_isGeometric
+    {a : ℕ → ℝ} {M r : ℝ} (h : IsGeometric a M r) :
+    ∀ n : ℕ, |borelTransform a n| ≤ M * r ^ n / n.factorial := by
+  intro n
+  have hn_pos : (0 : ℝ) < n.factorial := by exact_mod_cast n.factorial_pos
+  have hbound : |a n| ≤ M * r ^ n := h.bound n
+  calc |borelTransform a n|
+      = |a n| / n.factorial := by
+        unfold borelTransform; rw [abs_div, abs_of_pos hn_pos]
+    _ ≤ (M * r ^ n) / n.factorial := by
+        exact div_le_div_of_nonneg_right hbound hn_pos.le
+
 end SKEFTHawking.Resurgence
