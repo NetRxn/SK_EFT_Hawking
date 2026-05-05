@@ -637,6 +637,187 @@ def gamma_2_kinematic_dispersive_anchor() -> float:
     return BELIAEV_NLO_KIN_DISP_PREFACTOR
 
 
+# ---------------------------------------------------------------------------
+# Stage 4a: structural envelope theorem (Session 13)
+# ---------------------------------------------------------------------------
+#
+# Direct Python counterpart of `lean/SKEFTHawking/Resurgence/LoopEnvelope.lean`.
+# Computes the envelope-theorem rate `max(1/4, r_loop)` and constant
+# `(1 + M_loop)` for the FULL γ_n = γ_n^(kin-disp) + γ_n^(loop) under the
+# bounded-coupling assumption that γ_n^(loop) is itself bounded by a
+# geometric sequence with rate r_loop and constant M_loop.
+#
+# The substantive Stage-4a finding: even WITHOUT the explicit
+# Beliaev-Galitskii 1959 γ_2^(loop) value (which remains a multi-week
+# 2-loop integral), the FULL γ_n is bounded by a geometric sequence with
+# rate at most max(1/4, r_loop) — hence the FULL γ_n carries no Gevrey-1
+# transseries content at the substrate-envelope level. This sharpens
+# Path B's qualitative geometric-vs-Gevrey-1 verdict (Session 5) into a
+# structural Lean-level theorem (Session 13 LoopEnvelope.lean).
+
+
+@dataclass(frozen=True)
+class GeometricEnvelope:
+    """Envelope parameters for a sequence bounded by `M · r^n` with
+    `0 < r < 1` and `M ≥ 0`.
+
+    Attributes:
+        constant: the non-negative envelope constant M.
+        rate: the geometric rate r ∈ (0, 1).
+    """
+
+    constant: float
+    rate: float
+
+    def __post_init__(self) -> None:
+        if self.constant < 0:
+            raise ValueError(
+                f"GeometricEnvelope constant must be non-negative; "
+                f"got {self.constant}"
+            )
+        if not (0.0 < self.rate < 1.0):
+            raise ValueError(
+                f"GeometricEnvelope rate must lie in (0, 1); got {self.rate}"
+            )
+
+    def bound_at(self, n: int) -> float:
+        """Return the bound `M · r^n` at index n (>= 0)."""
+        if n < 0:
+            raise ValueError(f"index n must be non-negative; got {n}")
+        return self.constant * (self.rate**n)
+
+
+KIN_DISP_ENVELOPE: GeometricEnvelope = GeometricEnvelope(constant=1.0, rate=0.25)
+"""The Stage-3 kinematic-dispersive ratio sequence's envelope.
+
+Lean counterpart: `kinDispSeq_isGeometric : IsGeometric kinDispSeq 1 (1/4)`
+in `lean/SKEFTHawking/Resurgence/KinematicDispersive.lean` (Session 12).
+
+The kinematic-dispersive ratio γ_n^(kin-disp) / γ_1 = (-1)^(n-1) ·
+C(2(n-1), n-1) / 16^(n-1) satisfies |γ_n^(kin-disp) / γ_1| ≤ (1/4)^(n-1).
+Indexing from k = n-1 and noting (1/4)^k ≤ 1 for k ≥ 0, the ratio
+sequence is geometric with constant 1 and rate 1/4.
+"""
+
+
+def envelope_sum(
+    kin_disp: GeometricEnvelope, loop: GeometricEnvelope
+) -> GeometricEnvelope:
+    """Construct the envelope of the sum kin_disp + loop sequences.
+
+    Direct Python analog of the Lean theorem
+    `IsGeometric.add` in `lean/SKEFTHawking/Resurgence/LoopEnvelope.lean`:
+    if `IsGeometric a M₁ r₁` and `IsGeometric b M₂ r₂`, then
+    `IsGeometric (a + b) (M₁ + M₂) (max r₁ r₂)`.
+
+    For the SK-EFT γ_n sequence:
+        kin_disp = KIN_DISP_ENVELOPE  (constant=1, rate=1/4)
+        loop     = (M_loop, r_loop)   from bounded-coupling assumption
+    The envelope of γ_n is GeometricEnvelope(1 + M_loop, max(1/4, r_loop)).
+
+    Args:
+        kin_disp: kinematic-piece envelope (typically KIN_DISP_ENVELOPE).
+        loop: loop-piece envelope from a substrate bounded-coupling result.
+
+    Returns:
+        The combined GeometricEnvelope (constant = M₁ + M₂, rate = max(r₁, r₂)).
+    """
+    return GeometricEnvelope(
+        constant=kin_disp.constant + loop.constant,
+        rate=max(kin_disp.rate, loop.rate),
+    )
+
+
+def envelope_borel_transform_bound(
+    envelope: GeometricEnvelope, n: int
+) -> float:
+    """The envelope on the Borel transform `b_n = a_n / n!` for an
+    `IsGeometric` sequence: `|b_n| ≤ M · r^n / n!`.
+
+    Direct counterpart of Lean theorem
+    `borelTransform_bounded_of_isGeometric` in
+    `lean/SKEFTHawking/Resurgence/Basic.lean`:
+    the Borel transform of a geometric sequence decays super-geometrically
+    (factorially fast). Sum of the Borel transform is therefore entire —
+    NO finite Borel singularity at any radius — confirming the sequence
+    carries no Gevrey-1 transseries content.
+
+    Args:
+        envelope: the GeometricEnvelope (M, r).
+        n: index at which to evaluate the bound (n >= 0).
+
+    Returns:
+        `M · r^n / n!`.
+
+    Raises:
+        ValueError: if n < 0.
+    """
+    if n < 0:
+        raise ValueError(f"index n must be non-negative; got {n}")
+    return envelope.bound_at(n) / float(math.factorial(n))
+
+
+def is_borel_summable_under_envelope(envelope: GeometricEnvelope) -> bool:
+    """Test whether the envelope guarantees Borel-summability.
+
+    A geometric envelope with rate r ∈ (0, 1) implies the Borel transform
+    decays at rate r^n / n! — i.e., faster than any geometric sequence,
+    hence the Borel-plane series converges everywhere (entire). The full
+    perturbative gradient expansion under this envelope is therefore
+    Borel-summable; no resurgence-theoretic non-perturbative content.
+
+    Args:
+        envelope: the GeometricEnvelope.
+
+    Returns:
+        True iff the envelope's rate is < 1 (the IsGeometric condition).
+    """
+    return 0.0 < envelope.rate < 1.0
+
+
+def stage_4a_structural_verdict(
+    loop_envelope: GeometricEnvelope,
+) -> dict[str, float | bool]:
+    """Wave 1a.3 Stage-4a structural verdict on the FULL γ_n sequence.
+
+    Given the loop-piece bounded-coupling envelope, returns the full
+    γ_n envelope and the Wave 1a.3 substrate-level verdict on
+    Gevrey-1-vs-geometric.
+
+    Direct Python counterpart of the Lean theorem
+    `wave_1a_3_stage4a_structural_closure` in
+    `lean/SKEFTHawking/Resurgence/LoopEnvelope.lean`.
+
+    Args:
+        loop_envelope: the loop-piece envelope (M_loop, r_loop) from
+            substrate-level bounded-coupling considerations
+            (e.g., GKST 1904.01018 + dimensional-power-counting on
+            the dilute-BEC perturbative series).
+
+    Returns:
+        dict with keys:
+            'full_gamma_constant'      : 1 + M_loop
+            'full_gamma_rate'          : max(1/4, r_loop)
+            'full_gamma_borel_summable': True iff full envelope rate < 1
+            'kinematic_dominates'      : True iff loop rate < 1/4
+                                         (the dilute-BEC regime; full
+                                         asymptotic rate equals 1/4)
+            'convergence_radius_g'     : 1 / full_gamma_rate
+                                         (in g = (ξk)² variable)
+            'convergence_radius_xik'   : sqrt(1 / full_gamma_rate)
+                                         (in ξk variable)
+    """
+    full = envelope_sum(KIN_DISP_ENVELOPE, loop_envelope)
+    return {
+        "full_gamma_constant": full.constant,
+        "full_gamma_rate": full.rate,
+        "full_gamma_borel_summable": is_borel_summable_under_envelope(full),
+        "kinematic_dominates": loop_envelope.rate <= KIN_DISP_ENVELOPE.rate,
+        "convergence_radius_g": 1.0 / full.rate,
+        "convergence_radius_xik": math.sqrt(1.0 / full.rate),
+    }
+
+
 def andreev_khalatnikov_anchor_gamma_2() -> float:
     """Andreev-Khalatnikov 1963 γ_2 — finite-T 4-phonon scattering coefficient.
 

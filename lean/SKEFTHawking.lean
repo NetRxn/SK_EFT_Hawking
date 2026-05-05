@@ -35,6 +35,13 @@ import SKEFTHawking.Resurgence.StokesBound
 -- IsGeometric kinDispSeq 1 (1/4); convergence radius 2·Λ_UV. Python
 -- counterpart at src/resurgence/bdg_self_energy.py (Session 11).
 import SKEFTHawking.Resurgence.KinematicDispersive
+-- Phase 6n Wave 1a.3 Path A — Stage 4a Lean lift (Session 13, 2026-05-05):
+-- Structural envelope theorem: under the bounded-coupling assumption
+-- IsGeometric γ_loop M_loop r_loop, the full γ_n = kinDispSeq + γ_loop is
+-- IsGeometric (1 + M_loop) (max (1/4) r_loop), and its Borel transform
+-- decays super-geometrically — substrate-level near-definitive Wave 1a.3
+-- verdict pending the explicit Beliaev-Galitskii 1959 γ_2^(loop) value.
+import SKEFTHawking.Resurgence.LoopEnvelope
 -- Phase 6n Wave 2b (QCrooks-α; was 6n.δ) Stage 1 substrate: parallel-axiomatization
 -- tableau on quantum-Crooks fluctuation theorems. Setup + 4 candidate axiomatizations
 -- (Tasaki-TPM, Åberg-coherent, Kafri-Deffner-unital, Kirkwood-Dirac quasiprobability)
@@ -58,6 +65,15 @@ import SKEFTHawking.QuantumCrooks.Concrete
 -- Hamiltonian) as a non-trivial example, ℂ-form disagreement witness,
 -- ℂ-form quantum no-go theorem, and cross-bridge to the ℝ form.
 import SKEFTHawking.QuantumCrooks.ConcreteComplex
+-- Phase 6n Wave 2b higher-dimensional ℂ generalization (Session 13, 2026-05-05):
+-- Block-diagonal embedding of the canonical 2-level Perarnau-Llobet ℂ substrate
+-- into Matrix (Sum (Fin 2) T) (Sum (Fin 2) T) ℂ for arbitrary Fintype T —
+-- closes the Wave 2b "further ℂ generalization" target listed in the
+-- Phase 6n Roadmap recommended-next-up #8. Substantive content: trace +
+-- multiplication + diagonal compatibility of the embedding; reduction of
+-- embedded averages to 2-level averages; substantive higher-dimensional
+-- Perarnau-Llobet no-go theorem perarnau_llobet_no_go_higher_dim.
+import SKEFTHawking.QuantumCrooks.HigherDimensional
 -- Phase 6n Wave 2c (Crooks-on-analog-Hawking) Stage 1 substrate:
 -- HorizonDetailedBalance generalizes IsCrooksRatio to nonlinear entropy-
 -- production functionals σ : ℝ → ℝ; bridge to classical Crooks via the
@@ -105,6 +121,15 @@ import SKEFTHawking.CrooksAnalogHawking.SKEFTHorizonBridge
 -- Cross-bridge to existing σ-form GallavottiCohenSymmetry via change of
 -- variable σ = β·W and sign flip. Parallels Wave 2d Stage 4 SKEFTHorizonBridge.
 import SKEFTHawking.CrooksAnalogHawking.SKEFTGallavottiCohen
+-- Phase 6n Wave 2c Stage 5 LDP starter (Session 13, 2026-05-05): in-program
+-- build of LDP rate-function infrastructure for the linear-response Gaussian
+-- substrate. LDPLinearResponseData structure with positivity witnesses;
+-- canonical AnalogHawkingEmissionScheme construction; substantive substrate-
+-- level monotonicity (σ(W) = β·W ≥ 0 for W ≥ 0) AND W-form GC at β. First
+-- concrete substrate-level discharge of the third Sakharov-style biconditional
+-- in horizon-Crooks language at the W-form-GC level. Mathlib-upstream-PR
+-- target retained for full measure-theoretic LDP machinery.
+import SKEFTHawking.CrooksAnalogHawking.LDPLinearResponse
 -- Phase 6n Wave 1b Stage 3 substrate: SymTFT applicability verdict +
 -- discrete-sector predicates. The Stage-2 audit verdict (PartiallyApplicable
 -- per direct primary-source fetch of arXiv:2507.05350, Schäfer-Nameki et al.)

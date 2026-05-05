@@ -30,7 +30,9 @@ from src.resurgence.bdg_self_energy import (
     BELIAEV_LO_PREFACTOR,
     BELIAEV_NLO_KIN_DISP_PREFACTOR,
     BELIAEV_NLO_KIN_DISP_RATIO,
+    KIN_DISP_ENVELOPE,
     BdGSelfEnergyResult,
+    GeometricEnvelope,
     andreev_khalatnikov_anchor_gamma_2,
     beliaev_anchor_gamma_1,
     beliaev_lo_dimensionless,
@@ -41,10 +43,14 @@ from src.resurgence.bdg_self_energy import (
     derive_beliaev_lo_dimensionless,
     derive_beliaev_lo_kinematic_integral,
     derive_gamma_2_kinematic_dispersive,
+    envelope_borel_transform_bound,
+    envelope_sum,
     gamma_2_kinematic_dispersive_anchor,
     gamma_kinematic_dispersive_sequence,
     gamma_n_kinematic_dispersive,
     gamma_n_kinematic_dispersive_closed_form,
+    is_borel_summable_under_envelope,
+    stage_4a_structural_verdict,
 )
 
 
@@ -520,3 +526,185 @@ def test_kinematic_sequence_lambda_uv_estimate_returns_none() -> None:
         f"Expected None (no resurgence Λ_UV from kinematic-only sequence) "
         f"for geometric series; got Λ_UV = {Lambda_UV}."
     )
+
+
+# ---------------------------------------------------------------------------
+# Stage 4a tests (structural envelope theorem; Session 13)
+# ---------------------------------------------------------------------------
+
+
+def test_geometric_envelope_constructor_validates_bounds() -> None:
+    """GeometricEnvelope rejects M < 0 and r ∉ (0, 1)."""
+    with pytest.raises(ValueError, match="non-negative"):
+        GeometricEnvelope(constant=-1.0, rate=0.5)
+    with pytest.raises(ValueError, match=r"\(0, 1\)"):
+        GeometricEnvelope(constant=1.0, rate=0.0)
+    with pytest.raises(ValueError, match=r"\(0, 1\)"):
+        GeometricEnvelope(constant=1.0, rate=1.0)
+    with pytest.raises(ValueError, match=r"\(0, 1\)"):
+        GeometricEnvelope(constant=1.0, rate=1.5)
+
+
+def test_kin_disp_envelope_module_constant() -> None:
+    """KIN_DISP_ENVELOPE matches the Stage-3 Lean theorem (M=1, r=1/4)."""
+    assert KIN_DISP_ENVELOPE.constant == 1.0
+    assert KIN_DISP_ENVELOPE.rate == 0.25
+
+
+def test_kin_disp_envelope_dominates_closed_form_ratios() -> None:
+    """The KIN_DISP_ENVELOPE bound `1·(1/4)^k` dominates |γ_{k+1}/γ_1|.
+
+    For each k = 0..6, the closed-form ratio
+    |γ_{k+1}^(kin-disp) / γ_1| = C(2k, k) / 16^k
+    is ≤ (1/4)^k. This is the Python cross-validation of the Lean
+    theorem `kinDispRatio_abs_le_quarter_pow` in
+    `lean/SKEFTHawking/Resurgence/KinematicDispersive.lean`.
+    """
+    for k in range(7):
+        closed_form_ratio = abs(
+            float(gamma_n_kinematic_dispersive_closed_form(k + 1))
+        )
+        envelope_bound = KIN_DISP_ENVELOPE.bound_at(k)
+        assert closed_form_ratio <= envelope_bound, (
+            f"Closed-form ratio {closed_form_ratio} exceeds envelope bound "
+            f"{envelope_bound} at k={k} — Lean theorem mismatch."
+        )
+
+
+def test_envelope_sum_combines_constants_and_takes_max_rate() -> None:
+    """envelope_sum: sum of two envelopes is M₁+M₂, max(r₁, r₂).
+
+    Direct Python counterpart of Lean theorem `IsGeometric.add` in
+    `lean/SKEFTHawking/Resurgence/LoopEnvelope.lean`.
+    """
+    e1 = GeometricEnvelope(constant=1.0, rate=0.25)
+    e2 = GeometricEnvelope(constant=0.5, rate=0.1)
+    e_sum = envelope_sum(e1, e2)
+    assert e_sum.constant == 1.5
+    assert e_sum.rate == 0.25
+    # Symmetric in arguments
+    assert envelope_sum(e2, e1).rate == 0.25
+    assert envelope_sum(e2, e1).constant == 1.5
+
+
+def test_envelope_sum_dilute_BEC_kinematic_dominates() -> None:
+    """Dilute-BEC regime (g_BEC² ≪ 1/4): kinematic rate dominates.
+
+    For Steinhauer-class BECs, g_BEC ~ 10⁻³ ⇒ g_BEC² ~ 10⁻⁶ ≪ 1/4.
+    The full envelope rate is then 1/4 — the kinematic-piece value.
+    """
+    g_BEC_squared = 1.0e-6
+    loop = GeometricEnvelope(constant=1.0, rate=g_BEC_squared)
+    full = envelope_sum(KIN_DISP_ENVELOPE, loop)
+    assert full.rate == 0.25
+    assert full.constant == 2.0
+
+
+def test_envelope_sum_strong_coupling_loop_dominates() -> None:
+    """Strong-coupling regime (r_loop > 1/4): loop rate dominates.
+
+    In this regime the envelope theorem still applies (geometric, not
+    Gevrey-1) but the asymptotic rate is set by the loop piece.
+    """
+    loop = GeometricEnvelope(constant=2.0, rate=0.5)
+    full = envelope_sum(KIN_DISP_ENVELOPE, loop)
+    assert full.rate == 0.5
+    assert full.constant == 3.0
+
+
+def test_envelope_borel_transform_bound_decays_super_geometrically() -> None:
+    """Borel transform bound `M·r^n / n!` decays factorially fast.
+
+    Direct counterpart of Lean theorem
+    `borelTransform_bounded_of_isGeometric` in `Resurgence/Basic.lean`.
+    For the kinematic envelope (M=1, r=1/4), the Borel-transform bound
+    at n=10 is (1/4)^10 / 10! ≈ 2.6e-13 — vanishing.
+    """
+    bound_at_10 = envelope_borel_transform_bound(KIN_DISP_ENVELOPE, n=10)
+    expected = (0.25**10) / math.factorial(10)
+    assert bound_at_10 == pytest.approx(expected, rel=1e-12)
+    # Decay is super-geometric: ratio of consecutive bounds → 0
+    bound_n10 = envelope_borel_transform_bound(KIN_DISP_ENVELOPE, n=10)
+    bound_n11 = envelope_borel_transform_bound(KIN_DISP_ENVELOPE, n=11)
+    ratio = bound_n11 / bound_n10
+    # Ratio = r/(n+1) = 0.25/11 ≈ 0.0227
+    assert ratio == pytest.approx(0.25 / 11.0, rel=1e-12)
+
+
+def test_is_borel_summable_under_envelope_true_for_geometric() -> None:
+    """IsBorelSummable: True for any GeometricEnvelope (rate ∈ (0,1))."""
+    assert is_borel_summable_under_envelope(KIN_DISP_ENVELOPE) is True
+    assert (
+        is_borel_summable_under_envelope(
+            GeometricEnvelope(constant=10.0, rate=0.99)
+        )
+        is True
+    )
+
+
+def test_stage_4a_verdict_dilute_BEC_full_pipeline() -> None:
+    """Stage 4a structural verdict on a dilute-BEC loop envelope.
+
+    Direct counterpart of Lean theorem
+    `wave_1a_3_stage4a_structural_closure` in `LoopEnvelope.lean`.
+
+    For dilute BECs (r_loop = g_BEC² ~ 10⁻⁶ ≪ 1/4):
+      - Full γ_n envelope rate is 1/4 (kinematic-dominated).
+      - Convergence radius in g = (ξk)² is 1/(1/4) = 4.
+      - Convergence radius in ξk is √4 = 2 (i.e., k_max = 2 · Λ_UV).
+      - Borel-summable (no Gevrey-1 transseries content).
+      - Kinematic dominates (loop rate ≤ 1/4).
+    """
+    loop = GeometricEnvelope(constant=0.5, rate=1.0e-6)
+    verdict = stage_4a_structural_verdict(loop)
+    assert verdict["full_gamma_constant"] == pytest.approx(1.5, rel=1e-12)
+    assert verdict["full_gamma_rate"] == pytest.approx(0.25, rel=1e-12)
+    assert verdict["full_gamma_borel_summable"] is True
+    assert verdict["kinematic_dominates"] is True
+    assert verdict["convergence_radius_g"] == pytest.approx(4.0, rel=1e-12)
+    assert verdict["convergence_radius_xik"] == pytest.approx(2.0, rel=1e-12)
+
+
+def test_stage_4a_verdict_strong_coupling_loop_dominates() -> None:
+    """Stage 4a structural verdict on a strong-coupling loop envelope.
+
+    For r_loop > 1/4 the envelope still gives geometric convergence
+    (preserves Wave 1a.3 verdict) but with the loop rate dominant; the
+    convergence radius is correspondingly smaller.
+    """
+    loop = GeometricEnvelope(constant=1.0, rate=0.5)
+    verdict = stage_4a_structural_verdict(loop)
+    assert verdict["full_gamma_rate"] == pytest.approx(0.5, rel=1e-12)
+    assert verdict["full_gamma_borel_summable"] is True
+    assert verdict["kinematic_dominates"] is False
+    assert verdict["convergence_radius_g"] == pytest.approx(2.0, rel=1e-12)
+
+
+def test_stage_4a_envelope_borel_summable_for_any_geometric_loop() -> None:
+    """For any geometric loop-piece envelope (any r_loop ∈ (0, 1)),
+    the full γ_n is Borel-summable.
+
+    Substantive content: the envelope theorem decouples the
+    Gevrey-1-vs-geometric verdict from the explicit γ_n^(loop) value.
+    Even with strong loop coupling (r_loop close to 1), the verdict
+    holds: geometric, not Gevrey-1.
+    """
+    for r_loop in (0.01, 0.1, 0.25, 0.5, 0.9, 0.99):
+        loop = GeometricEnvelope(constant=1.0, rate=r_loop)
+        verdict = stage_4a_structural_verdict(loop)
+        assert verdict["full_gamma_borel_summable"] is True, (
+            f"Envelope theorem failed for r_loop = {r_loop}"
+        )
+
+
+def test_stage_4a_envelope_sum_is_associative_with_kin_disp() -> None:
+    """envelope_sum(KIN_DISP, loop) == envelope_sum(loop, KIN_DISP).
+
+    Direct test of `IsGeometric.add` symmetry in arguments at the
+    Python level; ensures the Lean-Python correspondence is symmetric.
+    """
+    loop = GeometricEnvelope(constant=2.0, rate=0.1)
+    forward = envelope_sum(KIN_DISP_ENVELOPE, loop)
+    backward = envelope_sum(loop, KIN_DISP_ENVELOPE)
+    assert forward.constant == backward.constant
+    assert forward.rate == backward.rate
