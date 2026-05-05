@@ -25,6 +25,7 @@ import pytest
 import sympy as sp
 
 from src.resurgence.bdg_self_energy import (
+    BELIAEV_2LOOP_KINEMATIC_RATE,
     BELIAEV_BOGOLIUBOV_PREFACTOR,
     BELIAEV_KINEMATIC_INTEGRAL,
     BELIAEV_LO_PREFACTOR,
@@ -49,8 +50,12 @@ from src.resurgence.bdg_self_energy import (
     gamma_kinematic_dispersive_sequence,
     gamma_n_kinematic_dispersive,
     gamma_n_kinematic_dispersive_closed_form,
+    gamma_n_loop_kinematic_dispersive_relative,
     is_borel_summable_under_envelope,
+    loop_envelope_at_dilute_bec,
     stage_4a_structural_verdict,
+    stage_4b_dilute_bec_verdict,
+    stage_5_sharpened_verdict,
 )
 
 
@@ -708,3 +713,229 @@ def test_stage_4a_envelope_sum_is_associative_with_kin_disp() -> None:
     backward = envelope_sum(loop, KIN_DISP_ENVELOPE)
     assert forward.constant == backward.constant
     assert forward.rate == backward.rate
+
+
+# ---------------------------------------------------------------------------
+# Stage 4b: 2-loop kinematic-dispersive rate preservation + parametric
+# loop coupling scaling (Session 14, 2026-05-05)
+# ---------------------------------------------------------------------------
+
+
+def test_stage_4b_2loop_kinematic_rate_equals_one_quarter() -> None:
+    """The 2-loop kinematic-dispersive rate equals 1/4 (substrate property).
+
+    Substantive Stage-4b finding: the Bogoliubov dispersion is loop-order-
+    independent, so the on-shell evaluation Im Σ^R(ω = ω_Bog(k), k) at any
+    loop order carries the same [1+(ξk/2)²]^(-1/2) factor — hence rate 1/4.
+    """
+    assert BELIAEV_2LOOP_KINEMATIC_RATE == 0.25
+
+
+def test_stage_4b_2loop_kin_disp_relative_matches_1loop_pattern() -> None:
+    """The 2-loop kin-disp relative ratio mirrors 1-loop closed form.
+
+    γ_n^(2-loop, kd) / γ_2^(2-loop, kd) = γ_n^(kin-disp) / γ_2^(kin-disp)
+    by rate-preservation. Verifies for n = 2, 3, 4, 5.
+    """
+    for n in range(2, 6):
+        relative = gamma_n_loop_kinematic_dispersive_relative(n)
+        expected = (
+            gamma_n_kinematic_dispersive_closed_form(n)
+            / gamma_n_kinematic_dispersive_closed_form(2)
+        )
+        assert relative == expected
+
+
+def test_stage_4b_2loop_kin_disp_relative_index_2_is_one() -> None:
+    """At n = 2 the relative ratio is by definition 1."""
+    assert gamma_n_loop_kinematic_dispersive_relative(2) == sp.Rational(1)
+
+
+def test_stage_4b_loop_kin_disp_rejects_n_below_2() -> None:
+    """gamma_n_loop_kinematic_dispersive_relative is undefined for n < 2."""
+    with pytest.raises(ValueError):
+        gamma_n_loop_kinematic_dispersive_relative(1)
+
+
+def test_stage_4b_loop_envelope_dilute_bec_zero_gives_zero_constant() -> None:
+    """At na³ = 0 (idealized non-interacting limit), M_loop = 0."""
+    env = loop_envelope_at_dilute_bec(0.0)
+    assert env.constant == 0.0
+    assert env.rate == 0.25
+
+
+def test_stage_4b_loop_envelope_dilute_bec_steinhauer_class() -> None:
+    """Steinhauer-class BEC na³ ~ 10⁻⁴ → M_loop ~ 0.01·prefactor.
+
+    Substantive content: dilute BECs are deeply in the kinematic-dominated
+    regime; M_loop is sub-leading to KIN_DISP_ENVELOPE.constant = 1.
+    """
+    na3 = 1.0e-4
+    env = loop_envelope_at_dilute_bec(na3, prefactor_estimate=1.0)
+    assert env.constant == pytest.approx(0.01, rel=1e-12)
+    assert env.rate == 0.25
+
+
+def test_stage_4b_loop_envelope_rejects_invalid_na3() -> None:
+    """na³ must lie in [0, 1)."""
+    with pytest.raises(ValueError):
+        loop_envelope_at_dilute_bec(-0.1)
+    with pytest.raises(ValueError):
+        loop_envelope_at_dilute_bec(1.0)
+    with pytest.raises(ValueError):
+        loop_envelope_at_dilute_bec(2.0)
+
+
+def test_stage_4b_loop_envelope_rejects_negative_prefactor() -> None:
+    """prefactor_estimate must be non-negative."""
+    with pytest.raises(ValueError):
+        loop_envelope_at_dilute_bec(0.5, prefactor_estimate=-1.0)
+
+
+def test_stage_4b_dilute_bec_verdict_steinhauer_kinematic_dominates() -> None:
+    """For Steinhauer-class na³ ~ 10⁻⁴, the kinematic dominates.
+
+    Full envelope: rate = 1/4 exactly, constant = 1 + √(na³)·prefactor ≈ 1.01.
+    Borel-summable. Convergence radius in g = (ξk)² is 4 (i.e., ξk = 2 = 2·Λ_UV).
+    """
+    verdict = stage_4b_dilute_bec_verdict(na3=1.0e-4, prefactor_estimate=1.0)
+    assert verdict["full_gamma_rate"] == pytest.approx(0.25, rel=1e-12)
+    assert verdict["full_gamma_constant"] == pytest.approx(1.01, rel=1e-12)
+    assert verdict["full_gamma_borel_summable"] is True
+    assert verdict["kinematic_dominates"] is True
+    assert verdict["convergence_radius_g"] == pytest.approx(4.0, rel=1e-12)
+    assert verdict["convergence_radius_xik"] == pytest.approx(2.0, rel=1e-12)
+
+
+def test_stage_4b_dilute_bec_verdict_idealized_zero_loop() -> None:
+    """At na³ = 0 the loop piece vanishes; full envelope = kinematic alone."""
+    verdict = stage_4b_dilute_bec_verdict(na3=0.0)
+    assert verdict["full_gamma_rate"] == 0.25
+    assert verdict["full_gamma_constant"] == 1.0
+    assert verdict["full_gamma_borel_summable"] is True
+    assert verdict["kinematic_dominates"] is True
+
+
+def test_stage_4b_dilute_bec_verdict_finite_na3_borel_summable() -> None:
+    """For any na³ ∈ [0, 1), the FULL γ_n is Borel-summable.
+
+    This is the substantive Stage-4b verdict refinement: combined with
+    Stage 4a's envelope theorem, the BEC SK-EFT geometric-not-Gevrey-1
+    classification holds for any dilute-gas parameter — robust to the
+    explicit unknown γ_2^(loop) prefactor. The convergence-radius
+    statement (full_gamma_rate = 1/4) is rigorous because the rate is
+    preserved across loop orders by the Bogoliubov-dispersion structure.
+    """
+    for na3 in (0.001, 0.01, 0.05, 0.1, 0.5, 0.9):
+        verdict = stage_4b_dilute_bec_verdict(na3, prefactor_estimate=1.0)
+        assert verdict["full_gamma_rate"] == pytest.approx(0.25, rel=1e-12)
+        assert verdict["full_gamma_borel_summable"] is True
+
+
+def test_stage_4b_verdict_compose_with_stage_4a() -> None:
+    """Stage 4b composes with Stage 4a: same envelope_sum machinery.
+
+    The dilute-BEC verdict is just stage_4a_structural_verdict applied to
+    loop_envelope_at_dilute_bec; verifies the composition is consistent.
+    """
+    na3 = 0.01
+    prefactor = 1.5
+    loop_env = loop_envelope_at_dilute_bec(na3, prefactor)
+    stage_4a = stage_4a_structural_verdict(loop_env)
+    stage_4b = stage_4b_dilute_bec_verdict(na3, prefactor)
+    assert stage_4a["full_gamma_constant"] == stage_4b["full_gamma_constant"]
+    assert stage_4a["full_gamma_rate"] == stage_4b["full_gamma_rate"]
+    assert stage_4a["full_gamma_borel_summable"] == stage_4b["full_gamma_borel_summable"]
+    assert stage_4a["kinematic_dominates"] == stage_4b["kinematic_dominates"]
+
+
+# ---------------------------------------------------------------------------
+# Stage 5: Sharpened verdict — γ_6-γ_7 + Padé-Borel re-run + closure
+# (Session 14, 2026-05-05)
+# ---------------------------------------------------------------------------
+
+
+def test_stage_5_sharpened_verdict_idealized_no_loop() -> None:
+    """Stage 5 sharpened verdict at na³ = 0 (idealized non-interacting limit).
+
+    With no loop piece, the kinematic-only sequence γ_1..γ_7 should:
+      - Have ratio test signature decaying monotonically
+      - Have no finite leading Borel singularity
+      - Yield Λ_UV estimate of None (no resurgence)
+      - Combined: BEC SK-EFT geometric, NOT Gevrey-1.
+    """
+    verdict = stage_5_sharpened_verdict(na3=0.0, max_order=7)
+    assert verdict["leading_borel_singularity"] is None
+    assert verdict["lambda_uv_estimate"] is None
+    assert verdict["is_geometric_not_gevrey1"] is True
+    assert verdict["full_gamma_rate"] == 0.25
+    assert verdict["full_gamma_borel_summable"] is True
+    assert verdict["kinematic_dominates"] is True
+    # Sequence is length 7
+    assert len(verdict["kinematic_sequence"]) == 7
+    # γ_1 is the LO Beliaev anchor
+    assert verdict["kinematic_sequence"][0] == pytest.approx(BELIAEV_LO_PREFACTOR)
+
+
+def test_stage_5_sharpened_verdict_steinhauer_class() -> None:
+    """Stage 5 verdict on Steinhauer-class BEC (na³ ~ 10⁻⁴).
+
+    Loop piece is parametrically suppressed; full verdict is unchanged
+    from idealized: geometric, rate 1/4, Borel-summable, no resurgence.
+    """
+    verdict = stage_5_sharpened_verdict(na3=1.0e-4, max_order=7)
+    assert verdict["full_gamma_rate"] == 0.25
+    assert verdict["full_gamma_borel_summable"] is True
+    assert verdict["kinematic_dominates"] is True
+    assert verdict["is_geometric_not_gevrey1"] is True
+    # Full constant ≈ 1.01 (kinematic 1.0 + loop 0.01)
+    assert verdict["full_gamma_constant"] == pytest.approx(1.01, rel=1e-12)
+
+
+def test_stage_5_sharpened_verdict_gamma_6_gamma_7_closed_form() -> None:
+    """Stage 5 ships the γ_6 and γ_7 closed-form coefficients explicitly."""
+    verdict = stage_5_sharpened_verdict(na3=0.0, max_order=7)
+    # γ_6 = γ_1 · (-1)^5 · C(10, 5) / 16^5 = -γ_1 · 252 / 1048576
+    expected_gamma_6 = (
+        BELIAEV_LO_PREFACTOR * (-1) * math.comb(10, 5) / (16**5)
+    )
+    # γ_7 = γ_1 · (-1)^6 · C(12, 6) / 16^6 = +γ_1 · 924 / 16777216
+    expected_gamma_7 = (
+        BELIAEV_LO_PREFACTOR * (+1) * math.comb(12, 6) / (16**6)
+    )
+    seq = verdict["kinematic_sequence"]
+    assert seq[5] == pytest.approx(expected_gamma_6, rel=1e-12)
+    assert seq[6] == pytest.approx(expected_gamma_7, rel=1e-12)
+
+
+def test_stage_5_ratio_test_decays_monotonically() -> None:
+    """Stage 5 sequence ratio test decays monotonically (geometric signature).
+
+    For Gevrey-1, the ratio test would saturate at a positive constant.
+    Monotone decay to 0 is the geometric signature.
+    """
+    verdict = stage_5_sharpened_verdict(na3=0.0, max_order=15)
+    assert verdict["ratio_test_monotone_decay"] is True
+
+
+def test_stage_5_verdict_string_present() -> None:
+    """Stage 5 verdict carries a substantive verdict string."""
+    verdict = stage_5_sharpened_verdict(na3=0.0)
+    assert isinstance(verdict["verdict"], str)
+    assert "geometrically convergent" in verdict["verdict"]
+    assert "NOT Gevrey-1" in verdict["verdict"]
+    assert "ξk = 2 = 2·Λ_UV" in verdict["verdict"]
+
+
+def test_stage_5_verdict_rejects_max_order_too_small() -> None:
+    """Stage 5 requires max_order >= 2 for meaningful Padé-Borel content."""
+    with pytest.raises(ValueError):
+        stage_5_sharpened_verdict(max_order=1)
+
+
+def test_stage_5_verdict_rejects_invalid_na3() -> None:
+    """Stage 5 inherits na³ ∈ [0, 1) validation from Stage 4b."""
+    with pytest.raises(ValueError):
+        stage_5_sharpened_verdict(na3=-0.1)
+    with pytest.raises(ValueError):
+        stage_5_sharpened_verdict(na3=1.0)

@@ -74,6 +74,27 @@ import SKEFTHawking.QuantumCrooks.ConcreteComplex
 -- embedded averages to 2-level averages; substantive higher-dimensional
 -- Perarnau-Llobet no-go theorem perarnau_llobet_no_go_higher_dim.
 import SKEFTHawking.QuantumCrooks.HigherDimensional
+-- Phase 6n Wave 2b (QCrooks-α) typeclass connections (Session 14, 2026-05-05):
+-- Wave 2a → Wave 2b cross-bridge linking SKEFTAxioms substrate to the four
+-- Stage-1 axiomatization predicates (Tasaki / Åberg / Kafri-Deffner / Kirkwood-
+-- Dirac) via the FDT-pinned linear-response Gaussian work distribution.
+-- First non-trivial substantive witnesses for IsTasakiTPMScheme / etc. (the
+-- previously-shipped trivialScheme_is_* used the zero distribution).
+-- skeft_substrate_yields_TPM_scheme extracts c : FirstOrderCoeffs from
+-- A.dynamical_KMS via algebraic FDR; firstOrderDissipative_yields_TPM_scheme
+-- ships unconditional concrete witness for γ₂ > 0; closure summary
+-- wave_2b_typeclass_connections_closure bundles all four axiomatization
+-- predicates simultaneously satisfied by a single MeasurementScheme.
+import SKEFTHawking.QuantumCrooks.SKEFTConnection
+-- Phase 6n Wave 2b reservoir-coupled / Lindblad-DB forms (Session 14, 2026-05-05):
+-- Adds IsReservoirCoupled + IsLindbladDetailedBalance predicates strengthening
+-- IsCrooksRatio with non-vacuity at W=0. Trivial zero scheme is NOT reservoir-
+-- coupled (substantive separation). Linear-response Gaussian is the first
+-- non-trivial witness. Wave 2a → Wave 2b cross-bridge skeft_substrate_yields_-
+-- lindbladDB_scheme. Concrete firstOrderDissipativeAction(γ₂>0) witness.
+-- Closure summary wave_2b_reservoir_coupled_closure bundles all 4 axiomatization
+-- predicates + reservoir-coupling + Lindblad-DB into single MeasurementScheme.
+import SKEFTHawking.QuantumCrooks.ReservoirCoupled
 -- Phase 6n Wave 2c (Crooks-on-analog-Hawking) Stage 1 substrate:
 -- HorizonDetailedBalance generalizes IsCrooksRatio to nonlinear entropy-
 -- production functionals σ : ℝ → ℝ; bridge to classical Crooks via the

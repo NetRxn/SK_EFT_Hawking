@@ -1,10 +1,10 @@
 {
-  "generated": "2026-05-05T12:37:34.142996",
+  "generated": "2026-05-05T13:53:44.227910",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 10832,
-    "theorems_total": 5478,
-    "theorems_substantive": 5453,
+    "total_declarations": 10872,
+    "theorems_total": 5507,
+    "theorems_substantive": 5482,
     "theorems_placeholder": 25,
     "axioms": 1,
     "axiom_names": [
@@ -12,7 +12,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 278,
+    "modules": 280,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -198,6 +198,8 @@
       "SKEFTHawking.QuantumCrooks.KafriDeffner",
       "SKEFTHawking.QuantumCrooks.PerarnauLlobet",
       "SKEFTHawking.QuantumCrooks.Quasiprobability",
+      "SKEFTHawking.QuantumCrooks.ReservoirCoupled",
+      "SKEFTHawking.QuantumCrooks.SKEFTConnection",
       "SKEFTHawking.QuantumCrooks.Setup",
       "SKEFTHawking.QuantumCrooks.Tasaki",
       "SKEFTHawking.QuantumGroupAntipode",
@@ -293,7 +295,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 4768,
+    "definitions": 4779,
     "structures": 235,
     "instances": 270,
     "inductives": 80
@@ -301,7 +303,7 @@
   "python": {
     "python_modules": 130,
     "test_files": 99,
-    "pytest_cases": 4160,
+    "pytest_cases": 4179,
     "notebooks": 87,
     "papers": 42,
     "figures": 154
