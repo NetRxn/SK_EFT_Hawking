@@ -869,7 +869,7 @@ SORRY_GAPS: list[SorryGap] = [
                            "Connect to FirstOrderProjection_yields_FirstOrderKMS to show the partition matches "
                            "transform-level vs algebraic-level KMS. If case analysis surfaces additional structure, "
                            "failure mode is itself publishable per DR §12 caveat.",
-             filled=True),  # Closed at Stage 1 by `decide` on the inductive enum (P5 anti-pattern at definitional level; substantive partition-recovery requires Stage 2-3 unfolding to actual SKDoubling.FirstOrderCoeffs / KMSSymmetry connection — I1 R1 hold remains).
+             filled=True),  # Phase 6n Session 5 (2026-05-04): Stage 2-3 SUBSTANTIVE replacement shipped — theorem now imports SKEFTHawking.SKDoubling and (a) projects 4 SKFields components from KMSSymmetry.kms_transform_spec's 4 ∀-conjuncts; (b) uses literal Aristotle counterexample aristotleCounterexample : FirstOrderCoeffs := ⟨0,0,0,0,0,0,0,1,0⟩; (c) proves it violates FirstOrderKMS.fdr_i2 via linarith. R1 hold LIFTED — partition now empirically derived from KMSSymmetry transform-component analysis, not `decide` on a definitional inductive. (Other 7 GloriosoLiu modules — Axioms, DynamicalKMS, LocalEquilibrium, EntropyCurrent, LocalSecondLaw, OnsagerReciprocity, FirstOrderProjection — remain Stage 1 placeholder-level; their substantive replacement is the gating prerequisite for 6n.ζ.) Counting form preserved as `partition_counts_4_and_5` corollary.
 
     SorryGap(module="SKEFTHawking.GoltermanShamir", name="tpf_violates_C2",
              description="TPF local dim exceeds any C2 finite dim: ∃ N > c.local_dim_finite",
