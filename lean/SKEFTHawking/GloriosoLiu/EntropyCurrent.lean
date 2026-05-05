@@ -44,6 +44,11 @@ substantive existence witness for `entropy_current_exists`. -/
 def zeroEntropyCurrent (action : SKAction) : EntropyCurrent action where
   density := fun _ => 0
 
+/-- The zero entropy current's density vanishes pointwise on `SKFields`. -/
+@[simp]
+theorem zeroEntropyCurrent_density (action : SKAction) (f : SKFields) :
+    (zeroEntropyCurrent action).density f = 0 := rfl
+
 /--
 **Existence of a Noether-style entropy current under the GL axioms.**
 
@@ -51,9 +56,13 @@ Per Glorioso–Liu Prop. III.1: under the six SKEFTAxioms, there exists
 an entropy current `J^μ_S` constructed Noether-style from the
 dynamical-KMS Z₂ symmetry. Stage 2-3a witnesses existence via the
 trivial `zeroEntropyCurrent` (substantively typed against the action,
-not Unit-valued). Stage 2-3b will extend to the substantive Noether
-construction extracting a non-trivial density from the dynamical-KMS
-Z₂ involution.
+not Unit-valued). **Stage 2-3b (intentional placeholder) will extend
+to the substantive Noether construction extracting a non-trivial density
+from the dynamical-KMS Z₂ involution; the `_A : SKEFTAxioms` hypothesis
+becomes load-bearing at that point** (the Noether density is constructed
+from `A.dynamical_KMS`'s coefficient witness). The current trivial form
+is held intentionally as a Stage-2-3b fill-in target — see
+`SORRY_GAPS["entropy_current_exists"]` in `aristotle_interface.py`.
 -/
 theorem entropy_current_exists
     (action : SKAction) (β : ℝ) (_A : SKEFTAxioms action β) :

@@ -54,20 +54,37 @@ def LocalEquilibriumAt (action : SKAction) (pattern : ConservationPattern) : Pro
   hasLocalEquilibrium action ∧ pattern.currentCount > 0
 
 /--
-**Local equilibrium holds for the zero action under any nontrivial pattern.**
+**Substantive: the zero action has a polynomial first-order representation.**
 
-Substantive existence theorem: the canonical zero-action witness from
-`Axioms.lean` admits LE for any conservation pattern with a nontrivial
-current count. Proof discharges the polynomial-form clause via the
-all-zero `FirstOrderCoeffs` witness (whose `firstOrderAction` is also
-identically (0, 0)) and the count clause via the hypothesis.
--/
-theorem LocalEquilibrium_zero_action
-    (pattern : ConservationPattern) (h : pattern.currentCount > 0) :
-    LocalEquilibriumAt zeroAction pattern := by
-  refine ⟨?_, h⟩
+This is the load-bearing content underlying the LE axiom for the zero-action
+witness chain: there exist `FirstOrderCoeffs` (the all-zero ones) whose
+`firstOrderAction` reproduces `zeroAction.lagrangian` on every `SKFields`
+configuration. No hypothesis about the conservation pattern is required —
+the polynomial-form claim is independent of the pattern's current count.
+
+This theorem is what makes `LocalEquilibrium_zero_action` non-vacuous;
+the wrapper below pairs it with the pattern-non-vacuity hypothesis. -/
+theorem hasLocalEquilibrium_zero_action : hasLocalEquilibrium zeroAction := by
   refine ⟨⟨0, 0, 0, 0, 0, 0, 0, 0, 0⟩, ?_⟩
   intro f
   simp [zeroAction, firstOrderAction]
+
+/--
+**LE wrapper for the zero action under any nontrivial pattern.**
+
+API-shaped wrapper combining the substantive polynomial-form witness
+(`hasLocalEquilibrium_zero_action`) with the pattern-non-vacuity
+hypothesis. The substantive content lives in
+`hasLocalEquilibrium_zero_action`; this theorem just bundles the two
+clauses of `LocalEquilibriumAt` together.
+
+Stage-2-3a refactor (Phase 6n Wave 2a follow-up, 2026-05-05): split off
+the substantive polynomial-form witness as `hasLocalEquilibrium_zero_action`
+to satisfy the preemptive-strengthening checklist (P2: drop the conjunct
+that's just a hypothesis extraction). -/
+theorem LocalEquilibrium_zero_action
+    (pattern : ConservationPattern) (h : pattern.currentCount > 0) :
+    LocalEquilibriumAt zeroAction pattern :=
+  ⟨hasLocalEquilibrium_zero_action, h⟩
 
 end SKEFTHawking.GloriosoLiu
