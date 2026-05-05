@@ -175,6 +175,18 @@ import SKEFTHawking.SymTFTAudit.CrossBridges
 -- a multi-year community project; this project-local form captures the
 -- chiral-central-charge piece load-bearing for the Schellekens chain.
 import SKEFTHawking.SymTFTAudit.WittClass
+-- Phase 6n Wave 1b Stage 5.8 (Session 15, 2026-05-05): Witt-equivalence-via-
+-- Drinfeld-center predicate. Lifts the Davydov-Müger-Nikshych-Ostrik 2010
+-- (arXiv:1009.2117) categorical characterization of Witt equivalence to
+-- Lean substrate using Mathlib's `CategoryTheory.Center`. Establishes
+-- `WittEquivalentMTC` as an equivalence relation (refl/symm/trans inherited
+-- from Mathlib's Equivalence apparatus) and ships the cross-bridge to
+-- integer-level `WittEquivalent` / `WittClass.mk` under a Prop-level
+-- central-charge-preservation hypothesis (no new axiom). First step toward
+-- the full Witt group of MTCs (continuations: braided equivalence in 5.9,
+-- Deligne tensor product as group operation in 5.10, DMNO theorem on
+-- pseudo-unitary subclass in 5.11).
+import SKEFTHawking.SymTFTAudit.DrinfeldCenter
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling

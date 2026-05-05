@@ -1,10 +1,10 @@
 {
-  "generated": "2026-05-05T13:53:44.227910",
+  "generated": "2026-05-05T15:32:42.897507",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 10872,
-    "theorems_total": 5507,
-    "theorems_substantive": 5482,
+    "total_declarations": 10920,
+    "theorems_total": 5528,
+    "theorems_substantive": 5503,
     "theorems_placeholder": 25,
     "axioms": 1,
     "axiom_names": [
@@ -12,7 +12,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 280,
+    "modules": 281,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -257,6 +257,7 @@
       "SKEFTHawking.SurgeryPresentation",
       "SKEFTHawking.SymTFTAudit.Applicability",
       "SKEFTHawking.SymTFTAudit.CrossBridges",
+      "SKEFTHawking.SymTFTAudit.DrinfeldCenter",
       "SKEFTHawking.SymTFTAudit.WittClass",
       "SKEFTHawking.TPFDisentangler",
       "SKEFTHawking.TPFEvasion",
@@ -295,9 +296,9 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 4779,
-    "structures": 235,
-    "instances": 270,
+    "definitions": 4803,
+    "structures": 237,
+    "instances": 271,
     "inductives": 80
   },
   "python": {
