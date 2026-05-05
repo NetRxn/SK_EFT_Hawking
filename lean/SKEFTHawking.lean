@@ -45,6 +45,12 @@ import SKEFTHawking.QuantumCrooks.Concrete
 -- inequality (third Sakharov-style biconditional candidate).
 import SKEFTHawking.CrooksAnalogHawking.HorizonDetailedBalance
 import SKEFTHawking.CrooksAnalogHawking.GallavottiCohen
+-- Phase 6n Wave 2d Stage 1 substrate: Sakharov ↔ horizon-Crooks reformulation.
+-- Bundles existing JacobsonThermoGRDarkEnergy.SakharovConditions (Phase 6m
+-- Track C substrate) with the new HorizonDetailedBalance predicate (Wave 2c).
+-- Concrete witnesses: ³He-A (Jacobson-consistent) and FLS BEC (not).
+-- Verlinde-vs-Jacobson distinction preserved at every Lean statement.
+import SKEFTHawking.CrooksAnalogHawking.SakharovHorizonCrooks
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling

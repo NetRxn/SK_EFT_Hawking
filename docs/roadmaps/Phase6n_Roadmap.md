@@ -88,7 +88,7 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 | **Wave 2a** | G10-6n.1 Glorioso-Liu axiomatic | ✅ **SHIPPED** (Stage-1 skeleton + Stage 2–3 substantive refactor + Stage 2–3b KMS framework refactor + R1 LIFTED; 8 GloriosoLiu/ modules) | D3 + L3 + I1 — **DEFERRED** (I1 reframing pre-draft EXISTS, on-hold) | **D.3** | **HELD** — I1 pre-draft at `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md` (on-hold per Session-5 user direction) |
 | **Wave 2b** | G10-QCrooks-α | ✅ **SHIPPED** (Stage 1: 6 QuantumCrooks/ modules + parametric no-go theorem; Stage 2-3: 7th module Concrete.lean ships substantive quantum no-go via canonical 2-level Perarnau-Llobet counterexample on `Matrix (Fin 2) (Fin 2) ℝ`. All MCP-proven, zero Aristotle escalation, zero sorry.) | D1 cross-bridge / D5 — **DEFERRED** | **D.2** | none |
 | **Wave 2c** | G10-6n.3 Crooks-on-analog-Hawking | 🟡 **IN-PROGRESS** (Stage 1 SHIPPED: 2 CrooksAnalogHawking/ modules — `HorizonDetailedBalance` predicate generalizes `IsCrooksRatio` to nonlinear σ; bridge theorem to classical Crooks; `GallavottiCohenSymmetry` LDP rate-function predicate. Stage 2-3 = third Sakharov-style biconditional `HDB ↔ GC under GLU monotonicity` requires LDP infrastructure deferred via Itô.) | E1 + D1 — **DEFERRED** | **D.2** | none |
-| **Wave 2d** | G10-6n.7 Sakharov ↔ horizon-Crooks | 📝 **WORKING DOC** (D3+L3 reframing pre-draft EXISTS at `temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md`; Lean module work UNBLOCKED, ready to start) | D3 + L3 — **DEFERRED** (pre-draft on-hold) | **D.3** | **HELD** — D3+L3 pre-draft on-hold per Session-5 user direction |
+| **Wave 2d** | G10-6n.7 Sakharov ↔ horizon-Crooks | 🟡 **IN-PROGRESS** (Stage 1 SHIPPED Session 6: `SakharovHorizonCrooks.lean` bundles existing `SakharovConditions` (Phase 6m JTGR substrate) with `HorizonDetailedBalance` (Wave 2c); ³He-A + FLS BEC substrate witnesses + partition theorem; Verlinde-vs-Jacobson distinction preserved. Stage 2-3 = full biconditional `Sakharov_iff_horizon_Crooks` derivation pending GLU monotonicity bridge.) D3+L3 reframing pre-draft on-hold per Session-5. | D3 + L3 — **DEFERRED** (pre-draft on-hold) | **D.3** | **HELD** — D3+L3 pre-draft on-hold per Session-5 user direction |
 
 **Wave dependencies (Session-5 status):**
 - Wave 1a / Wave 1b / Wave 2b / Wave 2c / Wave 2a are independent — can run in any order, in parallel.
@@ -100,7 +100,7 @@ Seven waves across two parallelizable Tracks. Five core waves run in parallel (n
 **Recommended next-up order (Session 6+ reset, per user direction "push forward on math"):**
 1. ~~**Wave 2b**~~ — ✅ Stage 1 + Stage 2-3 SHIPPED (Session 6): 7 QuantumCrooks/ modules + substantive quantum Perarnau-Llobet no-go (canonical 2-level counterexample, MCP-proven, zero Aristotle).
 2. ~~**Wave 2c**~~ — ✅ Stage 1 SHIPPED (Session 6): 2 CrooksAnalogHawking/ modules + bridge to classical Crooks + GallavottiCohen LDP-symmetry predicate. Stage 2-3 = third Sakharov-style biconditional pending LDP infrastructure (Itô-deferred).
-3. **Wave 2d Lean module** — `HorizonDetailedBalance` + `Sakharov_iff_horizon_Crooks` Lean substrate (the working-doc pre-draft is for the *bundle absorption*; Lean substrate work proceeds independently).
+3. ~~**Wave 2d Lean substrate**~~ — ✅ Stage 1 SHIPPED (Session 6): `SakharovHorizonCrooks.lean` bundles existing `SakharovConditions` (Phase 6m) with `HorizonDetailedBalance` (Wave 2c); ³He-A + FLS BEC witnesses + partition theorem with substantive cross-module proof. Stage 2-3 = full biconditional pending GLU monotonicity bridge.
 4. **Wave 1b Lean theorem-statement work** — once Stage-1 audit signs off internally (the audit verdict in the working doc identifies the next-step Lean structure).
 5. **Wave 2b Stage 2-3 extension targets** — generalize the concrete substrate to `Matrix (Fin n) (Fin n) ℂ` for arbitrary n; add reservoir-coupled forms; KMSCompatible/FDTCompatible typeclass connections.
 6. **Wave 1a.3 Path A precision** — pending user decision (per VERDICT doc §7); if NOT authorized, Wave 1a closes at 1a.4 + Path B.
@@ -308,14 +308,21 @@ Discrete-time / Markov-jump-process scope (Falasco-Esposito 2025 RMP framework) 
 
 ---
 
-## Wave 2d — G10-6n.7 Sakharov ↔ horizon-Crooks reformulation 📝 WORKING DOC; ⏳ Lean NOT STARTED
+## Wave 2d — G10-6n.7 Sakharov ↔ horizon-Crooks reformulation 🟡 IN-PROGRESS
 
-**Sub-wave status (Session-5 close):**
+**Sub-wave status (Session 6 close):**
+- ✅ **Stage 1 Lean substrate SHIPPED** (Session 6): `lean/SKEFTHawking/CrooksAnalogHawking/SakharovHorizonCrooks.lean`:
+  - `HorizonCrooksSubstrate` structure bundles existing `JacobsonThermoGRDarkEnergy.SakharovConditions` (Phase 6m Track C substrate) with the new `HorizonDetailedBalance` predicate (Wave 2c) into a single substrate type.
+  - `jacobsonConsistent` predicate captures the Jacobson reading (NOT Verlinde — distinction preserved at every Lean statement per Phase 6n DR §7).
+  - Concrete witnesses: `helium3A_horizon_crooks` (Sakharov true via JTGR7 → Jacobson-consistent) and `flsBEC_horizon_crooks` (Sakharov-(ii) fails via JTGR8 → not Jacobson-consistent).
+  - `horizonCrooks_substrate_partition` theorem: substantive partition combining both witnesses — extends the existing Phase 6e+6m biconditional witnesses to the horizon-Crooks substrate type. Proof invokes `JacobsonThermoGRDarkEnergy.volovik_jannes_he3a_satisfies_sakharov_criterion` (JTGR7) and `flsBEC.universalCoupling = false` (JTGR8) — substantive cross-module bridge per P6 discipline.
 - 📝 **D3+L3 reframing pre-draft EXISTS (uncommitted)** at `temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md`. On-hold for user review per Session-5 user direction (bundle absorption deferred until full Phase 6n + 6o picture lands).
-- ✅ **Wave dependency Wave 2a closed** at Lean-substrate level (Stage 1 + 2-3 + 2-3b shipped). Wave 2d Lean module work is **unblocked**.
-- ⏳ **Lean module NOT STARTED**: `HorizonDetailedBalance` predicate + `Sakharov_iff_horizon_Crooks` biconditional theorem statement + Phase 6e + Phase 6m Track C JTGR specialization witnesses.
+- ✅ **Wave dependency Wave 2a closed** at Lean-substrate level (Stage 1 + 2-3 + 2-3b shipped). Wave 2d Lean module work was unblocked, now Stage 1 SHIPPED.
+- ⏳ **Stage 2-3 NOT STARTED**: full `Sakharov_iff_horizon_Crooks` biconditional derivation requires the GLU monotonicity bridge from Wave 2a's `SKEFTAxioms`/`hasDynamicalKMS_algebraic` substrate applied at the substrate-level Rindler horizon. Per `6n_gamma_kms_framework_finding.md` §6.2, the bridge MUST use the algebraic-FDR form (`hasDynamicalKMS_algebraic`), not strict-invariance.
 
-**Recommended next-up order placement (Lean substrate work):** **#3** after Wave 2b + Wave 2c; bundle absorption HELD per user direction. The pre-draft KMS framework finding (§6.2 of `6n_gamma_kms_framework_finding.md`) flags that the D3 reframing prose should reference the algebraic-FDR form of dynamical-KMS (`SKEFTHawking.SKDoubling.FirstOrderKMS`) rather than strict-invariance for technical accuracy — apply when bundle-absorption pass begins.
+**Lake build state**: 8528 → 8529 jobs (+1 module), all clean, zero sorry.
+
+**Substantive Stage-1 finding:** the existing Phase 6e biconditional witnesses (³He-A satisfies / FLS BEC fails) extend cleanly to the horizon-Crooks substrate type via the `HorizonCrooksSubstrate` bundle. The partition theorem is a substantive cross-module statement preserving the Verlinde-vs-Jacobson distinction.
 
 **🚨 USER AUTHORIZATION GATE (D.3 absorption — Stage B of `LATE_PHASE6_ABSORPTION_PROTOCOL.md`) — HELD:**
 
