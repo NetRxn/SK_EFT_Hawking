@@ -622,12 +622,26 @@ All 5 user-facing headlines verified standard-kernel-only `[propext, Classical.c
 
 **Authoritative post-Session-18 counts (counts.json regen 2026-05-05 from fresh ExtractDeps):** **5575 thms (5550 substantive + 25 placeholder) / 283 modules / 0 sorry / 1 axiom / 4818 defs / 322 Aristotle-proved / Lake 8547 jobs / pytest 4111**. Δ vs Session 17: thms +21 substantive, modules +1 (`SymTFTAudit/FreeKLinearCategory.lean`), defs +7.
 
-**Highest-leverage Session 19+ priority order (Phase 6n continuation):**
-1. **Wave 1b.5.10b — Free k-linear monoidal category extension.** Build on this session's `FreeKLinear C k` substrate: extend `lift` universal property to monoidal functors. Prerequisite for the Deligne ⊠ proper construction (5.10e+). Substrate ready: `MonoidalCategory`, `Functor.Monoidal`, this session's `lift`. Few-session sub-wave.
-2. **Wave 1b.5.10c-e — Deligne tensor product proper.** Define `DeligneTensor C D` as a quotient of `FreeKLinear (C × D) k` by k-bilinear-relations setoid + transferred monoidal/braided structure (Path 1 from Session 17 substrate scout). Multi-session.
-3. **Wave 1b.5.12 — strict pseudo-unitary refinement.** Single-session deliverable. Refine `IsPseudoUnitary` to require the witness data to be induced by C's actual modular structure (e.g., extract from a `RibbonCategory C [HasModularData C]` typeclass). Breaks the Wave 1b.5.11 trivial-witness equivalence and produces the true DMNO Theorem 5.2 substantive content. Can run in parallel with 1b.5.10b/c.
-4. **Wave 2c.5c+ abstract LDP rate function class** — single-session deliverable on Mathlib `MeasureTheory` substrate; opens ~10-15 session continuation chain to full LDP framework (Cramér IID → Varadhan → Gärtner-Ellis non-IID).
-5. **Wave 1a.3 Stage 4b** — pre-session prerequisite: fetch Shi-Griffin Phys. Rep. 304 (1998) to cache via background Explore agent.
+**Session 19 close (2026-05-05) — Wave 1b.5.10b morphism-side SHIPPED (free k-linear monoidal extension first sub-session deliverable).** Pre-session dispatched a background Explore agent for Mathlib `MonoidalCategory` / `Functor.Monoidal` / `Monoidal.induced` substrate scout — confirmed direct construction (not via `Monoidal.induced`, since `incl` goes the wrong direction for `induced`-style transport).
+
+**Wave 1b.5.10b deliverable:** NEW `lean/SKEFTHawking/SymTFTAudit/FreeKLinearMonoidal.lean` (~10 substantive thms + 1 def):
+- §1 `freeTensorHom : ((X₁ ⟶ Y₁) →₀ k) → ((X₂ ⟶ Y₂) →₀ k) → ((X₁ ⊗ X₂ ⟶ Y₁ ⊗ Y₂) →₀ k)` k-bilinear extension of C's `tensorHom` via double-`Finsupp.sum` (built in lockstep with Session 18's `freeComp`). Bilinearity helpers (`freeTensorHom_single_single`, `freeTensorHom_zero_left`/`_right`, `freeTensorHom_add_left`/`_right`, `freeTensorHom_smul_left`/`_right`).
+- §2 `freeTensorHom_id_id` — `freeTensorHom (freeId X) (freeId Y) = freeId (X ⊗ Y)` via `MonoidalCategory.tensorHom_id` + `id_whiskerRight`.
+- §3 **Load-bearing interchange law** `freeTensorHom_freeComp_interchange`: `freeTensorHom (freeComp α β) (freeComp α' β') = freeComp (freeTensorHom α α') (freeTensorHom β β')`. The k-bilinear analog of C's `tensorHom_comp_tensorHom`. Proven by **quadruple-bilinearity-induction** via `Finsupp.induction_linear` on all four `Finsupp` arguments; singleton-singleton-singleton-singleton case discharged by `← MonoidalCategory.tensorHom_comp_tensorHom` + `ring` on coefficient arithmetic.
+- §4 3-conjunct `stage5_10b_partial_freeTensorHom_closure` (singleton-tensor-reduction + identity-tensor-identity + interchange law). **Partial** because object-level associator/unitor lifts + pentagon/triangle laws + full `MonoidalCategory (FreeKLinear C k)` instance are deferred to follow-on sub-sessions (5.10b.2/5.10b.3).
+
+All headlines verified standard-kernel-only `[propext, Classical.choice, Quot.sound]` via `lean_verify`. Lake build clean at **8548 jobs** (+1 vs Session 18). MCP-driven, zero Aristotle, zero new sorry, zero new axioms.
+
+**Authoritative post-Session-19 counts (counts.json regen 2026-05-05 from fresh ExtractDeps):** **5585 thms (5560 substantive + 25 placeholder) / 284 modules / 0 sorry / 1 axiom / 4819 defs / 322 Aristotle-proved / Lake 8548 jobs / pytest 4111**. Δ vs Session 18 (5575/283/4818): thms +10 substantive, modules +1 (`SymTFTAudit/FreeKLinearMonoidal.lean`), defs +1 (`freeTensorHom`).
+
+**Highest-leverage Session 20+ priority order (Phase 6n continuation):**
+1. **Wave 1b.5.10b.2 — `MonoidalCategoryStruct (FreeKLinear C k)` instance.** Object-level tensor (definitionally inherited from C via `unwrap`/`of` synonym), unit, associator/unitor as `incl.map` lifts of C's structural isomorphisms, whiskerLeft/Right via `freeTensorHom`. Substrate ready from this session.
+2. **Wave 1b.5.10b.3 — `MonoidalCategory (FreeKLinear C k)` instance.** Pentagon, triangle, naturality-of-associator/unitor laws — all reduce to C's laws via bilinearity-induction at the basis level.
+3. **Wave 1b.5.10b.4 — `Functor.LaxMonoidal incl` / `Functor.Monoidal incl` instances.**
+4. **Wave 1b.5.12 — strict pseudo-unitary refinement.** Single-session deliverable. Refine `IsPseudoUnitary` to require the witness data to be induced by C's actual modular structure. Breaks the Wave 1b.5.11 trivial-witness equivalence and produces the true Theorem 5.2 substantive content. Can run in parallel with 1b.5.10b.2-4.
+5. **Wave 1b.5.10c-e — Deligne tensor product proper.** Define `DeligneTensor C D` as a quotient of `FreeKLinear (C × D) k` by k-bilinear-relations setoid + transferred monoidal/braided structure (Path 1 from Session 17 substrate scout). Multi-session; the Mathlib `Quotient.preadditive`/`Quotient.Linear.smul` extensions become load-bearing here.
+6. **Wave 2c.5c+ abstract LDP rate function class** — single-session deliverable on Mathlib `MeasureTheory` substrate.
+7. **Wave 1a.3 Stage 4b** — pre-session prerequisite: fetch Shi-Griffin Phys. Rep. 304 (1998) to cache via background Explore agent.
 
 **Pre-Phase-7 bundle absorption gate:** Wave 1b.5.10 (full chain through 5.10g) + Wave 2c.5c+ + Wave 1a.3 Stage 4b form the Phase 6n true-closure prerequisite. Phase 6o opens after these close. After Phase 6n + 6o math both close, the unified bundle-absorption pass per Session-5 user direction runs — two D.3 user-auth gates (Wave 2a I1, Wave 2d D3+L3) trigger at that point.
 

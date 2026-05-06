@@ -206,6 +206,16 @@ import SKEFTHawking.SymTFTAudit.PseudoUnitary
 -- (5.10b-d), Deligne ⊠ proper as quotient (5.10e), and cross-bridge to
 -- WittClass via central-charge additivity under ⊠ (5.10g).
 import SKEFTHawking.SymTFTAudit.FreeKLinearCategory
+-- Phase 6n Wave 1b.5.10b (Session 19, 2026-05-05): morphism-side of the free
+-- k-linear monoidal extension. `freeTensorHom` k-bilinear extension of C's
+-- `tensorHom` via double-`Finsupp.sum` (analog to Session 18's `freeComp`),
+-- with bilinearity helpers, identity-tensor-identity, and the load-bearing
+-- interchange law `freeTensorHom (freeComp α β) (freeComp α' β') =
+-- freeComp (freeTensorHom α α') (freeTensorHom β β')`. **Partial** Stage 5.10b
+-- closure: object-level associator/unitor lifts + pentagon/triangle laws +
+-- full `MonoidalCategory (FreeKLinear C k)` instance deferred to follow-on
+-- sub-sessions (5.10b.2/5.10b.3).
+import SKEFTHawking.SymTFTAudit.FreeKLinearMonoidal
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
