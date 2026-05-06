@@ -229,6 +229,11 @@ import SKEFTHawking.SymTFTAudit.FreeKLinearMonoidal
 -- 5.10f braided lift, 5.10g WittClass cross-bridge.
 import SKEFTHawking.SymTFTAudit.DeligneTensor
 import SKEFTHawking.APSEta.Predicate
+import SKEFTHawking.APSEta.BECAcoustic
+import SKEFTHawking.APSEta.ADWHorizon
+import SKEFTHawking.APSEta.He3A
+import SKEFTHawking.APSEta.SymTFTBridge
+import SKEFTHawking.APSEta.RegimePartition
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
