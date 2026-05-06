@@ -2,7 +2,29 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-05-05-4000. **Phase 6n Session 20 — FOUR substantive lifts SHIPPED (Wave 1b.5.10b.2 + Wave 1b.5.10b.3 + Wave 1b.5.10b.4 + Wave 1b.5.12).** Phase 6n still in-progress — Wave 1b.5.10c-e (Deligne ⊠ proper) + 5.10f-g (braided lift + WittClass cross-bridge) + Wave 2c.5c+ + Wave 1a.3 Stage 4b remain.
+**Last synced:** 2026-05-05-5000. **Phase 6n Session 21 — FOUR substantive lifts SHIPPED (Wave 1b.5.10c + 5.10d substrate + 5.10e combined closure + 5.10g cc-additivity substrate).** Phase 6n still in-progress — Wave 1b.5.10d.2 (full MonoidalCategory lift via `tens` constructor extension) + 5.10f (BraidedCategory) + 5.10g.full (categorical cc additivity) + Wave 2c.5c+ + Wave 1a.3 Stage 4b remain.
+
+**Session 21 lifts:**
+
+- **Wave 1b.5.10c SHIPPED** — `DeligneTensor C D k` underlying-category construction. NEW `lean/SKEFTHawking/SymTFTAudit/DeligneTensor.lean` ships the inductive `DeligneRel C D k : HomRel (FreeKLinear (C × D) k)` (4 mathematical generators — k-bilinearity in each component — plus structural-closure constructors `refl`/`symm`/`trans`/`comp_left`/`comp_right`/`add`/`smul` baked-in for direct `Congruence`/`Quotient.preadditive`/`Quotient.linear` consumption). `instCongruence` instance. `DeligneTensor C D k := CategoryTheory.Quotient (DeligneRel C D k)` defined as `abbrev` for typeclass transparency; inherits `Category` automatically; `Preadditive` via `Quotient.preadditive` + `DeligneRel.add_resp`; `Linear k` via `Quotient.linear` + `DeligneRel.smul_resp`. Projection functor `proj : FreeKLinear (C × D) k ⥤ DeligneTensor C D k`. 4-conjunct `stage5_10c_deligneTensor_closure`.
+
+- **Wave 1b.5.10d substrate SHIPPED** — Monoidal-category substrate availability. External-product bifunctor `extProd : C × D ⥤ DeligneTensor C D k := FreeKLinear.incl ⋙ proj`. 3-conjunct `stage5_10d_deligneTensor_monoidal_substrate` (Mathlib's `prodMonoidal` + Wave 1b.5.10b's `instMonoidalCategory` on `FreeKLinear (C × D) k` + `extProd` existence). The full `MonoidalCategory (DeligneTensor C D k)` instance requires extending `DeligneRel` with a tensor-respect constructor — Wave 1b.5.10d.2 deliverable.
+
+- **Wave 1b.5.10e SHIPPED** — Combined closure theorem. 6-conjunct `stage5_10e_deligneTensor_combined_closure` bundling 5.10c + 5.10d substrate + 5.10g substrate.
+
+- **Wave 1b.5.10g substrate SHIPPED** — Integer-level central-charge additivity bridge to `WittClass`. `chiralCentralChargeOfDeligneTensor : ℤ → ℤ → ℤ := (· + ·)` (substrate-level cc operation under ⊠). Substantive `chiralCentralChargeOfDeligneTensor_witt_additive` (lifts integer cc additivity through `WittInvariant.fromChiralCentralCharge` AddMonoidHom to `ZMod 24` group addition) + `chiralCentralChargeOfDeligneTensor_wittEquivalent` (Witt-equivalence preservation under ⊠). Prop schema `CentralChargeAdditiveUnderDeligneTensor` parallel to `CentralChargePreservesDrinfeldCenter_*` family from Waves 1b.5.8/9/11/12. **Did NOT ship** trivial-rfl discharge of the schema (P5 anti-pattern per preemptive-strengthening discipline).
+
+  All Session-21 headlines verified standard-kernel-only `[propext, Classical.choice, Quot.sound]` via `lean_verify`; some inherit `Quot.sound` only (no `Classical.choice`). MCP-driven, zero Aristotle, zero new sorry, zero new axioms.
+
+**Session 21 substantive findings:**
+- Mathlib's `prodMonoidal : MonoidalCategory (C₁ × C₂)` ships, but **no Preadditive (C × D) instance exists in core** — the Deligne-tensor relation generators must be stated in terms of pair components individually, not via Preadditive on `C × D` directly. Confirmed via MCP probe pre-write.
+- The `abbrev` choice for `DeligneTensor C D k := CategoryTheory.Quotient (DeligneRel C D k)` is essential — typeclass resolution can't transparently see through a plain `def` so `Quotient.linear`'s `Preadditive (Quotient r)` substrate hypothesis can't find the instance registered on `DeligneTensor`. `abbrev` is the right call here despite slightly less explicit naming.
+- The inductive `DeligneRel` baking-in `add` and `smul` constructors directly (rather than deriving them from a smaller relation via `EqvGen`/`HomRel.CompClosure`) is the right architecture — it makes the `Congruence` instance trivial.
+- Full `MonoidalCategory (DeligneTensor C D k)` lift is genuinely multi-session: requires extending `DeligneRel` with a `tens` constructor, defining tensor of morphisms via `Quotient.lift`, and verifying all 10 coherence laws on the quotient. Honest Wave 1b.5.10d.2 deferral.
+
+**Authoritative post-Session-21 project counts (counts.json regen 2026-05-05 from fresh ExtractDeps):** **5616 theorems (5591 substantive + 25 placeholder) / 285 modules / 0 sorry / 1 axiom / 4833 definitions / 322 Aristotle-proved / 130 Python modules / 99 test files / 154 figures / 87 notebooks / 42 papers. Lake 8549 jobs / pytest 4111 passed.** Δ vs Session 20 (5604/284/4824/8548): thms +12 substantive (DeligneTensor.lean §1-§8), modules +1 (DeligneTensor), defs +9, Lake +1.
+
+**Carry-forward Session 20 baseline.**
 
 **Session 20 lifts:**
 
@@ -392,12 +414,12 @@ Session 6: Phase 5t Wave 2 FermiHubbardDimer.lean SHIPPED — Track A COMPLETE; 
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **5579 substantive** (5604 total = 5579 substantive + 25 placeholder; counts.json regen 2026-05-05 post Phase 6n Session 20 — Wave 1b.5.10b.2/5.10b.3/5.10b.4 + Wave 1b.5.12; +19 substantive over Session-19 5560 from extending `SymTFTAudit/FreeKLinearMonoidal.lean` §4-§7 + `SymTFTAudit/PseudoUnitary.lean` §8-§9; lake 8548 jobs PASS) | `lake build SKEFTHawking.ExtractDeps` 2026-05-05 + `update_counts.py`; counts.json fresh |
+| Lean theorems | **5591 substantive** (5616 total = 5591 substantive + 25 placeholder; counts.json regen 2026-05-05 post Phase 6n Session 21 — Wave 1b.5.10c + 5.10d substrate + 5.10e + 5.10g substrate; +12 substantive over Session-20 5579 from NEW `SymTFTAudit/DeligneTensor.lean` §1-§8; lake 8549 jobs PASS) | `lake build SKEFTHawking.ExtractDeps` 2026-05-05 + `update_counts.py`; counts.json fresh |
 | Placeholders (True := trivial) | **25** (counts.json 2026-05-05-0900; unchanged from 2026-05-01 baseline; W8 modules still use only `_phase6f_w8_session{4,5}_module_summary_marker` markers) | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine; unchanged across Phase 5z, 6a-6n — no Aristotle runs in any 6-prefix phase; Phase 6n waves all MCP-proven) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide (verified 2026-05-05 via lake build clean across 8546 jobs post Session 17) |
 | **Axioms** | **1** | Only `gapped_interface_axiom` in SPTClassification.lean remains; `gaussianSaddleAsymptotic` retired in Phase 6a Wave 7. |
-| Lean modules | **284** (Session 19 added `SymTFTAudit/FreeKLinearMonoidal.lean`; Session 18 added FreeKLinearCategory; Session 17 added PseudoUnitary; Session 16: extension within `SymTFTAudit/DrinfeldCenter.lean` — no new module; Session 15 added DrinfeldCenter; Session 14 added SKEFTConnection + ReservoirCoupled; Sessions 5-13 added 27 prior modules) | `lake build` 2026-05-05; ExtractDeps olean fresh |
+| Lean modules | **285** (Session 21 added `SymTFTAudit/DeligneTensor.lean`; Session 19 added FreeKLinearMonoidal; Session 18 added FreeKLinearCategory; Session 17 added PseudoUnitary; Session 16: extension within `SymTFTAudit/DrinfeldCenter.lean` — no new module; Session 15 added DrinfeldCenter; Session 14 added SKEFTConnection + ReservoirCoupled; Sessions 5-13 added 27 prior modules) | `lake build` 2026-05-05; ExtractDeps olean fresh |
 | Lean definitions | **4811** (+4 over Session-16 4807: `PreModularData.IsPseudoUnitary` + `trivialPreModular` + `IsPseudoUnitary` cat-level + `CentralChargePreservesDrinfeldCenter_pseudoUnitary`) | counts.json 2026-05-05 post Session 17 |
 | Python source modules | **130** | counts.json 2026-05-05 (was 128 at 2026-05-01; +2 over Phase 6n window) |
 | Test files | **99** | counts.json 2026-05-05 (was 96 at 2026-05-01; +3 over Phase 6n window) |

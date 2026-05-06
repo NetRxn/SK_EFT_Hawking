@@ -216,6 +216,18 @@ import SKEFTHawking.SymTFTAudit.FreeKLinearCategory
 -- full `MonoidalCategory (FreeKLinear C k)` instance deferred to follow-on
 -- sub-sessions (5.10b.2/5.10b.3).
 import SKEFTHawking.SymTFTAudit.FreeKLinearMonoidal
+-- Phase 6n Wave 1b.5.10c (Session 21, 2026-05-05): underlying-category construction
+-- of the Deligne tensor product `C ⊠ D` of two k-linear categories, defined as the
+-- quotient of `FreeKLinear (C × D) k` (Wave 1b.5.10a) by the bilinearity-respecting
+-- congruence `DeligneRel C D k`. The `DeligneRel` inductive bakes its `Congruence`
+-- closure (refl/symm/trans/comp_left/comp_right) and the additivity/smul-respect
+-- hypotheses required by `Quotient.preadditive` / `Quotient.linear` directly into
+-- its constructors, so the quotient is a k-linear category by direct Mathlib-
+-- substrate transport. `DeligneTensor C D k := CategoryTheory.Quotient (DeligneRel
+-- C D k)` (abbrev for typeclass transparency); inherits `Category`/`Preadditive`/
+-- `Linear k`. Continuations: 5.10d monoidal lift, 5.10e closure-with-ext,
+-- 5.10f braided lift, 5.10g WittClass cross-bridge.
+import SKEFTHawking.SymTFTAudit.DeligneTensor
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
