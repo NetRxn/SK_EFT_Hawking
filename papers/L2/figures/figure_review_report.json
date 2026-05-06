@@ -1,30 +1,78 @@
 {
   "bundle_target": "L2",
-  "review_round": 2,
-  "review_date_utc": "2026-05-01T00:00:00Z",
+  "review_round": 3,
+  "review_date_utc": "2026-05-06T00:00:00Z",
+  "review_context": "Phase 6n+6o -> Phase 7 absorption Session 1 (2026-05-06) D.3 conclusion-paragraph elevation pointer to D2 sec 2.7 (Niemeier -> Schellekens -> Moller-Scheithauer). No new figures introduced; this is a verification round confirming continued GREEN status and cross-bundle (L2 <-> D2) consistency for the modular-generation discriminant claim.",
   "verdict": "GREEN",
   "figures_reviewed": 2,
   "figures_pass": 2,
   "figures_fail": 0,
   "figures_minor": 0,
-  "findings": [],
-  "round1_resolution": [
+  "figures": [
     {
-      "figure_id": "fig75_modular_invariance_phase",
-      "round1_severity": "MINOR",
-      "round1_category": "CaptionFigureRangeMismatch",
-      "round1_summary": "Caption stated 'N_f = 1,...,9' but figure annotates groups through N_f = 12.",
-      "fix_applied": "Caption rewritten in paper_draft.tex (lines 155-160) to 'N_f = 1,...,12' with explicit modular-invariant set {3,6,9,12} and excluded set {1,2,4,5,7,8,10,11}.",
-      "round2_verification": "Figure (unchanged from r1) annotates blue ring 'N_f = 3, 6, 9, 12', top grey marker 'N_f = 1, 4, 7, 10', bottom grey marker 'N_f = 2, 5, 8, 11'. Caption set {1,2,4,5,7,8,10,11} = union of the two grey-marker groups. Caption-figure range now matches exactly. RESOLVED."
+      "name": "fig75_modular_invariance_phase",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "verification": "Plot shows three phase-locations on the unit circle in the complex plane: (i) Re=+1, Im=0 -> phase = 1 (cube root of unity 1, blue ring annotated 'N_f = 3, 6, 9, 12', plus '24 | c_-, N_f equiv 0 mod 3' callout); (ii) Re=-0.5, Im=+sqrt(3)/2 ~ +0.866 -> omega (top grey marker annotated 'N_f = 1, 4, 7, 10'); (iii) Re=-0.5, Im=-sqrt(3)/2 ~ -0.866 -> omega^2 (bottom grey marker annotated 'N_f = 2, 5, 8, 11'). All three positions sit on the dashed unit circle at the canonical cube-root-of-unity angles (0, 2pi/3, 4pi/3). The caption-claimed invariant set {3, 6, 9, 12} appears at phase = 1 as required by 24 | 8 N_f iff 3 | N_f. The caption-claimed excluded set {1, 2, 4, 5, 7, 8, 10, 11} = {1,4,7,10} U {2,5,8,11} matches the union of the two grey-marker annotations. Title 'Framing Anomaly: T-Phase e^{2 pi i c_-/24} vs Generation Count' is correct (T-transformation phase of partition function under tau -> tau + 1 picks up e^{2 pi i c_-/24}, Wang 2024)."
+      },
+      "style": {
+        "status": "pass",
+        "issues": [],
+        "verification": "Steel-blue (#2E86AB-family) ring marker for the modular-invariant subset; muted grey (#7C8B9F-family) circle markers for excluded subsets. No red/green pairing (colorblind-safe, project convention). Serif font family used throughout. Axis labels 'Re(phase)' and 'Im(phase)' are clean and centered; tick marks at -1, -0.5, 0, 0.5, 1, 1.5 (x) and -1, -0.5, 0, 0.5, 1 (y). Legend placed top-left, single entry, non-overlapping. Marker annotations placed adjacent to their markers without collision. Title centered at top with adequate margin."
+      },
+      "caption_match": true,
+      "notes": "Caption (paper_draft.tex lines 155-160) states exactly 'N_f = 1,...,12', '{3, 6, 9, 12}' invariant, '{1,2,4,5,7,8,10,11}' excluded. Figure annotations match line-by-line: blue ring labeled 'N_f = 3, 6, 9, 12'; top grey 'N_f = 1, 4, 7, 10'; bottom grey 'N_f = 2, 5, 8, 11'. Round-2 caption-figure-range reconciliation (recorded in prior figure_review_report.json round1_resolution[0]) remains intact."
     },
     {
-      "figure_id": "fig73_sm_generation_constraint",
-      "round1_severity": "MINOR",
-      "round1_category": "LabelClippingAtRightMargin",
-      "round1_summary": "Dashed-line right-margin labels c_-=24/48/72 clipped and collided with the N_f=9 bar-top label 'c_-=72'.",
-      "fix_applied": "annotation=dict(...) removed from add_hline calls in src/core/visualizations.py:fig_sm_generation_constraint; explicit tickvals=[0, 8, 16, 24, 32, 40, 48, 56, 64, 72] added to the y-axis so threshold grid is conveyed by ticks. PNG regenerated.",
-      "round2_verification": "Regenerated PNG inspected. Right-margin dashed-line annotations are gone. y-axis ticks visible at 0, 8, 16, 24, 32, 40, 48, 56, 64, 72 (every multiple of 8); the threshold values 24, 48, 72 are present as ticks AND as horizontal dashed lines spanning the plot. Per-bar 'c_-=N' labels above each bar are clean and do not collide with anything. Title 'Generation Constraint: c_- = 8N_f = 0 mod 24' renders cleanly. Blue bars at N_f = 0, 3, 6, 9; grey bars elsewhere; caption mapping (blue = divisible by 3) intact. No clipping or new annotation artifacts. RESOLVED."
+      "name": "fig73_sm_generation_constraint",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": [],
+        "verification": "Bar chart of c_- = 8 N_f for N_f = 0,...,9 with horizontal dashed lines at the modular-invariance multiples of 24 (c_- = 24, 48, 72). Bar heights: N_f=0: c_-=0; N_f=1: 8; N_f=2: 16; N_f=3: 24 (on threshold); N_f=4: 32; N_f=5: 40; N_f=6: 48 (on threshold); N_f=7: 56; N_f=8: 64; N_f=9: 72 (on threshold). All ten bars match c_- = 8 N_f arithmetic exactly. Blue bars (modular invariant) at N_f = 0, 3, 6, 9 (the 3 | N_f indices in the plotted range); grey bars at N_f = 1, 2, 4, 5, 7, 8 (the excluded indices). Title 'Generation Constraint: c_- = 8 N_f equiv 0 mod 24' encodes the constraint correctly. The three threshold lines at 24, 48, 72 visually demarcate the modular-invariance band; only the blue bars touch the dashed lines."
+      },
+      "style": {
+        "status": "pass",
+        "issues": [],
+        "verification": "Steel-blue bars for the modular-invariant subset; muted grey bars for the excluded subset. No red/green pairing. y-axis ticks every 8 units (0, 8, 16, 24, 32, 40, 48, 56, 64, 72) per round-2 fix; threshold values (24, 48, 72) appear as both ticks AND horizontal dashed lines, providing redundant visual encoding. Per-bar 'c_- = N' labels above each bar render cleanly with no clipping or collision (round-1 LabelClippingAtRightMargin issue resolved in round-2 by removing add_hline annotation= argument). x-axis label 'Number of Generations (N_f)' and y-axis label 'Chiral Central Charge (c_-)' are readable. Title centered, adequate margins."
+      },
+      "caption_match": true,
+      "notes": "Caption (paper_draft.tex lines 167-170) states 'Chiral central charge c_- = 8 N_f versus the modular invariance band c_- equiv 0 mod 24. Blue bars denote N_f divisible by three (modular invariant). Grey bars denote excluded generation counts.' Figure encoding matches exactly. Round-2 LabelClippingAtRightMargin resolution (recorded in prior figure_review_report.json round1_resolution[1]) remains intact."
     }
   ],
-  "notes": "Round-2 verdict GREEN. Both round-1 MINORs are resolved by the recorded fixes; no new MINORs surfaced on either figure. Figures continue to use the project colorblind-safe steel-blue/grey palette with no red/green pairings, render without kaleido glitches, and remain consistent with the paper_draft.tex captions. Observation (non-blocking, not a finding): fig73 plots N_f = 0..9 while fig75 plots N_f = 1..12. The two ranges are independently appropriate (fig73 demonstrates the c_- = 8 N_f staircase against the c_- = 24 multiples; fig75 demonstrates the cube-roots-of-unity cycling) and neither caption claims a range tied to the other figure, so this is a stylistic choice rather than a drift. Bundle pass criterion satisfied (all figures PASS, no FAIL, no MINOR)."
+  "cross_bundle_checks": [
+    {
+      "check_id": "L2_D2_modular_generation_discriminant_consistency",
+      "status": "pass",
+      "description": "L2 fig73 + fig75 visualize the c_- = 8 N_f / 24 | c_- ==> 3 | N_f / minimal N_f = 3 modular discriminant chain. D2 sec 2 (lines 170-237 of papers/D2/paper_draft.tex, 'The modular generation constraint') develops the identical chain analytically: same equation c_-^{(N_f)} = 8 N_f (D2 line 197), same constraint 24 | 8 N_f equiv 3 | N_f (D2 line 234), same with-nu_R convention (16 left-handed Weyl components per generation), same minimal solution N_f = 3, same Lean anchor (GenerationConstraint.generation_mod3_constraint). D2 contains no figures (papers/D2/figures/ does not exist as a directory; D2 paper_draft.tex contains zero \\includegraphics commands), so no L2-D2 figure-numerical-mismatch is possible. The L2 figures and D2 sec 2 text agree on the substantive content. PASS.",
+      "verification_method": "grep includegraphics, ls papers/D2/figures, line-by-line comparison of c_-, N_f, divisibility relation across L2 paper_draft.tex sec 'The chiral central charge from SM fermion content' (lines 74-149) and D2 paper_draft.tex sec 'The modular generation constraint' (lines 170-237)"
+    },
+    {
+      "check_id": "L2_D2_session1_D3_elevation_pointer_text_only",
+      "status": "pass",
+      "description": "Session-1 D.3 absorption (2026-05-06) added a conclusion-paragraph elevation pointer in L2 paper_draft.tex lines 284-293 referring to the Niemeier-lattice -> Schellekens-chain -> Moller-Scheithauer 2024 deeper structural reading of 24 | c_-, with cross-reference to D2 sec 2.7 (deep companion paper). This is a text-only addition; no figures were introduced or modified for this elevation. The L2 figures (fig73, fig75) remain the round-2 GREEN regenerated PNGs (file mtimes 2026-05-01) and continue to correctly visualize the basic c_- = 8 N_f / 24 | c_- discriminant claim, which is upstream-of and consistent with the deeper structural reading delegated to D2. No figure regeneration required. PASS."
+    },
+    {
+      "check_id": "L2_D2_color_palette_consistency",
+      "status": "pass",
+      "description": "L2 figures use steel-blue (#2E86AB-family) for modular-invariant N_f and muted grey for excluded N_f, consistent with the project colorblind-safe palette (no red/green pairing). D2 has no figures so no palette-clash possible."
+    }
+  ],
+  "structural_checks": {
+    "status": "n/a",
+    "note": "No structural_checks.json present in papers/L2/figures/. Both PNG files render cleanly when loaded via the Read tool (image-mode); no kaleido glitches, no missing traces, no overflow."
+  },
+  "summary": "Round-3 verification PASS. Both L2 figures (fig73_sm_generation_constraint, fig75_modular_invariance_phase) remain at GREEN with no new MINORs. Round-2 fixes (caption-figure-range alignment for fig75, label-clipping resolution for fig73) are intact. Cross-bundle consistency with D2 sec 2 (modular generation constraint) is confirmed: D2 develops the same c_- = 8 N_f / 24 | c_- discriminant chain analytically without figures, so no L2 <-> D2 figure-numerical mismatch is possible. The Session-1 D.3 absorption elevation pointer (Niemeier -> Schellekens -> Moller-Scheithauer, L2 lines 284-293) is text-only and does not require figure regeneration. Bundle pass criterion satisfied: ALL PASS, no FAIL, no MINOR.",
+  "recommendations": [],
+  "regeneration_required": false
 }

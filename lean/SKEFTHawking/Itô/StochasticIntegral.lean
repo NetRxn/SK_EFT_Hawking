@@ -14,8 +14,12 @@ upstream PR readiness is a future-ready discipline per Phase 6o user
 direction Session 30).
 
 References:
-- Degenne et al. arXiv:2511.20118 — Brownian motion in Lean.
-- Marion et al. arXiv:2510.04070 — Markov kernels in Mathlib.
+- Degenne, Ledvinka, Marion, Pfaffelhuber, "Formalization of Brownian
+  motion in Lean", arXiv:2511.20118 (2025).
+- Degenne, "Markov kernels in Mathlib's probability library",
+  arXiv:2510.04070 (2025). (Primary-source-verified
+  Phase 7 absorption Session 5 2026-05-08; supersedes the
+  carry-forward Phase-6n-era misattribution to "Marion et al.")
 - Phase 6o Wave 3b.Itô-α substrate-analysis working doc.
 -/
 

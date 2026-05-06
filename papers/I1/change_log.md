@@ -135,3 +135,118 @@ referenced Lean modules. `bundle_metadata.json` `last_lift` →
 Stage-13 redo required: yes. Reviewer triple (Stage 9/10/13) to
 be invoked next; per user directive 2026-05-01 they run as
 background processes against the bundle target I1.
+
+## 2026-05-06 — Lift-section from `_phase6n_W2b_lean_only` (§8)
+
+- Source title: Quantum Crooks no-go (Perarnau-Llobet)
+- Lift action: Lift-section
+- Insertion point: §8
+- Stage-13 redo required: yes
+- Notes: D.2 sidebar: Phase 6n W2b methodology case — typeclass-connections cross-bridge pattern; QuantumCrooks/SKEFTConnection IsReservoirCoupled non-vacuity strengthening
+
+## 2026-05-06 — Lift-section from `_phase6o_W2a_lean_only` (§11)
+
+- Source title: APS-η for analog horizons
+- Lift action: Lift-section
+- Insertion point: §11
+- Stage-13 redo required: yes
+- Notes: D.2 sidebar: Phase 6o W2a methodology case — substrate-discovery pattern (predicate-level operationalization at Wave 2a.2 + per-substrate concrete computation at Wave 2a.3-5; ³He-A unique non-degenerate cell)
+
+## 2026-05-06 — Lift-section from `_phase6o_W3a_lean_only` (§7)
+
+- Source title: G10 ETH-α productive-value refutation tableau: `ETH/Predicates.lean` (5 candi...
+- Lift action: Lift-section
+- Insertion point: §7
+- Stage-13 redo required: yes
+- Notes: D.2 sidebar: Phase 6o W3a methodology case — parallel-axiomatization productive-value Aristotle-driven tableau pattern (5 candidate ETH axiomatizations + 3 concrete refutation theorems)
+
+## 2026-05-06 — REVISION required by Phase 6n.γ (D.3 GATE 1, user-auth granted)
+
+I1 §3 (Worked Case 1: FirstOrderKMS Aristotle Counterexample) **substantively reframed** from "project-original axiom replaced by stronger one" to "first-order projection of the published Glorioso-Liu axiomatic skeleton."
+
+**Substantive content changes:**
+
+- New opening framing paragraph cites the published axiomatic anchor:
+  Crossley-Glorioso-Liu (CGL) JHEP 09 (2017) 095 (closed-time-path
+  action with hermiticity, reflection positivity Im S ≥ 0, local KMS
+  Z₂); Glorioso-Crossley-Liu II JHEP 09 (2017) 096 (dynamical-KMS Z₂
+  in any local-equilibrium state); Glorioso-Liu (arXiv:1612.07705)
+  local second-law derivation ∂_μ J^μ_S ≥ 0; Liu-Glorioso TASI
+  PoS TASI2017 (2018) 008 pedagogical version; Jain-Kovtun JHEP
+  01 (2024) 162 UV-realization ambiguity in dynamical-KMS.
+
+- Renamed transport coefficients (κ, ν) → (γ_1, γ_2) to match the
+  Lean code's DissipativeCoeffs structure (`SKDoubling.lean` lines
+  244-280). The Lean naming is "γ_1: isotropic phonon damping
+  (related to bulk viscosity); γ_2: anisotropic damping along the
+  superfluid flow." The original (κ, ν) labeling did not match the
+  code; the rename is a hygiene correction available with or without
+  6n.γ, rolled into this batch.
+
+- Reclassified the original `KMSSymmetry` axiom as a **preliminary
+  transform-level constraint** (the field-level transform ψ_a → ψ_a
+  + iβ ∂_t ψ_r acts only on 4 of 9 components). Aristotle's
+  counterexample c = (0,0,0,0,0,0,0,1,0) is now framed as flagging
+  the gap between the transform-level and algebraic-level forms.
+
+- Reclassified the strengthened `FirstOrderKMS` axiom as the
+  **first-order projection of the published dynamical-KMS axiom**.
+  The 4-of-9 / 5-of-9 partition Aristotle exposed is, in the new
+  reading, a *theorem* of first-order projection: the four components
+  whose KMS partners fit within the first-order budget vs the five
+  whose partners exceed it and surface at second order in the
+  Glorioso-Liu loop expansion (formalized in the program's
+  GloriosoLiu/SecondOrderProjection module).
+
+- Figure 4 caption upgraded to identify which constraint each panel
+  corresponds to (transform-component vs algebraic-FDR-projection of
+  dynamical-KMS).
+
+- Closing punchline preserved verbatim ("Aristotle's failure to prove
+  a wrong statement is the substantive content of this case") plus
+  added explanatory clause naming the substantive *why* (the original
+  axiom omitted the second-order content the published dynamical-KMS
+  axiom carries).
+
+**Citations added to thebibliography (5 new bibitems):**
+
+- `CrossleyGloriosoLiu2017` — JHEP 09 (2017) 095, arXiv:1511.03646.
+- `GloriosoCrossleyLiu2017` — JHEP 09 (2017) 096, arXiv:1701.07817.
+- `GloriosoLiu2018` — arXiv:1612.07705 (already in CITATION_REGISTRY).
+- `GloriosoLiu2018TASI` — PoS TASI2017 (2018) 008, arXiv:1805.09331
+  (NEW; added to CITATION_REGISTRY 2026-05-06; primary-source cache
+  fetch deferred).
+- `JainKovtun2024` — JHEP 01 (2024) 162, arXiv:2309.00511 (NEW;
+  added to CITATION_REGISTRY 2026-05-06; primary-source cache fetch
+  deferred).
+
+**Source verification (per user direction):** All five references
+verified via WebFetch + arXiv abstract reads + JHEP DOI confirmation
+2026-05-06. Pre-draft framing of "six axioms + one load-bearing
+theorem" preserved as program-level synthesis reading; specific
+attributions in the new prose hew to what each cited paper actually
+says (CGL: CTP + Im S ≥ 0 + local KMS; CGL II: dynamical KMS Z₂ +
+local equilibrium; GL: ∂_μ J^μ_S ≥ 0 from Z₂ + classical-limit
+unitarity remnant + local equilibrium; JK: UV-realization ambiguity).
+
+**LaTeX compile gate (per BUNDLE_LIFT_PROCEDURE.md §7):** `pdflatex
+paper_draft.tex` clean. 21 pages, 925 KB. Only LaTeX Font Warning
+advisories (project-wide pre-existing pattern; no Errors).
+
+**Stage 9/10/13 redo required:** yes. Per protocol §F, the I1
+reviewer triple must re-clear before bundle close.
+
+**D.3 cross-bundle propagation (cross-ref-only, no prose change):**
+D3 §8 (entropy-current second-law content) and L3 (BCH four laws
+second-law statement) absorb a cross-reference upgrade pointing at
+the formalized `Glorioso_Liu_local_second_law` theorem. This is
+already registered via the `_phase6n_W2a_lean_only` D.2 absorption
+event for L3 + the D.3 GATE 2 work (Phase 6n.ζ Sakharov ↔
+horizon-Crooks, separately tracked). No prose change needed in D3
+or L3 from GATE 1 alone.
+
+**Pre-draft consumed:** `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md`.
+
+Pre-existing GREEN reviewer-triple state (Stage 9 yellow / Stage 10
+green / Stage 13 green from 2026-05-01) reset to pending pending
+re-review.

@@ -1,0 +1,54 @@
+SK-EFT Hawking Validation Report
+Generated: 20260506T190224Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[FAIL] paper_provenance
+  - D1/bibliography — Has placeholder bibliography entries (xxxxx or XXX)
+  - D2/bibliography — Has placeholder bibliography entries (xxxxx or XXX)
+  + D5/figures — 7 referenced figure(s) resolved
+  + E1/figures — 2 referenced figure(s) resolved
+  + E2/figures — 4 referenced figure(s) resolved
+  + I1/figures — 6 referenced figure(s) resolved
+  + I2/figures — 5 referenced figure(s) resolved
+  + L1/figures — 1 referenced figure(s) resolved
+  + L2/figures — 2 referenced figure(s) resolved
+  + L3/figures — 1 referenced figure(s) resolved
+  + note_rt_ch_bounds/figures — 1 referenced figure(s) resolved
+  + paper10_modular_generation/figures — 2 referenced figure(s) resolved
+  + paper12_polariton/figures — 1 referenced figure(s) resolved
+  + paper14_braided_mtc/figures — 5 referenced figure(s) resolved
+  + paper16_graphene_sk_eft/figures — 4 referenced figure(s) resolved
+  + paper17_dark_sector/figures — 6 referenced figure(s) resolved
+  + paper18_doublon_gate/figures — 1 referenced figure(s) resolved
+  + paper1_first_order/figures — 3 referenced figure(s) resolved
+  + paper20_scalar_rung/figures — 2 referenced figure(s) resolved
+  + paper21_majorana_rung/figures — 2 referenced figure(s) resolved
+  + paper22_ew_phase_transition/figures — 1 referenced figure(s) resolved
+  + paper23_linearized_efe/figures — 1 referenced figure(s) resolved
+  + paper25_gravitational_waves/figures — 1 referenced figure(s) resolved
+  + paper26_bh_entropy/figures — 2 referenced figure(s) resolved
+  + paper27_bh_thermodynamics_four_laws/figures — 1 referenced figure(s) resolved
+  + paper29_bbn_unified/figures — 1 referenced figure(s) resolved
+  + paper2_second_order/figures — 6 referenced figure(s) resolved
+  + paper32_strong_cp_de/figures — 1 referenced figure(s) resolved
+  + paper33_ewbg_chirality_wall/figures — 1 referenced figure(s) resolved
+  + paper34_equivalence_principle/figures — 1 referenced figure(s) resolved
+  + paper35_qec_holography/figures — 1 referenced figure(s) resolved
+  + paper36_center_symmetry/figures — 1 referenced figure(s) resolved
+  + paper37_chiral_ssb/figures — 1 referenced figure(s) resolved
+  + paper38_cfl/figures — 1 referenced figure(s) resolved
+  + paper39_heat_kernel_expansion/figures — 1 referenced figure(s) resolved
+  + paper3_gauge_erasure/figures — 2 referenced figure(s) resolved
+  + paper40_higher_curvature/figures — 1 referenced figure(s) resolved
+  + paper41_diff_invariance/figures — 1 referenced figure(s) resolved
+  + paper42_nonlinear_efe/figures — 1 referenced figure(s) resolved
+  + paper42b_cc_emergent/figures — 1 referenced figure(s) resolved
+  + paper43_einstein_cartan/figures — 1 referenced figure(s) resolved
+  + paper4_wkb_connection/figures — 3 referenced figure(s) resolved
+  + paper5_adw_gap/figures — 5 referenced figure(s) resolved
+  + paper6_vestigial/figures — 4 referenced figure(s) resolved
+  + paper7_chirality_formal/figures — 4 referenced figure(s) resolved
+  + paper8_chirality_master/figures — 5 referenced figure(s) resolved
+  + paper9_sm_anomaly_drinfeld/figures — 4 referenced figure(s) resolved
+
+Overall: 0/1 passed

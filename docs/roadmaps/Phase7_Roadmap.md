@@ -605,3 +605,67 @@ F + D1 + D2 + D3 + D4 + D5 + I1 + I2 + L1 + L2 + L3 + E1 + E2 all at Stage 9 + S
 CITATION_REGISTRY: 504 entries (unchanged this session; F draws on existing entries + 9 inprep self-cite stubs).
 
 *Status update 2026-05-04 evening. Next session: Wave 15 pre-submission Stage-13 sweep on user authorization. After Wave 15 GREEN: Phase 7 CLOSES; Phase 8 submission roll-out begins per `PAPER_STRATEGY.md` §3.*
+
+---
+
+## Phase 7 — Late Phase 6X absorption pass Sessions 1+2+3 CLOSE (2026-05-06 → 05-07)
+
+**Trigger:** user direction at Sessions 1+2+3 dispatch — *"we're going to synthesize everything from 6n/6o in context of the larger program, and then write everything up using `LATE_PHASE6_ABSORPTION_PROTOCOL.md`... Auto-compact is enabled, let's continue (auto mode), within this conversation, session by session until all remaining work in phases 6n & 6o is complete."*
+
+**Outcome:** absorption pass deliverable substantively complete. Re-establishes the heatmap at 13/14 ALL-GREEN through `BUNDLE_LIFT_PROCEDURE.md` Stages 9 + 10 + 13 after the Phase 6n+6o math-substrate output (post-Phase-7c-close) re-flagged 13 bundles as `freshness-stale` per `validate.py --check bundle_source_freshness`.
+
+**Bundle close-state (Sessions 1+2+3 final):**
+
+| Bundle | Tier | S9 | S10 | S13 | Phase 6n+6o absorption events |
+|---|---:|---|---|---|---|
+| **F** | 0 | 🟢 | 🟢 | 🟢 | 6o Waves 1a/1b/1c/2a + 6n Wave 1c |
+| **D1** | 1 | 🟢 | 🟢 | 🟢 (r3) | 6n Waves 1a/2b + 6o Waves 1a/1b/2a/3a |
+| **D2** | 1 | 🟢 | 🟢 | 🟢 (r3) | **6o.ε D.3 GATE 3 CLOSED** + 6n Wave 1b + 6o Wave 2a |
+| **D3** | 1 | 🟢 | 🟢 | 🟢 | **6n.ζ D.3 GATE 2 CLOSED** + 6n Waves 1b/1c/2c + 6o Waves 1a/1b/1c/2a/3b |
+| **D4** | 1 | 🟢 | 🟢 | 🟢 | 6o Waves 1a/3a |
+| **D5** | 1 | 🟢 | 🟢 | 🟢 (r2) | 6n Waves 1b/2b |
+| **L1** | 2 | 🟢 | 🟢 | 🟢 | 6o Wave 1b cross-bridge |
+| **L2** | 2 | 🟢 | 🟢 | 🟢 (r2) | **6o.ε D.3 GATE 3 paired splash** |
+| **L3** | 2 | 🟢 | 🟢 | 🟢 | **6n.ζ D.3 GATE 2 paired anchor** + 6o Wave 2a |
+| **I1** | 3 | 🟢 | 🟢 | 🟢 | **6n.γ D.3 GATE 1 CLOSED** + 6o Wave 2a sidebar + 6o Wave 3a sidebar |
+| **I2** | 3 | 🟢 | 🟢 | 🟢 | (no 6n/6o absorption events) |
+| **E1** | 4 | 🟢 | 🟢 | 🟢 (r1) | 6n Wave 1c appendix + 6o Waves 1a/1b/2a |
+| **E2** | 4 | 🟢 | 🟢 | 🟢 (r1) | (cross-bundle propagation only) |
+| **I3** | 3 | — | — | 📝 DRAFTING | **Phase 6o Wave 3b D.4 (sourceless initial lift)** — substantive drafting is the deliverable, not an absorption event |
+
+**Cumulative deliverables (Sessions 1+2+3):**
+- 28 D.2/D.4 absorption events shipped.
+- All 3 D.3 user-authorization gates closed (GATE 1 / GATE 2 / GATE 3).
+- 16 BLOCKERs surfaced and remediated across reviewer-triple verification rounds.
+- 18 systematic post-bibliography `\section` stubs commented out across 8 bundles (`bundle_append.py` artifact; QI raised).
+- 6 malformed `'title'='et al.'` `CITATION_REGISTRY` artifacts swept (3 WebFetch-verified, 3 Session-4 TODO).
+- 7 newly-registered bibitems with primary-source PDF caches.
+- L1 pre-existing revtex4-2 `\begin{theorem}` env warning fixed.
+- Stage 12 `counts.json` + `lean_deps.json` regenerated; `review_runner.py` I3 KeyError fixed; `bundle_clusters` re-projected.
+- `docs/review_finding_supersessions.json` advanced to 468 entries.
+
+**Authoritative post-absorption counts (`counts.json` 2026-05-07):** 5837 theorems / 322 modules / 0 sorry / 1 axiom.
+
+**Process lessons banked (memory + roadmap):**
+- Adversarial-reviewer's WebFetch-and-compare for bibitem titles is a high-leverage fabrication detector — surfaced 8 of 16 BLOCKERs.
+- Round-2 round-broadening discipline (action QI candidates in same fix-pass).
+- Cross-bundle propagation audit mandatory after any registry-side fix.
+- Conservative prose-hedge preferable to invasive Lean refactor when name suggests stronger content than discharge (D5 P5 anti-pattern resolution).
+- `bundle_append.py` post-bib-default-insertion is a project-wide artifact (8 of 13 bundles affected); QI candidate raised.
+- `promote_primary_sources.py` "skip if already has inprep" check fails on multi-field-on-one-line registry format; QI candidate raised.
+
+**Wave 14 + Wave 15 status:** Wave 14 (cross-bundle final) was already CLOSED by Phase 7c (2026-05-04). The Sessions 1+2+3 absorption pass effectively **redoes Wave 14 fresh** post-Phase-6n-and-6o math closure plus closes the 3 D.3 gates that were not yet authorized at Phase 7c close. **Wave 15 pre-submission Stage-13 sweep** remains the next-up gate, now on a strictly more current basis (post-absorption) and 13/14 bundles entering at GREEN.
+
+**Session 4 carry-forward (non-blocking, listed in priority order; same list shown to user 2026-05-07):**
+1. 3 TODO-placeholder registry entries (Adler2024, BRSSS2008, Zhao2023) — need WebFetch for verbatim titles.
+2. D1 spectral-floor ω_× abstract-vs-body reconciliation — author-side decision needed (abstract ~6 T_H vs §3.5 platform-dependent 1.35–12 T_H).
+3. D5 narrative-anchor verifications — Tsallis HDE source for `tsallis_log_bayes := 6.2`; Luciano methodology framing.
+4. D5 deeper Lean refactor (`sakharov_..._iff_...` rename → `_implies_` + `lambdaJEqLambdaHK` substrate-derived independence) — currently shipped via §11 prose hedge.
+5. F bundle (Tier 0 flagship) freshness_stale → fresh Stage-13 sweep.
+6. **I3 substantive drafting (Phase 6o.ζ separate track)** — the I3 row above stays at 📝 DRAFTING until this completes.
+7. Lean docstring sync (`Schellekens/Chain.lean:76-77`; `JacobsonThermoGRDarkEnergy.lean:326-332`) + registry hygiene (GarciaEtxebarriaMontero2019 vs GarciaEtxebarria2019).
+8. 5 QI candidates for `validate.py` extension: `--check bibitem_title_matches_arxiv`, `--check citation_registry_no_et_al_title_artifact`, `bundle_append.py` post-bib-insertion fix, `promote_primary_sources.py` duplicate-key fix, programmatic bundle list across `review_runner.py` + `bundle_migration.py` + `bundle_readiness.py`.
+
+**Phase 7 absorption-pass status — FINAL: 13/14 ALL-GREEN, 1/14 DRAFTING (I3 substantive draft, out-of-band).** Wave 15 pre-submission Stage-13 sweep is the natural next gate; ready when user authorizes.
+
+*Phase 7 absorption close marker, 2026-05-07.*

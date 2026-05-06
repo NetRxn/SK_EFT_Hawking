@@ -39,7 +39,7 @@ $\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$,
 the first such computation in any proof assistant. Three textbook
 topology results (ko cohomology, ASS convergence, ABP splitting) enter
 as tracked hypotheses. The verification is fully automated by
-\texttt{lake build} on a $5229$-theorem $243$-module library with one
+\texttt{lake build} on a $5812$-theorem $322$-module library with one
 axiom and zero \texttt{sorry}.
 \end{abstract}
 
@@ -281,13 +281,23 @@ the divisibility step via
 the explicit minimal free resolution in \texttt{A1Ring.lean},
 \texttt{A1Resolution.lean}, and \texttt{A1Ext.lean}; and the
 change-of-rings step in \texttt{ChangeOfRings.lean}. The
+$24 \mid c_-$ constraint admits a deeper structural reading: the
+five-step chain spin-bordism $\Omega_5^{\mathrm{Spin}}(BG_{\mathrm{SM}})$
+$\to$ anomaly polynomial $\to$ modular invariance $\to$
+Niemeier-lattice classification~\cite{Niemeier1973} $\to$ Schellekens'
+classification of meromorphic $c=24$ CFTs~\cite{Schellekens1993},
+geometrically completed for the strongly-rational, weight-1-non-trivial
+subset by M\"oller--Scheithauer~\cite{MollerScheithauer2024}, places
+$24 \mid c_-$ as a corollary of holomorphic-VOA classification rather
+than a stand-alone modular-consistency requirement; the deep companion
+paper~\cite{Roehm2026D2} carries the full derivation. The
 without-$\nu_R$ argument upgrades from suggestive to formal: a
 fractional central charge $c_- = 15/2$ is gravitationally anomalous;
 no fractional natural number exists; therefore $\nu_R$ exists if the
 modular framing-anomaly constraint applies to the SM. The full
 verification builds in $\sim 30~\mathrm{s}$ on commodity hardware
 under Lean~4 v4.29.0 against Mathlib commit \texttt{8850ed93}
-(library state: 5229 theorems across 243 modules, 1 axiom
+(library state: 5812 theorems across 322 modules, 1 axiom
 \texttt{gapped\_interface\_axiom} unused in this chain, zero
 \texttt{sorry}). The Mathlib infrastructure that formalizes modular
 forms for analytic number theory directly constrains the
@@ -350,6 +360,30 @@ Ann.\ Math.\ \textbf{86}, 271 (1967).
 A.~Beaudry and J.~A.~Campbell,
 Contemp.\ Math.\ \textbf{718}, 89 (2018)
 [arXiv:1801.07530].
+%% Phase 6o.ε L2 paired-splash absorption (D.3 GATE 3, 2026-05-06)
+
+\bibitem{Niemeier1973}
+H.-V.~Niemeier,
+``Definite quadratische Formen der Dimension 24 und Diskriminante 1,''
+J.\ Number Theory \textbf{5}, 142 (1973).
+
+\bibitem{Schellekens1993}
+A.~N.~Schellekens,
+``Meromorphic $c=24$ conformal field theories,''
+Comm.\ Math.\ Phys.\ \textbf{153}, 159 (1993),
+arXiv:hep-th/9205072.
+
+\bibitem{MollerScheithauer2024}
+S.~M\"oller and N.~R.~Scheithauer,
+``A geometric classification of the holomorphic vertex operator
+algebras of central charge $24$,''
+Algebra \& Number Theory \textbf{18}, 1891 (2024),
+arXiv:2112.12291.
+
+\bibitem{Roehm2026D2}
+J.~Roehm, ``Anomaly constraints on Standard Model particle content,''
+in preparation (D2 deep companion to L2, 2026).
+
 \end{thebibliography}
 
 \end{document}

@@ -42,9 +42,11 @@ finite order in perturbation theory: modified unitarity
 $|\alpha|^2 - |\beta|^2 = 1 - \delta_k$ with
 $\delta_k = 2\Gamma_H/\kappa$, an FDR-mandated noise floor
 $n_\text{noise} = \delta_k / 2$ that is mandatory by KMS even with
-zero Hawking radiation, and a spectral floor at
-$\omega_\times \approx 6\, T_H$ where the high-$\omega$ spectrum
-becomes power-law rather than thermal. The three platforms span ten
+zero Hawking radiation, and a platform-dependent spectral floor at
+$\omega_\times = T_H \ln(2/\delta_\text{diss})$ ($\approx 2\, T_H$ for
+Heidelberg-accessible BEC; $\approx 12\, T_H$ for Steinhauer-class)
+where the high-$\omega$ spectrum becomes power-law rather than
+thermal. The three platforms span ten
 orders of magnitude in Hawking temperature
 ($T_H \sim \SI{0.35}{\nano\kelvin}$ for $^{87}$Rb BEC,
 $T_H \sim \SI{85}{\milli\kelvin}$ for the LKB polariton smooth-horizon
@@ -71,7 +73,7 @@ $\Delta S_I(\omega) = 2\hbar\omega \sigma_Q \Gamma(\omega) n_H(\omega)$
 derived independently from Keldysh fluctuation-dissipation and
 Landauer-Büttiker scattering, validated cross-platform by the
 giant Wiedemann-Franz violation $L/L_0 > 200$ measured at the same
-device. End-to-end, $5229$ Lean theorems are machine-verified
+device. End-to-end, $5812$ Lean theorems are machine-verified
 (\texttt{lake build} clean, zero \texttt{sorry}, $322$ closed by the
 Aristotle automated prover). The substrate's first-order KMS structure
 is encoded as the \texttt{FirstOrderKMS} Prop record (with fields
@@ -795,9 +797,10 @@ in an analogue black hole},
 Nature \textbf{569}, 688 (2019).
 
 \bibitem{Falque2025}
-M.~Falque \emph{et al.},
-\emph{Stable supersonic flow of polariton condensates},
-Phys.~Rev.~Lett.~\textbf{135}, 023401 (2025), arXiv:2311.01392.
+K.~Falque \emph{et al.},
+\emph{Polariton Fluids as Quantum Field Theory Simulators on Tailored
+Curved Spacetimes},
+arXiv:2311.01392 (2024).
 
 \bibitem{Giacobino2025}
 E.~Giacobino \emph{et al.},
@@ -806,13 +809,14 @@ arXiv:2512.14194 (2025).
 
 \bibitem{Geurs2025}
 J.~Geurs \emph{et al.},
-\emph{Supersonic electron flow in a bilayer-graphene Dirac fluid},
+\emph{Supersonic flow and hydraulic jump in an electronic de Laval
+nozzle},
 arXiv:2509.16321 (2025).
 
 \bibitem{Majumdar2025}
 A.~Majumdar \emph{et al.},
-\emph{Quantum-critical transport in graphene Dirac fluids: shear
-viscosity and Wiedemann-Franz violation},
+\emph{Universality in quantum critical flow of charge and heat in
+ultra-clean graphene},
 Nature Physics \textbf{21}, 1374 (2025), arXiv:2501.03193.
 
 \bibitem{CGL2017a}
@@ -875,9 +879,9 @@ relations: analytical results from cubic dispersion},
 Phys.~Rev.~D \textbf{92}, 044043 (2015).
 
 \bibitem{BelgiornoCacciatori2024}
-F.~Belgiorno and S.~L.~Cacciatori,
-\emph{Rigorous WKB analysis for analog Hawking radiation},
-Class.~Quant.~Grav.~\textbf{41}, 105001 (2024).
+F.~Belgiorno, S.~L.~Cacciatori, and D.~Trevisan,
+\emph{Analogous Hawking Radiation in Dispersive Media},
+Universe~\textbf{10}, 412 (2024). DOI: \href{https://doi.org/10.3390/universe10110412}{10.3390/universe10110412}.
 
 \bibitem{Estrecho2021}
 E.~Estrecho \emph{et al.},
@@ -903,9 +907,9 @@ monochromatic Hawking emission in a quasi-1D BEC},
 Phys.~Rev.~B \textbf{94}, 144518 (2016).
 
 \bibitem{Burkhard2025}
-N.~Burkhard \emph{et al.},
-\emph{Quasinormal modes in the driven-dissipative analog black
-hole},
+M.~Burkhard \emph{et al.},
+\emph{Stimulated Hawking effect and quasinormal mode resonance in a
+polariton simulator of field theory on curved spacetime},
 arXiv:2511.12339 (2025).
 
 \bibitem{Jacquet2022}
@@ -980,5 +984,61 @@ J.~Roehm, ``Verified Statistical Estimators and the
 % src/core/citations.py:CITATION_REGISTRY at the time of this cleanup pass.
 
 \end{thebibliography}
+
+
+%% ─── Lifted from _phase6n_W1a_lean_only (§3) — 2026-05-06T15:39:38Z ───
+%% \section{BEC SK-EFT geometric envelope (NOT Gevrey-1)}
+%% \label{sec:d1-_phase6n_W1a_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §3
+%% Lift notes: D.2 absorption: Phase 6n W1a kinematic-dispersive geometric envelope (NOT Gevrey-1); IsGeometric predicate; closed-form γ_n
+%% TODO: lift content from papers/_phase6n_W1a_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6n_W1a_lean_only ───
+
+
+%% ─── Lifted from _phase6n_W2c_lean_only (§5) — 2026-05-06T15:39:41Z ───
+%% \section{LDP linear-response framework}
+%% \label{sec:d1-_phase6n_W2c_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §5
+%% Lift notes: D.2 absorption: Phase 6n W2c FDR W-form GC + abstract IsLDPRateFunction; LinearResponseRateFunction
+%% TODO: lift content from papers/_phase6n_W2c_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6n_W2c_lean_only ───
+
+
+%% ─── Lifted from _phase6n_W2b_lean_only (§6) — 2026-05-06T15:39:44Z ───
+%% \section{Quantum Crooks no-go (Perarnau-Llobet)}
+%% \label{sec:d1-_phase6n_W2b_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §6
+%% Lift notes: D.2 absorption: Phase 6n W2b BEC + polariton quantum-Crooks landscape; Perarnau-Llobet typeclass connections
+%% TODO: lift content from papers/_phase6n_W2b_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6n_W2b_lean_only ───
+
+
+%% ─── Lifted from _phase6o_W1a_lean_only (§6) — 2026-05-06T15:39:47Z ───
+%% \section{Boostless / Carrollian soft theorems on analog horizons (Phase 6o W1a)}
+%% \label{sec:d1-_phase6o_W1a_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §6
+%% Lift notes: D.2 absorption: Phase 6o W1a boostless / Carrollian soft theorems on BEC + polariton; Strominger-triangle closure
+%% TODO: lift content from papers/_phase6o_W1a_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6o_W1a_lean_only ───
 
 \end{document}

@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-05-04
+**Auto-generated:** 2026-05-06
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable.
@@ -15,19 +15,20 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Verdict |
 |---|---:|---:|---:|---:|---|:---:|
-| **F** | 0 | 41 | 1 | 0 | 1 minor | 🟢 GREEN |
-| **D1** | 1 | 5 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **D2** | 1 | 4 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **D3** | 1 | 22 | 1 | 0 | 1 minor | 🟢 GREEN |
-| **D4** | 1 | 7 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **D5** | 1 | 6 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **L1** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **F** | 0 | 49 | 1 | 0 | 1 minor | 🟢 GREEN |
+| **D1** | 1 | 9 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D2** | 1 | 6 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D3** | 1 | 31 | 1 | 0 | 1 minor | 🟢 GREEN |
+| **D4** | 1 | 10 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D5** | 1 | 8 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **L1** | 2 | 2 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L2** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **L3** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **I1** | 3 | 2 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **I2** | 3 | 0 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **E1** | 4 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **E2** | 4 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **L3** | 2 | 3 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **I1** | 3 | 6 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **I2** | 3 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **I3** | 3 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **E1** | 4 | 3 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **E2** | 4 | 2 | 0 | 0 | _(none)_ | 🟢 GREEN |
 
 ## Gate × Bundle distribution (open findings)
 
@@ -44,6 +45,7 @@
 | **L3** | 0 |
 | **I1** | 0 |
 | **I2** | 0 |
+| **I3** | 0 |
 | **E1** | 0 |
 | **E2** | 0 |
 

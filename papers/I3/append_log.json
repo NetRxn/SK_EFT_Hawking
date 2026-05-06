@@ -1,4 +1,29 @@
 {
   "bundle_target": "I3",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-06T15:38:58Z",
+      "source_paper": "_phase6o_W3b_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "It\u00f4.StochasticIntegral",
+        "It\u00f4.QuadraticVariation",
+        "It\u00f4.Semimartingale",
+        "It\u00f4.ItoIsometry",
+        "It\u00f4.ItoLemma",
+        "It\u00f4.Novikov",
+        "LDP.CramerIID",
+        "LDP.Sanov",
+        "LDP.Contraction",
+        "LDP.CramerLowerBound",
+        "LDP.Varadhan",
+        "LDP.LDPCompatibleSKEFT"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:38:58Z",
+      "notes": "I3 sourceless initial lift (D.4): Phase 6o W3b It\u00f4 + LDP + LDPCompatibleSKEFT typeclass; 12 Lean modules; cross-bridge to Phase 6n W2c IsLDPRateFunction + Phase 6n W2a Glorioso-Liu monotonicity"
+    }
+  ]
 }

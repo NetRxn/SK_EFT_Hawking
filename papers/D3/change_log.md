@@ -169,3 +169,59 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: §22
 - Stage-13 redo required: yes
 - Notes: Einstein-Cartan torsion; Phase 7c stub
+
+## 2026-05-06 — Lift-section from `_phase6n_W1a_lean_only` (§6)
+
+- Source title: BEC SK-EFT geometric envelope (NOT Gevrey-1)
+- Lift action: Lift-section
+- Insertion point: §6
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6n W1a transport NO-GO landscape (substrate IS geometric envelope, not Gevrey-1; decouples asymptotic verdict from explicit γ_2^(loop))
+
+## 2026-05-06 — Lift-section from `_phase6n_W2c_lean_only` (§3)
+
+- Source title: LDP linear-response framework
+- Lift action: Lift-section
+- Insertion point: §3
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6n W2c Crooks-on-analog-Hawking entry-point + W-form GC structural anchor + IsLDPRateFunction abstract
+
+## 2026-05-06 — Lift-section from `_phase6o_W1a_lean_only` (§3)
+
+- Source title: Boostless / Carrollian soft-theorem program: `SoftTheorems/Boostless.lean` (I...
+- Lift action: Lift-section
+- Insertion point: §3
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6o W1a analog-horizon Strominger triangle closure + ADW graviton subleading factor with Goldstone-broken-boost content
+
+## 2026-05-06 — Lift-section from `_phase6o_W1b_lean_only` (§6)
+
+- Source title: G4 Kerr-Schild double-copy on Petrov-D analog gravity
+- Lift action: Lift-section
+- Insertion point: §6
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6o W1b vestigial-graviton landscape: Kerr-Schild double-copy on Petrov-D acoustic + 3-obstruction strong-form BCJ NO-GO theorem-pair
+
+## 2026-05-06 — Lift-section from `_phase6o_W3b_lean_only` (§6)
+
+- Source title: I3 Itô + LDP-α + LDP-β substrate (`Itô/StochasticIntegral.lean` + `Itô/Quadra...
+- Lift action: Lift-section
+- Insertion point: §6
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6o W3b Itô-time form W-form GC + Glorioso-Liu monotonicity cross-bridge via LDPCompatibleSKEFT typeclass
+
+## 2026-05-06 — Lift-section from `_phase6o_W1c_writeup` (§10)
+
+- Source title: G1 NO-GO writeup at `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md`...
+- Lift action: Lift-section
+- Insertion point: §10
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6o W1c G1 NO-GO writeup (parallel to 6n.η) — 3 structural obstructions: unitarity→KMS replacement breaks EFT-positivity; crossing has no doubled-contour analog; SDP feasibility breaks on complex contour
+
+## 2026-05-06 — Lift-section from `_phase6o_W2a_lean_only` (§17)
+
+- Source title: APS-η for analog horizons
+- Lift action: Lift-section
+- Insertion point: §17
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6o W2a heat-kernel APS-η substrate cross-bridge (BEC + ADW parity-symmetric → η = 0; ³He-A non-degenerate cell → substantive APS boundary correction)

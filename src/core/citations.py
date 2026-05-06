@@ -429,18 +429,18 @@ CITATION_REGISTRY = {
         'notes': 'Polariton collective excitation spectrum including reservoir corrections.',
     },
     'Burkhard2025': {
-        'authors': 'Burkhard, D. et al.',
-        'title': 'Quasinormal modes and stimulated Hawking radiation in analog black holes',
+        'authors': 'M.~Burkhard, M.~Kroj, K.~Falque, A.~Bramati, I.~Carusotto, M.~J.~Jacquet',
+        'title': 'Stimulated Hawking effect and quasinormal mode resonance in a polariton simulator of field theory on curved spacetime',
         'journal': None,
         'volume': None,
         'page': None,
         'year': 2025,
         'doi': None,
         'arxiv': '2511.12339',
-        'doi_verified': None,
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-5w/primary-sources/Burkhard2025.pdf',
-        'used_in': ['papers/paper12_polariton/paper_draft.tex'],
+        'used_in': ['papers/paper12_polariton/paper_draft.tex', 'papers/D1/paper_draft.tex', 'papers/E1/paper_draft.tex'],
         'provides': [],
         'notes': 'QNM resonances concentrate stimulated Hawking signal.',
     },
@@ -3563,6 +3563,171 @@ CITATION_REGISTRY = {
                      'dynamical KMS Z₂ symmetry; Eq. 6.34'],
         'notes': 'Wave 5 ADWSecondLaw constitutive-relation source.',
     },
+    # ──────────────────────────────────────────────────────────────────
+    # Phase 6n.γ I1 reframing bibitems (added 2026-05-06 unified
+    # absorption pass; D.3 GATE 1)
+    # ──────────────────────────────────────────────────────────────────
+    'GloriosoLiu2018TASI': {
+        'authors': 'Glorioso, P. and Liu, H.',
+        'title': 'Lectures on non-equilibrium effective field theories and '
+                 'fluctuating hydrodynamics',
+        'journal': 'PoS',
+        'volume': 'TASI2017',
+        'page': '008',
+        'year': 2018,
+        'doi': '10.22323/1.305.0008',
+        'arxiv': '1805.09331',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6n/primary-sources/GloriosoLiu2018TASI.pdf',
+        'used_in': ['papers/I1/paper_draft.tex'],
+        'provides': ['Pedagogical exposition of the Glorioso-Liu / CGL / CGL II '
+                     'axiomatic for non-equilibrium effective field theories: '
+                     'CTP doubled-contour structure, dynamical KMS Z₂ symmetry, '
+                     'local equilibrium, and the proof of the local second law. '
+                     'Cited as the pedagogical anchor in I1 §3 reframing.'],
+        'notes': 'Phase 6n.γ I1 reframing: Section §IV proves ∂_μ J^μ_S ≥ 0 '
+                 'from Z₂ symmetry + classical-limit unitarity remnant + local '
+                 'equilibrium. Pedagogical version of the Glorioso-Liu 2017 '
+                 'second-law preprint (arXiv:1612.07705). PoS TASI2017 (2018) '
+                 '008. arXiv:1805.09331 verified 2026-05-06.',
+    },
+    'Niemeier1973': {
+        'authors': 'Niemeier, H.-V.',
+        'title': 'Definite quadratische Formen der Dimension 24 und '
+                 'Diskriminante 1',
+        'journal': 'J. Number Theory',
+        'volume': 5,
+        'page': '142',
+        'year': 1973,
+        'doi': '10.1016/0022-314X(73)90068-1',
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D2/paper_draft.tex',
+                    'papers/L2/paper_draft.tex'],
+        'provides': ['Niemeier classification of the 24 even self-dual '
+                     'positive-definite unimodular lattices in dimension '
+                     '24. Algebraic spine of the c=24 holomorphic-VOA '
+                     'classification chain. Cited in D2 §2.7 (Schellekens '
+                     'chain) and L2 conclusion.'],
+        'notes': 'Pre-DOI / pre-arXiv mathematical paper (1973); textbook-'
+                 'tier reference verified via secondary citations + '
+                 'WebSearch 2026-05-06. Per Pipeline Invariant #11 textbook '
+                 'exemption, primary_source_path = None is allowed since '
+                 'no arXiv preprint exists.',
+    },
+    'Schellekens1993': {
+        'authors': 'Schellekens, A. N.',
+        'title': 'Meromorphic c=24 conformal field theories',
+        'journal': 'Commun. Math. Phys.',
+        'volume': 153,
+        'page': '159',
+        'year': 1993,
+        'doi': '10.1007/BF02099044',
+        'arxiv': 'hep-th/9205072',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6o/primary-sources/Schellekens1993.pdf',
+        'used_in': ['papers/D2/paper_draft.tex',
+                    'papers/L2/paper_draft.tex'],
+        'provides': ['Schellekens 1993 enumeration of 71 meromorphic c=24 '
+                     'conformal field theories from modular-invariant '
+                     'Kac-Moody combinations. Cited as the classical '
+                     'enumeration step in D2 §2.7 (Schellekens chain) and '
+                     'L2 conclusion as the 5-step holomorphic-VOA chain '
+                     'classifier preceding Möller-Scheithauer 2024.'],
+        'notes': 'Phase 6o.ε D2/L2 reframing: foundational c=24 CFT '
+                 'classification reference. Comm. Math. Phys. 153, 159 '
+                 '(1993). arXiv:hep-th/9205072 verified 2026-05-06. '
+                 'Primary-source cache fetch deferred.',
+    },
+    'MollerScheithauer2024': {
+        'authors': 'Möller, S. and Scheithauer, N. R.',
+        'title': 'A geometric classification of the holomorphic vertex '
+                 'operator algebras of central charge 24',
+        'journal': 'Algebra & Number Theory',
+        'volume': 18,
+        'page': '1891',
+        'year': 2024,
+        'doi': '10.2140/ant.2024.18.1891',
+        'arxiv': '2112.12291',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6o/primary-sources/MollerScheithauer2024.pdf',
+        'used_in': ['papers/D2/paper_draft.tex',
+                    'papers/L2/paper_draft.tex'],
+        'provides': ['Möller-Scheithauer 2024 geometric classification of '
+                     'strongly-rational holomorphic vertex operator '
+                     'algebras of central charge 24 with non-trivial '
+                     'weight-1 space (70 algebras). Cited in D2 §2.7 + L2 '
+                     'as the recent published completion of the Schellekens '
+                     '1993 classification chain (the strongly-rational '
+                     'subset; the moonshine VOA at trivial weight-1 lies '
+                     'outside their scope and is documented as a '
+                     'not-applicable witness in D2 §2.7).'],
+        'notes': 'Phase 6o.ε D2/L2 reframing: per Modular Bootstrap DR §8 '
+                 'Tier 1(a) "the highest-leverage move" — bypasses '
+                 'numerical bootstrap entirely; ties to existing Phase 5o '
+                 'W5 lean-tensor-categories + Phase 6n W1b WittClass '
+                 'infrastructure. Algebra & Number Theory 18, 1891 (2024); '
+                 'arXiv:2112.12291 verified 2026-05-06 (note: covers only '
+                 'the weight-1-non-trivial subset; does not complete the '
+                 'full c=24 classification — the moonshine FLM VOA with '
+                 'trivial weight-1 space is outside scope).',
+    },
+    'Crooks1999': {
+        'authors': 'Crooks, G. E.',
+        'title': 'Entropy production fluctuation theorem and the '
+                 'nonequilibrium work relation for free energy differences',
+        'journal': 'Phys. Rev. E',
+        'volume': 60,
+        'page': '2721',
+        'year': 1999,
+        'doi': '10.1103/PhysRevE.60.2721',
+        'arxiv': 'cond-mat/9901352',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6n/primary-sources/Crooks1999.pdf',
+        'used_in': ['papers/D3/paper_draft.tex',
+                    'papers/L3/paper_draft.tex'],
+        'provides': ['Crooks fluctuation theorem: '
+                     'P_F[γ] / P_R[γ̄] = exp(σ[γ]) for stochastic, '
+                     'microscopically reversible dynamics. Cited in '
+                     'D3 §17.5 + L3 "Substrate-class context" as the '
+                     'horizon-Crooks form specialized to local Rindler '
+                     'horizon physics.'],
+        'notes': 'Phase 6n.ζ D3 + L3 reframing: canonical reference for '
+                 'the Crooks fluctuation theorem statement. Phys. Rev. E '
+                 '60, 2721 (1999); arXiv:cond-mat/9901352 verified '
+                 '2026-05-06.',
+    },
+    'JainKovtun2024': {
+        'authors': 'Jain, A. and Kovtun, P.',
+        'title': 'Schwinger-Keldysh effective field theory for stable and '
+                 'causal relativistic hydrodynamics',
+        'journal': 'JHEP',
+        'volume': '01',
+        'page': '162',
+        'year': 2024,
+        'doi': '10.1007/JHEP01(2024)162',
+        'arxiv': '2309.00511',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6n/primary-sources/JainKovtun2024.pdf',
+        'used_in': ['papers/I1/paper_draft.tex'],
+        'provides': ['UV-realization ambiguity in dynamical KMS symmetry: '
+                     '"Since these EFTs typically admit ultraviolet sectors '
+                     'that are not fixed by the low-energy infrared symmetries, '
+                     'we find that they simultaneously admit multiple '
+                     'realisations of the dynamical KMS symmetry." Cited in I1 '
+                     '§3 to scope the typeclass-level encoding of the '
+                     'UV-realization ambiguity in the program\'s SKEFTAxioms.'],
+        'notes': 'Phase 6n.γ I1 reframing: cited for the typeclass discipline '
+                 'in encoding dynamical KMS realizations. JHEP 01 (2024) 162. '
+                 'arXiv:2309.00511 verified 2026-05-06.',
+    },
     'WallGSL2012': {
         'authors': 'Wall, A. C.',
         'title': 'A proof of the generalized second law for rapidly changing fields '
@@ -4592,20 +4757,20 @@ CITATION_REGISTRY = {
     },
 
     'Adler2024': {
-        'authors': 'D.~Adler',
-        'title': 'et al.',
+        'authors': 'D.~Adler, D.~Wei, M.~Will, K.~Srakaew, S.~Agrawal, P.~Weckesser, R.~Moessner, F.~Pollmann, I.~Bloch, J.~Zeiher',
+        'title': 'Observation of Hilbert-space fragmentation and fractonic excitations in two-dimensional Hubbard systems',
         'journal': 'Nature',
         'volume': 636,
-        'page': None,
+        'page': 80,
         'year': 2024,
         'doi': None,
-        'arxiv': None,
+        'arxiv': '2404.14896',
         'doi_verified': False,
         'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/paper3_gauge_erasure/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \bibitem block in `papers/paper3_gauge_erasure/paper_draft.tex`. Title and full author list verified via arXiv:2404.14896 (Session-4 cleanup).',
     },
 
     'AlvarezGaumeWitten1984': {
@@ -4713,20 +4878,20 @@ CITATION_REGISTRY = {
     },
 
     'BRSSS2008': {
-        'authors': 'R.~Baier',
-        'title': 'et~al.',
+        'authors': 'R.~Baier, P.~Romatschke, D.~T.~Son, A.~O.~Starinets, M.~A.~Stephanov',
+        'title': 'Relativistic viscous hydrodynamics, conformal invariance, and holography',
         'journal': 'JHEP',
         'volume': 4,
-        'page': None,
+        'page': 100,
         'year': 2008,
-        'doi': None,
-        'arxiv': None,
-        'doi_verified': False,
+        'doi': '10.1088/1126-6708/2008/04/100',
+        'arxiv': '0712.2451',
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title and full author list verified via arXiv:0712.2451 (Session-4 cleanup).',
     },
 
     'Baseilhac2005': {
@@ -5241,8 +5406,8 @@ CITATION_REGISTRY = {
     },
 
     'Geurs2025': {
-        'authors': 'J.~Geurs',
-        'title': 'et~al.',
+        'authors': 'J.~Geurs, T.~A.~Webb, Y.~Guo, I.~Keren, J.~H.~Farrell, J.~Xu, K.~Watanabe, T.~Taniguchi, D.~N.~Basov, J.~Hone, A.~Lucas, A.~Pasupathy, C.~R.~Dean',
+        'title': 'Supersonic flow and hydraulic jump in an electronic de Laval nozzle',
         'journal': None,
         'volume': None,
         'page': None,
@@ -5532,18 +5697,18 @@ CITATION_REGISTRY = {
     },
 
     'Majumdar2025': {
-        'authors': 'A.~Majumdar',
-        'title': 'et~al.',
+        'authors': 'A.~Majumdar, N.~Chadha, P.~Pal, A.~Gugnani, B.~Ghawri, K.~Watanabe, T.~Taniguchi, S.~Mukerjee, A.~Ghosh',
+        'title': 'Universality in quantum critical flow of charge and heat in ultra-clean graphene',
         'journal': 'Nature Physics',
         'volume': 21,
-        'page': None,
+        'page': '1374',
         'year': 2025,
         'doi': None,
-        'arxiv': None,
-        'doi_verified': False,
+        'arxiv': '2501.03193',
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
-        'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
+        'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex', 'papers/D1/paper_draft.tex', 'papers/E2/paper_draft.tex'],
         'provides': [],
         'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`.',
     },
@@ -5859,8 +6024,8 @@ CITATION_REGISTRY = {
     },
 
     'Sbordone2010': {
-        'authors': 'L.~Sbordone',
-        'title': 'et al.',
+        'authors': 'L.~Sbordone, P.~Bonifacio, E.~Caffau, H.-G.~Ludwig, N.~T.~Behara, J.~I.~Gonzalez Hernandez, M.~Steffen, R.~Cayrel, B.~Freytag, C.~Van''t Veer, P.~Molaro, B.~Plez, T.~Sivarani, M.~Spite, F.~Spite, T.~C.~Beers, N.~Christlieb, P.~Francois, V.~Hill',
+        'title': 'The metal-poor end of the Spite plateau. 1: Stellar parameters, metallicities and lithium abundances',
         'journal': None,
         'volume': 522,
         'page': None,
@@ -6029,8 +6194,8 @@ CITATION_REGISTRY = {
     },
 
     'Talanov2024': {
-        'authors': 'A.~Talanov',
-        'title': 'et~al.',
+        'authors': 'A.~Talanov, J.~Waissman, A.~Hui, B.~Skinner, K.~Watanabe, T.~Taniguchi, P.~Kim',
+        'title': 'Observation of Electronic Viscous Dissipation in Graphene Magneto-thermal Transport',
         'journal': None,
         'volume': None,
         'page': None,
@@ -6269,20 +6434,20 @@ CITATION_REGISTRY = {
     },
 
     'Zhao2023': {
-        'authors': 'W.~Zhao',
-        'title': 'et~al.',
+        'authors': 'W.~Zhao, S.~Wang, S.~Chen, Z.~Zhang, K.~Watanabe, T.~Taniguchi, A.~Zettl, F.~Wang',
+        'title': 'Observation of hydrodynamic plasmons and energy waves in graphene',
         'journal': 'Nature',
         'volume': 614,
-        'page': None,
+        'page': 688,
         'year': 2023,
-        'doi': None,
+        'doi': '10.1038/s41586-022-05619-8',
         'arxiv': None,
-        'doi_verified': False,
+        'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/paper16_graphene_sk_eft/paper_draft.tex'],
         'provides': [],
-        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`.',
+        'notes': 'Auto-generated stub from \bibitem block in `papers/paper16_graphene_sk_eft/paper_draft.tex`. Title, full author list, and DOI verified via Nature/PubMed (Session-4 cleanup); no arXiv preprint located.',
     },
 
     'alphaproof': {
@@ -7144,6 +7309,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Bundle D1 (Tier-1 deep paper) self-cite. SK-EFT analog Hawking across BEC/polariton/graphene with 92% Lean theorem reuse.'],
         'notes': 'In-preparation Bundle D1 self-cite. Phase 7e roadmap target.',
@@ -7155,6 +7322,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Bundle D2 (Tier-1 deep paper) self-cite. Spin^{Z_4} 5-bordism Z_{16} anomaly classification; N_f = 16 unique SM consistency count.'],
         'notes': 'In-preparation Bundle D2 self-cite. Phase 7d roadmap target.',
@@ -7166,7 +7335,9 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
-        'used_in': ['papers/F/paper_draft.tex'],
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/F/paper_draft.tex', 'papers/L3/paper_draft.tex'],
         'provides': ['Bundle D3 (Tier-1 heaviest deep paper) self-cite. Single Sakharov coefficient G_N^Sak = 12pi/(N_f Lambda_UV^2) propagating across 6 observables.'],
         'notes': 'In-preparation Bundle D3 self-cite. Phase 7c roadmap target.',
     },
@@ -7177,6 +7348,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D2/paper_draft.tex', 'papers/D3/paper_draft.tex', 'papers/F/paper_draft.tex'],
         'provides': ['Bundle D4 (Topological QC foundations) self-cite. Drinfeld centre + QEC-MTC cross-bridge. Companion deep paper to L2 PRL splash.'],
         'notes': 'In-preparation Bundle D4 self-cite. Phase 7f roadmap target.',
@@ -7188,6 +7361,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Bundle D5 (Tier-1 deep paper) self-cite. Phase 6m three-track closure: causal-set + entropic + Jacobson-thermo-GR.'],
         'notes': 'In-preparation Bundle D5 self-cite. Phase 7b sub-wave 7b.2 closed.',
@@ -7199,6 +7374,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Bundle E1 (polariton experimental letter) self-cite. Companion to D1 §6 polariton platform. Paris-LKB target.'],
         'notes': 'In-preparation Bundle E1 self-cite. Phase 7e roadmap target.',
@@ -7210,6 +7387,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/F/paper_draft.tex'],
         'provides': ['Bundle E2 (graphene experimental letter) self-cite. Companion to D1 §6 graphene platform. Dean-Kim-Lucas target.'],
         'notes': 'In-preparation Bundle E2 self-cite. Phase 7e roadmap target.',
@@ -7221,6 +7400,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D1/paper_draft.tex', 'papers/D2/paper_draft.tex',
                     'papers/D3/paper_draft.tex', 'papers/D4/paper_draft.tex',
                     'papers/D5/paper_draft.tex'],
@@ -7234,6 +7415,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D2/paper_draft.tex', 'papers/D3/paper_draft.tex', 'papers/L2/paper_draft.tex'],
         'provides': ['Bundle L2 (PRL splash on three generations from modular invariance) self-cite. paper10_modular_generation source. Z_16 anomaly + Ext^n_{A(1)}(F2,F2) + 24|c_- modular derivation.'],
         'notes': 'In-preparation Bundle L2 self-cite. Phase 7b sub-wave 7b.3 closed at GREEN.',
@@ -7245,6 +7428,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D2/paper_draft.tex', 'papers/D3/paper_draft.tex', 'papers/I1/paper_draft.tex'],
         'provides': ['Bundle I1 (Methodology paper with worked cases) self-cite. paper15 + paper44 + Phase 6f-6g substrate roster + Phase 6g W5 structural-Prop scoping pattern.'],
         'notes': 'In-preparation Bundle I1 self-cite. Phase 7a sub-wave 7a.2 closed at GREEN.',
@@ -7256,6 +7441,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D2/paper_draft.tex', 'papers/I2/paper_draft.tex'],
         'provides': ['Bundle I2 (Software paper) self-cite. Phase 5c VerifiedJackknife + Phase 5o Wave 4 lean-tensor-categories + Phase 5o Wave 5 Mathlib upstream coordination.'],
         'notes': 'In-preparation Bundle I2 self-cite. Phase 7a sub-wave 7a.3 closed at GREEN.',
@@ -7267,9 +7454,116 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
-        'used_in': ['papers/D3/paper_draft.tex'],
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D3/paper_draft.tex', 'papers/I3/paper_draft.tex'],
         'provides': ['13-bundle publication architecture (1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 2 Tier-3 infrastructure + 2 Tier-4 experimental). NO-GO results as first-class publishable content.'],
         'notes': 'In-preparation project strategy document (`docs/PAPER_STRATEGY.md`). Inprep exemption per Pipeline Invariant #11.',
+    },
+
+    'Degenne2025MarkovKernels': {
+        'authors': 'Degenne, R.',
+        'title': "Markov kernels in Mathlib's probability library",
+        'journal': 'arXiv preprint',
+        'volume': None, 'page': None, 'year': 2025,
+        'doi': None, 'arxiv': '2510.04070',
+        'doi_verified': True, 'inprep': False,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Degenne2025MarkovKernels.pdf',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Degenne2025MarkovKernels.abstract.txt',
+        'used_in': ['papers/I3/paper_draft.tex'],
+        'provides': ['Markov kernels infrastructure for Mathlib (composition + disintegration); cited as substrate for I3 Phase 6o.zeta.'],
+        'notes': 'Verified 2026-05-08 via WebFetch arXiv:2510.04070 — single author Rémy Degenne; supersedes the project carry-forward "Marion 2025 MarkovKernels" misattribution.',
+    },
+
+    'Degenne2025BrownianMotion': {
+        'authors': 'Degenne, R. and Ledvinka, D. and Marion, E. and Pfaffelhuber, P.',
+        'title': 'Formalization of Brownian motion in Lean',
+        'journal': 'arXiv preprint',
+        'volume': None, 'page': None, 'year': 2025,
+        'doi': None, 'arxiv': '2511.20118',
+        'doi_verified': True, 'inprep': False,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Degenne2025BrownianMotion.pdf',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Degenne2025BrownianMotion.abstract.txt',
+        'used_in': ['papers/I3/paper_draft.tex'],
+        'provides': ['Brownian motion in Lean: Carathéodory + Kolmogorov extension; Kolmogorov-Chentsov continuity; Gaussian measures on Banach spaces.'],
+        'notes': 'Verified 2026-05-08 via WebFetch arXiv:2511.20118; 4-author paper Degenne–Ledvinka–Marion–Pfaffelhuber.',
+    },
+
+    'FalascoEsposito2025RMP': {
+        'authors': 'Falasco, G. and Esposito, M.',
+        'title': 'Macroscopic stochastic thermodynamics',
+        'journal': 'Reviews of Modern Physics',
+        'volume': 97, 'page': '015002', 'year': 2025,
+        'doi': '10.1103/RevModPhys.97.015002', 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/FalascoEsposito2025RMP.json',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/FalascoEsposito2025RMP.abstract.txt',
+        'used_in': ['papers/I3/paper_draft.tex'],
+        'provides': ['Macroscopic stochastic thermodynamics framework; cited as motivation for the LDP frontier in I3.'],
+        'notes': 'Verified 2026-05-08 via Crossref API on DOI 10.1103/RevModPhys.97.015002.',
+    },
+
+    'KaratzasShreve1991BMSC': {
+        'authors': 'Karatzas, I. and Shreve, S. E.',
+        'title': 'Brownian Motion and Stochastic Calculus',
+        'journal': 'Springer Graduate Texts in Mathematics 113 (textbook)',
+        'volume': 113, 'page': None, 'year': 1991,
+        'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'primary_source_path': None,
+        'used_in': ['papers/I3/paper_draft.tex'],
+        'provides': ['Standard Brownian-motion + stochastic-calculus textbook; Itô integral, Itô lemma, Girsanov, Novikov classical references.'],
+        'notes': 'Textbook-exempt per Pipeline Invariant #11 (no DOI/arXiv; Springer GTM 113, 2nd ed. 1991).',
+    },
+
+    'RevuzYor1999CMSM': {
+        'authors': 'Revuz, D. and Yor, M.',
+        'title': 'Continuous Martingales and Brownian Motion',
+        'journal': 'Springer Grundlehren 293 (textbook)',
+        'volume': 293, 'page': None, 'year': 1999,
+        'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'primary_source_path': None,
+        'used_in': ['papers/I3/paper_draft.tex'],
+        'provides': ['Continuous-martingale + Brownian-motion textbook; complementary to KaratzasShreve.'],
+        'notes': 'Textbook-exempt per Pipeline Invariant #11 (no DOI/arXiv; Springer Grundlehren 293, 3rd ed. 1999).',
+    },
+
+    'DemboZeitouni1998LDT': {
+        'authors': 'Dembo, A. and Zeitouni, O.',
+        'title': 'Large Deviations Techniques and Applications',
+        'journal': 'Springer Applications of Mathematics 38 (textbook)',
+        'volume': 38, 'page': None, 'year': 1998,
+        'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'primary_source_path': None,
+        'used_in': ['papers/I3/paper_draft.tex'],
+        'provides': ['Standard LDP textbook; Cramér + Sanov + Varadhan + contraction principle classical references.'],
+        'notes': 'Textbook-exempt per Pipeline Invariant #11 (no DOI/arXiv; Springer Applications of Mathematics 38, 2nd ed. 1998).',
+    },
+
+    'denHollander2000LDPs': {
+        'authors': 'den Hollander, F.',
+        'title': 'Large Deviations',
+        'journal': 'AMS Fields Institute Monographs 14 (textbook)',
+        'volume': 14, 'page': None, 'year': 2000,
+        'doi': None, 'arxiv': None,
+        'doi_verified': True, 'inprep': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'primary_source_path': None,
+        'used_in': ['papers/I3/paper_draft.tex'],
+        'provides': ['Pedagogical LDP textbook complementary to DemboZeitouni; cited as alternate reference.'],
+        'notes': 'Textbook-exempt per Pipeline Invariant #11 (no DOI/arXiv; AMS Fields Institute Monographs 14, 2000).',
     },
 
     'Roehm2026Modular': {
@@ -7278,6 +7572,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D3/paper_draft.tex'],
         'provides': ['N_f = 16 anchor for the Sakharov coefficient G_N = 12pi/(N_f Lambda_UV^2); modular-invariance derivation of three SM fermion generations.'],
         'notes': 'In-preparation alias for Roehm2026Wave10 (Bundle L2 self-cite). Same content; the alias is used in D3 §1 narrative-level cross-reference.',
@@ -7335,20 +7631,20 @@ CITATION_REGISTRY = {
     },
 
     'BelgiornoCacciatori2024': {
-        'authors': 'Belgiorno, F. and Cacciatori, S. L.',
-        'title': 'Rigorous WKB analysis for analog Hawking radiation',
-        'journal': 'Classical and Quantum Gravity',
-        'volume': 41,
-        'page': '105001',
+        'authors': 'Belgiorno, F. and Cacciatori, S. L. and Trevisan, D.',
+        'title': 'Analogous Hawking Radiation in Dispersive Media',
+        'journal': 'Universe',
+        'volume': 10,
+        'page': 412,
         'year': 2024,
-        'doi': '10.1088/1361-6382/ad3812',
+        'doi': '10.3390/universe10110412',
         'arxiv': None,
         'doi_verified': True,
         'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/D1/paper_draft.tex', 'papers/paper4_wkb_connection/paper_draft.tex'],
-        'provides': ['Rigorous WKB analysis for analog Hawking radiation with dispersion; mathematical-physics-style closure of the dispersive-Hawking propagator.'],
-        'notes': 'Recent (2024) rigorous WKB analysis; cited at D1 §3 as the project-relevant rigorous-WKB-with-dispersion reference.',
+        'provides': ['Analytic dispersive-Hawking radiation framework in non-linear dielectric media; relevant to project D1 dispersive-WKB and paper4 WKB-connection content.'],
+        'notes': 'Belgiorno-Cacciatori-Trevisan 2024 Universe 10, 412 (DOI 10.3390/universe10110412; MDPI open-access). Replaced 2026-05-08 (Phase 7 absorption Session 5): the prior registry entry recorded a fabricated title "Rigorous WKB analysis for analog Hawking radiation" + non-resolving DOI 10.1088/1361-6382/ad3812 — primary-source verification surfaced it as a hallucinated citation and the actual Belgiorno-Cacciatori-Trevisan 2024 paper title is the MDPI Universe entry above.',
     },
 
     'FreedmanLarsenWang2002': {
@@ -7425,6 +7721,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D2/paper_draft.tex', 'papers/paper7_chirality_formal/paper_draft.tex'],
         'provides': ['Chirality-wall pillar 1 — Golterman-Shamir lattice no-go (9 conditions C1-C6 + I1-I3) plus TPFEvasion-class round_not_continuous + rotor_hilbert_not_finite_dim closures.'],
         'notes': 'In-preparation D2 source paper7 self-cite. Inprep exemption per Pipeline Invariant #11.',
@@ -7436,6 +7734,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D2/paper_draft.tex', 'papers/paper8_chirality_master/paper_draft.tex'],
         'provides': ['Chirality-wall master synthesis: Onsager algebra Z_2 -> Z_16; Witten anomaly element-8 identification; gapped_interface_axiom; SPTStacking 16-fold periodicity.'],
         'notes': 'In-preparation D2 source paper8 self-cite. Inprep exemption per Pipeline Invariant #11.',
@@ -7447,6 +7747,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D2/paper_draft.tex', 'papers/D4/paper_draft.tex', 'papers/paper9_sm_anomaly_drinfeld/paper_draft.tex'],
         'provides': ['SM Z_16 anomaly + Drinfeld centre Z(Vec_S3) toric-code anchor; Spin^Z_4 5-bordism dai_freed_spin_z4 placeholder.'],
         'notes': 'In-preparation D2/D4 source paper9 self-cite. Inprep exemption per Pipeline Invariant #11.',
@@ -7458,6 +7760,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D1/paper_draft.tex', 'papers/paper2_second_order/paper_draft.tex'],
         'provides': ['Second-order SK-EFT counting; KMS optimality biconditional via SKDoubling.firstOrder_KMS_optimal; parity-classification of dispersive vs dissipative coefficients.'],
         'notes': 'In-preparation D1 source paper2 self-cite. Inprep exemption per Pipeline Invariant #11.',
@@ -7469,6 +7773,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D1/paper_draft.tex', 'papers/paper12_polariton/paper_draft.tex', 'papers/E1/paper_draft.tex'],
         'provides': ['Polariton platform LKB-Paris configuration; stimulated-Hawking gain G > 0.5 at omega/kappa = 0.175 with N_probe = 100 photons per mode; reservoir-corrected sound speed; quasinormal-mode resonances.'],
         'notes': 'In-preparation D1 source paper12 self-cite. E1 PRL splash extraction. Inprep exemption per Pipeline Invariant #11.',
@@ -7480,6 +7786,8 @@ CITATION_REGISTRY = {
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
+        'inprep': False,
+        'primary_source_path': None,
         'used_in': ['papers/D1/paper_draft.tex', 'papers/paper16_graphene_sk_eft/paper_draft.tex', 'papers/E2/paper_draft.tex'],
         'provides': ['Graphene Dirac-fluid platform Dean-Kim-Lucas configuration; T_H ~ 2.4 K; 92% Lean theorem reuse with BEC modules; Wiedemann-Franz violation L/L_0 > 200; closed-form noise spectrum.'],
         'notes': 'In-preparation D1 source paper16_graphene_sk_eft self-cite. E2 PRL splash extraction. Inprep exemption per Pipeline Invariant #11.',
@@ -9307,6 +9615,226 @@ CITATION_REGISTRY = {
         'used_in': ['papers/D3/paper_draft.tex'],
         'provides': ['PPN parameter survey; comprehensive GR-experiment confrontation review'],
         'notes': 'Living Review article. Open-access.',
+    },
+
+    # ════════════════════════════════════════════════════════════════
+    # Auto-stubs from \bibitem blocks (Phase 6i Wave 1 backfill)
+    # ════════════════════════════════════════════════════════════════
+
+    'Roehm2026E1': {
+        'authors': "J.~Roehm, ``A Falsifiable Hawking Spectrum for Polariton Microcavities at the Paris LKB Device Parameters'', PRL/PRR letter (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    'Roehm2026E2': {
+        'authors': "J.~Roehm, ``Detecting Analog Hawking Radiation in the Bilayer-Graphene Dirac Fluid'', PRL/PRR letter (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    'Roehm2026F': {
+        'authors': "J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics --- A Formally Verified Survey'', RMP/Phys.~Rep.~flagship review (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    # ════════════════════════════════════════════════════════════════
+    # Auto-stubs from \bibitem blocks (Phase 6i Wave 1 backfill)
+    # ════════════════════════════════════════════════════════════════
+
+    'Roehm2026E1': {
+        'authors': "J.~Roehm, ``A Falsifiable Hawking Spectrum for Polariton Microcavities at the Paris LKB Device Parameters'', PRL/PRR letter (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    'Roehm2026E2': {
+        'authors': "J.~Roehm, ``Detecting Analog Hawking Radiation in the Bilayer-Graphene Dirac Fluid'', PRL/PRR letter (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    'Roehm2026F': {
+        'authors': "J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics --- A Formally Verified Survey'', RMP/Phys.~Rep.~flagship review (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    # ════════════════════════════════════════════════════════════════
+    # Auto-stubs from \bibitem blocks (Phase 6i Wave 1 backfill)
+    # ════════════════════════════════════════════════════════════════
+
+    'Roehm2026E1': {
+        'authors': "J.~Roehm, ``A Falsifiable Hawking Spectrum for Polariton Microcavities at the Paris LKB Device Parameters'', PRL/PRR letter (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    'Roehm2026E2': {
+        'authors': "J.~Roehm, ``Detecting Analog Hawking Radiation in the Bilayer-Graphene Dirac Fluid'', PRL/PRR letter (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    'Roehm2026F': {
+        'authors': "J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics --- A Formally Verified Survey'', RMP/Phys.~Rep.~flagship review (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    # ════════════════════════════════════════════════════════════════
+    # Auto-stubs from \bibitem blocks (Phase 6i Wave 1 backfill)
+    # ════════════════════════════════════════════════════════════════
+
+    'Roehm2026E1': {
+        'authors': "J.~Roehm, ``A Falsifiable Hawking Spectrum for Polariton Microcavities at the Paris LKB Device Parameters'', PRL/PRR letter (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    'Roehm2026E2': {
+        'authors': "J.~Roehm, ``Detecting Analog Hawking Radiation in the Bilayer-Graphene Dirac Fluid'', PRL/PRR letter (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
+    },
+
+    'Roehm2026F': {
+        'authors': "J.~Roehm, ``Fluid-Based Approaches to Fundamental Physics --- A Formally Verified Survey'', RMP/Phys.~Rep.~flagship review (2026)",
+        'title': '',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': False,
+        'inprep': False,
+        'primary_source_path': None,
+        'used_in': ['papers/D1/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Auto-generated stub from \bibitem block in `papers/D1/paper_draft.tex`. Title not present in source bibitem.',
     },
 }
 

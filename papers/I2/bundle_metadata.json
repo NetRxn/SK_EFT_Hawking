@@ -9,17 +9,17 @@
   "stage13_status": "green",
   "stage13_redo_required": false,
   "freshness_stale": false,
-  "source_manifest_last_regen": "2026-05-01T12:31:23Z",
-  "last_lift": "2026-05-01T16:30:00Z",
+  "source_manifest_last_regen": "2026-05-06T15:43:01Z",
+  "last_lift": "2026-05-06T15:43:01Z",
   "last_stage9_review": "2026-05-01T21:05:00Z",
-  "last_stage10_review": "2026-05-01T22:00:00Z",
-  "last_stage13_review": "2026-05-01T15:25:56Z",
+  "last_stage10_review": "2026-05-06T23:45:00Z",
+  "last_stage13_review": "2026-05-07T00:30:00Z",
   "blockers_open": 0,
   "advisories_open": 0,
-  "stage13_review_doc": "papers/AutomatedReviews/2026-05-01-1525-bundle-stage13/I2.md",
+  "stage13_review_doc": "papers/AutomatedReviews/2026-05-06-bundle-stage13/I2.md",
   "stage13_review_doc_round1": "papers/AutomatedReviews/2026-05-01-1456-bundle-stage13/I2.md",
   "stage13_review_doc_round2": "papers/AutomatedReviews/2026-05-01-1518-bundle-stage13/I2.md",
   "audit_log_path": "papers/I2/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "Stage 13 round 3 (2026-05-01T15:25:56Z): 0 findings (0 BLOCKER, 0 REQUIRED, 0 RECOMMENDED). Both round-2 findings verified REMEDIATED: 7.1 §5 number-field count drift now reads 'cumulative count is 164 declarations' with corrected per-module counts (QCyc3=12, QCyc15=19, QCyc15SqrtPhi=11) — sum 164 reproducible under line-start grep convention 'theorem|lemma|def|noncomputable def|structure|class|inductive|abbrev'; hedging clause dropped per round-2 option (a). 5.6 §8 'Google Quantum AI's surface-code work' clause removed from non-Abelian-anyon parenthetical; remaining items (Microsoft Quantum's, academic/national-lab Majorana-detection experiments) are categorically consistent. Seven I2 bibitems remain cache-verified 'match' (rounds 1+2; no round-3 fetches required). All eight finding classes pass. Submission verdict: READY. Stage 13 status: green. Round-2 QI candidate qi-round-broadening-introduces-new-issues empirically validated by round-3 outcome — ready to promote to ratified project-level QI rule in Stage 14."
+  "notes": "Stage 13 round 3 (2026-05-01T15:25:56Z): 0 findings (0 BLOCKER, 0 REQUIRED, 0 RECOMMENDED). Both round-2 findings verified REMEDIATED: 7.1 §5 number-field count drift now reads 'cumulative count is 164 declarations' with corrected per-module counts (QCyc3=12, QCyc15=19, QCyc15SqrtPhi=11) — sum 164 reproducible under line-start grep convention 'theorem|lemma|def|noncomputable def|structure|class|inductive|abbrev'; hedging clause dropped per round-2 option (a). 5.6 §8 'Google Quantum AI's surface-code work' clause removed from non-Abelian-anyon parenthetical; remaining items (Microsoft Quantum's, academic/national-lab Majorana-detection experiments) are categorically consistent. Seven I2 bibitems remain cache-verified 'match' (rounds 1+2; no round-3 fetches required). All eight finding classes pass. Submission verdict: READY. Stage 13 status: green. Round-2 QI candidate qi-round-broadening-introduces-new-issues empirically validated by round-3 outcome — ready to promote to ratified project-level QI rule in Stage 14. | 2026-05-06 Session-2 stage10 round-4 GREEN: 142 sentences walked, 0 blocking_issues. Sidebar D.2 absorption stub correctly remediated by Session-2 systematic stub-cleanup (lines 944-955 commented out, no rendered content past \\end{thebibliography}). 4 soft advisories carry forward (non-blocking). | 2026-05-06 Session-2 stage13 round-1 NEAR-READY (0 BLOCKER, 2 REQUIRED). REQUIRED 5.2 (28→27 module count) FIXED Session-2 (abstract line 49 + fig2 caption line 633). REQUIRED 5.1 (NetRxn/lean-tensor-categories repo not yet public) DEFERRED — non-blocking; either create the public repo or hedge prose to \"planned for release\" in a polish-pass session. Mathlib upstream PR coordination integrity verified clean."
 }

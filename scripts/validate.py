@@ -973,7 +973,15 @@ def check_paper_provenance() -> CheckResult:
                 ))
 
         # Check 3: No placeholder bibliography entries
-        if 'xxxxx' in tex.lower() or 'Nature \\textbf{XXX}' in tex:
+        # Strip LaTeX line comments first so historical cleanup notes
+        # like "% [2026-05-04 cleanup: ... arXiv:2604.XXXXX ...]" don't
+        # false-positive. A LaTeX line comment starts at an unescaped %
+        # and continues to end-of-line.
+        tex_comment_stripped = re.sub(r'(?<!\\)%[^\n]*', '', tex)
+        if (
+            'xxxxx' in tex_comment_stripped.lower()
+            or 'Nature \\textbf{XXX}' in tex_comment_stripped
+        ):
             all_pass = False
             details.append(Detail(
                 f"{paper_dir.name}/bibliography", False,

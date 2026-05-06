@@ -1,180 +1,567 @@
 {
+  "paper": "L2",
+  "review_date": "2026-05-06T22:30:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
   "bundle_target": "L2",
-  "review_round": 1,
-  "review_date_utc": "2026-05-01T00:00:00Z",
-  "verdict": "GREEN",
-  "checks_run": 24,
-  "pass": 24,
-  "fail": 0,
-  "warn": 0,
-  "findings": [
+  "review_round": 3,
+  "review_focus": "Phase6n_6o-absorption-Session2-R3-verification-of-R2-blocker-fixes",
+
+  "sentences": [
     {
-      "id": "L2-S10-r1-F1",
-      "severity": "PASS",
-      "category": "lean_module",
-      "summary": "All 9 \\texttt{<Module>.lean} references in paper resolve to existing files in lean/SKEFTHawking/: A1Ring.lean, A1Resolution.lean, A1Ext.lean, ChangeOfRings.lean, SMFermionData.lean, ModularInvarianceConstraint.lean, GenerationConstraint.lean, RokhlinBridge.lean, WangBridge.lean.",
-      "fix_recommendation": "None — all module references resolve."
+      "id": "sentence:L2:abstract:0aa0b70b",
+      "raw_id_parts": {"paper": "L2", "section_slug": "abstract", "quote_hash": "0aa0b70b", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 22,
+      "tex_line_end": 26,
+      "quote": "We present the first formally verified derivation that the number of Standard-Model fermion generations satisfies $N_f \\equiv 0 \\pmod{3}$, following the global modular constraint of Wang~\\cite{Wang2024}.",
+      "quote_normalized": "we present the first formally verified derivation that the number of standard-model fermion generations satisfies $n_f \\equiv 0 \\pmod{3}$, following the global modular constraint of wang~.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.generation_mod3_constraint"},
+          {"kind": "theorem", "target": "SKEFTHawking.generation_constraint_iff"},
+          {"kind": "citation", "target": "Wang2024"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. First-claim spot-check (literature registries: Coq/Lean/Agda/Isabelle community archives have no prior formalization of N_f ≡ 0 mod 3 from modular invariance). PASS at registry-spot-check confidence; appropriately hedged in body (§IV uses 'We are not aware of any prior...').",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2",
+      "bundle_section_hint": "abstract"
     },
     {
-      "id": "L2-S10-r1-F2",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "WangBridge.fermion_count_gives_central_charge exists at WangBridge.lean:73.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:abstract:73a3c22f",
+      "raw_id_parts": {"paper": "L2", "section_slug": "abstract", "quote_hash": "73a3c22f", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 27,
+      "tex_line_end": 33,
+      "quote": "The chain combines two independent ingredients machine-checked in Lean~4: the chiral central charge $c_- = 8 N_f$ derived from $16$ left-handed Weyl components per generation in the with-$\\nu_R$ convention, and the framing-anomaly constraint $24 \\mid c_-$ following from $\\eta(\\tau+1) = e^{2\\pi i/24}\\,\\eta(\\tau)$ via Mathlib's \\texttt{Complex.exp\\_add}.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.fermion_count_gives_central_charge"},
+          {"kind": "theorem", "target": "SKEFTHawking.qParam_shift"},
+          {"kind": "theorem", "target": "SKEFTHawking.framing_anomaly_constraint"},
+          {"kind": "theorem", "target": "SKEFTHawking.total_components_with_nu_R"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. All four cited theorems exist (verified via direct grep on lean/SKEFTHawking/{WangBridge,ModularInvarianceConstraint,SMFermionData}.lean). 8 = 16 × 1/2 (Weyl-fermion central-charge contribution per AlvarezGaumeWitten1984) is arithmetic; 24 from Dedekind-η phase via Complex.exp_add is structurally correct.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F3",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "WangBridge.central_charge_fractional_without_nu_R exists at WangBridge.lean:109.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:abstract:55dab710",
+      "raw_id_parts": {"paper": "L2", "section_slug": "abstract", "quote_hash": "55dab710", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 33,
+      "tex_line_end": 33,
+      "quote": "The minimal nontrivial solution is $N_f = 3$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.generation_mod3_constraint"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "R3 unchanged from R2. N_f=3 is the minimal positive integer divisible by 3; arithmetically tautological. Matches generation_mod3_constraint.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F4",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "ModularInvarianceConstraint.qParam_shift exists at ModularInvarianceConstraint.lean:79.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:abstract:587e1bda",
+      "raw_id_parts": {"paper": "L2", "section_slug": "abstract", "quote_hash": "587e1bda", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 33,
+      "tex_line_end": 36,
+      "quote": "Without right-handed neutrinos, $c_- = 15/2$ is fractional, giving a formal independent argument for $\\nu_R$ from modular invariance alone.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.central_charge_fractional_without_nu_R"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. Theorem central_charge_fractional_without_nu_R exists at WangBridge.lean:109. 15/2 is non-integer (15 odd); Lean encodes via contradiction from 15/2 ∈ ℕ.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F5",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "ModularInvarianceConstraint.framing_anomaly_constraint exists at ModularInvarianceConstraint.lean:103.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:abstract:8b982678",
+      "raw_id_parts": {"paper": "L2", "section_slug": "abstract", "quote_hash": "8b982678", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 36,
+      "tex_line_end": 41,
+      "quote": "The algebraic core of the Rokhlin bound is verified through homological degree~5 by an explicit minimal free resolution $\\dim \\mathrm{Ext}^n_{A(1)}(\\mathbb{F}_2,\\mathbb{F}_2) = 1,2,2,2,3,4$ together with a change-of-rings adjunction $\\mathrm{Hom}_A(A \\otimes_{A(1)} M, N) \\cong \\mathrm{Hom}_{A(1)}(M, N)$, the first such computation in any proof assistant.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.A1Ext"},
+          {"kind": "theorem", "target": "SKEFTHawking.A1Resolution"},
+          {"kind": "theorem", "target": "SKEFTHawking.ChangeOfRings"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. Ext dimensions 1,2,2,2,3,4 confirmed in lean/SKEFTHawking/A1Ext.lean (ext_dim_0..ext_dim_5).",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F6",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "RokhlinBridge.sixteen_convergence_full exists at RokhlinBridge.lean:112.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:abstract:69b57ab1",
+      "raw_id_parts": {"paper": "L2", "section_slug": "abstract", "quote_hash": "69b57ab1", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 41,
+      "tex_line_end": 43,
+      "quote": "The verification is fully automated by \\texttt{lake build} on a $5812$-theorem $322$-module library with one axiom and zero \\texttt{sorry}.",
+      "quote_normalized": "the verification is fully automated by lake build on a $5812$-theorem $322$-module library with one axiom and zero sorry.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "production_run", "target": "docs/counts.json", "computed_value": "5812 substantive theorems / 322 modules / 1 axiom / 0 sorry (counts.json regen 2026-05-06)"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "R3 verification of R2 BLOCKER #2 fix: literals updated 5229→5812 thm / 243→322 mod. Live counts.json (regen 2026-05-06) reports theorems_total=5837 / theorems_substantive=5812 / theorems_placeholder=25 / modules=322 / axioms=1 / sorry_declarations=0. Paper claims 5812 substantive theorems (matches), 322 modules (matches), one axiom (matches: gapped_interface_axiom), zero sorry (matches). PASS — IA finding closed. Sentence-id hash rolls 0aa0b70b-era ef84ff99 → 69b57ab1 due to literal change.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate9_NumericalFreshness"],
+      "rewrite_of": "sentence:L2:abstract:ef84ff99",
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F7",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "RokhlinBridge.z16_anomaly_always_cancels_with_nu_R exists at RokhlinBridge.lean:208.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:introduction:f36d7591",
+      "raw_id_parts": {"paper": "L2", "section_slug": "introduction", "quote_hash": "f36d7591", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 54,
+      "tex_line_end": 63,
+      "quote": "Wang~\\cite{Wang2024} proposed that a \\emph{global} modular constraint --- $24 \\mid c_-$ on the chiral central charge of the partition function under the modular $T$-transformation $\\tau \\to \\tau+1$ --- combined with the SM's fermion content $c_- = 8 N_f$, forces $N_f \\equiv 0 \\pmod{3}$.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "Wang2024"},
+          {"kind": "theorem", "target": "SKEFTHawking.framing_anomaly_constraint"},
+          {"kind": "theorem", "target": "SKEFTHawking.fermion_count_gives_central_charge"},
+          {"kind": "theorem", "target": "SKEFTHawking.generation_mod3_constraint"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. Wang2024 (Phys. Rev. D 110, 125028; arXiv:2312.14928) confirmed in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity", "Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F8",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "RokhlinBridge.constraints_without_nu_R exists at RokhlinBridge.lean:265.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:central-charge-from-sm:abc12301",
+      "raw_id_parts": {"paper": "L2", "section_slug": "central-charge-from-sm", "quote_hash": "abc12301", "hash_algorithm": "manual"},
+      "section": "central_charge_from_sm",
+      "section_ordinal": 3,
+      "tex_line_start": 99,
+      "tex_line_end": 102,
+      "quote": "The coefficient $8$ in $c_- = 8 N_f$ is therefore not free: it is \\emph{derived} from the count \\texttt{total\\_components\\_with\\_nu\\_R} = 16 by the Lean theorem \\texttt{WangBridge.fermion\\_count\\_gives\\_central\\_charge}.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.fermion_count_gives_central_charge"},
+          {"kind": "theorem", "target": "SKEFTHawking.total_components_with_nu_R"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. Both theorems exist (WangBridge.lean:73 / SMFermionData.lean:176).",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F9",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "RokhlinBridge.rokhlin_strictly_stronger exists at RokhlinBridge.lean:160 with body 'omega' proving ¬(16 ∣ 8).",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:framing-anomaly:abc12302",
+      "raw_id_parts": {"paper": "L2", "section_slug": "framing-anomaly", "quote_hash": "abc12302", "hash_algorithm": "manual"},
+      "section": "framing_anomaly",
+      "section_ordinal": 4,
+      "tex_line_start": 137,
+      "tex_line_end": 145,
+      "quote": "Modular invariance demands $e^{2\\pi i c_-/24} = 1$, equivalently $24 \\mid c_-$, formalized as \\texttt{ModularInvarianceConstraint.framing\\_anomaly\\_constraint}. Combining with $c_- = 8 N_f$: $24 \\mid 8 N_f \\Longleftrightarrow 3 \\mid N_f$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.framing_anomaly_constraint"},
+          {"kind": "theorem", "target": "SKEFTHawking.generation_constraint_iff"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. framing_anomaly_constraint exists at ModularInvarianceConstraint.lean:103. generation_constraint_iff at GenerationConstraint.lean:106.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F10",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "SMFermionData.total_components_with_nu_R exists at SMFermionData.lean:176.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:ext-computation:96b64780",
+      "raw_id_parts": {"paper": "L2", "section_slug": "ext-computation", "quote_hash": "96b64780", "hash_algorithm": "sha256_first_8"},
+      "section": "machine_checked_ext",
+      "section_ordinal": 5,
+      "tex_line_start": 196,
+      "tex_line_end": 199,
+      "quote": "$\\dim_{\\mathbb{F}_2} \\mathrm{Ext}^n_{A(1)}(\\mathbb{F}_2, \\mathbb{F}_2) = 1, 2, 2, 2, 3, 4 \\quad (n = 0, 1, 2, 3, 4, 5)$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.A1Ext"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "R3 unchanged from R2. Six dimensions match A1Ext.lean ext_dim_n theorems for n=0..5 (1,2,2,2,3,4).",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F11",
-      "severity": "PASS",
-      "category": "theorem_name",
-      "summary": "GenerationConstraint canonical theorems exist: generation_mod3_constraint (line 77), generation_constraint_iff (line 106), generation_minimal_nontrivial (line 115). Paper cites Nat.Coprime.dvd_of_dvd_mul_left from Mathlib via GenerationConstraint.lean — chain consistent.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:ext-computation:88a8e21b",
+      "raw_id_parts": {"paper": "L2", "section_slug": "ext-computation", "quote_hash": "88a8e21b", "hash_algorithm": "sha256_first_8"},
+      "section": "machine_checked_ext",
+      "section_ordinal": 5,
+      "tex_line_start": 203,
+      "tex_line_end": 206,
+      "quote": "We are not aware of any prior machine-checked Ext computation over a Steenrod sub-algebra in any proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. Hedged language ('We are not aware') is appropriately conservative.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F12",
-      "severity": "PASS",
-      "category": "citation",
-      "summary": "All 12 bibitems (Wang2024, AlvarezGaumeWitten1984, GarciaEtxebarria2019, Rademacher1973, diFrancesco1997, GrossJackiw1972, Rokhlin1952, Kitaev2009, FidkowskiKitaev2010, Adams1974, ABP1967, BeaudryCampbell) present in src/core/citations.py CITATION_REGISTRY.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:conclusion:17c46f03",
+      "raw_id_parts": {"paper": "L2", "section_slug": "conclusion", "quote_hash": "17c46f03", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 7,
+      "tex_line_start": 272,
+      "tex_line_end": 274,
+      "quote": "Combining $c_- = 8 N_f$ from SM fermion counting with $24 \\mid c_-$ from Dedekind-eta modular invariance gives $N_f \\equiv 0 \\pmod{3}$, with $N_f = 3$ as the minimal nontrivial solution.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.generation_mod3_constraint"},
+          {"kind": "theorem", "target": "SKEFTHawking.generation_constraint_iff"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. Headline conclusion claim. Cross-bundle bridge to D2 §2 (same chain, same Lean theorems) — consistent.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2",
+      "bundle_section_hint": "conclusion"
     },
     {
-      "id": "L2-S10-r1-F13",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "Library-counts claim '5229-theorem 243-module library with one axiom and zero sorry' matches docs/counts.json (theorems_total=5229, modules=243, axioms=1, sorry_declarations=0). Axiom name 'gapped_interface_axiom' (paper line 291) matches counts.json axiom_names=['SKEFTHawking.gapped_interface_axiom'].",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:conclusion:a5216cd8",
+      "raw_id_parts": {"paper": "L2", "section_slug": "conclusion", "quote_hash": "a5216cd8", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 7,
+      "tex_line_start": 274,
+      "tex_line_end": 283,
+      "quote": "The chain is machine-checked end to end: the coefficient $8$ via Mathlib finite sums in \\texttt{SMFermionData.lean}; the modular factor $24$ via \\texttt{Complex.exp\\_add} in \\texttt{ModularInvarianceConstraint.lean}; the divisibility step via \\texttt{Nat.Coprime.dvd\\_of\\_dvd\\_mul\\_left} in \\texttt{GenerationConstraint.lean}; the algebraic Rokhlin core via the explicit minimal free resolution in \\texttt{A1Ring.lean}, \\texttt{A1Resolution.lean}, and \\texttt{A1Ext.lean}; and the change-of-rings step in \\texttt{ChangeOfRings.lean}.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.SMFermionData"},
+          {"kind": "theorem", "target": "SKEFTHawking.ModularInvarianceConstraint"},
+          {"kind": "theorem", "target": "SKEFTHawking.GenerationConstraint"},
+          {"kind": "theorem", "target": "SKEFTHawking.A1Ring"},
+          {"kind": "theorem", "target": "SKEFTHawking.A1Resolution"},
+          {"kind": "theorem", "target": "SKEFTHawking.A1Ext"},
+          {"kind": "theorem", "target": "SKEFTHawking.ChangeOfRings"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. All seven Lean modules exist in lean/SKEFTHawking/.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F14",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "Ext dimensions sequence '1,2,2,2,3,4' for n=0..5 matches A1Ext.lean theorems ext_dim_0=1, ext_dim_1=2, ext_dim_2=2, ext_dim_3=2, ext_dim_4=3, ext_dim_5=4 (lines 88-103). ext_total_dim=14 corroborates sum.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:conclusion:39dd2303",
+      "raw_id_parts": {"paper": "L2", "section_slug": "conclusion", "quote_hash": "39dd2303", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 7,
+      "tex_line_start": 284,
+      "tex_line_end": 293,
+      "quote": "The $24 \\mid c_-$ constraint admits a deeper structural reading: the five-step chain spin-bordism $\\Omega_5^{\\mathrm{Spin}}(BG_{\\mathrm{SM}})$ $\\to$ anomaly polynomial $\\to$ modular invariance $\\to$ Niemeier-lattice classification~\\cite{Niemeier1973} $\\to$ Schellekens' classification of meromorphic $c=24$ CFTs~\\cite{Schellekens1993}, geometrically completed for the strongly-rational, weight-1-non-trivial subset by M\\\"oller--Scheithauer~\\cite{MollerScheithauer2024}, places $24 \\mid c_-$ as a corollary of holomorphic-VOA classification rather than a stand-alone modular-consistency requirement; the deep companion paper~\\cite{Roehm2026D2} carries the full derivation.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "citation", "target": "Niemeier1973"},
+          {"kind": "citation", "target": "Schellekens1993"},
+          {"kind": "citation", "target": "MollerScheithauer2024"},
+          {"kind": "citation", "target": "Roehm2026D2"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "R3 verification of R2 BLOCKER #1 fix: \\cite{Roehm2026Wave10} (R2 self-cite circular) → \\cite{Roehm2026D2} (correct deep-companion). Verified: (a) Roehm2026D2 present at line 293 (cite) and line 383 (\\bibitem); (b) CITATION_REGISTRY contains 'Roehm2026D2' entry at src/core/citations.py:7317 with 'in_preparation' status (D2 deep companion to L2, 2026); (c) two pdflatex passes with no 'undefined citation' warnings (4pp/431795 bytes). Sentence-id hash unchanged (39dd2303) because \\cite{...} normalizes to empty in quote_normalized; the cite-target swap is captured in chain_proposed.links. WARN preserved on Möller-Scheithauer scope hedge alignment with D2 §2.7 — see followup:L2-r2-1 carried forward to R3.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate1_CitationIntegrity", "Gate6_AssumptionDisclosure"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2",
+      "bundle_section_hint": "conclusion-paired-splash-pointer",
+      "lift_action": "Lift-letter"
     },
     {
-      "id": "L2-S10-r1-F15",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "Arithmetic: c_- = 8 N_f and 24 | c_- ⇒ 3 | N_f. Verified — gcd(24,8)=8, 24/8=3, so 24|8N ⟺ 3|N. Matches Lean theorems div_24_8n_implies_div_3_n + div_3_n_implies_div_24_8n + generation_constraint_iff in GenerationConstraint.lean. Factorization 24=8×3 cited in paper line 70 is arithmetically correct.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:conclusion:048e9b68",
+      "raw_id_parts": {"paper": "L2", "section_slug": "conclusion", "quote_hash": "048e9b68", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 7,
+      "tex_line_start": 293,
+      "tex_line_end": 297,
+      "quote": "The without-$\\nu_R$ argument upgrades from suggestive to formal: a fractional central charge $c_- = 15/2$ is gravitationally anomalous; no fractional natural number exists; therefore $\\nu_R$ exists if the modular framing-anomaly constraint applies to the SM.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.central_charge_fractional_without_nu_R"},
+          {"kind": "theorem", "target": "SKEFTHawking.constraints_without_nu_R"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "R3 unchanged from R2. Both theorems exist (WangBridge.lean:109, RokhlinBridge.lean:265).",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L2"
     },
     {
-      "id": "L2-S10-r1-F16",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "lcm(16,3) = 48 confirmed by python math.lcm. Without-ν_R combined-constraint claim N_f = lcm(16,3) = 48 is arithmetically correct. Matches RokhlinBridge.constraints_without_nu_R.",
-      "fix_recommendation": "None."
+      "id": "sentence:L2:conclusion:1f7cbd53",
+      "raw_id_parts": {"paper": "L2", "section_slug": "conclusion", "quote_hash": "1f7cbd53", "hash_algorithm": "sha256_first_8"},
+      "section": "conclusion",
+      "section_ordinal": 7,
+      "tex_line_start": 297,
+      "tex_line_end": 302,
+      "quote": "The full verification builds in $\\sim 30~\\mathrm{s}$ on commodity hardware under Lean~4 v4.29.0 against Mathlib commit \\texttt{8850ed93} (library state: 5812 theorems across 322 modules, 1 axiom \\texttt{gapped\\_interface\\_axiom} unused in this chain, zero \\texttt{sorry}).",
+      "quote_normalized": "the full verification builds in $\\sim 30~s$ on commodity hardware under lean~4 v4.29.0 against mathlib commit 8850ed93 (library state: 5812 theorems across 322 modules, 1 axiom gapped\\_interface\\_axiom unused in this chain, zero sorry).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "production_run", "target": "lean/lean-toolchain"},
+          {"kind": "production_run", "target": "lean/lakefile.toml"},
+          {"kind": "production_run", "target": "docs/counts.json"}
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "R3 verification of R2 BLOCKER #2 fix (conclusion site): literals updated 5229→5812 thm / 243→322 mod. (a) TP — Lean 4 v4.29.0 PASS (lean-toolchain unchanged); Mathlib 8850ed93 PASS (lakefile.toml first 8 chars unchanged). (b) IA — 5812 thm / 322 mod matches counts.json regen 2026-05-06 (theorems_substantive=5812, modules=322). Axiom name 'gapped_interface_axiom' and 'unused in this chain / zero sorry' all PASS. Composite IA+TP both PASS — IA finding closed. Sentence-id hash rolls a181cc09 → 1f7cbd53 due to literal change.",
+      "agent_run_id": "claims-reviewer-v2:L2:2026-05-06T22:30:00Z",
+      "gates_invoked": ["Gate9_NumericalFreshness"],
+      "rewrite_of": "sentence:L2:conclusion:a181cc09",
+      "tombstone": false,
+      "bundle_destination": "L2"
+    }
+  ],
+
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "sentence:L2:abstract:ef84ff99",
+      "prior_run_date": "2026-05-06T17:01:16Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "R2 BLOCKER #2 (abstract IA) closed: '5229 theorems / 243 modules' replaced by '5812 theorems / 322 modules' (matching counts.json regen 2026-05-06: theorems_substantive=5812, modules=322). New sentence id 69b57ab1 supersedes ef84ff99 via rewrite_of pointer.",
+      "deterministic_recheck": {
+        "kind": "counts_json_lookup",
+        "prior_value": "5229 thm / 243 mod (paper) vs 5651 thm / 285 mod (live R2)",
+        "current_value": "5812 thm / 322 mod (paper) vs 5812 thm (substantive) / 322 mod (live R3) — MATCH",
+        "command": "jq '.lean | {theorems_total, theorems_substantive, modules}' docs/counts.json"
+      }
     },
     {
-      "id": "L2-S10-r1-F17",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "Without-ν_R Weyl count 15 (16 - 1 right-handed neutrino) gives c_- = 15/2 fractional. Verified: 15 is odd, 15/2 ∉ ℕ. Matches WangBridge.central_charge_fractional_without_nu_R encoding.",
-      "fix_recommendation": "None."
+      "prior_finding_id": "sentence:L2:conclusion:roehm2026wave10-bibitem-missing",
+      "prior_run_date": "2026-05-06T17:01:16Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "R2 BLOCKER #1 (TN: missing \\bibitem{Roehm2026Wave10}) closed via re-routing the citation: paper_draft.tex line 293 \\cite{Roehm2026Wave10} → \\cite{Roehm2026D2}, and bibliography gained \\bibitem{Roehm2026D2} at line 383. R3 deterministic recheck: two-pass pdflatex emits zero 'undefined citation' warnings; CITATION_REGISTRY contains Roehm2026D2 entry at src/core/citations.py:7317; \\bibitem{Roehm2026D2} present in TeX at line 383 (verified via grep).",
+      "deterministic_recheck": {
+        "kind": "latex_compile_and_grep",
+        "prior_value": "0 \\bibitem{Roehm2026Wave10}; natbib WARN 'undefined citation'",
+        "current_value": "1 \\bibitem{Roehm2026D2} (line 383); 0 undefined-citation warnings in 2-pass pdflatex; CITATION_REGISTRY hit",
+        "command": "grep -nE 'Roehm2026D2|Roehm2026Wave10|^\\\\\\\\bibitem' papers/L2/paper_draft.tex && pdflatex -interaction=nonstopmode -output-directory=/tmp papers/L2/paper_draft.tex (2x) | grep undefined"
+      }
     },
     {
-      "id": "L2-S10-r1-F18",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "With-ν_R Weyl count 16 components per generation matches SMFermionData.total_components_with_nu_R (Q_L:6 + ū_R:3 + d̄_R:3 + L:2 + ē_R:1 + ν̄_R:1 = 16). Table at paper lines 81-94 internally consistent.",
-      "fix_recommendation": "None."
+      "prior_finding_id": "sentence:L2:conclusion:a181cc09",
+      "prior_run_date": "2026-05-06T17:01:16Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "R2 BLOCKER #2 (conclusion IA, composite with TP-passing) closed: '5229 theorems / 243 modules' replaced by '5812 theorems / 322 modules'. TP component (Lean v4.29.0 + Mathlib 8850ed93) was already PASS in R2 and remains PASS. New sentence id 1f7cbd53 supersedes a181cc09 via rewrite_of pointer.",
+      "deterministic_recheck": {
+        "kind": "counts_json_lookup_and_toolchain_pin",
+        "prior_value": "5229 thm / 243 mod (paper) IA-FAIL; Lean v4.29.0 + Mathlib 8850ed93 TP-PASS",
+        "current_value": "5812 thm / 322 mod (paper) IA-PASS; Lean v4.29.0 + Mathlib 8850ed93 TP-PASS",
+        "command": "jq '.lean | {theorems_substantive, modules}' docs/counts.json && cat lean/lean-toolchain && grep '^rev' lean/lakefile.toml"
+      }
     },
     {
-      "id": "L2-S10-r1-F19",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "Toolchain pin claims in acknowledgments: 'Lean 4 v4.29.0' matches lean/lean-toolchain ('leanprover/lean4:v4.29.0'); 'Mathlib commit 8850ed93' matches lean/lakefile.toml rev (8850ed93863d6ce27210a673f9ed235a4e8a2994).",
-      "fix_recommendation": "None."
+      "prior_finding_id": "L2-S10-r1-F12",
+      "prior_run_date": "2026-05-01T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "R2 already auto-closed F12 (12 bibitems verified in CITATION_REGISTRY). R3 reconfirms 16 bibitems including new Roehm2026D2.",
+      "deterministic_recheck": {
+        "kind": "citation_registry_lookup",
+        "prior_value": 12,
+        "current_value": 16,
+        "command": "grep -c '^\\\\\\\\bibitem' papers/L2/paper_draft.tex"
+      }
     },
     {
-      "id": "L2-S10-r1-F20",
-      "severity": "PASS",
-      "category": "first_claim",
-      "summary": "First-claim verification: 'first machine-checked Ext computation over a Steenrod sub-algebra in any proof assistant' (paper §IV). Spot-check via knowledge of formal-verification literature: Steenrod algebra has Lean4 / Coq formalizations of Sq^i operations (e.g., Anantharaman et al. work on cohomology operations) but no public end-to-end machine-checked Ext^n_{A(1)}(F_2,F_2) computation through degree 5 in any proof assistant has been published. The claim is consistent with current state of the art and appropriately hedged ('We are not aware of any prior...'). PASS at registry-level spot-check; confirmation would require systematic literature review.",
-      "fix_recommendation": "Hedging language ('We are not aware of any prior') is appropriate; consider adding a footnote citing the Mathlib homological-algebra status as the closest existing infrastructure."
+      "prior_finding_id": "L2-S10-r1-F19",
+      "prior_run_date": "2026-05-01T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Toolchain pin (Lean v4.29.0 + Mathlib 8850ed93) PASS — unchanged across R1/R2/R3.",
+      "deterministic_recheck": {
+        "kind": "toolchain_pin_recheck",
+        "prior_value": "Lean v4.29.0 + Mathlib 8850ed93 PASS",
+        "current_value": "Lean v4.29.0 + Mathlib 8850ed93 PASS (unchanged)",
+        "command": "cat lean/lean-toolchain && grep '^rev' lean/lakefile.toml"
+      }
     },
     {
-      "id": "L2-S10-r1-F21",
-      "severity": "PASS",
-      "category": "first_claim",
-      "summary": "First-claim verification: 'first formally verified derivation that the number of Standard-Model fermion generations satisfies N_f ≡ 0 mod 3' (abstract). Wang2024 is the original mathematical claim; Lean formalization of the chain is novel to this project. No competing formal verification known. PASS.",
-      "fix_recommendation": "None."
+      "prior_finding_id": "L2-S10-r1-F1-through-F11",
+      "prior_run_date": "2026-05-01T00:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Lean module + theorem-name resolution all PASS — unchanged across R1/R2/R3.",
+      "deterministic_recheck": {
+        "kind": "lean_theorem_grep",
+        "prior_value": "11 PASS",
+        "current_value": "11 PASS (unchanged)",
+        "command": "grep -nE '^theorem (fermion_count_gives_central_charge|...)' lean/SKEFTHawking/*.lean"
+      }
     },
     {
-      "id": "L2-S10-r1-F22",
-      "severity": "PASS",
-      "category": "lean_module",
-      "summary": "Mathlib lemma references in paper resolve: Complex.exp_add (paper line 31, 277) — standard Mathlib analytical lemma; Nat.Coprime.dvd_of_dvd_mul_left (paper line 279) — standard Mathlib number-theory lemma. Both used in GenerationConstraint.lean / ModularInvarianceConstraint.lean proofs.",
-      "fix_recommendation": "None."
+      "prior_finding_id": "L2-S10-r1-F14-through-F18-F20-F22-F23-F24",
+      "prior_run_date": "2026-05-01T00:00:00Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "R1 LLM-judgment / arithmetic-spot-check findings. Underlying claims still PASS in R3 corresponding sentence records. Not auto-closed per Part D.2 default.",
+      "deterministic_recheck": null
+    }
+  ],
+
+  "summary": {
+    "total_sentences": 16,
+    "by_type": {
+      "numeric": 4,
+      "theorem-ref": 3,
+      "citation": 3,
+      "parameter": 0,
+      "formal-claim": 5,
+      "qualitative": 0,
+      "methodology": 0,
+      "transition": 0,
+      "metaclaim": 1
     },
-    {
-      "id": "L2-S10-r1-F23",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "Phase cycle claim (Fig 1): e^{2πi c_-/24} at c_- = 8 N_f cycles through cube roots of unity {1, ω, ω²}. Verified: 8 N_f / 24 = N_f/3, so phase = e^{2πi N_f/3} which has period 3 in N_f, taking values 1, ω, ω². Phase = 1 iff N_f ≡ 0 mod 3, matching paper figure caption.",
-      "fix_recommendation": "None."
+    "by_verdict": {
+      "PASS": 15,
+      "FAIL": 0,
+      "WARN": 1,
+      "INFO": 0,
+      "UNGROUNDED": 0,
+      "TRANSITION": 0
     },
+    "by_finding_class": {
+      "IA": 0,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 7,
+    "non_reproducing_auto_closed": 6,
+    "non_reproducing_candidates": 1,
+    "agent_text": "R3 verification re-review of R2 BLOCKER fixes. 16 sentences walked (R2 had 17; the missing-bibitem stub sentence:L2:conclusion:roehm2026wave10-bibitem-missing was retired via supersession after the fix). 15 PASS / 0 FAIL / 1 WARN (Möller-Scheithauer scope-hedge advisory carried from R2). Both R2 BLOCKERs CLOSED CLEAN: (#1) Roehm2026Wave10 self-cite → Roehm2026D2 + \\bibitem added at line 383; CITATION_REGISTRY contains entry; 2-pass pdflatex 0 undefined-citation warnings (4pp/431795 bytes). (#2) library counts 5229→5812 thm and 243→322 mod at both abstract (line 42) and conclusion (line 300) sites; matches counts.json regen 2026-05-06 (theorems_substantive=5812, modules=322). Cross-bundle 24|c_- chain audit: L2 conclusion ↔ D2 §2.7 use SAME 5-step chain post-D2-fix (spin-bordism → anomaly polynomial → modular invariance → Niemeier1973 → Schellekens1993 → MollerScheithauer2024 geometric completion); SAME Lean substrate (Schellekens.Chain witness in lean/SKEFTHawking/Schellekens/); SAME bibitem set across both bundles; consistent."
+  },
+
+  "blocking_issues": [],
+
+  "non_blocking_followups": [
     {
-      "id": "L2-S10-r1-F24",
-      "severity": "PASS",
-      "category": "numerical",
-      "summary": "Hypothesis disclosure (Class HD check): Three textbook tracked hypotheses (ko cohomology Adams1974, ASS convergence BeaudryCampbell, ABP splitting ABP1967) explicitly disclosed at paper §IV (lines 208-216) with citations and explanation that they are tracked hypotheses, not project-originated axioms. Single project axiom 'gapped_interface_axiom' explicitly disclosed in conclusion as 'unused in this chain'. No undisclosed tracked hypotheses detected.",
-      "fix_recommendation": "None."
+      "id": "followup:L2-r2-1",
+      "summary": "WARN (carried from R2): Möller-Scheithauer scope hedge in L2 conclusion is compact ('strongly-rational, weight-1-non-trivial subset'). D2 §2.7 carries the explicit moonshine-FLM out-of-scope clause. For PRL depth this is acceptable; recommend ACCEPT AS-IS — L2 makes no moonshine-VOA claim, so the compact hedge is not an overclaim. Optional polish: add a parenthetical '(moonshine-VOA / FLM out of scope; see D2 companion)' if extra reviewer comfort is desired, but not required.",
+      "sentences": ["sentence:L2:conclusion:39dd2303"],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": null,
+      "recommendation": "ACCEPT_AS_IS"
     }
   ]
 }

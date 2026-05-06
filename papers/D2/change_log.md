@@ -33,3 +33,19 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: §4
 - Stage-13 redo required: yes
 - Notes: Pillars 2+3 + bridges + master TPF-evasion + 1+1D/2+1D gapped-interface evidence; merges with paper7 content under unified §4
+
+## 2026-05-06 — Lift-section from `_phase6n_W1b_lean_only` (§3)
+
+- Source title: SymTFT audit substrate
+- Lift action: Lift-section
+- Insertion point: §3
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6n W1b SymTFT audit substrate cross-bridge (DrinfeldCenter/Witt class/categorical cc additivity)
+
+## 2026-05-06 — Lift-section from `_phase6o_W2a_lean_only` (§3)
+
+- Source title: APS-η for analog horizons
+- Lift action: Lift-section
+- Insertion point: §3
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6o W2a APS-η Witten-Yonekura η/16 mod 1 cross-bridge to Z₁₆ Dai-Freed

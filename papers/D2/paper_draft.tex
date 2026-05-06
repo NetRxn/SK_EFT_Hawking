@@ -61,8 +61,8 @@ Rokhlin's signature theorem, Kitaev DIII period-16) and the
 generation count $N_f = 3$ appears in two independent settings
 (Z$_{16}$ + modular). The end-to-end chain — from sixteen Weyl
 components through three formal mechanisms to one observed
-$N_f = 3$ — is verified by \texttt{lake build} on a 5229-theorem,
-243-module Lean 4 library with one axiom and zero \texttt{sorry};
+$N_f = 3$ — is verified by \texttt{lake build} on a 5812-theorem,
+322-module Lean 4 library with one axiom and zero \texttt{sorry};
 322 of those theorems were closed by the Aristotle automated prover.
 The single axiom (\texttt{gapped\_interface\_axiom}, a 4+1D
 hypothesis) is corroborated in 1+1D and 2+1D by independent
@@ -119,7 +119,7 @@ the intersection of mechanisms (ii) and (iii), supported by
 machine-checked 1+1D and 2+1D evidence), three tracked
 algebraic-topology hypotheses (deferred to upstream Mathlib), and a
 single Mathlib-deferral placeholder
-(\texttt{Z16AnomalyComputation.dai\_freed\_spin\_z4}). Across the entire chain, $5229$
+(\texttt{Z16AnomalyComputation.dai\_freed\_spin\_z4}). Across the entire chain, $5812$
 theorems are machine-verified, $322$ of them closed automatically
 by the Aristotle automated prover, with zero \texttt{sorry}.
 
@@ -349,6 +349,80 @@ hypotheses for the full $\mathbb{Z}_{16}$ result are now H1
 (Anderson-Brown-Peterson splitting) — none of which carry physics
 content beyond their homological-algebra statements. We catalog these in
 \S\ref{sec:outlook}.
+
+\subsection{The Schellekens chain: $24 \mid c_{-}$ as a holomorphic-VOA classification corollary (Phase 6o W2b)}
+\label{sec:schellekens-chain}
+
+The modular-framing argument of \S\ref{sec:modular} establishes
+$24 \mid c_{-}$ at the level of partition-function consistency from
+the Dedekind-$\eta$ phase. A deeper structural reading places the
+constraint inside the classification of holomorphic vertex operator
+algebras (VOAs) at central charge $24$. The five-step chain is:
+\begin{enumerate}
+  \item Spin-bordism $\Omega_5^{\mathrm{Spin}}(BG_{\mathrm{SM}})$
+  classification of Dai--Freed
+  anomalies~\cite{GarciaEtxebarria2019}, formalised in the
+  program's \texttt{lean/SKEFTHawking/Schellekens/SpinBordism.lean} +
+  \texttt{lean/SKEFTHawking/Z16AnomalyComputation.lean}.
+  \item Anomaly-polynomial extraction at the boundary CFT, which
+  assigns each anomaly class a modular-form datum.
+  \item Modular invariance of the boundary CFT under SL$(2,\mathbb{Z})$,
+  which forces the framing-anomaly phase to close on integer
+  $c_{-}$.
+  \item Niemeier's classification of the
+  $24$-dimensional positive-definite even self-dual unimodular
+  lattices~\cite{Niemeier1973} (24 lattices; the Leech lattice is the
+  unique one with no roots), which is the algebraic spine of the
+  $c=24$ classification.
+  \item Schellekens'~\cite{Schellekens1993} enumeration of $71$
+  meromorphic $c=24$ conformal field theories, completed at the VOA
+  level in the strongly-rational, weight-1-non-trivial subset
+  ($70$ algebras) by M\"oller and Scheithauer~\cite{MollerScheithauer2024}
+  via the geometric-hole-diagram correspondence.
+\end{enumerate}
+Reading the chain in the program's setting: the
+$\mathrm{Spin}^{\mathbb{Z}_4}$ five-bordism class associated with the
+SM under Wang's hypothesis~\cite{Wang2024} produces a boundary CFT
+whose chiral central charge $c_{-} = 8 N_f$ must lie in the
+$24$-divisible spectrum carved out by the Niemeier-lattice and
+Schellekens-classification chain. The constraint $24 \mid c_{-}$ is
+therefore not a project-internal modular-consistency requirement but
+a corollary, at the level of the published classification, of the
+$c=24$ holomorphic-VOA enumeration: any integer $c_{-}$ realised by a
+strongly-rational holomorphic VOA in the Schellekens / Möller-Scheithauer
+class is a multiple of $24$ within the scope of those classifications
+(strongly-rational, weight-$1$-non-trivial subset; the moonshine FLM
+VOA at trivial weight-$1$ is a not-applicable witness and falls
+outside the scope rather than supplying a counterexample). The
+companion deliverable \texttt{lean/SKEFTHawking/Schellekens/}
+formalises the chain at the \emph{predicate} level — the substantive
+work in \texttt{NiemeierLattice.lean} and
+\texttt{HolomorphicVOAc24.lean} is predicate-level (the lattice
+classification and VOA classification are Mathlib-absent results,
+encoded as program-tracked classification predicates), and the
+composed chain ships as a predicate-level scaffold
+\texttt{Schellekens.schellekensChain\_implies\_24\_divides\_c\_minus\_iff\_3\_divides\_N\_gen}
+(see \texttt{Schellekens/Chain.lean}; companion witnesses
+\texttt{isSchellekensChainComposed\_witness} and
+\texttt{wave\_2b\_7\_chain\_closure}). The current Lean discharge of
+the chain-of-classifications statement is via \texttt{trivial} on
+predicate fields whose substantive content is tracked outside the
+Lean library; the load-bearing $N_f \equiv 0 \pmod 3$ result is
+established independently in \S\ref{sec:modular} via
+\texttt{GenerationConstraint.generation\_mod3\_constraint}, and this
+§ does not depend on the Schellekens-chain Lean scaffold for its
+mathematical force.
+The advantage of the structural reading is that the $24 \mid c_{-}$
+constraint stops being a free Dedekind-$\eta$ identity and becomes a
+classification corollary tracked by a predicate-level Lean scaffold
+backed by recent published mathematical work; the $N_f \equiv 0
+\pmod 3$ headline of \S\ref{sec:modular} inherits the elevated
+structural status without any change to the proof, the witnesses, or
+the Lean theorem \texttt{GenerationConstraint.generation\_mod3\_constraint}. The
+moonshine VOA (the Frenkel--Lepowsky--Meurman construction at $c=24$
+with trivial weight-$1$ space) lies outside the
+M\"oller--Scheithauer scope; for the program's chiral-fermion
+setting it is a not-applicable witness rather than a counterexample.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The SM $\mathbb{Z}_{16}$ anomaly and a categorical layer}
@@ -702,7 +776,7 @@ hypothesis.
 
 \subsection{What is proved}
 
-Across the four threads, $5229$ Lean theorems are
+Across the four threads, $5812$ Lean theorems are
 machine-verified (\texttt{lake build} clean), $322$ of them
 closed by the Aristotle automated prover. The chain
 end-to-end: sixteen Weyl components per generation imply
@@ -996,6 +1070,54 @@ J.~Roehm, ``Verified Statistical Estimators and the
 %  (verified via CITATION_REGISTRY['TPF2026']; cross-verified in
 %  papers/paper8_chirality_master/paper_draft.tex)]
 
+%% Phase 6o.ε D2 §2.7 Schellekens-chain absorption (D.3 GATE 3, 2026-05-06)
+
+\bibitem{Niemeier1973}
+H.-V.~Niemeier,
+``Definite quadratische Formen der Dimension 24 und Diskriminante 1,''
+J.\ Number Theory \textbf{5}, 142 (1973).
+
+\bibitem{Schellekens1993}
+A.~N.~Schellekens,
+``Meromorphic $c=24$ conformal field theories,''
+Comm.\ Math.\ Phys.\ \textbf{153}, 159 (1993),
+arXiv:hep-th/9205072.
+
+\bibitem{MollerScheithauer2024}
+S.~M\"oller and N.~R.~Scheithauer,
+``A geometric classification of the holomorphic vertex operator
+algebras of central charge $24$,''
+Algebra \& Number Theory \textbf{18}, 1891 (2024),
+arXiv:2112.12291.
+
 \end{thebibliography}
+
+
+%% ─── Lifted from _phase6n_W1b_lean_only (§3) — 2026-05-06T15:39:51Z ───
+%% \section{SymTFT audit substrate}
+%% \label{sec:d2-_phase6n_W1b_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §3
+%% Lift notes: D.2 absorption: Phase 6n W1b SymTFT audit substrate cross-bridge (DrinfeldCenter/Witt class/categorical cc additivity)
+%% TODO: lift content from papers/_phase6n_W1b_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6n_W1b_lean_only ───
+
+
+%% ─── Lifted from _phase6o_W2a_lean_only (§3) — 2026-05-06T15:39:54Z ───
+%% \section{APS $\eta$-invariant cross-bridge to $\mathbb{Z}_{16}$ Dai-Freed (Phase 6o W2a)}
+%% \label{sec:d2-_phase6o_W2a_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §3
+%% Lift notes: D.2 absorption: Phase 6o W2a APS-η Witten-Yonekura η/16 mod 1 cross-bridge to Z₁₆ Dai-Freed
+%% TODO: lift content from papers/_phase6o_W2a_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6o_W2a_lean_only ───
 
 \end{document}

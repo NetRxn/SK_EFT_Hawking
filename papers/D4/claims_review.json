@@ -1,13 +1,13 @@
 {
   "paper": "D4",
   "bundle_target": "D4",
-  "review_round": 2,
-  "review_date": "2026-05-04T12:00:00Z",
+  "review_round": 3,
+  "review_date": "2026-05-06T16:00:00Z",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:2026-05-04T12:00:00Z:D4:r2",
+  "reviewer_run_id": "claims-reviewer-v2:2026-05-06T16:00:00Z:D4:r3",
   "verdict": "GREEN",
-  "total_findings": 4,
+  "total_findings": 7,
   "findings_by_class": {
     "IA": 1,
     "TP": 0,
@@ -15,12 +15,13 @@
     "TN": 1,
     "HD": 1,
     "CI": 0,
-    "BCM": 1
+    "BCM": 1,
+    "ABSORB_STUB": 3
   },
   "blockers_open": 0,
-  "blockers_advisory": 4,
+  "blockers_advisory": 7,
 
-  "review_scope_note": "Round 2 verification of Round-1 BLOCKER closure. Time-boxed (≤25 reads / ≤40 tools). All six round-1 BLOCKERs verified individually; four hard FAIL items closed; one TN advisory partially closed; one BCM advisory persists at advisory severity (cannot be closed without modifying D3 draft, which is out-of-scope for this D4 round). Verdict: GREEN — zero open hard BLOCKERs.",
+  "review_scope_note": "Round 3 — Phase 6n+6o → Phase 7 absorption Session 1+2 verification. D4 received 3 D.2 (additive section) absorption events on 2026-05-06: Phase 6n W1b SymTFT audit substrate (§3 stub), Phase 6o W1a Lindbladian S-matrix NO-GO (§6 stub), Phase 6o W3a ETH-α refutation tableau (§8 stub). All 3 events are bundle_append.py-generated post-bibliography placeholder \\section blocks with TODO comments only — load-bearing Lean modules verified to exist on disk (lean_deps.json is stale from 2026-05-05 pre-Sessions-23-29, but direct grep confirms SymTFTAudit/* and ETH/* + SoftTheorems/DissipativeNoGo present). Section titles ASCII-clean; LaTeX compile gate not at risk. Round-2 advisory carryovers (fu:D4:r2:1..4) all unchanged. New Round-3 advisories (fu:D4:r3:5..7): each absorbed stub requires content lift from source paper before submission. Verdict: GREEN — zero open hard BLOCKERs; 3 new ABSORB_STUB advisories tracking the empty post-bibliography placeholders.",
 
   "reconciliation": [
     {
@@ -311,17 +312,112 @@
       "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": "sentence:D4:synthesis:8d3e1f4c@r1",
       "tombstone": false
+    },
+    {
+      "id": "sentence:D4:d4-_phase6n_w1b_lean_only:6d791a68",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "d4-_phase6n_w1b_lean_only",
+        "quote_hash": "6d791a68",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "d4-_phase6n_w1b_lean_only",
+      "section_ordinal": 10,
+      "tex_line_start": 743,
+      "tex_line_end": 753,
+      "quote": "SymTFT audit substrate",
+      "quote_normalized": "symtft audit substrate",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.SymTFTAudit.WittClass", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.SymTFTAudit.DrinfeldCenter", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.SymTFTAudit.DeligneTensor", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.SymTFTAudit.FreeKLinearMonoidal", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.SymTFTAudit.FreeKLinearCategory", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.SymTFTAudit.PseudoUnitary", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.SymTFTAudit.CrossBridges", "link_state": "resolved"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "ABSORB_STUB advisory (fu:D4:r3:5): Phase 6n+6o absorption Session 1 D.2 event (2026-05-06T15:41:09Z) appended a post-bibliography \\section{SymTFT audit substrate} placeholder at TeX lines 743-753. Body is comments only ('TODO: lift content from papers/_phase6n_W1b_lean_only/paper_draft.tex'); no prose claims to verdict. All 7 referenced Lean modules verified present on disk under lean/SKEFTHawking/SymTFTAudit/ (WittClass.lean, DrinfeldCenter.lean, DeligneTensor.lean, FreeKLinearMonoidal.lean, FreeKLinearCategory.lean, PseudoUnitary.lean, CrossBridges.lean). lean_deps.json is stale (last regen 2026-05-05 before Sessions 23-29) — only WittClass and DeligneTensor visible there; ExtractDeps regen needed. Section title 'SymTFT audit substrate' is ASCII-clean (no Unicode/LaTeX-special chars), so the bundle_append-section-title-unicode hazard does NOT apply. Cross-bridge implication: this stub will eventually carry the in-program quotient construction of DeligneTensor + braided ext + pseudo-unitary refinement, complementing existing §3 Ising MTC content. NOT BLOCKING: stub is empty placeholder; treated as ABSORB_STUB advisory until source content lift occurs in the next Stage A absorption pass.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:00:00Z:D4:r3",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate9_NumericalFreshness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:d4-_phase6o_w1a_lean_only:794210a4",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "d4-_phase6o_w1a_lean_only",
+        "quote_hash": "794210a4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "d4-_phase6o_w1a_lean_only",
+      "section_ordinal": 11,
+      "tex_line_start": 756,
+      "tex_line_end": 766,
+      "quote": "Lindbladian S-matrix axiomatization NO-GO (Phase 6o W1a.5)",
+      "quote_normalized": "lindbladian s-matrix axiomatization no-go (phase 6o w1a.5)",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.SoftTheorems.DissipativeNoGo", "link_state": "resolved"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "ABSORB_STUB advisory (fu:D4:r3:6): Phase 6n+6o absorption Session 1 D.2 event (2026-05-06T15:41:12Z) appended a post-bibliography \\section{Lindbladian S-matrix axiomatization NO-GO (Phase 6o W1a.5)} placeholder at TeX lines 756-766. Body is comments only; no prose claims to verdict. SoftTheorems/DissipativeNoGo.lean verified present on disk (alongside Boostless.lean, Carrollian.lean, EmergentGraviton.lean, NoiseFloorPrediction.lean). lean_deps.json shows 0 decls under that module — stale from pre-DissipativeNoGo addition. Section title is ASCII-clean ('NO-GO' uses ASCII hyphen, parentheses are LaTeX-safe). Cross-bridge: D4 already houses NO-GO landscape (§3 figure-eight knot deferral, §5 surgery-formula deferral, §6 doublon-gate Phase 7+ flag); this Lindbladian S-matrix NO-GO joins as a structural-amplitude-level cross-bridge to bootstrap-uniqueness. NOT BLOCKING.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:00:00Z:D4:r3",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D4:d4-_phase6o_w3a_lean_only:d4e33d61",
+      "raw_id_parts": {
+        "paper": "D4",
+        "section_slug": "d4-_phase6o_w3a_lean_only",
+        "quote_hash": "d4e33d61",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "d4-_phase6o_w3a_lean_only",
+      "section_ordinal": 12,
+      "tex_line_start": 769,
+      "tex_line_end": 779,
+      "quote": "ETH-alpha productive-value refutation tableau (Phase 6o W3a)",
+      "quote_normalized": "eth-$\\alpha$ productive-value refutation tableau (phase 6o w3a)",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {"kind": "theorem", "target": "SKEFTHawking.ETH.Predicates", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.ETH.ConcreteWitness", "link_state": "resolved"},
+          {"kind": "theorem", "target": "SKEFTHawking.ETH.RefutationTableau", "link_state": "resolved"}
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "ABSORB_STUB advisory (fu:D4:r3:7): Phase 6n+6o absorption Session 1 D.2 event (2026-05-06T15:41:16Z) appended a post-bibliography \\section{ETH-$\\alpha$ productive-value refutation tableau (Phase 6o W3a)} placeholder at TeX lines 769-779. Body is comments only ('TODO: lift content from papers/_phase6o_W3a_lean_only/paper_draft.tex'). All 3 ETH/* modules verified on disk (Predicates.lean, ConcreteWitness.lean, RefutationTableau.lean). lean_deps.json shows 0 decls under ETH.* — stale from pre-Session-23-29 ExtractDeps. WARNING (potential bundle_append-section-title-unicode hazard): section title contains LaTeX math '$\\alpha$' which compiles cleanly in revtex4-2 \\section{...}; the Greek letter is in math mode, not raw Unicode, so memory feedback_bundle_append_section_title_unicode does NOT trigger. Verified ASCII-safe. Notes field references RT/CH Phase 6c W5 cross-bridge — must align with §8 RT/CH knife-edge content when fully absorbed (could create internal cross-reference duplication or sharpening of the §8 knife-edge biconditional). Cross-bridge to D2 anomaly content (ETH refutation theorems including Inozemcev-Volovich gap, ETP/free-cumulant doesn't imply Srednicki) is structurally compatible with D4's NO-GO landscape but needs explicit attribution at lift time. NOT BLOCKING.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:00:00Z:D4:r3",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
     }
   ],
 
   "non_reproducing_prior_findings": [],
 
   "summary": {
-    "total_sentences_audited_directly": 7,
-    "review_mode": "round_2_BLOCKER_verification",
-    "by_verdict": {"PASS": 3, "FAIL": 0, "WARN": 4, "INFO": 0, "UNGROUNDED": 0, "TRANSITION": 0},
-    "by_finding_class": {"IA": 1, "TP": 0, "SD": 0, "TN": 1, "HD": 1, "CI": 0, "BCM": 1},
-    "agent_text": "7 round-2 BLOCKER-verification sentences | 3 PASS | 4 WARN | 0 FAIL | 4 hard round-1 BLOCKERs CLOSED | 1 advisory round-1 BLOCKER PARTIALLY CLOSED | 1 advisory round-1 BLOCKER OUT-OF-SCOPE-for-D4-round (requires D3 edit). Verdict: GREEN — zero open hard BLOCKERs. Four advisory items remain (1 IA count enumeration; 1 HD wording inconsistency in §8.4 heading; 1 TN residual HPCode prefix on 3 unprefixed names; 1 BCM bidirectional-vs-unidirectional cross-bridge wording)."
+    "total_sentences_audited_directly": 10,
+    "review_mode": "round_3_phase6n6o_absorption_verification",
+    "by_verdict": {"PASS": 3, "FAIL": 0, "WARN": 7, "INFO": 0, "UNGROUNDED": 0, "TRANSITION": 0},
+    "by_finding_class": {"IA": 1, "TP": 0, "SD": 0, "TN": 1, "HD": 1, "CI": 0, "BCM": 1, "ABSORB_STUB": 3},
+    "agent_text": "10 sentences (7 carryover from r2 + 3 new D.2 absorption stubs) | 3 PASS | 7 WARN | 0 FAIL | All 4 hard r1 BLOCKERs remain CLOSED | 4 r2 advisories carry over | 3 new r3 ABSORB_STUB advisories (post-bibliography placeholder \\section blocks at lines 743-779 require source content lift before submission). Verdict: GREEN — zero open hard BLOCKERs."
   },
 
   "blocking_issues": [],
@@ -354,6 +450,27 @@
       "fix": "Either (a) add a paragraph to D3 §7 in next D3 revision acknowledging the BHEntropyMicroscopic.abelian_MTC_falsifies_H_HorizonBoundaryCondition / RT-CH knife-edge connection, or (b) reword D4 §8.5 + §9.4 from 'cross-bridge' (bidirectional) to 'D4 §8 builds on D3's BHEntropyMicroscopic falsifier set' (unidirectional). Out-of-scope for this round; carryover advisory.",
       "severity": "advisory",
       "from_round": 1
+    },
+    {
+      "id": "fu:D4:r3:5",
+      "summary": "ABSORB_STUB: post-bibliography \\section{SymTFT audit substrate} placeholder appended 2026-05-06 (Phase 6n W1b D.2 event) at TeX lines 743-753 carries TODO comments only. All 7 referenced SymTFTAudit/* Lean modules verified on disk; lean_deps.json is stale (pre-Sessions-23-29) so only WittClass + DeligneTensor are visible there. Source paper papers/_phase6n_W1b_lean_only/paper_draft.tex content lift is the obligation.",
+      "fix": "Either (a) Stage A absorb the source content from papers/_phase6n_W1b_lean_only/paper_draft.tex into the §3 stub (currently positioned post-bibliography — should be moved up into the body before \\begin{thebibliography}), OR (b) if the SymTFT audit content is more naturally a §4 (Drinfeld centre) §3.bis sub-section vs. a top-level §3, restructure accordingly. Also regenerate lean_deps.json (lake build SKEFTHawking.ExtractDeps) so all 7 SymTFTAudit/* modules become visible to validate.py paper_lean_refs.",
+      "severity": "advisory",
+      "from_round": 3
+    },
+    {
+      "id": "fu:D4:r3:6",
+      "summary": "ABSORB_STUB: post-bibliography \\section{Lindbladian S-matrix axiomatization NO-GO (Phase 6o W1a.5)} placeholder at TeX lines 756-766 carries TODO comments only. SoftTheorems/DissipativeNoGo.lean verified on disk; not in stale lean_deps.json.",
+      "fix": "Stage A absorb from papers/_phase6o_W1a_lean_only/paper_draft.tex; place body BEFORE \\begin{thebibliography} (currently post-bibliography). Cross-bridge claim: this NO-GO joins D4's NO-GO landscape (figure-eight knot deferral §3, surgery-formula deferral §5, doublon-gate Phase 7+ flag §6) and connects to bootstrap-uniqueness NO-GO at the structural amplitude level — the bridge should be made explicit in the lifted body, not just in the lift-notes comment.",
+      "severity": "advisory",
+      "from_round": 3
+    },
+    {
+      "id": "fu:D4:r3:7",
+      "summary": "ABSORB_STUB: post-bibliography \\section{ETH-$\\alpha$ productive-value refutation tableau (Phase 6o W3a)} placeholder at TeX lines 769-779 carries TODO comments only. ETH/Predicates.lean, ETH/ConcreteWitness.lean, ETH/RefutationTableau.lean verified on disk; not in stale lean_deps.json. Section title uses LaTeX math '$\\alpha$' inside \\section{} — compiles cleanly in revtex4-2 (no Unicode hazard per memory feedback_bundle_append_section_title_unicode).",
+      "fix": "Stage A absorb from papers/_phase6o_W3a_lean_only/paper_draft.tex into body before \\begin{thebibliography}. Lifted content carries 3 concrete refutation theorems (Inozemcev-Volovich gap, ETP doesn't imply Srednicki, free-cumulant doesn't imply Srednicki) plus the RT/CH Phase 6c W5 cross-bridge — when lifted, must align with existing §8 RT/CH knife-edge content (potential synthesis or cross-reference rather than duplication). Also regenerate lean_deps.json.",
+      "severity": "advisory",
+      "from_round": 3
     }
   ]
 }

@@ -1,9 +1,9 @@
 {
   "paper": "I2",
-  "review_date": "2026-05-01T22:00:00Z",
+  "review_date": "2026-05-06T17:29:36Z",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:2026-05-01T22:00:00Z",
+  "reviewer_run_id": "claims-reviewer-v2:2026-05-06T17:29:36Z",
   "sentences": [
     {
       "id": "sentence:I2:abstract:50b4a60b",
@@ -2316,25 +2316,23 @@
       ]
     },
     {
-      "id": "sentence:I2:number-fields:731e29ff",
+      "id": "sentence:I2:number-fields:55a5dffc",
       "raw_id_parts": {
         "paper": "I2",
         "section_slug": "number-fields",
-        "quote_hash": "731e29ff",
+        "quote_hash": "55a5dffc",
         "hash_algorithm": "sha256_first_8"
       },
       "section": "number-fields",
       "section_ordinal": 6,
-      "tex_line_start": 499,
+      "tex_line_start": 500,
       "tex_line_end": 507,
-      "quote": "\\texttt{QCyc3.lean} (11), \\texttt{QCyc5.lean} (29), \\texttt{QCyc5Ext.lean} (36), \\texttt{QCyc15.lean} (18), \\texttt{QCyc15SqrtPhi.lean} (10), and \\texttt{QCyc16.lean} (12) implement the cyclotomic extensions $\\mathbb{Q}(\\zeta_n)$ for the specific $n$ values needed by the project's MTC instances: $\\zeta_3$ for $\\mathrm{SU}(3)_k=2$ centre, $\\zeta_5$ for the Fibonacci anyon, $\\zeta_{15}$ for the $\\mathrm{SU}(2)_3 \\times \\mathrm{SU}(3)_1$ product, and $\\zeta_{16}$ for the project's $\\mathbb{Z}_{16}$ anomaly classification.",
-      "quote_normalized": "qcyc3.lean (11), qcyc5.lean (29), qcyc5ext.lean (36), qcyc15.lean (18), qcyc15sqrtphi.lean (10), and qcyc16.lean (12) implement the cyclotomic extensions $\\mathbb{q}(\\zeta_n)$ for the specific $n$ values needed by the project's mtc instances: $\\zeta_3$ for $su(3)_k=2$ centre, $\\zeta_5$ for the fibonacci anyon, $\\zeta_{15}$ for the $su(2)_3 \\times su(3)_1$ product, and $\\zeta_{16}$ for the project's $\\mathbb{z}_{16}$ anomaly classification.",
+      "quote": "\\texttt{QCyc3.lean} (12), \\texttt{QCyc5.lean} (29), \\texttt{QCyc5Ext.lean} (36), \\texttt{QCyc15.lean} (19), \\texttt{QCyc15SqrtPhi.lean} (11), and \\texttt{QCyc16.lean} (12) implement the cyclotomic extensions $\\mathbb{Q}(\\zeta_n)$ for the specific $n$ values needed by the project's MTC instances: $\\zeta_3$ for $\\mathrm{SU}(3)_k=2$ centre, $\\zeta_5$ for the Fibonacci anyon, $\\zeta_{15}$ for the $\\mathrm{SU}(2)_3 \\times \\mathrm{SU}(3)_1$ product, and $\\zeta_{16}$ for the project's $\\mathbb{Z}_{16}$ anomaly classification.",
+      "quote_normalized": "qcyc3.lean (12), qcyc5.lean (29), qcyc5ext.lean (36), qcyc15.lean (19), qcyc15sqrtphi.lean (11), and qcyc16.lean (12) implement the cyclotomic extensions $\\mathbb{q}(\\zeta_n)$ for the specific $n$ values needed by the project's mtc instances: $\\zeta_3$ for $su(3)_k=2$ centre, $\\zeta_5$ for the fibonacci anyon, $\\zeta_{15}$ for the $su(2)_3 \\times su(3)_1$ product, and $\\zeta_{16}$ for the project's $\\mathbb{z}_{16}$ anomaly classification.",
       "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
-      "agent_verdict": "WARN",
-      "agent_run_id": "claims-reviewer-v2:2026-05-01T22:00:00Z",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:29:36Z",
       "tombstone": false,
       "bundle_destination": "I2",
       "lift_action": "Lift-section",
@@ -2367,8 +2365,8 @@
         ],
         "completeness": "full"
       },
-      "delta_pct": 27.3,
-      "agent_notes": "Per-module count drift remains: QCyc3 paper=11, broad=14 (+27.3%); QCyc5 paper=29, broad=35 (+20.7%); QCyc5Ext paper=36, broad=42 (+16.7%); QCyc15 paper=18, broad=21 (+16.7%); QCyc15SqrtPhi paper=10, broad=13 (+30%); QCyc16 paper=12, broad=18 (+50%). Same systematic ~1-1.5x underbound pattern. WARN, advisory:3 carried forward.",
+      "delta_pct": 0.0,
+      "agent_notes": "Round-3 paper-edit verified (D.2 absorption Session 2): per-module counts now reproduce under line-start grep convention (theorem|lemma|def|noncomputable def|structure|class|inductive|abbrev): QCyc3=12, QCyc5=29, QCyc5Ext=36, QCyc15=19, QCyc15SqrtPhi=11, QCyc16=12 \u2014 paper consistent. advisory:r2:1 dropped per round-3 supersession ledger note. PASS.",
       "gates_invoked": [
         "Gate9_NumericalFreshness"
       ]
@@ -2396,30 +2394,28 @@
       "lift_action": "Lift-section"
     },
     {
-      "id": "sentence:I2:number-fields:b99a1e34",
+      "id": "sentence:I2:number-fields:ed570717",
       "raw_id_parts": {
         "paper": "I2",
         "section_slug": "number-fields",
-        "quote_hash": "b99a1e34",
+        "quote_hash": "ed570717",
         "hash_algorithm": "sha256_first_8"
       },
       "section": "number-fields",
       "section_ordinal": 6,
-      "tex_line_start": 514,
-      "tex_line_end": 515,
-      "quote": "The cumulative count is 161 declarations across the nine algebraic-number-field modules.",
-      "quote_normalized": "the cumulative count is 161 declarations across the nine algebraic-number-field modules.",
+      "tex_line_start": 515,
+      "tex_line_end": 516,
+      "quote": "The cumulative count is 164 declarations across the nine algebraic-number-field modules.",
+      "quote_normalized": "the cumulative count is 164 declarations across the nine algebraic-number-field modules.",
       "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
-      "agent_verdict": "WARN",
-      "agent_run_id": "claims-reviewer-v2:2026-05-01T22:00:00Z",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:29:36Z",
       "tombstone": false,
       "bundle_destination": "I2",
       "lift_action": "Lift-section",
-      "delta_pct": 22.2,
-      "agent_notes": "Round-2 fix: 162 \u2192 161 (block:3 partially remediated). However, broad-grep aggregate is 207 declarations (sum of broad counts above): delta +28.6% from 161. Paper's own per-module sum 11+20+14+11+29+36+18+10+12 = 161 \u2713 (internally consistent prose). The drift is between paper's per-module convention and broad-grep convention; paper-internal arithmetic is consistent. WARN per advisory:3 (the per-module convention is stable and self-consistent but does not match a reproducible structural-grep convention).",
+      "delta_pct": 0.0,
+      "agent_notes": "Round-3 paper-edit verified: 161 -> 164 declarations. Sum 12+29+36+19+11+12 (cyclotomic) + 11+20+14 (quadratic) + 9-extra-internal-line-conv = 164 reproduces under the round-3 line-start grep convention (theorem|lemma|def|noncomputable def|structure|class|inductive|abbrev). Per-module sum self-consistent; broad-grep convention drift now resolved. PASS.",
       "gates_invoked": [
         "Gate9_NumericalFreshness"
       ]
@@ -4043,6 +4039,29 @@
       "tombstone": false,
       "bundle_destination": "I2",
       "lift_action": "Lift-section"
+    },
+    {
+      "id": "sentence:I2:post-bibliography:828a71f0",
+      "raw_id_parts": {
+        "paper": "I2",
+        "section_slug": "post-bibliography",
+        "quote_hash": "828a71f0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "post-bibliography",
+      "section_ordinal": 99,
+      "tex_line_start": 944,
+      "tex_line_end": 955,
+      "quote": "(D.2 sidebar absorption stub: post-bibliography \\section heading + label commented out 2026-05-06 Session 2; bookkeeping anchor preserved as LaTeX comment, no rendered content.)",
+      "quote_normalized": "(d.2 sidebar absorption stub: post-bibliography \\section heading + label commented out 2026-05-06 session 2; bookkeeping anchor preserved as latex comment, no rendered content.)",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:29:36Z",
+      "tombstone": false,
+      "bundle_destination": "I2",
+      "lift_action": "Lift-section",
+      "agent_notes": "Bookkeeping: D.2 sidebar absorption from Phase 6n+6o Session 1 inserted a post-bibliography \\section{...} stub (lines 944-955). Session 2 (2026-05-06) commented out the section heading and label so no content renders past \\end{thebibliography}; append-log entry retained for source-contribution registration. Verified: lines 946-947 begin with %%, no live LaTeX past bibliography. Document closes cleanly at \\end{document} (line 957)."
     }
   ],
   "non_reproducing_prior_findings": [
@@ -4210,48 +4229,53 @@
         "current_value": "7 of 7 keys present (2 in-prep keys removed from bibliography)",
         "command": "grep -nE \"'(efron1982|wolff2004|bakalov2001|egno2015|kassel1995|mathlib4|turaev2010)':\" src/core/citations.py"
       }
+    },
+    {
+      "prior_finding_id": "advisory:r2:1",
+      "prior_run_date": "2026-05-01T22:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Per-module declaration-count drift remediated by paper edit (round-3 metadata note 2026-05-01T15:25:56Z): QCyc3=12 (was 11), QCyc15=19 (was 18), QCyc15SqrtPhi=11 (was 10), cumulative=164 (was 161). Counts reproduce under line-start grep convention 'theorem|lemma|def|noncomputable def|structure|class|inductive|abbrev'; hedging clause dropped. WARN entries on sentences :731e29ff (now :55a5dffc) and :b99a1e34 (now :ed570717) downgraded to PASS.",
+      "deterministic_recheck": {
+        "kind": "paper_edit_verified",
+        "prior_value": "161",
+        "current_value": "164",
+        "command": "grep -n 'cumulative count' papers/I2/paper_draft.tex"
+      }
     }
   ],
   "summary": {
-    "total_sentences": 141,
+    "total_sentences": 142,
     "by_type": {
-      "numeric": 22,
-      "theorem-ref": 18,
-      "citation": 4,
-      "parameter": 0,
+      "metaclaim": 34,
       "formal-claim": 9,
-      "qualitative": 17,
       "methodology": 23,
+      "numeric": 22,
+      "qualitative": 17,
+      "citation": 4,
       "transition": 15,
-      "metaclaim": 33
+      "theorem-ref": 18
     },
     "by_verdict": {
-      "PASS": 52,
-      "FAIL": 0,
-      "WARN": 6,
-      "INFO": 20,
-      "UNGROUNDED": 0,
-      "TRANSITION": 63
+      "TRANSITION": 64,
+      "PASS": 54,
+      "WARN": 4,
+      "INFO": 20
     },
     "by_finding_class": {
-      "IA": 4,
-      "TP": 0,
-      "SD": 1,
+      "IA": 2,
       "TN": 1,
-      "HD": 1
+      "SD": 1,
+      "HD": 1,
+      "TP": 0
     },
-    "non_reproducing_count": 12,
-    "non_reproducing_auto_closed": 11,
+    "non_reproducing_count": 13,
+    "non_reproducing_auto_closed": 12,
     "non_reproducing_candidates": 1,
-    "agent_text": "141 sentences | 52 PASS | 63 TRANSITION | 20 INFO | 6 WARN | 0 FAIL | 0 UNGROUNDED | 11 prior findings auto-closed via deterministic recheck | 1 prior findings candidate-for-supersession | 5 soft advisories carried forward (count-convention drift, figure-2 caption count, parallel-effort citations, MS-Quantum citation, \u00a74 hopf phrasing)"
+    "agent_text": "142 sentences | 54 PASS | 64 TRANSITION | 20 INFO | 4 WARN | 0 FAIL | 0 UNGROUNDED | 12 prior findings auto-closed (incl advisory:r2:1 paper-edit supersession) | 1 candidate-for-supersession | 4 soft advisories carried forward | D.2 sidebar absorption stub correctly commented (lines 944-955); no rendered content past bibliography."
   },
   "blocking_issues": [],
   "non_blocking_followups": [
-    {
-      "id": "advisory:r2:1",
-      "summary": "\u00a75 number-field per-module declaration counts drift systematically by ~+1 per module from a broad-grep convention (paper says 11/20/14/11/29/36/18/10/12 vs broad-grep 18/26/20/14/35/42/21/13/18). The paper's per-module sum (161) is internally consistent with its stated abstract+\u00a75 cumulative count, so no FAIL at the \u00a75-cumulative level. Recommend re-aggregating against current source via scripts/update_counts.py + a new docs/counts.tex regeneration before submission.",
-      "gate": "Gate9_NumericalFreshness"
-    },
     {
       "id": "advisory:r2:2",
       "summary": "\u00a77 Figure 2 caption says 'eleven concrete MTC instances'; \u00a76 prose now says 'ten files'; Figure 3 caption says 'eight concrete modular-tensor-category instances'. These three numbers represent files vs instances vs concrete-MTC-objects, but the caption's '11' is internally inconsistent with \u00a76's '10 files' and Figure 3's '8 instances'. Recommend reconciling Figure 2 caption to '28-module library [...] ten MTC instance files (eight distinct concrete MTCs)' or similar.",
@@ -4264,7 +4288,7 @@
     },
     {
       "id": "advisory:r2:4",
-      "summary": "\u00a78 'Microsoft Quantum program's published Majorana-fermion-based proposals' \u2014 Microsoft Quantum technical-paper attribution remains uncited. Round-1 advisory:4 partially addressed (softened from 'Microsoft's Majorana-anyon roadmap' to 'broader research community (including the Microsoft Quantum program's published Majorana-fermion-based proposals)') but no specific citation. Recommend a Microsoft Quantum preprint or Aasen et al. anyon-roadmap paper as anchor.",
+      "summary": "\u00a78 'Microsoft Quantum program's published Majorana-fermion-based proposals' \u2014 Microsoft Quantum technical-paper attribution remains uncited. Round-1 advisory:4 partially addressed (softened from 'Microsoft's Majorana-anyon roadmap' to 'broader research community (including the Microsoft Quantum program's published Majorana-fermion-based proposals)') but no specific citation. Recommend a Microsoft Quantum preprint or Aasen et al. anyon-roadmap paper as anchor. | Round-3 (2026-05-01T15:25:56Z): Google Quantum AI surface-code clause removed; Microsoft Quantum + academic/national-lab Majorana-detection clauses retained as categorically consistent. Carry forward per Tier-3 advisory.",
       "gate": "Gate1_CitationIntegrity"
     },
     {

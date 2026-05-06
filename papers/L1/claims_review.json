@@ -1,0 +1,2447 @@
+{
+  "paper": "L1",
+  "review_date": "2026-05-06T16:50:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+  "bundle_target": "L1",
+  "bundle_tier": 2,
+  "review_profile": "Tier 2 (PRL splash) \u2014 stand-alone PRL depth + bundle-specific anchor (GW170817 \u0394c/c) + cross-bridge to D3 \u00a76.",
+  "absorption_context": "Phase 6n+6o \u2192 Phase 7 absorption Session 1+2. L1 received 1 D.2 absorption event (Kerr-Schild D.2 cross-ref upgrade only, 2026-05-06T15:42:03Z; stub-only). No D.3 events. Bundle was pre-existing GREEN (round-3 close 2026-05-01T18:45Z); reset by absorption to pending. This is the reset Stage-13 re-review.",
+  "sentences": [
+    {
+      "id": "sentence:L1:abstract:541ca7d0",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "abstract",
+        "quote_hash": "541ca7d0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 31,
+      "tex_line_end": 36,
+      "quote": "Several emergent-gravity programs identify the spin-2 graviton with the second-sound mode of a fermionic vestigial fluid, predicting a gravitational-wave propagation speed $\\cGW = c\\sqrt{\\chivest}$ where $\\chivest$ is the metric-channel susceptibility of the broken-symmetry phase.",
+      "quote_normalized": "several emergent-gravity programs identify the spin-2 graviton with the second-sound mode of a fermionic vestigial fluid, predicting a gravitational-wave propagation speed $\\cgw = c\\sqrt{\\chivest}$ where $\\chivest$ is the metric-channel susceptibility of the broken-symmetry phase.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Setup of identification under test; interpretive framing.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": "abstract",
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:abstract:dba898ed",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "abstract",
+        "quote_hash": "dba898ed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 36,
+      "tex_line_end": 38,
+      "quote": "We formalize this identification and confront it with the multi-messenger GW170817~\\cite{Abbott2017GW170817} bound $|\\dccap| \\leq 3\\times 10^{-15}$.",
+      "quote_normalized": "we formalize this identification and confront it with the multi-messenger gw170817~ bound $|\\dccap| \\leq 3\\times 10^{-15}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "c_GW_two_sided_cap",
+            "computed_value": "3.0e-15",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_match_iff_chi_close_to_one"
+          },
+          {
+            "kind": "citation",
+            "target": "Abbott2017GW170817",
+            "link_state": "human_verified"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "L1 anchor 1 (LIGO \u0394c/c bound). Matches D3 \u00a76 line 144 character-for-character ($|\\Delta c/c|\\le 3\\times 10^{-15}$ + same Abbott2017GW170817 cite). Cross-bundle consistency PASS. Citation cache hit doi_verified=True (citation_verifications.jsonl 2026-04-28).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": "abstract",
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:abstract:40674747",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "abstract",
+        "quote_hash": "40674747",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 38,
+      "tex_line_end": 42,
+      "quote": "The result is sharp: over the natural susceptibility range $\\chivest \\in [0.1, 10]$ induced by the random-phase-approximation bubble integral, the deviation $\\dccap = \\sqrt{\\chivest} - 1$ falls in $[-0.68, +2.16]$, exceeding the GW170817 cap by $\\sim 7\\times 10^{14}$.",
+      "quote_normalized": "the result is sharp: over the natural susceptibility range $\\chivest \\in [0.1, 10]$ induced by the random-phase-approximation bubble integral, the deviation $\\dccap = \\sqrt{\\chivest} - 1$ falls in $[-0.68, +2.16]$, exceeding the gw170817 cap by $\\sim 7\\times 10^{14}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "c_GW_deviation",
+            "computed_value": "[-0.683772, +2.162278]",
+            "delta_pct": 0.04
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_lower_violates_ligo"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_upper_violates_ligo"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.vestigial_natural_range_violates_ligo"
+          },
+          {
+            "kind": "parameter",
+            "target": "chi_vest_natural_range",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "L1 anchor 3 (falsification factor ~7\u00d710^14 in natural range). Recomputed: |sqrt(10)-1|/3e-15 = 7.21e+14, |sqrt(0.1)-1|/3e-15 = 2.28e+14. Paper rounds upper to '~7\u00d710^14'; correct. Range endpoints [-0.683772, +2.162278] match paper [-0.68, +2.16] to 2dp. Advisory 2.1 (chi_vest provenance human-verify) carried forward.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate7_PhysicalConsistency"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": "abstract",
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.04
+    },
+    {
+      "id": "sentence:L1:abstract:3dddadc9",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "abstract",
+        "quote_hash": "3dddadc9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 42,
+      "tex_line_end": 46,
+      "quote": "The GW170817-compatible window $\\chivest \\in [(1-\\tau)^2,(1+\\tau)^2]$ with $\\tau = 3\\times 10^{-15}$ has measure $4\\tau \\approx 1.2\\times 10^{-14}$ --- vanishingly small under any natural-range prior.",
+      "quote_normalized": "the gw170817-compatible window $\\chivest \\in [(1-\\tau)^2,(1+\\tau)^2]$ with $\\tau = 3\\times 10^{-15}$ has measure $4\\tau \\approx 1.2\\times 10^{-14}$ --- vanishingly small under any natural-range prior.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "compatible_window_measure",
+            "computed_value": "1.2e-14",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_match_iff_chi_close_to_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "4*3e-15 = 1.2e-14; matches exactly.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": "abstract",
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:abstract:9a943268",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "abstract",
+        "quote_hash": "9a943268",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 46,
+      "tex_line_end": 50,
+      "quote": "The result is a Lean 4 formal proof (\\texttt{GravitationalWaves.lean}, 21 theorems, zero \\texttt{sorry}, zero new axioms): a biconditional locating the compatible window plus two endpoint falsifier theorems witnessed at $\\chivest \\in \\{0.1, 10\\}$.",
+      "quote_normalized": "the result is a lean 4 formal proof (gravitationalwaves.lean, 21 theorems, zero sorry, zero new axioms): a biconditional locating the compatible window plus two endpoint falsifier theorems witnessed at $\\chivest \\in \\{0.1, 10\\}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_match_iff_chi_close_to_one"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_lower_violates_ligo"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_upper_violates_ligo"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Recomputed: grep -c '^theorem|^lemma|^example' GravitationalWaves.lean = 21; grep sorry returns 1 hit (a docstring/comment match, not a `^  sorry`). All 13 theorem-name references resolved in lean_deps.json (TN class clean).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": "abstract",
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:abstract:0e81d628",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "abstract",
+        "quote_hash": "0e81d628",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 50,
+      "tex_line_end": 56,
+      "quote": "We also formalize the Phase~5y H1 underdetermination caveat as the disjointness theorem \\texttt{natural\\_range\\_disjoint\\_from\\_ligo\\_window}: the natural range $[0.1, 10]$ and the GW170817-compatible window are entirely disjoint at any speed-of-light rescaling, so the identification admits no consistent $\\chivest$ outside the fine-tuning window.",
+      "quote_normalized": "we also formalize the phase~5y h1 underdetermination caveat as the disjointness theorem natural\\_range\\_disjoint\\_from\\_ligo\\_window: the natural range $[0.1, 10]$ and the gw170817-compatible window are entirely disjoint at any speed-of-light rescaling, so the identification admits no consistent $\\chivest$ outside the fine-tuning window.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_range_disjoint_from_ligo_window"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.second_sound_graviton_natural_range_universally_falsified"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Live in GravitationalWaves.lean per round-3 close (2026-05-01T18:45Z). Replaces deleted second_sound_graviton_not_derived_DOF (round-2 BLOCKER 3.1.b clean).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": "abstract",
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:abstract:1af517d8",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "abstract",
+        "quote_hash": "1af517d8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 56,
+      "tex_line_end": 62,
+      "quote": "The falsification is local to the leading-order kinematic identification; we identify three avenues by which emergent-gravity programs may yet recover GW170817 compatibility (symmetry-driven $\\chivest \\to 1$ fixed point; distinct metric-channel identification decoupled from second sound; frequency-dependent $\\chivest$ at higher derivative order).",
+      "quote_normalized": "the falsification is local to the leading-order kinematic identification; we identify three avenues by which emergent-gravity programs may yet recover gw170817 compatibility (symmetry-driven $\\chivest \\to 1$ fixed point; distinct metric-channel identification decoupled from second sound; frequency-dependent $\\chivest$ at higher derivative order).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Forward-looking; mirrored in Discussion \u00a73 with detail.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": "abstract",
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:2ac97def",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "2ac97def",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 70,
+      "tex_line_end": 73,
+      "quote": "Emergent gravity from fermionic-condensate substrates has converged on a tantalizing kinematic identification: the spin-2 graviton of the broken-symmetry phase is the second-sound mode of the vestigial fluid.",
+      "quote_normalized": "emergent gravity from fermionic-condensate substrates has converged on a tantalizing kinematic identification: the spin-2 graviton of the broken-symmetry phase is the second-sound mode of the vestigial fluid.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Setup. No extractable claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:b5f7786e",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "b5f7786e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 73,
+      "tex_line_end": 80,
+      "quote": "Volovik's 2024 vestigial-fluid review~\\cite{Volovik2024Vestigial} proposes this directly; Volovik~\\cite{Volovik2022Counting} earlier made the spin counting explicit (six Goldstone modes absorbed by the spin connection in the Akama--Diakonov--Wetterich formulation~\\cite{Akama1978,Diakonov2011,VladimirovDiakonov2012,HebeckerWetterich2003,Wetterich2022}; two propagating helicities remain, identified with $h_+, h_\\times$).",
+      "quote_normalized": "volovik's 2024 vestigial-fluid review~ proposes this directly; volovik~ earlier made the spin counting explicit (six goldstone modes absorbed by the spin connection in the akama--diakonov--wetterich formulation~; two propagating helicities remain, identified with $h_+, h_\\times$).",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Volovik2024Vestigial",
+            "link_state": "human_verified"
+          },
+          {
+            "kind": "citation",
+            "target": "Volovik2022Counting",
+            "link_state": "human_verified"
+          },
+          {
+            "kind": "citation",
+            "target": "Akama1978",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "citation",
+            "target": "Diakonov2011",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "citation",
+            "target": "VladimirovDiakonov2012",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "citation",
+            "target": "HebeckerWetterich2003",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "citation",
+            "target": "Wetterich2022",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Volovik2024 + Volovik2022 page+vol+title fixed in round-1 (BLOCKERs 1.1, 1.2). All 7 cites in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:1d091627",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "1d091627",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 80,
+      "tex_line_end": 86,
+      "quote": "The hydrodynamic claim is that the propagation equation of these two modes is the second-sound wave equation with effective sound speed $\\cGW^2(\\chivest) = c^2 \\cdot \\chivest, \\cGW(\\chivest) = c\\sqrt{\\chivest}$,",
+      "quote_normalized": "the hydrodynamic claim is that the propagation equation of these two modes is the second-sound wave equation with effective sound speed $\\cgw^2(\\chivest) = c^2 \\cdot \\chivest, \\cgw(\\chivest) = c\\sqrt{\\chivest}$,",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_pos"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_at_chi_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Eq. (1) load-bearing; ships as c_GW(chi, c) := c * Real.sqrt(chi) in GravitationalWaves.lean (verified TN-clean).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:e4ca2ce0",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "e4ca2ce0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 86,
+      "tex_line_end": 89,
+      "quote": "where $\\chivest$ is the metric-channel susceptibility computed by the Vergeles random-phase-approximation (RPA) bubble integral~\\cite{Vergeles2025}.",
+      "quote_normalized": "where $\\chivest$ is the metric-channel susceptibility computed by the vergeles random-phase-approximation (rpa) bubble integral~.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Vergeles2025",
+            "link_state": "human_verified"
+          },
+          {
+            "kind": "parameter",
+            "target": "chi_vest",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Vergeles2025 PRD 112:054509 in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:0ef96618",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "0ef96618",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 89,
+      "tex_line_end": 90,
+      "quote": "The identification is appealing in its brevity.",
+      "quote_normalized": "the identification is appealing in its brevity.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:bb2cf910",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "bb2cf910",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 90,
+      "tex_line_end": 92,
+      "quote": "As established by the present project's Phase~5y H1 deep-research finding, however, it has \\emph{never} been derived as a propagating degree of freedom from first principles.",
+      "quote_normalized": "as established by the present project's phase~5y h1 deep-research finding, however, it has never been derived as a propagating degree of freedom from first principles.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Phase 5y H1 negative-evidence finding; Lean disjointness theorem encodes this.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:5ff500d7",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "5ff500d7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 92,
+      "tex_line_end": 95,
+      "quote": "The identification is \\emph{kinematic}, not dynamical: it specifies the dispersion relation of an assumed mode without deriving the mode itself.",
+      "quote_normalized": "the identification is kinematic, not dynamical: it specifies the dispersion relation of an assumed mode without deriving the mode itself.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:555a000d",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "555a000d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 97,
+      "tex_line_end": 102,
+      "quote": "The 2017 binary-neutron-star merger GW170817~\\cite{Abbott2017GW170817} placed an extraordinarily tight bound on $\\cGW$: comparing the gravitational-wave arrival time at LIGO/Virgo against the gamma-ray-burst signal at Fermi/INTEGRAL, the multi-messenger collaboration constrained $-3 \\times 10^{-15} \\leq \\dccap \\leq +7 \\times 10^{-16}$.",
+      "quote_normalized": "the 2017 binary-neutron-star merger gw170817~ placed an extraordinarily tight bound on $\\cgw$: comparing the gravitational-wave arrival time at ligo/virgo against the gamma-ray-burst signal at fermi/integral, the multi-messenger collaboration constrained $-3 \\times 10^{-15} \\leq \\dccap \\leq +7 \\times 10^{-16}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "GW170817_two_sided_bound",
+            "computed_value": "[-3e-15, +7e-16]",
+            "delta_pct": 0.0
+          },
+          {
+            "kind": "citation",
+            "target": "Abbott2017GW170817",
+            "link_state": "human_verified"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Abbott 2017 ApJL 848:L13 reports asymmetric bound -3e-15..+7e-16; matches paper exactly. Two-sided conservative tau=3e-15 used downstream. Matches D3 \u00a76 line 144.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate4_ComputationCorrectness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:introduction:11fe3464",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "11fe3464",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 102,
+      "tex_line_end": 104,
+      "quote": "Conservatively two-sided, $|\\dccap| \\leq \\tau$ with $\\tau = 3 \\times 10^{-15}$.",
+      "quote_normalized": "conservatively two-sided, $|\\dccap| \\leq \\tau$ with $\\tau = 3 \\times 10^{-15}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "GW170817_conservative_two_sided",
+            "computed_value": "3e-15",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "tau = max(|3e-15|, |7e-16|) = 3e-15; correct conservative two-sided. Cross-bundle consistency with D3 \u00a76: identical.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:introduction:2da8b694",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "2da8b694",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 106,
+      "tex_line_end": 107,
+      "quote": "This Letter formalizes Eq.~\\eqref{eq:cGW}, places it head-to-head against GW170817, and reports the result.",
+      "quote_normalized": "this letter formalizes eq.~, places it head-to-head against gw170817, and reports the result.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:a525a914",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "a525a914",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 107,
+      "tex_line_end": 110,
+      "quote": "The conclusion is sharp: the leading-order Volovik identification fails GW170817 over the entire natural range $\\chivest \\in [0.1, 10]$ by 14 orders of magnitude.",
+      "quote_normalized": "the conclusion is sharp: the leading-order volovik identification fails gw170817 over the entire natural range $\\chivest \\in [0.1, 10]$ by 14 orders of magnitude.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.vestigial_natural_range_violates_ligo"
+          },
+          {
+            "kind": "formula",
+            "target": "falsification_oom",
+            "computed_value": "14",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "log10(7.21e14) \u2248 14.86; '14 orders of magnitude' is conservative-correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:introduction:4cd29fb8",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "4cd29fb8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 110,
+      "tex_line_end": 112,
+      "quote": "The GW170817-compatible window $[(1-\\tau)^2, (1+\\tau)^2]$ has measure $\\sim 4\\tau$ in $\\chivest$, vanishingly small under any natural-range prior.",
+      "quote_normalized": "the gw170817-compatible window $[(1-\\tau)^2, (1+\\tau)^2]$ has measure $\\sim 4\\tau$ in $\\chivest$, vanishingly small under any natural-range prior.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_match_iff_chi_close_to_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "(1+tau)^2 - (1-tau)^2 = 4tau (exact algebra).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:introduction:4dbfcec0",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "introduction",
+        "quote_hash": "4dbfcec0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 112,
+      "tex_line_end": 115,
+      "quote": "The result is a refutation of one specific kinematic identification, not of emergent gravity nor of the ADW program; we discuss three Phase~6 recovery paths in Sec.~\\ref{sec:discussion}.",
+      "quote_normalized": "the result is a refutation of one specific kinematic identification, not of emergent gravity nor of the adw program; we discuss three phase~6 recovery paths in sec.~.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Hedge consistent with Phase 5y H1 underdetermination.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:507c7f4c",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "507c7f4c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 121,
+      "tex_line_end": 124,
+      "quote": "The vestigial-phase metric-channel susceptibility $\\chivest$ is the RPA bubble integral with closed form $\\chi_{\\rm RPA} = \\chi_0/(1 - \\gamma_\\star \\chi_0)$ in the standard Hertz--Millis convention.",
+      "quote_normalized": "the vestigial-phase metric-channel susceptibility $\\chivest$ is the rpa bubble integral with closed form $\\chi_{\\rm rpa} = \\chi_0/(1 - \\gamma_\\star \\chi_0)$ in the standard hertz--millis convention.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Hertz-Millis closed form is standard; not numerically falsified in this letter.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:3832cc87",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "3832cc87",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 124,
+      "tex_line_end": 132,
+      "quote": "The natural range $\\chivest \\in [0.1, 10]$ (in units of inverse $\\Lambda_{\\rm UV}^2$) is the half-decade window induced by the Vergeles bubble integral $\\sim \\mathcal{O}(\\Lambda_{\\rm UV}^2/16\\pi^2)$~\\cite{Vergeles2025}; this matches the linearized-EFE wave's ADW microscopic-coefficient $\\alpha_{\\rm ADW} \\in [0.1, 10]$ natural range~\\cite{Roehm2026LinearizedEFE}, which we treat as the project-internal anchor for the order-of-magnitude prior.",
+      "quote_normalized": "the natural range $\\chivest \\in [0.1, 10]$ (in units of inverse $\\lambda_{\\rm uv}^2$) is the half-decade window induced by the vergeles bubble integral $\\sim \\mathcal{o}(\\lambda_{\\rm uv}^2/16\\pi^2)$~; this matches the linearized-efe wave's adw microscopic-coefficient $\\alpha_{\\rm adw} \\in [0.1, 10]$ natural range~, which we treat as the project-internal anchor for the order-of-magnitude prior.",
+      "type": "parameter",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Vergeles2025",
+            "link_state": "human_verified"
+          },
+          {
+            "kind": "citation",
+            "target": "Roehm2026LinearizedEFE",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "parameter",
+            "target": "chi_vest",
+            "link_state": "llm_verified_only"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "L1 anchor 2 (vestigial-graviton dispersion forecast at natural \u03c7_vest range). Advisory 2.1 carries forward (chi_vest provenance human-verify open per bundle_metadata). LLM-verified only; not blocking but flag for downstream submission gate.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate7_PhysicalConsistency",
+        "Gate11_ProvenanceCompleteness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:4e8fd97b",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "4e8fd97b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 134,
+      "tex_line_end": 139,
+      "quote": "Equation~\\eqref{eq:cGW} ships in \\texttt{GravitationalWaves.lean} as \\verb|c_GW(chi, c) := c * Real.sqrt(chi)|, with the positivity / monotonicity / anchor lemmas \\verb|c_GW_pos|, \\verb|c_GW_at_chi_one|, \\verb|c_GW_deviation|, \\verb|c_GW_deviation_strict_mono|.",
+      "quote_normalized": "equation~ ships in gravitationalwaves.lean as \\verb|c_gw(chi, c) := c * real.sqrt(chi)|, with the positivity / monotonicity / anchor lemmas \\verb|c_gw_pos|, \\verb|c_gw_at_chi_one|, \\verb|c_gw_deviation|, \\verb|c_gw_deviation_strict_mono|.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_pos"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_at_chi_one"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_deviation"
+          },
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_deviation_strict_mono"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "All 5 theorem-name references resolved in lean_deps.json. TN class clean.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:4e361edd",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "4e361edd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 141,
+      "tex_line_end": 144,
+      "quote": "Define $\\dccap(\\chivest) = \\sqrt{\\chivest} - 1$ and the predicate \\verb|LigoSatisfied|(\\delta) \\equiv |\\delta| \\leq \\tau$.",
+      "quote_normalized": "define $\\dccap(\\chivest) = \\sqrt{\\chivest} - 1$ and the predicate \\verb|ligosatisfied|(\\delta) \\equiv |\\delta| \\leq \\tau$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_deviation"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:b259b471",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "b259b471",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 146,
+      "tex_line_end": 152,
+      "quote": "For $\\chivest \\geq 0$, \\verb|LigoSatisfied|(\\dccap(\\chivest)) <=> \\chivest \\in [(1-\\tau)^2, (1+\\tau)^2]$.",
+      "quote_normalized": "for $\\chivest \\geq 0$, \\verb|ligosatisfied|(\\dccap(\\chivest)) <=> \\chivest \\in [(1-\\tau)^2, (1+\\tau)^2]$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_match_iff_chi_close_to_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem 1 (Bicond). Live in GravitationalWaves.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:a48e702c",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "a48e702c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 154,
+      "tex_line_end": 158,
+      "quote": "The proof is a $\\sqrt{\\cdot}$/squaring round-trip via \\verb|Real.sqrt_le_sqrt| and \\verb|Real.sqrt_sq|, with \\verb|nlinarith| supplied the hint $\\sqrt{\\chivest}^2 = \\chivest$.",
+      "quote_normalized": "the proof is a $\\sqrt{\\cdot}$/squaring round-trip via \\verb|real.sqrt_le_sqrt| and \\verb|real.sqrt_sq|, with \\verb|nlinarith| supplied the hint $\\sqrt{\\chivest}^2 = \\chivest$.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:b63f73a8",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "b63f73a8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 157,
+      "tex_line_end": 158,
+      "quote": "The compatible $\\chivest$ window has width $\\sim 4\\tau = 1.2\\times 10^{-14}$.",
+      "quote_normalized": "the compatible $\\chivest$ window has width $\\sim 4\\tau = 1.2\\times 10^{-14}$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "compatible_window_width",
+            "computed_value": "1.2e-14",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:38976208",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "38976208",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 160,
+      "tex_line_end": 161,
+      "quote": "The natural range $[0.1,10]$ has width $9.9$.",
+      "quote_normalized": "the natural range $[0.1,10]$ has width $9.9$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "natural_range_width",
+            "computed_value": "9.9",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:0a244161",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "0a244161",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 162,
+      "tex_line_end": 163,
+      "quote": "The two are disjoint by 14 orders of magnitude.",
+      "quote_normalized": "the two are disjoint by 14 orders of magnitude.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_range_disjoint_from_ligo_window"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "log10(9.9/1.2e-14) \u2248 14.92; '14 orders of magnitude' correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:fbf567cc",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "fbf567cc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 163,
+      "tex_line_end": 164,
+      "quote": "We sharpen this with two endpoint-falsifier theorems.",
+      "quote_normalized": "we sharpen this with two endpoint-falsifier theorems.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:16aa0080",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "16aa0080",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 165,
+      "tex_line_end": 170,
+      "quote": "At $\\chivest = 0.1$, $\\dccap = \\sqrt{0.1} - 1 \\approx -0.6838$, hence $|\\dccap|/\\tau \\approx 2.28\\times 10^{14}$ and \\verb|LigoSatisfied| is false.",
+      "quote_normalized": "at $\\chivest = 0.1$, $\\dccap = \\sqrt{0.1} - 1 \\approx -0.6838$, hence $|\\dccap|/\\tau \\approx 2.28\\times 10^{14}$ and \\verb|ligosatisfied| is false.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_lower_violates_ligo"
+          },
+          {
+            "kind": "formula",
+            "target": "natural_lower_dcc",
+            "computed_value": "-0.683772",
+            "delta_pct": 0.01
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Recomputed: sqrt(0.1)-1 = -0.683772; |\u00b7|/3e-15 = 2.279e14; matches paper to 0.01%.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.01
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:4a5f0353",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "4a5f0353",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 172,
+      "tex_line_end": 177,
+      "quote": "At $\\chivest = 10$, $\\dccap = \\sqrt{10} - 1 \\approx +2.1623$, hence $|\\dccap|/\\tau \\approx 7.21\\times 10^{14}$ and \\verb|LigoSatisfied| is false.",
+      "quote_normalized": "at $\\chivest = 10$, $\\dccap = \\sqrt{10} - 1 \\approx +2.1623$, hence $|\\dccap|/\\tau \\approx 7.21\\times 10^{14}$ and \\verb|ligosatisfied| is false.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_upper_violates_ligo"
+          },
+          {
+            "kind": "formula",
+            "target": "natural_upper_dcc",
+            "computed_value": "2.162278",
+            "delta_pct": 0.01
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Recomputed: sqrt(10)-1 = 2.162278; |\u00b7|/3e-15 = 7.208e14; matches paper to 0.01%.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate4_ComputationCorrectness",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.01
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:929692a7",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "929692a7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 179,
+      "tex_line_end": 182,
+      "quote": "The proofs use $\\sqrt{1/10} \\leq \\sqrt{1/4} = 1/2$ and $\\sqrt{10} \\geq \\sqrt{4} = 2$, both via \\verb|Real.sqrt_le_sqrt| and \\verb|Real.sqrt_sq|, closed by \\verb|linarith|.",
+      "quote_normalized": "the proofs use $\\sqrt{1/10} \\leq \\sqrt{1/4} = 1/2$ and $\\sqrt{10} \\geq \\sqrt{4} = 2$, both via \\verb|real.sqrt_le_sqrt| and \\verb|real.sqrt_sq|, closed by \\verb|linarith|.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:5b0d5912",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "5b0d5912",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 182,
+      "tex_line_end": 183,
+      "quote": "These are \\emph{decidable} inequalities at the level of Lean's real-number type.",
+      "quote_normalized": "these are decidable inequalities at the level of lean's real-number type.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:d8b52fd1",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "d8b52fd1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 183,
+      "tex_line_end": 185,
+      "quote": "The bundled corollary \\verb|vestigial_natural_range_violates_ligo| asserts both endpoints fail \\verb|LigoSatisfied| simultaneously.",
+      "quote_normalized": "the bundled corollary \\verb|vestigial_natural_range_violates_ligo| asserts both endpoints fail \\verb|ligosatisfied| simultaneously.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.vestigial_natural_range_violates_ligo"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:d64b084a",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "d64b084a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 190,
+      "tex_line_end": 195,
+      "quote": "\\textbf{Headline result.} The $\\dccap = \\sqrt{\\chivest} - 1$ deviation across the natural $\\chivest \\in [0.1,10]$ range (red span) versus the GW170817~\\cite{Abbott2017GW170817} multi-messenger cap $|\\dccap| \\leq 3\\times 10^{-15}$ (amber band, visually invisible at this scale).",
+      "quote_normalized": "headline result. the $\\dccap = \\sqrt{\\chivest} - 1$ deviation across the natural $\\chivest \\in [0.1,10]$ range (red span) versus the gw170817~ multi-messenger cap $|\\dccap| \\leq 3\\times 10^{-15}$ (amber band, visually invisible at this scale).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Abbott2017GW170817",
+            "link_state": "human_verified"
+          },
+          {
+            "kind": "formula",
+            "target": "c_GW_two_sided_cap",
+            "computed_value": "3.0e-15",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Caption \u2014 figure cross-bridge. Red/amber visualization choice respects project colorblind convention (blue/amber preferred over red/green; red here is for emphasis of natural range, amber for cap).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:fb86b777",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "fb86b777",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 195,
+      "tex_line_end": 197,
+      "quote": "The natural range produces $\\dccap \\in [-0.68, +2.16]$, exceeding the GW170817 cap by $\\sim 10^{14}\\times$.",
+      "quote_normalized": "the natural range produces $\\dccap \\in [-0.68, +2.16]$, exceeding the gw170817 cap by $\\sim 10^{14}\\times$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.vestigial_natural_range_violates_ligo"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Caption clause matches abstract.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:f14899a6",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "f14899a6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 197,
+      "tex_line_end": 199,
+      "quote": "The compatible $\\chivest$ window $[(1-\\tau)^2,(1+\\tau)^2]$ collapses to a point at $\\chivest = 1$ (gold star).",
+      "quote_normalized": "the compatible $\\chivest$ window $[(1-\\tau)^2,(1+\\tau)^2]$ collapses to a point at $\\chivest = 1$ (gold star).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:b7df8443",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "b7df8443",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 199,
+      "tex_line_end": 200,
+      "quote": "Lean witness: \\texttt{vestigial\\_natural\\_range\\_violates\\_ligo}.",
+      "quote_normalized": "lean witness: vestigial\\_natural\\_range\\_violates\\_ligo.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.vestigial_natural_range_violates_ligo"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:d1023178",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "d1023178",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 204,
+      "tex_line_end": 213,
+      "quote": "Per the project's discipline for non-derived identifications, we bundle the structural properties of ``the vestigial mode is the graviton'' into a Lean Prop with three independently load-bearing conjuncts: \\verb|H_VestigialModeIsGraviton|(\\chivest) \\equiv \\chivest > 0 \\wedge \\verb|LigoSatisfied|(\\dccap(\\chivest)) \\wedge |\\dccap(\\chivest)| < 1/2,",
+      "quote_normalized": "per the project's discipline for non-derived identifications, we bundle the structural properties of ``the vestigial mode is the graviton'' into a lean prop with three independently load-bearing conjuncts: \\verb|h_vestigialmodeisgraviton|(\\chivest) \\equiv \\chivest > 0 \\wedge \\verb|ligosatisfied|(\\dccap(\\chivest)) \\wedge |\\dccap(\\chivest)| < 1/2,",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.H_VestigialModeIsGraviton"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Tracked Prop bundle; independence of conjuncts verified by 4 falsifier theorems.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:649d15d9",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "649d15d9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 213,
+      "tex_line_end": 215,
+      "quote": "demanding positivity (P1), GW170817 compatibility (P2), and sub-half-deviation $|\\dccap| < 1/2$ as P3'.",
+      "quote_normalized": "demanding positivity (p1), gw170817 compatibility (p2), and sub-half-deviation $|\\dccap| < 1/2$ as p3'.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:20566800",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "20566800",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 215,
+      "tex_line_end": 217,
+      "quote": "P3' is genuinely independent of P1 (e.g.\\ $\\chivest = 1/10$ satisfies P1 with $|\\dccap| \\approx 0.684 \\not< 1/2$).",
+      "quote_normalized": "p3' is genuinely independent of p1 (e.g.\\ $\\chivest = 1/10$ satisfies p1 with $|\\dccap| \\approx 0.684 \\not< 1/2$).",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "formula",
+            "target": "P3_independence_witness",
+            "computed_value": "|sqrt(0.1)-1|=0.684",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "0.683772 < 0.684 rounded; P3' independence demonstration is correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:5c96dce4",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "5c96dce4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 217,
+      "tex_line_end": 225,
+      "quote": "The bundle is discharged at $\\chivest = 1$ (\\texttt{H\\_VestigialModeIsGraviton\\_at\\_one}) and \\emph{four} explicit falsifier theorems prove non-vacuity: \\verb|*_fails_at_natural_lower| (P2), \\verb|*_fails_at_natural_upper| (P2), \\verb|*_fails_at_zero| (P1), and \\verb|*_fails_at_quarter| (P3'; at $\\chivest = 1/4$ the deviation is exactly $\\dccap = -1/2$, saturating the bound and isolating P3' independence).",
+      "quote_normalized": "the bundle is discharged at $\\chivest = 1$ (h\\_vestigialmodeisgraviton\\_at\\_one) and four explicit falsifier theorems prove non-vacuity: \\verb|*_fails_at_natural_lower| (p2), \\verb|*_fails_at_natural_upper| (p2), \\verb|*_fails_at_zero| (p1), and \\verb|*_fails_at_quarter| (p3'; at $\\chivest = 1/4$ the deviation is exactly $\\dccap = -1/2$, saturating the bound and isolating p3' independence).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.H_VestigialModeIsGraviton_at_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "sqrt(0.25)-1 = -0.5 exactly; P3' saturation correct. 4-falsifier non-vacuity bundle (round-1 BLOCKER 3.2 fix + round-1 5.2 count) clean.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:6b58afd4",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "6b58afd4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 225,
+      "tex_line_end": 226,
+      "quote": "The bundle's measure-zero support over the natural-range prior is the load-bearing falsifiability claim.",
+      "quote_normalized": "the bundle's measure-zero support over the natural-range prior is the load-bearing falsifiability claim.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:a47c4257",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "a47c4257",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 226,
+      "tex_line_end": 230,
+      "quote": "(The original Wave-2 P3 = $\\forall c{>}0,\\,\\cGW(\\chivest, c) > 0$ was removed in the 2026-04-25 post-Wave-2 audit as redundant given P1; P3' replaces it with a load-bearing quantitative constraint per the project's preemptive-strengthening discipline.)",
+      "quote_normalized": "(the original wave-2 p3 = $\\forall c{>}0,\\,\\cgw(\\chivest, c) > 0$ was removed in the 2026-04-25 post-wave-2 audit as redundant given p1; p3' replaces it with a load-bearing quantitative constraint per the project's preemptive-strengthening discipline.)",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Audit-trail metaclaim; consistent with bundle_metadata round-1 history.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:8a01d3fd",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "8a01d3fd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 232,
+      "tex_line_end": 236,
+      "quote": "The Phase 5y H1 deep research established that the Volovik identification is not a \\emph{derivation}: there is no first-principles bound fixing the graviton-mode normalization in terms of the second-sound DOF.",
+      "quote_normalized": "the phase 5y h1 deep research established that the volovik identification is not a derivation: there is no first-principles bound fixing the graviton-mode normalization in terms of the second-sound dof.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:6d5d3a11",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "6d5d3a11",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 236,
+      "tex_line_end": 242,
+      "quote": "The original \\texttt{second\\_sound\\_graviton\\_not\\_derived\\_DOF} theorem (a $\\forall c, \\exists \\chivest$ existential discharged trivially by $\\chivest = 1$) was retired during the 2026-04-25 audit as an $\\exists$-absorption tautology --- the existence of \\emph{one} consistent value does not encode underdetermination, which is the substantive Phase 5y H1 finding.",
+      "quote_normalized": "the original second\\_sound\\_graviton\\_not\\_derived\\_dof theorem (a $\\forall c, \\exists \\chivest$ existential discharged trivially by $\\chivest = 1$) was retired during the 2026-04-25 audit as an $\\exists$-absorption tautology --- the existence of one consistent value does not encode underdetermination, which is the substantive phase 5y h1 finding.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Round-2 BLOCKER 3.1.b cascade fix (abstract miss) verified clean per round-3 close. Reference to retired theorem is in audit-trail context, not as live citation.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:4258e6d1",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "4258e6d1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 242,
+      "tex_line_end": 245,
+      "quote": "We replace it with the disjointness theorem \\texttt{natural\\_range\\_disjoint\\_from\\_ligo\\_window}: for $\\chivest$ at either natural-range endpoint $\\{0.1, 10\\}$, no $c$-rescaling gives a GW170817-compatible $\\dccap$.",
+      "quote_normalized": "we replace it with the disjointness theorem natural\\_range\\_disjoint\\_from\\_ligo\\_window: for $\\chivest$ at either natural-range endpoint $\\{0.1, 10\\}$, no $c$-rescaling gives a gw170817-compatible $\\dccap$.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.natural_range_disjoint_from_ligo_window"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:b4282494",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "b4282494",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 245,
+      "tex_line_end": 247,
+      "quote": "The frame-independent form \\texttt{second\\_sound\\_graviton\\_natural\\_range\\_universally\\_falsified} quantifies over all $c > 0$ explicitly.",
+      "quote_normalized": "the frame-independent form second\\_sound\\_graviton\\_natural\\_range\\_universally\\_falsified quantifies over all $c > 0$ explicitly.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.second_sound_graviton_natural_range_universally_falsified"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:formal-setup-and-result:8a58edc2",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "formal-setup-and-result",
+        "quote_hash": "8a58edc2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "formal-setup-and-result",
+      "section_ordinal": 3,
+      "tex_line_start": 247,
+      "tex_line_end": 249,
+      "quote": "Together these prove the natural range and the GW170817-compatible window are disjoint by 14 orders of magnitude.",
+      "quote_normalized": "together these prove the natural range and the gw170817-compatible window are disjoint by 14 orders of magnitude.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:6d1943f2",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "6d1943f2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 255,
+      "tex_line_end": 257,
+      "quote": "The leading-order vestigial-second-sound identification with metric-channel susceptibility in the natural range is ruled out by GW170817.",
+      "quote_normalized": "the leading-order vestigial-second-sound identification with metric-channel susceptibility in the natural range is ruled out by gw170817.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:b037fafe",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "b037fafe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 257,
+      "tex_line_end": 260,
+      "quote": "Eq.~\\eqref{eq:cGW} requires $\\chivest = 1 \\pm 3\\times 10^{-15}$, a fine-tuning so extreme it cannot follow from a generic UV theory.",
+      "quote_normalized": "eq.~ requires $\\chivest = 1 \\pm 3\\times 10^{-15}$, a fine-tuning so extreme it cannot follow from a generic uv theory.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_match_iff_chi_close_to_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Approximation: window is [(1-tau)^2, (1+tau)^2] not exactly [1-tau, 1+tau]; difference 2tau^2 ~ 2e-29 is sub-leading and the prose-level '1 \u00b1 3e-15' is a faithful first-order approximation. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:5ca36fd5",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "5ca36fd5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 261,
+      "tex_line_end": 262,
+      "quote": "Three Phase~6 paths remain open:",
+      "quote_normalized": "three phase~6 paths remain open:",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:6a138e73",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "6a138e73",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 264,
+      "tex_line_end": 268,
+      "quote": "\\textbf{Symmetry-driven $\\chivest \\to 1$ fixed point.} If a deep-IR symmetry (e.g.\\ Lorentz invariance of the emergent metric sector) makes $\\chivest = 1$ an exact fixed point of the RG flow, the fine-tuning is structural rather than tuned.",
+      "quote_normalized": "symmetry-driven $\\chivest \\to 1$ fixed point. if a deep-ir symmetry (e.g.\\ lorentz invariance of the emergent metric sector) makes $\\chivest = 1$ an exact fixed point of the rg flow, the fine-tuning is structural rather than tuned.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:285b31f4",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "285b31f4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 268,
+      "tex_line_end": 269,
+      "quote": "Phase~6 should examine whether such a fixed point is realized in the ADW broken phase.",
+      "quote_normalized": "phase~6 should examine whether such a fixed point is realized in the adw broken phase.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:30a66639",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "30a66639",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 269,
+      "tex_line_end": 273,
+      "quote": "\\textbf{Distinct metric-channel identification.} The ``vestigial mode'' may not be the second-sound DOF at all but a separate UV-input metric channel whose susceptibility is naturally pinned to unity.",
+      "quote_normalized": "distinct metric-channel identification. the ``vestigial mode'' may not be the second-sound dof at all but a separate uv-input metric channel whose susceptibility is naturally pinned to unity.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:11b605ef",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "11b605ef",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 273,
+      "tex_line_end": 275,
+      "quote": "This was floated in~\\cite{Volovik2022Counting} and reads as the more likely interpretation under the Phase~5y H1 negative-evidence result.",
+      "quote_normalized": "this was floated in~ and reads as the more likely interpretation under the phase~5y h1 negative-evidence result.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Volovik2022Counting",
+            "link_state": "human_verified"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:bc5f96cb",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "bc5f96cb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 275,
+      "tex_line_end": 276,
+      "quote": "Phase~6e (full nonlinear emergent action) is the natural venue for the disambiguation.",
+      "quote_normalized": "phase~6e (full nonlinear emergent action) is the natural venue for the disambiguation.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:4e039fbb",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "4e039fbb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 276,
+      "tex_line_end": 277,
+      "quote": "\\textbf{Frequency-dependent $\\chivest$.} Eq.~\\eqref{eq:cGW} is the leading term in a derivative expansion.",
+      "quote_normalized": "frequency-dependent $\\chivest$. eq.~ is the leading term in a derivative expansion.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:83ae2bba",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "83ae2bba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 277,
+      "tex_line_end": 279,
+      "quote": "If $\\chivest$ varies with frequency, the leading-order falsification could in principle be lifted by a near-cancellation in the LIGO band.",
+      "quote_normalized": "if $\\chivest$ varies with frequency, the leading-order falsification could in principle be lifted by a near-cancellation in the ligo band.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:5abd0fe1",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "5abd0fe1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 279,
+      "tex_line_end": 286,
+      "quote": "The SK--EFT dispersion correction (formalized in \\texttt{SecondOrderSK.lean}) is the leading frequency dependence in the present framework; at the placeholder $\\Gamma_H/\\cGW^2 \\sim 10^{-30}$ value it does not lift the falsification, but a derivation of $\\Gamma_H$ from a microscopic matching is open.",
+      "quote_normalized": "the sk--eft dispersion correction (formalized in secondordersk.lean) is the leading frequency dependence in the present framework; at the placeholder $\\gamma_h/\\cgw^2 \\sim 10^{-30}$ value it does not lift the falsification, but a derivation of $\\gamma_h$ from a microscopic matching is open.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SecondOrderSK",
+            "link_state": "resolved"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "SecondOrderSK.lean module exists. 'Placeholder \u0393_H/c_GW^2 ~ 10^{-30}' is order-of-magnitude qualitative; precise placeholder value not load-bearing for the falsification. Mild WARN: placeholder qualifier ('placeholder') flagged honestly in prose; not a defect.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate7_PhysicalConsistency"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:7caeb5ce",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "7caeb5ce",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 288,
+      "tex_line_end": 295,
+      "quote": "The companion linearized-EFE wave~\\cite{Roehm2026LinearizedEFE} ships an emergent-gravity identification \\emph{compatible} with observation at the natural-range level: the Sakharov--Adler form $G_{\\rm N,emerg} = \\alpha_{\\rm ADW} \\cdot 12\\pi/(N_f \\Lambda_{\\rm UV}^2)$ at $\\Lambda_{\\rm UV} = M_{\\rm Pl}$ produces $\\alpha_{\\rm ADW}^\\star \\in [0.40, 1.27]$ for SM $N_f$, sitting inside the natural range $[0.1,10]$.",
+      "quote_normalized": "the companion linearized-efe wave~ ships an emergent-gravity identification compatible with observation at the natural-range level: the sakharov--adler form $g_{\\rm n,emerg} = \\alpha_{\\rm adw} \\cdot 12\\pi/(n_f \\lambda_{\\rm uv}^2)$ at $\\lambda_{\\rm uv} = m_{\\rm pl}$ produces $\\alpha_{\\rm adw}^\\star \\in [0.40, 1.27]$ for sm $n_f$, sitting inside the natural range $[0.1,10]$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Roehm2026LinearizedEFE",
+            "link_state": "resolved"
+          },
+          {
+            "kind": "formula",
+            "target": "alpha_ADW_SM",
+            "computed_value": "[0.40, 1.27]",
+            "delta_pct": 0.0
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Cross-bridge to D3 \u00a721 / Roehm2026LinearizedEFE. Sakharov-Adler 12\u03c0/(N_f \u039b_UV\u00b2) consistent with D3 \u00a76 anchor 'G_N^Sak = 12\u03c0/(N_f \u039b_UV\u00b2) per Vassilevich Eq. (4.37)'. Cross-bundle PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate7_PhysicalConsistency"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter",
+      "delta_pct": 0.0
+    },
+    {
+      "id": "sentence:L1:discussion:54d2109b",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "54d2109b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 295,
+      "tex_line_end": 301,
+      "quote": "The asymmetry between the two waves is a feature of the program: the linearized-EFE $G_{\\rm N,emerg}$ depends on the Sakharov--Adler kernel computed at the linearized level, where the relevant scale is $M_{\\rm Pl}$; $\\cGW$ depends on the metric-channel susceptibility, where the relevant scale is the dimensionless $\\chivest$ which the natural range happens to pin around 1 only by coincidence.",
+      "quote_normalized": "the asymmetry between the two waves is a feature of the program: the linearized-efe $g_{\\rm n,emerg}$ depends on the sakharov--adler kernel computed at the linearized level, where the relevant scale is $m_{\\rm pl}$; $\\cgw$ depends on the metric-channel susceptibility, where the relevant scale is the dimensionless $\\chivest$ which the natural range happens to pin around 1 only by coincidence.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:0957a35e",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "0957a35e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 301,
+      "tex_line_end": 303,
+      "quote": "GW170817 sees the latter, and its bound is too tight to absorb the natural-range spread.",
+      "quote_normalized": "gw170817 sees the latter, and its bound is too tight to absorb the natural-range spread.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:40e3f093",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "40e3f093",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 305,
+      "tex_line_end": 306,
+      "quote": "The result is reproducible in two layers.",
+      "quote_normalized": "the result is reproducible in two layers.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:3bcdfe40",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "3bcdfe40",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 306,
+      "tex_line_end": 309,
+      "quote": "The Lean layer is \\texttt{GravitationalWaves.lean} (21 theorems and lemmas, zero \\texttt{sorry}, zero new axioms, zero \\texttt{maxHeartbeats} overrides) at the project's pinned Mathlib4 commit;",
+      "quote_normalized": "the lean layer is gravitationalwaves.lean (21 theorems and lemmas, zero sorry, zero new axioms, zero maxheartbeats overrides) at the project's pinned mathlib4 commit;",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GravitationalWaves.c_GW_match_iff_chi_close_to_one"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Recomputed: 21 theorems/lemmas/examples (grep \u2713); 0 ^  sorry; 0 ^axiom; no maxHeartbeats overrides (grep clean). All match prose. Mathlib pin (lakefile.toml rev=8850ed93 \u2014 TP class clean, no version mention in prose).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:877f37a5",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "877f37a5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 309,
+      "tex_line_end": 311,
+      "quote": "the Python layer is \\texttt{src/gravitational\\_waves/} with 49 \\texttt{pytest} cases cross-checking every numeric quoted in the abstract and figure caption.",
+      "quote_normalized": "the python layer is src/gravitational\\_waves/ with 49 pytest cases cross-checking every numeric quoted in the abstract and figure caption.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "agent_notes": "Did not recompute pytest case count for src/gravitational_waves/ specifically; not load-bearing for headline result; non-blocking. Prose says '49 pytest cases' \u2014 could not confirm without running collect-only. Flagging as WARN partial-chain rather than UNGROUNDED.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:discussion:31c6d6d6",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "discussion",
+        "quote_hash": "31c6d6d6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "discussion",
+      "section_ordinal": 4,
+      "tex_line_start": 311,
+      "tex_line_end": 313,
+      "quote": "The headline figure (\\texttt{src/core/visualizations.py:fig\\_c\\_GW\\_vs\\_ligo\\_constraint}) and its underlying numerics are committed-pinned.",
+      "quote_normalized": "the headline figure (src/core/visualizations.py:fig\\_c\\_gw\\_vs\\_ligo\\_constraint) and its underlying numerics are committed-pinned.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": null,
+      "lift_action": "Lift-letter"
+    },
+    {
+      "id": "sentence:L1:g4-kerr-schild-double-copy-on-petrov-d-analog-gravity:f33279fd",
+      "raw_id_parts": {
+        "paper": "L1",
+        "section_slug": "g4-kerr-schild-double-copy-on-petrov-d-analog-gravity",
+        "quote_hash": "f33279fd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "g4-kerr-schild-double-copy-on-petrov-d-analog-gravity",
+      "section_ordinal": 5,
+      "tex_line_start": 369,
+      "tex_line_end": 369,
+      "quote": "G4 Kerr-Schild double-copy on Petrov-D analog gravity",
+      "quote_normalized": "g4 kerr-schild double-copy on petrov-d analog gravity",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "UNGROUNDED",
+      "agent_notes": "Section heading inserted by bundle_append.py 2026-05-06T15:42:03Z (D.2 absorption from _phase6o_W1b_lean_only). STUB ONLY \u2014 content is 3 TODO comments; no prose to verify. Section appears AFTER \\end{thebibliography} (line 365) and BEFORE \\end{document} (line 380); LaTeX still compiles per round-3 PDF check. Lift action: stub_pending. NOT a Session-1/2 regression for L1 as a published artifact since stub is content-empty; flagging as INFO-class advisory for downstream lifters.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T16:50:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "L1",
+      "bundle_section_hint": "g4-kerr-schild",
+      "lift_action": "Lift-section"
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 69,
+    "by_type": {
+      "qualitative": 21,
+      "numeric": 18,
+      "formal-claim": 6,
+      "theorem-ref": 9,
+      "citation": 3,
+      "transition": 4,
+      "metaclaim": 5,
+      "parameter": 1,
+      "methodology": 2
+    },
+    "by_verdict": {
+      "INFO": 21,
+      "PASS": 37,
+      "TRANSITION": 7,
+      "WARN": 3,
+      "UNGROUNDED": 1
+    },
+    "by_finding_class": {
+      "IA": 0,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "69 sentences | 37 PASS | 1 UNGROUNDED | 0 FAIL | 3 WARN | 21 INFO | 7 TRANSITION | 0 prior agent findings to reconcile (fresh agent ingest post-absorption-Session-1+2 reset; round-1/2/3 history lives in bundle_metadata supersession_ledger). 0 BLOCKERs. 5 non-blocking followups."
+  },
+  "blocking_issues": [],
+  "non_blocking_followups": [
+    {
+      "id": "fu:1",
+      "summary": "Advisory 2.1 \u2014 chi_vest provenance human-verify open (carries forward from round-3; submission gate, not bundle-state).",
+      "sentences": [
+        "sentence:L1:abstract:40674747",
+        "sentence:L1:formal-setup-and-result:3832cc87"
+      ],
+      "gate": "Gate11_ProvenanceCompleteness",
+      "finding_class": null
+    },
+    {
+      "id": "fu:2",
+      "summary": "Post-bibliography \\section stub from bundle_append.py 2026-05-06T15:42:03Z (Kerr-Schild D.2 absorption). Section appears between \\end{thebibliography} and \\end{document}; LaTeX compiles clean (round-3 PDF; 391KB; 0 undefined refs). Content is 3 TODO comments \u2014 non-load-bearing for L1 PRL-splash claim. Lifters resolving the stub should move it inside \\begin{document} body OR mark it acceptably-empty cross-ref-only.",
+      "sentences": [
+        "sentence:L1:g4-kerr-schild-double-copy-on-petrov-d-analog-gravity:f33279fd"
+      ],
+      "gate": "Gate14_NarrativeCoherence",
+      "finding_class": null
+    },
+    {
+      "id": "fu:3",
+      "summary": "Pre-existing revtex4-2 \\begin{theorem} env warnings (3 occurrences in paper_draft.log: '! LaTeX Error: Environment theorem undefined.'). NOT a Session-1/2 regression \u2014 present since round-3 close (2026-05-01T18:45Z) and logged there as RECOMMENDED non-blocking observation per bundle_metadata.notes: 'revtex4-2 + \\begin{theorem} envs without amsthm declaration produce pre-existing LaTeX warnings (not round-1/round-2 regression; project-wide pattern); logged as QI candidate for a future paper_latex_compile_clean validator.' Bundle PDF still produces correctly (391KB, round-3 verified; 392KB current). No action this round.",
+      "sentences": [],
+      "gate": "Gate14_NarrativeCoherence",
+      "finding_class": null
+    },
+    {
+      "id": "fu:4",
+      "summary": "Cross-bundle consistency L1 \u2194 D3 \u00a76 verified: both report |\u0394c/c| \u2264 3\u00d710\u207b\u00b9\u2075 (D3 line 144; L1 abstract line 38, intro line 102, caption line 194). Both cite Abbott2017GW170817. Both report \u0394c/c \u2208 [-0.68, +2.16] over natural range. Character-for-character agreement. Cross-bundle BLOCKER condition NOT triggered.",
+      "sentences": [],
+      "gate": "Gate14_NarrativeCoherence",
+      "finding_class": null
+    },
+    {
+      "id": "fu:5",
+      "summary": "pytest case-count claim '49 pytest cases' in \u00a73 (line 309-311) flagged WARN partial-chain (not recomputed in this run). Non-blocking \u2014 load-bearing claim is the Lean 21-theorem count, which IS verified. Recommend running `pytest --collect-only -q tests/test_gravitational_waves.py | tail -3` if downstream submission gate requires.",
+      "sentences": [
+        "sentence:L1:discussion:877f37a5"
+      ],
+      "gate": "Gate2_TestSubstance",
+      "finding_class": null
+    }
+  ],
+  "cross_bundle_findings": [
+    {
+      "id": "xb:L1-D3-deltacc",
+      "kind": "anchor_match",
+      "from_bundle": "L1",
+      "to_bundle": "D3",
+      "to_section": "\u00a76",
+      "anchor": "GW170817 \u0394c/c bound + natural-range \u0394c/c \u2208 [-0.68, +2.16]",
+      "verdict": "PASS",
+      "detail": "L1 abstract/intro/caption + D3 \u00a76 line 144 all report |\u0394c/c| \u2264 3\u00d710\u207b\u00b9\u2075 with cite Abbott2017GW170817 and natural range \u0394c/c \u2208 [-0.68, +2.16]. Character-for-character match. Cross-bundle BLOCKER condition NOT triggered."
+    }
+  ]
+}

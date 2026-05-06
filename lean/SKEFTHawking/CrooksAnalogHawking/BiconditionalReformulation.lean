@@ -48,9 +48,10 @@ domain-physics layer (Stage 4+).
 
 References:
 - Phase 6n DR §8 — the load-bearing reformulation per Phase 6n+ DR
-- Phase 6e biconditional `sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk`
+- Phase 6e implication `sakharov_induced_gravity_criterion_implies_lambda_j_eq_lambda_hk`
   (`JacobsonThermoGRDarkEnergy.lean` JTGR6) — the analogous Phase 6e
-  Sakharov ↔ Λ_J = Λ_HK biconditional, structurally similar shape
+  Sakharov → Λ_J = Λ_HK implication (one-way at current substrate-data
+  encoding; biconditional pending substrate-data refactor)
 - Phase 6m Track C JTGR survivors — class-(b/b'/b'') assignments per
   R5 §3.6 inform which substrate horizon-Crooks reading applies
 - temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md
@@ -138,7 +139,7 @@ horizon-Crooks-side projection, and the joint conjunction (via the
 horizon-Crooks projections.
 
 **Substantive content:** this is the load-bearing structural restatement
-of the Phase 6e biconditional (`sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk`,
+of the Phase 6e implication (`sakharov_induced_gravity_criterion_implies_lambda_j_eq_lambda_hk`,
 JTGR6) in horizon-Crooks language. The Phase 6m Track C JTGR survivors
 (M1, M2/M7, M3 Exp/ArcTanh, M4, M9; M8 conditional) inherit this
 biconditional via their Sakharov-class assignment from R5 §3.6.

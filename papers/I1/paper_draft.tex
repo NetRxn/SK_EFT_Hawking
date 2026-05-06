@@ -281,62 +281,123 @@ none of the three layers alone suffices.}
 
 In Schwinger--Keldysh effective field theory, the first-order action
 contains nine real coefficients
-$\{r_1, \ldots, r_6, i_1, i_2, i_3\}$ controlling six retarded
-response and three noise channels at lowest derivative order. A
-clean physics question is whether the Kubo--Martin--Schwinger (KMS)
-condition --- the algebraic statement of fluctuation--dissipation
-relating retarded and noise sectors --- forces a unique parameterization
-of the action by the two transport coefficients
-$\kappa, \nu$ (bulk and shear viscosity, in the analog
-fluid).
+$\{r_1, \ldots, r_6, i_1, i_2, i_3\}$ controlling six retarded-response
+and three noise channels at lowest derivative order. A clean physics
+question is whether the Kubo--Martin--Schwinger (KMS) condition --- the
+algebraic statement of fluctuation--dissipation relating retarded and
+noise sectors --- forces a unique parameterization of the action by the
+two transport coefficients $(\gamma_1, \gamma_2)$ (isotropic phonon
+damping, related to bulk viscosity, and anisotropic damping along the
+superfluid flow; the precise correspondence to the action coefficients
+is encoded in the \texttt{DissipativeCoeffs} structure of
+\texttt{SKDoubling.lean}, lines~244--280).
 
-Our first attempt encoded an early version of the KMS constraint as
-a Lean axiom \texttt{KMSSymmetry} that asserted four of the nine
-component-level identities. The accompanying uniqueness theorem
-\texttt{SKEFTHawking.SKDoubling.firstOrder\_uniqueness} (in
-\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~412--439, with
-the \texttt{FirstOrderKMS} structure preceding it from line~367)
-was submitted to Aristotle in priority batch~1. Aristotle returned not
-a proof but a counterexample: the coefficient vector
-$c = (0,0,0,0,0,0,0,1,0)$ --- one nonzero noise channel and
-nothing else --- satisfies the four-component constraint but
-violates the full algebraic FDR. Without the formal pipeline this
-would have been a one-symbol typographical hole that survived
-human review on three rounds; with the formal pipeline it was
-flagged on first submission.
+A published axiomatic for the SK-EFT contour exists. Crossley,
+Glorioso, and Liu~\cite{CrossleyGloriosoLiu2017} formulate the
+closed-time-path action with hermiticity, reflection positivity
+($\Im\,S \geq 0$), and a $\mathbb{Z}_2$ symmetry they identified as
+the local KMS condition. The companion paper of Glorioso, Crossley,
+and Liu~\cite{GloriosoCrossleyLiu2017} promotes this to the
+\emph{dynamical} KMS $\mathbb{Z}_2$ symmetry, which is the central
+algebraic-level statement applicable in any local-equilibrium state
+rather than only thermal density matrices. Glorioso and
+Liu~\cite{GloriosoLiu2018} then derive the local second law,
+$\partial_\mu J^\mu_S \geq 0$ for a Noether-constructed entropy
+current $J^\mu_S$, from the dynamical-KMS $\mathbb{Z}_2$ symmetry, the
+classical-limit remnant of microscopic unitarity, and the local
+equilibrium assumption; the pedagogical exposition is the TASI~2017
+lectures of Glorioso and Liu~\cite{GloriosoLiu2018TASI}. The
+dynamical-KMS axiom carries a UV-realization ambiguity surfaced by
+Jain and Kovtun~\cite{JainKovtun2024}, which the program encodes at
+the typeclass level (the strict-vs-algebraic dynamical-KMS predicates
+\texttt{hasDynamicalKMS\_strict} / \texttt{hasDynamicalKMS\_algebraic}
+in \texttt{lean/SKEFTHawking/GloriosoLiu/Axioms.lean}). The first-order
+projection of this published skeleton onto the polynomial action with
+nine candidate coefficients is the structure documented below; the
+strengthening discussed in the rest of this section is the projection
+step, not a project-original axiomatic choice.
 
-The resolution exposed the substantive physics. The full
-component-level KMS at first order is seven simultaneous algebraic
-relations, not four, and produces the closed-form noise spectrum
-$i_1 = -r_2/\beta$, $i_2 = (r_1 + r_2)/\beta$, $i_3 = 0$ together
-with $r_3 = r_4 = r_5 = r_6 = 0$. The strengthened axiom
-\texttt{FirstOrderKMS} encodes all seven; the corresponding
-\texttt{firstOrder\_uniqueness} theorem (Aristotle
-run~\texttt{270e77a0}) closes cleanly. The two-parameter
-$(\kappa, \nu)$ family is recovered as a corollary. The published
-analog-Hawking spectrum and noise-floor formula in the project's
-Tier~1 deep papers depend numerically on $i_3 = 0$; the original
-weakened constraint did not force $i_3 = 0$, and a paper using it
-would have shipped the wrong noise floor.
+Our first formalization encoded a \emph{preliminary} transform-level
+KMS constraint as a Lean axiom \texttt{KMSSymmetry} (in
+\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~156--168). The
+field-level transform $\psi_a \to \psi_a + i\beta\,\partial_t \psi_r$
+acts only on four of the nine components ($\psi_r$, $\psi_a$,
+$\partial_t \psi_r$, and $\partial_x \psi_r$), leaving the
+derivatives of $\psi_a$ and the second derivatives of $\psi_r$
+unconstrained. We submitted the accompanying uniqueness theorem
+\texttt{SKEFTHawking.SKDoubling.firstOrder\_uniqueness} to Aristotle
+in priority batch~1. Aristotle returned not a proof but a
+counterexample: the coefficient vector $c = (0,0,0,0,0,0,0,1,0)$ ---
+one nonzero noise channel ($i_2 = 1$) and nothing else --- satisfies
+the transform-level constraint but is not the action of any valid
+$(\gamma_1, \gamma_2)$ pair. Without the formal pipeline this would
+have been a one-symbol typographical hole that survived three rounds
+of human review; with the formal pipeline it was flagged on first
+submission.
+
+The resolution recovers the algebraic content of the published
+dynamical-KMS axiom. At the level of the polynomial coefficients
+(rather than the field-level transform), dynamical-KMS at first order
+is seven simultaneous relations: the four lower-derivative monomials
+whose KMS partner exceeds the first-order budget vanish,
+$r_3 = r_4 = r_5 = r_6 = 0$; the two retained noise coefficients are
+fixed by the algebraic FDR, $i_1 = -r_2/\beta$ and
+$i_2 = (r_1 + r_2)/\beta$; the spatial-noise coefficient is forced to
+zero, $i_3 = 0$. The strengthened axiom \texttt{FirstOrderKMS} (in
+\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~367--379) encodes
+all seven; the uniqueness theorem \texttt{firstOrder\_uniqueness}
+(lines~412--439, Aristotle run~\texttt{270e77a0}) closes cleanly
+under it. The two-parameter $(\gamma_1, \gamma_2)$ family is
+recovered as a corollary. The four field components Aristotle's first-pass
+weak constraint \emph{did} hold are exactly the four whose KMS partners
+fit within the first-order derivative budget; the five it \emph{did not}
+hold --- the derivatives of $\psi_a$ and second derivatives of $\psi_r$
+--- are precisely the five whose KMS partners exceed first order and
+instead surface at second order in the SK-EFT loop expansion (where
+they are formalized in the program's Glorioso--Liu axiomatic Lean
+modules \texttt{lean/SKEFTHawking/GloriosoLiu/\{Axioms,FirstOrderProjection,SecondOrderProjection\}.lean}). The four-of-nine partition
+recovered by Aristotle's counterexample is, in this reading, a
+\emph{theorem} of first-order projection rather than an empirical
+observation.
+
+The published analog-Hawking spectrum and noise-floor formula in the
+project's Tier~1 deep papers depend numerically on $i_3 = 0$; the
+original weakened constraint did not force $i_3 = 0$, and a paper
+using it would have shipped the wrong noise floor. The pedagogical
+content of this case study survives intact: an automated theorem
+prover's \emph{failure to prove} a stated theorem can be diagnostic
+information about the theorem's correctness, not a deficiency of the
+prover. The structural content is upgraded by the framing above: the
+diagnosis is that the original axiom encoded a \emph{projection} of
+dynamical-KMS that omitted the second-order content the published
+axiom carries, not a project-original ad-hoc choice that happened to
+be wrong.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.95\linewidth]{figures/i1_fig4_firstorderkms_grid.png}
 \caption{FirstOrderKMS 9-coefficient constraint grid
-(Aristotle run~\texttt{270e77a0}). Left panel: original weak
-axiom constrains four of nine coefficients
-($\{r_1, r_2, i_1, \text{free elsewhere}\}$); the cell highlighted
-in carmine is the counterexample vector
-$c = (0,0,0,0,0,0,0,1,0)$ which satisfies the weak axiom but
-forces $i_3 \neq 0$ in the noise-floor formula. Right panel:
-strengthened \texttt{FirstOrderKMS} axiom constrains all nine
+(Aristotle run~\texttt{270e77a0}). Left panel: the preliminary
+transform-level \texttt{KMSSymmetry} constrains only the four
+field components $(\psi_r, \psi_a, \partial_t \psi_r,
+\partial_x \psi_r)$ on which the transform $\psi_a \to \psi_a +
+i\beta\,\partial_t \psi_r$ acts; the cell highlighted in carmine is
+the counterexample vector $c = (0,0,0,0,0,0,0,1,0)$ which satisfies
+the transform-level constraint but is not a valid first-order
+dissipative action. Right panel: the algebraic-level
+\texttt{FirstOrderKMS} (the first-order projection of the
+Glorioso--Liu dynamical-KMS axiom of
+ref.~\cite{GloriosoCrossleyLiu2017}) constrains seven of nine
 coefficients (including $i_3 = 0$ explicitly), and the
 \texttt{firstOrder\_uniqueness} theorem closes cleanly under it.}
 \label{fig:firstorderkms_grid}
 \end{figure}
 
-Aristotle's failure to
-prove a wrong statement is the substantive content of this case.
+Aristotle's failure to prove a wrong statement is the substantive
+content of this case; the upgraded framing identifies precisely
+\emph{why} the original statement was wrong --- it omitted the
+second-order content the dynamical-KMS axiom carries explicitly in
+the published Glorioso--Liu skeleton.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §4 Worked case 2: gap-solution-bounded conjecture disproof
@@ -888,7 +949,7 @@ publication bundles. The validation check
 the registry and flags any cluster whose member sentences disagree
 on the cluster's load-bearing fact. The load-bearing example is
 GW170817 vs vestigial-graviton: the L1 PRL splash and the D3 deep
-paper both report the LIGO Δ$c/c$ bound and the
+paper both report the LIGO $\Delta c/c$ bound and the
 $7\times 10^{14}$ falsification factor; CHECK~21 enforces that the
 two reports agree character-for-character on the numerical content.
 
@@ -1520,6 +1581,71 @@ as copilots for theorem proving in Lean,'' arXiv:2404.12534 (2024).
 \bibitem{alphaproof} Google DeepMind, ``AI achieves silver-medal
 standard solving International Mathematical Olympiad problems,''
 (2024).
+
+\bibitem{CrossleyGloriosoLiu2017} M.~Crossley, P.~Glorioso, and
+H.~Liu, ``Effective field theory of dissipative fluids,''
+\emph{JHEP}\ \textbf{09} (2017) 095, arXiv:1511.03646.
+
+\bibitem{GloriosoCrossleyLiu2017} P.~Glorioso, M.~Crossley, and
+H.~Liu, ``Effective field theory for dissipative fluids (II):
+classical limit, dynamical KMS symmetry and entropy current,''
+\emph{JHEP}\ \textbf{09} (2017) 096, arXiv:1701.07817.
+
+\bibitem{GloriosoLiu2018} P.~Glorioso and H.~Liu, ``The second law
+of thermodynamics from symmetry and unitarity,'' arXiv:1612.07705
+(2016).
+
+\bibitem{GloriosoLiu2018TASI} P.~Glorioso and H.~Liu, ``Lectures
+on non-equilibrium effective field theories and fluctuating
+hydrodynamics,'' \emph{PoS}\ \textbf{TASI2017} (2018) 008,
+arXiv:1805.09331.
+
+\bibitem{JainKovtun2024} A.~Jain and P.~Kovtun, ``Schwinger--Keldysh
+effective field theory for stable and causal relativistic
+hydrodynamics,'' \emph{JHEP}\ \textbf{01} (2024) 162,
+arXiv:2309.00511.
 \end{thebibliography}
+
+
+%% ─── Lifted from _phase6n_W2b_lean_only (§8) — 2026-05-06T15:42:06Z ───
+%% \section{Quantum Crooks no-go (Perarnau-Llobet)}
+%% \label{sec:i1-_phase6n_W2b_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §8
+%% Lift notes: D.2 sidebar: Phase 6n W2b methodology case — typeclass-connections cross-bridge pattern; QuantumCrooks/SKEFTConnection IsReservoirCoupled non-vacuity strengthening
+%% TODO: lift content from papers/_phase6n_W2b_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6n_W2b_lean_only ───
+
+
+%% ─── Lifted from _phase6o_W2a_lean_only (§11) — 2026-05-06T15:42:10Z ───
+%% \section{APS $\eta$-invariant for analog horizons: substrate-discovery methodology sidebar (Phase 6o W2a)}
+%% \label{sec:i1-_phase6o_W2a_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §11
+%% Lift notes: D.2 sidebar: Phase 6o W2a methodology case — substrate-discovery pattern (predicate-level operationalization at Wave 2a.2 + per-substrate concrete computation at Wave 2a.3-5; ³He-A unique non-degenerate cell)
+%% TODO: lift content from papers/_phase6o_W2a_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6o_W2a_lean_only ───
+
+
+%% ─── Lifted from _phase6o_W3a_lean_only (§7) — 2026-05-06T15:42:59Z ───
+%% \section{ETH-$\alpha$ refutation-tableau methodology sidebar (Phase 6o W3a)}
+%% \label{sec:i1-_phase6o_W3a_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §7
+%% Lift notes: D.2 sidebar: Phase 6o W3a methodology case — parallel-axiomatization productive-value Aristotle-driven tableau pattern (5 candidate ETH axiomatizations + 3 concrete refutation theorems)
+%% TODO: lift content from papers/_phase6o_W3a_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6o_W3a_lean_only ───
 
 \end{document}

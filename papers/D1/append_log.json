@@ -79,6 +79,69 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-04T12:36:30Z",
       "notes": "Graphene Dirac-fluid Hawking; 92% Lean theorem reuse; W-F violation; closed-form noise from Keldysh FDT + Landauer-Buttiker; companion to E2 PRL letter (already shipped GREEN 2026-05-04)"
+    },
+    {
+      "date": "2026-05-06T15:39:38Z",
+      "source_paper": "_phase6n_W1a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "Resurgence.KinematicDispersive",
+        "Resurgence.LoopEnvelope",
+        "Resurgence.Basic"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:39:38Z",
+      "notes": "D.2 absorption: Phase 6n W1a kinematic-dispersive geometric envelope (NOT Gevrey-1); IsGeometric predicate; closed-form \u03b3_n"
+    },
+    {
+      "date": "2026-05-06T15:39:41Z",
+      "source_paper": "_phase6n_W2c_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a75",
+      "lean_modules_referenced": [
+        "CrooksAnalogHawking.LDPLinearResponse",
+        "SKEFTGallavottiCohen",
+        "CrooksAnalogHawking.HorizonDetailedBalance"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:39:41Z",
+      "notes": "D.2 absorption: Phase 6n W2c FDR W-form GC + abstract IsLDPRateFunction; LinearResponseRateFunction"
+    },
+    {
+      "date": "2026-05-06T15:39:44Z",
+      "source_paper": "_phase6n_W2b_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "QuantumCrooks.SKEFTConnection",
+        "QuantumCrooks.ReservoirCoupled",
+        "QuantumCrooks.HigherDimensional",
+        "QuantumCrooks.ConcreteComplex"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:39:44Z",
+      "notes": "D.2 absorption: Phase 6n W2b BEC + polariton quantum-Crooks landscape; Perarnau-Llobet typeclass connections"
+    },
+    {
+      "date": "2026-05-06T15:39:47Z",
+      "source_paper": "_phase6o_W1a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "SoftTheorems.Boostless",
+        "SoftTheorems.Carrollian",
+        "SoftTheorems.EmergentGraviton",
+        "SoftTheorems.DissipativeNoGo",
+        "SoftTheorems.NoiseFloorPrediction"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:39:47Z",
+      "notes": "D.2 absorption: Phase 6o W1a boostless / Carrollian soft theorems on BEC + polariton; Strominger-triangle closure"
     }
   ]
 }

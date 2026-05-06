@@ -3486,7 +3486,7 @@ PAPER_DEPENDENCIES = {
         'key_claims': [
             '|α|²−|β|² = 1−δ_k (modified unitarity)',
             'Noise floor = δ_diss/(2(1−δ_diss))',
-            'Spectral floor at ω ≳ 6T_H',
+            'Spectral floor at ω_× = T_H ln(2/δ_diss) (≈2 T_H Heidelberg, ≈12 T_H Steinhauer)',
             'Acoustic BHs cool toward extremality',
         ],
     },

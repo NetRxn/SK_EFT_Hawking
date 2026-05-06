@@ -1,18 +1,20 @@
 # Bundle D2 — Source Manifest
 
-**Auto-generated:** 2026-05-04
+**Auto-generated:** 2026-05-06
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D2`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (4)
+## Contributing source papers (6)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
+| `_phase6n_W1b_lean_only` | §3 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W2a_lean_only` | §3 | (unspecified) | (see mapping) | (missing) |
 | `paper10_modular_generation` | §2 | Lift-letter | (see mapping) | 2026-05-01T18:57:16Z |
-| `paper7_chirality_formal` | §4 | Lift-section | (see mapping) | 2026-05-01T12:57:51Z |
-| `paper8_chirality_master` | §4 | Lift-section | (see mapping) | 2026-05-01T12:57:52Z |
+| `paper7_chirality_formal` | §4 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
+| `paper8_chirality_master` | §4 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
 | `paper9_sm_anomaly_drinfeld` | §3 | Lift-section | (see mapping) | 2026-04-25T07:48:13Z |
 
 ## Coverage notes

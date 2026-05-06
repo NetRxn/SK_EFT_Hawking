@@ -79,6 +79,8 @@ Sub-wave numbering (e.g., Wave 1a.1, 1a.2, …) replaces the Greek sub-wave labe
 | **Track 3 — ETH-α + Itô community contribution** | | | | | |
 | **Wave 3a** | G10-ETH-α productive-value Aristotle wave | ✅ **Lean substrate SHIPPED Sessions 33-34** (2 modules: ETH/Predicates.lean + ETH/ConcreteWitness.lean. Five candidate ETH axiomatizations encoded as Prop predicates (A1 Srednicki / A2 free-cumulant / A3 Helbig-et-al / A4 Wang ETP / A5 Inozemcev-Volovich-corrected) + concrete sandboxes (toy 1-dim + 4-dim Ising + 16-dim minimum-A4 substrate) + substantive structural distinctions (A5 ⟹ A1 strict-stronger; Inozemcev-Volovich gap typed at predicate-level; A4 fails for n < 16). **Wave 3a.4 Aristotle batch HELD** for productive-value refutation tableau iteration — would require concrete `theorem srednicki_implies_thermalization ... := by sorry` posed against MCP first per CLAUDE.md "MCP-first" discipline; deferred until concrete-theorem-with-sorry pose makes sense.) | D1 + I1 cross-bridge (additive hypothesis-tracking + refutation tableau) — **DEFERRED** | **D.2** | Aristotle submission user-auth (per `WAVE_EXECUTION_PIPELINE.md` Stage 4) |
 | **Wave 3b** | I3 Itô + LDP-α + LDP-β | ✅ **SHIPPED Session 40** (12 modules: 6 under SKEFTHawking/Itô/ — StochasticIntegral + QuadraticVariation + Semimartingale + ItoIsometry + ItoLemma + Novikov; 6 under SKEFTHawking/LDP/ — CramerIID + Sanov + Contraction + CramerLowerBound + Varadhan + LDPCompatibleSKEFT typeclass connecting Wave 3b LDP infrastructure to existing Phase 6n Wave 2c.5c+ IsLDPRateFunction + Phase 6n Wave 2a Glorioso-Liu monotonicity. Includes concrete instance on linearResponseRateFunctionCentered Gaussian rate function.) | **NEW BUNDLE I3** — bundle architecture user-auth GRANTED Phase 6n Session 4 | **N/A — bundle exists** | bundle-target gate already passed |
+| **Track 4 — Substrate-anchor refactors** | | | | | |
+| **Wave 4a** | Substrate-derived Sakharov Λ_J ↔ Λ_HK biconditional refactor (authorized 2026-05-08 user-call C2) | ⏳ **NOT STARTED** — extends `JacobsonThermoGRDarkEnergy.SakharovConditions` with ℝ-valued substrate-physics fields (`lambdaJ`, `lambdaHK`, plus optional `lambdaEffEqLambdaHK_witnessed : lambdaJ = lambdaHK`) populated from physics inputs (Volovik-Jannes ³He-A gap-energy substrate; FLS BEC depletion-factor; Verlinde 2017 entropic substrate). Re-attempts the genuine biconditional `sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk` against the new substrate-data structure. Risk-disclosed at user-call: the (⇐) direction may not hold without further conditions, in which case the wave terminates at the same `_implies_` Lean state but with substantively deeper substrate encoding. Triggered by Phase 7 absorption Session 4 (2026-05-07) D5 P5-anti-pattern audit + Session 5 (2026-05-08) primary-source-fidelity user direction "do that kind of thing from now on." | D5 §11 (refines current Phase 6e Sakharov 4-criterion section) — **DEFERRED to absorption pass** | **D.2** | none (substantive Lean work; FLS BEC dep-factor primary source dispatched as deep-research task) |
 
 **Wave dependencies:**
 - Wave 1a (G3 boostless soft-theorem) is independent.
@@ -88,6 +90,7 @@ Sub-wave numbering (e.g., Wave 1a.1, 1a.2, …) replaces the Greek sub-wave labe
 - Wave 2b (G1-Schellekens) depends on Phase 6n Wave 1b (G9 SymTFT audit + WittClass) closing — uses the categorical compression as substrate. **Phase 6n Wave 1b CLOSED Session 29 (2026-05-06)**: Wave 2b is unblocked.
 - Wave 3a (ETH-α) is independent.
 - Wave 3b (I3 Itô) is independent of all Phase 6n waves; bundle-architecture gate already cleared.
+- Wave 4a (Sakharov Λ_J ↔ Λ_HK substrate refactor) depends on `JacobsonThermoGRDarkEnergy.lean` SakharovConditions structure (already present); independent of all 7 prior 6o waves. Substrate-data from existing project Lean modules + Volovik 2003 (textbook) + Volovik-Jannes 2012; FLS BEC depletion-factor primary source dispatched as deep-research task `Lit-Search/Tasks/submitted/20260508_FLS_BEC_depletion_factor_lambda_substrate.md` (asynchronous return; substrate-fields can ship at placeholder values pending return).
 
 **Coherent sub-narrative.** Wave 1a + Wave 1b + Wave 1c form a single coordinated Track on the **emergent IR sector** of the program — boostless / Carrollian soft theorems + Kerr-Schild double-copy + dissipative-bootstrap NO-GO. Three positive-or-negative deliverables on the same emergent-IR substrate. Per Session-2 Shape C framing.
 
@@ -365,7 +368,7 @@ SKEFTHawking/ETH/
 
 ### Itô infrastructure (Wave 3b.Itô-α + Wave 3b.Itô-β)
 
-- **Wave 3b.Itô-α (substrate analysis + working doc):** read `Lit-Search/_Exploratory/Appendix-...md` §3 in full. Confirm Itô-explore findings against current Mathlib state (Marion's Markov kernels arXiv:2510.04070; Degenne brownian-motion repo arXiv:2511.20118; other 2025-2026 PRs). Working doc at `temporary/working-docs/phase6o/wave_3b_ito_substrate.md`.
+- **Wave 3b.Itô-α (substrate analysis + working doc):** read `Lit-Search/_Exploratory/Appendix-...md` §3 in full. Confirm Itô-explore findings against current Mathlib state (Degenne, "Markov kernels in Mathlib's probability library", arXiv:2510.04070, 2025 — primary-source-verified Phase 7 absorption Session 5 2026-05-08, supersedes carry-forward "Marion's Markov kernels" misattribution; Degenne–Ledvinka–Marion–Pfaffelhuber, "Formalization of Brownian motion in Lean", arXiv:2511.20118, 2025; other 2025-2026 PRs). Working doc at `temporary/working-docs/phase6o/wave_3b_ito_substrate.md`.
 - **Wave 3b.Itô-β.1 (StochasticIntegral.lean):** in-program L²-isometry construction from predictable elementary processes for Brownian-motion-only (the program's needed scope). Module path: `lean/SKEFTHawking/Itô/StochasticIntegral.lean` (in-program location — when user authorizes upstream PR, lifts to `Mathlib/Probability/StochasticCalculus/StochasticIntegral.lean`).
 - **Wave 3b.Itô-β.2 (QuadraticVariation.lean):** ⟨W⟩_t = t a.s.; covariation; in-program path `lean/SKEFTHawking/Itô/QuadraticVariation.lean`.
 - **Wave 3b.Itô-β.3 (Semimartingale.lean):** decomposition: martingale + finite-variation; in-program path `lean/SKEFTHawking/Itô/Semimartingale.lean`.
@@ -424,6 +427,45 @@ SKEFTHawking/LDP/
 - Multi-wave / multi-module scope (decompose into ≥ 12 atomic modules per `module decomposition` above).
 - Bundle architecture expansion 13 → 14 (precedent set; future Phase 6X+ Mathlib-upstream work can claim its own bundle target if first-mover community infrastructure).
 - LDP / Itô interaction with existing Phase 6n Wave 2c.5c+ `IsLDPRateFunction` (substantive) — Wave 3b.LDP-β.3 should consume the existing typeclass, not redefine it.
+
+---
+
+---
+
+## Wave 4a — Substrate-derived Sakharov Λ_J ↔ Λ_HK biconditional refactor ⏳ NOT STARTED
+
+**Genesis:** Phase 7 absorption Session 4 (2026-05-07) post-wave audit on D5 surfaced that the existing `JacobsonThermoGRDarkEnergy.sakharov_induced_gravity_criterion_implies_lambda_j_eq_lambda_hk` theorem is mathematically a *one-way* implication despite the underlying Phase 6e claim being phrased as a biconditional. Investigation confirmed `lambdaJEqLambdaHK := S.lambdaEffEqLambdaHK` is a literal Boolean projection (the "biconditional" reduces to `S.x = true → S.x = true`, a vacuous P5 anti-pattern) and substrate witnesses (`volovikJannes_he3a`, `flsBEC`) do not independently set `lambdaJ` and `lambdaHK` from physics inputs. Session-4 user-call C2 authorized this as a Phase-6X dedicated wave for substrate-derived refactor; Session 5 (2026-05-08) committed it as Phase 6o Wave 4a. **Risk-disclosed at user-call:** the (⇐) direction may not hold without further conditions, in which case the wave ships the same Lean state with substantively deeper substrate encoding (and the biconditional reading gets retired in D5 §11 prose).
+
+**Sub-wave decomposition (proposed; matures during session execution):**
+
+- **Wave 4a.1 (substrate analysis + working doc):** read Volovik 2003 *The Universe in a Helium Droplet* §27 (substrate-anchor Λ_HK on ³He-A) + Volovik-Jannes 2012 + FLS BEC depletion-factor primary source (deep-research task; see Wave 4a.2). Identify the substrate-side computation of Λ_HK = ⟨T_μν⟩_vacuum / g_μν vs Λ_J (gap-energy substrate scale) on each of the program's three substrates (³He-A; FLS BEC; Verlinde-style entropic). Working doc at `temporary/working-docs/phase6o/wave_4a_sakharov_lambda_substrate_refactor.md` extracting per-substrate ⟨T_μν⟩_vac and gap-energy values, with primary-source provenance for each.
+- **Wave 4a.2 (deep-research dispatch — FLS BEC depletion-factor primary source):** drop a Lit-Search task at `Lit-Search/Tasks/submitted/20260508_FLS_BEC_depletion_factor_lambda_substrate.md`. Goal: identify the explicit FLS BEC depletion-factor primary source (Finazzi-Liberati-Sindoni 2012; Liberati-Sindoni 2013; or successor papers) and extract the substrate-side computation of `Λ_eff` in BEC, with the depletion-factor pre-factor that distinguishes Λ_eff from Λ_HK. Asynchronous return; Wave 4a.3 can ship at placeholder values pending return and refit on close.
+- **Wave 4a.3 (SakharovConditions ℝ-valued extension):** extend `lean/SKEFTHawking/JacobsonThermoGRDarkEnergy.lean` `SakharovConditions` with new fields `lambdaJ : ℝ` (substrate-side gap-energy scale; Λ_J ∼ Δ₀⁴/(6π²ℏ³) on ³He-A), `lambdaHK : ℝ` (vacuum-energy substrate scale ⟨T_μν⟩_vac/g_μν), plus a Prop-typed witness field `lambdaEffEqLambdaHK_witnessed : lambdaJ = lambdaHK`. Re-populate the `volovikJannes_he3a` and `flsBEC` substrate witnesses from physics inputs (³He-A: `lambdaJ ≃ lambdaHK ≃ 1.6e-3` per gap energy; FLS BEC: `lambdaJ` substrate-scale phonon energy, `lambdaHK` vacuum energy times depletion factor — placeholder pending Wave 4a.2 return). Verify the existing Boolean projection layer continues to compute correctly under the new structure (backwards-compat).
+- **Wave 4a.4 (substantive biconditional re-attempt):** re-attempt `sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk` with the new ℝ-valued structure. The (⇒) direction now requires that all four Boolean conditions force `lambdaJ = lambdaHK` from substrate physics — non-trivial. The (⇐) direction is the genuine open-target: does `lambdaJ = lambdaHK` plus the structural Sakharov criterion fields imply the universal-coupling + induced-Newton + emergent-Lorentz fields? Likely requires *additional* substrate hypotheses (e.g., faithful-propagation of all matter sectors on a single emergent metric). **Outcome contingency:** if (⇐) holds under the substrate hypotheses, ship the genuine biconditional (load-bearing project finding); if (⇐) requires hypotheses too strong to be substantively claimed on the program's substrates, ship as `_implies_` (the same Lean assertion as today, but with substantively-deeper substrate encoding) and update D5 §11 to retire the biconditional reading.
+- **Wave 4a.5 (cross-bridge updates):** update `lean/SKEFTHawking/CrooksAnalogHawking/BiconditionalReformulation.lean` (Sakharov-related cross-bridges); update `JacobsonThermoGRDarkEnergy.lean:326-332` JTGR6 docstring + companion JTGR7/JTGR8 docstrings reflecting the new substrate encoding; update D5 §11 prose to reflect Wave 4a.4 outcome.
+- **Wave 4a.6 (working-doc deliverable + heatmap regen):** working-doc-grade memo at `temporary/working-docs/phase6o/wave_4a_sakharov_lambda_substrate_refactor_close.md` summarizing the outcome (genuine biconditional vs `_implies_` with deeper encoding), the substrate-physics provenance, and the D5 absorption note. Run `bundle_readiness.py` to confirm D5 stays GREEN.
+
+**Three-question template:**
+
+- *Integrates with:* `lean/SKEFTHawking/JacobsonThermoGRDarkEnergy.lean` SakharovConditions structure (Phase 6e); `BiconditionalReformulation.lean`; D5 §11 Sakharov 4-criterion cross-bridge; Volovik 2003 *Universe in a Helium Droplet* §27 substrate-anchor Λ_HK; Volovik-Jannes 2012 ³He-A computation of substrate Λ_J; FLS BEC depletion-factor primary source (Wave 4a.2 deep-research task); Verlinde 2017 entropic Λ; Phase 6m Track C M9 Volovik-Jannes substrate; existing `lambdaJ_he3a := 1.6e-3` placeholder in JacobsonThermoGRDarkEnergy.lean:369.
+- *New constraint adds:* substantively-deeper substrate encoding for the Sakharov 4-criterion. Either (a) genuine biconditional `Sakharov_4_criterion ↔ lambdaJ = lambdaHK` becomes provable (load-bearing publication-novelty result for D5 §11), OR (b) the biconditional is honestly retired in favor of a primary-source-grounded `_implies_` form with explicit substrate-witness data. Either outcome eliminates the P5 structural-tautology anti-pattern flagged at Phase 7 absorption Session 4.
+- *Tension surfaces:* whether the (⇐) direction holds at all under substrate hypotheses available in the program's three substrates (³He-A, FLS BEC, Verlinde-entropic). If yes, ship genuine biconditional; if no, ship same `_implies_` Lean state with deeper encoding. The risk-disclosed-at-authorization framing means *either outcome is acceptable*. FLS BEC depletion-factor primary-source dispatch may surface that the FLS BEC substrate has an explicit Λ_eff ≠ Λ_HK relation that breaks the (⇐) direction — productive finding either way.
+
+**Substrate.** Volovik 2003 *Universe in a Helium Droplet* §27 substrate-anchor Λ_HK; Volovik-Jannes 2012 substrate-side gap-energy Λ_J; FLS BEC depletion-factor primary source; existing `JacobsonThermoGRDarkEnergy.lean` SakharovConditions data structure.
+
+**Module decomposition (Lean):** in-place extension of existing modules; no new modules.
+```
+SKEFTHawking/JacobsonThermoGRDarkEnergy.lean      -- §4 SakharovConditions ℝ-valued extension
+SKEFTHawking/CrooksAnalogHawking/BiconditionalReformulation.lean  -- cross-bridge updates
+```
+
+**Bundle absorption.** D.2 additive into D5 §11 (refines Phase 6e Sakharov 4-criterion section with substrate-derived biconditional or substantively-deeper one-way implication). Cross-reference deep-research task at `Lit-Search/Tasks/submitted/20260508_FLS_BEC_depletion_factor_lambda_substrate.md`.
+
+**Risk axes.**
+- (⇐) direction may not hold under available substrate hypotheses — wave terminates at same Lean state with deeper encoding. **Pre-disclosed at user-call C2 authorization.**
+- FLS BEC depletion-factor primary-source verification asynchronous; substrate-fields ship at placeholder values pending return.
+- Substantive backwards-compatibility risk: extending SakharovConditions changes the structure shape; downstream callers (`volovikJannes_he3a`, `flsBEC`, JTGR6/7/8/9 theorems) all need re-population. P5-anti-pattern fix risks introducing P3 (algebraic-tautology) if substrate fields are populated trivially; mitigated by physics-input grounding at Wave 4a.3.
+- 2-4 sessions per user pre-disclosure; risk of multi-session overrun if substrate-physics derivation surfaces an obstruction.
 
 ---
 
@@ -544,3 +586,50 @@ Lake build clean at **8555 jobs (+6 vs Phase 6n Session 29 8549)**. All substant
 5. **Wave 1b** G4-Kerr-Schild (after Wave 1a substrate ships; algebraically clean).
 6. **Wave 2b** G1-Schellekens chain (multi-session 5-step composition; user-auth pre-draft for D2 reframing at unified absorption pass).
 7. **Wave 3b** I3 Itô + LDP-α + LDP-β (community Mathlib-grade in-program build; multi-session module decomposition).
+
+---
+
+## Phase 7 absorption pass TRIGGERED (2026-05-06; coordinated with Phase 6n)
+
+User direction at session start: "we're going to synthesize everything from 6n/6o in context of the larger program, and then write everything up using LATE_PHASE6_ABSORPTION_PROTOCOL.md... session by session until all remaining work in phases 6n & 6o is complete."
+
+**Phase 7 absorption authoritative plan:** `temporary/working-docs/phase6n_6o_unified_absorption_plan.md`. Captures the wave→bundle absorption matrix, per-bundle D-branch classification, sequencing for Stages A→G of `LATE_PHASE6_ABSORPTION_PROTOCOL.md`, and 3 D.3 user-auth gates surfaced together (1 from 6n.γ + 1 from 6n.ζ + 1 from 6o.ε).
+
+**Phase 6o → bundle absorption events** (D.2 unless noted):
+- **6o.α (Wave 1a)** — boostless / Carrollian soft theorems → D1 §6 + D3 §3 + D4 §6 + F §4 + E1 cross-bridge.
+- **6o.β (Wave 1b)** — Kerr-Schild + 3-obstruction BCJ NO-GO → D3 §6 + L1 cross-bridge + F §6 + E1 polariton ringdown.
+- **6o.γ (Wave 1c)** — G1 dissipative-bootstrap NO-GO writeup → D3 §10 + F §10 (writeup-only, no Lean).
+- **6o.δ (Wave 2a)** — APS-η for analog horizons → D2 §3 + D3 §17 + I1 §11 sidebar + F §6.
+- **6o.ε (Wave 2b)** — Schellekens chain reframing 24|c₋ → **D.3 D2 §2 + D.3 L2 paired splash** (GATE 3).
+- **6o.ζ (Wave 3a)** — G10-ETH-α refutation tableau → D4 §8 + I1 sidebar.
+- **6o.η (Wave 3b)** — Itô + LDP + LDPCompatibleSKEFT → **D.4 I3 (sourceless initial lift)** + D3 §6 cross-bridge.
+
+**Authoritative entry-state for absorption (2026-05-06; conversation-tail counts):** Lake 8586 jobs / 257 modules / 0 sorry / 1 axiom. The 8586-vs-roadmap-recorded-8585 delta is from Session 41 minor-housekeeping commit (post-Wave-3b dashboard/heatmap regen).
+
+**Phase 6o status: ALL 7 WAVES COMPLETE.** Pre-writeup state. Bundle absorption now the load-bearing remaining work.
+
+---
+
+## Phase 6n+6o → Phase 7 absorption pass — Sessions 1+2+3 CLOSE (2026-05-06 → 05-07)
+
+**Status:** Phase 6o D.2/D.3 absorption events SHIPPED into Phase 7 bundles. 13 of 14 bundles ALL-GREEN through Stages 9 + 10 + 13 of `BUNDLE_LIFT_PROCEDURE.md`; only **I3 remains in DRAFTING** — and I3 IS the Phase 6o Wave 3b `D.4` (sourceless initial lift) deliverable, so I3's substantive paper draft is itself a Phase 6o.ζ wave continuation, not an absorption event blocker.
+
+**Phase 6o-side absorption deliverables (subset of the 28 D.2/D.4 events):**
+- **6o.α (Wave 1a)** boostless / Carrollian soft theorems → D1 §6 + D3 §3 + D4 §6 + F §4 + E1 cross-bridge — appended.
+- **6o.β (Wave 1b)** Kerr-Schild + 3-obstruction BCJ NO-GO → D3 §6 + L1 cross-bridge + F §6 + E1 polariton ringdown — appended.
+- **6o.γ (Wave 1c)** G1 dissipative-bootstrap NO-GO writeup → D3 §10 + F §10 — appended.
+- **6o.δ (Wave 2a)** APS-η for analog horizons → D2 §3 + D3 §17 + I1 §11 sidebar + F §6 — appended.
+- **6o.ε (Wave 2b)** Schellekens chain reframing 24\|c₋ — **D.3 GATE 3 CLOSED**: D2 §2.7 + L2 paired splash committed with user-authorized prose (Möller-Scheithauer 2024 corollary framing); 5-step composed chain reads off as theorem-quality classification corollary.
+- **6o.ζ (Wave 3a)** G10-ETH-α refutation tableau → D4 §8 + I1 sidebar — appended.
+- **6o.η (Wave 3b)** Itô + LDP + LDPCompatibleSKEFT → I3 (sourceless initial lift) + D3 §6 cross-bridge — D3 cross-bridge appended; **I3 substantive drafting itself remains the Phase 6o.ζ wave continuation** (out-of-band of the absorption pass).
+
+**6o-specific carry-forward (non-blocking):**
+- I3 substantive drafting (Phase 6o.ζ separate track; bundle architecture user-auth ALREADY GRANTED Phase 6n Session 4; substantive paper draft is the deliverable).
+- Lean docstring sync `Schellekens/Chain.lean:76-77` (D2 V.8 advisory).
+- Adversarial-reviewer-discipline lesson banked (Session 3): WebFetch-and-compare bibitem titles is high-leverage fabrication detector. QI candidate raised: `validate.py --check bibitem_title_matches_arxiv`.
+
+**Phase 6o status — FINAL: ALL 7 WAVES COMPLETE; absorption-pass contribution COMPLETE** (modulo I3 substantive drafting which is itself the Wave 3b deliverable, not an absorption event).
+
+*Phase 6o absorption close marker, 2026-05-07.*
+
+*Phase 6o absorption-trigger marker, 2026-05-06.*

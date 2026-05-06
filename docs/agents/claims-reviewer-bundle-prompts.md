@@ -286,9 +286,14 @@ scoping document.
    must be supported by a literature search showing no prior
    Lean/Coq/Isabelle/HOL Light/Mizar formalization exists.
 2. **Mathlib substrate consumed.** Claims about consuming Brownian
-   motion (Degenne et al. arXiv:2511.20118), Doob martingales
-   (Ying-Degenne 2022), Markov kernels (Marion 2025), sub-Gaussian
-   variables, must trace to the named upstream Mathlib commits.
+   motion (Degenne–Ledvinka–Marion–Pfaffelhuber, "Formalization of
+   Brownian motion in Lean", arXiv:2511.20118, 2025), Doob martingales
+   (Ying-Degenne 2022), Markov kernels (Degenne, "Markov kernels in
+   Mathlib's probability library", arXiv:2510.04070, 2025;
+   primary-source verified Phase 7 absorption Session 5
+   2026-05-08 — supersedes carry-forward "Marion 2025"
+   misattribution), sub-Gaussian variables, must trace to the named
+   upstream Mathlib commits.
 3. **Reproducibility.** Each Lean module must build (no sorry, except
    documented stubs registered in `SORRY_GAPS`); the Mathlib upstream
    coordination memo's PR list must be live and cite-able.
@@ -296,8 +301,10 @@ scoping document.
    D5 / E1 downstream consumers must trace to specific Lean theorems
    in those modules that explicitly invoke the typeclass.
 5. **Mathlib upstream coordination integrity.** Claims about
-   coordination with Degenne / Marion must trace to actual Zulip /
-   GitHub coordination artifacts (not unilateral assertions).
+   coordination with Degenne et al. (Brownian motion authors:
+   Degenne, Ledvinka, Marion, Pfaffelhuber) or any Mathlib maintainer
+   must trace to actual Zulip / GitHub coordination artifacts (not
+   unilateral assertions).
 
 **Stage-13 profile:** software/methodology paper style (Tier 3 — same
 profile as I1 / I2). Each first-of-its-kind claim must trace to a

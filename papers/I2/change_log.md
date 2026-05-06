@@ -74,3 +74,11 @@ synthesis event referencing 28 Lean modules.
 Stage-13 redo required: yes. Reviewer triple (Stage 9/10/13) to be
 invoked next; per user directive 2026-05-01 they run as
 background processes against the bundle target I2.
+
+## 2026-05-06 — Lift-section from `_phase6n_W1b_lean_only` (§5)
+
+- Source title: SymTFT audit substrate
+- Lift action: Lift-section
+- Insertion point: §5
+- Stage-13 redo required: yes
+- Notes: D.2 sidebar: Phase 6n W1b lean-tensor-categories companion (SymTFTAudit substrate is Mathlib-grade in-program build; Phase 5o W5 cross-bridge)

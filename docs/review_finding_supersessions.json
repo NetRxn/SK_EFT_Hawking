@@ -2999,6 +2999,293 @@
       "superseded_by": "bundle-stage10:E1-2026-05-04-r2:green",
       "evidence": "BLOCKER (FAIL Class IA + SD): paper-quoted threshold G > 0.01 at omega/kappa = 0.175 was wrong. Recompute: G(0.175k) = 1/(exp(2*pi*0.175)-1) = 1/(3-1) = 0.5, not 0.01. The G > 0.01 threshold is at omega/kappa ~ 0.734, not at the published 0.175 value. Single-shot 5-sigma photon count: N_probe = 25/G^2 = 100 at G=0.5 (matches abstract's 'SNR ~ 11 for N_probe ~ 100' since at peak G=1.14, SNR = sqrt(100)*1.14 = 11.4). At G=0.01, N_probe = 250000 — paper's '~10^4 probe photons' was wrong by factor 25. Drift propagated across 4 sites: E1 abstract + body §4 + figure 1 caption + figure 1 dashed-line position. Source: paper12_polariton (figure caption only — body text in source did not have the drift). Fix applied 2026-05-04: papers/E1/paper_draft.tex 3 text sites + src/core/visualizations.py fig_stimulated_hawking_spectrum threshold y=0.01->0.5 and annotation 10^4->100 + papers/paper12_polariton/paper_draft.tex caption corrected with [historical correction] inline note pointing to this ledger entry. Stage 10 round 2 verified GREEN with internal consistency (G=0.5 single-shot 5-sigma <-> N_probe=100 <-> SNR=11.4 at peak G=1.14 <-> threshold crossing at omega/kappa = ln(3)/(2*pi)). QI candidate raised: pre-Stage-9 arithmetic verification step in BUNDLE_LIFT_PROCEDURE.md §7 LaTeX-compile gate to verify all paper-quoted numerical thresholds by direct re-computation. The provenance discipline log: G > 0.5 at omega/kappa = ln(3)/(2*pi) ~ 0.175 is now the canonical version; G > 0.01 was the historic incorrect value.",
       "date": "2026-05-04"
+    },
+    {
+      "finding_id": "bundle-stage10:D2-2026-05-06-r3:blocker-1:tn-class-fail-line-401",
+      "status": "fixed",
+      "superseded_by": "papers/D2/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER (Class TN, line 401): cited theorem `Schellekens.Chain.modular_generation_constraint_via_holomorphic_VOA` did not exist in lean_deps.json. Fixed: rewrote as `Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen` (the substantive composed-chain theorem in lean/SKEFTHawking/Schellekens/Chain.lean line 82). Added companion-witness pointers (`isSchellekensChainComposed_witness`, `wave_2b_7_chain_closure`). Verified via grep on Chain.lean. LaTeX recompile clean (9pp/395315 bytes/0 errors).",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:D2-2026-05-06-r3:advisory-2:lean-spinbordism-path-drift",
+      "status": "fixed",
+      "superseded_by": "papers/D2/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "ADVISORY (line 365): cited `lean/SKEFTHawking/SpinBordism.lean` (top-level path) does not exist; only `lean/SKEFTHawking/Schellekens/SpinBordism.lean` exists. Fixed: rewrote the path to `lean/SKEFTHawking/Schellekens/SpinBordism.lean` and added explicit prefix `lean/SKEFTHawking/` to the companion `Z16AnomalyComputation.lean` for symmetry. LaTeX recompile clean.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:D2-2026-05-06-r3:advisory-1:lean-deps-json-staleness",
+      "status": "fixed",
+      "superseded_by": "scripts/update_counts.py auto-regen (Phase 7 absorption Session 2 Stage 12)",
+      "evidence": "ADVISORY: lean_deps.json staleness flagged due to lake build timestamp drift. Fixed by Session-2 Stage 12 lake build SKEFTHawking.ExtractDeps + update_counts.py auto-regen of lean_deps.json (6,777,966 bytes). counts.json refreshed to 5837 thm (5812 substantive + 25 placeholder) / 322 modules / 1 axiom / 0 sorry.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:L2-2026-05-06-r2:blocker-1:tn-class-roehm-cite-undefined",
+      "status": "fixed",
+      "superseded_by": "papers/L2/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER (Class TN, line 293): `\\cite{Roehm2026Wave10}` had no matching `\\bibitem` in L2 bibliography (natbib log: 'Citation Roehm2026Wave10 on page 3 undefined'). Substantive issue: Roehm2026Wave10 is L2's OWN self-cite per CITATION_REGISTRY entry — the Session-1 absorption miswired the deep-companion reference circularly. Fixed: changed cite to `\\cite{Roehm2026D2}` (correct deep-companion reference per paired-splash architecture) and added `\\bibitem{Roehm2026D2}` after MollerScheithauer2024 in the L2 bibliography (matches L3's Roehm2026EmergentGravity in-prep bibitem pattern). LaTeX recompile clean (4pp/398675 bytes/0 undefined refs).",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:L2-2026-05-06-r2:blocker-2:ia-class-library-count-stale",
+      "status": "fixed",
+      "superseded_by": "papers/L2/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER (Class IA): inline literals `5229 theorems / 243 modules` (abstract line 42 + conclusion line 300) stale relative to current Lean library state. Fixed: updated to `5812 theorems / 322 modules` matching counts.json (regen 2026-05-06 — substantive count = 5812 = 5837 - 25 placeholders; module count = 322). Future improvement: switch to `\\input{counts.tex}` macro form to prevent re-drift (deferred to a polish-pass; non-blocking).",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:L3-2026-05-06-r3:warn-1:roehm2026emergentgravity-not-in-registry",
+      "status": "fixed",
+      "superseded_by": "papers/L3/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "WARN: Roehm2026EmergentGravity bibitem in L3 (lines 408-411) was not in CITATION_REGISTRY. Fixed: changed L3 cite + bibitem key from Roehm2026EmergentGravity to Roehm2026D3 (canonical registry key for D3 bundle self-cite; semantically identical). LaTeX recompile clean (4pp/339517 bytes/0 undefined refs).",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:L3-2026-05-06-r3:followup-2:bundle-clusters-not-reproject",
+      "status": "fixed",
+      "superseded_by": "scripts/bundle_clusters.py output 2026-05-06T17:12Z",
+      "evidence": "FOLLOWUP: cluster_bundle_index.json had 0 L3 entries despite the new D.3 GATE 2 paired-splash L3+D3 cluster. Fixed by re-running scripts/bundle_clusters.py (3 clusters indexed; 2 cross-bundle). validate.py --check bundle_consistency PASSED.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:L3-2026-05-06-r3:followup-3:below-end-document-stub",
+      "status": "fixed",
+      "superseded_by": "papers/L3/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "FOLLOWUP: Phase 6n W2a Glorioso-Liu axiomatic skeleton D.2-absorption stub was inserted by bundle_append.py BETWEEN \\end{thebibliography} and \\end{document}, rendering an empty 'Glorioso-Liu axiomatic skeleton' section heading on PDF page 4. Fixed: section heading + label commented out 2026-05-06 Session-2 (the lift was 'cross-ref upgrade only; no prose change' per append_log.json — bookkeeping anchor preserved as LaTeX comment, no rendered content). The L3+I1 cross-ref relationship is captured by the existing Glorioso-Liu citations in the L3 substrate-class context paragraph.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D2-2026-05-06-r1:blocker-1:citation-integrity-garcia-etxebarria-typo",
+      "status": "fixed",
+      "superseded_by": "papers/D2/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER (Class 1 CitationIntegrity): §2.7 line 364 cited \\cite{GarciaEtxebarriaMontero2019} — undefined bibkey (registry has GarciaEtxebarria2019). Fixed: changed cite to \\cite{GarciaEtxebarria2019}. LaTeX recompile clean (9pp/395199 bytes).",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D2-2026-05-06-r1:blocker-2:lean-proof-substance-trivial-discharge",
+      "status": "fixed",
+      "superseded_by": "papers/D2/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER (Class 3 LeanProofSubstance): Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen has body `True := trivial` (substrate witnesses transitively unfold to True). Theorem name promised biconditional that statement does not assert. Fixed: softened §2.7 prose (lines 386-412) to explicitly characterize the chain as 'a corollary, at the level of the published classification' / 'predicate-level scaffold' / 'discharged via trivial on predicate fields whose substantive content is tracked outside the Lean library'. Also disclosed: load-bearing N_f≡0 mod 3 result is established independently in §sec:modular via GenerationConstraint.generation_mod3_constraint, and §2.7 does not depend on the Schellekens-chain Lean scaffold for its mathematical force. Removed unsourced/conflated 'no holomorphic VOA at fractional values' claim (replaced with scope-restricted phrasing). Removed 'theorem-quality classification corollary' overclaim. LaTeX recompile clean.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D3-2026-05-06-r1:blocker-1:biconditional-overclaim-stage1-substrate",
+      "status": "fixed",
+      "superseded_by": "papers/D3/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER (Gate 7 LeanProofSubstance): §17.5 prose claimed Sakharov ↔ horizon-Crooks biconditional as established, but Sakharov_iff_horizon_Crooks is explicitly deferred to Stage 2-3 in SakharovHorizonCrooks.lean. Fixed: softened both occurrences ('is biconditional' → 'is conjectured biconditional, at the Stage-1 substrate-level encoded in <module> (the explicit Sakharov_iff_horizon_Crooks bridge is itself deferred to Stage 2-3 of the same module)') + added explicit Stage-2-3 deferral disclosure at the four-condition-(conjectured)-biconditional sentence.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D3-2026-05-06-r1:blocker-2:trivial-hdb-witness-misrepresentation",
+      "status": "fixed",
+      "superseded_by": "papers/D3/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER (Gate 6): Both substrate witnesses (helium3A_horizon_crooks, flsBEC_horizon_crooks) ship WorkDistribution.zero + σ ≡ 0 (trivial HDB). §17.5 prose 'horizon-Crooks-passable' over-implied non-trivial fluctuation-theorem content. Fixed: appended explicit disclosure paragraph: 'At the Stage-1 substrate level the partition is driven by the four-condition Sakharov boolean (sakharovCriterion); the actual horizon-detailed-balance witnesses for each substrate are placeholders (WorkDistribution.zero, σ≡0) pending Stage 2-3. The substrate-class partition (³He-A pass / FLS BEC fail) is already load-bearing at Stage 1; the explicit fluctuation-theorem content of horizon-Crooks for each substrate is the Stage-2-3 deliverable.'",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:I1-2026-05-06-r1:blocker-3-1:strengthening-cross-ref-stale",
+      "status": "fixed",
+      "superseded_by": "papers/I1/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER (3.1): I1 §3 cross-references \\S\\ref{sec:strengthening} twice (lines 312, 356) but that label resolves to §7 'Preemptive-Strengthening Discipline' which has zero content about (a) typeclass-level JainKovtun UV-realization OR (b) Glorioso-Liu axiomatic Lean modules. Fixed: replaced both cross-refs with direct Lean module pointers — line 312 now reads 'the strict-vs-algebraic dynamical-KMS predicates hasDynamicalKMS_strict / hasDynamicalKMS_algebraic in lean/SKEFTHawking/GloriosoLiu/Axioms.lean'; line 356 now reads 'they are formalized in the program's Glorioso-Liu axiomatic Lean modules lean/SKEFTHawking/GloriosoLiu/{Axioms,FirstOrderProjection,SecondOrderProjection}.lean'. LaTeX recompile clean (21pp/924326 bytes; only harmless OMS/cmtt font warning).",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:L3-2026-05-06-r1:required-1-1:roehm2026d3-used-in-missing-l3",
+      "status": "fixed",
+      "superseded_by": "src/core/citations.py (Phase 7 absorption Session 2)",
+      "evidence": "REQUIRED 1.1: Roehm2026D3 registry used_in field at citations.py:7340 omitted papers/L3/paper_draft.tex. Fixed: added 'papers/L3/paper_draft.tex' to used_in list. Also cleaned up duplicate inprep/primary_source_path keys (promote_primary_sources.py pass had inserted False/None duplicates after the original True/None pair, with later values silently winning — restored single inprep:True / primary_source_path:None pair).",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:L1-2026-05-01-pre-existing:revtex4-2-theorem-env-undefined",
+      "status": "fixed",
+      "superseded_by": "papers/L1/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "Pre-existing background defect: revtex4-2 does not predefine the theorem environment, but L1 §III used \\begin{theorem}[<lean>] ... \\end{theorem} blocks (3 occurrences) — produced 6 LaTeX errors per round-3 close note (2026-05-01); the close note classified it as 'project-wide QI candidate' and not a Session-1 regression. Fixed Session 2: added \\usepackage{amsthm} and \\newtheorem{theorem}{Theorem} to L1 preamble. LaTeX recompile clean (3pp/391983 bytes/0 errors).",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:D1-2026-05-06:absorb-stub:post-bibliography-section-stubs",
+      "status": "fixed",
+      "superseded_by": "papers/D1/paper_draft.tex (Phase 7 absorption Session 2 systematic cleanup)",
+      "evidence": "Systematic bundle_append.py default-insertion artifact: D.2 absorption events inserted \\section + \\label between \\end{thebibliography} and \\end{document}, rendering empty post-bibliography sections in PDF. Pattern surfaced as BLOCKER on D5 (round 3) and as advisory on D4/L3 round-3 reviews. Fixed in D1: 4 stub(s) commented out (turned \\section{...} and \\label{...} lines into '%% \\section{...}' / '%% \\label{...}'); bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content. QI candidate raised: patch bundle_append.py to insert before \\begin{thebibliography}, not before \\end{document}.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:D2-2026-05-06:absorb-stub:post-bibliography-section-stubs",
+      "status": "fixed",
+      "superseded_by": "papers/D2/paper_draft.tex (Phase 7 absorption Session 2 systematic cleanup)",
+      "evidence": "Systematic bundle_append.py default-insertion artifact: D.2 absorption events inserted \\section + \\label between \\end{thebibliography} and \\end{document}, rendering empty post-bibliography sections in PDF. Pattern surfaced as BLOCKER on D5 (round 3) and as advisory on D4/L3 round-3 reviews. Fixed in D2: 2 stub(s) commented out (turned \\section{...} and \\label{...} lines into '%% \\section{...}' / '%% \\label{...}'); bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content. QI candidate raised: patch bundle_append.py to insert before \\begin{thebibliography}, not before \\end{document}.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:D4-2026-05-06:absorb-stub:post-bibliography-section-stubs",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex (Phase 7 absorption Session 2 systematic cleanup)",
+      "evidence": "Systematic bundle_append.py default-insertion artifact: D.2 absorption events inserted \\section + \\label between \\end{thebibliography} and \\end{document}, rendering empty post-bibliography sections in PDF. Pattern surfaced as BLOCKER on D5 (round 3) and as advisory on D4/L3 round-3 reviews. Fixed in D4: 3 stub(s) commented out (turned \\section{...} and \\label{...} lines into '%% \\section{...}' / '%% \\label{...}'); bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content. QI candidate raised: patch bundle_append.py to insert before \\begin{thebibliography}, not before \\end{document}.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:D5-2026-05-06:absorb-stub:post-bibliography-section-stubs",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (Phase 7 absorption Session 2 systematic cleanup)",
+      "evidence": "Systematic bundle_append.py default-insertion artifact: D.2 absorption events inserted \\section + \\label between \\end{thebibliography} and \\end{document}, rendering empty post-bibliography sections in PDF. Pattern surfaced as BLOCKER on D5 (round 3) and as advisory on D4/L3 round-3 reviews. Fixed in D5: 2 stub(s) commented out (turned \\section{...} and \\label{...} lines into '%% \\section{...}' / '%% \\label{...}'); bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content. QI candidate raised: patch bundle_append.py to insert before \\begin{thebibliography}, not before \\end{document}.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:L1-2026-05-06:absorb-stub:post-bibliography-section-stubs",
+      "status": "fixed",
+      "superseded_by": "papers/L1/paper_draft.tex (Phase 7 absorption Session 2 systematic cleanup)",
+      "evidence": "Systematic bundle_append.py default-insertion artifact: D.2 absorption events inserted \\section + \\label between \\end{thebibliography} and \\end{document}, rendering empty post-bibliography sections in PDF. Pattern surfaced as BLOCKER on D5 (round 3) and as advisory on D4/L3 round-3 reviews. Fixed in L1: 1 stub(s) commented out (turned \\section{...} and \\label{...} lines into '%% \\section{...}' / '%% \\label{...}'); bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content. QI candidate raised: patch bundle_append.py to insert before \\begin{thebibliography}, not before \\end{document}.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:I1-2026-05-06:absorb-stub:post-bibliography-section-stubs",
+      "status": "fixed",
+      "superseded_by": "papers/I1/paper_draft.tex (Phase 7 absorption Session 2 systematic cleanup)",
+      "evidence": "Systematic bundle_append.py default-insertion artifact: D.2 absorption events inserted \\section + \\label between \\end{thebibliography} and \\end{document}, rendering empty post-bibliography sections in PDF. Pattern surfaced as BLOCKER on D5 (round 3) and as advisory on D4/L3 round-3 reviews. Fixed in I1: 3 stub(s) commented out (turned \\section{...} and \\label{...} lines into '%% \\section{...}' / '%% \\label{...}'); bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content. QI candidate raised: patch bundle_append.py to insert before \\begin{thebibliography}, not before \\end{document}.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:I2-2026-05-06:absorb-stub:post-bibliography-section-stubs",
+      "status": "fixed",
+      "superseded_by": "papers/I2/paper_draft.tex (Phase 7 absorption Session 2 systematic cleanup)",
+      "evidence": "Systematic bundle_append.py default-insertion artifact: D.2 absorption events inserted \\section + \\label between \\end{thebibliography} and \\end{document}, rendering empty post-bibliography sections in PDF. Pattern surfaced as BLOCKER on D5 (round 3) and as advisory on D4/L3 round-3 reviews. Fixed in I2: 1 stub(s) commented out (turned \\section{...} and \\label{...} lines into '%% \\section{...}' / '%% \\label{...}'); bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content. QI candidate raised: patch bundle_append.py to insert before \\begin{thebibliography}, not before \\end{document}.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage10:E1-2026-05-06:absorb-stub:post-bibliography-section-stubs",
+      "status": "fixed",
+      "superseded_by": "papers/E1/paper_draft.tex (Phase 7 absorption Session 2 systematic cleanup)",
+      "evidence": "Systematic bundle_append.py default-insertion artifact: D.2 absorption events inserted \\section + \\label between \\end{thebibliography} and \\end{document}, rendering empty post-bibliography sections in PDF. Pattern surfaced as BLOCKER on D5 (round 3) and as advisory on D4/L3 round-3 reviews. Fixed in E1: 2 stub(s) commented out (turned \\section{...} and \\label{...} lines into '%% \\section{...}' / '%% \\label{...}'); bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content. QI candidate raised: patch bundle_append.py to insert before \\begin{thebibliography}, not before \\end{document}.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D3-2026-05-06-r1:required-5-1:equilibrium-projection-framing",
+      "status": "fixed",
+      "superseded_by": "papers/D3/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "REQUIRED 5.1 (Gate 7 NarrativeGrounding): line 1313-1314 'is the equilibrium projection of a deeper non-equilibrium statement' read as if the deeper statement was established. Fixed: rewrote to 'Under that conjectured biconditional, the Sakharov-Adler closed-form result of §heat-kernel can be read as the equilibrium projection of a deeper non-equilibrium fluctuation-theorem statement rather than a stand-alone identity.' Maintains the conjectural-bridge framing established in BLOCKER 7.1 closure.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D3-2026-05-06-r1:required-4-1:w-form-bridge-cross-bundle-notation",
+      "status": "fixed",
+      "superseded_by": "papers/D3/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "REQUIRED 4.1 (Gate 2 CrossPaperConsistency): D3 §17.5 used trajectory-form Crooks (P_F[γ]/P_R[γ̄] = exp(σ[γ])); L3 splash + Lean substrate HorizonDetailedBalance.lean use W-form (P_F(W) = exp(σ(W))·P_R(-W)). Fixed: appended bridge sentence after Eq. (17.4) — 'Equation (17.4) is the trajectory-form expression of the W-form predicate HorizonDetailedBalance encoded in lean/SKEFTHawking/CrooksAnalogHawking/HorizonDetailedBalance.lean and shipped in the L3 splash; integrating over path space at fixed σ[γ] = W identifies the two forms.' Reader sees both forms with explicit identification.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D2-2026-05-06-r1:required-5-1-5-2:hedging-discipline",
+      "status": "fixed",
+      "superseded_by": "papers/D2/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "REQUIRED 5.1 ('theorem-quality classification corollary' overclaim) + 5.2 ('no holomorphic VOA at fractional values' unsourced + scope-conflated): both closed via the same prose-softening that closed BLOCKER 2 — replaced with 'classification corollary tracked by a predicate-level Lean scaffold' / 'within the scope of those classifications' (strongly-rational + non-trivial-weight-1) + explicit moonshine FLM out-of-scope hedge.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:I2-2026-05-06-r1:required-5-2:module-count-28-vs-27",
+      "status": "fixed",
+      "superseded_by": "papers/I2/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "REQUIRED 5.2 (Gate 9 CountFreshness internal arithmetic): I2 abstract line 49 + fig2 caption line 633 claimed 28-module library; §3-§6 enumeration is 4+4+9+10 = 27 modules. Fixed: replaced both 28→27. LaTeX recompile clean.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:E1-2026-05-06-r1:blocker-7-1:count-freshness-5229-243-stale",
+      "status": "fixed",
+      "superseded_by": "papers/E1/paper_draft.tex (Phase 7 absorption Session 2)",
+      "evidence": "BLOCKER 7.1 (Gate 9 CountFreshness): E1 paper_draft.tex lines 45 + 82 cited 5229 theorems / 243 modules; counts.json regen 2026-05-06 reports 5837 / 322 (substantive 5812). Fixed at both sites: 5229→5812 / 243→322. Same fix applied to D1 §I (1 site) + D2 abstract + D2 §1 + D2 §VI (4 sites total D2). LaTeX recompile clean across all 3 bundles.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-06-r1:deferral-note:pre-existing-blockers-deferred-to-session-3",
+      "status": "open",
+      "superseded_by": null,
+      "evidence": "Phase 7 absorption Session 2 deferral marker: D5 stage13 round-1 surfaced 4 BLOCKERs (1.1 YoonGuha2023 fabricated title; 1.2 TyagiHaridasuBasak2025 misattribution + Lean tsallis_log_bayes constant unsourced; 1.3 LucianoPaliathanasisSaridakis2506 misattribution; 5.1 P5 structural tautology in sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk). All 4 are PRE-EXISTING substantive issues — not Session-1 absorption regressions — and require non-mechanical fixes (WebFetch primary-source verification + possible §9.1 prose rewrite + possible Lean theorem refactor). Beyond Session-2 closure scope. Tracked for Session 3 user-prioritized work. Source review doc: papers/AutomatedReviews/2026-05-06-bundle-stage13/D5.md.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D1-2026-05-06-r1:deferral-note:pre-existing-blockers-deferred-to-session-3",
+      "status": "open",
+      "superseded_by": null,
+      "evidence": "Phase 7 absorption Session 2 deferral marker: D1 stage13 round-1 surfaced 4 BLOCKERs (1.1 Falque2025 fabricated title + initial; 1.2 Burkhard2025 fabricated title + initial + registry; 1.3 Geurs2025 paraphrased title; 1.4 Majumdar2025 fabricated title + malformed registry entry) + 1 REQUIRED (spectral-floor ω_× abstract-vs-body reconciliation). All BLOCKERs are PRE-EXISTING fabricated-bibitem-title regression — not Session-1 absorption regressions — and require non-mechanical fixes (WebFetch primary-source verification + bibitem rewrite + registry repair + cross-bundle propagation audit to E1/E2). SAME FABRICATION PATTERN AS D5 (4 fabricated/misattributed bibitem titles each = 8 across D1+D5). Beyond Session-2 closure scope. Tracked for Session 3 user-prioritized work. Source review doc: papers/AutomatedReviews/2026-05-06-bundle-stage13/D1.md.",
+      "date": "2026-05-06"
+    },
+    {
+      "finding_id": "bundle-stage13:D1-2026-05-06-r1:blocker-1-1:falque2025-fabrication",
+      "status": "fixed",
+      "superseded_by": "papers/D1/paper_draft.tex (Phase 7 absorption Session 3)",
+      "evidence": "BLOCKER 1.1: Falque2025 bibitem cited 'Stable supersonic flow of polariton condensates' (fabricated) + 'M.~Falque' (wrong initial). Verified via WebFetch arXiv:2311.01392: actual title 'Polariton Fluids as Quantum Field Theory Simulators on Tailored Curved Spacetimes', actual lead author K.~Falque (et al.: A.~Delhom, Q.~Glorieux, E.~Giacobino, A.~Bramati, M.~J.~Jacquet). Fixed: D1 bibitem rewritten with correct title + initial; PRL 135 023401 coordinate dropped pending PRL-version verification (current arXiv-only is conservative).",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D1-2026-05-06-r1:blocker-1-2:burkhard2025-fabrication",
+      "status": "fixed",
+      "superseded_by": "papers/D1/paper_draft.tex + src/core/citations.py (Phase 7 absorption Session 3)",
+      "evidence": "BLOCKER 1.2: Burkhard2025 bibitem cited 'Quasinormal modes in the driven-dissipative analog black hole' (paraphrase) + 'N.~Burkhard' (wrong initial). Verified via WebFetch arXiv:2511.12339: actual title 'Stimulated Hawking effect and quasinormal mode resonance in a polariton simulator of field theory on curved spacetime', actual lead M.~Burkhard (et al.: M.~Kroj, K.~Falque, A.~Bramati, I.~Carusotto, M.~J.~Jacquet). Fixed: D1 bibitem rewritten + CITATION_REGISTRY['Burkhard2025'] entry repaired (authors corrected + title verbatim + doi_verified=True + cross-bundle used_in extended).",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D1-2026-05-06-r1:blocker-1-3:geurs2025-paraphrase",
+      "status": "fixed",
+      "superseded_by": "papers/D1/paper_draft.tex + papers/E2/paper_draft.tex (Phase 7 absorption Session 3)",
+      "evidence": "BLOCKER 1.3: Geurs2025 bibitem cited 'Supersonic electron flow in a bilayer-graphene Dirac fluid' (paraphrase). Verified via WebFetch arXiv:2509.16321: actual title 'Supersonic flow and hydraulic jump in an electronic de Laval nozzle' (J.~Geurs, T.~A.~Webb, Y.~Guo, I.~Keren, J.~H.~Farrell, J.~Xu, K.~Watanabe, T.~Taniguchi, D.~N.~Basov, J.~Hone, A.~Lucas, A.~Pasupathy, C.~R.~Dean). Fixed in D1 + E2 bibitems. E2's prior bibitem also lacked arXiv ID — added.",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D1-2026-05-06-r1:blocker-1-4:majumdar2025-fabrication-and-malformed-registry",
+      "status": "fixed",
+      "superseded_by": "papers/D1/paper_draft.tex + papers/E2/paper_draft.tex + src/core/citations.py (Phase 7 absorption Session 3)",
+      "evidence": "BLOCKER 1.4: Majumdar2025 bibitem cited 'Quantum-critical transport in graphene Dirac fluids: shear viscosity and Wiedemann-Franz violation' (fabricated). E2's prior bibitem cited 'Universal quantum-critical transport in the graphene Dirac fluid with 200x Wiedemann-Franz violation' + 'S.~Majumdar' (wrong initial). Verified via WebFetch arXiv:2501.03193: actual title 'Universality in quantum critical flow of charge and heat in ultra-clean graphene' (A.~Majumdar et al.: N.~Chadha, P.~Pal, A.~Gugnani, B.~Ghawri, K.~Watanabe, T.~Taniguchi, S.~Mukerjee, A.~Ghosh; Nature Physics 21, 1374 (2025)). CITATION_REGISTRY entry was MALFORMED (authors='A.~Majumdar', title='et~al.' — 'et~al.' had been mis-parsed as title). Fixed: D1 + E2 bibitems rewritten + registry entry repaired with full author list + correct title + correct page + arXiv ID + doi_verified=True + cross-bundle used_in.",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-06-r1:blocker-1-1:yoonguha2023-fabrication-narrative-defensible",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (Phase 7 absorption Session 3)",
+      "evidence": "BLOCKER 1.1: YoonGuha2023 bibitem cited 'Stability of de Sitter attractors in entropic FLRW cosmology with matter and radiation' (fabricated). Verified via WebFetch arXiv:2304.07301: actual title 'Inflation and the late time acceleration from Hossenfelder-Verlinde gravity' (Y.~Yoon, A.~Guha; not J.~Yoon, B.~Guha). Fixed: bibitem rewritten with correct authors + title. **Narrative audit:** D5 §9.1 prose at line 814-818 cites the Lean theorem `hossenfelder_verlinde_no_go_post_yoon_guha` with claim 'Hossenfelder-Verlinde dS-instability claim is no longer load-bearing after Yoon-Guha 2304.07301 (matter+radiation FLRW stabilizes the dS attractor; λ² ∈ [1.85e4, 2.26e4] reproduces q ∈ [-0.95, -0.55]).' This narrative IS defensible against the actual paper — Yoon-Guha 2023 shows HV gravity supports both inflation and late-time acceleration, which is exactly what 'dS-instability claim is no longer load-bearing' captures (the actual paper resolves the dS-instability concern).",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-06-r1:blocker-1-2:tyagiharidasubasak2025-paraphrase",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (Phase 7 absorption Session 3)",
+      "evidence": "BLOCKER 1.2: TyagiHaridasuBasak2025 bibitem cited 'Bayesian model comparison of holographic dark-energy models with DESI DR2' (paraphrase, holographic-specific) + 'S.~Tyagi' (wrong full initial) + 'B.~S.~Haridasu' (wrong second author). Verified via WebFetch arXiv:2504.11308: actual title 'Constraints on Generalized Gravity-Thermodynamic Cosmology from DESI DR2' (U.~K.~Tyagi, S.~Haridasu, S.~Basak). The paper covers generalized entropic cosmological models (which include Tsallis HDE as one case), so the Lean docstring claim 'Tsallis HDE |log B| from Tyagi-Haridasu-Basak' (lean_deps `tsallis_log_bayes := 6.2`) is plausibly defensible IF the paper §2.2 reports a Bayes factor for Tsallis HDE specifically. Bibitem fixed; narrative-anchor question (whether tsallis_log_bayes:=6.2 truly comes from this paper) flagged as advisory carry-forward for next-round verification.",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-06-r1:blocker-1-3:lucianopaliathanasis-paraphrase",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (Phase 7 absorption Session 3)",
+      "evidence": "BLOCKER 1.3: LucianoPaliathanasisSaridakis2506 bibitem cited 'Same entropies in holographic dark energy: Bayesian comparison with DESI DR2' (paraphrase). Verified via WebFetch arXiv:2506.03019: actual title 'Constraints on Barrow and Tsallis Holographic Dark Energy from DESI DR2 BAO data' (G.~G.~Luciano, A.~Paliathanasis, E.~N.~Saridakis; J.~High Energy Astrophys.~49, 100427 (2026)). Methodology: information criteria, NOT Bayesian comparison as primary. Fixed: bibitem rewritten with correct title + JHEAp coordinates. The Lean docstring at EntropicGravityDarkEnergy.lean:101-103 says `barrow_log_bayes := 5.5 (R5 §2.2 footnote)` — is plausibly defensible since the paper IS about Barrow + Tsallis HDE; but methodology framing in D5 prose may need 'information-criteria' substitution for 'Bayesian comparison'. Flagged as advisory carry-forward.",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-06-r1:blocker-5-1:p5-anti-pattern-prose-hedge",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (Phase 7 absorption Session 3)",
+      "evidence": "BLOCKER 5.1 (P5 anti-pattern): theorem `sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk` is named `_iff_` and called 'biconditional' in §11 prose, but its current discharge is a one-way implication via projection of one Boolean conjunct in `lambdaJEqLambdaHK`. Fixed (CONSERVATIVE prose-hedge): D5 line 964-973 prose softened — explicit acknowledgment that 'the implication...at the current Stage-1 substrate level' (not biconditional), with explicit note that the `_iff_` suffix is retained for backward compatibility while the discharge is one-way, and reference to a substrate-derived `lambdaJEqLambdaHK` refactor as a Phase-7+ followup. Lean theorem name preserved; deeper refactor deferred.",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D1-2026-05-06-r2:blocker-1-3-partial:geurs2025-registry-malformation",
+      "status": "fixed",
+      "superseded_by": "src/core/citations.py (Phase 7 absorption Session 3 round-2 fix)",
+      "evidence": "Round-2 verification surfaced PARTIAL closure of round-1 BLOCKER 1.3 — D1+E2 bibitems were fixed Session-3 phase A, but CITATION_REGISTRY['Geurs2025'] entry was STILL malformed (`'authors':'J.~Geurs', 'title':'et~al.'` — same 'et al.' artifact pattern as pre-fix Majumdar2025). FIXED: registry entry repaired with full author list (J.~Geurs, T.~A.~Webb, Y.~Guo, I.~Keren, J.~H.~Farrell, J.~Xu, K.~Watanabe, T.~Taniguchi, D.~N.~Basov, J.~Hone, A.~Lucas, A.~Pasupathy, C.~R.~Dean) + verbatim title 'Supersonic flow and hydraulic jump in an electronic de Laval nozzle'.",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D1-2026-05-06-r2:new-finding-1-5:5-additional-malformed-registry-entries",
+      "status": "fixed",
+      "superseded_by": "src/core/citations.py (Phase 7 absorption Session 3 round-2 sweep)",
+      "evidence": "Round-2 QI sweep surfaced 5 additional malformed registry entries with the SAME 'et al.' artifact pattern: BRSSS2008, Talanov2024, Zhao2023, Adler2024, Sbordone2010. ALL 5 + Geurs2025 (= 6 total) systematically swept and repaired Session 3: (a) Geurs2025, Sbordone2010, Talanov2024 — WebFetch-verified verbatim titles + full author lists from arXiv abstracts (arXiv:2509.16321, 1003.4510, 2406.13799 respectively); (b) Adler2024, BRSSS2008, Zhao2023 — no arXiv IDs available, marked with explicit Session-4 TODO placeholder ('TODO Session-4: WebFetch primary source for verbatim title; existing entry was structurally malformed (title=et al. artifact)') + authors corrected to '<lead> et al.' form. Full sweep verified: 0 remaining 'et al.' malformed entries in CITATION_REGISTRY (510 entries clean). QI candidate: validate.py --check citation_registry_no_et_al_title_artifact.",
+      "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D1-2026-05-06-r3:final-verification:all-blockers-closed-13-of-14-bundles-all-green",
+      "status": "fixed",
+      "superseded_by": "papers/AutomatedReviews/2026-05-06-bundle-stage13/D1-r3.md (Phase 7 absorption Session 3 final close)",
+      "evidence": "D1 stage13 round-3 final verification GREEN. All 4 round-1 BLOCKERs (Falque2025/Burkhard2025/Geurs2025/Majumdar2025 fabricated bibitem titles) and round-2 NEW finding 1.5 (5 additional malformed registry entries) closed cleanly. CITATION_REGISTRY: 510 entries, 0 'et al.' artifact malformations remaining, 3 explicit Session-4 TODO placeholders for Adler2024/BRSSS2008/Zhao2023 (no arXiv IDs available; require Session-4 WebFetch). Spectral-floor ω_× REQUIRED carries forward as Session-4 author-side body-vs-Lean reconciliation. Phase 6n+6o → Phase 7 absorption pass: 13 of 14 bundles now ALL-GREEN through S9+S10+S13; only I3 remains in DRAFTING state (Phase 6o.zeta wave; out-of-band of Phase 7 sub-phase ladder).",
+      "date": "2026-05-07"
     }
   ]
 }

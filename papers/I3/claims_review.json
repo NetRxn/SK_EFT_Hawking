@@ -1,0 +1,149 @@
+{
+  "paper": "I3",
+  "review_date": "2026-05-06T00:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2:I3:2026-05-06T00:00:00Z",
+  "bundle_target": "I3",
+  "bundle_tier": 3,
+  "bundle_review_profile": "infrastructure-software-methodology",
+
+  "sentences": [
+    {
+      "id": "sentence:I3:abstract:b2baa8c6",
+      "raw_id_parts": {
+        "paper": "I3",
+        "section_slug": "abstract",
+        "quote_hash": "b2baa8c6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 23,
+      "tex_line_end": 23,
+      "quote": "TODO: bundle abstract.",
+      "quote_normalized": "todo: bundle abstract.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "UNGROUNDED",
+      "delta_pct": null,
+      "agent_notes": "Sourceless initial lift placeholder. Bundle abstract not yet drafted. No substantive prose to verify. Flagged as coverage-gap; blocking for bundle Stage-13 readiness but expected at this lifecycle stage (sourceless initial lift, Phase 7 absorption Session 1, 2026-05-06).",
+      "agent_run_id": "claims-reviewer-v2:I3:2026-05-06T00:00:00Z",
+      "gates_invoked": ["Gate12_BundleReadiness"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I3",
+      "bundle_section_hint": "abstract",
+      "lift_action": "Lift-section"
+    },
+    {
+      "id": "sentence:I3:introduction:b798d155",
+      "raw_id_parts": {
+        "paper": "I3",
+        "section_slug": "introduction",
+        "quote_hash": "b798d155",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 36,
+      "tex_line_end": 36,
+      "quote": "TODO: bundle introduction.",
+      "quote_normalized": "todo: bundle introduction.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "UNGROUNDED",
+      "delta_pct": null,
+      "agent_notes": "Sourceless initial lift placeholder. Bundle introduction not yet drafted. No substantive prose to verify. Flagged as coverage-gap; blocking for bundle Stage-13 readiness but expected at this lifecycle stage.",
+      "agent_run_id": "claims-reviewer-v2:I3:2026-05-06T00:00:00Z",
+      "gates_invoked": ["Gate12_BundleReadiness"],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I3",
+      "bundle_section_hint": "introduction",
+      "lift_action": "Lift-section"
+    }
+  ],
+
+  "non_reproducing_prior_findings": [],
+
+  "summary": {
+    "total_sentences": 2,
+    "by_type": {
+      "metaclaim": 2
+    },
+    "by_verdict": {
+      "PASS": 0,
+      "FAIL": 0,
+      "WARN": 0,
+      "INFO": 0,
+      "UNGROUNDED": 2,
+      "TRANSITION": 0
+    },
+    "by_finding_class": {
+      "IA": 0,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "I3 first-time review (sourceless initial lift, 2026-05-06). Bundle paper_draft.tex contains only TODO placeholders (abstract + introduction) plus a single empty lift-section heading (Phase 6o W3b Itô + LDP-α + LDP-β substrate, sourced from non-existent _phase6o_W3b_lean_only). 2 sentences walked, both UNGROUNDED (TODO placeholders awaiting drafting). No substantive prose to verify against the I3 anchor list. All 5 anchor categories (first-of-its-kind formalization claims, Mathlib substrate consumption, reproducibility, LDPCompatibleSKEFT typeclass cross-bridges, Mathlib upstream coordination integrity) are NOT YET ASSERTED in prose, so cannot drift; will require full re-review once content is drafted in Phase 6o.ζ wave."
+  },
+
+  "blocking_issues": [
+    {
+      "id": "block:1",
+      "summary": "I3 bundle paper_draft.tex has no substantive prose — only TODO placeholders for abstract and introduction, plus a single empty lift-section heading. Bundle is at sourceless-initial-lift state (Phase 7 absorption Session 1, 2026-05-06); 12 Lean modules referenced in append_log.json (Itô.{StochasticIntegral, QuadraticVariation, Semimartingale, ItoIsometry, ItoLemma, Novikov} + LDP.{CramerIID, Sanov, Contraction, CramerLowerBound, Varadhan, LDPCompatibleSKEFT}) but no prose claims connect to them yet. Bundle cannot reach Stage-13 readiness until prose is drafted.",
+      "sentences": [
+        "sentence:I3:abstract:b2baa8c6",
+        "sentence:I3:introduction:b798d155"
+      ],
+      "gate": "Gate12_BundleReadiness",
+      "finding_class": null
+    }
+  ],
+
+  "non_blocking_followups": [
+    {
+      "id": "followup:1",
+      "summary": "Source paper folder papers/_phase6o_W3b_lean_only/ does not exist on filesystem, despite source_manifest.md and append_log.json referencing it as the source of the §1 lift. This is consistent with the I3 sourceless-initial-lift design (Phase 6o.ζ Lean module synthesis, no per-paper substrate; analogous to I2's lean-tensor-categories framing). Once Phase 6o.ζ wave produces draft prose, re-run claims-reviewer to verify the 5 I3 anchors against drafted text.",
+      "anchor": "i3_sourceless_initial_lift"
+    },
+    {
+      "id": "followup:2",
+      "summary": "Anchor 1 (first-of-its-kind formalization claims): When prose is drafted, each 'first formalization in any proof assistant' claim for stochastic integral, quadratic variation, Itô's lemma, Novikov, Cramér, Sanov, Varadhan must cite a literature search confirming no prior Lean/Coq/Isabelle/HOL Light/Mizar formalization exists. Pre-flag for QI candidate qi-firstclaimverification.",
+      "anchor": "first_of_its_kind"
+    },
+    {
+      "id": "followup:3",
+      "summary": "Anchor 2 (Mathlib substrate consumed): Drafted prose must trace Brownian-motion claims to Degenne et al. arXiv:2511.20118, Doob martingales to Ying-Degenne 2022, Markov kernels to Marion 2025, sub-Gaussian variables to named upstream Mathlib commits. Currently no such citations exist in paper_draftNotes.bib.",
+      "anchor": "mathlib_substrate"
+    },
+    {
+      "id": "followup:4",
+      "summary": "Anchor 3 (Reproducibility): Each of the 12 Lean modules in append_log.json must build (no sorry except documented stubs in SORRY_GAPS); Mathlib upstream coordination memo's PR list must be live. Verification deferred until prose is drafted.",
+      "anchor": "reproducibility"
+    },
+    {
+      "id": "followup:5",
+      "summary": "Anchor 4 (LDPCompatibleSKEFT typeclass cross-bridge): Claims about D3/D5/E1 downstream consumers of LDPCompatibleSKEFT must trace to specific Lean theorems in those modules that explicitly invoke the typeclass. Cross-bundle consistency check via cluster_bundle_index.json deferred.",
+      "anchor": "typeclass_cross_bridge"
+    },
+    {
+      "id": "followup:6",
+      "summary": "Anchor 5 (Mathlib upstream coordination integrity): Claims about coordination with Degenne/Marion must trace to actual Zulip/GitHub coordination artifacts (not unilateral assertions). Deferred until prose is drafted.",
+      "anchor": "mathlib_upstream_coordination"
+    }
+  ]
+}

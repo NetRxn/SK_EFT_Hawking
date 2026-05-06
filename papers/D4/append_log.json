@@ -1,4 +1,52 @@
 {
   "bundle_target": "D4",
-  "events": []
+  "events": [
+    {
+      "date": "2026-05-06T15:41:09Z",
+      "source_paper": "_phase6n_W1b_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "SymTFTAudit.WittClass",
+        "SymTFTAudit.DrinfeldCenter",
+        "SymTFTAudit.DeligneTensor",
+        "SymTFTAudit.FreeKLinearMonoidal",
+        "SymTFTAudit.FreeKLinearCategory",
+        "SymTFTAudit.PseudoUnitary",
+        "SymTFTAudit.CrossBridges"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:41:09Z",
+      "notes": "D.2 absorption: Phase 6n W1b DrinfeldCenter / DeligneTensor / FreeKLinear / PseudoUnitary / categorical cc additivity (Mathlib-grade in-program builds; longest verified math chain extension)"
+    },
+    {
+      "date": "2026-05-06T15:41:12Z",
+      "source_paper": "_phase6o_W1a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "SoftTheorems.DissipativeNoGo"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:41:12Z",
+      "notes": "D.2 absorption: Phase 6o W1a Lindbladian S-matrix axiomatization NO-GO joining D4's NO-GO landscape (KMS-broken regime; cross-bridge to bootstrap-uniqueness NO-GO at structural amplitude level)"
+    },
+    {
+      "date": "2026-05-06T15:41:16Z",
+      "source_paper": "_phase6o_W3a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a78",
+      "lean_modules_referenced": [
+        "ETH.Predicates",
+        "ETH.ConcreteWitness",
+        "ETH.RefutationTableau"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:41:16Z",
+      "notes": "D.2 absorption: Phase 6o W3a G10 ETH-\u03b1 refutation tableau (3 concrete refutation theorems: Inozemcev-Volovich gap, ETP doesn't imply Srednicki, free-cumulant doesn't imply Srednicki); RT/CH Phase 6c W5 cross-bridge"
+    }
+  ]
 }

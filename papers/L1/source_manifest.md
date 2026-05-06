@@ -1,16 +1,17 @@
 # Bundle L1 — Source Manifest
 
-**Auto-generated:** 2026-05-01
+**Auto-generated:** 2026-05-06
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`L1`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (1)
+## Contributing source papers (2)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
-| `paper25_gravitational_waves` | (see mapping) | Lift-letter | (see mapping) | 2026-04-28T01:18:33Z |
+| `_phase6o_W1b_lean_only` | (see mapping) | (unspecified) | (see mapping) | (missing) |
+| `paper25_gravitational_waves` | (see mapping) | Lift-letter | (see mapping) | 2026-05-01T18:23:19Z |
 
 ## Coverage notes
 

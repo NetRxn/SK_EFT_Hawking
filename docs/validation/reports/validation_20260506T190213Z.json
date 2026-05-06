@@ -1,0 +1,53 @@
+{
+  "timestamp": "20260506T190213Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "citation_primary_sources_present": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": false,
+          "message": "396 bibkeys cited across 57 papers \u2014 213 cached / 12 inprep-exempt / 120 textbook-exempt / 51 need cache / 0 missing-from-registry",
+          "warning": false
+        },
+        {
+          "name": "missing_cache:Phase-1-and-Background",
+          "passed": false,
+          "message": "42 bibkeys lack primary-source cache: ADM1962, Adler1980, Akama1979, AlmheiriMarolfPolchinskiSully2013, ArnoldMcLerran1987 + 37 more",
+          "warning": false
+        },
+        {
+          "name": "missing_cache:Phase-3",
+          "passed": false,
+          "message": "1 bibkeys lack primary-source cache: Adler2024",
+          "warning": false
+        },
+        {
+          "name": "missing_cache:Phase-4",
+          "passed": false,
+          "message": "4 bibkeys lack primary-source cache: BelgiornoCacciatori2024, CorleyJacobson1996, CoutantParentani2012, RobertsonParentani2015",
+          "warning": false
+        },
+        {
+          "name": "missing_cache:Phase-5e",
+          "passed": false,
+          "message": "1 bibkeys lack primary-source cache: DaiFreed1994",
+          "warning": false
+        },
+        {
+          "name": "missing_cache:Phase-5w",
+          "passed": false,
+          "message": "3 bibkeys lack primary-source cache: BRSSS2008, Majumdar2025, Zhao2023",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

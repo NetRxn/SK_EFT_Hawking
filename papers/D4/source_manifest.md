@@ -1,17 +1,20 @@
 # Bundle D4 — Source Manifest
 
-**Auto-generated:** 2026-05-01
+**Auto-generated:** 2026-05-06
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D4`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (7)
+## Contributing source papers (10)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
+| `_phase6n_W1b_lean_only` | §3, §4 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W1a_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W3a_lean_only` | §8 | (unspecified) | (see mapping) | (missing) |
 | `note_rt_ch_bounds` | §8 | Lift-section | (see mapping) | 2026-04-27T18:45:54Z |
-| `paper11_quantum_group` | §2 | Lift-section | (see mapping) | 2026-04-29T21:29:08Z |
+| `paper11_quantum_group` | §2 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
 | `paper14_braided_mtc` | §3 | Lift-section | (see mapping) | 2026-04-25T07:48:35Z |
 | `paper16_wrt_tqft` | §5 | Lift-section | (see mapping) | 2026-04-25T15:47:52Z |
 | `paper18_doublon_gate` | §6 | Lift-section | (see mapping) | 2026-04-25T07:49:58Z |

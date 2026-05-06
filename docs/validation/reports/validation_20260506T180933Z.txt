@@ -1,0 +1,23 @@
+SK-EFT Hawking Validation Report
+Generated: 20260506T180933Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] bundle_source_freshness
+  + summary — 15 sub-findings: 0 FAIL / 2 WARN / 13 PASS
+  + bundle:D1 — fresh: all 9 source paper(s) older than last_lift (2026-05-06)
+  + bundle:D2 — fresh: all 6 source paper(s) older than last_lift (2026-05-06)
+  + bundle:D3 — fresh: all 31 source paper(s) older than last_lift (2026-05-06)
+  + bundle:D4 — fresh: all 10 source paper(s) older than last_lift (2026-05-06)
+  + bundle:D5 — fresh: all 8 source paper(s) older than last_lift (2026-05-06)
+  + bundle:E1 — fresh: all 3 source paper(s) older than last_lift (2026-05-06)
+  + bundle:E2 — fresh: all 2 source paper(s) older than last_lift (2026-05-01)
+  + bundle:F — freshness-stale: 9 of 49 source paper(s) modified after last_lift (2026-05-04); sample: paper11_quantum_group(2026-05-05), paper12_polariton(2026-05-05), paper15_methodology(2026-05-05) ... and 6 more
+  + bundle:I1 — fresh: all 6 source paper(s) older than last_lift (2026-05-06)
+  + bundle:I2 — fresh: all 1 source paper(s) older than last_lift (2026-05-06)
+  + bundle:I3 — stage13_redo_required=true (set by bundle_append.py); Stage-13 reviewer agent must re-clear before bundle close
+  + bundle:I3 — fresh: all 1 source paper(s) older than last_lift (2026-05-06)
+  + bundle:L1 — fresh: all 2 source paper(s) older than last_lift (2026-05-06)
+  + bundle:L2 — fresh: all 1 source paper(s) older than last_lift (2026-05-06)
+  + bundle:L3 — fresh: all 3 source paper(s) older than last_lift (2026-05-06)
+
+Overall: 1/1 passed

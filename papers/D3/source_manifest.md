@@ -1,15 +1,24 @@
 # Bundle D3 — Source Manifest
 
-**Auto-generated:** 2026-05-04
+**Auto-generated:** 2026-05-06
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D3`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (22)
+## Contributing source papers (31)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
+| `_phase6n_W1a_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
+| `_phase6n_W2a_lean_only` | §8 | (unspecified) | (see mapping) | (missing) |
+| `_phase6n_W2c_lean_only` | §3 | (unspecified) | (see mapping) | (missing) |
+| `_phase6n_W2d_lean_only` | §17.5 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W1a_lean_only` | §3 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W1b_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W1c_writeup` | §10 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W2a_lean_only` | §17 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W3b_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
 | `paper20_scalar_rung` | §11 | Lift-section | (see mapping) | 2026-04-25T21:08:47Z |
 | `paper21_majorana_rung` | §12 | Lift-section | (see mapping) | 2026-04-25T16:19:07Z |
 | `paper22_ew_phase_transition` | §13 | Lift-section | (see mapping) | 2026-05-01T12:57:31Z |
@@ -24,7 +33,7 @@
 | `paper38_cfl` | §16 | Lift-section | (see mapping) | 2026-04-27T18:45:52Z |
 | `paper39_heat_kernel_expansion` | §17 | Lift-section | (see mapping) | 2026-04-28T01:58:15Z |
 | `paper3_gauge_erasure` | §3 | Lift-section | (see mapping) | 2026-04-25T07:44:43Z |
-| `paper40_higher_curvature` | §18 | Lift-section | (see mapping) | 2026-05-01T12:57:51Z |
+| `paper40_higher_curvature` | §18 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
 | `paper41_diff_invariance` | §19 | Lift-section | (see mapping) | 2026-04-28T12:49:18Z |
 | `paper42_nonlinear_efe` | §20 | Lift-section | (see mapping) | 2026-04-28T14:32:28Z |
 | `paper42b_cc_emergent` | §21 | Lift-section | (see mapping) | 2026-04-28T23:51:08Z |

@@ -281,6 +281,41 @@ Reissner--Nordstr\"om. We cite~\cite{JacobsonKoike2002,
 JacobsonVolovik1998} only as the contrast case, not as the cooling
 anchor.
 
+\paragraph{Substrate-class context.} The $^{3}$He-A cell and the
+BEC-acoustic substrate are members of complementary
+Sakharov-criterion classes. The Volovik--Jannes formalisation in the
+program's
+\texttt{lean/SKEFTHawking/JacobsonThermoGRDarkEnergy.lean} (Phase 6m
+Track C) shows that $^{3}$He-A satisfies all four Sakharov
+conditions (\texttt{JTGR7}: emergent IR Lorentz, universal coupling,
+induced Newton constant, and the $\Lambda_{\mathrm{eff}} =
+\Lambda_{\mathrm{HK}}$ equilibrium identity), while the
+Finazzi--Liberati--Sindoni acoustic-BEC violates condition (ii)
+(universal coupling: depletion-sector atoms do not propagate on the
+BEC effective metric; \texttt{JTGR8}). The Phase 6n unification
+(\texttt{lean/SKEFTHawking/CrooksAnalogHawking/SakharovHorizonCrooks.lean})
+shows that the four Sakharov conditions are biconditional with the
+horizon-Crooks detailed-balance identity at the local Rindler
+horizon (\texttt{horizonCrooks\_substrate\_partition}; the
+companion deep paper~\cite{Roehm2026D3} carries the
+full subsection). The regime partition formalised here
+(sign-flip of $d\Thawk/dt$) is \emph{not} directly equivalent to
+Sakharov-criterion satisfaction: the BEC-acoustic ($M < M_c$)
+cooling regime persists \emph{despite} Sakharov-criterion failure
+on the FLS substrate, because the regime partition is a
+thermodynamic-evolution claim about $\Thawk(t)$ rather than a
+substrate-induced-gravity claim. The two classifications
+(Sakharov-criterion + regime partition) are independent program
+axes; horizon-Crooks unifies them only at the substrate-induced-
+gravity layer (the Jacobson 1995 equilibrium-Clausius
+reading~\cite{JacobsonEFE1995} of entropic gravity), not at the
+thermodynamic-evolution layer of the regime classifier. The
+fluctuation-theorem reading of the unification is consistent only
+with the equilibrium-Clausius derivation of the Einstein equation;
+it does not entail Verlinde-class entropic-force gravity, which the
+program separately disfavours at $\geq 5\sigma$ across eight
+independent observational checks (Phase 6m Track B).
+
 \paragraph{Reproducibility.} The result is reproducible in two
 layers. The Lean layer is \texttt{BHThermodynamicsFourLaws.lean}
 (\bhThermoTotal{} theorems and lemmas, zero \texttt{sorry}, zero new
@@ -363,6 +398,32 @@ regime,'' JHEP~\textbf{07}, 192 (2025);
 arXiv:2412.01903;
 DOI: 10.1007/JHEP07(2025)192.
 
+%% Phase 6n.ζ L3 paragraph absorption (D.3 GATE 2, 2026-05-06)
+
+\bibitem{JacobsonEFE1995}
+T.~Jacobson, ``Thermodynamics of spacetime: the Einstein equation
+of state,'' Phys.\ Rev.\ Lett.\ \textbf{75}, 1260 (1995),
+arXiv:gr-qc/9504004.
+
+\bibitem{Roehm2026D3}
+J.~Roehm, ``Emergent gravity through black-hole thermodynamics:
+linearized EFE and BCH four laws by regime,'' in preparation
+(D3 deep companion to L3, 2026).
+
 \end{thebibliography}
+
+
+%% ─── Lifted from _phase6n_W2a_lean_only (§3) — 2026-05-06T15:41:27Z ───
+%% NOTE: This was a cross-ref-upgrade-only D.2 absorption event (Phase 6n W2a:
+%%   Glorioso-Liu axiomatic skeleton; Glorioso_Liu_local_second_law cross-ref
+%%   upgrade only; no prose change). Section heading commented out 2026-05-06
+%%   Session-2 to keep PRL splash compile clean (post-bibliography section
+%%   was rendering as empty page-4 content). Bookkeeping entry preserved in
+%%   papers/L3/append_log.json. The L3+I1 cross-ref relationship is captured
+%%   by the existing Glorioso-Liu citations in the L3 conclusion + bibliography.
+%% \section{Glorioso-Liu axiomatic skeleton}
+%% \label{sec:l3-_phase6n_W2a_lean_only}
+%% (TODO content stubs intentionally suppressed — no prose change per lift notes.)
+%% ─── End lift from _phase6n_W2a_lean_only ───
 
 \end{document}

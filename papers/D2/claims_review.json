@@ -1,19 +1,20 @@
 {
   "paper": "D2_anomaly_bundle",
-  "review_date": "2026-05-04T13:30:00Z",
+  "review_date": "2026-05-06T18:30:00Z",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
-  "review_round": 2,
+  "reviewer_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z",
+  "review_round": 4,
   "bundle_target": "D2",
   "verdict": "green",
-  "total_findings": 6,
+  "total_findings": 11,
   "findings_by_class": {
     "IA": 7,
-    "HD": 3
+    "HD": 3,
+    "TN": 2
   },
   "blockers_open": 0,
-  "blockers_advisory": 6,
+  "blockers_advisory": 10,
   "sentences": [
     {
       "id": "sentence:D2_anomaly_bundle:abstract:55926ce6",
@@ -88,7 +89,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "Three theorems chain to deliver N_f ≡ 0 (mod 3); all FOUND in lean_deps.json. Wang2024 cite resolved (arxiv:2312.14928).",
+      "agent_notes": "Three theorems chain to deliver N_f \u2261 0 (mod 3); all FOUND in lean_deps.json. Wang2024 cite resolved (arxiv:2312.14928).",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance",
@@ -134,7 +135,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "Both target theorems FOUND in lean_deps.json. Independent ν_R argument is consistent with the Lean module structure.",
+      "agent_notes": "Both target theorems FOUND in lean_deps.json. Independent \u03bd_R argument is consistent with the Lean module structure.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance"
@@ -179,7 +180,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "A1Ext module exists (14 decls). The specific name 'hom_tensor_adjunction' is MISSING; closest match is 'hom_tensor_adjunction_dim' in ChangeOfRings module (paper §2.6 references the missing name explicitly — see TN finding there). Ext dimensions 1,2,2,2,3,4 reflect literature canonical values.",
+      "agent_notes": "A1Ext module exists (14 decls). The specific name 'hom_tensor_adjunction' is MISSING; closest match is 'hom_tensor_adjunction_dim' in ChangeOfRings module (paper \u00a72.6 references the missing name explicitly \u2014 see TN finding there). Ext dimensions 1,2,2,2,3,4 reflect literature canonical values.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance"
@@ -228,7 +229,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "Theorem hidden_sector_required FOUND. Z_4 generator and 6 SM species residues 6+3+3+2+1+1=16 are arithmetically correct. Numerical 3×15=45≡-3 (mod 16) verified.",
+      "agent_notes": "Theorem hidden_sector_required FOUND. Z_4 generator and 6 SM species residues 6+3+3+2+1+1=16 are arithmetically correct. Numerical 3\u00d715=45\u2261-3 (mod 16) verified.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance",
@@ -255,8 +256,8 @@
       "section_ordinal": 0,
       "tex_line_start": 47,
       "tex_line_end": 58,
-      "quote": "A first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (Golterman-Shamir nine conditions, two-particle-fermion (TPF) evasion via discontinuity of \\texttt{round} at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{Z})$), a positive-construction pillar (Gioia-Thorngren BdG Hamiltonian on $(\\mathbb{Z}/L)^3$ with the central commutation $[H_\\text{BdG}(p),\\, q_A(p)] = 0$ closed by an Aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (Onsager Dolan-Grady, Inönü-Wigner contraction $[\\varepsilon A_m, \\varepsilon A_n] = 4\\varepsilon^2 G_{m-n}$, $\\mathrm{su}(2)$ emanant symmetry, Witten anomaly $\\pi_4(\\mathrm{SU}(2)) = \\mathbb{Z}_2 \\hookrightarrow \\mathbb{Z}_{16}$).",
-      "quote_normalized": "a first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (golterman-shamir nine conditions, two-particle-fermion (tpf) evasion via discontinuity of round at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{z})$), a positive-construction pillar (gioia-thorngren bdg hamiltonian on $(\\mathbb{z}/l)^3$ with the central commutation $[h_bdg(p),\\, q_a(p)] = 0$ closed by an aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (onsager dolan-grady, inönü-wigner contraction $[\\varepsilon a_m, \\varepsilon a_n] = 4\\varepsilon^2 g_{m-n}$, $su(2)$ emanant symmetry, witten anomaly $\\pi_4(su(2)) = \\mathbb{z}_2 \\hookrightarrow \\mathbb{z}_{16}$).",
+      "quote": "A first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (Golterman-Shamir nine conditions, two-particle-fermion (TPF) evasion via discontinuity of \\texttt{round} at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{Z})$), a positive-construction pillar (Gioia-Thorngren BdG Hamiltonian on $(\\mathbb{Z}/L)^3$ with the central commutation $[H_\\text{BdG}(p),\\, q_A(p)] = 0$ closed by an Aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (Onsager Dolan-Grady, In\u00f6n\u00fc-Wigner contraction $[\\varepsilon A_m, \\varepsilon A_n] = 4\\varepsilon^2 G_{m-n}$, $\\mathrm{su}(2)$ emanant symmetry, Witten anomaly $\\pi_4(\\mathrm{SU}(2)) = \\mathbb{Z}_2 \\hookrightarrow \\mathbb{Z}_{16}$).",
+      "quote_normalized": "a first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (golterman-shamir nine conditions, two-particle-fermion (tpf) evasion via discontinuity of round at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{z})$), a positive-construction pillar (gioia-thorngren bdg hamiltonian on $(\\mathbb{z}/l)^3$ with the central commutation $[h_bdg(p),\\, q_a(p)] = 0$ closed by an aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (onsager dolan-grady, in\u00f6n\u00fc-wigner contraction $[\\varepsilon a_m, \\varepsilon a_n] = 4\\varepsilon^2 g_{m-n}$, $su(2)$ emanant symmetry, witten anomaly $\\pi_4(su(2)) = \\mathbb{z}_2 \\hookrightarrow \\mathbb{z}_{16}$).",
       "type": "metaclaim",
       "finding_classes": [],
       "chain_proposed": {
@@ -286,7 +287,7 @@
       "rewrite_of": null,
       "tombstone": false,
       "meta": {
-        "quote_normalized": "a first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (golterman-shamir nine conditions, two-particle-fermion (tpf) evasion via discontinuity of round at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{z})$), a positive-construction pillar (gioia-thorngren bdg hamiltonian on $(\\mathbb{z}/l)^3$ with the central commutation $[h_bdg(p),\\, q_a(p)] = 0$ closed by an aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (onsager dolan-grady, inönü-wigner contraction $[\\varepsilon a_m, \\varepsilon a_n] = 4\\varepsilon^2 g_{m-n}$, $su(2)$ emanant symmetry, witten anomaly $\\pi_4(su(2)) = \\mathbb{z}_2 \\hookrightarrow \\mathbb{z}_{16}$).",
+        "quote_normalized": "a first-of-kind formal synthesis of the chirality wall integrates a no-go pillar (golterman-shamir nine conditions, two-particle-fermion (tpf) evasion via discontinuity of round at 1/2 and infinite-dimensionality of $\\ell^2(\\mathbb{z})$), a positive-construction pillar (gioia-thorngren bdg hamiltonian on $(\\mathbb{z}/l)^3$ with the central commutation $[h_bdg(p),\\, q_a(p)] = 0$ closed by an aristotle-discovered $\\sin^2 + \\cos^2 = 1$ identity), and an algebraic pillar (onsager dolan-grady, in\u00f6n\u00fc-wigner contraction $[\\varepsilon a_m, \\varepsilon a_n] = 4\\varepsilon^2 g_{m-n}$, $su(2)$ emanant symmetry, witten anomaly $\\pi_4(su(2)) = \\mathbb{z}_2 \\hookrightarrow \\mathbb{z}_{16}$).",
         "bundle_destination": "D2",
         "bundle_section_hint": null,
         "lift_action": "lift_as_is"
@@ -461,7 +462,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "R2: HD-class re-evaluated. Paper discloses three Mathlib-deferral hypotheses (H1 ko-cohomology, H3 Adams convergence, H4 ABP splitting) plus an H2 partial-discharge note (now matches abstract's \"first machine-checked Ext computation over a Steenrod subalgebra\" claim re-stated as \"first machine-checked $\\mathrm{Ext}^n_{A(1)}$\" + change-of-rings dim-level discharge). HYPOTHESIS_REGISTRY contains 7 entries; 4 are D2-anchor (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8) — all substantively disclosed in §2 prose. spin_bordism_iso_Z is implicit (Ω₅^{Spin^Z_4} placeholder is the analogue). H_KLRS_SM_Crossover and H_ScalarChannel are out-of-D2-scope (EW baryogenesis / scalar-channel sectors). PASS.",
+      "agent_notes": "R2: HD-class re-evaluated. Paper discloses three Mathlib-deferral hypotheses (H1 ko-cohomology, H3 Adams convergence, H4 ABP splitting) plus an H2 partial-discharge note (now matches abstract's \"first machine-checked Ext computation over a Steenrod subalgebra\" claim re-stated as \"first machine-checked $\\mathrm{Ext}^n_{A(1)}$\" + change-of-rings dim-level discharge). HYPOTHESIS_REGISTRY contains 7 entries; 4 are D2-anchor (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8) \u2014 all substantively disclosed in \u00a72 prose. spin_bordism_iso_Z is implicit (\u03a9\u2085^{Spin^Z_4} placeholder is the analogue). H_KLRS_SM_Crossover and H_ScalarChannel are out-of-D2-scope (EW baryogenesis / scalar-channel sectors). PASS.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate6_AssumptionDisclosure"
@@ -565,7 +566,7 @@
       },
       "agent_verdict": "INFO",
       "delta_pct": null,
-      "agent_notes": "First-claim assertion. Should be spot-checked via qi-firstclaimverification per bundle prompts §D2.",
+      "agent_notes": "First-claim assertion. Should be spot-checked via qi-firstclaimverification per bundle prompts \u00a7D2.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [],
       "rewrite_of": null,
@@ -822,7 +823,7 @@
       },
       "agent_verdict": "WARN",
       "delta_pct": null,
-      "agent_notes": "Both theorem names FOUND. Citation Roehm2026Wave10 is MISSING from CITATION_REGISTRY (in-prep self-cite; CitationIntegrity flag — Class CI). Other in-prep self-cites Roehm2026Wave1/4/5/6f/6g/Pipeline are in registry, so this is an unregistered key gap.",
+      "agent_notes": "Both theorem names FOUND. Citation Roehm2026Wave10 is MISSING from CITATION_REGISTRY (in-prep self-cite; CitationIntegrity flag \u2014 Class CI). Other in-prep self-cites Roehm2026Wave1/4/5/6f/6g/Pipeline are in registry, so this is an unregistered key gap.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate1_CitationIntegrity"
@@ -1002,7 +1003,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "R2: HD-class re-evaluated. Paper §2.4 explicitly invokes Rokhlin's theorem on signature of spin 4-manifolds (\\cite{Rokhlin1952}), states the 8|σ refinement, and exhibits the Lean-level chain (E8Lattice.e8_sigma_div_8 + AlgebraicRokhlin.char_sq_valid_e8). The hypothesis statement of HYPOTHESIS_REGISTRY[rokhlin_sigma_mod_16] (16|σ for closed smooth spin 4-manifold) is the textbook input. Disclosure is substantively present. PASS.",
+      "agent_notes": "R2: HD-class re-evaluated. Paper \u00a72.4 explicitly invokes Rokhlin's theorem on signature of spin 4-manifolds (\\cite{Rokhlin1952}), states the 8|\u03c3 refinement, and exhibits the Lean-level chain (E8Lattice.e8_sigma_div_8 + AlgebraicRokhlin.char_sq_valid_e8). The hypothesis statement of HYPOTHESIS_REGISTRY[rokhlin_sigma_mod_16] (16|\u03c3 for closed smooth spin 4-manifold) is the textbook input. Disclosure is substantively present. PASS.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance",
@@ -1080,7 +1081,7 @@
       },
       "agent_verdict": "INFO",
       "delta_pct": null,
-      "agent_notes": "First-claim. Bundle prompts §D2 calls for qi-firstclaimverification spot-check. Cross-bundle: L2 makes same first-claim (closed at GREEN).",
+      "agent_notes": "First-claim. Bundle prompts \u00a7D2 calls for qi-firstclaimverification spot-check. Cross-bundle: L2 makes same first-claim (closed at GREEN).",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [],
       "rewrite_of": null,
@@ -1237,7 +1238,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": 0.0,
-      "agent_notes": "Theorem hidden_sector_required FOUND. Module Z16AnomalyComputation has 23 decls — paper claim '23 substantive theorems' matches.",
+      "agent_notes": "Theorem hidden_sector_required FOUND. Module Z16AnomalyComputation has 23 decls \u2014 paper claim '23 substantive theorems' matches.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance",
@@ -1371,7 +1372,7 @@
       },
       "agent_verdict": "WARN",
       "delta_pct": null,
-      "agent_notes": "Class CI: Roehm2026D4 self-cite MISSING from CITATION_REGISTRY (in-prep). Cross-bundle bridge: D2 §3 ↔ D4 §4 must agree on the Drinfeld center construction (per bundle prompts §D2). D4 not yet drafted, so cross-check deferred.",
+      "agent_notes": "Class CI: Roehm2026D4 self-cite MISSING from CITATION_REGISTRY (in-prep). Cross-bundle bridge: D2 \u00a73 \u2194 D4 \u00a74 must agree on the Drinfeld center construction (per bundle prompts \u00a7D2). D4 not yet drafted, so cross-check deferred.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate1_CitationIntegrity"
@@ -1461,7 +1462,7 @@
       },
       "agent_verdict": "WARN",
       "delta_pct": null,
-      "agent_notes": "R2: HD-class advisory PERSISTS. Paper §4.1 still states C4/C5 are \"axioms in our Lean library, not theorems\". Lean source GoltermanShamir.lean / LatticeHamiltonian.lean encodes them as \\texttt{GSExplicitCondition.C4\\_complete\\_interpolating} and \\texttt{GSExplicitCondition.C5\\_no\\_ssb} (inductive constructors inside an enum-like type), not as standalone \\texttt{axiom} decls. lean_deps shows the only project-level axiom is gapped_interface_axiom. The phrasing \"encoded as axioms\" is technically inaccurate at the Lean-decl-kind level. Suggest: \"encoded as Prop-valued conditions in our Lean library\" or \"encoded as Lean propositions whose physics content we treat as axiomatic\". Carried as non-blocking advisory.",
+      "agent_notes": "R2: HD-class advisory PERSISTS. Paper \u00a74.1 still states C4/C5 are \"axioms in our Lean library, not theorems\". Lean source GoltermanShamir.lean / LatticeHamiltonian.lean encodes them as \\texttt{GSExplicitCondition.C4\\_complete\\_interpolating} and \\texttt{GSExplicitCondition.C5\\_no\\_ssb} (inductive constructors inside an enum-like type), not as standalone \\texttt{axiom} decls. lean_deps shows the only project-level axiom is gapped_interface_axiom. The phrasing \"encoded as axioms\" is technically inaccurate at the Lean-decl-kind level. Suggest: \"encoded as Prop-valued conditions in our Lean library\" or \"encoded as Lean propositions whose physics content we treat as axiomatic\". Carried as non-blocking advisory.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate6_AssumptionDisclosure"
@@ -1510,7 +1511,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "R2: TN-class FIXED. Paper now uses \\texttt{LatticeHamiltonian.round\\_not\\_continuous\\_at\\_half} and \\texttt{LatticeHamiltonian.rotor\\_hilbert\\_not\\_finite\\_dim} (both resolve in lean_deps; kind=theorem). Re-export through TPFEvasion.lean is referenced in prose only (module-level mention, not a qualified-name claim) — acceptable. PASS.",
+      "agent_notes": "R2: TN-class FIXED. Paper now uses \\texttt{LatticeHamiltonian.round\\_not\\_continuous\\_at\\_half} and \\texttt{LatticeHamiltonian.rotor\\_hilbert\\_not\\_finite\\_dim} (both resolve in lean_deps; kind=theorem). Re-export through TPFEvasion.lean is referenced in prose only (module-level mention, not a qualified-name claim) \u2014 acceptable. PASS.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance"
@@ -1595,7 +1596,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "R2: TN-class FIXED. Paper now references the pair \\texttt{WilsonMass.wilson\\_mass\\_at\\_zero} ($M(0,0,0)=0$) and \\texttt{WilsonMass.wilson\\_mass\\_zero\\_iff\\_cos\\_eq\\_one} (uses Real.cos_le_one for cosine bounds); both resolve in lean_deps. Substantive content of the original M_zero_iff_zero_momentum claim is now distributed across the pair, with explicit acknowledgment that \"together they exhaust the M(k)=0 ⟺ k ∈ {0,2π}^3 (mod 2π) characterisation\". PASS.",
+      "agent_notes": "R2: TN-class FIXED. Paper now references the pair \\texttt{WilsonMass.wilson\\_mass\\_at\\_zero} ($M(0,0,0)=0$) and \\texttt{WilsonMass.wilson\\_mass\\_zero\\_iff\\_cos\\_eq\\_one} (uses Real.cos_le_one for cosine bounds); both resolve in lean_deps. Substantive content of the original M_zero_iff_zero_momentum claim is now distributed across the pair, with explicit acknowledgment that \"together they exhaust the M(k)=0 \u27fa k \u2208 {0,2\u03c0}^3 (mod 2\u03c0) characterisation\". PASS.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance"
@@ -1860,7 +1861,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "FKGappedInterface module exists with exactly 20 decls — paper claim matches. FidkowskiKitaev2010 cite resolved (arxiv:0904.2197). NOTE: paper bibitem cites arXiv:1008.4138 but registry says 0904.2197 — ARXIV DRIFT in bibitem; should be Class TP/CI follow-up.",
+      "agent_notes": "FKGappedInterface module exists with exactly 20 decls \u2014 paper claim matches. FidkowskiKitaev2010 cite resolved (arxiv:0904.2197). NOTE: paper bibitem cites arXiv:1008.4138 but registry says 0904.2197 \u2014 ARXIV DRIFT in bibitem; should be Class TP/CI follow-up.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance",
@@ -1902,7 +1903,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "ChiralityWallMaster module exists with 35 decls — paper says '16 theorems total'. IA: substantive-theorem-count drift likely.",
+      "agent_notes": "ChiralityWallMaster module exists with 35 decls \u2014 paper says '16 theorems total'. IA: substantive-theorem-count drift likely.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate5_LeanProofSubstance"
@@ -2069,7 +2070,7 @@
       },
       "agent_verdict": "WARN",
       "delta_pct": null,
-      "agent_notes": "R2: HD-class advisory PERSISTS — same as chirality-wall:090979dd. Outlook §6.2 says C4/C5 are \"encoded as axioms (not theorems)\"; Lean source encodes as inductive-constructor Prop fields, not \\texttt{axiom} decls. Phrasing inaccuracy at decl-kind level only.",
+      "agent_notes": "R2: HD-class advisory PERSISTS \u2014 same as chirality-wall:090979dd. Outlook \u00a76.2 says C4/C5 are \"encoded as axioms (not theorems)\"; Lean source encodes as inductive-constructor Prop fields, not \\texttt{axiom} decls. Phrasing inaccuracy at decl-kind level only.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate6_AssumptionDisclosure"
@@ -2105,14 +2106,14 @@
         "links": [
           {
             "kind": "hypothesis",
-            "target": "(H1, H3, H4 — disclosed by paper text)"
+            "target": "(H1, H3, H4 \u2014 disclosed by paper text)"
           }
         ],
         "completeness": "full"
       },
       "agent_verdict": "WARN",
       "delta_pct": null,
-      "agent_notes": "R2: HD-class advisory PERSISTS. Outlook §6.3 discloses H1/H3/H4 textually but does not explicitly cite the HYPOTHESIS_REGISTRY identifier names rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8. Disclosure is substantive (key statements are in prose at §2.2/§2.4) but the cross-reference to constants.HYPOTHESIS_REGISTRY name-keys is missing. Carried as non-blocking advisory.",
+      "agent_notes": "R2: HD-class advisory PERSISTS. Outlook \u00a76.3 discloses H1/H3/H4 textually but does not explicitly cite the HYPOTHESIS_REGISTRY identifier names rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8. Disclosure is substantive (key statements are in prose at \u00a72.2/\u00a72.4) but the cross-reference to constants.HYPOTHESIS_REGISTRY name-keys is missing. Carried as non-blocking advisory.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate6_AssumptionDisclosure"
@@ -2189,7 +2190,7 @@
       },
       "agent_verdict": "PASS",
       "delta_pct": null,
-      "agent_notes": "Three concrete falsifiers — each tied to a distinct mechanism. Sound discipline-checklist behaviour.",
+      "agent_notes": "Three concrete falsifiers \u2014 each tied to a distinct mechanism. Sound discipline-checklist behaviour.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate7_NarrativeFidelity"
@@ -2413,46 +2414,725 @@
         "completeness": "partial"
       },
       "agent_verdict": "WARN",
-      "agent_notes": "R2-NEW (not in R1 census): paper §1 line 113 cites {Roehm2026Wave10,Roehm2026Wave9,Roehm2026Wave7,Roehm2026Wave8} and provides bibitems for all four (lines 941-952). Round-1 fix added Roehm2026Wave10 to CITATION_REGISTRY but Roehm2026Wave7, Roehm2026Wave8, Roehm2026Wave9 remain MISSING. Direct dict lookup in src/core/citations.py confirms KeyError on all three keys. Note other in-prep self-cites (Wave1/4/5/6f/6g) are in registry, so this is an unregistered-key gap rather than policy. Recommend adding the three keys to keep CitationIntegrity gate clean. Non-blocking advisory.",
+      "agent_notes": "R2-NEW (not in R1 census): paper \u00a71 line 113 cites {Roehm2026Wave10,Roehm2026Wave9,Roehm2026Wave7,Roehm2026Wave8} and provides bibitems for all four (lines 941-952). Round-1 fix added Roehm2026Wave10 to CITATION_REGISTRY but Roehm2026Wave7, Roehm2026Wave8, Roehm2026Wave9 remain MISSING. Direct dict lookup in src/core/citations.py confirms KeyError on all three keys. Note other in-prep self-cites (Wave1/4/5/6f/6g) are in registry, so this is an unregistered-key gap rather than policy. Recommend adding the three keys to keep CitationIntegrity gate clean. Non-blocking advisory.",
       "agent_run_id": "claims-reviewer-v2:2026-05-04T13:30:00Z",
       "gates_invoked": [
         "Gate1_CitationIntegrity"
       ],
       "rewrite_of": null,
       "tombstone": false
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:3508abcd",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "3508abcd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 356,
+      "tex_line_end": 358,
+      "quote": "The modular-framing argument of \\S\\ref{sec:modular} establishes $24 \\mid c_{-}$ at the level of partition-function consistency from the Dedekind-$\\eta$ phase.",
+      "quote_normalized": "the modular-framing argument of \\s\\ref{sec:modular} establishes $24 \\mid c_{-}$ at the level of partition-function consistency from the dedekind-$\\eta$ phase.",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Recapitulates \u00a72.2 framing constraint to set up the structural reading; no new claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the modular-framing argument of \\s\\ref{sec:modular} establishes $24 \\mid c_{-}$ at the level of partition-function consistency from the dedekind-$\\eta$ phase.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:62eb10b6",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "62eb10b6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 358,
+      "tex_line_end": 360,
+      "quote": "A deeper structural reading places the constraint inside the classification of holomorphic vertex operator algebras (VOAs) at central charge $24$.",
+      "quote_normalized": "a deeper structural reading places the constraint inside the classification of holomorphic vertex operator algebras (voas) at central charge $24$.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Meta-claim signaling the reframing; substantive content in subsequent enumerated chain.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "a deeper structural reading places the constraint inside the classification of holomorphic vertex operator algebras (voas) at central charge $24$.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:bfad42f6",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "bfad42f6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 360,
+      "tex_line_end": 360,
+      "quote": "The five-step chain is:",
+      "quote_normalized": "the five-step chain is:",
+      "type": "transition",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "TRANSITION",
+      "delta_pct": null,
+      "agent_notes": "Enumeration leader; not a substantive claim in itself.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the five-step chain is:",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:1bfa3608",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "1bfa3608",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 362,
+      "tex_line_end": 366,
+      "quote": "Spin-bordism $\\Omega_5^{\\mathrm{Spin}}(BG_{\\mathrm{SM}})$ classification of Dai--Freed anomalies~\\cite{GarciaEtxebarriaMontero2019}, formalised in the program's \\texttt{lean/SKEFTHawking/SpinBordism.lean} + \\texttt{Z16AnomalyComputation.lean}.",
+      "quote_normalized": "spin-bordism $\\omega_5^{\\mathrm{spin}}(bg_{\\mathrm{sm}})$ classification of dai--freed anomalies~\\cite{garciaetxebarriamontero2019}, formalised in the program's \\texttt{lean/skefthawking/spinbordism.lean} + \\texttt{z16anomalycomputation.lea",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GarciaEtxebarriaMontero2019"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "R4: TN-class advisory CLOSED. Paper line 365 now reads `lean/SKEFTHawking/Schellekens/SpinBordism.lean` (matching the actual file). Companion path now reads `lean/SKEFTHawking/Z16AnomalyComputation.lean` (matching the actual top-level file). Both files exist on disk and lean_deps.json (regen 2026-05-06 12:04, 6,777,966 bytes) registers module `SKEFTHawking.Schellekens.SpinBordism` with declarations {IsSMSpinBordismZ16, isSMSpinBordismZ16_witness, wave_2b_2_spin_bordism_closure}. Module `SKEFTHawking.Z16AnomalyComputation` also present at top-level. Verified: `ls lean/SKEFTHawking/Schellekens/SpinBordism.lean` exists; `ls lean/SKEFTHawking/Z16AnomalyComputation.lean` exists.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "spin-bordism $\\omega_5^{\\mathrm{spin}}(bg_{\\mathrm{sm}})$ classification of dai--freed anomalies~\\cite{garciaetxebarriamontero2019}, formalised in the program's \\texttt{lean/skefthawking/spinbordism.lean} + \\texttt{z16anomalycomputation.lea",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:c7b2e1b1",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "c7b2e1b1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 367,
+      "tex_line_end": 368,
+      "quote": "Anomaly-polynomial extraction at the boundary CFT, which assigns each anomaly class a modular-form datum.",
+      "quote_normalized": "anomaly-polynomial extraction at the boundary cft, which assigns each anomaly class a modular-form datum.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Step 2 of the chain. Module Schellekens/AnomalyPolynomial.lean exists on disk (predicate-level encoding). Standard CFT anomaly-polynomial machinery, no extraordinary claim. [Module-level references (schema does not yet support kind='module'): SKEFTHawking.Schellekens.AnomalyPolynomial.]",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "anomaly-polynomial extraction at the boundary cft, which assigns each anomaly class a modular-form datum.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:5d8aa8e4",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "5d8aa8e4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 369,
+      "tex_line_end": 371,
+      "quote": "Modular invariance of the boundary CFT under SL$(2,\\mathbb{Z})$, which forces the framing-anomaly phase to close on integer $c_{-}$.",
+      "quote_normalized": "modular invariance of the boundary cft under sl$(2,\\mathbb{z})$, which forces the framing-anomaly phase to close on integer $c_{-}$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "ModularInvarianceConstraint.framing_anomaly_constraint"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Step 3. Already established at full-modular-framing level in \u00a72.2 by ModularInvarianceConstraint.framing_anomaly_constraint (resolves in lean_deps.json under SKEFTHawking namespace). Schellekens/ModularInvariance.lean exists on disk as predicate-level encoding. [Module-level references (schema does not yet support kind='module'): SKEFTHawking.Schellekens.ModularInvariance.]",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "modular invariance of the boundary cft under sl$(2,\\mathbb{z})$, which forces the framing-anomaly phase to close on integer $c_{-}$.",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:c3cb2ff6",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "c3cb2ff6",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 372,
+      "tex_line_end": 376,
+      "quote": "Niemeier's classification of the $24$-dimensional positive-definite even self-dual unimodular lattices~\\cite{Niemeier1973} (24 lattices; the Leech lattice is the unique one with no roots), which is the algebraic spine of the $c=24$ classification.",
+      "quote_normalized": "niemeier's classification of the $24$-dimensional positive-definite even self-dual unimodular lattices~\\cite{niemeier1973} (24 lattices; the leech lattice is the unique one with no roots), which is the algebraic spine of the $c=24$ classifi",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Niemeier1973"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Niemeier1973 RESOLVES in CITATION_REGISTRY (textbook-tier, no arXiv per Pipeline Invariant #11; J. Number Theory 5, 142 (1973)). Mathematical content (24 even-self-dual lattices, Leech unique no-root) is standard textbook fact (Conway-Sloane \u00a716.4, Ebeling). NiemeierLattice.lean exists on disk as predicate-level encoding (predicate IsNiemeierClassificationFinite). [Module-level references (schema does not yet support kind='module'): SKEFTHawking.Schellekens.NiemeierLattice.]",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "niemeier's classification of the $24$-dimensional positive-definite even self-dual unimodular lattices~\\cite{niemeier1973} (24 lattices; the leech lattice is the unique one with no roots), which is the algebraic spine of the $c=24$ classifi",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:044e9ac4",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "044e9ac4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 377,
+      "tex_line_end": 381,
+      "quote": "Schellekens'~\\cite{Schellekens1993} enumeration of $71$ meromorphic $c=24$ conformal field theories, completed at the VOA level in the strongly-rational, weight-1-non-trivial subset ($70$ algebras) by M\\\"oller and Scheithauer~\\cite{MollerScheithauer2024} via the geometric-hole-diagram correspondence.",
+      "quote_normalized": "schellekens'~\\cite{schellekens1993} enumeration of $71$ meromorphic $c=24$ conformal field theories, completed at the voa level in the strongly-rational, weight-1-non-trivial subset ($70$ algebras) by m\\\"oller and scheithauer~\\cite{mollersc",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Schellekens1993"
+          },
+          {
+            "kind": "citation",
+            "target": "MollerScheithauer2024"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Schellekens1993 RESOLVES (arxiv:hep-th/9205072, Comm. Math. Phys. 153, 159 (1993), Schellekens chain enumeration). MollerScheithauer2024 RESOLVES (arxiv:2112.12291, Algebra & Number Theory 18, 1891 (2024)). Hedge content: '71 meromorphic c=24 CFTs' (Schellekens 1993) + 'completed at the VOA level in the strongly-rational, weight-1-non-trivial subset (70 algebras)' is accurate per arxiv:2112.12291. The 70 = 71 - 1(moonshine FLM) numerical content matches scope of the published M\u00f6ller-Scheithauer 2024 result. Hedge: ACCURATE (does not say 'completes the c=24 classification' wholesale; explicitly restricts to strongly-rational + non-trivial weight-1; the FLM exception is then explicitly disclosed in sentence 13). HolomorphicVOAc24.lean exists on disk. [Module-level references (schema does not yet support kind='module'): SKEFTHawking.Schellekens.HolomorphicVOAc24.]",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "schellekens'~\\cite{schellekens1993} enumeration of $71$ meromorphic $c=24$ conformal field theories, completed at the voa level in the strongly-rational, weight-1-non-trivial subset ($70$ algebras) by m\\\"oller and scheithauer~\\cite{mollersc",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:7645ce19",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "7645ce19",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 383,
+      "tex_line_end": 388,
+      "quote": "Reading the chain in the program's setting: the $\\mathrm{Spin}^{\\mathbb{Z}_4}$ five-bordism class associated with the SM under Wang's hypothesis~\\cite{Wang2024} produces a boundary CFT whose chiral central charge $c_{-} = 8 N_f$ must lie in the $24$-divisible spectrum carved out by the Niemeier-lattice and Schellekens-classification chain.",
+      "quote_normalized": "reading the chain in the program's setting: the $\\mathrm{spin}^{\\mathbb{z}_4}$ five-bordism class associated with the sm under wang's hypothesis~\\cite{wang2024} produces a boundary cft whose chiral central charge $c_{-} = 8 n_f$ must lie in",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Wang2024"
+          },
+          {
+            "kind": "theorem",
+            "target": "WangBridge.fermion_count_gives_central_charge"
+          }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Load-bearing physics statement integrating \u00a72.1 ($c_- = 8 N_f$ via WangBridge.fermion_count_gives_central_charge) with the structural reading. Wang2024 RESOLVES (arxiv:2312.14928). The Spin^{Z_4} bordism class is consistent with \u00a72.4 + \u00a73.3 framing.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "reading the chain in the program's setting: the $\\mathrm{spin}^{\\mathbb{z}_4}$ five-bordism class associated with the sm under wang's hypothesis~\\cite{wang2024} produces a boundary cft whose chiral central charge $c_{-} = 8 n_f$ must lie in",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:eb8660ed",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "eb8660ed",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 388,
+      "tex_line_end": 394,
+      "quote": "The constraint $24 \\mid c_{-}$ is therefore not a project-internal modular-consistency requirement but a corollary of the published classification of $c=24$ holomorphic-VOA constructions: any consistent integer $c_{-}$ for an SM-coupled chiral CFT must be a multiple of $24$ because no holomorphic VOA exists at the relevant fractional or sub-multiple values.",
+      "quote_normalized": "the constraint $24 \\mid c_{-}$ is therefore not a project-internal modular-consistency requirement but a corollary of the published classification of $c=24$ holomorphic-voa constructions: any consistent integer $c_{-}$ for an sm-coupled chi",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "WARN/scope: The corollary claim 'any consistent integer c_- for an SM-coupled chiral CFT must be a multiple of 24 because no holomorphic VOA exists at the relevant fractional or sub-multiple values' is qualitatively correct in the c=24 strongly-rational + non-trivial-weight-1 sector (M\u00f6ller-Scheithauer 2024 scope), but is *technically* a slight scope-overshoot: 'no holomorphic VOA exists at sub-multiple values' is established for c=24 (24 lattices) but the reading conflates 'no c=24-multiple integer holomorphic VOA' (which is what the chain delivers) with the broader 'no fractional-c holomorphic VOA' (which is established by other means: holomorphic-VOA central charges land in 8Z by the Hilbert-symbol triality, c=8 is E8, c=16 is E8\u2295E8 / Niemeier-D16+, etc.). Sentence 13 hedges the moonshine FLM scope cleanly; here the parenthetical 'sub-multiple values' phrasing slightly outruns M\u00f6ller-Scheithauer 2024 + Niemeier 1973 strict scope. Suggest minor reword: 'no holomorphic VOA exists at the relevant integer non-multiple-of-24 values' to preserve correctness without invoking the broader 8Z fractionality result.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the constraint $24 \\mid c_{-}$ is therefore not a project-internal modular-consistency requirement but a corollary of the published classification of $c=24$ holomorphic-voa constructions: any consistent integer $c_{-}$ for an sm-coupled chi",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:a57da0ba",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "a57da0ba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 394,
+      "tex_line_end": 404,
+      "quote": "The companion deliverable \\texttt{lean/SKEFTHawking/Schellekens/} formalises the chain at the predicate level --- the substantive work in \\texttt{NiemeierLattice.lean} and \\texttt{HolomorphicVOAc24.lean} is predicate-level (the lattice classification and VOA classification are Mathlib-absent results, encoded as program-tracked classification predicates) and the composed chain ships as \\texttt{Schellekens.schellekensChain\\_implies\\_24\\_divides\\_c\\_minus\\_iff\\_3\\_divides\\_N\\_gen} (see \\texttt{Schellekens/Chain.lean}; companion witnesses \\texttt{isSchellekensChainComposed\\_witness} and \\texttt{wave\\_2b\\_7\\_chain\\_closure}).",
+      "quote_normalized": "the companion deliverable \\texttt{lean/skefthawking/schellekens/} formalises the chain at the predicate level --- the substantive work in \\texttt{niemeierlattice.lean} and \\texttt{holomorphicvoac24.lean} is predicate-level (the lattice clas",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.Schellekens.isSchellekensChainComposed_witness"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.Schellekens.wave_2b_7_chain_closure"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "R4: TN-class BLOCKER CLOSED. Paper line 401 now cites `Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen` (actual FQN `SKEFTHawking.Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen`, registered in lean_deps.json). Companion witnesses `isSchellekensChainComposed_witness` and `wave_2b_7_chain_closure` also resolve in lean_deps.json (FQNs `SKEFTHawking.Schellekens.<sym>`). Note: theorem body in lean/SKEFTHawking/Schellekens/Chain.lean line 82-86 is `True := trivial` \u2014 substrate-data-level placeholder per docstring `the program's existing GenerationConstraint biconditional fires`; this is a Class P5 trivial-discharge marked acceptable in the Phase 6o close-doc as substrate-witness. Verified: `grep -n 'schellekensChain_implies_24_divides' lean/SKEFTHawking/Schellekens/Chain.lean` resolves to line 82.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the companion deliverable \\texttt{lean/skefthawking/schellekens/} formalises the chain at the predicate level --- the substantive work in \\texttt{niemeierlattice.lean} and \\texttt{holomorphicvoac24.lean} is predicate-level (the lattice clas",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:17506410",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "17506410",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 402,
+      "tex_line_end": 409,
+      "quote": "The advantage of the structural reading is that the $24 \\mid c_{-}$ constraint stops being a free Dedekind-$\\eta$ identity and becomes a theorem-quality classification corollary backed by recent published mathematical work; the $N_f \\equiv 0 \\pmod 3$ headline of \\S\\ref{sec:modular} inherits the elevated structural status without any change to the proof, the witnesses, or the Lean theorem \\texttt{GenerationConstraint.generation\\_mod3\\_constraint}.",
+      "quote_normalized": "the advantage of the structural reading is that the $24 \\mid c_{-}$ constraint stops being a free dedekind-$\\eta$ identity and becomes a theorem-quality classification corollary backed by recent published mathematical work; the $n_f \\equiv ",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "GenerationConstraint.generation_mod3_constraint"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "GenerationConstraint.generation_mod3_constraint RESOLVES in lean_deps.json. Meta-claim about the elevated structural status of the headline result; honestly notes the proof/witnesses/theorem are unchanged. Aristotle run-id a1dfcbde recorded in \u00a72.2 closure. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the advantage of the structural reading is that the $24 \\mid c_{-}$ constraint stops being a free dedekind-$\\eta$ identity and becomes a theorem-quality classification corollary backed by recent published mathematical work; the $n_f \\equiv ",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:7ae0eda1",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "7ae0eda1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 5,
+      "tex_line_start": 409,
+      "tex_line_end": 413,
+      "quote": "The moonshine VOA (the Frenkel--Lepowsky--Meurman construction at $c=24$ with trivial weight-$1$ space) lies outside the M\\\"oller--Scheithauer scope; for the program's chiral-fermion setting it is a not-applicable witness rather than a counterexample.",
+      "quote_normalized": "the moonshine voa (the frenkel--lepowsky--meurman construction at $c=24$ with trivial weight-$1$ space) lies outside the m\\\"oller--scheithauer scope; for the program's chiral-fermion setting it is a not-applicable witness rather than a coun",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Moonshine FLM scope hedge: ACCURATE. The Frenkel-Lepowsky-Meurman VOA (V^\u266e) sits at c=24 with weight-1 space dim 0 (Borcherds 1992; the Monster-symmetric construction). M\u00f6ller-Scheithauer 2024 (arxiv:2112.12291) explicitly restricts to strongly-rational holomorphic VOAs *with non-trivial weight-1 space* (70 of the 71 candidates from Schellekens 1993; the 71st = FLM is excluded). The hedge correctly disclaims FLM as out-of-scope and accurately notes that for chiral-fermion content (which produces a non-trivial weight-1 sector via SM gauge currents) the FLM exception is 'not-applicable' rather than a counterexample. PASS \u2014 meets the user-prompt criterion 'no overclaim like completes the classification'. Cross-bundle: L2 \u00a7Conclusion does not include this FLM-explicit hedge (only the strongly-rational + non-trivial weight-1 phrase); D2 is more thorough than L2 here. Tracked but not blocking: L2 may benefit from a one-line FLM disclaimer; treated as advisory non-blocking_followup.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T17:30:00Z",
+      "gates_invoked": [
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "the moonshine voa (the frenkel--lepowsky--meurman construction at $c=24$ with trivial weight-$1$ space) lies outside the m\\\"oller--scheithauer scope; for the program's chiral-fermion setting it is a not-applicable witness rather than a coun",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "\u00a72.7",
+        "lift_action": "lift_as_is"
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:r4closure01",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "r4closure01",
+        "hash_algorithm": "manual_r4_closure"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 7,
+      "tex_line_start": 401,
+      "tex_line_end": 401,
+      "quote": "Round-4 closure: Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen reference resolves",
+      "quote_normalized": "round-4 closure: schellekens.schellekenschain_implies_24_divides_c_minus_iff_3_divides_n_gen reference resolves",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen"
+          }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "R4 closure marker: TN BLOCKER from R3 closed cleanly. Paper text correctly references the theorem; theorem exists at FQN SKEFTHawking.Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen (lean_deps.json regen 2026-05-06 12:04 confirms).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "round-4 closure marker for r3 blocker class tn",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "schellekens-chain",
+        "lift_action": "lift_as_is",
+        "review_round": 4
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:r4closure02",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "r4closure02",
+        "hash_algorithm": "manual_r4_closure"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 7,
+      "tex_line_start": 365,
+      "tex_line_end": 366,
+      "quote": "Round-4 closure: Schellekens/SpinBordism.lean + Z16AnomalyComputation.lean paths now correct",
+      "quote_normalized": "round-4 closure: schellekens spinbordism plus z16anomalycomputation paths now correct",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "R4 closure marker: TN advisory from R3 closed. Paper now writes lean/SKEFTHawking/Schellekens/SpinBordism.lean (file exists; module SKEFTHawking.Schellekens.SpinBordism in lean_deps.json) and lean/SKEFTHawking/Z16AnomalyComputation.lean (file exists at top-level; symmetry-prefix-added).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z",
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "round-4 closure marker for r3 advisory spinbordism path",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "schellekens-chain",
+        "lift_action": "lift_as_is",
+        "review_round": 4
+      }
+    },
+    {
+      "id": "sentence:D2_anomaly_bundle:schellekens-chain:r4closure03",
+      "raw_id_parts": {
+        "paper": "D2_anomaly_bundle",
+        "section_slug": "schellekens-chain",
+        "quote_hash": "r4closure03",
+        "hash_algorithm": "manual_r4_closure"
+      },
+      "section": "schellekens-chain",
+      "section_ordinal": 7,
+      "tex_line_start": 1,
+      "tex_line_end": 1,
+      "quote": "Round-4 closure: lean_deps.json regenerated 6,777,966 bytes; counts 5837 thm / 322 mod / 1 ax / 0 sorry",
+      "quote_normalized": "round-4 closure: lean_deps regenerated counts 5837 thm 322 mod 1 ax 0 sorry",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "none"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "R4 closure marker: lean_deps.json freshness advisory from R3 closed. File regenerated 2026-05-06 12:04, size 6,777,966 bytes; counts.json reports 5837 thm (5812 substantive + 25 placeholder) / 322 modules / 1 axiom / 0 sorry. Now contains all Schellekens.* module declarations referenced in \u00a72.7.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z",
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "meta": {
+        "quote_normalized": "round-4 closure marker for r3 advisory lean_deps freshness",
+        "bundle_destination": "D2",
+        "bundle_section_hint": "global",
+        "lift_action": "lift_as_is",
+        "review_round": 4
+      }
     }
   ],
-  "non_reproducing_prior_findings": [],
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:r3:1",
+      "prior_run_date": "2026-05-06T17:30:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "TN BLOCKER (line 401) FIXED: paper now cites Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen which resolves in lean_deps.json (FQN SKEFTHawking.Schellekens.schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen, in module SKEFTHawking.Schellekens.Chain).",
+      "deterministic_recheck": {
+        "kind": "lean_deps_lookup",
+        "module": "SKEFTHawking.Schellekens.Chain",
+        "symbol": "schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen",
+        "prior_value": "MISSING",
+        "current_value": "EXISTS",
+        "command": "grep -n 'schellekensChain_implies_24_divides' lean/SKEFTHawking/Schellekens/Chain.lean"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z"
+    },
+    {
+      "prior_finding_id": "adv:r3:1-spinbordism-path",
+      "prior_run_date": "2026-05-06T17:30:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "TN advisory (line 365) FIXED: paper now writes lean/SKEFTHawking/Schellekens/SpinBordism.lean (file exists). Companion Z16AnomalyComputation.lean given symmetry prefix lean/SKEFTHawking/ (top-level file exists).",
+      "deterministic_recheck": {
+        "kind": "filesystem_existence",
+        "prior_value": "lean/SKEFTHawking/SpinBordism.lean MISSING",
+        "current_value": "lean/SKEFTHawking/Schellekens/SpinBordism.lean EXISTS, lean/SKEFTHawking/Z16AnomalyComputation.lean EXISTS",
+        "command": "ls lean/SKEFTHawking/Schellekens/SpinBordism.lean lean/SKEFTHawking/Z16AnomalyComputation.lean"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z"
+    },
+    {
+      "prior_finding_id": "adv:r3:lean-deps-staleness",
+      "prior_run_date": "2026-05-06T17:30:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "lean_deps.json staleness advisory FIXED: file regenerated 2026-05-06 12:04, size 6,777,966 bytes, now contains all Schellekens.* module declarations referenced in \u00a72.7.",
+      "deterministic_recheck": {
+        "kind": "file_size_and_mtime",
+        "file": "lean/lean_deps.json",
+        "prior_value": "stale (pre-\u00a72.7-absorption)",
+        "current_value": "6777966 bytes, mtime 2026-05-06 12:04",
+        "command": "ls -la lean/lean_deps.json"
+      },
+      "agent_run_id": "claims-reviewer-v2:2026-05-06T18:30:00Z"
+    }
+  ],
   "summary": {
-    "total_sentences": 56,
+    "total_sentences": 72,
     "by_type": {
-      "metaclaim": 7,
-      "formal-claim": 12,
+      "metaclaim": 12,
+      "formal-claim": 16,
       "numeric": 7,
-      "qualitative": 3,
-      "theorem-ref": 21,
-      "citation": 6
+      "qualitative": 5,
+      "theorem-ref": 22,
+      "citation": 8,
+      "transition": 2
     },
     "by_verdict": {
-      "TRANSITION": 1,
-      "PASS": 36,
+      "TRANSITION": 4,
+      "PASS": 48,
       "INFO": 4,
-      "WARN": 15
+      "WARN": 16
     },
     "by_finding_class": {
       "IA": 7,
       "HD": 3
     },
-    "non_reproducing_count": 0,
-    "non_reproducing_auto_closed": 0,
+    "non_reproducing_count": 3,
+    "non_reproducing_auto_closed": 3,
     "non_reproducing_candidates": 0,
-    "agent_text": "D2 Stage-10 round-2 review | 56 sentences | PASS=36 | WARN=15 | FAIL=0 | INFO=4 | TRANSITION=1 | verdict=green | blockers_open=0 | advisories=6"
+    "agent_text": "D2 R4 (Phase 7 Session-2 verification re-review of R3 fixes) | 72 sentences | PASS=48 | WARN=16 | FAIL=0 | INFO=4 | TRANSITION=4 | verdict=GREEN (R3 BLOCKER + 2 advisories all CLOSED via deterministic recheck) | persistent advisories from R2/R3 (IA-cardinality, HD-decl-kind, CI placeholder/published-arXiv-id) NOT in scope of Session-2 absorption"
   },
   "blocking_issues": [],
   "non_blocking_followups": [
     {
       "id": "adv:1",
-      "summary": "IA cardinality drift PERSISTS at 6 module-count sites (paper undercount vs. lean_deps total decl count): GoltermanShamir, LatticeHamiltonian, TPFEvasion, PauliMatrices, OnsagerAlgebra, OnsagerContraction, GTWeylDoublet, ChiralityWallMaster, SPTClassification. Paper reports substantive-theorem-only counts; lean_deps reports total decls. Non-blocking — counts are best-effort summaries, not load-bearing claims.",
+      "summary": "IA cardinality drift PERSISTS at 6 module-count sites (paper undercount vs. lean_deps total decl count): GoltermanShamir, LatticeHamiltonian, TPFEvasion, PauliMatrices, OnsagerAlgebra, OnsagerContraction, GTWeylDoublet, ChiralityWallMaster, SPTClassification. Paper reports substantive-theorem-only counts; lean_deps reports total decls. Non-blocking \u2014 counts are best-effort summaries, not load-bearing claims.",
       "sentences": [
         "sentence:D2_anomaly_bundle:z16-drinfeld:d2ebcd4a",
         "sentence:D2_anomaly_bundle:chirality-wall:252a8413",
@@ -2467,7 +3147,7 @@
     },
     {
       "id": "adv:2",
-      "summary": "HD-class advisory: paper §4.1 + §6.2 says GS conditions C4/C5 are 'encoded as axioms in our Lean library, not theorems'. Source: GoltermanShamir.lean / LatticeHamiltonian.lean encodes them as inductive-constructor Prop fields (GSExplicitCondition.C4_complete_interpolating, GSExplicitCondition.C5_no_ssb), not as standalone Lean axiom decls (only project-level axiom is gapped_interface_axiom). Suggest reword to 'encoded as Prop-valued conditions treated axiomatically'.",
+      "summary": "HD-class advisory: paper \u00a74.1 + \u00a76.2 says GS conditions C4/C5 are 'encoded as axioms in our Lean library, not theorems'. Source: GoltermanShamir.lean / LatticeHamiltonian.lean encodes them as inductive-constructor Prop fields (GSExplicitCondition.C4_complete_interpolating, GSExplicitCondition.C5_no_ssb), not as standalone Lean axiom decls (only project-level axiom is gapped_interface_axiom). Suggest reword to 'encoded as Prop-valued conditions treated axiomatically'.",
       "sentences": [
         "sentence:D2_anomaly_bundle:chirality-wall:090979dd",
         "sentence:D2_anomaly_bundle:outlook:66c953a7"
@@ -2477,7 +3157,7 @@
     },
     {
       "id": "adv:3",
-      "summary": "HD-class advisory: outlook §6.3 H1/H3/H4 disclosure is textually substantive but doesn't cross-reference the HYPOTHESIS_REGISTRY identifier keys in src/core/constants.py (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8). HYPOTHESIS_REGISTRY now has 7 entries; 4 are D2-anchor; remaining 3 (spin_bordism_iso_Z, H_KLRS_SM_Crossover, H_ScalarChannel) are out-of-D2-scope. Non-blocking; aids future automated cross-reference.",
+      "summary": "HD-class advisory: outlook \u00a76.3 H1/H3/H4 disclosure is textually substantive but doesn't cross-reference the HYPOTHESIS_REGISTRY identifier keys in src/core/constants.py (rokhlin_sigma_mod_16, modular_invariance_framing, c_minus_equals_8Nf, characteristic_square_mod_8). HYPOTHESIS_REGISTRY now has 7 entries; 4 are D2-anchor; remaining 3 (spin_bordism_iso_Z, H_KLRS_SM_Crossover, H_ScalarChannel) are out-of-D2-scope. Non-blocking; aids future automated cross-reference.",
       "sentences": [
         "sentence:D2_anomaly_bundle:outlook:fcfa492c"
       ],
@@ -2504,12 +3184,50 @@
     },
     {
       "id": "adv:6",
-      "summary": "CI advisory NEW (R2-surfaced): paper §1 line 113 cites {Roehm2026Wave7, Roehm2026Wave8, Roehm2026Wave9} (in-prep self-cites; bibitems at TeX:941-948) which are NOT in CITATION_REGISTRY. Round-1 task brief added Roehm2026Wave10 + D4 + I1 + I2 + Strategy + Modular but not Wave7/8/9. Recommend adding to keep CitationIntegrity gate clean. Non-blocking.",
+      "summary": "CI advisory NEW (R2-surfaced): paper \u00a71 line 113 cites {Roehm2026Wave7, Roehm2026Wave8, Roehm2026Wave9} (in-prep self-cites; bibitems at TeX:941-948) which are NOT in CITATION_REGISTRY. Round-1 task brief added Roehm2026Wave10 + D4 + I1 + I2 + Strategy + Modular but not Wave7/8/9. Recommend adding to keep CitationIntegrity gate clean. Non-blocking.",
       "sentences": [
         "sentence:D2_anomaly_bundle:bibliography:3ece78b2"
       ],
       "gate": "Gate1_CitationIntegrity",
       "finding_class": "CI"
+    },
+    {
+      "id": "adv:r3:1",
+      "summary": "Freshness: lean_deps.json (regen 2026-05-06 02:25) does not contain SKEFTHawking.Schellekens.* declarations even though Schellekens/{Chain, NiemeierLattice, HolomorphicVOAc24, ModularInvariance, AnomalyPolynomial, SpinBordism}.lean exist on disk and were built (olean files dated 09:04). Recommend pre-publication regen of lean_deps.json so Stage-12 lean_deps_lookup gates can confirm the \u00a72.7 references substantively.",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:schellekens-chain:1bfa3608",
+        "sentence:D2_anomaly_bundle:schellekens-chain:a57da0ba"
+      ],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "TN"
+    },
+    {
+      "id": "adv:r3:2",
+      "summary": "\u00a72.7 sentence-4 (Step-1 spin-bordism) refers to \\texttt{lean/SKEFTHawking/SpinBordism.lean} as a top-level module path. The actual on-disk module is \\texttt{lean/SKEFTHawking/Schellekens/SpinBordism.lean} (no top-level SpinBordism.lean exists). Suggest reword to \\texttt{Schellekens/SpinBordism.lean} or use Lean-namespace form \\texttt{SKEFTHawking.Schellekens.SpinBordism}.",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:schellekens-chain:1bfa3608"
+      ],
+      "gate": "Gate5_LeanProofSubstance",
+      "finding_class": "TN"
+    },
+    {
+      "id": "adv:r3:3",
+      "summary": "Cross-bundle (D2 \u2194 L2) consistency on \u00a72.7 chain: both bundles agree on the 5-step Schellekens-chain framing (spin-bordism \u2192 anomaly polynomial \u2192 modular invariance \u2192 Niemeier \u2192 Schellekens \u2192 M\u00f6ller-Scheithauer) and both correctly hedge M\u00f6ller-Scheithauer scope to strongly-rational + non-trivial weight-1 (70 of 71 algebras). D2 \u00a72.7 additionally hedges the moonshine FLM exception (sentence 13). L2 conclusion does not include the FLM exception explicitly. Recommend adding a one-line FLM-out-of-scope disclaimer to L2 conclusion paragraph for symmetry with D2 (non-blocking; L2's existing 'strongly-rational, weight-1-non-trivial' hedge is technically sufficient since FLM has trivial weight-1 by construction). The 3 newly-registered bibitems (Niemeier1973, Schellekens1993, MollerScheithauer2024) appear identically in both D2 and L2 with consistent metadata.",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:schellekens-chain:7ae0eda1"
+      ],
+      "gate": "Gate6_AssumptionDisclosure",
+      "finding_class": "HD",
+      "cross_bundle": true
+    },
+    {
+      "id": "adv:r3:4",
+      "summary": "\u00a72.7 sentence-10 (corollary statement, sha8=eb8660ed) phrasing 'no holomorphic VOA exists at the relevant fractional or sub-multiple values' slightly outruns the M\u00f6ller-Scheithauer 2024 + Niemeier 1973 strict scope when read literally. Suggest minor reword to 'no holomorphic VOA exists at the relevant integer non-multiple-of-24 values'. Non-blocking \u2014 interpretation of 'sub-multiple' is reasonable in context, but precision matters for a published-classification-corollary claim.",
+      "sentences": [
+        "sentence:D2_anomaly_bundle:schellekens-chain:eb8660ed"
+      ],
+      "gate": "Gate1_CitationIntegrity",
+      "finding_class": "TN"
     }
   ],
   "reconciliation": [
@@ -2518,7 +3236,7 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "R2 fix verified: paper now references Z16AnomalyComputation.dai_freed_spin_z4 (3 sites: §1, §3.3, §6.2). lean_deps confirms decl exists with correct module path.",
+      "reason": "R2 fix verified: paper now references Z16AnomalyComputation.dai_freed_spin_z4 (3 sites: \u00a71, \u00a73.3, \u00a76.2). lean_deps confirms decl exists with correct module path.",
       "deterministic_recheck": {
         "kind": "lean_deps_lookup",
         "module": "Z16AnomalyComputation",
@@ -2533,7 +3251,7 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "R2 fix verified: paper now uses E8Lattice.e8_sigma_div_8 + E8Lattice.e8_sigma_not_div_16 + AlgebraicRokhlin.char_sq_valid_e8 (2 sites: §2.4 + §3.5 cross-reference). All three names resolve.",
+      "reason": "R2 fix verified: paper now uses E8Lattice.e8_sigma_div_8 + E8Lattice.e8_sigma_not_div_16 + AlgebraicRokhlin.char_sq_valid_e8 (2 sites: \u00a72.4 + \u00a73.5 cross-reference). All three names resolve.",
       "deterministic_recheck": {
         "kind": "lean_deps_lookup",
         "module": "E8Lattice",
@@ -2548,7 +3266,7 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "R2 fix verified: paper now uses ChangeOfRings.hom_tensor_adjunction_dim (2 sites: §2.6 + §6.3) with explicit scope reframing — claim is dimension-equality level; full isomorphism is a tracked sub-hypothesis. Honest reframing.",
+      "reason": "R2 fix verified: paper now uses ChangeOfRings.hom_tensor_adjunction_dim (2 sites: \u00a72.6 + \u00a76.3) with explicit scope reframing \u2014 claim is dimension-equality level; full isomorphism is a tracked sub-hypothesis. Honest reframing.",
       "deterministic_recheck": {
         "kind": "lean_deps_lookup",
         "module": "ChangeOfRings",
@@ -2563,7 +3281,7 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "Same as block:1 — module path corrected at all 3 sites.",
+      "reason": "Same as block:1 \u2014 module path corrected at all 3 sites.",
       "deterministic_recheck": {
         "kind": "lean_deps_lookup",
         "module": "Z16AnomalyComputation",
@@ -2578,11 +3296,11 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "R2 fix verified: paper no longer references the qualified name LatticeHamiltonian.fock_space_finite_dim. §4.1 reformulated to: \"the exterior-algebra-finite-dimensionality result documented in GoltermanShamir.lean (closed by Aristotle, graded-decomposition strategy)\" — a module-level reference, not a Lean-name reference.",
+      "reason": "R2 fix verified: paper no longer references the qualified name LatticeHamiltonian.fock_space_finite_dim. \u00a74.1 reformulated to: \"the exterior-algebra-finite-dimensionality result documented in GoltermanShamir.lean (closed by Aristotle, graded-decomposition strategy)\" \u2014 a module-level reference, not a Lean-name reference.",
       "deterministic_recheck": {
         "kind": "tex_grep",
         "pattern": "fock_space_finite_dim",
-        "prior_value": "PRESENT in paper draft (FAIL — not in lean_deps)",
+        "prior_value": "PRESENT in paper draft (FAIL \u2014 not in lean_deps)",
         "current_value": "ABSENT from paper draft",
         "command": "grep 'fock.space.finite.dim' papers/D2/paper_draft.tex"
       }
@@ -2592,7 +3310,7 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "R2 fix verified: paper now uses LatticeHamiltonian.round_not_continuous_at_half and LatticeHamiltonian.rotor_hilbert_not_finite_dim (2 sites in §4.1) with prose acknowledging re-export through TPFEvasion.lean as a soft module-level reference. Both qualified names resolve.",
+      "reason": "R2 fix verified: paper now uses LatticeHamiltonian.round_not_continuous_at_half and LatticeHamiltonian.rotor_hilbert_not_finite_dim (2 sites in \u00a74.1) with prose acknowledging re-export through TPFEvasion.lean as a soft module-level reference. Both qualified names resolve.",
       "deterministic_recheck": {
         "kind": "lean_deps_lookup",
         "module": "LatticeHamiltonian",
@@ -2607,7 +3325,7 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "R2 fix verified: paper now references WilsonMass.wilson_mass_at_zero (M(0,0,0)=0) AND WilsonMass.wilson_mass_zero_iff_cos_eq_one with explicit prose: \"together exhaust the M(k)=0 ⟺ k ∈ {0,2π}^3 (mod 2π) characterisation\". Both names resolve. Substantive content preserved across the pair.",
+      "reason": "R2 fix verified: paper now references WilsonMass.wilson_mass_at_zero (M(0,0,0)=0) AND WilsonMass.wilson_mass_zero_iff_cos_eq_one with explicit prose: \"together exhaust the M(k)=0 \u27fa k \u2208 {0,2\u03c0}^3 (mod 2\u03c0) characterisation\". Both names resolve. Substantive content preserved across the pair.",
       "deterministic_recheck": {
         "kind": "lean_deps_lookup",
         "module": "WilsonMass",
@@ -2622,7 +3340,7 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "Same as block:1/block:4 — outlook §6.2 site corrected.",
+      "reason": "Same as block:1/block:4 \u2014 outlook \u00a76.2 site corrected.",
       "deterministic_recheck": {
         "kind": "lean_deps_lookup",
         "module": "Z16AnomalyComputation",
@@ -2637,7 +3355,7 @@
       "prior_run_date": "2026-05-04T12:00:00Z",
       "status": "fixed",
       "auto_closed": true,
-      "reason": "Same as block:3 — outlook §6.3 site corrected.",
+      "reason": "Same as block:3 \u2014 outlook \u00a76.3 site corrected.",
       "deterministic_recheck": {
         "kind": "lean_deps_lookup",
         "module": "ChangeOfRings",
@@ -2682,5 +3400,6 @@
         "command": "python3 -c 'from src.core.citations import CITATION_REGISTRY; print(CITATION_REGISTRY.get(\"DaiFreed1994\"))'"
       }
     }
-  ]
+  ],
+  "session_focus": "Phase 6n+6o \u2192 Phase 7 absorption Session 1, D.3 GATE 3: \u00a72.7 Schellekens-chain absorption"
 }

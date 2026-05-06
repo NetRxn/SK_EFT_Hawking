@@ -234,6 +234,128 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-04T12:51:20Z",
       "notes": "Einstein-Cartan torsion; Phase 7c stub"
+    },
+    {
+      "date": "2026-05-06T15:40:15Z",
+      "source_paper": "_phase6n_W1a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "Resurgence.KinematicDispersive",
+        "Resurgence.LoopEnvelope"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:40:15Z",
+      "notes": "D.2 absorption: Phase 6n W1a transport NO-GO landscape (substrate IS geometric envelope, not Gevrey-1; decouples asymptotic verdict from explicit \u03b3_2^(loop))"
+    },
+    {
+      "date": "2026-05-06T15:40:20Z",
+      "source_paper": "_phase6n_W2c_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "CrooksAnalogHawking.LDPLinearResponse",
+        "CrooksAnalogHawking.HorizonDetailedBalance",
+        "SKEFTGallavottiCohen",
+        "SKEFTHorizonBridge"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:40:20Z",
+      "notes": "D.2 absorption: Phase 6n W2c Crooks-on-analog-Hawking entry-point + W-form GC structural anchor + IsLDPRateFunction abstract"
+    },
+    {
+      "date": "2026-05-06T15:40:23Z",
+      "source_paper": "_phase6o_W1a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "SoftTheorems.Carrollian",
+        "SoftTheorems.EmergentGraviton"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:40:23Z",
+      "notes": "D.2 absorption: Phase 6o W1a analog-horizon Strominger triangle closure + ADW graviton subleading factor with Goldstone-broken-boost content"
+    },
+    {
+      "date": "2026-05-06T15:40:26Z",
+      "source_paper": "_phase6o_W1b_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "KerrSchild.PetrovD",
+        "KerrSchild.SingleCopy",
+        "KerrSchild.WeylSpinor",
+        "KerrSchild.BCJNoGo",
+        "KerrSchild.PolaritonCrossBridge"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:40:26Z",
+      "notes": "D.2 absorption: Phase 6o W1b vestigial-graviton landscape: Kerr-Schild double-copy on Petrov-D acoustic + 3-obstruction strong-form BCJ NO-GO theorem-pair"
+    },
+    {
+      "date": "2026-05-06T15:40:30Z",
+      "source_paper": "_phase6o_W3b_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a76",
+      "lean_modules_referenced": [
+        "It\u00f4.ItoLemma",
+        "It\u00f4.ItoIsometry",
+        "LDP.LDPCompatibleSKEFT"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:40:30Z",
+      "notes": "D.2 absorption: Phase 6o W3b It\u00f4-time form W-form GC + Glorioso-Liu monotonicity cross-bridge via LDPCompatibleSKEFT typeclass"
+    },
+    {
+      "date": "2026-05-06T15:40:35Z",
+      "source_paper": "_phase6o_W1c_writeup",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a710",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:40:35Z",
+      "notes": "D.2 absorption: Phase 6o W1c G1 NO-GO writeup (parallel to 6n.\u03b7) \u2014 3 structural obstructions: unitarity\u2192KMS replacement breaks EFT-positivity; crossing has no doubled-contour analog; SDP feasibility breaks on complex contour"
+    },
+    {
+      "date": "2026-05-06T15:40:38Z",
+      "source_paper": "_phase6o_W2a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a717",
+      "lean_modules_referenced": [
+        "APSEta.Predicate",
+        "APSEta.BECAcoustic",
+        "APSEta.ADWHorizon",
+        "APSEta.He3A",
+        "APSEta.SymTFTBridge",
+        "APSEta.RegimePartition"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:40:38Z",
+      "notes": "D.2 absorption: Phase 6o W2a heat-kernel APS-\u03b7 substrate cross-bridge (BEC + ADW parity-symmetric \u2192 \u03b7 = 0; \u00b3He-A non-degenerate cell \u2192 substantive APS boundary correction)"
+    },
+    {
+      "date": "2026-05-06T16:30:00Z",
+      "source_paper": "_phase6n_W2d_lean_only",
+      "lift_action": "Revision",
+      "bundle_section_inserted": "\u00a717.5 (NEW subsection within \u00a717 Heat-kernel calibration)",
+      "lean_modules_referenced": [
+        "CrooksAnalogHawking.SakharovHorizonCrooks",
+        "CrooksAnalogHawking.HorizonDetailedBalance",
+        "JacobsonThermoGRDarkEnergy",
+        "EntropicGravityDarkEnergy",
+        "SKEFTHorizonBridge"
+      ],
+      "citation_count_added": 6,
+      "stage13_redo_required": true,
+      "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T16:30:00Z",
+      "notes": "D.3 GATE 2 absorption (Phase 6n.\u03b6, user-auth granted 2026-05-06): NEW subsection \u00a717.5 'Sakharov-horizon-Crooks unification'. Sakharov 4-condition criterion (JTGR6-9 in JacobsonThermoGRDarkEnergy.lean) \u2194 horizon-Crooks detailed-balance P_F[\u03b3]/P_R[\u03b3\u0304] = exp(\u03c3[\u03b3]) at local Rindler horizon. Verlinde-vs-Jacobson distinction explicit at every claim site (Jacobson 1995 equilibrium-Clausius reading allowed; Verlinde 2010/2017 entropic-force reading explicitly disclaimed and tied to Phase 6m R2/R3 EGDE 8/8 unanimous NO-GO at \u22655\u03c3). 6 new bibitems added (Crooks1999 NEW to CITATION_REGISTRY; JacobsonEFE1995, JacobsonVolovik1998, Volovik2003BraneBH, Verlinde2011Entropic, Verlinde2017dSEmergent already in registry but not previously cited in D3). Source verification: Crooks 1999 verified via WebFetch + arXiv abstract 2026-05-06; existing EGDE 8/8 NO-GO confirmed via direct grep of EntropicGravityDarkEnergy.lean theorems. LaTeX compile clean (50pp / 447KB). \u00a717 heat-kernel calibration (Decision Gate E.2) and all current claims preserved unchanged \u2014 purely additive structural framing. Pre-draft: temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md."
     }
   ]
 }

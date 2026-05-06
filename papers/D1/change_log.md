@@ -41,3 +41,35 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: §7
 - Stage-13 redo required: yes
 - Notes: Graphene Dirac-fluid Hawking; 92% Lean theorem reuse; W-F violation; closed-form noise from Keldysh FDT + Landauer-Buttiker; companion to E2 PRL letter (already shipped GREEN 2026-05-04)
+
+## 2026-05-06 — Lift-section from `_phase6n_W1a_lean_only` (§3)
+
+- Source title: BEC SK-EFT geometric envelope (NOT Gevrey-1)
+- Lift action: Lift-section
+- Insertion point: §3
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6n W1a kinematic-dispersive geometric envelope (NOT Gevrey-1); IsGeometric predicate; closed-form γ_n
+
+## 2026-05-06 — Lift-section from `_phase6n_W2c_lean_only` (§5)
+
+- Source title: LDP linear-response framework
+- Lift action: Lift-section
+- Insertion point: §5
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6n W2c FDR W-form GC + abstract IsLDPRateFunction; LinearResponseRateFunction
+
+## 2026-05-06 — Lift-section from `_phase6n_W2b_lean_only` (§6)
+
+- Source title: Quantum Crooks no-go (Perarnau-Llobet)
+- Lift action: Lift-section
+- Insertion point: §6
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6n W2b BEC + polariton quantum-Crooks landscape; Perarnau-Llobet typeclass connections
+
+## 2026-05-06 — Lift-section from `_phase6o_W1a_lean_only` (§6)
+
+- Source title: Boostless / Carrollian soft-theorem program: `SoftTheorems/Boostless.lean` (I...
+- Lift action: Lift-section
+- Insertion point: §6
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6o W1a boostless / Carrollian soft theorems on BEC + polariton; Strominger-triangle closure

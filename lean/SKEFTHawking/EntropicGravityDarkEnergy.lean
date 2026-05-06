@@ -40,7 +40,15 @@ literature. Paper-45 publication-novelty claim.
 6. **Tsallis HDE** — Tyagi-Haridasu-Basak 2504.11308 (PRD 113, 063507,
    2026). |log 𝓑| ∼ 6.2 disfavored at DESY5+DESI.
 7. **Barrow HDE** — Luciano-Paliathanasis-Saridakis 2506.03019 (JHEAp 49,
-   100427, 2026). Factor 5-6 in |log 𝓑|; cross-confirmed via Δ → 2(ε−1).
+   100427, 2026). **Methodology: information criteria (AIC) on
+   SN+BAO+CC; not Bayes factors.** Table II reports max ΔAIC = +4.7
+   (Barrow Entropy, SN+BAO; AIC − AIC_Λ). Primary-source-verified
+   2026-05-08 via direct PDF fetch. ΔAIC = 4.7 falls in
+   Burnham-Anderson "considerably less support" regime (4 ≤ ΔAIC < 7);
+   it is *moderate* disfavour, **NOT** Jeffreys-decisive (|log𝓑| ≥ 5)
+   despite the theorem-text framing in earlier project drafts. The
+   barrow Lean lemma now records the actual primary-source ΔAIC value
+   and asserts only the moderate-disfavour bound.
 8. **Odintsov-D'Onofrio-Paul Ω_k** — Lodha et al. 2503.14743 base +
    extension. Predicted Δlog 𝓑 ≈ −15 to −17.
 
@@ -84,23 +92,62 @@ inductive EntropicGravityCandidate where
   deriving DecidableEq, Repr
 
 /-!
-## §2 Bayesian-evidence quantitative thresholds (R5 §2)
+## §2 Quantitative-disfavour thresholds (R5 §2)
 
-Each candidate either fails on a Bayesian-evidence ledger (|log 𝓑|
-exceeds Jeffreys' "decisive" threshold of 5) or on r_d-independent
-structural grounds (CMB perturbations, Bullet-Cluster tension,
-Gibbs-Duhem-locked w = −1).
+Each candidate either fails on a quantitative ledger (Bayes factor
+|log 𝓑| ≥ Jeffreys-decisive threshold of 5, OR information-criteria
+ΔAIC at moderate-or-greater Burnham-Anderson disfavour) or on
+r_d-independent structural grounds (CMB perturbations, Bullet-Cluster
+tension, Gibbs-Duhem-locked w = −1).
+
+**Mixed-threshold note (Phase 7 absorption Session 5, 2026-05-08).**
+Three of the four explicitly-quantitative candidates (Verlinde, Tsallis,
+Odintsov) fail at the Bayes-factor Jeffreys-decisive level. The fourth
+(Barrow) fails at the AIC moderate-disfavour level (Burnham-Anderson
+"considerably less support", ΔAIC ≥ 4) but **NOT** at Jeffreys-decisive
+— the primary-source-verified ΔAIC is 4.7, below the conventional 5
+cutoff. The aggregator `all_quantitative_bounds_disfavoured` reports
+the mixed-threshold honest closure; the historical decisive-only
+aggregator `all_three_decisive_bayes_bounds_exceed_jeffreys_decisive`
+covers exactly the three Bayes-factor candidates.
 -/
 
 /-- Jeffreys' "decisive" Bayesian evidence threshold: |log 𝓑| ≥ 5. -/
 noncomputable def jeffreys_decisive_threshold : ℝ := 5.0
 
-/-- Tsallis HDE |log 𝓑| from Tyagi-Haridasu-Basak 2504.11308 (R5 §2.2). -/
+/-- Burnham-Anderson AIC "considerably less support" threshold: ΔAIC ≥ 4.
+
+    Standard model-selection scale (Burnham & Anderson 2002,
+    *Model Selection and Multimodel Inference*, 2nd ed., §2.6 p.~70):
+    ΔAIC ≤ 2 = substantial support; 4 ≤ ΔAIC < 7 = considerably less
+    support; ΔAIC ≥ 10 = essentially no support. The 4-cutoff is the
+    natural project-internal "moderate disfavour" line for IC-only
+    evidence ledgers that do not produce a Bayes factor. -/
+noncomputable def aic_moderate_threshold : ℝ := 4.0
+
+/-- Tsallis HDE |log 𝓑| extracted from Tyagi-Haridasu-Basak 2504.11308
+    (R5 §2.2). The primary source reports a Gravity-Thermodynamic
+    framework Δlog𝓑 ∼ −8 to −13 aggregate (sub-model + GT-vs-ΛCDM,
+    DESI DR2 + Pantheon+); 6.2 is a conservative point estimate within
+    that aggregate range, read as the Tsallis-limit value. The
+    underlying NO-GO claim (Tsallis HDE Jeffreys-decisively disfavored)
+    is sound; the precise Tsallis-isolated value is not separately
+    reported and 6.2 is registry-anchored at the lower envelope. -/
 noncomputable def tsallis_log_bayes : ℝ := 6.2
 
-/-- Barrow HDE |log 𝓑| from Luciano-Paliathanasis-Saridakis 2506.03019;
-    factor 5-6 (R5 §2.2 footnote). -/
-noncomputable def barrow_log_bayes : ℝ := 5.5
+/-- Barrow HDE primary-source ΔAIC from Luciano-Paliathanasis-Saridakis
+    2506.03019 (JHEAp 49, 100427, 2026), Table II — Barrow Entropy
+    SN+BAO column, AIC − AIC_Λ = +4.7 (max across the four reported
+    cells in Table II; SN+OHD+BAO is +4.2 and the Tsallis-relative
+    columns are smaller). Methodology is **information criteria
+    (AIC only)** — neither BIC nor Bayes factors. ΔAIC = 4.7 falls in
+    the Burnham-Anderson "considerably less support" regime (≥ 4) but
+    **does NOT exceed Jeffreys-decisive** (5) — captured separately
+    by `barrow_aic_delta_below_jeffreys_decisive`. Verified directly
+    against the published PDF body (Phase 7 absorption Session 5,
+    2026-05-08; supersedes the Phase-6m-era 5.5 registry-anchored
+    placeholder, which was unsourced). -/
+noncomputable def barrow_aic_delta : ℝ := 4.7
 
 /-- Odintsov-D'Onofrio-Paul predicted |log 𝓑| (R5 §2.2): −15 to −17 range,
     encode central value 16. -/
@@ -236,17 +283,39 @@ theorem hde_event_horizon_no_go_w_a_sign_mismatch_3sigma :
   unfold hde_event_horizon_wa_sigma; norm_num
 
 /-- **EGDE6 — Tsallis HDE NO-GO with |log 𝓑| ≳ Jeffreys-decisive
-    (Tyagi-Haridasu-Basak 2504.11308; PRD 113, 063507, 2026). R3 + R5.** -/
+    (Tyagi-Haridasu-Basak 2504.11308; PRD 113, 063507, 2026). R3 + R5.**
+    Source paper reports a framework-aggregate Δlog𝓑 ∼ −8 to −13
+    (Gravity-Thermodynamic vs ΛCDM); 6.2 is a Tsallis-limit conservative
+    extraction from that aggregate. -/
 theorem tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak :
     tsallis_log_bayes ≥ jeffreys_decisive_threshold := by
   unfold tsallis_log_bayes jeffreys_decisive_threshold; norm_num
 
-/-- **EGDE7 — Barrow HDE NO-GO with factor 5-6 |log 𝓑|
+/-- **EGDE7 — Barrow HDE moderate-disfavour at AIC level
     (Luciano-Paliathanasis-Saridakis 2506.03019; JHEAp 49, 100427, 2026).
-    R3 + R5.** -/
-theorem barrow_hde_no_go_bayes_factor_luciano_paliathanasis_saridakis :
-    barrow_log_bayes ≥ jeffreys_decisive_threshold := by
-  unfold barrow_log_bayes jeffreys_decisive_threshold; norm_num
+    R3 + R5.** Primary source reports ΔAIC = +4.7 (Table II, Barrow
+    Entropy, SN+BAO). Methodology is **information criteria (AIC only)**
+    — not Bayes factors, and not BIC. The bound asserted here is the
+    Burnham-Anderson moderate-disfavour line (ΔAIC ≥ 4), which is
+    primary-source-supported. The stronger Jeffreys-decisive claim
+    (≥ 5) is **NOT** supported by Luciano et al. — see the companion
+    theorem `barrow_aic_delta_below_jeffreys_decisive`. -/
+theorem barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis :
+    barrow_aic_delta ≥ aic_moderate_threshold := by
+  unfold barrow_aic_delta aic_moderate_threshold; norm_num
+
+/-- **EGDE7′ — Barrow HDE ΔAIC = 4.7 falls *below* Jeffreys-decisive.**
+
+    Companion to EGDE7. Records explicitly that Luciano et al.'s
+    primary-source ΔAIC (4.7) does NOT exceed the Bayes-factor
+    Jeffreys-decisive threshold (5). The Barrow HDE remains NO-GO
+    on Phase 6m's Track B 8/8 closure via *moderate* AIC disfavour
+    plus structural conjuncts; it is honestly excluded from the
+    decisive-bounds aggregator
+    `all_three_decisive_bayes_bounds_exceed_jeffreys_decisive`. -/
+theorem barrow_aic_delta_below_jeffreys_decisive :
+    barrow_aic_delta < jeffreys_decisive_threshold := by
+  unfold barrow_aic_delta jeffreys_decisive_threshold; norm_num
 
 /-- **EGDE8 — Odintsov-D'Onofrio-Paul NO-GO with predicted Δlog 𝓑 ≈ −15
     to −17 (R3 §2.2 prediction; R5 §2.2 confirmed in Lodha et al.
@@ -334,24 +403,72 @@ theorem entropic_gravity_no_go_count_eight :
   unfold allEntropicGravityCandidates; rfl
 
 /-!
-## §6 Quantitative summary
+## §6 Quantitative summary (mixed-threshold, primary-source-honest)
 
-The following theorem packages together the four explicitly-quantitative
-NO-GO bounds (Verlinde, Tsallis, Barrow, Odintsov) into a single
-"every NO-GO bound exceeds Jeffreys-decisive (5)" statement. This is
-the load-bearing numerical content of the first-complete-family closure.
+The four explicitly-quantitative NO-GO ledgers in Track B split by
+methodology: three of them (Verlinde, Tsallis, Odintsov) are
+Bayes-factor-based and individually exceed Jeffreys-decisive (≥ 5).
+The fourth (Barrow, Luciano-Paliathanasis-Saridakis 2506.03019) is
+information-criteria-based with primary-source-verified ΔAIC = 4.7,
+which is *moderate* disfavour (Burnham-Anderson ≥ 4) but **NOT**
+Jeffreys-decisive.
+
+Two aggregators below capture the honest closure:
+
+* `all_three_decisive_bayes_bounds_exceed_jeffreys_decisive` covers the
+  three genuinely-decisive Bayes-factor cases.
+* `all_quantitative_bounds_disfavoured` covers all four with the
+  mixed-threshold (decisive/decisive/moderate/decisive) phrasing,
+  where Barrow is at the AIC moderate level and the other three at
+  the Bayes-factor decisive level.
+
+The historical-named aggregator
+`all_quantitative_bounds_exceed_jeffreys_decisive` (which Phase-6m-era
+prose cited) is **retained as a deprecation alias** with a 3-of-4
+restricted body that excludes Barrow; downstream prose now cites the
+two new aggregators with explicit per-candidate methodology tagging.
 -/
 
-/-- **EGDE11 — All four explicitly-quantitative |log 𝓑| bounds exceed
-    the Jeffreys-decisive threshold (R3 + R5 numerical content).** -/
-theorem all_quantitative_bounds_exceed_jeffreys_decisive :
+/-- **EGDE11 — Three Bayes-factor bounds exceed Jeffreys-decisive
+    (R3 + R5 numerical content; Bayes-factor methodology cohort).** -/
+theorem all_three_decisive_bayes_bounds_exceed_jeffreys_decisive :
     verlinde_cmb_bullet_sigma ≥ jeffreys_decisive_threshold ∧
     tsallis_log_bayes ≥ jeffreys_decisive_threshold ∧
-    barrow_log_bayes ≥ jeffreys_decisive_threshold ∧
     odintsov_log_bayes ≥ jeffreys_decisive_threshold :=
   ⟨verlinde_2017_no_go_via_cmb_bullet_cluster_halenka_miller,
    tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak,
-   barrow_hde_no_go_bayes_factor_luciano_paliathanasis_saridakis,
    by unfold odintsov_log_bayes jeffreys_decisive_threshold; norm_num⟩
+
+/-- **EGDE11′ — All four quantitative bounds quantitatively disfavour
+    the candidate at moderate-or-greater level
+    (mixed-threshold honest closure).**
+
+    Verlinde + Tsallis + Odintsov are Bayes-factor-decisive (≥ 5);
+    Barrow is AIC-moderate (≥ 4). The mixed-threshold conjunction is
+    the load-bearing numerical content of Phase 6m Track B's
+    first-complete-mechanism-family closure under primary-source
+    fidelity. -/
+theorem all_quantitative_bounds_disfavoured :
+    verlinde_cmb_bullet_sigma ≥ jeffreys_decisive_threshold ∧
+    tsallis_log_bayes ≥ jeffreys_decisive_threshold ∧
+    barrow_aic_delta ≥ aic_moderate_threshold ∧
+    odintsov_log_bayes ≥ jeffreys_decisive_threshold :=
+  ⟨verlinde_2017_no_go_via_cmb_bullet_cluster_halenka_miller,
+   tsallis_hde_no_go_bayes_factor_tyagi_haridasu_basak,
+   barrow_hde_disfavoured_information_criteria_luciano_paliathanasis_saridakis,
+   by unfold odintsov_log_bayes jeffreys_decisive_threshold; norm_num⟩
+
+/-- **Deprecation alias.** The Phase-6m-era name
+    `all_quantitative_bounds_exceed_jeffreys_decisive` is retained for
+    cross-bundle prose-side citation continuity, but its restricted
+    body now matches the honest 3-of-4 Bayes-factor cohort. Downstream
+    callers should migrate to the explicit aggregators above. -/
+@[deprecated all_three_decisive_bayes_bounds_exceed_jeffreys_decisive
+  (since := "2026-05-08")]
+theorem all_quantitative_bounds_exceed_jeffreys_decisive :
+    verlinde_cmb_bullet_sigma ≥ jeffreys_decisive_threshold ∧
+    tsallis_log_bayes ≥ jeffreys_decisive_threshold ∧
+    odintsov_log_bayes ≥ jeffreys_decisive_threshold :=
+  all_three_decisive_bayes_bounds_exceed_jeffreys_decisive
 
 end SKEFTHawking.EntropicGravityDarkEnergy

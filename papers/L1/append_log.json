@@ -15,6 +15,21 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-01T18:01:41Z",
       "notes": "Initial lift: paper25 \u2192 L1 PRL splash (GW170817 vestigial-graviton falsifier; voucher candidate; Phase 6a W2)"
+    },
+    {
+      "date": "2026-05-06T15:42:03Z",
+      "source_paper": "_phase6o_W1b_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a74",
+      "lean_modules_referenced": [
+        "KerrSchild.PetrovD",
+        "KerrSchild.SingleCopy",
+        "KerrSchild.PolaritonCrossBridge"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:42:03Z",
+      "notes": "D.2 absorption: Phase 6o W1b Kerr-Schild single-copy as alternative substrate context to vestigial graviton; cross-ref-only"
     }
   ]
 }

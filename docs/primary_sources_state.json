@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-05-01T18:16:34+00:00",
+  "generated_at": "2026-05-06T20:45:03+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -8,10 +8,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:09+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "ADM1962": {
+      "bibkey": "ADM1962",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/ADM1962.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:40+00:00",
+      "size_bytes": 334406,
+      "url_used": "https://arxiv.org/pdf/gr-qc/0405109",
+      "note": null
     },
     "ADW": {
       "bibkey": "ADW",
@@ -63,7 +74,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:09+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -90,6 +101,17 @@
       "url_used": "https://arxiv.org/pdf/2507.15273",
       "note": null
     },
+    "Adler1980": {
+      "bibkey": "Adler1980",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Adler1980.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:42+00:00",
+      "size_bytes": 8839,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.44.1567",
+      "note": "no arxiv id"
+    },
     "Adler1982": {
       "bibkey": "Adler1982",
       "phase": "Phase-6a",
@@ -104,13 +126,13 @@
     "Adler2024": {
       "bibkey": "Adler2024",
       "phase": "Phase-3",
-      "tier_achieved": null,
-      "primary_source_path": null,
-      "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
-      "size_bytes": 0,
-      "url_used": null,
-      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-3/primary-sources/Adler2024.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:11+00:00",
+      "size_bytes": 2662676,
+      "url_used": "https://arxiv.org/pdf/2404.14896",
+      "note": null
     },
     "AhmedDodelsonGreeneSorkin2004": {
       "bibkey": "AhmedDodelsonGreeneSorkin2004",
@@ -141,6 +163,17 @@
       "primary_source_path": "Lit-Search/Phase-6a/primary-sources/Akama1978.json",
       "verdict": "success",
       "fetched_at": "2026-04-28T20:10:05+00:00",
+      "size_bytes": 4402,
+      "url_used": "https://api.crossref.org/works/10.1143/PTP.60.1900",
+      "note": "no arxiv id"
+    },
+    "Akama1979": {
+      "bibkey": "Akama1979",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Akama1979.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:44+00:00",
       "size_bytes": 4402,
       "url_used": "https://api.crossref.org/works/10.1143/PTP.60.1900",
       "note": "no arxiv id"
@@ -176,6 +209,17 @@
       "fetched_at": "2026-04-28T20:11:20+00:00",
       "size_bytes": 693869,
       "url_used": "https://arxiv.org/pdf/1411.7041",
+      "note": null
+    },
+    "AlmheiriMarolfPolchinskiSully2013": {
+      "bibkey": "AlmheiriMarolfPolchinskiSully2013",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/AlmheiriMarolfPolchinskiSully2013.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:46+00:00",
+      "size_bytes": 442868,
+      "url_used": "https://arxiv.org/pdf/1207.3123",
       "note": null
     },
     "Alnatah2024": {
@@ -228,7 +272,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:11+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -272,7 +316,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:11+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -283,7 +327,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:11+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -327,7 +371,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:11+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -338,10 +382,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:11+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "ArnoldMcLerran1987": {
+      "bibkey": "ArnoldMcLerran1987",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/ArnoldMcLerran1987.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:48+00:00",
+      "size_bytes": 8054,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevD.36.581",
+      "note": "no arxiv id"
     },
     "AslanbeigiSaravaniSorkin2014": {
       "bibkey": "AslanbeigiSaravaniSorkin2014",
@@ -390,13 +445,24 @@
     "BRSSS2008": {
       "bibkey": "BRSSS2008",
       "phase": "Phase-5w",
-      "tier_achieved": null,
-      "primary_source_path": null,
-      "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
-      "size_bytes": 0,
-      "url_used": null,
-      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-5w/primary-sources/BRSSS2008.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "size_bytes": 422805,
+      "url_used": "https://arxiv.org/pdf/0712.2451",
+      "note": null
+    },
+    "Balbinot2005": {
+      "bibkey": "Balbinot2005",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Balbinot2005.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:50+00:00",
+      "size_bytes": 131535,
+      "url_used": "https://arxiv.org/pdf/gr-qc/0405096",
+      "note": null
     },
     "Balbinot2005PRD": {
       "bibkey": "Balbinot2005PRD",
@@ -415,7 +481,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "fetch-failed",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:07+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "crossref: Crossref fetch HTTP 404: https://api.crossref.org/works/10.1103/PhysRevD.112.L121703; arxiv: no arxiv id"
@@ -442,6 +508,17 @@
       "url_used": "https://arxiv.org/pdf/gr-qc/0505065",
       "note": null
     },
+    "BardeenCarterHawking1973": {
+      "bibkey": "BardeenCarterHawking1973",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/BardeenCarterHawking1973.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:52+00:00",
+      "size_bytes": 8365,
+      "url_used": "https://api.crossref.org/works/10.1007/BF01645742",
+      "note": "no arxiv id"
+    },
     "BardeenHillLindner": {
       "bibkey": "BardeenHillLindner",
       "phase": "Phase-5z",
@@ -449,6 +526,17 @@
       "primary_source_path": "Lit-Search/Phase-5z/primary-sources/BardeenHillLindner.json",
       "verdict": "success",
       "fetched_at": "2026-04-28T20:10:34+00:00",
+      "size_bytes": 14912,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevD.41.1647",
+      "note": "no arxiv id"
+    },
+    "BardeenHillLindner1990": {
+      "bibkey": "BardeenHillLindner1990",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/BardeenHillLindner1990.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:54+00:00",
       "size_bytes": 14912,
       "url_used": "https://api.crossref.org/works/10.1103/PhysRevD.41.1647",
       "note": "no arxiv id"
@@ -486,6 +574,17 @@
       "url_used": "https://arxiv.org/pdf/1801.07530",
       "note": null
     },
+    "BelgiornoCacciatori2024": {
+      "bibkey": "BelgiornoCacciatori2024",
+      "phase": "Phase-4",
+      "tier_achieved": "abstract",
+      "primary_source_path": "Lit-Search/Phase-4/primary-sources/BelgiornoCacciatori2024.abstract.txt",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T20:00:08+00:00",
+      "size_bytes": 957,
+      "url_used": "https://api.crossref.org/works/10.3390/universe10110412",
+      "note": "no arxiv id"
+    },
     "BenincasaDowker2010": {
       "bibkey": "BenincasaDowker2010",
       "phase": "Phase-6m",
@@ -508,6 +607,17 @@
       "url_used": "https://arxiv.org/pdf/1507.01019",
       "note": null
     },
+    "BergesSexty2008": {
+      "bibkey": "BergesSexty2008",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/BergesSexty2008.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:57+00:00",
+      "size_bytes": 1847709,
+      "url_used": "https://arxiv.org/pdf/0708.0779",
+      "note": null
+    },
     "Berry1984": {
       "bibkey": "Berry1984",
       "phase": "Phase-5q",
@@ -525,7 +635,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -591,7 +701,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -602,7 +712,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -657,7 +767,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -811,7 +921,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -855,10 +965,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:07+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Carter1971": {
+      "bibkey": "Carter1971",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Carter1971.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:00+00:00",
+      "size_bytes": 7530,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.26.331",
+      "note": "no arxiv id"
     },
     "CasiniHuerta2009": {
       "bibkey": "CasiniHuerta2009",
@@ -926,6 +1047,17 @@
       "url_used": "https://arxiv.org/pdf/2104.13359",
       "note": null
     },
+    "ChristensenDuff1978": {
+      "bibkey": "ChristensenDuff1978",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/ChristensenDuff1978.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:02+00:00",
+      "size_bytes": 11698,
+      "url_used": "https://api.crossref.org/works/10.1016/0370-2693(78)90857-2",
+      "note": "no arxiv id"
+    },
     "ChristensenDuff1979": {
       "bibkey": "ChristensenDuff1979",
       "phase": "Phase-6e",
@@ -969,6 +1101,17 @@
       "size_bytes": 331113,
       "url_used": "https://arxiv.org/pdf/astro-ph/0608407",
       "note": null
+    },
+    "CohenKaplanNelson1991": {
+      "bibkey": "CohenKaplanNelson1991",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/CohenKaplanNelson1991.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:04+00:00",
+      "size_bytes": 18264,
+      "url_used": "https://api.crossref.org/works/10.1016/0370-2693(91)91711-4",
+      "note": "no arxiv id"
     },
     "CohenKaplanNelson1993": {
       "bibkey": "CohenKaplanNelson1993",
@@ -1014,13 +1157,24 @@
       "url_used": "https://arxiv.org/pdf/hep-th/9601073",
       "note": null
     },
+    "CorleyJacobson1996": {
+      "bibkey": "CorleyJacobson1996",
+      "phase": "Phase-4",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-4/primary-sources/CorleyJacobson1996.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:20+00:00",
+      "size_bytes": 529134,
+      "url_used": "https://arxiv.org/pdf/hep-th/9601073",
+      "note": null
+    },
     "Coutant2014": {
       "bibkey": "Coutant2014",
       "phase": "Phase-1-and-Background",
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1031,10 +1185,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "CoutantParentani2012": {
+      "bibkey": "CoutantParentani2012",
+      "phase": "Phase-4",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-4/primary-sources/CoutantParentani2012.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:23+00:00",
+      "size_bytes": 2641853,
+      "url_used": "https://arxiv.org/pdf/1108.1821",
+      "note": null
     },
     "CriticalReview2026": {
       "bibkey": "CriticalReview2026",
@@ -1042,10 +1207,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Crooks1999": {
+      "bibkey": "Crooks1999",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Crooks1999.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T17:17:58+00:00",
+      "size_bytes": 224061,
+      "url_used": "https://arxiv.org/pdf/cond-mat/9901352",
+      "note": null
     },
     "Crossley2017": {
       "bibkey": "Crossley2017",
@@ -1064,7 +1240,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1152,7 +1328,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1166,6 +1342,17 @@
       "fetched_at": "2026-05-01T18:16:20+00:00",
       "size_bytes": 109023,
       "url_used": "https://arxiv.org/pdf/1110.0673",
+      "note": null
+    },
+    "DaiFreed1994": {
+      "bibkey": "DaiFreed1994",
+      "phase": "Phase-5e",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-5e/primary-sources/DaiFreed1994.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:38+00:00",
+      "size_bytes": 412720,
+      "url_used": "https://arxiv.org/pdf/hep-th/9405012",
       "note": null
     },
     "DaiStojkovic2017": {
@@ -1185,7 +1372,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1229,10 +1416,32 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Degenne2025BrownianMotion": {
+      "bibkey": "Degenne2025BrownianMotion",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Degenne2025BrownianMotion.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T20:45:01+00:00",
+      "size_bytes": 423336,
+      "url_used": "https://arxiv.org/pdf/2511.20118",
+      "note": null
+    },
+    "Degenne2025MarkovKernels": {
+      "bibkey": "Degenne2025MarkovKernels",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Degenne2025MarkovKernels.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T20:45:00+00:00",
+      "size_bytes": 321799,
+      "url_used": "https://arxiv.org/pdf/2510.04070",
+      "note": null
     },
     "Diakonov2011": {
       "bibkey": "Diakonov2011",
@@ -1251,7 +1460,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1284,7 +1493,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1298,6 +1507,17 @@
       "fetched_at": "2026-04-28T20:11:16+00:00",
       "size_bytes": 2189,
       "url_used": "https://api.crossref.org/works/10.3390/universe4050063",
+      "note": "no arxiv id"
+    },
+    "Eddington1919": {
+      "bibkey": "Eddington1919",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "abstract",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Eddington1919.abstract.txt",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:06+00:00",
+      "size_bytes": 991,
+      "url_used": "https://api.crossref.org/works/10.1098/rsta.1920.0009",
       "note": "no arxiv id"
     },
     "ElingGuedensJacobson2006fR": {
@@ -1350,7 +1570,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1361,7 +1581,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1376,6 +1596,17 @@
       "size_bytes": 8940397,
       "url_used": "https://arxiv.org/pdf/2111.09849",
       "note": null
+    },
+    "FalascoEsposito2025RMP": {
+      "bibkey": "FalascoEsposito2025RMP",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FalascoEsposito2025RMP.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T20:45:03+00:00",
+      "size_bytes": 72862,
+      "url_used": "https://api.crossref.org/works/10.1103/RevModPhys.97.015002",
+      "note": "no arxiv id"
     },
     "Falke2008": {
       "bibkey": "Falke2008",
@@ -1416,7 +1647,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1427,7 +1658,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1471,7 +1702,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1526,7 +1757,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1537,10 +1768,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "FreedmanLarsenWang2002": {
+      "bibkey": "FreedmanLarsenWang2002",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FreedmanLarsenWang2002.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:29+00:00",
+      "size_bytes": 212114,
+      "url_used": "https://arxiv.org/pdf/quant-ph/0001108",
+      "note": null
     },
     "GKSW2015": {
       "bibkey": "GKSW2015",
@@ -1548,7 +1790,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1619,6 +1861,17 @@
       "url_used": "https://arxiv.org/pdf/hep-ph/9312215",
       "note": null
     },
+    "GellMannOakesRenner1968": {
+      "bibkey": "GellMannOakesRenner1968",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/GellMannOakesRenner1968.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:08+00:00",
+      "size_bytes": 10411,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRev.175.2195",
+      "note": "no arxiv id"
+    },
     "Gerace2012": {
       "bibkey": "Gerace2012",
       "phase": "Phase-5w",
@@ -1669,7 +1922,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:07+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1691,7 +1944,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1751,6 +2004,17 @@
       "url_used": "https://arxiv.org/pdf/1612.07705",
       "note": null
     },
+    "GloriosoLiu2018TASI": {
+      "bibkey": "GloriosoLiu2018TASI",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/GloriosoLiu2018TASI.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T17:17:55+00:00",
+      "size_bytes": 1159109,
+      "url_used": "https://arxiv.org/pdf/1805.09331",
+      "note": null
+    },
     "GoltermanShamir2026": {
       "bibkey": "GoltermanShamir2026",
       "phase": "Phase-5e",
@@ -1768,7 +2032,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:21+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1779,7 +2043,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:21+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1812,7 +2076,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1823,7 +2087,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1850,6 +2114,28 @@
       "url_used": "https://arxiv.org/pdf/1503.07675",
       "note": null
     },
+    "Hawking1971": {
+      "bibkey": "Hawking1971",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Hawking1971.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:10+00:00",
+      "size_bytes": 7528,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.26.1344",
+      "note": "no arxiv id"
+    },
+    "Hawking1972": {
+      "bibkey": "Hawking1972",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Hawking1972.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:12+00:00",
+      "size_bytes": 11433,
+      "url_used": "https://api.crossref.org/works/10.1007/BF01877517",
+      "note": "no arxiv id"
+    },
     "Hawking1974": {
       "bibkey": "Hawking1974",
       "phase": "Phase-1-and-Background",
@@ -1859,6 +2145,17 @@
       "fetched_at": "2026-04-28T20:10:02+00:00",
       "size_bytes": 6909,
       "url_used": "https://api.crossref.org/works/10.1038/248030a0",
+      "note": "no arxiv id"
+    },
+    "Hawking1975": {
+      "bibkey": "Hawking1975",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Hawking1975.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:14+00:00",
+      "size_bytes": 13269,
+      "url_used": "https://api.crossref.org/works/10.1007/BF02345020",
       "note": "no arxiv id"
     },
     "Hawking1975CMP": {
@@ -1894,6 +2191,17 @@
       "url_used": "https://api.crossref.org/works/10.1007/BF01208266",
       "note": "no arxiv id"
     },
+    "HawkingPenrose1970": {
+      "bibkey": "HawkingPenrose1970",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "abstract",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/HawkingPenrose1970.abstract.txt",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:16+00:00",
+      "size_bytes": 1434,
+      "url_used": "https://api.crossref.org/works/10.1098/rspa.1970.0021",
+      "note": "no arxiv id"
+    },
     "HaydenPreskill2007": {
       "bibkey": "HaydenPreskill2007",
       "phase": "Phase-6c",
@@ -1911,7 +2219,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1944,7 +2252,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1971,6 +2279,17 @@
       "url_used": "https://arxiv.org/pdf/2503.21518",
       "note": null
     },
+    "Hill2025bilocal": {
+      "bibkey": "Hill2025bilocal",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Hill2025bilocal.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:18+00:00",
+      "size_bytes": 574062,
+      "url_used": "https://arxiv.org/pdf/2512.16527",
+      "note": null
+    },
     "HironoTanizaki2018": {
       "bibkey": "HironoTanizaki2018",
       "phase": "Phase-6d",
@@ -1988,7 +2307,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2037,13 +2356,24 @@
       "url_used": "https://arxiv.org/pdf/hep-ph/9404302",
       "note": null
     },
+    "HughesDrever1960": {
+      "bibkey": "HughesDrever1960",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/HughesDrever1960.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:20+00:00",
+      "size_bytes": 4894,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.4.342",
+      "note": "no arxiv id"
+    },
     "InonuWigner1953": {
       "bibkey": "InonuWigner1953",
       "phase": "Phase-5h",
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2054,10 +2384,32 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Israel1967": {
+      "bibkey": "Israel1967",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Israel1967.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:22+00:00",
+      "size_bytes": 5915,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRev.164.1776",
+      "note": "no arxiv id"
+    },
+    "Israel1986": {
+      "bibkey": "Israel1986",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Israel1986.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:24+00:00",
+      "size_bytes": 8528,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.57.397",
+      "note": "no arxiv id"
     },
     "Israel1986ThirdLaw": {
       "bibkey": "Israel1986ThirdLaw",
@@ -2076,7 +2428,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2158,6 +2510,17 @@
       "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.130.111501",
       "note": "no arxiv id"
     },
+    "JainKovtun2024": {
+      "bibkey": "JainKovtun2024",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/JainKovtun2024.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T17:17:57+00:00",
+      "size_bytes": 668921,
+      "url_used": "https://arxiv.org/pdf/2309.00511",
+      "note": null
+    },
     "Jana2020": {
       "bibkey": "Jana2020",
       "phase": "Phase-1-and-Background",
@@ -2197,7 +2560,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2219,7 +2582,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2323,6 +2686,17 @@
       "url_used": "https://arxiv.org/pdf/2211.15742",
       "note": null
     },
+    "KehleUnger2024": {
+      "bibkey": "KehleUnger2024",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/KehleUnger2024.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:27+00:00",
+      "size_bytes": 1754042,
+      "url_used": "https://arxiv.org/pdf/2402.10190",
+      "note": null
+    },
     "KhourySaksteinSolomon2018KSS": {
       "bibkey": "KhourySaksteinSolomon2018KSS",
       "phase": "Phase-6m",
@@ -2362,7 +2736,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2417,10 +2791,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:21+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "KlinkhamerManton1984": {
+      "bibkey": "KlinkhamerManton1984",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/KlinkhamerManton1984.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:29+00:00",
+      "size_bytes": 9456,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevD.30.2212",
+      "note": "no arxiv id"
     },
     "KlinkhamerVolovik2010": {
       "bibkey": "KlinkhamerVolovik2010",
@@ -2450,7 +2835,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:21+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2483,7 +2868,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:14+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2552,6 +2937,17 @@
       "fetched_at": "2026-04-28T20:10:41+00:00",
       "size_bytes": 25693375,
       "url_used": "https://arxiv.org/pdf/2107.11462",
+      "note": null
+    },
+    "LEGEND2024": {
+      "bibkey": "LEGEND2024",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/LEGEND2024.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:31+00:00",
+      "size_bytes": 535588,
+      "url_used": "https://arxiv.org/pdf/2505.10440",
       "note": null
     },
     "LIGOSensitivity2015": {
@@ -2714,7 +3110,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:07+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2722,13 +3118,24 @@
     "Majumdar2025": {
       "bibkey": "Majumdar2025",
       "phase": "Phase-5w",
-      "tier_achieved": null,
-      "primary_source_path": null,
-      "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
-      "size_bytes": 0,
-      "url_used": null,
-      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-5w/primary-sources/Majumdar2025.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "size_bytes": 5082224,
+      "url_used": "https://arxiv.org/pdf/2501.03193",
+      "note": null
+    },
+    "Maldacena1997": {
+      "bibkey": "Maldacena1997",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Maldacena1997.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:33+00:00",
+      "size_bytes": 246327,
+      "url_used": "https://arxiv.org/pdf/hep-th/9711200",
+      "note": null
     },
     "Markevitch2004Bullet": {
       "bibkey": "Markevitch2004Bullet",
@@ -2758,7 +3165,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:21+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2829,6 +3236,17 @@
       "url_used": "https://arxiv.org/pdf/1406.5524",
       "note": null
     },
+    "MohapatraSenjanovic1980": {
+      "bibkey": "MohapatraSenjanovic1980",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/MohapatraSenjanovic1980.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:35+00:00",
+      "size_bytes": 9302,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.44.912",
+      "note": "no arxiv id"
+    },
     "MohapatraSmirnov2006": {
       "bibkey": "MohapatraSmirnov2006",
       "phase": "Phase-5z",
@@ -2838,6 +3256,17 @@
       "fetched_at": "2026-04-28T20:10:42+00:00",
       "size_bytes": 798745,
       "url_used": "https://arxiv.org/pdf/hep-ph/0603118",
+      "note": null
+    },
+    "MollerScheithauer2024": {
+      "bibkey": "MollerScheithauer2024",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/MollerScheithauer2024.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T17:18:00+00:00",
+      "size_bytes": 661711,
+      "url_used": "https://arxiv.org/pdf/2112.12291",
       "note": null
     },
     "MoradiYazdiZilhao2025BDG": {
@@ -2906,6 +3335,17 @@
       "url_used": "https://arxiv.org/pdf/0707.1889",
       "note": null
     },
+    "NayakSimonSternFreedmanDasSarma2008": {
+      "bibkey": "NayakSimonSternFreedmanDasSarma2008",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/NayakSimonSternFreedmanDasSarma2008.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:31+00:00",
+      "size_bytes": 1608725,
+      "url_used": "https://arxiv.org/pdf/0707.1889",
+      "note": null
+    },
     "Nelsen2013": {
       "bibkey": "Nelsen2013",
       "phase": "Phase-5w",
@@ -2934,7 +3374,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2945,10 +3385,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Niemeier1973": {
+      "bibkey": "Niemeier1973",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Niemeier1973.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:09+00:00",
+      "size_bytes": 7318,
+      "url_used": "https://api.crossref.org/works/10.1016/0022-314X(73)90068-1",
+      "note": "no arxiv id"
     },
     "NuFit60": {
       "bibkey": "NuFit60",
@@ -2978,7 +3429,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2989,7 +3440,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3088,7 +3539,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3099,7 +3550,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3110,7 +3561,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3121,7 +3572,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3132,7 +3583,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3146,6 +3597,17 @@
       "fetched_at": "2026-05-01T18:16:12+00:00",
       "size_bytes": 34190634,
       "url_used": "https://arxiv.org/pdf/2501.03480",
+      "note": null
+    },
+    "PastawskiYoshidaHarlowPreskill2015": {
+      "bibkey": "PastawskiYoshidaHarlowPreskill2015",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/PastawskiYoshidaHarlowPreskill2015.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:37+00:00",
+      "size_bytes": 4496178,
+      "url_used": "https://arxiv.org/pdf/1503.06237",
       "note": null
     },
     "PelissettoVicari2002": {
@@ -3170,13 +3632,24 @@
       "url_used": "https://arxiv.org/pdf/1509.04411",
       "note": null
     },
+    "Penrose1965": {
+      "bibkey": "Penrose1965",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Penrose1965.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:39+00:00",
+      "size_bytes": 7385,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.14.57",
+      "note": "no arxiv id"
+    },
     "PeskinSchroeder": {
       "bibkey": "PeskinSchroeder",
       "phase": "Phase-5z",
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:07+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3187,7 +3660,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3247,6 +3720,17 @@
       "url_used": "https://arxiv.org/pdf/1604.05329",
       "note": null
     },
+    "PretkoRadzihovsky2018": {
+      "bibkey": "PretkoRadzihovsky2018",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/PretkoRadzihovsky2018.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:41+00:00",
+      "size_bytes": 664256,
+      "url_used": "https://arxiv.org/pdf/1711.11044",
+      "note": null
+    },
     "ProfumoRamsey2007": {
       "bibkey": "ProfumoRamsey2007",
       "phase": "Phase-6c",
@@ -3264,7 +3748,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3280,6 +3764,138 @@
       "url_used": "https://arxiv.org/pdf/2410.11956",
       "note": null
     },
+    "ReshetikhinTuraev1991": {
+      "bibkey": "ReshetikhinTuraev1991",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/ReshetikhinTuraev1991.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:33+00:00",
+      "size_bytes": 13328,
+      "url_used": "https://api.crossref.org/works/10.1007/BF01239527",
+      "note": "no arxiv id"
+    },
+    "RobertsonParentani2015": {
+      "bibkey": "RobertsonParentani2015",
+      "phase": "Phase-4",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-4/primary-sources/RobertsonParentani2015.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:25+00:00",
+      "size_bytes": 353073,
+      "url_used": "https://arxiv.org/pdf/1503.04047",
+      "note": null
+    },
+    "Robinson1975": {
+      "bibkey": "Robinson1975",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Robinson1975.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:43+00:00",
+      "size_bytes": 4968,
+      "url_used": "https://api.crossref.org/works/10.1103/PhysRevLett.34.905",
+      "note": "no arxiv id"
+    },
+    "Roehm2026D1": {
+      "bibkey": "Roehm2026D1",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026D2": {
+      "bibkey": "Roehm2026D2",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026D4": {
+      "bibkey": "Roehm2026D4",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026D5": {
+      "bibkey": "Roehm2026D5",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026E1": {
+      "bibkey": "Roehm2026E1",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026E2": {
+      "bibkey": "Roehm2026E2",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026F": {
+      "bibkey": "Roehm2026F",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026I1": {
+      "bibkey": "Roehm2026I1",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026I2": {
+      "bibkey": "Roehm2026I2",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
     "Roehm2026LinearizedEFE": {
       "bibkey": "Roehm2026LinearizedEFE",
       "phase": "Phase-6a",
@@ -3291,13 +3907,112 @@
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
     },
+    "Roehm2026Modular": {
+      "bibkey": "Roehm2026Modular",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026Strategy": {
+      "bibkey": "Roehm2026Strategy",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026Wave10": {
+      "bibkey": "Roehm2026Wave10",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026Wave12": {
+      "bibkey": "Roehm2026Wave12",
+      "phase": "Phase-5w",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026Wave16": {
+      "bibkey": "Roehm2026Wave16",
+      "phase": "Phase-5w",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026Wave2": {
+      "bibkey": "Roehm2026Wave2",
+      "phase": "Phase-2",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026Wave7": {
+      "bibkey": "Roehm2026Wave7",
+      "phase": "Phase-5e",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026Wave8": {
+      "bibkey": "Roehm2026Wave8",
+      "phase": "Phase-5h",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026Wave9": {
+      "bibkey": "Roehm2026Wave9",
+      "phase": "Phase-5b",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
     "Rokhlin1952": {
       "bibkey": "Rokhlin1952",
       "phase": "Phase-5e",
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3308,7 +4023,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3319,7 +4034,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3346,13 +4061,24 @@
       "url_used": "https://arxiv.org/pdf/2504.06118",
       "note": null
     },
+    "Sakharov1967": {
+      "bibkey": "Sakharov1967",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Sakharov1967.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:45+00:00",
+      "size_bytes": 3141,
+      "url_used": "https://api.crossref.org/works/10.1070/PU1991v034n05ABEH002497",
+      "note": "no arxiv id"
+    },
     "Sakharov1968": {
       "bibkey": "Sakharov1968",
       "phase": "Phase-6a",
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:07+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3412,6 +4138,17 @@
       "url_used": "https://arxiv.org/pdf/hep-ph/9811473",
       "note": null
     },
+    "Schellekens1993": {
+      "bibkey": "Schellekens1993",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Schellekens1993.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T17:17:59+00:00",
+      "size_bytes": 284383,
+      "url_used": "https://arxiv.org/pdf/hep-th/9205072",
+      "note": null
+    },
     "Seiberg2023": {
       "bibkey": "Seiberg2023",
       "phase": "Phase-5h",
@@ -3440,7 +4177,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3454,6 +4191,17 @@
       "fetched_at": "2026-04-28T20:11:11+00:00",
       "size_bytes": 185111,
       "url_used": "https://arxiv.org/pdf/0805.0095",
+      "note": null
+    },
+    "Sen2013": {
+      "bibkey": "Sen2013",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Sen2013.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:47+00:00",
+      "size_bytes": 416802,
+      "url_used": "https://arxiv.org/pdf/1205.0971",
       "note": null
     },
     "Sen2013Schwarzschild": {
@@ -3473,7 +4221,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3517,7 +4265,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:07+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3539,7 +4287,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3561,7 +4309,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T18:14:13+00:00",
+      "fetched_at": "2026-05-06T19:51:38+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3605,7 +4353,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3638,7 +4386,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3737,7 +4485,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3759,7 +4507,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:07+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3902,7 +4650,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3924,7 +4672,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3935,7 +4683,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4160,6 +4908,17 @@
       "url_used": "https://arxiv.org/pdf/1601.01707",
       "note": null
     },
+    "Weinberg1989": {
+      "bibkey": "Weinberg1989",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Weinberg1989.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:49+00:00",
+      "size_bytes": 37590,
+      "url_used": "https://api.crossref.org/works/10.1103/RevModPhys.61.1",
+      "note": "no arxiv id"
+    },
     "WeisbergHuang2016": {
       "bibkey": "WeisbergHuang2016",
       "phase": "Phase-6e",
@@ -4177,7 +4936,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4188,10 +4947,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Wetterich1990": {
+      "bibkey": "Wetterich1990",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Wetterich1990.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:51+00:00",
+      "size_bytes": 6869,
+      "url_used": "https://api.crossref.org/works/10.1007/BF01614701",
+      "note": "no arxiv id"
     },
     "Wetterich2004": {
       "bibkey": "Wetterich2004",
@@ -4210,10 +4980,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Wetterich2017": {
+      "bibkey": "Wetterich2017",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Wetterich2017.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:54+00:00",
+      "size_bytes": 285787,
+      "url_used": "https://arxiv.org/pdf/1711.03844",
+      "note": null
     },
     "Wetterich2022": {
       "bibkey": "Wetterich2022",
@@ -4259,6 +5040,17 @@
       "url_used": "https://arxiv.org/pdf/2101.11519",
       "note": null
     },
+    "Will2014": {
+      "bibkey": "Will2014",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Will2014.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:52:56+00:00",
+      "size_bytes": 1654045,
+      "url_used": "https://arxiv.org/pdf/1403.7377",
+      "note": null
+    },
     "Will2018": {
       "bibkey": "Will2018",
       "phase": "Phase-6c",
@@ -4276,10 +5068,21 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Witten1989": {
+      "bibkey": "Witten1989",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Witten1989.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "size_bytes": 20830,
+      "url_used": "https://api.crossref.org/works/10.1007/BF01217730",
+      "note": "no arxiv id"
     },
     "Witten1998AdSThermal": {
       "bibkey": "Witten1998AdSThermal",
@@ -4342,7 +5145,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:16+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4361,13 +5164,13 @@
     "Zhao2023": {
       "bibkey": "Zhao2023",
       "phase": "Phase-5w",
-      "tier_achieved": null,
-      "primary_source_path": null,
-      "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
-      "size_bytes": 0,
-      "url_used": null,
-      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+      "tier_achieved": "crossref-json",
+      "primary_source_path": "Lit-Search/Phase-5w/primary-sources/Zhao2023.json",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 24047,
+      "url_used": "https://api.crossref.org/works/10.1038/s41586-022-05619-8",
+      "note": "no arxiv id"
     },
     "ZhaoEtAl2023BECNature": {
       "bibkey": "ZhaoEtAl2023BECNature",
@@ -4408,7 +5211,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4419,7 +5222,18 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "bakalov2001": {
+      "bibkey": "bakalov2001",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4430,7 +5244,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4441,7 +5255,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4463,7 +5277,29 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "efron1982": {
+      "bibkey": "efron1982",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "egno2015": {
+      "bibkey": "egno2015",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4474,7 +5310,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4485,7 +5321,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4496,7 +5332,18 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "kassel1995": {
+      "bibkey": "kassel1995",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4540,7 +5387,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4551,7 +5398,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4562,7 +5409,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4573,7 +5420,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4584,7 +5431,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4595,7 +5442,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4617,7 +5464,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4639,7 +5486,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4650,7 +5497,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-01T00:12:06+00:00",
+      "fetched_at": "2026-05-06T19:51:18+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"

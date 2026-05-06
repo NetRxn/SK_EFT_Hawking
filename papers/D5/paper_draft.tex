@@ -62,11 +62,19 @@ upper bound is prescription-dependent at the $\geq 40\%$ level; and the BDG
 $\sigma_\Lambda(V) = \alpha_{\rm BDG}/\sqrt{V}$ first-principles
 decomposition. (b)~Track~B entropic-gravity DE (8 candidates) yields the
 \emph{first complete-mechanism-family unanimous NO-GO closure} in Phase~6m
-via two structurally distinct routes: four candidates (Verlinde~2017,
-Tsallis~HDE, Barrow~HDE, Odintsov-D'Onofrio-Paul) yield quantitative
-Bayesian bounds with $|\!\log\mathcal{B}| \geq 5$ (Jeffreys-decisive),
-formalized in the Lean aggregator
-\texttt{all\_quantitative\_bounds\_exceed\_jeffreys\_decisive}; the
+via two structurally distinct routes: four candidates yield
+quantitative disfavour ledgers, of which three (Verlinde~2017,
+Tsallis~HDE, Odintsov-D'Onofrio-Paul) reach Jeffreys-decisive at the
+Bayes-factor level ($|\!\log\mathcal{B}| \geq 5$) and the fourth
+(Barrow~HDE) reaches Burnham-Anderson moderate-disfavour at the
+information-criteria level (primary-source-verified
+$\Delta\!\text{AIC} = +4.7$ from Luciano-Paliathanasis-Saridakis 2025
+Table~II, below the conventional Bayes-factor decisive cutoff but in
+the ``considerably less support'' regime). The two routes are
+formalized in the Lean aggregators
+\texttt{all\_three\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}
+(3 of 4) and \texttt{all\_quantitative\_bounds\_disfavoured} (4 of 4
+under mixed thresholds); the
 remaining four (Padmanabhan/CosMIn no-Lagrangian-scalar; Hossenfelder-Verlinde
 post-Yoon-Guha; Cadoni-Tuveri DEC via the GD theorem; HDE event-horizon
 wrong-sign $w_a$) are structurally NO-GO via mechanism-specific
@@ -830,11 +838,30 @@ two auxiliary supports for the Cadoni-Tuveri DEC entry follow.
   HDE event-horizon predicts $w_a > 0$, the wrong sign of the DESI~DR2
   best-fit at $3\sigma$.
 \item \texttt{tsallis\_hde\_no\_go\_bayes\_factor\_tyagi\_haridasu\_basak}:
-  Tyagi-Haridasu-Basak 2504.11308 yields $|\!\log\mathcal{B}| \sim 6.2$
-  for Tsallis HDE.
-\item \texttt{barrow\_hde\_no\_go\_bayes\_factor\_luciano\_paliathanasis\_saridakis}:
-  Luciano-Paliathanasis-Saridakis 2506.03019 yields a factor 5--6
-  Bayesian disfavour for Barrow HDE.
+  Tyagi-Haridasu-Basak 2504.11308 reports $\Delta\!\log\mathcal{B}
+  \sim -8$ to $-13$ for the Gravity-Thermodynamic framework
+  (DESI~DR2 + Pantheon$+$); extracted as the Tsallis-limit reading,
+  $|\!\log\mathcal{B}| \gtrsim 6$ exceeds Jeffreys-decisive. The
+  registry-anchored point estimate $6.2$ is conservative within the
+  reported $-8$ to $-13$ aggregate range.
+\item \texttt{barrow\_hde\_disfavoured\_information\_criteria\_luciano\_paliathanasis\_saridakis}:
+  Luciano-Paliathanasis-Saridakis 2506.03019 (JHEAp 49, 100427, 2026)
+  applies the Akaike Information Criterion (AIC) on the SN+BAO,
+  SN+OHD+BAO joint datasets and reports a max
+  $\Delta\!\text{AIC} = +4.7$ disfavouring Barrow HDE relative to
+  $\Lambda$CDM (Table~II, Barrow Entropy SN+BAO column;
+  primary-source-verified 2026-05-08 via direct PDF body fetch). This
+  falls in the Burnham-Anderson ``considerably less support'' regime
+  ($\Delta\!\text{AIC} \geq 4$) but \emph{below} the conventional
+  Bayes-factor Jeffreys-decisive cutoff ($\geq 5$). Methodology is
+  information-criteria (AIC) only — neither BIC nor Bayes factors —
+  the theorem-name's prior \texttt{bayes\_factor} suffix has been
+  retired and replaced with the methodology-honest
+  \texttt{disfavoured\_information\_criteria} form, and the historical
+  registry-anchored placeholder $5.5$ has been replaced with the
+  primary-source value $4.7$. The companion Lean theorem
+  \texttt{barrow\_aic\_delta\_below\_jeffreys\_decisive} records the
+  $4.7 < 5$ inequality explicitly.
 \item \texttt{odintsov\_donofrio\_paul\_omega\_k\_no\_go\_logB\_15\_to\_17}:
   Odintsov-D'Onofrio-Paul 4-parameter mechanism predicts
   $\Delta\!\log\mathcal{B} \approx -15$ to $-17$, far exceeding decisive.
@@ -844,9 +871,13 @@ The aggregator
 \texttt{entropic\_gravity\_no\_go\_count\_eight} establishes the
 8/8 closure; \texttt{r\_d\_independent\_count\_eight} establishes that
 each of the eight bounds is robust under the $r_d$-anchoring rescue
-(no rescue across any candidate). The all-quantitative-bounds aggregator
-\texttt{all\_quantitative\_bounds\_exceed\_jeffreys\_decisive} closes
-the mechanism family at the publication-novelty level: this is the first
+(no rescue across any candidate). The mixed-threshold aggregators
+\texttt{all\_three\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}
+(3 of 4 quantitative ledgers — Verlinde, Tsallis, Odintsov — at
+Bayes-factor Jeffreys-decisive) and
+\texttt{all\_quantitative\_bounds\_disfavoured} (all 4 at moderate-or-greater
+disfavour, with Barrow at the AIC moderate level) close the mechanism
+family at the publication-novelty level: this is the first
 complete-mechanism-family unanimous NO-GO closure in Phase~6m, and it
 is the paper's substantive new claim that distinguishes D5 from the
 Phase~5x precursor.
@@ -854,13 +885,16 @@ Phase~5x precursor.
 \subsection{$r_d$-independence}
 \label{subsec:phase6m-track-b-rd-independence}
 
-The closure is $r_d$-independent: each of the eight Bayesian thresholds
-is computed with the sound-horizon anchor allowed to vary across the
+The closure is $r_d$-independent: each of the eight quantitative or
+structural disfavour ledgers (three Bayes-factor decisive bounds + one
+AIC moderate-disfavour bound + four structural NO-GO mechanisms) is
+computed with the sound-horizon anchor allowed to vary across the
 $r_d \in [144, 153]$ Mpc range that the literature spans, and the
-disfavour persists. The mechanism family is decisively excluded
+disfavour persists. The mechanism family is excluded
 \emph{regardless of the sound-horizon assumption}, which removes the
 prior leading rescue route. Track~B's verdict is therefore final at the
-DESI~DR2 + literature-Bayesian-analysis level.
+DESI~DR2 + literature-statistical-evidence level (mixed
+Bayes-factor / information-criteria methodology).
 
 %% ─── End Track B ───
 
@@ -961,8 +995,37 @@ conditions are satisfied:
 \item Non-zero trace of identity ($\text{tr}\, I \neq 0$).
 \item IR Lorentz recovery (the substrate's IR limit is Lorentz-invariant).
 \end{enumerate}
-The biconditional is captured in
-\texttt{sakharov\_induced\_gravity\_criterion\_iff\_lambda\_j\_eq\_lambda\_hk}.
+The implication (Sakharov four-condition criterion implies
+$\Lambda_J = \Lambda_{HK}$, at the substrate level) is captured at the
+Boolean-projection layer in
+\texttt{sakharov\_induced\_gravity\_criterion\_implies\_lambda\_j\_eq\_lambda\_hk}
+(JTGR6, theorem renamed 2026-05-07 from the prior `\texttt{\_iff\_}'-suffix
+form to honestly reflect the one-way implication encoded at that layer).
+The Phase~6o Wave 4a substrate-derived refactor (Track 4; authorized
+2026-05-08 user-call C2) lifts this to substrate-physics-grounded
+$\mathbb{R}$-valued data via the new
+\texttt{SakharovExtended} structure: the existing four Boolean
+conditions are retained unchanged, and the structure additionally
+carries primary-source-grounded $\mathbb{R}$-valued $\lambda_J$ /
+$\lambda_{\rm HK}$ fields plus a witness-equality Prop discharging
+$\lambda_J = \lambda_{\rm HK}$ whenever Boolean condition~(iv) holds.
+The substantive (\,$\Rightarrow$\,) implication at the $\mathbb{R}$
+level is captured in JTGR12
+(\texttt{sakharov\_criterion\_implies\_lambda\_j\_eq\_lambda\_hk\_real});
+the ${}^3\!\text{He-A}$ extended substrate witness satisfies
+$\lambda_J = \lambda_{\rm HK}$ at $\mathbb{R}$ level (JTGR13,
+\texttt{volovikJannes\_he3a\_lambda\_j\_eq\_lambda\_hk\_real}); and the
+FLS BEC extended substrate witness structurally separates
+$\lambda_J \neq \lambda_{\rm HK}$ at $\mathbb{R}$ level (JTGR14,
+\texttt{flsBEC\_lambda\_j\_neq\_lambda\_hk\_real}). The (\,$\Leftarrow$\,)
+direction --- whether $\lambda_J = \lambda_{\rm HK}$ at the substrate
+level forces all four Boolean conditions --- is the Wave~4a.4 deferred
+deliverable, pending the FLS BEC depletion-factor primary-source return
+dispatched at \texttt{Lit-Search/Tasks/submitted/20260508\_FLS\_BEC\_depletion\_factor\_lambda\_substrate.md}.
+Risk-disclosed at user-call C2: if the (\,$\Leftarrow$\,) direction does
+not hold under available substrate hypotheses, Wave~4a ships the
+substantively-deeper substrate encoding and honestly retires the
+biconditional reading.
 
 The substrate-level evaluations are:
 
@@ -1198,19 +1261,20 @@ M.~Plaza and L.~Kraiselburd,
 Phys.\ Rev.\ D \textbf{112}, 023554 (2025), arXiv:2504.05432.
 
 \bibitem{TyagiHaridasuBasak2025}
-S.~Tyagi, B.~S.~Haridasu, and S.~Basak,
-``Bayesian model comparison of holographic dark-energy models with
+U.~K.~Tyagi, S.~Haridasu, and S.~Basak,
+``Constraints on Generalized Gravity-Thermodynamic Cosmology from
 DESI DR2,'' arXiv:2504.11308 (2025).
 
 \bibitem{LucianoPaliathanasisSaridakis2506}
 G.~G.~Luciano, A.~Paliathanasis, and E.~N.~Saridakis,
-``Same entropies in holographic dark energy: Bayesian comparison with
-DESI DR2,'' arXiv:2506.03019 (2025).
+``Constraints on Barrow and Tsallis Holographic Dark Energy from
+DESI DR2 BAO data,'' J.~High Energy Astrophys.~\textbf{49}, 100427
+(2026), arXiv:2506.03019.
 
 \bibitem{YoonGuha2023}
-J.~Yoon and B.~Guha,
-``Stability of de Sitter attractors in entropic FLRW cosmology with
-matter and radiation,'' arXiv:2304.07301.
+Y.~Yoon and A.~Guha,
+``Inflation and the late time acceleration from Hossenfelder-Verlinde
+gravity,'' arXiv:2304.07301.
 
 \bibitem{Vergeles2025}
 S.~N.~Vergeles, ``Unitarity of 4D Lattice Theory of Gravity,''
@@ -1228,6 +1292,34 @@ The mathlib Community,
 CPP \textbf{2020}, 367 (2020), arXiv:1910.09336.
 
 \end{thebibliography}
+
+
+%% ─── Lifted from _phase6n_W1c_writeup (§13) — 2026-05-06T15:41:18Z ───
+%% \section{Dissipative SK-EFT bootstrap-uniqueness NO-GO (Phase 6n W1c writeup)}
+%% \label{sec:d5-_phase6n_W1c_writeup}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §13
+%% Lift notes: D.2 absorption: Phase 6n W1c NO-GO writeup memo joint with 6o.γ (NO-GO landscape: dissipative SK-EFT bootstrap-uniqueness obstructions)
+%% TODO: lift content from papers/_phase6n_W1c_writeup/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6n_W1c_writeup ───
+
+
+%% ─── Lifted from _phase6n_W2b_lean_only (§13) — 2026-05-06T15:41:21Z ───
+%% \section{Quantum Crooks no-go (Perarnau-Llobet)}
+%% \label{sec:d5-_phase6n_W2b_lean_only}
+
+%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §13
+%% Lift notes: D.2 absorption: Phase 6n W2b Perarnau-Llobet quantum-Crooks parametric + ℂ-form NO-GO
+%% TODO: lift content from papers/_phase6n_W2b_lean_only/paper_draft.tex
+%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
+%% TODO: ensure all citations have primary-source cache entries
+
+%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
+%% ─── End lift from _phase6n_W2b_lean_only ───
 
 %% BUNDLE_APPEND_INSERT_HERE — bundle_append.py inserts new sections at
 %% this marker by default. To insert at a specific section, edit the

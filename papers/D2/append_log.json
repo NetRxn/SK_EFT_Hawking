@@ -81,6 +81,57 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-04T12:25:47Z",
       "notes": "Pillars 2+3 + bridges + master TPF-evasion + 1+1D/2+1D gapped-interface evidence; merges with paper7 content under unified \u00a74"
+    },
+    {
+      "date": "2026-05-06T15:39:51Z",
+      "source_paper": "_phase6n_W1b_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "SymTFTAudit.WittClass",
+        "SymTFTAudit.DrinfeldCenter",
+        "SymTFTAudit.DeligneTensor",
+        "SymTFTAudit.FreeKLinearMonoidal",
+        "SymTFTAudit.PseudoUnitary",
+        "SymTFTAudit.CrossBridges"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:39:51Z",
+      "notes": "D.2 absorption: Phase 6n W1b SymTFT audit substrate cross-bridge (DrinfeldCenter/Witt class/categorical cc additivity)"
+    },
+    {
+      "date": "2026-05-06T15:39:54Z",
+      "source_paper": "_phase6o_W2a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "APSEta.Predicate",
+        "APSEta.SymTFTBridge",
+        "APSEta.RegimePartition"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:39:54Z",
+      "notes": "D.2 absorption: Phase 6o W2a APS-\u03b7 Witten-Yonekura \u03b7/16 mod 1 cross-bridge to Z\u2081\u2086 Dai-Freed"
+    },
+    {
+      "date": "2026-05-06T17:00:00Z",
+      "source_paper": "_phase6o_W2b_lean_only",
+      "lift_action": "Revision",
+      "bundle_section_inserted": "\u00a72.7 (NEW subsection within \u00a72 Modular generation constraint)",
+      "lean_modules_referenced": [
+        "Schellekens.SpinBordism",
+        "Schellekens.AnomalyPolynomial",
+        "Schellekens.ModularInvariance",
+        "Schellekens.NiemeierLattice",
+        "Schellekens.HolomorphicVOAc24",
+        "Schellekens.Chain"
+      ],
+      "citation_count_added": 3,
+      "stage13_redo_required": true,
+      "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T17:00:00Z",
+      "notes": "D.3 GATE 3 absorption (Phase 6o.\u03b5, user-auth granted 2026-05-06): NEW subsection \u00a72.7 'The Schellekens chain: 24|c_- as a holomorphic-VOA classification corollary'. The 5-step structural reading: spin-bordism \u03a9_5^Spin(BG_SM) \u2192 anomaly polynomial \u2192 modular invariance \u2192 Niemeier-lattice classification (1973) \u2192 Schellekens 71-CFT enumeration (1993) \u2192 M\u00f6ller-Scheithauer 2024 geometric classification (70 algebras with non-trivial weight-1 space). 3 new bibitems added to D2: Niemeier1973, Schellekens1993, MollerScheithauer2024. All 3 also added to CITATION_REGISTRY this session. Per user direction (quality & correctness), M\u00f6ller-Scheithauer scope hedged accurately: their paper covers only the strongly-rational, weight-1-non-trivial subset (70 algebras) \u2014 the moonshine FLM VOA at trivial weight-1 is outside scope and explicitly noted as a not-applicable witness in \u00a72.7 prose. Source verification: arXiv:2112.12291 + WebSearch verification 2026-05-06; Schellekens 1993 (Comm. Math. Phys. 153, 159) verified via WebSearch + DOI cross-reference; Niemeier 1973 confirmed via standard mathematical reference (J. Number Theory 5, 142). LaTeX compile clean (9pp / 391KB). \u00a72.1-\u00a72.6 (existing modular argument + Ext computation + change-of-rings discharge) preserved unchanged. Pre-draft: temporary/working-docs/phase6o/wave_2b_schellekens_substrate.md."
     }
   ]
 }

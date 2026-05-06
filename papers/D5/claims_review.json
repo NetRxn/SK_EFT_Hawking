@@ -1,12 +1,12 @@
 {
   "paper": "D5",
   "bundle_target": "D5",
-  "review_date": "2026-05-01T23:30:00Z",
+  "review_date": "2026-05-06T18:30:00Z",
   "reviewer_version": "claims-reviewer-v2-bundle-aware",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-  "round": 2,
-  "stage": "Stage 10 (paper claims review) ROUND 2 of BUNDLE_LIFT_PROCEDURE",
+  "reviewer_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+  "round": 4,
+  "stage": "Stage 13 redo round-4 — Phase 6n+6o → Phase 7 absorption Session 2 stub-closure verification",
   "tier_profile": "Tier 1 (deep) — intra-bundle consistency + cross-bundle cross-bridge checks",
   "anchors_checked": [
     "Six Phase-5x DM mechanism classification (§2)",
@@ -20,9 +20,11 @@
     "§10.5 Barrow short-note (prescription-dependence)",
     "§11.5 Sakharov short-note (Lambda_J vs Lambda_HK comparison)",
     "Cross-bridge to D3 §21 (paper42b CC reproduction) — heat-kernel a_0",
-    "Cross-bridge to D2 (anomaly classification of DM candidates)"
+    "Cross-bridge to D2 (anomaly classification of DM candidates)",
+    "Closure marker 1: Phase 6n W1c writeup post-bib stub (commented out)",
+    "Closure marker 2: Phase 6n W2b QuantumCrooks Lean-only post-bib stub (commented out)"
   ],
-  "round_2_scope": "Re-verification of round-1's 8 FAILs + 1 WARN against the revised paper draft",
+  "round_4_scope": "Round-3 verdict was RED with 2 BLOCKERs (block:D5:R3:1, block:D5:R3:2) — both empty post-bibliography \\section stubs from bundle_append.py default-insertion. Session-2 stub-cleanup commented out both \\section + \\label lines (preserving append_log.json bookkeeping anchors as LaTeX comments). Round-4 verifies: (a) both \\section{...} lines now LaTeX-commented (`%% \\section{...}`); (b) both \\label{...} lines now LaTeX-commented (`%% \\label{...}`); (c) PDF compiles clean (12pp/1348791 bytes confirmed); (d) 14 prior anchored claims still all PASS; (e) cross-bundle D3 §21 + D2 cross-bridges still PASS.",
   "sentences": [
     {
       "id": "sentence:D5:phase6m-taxonomy:7780b79c",
@@ -42,26 +44,15 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "DarkSectorClassificationExtension.phase6m_mechanism_count",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "DarkSectorClassificationExtension.phase6m_class_admits_tier_assignment",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "DarkSectorClassificationExtension.phase6m_mechanism_count", "link_state": "resolved" },
+          { "kind": "theorem", "target": "DarkSectorClassificationExtension.phase6m_class_admits_tier_assignment", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: prose now correctly states what `phase6m_mechanism_count` proves (B+C=17 via list-length sum) and separately accounts for Track A's 4 inductive constructors via case-exhaustion. The 21-total framing is preserved as a roster summary, not as the theorem's body. The cross-reference to `phase6m_class_admits_tier_assignment` (which accepts a Phase6mGDClass arg covering all three tracks) backs the '21 classify into 7-class taxonomy' claim. Round-1 FAIL #1 RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance",
-        "Gate9_NumericalFreshness"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): prose correctly states what `phase6m_mechanism_count` proves (B+C=17 via list-length sum) and accounts for Track A's 4 inductive constructors via case-exhaustion. No drift since round-3.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate9_NumericalFreshness"],
       "rewrite_of": "sentence:D5:phase6m-taxonomy:236d5b21",
       "tombstone": false
     },
@@ -83,46 +74,19 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "EntropicGravityDarkEnergy.all_quantitative_bounds_exceed_jeffreys_decisive",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "EntropicGravityDarkEnergy.entropic_gravity_no_go_count_eight",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "EntropicGravityDarkEnergy.padmanabhan_cosmin_no_go_no_scalar_perturbation_theory",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "EntropicGravityDarkEnergy.hossenfelder_verlinde_no_go_post_yoon_guha",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "EntropicGravityDarkEnergy.cadoni_tuveri_dec_no_go_via_gd_theorem_w_eq_minus_1",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "EntropicGravityDarkEnergy.hde_event_horizon_no_go_w_a_sign_mismatch_3sigma",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "EntropicGravityDarkEnergy.all_quantitative_bounds_exceed_jeffreys_decisive", "link_state": "resolved" },
+          { "kind": "theorem", "target": "EntropicGravityDarkEnergy.entropic_gravity_no_go_count_eight", "link_state": "resolved" },
+          { "kind": "theorem", "target": "EntropicGravityDarkEnergy.padmanabhan_cosmin_no_go_no_scalar_perturbation_theory", "link_state": "resolved" },
+          { "kind": "theorem", "target": "EntropicGravityDarkEnergy.hossenfelder_verlinde_no_go_post_yoon_guha", "link_state": "resolved" },
+          { "kind": "theorem", "target": "EntropicGravityDarkEnergy.cadoni_tuveri_dec_no_go_via_gd_theorem_w_eq_minus_1", "link_state": "resolved" },
+          { "kind": "theorem", "target": "EntropicGravityDarkEnergy.hde_event_horizon_no_go_w_a_sign_mismatch_3sigma", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: abstract now correctly distinguishes the 4 quantitative Bayesian bounds (Verlinde / Tsallis / Barrow / Odintsov, formalized in `all_quantitative_bounds_exceed_jeffreys_decisive`) from the 4 structurally NO-GO mechanisms (Padmanabhan / Hossenfelder-Verlinde / Cadoni-Tuveri DEC / HDE event-horizon). Each of the four structural NO-GOs maps to its own resolved Lean theorem (verified above). The 'all eight' wording is replaced with the two-route framing. Round-1 FAIL #2 RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance",
-        "Gate9_NumericalFreshness"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): abstract correctly distinguishes 4 quantitative Bayesian bounds from 4 structurally NO-GO mechanisms. No drift since round-3.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate9_NumericalFreshness"],
       "rewrite_of": "sentence:D5:abstract:6ebeaa3c",
       "tombstone": false
     },
@@ -144,20 +108,14 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "EntropicGravityDarkEnergy.entropic_gravity_no_go_count_eight",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "EntropicGravityDarkEnergy.entropic_gravity_no_go_count_eight", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: §9.1 subsection renamed 'Per-mechanism Lean closures' (was previously implicit). The opener now explicitly declares the 4-quantitative + 4-structural-NO-GO split (matches the 8 mechanisms). The Cadoni-Tuveri DEC \\item now incorporates the two former-sibling supports (`dec_cpl_excluded_from_desi_dr2_1sigma` and `dec_fails_orthogonality_principle`) as auxiliary Lean supports under the parent `cadoni_tuveri_dec_no_go_via_gd_theorem_w_eq_minus_1`. Counting the \\item structure: 8 top-level \\item entries (Verlinde, Padmanabhan, Hossenfelder-Verlinde, Cadoni-Tuveri (with 2 auxiliaries inline), HDE event-horizon, Tsallis, Barrow, Odintsov) = 8 mechanism-level closures. The earlier 10-vs-8 mismatch is gone. Round-1 FAIL #3 RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): 8-itemize structure unchanged; 4 quantitative + 4 structural-NO-GO partition consistent.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate9_NumericalFreshness"],
       "rewrite_of": "sentence:D5:phase6m-track-b:6eb7104d",
       "tombstone": false
     },
@@ -179,26 +137,15 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "BBN.bbn_violators_share_n_eff_failure_mode",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "BBN.at_least_three_phase5x_candidates_bbn_conformant",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "BBN.bbn_violators_share_n_eff_failure_mode", "link_state": "resolved" },
+          { "kind": "theorem", "target": "BBN.at_least_three_phase5x_candidates_bbn_conformant", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: both theorem names resolve in `lean_deps.json` under SKEFTHawking.BBN. The replacement names (per Round-1 recommendation option (a)) preserve Pipeline Invariant 1 (no spurious aliases). Round-1 FAIL #4 RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance",
-        "Gate9_NumericalFreshness"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): both BBN theorems still resolve in lean_deps.json.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate9_NumericalFreshness"],
       "rewrite_of": "sentence:D5:bbn-tally:71628883",
       "tombstone": false
     },
@@ -220,20 +167,14 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.BBN",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "SKEFTHawking.BBN", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: module name corrected to `BBN.lean` (verified via `ls lean/SKEFTHawking/BBN.lean`); the 17-theorem / 0-sorry / 0-axiom count was already correct in Round 1. Round-1 FAIL #5 RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): BBN.lean module exists; counts unchanged.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": "sentence:D5:bbn-tally:784e2b7b",
       "tombstone": false
     },
@@ -255,25 +196,15 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.EquivalencePrinciple",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "SKEFTHawking.EquivalencePrinciple", "link_state": "resolved" },
+          { "kind": "theorem", "target": "EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: now correctly cites `EquivalencePrinciple.lean` (single module). The previous double-module split (`EquivalencePrincipleClassification.lean` + `VestigialPhaseEPViolation.lean`) was a fabrication; the consolidated content lives in one file. The downstream §6.1 reference to `vestigial_phase_eta_violates_microscope_bound` (line 540) and figure caption (line 580) remain consistent. Round-1 FAIL #6 RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): EquivalencePrinciple.lean exists; theorem resolves.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": "sentence:D5:paper34:c7922b6e",
       "tombstone": false
     },
@@ -295,30 +226,16 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.MicroscopicCoefficientMatch",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.HeatKernelExpansion",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "SKEFTHawking.MicroscopicCoefficientMatch", "link_state": "resolved" },
+          { "kind": "theorem", "target": "SKEFTHawking.HeatKernelExpansion", "link_state": "resolved" },
+          { "kind": "theorem", "target": "MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: replaced fabricated `CosmologicalConstantEmergent.lean` with the two real modules `MicroscopicCoefficientMatch.lean` + `HeatKernelExpansion.lean`. The substantive theorem `lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed` resolves in lean_deps.json under SKEFTHawking.MicroscopicCoefficientMatch. The HeatKernelExpansion module exists (verified ls + lean_deps decls under SKEFTHawking.HeatKernelExpansion namespace). Round-1 FAIL #7 RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): both modules + substantive theorem resolve. Cross-bridge to D3 §21 verified — D3 §21 cites the same modules + the same `lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed` theorem.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": "sentence:D5:paper42b:293bd1e5",
       "tombstone": false
     },
@@ -340,30 +257,16 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "DarkSectorSynthesis.candidate_T0",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "DarkSectorSynthesis.candidate_S0",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "HiddenSectorMixedCharge.H_MixedChannelZ16Cancels",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "DarkSectorSynthesis.candidate_T0", "link_state": "resolved" },
+          { "kind": "theorem", "target": "DarkSectorSynthesis.candidate_S0", "link_state": "resolved" },
+          { "kind": "theorem", "target": "HiddenSectorMixedCharge.H_MixedChannelZ16Cancels", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: T-0 and S-0 candidate defs now correctly attributed to `DarkSectorSynthesis.lean` (verified `SKEFTHawking.DarkSectorSynthesis.candidate_T0` and `candidate_S0` resolve in lean_deps.json). C-1 stays attributed to `HiddenSectorMixedCharge.lean` where the c1_wan_wang and joint-constraint theorems live (and where the H_MixedChannelZ16Cancels def is module-bound to per lean_deps.json's module field, even though its symbol path is `SKEFTHawking.H_MixedChannelZ16Cancels`). Round-1 FAIL #8 RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): T-0/S-0/C-1 attributions consistent. Cross-bridge to D2 anomaly classification verified — D2 references `Z16AnomalyComputation.lean` for SM Z16 anomaly per generation, which D5 §2.1 also cites for the +3 mod 16 hidden-sector forcing argument.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": "sentence:D5:z16:8bec7349",
       "tombstone": false
     },
@@ -385,20 +288,14 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "ADWMechanism.critical_coupling_pos",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "ADWMechanism.critical_coupling_pos", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 verification: figure caption now uses fully-qualified `ADWMechanism.critical_coupling_pos`, matching the convention used elsewhere in the paper. Round-1 WARN RESOLVED.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-2/3): fully-qualified theorem name preserved.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": "sentence:D5:adw-cc:929a4631",
       "tombstone": false
     },
@@ -420,28 +317,16 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "StrongCPTopologicalDE.zhitnitskyDE_eV4",
-            "link_state": "resolved",
-            "computed_value": "6.719e-9 eV^4",
-            "delta_pct": 0.28
-          },
-          {
-            "kind": "theorem",
-            "target": "StrongCPTopologicalDE.zhitnitsky_DE_far_below_planck",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "StrongCPTopologicalDE.zhitnitskyDE_eV4", "link_state": "resolved", "computed_value": "6.719e-9 eV^4", "delta_pct": 0.28 },
+          { "kind": "theorem", "target": "StrongCPTopologicalDE.zhitnitsky_DE_far_below_planck", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
       "delta_pct": 0.28,
-      "agent_notes": "Round-2 carry-forward (was PASS in Round-1): rho = (0.1)^6 / (1.22e19)^2 = 6.72e-45 GeV^4 = 6.72e-9 eV^4. Paper says 6.7e-9. Match within 0.3%. Ratio to observed (2.8e-11 eV^4) = 240x. log10(M_P^4 / rho_DE) = 120.5. delta_pct = 0.28%.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate4_ComputationCorrectness"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-1/2/3): rho_DE = 6.72e-9 eV^4 vs paper 6.7e-9 (delta 0.28%); 240x ratio to observed; 120 orders below Planck.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness"],
       "rewrite_of": null,
       "tombstone": false
     },
@@ -463,21 +348,14 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "JacobsonThermoGRDarkEnergy.f_R_hu_sawicki_no_go_via_dolgov_kawasaki_or_chameleon",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "JacobsonThermoGRDarkEnergy.f_R_hu_sawicki_no_go_via_dolgov_kawasaki_or_chameleon", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 carry-forward (was PASS in Round-1): 0.21 / 2e-3 = 105 (paper says '>100x'). Theorem exists.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate4_ComputationCorrectness",
-        "Gate5_LeanProofSubstance"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-1/2/3): 0.21 / 2e-3 = 105 (paper says >100x). Theorem resolves.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate5_LeanProofSubstance"],
       "rewrite_of": null,
       "tombstone": false
     },
@@ -499,30 +377,16 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "JacobsonThermoGRDarkEnergy.sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "JacobsonThermoGRDarkEnergy.volovik_jannes_he3a_satisfies_sakharov_criterion",
-            "link_state": "resolved"
-          },
-          {
-            "kind": "theorem",
-            "target": "JacobsonThermoGRDarkEnergy.finazzi_liberati_sindoni_bec_violates_universal_coupling",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "JacobsonThermoGRDarkEnergy.sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk", "link_state": "resolved" },
+          { "kind": "theorem", "target": "JacobsonThermoGRDarkEnergy.volovik_jannes_he3a_satisfies_sakharov_criterion", "link_state": "resolved" },
+          { "kind": "theorem", "target": "JacobsonThermoGRDarkEnergy.finazzi_liberati_sindoni_bec_violates_universal_coupling", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 carry-forward (was PASS in Round-1): all three Sakharov-related theorems resolve in lean_deps.json.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-1/2/3): all three Sakharov-related theorems resolve.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
       "rewrite_of": null,
       "tombstone": false
     },
@@ -544,21 +408,14 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 carry-forward (was PASS in Round-1): theorem resolves in SKEFTHawking.EquivalencePrinciple. Numerical claim arithmetically correct.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate4_ComputationCorrectness",
-        "Gate5_LeanProofSubstance"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-1/2/3): theorem resolves; numerical claim correct.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate4_ComputationCorrectness", "Gate5_LeanProofSubstance"],
       "rewrite_of": null,
       "tombstone": false
     },
@@ -580,147 +437,116 @@
       "finding_classes": [],
       "chain_proposed": {
         "links": [
-          {
-            "kind": "theorem",
-            "target": "HiddenSectorMixedCharge.H_MixedChannelZ16Cancels",
-            "link_state": "resolved"
-          }
+          { "kind": "theorem", "target": "HiddenSectorMixedCharge.H_MixedChannelZ16Cancels", "link_state": "resolved" }
         ],
         "completeness": "full"
       },
       "agent_verdict": "PASS",
-      "agent_notes": "Round-2 carry-forward (was PASS in Round-1): H_MixedChannelZ16Cancels exists as a `def` whose module field is SKEFTHawking.HiddenSectorMixedCharge in lean_deps.json. Hypothesis is correctly attributed.",
-      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-01T23:30:00Z",
-      "gates_invoked": [
-        "Gate6_AssumptionDisclosure"
-      ],
+      "agent_notes": "Round-4 carry-forward (PASS at round-1/2/3): tracked hypothesis correctly attributed.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate6_AssumptionDisclosure"],
       "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase-6n-w1c-stub:bbdd16ba",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase-6n-w1c-stub",
+        "quote_hash": "bbdd16ba",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Closure marker — Phase 6n W1c writeup post-bib stub",
+      "section_ordinal": 13,
+      "tex_line_start": 1233,
+      "tex_line_end": 1244,
+      "quote": "%% \\section{Dissipative SK-EFT bootstrap-uniqueness NO-GO (Phase 6n W1c writeup)} [LaTeX-commented; bookkeeping anchor preserved as comment]",
+      "quote_normalized": "section heading + label commented out 2026-05-06 session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as latex comment, no rendered content.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-4 stub-closure verification: round-3 BLOCKER block:D5:R3:1 CLOSED. Inspection of paper_draft.tex lines 1233-1244 confirms: (a) `\\section{Dissipative SK-EFT bootstrap-uniqueness NO-GO (Phase 6n W1c writeup)}` on line 1234 is now LaTeX-commented as `%% \\section{...}` (verified via direct read); (b) `\\label{sec:d5-_phase6n_W1c_writeup}` on line 1235 is now LaTeX-commented as `%% \\label{...}`; (c) the cleanup-comment on line 1243 explains the rationale (empty post-bib stub, bookkeeping anchor preserved as comment, no rendered content); (d) the `─── Lifted from _phase6n_W1c_writeup` and `─── End lift` separator comments remain (line 1233, 1244) — these are LaTeX comments (start with `%%`), not rendered prose. PDF compile clean (12pp / 1348791 bytes). The stub no longer renders as a section in the PDF; the bookkeeping anchor for append_log.json source-contribution registration remains. Procedurally compliant with Late-Phase-6 Absorption Protocol §D.2 stub-deferral pattern.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate11_AdversarialReview"],
+      "rewrite_of": "sentence:D5:phase-6n-w1c-stub:bbdd16ba",
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase-6n-w2b-stub:8bdb6476",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase-6n-w2b-stub",
+        "quote_hash": "8bdb6476",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Closure marker — Phase 6n W2b QuantumCrooks Lean-only post-bib stub",
+      "section_ordinal": 13,
+      "tex_line_start": 1247,
+      "tex_line_end": 1258,
+      "quote": "%% \\section{Quantum Crooks no-go (Perarnau-Llobet)} [LaTeX-commented; bookkeeping anchor preserved as comment]",
+      "quote_normalized": "section heading + label commented out 2026-05-06 session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as latex comment, no rendered content.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "agent_notes": "Round-4 stub-closure verification: round-3 BLOCKER block:D5:R3:2 CLOSED. Inspection of paper_draft.tex lines 1247-1258 confirms: (a) `\\section{Quantum Crooks no-go (Perarnau-Llobet)}` on line 1248 is now LaTeX-commented as `%% \\section{...}` (verified via direct read); (b) `\\label{sec:d5-_phase6n_W2b_lean_only}` on line 1249 is now LaTeX-commented as `%% \\label{...}`; (c) the cleanup-comment on line 1257 explains the rationale identical to W1c stub. PDF compile clean. The stub no longer renders as a section in the PDF; bookkeeping anchor for append_log.json source-contribution registration remains. Substrate readiness retained (lean/SKEFTHawking/QuantumCrooks/{SKEFTConnection,HigherDimensional,ConcreteComplex}.lean all on disk per round-3 verification). When content lift becomes scheduled, prose body can be added back to a re-instated \\section before \\begin{thebibliography} on line 1130.",
+      "agent_run_id": "claims-reviewer-v2-bundle:D5:2026-05-06T18:30:00Z",
+      "gates_invoked": ["Gate11_AdversarialReview"],
+      "rewrite_of": "sentence:D5:phase-6n-w2b-stub:8bdb6476",
       "tombstone": false
     }
   ],
   "non_reproducing_prior_findings": [
     {
-      "prior_finding_id": "block:D5:1",
-      "prior_run_date": "2026-05-01T22:00:00Z",
+      "prior_finding_id": "block:D5:R3:1",
+      "prior_run_date": "2026-05-06T16:00:00Z",
       "status": "superseded",
       "auto_closed": true,
-      "reason": "§12 prose now correctly states the theorem proves B+C=17 list-length sum and explicitly accounts for Track A's 4 inductive constructors via case-exhaustion. Verified by reading paper_draft.tex lines 1065-1077 and confirming `phase6m_mechanism_count` exists at DarkSectorClassificationExtension.lean:265 with the matching list-length statement.",
+      "reason": "Round-3 BLOCKER (empty post-bib \\section stub for Phase 6n W1c writeup) CLOSED by Session-2 stub-cleanup. Both \\section and \\label lines commented out (`%% \\section{...}` / `%% \\label{...}`) at lines 1234-1235. PDF compiles clean (12pp/1348791 bytes). Bookkeeping anchor preserved as LaTeX comment so append_log.json source-contribution registration remains intact, but no rendered content in PDF. Supersession ledger entry: bundle-stage10:D5-2026-05-06:absorb-stub:post-bibliography-section-stubs (status: fixed).",
       "deterministic_recheck": {
-        "kind": "tex_line_inspection_plus_lean_grep",
-        "prior_value": "Prose claimed '4+8+9=21' attributed to phase6m_mechanism_count which only proves B+C=17",
-        "current_value": "Prose distinguishes theorem body (B+C=17 via list-length) from inductive case-exhaustion (Track A's 4) for total roster of 21",
-        "command": "grep -n 'phase6m_mechanism_count' lean/SKEFTHawking/DarkSectorClassificationExtension.lean && sed -n '1065,1077p' papers/D5/paper_draft.tex"
+        "kind": "tex_line_inspection",
+        "prior_value": "Line 1234: \\section{Dissipative SK-EFT bootstrap-uniqueness NO-GO (Phase 6n W1c writeup)} (rendered)",
+        "current_value": "Line 1234: %% \\section{Dissipative SK-EFT bootstrap-uniqueness NO-GO (Phase 6n W1c writeup)} (LaTeX-commented)",
+        "command": "sed -n '1233,1244p' papers/D5/paper_draft.tex"
       }
     },
     {
-      "prior_finding_id": "block:D5:2",
-      "prior_run_date": "2026-05-01T22:00:00Z",
+      "prior_finding_id": "block:D5:R3:2",
+      "prior_run_date": "2026-05-06T16:00:00Z",
       "status": "superseded",
       "auto_closed": true,
-      "reason": "Abstract now correctly distinguishes 4 quantitative Bayesian bounds (Verlinde / Tsallis / Barrow / Odintsov) from 4 structurally NO-GO mechanisms (Padmanabhan / Hossenfelder-Verlinde / Cadoni-Tuveri DEC / HDE event-horizon). Each of the 4 structural NO-GOs maps to its own resolved Lean theorem.",
+      "reason": "Round-3 BLOCKER (empty post-bib \\section stub for Phase 6n W2b QuantumCrooks Lean-only) CLOSED by Session-2 stub-cleanup. Both \\section and \\label lines commented out (`%% \\section{...}` / `%% \\label{...}`) at lines 1248-1249. PDF compiles clean. Identical remediation pattern to block:D5:R3:1. Same supersession ledger entry.",
       "deterministic_recheck": {
-        "kind": "tex_inspection_plus_lean_deps_lookup",
-        "prior_value": "Abstract: 'all eight quantitative Bayesian bounds exceed Jeffreys-decisive' — only 4 are |log B|>=5",
-        "current_value": "Abstract: 'two structurally distinct routes: four candidates ... yield quantitative Bayesian bounds ... ; the remaining four ... are structurally NO-GO via mechanism-specific obstructions'",
-        "command": "sed -n '63,73p' papers/D5/paper_draft.tex"
-      }
-    },
-    {
-      "prior_finding_id": "block:D5:3",
-      "prior_run_date": "2026-05-01T22:00:00Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "§9.1 subsection renamed 'Per-mechanism Lean closures'. The 8-vs-10-itemize mismatch resolved by merging the two DEC sub-supports (`dec_cpl_excluded_from_desi_dr2_1sigma` and `dec_fails_orthogonality_principle`) into the parent Cadoni-Tuveri DEC \\item as inline auxiliary supports.",
-      "deterministic_recheck": {
-        "kind": "tex_item_count",
-        "prior_value": "10 \\item entries while prose claimed 8 mechanisms",
-        "current_value": "8 top-level \\item entries (DEC parent now contains 2 inline auxiliary supports rather than separate siblings)",
-        "command": "sed -n '785,832p' papers/D5/paper_draft.tex | grep -c '^\\\\item'"
-      }
-    },
-    {
-      "prior_finding_id": "block:D5:4",
-      "prior_run_date": "2026-05-01T22:00:00Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "Theorem names corrected: phase5x_dm_bbn_violators_count_two → bbn_violators_share_n_eff_failure_mode (resolved); phase5x_dm_bbn_passers_count_three → at_least_three_phase5x_candidates_bbn_conformant (resolved). Both real names exist in SKEFTHawking.BBN per lean_deps.json.",
-      "deterministic_recheck": {
-        "kind": "lean_deps_lookup",
-        "prior_value": "phase5x_dm_bbn_violators_count_two / phase5x_dm_bbn_passers_count_three NOT in lean_deps.json",
-        "current_value": "bbn_violators_share_n_eff_failure_mode + at_least_three_phase5x_candidates_bbn_conformant both resolved",
-        "command": "python3 -c \"import json; deps = json.load(open('lean/lean_deps.json')); names = {d['name'] for d in (deps if isinstance(deps, list) else deps['declarations']) if isinstance(d, dict) and 'name' in d}; assert 'SKEFTHawking.BBN.bbn_violators_share_n_eff_failure_mode' in names; assert 'SKEFTHawking.BBN.at_least_three_phase5x_candidates_bbn_conformant' in names; print('OK')\""
-      }
-    },
-    {
-      "prior_finding_id": "block:D5:5",
-      "prior_run_date": "2026-05-01T22:00:00Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "Module name corrected: BBNUnified.lean → BBN.lean. The actual file path lean/SKEFTHawking/BBN.lean confirmed via filesystem.",
-      "deterministic_recheck": {
-        "kind": "filesystem_check",
-        "prior_value": "BBNUnified.lean does not exist on disk",
-        "current_value": "BBN.lean exists at lean/SKEFTHawking/BBN.lean",
-        "command": "ls lean/SKEFTHawking/BBN.lean"
-      }
-    },
-    {
-      "prior_finding_id": "block:D5:6",
-      "prior_run_date": "2026-05-01T22:00:00Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "Module name corrected: EquivalencePrincipleClassification.lean + VestigialPhaseEPViolation.lean (both fabricated) → EquivalencePrinciple.lean (single real file). vestigial_phase_eta_violates_microscope_bound resolves under SKEFTHawking.EquivalencePrinciple.",
-      "deterministic_recheck": {
-        "kind": "filesystem_check_plus_lean_deps",
-        "prior_value": "Both EquivalencePrincipleClassification.lean and VestigialPhaseEPViolation.lean nonexistent",
-        "current_value": "EquivalencePrinciple.lean exists; vestigial_phase_eta_violates_microscope_bound resolves there",
-        "command": "ls lean/SKEFTHawking/EquivalencePrinciple.lean && python3 -c \"import json; deps = json.load(open('lean/lean_deps.json')); print('OK' if 'SKEFTHawking.EquivalencePrinciple.vestigial_phase_eta_violates_microscope_bound' in {d['name'] for d in (deps if isinstance(deps, list) else deps['declarations']) if isinstance(d, dict) and 'name' in d} else 'MISS')\""
-      }
-    },
-    {
-      "prior_finding_id": "block:D5:7",
-      "prior_run_date": "2026-05-01T22:00:00Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "Module name corrected: CosmologicalConstantEmergent.lean (fabricated) → MicroscopicCoefficientMatch.lean + HeatKernelExpansion.lean (both real). The substantive theorem lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed resolves under MicroscopicCoefficientMatch.",
-      "deterministic_recheck": {
-        "kind": "filesystem_check_plus_lean_deps",
-        "prior_value": "CosmologicalConstantEmergent.lean nonexistent",
-        "current_value": "Both MicroscopicCoefficientMatch.lean and HeatKernelExpansion.lean exist; substantive theorem resolves",
-        "command": "ls lean/SKEFTHawking/MicroscopicCoefficientMatch.lean lean/SKEFTHawking/HeatKernelExpansion.lean"
-      }
-    },
-    {
-      "prior_finding_id": "block:D5:8",
-      "prior_run_date": "2026-05-01T22:00:00Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "T-0 / S-0 attribution corrected: HiddenSectorMixedCharge.lean → DarkSectorSynthesis.lean. Both candidate_T0 and candidate_S0 resolve under SKEFTHawking.DarkSectorSynthesis. C-1 attribution to HiddenSectorMixedCharge.lean retained where the c1_wan_wang and joint-constraint theorems live.",
-      "deterministic_recheck": {
-        "kind": "lean_deps_lookup",
-        "prior_value": "candidate_T0 / candidate_S0 attributed to HiddenSectorMixedCharge (wrong module)",
-        "current_value": "candidate_T0 / candidate_S0 attributed to DarkSectorSynthesis (correct module)",
-        "command": "python3 -c \"import json; deps = json.load(open('lean/lean_deps.json')); names = {d['name'] for d in (deps if isinstance(deps, list) else deps['declarations']) if isinstance(d, dict) and 'name' in d}; print('OK' if 'SKEFTHawking.DarkSectorSynthesis.candidate_T0' in names and 'SKEFTHawking.DarkSectorSynthesis.candidate_S0' in names else 'MISS')\""
-      }
-    },
-    {
-      "prior_finding_id": "warn:D5:1",
-      "prior_run_date": "2026-05-01T22:00:00Z",
-      "status": "superseded",
-      "auto_closed": true,
-      "reason": "Figure caption now uses fully-qualified `ADWMechanism.critical_coupling_pos`, matching the convention used elsewhere in the paper. Round-1 WARN resolved.",
-      "deterministic_recheck": {
-        "kind": "tex_grep",
-        "prior_value": "Bare `critical_coupling_pos` cited without module prefix",
-        "current_value": "Now `\\texttt{ADWMechanism.critical_coupling_pos}` (fully qualified)",
-        "command": "grep -n 'ADWMechanism.critical' papers/D5/paper_draft.tex"
+        "kind": "tex_line_inspection",
+        "prior_value": "Line 1247: \\section{Quantum Crooks no-go (Perarnau-Llobet)} (rendered)",
+        "current_value": "Line 1248: %% \\section{Quantum Crooks no-go (Perarnau-Llobet)} (LaTeX-commented)",
+        "command": "sed -n '1247,1258p' papers/D5/paper_draft.tex"
       }
     }
   ],
   "summary": {
-    "total_sentences_audited_for_anchors": 14,
+    "total_sentences": 16,
+    "total_sentences_audited_for_anchors": 16,
+    "by_type": {
+      "numeric": 3,
+      "theorem-ref": 9,
+      "citation": 0,
+      "parameter": 0,
+      "formal-claim": 1,
+      "qualitative": 0,
+      "methodology": 0,
+      "transition": 0,
+      "metaclaim": 2
+    },
     "by_verdict": {
-      "PASS": 14,
+      "PASS": 16,
       "FAIL": 0,
       "WARN": 0,
       "INFO": 0,
@@ -734,19 +560,35 @@
       "TN": 0,
       "HD": 0
     },
-    "non_reproducing_count": 9,
-    "non_reproducing_auto_closed": 9,
+    "non_reproducing_count": 2,
+    "non_reproducing_auto_closed": 2,
     "non_reproducing_candidates": 0,
-    "agent_text": "Round-2: 14 anchored claims audited — all 14 PASS / 0 FAIL / 0 WARN. All 8 round-1 BLOCKERs (block:D5:1–8) and the 1 round-1 WARN (warn:D5:1) are deterministically auto-closed via tex+lean_deps inspection. No new findings introduced by the fixes."
+    "agent_text": "Round-4: 16 anchored claims audited — 16 PASS / 0 FAIL / 0 WARN. Both round-3 BLOCKERs (block:D5:R3:1 W1c stub, block:D5:R3:2 W2b stub) deterministically auto-closed via tex line inspection: both \\section + \\label lines now LaTeX-commented as `%% \\section{...}` / `%% \\label{...}` per Session-2 systematic stub-cleanup. PDF recompiled clean (12pp/1348791 bytes). 14 prior anchored claims all carry forward PASS unchanged. Cross-bundle re-checks D3 §21 (heat-kernel a_0) and D2 (Z16 anomaly classification) both PASS. D5 round-4 verdict: GREEN."
   },
   "blocking_issues": [],
   "non_blocking_followups": [
     {
       "id": "advisory:D5:1",
-      "summary": "Lean docstring drift in DarkSectorClassificationExtension.lean:262–266 — the docstring claims '4 (Track A) + 8 (Track B) + 9 (Track C) = 21 mechanism entries' but the theorem body proves only B+C=17. The paper's prose now correctly handles this asymmetry, but the Lean docstring should be brought into alignment in a follow-up sweep (recommended: option (a) from round-1 — prove a Track-A list-length lemma in CausalSetDarkEnergy.lean and strengthen `phase6m_mechanism_count` to sum all three lists to 21). This is non-blocking for D5 Stage-10/13 since the prose is internally consistent.",
+      "summary": "Lean docstring drift in DarkSectorClassificationExtension.lean:262–266 — the docstring claims '4 (Track A) + 8 (Track B) + 9 (Track C) = 21 mechanism entries' but the theorem body proves only B+C=17. The paper's prose now correctly handles this asymmetry, but the Lean docstring should be brought into alignment in a follow-up sweep (recommended: option (a) from round-1 — prove a Track-A list-length lemma in CausalSetDarkEnergy.lean and strengthen `phase6m_mechanism_count` to sum all three lists to 21). Carry-forward from round-3.",
       "sentences": [],
       "gate": "Gate5_LeanProofSubstance",
       "finding_class": "TN",
+      "severity": "ADVISORY"
+    },
+    {
+      "id": "advisory:D5:R3:1",
+      "summary": "bundle_append.py default behavior for D.2 events inserts stub sections AFTER \\end{thebibliography} (per BUNDLE_LIFT_PROCEDURE §8 fallback). Recommend adding a pre-bibliography `% BUNDLE_APPEND_INSERT_HERE` marker BEFORE \\begin{thebibliography} so future D.2 absorptions land in the natural document flow, not as orphaned post-bib stubs. Cross-cutting concern; affects all bundles using bundle_append.py default insertion. Carry-forward from round-3 (round-4 round-trips this advisory unchanged — Session-2 stub-cleanup is a tactical workaround, not a strategic fix).",
+      "sentences": [],
+      "gate": "Gate11_AdversarialReview",
+      "finding_class": "IA",
+      "severity": "ADVISORY"
+    },
+    {
+      "id": "advisory:D5:R4:1",
+      "summary": "When content lift for Phase 6n W1c writeup or W2b QuantumCrooks Lean-only becomes scheduled, the LaTeX-commented stubs at lines 1234-1235 / 1248-1249 should be re-instated as LIVE sections — but only after the prose body is populated AND the section block is moved BEFORE \\begin{thebibliography} at line 1130 (per advisory:D5:R3:1 strategic fix, OR as a one-off manual move). The current commented-out form preserves bookkeeping but loses the natural document position. The append_log.json registration is intact, so future lift discovery should work.",
+      "sentences": [],
+      "gate": "Gate11_AdversarialReview",
+      "finding_class": "IA",
       "severity": "ADVISORY"
     }
   ],
@@ -755,8 +597,8 @@
       "D3 §21",
       "D2"
     ],
-    "D3_cross_bridge_status": "PASS — D5 §7 now cites `MicroscopicCoefficientMatch.lean + HeatKernelExpansion.lean` for the heat-kernel a_0 framework. The round-1 finding noted that D3 §21 should also be retargeted away from `CosmologicalConstantEmergent.lean` (a fabricated name); that is a D3-side fix and is flagged in D3 lift QA, not blocking for D5. D5's local fix is uniformly consistent.",
-    "D2_cross_bridge_status": "PASS — D5 §2.1 Z16 anomaly content (T-0 / S-0 / C-1 candidates; +3 mod 16 hidden-charge constraint; tracked H_MixedChannelZ16Cancels hypothesis disclosure) consistent with D2's three-pillar synthesis."
+    "D3_cross_bridge_status": "PASS — D5 §7 cites `MicroscopicCoefficientMatch.lean + HeatKernelExpansion.lean` for the heat-kernel a_0 framework; D3 §21 (lines 116-180 verified) cites the same modules + the same substantive theorem `MicroscopicCoefficientMatch.lambdaEmergMicroscopic_at_planck_natural_far_exceeds_observed`. Both papers attribute the heat-kernel a_0 coefficient identically; no semantic drift.",
+    "D2_cross_bridge_status": "PASS — D5 §2.1 Z16 hidden-sector content cites `Z16AnomalyComputation.lean`; D2 lines 122/133-135 verified to cite the same `Z16AnomalyComputation.dai_freed_spin_z4` plus the SM Z16 anomaly per generation framework. Both bundles share the same substrate module for the +3 mod 16 hidden-charge classification. Per Phase 6n+6o → Phase 7 absorption Session 1 close memory, D2 received D.2/D.4 events (24|c₋ Möller-Scheithauer corollary, Schellekens chain reframing) at §2.7 + L2 paired-splash; these do not collide with D5 §2.1's anomaly classification."
   },
   "stage10_round_2_verdict": {
     "overall": "GREEN",
@@ -764,6 +606,22 @@
     "warn_count": 0,
     "pass_count": 14,
     "ready_for_stage_13": true,
-    "rationale": "All 8 round-1 BLOCKERs and 1 round-1 WARN deterministically auto-closed via tex inspection + lean_deps.json lookups + filesystem checks. No new findings introduced. The advisory non_blocking_followup (Lean docstring alignment in DarkSectorClassificationExtension.lean) is non-blocking for Stage-10/13 since the paper's prose is internally consistent with what the theorem actually proves."
+    "rationale": "All 8 round-1 BLOCKERs and 1 round-1 WARN deterministically auto-closed."
+  },
+  "round_3_verdict": {
+    "overall": "RED",
+    "fail_count": 2,
+    "warn_count": 0,
+    "pass_count": 14,
+    "ready_for_stage_13_close": false,
+    "rationale": "2 D.2 absorption events appended empty \\section stubs after \\end{thebibliography}. Both required remediation."
+  },
+  "round_4_verdict": {
+    "overall": "GREEN",
+    "fail_count": 0,
+    "warn_count": 0,
+    "pass_count": 16,
+    "ready_for_stage_13_close": true,
+    "rationale": "Round-3's 2 BLOCKERs both deterministically auto-closed via Session-2 systematic stub-cleanup: \\section + \\label lines commented out (`%% \\section{...}` / `%% \\label{...}`) preserving append_log.json bookkeeping anchor as LaTeX comment but eliminating rendered post-bib content. PDF recompiled clean (12pp/1348791 bytes confirmed). 14 prior anchored claims all carry forward PASS. Cross-bundle D3 §21 + D2 anchors both re-verified PASS. Session-1 D.2 absorption status: now properly bookkeeping-only without rendered empty sections. D5 round-4 stage-13 close: GREEN, ready for advancement. Three advisory non-blocking followups remain (DarkSectorClassificationExtension docstring drift; bundle_append.py pre-bib insert-marker strategic fix; future content-lift re-instatement protocol)."
   }
 }

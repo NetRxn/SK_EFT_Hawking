@@ -91,6 +91,32 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-01T19:32:14Z",
       "notes": "D.4 sourceless late-absorption: Phase 6m three-track Lean closure (CSDE Track A NO-GO + 3 caveats incl. Barrow \u00a710.5 + EGDE Track B 8/8 unanimous NO-GO paper-45-equivalent novelty + JTGR Track C f(R) Exp+ArcTanh CLEARED-R5 strongest + Sakharov \u00a711.5 + DSCE 7-class GD taxonomy)"
+    },
+    {
+      "date": "2026-05-06T15:41:18Z",
+      "source_paper": "_phase6n_W1c_writeup",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a713",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:41:18Z",
+      "notes": "D.2 absorption: Phase 6n W1c NO-GO writeup memo joint with 6o.\u03b3 (NO-GO landscape: dissipative SK-EFT bootstrap-uniqueness obstructions)"
+    },
+    {
+      "date": "2026-05-06T15:41:21Z",
+      "source_paper": "_phase6n_W2b_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a713",
+      "lean_modules_referenced": [
+        "QuantumCrooks.SKEFTConnection",
+        "QuantumCrooks.HigherDimensional",
+        "QuantumCrooks.ConcreteComplex"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:41:21Z",
+      "notes": "D.2 absorption: Phase 6n W2b Perarnau-Llobet quantum-Crooks parametric + \u2102-form NO-GO"
     }
   ]
 }

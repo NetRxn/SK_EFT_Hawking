@@ -13,6 +13,36 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-01T18:36:23Z",
       "notes": "Initial lift: paper27 \u2192 L3 PRL splash (BCH four-laws regime partition + sign-flip of dT_H/dt; Phase 6a W5; ships first wave with L1)"
+    },
+    {
+      "date": "2026-05-06T15:41:27Z",
+      "source_paper": "_phase6n_W2a_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a73",
+      "lean_modules_referenced": [
+        "GloriosoLiu.Axioms",
+        "GloriosoLiu.SecondOrderProjection",
+        "SKDoubling"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-06T15:41:27Z",
+      "notes": "D.2 absorption: Phase 6n W2a Glorioso-Liu axiomatic skeleton (Glorioso_Liu_local_second_law cross-ref upgrade only; no prose change)"
+    },
+    {
+      "date": "2026-05-06T16:30:00Z",
+      "source_paper": "_phase6n_W2d_lean_only",
+      "lift_action": "Revision",
+      "bundle_section_inserted": "new \"Substrate-class context\" paragraph after Jacobson-Koike contrast",
+      "lean_modules_referenced": [
+        "JacobsonThermoGRDarkEnergy",
+        "CrooksAnalogHawking.SakharovHorizonCrooks",
+        "EntropicGravityDarkEnergy"
+      ],
+      "citation_count_added": 2,
+      "stage13_redo_required": true,
+      "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T16:30:00Z",
+      "notes": "D.3 GATE 2 absorption (Phase 6n.ζ, user-auth granted 2026-05-06): NEW paragraph 'Substrate-class context' inserted after Jacobson-Koike contrast paragraph. ³He-A satisfies all 4 Sakharov / FLS BEC violates condition (ii). Two classifications (Sakharov-criterion + regime partition) are independent program axes; horizon-Crooks unifies them only at the substrate-induced-gravity layer. Verlinde disclaimer enforced (Phase 6m EGDE 8/8 NO-GO ≥5σ). 2 new bibitems added (JacobsonEFE1995, Roehm2026EmergentGravity D3 inprep self-cite). Title + abstract + result section unchanged; central PRL claim preserved. LaTeX compile clean (4pp / 350KB). Pre-draft: temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md."
     }
   ]
 }

@@ -1,17 +1,21 @@
 # Bundle I1 — Source Manifest
 
-**Auto-generated:** 2026-05-01
+**Auto-generated:** 2026-05-06
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`I1`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (2)
+## Contributing source papers (6)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
-| `paper15_methodology` | (see mapping) | Lift-section | (see mapping) | 2026-05-01T12:57:51Z |
-| `paper44_riemannian_connection` | (see mapping) | Lift-section | (see mapping) | 2026-04-30T16:13:53Z |
+| `_phase6n_W2a_lean_only` | §3 | (unspecified) | (see mapping) | (missing) |
+| `_phase6n_W2b_lean_only` | §8 sidebar | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W2a_lean_only` | §11 sidebar | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W3a_lean_only` | §7 | (unspecified) | (see mapping) | (missing) |
+| `paper15_methodology` | (see mapping) | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
+| `paper44_riemannian_connection` | (see mapping) | Lift-section | (see mapping) | 2026-05-01T17:56:24Z |
 
 ## Coverage notes
 

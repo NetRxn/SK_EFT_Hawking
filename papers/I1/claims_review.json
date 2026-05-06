@@ -1,9 +1,9 @@
 {
   "paper": "I1",
-  "review_date": "2026-05-01T18:00:00Z",
+  "review_date": "2026-05-06T20:00:00Z",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
+  "reviewer_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
   "sentences": [
     {
       "id": "sentence:I1:abstract:0ee6ab6f",
@@ -1488,362 +1488,6 @@
       "tex_line_end": 229,
       "quote": "The composition gives all three.",
       "quote_normalized": "the composition gives all three.",
-      "type": "qualitative",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
-      "agent_verdict": "INFO",
-      "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:131e510d",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "131e510d",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 1,
-      "tex_line_start": 257,
-      "tex_line_end": 266,
-      "quote": "In Schwinger--Keldysh effective field theory, the first-order action contains nine real coefficients $\\{r_1, \\ldots, r_6, i_1, i_2, i_3\\}$ controlling six retarded response and three noise channels at lowest derivative order.",
-      "quote_normalized": "in schwinger--keldysh effective field theory, the first-order action contains nine real coefficients $\\{r_1, \\ldots, r_6, i_1, i_2, i_3\\}$ controlling six retarded response and three noise channels at lowest derivative order.",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "FirstOrderKMS"
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "9 coefficients (6 retarded + 3 noise) verified against SKDoubling.lean FirstOrderCoeffs / FirstOrderKMS structure.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:88a7bacc",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "88a7bacc",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 2,
-      "tex_line_start": 261,
-      "tex_line_end": 266,
-      "quote": "A clean physics question is whether the Kubo--Martin--Schwinger (KMS) condition --- the algebraic statement of fluctuation--dissipation relating retarded and noise sectors --- forces a unique parameterization of the action by the two transport coefficients $\\kappa, \\nu$ (bulk and shear viscosity, in the analog fluid).",
-      "quote_normalized": "a clean physics question is whether the kubo--martin--schwinger (kms) condition --- the algebraic statement of fluctuation--dissipation relating retarded and noise sectors --- forces a unique parameterization of the action by the two transport coefficients $\\kappa, \\nu$ (bulk and shear viscosity, in the analog fluid).",
-      "type": "qualitative",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
-      "agent_verdict": "INFO",
-      "agent_notes": "Setup question.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:296dd86d",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "296dd86d",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 3,
-      "tex_line_start": 268,
-      "tex_line_end": 281,
-      "quote": "Our first attempt encoded an early version of the KMS constraint as a Lean axiom \\texttt{KMSSymmetry} that asserted four of the nine component-level identities.",
-      "quote_normalized": "our first attempt encoded an early version of the kms constraint as a lean axiom kmssymmetry that asserted four of the nine component-level identities.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "KMSSymmetry"
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "KMSSymmetry struct found at SKDoubling.lean line 156 (4 fields). PASS.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:6f935edb",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "6f935edb",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 4,
-      "tex_line_start": 270,
-      "tex_line_end": 273,
-      "quote": "The accompanying uniqueness theorem \\texttt{firstOrder\\_uniqueness} (in \\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~351--439) was submitted to Aristotle in priority batch~1.",
-      "quote_normalized": "the accompanying uniqueness theorem firstorder\\_uniqueness (in lean/skefthawking/skdoubling.lean, lines~351--439) was submitted to aristotle in priority batch~1.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "firstOrder_uniqueness"
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "Round-2 re-review: line ranges tightened. firstOrder_uniqueness verified at L412 (via `grep -nE '^theorem firstOrder_uniqueness' lean/SKEFTHawking/SKDoubling.lean`). FirstOrderKMS structure verified at L367. Cited range L412-439 + L367 onwards is now tight against current source. Round-1 followup:2 remediated.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:bb9ac60f",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "bb9ac60f",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 5,
-      "tex_line_start": 273,
-      "tex_line_end": 281,
-      "quote": "Aristotle returned not a proof but a counterexample: the coefficient vector $c = (0,0,0,0,0,0,0,1,0)$ --- one nonzero noise channel and nothing else --- satisfies the four-component constraint but violates the full algebraic FDR.",
-      "quote_normalized": "aristotle returned not a proof but a counterexample: the coefficient vector $c = (0,0,0,0,0,0,0,1,0)$ --- one nonzero noise channel and nothing else --- satisfies the four-component constraint but violates the full algebraic fdr.",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "Counterexample c=⟨0,0,0,0,0,0,0,1,0⟩ confirmed in SKDoubling.lean comment line 423.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:e9c09865",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "e9c09865",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 6,
-      "tex_line_start": 277,
-      "tex_line_end": 281,
-      "quote": "Without the formal pipeline this would have been a one-symbol typographical hole that survived human review on three rounds; with the formal pipeline it was flagged on first submission.",
-      "quote_normalized": "without the formal pipeline this would have been a one-symbol typographical hole that survived human review on three rounds; with the formal pipeline it was flagged on first submission.",
-      "type": "qualitative",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
-      "agent_verdict": "INFO",
-      "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:b9f2dd0b",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "b9f2dd0b",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 7,
-      "tex_line_start": 282,
-      "tex_line_end": 295,
-      "quote": "The resolution exposed the substantive physics.",
-      "quote_normalized": "the resolution exposed the substantive physics.",
-      "type": "transition",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
-      "agent_verdict": "TRANSITION",
-      "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:2d334728",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "2d334728",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 8,
-      "tex_line_start": 282,
-      "tex_line_end": 290,
-      "quote": "The full component-level KMS at first order is seven simultaneous algebraic relations, not four, and produces the closed-form noise spectrum $i_1 = -r_2/\\beta$, $i_2 = (r_1 + r_2)/\\beta$, $i_3 = 0$ together with $r_3 = r_4 = r_5 = r_6 = 0$.",
-      "quote_normalized": "the full component-level kms at first order is seven simultaneous algebraic relations, not four, and produces the closed-form noise spectrum $i_1 = -r_2/\\beta$, $i_2 = (r_1 + r_2)/\\beta$, $i_3 = 0$ together with $r_3 = r_4 = r_5 = r_6 = 0$.",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "FirstOrderKMS"
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "7 KMS relations / closed-form noise spectrum stated; structural-Prop. PASS without numeric recomputation since this is a formal-derivation summary.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:211f97d5",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "211f97d5",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 9,
-      "tex_line_start": 286,
-      "tex_line_end": 290,
-      "quote": "The strengthened axiom \\texttt{FirstOrderKMS} encodes all seven; the corresponding \\texttt{firstOrder\\_uniqueness} theorem (Aristotle run~\\texttt{270e77a0}) closes cleanly.",
-      "quote_normalized": "the strengthened axiom firstorderkms encodes all seven; the corresponding firstorder\\_uniqueness theorem (aristotle run~270e77a0) closes cleanly.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "firstOrder_uniqueness"
-          },
-          {
-            "kind": "aristotle",
-            "target": "270e77a0"
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "Aristotle run 270e77a0 confirmed in ARISTOTLE_THEOREMS for firstOrder_uniqueness. FirstOrderKMS struct at SKDoubling.lean line 367.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ]
-    },
-    {
-      "id": "sentence:I1:case1:7751572c",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "7751572c",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 10,
-      "tex_line_start": 290,
-      "tex_line_end": 291,
-      "quote": "The two-parameter $(\\kappa, \\nu)$ family is recovered as a corollary.",
-      "quote_normalized": "the two-parameter $(\\kappa, \\nu)$ family is recovered as a corollary.",
-      "type": "qualitative",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
-      "agent_verdict": "INFO",
-      "agent_notes": "",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:4b6023f0",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "4b6023f0",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 11,
-      "tex_line_start": 291,
-      "tex_line_end": 295,
-      "quote": "The published analog-Hawking spectrum and noise-floor formula in the project's Tier~1 deep papers depend numerically on $i_3 = 0$; the original weakened constraint did not force $i_3 = 0$, and a paper using it would have shipped the wrong noise floor.",
-      "quote_normalized": "the published analog-hawking spectrum and noise-floor formula in the project's tier~1 deep papers depend numerically on $i_3 = 0$; the original weakened constraint did not force $i_3 = 0$, and a paper using it would have shipped the wrong noise floor.",
-      "type": "qualitative",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
-      "agent_verdict": "INFO",
-      "agent_notes": "Cross-paper dependency claim; consistent with D-tier deep paper substrate.",
-      "agent_run_id": "claims-reviewer-v2:bundle:I1:2026-05-01T18:00:00Z",
-      "tombstone": false,
-      "bundle_destination": "I1",
-      "lift_action": "Lift-section"
-    },
-    {
-      "id": "sentence:I1:case1:4dbaa1bc",
-      "raw_id_parts": {
-        "paper": "I1",
-        "section_slug": "case1",
-        "quote_hash": "4dbaa1bc",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "case1",
-      "section_ordinal": 12,
-      "tex_line_start": 294,
-      "tex_line_end": 295,
-      "quote": "Aristotle's failure to prove a wrong statement is the substantive content of this case.",
-      "quote_normalized": "aristotle's failure to prove a wrong statement is the substantive content of this case.",
       "type": "qualitative",
       "finding_classes": [],
       "chain_proposed": {
@@ -7891,6 +7535,915 @@
         "Gate6_AssumptionDisclosure",
         "Gate2_CrossPaperConsistency"
       ]
+    },
+    {
+      "id": "sentence:I1:case1:f8dc7928",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "f8dc7928",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 282,
+      "tex_line_end": 285,
+      "quote": "In Schwinger--Keldysh effective field theory, the first-order action contains nine real coefficients $\\{r_1, \\ldots, r_6, i_1, i_2, i_3\\}$ controlling six retarded-response and three noise channels at lowest derivative order.",
+      "quote_normalized": "in schwinger--keldysh effective field theory, the first-order action contains nine real coefficients $\\{r_1, \\ldots, r_6, i_1, i_2, i_3\\}$ controlling six retarded-response and three noise channels at lowest derivative order.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Nine real coefficients = six retarded (r_1..r_6) + three noise (i_1..i_3); verified against SKDoubling.lean DissipativeCoeffs structure (lines~244--280) and GloriosoLiu/FirstOrderProjection.lean which references the same FirstOrderKMS axiom over these nine coefficients.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.firstOrder_uniqueness"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:bd5cf803",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "bd5cf803",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 285,
+      "tex_line_end": 293,
+      "quote": "A clean physics question is whether the Kubo--Martin--Schwinger (KMS) condition --- the algebraic statement of fluctuation--dissipation relating retarded and noise sectors --- forces a unique parameterization of the action by the two transport coefficients $(\\gamma_1, \\gamma_2)$ (isotropic phonon damping, related to bulk viscosity, and anisotropic damping along the superfluid flow; the precise correspondence to the action coefficients is encoded in the \\texttt{DissipativeCoeffs} structure of \\texttt{SKDoubling.lean}, lines~244--280).",
+      "quote_normalized": "a clean physics question is whether the kubo--martin--schwinger (kms) condition --- the algebraic statement of fluctuation--dissipation relating retarded and noise sectors --- forces a unique parameterization of the action by the two transport coefficients $(\\gamma_1, \\gamma_2)$ (isotropic phonon damping, related to bulk viscosity, and anisotropic damping along the superfluid flow; the precise correspondence to the action coefficients is encoded in the dissipativecoeffs structure of skdoubling.lean, lines~244--280).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "(gamma_1, gamma_2) transport-coefficient notation aligns with Lean DissipativeCoeffs structure. SKDoubling.lean and DissipativeCoeffs both resolve in lean_deps.json (113 + 73 hits respectively).",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.DissipativeCoeffs"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:05156780",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "05156780",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 295,
+      "tex_line_end": 295,
+      "quote": "A published axiomatic for the SK-EFT contour exists.",
+      "quote_normalized": "a published axiomatic for the sk-eft contour exists.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Setup sentence introducing the published-axiomatic framing. Non-load-bearing standalone.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place"
+    },
+    {
+      "id": "sentence:I1:case1:99f0dd4d",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "99f0dd4d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 296,
+      "tex_line_end": 299,
+      "quote": "Crossley, Glorioso, and Liu~\\cite{CrossleyGloriosoLiu2017} formulate the closed-time-path action with hermiticity, reflection positivity ($\\Im\\,S \\geq 0$), and a $\\mathbb{Z}_2$ symmetry they identified as the local KMS condition.",
+      "quote_normalized": "crossley, glorioso, and liu~ formulate the closed-time-path action with hermiticity, reflection positivity ($\\im\\,s \\geq 0$), and a $\\mathbb{z}_2$ symmetry they identified as the local kms condition.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Bibkey CrossleyGloriosoLiu2017 resolves in CITATION_REGISTRY (citations.py L3093, doi_verified=True, arxiv:1511.03646, JHEP 09 (2017) 095).",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "CrossleyGloriosoLiu2017"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:700362df",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "700362df",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 299,
+      "tex_line_end": 303,
+      "quote": "The companion paper of Glorioso, Crossley, and Liu~\\cite{GloriosoCrossleyLiu2017} promotes this to the \\emph{dynamical} KMS $\\mathbb{Z}_2$ symmetry, which is the central algebraic-level statement applicable in any local-equilibrium state rather than only thermal density matrices.",
+      "quote_normalized": "the companion paper of glorioso, crossley, and liu~ promotes this to the dynamical kms $\\mathbb{z}_2$ symmetry, which is the central algebraic-level statement applicable in any local-equilibrium state rather than only thermal density matrices.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Bibkey GloriosoCrossleyLiu2017 resolves in CITATION_REGISTRY (citations.py L3548, doi_verified=True, arxiv:1701.07817, JHEP 09 (2017) 096). 'Dynamical KMS Z_2' attribution to CGL II is consistent with provides field.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GloriosoCrossleyLiu2017"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:d6c98b18",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "d6c98b18",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 303,
+      "tex_line_end": 309,
+      "quote": "Glorioso and Liu~\\cite{GloriosoLiu2018} then derive the local second law, $\\partial_\\mu J^\\mu_S \\geq 0$ for a Noether-constructed entropy current $J^\\mu_S$, from the dynamical-KMS $\\mathbb{Z}_2$ symmetry, the classical-limit remnant of microscopic unitarity, and the local equilibrium assumption; the pedagogical exposition is the TASI~2017 lectures of Glorioso and Liu~\\cite{GloriosoLiu2018TASI}.",
+      "quote_normalized": "glorioso and liu~ then derive the local second law, $\\partial_\\mu j^\\mu_s \\geq 0$ for a noether-constructed entropy current $j^\\mu_s$, from the dynamical-kms $\\mathbb{z}_2$ symmetry, the classical-limit remnant of microscopic unitarity, and the local equilibrium assumption; the pedagogical exposition is the tasi~2017 lectures of glorioso and liu~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Both bibkeys resolve. GloriosoLiu2018 (citations.py L730, arxiv:1612.07705 verified). GloriosoLiu2018TASI (citations.py L3570, arxiv:1805.09331, PoS TASI2017 008, doi_verified=True). The second-law derivation matches GloriosoLiu2018 'provides' field: 'dynamical KMS Z_2 symmetry + unitarity (Im S_eff >= 0) ⇒ ∂_μ s^μ ≥ 0'.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GloriosoLiu2018"
+          },
+          {
+            "kind": "citation",
+            "target": "GloriosoLiu2018TASI"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:b2b04bd9",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "b2b04bd9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 309,
+      "tex_line_end": 312,
+      "quote": "The dynamical-KMS axiom carries a UV-realization ambiguity surfaced by Jain and Kovtun~\\cite{JainKovtun2024}, which the program encodes at the typeclass level (\\S\\ref{sec:strengthening}).",
+      "quote_normalized": "the dynamical-kms axiom carries a uv-realization ambiguity surfaced by jain and kovtun~, which the program encodes at the typeclass level (\\s).",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Bibkey JainKovtun2024 resolves in CITATION_REGISTRY (citations.py L3706, doi_verified=True, arxiv:2309.00511, JHEP 01 (2024) 162). Citation provides field explicitly states 'UV-realization ambiguity in dynamical KMS symmetry' — direct match to prose claim. Typeclass-level encoding confirmed in lean/SKEFTHawking/GloriosoLiu/DynamicalKMS.lean (DynamicalKMSAt at lines 62-95 with realization invariance theorem).",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "JainKovtun2024"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GloriosoLiu.DynamicalKMSAt"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:6dec3e5d",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "6dec3e5d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 312,
+      "tex_line_end": 316,
+      "quote": "The first-order projection of this published skeleton onto the polynomial action with nine candidate coefficients is the structure documented below; the strengthening discussed in the rest of this section is the projection step, not a project-original axiomatic choice.",
+      "quote_normalized": "the first-order projection of this published skeleton onto the polynomial action with nine candidate coefficients is the structure documented below; the strengthening discussed in the rest of this section is the projection step, not a project-original axiomatic choice.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Substantive load-bearing reframing claim: I1 §3's FirstOrderKMS is asserted to be a *projection* of published Glorioso--Liu axiomatic, not a project-original axiom. Verified against Lean substrate: lean/SKEFTHawking/GloriosoLiu/FirstOrderProjection.lean line 4-6 docstring states 'Recovers the program's existing SKEFTHawking.SKDoubling.FirstOrderKMS as the *first-order projection* of the GloriosoLiu six-axiom skeleton.' The Lean module name itself (FirstOrderProjection.lean) operationalizes the claim. PASS — prose matches Lean substrate exactly.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GloriosoLiu.SKEFTAxioms"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:a2f51bb5",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "a2f51bb5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 318,
+      "tex_line_end": 320,
+      "quote": "Our first formalization encoded a \\emph{preliminary} transform-level KMS constraint as a Lean axiom \\texttt{KMSSymmetry} (in \\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~156--168).",
+      "quote_normalized": "our first formalization encoded a preliminary transform-level kms constraint as a lean axiom kmssymmetry (in lean/skefthawking/skdoubling.lean, lines~156--168).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "KMSSymmetry resolves in lean_deps.json (SKEFTHawking.SKDoubling.KMSSymmetry, 13 hits incl. constructors). Module SKDoubling.lean confirmed via 113 hits.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.KMSSymmetry"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:46d1d08f",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "46d1d08f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 320,
+      "tex_line_end": 324,
+      "quote": "The field-level transform $\\psi_a \\to \\psi_a + i\\beta\\,\\partial_t \\psi_r$ acts only on four of the nine components ($\\psi_r$, $\\psi_a$, $\\partial_t \\psi_r$, and $\\partial_x \\psi_r$), leaving the derivatives of $\\psi_a$ and the second derivatives of $\\psi_r$ unconstrained.",
+      "quote_normalized": "the field-level transform $\\psi_a \\to \\psi_a + i\\beta\\,\\partial_t \\psi_r$ acts only on four of the nine components ($\\psi_r$, $\\psi_a$, $\\partial_t \\psi_r$, and $\\partial_x \\psi_r$), leaving the derivatives of $\\psi_a$ and the second derivatives of $\\psi_r$ unconstrained.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Four-of-nine partition unchanged from prior reviews; consistent with SKDoubling.lean transform-level KMSSymmetry definition.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place"
+    },
+    {
+      "id": "sentence:I1:case1:8d8954c8",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "8d8954c8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 324,
+      "tex_line_end": 326,
+      "quote": "We submitted the accompanying uniqueness theorem \\texttt{SKEFTHawking.SKDoubling.firstOrder\\_uniqueness} to Aristotle in priority batch~1.",
+      "quote_normalized": "we submitted the accompanying uniqueness theorem skefthawking.skdoubling.firstorder\\_uniqueness to aristotle in priority batch~1.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "firstOrder_uniqueness resolves in lean_deps.json (SKEFTHawking.SKDoubling.firstOrder_uniqueness, 1 hit). ARISTOTLE_THEOREMS registry confirms 'firstOrder_uniqueness': '270e77a0' (constants.py).",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.firstOrder_uniqueness"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:bb85b61c",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "bb85b61c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 326,
+      "tex_line_end": 331,
+      "quote": "Aristotle returned not a proof but a counterexample: the coefficient vector $c = (0,0,0,0,0,0,0,1,0)$ --- one nonzero noise channel ($i_2 = 1$) and nothing else --- satisfies the transform-level constraint but is not the action of any valid $(\\gamma_1, \\gamma_2)$ pair.",
+      "quote_normalized": "aristotle returned not a proof but a counterexample: the coefficient vector $c = (0,0,0,0,0,0,0,1,0)$ --- one nonzero noise channel ($i_2 = 1$) and nothing else --- satisfies the transform-level constraint but is not the action of any valid $(\\gamma_1, \\gamma_2)$ pair.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Counterexample vector unchanged from prior review (PASS verdict preserved). (gamma_1, gamma_2) notation rename clean — consistent with DissipativeCoeffs Lean structure.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GloriosoLiu.aristotle_counterexample_violates_FirstOrderKMS"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:c9750624",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "c9750624",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 331,
+      "tex_line_end": 334,
+      "quote": "Without the formal pipeline this would have been a one-symbol typographical hole that survived three rounds of human review; with the formal pipeline it was flagged on first submission.",
+      "quote_normalized": "without the formal pipeline this would have been a one-symbol typographical hole that survived three rounds of human review; with the formal pipeline it was flagged on first submission.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Hedged narrative claim about review hygiene. Non-falsifiable; no chain to compute.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place"
+    },
+    {
+      "id": "sentence:I1:case1:5d9a7e32",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "5d9a7e32",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 336,
+      "tex_line_end": 337,
+      "quote": "The resolution recovers the algebraic content of the published dynamical-KMS axiom.",
+      "quote_normalized": "the resolution recovers the algebraic content of the published dynamical-kms axiom.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Bridge sentence to algebraic-FDR derivation; substantively reframed from prior 'The resolution exposed the substantive physics' (b9f2dd0b in prior review).",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place"
+    },
+    {
+      "id": "sentence:I1:case1:6538225e",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "6538225e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 337,
+      "tex_line_end": 343,
+      "quote": "At the level of the polynomial coefficients (rather than the field-level transform), dynamical-KMS at first order is seven simultaneous relations: the four lower-derivative monomials whose KMS partner exceeds the first-order budget vanish, $r_3 = r_4 = r_5 = r_6 = 0$; the two retained noise coefficients are fixed by the algebraic FDR, $i_1 = -r_2/\\beta$ and $i_2 = (r_1 + r_2)/\\beta$; the spatial-noise coefficient is forced to zero, $i_3 = 0$.",
+      "quote_normalized": "at the level of the polynomial coefficients (rather than the field-level transform), dynamical-kms at first order is seven simultaneous relations: the four lower-derivative monomials whose kms partner exceeds the first-order budget vanish, $r_3 = r_4 = r_5 = r_6 = 0$; the two retained noise coefficients are fixed by the algebraic fdr, $i_1 = -r_2/\\beta$ and $i_2 = (r_1 + r_2)/\\beta$; the spatial-noise coefficient is forced to zero, $i_3 = 0$.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Seven algebraic-FDR relations (4 vanishings + 2 fixings + 1 zero spatial-noise) consistent with FirstOrderKMS axiom in SKDoubling.lean lines 367-379. Numerical content preserved from prior 2d334728 (PASS).",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:60a7e1ce",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "60a7e1ce",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 343,
+      "tex_line_end": 346,
+      "quote": "The strengthened axiom \\texttt{FirstOrderKMS} (in \\texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~367--379) encodes all seven; the uniqueness theorem \\texttt{firstOrder\\_uniqueness} (lines~412--439, Aristotle run~\\texttt{270e77a0}) closes cleanly under it.",
+      "quote_normalized": "the strengthened axiom firstorderkms (in lean/skefthawking/skdoubling.lean, lines~367--379) encodes all seven; the uniqueness theorem firstorder\\_uniqueness (lines~412--439, aristotle run~270e77a0) closes cleanly under it.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Both theorem references resolve. Aristotle run 270e77a0 confirmed in ARISTOTLE_THEOREMS dict (constants.py), keyed to firstOrder_uniqueness. Reproducibility-anchor (Tier 3 requirement) satisfied.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.firstOrder_uniqueness"
+          },
+          {
+            "kind": "axiom",
+            "target": "270e77a0"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:a71bb9a7",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "a71bb9a7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 346,
+      "tex_line_end": 348,
+      "quote": "The two-parameter $(\\gamma_1, \\gamma_2)$ family is recovered as a corollary.",
+      "quote_normalized": "the two-parameter $(\\gamma_1, \\gamma_2)$ family is recovered as a corollary.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "(gamma_1, gamma_2) notation rename complete; matches DissipativeCoeffs Lean structure. Prior sentence 7751572c with (kappa, nu) is now superseded.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.DissipativeCoeffs"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:cd39bd09",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "cd39bd09",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 348,
+      "tex_line_end": 355,
+      "quote": "The four field components Aristotle's first-pass weak constraint \\emph{did} hold are exactly the four whose KMS partners fit within the first-order derivative budget; the five it \\emph{did not} hold --- the derivatives of $\\psi_a$ and second derivatives of $\\psi_r$ --- are precisely the five whose KMS partners exceed first order and instead surface at second order in the SK-EFT loop expansion (where they are formalized in the program's Glorioso--Liu axiomatic Lean modules; see~\\S\\ref{sec:strengthening}).",
+      "quote_normalized": "the four field components aristotle's first-pass weak constraint did hold are exactly the four whose kms partners fit within the first-order derivative budget; the five it did not hold --- the derivatives of $\\psi_a$ and second derivatives of $\\psi_r$ --- are precisely the five whose kms partners exceed first order and instead surface at second order in the sk-eft loop expansion (where they are formalized in the program's glorioso--liu axiomatic lean modules; see~\\s).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "New sentence introduced by D.3 GATE 1 reframing. Cross-references the second-order GloriosoLiu Lean substrate (GloriosoLiu/SecondOrderProjection.lean confirmed in lean_deps.json, 17 thms via prior memory). Section ref to §sec:strengthening valid (cross-bridge, P6 anti-pattern not triggered).",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GloriosoLiu.SKEFTAxiomsExt"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:49b8afbe",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "49b8afbe",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 355,
+      "tex_line_end": 359,
+      "quote": "The four-of-nine partition recovered by Aristotle's counterexample is, in this reading, a \\emph{theorem} of first-order projection rather than an empirical observation.",
+      "quote_normalized": "the four-of-nine partition recovered by aristotle's counterexample is, in this reading, a theorem of first-order projection rather than an empirical observation.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Substantive metaclaim: the partition is THEOREM-grade content under the Glorioso-Liu projection reading. Backed by GloriosoLiu/FirstOrderProjection.lean substrate.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GloriosoLiu.SKEFTAxioms"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:4b6023f0",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "4b6023f0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 361,
+      "tex_line_end": 364,
+      "quote": "The published analog-Hawking spectrum and noise-floor formula in the project's Tier~1 deep papers depend numerically on $i_3 = 0$; the original weakened constraint did not force $i_3 = 0$, and a paper using it would have shipped the wrong noise floor.",
+      "quote_normalized": "the published analog-hawking spectrum and noise-floor formula in the project's tier~1 deep papers depend numerically on $i_3 = 0$; the original weakened constraint did not force $i_3 = 0$, and a paper using it would have shipped the wrong noise floor.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Counterfactual claim about downstream numerical impact. Hash unchanged from prior 4b6023f0 review (preserves prior INFO verdict).",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place"
+    },
+    {
+      "id": "sentence:I1:case1:7df73cb8",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "7df73cb8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 364,
+      "tex_line_end": 367,
+      "quote": "The pedagogical content of this case study survives intact: an automated theorem prover's \\emph{failure to prove} a stated theorem can be diagnostic information about the theorem's correctness, not a deficiency of the prover.",
+      "quote_normalized": "the pedagogical content of this case study survives intact: an automated theorem prover's failure to prove a stated theorem can be diagnostic information about the theorem's correctness, not a deficiency of the prover.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Pedagogical conclusion preserved through the reframing. Substantively unchanged from prior 4dbaa1bc.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place"
+    },
+    {
+      "id": "sentence:I1:case1:e0338eb1",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "e0338eb1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 367,
+      "tex_line_end": 372,
+      "quote": "The structural content is upgraded by the framing above: the diagnosis is that the original axiom encoded a \\emph{projection} of dynamical-KMS that omitted the second-order content the published axiom carries, not a project-original ad-hoc choice that happened to be wrong.",
+      "quote_normalized": "the structural content is upgraded by the framing above: the diagnosis is that the original axiom encoded a projection of dynamical-kms that omitted the second-order content the published axiom carries, not a project-original ad-hoc choice that happened to be wrong.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "New sentence — explicitly states the D.3 GATE 1 reframing thesis. Substantive structural content claim verified against Lean substrate: SecondOrderProjection.lean carries the second-order content, FirstOrderProjection.lean operationalizes the projection.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GloriosoLiu.SecondOrderProjection"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.GloriosoLiu.SKEFTAxiomsExt"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:I1:case1:7ab68fa8",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "7ab68fa8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 394,
+      "tex_line_end": 398,
+      "quote": "Aristotle's failure to prove a wrong statement is the substantive content of this case; the upgraded framing identifies precisely \\emph{why} the original statement was wrong --- it omitted the second-order content the dynamical-KMS axiom carries explicitly in the published Glorioso--Liu skeleton.",
+      "quote_normalized": "aristotle's failure to prove a wrong statement is the substantive content of this case; the upgraded framing identifies precisely why the original statement was wrong --- it omitted the second-order content the dynamical-kms axiom carries explicitly in the published glorioso--liu skeleton.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Closing summary expressing the upgraded framing thesis. Backed by Glorioso--Liu Lean substrate; coherent with prior 4dbaa1bc plus new framing.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place"
+    },
+    {
+      "id": "sentence:I1:case1:9cd2be30",
+      "raw_id_parts": {
+        "paper": "I1",
+        "section_slug": "case1",
+        "quote_hash": "9cd2be30",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "case1",
+      "section_ordinal": 3,
+      "tex_line_start": 377,
+      "tex_line_end": 390,
+      "quote": "FirstOrderKMS 9-coefficient constraint grid (Aristotle run~\\texttt{270e77a0}). Left panel: the preliminary transform-level \\texttt{KMSSymmetry} constrains only the four field components $(\\psi_r, \\psi_a, \\partial_t \\psi_r, \\partial_x \\psi_r)$ on which the transform $\\psi_a \\to \\psi_a + i\\beta\\,\\partial_t \\psi_r$ acts; the cell highlighted in carmine is the counterexample vector $c = (0,0,0,0,0,0,0,1,0)$ which satisfies the transform-level constraint but is not a valid first-order dissipative action. Right panel: the algebraic-level \\texttt{FirstOrderKMS} (the first-order projection of the Glorioso--Liu dynamical-KMS axiom of ref.~\\cite{GloriosoCrossleyLiu2017}) constrains seven of nine coefficients (including $i_3 = 0$ explicitly), and the \\texttt{firstOrder\\_uniqueness} theorem closes cleanly under it.",
+      "quote_normalized": "firstorderkms 9-coefficient constraint grid (aristotle run~270e77a0). left panel: the preliminary transform-level kmssymmetry constrains only the four field components $(\\psi_r, \\psi_a, \\partial_t \\psi_r, \\partial_x \\psi_r)$ on which the transform $\\psi_a \\to \\psi_a + i\\beta\\,\\partial_t \\psi_r$ acts; the cell highlighted in carmine is the counterexample vector $c = (0,0,0,0,0,0,0,1,0)$ which satisfies the transform-level constraint but is not a valid first-order dissipative action. right panel: the algebraic-level firstorderkms (the first-order projection of the glorioso--liu dynamical-kms axiom of ref.~) constrains seven of nine coefficients (including $i_3 = 0$ explicitly), and the firstorder\\_uniqueness theorem closes cleanly under it.",
+      "type": "numeric",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Figure caption updated to D.3 GATE 1 reframing: 'first-order projection of the Glorioso--Liu dynamical-KMS axiom' explicitly identifies the projection role and cites GloriosoCrossleyLiu2017. Caption matches prose §3 + figure file i1_fig4_firstorderkms_grid.png exists.",
+      "agent_run_id": "claims-reviewer-v2-bundle-I1-D3-G1:2026-05-06T20:00:00Z",
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance",
+        "Gate6_AssumptionDisclosure"
+      ],
+      "rewrite_of": null,
+      "tombstone": false,
+      "bundle_destination": "I1",
+      "bundle_section_hint": "§3 Worked Case 1",
+      "lift_action": "Retain-in-place",
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "GloriosoCrossleyLiu2017"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.SKDoubling.FirstOrderKMS"
+          },
+          {
+            "kind": "axiom",
+            "target": "270e77a0"
+          }
+        ],
+        "completeness": "full"
+      }
     }
   ],
   "non_reproducing_prior_findings": [
@@ -8159,25 +8712,179 @@
         "prior_value": "paper44riemannian bibitem at L1333 (in-prep self-cite)",
         "current_value": "no occurrences; companion paper described via prose only"
       }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:131e510d",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (numeric, PASS) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "131e510d",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:88a7bacc",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (qualitative, INFO) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "88a7bacc",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:296dd86d",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (theorem-ref, PASS) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "296dd86d",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:6f935edb",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (theorem-ref, PASS) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "6f935edb",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:bb9ac60f",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (numeric, PASS) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "bb9ac60f",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:e9c09865",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (qualitative, INFO) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "e9c09865",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:b9f2dd0b",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (transition, TRANSITION) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "b9f2dd0b",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:2d334728",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (numeric, PASS) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "2d334728",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:211f97d5",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (theorem-ref, PASS) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "211f97d5",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:7751572c",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (qualitative, INFO) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "7751572c",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
+    },
+    {
+      "prior_finding_id": "sentence:I1:case1:4dbaa1bc",
+      "prior_run_date": "2026-05-01T18:00:00Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Prior §3 sentence (qualitative, INFO) does not reproduce after D.3 GATE 1 reframing (2026-05-06): §3 prose was substantively rewritten to recast FirstOrderKMS as the first-order projection of the published Glorioso–Liu dynamical-KMS axiomatic, and (κ,ν) → (γ_1,γ_2) transport-coefficient notation was renamed throughout. Content-hash mechanism flips when the substantive claim changes.",
+      "deterministic_recheck": {
+        "kind": "content_hash_diff",
+        "module": "papers/I1/paper_draft.tex §3",
+        "prior_value": "4dbaa1bc",
+        "current_value": "absent",
+        "command": "sentence_state.py normalize-quote on prior quote does not match any §3 sentence in current paper_draft.tex (post 2026-05-06 D.3 GATE 1 rewrite)"
+      }
     }
   ],
   "summary": {
-    "total_sentences": 278,
+    "total_sentences": 290,
     "by_type": {
-      "qualitative": 74,
-      "metaclaim": 29,
-      "numeric": 34,
-      "transition": 30,
+      "qualitative": 77,
+      "metaclaim": 34,
+      "numeric": 35,
+      "transition": 29,
       "methodology": 90,
       "theorem-ref": 15,
       "formal-claim": 3,
-      "citation": 2,
+      "citation": 6,
       "parameter": 1
     },
     "by_verdict": {
-      "INFO": 83,
-      "PASS": 160,
-      "TRANSITION": 30,
+      "INFO": 81,
+      "PASS": 175,
+      "TRANSITION": 29,
       "WARN": 5
     },
     "by_finding_class": {
@@ -8187,10 +8894,10 @@
       "TN": 1,
       "HD": 0
     },
-    "non_reproducing_count": 22,
-    "non_reproducing_auto_closed": 18,
+    "non_reproducing_count": 33,
+    "non_reproducing_auto_closed": 29,
     "non_reproducing_candidates": 4,
-    "agent_text": "278 sentences | 160 PASS | 30 TRANSITION | 83 INFO | 5 WARN | 0 FAIL | 0 UNGROUNDED | 18 prior findings auto-closed | 4 candidate for supersession"
+    "agent_text": "290 sentences | 175 PASS | 81 INFO | 29 TRANSITION | 5 WARN | 0 FAIL | 0 UNGROUNDED | 4 prior findings candidate for supersession | 29 prior findings auto-closed via structural recheck. D.3 GATE 1 absorption (Phase 6n.γ §3 reframing): all 5 newly-cited bibitems (CrossleyGloriosoLiu2017, GloriosoCrossleyLiu2017, GloriosoLiu2018, GloriosoLiu2018TASI, JainKovtun2024) resolve in CITATION_REGISTRY with doi_verified=True; (κ,ν) → (γ_1,γ_2) transport-coefficient rename complete (zero leftovers in transport-coefficient context); FirstOrderKMS-as-projection reframing verified against lean/SKEFTHawking/GloriosoLiu/FirstOrderProjection.lean substrate; Aristotle run 270e77a0 reproducibility anchor preserved (Tier 3 requirement)."
   },
   "blocking_issues": [],
   "non_blocking_followups": [

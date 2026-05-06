@@ -162,3 +162,19 @@ Stage 13 review doc: `papers/AutomatedReviews/2026-05-01-1625-bundle-stage13/D5.
 ## 2026-05-01T21:55Z — Bundle D5 CLOSED at GREEN
 
 Phase 7b sub-wave 7b.2 ledger entry: 1 person-day effort for fresh first-pass + 3 reviewer-triple rounds with deterministic recheck. 12-page Tier-1 deep paper (target PRD) at GREEN at all three reviewer-triple stages. 17 supersession-ledger entries spanning the lift cycle (401 → 418 final). Bundle ready for the publication-length expansion pass (~50pp; current 12pp is condensed first-pass) before PRD submission.
+
+## 2026-05-06 — Lift-section from `_phase6n_W1c_writeup` (§13)
+
+- Source title: NO-GO writeup memo at `temporary/working-docs/phase6n/wave_1c_*`
+- Lift action: Lift-section
+- Insertion point: §13
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6n W1c NO-GO writeup memo joint with 6o.γ (NO-GO landscape: dissipative SK-EFT bootstrap-uniqueness obstructions)
+
+## 2026-05-06 — Lift-section from `_phase6n_W2b_lean_only` (§13)
+
+- Source title: Quantum Crooks no-go (Perarnau-Llobet)
+- Lift action: Lift-section
+- Insertion point: §13
+- Stage-13 redo required: yes
+- Notes: D.2 absorption: Phase 6n W2b Perarnau-Llobet quantum-Crooks parametric + ℂ-form NO-GO

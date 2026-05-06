@@ -744,3 +744,53 @@ Updates atomically as waves close.*
 7. Bundle absorption pass (after Phase 6o math closes, or on user trigger).
 
 **Phase 6n closure status: MATH SUBSTRATE COMPLETE.** The math/Lean discovery work is done. Pre-writeup state.
+
+---
+
+## Phase 7 absorption pass TRIGGERED (2026-05-06)
+
+User direction at session start: "we're going to synthesize everything from 6n/6o in context of the larger program, and then write everything up using LATE_PHASE6_ABSORPTION_PROTOCOL.md... Auto-compact is enabled, let's continue (auto mode), within this conversation, session by session until all remaining work in phases 6n & 6o is complete."
+
+**Phase 7 absorption authoritative plan:** `temporary/working-docs/phase6n_6o_unified_absorption_plan.md`. Captures the wave→bundle absorption matrix (16 wave deliverables × 14 bundles, 30 distinct (wave, bundle) absorption events), per-bundle D.1/D.2/D.3/D.4 branch classification, sequencing plan for Stages A→G, and 3 D.3 user-auth gates surfaced together.
+
+**Three D.3 user-auth gates** (per protocol §D.3 + §B.4):
+- **GATE 1** Phase 6n.γ I1 reframing (FirstOrderKMS as first-order Glorioso-Liu projection); pre-draft `temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md`.
+- **GATE 2** Phase 6n.ζ D3 §17.5 + L3 "Substrate-class context" (Sakharov ↔ horizon-Crooks unification with Verlinde-vs-Jacobson distinction preserved); pre-draft `temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md`.
+- **GATE 3** Phase 6o.ε D2 §2 + L2 paired splash (24|c₋ as Möller-Scheithauer 2024 corollary); pre-draft `temporary/working-docs/phase6o/wave_2b_schellekens_substrate.md` + module skeleton in `lean/SKEFTHawking/Schellekens/`.
+
+**Phase 6n bundle absorption HELD until session start was correct discipline** — bundling 6n + 6o into one coherent unified absorption pass yields fewer total reviewer rounds (multi-bundle parallelism per `BUNDLE_LIFT_PROCEDURE.md` §9) than running separately.
+
+*Phase 6n absorption-trigger marker, 2026-05-06.*
+
+---
+
+## Phase 6n+6o → Phase 7 absorption pass — Sessions 1+2+3 CLOSE (2026-05-06 → 05-07)
+
+**Status:** absorption pass deliverable SUBSTANTIVELY COMPLETE. 13 of 14 bundles ALL-GREEN through Stages 9 + 10 + 13 of `BUNDLE_LIFT_PROCEDURE.md`; only I3 remains DRAFTING (out-of-band Phase 6o.ζ wave; bundle architecture user-auth granted Phase 6n Session 4, substantive draft is itself the deliverable, not a Phase-7 absorption event).
+
+**Cumulative deliverables across Sessions 1+2+3:**
+- 28 D.2/D.4 absorption events shipped via `bundle_append.py` across the wave→bundle absorption matrix.
+- All **3 D.3 user-authorization gates closed** with user-authorized prose:
+  - GATE 1 (Phase 6n Wave 2a): I1 §3 FirstOrderKMS-as-Glorioso-Liu-projection reframing.
+  - GATE 2 (Phase 6n Wave 2d): D3 §17.5 + L3 "Substrate-class context" Sakharov ↔ horizon-Crooks unification with Verlinde-vs-Jacobson distinction enforced.
+  - GATE 3 (Phase 6o Wave 2b): D2 §2.7 + L2 paired-splash Schellekens-chain reframing 24\|c₋ as Möller-Scheithauer 2024 corollary.
+- 16 BLOCKERs surfaced and fully remediated across reviewer-triple verification rounds (D2 r3 Schellekens FQN; L2 r2 ×2 Roehm self-cite + counts; L3 r1 ×3; D2 r1 ×2 GarciaEtxebarria + Schellekens trivial-discharge; D3 r1 ×2 biconditional + trivial HDB; I1 r1 cross-ref; D5 r1 ×4 fabricated bibitems + P5 anti-pattern; D1 r1 ×4 fabricated bibitems; D1 r2 Geurs2025 registry; E1 r1 count drift).
+- 18 systematic post-bibliography `\section` stubs commented out across 8 bundles (`bundle_append.py` default-insertion artifact; QI candidate raised).
+- 6 malformed `'title'='et al.'` `CITATION_REGISTRY` artifacts swept and repaired (Adler2024, BRSSS2008, Geurs2025, Sbordone2010, Talanov2024, Zhao2023; 3 WebFetch-verified, 3 marked Session-4 TODO placeholders).
+- 7 newly-registered bibitems with primary-source PDF caches (Crooks1999, JainKovtun2024, GloriosoLiu2018TASI, Niemeier1973, Schellekens1993, MollerScheithauer2024, plus existing JacobsonEFE1995/JacobsonVolovik1998/Verlinde2011Entropic/Verlinde2017dSEmergent newly cited in D3).
+- L1 pre-existing revtex4-2 `\begin{theorem}` env undefined warning FIXED (`\usepackage{amsthm}` + `\newtheorem{theorem}{Theorem}`).
+- Stage 12 `counts.json` + `lean_deps.json` regenerated; `review_runner.py` I3 `KeyError` fixed; `bundle_clusters` re-projected.
+- 468 supersession-ledger entries appended cumulatively; `validate.py` PASS with 2 expected warnings (I3 stage13_redo; freshness flag).
+
+**Authoritative post-absorption counts (`counts.json` 2026-05-07):** 5837 theorems / 322 modules / 0 sorry / 1 axiom.
+
+**Cross-references:**
+- Authoritative absorption plan: `temporary/working-docs/phase6n_6o_unified_absorption_plan.md`.
+- Per-session memory memos: `~/.claude/projects/<project>/memory/project_phase6n6o_absorption_session{1,2,3}*.md`.
+- Cross-bundle final state: `docs/BUNDLE_READINESS_HEATMAP.md`.
+
+**Session 4 carry-forward (non-blocking):** 3 TODO-placeholder registry entries (Adler2024 / BRSSS2008 / Zhao2023 verbatim-title fetch); D1 spectral-floor ω_× abstract-vs-body reconciliation (author-side); D5 narrative-anchor verifications (Tsallis HDE source for `tsallis_log_bayes:=6.2`; Luciano methodology framing); D5 deeper Lean refactor (`sakharov_iff_` rename + `lambdaJEqLambdaHK` substrate-derived independence — currently shipped via §11 prose hedge); F bundle freshness_stale → fresh Stage-13 sweep; I3 substantive drafting (Phase 6o.ζ separate track); Lean docstring sync (`Schellekens/Chain.lean:76-77`; `JacobsonThermoGRDarkEnergy.lean:326-332`); 5 QI candidates for `validate.py` extension (`bibitem_title_matches_arxiv`, `citation_registry_no_et_al_title_artifact`, bundle_append post-bib insertion fix, promote_primary_sources duplicate-key fix, programmatic bundle list across review_runner+bundle_migration+bundle_readiness).
+
+**Phase 6n status — FINAL: math substrate COMPLETE; absorption-pass contribution COMPLETE.** All Phase 6n math/Lean substrate work shipped (Sessions 4–29); all Phase 6n D.2/D.3 absorption events shipped into Phase 7 bundles (Sessions 1–3 of the absorption pass).
+
+*Phase 6n absorption close marker, 2026-05-07.*
