@@ -80,7 +80,7 @@ Sub-wave numbering (e.g., Wave 1a.1, 1a.2, …) replaces the Greek sub-wave labe
 | **Wave 3a** | G10-ETH-α productive-value Aristotle wave | ✅ **Lean substrate SHIPPED Sessions 33-34** (2 modules: ETH/Predicates.lean + ETH/ConcreteWitness.lean. Five candidate ETH axiomatizations encoded as Prop predicates (A1 Srednicki / A2 free-cumulant / A3 Helbig-et-al / A4 Wang ETP / A5 Inozemcev-Volovich-corrected) + concrete sandboxes (toy 1-dim + 4-dim Ising + 16-dim minimum-A4 substrate) + substantive structural distinctions (A5 ⟹ A1 strict-stronger; Inozemcev-Volovich gap typed at predicate-level; A4 fails for n < 16). **Wave 3a.4 Aristotle batch HELD** for productive-value refutation tableau iteration — would require concrete `theorem srednicki_implies_thermalization ... := by sorry` posed against MCP first per CLAUDE.md "MCP-first" discipline; deferred until concrete-theorem-with-sorry pose makes sense.) | D1 + I1 cross-bridge (additive hypothesis-tracking + refutation tableau) — **DEFERRED** | **D.2** | Aristotle submission user-auth (per `WAVE_EXECUTION_PIPELINE.md` Stage 4) |
 | **Wave 3b** | I3 Itô + LDP-α + LDP-β | ✅ **SHIPPED Session 40** (12 modules: 6 under SKEFTHawking/Itô/ — StochasticIntegral + QuadraticVariation + Semimartingale + ItoIsometry + ItoLemma + Novikov; 6 under SKEFTHawking/LDP/ — CramerIID + Sanov + Contraction + CramerLowerBound + Varadhan + LDPCompatibleSKEFT typeclass connecting Wave 3b LDP infrastructure to existing Phase 6n Wave 2c.5c+ IsLDPRateFunction + Phase 6n Wave 2a Glorioso-Liu monotonicity. Includes concrete instance on linearResponseRateFunctionCentered Gaussian rate function.) | **NEW BUNDLE I3** — bundle architecture user-auth GRANTED Phase 6n Session 4 | **N/A — bundle exists** | bundle-target gate already passed |
 | **Track 4 — Substrate-anchor refactors** | | | | | |
-| **Wave 4a** | Substrate-derived Sakharov Λ_J ↔ Λ_HK biconditional refactor (authorized 2026-05-08 user-call C2) | ⏳ **NOT STARTED** — extends `JacobsonThermoGRDarkEnergy.SakharovConditions` with ℝ-valued substrate-physics fields (`lambdaJ`, `lambdaHK`, plus optional `lambdaEffEqLambdaHK_witnessed : lambdaJ = lambdaHK`) populated from physics inputs (Volovik-Jannes ³He-A gap-energy substrate; FLS BEC depletion-factor; Verlinde 2017 entropic substrate). Re-attempts the genuine biconditional `sakharov_induced_gravity_criterion_iff_lambda_j_eq_lambda_hk` against the new substrate-data structure. Risk-disclosed at user-call: the (⇐) direction may not hold without further conditions, in which case the wave terminates at the same `_implies_` Lean state but with substantively deeper substrate encoding. Triggered by Phase 7 absorption Session 4 (2026-05-07) D5 P5-anti-pattern audit + Session 5 (2026-05-08) primary-source-fidelity user direction "do that kind of thing from now on." | D5 §11 (refines current Phase 6e Sakharov 4-criterion section) — **DEFERRED to absorption pass** | **D.2** | none (substantive Lean work; FLS BEC dep-factor primary source dispatched as deep-research task) |
+| **Wave 4a** | Substrate-derived Sakharov Λ_J ↔ Λ_HK biconditional refactor (authorized 2026-05-08 user-call C2) | ✅ **SHIPPED 2026-05-08** (Wave 4a.1 + 4a.2 + 4a.3 strict-extension `SakharovExtended` Phase 7 absorption Session 5; **Wave 4a.4 verdict (B) honest one-way closure SHIPPED 2026-05-08** post-DR return: added load-bearing `depletion : ℝ` field to `SakharovExtended` + 5 substantive theorems JTGR16-JTGR20 — `sakharov_depletion_factor_relation` (unconditional `Λ_J = depletion · Λ_HK`) + `volovikJannes_he3a_depletion_eq_one` (³He-A unit depletion via Atiyah-Bott-Shapiro topological protection) + `flsBEC_depletion_strictly_between_zero_and_one` (FLS BEC strictly enforced 0 < depletion < 1 per FLS Eq. 67/71) + `volovikJannes_vs_flsBEC_depletion_asymmetry` (load-bearing ℝ asymmetry) + `wave_4a_4_honest_one_way_closure` (composed 4-conjunct closure summary). DR `Lit-Search/Phase-6o/6o-Wave 4a FLS BEC Depletion-Factor Λ_substrate Return.md` (returned 2026-05-06) verdict (B): honestly retire biconditional. Primary-source asymmetry: Volovik-Jannes 2012 §VII argues only forward; no source argues converse. 3 new bibitems added to `CITATION_REGISTRY` (FinazziLiberatiSindoni2012PRL, FinazziLiberatiSindoni2012Proc, BelenchiaLiberatiMohd2014) all primary-source-cached. D5 §11 prose addendum SHIPPED retiring biconditional + citing JTGR16-JTGR20. Lake build clean 8586 jobs; pdflatex D5 13pp clean; validate.py paper_provenance + citation_primary_sources_present + bundle_consistency + bundle_source_freshness all PASS; bundle_readiness.py **14/14 ALL-GREEN**. Closure memo at `temporary/working-docs/phase6o/wave_4a_sakharov_lambda_substrate_refactor_close.md`.) | D5 §11 (refines current Phase 6e Sakharov 4-criterion section) — **APPENDED to absorption pass** | **D.2** | none (substantive Lean work + DR-grounded primary-source numerical refit + verdict (B) honest closure) |
 
 **Wave dependencies:**
 - Wave 1a (G3 boostless soft-theorem) is independent.
@@ -631,5 +631,48 @@ User direction at session start: "we're going to synthesize everything from 6n/6
 **Phase 6o status — FINAL: ALL 7 WAVES COMPLETE; absorption-pass contribution COMPLETE** (modulo I3 substantive drafting which is itself the Wave 3b deliverable, not an absorption event).
 
 *Phase 6o absorption close marker, 2026-05-07.*
+
+---
+
+## Phase 6o Wave 4a — Sakharov Λ-substrate refactor CLOSE (2026-05-08)
+
+**Status:** ✅ **CLOSED with verdict (B)** — biconditional honestly retired; ship as one-way implication + load-bearing depletion-factor ℝ encoding.
+
+**Trigger:** deep-research dispatch return at `Lit-Search/Phase-6o/6o-Wave 4a FLS BEC Depletion-Factor Λ_substrate Return.md` (returned 2026-05-06; integrated 2026-05-08).
+
+**Wave 4a.4 substantive Lean deliverable.** Extended `SakharovExtended` (Wave 4a.3 strict-extension layer) with new load-bearing fields `depletion : ℝ` + `depletionRelation : lambdaJ = depletion * lambdaHK` and 5 substantive theorems:
+- **JTGR16** `sakharov_depletion_factor_relation` — unconditional `Λ_J = depletion · Λ_HK` for any `SakharovExtended`.
+- **JTGR17** `volovikJannes_he3a_depletion_eq_one` — ³He-A `depletion = 1` (Atiyah-Bott-Shapiro topological universality at Weyl point).
+- **JTGR18** `flsBEC_depletion_strictly_between_zero_and_one` — FLS BEC `0 < depletion < 1` structurally enforced (FLS Eq. 67/71; not fine-tunable).
+- **JTGR19** `volovikJannes_vs_flsBEC_depletion_asymmetry` — load-bearing ℝ-valued substrate distinction.
+- **JTGR20** `wave_4a_4_honest_one_way_closure` — composed 4-conjunct closure summary.
+
+`flsBEC_extended` numerics refit per DR §5: `lambdaJ := 6.0e-14`, `lambdaHK := 7.5e-12` (eV), `depletion := 8.0e-3` (√(ρ₀a³) at canonical Steinhauer ⁸⁷Rb parameters). `volovikJannes_he3a_extended` adds `depletion := 1`. Numerical consistency `8e-3 × 7.5e-12 = 6e-14` ✓ via `norm_num`.
+
+**3 new bibitems** added to `CITATION_REGISTRY` and primary-source-cached:
+- `FinazziLiberatiSindoni2012PRL` (PRL 108, 071101; arXiv:1103.4841)
+- `FinazziLiberatiSindoni2012Proc` (arXiv:1204.3039 — Eq. 71 closed-form depletion factor)
+- `BelenchiaLiberatiMohd2014` (PRD 90, 104015; arXiv:1407.7896 — relativistic-BEC corroboration)
+
+(`JannesVolovik2012` already in registry; cited for the strongest primary-source support of the asymmetric forward-only implication, §VII.)
+
+**D5 §11 prose addendum** SHIPPED retiring the (⇐) biconditional reading, with explicit primary-source asymmetry argument citing Volovik-Jannes 2012 §VII as the sole forward-direction primary source. Lean theorem references: JTGR16-JTGR20. Bibliography block extended.
+
+**Validation:**
+- Lake build clean **8586 jobs** (no delta vs absorption Session 5).
+- All 5 new substantive theorems verify standard-kernel-only `[propext, Classical.choice, Quot.sound]` via `lean_verify`.
+- pdflatex D5 13pp clean (was 12pp pre-Wave-4a).
+- `validate.py --check citation_primary_sources_present` PASS (271 cached / 11 inprep / 125 textbook-exempt / 0 missing).
+- `validate.py --check paper_provenance` PASS.
+- `validate.py --check bundle_consistency` + `bundle_source_freshness` PASS (2 pre-existing WARN both carry-forward).
+- `bundle_readiness.py` **14/14 ALL-GREEN**.
+
+**Authoritative post-Wave-4a counts (counts.json regen 2026-05-08):** **5855 thms (5830 substantive + 25 placeholder) / 322 modules / 0 sorry / 1 axiom / 5018 defs / Lake 8586 jobs / Aristotle-proved 322**. Δ vs Phase 7 absorption Session 5: thms +6 (5 JTGR16-JTGR20 + 1 SakharovExtended structure auto-gen), defs +12 (depletion field + depletionRelation Prop + per-substrate witness fields), modules unchanged. MCP-driven, zero Aristotle, zero new sorry, zero new axioms.
+
+**Close memo:** `temporary/working-docs/phase6o/wave_4a_sakharov_lambda_substrate_refactor_close.md`.
+
+**Phase 6o status — FINAL FINAL: ALL 8 WAVES COMPLETE.** Phase 6n+6o absorption + Wave 4a verdict (B) closure: 14/14 bundles ALL-GREEN; primary-source-cited substrate-physics finding (load-bearing depletion-factor ℝ asymmetry between Volovik-Jannes ³He-A and Finazzi-Liberati-Sindoni acoustic BEC) lifted into D5 §11 cleanly.
+
+*Phase 6o Wave 4a close marker, 2026-05-08.*
 
 *Phase 6o absorption-trigger marker, 2026-05-06.*

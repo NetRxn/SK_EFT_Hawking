@@ -1,0 +1,149 @@
+{
+  "timestamp": "20260506T233954Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "bibitem_title_primary_source": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": true,
+          "message": "checked 240 PDF caches \u2014 76 title-drift flags / 0 extract-failures / skipped: 12 inprep, 71 textbook, 68 non-pdf cache, 72 no-title, 5 cache-missing",
+          "warning": true
+        },
+        {
+          "name": "drift:AdamsonWallden2025BDG",
+          "passed": true,
+          "message": "ratio=0.49 \u2014 registry='Quantum-counting bi-action formulations for causal sets' \u2014 pdf-page1\u2248'incasa-dowker action in arbitrary spacetime dimensions for causal se'",
+          "warning": true
+        },
+        {
+          "name": "drift:AdhikaryDasOdintsovPaul2025",
+          "passed": true,
+          "message": "ratio=0.49 \u2014 registry='Flat 4-parameter generalized-entropy fit with DESI DR1 + compressed Planck' \u2014 pdf-page1\u2248'el from four parameter generalized entropy function of apparent horizon in a spatially fla'",
+          "warning": true
+        },
+        {
+          "name": "drift:AhmedDodelsonGreeneSorkin2004",
+          "passed": true,
+          "message": "ratio=0.65 \u2014 registry='Everpresent Lambda' \u2014 pdf-page1\u2248'everpresent \u03bb maqbool '",
+          "warning": true
+        },
+        {
+          "name": "drift:AlonsoSerranoLiska2020Unimodular",
+          "passed": true,
+          "message": "ratio=0.55 \u2014 registry='Entanglement equilibrium and unimodular gravity' \u2014 pdf-page1\u2248'ith the entanglement equilibrium approach developed by jac'",
+          "warning": true
+        },
+        {
+          "name": "drift:AlonsoSerranoLiska2022Unimodular",
+          "passed": true,
+          "message": "ratio=0.47 \u2014 registry='Trace-free Einstein equations from entanglement equilibrium' \u2014 pdf-page1\u2248'es it was found that the einstein equations imply a set of laws of black '",
+          "warning": true
+        },
+        {
+          "name": "drift:AltlandZirnbauer",
+          "passed": true,
+          "message": "ratio=0.80 \u2014 registry='Nonstandard symmetry classes in mesoscopic normal-superconducting hybrid structures' \u2014 pdf-page1\u2248'a novel symmetry classes in mesoscopic normalconducting-superconducting hybrid structures alexander alt'",
+          "warning": true
+        },
+        {
+          "name": "drift:AlvarezGonzalezMartin2012Unimodular",
+          "passed": true,
+          "message": "ratio=0.53 \u2014 registry='Graviton self-coupling and unimodular gravity' \u2014 pdf-page1\u2248'o have essentially the structure of unimodular gravity t'",
+          "warning": true
+        },
+        {
+          "name": "drift:BK2015",
+          "passed": true,
+          "message": "ratio=0.85 \u2014 registry='Theory of dark matter superfluidity' \u2014 pdf-page1\u2248'theory of dark matter super\ufb02uidity lasha be'",
+          "warning": true
+        },
+        {
+          "name": "drift:Berezhiani2015",
+          "passed": true,
+          "message": "ratio=0.85 \u2014 registry='Theory of dark matter superfluidity' \u2014 pdf-page1\u2248'theory of dark matter super\ufb02uidity lasha be'",
+          "warning": true
+        },
+        {
+          "name": "drift:BrusteinGorbonosHadad2009",
+          "passed": true,
+          "message": "ratio=0.65 \u2014 registry='Wald entropy and the entanglement entropy of black holes' \u2014 pdf-page1\u2248'mail meravha openu ac il the bekenstein-hawking entropy of black holes'",
+          "warning": true
+        },
+        {
+          "name": "drift:CGL2017a",
+          "passed": true,
+          "message": "ratio=0.77 \u2014 registry='Effective field theory of dissipative fluids' \u2014 pdf-page1\u2248'p 4734 e\ufb00ective \ufb01eld theory of dissipative \ufb02uids michae'",
+          "warning": true
+        },
+        {
+          "name": "drift:CGL2017b",
+          "passed": true,
+          "message": "ratio=0.51 \u2014 registry='Second law of thermodynamics from symmetry and unitarity' \u2014 pdf-page1\u2248' classical limit dynamical kms symmetry and entropy current paolo glor'",
+          "warning": true
+        },
+        {
+          "name": "drift:CadoniCasadioGiustiTuveri2018PRD",
+          "passed": true,
+          "message": "ratio=0.48 \u2014 registry='Quasilocal mass and the dark universe' \u2014 pdf-page1\u2248'e apparent dark matter and the baryonic matter'",
+          "warning": true
+        },
+        {
+          "name": "drift:CadoniSanna2020",
+          "passed": true,
+          "message": "ratio=0.50 \u2014 registry='Emergent dark energy from gravitational asymptotic dynamics' \u2014 pdf-page1\u2248'r dark energy and their possible interaction 3 speci\ufb01cally at galactic sc'",
+          "warning": true
+        },
+        {
+          "name": "drift:CadoniTuveri2019",
+          "passed": true,
+          "message": "ratio=0.43 \u2014 registry='Galactic-scale dark force from quantum gravitational corrections' \u2014 pdf-page1\u2248'io as a measure of sample quality for transition metal dichalcogenide monolayers'",
+          "warning": true
+        },
+        {
+          "name": "drift:CaiCao2007Lovelock",
+          "passed": true,
+          "message": "ratio=0.67 \u2014 registry='Thermodynamics of apparent horizon in brane-world scenario / Lovelock thermodynamics' \u2014 pdf-page1\u2248'p-th 0612144 thermodynamics of apparent horizon in brane world scenario rong-gen cai a 1 and li-ming c'",
+          "warning": true
+        },
+        {
+          "name": "drift:CastroNeto2009RMPGraphene",
+          "passed": true,
+          "message": "ratio=0.84 \u2014 registry='The electronic properties of graphene' \u2014 pdf-page1\u2248'a the ele troni properties of graphene a h cas'",
+          "warning": true
+        },
+        {
+          "name": "drift:ChakrabortyBCH2015",
+          "passed": true,
+          "message": "ratio=0.35 \u2014 registry='Padmanabhan-class BCH four-laws consistency' \u2014 pdf-page1\u2248'ravitational \ufb01eld equations for arbi- trary static an'",
+          "warning": true
+        },
+        {
+          "name": "drift:ChiangSchiveChiueh2021EridanusII",
+          "passed": true,
+          "message": "ratio=0.42 \u2014 registry='SFDM heating-resonance refinement of Marsh-Niemeyer' \u2014 pdf-page1\u2248' hsi-yu schive \u859b\u7199\u4e8e 1department of applied mathematics and theor'",
+          "warning": true
+        },
+        {
+          "name": "drift:CiriglianoMasterFormula2018",
+          "passed": true,
+          "message": "ratio=0.85 \u2014 registry='A neutrinoless double beta decay master formula from effective field theory' \u2014 pdf-page1\u2248' a a neutrinoless double beta decay master formula from e\ufb00ective \ufb01eld theory v ciriglianoa w '",
+          "warning": true
+        },
+        {
+          "name": "drift:overflow",
+          "passed": true,
+          "message": "(56 more drift flags omitted)",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

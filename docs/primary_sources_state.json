@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-05-06T20:45:03+00:00",
+  "generated_at": "2026-05-06T22:48:02+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -8,7 +8,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:09+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -74,7 +74,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:09+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -272,7 +272,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:11+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -316,7 +316,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:11+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -327,7 +327,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:11+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -371,7 +371,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:11+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -382,7 +382,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:11+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -481,7 +481,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "fetch-failed",
-      "fetched_at": "2026-05-06T19:51:07+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "crossref: Crossref fetch HTTP 404: https://api.crossref.org/works/10.1103/PhysRevD.112.L121703; arxiv: no arxiv id"
@@ -574,6 +574,17 @@
       "url_used": "https://arxiv.org/pdf/1801.07530",
       "note": null
     },
+    "BelenchiaLiberatiMohd2014": {
+      "bibkey": "BelenchiaLiberatiMohd2014",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/BelenchiaLiberatiMohd2014.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T22:47:54+00:00",
+      "size_bytes": 243508,
+      "url_used": "https://arxiv.org/pdf/1407.7896",
+      "note": null
+    },
     "BelgiornoCacciatori2024": {
       "bibkey": "BelgiornoCacciatori2024",
       "phase": "Phase-4",
@@ -635,7 +646,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -701,7 +712,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -712,7 +723,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -767,7 +778,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -921,7 +932,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -965,7 +976,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:07+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1174,7 +1185,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1185,7 +1196,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1207,7 +1218,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1240,7 +1251,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1328,7 +1339,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1372,7 +1383,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1416,7 +1427,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1443,6 +1454,17 @@
       "url_used": "https://arxiv.org/pdf/2510.04070",
       "note": null
     },
+    "DemboZeitouni1998LDT": {
+      "bibkey": "DemboZeitouni1998LDT",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
     "Diakonov2011": {
       "bibkey": "Diakonov2011",
       "phase": "Phase-5d",
@@ -1460,7 +1482,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1493,7 +1515,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1570,7 +1592,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1581,7 +1603,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1647,7 +1669,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1658,7 +1680,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1702,7 +1724,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1740,6 +1762,28 @@
       "url_used": "https://api.crossref.org/works/10.1103/PhysRevD.85.124027",
       "note": "no arxiv id"
     },
+    "FinazziLiberatiSindoni2012PRL": {
+      "bibkey": "FinazziLiberatiSindoni2012PRL",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012PRL.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T22:47:52+00:00",
+      "size_bytes": 318882,
+      "url_used": "https://arxiv.org/pdf/1103.4841",
+      "note": null
+    },
+    "FinazziLiberatiSindoni2012Proc": {
+      "bibkey": "FinazziLiberatiSindoni2012Proc",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012Proc.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-06T22:47:53+00:00",
+      "size_bytes": 229166,
+      "url_used": "https://arxiv.org/pdf/1204.3039",
+      "note": null
+    },
     "Fixsen2009CMB": {
       "bibkey": "Fixsen2009CMB",
       "phase": "Phase-1-and-Background",
@@ -1757,7 +1801,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1768,7 +1812,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1790,7 +1834,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1922,7 +1966,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:07+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -1944,7 +1988,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2032,7 +2076,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2043,7 +2087,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2076,7 +2120,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2087,7 +2131,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2219,7 +2263,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2252,7 +2296,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2307,7 +2351,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2373,7 +2417,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2384,7 +2428,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2428,7 +2472,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2560,7 +2604,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2582,7 +2626,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2641,6 +2685,17 @@
       "size_bytes": 222347,
       "url_used": "https://arxiv.org/pdf/2208.09056",
       "note": null
+    },
+    "KaratzasShreve1991BMSC": {
+      "bibkey": "KaratzasShreve1991BMSC",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
     },
     "Kaul2012Review": {
       "bibkey": "Kaul2012Review",
@@ -2736,7 +2791,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2791,7 +2846,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2835,7 +2890,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -2868,7 +2923,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:14+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3110,7 +3165,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:07+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3165,7 +3220,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3374,7 +3429,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3385,7 +3440,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3429,7 +3484,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3440,7 +3495,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3539,7 +3594,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3550,7 +3605,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3561,7 +3616,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3572,7 +3627,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3583,7 +3638,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3649,7 +3704,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:07+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3660,7 +3715,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3748,7 +3803,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3774,6 +3829,17 @@
       "size_bytes": 13328,
       "url_used": "https://api.crossref.org/works/10.1007/BF01239527",
       "note": "no arxiv id"
+    },
+    "RevuzYor1999CMSM": {
+      "bibkey": "RevuzYor1999CMSM",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
     },
     "RobertsonParentani2015": {
       "bibkey": "RobertsonParentani2015",
@@ -3803,7 +3869,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3814,7 +3880,18 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
+    "Roehm2026D3": {
+      "bibkey": "Roehm2026D3",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3825,7 +3902,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3836,7 +3913,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3847,7 +3924,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3858,7 +3935,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3869,7 +3946,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3880,7 +3957,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3891,7 +3968,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3913,7 +3990,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3924,7 +4001,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3935,7 +4012,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3946,7 +4023,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3957,7 +4034,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3968,7 +4045,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3979,7 +4056,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -3990,7 +4067,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4001,7 +4078,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:35+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4012,7 +4089,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4023,7 +4100,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4034,7 +4111,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4078,7 +4155,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:07+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4177,7 +4254,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4221,7 +4298,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4265,7 +4342,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:07+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4287,7 +4364,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4309,7 +4386,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:38+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4353,7 +4430,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4386,7 +4463,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4485,7 +4562,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4507,7 +4584,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:07+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4650,7 +4727,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4672,7 +4749,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4683,7 +4760,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4936,7 +5013,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4947,7 +5024,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -4980,7 +5057,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5068,7 +5145,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5145,7 +5222,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:16+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5211,7 +5288,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5222,7 +5299,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5233,7 +5310,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5244,7 +5321,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5255,7 +5332,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5271,13 +5348,24 @@
       "url_used": "https://arxiv.org/pdf/1809.00913",
       "note": null
     },
+    "denHollander2000LDPs": {
+      "bibkey": "denHollander2000LDPs",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": null,
+      "primary_source_path": null,
+      "verdict": "no-source",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
+      "size_bytes": 0,
+      "url_used": null,
+      "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
+    },
     "diFrancesco1997": {
       "bibkey": "diFrancesco1997",
       "phase": "Phase-5e",
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5288,7 +5376,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5299,7 +5387,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5310,7 +5398,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5321,7 +5409,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5332,7 +5420,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5343,7 +5431,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5387,7 +5475,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5398,7 +5486,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5409,7 +5497,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5420,7 +5508,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5431,7 +5519,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5442,7 +5530,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5464,7 +5552,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5486,7 +5574,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"
@@ -5497,7 +5585,7 @@
       "tier_achieved": null,
       "primary_source_path": null,
       "verdict": "no-source",
-      "fetched_at": "2026-05-06T19:51:18+00:00",
+      "fetched_at": "2026-05-06T22:48:02+00:00",
       "size_bytes": 0,
       "url_used": null,
       "note": "no arxiv id and no doi; manual fill required (no arxiv id)"

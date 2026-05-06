@@ -4297,6 +4297,77 @@ CITATION_REGISTRY = {
     },
 
     # ════════════════════════════════════════════════════════════════
+    # ════════════════════════════════════════════════════════════════
+    # Phase 6o — Wave 4a FLS BEC depletion-factor primary sources
+    # (returned 2026-05-06; populated 2026-05-08 verdict (B) closure)
+    # ════════════════════════════════════════════════════════════════
+
+    'FinazziLiberatiSindoni2012PRL': {
+        'authors': 'Finazzi, S., Liberati, S., Sindoni, L.',
+        'title': 'Cosmological Constant: A Lesson from Bose-Einstein Condensates',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 108,
+        'page': '071101',
+        'year': 2012,
+        'doi': '10.1103/PhysRevLett.108.071101',
+        'arxiv': '1103.4841',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012PRL.pdf',
+        'used_in': ['papers/D5/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Primary FLS source for the BEC analogue cosmological constant '
+                 'depletion-factor finding. Lambda_FLS proportional to sqrt(rho_0 a^3) '
+                 'depletion factor, giving Lambda_FLS / Lambda_HK ~ 1e-3 to 1e-4 for '
+                 'canonical 87Rb BECs. Substrate counterexample to "Lambda = renormalized '
+                 'vacuum energy" identification. Underlies Phase 6o Wave 4a verdict (B): '
+                 'biconditional reading of Sakharov ↔ Lambda_J = Lambda_HK retired in favour '
+                 'of one-way implication + depletion-factor as substrate-derived ℝ.',
+    },
+    'FinazziLiberatiSindoni2012Proc': {
+        'authors': 'Finazzi, S., Liberati, S., Sindoni, L.',
+        'title': 'The analogue cosmological constant in Bose-Einstein condensates: a lesson for quantum gravity',
+        'journal': 'Proc. II Amazonian Symposium on Physics',
+        'volume': None,
+        'page': None,
+        'year': 2012,
+        'doi': None,
+        'arxiv': '1204.3039',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012Proc.pdf',
+        'used_in': ['papers/D5/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Companion proceedings to FinazziLiberatiSindoni2012PRL with the full '
+                 'derivation chain: Eqs. (50) modified Poisson; (54)–(55) C_Lambda from '
+                 'depleted vacuum expectation values; (61) Volovik grand-canonical h; '
+                 '(67) depletion density; (69) LHY ground-state energy; (70) anomalous '
+                 'expectation; (71) load-bearing depletion-factor closed form Lambda_FLS = '
+                 '−(20 m gρ₀ (gρ₀+3λ))/(3√π ℏ² λ) · √(ρ₀a³) · F_Λ(λ/gρ₀); (76) suppression '
+                 'ratio E_Lambda/E_Planck proportional to ρ₀a³.',
+    },
+    'BelenchiaLiberatiMohd2014': {
+        'authors': 'Belenchia, A., Liberati, S., Mohd, A.',
+        'title': 'Emergent gravitational dynamics in relativistic Bose-Einstein condensate',
+        'journal': 'Phys. Rev. D',
+        'volume': 90,
+        'page': '104015',
+        'year': 2014,
+        'doi': '10.1103/PhysRevD.90.104015',
+        'arxiv': '1407.7896',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BelenchiaLiberatiMohd2014.pdf',
+        'used_in': ['papers/D5/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Restates the FLS depletion-factor result in the relativistic-BEC '
+                 'extension: the BEC analogue Lambda is "basically due to the depletion '
+                 'factor", "a pure quantum effect due to the quantum inequivalence of '
+                 'the phonon and atomic vacua." Independent corroboration of the load-'
+                 'bearing FLS finding.',
+    },
+
+    # ════════════════════════════════════════════════════════════════
     # Phase 6c — Strong-CP / dark-energy bridge (Wave 1)
     # ════════════════════════════════════════════════════════════════
 

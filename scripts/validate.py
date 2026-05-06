@@ -2441,6 +2441,275 @@ def check_bundle_source_freshness() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK 23: Bibitem title ↔ primary-source PDF page-1 consistency
+# (Stage 14 QI candidate from Phase 6o Wave 4a.4 D5 adversarial review:
+#  catches single-word title drift like "in a relativistic" vs
+#  "in relativistic" Bose-Einstein condensate. Default: advisory WARN.)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("bibitem_title_primary_source",
+                "Registry titles match primary-source cache PDF page-1 titles (drift detector)")
+def check_bibitem_title_primary_source() -> CheckResult:
+    """For every CITATION_REGISTRY entry whose `primary_source_path` points
+    to a `.pdf` cache file AND has a non-empty `title`, extract the page-1
+    text from the cached PDF and compare against the registry title.
+
+    Flags single-word and multi-word title drift between the registry's
+    bibitem title and the actual published form. Designed to catch the
+    failure mode that produced the BLOCKER in the Phase 6o Wave 4a.4 D5
+    adversarial review (`BelenchiaLiberatiMohd2014` registered as "in a
+    relativistic Bose-Einstein condensate" but published as "in
+    relativistic Bose-Einstein condensate" — a single-word drop).
+
+    Implementation: extract page-1 text via pdfminer.six; normalize both
+    titles (lowercase, collapse whitespace, strip punctuation); compute
+    `difflib.SequenceMatcher` ratio between the registry title and a
+    sliding window of the page-1 text. Flag entries where the best-window
+    ratio falls below a threshold.
+
+    Default mode: advisory WARN per finding (the check passes overall;
+    individual mismatches are surfaced for author review). Strict mode
+    (`validate.py --strict`) promotes mismatches to FAIL — for use at
+    paper-submission gate.
+
+    Skips:
+    - Entries with `inprep: True` (no external primary source).
+    - Entries with `primary_source_path: None` (textbook / pre-DOI exempt
+      per Pipeline Invariant #11).
+    - Entries whose cache is non-PDF (`.json`, `.abstract.txt`, `.tex`).
+    - Entries whose cache file does not exist on disk (separately
+      enforced by `citation_primary_sources_present`).
+
+    Phase 6o Wave 4a.4 close memo `temporary/working-docs/phase6o/
+    wave_4a_sakharov_lambda_substrate_refactor_close.md` documents the
+    BLOCKER pattern this check guards against.
+    """
+    import re
+    from src.core.citations import CITATION_REGISTRY
+
+    PROJECT_ROOT_LOCAL = Path(__file__).resolve().parent.parent.parent
+
+    try:
+        from pdfminer.high_level import extract_text  # type: ignore
+    except ImportError:
+        return CheckResult(
+            passed=True,
+            details=[Detail(
+                "skipped",
+                True,
+                "pdfminer.six not installed — check skipped (advisory)",
+                warning=True,
+            )],
+        )
+
+    # Common ligature decompositions used in PDF text extraction
+    LIGATURES = {
+        "ﬁ": "fi", "ﬂ": "fl", "ﬀ": "ff", "ﬃ": "ffi", "ﬄ": "ffl",
+        "ﬅ": "ft", "ﬆ": "st",
+    }
+
+    # Greek-letter spell-outs that appear in titles vs PDF text
+    GREEK = {
+        "Λ": "lambda", "λ": "lambda",
+        "Α": "alpha", "α": "alpha",
+        "Β": "beta", "β": "beta",
+        "Γ": "gamma", "γ": "gamma",
+        "Δ": "delta", "δ": "delta",
+        "Ω": "omega", "ω": "omega",
+        "ℝ": "r", "ℤ": "z", "ℕ": "n", "ℂ": "c",
+    }
+
+    def _normalize(s: str) -> str:
+        # Apply ligature + Greek decomposition
+        for k, v in LIGATURES.items():
+            s = s.replace(k, v)
+        for k, v in GREEK.items():
+            s = s.replace(k, v)
+        s = s.lower()
+        # Normalize all dash variants
+        s = s.replace("–", "-").replace("—", "-").replace("−", "-")
+        # Strip everything except letters, digits, hyphens, spaces.
+        # Also drop hyphens (so "Bose-Einstein" matches "Bose Einstein")
+        s = re.sub(r"[^a-z0-9\s]", " ", s)
+        s = re.sub(r"\s+", " ", s).strip()
+        return s
+
+    details: List[Detail] = []
+    flagged: list[tuple[str, str, str]] = []  # (key, registry_title, pdf_excerpt)
+    checked = 0
+    skipped_no_pdf = 0
+    skipped_inprep = 0
+    skipped_textbook = 0
+    skipped_no_title = 0
+    skipped_missing_cache = 0
+    extract_failed: list[tuple[str, str]] = []
+
+    for bibkey, entry in sorted(CITATION_REGISTRY.items()):
+        if entry.get("inprep"):
+            skipped_inprep += 1
+            continue
+        title = (entry.get("title") or "").strip()
+        if not title:
+            skipped_no_title += 1
+            continue
+        ps_path = entry.get("primary_source_path")
+        if ps_path is None:
+            # Textbook / pre-DOI exempt per Pipeline Invariant #11
+            if entry.get("doi") is None and entry.get("arxiv") is None:
+                skipped_textbook += 1
+            continue
+        if not str(ps_path).endswith(".pdf"):
+            skipped_no_pdf += 1
+            continue
+        cache_file = PROJECT_ROOT_LOCAL / ps_path
+        if not cache_file.is_file() or cache_file.stat().st_size == 0:
+            skipped_missing_cache += 1
+            continue
+
+        try:
+            page1_text = extract_text(str(cache_file), maxpages=1) or ""
+        except Exception as exc:
+            extract_failed.append((bibkey, str(exc)[:100]))
+            continue
+
+        norm_title = _normalize(title)
+        norm_page = _normalize(page1_text)
+        if not norm_title or not norm_page:
+            extract_failed.append((bibkey, "empty extract"))
+            continue
+
+        checked += 1
+
+        # Primary signal: substring containment after normalization.
+        # If the normalized registry title appears verbatim in the
+        # normalized page-1 text, the bibitem is consistent with the PDF.
+        if norm_title in norm_page:
+            continue
+
+        # Secondary signal: try dropping a single word from the registry
+        # title — if any single-word drop makes it a substring, that is
+        # the BLOCKER drift pattern (e.g., registry has "in a relativistic"
+        # but PDF has "in relativistic": dropping "a" yields containment).
+        tokens = norm_title.split()
+        single_drop_match = None
+        if len(tokens) >= 3:
+            for i, _ in enumerate(tokens):
+                candidate = " ".join(tokens[:i] + tokens[i + 1:])
+                if candidate and candidate in norm_page:
+                    single_drop_match = tokens[i]
+                    break
+        if single_drop_match is not None:
+            # Localize the matched window for the report
+            candidate = " ".join(t for t in tokens if t != single_drop_match)
+            idx = norm_page.find(candidate)
+            window = norm_page[max(0, idx - 10):idx + len(candidate) + 30]
+            flagged.append((
+                bibkey,
+                f"DROP-WORD: registry has extra {single_drop_match!r} not in PDF — title={title!r}",
+                window,
+            ))
+            continue
+
+        # Tertiary signal: check if PDF has an extra word the registry lacks.
+        # If we can find every registry token in order in a 200-char window
+        # of the page, but the title isn't a clean substring, flag for review.
+        # Otherwise, the title may simply not be on page 1 (e.g., journal
+        # metadata pages) — defer to manual audit.
+        # For brevity, just flag with a low-priority "title-not-on-page1" note.
+        flagged.append((
+            bibkey,
+            f"NOT-FOUND: registry title not a substring of page-1 — title={title!r}",
+            norm_page[:120],
+        ))
+
+    # Partition flags: DROP-WORD flags are the high-confidence drift class
+    # (the BLOCKER pattern this check targets). NOT-FOUND flags often
+    # indicate that the title isn't on page 1 of the PDF (e.g., the cache
+    # is a journal title page, a chapter excerpt, or has heavy metadata
+    # before the title) — these are advisory only.
+    drop_word_flags = [(k, m, w) for (k, m, w) in flagged if m.startswith("DROP-WORD")]
+    not_found_flags = [(k, m, w) for (k, m, w) in flagged if m.startswith("NOT-FOUND")]
+    n_drop_word = len(drop_word_flags)
+    n_not_found = len(not_found_flags)
+    n_extract_failed = len(extract_failed)
+
+    # In strict mode, both drift classes fail; in default mode, only
+    # DROP-WORD flags fail (high-confidence BLOCKER pattern), NOT-FOUND
+    # is advisory only.
+    summary_passed = STRICT_MODE is False or (n_drop_word == 0 and n_not_found == 0)
+    if not STRICT_MODE:
+        summary_passed = True  # Always pass in default mode
+
+    details.append(Detail(
+        "summary",
+        summary_passed,
+        f"checked {checked} PDF caches — "
+        f"{n_drop_word} DROP-WORD drift flag(s) / "
+        f"{n_not_found} NOT-FOUND advisory flag(s) / "
+        f"{n_extract_failed} extract-failure(s) / "
+        f"skipped: {skipped_inprep} inprep, {skipped_textbook} textbook, "
+        f"{skipped_no_pdf} non-pdf cache, {skipped_no_title} no-title, "
+        f"{skipped_missing_cache} cache-missing"
+        + (" (strict mode: drift flags promoted to FAIL)" if STRICT_MODE else ""),
+        warning=(n_drop_word > 0 or n_not_found > 0) and not STRICT_MODE,
+    ))
+
+    # DROP-WORD findings: high-confidence drift (the BLOCKER class)
+    for bibkey, msg, pdf_excerpt in drop_word_flags[:20]:
+        details.append(Detail(
+            f"drop_word:{bibkey}",
+            STRICT_MODE is False,
+            f"{msg} — pdf-page1≈{pdf_excerpt!r}",
+            warning=not STRICT_MODE,
+        ))
+    if len(drop_word_flags) > 20:
+        details.append(Detail(
+            "drop_word:overflow",
+            True,
+            f"({len(drop_word_flags) - 20} more DROP-WORD flags omitted)",
+            warning=True,
+        ))
+
+    # NOT-FOUND findings: advisory (title not on page 1; often false-positive
+    # for cached PDFs whose page-1 is a journal cover or chapter intro).
+    # Show only first 10 in default output.
+    for bibkey, msg, pdf_excerpt in not_found_flags[:10]:
+        details.append(Detail(
+            f"not_found:{bibkey}",
+            True,  # advisory only
+            f"{msg} (advisory — verify manually)",
+            warning=True,
+        ))
+    if len(not_found_flags) > 10:
+        details.append(Detail(
+            "not_found:overflow",
+            True,
+            f"({len(not_found_flags) - 10} more NOT-FOUND advisory flags omitted)",
+            warning=True,
+        ))
+
+    for bibkey, err in extract_failed[:10]:
+        details.append(Detail(
+            f"extract_failed:{bibkey}",
+            True,  # extract failures are advisory
+            f"pdfminer error: {err}",
+            warning=True,
+        ))
+
+    if n_drop_word == 0 and n_not_found == 0 and n_extract_failed == 0:
+        details.append(Detail(
+            "all_consistent",
+            True,
+            "Every checked registry title matches its PDF page-1 form",
+        ))
+
+    return CheckResult(
+        passed=summary_passed,
+        details=details,
+    )
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════════════
 

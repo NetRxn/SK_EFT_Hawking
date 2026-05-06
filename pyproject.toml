@@ -45,6 +45,7 @@ dependencies = [
     # Pulled by ipython / nbconvert / jupyterlab-pygments unconstrained;
     # pin here to force >=2.20.0 across the dep graph.
     "pygments>=2.20",
+    "pdfminer-six>=20260107",
 ]
 
 [project.optional-dependencies]

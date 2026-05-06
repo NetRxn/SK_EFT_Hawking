@@ -1,0 +1,625 @@
+{
+  "paper": "D5",
+  "bundle_target": "D5",
+  "review_date": "2026-05-08T20:30:00Z",
+  "reviewer_version": "claims-reviewer-v2-bundle-aware",
+  "reviewer_model": "claude-opus-4-7-1m",
+  "reviewer_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+  "round": "wave4a4-scoped",
+  "stage": "Stage 10 (claims review)",
+  "tier_profile": "Tier 1 (Deep paper)",
+  "round_4_scope": "Phase 6o Wave 4a.4 changes ONLY (D5 §11 + §11.5 prose; 3 new bibitems FinazziLiberatiSindoni2012PRL/Proc, BelenchiaLiberatiMohd2014; Lean JTGR16/17/18/19/20 + JTGR12/13/14/15 references). Pre-existing rest-of-D5 was reviewed-clean at the 2026-05-06 round-4 close (16/16 PASS).",
+  "anchors_checked": [
+    "Wave 4a.4 forward-only-implication framing (verdict (B)) consistent with deep-research return",
+    "5 Lean theorem references JTGR16-JTGR20 resolve in lean_deps.json",
+    "3 prior-substrate Lean theorem references JTGR12/13/14 resolve in lean_deps.json",
+    "JTGR6 rename `_iff_` -> `_implies_` resolved in lean_deps.json",
+    "3 new bibitems (FLS PRL, FLS Proc, BLM 2014) registered with valid arXiv IDs + DOIs",
+    "Numerical claims: depletion = 8e-3, lambdaJ = 6e-14 eV, lambdaHK = 7.5e-12 eV (Lean substrate)",
+    "Numerical consistency: depletion * lambdaHK = lambdaJ to 0.000% (exact rfl by JTGR16)",
+    "First systematic claim retained x2 (line 985 + 1209 + 1109) — appropriateness check",
+    "Abstract consistency with §11 Wave 4a.4 retirement",
+    "Cross-bridge: D3 §21 heat-kernel a_0 (anchor list) — out of scope for Wave 4a.4 pass"
+  ],
+  "sentences": [
+    {
+      "id": "sentence:D5:phase6m-sakharov:a85e747e",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "a85e747e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 984,
+      "tex_line_end": 986,
+      "quote": "Phase~6m closes the Sakharov 4-criterion induced-gravity test introduced in Phase~6e, providing the first systematic $\\Lambda_J$ vs $\\Lambda_{\\rm HK}$ comparison on a common substrate in the literature.",
+      "quote_normalized": "phase~6m closes the sakharov 4-criterion induced-gravity test introduced in phase~6e, providing the first systematic $\\lambda_j$ vs $\\lambda_{\\rm hk}$ comparison on a common substrate in the literature.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "citation", "target": "FinazziLiberatiSindoni2012PRL" },
+          { "kind": "citation", "target": "FinazziLiberatiSindoni2012Proc" },
+          { "kind": "citation", "target": "JannesVolovik2012" },
+          { "kind": "citation", "target": "BelenchiaLiberatiMohd2014" }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "First-claim verifiability: framed as 'first systematic Lambda_J vs Lambda_HK comparison on a common substrate' is defensible — the deep-research return (Wave 4a) finds no primary source that constructs the per-substrate Lambda_J vs Lambda_HK comparison explicitly with the 4-condition Sakharov criterion as the discriminant. FLS 2012 PRL/Proc and BLM 2014 publish the BEC-side Lambda_J finding alone; Jannes-Volovik 2012 publishes the He3-A side alone; no primary source pairs them as 'one substrate satisfies the 4-criterion and gives Lambda_J=Lambda_HK / another fails (ii) and gives the depletion-suppressed inequality.' Wave 4a.4 verdict (B) does not weaken the first-claim status — it only retires the (<=) biconditional reading. WARN (not PASS) because the claim is appropriate ONLY when the 'common substrate' phrasing is read as 'common Sakharov-criterion framework applied across substrates' — not 'a single shared substrate' (which would not be true since two different substrates He3-A and FLS BEC are compared). Sentence reads correctly under the intended meaning, but the phrasing 'on a common substrate' is mildly ambiguous (depletion-factor finding does live on FLS BEC alone). Recommendation: consider tightening to 'on a common comparison framework' or 'across emergent-gravity substrates' in a future polish pass; not blocking.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate1_CitationIntegrity", "Gate11_FirstClaimVerifiability"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:2e18f2e9",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "2e18f2e9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1012,
+      "tex_line_end": 1020,
+      "quote": "The substantive (\\,$\\Rightarrow$\\,) implication at the $\\mathbb{R}$ level is captured in JTGR12 (\\texttt{sakharov\\_criterion\\_implies\\_lambda\\_j\\_eq\\_lambda\\_hk\\_real}); the ${}^3\\!\\text{He-A}$ extended substrate witness satisfies $\\lambda_J = \\lambda_{\\rm HK}$ at $\\mathbb{R}$ level (JTGR13, \\texttt{volovikJannes\\_he3a\\_lambda\\_j\\_eq\\_lambda\\_hk\\_real}); and the FLS BEC extended substrate witness structurally separates $\\lambda_J \\neq \\lambda_{\\rm HK}$ at $\\mathbb{R}$ level (JTGR14, \\texttt{flsBEC\\_lambda\\_j\\_neq\\_lambda\\_hk\\_real}).",
+      "quote_normalized": "the substantive (\\,$\\rightarrow$\\,) implication at the $\\mathbb{r}$ level is captured in jtgr12 (sakharov\\_criterion\\_implies\\_lambda\\_j\\_eq\\_lambda\\_hk\\_real); the ${}^3\\!he-a$ extended substrate witness satisfies $\\lambda_j = \\lambda_{\\rm hk}$ at $\\mathbb{r}$ level (jtgr13, volovikjannes\\_he3a\\_lambda\\_j\\_eq\\_lambda\\_hk\\_real); and the fls bec extended substrate witness structurally separates $\\lambda_j \\neq \\lambda_{\\rm hk}$ at $\\mathbb{r}$ level (jtgr14, flsbec\\_lambda\\_j\\_neq\\_lambda\\_hk\\_real).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.sakharov_criterion_implies_lambda_j_eq_lambda_hk_real", "link_state": "resolved" },
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_he3a_lambda_j_eq_lambda_hk_real", "link_state": "resolved" },
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.flsBEC_lambda_j_neq_lambda_hk_real", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "TN check: all three Lean theorem references (JTGR12, JTGR13, JTGR14) resolve to existing fully-qualified names in lean/lean_deps.json. JTGR12 = sakharov_criterion_implies_lambda_j_eq_lambda_hk_real (line 649 of JacobsonThermoGRDarkEnergy.lean); JTGR13 = volovikJannes_he3a_lambda_j_eq_lambda_hk_real (line 663); JTGR14 = flsBEC_lambda_j_neq_lambda_hk_real (line 679). All three are substantive (>=4-line proofs).",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:4b14e6d0",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "4b14e6d0",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1023,
+      "tex_line_end": 1030,
+      "quote": "The deep-research return at \\texttt{Lit-Search/Phase-6o/6o-Wave 4a FLS BEC Depletion-Factor $\\Lambda$\\_substrate Return.md} (returned 2026-05-06) closes the Wave~4a.4 deferred deliverable with verdict~(B): the (\\,$\\Leftarrow$\\,)~biconditional is \\emph{honestly retired} in favour of a one-way implication $\\text{Sakharov 4-criterion} \\Rightarrow \\Lambda_J = \\Lambda_{\\rm HK}$ paired with a substantively-deeper substrate-physics encoding.",
+      "quote_normalized": "the deep-research return at lit-search/phase-6o/6o-wave 4a fls bec depletion-factor $\\lambda$\\_substrate return.md (returned 2026-05-06) closes the wave~4a.4 deferred deliverable with verdict~(b): the (\\,$\\leftarrow$\\,)~biconditional is honestly retired in favour of a one-way implication $sakharov 4-criterion \\rightarrow \\lambda_j = \\lambda_{\\rm hk}$ paired with a substantively-deeper substrate-physics encoding.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "hypothesis", "target": "Lit-Search/Phase-6o/6o-Wave 4a FLS BEC Depletion-Factor Λ_substrate Return.md (deep-research return artifact)", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Deep-research file exists at the cited path (verified by find: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/Lit-Search/Phase-6o/6o-Wave 4a FLS BEC Depletion-Factor Λ_substrate Return.md). Verdict (B) faithfully reproduced from §6 of that file: 'Honestly retire the biconditional reading and ship as a one-way implication Sakharov 4-criterion ⇒ Λ_J = Λ_HK, with deeper substrate encoding (the depletion pre-factor as a substrate-side computable real number) for transparency.' The prose framing ('honestly retired', 'substantively-deeper substrate-physics encoding') matches the verdict (B) language exactly.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate10_NarrativeFidelity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:3060209d",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "3060209d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1030,
+      "tex_line_end": 1035,
+      "quote": "Primary-source coverage of (\\,$\\Leftarrow$\\,) is asymmetric: Volovik--Jannes 2012 \\cite{JannesVolovik2012} (JETP Lett.\\ 96, 215, \\S\\,VII) argues only \\emph{forward}, from Atiyah--Bott-- Shapiro topological protection at Weyl points to universal coupling and the equality $\\Lambda_J \\propto \\Delta_0^4$ on $^3\\!\\text{He-A}$; no primary source argues the converse.",
+      "quote_normalized": "primary-source coverage of (\\,$\\leftarrow$\\,) is asymmetric: volovik--jannes 2012 (jetp lett.\\ 96, 215, \\s\\,vii) argues only forward, from atiyah--bott-- shapiro topological protection at weyl points to universal coupling and the equality $\\lambda_j \\propto \\delta_0^4$ on $^3\\!he-a$; no primary source argues the converse.",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "citation", "target": "JannesVolovik2012", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "JannesVolovik2012 entry exists in CITATION_REGISTRY with primary-source-cached PDF at Lit-Search/Phase-6m/primary-sources/JannesVolovik2012.pdf (PDF found at the project-root Lit-Search via find). Citation reference matches §VII of the JETP Lett. 96, 215 paper (arXiv:1108.5086). Asymmetry-claim (forward only, no converse) reproduces deep-research return §6 verdict.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:7bc964fb",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "7bc964fb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1035,
+      "tex_line_end": 1042,
+      "quote": "The Finazzi--Liberati--Sindoni acoustic-BEC analogue \\cite{FinazziLiberatiSindoni2012PRL, FinazziLiberatiSindoni2012Proc} provides an explicit substrate where universal coupling fails (depletion-sector atoms do not propagate on the BEC effective metric) \\emph{and} $\\Lambda_J \\neq \\Lambda_{\\rm HK}$ by the structurally enforced FLS Eq.~(71) depletion factor $\\sqrt{\\rho_0 a^3}$, but this only confirms the forward implication; it does not test (\\,$\\Leftarrow$\\,).",
+      "quote_normalized": "the finazzi--liberati--sindoni acoustic-bec analogue provides an explicit substrate where universal coupling fails (depletion-sector atoms do not propagate on the bec effective metric) and $\\lambda_j \\neq \\lambda_{\\rm hk}$ by the structurally enforced fls eq.~(71) depletion factor $\\sqrt{\\rho_0 a^3}$, but this only confirms the forward implication; it does not test (\\,$\\leftarrow$\\,).",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "citation", "target": "FinazziLiberatiSindoni2012PRL", "link_state": "resolved" },
+          { "kind": "citation", "target": "FinazziLiberatiSindoni2012Proc", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Both citation registry entries verified: (i) FinazziLiberatiSindoni2012PRL, doi=10.1103/PhysRevLett.108.071101, arxiv=1103.4841, primary-source PDF cached at Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012PRL.pdf (verified by find). (ii) FinazziLiberatiSindoni2012Proc, arxiv=1204.3039, doi=None (proceedings, no DOI), primary-source PDF cached. Eq. 71 reference matches deep-research return §3 (Eq. 71 = load-bearing depletion-factor closed form Λ_FLS proportional to √(ρ_0 a^3)).",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:aaac0ef5",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "aaac0ef5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1042,
+      "tex_line_end": 1044,
+      "quote": "The depletion-factor finding is independently corroborated by the relativistic-BEC extension of Belenchia--Liberati--Mohd \\cite{BelenchiaLiberatiMohd2014}.",
+      "quote_normalized": "the depletion-factor finding is independently corroborated by the relativistic-bec extension of belenchia--liberati--mohd .",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "citation", "target": "BelenchiaLiberatiMohd2014", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "BelenchiaLiberatiMohd2014 entry verified in CITATION_REGISTRY: doi=10.1103/PhysRevD.90.104015, arxiv=1407.7896, year=2014, vol=90, page=104015, primary-source PDF cached at Lit-Search/Phase-1-and-Background/primary-sources/BelenchiaLiberatiMohd2014.pdf. Notes-field directly reproduces the corroboration claim ('basically due to the depletion factor', 'pure quantum effect due to quantum inequivalence of phonon and atomic vacua'). Independent-corroboration framing matches deep-research return §1.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:0cf6e1c4",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "0cf6e1c4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1044,
+      "tex_line_end": 1048,
+      "quote": "Shipping a genuine biconditional would constitute publication-novelty without primary-source precedent in either direction beyond the $^3\\!\\text{He-A}$ example; the one-way reading is the maximally-honest substrate-physics statement available.",
+      "quote_normalized": "shipping a genuine biconditional would constitute publication-novelty without primary-source precedent in either direction beyond the $^3\\!he-a$ example; the one-way reading is the maximally-honest substrate-physics statement available.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "hypothesis", "target": "Lit-Search/Phase-6o/6o-Wave 4a FLS BEC Depletion-Factor Λ_substrate Return.md §6 (verdict-(B) rationale)", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Honesty-discipline meta-claim faithfully reproduces deep-research §6 verdict (B) rationale: 'Shipping as a genuine biconditional in D5 §11 would be a publication-novelty claim with no primary-source precedent; shipping as one-way implication preserves epistemic honesty'. Maximally-honest framing aligns with project Quality Standard ('Correctness over expediency').",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate10_NarrativeFidelity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:9c1c657b",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "9c1c657b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1050,
+      "tex_line_end": 1054,
+      "quote": "The Wave~4a.4 closure ships the depletion factor as a load-bearing $\\mathbb{R}$-valued substrate-physics field on \\texttt{SakharovExtended} with the unconditional relation $\\Lambda_J = \\texttt{depletion} \\cdot \\Lambda_{\\rm HK}$ (JTGR16, \\texttt{sakharov\\_depletion\\_factor\\_relation}).",
+      "quote_normalized": "the wave~4a.4 closure ships the depletion factor as a load-bearing $\\mathbb{r}$-valued substrate-physics field on sakharovextended with the unconditional relation $\\lambda_j = depletion \\cdot \\lambda_{\\rm hk}$ (jtgr16, sakharov\\_depletion\\_factor\\_relation).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.sakharov_depletion_factor_relation", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "TN check: JTGR16 = sakharov_depletion_factor_relation resolves in lean_deps.json (full name: SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.sakharov_depletion_factor_relation, JacobsonThermoGRDarkEnergy.lean line 707). Theorem statement matches prose exactly: 'S.lambdaJ = S.depletion * S.lambdaHK' for any S : SakharovExtended (unconditional). Discharged by S.depletionRelation field which is constructor-required. Sentence's load-bearing prose framing is faithful.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:4bce933b",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "4bce933b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1054,
+      "tex_line_end": 1057,
+      "quote": "On $^3\\!\\text{He-A}$ the depletion factor is exactly~$1$ (JTGR17, \\texttt{volovikJannes\\_he3a\\_depletion\\_eq\\_one}), reflecting universal coupling at the topologically protected Weyl point.",
+      "quote_normalized": "on $^3\\!he-a$ the depletion factor is exactly~$1$ (jtgr17, volovikjannes\\_he3a\\_depletion\\_eq\\_one), reflecting universal coupling at the topologically protected weyl point.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_he3a_depletion_eq_one", "link_state": "resolved" },
+          { "kind": "citation", "target": "JannesVolovik2012", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "TN: JTGR17 resolves; theorem proof is `rfl` discharging `volovikJannes_he3a_extended.depletion = 1` (def-level identity, line 611 of JacobsonThermoGRDarkEnergy.lean: depletion := 1). 'Reflecting universal coupling at the topologically protected Weyl point' matches Jannes-Volovik 2012 §III narrative (Atiyah-Bott-Shapiro topological reason).",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate4_ComputationCorrectness"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:d1e55799",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "d1e55799",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1057,
+      "tex_line_end": 1064,
+      "quote": "On FLS BEC the depletion factor satisfies $0 < \\texttt{depletion} < 1$ structurally (JTGR18, \\texttt{flsBEC\\_depletion\\_strictly\\_between\\_zero\\_and\\_one}) with placeholder $\\sqrt{\\rho_0 a^3} \\approx 8 \\times 10^{-3}$ for canonical Steinhauer-class $^{87}\\text{Rb}$ parameters \\cite{FinazziLiberatiSindoni2012Proc} (Eq.~67/71); the FLS p.~16 domain-of-validity constraint $\\rho_0 a^3 \\ll 1$ enforces this strict-inequality bound non-tunably.",
+      "quote_normalized": "on fls bec the depletion factor satisfies $0 < depletion < 1$ structurally (jtgr18, flsbec\\_depletion\\_strictly\\_between\\_zero\\_and\\_one) with placeholder $\\sqrt{\\rho_0 a^3} \\approx 8 \\times 10^{-3}$ for canonical steinhauer-class $^{87}rb$ parameters (eq.~67/71); the fls p.~16 domain-of-validity constraint $\\rho_0 a^3 \\ll 1$ enforces this strict-inequality bound non-tunably.",
+      "type": "numeric",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.flsBEC_depletion_strictly_between_zero_and_one", "link_state": "resolved" },
+          { "kind": "citation", "target": "FinazziLiberatiSindoni2012Proc", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": 0.0,
+      "agent_notes": "TN: JTGR18 resolves. Theorem proves `0 < flsBEC_extended.depletion ∧ flsBEC_extended.depletion < 1` via `unfold flsBEC_extended; refine ⟨?_, ?_⟩ <;> norm_num` against `depletion := 8.0e-3` (line 633). Placeholder value 8e-3 matches deep-research return §3.3 numerics: na^3 ≈ 7e-5 -> sqrt(na^3) ≈ 8.4e-3 (within 5% — placeholder rounded to 8e-3). FLS p.16 domain-of-validity constraint correctly cited from FinazziLiberatiSindoni2012Proc (arXiv:1204.3039).",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate4_ComputationCorrectness", "Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:0363e111",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "0363e111",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1064,
+      "tex_line_end": 1068,
+      "quote": "The $^3\\!\\text{He-A}$ vs.\\ FLS~BEC depletion-factor asymmetry (JTGR19, \\texttt{volovikJannes\\_vs\\_flsBEC\\_depletion\\_asymmetry}) is the load-bearing $\\mathbb{R}$-valued substrate distinction the prior Boolean 4-criterion did not capture.",
+      "quote_normalized": "the $^3\\!he-a$ vs.\\ fls~bec depletion-factor asymmetry (jtgr19, volovikjannes\\_vs\\_flsbec\\_depletion\\_asymmetry) is the load-bearing $\\mathbb{r}$-valued substrate distinction the prior boolean 4-criterion did not capture.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.volovikJannes_vs_flsBEC_depletion_asymmetry", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "TN: JTGR19 resolves at JacobsonThermoGRDarkEnergy.lean line 751. Theorem proves `volovikJannes_he3a_extended.depletion ≠ flsBEC_extended.depletion`, discharged by rewriting via JTGR17 (= 1) then unfolding flsBEC_extended (depletion = 8e-3) and `norm_num` (1 ≠ 8e-3). 'Load-bearing R-valued substrate distinction' framing is accurate: prior Boolean SakharovConditions.lambdaEffEqLambdaHK is `false` for FLS BEC and `true` for He3-A but does not encode the magnitude of the deviation; the depletion field does.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:674d8c9f",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "674d8c9f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1068,
+      "tex_line_end": 1073,
+      "quote": "The composed honest-one-way closure (JTGR20, \\texttt{wave\\_4a\\_4\\_honest\\_one\\_way\\_closure}) packages the (\\,$\\Rightarrow$\\,) implication, the unconditional depletion-factor relation, the $^3\\!\\text{He-A}$ unit-depletion identity, and the FLS BEC strict-bound asymmetry into a single substantive theorem.",
+      "quote_normalized": "the composed honest-one-way closure (jtgr20, wave\\_4a\\_4\\_honest\\_one\\_way\\_closure) packages the (\\,$\\rightarrow$\\,) implication, the unconditional depletion-factor relation, the $^3\\!he-a$ unit-depletion identity, and the fls bec strict-bound asymmetry into a single substantive theorem.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended.wave_4a_4_honest_one_way_closure", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "TN: JTGR20 resolves at line 773. The theorem packages exactly the four conjuncts the prose enumerates: (i) sakharov_criterion_implies_lambda_j_eq_lambda_hk_real (the (=>) implication, JTGR12), (ii) sakharov_depletion_factor_relation (unconditional depletion-factor relation, JTGR16), (iii) volovikJannes_he3a_depletion_eq_one (He3-A unit-depletion identity, JTGR17), (iv) flsBEC_depletion_strictly_between_zero_and_one (FLS BEC strict-bound asymmetry, JTGR18). Single substantive theorem proved by anonymous-constructor; no axioms, no sorry. Prose framing 'single substantive theorem' is exact (composition is structural, not just a docstring grouping).",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:phase6m-sakharov:1fdfc130",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "phase6m-sakharov",
+        "quote_hash": "1fdfc130",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "11. Sakharov criterion cross-bridge (final closure)",
+      "section_ordinal": 11,
+      "tex_line_start": 1073,
+      "tex_line_end": 1076,
+      "quote": "The substrate-physics encoding is now load-bearing; the prior P5-anti-pattern Boolean projection of $\\lambda_{\\rm Eff}\\!=\\!\\lambda_{\\rm HK}$ has been strictly-extended to a witness-required $\\mathbb{R}$-level identity.",
+      "quote_normalized": "the substrate-physics encoding is now load-bearing; the prior p5-anti-pattern boolean projection of $\\lambda_{\\rm eff}\\!=\\!\\lambda_{\\rm hk}$ has been strictly-extended to a witness-required $\\mathbb{r}$-level identity.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "hypothesis", "target": "P5-anti-pattern (CLAUDE.md preemptive-strengthening discipline §5)", "link_state": "resolved" },
+          { "kind": "theorem", "target": "SKEFTHawking.JacobsonThermoGRDarkEnergy.SakharovExtended (structure)", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "P5-anti-pattern reference is the project's preemptive-strengthening-discipline §5 in CLAUDE.md (defining-the-conclusion check). The `SakharovExtended` structure constructor genuinely requires a witness-equality Prop field `lambdaJEqLambdaHKEvidence` (line 587-588) AND a depletionRelation Prop field (line 596) — both must be supplied at construction. This grounds the strict-extension claim. The P5-anti-pattern was the prior Boolean `lambdaEffEqLambdaHK` field (now retained but no longer load-bearing for the R-level identity).",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate10_NarrativeFidelity", "Gate5_LeanProofSubstance"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:sakharov-short-note:47118edf",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "sakharov-short-note",
+        "quote_hash": "47118edf",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "§11.5 Sakharov Lambda_J vs Lambda_HK (embedded short note)",
+      "section_ordinal": 12,
+      "tex_line_start": 1109,
+      "tex_line_end": 1111,
+      "quote": "The Sakharov 4-criterion test (\\S\\ref{sec:phase6m-sakharov}) is the first systematic $\\Lambda$-comparison on a common substrate in the literature, and constitutes a publishable observation in its own right.",
+      "quote_normalized": "the sakharov 4-criterion test (\\s) is the first systematic $\\lambda$-comparison on a common substrate in the literature, and constitutes a publishable observation in its own right.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "hypothesis", "target": "§11 sec:phase6m-sakharov (intra-paper internal reference)", "link_state": "resolved" }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Same 'first systematic Λ-comparison on a common substrate in the literature' first-claim framing as line 985. Verdict (B) honest retirement DOES NOT undermine first-claim status — it only retires the (<=) biconditional reading; the systematic per-substrate comparison via the 4-criterion-driven framework remains a publication-novel observation. WARN (not PASS) because: (a) ambiguous 'common substrate' phrasing — the comparison is across two substrates (He3-A and FLS BEC), not on one common substrate, so 'common comparison framework' would be tighter; and (b) the §11.5 short-note also says 'publishable observation in its own right' which now has slightly weaker grounds post-verdict-(B) than before, since the substantive result is now 'one-way implication + load-bearing depletion factor' rather than a biconditional. Recommendation: future polish pass tighten phrasing to 'first systematic Sakharov-criterion-driven Λ_J vs Λ_HK comparison across emergent-gravity substrates, with one substrate (³He-A) satisfying the criterion and one (FLS BEC) failing it'.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate11_FirstClaimVerifiability", "Gate10_NarrativeFidelity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:discussion:4d68bb96",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "discussion",
+        "quote_hash": "4d68bb96",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "13. Discussion and outlook",
+      "section_ordinal": 14,
+      "tex_line_start": 1208,
+      "tex_line_end": 1211,
+      "quote": "The Phase~6e Sakharov-criterion cross-bridge (§\\ref{sec:phase6m-sakharov}) provides the program's first systematic $\\Lambda_J$ vs $\\Lambda_{\\rm HK}$ test on a common substrate, falsifying acoustic-BEC analog gravity at condition~(ii).",
+      "quote_normalized": "the phase~6e sakharov-criterion cross-bridge (§) provides the programs first systematic $\\lambda_j$ vs $\\lambda_{\\rm hk}$ test on a common substrate, falsifying acoustic-bec analog gravity at condition~(ii).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "hypothesis", "target": "§11 sec:phase6m-sakharov (intra-paper internal reference)", "link_state": "resolved" }
+        ],
+        "completeness": "partial"
+      },
+      "agent_verdict": "WARN",
+      "delta_pct": null,
+      "agent_notes": "Same first-systematic Λ_J vs Λ_HK framing as line 985 + 1109. WARN: 'falsifying acoustic-BEC analog gravity at condition (ii)' is fine — JTGR9 (`fls_bec_violates_universal_coupling`) discharges this. But 'on a common substrate' phrasing is again mildly ambiguous (the test is across substrates, not on one common substrate). Three-place repetition (lines 985, 1109, 1209) of this exact ambiguous framing is a minor consistency issue — recommend a single tightened phrasing across all three locations in a future polish pass. Not blocking.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate11_FirstClaimVerifiability", "Gate10_NarrativeFidelity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:bibliography:fls-prl-bibitem",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "bibliography",
+        "quote_hash": "00000001",
+        "hash_algorithm": "agent-assigned"
+      },
+      "section": "Bibliography (Phase 6o Wave 4a primary sources block)",
+      "section_ordinal": 99,
+      "tex_line_start": 1333,
+      "tex_line_end": 1337,
+      "quote": "\\bibitem{FinazziLiberatiSindoni2012PRL} S.~Finazzi, S.~Liberati, L.~Sindoni, ``Cosmological Constant: A Lesson from Bose-Einstein Condensates,'' Phys.\\ Rev.\\ Lett.\\ \\textbf{108}, 071101 (2012), DOI: 10.1103/PhysRevLett.108.071101, arXiv:1103.4841.",
+      "quote_normalized": "fls prl bibitem entry",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "citation", "target": "FinazziLiberatiSindoni2012PRL", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Bibitem matches CITATION_REGISTRY entry exactly (title, authors, journal, vol=108, page=071101, year=2012, doi=10.1103/PhysRevLett.108.071101, arxiv=1103.4841). Primary-source PDF cached at Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012PRL.pdf. Pipeline Invariant #11 (citation cache) satisfied. doi_verified=None (pending human verification per Phase 7 absorption Session 5 promotion).",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:bibliography:fls-proc-bibitem",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "bibliography",
+        "quote_hash": "00000002",
+        "hash_algorithm": "agent-assigned"
+      },
+      "section": "Bibliography (Phase 6o Wave 4a primary sources block)",
+      "section_ordinal": 99,
+      "tex_line_start": 1339,
+      "tex_line_end": 1343,
+      "quote": "\\bibitem{FinazziLiberatiSindoni2012Proc} S.~Finazzi, S.~Liberati, L.~Sindoni, ``The analogue cosmological constant in Bose-Einstein condensates: a lesson for quantum gravity,'' Proc.\\ II Amazonian Symposium on Physics (2012), arXiv:1204.3039.",
+      "quote_normalized": "fls proc bibitem entry",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "citation", "target": "FinazziLiberatiSindoni2012Proc", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Bibitem matches CITATION_REGISTRY entry (authors, title, journal=Proc. II Amazonian Symposium on Physics, year=2012, arxiv=1204.3039, doi=None — appropriate for a proceedings without a DOI). Primary-source PDF cached at Lit-Search/Phase-1-and-Background/primary-sources/FinazziLiberatiSindoni2012Proc.pdf. Eq. 67/71 references in §11 prose anchor to this same paper.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    },
+    {
+      "id": "sentence:D5:bibliography:blm-bibitem",
+      "raw_id_parts": {
+        "paper": "D5",
+        "section_slug": "bibliography",
+        "quote_hash": "00000003",
+        "hash_algorithm": "agent-assigned"
+      },
+      "section": "Bibliography (Phase 6o Wave 4a primary sources block)",
+      "section_ordinal": 99,
+      "tex_line_start": 1345,
+      "tex_line_end": 1350,
+      "quote": "\\bibitem{BelenchiaLiberatiMohd2014} A.~Belenchia, S.~Liberati, A.~Mohd, ``Emergent gravitational dynamics in a relativistic Bose-Einstein condensate,'' Phys.\\ Rev.\\ D \\textbf{90}, 104015 (2014), DOI: 10.1103/PhysRevD.90.104015, arXiv:1407.7896.",
+      "quote_normalized": "blm bibitem entry",
+      "type": "citation",
+      "finding_classes": [],
+      "chain_proposed": {
+        "links": [
+          { "kind": "citation", "target": "BelenchiaLiberatiMohd2014", "link_state": "resolved" }
+        ],
+        "completeness": "full"
+      },
+      "agent_verdict": "PASS",
+      "delta_pct": null,
+      "agent_notes": "Bibitem matches CITATION_REGISTRY entry exactly (authors, title, journal=Phys. Rev. D, vol=90, page=104015, year=2014, doi=10.1103/PhysRevD.90.104015, arxiv=1407.7896). Primary-source PDF cached at Lit-Search/Phase-1-and-Background/primary-sources/BelenchiaLiberatiMohd2014.pdf. CITATION_REGISTRY notes-field directly substantiates the corroboration claim in §11.",
+      "agent_run_id": "claims-reviewer-v2-bundle-aware:2026-05-08T20:30:00Z:wave4a4-scoped",
+      "gates_invoked": ["Gate1_CitationIntegrity"],
+      "rewrite_of": null,
+      "tombstone": false
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 18,
+    "by_type": {
+      "metaclaim": 5,
+      "theorem-ref": 6,
+      "citation": 5,
+      "numeric": 1,
+      "qualitative": 1
+    },
+    "by_verdict": {
+      "PASS": 15,
+      "WARN": 3,
+      "FAIL": 0,
+      "INFO": 0,
+      "UNGROUNDED": 0,
+      "TRANSITION": 0
+    },
+    "by_finding_class": {
+      "IA": 0,
+      "TP": 0,
+      "SD": 0,
+      "TN": 0,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "18 anchored sentences | 15 PASS | 3 WARN (all minor — 'first systematic Lambda_J vs Lambda_HK on a common substrate' phrasing repeated 3x; comparison is across substrates not on one shared substrate; non-blocking polish recommendation) | 0 FAIL | 0 IA/TP/SD/TN/HD. Wave 4a.4 changes verified: 5 new Lean theorems (JTGR16-JTGR20) + 3 prior-substrate Lean theorems (JTGR12-JTGR14) + 1 renamed JTGR6 all resolve in lean_deps.json. 3 new bibitems (FinazziLiberatiSindoni2012PRL/Proc, BelenchiaLiberatiMohd2014) registered with valid arXiv IDs and DOIs (or DOI=None for proceedings); primary-source PDFs cached. Numerical chain depletion=8e-3 -> lambdaJ = depletion*lambdaHK = 8e-3 * 7.5e-12 = 6.0e-14 eV verified to 0.000% (rfl-level identity in JTGR16). Verdict-(B) one-way framing faithfully reproduces deep-research return §6."
+  },
+  "blocking_issues": [],
+  "non_blocking_followups": [
+    {
+      "id": "nb:D5:wave4a4:1",
+      "summary": "Three-place repetition of 'first systematic Λ_J vs Λ_HK comparison on a common substrate' (lines 985, 1109, 1209) uses mildly ambiguous phrasing — the test is across two substrates (³He-A and FLS BEC), not on one shared substrate. Recommend tightening to 'across emergent-gravity substrates with the Sakharov 4-criterion as the discriminant' or similar in a future polish pass.",
+      "sentences": [
+        "sentence:D5:phase6m-sakharov:a85e747e",
+        "sentence:D5:sakharov-short-note:47118edf",
+        "sentence:D5:discussion:4d68bb96"
+      ],
+      "gate": "Gate10_NarrativeFidelity",
+      "finding_class": null,
+      "severity": "low",
+      "blocking": false
+    }
+  ],
+  "stage10_round_2_verdict": null,
+  "round_3_verdict": null,
+  "round_4_verdict": null,
+  "wave4a4_scoped_verdict": "GREEN — 15 PASS / 3 WARN (low-severity polish only) / 0 FAIL / 0 BLOCKERs. All 9 Lean theorem references resolve; all 3 new bibitems are registry-clean with cached primary-source PDFs; numerics are rfl-exact; verdict-(B) honest one-way framing matches deep-research §6 verdict. Stage 10 (claims review) for Wave 4a.4 is bundle-clean."
+}
