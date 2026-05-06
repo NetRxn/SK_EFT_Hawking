@@ -246,6 +246,12 @@ import SKEFTHawking.DoubleCopy.SingleCopy
 import SKEFTHawking.DoubleCopy.WeylSpinor
 import SKEFTHawking.DoubleCopy.BCJNoGo
 import SKEFTHawking.DoubleCopy.PolaritonCrossBridge
+import SKEFTHawking.Schellekens.SpinBordism
+import SKEFTHawking.Schellekens.AnomalyPolynomial
+import SKEFTHawking.Schellekens.ModularInvariance
+import SKEFTHawking.Schellekens.NiemeierLattice
+import SKEFTHawking.Schellekens.HolomorphicVOAc24
+import SKEFTHawking.Schellekens.Chain
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
