@@ -228,6 +228,7 @@ import SKEFTHawking.SymTFTAudit.FreeKLinearMonoidal
 -- `Linear k`. Continuations: 5.10d monoidal lift, 5.10e closure-with-ext,
 -- 5.10f braided lift, 5.10g WittClass cross-bridge.
 import SKEFTHawking.SymTFTAudit.DeligneTensor
+import SKEFTHawking.APSEta.Predicate
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
