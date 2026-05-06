@@ -234,6 +234,8 @@ import SKEFTHawking.APSEta.ADWHorizon
 import SKEFTHawking.APSEta.He3A
 import SKEFTHawking.APSEta.SymTFTBridge
 import SKEFTHawking.APSEta.RegimePartition
+import SKEFTHawking.ETH.Predicates
+import SKEFTHawking.ETH.ConcreteWitness
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
