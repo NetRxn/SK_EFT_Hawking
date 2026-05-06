@@ -2,7 +2,33 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-05-06-0700. **Phase 6n Session 22 — Wave 1b.5.10d.2 SHIPPED FULLY (3 sub-waves: 2a tens constructor + 2b MonoidalCategoryStruct + 2c full MonoidalCategory with all 10 coherence laws).** Phase 6n still in-progress — Wave 1b.5.10f (BraidedCategory; depends on FreeKLinear braided extension) + 5.10g.full (categorical cc additivity) + MonoidalPreadditive/MonoidalLinear lifts + Wave 2c.5c+ + Wave 1a.3 Stage 4b remain.
+**Last synced:** 2026-05-06-0230. **Phase 6n Sessions 23-29 — overnight run shipped ALL remaining math-substrate continuations + post-wave strengthening pass. PHASE 6N MATH SUBSTRATE COMPLETE.** Pre-writeup state.
+
+**Sessions 23-29 lifts (single overnight run):**
+
+- **Session 23 — Wave 1b.5.10b extension SHIPPED** — `MonoidalPreadditive (FreeKLinear C k)` + `MonoidalLinear k (FreeKLinear C k)` instances. Discharge via §1 bilinearity helpers; rfl-simp lemmas reduce field obligations to direct application of `freeTensorHom_zero/add/smul_left/right`. Closure 6→8 conjuncts.
+
+- **Session 24 — Wave 1b.5.10d.3 SHIPPED** — `MonoidalPreadditive`/`MonoidalLinear` on `DeligneTensor C D k`. Pattern: rcases X (Quot.inductionOn) → `congr_arg (Quotient.functor _).map` → invoke FreeKLinear's `freeTensorHom_*` helper. NEW `stage5_10d_3_deligneTensor_full_monoidal_closure`.
+
+- **Session 25 — Wave 1b.5.10b braided ext + 5.10f BraidedCategory on DeligneTensor SHIPPED** — Multi-component:
+  - FreeKLinearMonoidal §7b: `freeBraiding` def + 4 extracted top-level `_aux` lemmas (`freeBraiding_naturality_right_aux`, `_left_aux`, `freeBraiding_hexagon_forward_aux`, `_reverse_aux`) + `instBraidedCategory (FreeKLinear C k)`. **Aux extraction forced by Pipeline Invariant #10** — inlining hexagon proofs in instance body triggered heartbeat overflow.
+  - DeligneTensor §10b: `prodBraided` (BraidedCategory on `C × D` componentwise — Mathlib ships `prodMonoidal` but not the braided extension). Mathlib upstream-PR candidate.
+  - DeligneTensor §10c: `deligneBraiding` def + `instBraidedCategory (DeligneTensor C D k)` via descent pattern.
+  - NEW `stage5_10f_deligneTensor_braided_closure`.
+
+- **Session 26 — Wave 1b.5.10g.full SHIPPED (DeligneTensor §11b)** — `CategoricalCcStructure` (cc_int + cc_witt fields, default cc_witt computed via `WittInvariant.fromChiralCentralCharge` AddMonoidHom + cc_witt_eq compat field) + `deligneTensor` op + load-bearing `witt_additive` theorem (uses `chiralCentralChargeOfDeligneTensor_witt_additive` from Session 21 substantively via `AddMonoidHom.map_add`) + `wittEquivalent_deligneTensor` preservation. NEW `stage5_10g_full_deligneTensor_categorical_cc_closure` (3-conjunct: integer-additivity rfl + witt-additivity substantive + equivalence-preservation). **Substantive — does NOT trivially discharge by rfl.** Trivial Session-21 schema discharge deliberately NOT shipped per P5 anti-pattern discipline.
+
+- **Session 27 — Wave 2c.5c+ abstract LDP rate function class SHIPPED (LDPLinearResponse §7)** — `IsLDPRateFunction (β I) : Prop` typeclass with `zero_at_zero` + `wForm_gc` fields + derived `linear_bias_plus_even` theorem. **Substantive finding (during proof):** §2 Gaussian rate function `linearResponseRateFunction β σ²` evaluates to `β²·σ²/8 ≠ 0` at W=0 (centered at FDT-pinned mean β·σ²/2, NOT at zero). Honest LDP form is `linearResponseRateFunctionCentered` (subtracts I(0); W-form GC preserved under constant shifts). Three instances: re-centered Gaussian, quartic non-Gaussian, generic non-Gaussian with `g(0)=0` even. NEW `wave_2c_5c_abstract_LDP_class_closure`.
+
+- **Session 28 — Wave 1a.3 Stage 4b prerequisite scout COMPLETED, fetch DEFERRED.** Background Explore-agent scout findings: (1) Shi-Griffin Phys. Rep. 304 (1998) cache requires institutional access (not on arXiv); (2) **non-load-bearing for substrate verdict** — Stage 4a envelope (Session 13) + Stage 4b rate-preservation (Session 14) already give the asymptotic-growth result without explicit prefactor. TODO marker added to `bdg_self_energy.py`.
+
+- **Session 29 — Post-wave strengthening pass COMPLETED via sub-agent.** Audit found: 1 HIGH (closure-bundle dishonesty across Sessions 24/25 inhabitation closures) + 2 MEDIUM (P5 identity-wrappers in pre-existing LDP code) + 1 LOW (intentional documentation marker in Session 26's cc closure). Actions: (a) Sessions 24/25 closures → docstrings updated to honestly label as "instances-inhabited bookkeeping bundles" (preserved per UX-intentional discipline); (b) `linearResponseEmissionScheme_gcCompatible_via_WForm` deleted (zero downstream consumers, pure dead alias); (c) σ-form wrapper preserved (3 downstream usages, naming consistency); (d) Session 26 cc rfl conjunct preserved (substantive-vs-trivial documentation pairing).
+
+**Phase 6n math substrate IS NOW COMPLETE.** All Wave 1a/1b/1c/2a/2b/2c/2d content shipped at Lean-substrate level. Two items remain DEFERRED with explicit non-load-bearing status: Wave 1a.3 Stage 4b explicit γ_2^(loop) (pending Shi-Griffin cache); systematic γ_3-γ_5/γ_6-γ_7 enumeration. Bundle absorption HELD per Session-5.
+
+**Authoritative post-Session-29 project counts (counts.json regen 2026-05-06-0225 from fresh ExtractDeps):** **5651 theorems (5626 substantive + 25 placeholder) / 285 modules / 0 sorry / 1 axiom / 4856 definitions / 322 Aristotle-proved / 130 Python modules / 99 test files / 154 figures / 87 notebooks / 42 papers. Lake 8549 jobs / pytest 4111 passed.** Δ vs Session 22 (5627/285/4841/8549): thms +24 substantive (BraidedCategory aux lemmas + CategoricalCcStructure theorems + closure bundles + typeclass instance fields), defs +15, modules unchanged (extensions to existing files), Lake unchanged.
+
+**Carry-forward Session 22 baseline:**
 
 **Session 22 lifts (Wave 1b.5.10d.2 multi-sub-wave SHIPPED):**
 
