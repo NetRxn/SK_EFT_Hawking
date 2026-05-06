@@ -2,9 +2,38 @@
 
 **Purpose:** LLM-friendly quick reference for the full inventory (`SK_EFT_Hawking_Inventory.md`). Read this first; consult the full inventory for details.
 
-**Last synced:** 2026-05-05-5000. **Phase 6n Session 21 — FOUR substantive lifts SHIPPED (Wave 1b.5.10c + 5.10d substrate + 5.10e combined closure + 5.10g cc-additivity substrate).** Phase 6n still in-progress — Wave 1b.5.10d.2 (full MonoidalCategory lift via `tens` constructor extension) + 5.10f (BraidedCategory) + 5.10g.full (categorical cc additivity) + Wave 2c.5c+ + Wave 1a.3 Stage 4b remain.
+**Last synced:** 2026-05-06-0700. **Phase 6n Session 22 — Wave 1b.5.10d.2 SHIPPED FULLY (3 sub-waves: 2a tens constructor + 2b MonoidalCategoryStruct + 2c full MonoidalCategory with all 10 coherence laws).** Phase 6n still in-progress — Wave 1b.5.10f (BraidedCategory; depends on FreeKLinear braided extension) + 5.10g.full (categorical cc additivity) + MonoidalPreadditive/MonoidalLinear lifts + Wave 2c.5c+ + Wave 1a.3 Stage 4b remain.
 
-**Session 21 lifts:**
+**Session 22 lifts (Wave 1b.5.10d.2 multi-sub-wave SHIPPED):**
+
+- **Wave 1b.5.10d.2a SHIPPED** — `tens` constructor extension to `DeligneRel`. New constructor `tens [MonoidalCategory C] [MonoidalCategory D] {X₁ Y₁ X₂ Y₂ : C × D} {α₁ α₂ : ...} {β₁ β₂ : ...} : DeligneRel C D k α₁ α₂ → DeligneRel C D k β₁ β₂ → DeligneRel C D k (FreeKLinear.freeTensorHom α₁ β₁) (FreeKLinear.freeTensorHom α₂ β₂)` says the relation respects FreeKLinear's tensor of morphisms. Constructor-level instance hypotheses gate applicability.
+
+- **Wave 1b.5.10d.2b SHIPPED** — `MonoidalCategoryStruct (DeligneTensor C D k)` instance. NEW data definitions: `deligneTensorObj X Y := ⟨FreeKLinear.freeTensorObj X.as Y.as⟩`; `deligneTensorHom α β` via `Quot.liftOn₂` over the quotient morphism representation, descending `freeTensorHom` and using the `tens` constructor for well-definedness via `Quotient.functor_map_eq_iff`; `deligneWhiskerLeft/Right` via `deligneTensorHom` with identity in one slot; `deligneTensorUnit := ⟨𝟙_ (FreeKLinear (C × D) k)⟩`; `deligneAssociator/LeftUnitor/RightUnitor` via `(Quotient.functor _).mapIso` applied to FreeKLinear's structural isos. Plus the **load-bearing definitional `proj_freeTensorHom` lemma** (proved by `rfl`) that pushes the projection through `freeTensorHom`.
+
+- **Wave 1b.5.10d.2c SHIPPED** — full `MonoidalCategory (DeligneTensor C D k)` instance with all 10 coherence laws. Each law (`tensorHom_def`, `id_tensorHom_id`, `tensorHom_comp_tensorHom`, `whiskerLeft_id`, `id_whiskerRight`, `associator_naturality`, `leftUnitor_naturality`, `rightUnitor_naturality`, `pentagon`, `triangle`) descends from FreeKLinear's corresponding law via the **uniform pattern**: `show ((Quotient.functor _).map _) = ...` to canonicalize through the projection, `Quot.inductionOn` (via `rcases ⟨_⟩` on morphism args) to extract representatives, `Functor.map_comp` to pull projections out, `congr 1` to reduce the projection-equality to FreeKLinear-equality, then `MonoidalCategory.<law> (C := FreeKLinear (C × D) k) ...` with explicit category annotation to discharge via FreeKLinear's instance.
+
+  All headlines verified standard-kernel-only `[propext, Classical.choice, Quot.sound]` via `lean_verify`. MCP-driven, zero Aristotle, zero new sorry, zero new axioms.
+
+**Session 22 substantive findings:**
+- *Pre-flight Mathlib scout pays off again.* Explore agent (~3 min) confirmed: `Quotient.lift`/`Quot.liftOn₂` patterns; `Monoidal.induced` is NOT applicable here (wrong direction — `Quotient.functor : C ⥤ Quotient r` goes from concrete to quotient, but `Monoidal.induced` needs `D ⥤ C` with C monoidal to make D monoidal). Direct construction is the right path.
+- *`proj_freeTensorHom` is the load-bearing definitional fact.* By `rfl`: `(Quotient.functor _).map (freeTensorHom α β) = deligneTensorHom (proj.map α) (proj.map β)`. This single equation enables the uniform descent pattern for all 10 coherence laws.
+- *`apply MonoidalCategory.<law>` fails on syntactic match.* Even though FreeKLinear's `tensorHom = freeTensorHom` definitionally, the `apply` tactic's first-order unification can't bridge the layer in residual goals. Fix: use `exact MonoidalCategory.<law> (C := FreeKLinear (C × D) k) ...` with explicit category annotation.
+- *Field-name discipline:* Mathlib uses `id_tensorHom_id` and `tensorHom_comp_tensorHom`, NOT `tensor_id`/`tensor_comp` (those don't exist in current Mathlib). The latter were probably renamed in a Mathlib refactor.
+- *`MonoidalPreadditive`/`MonoidalLinear` defaults don't discharge on the quotient* (verified via `lean_run_code` probe). These instances would require manual lifts via `Quot.inductionOn` + FreeKLinear's MonoidalPreadditive/MonoidalLinear instances (which themselves haven't been added to FreeKLinear yet — would require a separate Wave 1b.5.10b extension first). Honest deferral.
+
+**Carry-forward Session 21 lifts:**
+
+- **Wave 1b.5.10c SHIPPED** — `DeligneTensor C D k` underlying-category construction. NEW `lean/SKEFTHawking/SymTFTAudit/DeligneTensor.lean` ships the inductive `DeligneRel C D k : HomRel (FreeKLinear (C × D) k)` (4 mathematical generators — k-bilinearity in each component — plus structural-closure constructors `refl`/`symm`/`trans`/`comp_left`/`comp_right`/`add`/`smul` baked-in for direct `Congruence`/`Quotient.preadditive`/`Quotient.linear` consumption). `instCongruence` instance. `DeligneTensor C D k := CategoryTheory.Quotient (DeligneRel C D k)` defined as `abbrev` for typeclass transparency; inherits `Category` automatically; `Preadditive` via `Quotient.preadditive` + `DeligneRel.add_resp`; `Linear k` via `Quotient.linear` + `DeligneRel.smul_resp`. Projection functor `proj : FreeKLinear (C × D) k ⥤ DeligneTensor C D k`. 4-conjunct `stage5_10c_deligneTensor_closure`.
+
+- **Wave 1b.5.10d substrate SHIPPED** — Monoidal-category substrate availability. External-product bifunctor `extProd : C × D ⥤ DeligneTensor C D k := FreeKLinear.incl ⋙ proj`. 3-conjunct `stage5_10d_deligneTensor_monoidal_substrate` (Mathlib's `prodMonoidal` + Wave 1b.5.10b's `instMonoidalCategory` on `FreeKLinear (C × D) k` + `extProd` existence). The full `MonoidalCategory (DeligneTensor C D k)` instance shipped Session 22 as Wave 1b.5.10d.2.
+
+- **Wave 1b.5.10e SHIPPED** — Combined closure theorem. 6-conjunct `stage5_10e_deligneTensor_combined_closure` bundling 5.10c + 5.10d substrate + 5.10g substrate.
+
+- **Wave 1b.5.10g substrate SHIPPED** — Integer-level central-charge additivity bridge to `WittClass`. `chiralCentralChargeOfDeligneTensor : ℤ → ℤ → ℤ := (· + ·)` + lift through `WittInvariant.fromChiralCentralCharge` AddMonoidHom to `ZMod 24` group addition.
+
+**Carry-forward Session 20 baseline.**
+
+**Session 20 lifts:**
 
 - **Wave 1b.5.10c SHIPPED** — `DeligneTensor C D k` underlying-category construction. NEW `lean/SKEFTHawking/SymTFTAudit/DeligneTensor.lean` ships the inductive `DeligneRel C D k : HomRel (FreeKLinear (C × D) k)` (4 mathematical generators — k-bilinearity in each component — plus structural-closure constructors `refl`/`symm`/`trans`/`comp_left`/`comp_right`/`add`/`smul` baked-in for direct `Congruence`/`Quotient.preadditive`/`Quotient.linear` consumption). `instCongruence` instance. `DeligneTensor C D k := CategoryTheory.Quotient (DeligneRel C D k)` defined as `abbrev` for typeclass transparency; inherits `Category` automatically; `Preadditive` via `Quotient.preadditive` + `DeligneRel.add_resp`; `Linear k` via `Quotient.linear` + `DeligneRel.smul_resp`. Projection functor `proj : FreeKLinear (C × D) k ⥤ DeligneTensor C D k`. 4-conjunct `stage5_10c_deligneTensor_closure`.
 
@@ -22,7 +51,9 @@
 - The inductive `DeligneRel` baking-in `add` and `smul` constructors directly (rather than deriving them from a smaller relation via `EqvGen`/`HomRel.CompClosure`) is the right architecture — it makes the `Congruence` instance trivial.
 - Full `MonoidalCategory (DeligneTensor C D k)` lift is genuinely multi-session: requires extending `DeligneRel` with a `tens` constructor, defining tensor of morphisms via `Quotient.lift`, and verifying all 10 coherence laws on the quotient. Honest Wave 1b.5.10d.2 deferral.
 
-**Authoritative post-Session-21 project counts (counts.json regen 2026-05-05 from fresh ExtractDeps):** **5616 theorems (5591 substantive + 25 placeholder) / 285 modules / 0 sorry / 1 axiom / 4833 definitions / 322 Aristotle-proved / 130 Python modules / 99 test files / 154 figures / 87 notebooks / 42 papers. Lake 8549 jobs / pytest 4111 passed.** Δ vs Session 20 (5604/284/4824/8548): thms +12 substantive (DeligneTensor.lean §1-§8), modules +1 (DeligneTensor), defs +9, Lake +1.
+**Authoritative post-Session-22 project counts (counts.json regen 2026-05-06 from fresh ExtractDeps):** **5627 theorems (5602 substantive + 25 placeholder) / 285 modules / 0 sorry / 1 axiom / 4841 definitions / 322 Aristotle-proved / 130 Python modules / 99 test files / 154 figures / 87 notebooks / 42 papers. Lake 8549 jobs / pytest 4111 passed.** Δ vs Session 21 (5616/285/4833/8549): thms +11 substantive (DeligneTensor.lean §9 — full MonoidalCategoryStruct + MonoidalCategory + 10 coherence laws), modules unchanged (extended DeligneTensor.lean), defs +8 (deligneTensorObj/Hom/WhiskerLeft/Right/Unit/Associator/LeftUnitor/RightUnitor), Lake unchanged (no new files).
+
+**Post-Session-21 baseline (carried forward):** 5616 theorems (5591 substantive + 25 placeholder) / 285 modules / 0 sorry / 1 axiom / 4833 definitions.
 
 **Carry-forward Session 20 baseline.**
 
@@ -414,7 +445,7 @@ Session 6: Phase 5t Wave 2 FermiHubbardDimer.lean SHIPPED — Track A COMPLETE; 
 
 | Item | Count | Source of truth |
 |------|-------|-----------------|
-| Lean theorems | **5591 substantive** (5616 total = 5591 substantive + 25 placeholder; counts.json regen 2026-05-05 post Phase 6n Session 21 — Wave 1b.5.10c + 5.10d substrate + 5.10e + 5.10g substrate; +12 substantive over Session-20 5579 from NEW `SymTFTAudit/DeligneTensor.lean` §1-§8; lake 8549 jobs PASS) | `lake build SKEFTHawking.ExtractDeps` 2026-05-05 + `update_counts.py`; counts.json fresh |
+| Lean theorems | **5602 substantive** (5627 total = 5602 substantive + 25 placeholder; counts.json regen 2026-05-06 post Phase 6n Session 22 — Wave 1b.5.10d.2a + 5.10d.2b + 5.10d.2c full MonoidalCategory lift; +11 substantive over Session-21 5591 from extending `SymTFTAudit/DeligneTensor.lean` §9 with `tens` constructor + `MonoidalCategoryStruct` + full `MonoidalCategory` instance with all 10 coherence laws; lake 8549 jobs PASS) | `lake build SKEFTHawking.ExtractDeps` 2026-05-06 + `update_counts.py`; counts.json fresh |
 | Placeholders (True := trivial) | **25** (counts.json 2026-05-05-0900; unchanged from 2026-05-01 baseline; W8 modules still use only `_phase6f_w8_session{4,5}_module_summary_marker` markers) | Module summaries + content placeholders; see PLACEHOLDER_THEOREMS in constants.py |
 | Aristotle-proved | **322** (machine; unchanged across Phase 5z, 6a-6n — no Aristotle runs in any 6-prefix phase; Phase 6n waves all MCP-proven) | ARISTOTLE_THEOREMS in constants.py; 44 Aristotle runs total |
 | **Sorry gaps** | **0** | Project-wide (verified 2026-05-05 via lake build clean across 8546 jobs post Session 17) |

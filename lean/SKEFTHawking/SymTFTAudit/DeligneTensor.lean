@@ -165,6 +165,17 @@ inductive DeligneRel (C D : Type u) [Category.{v} C] [Preadditive C]
   | add {XY₁ XY₂ : FreeKLinear (C × D) k} {f₁ f₂ g₁ g₂ : XY₁ ⟶ XY₂} :
       DeligneRel C D k f₁ f₂ → DeligneRel C D k g₁ g₂ →
       DeligneRel C D k (f₁ + g₁) (f₂ + g₂)
+  /-- Tensor respect (Wave 1b.5.10d.2): the relation respects `freeTensorHom`.
+      Required so that the FreeKLinear monoidal structure descends to the quotient.
+      Constructor-level instance hypotheses `[MonoidalCategory C]` `[MonoidalCategory D]`
+      gate this constructor's applicability. -/
+  | tens [MonoidalCategory C] [MonoidalCategory D]
+      {X₁ Y₁ X₂ Y₂ : C × D}
+      {α₁ α₂ : (X₁ ⟶ Y₁) →₀ k} {β₁ β₂ : (X₂ ⟶ Y₂) →₀ k} :
+      DeligneRel C D k (X := FreeKLinear.of X₁) (Y := FreeKLinear.of Y₁) α₁ α₂ →
+      DeligneRel C D k (X := FreeKLinear.of X₂) (Y := FreeKLinear.of Y₂) β₁ β₂ →
+      DeligneRel C D k
+        (FreeKLinear.freeTensorHom α₁ β₁) (FreeKLinear.freeTensorHom α₂ β₂)
   /-- Scalar-multiplication respect: `r f₁ f₂ → r (a • f₁) (a • f₂)`. -/
   | smul {XY₁ XY₂ : FreeKLinear (C × D) k} (a : k) {f₁ f₂ : XY₁ ⟶ XY₂} :
       DeligneRel C D k f₁ f₂ → DeligneRel C D k (a • f₁) (a • f₂)
@@ -534,5 +545,291 @@ theorem stage5_10e_deligneTensor_combined_closure
     ⟨FreeKLinear.instMonoidalCategory⟩,
     ⟨DeligneTensor.extProd⟩⟩,
    chiralCentralChargeOfDeligneTensor_witt_additive⟩
+
+/-! ## §9 Wave 1b.5.10d.2 — MonoidalCategoryStruct on DeligneTensor C D k -/
+
+open MonoidalCategory
+
+namespace DeligneTensor
+
+variable {C D : Type u} [Category.{v} C] [Preadditive C] [MonoidalCategory C]
+  {k : Type} [CommRing k] [Linear k C]
+  [Category.{v} D] [Preadditive D] [Linear k D] [MonoidalCategory D]
+
+/--
+**Tensor of objects** in `DeligneTensor C D k`. Defined by descending FreeKLinear's
+`freeTensorObj` through the quotient projection: `[X] ⊗ [Y] := [X.as ⊗ Y.as]` where
+`⊗` on the right is FreeKLinear's monoidal tensor (which itself is the lift of `C ×
+D`'s `prodMonoidal` tensor).
+-/
+noncomputable def deligneTensorObj (X Y : DeligneTensor C D k) : DeligneTensor C D k :=
+  ⟨FreeKLinear.freeTensorObj X.as Y.as⟩
+
+/--
+**Tensor of morphisms** in `DeligneTensor C D k`. Defined via `Quot.liftOn₂` over
+the quotient morphism representation, descending FreeKLinear's `freeTensorHom` and
+using the `DeligneRel.tens` constructor for well-definedness.
+-/
+noncomputable def deligneTensorHom {X₁ X₂ Y₁ Y₂ : DeligneTensor C D k}
+    (α : X₁ ⟶ X₂) (β : Y₁ ⟶ Y₂) :
+    deligneTensorObj X₁ Y₁ ⟶ deligneTensorObj X₂ Y₂ :=
+  Quot.liftOn₂ α β (fun a b => Quot.mk _ (FreeKLinear.freeTensorHom a b))
+    (fun a b₁ b₂ h => by
+      simp only [HomRel.compClosure_iff_self] at h
+      change (Quotient.functor (DeligneRel C D k)).map _ =
+             (Quotient.functor (DeligneRel C D k)).map _
+      rw [Quotient.functor_map_eq_iff]
+      exact DeligneRel.tens (DeligneRel.refl a) h)
+    (fun a₁ a₂ b h => by
+      simp only [HomRel.compClosure_iff_self] at h
+      change (Quotient.functor (DeligneRel C D k)).map _ =
+             (Quotient.functor (DeligneRel C D k)).map _
+      rw [Quotient.functor_map_eq_iff]
+      exact DeligneRel.tens h (DeligneRel.refl b))
+
+/--
+**Whisker-left** in `DeligneTensor C D k`. Tensor on the right with an identity:
+`X ◁ f := tensorHom (𝟙 X) f`.
+-/
+noncomputable def deligneWhiskerLeft (X : DeligneTensor C D k) {Y₁ Y₂ : DeligneTensor C D k}
+    (f : Y₁ ⟶ Y₂) : deligneTensorObj X Y₁ ⟶ deligneTensorObj X Y₂ :=
+  deligneTensorHom (𝟙 X) f
+
+/--
+**Whisker-right** in `DeligneTensor C D k`. Tensor on the left with an identity:
+`f ▷ Y := tensorHom f (𝟙 Y)`.
+-/
+noncomputable def deligneWhiskerRight {X₁ X₂ : DeligneTensor C D k} (f : X₁ ⟶ X₂)
+    (Y : DeligneTensor C D k) : deligneTensorObj X₁ Y ⟶ deligneTensorObj X₂ Y :=
+  deligneTensorHom f (𝟙 Y)
+
+/--
+**Monoidal unit** in `DeligneTensor C D k`. Lifted from FreeKLinear's monoidal unit
+(which is `(𝟙_ C, 𝟙_ D)` via `prodMonoidal`).
+-/
+noncomputable def deligneTensorUnit : DeligneTensor C D k :=
+  ⟨(𝟙_ (FreeKLinear (C × D) k))⟩
+
+/--
+**Associator** in `DeligneTensor C D k`. Lifted from FreeKLinear's associator via
+`(Quotient.functor _).mapIso`.
+-/
+noncomputable def deligneAssociator (X Y Z : DeligneTensor C D k) :
+    deligneTensorObj (deligneTensorObj X Y) Z ≅ deligneTensorObj X (deligneTensorObj Y Z) :=
+  (Quotient.functor (DeligneRel C D k)).mapIso (α_ X.as Y.as Z.as)
+
+/--
+**Left unitor** in `DeligneTensor C D k`. Lifted from FreeKLinear's left unitor via
+`(Quotient.functor _).mapIso`.
+-/
+noncomputable def deligneLeftUnitor (X : DeligneTensor C D k) :
+    deligneTensorObj deligneTensorUnit X ≅ X :=
+  (Quotient.functor (DeligneRel C D k)).mapIso (λ_ X.as)
+
+/--
+**Right unitor** in `DeligneTensor C D k`. Lifted from FreeKLinear's right unitor via
+`(Quotient.functor _).mapIso`.
+-/
+noncomputable def deligneRightUnitor (X : DeligneTensor C D k) :
+    deligneTensorObj X deligneTensorUnit ≅ X :=
+  (Quotient.functor (DeligneRel C D k)).mapIso (ρ_ X.as)
+
+/--
+**`MonoidalCategoryStruct (DeligneTensor C D k)` instance.** Bundles all the data
+fields (object/morphism tensor, whiskerings, unit, structural isos) for the monoidal
+structure on `DeligneTensor C D k`.
+-/
+noncomputable instance instMonoidalCategoryStruct :
+    MonoidalCategoryStruct (DeligneTensor C D k) where
+  tensorObj := deligneTensorObj
+  whiskerLeft X _ _ f := deligneWhiskerLeft X f
+  whiskerRight {_ _} f Y := deligneWhiskerRight f Y
+  tensorHom α β := deligneTensorHom α β
+  tensorUnit := deligneTensorUnit
+  associator := deligneAssociator
+  leftUnitor := deligneLeftUnitor
+  rightUnitor := deligneRightUnitor
+
+/-! ### §9a Projection-tensor compatibility (the load-bearing definitional lemma) -/
+
+/--
+**Projection-tensor compatibility.** The quotient projection of `freeTensorHom α β`
+equals `deligneTensorHom (proj.map α) (proj.map β)`. This is the load-bearing
+definitional fact that lets all monoidal laws descend from FreeKLinear's laws to
+the quotient via `Quot.inductionOn`.
+
+Proof: `rfl` — the `deligneTensorHom`'s `Quot.liftOn₂` definition coincides
+definitionally with `Quot.mk _ ∘ freeTensorHom` on basis representatives, which is
+exactly `(Quotient.functor _).map ∘ freeTensorHom`.
+-/
+theorem proj_freeTensorHom {X₁ X₂ Y₁ Y₂ : C × D}
+    (α : (X₁ ⟶ Y₁) →₀ k) (β : (X₂ ⟶ Y₂) →₀ k) :
+    (Quotient.functor (DeligneRel C D k)).map (FreeKLinear.freeTensorHom α β) =
+    deligneTensorHom
+      (X₁ := ⟨FreeKLinear.of X₁⟩) (X₂ := ⟨FreeKLinear.of Y₁⟩)
+      (Y₁ := ⟨FreeKLinear.of X₂⟩) (Y₂ := ⟨FreeKLinear.of Y₂⟩)
+      ((Quotient.functor (DeligneRel C D k)).map α)
+      ((Quotient.functor (DeligneRel C D k)).map β) := rfl
+
+/-! ### §9b Wave 1b.5.10d.2c — `id_tensorHom_id` and `tensorHom_comp_tensorHom` laws -/
+
+/-- `id_tensorHom_id` law on `DeligneTensor C D k`: `𝟙 X ⊗ 𝟙 Y = 𝟙 (X ⊗ Y)`.
+    Descends from FreeKLinear's `id_tensorHom_id` via `congr 1` after replacing
+    identities with projection-images. -/
+theorem deligne_id_tensorHom_id (X Y : DeligneTensor C D k) :
+    deligneTensorHom (𝟙 X) (𝟙 Y) = 𝟙 (deligneTensorObj X Y) := by
+  show (Quotient.functor (DeligneRel C D k)).map _ =
+       (Quotient.functor (DeligneRel C D k)).map _
+  congr 1
+  exact MonoidalCategory.id_tensorHom_id (C := FreeKLinear (C × D) k) X.as Y.as
+
+/-- `tensorHom_comp_tensorHom` law (interchange) on `DeligneTensor C D k`.
+    Mathlib's direction: `(f₁ ⊗ f₂) ≫ (g₁ ⊗ g₂) = (f₁ ≫ g₁) ⊗ (f₂ ≫ g₂)`.
+    Descends from FreeKLinear's via `Quot.inductionOn` on all four morphisms. -/
+theorem deligne_tensorHom_comp_tensorHom
+    {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : DeligneTensor C D k}
+    (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁) (g₂ : Y₂ ⟶ Z₂) :
+    deligneTensorHom f₁ f₂ ≫ deligneTensorHom g₁ g₂ =
+      deligneTensorHom (f₁ ≫ g₁) (f₂ ≫ g₂) := by
+  rcases f₁ with ⟨a₁⟩
+  rcases f₂ with ⟨a₂⟩
+  rcases g₁ with ⟨b₁⟩
+  rcases g₂ with ⟨b₂⟩
+  show (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _ =
+       (Quotient.functor (DeligneRel C D k)).map _
+  rw [← Functor.map_comp]
+  congr 1
+  apply MonoidalCategory.tensorHom_comp_tensorHom
+
+/-- Whisker-left identity: `X ◁ 𝟙 Y = 𝟙 (X ⊗ Y)`. Direct from `deligne_id_tensorHom_id`. -/
+theorem deligne_whiskerLeft_id (X Y : DeligneTensor C D k) :
+    deligneWhiskerLeft X (𝟙 Y) = 𝟙 (deligneTensorObj X Y) := by
+  exact deligne_id_tensorHom_id X Y
+
+/-- Right-whisker identity: `𝟙 X ▷ Y = 𝟙 (X ⊗ Y)`. Direct from `deligne_id_tensorHom_id`. -/
+theorem deligne_id_whiskerRight (X Y : DeligneTensor C D k) :
+    deligneWhiskerRight (𝟙 X) Y = 𝟙 (deligneTensorObj X Y) := by
+  exact deligne_id_tensorHom_id X Y
+
+/-! ### §9c `tensorHom_def` and structural-iso naturalities -/
+
+/-- `tensorHom_def`: tensor of morphisms equals whisker-right then whisker-left.
+    Descends from FreeKLinear's `tensorHom_def`. -/
+theorem deligne_tensorHom_def {X₁ Y₁ X₂ Y₂ : DeligneTensor C D k}
+    (α : X₁ ⟶ Y₁) (β : X₂ ⟶ Y₂) :
+    deligneTensorHom α β =
+      deligneWhiskerRight α X₂ ≫ deligneWhiskerLeft Y₁ β := by
+  rcases α with ⟨a⟩
+  rcases β with ⟨b⟩
+  show (Quotient.functor (DeligneRel C D k)).map _ =
+       (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _
+  rw [← Functor.map_comp]
+  congr 1
+  exact MonoidalCategory.tensorHom_def (C := FreeKLinear (C × D) k) a b
+
+/-- Associator naturality. Descends from FreeKLinear's via `Quot.inductionOn`. -/
+theorem deligne_associator_naturality
+    {X₁ X₂ Y₁ Y₂ Z₁ Z₂ : DeligneTensor C D k}
+    (α : X₁ ⟶ X₂) (β : Y₁ ⟶ Y₂) (γ : Z₁ ⟶ Z₂) :
+    deligneTensorHom (deligneTensorHom α β) γ ≫ (deligneAssociator X₂ Y₂ Z₂).hom =
+      (deligneAssociator X₁ Y₁ Z₁).hom ≫ deligneTensorHom α (deligneTensorHom β γ) := by
+  rcases α with ⟨a⟩
+  rcases β with ⟨b⟩
+  rcases γ with ⟨c⟩
+  show (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _ =
+       (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _
+  rw [← Functor.map_comp, ← Functor.map_comp]
+  congr 1
+  apply MonoidalCategory.associator_naturality
+
+/-- Left-unitor naturality. Descends from FreeKLinear's via `Quot.inductionOn`. -/
+theorem deligne_leftUnitor_naturality
+    {X Y : DeligneTensor C D k} (f : X ⟶ Y) :
+    deligneWhiskerLeft deligneTensorUnit f ≫ (deligneLeftUnitor Y).hom =
+      (deligneLeftUnitor X).hom ≫ f := by
+  rcases f with ⟨g⟩
+  show (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _ =
+       (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _
+  rw [← Functor.map_comp, ← Functor.map_comp]
+  congr 1
+  apply MonoidalCategory.leftUnitor_naturality
+
+/-- Right-unitor naturality. Descends from FreeKLinear's via `Quot.inductionOn`. -/
+theorem deligne_rightUnitor_naturality
+    {X Y : DeligneTensor C D k} (f : X ⟶ Y) :
+    deligneWhiskerRight f deligneTensorUnit ≫ (deligneRightUnitor Y).hom =
+      (deligneRightUnitor X).hom ≫ f := by
+  rcases f with ⟨g⟩
+  show (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _ =
+       (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _
+  rw [← Functor.map_comp, ← Functor.map_comp]
+  congr 1
+  apply MonoidalCategory.rightUnitor_naturality
+
+/-! ### §9d Pentagon and triangle laws -/
+
+/-- Pentagon law on `DeligneTensor C D k`. Descends from FreeKLinear's pentagon. -/
+theorem deligne_pentagon (W X Y Z : DeligneTensor C D k) :
+    deligneWhiskerRight (deligneAssociator W X Y).hom Z ≫
+      (deligneAssociator W (deligneTensorObj X Y) Z).hom ≫
+        deligneWhiskerLeft W (deligneAssociator X Y Z).hom =
+      (deligneAssociator (deligneTensorObj W X) Y Z).hom ≫
+        (deligneAssociator W X (deligneTensorObj Y Z)).hom := by
+  show (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _ =
+       (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _
+  rw [← Functor.map_comp, ← Functor.map_comp, ← Functor.map_comp]
+  congr 1
+  apply MonoidalCategory.pentagon
+
+/-- Triangle law on `DeligneTensor C D k`. Descends from FreeKLinear's triangle. -/
+theorem deligne_triangle (X Y : DeligneTensor C D k) :
+    (deligneAssociator X deligneTensorUnit Y).hom ≫
+      deligneWhiskerLeft X (deligneLeftUnitor Y).hom =
+      deligneWhiskerRight (deligneRightUnitor X).hom Y := by
+  show (Quotient.functor (DeligneRel C D k)).map _ ≫
+       (Quotient.functor (DeligneRel C D k)).map _ =
+       (Quotient.functor (DeligneRel C D k)).map _
+  rw [← Functor.map_comp]
+  congr 1
+  apply MonoidalCategory.triangle
+
+/-! ### §9e MonoidalCategory instance assembly -/
+
+/--
+**`MonoidalCategory (DeligneTensor C D k)` instance.** Wave 1b.5.10d.2c deliverable.
+Bundles all 10 monoidal coherence laws (tensor_id, tensor_comp, tensorHom_def,
+whiskerLeft_id, id_whiskerRight, associator_naturality, leftUnitor_naturality,
+rightUnitor_naturality, pentagon, triangle), each descended from FreeKLinear's
+corresponding law via `Quot.inductionOn` + `congr 1` + functor-map-of-equal-things.
+
+This is the *load-bearing* deliverable that lifts the full Wave 1b.5.10b monoidal
+infrastructure on `FreeKLinear (C × D) k` through the `DeligneRel` quotient to
+make `DeligneTensor C D k` a genuine k-linear monoidal category.
+-/
+noncomputable instance instMonoidalCategory :
+    MonoidalCategory (DeligneTensor C D k) where
+  tensorHom_def := deligne_tensorHom_def
+  id_tensorHom_id := deligne_id_tensorHom_id
+  tensorHom_comp_tensorHom := deligne_tensorHom_comp_tensorHom
+  whiskerLeft_id := deligne_whiskerLeft_id
+  id_whiskerRight := deligne_id_whiskerRight
+  associator_naturality := deligne_associator_naturality
+  leftUnitor_naturality := deligne_leftUnitor_naturality
+  rightUnitor_naturality := deligne_rightUnitor_naturality
+  pentagon := deligne_pentagon
+  triangle := deligne_triangle
+
+end DeligneTensor
 
 end SKEFTHawking.SymTFTAudit
