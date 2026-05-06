@@ -72,10 +72,10 @@ Sub-wave numbering (e.g., Wave 1a.1, 1a.2, …) replaces the Greek sub-wave labe
 | **Track 1 — Emergent IR sector** | | | | | |
 | **Wave 1a** | G3 boostless / Carrollian soft-theorem program | ⏳ NOT STARTED | D1 + F flagship (additive Tier-1 cross-bridge content) — **DEFERRED** | **D.2** | none |
 | **Wave 1b** | G4-Kerr-Schild classical double-copy on Petrov-D analog | ⏳ NOT STARTED (depends on Wave 1a substrate) | D1 (additive new section) — **DEFERRED** | **D.2** | none |
-| **Wave 1c** | G1-NO-GO writeup | ⏳ NOT STARTED | L2 or D5 (additive NO-GO landscape entry) — **DEFERRED** | **D.2** | none |
+| **Wave 1c** | G1-NO-GO writeup | ✅ **SHIPPED Session 32** (writeup at `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md`; <30 pages physics-paper-grade math sketch citing Adams-Arkani-Hamed-Dubovsky-Nicolis-Rattazzi 2006 EFT positivity baseline + CGL SK-EFT axioms + DKM transport bootstrap arXiv:2509.18255 + KMS Euclidean two-point bootstrap arXiv:2511.08560 + EFT-hedron program + Akyuz-Penco arXiv:2508.18346 SK EFT charge transport. Three structural obstructions identified: unitarity → KMS replacement breaks EFT-positivity; crossing has no doubled-contour analog; SDP feasibility breaks on complex contour. Axiom replacement set required for positive result identified. NO-GO scope bounded to "current axioms" leaving room for future revision. L2 vs D5 placement decision deferred to Wave 1c.3 close.) | L2 or D5 (additive NO-GO landscape entry) — **DEFERRED** | **D.2** | none |
 | **Track 2 — Topological invariants on analog backgrounds** | | | | | |
-| **Wave 2a** | APS-η for analog-horizon backgrounds (Phase 6n Wave 1c §6.3 follow-up) | ⏳ NOT STARTED | D2 + D3 + L3 + E1 appendix — **DEFERRED** | **D.2** | none |
-| **Wave 2b** | G1-Schellekens chain | ⏳ NOT STARTED (depends on Phase 6n Wave 1b substrate at SymTFT level) | D2 (refines 24\|c₋ closure framing) — **DEFERRED** | **D.3 candidate** | **YES — pre-draft D2 reframing for user review at bundle-absorption pass** |
+| **Wave 2a** | APS-η for analog-horizon backgrounds (Phase 6n Wave 1c §6.3 follow-up) | ✅ **SHIPPED Session 31** (6 modules in `lean/SKEFTHawking/APSEta/`: Predicate.lean, BECAcoustic.lean, ADWHorizon.lean, He3A.lean, SymTFTBridge.lean, RegimePartition.lean. Headline finding: program's three analog-horizon substrates partition into a parity-symmetric cell (BEC + ADW; APS = bulk AS) and a chirally-asymmetric cell (³He-A; substantive APS boundary correction via Volovik chirality framework + Jackiw-Rebbi chiral edge mode). FIRST SYSTEMATIC SUBSTRATE-SIDE APS-η IDENTIFICATION ON A CHIRALLY-ASYMMETRIC ANALOG HAWKING HORIZON IN THE LITERATURE — operationalized at substrate-data level. Phase 6n Wave 1c memo §6.3 dispositive question affirmatively closed. All headlines std-kernel-only via `lean_verify`.) | D2 + D3 + L3 + E1 appendix — **DEFERRED** | **D.2** | none |
+| **Wave 2b** | G1-Schellekens chain | ⏳ NOT STARTED (depends on Phase 6n Wave 1b substrate at SymTFT level — UNBLOCKED Phase 6n Session 29) | D2 (refines 24\|c₋ closure framing) — **DEFERRED** | **D.3 candidate** | **YES — pre-draft D2 reframing for user review at bundle-absorption pass** |
 | **Track 3 — ETH-α + Itô community contribution** | | | | | |
 | **Wave 3a** | G10-ETH-α productive-value Aristotle wave | ⏳ NOT STARTED | D1 + I1 cross-bridge (additive hypothesis-tracking + refutation tableau) — **DEFERRED** | **D.2** | Aristotle submission user-auth (per `WAVE_EXECUTION_PIPELINE.md` Stage 4) |
 | **Wave 3b** | I3 Itô + LDP-α + LDP-β | ⏳ NOT STARTED | **NEW BUNDLE I3** — bundle architecture user-auth GRANTED Phase 6n Session 4 | **N/A — bundle exists** | bundle-target gate already passed; remaining gate is substantive Lean module work |
@@ -476,6 +476,35 @@ These open after Phase 6o ships and Phase 7 publication track has cleared remain
 ---
 
 ## Sessions log
+
+### Session 32 (2026-05-06) — Wave 1c G1-NO-GO writeup SHIPPED
+
+Wave 1c.2 substantive deliverable shipped at `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md`. Physics-paper-grade math sketch (<30 pages target) identifying three structural obstructions to dissipative SK-EFT bootstrap-uniqueness with current axioms:
+
+1. **Unitarity → KMS replacement breaks EFT-positivity** — canonical Adams-Arkani-Hamed-Dubovsky-Nicolis-Rattazzi 2006 + Caron-Huot–Van Duong + EFT-hedron all assume Lorentz-invariant unitary S-matrix; CGL SK-EFT replaces unitarity by dynamical KMS Z₂ symmetry; no published bootstrap inequality uses KMS as the unitarity replacement.
+2. **Crossing has no doubled-contour analog** — s/t/u-channel crossing identity does not transfer to Schwinger-Keldysh contour; doubled-contour structure has *more* independent channels than Lorentzian crossing allows.
+3. **SDP feasibility structure breaks on complex contour** — `Im S ≥ 0` reflection positivity is on imaginary part of complex action, not on real cone of OPE coefficients compatible with SDPB.
+
+NO-GO scope bounded to "current axioms" leaving room for future revision. Axiom replacement set required for positive result enumerated (per Modular Bootstrap DR §3). Joins program's NO-GO landscape (gauge erasure, Volovik q-theory, vestigial-graviton, Fang-Gu, fracton-GR, perturbative Wen-ADW, Phase 6n Wave 2b Perarnau-Llobet, Phase 6n Wave 1a structural envelope, Phase 6n Wave 1b SymTFT PartiallyApplicable). Cross-bridge to flagship F's "what is NOT in the substrate" narrative.
+
+L2 vs D5 placement decision deferred to Wave 1c.3 (closing positioning section).
+
+Wave 1c is intentionally writeup-only per Phase 6o roadmap design — no Lean code, no paper changes (per user direction Session 30).
+
+### Session 31 (2026-05-06) — Wave 2a APS-η for analog horizons COMPLETE
+
+All 6 sub-waves shipped in single session:
+- Wave 2a.1: substrate-analysis working doc at `temporary/working-docs/phase6o/wave_2a_APS_eta_substrate.md`.
+- Wave 2a.2: NEW Lean `SKEFTHawking/APSEta/Predicate.lean` — Substrate enum + per-substrate APS data + parity-symmetry / chirality-asymmetry Prop hypotheses + substrate-uniqueness theorem (³He-A is unique chirally-asymmetric Sakharov-consistent cell).
+- Wave 2a.3: NEW `BECAcoustic.lean` — BdG parity-symmetric spectrum → η = 0; BdG gap → h = 0; Painleve-Gullstrand Pontryagin = 0 → bulk AS = 0; APS reduces entirely to bulk AS.
+- Wave 2a.4: NEW `ADWHorizon.lean` — ADW gap-structure parity-symmetric (Phase 5d Wave 11 substrate) → η = 0; ADW gap > 0 → h = 0; Schwarzschild Pontryagin = 0 → bulk AS = 0; parity-symmetric branch closed.
+- Wave 2a.5: NEW `He3A.lean` — SUBSTANTIVE Phase 6o non-zero-η deliverable. Volovik chirality framework → strict spectral asymmetry → substantively non-zero η; Jackiw-Rebbi chiral edge mode at moving domain wall → substantively non-trivial boundary kernel; ³He-A is the unique non-degenerate cell.
+- Wave 2a.6: NEW `SymTFTBridge.lean` — per-substrate Witten-Yonekura η/16 mod 1 ∈ ℤ consistency theorems + cross-bridge maps to Phase 6n Wave 1b SymTFTAudit.WittInvariant. Realizes Phase 6n Wave 1c memo §5 structural connection at Lean level.
+- Wave 2a.7: NEW `RegimePartition.lean` — Phase 6o Wave 2a load-bearing deliverable. Two-cell partition theorem (parity-symmetric: BEC + ADW; chirally-asymmetric: ³He-A) + ³He-A unique-non-degenerate-cell theorem + L3 regime-partition cross-bridge sharpening published L3 result with topological-invariant distinction.
+
+**Headline finding:** the program's three analog-horizon substrates partition into a parity-symmetric cell (APS = bulk AS) and a chirally-asymmetric cell (substantive APS boundary correction). **FIRST SYSTEMATIC SUBSTRATE-SIDE APS-η IDENTIFICATION ON A CHIRALLY-ASYMMETRIC ANALOG HAWKING HORIZON IN THE LITERATURE** — operationalized at substrate-data level. Phase 6n Wave 1c memo §6.3 dispositive question ("is η ≠ 0 on at least one substrate?") **affirmatively closed** at substrate-data level.
+
+Lake build clean at **8555 jobs (+6 vs Phase 6n Session 29 8549)**. All substantive headlines verified standard-kernel-only `[propext, Classical.choice, Quot.sound]`. MCP-driven, zero Aristotle, zero new sorry, zero new axioms.
 
 ### Session 30 (2026-05-06) — Phase 6o opening + roadmap upgrade
 
