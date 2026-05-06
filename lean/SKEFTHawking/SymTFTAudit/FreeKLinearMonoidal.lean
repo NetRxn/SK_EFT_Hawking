@@ -239,7 +239,353 @@ theorem freeTensorHom_freeComp_interchange {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C}
           congr 1
           ring
 
-/-! ## §4 Stage 5.10b partial closure -/
+/-! ## §4 Object-level monoidal structure (sub-wave 5.10b.2) -/
+
+/--
+**Tensor object in `FreeKLinear C k`** is the `of`-image of the underlying C-tensor.
+Definitionally `tensorObj X Y = X.unwrap ⊗ Y.unwrap`, since `FreeKLinear C k` is a
+type synonym for `C`.
+-/
+def freeTensorObj (X Y : FreeKLinear C k) : FreeKLinear C k :=
+  of (X.unwrap ⊗ Y.unwrap)
+
+omit [CommRing k] in
+@[simp]
+theorem freeTensorObj_unwrap (X Y : FreeKLinear C k) :
+    (freeTensorObj X Y).unwrap = X.unwrap ⊗ Y.unwrap := rfl
+
+/-! ## §5 MonoidalCategoryStruct instance -/
+
+/--
+**`MonoidalCategoryStruct (FreeKLinear C k)`**. Object-level tensor + unit are
+inherited from C (definitionally via the type synonym). Whiskering and tensor on
+morphisms are k-bilinear extensions via `freeTensorHom`. Associator and unitors
+are `incl`-lifts of C's structural isomorphisms (each iso component becomes
+`Finsupp.single (·) 1`).
+-/
+noncomputable instance instMonoidalCategoryStruct :
+    MonoidalCategoryStruct (FreeKLinear C k) where
+  tensorObj X Y := freeTensorObj X Y
+  whiskerLeft X _ _ f := freeTensorHom (freeId (k := k) X.unwrap) f
+  whiskerRight {_ _} f Y := freeTensorHom f (freeId (k := k) Y.unwrap)
+  tensorHom α β := freeTensorHom α β
+  tensorUnit := of (𝟙_ C)
+  associator X Y Z :=
+    (incl (k := k)).mapIso (α_ X.unwrap Y.unwrap Z.unwrap)
+  leftUnitor X := (incl (k := k)).mapIso (λ_ X.unwrap)
+  rightUnitor X := (incl (k := k)).mapIso (ρ_ X.unwrap)
+
+/-! ### §5a Unfolding lemmas for the structure -/
+
+@[simp]
+theorem instMonoidalCategoryStruct_tensorObj (X Y : FreeKLinear C k) :
+    X ⊗ Y = freeTensorObj X Y := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_tensorUnit :
+    (𝟙_ (FreeKLinear C k)) = of (𝟙_ C) := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_whiskerLeft
+    (X : FreeKLinear C k) {Y₁ Y₂ : FreeKLinear C k} (f : Y₁ ⟶ Y₂) :
+    X ◁ f = freeTensorHom (freeId (k := k) X.unwrap) f := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_whiskerRight
+    {X₁ X₂ : FreeKLinear C k} (f : X₁ ⟶ X₂) (Y : FreeKLinear C k) :
+    f ▷ Y = freeTensorHom f (freeId (k := k) Y.unwrap) := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_tensorHom
+    {X₁ Y₁ X₂ Y₂ : FreeKLinear C k} (α : X₁ ⟶ Y₁) (β : X₂ ⟶ Y₂) :
+    α ⊗ₘ β = freeTensorHom α β := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_associator_hom (X Y Z : FreeKLinear C k) :
+    (α_ X Y Z).hom = (Finsupp.single (α_ X.unwrap Y.unwrap Z.unwrap).hom (1 : k)) := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_associator_inv (X Y Z : FreeKLinear C k) :
+    (α_ X Y Z).inv = (Finsupp.single (α_ X.unwrap Y.unwrap Z.unwrap).inv (1 : k)) := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_leftUnitor_hom (X : FreeKLinear C k) :
+    (λ_ X).hom = (Finsupp.single (λ_ X.unwrap).hom (1 : k)) := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_leftUnitor_inv (X : FreeKLinear C k) :
+    (λ_ X).inv = (Finsupp.single (λ_ X.unwrap).inv (1 : k)) := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_rightUnitor_hom (X : FreeKLinear C k) :
+    (ρ_ X).hom = (Finsupp.single (ρ_ X.unwrap).hom (1 : k)) := rfl
+
+@[simp]
+theorem instMonoidalCategoryStruct_rightUnitor_inv (X : FreeKLinear C k) :
+    (ρ_ X).inv = (Finsupp.single (ρ_ X.unwrap).inv (1 : k)) := rfl
+
+/-! ## §6 MonoidalCategory instance (sub-wave 5.10b.3) -/
+
+/-! ### §6a Easy laws — direct algebra on `freeTensorHom`/`freeComp` -/
+
+/--
+**`tensorHom_def`** at the FreeKLinear level: the morphism-side tensor agrees
+with the whisker-then-whisker composition. Follows from the §3 interchange law
++ the §1/§2 identity laws.
+-/
+theorem freeTensorHom_eq_freeComp_whiskering {X₁ Y₁ X₂ Y₂ : C}
+    (α : (X₁ ⟶ Y₁) →₀ k) (β : (X₂ ⟶ Y₂) →₀ k) :
+    freeTensorHom α β =
+      freeComp (freeTensorHom α (freeId X₂)) (freeTensorHom (freeId Y₁) β) := by
+  rw [← freeTensorHom_freeComp_interchange, freeComp_id_right, freeComp_id_left]
+
+/--
+**Identity tensor identity at the FreeKLinear level.** Direct restatement of
+`freeTensorHom_id_id` for the FreeKLinear identity morphism.
+-/
+theorem freeTensorHom_freeId_freeId (X Y : FreeKLinear C k) :
+    freeTensorHom (freeId (k := k) X.unwrap) (freeId (k := k) Y.unwrap) =
+      freeId (X.unwrap ⊗ Y.unwrap) :=
+  freeTensorHom_id_id (k := k) X.unwrap Y.unwrap
+
+/-! ### §6b Naturality + coherence laws — bilinearity-induction to C -/
+
+/--
+**Associator naturality**: `((α ⊗ₘ β) ⊗ₘ γ) ≫ (α_ Y₁ Y₂ Y₃).hom =
+(α_ X₁ X₂ X₃).hom ≫ (α ⊗ₘ (β ⊗ₘ γ))` in `FreeKLinear C k`. Triple
+bilinearity-induction on α, β, γ; the singleton-singleton-singleton case
+reduces via `freeTensorHom_single_single` + C's `associator_naturality` +
+multiplicative algebra on coefficients.
+-/
+theorem freeAssociator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C}
+    (α : (X₁ ⟶ Y₁) →₀ k) (β : (X₂ ⟶ Y₂) →₀ k) (γ : (X₃ ⟶ Y₃) →₀ k) :
+    freeComp (freeTensorHom (freeTensorHom α β) γ)
+             (Finsupp.single (α_ Y₁ Y₂ Y₃).hom (1 : k)) =
+      freeComp (Finsupp.single (α_ X₁ X₂ X₃).hom (1 : k))
+               (freeTensorHom α (freeTensorHom β γ)) := by
+  induction α using Finsupp.induction_linear with
+  | zero =>
+    simp [freeTensorHom_zero_left, freeComp_zero_left, freeComp_zero_right]
+  | add α₁ α₂ ih₁ ih₂ =>
+    simp only [freeTensorHom_add_left, freeComp_add_left, freeComp_add_right,
+               ih₁, ih₂]
+  | single f a =>
+    induction β using Finsupp.induction_linear with
+    | zero =>
+      simp [freeTensorHom_zero_right, freeTensorHom_zero_left,
+            freeComp_zero_left, freeComp_zero_right]
+    | add β₁ β₂ ih₁ ih₂ =>
+      simp only [freeTensorHom_add_right, freeTensorHom_add_left,
+                 freeComp_add_left, freeComp_add_right, ih₁, ih₂]
+    | single g b =>
+      induction γ using Finsupp.induction_linear with
+      | zero =>
+        simp [freeTensorHom_zero_right, freeComp_zero_left, freeComp_zero_right]
+      | add γ₁ γ₂ ih₁ ih₂ =>
+        simp only [freeTensorHom_add_right, freeComp_add_left,
+                   freeComp_add_right, ih₁, ih₂]
+      | single h c =>
+        rw [freeTensorHom_single_single, freeTensorHom_single_single,
+            freeTensorHom_single_single, freeTensorHom_single_single,
+            freeComp_single_single, freeComp_single_single,
+            MonoidalCategory.associator_naturality]
+        congr 1
+        ring
+
+/--
+**Left-unitor naturality**: `𝟙_ ◁ α ≫ (λ_ Y).hom = (λ_ X).hom ≫ α` in
+`FreeKLinear C k`. Single bilinearity-induction on α; the singleton case reduces
+via `freeTensorHom_single_single` + C's `leftUnitor_naturality` + algebra.
+-/
+theorem freeLeftUnitor_naturality {X Y : C} (α : (X ⟶ Y) →₀ k) :
+    freeComp (freeTensorHom (freeId (𝟙_ C)) α)
+             (Finsupp.single (λ_ Y).hom (1 : k)) =
+      freeComp (Finsupp.single (λ_ X).hom (1 : k)) α := by
+  induction α using Finsupp.induction_linear with
+  | zero =>
+    simp [freeTensorHom_zero_right, freeComp_zero_left, freeComp_zero_right]
+  | add α₁ α₂ ih₁ ih₂ =>
+    simp only [freeTensorHom_add_right, freeComp_add_left, freeComp_add_right,
+               ih₁, ih₂]
+  | single f a =>
+    unfold freeId
+    rw [freeTensorHom_single_single, freeComp_single_single,
+        freeComp_single_single, ← MonoidalCategory.leftUnitor_naturality,
+        ← MonoidalCategory.id_tensorHom]
+    congr 1
+    ring
+
+/--
+**Right-unitor naturality**: `α ▷ 𝟙_ ≫ (ρ_ Y).hom = (ρ_ X).hom ≫ α` in
+`FreeKLinear C k`. Single bilinearity-induction on α; the singleton case reduces
+via `freeTensorHom_single_single` + C's `rightUnitor_naturality` + algebra.
+-/
+theorem freeRightUnitor_naturality {X Y : C} (α : (X ⟶ Y) →₀ k) :
+    freeComp (freeTensorHom α (freeId (𝟙_ C)))
+             (Finsupp.single (ρ_ Y).hom (1 : k)) =
+      freeComp (Finsupp.single (ρ_ X).hom (1 : k)) α := by
+  induction α using Finsupp.induction_linear with
+  | zero =>
+    simp [freeTensorHom_zero_left, freeComp_zero_left, freeComp_zero_right]
+  | add α₁ α₂ ih₁ ih₂ =>
+    simp only [freeTensorHom_add_left, freeComp_add_left, freeComp_add_right,
+               ih₁, ih₂]
+  | single f a =>
+    unfold freeId
+    rw [freeTensorHom_single_single, freeComp_single_single,
+        freeComp_single_single, ← MonoidalCategory.rightUnitor_naturality,
+        ← MonoidalCategory.tensorHom_id]
+    congr 1
+    ring
+
+/--
+**Pentagon law** in `FreeKLinear C k`. Each piece of the pentagon involves
+only structural isomorphisms of C lifted as `Finsupp.single (·) 1`; the
+identity reduces to C's pentagon + multiplicative collapse `1 * 1 * 1 = 1`.
+-/
+theorem freePentagon (W X Y Z : C) :
+    freeComp (freeTensorHom (Finsupp.single (α_ W X Y).hom (1 : k)) (freeId Z))
+             (freeComp (Finsupp.single (α_ W (X ⊗ Y) Z).hom (1 : k))
+                       (freeTensorHom (freeId W)
+                         (Finsupp.single (α_ X Y Z).hom (1 : k)))) =
+      freeComp (Finsupp.single (α_ (W ⊗ X) Y Z).hom (1 : k))
+               (Finsupp.single (α_ W X (Y ⊗ Z)).hom (1 : k)) := by
+  unfold freeId
+  rw [freeTensorHom_single_single, freeTensorHom_single_single,
+      freeComp_single_single, freeComp_single_single, freeComp_single_single]
+  rw [MonoidalCategory.tensorHom_id, MonoidalCategory.id_tensorHom]
+  congr 1
+  · exact MonoidalCategory.pentagon W X Y Z
+  · ring
+
+/--
+**Triangle law** in `FreeKLinear C k`. The structural isos reduce to
+`Finsupp.single (·) 1`; identity follows from C's triangle + `mul_one`/`one_mul`.
+-/
+theorem freeTriangle (X Y : C) :
+    freeComp (Finsupp.single (α_ X (𝟙_ C) Y).hom (1 : k))
+             (freeTensorHom (freeId X) (Finsupp.single (λ_ Y).hom (1 : k))) =
+      freeTensorHom (Finsupp.single (ρ_ X).hom (1 : k)) (freeId Y) := by
+  unfold freeId
+  rw [freeTensorHom_single_single, freeTensorHom_single_single,
+      freeComp_single_single]
+  rw [MonoidalCategory.id_tensorHom, MonoidalCategory.tensorHom_id]
+  congr 1
+  · exact MonoidalCategory.triangle X Y
+  · ring
+
+/-! ### §6c Full `MonoidalCategory` instance -/
+
+/--
+**`MonoidalCategory (FreeKLinear C k)`**. The full monoidal-category structure
+on the free k-linear envelope of a monoidal category `C`. All ten coherence
+laws are discharged by §6a/§6b. The naturality laws + pentagon + triangle
+ultimately reduce to the corresponding laws in `C` via bilinearity-induction
+to the singleton level + multiplicative algebra on coefficients.
+
+Sub-wave 5.10b.3 deliverable. Completes the substrate for `Functor.Monoidal incl`
+in 5.10b.4 and Deligne ⊠ proper in 5.10c+.
+-/
+noncomputable instance instMonoidalCategory : MonoidalCategory (FreeKLinear C k) where
+  tensorHom_def α β := freeTensorHom_eq_freeComp_whiskering α β
+  id_tensorHom_id X Y := freeTensorHom_freeId_freeId X Y
+  tensorHom_comp_tensorHom f₁ f₂ g₁ g₂ :=
+    (freeTensorHom_freeComp_interchange f₁ g₁ f₂ g₂).symm
+  whiskerLeft_id X Y := freeTensorHom_id_id (k := k) X.unwrap Y.unwrap
+  id_whiskerRight X Y := freeTensorHom_id_id (k := k) X.unwrap Y.unwrap
+  associator_naturality f₁ f₂ f₃ := freeAssociator_naturality f₁ f₂ f₃
+  leftUnitor_naturality f := freeLeftUnitor_naturality f
+  rightUnitor_naturality f := freeRightUnitor_naturality f
+  pentagon W X Y Z := freePentagon W.unwrap X.unwrap Y.unwrap Z.unwrap
+  triangle X Y := freeTriangle X.unwrap Y.unwrap
+
+/-! ## §7 Inclusion functor monoidal structure (sub-wave 5.10b.4) -/
+
+/--
+Reduce `freeTensorHom (incl.map f) (freeId X')` to `incl.map (f ▷ X')`. The
+inclusion is `f ↦ Finsupp.single f 1`, so on basis elements this is
+`Finsupp.single (f ⊗ₘ 𝟙 X') 1 = Finsupp.single (f ▷ X') 1` by C's
+`tensorHom_id`.
+-/
+theorem freeTensorHom_incl_freeId {X Y X' : C} (f : X ⟶ Y) :
+    freeTensorHom (Finsupp.single f (1 : k)) (Finsupp.single (𝟙 X') 1) =
+      Finsupp.single (f ▷ X') (1 : k) := by
+  rw [freeTensorHom_single_single, MonoidalCategory.tensorHom_id, mul_one]
+
+/--
+Reduce `freeTensorHom (freeId X') (incl.map f)` to `incl.map (X' ◁ f)`. Dual to
+`freeTensorHom_incl_freeId` — uses C's `id_tensorHom`.
+-/
+theorem freeTensorHom_freeId_incl {X Y X' : C} (f : X ⟶ Y) :
+    freeTensorHom (Finsupp.single (𝟙 X') (1 : k)) (Finsupp.single f 1) =
+      Finsupp.single (X' ◁ f) (1 : k) := by
+  rw [freeTensorHom_single_single, MonoidalCategory.id_tensorHom, one_mul]
+
+/--
+**`Functor.LaxMonoidal incl`**: the inclusion `incl : C ⥤ FreeKLinear C k`
+preserves tensor on the nose (since `incl.obj X ⊗ incl.obj Y =
+of (X ⊗ Y) = incl.obj (X ⊗ Y)` definitionally), so the laxator `μ X Y` and
+unit map `ε` are identity morphisms. Naturality + associativity + unitality
+reduce to identity-composition + the fact that whiskering of singletons by
+`freeId` recovers C's whiskering via `tensorHom_id` / `id_tensorHom`.
+-/
+noncomputable instance instInclLaxMonoidal :
+    (incl (k := k) (C := C)).LaxMonoidal where
+  ε := 𝟙 _
+  μ _ _ := 𝟙 _
+  μ_natural_left {_ _} f X' := by
+    simp [instMonoidalCategoryStruct_whiskerRight, freeId, incl_map,
+          freeTensorHom_single_single, MonoidalCategory.tensorHom_id,
+          freeTensorObj]
+  μ_natural_right {_ _} X' f := by
+    simp [instMonoidalCategoryStruct_whiskerLeft, freeId, incl_map,
+          freeTensorHom_single_single, MonoidalCategory.id_tensorHom,
+          freeTensorObj]
+  associativity X Y Z := by
+    simp [freeTensorObj, incl_map]
+  left_unitality X := by
+    simp [freeTensorObj, incl_map]
+  right_unitality X := by
+    simp [freeTensorObj, incl_map]
+
+/--
+**`Functor.OplaxMonoidal incl`**: dual to `LaxMonoidal`; oplaxator `δ X Y`
+and counit `η` are identity morphisms (since tensor is preserved on the nose).
+-/
+noncomputable instance instInclOplaxMonoidal :
+    (incl (k := k) (C := C)).OplaxMonoidal where
+  η := 𝟙 _
+  δ _ _ := 𝟙 _
+  δ_natural_left {_ _} f X' := by
+    simp [instMonoidalCategoryStruct_whiskerRight, freeId, incl_map,
+          freeTensorHom_single_single, MonoidalCategory.tensorHom_id,
+          freeTensorObj]
+  δ_natural_right {_ _} X' f := by
+    simp [instMonoidalCategoryStruct_whiskerLeft, freeId, incl_map,
+          freeTensorHom_single_single, MonoidalCategory.id_tensorHom,
+          freeTensorObj]
+  oplax_associativity X Y Z := by
+    simp [freeTensorObj, incl_map]
+  oplax_left_unitality X := by
+    simp [freeTensorObj, incl_map]
+  oplax_right_unitality X := by
+    simp [freeTensorObj, incl_map]
+
+/--
+**`Functor.Monoidal incl`**: the inclusion is *strong* monoidal — `μ ≫ δ = 𝟙`
+and `δ ≫ μ = 𝟙` since both are `𝟙 ≫ 𝟙 = 𝟙`. Same for `ε ≫ η`/`η ≫ ε`.
+
+This is the substrate for transferring monoidal/braided structure from a
+k-linear category along the inclusion in Wave 1b.5.10c+ (Deligne ⊠ proper).
+-/
+noncomputable instance instInclMonoidal :
+    (incl (k := k) (C := C)).Monoidal where
+  ε_η := Category.id_comp _
+  η_ε := Category.id_comp _
+  μ_δ _ _ := Category.id_comp _
+  δ_μ _ _ := Category.id_comp _
+
+/-! ## §8 Stage 5.10b extended closure -/
 
 end FreeKLinear
 
@@ -281,5 +627,64 @@ theorem stage5_10b_partial_freeTensorHom_closure
    fun X Y => FreeKLinear.freeTensorHom_id_id X Y,
    fun {_ _ _ _ _ _} α β α' β' =>
      FreeKLinear.freeTensorHom_freeComp_interchange α β α' β'⟩
+
+/--
+**Stage 5.10b extended closure (full).** Bundles the morphism-side
+infrastructure (Session 19) + object-level structure + monoidal-category
+instance + inclusion's monoidal structure (Session 20) into a single
+substantive closure summary for the second sub-wave of Wave 1b.5.10:
+
+1. **Tensor of singletons reduces to C-tensor with multiplied coefficients.**
+   (From Session 19.)
+2. **Identity tensor identity equals tensor identity.** (From Session 19.)
+3. **Interchange law:** `freeTensorHom` and `freeComp` satisfy the bilinear
+   analog of C's `tensor_comp`. (From Session 19.)
+4. **`MonoidalCategoryStruct (FreeKLinear C k)` is inhabited.** (Session 20
+   sub-wave 5.10b.2.)
+5. **`MonoidalCategory (FreeKLinear C k)` is inhabited.** All ten coherence
+   laws hold; naturality + pentagon + triangle reduce to the corresponding
+   laws in C via bilinearity-induction at the singleton level. (Session 20
+   sub-wave 5.10b.3.)
+6. **`Functor.Monoidal incl` is inhabited.** The inclusion preserves tensor
+   on the nose: laxator/oplaxator/unit/counit are all identity morphisms;
+   strong-monoidality (μ ≫ δ = 𝟙 etc.) follows from `Category.id_comp`.
+   (Session 20 sub-wave 5.10b.4.)
+
+The full chain (5.10a free k-linear envelope + 5.10b free k-linear monoidal
+extension) provides the complete substrate for Wave 1b.5.10c+ (Deligne ⊠ as
+quotient of `FreeKLinear (C × D) k` by k-bilinear-relations setoid + transferred
+monoidal/braided structure).
+-/
+theorem stage5_10b_freeKLinear_monoidal_closure
+    (C : Type u) [Category.{v} C] [MonoidalCategory C]
+    (k : Type) [CommRing k] :
+    -- (1)–(3) inherited via stage5_10b_partial_freeTensorHom_closure
+    (∀ {X₁ Y₁ X₂ Y₂ : C} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) (a b : k),
+      FreeKLinear.freeTensorHom (Finsupp.single f a) (Finsupp.single g b) =
+        Finsupp.single (f ⊗ₘ g) (a * b)) ∧
+    (∀ (X Y : C),
+      FreeKLinear.freeTensorHom (FreeKLinear.freeId (k := k) X)
+                                (FreeKLinear.freeId (k := k) Y) =
+        FreeKLinear.freeId (X ⊗ Y)) ∧
+    (∀ {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C}
+       (α : (X₁ ⟶ Y₁) →₀ k) (β : (Y₁ ⟶ Z₁) →₀ k)
+       (α' : (X₂ ⟶ Y₂) →₀ k) (β' : (Y₂ ⟶ Z₂) →₀ k),
+      FreeKLinear.freeTensorHom (FreeKLinear.freeComp α β)
+                                (FreeKLinear.freeComp α' β') =
+        FreeKLinear.freeComp (FreeKLinear.freeTensorHom α α')
+                             (FreeKLinear.freeTensorHom β β')) ∧
+    -- (4) MonoidalCategoryStruct
+    Nonempty (MonoidalCategoryStruct (FreeKLinear C k)) ∧
+    -- (5) MonoidalCategory
+    Nonempty (MonoidalCategory (FreeKLinear C k)) ∧
+    -- (6) Functor.Monoidal incl
+    Nonempty ((FreeKLinear.incl (k := k) (C := C)).Monoidal) :=
+  ⟨fun {_ _ _ _} f g a b => FreeKLinear.freeTensorHom_single_single f g a b,
+   fun X Y => FreeKLinear.freeTensorHom_id_id X Y,
+   fun {_ _ _ _ _ _} α β α' β' =>
+     FreeKLinear.freeTensorHom_freeComp_interchange α β α' β',
+   ⟨FreeKLinear.instMonoidalCategoryStruct⟩,
+   ⟨FreeKLinear.instMonoidalCategory⟩,
+   ⟨FreeKLinear.instInclMonoidal⟩⟩
 
 end SKEFTHawking.SymTFTAudit
