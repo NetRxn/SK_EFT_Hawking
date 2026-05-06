@@ -241,6 +241,11 @@ import SKEFTHawking.SoftTheorems.Carrollian
 import SKEFTHawking.SoftTheorems.EmergentGraviton
 import SKEFTHawking.SoftTheorems.DissipativeNoGo
 import SKEFTHawking.SoftTheorems.NoiseFloorPrediction
+import SKEFTHawking.DoubleCopy.PetrovD
+import SKEFTHawking.DoubleCopy.SingleCopy
+import SKEFTHawking.DoubleCopy.WeylSpinor
+import SKEFTHawking.DoubleCopy.BCJNoGo
+import SKEFTHawking.DoubleCopy.PolaritonCrossBridge
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
