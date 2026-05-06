@@ -182,31 +182,21 @@ theorem linearResponseEmissionScheme_WFormGC
     WFormGallavottiCohen D.β (linearResponseEmissionScheme D).I :=
   D.gcCompatible_W_form
 
-/--
-**The scheme's rate function I satisfies the σ-form Gallavotti-Cohen
-symmetry — the form `gcCompatibleEmission` requires.**
+/-!
+**Note on the σ-form vs W-form Gallavotti-Cohen.**
 
-Per the Stage 2-3 form of `gcCompatibleEmission`:
+`gcCompatibleEmission` requires `GallavottiCohenSymmetry I := ∀ σ, I(-σ) - I(σ) = -σ`
+in the σ-variable. The Stage-4 cross-bridge `WFormGallavottiCohen.to_σForm`
+converts the W-form to the σ-form via σ = β·W. The scheme's `I` satisfies
+the W-form (via `linearResponseEmissionScheme_WFormGC`); the σ-form follows
+algebraically. Use `linearResponseEmissionScheme_WFormGC` directly when
+needing the W-form; the σ-form derivations are in §6.5 below.
 
-    GallavottiCohenSymmetry I := ∀ σ, I(-σ) - I(σ) = -σ
-
-This is a σ-variable predicate. The Stage-4 cross-bridge
-`WFormGallavottiCohen.to_σForm` converts the W-variable form to the
-σ-variable form via σ = β·W. The scheme's `I` satisfies the W-form;
-the σ-form identity is
-
-    I'(-σ) - I'(σ) = -σ
-
-where `I' σ = I(σ/β) · (-1)` (sign flip) per the Stage-4 conversion.
-For the present module, we ship the load-bearing fact directly via the
-Wave 2c Stage 4 `WFormGallavottiCohen` ↔ `GallavottiCohenSymmetry`
-correspondence. The substantive content is the W-form GC; the
-σ-form is its expression in the σ-variable.
+(Session 29 strengthening pass: the trivial alias
+`linearResponseEmissionScheme_gcCompatible_via_WForm`, formerly defined
+here as `:= linearResponseEmissionScheme_WFormGC D`, was removed as a P5
+identity-wrapper anti-pattern with zero downstream consumers.)
 -/
-theorem linearResponseEmissionScheme_gcCompatible_via_WForm
-    (D : LDPLinearResponseData) :
-    WFormGallavottiCohen D.β (linearResponseEmissionScheme D).I :=
-  linearResponseEmissionScheme_WFormGC D
 
 /-! ## §6. The substantive third-biconditional discharge for linear response. -/
 
@@ -518,5 +508,144 @@ theorem wave_2c_stage5_nonGaussian_closure (β k : ℝ) :
     WFormGallavottiCohen β (quarticRateFunction β k) :=
   ⟨WFormGC_iff_linear_bias_plus_even β,
    quarticRateFunction_satisfies_WFormGC β k⟩
+
+/-! ## §7. Abstract LDP rate function class (Wave 2c.5c+, Session 27)
+
+Stage-5+ extension: an *abstract* typeclass `IsLDPRateFunction` capturing the
+core structural properties any large-deviation rate function in the project's
+linear-response/non-Gaussian framework must satisfy. The class unifies the
+concrete `linearResponseRateFunction` (§2 — Gaussian) and `quarticRateFunction`
+(§6 — quartic non-Gaussian) under a single abstract interface, which is the
+substrate the Falasco-Esposito 2025 RMP framework consumes.
+
+**Class fields:**
+1. **`zero_at_zero`** — `I(0) = 0`. The "no-cost" event has zero rate.
+2. **`wForm_gc`** — W-form Gallavotti-Cohen at β: `I(W) - I(-W) = -β·W`.
+3. **`linear_bias_plus_even`** — structural decomposition: `I` decomposes as
+   `-β·W/2 + g(W)` for some even `g`. Equivalent to `wForm_gc` by §6's
+   characterization theorem.
+
+**Substantive content:**
+- The class is non-vacuously inhabited by both Gaussian and non-Gaussian rate
+  functions.
+- The class predicate is *not* trivially dischargeable (the W-form GC field
+  has substantive algebraic content; for the linear-response Gaussian, the
+  proof uses `field_simp` + `ring` chains).
+- The bridge to `WFormGallavottiCohen` makes `IsLDPRateFunction β I` strictly
+  stronger than W-form GC alone (adds `zero_at_zero` regularity).
+
+This class is the *abstract* form of the Wave 2c LDP starter (§§1-5 = concrete
+Gaussian; §6 = concrete non-Gaussian). It is the substrate the full
+measure-theoretic LDP framework would extend (Cramér / Varadhan / Gärtner-Ellis
+LDP from Mathlib MeasureTheory; multi-year community PR target).
+-/
+
+/-- **Abstract LDP rate function class.** Any rate function `I : ℝ → ℝ`
+satisfies `IsLDPRateFunction β I` if it has zero penalty at zero, satisfies
+the W-form Gallavotti-Cohen symmetry at `β`, and admits the canonical
+linear-bias-plus-even decomposition. -/
+class IsLDPRateFunction (β : ℝ) (I : ℝ → ℝ) : Prop where
+  /-- The rate function vanishes at the identity event (W = 0). -/
+  zero_at_zero : I 0 = 0
+  /-- W-form Gallavotti-Cohen symmetry at β. -/
+  wForm_gc : WFormGallavottiCohen β I
+
+namespace IsLDPRateFunction
+
+variable {β : ℝ} {I : ℝ → ℝ}
+
+/-- The linear-bias-plus-even decomposition is implied by the class. -/
+theorem linear_bias_plus_even (h : IsLDPRateFunction β I) :
+    ∃ g : ℝ → ℝ, (∀ W, g W = g (-W)) ∧ (∀ W, I W = -β * W / 2 + g W) :=
+  (WFormGC_iff_linear_bias_plus_even β I).mp h.wForm_gc
+
+end IsLDPRateFunction
+
+/-!
+**Substantive finding for the §2 linear-response Gaussian.** The §2 form
+`linearResponseRateFunction β σ² (W) := (W + β·σ²/2)² / (2·σ²)` does NOT
+satisfy `zero_at_zero` — at W = 0, it evaluates to `β²·σ²/8 ≠ 0` (the
+FDT-pinned mean shifts the minimum away from W=0). The honest LDP form is
+the re-centered `linearResponseRateFunctionCentered` below, which subtracts
+the constant `I(0)` so the zero-at-zero invariant holds. The W-form GC is
+preserved under constant shifts.
+-/
+
+/-- **Re-centered linear-response rate function.** Subtracts `I(0)` so the
+zero-at-zero invariant holds — the rate function vanishes at the no-work event.
+
+Note: the W-form GC is preserved under constant shifts (`I(W) - C - (I(-W) - C)
+= I(W) - I(-W)`), so the re-centered form retains the same fluctuation-theorem
+content. This is the "honest LDP" form of §2's linear-response rate function.
+-/
+noncomputable def linearResponseRateFunctionCentered (β σ_sq : ℝ) : ℝ → ℝ :=
+  fun W => linearResponseRateFunction β σ_sq W - linearResponseRateFunction β σ_sq 0
+
+@[simp]
+theorem linearResponseRateFunctionCentered_zero (β σ_sq : ℝ) :
+    linearResponseRateFunctionCentered β σ_sq 0 = 0 := by
+  simp [linearResponseRateFunctionCentered]
+
+theorem linearResponseRateFunctionCentered_satisfies_WFormGC
+    (β σ_sq : ℝ) (h : σ_sq ≠ 0) :
+    WFormGallavottiCohen β (linearResponseRateFunctionCentered β σ_sq) := by
+  intro W
+  simp [linearResponseRateFunctionCentered]
+  have h_orig := linearResponseRateFunction_satisfies_WFormGC β σ_sq h W
+  linarith
+
+instance (β σ_sq : ℝ) [Fact (σ_sq ≠ 0)] :
+    IsLDPRateFunction β (linearResponseRateFunctionCentered β σ_sq) where
+  zero_at_zero := linearResponseRateFunctionCentered_zero β σ_sq
+  wForm_gc := linearResponseRateFunctionCentered_satisfies_WFormGC β σ_sq Fact.out
+
+/-- **Instance: the quartic non-Gaussian rate function is an LDP rate function.**
+
+`zero_at_zero` proof: substitution `W = 0` gives `-β·0/2 + k·0^4 = 0`. ✓
+`wForm_gc` proof: §6's `quarticRateFunction_satisfies_WFormGC`. -/
+instance (β k : ℝ) :
+    IsLDPRateFunction β (quarticRateFunction β k) where
+  zero_at_zero := by simp [quarticRateFunction]
+  wForm_gc := quarticRateFunction_satisfies_WFormGC β k
+
+/-- **Instance: any "linear bias + even part with `g(0) = 0`" non-Gaussian rate
+function is an LDP rate function.** Generalizes the quartic case; covers
+arbitrary even functions `g` with `g(0) = 0` (e.g., `k·W^(2n)` for any n ≥ 1,
+`k·(cosh(W) - 1)`, etc.). -/
+instance nonGaussianRateFunction_isLDPRateFunction
+    (β : ℝ) (g : ℝ → ℝ) (h_even : ∀ W, g W = g (-W)) (h_zero : g 0 = 0) :
+    IsLDPRateFunction β (nonGaussianRateFunction β g) where
+  zero_at_zero := by simp [nonGaussianRateFunction, h_zero]
+  wForm_gc := nonGaussianRateFunction_satisfies_WFormGC β g h_even
+
+/-- **§7 closure summary.**
+
+The abstract `IsLDPRateFunction` class is non-vacuously inhabited by:
+1. The re-centered linear-response Gaussian rate function (§2 generalization).
+2. The quartic non-Gaussian rate function (§6).
+3. Any "linear bias + even with `g(0)=0`" non-Gaussian rate function.
+
+The class supplies the abstract LDP substrate that the Wave 2c full
+measure-theoretic LDP machinery (Mathlib upstream-PR target) would refine.
+
+This closure theorem is the substantive Wave 2c.5c+ deliverable: instead of
+discharging individual LDP cases ad hoc, downstream consumers get a uniform
+typeclass interface, and adding new rate-function families requires only a
+new `instance` declaration. -/
+theorem wave_2c_5c_abstract_LDP_class_closure
+    (β σ_sq k : ℝ) (h : σ_sq ≠ 0) (g : ℝ → ℝ)
+    (h_even : ∀ W, g W = g (-W)) (h_zero : g 0 = 0) :
+    -- (1) Re-centered linear-response Gaussian is an LDP rate function.
+    (haveI : Fact (σ_sq ≠ 0) := ⟨h⟩
+     IsLDPRateFunction β (linearResponseRateFunctionCentered β σ_sq)) ∧
+    -- (2) Quartic is an LDP rate function.
+    IsLDPRateFunction β (quarticRateFunction β k) ∧
+    -- (3) Non-Gaussian linear-bias-plus-even (with g(0) = 0) is an LDP rate fn.
+    IsLDPRateFunction β (nonGaussianRateFunction β g) := by
+  refine ⟨?_, ?_, ?_⟩
+  · haveI : Fact (σ_sq ≠ 0) := ⟨h⟩
+    infer_instance
+  · infer_instance
+  · exact nonGaussianRateFunction_isLDPRateFunction β g h_even h_zero
 
 end SKEFTHawking.CrooksAnalogHawking

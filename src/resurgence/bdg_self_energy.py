@@ -79,6 +79,22 @@ the *finite-T* SK-EFT extension, deferred to a future wave.
           closed form γ_n^(kin-disp) = γ_1·(-1)^(n-1)·C(2(n-1),n-1)/16^(n-1).
   Stage 4: γ_2^(loop) + γ_3-γ_5 systematic loop enumeration (Beliaev-
           Galitskii 1959 + modern higher-loop ERG references).
+          - Stage 4a (shipped Session 13): structural envelope theorem
+              (loop-bounded → full γ_n geometric).
+          - Stage 4b (parametric, shipped Session 14): rate preservation
+              via dispersion-factor loop-order-independence.
+          - Stage 4b explicit (DEFERRED, Session 28 scout 2026-05-06):
+              Explicit numerical γ_2^(loop) prefactor requires Shi-Griffin
+              Phys. Rep. 304 (1998) §3.4-3.5 Eqs. (3.86)-(3.95) cache.
+              TODO: fetch ShiGriffin1998 to
+                    Lit-Search/Phase-6n/primary-sources/ShiGriffin1998.pdf
+                    via human/institutional access (not on arXiv);
+                    then few-session SymPy task (Keldysh-Matsubara
+                    reconciliation + Hugenholtz-Pines counterterm surgery)
+                    extracts the coefficient.
+              NOT load-bearing for the substrate verdict — Stage 4a
+              envelope + Stage 4b rate preservation already give the
+              full asymptotic-growth result without the explicit prefactor.
   Stage 5: γ_6-γ_7 + Padé-Borel pipeline re-run + definitive verdict
           on Gevrey-1 vs geometric for the precise γ_n sequence.
 

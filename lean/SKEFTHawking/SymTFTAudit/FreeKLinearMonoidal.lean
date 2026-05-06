@@ -59,6 +59,9 @@ triple-bilinearity-induction proof pattern.
 -/
 
 import Mathlib.CategoryTheory.Monoidal.Category
+import Mathlib.CategoryTheory.Monoidal.Preadditive
+import Mathlib.CategoryTheory.Monoidal.Linear
+import Mathlib.CategoryTheory.Monoidal.Braided.Basic
 import SKEFTHawking.SymTFTAudit.FreeKLinearCategory
 
 namespace SKEFTHawking.SymTFTAudit
@@ -585,6 +588,195 @@ noncomputable instance instInclMonoidal :
   μ_δ _ _ := Category.id_comp _
   δ_μ _ _ := Category.id_comp _
 
+/-! ## §7a MonoidalPreadditive + MonoidalLinear (Wave 1b.5.10b extension) -/
+
+/--
+**`MonoidalPreadditive (FreeKLinear C k)`** — whiskering distributes over zero
+and addition. Each field reduces by the rfl-simp lemmas
+`instMonoidalCategoryStruct_whiskerLeft/whiskerRight` to a `freeTensorHom`-form
+that the §1 bilinearity helpers (`freeTensorHom_zero_left/right`,
+`freeTensorHom_add_left/right`) discharge directly.
+
+Substrate for downstream Wave 1b.5.10d.3 (`MonoidalPreadditive` on
+`DeligneTensor C D k` via uniform `Quot.inductionOn` descent) and Wave 1b.5.10f
+(braided lift) which both consume this instance.
+-/
+instance instMonoidalPreadditive : MonoidalPreadditive (FreeKLinear C k) where
+  whiskerLeft_zero {X _ _} := freeTensorHom_zero_right (freeId X.unwrap)
+  zero_whiskerRight {X _ _} := freeTensorHom_zero_left (freeId X.unwrap)
+  whiskerLeft_add {X _ _} f g := freeTensorHom_add_right (freeId X.unwrap) f g
+  add_whiskerRight {X _ _} f g := freeTensorHom_add_left f g (freeId X.unwrap)
+
+/--
+**`MonoidalLinear k (FreeKLinear C k)`** — whiskering distributes over scalar
+multiplication. Each field reduces by the rfl-simp lemmas to a `freeTensorHom`-
+form that the §1 scalar-bilinearity helpers (`freeTensorHom_smul_left/right`)
+discharge directly.
+
+Substrate for downstream Wave 1b.5.10d.3 (`MonoidalLinear` on
+`DeligneTensor C D k`) and Wave 1b.5.10f (braided lift), both of which require
+the underlying free k-linear monoidal envelope to be k-linear-monoidal.
+-/
+instance instMonoidalLinear : MonoidalLinear k (FreeKLinear C k) where
+  whiskerLeft_smul X _ _ r f := freeTensorHom_smul_right r (freeId X.unwrap) f
+  smul_whiskerRight r _ _ f X := freeTensorHom_smul_left r f (freeId X.unwrap)
+
+/-! ## §7b BraidedCategory (Wave 1b.5.10b braided extension, Session 25) -/
+
+section Braided
+variable [BraidedCategory C]
+
+/--
+**Braiding on `FreeKLinear C k`** when `C` is braided. The hom/inv components are
+singletons of C's braiding morphisms with coefficient 1.
+-/
+noncomputable def freeBraiding (X Y : FreeKLinear C k) :
+    freeTensorObj X Y ≅ freeTensorObj Y X where
+  hom := Finsupp.single (β_ X.unwrap Y.unwrap).hom (1 : k)
+  inv := Finsupp.single (β_ X.unwrap Y.unwrap).inv (1 : k)
+  hom_inv_id := by
+    show freeComp (Finsupp.single (β_ X.unwrap Y.unwrap).hom (1 : k))
+                  (Finsupp.single (β_ X.unwrap Y.unwrap).inv (1 : k)) =
+         freeId (X.unwrap ⊗ Y.unwrap)
+    rw [freeComp_single_single, Iso.hom_inv_id, mul_one]
+    rfl
+  inv_hom_id := by
+    show freeComp (Finsupp.single (β_ X.unwrap Y.unwrap).inv (1 : k))
+                  (Finsupp.single (β_ X.unwrap Y.unwrap).hom (1 : k)) =
+         freeId (Y.unwrap ⊗ X.unwrap)
+    rw [freeComp_single_single, Iso.inv_hom_id, mul_one]
+    rfl
+
+@[simp]
+theorem freeBraiding_hom (X Y : FreeKLinear C k) :
+    (freeBraiding (k := k) X Y).hom =
+      Finsupp.single (β_ X.unwrap Y.unwrap).hom (1 : k) := rfl
+
+@[simp]
+theorem freeBraiding_inv (X Y : FreeKLinear C k) :
+    (freeBraiding (k := k) X Y).inv =
+      Finsupp.single (β_ X.unwrap Y.unwrap).inv (1 : k) := rfl
+
+/--
+**Braiding naturality (right) — extracted as a top-level lemma.** Bilinearity-
+induction on `f` reduces to C's law at the singleton case. Extracted to keep the
+`BraidedCategory (FreeKLinear C k)` instance body small and avoid heartbeat
+overflow during typeclass elaboration.
+-/
+theorem freeBraiding_naturality_right_aux (X : FreeKLinear C k)
+    {Y Z : FreeKLinear C k} (f : Y ⟶ Z) :
+    freeComp (freeTensorHom (freeId X.unwrap) f)
+             (Finsupp.single (β_ X.unwrap Z.unwrap).hom (1 : k)) =
+    freeComp (Finsupp.single (β_ X.unwrap Y.unwrap).hom (1 : k))
+             (freeTensorHom f (freeId X.unwrap)) := by
+  induction f using Finsupp.induction_linear with
+  | zero =>
+    simp [freeTensorHom_zero_right, freeTensorHom_zero_left,
+          freeComp_zero_left, freeComp_zero_right]
+  | add f₁ f₂ ih₁ ih₂ =>
+    simp only [freeTensorHom_add_right, freeTensorHom_add_left,
+               freeComp_add_left, freeComp_add_right, ih₁, ih₂]
+  | single f a =>
+    simp only [freeId, freeTensorHom_single_single, freeComp_single_single,
+               one_mul, mul_one,
+               MonoidalCategory.id_tensorHom, MonoidalCategory.tensorHom_id]
+    rw [BraidedCategory.braiding_naturality_right (C := C) X.unwrap f]
+
+/-- **Braiding naturality (left)** — symmetric to `_right`. -/
+theorem freeBraiding_naturality_left_aux {X Y : FreeKLinear C k}
+    (f : X ⟶ Y) (Z : FreeKLinear C k) :
+    freeComp (freeTensorHom f (freeId Z.unwrap))
+             (Finsupp.single (β_ Y.unwrap Z.unwrap).hom (1 : k)) =
+    freeComp (Finsupp.single (β_ X.unwrap Z.unwrap).hom (1 : k))
+             (freeTensorHom (freeId Z.unwrap) f) := by
+  induction f using Finsupp.induction_linear with
+  | zero =>
+    simp [freeTensorHom_zero_right, freeTensorHom_zero_left,
+          freeComp_zero_left, freeComp_zero_right]
+  | add f₁ f₂ ih₁ ih₂ =>
+    simp only [freeTensorHom_add_right, freeTensorHom_add_left,
+               freeComp_add_left, freeComp_add_right, ih₁, ih₂]
+  | single f a =>
+    simp only [freeId, freeTensorHom_single_single, freeComp_single_single,
+               one_mul, mul_one,
+               MonoidalCategory.id_tensorHom, MonoidalCategory.tensorHom_id]
+    rw [BraidedCategory.braiding_naturality_left (C := C) f Z.unwrap]
+
+/--
+**Hexagon forward (extracted)** — at singleton level. Both sides of the hexagon
+reduce to a `Finsupp.single` of the matching C-level composition; C's hexagon
+discharges. Stated with right-associated `freeComp` to match the expected form
+in the `BraidedCategory` instance field after `dsimp`.
+-/
+theorem freeBraiding_hexagon_forward_aux (X Y Z : C) :
+    freeComp (Finsupp.single (α_ X Y Z).hom (1 : k))
+      (freeComp (Finsupp.single (β_ X (Y ⊗ Z)).hom (1 : k))
+                (Finsupp.single (α_ Y Z X).hom (1 : k))) =
+    freeComp (freeTensorHom (Finsupp.single (β_ X Y).hom (1 : k))
+                            (Finsupp.single (𝟙 Z) (1 : k)))
+      (freeComp (Finsupp.single (α_ Y X Z).hom (1 : k))
+                (freeTensorHom (Finsupp.single (𝟙 Y) (1 : k))
+                               (Finsupp.single (β_ X Z).hom (1 : k)))) := by
+  rw [freeTensorHom_single_single, freeTensorHom_single_single,
+      freeComp_single_single, freeComp_single_single,
+      freeComp_single_single, freeComp_single_single]
+  congr 1
+  · simp only [MonoidalCategory.id_tensorHom, MonoidalCategory.tensorHom_id]
+    have h := BraidedCategory.hexagon_forward (C := C) X Y Z
+    simp only [Category.assoc] at h
+    exact h
+  · ring
+
+/-- **Hexagon reverse (extracted).** Right-associated `freeComp` form. -/
+theorem freeBraiding_hexagon_reverse_aux (X Y Z : C) :
+    freeComp (Finsupp.single (α_ X Y Z).inv (1 : k))
+      (freeComp (Finsupp.single (β_ (X ⊗ Y) Z).hom (1 : k))
+                (Finsupp.single (α_ Z X Y).inv (1 : k))) =
+    freeComp (freeTensorHom (Finsupp.single (𝟙 X) (1 : k))
+                            (Finsupp.single (β_ Y Z).hom (1 : k)))
+      (freeComp (Finsupp.single (α_ X Z Y).inv (1 : k))
+                (freeTensorHom (Finsupp.single (β_ X Z).hom (1 : k))
+                               (Finsupp.single (𝟙 Y) (1 : k)))) := by
+  rw [freeTensorHom_single_single, freeTensorHom_single_single,
+      freeComp_single_single, freeComp_single_single,
+      freeComp_single_single, freeComp_single_single]
+  congr 1
+  · simp only [MonoidalCategory.id_tensorHom, MonoidalCategory.tensorHom_id]
+    have h := BraidedCategory.hexagon_reverse (C := C) X Y Z
+    simp only [Category.assoc] at h
+    exact h
+  · ring
+
+/--
+**`BraidedCategory (FreeKLinear C k)` instance** when `C` is braided.
+
+All four fields delegate to extracted top-level `_aux` lemmas. Keeping the
+instance body trivial avoids heartbeat overflow during typeclass elaboration
+(per Pipeline Invariant #10).
+-/
+noncomputable instance instBraidedCategory : BraidedCategory (FreeKLinear C k) where
+  braiding X Y := freeBraiding X Y
+  braiding_naturality_right X _ _ f :=
+    freeBraiding_naturality_right_aux (k := k) X f
+  braiding_naturality_left {_ _} f Z :=
+    freeBraiding_naturality_left_aux (k := k) f Z
+  hexagon_forward X Y Z := by
+    dsimp only [instMonoidalCategoryStruct_associator_hom,
+                instMonoidalCategoryStruct_whiskerLeft,
+                instMonoidalCategoryStruct_whiskerRight,
+                freeBraiding_hom, freeTensorObj_unwrap, freeId,
+                instMonoidalCategoryStruct_tensorObj]
+    exact freeBraiding_hexagon_forward_aux (k := k) X.unwrap Y.unwrap Z.unwrap
+  hexagon_reverse X Y Z := by
+    dsimp only [instMonoidalCategoryStruct_associator_inv,
+                instMonoidalCategoryStruct_whiskerLeft,
+                instMonoidalCategoryStruct_whiskerRight,
+                freeBraiding_hom, freeTensorObj_unwrap, freeId,
+                instMonoidalCategoryStruct_tensorObj]
+    exact freeBraiding_hexagon_reverse_aux (k := k) X.unwrap Y.unwrap Z.unwrap
+
+end Braided
+
 /-! ## §8 Stage 5.10b extended closure -/
 
 end FreeKLinear
@@ -678,13 +870,19 @@ theorem stage5_10b_freeKLinear_monoidal_closure
     -- (5) MonoidalCategory
     Nonempty (MonoidalCategory (FreeKLinear C k)) ∧
     -- (6) Functor.Monoidal incl
-    Nonempty ((FreeKLinear.incl (k := k) (C := C)).Monoidal) :=
+    Nonempty ((FreeKLinear.incl (k := k) (C := C)).Monoidal) ∧
+    -- (7) MonoidalPreadditive (Wave 1b.5.10b extension, Session 23)
+    Nonempty (MonoidalPreadditive (FreeKLinear C k)) ∧
+    -- (8) MonoidalLinear k (Wave 1b.5.10b extension, Session 23)
+    Nonempty (MonoidalLinear k (FreeKLinear C k)) :=
   ⟨fun {_ _ _ _} f g a b => FreeKLinear.freeTensorHom_single_single f g a b,
    fun X Y => FreeKLinear.freeTensorHom_id_id X Y,
    fun {_ _ _ _ _ _} α β α' β' =>
      FreeKLinear.freeTensorHom_freeComp_interchange α β α' β',
    ⟨FreeKLinear.instMonoidalCategoryStruct⟩,
    ⟨FreeKLinear.instMonoidalCategory⟩,
-   ⟨FreeKLinear.instInclMonoidal⟩⟩
+   ⟨FreeKLinear.instInclMonoidal⟩,
+   ⟨FreeKLinear.instMonoidalPreadditive⟩,
+   ⟨FreeKLinear.instMonoidalLinear⟩⟩
 
 end SKEFTHawking.SymTFTAudit
