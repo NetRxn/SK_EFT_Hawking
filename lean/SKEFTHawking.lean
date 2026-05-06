@@ -237,6 +237,10 @@ import SKEFTHawking.APSEta.RegimePartition
 import SKEFTHawking.ETH.Predicates
 import SKEFTHawking.ETH.ConcreteWitness
 import SKEFTHawking.SoftTheorems.Boostless
+import SKEFTHawking.SoftTheorems.Carrollian
+import SKEFTHawking.SoftTheorems.EmergentGraviton
+import SKEFTHawking.SoftTheorems.DissipativeNoGo
+import SKEFTHawking.SoftTheorems.NoiseFloorPrediction
 import SKEFTHawking.HigherOrderSK
 import SKEFTHawking.AcousticMetric
 import SKEFTHawking.SKDoubling
