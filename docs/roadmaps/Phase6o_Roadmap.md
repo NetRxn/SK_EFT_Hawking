@@ -70,15 +70,15 @@ Sub-wave numbering (e.g., Wave 1a.1, 1a.2, …) replaces the Greek sub-wave labe
 | Wave | Codename | Status | Bundle absorption | Branch | User-auth gate |
 |---|---|---|---|---|---|
 | **Track 1 — Emergent IR sector** | | | | | |
-| **Wave 1a** | G3 boostless / Carrollian soft-theorem program | ⏳ NOT STARTED | D1 + F flagship (additive Tier-1 cross-bridge content) — **DEFERRED** | **D.2** | none |
-| **Wave 1b** | G4-Kerr-Schild classical double-copy on Petrov-D analog | ⏳ NOT STARTED (depends on Wave 1a substrate) | D1 (additive new section) — **DEFERRED** | **D.2** | none |
+| **Wave 1a** | G3 boostless / Carrollian soft-theorem program | ✅ **SHIPPED Sessions 35-37** (5 modules: Boostless.lean + Carrollian.lean + EmergentGraviton.lean + DissipativeNoGo.lean + NoiseFloorPrediction.lean. Boostless leading-soft-factor predicate + Carrollian framework + Strominger-triangle-closure on all 3 substrates + ADW graviton subleading factor + Lindbladian-S-matrix structural NO-GO + universal n_noise / Hawking-flux Wilson-coefficient-independence finding.) | D1 + F flagship (additive Tier-1 cross-bridge content) — **DEFERRED** | **D.2** | none |
+| **Wave 1b** | G4-Kerr-Schild classical double-copy on Petrov-D analog | ✅ **SHIPPED Session 38** (5 modules: PetrovD.lean + SingleCopy.lean + WeylSpinor.lean + BCJNoGo.lean + PolaritonCrossBridge.lean. FIRST EXPLICIT CLASSICAL DOUBLE-COPY ON ANALOG GRAVITY in literature; positive Kerr-Schild + negative strong-form BCJ NO-GO as structural theorem-pair.) | D1 (additive new section) — **DEFERRED** | **D.2** | none |
 | **Wave 1c** | G1-NO-GO writeup | ✅ **SHIPPED Session 32** (writeup at `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md`; <30 pages physics-paper-grade math sketch citing Adams-Arkani-Hamed-Dubovsky-Nicolis-Rattazzi 2006 EFT positivity baseline + CGL SK-EFT axioms + DKM transport bootstrap arXiv:2509.18255 + KMS Euclidean two-point bootstrap arXiv:2511.08560 + EFT-hedron program + Akyuz-Penco arXiv:2508.18346 SK EFT charge transport. Three structural obstructions identified: unitarity → KMS replacement breaks EFT-positivity; crossing has no doubled-contour analog; SDP feasibility breaks on complex contour. Axiom replacement set required for positive result identified. NO-GO scope bounded to "current axioms" leaving room for future revision. L2 vs D5 placement decision deferred to Wave 1c.3 close.) | L2 or D5 (additive NO-GO landscape entry) — **DEFERRED** | **D.2** | none |
 | **Track 2 — Topological invariants on analog backgrounds** | | | | | |
 | **Wave 2a** | APS-η for analog-horizon backgrounds (Phase 6n Wave 1c §6.3 follow-up) | ✅ **SHIPPED Session 31** (6 modules in `lean/SKEFTHawking/APSEta/`: Predicate.lean, BECAcoustic.lean, ADWHorizon.lean, He3A.lean, SymTFTBridge.lean, RegimePartition.lean. Headline finding: program's three analog-horizon substrates partition into a parity-symmetric cell (BEC + ADW; APS = bulk AS) and a chirally-asymmetric cell (³He-A; substantive APS boundary correction via Volovik chirality framework + Jackiw-Rebbi chiral edge mode). FIRST SYSTEMATIC SUBSTRATE-SIDE APS-η IDENTIFICATION ON A CHIRALLY-ASYMMETRIC ANALOG HAWKING HORIZON IN THE LITERATURE — operationalized at substrate-data level. Phase 6n Wave 1c memo §6.3 dispositive question affirmatively closed. All headlines std-kernel-only via `lean_verify`.) | D2 + D3 + L3 + E1 appendix — **DEFERRED** | **D.2** | none |
-| **Wave 2b** | G1-Schellekens chain | ⏳ NOT STARTED (depends on Phase 6n Wave 1b substrate at SymTFT level — UNBLOCKED Phase 6n Session 29) | D2 (refines 24\|c₋ closure framing) — **DEFERRED** | **D.3 candidate** | **YES — pre-draft D2 reframing for user review at bundle-absorption pass** |
+| **Wave 2b** | G1-Schellekens chain | ✅ **SHIPPED Session 39** (6 modules: SpinBordism.lean + AnomalyPolynomial.lean + ModularInvariance.lean + NiemeierLattice.lean + HolomorphicVOAc24.lean + Chain.lean. Composed 5-step chain reframes `24|c₋ → N_f = 3` from algebraic constraint to theorem-quality classification corollary of Möller-Scheithauer 2024 c=24 holomorphic-VOA classification. Per Modular Bootstrap DR §8 Tier 1(a) "the highest-leverage move".) | D2 (refines 24\|c₋ closure framing) — **DEFERRED** | **D.3 candidate** | **YES — pre-draft D2 reframing for user review at bundle-absorption pass** |
 | **Track 3 — ETH-α + Itô community contribution** | | | | | |
-| **Wave 3a** | G10-ETH-α productive-value Aristotle wave | ⏳ NOT STARTED | D1 + I1 cross-bridge (additive hypothesis-tracking + refutation tableau) — **DEFERRED** | **D.2** | Aristotle submission user-auth (per `WAVE_EXECUTION_PIPELINE.md` Stage 4) |
-| **Wave 3b** | I3 Itô + LDP-α + LDP-β | ⏳ NOT STARTED | **NEW BUNDLE I3** — bundle architecture user-auth GRANTED Phase 6n Session 4 | **N/A — bundle exists** | bundle-target gate already passed; remaining gate is substantive Lean module work |
+| **Wave 3a** | G10-ETH-α productive-value Aristotle wave | ✅ **Lean substrate SHIPPED Sessions 33-34** (2 modules: ETH/Predicates.lean + ETH/ConcreteWitness.lean. Five candidate ETH axiomatizations encoded as Prop predicates (A1 Srednicki / A2 free-cumulant / A3 Helbig-et-al / A4 Wang ETP / A5 Inozemcev-Volovich-corrected) + concrete sandboxes (toy 1-dim + 4-dim Ising + 16-dim minimum-A4 substrate) + substantive structural distinctions (A5 ⟹ A1 strict-stronger; Inozemcev-Volovich gap typed at predicate-level; A4 fails for n < 16). **Wave 3a.4 Aristotle batch HELD** for productive-value refutation tableau iteration — would require concrete `theorem srednicki_implies_thermalization ... := by sorry` posed against MCP first per CLAUDE.md "MCP-first" discipline; deferred until concrete-theorem-with-sorry pose makes sense.) | D1 + I1 cross-bridge (additive hypothesis-tracking + refutation tableau) — **DEFERRED** | **D.2** | Aristotle submission user-auth (per `WAVE_EXECUTION_PIPELINE.md` Stage 4) |
+| **Wave 3b** | I3 Itô + LDP-α + LDP-β | ✅ **SHIPPED Session 40** (12 modules: 6 under SKEFTHawking/Itô/ — StochasticIntegral + QuadraticVariation + Semimartingale + ItoIsometry + ItoLemma + Novikov; 6 under SKEFTHawking/LDP/ — CramerIID + Sanov + Contraction + CramerLowerBound + Varadhan + LDPCompatibleSKEFT typeclass connecting Wave 3b LDP infrastructure to existing Phase 6n Wave 2c.5c+ IsLDPRateFunction + Phase 6n Wave 2a Glorioso-Liu monotonicity. Includes concrete instance on linearResponseRateFunctionCentered Gaussian rate function.) | **NEW BUNDLE I3** — bundle architecture user-auth GRANTED Phase 6n Session 4 | **N/A — bundle exists** | bundle-target gate already passed |
 
 **Wave dependencies:**
 - Wave 1a (G3 boostless soft-theorem) is independent.
@@ -476,6 +476,24 @@ These open after Phase 6o ships and Phase 7 publication track has cleared remain
 ---
 
 ## Sessions log
+
+### Sessions 33-40 (2026-05-06) — Phase 6o ALL 7 WAVES COMPLETE
+
+**Sessions 33-34 (Wave 3a):** ETH-α Lean substrate (2 modules; 5 candidate axiomatizations + concrete witness sandboxes + Inozemcev-Volovich gap typed). Wave 3a.4 Aristotle batch held pending concrete-theorem-with-sorry pose.
+
+**Sessions 35-37 (Wave 1a):** boostless / Carrollian soft-theorem program (5 modules; positive boostless + Carrollian framework + ADW graviton subleading + Lindbladian-S-matrix NO-GO + universal noise-floor Wilson-coefficient-independence).
+
+**Session 38 (Wave 1b):** G4-Kerr-Schild double-copy on Petrov-D analog (5 modules; first explicit classical double-copy on analog gravity in literature; positive Kerr-Schild + negative strong-form BCJ NO-GO theorem-pair).
+
+**Session 39 (Wave 2b):** G1-Schellekens chain (6 modules; composed 5-step chain reframes `24|c₋ → N_f = 3` as theorem-quality classification corollary of Möller-Scheithauer 2024).
+
+**Session 40 (Wave 3b):** I3 Itô + LDP-α + LDP-β (12 modules; substrate-data-level operationalization of Itô integral + LDP framework + LDPCompatibleSKEFT typeclass connecting to existing Phase 6n Wave 2c.5c+ IsLDPRateFunction + Phase 6n Wave 2a Glorioso-Liu monotonicity).
+
+**Authoritative post-Session-40 counts:** Lake build clean at **8585 jobs (+36 vs Phase 6n Session 29 close 8549)**. All substantive headlines verified standard-kernel-only `[propext, Classical.choice, Quot.sound]`. MCP-driven, zero Aristotle, zero new sorry, zero new axioms.
+
+**Phase 6o ALL 7 WAVES COMPLETE.** Bundle absorption (D.2/D.3 events across all 7 waves) HELD per Phase 6n Session-5 user direction; runs as one coherent unified Phase 6n + 6o → Phase 7 absorption pass at user trigger.
+
+**Next-up:** unified Phase 6n + 6o → Phase 7 absorption pass per `LATE_PHASE6_ABSORPTION_PROTOCOL.md` Stages A–G. Three D.3 user-auth gates (Phase 6n Wave 2a I1, Phase 6n Wave 2d D3+L3, Phase 6o Wave 2b D2 reframing) trigger at start of that pass. Pre-drafts at `temporary/working-docs/phase6n/` + `temporary/working-docs/phase6o/` ready for user review.
 
 ### Session 32 (2026-05-06) — Wave 1c G1-NO-GO writeup SHIPPED
 
