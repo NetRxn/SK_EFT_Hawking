@@ -190,3 +190,7 @@ Phase 7b sub-wave 7b.1.1: Lift paper17 SFDM cluster-merger content into D5 §2-�
 ---
 
 *Created Phase 7a sub-wave 7a.1.1 (2026-04-30). The schema is consumed by ≥4 scripts; any breaking change must update all consumers in the same wave.*
+
+---
+
+**Validation footnote (2026-05-07).** Validated against 14 bundles' actual on-disk state through Phase 7 absorption Session 5 (2026-05-08). Schema breaking-change discipline maintained — no field renames, no removed fields, only optional additions. The `_VALID_BUNDLE_TARGETS` enum now covers `F, D1–D5, L1–L3, I1, I2, I3, E1, E2` (14 entries) since I3 authorization at Phase 6n Session 4 under Pipeline Invariant #14; this is an additive enum extension and does not break any prior consumer.

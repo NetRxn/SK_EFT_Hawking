@@ -85,6 +85,22 @@ Interactive D3 force-directed provenance graph. See `docs/KNOWLEDGE_GRAPH.md` fo
 
 Key features: 4 layouts (Force/Radial/Hierarchy/Circle), 3 modes (Explore/Trace/Impact), Paper Focus, Logical Focus, shape-encoded semantic roles, Scaffolding toggle, physics controls, detail panel.
 
+### Readiness / QI _(Phase 5v Wave 4–5)_
+
+Per-paper × 11 readiness-gate matrix backed by `scripts/readiness_gates.py` and the `ReadinessGate` graph nodes. Each cell renders the gate's current state (`green` / `amber` / `red` / `needs-recheck`) with click-through to gate-specific evidence (Lean theorems, parameter provenance, production runs, review findings). Sibling QI sub-pane surfaces the QI register (`docs/QI_REGISTER.md`) with action items binned by severity. Driven by the `/api/readiness` SSE endpoint.
+
+### Chains _(Phase 5v)_
+
+Provenance chain inspector. Lists named provenance chains (paper claim → formula → Lean theorem → axioms / hypotheses → primary source) and lets a reviewer step through each link. Companion to the KG tab's Trace mode but linearised for sentence-level audit work.
+
+### Bundles _(Phase 6i Wave 7.5)_
+
+Per-publication-bundle readiness panel for the 13-bundle architecture (1 flagship F + 5 Tier 1 deep + 3 Tier 2 PRL + 2 Tier 3 infrastructure + 2 Tier 4 experimental). Sourced from `scripts/datastar_bundles.py`, which assembles per-bundle data from `docs/PAPER_DRAFT_MAPPING.md`, `papers/cluster_bundle_index.json` (cross-bundle ClaimCluster index), per-paper readiness output, and `docs/submission_state.json`. Each bundle card shows: cluster membership, source-freshness flag (`bundle_source_freshness`), Stage-13 reviewer-triple status, and a submission-event log. Submission events post via `/api/bundles/<bundle>/submission_event`.
+
+### Paper Provenance v2 _(Phase 5v Wave 10)_
+
+Sentence-level chain-of-backing inspector. Renders the prose of a chosen paper as a stream of `Sentence` nodes (`sentence:<paper>:<section_slug>:<sha8>`), each with its `BACKED_BY` chain to Formula / LeanTheorem / Parameter / PrimarySource / Hypothesis / AristotleRun / ProductionRun artifacts. Per-link verify buttons fire `/api/verification/event` with a `triggered_by: <sentence_id>` field so the audit trail records cross-tab provenance. Right-side drawer shows the `AuditEvent` log (`LOGGED_BY` edges) for the focused sentence, including `re_audit` chains across multiple agent runs. Cluster siblings (cross-paper `ClaimCluster` membership via `MEMBER_OF`) surface inline.
+
 ## API Endpoints
 
 | Endpoint | Method | Returns |
@@ -102,16 +118,25 @@ Node IDs containing colons (e.g., `param:Steinhauer.omega_perp`) are handled via
 ## Architecture
 
 ```
-Python registries          build_graph.py           Flask API          Dashboard
-(constants.py,        -->  (13 node types,    -->   /api/graph    -->  6 tabs
- provenance.py,             11 edge types,          /api/trace         Datastar
- citations.py,              ~1870 nodes,            /api/impact        D3 KG
- formulas.py,               ~990 edges)             /api/integrity     
- lean_deps.json,                |
- review_figures.py)             v
-                         PG+AGE (parallel)
-                         sk_eft graph on :5433
+Python registries +          build_graph.py           Flask API           Dashboard (Datastar)
+prose / audit JSON     -->   (25 node types,    -->   /api/graph     -->  Parameters
+(constants.py,               25 edge types —          /api/trace          Formulas
+ provenance.py,              see KNOWLEDGE_GRAPH.md   /api/impact         Proof Architecture
+ citations.py,               + scripts/build_graph.py /api/integrity      Paper Claims
+ formulas.py,                for authoritative list)  /api/readiness      Citation Registry
+ lean_deps.json,                                      /api/bundles/...    Knowledge Graph (D3)
+ papers/<p>/claims_review.json,                       /api/verification/  Readiness / QI
+ papers/<p>/audit_log.jsonl,                          /api/papers/<p>/    Chains
+ papers/<p>/prose_state.json,                              provenance     Paper Provenance v2
+ papers/claim_clusters.json,                                              Bundles
+ papers/cluster_bundle_index.json,                          |
+ docs/submission_state.json,                                v
+ review_figures.py)                                   PG+AGE (parallel
+                                                       rebuildable mirror;
+                                                       sk_eft graph on :5433)
 ```
+
+Schema spans Phase 1 / 1.5 base types + Phase 5v Wave 2a readiness-system types + Phase 5v Wave 10b sentence-level types (`Sentence`, `AuditEvent`, `ClaimCluster` + `BACKED_BY`, `LOGGED_BY`, `MEMBER_OF`). For the canonical type list always defer to `scripts/build_graph.py`. JSON-on-disk is the source of truth; PG+AGE is a rebuildable mirror, not a writer.
 
 ## Files
 
@@ -130,3 +155,25 @@ Python registries          build_graph.py           Flask API          Dashboard
 - `c` — confirm current parameter
 - `r` — reject current parameter
 - `f` — flag current parameter
+
+## Bundle readiness command _(2026-05-07)_
+
+```bash
+# Regenerates docs/BUNDLE_READINESS_HEATMAP.md (N-gate × 13-bundle matrix).
+uv run python scripts/bundle_readiness.py --heatmap
+
+# Full per-bundle pass (per-paper rollup + heatmap).
+uv run python scripts/bundle_readiness.py
+```
+
+The Bundles tab consumes the same per-bundle aggregation that this script writes, sourced through `scripts/datastar_bundles.py` (`PAPER_DRAFT_MAPPING.md` + `papers/cluster_bundle_index.json` + per-paper readiness output + `docs/submission_state.json`). The heatmap markdown is the human-readable mirror; the dashboard renders the live in-memory snapshot, so a bundle's state on disk and on screen agree as long as `scripts/bundle_readiness.py` has been run since the last gate-flipping change.
+
+## Sentence-level provenance _(Phase 5v Wave 10b–10c, 2026-05-07)_
+
+The Paper Provenance v2 tab and the Bundles tab both rely on a tightly enforced write-path discipline:
+
+- **Sole writer for prose / audit state:** `scripts/sentence_state.py` (CLI). All mutations to `papers/<paper>/prose_state.json` and `papers/<paper>/audit_log.jsonl` route through this command — no free-form JSON edits, no ad-hoc scripts. Schema validation, file-lock, and atomic writes are enforced at this chokepoint.
+- **Cross-tab change-bus:** verification actions on artifacts (parameters / citations / axioms / hypotheses / aristotle runs / production runs) flow through `scripts/verification_state.py` → `docs/verification_log.jsonl`. The Parameters tab's confirm/reject flow and Paper Provenance v2's per-link verify buttons are both delegates of this same library API. Each event annotates `meta.last_modified_explicit` on the corresponding KG node, propagating upstream so dependent `Sentence` nodes flip to `NEEDS_RECHECK` automatically when their backing artifacts re-verify.
+- **`triggered_by` for cross-tab provenance:** verification events fired from a sentence's per-link UI carry `triggered_by: <source_sentence_id>`, so the audit trail surfaces "fired from sentence X's chain inspector" vs an opaque "Parameter X confirmed". Audit-log diffs render an inline `⚲ self` (self-triggered) or `↗ <other_sid>` badge. Field is `null` for events from the Parameters tab or the CLI.
+- **Replay-canonical recovery:** the audit log is the canonical record. If a `cmd_mark` succeeds at the audit-event write but fails at the prose_state update (rare partial-failure), `scripts/sentence_state.py rebuild_prose_state --paper <id> --check` walks events in timestamp order and reports drift; `--write` atomically replaces `prose_state.json` with the rebuilt content.
+- **Retention policy:** `verification_log.jsonl` is append-only. `read_events` emits a one-shot WARN to stderr when the file exceeds 1 MB recommending `scripts/verification_state.py prune --keep-days 90` (default retention). `prune` refuses to operate without a retention criterion (`--keep-days N` / `--keep-records N` / `--before <ISO-8601>`). `--archive-to <path>` appends pruned events to a sidecar JSONL for recovery.

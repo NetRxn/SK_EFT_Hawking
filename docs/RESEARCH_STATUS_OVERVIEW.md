@@ -2,9 +2,11 @@
 
 **Purpose:** Plain-language, rigorous assessment of all proven chains, their implications, gaps, and strategic situation. Written for the principal investigator and future collaborators.
 
-**Last updated:** 2026-04-28-1200
+**Last updated:** 2026-05-07 (Phase 6e–6o + Phase 7 bundle architecture sync)
 
-**Current build:** **187 Lean modules, 4,385 theorems** (4,362 substantive + 23 placeholder), **1 axiom** (`gapped_interface_axiom`, eliminability: hard), **0 sorry project-wide**. 103 Python modules across 18+ sub-packages (now including `bh_thermodynamics/`, `bbn/`, `strong_cp/`, `equivalence_principle/`, `qec_holography/`, `confinement/`, `chiral_ssb/`, `cfl_color_flavor/`, `gravitational_waves/` alongside the earlier `dark_sector/`, `graphene/`, `fermi_hubbard/`, `adw/`, `wkb/`, `vestigial/`, `chirality/`, `fracton/`, `experimental/`), 75 test files (~3,250 fast-pass tests in 2.1 s + slow-marked extras), 128 figures, 52+ notebooks, 32 paper drafts (none submitted). 322 theorems Aristotle-proved across 44 runs (most recent batch ~Phase 6c.1 baseline; user-triggered).
+**Prior update:** 2026-04-28-1200
+
+**Current build:** **322 Lean modules, 5,855 theorems** (5,830 substantive + 25 placeholder), **1 axiom** (`gapped_interface_axiom`, eliminability: hard), **0 sorry project-wide**. 130 Python modules across 18+ sub-packages (now including `bh_thermodynamics/`, `bbn/`, `strong_cp/`, `equivalence_principle/`, `qec_holography/`, `confinement/`, `chiral_ssb/`, `cfl_color_flavor/`, `gravitational_waves/` alongside the earlier `dark_sector/`, `graphene/`, `fermi_hubbard/`, `adw/`, `wkb/`, `vestigial/`, `chirality/`, `fracton/`, `experimental/`), 99 test files (4,179 pytest cases — fast-pass in ~2 s + slow-marked extras), 154 figures, 87 notebooks, 42 paper drafts (none submitted). 322 theorems Aristotle-proved across 44 runs (most recent batch ~Phase 6c.1 baseline; user-triggered). **Synced 2026-05-07** — counts refreshed from `docs/counts.json` (2026-05-06).
 
 The **`gaussianSaddleAsymptotic` axiom was retired** in Phase 6a Wave 7 via a project-local Laplace-method derivation (`LaplaceMethod.lean`), bringing the axiom count from 2 → 1. **Default test-suite runtime dropped from 9 m 26 s to 2.14 s (264× speedup)** with the introduction of a `slow` pytest marker that defers the three Lean-walking suites (`test_extract_lean_deps`, `test_build_graph`, `test_graph_integrity`) to opt-in runs (`-m ''`). The seven Phase 6 papers (paper29, paper32, paper34, paper35, paper36, paper37, paper38, note_rt_ch_bounds) now drive their abstract / formalization-section counts entirely through `\input{counts.tex}` macros, eliminating count-literal drift permanently for those papers.
 
@@ -200,6 +202,24 @@ Recently completed (Phase 5p, April 8 2026):
 
 **Implication:** Emergent gravity has a clear structural map. The perturbative route is dead. Three alternative routes remain: non-perturbative instantons, vestigial gravity, and Fermi-point topology. The gauge erasure result is a clean selection rule: which forces can emerge from where.
 
+**Phase 6e extensions (May 2026): nonlinear emergent EFE through Einstein–Cartan torsion.** Six waves push beyond the linearized result of Phase 6a Wave 1 to a calibrated nonlinear emergent-gravity stack:
+- **W1 — Heat-kernel calibration (paper39):** computes Christensen–Duff Dirac heat-kernel coefficients `a₀`, `a₂`, `a₄` to identify Sakharov–Adler `G_N^Sak ↔ G_N^emerg` matching locus and the Planck-anchor reduction. (See `docs/roadmaps/Phase6e_Roadmap.md` and `PAPER_DRAFT_MAPPING.md` row.)
+- **W2 — Higher-curvature Stelle structure (paper40):** Stelle (α, β, γ) closed form at order `a₄`; observational ceiling check against published higher-curvature bounds.
+- **W3 — Nonlinear diff invariance (paper41):** Decision Gate E.3 path-(b) — invariance of the emergent action through `a₄`.
+- **W4 — Variational nonlinear EFE + multi-channel PPN (paper42):** trace-level emergent EFE with emergent-vs-matter `T_μν` decomposition; multi-channel PPN signatures.
+- **W5 — Cosmological constant in emergent form (paper42b):** Decision Gate E.4 — `Λ^emerg` microscopic prediction; reproduces the magnitude side of the CC problem (heat-kernel `a₀` does not produce `Λ_obs` naturally — D5 cross-bridge documents this as an explicit non-prediction of the emergent route, *not* as a dark-energy mechanism).
+- **W6 — Einstein–Cartan torsion (paper43):** EC torsion as the ADW spin current's nonlinear realization; **Kostelecký / Hughes–Drever bound passage formalized** (the torsion sector evades existing tests within the calibrated parameter window).
+
+**Phase 6f (May 2026): classical-GR algebraic backbone — first formalization in any proof assistant.** Phase 6f W1–W6 ship the substrate (no per-wave drafts; lifts into D3 §22.5 + I1 sidebar):
+- `Curvature.lean`, `EinsteinTensor.lean`, `EnergyConditions.lean` (already shipped Phase 6f W3 — first formalization of WEC/NEC/DEC/SEC in any proof assistant per audit §3E), `ExactSolutions.lean`, `ADM.lean`, `Tetrad.lean`.
+- `paper44_riemannian_connection` (Phase 6f W7 + W8, expanding session-by-session): Lorentzian metric typeclass + Levi-Civita Christoffel uniqueness + full coordinate Riemann + algebraic + differential Bianchi machinery + bundle-level Riemann curvature consumer of Bonn `IsCovariantDerivativeOn` + `mlieBracket` API. Mathlib-PR-quality target.
+- Deferred: `Curvature.lean` second-Bianchi at bundle scope (Phase 6f.1 / W3.1) sits behind upstream Mathlib Bonn-Massot ↔ Rothgang Levi-Civita branch (status unchanged from prior overview).
+
+**Phase 6g (May 2026): causal structure + singularity hypothesis bundles + Schwarzschild area-monotone + Kerr no-hair.** Bundled into D3 §23–§27 + I1 sidebar (W5 Cauchy):
+- W1–W4: causal structure axioms (Wald §8.1 + `realLineSpacetime` witness); Penrose hypothesis bundle with Riccati-focusing core + correctness-push-under-applicability biconditional; Hawking–Penrose SEC variant with cosmological-Λ-violates-SEC counterexample; classical area theorem for Schwarzschild monotone-mass + BH-entropy bridge.
+- W6: Kerr no-hair with sub-extremality `J² ≤ M⁴` + Schwarzschild specialization.
+- W5: Cauchy-problem well-posedness predicate framework (structural-Prop scope per Gate G.4 LMPP fallback; lifts to I1 as a methodology case study of the Mathlib-dependency-fallback discipline).
+
 ---
 
 ## Chain 6: Monte Carlo / Vestigial Gravity
@@ -316,6 +336,35 @@ Phase 6d summary: Track A (W1+W2+W3) shipped end-to-end; **Phase 6d is CLOSED**.
 - **Wave 3 (EnergyConditions.lean, 9 thms):** **First formalization of the four energy conditions (WEC / NEC / DEC / SEC) in any proof assistant** per Phase 6f audit §3E. WEC / NEC / DEC / SEC predicates on an abstract bilinear form + 3 chain implications + 5 counterexample witnesses (cosmological-Λ violates SEC; ghost scalar violates NEC; stiff-fluid violates DEC).
 - **Wave 3.1 / 6f.1 (Curvature.lean) — DEFERRED.** Stage-1 scoping doc filed; implementation deferred behind the upstream Mathlib Bonn-Massot ↔ Rothgang Levi-Civita branch.
 
+### Phase 6m — Dark-energy three-track closure (May 2026)
+
+After Phase 5y closed the Volovik q-theory family, three additional mechanism families remained outside the Phase 5y tested scope. Phase 6m closes all three at the Lean-formalization scope (4 Lean modules; absorbed into D5 §8–§12):
+- **Track A — Causal-set DE (`CausalSetDarkEnergy.lean`, 15 thms):** 3 NO-GO-R5 phenomenological prescriptions (Sorkin Models 1 + 2; BDG MYZ 2025) with 3 publishable structural caveats: GD-inapplicability across 4 prescriptions, Barrow-bound prescription dependence, BDG `σ_Λ` first-principles decomposition.
+- **Track B — Entropic-gravity DE (`EntropicGravityDarkEnergy.lean`):** **8/8 unanimous NO-GO** — *first complete-mechanism-family unanimous closure* in Phase 6m (Tsallis, Barrow, Odintsov, Verlinde, ...; r_d-independent Bayesian thresholds all exceeding Jeffreys-decisive). Phase 7 absorption Session 5 honestly downgraded one Bayes-factor claim to mixed-threshold information-criteria (Luciano arXiv:2506.03019 Table II → ΔAIC = +4.7 for Barrow, AIC-only) preserving 3-of-4 as genuinely Bayes-decisive plus a fourth as AIC-disfavoured; first-mechanism-family closure survives via mixed-threshold aggregator.
+- **Track C — Jacobson-thermo-GR DE (`JacobsonThermoGRDarkEnergy.lean`):** highest-survival 5+ R5 survivors. **M3 EGJ f(R) Exp+ArcTanh strongest CLEARED-R5 of any track** per Plaza-Kraiselburd ΔAIC ≃ ΔBIC ≳ 20; Hu-Sawicki NO-GO chameleon at `b ≈ 0.21 ≫ 100×` Solar-System bound; M4 Pure Lovelock NO-GO at 1σ-box edge; M8 KSS conditional path-(a); Phase 6e Sakharov 4-criterion cross-bridge: ³He-A satisfies + FLS BEC violates condition (ii); unimodular escape route admits 5/6 except KSS.
+- **Wave 4 (`DarkSectorClassificationExtension.lean`):** unified Phase 6m **7-class GD taxonomy + 3-tier applicability gradient** + per-track class assignments + cross-class instantiation witnesses to Phase 5y orthogonality principle. This integrative structural framework is the most reusable Phase 6m output.
+
+**Phase 6o W4a verdict (B) — biconditional retired, depletion field load-bearing (2026-05-08):** The proposed biconditional `Sakharov 4-criterion ↔ Λ_J = Λ_HK` was *retired* in favour of one-way implication + a load-bearing `depletion : ℝ` field on a strict-extension `SakharovExtended` structure. Volovik–Jannes 2012 §VII argues only forward; FLS BEC arXiv:1103.4841 + 1204.3039 Eq. 71 confirms forward but does not test (⇐). Five new substantive theorems (depletion-factor unconditional + ³He-A unit + FLS strict bounds + asymmetry + composed honest-one-way closure) shipped in `JacobsonThermoGRDarkEnergy.lean §8`; D5 §11 prose addendum + bibliography block shipped. The verdict is honest one-way implication and is documented as such in D5.
+
+### Phase 6n — Mathematical substrate for the SK-EFT / SymTFT / horizon-thermodynamic / LDP layers (April–May 2026)
+
+Phase 6n is the program's *mathematical substrate* push — no per-wave drafts, all output is sourceless Lean lifts into existing bundles (D1, D2, D3, D4, D5, I1, I2, I3, L3) per the D.4 protocol. Key deliverables:
+- **Glorioso–Liu axiomatic skeleton (`GloriosoLiu/Axioms.lean`, `GloriosoLiu/SecondOrderProjection.lean`):** `SKEFTAxioms` typeclass; **FirstOrderKMS reframed as the first-order projection of the CGL / CGL II / Glorioso–Liu II 2017 axiomatic skeleton.** The 4-of-9 / 5-of-9 component partition (the original "Aristotle counterexample" finding from Phase 1) is now *recovered as a theorem* of first-order projection, not as a hand-tuned axiom strengthening. D.3 user-auth gate at I1 §3 (substantive reframing) + D3 + L3 (cross-ref-only upgrades).
+- **Quantum Crooks NO-GO (Perarnau-Llobet) — including ℂ-form higher-dim NO-GO:** `QuantumCrooks/SKEFTConnection.lean` + `ReservoirCoupled.lean` + `HigherDimensional.lean` (block-diagonal embedding into `Matrix (Sum (Fin 2) T) ℂ`; substantive higher-dim ℂ no-go) + `ConcreteComplex.lean`. NO-GO landscape entry into D5 §13.
+- **LDP linear-response framework (`CrooksAnalogHawking/LDPLinearResponse.lean`, `SKEFTGallavottiCohen.lean`):** `LDPLinearResponseData` + W-form Gallavotti–Cohen + abstract `IsLDPRateFunction` typeclass with `zero_at_zero` + `wForm_gc` fields + `linear_bias_plus_even` derived theorem (re-centered form; substantive finding: §2 Gaussian rate fn NOT zero at zero — re-centered Gaussian instance ships); 3 `IsLDPRateFunction` instances (linear-response centered + quartic + non-Gaussian); third Sakharov-style biconditional substrate-level discharge in W-form + σ-form.
+- **Sakharov ↔ horizon-Crooks unification at horizon temperature `β_H` (`SKEFTHorizonBridge.lean`):** 6 theorems linking Wave 2a `SKEFTAxioms` machinery to Wave 2c `HorizonDetailedBalance` at `β_H`; `HorizonCrooks` predicate + biconditional with Sakharov 4-criterion + **explicit Verlinde-vs-Jacobson distinction at every claim site** (Phase 6m R2/R3 EGDE 8/8 NO-GO referenced as discriminator). D.3 user-auth gate at D3 §17.5 (NEW substantive subsection) + L3 (NEW "Substrate-class context" paragraph; ³He-A satisfies all 4 / FLS BEC violates condition (ii) — two classifications independent program axes).
+- **SymTFT audit substrate (~100 substantive thms):** `SymTFTAudit/WittClass.lean` (`WittInvariant := ZMod 24` quotient + `AddMonoidHom`); `DrinfeldCenter.lean` (DMNO 2010 Witt-equivalence via Mathlib `Center.braidedCategoryCenter`; braided strengthening to genuine `IsBraidedEquivalence` in S16); `FreeKLinearCategory.lean` + `FreeKLinearMonoidal.lean` (free k-linear envelope `MonoidalCategory` + `Braided` + `MonoidalPreadditive` + `Linear k`); `DeligneTensor.lean` (`DeligneTensor C D k` as quotient with `Preadditive` + `Linear k` + `MonoidalCategory` + `Braided` + `CategoricalCcStructure` with `witt_additive` theorem); `PseudoUnitary.lean` (DMNO 2010 Theorem 5.2 substrate at restricted-form layer + strict refinement breaking trivial-witness equivalence); `CrossBridges.lean` (3 substantive cross-bridges). SymTFT audit verdict: **PartiallyApplicable**.
+
+### Phase 6o — Soft theorems / classical double-copy / APS-η / Schellekens / ETH refutation / Itô + LDP (May 2026)
+
+Phase 6o is also research-only (no per-wave drafts; all output is sourceless lifts):
+- **G2 Boostless / Carrollian soft theorems (`SoftTheorems/Boostless.lean`, `Carrollian.lean`, `EmergentGraviton.lean`, `DissipativeNoGo.lean`, `NoiseFloorPrediction.lean`):** Strominger triangle closure on BEC + ADW + polariton; ADW graviton subleading factor; Lindbladian S-matrix axiomatization NO-GO joining D4's NO-GO landscape; **universal `n_noise / Hawking-flux` Wilson-coefficient-independence** as the most concrete near-term Phase 7 deliverable per On-Shell Methods DR §7.2 (cross-bridge into E1).
+- **G4 Kerr–Schild double-copy on Petrov-D analog gravity (`KerrSchild/PetrovD.lean`, `SingleCopy.lean`, `WeylSpinor.lean`, `BCJNoGo.lean`, `PolaritonCrossBridge.lean`):** **First explicit classical double-copy on analog gravity in the literature.** Petrov-D verification on the draining-bathtub acoustic metric; Maxwell field on flat Minkowski via `A_μ = φ k_μ`; type-D vacuum reformulation `Ψ_ABCD = Φ_(AB Φ_CD) / S`; **3-obstruction strong-form BCJ NO-GO theorem-pair** (Lorentz-frame breaking + gauge-erasure abelianization + UV-vs-IR scale-ordering mismatch — productive-value structural negative result); polariton ringdown signature cross-bridge into E1.
+- **G3 APS-η for analog horizons (`APSEta/Predicate.lean` + `BECAcoustic.lean` + `ADWHorizon.lean` + `He3A.lean` + `SymTFTBridge.lean` + `RegimePartition.lean`):** **First systematic substrate-side APS-η identification on a chirally-asymmetric analog Hawking horizon in the literature.** Parity-symmetric BEC + ADW give η = 0; ³He-A carries substantively non-zero η (Jackiw–Rebbi chiral edge mode at moving domain wall; ³He-A unique non-degenerate cell). Witten–Yonekura `η/16 mod 1 ↔ ℤ₁₆` cross-bridge via `WittClass`.
+- **G1 Schellekens chain reframing (`Schellekens/SpinBordism.lean`, `AnomalyPolynomial.lean`, `ModularInvariance.lean`, `NiemeierLattice.lean`, `HolomorphicVOAc24.lean`, `Chain.lean`):** Per Modular Bootstrap DR §8 Tier 1(a) "the highest-leverage move": **`24 | c₋ → N_f ≡ 0 mod 3` reframed as a theorem-quality classification corollary of Möller–Scheithauer 2024 c=24 holomorphic-VOA classification.** D.3 user-auth gate at D2 §2 (substantive reframing) + L2 (paired-splash update preserving the central "Three Generations" claim) + F §5.
+- **G10 ETH-α refutation tableau (`ETH/Predicates.lean` + `ConcreteWitness.lean` + `RefutationTableau.lean`):** 5 candidate `ETHAnsatz` predicates (A1 Srednicki / A2 free-cumulant Pappalardi–Foini–Kurchan / A3 Helbig–Hofmann–Thomale–Greiter Theory-of-ETH / A4 Wang Eigenstate-Typicality-Principle / A5 Inozemcev–Volovich-corrected); 4-site Ising chain witness substrate; **3 concrete refutation theorems** (T1 Inozemcev–Volovich gap via β-equation contradiction; T2 ETP doesn't imply Srednicki via n=16 zero-mean failure; T3 free-cumulant doesn't imply Srednicki via n=1 sum=1 violation). MCP-CLOSED — Aristotle batch deferred (zero residue after MCP).
+- **I3 Itô + LDP-α + LDP-β substrate (12 modules):** `Itô/StochasticIntegral.lean` + `QuadraticVariation.lean` + `Semimartingale.lean` + `ItoIsometry.lean` + `ItoLemma.lean` + `Novikov.lean` + `LDP/CramerIID.lean` + `Sanov.lean` + `Contraction.lean` + `CramerLowerBound.lean` + `Varadhan.lean` + `LDPCompatibleSKEFT.lean` typeclass connecting to Phase 6n W2c `IsLDPRateFunction` + Phase 6n W2a Glorioso–Liu monotonicity. **I3 is the new 14th publication target** (added Phase 6n Session 4 commit `a72ba68` under Pipeline Invariant #14 user-auth) — sourceless bundle initial lift via D.4 protocol, analogous to I2's lean-tensor-categories framing.
+
 ### Implications of the Phase 6 push as a whole
 
 - **Falsifications, not just consistency checks.** The Phase 6 waves run the project's emergent-physics machinery against published constraints and frequently produce ratios in the 10¹⁴ range (GW170817 vs vestigial graviton) or order-of-magnitude tensions (combined-DE-mechanisms × 240) that are either decisive or force model-commitment.
@@ -324,6 +373,76 @@ Phase 6d summary: Track A (W1+W2+W3) shipped end-to-end; **Phase 6d is CLOSED**.
 - **Holographic + QEC cross-bridges.** Phase 6c W4 + W5 wire the Wave 3 horizon-MTC substrate to QEC and RT/CH frameworks via tracked-hypothesis correctness-pushes; this is the project's first formal contact with holographic structural bounds.
 - **QCD strong coupling closed.** Phase 6d closes the chirality + confinement + CFL triangle at the generator level, with GMOR PDG-verified to ~1 part in 10⁴.
 - **Energy-conditions formalization.** Phase 6f W3 is a foundational contribution — the four energy conditions and their counterexamples are now machine-checked at the abstract-bilinear-form level and available as substrate for any future emergent-gravity / vestigial-EOS / dark-energy work.
+- **Phase 6m three-track dark-energy closure.** Causal-set, entropic-gravity, and Jacobson-thermo-GR DE families closed at Lean-formalization scope; Track B is the **first complete-mechanism-family unanimous NO-GO** in Phase 6m; Track C surfaces the strongest *positive* survivor (M3 EGJ f(R) Exp+ArcTanh CLEARED-R5 with ΔAIC ≃ ΔBIC ≳ 20). The 7-class GD taxonomy + 3-tier applicability gradient is the most reusable integrative framework. Phase 6o W4a verdict (B) honestly retired the proposed Sakharov 4-criterion ↔ Λ_J = Λ_HK biconditional in favour of one-way implication + load-bearing depletion field.
+- **Phase 6n mathematical substrate.** Glorioso–Liu axiomatic skeleton makes FirstOrderKMS a *theorem* of first-order projection (not an axiom strengthening); Quantum Crooks NO-GO including ℂ-form higher-dim no-go formally added to the program's NO-GO landscape; LDP linear-response framework with W-form Gallavotti–Cohen + abstract `IsLDPRateFunction` typeclass; Sakharov ↔ horizon-Crooks unification at `β_H` with explicit Verlinde-vs-Jacobson distinction; SymTFT audit substrate (DrinfeldCenter via DMNO 2010 Witt-equivalence with braided strengthening; FreeKLinear monoidal; DeligneTensor as quotient; PseudoUnitary at restricted-form layer).
+- **Phase 6o substrate-side firsts.** *First* explicit classical double-copy on analog gravity (G4 Kerr–Schild Petrov-D); *first* systematic substrate-side APS-η identification on a chirally-asymmetric analog Hawking horizon (G3); G1 Schellekens-chain reframing of `24 | c₋ → N_f ≡ 0 mod 3` as a Möller–Scheithauer 2024 corollary; G10 productive-value ETH-α refutation tableau; G2 boostless / Carrollian soft theorems with universal noise-floor / Hawking-flux Wilson-coefficient-independence as a near-term experimental deliverable.
+
+---
+
+## Architectural Scope (Phase 6m post-closure)
+
+The three-layer architecture (Layer 1 lattice / Layer 2 SK-EFT / Layer 3 emergent SM + GR) is now scope-explicit for what it predicts and what it does *not* predict, with the boundary tightened by Phases 5y, 6m, and 6o W4a.
+
+**In scope (Layer 3):** SM + GR-sector emergent physics under the tested mechanisms — ADW tetrad condensation, gauge erasure, fracton hydrodynamics, and vestigial gravity (with the Phase 6e nonlinear-EFE + Einstein–Cartan torsion calibration).
+
+**Out of scope (under tested mechanisms — *not* a global no-go):**
+- *Volovik-family dark-energy* (Phase 5y closure): four q-theory realizations + vestigial-gravity EOS + second-sound graviton all returned NO-GO for DESI DR2 compatibility; structural obstruction is Gibbs–Duhem locking `w_vac ≡ −1` for any single-scalar self-tuning emergent-vacuum framework.
+- *Causal-set DE* (Phase 6m Track A): NO-GO across 4 prescriptions with 3 publishable structural caveats.
+- *Entropic-gravity DE* (Phase 6m Track B): **first complete-mechanism-family unanimous NO-GO** with mixed-threshold aggregator (3 Bayes-decisive + 1 AIC-disfavoured after Phase 7 absorption Session 5 honesty correction).
+- *Jacobson-thermo-GR DE* (Phase 6m Track C): mostly NO-GO; **highest-survival 5+ R5 survivors** including M3 EGJ f(R) Exp+ArcTanh as the strongest CLEARED-R5 of any track. (Track C is the *positive* track within Phase 6m.)
+- *Cosmological-constant magnitude prediction from heat-kernel `a₀`* (Phase 6e W5 / D5 §7): the emergent route does **not** predict `Λ_obs` naturally — explicit non-prediction documented as a CC-channel constraint.
+
+**Implication:** Phase 6m / 6o close the *negative* boundary on the program's predictive scope while preserving Track C's positive survivors. The architecture is no weaker for SM + GR; it is *more honest* about which dark-energy mechanism families are accessible from condensed-matter substrates and which are not. Full scope-ledger is in `docs/ARCHITECTURE_SCOPE.md`.
+
+---
+
+## Paper Strategy / Phase 7 Bundle Architecture
+
+Phase 6i Wave 7 introduced a fourteen-target publication architecture that supersedes the per-wave-paper convention for *external* communication. The 32+ existing per-wave drafts in `papers/paperN_*/` continue as internal source material that is *consolidated* into the bundles defined here. Authoritative documents:
+- `docs/PAPER_STRATEGY.md` — canonical bundle architecture (1 flagship + 5 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure + 2 Tier 4 experimental = 14)
+- `docs/PAPER_DRAFT_MAPPING.md` — per-existing-draft → per-bundle assignment table
+- `docs/BUNDLE_LIFT_PROCEDURE.md` — frozen 14-step lift workflow (Stages I1, I2, D1–D5, L1–L3, F, E1, E2)
+- `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` — frozen Stage A–G protocol for absorbing future Phase 6X waves into already-drafted bundles (D.1/D.2/D.3/D.4 branches)
+- `docs/BUNDLE_READINESS_HEATMAP.md` — auto-generated N-gate × 14-bundle Stage-13 readiness summary
+
+**The 14 publication targets:**
+
+| Tier | Bundle | Title (working) |
+|---|---|---|
+| 0 | **F** | Fluid-Based Approaches to Fundamental Physics — A Formally Verified Survey |
+| 1 | **D1** | Formally Verified Analog Hawking Radiation Across Three Platforms |
+| 1 | **D2** | Anomaly Constraints on Standard-Model Particle Content |
+| 1 | **D3** | Emergent Gravity from Microscopy — Linearized EFE through BH Thermodynamics |
+| 1 | **D4** | Topological Quantum Computation — First Machine-Verified Foundations |
+| 1 | **D5** | The Dark Sector under Substrate Constraints |
+| 2 | **L1** | GW170817 Falsifies the Vestigial-Second-Sound Graviton Identification by 7 × 10¹⁴ |
+| 2 | **L2** | Three Generations of SM Fermions from Modular Invariance — Machine-Checked |
+| 2 | **L3** | Bardeen–Carter–Hawking Four Laws Partitioned by Regime in an Emergent-Gravity Substrate |
+| 3 | **I1** | Formal Verification at Scale in Theoretical Physics — Methodology with Worked Cases |
+| 3 | **I2** | Verified Statistical Estimators and the lean-tensor-categories Library |
+| 3 | **I3** | **Verified Stochastic Calculus for Mathlib4 — Stochastic Integral, Quadratic Variation, Itô's Lemma, and LDP Foundations** (added Phase 6n Session 4 under Pipeline Invariant #14 user-auth) |
+| 4 | **E1** | Falsifiable Hawking Spectrum for Polariton Microcavities at Paris-LKB Device Parameters |
+| 4 | **E2** | Falsifiable Hawking Noise Spectrum for Graphene Dirac-Fluid at Dean-Kim-Lucas Device Parameters |
+
+**Readiness:** As of 2026-05-06, **all 14 bundles are GREEN** in `BUNDLE_READINESS_HEATMAP.md` (0 blockers; F has 1 minor advisory and D3 has 1 minor advisory; all others have no open findings). I3 is the youngest bundle and reached GREEN at Phase 6n Session 4 close.
+
+**Phase 7 absorption status (as of 2026-05-08):** Phase 7 (Phase 6n + 6o → bundles) absorption is in flight across multiple sessions:
+- **Session 1 (2026-05-06):** Stages A→E COMPLETE + all 3 D.3 user-auth gates COMPLETE (GATE 1 I1 §3 Glorioso–Liu projection reframing; GATE 2 D3 §17.5 + L3 Sakharov ↔ horizon-Crooks unification; GATE 3 D2 §2.7 + L2 paired-splash Schellekens-chain reframing).
+- **Sessions 2–5:** Stage F reviewer triple per affected bundle; multi-bundle parallelism; mid-session BLOCKER remediation; primary-source PDF caching (213 → 264; 0 missing); citation cache pipeline (Pipeline Invariant #11) caught one fabricated `BelgiornoCacciatori2024` registry entry; Bayes-factor → information-criteria honesty correction (Luciano arXiv:2506.03019); paper_provenance LaTeX-comment-strip fix.
+- **Phase 6o W4a Track 4 (Session 5):** authorized + shipped; honest one-way verdict (B) with load-bearing `depletion : ℝ` field on `SakharovExtended`.
+
+**Pipeline additions in Phase 7:**
+- **Primary-source WebFetch + verify is now project policy** (user-authorized 2026-05-08, "do that kind of thing from now on"): when a numerical magnitude in a Lean constant / paper claim / registry entry is registry-anchored or unverified, fetch the primary-source PDF (WebFetch + pdfminer.six fallback) and verify before relying.
+- **Pipeline Invariant #11 — Citation cache pipeline:** every cited primary source has a cached PDF + extracted-content snapshot under `papers/.citation_cache/`; fabricated bibitem entries (hallucinated DOIs, hallucinated titles, hallucinated authors) are caught at promotion time. Several "et al."-only / hallucinated-title artifacts were repaired across Phase 7 absorption.
+- **Pipeline Invariant #14 — Bundle assignment mandatory at Stage 1:** every wave's Stage 1 scoping doc must declare its target bundle(s); user-auth required to spawn a *new* bundle target (I3 was authorized this way Phase 6n Session 4).
+
+---
+
+## Axioms
+
+The project's axiom count is **1**: `gapped_interface_axiom` (`SPTClassification.lean`, eliminability: hard) — the 4+1D gapped interface conjecture. This is the single load-bearing assumption in the entire codebase that is not a standard textbook result.
+
+**Retired:** `gaussianSaddleAsymptotic` was retired in Phase 6a Wave 7 (`LaplaceMethod.lean`) via a project-local Laplace-method derivation; `BHEntropyMicroscopic §2`'s `verlindeEntropy_SU2k` is now a concrete Laplace-saddle-limit construction, and the corresponding axiom is now a theorem.
 
 ---
 
@@ -442,7 +561,15 @@ External constraints:
 **Phase 6c (cosmology + holography — strong CP, EP, QEC, RT/CH):** `StrongCPTopologicalDE` (W1), `EquivalencePrinciple` (W3), `QECHolographyBridge` (W4), `RTCasiniHuertaBounds` (W5). W2 (`EWBaryogenesisChiralityWall`) outstanding.
 **Phase 6d (QCD strong coupling — Track A CLOSED):** `CenterSymmetryConfinement` (W1), `ChiralSSB_QCD` (W2), `CFLChiralLagrangian` (W3).
 **Phase 6f (energy conditions + curvature):** `EnergyConditions` (W3). `Curvature` (W3.1 / 6f.1) deferred behind upstream Mathlib Bonn-Massot ↔ Rothgang Levi-Civita branch.
+**Phase 6e (nonlinear emergent EFE through Einstein–Cartan torsion — May 2026):** heat-kernel calibration (W1), higher-curvature Stelle (W2), nonlinear diff invariance (W3), variational nonlinear EFE + multi-channel PPN (W4), CC in emergent form (W5), Einstein–Cartan torsion + Kostelecký / Hughes–Drever bound passage (W6). See `docs/roadmaps/Phase6e_Roadmap.md` and per-paper drafts (paper39–paper43).
+**Phase 6f W1–W6 (classical-GR algebraic backbone — May 2026):** `Curvature`, `EinsteinTensor`, `EnergyConditions` (= 6f W3 above), `ExactSolutions`, `ADM`, `Tetrad` — *first formalization in any proof assistant* per audit §3E. Plus `paper44_riemannian_connection` (Phase 6f W7 + W8): Lorentzian metric typeclass + Levi-Civita Christoffel uniqueness + bundle-level Riemann curvature consumer of Bonn `IsCovariantDerivativeOn`. Lifts into D3 §22.5 + I1 sidebar.
+**Phase 6g (causal structure + singularity bundles + area-monotone + Kerr no-hair — May 2026):** causal structure axioms (W1), Penrose hypothesis bundle (W2), Hawking–Penrose SEC variant + counterexamples (W3), Schwarzschild area-monotone + BH-entropy bridge (W4), Cauchy-problem well-posedness predicate framework (W5; structural-Prop scope per Gate G.4 LMPP fallback), Kerr no-hair with sub-extremality (W6). Lifts into D3 §23–§27 + I1 sidebar.
+**Phase 6m (dark-energy three-track closure — May 2026):** `CausalSetDarkEnergy` (Track A), `EntropicGravityDarkEnergy` (Track B — first complete-mechanism-family unanimous NO-GO), `JacobsonThermoGRDarkEnergy` (Track C — highest-survival 5+ R5; M3 EGJ f(R) Exp+ArcTanh strongest CLEARED-R5; Phase 6o W4a verdict-(B) Sakharov-extension shipped here), `DarkSectorClassificationExtension` (Wave 4 — 7-class GD taxonomy + 3-tier applicability gradient).
+**Phase 6n (mathematical substrate — April–May 2026, no per-wave drafts; sourceless Lean lifts into D1/D2/D3/D4/D5/I1/I2/I3/L3):** `GloriosoLiu/Axioms` + `SecondOrderProjection`; `QuantumCrooks/SKEFTConnection` + `ReservoirCoupled` + `HigherDimensional` + `ConcreteComplex`; `CrooksAnalogHawking/LDPLinearResponse` + `HorizonDetailedBalance` + `SKEFTGallavottiCohen` (with abstract `IsLDPRateFunction` typeclass + 3 instances); `SKEFTHorizonBridge` (Sakharov ↔ horizon-Crooks at `β_H` with Verlinde-vs-Jacobson distinction); `SymTFTAudit/WittClass` + `DrinfeldCenter` (DMNO 2010 + braided strengthening) + `FreeKLinearCategory` + `FreeKLinearMonoidal` + `DeligneTensor` + `PseudoUnitary` + `CrossBridges`.
+**Phase 6o (soft theorems / classical double-copy / APS-η / Schellekens / ETH refutation / Itô + LDP — May 2026, no per-wave drafts):** `SoftTheorems/Boostless` + `Carrollian` + `EmergentGraviton` + `DissipativeNoGo` + `NoiseFloorPrediction`; `KerrSchild/PetrovD` + `SingleCopy` + `WeylSpinor` + `BCJNoGo` + `PolaritonCrossBridge` (first explicit classical double-copy on analog gravity); `APSEta/Predicate` + `BECAcoustic` + `ADWHorizon` + `He3A` + `SymTFTBridge` + `RegimePartition` (first systematic substrate-side APS-η identification on a chirally-asymmetric analog Hawking horizon); `Schellekens/SpinBordism` + `AnomalyPolynomial` + `ModularInvariance` + `NiemeierLattice` + `HolomorphicVOAc24` + `Chain`; `ETH/Predicates` + `ConcreteWitness` + `RefutationTableau`; **I3 Itô + LDP substrate** — `Itô/StochasticIntegral` + `QuadraticVariation` + `Semimartingale` + `ItoIsometry` + `ItoLemma` + `Novikov` + `LDP/CramerIID` + `Sanov` + `Contraction` + `CramerLowerBound` + `Varadhan` + `LDPCompatibleSKEFT` typeclass.
 **Infrastructure (cross-phase):** `ExtractDeps` (environment-walker for axiom-dependency extraction; see Pipeline Invariant #10 exception clause).
+
+> **Note (2026-05-07):** Module-count and theorem-count totals in this document's header reflect the 2026-04-28 snapshot. Phase 6e/6f/6g/6m/6n/6o additions have *not* been propagated into the count macros at the top of this file (other agents handle that pass). The narrative additions above are the substantive update; see `SK_EFT_Hawking_Inventory.md` and `BUNDLE_READINESS_HEATMAP.md` for current authoritative counts.
 
 ---
 

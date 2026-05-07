@@ -4,7 +4,7 @@
 
 This project asks a deep question: can the mathematics of exotic states of matter — superfluids, topological insulators, quantum spin liquids — also describe the fundamental forces and particles of the universe, and where exactly does that idea break down? We investigate this with a combination of numerical computation, formal mathematical proof-checking in Lean 4, and automated theorem proving, producing experimentally testable predictions along the way.
 
-Everything is machine-checked in the Lean 4 proof assistant. The library currently contains roughly **3,950 theorems across 166 modules with zero sorry project-wide** and only **one remaining axiom** (the 4+1D gapped-interface conjecture — a standard open question in lattice QFT, not a project-originated assumption).
+Everything is machine-checked in the Lean 4 proof assistant. The library currently contains **5,855 theorems across 322 modules with zero sorry project-wide** and only **one remaining axiom** (the 4+1D gapped-interface conjecture — a standard open question in lattice QFT, not a project-originated assumption).
 
 ---
 
@@ -97,22 +97,45 @@ Every paper is run through an adversarial-reviewer agent (Opus, fresh context) b
 
 ---
 
-## By the Numbers (2026-04-24 snapshot)
+## What's New Since You Last Looked (2026-04-24 → 2026-05-07 snapshot)
+
+Since the 2026-04-24 snapshot, the program has shipped Phase 6 e/f/g/m/n/o substantive content + Phase 7a paper-bundle architecture freeze + Phase 7 absorption Sessions 1–5 closing all 14 bundle stages 9/10/13 to GREEN. Notable additions:
+
+- **Classical-GR algebraic backbone in Lean** — first in any proof assistant. Phase 6f shipped Riemann, Einstein tensor, energy conditions with explicit counterexample witnesses, exact-solutions catalog, ADM 3+1, tetrad formalism, Lorentzian metric typeclass, and bundle-level Levi-Civita uniqueness via the substantive Koszul-bilinear-form argument from Wald §3.1.
+- **Heat-kernel chain through $a_4$ + Stelle higher-curvature + Einstein–Cartan torsion bound passage** — Phase 6e closes the "GR from condensate" derivation chain. Four Decision Gates passed. Cosmological-constant prediction overshoots observation by ~$10^{122}$ at Planck-natural cutoff (CC problem reproduced, not solved — the honest verdict).
+- **Phase 6m three-track dark-energy reframing** — combined with Phase 5y, all four major dark-energy mechanism families have now been formally exercised. Layer-3 dark-energy outside the architecture's tested predictive scope under all tested mechanisms.
+- **First complete-mechanism-family NO-GO closure (Phase 6m Track B Entropic-gravity DE, 8/8 unanimous).** Phase 7 absorption Session 5 honest correction: Tsallis/Barrow figures relabeled as AIC/BIC-based (not Bayes-factor); aggregator updated to mixed-threshold form.
+- **APS-η for analog horizons (Phase 6o W2a)** — first systematic substrate-side identification on a chirally-asymmetric analog Hawking horizon. Two-cell partition: parity-symmetric (BEC + ADW; APS = bulk AS) vs chirally-asymmetric (³He-A; substantive boundary correction).
+- **First explicit classical Kerr-Schild double-copy on analog gravity in literature** (Phase 6o W1b) — positive Kerr-Schild + 3-obstruction strong-form BCJ NO-GO theorem-pair on Petrov-D acoustic metric.
+- **Schellekens chain reframing of $24 | c_-$ → $N_{\rm gen} \equiv 0 \pmod 3$** (Phase 6o W2b) — reframed as theorem-quality classification corollary of Möller-Scheithauer 2024 c=24 holomorphic-VOA classification. Modular Bootstrap DR §8 Tier 1(a) "highest-leverage move."
+- **Sakharov 4-criterion ↔ $\Lambda_J = \Lambda_{\rm HK}$ biconditional retired** in favor of honest one-way implication + load-bearing depletion factor (Phase 6o W4a verdict B). Per Volovik-Jannes 2012 §VII forward-only argument + FLS BEC primary-source verification.
+- **Paper-bundle architecture frozen** (Phase 7a). 14 publication targets: 1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure (I3 added Phase 6n Session 4 under Pipeline Invariant #14) + 2 Tier-4 experimental. 14-step BUNDLE_LIFT_PROCEDURE + LATE_PHASE6_ABSORPTION_PROTOCOL frozen.
+- **All 14 bundles 🟢 GREEN** at Phase 7 absorption Session-5 close. The L1 → arXiv-voucher gate is the only remaining program-level blocker for the first three Tier-2 PRL splashes.
+- **Standing primary-source WebFetch + verify policy** adopted at Session 5 ("do that kind of thing from now on"). Caught Luciano AIC vs Bayes methodology mismatch + BelgiornoCacciatori2024 fabricated-bibitem entry. 51 PDF caches → 0 missing.
+
+The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, awaiting submission gates per the dependency graph."
+
+---
+
+## By the Numbers (2026-05-06 snapshot)
 
 | Metric | Count |
 |--------|-------|
-| Lean theorems | ~3,950 (3,840 substantive + 110 placeholder) |
-| Lean modules | 166 |
+| Lean theorems | 5,855 (5,830 substantive + 25 placeholder) |
+| Lean modules | 322 |
 | Axioms | 1 (4+1D gapped-interface conjecture) |
 | Sorry gaps | 0 project-wide |
-| Python test files | 58 (2,800+ tests) |
-| Python source modules | 66+ across 14 sub-packages including `dark_sector/`, `fermi_hubbard/`, `graphene/` (all new since Phase 5s) |
-| Publication-quality figures | 110 |
-| Paper drafts | 18 |
-| Computational notebooks | 52 (technical + stakeholder pairs) |
-| Aristotle prover runs | 44 |
-| Deep research files | Phase-1 through Phase-5z under `Lit-Search/` |
+| Python test files | 99 (4,179 pytest cases) |
+| Python source modules | 130 across 18+ sub-packages including `dark_sector/`, `fermi_hubbard/`, `graphene/` (all new since Phase 5s) |
+| Publication-quality figures | 154 |
+| Paper drafts | 42 |
+| Computational notebooks | 87 (technical + stakeholder pairs) |
+| Aristotle prover runs | 44 (322 theorems proved) |
+| Publication-bundle targets | 14 (1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure + 2 Tier-4 experimental) |
+| Deep research files | Phase-1 through Phase-6o under `Lit-Search/` |
 | Stakeholder docs | 29+ under `docs/stakeholder/` |
+
+*Synced 2026-05-07 — counts refreshed from `docs/counts.json` (2026-05-06).*
 
 ### Formal Verification Firsts
 
@@ -152,7 +175,16 @@ Every paper is run through an adversarial-reviewer agent (Opus, fresh context) b
 | What each phase accomplished | `docs/stakeholder/Phase{N}_Implications.md` |
 | Strategic positioning per phase | `docs/stakeholder/Phase{N}_Strategic_Positioning.md` |
 | Phase 5y closure (2026-04-23) | [`Phase5y_Closure_Summary.md`](Phase5y_Closure_Summary.md) + four cross-phase impact memos |
-| Predictive-scope boundary | [`docs/ARCHITECTURE_SCOPE.md`](../ARCHITECTURE_SCOPE.md) — Layer 3 scope: SM+GR in, dark sector out under tested mechanisms |
+| Phase 6e (heat-kernel through Einstein–Cartan) | [`Phase6e_Implications.md`](Phase6e_Implications.md) + [`Phase6e_Strategic_Positioning.md`](Phase6e_Strategic_Positioning.md) |
+| Phase 6f (classical-GR algebraic backbone) | [`Phase6f_Implications.md`](Phase6f_Implications.md) + [`Phase6f_Strategic_Positioning.md`](Phase6f_Strategic_Positioning.md) |
+| Phase 6g (singularities + area + no-hair) | [`Phase6g_Implications.md`](Phase6g_Implications.md) + [`Phase6g_Strategic_Positioning.md`](Phase6g_Strategic_Positioning.md) |
+| Phase 6m (three-track dark-energy NO-GO closure) | [`Phase6m_Implications.md`](Phase6m_Implications.md) + [`Phase6m_Strategic_Positioning.md`](Phase6m_Strategic_Positioning.md) |
+| Phase 6n (math-substrate compression) | [`Phase6n_Implications.md`](Phase6n_Implications.md) + [`Phase6n_Strategic_Positioning.md`](Phase6n_Strategic_Positioning.md) |
+| Phase 6o (substrate-findings + first-mover discoveries) | [`Phase6o_Implications.md`](Phase6o_Implications.md) + [`Phase6o_Strategic_Positioning.md`](Phase6o_Strategic_Positioning.md) |
+| Phase 7 (paper-bundle architecture + absorption Sessions 1–5) | [`Phase7_Implications.md`](Phase7_Implications.md) + [`Phase7_Strategic_Positioning.md`](Phase7_Strategic_Positioning.md) |
+| Predictive-scope boundary | [`docs/ARCHITECTURE_SCOPE.md`](../ARCHITECTURE_SCOPE.md) — Layer 3 scope: SM+GR in, dark sector out under all tested mechanisms |
+| Bundle readiness heatmap | [`docs/BUNDLE_READINESS_HEATMAP.md`](../BUNDLE_READINESS_HEATMAP.md) — auto-regenerated per-bundle Stage-9/10/13 status |
+| Paper strategy + per-draft mapping | [`docs/PAPER_STRATEGY.md`](../PAPER_STRATEGY.md) + [`docs/PAPER_DRAFT_MAPPING.md`](../PAPER_DRAFT_MAPPING.md) |
 | The broader research program | [`Feasibility Study`](../Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
 | Critical assessment | [`Consolidated Critical Review v3`](../Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
 | What's next | [`docs/roadmaps/Phase6_Deferred_Targets.md`](../roadmaps/Phase6_Deferred_Targets.md) and [`Phase6_Roadmap.md`](../roadmaps/Phase6_Roadmap.md) |
@@ -160,4 +192,4 @@ Every paper is run through an adversarial-reviewer agent (Opus, fresh context) b
 
 ---
 
-*Last updated: 2026-04-24-1439.*
+*Last updated: 2026-05-07.*

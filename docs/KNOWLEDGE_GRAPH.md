@@ -49,6 +49,8 @@ Lean declarations are extracted via a meta-programming script (`lean/SKEFTHawkin
 
 ## Graph Schema
 
+> **Authoritative source.** The lists below are descriptive. For the authoritative node and edge taxonomy always defer to `scripts/build_graph.py` (`SHAPE_MAP` for node types; the per-edge-extractor functions for edge types). If you spot drift between this doc and the script, trust the script.
+
 ### Node Types (25 — Phase 1 + 1.5 + 5v Wave 2a + 5v Wave 10b)
 
 **Phase 1 / 1.5 base types (14):**
@@ -242,8 +244,12 @@ Click any node to open the detail panel (right side). Shows:
 | `/api/graph/impact/<node_id>` | GET | `{impacted_node_ids, impacted_edge_indices}` |
 | `/api/graph/integrity` | GET | Integrity report (orphans, conflicts, chains) |
 | `/api/readiness` | GET | Per-paper readiness gate data (Phase 5v Wave 5) |
+| `/api/bundles/<bundle>/review` | GET | Per-bundle Stage-13 review payload (Phase 6i Wave 7.5) |
+| `/api/bundles/<bundle>/submission_event` | POST | Append a submission event for the bundle to `docs/submission_state.json` (Phase 6i Wave 7.5) |
 
 Node IDs contain colons (e.g., `param:Steinhauer.omega_perp`). The Flask routes use `<path:node_id>` to handle this.
+
+Per-bundle aggregation is currently rendered server-side by `scripts/datastar_bundles.py` (see `load_bundles_summary`) rather than via a dedicated `/api/bundles` index endpoint; the Bundles tab consumes the rendered partial directly.
 
 ## Command-Line Tools
 
@@ -342,3 +348,8 @@ Integrated as CHECK 16 in the validation suite. Conflicts are hard failures; orp
 - Export to JSON-LD / W3C PROV
 - CI-style automated monitoring
 - Notebook integration: `from src.core.graph import trace_claim`
+
+### Phase 4+ (2026-05-07): Readiness state machine, sentence-level audit, paper-bundle architecture
+- **Phase 5v Wave 2 / 4** — `ReadinessGate` node type + 11-gate per-paper state machine; `IMPACTED_BY` propagation flips dependent gates to `needs-recheck` when an upstream artifact changes; surfaced via `/api/readiness` (Wave 5).
+- **Phase 5v Wave 10b / 10c** — sentence-level prose audit: `Sentence` / `AuditEvent` / `ClaimCluster` node types + `BACKED_BY` / `LOGGED_BY` / `MEMBER_OF` edges; cross-tab change-bus through `scripts/verification_state.py`; `triggered_by` field for cross-tab provenance; replay-canonical recovery via `scripts/sentence_state.py rebuild_prose_state`.
+- **Phase 6i Wave 7** — paper-bundle architecture wired into the graph: `papers/cluster_bundle_index.json` indexes each `ClaimCluster` to its target publication bundle; cluster-level `MEMBER_OF` edges carry bundle-aware semantics; review-finding flow (`FLAGS` / `SUPERSEDES`) is routed through `docs/review_finding_supersessions.json` so adversarial-review supersession across bundle lifts is preserved.

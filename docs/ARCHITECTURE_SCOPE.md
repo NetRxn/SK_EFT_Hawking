@@ -168,6 +168,62 @@ energy scope statement, sharpened from the Phase 5y formulation:
 
 ---
 
+## Phase 6n / 6o math-substrate sub-phases (2026-05-04 → 2026-05-08)
+
+Substrate-side findings; **no scope change**. The architectural-scope
+boundary established by Phase 5y + Phase 6m is preserved. Phase 6n + 6o
+sharpen the substrate operationalization at several integration points:
+
+- **SymTFT PartiallyApplicable verdict** (Phase 6n.β): SymTFT
+  audit substrate (`SymTFTAudit/WittClass.lean` + DrinfeldCenter +
+  FreeKLinearCategory + DeligneTensor + PseudoUnitary + CrossBridges;
+  ~100 substantive theorems) clears DMNO 2010 Witt-equivalence,
+  Schellekens 24|c₋ chain, and pseudo-unitary substrate at the
+  restricted-form layer. Verdict: SymTFT applicable to Layer-3 anomaly
+  classification (D2 + D4 absorption); not load-bearing for dark sector.
+- **Sakharov ↔ horizon-Crooks unification at β_H** (Phase 6n.ζ):
+  ³He-A satisfies all 4 Sakharov conditions / FLS BEC violates
+  condition (ii). Two classifications (Sakharov 4-criterion + horizon
+  Crooks fluctuation theorem) shown to be independent program axes
+  with Verlinde-vs-Jacobson distinction enforced at every claim site.
+- **APS-η regime partition for analog horizons** (Phase 6o.δ):
+  parity-symmetric branch → η = 0 (BEC + ADW); ³He-A carries
+  substantively non-zero η via Jackiw-Rebbi chiral edge mode at moving
+  domain wall (³He-A unique non-degenerate cell). First systematic
+  substrate-side APS-η identification on chirally-asymmetric analog
+  Hawking horizon in literature.
+- **Schellekens chain 24|c₋ as Möller-Scheithauer 2024 corollary**
+  (Phase 6o.ε): the 5-step Schellekens chain (Spin bordism + anomaly
+  polynomial + modular invariance + Niemeier + holomorphic VOA c=24)
+  is now formalized as a substantive theorem reframing 24|c₋ as a
+  classification corollary of the Möller-Scheithauer 2024 c=24
+  holomorphic-VOA classification.
+- **G4 Kerr-Schild classical double-copy on Petrov-D analog gravity**
+  (Phase 6o.β): Petrov-D verification on draining-bathtub acoustic
+  metric + Maxwell single-copy on flat Minkowski + 3-obstruction
+  strong-form BCJ NO-GO theorem. **First explicit classical double-copy
+  on analog gravity in the literature.**
+
+**Phase 6o Wave 4a Track 4 (2026-05-08) — verdict-(B) honest closure
+of the Sakharov 4-criterion ↔ Λ_J = Λ_HK biconditional.** Per Volovik-
+Jannes 2012 §VII forward-only argument and FLS BEC primary-source
+verification (arXiv:1103.4841 + arXiv:1204.3039 Eq. 71), the
+biconditional reading is honestly retired in favour of one-way (⇒)
+implication + load-bearing `depletion : ℝ` field on `SakharovExtended`.
+The `SakharovExtended` strict-extension structure wraps the unchanged
+`SakharovConditions` 4-Boolean structure, preserving all downstream
+callers. JTGR16-JTGR20 substantive theorems (depletion-factor
+unconditional + ³He-A unit + FLS strict bounds + asymmetry + composed
+honest-one-way closure) ship at refit numerics
+`lambdaJ:=6.0e-14 / lambdaHK:=7.5e-12 / depletion:=8.0e-3`
+(consistency `8e-3 × 7.5e-12 = 6e-14` via norm_num). The honest
+downgrade from biconditional to one-way implication preserves the
+substrate-physics content while correctly attributing to the
+forward-only source argument. Architecture remains scoped: Layer 3
+SM+GR-emergent IN; dark-sector OUT under all tested mechanism families.
+
+---
+
 ## Cross-phase non-inheritance
 
 Phase 5y's NO-GO verdicts do **not** propagate to the following

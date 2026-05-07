@@ -225,35 +225,40 @@ uv run python scripts/bundle_clusters.py
 
 ---
 
-## Worked example (synthetic, pending first real absorption)
+## Worked example (real: Phase 6o Wave 4a Track 4 — FLS BEC depletion-factor return)
 
-**Scenario:** Phase 6n ships in 2026-Q3 — a new mechanism family for dark-energy substrate constraints (call it `paper46_phase6n_topic`). It maps to D5 §14 (additive) and F §10.6 (downstream propagation).
+**Scenario:** Phase 6o Wave 4a Track 4 ships 2026-05-07/08 — a verdict-(B) honest-correction follow-up to Phase 7 absorption Session 5 (user-call C2). Wave produces a strict-extension Lean structure (`SakharovExtended` wrapping unchanged `SakharovConditions` + `lambdaJ : ℝ` + `lambdaHK : ℝ` + load-bearing `depletion : ℝ` field + Prop-typed substrate-physics witness) plus 5 substantive theorems (JTGR16-JTGR20 in `JacobsonThermoGRDarkEnergy.lean` §8). The substantive shift: the prior `sakharov_..._iff_lambda_j_eq_lambda_hk` biconditional reading is honestly retired in favour of one-way (⇒) implication per Volovik-Jannes 2012 §VII forward-only argument and FLS BEC primary-source verification (arXiv:1103.4841 + arXiv:1204.3039 Eq. 71). No standalone per-paper draft (Phase 6o research-only scope) — sourceless / Lean-only output triggers branch D.4. It maps to D5 §11 + §11.5 (additive prose addendum updating an existing structural-caveat embedded subsection) and F §10 (one-sentence pointer in dark-sector summary).
 
-**Stage A:** Phase 6n's per-paper Stage-13 closure GREEN.
+**Stage A.alt** (Lean-only): `lake build SKEFTHawking.JacobsonThermoGRDarkEnergy` clean (1.5s); full library `lake build` clean (8586 jobs); zero sorry / zero new axioms; substantive content documented at `temporary/working-docs/phase6o/wave_4a_session1_close.md`; `ARCHITECTURE_SCOPE.md` Phase 6n / 6o coda updated (this file's Phase 6m closure block is supplemented, not modified).
 
-**Stage B:** add row to `PAPER_DRAFT_MAPPING.md`:
+**Stage B (sourceless variant):** add row to `PAPER_DRAFT_MAPPING.md`:
 ```markdown
-| `paper46_phase6n_topic` | New mechanism family X | Phase 6n W3 | **D5 §14** + **F §10.6** | Lift-section |
+| `_phase6o_W4a_lean_only` | FLS BEC depletion-factor / Sakharov 4-criterion verdict-(B) closure | Phase 6o Wave 4a Track 4 | **D5 §11** + **D5 §11.5** + **F §10** | Revision (honest verdict-(B) downgrade) |
 ```
+
+User authorization: granted at Phase 7 absorption Session 5 user-call C2 (substrate-derived `lambdaJEqLambdaHK` refactor; risk-disclosed (⇐) may not hold). Lift action is **Revision** (not pure Synthesize) because the prior biconditional reading is being downgraded — a refinement of an already-shipped verdict, even though absent any per-paper draft on the source side.
 
 **Stage C:** `bundle_source_manifest.py` re-run; D5 + F flagged `freshness_stale`.
 
-**Stage D:** D5 → branch D.2 (paper_draft.tex exists, additive). F → branch D.1 if F not yet drafted (likely; F is Phase 7g) OR D.2 if drafted.
+**Stage D:** D5 → branch **D.4** (sourceless / Lean-only late absorption with substantive prose addendum + load-bearing structure-shape change at the substrate layer; existing `SakharovConditions` + JTGR6-9 untouched). F → branch D.2 (drafted; cross-ref upgrade only via D5 propagation).
 
-**For D.2 (D5):**
+**For D.4 (D5):**
 ```bash
 uv run python scripts/bundle_append.py \
-    --bundle D5 --source-paper paper46_phase6n_topic \
-    --insertion-point '§14' \
-    --notes "Phase 6n W3 absorption: new mechanism family X" \
-    --lean-modules "Phase6nMechanismX"
+    --bundle D5 \
+    --source-paper "_phase6o_W4a_lean_only" \
+    --insertion-point '§11' \
+    --notes "Late absorption (sourceless): Phase 6o Wave 4a Track 4 verdict-(B) honest closure — Lean-only substrate; SakharovExtended strict-extension + JTGR16-20 + retired biconditional → one-way implication" \
+    --lean-modules "JacobsonThermoGRDarkEnergy"
 ```
 
-**Stage E:** F auto-flagged `freshness_stale` after next CHECK 22 run (F lifts from D5).
+The strict-extension-layer pattern is load-bearing here: keeping the legacy `SakharovConditions` 4-Boolean structure unchanged preserves all downstream callers (`BiconditionalReformulation`, `SakharovHorizonCrooks`, etc.) without invasive refactor. Pre-existing `_iff_` aliases in `BiconditionalReformulation.lean` were renamed to `_implies_` at Phase 7 absorption Session 4 (anticipating this verdict); aging citations in already-closed bundles preserve via `@[deprecated]` aliases per the post-freeze refinement absorbed in `BUNDLE_LIFT_PROCEDURE.md` Session-5 footnote.
 
-**Stage F:** Re-invoke reviewer triple on D5; on F if drafted; resolve BLOCKERs.
+**Stage E:** F auto-flagged `freshness_stale` after next CHECK 22 run (F lifts from D5 §10 dark-sector summary).
 
-**Stage G:** `validate.py --check bundle_consistency` re-run.
+**Stage F:** Re-invoke reviewer triple on D5 (figure / claims / adversarial). The bundle's existing 13/14 ALL-GREEN heatmap status preserved post-absorption; D5 §11 prose addendum + §11.5 update verified via pdflatex (12pp clean); 3 new bibitems (Finazzi-Liberati-Sindoni 2012 PRL/Proc + Belenchia-Liberati-Mohd 2014) added to `CITATION_REGISTRY` with primary-source PDFs cached. Cross-bundle propagation: F flagged + cross-ref upgrade only (one-sentence pointer); L3 cross-ref preserved via D3 §17.5 ↔ L3 substrate-class-context paragraph.
+
+**Stage G:** `validate.py --check bundle_consistency --check bundle_source_freshness` re-run; `papers/cluster_bundle_index.json` re-frozen.
 
 ---
 
@@ -287,3 +292,7 @@ The following protocol stages may require explicit user authorization before pro
 ---
 
 *Created Phase 7a sub-wave 7a.1.6 (2026-05-01). **FROZEN at sub-wave 7a.4 (2026-05-01)** via conceptual rehearsal of "what if a hypothetical Phase 6n landed during sub-wave 7a.2/7a.3." Two refinements absorbed: (1) Stage A.alt for Lean-only Phase 6X output (no per-paper draft) — promoted from hypothetical to real after I2's sourceless-bundle pattern; (2) D.4 branch in Stage D for sourceless late absorption. Stages F (re-review per `BUNDLE_LIFT_PROCEDURE.md` §8/§9/§10/§11/§13) and G (cross-bundle consistency) inherit the same hardened ordering and BLOCKER-resolution discipline frozen in `BUNDLE_LIFT_PROCEDURE.md` 7a.4. Updated with worked-example examples on first real absorption event. Cross-referenced from `BUNDLE_LIFT_PROCEDURE.md`, `Phase7_Roadmap.md`, `Phase7a_Roadmap.md`, `WAVE_EXECUTION_PIPELINE.md`.*
+
+---
+
+**Post-freeze validation footnote (2026-05-07).** Phase 7 absorption Sessions 1–5 (2026-05-06 → 2026-05-08) executed this protocol across 16+ Phase 6n + 6o handles via D.2 / D.3 / D.4 branches without protocol revision. Three D.3 user-auth gates closed with substantive bundle revision: GATE 1 — I1 §3 reframing of FirstOrderKMS as first-order Glorioso-Liu projection (Phase 6n W2a); GATE 2 — D3 §17.5 + L3 substrate-class context paragraph for Sakharov ↔ horizon-Crooks unification with Verlinde-vs-Jacobson distinction enforced (Phase 6n W2d); GATE 3 — D2 §2 + L2 paired splash for Schellekens-chain reframing of 24|c₋ as Möller-Scheithauer 2024 c=24 holomorphic-VOA classification corollary (Phase 6o W2b). The honest verdict-(B) closure of Phase 6o Wave 4a Track 4 (the worked example above) demonstrates the Stage D.4 + Stage F path applied to a *retraction*-shaped late absorption — where new substrate evidence honestly downgrades a prior biconditional claim to a one-way implication — without overrunning the bundle's existing reviewer triple or requiring a fresh bundle target.

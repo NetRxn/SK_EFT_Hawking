@@ -351,6 +351,8 @@ For each tab being ported from vanilla JS to Datastar (Wave 9h):
 
 **Order:** readiness → qi → chains → paper → graph (graph may stay vanilla-wrapped because D3 force-directed sim owns imperative state).
 
+**Status (2026-05-07):** migration complete for **Parameters / Formulas / Proof Architecture / Paper Claims / Citation Registry / Readiness / QI / Chains / Paper Provenance v2 / Bundles** tabs. Only the **Knowledge Graph** tab remains non-Datastar (vanilla-JS + D3, by design — the force-directed simulation owns imperative state and Datastar v1 has no canvas / SVG bridge that would let it manage it idiomatically). Keep this configuration until Datastar v2 ships canvas / SVG bridges.
+
 ---
 
 ## 8. Gotchas
@@ -379,3 +381,13 @@ For each tab being ported from vanilla JS to Datastar (Wave 9h):
 - Getting started: <https://data-star.dev/guide/getting_started>
 
 This reference is frozen at `datastar@v1.0.1` + `datastar-py@0.8.0`. Update the tag + re-check this doc when bumping — and run a full dashboard smoke test (readiness + qi + chains + paper-provenance tabs) because event-name renames have happened and will happen again.
+
+> **Note (2026-05-07).** `pyproject.toml` declares `datastar-py>=0.5` (lower bound), so the *resolved* version locally floats. The pin in this doc is the *target / verified-tested* version; if you bump the lower bound or the resolved version drifts away from `0.8.0`, re-run §7's smoke checklist before treating the new combination as stable.
+
+---
+
+## 10. Wave 9h closing note _(2026-05-07)_
+
+Datastar adoption is complete across the Parameters / Formulas / Proof Architecture / Paper Claims / Citation Registry tabs (Phase 5v Wave 9h closed) and has since been carried forward to the Readiness, QI, Chains, Paper Provenance v2, and Bundles tabs added in Phase 5v Waves 4–10 and Phase 6i Wave 7.5.
+
+The **Knowledge Graph** tab remains vanilla-JS-wrapped: the D3 force-directed simulation owns imperative state (per-tick node positions, drag offsets, alpha decay), and Datastar v1 doesn't yet expose the canvas / SVG bridges that would let it idiomatically host that mutation pattern. Keep this arrangement — don't try to retrofit Datastar onto the KG tab — until Datastar v2 ships those bridges. The `data-*` ↔ D3 boundary is documented in §1 ("Signal access from vanilla JS") and §6 ("IDs on every morph target") above.

@@ -262,6 +262,8 @@ Twelve months from voucher to flagship is the rough envelope. The Phase 6 deep-r
 
 The critical path is L1 → voucher → everything else. The slowest path is Phase 6m → D5 → F. The flagship lands roughly when Phase 6m closes.
 
+**Status note (2026-05-07).** All 14 bundles have shipped Stage 9 + Stage 10 + Stage 13 reviewer triples GREEN per `BUNDLE_READINESS_HEATMAP.md` after Phase 7 absorption Sessions 1–5 (2026-05-06 → 2026-05-08). The roll-out timeline above expressed *first-pass* drafting cadence; the now-shipped state is "all 14 bundles cleared per-bundle reviewer triple, awaiting submission gates per the dependency graph" — the critical-path L1 → voucher gate is the only remaining program-level blocker for the first three Tier-2 splashes.
+
 ---
 
 ## 4. Cross-cutting principles
@@ -294,6 +296,8 @@ The critical path is L1 → voucher → everything else. The slowest path is Pha
 
 **What if a striking new result lands during the roll-out?** The architecture is intentionally append-friendly. A new Tier 2 PRL splash can be added if a Phase 6 wave produces a 4-page-PRL-shaped headline (e.g., a Phase 6m Track returning VIABLE with a specific substrate-realization, or a Phase 6h activation if Gate Z.4 flips). The flagship's outline accommodates incremental additions.
 
+**Citation hygiene infrastructure (2026-05-07 status).** The 51-PDF primary-source backfill cycle ran during Phase 7 absorption Session 5 (264 cached / 0 missing as of 2026-05-08). Primary-source WebFetch + verify is now standing project policy: when a numerical magnitude in a Lean constant, paper claim, or registry entry is registry-anchored or unverified, the primary-source PDF is fetched and the claim verified before publication-grade prose relies on it. This protocol surfaced the Luciano arXiv:2506.03019 Table II AIC-vs-Bayes methodology mislabel + the `BelgiornoCacciatori2024` hallucinated-citation cache entry during Session 5, and is the standing safeguard against bibitem-title fabrication for the remainder of the publication roll-out.
+
 ---
 
 ## 6. Summary table
@@ -310,11 +314,12 @@ The critical path is L1 → voucher → everything else. The slowest path is Pha
 | 1 | D5 | Dark sector under substrate constraints | PRD/Phys Rep | ~40pp | Month 5–8 | Phase 6m closure |
 | 3 | I1 | Methodology | CPC/Phys Rep | ~25pp | Month 4–6 | (none) |
 | 3 | I2 | Verified estimators + lean-tensor-categories | JOSS/CPC | ~15pp | Month 4–6 | Phase 5o W5 |
+| 3 | I3 | Verified stochastic calculus + LDP foundations for Mathlib4 | JOSS/CPC | ~15pp | Month 5–7 | Phase 6n W2c IsLDPRateFunction + Phase 6o W3b lift |
 | 4 | E1 | Polariton experimental letter | PRL/PRR | 2–3pp | Month 3–4 | D1 ready + Phase 5u W21 |
 | 4 | E2 | Graphene Dirac-fluid letter | PRL/PRR | 2–3pp | Month 3–4 | D1 ready |
 | 0 | F | Flagship review | RMP/Phys Rep | 80–150pp | Month 8–12 | All above |
 
-Eleven publication targets. Approximate twelve-month roll-out from voucher. The flagship is the citation anchor.
+Fourteen publication targets (1 flagship + 5 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure including I3 + 2 Tier 4 experimental). Approximate twelve-month roll-out from voucher. The flagship is the citation anchor. (The figure was previously stated as "thirteen" before I3 authorization in Phase 6n Session 4 under Pipeline Invariant #14, and as "eleven" in v1 of this table — both are superseded by the present fourteen-target architecture.)
 
 ---
 
