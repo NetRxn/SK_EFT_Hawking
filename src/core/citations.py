@@ -1209,20 +1209,24 @@ CITATION_REGISTRY = {
     'BK2025': {
         'authors': 'Berezhiani, L., Cintia, G., De Luca, V., Khoury, J.',
         'title': 'Superfluid Dark Matter',
-        'journal': 'Physics Reports',
+        'journal': 'Physics Reports (in press, accepted 2026)',
         'volume': None,
         'page': None,
-        'year': 2025,
+        'year': 2026,
         'doi': None,
         'arxiv': '2505.23900',
+        'arxiv_verified': True,
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-5x/primary-sources/BK2025.pdf',
-        'used_in': ['papers/paper17_dark_sector/paper_draft.tex'],
+        'used_in': ['papers/D5/paper_draft.tex', 'papers/paper17_dark_sector/paper_draft.tex'],
         'provides': [],
-        'notes': 'BK2025 SFDM review, Physics Reports (in press). '
-                 '136 pages, 12 figures. Paper 17 cites gap: no quantitative '
-                 'merger forecast. arXiv + page count verified 2026-04-24.',
+        'notes': 'BK2025 SFDM review, Physics Reports (accepted, in press; v2 dated '
+                 '2026-02-16 is the journal-matched version). 136 pages, 12 figures. '
+                 'Paper 17 cites gap: no quantitative merger forecast. arXiv + page '
+                 'count verified 2026-04-24; venue corrected 2026-05-11 from '
+                 '"Physics Reports (2025)" — no 2025 published version exists — per '
+                 'Stage-13 D5 review finding 1.6 via WebFetch.',
     },
     'BKWang2017': {
         'authors': 'Berezhiani, L., Khoury, J., Wang, J.',
@@ -1260,20 +1264,24 @@ CITATION_REGISTRY = {
     },
     'DESI2025': {
         'authors': 'DESI Collaboration',
-        'title': 'DESI DR2 BAO: cosmological constraints',
-        'journal': None,
-        'volume': None,
-        'page': None,
+        'title': 'DESI DR2 Results II: Measurements of Baryon Acoustic Oscillations and Cosmological Constraints',
+        'journal': 'Phys. Rev. D',
+        'volume': 112,
+        'page': '083515',
         'year': 2025,
-        'doi': None,
+        'doi': '10.1103/PhysRevD.112.083515',
         'arxiv': '2503.14738',
+        'arxiv_verified': True,
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-5x/primary-sources/DESI2025.pdf',
-        'used_in': ['papers/paper17_dark_sector/paper_draft.tex'],
+        'used_in': ['papers/D5/paper_draft.tex', 'papers/paper17_dark_sector/paper_draft.tex'],
         'provides': [],
-        'notes': 'DESI DR2 2025 cosmology (KV tension source). '
-                 'User verify full title.',
+        'notes': 'DESI DR2 2025 cosmology — BAO measurements from >14M galaxies/quasars; '
+                 'flat-LCDM with 2.3σ CMB tension; dynamical DE indicated. Registry '
+                 'title + venue corrected 2026-05-11 from abbreviated "DESI DR2 BAO: '
+                 'cosmological constraints" + missing PRD 112, 083515 per Stage-13 '
+                 'D5 review finding 1.5; arXiv title + journal-ref verified via WebFetch.',
     },
     'Sola2023': {
         'authors': 'Sol{\\`a} Peracaula, J.',
@@ -7521,15 +7529,15 @@ CITATION_REGISTRY = {
 
     'Roehm2026Strategy': {
         'authors': 'Roehm, J. G.',
-        'title': 'SK-EFT Hawking 13-bundle publication architecture (project paper-strategy frame)',
+        'title': 'SK-EFT Hawking 14-bundle publication architecture (project paper-strategy frame)',
         'journal': 'in preparation',
         'volume': None, 'page': None, 'year': 2026, 'doi': None, 'arxiv': None,
         'doi_verified': True, 'inprep': True, 'primary_source_path': None,
         'inprep': False,
         'primary_source_path': None,
         'used_in': ['papers/D3/paper_draft.tex', 'papers/I3/paper_draft.tex'],
-        'provides': ['13-bundle publication architecture (1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 2 Tier-3 infrastructure + 2 Tier-4 experimental). NO-GO results as first-class publishable content.'],
-        'notes': 'In-preparation project strategy document (`docs/PAPER_STRATEGY.md`). Inprep exemption per Pipeline Invariant #11.',
+        'provides': ['14-bundle publication architecture (1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure + 2 Tier-4 experimental). NO-GO results as first-class publishable content.'],
+        'notes': 'In-preparation project strategy document (`docs/PAPER_STRATEGY.md`). Inprep exemption per Pipeline Invariant #11. Bundle count updated 13->14 at I3 (Tier-3 software paper) introduction, Phase 6o.zeta. Verified against PAPER_STRATEGY.md 2026-05-11.',
     },
 
     'Degenne2025MarkovKernels': {
@@ -7575,6 +7583,19 @@ CITATION_REGISTRY = {
         'used_in': ['papers/I3/paper_draft.tex'],
         'provides': ['Macroscopic stochastic thermodynamics framework; cited as motivation for the LDP frontier in I3.'],
         'notes': 'Verified 2026-05-08 via Crossref API on DOI 10.1103/RevModPhys.97.015002.',
+    },
+
+    'YingDegenne2022Martingales': {
+        'authors': 'Ying, K. and Degenne, R.',
+        'title': "A Formalization of Doob's Martingale Convergence Theorems in mathlib",
+        'journal': 'Proceedings of the 12th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2023)',
+        'volume': None, 'page': '334-347', 'year': 2023,
+        'doi': '10.1145/3573105.3575675', 'arxiv': '2212.05578',
+        'doi_verified': True, 'arxiv_verified': True, 'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/YingDegenne2022Martingales.pdf',
+        'used_in': ['papers/I3/paper_draft.tex'],
+        'provides': ['First Mathlib4 formalization of Doob martingale convergence theorems; predicate scaffolding for filtrations, adapted/predictable processes, stopping times; canonical prior art for the I3 predicate-substrate-first / quantitative-content-later release pattern.'],
+        'notes': 'Verified 2026-05-11 via WebFetch to arXiv:2212.05578 (title + 2-author list Ying + Degenne) and DBLP record dblp:conf/cpp/YingD23 (CPP 2023 venue, pp. 334-347, DOI 10.1145/3573105.3575675). PDF fetched into primary-sources cache.',
     },
 
     'KaratzasShreve1991BMSC': {
@@ -8404,37 +8425,49 @@ CITATION_REGISTRY = {
     },
     'LucianoPaliathanasisSaridakis2506': {
         'authors': 'Luciano, G. G., Paliathanasis, A., Saridakis, E. N.',
-        'title': 'Same entropies in holographic dark energy: Bayesian comparison with DESI DR2',
+        'title': 'Constraints on Barrow and Tsallis Holographic Dark Energy from DESI DR2 BAO data',
+        'journal': 'J. High Energy Astrophys.',
+        'volume': 49,
+        'page': '100427',
+        'year': 2026,
+        'doi': '10.1016/j.jheap.2025.100427',
+        'arxiv': '2506.03019',
+        'arxiv_verified': True,
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6m/primary-sources/LucianoPaliathanasisSaridakis2506.pdf',
+        'used_in': ['papers/D5/paper_draft.tex', 'papers/paper45_phase6m_review/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Barrow + Tsallis HDE constrained against DESI DR2 BAO + SN + CC; '
+                 'information-criteria (AIC/BIC) verdict: not favoured vs ΛCDM, '
+                 'cannot alleviate H0 tension (Phase 6m TB-R3; Phase 7 Session 5). '
+                 'Registry corrected 2026-05-11 from earlier "Same entropies..." '
+                 'title (was unrelated to actual arXiv content) per Stage-13 '
+                 'D5 review finding 1.1; arXiv title + JHEAp venue verified via WebFetch.',
+    },
+    'TyagiHaridasuBasak2025': {
+        'authors': 'Tyagi, U. K., Haridasu, S., Basak, S.',
+        'title': 'Constraints on Generalized Gravity-Thermodynamic Cosmology from DESI DR2',
         'journal': 'arXiv preprint',
         'volume': None,
         'page': None,
         'year': 2025,
         'doi': None,
-        'arxiv': '2506.03019',
-        'doi_verified': None,
-        'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-6m/primary-sources/LucianoPaliathanasisSaridakis2506.pdf',
-        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex'],
-        'provides': [],
-        'notes': 'Same entropies in HDE construction; Delta ~ 0 best fit '
-                 '(Phase 6m TB-R3 §0, §1). Preprint, June 2025.',
-    },
-    'TyagiHaridasuBasak2025': {
-        'authors': 'Tyagi, S., Haridasu, B. S., Basak, S.',
-        'title': 'Bayesian model comparison of holographic dark-energy models with DESI DR2',
-        'journal': 'Phys. Rev. D',
-        'volume': 113,
-        'page': '063507',
-        'year': 2026,
-        'doi': '10.1103/PhysRevD.113.063507',
         'arxiv': '2504.11308',
+        'arxiv_verified': True,
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6m/primary-sources/TyagiHaridasuBasak2025.pdf',
-        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex'],
+        'used_in': ['papers/D5/paper_draft.tex', 'papers/paper45_phase6m_review/paper_draft.tex'],
         'provides': [],
-        'notes': 'Bayesian Delta log B ~ -8 to -13 disfavor of Tsallis/Barrow HDE '
-                 '(Phase 6m TB-R1/R2/R3 §0).',
+        'notes': 'Generalized entropic / Gravity-Thermodynamics models constrained '
+                 'against DESI DR2 + SN; framework-aggregate Delta log B disfavour vs '
+                 'LCDM; standard Bekenstein-Hawking preferred (Phase 6m TB-R1/R2/R3). '
+                 'Registry corrected 2026-05-11 from earlier "Bayesian model '
+                 'comparison of holographic dark-energy..." title and fabricated '
+                 'PRD 113, 063507 venue/DOI (DOI 404\'d) per Stage-13 D5 review '
+                 'finding 1.2; arXiv title verified via WebFetch, no peer-reviewed '
+                 'venue listed on arXiv page.',
     },
     'OdintsovDOnofrioPaul2025': {
         'authors': "Odintsov, S. D., D'Onofrio, S., Paul, T.",
@@ -8488,21 +8521,29 @@ CITATION_REGISTRY = {
                  '(Phase 6m TB-R1/R3 §1, §5).',
     },
     'YoonGuha2023': {
-        'authors': 'Yoon, Y., Guha, S.',
-        'title': 'Hossenfelder-Verlinde emergent gravity with matter and radiation: a de Sitter attractor',
-        'journal': 'Phys. Rev. D',
-        'volume': 108,
-        'page': '084064',
+        'authors': 'Yoon, Y., Guha, A.',
+        'title': 'Inflation and the late time acceleration from Hossenfelder-Verlinde gravity',
+        'journal': 'arXiv preprint',
+        'volume': None,
+        'page': None,
         'year': 2023,
-        'doi': '10.1103/PhysRevD.108.084064',
+        'doi': None,
         'arxiv': '2304.07301',
+        'arxiv_verified': True,
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6m/primary-sources/YoonGuha2023.pdf',
-        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex'],
+        'used_in': ['papers/D5/paper_draft.tex', 'papers/paper45_phase6m_review/paper_draft.tex'],
         'provides': [],
-        'notes': 'Hossenfelder-Verlinde with matter/radiation; dS attractor '
-                 '(Phase 6m TB-R1/R3 §5).',
+        'notes': 'Hossenfelder covariant formulation of Verlinde emergent gravity '
+                 'predicts inflation and late-time acceleration simultaneously; '
+                 'imposter-field mass lambda^2 in 1.85e4-2.26e4 range for '
+                 'q in [-0.95, -0.55] (Phase 6m TB-R1/R3 §5). '
+                 'Registry corrected 2026-05-11 from earlier "...with matter and '
+                 'radiation: a de Sitter attractor" title and fabricated PRD 108, '
+                 '084064 venue per Stage-13 D5 review finding 1.3; arXiv title '
+                 'verified via WebFetch, no peer-reviewed venue listed on arXiv page. '
+                 'Second author is Atanu Guha (A. Guha), not S. Guha.',
     },
     'DaiStojkovic2017': {
         'authors': 'Dai, D.-C., Stojkovic, D.',
@@ -8662,21 +8703,27 @@ CITATION_REGISTRY = {
                  '(Phase 6m TC-R1/R2/R3 §1).',
     },
     'PlazaKraiselburd2025fR': {
-        'authors': 'Plaza, M., Kraiselburd, L.',
-        'title': 'f(R) gravity DESI DR2 + PPS + CC: very strong Bayesian preference',
+        'authors': 'Plaza, F., Kraiselburd, L.',
+        'title': 'Testing f(R)-gravity models with DESI DR2 2025-BAO and other cosmological data',
         'journal': 'Phys. Rev. D',
         'volume': 112,
         'page': '023554',
         'year': 2025,
         'doi': '10.1103/PhysRevD.112.023554',
         'arxiv': '2504.05432',
+        'arxiv_verified': True,
         'doi_verified': None,
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-6m/primary-sources/PlazaKraiselburd2025fR.pdf',
-        'used_in': ['papers/paper45_phase6m_review/paper_draft.tex'],
+        'used_in': ['papers/D5/paper_draft.tex', 'papers/paper45_phase6m_review/paper_draft.tex'],
         'provides': [],
-        'notes': 'f(R) DESI DR2 + PPS + CC; "very strong" Bayesian preference '
-                 '(Phase 6m TC-R1/R2/R3 §3).',
+        'notes': 'MCMC analysis of f(R) models vs DESI DR2 BAO + Pantheon++SH0ES + CC; '
+                 '"very strong statistical evidence" in favour of f(R) over LCDM '
+                 '(Phase 6m TC-R1/R2/R3 §3). Registry title corrected 2026-05-11 '
+                 'from earlier paraphrased "f(R) gravity DESI DR2 + PPS + CC: very '
+                 'strong Bayesian preference" per Stage-13 D5 review finding 1.4; '
+                 'arXiv title verified via WebFetch. Lead author first name is '
+                 'Francisco (F. Plaza), not M. Plaza.',
     },
     'FengGongLiuYanChen2025fR': {
         'authors': 'Feng, L., Gong, Y., Liu, Y., Yan, M., Chen, X.',

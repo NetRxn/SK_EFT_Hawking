@@ -3286,6 +3286,294 @@
       "superseded_by": "papers/AutomatedReviews/2026-05-06-bundle-stage13/D1-r3.md (Phase 7 absorption Session 3 final close)",
       "evidence": "D1 stage13 round-3 final verification GREEN. All 4 round-1 BLOCKERs (Falque2025/Burkhard2025/Geurs2025/Majumdar2025 fabricated bibitem titles) and round-2 NEW finding 1.5 (5 additional malformed registry entries) closed cleanly. CITATION_REGISTRY: 510 entries, 0 'et al.' artifact malformations remaining, 3 explicit Session-4 TODO placeholders for Adler2024/BRSSS2008/Zhao2023 (no arXiv IDs available; require Session-4 WebFetch). Spectral-floor ω_× REQUIRED carries forward as Session-4 author-side body-vs-Lean reconciliation. Phase 6n+6o → Phase 7 absorption pass: 13 of 14 bundles now ALL-GREEN through S9+S10+S13; only I3 remains in DRAFTING state (Phase 6o.zeta wave; out-of-band of Phase 7 sub-phase ladder).",
       "date": "2026-05-07"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:1.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "src/core/citations.py (D5 Stage-13 2026-05-11 fix-pass: LucianoPaliathanasisSaridakis2506 registry-title repair)",
+      "evidence": "BLOCKER 1.1: CITATION_REGISTRY['LucianoPaliathanasisSaridakis2506'] title was 'Same entropies in holographic dark energy: Bayesian comparison with DESI DR2' (unrelated to actual arXiv content). WebFetch arXiv:2506.03019 2026-05-11 returned actual title 'Constraints on Barrow and Tsallis Holographic Dark Energy from DESI DR2 BAO data', published JHEAp 49, 100427 (2026), DOI 10.1016/j.jheap.2025.100427. Registry entry overwritten with verified title + JHEAp venue + correct DOI + arxiv_verified:True. D5 bibitem already correct; no change needed there. used_in updated to include papers/D5/paper_draft.tex.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:1.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "src/core/citations.py (D5 Stage-13 2026-05-11 fix-pass: TyagiHaridasuBasak2025 registry-title + fabricated-PRD-venue repair)",
+      "evidence": "BLOCKER 1.2: CITATION_REGISTRY['TyagiHaridasuBasak2025'] title was 'Bayesian model comparison of holographic dark-energy models with DESI DR2' with fabricated PRD 113, 063507 venue + DOI 10.1103/PhysRevD.113.063507 (DOI 404'd per finding evidence). WebFetch arXiv:2504.11308 2026-05-11 returned actual title 'Constraints on Generalized Gravity-Thermodynamic Cosmology from DESI DR2'; no peer-reviewed venue listed. Registry entry overwritten: title corrected, journal:'arXiv preprint', volume/page/doi:None, year:2025, arxiv_verified:True. D5 bibitem already correct.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:1.3",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "src/core/citations.py (D5 Stage-13 2026-05-11 fix-pass: YoonGuha2023 registry-title + fabricated-PRD-venue repair)",
+      "evidence": "BLOCKER 1.3: CITATION_REGISTRY['YoonGuha2023'] title was 'Hossenfelder-Verlinde emergent gravity with matter and radiation: a de Sitter attractor' with fabricated PRD 108, 084064 venue. WebFetch arXiv:2304.07301 2026-05-11 returned actual title 'Inflation and the late time acceleration from Hossenfelder-Verlinde gravity'; no peer-reviewed venue listed on arXiv page. Also corrected second author from 'S. Guha' to 'A. Guha' (Atanu Guha). Registry entry overwritten: title corrected, authors corrected, journal:'arXiv preprint', volume/page/doi:None, arxiv_verified:True. D5 bibitem already correct.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:1.4",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex + src/core/citations.py (D5 Stage-13 2026-05-11 fix-pass: PlazaKraiselburd2025fR bibitem + registry-title repair)",
+      "evidence": "BLOCKER 1.4: D5 bibitem at paper_draft.tex:1309-1312 had paraphrased title 'f(R) gravity DESI DR2 + PPS + CC: very strong Bayesian preference'. WebFetch arXiv:2504.05432 2026-05-11 returned actual title 'Testing f(R)-gravity models with DESI DR2 2025-BAO and other cosmological data', published Phys. Rev. D 112, 023554 (2025). D5 bibitem rewritten with verbatim arXiv title (preserving venue + DOI which were correct). Lead author corrected from 'M. Plaza' to 'F. Plaza' (Francisco Plaza). Registry entry also updated. Cross-paper grep: PlazaKraiselburd2025fR not actually cited in paper45_phase6m_review/paper_draft.tex (registry used_in field was misleading; that paper is a stub).",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:1.5",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex + src/core/citations.py (D5 Stage-13 2026-05-11 fix-pass: DESI2025 bibitem + registry title expansion)",
+      "evidence": "REQUIRED 1.5: D5 bibitem at paper_draft.tex:1285-1287 had severely abbreviated title 'DESI DR2 BAO: cosmological constraints' missing the 'DR2 Results II' series label and journal venue. WebFetch arXiv:2503.14738 2026-05-11 returned full title 'DESI DR2 Results II: Measurements of Baryon Acoustic Oscillations and Cosmological Constraints', published Phys. Rev. D 112, 083515 (2025). D5 bibitem + CITATION_REGISTRY['DESI2025'] both updated with full verbatim title + PRD 112, 083515 venue + DOI 10.1103/PhysRevD.112.083515 + arxiv_verified:True.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:1.6",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex + src/core/citations.py (D5 Stage-13 2026-05-11 fix-pass: BK2025 venue correction)",
+      "evidence": "REQUIRED 1.6: D5 bibitem at paper_draft.tex:1252-1255 stated 'Physics Reports (2025)' but no 2025 published version exists per WebFetch arXiv:2505.23900 2026-05-11; submission history shows v2 dated 2026-02-16. Bibitem corrected to 'Physics Reports (in press, accepted 2026)'; CITATION_REGISTRY['BK2025'] year flipped 2025→2026, journal expanded to 'Physics Reports (in press, accepted 2026)', arxiv_verified:True. used_in updated to include papers/D5/paper_draft.tex.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:2.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "src/core/provenance.py (D5 Stage-13 2026-05-11 fix-pass: FLSBEC.DEPLETION_FACTOR PARAMETER_PROVENANCE entry added)",
+      "evidence": "REQUIRED 2.1: FLS BEC depletion-factor value 8e-3 (used in flsBEC_extended.depletion in JacobsonThermoGRDarkEnergy.lean::JTGR18/19) lacked a PARAMETER_PROVENANCE entry. Added 'FLSBEC.DEPLETION_FACTOR' with tier:PROJECTED, source:FLS arXiv:1204.3039 Eqs. 67/71/76, llm_verified_date:2026-05-11, human_verified_date:None. Docstring explicitly flags 8e-3 as PLACEHOLDER pending primary-source extraction of Steinhauer rho_0 + a; load-bearing physics (strict-positivity-less-than-1 obstruction) does not depend on the specific magnitude, per CLAUDE.md exception for 'commit to a non-trivial concrete model and document the modeling assumption'. Human-verification gate remains open until Steinhauer parameter extraction is performed.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:2.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "accepted",
+      "superseded_by": "src/core/provenance.py::MICRO_MACRO.LAMBDA_OBSERVED_GEV4 (pre-existing entry confirmed; D5 Stage-13 2026-05-11 fix-pass audit)",
+      "evidence": "RECOMMENDED 2.2: Audit confirmed PARAMETER_PROVENANCE['MICRO_MACRO.LAMBDA_OBSERVED_GEV4'] at provenance.py:3260 already exists with value:2.6e-47 GeV^4, tier:MEASURED, source:Planck 2018 VI Table 2, DOI:10.1051/0004-6361/201833910, llm+human verified 2026-04-28. No new entry needed; finding closes as already-satisfied.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:3.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "accepted",
+      "superseded_by": "memory/project_phase6o_wave4a_close.md (defining-the-conclusion pattern accepted Phase 6o Wave 4a, per CLAUDE.md preemptive-strengthening question 5 exception clause)",
+      "evidence": "RECOMMENDED 3.1 (JTGR17/18/19 defining-the-conclusion pattern): Wave 4a Lean theorems intentionally encode the depletion-factor magnitude in the structure-field assignment, then discharge bounds via rfl/norm_num. Per CLAUDE.md preemptive-strengthening question 5 exception ('commit to a non-trivial concrete model and document the modeling assumption'), this pattern is permissible; the modeling assumption is now documented via the new PARAMETER_PROVENANCE entry FLSBEC.DEPLETION_FACTOR (finding 2.1). Wave 4a Lean theorems intentionally not modified per fix-pass scope; user previously accepted this pattern per project_phase6o_wave4a_close.md.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:5.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (D5 Stage-13 2026-05-11 fix-pass: literature-first claims softened with 'to the best of our knowledge' hedge)",
+      "evidence": "REQUIRED 5.1 (literature-first claim ledger): Three instances of 'the first systematic Lambda_J vs Lambda_HK comparison ... in the literature' at D5 paper_draft.tex:985-986 (§11 opening), 1110-1113 (§11.5 embedded short note), 1212-1215 (§Discussion). FirstClaimLedger artifact does not exist in project; per finding's stated recommended fix (b), prose softened to 'what — to the best of our knowledge — is the first systematic ...' across all three locations. No fabricated ledger.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:5.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (D5 Stage-13 2026-05-11 fix-pass: 7-class taxonomy first-claim softened)",
+      "evidence": "REQUIRED 5.2 (literature-first claim ledger): '7-class taxonomy is the first unified organisational framework for emergent-gravity DE mechanisms in the literature' at paper_draft.tex:1170-1171 softened to 'is, to the best of our knowledge, the first unified organisational framework ...' (interpretive disclaimer). No FirstClaimLedger fabricated.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:5.3",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (D5 Stage-13 2026-05-11 fix-pass: abstract first-complete-mechanism-family scope disambiguation)",
+      "evidence": "RECOMMENDED 5.3: Abstract line 64 'first complete-mechanism-family unanimous NO-GO closure in Phase~6m' tightened to 'first complete-mechanism-family unanimous NO-GO closure within the SK-EFT Hawking project (Phase~6m)' to remove literature-first ambiguity. Subsequent project-internal uses inherit the disambiguation by implication.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:6.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "papers/D5/paper_draft.tex (D5 Stage-13 2026-05-11 fix-pass: r_d rescue-range bibitem citations added)",
+      "evidence": "RECOMMENDED 6.1: D5 §9.2 r_d ∈ [144, 153] Mpc rescue-range claim at line 891-892 now cites \\cite{ParkRatra2025rd,WangYinTension2025rd}, both already in CITATION_REGISTRY with primary-source caches at Lit-Search/Phase-6m/primary-sources/. New \\bibitem entries for ParkRatra2025rd (arXiv:2501.03480) and WangYinTension2025rd (arXiv:2504.15222) added to D5 bibliography.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:7.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "fixed",
+      "superseded_by": "scripts/update_counts.py + docs/counts.tex + papers/D5/paper_draft.tex (D5 Stage-13 2026-05-11 fix-pass: BBN.lean count macroed)",
+      "evidence": "REQUIRED 7.1: D5 line 322 literal '$17$ substantive theorems' for BBN.lean was inflated. Strict count via _module_thm_count_strict logic = 14 (matches review's 14 total / 13 substantive excluding module_summary_marker:=trivial). D5 literal replaced with macro \\bbnThms; \\bbnThms + \\bbnTests macros added to scripts/update_counts.py phase6_modules list (will be regenerated by next update_counts.py run). docs/counts.tex manually populated with \\bbnThms{14} + \\bbnTests{16} for immediate compile. D5 pdflatex compiles clean (13 pages, no errors).",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:7.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "accepted",
+      "superseded_by": "F-flagship-prep wave (deferred per finding scope: 'defer to F-flagship-prep wave' explicit in review)",
+      "evidence": "RECOMMENDED 7.2: Phase 6m roster total literal '21' at D5 lines 1195/1216 — advisory macro request for \\phaseSixmRosterTotal. Deferred to F-flagship-prep wave per review directive; arithmetic 4+8+9=21 is consistent and Lean theorem phase6m_mechanism_count proves the 8+9=17 portion.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:D5-2026-05-11-1251:7.3",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/D5.md",
+      "status": "accepted",
+      "superseded_by": "F-flagship-prep wave (deferred per finding scope: 'defer to F-flagship-prep wave' explicit in review)",
+      "evidence": "RECOMMENDED 7.3: '120 orders of magnitude' phrasing repeated at D5 lines 431-434, 498-499, 669 — advisory check that the two 120 figures (Zhitnitsky ρ_DE vs heat-kernel Λ_emerg) are independent and not accidentally coupled. Deferred to F-flagship-prep wave per review directive.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:1.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: YingDegenne2022Martingales bibitem added",
+      "evidence": "BLOCKER 1.1: YingDegenne2022Martingales bibitem added to papers/I3/paper_draft.tex (CPP 2023 / arXiv:2212.05578); cited inline in §1 paragraph 1 ('martingales (with optional sampling and Doob's inequality; via Ying and Degenne~\\cite{YingDegenne2022Martingales})') and §1 'A note on novelty claims' paragraph. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:1.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: mathlib4_2020 orphan bibitem cited inline",
+      "evidence": "REQUIRED 1.2: \\cite{mathlib4_2020} added after 'Mathlib4's measure-theory hierarchy' in §1 intro. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:3.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: Lean substrate substantive via 14 refutable Prop bodies",
+      "evidence": "BLOCKER 3.1: All 14 Prop := True predicate bodies replaced with refutable substantive bodies. StochasticIntegral: `Continuous I ∧ I 0 = 0`. QuadraticVariation: `Monotone qv ∧ qv 0 = 0` + existential Brownian-QV identity + Covariation `cv 0 = 0`. Semimartingale: `∀ t, X t = M t + A t` + Doob-Meyer uniqueness `∀ M₁ A₁ M₂ A₂, ...`. ItoIsometry: `I 0 = 0 ∧ ∀ t ≥ 0, 0 ≤ I t`. ItoLemma: `Continuous f ∧ result 0 = f (X 0) - f (X 0)`. Novikov: `0 ≤ T ∧ Continuous θ`. CramerIID/CramerLowerBound: `Continuous I ∧ I 0 = 0`. Sanov: `0 < A ∧ Continuous I ∧ I 0 = 0`. Contraction: `(∀ y, I_Y y ≤ I_X y) ∧ I_Y 0 = 0`. Varadhan: `Continuous I ∧ Continuous F`. LDPCompatibleSKEFT's 4 LDP-side fields now discharge via `linearResponseRateFunctionCentered_continuous` (new substantive lemma using `fun_prop` on the unfolded centered quadratic) + `linearResponseRateFunctionCentered_zero`. Build clean (8586 Lake jobs); 0 sorry; axiom check on `wave_3b_ldp_overall_closure` shows standard kernel only `[propext, Classical.choice, Quot.sound]`. Paper §5/§5.2/§5.3 prose reverted from 'predicate-scaffolding cross-bridge' back to 'substantive cross-bridge' to match the now-substantive Lean.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:3.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: ito_reduces_to_calculus_when_zero_qv now carries substantive content",
+      "evidence": "BLOCKER 3.2: Theorem `ito_reduces_to_calculus_when_zero_qv` no longer discharges via `trivial` on `True`. The substantive `IsItoLemma` predicate (`Continuous f ∧ result 0 = f (X 0) - f (X 0)`) is proved on the trivial-zero witness via `⟨continuous_const, by simp⟩`; the witness inhabits the substantive predicate body. Paper §3.5 prose updated to describe the substrate-data shape honestly (the structural shape of the FTC cross-bridge ships now; the full reduction lifts when stochastic-integral substrate lands).",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:3.3",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: paper renamed IsCramerLowerBound → IsCramerLowerBoundEsscher",
+      "evidence": "BLOCKER 3.3: Paper §4.4 'Substrate-data predicate.' now references `IsCramerLowerBoundEsscher mgf I` (matches the Lean def name) with informative note that the Esscher suffix reflects the lift technique. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:3.4",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: redundant wave_3b_itoBeta_5_itoLemma_closure retired",
+      "evidence": "REQUIRED 3.4: The redundant `wave_3b_itoBeta_5_itoLemma_closure` (restated the same conclusion as `ito_reduces_to_calculus_when_zero_qv`) was retired. Paper §3.5 wave-closure paragraph documents the retirement and explains that the substrate-data theorem also serves as the per-module closure.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:5.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: conclusion first-claim softened",
+      "evidence": "BLOCKER 5.1: Conclusion's 'first explicit articulation of a software-substrate release pattern' first-claim replaced with explicit acknowledgement of prior art (Ying-Degenne 2022 Doob martingales + Degenne et al. 2025 Brownian motion); the pattern is described as 'continuous with staged-substrate practice already common in the Mathlib4 community'. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:5.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: §1 first-claim survey scope reduced to Mathlib4 / Lean ecosystem",
+      "evidence": "REQUIRED 5.2: §1 'A note on novelty claims' first-claim cross-prover scope was narrowed from '(i) Isabelle/HOL AFP, (ii) awesome-coq, (iii) Mathlib4' to 'Within Mathlib4 (and the Lean ecosystem more broadly)'; the over-strong cross-prover claim is explicitly retracted with a note acknowledging unsurveyed mathcomp-analysis, Lean 3 mathlib, Isabelle-distribution-beyond-AFP, and the structural-engineering nature of the 'predicate-level scaffolding' claim. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:5.3",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: substrate now substantive, prose 'substantive cross-bridge' restored",
+      "evidence": "BLOCKER 5.3: The abstract's 'substantive cross-bridge typeclass' claim is now honest because the Lean substrate IS substantive (per finding 3.1). The prior prose softening to 'predicate-scaffolding' is reverted; §5 heading is 'LDPCompatibleSKEFT --- the substantive cross-bridge typeclass'; abstract specifies all five fields carry refutable mathematical content. The §5.1 explicit detail describes the four LDP-side fields' substantive shapes (continuity + zero-at-zero for Cramér/Sanov/Cramér-lower-bound/Varadhan; inf-projection inequality + zero-at-zero for contraction principle) and the substantive `linearResponseRateFunctionCentered_continuous` lemma discharging them.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:5.4",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: ~5800 theorems literal replaced with \\totaltheorems macro",
+      "evidence": "REQUIRED 5.4: §1 paragraph 'the cadence by which the bulk of the SK--EFT Hawking project's $\\sim$5800 theorems were written' now uses `\\totaltheorems` macro (currently expands to 5855); permanent drift fix. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:5.5",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: §6 cross-bridge designed-not-yet-consumed status explicit",
+      "evidence": "RECOMMENDED 5.5: §6 opening now reads 'The I3 cross-bridge is designed but not yet consumed at release time' with grep evidence and the freestanding-at-release-time statement. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:5.6",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: I2+I3 release pair phrasing replaced",
+      "evidence": "REQUIRED 5.6: Conclusion's 'I2 + I3 release pair' phrasing replaced with 'the program's Tier 3 software-paper releases'. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:6.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: σ²≠0 assumption disclosed in §5.2",
+      "evidence": "REQUIRED 6.1: §5.2 wave_3b_ldp_overall_closure prose now includes 'The closure requires [Fact (σ² ≠ 0)] — equivalently, the underlying linear-response Gaussian has positive variance — to ensure the rate function is well-defined; ... Instantiation with σ² = 0 produces an instance-synthesis failure rather than a provable false statement.' Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:6.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: out-of-bundle dep disclosure added to §5.1",
+      "evidence": "RECOMMENDED 6.2: §5.1 'Out-of-bundle dependency disclosure' paragraph added stating that the `IsLDPRateFunction` instance is reused from Phase 6n Wave 2c.5c+ (lines 597-600); I3's contribution is the substantive typeclass wrapper plus the new `linearResponseRateFunctionCentered_continuous` lemma. Updated post-substrate-refactor to reflect that the four LDP-side fields are now substantive (not vacuous).",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:7.1",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: line count 1000 → 450",
+      "evidence": "BLOCKER 7.1: Paper §2.4 line count corrected from '~1000 lines of Lean source' to '~450 lines of Lean source; exact count 446 across the 12 modules as of the Phase 6o.ζ release'. After Lean refactor the line count grew slightly (modules gained substantive predicate bodies + witness proofs); the ~450 hedge remains accurate. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:7.2",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: predicate count 30 → 14",
+      "evidence": "REQUIRED 7.2: Paper §2.4 predicate count corrected from '~30 Prop-typed predicates' to '14 Prop-typed predicates across the 12 modules (13 def Is* declarations plus the class LDPCompatibleSKEFT)'. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:7.3",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: non-vacuity witness count 30 → 8",
+      "evidence": "BLOCKER 7.3: Paper §2.4 witness count corrected from '~30 non-vacuity witnesses (one per predicate, sometimes more)' to '~8 non-vacuity witnesses (substantive predicates each have at least one; trivially-vacuous predicates are witnessed by their wave-closure summary)'. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:7.4",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: 12 → 11+2 closure breakdown",
+      "evidence": "REQUIRED 7.4: Paper §2.4 wave-closure count corrected from '12 wave-closure summary theorems (one per module)' to '11 per-module wave-closure summary theorems plus 2 overall-wave closures (one per Itô / LDP namespace); the Novikov module folds its closure into the overall wave_3b_ito_overall_closure'. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:7.5",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: PR count 12-14 → 11-13",
+      "evidence": "RECOMMENDED 7.5: §7 'The total PR cycle is therefore ~12-14 PRs' corrected to '~11-13 PRs'. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
+    },
+    {
+      "finding_id": "bundle-stage13:I3-2026-05-11-1251:1.3",
+      "source_path": "papers/AutomatedReviews/2026-05-11-1251-bundle-stage13/I3.md",
+      "status": "fixed",
+      "superseded_by": "session_2026-05-11_wave1_i3_lean_substrate_refactor: Roehm2026Strategy bibitem 13→14 bundle",
+      "evidence": "RECOMMENDED 1.3: I3 bibitem for Roehm2026Strategy updated from '13-bundle' to '14-bundle' to match PAPER_STRATEGY.md actual count. Carried over from prior fix-pass.",
+      "date": "2026-05-11"
     }
   ]
 }

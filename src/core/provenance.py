@@ -3417,6 +3417,51 @@ PARAMETER_PROVENANCE = {
         'notes': 'Used in EINSTEIN_CARTAN_PARAMS["T_CMB_GEV"] as the bath-'
                  'temperature anchor for the cosmological-spin-density derivation.',
     },
+
+    # ── Phase 6o Wave 4a (FLS BEC depletion-factor substrate) ──────
+    'FLSBEC.DEPLETION_FACTOR': {
+        'value': 8.0e-3,
+        'unit': 'dimensionless',
+        'tier': 'PROJECTED',
+        'source': 'Finazzi-Liberati-Sindoni 2012, arXiv:1204.3039 (Proc. II '
+                  'Amazonian Symposium on Physics) Eqs. 67/71/76; canonical '
+                  'Steinhauer-class 87Rb parameters',
+        'detail': 'Depletion factor sqrt(rho_0 * a^3) for canonical '
+                  'Steinhauer-class 87Rb BEC parameters. Per FLS arXiv:1204.3039 '
+                  'p. 16 domain-of-validity constraint, rho_0 * a^3 << 1 '
+                  'enforces a strict-inequality bound non-tunably. The value '
+                  '8e-3 is currently a PLACEHOLDER for the canonical '
+                  'Steinhauer-class run; the load-bearing physics it backs '
+                  '(JTGR17/18/19 in JacobsonThermoGRDarkEnergy.lean) only '
+                  'requires 0 < depletion < 1, not the specific 8e-3 magnitude. '
+                  'Internal-consistency check Lambda_J = depletion * Lambda_HK '
+                  'reads 6e-14 eV = 8e-3 * 7.5e-12 eV, satisfied by '
+                  'construction (`depletionRelation` in flsBEC_extended).',
+        'doi': None,
+        'llm_verified_date': '2026-05-11',
+        'llm_verified_notes': 'FLS arXiv:1204.3039 cached at '
+                              'Lit-Search/Phase-1-and-Background/primary-sources/'
+                              'FinazziLiberatiSindoni2012Proc.pdf. The 8e-3 '
+                              'value was set during Phase 6o Wave 4a.4 closure '
+                              '(2026-05-08) as a placeholder; a primary-source '
+                              'extraction of rho_0 and scattering length a for '
+                              'Steinhauer\'s canonical 87Rb runs (to derive '
+                              'sqrt(rho_0 * a^3) numerically) has not yet been '
+                              'performed. The Lean theorems JTGR18/19 only rely '
+                              'on the strict-positivity-less-than-1 obstruction, '
+                              'so the specific magnitude is not load-bearing '
+                              'for the substantive claim; however, the prose at '
+                              'papers/D5/paper_draft.tex:1059-1064 and the Lean '
+                              'docstring at JacobsonThermoGRDarkEnergy.lean:571-575 '
+                              'both mark this as a placeholder pending '
+                              'primary-source derivation.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'PLACEHOLDER pending primary-source extraction of Steinhauer '
+                 'rho_0 and a for 87Rb. Used in lean/SKEFTHawking/'
+                 'JacobsonThermoGRDarkEnergy.lean::flsBEC_extended.depletion. '
+                 'Added 2026-05-11 per Stage-13 D5 review finding 2.1.',
+    },
 }
 
 

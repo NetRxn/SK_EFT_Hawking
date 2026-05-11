@@ -8,7 +8,7 @@
   "stage10_status": "green",
   "stage13_status": "green",
   "stage13_redo_required": false,
-  "freshness_stale": false,
+  "freshness_stale": true,
   "source_manifest_last_regen": "2026-05-06T15:40:38Z",
   "last_lift": "2026-05-06T16:30:00Z",
   "last_stage9_review": "2026-05-06T22:00:00Z",
@@ -19,5 +19,5 @@
   "stage13_review_doc": "papers/AutomatedReviews/2026-05-06-bundle-stage13/D3.md",
   "audit_log_path": "papers/D3/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "2026-05-06 Session-2 stage10 round-4 GREEN (8 focal sentences, 0 BLOCKER). Stage 9 GREEN (0 figures; advisory: D3 sibling figures absent for cross-bundle anchors — pre-existing, not Session-1 introduced). | Round-2 verification 2026-05-06: both BLOCKERs (7.1 biconditional overclaim + 6.1 trivial-HDB-witness misrepresentation) closed cleanly. REQUIRED 5.1 (Sakharov-Adler equilibrium-projection framing) + REQUIRED 4.1 (W-form bridge sentence) ALSO closed via paper_draft.tex Edits. 1 RECOMMENDED 5.2 (top-of-section Verlinde disclaimer) carry-forward advisory."
+  "notes": "2026-05-06 Session-2 stage10 round-4 GREEN (8 focal sentences, 0 BLOCKER). Stage 9 GREEN (0 figures; advisory: D3 sibling figures absent for cross-bundle anchors \u2014 pre-existing, not Session-1 introduced). | Round-2 verification 2026-05-06: both BLOCKERs (7.1 biconditional overclaim + 6.1 trivial-HDB-witness misrepresentation) closed cleanly. REQUIRED 5.1 (Sakharov-Adler equilibrium-projection framing) + REQUIRED 4.1 (W-form bridge sentence) ALSO closed via paper_draft.tex Edits. 1 RECOMMENDED 5.2 (top-of-section Verlinde disclaimer) carry-forward advisory."
 }

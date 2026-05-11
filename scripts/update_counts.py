@@ -372,6 +372,8 @@ def generate_tex(counts: dict, path: Path):
         ("nonlinearEFE",    "NonlinearEFE.lean",              "test_nonlinear_efe.py"),
         ("microscopicCoefficientMatch", "MicroscopicCoefficientMatch.lean", "test_micro_macro_match.py"),
         ("einsteinCartanExtension", "EinsteinCartanExtension.lean", "test_einstein_cartan.py"),
+        # Phase 6b W1 (paper29) BBN classification — D5 §4 cites \bbnTheorems
+        ("bbn", "BBN.lean", "test_bbn.py"),
     ]
     phase6_lines = []
     for prefix, lean_mod, test_mod in phase6_modules:
