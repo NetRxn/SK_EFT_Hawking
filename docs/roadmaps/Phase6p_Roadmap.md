@@ -229,7 +229,7 @@ Wave 3b (bundle-architecture decision + flagship-F positioning)
 
 ---
 
-### POLICY (added 2026-05-12 post-strengthening Pass 2; project-wide)
+### POLICY (added 2026-05-12 AM post-strengthening Pass 2; AMENDED 2026-05-12 PM; project-wide)
 
 **Axioms require explicit user sign-off going forward.** A DR returning with
 "ship as predicate-substrate AXIOM" is a *recommendation*, NOT a green-light;
@@ -245,6 +245,40 @@ not permanent commitments. Every new axiom must come with a discharge plan
 project's pre-Phase-6p axiom count was 1 (`gapped_interface_axiom`,
 SPTClassification.lean); Phase 6p added 2; both are now scheduled for
 discharge. Quality bar: standard kernel only on headline theorems.
+
+#### POLICY AMENDMENT (2026-05-12 PM, post-Wave-Cluster-PR-#17)
+
+**Substantive in-tree work is IMPLICITLY AUTHORIZED.** Per user clarification
+2026-05-12 PM: authorization is granted for any substantive work required to
+complete a wave, complete a phase, or discharge an axiom — INCLUDING building
+Mathlib-grade infrastructure project-local. The project regularly builds such
+infra (existing examples: `PolyQuotQ`, `PolyQuotOver`, `FreeKLinearCategory`,
+`DeligneTensor`, `RibbonCategory`, `QCyc40Ext`).
+
+**Explicit sign-off is REQUIRED ONLY for:**
+- Submitting a PR to Mathlib4 (or any external Lean library) upstream.
+- Coordinating with external research groups (e.g., contacting paper authors).
+- Publishing / submitting to journals or conferences.
+- Public communication beyond the repo.
+
+**Implication for substrate framing:** module docstrings and `AXIOM_METADATA`
+entries previously framed in-tree Mathlib-infra build targets as "blocked on
+Mathlib4 upstream PR" — this is **WRONG framing** and has been corrected
+project-wide (2026-05-12 PM). The build targets are in-scope IN-TREE SUB-WAVES:
+- Matrix Taylor remainder port (~80 LoC in-tree, eventual upstream PR with sign-off).
+- `IsCompact`/`PathConnectedSpace`/`LieGroup` on `Matrix.specialUnitaryGroup` (~80/80/200 LoC in-tree).
+- Pentagon equation + 4-strand F-symbol substrate (~150 LoC in-tree).
+- BCH order-2 cubic-remainder (FIRST-FORMALIZATION-TERRITORY, ~150 LoC in-tree).
+
+**DRs are NOT needed for Mathlib4 introspection** — Lean MCP tools provide
+direct access (`lean_local_search`, `lean_loogle`, `lean_leansearch`,
+`lean_hammer_premise`, `lean_declaration_file`, `lean_hover_info`). DRs are
+needed only for: external paper content not in primary-source cache, methodology
+surveys (e.g., open-source GA-SK code availability), cross-prover landscape
+surveys, and primary-source proof-structure transcriptions when WebFetch is
+impractical. Two such DRs dropped 2026-05-12 PM in `Lit-Search/Tasks/submitted/`:
+- `20260512_phase6p_wave_2b32_HZBS_fig4_4strand_fsymbols.md`
+- `20260512_phase6p_wave_3a23c_T_gate_SK_iteration.md`
 
 ### H. Phase 6p execution close (2026-05-12, single-session ship)
 
@@ -328,13 +362,22 @@ Six waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substra
 | **Track 3 — Applications + cross-bridges** | | | | | |
 | **Wave 3a** | Concrete BHSZ braid-word compilation on Fibonacci MTC (Rouabah Hadamard at ε~10⁻³ via QCyc40 substrate; composition CONDITIONAL on p_eff < p_th_AGP) | ✅ **SHIPPED** (3a.1 DR returned; 3a.2 QCyc40 + GateCompilation; 3a.3 FaultTolerantUQC conditional composition) | DEFERRED (G15 pending) | **D.2 / D.4 candidate** | none |
 | **Wave 3b** | Cross-bridge to D4 / new-bundle decision + flagship-F positioning | ✅ **SHIPPED** (3b.1 working doc `wave_3b_bundle_decision.md`; awaits user G15 call) | DEFERRED (G15 pending) | **D.2** | 🔒 **YES** (G15 user-authorization gate) |
-| **Track 4 — Axiom elimination + deferral completion (NEW, added 2026-05-12)** | | | | | |
-| **Wave 1c** | MeasureTheory-grounded NoiseModel (zero new axioms; ~350 LoC; Mathlib direct discharge) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2 / I1** | none |
-| **Wave 2b.3.2** | Full quintet 24-conjunct spanning (~350 LoC; native_decide pilot recommended) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | none |
-| **Wave 2c** | Substantive FKLW density bridge — eliminates `bridge_axiom_FKLW` via Aharonov-Arad simpler proof (~430 LoC) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | 🔒 **YES** (axiom-elim user sign-off) |
-| **Wave 2d** | Substantive Solovay-Kitaev — eliminates `sk_axiom_Dawson_Nielsen` via Dawson-Nielsen constructive proof (~550 LoC; first-formalization-territory) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | 🔒 **YES** (axiom-elim user sign-off) |
-| **Wave 3a.2.2** | Explicit Rouabah 30-crossing ε-discharge (~430 LoC; substrate ready post-Strengthening-Pass-2) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | none |
-| **Wave 3a.2.3** | CNOT (HZBS Fig 15) + T-gate (KBS algorithm) explicit braid words (~480 LoC + 2 DR dispatches) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | none |
+| **Track 4 — Axiom elimination + deferral completion (added 2026-05-12 AM, all 7 waves SHIPPED 2026-05-12 PM via PR #17)** | | | | | |
+| **Wave 1c** | MeasureTheory-grounded NoiseModel (Bernoulli-product bridge to LocalStochasticNoise; zero new axioms; 290 LoC) | ✅ **SHIPPED** PR #17 commit `ad0057a` | n/a | **D.2 / I1** | none |
+| **Wave 2b.3.2** | Quintet spanning conjuncts via iterated commutators | ⚠️ **PARTIAL SHIPPED** (8/24 conjuncts, 180 LoC, PR #17) — full 24 in **2b.3.2-followup** in-tree sub-wave (needs HZBS Fig 4 4-strand F-symbols; DR `20260512_phase6p_wave_2b32_HZBS_fig4_4strand_fsymbols.md` dropped 2026-05-12 PM) | n/a | **D.2** | none |
+| **Wave 2c** | FKLW density bridge axiom-elim via Aharonov-Arad (architectural closure) | ✅ **SHIPPED** PR #17 ~385 LoC; `bridge_axiom_FKLW` retired→theorem; residual `bridge_axiom_FKLW_general` strictly weaker (`1 ≤ d` guard); citation corrected (arXiv:quant-ph/0605181) | n/a | **D.2** | 🔒 G16 obtained 2026-05-12 |
+| **Wave 2d** | Solovay-Kitaev axiom-elim (Dawson-Nielsen) + same-day audit-corrected substantive followup | ✅ **SHIPPED + SUBSTANTIVE FOLLOWUP** PR #17 ~1084 LoC; `sk_axiom_Dawson_Nielsen` eliminated (headline standard-kernel-only with honest P5 existential-unfolding docstring); residual `bch_order_2_axiom` TIGHTENED to Hermitian + norm-bound matching D-N Lemma 3 exactly; `dn_single_refinement_substantive` non-trivially consumes axiom; `DNRecurrence` encodes 5-fold branching + 3/2 exponent | n/a | **D.2** | 🔒 G17 obtained 2026-05-12 |
+| **Wave 3a.2.2** | Rouabah 30-crossing ε-discharge SUBSTRATE | ✅ **SUBSTRATE SHIPPED** PR #17 ~440 LoC; new field `QCyc40Ext` = Q(ζ₄₀, √φ) (degree-32; Kronecker-Weber-required); Fibonacci 3-strand qubit-sector rep with F²=I + σ·σ⁻¹=I + Yang-Baxter all native_decide-verified over Mat2K_40_Ext; full 30-deep Frobenius `native_decide` in **3a.2.2c-followup** (substrate-ready) | n/a | **D.2** | none |
+| **Wave 3a.2.3** | CNOT (TQSim 280) + T-gate (Python brute-force) | ✅ **SHIPPED** PR #17 ~640 LoC; TQSim 280-crossing CNOT verbatim; **FIRST Fibonacci T-gate braid published anywhere** at L=17, ε≈7.5e-2 spectral (Path P1 first-attempt). Precision-tightening to ε≤10⁻³ in **3a.2.3c-followup** (DR `20260512_phase6p_wave_3a23c_T_gate_SK_iteration.md` dropped 2026-05-12 PM) | n/a | **D.2** | none |
+| **Track 4 follow-up sub-waves (post-PR-#17, in-tree Mathlib-infra builds; authorization implicit per amended Phase 6p policy 2026-05-12 PM)** | | | | | |
+| **Wave 2c.4a/b/c** | Aharonov-Arad Bridge Lemma in-tree (~250 LoC qutrit-only path) | ⏳ **NOT STARTED** (substrate-ready; needs `IsCompact specialUnitaryGroup` ~80 LoC + `PathConnectedSpace specialUnitaryGroup` ~80 LoC in-tree build + Bridge Lemma 4.1 proof) | n/a | **D.2** | none |
+| **Wave 2c.4d** | Decoupling Lemma for d≥9 (~280 LoC + `LieGroup specialUnitaryGroup` ~200 LoC) | 🔒 **EXPLICIT SIGN-OFF DEFER** | n/a | **D.2** | not needed for project's d≤5 use; defer per user direction |
+| **Wave 2d.2-followup** | BCH order-2 in-tree Mathlib-infra build (matrix Taylor remainder ~80 + 4-fold expansion ~150 + triangle closure ~70 = ~300 LoC) | ⏳ **NOT STARTED** (first-formalization-territory across all proof assistants; in-tree build authorized) | n/a | **D.2** | none |
+| **Wave 2d.3-followup** | Qubit Bloch-sphere balanced commutator (D-N §4.1 Eq. 10-13; ~80 LoC) | ⏳ **NOT STARTED** (tractable; sub-agent can WebFetch arXiv:quant-ph/0505030 §4.1 directly) | n/a | **D.2** | none |
+| **Wave 2d.5-followup-full** | Full constructive recursion proof of `SolovayKitaevWithLengthBound` (~120 LoC; depends on 2d.2-followup + 2d.3-followup) | ⏳ **NOT STARTED** | n/a | **D.2** | none |
+| **Wave 3a.2.2c-followup** | Full 30-deep Rouabah Frobenius `native_decide` over Mat2K_40_Ext (~30 LoC; substrate ready) | ⏳ **NOT STARTED** | n/a | **D.2** | none |
+| **Wave 3a.2.3c-followup** | T-gate precision tightening: Solovay-Kitaev iteration or GA-SK / MIP refinement of 17-crossing base to ε≤10⁻³ | ⏳ **NOT STARTED** (DR dropped 2026-05-12 PM; awaits return) | n/a | **D.2** | none |
+| **Wave 2b.3.2-followup** | HZBS Fig 4 4-strand F-symbol transcription + Pachner-derivation cross-validation + 16 additional spanning conjuncts (~250 LoC) | ⏳ **NOT STARTED** (DR dropped 2026-05-12 PM; awaits return) | n/a | **D.2** | none |
 
 **Wave dependencies:**
 - Wave 1a (AGP substrate) and Wave 2a (FKLW substrate) are independent — can run in parallel.

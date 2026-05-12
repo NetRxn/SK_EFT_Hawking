@@ -20,7 +20,8 @@ The Wave 2c.1 DR returned with a citation correction and strategic split:
     machinery absent in current Mathlib4) is required; this case remains as
     a strictly weaker residual axiom `bridge_axiom_FKLW_general` documented
     in `src/core/constants.py`'s `AXIOM_METADATA` with discharge planned for
-    a future wave (when SU(n) `LieGroup` lands upstream).
+    a future wave (in-tree Mathlib-infra build for SU(n) LieGroup; eventual
+    upstream PR contingent on separate user sign-off per project policy).
 
 Primary citations:
   - Freedman-Larsen-Wang 2002, *Comm. Math. Phys.* 228, 177–199;
@@ -103,10 +104,12 @@ Wave 2c.4 ship splits this into:
 The strict weakening is real (the `d = 0` case is now axiom-free instead of
 axiomatic), but the bulk of the discharge — the substantive Aharonov-Arad
 Bridge Lemma proof — remains a follow-up sub-wave (Wave 2c.4a/4b/4c per
-DR §7.3) blocked on Mathlib4 SU(n) `LieGroup`, `IsCompact`, and
-`PathConnectedSpace` instances. The Wave 2c.4 ship lays the architectural
-scaffolding (predicate substrate + module split + citation correction) for
-the substantive discharge in a Wave 2c.4-follow-up.
+DR §7.3). The follow-up will build SU(n) `IsCompact` (~80 LoC),
+`PathConnectedSpace` (~80 LoC), and (only for 2c.4d Decoupling at d≥9)
+`LieGroup` (~200 LoC) **in-tree** as Mathlib-grade infrastructure; eventual
+upstream PR contingent on separate user sign-off per project policy. The
+Wave 2c.4 ship lays the architectural scaffolding (predicate substrate +
+module split + citation correction) for the substantive discharge.
 
 For the project's actual concrete usage — qutrit n = 3, d = 3 in
 `FibonacciQutritUniversality` — the axiom is still invoked via the residual
