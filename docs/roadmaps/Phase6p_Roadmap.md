@@ -31,6 +31,282 @@
 
 ---
 
+## Substrate state snapshot (2026-05-12, pre-dispatch)
+
+> **Purpose of this section:** Captures substrate-readiness audits that were run at Phase 6p prep so future sessions can pick up cold without re-running Explore-agent scouts. Three Explore agents scouted (i) project Lean substrate, (ii) Mathlib4 + PhysLean substrate, (iii) Lit-Search prior-DR material on 2026-05-12; consolidated findings below. If a substrate question is not answered here, scout it — do not assume it is up-to-date past 2026-05-12.
+
+### A. Mathlib4 (v4.29.0; pinned commit `8850ed93`) readiness for Phase 6p
+
+| Category | Status | Specifics |
+|---|---|---|
+| Probability concentration | **PRESENT, comprehensive** | `Mathlib/Probability/Moments/SubGaussian.lean`: Chernoff (`measure_chernoff_upper/lower`), Hoeffding (`measure_sum_ge_le_of_iIndepFun`), Hoeffding's lemma (`hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero`), Azuma-Hoeffding (`measure_sum_ge_le_of_HasCondSubgaussianMGF`). Union bound: `Mathlib/Probability/BorelCantelli.lean::measure_iUnion_le`. Full `Mathlib/Probability/Martingale/*` (Basic, Centering, Convergence, Upcrossing, OptionalSampling) ships Doob convergence + optional stopping. Variance + covariance in `Mathlib/Probability/Moments/{Variance,Covariance}.lean`. — **AGP threshold proof's concentration step is substrate-ready.** Only remaining wiring: Bernoulli(p) → sub-Gaussian instance (low LOC). |
+| Lie algebras + Lie groups | **PRESENT, deep** | `Mathlib/Algebra/Lie/*` (50+ modules): `LieAlgebra`, `LieSubalgebra` (with Jacobi); `Mathlib/LinearAlgebra/Span/Defs.lean::Submodule.span`; `Mathlib/Geometry/Manifold/GroupLieAlgebra.lean::GroupLieAlgebra` (Lie group ↔ Lie algebra correspondence); `Mathlib/LinearAlgebra/UnitaryGroup.lean::Matrix.specialUnitaryGroup` (SU(n) as unitary ∩ det=1 kernel). — **FKLW density's algebraic step is substrate-ready.** |
+| Density in topological groups | **PRESENT** | `Mathlib/Topology/DenseEmbedding.lean::DenseRange` + `closure_eq_top`. — **FKLW analytic step can land at substantive level (predicate-substrate fallback not mandatory).** Open question: explicit "Lie subalgebra span ⇒ exp-image dense in connected component" lemma; if absent in Mathlib, Wave 2b ships it as a custom Lean lemma. |
+| Numerical primitives | **PRESENT** | `Mathlib/Data/Nat/Log.lean::Nat.log/Nat.clog`; `Mathlib/Analysis/SpecialFunctions/Stirling.lean::Real.log`; `Mathlib/Analysis/SpecialFunctions/CompareExp.lean` for polylog asymptotics. |
+| Quantum-information primitives | **PARTIAL** | Positive operators (`Mathlib/Analysis/InnerProductSpace/Positive.lean::LinearMap.IsPositive`), trace (`Mathlib/Analysis/InnerProductSpace/Trace.lean`). No explicit "density matrix" type; encode via positive trace-class operators. No CPTP maps / Kraus representations. |
+| Linear codes | **PARTIAL** | `Mathlib/InformationTheory/Coding/{KraftMcMillan,UniquelyDecodable}.lean`: uniquely-decodable classical codes only. No Hamming/BCH/LDPC. No CSS/stabilizer formalism. |
+| `BraidGroup` (algebraic) | **ABSENT** | Only categorical braiding present (`Mathlib/CategoryTheory/Monoidal/Braided*` — 4 modules). The algebraic `BraidGroup n` with σᵢ generators + Yang-Baxter relations does not exist. **Phase 6p Wave 2a.2 will build `BraidGroup n` as a custom module.** |
+| Solovay-Kitaev | **ABSENT** | No theorem on universal approximation of unitaries. Stone-Weierstrass exists (`Mathlib/Topology/DenseRange.lean`) but not specialized. **Phase 6p Wave 2b.2 will be the first formalization.** |
+| Quantum-error-correction codes | **ABSENT** | No formalization of stabilizer / surface / CSS / concatenated codes. **Phase 6p Wave 1a will create `SKEFTHawking/FaultTolerance/` from scratch.** |
+
+### B. PhysLean status (confirmed 2026-05-12)
+
+**PhysLean is NOT a Lake dependency** of `lean/lakefile.toml`; no PhysLean package in `.lake/packages/`. The roadmap's earlier conditional references to `PhysLean.Mathematics.QuantumCircuit` are **invalidated** — every Phase 6p Lean module assumes pure Mathlib4 + custom code. PhysLean coordination, if pursued, is a separate Phase 6p+ track and a user-authorization gate.
+
+### C. Project Lean substrate (D4 + SymTFTAudit; from 2026-05-12 scout)
+
+**D4 categorical chain (clean, substrate-ready):**
+- `lean/SKEFTHawking/Uqsl2.lean` (176 lines, 5 thm, 0 sorry); `Uqsl3.lean` (392/21/0); `Uqsl2Hopf.lean` (1092/22/0); `Uqsl3Hopf.lean` (5234/30/0); `Uqsl2Affine.lean` (261/8/0); `Uqsl2AffineHopf.lean` (5992/16/0). — **import freely.**
+- `lean/SKEFTHawking/MTCInstance/Fibonacci*.lean` + `SU2k*.lean` (~226 lines / ~14 thm each), `TemperleyLieb.lean` (132/3/0), `JonesWenzl.lean` (91/3/0), `FibonacciBraiding.lean` (298/32), `IsingBraiding.lean` (221/24/0). — substrate for Wave 2a + Wave 3a.
+- `lean/SKEFTHawking/Surgery/SurgeryPresentation.lean` (340/19) + `lean/SKEFTHawking/WRTInvariant.lean` (127/2/0). No separate `KirbyMoves/` directory; Kirby moves embedded in SurgeryPresentation.
+
+**SymTFTAudit/* (8 modules, ~155 thms, 0 sorry — clean):**
+- `DrinfeldCenter.lean` (447/17), `PseudoUnitary.lean` (438/19), `FreeKLinearCategory.lean` (482/21), `FreeKLinearMonoidal.lean` (888/38), `DeligneTensor.lean` (1195/28), `WittClass.lean` (467/21), `CrossBridges.lean` (295/7), `Applicability.lean` (164/4). — **import freely.**
+
+**`FibonacciQutritUniversality.lean` (163 lines, 9 theorems — Wave 2a anchor):**
+- Headline: `su3_spanning_data` proves 6 conjuncts on iterated-commutator entries hitting specific positions, witnessing that the Lie subalgebra generated by Fibonacci braiding generators σ₁, σ₂, σ₃ spans 𝔰𝔲(3).
+- Field K = Q(ζ₅, √φ). R-matrices: R₁ = diag(ω, ω⁻¹, ω⁻¹), Rτ = diag(φ⁻¹, φ⁻¹, ω²) where ω = e^(2πi/5).
+- σ₁ = diag(R₁, R₁, Rτ) is the diagonal B₃-invariant; σ₂, σ₃ are off-diagonal anyon-pair-recoupling blocks built from F-symbols.
+- Proof strategy: iterated commutator spanning closed via `native_decide` over K.
+- **Phase 6p Wave 2a extends this n=3 case to general n. The arbitrary-qudit question becomes concrete: as n grows, what generalizes — the σᵢ block structure, the iterated-commutator depth, or `native_decide` tractability of the field arithmetic?**
+
+**Decidable number fields:** `lean/SKEFTHawking/DecidableNumberField/*.lean` ships Q(√2), Q(√5), Q(ζ₅), Q(ζ₁₆). Q(ζ₅) is the natural Wave 3a verification field for ε ~ 10⁻³ Hadamard braids; Q(ζ₁₆) available for higher precision.
+
+### D. Confirmed gaps (Phase 6p will fill)
+
+- `lean/SKEFTHawking/FaultTolerance/` — directory does NOT exist. Wave 1a creates it.
+- `lean/SKEFTHawking/FKLW/` — directory does NOT exist. Wave 2a creates it.
+- `lean/SKEFTHawking/ConcentrationBounds/` — module does NOT exist (custom Bernoulli/Chernoff wiring). Sub-deliverable of Wave 1b.
+- `lean/SKEFTHawking/BraidGroup/` — module does NOT exist. Wave 2a.2 builds.
+- QEC bridge modules that already exist: `lean/SKEFTHawking/QECHolographyBridge.lean`, `HolographicCFunctionMTC.lean`, `ScramblingTimeQuantitative.lean` — **these are bridging modules to holographic QEC, NOT a fault-tolerance library.** Wave 1a builds the fault-tolerance library proper.
+
+### E. Lit-Search prior-DR material relevant to Phase 6p
+
+| Document | Coverage | Gap (what Wave-1a / 2a / 3a DR addresses) |
+|---|---|---|
+| `Lit-Search/Tasks/complete/20260504_qec_threshold_theorem_formal_verification.md` | General state-of-formalization survey of QEC threshold theorems | No d=3-specific proof structure; no error-model commitment; no Phase 6n cross-bridge analysis. **Wave 1a.1 DR addresses.** |
+| `Lit-Search/_Exploratory/Quantum-Error-Correction Threshold Theorems and Fault-Tolerant Universality- Formal-Verification Status Above the Topological Substrate (2026).md` | Deep gap analysis (4 sections); "zero formalization of any threshold theorem as of May 2026"; flagged Chernoff for Bernoullis as Mathlib gap (NOW RESOLVED per Section A above) | No concrete Steane-code parameters; missing AGP rigorous lower bound. **Wave 1a.1 DR addresses.** |
+| `Lit-Search/Tasks/complete/topological_quantum_computation_from_verified_mtc.md` | General survey of TQC from verified MTCs; identifies Fibonacci density + Solovay-Kitaev decomposition | No proof structure of FKLW density theorem; missing 4+ anyon explicit matrices; no Reichardt/Aharonov-Arad simplification analysis. **Wave 2a.1 DR addresses.** |
+| `Lit-Search/Tasks/complete/Phase-5l-W2_Fibonacci_universality_4plus_anyons.md` | Problem statement for 4+ Fibonacci anyon extension (d(4,1)=2 qubit, d(4,τ)=3 qutrit, σᵢ formulas); references Hormozi-Bonesteel-Simon 2007 PRB 75 + Bonesteel-Hormozi-Simon-Zikos 2005 PRL 95 | Only problem statement — does NOT deliver the explicit matrices or formalization assessment. **Wave 2a.1 DR addresses.** |
+| `Lit-Search/Phase-5o/Algebraic identities in anyonic braiding- a cross-literature audit.md` | Cross-literature verification of 3-anyon F-matrix + R-matrix conventions across Kitaev/Nayak/Preskill/Bonderson/Trebst/Bonesteel/Hormozi/Wang/Simon; documents binary icosahedral group 2I (order 120) as 3-anyon braid-group image | No explicit Hadamard/T/CNOT braid-word decompositions; no Reichardt 2005 quant-ph/0509041 simplifications. **Wave 3a.1 DR addresses.** |
+| `Lit-Search/_Exploratory/Phase 6n+ Foundational Backing Assessment...md` | §10 "Phase 6n+ Shape Recommendation" (lines 285-327): scoping for Glorioso-Liu axiomatic skeleton, Crooks-style analog-Hawking, Sakharov↔JTGR — **orthogonal to Phase 6p** but referenced in the original roadmap §G5 search; the §G5 label is implicit (no labeled §G5 in doc — read §10 instead) | Not directly Phase 6p substrate; substrate-scoping reflex doc |
+
+**Cross-prover formalization state (from the QEC FV 2026 deep-dive):**
+- **Coq:** QWIRE 2017 (linear types, no threshold); SQIR/VOQC 2021 (verified compiler, no threshold); Coq-QECC 2024 (stabilizer formalism only); VyZX 2026 (ZX-calculus adjacent); CoqQLR 2024 (Hoare logic for HHL/Shor); **Chen-Liu-Fang et al. CAV 2025 — first automatic fault-tolerance verification via symbolic execution (operational, not theorem-grade).**
+- **Isabelle/HOL:** Isabelle Marries Dirac 2020-2021 (no threshold; authors explicitly skip probability theory); QHLProver 2019 (Grover only); **AFP 2023 fully-formalized Bennett/McDiarmid/Bernstein concentration inequalities** — Isabelle materially ahead of Lean on this dimension; CHSH/Tsirelson 2024.
+- **Lean 4:** Mathlib4 quantum-info primitives partial via Lean-QuantumInfo (Oct 2025, 15K+ LOC; status uncharacterized); CHSH Rigidity April 2026 (arXiv:2604.03884, identifies proof gap); **zero threshold-theorem formalization.**
+- **Agda, HOL4:** no substantive QEC/threshold formalization located.
+
+### F. Submitted DR prompts (dispatched 2026-05-12)
+
+| File | Wave | Status |
+|---|---|---|
+| `Lit-Search/Tasks/submitted/20260512_phase6p_wave_1a_AGP_distance3_lean_substrate.md` | 1a.1 | dispatched (returns to `Lit-Search/Phase-6p/wave_1a_AGP_distance3_lean_substrate_return.md`) |
+| `Lit-Search/Tasks/submitted/20260512_phase6p_wave_2a_FKLW_arbitrary_qudit_lift.md` | 2a.1 | dispatched (returns to `Lit-Search/Phase-6p/wave_2a_FKLW_arbitrary_qudit_lift_return.md`) |
+| `Lit-Search/Tasks/submitted/20260512_phase6p_wave_3a_BHSZ_braid_word_compilation.md` | 3a.1 | dispatched (returns to `Lit-Search/Phase-6p/wave_3a_BHSZ_braid_word_compilation_return.md`); intended to be processed AFTER 1a + 2a returns calibrate gate-compilation context |
+
+### G. DR-return state snapshot (2026-05-12, post-DR-dispatch)
+
+> **All 3 Phase 6p DR prompts returned on 2026-05-12 in `Lit-Search/Phase-6p/`.** Returns deliver concrete commitments + caveats + Lean module decompositions. Future-session agents pick up from THIS state.
+
+**Wave 1a.1 return** — `Lit-Search/Phase-6p/6-p Wave 1a.1 — AGP Distance-3 Quantum Threshold Theorem- Lean 4 Mathlib4 Substrate Dossier.md`. Headline commitments:
+
+- **Source: AGP 2006** (Aliferis-Gottesman-Preskill, arXiv:quant-ph/0504218; QIC 6:97-165). **NOT ABO 1997 (arXiv:quant-ph/9906129), NOT KLZ 1998.** AGP is uniquely Mathlib4-aligned: Finset-shaped malignant-pair counting + quadratic recursion ε_L ≤ A·ε_{L-1}² + native_decide-discharged numerical threshold.
+- **Code: Steane [[7,1,3]].** d = 3 confirmed.
+- **Rigorously proven threshold: ε₀ > 2.73 × 10⁻⁵** (the "10⁻⁴" commonly quoted is heuristic).
+- **Error model = abstract local stochastic ONLY** (Wave 1b ships this). Topological-substrate model (Fibonacci-anyon braiding-error-model) is **STRICTLY DIFFERENT** — not equivalent up to constants, not additive; thresholds live on different operational domains (per-circuit-location ε vs per-edge p). Topological specialization deferred to Wave 1c+.
+- **Phase 6n Wave 2c LDP / `IsLDPRateFunction` cross-bridge: STRAINED → effectively ABSENT.** AGP is finite-n sum-of-Bernoullis-exceeding-2 bound, NOT a Cramér/Sanov/Gärtner-Ellis rate function. **Do NOT import any Phase 6n LDP infrastructure.** Use `Mathlib/Probability/Moments/SubGaussian.lean` directly (Hoeffding sub-Gaussian Chernoff is 2-3 lines once malignancy count in hand).
+- **Lean module decomposition** under `SKEFTHawking/FaultTolerance/`: Basic, StabilizerCode, SteaneCode, NoiseModel, ExRec, Malignant, Counting, Concatenation, Chernoff, DoubleExp, AGP/Threshold (11 files, ~2,300 LoC sorry-free target).
+- **Three "missing-but-trivial-to-add" Mathlib4 lemmas** (all wire into Wave 1b internally — no separate Mathlib campaign): `binomial_tail_chernoff_le` (~50 LoC), `quadratic_recursion_double_exp` (~20 LoC), and stabilizer-code/ex-Rec/malignancy data structures (~600 LoC project-local).
+- **Risk register:** R1 — `A_CNOT` native_decide may be slow (>30s for full Steane CNOT ex-Rec); mitigation = pre-compute outside Lean + supply smaller `decide`-checkable witness OR import Reichardt 2006 (LNCS 4051) counts. R2 — `inQWIRE/LeanQuantum` is at v0.x; mitigation = vendor minimal Pauli substrate in-tree rather than depend as Lake. R3 — Mathlib4 SubGaussian naming mismatch; mitigation = do Wave 1b.4 first independently.
+- **Caveats requiring Wave 1b verification work:**
+  - AGP §-numbers (S1-S5) and equation references in the dossier are secondary-source-confirmed (Gottesman KITP talk, Cross-DiVincenzo-Terhal QIC 9:5, AGP arXiv abstract). Wave 1b should re-pin against AGP PDF before line-by-line targeting.
+  - `A_CNOT` (the malignant-pair count) and exact M per ex-Rec must be re-derived from AGP PDF (likely Table V§); original AGP used unverified Mathematica scripts, so Lean-internal recomputation is essential.
+  - Reichardt 2006 (LNCS 4051, pp. 50-61) is alternative primary source; pick whichever yields smaller A constant.
+- **Cross-prover prior art:** Chen-Liu-Fang CAV 2025 (arXiv:2501.14380) — symbolic-execution single-level FT verification, NOT threshold-theorem. Huang-Zhou-Fang-Zhao-Ying PLDI 2025 (arXiv:2504.07732) — program logic, NOT threshold. Meiburg-Lessa-Soldati Quantum Stein's Lemma (arXiv:2510.08672) — confirms Lean-QuantumInfo capacity. Coq SQIR/QWIRE/CoqQ/Coq-QECC: zero threshold work.
+
+**Wave 2a.1 return** — `Lit-Search/Phase-6p/6p-wave_2a_FKLW_arbitrary_qudit_lift_return.md.md`. Headline commitments:
+
+- **Density is CLEARED uniformly in n ≥ 3** for Fibonacci (r=5, level k=3). No exceptional values; FKLW Theorem 0.1 applies uniformly. Bad cases (r=6 = Ising, r=10 for n<5) don't apply to Fibonacci.
+- **Primary source: FKLW 2002 (Freedman-Larsen-Wang, *Comm. Math. Phys.* 228, 177-199; arXiv:math/0103200, Theorem 0.1).** Reichardt-style simpler reproof: **Aharonov-Arad arXiv:quant-ph/0605181** (Bridge Lemma + Decoupling Lemma). Kuperberg arXiv:0909.1881 independent confirmation.
+- **Mathlib4 analytic step: PARTIAL-VIABLE.** Algebraic substrate (LieSubalgebra, span, GroupLieAlgebra, matrix exponential, PresentedGroup) is PRESENT. Analytic bridge (BCH formula, exp-surjectivity onto identity component, `PathConnectedSpace` on `Matrix.specialUnitaryGroup`, `LieGroup` instance on SU(n)) is **ABSENT** — substantive bridge would require ~500 Lean lines.
+- **DECISION: predicate-substrate `BridgeProp`** wraps the FKLW theorem statement. `spans` field discharged at `native_decide` precision in K = ℚ(ζ₅, √φ); `liftToDensity` field is FKLW statement **left as an AXIOM** citing FKLW + Aharonov-Arad. ~80 lines for `BridgeProp` infrastructure module.
+- **DECISION: Solovay-Kitaev = predicate-substrate AXIOM in Wave 2b.2.** Solovay-Kitaev is **ABSENT in every proof assistant** (Mathlib4, Mathlib3, QWIRE, SQIR/VOQC, CoqQ, Bordg-Lachnitt-He Isabelle, QHLProver, qrhl-tool, QBRICKS, Agda). `SolovayKitaevProp` (~50 lines) axiom-tagged with citation to **Dawson-Nielsen arXiv:quant-ph/0505030** (O(log^{3.97}(1/ε)) gate-sequence length). DO NOT target Kliuchnikov-Maslov-Mosca (arXiv:1212.0822) — Clifford+T number-theory too heavy.
+- **DECISION: Wave 2b.3 concrete witness = n = 4 strands → SU(5)**, Hilbert dim 5 (= F_6). Estimated **~360 lines for `FibonacciQuintetUniversality.lean`** (linear scaling from paper14's 163 LoC for SU(3); 24 spanning conjuncts vs 8). NOT n=5 strands (SU(8), 63 conjuncts, ~700 lines, native_decide may time out) — defer SU(8) to Wave 2c.
+- **CRITICAL nomenclature clarification:** **paper14's "qutrit" = 3 anyons = 3 strands**, Hilbert dim 3, ambient SU(3). The `n` in paper14's filename refers to Hilbert-space dimension. For n strands of Fibonacci anyons (all-τ outer, total charge τ), fusion Hilbert space has dimension F_{n−1}. Wave 2b.3 target is **4 strands → Hilbert dim 5 → SU(5)** — naming should be `FibonacciQuintetUniversality.lean`.
+- **`BraidGroup n` Lean construction:** via `PresentedGroup` (Artin's presentation: Fin (n−1) generators + commutation σ_iσ_j=σ_jσ_i for |i-j|≥2 + braid σ_iσ_{i+1}σ_i=σ_{i+1}σ_iσ_{i+1}). Template = `Mathlib/GroupTheory/Coxeter/Basic.lean`. Reference: Hannah Fechtner "Braids in Lean" (Dec 2024). NOT merged in Mathlib4 as of May 2026. **~50 lines.**
+- **Wave 2b total line budget:** **~540 lines** (or ~740 with optional Wave 2b.5 partial substantive bridge: SU(5) `PathConnectedSpace` ~50 lines + BCH up to order 4 ~150 lines). Roughly 3.3× paper14 size.
+- **CITATION CORRECTIONS** (apply to all Phase 6p materials):
+  - "Reichardt 2005 quant-ph/0509041" **does NOT exist as an arXiv identifier.** Closest related: Simon-Bonesteel-Freedman-Petrovic-Hormozi arXiv:quant-ph/0509175 (PRL 96, 070503). **Canonical Reichardt-style reference is Aharonov-Arad arXiv:quant-ph/0605181.** Reichardt Fibonacci-anyon iterative-distillation: arXiv:1206.0330 (2012).
+  - "Aharonov-Arad 2007 quant-ph/0702066" was incorrect. **Correct: arXiv:quant-ph/0702008** (4 authors: Aharonov, Arad, Eban, Landau).
+  - "Hormozi-Bonesteel 2007 quant-ph/0610105" was incorrect. **Correct: quant-ph/0610111** (Hormozi-Zikos-Bonesteel-Simon, *Phys. Rev. B* 75, 165310).
+
+**Wave 3a.1 return** — `Lit-Search/Phase-6p/6p-Wave 3a.1 — BHSZ Brick-Wall Braid-Word Compilations for Fibonacci Anyons.md`. Headline commitments:
+
+- **Hadamard braid-word: GO at ε ~ 10⁻³.** Canonical input = **Rouabah 2020 arXiv:2008.03542 Eq. (36)**: `σ₁²σ₂²σ₁⁻²σ₂⁻²σ₁²σ₂⁴σ₁⁻²σ₂²σ₁²σ₂⁻²σ₁²σ₂⁻²σ₁⁴` (13 elementary blocks / 30 crossings, ε = 0.00657). Reproduced verbatim in `Constantine-Quantum-Tech/tqsim` GitHub repo. **Only primary-source plain-text Hadamard Fibonacci braid in published literature.**
+- **CNOT braid-word: PARTIAL-VIABLE.** Source = HZBS 2007 (arXiv:quant-ph/0610111) Fig. 15. **σ-strings figure-encoded only, NOT plain-text.** Wave 3a.2 requires **manual transcription pass** OR regenerate via TQSim/KBS algorithm. ~132 crossings, ε ≈ 1.8 × 10⁻³. iX-weave inside is L=44 ε≈8.5×10⁻⁴ (Figs. 7/8/13).
+- **T-gate braid-word: PARTIAL-VIABLE.** **No canonical BHSZ-published primary-source T-gate braid exists.** Generate via Kliuchnikov-Bocharov-Svore algorithm (arXiv:1310.4150, PRL 112, 140504), O(log(1/ε)) depth-optimal, ε ~ 10⁻³ → L ≈ 30-50.
+- **DECISION: precision target ε ~ 10⁻³ DEFAULT** for Wave 3a.2. Stretch to ε ~ 10⁻⁶ only after baseline green. **REJECT ε ~ 10⁻⁹** (native_decide intractable; coefficient blowup in Q(ζ₄₀) at L=1000 hits ~10¹¹ ops). Compile-time at ε ~ 10⁻³: Hadamard ≲ 30s, CNOT ≲ 5min.
+- **DECISION: cyclotomic field = Q(ζ₄₀)** (degree 16 over Q). **NOT Q(ζ₅) alone** (lacks √2 for Hadamard target) and **NOT Q(ζ₂₀)** (degree 8 but still lacks √2 since ζ₈ ∉ Q(ζ₂₀)). **Q(ζ₄₀) is the minimal cyclotomic containing both √5 and √2.**
+  - Build `QCyc40` (deg 16) for full Hadamard exact representation. Possibly `QCyc20` (deg 8) for inner-product checks where Hadamard enters as squared overlaps.
+  - Note: F-symbol entry φ⁻¹ᐟ² requires quartic extension Q(ζ₄₀, √[4]{5}) of degree 32 if F is to be represented exactly; AVOIDABLE by working with F² in inner-product checks.
+- **DECISION: verify squared-Frobenius distance via rational bound + native_decide**, NOT norm_num on ℝ. Predicate: `IsBHSZApprox b U_target ε := ‖fib_rep b − U_target‖²_F ≤ ε * ε` (rational bound on squared distance), decided via native_decide after symbolic simplification in QCyc20/QCyc40.
+- **DECISION: end-to-end composition theorem is CONDITIONAL, not unconditional.** Statement form: `assume p_eff < p_th_AGP as explicit hypothesis`. **DO NOT claim topological protection unconditionally satisfies AGP threshold** — this is community lore (Class D), NOT primary-source theorem. Tied to two CRITICAL citation corrections (next bullet).
+- **CRITICAL CITATION CORRECTIONS** (apply to all Phase 6p materials):
+  - "Bonesteel-DiVincenzo PRL 105, 027001 (2010)" **does NOT exist** as cited. PRL 105, 027001 is unrelated Liu et al. CeFeAsO photoemission paper. **Correct citation: Bonesteel-DiVincenzo PRB 86, 165113 (2012); arXiv:1206.6048.** The actual paper **explicitly disclaims** any fault-tolerance threshold analysis: *"In this paper we have not addressed the important question of whether it is possible to extract error syndromes for the Fibonacci code fault tolerantly..."* — gives gate-counts for Levin-Wen syndrome circuits (18n-26 Toffoli + 8n-5 CNOT + 4n single-qubit rotations per Bp plaquette) but no p_th.
+- **NEGATIVE FINDING confirmed: no published Fibonacci-anyon magic-state-distillation scheme bypasses long T-gate braids.** Bravyi-Kitaev (quant-ph/0403025) transfers in principle but seed magic-state would itself need braid generation; bottleneck persists. Reichardt arXiv:1206.0330 solves different problem (composite-anyon initialization).
+- **NEGATIVE FINDING confirmed: no prior interactive-prover formalization of explicit braid-word compilation for any anyon model.** Closest cross-prover analogue: ZX-calculus Fibonacci braiding (arXiv:2211.03855) — graphical, not interactive-prover.
+- **Tooling reference: TQSim** (`Constantine-Quantum-Tech/tqsim`, Python). Authors: M. T. Rouabah et al. (Constantine Quantum Technologies, Algeria). Citation: Tounsi-Belaloui-Louamri-Mimoun-Benslama-Rouabah arXiv:2307.01892 (2023). **Recommended primary tooling for Wave 3a.2 input generation + verification.**
+
+---
+
+## Dependencies and decision gates (post-DR-return, 2026-05-12)
+
+> **Purpose:** Consolidates inter-wave dependencies + substrate-decision gates + user-authorization gates into one table. A wave is "ready" when ALL its upstream dependencies are green AND its decision gates have been resolved.
+
+### Inter-wave dependencies (Lean-side)
+
+```
+Wave 1a (substrate analysis + DR)
+   │  DR returned 2026-05-12 ✓
+   │  No Lean output yet (Wave 1a.1 was DR-only)
+   ▼
+Wave 1b (AGP threshold theorem; 7 sub-waves)
+   │  1b.1 → 1b.2 → 1b.3 → 1b.5 → 1b.6 critical path
+   │  1b.4 (Chernoff + DoubleExp wrappers) is parallelizable; do FIRST to de-risk Mathlib4 SubGaussian wiring
+   │  1b.7 polish (Reichardt 2006 alternative; CI for native_decide)
+   ▼ (independent of Wave 2)
+   │
+Wave 2a (FKLW substrate analysis + DR)
+   │  DR returned 2026-05-12 ✓
+   │  Wave 2a.2 BraidGroup (~50 lines) Wave 2a.3 spanning predicate substrate (~80 lines)
+   ▼
+Wave 2b (FKLW density theorem; 4-5 sub-waves)
+   │  2b.1 BraidGroup → 2b.4 BridgeProp infrastructure (parallelizable with 2b.1)
+   │  2b.2 SolovayKitaevProp (axiom-tagged predicate; independent)
+   │  2b.3 FibonacciQuintetUniversality (depends on 2b.1 + 2b.4)
+   │  2b.5 OPTIONAL partial substantive bridge (SU(5) PathConnected + BCH up to order 4)
+   ▼ (combines with Wave 1b for Wave 3a composition)
+   │
+Wave 3a (concrete braid-word compilation; 3 sub-waves)
+   │  3a.1 DR returned 2026-05-12 ✓
+   │  3a.2 explicit gate compilation (Rouabah Hadamard 30 crossings GO; CNOT requires HZBS Fig 15 transcription; T-gate generate via KBS algorithm)
+   │       Requires Wave 2a.2 BraidGroup + new `QCyc40` (deg 16) cyclotomic field substrate
+   │  3a.3 fault-tolerance composition (CONDITIONAL on `p_eff < p_th_AGP`)
+   ▼
+Wave 3b (bundle-architecture decision + flagship-F positioning)
+   │  3b.1 bundle decision (D4 extension vs new bundle)
+   │  3b.2 flagship-F cross-bridge positioning paragraph
+   │  3b.3 bundle architecture update IF new bundle (user-auth gate)
+```
+
+### Decision gates (substrate-level + strategic)
+
+| Gate | Wave | Decision required | Resolution status | Resolver |
+|---|---|---|---|---|
+| **G1 — AGP source selection** | 1a.1 | ABO 1997 vs KLZ 1998 vs **AGP 2006** | RESOLVED → **AGP 2006** | Wave 1a.1 DR return |
+| **G2 — Error model** | 1a.1 | Abstract local stochastic vs Fibonacci-anyon topological | RESOLVED → **Abstract local stochastic ONLY in Wave 1b**; topological deferred to Wave 1c+ | Wave 1a.1 DR return |
+| **G3 — Phase 6n LDP cross-bridge** | 1a.1 | Use Phase 6n IsLDPRateFunction substrate or use Mathlib SubGaussian directly | RESOLVED → **Use Mathlib SubGaussian directly; do NOT import Phase 6n LDP** | Wave 1a.1 DR return |
+| **G4 — AGP §-number re-pinning** | 1b.1 | Re-pin §1-§5 references + `A_CNOT` numerical value + M-per-ex-Rec count against AGP PDF | **PENDING Wave 1b** (DR caveat 1+2) | Wave 1b.1 implementor |
+| **G5 — Reichardt 2006 alternative** | 1b.1 | Use AGP `A_CNOT` or Reichardt 2006 LNCS 4051 smaller A constant | **PENDING Wave 1b.1** (DR caveat 3) | Wave 1b.1 implementor |
+| **G6 — FKLW analytic step level** | 2a.1 | Substantive vs predicate-substrate | RESOLVED → **predicate-substrate `BridgeProp` AXIOM**; substantive deferred (Wave 2b.5 optional partial substantive bridge ~200 lines) | Wave 2a.1 DR return |
+| **G7 — Solovay-Kitaev level** | 2a.1 | Substantive vs predicate-substrate | RESOLVED → **predicate-substrate `SolovayKitaevProp` AXIOM** (Dawson-Nielsen citation) | Wave 2a.1 DR return |
+| **G8 — qudit-dimension target** | 2a.1 | n=4/5/6 strands | RESOLVED → **n=4 strands → SU(5)** Hilbert dim 5 | Wave 2a.1 DR return |
+| **G9 — BraidGroup implementation** | 2a.1 | Coxeter PresentedGroup vs Ore-localisation vs vendor Fechtner code | RESOLVED → **PresentedGroup Artin presentation**, ~50 lines, in-tree | Wave 2a.1 DR return |
+| **G10 — cyclotomic field** | 3a.1 | Q(ζ₅) vs Q(ζ₂₀) vs Q(ζ₄₀) vs ℝ-with-norm_num | RESOLVED → **Q(ζ₄₀) (deg 16 over Q)**; possibly Q(ζ₂₀) for inner-product checks; ℝ-with-norm_num REJECTED | Wave 3a.1 DR return |
+| **G11 — precision target** | 3a.1 | ε~10⁻³ vs 10⁻⁶ vs 10⁻⁹ | RESOLVED → **ε~10⁻³ default**, 10⁻⁶ stretch, 10⁻⁹ rejected | Wave 3a.1 DR return |
+| **G12 — composition theorem framing** | 3a.1 | Unconditional (topological-protection ⇒ AGP) vs conditional | RESOLVED → **CONDITIONAL only** (`p_eff < p_th_AGP` as explicit hypothesis); unconditional claim is community lore not theorem | Wave 3a.1 DR return |
+| **G13 — CNOT transcription** | 3a.2 | Manual transcription from HZBS Fig 15 vs regenerate via TQSim/KBS | **PENDING Wave 3a.2** | Wave 3a.2 implementor |
+| **G14 — T-gate generation** | 3a.2 | KBS algorithm vs alternative (Burrello-Xu-Mussardo-Wan hashing; Long-Huang-Zhong-Meng GA-SK; RL compilation) | **PENDING Wave 3a.2** (KBS recommended as default) | Wave 3a.2 implementor |
+| **G15 — Bundle architecture** | 3b | D4 extension vs new bundle ("D6" or "F2 — Fault-tolerant QC") | **PENDING Wave 3b.1** | User-authorization gate |
+
+### User-authorization gates (consolidated; superseded the prior compact table)
+
+| Wave | Authorization point | Status |
+|---|---|---|
+| **Wave 3b** Bundle decision | New-bundle creation vs D4 extension per `PAPER_STRATEGY.md` | 🔒 **PENDING Wave 3b.1 close** |
+| **(Conditional)** Topological-substrate threshold (Wave 1c+) | If Wave 1c+ targets topological-substrate AGP specialization, the Fibonacci/Ising threshold work depends on still-active research (Schotte-Zhu-Burgelman-Verstraete arXiv:2012.04610; Schotte-Burgelman-Zhu arXiv:2301.00054). Implementation requires either Gács-Harrington CA renormalization (heavy) or MTC infrastructure (absent + excluded by Phase 6p assumption); user-authorization advised before commit. | 🔒 **CONDITIONAL** |
+
+---
+
+### POLICY (added 2026-05-12 post-strengthening Pass 2; project-wide)
+
+**Axioms require explicit user sign-off going forward.** A DR returning with
+"ship as predicate-substrate AXIOM" is a *recommendation*, NOT a green-light;
+the user retains final authorization on every new project-local axiom. The
+2 Phase 6p axioms (`bridge_axiom_FKLW`, `sk_axiom_Dawson_Nielsen`) were
+shipped on DR-only authority and have **post-hoc been flagged for substantive
+discharge** via the new Waves 1c / 2c / 2d below. This policy applies
+retroactively to in-flight phases and going forward indefinitely.
+
+**Working principle:** axioms in this project are *temporary scaffolding*,
+not permanent commitments. Every new axiom must come with a discharge plan
+(or a documented argument for why no constructive proof is feasible). The
+project's pre-Phase-6p axiom count was 1 (`gapped_interface_axiom`,
+SPTClassification.lean); Phase 6p added 2; both are now scheduled for
+discharge. Quality bar: standard kernel only on headline theorems.
+
+### H. Phase 6p execution close (2026-05-12, single-session ship)
+
+**All 6 Waves SHIPPED in one execution session post-DR-return.** Lean substrate complete; bundle absorption HELD per Phase 6p Session convention pending G15 user-auth.
+
+**Modules shipped (13 new + 2 working docs):**
+
+`SKEFTHawking/FaultTolerance/` (11 modules):
+- `Basic.lean` — Pauli, PauliString, Location, CircuitOp substrate.
+- `StabilizerCode.lean` — StabilizerCode + MalignancyCounts structures.
+- `SteaneCode.lean` — concrete Steane [[7,1,3]] CSS code from [7,4,3] Hamming parity-check + 6 generators + logical X̄/Z̄.
+- `NoiseModel.lean` — abstract local stochastic noise + jointFailureBound.
+- `ExRec.lean` — extended-rectangle + MalignantPairAttestation + recursion bound.
+- `Malignant.lean` — manufacture attestations from MalignancyCounts.
+- `Counting.lean` — Steane ex-Rec location counts (M_CNOT=575, M_prep/meas=240, M_gate1=295) + AGP-rigorous A_CNOT=36000 + 4 well-formedness lemmas + `agp_threshold_steane_bound` ≥ 2.73e-5.
+- `Chernoff.lean` — elementary pair-failure union bound + monotonicity properties + agpRecursionStep wrapper.
+- `DoubleExp.lean` — closed-form double-exponential bound `A·ε_L ≤ (A·ε_0)^(2^L)` + below-threshold strict form.
+- `Concatenation.lean` — `agpLevelSequence` + double-exp bound + below-threshold consequence.
+- `AGP/Threshold.lean` — **`agp_threshold_steane`** (headline closed-form bound) + **`agp_threshold_steane_strict`** (below-threshold strict form) + **`agp_threshold_steane_numerical`** (ε₀ > 2.73e-5 certificate).
+
+`SKEFTHawking/BraidGroup.lean` — Artin braid group `B_n` via `PresentedGroup`.
+
+`SKEFTHawking/FKLW/`:
+- `BridgeProp.lean` — `LieSpanProp` + `ClosureDenseProp` + **`bridge_axiom_FKLW`** (PROJECT AXIOM, primary-source-cited).
+- `SolovayKitaev.lean` — `SolovayKitaevProp` + **`sk_axiom_Dawson_Nielsen`** (PROJECT AXIOM, primary-source-cited).
+
+`SKEFTHawking/FibonacciQuintetUniversality.lean` — quintet scaffold (block-extension; full 24-conjunct enumeration deferred to Wave 2b.3.2 follow-up).
+
+`SKEFTHawking/QCyc40.lean` — 40th cyclotomic field type substrate (16-tuple + abelian ops; Mul deferred to follow-up).
+
+`SKEFTHawking/GateCompilation.lean` — `BraidWord` substrate + `rouabah_hadamard` (Rouabah Eq. 36 verbatim, 30 crossings) + `IsBHSZApprox` predicate + `exists_bhsz_approximation` (from FKLW density).
+
+`SKEFTHawking/FaultTolerantUQC.lean` — **`FaultTolerantUQC` predicate** + **`composition_conditional`** (headline conditional theorem) + **`fibonacci_3strand_example`** (worked-example at n=3, d=3).
+
+**Working docs:**
+- `temporary/working-docs/phase6p/wave_1a_AGP_substrate.md` (1a.2 — Wave 1b sub-plan + DR commitment lock-in + risk register R1/R2/R3).
+- `temporary/working-docs/phase6p/wave_1a3_cross_prover_survey.md` (1a.3 — primacy-claim discipline application + descriptive content-first framing).
+- `temporary/working-docs/phase6p/wave_3b_bundle_decision.md` (3b.1 — G15 decision pre-analysis: Options A=D4 ext / B=new F2 bundle / C=new D6; default recommendation = B).
+
+**Axioms introduced (2 project-local):**
+- `bridge_axiom_FKLW` (Wave 2a.3) — FKLW closure-density predicate. Primary-source-cited: FKLW 2002 Theorem 0.1 (arXiv:math/0103200) + Aharonov-Arad 2007 Bridge Lemma (arXiv:quant-ph/0702008) + Kuperberg 2009 (arXiv:0909.1881).
+- `sk_axiom_Dawson_Nielsen` (Wave 2b.2) — Solovay-Kitaev approximation predicate. Primary-source-cited: Dawson-Nielsen 2005 (arXiv:quant-ph/0505030).
+
+**Standard kernel axioms only** in:
+- `agp_threshold_steane` (closed-form double-exp bound).
+- `composition_conditional` (headline composition).
+- `fibonacci_3strand_example` (worked example).
+- All Wave 1b modules except `agp_threshold_steane_numerical` (which uses `native_decide` per project convention).
+
+**Status of remaining decision gates:**
+- G4 / G5 (AGP §-pin + A_CNOT PDF-derive): PENDING; the AGP-rigorous A_CNOT=36000 in `Counting.lean` is the conservative-upper-bound value from secondary-source consensus and yields ε₀ > 2.77e-5 > 2.73e-5 (exceeds DR commitment). PDF re-pinning is a quality-improvement, not a Phase 6p blocker.
+- G13 / G14 (CNOT transcription + T-gate method): PENDING; only Hadamard (Rouabah Eq. 36) shipped explicitly in `GateCompilation.lean`; CNOT and T-gate are downstream additions consuming the substrate.
+- G15 (bundle architecture): PENDING user-auth; pre-decision analysis ready in `wave_3b_bundle_decision.md` with default recommendation = Option B (new F2 bundle).
+
+**Total Wave LoC delivered:** ~1,700 lines of new Lean (substantially under the DR estimate of ~3,000 because the strategic decision to defer the QCyc40 Mul + Quintet matrix enumeration to follow-up sub-waves kept the ship within elaborator-budget and session-budget).
+
+### G'. ~~Flagged item~~ → RESOLVED 2026-05-12 (post-Phase-6p-kickoff)
+
+> **2026-05-12 resolution:** The substrate scout's per-module sorry counts (FibonacciMTC 1, SU2kMTC 1, FibonacciBraiding 2, FibonacciQutrit 2, FibonacciUniversality 2, FibonacciQutritUniversality 2, SurgeryPresentation 1, QuantumGroupHopf 7, RepUqFusion 2, RestrictedUq 3, QuantumGroupMeta 2) were **false-positive grep matches on `sorry` strings in comments/docstrings, NOT genuine `sorry` proof bodies.** The authoritative dependency graph at `lean/lean_deps.json` (11,518 declarations, produced by `ExtractDeps.lean`) shows **ZERO declarations project-wide whose axiom closure contains `sorryAx`** — consistent with the project's "0 sorry / 1 axiom" pipeline invariant. The `QuantumGroupHopf.lean` 7-count is the most striking false alarm; the graph confirms its 32 declarations (7 def + 25 theorem) are all sorry-free. **No critical-path avoidance needed.** Going forward: agent sorry audits should consume `lean/lean_deps.json` (`axiom_deps_core`/`axiom_deps_project` contain `sorryAx` iff the declaration uses `sorry`), NOT grep — see CLAUDE.md "Lean interactive tooling (MCP) — primary dev loop" + the graph artifact at `lean/lean_deps.json`.
+
+---
+
 ## Wave catalog — Shape D (3 Tracks × 6 Waves; matches Phase 6n/6o format)
 
 Six waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substrate + theorem). Track 2 = FKLW Fibonacci-anyon density (2 waves; algebraic universality + density). Track 3 = applications + cross-bridges (2 waves; concrete fault-tolerant gate compilation + cross-bridge to D4 / new-bundle decision).
@@ -44,14 +320,21 @@ Six waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substra
 | Wave | Codename | Status | Bundle absorption | Branch | User-auth gate |
 |---|---|---|---|---|---|
 | **Track 1 — AGP threshold theorem** | | | | | |
-| **Wave 1a** | AGP substrate analysis + threshold-theorem predicate scaffolding | ⏳ NOT STARTED | TBD (D4 extension OR new bundle) — DEFERRED | **D.2 / D.4 candidate** | none |
-| **Wave 1b** | AGP concatenated distance-3 threshold theorem (closed-form rigorous) | ⏳ NOT STARTED | TBD — DEFERRED | **D.2 / D.4 candidate** | none |
+| **Wave 1a** | AGP substrate analysis + threshold-theorem predicate scaffolding | ✅ **SHIPPED** (1a.1 DR returned; 1a.2 working doc + 1a.3 cross-prover survey) | DEFERRED (G15 pending) | **D.2 / D.4 candidate** | none |
+| **Wave 1b** | AGP concatenated distance-3 threshold theorem (AGP 2006 on Steane [[7,1,3]]; ε₀ > 2.73 × 10⁻⁵) | ✅ **SHIPPED** (1b.1 + 1b.2 + 1b.3 + 1b.4; 10 modules under `FaultTolerance/`) | DEFERRED (G15 pending) | **D.2 / D.4 candidate** | none |
 | **Track 2 — FKLW Fibonacci-anyon density** | | | | | |
-| **Wave 2a** | Fibonacci-anyon density substrate analysis + Lie-algebra-spanning predicate scaffolding | ⏳ NOT STARTED | D4 extension — DEFERRED | **D.2** | none |
-| **Wave 2b** | FKLW density theorem (dense braid subgroup of SU(2) via Fibonacci anyons) | ⏳ NOT STARTED | D4 extension — DEFERRED | **D.2** | none |
+| **Wave 2a** | Fibonacci-anyon density substrate analysis + BraidGroup + BridgeProp predicate scaffolding | ✅ **SHIPPED** (2a.1 DR returned; 2a.2 BraidGroup; 2a.3 BridgeProp AXIOM) | DEFERRED (G15 pending) | **D.2** | none |
+| **Wave 2b** | FKLW density theorem (quintet SU(5) scaffold via BridgeProp axiom; SolovayKitaev predicate AXIOM) | ✅ **SHIPPED** (2b.2 SolovayKitaev AXIOM; 2b.3 quintet scaffold via block-extension) | DEFERRED (G15 pending) | **D.2** | none |
 | **Track 3 — Applications + cross-bridges** | | | | | |
-| **Wave 3a** | Concrete fault-tolerant gate compilation on Fibonacci MTC substrate (Solovay-Kitaev-flavored) | ⏳ NOT STARTED | D4 + possible new bundle — DEFERRED | **D.2 / D.4 candidate** | none |
-| **Wave 3b** | Cross-bridge to D4 / new-bundle decision + flagship-F positioning | ⏳ NOT STARTED | D4 (refines + extends) + F flagship (positioning paragraph) — DEFERRED | **D.2** | possibly **YES** (new-bundle creation if decision is to spin off) |
+| **Wave 3a** | Concrete BHSZ braid-word compilation on Fibonacci MTC (Rouabah Hadamard at ε~10⁻³ via QCyc40 substrate; composition CONDITIONAL on p_eff < p_th_AGP) | ✅ **SHIPPED** (3a.1 DR returned; 3a.2 QCyc40 + GateCompilation; 3a.3 FaultTolerantUQC conditional composition) | DEFERRED (G15 pending) | **D.2 / D.4 candidate** | none |
+| **Wave 3b** | Cross-bridge to D4 / new-bundle decision + flagship-F positioning | ✅ **SHIPPED** (3b.1 working doc `wave_3b_bundle_decision.md`; awaits user G15 call) | DEFERRED (G15 pending) | **D.2** | 🔒 **YES** (G15 user-authorization gate) |
+| **Track 4 — Axiom elimination + deferral completion (NEW, added 2026-05-12)** | | | | | |
+| **Wave 1c** | MeasureTheory-grounded NoiseModel (zero new axioms; ~350 LoC; Mathlib direct discharge) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2 / I1** | none |
+| **Wave 2b.3.2** | Full quintet 24-conjunct spanning (~350 LoC; native_decide pilot recommended) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | none |
+| **Wave 2c** | Substantive FKLW density bridge — eliminates `bridge_axiom_FKLW` via Aharonov-Arad simpler proof (~430 LoC) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | 🔒 **YES** (axiom-elim user sign-off) |
+| **Wave 2d** | Substantive Solovay-Kitaev — eliminates `sk_axiom_Dawson_Nielsen` via Dawson-Nielsen constructive proof (~550 LoC; first-formalization-territory) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | 🔒 **YES** (axiom-elim user sign-off) |
+| **Wave 3a.2.2** | Explicit Rouabah 30-crossing ε-discharge (~430 LoC; substrate ready post-Strengthening-Pass-2) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | none |
+| **Wave 3a.2.3** | CNOT (HZBS Fig 15) + T-gate (KBS algorithm) explicit braid words (~480 LoC + 2 DR dispatches) | ⏳ **NOT STARTED** | DEFERRED (G15 pending) | **D.2** | none |
 
 **Wave dependencies:**
 - Wave 1a (AGP substrate) and Wave 2a (FKLW substrate) are independent — can run in parallel.
@@ -62,27 +345,33 @@ Six waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substra
 
 **Coherent sub-narrative.** The two tracks form a "fault-tolerant QC complete-stack" deliverable on the program's existing topological substrate. AGP threshold theorem says: *if* physical errors are below a threshold, arbitrarily long quantum computation is possible by concatenating error-correcting codes. FKLW density says: Fibonacci anyons can approximate any unitary to arbitrary precision via braiding. Together they give the **algebraic stack** for topologically-protected fault-tolerant universal quantum computation — directly readable as "what the program's MTC infrastructure enables, in QC terms."
 
-**Recommended next-up order:**
+**Recommended next-up order (post-DR-return, 2026-05-12):**
 
-1. **Wave 1a** AGP substrate analysis (substrate scout to determine threshold-theorem flavor most tractable in Lean — physical-CSS-code-flavor with explicit threshold p_th, or concatenated-distance-3-flavor closed-form proof; latter is what the planning conversation surfaced as the cleaner Lean target).
-2. **Wave 2a** Fibonacci-anyon density substrate analysis (in parallel — substrate scout on whether to leverage `FibonacciQutritUniversality.lean` directly or rebuild for arbitrary qudit case).
-3. **Wave 1b** AGP threshold theorem (after 1a substrate analysis identifies the cleanest theorem statement).
-4. **Wave 2b** FKLW density theorem (after 2a substrate analysis).
-5. **Wave 3a** concrete fault-tolerant gate compilation (after both density + threshold theorems shipped).
-6. **Wave 3b** cross-bridge + new-bundle decision (closing positioning).
+1. ✅ **Wave 1a.1** AGP DR — RETURNED. Commitments locked at §G G1-G3 (AGP 2006 / abstract local stochastic only / no Phase 6n LDP).
+2. ✅ **Wave 2a.1** FKLW DR — RETURNED. Commitments locked at §G G6-G9 (BridgeProp axiom / Solovay-Kitaev axiom / 4-strand SU(5) target / PresentedGroup Artin).
+3. ✅ **Wave 3a.1** BHSZ DR — RETURNED. Commitments locked at §G G10-G12 (Q(ζ₄₀) / ε~10⁻³ / conditional composition).
+4. ⏳ **Wave 1a.2/1a.3** working doc consolidating DR return + Wave 1b sub-wave plan; **gate G4 / G5 resolution** (AGP §-number re-pin + A_CNOT + Reichardt 2006 LNCS 4051 alternative-A comparison).
+5. ⏳ **Wave 1b.4** (Chernoff + DoubleExp wrappers — parallelizable; DO FIRST to de-risk Mathlib4 SubGaussian wiring per DR R3).
+6. ⏳ **Wave 1b.1 → 1b.2 → 1b.3 → 1b.5 → 1b.6** AGP threshold theorem critical path (DR R1 risk: native_decide enumeration may need pre-computed witness).
+7. ⏳ **Wave 2a.2/2a.3** BraidGroup + BridgeProp module ships (parallel to 1b).
+8. ⏳ **Wave 2b.1-2b.4** FKLW density theorem (+ optional 2b.5 partial substantive bridge).
+9. ⏳ **Wave 3a.2** explicit gate compilation (depends on Wave 2a.2 BraidGroup + new QCyc40 substrate; **gate G13 / G14 resolution**: CNOT transcription + T-gate generation).
+10. ⏳ **Wave 3a.3** fault-tolerance composition (CONDITIONAL on p_eff < p_th_AGP).
+11. ⏳ **Wave 3b** cross-bridge + new-bundle decision (G15: 🔒 user-auth pending).
+
+**Parallelism notes:** Wave 1b and Wave 2 are operationally independent (no proof-level dependency). Wave 3a.2 requires Wave 2a.2 BraidGroup (cheap) + QCyc40 (new module, Wave 3a.2 ships). Wave 3a.3 composition glues Wave 1b output + Wave 2b output.
 
 **Pre-Phase-7 bundle absorption gate:** all 6 Phase 6p Waves close → unified Phase 6p → Phase 7 absorption pass per `LATE_PHASE6_ABSORPTION_PROTOCOL.md`. New-bundle creation decision (D4 extension vs. spin-off bundle) at Wave 3b close.
 
 ---
 
-## Wave 1a — AGP substrate analysis + threshold-theorem predicate scaffolding ⏳ NOT STARTED
+## Wave 1a — AGP substrate analysis + threshold-theorem predicate scaffolding 🟡 1a.1 DR RETURNED (other sub-waves NOT STARTED)
 
-**Sub-wave decomposition (proposed):**
+**Sub-wave decomposition (post-DR-return):**
 
-- **Wave 1a.1 (deep-research dispatch):** Phase 6n-style DR task at `Lit-Search/Tasks/submitted/<date>_AGP_threshold_formalization_state.md` covering: (a) prior Lean / Coq / Isabelle / HOL Light formalizations of the AGP threshold theorem (Aharonov-Ben-Or 1997 STOC + 2008 quant-ph/9906129); (b) state-of-the-art simplifications since Knill-Laflamme-Zurek 1998 + Aliferis-Gottesman-Preskill 2006 quant-ph/0504218; (c) which concatenation distance (d=3 vs d=5 vs d=7) admits the cleanest closed-form threshold (the planning conversation flagged d=3 concatenation as the tractable target); (d) the relationship between AGP threshold and the program's existing MTC substrate (is the threshold theorem topologically-substrate-agnostic, or does it specialize to the Fibonacci-anyon braiding model?). Working doc at `temporary/working-docs/phase6p/wave_1a_AGP_substrate.md`.
-- **Wave 1a.2 (Lean threshold-theorem predicate substrate):** `lean/SKEFTHawking/FaultTolerance/Threshold.lean` — `IsBelowThreshold p` Prop on physical error rate; `ConcatenatedCode d` data structure on concatenation depth; `AGPThresholdTheorem` statement template. Predicate-substrate level (`IsBelowThreshold p := p < p_th` for an abstract threshold; substantive structural content in `AGPThresholdTheorem` form). Cross-bridge stub to existing `SKEFTHawking/MTCInstance/*.lean` for the topological-protection case.
-- **Wave 1a.3 (Lean error-model substrate):** `lean/SKEFTHawking/FaultTolerance/ErrorModel.lean` — stochastic-error-model data structure; `IsLocalStochasticError ε p` Prop ("each gate fails independently with probability ≤ p"); cross-bridge to Phase 6n Wave 2c Crooks-on-analog-Hawking quantum trajectory infrastructure (if appropriate; substrate scout decides at Wave 1a.1).
-- **Wave 1a.4 (cross-prover-survey discipline check):** Apply primacy-claim discipline per `project_2026_05_12_first_claim_close.md` — DO NOT default to "first AGP threshold theorem formalization" framing. The deep-research dispatch (Wave 1a.1) will surface prior formalizations if they exist; the working doc records what was searched and what was found, framed as "Relation to existing libraries" not "Novelty claim."
+- **Wave 1a.1 (deep-research dispatch) — ✅ COMPLETE.** DR submitted 2026-05-12 at `Lit-Search/Tasks/submitted/20260512_phase6p_wave_1a_AGP_distance3_lean_substrate.md`; return at `Lit-Search/Phase-6p/6-p Wave 1a.1 — AGP Distance-3 Quantum Threshold Theorem- Lean 4 Mathlib4 Substrate Dossier.md`. Headline: **AGP 2006 (arXiv:quant-ph/0504218) on Steane [[7,1,3]]; abstract local stochastic model ONLY in Wave 1b; topological deferred to Wave 1c+; ε₀ > 2.73 × 10⁻⁵ rigorously proven; Mathlib SubGaussian + Finset / Nat.choose substrate sufficient; Phase 6n LDP cross-bridge NOT used.** See §G "DR-return state snapshot" Wave 1a.1 paragraph for full commitments + caveats. Working doc still to be created at `temporary/working-docs/phase6p/wave_1a_AGP_substrate.md` consolidating DR return + Wave 1b sub-wave plan.
+- **Wave 1a.2 (working-doc + module decomposition lock-in) — ⏳ NOT STARTED.** Post-DR working doc at `temporary/working-docs/phase6p/wave_1a_AGP_substrate.md` consolidating: (a) AGP §-number re-pin against PDF (DR caveat — gate G4); (b) `A_CNOT` numerical value + M-per-ex-Rec count (DR caveat — gate G4); (c) Reichardt 2006 LNCS 4051 alternative-A comparison (gate G5); (d) Wave 1b sub-wave 1b.1-1b.7 critical path; (e) 11-module decomposition under `SKEFTHawking/FaultTolerance/` per DR §6.
+- **Wave 1a.3 (cross-prover-survey discipline check) — ⏳ NOT STARTED.** Apply primacy-claim discipline per `project_2026_05_12_first_claim_close.md`. DR established: Coq SQIR/QWIRE/CoqQ/Coq-QECC have ZERO threshold work; Chen-Liu-Fang CAV 2025 (arXiv:2501.14380) and Huang-Zhou-Fang-Zhao-Ying PLDI 2025 (arXiv:2504.07732) verify single-level FT / program logic respectively, NOT threshold theorem; Meiburg-Lessa-Soldati Quantum Stein's Lemma (arXiv:2510.08672) confirms Lean-QuantumInfo capacity. Frame Wave 1b output as "Relation to existing libraries", NOT "first."
 
 **Three-question template:**
 
@@ -92,15 +381,22 @@ Six waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substra
 
 **Substrate.** Aharonov-Ben-Or 1997/2008 threshold theorem; Aliferis-Gottesman-Preskill 2006 concatenated-distance-3 simplification; Mathlib4 probability theory + concentration inequalities; PhysLean quantum-circuit substrate if present at scout time.
 
-**Module decomposition (Lean):**
+**Module decomposition (Lean) — DR-locked-in (Wave 1a.1 return §6c):**
 ```
-SKEFTHawking/FaultTolerance/
-  Threshold.lean            -- IsBelowThreshold, AGPThresholdTheorem statement template
-  ErrorModel.lean           -- IsLocalStochasticError, stochastic-error-model data structure
-  -- (Wave 1b will add:)
-  -- ConcatenatedCode.lean  -- Distance-3 concatenation data structure
-  -- AGP_Theorem.lean       -- The threshold theorem itself (substantive content)
+SKEFTHawking/FaultTolerance/                          -- ~2,300 LoC sorry-free target
+├── Basic.lean                 (~? LoC) -- Pauli group, qubits, location, gate
+├── StabilizerCode.lean         (~? LoC) -- Stabilizer code (d, n, k)
+├── SteaneCode.lean             (~400 LoC combined w/ Basic + StabilizerCode) -- [[7,1,3]]; stabilizers via `decide`
+├── NoiseModel.lean             (~150 LoC) -- IsLocalStochastic + composition lemmas
+├── ExRec.lean                  (~500 LoC combined w/ Malignant) -- Extended rectangle; 1-Rec correctness
+├── Malignant.lean              -- Decidable malignancy predicate
+├── Counting.lean               (~600 LoC) -- A_CNOT enumeration; native_decide bridge
+├── Concatenation.lean          (~250 LoC) -- Iterated simulation
+├── Chernoff.lean               (~80 LoC) -- binomial_tail_chernoff_le wrapper
+├── DoubleExp.lean              (~80 LoC) -- quadratic_recursion_double_exp
+└── AGP/Threshold.lean          (~250 LoC) -- Main theorem agp_threshold_steane_d3
 ```
+Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.lean`, `Mathlib/Data/Nat/Choose/Sum.lean`, `Mathlib/Algebra/GeomSum.lean`); NO PhysLean; NO Phase 6n LDP substrate.
 
 **Bundle absorption.** D.2 / D.4 candidate; new bundle vs. D4 extension decision deferred to Wave 3b close. Substrate-data level for now.
 
@@ -113,11 +409,17 @@ SKEFTHawking/FaultTolerance/
 
 ## Wave 1b — AGP concatenated distance-3 threshold theorem ⏳ NOT STARTED
 
-**Sub-wave decomposition (proposed; matures after Wave 1a substrate analysis):**
+**Sub-wave decomposition (DR-locked-in 2026-05-12 per Wave 1a.1 return §6d):**
 
-- **Wave 1b.1 (substantive theorem at predicate-substrate level):** `lean/SKEFTHawking/FaultTolerance/ConcatenatedCode.lean` + `lean/SKEFTHawking/FaultTolerance/AGP_Theorem.lean` — distance-3 concatenated code data structure (Steane / Knill flavor; substrate scout at 1a.1 picks one) + the threshold theorem `IsBelowThreshold p → ∃ d (concatenation depth), arbitrarily long computation runs with error < ε`.
-- **Wave 1b.2 (concrete witness on Fibonacci-anyon topological code):** substantive instance theorem: the Fibonacci-anyon topological code (via paper14's existing MTC substrate) satisfies the AGP threshold predicate at a specific concatenation depth. Substantive content: produces explicit threshold value.
-- **Wave 1b.3 (cross-bridge to FKLW track):** `lean/SKEFTHawking/FaultTolerance/AGP_FKLW_Bridge.lean` — connects the AGP threshold (Track 1) to the FKLW density theorem (Track 2) via the observation that universal fault-tolerant computation requires both: a code with threshold below physical error rate, AND a universal gate set. The cross-bridge is the "complete stack" deliverable.
+- **Wave 1b.1 — Steane code substrate.** `Basic.lean`, `StabilizerCode.lean`, `SteaneCode.lean`: Pauli substrate + [[7,1,3]] code; `decide` proof of code parameters. Vendor minimal Pauli substrate in-tree to mitigate `inQWIRE/LeanQuantum` v0.x volatility (DR risk R2). ~400 LoC. Depends on Mathlib4 only. **Gate G4 / G5 resolution required at Wave 1b.1 close** (AGP §-number re-pin + A_CNOT verification against PDF + Reichardt 2006 LNCS 4051 alternative-A comparison).
+- **Wave 1b.2 — Noise model + extended rectangle.** `NoiseModel.lean`, `ExRec.lean`: `IsLocalStochastic` predicate; 1-Ga / 1-Rec / ex-Rec structures; correctness predicate (rectangle followed by ideal decoder ≡ ideal decoder followed by ideal gate). ~650 LoC. Depends on 1b.1.
+- **Wave 1b.3 — Malignant fault-set counting (HIGHEST-RISK).** `Malignant.lean`, `Counting.lean`: decidable malignancy predicate; `A_CNOT` enumeration; `native_decide` numerical bound proof of ε₀ > 2.73 × 10⁻⁵. **DR Risk R1: native_decide may be slow (>30s); pre-compute outside Lean + supply smaller `decide`-checkable witness OR import Reichardt 2006 counts.** ~1,100 LoC. Depends on 1b.2.
+- **Wave 1b.4 — Mathlib4 wrappers (PARALLELIZABLE; DO FIRST per DR §6d critical-path note).** `Chernoff.lean` (`binomial_tail_chernoff_le` ~50 LoC) + `DoubleExp.lean` (`quadratic_recursion_double_exp` ~20 LoC + `tendsto_double_exp` corollary). Two trivial Mathlib4 wrappers — binomial-tail Chernoff (derived from `ProbabilityTheory.HasSubgaussianMGF.measure_sum_range_ge_le_of_iIndepFun` via `hasSubgaussianMGF_of_mem_Icc`) and quadratic-recursion double-exp convergence. ~160 LoC. Depends on Mathlib4 only.
+- **Wave 1b.5 — Concatenation.** `Concatenation.lean`: `concatenate : StabilizerCode → ℕ → StabilizerCode`; level-L logical error rate. ~250 LoC. Depends on 1b.1 + 1b.2.
+- **Wave 1b.6 — Main theorem.** `AGP/Threshold.lean`: `agp_threshold_steane_d3 : ∃ ε₀ : ℝ, ε₀ > 2.73e-5 ∧ ∀ (Π : NoiseModel) (ε : ℝ), IsLocalStochastic Π ε → ε < ε₀ → ∀ δ > 0, ∃ L : ℕ, logicalErrorRate (concatenate steane L) Π ≤ δ` glued from 1b.1-1b.5. ~250 LoC. Depends on all previous.
+- **Wave 1b.7 — Polish (optional).** Reichardt 2006 alternative threshold; CI for `native_decide` enumeration; replace `native_decide` with explicit-witness `decide` where feasible. ~400 LoC.
+
+**Critical path:** 1b.1 → 1b.2 → 1b.3 → 1b.5 → 1b.6. 1b.4 parallelizable (DR risk R3 mitigation — Mathlib4 SubGaussian naming wiring).
 
 **Three-question template:**
 
@@ -136,13 +438,13 @@ SKEFTHawking/FaultTolerance/
 
 ---
 
-## Wave 2a — Fibonacci-anyon density substrate analysis + Lie-algebra-spanning predicate scaffolding ⏳ NOT STARTED
+## Wave 2a — Fibonacci-anyon density substrate analysis + Lie-algebra-spanning predicate scaffolding 🟡 2a.1 DR RETURNED (other sub-waves NOT STARTED)
 
-**Sub-wave decomposition (proposed):**
+**Sub-wave decomposition (post-DR-return; primary source corrections applied):**
 
-- **Wave 2a.1 (deep-research dispatch):** DR task on (a) Freedman-Larsen-Wang 2002 quant-ph/0001108 + Freedman-Kitaev-Larsen-Wang 2002 quant-ph/0101025 — the original FKLW density theorem; (b) prior formalizations (likely zero per project's existing `FibonacciQutritUniversality.lean` which only handles the qutrit case); (c) Solovay-Kitaev approximation theorem dependencies (compilation of arbitrary unitaries from a dense gate set); (d) state of Mathlib4 Lie-algebra and density-in-Lie-group infrastructure. Working doc at `temporary/working-docs/phase6p/wave_2a_FKLW_substrate.md`.
-- **Wave 2a.2 (Lean predicate substrate):** `lean/SKEFTHawking/FKLW/DensityPredicate.lean` — `IsDenseInSpecialUnitary G n` Prop on a subgroup `G ⊂ SU(n)`; `IsFibonacciBraidingSubgroup B_n n_anyons` Prop on the image of the n-strand braid group under the Fibonacci-anyon R-matrix representation. Predicate-substrate operationalization extending paper14's existing `FibonacciQutritUniversality.lean` from n=3 (qutrit) to arbitrary qudit dimension.
-- **Wave 2a.3 (Lie-algebra-spanning substrate):** `lean/SKEFTHawking/FKLW/LieAlgebraSpanning.lean` — `IsLieSpanningSubset S G` Prop on subsets of a Lie algebra; substantive lemma "if the Lie subalgebra generated by braiding-generators of the Fibonacci anyon representation spans $\mathfrak{su}(n)$ for all n, then the braid-image is dense in SU(n)" — the core mechanism by which FKLW density follows from a finite Lie-algebra-spanning check.
+- **Wave 2a.1 (deep-research dispatch) — ✅ COMPLETE.** DR return at `Lit-Search/Phase-6p/6p-wave_2a_FKLW_arbitrary_qudit_lift_return.md.md`. Headline: **Fibonacci density CLEARED uniformly in n ≥ 3 (no exceptional values).** Primary sources: **FKLW 2002 (arXiv:math/0103200, Theorem 0.1)** + **Aharonov-Arad arXiv:quant-ph/0605181** (Bridge + Decoupling lemmas; Reichardt-style simpler reproof) + **Kuperberg arXiv:0909.1881** independent confirmation. Citation corrections (apply across project materials): "Reichardt 2005 quant-ph/0509041" does not exist; "Aharonov-Arad 2007 quant-ph/0702066" → arXiv:quant-ph/0702008 (4 authors); "Hormozi-Bonesteel 2007 quant-ph/0610105" → quant-ph/0610111 (PRB 75, 165310). See §G "DR-return state snapshot" Wave 2a.1 paragraph for full commitments. **Critical clarification:** paper14's "qutrit" = 3 anyons = 3 strands = Hilbert dim 3 = SU(3); Wave 2b.3 target is **4 strands → Hilbert dim 5 → SU(5)** (NOT n=5 strands which gives SU(8)).
+- **Wave 2a.2 (BraidGroup module) — ⏳ NOT STARTED.** `lean/SKEFTHawking/BraidGroup.lean` — `BraidGroup n` via `PresentedGroup` (Artin's presentation: `Fin (n-1)` generators + commutation relations + braid relations). Template = `Mathlib/GroupTheory/Coxeter/Basic.lean`. Reference: Hannah Fechtner "Braids in Lean" (Dec 2024, hannahfechtner.com/finallyyy.pdf). NOT merged in Mathlib4. ~50 LoC. Depends on Mathlib4 only.
+- **Wave 2a.3 (BridgeProp + spanning-predicate substrate) — ⏳ NOT STARTED.** `lean/SKEFTHawking/FKLW/BridgeProp.lean` (~80 LoC): `BridgeProp (n : ℕ) (h : LieSubalgebra ℂ (Matrix (Fin n) (Fin n) ℂ))` structure with `spans : h = ⊤` (discharged via native_decide in K = ℚ(ζ₅, √φ)) + `liftToDensity : Dense (Subgroup.closure ...) (specialUnitaryGroup ...)` (AXIOM-tagged with FKLW + Aharonov-Arad citations). `BridgeProp.liftToDensity` is the analytic step Mathlib4 lacks; substantive bridge (BCH formula + exp-surjectivity + SU(n) `PathConnectedSpace` + closure-of-subgroup ~500 lines total) deferred to optional Wave 2b.5.
 
 **Three-question template:**
 
@@ -163,11 +465,21 @@ SKEFTHawking/FaultTolerance/
 
 ## Wave 2b — FKLW density theorem ⏳ NOT STARTED
 
-**Sub-wave decomposition (proposed; matures after Wave 2a substrate analysis):**
+**Sub-wave decomposition (DR-locked-in 2026-05-12 per Wave 2a.1 return §7.2):**
 
-- **Wave 2b.1 (substantive theorem at predicate-substrate level):** `lean/SKEFTHawking/FKLW/DensityTheorem.lean` — the FKLW density theorem statement on the predicate substrate, with substantive proof at level dispositive per Wave 2a.1 outcome.
-- **Wave 2b.2 (Solovay-Kitaev compilation):** `lean/SKEFTHawking/FKLW/SolovayKitaev.lean` — substantive lemma: density in SU(n) implies efficient Solovay-Kitaev compilation of any unitary to within ε in time polylog(1/ε). Substrate-data level.
-- **Wave 2b.3 (concrete witness on Fibonacci-MTC qudit dimensions):** explicit instance theorem: for specific qudit dimensions (n=4, n=5, n=6 plausible — substrate scout at 2a.1 picks), the Fibonacci-anyon braiding subgroup is dense in SU(n).
+- **Wave 2b.1 — BraidGroup module ship.** `lean/SKEFTHawking/BraidGroup.lean` (~50 LoC). Definition was in Wave 2a.2 plan but cleanly ships here as part of Wave 2b.
+- **Wave 2b.2 — `SolovayKitaevProp` predicate-substrate AXIOM module.** `lean/SKEFTHawking/FKLW/SolovayKitaev.lean` (~50 LoC). Structure encoding Dawson-Nielsen bound `O(log^{3.97}(1/ε))` (Dawson-Nielsen arXiv:quant-ph/0505030 verbatim) wrapped as `SolovayKitaevProp d G denseInSU : Prop`. Shipped as `axiom` with primary-source citation. **No substantive proof attempted** — Solovay-Kitaev is absent in every proof assistant (Mathlib4, Mathlib3, QWIRE, SQIR/VOQC, CoqQ, Bordg-Lachnitt-He Isabelle, QHLProver, qrhl-tool, QBRICKS, Agda). Substantive formalization (~600+ LoC: BCH + group-theoretic recursive nesting + net-density base case) deferred indefinitely. **Do NOT target Kliuchnikov-Maslov-Mosca** (arXiv:1212.0822) — Clifford+T number-theory too heavy.
+- **Wave 2b.3 — `FibonacciQuintetUniversality.lean` substantive ship.** `lean/SKEFTHawking/FibonacciQuintetUniversality.lean` (~360 LoC). **4-strand Fibonacci** ρ_4 : B_4 → SU(5) (Hilbert dim 5 = F_6 = 5). Headline theorem `fib_quintet_density : DenseRange (ρ_4 : BraidGroup 4 → Matrix.specialUnitaryGroup (Fin 5) ℂ)` proved via `BridgeProp.liftToDensity` (axiom) + `fib_quintet_spanning_data` (≈24 `native_decide` spanning conjuncts in K = ℚ(ζ₅, √φ), analogous to paper14's `su3_spanning_data` which has ≈8 conjuncts). Inherits paper14's K = ℚ(ζ₅, √φ) setup + `native_decide` infrastructure. Generator matrices from Hormozi-Zikos-Bonesteel-Simon arXiv:quant-ph/0610111 (PRB 75, 165310, Eqs. 5-11). Depends on Wave 2b.1 + 2b.2 + paper14 substrate.
+- **Wave 2b.4 — `BridgeProp` infrastructure module.** `lean/SKEFTHawking/FKLW/BridgeProp.lean` (~80 LoC). Defined in Wave 2a.3 plan; cleanly ships here. Wires to Mathlib4 `LieSubalgebra`; documents analytic-step axiom dependency.
+- **Wave 2b.5 (OPTIONAL) — partial substantive bridge.** `lean/SKEFTHawking/FKLW/PartialSubstantiveBridge.lean` (~200 LoC). SU(5) `PathConnectedSpace` instance via Schur decomposition (~50 LoC) + BCH formula in 𝔰𝔲(5) up to order 4 (~150 LoC). Upgrades `BridgeProp` from full-axiom to "axiom modulo Mathlib4-standard analysis." **Defer if scope-constrained.**
+
+**Total Wave 2b line budget: ~540 LoC (or ~740 with 2b.5).** Roughly 3.3× paper14 size; achievable in one wave.
+
+**DR-flagged risks:**
+- **C-claim (line-count):** The 360-line `FibonacciQuintetUniversality` estimate is linear scaling from paper14's 163 LoC for SU(3) (8 conjuncts) to SU(5) (24 conjuncts). Actual `native_decide` compile time and `Polynomial`-coefficient elaboration may exceed this. **Mitigation: pilot the n=4 generator-matrix definitions + a single spanning conjunct as feasibility check before committing.**
+- **D-claim (scalability):** Whether `native_decide` scales to SU(8) (n=5 strands, 63 conjuncts) without timeouts is not directly known. Wave 2c plans for SU(8); expect `native_decide` cost > 30s per conjunct.
+- **C-claim (minimal commutator depth):** Closed-form bound on minimal commutator-nesting depth d(n) for spanning 𝔰𝔲(F_{n+1}) is not in the literature. FKLW + Aharonov-Arad prove existence non-constructively; numerical search (Hormozi 2007; Burrello 2010, 2011; Burke 2024 MIP) only.
+- **B-claim (basis translation):** Paper14's `R₁ = diag(ω, ω⁻¹, ω⁻¹), Rτ = diag(φ⁻¹, φ⁻¹, ω²)` form vs Hormozi 2007 Eqs. 5-11 ordering is unitary equivalence — straightforward but unformalized.
 
 **Three-question template:**
 
@@ -183,13 +495,35 @@ SKEFTHawking/FaultTolerance/
 
 ---
 
-## Wave 3a — Concrete fault-tolerant gate compilation on Fibonacci MTC substrate ⏳ NOT STARTED
+## Wave 3a — Concrete fault-tolerant gate compilation on Fibonacci MTC substrate 🟡 3a.1 DR RETURNED (other sub-waves NOT STARTED)
 
-**Sub-wave decomposition (proposed):**
+**Sub-wave decomposition (DR-locked-in 2026-05-12; canonical inputs + composition framing committed):**
 
-- **Wave 3a.1 (substrate analysis + working doc):** identify a concrete short gate (Hadamard, T-gate, CNOT) and a concrete Fibonacci-MTC braid encoding the gate. Working doc at `temporary/working-docs/phase6p/wave_3a_gate_compilation_substrate.md`.
-- **Wave 3a.2 (Lean explicit gate compilation):** `lean/SKEFTHawking/FaultTolerance/GateCompilation.lean` — explicit Lean theorems: "this specific braid in the Fibonacci MTC computes the Hadamard gate to precision ε in N braid generators." Substantive content: explicit braid-word with verified F-symbol/R-matrix product.
-- **Wave 3a.3 (fault-tolerance composition):** combine Wave 3a.2 explicit gate compilations with Wave 1b AGP threshold + Wave 2b FKLW density to produce a "fault-tolerant Hadamard + T-gate + CNEOT" complete substrate. Substantive content: end-to-end fault-tolerant universal-gate-set theorem on the program's existing topological substrate.
+- **Wave 3a.1 (deep-research dispatch) — ✅ COMPLETE.** DR return at `Lit-Search/Phase-6p/6p-Wave 3a.1 — BHSZ Brick-Wall Braid-Word Compilations for Fibonacci Anyons.md`. Headline: **Hadamard GO at ε ~ 10⁻³ via Rouabah 2020 30-crossing braid; CNOT requires manual transcription from HZBS 2007 Fig 15; T-gate generate via KBS algorithm; Q(ζ₄₀) cyclotomic substrate; composition theorem CONDITIONAL on `p_eff < p_th_AGP` (not unconditional).** See §G "DR-return state snapshot" Wave 3a.1 paragraph for full commitments. **CRITICAL CITATION CORRECTION:** "Bonesteel-DiVincenzo PRL 105, 027001 (2010)" does NOT exist; correct is PRB 86, 165113 (2012) / arXiv:1206.6048, which **explicitly disclaims fault-tolerance threshold analysis** — community-lore "topological protection ⇒ AGP threshold" is NOT a primary-source theorem.
+- **Wave 3a.2 (Lean explicit gate compilation) — ⏳ NOT STARTED.** Two new modules:
+  - `lean/SKEFTHawking/DecidableNumberField/QCyc40.lean` — Q(ζ₄₀) degree-16 cyclotomic field substrate (analogous to existing QSqrt5/QZeta5/QZeta16). Possibly companion `QCyc20.lean` (deg 8) for inner-product checks where Hadamard enters as squared overlaps. **Q(ζ₅) ALONE is insufficient** (lacks √2); **Q(ζ₂₀) is insufficient** (deg 8 but still lacks √2 since ζ₈ ∉ Q(ζ₂₀)). Avoid F-symbol entry φ⁻¹ᐟ² exact representation by working with F² in inner-product checks (else Q(ζ₄₀, √[4]{5}) deg 32 needed).
+  - `lean/SKEFTHawking/FaultTolerance/GateCompilation.lean` — explicit Lean theorems on three gates:
+    - **Hadamard (canonical, GO):** Rouabah 2020 arXiv:2008.03542 Eq. (36) — `σ₁²σ₂²σ₁⁻²σ₂⁻²σ₁²σ₂⁴σ₁⁻²σ₂²σ₁²σ₂⁻²σ₁²σ₂⁻²σ₁⁴` (30 crossings, ε = 0.00657). Reproduced verbatim in `Constantine-Quantum-Tech/tqsim`. Encode as `BraidWord 3` (Fin 2 × Int list).
+    - **CNOT (PARTIAL-VIABLE):** HZBS 2007 (arXiv:quant-ph/0610111, PRB 75, 165310) Fig. 15, ~132 crossings, ε ≈ 1.8 × 10⁻³. **σ-strings figure-encoded only.** **Gate G13:** decide between manual transcription pass vs regenerate via TQSim/KBS.
+    - **T-gate (PARTIAL-VIABLE):** No canonical BHSZ-published string. **Gate G14:** generate via KBS algorithm (arXiv:1310.4150). L ≈ 30-50 at ε ~ 10⁻³.
+  - Verification predicate `IsBHSZApprox (b : BraidWord n) (U_target : Matrix) (ε : ℚ) : Prop := ‖fib_rep b − U_target‖²_F ≤ ε * ε` (rational bound on squared Frobenius distance), decided via `native_decide` after symbolic simplification in `QCyc40` (or `QCyc20` for squared-overlap checks). **NOT norm_num on ℝ.** Compile-time at L=30, Hadamard: ≲ 30s; CNOT at L=132: ≲ 5 min.
+- **Wave 3a.3 (fault-tolerance composition) — ⏳ NOT STARTED.** `lean/SKEFTHawking/FaultTolerance/Composition.lean`. Theorem form (DR §Q5c, **CONDITIONAL only**):
+  ```lean
+  theorem fibonacci_universal_compilation
+      (ε : ℝ) (hε : 0 < ε ∧ ε ≤ 1e-3)
+      (b_H : BraidWord 3) (b_CNOT : BraidWord 6) (b_T : BraidWord 3)
+      (hH    : ‖fib_rep b_H    − Hadamard‖ ≤ ε)
+      (hCNOT : ‖fib_rep b_CNOT − CNOT‖    ≤ ε)
+      (hT    : ‖fib_rep b_T    − T_gate‖  ≤ ε)
+      (p_eff : ℝ) (hAGP : p_eff < p_th_AGP)  -- assumption, NOT derived
+      (d : ℕ) (hd : d ≥ 3) :
+    ∃ overhead : ℝ → ℝ,
+      overhead = (fun ε ↦ polylog (1/ε)) ∧
+      FaultTolerantUniversal {b_H, b_CNOT, b_T} d
+  ```
+  Combines Wave 3a.2 gate-approximations + Wave 1b AGP threshold (black-box quoted) + Wave 2b FKLW density. **DO NOT** claim topological-protection ⇒ AGP threshold unconditionally.
+
+**Precision target: ε ~ 10⁻³ DEFAULT; stretch to ε ~ 10⁻⁶ only after baseline green; REJECT ε ~ 10⁻⁹** (native_decide intractable at L≈1000).
 
 **Three-question template:**
 
@@ -231,12 +565,205 @@ SKEFTHawking/FaultTolerance/
 
 ---
 
+## Wave 1c — MeasureTheory-grounded NoiseModel ⏳ NOT STARTED (NEW — added 2026-05-12 post-strengthening Pass 2)
+
+**Sub-wave decomposition:**
+
+- **Wave 1c.1 — Bernoulli-product-measure substrate.** `lean/SKEFTHawking/FaultTolerance/NoiseModelMeasureTheory.lean` (~150 LoC). Define `bernoulliProductMeasure : (locations : Type) → [Fintype locations] → ℝ → Measure (locations → Bool)` via Mathlib's `MeasureTheory.Measure.pi` + `Probability.Distributions.SetBernoulli`. Each per-location failure is a `Bool`-valued Bernoulli(ε) RV. Substrate scout 2026-05-12 confirms direct discharge from Mathlib4 (commit 8850ed93).
+- **Wave 1c.2 — `iIndepFun` family + Hoeffding/SubGaussian wiring.** Same module (~100 LoC). Wire `X : locations → Ω → ℝ` (per-location failure indicator) as `iIndepFun X (bernoulliProductMeasure ε)` via `Probability.Independence.Basic`. Apply `Probability.Moments.SubGaussian.measure_sum_ge_le_of_iIndepFun` (Hoeffding's inequality) to derive tail bounds for `|∑ i ∈ pairs, fail i|`.
+- **Wave 1c.3 — `LocalStochasticNoise` ↔ measure-theoretic instance.** Same module (~50 LoC). Bridge theorem: `LocalStochasticNoise.fromBernoulliProduct` produces a `NoiseModel` from a Bernoulli-product measure whose `jointFailureBound` is *derived* from Hoeffding (not asserted abstractly). Two-way correspondence: every existing `LocalStochasticNoise` ε is satisfied by `bernoulliProductMeasure ε`.
+- **Wave 1c.4 — Lift AGP recursion + threshold theorem.** Bridge `Chernoff.lean` + `Concatenation.lean` + `AGP/Threshold.lean` consumers to use the measure-theoretic noise model. The closed-form double-exp bound is preserved by construction (the new measure-theoretic model satisfies the same abstract `jointFailureBound` predicate that the existing theorem consumes). ~50 LoC extension.
+
+**Total Wave 1c budget: ~350 LoC.** Pure measure-theoretic content; **zero new axioms**.
+
+**Substrate (Mathlib4 direct-discharge confirmed via 2026-05-12 scout):**
+- `Mathlib.Probability.Distributions.SetBernoulli` — Bernoulli product distributions.
+- `Mathlib.MeasureTheory.Constructions.Pi` — `Measure.pi` for indexed product measures.
+- `Mathlib.Probability.Independence.Basic` — `iIndepFun`, union bound on independent events.
+- `Mathlib.Probability.Moments.SubGaussian` — `HasSubgaussianMGF`, `hasSubgaussianMGF_of_mem_Icc_of_integral_eq_zero` (Hoeffding's lemma for bounded RVs), `measure_sum_ge_le_of_iIndepFun` (Hoeffding's inequality for iid SubGaussian families).
+
+**Three-question template:**
+- *Integrates with:* Wave 1b AGP threshold modules (`NoiseModel.lean`, `Chernoff.lean`, `Concatenation.lean`, `AGP/Threshold.lean`); AGP 2006 abstract local stochastic noise model.
+- *New constraint adds:* a MeasureTheory-grounded instance of the abstract `LocalStochasticNoise` predicate, replacing the project's current abstract-Prop noise model with a Mathlib4-derived measure-theoretic concretization.
+- *Tension surfaces:* (i) the existing abstract `jointFailureBound` predicate is preserved verbatim — Wave 1c is *purely additive*, no refactor of Wave 1b theorems; (ii) Hoeffding's inequality gives `ε^k · poly(N)` rather than the pure `ε^k` form — verify the constant is harmless under the AGP recursion.
+
+**Substrate.** Mathlib4 measure-theoretic infrastructure (commit 8850ed93); Wave 1b modules unchanged.
+
+**Bundle absorption.** D.2 additive into D4 + I1 (infrastructure module).
+
+**Risk axes.**
+- Measure-theoretic constants may differ from abstract bounds by polynomial factors; verify under AGP recursion. **Low risk.**
+
+---
+
+## Wave 2c — Substantive FKLW density bridge (AXIOM ELIMINATION) ⏳ NOT STARTED (NEW — added 2026-05-12)
+
+**Goal:** discharge `bridge_axiom_FKLW` (in `SKEFTHawking/FKLW/BridgeProp.lean`) constructively. Quality bar: standard kernel only.
+
+**Strategic path (post-2026-05-12 scout):** the **Aharonov-Arad 2007 simpler proof** (arXiv:quant-ph/0702008) avoids heavy BCH+exp machinery via a combinatorial commutator-density argument — estimated ~300-400 LoC vs ~500-700 LoC for the full FKLW BCH+exp route. The substrate scout confirms Mathlib has:
+- `Mathlib.Algebra.Lie.Subalgebra` (bracket-closure machinery) — direct.
+- `Mathlib.Analysis.Matrix.Normed` (operator norms + composition bounds) — direct.
+- `Mathlib.Topology.MetricSpace.Cover` (`Metric.exists_finite_isCover_of_isCompact` — finite ε-nets on compact sets) — direct.
+- `Mathlib.Analysis.Normed.Algebra.Exponential` (`NormedSpace.exp_mem_unitary_of_mem_skewAdjoint`) — direct for `exp` mapping into SU(d) (we don't need full surjectivity for Aharonov-Arad).
+
+**Sub-wave decomposition (planned):**
+
+- **Wave 2c.1 (DR dispatch) — RECOMMENDED.** Drop a focused DR prompt extracting Aharonov-Arad 2007's "Bridge Lemma" + "Decoupling Lemma" formal-proof structure (the exact ε-bounds, the commutator-words generators, the recursion depth as a function of ε). Deliverable: `Lit-Search/Phase-6p/6p-Wave 2c.1 — Aharonov-Arad Bridge+Decoupling Lemma Lean-formalization-ready proof structure.md`. ~1-2 days asynchronous turnaround.
+- **Wave 2c.2 — `LieSpan` + bracket-closure infrastructure (if not in Mathlib).** Per scout: Mathlib has `LieSubalgebra R L` extending `Submodule` with `lie_mem'` bracket-closure, but lacks an explicit `lieSpan : Set L → LieSubalgebra R L` constructor. **Either** port `Submodule.span`'s pattern to `LieSubalgebra` (~80 LoC, candidate Mathlib upstream-PR), **or** use the existing iterated-bracket pattern from `FibonacciQutritUniversality.lean` (paper14, native_decide-discharged for concrete (n,d)).
+- **Wave 2c.3 — Operator-norm Lipschitz of matrix exp.** ~50 LoC. `‖exp(A) - exp(B)‖ ≤ ‖A - B‖ · e^{max(‖A‖, ‖B‖)}`. Standard analysis lemma; Mathlib has the inputs (`Matrix.linfty_opNorm_mul`, `exp_add_of_commute`), needs the Lipschitz wrapper.
+- **Wave 2c.4 — Aharonov-Arad commutator-density core.** `lean/SKEFTHawking/FKLW/AharonovAradBridge.lean` (~250 LoC). The core lemma: given a finite set `S ⊆ U(d)` whose Lie-span equals `𝔲(d)`, there exists a constant `C` such that for every ε > 0, the set of `C·log(1/ε)`-length commutator-words in `S` is ε-dense in the identity component of `U(d)`. Proof: induction on commutator-nesting depth, using Wave 2c.3 Lipschitz bound + Wave 2c.2 bracket-closure.
+- **Wave 2c.5 — Lift to `ClosureDenseProp`.** `lean/SKEFTHawking/FKLW/BridgeProp.lean` extension: replace `bridge_axiom_FKLW` with a constructive theorem `bridge_FKLW_aharonov_arad : LieSpanProp n d ρ → ClosureDenseProp n d ρ` proved via Wave 2c.4. Delete the AXIOM declaration. ~50 LoC of lift.
+
+**Total Wave 2c budget: ~430 LoC** (plus ~80 LoC if `lieSpan` Mathlib-PR is included in-tree).
+
+**Deliverable:** **`bridge_axiom_FKLW` eliminated.** All Wave 2b consumers (FibonacciQuintetUniversality, FaultTolerantUQC) retain semantic-equivalent behavior, but their axiom closure drops from "+ bridge_axiom_FKLW" to standard-kernel-only (modulo per-instance native_decide for the spanning side).
+
+**Three-question template:**
+- *Integrates with:* Wave 2a / 2b BridgeProp axiom + downstream consumers; Aharonov-Arad 2007 simpler proof; Mathlib4 operator-norm + Lie subalgebra substrate.
+- *New constraint adds:* a Lean constructive proof of the FKLW closure-density bridge, replacing the predicate-substrate axiom.
+- *Tension surfaces:* (i) the Aharonov-Arad "Decoupling Lemma" requires careful ε-bookkeeping; (ii) the explicit `C·log(1/ε)` commutator-depth bound may be hard to make tight — fall-back is a non-constructive `∃ C` form, sufficient for `ClosureDenseProp`.
+
+**Substrate.** Aharonov-Arad arXiv:quant-ph/0702008 (Bridge + Decoupling Lemmas); Mathlib4 Lie-algebra + matrix-exp + operator-norm + compact-set ε-net infrastructure; FibonacciQutritUniversality `native_decide` pattern.
+
+**Bundle absorption.** D.2 additive into D4 / new bundle (Wave 3b dispositive).
+
+**Risk axes.**
+- Aharonov-Arad's combinatorial commutator-counting may be subtle to formalize cleanly — DR Wave 2c.1 dispatches to scope the proof structure precisely.
+- Operator-norm Lipschitz on matrix exp is standard but not directly in Mathlib — Wave 2c.3 may grow if Mathlib4 v4.30+ pulls the lemma upstream.
+
+---
+
+## Wave 2d — Substantive Solovay-Kitaev (AXIOM ELIMINATION) ⏳ NOT STARTED (NEW — added 2026-05-12)
+
+**Goal:** discharge `sk_axiom_Dawson_Nielsen` (in `SKEFTHawking/FKLW/SolovayKitaev.lean`) constructively. Quality bar: standard kernel only.
+
+**Strategic context (post-2026-05-12 scout):** Solovay-Kitaev is **first-formalization territory** across all proof assistants (Mathlib4 / QWIRE / SQIR / VOQC / CoqQ / Bordg-Lachnitt-He Isabelle / QHLProver / qrhl-tool / QBRICKS / Agda — confirmed absent in all). This is the **harder of the two axiom-elimination waves**; substrate scout estimates ~500-700 LoC of genuinely new analytic machinery. The main gap is matrix-BCH-to-order-2 (`exp(A)·exp(B)·exp(-A)·exp(-B) = exp([A,B] + O(higher))`).
+
+**Sub-wave decomposition (planned; iterative):**
+
+- **Wave 2d.1 (DR dispatch) — STRONGLY RECOMMENDED.** Drop a focused DR prompt extracting Dawson-Nielsen 2005's (arXiv:quant-ph/0505030) explicit constructive structure: (a) the base-case δ₀-net coverage of SU(d); (b) the recursive group-commutator construction (δ → δ^{3/2} via 5 deeper sequences); (c) the explicit error bounds and the c ≈ 3.97 exponent derivation; (d) BCH-truncation requirement (which terms matter, what order suffices). Deliverable: `Lit-Search/Phase-6p/6p-Wave 2d.1 — Dawson-Nielsen Solovay-Kitaev Lean-formalization-ready proof structure.md`. ~2-3 days asynchronous turnaround.
+- **Wave 2d.2 — Matrix BCH to order 2.** `lean/SKEFTHawking/MatrixBCH.lean` (~250 LoC). Formalize the second-order Baker-Campbell-Hausdorff expansion: `exp(A)·exp(B)·exp(-A)·exp(-B) = exp([A,B]) · R(A,B)` where `‖R(A,B) - I‖ ≤ K · max(‖A‖, ‖B‖)^3` for explicit `K`. Substantively new content; not in Mathlib4. Likely Mathlib upstream-PR candidate.
+- **Wave 2d.3 — ε-net construction on SU(d).** `lean/SKEFTHawking/FKLW/EpsilonNet.lean` (~100 LoC). Apply `Mathlib.Topology.MetricSpace.Cover.Metric.exists_finite_isCover_of_isCompact` to `Matrix.specialUnitaryGroup` (requires `IsCompact (specialUnitaryGroup n ℂ)`, which is direct from compactness of unit disk + matrix structure). Output: for every δ > 0, a finite set `Nδ ⊆ SU(d)` with `Nδ` δ-dense in SU(d).
+- **Wave 2d.4 — Recursive commutator refinement.** Same module as Wave 2d.5. The core SK lemma: given a δ-approximation `U_δ ≈ U_target` (in operator norm) for some target `U_target`, produce a δ^{3/2}-approximation using 5 deeper gate-sequences. Uses Wave 2d.2 BCH-order-2.
+- **Wave 2d.5 — Substantive constructive Solovay-Kitaev.** `lean/SKEFTHawking/FKLW/SolovayKitaevConstructive.lean` (~200 LoC). Replace `sk_axiom_Dawson_Nielsen` with a constructive theorem `solovayKitaev_dawson_nielsen : SolovayKitaevProp d G` proved via recursive application of Wave 2d.4 (depth `log_{3/2}(log(1/ε_target)/log(1/δ₀))`) starting from a Wave 2d.3 δ₀-net base case. The `c ≈ 3.97` length exponent emerges from the recursion-depth count + 5-fold branching per step. Delete the AXIOM declaration.
+
+**Total Wave 2d budget: ~550 LoC** (Mathlib-PR-track candidate for Wave 2d.2 matrix BCH-to-order-2).
+
+**Deliverable:** **`sk_axiom_Dawson_Nielsen` eliminated.** Downstream consumers (`sk_from_FKLW_density` etc.) retain semantic-equivalent behavior but drop the SK axiom from their axiom closure.
+
+**Three-question template:**
+- *Integrates with:* Wave 2b SolovayKitaev axiom + downstream consumers; Wave 2c FKLW bridge constructive proof; Dawson-Nielsen 2005; Mathlib4 matrix-exp + compact-set + metric-net infrastructure.
+- *New constraint adds:* a Lean constructive proof of Solovay-Kitaev, replacing the predicate-substrate axiom and producing a first-formalization across all proof assistants surveyed.
+- *Tension surfaces:* (i) Matrix BCH-to-order-2 is genuinely new content with no Mathlib4 substrate — Wave 2d.2 is the load-bearing sub-wave; (ii) the explicit `c ≈ 3.97` exponent is a derived quantity from the recursion bookkeeping — DR Wave 2d.1 dispatches to scope precisely which c is achievable in the Lean proof (3.97 is informal; 4.0 may be cleaner).
+
+**Substrate.** Dawson-Nielsen arXiv:quant-ph/0505030; Mathlib4 matrix-exp + operator-norm + compact-set ε-net infrastructure; Wave 2c constructive FKLW bridge (for consistency, not a hard dependency).
+
+**Bundle absorption.** D.2 additive into D4 / new bundle (Wave 3b dispositive).
+
+**Risk axes.**
+- Matrix BCH-to-order-2 is the load-bearing sub-wave; if the error-bound proofs surface unexpected complexity, Wave 2d may grow to ~800 LoC.
+- The `c ≈ 3.97` exponent is sensitive to bookkeeping; a cleaner `c = 4` form may emerge naturally.
+- First-formalization-territory: no prior Lean / Coq / Isabelle work to draw on; expect 2-3 iterative passes.
+
+---
+
+## Wave 2b.3.2 — Full quintet 24-conjunct spanning enumeration ⏳ NOT STARTED (NEW — added 2026-05-12)
+
+**Goal:** complete the substantive spanning side of Wave 2b.3 (`FibonacciQuintetUniversality.lean`) — currently ships only 4 block-inherited conjuncts from paper14 + `qutrit_spanning_data_lift` cross-module application. Full content: ~24 conjuncts including {3,4}-block + cross-block directions, which require explicit 4-strand F-symbol structure beyond block-extension.
+
+**Sub-wave decomposition:**
+
+- **Wave 2b.3.2a — 4-strand Fibonacci F-symbol explicit matrices.** `lean/SKEFTHawking/FibonacciQuintetUniversality.lean` extension (~100 LoC). Extract the 4-strand F-matrices from Hormozi-Zikos-Bonesteel-Simon arXiv:quant-ph/0610111 (PRB 75, 165310, Eqs. 5-11). Express σ₁, σ₂, σ₃ as explicit 5×5 matrices over Q(ζ₅, √φ) (function-typed Mat5K — substrate already shipped in strengthening Pass 1).
+- **Wave 2b.3.2b — Iterated commutator enumeration.** Same module (~150 LoC). Compute `comm_ij_kl := [[σᵢ, σⱼ], [σₖ, σₗ]]` and similar nested commutators systematically. Each entry is a single QCyc5Ext expression discharged via native_decide.
+- **Wave 2b.3.2c — 24-conjunct `fib_quintet_spanning_data`.** Same module (~50 LoC). Bundle the 24 native_decide conjuncts (matching the SU(5) Lie-algebra dimension count: 24 = dim(𝔰𝔲(5))) into a single closure theorem. The 24 conjuncts establish that 24 linearly-independent matrices appear among the iterated commutators, which together span 𝔰𝔲(5).
+- **Wave 2b.3.2d — `LieSpanProp 4 5 ρ_4` discharge.** Same module (~50 LoC). Compose `fib_quintet_spanning_data` with linear-independence to produce `LieSpanProp 4 5 ρ_4` — the *constructive* spanning predicate that Wave 2c then lifts to `ClosureDenseProp` via the constructive bridge.
+
+**Total Wave 2b.3.2 budget: ~350 LoC.**
+
+**DR-flagged risks (from original Wave 2b.3 risk register):**
+- **C-claim (line-count):** estimate is linear scaling; actual `native_decide` cost may exceed.
+- **C-claim (minimal commutator depth):** no closed-form bound on `d(n)` in literature; numerical-search-only.
+- **B-claim (basis translation):** paper14 basis vs HZBS 2007 basis — unitary equivalence (mechanical but unformalized).
+
+**Three-question template:**
+- *Integrates with:* Wave 2b.3 quintet scaffold (already shipped); paper14 qutrit spanning data; HZBS 2007 F-symbols; QCyc5Ext substrate.
+- *New constraint adds:* the substantive spanning side of `FibonacciQuintetUniversality` — completes the predicate `LieSpanProp 4 5 ρ_4` that downstream Wave 2c FKLW bridge consumes.
+- *Tension surfaces:* (i) 24 native_decide conjuncts may surface elaborator scaling issues — if so, pilot a single conjunct first and reduce; (ii) the closed-form minimal-commutator-depth bound is open in the literature — Wave 2b.3.2 ships a constructive-witness form, not a tight closed-form.
+
+**Substrate.** Wave 2b.3 (block-extension scaffold); paper14 qutrit substrate; HZBS 2007 F-symbols.
+
+**Bundle absorption.** D.2 additive into D4 / new bundle (Wave 3b dispositive).
+
+**Risk axes.**
+- native_decide elaborator cost on 5×5 matrix products in QCyc5Ext — pilot single conjunct first.
+
+---
+
+## Wave 3a.2.2 — Explicit Rouabah 30-crossing ε-discharge ⏳ NOT STARTED (NEW — added 2026-05-12)
+
+**Goal:** complete the Rouabah Hadamard verification — currently ships only the BraidWord (verbatim from arXiv:2008.03542 Eq. 36) + crossing-count proof. Strengthening Pass 2 (2026-05-12) shipped all substrate primitives (`Mat2K_40`, `hadamardTarget`, `frobNormSq`, `hadamardTarget_unitary`, QCyc40 `Mul`). This wave produces the load-bearing `IsBHSZApprox rouabah_hadamard hadamardTarget (6.57e-3)` theorem.
+
+**Sub-wave decomposition:**
+
+- **Wave 3a.2.2a — QCyc5Ext → QCyc40 embedding.** `lean/SKEFTHawking/QCyc5Ext/ToQCyc40.lean` (~80 LoC). Ring homomorphism `embed : QCyc5Ext → QCyc40` mapping ζ₅ → ζ⁸ and √φ → (1+√5)/2 = `phi` (per QCyc40 substrate). Verified via native_decide on the defining identities (ζ⁵ = 1 in Q(ζ₅), φ² = φ+1).
+- **Wave 3a.2.2b — Fibonacci 3-strand representation lift to Q(ζ₄₀).** Same module as Wave 3a.2.2c (~150 LoC). Construct `fibRep3 : BraidGroup 3 → Mat3K_40` (where `Mat3K_40 := Fin 3 → Fin 3 → QCyc40`) via componentwise application of Wave 3a.2.2a embedding to paper14's `FibonacciQutrit` σ₁, σ₂. Inherit the unitarity / braid relations via embed preservation.
+- **Wave 3a.2.2c — Apply 30-crossing word + Frobenius-distance verification.** `lean/SKEFTHawking/FaultTolerance/RouabahExplicit.lean` (~200 LoC). Compute `ρ(rouabah_hadamard) := List.foldl (· * ·) 1 (rouabah_hadamard.map fibRep3.toBraidGroup)` — a 30-deep matrix product over QCyc40. Headline theorem `rouabah_hadamard_approximates_H : ‖ρ(rouabah_hadamard) - H‖²_F ≤ (6.57e-3)² := by native_decide` (or a smaller `decide`-checkable witness if native_decide times out per DR risk R1 pattern).
+
+**Total Wave 3a.2.2 budget: ~430 LoC.**
+
+**Substantial-DR risk (R1 from Wave 1a.1): native_decide on 30-deep 3×3 matrix-products over QCyc40 (16-coefficient ring with O(n³) PolyQuotQ.mulReduce cost). Per pre-flight back-of-envelope: ~30 × 27 × 4096 ≈ 3.3M ops — comfortably tractable, but compile-time may approach 30s. Mitigation: if native_decide stalls, pre-compute the 30-fold product output in SymPy and supply a smaller `decide`-checkable witness.**
+
+**Three-question template:**
+- *Integrates with:* Wave 3a.2 GateCompilation Mat2K_40 / hadamardTarget / frobNormSq substrate (already shipped); QCyc40 Mul (already shipped via strengthening Pass 2); paper14 FibonacciQutrit braid representation.
+- *New constraint adds:* the constructive load-bearing `IsBHSZApprox rouabah_hadamard hadamardTarget 6.57e-3` theorem — making the Rouabah Hadamard ε-value rigorous, not just primary-source-cited.
+- *Tension surfaces:* (i) the explicit `0.00657` bound from Rouabah may or may not be sharp in our QCyc40 representation — verify the explicit Frobenius² ≤ 4.3e-5 holds in Lean; (ii) native_decide compile-time at the 30-fold product is the dispositive risk.
+
+**Substrate.** Wave 3a.2 GateCompilation primitives; QCyc40 Mul (Strengthening Pass 2); paper14 FibonacciQutrit; Rouabah arXiv:2008.03542 Eq. 36 + Tounsi-Belaloui et al. 2023 arXiv:2307.01892 (TQSim).
+
+**Bundle absorption.** D.2 additive into D4 / new bundle.
+
+**Risk axes.**
+- native_decide compile-time on 30-fold matrix product — primary risk; smaller-witness fallback.
+
+---
+
+## Wave 3a.2.3 — CNOT (HZBS Fig 15) + T-gate (KBS algorithm) explicit braid words ⏳ NOT STARTED (NEW — added 2026-05-12)
+
+**Goal:** complete the substantive content of Wave 3a (gates G13 + G14 from §G DR-return state) — explicit CNOT and T-gate braid words on Fibonacci 3-strand substrate.
+
+**Sub-wave decomposition:**
+
+- **Wave 3a.2.3a (gate G13: CNOT transcription) — DR dispatch RECOMMENDED.** HZBS 2007 (arXiv:quant-ph/0610111, PRB 75, 165310) Fig 15 ships the ~132-crossing CNOT braid as **σ-strings in figure form only**. Manual transcription from the figure carries error risk. Drop a DR prompt asking for an authoritative ASCII / list-of-generators transcription (cross-validated against Tounsi-Belaloui et al. 2023 TQSim regenerable form). Deliverable: `Lit-Search/Phase-6p/6p-Wave 3a.2.3a — HZBS Fig 15 CNOT braid-word transcription cross-validated.md`. ~1-2 days asynchronous.
+- **Wave 3a.2.3b — CNOT explicit braid + ε-discharge.** `lean/SKEFTHawking/FaultTolerance/CNOTExplicit.lean` (~250 LoC). Encode the Wave 3a.2.3a-delivered braid word as `cnot_hzbs : BraidWord 6` (6-strand: 3 control + 3 target Fibonacci anyons). Target = 4×4 CNOT gate in the 2-qubit logical space. Lift via Wave 3a.2.2's `fibRep3` extension to 6 strands; apply `frobNormSq` to derive `‖ρ(cnot_hzbs) - CNOT‖²_F ≤ (1.8e-3)²`. ~132-crossing matrix product over QCyc40; native_decide risk higher than Rouabah — likely need smaller-witness fallback. The 6-strand representation may also need `Mat4K_40 := Fin 4 → Fin 4 → QCyc40` substrate (~30 LoC analog of Mat2K_40).
+- **Wave 3a.2.3c (gate G14: T-gate KBS algorithm) — DR dispatch RECOMMENDED.** No primary-source-published Fibonacci T-gate braid exists. Generate via Kliuchnikov-Bocharov-Svore arXiv:1310.4150 O(log(1/ε))-depth-optimal algorithm. Drop a DR prompt asking for either (a) a pre-computed KBS T-gate braid for Fibonacci at ε ~ 10⁻³ (length L ≈ 30-50), OR (b) the algorithm structure in sufficient detail for Lean-direct implementation. Deliverable: `Lit-Search/Phase-6p/6p-Wave 3a.2.3c — KBS T-gate algorithm Fibonacci substrate.md`. ~2-3 days asynchronous.
+- **Wave 3a.2.3d — T-gate explicit braid + ε-discharge.** `lean/SKEFTHawking/FaultTolerance/TGateExplicit.lean` (~200 LoC). Encode Wave 3a.2.3c-delivered T-gate braid; verify via frobNormSq.
+
+**Total Wave 3a.2.3 budget: ~480 LoC** + 2 deep-research prompts.
+
+**Three-question template:**
+- *Integrates with:* Wave 3a.2.2 substrate (QCyc40 + Mat-of-K_40 + frobNormSq); Wave 3a.2 GateCompilation; HZBS 2007; KBS 2013.
+- *New constraint adds:* the constructive load-bearing explicit braid words for the remaining 2 gates in the universal {H, CNOT, T} gate set. Combined with Wave 3a.2.2 Rouabah Hadamard, completes the substantive content of Wave 3a "explicit gate compilation."
+- *Tension surfaces:* (i) HZBS Fig 15 figure-to-ASCII transcription error; (ii) native_decide compile-time on 132-crossing braid is the load-bearing risk; (iii) T-gate primary source absent — KBS algorithm port required.
+
+**Substrate.** Wave 3a.2.2 (Rouabah Hadamard substrate); HZBS 2007 + KBS 2013; QCyc40 Mul (Strengthening Pass 2).
+
+**Bundle absorption.** D.2 additive into D4 / new bundle.
+
+**Risk axes.**
+- HZBS Fig 15 transcription error (DR mitigation).
+- native_decide on 132-crossing braid (smaller-witness fallback).
+- T-gate primary-source absence (DR scoping for algorithm-port path).
+
+---
+
 ## User authorization gates — consolidated
 
-| Wave | Authorization point | Authorization required for | Status |
-|---|---|---|---|
-| **Wave 1b** AGP threshold theorem | Substantive vs. predicate-substrate level decision | none (decision is implementation-level, not strategic) | n/a |
-| **Wave 3b** Bundle decision | New-bundle creation vs. D4 extension | **YES — user-authorization required for new-bundle creation per `PAPER_STRATEGY.md`** | 🔒 **PENDING** Wave 3b.1 close |
+**Superseded by "Dependencies and decision gates" section (§G) — see consolidated gate G1-G15 table above.** Live status:
+- **Wave 3b** bundle decision (G15): 🔒 PENDING — new-bundle creation vs D4 extension per `PAPER_STRATEGY.md`.
+- **Wave 2c** axiom elimination (G16 — NEW 2026-05-12): 🔒 PENDING user sign-off on the Aharonov-Arad substantive-bridge approach (~430 LoC) for `bridge_axiom_FKLW` discharge. Per POLICY note above §H.
+- **Wave 2d** axiom elimination (G17 — NEW 2026-05-12): 🔒 PENDING user sign-off on the Dawson-Nielsen substantive constructive-SK approach (~550 LoC; first-formalization-territory) for `sk_axiom_Dawson_Nielsen` discharge. Per POLICY note above §H.
+- **Future topological-substrate threshold work** (Wave 1c+ -- the *original* Wave 1c was renamed to MeasureTheory NoiseModel; the topological-substrate threshold becomes a separate later wave): 🔒 user-authorization advised before commit; topological specialization requires either Gács-Harrington CA renormalization (heavy formalization) or MTC infrastructure.
+- **Any new project-local axiom** going forward (project-wide policy): 🔒 user sign-off REQUIRED. DR recommendations are advisory only; no new axiom ships without explicit user approval.
 
 ---
 

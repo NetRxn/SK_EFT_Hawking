@@ -34,6 +34,104 @@
 
 ---
 
+## Substrate state snapshot (2026-05-12, pre-dispatch)
+
+> **Purpose of this section:** Captures substrate-readiness audits run at Phase 6r prep so future sessions can pick up cold without re-running Explore-agent scouts. Two Explore agents scouted on 2026-05-12 — project Lean substrate + Mathlib4 categorical infrastructure + Lit-Search prior DRs; consolidated findings below.
+
+### A. Project Lean substrate (substantive, scout-confirmed)
+
+**`lean/SKEFTHawking/SymTFTAudit/`** — 8 modules, 4,376 LOC, zero sorries. **Heaviest dependency Phase 6r consumes:**
+- `DrinfeldCenter.lean` (447 LOC): `WittEquivalentMTC C D` (DMNO 2010 categorical equivalence of Drinfeld centers as MTC Witt equivalence); `stage5_8_drinfeldCenter_closure` (monoidal); `stage5_9_drinfeldCenter_braided_closure` (braided refinement). **Wave 1b.2 lifts to "Z(C) is a 3D TQFT bulk."**
+- `PseudoUnitary.lean` (438): `IsPseudoUnitary C`, `IsStrictlyPseudoUnitary C` (S-matrix unitary, S² = 1); `stage5_11_pseudoUnitary_closure` + `stage5_12_strictlyPseudoUnitary_closure`.
+- `FreeKLinearCategory.lean` (482): `FreeKLinear C k` + `stage5_10a_freeKLinear_closure` (universal lift property + preadditive + linear instances).
+- `FreeKLinearMonoidal.lean` (888): `freeTensorHom`, `freeTensorObj`, monoidal + braided braiding; `stage5_10b_freeKLinear_monoidal_closure`.
+- `DeligneTensor.lean` (1195): `DeligneTensor C D k` via quotient by congruence on free k-linear biproduct; `stage5_10c_deligneTensor_closure`.
+- `WittClass.lean` (467): `WittInvariant ≃ ℤ/24ℤ`, `WittTrivial c ↔ 24 ∣ c`, `WittEquivalent c c' ↔ 24 ∣ c - c'`; cross-bridge `WittTrivial (8 * N_f) ↔ 3 ∣ N_f` to GenerationConstraint.lean.
+- `CrossBridges.lean` (295): `KMSParityAlternation_bridges_to_SecondOrderSK`, `Z16AnomalyEta_bridges_to_Z16AnomalyCancels`, `chiralCentralCharge_bridges_to_GenerationConstraint`; `stage4_discrete_sector_bridges_partition`, `stage5_witt_grade_partition`.
+- `Applicability.lean` (164): `SymTFTApplicability` sum (Applicable / PartiallyApplicable / NotApplicable); `stage2_partition` asserts `stage2Verdict = PartiallyApplicable`.
+
+**`lean/SKEFTHawking/APSEta/`** — Phase 6o Wave 2a Witten-Yonekura η/16 mod 1 bridge:
+- `SymTFTBridge.lean` (193 LOC): `IsWittenYonekuraConsistent s`, `wittenYonekuraToZ16 : Substrate → ZMod 16`, `apsEta_to_wittInvariant : Substrate → SymTFTAudit.WittInvariant`; headline `wave_2a_6_symtft_bridge_closure` (BECAcoustic + ADWHorizon + He3AMovingDomainWall all Z₁₆-trivial-lift; η = 0 for BEC/ADW; η ≠ 0 placeholder for ³He-A).
+- Supporting: `Predicate.lean`, `BECAcoustic.lean`, `ADWHorizon.lean`, `He3A.lean`, `RegimePartition.lean` (<100 lines each).
+
+**`lean/SKEFTHawking/Schellekens/`** — Phase 6o Wave 2b infrastructure (stub-predicate at headline; supporting modules available):
+- `Chain.lean` (97 LOC): stub-predicate `IsSchellekensChainComposed`; `schellekensChain_implies_24_divides_c_minus_iff_3_divides_N_gen` (stub).
+- Supporting: `AnomalyPolynomial.lean`, `HolomorphicVOAc24.lean`, `ModularInvariance.lean`, `NiemeierLattice.lean`, `SpinBordism.lean` (each <200 lines).
+
+**Paper 9 (Drinfeld center + anomaly):**
+- `S3CenterAnyons.lean` (310): Z(Vec_S₃) toric-code-like structure; S₃ conjugacy classes; anyons A1-A3, B1-B2, C1-C3; class equation + centralizer formulas.
+- `CenterFunctorZ2.lean` (649): center functor on dihedral group D(G₂); Drinfeld double ring; character algebra χ functor (trivial, sign, flip, flip-sign).
+- `DrinfeldCenterBridge.lean`.
+- **Z(Vec_Z₂) toric-code is NOT explicitly formalized as a Lean theorem yet** — only referenced in comments. **Wave 1c.3 ships this as the natural concrete substantive witness.**
+
+**Paper 10 (3-generation):**
+- `GenerationConstraint.lean` (189): `generation_constraint_iff : ∀ n, 3 ∣ n ↔ 24 ∣ 8 * n`; `generation_mod3_constraint`, `div_24_8n_implies_div_3_n`, `generation_minimal_nontrivial`. **The load-bearing existing project result Wave 3a.3 reframes.**
+
+**Paper 8 (Pin⁺ bordism + Z₁₆):**
+- `Z16AnomalyForcesThetaBar.lean` (266): `SubstrateConfig (z16_class ∈ ZMod 16, θ_bar ∈ ℝ)`; `Z16AnomalyCancels s ↔ z16_class = 16 ∨ θ_bar ∈ annulus`; `z16_anomaly_cancels_via_phase5b`, `theta_bar_not_forced_by_z16`, `theta_bar_modulus_covers_real`.
+- `Z16AnomalyComputation.lean`: Z₁₆ anomaly index calculation from fermion content.
+- `SPTStacking.lean`: SPT phase ℤ/16ℤ classification.
+
+**Phase 5b-5p categorical chain (Phase 6p substrate; Phase 6r imports selectively):**
+- Layout is FLAT (files at top of `lean/SKEFTHawking/`, not subdirectories): `Uqsl3.lean`, `SU3kFusion.lean`, `KacWaltonFusion.lean`, `RTReplicaTrickOnMTC.lean`, etc. (Other paper11/14/16_wrt_tqft files at top level.) **Coordinate with Phase 6p before extensive imports.**
+
+**SymTFT-language Lean declarations ABSENT in project** (Phase 6r will define under `lean/SKEFTHawking/SymTFT/`):
+- `LagrangianAlgebra`, `GappedBoundary`, `3DTQFT`, `Is3DTQFT`, `IsBulkBoundary`, `TopologicalBoundary`.
+
+**Phase 6r directory placeholder:** `lean/SKEFTHawking/SymTFT/` does NOT exist (distinct from `SymTFTAudit/`).
+
+### B. Mathlib4 (v4.29.0, pinned `8850ed93`) categorical infrastructure depth
+
+**PRESENT, comprehensive** (Wave 1b-1c-1d substrate-ready at 1-categorical layer):
+- `MonoidalCategory`, `BraidedCategory`, `SymmetricCategory` (full coherence pentagon + hexagon + symmetry) — `Monoidal/Category.lean`, `Monoidal/Braided/Basic.lean`.
+- `LaxMonoidalFunctor`, `MonoidalFunctor`, `BraidedFunctor`, `LaxBraidedFunctor` — `Monoidal/Functor.lean`, `Monoidal/Braided/Basic.lean`.
+- `HalfBraiding`, `Center` (Drinfeld center) + braided monoidal structure instance on `Center C` + lax monoidal `Center.forget : Center C ⥤ C` — `Monoidal/Center.lean`. (Recent Kim Morrison / Joël Riou 2021-2025 work.)
+- `RigidCategory`, `ExactPairing`, `HasLeftDual`/`HasRightDual` (left/right duals, coevaluation/evaluation, triangle equalities) — `Monoidal/Rigid/Basic.lean`.
+- Full `Bicategory` + Lax/Oplax/Pseudo-functors + Strict 2-categories + Kan extensions (`HasKan`, `IsKan`, `Adjunction`) — `Bicategory/*`.
+- Algebra-in-monoidal: `Mon_`, `CommMon_`, internal Module — `Monoidal/Mon_.lean`, `Monoidal/CommMon_.lean`, `Monoidal/Internal/Module.lean`.
+
+**PARTIAL / ABSENT** (Phase 6r builds or works around — critical-path gaps):
+- `Pivotal` (rigid + ᘁᘁ ≅ 𝟙_C natural iso): noted as **future work** in `Monoidal/Rigid/Basic.lean` L42 — NOT YET FORMALIZED in Mathlib.
+- `Spherical` category: ABSENT (needed for 3D trace structure).
+- `FusionCategory` typeclass: ABSENT (no semisimplicity + finite-dimensionality predicates).
+- `ModularTensorCategory` typeclass: ABSENT in Mathlib (project's `PreModularData` modules cover this internally per Phases 5c-5p).
+- S-matrix / T-matrix / Verlinde formula: ABSENT in Mathlib.
+- **Cobordism category + TQFT functor: COMPLETELY ABSENT.** No `Mathlib/AlgebraicTopology/Cobordism/` directory. 2-Cob, 3-Cob, spin/Pin variants: ABSENT. **Critical gap for Wave 1b.1 3D TQFT predicate substrate** — Phase 6r either builds at predicate-substrate level or imports from project-local infrastructure.
+- **Frobenius algebras + Lagrangian algebras: ABSENT.** Wave 1c.1-1c.2 must custom-build Frobenius algebra in monoidal category + Lagrangian algebra characterization.
+- Monoidal bicategories: PARTIAL (bicategories present; monoidal-structure-on-bicategories not dedicated class).
+- Spin / Pin⁺ / Pin⁻ bordism in Mathlib: ABSENT.
+- η-invariant / APS index in Mathlib: ABSENT (project has APSEta local content).
+- TMF spectrum: ABSENT.
+
+### C. Lit-Search prior-DR material relevant to Phase 6r
+
+**Note on scout scope:** the Phase 6r Mathlib + Lit-Search scout had its working directory set to `SK_EFT_Hawking/` (instead of the project root) and reported the Lit-Search folder as "absent" — this was a scout artifact, NOT actual absence. The actual Lit-Search tree at `/Users/johnroehm/.../Fluid-Based-Physics-Research/Lit-Search/` is rich; verified contents below.
+
+| Document | Coverage | Significance for Phase 6r |
+|---|---|---|
+| `Lit-Search/_Exploratory/SymTFT, Higher-Form, and Non-Invertible Symmetries Applied to the SK-EFT Hawking Program- A Structural Audit.md` (268 lines) | **Project's comprehensive SymTFT structural audit** (May 2026). Covers SymTFT framework state 2024-2026; active frontiers (mixed-state SymTFT via Choi-doubling Schäfer-Nameki-Tiwari-Warman-Zhang arXiv:2507.05350, continuous-symmetry SymTFT Brennan-Sun arXiv:2407.07951, spacetime-symmetry SymTFT Apruzzi et al. arXiv:2509.07965); open classification problems (MTC beyond rank 12; fusion 2/3-categories; non-invertible-continuous; fermionic/spin SymTFT only in 1+1d Wen-Ye-Potter arXiv:2404.19004). **Identifies "fibered SymTFT" (5d Spin × ℤ₁₆ Dijkgraaf-Witten / Anderson-dual bulk on equilibrium sector + Choi-doubled SymTFT on SK sector) as the highest-leverage open structural problem.** Reading this end-to-end is REQUIRED for Wave 1a.1. |
+| `Lit-Search/_Exploratory/Modular : Conformal Bootstrap as a Uniqueness Argument for Standard-Model Matter Content from a Condensed-Matter Substrate.md` (434 lines) | The "§8 Tier 3 — SymTFT preview track" referenced in this roadmap. Read §8 directly. |
+| `Lit-Search/_Exploratory/Atiyah–Singer Index Theorems as a Unifying Organizational Tool .md` | AS-index unifying-tool memo; relevant for Wave 1b.2 + 2a-2b cross-bridges. |
+| `Lit-Search/Phase-5d/Restructuring CenterFunctor.lean for Z(Vec_G) ≅ Rep(D(G)).md` | Drinfeld-center restructuring substrate. |
+| `Lit-Search/Phase-5s/CenterFunctor Z2 finite matrix feasibility.md` | Z(Vec_Z₂) toric-code feasibility — direct substrate for Wave 1c.3 toric-code witness. |
+| `Lit-Search/Tasks/complete/Muger_dual_closure_braided_rigid_Lean4.txt` | Müger center substrate. |
+| `Lit-Search/Tasks/complete/MTC-Level{1,2,3}-*.md` | MTC substrate chain (paper 14 Lit-Search backing). |
+| `Lit-Search/Tasks/complete/Phase-5d-CenterFunctor_restructuring.md`, `Phase-5p_Muger_center_definition_and_properties.md`, `Phase-5p_S_matrix_nondegeneracy_Muger_equivalence.md`, `center_functor_equivalence_mathlib_lean4.md`, `Phase5s_center_functor_concrete_construction.md`, `center_functor_z2_finite_matrix.md`, `Phase5s_muger_smatrix_general_theorem.md` | Categorical-chain substrate DRs. |
+
+### D. Missing project documents — action items
+
+- **`temporary/working-docs/phase6n/6n_eta_AS_reformulation_memo.md`** — referenced in `APSEta/SymTFTBridge.lean` (L17-21, L62-63) but NOT located by scout. The implicit AS-index identification substance is in those `APSEta/SymTFTBridge.lean` comments + arXiv:1909.08775 (Witten-Yonekura). **Wave 1b.2 should NOT block on this memo; extract substance from the in-comments references + primary source.**
+
+### E. Submitted DR prompts (dispatched 2026-05-12)
+
+| File | Wave | Status |
+|---|---|---|
+| `Lit-Search/Tasks/submitted/20260512_phase6r_wave_1a_SymTFT_2024_2026_substrate.md` | 1a.1 | dispatched — **load-bearing entry point of Phase 6r; cannot proceed without this return.** Returns to `Lit-Search/Phase-6r/wave_1a_SymTFT_2024_2026_substrate_return.md` |
+| `Lit-Search/Tasks/submitted/20260512_phase6r_wave_2a_spin_SymTFT_fermionic_extension.md` | 2a.1 | dispatched (intended to process AFTER Wave 1a.1 return). Returns to `Lit-Search/Phase-6r/wave_2a_spin_SymTFT_fermionic_extension_return.md` |
+| `Lit-Search/Tasks/submitted/20260512_phase6r_wave_3a_SM_matter_topological_boundary.md` | 3a.1 | dispatched (intended to process AFTER Wave 1a.1 + Wave 2a.1 returns). Returns to `Lit-Search/Phase-6r/wave_3a_SM_matter_topological_boundary_return.md` |
+
+---
+
 ## Wave catalog — Shape D (3 Tracks × 8 Waves)
 
 Eight waves across three Tracks. Track 1 = SymTFT axiomatization (the bulk-side substrate). Track 2 = SymTFT-with-fermions extension. Track 3 = SM-matter-on-topological-boundary application.

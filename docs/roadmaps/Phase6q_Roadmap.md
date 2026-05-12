@@ -35,6 +35,98 @@
 
 ---
 
+## Substrate state snapshot (2026-05-12, pre-dispatch)
+
+> **Purpose of this section:** Captures substrate-readiness audits run at Phase 6q prep so future sessions can pick up cold without re-running Explore-agent scouts. Two Explore agents scouted on 2026-05-12 — project Lean substrate + Mathlib4 substrate; consolidated findings below.
+
+### A. CRITICAL FLAG — Phase 6o Wave 1c NO-GO writeup status
+
+The roadmap identifies `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md` as "the trigger result." **The substrate scout could not locate this file in the working-docs tree.** Phase 6o working-docs at scout time were `wave_4a_session1_close.md` + `wave_4a_sakharov_lambda_substrate_refactor.md` (Wave 4a Sakharov closure work), not Wave 1c NO-GO findings. Either the Wave 1c NO-GO was conceptually identified during Phase 6o but never formally written up, OR the writeup is at an unexpected location.
+
+**Action item carried into Wave 1a.1:** the Wave 1a.1 DR (`Lit-Search/Tasks/submitted/20260512_phase6q_wave_1a_DKM_axiom_replacement_substrate.md`) is parameterized to **reconstruct** the three NO-GO obstructions (unitarity → KMS replacement breaks EFT-positivity; crossing has no doubled-contour analog; SDP feasibility breaks on complex contour) from first principles + primary sources rather than presuming the writeup exists. **Recommend user-action pre-dispatch:** spot-check whether the writeup exists at an alternative location (e.g., `temporary/working-docs/phase6o/` immediate parent, OR project-root scratchpad). If found, cross-check against Wave 1a.1 DR's reconstruction.
+
+### B. Project Lean substrate (substantive, scout-confirmed)
+
+**`lean/SKEFTHawking/CrooksAnalogHawking/`** (8 modules, ~2630 LOC, zero sorries) — substrate Phase 6q consumes for the KMS-replaces-unitarity content + LDP cross-bridge:
+- `LDPLinearResponse.lean` (651): `IsLDPRateFunction` class definition + linear-response rate function; headline `wave_2c_5c_abstract_LDP_class_closure` ties linear-response/quartic/non-Gaussian rate functions to W-form Gallavotti-Cohen symmetry. Key declarations: `LDPLinearResponseData`, `linearResponseEmissionScheme`, `linearResponseRateFunctionCentered`.
+- `SKEFTGallavottiCohen.lean` (417): `SKEFT_implies_GC_symmetry` structural theorem.
+- `SKEFTHorizonBridge.lean` (255): `skeft_action_to_horizon_emission`.
+- `AnalogHawkingBiconditional.lean` (249): `AnalogHawkingEmissionScheme` struct + `analog_hawking_third_biconditional` (monotonicityCompatibleEmission ↔ gcCompatibleEmission).
+- `BiconditionalReformulation.lean` (211): `stage2_3_partition_substantive`.
+- `SakharovHorizonCrooks.lean` (192): `sakharov_to_crooks_dynamics` cross-layer.
+- `HorizonDetailedBalance.lean` (146): work-distribution algebra.
+- `GallavottiCohen.lean` (91): `WFormGallavottiCohen`, `GallavottiCohenSymmetry`.
+
+**`lean/SKEFTHawking/GloriosoLiu/`** (9 modules, ~1271 LOC, zero sorries) — CGL axiom encoding + monotonicity substrate:
+- `Axioms.lean` (291): `SKEFTAxioms : SKAction → ℝ → Prop` (L144-172) bundling `hasCTPStructure ∧ hasLargestTime ∧ hasReflectionPositivity ∧ hasHermiticity ∧ hasDynamicalKMS ∧ hasLocalEquilibrium`; algebraic vs strict KMS at L94-111.
+- `SecondOrderProjection.lean` (471): `SKEFTAxiomsExt`; load-bearing `SKEFTAxiomsExt_yields_parity_alternation` (γ_{2,1} + γ_{2,2} = 0).
+- `OnsagerReciprocity.lean` (152): load-bearing `OnsagerReciprocity_from_KMS` (transport matrix symmetric).
+- `Phase1Reconciliation.lean` (261): `firstOrderCoefficients_recover_dissipative`.
+- `EntropyCurrent.lean` (123), `DynamicalKMS.lean` (123) (`UVRealization` typeclass + `DynamicalKMSAt` predicate), `FirstOrderProjection.lean` (97), `LocalEquilibrium.lean` (90), `LocalSecondLaw.lean` (81).
+
+**SK-EFT core:**
+- `SKDoubling.lean` (657): `SKFields` struct (9-dim doubled), `SKAction` struct, `KMSSymmetry : SKAction → ℝ → Type`, `FirstOrderKMS : FirstOrderCoeffs → ℝ → Prop` (L351-379).
+- `SecondOrderSK.lean` (958).
+- `ThirdOrderSK.lean`.
+
+**4 load-bearing theorems Phase 6q must respect** (any axiom replacement must NOT break these):
+1. `OnsagerReciprocity_from_KMS` (`GloriosoLiu/OnsagerReciprocity.lean`) — transport matrix symmetric.
+2. `SKEFTAxiomsExt_yields_parity_alternation` (`GloriosoLiu/SecondOrderProjection.lean`) — γ_{2,1} + γ_{2,2} = 0 preserved.
+3. `analog_hawking_third_biconditional` (`CrooksAnalogHawking/AnalogHawkingBiconditional.lean`) — monotonicity ↔ Gallavotti-Cohen.
+4. `wave_2c_5c_abstract_LDP_class_closure` (`CrooksAnalogHawking/LDPLinearResponse.lean`) — `IsLDPRateFunction` interface.
+
+### C. Mathlib4 (v4.29.0, pinned `8850ed93`) readiness for Phase 6q
+
+**PRESENT, mature** (Wave 1c can ship substantive content):
+- Cauchy integral formula: `Mathlib/Analysis/Complex/CauchyIntegral.lean` (`circleIntegral_sub_inv_smul_of_differentiable_on_off_countable`, Cauchy-Goursat `integral_boundary_rect_eq_zero_of_differentiable_on_off_countable`, higher-derivative `circleIntegral_one_div_sub_center_pow_smul_of_differentiable_on_off_countable`).
+- Convex cones + Hahn-Banach separation: `Mathlib/Analysis/Convex/Cone/{Basic,Dual,Extension,InnerDual}.lean` (`ConvexCone`, `PointedCone`, `ProperCone R E`, `ProperCone.hyperplane_separation` = Farkas via separation).
+- Riesz representation: `Mathlib/Analysis/InnerProductSpace/Dual.lean` (`InnerProductSpace.toDualMap`, `InnerProductSpace.toDual`).
+- Positive linear functionals on C*-algebras: `Mathlib/Analysis/CStarAlgebra/PositiveLinearMap.lean` (`PositiveLinearMap`).
+- Bochner integration: `Mathlib/MeasureTheory/Integral/Bochner/Basic.lean` + L¹ + `DominatedConvergence.lean`.
+- C*-algebra substrate: `Mathlib/Analysis/CStarAlgebra/` (21 files; `Basic`, `Classes`, `PositiveLinearMap`, `CompletelyPositiveMap`, `GelfandDuality`).
+- Star structures: `Mathlib/Algebra/Star/*` + `Mathlib/Analysis/Matrix/Hermitian.lean`.
+- Spectral theory (finite-dim + compact): `Mathlib/Analysis/InnerProductSpace/Spectrum.lean` (`LinearMap.IsSymmetric.diagonalization/eigenvectorBasis`).
+- Asymptotics: `Mathlib/Analysis/Asymptotics/` (10 files; `IsBigOWith`, `=O[l]`, `=o[l]`, `ExpGrowth`, `SuperpolynomialDecay`).
+- `Matrix.PosSemidef`: `Mathlib/Analysis/Matrix/Positive.lean` — substrate for SDP feasibility predicate wrapping.
+
+**ABSENT, small custom build** (Wave 1c per-piece scope):
+- Kramers-Kronig dispersion relations (1-2pp, depends on Plemelj).
+- Residue theorem with explicit indexing (1-2pp; implicit in Cauchy analyticity).
+- SDP feasibility predicate wrapping `Matrix.PosSemidef` (~1pp).
+- KMS condition predicate on C*-states (~1-2pp).
+- Saddle-point / stationary-phase asymptotics (~2-3pp).
+
+**ABSENT, major custom build** (Wave 1c risk axis):
+- Sokhotski-Plemelj theorem + Hilbert transform + principal-value integral infrastructure (~3-5pp). Mathlib has no PV-integral substrate at all.
+
+**Total estimated custom infrastructure for Phase 6q: ~10-15 pages of Lean code.** No blocker-level gap. Phase 6q is substrate-capable.
+
+### D. Confirmed gaps (Phase 6q will fill)
+
+- `lean/SKEFTHawking/DKMBootstrap/` — directory does NOT exist. Wave 1a creates.
+- No `TransportCoefficient`/`Conductivity`/`ShearViscosity`/`BulkViscosity`/`DrudeWeight`/`Permittivity` typed structures in project — coefficient families are ad-hoc (`FirstOrderCoeffs` r1-r6/i1-i2; `CombinedDissipativeCoeffs` γ_1/γ_2/γ_{2,1}/γ_{2,2}). Wave 2a's design decision: typed structures vs predicate substrate (see Wave 2a.1 DR Q3).
+- No `paper1`/`paper2`/`paper3` Lean directories (early papers live as flat `SKDoubling.lean`, `SecondOrderSK.lean`, `CrooksAnalogHawking/*`, `AnalogHawkingBiconditional.lean` + tex/pdf outside `lean/`).
+- No SDP / convex-cone / linear-functional / `BootstrapBound` / `Crossing` Lean substrate (grep confirmed zero matches).
+
+### E. Lit-Search prior-DR material relevant to Phase 6q
+
+| Document | Coverage |
+|---|---|
+| `Lit-Search/Tasks/complete/Crossley-Glorioso-Liu (CGL) dynamical KMS transformation prompt.txt` (16 lines) | CGL axiom DR seed |
+| `Lit-Search/Phase-6a/primary-sources/CrossleyGloriosoLiu2017.pdf` | CGL primary source (cached) |
+| Phase 6n+ Foundational Backing Assessment doc (Lit-Search/_Exploratory/) | Phase 6n+ shape recommendation §10 |
+
+(Note: the primary DR substrate for Phase 6q's DKM bootstrap is the CHHK arXiv:2509.18255 primary source itself + the project's existing Crossley-Glorioso-Liu prompt + the active 2024-2026 transport-bootstrap literature. Wave 1a.1 DR is the comprehensive new dispatch.)
+
+### F. Submitted DR prompts (dispatched 2026-05-12)
+
+| File | Wave | Status |
+|---|---|---|
+| `Lit-Search/Tasks/submitted/20260512_phase6q_wave_1a_DKM_axiom_replacement_substrate.md` | 1a.1 | dispatched (returns to `Lit-Search/Phase-6q/wave_1a_DKM_axiom_replacement_substrate_return.md`) |
+| `Lit-Search/Tasks/submitted/20260512_phase6q_wave_2a_SKEFT_Hawking_DKM_specialization.md` | 2a.1 | dispatched (returns to `Lit-Search/Phase-6q/wave_2a_SKEFT_Hawking_DKM_specialization_return.md`); intended to process AFTER Wave 1a.1 return calibrates axiom-set context |
+
+---
+
 ## Wave catalog — Shape D (2 Tracks × 5 Waves)
 
 Five waves across two Tracks. Track 1 = transport-bootstrap axiom replacement (the generic machinery applied to SK-EFT). Track 2 = SK-EFT-Hawking specialization + horizon transport application.
