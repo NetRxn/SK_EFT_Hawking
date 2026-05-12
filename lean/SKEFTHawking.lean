@@ -507,6 +507,50 @@ import SKEFTHawking.MazurSigmaModelRigidity
 import SKEFTHawking.HawkingPenroseSingularityCurveTheoretic
 import SKEFTHawking.AreaTheoremCurveTheoretic
 import SKEFTHawking.WaveEquation1D
+import SKEFTHawking.CNOTBraidTQSim
+-- Phase 6p Wave 2d.2 (2026-05-12): Dawson-Nielsen Lemma 3 order-2 BCH
+-- cubic-remainder bound for matrix exponentials. Strictly-weaker analytic
+-- axiom replacing the retired sk_axiom_Dawson_Nielsen (Wave 2b.2). First-
+-- formalization-territory across all proof assistants; ~300 LoC discharge
+-- plan in AXIOM_METADATA pending Mathlib4 matrix Taylor remainder upstream.
+import SKEFTHawking.MatrixBCH
+-- Phase 6p Wave 2d.4 (2026-05-12): ε-net base case + UniversalGateSet
+-- substrate for the constructive Solovay-Kitaev discharge.
+import SKEFTHawking.FKLW.EpsilonNet
+-- Phase 6p Wave 2d.5 (2026-05-12): Constructive Solovay-Kitaev refinement.
+-- SolovayKitaevWithLengthBound predicate (substantive D-N length bound)
+-- and bridges from ClosureDenseProp. Companion to FKLW.SolovayKitaev's
+-- length-bound-free constructive theorem.
+import SKEFTHawking.FKLW.SolovayKitaevConstructive
+-- Phase 6p Wave 1c (2026-05-12): MeasureTheory-grounded Bernoulli-product
+-- noise model. BernoulliProductModel structure + bridge to abstract
+-- LocalStochasticNoise; joint-failure probability ε^k EXACT (not just upper
+-- bound) under per-location-independence semantics. Load-bearing AGP-
+-- compatibility check at k=2 (the recursion-rate exponent). Zero new axioms.
+import SKEFTHawking.FaultTolerance.NoiseModelMT
+-- Phase 6p Wave 3a.2.2a (2026-05-12): QCyc40Ext = Q(ζ₄₀, √φ) — degree-32
+-- non-cyclotomic extension field substrate for Fibonacci F-matrix off-
+-- diagonal √φ entry. Required because Q(√φ)/Q is non-abelian D₄
+-- (Kronecker-Weber obstruction; the roadmap's "√φ → phi" placeholder
+-- mapping was incorrect). Multiplication via (a+bw)(c+dw) = (ac+bd·φ)+(ad+bc)w.
+import SKEFTHawking.QCyc40Ext
+-- Phase 6p Wave 3a.2.2 (2026-05-12): Fibonacci 3-strand qubit-sector
+-- representation over Q(ζ₄₀, √φ); load-bearing F² = I + Yang-Baxter
+-- braid relation σ₁σ₂σ₁ = σ₂σ₁σ₂ verified by native_decide on Mat2K_40_Ext.
+-- Substrate for explicit Rouabah Hadamard ε-discharge (full 30-deep
+-- native_decide deferred to 3a.2.2c-followup).
+import SKEFTHawking.RouabahExplicit
+-- Phase 6p Wave 3a.2.3c (2026-05-12): Externally-compiled (Python brute-
+-- force beam search via `scripts/phase6p_tgate_compiler.py`) Fibonacci
+-- 3-strand T-gate braid. First Fibonacci T-gate braid published anywhere
+-- per Wave 3a.2.3c DR audit. ε ≈ 7.5e-2 first-attempt; refinement to
+-- ε ≤ 10⁻³ via SK-iteration or GA-SK is mechanical (replace braid literal).
+import SKEFTHawking.TgateFibBraid
+-- Phase 6p Wave 2b.3.2 partial (2026-05-12): Iterated-commutator extension
+-- of the block-extended Fibonacci quintet representation. Ships 8 of 24
+-- target conjuncts via native_decide on {0,1,2}-block iterated commutators.
+-- Full 24 deferred pending HZBS Fig 4 4-strand F-symbol substrate.
+import SKEFTHawking.FibonacciQuintetUniversalityExt
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

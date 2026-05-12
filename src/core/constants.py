@@ -1427,6 +1427,301 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                            'at the Laplace-saddle level only.',
         },
     },
+    'sk_axiom_Dawson_Nielsen': {
+        'eliminability': 'closed',
+        'reason': 'Phase 6p Wave 2d (2026-05-12) eliminated the structurally-'
+                  'tautological sk_axiom_Dawson_Nielsen of Wave 2b.2 (whose '
+                  'h_dense hypothesis was identical to its conclusion '
+                  'SolovayKitaevProp d G — a trivial P → P axiom). The Wave 2d '
+                  'replacement was originally framed as "constructive theorem '
+                  'consuming a strictly-weaker UniversalGateSet hypothesis" — '
+                  'AN INDEPENDENT AUDIT (2026-05-12, post-Wave-2d) FOUND THIS '
+                  'FRAMING INACCURATE: UniversalGateSet (EpsilonNet.lean:74-78) '
+                  'and SolovayKitaevProp (SolovayKitaev.lean:73-77) have '
+                  'TEXTUALLY IDENTICAL BODIES, making the headline theorem '
+                  'solovayKitaev_dawson_nielsen an existential unfolding (P5 '
+                  'identity-function pattern, body := hG_universal), NOT a '
+                  'substantive discharge. The Wave 2d.5-followup (this revision, '
+                  'same-day 2026-05-12) acknowledges the P5 framing honestly: '
+                  'the headline theorem is preserved for downstream API '
+                  'stability, docstring-flagged as P5-acknowledged existential '
+                  'unfolding, and the SUBSTANTIVE Dawson-Nielsen content is '
+                  'moved to: (a) SolovayKitaevWithLengthBound (the length-'
+                  'bounded form with the genuinely-additional log^4(1/ε) '
+                  'conjunct), (b) dn_single_refinement_substantive (the BCH-'
+                  'axiom-consuming single-step refinement), (c) DNRecurrence '
+                  'structure (5-fold branching + 3/2 exponent as first-class '
+                  'fields, not docstring-only). The tightened bch_order_2_axiom '
+                  '(see below) is now load-bearing for the substantive content.',
+        'module': 'FKLW.SolovayKitaev',
+        'evidence_on_close': {
+            'wave': 'Phase 6p Wave 2d (2026-05-12, user-authorized G17) + '
+                    'Wave 2d.5-followup audit-correction (2026-05-12)',
+            'date_closed': '2026-05-12',
+            'project_local_modules': [
+                'lean/SKEFTHawking/MatrixBCH.lean',
+                'lean/SKEFTHawking/FKLW/EpsilonNet.lean',
+                'lean/SKEFTHawking/FKLW/SolovayKitaev.lean',
+                'lean/SKEFTHawking/FKLW/SolovayKitaevConstructive.lean',
+            ],
+            'derivation_strategy': 'The retired Wave 2b.2 axiom is eliminated; '
+                                   'the Wave 2d theorem solovayKitaev_dawson_'
+                                   'nielsen is preserved as an existential '
+                                   'unfolding (P5 audit-acknowledged: '
+                                   'UniversalGateSet ≡ SolovayKitaevProp '
+                                   'textually). SUBSTANTIVE Dawson-Nielsen '
+                                   'content lives in '
+                                   'SolovayKitaevConstructive.lean: '
+                                   'SolovayKitaevWithLengthBound (length bound '
+                                   'log^4(1/ε), genuinely additional '
+                                   'conjunct), dn_single_refinement_'
+                                   'substantive (BCH-consuming single-step '
+                                   'refinement: lean_verify reports '
+                                   'bch_order_2_axiom in kernel closure), '
+                                   'DNRecurrence (explicit 5-fold-branching + '
+                                   '3/2-exponent structure with K ≤ 4√2 and '
+                                   'ε₀ < 1/K² as fields, end-of-docstring-only '
+                                   'encoding).',
+            'verification': 'lean_diagnostic_messages clean on all four '
+                            'modified files; lean_verify on '
+                            'FKLW.solovayKitaev_dawson_nielsen returns standard '
+                            'kernel [propext, Classical.choice, Quot.sound] '
+                            '(consistent with P5 existential-unfolding form); '
+                            'lean_verify on '
+                            'FKLW.dn_single_refinement_substantive returns '
+                            '[propext, Classical.choice, Quot.sound, '
+                            'MatrixBCH.bch_order_2_axiom] '
+                            '(confirms the tightened BCH axiom is now load-'
+                            'bearing for substantive SK content).',
+            'future_work': 'Sub-wave 2d.5-followup-full: explicit constructive '
+                           'witness for SolovayKitaevWithLengthBound '
+                           '(~120 LoC strong induction using '
+                           'MatrixBCH.bch_order_2_estimate + qubit Lemma 2). '
+                           'Currently blocked on qubit Lemma 2 (D-N §4.1 '
+                           'Bloch-sphere construction; ~80 LoC, first-'
+                           'formalization-territory). Once that ships either '
+                           'as Mathlib4 substrate or as a strictly-narrower '
+                           'residual axiom (dn_lemma_2_qubit), the '
+                           'SolovayKitaevWithLengthBound predicate becomes '
+                           'unconditionally provable.',
+            'audit_acknowledgment_2026_05_12': 'The Wave 2d original ship '
+                                               'used the framing "strictly '
+                                               'weaker hypothesis" for the '
+                                               'UniversalGateSet → '
+                                               'SolovayKitaevProp transition. '
+                                               'The audit found this framing '
+                                               'inaccurate because the two '
+                                               'predicates are textually '
+                                               'identical (existential '
+                                               'unfolding, P5 pattern). The '
+                                               'Wave 2d.5-followup (same-day '
+                                               'correction) replaces the '
+                                               'framing with an honest P5 '
+                                               'acknowledgment and pushes '
+                                               'substantive Dawson-Nielsen '
+                                               'content to the length-bounded '
+                                               'form + single-step refinement, '
+                                               'where the tightened BCH axiom '
+                                               'is load-bearing.',
+        },
+    },
+    'bch_order_2_axiom': {
+        'eliminability': 'medium',
+        'reason': 'Phase 6p Wave 2d.2 (2026-05-12, user-authorized G17) shipped '
+                  'the original axiom in an over-strong form (quantified over '
+                  'ALL matrices A, B without Hermitian or norm-bound '
+                  'hypotheses). An independent audit (2026-05-12 post-Wave-2d) '
+                  'flagged this as P4 over-strong: without the Hermitian '
+                  'hypothesis the bound fails in general (non-Hermitian large-'
+                  'norm matrices), and without the norm-bound hypothesis the '
+                  'bound is vacuously satisfiable in the large-norm regime '
+                  '(LHS dominated by 4·exp(4δ) from sub-multiplicativity, '
+                  'trivially ≤ K·δ³ for K ≥ 4 once δ is large enough). The '
+                  'Wave 2d.5-followup (same-day 2026-05-12) TIGHTENED the axiom '
+                  'to match Dawson-Nielsen 2005 Lemma 3 (§5.2 p. 12, citing '
+                  'Rossmann 2002 Prop. 2 §1.3 p. 25) EXACTLY: for Hermitian F, '
+                  'G with ‖F‖, ‖G‖ ≤ δ, ‖exp(F)·exp(G)·exp(-F)·exp(-G) - '
+                  'exp(-[F,G])‖ ≤ K · δ³ with K ≤ 4. The tightened form is '
+                  'strictly weaker (smaller universal-quantifier domain). It '
+                  'is also now LOAD-BEARING: '
+                  'dn_single_refinement_substantive in '
+                  'SolovayKitaevConstructive.lean consumes the axiom non-'
+                  'trivially (lean_verify reports it in the kernel closure). '
+                  'First-formalization-territory across all proof assistants '
+                  '(per 2026-05-12 cross-prover scout: absent from Mathlib4, '
+                  'PhysLib, inQWIRE, SQIR/VOQC, CoqQ, Isabelle/HOL AFP, '
+                  'QHLProver, Agda).',
+        'module': 'MatrixBCH',
+        'discharge_plan': {
+            'wave': 'Phase 6p Wave 2d.2-followup (post-Mathlib matrix Taylor remainder)',
+            'estimated_loc': 300,
+            'sub_pieces': [
+                {
+                    'name': 'matrix Taylor remainder',
+                    'loc': 80,
+                    'mathlib_status': 'MISSING (scalar version present as '
+                                      'Complex.norm_exp_sub_sum_le_exp_norm_sub_sum; '
+                                      'matrix lift requires NormedSpace.expSeries).',
+                },
+                {
+                    'name': 'four-fold product expansion + order-2 cancellation',
+                    'loc': 150,
+                    'mathlib_status': 'MISSING (this is the load-bearing '
+                                      'piece; Ozols 2009 Claim 1 gives the '
+                                      'explicit cancellation calculation).',
+                },
+                {
+                    'name': 'comparison to exp([A,B]) via triangle inequality',
+                    'loc': 70,
+                    'mathlib_status': 'MISSING (matrix-norm submultiplicativity '
+                                      '+ scalar Taylor — straightforward).',
+                },
+            ],
+            'mathlib_pr_target': 'Matrix.norm_exp_sub_taylor_le (matrix Taylor '
+                                 'remainder; port from scalar). Once landed '
+                                 'upstream, the local 300 LoC discharge proceeds '
+                                 'via direct power-series manipulation.',
+        },
+        'source': 'Dawson & Nielsen, *Quantum Info. & Comp.* 6 (2006), 81–95; '
+                  'arXiv:quant-ph/0505030 §5.2 Lemma 3, p. 12. Cites Rossmann '
+                  '2002 *Lie Groups: An Introduction Through Linear Groups*, '
+                  'Proposition 2, §1.3, p. 25.',
+        'risk': 'Low — Dawson-Nielsen Lemma 3 is a standard matrix-Lie-group '
+                'identity used routinely throughout quantum-control and '
+                'compilation literature; the proof is direct power-series '
+                'manipulation (no analytic subtleties beyond uniform '
+                'convergence of the matrix exponential series, which Mathlib4 '
+                'already provides for any normed algebra).',
+        'circularity_note': 'None. The BCH axiom is a purely analytic '
+                            'statement about matrix exponentials; it does '
+                            'not depend on any Solovay-Kitaev, FKLW, or '
+                            'gate-set content. Its consumers (the recursive '
+                            'Solovay-Kitaev refinement) use it as a one-way '
+                            'analytic primitive.',
+        'tightening_history': {
+            'wave_2d_2_original_form_2026_05_12': 'Quantified over ALL '
+                                                  'matrices A, B (no '
+                                                  'Hermitian, no norm-bound). '
+                                                  'Audit-flagged as P4 over-'
+                                                  'strong / vacuously '
+                                                  'satisfiable in large-norm '
+                                                  'regime.',
+            'wave_2d_5_followup_tightened_form_2026_05_12': 'Restricted to '
+                                                            'Hermitian F, G '
+                                                            'with ‖F‖, ‖G‖ ≤ '
+                                                            'δ (explicit δ '
+                                                            'parameter). '
+                                                            'Matches '
+                                                            'Dawson-Nielsen '
+                                                            'Lemma 3 §5.2 '
+                                                            'exactly. '
+                                                            'Strictly weaker '
+                                                            '(smaller '
+                                                            'universal-'
+                                                            'quantifier '
+                                                            'domain).',
+            'substrate_gaps_post_tightening': [
+                'Matrix Taylor remainder: ‖exp(X) - (1+X+X²/2)‖ ≤ '
+                '‖X‖³·exp(‖X‖)/6 (Mathlib has scalar Complex.'
+                'norm_exp_sub_sum_le_exp_norm_sub_sum, missing matrix lift)',
+                'Hermitian-product 4-fold expansion to order 3 + order-2 '
+                'cancellation (no precedent in any prover; Ozols 2009 '
+                'Claim 1 gives the explicit calculation, ~150 LoC)',
+                'Triangle-inequality closure against exp(-[F,G]) = '
+                'I - [F,G] + O(δ⁴) (uses Matrix.linftyOpNorm '
+                'submultiplicativity, ~70 LoC)',
+            ],
+        },
+    },
+    'bridge_axiom_FKLW': {
+        'eliminability': 'closed',
+        'reason': 'Phase 6p Wave 2c.4 (2026-05-12) replaced the original '
+                  '`axiom bridge_axiom_FKLW` (which covered all d ≥ 0) with a '
+                  'theorem of identical signature delegating to '
+                  '`AharonovAradBridge.bridge_FKLW_smallDim`. The new theorem '
+                  'is constructive at d = 0 (vacuous: Fin 0 is empty) and '
+                  'delegates to the strictly-weaker residual axiom '
+                  '`bridge_axiom_FKLW_general` (which carries an explicit '
+                  '1 ≤ d guard) for d ≥ 1. Net: the d = 0 case is now '
+                  'axiom-free; the project axiom previously named '
+                  '`bridge_axiom_FKLW` is no longer an axiom (it is a '
+                  'theorem in `BridgeProp.lean`).',
+        'module': 'FKLW.BridgeProp',
+        'used_in': 'density_from_spanning (still tainted via the residual '
+                   'axiom for d ≥ 1; no downstream theorems invoke it).',
+        'evidence_on_close': {
+            'wave': 'Phase 6p Wave 2c.4 (Aharonov-Arad Bridge architectural '
+                    'closure — user-authorized G16 2026-05-12)',
+            'date_closed': '2026-05-12',
+            'project_local_module': 'lean/SKEFTHawking/FKLW/'
+                                    'AharonovAradBridge.lean',
+            'derivation_strategy': 'Vacuous-quantifier discharge for d = 0 '
+                                   '(Fin 0 has no inhabitants, so the '
+                                   'entrywise quantifier in ClosureDenseProp '
+                                   'is trivially true); delegation to '
+                                   'strictly-weaker residual axiom '
+                                   '`bridge_axiom_FKLW_general` for d ≥ 1.',
+            'verification': 'lean_verify on '
+                            'SKEFTHawking.FKLW.bridge_axiom_FKLW returns '
+                            'axioms = [propext, Classical.choice, Quot.sound, '
+                            'SKEFTHawking.FKLW.AharonovAradBridge.'
+                            'bridge_axiom_FKLW_general] '
+                            '(the new residual replaces the former '
+                            '`bridge_axiom_FKLW`).',
+            'citation_correction': 'arXiv:quant-ph/0702008 was an erroneous '
+                                   'citation in the pre-Wave-2c.4 docstring; '
+                                   'the actual Bridge Lemma + Decoupling '
+                                   'Lemma source is arXiv:quant-ph/0605181 '
+                                   '(Aharonov & Arad 2007/2011 → '
+                                   '*New J. Phys.* 13 (2011) 035019) §4 + §6.',
+        },
+    },
+    'bridge_axiom_FKLW_general': {
+        'eliminability': 'planned',
+        'reason': 'Strictly-weaker residual axiom (post-Wave 2c.4 replacement '
+                  'for `bridge_axiom_FKLW`). Carries an explicit `1 ≤ d` '
+                  'hypothesis, excluding the trivial d = 0 case that is '
+                  'discharged constructively. Substantive constructive '
+                  'discharge for the d ≥ 1 case requires the Aharonov-Arad '
+                  'Bridge Lemma 4.1 + Lemma 6.1/6.2 formalization in '
+                  '`AharonovAradBridge.lean` — the substrate scaffolding '
+                  '(predicates, supporting lemmas) is in place; the '
+                  'substantive proof is the Wave 2c.4 follow-up plan.',
+        'module': 'FKLW.AharonovAradBridge',
+        'used_in': 'bridge_axiom_FKLW (delegates to it for d ≥ 1).',
+        'discharge_wave': 'Phase 6p Wave 2c.4 follow-up sub-waves '
+                          '(2c.4a/4b/4c/4d).',
+        'discharge_estimate_loc': {
+            '2c.4a (Bridge Lemma 4.1 + Lemma 6.1/6.2 abstract)': 120,
+            '2c.4b (qutrit d = 3 specialization)': 80,
+            '2c.4c (LieSpanProp → BridgeHypothesis bridging)': 50,
+            '2c.4d (Decoupling Lemma 4.2 for d ≥ 9)': 280,
+            'total': 530,
+        },
+        'substrate_gaps_blocking_2c.4d': {
+            'IsCompact on Matrix.specialUnitaryGroup': 'absent in Mathlib4 '
+                'as of pin 8850ed93. Estimated ~80 LoC to add upstream or '
+                'project-local.',
+            'PathConnectedSpace on Matrix.specialUnitaryGroup': 'absent. '
+                '~80 LoC upstream port.',
+            'LieGroup on Matrix.specialUnitaryGroup': 'absent. ~200 LoC '
+                'upstream port.',
+        },
+        'source': 'Aharonov & Arad 2011, *New J. Phys.* 13, 035019; '
+                  'arXiv:quant-ph/0605181 §4 (density Theorem 3.2) and '
+                  '§6 (Lemma 4.1 Bridge + Lemma 4.2 Decoupling).',
+        'risk': 'Low for d ≤ 4 (no Decoupling Lemma needed; ~250 LoC '
+                'substantive Bridge Lemma formalization). Medium for d ≥ 9 '
+                '(Decoupling Lemma requires nonconstructive Lie-group '
+                'quotient machinery currently absent from Mathlib4).',
+        'circularity_note': 'None. The bridge axiom is a pure analytic-'
+                            'topological statement about closures in unitary '
+                            'matrix groups; it does not depend on any '
+                            'Solovay-Kitaev, AGP-threshold, or gate-set '
+                            'content. Its only direct consumer is '
+                            '`density_from_spanning`, which has no '
+                            'downstream callers (verified via `grep`).',
+    },
 }
 
 # ════════════════════════════════════════════════════════════════════
