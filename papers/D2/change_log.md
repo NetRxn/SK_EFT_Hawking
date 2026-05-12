@@ -49,3 +49,19 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: §3
 - Stage-13 redo required: yes
 - Notes: D.2 absorption: Phase 6o W2a APS-η Witten-Yonekura η/16 mod 1 cross-bridge to Z₁₆ Dai-Freed
+
+## 2026-05-11 — Freshness-bookkeeping (bookkeeping)
+
+- Source: (none — bookkeeping event for Stage-13-sweep freshness cleanup)
+- Lift action: Freshness-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-11 Stage-13-sweep freshness cleanup + inline-absorption-record: paper7_chirality_formal/paper_draft.tex edited 2026-05-11T09:50 + paper8_chirality_master/paper_draft.tex edited 2026-05-11T09:51 (substantive paper-draft edits, contents not diff-able without git). D2 own paper_draft.tex edited at 09:58 directly after, content-aligned at §4 (Pillar 1 / 2+3 paragraphs grep-verified: Golterman-Shamir, TPF, Drinfeld doubles, Steenrod A(1), FK gapped-interface). Today's 09:58 D2 edit was effectively an inline absorption that bypassed the formal bundle_append.py cycle; this event formally records that absorption. Also auto-regenerated tables across the source-paper tree at 12:56 (see D1 event).
+
+## 2026-05-12 - Prose-revision-bookkeeping (bookkeeping)
+
+- Source: (none - project-wide first-claim-removal prose revision)
+- Lift action: Prose-revision-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-12 first-claim-removal: paper7_chirality_formal + paper8_chirality_master + paper10_modular_generation abstracts + body + conclusions had primacy framing rewritten to descriptive prose ('We present a formal verification of X' rather than 'the first formal verification of X'); Steenrod Ext + FK gapped-interface + Onsager-algebra wording softened. D2 bundle own draft Onsager paragraph also rewritten (dropped 'to our knowledge the first formalisation of the Onsager algebra' hedge). D2 bundle content remains aligned (paper7/paper8 absorbed material in D2 §4 unchanged in substance).

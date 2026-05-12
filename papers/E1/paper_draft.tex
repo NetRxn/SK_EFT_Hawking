@@ -4,6 +4,8 @@
 \usepackage{hyperref}
 \usepackage{siunitx}
 
+\input{../../docs/counts.tex}
+
 %% Bundle: E1 (tier 4, target PRL | PRR)
 %% Source manifest: papers/E1/source_manifest.md
 %% Source paper: paper12_polariton (companion content) + Phase 5u Wave 21 cover-letter material
@@ -35,20 +37,28 @@ predictions are reliable in the smooth regime and leading-order at
 steep horizon. The stimulated-Hawking gain
 $G(\omega) = \Gamma(\omega) / (e^{2\pi \omega/\kappa_{\rm eff}} - 1)$
 crosses the single-shot $5\sigma$ threshold $G > 0.5$ at
-$\omega < \ln(3)/(2\pi)\,\kappa \approx 0.175\,\kappa$ (universal,
-$\kappa$-independent) — yielding
+$\omega < \ln(3)/(2\pi)\,\kappa \approx 0.175\,\kappa$ in the
+greybody-saturation limit $\Gamma(\omega) \equiv 1$ (universal across
+$\kappa$ in that limit; the Paris-LKB low-$\omega$ regime
+$\omega \lesssim 0.3\,\kappa$ is in the perturbative window where
+$\Gamma$ is approximately flat~\cite{Finazzi2012,Jacquet2023QNM}) ---
+yielding
 $\mathrm{SNR} \approx 11$ for $N_{\rm probe} \sim 100$ probe photons
 per mode --- a $10^3$--$10^6$ improvement over spontaneous-correlation
 detection. We emit one falsifiable spectral window:
 $\omega/\kappa \in [0.05, 0.30]$ at the smooth-horizon configuration,
 where the SK-EFT noise-floor formula is the cleanest. The Lean~4
-verification of the underlying chain (5812 theorems / 322 modules / 1
-axiom / 0 sorry) is independent of platform parameters, so the
+verification of the underlying chain
+(\substantivetheorems{}~substantive theorems /
+\leanmodules{}~modules / \axiomcount{}~axiom / \sorrycount{}~sorry)
+is independent of platform parameters, so the
 prediction can be inverted: a measured $G(\omega)$ profile constrains
 $(c_s, \xi, \kappa)$ jointly and falsifies the SK-EFT framework if
 inconsistent. We close with a request to the LKB team for current
 device-parameter values to allow band-tightening before measurement.
 \end{abstract}
+
+%% Counts: see line 45 and line 82 (now macro-driven via counts.tex).
 
 \maketitle
 
@@ -79,8 +89,10 @@ a factor of $\sim$2--3 relative to reservoir-free Bogoliubov estimates
 detection pathway via CW pump-probe spectroscopy~\cite{Grisins2016}
 that bypasses the quantum-noise floor by operating at the
 classical-mean-field level; (iii) formally verified spectral formulas
-derived from a Lean~4 chain (5812 theorems / 322 modules / 1 axiom /
-0 sorry; \texttt{lake build} clean).
+derived from a Lean~4 chain
+(\substantivetheorems{}~substantive theorems /
+\leanmodules{}~modules / \axiomcount{}~axiom /
+\sorrycount{}~sorry; \texttt{lake build} clean).
 
 %% ══════════════════════════════════════════════════════════════════
 \section{Reservoir-corrected device parameters}
@@ -95,6 +107,14 @@ length $\xi \approx \SI{3.4}{\micro\meter}$. The downstream healing
 length is $\xi \approx \SI{4.0}{\micro\meter}$. Two configurations
 are reported by the primary source:
 
+%% Provenance: inline literals below trace to
+%%   src/core/constants.py :: POLARITON_PLATFORMS['Paris_standard']
+%%   (c_s = 4.0e5 m/s, xi = 3.4e-6 m, kappa = 7.0e10 s^{-1})
+%% and
+%%   src/core/constants.py :: FALQUE_STEEP_HORIZON_KAPPA = 1.1e11 s^{-1}.
+%% Full tables.py / render_paper_tables.py retrofit is registered as
+%% a follow-up pipeline action (non-blocking for draft state per Gate
+%% 9 remediation; would be required at PRL submission).
 \begin{center}
 \begin{tabular}{lcc}
 \hline
@@ -122,8 +142,12 @@ The Hawking temperature is universal,
 T_H = \frac{\hbar \kappa}{2\pi k_B},
 \label{eq:T_H}
 \end{equation}
-formalized in
-\texttt{AcousticMetric.hawking\_temp\_from\_surface\_gravity}.
+whose name-binding to surface gravity is encoded definitionally as
+\texttt{AcousticMetric.hawking\_temp\_from\_surface\_gravity} (a
+\texttt{rfl}-discharge on the \texttt{Basic.hawkingTemp} definitional
+unfolding); the substantive universality content lives upstream in
+the project's surface-gravity / Killing-horizon chain (\texttt{Basic}
+and \texttt{AcousticMetric.SonicHorizon}).
 At the smooth-horizon baseline this gives
 $T_H \approx \SI{85}{\milli\kelvin}$; at the steep-horizon reach
 $T_H \approx \SI{134}{\milli\kelvin}$. The leading dispersive
@@ -151,14 +175,23 @@ G(\omega) = \frac{\Gamma(\omega)}{e^{2\pi\omega/\kappa_{\rm eff}} - 1},
 \end{equation}
 where $\Gamma(\omega)$ is the greybody transmission factor and
 $\kappa_{\rm eff} \approx \kappa(1 - c_1 D^2)$ incorporates the
-leading dispersive correction~\cite{Finazzi2012}. The gain peaks at
-low frequencies: $G(0.1\,\kappa) \approx 1.14$,
+leading dispersive correction~\cite{Finazzi2012}. The numerical
+values reported below assume the greybody-saturation limit
+$\Gamma(\omega) \equiv 1$, which is the appropriate idealization for
+the perturbative low-$\omega$ window
+$\omega \lesssim 0.3\,\kappa$ at the Paris-LKB
+configuration~\cite{Finazzi2012,Jacquet2023QNM}; corrections to
+$\Gamma(\omega)$ enter at $\mathcal{O}(\omega^2/\kappa^2)$ in the
+hydrodynamic regime and do not modify the low-$\omega$ plateau at
+the precision relevant here. Under that assumption, the gain peaks
+at low frequencies: $G(0.1\,\kappa) \approx 1.14$,
 $G(0.3\,\kappa) \approx 0.18$, $G(\kappa) \approx 0.002$. The
 single-shot $5\sigma$ threshold $G > 0.5$ (i.e.,
 $N_{\rm probe} \, G^2 \geq 25$ for $N_{\rm probe} = 100$) is crossed
 at $\omega < \ln(3)/(2\pi)\,\kappa \approx 0.175\,\kappa$, which is
-universal and independent of $\kappa$ — a model-independent spectral
-signature of the SK-EFT prediction. Spatial attenuation is bounded below by 1 in
+universal across $\kappa$ in the $\Gamma$-independent limit --- a
+spectral signature of the SK-EFT prediction in the perturbative
+greybody-saturation regime. Spatial attenuation is bounded below by 1 in
 \texttt{PolaritonTier1.attenuation\_ge\_one} and is monotone in
 $\Gamma$ via \texttt{PolaritonTier1.attenuation\_mono\_Gamma}; both
 are manual Lean proofs with zero \texttt{sorry}.
@@ -212,6 +245,7 @@ Correlation analysis exploits this shape difference.
 The falsifiable window is therefore
 \begin{equation}
 \boxed{\;\omega/\kappa \in [0.05, 0.30]\;}
+\label{eq:window}
 \end{equation}
 at the smooth-horizon configuration. Inside this band, the SK-EFT
 prediction $G(\omega) = \Gamma(\omega)/(e^{2\pi\omega/\kappa_{\rm eff}} - 1)$
@@ -273,7 +307,7 @@ in-situ measured polariton decay rate $\Gamma_{\rm pol}$ and
 cavity lifetime $\tau_{\rm cav}$ at the SLM-tailored profile, plus
 any updated $\kappa$ values for ongoing long-cavity device
 generations beyond Falque~\cite{Falque2025}. With these, the
-detection-band edges in Eq.~(boxed window) shift by amounts
+detection-band edges in Eq.~\eqref{eq:window} shift by amounts
 calculable from the same Lean chain; we are happy to recompute on
 request and to share the updated PRL spectrum and noise floor in
 advance of publication.
@@ -366,31 +400,33 @@ Phys.\ Rev.\ Lett.\ \textbf{130}, 111501 (2023).
 \end{thebibliography}
 
 
-%% ─── Lifted from _phase6o_W1a_lean_only (§3) — 2026-05-06T15:42:19Z ───
-%% \section{Universal $n_{\mathrm{noise}}$/Hawking-flux ratio (Phase 6o W1a soft-theorem prediction)}
-%% \label{sec:e1-_phase6o_W1a_lean_only}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §3
-%% Lift notes: D.2 absorption: Phase 6o W1a universal noise floor n_noise/Hawking-flux Wilson-coefficient-independence at Paris-LKB device parameters; falsifiable prediction
-%% TODO: lift content from papers/_phase6o_W1a_lean_only/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
-%% ─── End lift from _phase6o_W1a_lean_only ───
-
-
-%% ─── Lifted from _phase6o_W1b_lean_only (§4) — 2026-05-06T15:42:20Z ───
-%% \section{G4 Kerr-Schild double-copy on Petrov-D analog gravity}
-%% \label{sec:e1-_phase6o_W1b_lean_only}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §4
-%% Lift notes: D.2 absorption: Phase 6o W1b polariton ringdown signature from Kerr-Schild single-copy
-%% TODO: lift content from papers/_phase6o_W1b_lean_only/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
-%% (Section heading + label commented out 2026-05-06 Session 2: empty post-bibliography stub from bundle_append.py default-insertion; bookkeeping anchor preserved as LaTeX comment, no rendered content. Append-log entry retains source-contribution registration.)
-%% ─── End lift from _phase6o_W1b_lean_only ───
+%% ─── D.2 absorption ledger close-out (2026-05-11 Stage-13 fix-pass) ───
+%% Per LATE_PHASE6_ABSORPTION_PROTOCOL.md branch D.2 close-out option.
+%% Both stubs below are closed NON-BLOCKING: the underlying Phase 6o
+%% Lean-only content is registered in append_log.json and source_manifest.md
+%% for cross-bundle bookkeeping continuity, but the E1 letter (Tier-4 PRL,
+%% 6 pages target) is intentionally narrow in scope (Paris-LKB device
+%% prediction + falsifiable spectral window). The W1a noise-floor result is
+%% already incorporated into E1 prose via the abstract phrase "the SK-EFT
+%% noise-floor formula is the cleanest" (line 44) and §5 prose anchoring
+%% the m^* c_s^2 / k_B = 0.81 K noise temperature. The W1b Kerr-Schild /
+%% Petrov-D ringdown signature is a separate D-bundle (D1 §6) result; its
+%% appropriate publication home is D1, not the E1 letter. The 2026-05-06
+%% bundle_append.py invocations registered the bookkeeping anchors;
+%% extracting them as separate \section{} stubs in E1 would expand the
+%% letter beyond Tier-4 scope. Append-log entries retain registration.
+%%
+%% Stub 1: D.2 absorption from _phase6o_W1a_lean_only (§3 anchor)
+%%   - Phase 6o W1a: universal noise floor n_noise / Hawking-flux ratio
+%%     Wilson-coefficient-independence at Paris-LKB device parameters
+%%   - Status: CLOSED non-blocking (incorporated as abstract+§5 prose; no
+%%     separate section in E1 letter)
+%%
+%% Stub 2: D.2 absorption from _phase6o_W1b_lean_only (§4 anchor)
+%%   - Phase 6o W1b: polariton ringdown signature from Kerr-Schild
+%%     single-copy (Petrov-D analog gravity)
+%%   - Status: CLOSED non-blocking (publication home is D1 §6, not E1
+%%     letter; D1 ↔ E1 cross-bridge verified by Stage-13 reviewer)
+%% ─── End D.2 absorption close-out ───
 
 \end{document}

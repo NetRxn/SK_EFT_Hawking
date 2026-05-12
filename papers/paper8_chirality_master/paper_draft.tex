@@ -36,9 +36,9 @@ in Lean~4}
 \date{\today}
 
 \begin{abstract}
-We present the first formal verification survey of the lattice chirality
-problem---the obstruction to placing chiral fermions on a lattice with the
-correct continuum limit. The formalization in Lean~4 with Mathlib comprises
+We present a formal verification survey of the lattice chirality
+problem---the obstruction to placing chiral fermions on a lattice with
+the correct continuum limit. The formalization in Lean~4 with Mathlib comprises
 $\totaltheorems{}$~theorems with $\axiomcount{}$~axiom
 (\texttt{gapped\_interface\_axiom}) across $\leanmodules{}$~modules
 (zero \texttt{sorry}), of which $\aristotleproved{}$~are proved by the
@@ -57,19 +57,18 @@ theorem $[H_{\mathrm{BdG}}(\mathbf{k}), q_A(\mathbf{k})] = 0$---exact chiral
 symmetry---is machine-verified at each momentum via a 2$\times$2 trigonometric
 identity ($\sin^2 + \cos^2 = 1$). The chiral charge is proved non-on-site
 (range $R=1$) and non-compact (eigenvalues $\pm\cos(p_3/2)$), violating
-exactly the Golterman-Shamir conditions identified in Pillar~1. This is the
-first formal verification of a lattice chiral fermion construction in any
-proof assistant.
+exactly the Golterman-Shamir conditions identified in Pillar~1. The
+lattice chiral fermion construction is formally verified in Lean~4.
 
-\textbf{Pillar~3 (Algebraic Framework):} The Onsager algebra (first
-formalization in any proof assistant) is defined via the Dolan-Grady
+\textbf{Pillar~3 (Algebraic Framework):} The Onsager algebra is
+formalized in Lean~4 via the Dolan-Grady
 presentation, with the Davies isomorphism, Chevalley embedding into $L(\mathfrak{sl}_2)$,
 and In\"on\"u-Wigner contraction to $\mathfrak{su}(2)$ encoding the Witten
 anomaly on the lattice. The $\mathbb{Z}_{16}$ classification of Pin$^+$
 bordism is formalized in \texttt{Z16Classification.lean} with zero
 axioms; the A(1) Steenrod subalgebra computation supplies the
-machine-checked algebraic core (first Ext computation over any Steenrod
-subalgebra in a proof assistant). Bridge theorems connect the Witten
+machine-checked algebraic core (Ext computation over the Steenrod
+subalgebra $A(1)$ in Lean~4). Bridge theorems connect the Witten
 $\mathbb{Z}_2$ anomaly (element $8 \in \mathbb{Z}_{16}$) to the Onsager
 contraction and the Gioia-Thorngren Weyl doublet.
 
@@ -312,8 +311,8 @@ formalization.
 \subsection{Onsager algebra}
 
 The Onsager algebra $\mathcal{O}$, discovered in the exact solution of the
-2D Ising model~\cite{Onsager1944}, is formalized for the first time in
-any proof assistant in \texttt{OnsagerAlgebra.lean} (24~theorems). The
+2D Ising model~\cite{Onsager1944}, is formalized in
+\texttt{OnsagerAlgebra.lean} (24~theorems). The
 Dolan-Grady presentation~\cite{DolanGrady1982} uses two generators
 $A_0,A_1$ satisfying
 \begin{equation}
@@ -348,11 +347,11 @@ theorems derive the 16-fold way for super-modular
 categories~\cite{BruillardGRW2017} and the strengthening of the
 chirality limitation from $c \equiv 0\pmod{8}$ (proved for string-nets in
 \texttt{GaugeEmergence.lean}) to $c \equiv 0\pmod{16}$. The A(1) Steenrod
-subalgebra---the first formalization of any Steenrod algebra in a proof
-assistant---partially discharges the axiom via the finite computation
+subalgebra is formalized in Lean~4 and used to partially discharge the
+axiom via the finite computation
 $\dim_{\mathbb{F}_2} {\rm Ext}^4_{A(1)}(\mathbb{F}_2,\mathbb{F}_2) = 3$
 (\texttt{A1Ring.lean}+\texttt{A1Resolution.lean}+\texttt{A1Ext.lean},
-first machine-checked Ext computation over any Steenrod subalgebra).
+machine-checked end-to-end).
 The number 16 enters through the infinite $h_0$-tower in stem~4
 assembling to~$\mathbb{Z}$ via Adams spectral sequence extensions.
 
@@ -438,10 +437,9 @@ input, as is standard in the $\mathbb{Z}_{16}$ literature.}
 \noindent\textbf{What is proved:} $\totaltheorems{}$ theorems across $\leanmodules{}$ Lean modules,
 including $[H,Q_A]=0$, Wilson mass uniqueness, Pauli algebra, Onsager
 relations, contraction, $\mathbb{Z}_{16}$ conditional theorems, A(1)
-Steenrod Ext computation (first in any proof assistant), GS conditions,
-TPF evasion, SM anomaly in $\mathbb{Z}_{16}$, generation constraint,
-Drinfeld center computations, Fidkowski-Kitaev 2+1D gapped interface
-(first FK formalization), and all bridge connections.
+Steenrod Ext computation, GS conditions, TPF evasion, SM anomaly in
+$\mathbb{Z}_{16}$, generation constraint, Drinfeld center computations,
+Fidkowski-Kitaev 2+1D gapped interface, and all bridge connections.
 
 \noindent\textbf{What was formerly axiomatized:} GS no-go theorem
 and gauge erasure universality are proved as theorems. The $\mathbb{Z}_{16}$
@@ -453,7 +451,7 @@ conjecture), supported by machine-checked 1+1D and 2+1D evidence.
 The analogous statement is machine-verified in two lower dimensions:
 (i) in 1+1D via the 3450 K-matrix model (\texttt{VillainHamiltonian.lean}),
 and (ii) in 2+1D via the Fidkowski-Kitaev construction
-(\texttt{FKGappedInterface.lean}, 20~theorems)---the first machine-checked
+(\texttt{FKGappedInterface.lean}, 20~theorems)---a machine-checked
 proof that 8~Majorana fermions can be gapped to a unique ground state
 (spectral gap $\Delta=2$) while preserving symmetry.
 
@@ -496,14 +494,14 @@ on which any resolution must stand is now machine-checked.
 \label{sec:conclusion}
 %=================================================================
 
-We have presented the first comprehensive formal verification of the
-lattice chirality problem in Lean~4, comprising $\totaltheorems{}$~theorems
+We have presented a comprehensive formal verification of the lattice
+chirality problem in Lean~4, comprising $\totaltheorems{}$~theorems
 ($\axiomcount{}$~axiom: gapped interface) across $\leanmodules{}$~modules. The three-pillar
 structure---no-go, positive construction, anomaly classification---provides
 a complete machine-checked map of the chirality wall as of 2026. The
 Gioia-Thorngren chiral symmetry $[H,Q_A]=0$ is formally verified, the
-Onsager algebra is formalized for the first time, and all bridge
-connections between the three pillars are machine-checked. Resolution
+Onsager algebra is formalized in Lean~4, and all bridge connections
+between the three pillars are machine-checked. Resolution
 of the chirality wall---one of the central open problems in lattice
 field theory---will build on this formal foundation.
 
@@ -514,10 +512,12 @@ field theory---will build on this formal foundation.
 \begin{thebibliography}{99}
 
 \bibitem{Nielsen1981a} H.~B.~Nielsen and M.~Ninomiya,
-\textit{Phys.~Lett.~B} \textbf{105}, 219 (1981).
+\emph{Absence of neutrinos on a lattice. I. Proof by homotopy theory},
+\textit{Nucl.~Phys.~B} \textbf{185}, 20 (1981).
 
 \bibitem{Nielsen1981b} H.~B.~Nielsen and M.~Ninomiya,
-\textit{Nucl.~Phys.~B} \textbf{185}, 20 (1981).
+\emph{Absence of neutrinos on a lattice. II. Intuitive topological proof},
+\textit{Nucl.~Phys.~B} \textbf{193}, 173 (1981).
 
 \bibitem{GoltermanShamir2026} M.~Golterman and Y.~Shamir,
 \textit{Phys.~Rev.~D} \textbf{113}, 014503 (2026).

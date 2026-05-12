@@ -47,6 +47,28 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:41:16Z",
       "notes": "D.2 absorption: Phase 6o W3a G10 ETH-\u03b1 refutation tableau (3 concrete refutation theorems: Inozemcev-Volovich gap, ETP doesn't imply Srednicki, free-cumulant doesn't imply Srednicki); RT/CH Phase 6c W5 cross-bridge"
+    },
+    {
+      "date": "2026-05-11T19:50:00Z",
+      "source_paper": "(none \u2014 bookkeeping event)",
+      "lift_action": "Freshness-bookkeeping",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "freshness-bookkeeping-2026-05-11T19:50:00Z",
+      "notes": "2026-05-11 Stage-13-sweep freshness cleanup: paper11_quantum_group/tables/table1_chain.tex regenerated at 12:56. D4 bundle paper_draft.tex does NOT \\input source paper tables; bundle compile path unaffected. No bundle content change required; last_lift bumped."
+    },
+    {
+      "date": "2026-05-12T13:00:00Z",
+      "source_paper": "(none - project-wide prose-revision bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a - bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
+      "notes": "2026-05-12 first-claim-removal: paper11_quantum_group abstract + introduction + conclusions rewritten (multiple primacy claims removed including 'first quantum group library', 'first verified MTC instances', 'first Hopf algebra', 'first parameterized quantum group definition' - replaced with descriptive content); paper14_braided_mtc title changed ('First Formally Verified ...' -> 'Formally Verified ...'), abstract + body + conclusion rewritten to descriptive; paper16_wrt_tqft title changed ('The First Formalization of the' -> 'A Formalization of the'), abstract + body + conclusion rewritten."
     }
   ]
 }

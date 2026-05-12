@@ -117,6 +117,17 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:41:21Z",
       "notes": "D.2 absorption: Phase 6n W2b Perarnau-Llobet quantum-Crooks parametric + \u2102-form NO-GO"
+    },
+    {
+      "date": "2026-05-12T13:00:00Z",
+      "source_paper": "(none - project-wide prose-revision bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a - bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
+      "notes": "2026-05-12 first-claim-removal: paper17_dark_sector 'first deliverable to export' line softened to descriptive; D5 bundle own \u00a711 Sakharov $\\Lambda_J$ vs $\\Lambda_{HK}$ paragraphs (3 places) had 'to the best of our knowledge ... the first systematic ...' framing dropped and replaced with descriptive prose; D5 discussion section 'first-complete-mechanism-family' -> 'complete-mechanism-family'."
     }
   ]
 }

@@ -33,9 +33,8 @@ generation constraint chain); the complete
 derivation chain from modular forms through fermion counting to the
 generation bound is fully machine-checked. The algebraic core of the
 Rokhlin bound is verified via a machine-checked Ext computation over the
-Steenrod subalgebra $A(1)$ --- the first such computation in any proof
-assistant. This is the first formal derivation connecting number-theoretic
-modular invariance to a Standard Model constraint.
+Steenrod subalgebra $A(1)$. This is a formal derivation connecting
+number-theoretic modular invariance to a Standard Model constraint.
 \end{abstract}
 
 \maketitle
@@ -70,7 +69,7 @@ modular weight to be a multiple of 24.
 \end{enumerate}
 Together: $8 N_f \equiv 0 \pmod{24}$, i.e., $N_f \equiv 0 \pmod{3}$.
 
-In this Letter, we present the first formally verified version of this
+In this Letter, we present a formally verified version of this
 derivation, machine-checked in Lean~4 with Mathlib's modular forms
 infrastructure. Every numerical coefficient is either derived from the
 formalization or enters as a well-motivated physics axiom.
@@ -264,8 +263,8 @@ $\sigma = -16$, while the E8 manifold has $\sigma = 8$ but is
 %% ══════════════════════════════════════════════════════════════════
 \section{Conclusions}
 
-We have established the first formally verified derivation of the SM
-generation constraint $N_f \equiv 0 \pmod{3}$ from modular form theory:
+We have established a formally verified derivation of the SM generation
+constraint $N_f \equiv 0 \pmod{3}$ from modular form theory:
 \begin{enumerate}
 \item The coefficient $c_- = 8$ is \emph{derived} from the 16 Weyl fermions
 per SM generation, not a free parameter.
@@ -311,8 +310,8 @@ $\mathrm{Hom}_A(A \otimes_{A(1)} M, N) \cong \mathrm{Hom}_{A(1)}(M, N)$
 (\texttt{ChangeOfRings.lean}) establishes the change-of-rings isomorphism
 as pure algebra, reducing the full Adams spectral sequence computation to the
 finite $A(1)$ computation.
-This is the first machine-checked Ext computation over any Steenrod subalgebra
-in any proof assistant.
+This Ext computation over the Steenrod subalgebra $A(1)$ is
+machine-checked end-to-end.
 
 The complete generation constraint chain rests on
 machine-checked algebra plus three standard textbook topology results

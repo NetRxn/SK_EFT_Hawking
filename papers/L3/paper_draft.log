@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  6 MAY 2026 12:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.3.22)  11 MAY 2026 09:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -498,74 +498,74 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 65.
+(hyperref)                removing `math shift' on input line 66.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 65.
+(hyperref)                removing `subscript' on input line 66.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 65.
+(hyperref)                removing `math shift' on input line 66.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\\' on input line 65.
+(hyperref)                removing `\\' on input line 66.
 
 
-Underfull \hbox (badness 1189) in paragraph at lines 102--114
+Underfull \hbox (badness 1189) in paragraph at lines 103--116
 \OT1/cmr/m/n/10 bearing correctness-push the-o-rem. We do \OT1/cmr/m/it/10 not 
 \OT1/cmr/m/n/10 at-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 120--127
+Underfull \hbox (badness 10000) in paragraph at lines 122--129
 \OT1/cmr/m/n/10 ti-ties; \OT1/cmtt/m/n/10 ADWParams \OT1/cmr/m/n/10 bun-dles su
 b-strate pa-ram-e-ters
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 139--143
+Underfull \hbox (badness 10000) in paragraph at lines 141--145
 \OT1/cmr/m/n/10 The clas-si-fier ad-mits three iff-theorems
  []
 
 
-Underfull \hbox (badness 5771) in paragraph at lines 139--143
+Underfull \hbox (badness 5771) in paragraph at lines 141--145
 \OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 classify[]*[]iff\OT1/cmr/m/n/10 ); pos-i-tiv-
 ity of $\OML/cmm/m/it/10 M[]$ \OT1/cmr/m/n/10 fol-lows from
  []
 
-
-Underfull \hbox (badness 7291) in paragraph at lines 145--152
+[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Underfull \hbox (badness 7291) in paragraph at lines 147--154
 \OT1/cmr/m/n/10 and \OT1/cmtt/m/n/10 T[]H[]schwarzschild[]strict[]decreasing \O
 T1/cmr/m/n/10 for-mal-
  []
 
 
-Underfull \hbox (badness 1137) in paragraph at lines 145--152
+Underfull \hbox (badness 1137) in paragraph at lines 147--154
 \OML/cmm/m/it/10 dM=dt < \OT1/cmr/m/n/10 0$, this es-tab-lishes $\OML/cmm/m/it/
 10 dT[]=dt > \OT1/cmr/m/n/10 0$ in the
  []
 
-[1{/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 162--177
+
+Underfull \hbox (badness 10000) in paragraph at lines 164--179
 \OT1/cmr/m/n/10 which matches the project's Python an-chor
  []
 
 
-Underfull \hbox (badness 2103) in paragraph at lines 162--177
+Underfull \hbox (badness 2103) in paragraph at lines 164--179
 \OT1/cmtt/m/n/10 src/wkb/backreaction.py \OT1/cmr/m/n/10 (line 449) | note that
 
  []
 
 
-Underfull \hbox (badness 2096) in paragraph at lines 162--177
+Underfull \hbox (badness 2096) in paragraph at lines 164--179
 \OT1/cmr/m/n/10 pur-poses. We prove \OT1/cmtt/m/n/10 T[]H[]acoustic[]evolution[
 ]pos\OT1/cmr/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 162--177
+Underfull \hbox (badness 10000) in paragraph at lines 164--179
 \OT1/cmtt/m/n/10 T[]H[]acoustic[]evolution[]strict[]decreasing\OT1/cmr/m/n/10 :
  for
  []
@@ -574,284 +574,270 @@ Underfull \hbox (badness 10000) in paragraph at lines 162--177
 File: figures/fig_T_H_evolution_regime_partition.png Graphic file (type png)
 <use figures/fig_T_H_evolution_regime_partition.png>
 Package pdftex.def Info: figures/fig_T_H_evolution_regime_partition.png  used o
-n input line 180.
+n input line 182.
 (pdftex.def)             Requested size: 236.16165pt x 128.81038pt.
 
-Overfull \hbox (99.67435pt too wide) detected at line 209
+Overfull \hbox (99.67435pt too wide) detected at line 211
 []
  []
 
 
-Underfull \hbox (badness 5119) in paragraph at lines 209--226
-\OT1/cmr/m/n/10 The bun-dle is gen-uinely non-trivial: four fal-si-
+Underfull \hbox (badness 2205) in paragraph at lines 211--230
+\OT1/cmr/m/n/10 The bun-dle is gen-uinely non-trivial: four fal-si-fier
  []
 
 
-Underfull \hbox (badness 4328) in paragraph at lines 209--226
-\OT1/cmr/m/n/10 fier the-o-rems wit-ness the four in-de-pen-dent ways
+Underfull \hbox (badness 2443) in paragraph at lines 211--230
+\OT1/cmr/m/n/10 the-o-rems wit-ness four in-de-pen-dent ways the bun-
  []
 
 
-Underfull \hbox (badness 3168) in paragraph at lines 209--226
-\OT1/cmr/m/n/10 the bun-dle's sub-stan-tive con-tent can be vi-o-lated.
+Underfull \hbox (badness 3118) in paragraph at lines 211--230
+\OT1/cmr/m/n/10 dle's sub-stan-tive con-tent (the four physics-content
  []
 
 
-Underfull \hbox (badness 2538) in paragraph at lines 209--226
+Underfull \hbox (badness 2538) in paragraph at lines 211--230
 [][]\OT1/cmtt/m/n/10 falsifier_acoustic_decay_form []\OT1/cmr/m/n/10 (the BEC-a
 coustic
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 209--226
+Underfull \hbox (badness 10000) in paragraph at lines 211--230
 []\OT1/cmr/m/n/10 (the regime-partition bun-dle's third- law slot
  []
 
 
-Underfull \hbox (badness 4739) in paragraph at lines 209--226
+Underfull \hbox (badness 4739) in paragraph at lines 211--230
 \OT1/cmr/m/n/10 is not vacuous-true; $\OML/cmm/m/it/10 t \OMS/cmsy/m/n/10 ! 1$ 
 \OT1/cmr/m/n/10 ap-proach is re-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 209--226
+Underfull \hbox (badness 10000) in paragraph at lines 211--230
 \OT1/cmr/m/n/10 quired); [][]\OT1/cmtt/m/n/10 falsifier_alpha_ADW_dependence []
 \OT1/cmr/m/n/10 (the
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 209--226
+Underfull \hbox (badness 10000) in paragraph at lines 211--230
 \OT1/cmr/m/n/10 substrate-response co-ef-fi-cient $\OML/cmm/m/it/10 ^^N$ \OT1/c
 mr/m/n/10 must de-pend
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 209--226
+Underfull \hbox (badness 10000) in paragraph at lines 211--230
 \OT1/cmr/m/n/10 on $\OML/cmm/m/it/10 []$ \OT1/cmr/m/n/10 via the Wave-9 ansatz
 , not be a
  []
 
 
-Underfull \hbox (badness 6316) in paragraph at lines 209--226
+Underfull \hbox (badness 6316) in paragraph at lines 211--230
 \OT1/cmr/m/n/10 free pa-ram-e-ter). The correctness-push the-o-rem
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 227--249
- []\OT1/cmr/m/it/10 Four laws by regime.[] \OT1/cmr/m/n/10 The four-laws bun-dl
-e
+Underfull \hbox (badness 10000) in paragraph at lines 231--257
+ []\OT1/cmr/m/it/10 Four laws by regime.[] \OT1/cmr/m/n/10 The four laws (ze-
  []
 
 
-Underfull \hbox (badness 6542) in paragraph at lines 227--249
-\OML/cmm/m/it/10 H[]\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 p; b\OT1/cmr/m/n/10 )$ pa
-r-ti-tions across regimes. The ze-
+Underfull \hbox (badness 2326) in paragraph at lines 231--257
+\OT1/cmr/m/n/10 ture $\OML/cmm/m/it/10 H[]$ \OT1/cmr/m/n/10 but ap-pear as sep-
+a-rate the-o-rems and
  []
 
 
-Underfull \hbox (badness 3646) in paragraph at lines 227--249
+Underfull \hbox (badness 3646) in paragraph at lines 231--257
 \OT1/cmr/m/n/10 in-vok-ing point-wise NEC; this is the load-bearing
  []
 
 
-Underfull \hbox (badness 1354) in paragraph at lines 227--249
+Underfull \hbox (badness 1354) in paragraph at lines 231--257
 \OT1/cmr/m/n/10 (Bal-binot 2005 $\OML/cmm/m/it/10 t \OMS/cmsy/m/n/10 ^^X \OT1/c
 mr/m/n/10 1\OML/cmm/m/it/10 =T[]$ \OT1/cmr/m/n/10 ex-trap-o-la-tion), and the
  []
 
 [2 <./figures/fig_T_H_evolution_regime_partition.png>]
-Underfull \hbox (badness 1077) in paragraph at lines 273--283
+Underfull \hbox (badness 1077) in paragraph at lines 281--291
 \OT1/cmr/m/n/10 domain-wall ana-log in $[]$He-A stud-ied by Jacobson--
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--318
+Underfull \hbox (badness 10000) in paragraph at lines 292--329
  []\OT1/cmr/m/it/10 Substrate-class con-text.[] \OT1/cmr/m/n/10 The $[]$He-A ce
 ll and
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--318
+Underfull \hbox (badness 10000) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 the BEC-acoustic sub-strate are mem-bers of
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--318
+Underfull \hbox (badness 10000) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 com-ple-men-tary Sakharov-criterion classes. The
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--318
+Underfull \hbox (badness 10000) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 Volovik--Jannes for-mal-i-sa-tion in the pro-gram's
  []
 
 
-Overfull \hbox (11.24776pt too wide) in paragraph at lines 284--318
+Overfull \hbox (11.24776pt too wide) in paragraph at lines 292--329
 \OT1/cmtt/m/n/10 lean/SKEFTHawking/JacobsonThermoGRDarkEnergy.lean
  []
 
 
-Underfull \hbox (badness 3826) in paragraph at lines 284--318
+Underfull \hbox (badness 3826) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 (Phase 6m Track C) shows that $[]$He-A sat-is-fies
  []
 
 
-Underfull \hbox (badness 1430) in paragraph at lines 284--318
+Underfull \hbox (badness 1430) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 all four Sakharov con-di-tions (\OT1/cmtt/m/n/10 JTGR7\OT1/cmr/
 m/n/10 : emer-gent IR
  []
 
 
-Underfull \hbox (badness 3189) in paragraph at lines 284--318
+Underfull \hbox (badness 3189) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 Lorentz, uni-ver-sal cou-pling, in-duced New-ton con-
  []
 
 
-Underfull \hbox (badness 1515) in paragraph at lines 284--318
+Underfull \hbox (badness 1515) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 stant, and the $^^C[] = ^^C[]$ equi-lib-rium iden-tity),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--318
+Underfull \hbox (badness 10000) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 while the Finazzi--Liberati--Sindoni acoustic-BEC
  []
 
 
-Underfull \hbox (badness 3291) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 sector atoms do not prop-a-gate on the BEC ef-
- []
-
-
-Underfull \hbox (badness 1342) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 fec-tive met-ric; \OT1/cmtt/m/n/10 JTGR8\OT1/cmr/m/n/10 ). The 
-Phase 6n uni-fi-ca-tion
- []
-
-
-Overfull \hbox (97.77487pt too wide) in paragraph at lines 284--318
+Overfull \hbox (97.77487pt too wide) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 lean/SKEFTHawking/CrooksAnalogHawking/Sakharo
 vHorizonCrooks.lean\OT1/cmr/m/n/10 )
  []
 
 
-Underfull \hbox (badness 3364) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 shows that the four Sakharov con-di-tions are bi-
+Underfull \hbox (badness 5847) in paragraph at lines 292--329
+\OT1/cmr/m/n/10 ships a 2-conjunct struc-tural par-ti-tion state-ment
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 con-di-tional with the horizon-Crooks detailed-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 balance iden-tity at the lo-cal Rindler hori-zon
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 284--318
+Underfull \hbox (badness 10000) in paragraph at lines 292--329
 \OT1/cmr/m/n/10 (\OT1/cmtt/m/n/10 horizonCrooks[]substrate[]partition\OT1/cmr/m
-/n/10 ; the com-
+/n/10 : $[]$He-A is
  []
 
 
-Underfull \hbox (badness 3240) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 The regime par-ti-tion for-malised here (sign-flip of
+Underfull \hbox (badness 5787) in paragraph at lines 292--329
+\OT1/cmr/m/n/10 Jacobson-consistent while the FLS BEC is not)
  []
 
 
-Underfull \hbox (badness 1112) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 regime per-sists \OT1/cmr/m/it/10 de-spite \OT1/cmr/m/n/10 Sakh
-arov-criterion fail-ure on
+Underfull \hbox (badness 10000) in paragraph at lines 292--329
+\OT1/cmr/m/n/10 un-der the lo-cal Rindler-horizon horizon-Crooks
  []
 
 
-Underfull \hbox (badness 3590) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 thermodynamic-evolution claim about $\OML/cmm/m/it/10 T[]\OT1/c
-mr/m/n/10 (\OML/cmm/m/it/10 t\OT1/cmr/m/n/10 )$ rather
+Underfull \hbox (badness 5592) in paragraph at lines 292--329
+\OT1/cmr/m/n/10 full sub-sec-tion in-clud-ing the sub-stan-tive bi-con-di-
  []
 
 
-Underfull \hbox (badness 2269) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 than a substrate-induced-gravity claim. The two
+Underfull \hbox (badness 10000) in paragraph at lines 292--329
+\OT1/cmr/m/n/10 tional lift in \OT1/cmtt/m/n/10 BiconditionalReformulation.lean
+
  []
 
 
-Underfull \hbox (badness 2376) in paragraph at lines 284--318
-\OT1/cmr/m/n/10 Ja-cob-son 1995 equilibrium-Clausius read-ing [[]] of
+Underfull \hbox (badness 2529) in paragraph at lines 292--329
+\OT1/cmr/m/n/10 claim. The two clas-si-fi-ca-tions (Sakharov-criterion
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--329
+Underfull \hbox (badness 1092) in paragraph at lines 292--329
+\OT1/cmr/m/n/10 + regime par-ti-tion) are in-de-pen-dent pro-gram axes;
+ []
+
+
+Underfull \hbox (badness 1533) in paragraph at lines 292--329
+\OT1/cmr/m/n/10 horizon-Crooks uni-fies them only at the substrate-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 330--340
  []\OT1/cmr/m/it/10 Reproducibility.[] \OT1/cmr/m/n/10 The re-sult is re-pro-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--329
+Underfull \hbox (badness 10000) in paragraph at lines 330--340
 \OT1/cmr/m/n/10 ducible in two lay-ers. The Lean layer is
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--329
+Underfull \hbox (badness 10000) in paragraph at lines 330--340
 \OT1/cmtt/m/n/10 BHThermodynamicsFourLaws.lean \OT1/cmr/m/n/10 (20 the-o-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--329
+Underfull \hbox (badness 10000) in paragraph at lines 330--340
 \OT1/cmr/m/n/10 rems and lem-mas, zero \OT1/cmtt/m/n/10 sorry\OT1/cmr/m/n/10 , 
 zero new ax-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--329
+Underfull \hbox (badness 10000) in paragraph at lines 330--340
 \OT1/cmr/m/n/10 ioms, zero \OT1/cmtt/m/n/10 maxHeartbeats \OT1/cmr/m/n/10 over-
 rides) at the
  []
 
 
-Underfull \hbox (badness 3088) in paragraph at lines 319--329
+Underfull \hbox (badness 3088) in paragraph at lines 330--340
 \OT1/cmr/m/n/10 project's pinned Math-lib4 com-mit. The Python
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--329
+Underfull \hbox (badness 10000) in paragraph at lines 330--340
 \OT1/cmr/m/n/10 layer is \OT1/cmtt/m/n/10 src/wkb/backreaction.py \OT1/cmr/m/n/
 10 (the BEC-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 319--329
+Underfull \hbox (badness 10000) in paragraph at lines 330--340
 \OT1/cmr/m/n/10 acoustic ODE evo-lu-tion at line 449) and the
  []
 
 
-Overfull \hbox (66.8972pt too wide) in paragraph at lines 319--329
+Overfull \hbox (66.8972pt too wide) in paragraph at lines 330--340
 \OT1/cmtt/m/n/10 src/core/visualizations.py:fig[]T[]H[]evolution[]regime[]parti
 tion
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 341--344
+Underfull \hbox (badness 10000) in paragraph at lines 352--355
  \OT1/cmr/m/n/9 Com-mun. Math. Phys. \OT1/cmr/bx/n/9 43\OT1/cmr/m/n/9 , 199 (19
 75); DOI:
  []
 
-
-Underfull \hbox (badness 1057) in paragraph at lines 377--379
+[3]
+Underfull \hbox (badness 1057) in paragraph at lines 393--395
  \OT1/cmr/m/n/9 mo-dy-nam-ics from sym-me-try and uni-tar-ity,'' (2018);
  []
 
 
-Underfull \hbox (badness 2142) in paragraph at lines 381--384
+Underfull \hbox (badness 2142) in paragraph at lines 397--400
  []\OT1/cmr/m/n/9 M. Cross-ley, P. Glo-rioso, H. Liu, ``Ef-fec-tive field
  []
 
 
-Underfull \hbox (badness 4779) in paragraph at lines 392--394
+Underfull \hbox (badness 4779) in paragraph at lines 408--410
  \OT1/cmr/m/n/9 ge-bras and the gen-er-al-ized sec-ond law,'' (2024);
  []
 
-[3]
 No file paper_draft.bbl.
 [4] (./paper_draft.aux)
  ***********
@@ -862,13 +848,13 @@ Package rerunfilecheck Info: File `paper_draft.out' has not changed.
 (rerunfilecheck)             Checksum: 9FD686F07C9E23B07D930653BE1EF37E;1378.
  ) 
 Here is how much of TeX's memory you used:
- 15775 strings out of 467525
- 298861 string characters out of 5418982
- 705372 words of memory out of 5000000
- 44494 multiletter control sequences out of 15000+600000
+ 15780 strings out of 467525
+ 298936 string characters out of 5418982
+ 704396 words of memory out of 5000000
+ 44498 multiletter control sequences out of 15000+600000
  638634 words of font info for 83 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,13n,79p,922b,1207s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,13n,79p,922b,1197s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><
 /usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></
@@ -890,10 +876,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2026/texmf
 ist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2026/texmf-di
 st/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2026/texmf-dist
 /fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on paper_draft.pdf (4 pages, 339517 bytes).
+Output written on paper_draft.pdf (4 pages, 340562 bytes).
 PDF statistics:
- 228 PDF objects out of 1000 (max. 8388607)
- 172 compressed objects within 2 object streams
- 38 named destinations out of 1000 (max. 500000)
+ 230 PDF objects out of 1000 (max. 8388607)
+ 174 compressed objects within 2 object streams
+ 39 named destinations out of 1000 (max. 500000)
  54 words of extra memory for PDF output out of 10000 (max. 10000000)
 

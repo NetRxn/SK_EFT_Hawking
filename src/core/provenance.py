@@ -265,6 +265,27 @@ PARAMETER_PROVENANCE = {
                  'Correct arXiv is 1605.01027.',
     },
 
+    'Steinhauer.T_H_measured': {
+        'value': 0.351e-9,
+        'unit': 'K',
+        'tier': 'MEASURED',
+        'source': 'de Nova et al., Nature 569, 688 (2019)',
+        'detail': 'Reported analog Hawking temperature T_H = 0.351(4) nK from the '
+                  '2018 Technion analog black-hole run (Steinhauer group, Israel Institute '
+                  'of Technology). Reported with statistical uncertainty 4 pK from '
+                  'spectral fitting of the analog Hawking emission spectrum across the '
+                  'transonic horizon. Substrate-anchoring measurement for SK-EFT BEC platform.',
+        'doi': '10.1038/s41586-019-1241-0',
+        'llm_verified_date': '2026-05-11',
+        'llm_verified_notes': 'Cross-referenced de Nova 2019 Nature paper via CITATION_REGISTRY '
+                              'and primary-source cache. Attribution is Technion (Steinhauer lab); '
+                              'NOT Heidelberg (which has only published analog cosmology — Viermann 2022).',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Substrate quantitative anchor in BEC platform; cited in F §3.1, '
+                 'D1 §6, E1 §5, E2 §5 cross-platform context.',
+    },
+
     # ── Heidelberg projected parameters ────────────────────────────
 
     'Heidelberg.density_upstream': {

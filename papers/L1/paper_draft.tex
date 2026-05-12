@@ -235,13 +235,7 @@ project's preemptive-strengthening discipline.)
 Phase 5y H1 deep research established that the Volovik identification
 is not a \emph{derivation}: there is no first-principles bound fixing
 the graviton-mode normalization in terms of the second-sound DOF.
-The original \texttt{second\_sound\_graviton\_not\_derived\_DOF}
-theorem (a $\forall c, \exists \chivest$ existential discharged
-trivially by $\chivest = 1$) was retired during the 2026-04-25
-audit as an $\exists$-absorption tautology — the existence of
-\emph{one} consistent value does not encode underdetermination,
-which is the substantive Phase 5y H1 finding. We replace it with
-the disjointness theorem
+We formalize this caveat directly as the disjointness theorem
 \texttt{natural\_range\_disjoint\_from\_ligo\_window}: for $\chivest$
 at either natural-range endpoint $\{0.1, 10\}$, no $c$-rescaling
 gives a GW170817-compatible $\dccap$. The frame-independent form
@@ -281,9 +275,9 @@ with frequency, the leading-order falsification could in principle be
 lifted by a near-cancellation in the LIGO band. The
 SK--EFT dispersion correction (formalized in
 \texttt{SecondOrderSK.lean}) is the leading frequency dependence in
-the present framework; at the placeholder
-$\Gamma_H/\cGW^2 \sim 10^{-30}$ value it does not lift the
-falsification, but a derivation of $\Gamma_H$ from a microscopic
+the present framework; at the project's current conservative upper
+bound $|\gamma| \leq 10^{-30}$ on $\Gamma_H/\cGW^2$ it does not lift
+the falsification, but a derivation of $\Gamma_H$ from a microscopic
 matching is open.
 \end{enumerate}
 
@@ -306,7 +300,7 @@ spread.
 
 \paragraph{Reproducibility.} The result is reproducible in two
 layers. The Lean layer is \texttt{GravitationalWaves.lean} (21
-theorems and lemmas, zero \texttt{sorry}, zero new axioms, zero
+theorems, zero \texttt{sorry}, zero new axioms, zero
 \texttt{maxHeartbeats} overrides) at the project's pinned
 Mathlib4 commit; the Python layer is \texttt{src/gravitational\_waves/}
 with 49 \texttt{pytest} cases cross-checking every numeric quoted

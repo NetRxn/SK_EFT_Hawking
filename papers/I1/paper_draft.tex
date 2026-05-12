@@ -54,10 +54,12 @@ development via the language-server protocol, fresh-context
 adversarial review, and meta-process quality improvement), three new
 invariants (placeholder non-load-bearing, no heartbeat overrides in
 proof bodies, primary-source citation cache), the publication-bundle
-architecture that consolidates per-wave drafts into thirteen
+architecture that consolidates per-wave drafts into fourteen
 publication targets, and the preemptive-strengthening discipline
-that reduces theorem-statement audit cost from twelve cuts to zero
-across recent waves. Three worked cases illustrate the methodology:
+that reduces theorem-statement audit cost from twelve retroactive
+cuts to five and then to zero across three successive waves (with
+a mandatory ruthless post-wave review as a safety net for residual
+subtler patterns). Three worked cases illustrate the methodology:
 the Aristotle FirstOrderKMS counterexample (where automated proving
 failed and the failure surfaced a substantive physics result), the
 gap-solution-bounded conjecture disproof (where formalization-driven
@@ -65,8 +67,8 @@ counterexample search refuted a literature claim), and the
 chirality-wall axiom decomposition (where structural axiom
 classification turned a single 50-term proof into nine
 individually-tractable sublemmas). Two additional sidebar studies
-document first-in-any-proof-assistant formalization claims at the
-algebraic-general-relativity substrate level and a
+document the algebraic-general-relativity substrate formalization
+work that the pipeline accreted as a byproduct, and a
 Mathlib-dependency-fallback discipline pattern for theorems whose
 substantive content has no upstream PDE infrastructure available.
 The methodology is domain-agnostic.
@@ -140,10 +142,12 @@ review (Stage~13), and meta-process quality improvement
 no heartbeat overrides in proof bodies, primary-source citation
 cache). It also documents the
 publication-bundle architecture that consolidates per-wave drafts
-into thirteen publication targets and the preemptive-strengthening
+into fourteen publication targets and the preemptive-strengthening
 discipline that reduces theorem-statement audit cost from twelve
-retroactive cuts (one wave) to zero (subsequent waves) by applying
-strengthening rules prospectively.
+retroactive cuts (Phase~6c.3) to five (Phase~6b.1) and then to zero
+(Phase~6m R6) by applying strengthening rules prospectively, with
+a mandatory ruthless post-wave review as the safety net for the
+subtler patterns the prospective checklist misses.
 
 The remainder of this paper is organized as follows.
 Section~\ref{sec:architecture} describes the three-layer
@@ -161,10 +165,9 @@ publication. Section~\ref{sec:three_layer_extended} returns to the
 three-layer architecture in the context of automated theorem proving
 integration. Section~\ref{sec:adversarial} describes the
 fresh-context adversarial-reviewer pattern.
-Section~\ref{sec:phase6f_substrate} presents a sidebar of
-first-formalization-in-any-proof-assistant claims at the
-algebraic-general-relativity substrate level
-(Phase~6f Waves~1--6). Section~\ref{sec:riemannian_sidebar}
+Section~\ref{sec:phase6f_substrate} presents the
+algebraic-general-relativity substrate roster shipped over
+Phase~6f Waves~1--6. Section~\ref{sec:riemannian_sidebar}
 presents the Phase~6f Wave~7 catch-up Riemannian connection sidebar
 and its bundle-level extension via the abstract-bundle Levi-Civita
 construction (Phase~6f Wave~8 Sessions~1--3).
@@ -290,7 +293,9 @@ two transport coefficients $(\gamma_1, \gamma_2)$ (isotropic phonon
 damping, related to bulk viscosity, and anisotropic damping along the
 superfluid flow; the precise correspondence to the action coefficients
 is encoded in the \texttt{DissipativeCoeffs} structure of
-\texttt{SKDoubling.lean}, lines~244--280).
+\texttt{Basic.lean} (line~152), consumed by the
+\texttt{firstOrderDissipativeAction} construction in
+\texttt{SKDoubling.lean} lines~244--280).
 
 A published axiomatic for the SK-EFT contour exists. Crossley,
 Glorioso, and Liu~\cite{CrossleyGloriosoLiu2017} formulate the
@@ -347,7 +352,8 @@ zero, $i_3 = 0$. The strengthened axiom \texttt{FirstOrderKMS} (in
 \texttt{lean/SKEFTHawking/SKDoubling.lean}, lines~367--379) encodes
 all seven; the uniqueness theorem \texttt{firstOrder\_uniqueness}
 (lines~412--439, Aristotle run~\texttt{270e77a0}) closes cleanly
-under it. The two-parameter $(\gamma_1, \gamma_2)$ family is
+under it (under positivity, dynamical-KMS, and $\beta > 0$ at
+positive temperature). The two-parameter $(\gamma_1, \gamma_2)$ family is
 recovered as a corollary. The four field components Aristotle's first-pass
 weak constraint \emph{did} hold are exactly the four whose KMS partners
 fit within the first-order derivative budget; the five it \emph{did not}
@@ -607,8 +613,10 @@ not by adding a new axiom but by promoting the implicit
 dependency to an explicit \emph{theorem}
 (\texttt{SKEFTHawking.EWBaryogenesisChiralityWall.sphaleronSuppression\_le\_one}
 on lines~106--114 of \texttt{EWBaryogenesisChiralityWall.lean},
-proving that the suppression factor lies in $[0,1]$ within the
-surrounding \texttt{def sphaleronSuppression} infrastructure).
+proving that the suppression factor lies in $[0,1]$ under the
+broken-phase-or-trivial-unbroken-phase hypothesis $v/T \geq 0$,
+within the surrounding \texttt{def sphaleronSuppression}
+infrastructure).
 A monolithic proof would have hidden this dependency
 indefinitely; the decomposition forced it into the open.
 
@@ -660,14 +668,14 @@ fifteen seconds per cycle) with a millisecond-latency interactive
 loop using the \texttt{lean-lsp-mcp} tool integration. The
 interactive loop reads the proof state at any line and column,
 tests candidate tactic sequences without editing the file, and
-returns ``no goals'' when the proof is complete. Empirically, the
-interactive loop accelerates proof construction by roughly two
-to three orders of magnitude relative to the build-iterate
-cycle, with the exact factor depending on how many tactic-test
-cycles a typical proof requires (per-cycle speedup is roughly
-$15\,000\times$, $\sim\!15$\,s versus $\sim\!1$\,ms; end-to-end
-proof-construction time on a representative theorem is between
-two and four orders of magnitude faster).
+returns ``no goals'' when the proof is complete. Per tactic-test cycle, the interactive
+loop replaces a $\sim\!15$\,s lake-build round-trip with
+millisecond-scale LSP state inspection. End-to-end
+proof-construction time on a given theorem improves by a factor
+determined by the number of tactic-test cycles the proof requires;
+we have not measured this factor on a controlled benchmark set, and
+quantitative speedup claims would require such a benchmark to be
+load-bearing.
 
 Stage~13, fresh-context adversarial review, runs a Lean-aware
 adversarial reviewer agent in a fresh context window against each
@@ -768,7 +776,7 @@ bundle.} New drafts, section additions, and notebook companions
 identify their target bundle at Stage~1 and record it in the
 draft-mapping document at Stage~12. No new stand-alone paper
 drafts are created without explicit user authorization to add a
-fourteenth-or-higher bundle target.
+fifteenth-or-higher bundle target.
 
 \end{enumerate}
 
@@ -901,7 +909,7 @@ sentences are lifted into different paper bundles. Walked by
 %  - claim_clusters.json + cluster_bundle_index.json semantics
 %  - validate.py CHECK 21 (bundle_consistency) walks the registry
 %    and flags cross-bundle drift
-%  - The 13-bundle publication architecture per docs/PAPER_STRATEGY.md
+%  - The 14-bundle publication architecture per docs/PAPER_STRATEGY.md
 %  - The bundle_metadata.json schema (Phase 7a sub-wave 7a.1.1) and
 %    the BUNDLE_LIFT_PROCEDURE.md canonical lift workflow
 %
@@ -954,12 +962,12 @@ $7\times 10^{14}$ falsification factor; CHECK~21 enforces that the
 two reports agree character-for-character on the numerical content.
 
 The publication-bundle architecture (\texttt{docs/PAPER\_STRATEGY.md})
-consolidates the project's project's forty-plus per-wave drafts into thirteen
+consolidates the project's forty-plus per-wave drafts into fourteen
 publication targets organized into five tiers: a flagship review
 (\texttt{F}), five themed deep papers
 (\texttt{D1}--\texttt{D5}), three PRL-style headline letters
-(\texttt{L1}--\texttt{L3}), two infrastructure papers (\texttt{I1},
-\texttt{I2}), and two experimental letters (\texttt{E1},
+(\texttt{L1}--\texttt{L3}), three infrastructure papers (\texttt{I1},
+\texttt{I2}, \texttt{I3}), and two experimental letters (\texttt{E1},
 \texttt{E2}). Each per-wave draft maps to one bundle target via an
 append-only assignment table
 (\texttt{docs/PAPER\_DRAFT\_MAPPING.md}); each bundle accumulates
@@ -976,7 +984,7 @@ last-regen timestamp, and stage-13 review document path. Pipeline
 Invariant~14 codifies the contract: every paper-shaped output lifts
 into a bundle target identified at Stage~1 and recorded at
 Stage~12. The architecture is what makes forty-plus-draft to
-thirteen-publication consolidation tractable without sacrificing
+fourteen-publication consolidation tractable without sacrificing
 per-claim provenance: the sentence-level audit trail moves with the
 prose; the cluster registry preserves cross-bundle consistency; the
 bundle metadata captures every reviewer agent's verdict.
@@ -1020,8 +1028,8 @@ six candidate tactic sequences without editing the file, and
 returns the resulting goal state for each. A typical proof that
 would have been submitted to Aristotle in the original workflow
 now closes interactively in three to five tactic-test cycles
-(see Section~\ref{sec:pipeline} for the per-cycle and end-to-end
-speedup figures). Aristotle has correspondingly retreated from
+(see Section~\ref{sec:pipeline} for the per-cycle latency
+discussion). Aristotle has correspondingly retreated from
 default proof-construction tool to fallback-for-residual-sorries.
 
 The residual role is genuine, not vestigial. Three classes of
@@ -1199,10 +1207,10 @@ clusters in \texttt{cluster\_bundle\_index.json}) emit
 \texttt{BundleConsistencyMismatch} findings.
 
 %% ─────────────────────────────────────────────────────────────────
-%% §11 Phase 6f W1-W6 first-formalization claims (substrate roster)
+%% §11 Phase 6f W1-W6 algebraic-GR substrate roster
 %% ─────────────────────────────────────────────────────────────────
 
-\section{Algebraic-General-Relativity Substrate First-Formalization Claims}
+\section{Algebraic-General-Relativity Substrate Roster}
 \label{sec:phase6f_substrate}
 
 % TODO: substantive draft. Substrate to draw from:
@@ -1210,32 +1218,30 @@ clusters in \texttt{cluster\_bundle\_index.json}) emit
 %    SchwarzschildKerrSchild, DeSitterAdSLambdaVacuum,
 %    TetradMetricEquivalence, ...}.lean
 %  - Phase 6f Wave 1-6 memory files
-%  - The "first formalization in any proof assistant" claim per:
+%  - The algebraic-GR substrate roster:
 %    + algebraic Riemann (Wave 1)
 %    + Schwarzschild Kerr-Schild (Wave 2)
 %    + de Sitter / AdS Lambda-vacuum biconditional (Wave 3)
 %    + ADM Hamiltonian/momentum-constraint biconditionals (Wave 4)
 %    + tetrad metric equivalence (Wave 5)
-%    + Wave 6: <topic to be filled>
+%    + Wave 6: tetrad formalism cross-bridges
 %
-% Section thesis: each of the six waves shipped a first-in-any-
-% proof-assistant claim at the algebraic-general-relativity
-% substrate level. These are not merely formalization
-% achievements; they are infrastructure on which subsequent
-% Phase 6 waves (BCH four laws, area theorem, Hawking-Penrose
-% singularity theorem) build. The bundle paper presents this as a
-% sidebar to the main methodology narrative.
+% Section thesis: each of the six waves shipped a substrate-level
+% formalization at the algebraic-general-relativity layer. These
+% are infrastructure on which subsequent Phase 6 waves (BCH four
+% laws, area theorem, Hawking-Penrose singularity theorem) build.
+% The bundle paper presents this as a sidebar to the main
+% methodology narrative.
 
 Although this paper's primary contribution is methodological, the
 verification pipeline has produced as a side product a body of
-classical-general-relativity formalization at a substrate level that
-is, to the authors' knowledge after exhaustive prior-art search, new
-to any proof assistant. We sketch the body here as a sidebar; full
+classical-general-relativity formalization at the algebraic
+substrate level. We sketch the body here as a sidebar; full
 treatment is the subject of a companion algebraic-general-relativity
 backbone paper.
 
-Phase~6f Waves~1 through~6 produced 73~theorems (64~substantive
-after retroactive strengthening-pass cuts; the
+Phase~6f Waves~1 through~6 produced \phaseSixfWonesixTotal{}~theorems
+(63~substantive after placeholder markers are excluded; the
 substantive--vs--total distinction is the
 \texttt{PLACEHOLDER\_THEOREMS} registry per Invariant~9 of
 Section~\ref{sec:pipeline}) across six modules at the
@@ -1250,16 +1256,13 @@ Props rather than re-deriving them on a manifold. Six waves shipped
 in sequence:
 
 \begin{itemize}
-\item \textbf{Wave~1 (\texttt{Curvature.lean}, 18 theorems):}
+\item \textbf{Wave~1 (\texttt{Curvature.lean}, \curvatureThms{}~theorems):}
 algebraic Riemann tensor $R^\rho_{\sigma\mu\nu}$, the
 \texttt{FirstBianchi} predicate, antisymmetry of the lower index pair,
 and the pair-symmetry corollary $R_{\rho\sigma\mu\nu} =
-R_{\mu\nu\rho\sigma}$. Prior-art search across Mathlib4, Coq's
-\texttt{Math-Components}, Isabelle/AFP, HOL~Light, HOL4, Mizar, and
-Agda \texttt{unimath} found no formalization of the Riemann tensor
-or the algebraic first Bianchi at this scope.
+R_{\mu\nu\rho\sigma}$.
 
-\item \textbf{Wave~2 (\texttt{EinsteinTensor.lean}, 11 theorems):}
+\item \textbf{Wave~2 (\texttt{EinsteinTensor.lean}, \einsteinTensorThms{}~theorems):}
 algebraic Einstein tensor $G_{\mu\nu} := \mathrm{Ric}_{\mu\nu} -
 \tfrac{1}{2}R\, g_{\mu\nu}$, the dimension-4 trace identity
 $G^\mu_\mu = -R$, the vacuum-characterization biconditional
@@ -1267,13 +1270,11 @@ $G_{\mu\nu} = 0 \iff \mathrm{Ric}_{\mu\nu} = 0$, and the de Sitter
 $\Lambda$-vacuum cross-bridge $G + \Lambda g = 0 \iff \Lambda = 3K$
 (constant-$K$ specialization).
 
-\item \textbf{Wave~3 (\texttt{EnergyConditions.lean}, 9
-theorems):} pointwise energy-condition predicates (NEC, WEC, SEC,
+\item \textbf{Wave~3 (\texttt{EnergyConditions.lean}, \energyConditionsThms{}~theorems):} pointwise energy-condition predicates (NEC, WEC, SEC,
 DEC) on the algebraic stress-energy tensor and Ricci-curvature
 specializations.
 
-\item \textbf{Wave~4 (\texttt{ExactSolutions.lean}, 17
-theorems):} four canonical exact solutions as algebraic consumers
+\item \textbf{Wave~4 (\texttt{ExactSolutions.lean}, \exactSolutionsThms{}~theorems):} four canonical exact solutions as algebraic consumers
 of the Wave~1--3 substrate. Minkowski ($K=0$, $\Lambda=0$); de
 Sitter ($K>0$, Hubble$^2 = K$); anti-de Sitter ($K<0$, AdS radius
 $\ell = 1/\sqrt{-K}$); Schwarzschild in Kerr-Schild form
@@ -1281,21 +1282,21 @@ $g = \eta + (2M/r)\,l\otimes l$, with explicit cross-bridges to
 Wave~1's Riemann tensor and downstream black-hole-thermodynamics
 hooks.
 
-\item \textbf{Wave~5 (\texttt{ADMFormalism.lean}, 11 theorems):}
+\item \textbf{Wave~5 (\texttt{ADMFormalism.lean}, \admFormalismThms{}~theorems):}
 ADM 3+1 decomposition. Hamiltonian constraint
 $\square g = 2(R_{(3)} + K_{ij}K^{ij} - K^2)$, momentum constraint,
 extrinsic curvature trace, with Minkowski and de Sitter explicit
 witnesses.
 
-\item \textbf{Wave~6 (\texttt{TetradFormalism.lean}, 7
-theorems):} tetrad-induced metric symmetry, Minkowski tetrad
+\item \textbf{Wave~6 (\texttt{TetradFormalism.lean}, \tetradFormalismThms{}~theorems):} tetrad-induced metric symmetry, Minkowski tetrad
 witness, determinant identity, and cross-bridges to the
 Einstein-Cartan extension module (Phase~6e).
 \end{itemize}
 
-Total Phase~6f W1-W6 yield: 73~theorems (64~substantive after
-strengthening), zero sorry, zero new axioms, with 13~retroactive
-cuts spread across the six waves. The exhaustive prior-art audit is on file at
+Total Phase~6f W1-W6 yield: \phaseSixfWonesixTotal{}~theorems
+(63~substantive after the six per-module placeholder markers are
+excluded), zero sorry, zero new axioms. The Phase~6f audit summary is
+on file at
 \texttt{Lit-Search/Phase-6f/Phase\,6f\,audit\,---\,Classical\,GR\,Lean\,infrastructure.md}
 (at the project root, not under
 \texttt{SK\_EFT\_Hawking/}; the filename contains a literal em-dash); downstream papers
@@ -1350,13 +1351,13 @@ The starting point is the indefinite-signature metric typeclass
 \texttt{IsLorentzianMetric}. Mathlib's existing infrastructure on
 Riemannian-bundle metrics
 (\texttt{Mathlib.Geometry.Manifold.IsRiemannianBundle}, due to
-S.~Gou\"ezel) is positive-definite by design; an indefinite-signature
-analogue did not exist in any proof assistant prior to Wave~7.
+S.~Gou\"ezel) is positive-definite by design; Wave~7's contribution
+is the indefinite-signature analogue.
 Our typeclass is a field-level predicate (signature
 $(-, +, +, +)$), with Minkowski as a primitive witness
 (\texttt{$\eta$\_isLorentzianMetric}). Wave~7 (modules
 \texttt{LorentzianMetric.lean} + \texttt{RiemannianConnection.lean},
-14 theorems) shipped the Christoffel-quadratic
+\phaseSixfWsevenTotal{}~theorems) shipped the Christoffel-quadratic
 Riemann tensor antisymmetry (in the lower index pair, separate
 from the Wave~1 algebraic version which constructs Riemann from
 the abstract type rather than from the metric), the
@@ -1370,8 +1371,10 @@ Wave~8 Sessions~1 through~5 (modules
 \texttt{RiemannCoordinate.lean},
 \texttt{RiemannDifferentialBianchi.lean},
 \texttt{BundleRiemannAux.lean}, \texttt{BundleRiemann.lean},
-\texttt{LeviCivita.lean}; 39 theorems total --- 9 + 9 + 8 + 8 + 5
-by module) shipped the coordinate-form Riemann tensor in linear
+\texttt{LeviCivita.lean}; \phaseSixfWeightTotal{}~theorems total ---
+\riemannCoordinateThms{} + \riemannDifferentialBianchiThms{} +
+\bundleRiemannAuxThms{} + \bundleRiemannThms{} + \leviCivitaThms{} by
+module) shipped the coordinate-form Riemann tensor in linear
 plus quadratic decomposition, the algebraic first Bianchi
 identity, the differential second Bianchi identity, the
 bundle-level Riemann tensor consuming Bonn's
@@ -1388,8 +1391,7 @@ load-bearing result of Wave~8: it lifts the Wald \S3.1 /
 Kobayashi-Nomizu IV.2.2 textbook construction to a
 proof-assistant-checked form, using \texttt{FiberBundle.extend}
 plus bilinearity non-degeneracy. The Phase~6f W7--W8 substrate
-collectively addresses two Mathlib gaps that no other proof
-assistant project we surveyed had filled: the
+collectively addresses two Mathlib gaps: the
 indefinite-signature metric typeclass, and Riemann/Ricci/scalar
 curvature on a connection (out-of-scope for the
 Massot--Rothgang--Macbeth Half-ERC proposal explicitly per their
@@ -1466,8 +1468,10 @@ Einstein-vacuum Cauchy problem in this form. Wave~9 produced four
 substantive curve-theoretic modules
 (\texttt{RiccatiComparison.lean}, \texttt{MazurSigmaModelRigidity.lean},
 \texttt{HawkingPenroseSingularityCurveTheoretic.lean},
-\texttt{AreaTheoremCurveTheoretic.lean}) yielding twenty
-post-audit theorems on Raychaudhuri-Riccati comparison, the
+\texttt{AreaTheoremCurveTheoretic.lean}) yielding \phaseSixgWnineTotal{}~theorems
+(\riccatiComparisonThms{} + \mazurSigmaModelRigidityThms{} +
+\hawkingPenroseCurveThms{} + \areaTheoremCurveThms{} by module) on
+Raychaudhuri-Riccati comparison, the
 $\sigma$-model 1D rigidity (Mazur's lemma:
 $f' \geq 0 \wedge f(0) = f(L) \implies f \equiv f(0)$), the
 curve-theoretic Hawking--Penrose singularity theorem with a
@@ -1549,9 +1553,8 @@ event is the April~2026 external-adversarial-review round that
 exposed a thirteen-dimensional problem space that internal
 validation could not detect by construction. Second, the
 publication-bundle architecture that consolidates per-wave drafts
-into thirteen publication targets while preserving sentence-level
-provenance; this paper is the first bundle to be drafted under the
-architecture. Third, an automated cross-bundle consistency check
+into fourteen publication targets while preserving sentence-level
+provenance; this paper is drafted under that architecture. Third, an automated cross-bundle consistency check
 that walks a cross-bundle cluster registry and flags member-
 sentence drift across bundle boundaries, preventing the same fact
 from being stated differently in two papers.
@@ -1576,8 +1579,9 @@ the deliverable.
 compiler,'' \emph{Comm.\ ACM}\ \textbf{52}(7), 107--115 (2009).
 \bibitem{sel4} G.~Klein et al., ``seL4: Formal verification of an OS
 kernel,'' \emph{Proc.\ ACM SOSP} (2009).
-\bibitem{leancipilot} P.~Song et al., ``Towards large language models
-as copilots for theorem proving in Lean,'' arXiv:2404.12534 (2024).
+\bibitem{leancipilot} P.~Song, K.~Yang, and A.~Anandkumar, ``Lean
+Copilot: Large Language Models as Copilots for Theorem Proving in
+Lean,'' arXiv:2404.12534 (2024).
 \bibitem{alphaproof} Google DeepMind, ``AI achieves silver-medal
 standard solving International Mathematical Olympiad problems,''
 (2024).

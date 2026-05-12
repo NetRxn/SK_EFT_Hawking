@@ -14,8 +14,8 @@ and Fusion Rules in a Proof Assistant}
 \date{\today}
 
 \begin{abstract}
-We present the first quantum group library in any proof assistant:
-the Drinfeld-Jimbo quantum group $U_q(\mathfrak{g})$, parameterized by
+We present a quantum group library in Lean~4 with Mathlib: the
+Drinfeld-Jimbo quantum group $U_q(\mathfrak{g})$, parameterized by
 an arbitrary Cartan matrix~$A$, constructed in Lean~4 with Mathlib via
 \texttt{FreeAlgebra} and \texttt{RingQuot} --- with zero axioms and
 zero sorry. The generic \texttt{HopfAlgebra} instance (coproduct,
@@ -27,10 +27,9 @@ We implement the Kac-Walton fusion algorithm from Cartan data, with
 algorithmic weight diagram generation, verifying SU($N$)$_k$ fusion rules
 for $N = 2, 3, 4, 5$ and exceptional types G$_2$, B$_2$.
 Cartan matrices and named generators are provided for all exceptional
-types (E$_6$, E$_7$, E$_8$, F$_4$) --- the first in any proof assistant.
-The rank-specific infrastructure includes the first verified modular
-tensor categories (Ising and Fibonacci), the first braided fusion
-category with complete hexagon/ribbon verification, and the first
+types (E$_6$, E$_7$, E$_8$, F$_4$). The rank-specific infrastructure
+includes verified modular tensor categories (Ising and Fibonacci), a
+braided fusion category with complete hexagon/ribbon verification, and a
 verified knot invariant (trefoil $= -1$). All with zero sorry across
 $\sim$12{,}000~LOC.
 \end{abstract}
@@ -44,10 +43,9 @@ Quantum groups, introduced independently by Drinfeld~\cite{Drinfeld1986}
 and Jimbo~\cite{Jimbo1986}, are $q$-deformations of universal enveloping
 algebras that play a central role in knot theory, integrable systems,
 topological quantum field theory, and the mathematical foundations of
-gauge theory. Despite their importance and 40~years of development, no
-quantum group has previously been defined in a proof assistant.
+gauge theory.
 
-We present the first such definition: $U_q(\mathfrak{sl}_2)$ in Lean~4
+We present a Lean~4 definition: $U_q(\mathfrak{sl}_2)$ in Lean~4
 with Mathlib, constructed from \texttt{FreeAlgebra} and \texttt{RingQuot}
 with \emph{zero axioms}. The key insight is that Mathlib's existing
 algebra-by-generators-and-relations infrastructure --- the same
@@ -173,9 +171,9 @@ emergence through the quantum group framework.
 The quantum group $U_q(\mathfrak{sl}_2)$ carries a Hopf algebra
 structure: a coproduct $\Delta$, counit $\varepsilon$, and antipode $S$.
 We formalize all three and wire them into Mathlib's
-\texttt{HopfAlgebra} typeclass, making $U_q(\mathfrak{sl}_2)$ the
-\emph{first Hopf algebra in any proof assistant} (beyond the trivial
-commutative semiring and group algebra instances).
+\texttt{HopfAlgebra} typeclass, equipping $U_q(\mathfrak{sl}_2)$ with a
+genuine Hopf algebra instance (going beyond the trivial commutative
+semiring and group algebra instances Mathlib already ships).
 
 \subsection{Coproduct and counit}
 
@@ -330,7 +328,7 @@ for all $8 + 27 + 64 = 99$ entries at $k=1,2,3$.
 
 \subsection{Ribbon and modular tensor category definitions}
 
-We define, for the first time in any proof assistant:
+We define, in Lean~4:
 \begin{itemize}
 \item \texttt{BalancedCategory}: braided monoidal + twist $\theta$
   satisfying $\theta_{X \otimes Y} = (\theta_X \otimes \theta_Y)
@@ -344,10 +342,9 @@ We define, for the first time in any proof assistant:
 $\mathrm{SU}(2)_1$ and $\mathrm{SU}(2)_2$ are instantiated as
 \texttt{PreModularData}.
 
-\subsection{First verified MTC instances}
+\subsection{Verified MTC instances}
 
-We construct the first two verified modular tensor category instances
-in any proof assistant.
+We construct two verified modular tensor category instances in Lean~4.
 
 \textbf{Ising MTC} (SU(2)$_2$, \texttt{SU2kMTC.lean}): The three anyons
 $\{1, \sigma, \psi\}$ have F-symbols in $\mathbb{Q}(\sqrt{2})$ (custom
@@ -355,7 +352,7 @@ type \texttt{QSqrt2} with \texttt{DecidableEq}). The exceptional sign
 $F^\sigma_{\psi\sigma\psi} = -1$ (corrected from the standard convention
 via deep research against Kitaev 2006) is verified. Global dimension
 $\mathcal{D}^2 = 4$ is proved via \texttt{Real.mul\_self\_sqrt}.
-A \texttt{ModularTensorData} instance is constructed --- the first ever.
+A \texttt{ModularTensorData} instance is constructed.
 Pentagon equation and $F^2 = I$ are proved by \texttt{native\_decide}
 over $\mathbb{Q}(\sqrt{2})$ (zero sorry, Aristotle \texttt{78dcc5f4}).
 
@@ -402,8 +399,7 @@ Bott periodicity) yields Rokhlin's~16.
 %% ══════════════════════════════════════════════════════════════════
 \section{Extension to Rank~2: $U_q(\mathfrak{sl}_3)$}
 
-We extended the formalization to rank~2 quantum groups --- the first in any
-proof assistant. \texttt{Uqsl3.lean} defines $U_q(\mathfrak{sl}_3)$ via
+We extend the formalization to rank~2 quantum groups. \texttt{Uqsl3.lean} defines $U_q(\mathfrak{sl}_3)$ via
 8~generators (E$_1$, E$_2$, F$_1$, F$_2$, K$_1^{\pm 1}$, K$_2^{\pm 1}$)
 and 21~Chevalley-Serre relations encoding the $A_2$ Cartan matrix
 $\bigl(\begin{smallmatrix} 2 & -1 \\ -1 & 2 \end{smallmatrix}\bigr)$.
@@ -462,10 +458,9 @@ Key structural properties verified by \nativedecide{}:
     ($B_2$) and $D = \mathrm{diag}(3,1)$ ($G_2$) (PROVED)
 \end{itemize}
 
-This is the \emph{first parameterized quantum group definition in any
-proof assistant}, now covering all rank-2 types ($A_2$, $B_2$, $C_2$,
-$G_2$) and representative higher-rank types ($A_3$, $B_3$, $D_4$)
-with zero sorry.
+This is a \emph{parameterized quantum group definition in Lean~4},
+covering all rank-2 types ($A_2$, $B_2$, $C_2$, $G_2$) and
+representative higher-rank types ($A_3$, $B_3$, $D_4$) with zero sorry.
 
 \subsection{q-Binomial coefficients}
 The quantum Serre relation uses $q$-binomial coefficients
@@ -508,8 +503,7 @@ $\mu \circ (S \otimes \mathrm{id}) \circ \Delta = \eta \circ
 multiplicativity step using \texttt{TensorProduct.exists\_finset} and
 \texttt{Algebra.commutes}. \texttt{HopfAlgebra} instance wired.
 
-\emph{This is the first generic quantum group Hopf algebra in any
-proof assistant.}
+\emph{The generic quantum group Hopf algebra is fully wired in Lean~4.}
 
 \subsection{Instantiation verification}
 
@@ -562,29 +556,29 @@ F$_4$ level~1 $\cong \mathbb{Z}_2$ (2~reps).
 Named generator abbreviations for SU(4) (12) and E$_6$ (24) enable
 ergonomic access to $U_q(E_6)$ generators.
 
-\emph{First E$_6$/E$_7$/E$_8$ quantum group generators in any proof assistant.}
+\emph{E$_6$/E$_7$/E$_8$ quantum group generators are wired in Lean~4.}
 
 \section{Conclusions}
 
-We have presented the first quantum group library in any proof assistant,
+We have presented a quantum group library in Lean~4 with Mathlib,
 spanning from $U_q(\mathfrak{sl}_2)$ through a fully generic
 $U_q(\mathfrak{g})$ for arbitrary Cartan matrix --- with
 \texttt{HopfAlgebra} instance proved for the generic type (3176~LOC,
-zero sorry). Key ``firsts'' established:
+zero sorry). Library contents:
 \begin{itemize}
-\item First quantum group in any PA: $U_q(\mathfrak{sl}_2)$ (66~thms)
-\item First generic quantum group \texttt{HopfAlgebra}: $U_q(\mathfrak{g})$
-  parameterized by Cartan matrix $A$ (3176~LOC across 4~files)
+\item $U_q(\mathfrak{sl}_2)$ (66~thms)
+\item Generic $U_q(\mathfrak{g})$ \texttt{HopfAlgebra} parameterized by
+  Cartan matrix $A$ (3176~LOC across 4~files)
 \item Instantiation verified: $U_q(A_1) \cong_{\mathrm{alg}} U_q(\mathfrak{sl}_2)$
   and $U_q(A_2) \cong_{\mathrm{alg}} U_q(\mathfrak{sl}_3)$ as full \texttt{AlgEquiv} (629~LOC)
-\item First Kac-Walton fusion in any PA: algorithmic weight diagram
-  generation + SU($N$)$_k$ fusion for $N=2,3,4,5$ and G$_2$/B$_2$
-\item First exceptional quantum group generators: E$_6$, E$_7$, E$_8$, F$_4$
+\item Kac-Walton fusion: algorithmic weight diagram generation +
+  SU($N$)$_k$ fusion for $N=2,3,4,5$ and G$_2$/B$_2$
+\item Exceptional quantum group generators: E$_6$, E$_7$, E$_8$, F$_4$
   Cartan data + named generators + level~1 alcove structure
-\item First affine Hopf: $U_q(\widehat{\mathfrak{sl}}_2)$ (201~thms)
-\item First verified MTCs: Ising ($\mathbb{Q}(\sqrt{2})$) + Fibonacci
+\item Affine Hopf algebra $U_q(\widehat{\mathfrak{sl}}_2)$ (201~thms)
+\item Verified MTCs: Ising ($\mathbb{Q}(\sqrt{2})$) + Fibonacci
   ($\mathbb{Q}(\sqrt{5})$) with F-symbols, hexagon, ribbon
-\item First verified knot invariant: trefoil $= -1$
+\item Verified knot invariant: trefoil $= -1$
 \item SU(2)$_k$ + SU(3)$_k$ fusion (128~thms by \texttt{native\_decide})
 \item $q$-binomials with classical limit $\binom{n}{j}_1 = C(n,j)$
 \end{itemize}

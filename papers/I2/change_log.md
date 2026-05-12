@@ -82,3 +82,36 @@ background processes against the bundle target I2.
 - Insertion point: §5
 - Stage-13 redo required: yes
 - Notes: D.2 sidebar: Phase 6n W1b lean-tensor-categories companion (SymTFTAudit substrate is Mathlib-grade in-program build; Phase 5o W5 cross-bridge)
+
+## 2026-05-11 — Stage-13 fix-pass (papers/AutomatedReviews/2026-05-11-1550-bundle-stage13/I2.md)
+
+Closed 17 of 20 findings (8 BLOCKER + 6 REQUIRED + 3 RECOMMENDED) and accepted 3 (7.4 + 1.1 registry-bookkeeping; 5.7 redundant with 5.1-5.3 removal pass). 20 supersession-ledger entries appended to `docs/review_finding_supersessions.json` (entries 633-652).
+
+Substantive fixes:
+
+- **BLOCKER 3.1** Verlinde scope: §6.1 prose corrected from "for the cases up to k=5" to k=1,2 only with explicit theorem enumeration (matches SU2kSMatrix.lean module docstring).
+- **BLOCKER 3.2** FibonacciBraiding hexagon: §6.4 rewritten — pentagon reattributed to FibonacciMTC.lean (`fib_pentagon`, line 106, native_decide); hexagon claim retracted, no "in flight" hedge per discipline override.
+- **BLOCKER 3.3** RibbonCategory inheritance: §3.1 corrected to match actual class declaration ("extends BalancedCategory (with RigidCategory as typeclass parameter)" rather than fabricated "extends BalancedCategory, PivotalCategory"); future Pivotal-aligned refactor flagged as separate task.
+- **REQUIRED 3.4** SU(3)_k=2 hexagon scope: §6.2 softened to "F-matrix on Fibonacci sub-block (F^2 = I involution proven; full F-symbol catalog + hexagon/pentagon deferred)".
+- **BLOCKER 5.1/5.2/5.3** First-claim removal (10 instances + cleanup): all 10 enumerated instances + abstract's 5-item packaging + §9.1 "to the best of our knowledge" packaging + §1 "have never been formally verified in any proof assistant" softened to neutral scope description / "as of our 2026 prior-art sweep" framing. Zero "first" priority-claims remain (verified via grep).
+- **REQUIRED 5.4** IsolatedHorizonHypotheses paragraph: "Phase 6j Wave 1" wave-history jargon removed; bundle D3 substituted for broken sec:reusability flagship cross-paper ref; public-facing description of gauge assumptions added.
+- **REQUIRED 5.5** Fault-tolerant QC certification overclaim: section bullet lead softened from "certification" to "infrastructure"; FibonacciUniversality.lean cited with explicit non-shipped-named-theorem flag.
+- **RECOMMENDED 5.6** "in preparation" / "in active development": abstract + §9.3 rephrased to neutral forward-looking.
+- **BLOCKER 7.1/7.2/7.3** Count drift: all 9 number-field per-module counts + cumulative 164→207 + Hopf-layer 101→114 + 4 Hopf per-module counts + abstract ~640→~695 refreshed against canonical Lean source (grep-verified).
+- **REQUIRED 6.1** intAutocorrTime_uncorrelated window-bound: §2.2 enumerated theorem reads "W with W+1 < n" matching Lean theorem statement at VerifiedJackknife.lean:109-114.
+- **REQUIRED 8.1** tau_int illustrative value: §1 tagged "(a worked-example value, not a measured one in this paper)".
+- **RECOMMENDED 4.1** turaev2010 bibitem aligned with CITATION_REGISTRY (`V.~G.~Turaev`).
+- **RECOMMENDED 7.5** wolff2004 bibitem amended with arXiv:hep-lat/0306017.
+
+Accepted as Stage 14 QI candidates (registry/source-maintenance only, no paper change):
+
+- **RECOMMENDED 7.4**: VerifiedJackknife.lean:138 docstring "1 sorry" is stale (file is sorry-clean); paper does not reproduce this stale string. Stage 14 QI: `lean_docstring_audit.py`.
+- **RECOMMENDED 1.1**: wolff2004 + mathlib4 CITATION_REGISTRY entries missing `arxiv_verified=True` / `doi_verified=True` bookkeeping fields; non-paper finding.
+- **REQUIRED 5.7**: prior-art ledger absence — resolved by 5.1+5.2+5.3 first-claim removal pass; no first-claims remain.
+
+QI candidates surfaced (Stage 14 candidates):
+
+- `scripts/lean_docstring_audit.py` — flag "FIRST", "first formalization", "N sorry" patterns and cross-check sorry counts against actual file content.
+- `scripts/update_counts.py` per-bundle macros — extend to emit `\iiNumberFieldDecls`, `\iiHopfDecls`, `\iiCategoricalDecls`, `\iiInstancesDecls`, etc., for I2-class count-heavy bundles. Closes the count-drift class for good.
+
+LaTeX compile clean (14 pages, 1200339 bytes). validate.py citation_primary_sources_present PASS (no new bibitems added; all references registry-resident). Stage-13 redo: re-runnable; expect GREEN.

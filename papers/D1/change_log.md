@@ -73,3 +73,19 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: §6
 - Stage-13 redo required: yes
 - Notes: D.2 absorption: Phase 6o W1a boostless / Carrollian soft theorems on BEC + polariton; Strominger-triangle closure
+
+## 2026-05-11 — Freshness-bookkeeping (bookkeeping)
+
+- Source: (none — bookkeeping event for Stage-13-sweep freshness cleanup)
+- Lift action: Freshness-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-11 Stage-13-sweep freshness cleanup: auto-generated tables in paper1_first_order, paper2_second_order, paper12_polariton (and 1 more) regenerated today by render_paper_tables.py at ~12:56 local. D1 bundle paper_draft.tex does NOT \input source paper tables (only \input{../../docs/counts.tex}); regenerated source-side tables are decoupled from bundle compile path. No bundle content change required; last_lift bumped to acknowledge source-mtime drift is benign.
+
+## 2026-05-12 - Prose-revision-bookkeeping (bookkeeping)
+
+- Source: (none - project-wide first-claim-removal prose revision)
+- Lift action: Prose-revision-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-12 first-claim-removal: paper1_first_order abstract ('first systematic computation' -> 'a systematic computation'), paper2_second_order conclusion ('first formally machine-verified' -> 'formally machine-verified'), paper16_graphene_sk_eft two experimental physics claims softened ('first measurement' / 'first observation' -> 'a measurement' / 'an observation'). No claims added; no numerical results changed.

@@ -8,7 +8,7 @@
 
 \begin{document}
 
-\title{From Surgery to Invariants: The First Formalization of the\\
+\title{From Surgery to Invariants: A Formalization of the\\
 WRT TQFT Pipeline in Lean~4}
 
 \author{J.~Roehm}
@@ -17,8 +17,8 @@ WRT TQFT Pipeline in Lean~4}
 \date{\today}
 
 \begin{abstract}
-We present the first formalization of the Witten-Reshetikhin-Turaev
-3-manifold invariant pipeline in any proof assistant. Starting from
+We present a formalization in Lean~4 of the
+Witten-Reshetikhin-Turaev 3-manifold invariant pipeline. Starting from
 verified modular tensor category data (Ising and Fibonacci MTCs with
 machine-checked R-matrices, F-symbols, pentagon, hexagon, and ribbon
 conditions), we build a complete chain through the Temperley-Lieb
@@ -26,11 +26,10 @@ algebra, Jones-Wenzl idempotents, surgery presentations for
 3-manifolds, to the WRT surgery formula connecting topological data
 to algebraic invariants. Concrete computations verified by
 \nativedecide{}: Ising $D^2 = 4$, Gauss sum $p_+ = 2\zeta_{16}$;
-Fibonacci $D^2 = 2 + \varphi$ with $\varphi^2 = \varphi + 1$. The
-Temperley-Lieb algebra (3~relation types), Jones-Wenzl recurrence,
+Fibonacci $D^2 = 2 + \varphi$ with $\varphi^2 = \varphi + 1$. The Temperley-Lieb algebra (3~relation types), Jones-Wenzl recurrence,
 surgery presentations ($S^3$, $S^2 \times S^1$, lens spaces), and the
-WRT formula are all first formalizations in any proof assistant. Zero
-sorry, zero axioms across 7~new Lean~4 modules.
+WRT formula are each formalized in Lean~4. Zero sorry, zero axioms
+across 7~new Lean~4 modules.
 \end{abstract}
 
 \maketitle
@@ -40,15 +39,13 @@ sorry, zero axioms across 7~new Lean~4 modules.
 
 The Witten-Reshetikhin-Turaev invariant~\cite{witten1989,rt1991}
 assigns a complex number $Z(M)$ to each closed oriented 3-manifold $M$,
-computed from a modular tensor category (MTC). Despite 35~years of
-development and central importance in quantum topology, no component
-of the WRT construction has previously been formalized in any proof
-assistant --- not the surgery formula, not the Temperley-Lieb algebra,
-not the Kirby calculus, and not any quantum 3-manifold invariant value.
+computed from a modular tensor category (MTC). This work formalizes
+the construction in Lean~4 with Mathlib: the surgery formula, the
+Temperley-Lieb algebra, the Kirby calculus, and concrete quantum
+3-manifold invariant values.
 
-We close this gap with a complete formalization pipeline in Lean~4
-with Mathlib, building on our prior work establishing the first
-verified MTC instances (Ising and Fibonacci) with machine-checked
+The complete formalization pipeline builds on our prior work
+establishing verified MTC instances (Ising and Fibonacci) with machine-checked
 pentagon, hexagon, and ribbon coherence~\cite{paper14}. The pipeline
 comprises seven new modules totaling ${\sim}60$~theorems with zero
 \texttt{sorry} and zero axioms.
@@ -161,14 +158,14 @@ $\binom{3}{1}_q = [3]_q$ (for $B_n/C_n$ types).
 %% ══════════════════════════════════════════════════════════════════
 \section{Conclusion}
 
-We have presented the first formalization of the WRT 3-manifold
-invariant pipeline: from algebraic MTC data through the Temperley-Lieb
+We have presented a formalization of the WRT 3-manifold invariant
+pipeline in Lean~4: from algebraic MTC data through the Temperley-Lieb
 algebra, Jones-Wenzl idempotents, surgery presentations with Kirby
 moves, to concrete verified invariant values and anyonic braiding
 gates. Nine Lean~4 modules, ${\sim}115$~theorems, zero sorry, zero
 axioms. The Ising and Fibonacci computations demonstrate that verified
 MTC data can produce both verified topological invariants and verified
-quantum gates --- the first such connections in any proof assistant.
+quantum gates.
 
 Braiding gates computed via $B = F^{-1}RF$: Ising gates generate the
 Clifford group, Fibonacci gates generate a dense subgroup of SU(2)
@@ -210,7 +207,7 @@ V.~G.~Turaev, \emph{Quantum Invariants of Knots and 3-Manifolds} (de Gruyter, 20
 J.~Roehm, companion paper: Braided modular tensor categories and knot invariants in Lean~4.
 
 \bibitem{paper11}
-J.~Roehm, companion paper: $U_q(\mathfrak{sl}_2)$ in Lean~4: the first quantum group in a proof assistant.
+J.~Roehm, companion paper: $U_q(\mathfrak{sl}_2)$ in Lean~4 with Mathlib.
 \end{thebibliography}
 
 \end{document}

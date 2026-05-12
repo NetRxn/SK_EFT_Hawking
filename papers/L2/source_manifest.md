@@ -1,6 +1,6 @@
 # Bundle L2 — Source Manifest
 
-**Auto-generated:** 2026-05-06
+**Auto-generated:** 2026-05-12
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`L2`
@@ -10,7 +10,7 @@
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
-| `paper10_modular_generation` | (see mapping) | Lift-letter | (see mapping) | 2026-05-01T18:57:16Z |
+| `paper10_modular_generation` | (see mapping) | Lift-letter | (see mapping) | 2026-05-12T12:35:56Z |
 
 ## Coverage notes
 

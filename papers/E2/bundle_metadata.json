@@ -9,8 +9,8 @@
   "stage13_status": "green",
   "stage13_redo_required": false,
   "freshness_stale": false,
-  "source_manifest_last_regen": "2026-05-06T15:36:14Z",
-  "last_lift": "2026-05-01T22:41:36Z",
+  "source_manifest_last_regen": "2026-05-12T12:46:30Z",
+  "last_lift": "2026-05-12T13:00:00Z",
   "last_stage9_review": "2026-05-04T00:00:00Z",
   "last_stage10_review": "2026-05-04T00:00:00Z",
   "last_stage13_review": "2026-05-07T01:40:00Z",
@@ -19,5 +19,5 @@
   "stage13_review_doc": "papers/AutomatedReviews/2026-05-04-bundle-stage13/E2.md",
   "audit_log_path": "papers/E2/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "2026-05-07 Session-3 cross-bundle propagation: E2 Geurs2025 + Majumdar2025 bibitems updated to match arXiv-version titles + author initials (S.~Majumdar → A.~Majumdar). Both received arXiv ID + Nat. Phys. coordinates where applicable. LaTeX recompile clean (4pp/569936 bytes). | 2026-05-07 Session-3 cross-bundle r1 GREEN: 0 BLOCKER, 3 RECOMMENDED (Falque2025 dangling bibitem; Zhao2023 missing arXiv/DOI; η/s device-equivalence one-sentence clarification). η/s ≈ 4 × ℏ/(4π k_B) attribution at E2:169 CORRECTLY GROUNDED — Majumdar2025 abstract explicitly reports three distinct universalities (σ_Q≈4 e²/h, >200× WF violation, η/s→ℏ/(4πk_B)); E2 cites all three correctly. E2↔D1 §7 cross-bundle CONSISTENT (8 shared narrative claims agree)."
+  "notes": "2026-05-07 Session-3 cross-bundle propagation: E2 Geurs2025 + Majumdar2025 bibitems updated to match arXiv-version titles + author initials (S.~Majumdar \u2192 A.~Majumdar). Both received arXiv ID + Nat. Phys. coordinates where applicable. LaTeX recompile clean (4pp/569936 bytes). | 2026-05-07 Session-3 cross-bundle r1 GREEN: 0 BLOCKER, 3 RECOMMENDED (Falque2025 dangling bibitem; Zhao2023 missing arXiv/DOI; \u03b7/s device-equivalence one-sentence clarification). \u03b7/s \u2248 4 \u00d7 \u210f/(4\u03c0 k_B) attribution at E2:169 CORRECTLY GROUNDED \u2014 Majumdar2025 abstract explicitly reports three distinct universalities (\u03c3_Q\u22484 e\u00b2/h, >200\u00d7 WF violation, \u03b7/s\u2192\u210f/(4\u03c0k_B)); E2 cites all three correctly. E2\u2194D1 \u00a77 cross-bundle CONSISTENT (8 shared narrative claims agree)."
 }

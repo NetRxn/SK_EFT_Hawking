@@ -28,11 +28,8 @@ The Fermi-Hubbard Doublon Berry-Phase SWAP in Lean~4}
 \date{\today}
 
 \begin{abstract}
-We report what we believe to be the first end-to-end formalization
-of a geometric quantum gate in Lean~4; we have not located a
-comparable Berry-phase-gate formalization in the Isabelle/HOL AFP,
-Coq (QuantumLib / QWIRE), or Agda quantum libraries, and invite
-correction if prior work exists. The target is the doublon geometric
+We report an end-to-end formalization of a geometric quantum gate in
+Lean~4. The target is the doublon geometric
 SWAP gate recently demonstrated by Kiefer~\textit{et~al.}
 (Nature~2026, arXiv:2507.22112) in a Fermi-Hubbard dimer with dynamical
 optical lattices. Working entirely within Lean~4 + Mathlib, we formalize
@@ -98,10 +95,8 @@ target is deliberately scoped: we formalize the finite-dimensional
 matrix content---the Hamiltonian, the dark state, the SWAP operator,
 the sign flip, the dynamical-phase-vanishes statement---without
 touching the adiabatic theorem, fiber bundles, or connections on
-vector bundles. The result is the \emph{first end-to-end formalization
-of a geometric quantum gate in Lean~4}; we have not located
-comparable prior work in the Isabelle/HOL AFP, Coq (QuantumLib /
-QWIRE), or Agda quantum libraries.
+vector bundles. The result is an \emph{end-to-end formalization of a
+geometric quantum gate in Lean~4}.
 
 Our scope choice is informed by the deep-research landscape review
 (Lit-Search/Phase-5t, December~2025), which identified a three-layer
@@ -116,8 +111,7 @@ future work.
 \textbf{Contributions.} (i)~A Lean~4 formalization of the
 Fermi-Hubbard dimer singlet-sector spectrum, covering the $3\times 3$
 charge-conjugation Hamiltonian at zero detuning, the exact dark state,
-and the bright-state eigenvectors. (ii)~A formal proof (to our
-knowledge the first in any interactive proof assistant) of the
+and the bright-state eigenvectors. (ii)~A Lean~4 formal proof of the
 discrete-step statement underlying the Kiefer \textit{et~al.} SWAP
 gate:
 $\darkstate(\theta + \pi) = -\darkstate(\theta)$ with zero dynamical
@@ -534,8 +528,8 @@ statement expressing the first Stiefel-Whitney class of the real
 eigenvector bundle over $S^1$. Our estimate is 2--3 weeks; the main
 obstacle is the continuous-eigenvector construction from Mathlib's
 \texttt{IsHermitian.spectral\_theorem}, which has no parameterized
-smoothness guarantee out of the box. Would be the first formal
-$\mathbb{Z}_2$ Berry-phase theorem in any proof assistant.
+smoothness guarantee out of the box. Once shipped, this provides a
+formal Lean~4 $\mathbb{Z}_2$ Berry-phase theorem.
 
 \textbf{Layer 3 — discrete Berry-phase gauge invariance.} Define the
 discrete Berry phase for a finite sequence of real unit vectors as
@@ -584,10 +578,9 @@ Hilbert space decomposition to Berry phase.
 The natural next target is Layer~2 of the deep-research hierarchy:
 the $\mathbb{Z}_2$ Berry-phase quantization theorem for arbitrary
 continuous loops of real-symmetric matrices with a simple eigenvalue.
-A successful formalization would be the first $\mathbb{Z}_2$
-Berry-phase result in any interactive proof assistant, and would
-complete the \emph{kinematic} Berry-phase story without touching the
-adiabatic theorem or any ODE/PDE machinery.
+A successful formalization would provide a Lean~4 $\mathbb{Z}_2$
+Berry-phase result, completing the \emph{kinematic} Berry-phase story
+without touching the adiabatic theorem or any ODE/PDE machinery.
 
 %% ================================================================
 \begin{acknowledgments}

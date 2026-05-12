@@ -47,3 +47,11 @@ Stage 13 review doc: `papers/AutomatedReviews/2026-05-01-2200-bundle-stage13/L2.
 ## 2026-05-01T23:00Z — Bundle L2 CLOSED at GREEN
 
 Phase 7b sub-wave 7b.3 ledger entry: <0.5 person-day effort for fresh first-pass + 3 reviewer-triple stages with deterministic recheck (Stage 9 needed 1 round-of-fixes; Stages 10 + 13 GREEN direct). 3-page Tier-2 PRL splash bundle (target PRL) at GREEN at all three reviewer-triple stages. Bundle ready for arXiv-voucher submission per `PAPER_STRATEGY.md` §3 sequencing. 6 of 13 bundles now reviewer-triple-closed (L2 + D5 + I1 + I2 + L1 + L3); 7 source-only-green still need first-pass drafting (F + D1 + D2 + D3 + D4 + E1 + E2).
+
+## 2026-05-12 - Prose-revision-bookkeeping (bookkeeping)
+
+- Source: (none - project-wide first-claim-removal prose revision)
+- Lift action: Prose-revision-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-12 first-claim-removal: paper10_modular_generation (L2's sole source paper) had abstract + conclusion + body first-claims rewritten to descriptive prose. L2 bundle content remains aligned.

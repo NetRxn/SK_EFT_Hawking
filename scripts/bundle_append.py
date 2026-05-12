@@ -4,7 +4,8 @@ bundle_append.py — Phase 7a sub-wave 7a.1.3 deliverable
 =======================================================
 
 Semi-automated tool for absorbing a new source paper into an
-already-drafted bundle. Used in two modes:
+already-drafted bundle, or for recording bookkeeping-only events
+(non-content-changing drift acknowledgements). Three modes:
 
   - **Initial lift**: bundle directory has no `paper_draft.tex` yet;
     creates a minimal `paper_draft.tex` skeleton, runs
@@ -15,8 +16,18 @@ already-drafted bundle. Used in two modes:
     source paper. Per Pipeline Invariant #14, the source paper must
     already have a row in `docs/PAPER_DRAFT_MAPPING.md` mapping it to
     `<bundle>`.
+  - **Bookkeeping-only** (`--bookkeeping-only`): records a freshness /
+    prose-revision / inline-absorption event in `append_log.json` +
+    `change_log.md`, bumps `last_lift`, and resets `freshness_stale =
+    false` *without* inserting a `\\section` and *without* flipping
+    stage9/10/13 statuses to pending. Use when source-paper mtimes
+    drifted but bundle content was already correct (verified case:
+    auto-regenerated tables; or per-paper prose revisions that didn't
+    have a counterpart in the bundle draft). Required: `--lift-action`
+    and `--notes`. Optional: `--source-paper` (use a sentinel like
+    `none` or omit).
 
-Effects (always):
+Effects (full-lift modes):
   - validates source ↔ bundle mapping
   - computes the next `\\section` / `\\subsection` heading using the
     `--insertion-point` hint (e.g., "§13", "§§4.2")
@@ -27,6 +38,14 @@ Effects (always):
     refresh `source_manifest.md` + `bundle_metadata.json`
   - sets `bundle_metadata.json.stage13_redo_required = true` and
     `last_lift = <now>`
+
+Effects (bookkeeping-only mode):
+  - appends an entry to `papers/<bundle>/append_log.json` with
+    `stage13_redo_required = false` and a `(bookkeeping)` source marker
+  - appends a dated H2 to `papers/<bundle>/change_log.md`
+  - re-runs `scripts/bundle_source_manifest.py --bundle <bundle>`
+  - sets `last_lift = <now>` and `freshness_stale = false`
+  - **does NOT** touch `paper_draft.tex` or flip stage9/10/13 statuses
 
 Effects NOT done by this script (out of scope; deferred to manual or
 later sub-waves):
@@ -42,6 +61,7 @@ context. This script is one mechanical step in that procedure.
 
 Usage
 -----
+    # Initial lift / additive lift
     uv run python scripts/bundle_append.py \\
         --bundle D5 --source-paper paper17_dark_sector \\
         --insertion-point '§2-§3' \\
@@ -54,6 +74,12 @@ Usage
     uv run python scripts/bundle_append.py \\
         --bundle I1 --source-paper paper15_methodology \\
         --insertion-point '§1' --initial-lift
+
+    # Bookkeeping-only event (no content change)
+    uv run python scripts/bundle_append.py \\
+        --bundle D1 --bookkeeping-only \\
+        --lift-action Freshness-bookkeeping \\
+        --notes "Auto-gen tables in source papers regenerated; bundle does not \\input source tables; no content change required."
 """
 from __future__ import annotations
 
@@ -300,6 +326,69 @@ def _update_metadata_post_append(bundle: str) -> None:
     md_path.write_text(json.dumps(md, indent=2) + "\n")
 
 
+def _append_to_change_log_bookkeeping(
+    bundle: str, lift_action: str, notes: str, source: str,
+) -> None:
+    """Bookkeeping-only variant of `_append_to_change_log`: no insertion
+    point, explicit Stage-13-redo-required = no, source marker indicates
+    bookkeeping."""
+    log_path = _bundle_dir(bundle) / "change_log.md"
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    src_marker = f"`{source}`" if source else "(none — bookkeeping event)"
+    entry = f"""
+## {today} — {lift_action} (bookkeeping)
+
+- Source: {src_marker}
+- Lift action: {lift_action}
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: {notes or "(none)"}
+"""
+    if log_path.exists():
+        log_path.write_text(log_path.read_text().rstrip() + "\n" + entry)
+    else:
+        log_path.write_text(f"# Bundle {bundle} — Change Log\n" + entry)
+
+
+def _append_to_append_log_bookkeeping(
+    bundle: str, lift_action: str, notes: str, source: str,
+) -> None:
+    """Bookkeeping-only variant of `_append_to_append_log`: empty
+    lean_modules, `stage13_redo_required = false`, source marker
+    indicates bookkeeping."""
+    log_path = _bundle_dir(bundle) / "append_log.json"
+    if log_path.exists():
+        data = json.loads(log_path.read_text())
+    else:
+        data = {"bundle_target": bundle, "events": []}
+    event = {
+        "date": _now_iso(),
+        "source_paper": source or "(none — bookkeeping)",
+        "lift_action": lift_action,
+        "bundle_section_inserted": "(n/a — bookkeeping)",
+        "lean_modules_referenced": [],
+        "citation_count_added": 0,
+        "stage13_redo_required": False,
+        "agent_run_id": f"bundle_append-bookkeeping-{_now_iso()}",
+        "notes": notes,
+    }
+    data["events"].append(event)
+    log_path.write_text(json.dumps(data, indent=2) + "\n")
+
+
+def _update_metadata_post_bookkeeping(bundle: str) -> None:
+    """Bookkeeping variant of `_update_metadata_post_append`: refreshes
+    `last_lift` and clears `freshness_stale`, but does NOT flip
+    stage9/10/13 statuses and does NOT set `stage13_redo_required`."""
+    md_path = _bundle_dir(bundle) / "bundle_metadata.json"
+    if not md_path.exists():
+        return
+    md = json.loads(md_path.read_text())
+    md["last_lift"] = _now_iso()
+    md["freshness_stale"] = False
+    md_path.write_text(json.dumps(md, indent=2) + "\n")
+
+
 def _refresh_source_manifest(bundle: str) -> None:
     """Re-run bundle_source_manifest.py to refresh the manifest after
     append. Use subprocess so we don't tightly couple imports."""
@@ -404,27 +493,104 @@ def append(
     return 0
 
 
+def bookkeeping_only(
+    *,
+    bundle: str,
+    lift_action: str,
+    notes: str,
+    source: str = "",
+) -> int:
+    """Record a bookkeeping-only event (no content change). Bumps
+    `last_lift`, clears `freshness_stale`, appends event rows to
+    `append_log.json` + `change_log.md`. Does NOT touch
+    `paper_draft.tex` and does NOT flip stage9/10/13 statuses.
+
+    Returns 0 on success, nonzero on error."""
+    if bundle not in _VALID_BUNDLE_TARGETS:
+        print(f"FATAL: invalid bundle {bundle!r}", file=sys.stderr)
+        return 2
+
+    md_path = _bundle_dir(bundle) / "bundle_metadata.json"
+    if not md_path.exists():
+        print(f"FATAL: papers/{bundle}/bundle_metadata.json missing; cannot "
+              f"book-keep a bundle that hasn't been bootstrapped",
+              file=sys.stderr)
+        return 2
+
+    if not notes.strip():
+        print("FATAL: --notes is required for --bookkeeping-only (the notes "
+              "field is the only signal explaining why no content changed)",
+              file=sys.stderr)
+        return 2
+
+    _append_to_change_log_bookkeeping(bundle, lift_action, notes, source)
+    _append_to_append_log_bookkeeping(bundle, lift_action, notes, source)
+    _update_metadata_post_bookkeeping(bundle)
+    _refresh_source_manifest(bundle)
+
+    print(f"  [BOOKKEEPING] {bundle}  lift_action={lift_action}")
+    print(f"                last_lift bumped; freshness_stale cleared; "
+          f"stages untouched.")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Phase 7a sub-wave 7a.1.3: append a new source paper into "
-            "an already-drafted (or fresh) bundle."
+            "an already-drafted (or fresh) bundle, OR record a "
+            "bookkeeping-only event (--bookkeeping-only)."
         )
     )
     parser.add_argument("--bundle", required=True,
                         help="bundle target (e.g., D5, I1)")
-    parser.add_argument("--source-paper", required=True,
-                        help="source paper directory key (e.g., paper17_dark_sector)")
-    parser.add_argument("--insertion-point", required=True,
-                        help="section / subsection hint (e.g., '§2-§3', '§§4.2')")
+    parser.add_argument("--source-paper", default="",
+                        help="source paper directory key (e.g., paper17_dark_sector); "
+                             "required in lift modes, optional in --bookkeeping-only")
+    parser.add_argument("--insertion-point", default="",
+                        help="section / subsection hint (e.g., '§2-§3', '§§4.2'); "
+                             "required in lift modes, ignored in --bookkeeping-only")
     parser.add_argument("--notes", default="",
-                        help="lift notes (free-form, recorded in change_log.md)")
+                        help="lift notes (free-form, recorded in change_log.md); "
+                             "required when --bookkeeping-only is set")
     parser.add_argument("--lean-modules", default="",
                         help="comma-separated Lean module names referenced (e.g., "
-                             "'CausalSetDarkEnergy,EntropicGravityDarkEnergy')")
+                             "'CausalSetDarkEnergy,EntropicGravityDarkEnergy'); "
+                             "lift-mode only")
     parser.add_argument("--initial-lift", action="store_true",
                         help="bundle has no paper_draft.tex yet; bootstrap skeleton")
+    parser.add_argument("--bookkeeping-only", action="store_true",
+                        help="record a bookkeeping-only event (no \\section "
+                             "insertion, no stage flips); requires --lift-action "
+                             "and --notes")
+    parser.add_argument("--lift-action", default="",
+                        help="lift action name recorded in append_log.json and "
+                             "change_log.md (e.g., 'Freshness-bookkeeping', "
+                             "'Prose-revision-bookkeeping'); required for "
+                             "--bookkeeping-only, inherited from "
+                             "PAPER_DRAFT_MAPPING.md in lift modes")
     args = parser.parse_args()
+
+    if args.bookkeeping_only:
+        if not args.lift_action:
+            print("FATAL: --lift-action is required when --bookkeeping-only "
+                  "is set", file=sys.stderr)
+            return 2
+        return bookkeeping_only(
+            bundle=args.bundle,
+            lift_action=args.lift_action,
+            notes=args.notes,
+            source=args.source_paper,
+        )
+
+    if not args.source_paper:
+        print("FATAL: --source-paper is required in lift mode (omit it only "
+              "with --bookkeeping-only)", file=sys.stderr)
+        return 2
+    if not args.insertion_point:
+        print("FATAL: --insertion-point is required in lift mode",
+              file=sys.stderr)
+        return 2
 
     lean_modules = [m.strip() for m in args.lean_modules.split(",") if m.strip()]
     return append(

@@ -16,7 +16,7 @@
 \newcommand{\nativedecide}{\texttt{native\_decide}}
 \newcommand{\Zn}[1]{\mathbb{Z}/#1\mathbb{Z}}
 
-\title{First Formally Verified Braided Modular Tensor Categories\\and Knot Invariants in Lean~4}
+\title{Formally Verified Braided Modular Tensor Categories\\and Knot Invariants in Lean~4}
 
 \author{John Roehm}
 \date{Draft --- April 2026}
@@ -26,7 +26,7 @@
 \maketitle
 
 \begin{abstract}
-We present the first machine-checked formalization of braided modular tensor categories (MTCs), categorical knot invariants, and topological quantum field theory (TQFT) partition functions in any proof assistant. Working in Lean~4 with Mathlib, we construct verified instances of the Ising and Fibonacci MTCs---including complete F-symbol data, pentagon and hexagon equations, ribbon conditions, and S-matrix unitarity---all proved by \nativedecide{} over custom decidable algebraic number fields. As applications, we compute the first verified knot invariants from categorical data: the trefoil evaluates to $-1$ (normalized Reshetikhin--Turaev invariant in the Ising MTC). We further verify TQFT partition functions on surfaces of genus $g = 0, 1, 2$ for both Ising and Fibonacci theories, and extend to SU(3)$_k$ fusion categories at levels $k=1,2$---including the first verified Fibonacci subcategory within SU(3)$_2$. The formalization comprises 4049 machine-checked theorems across 170 Lean modules with zero \sorry{} in the paper14 modules (one residual \sorry{} elsewhere in the project, in \lean{CenterFunctorZ2Equiv.lean}, is out of scope for this paper). A general modularity theorem proves $\det S \neq 0 \Rightarrow Z_2(\mathcal{C}) = \mathrm{Vec}$ as abstract linear algebra and is instantiated for SU(2)$_1$, SU(2)$_2$ (Ising), and Fibonacci. The Müger center is formalized as a full subcategory \texttt{MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)} carrying the canonical \texttt{SymmetricCategory} instance---the first time a Müger center has been equipped with its symmetric monoidal structure in any proof assistant. Frobenius-Perron dimensions are derived from fusion matrices via an eigenvector certificate (avoiding the unproved general Perron-Frobenius theorem upstream), and the categorical dimension formula $D^2(Z(\mathcal{C})) = D^2(\mathcal{C})^2$ is verified for both abelian (toric code, $4 = 2^2$) and non-abelian ($D(S_3)$, $36 = 6^2$) Drinfeld centers. The decidable number field technique---representing elements of $\mathbb{Q}(\sqrt{2})$, $\mathbb{Q}(\sqrt{5})$, $\mathbb{Q}(\zeta_5)$, $\mathbb{Q}(\zeta_{16})$, and other algebraic extensions as rational coefficient tuples with computable arithmetic---appears to be novel and broadly applicable.
+We present a machine-checked formalization of braided modular tensor categories (MTCs), categorical knot invariants, and topological quantum field theory (TQFT) partition functions in Lean~4 with Mathlib. We construct verified instances of the Ising and Fibonacci MTCs---including complete F-symbol data, pentagon and hexagon equations, ribbon conditions, and S-matrix unitarity---all proved by \nativedecide{} over custom decidable algebraic number fields. As applications, we compute verified knot invariants from categorical data: the trefoil evaluates to $-1$ (normalized Reshetikhin--Turaev invariant in the Ising MTC). We further verify TQFT partition functions on surfaces of genus $g = 0, 1, 2$ for both Ising and Fibonacci theories, and extend to SU(3)$_k$ fusion categories at levels $k=1,2$, including a verified Fibonacci subcategory within SU(3)$_2$. The formalization comprises 4049 machine-checked theorems across 170 Lean modules with zero \sorry{} in the paper14 modules (one residual \sorry{} elsewhere in the project, in \lean{CenterFunctorZ2Equiv.lean}, is out of scope for this paper). A general modularity theorem proves $\det S \neq 0 \Rightarrow Z_2(\mathcal{C}) = \mathrm{Vec}$ as abstract linear algebra and is instantiated for SU(2)$_1$, SU(2)$_2$ (Ising), and Fibonacci. The Müger center is formalized as a full subcategory \texttt{MugerCenter C := ObjectProperty.FullSubcategory (IsTransparent C)} carrying the canonical \texttt{SymmetricCategory} instance. Frobenius-Perron dimensions are derived from fusion matrices via an eigenvector certificate (avoiding the unproved general Perron-Frobenius theorem upstream), and the categorical dimension formula $D^2(Z(\mathcal{C})) = D^2(\mathcal{C})^2$ is verified for both abelian (toric code, $4 = 2^2$) and non-abelian ($D(S_3)$, $36 = 6^2$) Drinfeld centers. The decidable number field technique---representing elements of $\mathbb{Q}(\sqrt{2})$, $\mathbb{Q}(\sqrt{5})$, $\mathbb{Q}(\zeta_5)$, $\mathbb{Q}(\zeta_{16})$, and other algebraic extensions as rational coefficient tuples with computable arithmetic---is broadly applicable beyond MTCs.
 \end{abstract}
 
 % ============================================================
@@ -39,15 +39,15 @@ This gap matters for three reasons. First, the algebraic data defining an MTC (F
 
 Our contributions are:
 \begin{enumerate}
-\item The first definitions of pivotal, spherical, ribbon, and modular tensor categories in any proof assistant, organized as a typeclass hierarchy extending Mathlib's categorical infrastructure.
+\item Lean~4 definitions of pivotal, spherical, ribbon, and modular tensor categories, organized as a typeclass hierarchy extending Mathlib's categorical infrastructure.
 \item Complete verified instances of the Ising and Fibonacci MTCs, with all coherence conditions (pentagon, hexagon, ribbon) checked by \nativedecide{} over decidable algebraic number fields.
-\item The first categorical knot invariants computed in a proof assistant: the trefoil evaluates to $-1$ via the Reshetikhin--Turaev construction applied to the Ising MTC.
+\item Categorical knot invariants computed in Lean~4: the trefoil evaluates to $-1$ via the Reshetikhin--Turaev construction applied to the Ising MTC.
 \item Verified TQFT partition functions $Z(\Sigma_g)$ for genera $g = 0, 1, 2$ for both Ising and Fibonacci theories.
-\item The first SU(3)$_k$ fusion categories in any proof assistant, at levels $k=1$ (the $\Zn{3}$ fusion ring) and $k=2$ (6 anyons with a Fibonacci subcategory).
-\item The first formalization of the Müger center as a full subcategory carrying its canonical \texttt{SymmetricCategory} instance, plus a machine-checked Direction~1 of the Müger equivalence ($\det S \neq 0 \Rightarrow Z_2(\mathcal{C}) = \mathrm{Vec}$) instantiated for SU(2)$_1$, Ising, and Fibonacci.
+\item SU(3)$_k$ fusion categories at levels $k=1$ (the $\Zn{3}$ fusion ring) and $k=2$ (6 anyons with a Fibonacci subcategory).
+\item A formalization of the Müger center as a full subcategory carrying its canonical \texttt{SymmetricCategory} instance, plus a machine-checked Direction~1 of the Müger equivalence ($\det S \neq 0 \Rightarrow Z_2(\mathcal{C}) = \mathrm{Vec}$) instantiated for SU(2)$_1$, Ising, and Fibonacci.
 \item Frobenius-Perron dimensions derived from fusion matrices via explicit eigenvector certificates, including a unified $\varphi$-triple-origin theorem identifying the golden ratio as the FPdim of three independent Lie algebra contexts (A$_1$ at level~1 / Fibonacci, A$_1$ at level~3 / SU(2)$_3$, and G$_2$ at level~1).
-\item The first non-abelian Drinfeld-center dimension formula in any proof assistant: $D^2(Z(\mathrm{Vec}_{S_3})) = 36 = 6^2 = |S_3|^2$, alongside the abelian instance $D^2(Z(\mathrm{Vec}_{\Zn{2}})) = 4 = 2^2$.
-\item A novel decidable number field technique for algebraic verification, applicable beyond MTCs.
+\item A non-abelian Drinfeld-center dimension formula: $D^2(Z(\mathrm{Vec}_{S_3})) = 36 = 6^2 = |S_3|^2$, alongside the abelian instance $D^2(Z(\mathrm{Vec}_{\Zn{2}})) = 4 = 2^2$.
+\item A decidable number field technique for algebraic verification, applicable beyond MTCs.
 \end{enumerate}
 
 % ============================================================
@@ -161,7 +161,7 @@ The Reshetikhin--Turaev (RT) construction assigns to each braid $\beta \in B_n$ 
 \label{fig:knots}
 \end{figure}
 
-The trefoil knot, represented as the closure of $\sigma_1^3 \in B_2$, evaluates to $-1$ (normalized RT invariant) in the Ising MTC---the first knot invariant computed from categorical data in any proof assistant (\lean{IsingBraiding.lean}). The figure-eight knot trace is computed in \lean{FigureEightKnot.lean} via a 3-strand braid representation, yielding a specific value in $\mathbb{Q}(\zeta_{16})$.
+The trefoil knot, represented as the closure of $\sigma_1^3 \in B_2$, evaluates to $-1$ (normalized RT invariant) in the Ising MTC---computed from categorical data in Lean~4 (\lean{IsingBraiding.lean}). The figure-eight knot trace is computed in \lean{FigureEightKnot.lean} via a 3-strand braid representation, yielding a specific value in $\mathbb{Q}(\zeta_{16})$.
 
 % ============================================================
 \section{TQFT Partition Functions}
@@ -185,7 +185,7 @@ We verify this formula for the Ising MTC ($d = (1, \sqrt{2}, 1)$, $D^2 = 4$) and
 \section{SU(3)$_k$ Fusion Categories}
 \label{sec:su3}
 
-We extend beyond SU(2)$_k$ to the first formalization of SU(3)$_k$ fusion categories, at levels $k=1$ and $k=2$.
+We extend beyond SU(2)$_k$ to a formalization of SU(3)$_k$ fusion categories, at levels $k=1$ and $k=2$.
 
 \textbf{SU(3)$_1$} has 3 simple objects---vacuum, fundamental $f$, and conjugate $\bar{f}$---forming the $\Zn{3}$ fusion ring. All quantum dimensions equal 1 (invertible objects). Commutativity, associativity, and charge conjugation are verified by \nativedecide{} in \lean{SU3kFusion.lean}.
 
@@ -216,7 +216,7 @@ The unit-closure (\lean{containsUnit\_isTransparent}) and tensor-closure (\lean{
 \[
 \texttt{instance : SymmetricCategory (MugerCenter}\ \mathcal{C}\texttt{)}
 \]
-proved by lifting the transparency witness through the faithful inclusion functor $\iota$. To our knowledge this is the first time a Müger center has been equipped with its canonical symmetric monoidal structure in any proof assistant.
+proved by lifting the transparency witness through the faithful inclusion functor $\iota$. This equips the Müger center with its canonical symmetric monoidal structure inside Mathlib's categorical framework.
 
 \subsection{Direction~1 of the Müger equivalence (det $S \neq 0 \Rightarrow Z_2 = \mathrm{Vec}$)}
 
@@ -232,7 +232,7 @@ The categorical dimension formula relates the global dimension of a Drinfeld cen
 \[
 D^2(Z(\mathrm{Vec}_{\Zn{2}})) \;=\; 1^2 + 1^2 + 1^2 + 1^2 \;=\; 4 \;=\; 2^2 \;=\; D^2(\mathrm{Vec}_{\Zn{2}})^2
 \]
-in \lean{D2Formula.lean} as \lean{drinfeld\_center\_dim\_Z2}. For the non-abelian case $\mathcal{C} = \mathrm{Vec}_{S_3}$, the center has $8$ anyons with quantum dimensions $[1, 1, 2, 3, 3, 2, 2, 2]$. Sum-of-squares yields $1+1+4+9+9+4+4+4 = 36 = 6^2 = |S_3|^2$, formalized as \lean{drinfeld\_center\_dim\_S3}. The non-abelian instance is, to our knowledge, the first formalized non-abelian Drinfeld-center dimension formula in any proof assistant; it confirms that the formula holds despite the presence of anyons with quantum dimension $> 1$. The general $\forall G\ \text{finite}$ statement requires the Burnside-type identity $\sum_\rho (\dim \rho)^2 = |G|$ from finite-group representation theory, which Mathlib does not yet have (listed as a TODO in \lean{Mathlib.RepresentationTheory.Character.Lemmas}); we leave the abstract case for a future Mathlib upstream contribution.
+in \lean{D2Formula.lean} as \lean{drinfeld\_center\_dim\_Z2}. For the non-abelian case $\mathcal{C} = \mathrm{Vec}_{S_3}$, the center has $8$ anyons with quantum dimensions $[1, 1, 2, 3, 3, 2, 2, 2]$. Sum-of-squares yields $1+1+4+9+9+4+4+4 = 36 = 6^2 = |S_3|^2$, formalized as \lean{drinfeld\_center\_dim\_S3}. The non-abelian instance confirms that the formula holds despite the presence of anyons with quantum dimension $> 1$. The general $\forall G\ \text{finite}$ statement requires the Burnside-type identity $\sum_\rho (\dim \rho)^2 = |G|$ from finite-group representation theory, which Mathlib does not yet have (listed as a TODO in \lean{Mathlib.RepresentationTheory.Character.Lemmas}); we leave the abstract case for a future Mathlib upstream contribution.
 
 % ============================================================
 \section{Temperley-Lieb Algebra and Jones-Wenzl Idempotents}
@@ -246,8 +246,7 @@ following the same \texttt{FreeAlgebra}$\to$\texttt{RingQuot} pattern
 as our quantum group definitions. The three relation types---idempotent
 ($e_i^2 = \delta\, e_i$), Jones ($e_i e_j e_i = e_i$ for $|i-j|=1$),
 and far-commutativity ($e_i e_j = e_j e_i$ for $|i-j| \ge 2$)---are
-all proved via \texttt{RingQuot.mkAlgHom\_rel}. This is the first
-Temperley-Lieb algebra in any proof assistant.
+all proved via \texttt{RingQuot.mkAlgHom\_rel}.
 
 Jones-Wenzl idempotents $f^{(m)} \in \mathrm{TL}_n(\delta)$
 (\texttt{JonesWenzl.lean}) are defined by the Wenzl recurrence
@@ -275,8 +274,8 @@ Concrete verification targets: Ising ($D^2 = 4$, $Z(S^2 \times S^1) = 3$)
 and Fibonacci ($D^2 = (5{+}\sqrt{5})/2$, $Z(S^2 \times S^1) = 2$)
 follow directly from our existing modular data.
 
-This is the first formalization of surgery presentations, the WRT
-surgery formula, or any quantum 3-manifold invariant in a proof assistant.
+This formalizes surgery presentations, the WRT surgery formula, and a
+quantum 3-manifold invariant inside Lean~4.
 
 \subsection{Kirby moves}
 
@@ -390,8 +389,8 @@ different off-diagonal positions --- provides enough directions to
 span 8-dimensional $\mathfrak{su}(3)$, implying density in SU(3).
 10~theorems (\lean{FibonacciQutritUniversality.lean}).
 
-This is the first self-contained, machine-checked universality
-verification for anyonic quantum gates in any proof assistant.
+This is a self-contained, machine-checked universality verification for
+anyonic quantum gates in Lean~4.
 
 % ============================================================
 \section{Discussion}
@@ -417,11 +416,11 @@ Mathlib provides \lean{MonoidalCategory}, \lean{BraidedCategory}, \lean{Symmetri
 \section{Conclusion}
 \label{sec:conclusion}
 
-We have presented the first machine-checked formalization of braided
+We have presented a machine-checked formalization in Lean~4 of braided
 modular tensor categories, knot invariants, TQFT partition functions,
 SU(3)$_k$ fusion categories, the Temperley-Lieb algebra, Jones-Wenzl
 idempotents, surgery presentations with Kirby moves, and the WRT
-invariant formula in any proof assistant.  The pipeline extends from
+invariant formula.  The pipeline extends from
 categorical algebraic data through combinatorial topology to quantum
 3-manifold invariants and anyonic quantum gates --- with every link
 machine-checked.

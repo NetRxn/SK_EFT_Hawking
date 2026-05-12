@@ -277,12 +277,24 @@ theorem A4_fails_small_n :
 
 /-! ## §6. Wave 3a.4 closure summary -/
 
-/-- Wave 3a.4 closure: 4 tableau questions posed; 1 cross-checked at
-predicate level (T4); 3 await MCP-first attempt → Aristotle escalation.
+/-- Wave 3a.4 closure (MCP-only, 2026-05-06): all 4 tableau questions
+shipped substantively. T1 (`srednicki_does_not_imply_thermal_compatibility`)
+closed via concrete n=2 counterexample; T2 (`ETP_does_not_imply_srednicki`)
+closed via concrete n=16 counterexample; T3
+(`freeCumulant_does_not_imply_srednicki`) closed via concrete n=1
+counterexample; T4 (`A4_fails_small_n`) cross-checked from Wave 3a.2.
+
+**Aristotle batch NOT required.** The Phase 6o roadmap predicted Aristotle
+would be needed for these refutations ("Inozemcev-Volovich gap is exactly
+the kind of axiom-system instability Aristotle is designed for; expected
+refutation count ≥ 1"); in practice the refuting counterexamples turned out
+to be small enough (n=1, n=2, n=16) for direct MCP-driven construction.
+Validates CLAUDE.md MCP-first discipline.
 
 Substantive Wave 3a.4 deliverable: the typed refutation-tableau
 operationalization of the Inozemcev-Volovich gap + ETH-axiomatization
-cross-comparison questions. -/
+cross-comparison questions. The surprise is that no Aristotle pass was
+needed to close it. -/
 theorem wave_3a_4_tableau_closure :
     -- T4: A4 fails on small Hilbert space (cross-checked from Wave 3a.2)
     ¬ IsEigenstateTypicalityPrincipleAnsatz fourDimIsing := A4_fails_small_n

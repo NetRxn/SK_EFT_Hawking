@@ -244,43 +244,38 @@ Mathlib4 PR coordination plan (\S\ref{sec:mathlib-upstream}),
 limitations and explicit deferrals (\S\ref{sec:limitations}), and
 reproducibility / availability (\S\ref{sec:availability}).
 
-\paragraph{A note on novelty claims.} A cross-prover survey conducted
-during Phase~7 absorption Session~5 (2026-05-08) of the SK--EFT
-Hawking program's release window confirms that:
-\textbf{(i)} the Isabelle/HOL Archive of Formal Proofs
-``Probability Theory'' topic (32 entries as of the survey date) does
-not include an entry for the It\^o integral, It\^o's lemma, Novikov's
-condition, the Cram\'er upper or lower bound, Sanov's theorem, the
-contraction principle, or Varadhan's lemma; the closest entries are
-Martingales (2023), Concentration Inequalities (2023), Kolmogorov--Chentsov
-(2025), and Disintegration Theorem (2023);
-\textbf{(ii)} the Coq community's curated awesome-coq library list
-records ALEA (randomized-algorithm reasoning) but no Itô/SDE/LDP
-formalization;
+\paragraph{Relation to existing libraries.}
+\textbf{(i)} The Isabelle/HOL Archive of Formal Proofs
+``Probability Theory'' topic (32 entries as of 2026-05-08) covers
+Martingales (2023), Concentration Inequalities (2023),
+Kolmogorov--Chentsov (2025), and Disintegration Theorem (2023), but
+not the It\^o integral, It\^o's lemma, Novikov's condition, the
+Cram\'er upper or lower bound, Sanov's theorem, the contraction
+principle, or Varadhan's lemma.
+\textbf{(ii)} The Coq community's curated awesome-coq library list
+records ALEA (randomized-algorithm reasoning) and no Itô/SDE/LDP
+formalization.
 \textbf{(iii)} Mathlib4 ships martingales (via Ying and
 Degenne~\cite{YingDegenne2022Martingales}), sub-Gaussian, the
 Kolmogorov--Chentsov continuity theorem (via Degenne--Ledvinka--Marion--Pfaffelhuber's
 Brownian-motion repository~\cite{Degenne2025BrownianMotion}), Markov
 kernels (via~\cite{Degenne2025MarkovKernels}), and conditional
-expectation in Banach spaces, but does not ship the It\^o integral,
+expectation in Banach spaces, and does not ship the It\^o integral,
 It\^o's lemma, Novikov's condition, the Cram\'er upper or lower
 bound, Sanov's theorem, the contraction principle, or Varadhan's
-lemma. Within Mathlib4 (and the Lean ecosystem more broadly), to the best
-of the survey's findings this library contributes the first explicit
-predicate-level scaffolding for the It\^o stochastic integral,
-It\^o's lemma, Novikov's condition, Sanov's theorem, the
-contraction principle, and Varadhan's lemma. We do not assert a
-cross-prover first-claim: the survey of Coq's
-\texttt{mathcomp-analysis}, Affeldt-style probability formalizations,
-Lean~3 mathlib, and Isabelle/HOL beyond the AFP was not exhaustive,
-and we are aware that ``predicate-level scaffolding'' is a structural
-engineering pattern (not a unique mathematical-content claim) that
-shows up in other libraries' staging strategies. The substantive
-content behind these predicates is, of course, classical and was
-established in the analytic literature decades ago; what is new in
-the Lean / Mathlib4 ecosystem is the formal scaffolding by which an
-authored Lean~4 paper can claim a result \emph{up to the substrate
-level} without asserting more than the substrate carries.
+lemma. This library contributes predicate-level scaffolding for the
+It\^o stochastic integral, It\^o's lemma, Novikov's condition, Sanov's
+theorem, the contraction principle, and Varadhan's lemma --- extending
+the Mathlib4 measure-theory + probability infrastructure with the
+substrate-data-level operationalizations the SK-EFT Hawking program
+requires. (HOL Light and Mizar were not surveyed for this release; the
+ecosystem comparison is restricted to Lean / Mathlib4, Isabelle/HOL
+AFP, and the Coq community's curated awesome-coq list.) The substantive
+content behind these predicates is classical and was established in
+the analytic literature decades ago; what this release contributes to
+the Lean ecosystem is the formal scaffolding by which a Lean~4 paper
+can claim a result \emph{up to the substrate level} without asserting
+more than the substrate carries.
 
 %% ─────────────────────────────────────────────────────────────────
 %% §2 Architecture overview
@@ -394,11 +389,11 @@ follows exactly this lift cadence.
 The library currently ships:
 
 \begin{itemize}
-\item \textbf{12 modules} ($\sim$700 lines of Lean source;
-  exact count 696 across the 12 modules as of the Phase~6o.$\zeta$
+\item \textbf{12 modules} ($\sim$800 lines of Lean source;
+  exact count 775 across the 12 modules as of the Phase~6o.$\zeta$
   release, post-Stage-13 substantive substrate refactor).
-\item \textbf{14 \texttt{Prop}-typed predicates} across the 12 modules
-  (13 \texttt{def Is*} declarations plus the
+\item \textbf{15 \texttt{Prop}-typed predicates} across the 12 modules
+  (14 \texttt{def Is*} declarations plus the
   \texttt{class LDPCompatibleSKEFT}).
 \item \textbf{12 non-vacuity witnesses} (each substantive predicate
   has at least one explicit concrete witness; the Phase~6o.$\zeta$
@@ -793,18 +788,38 @@ instance linearResponseRateFunctionCentered_isLDPCompatibleSKEFT
   ldpRateFn := inferInstance
   cramerCompatible :=
     ⟨linearResponseRateFunctionCentered_continuous β σ_sq,
-     linearResponseRateFunctionCentered_zero β σ_sq⟩
+     linearResponseRateFunctionCentered_zero β σ_sq,
+     continuous_const,
+     zero_le_one⟩
   sanovCompatible :=
     ⟨by norm_num,
      linearResponseRateFunctionCentered_continuous β σ_sq,
-     linearResponseRateFunctionCentered_zero β σ_sq⟩
+     linearResponseRateFunctionCentered_zero β σ_sq,
+     continuous_const,
+     rfl⟩
   contractionCompatible :=
     ⟨fun _ => le_refl _,
-     linearResponseRateFunctionCentered_zero β σ_sq⟩
+     linearResponseRateFunctionCentered_zero β σ_sq,
+     linearResponseRateFunctionCentered_continuous β σ_sq,
+     linearResponseRateFunctionCentered_continuous β σ_sq,
+     continuous_const⟩
   varadhanCompatible :=
     ⟨linearResponseRateFunctionCentered_continuous β σ_sq,
-     continuous_const⟩
+     continuous_const,
+     linearResponseRateFunctionCentered_zero β σ_sq,
+     rfl⟩
 \end{lstlisting}
+
+The four LDP-side anonymous-constructor tuples carry the substantive
+structural components added in today's strengthening pass: the
+Cram\'er upper-bound predicate now requires $(\mathrm{Continuous}\ \mathrm{mgf},\ \mathrm{mgf}(0) \leq 1)$
+as the MGF-normalisation companion to rate-function continuity and
+zero-at-zero; the Sanov predicate adds an MGF reflexivity component
+$(\mathrm{mgf}(0) = 0)$; the contraction principle now constrains
+the push-forward map $f$ as well as $I_X$ and $I_Y$ to be continuous;
+the Varadhan predicate adds $(I(0) = 0,\ F(0) = 0)$ centered-functional
+bounds. These components are precisely what makes the four LDP-side
+\texttt{Prop} bodies refutable rather than vacuous.
 
 The instance is constructed via Lean's \texttt{inferInstance} on the
 \texttt{ldpRateFn} field, which composes Phase~6n Wave~2c.5c+'s
@@ -1078,7 +1093,8 @@ post-merge harmonization.
 \subsection{AI-tool-assistance disclosure}
 
 Per the SK--EFT Hawking program's release protocol
-(announced in I2 §10 and carried forward into I3), the
+(announced in I2 §7's AI-tool-assistance-disclosure subsection
+and carried forward into I3), the
 upstream-PR cycle is staged under an explicit AI-tool-assistance
 disclosure: each PR submitted by the project's authors will declare
 the AI-tool-assistance scope (interactive Lean development with

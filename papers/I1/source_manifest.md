@@ -1,6 +1,6 @@
 # Bundle I1 — Source Manifest
 
-**Auto-generated:** 2026-05-06
+**Auto-generated:** 2026-05-12
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`I1`
@@ -14,8 +14,8 @@
 | `_phase6n_W2b_lean_only` | §8 sidebar | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W2a_lean_only` | §11 sidebar | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W3a_lean_only` | §7 | (unspecified) | (see mapping) | (missing) |
-| `paper15_methodology` | (see mapping) | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
-| `paper44_riemannian_connection` | (see mapping) | Lift-section | (see mapping) | 2026-05-01T17:56:24Z |
+| `paper15_methodology` | (see mapping) | Lift-section | (see mapping) | 2026-05-11T17:56:28Z |
+| `paper44_riemannian_connection` | (see mapping) | Lift-section | (see mapping) | 2026-05-12T12:38:48Z |
 
 ## Coverage notes
 

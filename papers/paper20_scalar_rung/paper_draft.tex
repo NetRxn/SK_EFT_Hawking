@@ -106,8 +106,8 @@ The $SU(2)_L\times U(1)_Y$-dressed extension is documented as a Wave~1
 follow-up gated on Open Question O.2 in the Phase 5z roadmap
 (\texttt{Lit-Search/Tasks/Phase5z\_wetterich\_njl\_ew\_index\_structure.md}).
 
-\textbf{Contributions.} (i)~The first formal-verification-grade
-identification of the Higgs bilinear with a Wetterich-NJL scalar channel,
+\textbf{Contributions.} (i)~A formal-verification-grade identification of
+the Higgs bilinear with a Wetterich-NJL scalar channel,
 formalized in Lean~4 in the flavor-singlet frame
 (\texttt{ScalarRungInterpretation.lean}, $20$ theorems, zero sorry).
 (ii)~Three formal consequences of the identification: the Mexican-hat
@@ -552,21 +552,15 @@ filed as tasks in \texttt{Lit-Search/Tasks/}.
 
 \subsection*{Prior-art search}
 
-To our knowledge, no prior formalization in any interactive proof
-assistant identifies the Higgs bilinear with a Wetterich-NJL scalar
-channel. We searched: HepLean's existing modules
-(\texttt{HepLean/SM}, \texttt{HepLean/StandardModel}; the existing
-formalization treats the Higgs as a fundamental field, not a condensate);
-the Lean community Zulip archive for \emph{Higgs}, \emph{Wetterich}, and
-\emph{NJL}; the Mathlib changelog for any
-\texttt{StandardModel} / \texttt{Higgs} contributions; and the Coq
-QuantumLib + QWIRE + metamath ecosystem for SM-related formalizations
-(none found). Comparable activity in Isabelle/HOL AFP and Agda was
-likewise not found. We invite correction if prior work exists; the
-``first formal-verification-grade identification'' phrasing in the
-abstract and conclusion is intended in the
-\emph{condensate-as-Higgs-bilinear} sense, not in the broader sense of
-``first formalization touching the Higgs sector.''
+For context on prior art, HepLean's existing modules
+(\texttt{HepLean/SM}, \texttt{HepLean/StandardModel}) formalize the
+Higgs as a fundamental field, not a condensate; the Lean community
+Zulip archive, the Mathlib changelog, and the Coq QuantumLib + QWIRE +
+metamath ecosystems do not surface a condensate-as-Higgs-bilinear
+identification at the time of writing; comparable activity in
+Isabelle/HOL AFP and Agda is likewise not surfaced. The identification
+presented here is at structural scope in the
+\emph{condensate-as-Higgs-bilinear} sense.
 \label{sec:conclusion}
 
 The Wetterich-NJL scalar channel, the Mexican-hat potential, the
@@ -585,9 +579,9 @@ existing Wetterich-NJL / TetradGapEquation / ADWMechanism /
 FermiPointTopology infrastructure. Three formal consequences---the
 Mexican-hat $\leftrightarrow$ tetrad-bifurcation bridge, the
 Anderson-Higgs $W$/$Z$ mass-matrix theorem, and the Yukawa-overlap
-linearity lemma---constitute the first formal-verification-grade
-identification of the Higgs bilinear with a four-fermion-substrate
-condensate. The deep-research-gated extensions to the
+linearity lemma---constitute, in the sense delimited above, a
+formal-verification-grade identification of the Higgs bilinear with a
+four-fermion-substrate condensate. The deep-research-gated extensions to the
 $SU(2)_L \times U(1)_Y$-dressed scalar channel and the canonical
 overlap-integral form remain the natural next steps.
 

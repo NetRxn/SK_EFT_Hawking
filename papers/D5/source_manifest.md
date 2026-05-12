@@ -1,19 +1,20 @@
 # Bundle D5 — Source Manifest
 
-**Auto-generated:** 2026-05-06
+**Auto-generated:** 2026-05-12
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D5`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (8)
+## Contributing source papers (9)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
 | `D5_phase6m_lean_only` | §8-§12 | (unspecified) | (see mapping) | (missing) |
 | `_phase6n_W1c_writeup` | §13 | (unspecified) | (see mapping) | (missing) |
 | `_phase6n_W2b_lean_only` | §13 | (unspecified) | (see mapping) | (missing) |
-| `paper17_dark_sector` | §2 | Lift-section | (see mapping) | 2026-04-28T23:43:16Z |
+| `_phase6o_W4a_lean_only` | §11 | (unspecified) | (see mapping) | (missing) |
+| `paper17_dark_sector` | §2 | Lift-section | (see mapping) | 2026-05-12T12:41:14Z |
 | `paper29_bbn_unified` | §4 | Lift-section | (see mapping) | 2026-04-26T22:03:12Z |
 | `paper32_strong_cp_de` | §5 | Lift-section | (see mapping) | 2026-04-28T22:16:03Z |
 | `paper34_equivalence_principle` | §6 | Lift-section | (see mapping) | 2026-04-27T18:45:48Z |

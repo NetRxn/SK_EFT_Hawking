@@ -1,14 +1,15 @@
 # Fdb version 4
-["bibtex paper_draft"] 1775845504.01442 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1775845504.12596 2
-  "./paper_draftNotes.bib" 1775845503.66623 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1778588339.38404 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1778588360.74828 2
+  "./paper_draftNotes.bib" 1778588360.52381 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1775845496.0131 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "paper_draft.aux" 1778588360.52265 9517 09adc6a08fd425d2ac889d12e9c8c8f9 "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1775845502.83735 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper8_chirality_master/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1775845503.93866 2
-  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper8_chirality_master/paper_draft.tex" 1775844423.44364 25295 3286417124b0daf47b0db416aee8ee11 ""
+["pdflatex"] 1778588359.74964 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper8_chirality_master/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1778588360.74846 2
+  "../../docs/counts.tex" 1778522188.2054 2188 09cc131d0434a930e0901fac620577c3 ""
+  "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper8_chirality_master/paper_draft.tex" 1778588358.47325 26069 ad1f57a15af50f1509217b67aab984fe ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/jknappen/ec/tcrm1000.tfm" 1136768653 1536 e07581a4bb3136ece9eeb4c3ffab8233 ""
@@ -61,6 +62,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb" 1248133631 29078 718ea4567ceff944262b0f5b0800e1d9 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/euler/eufm10.pfb" 1336858727 21098 d4aee7c0aac232caac5688b586b9363c ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm5.pfb" 1248133631 35457 884c5a936fbb3fae6a4c18058662d654 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm7.pfb" 1248133631 35309 940e81a5b9e04201a07e8b33a3ae6e64 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb" 1215737283 138258 6525c253f16cededa14c7fd0da7f67b2 ""
   "/usr/local/texlive/2026/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1461363279 71627 94eb9990bed73c364d7f53f960cc8c5b ""
@@ -130,10 +132,11 @@
   "figures/fig68_chiral_charge_spectrum.png" 1775271333.18476 144191 ccb9087b5ed987fcbc9d8f984b6448f7 ""
   "figures/fig69_gt_commutator_verification.png" 1775271333.18711 88837 6a2e8d325fa0aea73c9e28ffb0168e8f ""
   "figures/fig70_chirality_wall_three_pillars.png" 1775271713.998 153980 0892d14575cdec0fac918bc70fb22292 ""
-  "paper_draft.aux" 1775845496.0131 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "paper_draft.bbl" 1775845504.1249 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
-  "paper_draft.out" 0 -1 0 "pdflatex"
-  "paper_draft.tex" 1775844423.44364 25295 3286417124b0daf47b0db416aee8ee11 ""
+  "paper_draft.aux" 1778588360.52265 9517 09adc6a08fd425d2ac889d12e9c8c8f9 "pdflatex"
+  "paper_draft.bbl" 1778588339.4807 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
+  "paper_draft.out" 1778588360.52365 3972 8131ee6b348636505641da35946e0409 "pdflatex"
+  "paper_draft.tex" 1778588358.47325 26069 ad1f57a15af50f1509217b67aab984fe ""
+  "tables/table1_formalization_summary.tex" 1778522188.52223 667 491e162b13f46815032d05d60a046fda ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"

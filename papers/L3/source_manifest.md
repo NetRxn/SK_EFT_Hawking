@@ -1,17 +1,18 @@
 # Bundle L3 — Source Manifest
 
-**Auto-generated:** 2026-05-06
+**Auto-generated:** 2026-05-12
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`L3`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (3)
+## Contributing source papers (4)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
 | `_phase6n_W2a_lean_only` | (see mapping) | (unspecified) | (see mapping) | (missing) |
 | `_phase6n_W2d_lean_only` | (see mapping) | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W4a_lean_only` | (see mapping) | (unspecified) | (see mapping) | (missing) |
 | `paper27_bh_thermodynamics_four_laws` | (see mapping) | Lift-letter | (see mapping) | 2026-04-26T18:34:54Z |
 
 ## Coverage notes

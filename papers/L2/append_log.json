@@ -31,6 +31,17 @@
       "stage13_redo_required": true,
       "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T17:00:00Z",
       "notes": "D.3 GATE 3 paired splash absorption (Phase 6o.\u03b5, user-auth granted 2026-05-06): one-sentence elevation pointer added to Conclusion section identifying 24|c_- as a corollary of the 5-step Schellekens chain (Niemeier 1973 + Schellekens 1993 + M\u00f6ller-Scheithauer 2024). Central PRL claim 'Three Generations from Modular Invariance' preserved unchanged \u2014 title, abstract, body sections all intact. 3 new bibitems added (Niemeier1973, Schellekens1993, MollerScheithauer2024 \u2014 all in CITATION_REGISTRY). LaTeX compile clean (4pp / 400KB). Pre-draft: temporary/working-docs/phase6o/wave_2b_schellekens_substrate.md. Pre-existing GREEN reviewer-triple state (Stage 9 green / Stage 10 green / Stage 13 green from 2026-05-01) reset to pending re-review."
+    },
+    {
+      "date": "2026-05-12T13:00:00Z",
+      "source_paper": "(none - project-wide prose-revision bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a - bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
+      "notes": "2026-05-12 first-claim-removal: paper10_modular_generation (L2's sole source paper) had abstract + conclusion + body first-claims rewritten to descriptive prose. L2 bundle content remains aligned."
     }
   ]
 }

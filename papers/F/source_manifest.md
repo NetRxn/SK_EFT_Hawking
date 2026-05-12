@@ -1,12 +1,12 @@
 # Bundle F — Source Manifest
 
-**Auto-generated:** 2026-05-06
+**Auto-generated:** 2026-05-12
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`F`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (49)
+## Contributing source papers (50)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
@@ -18,18 +18,19 @@
 | `_phase6o_W1b_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W1c_writeup` | §10 | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W2a_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
+| `_phase6o_W4a_lean_only` | §10 | (unspecified) | (see mapping) | (missing) |
 | `note_rt_ch_bounds` | §7 | Lift-section | (see mapping) | 2026-04-27T18:45:54Z |
-| `paper10_modular_generation` | §5 | Lift-letter | (see mapping) | 2026-05-01T18:57:16Z |
-| `paper11_quantum_group` | §7 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
-| `paper12_polariton` | §4 | Lift-companion | (see mapping) | 2026-05-05T14:44:30Z |
-| `paper14_braided_mtc` | §7 | Lift-section | (see mapping) | 2026-04-25T07:48:35Z |
-| `paper15_methodology` | §9 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
-| `paper16_graphene_sk_eft` | §4 | Lift-companion | (see mapping) | 2026-04-29T19:14:08Z |
-| `paper16_wrt_tqft` | §7 | Lift-section | (see mapping) | 2026-04-25T15:47:52Z |
-| `paper17_dark_sector` | §8 | Lift-section | (see mapping) | 2026-04-28T23:43:16Z |
-| `paper18_doublon_gate` | §7 | Lift-section | (see mapping) | 2026-04-25T07:49:58Z |
-| `paper1_first_order` | §4 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
-| `paper20_scalar_rung` | §6 | Lift-section | (see mapping) | 2026-04-25T21:08:47Z |
+| `paper10_modular_generation` | §5 | Lift-letter | (see mapping) | 2026-05-12T12:35:56Z |
+| `paper11_quantum_group` | §7 | Lift-section | (see mapping) | 2026-05-12T12:44:23Z |
+| `paper12_polariton` | §4 | Lift-companion | (see mapping) | 2026-05-11T17:56:28Z |
+| `paper14_braided_mtc` | §7 | Lift-section | (see mapping) | 2026-05-12T12:44:21Z |
+| `paper15_methodology` | §9 | Lift-section | (see mapping) | 2026-05-11T17:56:28Z |
+| `paper16_graphene_sk_eft` | §4 | Lift-companion | (see mapping) | 2026-05-12T12:42:35Z |
+| `paper16_wrt_tqft` | §7 | Lift-section | (see mapping) | 2026-05-12T12:44:55Z |
+| `paper17_dark_sector` | §8 | Lift-section | (see mapping) | 2026-05-12T12:41:14Z |
+| `paper18_doublon_gate` | §7 | Lift-section | (see mapping) | 2026-05-12T12:42:09Z |
+| `paper1_first_order` | §4 | Lift-section | (see mapping) | 2026-05-12T12:33:23Z |
+| `paper20_scalar_rung` | §6 | Lift-section | (see mapping) | 2026-05-12T12:38:38Z |
 | `paper21_majorana_rung` | §6, §10 | Lift-section | (see mapping) | 2026-04-25T16:19:07Z |
 | `paper22_ew_phase_transition` | §6, §10 | Lift-section | (see mapping) | 2026-05-01T12:57:31Z |
 | `paper23_linearized_efe` | §6 | Lift-section | (see mapping) | 2026-04-28T01:18:32Z |
@@ -37,7 +38,7 @@
 | `paper26_bh_entropy` | §6 | Lift-section | (see mapping) | 2026-04-27T13:21:03Z |
 | `paper27_bh_thermodynamics_four_laws` | §6 | Lift-letter | (see mapping) | 2026-04-26T18:34:54Z |
 | `paper29_bbn_unified` | §8 | Lift-section | (see mapping) | 2026-04-26T22:03:12Z |
-| `paper2_second_order` | §4 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
+| `paper2_second_order` | §4 | Lift-section | (see mapping) | 2026-05-12T12:33:17Z |
 | `paper32_strong_cp_de` | §8, §10 | Lift-section | (see mapping) | 2026-04-28T22:16:03Z |
 | `paper33_ewbg_chirality_wall` | §6, §10 | Lift-section | (see mapping) | 2026-04-29T01:04:06Z |
 | `paper34_equivalence_principle` | §8 | Lift-section | (see mapping) | 2026-04-27T18:45:48Z |
@@ -47,18 +48,18 @@
 | `paper38_cfl` | §6 | Lift-section | (see mapping) | 2026-04-27T18:45:52Z |
 | `paper39_heat_kernel_expansion` | §6 | Lift-section | (see mapping) | 2026-04-28T01:58:15Z |
 | `paper3_gauge_erasure` | §3 | Lift-section | (see mapping) | 2026-04-25T07:44:43Z |
-| `paper40_higher_curvature` | §6 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
+| `paper40_higher_curvature` | §6 | Lift-section | (see mapping) | 2026-05-11T17:56:28Z |
 | `paper41_diff_invariance` | §6 | Lift-section | (see mapping) | 2026-04-28T12:49:18Z |
 | `paper42_nonlinear_efe` | §6 | Lift-section | (see mapping) | 2026-04-28T14:32:28Z |
 | `paper42b_cc_emergent` | §6, §8 | Lift-section | (see mapping) | 2026-04-28T23:51:08Z |
 | `paper43_einstein_cartan` | §6 | Lift-section | (see mapping) | 2026-04-28T20:51:38Z |
-| `paper44_riemannian_connection` | §6, §9 | Lift-section | (see mapping) | 2026-05-01T17:56:24Z |
-| `paper4_wkb_connection` | §4 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
-| `paper5_adw_gap` | §6 | Lift-section | (see mapping) | 2026-04-26T02:41:38Z |
+| `paper44_riemannian_connection` | §6, §9 | Lift-section | (see mapping) | 2026-05-12T12:38:48Z |
+| `paper4_wkb_connection` | §4 | Lift-section | (see mapping) | 2026-05-11T17:56:28Z |
+| `paper5_adw_gap` | §6 | Lift-section | (see mapping) | 2026-05-12T12:38:04Z |
 | `paper6_vestigial` | §6 | Lift-section | (see mapping) | 2026-04-28T02:03:40Z |
-| `paper7_chirality_formal` | §5 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
-| `paper8_chirality_master` | §5 | Lift-section | (see mapping) | 2026-05-05T14:44:30Z |
-| `paper9_sm_anomaly_drinfeld` | §5, §7 | Lift-section | (see mapping) | 2026-04-25T07:48:13Z |
+| `paper7_chirality_formal` | §5 | Lift-section | (see mapping) | 2026-05-12T12:45:02Z |
+| `paper8_chirality_master` | §5 | Lift-section | (see mapping) | 2026-05-12T12:44:58Z |
+| `paper9_sm_anomaly_drinfeld` | §5, §7 | Lift-section | (see mapping) | 2026-05-12T12:41:04Z |
 
 ## Coverage notes
 

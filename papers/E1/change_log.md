@@ -25,3 +25,11 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: §4
 - Stage-13 redo required: yes
 - Notes: D.2 absorption: Phase 6o W1b polariton ringdown signature from Kerr-Schild single-copy
+
+## 2026-05-11 — Freshness-bookkeeping (bookkeeping)
+
+- Source: (none — bookkeeping event for Stage-13-sweep freshness cleanup)
+- Lift action: Freshness-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-11 Stage-13-sweep freshness cleanup: paper12_polariton tables (3 tables) regenerated at 12:56. E1 bundle paper_draft.tex does NOT \input source paper tables; bundle compile path unaffected. No bundle content change required; last_lift bumped.

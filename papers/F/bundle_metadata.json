@@ -8,16 +8,16 @@
   "stage10_status": "green",
   "stage13_status": "green",
   "stage13_redo_required": false,
-  "freshness_stale": true,
-  "source_manifest_last_regen": "2026-05-06T15:36:14Z",
-  "last_lift": "2026-05-04T17:00:00Z",
+  "freshness_stale": false,
+  "source_manifest_last_regen": "2026-05-12T12:46:30Z",
+  "last_lift": "2026-05-12T13:00:00Z",
   "last_stage9_review": "2026-05-04T17:30:00Z",
   "last_stage10_review": "2026-05-04T20:30:00Z",
-  "last_stage13_review": "2026-05-04T22:00:00Z",
+  "last_stage13_review": "2026-05-11T18:12:44Z",
   "blockers_open": 0,
-  "advisories_open": 4,
-  "stage13_review_doc": "papers/AutomatedReviews/2026-05-04-bundle-stage13/F.md",
+  "advisories_open": 3,
+  "stage13_review_doc": "papers/AutomatedReviews/2026-05-11-1830-bundle-stage13-rereinvocation/F.md",
   "audit_log_path": "papers/F/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
-  "notes": "Phase 7g sub-waves 7g.1\u20137g.8 (commits 10f24d8\u2192409af5f). 21pp first-pass; substrate-identity synthesis NEW to F across 4 cross-thread threads. Stage-10 r1\u2192r2\u2192r3 sequence with 4 BLOCKERs closed; Stage-13 r1\u2192r2 sequence with 1 BLOCKER closed. 4 advisory carry-forwards remain non-blocking at draft tier."
+  "notes": "Phase 7g sub-waves 7g.1\u20137g.8 (commits 10f24d8\u2192409af5f). 21pp first-pass; substrate-identity synthesis NEW to F across 4 cross-thread threads. Stage-10 r1\u2192r2\u2192r3 sequence with 4 BLOCKERs closed; Stage-13 r1\u2192r2 sequence with 1 BLOCKER closed. 4 advisory carry-forwards remain non-blocking at draft tier. [2026-05-11 RE-LIFT: Stage-13 sweep absorption \u2014 F synced to Wave 1-7 sibling-bundle corrections (DoublonGate\u2192FermiHubbardDimer, wen_adw_factor_6000\u2192coupling_deficit, 8/8 Bayes universalisation\u2192mixed-threshold, Lambda_J biconditional\u2192one-way implication, 8 first-claims removed). PDF 22pp. stage13_redo_required=true pending re-invocation.] [2026-05-11T18:30 RE-VERIFICATION GREEN: 3rd-round adversarial-reviewer confirmed all 7 round-2 BLOCKER+REQUIRED fixes landed; 3 cosmetic RECOMMENDEDs (14-vs-13 phrasing, Akama1979/1978 rename, pre-abstract TODO block) all closed inline. F stage13_status=green, ready for submission gate.]"
 }

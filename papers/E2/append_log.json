@@ -17,6 +17,17 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-01T22:41:36Z",
       "notes": "E2 PRL/PRR experimental letter: Dean-Kim-Lucas bilayer-graphene Dirac-fluid analog Hawking + Wiedemann-Franz violation + closed-form noise spectrum from Keldysh FDT + Landauer-Buttiker"
+    },
+    {
+      "date": "2026-05-12T13:00:00Z",
+      "source_paper": "(none - project-wide prose-revision bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a - bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
+      "notes": "2026-05-12 first-claim-removal: paper16_graphene_sk_eft experimental physics first-claims softened ('first measurement of analog Hawking radiation in an electronic system' -> 'a measurement ...'; 'first observation ...' -> 'an observation ...'). No physics claims changed; only the primacy framing dropped."
     }
   ]
 }

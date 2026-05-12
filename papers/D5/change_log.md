@@ -178,3 +178,11 @@ Phase 7b sub-wave 7b.2 ledger entry: 1 person-day effort for fresh first-pass + 
 - Insertion point: §13
 - Stage-13 redo required: yes
 - Notes: D.2 absorption: Phase 6n W2b Perarnau-Llobet quantum-Crooks parametric + ℂ-form NO-GO
+
+## 2026-05-12 - Prose-revision-bookkeeping (bookkeeping)
+
+- Source: (none - project-wide first-claim-removal prose revision)
+- Lift action: Prose-revision-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-12 first-claim-removal: paper17_dark_sector 'first deliverable to export' line softened to descriptive; D5 bundle own §11 Sakharov $\Lambda_J$ vs $\Lambda_{HK}$ paragraphs (3 places) had 'to the best of our knowledge ... the first systematic ...' framing dropped and replaced with descriptive prose; D5 discussion section 'first-complete-mechanism-family' -> 'complete-mechanism-family'.

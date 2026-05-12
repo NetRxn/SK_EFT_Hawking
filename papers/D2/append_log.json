@@ -132,6 +132,28 @@
       "stage13_redo_required": true,
       "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T17:00:00Z",
       "notes": "D.3 GATE 3 absorption (Phase 6o.\u03b5, user-auth granted 2026-05-06): NEW subsection \u00a72.7 'The Schellekens chain: 24|c_- as a holomorphic-VOA classification corollary'. The 5-step structural reading: spin-bordism \u03a9_5^Spin(BG_SM) \u2192 anomaly polynomial \u2192 modular invariance \u2192 Niemeier-lattice classification (1973) \u2192 Schellekens 71-CFT enumeration (1993) \u2192 M\u00f6ller-Scheithauer 2024 geometric classification (70 algebras with non-trivial weight-1 space). 3 new bibitems added to D2: Niemeier1973, Schellekens1993, MollerScheithauer2024. All 3 also added to CITATION_REGISTRY this session. Per user direction (quality & correctness), M\u00f6ller-Scheithauer scope hedged accurately: their paper covers only the strongly-rational, weight-1-non-trivial subset (70 algebras) \u2014 the moonshine FLM VOA at trivial weight-1 is outside scope and explicitly noted as a not-applicable witness in \u00a72.7 prose. Source verification: arXiv:2112.12291 + WebSearch verification 2026-05-06; Schellekens 1993 (Comm. Math. Phys. 153, 159) verified via WebSearch + DOI cross-reference; Niemeier 1973 confirmed via standard mathematical reference (J. Number Theory 5, 142). LaTeX compile clean (9pp / 391KB). \u00a72.1-\u00a72.6 (existing modular argument + Ext computation + change-of-rings discharge) preserved unchanged. Pre-draft: temporary/working-docs/phase6o/wave_2b_schellekens_substrate.md."
+    },
+    {
+      "date": "2026-05-11T19:50:00Z",
+      "source_paper": "(none \u2014 bookkeeping event)",
+      "lift_action": "Freshness-bookkeeping",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "freshness-bookkeeping-2026-05-11T19:50:00Z",
+      "notes": "2026-05-11 Stage-13-sweep freshness cleanup + inline-absorption-record: paper7_chirality_formal/paper_draft.tex edited 2026-05-11T09:50 + paper8_chirality_master/paper_draft.tex edited 2026-05-11T09:51 (substantive paper-draft edits, contents not diff-able without git). D2 own paper_draft.tex edited at 09:58 directly after, content-aligned at \u00a74 (Pillar 1 / 2+3 paragraphs grep-verified: Golterman-Shamir, TPF, Drinfeld doubles, Steenrod A(1), FK gapped-interface). Today's 09:58 D2 edit was effectively an inline absorption that bypassed the formal bundle_append.py cycle; this event formally records that absorption. Also auto-regenerated tables across the source-paper tree at 12:56 (see D1 event)."
+    },
+    {
+      "date": "2026-05-12T13:00:00Z",
+      "source_paper": "(none - project-wide prose-revision bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a - bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
+      "notes": "2026-05-12 first-claim-removal: paper7_chirality_formal + paper8_chirality_master + paper10_modular_generation abstracts + body + conclusions had primacy framing rewritten to descriptive prose ('We present a formal verification of X' rather than 'the first formal verification of X'); Steenrod Ext + FK gapped-interface + Onsager-algebra wording softened. D2 bundle own draft Onsager paragraph also rewritten (dropped 'to our knowledge the first formalisation of the Onsager algebra' hedge). D2 bundle content remains aligned (paper7/paper8 absorbed material in D2 \u00a74 unchanged in substance)."
     }
   ]
 }

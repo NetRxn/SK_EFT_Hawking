@@ -225,3 +225,19 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: §17
 - Stage-13 redo required: yes
 - Notes: D.2 absorption: Phase 6o W2a heat-kernel APS-η substrate cross-bridge (BEC + ADW parity-symmetric → η = 0; ³He-A non-degenerate cell → substantive APS boundary correction)
+
+## 2026-05-11 — Freshness-bookkeeping (bookkeeping)
+
+- Source: (none — bookkeeping event for Stage-13-sweep freshness cleanup)
+- Lift action: Freshness-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-11 Stage-13-sweep freshness cleanup: paper40_higher_curvature tables (c_riem_anchor_at_Nf_27.tex, c_riem_pulsar_orders_below.tex) regenerated at 12:56. D3 bundle paper_draft.tex does NOT \input source paper tables; bundle compile path unaffected. No bundle content change required; last_lift bumped.
+
+## 2026-05-12 - Prose-revision-bookkeeping (bookkeeping)
+
+- Source: (none - project-wide first-claim-removal prose revision)
+- Lift action: Prose-revision-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-12 first-claim-removal: paper5_adw_gap conclusion ('first such derivation in the published literature' removed), paper20_scalar_rung abstract + conclusion rewritten to descriptive + prior-art paragraph reframed as 'Relation to existing libraries' (kept the survey content, dropped 'no prior formalization' framing), paper44_riemannian_connection signature-falsifier wording softened.

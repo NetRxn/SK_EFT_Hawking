@@ -22,43 +22,49 @@ quantum groups, modular tensor categories, and Hayden--Preskill on horizon MTCs}
 
 \begin{abstract}
 We consolidate seven formally verified threads in topological quantum
-computation into a single substrate account: the first machine-checked
-construction of the Drinfeld quantum groups $U_q(\mathfrak{sl}_2)$ and
-$U_q(\mathfrak{sl}_3)$ in any proof assistant; the first complete
-machine-checked Ising modular-tensor-category braided structure with all
+computation into a single substrate account: machine-checked
+constructions of the Drinfeld quantum groups $U_q(\mathfrak{sl}_2)$ and
+$U_q(\mathfrak{sl}_3)$; the Ising modular-tensor-category braided structure with
 six hexagon equations, ribbon equations, and an explicit knot-invariant
-calculation $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$; the WRT topological
-quantum field theory partition function $Z(S^{2}\times S^{1}) = \mathrm{rk}\,\mathcal{C}$
-and surgery formula on three-manifolds; the doublon-SWAP gate as the
-substrate's first symmetry-protected topological gate (to our knowledge
-without a published prior-art counterexample), with Berry-phase
-gauge invariance; the Hayden--Preskill error-correcting-code structure
-on horizon modular-tensor categories, with a non-abelian-anyon admissibility
-biconditional; and the Ryu--Takayanagi / Casini--Huerta knife-edge
-biconditional that distinguishes generic-MTC from BH-entropy-yielding
+calculation $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$; WRT topological
+quantum field theory partition-function definitional encodings on
+$S^{2}\times S^{1}$ and $S^{3}$~\cite{ReshetikhinTuraev1991,Witten1989,Lickorish1997};
+the doublon-SWAP gate's substantive substrate-level content
+(dark-state sign flip after a $2\pi$ cycle, with the Berry-phase /
+adiabatic-drag equivalence noted as deferred); the Hayden--Preskill
+error-correcting-code structure on horizon modular-tensor
+categories~\cite{HaydenPreskill2007,PastawskiYoshidaHarlowPreskill2015,AlmheiriMarolfPolchinskiSully2013},
+with a non-abelian-anyon admissibility biconditional; and the
+Ryu--Takayanagi / Casini--Huerta knife-edge
+biconditional~\cite{RyuTakayanagi2006,CasiniHuerta2009,HolzheyLarsenWilczek1994,LewkowyczMaldacena2013}
+that distinguishes generic-MTC from BH-entropy-yielding
 boundary conditions. The unifying claim is that the substrate carries a
 single MTC---the SU(2)$_k$ Chern--Simons MTC at the horizon---which
 simultaneously underwrites the Bekenstein--Hawking entropy of Bundle~D3
 \S 7, the Hayden--Preskill information-recovery code structure here in
 \S 7, and the RT/Casini--Huerta entanglement-entropy structure of \S 8.
-The same MTC also underlies the Drinfeld-centre construction of Bundle~D2
-\S 3.4 (anomaly-classification anchor); D4 carries the full content while
-D2 provides the minimal-anchor cross-bridge. Across the seven threads:
+The same MTC also underlies the Drinfeld-centre construction relevant
+to the Standard-Model chirality-wall classification of Bundle~D2~\S 3.4
+(whose minimal anchor is the toric-code MTC $\mathcal{Z}(\mathrm{Vec}_{\mathbb{Z}_2})$);
+D4 ships the non-abelian generalisation
+$\mathcal{Z}(\mathrm{Vec}_{S_3}) \simeq \mathrm{Rep}(D(S_3))$ as the
+TQC-side companion structure. Across the seven threads:
 quantum-group formalisation underwrites
 WRT TQFT (\S 5) and Ising braiding (\S 4); WRT TQFT underwrites BH
-partition-function counting (Bundle~D3 \S 7); doublon-SWAP gates exhibit
-the substrate's first concrete topological-quantum-information primitive;
+partition-function counting (Bundle~D3 \S 7); doublon-SWAP gate content
+provides a substrate-level topological-quantum-information primitive;
 and the QEC--RT cross-bridge (\S\S 7--8) ties black-hole interior
 recovery to the same MTC as the boundary-entropy structure. The
 substrate's load-bearing claims here ship with Lean~4 modules at
 zero \texttt{sorry}; one tracked-hypothesis Prop record
 (\texttt{H\_HorizonBoundaryCondition}) carries the boundary-condition
-choice; one true axiom carries over from Bundle~D2 (the 4+1D
-gapped-interface conjecture). The MTC-side first-formalisation claims
-across $U_q(\mathfrak{sl}_2)$, $U_q(\mathfrak{sl}_3)$, the Ising braided
-fusion category, and WRT TQFT partition function on $S^{2}\times S^{1}$
-together establish the substrate's TQC foundation as machine-verified
-infrastructure ready for downstream quantum-computation applications.
+choice (its five fields are itemised honestly in \S\ref{sec:rt-ch-bounds});
+one true axiom carries over from Bundle~D2 (the 4+1D
+gapped-interface conjecture). The MTC-side definitional-encoding plus
+proved-identity register across $U_q(\mathfrak{sl}_2)$,
+$U_q(\mathfrak{sl}_3)$, the Ising braided fusion category, and WRT
+TQFT on $S^{2}\times S^{1}$ provides the substrate's program-internal
+TQC infrastructure for downstream quantum-computation applications.
 \end{abstract}
 
 \maketitle
@@ -79,11 +85,10 @@ fusion and braiding into a coherent algebraic structure with a non-degenerate
 $S$-matrix; and a topological quantum field theory (TQFT) whose
 partition function on three-manifolds delivers knot and link
 invariants. We consolidate seven formally verified threads
-spanning these three pillars into a single substrate account that
-closes infrastructure-grade infrastructure for downstream
-topological-quantum-computation applications, and that simultaneously
-underwrites the Bekenstein--Hawking entropy and Hayden--Preskill
-information-recovery content of Bundle~D3.
+spanning these three pillars into a single substrate account suitable
+for downstream topological-quantum-computation applications, and that
+simultaneously underwrites the Bekenstein--Hawking entropy and
+Hayden--Preskill information-recovery content of Bundle~D3.
 
 \paragraph{One MTC, four faces.}
 The architectural claim of this paper is that the substrate carries a
@@ -102,27 +107,27 @@ distinguishing generic from BH-entropy MTCs
 (\S\ref{sec:rt-ch-bounds}). \emph{This is the synthesis-level claim
 that no individual source paper makes end-to-end.}
 
-\paragraph{First machine-checked claims.}
-The substrate ships, to our knowledge, the first machine-checked
-formalisation in any proof assistant of: $U_q(\mathfrak{sl}_2)$ and
-$U_q(\mathfrak{sl}_3)$ as Drinfeld quantum groups (\S\ref{sec:quantum-groups});
-the Ising braided fusion category with all six hexagon and ribbon
-equations (\S\ref{sec:ising-mtc}); the WRT TQFT partition function on
-$S^{2}\times S^{1}$ via Lickorish's surgery formula
+\paragraph{Program-internal formalisation register.}
+Within the SK-EFT program, this paper consolidates Lean~4 modules for:
+$U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$ as Drinfeld quantum
+groups (\S\ref{sec:quantum-groups}); the Ising braided fusion category
+with six hexagon and ribbon equations (\S\ref{sec:ising-mtc}); WRT
+TQFT partition functions on $S^{2}\times S^{1}$ and $S^{3}$
 (\S\ref{sec:wrt-tqft}); and the Hayden--Preskill code-distance
-biconditional on horizon-MTC substrates
-(\S\ref{sec:qec-mtc}). Together these claim that topological
-quantum-computation infrastructure
-is now mechanised at the foundational level on a single Lean~4 substrate.
+biconditional on horizon-MTC substrates~\cite{HaydenPreskill2007,
+PastawskiYoshidaHarlowPreskill2015,AlmheiriMarolfPolchinskiSully2013}
+(\S\ref{sec:qec-mtc}). Together these mechanise topological
+quantum-computation infrastructure at the foundational level on a
+single Lean~4 substrate.
 
 \paragraph{Knot-invariant calibration.}
 The Ising braiding action delivers an explicit
 $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$ closed-form invariant
-(\texttt{IsingBraiding.trefoil\_eq\_neg\_sqrt2}), the first formalised
-non-trivial knot invariant on the Ising MTC. The figure-eight
-analogue is in flight for the next iteration. The Hopf-link Killing
-invariant
-$\langle \mathrm{Hopf}\rangle = S_{ab}/D$ closes via
+(\texttt{IsingBraiding.trefoil\_eq\_neg\_sqrt2}). The figure-eight
+analogue closes at \texttt{FigureEightKnot.figure\_eight\_normalized},
+giving the normalised RT invariant $\mathrm{RT}(4_1,\sigma) = -1/\sqrt{2}$
+in $\mathbb{Q}(\zeta_{16})$ via \texttt{native\_decide}. The Hopf-link
+invariant $\langle \mathrm{Hopf}\rangle = S_{ab}/D$ closes via
 \texttt{IsingBraiding.hopf\_link\_matches\_S\_matrix}, where
 $D = \sqrt{2}$ is the Ising global quantum dimension and $S$ is the
 modular $S$-matrix.
@@ -145,14 +150,14 @@ Bekenstein--Hawking-yielding boundary condition
 biconditional \texttt{rt\_eq\_kaulMajumdar\_iff\_trivial\_reduced\_area}
 formalises this knife-edge.
 
-\paragraph{Symmetry-protected topological gates.}
-The substrate exhibits the doublon-SWAP gate as the first concrete
-symmetry-protected topological quantum gate
+\paragraph{Symmetry-protected topological gate substrate.}
+The substrate carries the doublon-SWAP gate's substrate-level content
 (\S\ref{sec:doublon-gate}): a SWAP-equivalent operation on a
-two-doublon system whose Berry phase factor of $\pi$
-distinguishes it from the trivial SWAP and whose protection against
-local error stems from the topological winding number rather than
-energy gap protection.
+two-doublon system whose dark-state sign flip after a $2\pi$ cycle is
+formalised in \texttt{FermiHubbardDimer.lean}. The full Berry-phase /
+adiabatic-drag equivalence at the holonomy level is explicitly
+deferred in that module (T13--T15) and is noted as deferred in this
+paper as well.
 
 \paragraph{Roadmap.}
 \S\ref{sec:quantum-groups} ships the quantum-group formalisation.
@@ -171,12 +176,13 @@ register.
 %% §2 — Quantum groups
 %% Lift: paper11_quantum_group
 %% =====================================================================
-\section{First machine-checked $U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$ quantum groups}
+\section{$U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$ quantum groups}
 \label{sec:quantum-groups}
 
 The Drinfeld quantum groups $U_q(\mathfrak{sl}_2)$ and $U_q(\mathfrak{sl}_3)$
 are the algebraic input to topological quantum computation. We supply
-the first machine-checked formalisations of both in any proof assistant.
+Lean~4 formalisations of both at the Hopf-algebra level on the
+substrate.
 
 \subsection{Definition: $U_q(\mathfrak{sl}_2)$}
 
@@ -209,14 +215,13 @@ extension is the input for higher-genus WRT TQFT and for the
 generalisation of the Ising MTC to $U_q(\mathfrak{sl}_3)$-related
 braided fusion categories.
 
-\subsection{First-formalisation claim}
+\subsection{Program-internal status}
 
-Prior to this work, no proof assistant carried a complete
-formalisation of either $U_q(\mathfrak{sl}_2)$ or
-$U_q(\mathfrak{sl}_3)$ at the Hopf-algebra level. The substrate's
-formalisation closes this gap, providing the algebraic foundation for
-downstream Lean~4 work on quantum invariants, link homology, and
-representation-categorical TQFT.
+Within the SK-EFT program, the substrate's $U_q(\mathfrak{sl}_2)$
+and $U_q(\mathfrak{sl}_3)$ formalisations provide the algebraic
+foundation for downstream Lean~4 work on quantum invariants, link
+homology, and representation-categorical TQFT. The Hopf-algebra
+structure is closed at zero \texttt{sorry} on both algebras.
 
 
 %% =====================================================================
@@ -257,13 +262,11 @@ fusion-category structure is complete.
 
 \subsection{Trefoil-knot invariant: $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$}
 
-The substrate's first non-trivial knot-invariant calculation is
+The substrate's primary non-trivial knot-invariant calculation is
 the trefoil knot in the Ising MTC. \texttt{IsingBraiding.quantum\_trace\_R3}
 closes the quantum trace of $R_{\sigma\sigma}^{3}$;
 \texttt{IsingBraiding.trefoil\_eq\_neg\_sqrt2} formalises the closed-form
-identity $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$. This is the
-first complete machine-checked computation of a non-trivial knot
-invariant in any proof assistant.
+identity $\langle \mathrm{trefoil}\rangle = -\sqrt{2}$.
 
 \subsection{Hopf-link invariant: $S$-matrix match}
 
@@ -274,12 +277,19 @@ the substrate's calibration that the modular $S$-matrix derived
 algebraically from the $R$-matrix and topological twists agrees with
 the Hopf-link expectation value in the diagrammatic computation.
 
-\subsection{Figure-eight knot (in flight)}
+\subsection{Figure-eight knot}
 
-The figure-eight knot invariant on the Ising MTC closes algebraically
-to the cyclotomic ring structure $\mathbb{Q}(\zeta_{16})$; the
-explicit Lean formalisation is in flight for the next iteration. We
-flag this as the principal open-task item on the Ising-MTC side.
+The figure-eight knot invariant on the Ising MTC closes at
+\texttt{FigureEightKnot.figure\_eight\_trace\_neg\_one} (the unnormalised
+quantum trace evaluates to $-1$ in $\mathbb{Q}(\zeta_{16})$ via
+\texttt{native\_decide}); the normalised RT invariant
+$\mathrm{RT}(4_1,\sigma) = -1/\sqrt{2}$ closes at
+\texttt{FigureEightKnot.figure\_eight\_normalized}. The braid-word
+representation $\sigma_1\,\sigma_2^{-1}\,\sigma_1\,\sigma_2^{-1}$ is
+amphichiral (real-valued invariant); the substrate's Ising MTC
+delivers a specific evaluation at the SU(2)$_2$ level, distinct from
+the full Jones polynomial which would require multiple level
+evaluations.
 
 
 %% =====================================================================
@@ -289,10 +299,16 @@ flag this as the principal open-task item on the Ising-MTC side.
 \section{Drinfeld centre: cross-bridge to the Standard-Model chirality wall}
 \label{sec:drinfeld-centre}
 
-The Drinfeld centre $\mathcal{Z}(\mathrm{Vec}_{S_3})$ is the minimal
-modular tensor category that anchors the Standard-Model
-chirality-wall classification of Bundle~D2. We carry the cross-bridge
-in this section; D2 ships the full $\mathbb{Z}_{16}$ analysis.
+Bundle~D2 \S 3.4 anchors the Standard-Model chirality-wall
+classification on the toric-code MTC
+$\mathcal{Z}(\mathrm{Vec}_{\mathbb{Z}_2}) \simeq \mathrm{Rep}(D(\mathbb{Z}_2))$,
+the abelian Drinfeld-centre supplying the $\mathbb{Z}_2$ braiding data
+compatible with the Witten anomaly
+$\pi_4(\mathrm{SU}(2)) = \mathbb{Z}_2$. D4 supplies the categorical
+infrastructure shared by both the abelian anchor and the non-abelian
+generalisation $\mathcal{Z}(\mathrm{Vec}_{S_3}) \simeq \mathrm{Rep}(D(S_3))$,
+which is the natural extension to non-trivial topological
+quantum-computation universality.
 
 \subsection{Drinfeld double Hopf structure}
 
@@ -303,24 +319,42 @@ with associated structure in \texttt{DrinfeldDouble.lean},
 \texttt{DrinfeldDoubleRing.lean}, \texttt{DrinfeldEquivalence.lean}, and
 \texttt{DrinfeldCenterBridge.lean}.
 
-\subsection{Toric-code MTC anchor (cross-bridge to D2 \S 3.4)}
+\subsection{Toric-code MTC anchor (the abelian anchor used by D2 \S 3.4)}
 
 The toric-code MTC, defined as
 $\mathcal{Z}(\mathrm{Vec}_{\mathbb{Z}_2})$, is the minimal Drinfeld-centre
 anchor that supplies $\mathbb{Z}_2$ braiding compatible with the
 Witten anomaly $\pi_4(\mathrm{SU}(2)) = \mathbb{Z}_2$. The
-substrate's Drinfeld-centre cross-bridge to Bundle~D2 \S 3.4 ships in
-\texttt{DrinfeldCenterBridge.lean}; D2 carries the substantive
-content while D4 supplies the categorical infrastructure.
+substrate's abelian Drinfeld-centre cross-bridge ships in
+\texttt{DrinfeldCenterBridge.lean}; Bundle~D2 \S 3.4 consumes this
+abelian fragment for its $\mathbb{Z}_{16}$ analysis.
+
+\subsection{Non-abelian extension: $\mathcal{Z}(\mathrm{Vec}_{S_3}) \simeq \mathrm{Rep}(D(S_3))$}
+
+The non-abelian generalisation to $\mathcal{Z}(\mathrm{Vec}_{S_3})$
+is the TQC-relevant extension carrying universality-class data beyond
+the toric-code abelian anchor. The substrate formalises the
+8-anyon spectrum of $D(S_3)$ in \texttt{S3CenterAnyons.lean}:
+\texttt{s3\_anyon\_count} ($|\mathrm{Irr}(D(S_3))| = 8$ via
+\texttt{decide}); \texttt{class\_equation} (the three $S_3$ conjugacy
+classes; $1 + 3 + 2 = 6$); \texttt{centralizer\_order\_formula} per
+class; \texttt{quantumDimS3} (quantum dimensions $1,1,2,3,3,3,3,2$);
+\texttt{s3\_global\_dim\_sq} ($D^{2} = 36 = |S_3|^{2}$);
+\texttt{A3\_is\_nonabelian} and \texttt{B\_anyons\_dim\_3}
+(non-abelian sub-spectrum); and the closure
+\texttt{s3\_center\_summary}. The non-abelian extension lives natively
+in D4 (TQC foundations); D2 \S 3.4's anchor remains the abelian toric
+code.
 
 \subsection{Higher-form symmetry: $\mathbb{Z}_2$ centre and the Witten anomaly}
 
 The minimal $\mathbb{Z}_2$ centre symmetry of $\mathrm{SU}(2)$ gauge
 theory underlies the Witten anomaly classification of the
-Standard-Model chirality wall. The Drinfeld-centre construction
-of \S\ref{sec:drinfeld-centre} ensures that the substrate's MTC at
-the chirality wall carries the same $\mathbb{Z}_2$ data as the bulk
-$\mathrm{SU}(2)$ gauge sector, closing the cross-bundle bridge to D2.
+Standard-Model chirality wall. The toric-code Drinfeld-centre
+construction of \S\ref{sec:drinfeld-centre} ensures that the
+substrate's MTC at the chirality wall carries the same $\mathbb{Z}_2$
+data as the bulk $\mathrm{SU}(2)$ gauge sector, closing the
+cross-bundle bridge to D2.
 
 
 %% =====================================================================
@@ -335,7 +369,7 @@ delivers $3$-manifold invariants from the modular tensor category
 data. We ship a partial formalisation of the partition function on
 $S^{2}\times S^{1}$ and the surgery-formula content.
 
-\subsection{Partition function on $S^{2}\times S^{1}$}
+\subsection{Partition function on $S^{2}\times S^{1}$ (definitional encoding)}
 
 For an MTC with twist $\mathcal{C}$, the WRT partition function on
 $S^{2}\times S^{1}$ is the rank of $\mathcal{C}$:
@@ -343,95 +377,127 @@ $S^{2}\times S^{1}$ is the rank of $\mathcal{C}$:
 Z_{\mathrm{WRT}}(S^{2}\times S^{1}) \;=\; \mathrm{rk}(\mathcal{C})\,.
 \end{equation}
 \noindent
-\texttt{WRTInvariant.wrtS2xS1} closes the formula at the Lean level;
-\texttt{wrt\_S2xS1\_eq\_rank} discharges the rank-equality identity.
-For the Ising MTC, $\mathrm{rk}(\mathcal{C}) = 3$, matching the
-three simple objects $\mathbf{1}, \sigma, \psi$.
+We \emph{define} \texttt{WRTInvariant.wrtS2xS1} as $\mathcal{C}.n$
+(the rank) directly, matching the standard physics expectation derived
+from the Verlinde-formula argument $\sum_i d_i^{2}/D = n$; the
+companion theorem \texttt{wrt\_S2xS1\_eq\_rank} is a definitional
+sanity-check (\texttt{rfl} on the definitional unfolding), not a
+proof of the Verlinde-formula chain. The substantive Verlinde-formula
+content (that the explicit sum $\sum_i d_i^2/D$ equals $n$ on a complete
+MTC structure) is left deferred at the substrate level pending Mathlib
+upstream of the Verlinde formula. For the Ising MTC,
+$\mathrm{rk}(\mathcal{C}) = 3$, matching the three simple objects
+$\mathbf{1}, \sigma, \psi$.
 
-\subsection{Partition function on $S^{3}$ via surgery}
+\subsection{Partition function on $S^{3}$ (definitional encoding)}
 
-The Lickorish surgery presentation of $S^{3}$ delivers
+The Lickorish~\cite{Lickorish1997} surgery presentation of $S^{3}$
+yields
 \begin{equation}
-Z_{\mathrm{WRT}}(S^{3}) \;=\; \frac{1}{D}\,,
+Z_{\mathrm{WRT}}(S^{3}) \;=\; p_{+} / D^{2}\,,
 \end{equation}
 \noindent
-where $D = \sqrt{\mathrm{globalDimSq}}$ is the global quantum dimension.
-\texttt{WRTInvariant.wrtS3} closes the formula;
-\texttt{wrt\_S3\_formula} discharges the divisibility identity. For the
-Ising MTC, $D = \sqrt{2}$, so $Z_{\mathrm{WRT}}(S^{3}) = 1/\sqrt{2}$.
+where $D^{2} = \sum_i d_i^{2}$ is the global quantum dimension squared
+and $p_{+} = \sum_i d_i^{2} \theta_i$ is the Gauss sum. We \emph{define}
+\texttt{WRTInvariant.wrtS3} directly via this formula; the companion
+theorem \texttt{wrt\_S3\_formula} is again definitional
+(\texttt{rfl}-discharged on the definitional unfolding), encoding the
+standard Kirby-colour normalisation rather than proving Kirby-move
+invariance from first principles.
 
 \subsection{Lickorish surgery formula on three-manifolds}
 
-The Lickorish surgery formula expresses any closed orientable
-$3$-manifold $M$ as $S^{3}$ with framed-link surgery; the WRT
-partition function is then the link-invariant integrand on the surgery
-presentation. \texttt{WRTComputation.lean} closes the surgery formula
-at the algebraic level; the explicit application to specific
-$3$-manifolds is in flight for the next iteration.
+The Lickorish surgery formula~\cite{Lickorish1997} expresses any closed
+orientable $3$-manifold $M$ as $S^{3}$ with framed-link surgery; the
+WRT partition function is then the link-invariant integrand on the
+surgery presentation. \texttt{WRTComputation.lean} encodes the surgery
+formula at the algebraic level; explicit applications to specific
+$3$-manifolds (lens spaces, Seifert-fibred manifolds) are deferred to
+future work once Mathlib's braided-fusion-category infrastructure
+upstreams the $\mathrm{rk}$-and-$S$-matrix invariants.
 
-\subsection{First-formalisation claim}
+\subsection{Program-internal status}
 
-The WRT TQFT partition function on $S^{2}\times S^{1}$ via the rank-equality
-identity, and on $S^{3}$ via the global-dimension formula, are first-formalisation
-claims at the Lean~4 level on a complete-MTC-data substrate. The
-substantive surgery formula is partially formalised; full closure is
-deferred to a subsequent iteration once the
-braided-fusion-category $\mathrm{rk}$-and-$S$-matrix infrastructure is
-upstreamed to Mathlib.
+Within the SK-EFT program, the WRT TQFT content of \S\ref{sec:wrt-tqft}
+encodes the partition function on $S^{2}\times S^{1}$ and $S^{3}$
+definitionally (as Verlinde-formula and Kirby-colour normalisations
+respectively) and surfaces the Lickorish-surgery formalisation as
+substrate infrastructure for downstream three-manifold work. The
+Kirby-move-invariance content (Reidemeister~II/III + handle-slide +
+blow-up lemmas on the substrate's complete MTC data) is the principal
+deferred WRT item awaiting Mathlib upstream.
 
 
 %% =====================================================================
 %% §6 — Doublon-SWAP gate
 %% Lift: paper18_doublon_gate
 %% =====================================================================
-\section{Doublon-SWAP gate: the substrate's first symmetry-protected topological gate}
+\section{Doublon-SWAP gate substrate: dark-state sign flip and SPT framing}
 \label{sec:doublon-gate}
 
 A doublon is a two-fermion bound state on a lattice; doublons on the
-Hubbard model carry a non-trivial Berry phase under SWAP that
-distinguishes them from elementary fermion swaps. The substrate
-exhibits this as the first symmetry-protected topological (SPT)
-quantum gate.
+Hubbard model are expected to carry a non-trivial Berry phase under
+SWAP that distinguishes them from elementary fermion swaps. The
+substrate ships the underlying Fermi--Hubbard dimer module
+(\texttt{FermiHubbardDimer.lean}), which closes the dark-state /
+sign-flip content at the algebraic level; the Berry-phase / adiabatic
+holonomy machinery itself is explicitly deferred in that module
+(theorems T13--T15) and is therefore deferred in this paper as well.
 
-\subsection{Doublon Hilbert-space structure}
+\subsection{Fermi--Hubbard dimer Hilbert-space structure}
 
-For two doublons on a Hubbard lattice with on-site repulsion $U$, the
-two-doublon Hilbert space is $\mathbb{C}^{4}$ at the doublon level
-(internal-spin-symmetric reduction). The SWAP operation on the
-two-doublon system is the standard SWAP up to a Berry phase
-contribution from the slow drag of one doublon around the other.
+For two doublons on a Hubbard dimer with on-site repulsion $U$, the
+singlet sector reduces to a $3 \times 3$ Hamiltonian $H_{\mathrm{singlet}}$
+in the basis $\{|D_{+}\rangle, |T\rangle, |D_{-}\rangle\}$ parametrised
+by hopping $t$, detuning $\Delta$, and $U$.
+\texttt{FermiHubbardDimer.lean} closes the algebraic substrate of this
+sector: the unnormalised dark-state vector \texttt{darkVec} at $U = 0$,
+the kernel inclusion \texttt{dark\_state\_in\_kernel}, the
+$\theta$-parametrised normalised dark-state vector
+\texttt{darkStateθ\_in\_kernel}, and the dark-state nontriviality
+\texttt{darkVec\_ne\_zero} (whenever parameters are nondegenerate).
 
-\subsection{Berry-phase calculation: $\pi$ accumulation}
+\subsection{Dark-state sign flip after a $2\pi$ cycle}
 
-For the doublon-SWAP, the Berry phase is exactly $\pi$ (modulo $2\pi$)
-under a slow-adiabatic-drag hypothesis on the two-doublon
-configuration space. A dedicated Lean module
-(\texttt{DoublonGate.lean}) formalising the explicit
-\texttt{berryPhase\_eq\_pi} closure and the adiabatic-drag premise
-biconditional is in flight as a Phase~7+ supplement; the conceptual
-content (Berry phase $= \pi$, SPT robustness against local
-symmetry-preserving perturbations) draws on the standard treatment
-of two-doublon SWAP in Hubbard-model lattice
+The substrate's substantive doublon-SWAP content is the
+\emph{dark-state sign flip} on $|D_{-}\rangle$ at the algebraic level:
+the SWAP-equivalent operator $U_{\mathrm{SWAP}}$ acts as $-1$ on the
+dark-state subspace
+(\texttt{FermiHubbardDimer.lean}: $U_{\mathrm{SWAP}} \cdot
+\mathtt{darkVec} = -\mathtt{darkVec}$). This is the algebraic
+consequence of the $3\times 3$ structure, with no adiabatic theorem
+invoked. The full Berry-phase identification of this sign flip with a
+$\pi$ holonomy around the two-doublon configuration space (theorems
+T13--T15 in \texttt{FermiHubbardDimer.lean}, labelled "adiabatic /
+Berry phase / SWAP equivalence") is \emph{explicitly deferred} in the
+module and remains deferred in this paper. The conceptual content
+(Berry phase $= \pi$, SPT robustness against local symmetry-preserving
+perturbations) draws on the standard treatment of two-doublon SWAP in
+Hubbard-model lattice
 physics~\cite{NayakSimonSternFreedmanDasSarma2008}.
 
-\subsection{Symmetry protection}
+\subsection{Symmetry-protection framing (deferred holonomy)}
 
-The Berry-phase $\pi$ accumulates as a topological winding number rather
-than as a smooth phase rotation; perturbations preserving the lattice
-symmetry cannot change the winding number, so the SPT gate is robust
-against local perturbations within the symmetry class. The
-substrate's first symmetry-protected topological quantum gate is
-therefore exhibited as the doublon-SWAP, in contrast to the standard
-gap-protected SWAP gate of conventional quantum computation.
+If a Berry-phase $\pi$ identification holds at the level of
+\texttt{FermiHubbardDimer.lean}'s deferred T13--T15 layer, the phase
+accumulates as a topological winding number rather than as a smooth
+phase rotation; perturbations preserving the lattice symmetry cannot
+change the winding number, so the SPT-class gate would be robust
+against local perturbations within the symmetry class. The substrate's
+program-internal contribution is the algebraic sign-flip content
+above; the SPT-quantum-gate framing relies on the deferred Berry-phase
+layer that future work in this program will close.
 
 \subsection{Cross-bridge to topological-quantum-information substrate}
 
-The doublon-SWAP gate is the substrate's primitive for downstream
-topological-quantum-information applications: the Hayden--Preskill
-QEC code structure of \S\ref{sec:qec-mtc} consumes the
-SPT-gate primitive at the lattice level, and the
-RT/Casini--Huerta entanglement entropy of \S\ref{sec:rt-ch-bounds}
-uses the same SPT structure to identify boundary-condition classes.
+The Fermi--Hubbard dimer substrate is the program-internal lattice
+primitive for downstream topological-quantum-information applications:
+the Hayden--Preskill QEC code structure of \S\ref{sec:qec-mtc}
+consumes the dark-state subspace at the MTC level (where the
+$\pi$-sign-flip content reads as braiding-class data), and the
+RT/Casini--Huerta entanglement-entropy structure of
+\S\ref{sec:rt-ch-bounds} draws on the same dark-state subspace to
+identify boundary-condition classes.
 
 
 %% =====================================================================
@@ -443,8 +509,10 @@ uses the same SPT structure to identify boundary-condition classes.
 
 The substrate's most consequential cross-bridge: the SU(2)$_k$ MTC at
 the black-hole horizon (Bundle~D3 \S 7) supports a Hayden--Preskill
-quantum error-correcting code with admissibility biconditional with
-non-abelian-anyon support. We ship the complete QEC structure here.
+quantum error-correcting code~\cite{HaydenPreskill2007,
+PastawskiYoshidaHarlowPreskill2015,AlmheiriMarolfPolchinskiSully2013}
+with admissibility biconditional with non-abelian-anyon support. We
+ship the complete QEC structure here.
 
 \subsection{Horizon-MTC boundary condition}
 
@@ -452,7 +520,22 @@ The substrate's MTC at the horizon carries a boundary-condition
 tracked-hypothesis Prop record
 \texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} (defined
 in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}, consumed here
-through the QEC-MTC cross-bridge to D3 \S 7). The boundary condition fixes
+through the QEC-MTC cross-bridge to D3 \S 7). The Prop record has
+five fields: three substantive (\texttt{positivity}: $S \ge 0$ for
+$A \ge 0$; \texttt{areaLeading}: $0 < \kappa_{\mathrm{area}}$;
+\texttt{secondLaw}: $S_{\mathrm{horizon}}$ monotone) and two
+explicit-\texttt{True}-placeholder fields (\texttt{modularInvariant},
+intended for $(ST)^3 = S^2$ modular-group action at the abstract
+level; \texttt{anomalyMatch}, intended for Walker--Wang anomaly
+inflow at the abstract level). The two placeholder fields are not
+yet bundled into the substrate; the Prop's load-bearing content is
+the three substantive conjuncts. The five horizon-boundary falsifier
+theorems of Bundle~D3 \S 7
+(\texttt{H\_HorizonBoundaryCondition\_falsifier\_positivity},
+\texttt{*\_logBound}, \texttt{*\_secondLaw},
+\texttt{*\_quarterCoefficient}, and the non-abelian envelope) close
+on these three substantive fields, giving a constructive obstruction
+set on the horizon MTC. The boundary condition fixes
 the global dimension squared via
 \texttt{QECHolographyBridge.HPCode.one\_le\_globalDimSq}; the scrambling time
 is bounded below by a positivity guard
@@ -524,8 +607,10 @@ consistent across the entropy and information-recovery faces.
 \section{Ryu--Takayanagi / Casini--Huerta knife-edge biconditional}
 \label{sec:rt-ch-bounds}
 
-The Ryu--Takayanagi (RT) entanglement-entropy formula and the
-Casini--Huerta modular-Hamiltonian flow agree on the
+The Ryu--Takayanagi (RT) entanglement-entropy
+formula~\cite{RyuTakayanagi2006,LewkowyczMaldacena2013} and the
+Casini--Huerta modular-Hamiltonian
+flow~\cite{CasiniHuerta2009,HolzheyLarsenWilczek1994} agree on the
 Bekenstein--Hawking-yielding boundary condition and disagree
 generically. This is the substrate's knife-edge: a sharp
 biconditional that distinguishes the BH-entropy-yielding MTC from
@@ -534,8 +619,8 @@ generic alternatives.
 \subsection{RT entropy on the substrate's MTC}
 
 \texttt{RTReplicaTrickOnMTC.lean} encodes the replica-trick derivation
-of the RT formula on a generic-MTC substrate;
-\texttt{RTCasiniHuertaBounds.rt\_entropy\_pos} discharges
+of the RT formula~\cite{LewkowyczMaldacena2013} on a generic-MTC
+substrate; \texttt{RTCasiniHuertaBounds.rt\_entropy\_pos} discharges
 positivity; \texttt{rt\_kaulMajumdar\_gap\_at\_reduced\_area\_two}
 closes the Kaul--Majumdar matching at the reduced-area-2 critical
 point.
@@ -543,9 +628,10 @@ point.
 \subsection{Casini--Huerta modular Hamiltonian on MTC}
 
 \texttt{CasiniHuertaModularHamiltonianMTC.lean} encodes the
-Casini--Huerta modular-Hamiltonian flow on the same MTC structure.
-The flow generates the entanglement spectrum, which feeds the
-modular-flow-based entropy.
+Casini--Huerta modular-Hamiltonian
+flow~\cite{CasiniHuerta2009,HolzheyLarsenWilczek1994} on the same MTC
+structure. The flow generates the entanglement spectrum, which feeds
+the modular-flow-based entropy.
 
 \subsection{Knife-edge biconditional}
 
@@ -563,11 +649,19 @@ Bekenstein--Hawking.
 
 \texttt{H\_HorizonBoundaryCondition} is the principal tracked
 Prop: the boundary condition that picks out the BH-entropy-yielding
-MTC. The five falsifier theorems of Bundle~D3 \S 7
-(positivity, log-bound, second-law, quarter-coefficient, and
-non-abelian envelope) close as a constructive obstruction set on the
-horizon MTC. The same Prop reappears here as the RT/Casini--Huerta
-knife-edge anchor.
+MTC. As itemised in \S\ref{sec:qec-mtc}, the Prop has five fields,
+three substantive (\texttt{positivity}, \texttt{areaLeading},
+\texttt{secondLaw}) and two
+\texttt{True}-placeholder
+(\texttt{modularInvariant}, \texttt{anomalyMatch}); the Prop's
+load-bearing content is the three substantive conjuncts. The four
+horizon-boundary falsifier theorems of Bundle~D3 \S 7
+(\texttt{H\_HorizonBoundaryCondition\_falsifier\_positivity},
+\texttt{*\_logBound}, \texttt{*\_secondLaw}, and
+\texttt{*\_quarterCoefficient}), together with the non-abelian
+envelope, close as a constructive obstruction set on the horizon MTC.
+The same Prop reappears here as the RT/Casini--Huerta knife-edge
+anchor.
 
 \subsection{Cross-bridge to Bundle~D3 \S 7}
 
@@ -577,7 +671,14 @@ mathematical infrastructure underlying Bundle~D3 \S 7's
 abelian-MTC falsifier of D3 \S 7 reads off the
 RT/Casini--Huerta knife-edge of D4 \S 8. The same boundary-condition
 choice is invoked across both bundles; the same
-\texttt{H\_HorizonBoundaryCondition} Prop carries the load.
+\texttt{H\_HorizonBoundaryCondition} Prop carries the load. This is
+a forward-pointing cross-bridge from D4: D3 \S 7's prose retains its
+existing abelian-MTC-falsifier framing; the explicit identification
+of the RT/CH knife-edge biconditional as the mathematical underpinning
+of that falsifier is established here, and any future D3 absorption of
+RT/CH content should reference
+\texttt{rt\_eq\_kaulMajumdar\_iff\_trivial\_reduced\_area} as the
+bridge.
 
 
 %% =====================================================================
@@ -603,41 +704,48 @@ Ryu--Takayanagi / Casini--Huerta knife-edge entropy
 (\S\ref{sec:rt-ch-bounds}). \emph{One MTC, four observable faces, no
 additional categorical input.}
 
-\subsection{First-formalisation register}
+\subsection{Program-internal formalisation register}
 
-Prior to this work, no proof assistant carried a complete formalisation
-of: $U_q(\mathfrak{sl}_2)$ or $U_q(\mathfrak{sl}_3)$ as Drinfeld
-quantum groups (\S\ref{sec:quantum-groups}); the Ising braided
-fusion category with all six hexagon and ribbon equations
-(\S\ref{sec:ising-mtc}); the trefoil knot invariant
-$-\sqrt{2}$ on the Ising MTC (\S\ref{sec:ising-mtc});
-the WRT partition function on $S^{2}\times S^{1}$ via the
-rank-equality identity (\S\ref{sec:wrt-tqft}); or the
+Within the SK-EFT program, this paper's contribution is the
+consolidated Lean~4 substrate for: $U_q(\mathfrak{sl}_2)$ and
+$U_q(\mathfrak{sl}_3)$ as Drinfeld quantum groups
+(\S\ref{sec:quantum-groups}); the Ising braided fusion category
+with six hexagon and ribbon equations (\S\ref{sec:ising-mtc});
+the trefoil and figure-eight knot invariants on the Ising MTC
+(\S\ref{sec:ising-mtc}); the WRT partition-function definitional
+encodings on $S^{2}\times S^{1}$ and $S^{3}$ together with the
+Lickorish surgery substrate (\S\ref{sec:wrt-tqft}); and the
 Hayden--Preskill code-distance biconditional on horizon-MTC
-substrates (\S\ref{sec:qec-mtc}). The substrate's contribution closes
-all five at zero \texttt{sorry}.
+substrates (\S\ref{sec:qec-mtc}). All five close at zero
+\texttt{sorry}.
 
 \subsection{Open problems}
 
-The figure-eight knot invariant on the Ising MTC closes algebraically
-to the cyclotomic ring $\mathbb{Q}(\zeta_{16})$; the explicit
-formalisation is in flight. The full Lickorish surgery formula
-on arbitrary three-manifolds awaits Mathlib upstream of the
+The figure-eight knot invariant is closed in
+\texttt{FigureEightKnot.lean} (see \S\ref{sec:ising-mtc}); the open
+extension is to additional knot families (Hopf link, twist knots,
+links of higher braid index). The full Lickorish surgery formula on
+arbitrary three-manifolds awaits Mathlib upstream of the
 braided-fusion-category $\mathrm{rk}$-and-$S$-matrix infrastructure
-(\S\ref{sec:wrt-tqft}). The non-abelian-Drinfeld-centre extension
-to $D(S_3)$ for the Standard-Model chirality wall full content
-ships in Bundle~D2 \S 3.4 (D4 here carries only the
-toric-code anchor). The doublon-SWAP gate's dedicated Lean module
-(\texttt{DoublonGate.lean}) formalising the
-\texttt{berryPhase\_eq\_pi} closure and the adiabatic-drag-premise
-biconditional is in flight as a Phase~7+ supplement; explicit
-non-adiabatic corrections are open.
+(\S\ref{sec:wrt-tqft}). The non-abelian Drinfeld-centre extension to
+$D(S_3)$ ships in D4 (\S\ref{sec:drinfeld-centre}: 8-anyon spectrum
+via \texttt{S3CenterAnyons.lean}); the abelian toric-code anchor
+$\mathcal{Z}(\mathrm{Vec}_{\mathbb{Z}_2})$ supplies the substrate of
+Bundle~D2 \S 3.4. The doublon-SWAP gate's full Berry-phase / adiabatic
+holonomy identification (theorems T13--T15 in
+\texttt{FermiHubbardDimer.lean}) is deferred at the substrate level;
+the algebraic dark-state sign-flip content is closed
+(\S\ref{sec:doublon-gate}). Explicit non-adiabatic corrections to the
+SWAP-equivalence are open.
 
 \subsection{Cross-bundle bridges (Phase 7+ obligations)}
 
-\S\ref{sec:drinfeld-centre} $\leftrightarrow$Bundle~D2 \S 3.4 (Drinfeld-centre
-construction; D4 supplies the categorical infrastructure, D2 the
-$\mathbb{Z}_{16}$ analysis). \S\ref{sec:qec-mtc} $\leftrightarrow$Bundle~D3 \S 7
+\S\ref{sec:drinfeld-centre} $\leftrightarrow$Bundle~D2 \S 3.4
+(Drinfeld-centre construction; D4 ships both the abelian toric-code
+anchor consumed by D2 and the non-abelian
+$\mathcal{Z}(\mathrm{Vec}_{S_3}) \simeq \mathrm{Rep}(D(S_3))$
+extension; D2 carries the $\mathbb{Z}_{16}$ analysis on the abelian
+anchor). \S\ref{sec:qec-mtc} $\leftrightarrow$Bundle~D3 \S 7
 (same horizon MTC carrying both Bekenstein--Hawking entropy and
 Hayden--Preskill code structure). \S\ref{sec:qec-mtc} $\leftrightarrow$Bundle~D3
 \S 9 (QEC-bridge canonical form; D3 \S 9 sets framing, D4 \S 7 ships
@@ -657,15 +765,16 @@ introduced in D4. The
 (defined in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}) is a
 tracked-hypothesis Prop record, not an axiom; D4 \S 7 consumes it
 through the QEC-MTC cross-bridge. The doublon-SWAP gate's
-adiabatic-drag premise will be encoded similarly as a
-tracked-hypothesis Prop record in the in-flight
-\texttt{DoublonGate.lean} module.
+adiabatic-drag premise remains in the deferred T13--T15 layer of
+\texttt{FermiHubbardDimer.lean} (\S\ref{sec:doublon-gate});
+when that layer is closed in future work, the adiabatic-drag premise
+will be encoded as a tracked-hypothesis Prop record within the same
+module.
 Across D4's seven threads, the substrate's load-bearing claims close
 at zero \texttt{sorry} across the modules listed above; one
 tracked-hypothesis Prop record (\texttt{H\_HorizonBoundaryCondition})
-carries the boundary-condition choice, and one tracked-hypothesis
-premise (in flight in \texttt{DoublonGate.lean}) carries the
-doublon-SWAP adiabatic-drag condition.
+carries the boundary-condition choice (its five fields as itemised in
+\S\ref{sec:qec-mtc} and \S\ref{sec:rt-ch-bounds}).
 
 \subsection{What this paper is not}
 
@@ -685,24 +794,38 @@ D4 is the substrate's machine-checked topological-quantum-computation
 foundation: quantum-group infrastructure for $U_q(\mathfrak{sl}_2)$
 and $U_q(\mathfrak{sl}_3)$, the Ising MTC braided fusion category
 with explicit knot-invariant calibration, the Drinfeld-centre
-cross-bridge to the Standard-Model anomaly classification, the WRT
-TQFT partition-function content for $S^{2}\times S^{1}$ and $S^{3}$,
-the doublon-SWAP gate as the first symmetry-protected topological
-quantum gate, the Hayden--Preskill QEC structure on the horizon MTC,
-and the RT/Casini--Huerta knife-edge entropy biconditional. The
-substrate's TQC infrastructure is now machine-verified.
+cross-bridge to the Standard-Model anomaly classification (toric-code
+abelian anchor for D2 \S 3.4 plus the non-abelian
+$\mathcal{Z}(\mathrm{Vec}_{S_3})$ extension), the WRT TQFT
+partition-function content for $S^{2}\times S^{1}$ and $S^{3}$, the
+doublon-SWAP gate's dark-state substrate, the Hayden--Preskill QEC
+structure on the horizon MTC, and the RT/Casini--Huerta knife-edge
+entropy biconditional. The substrate's TQC infrastructure is now
+machine-verified.
 
 \paragraph{Submission gate.}
-D4 ships at this Phase~7 close-out gate as the second-shipped Tier-1
-deep paper after D3 (\S\ref{sec:intro}). Phase~8 is the
-submission roll-out; D4's PRD-long-format submission is recommended
-in the Phase~7 close-out window per the project strategy~\cite{Roehm2026Strategy}.
-The Drinfeld-centre cross-bridge to Bundle~D2 (\S\ref{sec:drinfeld-centre})
-must be cross-bundle-validated before submission; the QEC-MTC
-cross-bridge to Bundle~D3 (\S\ref{sec:qec-mtc}) must agree
-character-for-character with D3 \S 7 and \S 9.
+D4 ships at this Phase~7 close-out gate per the project
+strategy~\cite{Roehm2026Strategy}; Phase~8 is the submission
+roll-out, with PRD-long-format submission recommended in the Phase~7
+close-out window. The Drinfeld-centre cross-bridge to Bundle~D2
+(\S\ref{sec:drinfeld-centre}) must be cross-bundle-validated before
+submission; the QEC-MTC cross-bridge to Bundle~D3
+(\S\ref{sec:qec-mtc}) must agree character-for-character with D3 \S 7
+and \S 9.
 
 \begin{thebibliography}{99}
+
+\bibitem{AlmheiriMarolfPolchinskiSully2013}
+A.~Almheiri, D.~Marolf, J.~Polchinski, and J.~Sully,
+``Black holes: complementarity or firewalls?,''
+JHEP \textbf{02}, 062 (2013),
+arXiv:1207.3123.
+
+\bibitem{CasiniHuerta2009}
+H.~Casini and M.~Huerta,
+``Entanglement entropy in free quantum field theory,''
+J.\ Phys.\ A \textbf{42}, 504007 (2009),
+arXiv:0905.2562.
 
 \bibitem{FreedmanLarsenWang2002}
 M.~H.~Freedman, M.~J.~Larsen, and Z.~Wang,
@@ -710,17 +833,48 @@ M.~H.~Freedman, M.~J.~Larsen, and Z.~Wang,
 Commun.\ Math.\ Phys.\ \textbf{227}, 605 (2002),
 arXiv:quant-ph/0001108.
 
+\bibitem{HaydenPreskill2007}
+P.~Hayden and J.~Preskill,
+``Black holes as mirrors: quantum information in random subsystems,''
+JHEP \textbf{09}, 120 (2007),
+arXiv:0708.4025.
+
+\bibitem{HolzheyLarsenWilczek1994}
+C.~Holzhey, F.~Larsen, and F.~Wilczek,
+``Geometric and renormalized entropy in conformal field theory,''
+Nucl.\ Phys.\ B \textbf{424}, 443 (1994),
+arXiv:hep-th/9403108.
+
 \bibitem{Kitaev2003}
-A.~Kitaev,
+A.~Yu.~Kitaev,
 ``Fault-tolerant quantum computation by anyons,''
 Ann.\ Phys.\ \textbf{303}, 2 (2003),
 arXiv:quant-ph/9707021.
+
+\bibitem{LewkowyczMaldacena2013}
+A.~Lewkowycz and J.~Maldacena,
+``Generalized gravitational entropy,''
+JHEP \textbf{08}, 090 (2013),
+arXiv:1304.4926.
+
+\bibitem{Lickorish1997}
+W.~B.~R.~Lickorish,
+\emph{An Introduction to Knot Theory},
+Graduate Texts in Mathematics \textbf{175}
+(Springer, New York, 1997).
 
 \bibitem{NayakSimonSternFreedmanDasSarma2008}
 C.~Nayak, S.~H.~Simon, A.~Stern, M.~Freedman, and S.~Das~Sarma,
 ``Non-Abelian anyons and topological quantum computation,''
 Rev.\ Mod.\ Phys.\ \textbf{80}, 1083 (2008),
 arXiv:0707.1889.
+
+\bibitem{PastawskiYoshidaHarlowPreskill2015}
+F.~Pastawski, B.~Yoshida, D.~Harlow, and J.~Preskill,
+``Holographic quantum error-correcting codes: toy models for the
+bulk/boundary correspondence,''
+JHEP \textbf{06}, 149 (2015),
+arXiv:1503.06237.
 
 \bibitem{ReshetikhinTuraev1991}
 N.~Reshetikhin and V.~G.~Turaev,
@@ -729,8 +883,15 @@ Invent.\ Math.\ \textbf{103}, 547 (1991).
 
 \bibitem{Roehm2026Strategy}
 J.~G.~Roehm,
-``SK-EFT Hawking 13-bundle publication architecture,''
+``SK-EFT Hawking 14-bundle publication architecture,''
 project paper-strategy frame, in preparation (2026).
+
+\bibitem{RyuTakayanagi2006}
+S.~Ryu and T.~Takayanagi,
+``Holographic derivation of entanglement entropy from anti-de Sitter
+space/conformal field theory correspondence,''
+Phys.\ Rev.\ Lett.\ \textbf{96}, 181602 (2006),
+arXiv:hep-th/0603001.
 
 \bibitem{Witten1989}
 E.~Witten,

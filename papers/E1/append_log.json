@@ -43,6 +43,17 @@
       "stage13_redo_required": true,
       "agent_run_id": "bundle_append-2026-05-06T15:42:20Z",
       "notes": "D.2 absorption: Phase 6o W1b polariton ringdown signature from Kerr-Schild single-copy"
+    },
+    {
+      "date": "2026-05-11T19:50:00Z",
+      "source_paper": "(none \u2014 bookkeeping event)",
+      "lift_action": "Freshness-bookkeeping",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "freshness-bookkeeping-2026-05-11T19:50:00Z",
+      "notes": "2026-05-11 Stage-13-sweep freshness cleanup: paper12_polariton tables (3 tables) regenerated at 12:56. E1 bundle paper_draft.tex does NOT \\input source paper tables; bundle compile path unaffected. No bundle content change required; last_lift bumped."
     }
   ]
 }

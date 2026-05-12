@@ -1,6 +1,6 @@
 # Bundle E1 — Source Manifest
 
-**Auto-generated:** 2026-05-06
+**Auto-generated:** 2026-05-12
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`E1`
@@ -12,7 +12,7 @@
 |---|---|---|---|---|
 | `_phase6o_W1a_lean_only` | (see mapping) | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W1b_lean_only` | (see mapping) | (unspecified) | (see mapping) | (missing) |
-| `paper12_polariton` | (see mapping) | Lift-companion | (see mapping) | 2026-05-05T14:44:30Z |
+| `paper12_polariton` | (see mapping) | Lift-companion | (see mapping) | 2026-05-11T17:56:28Z |
 
 ## Coverage notes
 

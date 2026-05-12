@@ -356,6 +356,28 @@
       "stage13_redo_required": true,
       "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T16:30:00Z",
       "notes": "D.3 GATE 2 absorption (Phase 6n.\u03b6, user-auth granted 2026-05-06): NEW subsection \u00a717.5 'Sakharov-horizon-Crooks unification'. Sakharov 4-condition criterion (JTGR6-9 in JacobsonThermoGRDarkEnergy.lean) \u2194 horizon-Crooks detailed-balance P_F[\u03b3]/P_R[\u03b3\u0304] = exp(\u03c3[\u03b3]) at local Rindler horizon. Verlinde-vs-Jacobson distinction explicit at every claim site (Jacobson 1995 equilibrium-Clausius reading allowed; Verlinde 2010/2017 entropic-force reading explicitly disclaimed and tied to Phase 6m R2/R3 EGDE 8/8 unanimous NO-GO at \u22655\u03c3). 6 new bibitems added (Crooks1999 NEW to CITATION_REGISTRY; JacobsonEFE1995, JacobsonVolovik1998, Volovik2003BraneBH, Verlinde2011Entropic, Verlinde2017dSEmergent already in registry but not previously cited in D3). Source verification: Crooks 1999 verified via WebFetch + arXiv abstract 2026-05-06; existing EGDE 8/8 NO-GO confirmed via direct grep of EntropicGravityDarkEnergy.lean theorems. LaTeX compile clean (50pp / 447KB). \u00a717 heat-kernel calibration (Decision Gate E.2) and all current claims preserved unchanged \u2014 purely additive structural framing. Pre-draft: temporary/working-docs/phase6n/6n_zeta_D3_L3_reframing_predraft.md."
+    },
+    {
+      "date": "2026-05-11T19:50:00Z",
+      "source_paper": "(none \u2014 bookkeeping event)",
+      "lift_action": "Freshness-bookkeeping",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "freshness-bookkeeping-2026-05-11T19:50:00Z",
+      "notes": "2026-05-11 Stage-13-sweep freshness cleanup: paper40_higher_curvature tables (c_riem_anchor_at_Nf_27.tex, c_riem_pulsar_orders_below.tex) regenerated at 12:56. D3 bundle paper_draft.tex does NOT \\input source paper tables; bundle compile path unaffected. No bundle content change required; last_lift bumped."
+    },
+    {
+      "date": "2026-05-12T13:00:00Z",
+      "source_paper": "(none - project-wide prose-revision bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a - bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
+      "notes": "2026-05-12 first-claim-removal: paper5_adw_gap conclusion ('first such derivation in the published literature' removed), paper20_scalar_rung abstract + conclusion rewritten to descriptive + prior-art paragraph reframed as 'Relation to existing libraries' (kept the survey content, dropped 'no prior formalization' framing), paper44_riemannian_connection signature-falsifier wording softened."
     }
   ]
 }

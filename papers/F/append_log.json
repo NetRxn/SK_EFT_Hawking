@@ -1,4 +1,27 @@
 {
   "bundle_target": "F",
-  "events": []
+  "events": [
+    {
+      "event_id": "F-relift-2026-05-11-stage13-sweep",
+      "timestamp": "2026-05-11T17:41:52Z",
+      "lift_action": "Revision",
+      "description": "Stage-13 sweep absorption: F bundle re-lift to sync prose with Wave 1-7 fix-pass corrections to sibling Tier-1 bundles. Substantive sync items: (a) DoublonGate.lean phantom-module references replaced with FermiHubbardDimer.lean citations (2 sites, per Wave 5 D4 fix); (b) wen_adw_factor_6000 in-flight-lemma reference replaced with EmergentGravityBounds.coupling_deficit + coupling_ratio_small (per Wave 2 D3 fix); (c) 8/8 Bayes-decisive |log B| >= 5 universal claim downgraded to mixed-threshold (3 quantitative Bayes-decisive + Barrow at AIC=4.7 Burnham-Anderson moderate) per Wave 4 D5 Sessions 4+5 honest-correction; (d) Sakharov biconditional Lambda_J=Lambda_HK retired in favor of one-way implication + SakharovExtended depletion-factor witness per Wave 4a verdict-(B) closure; (e) 8 first-claim instances removed (8 sites) per project-wide policy. PDF 22 pages 478206 bytes, lake build clean.",
+      "pdf_pages": 22,
+      "pdf_bytes": 478206,
+      "related_supersessions": [
+        "policy_2026-05-11:F:first_claim_removal"
+      ]
+    },
+    {
+      "date": "2026-05-12T13:00:00Z",
+      "source_paper": "(none - project-wide prose-revision bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a - bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
+      "notes": "2026-05-12 project-wide first-claim-removal pass: 15 source paper drafts (paper1, paper2, paper5, paper7, paper8, paper9, paper10, paper11, paper14, paper16_graphene_sk_eft, paper16_wrt_tqft, paper17_dark_sector, paper18, paper20, paper44) had primacy-framing prose ('We present the first ...', 'the first machine-checked', 'the first such', 'first formalization') rewritten to descriptive content-first prose. paper14 + paper16_wrt_tqft titles changed (dropped leading 'First'). No claims added; no numerical results changed; bibliographies + citations preserved. F bundle prose was not directly edited but inherits the per-source revisions via the flagship-bundle aggregation; the next F lift cycle will fold the new descriptive prose into bundle text."
+    }
+  ]
 }

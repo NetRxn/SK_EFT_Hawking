@@ -1,0 +1,287 @@
+{
+  "timestamp": "20260511T151321Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "paper_provenance": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "D5/figures",
+          "passed": true,
+          "message": "7 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "E1/figures",
+          "passed": true,
+          "message": "2 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "E2/figures",
+          "passed": true,
+          "message": "4 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "I1/figures",
+          "passed": true,
+          "message": "6 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "I2/figures",
+          "passed": true,
+          "message": "5 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "L1/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "L2/figures",
+          "passed": true,
+          "message": "2 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "L3/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "note_rt_ch_bounds/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper10_modular_generation/figures",
+          "passed": true,
+          "message": "2 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper12_polariton/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper14_braided_mtc/figures",
+          "passed": true,
+          "message": "5 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper16_graphene_sk_eft/figures",
+          "passed": true,
+          "message": "4 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper17_dark_sector/figures",
+          "passed": true,
+          "message": "6 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper18_doublon_gate/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper1_first_order/figures",
+          "passed": true,
+          "message": "3 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper20_scalar_rung/figures",
+          "passed": true,
+          "message": "2 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper21_majorana_rung/figures",
+          "passed": true,
+          "message": "2 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper22_ew_phase_transition/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper23_linearized_efe/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper25_gravitational_waves/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper26_bh_entropy/figures",
+          "passed": true,
+          "message": "2 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper27_bh_thermodynamics_four_laws/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper29_bbn_unified/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper2_second_order/figures",
+          "passed": true,
+          "message": "6 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper32_strong_cp_de/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper33_ewbg_chirality_wall/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper34_equivalence_principle/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper35_qec_holography/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper36_center_symmetry/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper37_chiral_ssb/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper38_cfl/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper39_heat_kernel_expansion/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper3_gauge_erasure/figures",
+          "passed": true,
+          "message": "2 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper40_higher_curvature/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper41_diff_invariance/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper42_nonlinear_efe/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper42b_cc_emergent/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper43_einstein_cartan/figures",
+          "passed": true,
+          "message": "1 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper4_wkb_connection/figures",
+          "passed": true,
+          "message": "3 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper5_adw_gap/figures",
+          "passed": true,
+          "message": "5 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper6_vestigial/figures",
+          "passed": true,
+          "message": "4 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper7_chirality_formal/figures",
+          "passed": true,
+          "message": "4 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper8_chirality_master/figures",
+          "passed": true,
+          "message": "5 referenced figure(s) resolved",
+          "warning": false
+        },
+        {
+          "name": "paper9_sm_anomaly_drinfeld/figures",
+          "passed": true,
+          "message": "4 referenced figure(s) resolved",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

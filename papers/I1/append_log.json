@@ -162,6 +162,28 @@
       "stage13_redo_required": true,
       "agent_run_id": "phase6n_6o-absorption-pass-2026-05-06T16:00:00Z",
       "notes": "D.3 GATE 1 absorption (Phase 6n.\u03b3, user-auth granted 2026-05-06): substantive reframing of \u00a73 from project-original-axiom-replaced framing to first-order-projection-of-published-Glorioso-Liu-axiomatic framing. 5 new bibitems added (CrossleyGloriosoLiu2017, GloriosoCrossleyLiu2017, GloriosoLiu2018, GloriosoLiu2018TASI, JainKovtun2024); the latter two added to CITATION_REGISTRY this session. Transport-coefficient names updated (\u03ba, \u03bd) \u2192 (\u03b3_1, \u03b3_2) to match Lean DissipativeCoeffs structure. Pedagogical punchline preserved with added explanatory clause. Source verification per user direction: each of 5 references verified via WebFetch + arXiv + JHEP DOI confirmation 2026-05-06. LaTeX compile clean (21pp / 925KB). Pre-existing GREEN reviewer-triple state reset to pending re-review per LATE_PHASE6_ABSORPTION_PROTOCOL.md \u00a7F. Pre-draft: temporary/working-docs/phase6n/6n_gamma_I1_reframing_predraft.md."
+    },
+    {
+      "date": "2026-05-11T19:50:00Z",
+      "source_paper": "(none \u2014 bookkeeping event)",
+      "lift_action": "Freshness-bookkeeping",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "freshness-bookkeeping-2026-05-11T19:50:00Z",
+      "notes": "2026-05-11 Stage-13-sweep freshness cleanup: paper15_methodology/tables/table1_stages.tex + table2_checks.tex regenerated at 12:56. I1 bundle paper_draft.tex does NOT \\input source paper tables; bundle compile path unaffected. No bundle content change required; last_lift bumped."
+    },
+    {
+      "date": "2026-05-12T13:00:00Z",
+      "source_paper": "(none - project-wide prose-revision bookkeeping)",
+      "lift_action": "Prose-revision-bookkeeping",
+      "bundle_section_inserted": "(n/a - bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
+      "notes": "2026-05-12 first-claim-removal: paper44_riemannian_connection signature-falsifier wording softened; I1 bundle own draft 'this paper is the first bundle to be drafted under the architecture' -> 'this paper is drafted under that architecture'. I1's \u00a7lessons-learned reference at line 1141 (citing a historical 'first machine-checked' claim that had unrecognized Coq prior art) is PRESERVED INTACT - it documents the failure mode that motivated Stage-13 and is load-bearing pedagogical content."
     }
   ]
 }

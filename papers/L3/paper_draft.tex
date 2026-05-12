@@ -39,7 +39,7 @@ the BH follows the textbook Hawking 1975 profile
 $\Thawk = \hbar/(8\pi M)$~\cite{Hawking1975CMP}: $dM/dt < 0$,
 $d\Thawk/dt > 0$ (heats as it evaporates), finite evaporation time
 $t_{\rm evap} \sim M^3$. Below $\Mc$ the BH follows the BEC-acoustic
-backreaction profile of Balbinot, Fagnocchi, Fabbri, Procopio
+backreaction profile of Balbinot, Fagnocchi, Fabbri
 (PRD~\textbf{71}, 064019)~\cite{Balbinot2005PRD}: linear-in-$t$
 cooling with extrapolation $t \sim 1/T^3$, so $\Thawk \to 0$ in
 \emph{infinite} time --- the analog of near-extremal
@@ -55,8 +55,9 @@ discipline for non-derived structural identifications). The full
 second law uses Glorioso--Liu SK-EFT entropy-current
 monotonicity~\cite{GloriosoLiu2018,CrossleyGloriosoLiu2017,GloriosoCrossleyLiu2017}
 without invoking pointwise NEC. The substrate-response coefficient
-ansatz $\dADW = (\aADW - 1)\Ladw$ vanishes at $\aADW = 1$ (the bare
-Sakharov--Adler limit) and provides four falsifier theorems for any
+ansatz $\dADW = (\aADW - 1)\Ladw$ vanishes at $\aADW = 1$ (project-internal
+shorthand for the bare induced-gravity limit in which the response
+coefficient turns off) and provides four falsifier theorems for any
 candidate ADW substrate. The critical-mass functional form
 $\Mc(\aADW, \Ladw, \Nf)$ is project-original and explicitly disclosed
 as such: no published derivation exists.
@@ -80,7 +81,7 @@ evaporation, with finite evaporation time $t_{\rm evap}
 
 Analog and emergent-gravity systems offer a structurally different
 evaporation pattern. In the BEC-acoustic backreaction analysis of
-Balbinot, Fagnocchi, Fabbri, Procopio~\cite{Balbinot2005PRD},
+Balbinot, Fagnocchi, Fabbri~\cite{Balbinot2005PRD},
 backreaction of thermally radiated phonons on the fluid background
 \emph{shrinks} the sonic horizon and \emph{decreases} $\Thawk$ in
 time, with linear-in-$t$ leading order
@@ -108,9 +109,10 @@ the existence of a critical mass $\Mc(\aADW, \Ladw, \Nf)$ separating
 them as a tracked-hypothesis bundle $H_{\rm RegimePartition}$ with
 each branch's sign claim grounded in its primary literature. The
 choice of $\Mc$ is the dimensional ansatz $\Nf \Ladw / (12\pi \aADW)$
-implied by Sakharov--Visser $1/G_N \propto \Nf \Lambda^2$ at the
-Wave-1 emergent-gravity scale; this is project-original and
-explicitly flagged.
+implied by the project's Sakharov-style induced-gravity identity
+$1/G_N \propto \Nf \Lambda^2$ at the Wave-1 emergent-gravity scale
+(project-internal shorthand; no external citation); this functional
+form is project-original and explicitly flagged.
 
 %% ================================================================
 \section{Setup and main result}
@@ -208,7 +210,9 @@ fields (anti-$\exists$-absorption-pattern audit clean):
     \delta = (\aADW - 1) \cdot \Ladw.
 \end{align*}
 The bundle is genuinely non-trivial: four falsifier theorems witness
-the four independent ways the bundle's substantive content can be
+four independent ways the bundle's substantive content (the four
+physics-content fields; the fifth field \texttt{T\_H0\_pos} is a
+positivity assumption and is not falsifier-witnessed) can be
 violated.
 \verb|falsifier_acoustic_decay_form| (the BEC-acoustic
 strictly-decreasing claim cannot be reproduced by a non-decreasing
@@ -224,8 +228,12 @@ not be a free parameter). The correctness-push theorem
 to produce the explicit sign-of-$d\Thawk/dt$-flips-at-$\Mc$
 statement.
 
-\paragraph{Four laws by regime.} The four-laws bundle
-$H_{\rm BCH}(p, b)$ partitions across regimes. The zeroth law
+\paragraph{Four laws by regime.} The four laws (zeroth/first/second/
+third) partition across regimes as informal narrative-level
+statements; unlike $H_{\rm RegimePartition}$, they are NOT bundled
+into a single Lean Prop structure $H_{\rm BCH}$ but appear as
+separate theorems and predicates in
+\texttt{BHThermodynamicsFourLaws.lean}. The zeroth law
 ($\kappa$ constant on the horizon) and first law
 ($dM = (\kappa/8\pi) dA + \Omega\,dJ + \Phi\,dQ$) are
 substrate-agnostic. The second law (entropy non-decrease) is
@@ -235,9 +243,9 @@ GloriosoCrossleyLiu2017} on the open Schwinger--Keldysh action,
 without invoking pointwise NEC; this is the load-bearing
 substrate-class generalization compared to the standard
 Bekenstein--Hawking-on-area-law treatment. The third law
-(Israel's strong form: $\kappa \to 0$ attainable only at infinite
-affine time; equivalently, no extremal-horizon formation in finite
-proper time) holds in both branches under the regime-specific
+(Israel's strong form~\cite{Israel1986}: $\kappa \to 0$ attainable
+only at infinite affine time; equivalently, no extremal-horizon
+formation in finite proper time) holds in both branches under the regime-specific
 asymptotics: the BEC-acoustic branch reaches the
 $\Thawk \to 0$ extremality only at $t \to \infty$ (Balbinot 2005
 $t \sim 1/T^3$ extrapolation), and the Schwarzschild branch
@@ -292,13 +300,16 @@ induced Newton constant, and the $\Lambda_{\mathrm{eff}} =
 \Lambda_{\mathrm{HK}}$ equilibrium identity), while the
 Finazzi--Liberati--Sindoni acoustic-BEC violates condition (ii)
 (universal coupling: depletion-sector atoms do not propagate on the
-BEC effective metric; \texttt{JTGR8}). The Phase 6n unification
+BEC effective metric; \texttt{JTGR8}). The Phase 6n substrate
+partition
 (\texttt{lean/SKEFTHawking/CrooksAnalogHawking/SakharovHorizonCrooks.lean})
-shows that the four Sakharov conditions are biconditional with the
-horizon-Crooks detailed-balance identity at the local Rindler
-horizon (\texttt{horizonCrooks\_substrate\_partition}; the
-companion deep paper~\cite{Roehm2026D3} carries the
-full subsection). The regime partition formalised here
+ships a 2-conjunct structural partition statement
+(\texttt{horizonCrooks\_substrate\_partition}: $^{3}$He-A is
+Jacobson-consistent while the FLS BEC is not) under the local
+Rindler-horizon horizon-Crooks framing; the companion deep
+paper~\cite{Roehm2026D3} carries the full subsection including the
+substantive biconditional lift in
+\texttt{BiconditionalReformulation.lean} (\texttt{sakharov\_iff\_horizon\_crooks}). The regime partition formalised here
 (sign-flip of $d\Thawk/dt$) is \emph{not} directly equivalent to
 Sakharov-criterion satisfaction: the BEC-acoustic ($M < M_c$)
 cooling regime persists \emph{despite} Sakharov-criterion failure
@@ -343,7 +354,7 @@ Commun.\ Math.\ Phys.\ \textbf{43}, 199 (1975);
 DOI: 10.1007/BF02345020.
 
 \bibitem{Balbinot2005PRD}
-R.~Balbinot, S.~Fagnocchi, A.~Fabbri, G.~P.~Procopio,
+R.~Balbinot, S.~Fagnocchi, A.~Fabbri,
 ``Quantum Effects in Acoustic Black Holes: the Backreaction,''
 Phys.\ Rev.\ D \textbf{71}, 064019 (2005);
 arXiv:gr-qc/0405098;
@@ -359,6 +370,11 @@ T.~A.~Jacobson and T.~Koike, ``Black hole and baby universe in a
 thin film of $^{3}$He-A,'' in \emph{Artificial Black Holes}, edited
 by M.~Novello, M.~Visser, G.~Volovik (World Scientific, 2002);
 arXiv:cond-mat/0205174.
+
+\bibitem{Israel1986}
+W.~Israel,
+``Third law of black-hole dynamics: a formulation and proof,''
+Phys.\ Rev.\ Lett.\ \textbf{57}, 397 (1986).
 
 \bibitem{KehleUnger2022ThirdLaw}
 C.~Kehle and R.~Unger, ``Gravitational collapse to extremal black
@@ -383,7 +399,7 @@ dissipative fluids,'' JHEP~\textbf{09}, 095 (2017);
 arXiv:1511.03646.
 
 \bibitem{GloriosoCrossleyLiu2017}
-P.~Glorioso, M.~Crossley, H.~Liu, ``Effective field theory of
+P.~Glorioso, M.~Crossley, H.~Liu, ``Effective field theory for
 dissipative fluids (II): classical limit, dynamical KMS symmetry
 and entropy current,'' JHEP~\textbf{09}, 096 (2017);
 arXiv:1701.07817.

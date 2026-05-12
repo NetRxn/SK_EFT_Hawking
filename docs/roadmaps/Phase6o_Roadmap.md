@@ -77,7 +77,7 @@ Sub-wave numbering (e.g., Wave 1a.1, 1a.2, …) replaces the Greek sub-wave labe
 | **Wave 2a** | APS-η for analog-horizon backgrounds (Phase 6n Wave 1c §6.3 follow-up) | ✅ **SHIPPED Session 31** (6 modules in `lean/SKEFTHawking/APSEta/`: Predicate.lean, BECAcoustic.lean, ADWHorizon.lean, He3A.lean, SymTFTBridge.lean, RegimePartition.lean. Headline finding: program's three analog-horizon substrates partition into a parity-symmetric cell (BEC + ADW; APS = bulk AS) and a chirally-asymmetric cell (³He-A; substantive APS boundary correction via Volovik chirality framework + Jackiw-Rebbi chiral edge mode). FIRST SYSTEMATIC SUBSTRATE-SIDE APS-η IDENTIFICATION ON A CHIRALLY-ASYMMETRIC ANALOG HAWKING HORIZON IN THE LITERATURE — operationalized at substrate-data level. Phase 6n Wave 1c memo §6.3 dispositive question affirmatively closed. All headlines std-kernel-only via `lean_verify`.) | D2 + D3 + L3 + E1 appendix — **DEFERRED** | **D.2** | none |
 | **Wave 2b** | G1-Schellekens chain | ✅ **SHIPPED Session 39** (6 modules: SpinBordism.lean + AnomalyPolynomial.lean + ModularInvariance.lean + NiemeierLattice.lean + HolomorphicVOAc24.lean + Chain.lean. Composed 5-step chain reframes `24|c₋ → N_f = 3` from algebraic constraint to theorem-quality classification corollary of Möller-Scheithauer 2024 c=24 holomorphic-VOA classification. Per Modular Bootstrap DR §8 Tier 1(a) "the highest-leverage move".) | D2 (refines 24\|c₋ closure framing) — **DEFERRED** | **D.3 candidate** | **YES — pre-draft D2 reframing for user review at bundle-absorption pass** |
 | **Track 3 — ETH-α + Itô community contribution** | | | | | |
-| **Wave 3a** | G10-ETH-α productive-value Aristotle wave | ✅ **Lean substrate SHIPPED Sessions 33-34** (2 modules: ETH/Predicates.lean + ETH/ConcreteWitness.lean. Five candidate ETH axiomatizations encoded as Prop predicates (A1 Srednicki / A2 free-cumulant / A3 Helbig-et-al / A4 Wang ETP / A5 Inozemcev-Volovich-corrected) + concrete sandboxes (toy 1-dim + 4-dim Ising + 16-dim minimum-A4 substrate) + substantive structural distinctions (A5 ⟹ A1 strict-stronger; Inozemcev-Volovich gap typed at predicate-level; A4 fails for n < 16). **Wave 3a.4 Aristotle batch HELD** for productive-value refutation tableau iteration — would require concrete `theorem srednicki_implies_thermalization ... := by sorry` posed against MCP first per CLAUDE.md "MCP-first" discipline; deferred until concrete-theorem-with-sorry pose makes sense.) | D1 + I1 cross-bridge (additive hypothesis-tracking + refutation tableau) — **DEFERRED** | **D.2** | Aristotle submission user-auth (per `WAVE_EXECUTION_PIPELINE.md` Stage 4) |
+| **Wave 3a** | G10-ETH-α productive-value Aristotle wave | ✅ **SHIPPED Sessions 33-34 + Wave 3a.4 MCP-only close 2026-05-06** (3 modules: ETH/Predicates.lean + ETH/ConcreteWitness.lean + ETH/RefutationTableau.lean. Five candidate ETH axiomatizations encoded as Prop predicates (A1 Srednicki / A2 free-cumulant / A3 Helbig-et-al / A4 Wang ETP / A5 Inozemcev-Volovich-corrected) + concrete sandboxes (toy 1-dim + 4-dim Ising + 16-dim minimum-A4 substrate) + substantive structural distinctions (A5 ⟹ A1 strict-stronger; Inozemcev-Volovich gap typed at predicate-level; A4 fails for n < 16). **Wave 3a.4 SHIPPED via MCP-only on 2026-05-06** — `ETH/RefutationTableau.lean` (290 lines) ships 4 refutation theorems (T1 `srednicki_does_not_imply_thermal_compatibility` via n=2 witness; T2 `ETP_does_not_imply_srednicki` via n=16 witness; T3 `freeCumulant_does_not_imply_srednicki` via n=1 witness; T4 `A4_fails_small_n` cross-check) + `wave_3a_4_tableau_closure` summary; zero sorries; all closed via direct concrete-counterexample witnesses. **Planned Aristotle batch NOT required** — MCP solved all 4 tableau questions via small-substrate counterexample construction. Validates CLAUDE.md MCP-first discipline.) | D1 + I1 cross-bridge (additive hypothesis-tracking + refutation tableau) — **DEFERRED** | **D.2** | **none — MCP-only deliverable; planned Aristotle batch not required** |
 | **Wave 3b** | I3 Itô + LDP-α + LDP-β | ✅ **SHIPPED Session 40** (12 modules: 6 under SKEFTHawking/Itô/ — StochasticIntegral + QuadraticVariation + Semimartingale + ItoIsometry + ItoLemma + Novikov; 6 under SKEFTHawking/LDP/ — CramerIID + Sanov + Contraction + CramerLowerBound + Varadhan + LDPCompatibleSKEFT typeclass connecting Wave 3b LDP infrastructure to existing Phase 6n Wave 2c.5c+ IsLDPRateFunction + Phase 6n Wave 2a Glorioso-Liu monotonicity. Includes concrete instance on linearResponseRateFunctionCentered Gaussian rate function.) | **NEW BUNDLE I3** — bundle architecture user-auth GRANTED Phase 6n Session 4 | **N/A — bundle exists** | bundle-target gate already passed |
 | **Track 4 — Substrate-anchor refactors** | | | | | |
 | **Wave 4a** | Substrate-derived Sakharov Λ_J ↔ Λ_HK biconditional refactor (authorized 2026-05-08 user-call C2) | ✅ **SHIPPED 2026-05-08** (Wave 4a.1 + 4a.2 + 4a.3 strict-extension `SakharovExtended` Phase 7 absorption Session 5; **Wave 4a.4 verdict (B) honest one-way closure SHIPPED 2026-05-08** post-DR return: added load-bearing `depletion : ℝ` field to `SakharovExtended` + 5 substantive theorems JTGR16-JTGR20 — `sakharov_depletion_factor_relation` (unconditional `Λ_J = depletion · Λ_HK`) + `volovikJannes_he3a_depletion_eq_one` (³He-A unit depletion via Atiyah-Bott-Shapiro topological protection) + `flsBEC_depletion_strictly_between_zero_and_one` (FLS BEC strictly enforced 0 < depletion < 1 per FLS Eq. 67/71) + `volovikJannes_vs_flsBEC_depletion_asymmetry` (load-bearing ℝ asymmetry) + `wave_4a_4_honest_one_way_closure` (composed 4-conjunct closure summary). DR `Lit-Search/Phase-6o/6o-Wave 4a FLS BEC Depletion-Factor Λ_substrate Return.md` (returned 2026-05-06) verdict (B): honestly retire biconditional. Primary-source asymmetry: Volovik-Jannes 2012 §VII argues only forward; no source argues converse. 3 new bibitems added to `CITATION_REGISTRY` (FinazziLiberatiSindoni2012PRL, FinazziLiberatiSindoni2012Proc, BelenchiaLiberatiMohd2014) all primary-source-cached. D5 §11 prose addendum SHIPPED retiring biconditional + citing JTGR16-JTGR20. Lake build clean 8586 jobs; pdflatex D5 13pp clean; validate.py paper_provenance + citation_primary_sources_present + bundle_consistency + bundle_source_freshness all PASS; bundle_readiness.py **14/14 ALL-GREEN**. Closure memo at `temporary/working-docs/phase6o/wave_4a_sakharov_lambda_substrate_refactor_close.md`.) | D5 §11 (refines current Phase 6e Sakharov 4-criterion section) — **APPENDED to absorption pass** | **D.2** | none (substantive Lean work + DR-grounded primary-source numerical refit + verdict (B) honest closure) |
@@ -98,7 +98,7 @@ Sub-wave numbering (e.g., Wave 1a.1, 1a.2, …) replaces the Greek sub-wave labe
 
 1. **Wave 2a** APS-η for analog horizons (single substrate-analysis wave; Phase 6n Wave 1c memo §6.3 already identifies the predicates and concrete witnesses; substrate-discovery yield expected to be substantial given the program's existing heat-kernel/AS Lean substrate).
 2. **Wave 1c** G1-NO-GO writeup (no Lean novelty — working-doc memo at `temporary/working-docs/phase6o/`; <30 pages physics-paper-grade math sketch citing Adams et al., Crossley–Glorioso–Liu, Akyuz–Penco, Chowdhury-Hartnoll-Hebbar-Khondaker, arXiv:2511.08560 KMS bootstrap).
-3. **Wave 3a** ETH-α productive-value Aristotle wave (parallel-axiomatization tableau; Aristotle submission gating per Wave Execution Pipeline Stage 4).
+3. **Wave 3a** ETH-α productive-value Aristotle wave (parallel-axiomatization tableau).
 4. **Wave 1a** G3 boostless / Carrollian soft-theorem program (multi-session — soft-theorem framework + emergent-U(1) Weinberg leading factor + ADW graviton subleading factor + Lindbladian S-matrix axiomatization NO-GO + concrete noise-floor prediction n_noise / Hawking flux for E1 polariton substrate).
 5. **Wave 1b** G4-Kerr-Schild (after Wave 1a substrate ships; algebraically clean Lean lift on draining-bathtub Petrov-D acoustic metric).
 6. **Wave 2b** G1-Schellekens chain (multi-session formalization composing through 5 categorical/topological steps; substrate ready via Phase 6n Wave 1b WittClass + DrinfeldCenter + PseudoUnitary).
@@ -312,7 +312,7 @@ SKEFTHawking/Schellekens/
 
 ---
 
-## Wave 3a — G10-ETH-α productive-value Aristotle wave ⏳ NOT STARTED
+## Wave 3a — G10-ETH-α productive-value Aristotle wave ✅ SHIPPED (Sessions 33-34 + Wave 3a.4 MCP-only close 2026-05-06)
 
 **Sub-wave decomposition (proposed):**
 
@@ -474,26 +474,28 @@ SKEFTHawking/CrooksAnalogHawking/BiconditionalReformulation.lean  -- cross-bridg
 | Wave | Gate | Pre-draft deliverable for user review | Status |
 |---|---|---|---|
 | **Wave 2b** G1-Schellekens chain (D.3 candidate) | D2 reframing language | "24\|c₋ as algebraic constraint → 24\|c₋ as Möller-Scheithauer 2024 corollary; theorem-quality classification corollary, not a one-shot algebraic anchor." Pre-draft at Wave 2b.8 close. | 📝 **HELD** for unified bundle-absorption pass |
-| **Wave 3a** G10-ETH-α | Aristotle submission user-auth (Stage 4 per `WAVE_EXECUTION_PIPELINE.md`) | Refutation-tableau scope brief; 4+ candidate ETH ansätze enumerated; QCyc16 sandbox parameter ranges. Pre-draft at Wave 3a.4 close. | ⏳ Triggers at Wave 3a.4 close |
+| **Wave 3a** G10-ETH-α | Aristotle submission user-auth (Stage 4 per `WAVE_EXECUTION_PIPELINE.md`) | Refutation-tableau scope brief; 4+ candidate ETH ansätze enumerated; QCyc16 sandbox parameter ranges. Pre-draft at Wave 3a.4 close. | ✅ **RESOLVED — MCP-only solve, no Aristotle submission required (2026-05-06)** |
 | **Wave 3b** I3 Itô + LDP | **Pipeline Invariant #14 — new bundle target authorization** | I3 bundle scoping document at `temporary/working-docs/phase6n/i3_bundle_scoping.md`; PAPER_STRATEGY.md §2.4 Tier-3 #3 entry; PAPER_DRAFT_MAPPING.md headline updated; claims-reviewer-bundle-prompts.md I3 anchor block. | ✅ **GRANTED** (Phase 6n Session 4, 2026-05-04) — substantive Lean module work remaining |
 
 **Additional gates (standard per `WAVE_EXECUTION_PIPELINE.md`):**
-- Stage 4 Aristotle submission (Wave 3a specifically) — user gets first and last call. Triggers when Wave 3a Lean substrate is decomposed and ready for batch.
+- Stage 4 Aristotle submission (Wave 3a specifically) — user gets first and last call. ✅ **RESOLVED 2026-05-06: MCP-only solve closed Wave 3a.4 (3 modules + 4 substantive refutation theorems + closure); no Aristotle submission required.**
 - Stage 13 adversarial review per absorbed bundle — fresh-context reviewer per `BUNDLE_LIFT_PROCEDURE.md` §11. Triggers in unified bundle-absorption pass at end of Phase 6o.
 
 ---
 
-## Phase 6p preview (further-deferred tracks)
+## Phase 6p preview (further-deferred tracks) — SCOPED 2026-05-12 INTO 4 PHASES
 
-Tracks deferred to Phase 6p (or "Phase 7-research-roadmap-stub" per Session-2 framing):
-- **G5 AGP concatenated distance-3** (Aharonov-Ben-Or threshold theorem above topological substrate; closed-form rigorous) + **FKLW Fibonacci-anyon density theorem** (universality on existing program SU(2)_k stack). Industrial reach (D4 / new bundle); not unification-flavor.
+Tracks scoped 2026-05-12 into Phase 6{p,q,r,s} per `memory/project_phase_6p6q6r6s_planning.md`:
+- **Phase 6p — G5 AGP + FKLW** (fault-tolerant QC on existing topological substrate). Aharonov-Ben-Or threshold theorem + Freedman-Larsen-Wang Fibonacci-anyon density. Industrial reach (D4 extension or new bundle). Roadmap: `docs/roadmaps/Phase6p_Roadmap.md`.
+- **Phase 6q — Drude-Kadanoff-Martin transport bootstrap** (positive-result response to Wave 1c NO-GO). Apply Chowdhury-Hartnoll-style transport bootstrap to SK-EFT-Hawking horizon transport coefficients. Bimodal outcome: positive uniqueness OR sharpened NO-GO. Roadmap: `docs/roadmaps/Phase6q_Roadmap.md`.
+- **Phase 6r — SymTFT / SymTFT-with-fermions formalization** (long-horizon unification umbrella). Substrate to bulk SymTFT, SM matter to topological boundary; potential program unification crown. Roadmap: `docs/roadmaps/Phase6r_Roadmap.md`.
+- **Phase 6s — Phase 1c bootstrap-as-uniqueness + substantive I3 Mathlib lift** (twin formalization-line phase). Track 1: KMS-decorated OS axioms aligned with PhysLean. Track 2: substantive lift of I3's 12 predicate-substrate modules + Mathlib4 PR cycle. Roadmap: `docs/roadmaps/Phase6s_Roadmap.md`.
+
+Phase 6p-internal further-deferred tracks (deferred past Phase 6{p,q,r,s}):
 - **G6c+d Aristotle++** domain-fine-tuned prover (revisit when current Opus + lean4-plugin + MCP + Aristotle stack capacity is binding).
-- **G8-Lean-refactor full Mathlib AS** (multi-year community coordination; track van Doorn / Rothgang / Tooby-Smith infrastructure progress).
-- **Phase 1c bootstrap-as-uniqueness route** (per Modular Bootstrap DR §3 Tier 2: extend Douglas-Hoback-Mei-Nissim Lean OS-axioms with KMS-decorated SK / OS variant; original Lean work that opens a new formalization line aligned with PhysLean).
-- **Drude-Kadanoff-Martin-style transport bootstrap** (per Modular Bootstrap DR §3 Tier 2(d): apply Chowdhury-Hartnoll-style transport bootstrap to SK-EFT-Hawking horizon transport coefficients).
-- **SymTFT / SymTFT-with-fermions formalization** (per Modular Bootstrap DR §8 Tier 3: connect substrate to bulk SymTFT, SM matter to topological boundary condition; long-horizon).
+- **G8-Lean-refactor full Mathlib AS** (multi-year community coordination; track van Doorn / Rothgang / Tooby-Smith infrastructure progress; consider as Phase 6s consolidation track).
 
-These open after Phase 6o ships and Phase 7 publication track has cleared remaining bundle-readiness gates.
+Phase 6{p,q,r,s} open in parallel after Phase 6o ships and Phase 7 publication track has cleared bundle-readiness gates. All 4 phases are mutually independent in substrate.
 
 ---
 
@@ -521,7 +523,7 @@ These open after Phase 6o ships and Phase 7 publication track has cleared remain
 
 ### Sessions 33-40 (2026-05-06) — Phase 6o ALL 7 WAVES COMPLETE
 
-**Sessions 33-34 (Wave 3a):** ETH-α Lean substrate (2 modules; 5 candidate axiomatizations + concrete witness sandboxes + Inozemcev-Volovich gap typed). Wave 3a.4 Aristotle batch held pending concrete-theorem-with-sorry pose.
+**Sessions 33-34 (Wave 3a):** ETH-α Lean substrate (2 modules; 5 candidate axiomatizations + concrete witness sandboxes + Inozemcev-Volovich gap typed). **Wave 3a.4 closed via MCP-only on 2026-05-06** with `ETH/RefutationTableau.lean` (290 lines; 4 substantive refutation theorems + closure summary on n=1/n=2/n=16 substrates; zero sorries); planned Aristotle batch not required.
 
 **Sessions 35-37 (Wave 1a):** boostless / Carrollian soft-theorem program (5 modules; positive boostless + Carrollian framework + ADW graviton subleading + Lindbladian-S-matrix NO-GO + universal noise-floor Wilson-coefficient-independence).
 
@@ -581,7 +583,7 @@ Lake build clean at **8555 jobs (+6 vs Phase 6n Session 29 8549)**. All substant
 **Next-up order for sessions 31+:**
 1. **Wave 2a** APS-η for analog horizons (single substrate-analysis wave).
 2. **Wave 1c** G1-NO-GO writeup (no Lean novelty; <30 pages physics-paper-grade memo).
-3. **Wave 3a** ETH-α productive-value Aristotle wave (parallel-axiomatization tableau; user-auth required at Wave 3a.4).
+3. **Wave 3a** ETH-α productive-value Aristotle wave (parallel-axiomatization tableau).
 4. **Wave 1a** G3 boostless / Carrollian soft-theorem program (multi-session).
 5. **Wave 1b** G4-Kerr-Schild (after Wave 1a substrate ships; algebraically clean).
 6. **Wave 2b** G1-Schellekens chain (multi-session 5-step composition; user-auth pre-draft for D2 reframing at unified absorption pass).

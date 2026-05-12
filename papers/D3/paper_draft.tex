@@ -46,15 +46,17 @@ the natural microscopic point $(\Lambda_{\mathrm{UV}},\,N_f,\,\alpha_{\mathrm{EC
 beneath the Kostelecky--Russell--Tasson cosmic-axial-torsion bound. The
 classical cosmological-constant problem is reproduced rather than solved
 inside the same calculation: at the same natural point, $\Lambda_{\mathrm{emerg}}/
-\Lambda_{\mathrm{obs}} \gtrsim 10^{100}$ (the formal Lean lower bound;
-heuristically $\sim 10^{122}$), with no \emph{a priori} cancellation
-mechanism. Five appendices supply the algebraic-Lorentzian-geometry ground
-floor on which the singularity, area, and no-hair theorems then rest as,
-to our knowledge, the first machine-checked Penrose-hypothesis bundle,
-area theorem, and Kerr-family no-hair statement on indefinite-signature
-metrics; Bundle~I1 is the primary first-formalization claim and
-\S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} is the supplement
-that consumes them on the substrate side. Sixteen of
+\Lambda_{\mathrm{obs}} \gtrsim 10^{100}$ (the formal Lean lower bound
+discharged at the precision of Mathlib's shipped fundamental constants;
+the classical Weinberg estimate of $\sim 10^{122}$ is recovered when
+Mathlib's precision is sufficient to evaluate to that order, and the
+gap is a Mathlib-precision artefact rather than a substrate-prediction
+uncertainty), with no \emph{a priori} cancellation mechanism. Five appendices supply the algebraic-Lorentzian-geometry ground
+floor on which the singularity, area, and no-hair theorems then rest as a
+machine-checked Penrose-hypothesis bundle, area theorem, and Kerr-family
+no-hair statement on indefinite-signature metrics;
+\S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} is the
+substrate-side supplement consuming this content. Sixteen of
 the twenty-two threads ship with formally verified (zero-\texttt{sorry}) Lean~4
 modules; eight threads supply numerical or experimental falsifiers; the
 single shared coupling $N_f = 16$ also anchors the modular-invariance
@@ -78,7 +80,7 @@ the single coherent face of a substrate whose predictive content is fixed by
 a heat-kernel calibration. The substrate is the antisymmetric-tetrad
 bilinear of Akama, Diakonov, and Wetterich (ADW), augmented by the
 Wetterich--Hubbard--Stratonovich apparatus that drives a tetrad gap
-equation~\cite{Akama1979,Diakonov2011,Wetterich2017}. The calibration is
+equation~\cite{Akama1978,Diakonov2011,Wetterich2017}. The calibration is
 Vassilevich's Christensen--Duff coefficient~\cite{Vassilevich2003,
 ChristensenDuff1978} extracted from a Dirac heat-kernel expansion at order
 $a_2$, which delivers a Sakharov--Adler closed
@@ -200,15 +202,15 @@ expected Svetitsky--Yaffe universality class (\S\ref{sec:confinement}); the
 Gell-Mann--Oakes--Renner relation~\cite{GellMannOakesRenner1968} closes
 chiral symmetry breaking with a PDG-anchored numerical
 match (\S\ref{sec:chiral-ssb}); and the CFL chiral
-Lagrangian~\cite{AlfordRajagopalWilczek1999} ships with the first
-machine-checked formalisation in any proof assistant of
-emergent-$\mathbb{Z}_3$ matching the QCD centre
+Lagrangian~\cite{AlfordRajagopalWilczek1999} ships with a machine-checked
+formalisation of emergent-$\mathbb{Z}_3$ matching the QCD centre
 (\S\ref{sec:cfl}).
 
 \paragraph{Algebraic-Lorentzian-geometry ground floor.}
 The classical-gravity backbone that the entropy, regime-partition, and
-no-hair content above implicitly assumes was, prior to this work, not
-verified in any proof assistant on indefinite-signature metrics. Five
+no-hair content above implicitly assumes draws on algebraic Lorentzian-
+geometry primitives that are not part of Mathlib4's standard
+Riemannian-geometry library. Five
 appendices supply this missing ground floor: causal structure
 (\S\ref{sec:causal-structure}); the Penrose singularity hypothesis bundle
 with the Riccati-focusing core (\S\ref{sec:penrose}); the
@@ -278,8 +280,8 @@ G_c^{\mathrm{ADW}}(N_f,\Lambda_{\mathrm{UV}}) \;=\;
 \frac{8\pi^{2}}{N_f\,\Lambda_{\mathrm{UV}}^{2}}\,.
 \end{equation}
 \noindent
-This is the first explicit closed form for the ADW critical coupling in the
-literature; the derivation is machine-verified in
+This explicit closed form for the ADW critical coupling is
+machine-verified in
 \texttt{ADWMechanism.lean} with zero \texttt{sorry}, and the positivity
 guard $G > 0$ closes by \texttt{critical\_coupling\_pos}. The coupling
 $G_c^{\mathrm{ADW}}$
@@ -429,12 +431,17 @@ non-perturbative coefficient. Numerically,
 \end{equation}
 \noindent
 which under-predicts $G_N$ by three to four orders of magnitude on every
-natural microscopic point. The deficit is a closed-form Lean identity
-— a closed-form Lean-derived ratio rather than a numerical estimate
-(the algebraic ratio enters as a coefficient identity downstream of
-\texttt{GaugeErasure.gauge\_erasure}; an explicit
-\texttt{wen\_adw\_factor\_6000}-named lemma is in flight as a
-single-line corollary).
+natural microscopic point. The deficit is established at the
+Lean-formalization scope by
+\texttt{EmergentGravityBounds.coupling\_deficit}
+(\(G_{4f} < G_c/1000\) for \(\alpha \le 0.20,\ N_f \le 10\)) and
+\texttt{EmergentGravityBounds.coupling\_ratio\_small}
+(\(G_{4f}/G_c < 1/1000\) at \(\alpha = 0.20,\ N_f = 4\)). The same
+algebraic formula \(\alpha^2 N_f / (32\pi^3)\) gives the tighter
+numerical estimate \(\approx 1/6202 \approx 1/6000\) at the
+compact-QED-bounded \(\alpha = 1/5,\ N_f = 4\) point; the structural
+Lean bound at \(1/1000\) is the formally discharged inequality (Wen
+2003~\cite{Wen2003}).
 Wen's mechanism is consistent for a $U(1)$ photon---its original
 target---but cannot scale to gravity at quantitative magnitude.
 
@@ -462,7 +469,10 @@ mode predicts a $c_{\mathrm{GW}} = c\sqrt{\chi_{\mathrm{vest}}}$ with
 $\chi_{\mathrm{vest}}\in[0.1,10]$ on the natural range; LIGO--Virgo
 caps $|\Delta c/c|\le 3\times 10^{-15}$; the Lean disjointness theorem
 \texttt{GravitationalWaves.natural\_range\_disjoint\_from\_ligo\_window}
-falsifies the entire natural range by approximately $7\times 10^{14}$.
+falsifies the entire natural range with the endpoint ratios
+$|\Delta c/c|/\tau \approx 7.21\times 10^{14}$ at the $\chi=10$
+endpoint and $\approx 2.28\times 10^{14}$ at the $\chi=0.1$ endpoint
+(matching Bundle~L1 \S\ref{sec:gw170817} character-for-character).
 
 \subsection{Triad summary}
 
@@ -767,8 +777,12 @@ $T_H(v) = T_H(0)\,(1 - v^2/c_\perp^2)$ holds with the Jacobson--Koike
 contrast~\cite{JacobsonKoike2002}, and an explicit cooling evolution
 $T_H(t) = T_{H0}\,e^{-t/\tau_{\mathrm{cool}}}$
 (\texttt{T\_H\_acoustic\_evolution\_strict\_decreasing}). The two
-profiles are smoothly joined at $M = M_c$ via a Lean continuity
-biconditional.
+profiles are classified by an inductive
+\texttt{Regime}-type discriminant at $M = M_c$ (discrete classification
+in the Lean substrate; the splash-companion L3 makes this discrete
+character explicit). The substrate carries no continuity-biconditional
+gluing the two branches into a single smooth profile; the regime
+partition is a hard classification boundary.
 
 \subsection{Four laws in two regimes}
 
@@ -1164,11 +1178,17 @@ four-fermion contact channel that drove the gap equation of
 \subsection{GMOR PDG match}
 
 \texttt{ChiralSSB\_QCD.gmor\_pdg\_match} discharges the numerical match
-of \eqref{eq:gmor} against PDG values: $f_\pi = 92.07\,\mathrm{MeV}$,
-$m_\pi = 134.98\,\mathrm{MeV}$, $m_q = 3.45\,\mathrm{MeV}$ (mean of
-$m_u + m_d$), and $\langle\bar{q}q\rangle =
--(2.62\times 10^8\,\mathrm{MeV}^3)$, all
-within the GMOR tolerance.
+of \eqref{eq:gmor} against FLAG-2021 central values at the precision
+the named theorem encodes: $f_\pi = 92\,\mathrm{MeV}$,
+$m_\pi = 137\,\mathrm{MeV}$, $m_q = 3.5\,\mathrm{MeV}$ (mean of
+$m_u + m_d$), and $\langle\bar{q}q\rangle = -0.0227\,\mathrm{GeV}^3 =
+-2.27\times 10^7\,\mathrm{MeV}^3 \approx -(283\,\mathrm{MeV})^3$;
+both sides of \eqref{eq:gmor} evaluate to $1.589\times 10^{-4}\,
+\mathrm{GeV}^4$ within the
+$10^{-4}$ GMOR tolerance. The more precise PDG~2024 central values
+$f_\pi = 92.07\,\mathrm{MeV}$, $m_\pi = 134.98\,\mathrm{MeV}$,
+$m_q = 3.45\,\mathrm{MeV}$ lie within the same GMOR tolerance band
+but are not the values discharged by the named theorem.
 
 \subsection{Chiral-unbroken phase ruled out}
 
@@ -1201,10 +1221,8 @@ carries an emergent $\mathbb{Z}_3$ from diquark condensation. The
 substrate's prediction, encoded in \texttt{CFLChiralLagrangian.lean}, is
 that this emergent $\mathbb{Z}_3$ is \emph{the same} as the
 $\mathbb{Z}_3$ centre of QCD that drives confinement
-(\S\ref{sec:confinement}). To our knowledge, this is the first
-machine-checked formalisation of this identity in any proof assistant
-(we have not located prior occurrences in the Coq, Agda, Isabelle, HOL4,
-or Mizar libraries).
+(\S\ref{sec:confinement}). The identity is machine-checked at the
+substrate-data level in \texttt{CFLChiralLagrangian.lean}.
 
 \subsection{CFL phase predicate}
 
@@ -1380,14 +1398,26 @@ Verlinde 2011/2017 entropic-force reading~\cite{Verlinde2011Entropic,Verlinde201
 in which gravity \emph{is} an entropic force generated by
 holographic-screen entropy gradients. Per the program's Phase 6m
 Track B closure (\texttt{lean/SKEFTHawking/EntropicGravityDarkEnergy.lean}),
-Verlinde-class entropic gravity is $r_d$-independent disfavoured at
-$\geq 5\sigma$ across all eight independent observational checks
-canvassed (CMB + Bullet Cluster, Tsallis HDE, Barrow HDE, Odintsov
-dark energy, the Padmanabhan--Cosmin no-scalar-perturbation-theory
-criterion, the Hossenfelder--Verlinde dS-instability constraint, the
-Cadoni--Tuveri DEC bound, and the DEC--CPL DESI~DR2 1$\sigma$
-exclusion); the unanimous-NO-GO closure is the program's Phase 6m
-Track B headline. The horizon-Crooks identity~\eqref{eq:horizon-crooks}
+Verlinde-class entropic gravity is $r_d$-independent disfavoured under
+\emph{mixed-threshold} criteria across the quantitative
+checks canvassed: Bayes-decisive at Jeffreys $\geq 5$ for three of four
+$r_d$-independent quantitative bounds (Verlinde + Tsallis HDE +
+Odintsov dark energy --- aggregated as
+\texttt{all\_three\_decisive\_bayes\_bounds\_exceed\_jeffreys\_decisive}),
+and at Burnham--Anderson moderate-AIC ($\Delta\mathrm{AIC} = 4.7 < 5$,
+below the Jeffreys-decisive threshold) for the fourth (Barrow HDE,
+verified Phase 7 absorption Session 5 against Luciano-Paliathanasis-
+Saridakis arXiv:2506.03019 Table~II); the combined four-of-four
+mixed-threshold aggregator is
+\texttt{all\_quantitative\_bounds\_disfavoured}. The remaining
+qualitative criteria (CMB + Bullet Cluster, Padmanabhan--Cosmin
+no-scalar-perturbation-theory, Hossenfelder--Verlinde dS-instability,
+Cadoni--Tuveri DEC bound, DEC--CPL DESI~DR2 $1\sigma$ exclusion)
+provide independent structural reasons for the same disfavoured
+verdict. The NO-GO closure is the program's Phase 6m Track B
+headline; the honest characterisation is `3-of-4 Bayes-decisive +
+4-of-4 mixed-threshold` rather than `4-of-4 Bayes-decisive', per
+the Session-5 honest downgrade. The horizon-Crooks identity~\eqref{eq:horizon-crooks}
 is consistent only with the equilibrium-Clausius derivation of the
 Einstein equation; it does \emph{not} entail the ontological claim
 that gravity itself is an entropic force, and the substrate's gravity
@@ -1420,10 +1450,9 @@ mode that propagates a massive spin-2 ghost at the Stelle
 scale). The basis-change identity relating $(R^2,\mathrm{Ric}^2,\mathrm{Riem}^2)$
 to $(\mathcal G, C^2, R^2)$ is closed in
 the heat-kernel $a_4$ machinery of \texttt{HeatKernelExpansion.lean}
-(\S\ref{sec:heat-kernel}; the Stelle higher-curvature decomposition
-shipping as a sibling Lean module is in flight as a standalone
-\texttt{HigherCurvatureStelle.lean} module to be upstreamed in a
-subsequent iteration).
+(\S\ref{sec:heat-kernel}). The Stelle-basis identity is established
+directly via
+\texttt{HeatKernelExpansion.a4\_gauss\_bonnet\_combination}.
 
 \subsection{Stelle $(\alpha,\beta,\gamma)$ from heat-kernel $a_4$}
 
@@ -1448,11 +1477,13 @@ constrain $|\alpha|, |\beta|, |\gamma| \lesssim 10^{60}$ in
 geometric units; binary-black-hole inspiral observations from LIGO/Virgo
 constrain to $\lesssim 10^{50}$. The substrate's predictions
 sit at $\mathcal O(10^{-2})$ in geometric units, well beneath both
-ceilings (the comparison is established by combining the
-\texttt{HeatKernelExpansion} $a_4$ closed forms with the published
-observational-ceiling literature; the explicit
-\texttt{predictions\_below\_observational\_ceilings} closure ships in
-the in-flight \texttt{HigherCurvatureStelle.lean} module).
+ceilings. This is a numerical comparison combining the
+\texttt{HeatKernelExpansion} $a_4$ closed forms (\(a_4\) coefficients
+\texttt{a4\_R\_sq\_coef\_neg}, \texttt{a4\_Ricci\_sq\_coef\_pos},
+\texttt{a4\_Riemann\_sq\_coef\_neg}) with the published
+observational-ceiling literature; the comparison is a numerical
+statement at the substrate-prediction level rather than a single
+Lean closure.
 
 \subsection{Correctness-push: predictions vs ceilings (passes)}
 
@@ -1730,15 +1761,16 @@ torsion bounds at all natural microscopic parameter points
 
 The classical-gravity backbone supporting the singularity, area, and no-hair
 content of \S\ref{sec:causal-structure}--\S\ref{sec:no-hair} requires
-algebraic Lorentzian-geometry primitives that, prior to this work, were
-not formalised in any proof assistant on indefinite-signature metrics.
+algebraic Lorentzian-geometry primitives that are not part of
+Mathlib4's standard Riemannian-geometry library (which assumes
+positive-definite metrics).
 The supplement in \texttt{LorentzianMetric.lean},
 \texttt{RiemannianConnection.lean}, \texttt{RiemannCoordinate.lean},
 \texttt{RiemannDifferentialBianchi.lean},
 \texttt{BundleRiemann.lean}, and \texttt{BundleRiemannAux.lean} fills this
-gap. Bundle~I1 ships these as the primary first-formalization claim;
-\S\ref{sec:algebraic-gr-backbone} is the supplement that consumes them
-on the substrate side.
+gap. The bundle is documented in I1 (methodology) at primary scope;
+\S\ref{sec:algebraic-gr-backbone} is the substrate-side supplement
+consuming it.
 
 \subsection{Lorentzian metric typeclass}
 
@@ -1889,7 +1921,21 @@ states the load-bearing biconditional: under
 \texttt{IsADWPenroseApplicable} (the substrate-specific applicability
 predicate), the Penrose hypothesis is satisfied if and only if the
 spacetime is null-geodesically incomplete to the future of the
-trapped surface. This is the substrate's first-formalization Penrose
+trapped surface. The applicability predicate
+\texttt{IsADWPenroseApplicable} requires
+\emph{(i)} an ADW-substrate-scale tetrad present in the spacetime
+(the substrate's geometric register active);
+\emph{(ii)} a trapped-surface hypothesis on the candidate 2-surface
+(matching \texttt{PenroseSingularity.IsTrappedSurface});
+\emph{(iii)} a global-hyperbolicity witness for the substrate's
+causal structure; and \emph{(iv)} NEC closure on the substrate's
+ADW stress-energy tensor (matching \S\ref{sec:adw-gap}'s gap-equation
+energy-momentum). When all four conditions hold, the biconditional
+collapses on the Lean side via the Riccati-focusing route
+(\S\ref{sec:singularity-thms} above); when any one fails, the
+applicability predicate is false and the biconditional is vacuously
+satisfied (the Penrose hypothesis does not engage the substrate at
+that point). This is the substrate's first-formalization Penrose
 hypothesis bundle.
 
 
@@ -2099,9 +2145,12 @@ identifier with a one-line closure path:
   path as the Vergeles trio.
 \item \texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} — the
   substrate's horizon-MTC boundary-condition Prop record
-  (\S\ref{sec:bh-entropy}); five falsifier theorems cover the
-  alternative-MTC closures (abelian-MTC, generic-MTC, etc.). Cross-bridge
-  to Bundle~D4 \S 7 (HP-QEC consumes the same Prop record).
+  (\S\ref{sec:bh-entropy}); four named falsifier theorems cover the
+  alternative-MTC closures: \texttt{H\_HorizonBoundaryCondition\_falsifier\_positivity},
+  \texttt{H\_HorizonBoundaryCondition\_falsifier\_logBound},
+  \texttt{H\_HorizonBoundaryCondition\_falsifier\_secondLaw}, and
+  \texttt{H\_HorizonBoundaryCondition\_falsifier\_quarterCoefficient}.
+  Cross-bridge to Bundle~D4 \S 7 (HP-QEC consumes the same Prop record).
 \item \texttt{CFLChiralLagrangian.H\_TopologicalOrderBeyondLG} — the
   CFL-emergent-$\mathbb{Z}_3$ matching with QCD-centre $\mathbb{Z}_3$
   beyond the Landau-Ginzburg paradigm (\S\ref{sec:cfl-z3-matching});
@@ -2115,7 +2164,22 @@ identifier with a one-line closure path:
   criterion at $M_c = N_f \Lambda_{\mathrm{UV}}/(12\pi\,\alpha_{\mathrm{ADW}})$
   separating the Schottky-natural and ADW-extremality branches
   (\S\ref{sec:bch-four-laws}); shipped at the Lean-formalization scope
-  (no further closure required).
+  (no further closure required). Five BCH-four-laws falsifier theorems
+  cover the regime-partition obligations:
+  \texttt{falsifier\_acoustic\_decay\_form},
+  \texttt{falsifier\_schwarzschild\_heating},
+  \texttt{falsifier\_third\_law\_form},
+  \texttt{falsifier\_alpha\_ADW\_dependence}, and
+  \texttt{four\_laws\_consistent\_with\_acoustic\_regime}.
+\item \texttt{NonlinearEFE.IsADWPenroseApplicable} — substrate-specific
+  applicability predicate for the Penrose singularity hypothesis
+  (\S\ref{sec:singularity-thms}); the predicate requires
+  (i)~ADW-substrate-scale tetrad presence, (ii)~trapped-surface
+  hypothesis, (iii)~global-hyperbolicity witness, and (iv)~NEC closure
+  on the ADW stress-energy. Shipped at the Lean-formalization scope as
+  a substrate-data Prop; the substrate's correctness-push biconditional
+  \texttt{correctness\_push\_biconditional\_under\_applicable} closes
+  the Penrose direction under the applicability predicate.
 \item \texttt{NonlinearEFE.H\_NonlinearEFEHolds} — nonlinear-EFE chain
   through the path-(b) framework (\S\ref{sec:nonlinear-efe-ppn});
   shipped at the Lean-formalization scope.
@@ -2142,8 +2206,6 @@ identifier with a one-line closure path:
 \item \emph{In-flight numerical / non-Lean tracked premises:} RHMC
   convergence at $L \ge 8$ (\S\ref{sec:vestigial-mc}); explicit
   $\alpha_{\mathrm{ADW}}$ one-loop calculation (above);
-  \texttt{wen\_adw\_factor\_6000} closed-form corollary
-  (\S\ref{sec:wen-adw-deficit}; in-flight single-line discharge);
   Hu-Sawicki BHL bilocal back-reaction (\S\ref{sec:scalar-rung});
   PMNS structure on the Majorana rung (\S\ref{sec:majorana-rung}).
 \end{itemize}
@@ -2165,16 +2227,15 @@ share the $N_f = 16$ anchor. \S\ref{sec:cc-emergent} and Bundle~D5
 \S\ref{sec:algebraic-gr-backbone} and Bundle~I1 share the
 first-formalization claims; I1 is the primary, D3 the supplement.
 
-\subsection{Algebraic-Lorentzian-geometry first-formalization claims}
+\subsection{Algebraic-Lorentzian-geometry supplement scope}
 
-\S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} is, to our
-knowledge, the first machine-checked package on indefinite-signature
-metrics in any proof assistant for: the indefinite-signature
-Lorentzian-metric typeclass,
-Levi-Civita Christoffel uniqueness, the algebraic first Bianchi identity,
-the differential second Bianchi identity, the causal-structure axiom
-hierarchy, the Penrose singularity hypothesis bundle with the Riccati-focusing
-core, the Hawking--Penrose SEC variant with the
+\S\ref{sec:algebraic-gr-backbone}--\S\ref{sec:no-hair} ships a
+machine-checked package on indefinite-signature metrics covering:
+the indefinite-signature Lorentzian-metric typeclass, Levi-Civita
+Christoffel uniqueness, the algebraic first Bianchi identity, the
+differential second Bianchi identity, the causal-structure axiom
+hierarchy, the Penrose singularity hypothesis bundle with the
+Riccati-focusing core, the Hawking--Penrose SEC variant with the
 $\Lambda$-violates-SEC counterexample, the classical area theorem on the
 Schwarzschild family, and the Kerr-family no-hair statement with
 sub-extremality $J^2 \le M^4$. The supplementary infrastructure ships
@@ -2223,8 +2284,11 @@ the Phase~7 close-out window per the project strategy
 
 
 %% ─── Lifted from _phase6n_W1a_lean_only (§6) — 2026-05-06T15:40:15Z ───
-\section{BEC SK-EFT geometric envelope (NOT Gevrey-1)}
-\label{sec:d3-_phase6n_W1a_lean_only}
+%% D3 Stage-13 fix-pass 2026-05-11: header commented out per BLOCKER 4.1
+%% (empty post-§28 stub renders as TOC entry with no body in compiled PDF).
+%% Lift body content remains pending; restore \section + \label once content lands.
+%% \section{BEC SK-EFT geometric envelope (NOT Gevrey-1)}
+%% \label{sec:d3-_phase6n_W1a_lean_only}
 
 %% Insertion point hint from PAPER_DRAFT_MAPPING.md: §6
 %% Lift notes: D.2 absorption: Phase 6n W1a transport NO-GO landscape (substrate IS geometric envelope, not Gevrey-1; decouples asymptotic verdict from explicit γ_2^(loop))
@@ -2236,8 +2300,9 @@ the Phase~7 close-out window per the project strategy
 
 
 %% ─── Lifted from _phase6n_W2c_lean_only (§3) — 2026-05-06T15:40:20Z ───
-\section{LDP linear-response framework}
-\label{sec:d3-_phase6n_W2c_lean_only}
+%% D3 Stage-13 fix-pass 2026-05-11: header commented out (empty stub).
+%% \section{LDP linear-response framework}
+%% \label{sec:d3-_phase6n_W2c_lean_only}
 
 %% Insertion point hint from PAPER_DRAFT_MAPPING.md: §3
 %% Lift notes: D.2 absorption: Phase 6n W2c Crooks-on-analog-Hawking entry-point + W-form GC structural anchor + IsLDPRateFunction abstract
@@ -2249,8 +2314,9 @@ the Phase~7 close-out window per the project strategy
 
 
 %% ─── Lifted from _phase6o_W1a_lean_only (§3) — 2026-05-06T15:40:23Z ───
-\section{Boostless / Carrollian soft theorems on analog horizons (Phase 6o W1a)}
-\label{sec:d3-_phase6o_W1a_lean_only}
+%% D3 Stage-13 fix-pass 2026-05-11: header commented out (empty stub).
+%% \section{Boostless / Carrollian soft theorems on analog horizons (Phase 6o W1a)}
+%% \label{sec:d3-_phase6o_W1a_lean_only}
 
 %% Insertion point hint from PAPER_DRAFT_MAPPING.md: §3
 %% Lift notes: D.2 absorption: Phase 6o W1a analog-horizon Strominger triangle closure + ADW graviton subleading factor with Goldstone-broken-boost content
@@ -2262,8 +2328,9 @@ the Phase~7 close-out window per the project strategy
 
 
 %% ─── Lifted from _phase6o_W1b_lean_only (§6) — 2026-05-06T15:40:26Z ───
-\section{G4 Kerr-Schild double-copy on Petrov-D analog gravity}
-\label{sec:d3-_phase6o_W1b_lean_only}
+%% D3 Stage-13 fix-pass 2026-05-11: header commented out (empty stub).
+%% \section{G4 Kerr-Schild double-copy on Petrov-D analog gravity}
+%% \label{sec:d3-_phase6o_W1b_lean_only}
 
 %% Insertion point hint from PAPER_DRAFT_MAPPING.md: §6
 %% Lift notes: D.2 absorption: Phase 6o W1b vestigial-graviton landscape: Kerr-Schild double-copy on Petrov-D acoustic + 3-obstruction strong-form BCJ NO-GO theorem-pair
@@ -2275,8 +2342,9 @@ the Phase~7 close-out window per the project strategy
 
 
 %% ─── Lifted from _phase6o_W3b_lean_only (§6) — 2026-05-06T15:40:30Z ───
-\section{It\^o + LDP-$\alpha$ + LDP-$\beta$ substrate (Phase 6o W3b cross-bridge)}
-\label{sec:d3-_phase6o_W3b_lean_only}
+%% D3 Stage-13 fix-pass 2026-05-11: header commented out (empty stub).
+%% \section{It\^o + LDP-$\alpha$ + LDP-$\beta$ substrate (Phase 6o W3b cross-bridge)}
+%% \label{sec:d3-_phase6o_W3b_lean_only}
 
 %% Insertion point hint from PAPER_DRAFT_MAPPING.md: §6
 %% Lift notes: D.2 absorption: Phase 6o W3b Itô-time form W-form GC + Glorioso-Liu monotonicity cross-bridge via LDPCompatibleSKEFT typeclass
@@ -2288,8 +2356,9 @@ the Phase~7 close-out window per the project strategy
 
 
 %% ─── Lifted from _phase6o_W1c_writeup (§10) — 2026-05-06T15:40:35Z ───
-\section{Dissipative SK-EFT bootstrap-uniqueness NO-GO (Phase 6o W1c writeup)}
-\label{sec:d3-_phase6o_W1c_writeup}
+%% D3 Stage-13 fix-pass 2026-05-11: header commented out (empty stub).
+%% \section{Dissipative SK-EFT bootstrap-uniqueness NO-GO (Phase 6o W1c writeup)}
+%% \label{sec:d3-_phase6o_W1c_writeup}
 
 %% Insertion point hint from PAPER_DRAFT_MAPPING.md: §10
 %% Lift notes: D.2 absorption: Phase 6o W1c G1 NO-GO writeup (parallel to 6n.η) — 3 structural obstructions: unitarity→KMS replacement breaks EFT-positivity; crossing has no doubled-contour analog; SDP feasibility breaks on complex contour
@@ -2301,8 +2370,9 @@ the Phase~7 close-out window per the project strategy
 
 
 %% ─── Lifted from _phase6o_W2a_lean_only (§17) — 2026-05-06T15:40:38Z ───
-\section{APS $\eta$-invariant for analog horizons (Phase 6o W2a)}
-\label{sec:d3-_phase6o_W2a_lean_only}
+%% D3 Stage-13 fix-pass 2026-05-11: header commented out (empty stub).
+%% \section{APS $\eta$-invariant for analog horizons (Phase 6o W2a)}
+%% \label{sec:d3-_phase6o_W2a_lean_only}
 
 %% Insertion point hint from PAPER_DRAFT_MAPPING.md: §17
 %% Lift notes: D.2 absorption: Phase 6o W2a heat-kernel APS-η substrate cross-bridge (BEC + ADW parity-symmetric → η = 0; ³He-A non-degenerate cell → substantive APS boundary correction)
@@ -2339,7 +2409,7 @@ S.~L.~Adler,
 with spontaneous scale breaking,''
 Phys.\ Rev.\ Lett.\ \textbf{44}, 1567 (1980).
 
-\bibitem{Akama1979}
+\bibitem{Akama1978}
 K.~Akama,
 ``An attempt at pregeometry: gravity with composite metric,''
 Prog.\ Theor.\ Phys.\ \textbf{60}, 1900 (1978).
@@ -2579,7 +2649,7 @@ in preparation (2026), Bundle L2 splash.
 
 \bibitem{Roehm2026Strategy}
 J.~G.~Roehm,
-``SK-EFT Hawking 13-bundle publication architecture,''
+``SK-EFT Hawking 14-bundle publication architecture,''
 project paper-strategy frame, in preparation (2026).
 
 \bibitem{Sakharov1967}

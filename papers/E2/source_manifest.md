@@ -1,6 +1,6 @@
 # Bundle E2 — Source Manifest
 
-**Auto-generated:** 2026-05-06
+**Auto-generated:** 2026-05-12
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`E2`
@@ -11,7 +11,7 @@
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
 | `_phase6n_W1a_lean_only` | (see mapping) | (unspecified) | (see mapping) | (missing) |
-| `paper16_graphene_sk_eft` | (see mapping) | Lift-companion | (see mapping) | 2026-04-29T19:14:08Z |
+| `paper16_graphene_sk_eft` | (see mapping) | Lift-companion | (see mapping) | 2026-05-12T12:42:35Z |
 
 ## Coverage notes
 

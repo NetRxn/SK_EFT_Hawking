@@ -90,6 +90,38 @@ The synthetic source-paper key (`<X>_initial_draft`) registers the lift event in
 
 After append: `bundle_metadata.json.last_lift` = now; `stage13_redo_required` = true; `stage{9,10,13}_status` reset to `pending`.
 
+#### §3d. Bookkeeping-only events (no content change)
+
+Sometimes source-paper mtimes drift but the bundle's own `paper_draft.tex` does **not** need a content lift. Verified cases include:
+
+- **Auto-regenerated artifacts in source-paper dirs** (e.g., `scripts/render_paper_tables.py` rewriting `tables/*.tex`) when the bundle does not `\input` those source tables. Bundle compile path is decoupled; source mtimes are misleading.
+- **Per-paper prose revisions that have no counterpart in the bundle draft.** If a source paper's abstract is rewritten but the bundle draft was already written without quoting that abstract verbatim, no propagation is needed.
+- **Inline absorption that bypassed the formal `bundle_append.py` cycle.** If a bundle draft was edited directly to absorb source-paper changes without going through `--initial-lift` / append, that edit needs to be retroactively recorded.
+
+In these cases, `validate.py --check bundle_source_freshness` will flag the bundle stale, but a real lift would be inappropriate (no `\section` to insert; no stage9/10/13 redo is warranted because reviewed content is unchanged).
+
+The canonical tool is:
+
+```bash
+uv run python scripts/bundle_append.py --bundle <X> --bookkeeping-only \
+    --lift-action <Action> \
+    --notes "<why no content change is needed; reference the specific drift>"
+```
+
+Where `<Action>` is one of:
+- `Freshness-bookkeeping` — generic source-mtime drift acknowledgement
+- `Prose-revision-bookkeeping` — source paper prose was revised but bundle prose was already aligned
+- `Inline-absorption-record` — retroactively records a bundle-draft edit that absorbed source-paper content outside the formal append cycle
+
+Effects (vs `§3a`/`§3b` full lifts):
+- Appends `lift_action: "<Action>"`, `stage13_redo_required: false`, `bundle_section_inserted: "(n/a — bookkeeping)"` to `append_log.json`
+- Appends a dated H2 to `change_log.md` flagged `(bookkeeping)`
+- Bumps `bundle_metadata.json.last_lift` and clears `freshness_stale`
+- **Does NOT** touch `paper_draft.tex`
+- **Does NOT** flip `stage{9,10,13}_status` — the prior review remains valid
+
+The notes field is required; it carries the entire explanation of why no content change was needed, so it should specifically name the drifted files and the verification (`grep`, manual inspection, or compile-time decoupling) that justifies the bookkeeping path over a real lift.
+
 ### §4. Sentence-state migration
 
 After all source-paper appends for the bundle have run (often a single sub-wave), migrate sentence-level provenance:

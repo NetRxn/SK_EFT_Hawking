@@ -250,3 +250,19 @@ or L3 from GATE 1 alone.
 Pre-existing GREEN reviewer-triple state (Stage 9 yellow / Stage 10
 green / Stage 13 green from 2026-05-01) reset to pending pending
 re-review.
+
+## 2026-05-11 — Freshness-bookkeeping (bookkeeping)
+
+- Source: (none — bookkeeping event for Stage-13-sweep freshness cleanup)
+- Lift action: Freshness-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-11 Stage-13-sweep freshness cleanup: paper15_methodology/tables/table1_stages.tex + table2_checks.tex regenerated at 12:56. I1 bundle paper_draft.tex does NOT \input source paper tables; bundle compile path unaffected. No bundle content change required; last_lift bumped.
+
+## 2026-05-12 - Prose-revision-bookkeeping (bookkeeping)
+
+- Source: (none - project-wide first-claim-removal prose revision)
+- Lift action: Prose-revision-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: 2026-05-12 first-claim-removal: paper44_riemannian_connection signature-falsifier wording softened; I1 bundle own draft 'this paper is the first bundle to be drafted under the architecture' -> 'this paper is drafted under that architecture'. I1's §lessons-learned reference at line 1141 (citing a historical 'first machine-checked' claim that had unrecognized Coq prior art) is PRESERVED INTACT - it documents the failure mode that motivated Stage-13 and is load-bearing pedagogical content.
