@@ -217,11 +217,16 @@ narrowly correct: it asks Mathlib4 for *only* the substrate D-N actually
 use, not a strictly-stronger universal claim.
 
 Discharge plan: ~300 LoC of new analytic content lifting `bch_order_2_axiom`
-to a theorem; depends on:
-  - Mathlib4 PR for `Matrix.norm_exp_sub_taylor_le n A` (matrix Taylor
-    remainder; port from `Complex.norm_exp_sub_sum_le_exp_norm_sub_sum`).
-  - Local construction of the four-fold product expansion + order-2
-    cancellation calculation.
+to a theorem; built **in-tree** (eventual Mathlib upstream PR contingent on
+separate user sign-off per project policy):
+  - Matrix Taylor remainder `Matrix.norm_exp_sub_taylor_le n A` (~80 LoC;
+    lift scalar `Complex.norm_exp_sub_sum_le_exp_norm_sub_sum` via
+    `NormedSpace.expSeries`; Mathlib has all primitive ingredients).
+  - Four-fold Hermitian product expansion + order-2 cancellation (~150 LoC;
+    Ozols 2009 Claim 1 gives the explicit calculation; first-formalization-
+    territory across all proof assistants).
+  - Triangle-inequality closure against `exp(-[F,G]) = I - [F,G] + O(δ⁴)`
+    using `Matrix.linftyOpNorm` submultiplicativity (~70 LoC; straightforward).
 
 Zero sorry. One axiom (`bch_order_2_axiom`) — tightened to match D-N exactly.
 -/

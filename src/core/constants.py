@@ -1553,34 +1553,48 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                   'QHLProver, Agda).',
         'module': 'MatrixBCH',
         'discharge_plan': {
-            'wave': 'Phase 6p Wave 2d.2-followup (post-Mathlib matrix Taylor remainder)',
+            'wave': 'Phase 6p Wave 2d.2-followup (in-tree Mathlib-infra build)',
             'estimated_loc': 300,
+            'authorization': 'In-tree build authorized per Phase 6p policy: any '
+                             'substantive work to complete a wave/phase/discharge '
+                             'an axiom is authorized provided no external Mathlib '
+                             'submission, external-group coordination, or '
+                             'publication. Eventual upstream PR contingent on '
+                             'separate user sign-off.',
             'sub_pieces': [
                 {
                     'name': 'matrix Taylor remainder',
                     'loc': 80,
-                    'mathlib_status': 'MISSING (scalar version present as '
-                                      'Complex.norm_exp_sub_sum_le_exp_norm_sub_sum; '
-                                      'matrix lift requires NormedSpace.expSeries).',
+                    'in_tree_status': 'Build target: lift scalar '
+                                      'Complex.norm_exp_sub_sum_le_exp_norm_sub_sum '
+                                      'to matrices via NormedSpace.expSeries '
+                                      '(project-local module Mathlib.Analysis. '
+                                      'NormedSpace.Exponential subset). Mathlib4 '
+                                      'has all primitive ingredients.',
                 },
                 {
                     'name': 'four-fold product expansion + order-2 cancellation',
                     'loc': 150,
-                    'mathlib_status': 'MISSING (this is the load-bearing '
-                                      'piece; Ozols 2009 Claim 1 gives the '
-                                      'explicit cancellation calculation).',
+                    'in_tree_status': 'Build target: load-bearing piece; Ozols '
+                                      '2009 Claim 1 gives the explicit '
+                                      'cancellation calculation. Direct '
+                                      'transcription to Lean over Matrix '
+                                      '(Fin d) (Fin d) ℂ.',
                 },
                 {
                     'name': 'comparison to exp([A,B]) via triangle inequality',
                     'loc': 70,
-                    'mathlib_status': 'MISSING (matrix-norm submultiplicativity '
-                                      '+ scalar Taylor — straightforward).',
+                    'in_tree_status': 'Build target: matrix-norm submultiplicativity '
+                                      '(Matrix.linftyOpNorm_mul, present) + '
+                                      'scalar Taylor remainder — straightforward.',
                 },
             ],
-            'mathlib_pr_target': 'Matrix.norm_exp_sub_taylor_le (matrix Taylor '
-                                 'remainder; port from scalar). Once landed '
-                                 'upstream, the local 300 LoC discharge proceeds '
-                                 'via direct power-series manipulation.',
+            'eventual_upstream_target': 'Matrix.norm_exp_sub_taylor_le + non-'
+                                        'commuting exp(A)·exp(B) order-2 '
+                                        'expansion are clean Mathlib upstream '
+                                        'candidates after in-tree validation. '
+                                        'Upstream submission gated on explicit '
+                                        'user sign-off per project policy.',
         },
         'source': 'Dawson & Nielsen, *Quantum Info. & Comp.* 6 (2006), 81–95; '
                   'arXiv:quant-ph/0505030 §5.2 Lemma 3, p. 12. Cites Rossmann '
@@ -1620,16 +1634,20 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                                                             'universal-'
                                                             'quantifier '
                                                             'domain).',
-            'substrate_gaps_post_tightening': [
+            'in_tree_substrate_to_build_for_discharge': [
                 'Matrix Taylor remainder: ‖exp(X) - (1+X+X²/2)‖ ≤ '
-                '‖X‖³·exp(‖X‖)/6 (Mathlib has scalar Complex.'
-                'norm_exp_sub_sum_le_exp_norm_sub_sum, missing matrix lift)',
+                '‖X‖³·exp(‖X‖)/6. Mathlib has scalar version '
+                '(Complex.norm_exp_sub_sum_le_exp_norm_sub_sum); '
+                'matrix lift via NormedSpace.expSeries is ~80 LoC '
+                'in-tree build (eventual upstream PR candidate).',
                 'Hermitian-product 4-fold expansion to order 3 + order-2 '
-                'cancellation (no precedent in any prover; Ozols 2009 '
-                'Claim 1 gives the explicit calculation, ~150 LoC)',
+                'cancellation (Ozols 2009 Claim 1 explicit calculation; '
+                '~150 LoC project-local; first-formalization-territory '
+                'across all proof assistants — substantial Mathlib upstream '
+                'candidate after in-tree validation).',
                 'Triangle-inequality closure against exp(-[F,G]) = '
-                'I - [F,G] + O(δ⁴) (uses Matrix.linftyOpNorm '
-                'submultiplicativity, ~70 LoC)',
+                'I - [F,G] + O(δ⁴) using Matrix.linftyOpNorm '
+                'submultiplicativity (~70 LoC; straightforward).',
             ],
         },
     },
@@ -1698,14 +1716,21 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
             '2c.4d (Decoupling Lemma 4.2 for d ≥ 9)': 280,
             'total': 530,
         },
-        'substrate_gaps_blocking_2c.4d': {
-            'IsCompact on Matrix.specialUnitaryGroup': 'absent in Mathlib4 '
-                'as of pin 8850ed93. Estimated ~80 LoC to add upstream or '
-                'project-local.',
-            'PathConnectedSpace on Matrix.specialUnitaryGroup': 'absent. '
-                '~80 LoC upstream port.',
-            'LieGroup on Matrix.specialUnitaryGroup': 'absent. ~200 LoC '
-                'upstream port.',
+        'in_tree_mathlib_infra_to_build_for_discharge': {
+            'authorization': 'In-tree build authorized per Phase 6p policy. '
+                             'Eventual upstream PR contingent on separate user '
+                             'sign-off; coordinate before submission.',
+            'IsCompact on Matrix.specialUnitaryGroup': 'Build target: derive '
+                'from Matrix.unitaryGroup compactness (present in Mathlib4) + '
+                'det⁻¹{1} closed slice. ~80 LoC project-local; clean Mathlib '
+                'upstream candidate.',
+            'PathConnectedSpace on Matrix.specialUnitaryGroup': 'Build target: '
+                '~80 LoC project-local; path-construction via 1-parameter '
+                'subgroups exp(t·X) for skew-Hermitian X with tr X = 0.',
+            'LieGroup on Matrix.specialUnitaryGroup': 'Build target: ~200 LoC '
+                'project-local; needed only for 2c.4d Decoupling Lemma path '
+                '(d ≥ 9). Project use-cases (qutrit d=3, quintet d=5) do NOT '
+                'require this — the no-Decoupling path suffices.',
         },
         'source': 'Aharonov & Arad 2011, *New J. Phys.* 13, 035019; '
                   'arXiv:quant-ph/0605181 §4 (density Theorem 3.2) and '
