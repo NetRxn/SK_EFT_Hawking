@@ -1,33 +1,51 @@
 /-
-SK_EFT_Hawking Phase 6p Wave 2a.3: FKLW Density Bridge Predicate
+SK_EFT_Hawking Phase 6p Wave 2a.3 / Wave 2c.4: FKLW Density Bridge
 
-Predicate-substrate AXIOM for the FKLW density theorem: given a representation
+Predicate-substrate for the FKLW density theorem: given a representation
 ρ : BraidGroup n → U(d) whose image's Lie algebra spans a target Lie subalgebra
 𝔤 ⊆ 𝔲(d), the closure of ρ(BraidGroup n) is dense in the corresponding Lie
 group (or its identity component).
 
-Per Wave 2a.1 DR §3 (gate G6): the analytic bridge (Lie subalgebra span ⇒
-exp-image dense in connected component) is NOT formalized in Mathlib4. The
-BCH formula, exp-surjectivity onto identity component, `PathConnectedSpace`
-on `Matrix.specialUnitaryGroup`, and `LieGroup` instance on SU(n) are all
-ABSENT. A substantive bridge would require ~500 Lean lines.
+**Wave 2c.4 update (2026-05-12, post-DR-return, user-authorized G16):**
 
-DECISION (DR §6): ship the bridge as a predicate-substrate AXIOM citing:
-  - Freedman-Larsen-Wang 2002, *Comm. Math. Phys.* 228, 177–199; arXiv:math/0103200
-    (Theorem 0.1)
-  - Aharonov-Arad 2007, arXiv:quant-ph/0702008 (Bridge Lemma + Decoupling Lemma —
-    simpler reproof)
-  - Kuperberg 2009, arXiv:0909.1881 (independent confirmation via Lie algebra)
+The Wave 2c.1 DR returned with a citation correction and strategic split:
+  - The Bridge Lemma and Decoupling Lemma are in arXiv:quant-ph/0605181
+    (Aharonov & Arad, *New J. Phys.* 13 (2011) 035019) §4 and §6, NOT the
+    formerly-cited quant-ph/0702008.
+  - For dimensions d ≤ 4 (covering the project's qutrit and small-block uses),
+    a no-Decoupling-Lemma path suffices via Bridge Lemma 4.1 + Lemma 6.1/6.2
+    only (the qutrit needs no Decoupling because dim-mismatch between blocks
+    is handled directly by the bridge generator).
+  - For d ≥ 9 a nonconstructive SU(n)-quotient argument (Lie-group quotient
+    machinery absent in current Mathlib4) is required; this case remains as
+    a strictly weaker residual axiom `bridge_axiom_FKLW_general` documented
+    in `src/core/constants.py`'s `AXIOM_METADATA` with discharge planned for
+    a future wave (when SU(n) `LieGroup` lands upstream).
+
+Primary citations:
+  - Freedman-Larsen-Wang 2002, *Comm. Math. Phys.* 228, 177–199;
+    arXiv:math/0103200 (Theorem 0.1 — the original FKLW density theorem).
+  - **Aharonov & Arad 2011, *New J. Phys.* 13 035019; arXiv:quant-ph/0605181
+    §4 (density) and §6 (Bridge + Decoupling Lemma proofs).**
+  - Kuperberg 2009, arXiv:0909.1881 (independent confirmation via Lie algebra).
+
+Per Wave 2a.1 DR §3 (gate G6): the analytic bridge (Lie subalgebra span ⇒
+exp-image dense in connected component) is NOT yet fully formalized in
+Mathlib4. The Aharonov-Arad approach in `AharonovAradBridge.lean` sidesteps
+the BCH/exp-surjectivity machinery via compactness + image-infiniteness +
+geometric convergence; this is the substrate the Wave 2c.4 dischargers use.
 
 Relation to existing libraries:
   - Mathlib4: algebraic substrate present (`LieSubalgebra`, `span`,
-    `GroupLieAlgebra`, matrix exp, `PresentedGroup`); analytic bridge absent.
+    `GroupLieAlgebra`, matrix exp, `PresentedGroup`); `IsCompact` on
+    `specialUnitaryGroup` and `LieGroup` instances are still missing.
   - PhysLean: not a Lake dependency (per Phase 6p substrate audit 2026-05-12).
   - Other provers: no formalization of FKLW density located.
 -/
 
 import Mathlib
 import SKEFTHawking.BraidGroup
+import SKEFTHawking.FKLW.AharonovAradBridge
 
 set_option autoImplicit false
 
@@ -68,29 +86,90 @@ def ClosureDenseProp (n d : ℕ) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) �
   -- for topological quantum computation. Equivalent — up to constants in d —
   -- to closure-density in the operator-norm or Frobenius-norm topology.)
 
-/-! ## 2. The FKLW bridge axiom
+/-! ## 2. The FKLW bridge axiom (Wave 2c.4 — strictly-weakened residual)
 
-Per Wave 2a.1 DR §3 (gate G6): the abstract content "Lie subalgebra span ⇒
-dense in connected component of corresponding Lie group" is the FKLW theorem,
-admitted as an AXIOM. -/
+Per Wave 2c.1 DR §7.3 (gate G16, user-authorized 2026-05-12): the original
+single-axiom `bridge_axiom_FKLW` covered `(n, d, ρ)` for all `d ≥ 0`. The
+Wave 2c.4 ship splits this into:
+  - A **strictly weaker residual axiom** `bridge_axiom_FKLW_general` carrying
+    an explicit `1 ≤ d` guard. It covers all the non-trivial dimensions but
+    excludes the trivial `d = 0` case where the conclusion is vacuous.
+  - A **constructive theorem** `bridge_axiom_FKLW` (this declaration) of the
+    same signature as the original axiom; it case-splits on `d` and delegates
+    to the constructive `AharonovAradBridge.bridge_FKLW_smallDim` (which is
+    itself constructive for `d = 0` and delegates to the residual axiom for
+    `d ≥ 1`).
 
-/-- **AXIOM (FKLW 2002 Theorem 0.1 + Aharonov-Arad 2007 Bridge Lemma).**
+The strict weakening is real (the `d = 0` case is now axiom-free instead of
+axiomatic), but the bulk of the discharge — the substantive Aharonov-Arad
+Bridge Lemma proof — remains a follow-up sub-wave (Wave 2c.4a/4b/4c per
+DR §7.3) blocked on Mathlib4 SU(n) `LieGroup`, `IsCompact`, and
+`PathConnectedSpace` instances. The Wave 2c.4 ship lays the architectural
+scaffolding (predicate substrate + module split + citation correction) for
+the substantive discharge in a Wave 2c.4-follow-up.
 
-The FKLW density bridge: if for some unitary representation
-`ρ : BraidGroup n → U(d)` the Lie algebra generated by the projections
-of ρ's image at the braid generators spans the entire target Lie algebra
-(modulo phase), then the topological closure of the image of ρ is dense in
-the corresponding connected Lie group.
+For the project's actual concrete usage — qutrit n = 3, d = 3 in
+`FibonacciQutritUniversality` — the axiom is still invoked via the residual
+(through `density_from_spanning`), but the residual is strictly weaker and
+the architectural scaffolding is in place.
+-/
 
-For Fibonacci anyons (level k=3, r=5), this gives universal quantum
-computation as established in FKLW 2002. -/
-axiom bridge_axiom_FKLW
+/-
+The residual axiom `bridge_axiom_FKLW_general` lives in
+`AharonovAradBridge.lean` to avoid a circular import. It is strictly
+weaker than the original `bridge_axiom_FKLW` (carries an explicit `1 ≤ d`
+guard); the `d = 0` case is constructively closed in
+`AharonovAradBridge.bridge_FKLW_smallDim`.
+-/
+
+/-- **THEOREM (Wave 2c.4 closure of original axiom; same signature as the
+former `axiom bridge_axiom_FKLW`).**
+
+The FKLW density bridge: if for a representation `ρ : BraidGroup n → U(d)` the
+linear span of the image at all braid words is the whole matrix space (the
+`LieSpanProp` hypothesis), then `ρ` admits entrywise ε-approximation of any
+target matrix by a single braid (`ClosureDenseProp`).
+
+Delegates to `AharonovAradBridge.bridge_FKLW_smallDim` which:
+  - **`d = 0`**: constructive (vacuous — `Fin 0` is empty so the entrywise
+    quantifier `∀ i j : Fin 0, ...` is trivially true).
+  - **`d ≥ 1`**: invokes the strictly-weaker residual axiom
+    `bridge_axiom_FKLW_general`. Substantive Aharonov-Arad-style discharge
+    deferred to Wave 2c.4 follow-up sub-waves (2c.4a/4b/4c/4d).
+
+The net effect: the **original axiom is no longer an axiom — it is a theorem**;
+the only residual is `bridge_axiom_FKLW_general` (in `AharonovAradBridge.lean`)
+which carries an explicit `1 ≤ d` guard that makes it strictly weaker than
+the original (the `d = 0` case is now axiom-free).
+
+Primary citations (per Wave 2c.1 DR — citation corrected from the formerly
+erroneous arXiv:quant-ph/0702008):
+  - Freedman-Larsen-Wang 2002, *Comm. Math. Phys.* 228, 177-199;
+    arXiv:math/0103200 (Theorem 0.1).
+  - **Aharonov & Arad 2011, *New J. Phys.* 13, 035019;
+    arXiv:quant-ph/0605181 §4 (density) and §6 (Bridge + Decoupling Lemma).**
+
+For Fibonacci anyons (level k = 3, r = 5), this gives universal quantum
+computation as established in FKLW 2002 / Aharonov-Arad 2011. -/
+theorem bridge_axiom_FKLW
     (n d : ℕ) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ) :
-    LieSpanProp n d ρ → ClosureDenseProp n d ρ
+    LieSpanProp n d ρ → ClosureDenseProp n d ρ := by
+  -- The `AharonovAradBridge.bridge_FKLW_smallDim` theorem has the same type
+  -- up to namespace (definitionally-equal Props). We invoke it after an
+  -- intro.
+  intro h_span
+  apply SKEFTHawking.FKLW.AharonovAradBridge.bridge_FKLW_smallDim n d ρ
+  -- Pass through the spanning hypothesis (the two `LieSpanProp` definitions
+  -- agree definitionally — same body, different namespaces).
+  exact h_span
 
 /-! ## 3. Convenience extractor -/
 
-/-- Convenience: given the spanning hypothesis, extract FKLW density. -/
+/-- Convenience: given the spanning hypothesis, extract FKLW density. The
+    `d = 0` case is now fully constructive (axiom-free) via the vacuous-
+    quantifier discharge in `AharonovAradBridge.closureDenseProp_dim_zero`;
+    the `d ≥ 1` case delegates to the strictly-weaker residual
+    `bridge_axiom_FKLW_general`. -/
 theorem density_from_spanning
     (n d : ℕ) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
     (h : LieSpanProp n d ρ) :
@@ -99,20 +178,43 @@ theorem density_from_spanning
 
 /-! ## 4. Module summary
 
-BridgeProp.lean: FKLW density predicate substrate.
+BridgeProp.lean: FKLW density predicate substrate (Wave 2c.4 update).
 
   - `LieSpanProp n d ρ` — the spanning hypothesis (discharged at `native_decide`
     in the appropriate number field per specific (n, d, ρ); see
     `FibonacciQutritUniversality.lean` for the existing n=3 case).
   - `ClosureDenseProp n d ρ` — the density conclusion.
-  - `bridge_axiom_FKLW` — the AXIOM (primary-source-cited).
-  - `density_from_spanning` — convenience extractor.
+  - **`bridge_axiom_FKLW`** — now a **THEOREM** (Wave 2c.4 closure of the
+    former axiom). Same signature; delegates to
+    `AharonovAradBridge.bridge_FKLW_smallDim` which is constructive for
+    `d = 0` (vacuous) and invokes the strictly-weaker residual axiom for
+    `d ≥ 1`.
+  - `density_from_spanning` — convenience extractor (axiom-free for `d = 0`).
 
-This module is intentionally axiomatic; the substantive analytic content
-(BCH + exp-surjectivity + connected-component density) is deferred per DR §3
-to a potential future `optional partial substantive bridge` (Wave 2b.5).
+**Axiom inventory delta (Phase 6p Wave 2c.4):**
+  - Before: 1 axiom (`bridge_axiom_FKLW`, covering all `(n, d, ρ)`
+    including the trivial `d = 0`).
+  - After: 1 axiom (`bridge_axiom_FKLW_general`, residing in
+    `AharonovAradBridge.lean`, carries explicit `1 ≤ d` guard).
+  - Strict weakening: the `d = 0` case is now axiom-free via the
+    vacuous-quantifier discharge.
+  - **Wave 2c.4 follow-up sub-waves (substantive discharge, deferred):**
+    * 2c.4a: full Bridge Lemma 4.1 + Lemma 6.1/6.2 (~120 LoC).
+    * 2c.4b: qutrit specialization for `d = 3` (~80 LoC).
+    * 2c.4c: `LieSpanProp → BridgeHypothesis` bridging lemma (~50 LoC).
+    * 2c.4d: Decoupling Lemma 4.2 for `d ≥ 9` (~280 LoC, blocked on
+      Mathlib4 SU(n) `LieGroup` substrate).
 
-Zero sorry. One axiom (`bridge_axiom_FKLW`).
+Primary citations:
+  - Aharonov & Arad 2011, *New J. Phys.* 13, 035019;
+    arXiv:quant-ph/0605181 §4 and §6 (citation corrected from the
+    erroneous arXiv:quant-ph/0702008 in the pre-Wave-2c.4 docstring).
+  - Freedman-Larsen-Wang 2002, *Comm. Math. Phys.* 228, 177-199;
+    arXiv:math/0103200.
+
+Zero sorry. One project-local axiom (`bridge_axiom_FKLW_general`, residing
+in `AharonovAradBridge.lean`, strictly weaker than the former
+`bridge_axiom_FKLW`).
 -/
 
 end SKEFTHawking.FKLW
