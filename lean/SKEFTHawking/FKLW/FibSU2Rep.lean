@@ -622,72 +622,170 @@ theorem σ_Fib_2_apply_11 :
     have := φInvSqrt_C_sq; rw [sq] at this; exact this
   linear_combination R1_C * hq2
 
--- **Yang-Baxter matrix entry [0,0]** (R4.2.b.2 target):
--- `(σ_Fib_1 * σ_Fib_2 * σ_Fib_1) 0 0 = (σ_Fib_2 * σ_Fib_1 * σ_Fib_2) 0 0`
---
--- Substrate ready (this commit):
---   - σ_Fib_1_apply_* matrix entry rfl-lemmas
---   - σ_Fib_2_apply_* matrix entry lemmas (use q²=p internally)
---   - fib_yb_core_identity : `φInv_C²·(R1_C²+Rtau_C²) + (2·φInv_C-1)·R1_C·Rtau_C = 0`
---   - φInv_C_pow_3 : `φInv_C³ = 2·φInv_C - 1`
---   - φInvSqrt_C_sq : `φInvSqrt_C² = φInv_C`
---
--- After `rw [σ_Fib_2_apply_*]` the matrix equation becomes a polynomial
--- identity in {R1_C, Rtau_C, φInv_C, φInvSqrt_C}. Analytical derivation
--- (see §9) shows LHS - RHS factors as `(R1_C - Rtau_C) · φInv_C · core`
--- plus terms cancelled by hφ3 + hq2. The `linear_combination` proof
--- requires careful coefficient derivation (~30-100 LoC trial-and-error
--- without the now-defunct `polyrith` tactic). R4.2.b.2 ship deferred
--- pending coefficient analysis or alternative tactic.
+/-- **Yang-Baxter matrix entry [0,0]** (R4.2.b.3, this commit):
 
-/-! ## 9. Yang-Baxter algebraic reduction (analytical sketch for R4.2.b.2)
+`(σ_Fib_1 * σ_Fib_2 * σ_Fib_1) 0 0 = (σ_Fib_2 * σ_Fib_1 * σ_Fib_2) 0 0`
+
+After expanding via `Matrix.mul_apply` + `Fin.sum_univ_two`, both sides
+become polynomials in `{R1_C, Rtau_C, φInv_C, φInvSqrt_C}`. Manual
+coefficient derivation (see comments inside the proof) yields:
+
+  LHS - RHS = c_phisqrt · (φInvSqrt_C² - φInv_C)
+            + c_hcore   · (φInv_C² · (R1_C² + Rtau_C²) + (2·φInv_C - 1)·R1_C·Rtau_C)
+            + c_hsq     · (φInv_C² + φInv_C - 1)
+
+with
+  c_phisqrt = -φInv_C² · Rtau_C · (R1_C - Rtau_C)²
+  c_hcore   = (R1_C - Rtau_C) · φInv_C
+  c_hsq     = -φInv_C² · R1_C³ - 2·φInv_C·R1_C²·Rtau_C + φInv_C·R1_C·Rtau_C²
+
+The strategy and coefficient derivation is documented in §9. -/
+theorem σ_Fib_yb_entry_00 :
+    (σ_Fib_1 * σ_Fib_2 * σ_Fib_1) 0 0 =
+      (σ_Fib_2 * σ_Fib_1 * σ_Fib_2) 0 0 := by
+  -- Step 1: Expand matrix products
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             σ_Fib_1_apply_00, σ_Fib_1_apply_01, σ_Fib_1_apply_10, σ_Fib_1_apply_11,
+             σ_Fib_2_apply_00, σ_Fib_2_apply_01, σ_Fib_2_apply_10, σ_Fib_2_apply_11,
+             mul_zero, zero_mul, add_zero, zero_add]
+  -- Step 2: Set up hypotheses
+  have hq2 : φInvSqrt_C ^ 2 = φInv_C := φInvSqrt_C_sq
+  have hsq : φInv_C ^ 2 + φInv_C = 1 := φInv_C_sq_add_self
+  have hcore : φInv_C ^ 2 * (R1_C ^ 2 + Rtau_C ^ 2) +
+               (2 * φInv_C - 1) * R1_C * Rtau_C = 0 := fib_yb_core_identity
+  -- Step 3: linear_combination with hand-derived coefficients
+  linear_combination
+    (-(φInv_C ^ 2 * Rtau_C * (R1_C - Rtau_C) ^ 2)) * hq2 +
+    ((R1_C - Rtau_C) * φInv_C) * hcore +
+    (-(φInv_C ^ 2 * R1_C ^ 3) - 2 * φInv_C * R1_C ^ 2 * Rtau_C +
+      φInv_C * R1_C * Rtau_C ^ 2) * hsq
+
+/-- **Yang-Baxter matrix entry [0,1]** (R4.2.b.3).
+
+After expansion via `Matrix.mul_apply`:
+  LHS[0,1] = R1_C · σ_Fib_2[0,1] · Rtau_C = φInv_C · φInvSqrt_C · R1_C · Rtau_C · (R1_C - Rtau_C)
+  RHS[0,1] = factors as φInv_C · φInvSqrt_C · (R1_C - Rtau_C) · [φInv_C²·(R1_C² + Rtau_C²) + 2·φInv_C·R1_C·Rtau_C]
+
+The difference factors cleanly as `-φInv_C · φInvSqrt_C · (R1_C - Rtau_C) · hcore`,
+so only `fib_yb_core_identity` is needed (no `hq2` or `hsq` consumed). -/
+theorem σ_Fib_yb_entry_01 :
+    (σ_Fib_1 * σ_Fib_2 * σ_Fib_1) 0 1 =
+      (σ_Fib_2 * σ_Fib_1 * σ_Fib_2) 0 1 := by
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             σ_Fib_1_apply_00, σ_Fib_1_apply_01, σ_Fib_1_apply_10, σ_Fib_1_apply_11,
+             σ_Fib_2_apply_00, σ_Fib_2_apply_01, σ_Fib_2_apply_10, σ_Fib_2_apply_11,
+             mul_zero, zero_mul, add_zero, zero_add]
+  have hcore : φInv_C ^ 2 * (R1_C ^ 2 + Rtau_C ^ 2) +
+               (2 * φInv_C - 1) * R1_C * Rtau_C = 0 := fib_yb_core_identity
+  linear_combination
+    (-(φInv_C * φInvSqrt_C * (R1_C - Rtau_C))) * hcore
+
+/-- **Yang-Baxter matrix entry [1,0]** (R4.2.b.3).
+
+By σ_Fib_2 symmetry (σ_Fib_2[0,1] = σ_Fib_2[1,0]) and σ_Fib_1 being diagonal,
+LHS[1,0] = LHS[0,1] and RHS[1,0] = RHS[0,1], so the proof is structurally
+identical to `σ_Fib_yb_entry_01`. -/
+theorem σ_Fib_yb_entry_10 :
+    (σ_Fib_1 * σ_Fib_2 * σ_Fib_1) 1 0 =
+      (σ_Fib_2 * σ_Fib_1 * σ_Fib_2) 1 0 := by
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             σ_Fib_1_apply_00, σ_Fib_1_apply_01, σ_Fib_1_apply_10, σ_Fib_1_apply_11,
+             σ_Fib_2_apply_00, σ_Fib_2_apply_01, σ_Fib_2_apply_10, σ_Fib_2_apply_11,
+             mul_zero, zero_mul, add_zero, zero_add]
+  have hcore : φInv_C ^ 2 * (R1_C ^ 2 + Rtau_C ^ 2) +
+               (2 * φInv_C - 1) * R1_C * Rtau_C = 0 := fib_yb_core_identity
+  linear_combination
+    (-(φInv_C * φInvSqrt_C * (R1_C - Rtau_C))) * hcore
+
+/-- **Yang-Baxter matrix entry [1,1]** (R4.2.b.3).
+
+By the `R1_C ↔ Rtau_C` symmetry of the [0,0] case, the same coefficient structure
+applies with R1_C and Rtau_C swapped in `c_phisqrt`, `c_hcore`, and `c_hsq`. -/
+theorem σ_Fib_yb_entry_11 :
+    (σ_Fib_1 * σ_Fib_2 * σ_Fib_1) 1 1 =
+      (σ_Fib_2 * σ_Fib_1 * σ_Fib_2) 1 1 := by
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             σ_Fib_1_apply_00, σ_Fib_1_apply_01, σ_Fib_1_apply_10, σ_Fib_1_apply_11,
+             σ_Fib_2_apply_00, σ_Fib_2_apply_01, σ_Fib_2_apply_10, σ_Fib_2_apply_11,
+             mul_zero, zero_mul, add_zero, zero_add]
+  have hq2 : φInvSqrt_C ^ 2 = φInv_C := φInvSqrt_C_sq
+  have hsq : φInv_C ^ 2 + φInv_C = 1 := φInv_C_sq_add_self
+  have hcore : φInv_C ^ 2 * (R1_C ^ 2 + Rtau_C ^ 2) +
+               (2 * φInv_C - 1) * R1_C * Rtau_C = 0 := fib_yb_core_identity
+  linear_combination
+    (-(φInv_C ^ 2 * R1_C * (R1_C - Rtau_C) ^ 2)) * hq2 +
+    ((Rtau_C - R1_C) * φInv_C) * hcore +
+    (-(φInv_C ^ 2 * Rtau_C ^ 3) - 2 * φInv_C * R1_C * Rtau_C ^ 2 +
+      φInv_C * R1_C ^ 2 * Rtau_C) * hsq
+
+/-- **Yang-Baxter matrix relation** (R4.2.b.3 SHIP, this commit).
+
+`σ_Fib_1 * σ_Fib_2 * σ_Fib_1 = σ_Fib_2 * σ_Fib_1 * σ_Fib_2`
+
+Assembled from the 4 entry-level theorems via `Matrix.ext` + `Fin.cases`.
+This is the load-bearing braid relation for the Fibonacci 2-anyon-strand
+representation, lifting `RouabahExplicit.lean`'s native_decide-on-QCyc20 proof
+to the analytic complex-number version where R4.2 continuation (det normalization +
+substantive density) takes over. -/
+theorem σ_Fib_yang_baxter :
+    σ_Fib_1 * σ_Fib_2 * σ_Fib_1 = σ_Fib_2 * σ_Fib_1 * σ_Fib_2 := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · exact σ_Fib_yb_entry_00
+  · exact σ_Fib_yb_entry_01
+  · exact σ_Fib_yb_entry_10
+  · exact σ_Fib_yb_entry_11
+
+/-! ## 9. Yang-Baxter algebraic reduction (R4.2.b.3 implementation notes)
 
 With the bridge identity `R1_C² + R1_C³ = 1/φ` and rotation
-`Rtau_C = -R1_C³` in hand, the YB proof structure for the [0,0] entry
-is fully determined. The reduction is (proven by hand below; mechanical
-verification deferred to R4.2.b.2 in Lean):
+`Rtau_C = -R1_C³`, the per-entry YB proofs (R4.2.b.3, this commit)
+follow this structure. Throughout, abbreviate `p = φInv_C`,
+`q = φInvSqrt_C`, `a = R1_C`, `b = Rtau_C`. Recall `q² = p`,
+`p² + p = 1`, and the core identity
+`hcore : p²·(a² + b²) + (2p - 1)·a·b = 0`.
 
-  **Step 1**: Expand `(σ_Fib_1 σ_Fib_2 σ_Fib_1)[0,0]` and
-  `(σ_Fib_2 σ_Fib_1 σ_Fib_2)[0,0]` using `σ_Fib_2 = F · σ_1 · F`.
-  σ_Fib_2 entries (with p = φInv_C, q = φInvSqrt_C, A = R1_C, B = Rtau_C):
-    σ_Fib_2[0,0] = p²A + pB
-    σ_Fib_2[0,1] = σ_Fib_2[1,0] = pq(A - B)
-    σ_Fib_2[1,1] = pA + p²B
+  **Step 1 — Expand**: Apply `Matrix.mul_apply` + `Fin.sum_univ_two`,
+  then substitute `σ_Fib_{1,2}_apply_*` to reduce each entry equation
+  to a polynomial identity in `{a, b, p, q}`.
 
-  **Step 2**: After algebraic manipulation (using `q² = p`):
-    LHS - RHS = p(A - B)·[p²(A² + B²) + (2p - 1)·AB]
+  **Step 2 — Coefficient discovery (YB[0,0])**:
+  After expansion, `LHS - RHS` has the form
+      LHS - RHS = c_hcore·hcore_LHS + c_hsq·(p²+p-1) + c_phisqrt·(q²-p)
+  Manual derivation (see fib_yb_core_identity proof comments + this
+  documentation) yields:
+      c_hcore   = (a - b)·p
+      c_hsq     = -p²·a³ - 2·p·a²·b + p·a·b²
+      c_phisqrt = -p²·b·(a - b)²
+  These are the coefficients fed to `linear_combination` in
+  `σ_Fib_yb_entry_00`; `ring` then closes the residual.
 
-  **Step 3**: Substitute B = -A³ (rotation), then use A⁵ = 1:
-    A² + B² = A² + A⁶ = A² + A
-    AB = -A⁴
-    Hence: p²(A² + A) + (2p-1)·(-A⁴) = p²(A² + A) - (2p-1)·A⁴
-    Multiplying by A:
-      p²(A³ + A²) - (2p-1)·A⁵ = p²·(R1_C² + R1_C³) - (2p-1)
-                              = p² · (1/φ) - (2p-1)   [bridge]
-                              = p² · p - 2p + 1     [(1/φ) = p]
-                              = p³ - 2p + 1
+  **Step 3 — Symmetry (YB[1,1])**: Under the involution `a ↔ b`,
+  LHS[1,1] - RHS[1,1] = the a↔b swap of LHS[0,0] - RHS[0,0]. Thus
+  σ_Fib_yb_entry_11 uses the coefficients of [0,0] with a ↔ b swap:
+      c_hcore   = (b - a)·p     (sign flip via the swap)
+      c_hsq     = -p²·b³ - 2·p·a·b² + p·a²·b
+      c_phisqrt = -p²·a·(a - b)²    (since (b-a)² = (a-b)²)
 
-  **Step 4**: `p³ - 2p + 1 = 0` is provable from `p² = 1 - p` (i.e.,
-  `φ_C² = φ_C + 1` via `1/φ² + 1/φ = 1`):
-    p³ = p · p² = p(1-p) = p - p² = p - (1-p) = 2p - 1
-    Hence p³ - 2p + 1 = (2p - 1) - 2p + 1 = 0  ✓
+  **Step 4 — Off-diagonal (YB[0,1] = YB[1,0])**: By symmetry of
+  σ_Fib_2 (σ_Fib_2[0,1] = σ_Fib_2[1,0]) and the diagonality of σ_Fib_1,
+  both LHS[0,1] = LHS[1,0] = p·q·a·b·(a-b), and similarly for the RHS.
+  The difference factors cleanly:
+      LHS - RHS = -p·q·(a-b)·hcore_LHS
+  So only one hypothesis is consumed:  c_hcore = -p·q·(a-b),
+  no hq2 or hsq needed.
 
-  **Step 5**: By symmetry (F is symmetric, σ_Fib_2 entries swap under
-  index swap), YB[1,1] follows from the same chain.
-  YB[0,1] and YB[1,0] reduce similarly to a chain ending in the same
-  `p³ - 2p + 1 = 0` identity.
+  **Step 5 — Matrix assembly**: `σ_Fib_yang_baxter` follows by
+  `Matrix.ext` + `fin_cases` over the four entry lemmas.
 
-  **Step 6**: Combining all 4 entries yields the matrix-level
-    `σ_Fib_1 * σ_Fib_2 * σ_Fib_1 = σ_Fib_2 * σ_Fib_1 * σ_Fib_2`
-
-The Lean implementation of steps 1-6 is sub-wave R4.2.b.2 (estimated
-~290-460 LoC). The transcendental ingredient (bridge identity) and the
-rotation identity are now both in place; only mechanical matrix-algebra
-manipulation remains. -/
+This completes the analytical path from R4.1 substrate
+(`braidGroup3HomFromPair`) + R4.2.a/b substrate (σ_1, σ_2 unitary, det)
++ R4.2.b.1 bridge + R4.2.b.2 core identity to the full Yang-Baxter
+relation `σ_Fib_1 · σ_Fib_2 · σ_Fib_1 = σ_Fib_2 · σ_Fib_1 · σ_Fib_2`. -/
 
 /-! ## 7. Module summary
 
-FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a + R4.2.b.1, 2026-05-13):
+FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a + R4.2.b.{1,2,3}, 2026-05-13):
 
 **Substrate provided (this ship, 2026-05-13)**:
   - `R1_C, Rtau_C : ℂ` — Fibonacci R-matrix eigenvalues in ℂ.
@@ -705,7 +803,7 @@ FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a + R4.2.b.1, 2026-05-13):
   - **`σ_Fib_2_det_eq_σ_Fib_1_det : σ_Fib_2.det = σ_Fib_1.det`** — det
     invariance under F-conjugation.
 
-**R4.2.b.1 ship (this commit)**: cyclotomic-Fibonacci bridge identity:
+**R4.2.b.1 ship (commit 64fc14b)**: cyclotomic-Fibonacci bridge identity:
   - `R1_C_pow_5 : R1_C^5 = 1` (5th root of unity)
   - `Rtau_C_pow_5 : Rtau_C^5 = -1` (10th root of unity)
   - `Rtau_C_pow_10 : Rtau_C^10 = 1`
@@ -718,11 +816,20 @@ FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a + R4.2.b.1, 2026-05-13):
   - Plus auxiliary `exp_z_I_add_exp_neg_z_I : exp(z·I) + exp(-z·I) = 2·cos z`
     (reusable Euler-formula lemma).
 
-**Deferred to R4.2.b.2 sub-wave (Yang-Baxter assembly)**:
-  - `σ_Fib_1 * σ_Fib_2 * σ_Fib_1 = σ_Fib_2 * σ_Fib_1 * σ_Fib_2` over ℂ.
-  - **Now mechanical**: all 4 YB entries reduce via §7 analysis to the
-    algebraic identity `p³ - 2p + 1 = 0` (provable from `φ² = φ + 1`),
-    using bridge + rotation as substrate. ~290-460 LoC.
+**R4.2.b.2 ship (commit deddb99)**: core YB algebraic identity + σ_Fib_2 entries:
+  - **`fib_yb_core_identity`** : `φInv_C²·(R1_C² + Rtau_C²) + (2·φInv_C - 1)·R1_C·Rtau_C = 0`
+    — the substantive algebraic content all 4 YB entries reduce to.
+  - `φInv_C_sq_add_self : φInv_C² + φInv_C = 1` (lifted from F²=I).
+  - `φInv_C_pow_3 : φInv_C³ = 2·φInv_C - 1`.
+  - `σ_Fib_2_apply_{00,01,10,11}` matrix entry lemmas (using `q²=p`).
+
+**R4.2.b.3 ship (this commit)**: Yang-Baxter matrix relation.
+  - `σ_Fib_yb_entry_{00,01,10,11}` — per-entry braid identities, each
+    proved by `linear_combination` with hand-derived polynomial coefficients
+    against `{hcore, φInv_C_sq_add_self, φInvSqrt_C_sq}`.
+  - **`σ_Fib_yang_baxter : σ_Fib_1 * σ_Fib_2 * σ_Fib_1 = σ_Fib_2 * σ_Fib_1 * σ_Fib_2`**
+    — full matrix-level Yang-Baxter relation, assembled by `Matrix.ext` +
+    `Fin.cases` over the four entry lemmas. Standard-kernel-only.
 
 **Deferred to R4.2.c sub-wave (det normalization + MonoidHom)**:
   - ω = exp(πi/10) det-normalization to bring σ_1, σ_2 into SU(2).
