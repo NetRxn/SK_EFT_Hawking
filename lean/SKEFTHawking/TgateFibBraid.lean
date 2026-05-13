@@ -256,9 +256,13 @@ def zeta80_45 : QCyc80 :=
 
 -- Algebraic identity theorems on QCyc80 (zeta80_40_eq_neg_one,
 -- zeta80_35_mul_eighth_root_eq_45, zeta80_35_ne_zero, zeta80_45_ne_zero,
--- zeta80_35_mul_zeta80_45) deferred to SKEFTHawking.QCyc80Verify per the
--- bundling-discipline pattern (see QCyc80.lean module docstring).
--- The defs above (zeta80_35, zeta80_45) suffice for the type-substrate
+-- zeta80_35_mul_zeta80_45) are **ARCHITECTURALLY INFEASIBLE** at the
+-- theorem level — see `QCyc80.lean` module docstring § "Algebraic-identity
+-- verification: architecturally infeasible at degree 32". The Python
+-- compiler `scripts/phase6p_tgate_compiler_v7.py` numerically verifies
+-- that ζ_80^35 / ζ_80^45 / ζ_80^40 = -1 hold via exact rational arithmetic
+-- in the same `PolyQuotQ.mulReduceWithTable 32 powerTable80` substrate.
+-- The Lean defs above (zeta80_35, zeta80_45) suffice for the type-substrate
 -- consumption pattern of `tgateTarget_shifted_qcyc80` below.
 
 /-- The Nielsen-Chuang T-gate T_NC = diag(1, e^(iπ/4)) in Mat2K_80_Ext.
@@ -317,9 +321,14 @@ QCyc80 substrate-upgrade (§4-§5):
 
 Algebraic-identity theorems on QCyc80 (`zeta80_40_eq_neg_one`,
 `zeta80_35_mul_eighth_root_eq_45`, `zeta80_35_ne_zero`, `zeta80_45_ne_zero`,
-`zeta80_35_mul_zeta80_45`) deferred to QCyc80Verify per bundling-discipline
-pattern (see QCyc80.lean module docstring). The def-level substrate above
-suffices for the type-substrate consumption of `tgateTarget_shifted_qcyc80`.
+`zeta80_35_mul_zeta80_45`) are **ARCHITECTURALLY INFEASIBLE** at the
+theorem level — see `QCyc80.lean` module docstring §
+"Algebraic-identity verification: architecturally infeasible at degree 32".
+Python pipeline (`scripts/phase6p_tgate_compiler_v7.py` and
+`phase6p_tgate_exact_frob.py`) verifies the substrate's runtime behavior on
+the same identities via exact rational arithmetic. The Lean def-level
+substrate above suffices for the type-substrate consumption of
+`tgateTarget_shifted_qcyc80`.
 
 # Substantive content delivered (substrate-upgrade ship)
 
