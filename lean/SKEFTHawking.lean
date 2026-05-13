@@ -566,6 +566,17 @@ import SKEFTHawking.FKLW.SpecialUnitaryPathConnected
 -- `AharonovAradBridge.lean` (Wave 2c.4a-cleanup) and the live FKLW path
 -- routes exclusively through this module's `bridge_FKLW_unitary` theorem.
 import SKEFTHawking.FKLW.AharonovAradBridgeIteration
+-- Phase 6p Wave 2c.4a-R4.1 (2026-05-13): infinite-order witness infrastructure
+-- for `h_inf : (Set.range ρ_hom).Infinite` discharge of the amended
+-- `aa_residual_interior_at_one_for_hom` axiom. Structural lemmas
+-- (`matrix_no_pow_eq_one_of_eigenvalue_not_rootOfUnity`,
+-- `not_finOrder_of_eigenvalue_not_rootOfUnity`,
+-- `complex_exp_not_root_of_unity`) factor any future Fibonacci
+-- eigenvalue-witness work; plus a concrete `BraidGroup 3 →* SU(2)`
+-- MonoidHom `demo3StrandRep` with infinite-cyclic image (validates
+-- the discharge path end-to-end; does NOT satisfy `LieSpanProp` —
+-- combined-with-LieSpan Fibonacci witness is R4.2+).
+import SKEFTHawking.FKLW.FibRepInfiniteOrder
 -- Phase 6p Wave 1c (2026-05-12): MeasureTheory-grounded Bernoulli-product
 -- noise model. BernoulliProductModel structure + bridge to abstract
 -- LocalStochasticNoise; joint-failure probability ε^k EXACT (not just upper
