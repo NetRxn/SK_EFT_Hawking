@@ -577,6 +577,13 @@ import SKEFTHawking.FKLW.AharonovAradBridgeIteration
 -- the discharge path end-to-end; does NOT satisfy `LieSpanProp` —
 -- combined-with-LieSpan Fibonacci witness is R4.2+).
 import SKEFTHawking.FKLW.FibRepInfiniteOrder
+-- Phase 6p Wave 2c.4a-R5.1 (2026-05-13): axiom-free topological substrate
+-- for the constructive discharge of `aa_residual_interior_at_one_for_hom`.
+-- Ships `one_accPt_of_infinite_closed_subgroup` (generic compact-group
+-- topology: infinite closed subgroup ⇒ 1 is an accumulation point) and
+-- the FKLW specialization `accPt_one_in_topClosure_of_hom`. The full AA
+-- discharge requires BCH cubic-bound K·δ³ (deferred — substrate gap).
+import SKEFTHawking.FKLW.AharonovAradLemma6
 -- Phase 6p Wave 1c (2026-05-12): MeasureTheory-grounded Bernoulli-product
 -- noise model. BernoulliProductModel structure + bridge to abstract
 -- LocalStochasticNoise; joint-failure probability ε^k EXACT (not just upper
