@@ -584,6 +584,14 @@ import SKEFTHawking.FKLW.FibRepInfiniteOrder
 -- the FKLW specialization `accPt_one_in_topClosure_of_hom`. The full AA
 -- discharge requires BCH cubic-bound K·δ³ (deferred — substrate gap).
 import SKEFTHawking.FKLW.AharonovAradLemma6
+-- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
+-- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
+-- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
+-- `‖bchPolyRem F G‖ ≤ C·δ³` is deferred (R5.2a, multi-session) and is the
+-- load-bearing gate for the cubic upgrade of `bch_order_2_thm` (currently
+-- linear `200·δ`), which in turn gates the AA Bridge Lemma 6.1
+-- quadratic-shrinkage iteration.
+import SKEFTHawking.MatrixBCHCubic
 -- Phase 6p Wave 1c (2026-05-12): MeasureTheory-grounded Bernoulli-product
 -- noise model. BernoulliProductModel structure + bridge to abstract
 -- LocalStochasticNoise; joint-failure probability ε^k EXACT (not just upper
