@@ -332,9 +332,206 @@ theorem σ_Fib_2_det_eq_σ_Fib_1_det :
   have key : F_C.det * σ_Fib_1.det * F_C.det = σ_Fib_1.det * (F_C.det * F_C.det) := by ring
   rw [key, hF2, mul_one]
 
-/-! ## 5. Module summary
+/-! ## 5. The cyclotomic-Fibonacci bridge identity
 
-FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a, 2026-05-13):
+The single non-trivial transcendental ingredient for proving Yang-Baxter
+over ℂ: `R1_C² + R1_C³ = 1/φ`. This is the ℂ-level statement of the
+classical algebraic identity `ζ + ζ⁴ = 1/φ` (where ζ = exp(2πi/5)),
+which connects the cyclotomic field Q(ζ_5) to the quadratic-irrational
+field Q(√5).
+
+Decomposing R1_C^2 = exp(-8πi/5) = exp(2πi/5) (mod 2πi periodicity)
+and R1_C^3 = exp(-12πi/5) = exp(-2πi/5), we get
+`R1_C² + R1_C³ = 2·cos(2π/5)`. Then `2·cos(2π/5) = (√5-1)/2 = 1/φ`
+via Mathlib's `Real.cos_pi_div_five = (1+√5)/4` + double-angle formula.
+
+This identity is the **only** Fibonacci-specific transcendental content
+in the YB proof; the remaining algebra is purely formal manipulation of
+`φ² = φ + 1`, `R1_C^5 = 1`, and `Rtau_C^5 = -1` (or related).
+-/
+
+/-- `R1_C^5 = 1`: R₁ is a primitive 5th root of unity.
+
+Computed via `exp(5 · (-4π/5)·I) = exp(-4π·I) = (exp(2π·I))^{-2} = 1`. -/
+theorem R1_C_pow_5 : R1_C ^ 5 = 1 := by
+  unfold R1_C
+  rw [← Complex.exp_nat_mul]
+  -- 5 * ((-4π/5 : ℝ) : ℂ) · I = -4π · I  (need to push to canonical form)
+  have heq : ((5 : ℕ) : ℂ) * (((-4 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) =
+              ((-2 : ℤ) : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) := by
+    push_cast; ring
+  rw [heq]
+  exact Complex.exp_int_mul_two_pi_mul_I (-2)
+
+/-- `Rtau_C^5 = -1`: R_τ is a primitive 10th root of unity.
+
+Computed via `exp(5 · 3π/5 · I) = exp(3π·I) = exp(π·I) · exp(2π·I) = -1 · 1`. -/
+theorem Rtau_C_pow_5 : Rtau_C ^ 5 = -1 := by
+  unfold Rtau_C
+  rw [← Complex.exp_nat_mul]
+  -- 5 * (3π/5 · I) = 3π·I = π·I + 2π·I
+  have heq : ((5 : ℕ) : ℂ) * (((3 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) =
+              (Real.pi : ℂ) * Complex.I + ((1 : ℤ) : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) := by
+    push_cast; ring
+  rw [heq, Complex.exp_add, Complex.exp_int_mul_two_pi_mul_I 1, mul_one,
+      Complex.exp_pi_mul_I]
+
+/-- `R1_C^10 = 1`. -/
+private theorem R1_C_pow_10 : R1_C ^ 10 = 1 := by
+  rw [show (10 : ℕ) = 5 * 2 by norm_num, pow_mul, R1_C_pow_5]; norm_num
+
+/-- `Rtau_C^10 = 1`: R_τ is a 10th root of unity. -/
+theorem Rtau_C_pow_10 : Rtau_C ^ 10 = 1 := by
+  rw [show (10 : ℕ) = 5 * 2 by norm_num, pow_mul, Rtau_C_pow_5]; norm_num
+
+/-- Helper: `2·cos(2π/5) = (√5 - 1)/2`. Derived from `Real.cos_pi_div_five`
+via the double-angle formula. -/
+private theorem two_cos_two_pi_div_five :
+    2 * Real.cos (2 * Real.pi / 5) = (Real.sqrt 5 - 1) / 2 := by
+  have h : Real.cos (2 * Real.pi / 5) = 2 * Real.cos (Real.pi / 5) ^ 2 - 1 := by
+    rw [show (2 * Real.pi / 5 : ℝ) = 2 * (Real.pi / 5) by ring]
+    exact Real.cos_two_mul _
+  rw [h, Real.cos_pi_div_five]
+  have hsq : (Real.sqrt 5) ^ 2 = 5 := Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 5)
+  -- Goal: 2 * (2 * ((1 + √5)/4)^2 - 1) = (√5 - 1)/2
+  -- Expand: 2*(2*(1+2√5+5)/16 - 1) = (1+2√5+5)/4 - 2 = (6+2√5)/4 - 8/4 = (2√5 - 2)/4 = (√5-1)/2 ✓
+  nlinarith [hsq, sq_nonneg (Real.sqrt 5 - 1), sq_nonneg (Real.sqrt 5 + 1)]
+
+/-- Helper: `(√5 - 1)/2 = goldenRatio⁻¹` (real-side). -/
+private theorem goldenRatio_inv_eq :
+    (Real.goldenRatio⁻¹ : ℝ) = (Real.sqrt 5 - 1) / 2 := by
+  -- goldenRatio = (1 + √5)/2, so 1/goldenRatio = 2/(1+√5) = (√5-1)/2 after rationalization
+  unfold Real.goldenRatio
+  rw [show ((1 + Real.sqrt 5) / 2 : ℝ)⁻¹ = 2 / (1 + Real.sqrt 5) by
+    rw [inv_div]]
+  -- 2/(1+√5) = (√5-1)/2 via (1+√5)(√5-1) = 5 - 1 = 4
+  have hsq : (Real.sqrt 5) ^ 2 = 5 := Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 5)
+  have hne : (1 + Real.sqrt 5 : ℝ) ≠ 0 := by
+    have : (0 : ℝ) < 1 + Real.sqrt 5 :=
+      add_pos zero_lt_one (Real.sqrt_pos.mpr (by norm_num))
+    exact ne_of_gt this
+  field_simp
+  linear_combination -hsq
+
+/-- Helper: `exp(z·I) + exp(-z·I) = 2·cos(z)` for `z : ℂ`. -/
+private theorem exp_z_I_add_exp_neg_z_I (z : ℂ) :
+    Complex.exp (z * Complex.I) + Complex.exp (-z * Complex.I) =
+    2 * Complex.cos z := by
+  -- Use Mathlib's `Complex.cos = (exp(z·I) + exp(-z·I))/2`
+  rw [Complex.cos]
+  ring
+
+/-- **The cyclotomic-Fibonacci bridge identity.**
+
+`R1_C² + R1_C³ = 1/φ` in ℂ. This is the load-bearing transcendental
+content of the Yang-Baxter relation: it links the cyclotomic field
+Q(ζ_5) to the golden-ratio field Q(√5) via Re(exp(2πi/5)) = (√5-1)/4.
+
+Proof: `R1_C² + R1_C³ = exp(-8πi/5) + exp(-12πi/5) = exp(2πi/5) +
+exp(-2πi/5) = 2·cos(2π/5) = (√5-1)/2 = 1/φ`. -/
+theorem R1_C_sq_add_cube_eq_φInv :
+    R1_C ^ 2 + R1_C ^ 3 = (Real.goldenRatio⁻¹ : ℂ) := by
+  -- Strategy: show LHS = 2 · cos(2π/5) (real-cast); then bridge to 1/φ.
+  unfold R1_C
+  rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul]
+  -- LHS = exp(2·(-4π/5)·I) + exp(3·(-4π/5)·I) = exp(-8π/5·I) + exp(-12π/5·I)
+  -- Mod 2π: -8π/5 ≡ 2π/5; -12π/5 ≡ -2π/5.
+  have h1 : ((2 : ℕ) : ℂ) * (((-4 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) =
+              ((2 * Real.pi / 5 : ℝ) : ℂ) * Complex.I +
+              ((-1 : ℤ) : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) := by
+    push_cast; ring
+  have h2 : ((3 : ℕ) : ℂ) * (((-4 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) =
+              -(((2 * Real.pi / 5 : ℝ) : ℂ)) * Complex.I +
+              ((-1 : ℤ) : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) := by
+    push_cast; ring
+  rw [h1, h2, Complex.exp_add, Complex.exp_add, Complex.exp_int_mul_two_pi_mul_I,
+      mul_one, mul_one]
+  -- Goal: exp(θ·I) + exp(-θ·I) = (1/φ : ℂ), where θ = 2π/5
+  rw [exp_z_I_add_exp_neg_z_I ((2 * Real.pi / 5 : ℝ) : ℂ)]
+  -- Now goal: 2 * Complex.cos ((2π/5 : ℝ) : ℂ) = ((Real.goldenRatio⁻¹ : ℝ) : ℂ)
+  rw [show Complex.cos ((2 * Real.pi / 5 : ℝ) : ℂ) =
+        ((Real.cos (2 * Real.pi / 5) : ℝ) : ℂ) from
+        (Complex.ofReal_cos _).symm]
+  rw [show (2 : ℂ) * ((Real.cos (2 * Real.pi / 5) : ℝ) : ℂ) =
+        ((2 * Real.cos (2 * Real.pi / 5) : ℝ) : ℂ) by push_cast; ring]
+  rw [show (2 * Real.cos (2 * Real.pi / 5) : ℝ) = (Real.goldenRatio⁻¹ : ℝ) by
+    rw [two_cos_two_pi_div_five, goldenRatio_inv_eq]]
+  push_cast
+  rfl
+
+/-! ## 6. Rotation identity: `Rtau_C = -R1_C^3`
+
+A second algebraic ingredient for the YB proof: the rotation relating
+R₁ and R_τ. We have `R1_C = exp(-4πi/5)` and `Rtau_C = exp(3πi/5)`.
+Since `R1_C^3 = exp(-12πi/5) = exp(-2πi/5)` (mod 2π) and
+`-exp(-2πi/5) = exp(iπ - 2πi/5) = exp(3πi/5) = Rtau_C`, we get
+`Rtau_C = -R1_C^3`. -/
+
+/-- `Rtau_C = -R1_C^3`: the rotation identity. -/
+theorem Rtau_C_eq_neg_R1_C_pow_3 : Rtau_C = -(R1_C ^ 3) := by
+  unfold R1_C Rtau_C
+  rw [← Complex.exp_nat_mul]
+  -- show exp((3π/5)·I) = -exp(3 · (-4π/5)·I)
+  -- 3·(-4π/5)·I = -12π/5·I
+  -- exp(-12π/5·I) + π·I·shift = exp(-12π/5·I + π·I + 2π·I) where the 2π·I lifts to 1
+  -- Compute: 3π/5 = -12π/5 + π + 2π = (-12π + 5π + 10π)/5 = 3π/5 ✓
+  -- So: exp(3π/5·I) = exp(π·I)·exp(2π·I)·exp(-12π/5·I) = (-1)·1·R1_C^3 = -R1_C^3
+  have heq : ((3 * Real.pi / 5 : ℝ) : ℂ) * Complex.I =
+              (Real.pi : ℂ) * Complex.I + ((1 : ℤ) : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) +
+              ((3 : ℕ) : ℂ) * (((-4 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) := by
+    push_cast; ring
+  rw [heq, Complex.exp_add, Complex.exp_add, Complex.exp_int_mul_two_pi_mul_I 1,
+      Complex.exp_pi_mul_I, mul_one]
+  ring
+
+/-! ## 7. Yang-Baxter algebraic reduction (analytical sketch for R4.2.b.2)
+
+With the bridge identity `R1_C² + R1_C³ = 1/φ` and rotation
+`Rtau_C = -R1_C³` in hand, the YB proof structure for the [0,0] entry
+is fully determined. The reduction is (proven by hand below; mechanical
+verification deferred to R4.2.b.2 in Lean):
+
+  **Step 1**: Expand `(σ_Fib_1 σ_Fib_2 σ_Fib_1)[0,0]` and
+  `(σ_Fib_2 σ_Fib_1 σ_Fib_2)[0,0]` using `σ_Fib_2 = F · σ_1 · F`.
+  σ_Fib_2 entries (with p = φInv_C, q = φInvSqrt_C, A = R1_C, B = Rtau_C):
+    σ_Fib_2[0,0] = p²A + pB
+    σ_Fib_2[0,1] = σ_Fib_2[1,0] = pq(A - B)
+    σ_Fib_2[1,1] = pA + p²B
+
+  **Step 2**: After algebraic manipulation (using `q² = p`):
+    LHS - RHS = p(A - B)·[p²(A² + B²) + (2p - 1)·AB]
+
+  **Step 3**: Substitute B = -A³ (rotation), then use A⁵ = 1:
+    A² + B² = A² + A⁶ = A² + A
+    AB = -A⁴
+    Hence: p²(A² + A) + (2p-1)·(-A⁴) = p²(A² + A) - (2p-1)·A⁴
+    Multiplying by A:
+      p²(A³ + A²) - (2p-1)·A⁵ = p²·(R1_C² + R1_C³) - (2p-1)
+                              = p² · (1/φ) - (2p-1)   [bridge]
+                              = p² · p - 2p + 1     [(1/φ) = p]
+                              = p³ - 2p + 1
+
+  **Step 4**: `p³ - 2p + 1 = 0` is provable from `p² = 1 - p` (i.e.,
+  `φ_C² = φ_C + 1` via `1/φ² + 1/φ = 1`):
+    p³ = p · p² = p(1-p) = p - p² = p - (1-p) = 2p - 1
+    Hence p³ - 2p + 1 = (2p - 1) - 2p + 1 = 0  ✓
+
+  **Step 5**: By symmetry (F is symmetric, σ_Fib_2 entries swap under
+  index swap), YB[1,1] follows from the same chain.
+  YB[0,1] and YB[1,0] reduce similarly to a chain ending in the same
+  `p³ - 2p + 1 = 0` identity.
+
+  **Step 6**: Combining all 4 entries yields the matrix-level
+    `σ_Fib_1 * σ_Fib_2 * σ_Fib_1 = σ_Fib_2 * σ_Fib_1 * σ_Fib_2`
+
+The Lean implementation of steps 1-6 is sub-wave R4.2.b.2 (estimated
+~290-460 LoC). The transcendental ingredient (bridge identity) and the
+rotation identity are now both in place; only mechanical matrix-algebra
+manipulation remains. -/
+
+/-! ## 7. Module summary
+
+FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a + R4.2.b.1, 2026-05-13):
 
 **Substrate provided (this ship, 2026-05-13)**:
   - `R1_C, Rtau_C : ℂ` — Fibonacci R-matrix eigenvalues in ℂ.
@@ -352,11 +549,24 @@ FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a, 2026-05-13):
   - **`σ_Fib_2_det_eq_σ_Fib_1_det : σ_Fib_2.det = σ_Fib_1.det`** — det
     invariance under F-conjugation.
 
-**Deferred to R4.2.b proper sub-wave (Yang-Baxter)**:
+**R4.2.b.1 ship (this commit)**: cyclotomic-Fibonacci bridge identity:
+  - `R1_C_pow_5 : R1_C^5 = 1` (5th root of unity)
+  - `Rtau_C_pow_5 : Rtau_C^5 = -1` (10th root of unity)
+  - `Rtau_C_pow_10 : Rtau_C^10 = 1`
+  - **`Rtau_C_eq_neg_R1_C_pow_3 : Rtau_C = -R1_C^3`** — rotation identity
+    linking the two R-eigenvalues
+  - **`R1_C_sq_add_cube_eq_φInv : R1_C^2 + R1_C^3 = (Real.goldenRatio⁻¹ : ℂ)`** —
+    THE LOAD-BEARING BRIDGE: links cyclotomic field Q(ζ_5) to golden-ratio
+    field Q(√5) via `2·cos(2π/5) = (√5-1)/2 = 1/φ` (proved using
+    `Real.cos_pi_div_five = (1+√5)/4` + double-angle formula).
+  - Plus auxiliary `exp_z_I_add_exp_neg_z_I : exp(z·I) + exp(-z·I) = 2·cos z`
+    (reusable Euler-formula lemma).
+
+**Deferred to R4.2.b.2 sub-wave (Yang-Baxter assembly)**:
   - `σ_Fib_1 * σ_Fib_2 * σ_Fib_1 = σ_Fib_2 * σ_Fib_1 * σ_Fib_2` over ℂ.
-  - Either direct algebraic proof (~200-500 LoC) or ring-hom transport
-    from QCyc40Ext native_decide proof (~200-400 LoC of cyclotomic
-    embedding infrastructure).
+  - **Now mechanical**: all 4 YB entries reduce via §7 analysis to the
+    algebraic identity `p³ - 2p + 1 = 0` (provable from `φ² = φ + 1`),
+    using bridge + rotation as substrate. ~290-460 LoC.
 
 **Deferred to R4.2.c sub-wave (det normalization + MonoidHom)**:
   - ω = exp(πi/10) det-normalization to bring σ_1, σ_2 into SU(2).
