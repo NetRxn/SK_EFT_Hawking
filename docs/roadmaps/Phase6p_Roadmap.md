@@ -450,25 +450,55 @@ per SPTClassification.lean). Strict dependency order:
    - `bch_group_commutator_linearization`:
      `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - (1 - ⁅F, G⁆)‖ ≤ 356·δ³`
    No Hermitian hypothesis; works in BCH coordinates (avoids matrix log).
-7. ⏳ **R5.4** — AA Bridge Lemma 6.2 (LieSpan + cubic linearization
-   → nbhd of 1). Substrate ready: `bch_group_commutator_linearization`
-   gives the leading-order Lie-algebra direction with cubic error;
-   `LieSpanProp` provides the spanning condition; basis-rotation argument
-   in connected SU(d) finishes.
-8. ⏳ **R5.5** — Compose R5.1 + R5.3 + R5.4 to discharge AA axiom.
-9. ⏳ **R4.2** (separable from R5 chain) — Full Fibonacci witness via
-   `Mat3K → ℂ` ring-hom embedding + det normalization.
+7. ⛔ **R5.4 / R5.5 — RETIRED 2026-05-13 PM-PM (R2 soundness audit)**.
+   The original target axiom `aa_residual_interior_at_one_for_hom` was
+   shown UNSOUND via SO(d) ⊂ SU(d) counterexample (LieSpan + h_inf
+   satisfied by dense-in-SO(d) braid reps, but closure(range) ⊆ SO(d)
+   has no SU(d)-interior). The axiom has been **DELETED** in commit
+   `f44c60d` and replaced by the axiom-free theorem
+   `aa_residual_interior_at_one_from_closure_eq_univ` (takes
+   `closure = univ` as hypothesis; tautological proof).
+   - **Project axiom count: 2 → 1** (only `gapped_interface_axiom`
+     remains).
+   - The substantive density content (proving `closure(range ρ) = univ`
+     for specific ρ like Fibonacci) is now an EXPLICIT caller burden,
+     to be discharged via either: (a) Lean-internal HBS proof
+     (multi-month, requires Cartan + Lie-algebra Mathlib infrastructure
+     not currently available); OR (b) scoped Fibonacci-specific HBS
+     axiom citing Hormozi-Bonesteel-Simon 2007 (future R4.2 work,
+     requires user sign-off).
+8. ⏳ **R4.2** (now the natural successor) — Full Fibonacci witness via
+   `Mat3K → ℂ` ring-hom embedding + det normalization. **Post-R2 (this
+   commit)**: R4.2 also becomes the natural host for the SCOPED
+   HBS-for-ρ_Fib axiom (path 2 from R2 audit) — replaces general
+   unsound AA axiom (now deleted) with specific sound HBS-cited axiom
+   for ρ_Fib only. Requires user sign-off per Phase 6p axiom policy.
 
-**Next-session entry point**: R5.4 — AA Bridge Lemma 6.2 (basis-rotation
-+ LieSpan → neighborhood of 1). Strategy: given `LieSpanProp` (the
-ℂ-span of `[ρ(b1), ρ(b2)]` Lie commutators is full Matrix d² space) and
-the cubic linearization `[exp(iF), exp(iG)] = (1 - [F,G]) + O(δ³)`
-(R5.3.2), choose a basis of Lie algebra `Lie(SU(d))` from the span,
-write each basis element as a Lie commutator `[F_i, G_i]`, take the
-corresponding group commutators `[exp(iF_i), exp(iG_i)]`, and combine
-to produce neighborhoods of 1 in `closure(range ρ_hom)`. ~150-300 LoC.
-Substrate ready: R5.1 + R5.3, plus existing `LieSpanProp` in
-AharonovAradBridgeIteration.lean.
+**R2 SOUNDNESS AUDIT (2026-05-13 PM-PM)**: The
+`aa_residual_interior_at_one_for_hom` axiom was shown UNSOUND via SO(d)
+counterexample (LieSpan + h_inf satisfied by dense-in-SO(d) braid reps
+but closure ⊂ SO(d) ⊊ SU(d), conclusion fails). The axiom is now
+**DELETED** (commit `f44c60d`); project axiom count 2 → 1. R5.4/R5.5
+RETIRED. The substantive density content moves to R4.2 (where it
+belongs — paired with specific representations, not generic
+hypotheses).
+
+**Next-session entry point**: R4.2 — concrete Fibonacci witness +
+scoped HBS axiom. Two phases:
+  (a) **Concrete Fibonacci MonoidHom**: construct `ρ_Fib_SU3 :
+      BraidGroup 4 →* SU(3)` from `FibonacciQutrit.lean` Mat3K data +
+      Q(ζ₅, √φ) → ℂ ring-hom embedding + det normalization. ~200-300
+      LoC. Substrate ready: `braidGroup3HomFromPair` constructor
+      (R4.1), `FibonacciQutritUniversality.su3_spanning_data`, Mat3K
+      types.
+  (b) **Scoped HBS-for-ρ_Fib axiom** (requires user sign-off): add
+      `axiom ρ_Fib_dense_in_SU3 : closure(Set.range ρ_Fib_SU3) =
+      Set.univ` citing Hormozi-Bonesteel-Simon 2007 as primary source.
+      ~5 LoC including AXIOM_METADATA entry. Project axiom count:
+      1 → 2 (but specific + cited, not general + potentially unsound).
+  (c) **Compose**: `bridge_FKLW_unitary` applied to ρ_Fib_SU3 with the
+      scoped density hypothesis gives `DenseInSpecialUnitary` for
+      Fibonacci. Plugs into `fibonacci_3strand_example_substantive`.
 
 **Parallelism notes:** Wave 1b and Wave 2 are operationally independent (no proof-level dependency). Wave 3a.2 requires Wave 2a.2 BraidGroup (cheap) + QCyc40 (new module, Wave 3a.2 ships). Wave 3a.3 composition glues Wave 1b output + Wave 2b output.
 
