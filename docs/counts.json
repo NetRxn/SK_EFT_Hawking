@@ -1,10 +1,10 @@
 {
-  "generated": "2026-05-12T20:47:17.299756",
+  "generated": "2026-05-13T10:26:17.630657",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 12110,
-    "theorems_total": 6082,
-    "theorems_substantive": 6057,
+    "total_declarations": 12135,
+    "theorems_total": 6101,
+    "theorems_substantive": 6076,
     "theorems_placeholder": 25,
     "axioms": 2,
     "axiom_names": [
@@ -13,7 +13,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 348,
+    "modules": 349,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -110,6 +110,7 @@
       "SKEFTHawking.FKLW.AharonovAradBridgeProof",
       "SKEFTHawking.FKLW.BridgeProp",
       "SKEFTHawking.FKLW.EpsilonNet",
+      "SKEFTHawking.FKLW.FibRepInfiniteOrder",
       "SKEFTHawking.FKLW.SolovayKitaev",
       "SKEFTHawking.FKLW.SolovayKitaevConstructive",
       "SKEFTHawking.FKLW.SpecialUnitaryPathConnected",
@@ -364,7 +365,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 5309,
+    "definitions": 5315,
     "structures": 252,
     "instances": 378,
     "inductives": 87
