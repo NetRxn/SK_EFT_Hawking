@@ -544,8 +544,53 @@ plus Mathlib substrate (subgroup accumulation, finite-group-classification,
 commutator-norm estimates) that is genuinely beyond a single-session
 discharge. This axiom captures only that analytic content.
 
+## Soundness audit (2026-05-13 follow-up)
+
+The hypothesis `LieSpanProp` (ℂ-span of `range ρ_hom` = `Matrix (Fin d) (Fin d) ℂ`)
+is equivalent to absolute irreducibility of `ρ_hom` (Burnside). It does
+NOT directly imply `(Set.range ρ_hom).Infinite`. A finite subgroup of
+SU(d) can be absolutely irreducible (e.g., the binary polyhedral groups
+BT/BO/BI in SU(2) are absolutely irreducible and finite, with 24/48/120
+elements respectively). If `BraidGroup n` admits a surjective homomorphism
+to such a finite spanning subgroup, the closure of `range ρ_hom` would be
+finite + closed, with empty interior in SU(d) — falsifying the axiom's
+conclusion.
+
+**The discharge plan in §6 above implicitly assumes `(Set.range ρ_hom).Infinite`**
+(via `Set.Infinite.exists_accPt_of_subset_isCompact`). For the discharge
+to be sound, one of the following must hold:
+
+  (S1) **Substantive theorem** to be proved before the discharge: at
+       `d ≥ 2`, any `BraidGroup n →* SU(d)` MonoidHom with `LieSpanProp`
+       on its underlying function has infinite image. (Plausibly true via
+       Burau-faithfulness or related braid-group structure theorems, but
+       this is itself a substantive theorem requiring proof — and it is
+       not obvious that BraidGroup-source + LieSpanProp suffices, since
+       e.g. S₃ admits a 2-cycle ↦ braid-generator hom satisfying braid
+       relations whose 2D faithful rep in O(2) ⊃ SU(2)? would ℂ-span at
+       d = 2 — though the S₃ 2D rep is actually in O(2) not SU(2) so the
+       analog construction has to be more careful.)
+
+  (S2) **Axiom amendment** (requires user sign-off per Phase 6p axiom
+       policy 2026-05-12 PM): strengthen the hypothesis to include
+       `(Set.range ρ_hom).Infinite` directly, OR replace `LieSpanProp`
+       with the project's `BridgeHypothesis n d ρ_hom` predicate (which
+       already includes `image_infinite + bridge_exists`). The
+       `LieSpan_and_infiniteImage_imply_BridgeHypothesis` packaging
+       lemma in `AharonovAradBridgeProof.lean` is the existing path for
+       (S2).
+
+The discharge plan above (Phases A–E via the explore-agent assessment
+of 2026-05-13) is sound under (S2) but conditional on (S1) for the
+original axiom shape. Future discharge work should resolve (S1) vs (S2)
+before committing to ~800 LoC of analytic discharge — otherwise the
+discharged theorem may end up requiring `image_infinite` as an
+additional hypothesis anyway.
+
 Citation: Aharonov & Arad 2011, *New J. Phys.* 13 035019;
-arXiv:quant-ph/0605181 §4 Theorem 3.2 + §6 Lemma 6.1 + 6.2. -/
+arXiv:quant-ph/0605181 §4 Theorem 3.2 + §6 Lemma 6.1 + 6.2.
+Burnside's theorem (absolute irreducibility ⟺ ℂ-span full algebra):
+standard, e.g., Curtis-Reiner *Representation Theory of Finite Groups* §27. -/
 axiom aa_residual_interior_at_one_for_hom
     (n d : ℕ) (_hd : 2 ≤ d)
     (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ)
