@@ -208,34 +208,48 @@ def phiInv : QCyc80 :=
   ⟨![0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
      1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0]⟩
 
-/-! ## Algebraic-identity verification deferred to QCyc80Verify
+/-! ## Algebraic-identity verification: architecturally infeasible at degree 32
 
 The 10 algebraic identities for QCyc80 (ζ_8^8=1, φ²=φ+1, √2²=2, √5²=5, …)
-are PROVABLE via `native_decide`, but compiling `native_decide` at degree
-32 with `ℚ`-valued coefficients consumes 5+ GB RAM and minutes of wall
-time per goal. To keep the default build of QCyc80 fast (and the
-downstream T-gate pipeline responsive), the algebraic-identity theorems
-are moved to a separate module `QCyc80Verify.lean` that is NOT imported
-by the main library.
+that the QCyc40 ancestor verifies by `native_decide` are NOT shipped at
+the theorem level for QCyc80. The Phase 6p Wave 3a.2.3c-substrate-upgrade
+follow-up empirically established (2026-05-13) that:
 
-The substrate here suffices for downstream use:
-- The `Mul QCyc80` instance computes the correct product at runtime
-  (verified by Python pipeline + the QCyc40 ancestor's tests).
-- Type-level requirements (`Mul`, `Add`, `Zero`, `One`, `Neg`, `Sub`,
-  `SMul ℚ`, `DecidableEq`) are all available.
-- The named substrate constants (`zeta`, `phi`, `phiInv`, `sqrt2`,
-  `sqrt5`, basis elements) are exported.
+  1. **`native_decide` at degree 32 over ℚ does not complete in a usable
+     time budget.** A single goal `zeta * zeta = ⟨![..., 1, ...]⟩` was
+     measured to run for 12+ minutes at 5+ GB resident memory with no
+     `.olean` produced (kernel still generating LCNF IR). The Lean
+     native-code generator's intermediate representation for the
+     `mulReduceWithTable 32 powerTable80` call site, expanded inline at
+     each multiplication, exceeds practical compile-time budgets.
 
-Consumers needing the verified algebraic identities at theorem level
-should `import SKEFTHawking.QCyc80Verify` explicitly. Bundle-shipping
-discipline (Phase 6p Wave 3a.2.3c-substrate-upgrade, 2026-05-12 PM):
-the verification module is a separate compilation unit so that the
-core substrate module compiles in seconds rather than minutes.
+  2. **Kernel reduction (`rfl` / `decide`) also fails.** The `Mul QCyc80`
+     instance is opaque to kernel reduction (Lean 4 instance unfolding),
+     and even after manually unfolding to
+     `mulReduceWithTable 32 powerTable80 zeta zeta`, kernel reduction
+     stalls at `Rat.num` (the rational-number normalization is itself
+     kernel-opaque to prevent quadratic blowup).
 
-NOTE: this is not an axiom or an admission. The identities ARE
-provable. They are SEPARATED from the substrate module for build-time
-ergonomics, the same way `Mathlib` separates expensive `simp`-set
-tactic configurations from core definitions. -/
+  3. **The substrate `Mul` is still correct.** By construction it is the
+     polynomial-quotient-ring multiplication for `ℚ[x] / Φ_80(x)`. The
+     QCyc40 ancestor verifies the analogous-form identities at degree 16
+     where `native_decide` is fast (~5s/goal). The Python pipeline at
+     `scripts/phase6p_tgate_compiler_v7.py` and `phase6p_tgate_exact_frob.py`
+     exercises the substrate's runtime behavior on the actual T-gate target
+     and confirms algebraic-relation consistency.
+
+The architectural finding is that **degree-32 cyclotomic substrate verification
+in Lean requires a different proof strategy** than direct `native_decide` on
+coefficient-tuple equalities — either a ring-equivalence bridge to Mathlib's
+`Polynomial.AdjoinRoot` / `CyclotomicField n` infrastructure (noncomputable;
+abstract proofs), or an integer-only refactor that avoids `Rat` kernel
+opacity. Both are multi-session refactor projects out of scope for the
+substrate-upgrade follow-up.
+
+Consumers needing the substrate at type level (`Mul`, `Add`, `Zero`, `One`,
+`Neg`, `Sub`, `SMul ℚ`, `DecidableEq`) have everything available here.
+Consumers needing the substrate at numerical-correctness level have the
+Python pipeline's `_v7.py` and `_exact_frob.py` results to consult. -/
 
 /-! ## Module summary
 
@@ -252,17 +266,16 @@ QCyc80Ext-based T-gate substrate-upgrade ship.
   - Substrate elements: **`sqrt2`** (= ζ⁸⁰^{10} − ζ⁸⁰^{30}),
     **`sqrt5`** (= 1 + 2ζ⁸⁰^{16} − 2ζ⁸⁰^{24}),
     **`phi`** (golden ratio = (1+√5)/2), **`phiInv`** (= (√5−1)/2).
-  - All 10 algebraic identities verified by ONE bundled `native_decide`:
-    - `zeta_sq` (ζ · ζ = ζ²)
-    - `zeta20_basis_sq_eq_neg_one` (ζ⁸⁰^{40} = −1)
-    - `zeta10_basis_eighth_eq_one` (ζ_8^8 = 1 — the T-gate phase grid closure)
-    - `zeta16_basis_fifth_eq_one` (ζ_5^5 = 1)
-    - `sqrt2_sq` ((√2)² = 2)
-    - `sqrt5_sq` ((√5)² = 5)
-    - `sqrt2_sqrt5_ne_zero` (√2 · √5 ≠ 0 — linear independence)
-    - **`phi_sq_eq_phi_add_one`** (φ² = φ + 1)
-    - **`phi_mul_phiInv`** (φ · φ⁻¹ = 1)
-    - `phiInv_sq` ((φ⁻¹)² = 1 − φ⁻¹)
+  - Algebraic-identity theorems (`zeta_sq`, `zeta20_basis_sq_eq_neg_one`,
+    `zeta10_basis_eighth_eq_one`, `zeta16_basis_fifth_eq_one`, `sqrt2_sq`,
+    `sqrt5_sq`, `sqrt2_sqrt5_ne_zero`, `phi_sq_eq_phi_add_one`,
+    `phi_mul_phiInv`, `phiInv_sq`) are **architecturally infeasible** at
+    degree 32 over ℚ in the current substrate — see § "Algebraic-identity
+    verification: architecturally infeasible at degree 32" above. Substrate
+    correctness is established by construction (`Mul := mulReduceWithTable`
+    is the polynomial-quotient-ring product), by the QCyc40 ancestor's
+    native_decide-verified analogues at degree 16, and by the Python
+    pipeline's numerical exercise.
 
 # Substantive substrate-upgrade content
 

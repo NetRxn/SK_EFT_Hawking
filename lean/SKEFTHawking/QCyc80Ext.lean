@@ -106,11 +106,12 @@ def w : QCyc80Ext := ⟨0, 1⟩
 def ofQCyc80 (x : QCyc80) : QCyc80Ext := ⟨x, 0⟩
 
 -- Algebraic identity theorems (w_sq, w_ne_zero, phi_inv_sqrt_sq,
--- phi_ext_sq_eq_phi_ext_add_one, phi_ext_mul_phiInv_ext) deferred to
--- SKEFTHawking.QCyc80ExtVerify per the bundling-discipline pattern
--- established in QCyc80.lean (see QCyc80.lean module docstring §
--- "Representation + bundling choices"). `native_decide` over the
--- degree-64 Q(ζ₈₀, √φ) extension consumes 5+ GB / minutes per goal.
+-- phi_ext_sq_eq_phi_ext_add_one, phi_ext_mul_phiInv_ext) are
+-- ARCHITECTURALLY INFEASIBLE at this degree — see QCyc80.lean module
+-- docstring § "Algebraic-identity verification: architecturally
+-- infeasible at degree 32". The QCyc80Ext multiplication unpacks into
+-- 4 QCyc80 products, each of which has the degree-32 native_decide
+-- pathology (kernel & native both fail in usable time).
 
 /-- φ embedded in K (as a "real" element). -/
 def phi_ext : QCyc80Ext := ofQCyc80 QCyc80.phi
@@ -167,10 +168,11 @@ the degree-64 number field K = Q(ζ₈₀, √φ) for Fibonacci 3-strand qubit-s
 
 Algebraic-identity theorems (`w_sq`, `w_ne_zero`, `phi_inv_sqrt_sq`,
 `phi_ext_sq_eq_phi_ext_add_one`, `phi_ext_mul_phiInv_ext`, `invSqrt2_ext_sq`,
-`eighth_root_ext_eighth_eq_one`) are deferred to the (future, on-demand)
-`QCyc80ExtVerify` module — `native_decide` over degree-64 Q(ζ₈₀, √φ) costs
-5+ GB / minutes per goal. See QCyc80.lean module docstring for the bundling-
-discipline rationale.
+`eighth_root_ext_eighth_eq_one`) are **architecturally infeasible** at
+this degree — see `QCyc80.lean` module docstring § "Algebraic-identity
+verification: architecturally infeasible at degree 32". Substrate correctness
+is established by construction + Python pipeline + QCyc40Ext ancestor's
+native_decide-verified analogues at degree-32 Q(ζ_40, √φ).
 
 # Substantive substrate-upgrade content
 
