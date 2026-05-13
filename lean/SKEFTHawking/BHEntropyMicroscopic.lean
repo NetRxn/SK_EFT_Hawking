@@ -180,8 +180,13 @@ Wave 3 originally shipped this declaration as
 `opaque verlindeEntropy_SU2k : ℝ → ℝ → ℝ` together with the load-
 bearing axiom `gaussianSaddleAsymptotic`. Wave 6a.7 retires the
 axiom by making the definition concrete via the saddle limit.
-After Wave 6a.7, the project's only declared `axiom` is
-`gapped_interface_axiom` (in `SPTClassification.lean`).
+After Wave 6a.7, this module is axiom-free.
+
+(Project-wide as of Phase 6p Wave 2c.4a-iteration: 2 axioms total —
+`gapped_interface_axiom` in `SPTClassification.lean` +
+`aa_residual_interior_at_one_for_hom` in `FKLW/AharonovAradBridgeIteration.lean`,
+the latter amended 2026-05-13 to include the `image_infinite` hypothesis
+per the user-authorized soundness audit.)
 -/
 noncomputable def verlindeEntropy_SU2k (A G_N : ℝ) : ℝ :=
   kaulMajumdarS A G_N 0

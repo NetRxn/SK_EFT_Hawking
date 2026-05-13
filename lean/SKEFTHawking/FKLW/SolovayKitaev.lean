@@ -138,7 +138,15 @@ density (`ClosureDenseProp`), Solovay-Kitaev applies via the bridge
 
     The dense gate set is `(ρ (σ i)) i = 0, ..., n-2`, the images of the
     standard braid generators (and their inverses, by the inversion-closure
-    of `UniversalGateSet`). -/
+    of `UniversalGateSet`).
+
+    ⚠️ **Soundness warning (F2 finding, 2026-05-13)**: `ClosureDenseProp` is
+    UNSATISFIABLE for unitary ρ. See `GateCompilation.exists_bhsz_approximation`
+    docstring. New consumers should use a sound migrated form via
+    `DenseInSpecialUnitary`. -/
+@[deprecated "Use a DenseInSpecialUnitary-based variant — \
+              ClosureDenseProp is unsatisfiable for unitary ρ \
+              (F2 finding 2026-05-13)" (since := "2026-05-13")]
 theorem sk_from_FKLW_density
     (n d : ℕ) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
     (G : List (Matrix (Fin d) (Fin d) ℂ))

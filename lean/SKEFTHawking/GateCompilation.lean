@@ -238,12 +238,20 @@ target unitary U has a BHSZ-approximating braid word for every ε > 0. -/
 /-- **Existence of BHSZ-ε approximations** (LEGACY API, retained for
     `ClosureDenseProp`-typed consumers).
 
-    NOTE: `ClosureDenseProp` is **unsatisfiable** for unitary ρ (BridgeProp.lean
-    F2 finding — unitary entries lie on the unit-modulus locus, not dense in
-    the full matrix space). So this theorem's hypothesis cannot be supplied
-    by any actually-unitary representation. The migrated, sound API is
-    `exists_bhsz_approximation_su` below, which uses `DenseInSpecialUnitary`
-    (the correct entrywise-density-in-SU(d) predicate). -/
+    ⚠️ **Soundness warning (F2 finding, 2026-05-13)**: `ClosureDenseProp` is
+    UNSATISFIABLE for unitary ρ — entries of a unitary matrix lie on the
+    unit-modulus locus, never dense in the full matrix space `ℂ^(d×d)`.
+    See `AharonovAradBridgeIteration.unitary_d_one_not_dense_in_matrix` for
+    the formal counterexample at d=1, and the general F2 finding in
+    `BridgeProp.lean`. **No actually-unitary representation can supply this
+    hypothesis** — invocations of this theorem are vacuously true.
+
+    The sound migrated API is `exists_bhsz_approximation_su` (below), which
+    uses `DenseInSpecialUnitary` (the correct entrywise-density-in-SU(d)
+    predicate). New consumers should use the SU variant. -/
+@[deprecated "Use exists_bhsz_approximation_su (SU(d)-density variant) — \
+              ClosureDenseProp is unsatisfiable for unitary ρ \
+              (F2 finding 2026-05-13)" (since := "2026-05-13")]
 theorem exists_bhsz_approximation
     {n d : ℕ} (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
     (h_density : ClosureDenseProp n d ρ)
