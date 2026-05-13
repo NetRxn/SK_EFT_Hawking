@@ -1475,11 +1475,209 @@ theorem bch_order_2_cubic_thm {d : ℕ} [Nonempty (Fin d)]
   -- Compose: 253 + 30 + 36 = 319 ≤ 320
   linarith
 
-/-! ## 11. Module summary
+/-! ## 11. AA Bridge Lemma 6.1 — group commutator quadratic shrinkage (R5.3 SHIP)
 
-MatrixBCHCubic.lean (Wave 2d.2-followup-R5.2a+R5.2b ship, 2026-05-13 PM):
+The Aharonov-Arad Bridge Lemma 6.1 statement (group commutator quadratic
+shrinkage from BCH order-2 estimate). Given `F, G : Matrix _ _ ℂ` with
+`‖F‖, ‖G‖ ≤ δ ≤ 1`, the GROUP commutator
+`[exp(iF), exp(iG)] := exp(iF)·exp(iG)·exp(-iF)·exp(-iG)`
+satisfies `‖[exp(iF), exp(iG)] - 1‖ ≤ C · δ²`.
+
+This is the **quadratic-shrinkage** content of AA Lemma 6.1: starting
+from elements of "scale δ" in BCH coordinates, the group commutator is
+of scale δ², not δ. Iterating, ε → ε² → ε⁴ → ... → 0 quadratically.
+
+The **cubic-linearization** companion (R5.3.2):
+  `‖[exp(iF), exp(iG)] - (1 - [F, G])‖ ≤ C · δ³`
+identifies the LEADING-ORDER Lie-algebra DIRECTION of the group
+commutator. This is consumed by Lemma 6.2 (basis-rotation / LieSpan
+argument) since LieSpanProp is about Lie commutators `[F, G]`.
+
+Both theorems are direct compositions of `bch_order_2_cubic_thm` (R5.2b)
+with Taylor remainder bounds on `exp(-[F, G])`. -/
+
+/-- **AA Bridge Lemma 6.1 — quadratic shrinkage** (R5.3 SHIP).
+
+For `F, G : Matrix (Fin d) (Fin d) ℂ` with `‖F‖, ‖G‖ ≤ δ ≤ 1`:
+
+  `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - 1‖ ≤ 338 · δ²`.
+
+This is the group commutator quadratic shrinkage: starting from
+"scale δ" Lie-algebra elements, the group commutator is "scale δ²".
+Iterating this lemma drives the commutator hierarchy `δ → δ² → δ⁴ → ...`
+to zero quadratically.
+
+**Proof.** Triangle inequality:
+  `‖P - 1‖ ≤ ‖P - exp(-[F, G])‖ + ‖exp(-[F, G]) - 1‖`
+where `P := exp(iF)·exp(iG)·exp(-iF)·exp(-iG)`.
+
+- First term ≤ `320·δ³` (R5.2b, `bch_order_2_cubic_thm`).
+- Second term: `‖exp(-[F, G]) - 1‖ ≤ ‖[F, G]‖ · exp(‖[F, G]‖)`
+  (order-1 Taylor remainder of `exp`); with `‖[F, G]‖ ≤ 2δ²`
+  (from `commutator_norm_le ≤ 2·‖F‖·‖G‖`) and `exp(2δ²) ≤ exp(2) ≤ 9`
+  (for δ ≤ 1), we get `≤ 18·δ²`.
+
+For δ ≤ 1: `320·δ³ ≤ 320·δ²`, so total `≤ 338·δ²`.
+
+**No Hermitian hypothesis required** — the bound uses generic
+`commutator_norm_le ≤ 2·‖F‖·‖G‖`, not the Hermitian-specific
+`MatrixBCH.hermitian_commutator_norm_le`. -/
+theorem bch_group_commutator_quadratic_shrinkage {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖NormedSpace.exp (Complex.I • F) * NormedSpace.exp (Complex.I • G) *
+       NormedSpace.exp (-(Complex.I • F)) * NormedSpace.exp (-(Complex.I • G))
+       - 1‖ ≤ 338 * δ ^ 2 := by
+  set P := NormedSpace.exp (Complex.I • F) * NormedSpace.exp (Complex.I • G) *
+           NormedSpace.exp (-(Complex.I • F)) * NormedSpace.exp (-(Complex.I • G))
+  set Q := NormedSpace.exp (-⁅F, G⁆)
+  -- Triangle: ‖P - 1‖ ≤ ‖P - Q‖ + ‖Q - 1‖
+  have h_split : P - 1 = (P - Q) + (Q - 1) := by abel
+  have h_tri : ‖P - 1‖ ≤ ‖P - Q‖ + ‖Q - 1‖ := by
+    rw [h_split]; exact norm_add_le _ _
+  -- ‖P - Q‖ ≤ 320·δ³ (R5.2b)
+  have h_PQ : ‖P - Q‖ ≤ 320 * δ ^ 3 :=
+    bch_order_2_cubic_thm δ hδ_nn hδ_le_one F G hF hG
+  -- ‖Q - 1‖ via order-1 Taylor of exp at -[F, G]
+  have h_Q_sub_1_taylor : ‖Q - 1‖ ≤ ‖⁅F, G⁆‖ * Real.exp ‖⁅F, G⁆‖ := by
+    have := MatrixBCH.norm_exp_smul_sub_one_le (-⁅F, G⁆) 1 (by rw [norm_one])
+    simp only [one_smul] at this
+    rwa [show ‖(-⁅F, G⁆ : Matrix (Fin d) (Fin d) ℂ)‖ = ‖⁅F, G⁆‖ from norm_neg _] at this
+  -- ‖[F, G]‖ ≤ 2·δ²  (generic commutator bound, no Hermitian)
+  have h_comm_le : ‖⁅F, G⁆‖ ≤ 2 * δ ^ 2 := by
+    have h_comm := commutator_norm_le F G
+    have h_2F_le : 2 * ‖F‖ ≤ 2 * δ := by linarith [norm_nonneg F]
+    have hG_nn : (0 : ℝ) ≤ ‖G‖ := norm_nonneg _
+    have h_2δ_nn : (0 : ℝ) ≤ 2 * δ := by linarith [norm_nonneg F]
+    have h_FG_le : 2 * ‖F‖ * ‖G‖ ≤ 2 * δ * δ := by
+      calc 2 * ‖F‖ * ‖G‖ ≤ 2 * δ * ‖G‖ := mul_le_mul_of_nonneg_right h_2F_le hG_nn
+        _ ≤ 2 * δ * δ := mul_le_mul_of_nonneg_left hG h_2δ_nn
+    have h_eq : 2 * δ * δ = 2 * δ ^ 2 := by ring
+    linarith
+  have h_comm_nn : (0 : ℝ) ≤ ‖⁅F, G⁆‖ := norm_nonneg _
+  have h_2δ2_nn : (0 : ℝ) ≤ 2 * δ ^ 2 := by positivity
+  -- ‖Q - 1‖ ≤ 2·δ²·exp(2·δ²)
+  have h_Q_sub_1 : ‖Q - 1‖ ≤ (2 * δ ^ 2) * Real.exp (2 * δ ^ 2) := by
+    have h_exp_F_nn : (0 : ℝ) ≤ Real.exp ‖⁅F, G⁆‖ := le_of_lt (Real.exp_pos _)
+    have h_exp_le : Real.exp ‖⁅F, G⁆‖ ≤ Real.exp (2 * δ ^ 2) := Real.exp_le_exp.mpr h_comm_le
+    have h_step1 : ‖⁅F, G⁆‖ * Real.exp ‖⁅F, G⁆‖ ≤ (2 * δ ^ 2) * Real.exp ‖⁅F, G⁆‖ :=
+      mul_le_mul_of_nonneg_right h_comm_le h_exp_F_nn
+    have h_step2 : (2 * δ ^ 2) * Real.exp ‖⁅F, G⁆‖ ≤ (2 * δ ^ 2) * Real.exp (2 * δ ^ 2) :=
+      mul_le_mul_of_nonneg_left h_exp_le h_2δ2_nn
+    linarith
+  -- Numeric collapse: bound exp(2δ²) ≤ 9 for δ ≤ 1
+  have h_δ2_nn : (0 : ℝ) ≤ δ ^ 2 := by positivity
+  have h_δ3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  have hδ_sq_le_one : δ ^ 2 ≤ 1 := by nlinarith
+  have h_2δ2_le_2 : 2 * δ ^ 2 ≤ 2 := by linarith
+  have h_exp_2_le_9 : Real.exp 2 ≤ 9 := by
+    have h_eq : Real.exp 2 = Real.exp 1 * Real.exp 1 := by
+      rw [show (2 : ℝ) = 1 + 1 from by norm_num, Real.exp_add]
+    have h_exp_1_lt : Real.exp 1 < 3 := by have := Real.exp_one_lt_d9; linarith
+    have h_exp1_pos : (0 : ℝ) < Real.exp 1 := Real.exp_pos _
+    rw [h_eq]; nlinarith
+  have h_exp_2δ2_le : Real.exp (2 * δ ^ 2) ≤ 9 :=
+    (Real.exp_le_exp.mpr h_2δ2_le_2).trans h_exp_2_le_9
+  have h_Q_sub_1_num : ‖Q - 1‖ ≤ 18 * δ ^ 2 := by
+    have h_step : (2 * δ ^ 2) * Real.exp (2 * δ ^ 2) ≤ (2 * δ ^ 2) * 9 :=
+      mul_le_mul_of_nonneg_left h_exp_2δ2_le h_2δ2_nn
+    have h_eq : (2 * δ ^ 2) * 9 = 18 * δ ^ 2 := by ring
+    linarith
+  -- 320·δ³ ≤ 320·δ² for δ ≤ 1
+  have h_δ3_le_δ2 : δ ^ 3 ≤ δ ^ 2 := by
+    have h_eq : δ ^ 3 = δ ^ 2 * δ := by ring
+    rw [h_eq]
+    calc δ ^ 2 * δ ≤ δ ^ 2 * 1 := mul_le_mul_of_nonneg_left hδ_le_one h_δ2_nn
+      _ = δ ^ 2 := by ring
+  have h_PQ_num : ‖P - Q‖ ≤ 320 * δ ^ 2 := by
+    have : 320 * δ ^ 3 ≤ 320 * δ ^ 2 :=
+      mul_le_mul_of_nonneg_left h_δ3_le_δ2 (by norm_num)
+    linarith
+  -- 320 + 18 = 338
+  linarith
+
+/-- **AA Bridge Lemma 6.1 cubic linearization** (R5.3.2 SHIP).
+
+For `F, G : Matrix (Fin d) (Fin d) ℂ` with `‖F‖, ‖G‖ ≤ δ ≤ 1`:
+
+  `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - (1 - ⁅F, G⁆)‖ ≤ 356 · δ³`.
+
+The **leading-order linearization** of the group commutator in Lie
+coordinates: `[exp(iF), exp(iG)] = (1 - [F, G]) + O(δ³)`. Consumed by
+AA Lemma 6.2 (basis-rotation): since `LieSpanProp` is about Lie
+commutators `[F, G]`, the cubic-linearization identifies how a group
+commutator points in the direction of a Lie commutator (with cubic
+error).
+
+**Proof.** Triangle inequality:
+  `‖P - (1 - [F, G])‖ ≤ ‖P - exp(-[F, G])‖ + ‖exp(-[F, G]) - (1 - [F, G])‖`
+- First term ≤ `320·δ³` (R5.2b).
+- Second term ≤ `36·δ³` (R5.2b §9, `norm_exp_neg_comm_sub_one_plus_comm_le_of_delta`).
+
+Total: `320 + 36 = 356`. -/
+theorem bch_group_commutator_linearization {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖NormedSpace.exp (Complex.I • F) * NormedSpace.exp (Complex.I • G) *
+       NormedSpace.exp (-(Complex.I • F)) * NormedSpace.exp (-(Complex.I • G))
+       - (1 - ⁅F, G⁆)‖ ≤ 356 * δ ^ 3 := by
+  set P := NormedSpace.exp (Complex.I • F) * NormedSpace.exp (Complex.I • G) *
+           NormedSpace.exp (-(Complex.I • F)) * NormedSpace.exp (-(Complex.I • G))
+  set Q := NormedSpace.exp (-⁅F, G⁆)
+  -- P - (1 - [F,G]) = (P - Q) + (Q - (1 - [F,G]))
+  have h_split : P - (1 - ⁅F, G⁆) = (P - Q) + (Q - (1 - ⁅F, G⁆)) := by abel
+  have h_tri : ‖P - (1 - ⁅F, G⁆)‖ ≤ ‖P - Q‖ + ‖Q - (1 - ⁅F, G⁆)‖ := by
+    rw [h_split]; exact norm_add_le _ _
+  have h_PQ : ‖P - Q‖ ≤ 320 * δ ^ 3 :=
+    bch_order_2_cubic_thm δ hδ_nn hδ_le_one F G hF hG
+  have h_Q_taylor : ‖Q - (1 - ⁅F, G⁆)‖ ≤ 4 * δ ^ 4 * Real.exp (2 * δ ^ 2) :=
+    norm_exp_neg_comm_sub_one_plus_comm_le_of_delta δ hδ_nn F G hF hG
+  -- Numeric: 4·δ⁴·exp(2δ²) ≤ 36·δ³ for δ ≤ 1
+  have h_δ3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  have h_δ4_nn : (0 : ℝ) ≤ δ ^ 4 := by positivity
+  have hδ_sq_nn : (0 : ℝ) ≤ δ ^ 2 := by positivity
+  have hδ_sq_le_one : δ ^ 2 ≤ 1 := by nlinarith
+  have h_2δ2_le_2 : 2 * δ ^ 2 ≤ 2 := by linarith
+  have h_exp_2_le_9 : Real.exp 2 ≤ 9 := by
+    have h_eq : Real.exp 2 = Real.exp 1 * Real.exp 1 := by
+      rw [show (2 : ℝ) = 1 + 1 from by norm_num, Real.exp_add]
+    have h_exp_1_lt : Real.exp 1 < 3 := by have := Real.exp_one_lt_d9; linarith
+    have h_exp1_pos : (0 : ℝ) < Real.exp 1 := Real.exp_pos _
+    rw [h_eq]; nlinarith
+  have h_exp_2δ2_le : Real.exp (2 * δ ^ 2) ≤ 9 :=
+    (Real.exp_le_exp.mpr h_2δ2_le_2).trans h_exp_2_le_9
+  have h_4δ4_nn : (0 : ℝ) ≤ 4 * δ ^ 4 := by positivity
+  have h_Q_taylor_num : ‖Q - (1 - ⁅F, G⁆)‖ ≤ 36 * δ ^ 3 := by
+    have h_step1 : 4 * δ ^ 4 * Real.exp (2 * δ ^ 2) ≤ 4 * δ ^ 4 * 9 :=
+      mul_le_mul_of_nonneg_left h_exp_2δ2_le h_4δ4_nn
+    have h_δ4_le_δ3 : δ ^ 4 ≤ δ ^ 3 := by
+      have h_eq : δ ^ 4 = δ ^ 3 * δ := by ring
+      rw [h_eq]
+      calc δ ^ 3 * δ ≤ δ ^ 3 * 1 := mul_le_mul_of_nonneg_left hδ_le_one h_δ3_nn
+        _ = δ ^ 3 := by ring
+    have h_step2 : 4 * δ ^ 4 * 9 = 36 * δ ^ 4 := by ring
+    have h_step3 : 36 * δ ^ 4 ≤ 36 * δ ^ 3 :=
+      mul_le_mul_of_nonneg_left h_δ4_le_δ3 (by norm_num)
+    linarith
+  linarith
+
+/-! ## 12. Module summary
+
+MatrixBCHCubic.lean (Wave 2d.2-followup-R5.2a+R5.2b+R5.3 ship, 2026-05-13 PM):
 **BCH cubic norm bound on the polynomial residual + headline cubic
-BCH order-2 estimate**.
+BCH order-2 estimate + AA Bridge Lemma 6.1 quadratic shrinkage**.
+
+  *AA Bridge Lemma 6.1 (§11, R5.3 SHIP):*
+  - **`bch_group_commutator_quadratic_shrinkage`** —
+    `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - 1‖ ≤ 338·δ²` for `‖F‖, ‖G‖ ≤ δ ≤ 1`.
+    The quadratic-shrinkage content of AA Lemma 6.1: starting from
+    "scale δ" Lie-algebra elements, the group commutator is "scale δ²".
+  - **`bch_group_commutator_linearization`** —
+    `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - (1 - ⁅F, G⁆)‖ ≤ 356·δ³`.
+    The cubic-linearization: the leading-order DIRECTION of the group
+    commutator is the Lie commutator `-⁅F, G⁆` (consumed by Lemma 6.2).
+
+  No Hermitian hypothesis required — uses `commutator_norm_le ≤ 2·‖F‖·‖G‖`.
 
 **R5.2a + R5.2b SHIP — Substantive content**:
 

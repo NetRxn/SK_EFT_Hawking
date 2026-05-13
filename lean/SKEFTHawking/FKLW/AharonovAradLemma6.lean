@@ -29,16 +29,18 @@ Step decomposition of the full AA discharge:
      the FKLW use case: `BraidGroup n →* SU(d)` MonoidHom with
      infinite range ⇒ 1 is an AccPt of the range.
 
-  4. **Commutator-shrinkage Lemma 6.1** (DEFERRED, requires BCH cubic):
-     For elements g, h ∈ SU(d) close to 1 (in some norm sense), the
-     group commutator [g, h] = ghg⁻¹h⁻¹ has norm-from-1 ≤ C · ‖g-1‖²
-     (quadratically smaller). The cubic BCH bound is the load-bearing
-     ingredient: writing g = exp(iF), h = exp(iG) with ‖F‖, ‖G‖ ~ δ,
-     the bound `‖[g,h] - 1‖ ≤ ‖exp(-[F,G]) - 1‖ + ‖BCH-remainder‖`
-     requires `BCH-remainder = O(δ³)`, not the current linear `200·δ`.
+  4. **Commutator-shrinkage Lemma 6.1** (SHIPPED 2026-05-13 PM in
+     `MatrixBCHCubic.lean` §11 as `bch_group_commutator_quadratic_shrinkage`
+     + `bch_group_commutator_linearization`):
+     For F, G with ‖F‖, ‖G‖ ≤ δ ≤ 1:
+       - `‖[exp(iF), exp(iG)] - 1‖ ≤ 338·δ²` (quadratic shrinkage)
+       - `‖[exp(iF), exp(iG)] - (1 - ⁅F, G⁆)‖ ≤ 356·δ³` (cubic linearization)
+     Built on `bch_order_2_cubic_thm` (R5.2b) + order-1 Taylor remainder
+     of `exp` at `-⁅F, G⁆` + `‖⁅F, G⁆‖ ≤ 2·δ²` (generic commutator bound).
+     No Hermitian hypothesis required.
 
   5. **Basis-rotation Lemma 6.2** (DEFERRED): combines Lemma 6.1's
-     small-element generation with `LieSpanProp` to show the resulting
+     cubic linearization with `LieSpanProp` to show the resulting
      small-element family covers a neighborhood of 1 in SU(d). This
      uses the ℂ-span of `range ρ_hom` to choose generator commutator
      directions matching a basis of the Lie algebra at 1.
