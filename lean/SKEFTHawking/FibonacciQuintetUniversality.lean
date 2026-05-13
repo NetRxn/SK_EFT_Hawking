@@ -1,6 +1,17 @@
 /-
 SK_EFT_Hawking Phase 6p Wave 2b.3 (STRENGTHENED): Fibonacci Quintet Universality
 
+**SUPERSEDED 2026-05-12** by `SKEFTHawking.FibonacciQuintetTrueRep` per Phase 6p
+Wave 2b.3.2-followup DR §5.3 R5 finding (file:
+`Lit-Search/Phase-6p/Phase 6p Wave 2b.3.2-followup — HZBS Fig 4 .md`). The
+block-extension architecture in THIS module places the qutrit σᵢ on {0,1,2}
+and IDENTITY on {3,4}, which is NOT the true 4-strand Fibonacci
+representation. Additionally, the dim-𝔰𝔲(5) = 24 spanning target is
+structurally unreachable by braiding alone (braid-group reps are always
+block-diagonal in total charge c; braiding spans 𝔰𝔲(3) ⊕ 𝔰𝔲(2) ⊕ 𝔲(1)
+of dim 12, not 𝔰𝔲(5) of dim 24). **Retained for legacy linkage only**;
+use `FibonacciQuintetTrueRep` for any genuine 4-strand spanning claim.
+
 Substantive extension of `FibonacciQutritUniversality.lean` (paper14 — qutrit case,
 3-dim Hilbert space → SU(3)) to a 5-dim Hilbert space → SU(5) representation.
 
