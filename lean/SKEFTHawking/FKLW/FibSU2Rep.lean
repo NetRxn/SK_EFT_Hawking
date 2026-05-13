@@ -783,6 +783,155 @@ This completes the analytical path from R4.1 substrate
 + R4.2.b.1 bridge + R4.2.b.2 core identity to the full Yang-Baxter
 relation `σ_Fib_1 · σ_Fib_2 · σ_Fib_1 = σ_Fib_2 · σ_Fib_1 · σ_Fib_2`. -/
 
+/-! ## 10. Det normalization + SU(2) MonoidHom (R4.2.c)
+
+Bring `σ_Fib_1, σ_Fib_2` into `SU(2)` by multiplying by the unit-modulus
+scalar `ω = exp(πi/10)` (chosen so `ω² · det(σ_Fib_1) = 1`), then assemble
+the Fibonacci braid representation `ρ_Fib_SU2 : BraidGroup 3 →* SU(2)`
+via R4.1's `braidGroup3HomFromPair`. -/
+
+/-- Det-normalization scalar `ω = exp(πi/10)`. Chosen so that
+`ω² · det(σ_Fib_1) = ω² · R1_C · Rtau_C = 1`. -/
+noncomputable def ω_Fib_C : ℂ :=
+  Complex.exp (((Real.pi / 10 : ℝ) : ℂ) * Complex.I)
+
+/-- `‖ω_Fib_C‖ = 1` (unit-modulus). -/
+theorem norm_ω_Fib_C : ‖ω_Fib_C‖ = 1 := by
+  unfold ω_Fib_C
+  exact Complex.norm_exp_ofReal_mul_I _
+
+/-- `ω_Fib_C² · (R1_C · Rtau_C) = 1` — the key normalization identity.
+
+Proof: `ω² = exp(πi/5)`, `R1_C · Rtau_C = exp(-πi/5)`, so product
+`= exp(0) = 1`. -/
+theorem ω_Fib_C_sq_mul_det : ω_Fib_C ^ 2 * (R1_C * Rtau_C) = 1 := by
+  unfold ω_Fib_C R1_C Rtau_C
+  rw [sq, ← Complex.exp_add, ← Complex.exp_add, ← Complex.exp_add]
+  -- exponent: (π/10)·I + (π/10)·I + (-4π/5)·I + (3π/5)·I = 0
+  convert Complex.exp_zero using 2
+  push_cast
+  ring
+
+/-- The det-normalized `σ_Fib_1` matrix: `ω_Fib_C • σ_Fib_1`. -/
+noncomputable def σ_Fib_1_SU_mat : Matrix (Fin 2) (Fin 2) ℂ :=
+  ω_Fib_C • σ_Fib_1
+
+/-- The det-normalized `σ_Fib_2` matrix: `ω_Fib_C • σ_Fib_2`. -/
+noncomputable def σ_Fib_2_SU_mat : Matrix (Fin 2) (Fin 2) ℂ :=
+  ω_Fib_C • σ_Fib_2
+
+/-- `σ_Fib_1_SU_mat` is unitary.
+Proof: `(ω • σ) · star(ω • σ) = (ω · star ω) • (σ · star σ) = 1 • 1 = 1`,
+using `‖ω‖ = 1`. -/
+theorem σ_Fib_1_SU_mat_unitary : σ_Fib_1_SU_mat * star σ_Fib_1_SU_mat = 1 := by
+  unfold σ_Fib_1_SU_mat
+  rw [star_smul, Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+  have hω : ω_Fib_C * star ω_Fib_C = 1 := unit_norm_mul_conj norm_ω_Fib_C
+  rw [hω, σ_Fib_1_unitary, one_smul]
+
+/-- `σ_Fib_2_SU_mat` is unitary (same argument). -/
+theorem σ_Fib_2_SU_mat_unitary : σ_Fib_2_SU_mat * star σ_Fib_2_SU_mat = 1 := by
+  unfold σ_Fib_2_SU_mat
+  rw [star_smul, Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+  have hω : ω_Fib_C * star ω_Fib_C = 1 := unit_norm_mul_conj norm_ω_Fib_C
+  rw [hω, σ_Fib_2_unitary, one_smul]
+
+/-- `σ_Fib_1_SU_mat` has determinant 1.
+Proof: `det(ω • σ_Fib_1) = ω² · det(σ_Fib_1) = ω² · (R1_C · Rtau_C) = 1`
+(via `Matrix.det_smul` for `Fin 2` and `ω_Fib_C_sq_mul_det`). -/
+theorem σ_Fib_1_SU_mat_det : σ_Fib_1_SU_mat.det = 1 := by
+  unfold σ_Fib_1_SU_mat
+  rw [Matrix.det_smul]
+  -- Goal: ω_Fib_C ^ Fintype.card (Fin 2) * σ_Fib_1.det = 1
+  simp only [Fintype.card_fin]
+  rw [σ_Fib_1_det]
+  exact ω_Fib_C_sq_mul_det
+
+/-- `σ_Fib_2_SU_mat` has determinant 1.
+Proof: same as σ_Fib_1, since `det(σ_Fib_2) = det(σ_Fib_1)`. -/
+theorem σ_Fib_2_SU_mat_det : σ_Fib_2_SU_mat.det = 1 := by
+  unfold σ_Fib_2_SU_mat
+  rw [Matrix.det_smul]
+  simp only [Fintype.card_fin]
+  rw [σ_Fib_2_det_eq_σ_Fib_1_det, σ_Fib_1_det]
+  exact ω_Fib_C_sq_mul_det
+
+/-- `σ_Fib_1_SU : Matrix.specialUnitaryGroup (Fin 2) ℂ` — the
+det-normalized σ_Fib_1 packaged as an SU(2) element. -/
+noncomputable def σ_Fib_1_SU :
+    Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  ⟨σ_Fib_1_SU_mat,
+    Matrix.mem_specialUnitaryGroup_iff.mpr
+      ⟨Matrix.mem_unitaryGroup_iff.mpr σ_Fib_1_SU_mat_unitary,
+       σ_Fib_1_SU_mat_det⟩⟩
+
+/-- `σ_Fib_2_SU : Matrix.specialUnitaryGroup (Fin 2) ℂ` — the
+det-normalized σ_Fib_2 packaged as an SU(2) element. -/
+noncomputable def σ_Fib_2_SU :
+    Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  ⟨σ_Fib_2_SU_mat,
+    Matrix.mem_specialUnitaryGroup_iff.mpr
+      ⟨Matrix.mem_unitaryGroup_iff.mpr σ_Fib_2_SU_mat_unitary,
+       σ_Fib_2_SU_mat_det⟩⟩
+
+/-- The Yang-Baxter relation lifts from σ_Fib to σ_Fib_SU at the
+matrix level (before coercion to SU(2)).
+
+Proof: `(ω·σ_1)·(ω·σ_2)·(ω·σ_1) = ω³ · σ_1·σ_2·σ_1 = ω³ · σ_2·σ_1·σ_2
+                                = (ω·σ_2)·(ω·σ_1)·(ω·σ_2)`. -/
+theorem σ_Fib_SU_mat_yang_baxter :
+    σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * σ_Fib_1_SU_mat =
+      σ_Fib_2_SU_mat * σ_Fib_1_SU_mat * σ_Fib_2_SU_mat := by
+  unfold σ_Fib_1_SU_mat σ_Fib_2_SU_mat
+  -- Strategy: convert each side into `(ω · ω · ω) • (matrix triple product)`,
+  -- then apply σ_Fib_yang_baxter for the matrix-level YB.
+  have hLHS : (ω_Fib_C • σ_Fib_1) * (ω_Fib_C • σ_Fib_2) * (ω_Fib_C • σ_Fib_1) =
+              (ω_Fib_C * ω_Fib_C * ω_Fib_C) • (σ_Fib_1 * σ_Fib_2 * σ_Fib_1) := by
+    simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, mul_assoc]
+  have hRHS : (ω_Fib_C • σ_Fib_2) * (ω_Fib_C • σ_Fib_1) * (ω_Fib_C • σ_Fib_2) =
+              (ω_Fib_C * ω_Fib_C * ω_Fib_C) • (σ_Fib_2 * σ_Fib_1 * σ_Fib_2) := by
+    simp only [Matrix.smul_mul, Matrix.mul_smul, smul_smul, mul_assoc]
+  rw [hLHS, hRHS, σ_Fib_yang_baxter]
+
+/-- **Yang-Baxter relation in SU(2)**: the det-normalized braid
+generators satisfy the braid relation in the group `SU(2)`. -/
+theorem σ_Fib_SU_yang_baxter :
+    σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU =
+      σ_Fib_2_SU * σ_Fib_1_SU * σ_Fib_2_SU := by
+  -- Equality of group elements ⇔ equality of underlying matrices.
+  apply Subtype.ext
+  show (σ_Fib_1_SU.val * σ_Fib_2_SU.val * σ_Fib_1_SU.val : Matrix _ _ _) =
+       σ_Fib_2_SU.val * σ_Fib_1_SU.val * σ_Fib_2_SU.val
+  exact σ_Fib_SU_mat_yang_baxter
+
+/-- **The concrete Fibonacci 3-strand braid representation in SU(2)**
+(R4.2.c SHIP, this commit).
+
+`ρ_Fib_SU2 : BraidGroup 3 →* Matrix.specialUnitaryGroup (Fin 2) ℂ`
+
+Built from `braidGroup3HomFromPair` (R4.1) applied to the Yang-Baxter
+pair `(σ_Fib_1_SU, σ_Fib_2_SU)`. This is the canonical concrete
+witness for the Fibonacci universal quantum computation construction
+at the lowest non-trivial strand count. -/
+noncomputable def ρ_Fib_SU2 :
+    SKEFTHawking.BraidGroup 3 →*
+      Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  braidGroup3HomFromPair σ_Fib_1_SU σ_Fib_2_SU σ_Fib_SU_yang_baxter
+
+/-- σ₀ generator of `BraidGroup 3` maps to `σ_Fib_1_SU` under `ρ_Fib_SU2`. -/
+theorem ρ_Fib_SU2_apply_σ0 :
+    ρ_Fib_SU2 (SKEFTHawking.BraidGroup.σ (⟨0, by omega⟩ : Fin (3 - 1))) =
+      σ_Fib_1_SU := by
+  unfold ρ_Fib_SU2
+  exact braidGroup3HomFromPair_apply_σ0 σ_Fib_1_SU σ_Fib_2_SU σ_Fib_SU_yang_baxter
+
+/-- σ₁ generator of `BraidGroup 3` maps to `σ_Fib_2_SU` under `ρ_Fib_SU2`. -/
+theorem ρ_Fib_SU2_apply_σ1 :
+    ρ_Fib_SU2 (SKEFTHawking.BraidGroup.σ (⟨1, by omega⟩ : Fin (3 - 1))) =
+      σ_Fib_2_SU := by
+  unfold ρ_Fib_SU2
+  exact braidGroup3HomFromPair_apply_σ1 σ_Fib_1_SU σ_Fib_2_SU σ_Fib_SU_yang_baxter
+
 /-! ## 7. Module summary
 
 FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a + R4.2.b.{1,2,3}, 2026-05-13):
@@ -831,9 +980,18 @@ FibSU2Rep.lean (Phase 6p Wave 2c.4a-R4.2.a + R4.2.b.{1,2,3}, 2026-05-13):
     — full matrix-level Yang-Baxter relation, assembled by `Matrix.ext` +
     `Fin.cases` over the four entry lemmas. Standard-kernel-only.
 
-**Deferred to R4.2.c sub-wave (det normalization + MonoidHom)**:
-  - ω = exp(πi/10) det-normalization to bring σ_1, σ_2 into SU(2).
-  - `ρ_Fib_SU2 : BraidGroup 3 →* SU(2)` via `braidGroup3HomFromPair`.
+**R4.2.c ship (this commit)**: det normalization + MonoidHom assembly.
+  - `ω_Fib_C := exp(πi/10)` — det-normalization scalar; `‖ω_Fib_C‖ = 1`.
+  - `ω_Fib_C_sq_mul_det : ω_Fib_C² · (R1_C · Rtau_C) = 1` — proves
+    `det(ω_Fib_C • σ_Fib_1) = 1` (via `Matrix.det_smul` and σ_Fib_1_det).
+  - `σ_Fib_1_SU, σ_Fib_2_SU : Matrix.specialUnitaryGroup (Fin 2) ℂ` —
+    the det-normalized braid generators in SU(2).
+  - `σ_Fib_SU_yang_baxter : σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU =
+                            σ_Fib_2_SU * σ_Fib_1_SU * σ_Fib_2_SU`
+    in the SU(2) group, lifted from `σ_Fib_yang_baxter` via scalar.
+  - **`ρ_Fib_SU2 : BraidGroup 3 →* Matrix.specialUnitaryGroup (Fin 2) ℂ`**
+    via `braidGroup3HomFromPair` (R4.1). The canonical concrete Fibonacci
+    representation at 3 strands.
 
 **Deferred to R4.2.d sub-wave (substantive density)**:
   - `closure(Set.range ρ_Fib_SU2) = Set.univ`
