@@ -136,6 +136,66 @@ noncomputable def bchPolyRem {d : ℕ} (F G : Matrix (Fin d) (Fin d) ℂ) :
     Matrix (Fin d) (Fin d) ℂ :=
   T2pos F * T2pos G * T2neg F * T2neg G - (1 - ⁅F, G⁆)
 
+/-! ### 2.1. Clean factorization `T2pos F · T2neg F = 1 + F⁴/4`
+
+A substantive algebraic identity: when the same matrix `F` appears in
+both factors, the cross-terms cancel exactly and only `1 + F⁴/4`
+remains. This is a building block for the deferred cubic bound R5.2a:
+the 4-fold product `T2pos F · T2pos G · T2neg F · T2neg G` can be
+rewritten as `T2pos F · T2neg F · T2pos G · T2neg G` plus a commutator
+correction term `T2pos F · [T2pos G, T2neg F] · T2neg G`. The former
+equals `(1 + F⁴/4)(1 + G⁴/4)` by this identity applied twice, leaving
+the commutator term as the load-bearing piece for the cubic bound.
+
+Proof: write `(1 + iF - F²/2)(1 - iF - F²/2) = (a + b)(a - b)` with
+`a = 1 - F²/2`, `b = iF`. Use `Commute.sq_sub_sq` (since a, b commute —
+both polynomials in F), then compute `a² - b²`:
+  - `a² = 1 - F² + F⁴/4` (direct expansion using `module` for smul algebra).
+  - `b² = (iF)² = i² F² = -F²` (using `Complex.I_sq` and `smul_pow`).
+  - `a² - b² = (1 - F² + F⁴/4) - (-F²) = 1 + F⁴/4`. -/
+
+/-- **Clean factorization** `T2pos F · T2neg F = 1 + F⁴/4`.
+
+The same-`F` product collapses to `1 + F⁴/4` exactly (no remainder).
+Used downstream in R5.2a's cubic-bound proof: the 4-fold product
+factors as `(1 + F⁴/4)(1 + G⁴/4) + commutator-correction`, isolating
+the bound-relevant content in the commutator. -/
+theorem T2pos_T2neg_self {d : ℕ} (F : Matrix (Fin d) (Fin d) ℂ) :
+    T2pos F * T2neg F = 1 + ((4 : ℂ)⁻¹) • F ^ 4 := by
+  unfold T2pos T2neg
+  set a : Matrix (Fin d) (Fin d) ℂ := 1 - ((2 : ℂ)⁻¹) • F^2 with ha_def
+  set b : Matrix (Fin d) (Fin d) ℂ := Complex.I • F with hb_def
+  -- Rewrite LHS as (a + b) * (a - b)
+  have h_lhs : (1 + Complex.I • F - ((2 : ℂ)⁻¹) • F^2) *
+               (1 - Complex.I • F - ((2 : ℂ)⁻¹) • F^2) = (a + b) * (a - b) := by
+    show (1 + b - ((2 : ℂ)⁻¹) • F^2) * (1 - b - ((2 : ℂ)⁻¹) • F^2) = (a + b) * (a - b)
+    rw [show 1 + b - ((2 : ℂ)⁻¹) • F^2 = a + b from by rw [ha_def]; abel,
+        show 1 - b - ((2 : ℂ)⁻¹) • F^2 = a - b from by rw [ha_def]; abel]
+  rw [h_lhs]
+  -- a, b commute (both are polynomials in F)
+  have h_comm : Commute a b := by
+    show Commute (1 - ((2 : ℂ)⁻¹) • F^2) (Complex.I • F)
+    have hX : Commute (((2 : ℂ)⁻¹) • F^2) (Complex.I • F) := by
+      have h1 : Commute (F^2) F := (Commute.refl F).pow_left 2
+      exact (h1.smul_right Complex.I).smul_left ((2 : ℂ)⁻¹)
+    exact (Commute.one_left (Complex.I • F)).sub_left hX
+  -- (a + b)(a - b) = a² - b²
+  rw [← h_comm.sq_sub_sq]
+  -- b² = -F²
+  have h_b_sq : b^2 = -((1 : ℂ) • F^2) := by
+    show (Complex.I • F)^2 = -((1 : ℂ) • F^2)
+    rw [smul_pow, Complex.I_sq]
+    simp
+  -- a² = 1 - F² + F⁴/4
+  have h_a_sq : a^2 = 1 - (1 : ℂ) • F^2 + ((4 : ℂ)⁻¹) • F^4 := by
+    show (1 - ((2 : ℂ)⁻¹) • F^2)^2 = 1 - (1 : ℂ) • F^2 + ((4 : ℂ)⁻¹) • F^4
+    rw [sq, mul_sub, sub_mul, sub_mul, mul_one, one_mul, smul_mul_smul_comm]
+    have hF4 : F^2 * F^2 = F^4 := by rw [show (4 : ℕ) = 2 + 2 from rfl, pow_add]
+    rw [hF4, show (2 : ℂ)⁻¹ * (2 : ℂ)⁻¹ = (4 : ℂ)⁻¹ from by norm_num, mul_one]
+    module
+  rw [h_a_sq, h_b_sq]
+  abel
+
 /-- **Trivial algebraic decomposition (naming the residual)**:
 
   `T2pos F · T2pos G · T2neg F · T2neg G = (1 - ⁅F, G⁆) + bchPolyRem F G`.
@@ -158,6 +218,11 @@ algebraic infrastructure for the BCH cubic-bound discharge.
 **Substantive content shipped**:
   - `T2pos`, `T2neg` — order-2 Taylor polynomials of `exp(±iX)`.
   - `T2pos_neg_eq_T2neg` — symmetry identity.
+  - **`T2pos_T2neg_self`** (substantive factorization) —
+    `T2pos F · T2neg F = 1 + F⁴/4`. Building block for R5.2a:
+    the 4-fold product splits as `(1 + F⁴/4)(1 + G⁴/4) +
+    T2pos F · [T2pos G, T2neg F] · T2neg G`, isolating the
+    cubic-relevant content in the commutator.
   - `bchPolyRem` — explicit cubic-or-higher polynomial residual.
   - `bchPoly_decomp` — trivial decomposition (names the residual).
 
