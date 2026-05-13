@@ -484,7 +484,163 @@ theorem Rtau_C_eq_neg_R1_C_pow_3 : Rtau_C = -(R1_C ^ 3) := by
       Complex.exp_pi_mul_I, mul_one]
   ring
 
-/-! ## 7. Yang-Baxter algebraic reduction (analytical sketch for R4.2.b.2)
+/-! ## 7. Core algebraic identities for Yang-Baxter
+
+The key φ-identities used in the YB proof. -/
+
+/-- `φInv_C² + φInv_C = 1` — the F²=I diagonal identity, lifted from
+`F_C_diag_identity` by replacing `φInvSqrt_C²` with `φInv_C`. -/
+theorem φInv_C_sq_add_self : φInv_C ^ 2 + φInv_C = 1 := by
+  have h := F_C_diag_identity
+  have hsq : φInvSqrt_C * φInvSqrt_C = φInv_C := by
+    have := φInvSqrt_C_sq; rw [sq] at this; exact this
+  rw [hsq] at h
+  linear_combination h
+
+/-- `φInv_C³ = 2·φInv_C - 1` — derived from `φInv_C² + φInv_C = 1`. -/
+theorem φInv_C_pow_3 : φInv_C ^ 3 = 2 * φInv_C - 1 := by
+  have h := φInv_C_sq_add_self
+  -- φInv_C^3 = φInv_C · φInv_C^2 = φInv_C · (1 - φInv_C)
+  -- = φInv_C - φInv_C^2 = φInv_C - (1 - φInv_C) = 2*φInv_C - 1
+  linear_combination φInv_C * h - h
+
+/-- **Core YB algebraic identity** (the substantive content all 4 YB
+entries reduce to):
+
+`φInv_C² · (R1_C² + Rtau_C²) + (2·φInv_C - 1) · R1_C · Rtau_C = 0`
+
+Proof: substitute `Rtau_C = -R1_C^3`, then `R1_C^5 = 1`, then bridge
+`R1_C² + R1_C³ = φInv_C`, then algebraic identity `φInv_C³ = 2·φInv_C - 1`.
+
+Strategy: multiply both sides by `R1_C` (nonzero) to convert `R1_C^4`
+into `R1_C^5 = 1`, then linear-combine the three substrate identities. -/
+theorem fib_yb_core_identity :
+    φInv_C ^ 2 * (R1_C ^ 2 + Rtau_C ^ 2) +
+      (2 * φInv_C - 1) * R1_C * Rtau_C = 0 := by
+  rw [Rtau_C_eq_neg_R1_C_pow_3]
+  have hR5 : R1_C ^ 5 = 1 := R1_C_pow_5
+  -- Convert the bridge to the φInv_C form (handle ℝ→ℂ cast).
+  have hbridge : R1_C ^ 2 + R1_C ^ 3 = φInv_C := by
+    have h := R1_C_sq_add_cube_eq_φInv
+    unfold φInv_C
+    rw [h]
+    push_cast; rfl
+  have hφ3 : φInv_C ^ 3 = 2 * φInv_C - 1 := φInv_C_pow_3
+  have hR1_ne : R1_C ≠ 0 := by
+    intro h
+    have h2 : ‖R1_C‖ = 0 := by rw [h, norm_zero]
+    rw [norm_R1_C] at h2; norm_num at h2
+  -- Reduce to showing R1_C * (LHS) = R1_C * 0
+  refine mul_left_cancel₀ hR1_ne ?_
+  rw [mul_zero]
+  -- New goal: R1_C * (φInv_C^2 * (R1_C^2 + (-R1_C^3)^2) +
+  --                   (2*φInv_C - 1) * R1_C * (-R1_C^3)) = 0
+  -- = φInv_C^2 * R1_C^3 + φInv_C^2 * R1_C^7 - (2*φInv_C - 1) * R1_C^5
+  -- Combine via linear_combination with coefficients derived from manual analysis:
+  --   c_hR5 := φInv_C^2 * R1_C^2 - (2*φInv_C - 1)
+  --   c_hbridge := φInv_C^2
+  --   c_hφ3 := 1
+  linear_combination
+    (φInv_C ^ 2 * R1_C ^ 2 - (2 * φInv_C - 1)) * hR5 +
+    φInv_C ^ 2 * hbridge + hφ3
+
+/-! ## 8. σ_Fib_2 entry-level computations + Yang-Baxter matrix entries
+
+Compute each entry of `σ_Fib_2 = F_C · σ_Fib_1 · F_C` directly,
+using `q² = p` to simplify (where p = φInv_C, q = φInvSqrt_C). -/
+
+/-- σ_Fib_1 entry [0,0] = R1_C. -/
+private theorem σ_Fib_1_apply_00 : σ_Fib_1 0 0 = R1_C := rfl
+
+/-- σ_Fib_1 entry [0,1] = 0. -/
+private theorem σ_Fib_1_apply_01 : σ_Fib_1 0 1 = 0 := rfl
+
+/-- σ_Fib_1 entry [1,0] = 0. -/
+private theorem σ_Fib_1_apply_10 : σ_Fib_1 1 0 = 0 := rfl
+
+/-- σ_Fib_1 entry [1,1] = Rtau_C. -/
+private theorem σ_Fib_1_apply_11 : σ_Fib_1 1 1 = Rtau_C := rfl
+
+/-- F_C entry [0,0] = φInv_C. -/
+private theorem F_C_apply_00 : F_C 0 0 = φInv_C := rfl
+
+/-- F_C entry [0,1] = φInvSqrt_C. -/
+private theorem F_C_apply_01 : F_C 0 1 = φInvSqrt_C := rfl
+
+/-- F_C entry [1,0] = φInvSqrt_C. -/
+private theorem F_C_apply_10 : F_C 1 0 = φInvSqrt_C := rfl
+
+/-- F_C entry [1,1] = -φInv_C. -/
+private theorem F_C_apply_11 : F_C 1 1 = -φInv_C := rfl
+
+/-- σ_Fib_2[0,0] = φInv_C² · R1_C + φInv_C · Rtau_C. -/
+theorem σ_Fib_2_apply_00 :
+    σ_Fib_2 0 0 = φInv_C ^ 2 * R1_C + φInv_C * Rtau_C := by
+  unfold σ_Fib_2
+  rw [Matrix.mul_apply]
+  simp only [Fin.sum_univ_two, Matrix.mul_apply,
+             σ_Fib_1_apply_00, σ_Fib_1_apply_01, σ_Fib_1_apply_10, σ_Fib_1_apply_11,
+             F_C_apply_00, F_C_apply_01, F_C_apply_10, F_C_apply_11,
+             mul_zero, zero_mul, add_zero, zero_add]
+  -- Goal: φInv_C * R1_C * φInv_C + φInvSqrt_C * Rtau_C * φInvSqrt_C = φInv_C² · R1_C + φInv_C · Rtau_C
+  have hq2 : φInvSqrt_C * φInvSqrt_C = φInv_C := by
+    have := φInvSqrt_C_sq; rw [sq] at this; exact this
+  linear_combination Rtau_C * hq2
+
+/-- σ_Fib_2[0,1] = φInv_C · φInvSqrt_C · (R1_C - Rtau_C). -/
+theorem σ_Fib_2_apply_01 :
+    σ_Fib_2 0 1 = φInv_C * φInvSqrt_C * (R1_C - Rtau_C) := by
+  unfold σ_Fib_2
+  rw [Matrix.mul_apply]
+  simp only [Fin.sum_univ_two, Matrix.mul_apply,
+             σ_Fib_1_apply_00, σ_Fib_1_apply_01, σ_Fib_1_apply_10, σ_Fib_1_apply_11,
+             F_C_apply_00, F_C_apply_01, F_C_apply_10, F_C_apply_11,
+             mul_zero, zero_mul, add_zero, zero_add]
+  ring
+
+/-- σ_Fib_2[1,0] = σ_Fib_2[0,1] = φInv_C · φInvSqrt_C · (R1_C - Rtau_C). -/
+theorem σ_Fib_2_apply_10 :
+    σ_Fib_2 1 0 = φInv_C * φInvSqrt_C * (R1_C - Rtau_C) := by
+  unfold σ_Fib_2
+  rw [Matrix.mul_apply]
+  simp only [Fin.sum_univ_two, Matrix.mul_apply,
+             σ_Fib_1_apply_00, σ_Fib_1_apply_01, σ_Fib_1_apply_10, σ_Fib_1_apply_11,
+             F_C_apply_00, F_C_apply_01, F_C_apply_10, F_C_apply_11,
+             mul_zero, zero_mul, add_zero, zero_add]
+  ring
+
+/-- σ_Fib_2[1,1] = φInv_C · R1_C + φInv_C² · Rtau_C. -/
+theorem σ_Fib_2_apply_11 :
+    σ_Fib_2 1 1 = φInv_C * R1_C + φInv_C ^ 2 * Rtau_C := by
+  unfold σ_Fib_2
+  rw [Matrix.mul_apply]
+  simp only [Fin.sum_univ_two, Matrix.mul_apply,
+             σ_Fib_1_apply_00, σ_Fib_1_apply_01, σ_Fib_1_apply_10, σ_Fib_1_apply_11,
+             F_C_apply_00, F_C_apply_01, F_C_apply_10, F_C_apply_11,
+             mul_zero, zero_mul, add_zero, zero_add]
+  have hq2 : φInvSqrt_C * φInvSqrt_C = φInv_C := by
+    have := φInvSqrt_C_sq; rw [sq] at this; exact this
+  linear_combination R1_C * hq2
+
+-- **Yang-Baxter matrix entry [0,0]** (R4.2.b.2 target):
+-- `(σ_Fib_1 * σ_Fib_2 * σ_Fib_1) 0 0 = (σ_Fib_2 * σ_Fib_1 * σ_Fib_2) 0 0`
+--
+-- Substrate ready (this commit):
+--   - σ_Fib_1_apply_* matrix entry rfl-lemmas
+--   - σ_Fib_2_apply_* matrix entry lemmas (use q²=p internally)
+--   - fib_yb_core_identity : `φInv_C²·(R1_C²+Rtau_C²) + (2·φInv_C-1)·R1_C·Rtau_C = 0`
+--   - φInv_C_pow_3 : `φInv_C³ = 2·φInv_C - 1`
+--   - φInvSqrt_C_sq : `φInvSqrt_C² = φInv_C`
+--
+-- After `rw [σ_Fib_2_apply_*]` the matrix equation becomes a polynomial
+-- identity in {R1_C, Rtau_C, φInv_C, φInvSqrt_C}. Analytical derivation
+-- (see §9) shows LHS - RHS factors as `(R1_C - Rtau_C) · φInv_C · core`
+-- plus terms cancelled by hφ3 + hq2. The `linear_combination` proof
+-- requires careful coefficient derivation (~30-100 LoC trial-and-error
+-- without the now-defunct `polyrith` tactic). R4.2.b.2 ship deferred
+-- pending coefficient analysis or alternative tactic.
+
+/-! ## 9. Yang-Baxter algebraic reduction (analytical sketch for R4.2.b.2)
 
 With the bridge identity `R1_C² + R1_C³ = 1/φ` and rotation
 `Rtau_C = -R1_C³` in hand, the YB proof structure for the [0,0] entry
