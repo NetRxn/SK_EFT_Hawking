@@ -904,12 +904,584 @@ theorem bchPolyRem_norm_le_cubic {d : ℕ} [Nonempty (Fin d)]
       ≤ 30 * δ ^ 3 := by nlinarith
   linarith
 
-/-! ## 8. Module summary
+/-! ## 8. Taylor remainder bounds for `exp(±iF)` vs T2pos/T2neg (R5.2b)
 
-MatrixBCHCubic.lean (Wave 2d.2-followup-R5.2a ship, 2026-05-13 PM):
-**load-bearing BCH cubic norm bound on the BCH polynomial residual**.
+These bridge the matrix exponential `exp(±i•F)` to its order-2 Taylor polynomial
+`T2pos`/`T2neg`, with quantitative cubic remainder bounds. Built on
+`MatrixTaylor.norm_exp_sub_order3_le_loose`.
 
-**R5.2a SHIP — Substantive content**:
+A companion order-2 Taylor bound on `exp(-[F,G]) - (1 - [F,G])` is also shipped
+here — the order-1 remainder of `exp` at `-[F,G]`, which is `O(δ⁴)` under
+`‖F‖, ‖G‖ ≤ δ` thanks to `‖[F,G]‖ ≤ 2·δ²` (from `commutator_norm_le`, no
+Hermitian hypothesis). -/
+
+/-- **T2pos in Mathlib Taylor form**: `T2pos F = 1 + (Complex.I • F) + ((2:ℂ)⁻¹) • (Complex.I • F)^2`.
+
+The intrinsic order-2 Taylor polynomial of `exp` at `Complex.I • F`, after
+applying `(i•F)² = -F²` simplification. Direct rewrite that lets us
+plug into `MatrixTaylor.norm_exp_sub_order3_le_loose`. -/
+private lemma T2pos_eq_taylor_form {d : ℕ} (F : Matrix (Fin d) (Fin d) ℂ) :
+    T2pos F = 1 + Complex.I • F + ((2 : ℂ)⁻¹) • (Complex.I • F) ^ 2 := by
+  unfold T2pos
+  rw [smul_pow, Complex.I_sq]
+  simp
+  module
+
+/-- **T2neg in Mathlib Taylor form**: `T2neg F = 1 + (-(Complex.I • F)) + ((2:ℂ)⁻¹) • (-(Complex.I • F))^2`. -/
+private lemma T2neg_eq_taylor_form {d : ℕ} (F : Matrix (Fin d) (Fin d) ℂ) :
+    T2neg F = 1 + (-(Complex.I • F)) + ((2 : ℂ)⁻¹) • (-(Complex.I • F)) ^ 2 := by
+  unfold T2neg
+  rw [neg_pow, smul_pow, Complex.I_sq]
+  simp
+  module
+
+/-- **Cubic Taylor remainder bound for `exp(iF) - T2pos F`**:
+
+  `‖NormedSpace.exp (Complex.I • F) - T2pos F‖ ≤ ‖F‖³ · exp(‖F‖)`.
+
+Direct application of `MatrixTaylor.norm_exp_sub_order3_le_loose` at
+`X = Complex.I • F`, using `T2pos_eq_taylor_form` to identify the Taylor
+polynomial and `‖Complex.I • F‖ = ‖F‖`. -/
+theorem norm_exp_iF_sub_T2pos_le {d : ℕ} [Nonempty (Fin d)]
+    (F : Matrix (Fin d) (Fin d) ℂ) :
+    ‖NormedSpace.exp (Complex.I • F) - T2pos F‖ ≤ ‖F‖ ^ 3 * Real.exp ‖F‖ := by
+  have h_taylor := MatrixTaylor.norm_exp_sub_order3_le_loose (Complex.I • F)
+  rw [← T2pos_eq_taylor_form] at h_taylor
+  have h_iF_norm : ‖Complex.I • F‖ = ‖F‖ := by
+    rw [norm_smul, Complex.norm_I, one_mul]
+  rw [h_iF_norm] at h_taylor
+  exact h_taylor
+
+/-- **Cubic Taylor remainder bound for `exp(-iF) - T2neg F`**:
+
+  `‖NormedSpace.exp (-(Complex.I • F)) - T2neg F‖ ≤ ‖F‖³ · exp(‖F‖)`. -/
+theorem norm_exp_neg_iF_sub_T2neg_le {d : ℕ} [Nonempty (Fin d)]
+    (F : Matrix (Fin d) (Fin d) ℂ) :
+    ‖NormedSpace.exp (-(Complex.I • F)) - T2neg F‖ ≤ ‖F‖ ^ 3 * Real.exp ‖F‖ := by
+  have h_taylor := MatrixTaylor.norm_exp_sub_order3_le_loose (-(Complex.I • F))
+  rw [← T2neg_eq_taylor_form] at h_taylor
+  have h_neg_iF_norm : ‖(-(Complex.I • F))‖ = ‖F‖ := by
+    rw [norm_neg, norm_smul, Complex.norm_I, one_mul]
+  rw [h_neg_iF_norm] at h_taylor
+  exact h_taylor
+
+/-- **Quadratic Taylor remainder bound for `exp(-[F,G]) - (1 - [F,G])`**:
+
+  `‖NormedSpace.exp (-⁅F, G⁆) - (1 - ⁅F, G⁆)‖ ≤ ‖⁅F, G⁆‖² · exp(‖⁅F, G⁆‖)`.
+
+The order-1 Taylor remainder of `exp` at `-⁅F, G⁆`. The polynomial `1 - [F,G]`
+is the BCH leading correction; the residual absorbs the higher-order content
+of `exp`. Bounded `O(‖[F,G]‖²) = O(δ⁴)` under `‖F‖, ‖G‖ ≤ δ`. -/
+theorem norm_exp_neg_comm_sub_one_plus_comm_le {d : ℕ} [Nonempty (Fin d)]
+    (F G : Matrix (Fin d) (Fin d) ℂ) :
+    ‖NormedSpace.exp (-⁅F, G⁆) - (1 - ⁅F, G⁆)‖
+      ≤ ‖⁅F, G⁆‖ ^ 2 * Real.exp ‖⁅F, G⁆‖ := by
+  have h_taylor := MatrixTaylor.norm_exp_sub_order2_le_loose (-⁅F, G⁆)
+  have h_eq : (1 : Matrix (Fin d) (Fin d) ℂ) + (-⁅F, G⁆) = 1 - ⁅F, G⁆ := by abel
+  rw [h_eq] at h_taylor
+  have h_norm : ‖(-⁅F, G⁆ : Matrix (Fin d) (Fin d) ℂ)‖ = ‖⁅F, G⁆‖ := norm_neg _
+  rw [h_norm] at h_taylor
+  exact h_taylor
+
+/-! ## 9. δ-parameterized Taylor remainder bounds (R5.2b)
+
+Specialize the §8 bounds under the standing hypothesis `‖F‖ ≤ δ ≤ 1`. -/
+
+/-- For `‖F‖ ≤ δ`: `‖exp(iF) - T2pos F‖ ≤ δ³ · exp(δ)`. -/
+lemma norm_exp_iF_sub_T2pos_le_of_delta {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (_hδ_nn : 0 ≤ δ) (F : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) :
+    ‖NormedSpace.exp (Complex.I • F) - T2pos F‖ ≤ δ ^ 3 * Real.exp δ := by
+  have h := norm_exp_iF_sub_T2pos_le F
+  have hF_nn : (0 : ℝ) ≤ ‖F‖ := norm_nonneg _
+  have h_F3_le : ‖F‖ ^ 3 ≤ δ ^ 3 := pow_le_pow_left₀ hF_nn hF 3
+  have h_exp_F_nn : (0 : ℝ) ≤ Real.exp ‖F‖ := le_of_lt (Real.exp_pos _)
+  have h_exp_le : Real.exp ‖F‖ ≤ Real.exp δ := Real.exp_le_exp.mpr hF
+  have h_d3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  have h_step1 : ‖F‖ ^ 3 * Real.exp ‖F‖ ≤ δ ^ 3 * Real.exp ‖F‖ :=
+    mul_le_mul_of_nonneg_right h_F3_le h_exp_F_nn
+  have h_step2 : δ ^ 3 * Real.exp ‖F‖ ≤ δ ^ 3 * Real.exp δ :=
+    mul_le_mul_of_nonneg_left h_exp_le h_d3_nn
+  linarith
+
+/-- For `‖F‖ ≤ δ`: `‖exp(-iF) - T2neg F‖ ≤ δ³ · exp(δ)`. -/
+lemma norm_exp_neg_iF_sub_T2neg_le_of_delta {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (_hδ_nn : 0 ≤ δ) (F : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) :
+    ‖NormedSpace.exp (-(Complex.I • F)) - T2neg F‖ ≤ δ ^ 3 * Real.exp δ := by
+  have h := norm_exp_neg_iF_sub_T2neg_le F
+  have hF_nn : (0 : ℝ) ≤ ‖F‖ := norm_nonneg _
+  have h_F3_le : ‖F‖ ^ 3 ≤ δ ^ 3 := pow_le_pow_left₀ hF_nn hF 3
+  have h_exp_F_nn : (0 : ℝ) ≤ Real.exp ‖F‖ := le_of_lt (Real.exp_pos _)
+  have h_exp_le : Real.exp ‖F‖ ≤ Real.exp δ := Real.exp_le_exp.mpr hF
+  have h_d3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  have h_step1 : ‖F‖ ^ 3 * Real.exp ‖F‖ ≤ δ ^ 3 * Real.exp ‖F‖ :=
+    mul_le_mul_of_nonneg_right h_F3_le h_exp_F_nn
+  have h_step2 : δ ^ 3 * Real.exp ‖F‖ ≤ δ ^ 3 * Real.exp δ :=
+    mul_le_mul_of_nonneg_left h_exp_le h_d3_nn
+  linarith
+
+/-- For `‖F‖, ‖G‖ ≤ δ`: `‖exp(-[F,G]) - (1 - [F,G])‖ ≤ 4·δ⁴ · exp(2·δ²)`. -/
+lemma norm_exp_neg_comm_sub_one_plus_comm_le_of_delta {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖NormedSpace.exp (-⁅F, G⁆) - (1 - ⁅F, G⁆)‖
+      ≤ 4 * δ ^ 4 * Real.exp (2 * δ ^ 2) := by
+  have h := norm_exp_neg_comm_sub_one_plus_comm_le F G
+  -- ‖[F, G]‖ ≤ 2·δ²
+  have h_comm_le : ‖⁅F, G⁆‖ ≤ 2 * δ ^ 2 := by
+    have h_comm := commutator_norm_le F G
+    have h_2δ_nn : (0 : ℝ) ≤ 2 * δ := by linarith [norm_nonneg F]
+    have hG_nn : (0 : ℝ) ≤ ‖G‖ := norm_nonneg _
+    have h_FG_le : 2 * ‖F‖ * ‖G‖ ≤ 2 * δ * δ := by
+      have h_2F_le : 2 * ‖F‖ ≤ 2 * δ := by linarith
+      calc 2 * ‖F‖ * ‖G‖ ≤ 2 * δ * ‖G‖ := mul_le_mul_of_nonneg_right h_2F_le hG_nn
+        _ ≤ 2 * δ * δ := mul_le_mul_of_nonneg_left hG h_2δ_nn
+    have h_eq : 2 * δ * δ = 2 * δ ^ 2 := by ring
+    linarith
+  have h_comm_nn : (0 : ℝ) ≤ ‖⁅F, G⁆‖ := norm_nonneg _
+  have h_comm_sq_le : ‖⁅F, G⁆‖ ^ 2 ≤ (2 * δ ^ 2) ^ 2 :=
+    pow_le_pow_left₀ h_comm_nn h_comm_le 2
+  have h_exp_le : Real.exp ‖⁅F, G⁆‖ ≤ Real.exp (2 * δ ^ 2) := Real.exp_le_exp.mpr h_comm_le
+  have h_exp_F_nn : (0 : ℝ) ≤ Real.exp ‖⁅F, G⁆‖ := le_of_lt (Real.exp_pos _)
+  have h_2d2_sq_nn : (0 : ℝ) ≤ (2 * δ ^ 2) ^ 2 := by positivity
+  have h_step1 :
+      ‖⁅F, G⁆‖ ^ 2 * Real.exp ‖⁅F, G⁆‖ ≤ (2 * δ ^ 2) ^ 2 * Real.exp ‖⁅F, G⁆‖ :=
+    mul_le_mul_of_nonneg_right h_comm_sq_le h_exp_F_nn
+  have h_step2 :
+      (2 * δ ^ 2) ^ 2 * Real.exp ‖⁅F, G⁆‖ ≤ (2 * δ ^ 2) ^ 2 * Real.exp (2 * δ ^ 2) :=
+    mul_le_mul_of_nonneg_left h_exp_le h_2d2_sq_nn
+  have h_eq_4d4 : (2 * δ ^ 2) ^ 2 = 4 * δ ^ 4 := by ring
+  have h_step3 : (2 * δ ^ 2) ^ 2 * Real.exp (2 * δ ^ 2) = 4 * δ ^ 4 * Real.exp (2 * δ ^ 2) := by
+    rw [h_eq_4d4]
+  linarith
+
+/-! ## 10. The headline cubic bound on the BCH order-2 estimate (R5.2b SHIP)
+
+This composes the §1-9 infrastructure:
+
+  P - Q = (P - PolyP) + (PolyP - (1 - [F,G])) - (Q - (1 - [F,G]))
+        = TaylorCross + bchPolyRem F G - ExpRemainder
+
+where:
+  - P = exp(iF)·exp(iG)·exp(-iF)·exp(-iG)
+  - PolyP = T2pos F · T2pos G · T2neg F · T2neg G
+  - Q = exp(-[F,G])
+  - TaylorCross via 4-term telescope, each O(δ³ · exp(δ))
+  - bchPolyRem F G ≤ 30·δ³ (R5.2a)
+  - ExpRemainder = Q - (1 - [F,G]) ≤ 4·δ⁴·exp(2δ²) ≤ 36·δ³ for δ ≤ 1.
+
+The constant K = 320 is loose; D-N original K ≤ 4 is deferred to R5.2c.
+
+For Pipeline Invariant #10 (no `maxHeartbeats`), the proof is decomposed
+into 4 telescope-term lemmas + 1 numeric-collapse lemma + 1 final compose
+lemma. Each sub-lemma has small enough scope to fit the default heartbeat
+budget. -/
+
+/-- **Telescope term 1**: `‖(exp(iF) - T2pos F)·exp(iG)·exp(-iF)·exp(-iG)‖ ≤ 81·δ³`
+for `‖F‖, ‖G‖ ≤ δ ≤ 1`.
+
+Bound: `‖A - A'‖ ≤ δ³·exp(δ)`, `‖B·C·D‖ ≤ exp(δ)³`. For δ ≤ 1, exp(δ) ≤ 3,
+giving `≤ 3·δ³ · 27 = 81·δ³`. -/
+private lemma bch_cubic_telescope_term1 {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖(NormedSpace.exp (Complex.I • F) - T2pos F)
+        * NormedSpace.exp (Complex.I • G)
+        * NormedSpace.exp (-(Complex.I • F))
+        * NormedSpace.exp (-(Complex.I • G))‖ ≤ 81 * δ ^ 3 := by
+  have h_A_sub : ‖NormedSpace.exp (Complex.I • F) - T2pos F‖ ≤ δ ^ 3 * Real.exp δ :=
+    norm_exp_iF_sub_T2pos_le_of_delta δ hδ_nn F hF
+  have h_B_norm : ‖NormedSpace.exp (Complex.I • G)‖ ≤ Real.exp δ :=
+    (MatrixBCH.norm_exp_I_smul_le G).trans (Real.exp_le_exp.mpr hG)
+  have h_C_norm : ‖NormedSpace.exp (-(Complex.I • F))‖ ≤ Real.exp δ :=
+    (MatrixBCH.norm_exp_neg_I_smul_le F).trans (Real.exp_le_exp.mpr hF)
+  have h_D_norm : ‖NormedSpace.exp (-(Complex.I • G))‖ ≤ Real.exp δ :=
+    (MatrixBCH.norm_exp_neg_I_smul_le G).trans (Real.exp_le_exp.mpr hG)
+  have h_exp_pos : (0 : ℝ) < Real.exp δ := Real.exp_pos _
+  have h_exp_nn : (0 : ℝ) ≤ Real.exp δ := le_of_lt h_exp_pos
+  have h_exp_le_3 : Real.exp δ ≤ 3 := by
+    have h_exp_1_lt : Real.exp 1 < 3 := by
+      have := Real.exp_one_lt_d9; linarith
+    linarith [Real.exp_le_exp.mpr hδ_le_one]
+  have h_δ3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  set A := NormedSpace.exp (Complex.I • F)
+  set A' := T2pos F
+  set B := NormedSpace.exp (Complex.I • G)
+  set C := NormedSpace.exp (-(Complex.I • F))
+  set D := NormedSpace.exp (-(Complex.I • G))
+  have h_BCD_norm : ‖B * C * D‖ ≤ Real.exp δ ^ 3 := by
+    have h1 : ‖B * C * D‖ ≤ ‖B * C‖ * ‖D‖ := norm_mul_le _ _
+    have h2 : ‖B * C‖ ≤ ‖B‖ * ‖C‖ := norm_mul_le B C
+    have h3 : ‖B‖ * ‖C‖ ≤ Real.exp δ * Real.exp δ :=
+      mul_le_mul h_B_norm h_C_norm (norm_nonneg _) h_exp_nn
+    have h_BC_le : ‖B * C‖ ≤ Real.exp δ * Real.exp δ := h2.trans h3
+    have h_sq_nn : (0 : ℝ) ≤ Real.exp δ * Real.exp δ := by positivity
+    calc ‖B * C * D‖ ≤ ‖B * C‖ * ‖D‖ := h1
+      _ ≤ (Real.exp δ * Real.exp δ) * Real.exp δ :=
+          mul_le_mul h_BC_le h_D_norm (norm_nonneg _) h_sq_nn
+      _ = Real.exp δ ^ 3 := by ring
+  have h_exp_cube_le : Real.exp δ ^ 3 ≤ 27 := by
+    have h_sq_le : Real.exp δ ^ 2 ≤ 9 := by nlinarith [h_exp_le_3]
+    have h_eq : Real.exp δ ^ 3 = Real.exp δ ^ 2 * Real.exp δ := by ring
+    rw [h_eq]
+    calc Real.exp δ ^ 2 * Real.exp δ
+        ≤ 9 * Real.exp δ := mul_le_mul_of_nonneg_right h_sq_le h_exp_nn
+      _ ≤ 9 * 3 := mul_le_mul_of_nonneg_left h_exp_le_3 (by norm_num)
+      _ = 27 := by norm_num
+  have h_assoc : (A - A') * B * C * D = (A - A') * (B * C * D) := by simp only [mul_assoc]
+  rw [h_assoc]
+  have h_prod1 : ‖(A - A') * (B * C * D)‖ ≤ ‖A - A'‖ * ‖B * C * D‖ := norm_mul_le _ _
+  have h_BCD_nn : (0 : ℝ) ≤ ‖B * C * D‖ := norm_nonneg _
+  have h_d3exp_nn : (0 : ℝ) ≤ δ ^ 3 * Real.exp δ := by positivity
+  have h_prod2 : ‖A - A'‖ * ‖B * C * D‖ ≤ (δ ^ 3 * Real.exp δ) * ‖B * C * D‖ :=
+    mul_le_mul_of_nonneg_right h_A_sub h_BCD_nn
+  have h_prod3 : (δ ^ 3 * Real.exp δ) * ‖B * C * D‖
+                ≤ (δ ^ 3 * Real.exp δ) * Real.exp δ ^ 3 :=
+    mul_le_mul_of_nonneg_left h_BCD_norm h_d3exp_nn
+  have h_d3exp_le : δ ^ 3 * Real.exp δ ≤ δ ^ 3 * 3 :=
+    mul_le_mul_of_nonneg_left h_exp_le_3 h_δ3_nn
+  have h_exp_cube_nn : (0 : ℝ) ≤ Real.exp δ ^ 3 := by positivity
+  have h_final :
+      (δ ^ 3 * Real.exp δ) * Real.exp δ ^ 3 ≤ 81 * δ ^ 3 := by
+    calc (δ ^ 3 * Real.exp δ) * Real.exp δ ^ 3
+        ≤ (δ ^ 3 * 3) * Real.exp δ ^ 3 := mul_le_mul_of_nonneg_right h_d3exp_le h_exp_cube_nn
+      _ ≤ (δ ^ 3 * 3) * 27 := mul_le_mul_of_nonneg_left h_exp_cube_le (by positivity)
+      _ = 81 * δ ^ 3 := by ring
+  linarith
+
+/-- **Telescope term 2**: `‖T2pos F · (exp(iG) - T2pos G) · exp(-iF) · exp(-iG)‖ ≤ 68·δ³`. -/
+private lemma bch_cubic_telescope_term2 {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖T2pos F * (NormedSpace.exp (Complex.I • G) - T2pos G)
+        * NormedSpace.exp (-(Complex.I • F))
+        * NormedSpace.exp (-(Complex.I • G))‖ ≤ 68 * δ ^ 3 := by
+  have h_A'_norm : ‖T2pos F‖ ≤ 5 / 2 := T2pos_norm_le_of_delta δ hδ_nn hδ_le_one F hF
+  have h_B_sub : ‖NormedSpace.exp (Complex.I • G) - T2pos G‖ ≤ δ ^ 3 * Real.exp δ :=
+    norm_exp_iF_sub_T2pos_le_of_delta δ hδ_nn G hG
+  have h_C_norm : ‖NormedSpace.exp (-(Complex.I • F))‖ ≤ Real.exp δ :=
+    (MatrixBCH.norm_exp_neg_I_smul_le F).trans (Real.exp_le_exp.mpr hF)
+  have h_D_norm : ‖NormedSpace.exp (-(Complex.I • G))‖ ≤ Real.exp δ :=
+    (MatrixBCH.norm_exp_neg_I_smul_le G).trans (Real.exp_le_exp.mpr hG)
+  have h_exp_pos : (0 : ℝ) < Real.exp δ := Real.exp_pos _
+  have h_exp_nn : (0 : ℝ) ≤ Real.exp δ := le_of_lt h_exp_pos
+  have h_exp_le_3 : Real.exp δ ≤ 3 := by
+    have h_exp_1_lt : Real.exp 1 < 3 := by have := Real.exp_one_lt_d9; linarith
+    linarith [Real.exp_le_exp.mpr hδ_le_one]
+  have h_δ3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  have h_5_2_nn : (0 : ℝ) ≤ (5 / 2 : ℝ) := by norm_num
+  set A' := T2pos F
+  set B := NormedSpace.exp (Complex.I • G)
+  set B' := T2pos G
+  set C := NormedSpace.exp (-(Complex.I • F))
+  set D := NormedSpace.exp (-(Complex.I • G))
+  have h_assoc : A' * (B - B') * C * D = A' * ((B - B') * (C * D)) := by noncomm_ring
+  rw [h_assoc]
+  have h_CD_norm : ‖C * D‖ ≤ Real.exp δ ^ 2 := by
+    have h_sq_eq : Real.exp δ * Real.exp δ = Real.exp δ ^ 2 := by ring
+    calc ‖C * D‖ ≤ ‖C‖ * ‖D‖ := norm_mul_le C D
+      _ ≤ Real.exp δ * Real.exp δ :=
+          mul_le_mul h_C_norm h_D_norm (norm_nonneg _) h_exp_nn
+      _ = Real.exp δ ^ 2 := h_sq_eq
+  have h_exp_sq_le : Real.exp δ ^ 2 ≤ 9 := by nlinarith [h_exp_le_3]
+  have h_d3exp_nn : (0 : ℝ) ≤ δ ^ 3 * Real.exp δ := by positivity
+  have h_d3exp_le : δ ^ 3 * Real.exp δ ≤ δ ^ 3 * 3 :=
+    mul_le_mul_of_nonneg_left h_exp_le_3 h_δ3_nn
+  have h_BB'_CD : ‖(B - B') * (C * D)‖ ≤ (δ ^ 3 * Real.exp δ) * Real.exp δ ^ 2 := by
+    calc ‖(B - B') * (C * D)‖
+        ≤ ‖B - B'‖ * ‖C * D‖ := norm_mul_le _ _
+      _ ≤ (δ ^ 3 * Real.exp δ) * ‖C * D‖ :=
+          mul_le_mul_of_nonneg_right h_B_sub (norm_nonneg _)
+      _ ≤ (δ ^ 3 * Real.exp δ) * Real.exp δ ^ 2 :=
+          mul_le_mul_of_nonneg_left h_CD_norm h_d3exp_nn
+  have h_BB'_CD_le_num :
+      (δ ^ 3 * Real.exp δ) * Real.exp δ ^ 2 ≤ 27 * δ ^ 3 := by
+    have h_sq_nn : (0 : ℝ) ≤ Real.exp δ ^ 2 := by positivity
+    calc (δ ^ 3 * Real.exp δ) * Real.exp δ ^ 2
+        ≤ (δ ^ 3 * 3) * Real.exp δ ^ 2 := mul_le_mul_of_nonneg_right h_d3exp_le h_sq_nn
+      _ ≤ (δ ^ 3 * 3) * 9 := mul_le_mul_of_nonneg_left h_exp_sq_le (by positivity)
+      _ = 27 * δ ^ 3 := by ring
+  have h_BB'_CD_le_num' : ‖(B - B') * (C * D)‖ ≤ 27 * δ ^ 3 := h_BB'_CD.trans h_BB'_CD_le_num
+  have h_main : ‖A' * ((B - B') * (C * D))‖ ≤ (5 / 2) * (27 * δ ^ 3) := by
+    have h1 : ‖A' * ((B - B') * (C * D))‖ ≤ ‖A'‖ * ‖(B - B') * (C * D)‖ := norm_mul_le _ _
+    have h2 : ‖A'‖ * ‖(B - B') * (C * D)‖ ≤ (5 / 2) * ‖(B - B') * (C * D)‖ :=
+      mul_le_mul_of_nonneg_right h_A'_norm (norm_nonneg _)
+    have h3 : (5 / 2 : ℝ) * ‖(B - B') * (C * D)‖ ≤ (5 / 2) * (27 * δ ^ 3) :=
+      mul_le_mul_of_nonneg_left h_BB'_CD_le_num' h_5_2_nn
+    linarith
+  have h_num_eq : (5 / 2 : ℝ) * (27 * δ ^ 3) = (135 / 2) * δ ^ 3 := by ring
+  have h_num_le : (135 / 2 : ℝ) * δ ^ 3 ≤ 68 * δ ^ 3 := by nlinarith [h_δ3_nn]
+  linarith
+
+/-- **Telescope term 3**: `‖T2pos F · T2pos G · (exp(-iF) - T2neg F) · exp(-iG)‖ ≤ 57·δ³`. -/
+private lemma bch_cubic_telescope_term3 {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖T2pos F * T2pos G * (NormedSpace.exp (-(Complex.I • F)) - T2neg F)
+        * NormedSpace.exp (-(Complex.I • G))‖ ≤ 57 * δ ^ 3 := by
+  have h_A'_norm : ‖T2pos F‖ ≤ 5 / 2 := T2pos_norm_le_of_delta δ hδ_nn hδ_le_one F hF
+  have h_B'_norm : ‖T2pos G‖ ≤ 5 / 2 := T2pos_norm_le_of_delta δ hδ_nn hδ_le_one G hG
+  have h_C_sub : ‖NormedSpace.exp (-(Complex.I • F)) - T2neg F‖ ≤ δ ^ 3 * Real.exp δ :=
+    norm_exp_neg_iF_sub_T2neg_le_of_delta δ hδ_nn F hF
+  have h_D_norm : ‖NormedSpace.exp (-(Complex.I • G))‖ ≤ Real.exp δ :=
+    (MatrixBCH.norm_exp_neg_I_smul_le G).trans (Real.exp_le_exp.mpr hG)
+  have h_exp_pos : (0 : ℝ) < Real.exp δ := Real.exp_pos _
+  have h_exp_nn : (0 : ℝ) ≤ Real.exp δ := le_of_lt h_exp_pos
+  have h_exp_le_3 : Real.exp δ ≤ 3 := by
+    have h_exp_1_lt : Real.exp 1 < 3 := by have := Real.exp_one_lt_d9; linarith
+    linarith [Real.exp_le_exp.mpr hδ_le_one]
+  have h_δ3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  have h_5_2_nn : (0 : ℝ) ≤ (5 / 2 : ℝ) := by norm_num
+  set A' := T2pos F
+  set B' := T2pos G
+  set C := NormedSpace.exp (-(Complex.I • F))
+  set C' := T2neg F
+  set D := NormedSpace.exp (-(Complex.I • G))
+  have h_d3exp_nn : (0 : ℝ) ≤ δ ^ 3 * Real.exp δ := by positivity
+  have h_d3exp_le : δ ^ 3 * Real.exp δ ≤ δ ^ 3 * 3 :=
+    mul_le_mul_of_nonneg_left h_exp_le_3 h_δ3_nn
+  -- ‖(C - C') * D‖ ≤ (δ³ exp δ) * exp δ ≤ 9·δ³
+  have h_CC'D : ‖(C - C') * D‖ ≤ 9 * δ ^ 3 := by
+    have h1 : ‖(C - C') * D‖ ≤ ‖C - C'‖ * ‖D‖ := norm_mul_le _ _
+    have h2 : ‖C - C'‖ * ‖D‖ ≤ (δ ^ 3 * Real.exp δ) * Real.exp δ :=
+      mul_le_mul h_C_sub h_D_norm (norm_nonneg _) h_d3exp_nn
+    have h3 : (δ ^ 3 * Real.exp δ) * Real.exp δ ≤ 9 * δ ^ 3 := by
+      calc (δ ^ 3 * Real.exp δ) * Real.exp δ
+          ≤ (δ ^ 3 * 3) * Real.exp δ := mul_le_mul_of_nonneg_right h_d3exp_le h_exp_nn
+        _ ≤ (δ ^ 3 * 3) * 3 := mul_le_mul_of_nonneg_left h_exp_le_3 (by positivity)
+        _ = 9 * δ ^ 3 := by ring
+    linarith
+  -- ‖A' * B'‖ ≤ 25/4
+  have h_A'B' : ‖A' * B'‖ ≤ (5 / 2) ^ 2 := by
+    have h1 : ‖A' * B'‖ ≤ ‖A'‖ * ‖B'‖ := norm_mul_le A' B'
+    have h2 : ‖A'‖ * ‖B'‖ ≤ (5 / 2) * (5 / 2) :=
+      mul_le_mul h_A'_norm h_B'_norm (norm_nonneg _) h_5_2_nn
+    calc ‖A' * B'‖ ≤ ‖A'‖ * ‖B'‖ := h1
+      _ ≤ (5 / 2) * (5 / 2) := h2
+      _ = (5 / 2) ^ 2 := by ring
+  have h_5_2_sq_nn : (0 : ℝ) ≤ (5 / 2 : ℝ) ^ 2 := by positivity
+  -- Assoc
+  have h_assoc : A' * B' * (C - C') * D = (A' * B') * ((C - C') * D) := by noncomm_ring
+  rw [h_assoc]
+  -- Final
+  have h1 : ‖(A' * B') * ((C - C') * D)‖ ≤ ‖A' * B'‖ * ‖(C - C') * D‖ := norm_mul_le _ _
+  have h_CC'D_nn : (0 : ℝ) ≤ ‖(C - C') * D‖ := norm_nonneg _
+  have h2 : ‖A' * B'‖ * ‖(C - C') * D‖ ≤ (5 / 2) ^ 2 * ‖(C - C') * D‖ :=
+    mul_le_mul_of_nonneg_right h_A'B' h_CC'D_nn
+  have h3 : (5 / 2 : ℝ) ^ 2 * ‖(C - C') * D‖ ≤ (5 / 2) ^ 2 * (9 * δ ^ 3) :=
+    mul_le_mul_of_nonneg_left h_CC'D h_5_2_sq_nn
+  have h_simp : (5 / 2 : ℝ) ^ 2 * (9 * δ ^ 3) = (225 / 4) * δ ^ 3 := by ring
+  have h_num_le : (225 / 4 : ℝ) * δ ^ 3 ≤ 57 * δ ^ 3 := by nlinarith [h_δ3_nn]
+  linarith
+
+/-- **Telescope term 4**: `‖T2pos F · T2pos G · T2neg F · (exp(-iG) - T2neg G)‖ ≤ 47·δ³`. -/
+private lemma bch_cubic_telescope_term4 {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖T2pos F * T2pos G * T2neg F * (NormedSpace.exp (-(Complex.I • G)) - T2neg G)‖
+      ≤ 47 * δ ^ 3 := by
+  have h_A'_norm : ‖T2pos F‖ ≤ 5 / 2 := T2pos_norm_le_of_delta δ hδ_nn hδ_le_one F hF
+  have h_B'_norm : ‖T2pos G‖ ≤ 5 / 2 := T2pos_norm_le_of_delta δ hδ_nn hδ_le_one G hG
+  have h_C'_norm : ‖T2neg F‖ ≤ 5 / 2 := T2neg_norm_le_of_delta δ hδ_nn hδ_le_one F hF
+  have h_D_sub : ‖NormedSpace.exp (-(Complex.I • G)) - T2neg G‖ ≤ δ ^ 3 * Real.exp δ :=
+    norm_exp_neg_iF_sub_T2neg_le_of_delta δ hδ_nn G hG
+  have h_exp_pos : (0 : ℝ) < Real.exp δ := Real.exp_pos _
+  have h_exp_nn : (0 : ℝ) ≤ Real.exp δ := le_of_lt h_exp_pos
+  have h_exp_le_3 : Real.exp δ ≤ 3 := by
+    have h_exp_1_lt : Real.exp 1 < 3 := by have := Real.exp_one_lt_d9; linarith
+    linarith [Real.exp_le_exp.mpr hδ_le_one]
+  have h_δ3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  have h_5_2_nn : (0 : ℝ) ≤ (5 / 2 : ℝ) := by norm_num
+  have h_5_2_sq_nn : (0 : ℝ) ≤ (5 / 2 : ℝ) ^ 2 := by positivity
+  have h_5_2_cube_nn : (0 : ℝ) ≤ (5 / 2 : ℝ) ^ 3 := by positivity
+  set A' := T2pos F
+  set B' := T2pos G
+  set C' := T2neg F
+  set D := NormedSpace.exp (-(Complex.I • G))
+  set D' := T2neg G
+  -- ‖A' * B' * C'‖ ≤ (5/2)³
+  have h_A'B' : ‖A' * B'‖ ≤ (5 / 2) ^ 2 := by
+    have h_eq : (5 / 2 : ℝ) * (5 / 2) = (5 / 2) ^ 2 := by ring
+    calc ‖A' * B'‖ ≤ ‖A'‖ * ‖B'‖ := norm_mul_le A' B'
+      _ ≤ (5 / 2) * (5 / 2) := mul_le_mul h_A'_norm h_B'_norm (norm_nonneg _) h_5_2_nn
+      _ = (5 / 2) ^ 2 := h_eq
+  have h_A'B'_nn : (0 : ℝ) ≤ ‖A' * B'‖ := norm_nonneg _
+  have h_C'_nn : (0 : ℝ) ≤ ‖C'‖ := norm_nonneg _
+  have h_A'B'C' : ‖A' * B' * C'‖ ≤ (5 / 2) ^ 3 := by
+    calc ‖A' * B' * C'‖
+        ≤ ‖A' * B'‖ * ‖C'‖ := norm_mul_le _ _
+      _ ≤ (5 / 2) ^ 2 * ‖C'‖ := mul_le_mul_of_nonneg_right h_A'B' h_C'_nn
+      _ ≤ (5 / 2) ^ 2 * (5 / 2) := mul_le_mul_of_nonneg_left h_C'_norm h_5_2_sq_nn
+      _ = (5 / 2) ^ 3 := by ring
+  have h_d3exp_nn : (0 : ℝ) ≤ δ ^ 3 * Real.exp δ := by positivity
+  have h_d3exp_le : δ ^ 3 * Real.exp δ ≤ δ ^ 3 * 3 :=
+    mul_le_mul_of_nonneg_left h_exp_le_3 h_δ3_nn
+  -- Final
+  have h1 : ‖A' * B' * C' * (D - D')‖ ≤ ‖A' * B' * C'‖ * ‖D - D'‖ := norm_mul_le _ _
+  have h_DD'_nn : (0 : ℝ) ≤ ‖D - D'‖ := norm_nonneg _
+  have h2 : ‖A' * B' * C'‖ * ‖D - D'‖ ≤ (5 / 2) ^ 3 * ‖D - D'‖ :=
+    mul_le_mul_of_nonneg_right h_A'B'C' h_DD'_nn
+  have h3 : (5 / 2 : ℝ) ^ 3 * ‖D - D'‖ ≤ (5 / 2) ^ 3 * (δ ^ 3 * Real.exp δ) :=
+    mul_le_mul_of_nonneg_left h_D_sub h_5_2_cube_nn
+  have h4 : (5 / 2 : ℝ) ^ 3 * (δ ^ 3 * Real.exp δ) ≤ (5 / 2) ^ 3 * (δ ^ 3 * 3) :=
+    mul_le_mul_of_nonneg_left h_d3exp_le h_5_2_cube_nn
+  have h_simp : (5 / 2 : ℝ) ^ 3 * (δ ^ 3 * 3) = (375 / 8) * δ ^ 3 := by ring
+  have h_num_le : (375 / 8 : ℝ) * δ ^ 3 ≤ 47 * δ ^ 3 := by nlinarith [h_δ3_nn]
+  linarith
+
+/-- **Telescope norm bound on `‖P - PolyP‖`**: the sum of the four
+`bch_cubic_telescope_term[1-4]` bounds. -/
+private lemma bch_cubic_PolyP_diff_norm_le {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖NormedSpace.exp (Complex.I • F) * NormedSpace.exp (Complex.I • G) *
+       NormedSpace.exp (-(Complex.I • F)) * NormedSpace.exp (-(Complex.I • G))
+       - T2pos F * T2pos G * T2neg F * T2neg G‖ ≤ 253 * δ ^ 3 := by
+  set A := NormedSpace.exp (Complex.I • F)
+  set A' := T2pos F
+  set B := NormedSpace.exp (Complex.I • G)
+  set B' := T2pos G
+  set C := NormedSpace.exp (-(Complex.I • F))
+  set C' := T2neg F
+  set D := NormedSpace.exp (-(Complex.I • G))
+  set D' := T2neg G
+  -- Telescope identity
+  have h_telescope :
+      A * B * C * D - A' * B' * C' * D'
+        = (A - A') * B * C * D + A' * (B - B') * C * D
+        + A' * B' * (C - C') * D + A' * B' * C' * (D - D') := by noncomm_ring
+  -- Per-term bounds
+  have h_t1 := bch_cubic_telescope_term1 δ hδ_nn hδ_le_one F G hF hG
+  have h_t2 := bch_cubic_telescope_term2 δ hδ_nn hδ_le_one F G hF hG
+  have h_t3 := bch_cubic_telescope_term3 δ hδ_nn hδ_le_one F G hF hG
+  have h_t4 := bch_cubic_telescope_term4 δ hδ_nn hδ_le_one F G hF hG
+  -- Triangle inequality on the 4-piece sum
+  rw [h_telescope]
+  have hs1 := norm_add_le
+    ((A - A') * B * C * D + A' * (B - B') * C * D + A' * B' * (C - C') * D)
+    (A' * B' * C' * (D - D'))
+  have hs2 := norm_add_le
+    ((A - A') * B * C * D + A' * (B - B') * C * D)
+    (A' * B' * (C - C') * D)
+  have hs3 := norm_add_le ((A - A') * B * C * D) (A' * (B - B') * C * D)
+  linarith
+
+/-- **R5.2b SHIP — Cubic BCH order-2 estimate**.
+
+For any dimension `d`, any norm-bound `0 ≤ δ ≤ 1`, and any
+(not-necessarily-Hermitian) matrices `F, G : Matrix (Fin d) (Fin d) ℂ` with
+`‖F‖, ‖G‖ ≤ δ`:
+
+  `‖exp(iF) · exp(iG) · exp(-iF) · exp(-iG) - exp(-⁅F, G⁆)‖ ≤ 320 · δ³`.
+
+This is the **cubic** version of `MatrixBCH.bch_order_2_thm` (linear `200·δ`),
+matching the Dawson-Nielsen Lemma 3 cubic shape (constant K ≤ 4 deferred to
+R5.2c). Crucially, this version drops the Hermitian hypothesis required by
+`bch_order_2_thm`: the `‖[F,G]‖ ≤ 2·δ²` bound holds for arbitrary `F, G` via
+`commutator_norm_le`.
+
+**Architecture (decomposition into 3 cubic-bounded pieces):**
+
+  `P - Q = (P - PolyP) + bchPolyRem F G - (Q - (1 - [F,G]))`
+
+where `PolyP := T2pos F · T2pos G · T2neg F · T2neg G`, and the identity
+`PolyP - (1 - [F,G]) = bchPolyRem F G` is from `bchPoly_decomp` (definitionally).
+
+  - `‖P - PolyP‖ ≤ 253·δ³` via 4-term telescope (`bch_cubic_PolyP_diff_norm_le`).
+  - `‖bchPolyRem F G‖ ≤ 30·δ³` (R5.2a, `bchPolyRem_norm_le_cubic`).
+  - `‖Q - (1 - [F,G])‖ ≤ 36·δ³` via order-2 Taylor remainder of `exp` at `-[F,G]`
+    plus `‖[F,G]‖ ≤ 2·δ²`.
+
+Total: 253 + 30 + 36 = 319 ≤ 320. -/
+theorem bch_order_2_cubic_thm {d : ℕ} [Nonempty (Fin d)]
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (F G : Matrix (Fin d) (Fin d) ℂ) (hF : ‖F‖ ≤ δ) (hG : ‖G‖ ≤ δ) :
+    ‖NormedSpace.exp (Complex.I • F) * NormedSpace.exp (Complex.I • G) *
+       NormedSpace.exp (-(Complex.I • F)) * NormedSpace.exp (-(Complex.I • G)) -
+       NormedSpace.exp (-⁅F, G⁆)‖ ≤ 320 * δ ^ 3 := by
+  set A := NormedSpace.exp (Complex.I • F)
+  set B := NormedSpace.exp (Complex.I • G)
+  set C := NormedSpace.exp (-(Complex.I • F))
+  set D := NormedSpace.exp (-(Complex.I • G))
+  set A' := T2pos F
+  set B' := T2pos G
+  set C' := T2neg F
+  set D' := T2neg G
+  set Q := NormedSpace.exp (-⁅F, G⁆)
+  have h_δ3_nn : (0 : ℝ) ≤ δ ^ 3 := by positivity
+  -- Algebraic identity: P - Q = (P - PolyP) + bchPolyRem F G - (Q - (1 - [F,G]))
+  -- PolyP = A'·B'·C'·D' and bchPoly_decomp says
+  --   A'·B'·C'·D' = (1 - [F,G]) + bchPolyRem F G
+  -- so (P - PolyP) + (PolyP - (1 - [F,G])) - (Q - (1 - [F,G])) = P - Q.
+  have h_poly_eq : A' * B' * C' * D' = (1 - ⁅F, G⁆) + bchPolyRem F G :=
+    bchPoly_decomp F G
+  have h_split :
+      A * B * C * D - Q
+        = (A * B * C * D - A' * B' * C' * D')
+        + bchPolyRem F G
+        - (Q - (1 - ⁅F, G⁆)) := by
+    rw [h_poly_eq]; abel
+  -- Triangle inequality
+  have h_tri :
+      ‖A * B * C * D - Q‖
+        ≤ ‖A * B * C * D - A' * B' * C' * D'‖
+        + ‖bchPolyRem F G‖
+        + ‖Q - (1 - ⁅F, G⁆)‖ := by
+    rw [h_split]
+    have h_eq : (A * B * C * D - A' * B' * C' * D') + bchPolyRem F G - (Q - (1 - ⁅F, G⁆))
+              = ((A * B * C * D - A' * B' * C' * D') + bchPolyRem F G)
+                + (-(Q - (1 - ⁅F, G⁆))) := by abel
+    rw [h_eq]
+    have h1 := norm_add_le
+      ((A * B * C * D - A' * B' * C' * D') + bchPolyRem F G)
+      (-(Q - (1 - ⁅F, G⁆)))
+    have h2 := norm_add_le (A * B * C * D - A' * B' * C' * D') (bchPolyRem F G)
+    have h_neg : ‖-(Q - (1 - ⁅F, G⁆))‖ = ‖Q - (1 - ⁅F, G⁆)‖ := norm_neg _
+    linarith
+  -- 3 cubic bounds:
+  have h_PolyP_diff : ‖A * B * C * D - A' * B' * C' * D'‖ ≤ 253 * δ ^ 3 :=
+    bch_cubic_PolyP_diff_norm_le δ hδ_nn hδ_le_one F G hF hG
+  have h_bchPolyRem : ‖bchPolyRem F G‖ ≤ 30 * δ ^ 3 :=
+    bchPolyRem_norm_le_cubic δ hδ_nn hδ_le_one F G hF hG
+  -- ‖Q - (1 - [F,G])‖ ≤ 4·δ⁴·exp(2δ²) ≤ 36·δ³
+  have h_exp_rem_taylor : ‖Q - (1 - ⁅F, G⁆)‖ ≤ 4 * δ ^ 4 * Real.exp (2 * δ ^ 2) :=
+    norm_exp_neg_comm_sub_one_plus_comm_le_of_delta δ hδ_nn F G hF hG
+  -- numeric: 4·δ⁴·exp(2δ²) ≤ 36·δ³
+  have h_exp_rem_num :
+      4 * δ ^ 4 * Real.exp (2 * δ ^ 2) ≤ 36 * δ ^ 3 := by
+    have hδ_sq_nn : (0 : ℝ) ≤ δ ^ 2 := by positivity
+    have hδ_sq_le_one : δ ^ 2 ≤ 1 := by nlinarith
+    have h_2δ2_le_2 : 2 * δ ^ 2 ≤ 2 := by linarith
+    have h_exp_2_le_9 : Real.exp 2 ≤ 9 := by
+      have h_eq : Real.exp 2 = Real.exp 1 * Real.exp 1 := by
+        rw [show (2 : ℝ) = 1 + 1 from by norm_num, Real.exp_add]
+      have h_exp_1_lt : Real.exp 1 < 3 := by have := Real.exp_one_lt_d9; linarith
+      have h_exp1_pos : (0 : ℝ) < Real.exp 1 := Real.exp_pos _
+      rw [h_eq]; nlinarith
+    have h_exp_2δ2_le : Real.exp (2 * δ ^ 2) ≤ 9 :=
+      (Real.exp_le_exp.mpr h_2δ2_le_2).trans h_exp_2_le_9
+    have h_4δ4_nn : (0 : ℝ) ≤ 4 * δ ^ 4 := by positivity
+    have h_step1 : 4 * δ ^ 4 * Real.exp (2 * δ ^ 2) ≤ 4 * δ ^ 4 * 9 :=
+      mul_le_mul_of_nonneg_left h_exp_2δ2_le h_4δ4_nn
+    have h_δ4_le_δ3 : δ ^ 4 ≤ δ ^ 3 := by
+      have h_eq : δ ^ 4 = δ ^ 3 * δ := by ring
+      rw [h_eq]
+      calc δ ^ 3 * δ ≤ δ ^ 3 * 1 := mul_le_mul_of_nonneg_left hδ_le_one h_δ3_nn
+        _ = δ ^ 3 := by ring
+    have h_step2 : 4 * δ ^ 4 * 9 = 36 * δ ^ 4 := by ring
+    have h_step3 : 36 * δ ^ 4 ≤ 36 * δ ^ 3 :=
+      mul_le_mul_of_nonneg_left h_δ4_le_δ3 (by norm_num)
+    linarith
+  have h_exp_rem : ‖Q - (1 - ⁅F, G⁆)‖ ≤ 36 * δ ^ 3 := h_exp_rem_taylor.trans h_exp_rem_num
+  -- Compose: 253 + 30 + 36 = 319 ≤ 320
+  linarith
+
+/-! ## 11. Module summary
+
+MatrixBCHCubic.lean (Wave 2d.2-followup-R5.2a+R5.2b ship, 2026-05-13 PM):
+**BCH cubic norm bound on the polynomial residual + headline cubic
+BCH order-2 estimate**.
+
+**R5.2a + R5.2b SHIP — Substantive content**:
 
   *Algebraic infrastructure (§§1-2, shipped R5.2.1):*
   - `T2pos`, `T2neg` — order-2 Taylor polynomials of `exp(±iX)`.
@@ -940,22 +1512,40 @@ MatrixBCHCubic.lean (Wave 2d.2-followup-R5.2a ship, 2026-05-13 PM):
     — `≤ 3δ/2`.
   - `commutator_T2pos_T2neg_norm_le_quadratic` — `≤ 9δ²/2`.
 
-  *Main cubic bound (§7, R5.2a SHIP):*
+  *Polynomial-residual cubic bound (§7, R5.2a SHIP):*
   - `bchPolyRem_decomp` — explicit 6-piece algebraic decomposition.
   - **`bchPolyRem_norm_le_cubic`** — `‖bchPolyRem F G‖ ≤ 30·δ³`
     for `‖F‖, ‖G‖ ≤ δ ≤ 1`.
 
-**Deferred (R5.2 sub-waves, multi-session)**:
-  - R5.2b: Compose with Taylor cross-term bounds (from
-    `MatrixTaylor.norm_exp_sub_order3_le_loose`) for the full
-    `bch_order_2_cubic_thm`.
-  - R5.2c: Optimize constant K (current K = 30; D-N original K ≤ 4).
+  *Taylor-remainder bridges (§8, R5.2b):*
+  - `T2pos_eq_taylor_form`, `T2neg_eq_taylor_form` — express T2pos/T2neg
+    in Mathlib Taylor form for `MatrixTaylor` consumption.
+  - **`norm_exp_iF_sub_T2pos_le`** — `‖exp(iF) - T2pos F‖ ≤ ‖F‖³·exp(‖F‖)`.
+  - **`norm_exp_neg_iF_sub_T2neg_le`** — `‖exp(-iF) - T2neg F‖ ≤ ‖F‖³·exp(‖F‖)`.
+  - **`norm_exp_neg_comm_sub_one_plus_comm_le`** —
+    `‖exp(-⁅F,G⁆) - (1 - ⁅F,G⁆)‖ ≤ ‖⁅F,G⁆‖²·exp(‖⁅F,G⁆‖)`.
 
-**Downstream impact (R5.2a ship enables)**:
+  *δ-parameterized Taylor bounds (§9, R5.2b):*
+  - `norm_exp_iF_sub_T2pos_le_of_delta` — `≤ δ³·exp(δ)`.
+  - `norm_exp_neg_iF_sub_T2neg_le_of_delta` — `≤ δ³·exp(δ)`.
+  - `norm_exp_neg_comm_sub_one_plus_comm_le_of_delta` — `≤ 4·δ⁴·exp(2·δ²)`.
+
+  *Headline cubic BCH estimate (§10, R5.2b SHIP):*
+  - **`bch_order_2_cubic_thm`** —
+    `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - exp(-⁅F,G⁆)‖ ≤ 320·δ³`
+    for `‖F‖, ‖G‖ ≤ δ ≤ 1`. No Hermitian hypothesis required (strictly
+    stronger than `MatrixBCH.bch_order_2_thm` which needs Hermitian +
+    gives only linear `200·δ`).
+
+**Deferred (R5.2c sub-wave)**:
+  - R5.2c: Optimize constant K (current K = 320 in `bch_order_2_cubic_thm`,
+    K = 30 in `bchPolyRem_norm_le_cubic`; D-N original K ≤ 4).
+
+**Downstream impact (R5.2a + R5.2b ship enables)**:
   - AA Bridge Lemma 6.1 (R5.3, deferred) becomes provable:
     `‖[g,h] - 1‖ ≤ C·ε²` for group commutator of ε-close elements.
     The cubic bound is what makes the iteration converge (the prior
-    linear `200·δ` dominated the quadratic shrinkage; cubic `30·δ³`
+    linear `200·δ` dominated the quadratic shrinkage; cubic `320·δ³`
     is dominated by `O(δ²)` for δ ≤ 1).
   - AA axiom `aa_residual_interior_at_one_for_hom` becomes
     constructively dischargeable via the chain R5.1 + R5.2 + R5.3 +

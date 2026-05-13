@@ -1,10 +1,10 @@
 {
-  "generated": "2026-05-13T11:27:54.859896",
+  "generated": "2026-05-13T14:05:03.831304",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 12144,
-    "theorems_total": 6107,
-    "theorems_substantive": 6082,
+    "total_declarations": 12165,
+    "theorems_total": 6128,
+    "theorems_substantive": 6103,
     "theorems_placeholder": 25,
     "axioms": 2,
     "axiom_names": [
