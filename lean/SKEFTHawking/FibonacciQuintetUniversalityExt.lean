@@ -2,6 +2,17 @@
 SK_EFT_Hawking Phase 6p Wave 2b.3.2 (partial): Quintet iterated-commutator
 extension over the {0,1,2} block of the block-extended Fibonacci representation.
 
+**SUPERSEDED 2026-05-12** by `SKEFTHawking.FibonacciQuintetTrueRep` per Phase 6p
+Wave 2b.3.2-followup DR §5.3 R5 finding (file:
+`Lit-Search/Phase-6p/Phase 6p Wave 2b.3.2-followup — HZBS Fig 4 .md`). This
+module builds iterated commutators over the parent module's block-extension
+generators (qutrit-on-{0,1,2}, identity-on-{3,4}); these generators are NOT
+the true 4-strand Fibonacci representation. The roadmap's dim-𝔰𝔲(5) = 24
+spanning target is structurally unreachable by braiding (braiding spans
+𝔰𝔲(3) ⊕ 𝔰𝔲(2) ⊕ 𝔲(1) of dim 12, not 𝔰𝔲(5) of dim 24). **Retained for
+legacy linkage only**; use `FibonacciQuintetTrueRep` for genuine 4-strand
+spanning content (12-conjunct honest closure).
+
 Per Phase 6p Roadmap §Wave 2b.3.2 (added 2026-05-12 post-Strengthening-Pass-2):
 the full 24-conjunct quintet spanning enumeration (matching dim 𝔰𝔲(5) = 24)
 requires the HZBS 2007 Fig 4 explicit 4-strand F-symbol matrices over

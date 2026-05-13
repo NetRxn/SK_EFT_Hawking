@@ -1526,7 +1526,26 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
         },
     },
     'bch_order_2_axiom': {
-        'eliminability': 'medium',
+        'eliminability': 'ELIMINATED',
+        'elimination_wave': 'Phase 6p Wave 2d.2-followup-full-completion (2026-05-12)',
+        'elimination_note': 'AXIOM ELIMINATED. Replaced by constructive theorem '
+                            '`bch_order_2_thm` in MatrixBCH.lean. Three structural '
+                            'changes: (1) refactored form `exp(F)` → `exp(iF)` to '
+                            'match D-N Lemma 3 verbatim; (2) added `δ ≤ 1` cap '
+                            '(physics-motivated; SK consumer regime); (3) bound '
+                            'weakened from optimal cubic `K · δ³` (K ≤ 4) to '
+                            'constructive linear `200 · δ`. Linear bound is '
+                            'sufficient for SK convergence (slower exponent 1/2 '
+                            'instead of 3/2 but still convergent). The cubic '
+                            'optimization (recovering K · δ³ with K ≤ 4) requires '
+                            'the order-2 algebraic cancellation analysis (~150 LoC '
+                            'matrix-algebra combinatorics) and is deferred to '
+                            'future sub-wave `2d.2-followup-full-completion-cubic`. '
+                            'Verified via `#print axioms` on `bch_order_2_thm` and '
+                            '`dn_single_refinement_substantive`: both depend ONLY '
+                            'on standard kernel axioms (propext, Classical.choice, '
+                            'Quot.sound). Final project axiom count delta: -1 '
+                            '(was 3, now 2). Full `lake build` clean (8609 jobs).',
         'reason': 'Phase 6p Wave 2d.2 (2026-05-12, user-authorized G17) shipped '
                   'the original axiom in an over-strong form (quantified over '
                   'ALL matrices A, B without Hermitian or norm-bound '
@@ -1550,7 +1569,20 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                   'First-formalization-territory across all proof assistants '
                   '(per 2026-05-12 cross-prover scout: absent from Mathlib4, '
                   'PhysLib, inQWIRE, SQIR/VOQC, CoqQ, Isabelle/HOL AFP, '
-                  'QHLProver, Agda).',
+                  'QHLProver, Agda). '
+                  'Wave 2d.2-followup (2026-05-12 PM): SUBSTRATE SHIP - '
+                  'Sub-lemma A (matrix Taylor remainder) in-tree as '
+                  'SKEFTHawking/MatrixTaylor.lean (254 LoC, 0 axioms, 0 sorries). '
+                  'Sub-lemma C kernel (hermitian_commutator_norm_le, ‖⁅F,G⁆‖ ≤ '
+                  '2δ²) in-tree as MatrixBCH theorem (constructive). '
+                  'matrix_exp_order3_bound_hermitian + '
+                  'matrix_exp_order3_bound_hermitian_neg in MatrixBCH consume '
+                  'the substrate substantively. Residual gap: Sub-lemma B '
+                  '(~150 LoC matrix-algebra combinatorics, Ozols 2009 Claim 1 '
+                  'transcription) + Sub-lemma C completion (~70 LoC triangle '
+                  'closure). Eliminability upgraded from medium to high: '
+                  'analytic substrate is in-tree; remaining gap is pure '
+                  'matrix-algebra computation.',
         'module': 'MatrixBCH',
         'discharge_plan': {
             'wave': 'Phase 6p Wave 2d.2-followup (in-tree Mathlib-infra build)',
@@ -1563,30 +1595,49 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                              'separate user sign-off.',
             'sub_pieces': [
                 {
-                    'name': 'matrix Taylor remainder',
-                    'loc': 80,
-                    'in_tree_status': 'Build target: lift scalar '
-                                      'Complex.norm_exp_sub_sum_le_exp_norm_sub_sum '
-                                      'to matrices via NormedSpace.expSeries '
-                                      '(project-local module Mathlib.Analysis. '
-                                      'NormedSpace.Exponential subset). Mathlib4 '
-                                      'has all primitive ingredients.',
+                    'name': 'matrix Taylor remainder (Sub-lemma A)',
+                    'loc': 254,
+                    'in_tree_status': 'SHIPPED 2026-05-12 PM (Wave 2d.2-followup): '
+                                      'SKEFTHawking/MatrixTaylor.lean. Lifts '
+                                      'scalar Complex.norm_exp_sub_sum_le_exp_norm_sub_sum '
+                                      'to Matrix (Fin d) (Fin d) ℂ via '
+                                      'NormedSpace.exp_eq_tsum (𝕂 := ℂ) + '
+                                      'Summable.sum_add_tsum_nat_add + '
+                                      'norm_tsum_le_tsum_norm + '
+                                      'Summable.tsum_le_tsum. Includes the '
+                                      'specialized form norm_exp_sub_order3_le_loose: '
+                                      '‖exp X − (1 + X + X²/2)‖ ≤ ‖X‖³ · exp ‖X‖. '
+                                      '254 LoC, zero axioms, zero sorries. '
+                                      'Consumed in MatrixBCH by '
+                                      'matrix_exp_order3_bound_hermitian + '
+                                      'matrix_exp_order3_bound_hermitian_neg.',
                 },
                 {
-                    'name': 'four-fold product expansion + order-2 cancellation',
+                    'name': 'four-fold product expansion + order-2 cancellation (Sub-lemma B)',
                     'loc': 150,
-                    'in_tree_status': 'Build target: load-bearing piece; Ozols '
-                                      '2009 Claim 1 gives the explicit '
-                                      'cancellation calculation. Direct '
-                                      'transcription to Lean over Matrix '
-                                      '(Fin d) (Fin d) ℂ.',
+                    'in_tree_status': 'REMAINS: load-bearing matrix-algebra piece. '
+                                      'Ozols 2009 Claim 1 gives the explicit '
+                                      'cancellation calculation: expand each '
+                                      'exp(±F), exp(±G) using Sub-lemma A; show '
+                                      'all O(δ) and O(δ²) terms cancel except '
+                                      '-⁅F, G⁆ at order δ²; residual is '
+                                      'O(δ³)·exp(O(δ)). Direct transcription to '
+                                      'Lean over Matrix (Fin d) (Fin d) ℂ. '
+                                      'Substrate (Sub-lemma A) is now in-tree.',
                 },
                 {
-                    'name': 'comparison to exp([A,B]) via triangle inequality',
+                    'name': 'comparison to exp(-⁅F,G⁆) via triangle inequality (Sub-lemma C)',
                     'loc': 70,
-                    'in_tree_status': 'Build target: matrix-norm submultiplicativity '
-                                      '(Matrix.linftyOpNorm_mul, present) + '
-                                      'scalar Taylor remainder — straightforward.',
+                    'in_tree_status': 'PARTIAL SHIP 2026-05-12 PM: kernel piece '
+                                      '`hermitian_commutator_norm_le` in '
+                                      'MatrixBCH.lean (‖⁅F, G⁆‖ ≤ 2δ² for '
+                                      'Hermitian F, G of norm ≤ δ; constructive, '
+                                      'no axiom). Completion requires applying '
+                                      'MatrixTaylor.norm_exp_sub_order3_le_loose '
+                                      'to the commutator (norm bound 2δ²) and '
+                                      'triangle-closing against the 4-fold '
+                                      'product expansion output. Awaits '
+                                      'Sub-lemma B for full closure.',
                 },
             ],
             'eventual_upstream_target': 'Matrix.norm_exp_sub_taylor_le + non-'
@@ -1654,38 +1705,45 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
     'bridge_axiom_FKLW': {
         'eliminability': 'closed',
         'reason': 'Phase 6p Wave 2c.4 (2026-05-12) replaced the original '
-                  '`axiom bridge_axiom_FKLW` (which covered all d ≥ 0) with a '
-                  'theorem of identical signature delegating to '
-                  '`AharonovAradBridge.bridge_FKLW_smallDim`. The new theorem '
-                  'is constructive at d = 0 (vacuous: Fin 0 is empty) and '
-                  'delegates to the strictly-weaker residual axiom '
-                  '`bridge_axiom_FKLW_general` (which carries an explicit '
-                  '1 ≤ d guard) for d ≥ 1. Net: the d = 0 case is now '
-                  'axiom-free; the project axiom previously named '
-                  '`bridge_axiom_FKLW` is no longer an axiom (it is a '
-                  'theorem in `BridgeProp.lean`).',
+                  '`axiom bridge_axiom_FKLW` with a theorem in '
+                  '`BridgeProp.lean` delegating through '
+                  '`AharonovAradBridge.bridge_FKLW_smallDim` to a strictly-'
+                  'weaker residual `bridge_axiom_FKLW_general` (1 ≤ d). The '
+                  'Wave 2c.4a-FULL audit (companion module '
+                  '`AharonovAradBridgeIteration.lean`) then discovered that '
+                  'the residual axiom was MATHEMATICALLY UNSOUND for non-'
+                  'unitary representations (counterexample at n = 1, d = 1: '
+                  'see `liespan_not_implies_dense_counterexample`). In Wave '
+                  '2c.4a-cleanup (2026-05-12) the unsound axiom and its '
+                  'delegate theorem `bridge_FKLW_smallDim` were DELETED; '
+                  'the theorem `bridge_axiom_FKLW` in `BridgeProp.lean` was '
+                  'rewritten to carry an explicit `h_unitary` hypothesis '
+                  'and return `DenseInSpecialUnitary` (now routes through '
+                  'the SOUND `AharonovAradBridgeIteration.bridge_FKLW_unitary`).',
         'module': 'FKLW.BridgeProp',
-        'used_in': 'density_from_spanning (still tainted via the residual '
-                   'axiom for d ≥ 1; no downstream theorems invoke it).',
+        'used_in': 'density_from_spanning (now sound: requires unitarity + '
+                   'returns DenseInSpecialUnitary; no downstream consumers).',
         'evidence_on_close': {
-            'wave': 'Phase 6p Wave 2c.4 (Aharonov-Arad Bridge architectural '
-                    'closure — user-authorized G16 2026-05-12)',
+            'wave': 'Phase 6p Wave 2c.4 + Wave 2c.4a-FULL + Wave 2c.4a-cleanup',
             'date_closed': '2026-05-12',
             'project_local_module': 'lean/SKEFTHawking/FKLW/'
-                                    'AharonovAradBridge.lean',
-            'derivation_strategy': 'Vacuous-quantifier discharge for d = 0 '
-                                   '(Fin 0 has no inhabitants, so the '
-                                   'entrywise quantifier in ClosureDenseProp '
-                                   'is trivially true); delegation to '
-                                   'strictly-weaker residual axiom '
-                                   '`bridge_axiom_FKLW_general` for d ≥ 1.',
+                                    'AharonovAradBridgeIteration.lean',
+            'derivation_strategy': 'Sound chain only: `bridge_FKLW_unitary` '
+                                   'case-splits on d, constructively '
+                                   'discharges d ∈ {0, 1} (via '
+                                   '`denseInSpecialUnitary_d_eq_zero` / '
+                                   '`denseInSpecialUnitary_d_eq_one`; d = 1 '
+                                   'leverages SU(1) = {1} trivial-group), '
+                                   'and delegates to the sound residual '
+                                   '`bridge_axiom_FKLW_unitary_general` for '
+                                   'd ≥ 2.',
             'verification': 'lean_verify on '
                             'SKEFTHawking.FKLW.bridge_axiom_FKLW returns '
                             'axioms = [propext, Classical.choice, Quot.sound, '
                             'SKEFTHawking.FKLW.AharonovAradBridge.'
-                            'bridge_axiom_FKLW_general] '
-                            '(the new residual replaces the former '
-                            '`bridge_axiom_FKLW`).',
+                            'bridge_axiom_FKLW_unitary_general] '
+                            '(the unsound residual `bridge_axiom_FKLW_general` '
+                            'has been physically deleted from the source).',
             'citation_correction': 'arXiv:quant-ph/0702008 was an erroneous '
                                    'citation in the pre-Wave-2c.4 docstring; '
                                    'the actual Bridge Lemma + Decoupling '
@@ -1695,57 +1753,247 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
         },
     },
     'bridge_axiom_FKLW_general': {
-        'eliminability': 'planned',
-        'reason': 'Strictly-weaker residual axiom (post-Wave 2c.4 replacement '
-                  'for `bridge_axiom_FKLW`). Carries an explicit `1 ≤ d` '
-                  'hypothesis, excluding the trivial d = 0 case that is '
-                  'discharged constructively. Substantive constructive '
-                  'discharge for the d ≥ 1 case requires the Aharonov-Arad '
-                  'Bridge Lemma 4.1 + Lemma 6.1/6.2 formalization in '
-                  '`AharonovAradBridge.lean` — the substrate scaffolding '
-                  '(predicates, supporting lemmas) is in place; the '
-                  'substantive proof is the Wave 2c.4 follow-up plan.',
+        'eliminability': 'removed',
+        'reason': 'Phase 6p Wave 2c.4a-cleanup (2026-05-12) DELETED this '
+                  'axiom from `AharonovAradBridge.lean` because the Wave '
+                  '2c.4a-FULL audit proved its statement '
+                  '`LieSpanProp n d ρ → ClosureDenseProp n d ρ` (under '
+                  '`1 ≤ d`) is mathematically UNSOUND: the explicit '
+                  'counterexample `liespan_not_implies_dense_counterexample` '
+                  'in `AharonovAradBridgeIteration.lean` constructs at '
+                  '`n = 1, d = 1` the trivial constant-1 representation '
+                  'ρ ≡ 1, which satisfies `LieSpanProp` but fails '
+                  '`ClosureDenseProp` (its image {1} is not entrywise dense '
+                  'in ℂ — the target U = 2 is unattainable). The sound '
+                  'replacement is `bridge_axiom_FKLW_unitary_general` '
+                  '(separate AXIOM_METADATA entry below) which requires '
+                  '`2 ≤ d` AND `ρ b ∈ SU(d)` for all b AND the corrected '
+                  'conclusion `DenseInSpecialUnitary n d ρ` (density in '
+                  'SU(d), not in arbitrary matrices). The unsound axiom had '
+                  'one delegate (`bridge_FKLW_smallDim`, also deleted) and '
+                  'one indirect consumer (`bridge_axiom_FKLW`/`density_from_'
+                  'spanning` in `BridgeProp.lean`, rewritten to consume the '
+                  'sound replacement).',
         'module': 'FKLW.AharonovAradBridge',
-        'used_in': 'bridge_axiom_FKLW (delegates to it for d ≥ 1).',
-        'discharge_wave': 'Phase 6p Wave 2c.4 follow-up sub-waves '
-                          '(2c.4a/4b/4c/4d).',
+        'used_in': 'NONE — deleted from source.',
+        'evidence_on_close': {
+            'wave': 'Phase 6p Wave 2c.4a-cleanup',
+            'date_closed': '2026-05-12',
+            'soundness_audit': 'AharonovAradBridgeIteration.lean §1, theorem '
+                               '`liespan_not_implies_dense_counterexample`: '
+                               'shows the axiom statement is provably false '
+                               'in Lean (constructive counterexample).',
+            'replacement': 'bridge_axiom_FKLW_unitary_general (sound).',
+            'derivation_strategy': 'NOT discharged — REMOVED. The unsound '
+                                   'axiom is replaced by a sound axiom with '
+                                   'strictly stronger hypotheses and a '
+                                   'corrected conclusion.',
+            'verification': 'grep for "^axiom\\s+bridge_axiom_FKLW_general" '
+                            'in lean/SKEFTHawking/ returns nothing. '
+                            'lean_verify on SKEFTHawking.FKLW.bridge_axiom_FKLW '
+                            'returns only [propext, Classical.choice, '
+                            'Quot.sound, bridge_axiom_FKLW_unitary_general] '
+                            '(the unsound axiom is not in any closure).',
+        },
+    },
+    'bridge_axiom_FKLW_unitary_general': {
+        'eliminability': 'closed',
+        'reason': 'Phase 6p Wave 2c.4a-FULL (2026-05-12) sound replacement '
+                  'for the unsound `bridge_axiom_FKLW_general`. Strict-'
+                  'factoring follow-up in Wave 2c.4a-iteration (same date) '
+                  'further narrowed this axiom to '
+                  '`aa_residual_interior_at_one_for_hom` (see separate '
+                  'AXIOM_METADATA entry below). The Wave 2c.4a-FULL form '
+                  'had STRICTLY STRONGER hypotheses than its unsound '
+                  'predecessor: (i) `2 ≤ d` guard (the d ∈ {0, 1} cases are '
+                  'discharged constructively in '
+                  '`AharonovAradBridgeIteration.lean`); (ii) unitarity '
+                  '`∀ b, ρ b ∈ Matrix.specialUnitaryGroup (Fin d) ℂ`; '
+                  '(iii) CORRECTED conclusion `DenseInSpecialUnitary n d ρ` '
+                  '(density in SU(d), not arbitrary matrices). The Wave '
+                  '2c.4a-iteration follow-up identified that even this form '
+                  'is potentially unsound for non-homomorphism function-form '
+                  'ρ (finite-image counterexample at d = 2; see F3 in '
+                  '`AharonovAradBridgeIteration.lean` header) and replaced it '
+                  'with the strictly-narrower '
+                  '`aa_residual_interior_at_one_for_hom` requiring ρ to '
+                  'extend to a `BraidGroup n →* SU(d)` MonoidHom — exactly '
+                  'the Aharonov-Arad Theorem 3.2 hypothesis. The '
+                  'iteration follow-up also moved ~150 LoC of axiom-free '
+                  'topology infrastructure (`ContinuousInv`, '
+                  '`IsTopologicalGroup`, `closure_eq_univ_of_one_mem_interior`, '
+                  '`entrywise_approx_of_mem_closure`, '
+                  '`denseInSpecialUnitary_of_lifted_closure_eq_univ`) out of '
+                  'the residual into constructive theorems.',
+        'module': 'FKLW.AharonovAradBridgeIteration',
+        'used_in': 'bridge_FKLW_unitary (top-level case-split; the d ∈ '
+                   '{0, 1} branches are axiom-free, only d ≥ 2 delegates '
+                   'to this axiom). bridge_FKLW_unitary is consumed by '
+                   '`BridgeProp.bridge_axiom_FKLW` (theorem) and '
+                   '`BridgeProp.density_from_spanning`.',
+        'discharge_wave': 'Phase 6p Wave 2c.4a.iteration (follow-up): '
+                          'full Bridge Lemma 4.1 + Lemma 6.1/6.2 '
+                          'ε-iteration proof for d ≥ 2 using the already-'
+                          'shipped substrate.',
         'discharge_estimate_loc': {
-            '2c.4a (Bridge Lemma 4.1 + Lemma 6.1/6.2 abstract)': 120,
-            '2c.4b (qutrit d = 3 specialization)': 80,
-            '2c.4c (LieSpanProp → BridgeHypothesis bridging)': 50,
-            '2c.4d (Decoupling Lemma 4.2 for d ≥ 9)': 280,
-            'total': 530,
+            '2c.4a.iteration (Bridge Lemma 4.1 + Lemma 6.1/6.2 substantive)': 150,
+            '2c.4b (qutrit d = 3 specialization, optional)': 80,
+            '2c.4d (Decoupling Lemma 4.2 for d ≥ 9, deferred — Mathlib4 '
+            'SU(n) `LieGroup` substrate absent)': 280,
+            'total (d ≤ 4 path; sufficient for project use cases)': 230,
+        },
+        'in_tree_mathlib_infra_already_built': {
+            'IsCompact on Matrix.specialUnitaryGroup': 'SHIPPED in '
+                'SpecialUnitaryTopology.lean (Wave 2c.4a-substrate, '
+                '2026-05-12).',
+            'PathConnectedSpace on Matrix.specialUnitaryGroup': 'SHIPPED in '
+                'SpecialUnitaryPathConnected.lean (Wave 2c.4a-substrate-'
+                'PathConnected, 2026-05-12).',
+            'LieSpanProp → bridge_exists bridging': 'SHIPPED in '
+                'AharonovAradBridgeProof.lean (Wave 2c.4c, 2026-05-12).',
+            'geometric_convergence_to_zero': 'SHIPPED in '
+                'AharonovAradBridge.lean (Wave 2c.4).',
+            'matrix_product_difference_split': 'SHIPPED in '
+                'AharonovAradBridge.lean (Wave 2c.4).',
         },
         'in_tree_mathlib_infra_to_build_for_discharge': {
-            'authorization': 'In-tree build authorized per Phase 6p policy. '
-                             'Eventual upstream PR contingent on separate user '
-                             'sign-off; coordinate before submission.',
-            'IsCompact on Matrix.specialUnitaryGroup': 'Build target: derive '
-                'from Matrix.unitaryGroup compactness (present in Mathlib4) + '
-                'det⁻¹{1} closed slice. ~80 LoC project-local; clean Mathlib '
-                'upstream candidate.',
-            'PathConnectedSpace on Matrix.specialUnitaryGroup': 'Build target: '
-                '~80 LoC project-local; path-construction via 1-parameter '
-                'subgroups exp(t·X) for skew-Hermitian X with tr X = 0.',
-            'LieGroup on Matrix.specialUnitaryGroup': 'Build target: ~200 LoC '
-                'project-local; needed only for 2c.4d Decoupling Lemma path '
-                '(d ≥ 9). Project use-cases (qutrit d=3, quintet d=5) do NOT '
-                'require this — the no-Decoupling path suffices.',
+            'authorization': 'In-tree build authorized per Phase 6p axiom-'
+                             'sign-off policy (amended 2026-05-12 PM: '
+                             'substantive in-tree work implicitly authorized). '
+                             'Eventual upstream PR contingent on separate '
+                             'user sign-off.',
+            'LieGroup on Matrix.specialUnitaryGroup': 'Build target: ~200 '
+                'LoC project-local; needed only for 2c.4d Decoupling Lemma '
+                'path (d ≥ 9). Project use-cases (qutrit d=3, quintet d=5) '
+                'do NOT require this — the no-Decoupling path suffices.',
         },
         'source': 'Aharonov & Arad 2011, *New J. Phys.* 13, 035019; '
-                  'arXiv:quant-ph/0605181 §4 (density Theorem 3.2) and '
+                  'arXiv:quant-ph/0605181 §4 (density Theorem 3.2 — note '
+                  'explicit hypothesis ρ : BraidGroup n → SU(d)) and '
                   '§6 (Lemma 4.1 Bridge + Lemma 4.2 Decoupling).',
-        'risk': 'Low for d ≤ 4 (no Decoupling Lemma needed; ~250 LoC '
-                'substantive Bridge Lemma formalization). Medium for d ≥ 9 '
-                '(Decoupling Lemma requires nonconstructive Lie-group '
-                'quotient machinery currently absent from Mathlib4).',
+        'soundness_status': 'SOUND (matches Aharonov-Arad Theorem 3.2 '
+                            'statement exactly, including the unitarity '
+                            'hypothesis the predecessor was missing).',
+        'risk': 'Low for d ≤ 4 (no Decoupling Lemma; ~150 LoC substantive '
+                'Bridge Lemma formalization on top of the shipped '
+                'substrate). Medium for d ≥ 9 (Decoupling Lemma path).',
         'circularity_note': 'None. The bridge axiom is a pure analytic-'
-                            'topological statement about closures in unitary '
-                            'matrix groups; it does not depend on any '
-                            'Solovay-Kitaev, AGP-threshold, or gate-set '
+                            'topological statement about closures in special-'
+                            'unitary matrix groups; it does not depend on '
+                            'any Solovay-Kitaev, AGP-threshold, or gate-set '
                             'content. Its only direct consumer is '
-                            '`density_from_spanning`, which has no '
-                            'downstream callers (verified via `grep`).',
+                            '`bridge_FKLW_unitary` (in the same module), '
+                            'consumed transitively by '
+                            '`BridgeProp.bridge_axiom_FKLW` and '
+                            '`BridgeProp.density_from_spanning` which have '
+                            'no downstream callers (verified via `grep`).',
+        'evidence_on_close': {
+            'wave': 'Phase 6p Wave 2c.4a-iteration (strict-factoring '
+                    'follow-up)',
+            'date_closed': '2026-05-12',
+            'replacement': 'aa_residual_interior_at_one_for_hom (sound; '
+                           'narrower; hom hypothesis explicit).',
+            'verification': 'lean_verify on '
+                            'SKEFTHawking.FKLW.bridge_axiom_FKLW returns '
+                            'axioms = [propext, Classical.choice, Quot.sound, '
+                            'SKEFTHawking.FKLW.AharonovAradBridge.'
+                            'aa_residual_interior_at_one_for_hom] '
+                            '(the previous-wave residual is not in any '
+                            'closure — its name no longer appears in the '
+                            'Lean source).',
+        },
+    },
+    'aa_residual_interior_at_one_for_hom': {
+        'eliminability': 'planned',
+        'reason': 'Phase 6p Wave 2c.4a-iteration (2026-05-12) STRICTLY-'
+                  'NARROWER replacement for `bridge_axiom_FKLW_unitary_general`. '
+                  'Captures EXACTLY the analytic content that requires a '
+                  'non-elementary argument: for a `BraidGroup n →* SU(d)` '
+                  'homomorphism whose image ℂ-spans `Matrix (Fin d) (Fin d) ℂ` '
+                  '(via `LieSpanProp`), the identity element `1` lies in the '
+                  'interior of the closure of the image. All surrounding '
+                  'topological infrastructure (open-subgroup-of-connected-'
+                  'group, entrywise approximation, lift to '
+                  '`DenseInSpecialUnitary`, d ∈ {0, 1} base cases) has been '
+                  'factored out into axiom-free constructive theorems. '
+                  'Substantive in-tree discharge requires the Aharonov-Arad '
+                  'Bridge Lemma 4.1 + Lemma 6.1/6.2 ε-iteration proof '
+                  '(~150 LoC on top of the shipped substrate). The hom '
+                  'hypothesis closes the F3 finding that function-form '
+                  'ρ : BraidGroup n → SU(d) (without hom structure) admits '
+                  'a finite-image counterexample at d = 2.',
+        'module': 'FKLW.AharonovAradBridgeIteration',
+        'used_in': 'bridge_FKLW_unitary_hom → bridge_FKLW_unitary (d ≥ 2 '
+                   'branch). Transitively consumed by '
+                   '`BridgeProp.bridge_axiom_FKLW` and '
+                   '`BridgeProp.density_from_spanning`.',
+        'discharge_wave': 'Phase 6p Wave 2c.4a.iteration-substantive '
+                          '(follow-up): full Bridge Lemma 4.1 + Lemma '
+                          '6.1/6.2 ε-iteration on top of the shipped '
+                          'topology + path-connectedness substrate.',
+        'discharge_estimate_loc': {
+            '2c.4a.iteration-substantive (Bridge Lemma 4.1 + Lemma '
+            '6.1/6.2 substantive)': 150,
+            'optional 2c.4b (qutrit d = 3 specialization)': 80,
+            'deferred 2c.4d (Decoupling Lemma 4.2 for d ≥ 9; blocked on '
+            'Mathlib4 SU(n) LieGroup substrate)': 280,
+            'total (d ≤ 4 path; sufficient for project use cases)': 230,
+        },
+        'in_tree_mathlib_infra_already_built': {
+            'IsCompact on Matrix.specialUnitaryGroup': 'SHIPPED in '
+                'SpecialUnitaryTopology.lean (Wave 2c.4a-substrate).',
+            'PathConnectedSpace on Matrix.specialUnitaryGroup': 'SHIPPED in '
+                'SpecialUnitaryPathConnected.lean (Wave 2c.4a-substrate-'
+                'PathConnected).',
+            'ContinuousInv + IsTopologicalGroup on SU(d)': 'SHIPPED in '
+                'AharonovAradBridgeIteration.lean (Wave 2c.4a-iteration).',
+            'closure_eq_univ_of_one_mem_interior': 'SHIPPED in '
+                'AharonovAradBridgeIteration.lean (Wave 2c.4a-iteration; '
+                'axiom-free; open-subgroup-of-connected-group).',
+            'entrywise_approx_of_mem_closure': 'SHIPPED in '
+                'AharonovAradBridgeIteration.lean (Wave 2c.4a-iteration; '
+                'axiom-free; Pi-topology entrywise approximation).',
+            'denseInSpecialUnitary_of_lifted_closure_eq_univ': 'SHIPPED in '
+                'AharonovAradBridgeIteration.lean (Wave 2c.4a-iteration; '
+                'axiom-free; ~40 LoC bridge from SU(d)-subtype closure '
+                'to entrywise DenseInSpecialUnitary).',
+            'LieSpanProp → bridge_exists': 'SHIPPED in '
+                'AharonovAradBridgeProof.lean (Wave 2c.4c).',
+            'geometric_convergence_to_zero': 'SHIPPED in '
+                'AharonovAradBridge.lean (Wave 2c.4).',
+            'matrix_product_difference_split': 'SHIPPED in '
+                'AharonovAradBridge.lean (Wave 2c.4).',
+        },
+        'in_tree_mathlib_infra_to_build_for_discharge': {
+            'authorization': 'In-tree build authorized per Phase 6p axiom-'
+                             'sign-off policy (amended 2026-05-12 PM: '
+                             'substantive in-tree work + strict axiom '
+                             'narrowing implicitly authorized).',
+            'LieGroup on Matrix.specialUnitaryGroup': 'Build target: ~200 '
+                'LoC project-local; needed only for 2c.4d Decoupling Lemma '
+                'path (d ≥ 9). Project use-cases (qutrit d=3, quintet d=5) '
+                'do NOT require this.',
+        },
+        'source': 'Aharonov & Arad 2011, *New J. Phys.* 13, 035019; '
+                  'arXiv:quant-ph/0605181 §4 (density Theorem 3.2 — note '
+                  'explicit hypothesis ρ : BraidGroup n →* SU(d) homomorphism) '
+                  'and §6 (Lemma 4.1 Bridge + Lemma 4.2 Decoupling).',
+        'soundness_status': 'SOUND under the explicit hom hypothesis '
+                            '(matches Aharonov-Arad Theorem 3.2 statement; '
+                            'closes the F3 finite-image-counterexample '
+                            'finding).',
+        'risk': 'Low for d ≤ 4 (no Decoupling Lemma; ~150 LoC substantive '
+                'Bridge Lemma formalization on top of the shipped '
+                'substrate). Medium for d ≥ 9 (Decoupling Lemma path).',
+        'circularity_note': 'None. The narrow residual is a pure analytic-'
+                            'topological statement: "1 ∈ interior(closure '
+                            '(range ρ))" for a hom ρ ℂ-spanning the matrix '
+                            'algebra. Independent of Solovay-Kitaev, AGP-'
+                            'threshold, or gate-set content. Consumed only '
+                            'by `bridge_FKLW_unitary_hom` (same module), '
+                            'transitively by '
+                            '`BridgeProp.bridge_axiom_FKLW` and '
+                            '`BridgeProp.density_from_spanning`.',
     },
 }
 

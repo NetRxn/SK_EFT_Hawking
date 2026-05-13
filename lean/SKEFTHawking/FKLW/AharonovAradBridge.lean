@@ -1,43 +1,47 @@
 /-
-SK_EFT_Hawking Phase 6p Wave 2c.4: Aharonov-Arad Bridge Lemma Infrastructure
+SK_EFT_Hawking Phase 6p Wave 2c.4 / 2c.4a-cleanup: Aharonov-Arad Bridge
+Lemma Infrastructure (axiom-narrowed).
 
 Substantive predicate substrate + supporting lemmas for the constructive
 elimination of `bridge_axiom_FKLW` (Wave 2a.3 axiom) via the Aharonov-Arad
-2011 proof strategy. User-authorized 2026-05-12 (G16).
+2011 proof strategy.
 
-**Wave 2c.4 ship (this module):**
+**Wave 2c.4 ship (architectural scaffolding):** Defined `BridgeHypothesis`,
+re-stated `LieSpanProp` / `ClosureDenseProp`, provided geometric-convergence
++ product-difference algebraic lemmas, and hosted the strictly-weaker
+residual axiom `bridge_axiom_FKLW_general` (with `1 ≤ d` guard).
 
-  - Defines `BridgeHypothesis n d ρ` — the natural Aharonov-Arad block-
-    structure hypothesis (image-infiniteness + bridge-rich generators)
-    that replaces the strong `LieSpanProp` in the constructive route.
-  - Defines `LieSpanProp` as previously imported from `BridgeProp.lean`
-    (we re-import, do NOT redefine).
-  - Provides supporting infrastructure:
-    * Vacuity of `ClosureDenseProp` at `d = 0`.
-    * Geometric-convergence lemma for the Bridge Lemma 6.1 iteration
-      (`|a|ⁿ → 0` with `0 ≤ |a| < 1`).
-    * Operator-norm Lipschitz-of-products for accumulated error
-      `‖U₁U₂ - V₁V₂‖ ≤ ‖U₁‖·‖U₂-V₂‖ + ‖U₁-V₁‖·‖V₂‖` (via Mathlib's
-      `Matrix.l2_opNorm_mul`).
-  - Hosts the strictly-weaker residual axiom `bridge_axiom_FKLW_general`
-    (formerly in `BridgeProp.lean`; moved here to break the import cycle
-    `BridgeProp → AharonovAradBridge`). The new axiom carries an explicit
-    `1 ≤ d` guard, making it strictly weaker than the original
-    `bridge_axiom_FKLW` which had no such guard.
-  - Provides `bridge_FKLW_smallDim` — the **constructive theorem** the
-    `BridgeProp.bridge_axiom_FKLW` theorem delegates to. For `d = 0` it is
-    axiom-free (vacuous); for `d ≥ 1` it delegates to the residual axiom.
+**Wave 2c.4a-FULL ship (2026-05-12; companion module
+`AharonovAradBridgeIteration.lean`):** Discovered that the
+`bridge_axiom_FKLW_general` axiom statement is **mathematically false** for
+non-unitary representations (counterexample at `n = 1, d = 1` with the
+trivial constant-1 representation: spans ℂ but its image {1} is not dense
+in ℂ — see `liespan_not_implies_dense_counterexample`). Replaced with the
+SOUND axiom `bridge_axiom_FKLW_unitary_general` requiring `2 ≤ d` AND
+`ρ b ∈ SU(d)` AND with the corrected conclusion `DenseInSpecialUnitary`
+(density in SU(d), not in the full matrix space).
 
-**Wave 2c.4 follow-up sub-waves (not in this ship):**
+**Wave 2c.4a-cleanup (2026-05-12 — this commit):** The unsound axiom
+`bridge_axiom_FKLW_general` and its delegate theorem `bridge_FKLW_smallDim`
+are **deleted** from this module. The sound path is now the only path:
+`AharonovAradBridgeIteration.bridge_FKLW_unitary` (with explicit unitarity
+hypothesis, returning `DenseInSpecialUnitary`). Net project axiom-count
+delta: 3 → 2 (`gapped_interface_axiom` + `bridge_axiom_FKLW_unitary_general`).
 
-  - 2c.4a (~120 LoC): full Bridge Lemma 4.1 + Lemma 6.1/6.2 proof,
-    parameterized over (A, B, W).
-  - 2c.4b (~80 LoC): qutrit-block-structure specialization;
-    discharge `bridge_axiom_FKLW_general` for `d = 3` directly.
-  - 2c.4c (~50 LoC): `LieSpanProp → BridgeHypothesis` bridging lemma so
-    that the qutrit `native_decide` data feeds into the constructive proof.
-  - 2c.4d (DEFERRED): Decoupling Lemma 4.2 for `d ≥ 9` cases — requires
-    Mathlib SU(n) `LieGroup` instance + closed-normal-subgroup quotients.
+**Retained content in this module:**
+
+  - `LieSpanProp`, `ClosureDenseProp` — re-stated (definitionally agree
+    with `BridgeProp.lean` versions; kept here to break the historical
+    import cycle).
+  - `BridgeHypothesis n d ρ` — natural Aharonov-Arad block-structure
+    hypothesis.
+  - `geometric_convergence_to_zero` — substrate lemma for Bridge Lemma
+    6.1 ε-iteration.
+  - `matrix_product_difference_split` — algebraic identity for the
+    Bridge Lemma error-accumulation expansion.
+  - `closureDenseProp_dim_zero` — vacuity at `d = 0` (still useful as a
+    standalone constructive discharge for the `d = 0` case, even though
+    the broader chain has been retired).
 
 **Citation correction (Wave 2c.1 DR, 2026-05-12):**
 
@@ -155,52 +159,25 @@ theorem matrix_product_difference_split {d : ℕ}
   rw [Matrix.mul_sub, Matrix.sub_mul]
   abel
 
-/-! ## 4. The residual axiom (strictly weaker than the original)
+/-! ## 4. Vacuity at `d = 0`
 
-Lives here (rather than in `BridgeProp.lean`) to break the import cycle:
-`BridgeProp.lean` imports this module to use `bridge_FKLW_smallDim`, and
-`bridge_FKLW_smallDim` invokes this axiom for `d ≥ 1`.
--/
+The original Wave 2c.4 ship of this module hosted a residual axiom
+`bridge_axiom_FKLW_general : LieSpanProp n d ρ → ClosureDenseProp n d ρ`
+(under `1 ≤ d`) and a delegating theorem `bridge_FKLW_smallDim` matching
+that signature. The Wave 2c.4a-FULL companion module
+`AharonovAradBridgeIteration.lean` proved that this axiom statement is
+mathematically false for non-unitary representations (counterexample at
+`n = 1, d = 1`) and replaced it with the sound
+`bridge_axiom_FKLW_unitary_general` requiring `2 ≤ d` AND unitarity AND
+the corrected `DenseInSpecialUnitary` conclusion.
 
-/-- **RESIDUAL AXIOM (strictly weaker than the original `bridge_axiom_FKLW`).**
-
-The general-`d ≥ 1` FKLW density bridge. Strictly weaker than the original
-single-axiom (which covered `d ≥ 0`) because the `d = 0` case is now
-discharged constructively in `bridge_FKLW_smallDim` (the conclusion is
-vacuous when `Fin d` is empty).
-
-Discharge plan (Wave 2c.4 follow-up sub-waves per Wave 2c.1 DR §7.3):
-  - Wave 2c.4a (~120 LoC): full Bridge Lemma 4.1 + Lemma 6.1/6.2.
-  - Wave 2c.4b (~80 LoC): qutrit specialization (d = 3 direct discharge,
-    no Decoupling Lemma needed).
-  - Wave 2c.4c (~50 LoC): `LieSpanProp → BridgeHypothesis` bridging lemma.
-  - Wave 2c.4d (~280 LoC, deferred): Decoupling Lemma 4.2 (d ≥ 9 cases).
-    Requires Mathlib4 SU(n) `LieGroup` instance + closed-normal-subgroup
-    quotients of compact Lie groups — both currently absent.
-
-Citation: Aharonov & Arad 2011, *New J. Phys.* 13, 035019;
-arXiv:quant-ph/0605181 §4 (density) and §6 (Bridge + Decoupling proofs).
-
-Tracked in `src/core/constants.py` `AXIOM_METADATA` with
-`eliminability: 'planned'`. -/
-axiom bridge_axiom_FKLW_general
-    (n d : ℕ) (_hd : 1 ≤ d) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ) :
-    LieSpanProp n d ρ → ClosureDenseProp n d ρ
-
-/-! ## 5. The constructive small-dimension theorem
-
-Wave 2c.4 ships the architectural scaffolding (predicate substrate +
-module split) but defers the substantive Bridge Lemma proof to follow-up
-sub-waves. For the present, `bridge_FKLW_smallDim` is constructive for
-`d = 0` (vacuous) and delegates to the strictly-weaker residual axiom for
-`d ≥ 1`.
-
-Net axiom-count impact: the original `bridge_axiom_FKLW` (which covered all
-`d ≥ 0`) is replaced by `bridge_axiom_FKLW_general` (which carries the
-explicit `1 ≤ d` guard, excluding the trivial `d = 0` case). The
-`bridge_axiom_FKLW` declaration in `BridgeProp.lean` is now a `theorem`
-(no longer an `axiom`); the only project-local axiom in the FKLW path is
-`bridge_axiom_FKLW_general`.
+In the Wave 2c.4a-cleanup ship (2026-05-12), the unsound
+`bridge_axiom_FKLW_general` and its `bridge_FKLW_smallDim` delegate were
+**deleted** from this module — they had no live term-level callers
+outside the now-rewritten `BridgeProp.lean` chain. The vacuous
+`d = 0` case is retained as a constructive lemma because it remains a
+useful primitive (consumed by `AharonovAradBridgeIteration` for the
+`d = 0` discharge of `DenseInSpecialUnitary`).
 -/
 
 /-- **Vacuity at `d = 0`.** When the matrix dimension is `0`, the entrywise
@@ -215,60 +192,40 @@ theorem closureDenseProp_dim_zero
   intro i j
   exact i.elim0
 
-/-- **`bridge_FKLW_smallDim` — the constructive theorem the
-`BridgeProp.bridge_axiom_FKLW` theorem delegates to.**
+/-! ## 5. Module summary
 
-Case-splits on whether `d = 0` (constructive vacuity) or `d ≥ 1`
-(delegate to the strictly-weaker residual axiom `bridge_axiom_FKLW_general`).
-
-The signature matches the former `bridge_axiom_FKLW` exactly, ensuring
-backward compatibility for any consumer that happens to invoke this path. -/
-theorem bridge_FKLW_smallDim
-    (n d : ℕ) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ) :
-    LieSpanProp n d ρ → ClosureDenseProp n d ρ := by
-  intro h_span
-  rcases Nat.eq_zero_or_pos d with hd | hd
-  · -- d = 0: constructive vacuity.
-    subst hd
-    exact closureDenseProp_dim_zero n ρ
-  · -- d ≥ 1: delegate to the residual axiom.
-    exact bridge_axiom_FKLW_general n d hd ρ h_span
-
-/-! ## 6. Module summary
-
-AharonovAradBridge.lean (Wave 2c.4 ship): Aharonov-Arad Bridge Lemma
-infrastructure for the constructive elimination of `bridge_axiom_FKLW`.
+AharonovAradBridge.lean (Wave 2c.4 ship + Wave 2c.4a-cleanup pruning):
+Aharonov-Arad Bridge Lemma predicate substrate + supporting lemmas.
 
   - `LieSpanProp`, `ClosureDenseProp` — re-stated (definitionally agree
     with `BridgeProp.LieSpanProp` / `BridgeProp.ClosureDenseProp`); kept
-    here to break the import cycle.
-  - **`BridgeHypothesis n d ρ`** — the natural Aharonov-Arad block-structure
+    here to break the historical import cycle.
+  - **`BridgeHypothesis n d ρ`** — natural Aharonov-Arad block-structure
     hypothesis (image-infiniteness + bridge braid existence).
   - **`geometric_convergence_to_zero`** — substrate lemma: `aⁿ → 0` for
-    `0 ≤ a < 1` (used by Bridge Lemma 6.1 ε-iteration).
+    `0 ≤ a < 1` (Bridge Lemma 6.1 ε-iteration).
   - **`matrix_product_difference_split`** — algebraic identity for the
     Bridge Lemma error-accumulation expansion
     `U₁U₂ - V₁V₂ = U₁(U₂ - V₂) + (U₁ - V₁)V₂`.
-  - **`bridge_axiom_FKLW_general`** — strictly-weaker residual axiom
-    (carries explicit `1 ≤ d` guard; the `d = 0` case is now axiom-free).
   - **`closureDenseProp_dim_zero`** — constructive vacuity at `d = 0`.
-  - **`bridge_FKLW_smallDim`** — the constructive theorem that
-    `BridgeProp.bridge_axiom_FKLW` delegates to (case-splits on `d`).
+
+**Wave 2c.4a-cleanup pruning (this commit, 2026-05-12):**
+  - `axiom bridge_axiom_FKLW_general` — **DELETED.** Mathematically
+    unsound (counterexample shipped in
+    `AharonovAradBridgeIteration.liespan_not_implies_dense_counterexample`).
+    The sound replacement `bridge_axiom_FKLW_unitary_general` (in
+    `AharonovAradBridgeIteration.lean`) requires unitarity + 2 ≤ d
+    + correct `DenseInSpecialUnitary` conclusion.
+  - `theorem bridge_FKLW_smallDim` — **DELETED.** Was a delegate of the
+    unsound axiom; replaced by `AharonovAradBridgeIteration.bridge_FKLW_unitary`
+    which has the sound (unitary + DenseInSpecialUnitary) signature.
 
 **Axiom inventory delta (project-wide):**
-  - Before Wave 2c.4: 3 axioms total (`gapped_interface_axiom`,
+  - Before Wave 2c.4: 3 axioms (`gapped_interface_axiom`,
     `bridge_axiom_FKLW`, `sk_axiom_Dawson_Nielsen`).
-  - After Wave 2c.4: 3 axioms total — but `bridge_axiom_FKLW` is replaced by
-    the strictly weaker `bridge_axiom_FKLW_general` (with `1 ≤ d` guard).
-    The `bridge_axiom_FKLW` declaration in `BridgeProp.lean` is now a
-    `theorem` (no longer an `axiom`).
-
-**Wave 2c.4 follow-up sub-waves (substantive discharge):**
-  - 2c.4a: full Bridge Lemma 4.1 + Lemma 6.1/6.2 (~120 LoC).
-  - 2c.4b: qutrit specialization for `d = 3` (~80 LoC).
-  - 2c.4c: `LieSpanProp → BridgeHypothesis` bridging lemma (~50 LoC).
-  - 2c.4d: Decoupling Lemma 4.2 for `d ≥ 9` (~280 LoC, deferred — blocked
-    on Mathlib4 SU(n) `LieGroup` substrate).
+  - After Wave 2c.4 + 2c.4a-FULL + 2c.4a-cleanup: the FKLW path
+    contributes exactly one axiom (`bridge_axiom_FKLW_unitary_general`,
+    sound). The unsound `bridge_axiom_FKLW_general` is gone.
 
 Primary citations:
   - Aharonov & Arad 2011, *New J. Phys.* 13, 035019; arXiv:quant-ph/0605181
@@ -276,8 +233,8 @@ Primary citations:
   - Freedman-Larsen-Wang 2002, *Comm. Math. Phys.* 228, 177-199;
     arXiv:math/0103200 (Theorem 0.1).
 
-Zero sorry. One project-local axiom (`bridge_axiom_FKLW_general`, strictly
-weaker than the former `bridge_axiom_FKLW`).
+Zero sorry. Zero project-local axioms in this module (the sound residual
+lives in `AharonovAradBridgeIteration.bridge_axiom_FKLW_unitary_general`).
 -/
 
 end SKEFTHawking.FKLW.AharonovAradBridge

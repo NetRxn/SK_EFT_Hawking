@@ -166,6 +166,60 @@ def mulReduce (n : ℕ) (r : Fin n → ℚ) (x y : PolyQuotQ n) : PolyQuotQ n :=
           (table[p.val + q.val]!)[k.val]!)))
   ⟨fun k => outArr[k.val]!⟩
 
+/-- Optimized multiplication using `Nat.fold` instead of `Finset.univ.sum`.
+
+    Functionally equivalent to `mulReduce` but compiles to native code
+    dramatically faster for high-degree cyclotomic extensions (n ≥ 32).
+    The `Finset.univ.sum` machinery in `mulReduce` involves `Multiset`
+    quotient operations that explode the elaborator's term size during
+    `native_decide` compilation. At n = 32 this caused a 5+ GB memory
+    blowup compiling Q(ζ₈₀); the `Nat.fold` form compiles in seconds.
+
+    Performance characteristics:
+    - Runtime: `O(n³)` per call (same as `mulReduce`).
+    - Elaborator: avoids the `Finset.sum` typeclass cascade entirely.
+    - Compatible with `native_decide` and `decide`.
+
+    Use this form for degree-n cyclotomic substrate at `n ≥ 32`. For lower
+    degrees, both forms perform acceptably and `mulReduce` is kept for
+    documentation continuity.
+
+    Phase 6p Wave 3a.2.3c-substrate-upgrade optimization (2026-05-12):
+    introduced specifically to enable QCyc80 (degree-32 cyclotomic) to
+    compile within reasonable memory bounds. -/
+@[noinline]
+def mulReduceFast (n : ℕ) (r : Fin n → ℚ) (x y : PolyQuotQ n) : PolyQuotQ n :=
+  let table := buildPowerTable r
+  let xArr : Array ℚ := Array.ofFn (n := n) (fun i : Fin n => x.coeffs i)
+  let yArr : Array ℚ := Array.ofFn (n := n) (fun i : Fin n => y.coeffs i)
+  let outArr : Array ℚ := Array.ofFn (n := n) (fun k : Fin n =>
+    Nat.fold n (fun p _ acc1 =>
+      Nat.fold n (fun q _ acc2 =>
+        acc2 + xArr[p]! * yArr[q]! * (table[p + q]!)[k.val]!) acc1) 0)
+  ⟨fun k => outArr[k.val]!⟩
+
+/-- Variant of `mulReduceFast` taking a pre-built power table. Use when the
+    same polynomial-quotient ring is used for many multiplications and the
+    caller can hoist `buildPowerTable` to module scope to avoid recomputation.
+
+    Pairs with a top-level `def powerTable_xxx : Array (Array ℚ) :=
+    PolyQuotQ.buildPowerTable reduction_xxx` for the specific cyclotomic.
+
+    `@[noinline]` is applied so the compiler emits a single function-call
+    boundary rather than inlining the O(n³) loop body at every multiplication
+    site. At n = 32 with multiple `native_decide` invocations per file, this
+    keeps native-code generation tractable. -/
+@[noinline]
+def mulReduceWithTable (n : ℕ) (table : Array (Array ℚ)) (x y : PolyQuotQ n) :
+    PolyQuotQ n :=
+  let xArr : Array ℚ := Array.ofFn (n := n) (fun i : Fin n => x.coeffs i)
+  let yArr : Array ℚ := Array.ofFn (n := n) (fun i : Fin n => y.coeffs i)
+  let outArr : Array ℚ := Array.ofFn (n := n) (fun k : Fin n =>
+    Nat.fold n (fun p _ acc1 =>
+      Nat.fold n (fun q _ acc2 =>
+        acc2 + xArr[p]! * yArr[q]! * (table[p + q]!)[k.val]!) acc1) 0)
+  ⟨fun k => outArr[k.val]!⟩
+
 /-! ## Sanity checks
 
 These examples verify `mulReduce` on concrete reduction rules at the

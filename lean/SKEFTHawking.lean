@@ -508,11 +508,19 @@ import SKEFTHawking.HawkingPenroseSingularityCurveTheoretic
 import SKEFTHawking.AreaTheoremCurveTheoretic
 import SKEFTHawking.WaveEquation1D
 import SKEFTHawking.CNOTBraidTQSim
+-- Phase 6p Wave 2d.2-followup (2026-05-12): Matrix Taylor remainder bound.
+-- In-tree substrate ship — Sub-lemma A of the Dawson-Nielsen Lemma 3 discharge
+-- plan. Lifts scalar `Complex.norm_exp_sub_sum_le_exp_norm_sub_sum` to the
+-- matrix algebra `Matrix (Fin d) (Fin d) ℂ` (linftyOp norm). 254 LoC, zero
+-- axioms, zero sorries. Consumed by MatrixBCH.matrix_exp_order3_bound_hermitian.
+import SKEFTHawking.MatrixTaylor
 -- Phase 6p Wave 2d.2 (2026-05-12): Dawson-Nielsen Lemma 3 order-2 BCH
 -- cubic-remainder bound for matrix exponentials. Strictly-weaker analytic
 -- axiom replacing the retired sk_axiom_Dawson_Nielsen (Wave 2b.2). First-
--- formalization-territory across all proof assistants; ~300 LoC discharge
--- plan in AXIOM_METADATA pending Mathlib4 matrix Taylor remainder upstream.
+-- formalization-territory across all proof assistants. Wave 2d.2-followup
+-- (2026-05-12 PM) ships Sub-lemma A (matrix Taylor remainder) + Sub-lemma C
+-- kernel (Hermitian commutator norm bound) in-tree; Sub-lemma B (four-fold
+-- product expansion ~150 LoC) remains as the residual gap behind the axiom.
 import SKEFTHawking.MatrixBCH
 -- Phase 6p Wave 2d.4 (2026-05-12): ε-net base case + UniversalGateSet
 -- substrate for the constructive Solovay-Kitaev discharge.
@@ -522,6 +530,42 @@ import SKEFTHawking.FKLW.EpsilonNet
 -- and bridges from ClosureDenseProp. Companion to FKLW.SolovayKitaev's
 -- length-bound-free constructive theorem.
 import SKEFTHawking.FKLW.SolovayKitaevConstructive
+-- Phase 6p Wave 2c.4c (2026-05-12): Aharonov-Arad Bridge constructive
+-- content. Substantive bridging lemma `LieSpan_implies_bridge_exists`
+-- (axiom-free; d ≥ 2): the strong LieSpanProp forces existence of a braid
+-- with non-zero off-diagonal image entry. Closes the gap between the
+-- strong LieSpanProp and the natural Aharonov-Arad BridgeHypothesis modulo
+-- the externally-supplied `image_infinite` witness. Pipeline Invariant #15
+-- compliant: zero new axioms. The substantive Bridge Lemma 4.1 + 6.1/6.2
+-- iteration discharge is a Wave 2c.4a.full follow-up.
+import SKEFTHawking.FKLW.AharonovAradBridgeProof
+-- Phase 6p Wave 2c.4a-substrate (2026-05-12): Mathlib-grade topological
+-- substrate for SU(d) and U(d). `IsCompact` on the carrier sets plus
+-- `CompactSpace` instances on the Submonoid-coerced subtypes for any
+-- `d : ℕ`. Pure linear-algebra-and-topology proof (entry-modulus ≤ 1
+-- inside compact d×d-bounding box; closed as preimage of {1} under
+-- continuous M ↦ M Mᴴ; closed-of-compact ⇒ compact). Zero new axioms;
+-- Mathlib-PR-shaped.
+import SKEFTHawking.FKLW.SpecialUnitaryTopology
+-- Phase 6p Wave 2c.4a-substrate-PathConnected (2026-05-12): the companion
+-- ship adding `PathConnectedSpace` + `ConnectedSpace` instances on
+-- `Matrix.unitaryGroup` and `Matrix.specialUnitaryGroup`. Routes through
+-- Mathlib's `Unitary.instLocPathConnectedSpace` on `CStarMatrix` +
+-- phase-shift construction + finite-spectrum avoidance (via
+-- `Matrix.finite_spectrum`) + det-correction for SU(d). The substantive
+-- analytical content for Aharonov-Arad Lemma 6.1 vector transport.
+-- Zero new axioms; Mathlib-PR-shaped.
+import SKEFTHawking.FKLW.SpecialUnitaryPathConnected
+-- Phase 6p Wave 2c.4a-FULL (2026-05-12): substantive Aharonov-Arad Bridge
+-- Lemma iteration substrate. Ships
+-- `liespan_not_implies_dense_counterexample` (proves the original Wave 2c.4
+-- `bridge_axiom_FKLW_general` was unsound), constructive d ∈ {0, 1}
+-- discharges for the sound `DenseInSpecialUnitary` predicate, and the sound
+-- residual `bridge_axiom_FKLW_unitary_general` axiom (2 ≤ d + unitary ρ).
+-- The unsound `bridge_axiom_FKLW_general` is now gone from
+-- `AharonovAradBridge.lean` (Wave 2c.4a-cleanup) and the live FKLW path
+-- routes exclusively through this module's `bridge_FKLW_unitary` theorem.
+import SKEFTHawking.FKLW.AharonovAradBridgeIteration
 -- Phase 6p Wave 1c (2026-05-12): MeasureTheory-grounded Bernoulli-product
 -- noise model. BernoulliProductModel structure + bridge to abstract
 -- LocalStochasticNoise; joint-failure probability ε^k EXACT (not just upper
@@ -545,12 +589,33 @@ import SKEFTHawking.RouabahExplicit
 -- 3-strand T-gate braid. First Fibonacci T-gate braid published anywhere
 -- per Wave 3a.2.3c DR audit. ε ≈ 7.5e-2 first-attempt; refinement to
 -- ε ≤ 10⁻³ via SK-iteration or GA-SK is mechanical (replace braid literal).
+-- RE-ENABLED 2026-05-12 PM (Phase 6p Wave 3a.2.3c-substrate-upgrade
+-- optimization). The original QCyc80 mulReduce compile-time failure
+-- was resolved via:
+--   1. PolyQuotQ.mulReduceWithTable (Nat.fold instead of Finset.univ.sum,
+--      `@[noinline]` to prevent compiler-side inlining blowup).
+--   2. QCyc80 as `abbrev := PolyQuotQ 32` (function-backed representation
+--      `Fin 32 → ℚ` for lighter DecidableEq vs 32-field struct).
+--   3. native_decide algebraic-identity theorems deferred to a separate
+--      Verify module (still provable, just compiled on demand).
+-- See QCyc80.lean module docstring for full rationale.
 import SKEFTHawking.TgateFibBraid
 -- Phase 6p Wave 2b.3.2 partial (2026-05-12): Iterated-commutator extension
 -- of the block-extended Fibonacci quintet representation. Ships 8 of 24
 -- target conjuncts via native_decide on {0,1,2}-block iterated commutators.
--- Full 24 deferred pending HZBS Fig 4 4-strand F-symbol substrate.
+-- SUPERSEDED 2026-05-12 by FibonacciQuintetTrueRep.lean (per Wave 2b.3.2-followup
+-- DR §5.3 R5: block-extension architecture is not the true 4-strand rep, and
+-- the 24-conjunct dim-𝔰𝔲(5) target is structurally unreachable by braiding —
+-- the correct target is dim 𝔰𝔲(3) ⊕ 𝔰𝔲(2) ⊕ 𝔲(1) = 12). Retained for legacy
+-- linkage only.
 import SKEFTHawking.FibonacciQuintetUniversalityExt
+-- Phase 6p Wave 2b.3.2-followup (2026-05-12): TRUE 4-strand Fibonacci
+-- representation on Mat5K over ℚ(ζ₅, √φ) per Lit-Search/Phase-6p/Phase 6p
+-- Wave 2b.3.2-followup — HZBS Fig 4 .md (DR returned 2026-05-12). Ships
+-- σ₁/σ₂/σ₃ true 4-strand matrices, block-diagonality theorems, Yang-Baxter
+-- + far-commutativity, Pentagon-equation corollary, and 12-conjunct
+-- structurally-honest spanning closure for 𝔰𝔲(3) ⊕ 𝔰𝔲(2) ⊕ 𝔲(1) (DR §5.3 R5).
+import SKEFTHawking.FibonacciQuintetTrueRep
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
