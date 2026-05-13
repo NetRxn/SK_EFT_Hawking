@@ -166,38 +166,40 @@ theorem bridge_axiom_FKLW
     (h_unitary : ∀ b, ρ b ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)
     (h_hom : 2 ≤ d → ∃ (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ),
       (∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b) ∧
-      (Set.range ρ_hom).Infinite) :
-    LieSpanProp n d ρ →
-      SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ := by
-  intro h_span
-  -- The two `LieSpanProp` definitions (this module's and
-  -- `AharonovAradBridge.LieSpanProp`) agree definitionally; pass through.
-  -- Wave 2c.4a-soundness ship (2026-05-13, R3): h_hom now carries the
-  -- (Set.range ρ_hom).Infinite witness alongside the hom-extension witness.
-  exact SKEFTHawking.FKLW.AharonovAradBridge.bridge_FKLW_unitary n d ρ h_unitary h_span h_hom
+      closure (Set.range ρ_hom) =
+        (Set.univ : Set (Matrix.specialUnitaryGroup (Fin d) ℂ))) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ := by
+  -- **R2 soundness audit, option (b), 2026-05-13 PM-PM**: the `LieSpanProp`
+  -- hypothesis was REMOVED from this signature because it does not enter
+  -- the substantive proof in any sound way (the SO(d) counterexample showed
+  -- that LieSpan does NOT imply density). The substantive hypothesis is
+  -- now `closure(range ρ_hom) = univ` (carried in `h_hom`), which the caller
+  -- must establish via the actual FKLW / HBS density machinery.
+  exact SKEFTHawking.FKLW.AharonovAradBridge.bridge_FKLW_unitary n d ρ h_unitary h_hom
 
 /-! ## 3. Convenience extractor -/
 
-/-- Convenience: given the unitarity hypothesis + spanning hypothesis + the
-    hom-extension-with-infinite-image hypothesis, extract FKLW density in `SU(d)`.
+/-- Convenience: given the unitarity hypothesis + density hypothesis on
+    a hom-extension, extract FKLW density in `SU(d)`.
     The `d ∈ {0, 1}` cases are axiom-free (vacuous / trivial-group); the
-    `d ≥ 2` case constructively dispatches through the strictly-narrower
-    residual axiom `AharonovAradBridgeIteration.aa_residual_interior_at_one_for_hom`
-    plus the constructive topology framework.
+    `d ≥ 2` case constructively dispatches through the axiom-free
+    `bridge_FKLW_unitary` (after the R2 soundness audit refactor).
 
-    **Wave 2c.4a-soundness ship (2026-05-13, R3)**: `h_hom` now bundles
-    `(Set.range ρ_hom).Infinite` alongside the hom-extension witness,
-    closing the soundness gap surfaced by the BraidGroup₃ → SL(2, F₃)
-    counterexample. -/
-theorem density_from_spanning
+    **R2 soundness audit, option (b), 2026-05-13 PM-PM**: this convenience
+    extractor no longer takes `LieSpanProp`. The substantive hypothesis is
+    `closure(range ρ_hom) = univ` (in `h_hom`), which the caller must
+    establish via the actual FKLW / Hormozi-Bonesteel-Simon density
+    machinery (a separate, substantive theorem; not derivable from
+    LieSpanProp due to the SO(d) ⊂ SU(d) counterexample for d ≥ 3). -/
+theorem density_from_hom_with_dense_range
     (n d : ℕ) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
     (h_unitary : ∀ b, ρ b ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)
     (h_hom : 2 ≤ d → ∃ (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ),
       (∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b) ∧
-      (Set.range ρ_hom).Infinite)
-    (h : LieSpanProp n d ρ) :
+      closure (Set.range ρ_hom) =
+        (Set.univ : Set (Matrix.specialUnitaryGroup (Fin d) ℂ))) :
     SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ :=
-  bridge_axiom_FKLW n d ρ h_unitary h_hom h
+  bridge_axiom_FKLW n d ρ h_unitary h_hom
 
 /-! ## 4. Module summary
 

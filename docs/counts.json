@@ -1,14 +1,13 @@
 {
-  "generated": "2026-05-13T14:32:50.245322",
+  "generated": "2026-05-13T15:37:22.688797",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
     "total_declarations": 12167,
-    "theorems_total": 6130,
-    "theorems_substantive": 6105,
+    "theorems_total": 6131,
+    "theorems_substantive": 6106,
     "theorems_placeholder": 25,
-    "axioms": 2,
+    "axioms": 1,
     "axiom_names": [
-      "SKEFTHawking.FKLW.AharonovAradBridge.aa_residual_interior_at_one_for_hom",
       "SKEFTHawking.gapped_interface_axiom"
     ],
     "sorry_declarations": 0,
