@@ -587,6 +587,27 @@ before committing to ~800 LoC of analytic discharge — otherwise the
 discharged theorem may end up requiring `image_infinite` as an
 additional hypothesis anyway.
 
+**Amendment 2026-05-13 (R1, user-authorized post-soundness-audit):** the
+prior axiom shape (without `h_inf`) was UNSOUND. Concrete counterexample:
+BraidGroup₃ surjects onto SL(2, F₃) via reduction-mod-3 of the standard
+BraidGroup₃ → SL(2, ℤ) hom (σ₁ ↦ [[1,1],[0,1]], σ₂ ↦ [[1,0],[-1,1]]);
+the image SL(2, F₃) (order 24, ≅ binary tetrahedral) is absolutely
+irreducible in SU(2) (hence ℂ-spans Matrix 2 2 ℂ → LieSpanProp holds)
+but FINITE (closure has empty interior). The added `h_inf` hypothesis
+excludes such pathologies; it is satisfied by the Fibonacci 3-strand
+rep `ρ_Fib` per Hormozi-Bonesteel-Simon density (literature). Formal
+Lean witness `fibRep3_image_infinite` is **deferred to the follow-up
+wave (R4)** — it is a substantive separate theorem (showing some
+explicit braid word has infinite order in `ρ_Fib`, e.g. via eigenvalue
+analysis: ρ_Fib(σ₁ σ₂) has an eigenvalue that is NOT a root of unity).
+Project status post-R1–R3 ship: axiom is sound; downstream callers
+forward the `h_inf` requirement; no current call site relies on a
+specific Fibonacci witness because `composition_substantive` /
+`fibonacci_3strand_example_substantive` take `ClosureDenseProp` as a
+hypothesis (separate audit issue: `ClosureDenseProp` is unsatisfiable
+for unitary ρ per `BridgeProp.lean` F2 — making those theorems
+vacuously true under unsatisfiable hypothesis; tracked separately).
+
 Citation: Aharonov & Arad 2011, *New J. Phys.* 13 035019;
 arXiv:quant-ph/0605181 §4 Theorem 3.2 + §6 Lemma 6.1 + 6.2.
 Burnside's theorem (absolute irreducibility ⟺ ℂ-span full algebra):
@@ -594,7 +615,8 @@ standard, e.g., Curtis-Reiner *Representation Theory of Finite Groups* §27. -/
 axiom aa_residual_interior_at_one_for_hom
     (n d : ℕ) (_hd : 2 ≤ d)
     (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ)
-    (_h_span : LieSpanProp n d (fun b => ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ))) :
+    (_h_span : LieSpanProp n d (fun b => ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ)))
+    (_h_inf : (Set.range ρ_hom).Infinite) :
     (1 : Matrix.specialUnitaryGroup (Fin d) ℂ) ∈
       interior (closure (Set.range ρ_hom))
 
@@ -621,7 +643,8 @@ theorem bridge_FKLW_unitary_hom
     (h_unitary : ∀ b, ρ b ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)
     (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ)
     (h_ext : ∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b)
-    (h_span : LieSpanProp n d ρ) :
+    (h_span : LieSpanProp n d ρ)
+    (h_inf : (Set.range ρ_hom).Infinite) :
     DenseInSpecialUnitary n d ρ := by
   -- Lie-span on the hom's underlying function follows from h_ext.
   have h_span_hom :
@@ -638,7 +661,7 @@ theorem bridge_FKLW_unitary_hom
   have h_int :
       (1 : Matrix.specialUnitaryGroup (Fin d) ℂ) ∈
         interior (closure (Set.range ρ_hom)) :=
-    aa_residual_interior_at_one_for_hom n d hd ρ_hom h_span_hom
+    aa_residual_interior_at_one_for_hom n d hd ρ_hom h_span_hom h_inf
   -- Step 2: The range of ρ_hom equals the subgroup-closure of itself,
   -- and `range = ρ_hom.range` as a Subgroup. The subgroup's carrier is
   -- exactly `Set.range ρ_hom`.
@@ -757,14 +780,15 @@ theorem bridge_FKLW_unitary
     (h_unitary : ∀ b, ρ b ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)
     (h_span : LieSpanProp n d ρ)
     (h_hom : 2 ≤ d → ∃ (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ),
-      ∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b) :
+      (∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b) ∧
+      (Set.range ρ_hom).Infinite) :
     DenseInSpecialUnitary n d ρ := by
   match d with
   | 0 => exact denseInSpecialUnitary_d_eq_zero n ρ
   | 1 => exact denseInSpecialUnitary_d_eq_one n ρ h_unitary
   | (k + 2) =>
-    obtain ⟨ρ_hom, h_ext⟩ := h_hom (by omega)
-    exact bridge_FKLW_unitary_hom n (k + 2) (by omega) ρ h_unitary ρ_hom h_ext h_span
+    obtain ⟨ρ_hom, h_ext, h_inf⟩ := h_hom (by omega)
+    exact bridge_FKLW_unitary_hom n (k + 2) (by omega) ρ h_unitary ρ_hom h_ext h_span h_inf
 
 /-! ## 9. Module summary
 

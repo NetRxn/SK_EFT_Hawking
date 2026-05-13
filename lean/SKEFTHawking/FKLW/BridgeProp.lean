@@ -165,27 +165,36 @@ theorem bridge_axiom_FKLW
     (n d : ℕ) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
     (h_unitary : ∀ b, ρ b ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)
     (h_hom : 2 ≤ d → ∃ (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ),
-      ∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b) :
+      (∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b) ∧
+      (Set.range ρ_hom).Infinite) :
     LieSpanProp n d ρ →
       SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ := by
   intro h_span
   -- The two `LieSpanProp` definitions (this module's and
   -- `AharonovAradBridge.LieSpanProp`) agree definitionally; pass through.
+  -- Wave 2c.4a-soundness ship (2026-05-13, R3): h_hom now carries the
+  -- (Set.range ρ_hom).Infinite witness alongside the hom-extension witness.
   exact SKEFTHawking.FKLW.AharonovAradBridge.bridge_FKLW_unitary n d ρ h_unitary h_span h_hom
 
 /-! ## 3. Convenience extractor -/
 
 /-- Convenience: given the unitarity hypothesis + spanning hypothesis + the
-    hom-extension hypothesis, extract FKLW density in `SU(d)`. The `d ∈ {0, 1}`
-    cases are axiom-free (vacuous / trivial-group); the `d ≥ 2` case
-    constructively dispatches through the strictly-narrower residual axiom
-    `AharonovAradBridgeIteration.aa_residual_interior_at_one_for_hom` plus
-    the constructive topology framework. -/
+    hom-extension-with-infinite-image hypothesis, extract FKLW density in `SU(d)`.
+    The `d ∈ {0, 1}` cases are axiom-free (vacuous / trivial-group); the
+    `d ≥ 2` case constructively dispatches through the strictly-narrower
+    residual axiom `AharonovAradBridgeIteration.aa_residual_interior_at_one_for_hom`
+    plus the constructive topology framework.
+
+    **Wave 2c.4a-soundness ship (2026-05-13, R3)**: `h_hom` now bundles
+    `(Set.range ρ_hom).Infinite` alongside the hom-extension witness,
+    closing the soundness gap surfaced by the BraidGroup₃ → SL(2, F₃)
+    counterexample. -/
 theorem density_from_spanning
     (n d : ℕ) (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
     (h_unitary : ∀ b, ρ b ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)
     (h_hom : 2 ≤ d → ∃ (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ),
-      ∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b)
+      (∀ b, ((ρ_hom b) : Matrix (Fin d) (Fin d) ℂ) = ρ b) ∧
+      (Set.range ρ_hom).Infinite)
     (h : LieSpanProp n d ρ) :
     SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ :=
   bridge_axiom_FKLW n d ρ h_unitary h_hom h
