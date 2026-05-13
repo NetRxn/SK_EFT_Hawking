@@ -304,55 +304,102 @@ theorem infiniteOrderGen2_not_finOrder :
     rw [h_theta]
     exact complex_exp_not_root_of_unity (Real.pi * Real.sqrt 2) irrational_pi_sqrt2_div_2pi
 
-/-! ### 3.1. The MonoidHom `BraidGroup 3 →* SU(2)` -/
+/-! ### 3.1. Generic `BraidGroup 3 →* G` from a Yang-Baxter pair
 
-/-- The "constant" assignment of `infiniteOrderGen2` to every generator of
-`BraidGroup 3`. -/
-noncomputable def demo3StrandGen :
-    Fin (3 - 1) → Matrix.specialUnitaryGroup (Fin 2) ℂ :=
-  fun _ => infiniteOrderGen2
+A canonical reusable constructor: given ANY pair `(a, b)` of group elements
+satisfying the Yang-Baxter (braid) relation `a·b·a = b·a·b`, build a
+`MonoidHom` from `BraidGroup 3` sending the two standard generators σ₀, σ₁
+to `a, b` respectively. The commutation relation is vacuous at `n = 3`
+(Fin (3-1) = Fin 2, max generator-index difference is 1 < 2), so the only
+relator to discharge is the braid relation — exactly what `h_braid` provides.
 
-/-- All Artin relations of `BraidGroup 3` evaluate to 1 under the constant
-assignment (trivial — same element on both sides of any relator). -/
-lemma demo3StrandGen_rels_trivial (r : FreeGroup (Fin (3 - 1)))
-    (hr : r ∈ SKEFTHawking.artinRelations 3) :
-    (FreeGroup.lift demo3StrandGen) r = 1 := by
-  rcases hr with hbraid | hcomm
-  · -- Braid relation: σᵢσⱼσᵢ · (σⱼσᵢσⱼ)⁻¹ ↦ A³ · A⁻³ = 1
-    obtain ⟨i, j, _hadj, h_eq⟩ := hbraid
-    rw [h_eq, SKEFTHawking.braidRelation]
-    simp [demo3StrandGen]
-  · -- Commutation relation: vacuous at n = 3 (Fin (3-1) = Fin 2; max diff = 1 < 2).
-    obtain ⟨i, j, h_far, _h_eq⟩ := hcomm
-    exfalso
-    have hi : i.val < 2 := i.isLt
-    have hj : j.val < 2 := j.isLt
-    -- (3 - 1) = 2, so i.val, j.val ∈ {0, 1}; |i.val - j.val| ≤ 1.
-    omega
+**Strengthening, 2026-05-13**: this generalizes the prior single-element-
+constant-assignment demo (which set both generators to the same element).
+The strengthened form is the canonical structural pattern that any future
+Fibonacci-style witness will use: σ₀ ↦ σ₁_Fib, σ₁ ↦ σ₂_Fib with the
+proved Yang-Baxter relation in the Fibonacci R-matrix data. The constant
+demo is now recovered as the special case `a = b`. -/
 
-/-- The concrete `BraidGroup 3 →* SU(2)` MonoidHom (constant on
-generators; image = ⟨infiniteOrderGen2⟩). -/
-noncomputable def demo3StrandRep :
-    SKEFTHawking.BraidGroup 3 →* Matrix.specialUnitaryGroup (Fin 2) ℂ :=
-  PresentedGroup.toGroup demo3StrandGen_rels_trivial
+/-- **Generic `BraidGroup 3 →* G` from a Yang-Baxter pair** (reusable
+structural lemma; canonical pattern for Fibonacci witness R4.2+).
 
-/-! ### 3.2. The infinite-image conclusion -/
+Given any group `G` and elements `a, b ∈ G` satisfying the braid relation
+`a·b·a = b·a·b`, the assignment σ₀ ↦ a, σ₁ ↦ b extends to a `MonoidHom`
+`BraidGroup 3 →* G`. -/
+noncomputable def braidGroup3HomFromPair
+    {G : Type*} [Group G] (a b : G) (h_braid : a * b * a = b * a * b) :
+    SKEFTHawking.BraidGroup 3 →* G :=
+  PresentedGroup.toGroup
+    (f := fun (i : Fin (3 - 1)) => if i.val = 0 then a else b)
+    (by
+      intro r hr
+      rcases hr with hbraid | hcomm
+      · obtain ⟨i, j, _hadj, h_eq⟩ := hbraid
+        rw [h_eq]
+        have hi : i.val < 2 := i.isLt
+        have hj : j.val < 2 := j.isLt
+        have hi_val : i.val = 0 := by omega
+        have hj_val : j.val = 1 := by omega
+        unfold SKEFTHawking.braidRelation
+        simp only [map_mul, map_inv, FreeGroup.lift_apply_of]
+        rw [hi_val, hj_val]
+        simp only [if_true, show (1 : ℕ) ≠ 0 from by norm_num, if_false]
+        calc a * b * a * (b * a * b)⁻¹
+            = (b * a * b) * (b * a * b)⁻¹ := by rw [h_braid]
+          _ = 1 := by group
+      · obtain ⟨i, j, h_far, _h_eq⟩ := hcomm
+        exfalso
+        have hi : i.val < 2 := i.isLt
+        have hj : j.val < 2 := j.isLt
+        omega)
 
-/-- The image of the generator under the demo MonoidHom is
-`infiniteOrderGen2` (which has infinite order). -/
-lemma demo3StrandRep_apply_gen (i : Fin (3 - 1)) :
-    demo3StrandRep (SKEFTHawking.BraidGroup.σ i) = infiniteOrderGen2 := by
-  show PresentedGroup.toGroup demo3StrandGen_rels_trivial (PresentedGroup.of i)
-       = infiniteOrderGen2
+/-- The σ₀ generator of `BraidGroup 3` maps to `a` under
+`braidGroup3HomFromPair a b h_braid`. -/
+lemma braidGroup3HomFromPair_apply_σ0
+    {G : Type*} [Group G] (a b : G) (h_braid : a * b * a = b * a * b) :
+    braidGroup3HomFromPair a b h_braid
+      (SKEFTHawking.BraidGroup.σ (⟨0, by omega⟩ : Fin (3 - 1))) = a := by
+  show PresentedGroup.toGroup _ (PresentedGroup.of _) = a
   rw [PresentedGroup.toGroup.of]
   rfl
+
+/-- The σ₁ generator of `BraidGroup 3` maps to `b` under
+`braidGroup3HomFromPair a b h_braid`. -/
+lemma braidGroup3HomFromPair_apply_σ1
+    {G : Type*} [Group G] (a b : G) (h_braid : a * b * a = b * a * b) :
+    braidGroup3HomFromPair a b h_braid
+      (SKEFTHawking.BraidGroup.σ (⟨1, by omega⟩ : Fin (3 - 1))) = b := by
+  show PresentedGroup.toGroup _ (PresentedGroup.of _) = b
+  rw [PresentedGroup.toGroup.of]
+  rfl
+
+/-! ### 3.2. The demo MonoidHom — special case `a = b = infiniteOrderGen2`
+
+The constant-on-generators demo `demo3StrandRep` is now a special case of
+the generic `braidGroup3HomFromPair`: take `a = b = infiniteOrderGen2`.
+The Yang-Baxter relation `a·b·a = b·a·b` is then trivially `a³ = a³`. -/
+
+/-- The concrete `BraidGroup 3 →* SU(2)` MonoidHom (constant on
+generators; image = ⟨infiniteOrderGen2⟩). Special case of
+`braidGroup3HomFromPair` with `a = b = infiniteOrderGen2`. -/
+noncomputable def demo3StrandRep :
+    SKEFTHawking.BraidGroup 3 →* Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  braidGroup3HomFromPair infiniteOrderGen2 infiniteOrderGen2 rfl
+
+/-- The image of the σ₀ generator under the demo MonoidHom is
+`infiniteOrderGen2` (which has infinite order). -/
+lemma demo3StrandRep_apply_σ0 :
+    demo3StrandRep
+      (SKEFTHawking.BraidGroup.σ (⟨0, by omega⟩ : Fin (3 - 1)))
+      = infiniteOrderGen2 :=
+  braidGroup3HomFromPair_apply_σ0 _ _ _
 
 /-- The demo MonoidHom has a generator mapping to an infinite-order
 element — concrete witness of `∃ b, ¬IsOfFinOrder (demo3StrandRep b)`. -/
 theorem demo3StrandRep_exists_not_finOrder :
     ∃ b : SKEFTHawking.BraidGroup 3, ¬ IsOfFinOrder (demo3StrandRep b) := by
   refine ⟨SKEFTHawking.BraidGroup.σ (⟨0, by omega⟩ : Fin (3 - 1)), ?_⟩
-  rw [demo3StrandRep_apply_gen]
+  rw [demo3StrandRep_apply_σ0]
   exact infiniteOrderGen2_not_finOrder
 
 /-- **The R4 deliverable for the demo MonoidHom: image is infinite.**
@@ -384,9 +431,15 @@ FibRepInfiniteOrder.lean (Wave 2c.4a-R4.1 ship, 2026-05-13):
   - `infiniteOrderGen2Mat` — diagonal 2×2 matrix `diag(exp(iπ√2), exp(-iπ√2))`.
   - `infiniteOrderGen2` — that matrix lifted to SU(2) (det = 1, unitary).
   - `infiniteOrderGen2_not_finOrder` — concrete `¬IsOfFinOrder` witness.
-  - `demo3StrandGen_rels_trivial` — verifies all `BraidGroup 3` Artin
-    relations evaluate to 1 under the constant assignment.
-  - `demo3StrandRep : BraidGroup 3 →* SU(2)` — concrete MonoidHom.
+  - **`braidGroup3HomFromPair`** (strengthening, 2026-05-13): canonical
+    reusable constructor `BraidGroup 3 →* G` from any Yang-Baxter pair
+    `(a, b)` with `a·b·a = b·a·b`. The Fibonacci witness (R4.2+) will
+    use this exact constructor with `(a, b) = (σ₁_Fib, σ₂_Fib)` from
+    the concrete Fibonacci R-matrix data — no re-derivation needed.
+  - `braidGroup3HomFromPair_apply_σ0/σ1` — extraction lemmas.
+  - `demo3StrandRep : BraidGroup 3 →* SU(2)` — concrete MonoidHom
+    (now defined as a special case of `braidGroup3HomFromPair` with
+    `a = b = infiniteOrderGen2`; Yang-Baxter is trivial `a³ = a³`).
   - `demo3StrandRep_exists_not_finOrder` — `∃ b, ¬IsOfFinOrder (ρ b)`.
   - `demo3StrandRep_image_infinite` — `(Set.range demo3StrandRep).Infinite`
     discharges `h_inf` for this concrete MonoidHom.
