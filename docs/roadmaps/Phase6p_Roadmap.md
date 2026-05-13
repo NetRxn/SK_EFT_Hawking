@@ -388,7 +388,10 @@ Six waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substra
 | **Wave 2c.4a-R5.3** | AA Bridge Lemma 6.1 (group commutator quadratic shrinkage) | ✅ **SHIPPED 2026-05-13 PM** (same session as R5.2a/R5.2b): `MatrixBCHCubic.lean` §11, 2 new theorems (~150 LoC including proof bodies). **Headline**: `bch_group_commutator_quadratic_shrinkage` — `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - 1‖ ≤ 338·δ²` for `‖F‖, ‖G‖ ≤ δ ≤ 1`. **Cubic linearization companion**: `bch_group_commutator_linearization` — `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - (1 - ⁅F, G⁆)‖ ≤ 356·δ³` (consumed by R5.4 Lemma 6.2 since `LieSpanProp` is about Lie commutators). **Proof architecture (BCH coordinates, avoids matrix log)**: triangle inequality `‖[P] - 1‖ ≤ ‖P - exp(-[F,G])‖ + ‖exp(-[F,G]) - 1‖`; first term ≤ 320·δ³ (R5.2b `bch_order_2_cubic_thm`); second term ≤ 2·δ²·exp(2·δ²) ≤ 18·δ² (order-1 Taylor of exp at -[F,G] + ‖[F,G]‖ ≤ 2·δ² from generic `commutator_norm_le`, no Hermitian). Total 320·δ³ + 18·δ² ≤ 338·δ² (using δ ≤ 1 so δ³ ≤ δ²). **No Hermitian hypothesis** — strictly stronger than typical AA formulations. Zero new axioms; project axiom count UNCHANGED at 2. | n/a | **D.2** | none |
 | **Wave 2c.4a-R5.4** | AA Bridge Lemma 6.2 (LieSpan + small elements fill nbhd of 1) | ⏳ **NOT STARTED** (depends on R5.3; ~150-200 LoC). The substantive analytic content: given `LieSpanProp` (image ℂ-spans Matrix d²) + arbitrarily small group elements (from R5.3 commutator iteration), construct an open neighborhood of 1 in `closure (range ρ_hom)`. Basis-rotation argument from AA §6 Lemma 6.2. | n/a | **D.2** | none |
 | **Wave 2c.4a-R5.5** | Compose R5.1 + R5.2 + R5.3 + R5.4 → discharge `aa_residual_interior_at_one_for_hom` | ⏳ **NOT STARTED** (~50 LoC composition). Eliminates the last Phase 6p axiom (`aa_residual_interior_at_one_for_hom`). Project axiom count drops from 2 → 1 (only `gapped_interface_axiom` remains, which is physics-substantive permanent scaffolding per SPTClassification.lean docstring). | n/a | **D.2** | none |
-| **Wave 2c.4a-R4.2** | Full Fibonacci witness with LieSpan + h_inf (concrete `ρ_Fib3 : BraidGroup n →* SU(d)`) | ⏳ **NOT STARTED** (multi-session, separable from R5 chain). Construct concrete `ρ_Fib_SU : BraidGroup 4 →* SU(3)` MonoidHom from `FibonacciQutrit.lean` Mat3K data + Q(ζ₅, √φ) → ℂ ring-hom embedding + det normalization. Combined with R5 chain, gives a *fully constructive* `DenseInSpecialUnitary` discharge for the load-bearing Fibonacci example (current headline `fibonacci_3strand_example_substantive` takes density as hypothesis; R4.2 instantiates it). | n/a | **D.2** | none |
+| **Wave 2c.4a-R4.2.a/b (substrate)** | Concrete Fibonacci SU(2) substrate (complex-matrix layer + σ_1, σ_2 unitarity + det) | ✅ **SHIPPED 2026-05-13 PM-PM-PM-PM-PM-PM** (this commit): `FKLW/FibSU2Rep.lean` (~340 LoC). **R-eigenvalues + golden ratio in ℂ**: `R1_C = exp(-4πi/5)`, `Rtau_C = exp(3πi/5)`, `φ_C, φInv_C, φInvSqrt_C`, with unit-modulus proofs + `φ² = φ + 1` + `(1/√φ)² = 1/φ`. **F-matrix involution**: `F_C * F_C = 1` via golden-ratio identity (~50 LoC of careful algebra). **F-matrix Hermitian + unitary**: `star F_C = F_C` (all entries real-cast); `F_C * star F_C = 1`. **σ matrices**: `σ_Fib_1 = diag(R_1, R_τ)`, `σ_Fib_2 = F · σ_1 · F`. **Unitarity**: `σ_Fib_1_unitary`, `σ_Fib_2_unitary` (via F Hermitian + F²=I + σ_1 unitary, calc chain). **Det**: `σ_Fib_1_det = R1_C · Rtau_C`, `σ_Fib_2_det = σ_Fib_1_det` (F²=1 ⇒ det(F)²=1). Zero new project axioms; standard-kernel-only (`propext`, `Classical.choice`, `Quot.sound`). 8616 jobs / 0 sorry / 1 project axiom (unchanged). | n/a | **D.2** | none |
+| **Wave 2c.4a-R4.2.b proper** | Yang-Baxter `σ_Fib_1 σ_Fib_2 σ_Fib_1 = σ_Fib_2 σ_Fib_1 σ_Fib_2` over ℂ | ⏳ **NOT STARTED** (sub-wave-scale, 1-3 sessions). Two paths: (i) Direct algebraic proof in ℂ using R1^5 = 1 + Rτ^10 = 1 + φ² = φ + 1 cyclotomic relations (~200-500 LoC of careful matrix algebra). (ii) Ring-hom transport from QCyc40Ext-side `native_decide` proof in `RouabahExplicit.lean`: requires building `QCyc40Ext →+* ℂ` ring hom (~200-400 LoC of cyclotomic embedding infrastructure). | n/a | **D.2** | none |
+| **Wave 2c.4a-R4.2.c** | det normalization + `ρ_Fib_SU2 : BraidGroup 3 →* SU(2)` MonoidHom | ⏳ **NOT STARTED** (depends on R4.2.b YB). Add `ω = exp(πi/10)` det-normalization (`ω · σ_Fib_1, ω · σ_Fib_2 ∈ SU(2)`); verify Yang-Baxter survives det-rescaling; apply `braidGroup3HomFromPair` (R4.1) to get `ρ_Fib_SU2 : BraidGroup 3 →* Matrix.specialUnitaryGroup (Fin 2) ℂ`. ~100-150 LoC. | n/a | **D.2** | none |
+| **Wave 2c.4a-R4.2.d** | Density discharge: `closure(Set.range ρ_Fib_SU2) = Set.univ` | ⏳ **NOT STARTED** (substantial substrate ship OR scoped axiom; user sign-off required for axiom path). **Path (i) constructive**: Weyl-equidistribution (Mathlib has via `AddCircle`) + Euler-axes covering for SU(2). Requires substrate ship: 2 non-commuting infinite-order SU(2) rotations with non-parallel irrational-angle axes generate dense subgroup. ~500-1500 LoC. Mathlib lacks: matrix log with Lipschitz bounds, classification of closed subgroups of SU(2), Tits alternative / free-group-in-Lie-group. **Path (ii) scoped axiom**: ship `axiom ρ_Fib_SU2_dense : closure (Set.range ρ_Fib_SU2) = (Set.univ : Set SU(2))` citing Hormozi-Bonesteel-Simon 2007 + Bonesteel et al. 2005 + FLW 2002 + Reichardt 2005. ~5 LoC + AXIOM_METADATA entry. Project axiom count: 1 → 2 (cited, specific, primary-source-backed). | n/a | **D.2** | none |
 | **Wave 3a.2.3c-R5.6** | T-gate ε ≤ 10⁻³ via GA-SK (multi-session Python) | ⏳ **NOT STARTED** (separable from R5 chain). Long-Bourassa-Bell 2025 GA-SK (arXiv:2501.01746) implementation in Python. Random-search saturation confirmed (frob²≈4.35e-4 at L=46, 5M trials); needs proper SK iteration with balanced commutator structure. ~Multi-hour Python. | n/a | **E2** | none |
 
 **Wave dependencies:**
@@ -483,22 +486,47 @@ RETIRED. The substantive density content moves to R4.2 (where it
 belongs — paired with specific representations, not generic
 hypotheses).
 
-**Next-session entry point**: R4.2 — concrete Fibonacci witness +
-scoped HBS axiom. Two phases:
-  (a) **Concrete Fibonacci MonoidHom**: construct `ρ_Fib_SU3 :
-      BraidGroup 4 →* SU(3)` from `FibonacciQutrit.lean` Mat3K data +
-      Q(ζ₅, √φ) → ℂ ring-hom embedding + det normalization. ~200-300
-      LoC. Substrate ready: `braidGroup3HomFromPair` constructor
-      (R4.1), `FibonacciQutritUniversality.su3_spanning_data`, Mat3K
-      types.
-  (b) **Scoped HBS-for-ρ_Fib axiom** (requires user sign-off): add
-      `axiom ρ_Fib_dense_in_SU3 : closure(Set.range ρ_Fib_SU3) =
-      Set.univ` citing Hormozi-Bonesteel-Simon 2007 as primary source.
-      ~5 LoC including AXIOM_METADATA entry. Project axiom count:
-      1 → 2 (but specific + cited, not general + potentially unsound).
-  (c) **Compose**: `bridge_FKLW_unitary` applied to ρ_Fib_SU3 with the
-      scoped density hypothesis gives `DenseInSpecialUnitary` for
-      Fibonacci. Plugs into `fibonacci_3strand_example_substantive`.
+**R4.2 sub-wave decomposition (refined 2026-05-13 PM-PM-PM-PM-PM-PM)**:
+
+**Decision pivot (2026-05-13 PM-PM-PM-PM-PM-PM)**: User pushed back on
+the "multi-month" estimate per the LOE calibration memory
+(`feedback_loe_calibration.md`). Substrate audit performed (Mathlib4
+gap analysis): matrix logarithm with bounds, Cartan's closed-subgroup
+theorem, classification of closed subgroups of SU(2), Tits alternative
+are ALL absent from Mathlib4. So the constructive HBS-in-Lean path is
+genuinely a substantial substrate ship (not a quick deep-research-
+collapsing problem). However, the algebraic / matrix-substrate layer
+IS tractable; concretely shipped R4.2.a/b this commit.
+
+Pivoted from "3-strand SU(2) Fibonacci" (original Phase 6p sub-wave
+prep) to "concrete SU(2) substrate now, then YB, then MonoidHom, then
+density". This gives clean per-session checkpoints + decouples the
+algebraic substrate (mechanical) from the density discharge
+(substantive substrate ship).
+
+  (a/b) ✅ **SHIPPED 2026-05-13 PM-PM-PM-PM-PM-PM** (this commit):
+        `FKLW/FibSU2Rep.lean` (~340 LoC). R-eigenvalues + golden ratio
+        in ℂ + F-matrix Hermitian + F² = I + σ_1, σ_2 in U(2) +
+        unitarity + det = R1·Rtau. Standard-kernel-only.
+  (b proper) ⏳ Yang-Baxter `σ_Fib_1 σ_Fib_2 σ_Fib_1 = σ_Fib_2 σ_Fib_1
+        σ_Fib_2` over ℂ. 1-3 sessions. Two paths:
+          (i) Direct algebraic in ℂ (~200-500 LoC)
+          (ii) Ring-hom transport from QCyc40Ext native_decide proof
+               (requires `QCyc40Ext →+* ℂ` ring hom, ~200-400 LoC)
+  (c) ⏳ Det normalization + `ρ_Fib_SU2 : BraidGroup 3 →* SU(2)`
+        MonoidHom via R4.1's `braidGroup3HomFromPair`. ~100-150 LoC.
+  (d) ⏳ Density discharge: `closure(Set.range ρ_Fib_SU2) = Set.univ`.
+        Two paths (per user call):
+          (i) Constructive Weyl + Euler-axes (~500-1500 LoC, multi-week)
+          (ii) Scoped HBS axiom + sign-off (~5 LoC, project axiom 1→2)
+
+**For 3-strand SU(2) (this session pivot)** rather than the originally-
+planned 4-strand SU(3): the 3-strand qubit-sector is what
+Hormozi-Bonesteel-Simon 2007 explicitly proves density for, has simpler
+matrix dimension (2×2), and matches the existing `RouabahExplicit.lean`
++ `FibonacciBraiding.lean` substrate. The 4-strand SU(3) version
+remains a follow-on (would require `braidGroup4HomFromTriple` analog
+of R4.1's `braidGroup3HomFromPair`).
 
 **Parallelism notes:** Wave 1b and Wave 2 are operationally independent (no proof-level dependency). Wave 3a.2 requires Wave 2a.2 BraidGroup (cheap) + QCyc40 (new module, Wave 3a.2 ships). Wave 3a.3 composition glues Wave 1b output + Wave 2b output.
 
