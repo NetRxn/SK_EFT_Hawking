@@ -68,12 +68,18 @@ The predicate captures both ingredients.
 
 Given a Fibonacci representation `ρ` and a physical per-location rate `ε`,
 the stack provides fault-tolerant UQC if:
-  (1) ρ has closure-density (FKLW).
-  (2) ε is strictly below the AGP threshold `1 / A_CNOT`. -/
+  (1) ρ is entrywise-dense in SU(d) (FKLW density via `DenseInSpecialUnitary`).
+  (2) ε is strictly below the AGP threshold `1 / A_CNOT`.
+
+**F2 migration (2026-05-13, user-authorized post-soundness-audit)**: the
+`density` field now uses `DenseInSpecialUnitary` instead of `ClosureDenseProp`.
+The latter is unsatisfiable for unitary ρ (entries lie on unit-modulus locus,
+not dense in ℂ) — see BridgeProp.lean F2 finding. The migrated form is the
+mathematically correct entrywise-density-in-SU(d) predicate. -/
 structure FaultTolerantUQC (n d : ℕ)
     (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ) (ε : ℝ) : Prop where
-  /-- The representation has FKLW closure-density (universality of gate set). -/
-  density : ClosureDenseProp n d ρ
+  /-- The representation is entrywise-dense in SU(d) (FKLW universality). -/
+  density : SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ
   /-- The physical per-location rate is strictly below the AGP threshold. -/
   below_threshold : ε < steaneAGPThreshold
   /-- The physical rate is non-negative. -/
@@ -84,12 +90,13 @@ namespace FaultTolerantUQC
 variable {n d : ℕ}
   {ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ} {ε : ℝ}
 
-/-- Existence of BHSZ-ε approximations for any target unitary, derived from
+/-- Existence of BHSZ-ε approximations for any SU(d) target, derived from
     the density component of `FaultTolerantUQC`. -/
 theorem hasGateCompilation (UQC : FaultTolerantUQC n d ρ ε)
-    (U : Matrix (Fin d) (Fin d) ℂ) (δ : ℝ) (hδ : 0 < δ) :
-    ∃ b : BraidGroup n, ∀ i j : Fin d, ‖ρ b i j - U i j‖ < δ :=
-  exists_bhsz_approximation ρ UQC.density U δ hδ
+    (U : Matrix.specialUnitaryGroup (Fin d) ℂ) (δ : ℝ) (hδ : 0 < δ) :
+    ∃ b : BraidGroup n, ∀ i j : Fin d,
+      ‖ρ b i j - (U : Matrix (Fin d) (Fin d) ℂ) i j‖ < δ :=
+  exists_bhsz_approximation_su ρ UQC.density U δ hδ
 
 /-- The AGP threshold is satisfied: the level-L logical error rate decays
     double-exponentially in `L` for any `L ≥ 1`. -/
@@ -129,7 +136,7 @@ Returns a `FaultTolerantUQC` structure. The substantive consequences
 `hasFaultTolerance`, or directly via `composition_substantive` below. -/
 theorem composition_conditional
     {n d : ℕ} (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
-    (h_density : ClosureDenseProp n d ρ)
+    (h_density : SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ)
     (ε : ℝ) (hε : 0 ≤ ε) (h_below : ε < steaneAGPThreshold) :
     FaultTolerantUQC n d ρ ε :=
   { density := h_density
@@ -162,16 +169,17 @@ threshold") is community lore, not primary-source theorem; deferred to
 Wave 1c+. -/
 theorem composition_substantive
     {n d : ℕ} (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
-    (h_density : ClosureDenseProp n d ρ)
+    (h_density : SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ)
     (ε : ℝ) (hε : 0 ≤ ε) (h_below : ε < steaneAGPThreshold) :
-    ∀ (U : Matrix (Fin d) (Fin d) ℂ) (δ : ℝ) (_ : 0 < δ)
+    ∀ (U : Matrix.specialUnitaryGroup (Fin d) ℂ) (δ : ℝ) (_ : 0 < δ)
       (L : ℕ) (_ : 1 ≤ L),
-      (∃ b : BraidGroup n, ∀ i j : Fin d, ‖ρ b i j - U i j‖ < δ) ∧
+      (∃ b : BraidGroup n, ∀ i j : Fin d,
+        ‖ρ b i j - (U : Matrix (Fin d) (Fin d) ℂ) i j‖ < δ) ∧
       ((steaneMalignancyCounts.A_CNOT : ℝ) *
         agpLevelSequence (steaneMalignancyCounts.A_CNOT : ℝ) ε L < 1) := by
   intro U δ hδ L hL
   refine ⟨?_, ?_⟩
-  · -- Universality: from FKLW density
+  · -- Universality: from FKLW density-in-SU(d)
     exact h_density U δ hδ
   · -- Fault-tolerance: from AGP threshold theorem applied below threshold
     apply agp_threshold_steane_strict ε hε _ L hL
@@ -193,7 +201,7 @@ lifts the spanning to closure-density. -/
     Steane AGP threshold (ε < 2.73e-5 suffices) admits fault-tolerant UQC. -/
 theorem fibonacci_3strand_example
     (ρ : BraidGroup 3 → Matrix (Fin 3) (Fin 3) ℂ)
-    (h_density : ClosureDenseProp 3 3 ρ)
+    (h_density : SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 3 ρ)
     (ε : ℝ) (hε : 0 ≤ ε) (h_below : ε < 2.73e-5) :
     FaultTolerantUQC 3 3 ρ ε := by
   apply composition_conditional ρ h_density ε hε
@@ -213,11 +221,12 @@ compose into a *functioning* fault-tolerant UQC stack with explicit joint
 guarantees. -/
 theorem fibonacci_3strand_example_substantive
     (ρ : BraidGroup 3 → Matrix (Fin 3) (Fin 3) ℂ)
-    (h_density : ClosureDenseProp 3 3 ρ)
+    (h_density : SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 3 ρ)
     (ε : ℝ) (hε : 0 ≤ ε) (h_below : ε < 2.73e-5) :
-    ∀ (U : Matrix (Fin 3) (Fin 3) ℂ) (δ : ℝ) (_ : 0 < δ)
+    ∀ (U : Matrix.specialUnitaryGroup (Fin 3) ℂ) (δ : ℝ) (_ : 0 < δ)
       (L : ℕ) (_ : 1 ≤ L),
-      (∃ b : BraidGroup 3, ∀ i j : Fin 3, ‖ρ b i j - U i j‖ < δ) ∧
+      (∃ b : BraidGroup 3, ∀ i j : Fin 3,
+        ‖ρ b i j - (U : Matrix (Fin 3) (Fin 3) ℂ) i j‖ < δ) ∧
       ((steaneMalignancyCounts.A_CNOT : ℝ) *
         agpLevelSequence (steaneMalignancyCounts.A_CNOT : ℝ) ε L < 1) := by
   apply composition_substantive ρ h_density ε hε
@@ -239,9 +248,21 @@ unconditional implication "topological protection ⇒ AGP threshold satisfied"
 is community lore (Class D in Wave 3a.1 DR's evidence taxonomy), NOT a
 primary-source theorem. Deferred to Wave 1c+.
 
+**F2 migration ship (2026-05-13, user-authorized)**: the `density` field
+of `FaultTolerantUQC` (and the `h_density` parameter of all headline
+theorems) now uses `DenseInSpecialUnitary` instead of `ClosureDenseProp`.
+The latter was unsatisfiable for unitary ρ — making the prior headline
+theorems vacuously true under unsatisfiable hypothesis. The migrated form
+correctly states "ρ entrywise approximates every U ∈ SU(d)" which IS
+satisfiable for actually-dense Fibonacci representations. The conclusion
+universal quantifier also tightened from `U : Matrix d d ℂ` (overly broad —
+non-unitary U cannot be approximated by unitary ρ) to `U : SU(d)` (the
+correct domain).
+
 Zero sorry. Zero project-local axioms in this module (consumes the AXIOM-
-tagged `bridge_axiom_FKLW` from Wave 2a.3 + `sk_axiom_Dawson_Nielsen` from
-Wave 2b.2 transitively via the `ClosureDenseProp` hypothesis).
+tagged `aa_residual_interior_at_one_for_hom` from Wave 2c.4a-iteration +
+`sk_axiom_Dawson_Nielsen` from Wave 2b.2 transitively via the
+`DenseInSpecialUnitary` hypothesis chain through `bridge_axiom_FKLW`).
 -/
 
 end SKEFTHawking

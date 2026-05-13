@@ -235,14 +235,39 @@ def IsBHSZApprox {n d : ℕ}
 Given a Fibonacci representation that satisfies FKLW closure-density, every
 target unitary U has a BHSZ-approximating braid word for every ε > 0. -/
 
-/-- **Existence of BHSZ-ε approximations** for any target unitary U, given
-    FKLW closure-density of the representation. The braid word is the lift
-    of the Solovay-Kitaev gate sequence into `BraidGroup n`. -/
+/-- **Existence of BHSZ-ε approximations** (LEGACY API, retained for
+    `ClosureDenseProp`-typed consumers).
+
+    NOTE: `ClosureDenseProp` is **unsatisfiable** for unitary ρ (BridgeProp.lean
+    F2 finding — unitary entries lie on the unit-modulus locus, not dense in
+    the full matrix space). So this theorem's hypothesis cannot be supplied
+    by any actually-unitary representation. The migrated, sound API is
+    `exists_bhsz_approximation_su` below, which uses `DenseInSpecialUnitary`
+    (the correct entrywise-density-in-SU(d) predicate). -/
 theorem exists_bhsz_approximation
     {n d : ℕ} (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
     (h_density : ClosureDenseProp n d ρ)
     (U : Matrix (Fin d) (Fin d) ℂ) (ε : ℝ) (hε : 0 < ε) :
     ∃ b : BraidGroup n, ∀ i j : Fin d, ‖ρ b i j - U i j‖ < ε :=
+  h_density U ε hε
+
+/-- **Existence of BHSZ-ε approximations (sound migrated form, F2 ship
+    2026-05-13)**.
+
+For a Fibonacci representation `ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ`
+that is dense in SU(d) (via `DenseInSpecialUnitary` — the correct entrywise
+density predicate for unitary ρ), every target `U ∈ SU(d)` is entrywise
+approximable by some braid word at every precision.
+
+This is the migrated headline API replacing the (vacuous-under-unsatisfiable-
+hypothesis) `exists_bhsz_approximation`. See BridgeProp.lean F2 finding
+for the soundness argument. -/
+theorem exists_bhsz_approximation_su
+    {n d : ℕ} (ρ : BraidGroup n → Matrix (Fin d) (Fin d) ℂ)
+    (h_density : SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary n d ρ)
+    (U : Matrix.specialUnitaryGroup (Fin d) ℂ) (ε : ℝ) (hε : 0 < ε) :
+    ∃ b : BraidGroup n, ∀ i j : Fin d,
+      ‖ρ b i j - (U : Matrix (Fin d) (Fin d) ℂ) i j‖ < ε :=
   h_density U ε hε
 
 /-! ## 5. Module summary
