@@ -382,7 +382,7 @@ Six waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substra
 | **Wave 3a.2.3c-followup (substrate-upgrade)** | T-gate precision tightening | ✅ **FULL SUBSTRATE SHIPPED 2026-05-12 PM**: 5.4× tightening achieved (L=46 ε≈1.38e-2, was 7.5e-2). **CRITICAL substrate finding**: Kronecker-Weber parity obstruction in QCyc40Ext (det(braid) ∈ ζ_40^{4ℤ} even, det(T_NC) = ζ_40^5 odd; no phase shift matches). **Substrate ship + compile-time refactor**: `QCyc80.lean` (Q(ζ_80) field; `abbrev := PolyQuotQ 32` + Mul via `mulReduceWithTable 32` + Nat.fold inner loop + pre-built `powerTable80`; native_decide algebraic identities deferred to optional QCyc80Verify) + `QCyc80Ext.lean` (Q(ζ_80, √φ)) + `phase6p_tgate_compiler_v7.py`. TgateFibBraid refactored to consume QCyc80Ext + native_decide theorems deferred. Compile cost dropped from 5+ GB / multi-minute OOM to ~5s / 300 MB per module. Full project 8612 jobs / ~800 MB peak. **PolyQuotQ.lean** extended with `mulReduceFast` + `mulReduceWithTable` (both `@[noinline]`, Nat.fold-based, drop-in replacements for high-degree usage). ε ≤ 10⁻³ ALGORITHM-QUALITY remains separable sub-wave (random-search plateau ~4.5e-2; needs proper KBS / GA-SK / MIP) | n/a | **D.2** | none |
 | **Wave 2b.3.2-followup-substantive** | True 4-strand Fibonacci representation per DR §4 + 8-conjunct spanning target (corrected from 12 post-P2-audit) | ✅ **SHIPPED 2026-05-12 PM**: `FibonacciQuintetTrueRep.lean` (427 LoC, 21 thms, 0 sorries, 0 axioms). True 4-strand σ₁/σ₂/σ₃ over QCyc5Ext per DR §4. Pentagon equation + Yang-Baxter + far-commutativity native_decide. Block-diagonality (DR R5 R-finding documented). **P2 strengthening**: 12→8 conjunct closure (commutators of complex-symmetric matrices are anti-symmetric → (p,q)/(q,p) dependent). Legacy block-extension files marked superseded | n/a | **D.2** | none |
 | **Track 4 R5 program — full AA axiom discharge (multi-session, pending; 2026-05-13)** | | | | | |
-| **Wave 2d.2-followup-R5.2a** | BCH cubic-bound norm `‖bchPolyRem F G‖ ≤ C·δ³` | ⏳ **NOT STARTED** (next-session ready; ~200-300 LoC). Strategy: use `T2pos_T2neg_self` factorization to decompose `T2pos F · T2pos G · T2neg F · T2neg G = (1 + F⁴/4)(1 + G⁴/4) + T2pos F · [T2pos G, T2neg F] · T2neg G`. Bound the commutator term explicitly: `[T2pos G, T2neg F] = -[F,G] + (order-3+)`, then `T2pos F · (-[F,G]) · T2neg G + [F,G] = O(δ³)` via commutator and norm-decoupling identities. Constant K ≤ 1000 acceptable for downstream; K ≤ 4 (D-N optimal) deferred to R5.2c. | n/a | **D.2** | none |
+| **Wave 2d.2-followup-R5.2a** | BCH cubic-bound norm `‖bchPolyRem F G‖ ≤ C·δ³` | ✅ **SHIPPED 2026-05-13 PM**: `MatrixBCHCubic.lean` extended +650 LoC. **Headline**: `bchPolyRem_norm_le_cubic` — `‖bchPolyRem F G‖ ≤ 30·δ³` for `‖F‖, ‖G‖ ≤ δ ≤ 1`. **Architecture (4-stage decomposition)**: (i) `bchPolyRem_decomp` — explicit 6-piece algebraic decomposition via swap identity `A·B·C·D = A·C·B·D + A·⁅B,C⁆·D` + `T2pos_T2neg_self` twice + bookend identity `A·X·D = X + A·X·(D-1) + (A-1)·X`; (ii) `commutator_T2pos_T2neg_plus_FG_decomp` — load-bearing commutator linearization: `⁅T2pos G, T2neg F⁆ + ⁅F, G⁆ = ⁅-(½)•G², T2neg F - 1⁆ + ⁅i•G, -(½)•F²⁆` via universal Lie identity + `⁅i•G, -(i•F)⁆ = -⁅F, G⁆` smul-Lie cancellation; (iii) `commutator_T2pos_T2neg_plus_FG_norm_le_cubic` — `≤ 3·δ³`; (iv) δ-parameterized helpers `T2pos_norm_le_of_delta` (`≤ 5/2`), `T2pos_sub_one_norm_le_of_delta` (`≤ 3δ/2`), `commutator_T2pos_T2neg_norm_le_quadratic` (`≤ 9δ²/2`). **Total bound**: 1 + 3 + 17 + 7 = 28 ≤ 30. Zero new axioms; project axiom count UNCHANGED at 2. K = 30 loose; D-N K ≤ 4 deferred to R5.2c. | n/a | **D.2** | none |
 | **Wave 2d.2-followup-R5.2b** | Compose R5.2a + Taylor cross-terms → `bch_order_2_cubic_thm` | ⏳ **NOT STARTED** (~50-100 LoC). Combine `T2pos`/`T2neg` algebraic bound with `MatrixTaylor.norm_exp_sub_order3_le_loose` Taylor remainders. Replaces existing `bch_order_2_thm` linear `200·δ` bound with cubic `K·δ³`. | n/a | **D.2** | none |
 | **Wave 2d.2-followup-R5.2c** | Optimize K ≤ 4 (D-N original) | ⏳ **NOT STARTED** (~50 LoC, optional polish). Tighten loose enumeration bounds + use sharper `δ ≤ 1` algebraic identities. Not load-bearing — K ≤ 1000 from R5.2a is sufficient for R5.3. | n/a | **D.2** | none |
 | **Wave 2c.4a-R5.3** | AA Bridge Lemma 6.1 (group commutator quadratic shrinkage) | ⏳ **NOT STARTED** (depends on R5.2b; ~100-150 LoC). Given `g, h ∈ SU(d)` with `‖g - 1‖, ‖h - 1‖ ≤ ε`, prove `‖[g,h] - 1‖ ≤ C·ε²` via BCH cubic + matrix-log (or direct algebraic). With cubic BCH the bound chain `‖[g,h] - 1‖ ≤ 16·δ² + K·δ³ ≤ (16+K)·δ²` for δ ≤ 1 closes. | n/a | **D.2** | none |
@@ -428,11 +428,17 @@ per SPTClassification.lean). Strict dependency order:
 3. ✅ **R5.2.1** (MatrixBCHCubic) — BCH cubic-bound algebraic infra
    (T2pos/T2neg/bchPolyRem + `T2pos_T2neg_self : T2pos F · T2neg F =
    1 + F⁴/4` factorization). SHIPPED 2026-05-13.
-4. ⏳ **R5.2a** — BCH cubic norm bound `‖bchPolyRem F G‖ ≤ C·δ³`
-   (next-session ready; ~200-300 LoC; strategy documented in
-   MatrixBCHCubic.lean header; uses `T2pos_T2neg_self` decomposition).
-5. ⏳ **R5.2b** — Compose with Taylor cross-terms → `bch_order_2_cubic_thm`
-   (replaces linear `200·δ` with cubic `K·δ³`).
+4. ✅ **R5.2a** (MatrixBCHCubic ext, ~650 LoC) — BCH cubic norm bound
+   `‖bchPolyRem F G‖ ≤ 30·δ³` for `‖F‖, ‖G‖ ≤ δ ≤ 1`. SHIPPED 2026-05-13
+   PM. Headline `bchPolyRem_norm_le_cubic` + supporting infrastructure
+   `bchPolyRem_decomp` (6-piece algebraic decomposition),
+   `commutator_T2pos_T2neg_plus_FG_decomp` (load-bearing commutator
+   linearization), `commutator_T2pos_T2neg_plus_FG_norm_le_cubic`
+   (`≤ 3·δ³`), `commutator_T2pos_T2neg_norm_le_quadratic` (`≤ 9δ²/2`).
+   K = 30 loose; D-N K ≤ 4 deferred to R5.2c.
+5. ⏳ **R5.2b** — Compose R5.2a + Taylor cross-terms → `bch_order_2_cubic_thm`
+   (replaces linear `200·δ` with cubic `K·δ³`). Substrate ready:
+   `MatrixTaylor.norm_exp_sub_order3_le_loose` available.
 6. ⏳ **R5.3** — AA Bridge Lemma 6.1 (group commutator quadratic
    shrinkage from BCH cubic).
 7. ⏳ **R5.4** — AA Bridge Lemma 6.2 (LieSpan + small → nbhd of 1).
@@ -440,12 +446,10 @@ per SPTClassification.lean). Strict dependency order:
 9. ⏳ **R4.2** (separable from R5 chain) — Full Fibonacci witness via
    `Mat3K → ℂ` ring-hom embedding + det normalization.
 
-**Next-session entry point**: R5.2a — prove `‖bchPolyRem F G‖ ≤ C·δ³`.
-Substrate ready: `T2pos_T2neg_self` factorization shipped this session;
-`MatrixTaylor.norm_exp_sub_order3_le_loose` available for cross-terms.
-Estimated 1-2 sessions for R5.2a alone (subscribe-to-bound chain via
-the commutator decomposition `[T2pos G, T2neg F] = -[F,G] + O(δ³)`,
-then `T2pos F · (-[F,G]) · T2neg G + [F,G] = O(δ³)`).
+**Next-session entry point**: R5.2b — compose R5.2a (`bchPolyRem F G`
+cubic bound) with Taylor cross-term bound `MatrixTaylor.norm_exp_sub_order3_le_loose`
+to produce `bch_order_2_cubic_thm`, replacing `MatrixBCH.bch_order_2_thm`'s
+linear `200·δ` with cubic `K·δ³`. Estimated 50-100 LoC.
 
 **Parallelism notes:** Wave 1b and Wave 2 are operationally independent (no proof-level dependency). Wave 3a.2 requires Wave 2a.2 BraidGroup (cheap) + QCyc40 (new module, Wave 3a.2 ships). Wave 3a.3 composition glues Wave 1b output + Wave 2b output.
 

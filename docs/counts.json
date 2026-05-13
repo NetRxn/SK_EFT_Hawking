@@ -1,10 +1,10 @@
 {
-  "generated": "2026-05-13T10:26:17.630657",
+  "generated": "2026-05-13T11:27:54.859896",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 12135,
-    "theorems_total": 6101,
-    "theorems_substantive": 6076,
+    "total_declarations": 12144,
+    "theorems_total": 6107,
+    "theorems_substantive": 6082,
     "theorems_placeholder": 25,
     "axioms": 2,
     "axiom_names": [
@@ -13,7 +13,7 @@
     ],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 349,
+    "modules": 351,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -108,6 +108,7 @@
       "SKEFTHawking.FKLW.AharonovAradBridge",
       "SKEFTHawking.FKLW.AharonovAradBridgeIteration",
       "SKEFTHawking.FKLW.AharonovAradBridgeProof",
+      "SKEFTHawking.FKLW.AharonovAradLemma6",
       "SKEFTHawking.FKLW.BridgeProp",
       "SKEFTHawking.FKLW.EpsilonNet",
       "SKEFTHawking.FKLW.FibRepInfiniteOrder",
@@ -207,6 +208,7 @@
       "SKEFTHawking.MajoranaRungDecoupling",
       "SKEFTHawking.MajoranaRungSMG",
       "SKEFTHawking.MatrixBCH",
+      "SKEFTHawking.MatrixBCHCubic",
       "SKEFTHawking.MatrixTaylor",
       "SKEFTHawking.MazurSigmaModelRigidity",
       "SKEFTHawking.MicroscopicCoefficientMatch",
@@ -365,7 +367,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 5315,
+    "definitions": 5318,
     "structures": 252,
     "instances": 378,
     "inductives": 87
