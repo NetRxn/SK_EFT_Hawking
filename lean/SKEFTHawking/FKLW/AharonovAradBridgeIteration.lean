@@ -306,6 +306,49 @@ theorem unitary_d_one_not_dense_in_matrix
     linarith
   linarith
 
+/-! ## 3.5. Image-infinite from infinite-order element (R4 structural theorem)
+
+Bridge from a single infinite-order witness to `(Set.range ρ).Infinite`,
+the new `h_inf` hypothesis of the amended `aa_residual_interior_at_one_for_hom`
+axiom. Future Fibonacci-rep instantiation work (R4 follow-up) supplies the
+specific `∃ b, ¬IsOfFinOrder (ρ b)` witness for `ρ_Fib`; this structural
+lemma is the generic reduction.
+
+Mathematical content: if some `b ∈ BraidGroup n` has `ρ_hom(b)` of infinite
+order in SU(d), then the cyclic subgroup `⟨ρ_hom(b)⟩` is countably infinite
+and embedded in `Set.range ρ_hom`, hence the range is infinite.
+-/
+
+/-- **R4 structural theorem (2026-05-13)**: if some braid maps to an
+element of infinite order, the image of the hom is infinite.
+
+This is the standard reduction from a point-wise infinite-order witness
+to `Set.Infinite` of the range. Combined with the new `h_inf` hypothesis
+in `aa_residual_interior_at_one_for_hom`, this provides a clean path for
+future Fibonacci-rep instantiation: prove `∃ b, ¬IsOfFinOrder (ρ_Fib b)`
+(e.g., via eigenvalue analysis on `ρ_Fib(σ₁σ₂)` showing some eigenvalue
+is not a root of unity), then apply this lemma to discharge the new
+`h_inf` requirement. -/
+theorem image_infinite_of_exists_not_finOrder
+    {n d : ℕ}
+    (ρ_hom : BraidGroup n →* Matrix.specialUnitaryGroup (Fin d) ℂ)
+    (h : ∃ b : BraidGroup n, ¬ IsOfFinOrder (ρ_hom b)) :
+    (Set.range ρ_hom).Infinite := by
+  obtain ⟨b, hb⟩ := h
+  -- The map `k ↦ ρ_hom(b)^k` is injective because `ρ_hom(b)` has infinite order.
+  have h_inj : Function.Injective (fun (k : ℕ) => (ρ_hom b) ^ k) :=
+    injective_pow_iff_not_isOfFinOrder.mpr hb
+  -- Its range is infinite (ℕ → distinct).
+  have h_pow_range_inf : (Set.range (fun (k : ℕ) => (ρ_hom b) ^ k)).Infinite :=
+    Set.infinite_range_of_injective h_inj
+  -- The range of `fun k => ρ_hom(b)^k` is contained in `Set.range ρ_hom`,
+  -- because `ρ_hom` is a `MonoidHom` so `ρ_hom(b)^k = ρ_hom(b^k)`.
+  have h_sub : Set.range (fun (k : ℕ) => (ρ_hom b) ^ k) ⊆ Set.range ρ_hom := by
+    rintro x ⟨k, rfl⟩
+    refine ⟨b^k, ?_⟩
+    rw [map_pow]
+  exact h_pow_range_inf.mono h_sub
+
 /-! ## 4. The conclusion predicate `DenseInSpecialUnitary` -/
 
 /-- **Predicate: density of `range ρ` in SU(d).**
