@@ -146,8 +146,16 @@ class TestMappingParser:
         from bundle_migration import MAPPING_DOC
         text = MAPPING_DOC.read_text()
         assignments = parse_mapping(text)
-        # Every existing draft also lifts into the flagship F.
+        # Every existing DRAFT also lifts into the flagship F. Sourceless
+        # `_lean_only` handles (Phase 6n / 6o research substrate that lifts
+        # INTO bundle drafts but doesn't have its own draft) are exempt
+        # from this invariant — whether they additionally lift into F is a
+        # per-entry substantive question, not a universal requirement.
+        # See PAPER_DRAFT_MAPPING.md row notes like "(no standalone draft
+        # per Phase 6n research-only scope)" for the architectural rationale.
         for paper, a in assignments.items():
+            if paper.endswith('_lean_only'):
+                continue
             assert "F" in a["bundle_destinations"], (
                 f"{paper} missing F (flagship) assignment"
             )

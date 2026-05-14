@@ -18,14 +18,17 @@ defaultTargets = ["SKEFTHawking"]
 [leanOptions]
 autoImplicit = false
 
-# Pinned to Mathlib's first v4.29.0 commit. Previous Aristotle-compatible pin: 8f9d9cff (v4.28.0).
-# See: https://aristotle.harmonic.fun/dashboard/docs/toolchain
+# Pinned to Mathlib's v4.29.1 tag (5e932f97, 2026-04-17). Previous: 8850ed93 (v4.29.0 first commit, 2026-04-04).
+# Previous Aristotle-compatible pin: 8f9d9cff (v4.28.0). See: https://aristotle.harmonic.fun/dashboard/docs/toolchain
+# Bumped 2026-05-14 to align with PhysLib (leanprover-community/physlib) for downstream consumers.
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4.git"
-rev = "8850ed93863d6ce27210a673f9ed235a4e8a2994"
+rev = "5e932f97dd25535344f80f9dd8da3aab83df0fe6"
 
-# Lean REPL binary, version-matched to leanprover/lean4:v4.29.0 (see lean-toolchain).
+# Lean REPL binary. The leanprover-community/repl repo skipped a v4.29.1 tag
+# (jumped directly v4.29.0 -> v4.30.0-rc1); v4.29.0 build is patch-level
+# compatible with Lean v4.29.1 since the REPL is a thin protocol wrapper.
 # Built into .lake/packages/repl/.lake/build/bin/repl where lean-lsp-mcp auto-discovers it.
 # Zero transitive deps, cannot conflict with Mathlib.
 [[require]]

@@ -1281,8 +1281,16 @@ _BLOCKER_RE = re.compile(
 
 def _infer_paper_key_from_text(text: str) -> str | None:
     """Best-effort extraction of a paper key (paper1_first_order, etc.)
-    from the body text of a finding. Returns None if none found."""
-    m = re.search(r'`?paper(\d{1,2}[_A-Za-z0-9]*)`?', text, re.IGNORECASE)
+    from the body text of a finding. Returns None if none found.
+
+    The 2026-05-14 update added optional `\\s+` between "paper" and the
+    digit so review-doc headings like "Paper 10 Deep Review — ..." (with
+    a literal space) attribute correctly to `paper10`. Previously the
+    regex required no space, dropping all "Paper N" review-doc findings
+    into the orphan bucket (~5% of the 832-finding corpus, enough to
+    drop the test_no_orphaned_findings attach-rate below the 25% floor).
+    """
+    m = re.search(r'`?paper\s*(\d{1,2}[_A-Za-z0-9]*)`?', text, re.IGNORECASE)
     if m:
         return f'paper{m.group(1).lower()}'
     return None
@@ -1396,7 +1404,16 @@ def extract_review_finding_nodes() -> list[dict]:
             if re.search(r'[❌✗]\s+still', body[:400], re.IGNORECASE):
                 status = 'open'
 
-            inferred_paper = _infer_paper_key_from_text(heading + " " + body[:400])
+            # Inference text: section heading + body slice + review_name (the
+            # filename-derived review identifier). Including review_name lets
+            # files like "Paper 10 Deep Review — Modular Generation Constraint.md"
+            # attribute every section's findings to paper10 even when the section
+            # heading itself doesn't repeat "Paper 10". (2026-05-14: this was
+            # the dominant orphan-cause for the Master Checklist + Deep Review
+            # corpus; review_name inclusion lifted attach-rate from ~24% to ~30%+.)
+            inferred_paper = _infer_paper_key_from_text(
+                heading + " " + body[:400] + " " + review_name
+            )
 
             finding_id = f'review:{date_dir}:{review_name}:{section_num}'
             if finding_id in seen_ids:
@@ -2930,17 +2947,44 @@ def extract_flags_edges(node_ids: set) -> list[dict]:
     — finer-grained targeting (finding -> specific formula / Lean theorem
     mentioned in the finding text) is deferred; the readiness system
     (Wave 4) will read body text to resolve more targets if needed.
+
+    2026-05-14: added prefix-fallback resolution. The heuristic
+    `_infer_paper_key_from_text` returns short keys like `paper10` from
+    review-doc body text, but Paper node IDs include a slug suffix
+    (`paper:paper10_modular_generation`). When the exact-match lookup
+    `paper:<short>` misses, fall back to prefix-match `paper:<short>_*`;
+    if exactly one node matches the prefix, treat it as the resolved
+    target. If multiple match (e.g., `paper16_graphene_sk_eft` AND
+    `paper16_wrt_tqft`), log ambiguity and skip (preserves prior
+    behavior for genuinely ambiguous short keys).
     """
     findings = extract_review_finding_nodes()
+    paper_ids = {nid for nid in node_ids if nid.startswith('paper:')}
     edges = []
     seen: set[tuple[str, str]] = set()
+    ambig_warned: set[str] = set()
     for f in findings:
         paper = f.get('meta', {}).get('inferred_paper')
         if not paper:
             continue
         paper_id = f'paper:{paper}'
         if paper_id not in node_ids:
-            continue
+            # Prefix fallback: paper10 -> paper:paper10_<slug>
+            prefix = f'paper:{paper}_'
+            candidates = [pid for pid in paper_ids if pid.startswith(prefix)]
+            if len(candidates) == 1:
+                paper_id = candidates[0]
+            elif len(candidates) > 1:
+                if paper not in ambig_warned:
+                    logger.info(
+                        "Ambiguous paper-key resolution: %r matches %d Paper nodes "
+                        "(%s) — FLAGS edges skipped for findings inferring this key.",
+                        paper, len(candidates), ", ".join(sorted(candidates))
+                    )
+                    ambig_warned.add(paper)
+                continue
+            else:
+                continue
         if f['id'] not in node_ids:
             continue
         edge_key = (f['id'], paper_id)
