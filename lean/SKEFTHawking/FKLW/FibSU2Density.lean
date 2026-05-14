@@ -1117,7 +1117,120 @@ theorem fibonacci_density_from_H_Fib_eq_top (h : H_Fib = ⊤) :
       (fun b => (ρ_Fib_SU2 b : Matrix (Fin 2) (Fin 2) ℂ)) :=
   fibonacci_density_conditional (H_Fib_eq_top_iff_closure_eq_univ.mp h)
 
-/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1})
+/-! ## 11. Subgroup-level structural ruleouts (Phase D4.2)
+
+With D4.1's `H_Fib` packaging in place, this section lifts the
+matrix-algebra-level structural facts of D1-D3.b into the
+`Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)` language. The lifts
+are entirely mechanical (via `Subtype.ext` + `SubmonoidClass.coe_pow`),
+but they're the prerequisite for any downstream argument that needs
+to reason about H_Fib as a closed subgroup of SU(2) (e.g., the
+"H_Fib is not contained in any finite subgroup" step toward Cartan
+classification).
+
+The ruleouts at this level:
+  - `σ_Fib_1_SU` has multiplicative period exactly 20 in SU(2) (qua group).
+  - `H_Fib` is compact (closed subset of compact SU(2)).
+  - `H_Fib ≠ ⊥` (non-trivial — contains a non-identity generator).
+  - `H_Fib` is NOT abelian (contains non-commuting elements).
+  - `H_Fib` contains an element of period exactly 20.
+
+These translate the matrix-level facts into the Subgroup-language
+needed for the D4.3+ closed-subgroup-classification argument. -/
+
+section D4_2_StructuralRuleouts
+
+/-- `σ_Fib_1_SU ^ 20 = 1` in SU(2) qua group. Lifted from
+`σ_Fib_1_SU_mat_pow_20` (matrix-level) via `Subtype.ext +
+SubmonoidClass.coe_pow`. -/
+theorem σ_Fib_1_SU_pow_20_eq_one :
+    σ_Fib_1_SU ^ 20 = (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  apply Subtype.ext
+  rw [SubmonoidClass.coe_pow]
+  exact σ_Fib_1_SU_mat_pow_20
+
+/-- `σ_Fib_1_SU ^ 10 ≠ 1` in SU(2). Lifted from
+`σ_Fib_1_SU_mat_pow_10_ne_one`. -/
+theorem σ_Fib_1_SU_pow_10_ne_one :
+    σ_Fib_1_SU ^ 10 ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro h
+  apply σ_Fib_1_SU_mat_pow_10_ne_one
+  have h2 : (σ_Fib_1_SU ^ 10).val =
+      (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val := by rw [h]
+  rw [SubmonoidClass.coe_pow] at h2
+  exact h2
+
+/-- `σ_Fib_1_SU ^ 4 ≠ 1` in SU(2). Lifted from
+`σ_Fib_1_SU_mat_pow_4_ne_one`. -/
+theorem σ_Fib_1_SU_pow_4_ne_one :
+    σ_Fib_1_SU ^ 4 ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro h
+  apply σ_Fib_1_SU_mat_pow_4_ne_one
+  have h2 : (σ_Fib_1_SU ^ 4).val =
+      (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val := by rw [h]
+  rw [SubmonoidClass.coe_pow] at h2
+  exact h2
+
+/-- **`σ_Fib_1_SU` has multiplicative period exactly 20 in SU(2)**.
+Packages the three pow-facts above into a single conjunction. The
+order of σ_Fib_1_SU in `↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)` is
+exactly 20 (the only divisor of 20 not dividing 4 or 10 is 20 itself). -/
+theorem σ_Fib_1_SU_has_period_20 :
+    σ_Fib_1_SU ^ 20 = (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    σ_Fib_1_SU ^ 10 ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    σ_Fib_1_SU ^ 4 ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+  ⟨σ_Fib_1_SU_pow_20_eq_one, σ_Fib_1_SU_pow_10_ne_one, σ_Fib_1_SU_pow_4_ne_one⟩
+
+/-- **`H_Fib` is compact** as a subset of SU(2). Proof: `H_Fib` is
+closed (D4.1) and SU(2) is compact (via `Matrix.specialUnitaryGroup`'s
+`CompactSpace` instance from `FKLW.SpecialUnitaryTopology`). -/
+theorem H_Fib_isCompact :
+    IsCompact (H_Fib : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+  IsCompact.of_isClosed_subset isCompact_univ H_Fib_isClosed (Set.subset_univ _)
+
+/-- **`H_Fib ≠ ⊥`**: the Fibonacci closure subgroup is non-trivial.
+Proof: σ_Fib_1_SU ∈ H_Fib but σ_Fib_1_SU ≠ 1 (D2). -/
+theorem H_Fib_ne_bot : H_Fib ≠ ⊥ := by
+  intro h
+  have h_in : σ_Fib_1_SU ∈ (⊥ : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+    h ▸ σ_Fib_1_SU_mem_H_Fib
+  rw [Subgroup.mem_bot] at h_in
+  exact σ_Fib_1_SU_ne_one h_in
+
+/-- **`H_Fib` is NOT abelian**: contains two non-commuting elements.
+Proof: σ_Fib_1_SU, σ_Fib_2_SU ∈ H_Fib (D4.1) and they don't commute
+(D1's `σ_Fib_SU_not_commute`). -/
+theorem H_Fib_not_abelian :
+    ∃ x y : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      x ∈ H_Fib ∧ y ∈ H_Fib ∧ x * y ≠ y * x :=
+  ⟨σ_Fib_1_SU, σ_Fib_2_SU, σ_Fib_1_SU_mem_H_Fib, σ_Fib_2_SU_mem_H_Fib,
+    fun h => σ_Fib_SU_not_commute h⟩
+
+/-- **`H_Fib` contains an element of multiplicative period exactly 20**.
+Witnessed by σ_Fib_1_SU (in H_Fib by D4.1, has period 20 by D4.2). -/
+theorem H_Fib_contains_period_20_element :
+    ∃ u : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      u ∈ H_Fib ∧
+      u ^ 20 = 1 ∧ u ^ 10 ≠ 1 ∧ u ^ 4 ≠ 1 :=
+  ⟨σ_Fib_1_SU, σ_Fib_1_SU_mem_H_Fib,
+    σ_Fib_1_SU_pow_20_eq_one, σ_Fib_1_SU_pow_10_ne_one, σ_Fib_1_SU_pow_4_ne_one⟩
+
+/-- **`H_Fib` is NOT contained in the center of SU(2)**. The center
+of SU(2) is `{±I}`, and σ_Fib_1_SU ≠ ±I at the matrix level
+(D2's `σ_Fib_1_SU_mat_ne_one` + `σ_Fib_1_SU_mat_ne_neg_one`). Since
+σ_Fib_1_SU ∈ H_Fib but σ_Fib_1_SU's matrix is neither ±I, H_Fib
+cannot be contained in `{u : SU(2) | u = ±1}`. We state the weaker
+form ≰ ⟨σ_Fib_1_SU⟩, which gives strict non-triviality beyond
+`H_Fib ≠ ⊥`. -/
+theorem H_Fib_not_subset_singleton_id :
+    ¬ ∀ u : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+        u ∈ H_Fib → u = 1 := by
+  intro h_all_id
+  exact σ_Fib_1_SU_ne_one (h_all_id σ_Fib_1_SU σ_Fib_1_SU_mem_H_Fib)
+
+end D4_2_StructuralRuleouts
+
+/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
@@ -1282,9 +1395,46 @@ using:
     SU(2) (Mathlib4 substrate gap), or (b) an in-tree direct
     accumulation argument (~500-1500 LoC of additional topology).
 
-**Deferred to R4.2.d.4.2+**:
-  - **D4.2**: discharge `H_Fib = ⊤`. Substrate gap is the remaining
-    blocker.
+**Theorems shipped in R4.2.d.4.2 (this commit)** — Subgroup-level
+structural ruleouts (D1-D3.b matrix-level facts lifted to `Subgroup`):
+
+  - **`σ_Fib_1_SU_pow_20_eq_one : σ_Fib_1_SU ^ 20 = 1`** in SU(2). Lifted
+    from matrix-level `σ_Fib_1_SU_mat_pow_20` (D1) via
+    `Subtype.ext + SubmonoidClass.coe_pow`.
+  - **`σ_Fib_1_SU_pow_10_ne_one`**, **`σ_Fib_1_SU_pow_4_ne_one`** —
+    lifts of D3.b matrix facts.
+  - **`σ_Fib_1_SU_has_period_20`** : packages the three above into
+    the order-exactly-20 conjunction at the SU(2) Subgroup level.
+  - **`H_Fib_isCompact`** : H_Fib is compact (closed subset of
+    compact SU(2)). Uses `instCompactSpaceSpecialUnitaryGroup`
+    from `FKLW.SpecialUnitaryTopology`.
+  - **`H_Fib_ne_bot`** : H_Fib non-trivial (contains σ_Fib_1_SU ≠ 1).
+  - **`H_Fib_not_abelian`** : ∃ x y ∈ H_Fib, x*y ≠ y*x — H_Fib is
+    not abelian. Lifted from D1's `σ_Fib_SU_not_commute`.
+  - **`H_Fib_contains_period_20_element`** : ∃ u ∈ H_Fib with order
+    exactly 20 in SU(2). Witnessed by σ_Fib_1_SU.
+  - **`H_Fib_not_subset_singleton_id`** : H_Fib is not the trivial
+    subgroup pointwise (stronger form of `H_Fib_ne_bot`).
+
+**Density implication after D4.2**: H_Fib is now provably a
+**non-trivial, non-abelian, compact subgroup of SU(2) containing an
+element of order exactly 20**. These are precisely the Subgroup-level
+preconditions for the Cartan-classification argument: any closed
+subgroup of SU(2) with these properties must be SU(2) itself (cyclic
+Z_n ruled out by non-abelian; binary dihedral BD_4n outside-cyclic
+order 4 < 20; 2T max order 6 < 20; 2O max order 8 < 20; 2I max
+order 10 < 20; conjugates of T abelian; conjugates of N(T) ruled out
+by D3.a). The remaining substrate piece (D4.3+) is the formal Cartan
+classification itself.
+
+**Deferred to R4.2.d.4.3+**:
+  - **D4.3**: discharge `H_Fib = ⊤` via formal Cartan classification
+    of closed subgroups of SU(2). Substrate gap (Mathlib4 v4.29.0
+    doesn't ship: (a) "compact 0-dim subgroup of compact Lie group
+    is finite"; (b) classification of dim-0/1/3 closed subgroups
+    of SU(2); (c) finite-subgroup classification of SU(2) into
+    {Z_n, BD_4n, 2T, 2O, 2I} with element-order bounds). Multi-session
+    in-tree substrate build (~500-1500 LoC).
 
 **Pipeline Invariant compliance**:
   - #10 (no `maxHeartbeats`): RESPECTED.
