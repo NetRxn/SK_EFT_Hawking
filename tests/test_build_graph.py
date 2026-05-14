@@ -567,7 +567,17 @@ class TestExtractReviewFindingNodes:
             pytest.skip("No ReviewFinding nodes (no AutomatedReviews dir?)")
         _assert_unique_ids(nodes)
         valid_severity = {'blocker', 'major', 'minor', 'info', 'advisory', 'unknown'}
-        valid_status = {'open', 'fixed', 'wontfix', 'duplicate', 'unknown'}
+        # Status set extended 2026-05-14 to match the actual schema in
+        # docs/review_finding_supersessions.json (overrides the parser-default
+        # 'open'/'fixed'). 'accepted' was added in Phase 6i Wave 3 close
+        # (~127 ledger entries) for findings acknowledged as out-of-scope
+        # architectural facts (distinct from 'fixed' = remediated and
+        # 'wontfix' = rejected); 'propagated'/'applied' are single-use
+        # variants from later waves.
+        valid_status = {
+            'open', 'fixed', 'wontfix', 'duplicate', 'unknown',
+            'accepted', 'propagated', 'applied',
+        }
         for n in nodes[:10]:
             _assert_valid_node(n, 'ReviewFinding', 'review:')
             assert n['meta'].get('severity') in valid_severity

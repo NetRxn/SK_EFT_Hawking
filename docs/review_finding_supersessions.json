@@ -4338,10 +4338,11 @@
     {
       "finding_id": "bundle-stage13:L1-2026-05-11-1550:2.1",
       "source_path": "papers/AutomatedReviews/2026-05-11-1550-bundle-stage13/L1.md",
-      "status": "closed_by: carryover-pending-human-verification",
+      "status": "open",
       "superseded_by": "scripts/provenance_dashboard.py human-verify hand-shake for GW.CHI_VEST_NATURAL_LOWER + GW.CHI_VEST_NATURAL_UPPER",
       "evidence": "REQUIRED 2.1 (carryover from rounds 1-3 + Wave 3 + Wave 4): GW.CHI_VEST_NATURAL_LOWER (provenance.py:2512-2543) and GW.CHI_VEST_NATURAL_UPPER (provenance.py:2545-2569) carry llm_verified_date='2026-04-25' but human_verified_date=None. Pre-filled human_verified_notes block is in place; parameter is correctly tagged tier='PROJECTED' (relaxed Gate 3 requirement is honest projection-tier labeling, which L1 prose satisfies throughout). This is a submission-gate user-action, not a paper-text fix; remains open until the user runs scripts/provenance_dashboard.py and approves the pre-filled notes. Carryover; requires human dashboard verification.",
-      "date": "2026-05-11"
+      "date": "2026-05-11",
+      "_status_fix_note": "Status field was malformed as \"closed_by: <text>\"; normalized to \"open\" 2026-05-14 (semantic intent per evidence field)."
     },
     {
       "finding_id": "bundle-stage13:L1-2026-05-11-1550:5.1",
@@ -4913,7 +4914,7 @@
       "severity": "BLOCKER",
       "status": "fixed",
       "closed_by": "inline-fix-2026-05-11T19:15:00Z",
-      "note": "§5 LDPCompatibleSKEFT instance code block refreshed from stale 2-/3-tuple anonymous constructors to current 4-/5-tuple constructors matching the post-strengthening LDPCompatibleSKEFT.lean source. Added explanatory prose paragraph documenting the MGF-normalisation, MGF-reflexivity, push-forward-continuity, and centered-functional-bound components added in today's Stage-13 strengthening pass.",
+      "note": "\u00a75 LDPCompatibleSKEFT instance code block refreshed from stale 2-/3-tuple anonymous constructors to current 4-/5-tuple constructors matching the post-strengthening LDPCompatibleSKEFT.lean source. Added explanatory prose paragraph documenting the MGF-normalisation, MGF-reflexivity, push-forward-continuity, and centered-functional-bound components added in today's Stage-13 strengthening pass.",
       "applied_at": "2026-05-11T19:15:00Z"
     },
     {
@@ -4923,7 +4924,7 @@
       "severity": "BLOCKER",
       "status": "fixed",
       "closed_by": "inline-fix-2026-05-11T19:15:00Z",
-      "note": "§2.3 line-count claim refreshed: 696 lines (stale) → 775 lines (current wc -l total across 12 modules post-strengthening). Approximate qualifier updated from ~700 to ~800.",
+      "note": "\u00a72.3 line-count claim refreshed: 696 lines (stale) \u2192 775 lines (current wc -l total across 12 modules post-strengthening). Approximate qualifier updated from ~700 to ~800.",
       "applied_at": "2026-05-11T19:15:00Z"
     },
     {
@@ -4933,7 +4934,7 @@
       "severity": "BLOCKER",
       "status": "fixed",
       "closed_by": "inline-fix-2026-05-11T19:15:00Z",
-      "note": "§2.3 predicate-count off-by-one fixed: 14 (13 def Is* + 1 class) → 15 (14 def Is* + 1 class). Uncounted declaration was IsCovariation in QuadraticVariation.lean.",
+      "note": "\u00a72.3 predicate-count off-by-one fixed: 14 (13 def Is* + 1 class) \u2192 15 (14 def Is* + 1 class). Uncounted declaration was IsCovariation in QuadraticVariation.lean.",
       "applied_at": "2026-05-11T19:15:00Z"
     },
     {
@@ -4943,7 +4944,7 @@
       "severity": "REQUIRED",
       "status": "fixed",
       "closed_by": "inline-fix-2026-05-11T19:15:00Z",
-      "note": "§7.3 cross-reference fixed: 'I2 §10' (I2 has only 9 sections) → 'I2 §7's AI-tool-assistance-disclosure subsection' (matches I2 paper_draft.tex line 716 \\subsection{The AI-tool-assistance disclosure protocol} under I2 §7 Mathlib Upstream Coordination Plan).",
+      "note": "\u00a77.3 cross-reference fixed: 'I2 \u00a710' (I2 has only 9 sections) \u2192 'I2 \u00a77's AI-tool-assistance-disclosure subsection' (matches I2 paper_draft.tex line 716 \\subsection{The AI-tool-assistance disclosure protocol} under I2 \u00a77 Mathlib Upstream Coordination Plan).",
       "applied_at": "2026-05-11T19:15:00Z"
     },
     {
@@ -4953,7 +4954,7 @@
       "severity": "REQUIRED",
       "status": "fixed",
       "closed_by": "inline-fix-2026-05-11T19:15:00Z",
-      "note": "§1 cross-prover survey scope on-paper disclosure added: parenthetical 'HOL Light and Mizar were not surveyed for this release; the cross-prover absence claim is restricted to the surveyed ecosystems' added after the substrate-data-level operationalizations sentence. Matches bundle_metadata pre-disclosure to surface the survey gap in the published text.",
+      "note": "\u00a71 cross-prover survey scope on-paper disclosure added: parenthetical 'HOL Light and Mizar were not surveyed for this release; the cross-prover absence claim is restricted to the surveyed ecosystems' added after the substrate-data-level operationalizations sentence. Matches bundle_metadata pre-disclosure to surface the survey gap in the published text.",
       "applied_at": "2026-05-11T19:15:00Z"
     },
     {
@@ -4963,7 +4964,7 @@
       "severity": "RECOMMENDED",
       "status": "accepted",
       "closed_by": "kept-as-is-2026-05-11T19:15:00Z",
-      "note": "§9.2 Lake job count '~8500' kept loose; order-of-magnitude qualifier accommodates the current 8586 cleanly. No on-paper update needed.",
+      "note": "\u00a79.2 Lake job count '~8500' kept loose; order-of-magnitude qualifier accommodates the current 8586 cleanly. No on-paper update needed.",
       "applied_at": "2026-05-11T19:15:00Z"
     },
     {
@@ -4973,7 +4974,7 @@
       "severity": "RECOMMENDED",
       "status": "fixed",
       "closed_by": "metadata-flip-2026-05-11T19:15:00Z",
-      "note": "Bundle_metadata page-count refreshed: 16 pages (2026-05-08 draft) → 18 pages (post-fix-pass 2026-05-11). Note added to bundle_metadata notes field.",
+      "note": "Bundle_metadata page-count refreshed: 16 pages (2026-05-08 draft) \u2192 18 pages (post-fix-pass 2026-05-11). Note added to bundle_metadata notes field.",
       "applied_at": "2026-05-11T19:15:00Z"
     },
     {
@@ -4983,7 +4984,7 @@
       "severity": "RECOMMENDED",
       "status": "accepted",
       "closed_by": "verified-accurate-2026-05-11T19:15:00Z",
-      "note": "§5 file/line reference 'LDPLinearResponse.lean lines 597-600' verified accurate against actual source (IsLDPRateFunction instance at lines 597-600). No update needed.",
+      "note": "\u00a75 file/line reference 'LDPLinearResponse.lean lines 597-600' verified accurate against actual source (IsLDPRateFunction instance at lines 597-600). No update needed.",
       "applied_at": "2026-05-11T19:15:00Z"
     }
   ]
