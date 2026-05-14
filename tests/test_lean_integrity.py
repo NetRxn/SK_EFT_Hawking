@@ -100,11 +100,12 @@ def test_lakefile_exists():
 
 
 def test_lean_toolchain():
-    """Verify lean-toolchain specifies v4.29.0 (upgraded from v4.28.0)."""
+    """Verify lean-toolchain specifies v4.29.1 (bumped from v4.29.0 on 2026-05-14
+    to align with Mathlib v4.29.1 tag pin; see lakefile.toml header comment)."""
     toolchain = LEAN_DIR / "lean-toolchain"
     assert toolchain.exists(), "Missing lean-toolchain"
     content = toolchain.read_text().strip()
-    assert "v4.29.0" in content
+    assert "v4.29.1" in content
 
 
 def test_no_active_sorry():
