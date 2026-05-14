@@ -781,7 +781,189 @@ theorem σ_Fib_SU_mat_not_conj_inverts :
     rw [this, h_sq]
   exact ω_Fib_C_sq_mul_R1_C_sq_ne_one h_pow
 
-/-! ## 7. Conditional density theorem (Phase D1 final)
+/-! ## 7. Phase D3.b: order analysis + finite-subgroup ruleout
+
+After D3.a established that ⟨σ_Fib_1_SU, σ_Fib_2_SU⟩ is not contained
+in any torus normalizer N(T), only finite binary subgroups of SU(2)
+(Z_n, BD_4n, 2T, 2O, 2I) and SU(2) itself remain as candidates.
+
+This section ships the substrate to rule out all finite binary
+subgroups:
+
+  **`σ_Fib_1_SU_mat^4 ≠ I`** AND **`σ_Fib_1_SU_mat^10 = -I`**
+    (hence `σ_Fib_1_SU_mat^10 ≠ I`).
+
+Combined with `σ_Fib_1_SU_mat^20 = I` (§2, D1), the **multiplicative
+order of `σ_Fib_1_SU_mat` in `M₂(ℂ)` is exactly 20**: order divides
+20 (since σ^20 = I) but neither 4 nor 10 (so order ∉ {1, 2, 4, 5, 10},
+leaving only 20).
+
+**Finite-subgroup ruleout** (proof-by-docstring; formalizing the
+subgroup classes is a Mathlib4 substrate gap):
+
+| Class | Max element order | σ_Fib_1_SU order 20 forces |
+|-------|-------------------|------------------------------|
+| Z_n   | n                 | n ≥ 20, but Z_n abelian ⊥ §3 non-commute |
+| BD_4n (order 4n) | cyclic part 2n, outside 4 | 2n ≥ 20 (so n ≥ 10); σ_Fib_2_SU order 20 also in cyclic Z_{2n} (else order 4 ≠ 20); both in abelian Z_{2n} ⊥ non-commute |
+| 2T (order 24)    | 6                 | 20 > 6 → σ_Fib_1_SU ∉ 2T  |
+| 2O (order 48)    | 8                 | 20 > 8 → σ_Fib_1_SU ∉ 2O  |
+| 2I (order 120)   | 10                | 20 > 10 → σ_Fib_1_SU ∉ 2I |
+
+Together with D2 (center {±I} ruled out, 1-tori ruled out) and D3.a
+(N(T) ruled out), the closure of ⟨σ_Fib_1_SU, σ_Fib_2_SU⟩ in SU(2)
+must equal **SU(2) itself** — the headline density discharge.
+
+**Slick algebraic identity**: `(ω · R_1)^4 = R_1` (proved here as
+`ω_R1_pow_4_eq_R1`). This is the cyclotomic consequence of
+`ω^4 · R_1^3 = 1` (since ω^4 = ζ_5, R_1 = ζ_5^3, so ω^4·R_1^3 = ζ_5·ζ_5^9 = ζ_5^{10} = 1).
+Combined with `R_1 ≠ 1` (proved via the R4.2.b.1 bridge identity
+`R_1^2 + R_1^3 = 1/φ`), we get `(ω·R_1)^4 ≠ 1`, hence `σ^4 ≠ I`. -/
+
+/-- `R1_C ≠ 1`: the 5th root of unity R_1 = exp(-4πi/5) is not the
+trivial root. Proof via the bridge identity `R_1^2 + R_1^3 = 1/φ`:
+if R_1 = 1, then `1 + 1 = 1/φ`, i.e., `2 = 1/φ`. But `1/φ < 1 < 2`. -/
+private theorem R1_C_ne_one : R1_C ≠ 1 := by
+  intro h
+  have h_bridge := R1_C_sq_add_cube_eq_φInv
+  rw [h] at h_bridge
+  -- h_bridge : 1^2 + 1^3 = (Real.goldenRatio⁻¹ : ℂ)
+  have h_lhs : (1 : ℂ) ^ 2 + (1 : ℂ) ^ 3 = (2 : ℂ) := by ring
+  rw [h_lhs] at h_bridge
+  -- h_bridge : (2 : ℂ) = (Real.goldenRatio⁻¹ : ℂ)
+  have h_real : (2 : ℝ) = Real.goldenRatio⁻¹ := by exact_mod_cast h_bridge
+  -- But 1/φ < 1 < 2
+  have h_phi_pos : (0 : ℝ) < Real.goldenRatio := Real.goldenRatio_pos
+  have h_phi_gt : (1 : ℝ) < Real.goldenRatio := Real.one_lt_goldenRatio
+  have h_phiInv_lt_one : Real.goldenRatio⁻¹ < 1 := by
+    rw [inv_eq_one_div, div_lt_one h_phi_pos]
+    exact h_phi_gt
+  linarith
+
+/-- `ω^4 · R_1^3 = 1`: the cyclotomic-Fibonacci consequence
+`ω^4 = ζ_5, R_1 = ζ_5^3` ⟹ `ω^4·R_1^3 = ζ_5^{10} = 1`.
+
+Computed: `4 · (π/10·I) + 3 · (-4π/5·I) = (2π/5 - 12π/5)·I
+= -2π·I = -1 · (2π·I)`, so `exp(...) = exp(-1 · 2π·I) = 1`. -/
+private theorem ω_pow_4_mul_R1_pow_3 :
+    ω_Fib_C ^ 4 * R1_C ^ 3 = 1 := by
+  unfold ω_Fib_C R1_C
+  rw [← Complex.exp_nat_mul, ← Complex.exp_nat_mul, ← Complex.exp_add]
+  rw [show ((4 : ℕ) : ℂ) * (((Real.pi / 10 : ℝ) : ℂ) * Complex.I) +
+        ((3 : ℕ) : ℂ) * (((-4 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) =
+        ((-1 : ℤ) : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) by
+    push_cast; ring]
+  exact Complex.exp_int_mul_two_pi_mul_I (-1)
+
+/-- **`(ω · R_1)^4 = R_1`** — the slick algebraic reduction
+from a 4th-power computation to a primitive 5th-root-of-unity.
+
+Proof: `(ω·R_1)^4 = ω^4·R_1^4 = (ω^4·R_1^3) · R_1 = 1 · R_1 = R_1`. -/
+private theorem ω_R1_pow_4_eq_R1 :
+    (ω_Fib_C * R1_C) ^ 4 = R1_C := by
+  rw [mul_pow]
+  have h := ω_pow_4_mul_R1_pow_3
+  have : ω_Fib_C ^ 4 * R1_C ^ 4 = ω_Fib_C ^ 4 * R1_C ^ 3 * R1_C := by ring
+  rw [this, h, one_mul]
+
+/-- **`σ_Fib_1_SU_mat^4 ≠ I`** — rules out element order 4.
+
+Proof: `σ_Fib_1_SU_mat^4 = ω^4 • σ_Fib_1^4`. Project to entry [0,0]:
+`[σ_Fib_1_SU_mat^4][0,0] = ω^4 · R_1^4 = (ω·R_1)^4 = R_1`. If
+σ_Fib_1_SU_mat^4 = I, then R_1 = 1, contradicting `R1_C_ne_one`. -/
+theorem σ_Fib_1_SU_mat_pow_4_ne_one :
+    σ_Fib_1_SU_mat ^ 4 ≠ (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  intro h
+  -- σ_Fib_1_SU_mat^4 = ω^4 • σ_Fib_1^4
+  have h_pow : σ_Fib_1_SU_mat ^ 4 = ω_Fib_C ^ 4 • σ_Fib_1 ^ 4 := by
+    show (ω_Fib_C • σ_Fib_1) ^ 4 = ω_Fib_C ^ 4 • σ_Fib_1 ^ 4
+    rw [smul_pow]
+  rw [h_pow, σ_Fib_1_pow_eq] at h
+  -- h : ω^4 • diag(R_1^4, R_τ^4) = 1
+  -- Project to entry [0,0]
+  have h_00 : ω_Fib_C ^ 4 * R1_C ^ 4 = 1 := by
+    have h_entry : ((ω_Fib_C ^ 4) • (!![R1_C ^ 4, 0; 0, Rtau_C ^ 4] :
+                    Matrix (Fin 2) (Fin 2) ℂ)) 0 0 =
+                   (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0 := by
+      rw [h]
+    simp [Matrix.smul_apply, smul_eq_mul, Matrix.one_apply] at h_entry
+    exact h_entry
+  -- h_00 : ω^4 · R_1^4 = 1
+  have h_factor : (ω_Fib_C * R1_C) ^ 4 = ω_Fib_C ^ 4 * R1_C ^ 4 := by ring
+  rw [← h_factor, ω_R1_pow_4_eq_R1] at h_00
+  -- h_00 : R_1 = 1
+  exact R1_C_ne_one h_00
+
+/-- **`σ_Fib_1_SU_mat^10 = -I`** — the concrete value of the 10th
+power. Combined with `σ_Fib_1_SU_mat^20 = I` (§2, D1), this shows
+σ_Fib_1_SU_mat has period exactly 20 in M₂(ℂ).
+
+Proof: `σ^10 = (ω • σ_Fib_1)^10 = ω^10 • σ_Fib_1^10 = (-1) • I = -I`. -/
+theorem σ_Fib_1_SU_mat_pow_10_eq_neg_one :
+    σ_Fib_1_SU_mat ^ 10 = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  show (ω_Fib_C • σ_Fib_1) ^ 10 = -1
+  rw [smul_pow, ω_Fib_C_pow_10, σ_Fib_1_pow_10]
+  rw [neg_smul, one_smul]
+
+/-- **`σ_Fib_1_SU_mat^10 ≠ I`** — rules out element orders {5, 10}.
+
+Proof: σ^10 = -I (above) and -I ≠ I (differ at entry [0,0]). -/
+theorem σ_Fib_1_SU_mat_pow_10_ne_one :
+    σ_Fib_1_SU_mat ^ 10 ≠ (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [σ_Fib_1_SU_mat_pow_10_eq_neg_one]
+  intro h
+  have h_00 : (-1 : ℂ) = 1 := by
+    have h_entry : (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) 0 0 =
+                   (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0 := by rw [h]
+    simp [Matrix.neg_apply, Matrix.one_apply] at h_entry
+    exact h_entry
+  norm_num at h_00
+
+/-- **`σ_Fib_1_SU_mat` has multiplicative period exactly 20** in `M₂(ℂ)`.
+
+Statement: `σ^k ≠ I` for `k ∈ {1, 2, 4, 5, 10}` AND `σ^20 = I`. Since
+the only divisors of 20 are {1, 2, 4, 5, 10, 20}, the order is 20.
+
+We package the order-≥-20 part: for all 0 < k < 20 with k dividing 20,
+σ^k ≠ I. -/
+theorem σ_Fib_1_SU_mat_has_period_20 :
+    σ_Fib_1_SU_mat ^ 20 = 1 ∧
+    σ_Fib_1_SU_mat ^ 10 ≠ 1 ∧
+    σ_Fib_1_SU_mat ^ 4 ≠ 1 := by
+  refine ⟨?_, σ_Fib_1_SU_mat_pow_10_ne_one, σ_Fib_1_SU_mat_pow_4_ne_one⟩
+  -- σ^20 = (σ^10)^2 = (-I)^2 = I
+  have h10 := σ_Fib_1_SU_mat_pow_10_eq_neg_one
+  have h_eq : σ_Fib_1_SU_mat ^ 20 = (σ_Fib_1_SU_mat ^ 10) ^ 2 := by
+    rw [← pow_mul]
+  rw [h_eq, h10]
+  -- (-1)^2 = 1
+  rw [neg_one_sq]
+
+/-! ### Finite-subgroup ruleout consequences (proof-by-docstring)
+
+The above period-20 result + non-commutation directly preclude
+⟨σ_Fib_1_SU, σ_Fib_2_SU⟩ being contained in any finite binary
+subgroup of SU(2). The argument (recorded here for traceability,
+formalization deferred pending Mathlib4 substrate):
+
+**`σ_Fib_1_SU ∉ 2I`** (order 120): max element order in 2I is 10
+(the lift of A_5's order-5 elements). Since σ_Fib_1_SU has period
+20 > 10, it cannot be in 2I.
+
+**`σ_Fib_1_SU ∉ 2O`** (order 48): max element order 8 < 20.
+
+**`σ_Fib_1_SU ∉ 2T`** (order 24): max element order 6 < 20.
+
+**`⟨σ_Fib_1_SU, σ_Fib_2_SU⟩ ⊄ Z_n` for any n**: Z_n is abelian, but
+the generators don't commute (§3).
+
+**`⟨σ_Fib_1_SU, σ_Fib_2_SU⟩ ⊄ BD_4n`**: BD_4n has a cyclic subgroup
+Z_{2n} of index 2; elements outside Z_{2n} have order 4. Since
+σ_Fib_2_SU has period 20 (analogous to σ_Fib_1_SU via F-conjugacy),
+σ_Fib_2_SU must be in Z_{2n} (else order would be 4, contradicting
+period 20). But Z_{2n} is abelian, and σ_Fib_1_SU is also in Z_{2n},
+forcing commutation — contradicts §3 non-commutation. -/
+
+/-! ## 8. Conditional density theorem (Phase D1 final)
 
 Given the residual closure-equals-univ hypothesis (which constitutes
 the HBS density theorem yet-to-be-proved-constructively), the
@@ -821,7 +1003,7 @@ theorem fibonacci_density_conditional
     3 2 (by omega) (fun b => (ρ_Fib_SU2 b : Matrix (Fin 2) (Fin 2) ℂ))
     h_unitary ρ_Fib_SU2 h_ext h_closure_eq_univ
 
-/-! ## 8. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a})
+/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
@@ -912,19 +1094,54 @@ non-commutation), the only closed subgroups of SU(2) still possible
 are the FINITE binary subgroups (Z_n, BD_4n, 2T, 2O, 2I) — to be
 ruled out in D3.b — and SU(2) itself.
 
-**Deferred to R4.2.d.{3b,4}**:
-  - **D3.b**: rule out FINITE binary subgroups of SU(2). The element
-    σ_Fib_1_SU has order 20 in SU(2), exceeding the maximum element
-    order in 2T (6), 2O (8), 2I (10). Cyclic Z_n is abelian (ruled
-    out by non-commute). In BD_4n, elements outside the cyclic Z_{2n}
-    have order 4, but σ_Fib_2_SU has order 20, so σ_Fib_2_SU is in
-    the cyclic part Z_{2n}, which contains σ_Fib_1_SU too — but then
-    they commute, contradicting non-commute. Formalization needs the
-    element-order facts in Mathlib4 (currently absent for binary
-    polyhedral groups).
+**Theorems shipped in R4.2.d.3b (this commit)** — order analysis +
+finite-subgroup ruleout:
+
+  - `R1_C_ne_one : R_1 ≠ 1` (private helper). Via bridge identity
+    `R_1^2 + R_1^3 = 1/φ`: if R_1 = 1, then `2 = 1/φ`, but `1/φ < 1`.
+  - `ω_pow_4_mul_R1_pow_3 : ω^4 · R_1^3 = 1` (private). Cyclotomic
+    identity: `4·(π/10) + 3·(-4π/5) = 2π/5 - 12π/5 = -2π`, so
+    `exp(-2πi) = 1`.
+  - `ω_R1_pow_4_eq_R1 : (ω · R_1)^4 = R_1` (private). The slick
+    reduction: `(ω·R_1)^4 = ω^4·R_1^4 = (ω^4·R_1^3)·R_1 = 1·R_1 = R_1`.
+  - **`σ_Fib_1_SU_mat_pow_4_ne_one : σ_Fib_1_SU_mat^4 ≠ I`** —
+    rules out element order 4. Project [0,0]: `[σ^4][0,0] = (ω·R_1)^4
+    = R_1`; if `σ^4 = I` then `R_1 = 1`, contradicting `R1_C_ne_one`.
+  - **`σ_Fib_1_SU_mat_pow_10_eq_neg_one : σ_Fib_1_SU_mat^10 = -I`**
+    — concrete value. `σ^10 = ω^10 • σ_Fib_1^10 = (-1) • I = -I`.
+  - **`σ_Fib_1_SU_mat_pow_10_ne_one : σ_Fib_1_SU_mat^10 ≠ I`** —
+    rules out element orders {5, 10}. Derived from `σ^10 = -I` and
+    `-I ≠ I` (differ at [0,0]: `-1 ≠ 1`).
+  - **`σ_Fib_1_SU_mat_has_period_20`** : packaged conjunction
+    `σ^20 = I ∧ σ^10 ≠ I ∧ σ^4 ≠ I`. Combined with σ^20 = I, the
+    order of σ_Fib_1_SU_mat in `M₂(ℂ)` is exactly 20 (divisors of
+    20 not dividing 4 or 10 are just {20}).
+
+**Finite-subgroup ruleout (proof-by-docstring; Mathlib4 substrate gap)**:
+
+The order-20 fact + non-commutation + scalar-distinction directly
+precludes any finite binary subgroup of SU(2) containing both
+generators (Z_n abelian, BD_4n outside-cyclic order 4, 2T max
+order 6, 2O max 8, 2I max 10).
+
+**Combined with D2 + D3.a, the only remaining closed subgroup of
+SU(2) containing both generators is SU(2) itself.** This is the
+informal density result; formal closure-eq-univ is deferred to D4
+pending Mathlib4 closed-subgroup classification for SU(2).
+
+**Deferred to R4.2.d.4**:
   - **D4**: assemble `closure(range ρ_Fib_SU2) = univ`, then apply
     `bridge_FKLW_unitary_hom` (R2-soundness-audit-cleaned version)
     for `DenseInSpecialUnitary 3 2 (ρ_Fib_SU2 · : Matrix _ _ ℂ)`.
+    The substantive closure-eq-univ step requires either (a) the
+    Mathlib4 closed-subgroup classification for SU(2) (currently a
+    substrate gap — needs Cartan's closed-subgroup theorem +
+    classification of dim-0 + dim-1 + dim-3 closed subgroups of
+    SU(2)), or (b) a direct accumulation argument using the
+    structural facts (order-20 + non-commute + non-N(T) + non-scalar)
+    to conclude closure = univ via Mathlib's topological closure
+    machinery. Approach (b) likely requires ~500-1500 LoC of
+    in-tree topological substrate.
 
 **Pipeline Invariant compliance**:
   - #10 (no `maxHeartbeats`): RESPECTED.
