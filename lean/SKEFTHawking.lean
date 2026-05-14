@@ -590,6 +590,11 @@ import SKEFTHawking.FKLW.AharonovAradLemma6
 -- ratio φ_C with φ² = φ + 1, and the F-matrix involution F²=I. Substrate
 -- for R4.2.b (σ_1, σ_2, YB), R4.2.c (MonoidHom), R4.2.d (density).
 import SKEFTHawking.FKLW.FibSU2Rep
+-- Phase 6p Wave 2c.4a-R4.2.d.1 (2026-05-13): Fibonacci SU(2) density Phase D1
+-- — structural facts about σ_Fib_{1,2}_SU. Ships powers/orders, non-commutation,
+-- trace invariants, plus `fibonacci_density_conditional` framing the residual
+-- hypothesis for full constructive density discharge.
+import SKEFTHawking.FKLW.FibSU2Density
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
