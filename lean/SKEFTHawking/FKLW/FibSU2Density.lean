@@ -340,7 +340,221 @@ theorem σ_Fib_1_SU_mul_σ_Fib_2_SU_trace :
   rw [smul_eq_mul, ← sq]
   exact h
 
-/-! ## 5. Conditional density theorem
+/-! ## 5. Phase D2: individual-generator trace formulas and F-conjugacy
+
+While §4 computed the product trace `tr(σ_Fib_1_SU · σ_Fib_2_SU) = 1`,
+this section computes the trace of each generator individually and
+establishes the F-conjugacy that relates them.
+
+**Individual traces**: `tr(σ_Fib_1_SU_mat) = tr(σ_Fib_2_SU_mat)
+= exp(-7πi/10) + exp(7πi/10) = 2·cos(7π/10)`.
+
+**F-conjugacy**: `σ_Fib_2_SU_mat = F_C · σ_Fib_1_SU_mat · F_C` (where
+F_C is the Bonesteel F-matrix and `F_C² = I`). This means σ_Fib_2_SU
+and σ_Fib_1_SU have the same spectrum and the same rotation angle in
+the SU(2)→SO(3) double cover (`θ = 7π/5`), but DIFFERENT rotation
+axes — the axis of σ_Fib_2 is obtained from that of σ_Fib_1 by the
+F-rotation.
+
+**Non-centrality**: since the diagonal entries of σ_Fib_1_SU_mat are
+`ω · R_1 = exp(-7πi/10)` and `ω · R_τ = exp(7πi/10)`, which are
+distinct, σ_Fib_1_SU_mat is NOT a scalar matrix. In particular,
+σ_Fib_1_SU_mat ≠ I and σ_Fib_1_SU_mat ≠ -I. Same for σ_Fib_2_SU_mat
+(via F-conjugacy of a non-scalar matrix).
+
+**Density implication**: combined with non-commutation (§3), the
+subgroup `⟨σ_Fib_1_SU, σ_Fib_2_SU⟩` is non-abelian and contains
+non-central elements. This rules out two large families of closed
+subgroups of SU(2): the center `{±I}` (since both generators are
+outside it) and 1-parameter subgroups (since non-commuting generators
+cannot lie in a common 1-torus). Phase D3 will use the remaining
+structural facts to rule out finite subgroups and the normalizers of
+1-tori. -/
+
+/-- `R1_C ≠ Rtau_C`: the two R-eigenvalues are distinct. Proved via
+`R1_C^5 = 1` vs `Rtau_C^5 = -1`. -/
+theorem R1_C_ne_Rtau_C : R1_C ≠ Rtau_C := by
+  intro h_eq
+  have h1 := R1_C_pow_5
+  have h2 := Rtau_C_pow_5
+  rw [h_eq] at h1
+  rw [h1] at h2
+  have : (2 : ℂ) = 0 := by linear_combination h2
+  norm_num at this
+
+/-! ### 5a. Trace formulas for individual generators -/
+
+/-- `tr(σ_Fib_1) = R_1 + R_τ` (`σ_Fib_1` is diagonal). -/
+theorem σ_Fib_1_trace : Matrix.trace σ_Fib_1 = R1_C + Rtau_C := by
+  rw [Matrix.trace_fin_two]
+  rfl
+
+/-- `tr(σ_Fib_2) = R_1 + R_τ` (same as σ_Fib_1, since σ_Fib_2 is
+F-conjugate to σ_Fib_1 and trace is conjugation-invariant — proved
+here via direct algebraic computation using `φInv_C² + φInv_C = 1`). -/
+theorem σ_Fib_2_trace : Matrix.trace σ_Fib_2 = R1_C + Rtau_C := by
+  rw [Matrix.trace_fin_two, σ_Fib_2_apply_00, σ_Fib_2_apply_11]
+  -- LHS = (φInv²·R_1 + φInv·R_τ) + (φInv·R_1 + φInv²·R_τ)
+  --     = (φInv² + φInv)·(R_1 + R_τ) = 1·(R_1 + R_τ) = R_1 + R_τ
+  have h := φInv_C_sq_add_self
+  linear_combination (R1_C + Rtau_C) * h
+
+/-- `tr(σ_Fib_1_SU_mat) = exp(-7πi/10) + exp(7πi/10)` — exponential
+form of the spectral invariant.
+
+Proof: `tr(ω·σ_Fib_1) = ω·(R_1 + R_τ) = ω·R_1 + ω·R_τ`. Compute:
+`ω·R_1 = exp(π/10·I)·exp(-4π/5·I) = exp((π/10 - 8π/10)·I)
+= exp(-7π/10·I)`, similarly `ω·R_τ = exp(7π/10·I)`. -/
+theorem σ_Fib_1_SU_mat_trace_eq :
+    Matrix.trace σ_Fib_1_SU_mat =
+      Complex.exp (((-7 * Real.pi / 10 : ℝ) : ℂ) * Complex.I) +
+      Complex.exp (((7 * Real.pi / 10 : ℝ) : ℂ) * Complex.I) := by
+  unfold σ_Fib_1_SU_mat
+  rw [Matrix.trace_smul, σ_Fib_1_trace, smul_eq_mul, mul_add]
+  -- Goal: ω·R_1 + ω·R_τ = exp(-7π/10·I) + exp(7π/10·I)
+  unfold ω_Fib_C R1_C Rtau_C
+  rw [← Complex.exp_add, ← Complex.exp_add]
+  congr 1
+  · congr 1; push_cast; ring
+  · congr 1; push_cast; ring
+
+/-! ### 5b. F-conjugacy of σ_Fib_2 with σ_Fib_1 -/
+
+/-- The det-normalized σ_Fib_2 is F-conjugate to the det-normalized
+σ_Fib_1: `σ_Fib_2_SU_mat = F_C · σ_Fib_1_SU_mat · F_C`.
+
+Proof: `σ_Fib_2 := F·σ_Fib_1·F` by definition. Then
+`ω • (F·σ_Fib_1·F) = F·(ω • σ_Fib_1)·F` by Matrix.smul_mul. -/
+theorem σ_Fib_2_SU_mat_eq_F_conj :
+    σ_Fib_2_SU_mat = F_C * σ_Fib_1_SU_mat * F_C := by
+  unfold σ_Fib_2_SU_mat σ_Fib_2 σ_Fib_1_SU_mat
+  rw [← Matrix.smul_mul, ← Matrix.mul_smul]
+
+/-- Trace of `σ_Fib_2_SU_mat` equals trace of `σ_Fib_1_SU_mat`.
+Proof: via F-conjugacy + trace cyclicity + F² = I. -/
+theorem σ_Fib_2_SU_mat_trace_eq_σ_Fib_1_SU_mat_trace :
+    Matrix.trace σ_Fib_2_SU_mat = Matrix.trace σ_Fib_1_SU_mat := by
+  rw [σ_Fib_2_SU_mat_eq_F_conj]
+  -- tr(F · σ_Fib_1_SU_mat · F) = tr((F · F) · σ_Fib_1_SU_mat) (cyclic)
+  --                            = tr(1 · σ_Fib_1_SU_mat) (F² = I)
+  --                            = tr(σ_Fib_1_SU_mat)
+  rw [Matrix.trace_mul_cycle, F_C_sq, one_mul]
+
+/-- `tr(σ_Fib_2_SU_mat) = exp(-7πi/10) + exp(7πi/10)` (same as
+σ_Fib_1_SU_mat, by F-conjugacy). -/
+theorem σ_Fib_2_SU_mat_trace_eq :
+    Matrix.trace σ_Fib_2_SU_mat =
+      Complex.exp (((-7 * Real.pi / 10 : ℝ) : ℂ) * Complex.I) +
+      Complex.exp (((7 * Real.pi / 10 : ℝ) : ℂ) * Complex.I) := by
+  rw [σ_Fib_2_SU_mat_trace_eq_σ_Fib_1_SU_mat_trace, σ_Fib_1_SU_mat_trace_eq]
+
+/-! ### 5c. Non-centrality: σ_Fib_{1,2}_SU_mat ≠ ±I -/
+
+/-- The diagonal entries of σ_Fib_1_SU_mat differ:
+`σ_Fib_1_SU_mat[0,0] = ω·R_1 ≠ ω·R_τ = σ_Fib_1_SU_mat[1,1]`. -/
+theorem σ_Fib_1_SU_mat_diag_ne :
+    σ_Fib_1_SU_mat 0 0 ≠ σ_Fib_1_SU_mat 1 1 := by
+  unfold σ_Fib_1_SU_mat
+  simp only [Matrix.smul_apply, show σ_Fib_1 0 0 = R1_C from rfl,
+             show σ_Fib_1 1 1 = Rtau_C from rfl, smul_eq_mul]
+  intro h
+  have h_ω_ne : ω_Fib_C ≠ 0 := by
+    intro h_ω
+    have h_norm : ‖ω_Fib_C‖ = 0 := by rw [h_ω, norm_zero]
+    rw [norm_ω_Fib_C] at h_norm
+    norm_num at h_norm
+  exact R1_C_ne_Rtau_C (mul_left_cancel₀ h_ω_ne h)
+
+/-- σ_Fib_1_SU_mat is NOT a scalar multiple of the identity. Proof:
+a scalar matrix has equal diagonal entries, but σ_Fib_1_SU_mat[0,0]
+≠ σ_Fib_1_SU_mat[1,1]. -/
+theorem σ_Fib_1_SU_mat_ne_smul_one (c : ℂ) :
+    σ_Fib_1_SU_mat ≠ c • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  intro h
+  apply σ_Fib_1_SU_mat_diag_ne
+  rw [h]
+  simp [Matrix.smul_apply]
+
+/-- σ_Fib_1_SU_mat ≠ I (the identity matrix). -/
+theorem σ_Fib_1_SU_mat_ne_one :
+    σ_Fib_1_SU_mat ≠ (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  intro h
+  apply σ_Fib_1_SU_mat_ne_smul_one 1
+  rw [h, one_smul]
+
+/-- σ_Fib_1_SU_mat ≠ -I. -/
+theorem σ_Fib_1_SU_mat_ne_neg_one :
+    σ_Fib_1_SU_mat ≠ -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  intro h
+  apply σ_Fib_1_SU_mat_ne_smul_one (-1)
+  rw [h, neg_smul, one_smul]
+
+/-- σ_Fib_2_SU_mat is NOT a scalar matrix. Proof: F-conjugating a
+scalar matrix gives the same scalar matrix (since F² = I and scalar
+matrices commute with everything), so if σ_Fib_2_SU_mat = c • I,
+then σ_Fib_1_SU_mat = c • I as well, contradicting
+σ_Fib_1_SU_mat_ne_smul_one. -/
+theorem σ_Fib_2_SU_mat_ne_smul_one (c : ℂ) :
+    σ_Fib_2_SU_mat ≠ c • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  intro h
+  apply σ_Fib_1_SU_mat_ne_smul_one c
+  -- From σ_Fib_2_SU_mat = c • 1 and σ_Fib_2_SU_mat = F · σ_Fib_1_SU_mat · F:
+  -- F · σ_Fib_1_SU_mat · F = c • 1
+  -- Multiply by F on both sides: F · (F · σ_Fib_1_SU_mat · F) · F = F · (c • 1) · F
+  -- LHS = (F·F) · σ_Fib_1_SU_mat · (F·F) = 1 · σ_Fib_1_SU_mat · 1 = σ_Fib_1_SU_mat
+  -- RHS = F · (c • 1) · F = c • (F · 1 · F) = c • (F · F) = c • 1
+  have h_conj : F_C * σ_Fib_1_SU_mat * F_C = c • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    rw [← σ_Fib_2_SU_mat_eq_F_conj]; exact h
+  -- Wrap with F on both sides:
+  have h_wrap : F_C * (F_C * σ_Fib_1_SU_mat * F_C) * F_C =
+                F_C * (c • (1 : Matrix (Fin 2) (Fin 2) ℂ)) * F_C := by
+    rw [h_conj]
+  -- LHS reduces to σ_Fib_1_SU_mat via F² = I
+  have h_LHS : F_C * (F_C * σ_Fib_1_SU_mat * F_C) * F_C = σ_Fib_1_SU_mat := by
+    rw [show F_C * (F_C * σ_Fib_1_SU_mat * F_C) * F_C =
+          (F_C * F_C) * σ_Fib_1_SU_mat * (F_C * F_C) by
+      simp [mul_assoc]]
+    rw [F_C_sq, one_mul, mul_one]
+  -- RHS reduces to c • 1 via F² = I and smul commutes with multiplication
+  have h_RHS : F_C * (c • (1 : Matrix (Fin 2) (Fin 2) ℂ)) * F_C =
+               c • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    rw [Matrix.mul_smul, mul_one, Matrix.smul_mul, F_C_sq]
+  rw [h_LHS, h_RHS] at h_wrap
+  exact h_wrap
+
+/-- σ_Fib_2_SU_mat ≠ I. -/
+theorem σ_Fib_2_SU_mat_ne_one :
+    σ_Fib_2_SU_mat ≠ (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  intro h
+  apply σ_Fib_2_SU_mat_ne_smul_one 1
+  rw [h, one_smul]
+
+/-- σ_Fib_2_SU_mat ≠ -I. -/
+theorem σ_Fib_2_SU_mat_ne_neg_one :
+    σ_Fib_2_SU_mat ≠ -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  intro h
+  apply σ_Fib_2_SU_mat_ne_smul_one (-1)
+  rw [h, neg_smul, one_smul]
+
+/-! ### 5d. SU(2)-level non-identity statements -/
+
+/-- σ_Fib_1_SU ≠ 1 in SU(2). Lifted from σ_Fib_1_SU_mat_ne_one. -/
+theorem σ_Fib_1_SU_ne_one : σ_Fib_1_SU ≠ 1 := by
+  intro h
+  apply σ_Fib_1_SU_mat_ne_one
+  show σ_Fib_1_SU.val = 1
+  rw [h]
+  rfl
+
+/-- σ_Fib_2_SU ≠ 1 in SU(2). Lifted from σ_Fib_2_SU_mat_ne_one. -/
+theorem σ_Fib_2_SU_ne_one : σ_Fib_2_SU ≠ 1 := by
+  intro h
+  apply σ_Fib_2_SU_mat_ne_one
+  show σ_Fib_2_SU.val = 1
+  rw [h]
+  rfl
+
+/-! ## 6. Conditional density theorem (Phase D1 final)
 
 Given the residual closure-equals-univ hypothesis (which constitutes
 the HBS density theorem yet-to-be-proved-constructively), the
@@ -380,13 +594,13 @@ theorem fibonacci_density_conditional
     3 2 (by omega) (fun b => (ρ_Fib_SU2 b : Matrix (Fin 2) (Fin 2) ℂ))
     h_unitary ρ_Fib_SU2 h_ext h_closure_eq_univ
 
-/-! ## 6. Module summary (Phase 6p Wave 2c.4a-R4.2.d.1, partial)
+/-! ## 7. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
 full constructive density discharge.
 
-**Theorems shipped this commit (R4.2.d.1)**:
+**Theorems shipped in R4.2.d.1 (commit 4dd4b68)**:
 
   - `σ_Fib_1_pow_10` : `σ_Fib_1^10 = I` (using R_1^5 = 1, R_τ^5 = -1).
   - `ω_Fib_C_pow_20` : `ω_Fib_C^20 = 1` (20th root of unity).
@@ -406,14 +620,48 @@ full constructive density discharge.
     `closure(range ρ_Fib_SU2) = univ` in SU(2). Makes explicit the
     last substantive gap for Path (i) constructive discharge.
 
-**Deferred to R4.2.d.{2,3,4}**:
-  - **D2**: trace formula + SO(3) rotation angle 7π/5.
-  - **D3**: subgroup-of-SU(2) classification or HBS-style braid word
-    of infinite order. The closed subgroups of SU(2) are: cyclic
-    ⟨exp(iθ)·I⟩, dihedral, binary tetra/octa/icosahedral, U(1)-tori
-    (1-parameter), and SU(2) itself. The non-commutation + order-20
-    structure constrains ⟨σ_Fib_1_SU, σ_Fib_2_SU⟩ but does NOT alone
-    suffice — need to show the subgroup is genuinely 3-dimensional.
+**Theorems shipped in R4.2.d.2 (this commit)** — individual-generator
+trace formulas + F-conjugacy + non-centrality:
+
+  - **`R1_C_ne_Rtau_C`** : the two R-eigenvalues are distinct
+    (extracted from §3 as a standalone fact).
+  - `σ_Fib_1_trace : tr(σ_Fib_1) = R_1 + R_τ`.
+  - `σ_Fib_2_trace : tr(σ_Fib_2) = R_1 + R_τ` (same as σ_Fib_1; via
+    the algebraic identity `φInv_C² + φInv_C = 1`).
+  - **`σ_Fib_1_SU_mat_trace_eq : tr(σ_Fib_1_SU_mat) = exp(-7πi/10) +
+    exp(7πi/10)`** — exponential form of the spectral invariant
+    (corresponds to rotation by 7π/5 in SO(3); period 20 in SU(2)
+    matches `σ_Fib_1_SU_mat^20 = I` from §2).
+  - **`σ_Fib_2_SU_mat_eq_F_conj : σ_Fib_2_SU_mat = F_C · σ_Fib_1_SU_mat · F_C`**
+    — the F-conjugacy relation between the two generators. F is the
+    Bonesteel involutive Hermitian F-matrix.
+  - `σ_Fib_2_SU_mat_trace_eq_σ_Fib_1_SU_mat_trace : tr(σ_Fib_2_SU_mat)
+    = tr(σ_Fib_1_SU_mat)` — same spectrum, via trace cyclicity + F²=I.
+  - `σ_Fib_2_SU_mat_trace_eq : tr(σ_Fib_2_SU_mat) = exp(-7πi/10) +
+    exp(7πi/10)` — derived form for σ_Fib_2.
+  - **`σ_Fib_1_SU_mat_diag_ne`** : diagonal entries [0,0] and [1,1]
+    of σ_Fib_1_SU_mat differ (so σ_Fib_1_SU_mat is NOT a scalar matrix).
+  - `σ_Fib_1_SU_mat_ne_smul_one : σ_Fib_1_SU_mat ≠ c • I` for any `c`.
+  - `σ_Fib_1_SU_mat_ne_one`, `σ_Fib_1_SU_mat_ne_neg_one`.
+  - `σ_Fib_2_SU_mat_ne_smul_one`, `σ_Fib_2_SU_mat_ne_one`,
+    `σ_Fib_2_SU_mat_ne_neg_one` (via F-conjugacy preserves
+    scalar-ness — if σ_Fib_2_SU_mat = c·I then so is σ_Fib_1_SU_mat).
+  - `σ_Fib_1_SU_ne_one`, `σ_Fib_2_SU_ne_one` — non-identity in SU(2)
+    qua group (SU(2) does not have a Neg instance as a `Subgroup`;
+    the `≠ -I` content lives at the matrix algebra level).
+
+**Deferred to R4.2.d.{3,4}**:
+  - **D3**: rule out the remaining closed subgroups of SU(2) — finite
+    binary subgroups (cyclic Z_n, binary dihedral BD_4n, binary
+    tetrahedral 2T, binary octahedral 2O, binary icosahedral 2I) and
+    normalizers of maximal tori. The non-commutation + non-centrality
+    (D2) rules out the center and 1-tori; remaining work classifies
+    against finite subgroups (e.g., via showing some braid word has
+    infinite order or via discrete-vs-continuous-spectrum analysis)
+    and against torus normalizers (which have dimension 1 + Z/2).
+    Multi-session work; needs either closed-subgroup classification
+    theorem for SU(2) in Mathlib4 (currently absent) or direct
+    HBS-style accumulation argument.
   - **D4**: assemble `closure(range ρ_Fib_SU2) = univ`, then apply
     `bridge_FKLW_unitary_hom` (R2-soundness-audit-cleaned version)
     for `DenseInSpecialUnitary 3 2 (ρ_Fib_SU2 · : Matrix _ _ ℂ)`.
