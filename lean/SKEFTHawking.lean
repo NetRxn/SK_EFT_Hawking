@@ -612,6 +612,16 @@ import SKEFTHawking.FKLW.QubitBalancedCommutator
 -- G = √(θ/2)·σ_x, H = θ·σ_z, ∀ θ ∈ [0, 1]. Full SU(2) recursion + ε-net
 -- base case deferred to follow-up sub-waves. Zero new axioms.
 import SKEFTHawking.FKLW.SKZAxisStep
+-- Phase 6p Wave 3a.2.2c-followup (2026-05-14): split-braid Frobenius
+-- infrastructure for the Rouabah 30-crossing Hadamard. Ships
+-- `fibRep3Qubit_rouabah_eq_split` — the substantive structural lemma
+-- factoring `fibRep3Qubit rouabah_hadamard` into a 15-deep prefix +
+-- 15-deep foldl continuation via `List.foldl_append` (NO Mat2K_40_Ext
+-- monoid laws required). Plus `RouabahHadamardFrobValue` predicate +
+-- biconditional reducing the full-form discharge to the split-form.
+-- Final ε-discharge (Python-precomputed QCyc40Ext literal + QCyc40Ext
+-- real-projection ordering) deferred to follow-up sub-wave. Zero new axioms.
+import SKEFTHawking.FKLW.RouabahSplitBraid
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
