@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex paper_draft"] 1778636838.67907 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1778636838.76662 2
-  "./paper_draftNotes.bib" 1778636838.38206 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
+["bibtex paper_draft"] 1778710326.45505 "paper_draft.aux" "paper_draft.bbl" "paper_draft" 1778710326.56563 2
+  "./paper_draftNotes.bib" 1778710326.13379 104 4d8bb863c86f3d7b03a471e9d4707f34 ""
   "/usr/local/texlive/2026/texmf-dist/bibtex/bst/revtex/apsrev4-2.bst" 1601932770 69609 e9dea59f0e753ccda3ddc8f5806d846d ""
-  "paper_draft.aux" 1778636830.67784 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "paper_draft.aux" 1778710318.45379 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
   (generated)
   "paper_draft.bbl"
   "paper_draft.blg"
   (rewritten before read)
-["pdflatex"] 1778636837.60419 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper8_chirality_master/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1778636838.60802 2
-  "../../docs/counts.tex" 1778636837.30775 2188 81f9760063e2d4fda31b32a1bb9557f0 ""
+["pdflatex"] 1778710325.3254 "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper8_chirality_master/paper_draft.tex" "paper_draft.pdf" "paper_draft" 1778710326.36823 2
+  "../../docs/counts.tex" 1778710325.13104 2188 c60d89d767585df5e834fea710460c62 ""
   "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/papers/paper8_chirality_master/paper_draft.tex" 1778589650.71716 25654 dd1cc27afc41fd8246993e40dfb5db31 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -132,11 +132,11 @@
   "figures/fig68_chiral_charge_spectrum.png" 1775271333.18476 144191 ccb9087b5ed987fcbc9d8f984b6448f7 ""
   "figures/fig69_gt_commutator_verification.png" 1775271333.18711 88837 6a2e8d325fa0aea73c9e28ffb0168e8f ""
   "figures/fig70_chirality_wall_three_pillars.png" 1775271713.998 153980 0892d14575cdec0fac918bc70fb22292 ""
-  "paper_draft.aux" 1778636830.67784 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
-  "paper_draft.bbl" 1778636838.76569 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
+  "paper_draft.aux" 1778710318.45379 32 3985256e7290058c681f74d7a3565a19 "pdflatex"
+  "paper_draft.bbl" 1778710326.56469 0 d41d8cd98f00b204e9800998ecf8427e "bibtex paper_draft"
   "paper_draft.out" 0 -1 0 "pdflatex"
   "paper_draft.tex" 1778589650.71716 25654 dd1cc27afc41fd8246993e40dfb5db31 ""
-  "tables/table1_formalization_summary.tex" 1778626901.67558 667 491e162b13f46815032d05d60a046fda ""
+  "tables/table1_formalization_summary.tex" 1778685977.9434 667 491e162b13f46815032d05d60a046fda ""
   (generated)
   "paper_draft.aux"
   "paper_draft.log"
