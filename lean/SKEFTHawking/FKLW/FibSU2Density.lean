@@ -1003,7 +1003,121 @@ theorem fibonacci_density_conditional
     3 2 (by omega) (fun b => (ρ_Fib_SU2 b : Matrix (Fin 2) (Fin 2) ℂ))
     h_unitary ρ_Fib_SU2 h_ext h_closure_eq_univ
 
-/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b})
+/-! ## 10. Closure-as-subgroup substrate (Phase D4.1)
+
+The D2 + D3.a + D3.b results have informally ruled out every proper
+closed subgroup of SU(2) that could contain both generators. To lift
+those informal ruleouts toward a formal `closure = univ` statement,
+we package the closure of `range ρ_Fib_SU2` as a closed subgroup of
+SU(2) (call it `H_Fib`) and re-state the residual D4 hypothesis as
+`H_Fib = ⊤`.
+
+This requires two general-purpose substrate pieces NOT in Mathlib4 as
+of v4.29.0:
+
+  - `ContinuousInv` for `Matrix.specialUnitaryGroup (Fin n) ℂ`. This
+    follows from the fact that `(A : SU(n))⁻¹ = star A` (definitional
+    in Mathlib) and `star` on `Matrix (Fin n) (Fin n) ℂ` is continuous
+    (via `Matrix.instContinuousStar`). The proof is short (4 lines)
+    but the instance is missing upstream.
+
+  - `IsTopologicalGroup` for the same — immediate from `ContinuousMul`
+    (via `Submonoid.continuousMul`) plus the new `ContinuousInv`.
+
+Once those instances are available, `Subgroup.topologicalClosure`
+applies and `H_Fib := ρ_Fib_SU2.range.topologicalClosure` is a
+well-formed closed subgroup of SU(2). We then ship membership lemmas
+for the generators and the lift lemma to/from the `Set.closure` form
+used by `fibonacci_density_conditional`, plus a clean `H_Fib = ⊤`
+form of the conditional density theorem.
+
+After this section, the **only** remaining substrate gap for full
+constructive D4 discharge is the classification of closed subgroups
+of SU(2) (Cartan + 1-dim/3-dim structure theorem). All of D1-D3.b's
+structural ruleouts now become potentially actionable at the
+subgroup level. -/
+
+/-- `Matrix.specialUnitaryGroup (Fin n) ℂ` has continuous inversion.
+
+Inversion on SU(n) is defined as `star` (the conjugate transpose, which
+agrees with the inverse on the unitary group). `star` on `Matrix` is
+continuous (`Matrix.instContinuousStar`), and the subtype map preserves
+continuity, so `Continuous fun A : SU(n) => star A` lifts to
+`Continuous fun A : SU(n) => A⁻¹` via the definition `Inv` instance. -/
+noncomputable instance su_continuousInv (n : ℕ) :
+    ContinuousInv ↥(Matrix.specialUnitaryGroup (Fin n) ℂ) := by
+  refine ⟨?_⟩
+  refine Continuous.subtype_mk ?_ ?_
+  exact (continuous_star (R := Matrix (Fin n) (Fin n) ℂ)).comp continuous_subtype_val
+
+/-- `Matrix.specialUnitaryGroup (Fin n) ℂ` is a topological group.
+
+Combines `Submonoid.continuousMul` (inherited from `Matrix`'s continuous
+multiplication on a Submonoid) with the new `su_continuousInv` instance.
+The `IsTopologicalGroup` class extends `ContinuousMul` and `ContinuousInv`,
+both of which are now in scope. -/
+noncomputable instance su_isTopologicalGroup (n : ℕ) :
+    IsTopologicalGroup ↥(Matrix.specialUnitaryGroup (Fin n) ℂ) := { }
+
+/-- **The Fibonacci closure subgroup.**
+
+`H_Fib` is the topological closure of `MonoidHom.range ρ_Fib_SU2`, viewed
+as a closed subgroup of SU(2). By construction `H_Fib` contains the image
+of every braid word under `ρ_Fib_SU2`, and is the smallest closed subgroup
+of SU(2) with that property.
+
+The residual D4 target reformulated: prove `H_Fib = ⊤`. -/
+noncomputable def H_Fib : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  ρ_Fib_SU2.range.topologicalClosure
+
+/-- `H_Fib` is a closed subset of SU(2). -/
+theorem H_Fib_isClosed :
+    IsClosed (H_Fib : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+  Subgroup.isClosed_topologicalClosure _
+
+/-- `σ_Fib_1_SU ∈ H_Fib`: the first braid generator's SU(2) image lies in
+the Fibonacci closure subgroup. -/
+theorem σ_Fib_1_SU_mem_H_Fib : σ_Fib_1_SU ∈ H_Fib := by
+  show σ_Fib_1_SU ∈ ρ_Fib_SU2.range.topologicalClosure
+  apply Subgroup.le_topologicalClosure
+  exact MonoidHom.mem_range.mpr
+    ⟨SKEFTHawking.BraidGroup.σ (⟨0, by omega⟩ : Fin (3 - 1)), ρ_Fib_SU2_apply_σ0⟩
+
+/-- `σ_Fib_2_SU ∈ H_Fib`: the second braid generator's SU(2) image lies in
+the Fibonacci closure subgroup. -/
+theorem σ_Fib_2_SU_mem_H_Fib : σ_Fib_2_SU ∈ H_Fib := by
+  show σ_Fib_2_SU ∈ ρ_Fib_SU2.range.topologicalClosure
+  apply Subgroup.le_topologicalClosure
+  exact MonoidHom.mem_range.mpr
+    ⟨SKEFTHawking.BraidGroup.σ (⟨1, by omega⟩ : Fin (3 - 1)), ρ_Fib_SU2_apply_σ1⟩
+
+/-- **Lift lemma**: the `Subgroup`-eq-`⊤` form of the residual D4
+hypothesis is equivalent to the `Set`-eq-`Set.univ` form used by
+`fibonacci_density_conditional`.
+
+The two surface forms differ only in the bundled-vs-coerced view of
+closure: `H_Fib = ⊤` (a `Subgroup` equality) iff
+`closure (Set.range ρ_Fib_SU2) = Set.univ` (a `Set` equality). -/
+theorem H_Fib_eq_top_iff_closure_eq_univ :
+    H_Fib = ⊤ ↔ closure (Set.range ρ_Fib_SU2) =
+      (Set.univ : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  unfold H_Fib
+  rw [SetLike.ext'_iff]
+  rw [Subgroup.topologicalClosure_coe, ρ_Fib_SU2.coe_range, Subgroup.coe_top]
+
+/-- **Fibonacci density theorem, conditional on `H_Fib = ⊤`** (the
+subgroup-level form of the residual D4 hypothesis).
+
+This is the subgroup-form analogue of `fibonacci_density_conditional`,
+composed through `H_Fib_eq_top_iff_closure_eq_univ`. Discharging
+`H_Fib = ⊤` (the D4.2+ residual) discharges the unconditional Fibonacci
+density theorem. -/
+theorem fibonacci_density_from_H_Fib_eq_top (h : H_Fib = ⊤) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (ρ_Fib_SU2 b : Matrix (Fin 2) (Fin 2) ℂ)) :=
+  fibonacci_density_conditional (H_Fib_eq_top_iff_closure_eq_univ.mp h)
+
+/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
@@ -1129,19 +1243,48 @@ SU(2) containing both generators is SU(2) itself.** This is the
 informal density result; formal closure-eq-univ is deferred to D4
 pending Mathlib4 closed-subgroup classification for SU(2).
 
-**Deferred to R4.2.d.4**:
-  - **D4**: assemble `closure(range ρ_Fib_SU2) = univ`, then apply
-    `bridge_FKLW_unitary_hom` (R2-soundness-audit-cleaned version)
-    for `DenseInSpecialUnitary 3 2 (ρ_Fib_SU2 · : Matrix _ _ ℂ)`.
-    The substantive closure-eq-univ step requires either (a) the
-    Mathlib4 closed-subgroup classification for SU(2) (currently a
-    substrate gap — needs Cartan's closed-subgroup theorem +
-    classification of dim-0 + dim-1 + dim-3 closed subgroups of
-    SU(2)), or (b) a direct accumulation argument using the
-    structural facts (order-20 + non-commute + non-N(T) + non-scalar)
-    to conclude closure = univ via Mathlib's topological closure
-    machinery. Approach (b) likely requires ~500-1500 LoC of
-    in-tree topological substrate.
+**Theorems shipped in R4.2.d.4.1 (this commit)** — closure-as-subgroup
+substrate for the residual D4 discharge:
+
+  - **`su_continuousInv`** : `ContinuousInv` instance for
+    `Matrix.specialUnitaryGroup (Fin n) ℂ`, parametric in `n`.
+    Proof: `(A : SU(n))⁻¹ = star A` (definitional); `star` on
+    `Matrix` is continuous (`Matrix.instContinuousStar` upstream);
+    subtype-mk lifts continuity. General-purpose Mathlib substrate
+    not in v4.29.0 (no `ContinuousInv` or `IsTopologicalGroup`
+    instance exists for the complex special unitary group upstream).
+  - **`su_isTopologicalGroup`** : `IsTopologicalGroup` instance for
+    `Matrix.specialUnitaryGroup (Fin n) ℂ`, combining the upstream
+    `Submonoid.continuousMul` with the new `su_continuousInv`.
+  - **`H_Fib`** : `(ρ_Fib_SU2.range).topologicalClosure` — the
+    Fibonacci closure subgroup of SU(2), a closed `Subgroup`.
+  - `H_Fib_isClosed` : `IsClosed (H_Fib : Set _)`.
+  - **`σ_Fib_1_SU_mem_H_Fib`**, **`σ_Fib_2_SU_mem_H_Fib`** :
+    both generators are in `H_Fib` (via the R4.2.c apply-on-σⱼ
+    lemmas + `Subgroup.le_topologicalClosure`).
+  - **`H_Fib_eq_top_iff_closure_eq_univ`** : equivalence of the
+    `Subgroup`-eq-`⊤` form and the `Set`-eq-`Set.univ` form of
+    the residual D4 hypothesis.
+  - **`fibonacci_density_from_H_Fib_eq_top`** : full
+    `DenseInSpecialUnitary 3 2 (ρ_Fib_SU2 · : Matrix _ _ ℂ)` from
+    `H_Fib = ⊤`, via composition with `fibonacci_density_conditional`.
+
+**Density implication after D4.1**: the residual D4 hypothesis is now
+articulated at the `Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)`
+level as `H_Fib = ⊤`, with general-purpose topological-group substrate
+in place. The remaining work (D4.2+) is to discharge `H_Fib = ⊤`
+using:
+
+  - the structural ruleouts shipped in D1-D3.b (period 20,
+    non-commute, non-N(T), non-scalar), which constrain any proper
+    closed subgroup containing both generators;
+  - plus either (a) Cartan's classification of closed subgroups of
+    SU(2) (Mathlib4 substrate gap), or (b) an in-tree direct
+    accumulation argument (~500-1500 LoC of additional topology).
+
+**Deferred to R4.2.d.4.2+**:
+  - **D4.2**: discharge `H_Fib = ⊤`. Substrate gap is the remaining
+    blocker.
 
 **Pipeline Invariant compliance**:
   - #10 (no `maxHeartbeats`): RESPECTED.
