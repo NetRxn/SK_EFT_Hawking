@@ -554,7 +554,234 @@ theorem σ_Fib_2_SU_ne_one : σ_Fib_2_SU ≠ 1 := by
   rw [h]
   rfl
 
-/-! ## 6. Conditional density theorem (Phase D1 final)
+/-! ## 6. Phase D3.a: conjugation analysis and N(T) ruleout
+
+A closed subgroup G ⊆ SU(2) of dimension 1 is either a maximal torus
+T or its normalizer N(T). The normalizer N(T) has two connected
+components: T and a coset T·s where s² ∈ T. Crucially, conjugation by
+elements of N(T) \ T **inverts** elements of T:
+
+  s ∈ N(T) \ T, t ∈ T  ⟹  s · t · s⁻¹ = t⁻¹.
+
+This section establishes the matrix-level inequality:
+
+  σ_Fib_2_SU_mat · σ_Fib_1_SU_mat · star σ_Fib_2_SU_mat ≠ star σ_Fib_1_SU_mat,
+
+which is equivalent to:
+
+  σ_Fib_2_SU_mat · σ_Fib_1_SU_mat ≠ star σ_Fib_1_SU_mat · σ_Fib_2_SU_mat.
+
+Hence the subgroup `⟨σ_Fib_1_SU, σ_Fib_2_SU⟩` cannot be contained in
+any N(T): either σ_Fib_2_SU ∈ T (forcing commute via T abelian, which
+contradicts §3 non-commutation) or σ_Fib_2_SU ∈ N(T)\T (forcing
+inversion under conjugation, which contradicts the inequality here).
+
+Combined with D2's center + 1-torus ruleouts, the only closed
+subgroups of SU(2) still in play are the finite binary subgroups
+(Z_n, BD_4n, 2T, 2O, 2I) — to be ruled out in D3.b — and SU(2) itself.
+
+**Proof strategy**: project to matrix entry [0,0]. After expanding
+both sides via `Matrix.mul_apply` and the diagonal structure of
+σ_Fib_1, the constraint reduces to `(ω² · R_1² - 1) · σ_Fib_2[0,0] = 0`.
+We show both factors are non-zero:
+- `ω²·R_1² ≠ 1` via `(ω²·R_1²)^5 = -1` (using ω^10 = -1 and R_1^10 = 1).
+- `σ_Fib_2[0,0] ≠ 0` via `σ_Fib_2[0,0] = φInv · (φInv·R_1 + R_τ)`;
+  if `φInv·R_1 + R_τ = 0` then `R_τ = -φInv·R_1`; taking 5th powers
+  gives `-1 = -φInv^5`, i.e., `φInv^5 = 1`; but φInv is real with
+  `|φInv| = 1/φ < 1`, so `φInv^5 < 1`, contradiction. -/
+
+/-- `ω_Fib_C^10 = -1`. Helper: ω = exp(πi/10) has order 20, so
+`ω^10 = exp(πi) = -1`. -/
+private theorem ω_Fib_C_pow_10 : ω_Fib_C ^ 10 = -1 := by
+  unfold ω_Fib_C
+  rw [← Complex.exp_nat_mul]
+  rw [show ((10 : ℕ) : ℂ) * (((Real.pi / 10 : ℝ) : ℂ) * Complex.I) =
+        (Real.pi : ℂ) * Complex.I by push_cast; ring]
+  exact Complex.exp_pi_mul_I
+
+/-- `R1_C^10 = 1`. Derived from `R1_C^5 = 1` by squaring. -/
+private theorem R1_C_pow_10 : R1_C ^ 10 = 1 := by
+  have h5 := R1_C_pow_5
+  have : R1_C ^ 10 = (R1_C ^ 5) ^ 2 := by ring
+  rw [this, h5]; norm_num
+
+/-- **Key blocking identity for N(T) ruleout**: `ω² · R_1² ≠ 1`.
+
+Proof: `(ω²·R_1²)^5 = ω^10·R_1^10 = (-1)·1 = -1`. If `ω²·R_1² = 1`,
+then `1^5 = 1 ≠ -1`, contradiction. -/
+theorem ω_Fib_C_sq_mul_R1_C_sq_ne_one :
+    ω_Fib_C ^ 2 * R1_C ^ 2 ≠ 1 := by
+  intro h
+  have h_pow : (ω_Fib_C ^ 2 * R1_C ^ 2) ^ 5 = 1 := by
+    rw [h]; norm_num
+  have h_factored : (ω_Fib_C ^ 2 * R1_C ^ 2) ^ 5 = ω_Fib_C ^ 10 * R1_C ^ 10 := by
+    ring
+  rw [h_factored, ω_Fib_C_pow_10, R1_C_pow_10] at h_pow
+  -- h_pow : -1 * 1 = 1, i.e., -1 = 1 in ℂ
+  have : (2 : ℂ) = 0 := by linear_combination -h_pow
+  norm_num at this
+
+/-- `φInv_C^5 ≠ 1`. Since `φInv_C = (Real.goldenRatio⁻¹ : ℂ)` is a
+real complex number with `0 < φInv_C < 1`, its 5th power is also a
+real complex number `< 1`, hence `≠ 1`. -/
+private theorem φInv_C_pow_5_ne_one : φInv_C ^ 5 ≠ 1 := by
+  unfold φInv_C
+  -- Cast: (a : ℝ → ℂ)^5 = ((a^5 : ℝ) : ℂ)
+  rw [← Complex.ofReal_pow]
+  intro h_eq
+  -- h_eq : ((Real.goldenRatio⁻¹)^5 : ℂ) = 1 = ((1 : ℝ) : ℂ)
+  have h_real : (Real.goldenRatio⁻¹ : ℝ) ^ 5 = 1 := by
+    have : ((Real.goldenRatio⁻¹ ^ 5 : ℝ) : ℂ) = ((1 : ℝ) : ℂ) := by
+      rw [h_eq]; push_cast; rfl
+    exact_mod_cast this
+  -- But (φInv)^5 < 1 since 0 < φInv < 1
+  have h_phi_pos : (0 : ℝ) < Real.goldenRatio := Real.goldenRatio_pos
+  have h_phi_gt_one : (1 : ℝ) < Real.goldenRatio := Real.one_lt_goldenRatio
+  have h_phiInv_pos : (0 : ℝ) < Real.goldenRatio⁻¹ := inv_pos.mpr h_phi_pos
+  have h_phiInv_lt_one : Real.goldenRatio⁻¹ < 1 := by
+    rw [inv_eq_one_div, div_lt_one h_phi_pos]
+    exact h_phi_gt_one
+  have h_pow_lt : Real.goldenRatio⁻¹ ^ 5 < 1 :=
+    (pow_lt_one_iff_of_nonneg h_phiInv_pos.le (by norm_num : (5 : ℕ) ≠ 0)).mpr
+      h_phiInv_lt_one
+  linarith
+
+/-- **`σ_Fib_2[0,0] ≠ 0`**.
+
+Proof: `σ_Fib_2[0,0] = φInv² · R_1 + φInv · R_τ = φInv · (φInv · R_1 + R_τ)`.
+Suppose σ_Fib_2[0,0] = 0. Then either `φInv = 0` (false, since φInv is
+the inverse of the positive real golden ratio) or `φInv · R_1 + R_τ = 0`,
+i.e., `R_τ = -φInv · R_1`. Taking 5th powers: `R_τ^5 = -φInv^5 · R_1^5`,
+i.e., `-1 = -φInv^5`, so `φInv^5 = 1`. But φInv^5 < 1, contradiction. -/
+theorem σ_Fib_2_apply_00_ne_zero : σ_Fib_2 0 0 ≠ 0 := by
+  rw [σ_Fib_2_apply_00]
+  intro h
+  -- h : φInv² · R_1 + φInv · R_τ = 0
+  -- Factor: φInv · (φInv · R_1 + R_τ) = 0
+  have h_factor : φInv_C * (φInv_C * R1_C + Rtau_C) = 0 := by
+    linear_combination h
+  rcases mul_eq_zero.mp h_factor with h_phi_zero | h_rest
+  · -- φInv = 0: impossible since φInv^2 + φInv = 1
+    have h_sq := φInv_C_sq_add_self
+    rw [h_phi_zero] at h_sq
+    norm_num at h_sq
+  · -- φInv · R_1 + R_τ = 0, so R_τ = -φInv · R_1
+    have h_Rtau : Rtau_C = -(φInv_C * R1_C) := by
+      linear_combination h_rest
+    -- Take 5th powers: R_τ^5 = -φInv^5 · R_1^5
+    have h_Rtau5 := Rtau_C_pow_5
+    have h_R1_5 := R1_C_pow_5
+    have h_pow5 : Rtau_C ^ 5 = -(φInv_C ^ 5 * R1_C ^ 5) := by
+      rw [h_Rtau]; ring
+    rw [h_R1_5, mul_one, h_Rtau5] at h_pow5
+    -- h_pow5 : -1 = -φInv^5
+    have h_phiInv5 : φInv_C ^ 5 = 1 := by linear_combination h_pow5
+    exact φInv_C_pow_5_ne_one h_phiInv5
+
+/-- `(σ_Fib_2 · σ_Fib_1)[0,0] = σ_Fib_2[0,0] · R_1` (σ_Fib_1 diagonal). -/
+private theorem σ_Fib_2_mul_σ_Fib_1_apply_00 :
+    (σ_Fib_2 * σ_Fib_1) 0 0 = σ_Fib_2 0 0 * R1_C := by
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             show σ_Fib_1 0 0 = R1_C from rfl,
+             show σ_Fib_1 1 0 = 0 from rfl,
+             mul_zero, add_zero]
+
+/-- **`σ_Fib_2_SU_mat · σ_Fib_1_SU_mat ≠ star σ_Fib_1_SU_mat · σ_Fib_2_SU_mat`**
+— the headline N(T)-ruleout inequality.
+
+Equivalent to: `σ_Fib_2_SU · σ_Fib_1_SU · σ_Fib_2_SU⁻¹ ≠ σ_Fib_1_SU⁻¹`,
+since for SU(2) the inverse is the star (conjugate transpose).
+
+**Argument**: project to entry [0,0]. After expansion:
+- LHS[0,0] = `ω² · σ_Fib_2[0,0] · R_1`
+- RHS[0,0] = `star(ω · R_1) · ω · σ_Fib_2[0,0]`
+
+Equality forces (after canceling σ_Fib_2[0,0] ≠ 0 and ω ≠ 0)
+`ω · R_1 = star(ω · R_1)`, i.e., `ω · R_1` is real. For
+unit-modulus `ω · R_1`, this means `(ω · R_1)² = 1`. But
+`ω² · R_1² ≠ 1`, contradiction. -/
+theorem σ_Fib_SU_mat_not_conj_inverts :
+    σ_Fib_2_SU_mat * σ_Fib_1_SU_mat ≠
+      star σ_Fib_1_SU_mat * σ_Fib_2_SU_mat := by
+  intro h_eq
+  -- Project to entry [0,0]
+  have h_00 : (σ_Fib_2_SU_mat * σ_Fib_1_SU_mat) 0 0 =
+              (star σ_Fib_1_SU_mat * σ_Fib_2_SU_mat) 0 0 := by
+    rw [h_eq]
+  -- Helper: matrix entries of σ_Fib_1_SU_mat
+  have h_σ1_00 : σ_Fib_1_SU_mat 0 0 = ω_Fib_C * R1_C := by
+    show (ω_Fib_C • σ_Fib_1) 0 0 = ω_Fib_C * R1_C
+    simp [Matrix.smul_apply, smul_eq_mul, show σ_Fib_1 0 0 = R1_C from rfl]
+  have h_σ1_10 : σ_Fib_1_SU_mat 1 0 = 0 := by
+    show (ω_Fib_C • σ_Fib_1) 1 0 = 0
+    simp [Matrix.smul_apply, smul_eq_mul, show σ_Fib_1 1 0 = 0 from rfl]
+  have h_σ2_00 : σ_Fib_2_SU_mat 0 0 = ω_Fib_C * σ_Fib_2 0 0 := by
+    show (ω_Fib_C • σ_Fib_2) 0 0 = ω_Fib_C * σ_Fib_2 0 0
+    simp [Matrix.smul_apply, smul_eq_mul]
+  -- LHS [0,0] = σ_Fib_2_SU_mat[0,0] · σ_Fib_1_SU_mat[0,0] (σ_Fib_1_SU_mat[1,0]=0)
+  have h_LHS : (σ_Fib_2_SU_mat * σ_Fib_1_SU_mat) 0 0 =
+               ω_Fib_C ^ 2 * σ_Fib_2 0 0 * R1_C := by
+    simp only [Matrix.mul_apply, Fin.sum_univ_two, h_σ1_10, mul_zero, add_zero,
+               h_σ1_00, h_σ2_00]
+    ring
+  -- RHS [0,0]: use Matrix.conjTranspose / star
+  -- (star M)[i,j] = star (M[j,i])
+  have h_star_00 : (star σ_Fib_1_SU_mat) 0 0 = star (ω_Fib_C * R1_C) := by
+    show star (σ_Fib_1_SU_mat 0 0) = star (ω_Fib_C * R1_C)
+    rw [h_σ1_00]
+  have h_star_01 : (star σ_Fib_1_SU_mat) 0 1 = 0 := by
+    show star (σ_Fib_1_SU_mat 1 0) = 0
+    rw [h_σ1_10, star_zero]
+  have h_RHS : (star σ_Fib_1_SU_mat * σ_Fib_2_SU_mat) 0 0 =
+               star (ω_Fib_C * R1_C) * (ω_Fib_C * σ_Fib_2 0 0) := by
+    simp only [Matrix.mul_apply, Fin.sum_univ_two, h_star_01, zero_mul, add_zero,
+               h_star_00, h_σ2_00]
+  rw [h_LHS, h_RHS] at h_00
+  -- h_00 : ω² · σ_Fib_2[0,0] · R_1 = star(ω · R_1) · ω · σ_Fib_2[0,0]
+  -- Cancel σ_Fib_2[0,0] (≠ 0)
+  have h_σ2_ne := σ_Fib_2_apply_00_ne_zero
+  have h_factored : (ω_Fib_C ^ 2 * R1_C - star (ω_Fib_C * R1_C) * ω_Fib_C) *
+                    σ_Fib_2 0 0 = 0 := by
+    linear_combination h_00
+  have h_arg : ω_Fib_C ^ 2 * R1_C = star (ω_Fib_C * R1_C) * ω_Fib_C := by
+    rcases mul_eq_zero.mp h_factored with h | h
+    · linear_combination h
+    · exact absurd h h_σ2_ne
+  -- Cancel ω (≠ 0): ω · R_1 = star(ω · R_1)
+  have h_ω_ne : ω_Fib_C ≠ 0 := by
+    intro h_ω
+    have h_norm : ‖ω_Fib_C‖ = 0 := by rw [h_ω, norm_zero]
+    rw [norm_ω_Fib_C] at h_norm
+    norm_num at h_norm
+  have h_unit : ω_Fib_C * R1_C = star (ω_Fib_C * R1_C) := by
+    have h_cancel : ω_Fib_C * (ω_Fib_C * R1_C) =
+                    ω_Fib_C * (star (ω_Fib_C * R1_C)) := by
+      linear_combination h_arg
+    exact mul_left_cancel₀ h_ω_ne h_cancel
+  -- (ω · R_1) · star(ω · R_1) = 1 (unit modulus)
+  have h_norm_ω : ‖ω_Fib_C‖ = 1 := norm_ω_Fib_C
+  have h_norm_R1 : ‖R1_C‖ = 1 := norm_R1_C
+  have h_norm_prod : ‖ω_Fib_C * R1_C‖ = 1 := by
+    rw [norm_mul, h_norm_ω, h_norm_R1, mul_one]
+  -- For unit-modulus z, z · star z = 1 (inline of `unit_norm_mul_conj`)
+  have h_z_star : (ω_Fib_C * R1_C) * star (ω_Fib_C * R1_C) = 1 := by
+    show (ω_Fib_C * R1_C) * (starRingEnd ℂ) (ω_Fib_C * R1_C) = 1
+    rw [Complex.mul_conj]
+    have h_normSq : Complex.normSq (ω_Fib_C * R1_C) = ‖ω_Fib_C * R1_C‖ ^ 2 :=
+      (Complex.sq_norm _).symm
+    rw [h_normSq, h_norm_prod]
+    norm_num
+  have h_sq : (ω_Fib_C * R1_C) ^ 2 = 1 := by
+    have h_chain : (ω_Fib_C * R1_C) ^ 2 =
+                   (ω_Fib_C * R1_C) * star (ω_Fib_C * R1_C) := by
+      rw [sq, ← h_unit]
+    rw [h_chain, h_z_star]
+  have h_pow : ω_Fib_C ^ 2 * R1_C ^ 2 = 1 := by
+    have : ω_Fib_C ^ 2 * R1_C ^ 2 = (ω_Fib_C * R1_C) ^ 2 := by ring
+    rw [this, h_sq]
+  exact ω_Fib_C_sq_mul_R1_C_sq_ne_one h_pow
+
+/-! ## 7. Conditional density theorem (Phase D1 final)
 
 Given the residual closure-equals-univ hypothesis (which constitutes
 the HBS density theorem yet-to-be-proved-constructively), the
@@ -594,7 +821,7 @@ theorem fibonacci_density_conditional
     3 2 (by omega) (fun b => (ρ_Fib_SU2 b : Matrix (Fin 2) (Fin 2) ℂ))
     h_unitary ρ_Fib_SU2 h_ext h_closure_eq_univ
 
-/-! ## 7. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2})
+/-! ## 8. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
@@ -650,18 +877,51 @@ trace formulas + F-conjugacy + non-centrality:
     qua group (SU(2) does not have a Neg instance as a `Subgroup`;
     the `≠ -I` content lives at the matrix algebra level).
 
-**Deferred to R4.2.d.{3,4}**:
-  - **D3**: rule out the remaining closed subgroups of SU(2) — finite
-    binary subgroups (cyclic Z_n, binary dihedral BD_4n, binary
-    tetrahedral 2T, binary octahedral 2O, binary icosahedral 2I) and
-    normalizers of maximal tori. The non-commutation + non-centrality
-    (D2) rules out the center and 1-tori; remaining work classifies
-    against finite subgroups (e.g., via showing some braid word has
-    infinite order or via discrete-vs-continuous-spectrum analysis)
-    and against torus normalizers (which have dimension 1 + Z/2).
-    Multi-session work; needs either closed-subgroup classification
-    theorem for SU(2) in Mathlib4 (currently absent) or direct
-    HBS-style accumulation argument.
+**Theorems shipped in R4.2.d.3a (this commit)** — conjugation analysis
+ruling out the torus normalizer N(T):
+
+  - `ω_Fib_C_pow_10 : ω_Fib_C^10 = -1` — ω is a primitive 20th root of
+    unity (private helper).
+  - `R1_C_pow_10 : R1_C^10 = 1` — derived from `R1_C^5 = 1` (private).
+  - **`ω_Fib_C_sq_mul_R1_C_sq_ne_one : ω² · R_1² ≠ 1`** — the key
+    blocking identity. Proof: `(ω²·R_1²)^5 = ω^10·R_1^10 = (-1)·1 = -1`.
+  - `φInv_C_pow_5_ne_one : φInv_C^5 ≠ 1` — private helper. Cast to ℝ,
+    then use `φ > 1 ⟹ φInv < 1 ⟹ φInv^5 < 1`.
+  - **`σ_Fib_2_apply_00_ne_zero : σ_Fib_2[0,0] ≠ 0`** — factor
+    `σ_Fib_2[0,0] = φInv · (φInv · R_1 + R_τ)`; if zero, taking 5th
+    powers gives `φInv^5 = 1`, contradicting `φInv_C_pow_5_ne_one`.
+  - **`σ_Fib_SU_mat_not_conj_inverts : σ_Fib_2_SU_mat · σ_Fib_1_SU_mat
+    ≠ star σ_Fib_1_SU_mat · σ_Fib_2_SU_mat`** — the headline N(T)
+    ruleout. Equivalent to: conjugation by σ_Fib_2_SU does NOT invert
+    σ_Fib_1_SU. Proof: project to entry [0,0]. After algebra, equality
+    forces `(ω·R_1)² = (ω·R_1) · star(ω·R_1) = ‖ω·R_1‖² = 1`, i.e.,
+    `ω²·R_1² = 1`, contradicting `ω_Fib_C_sq_mul_R1_C_sq_ne_one`.
+
+**Density implication after D3.a**: closed subgroups of SU(2) of
+dimension 1 are exactly the maximal tori T and their normalizers N(T)
+(with `N(T)/T = Z/2`). For ⟨σ_Fib_1_SU, σ_Fib_2_SU⟩ ⊆ N(T):
+  • If σ_Fib_2_SU ∈ T: forces commutation with σ_Fib_1_SU (T abelian),
+    contradicting §3 non-commutation.
+  • If σ_Fib_2_SU ∈ N(T) \ T: forces `σ_Fib_2_SU·σ_Fib_1_SU·σ_Fib_2_SU⁻¹
+    = σ_Fib_1_SU⁻¹` (Weyl-group inversion), equivalent to the
+    inequality shipped here being an equality, contradicting D3.a.
+Hence ⟨σ_Fib_1_SU, σ_Fib_2_SU⟩ ⊄ N(T) for any T.
+
+Combined with D2 (center {±I} + 1-tori ruled out by non-centrality +
+non-commutation), the only closed subgroups of SU(2) still possible
+are the FINITE binary subgroups (Z_n, BD_4n, 2T, 2O, 2I) — to be
+ruled out in D3.b — and SU(2) itself.
+
+**Deferred to R4.2.d.{3b,4}**:
+  - **D3.b**: rule out FINITE binary subgroups of SU(2). The element
+    σ_Fib_1_SU has order 20 in SU(2), exceeding the maximum element
+    order in 2T (6), 2O (8), 2I (10). Cyclic Z_n is abelian (ruled
+    out by non-commute). In BD_4n, elements outside the cyclic Z_{2n}
+    have order 4, but σ_Fib_2_SU has order 20, so σ_Fib_2_SU is in
+    the cyclic part Z_{2n}, which contains σ_Fib_1_SU too — but then
+    they commute, contradicting non-commute. Formalization needs the
+    element-order facts in Mathlib4 (currently absent for binary
+    polyhedral groups).
   - **D4**: assemble `closure(range ρ_Fib_SU2) = univ`, then apply
     `bridge_FKLW_unitary_hom` (R2-soundness-audit-cleaned version)
     for `DenseInSpecialUnitary 3 2 (ρ_Fib_SU2 · : Matrix _ _ ℂ)`.
