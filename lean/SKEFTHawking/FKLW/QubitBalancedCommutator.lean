@@ -1,0 +1,307 @@
+/-
+Phase 6p Wave 2d.3-followup: Qubit Bloch-sphere balanced commutator (D-N §4.1 Eq. 10-13).
+
+The Dawson-Nielsen Lemma 2 (qubit case) ships the *explicit balanced commutator
+decomposition* used in the SK recursive step.  For the Z-axis (coordinate) case
+H = θ·σ_z, the construction is:
+
+  F = √(θ/2) · σ_y    (hermitian, ‖F‖ ≤ √(θ/2))
+  G = √(θ/2) · σ_x    (hermitian, ‖G‖ ≤ √(θ/2))
+
+and direct computation (using `comm_σ_x_σ_y` from `PauliMatrices.lean`) gives
+
+  F·G − G·F  =  −(2·(θ/2)·i) • σ_z  =  −(θ·i) • σ_z  =  −i·H.
+
+With  V := exp(iF), W := exp(iG),  the order-2 BCH expansion yields
+
+  V·W·V†·W†  ≈  exp([iF, iG])  =  exp(−[F,G])  =  exp(i·θ·σ_z)  =  U  ✓
+
+(the cubic-order remainder is bounded by `bch_order_2_cubic_thm` at K = 320,
+applied with δ = √(θ/2) ≤ √(1/2) for θ ≤ 1).  Norms ‖F‖, ‖G‖ ≤ √(θ/2) ≤ √θ
+when θ ≤ 1, matching D-N Eq. (11): the balanced commutator F, G have norm
+on the order of √‖H‖.
+
+**Scope of this wave (2d.3-followup, ~200 LoC):**
+
+  - **Coordinate (Z-axis) case fully proved** — substantive content via
+    `comm_σ_x_σ_y` (Pauli substrate already in `PauliMatrices.lean`) plus
+    explicit norm bounds via `Matrix.linfty_opNorm_def`.
+
+  - **General-axis case** (H = θ·(n·σ) for arbitrary unit n ∈ ℝ³) is
+    documented as a predicate-level statement; full proof requires SU(2)
+    Bloch parametrization + Pauli identity [a·σ, b·σ] = 2i(a×b)·σ, which
+    is genuinely new Mathlib substrate (~200-400 LoC of additional work).
+    Deferred to a follow-up sub-wave; the predicate is named so Wave
+    2d.5-followup-full can quantify over it directly.
+
+**Pipeline Invariant compliance:**
+  - Zero new project-local axioms (the construction is fully constructive,
+    grounded in `PauliMatrices.comm_σ_x_σ_y` + standard Mathlib norm theory).
+  - Zero `maxHeartbeats` overrides; proofs decomposed into ≤30-line bodies.
+  - Cross-module bridge integrity: `import SKEFTHawking.PauliMatrices` and
+    the body calls `comm_σ_x_σ_y` substantively (not just docstring).
+
+References:
+  - Dawson & Nielsen, arXiv:quant-ph/0505030 §4.1 Eq. 10-13 (Lemma 2).
+  - `SKEFTHawking.PauliMatrices` — σ_x, σ_y, σ_z + `comm_σ_x_σ_y`.
+  - `SKEFTHawking.MatrixBCHCubic.bch_order_2_cubic_thm` — order-2 BCH bound.
+-/
+
+import Mathlib
+import SKEFTHawking.PauliMatrices
+
+set_option autoImplicit false
+
+namespace SKEFTHawking.FKLW
+
+open SKEFTHawking Matrix Complex
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-! ## 1. Pauli matrix `linftyOpNorm` upper bounds
+
+The L∞→L∞ operator norm (`linftyOpNorm` = row-max-sum) of each Pauli matrix
+is bounded by 1.  Equality holds, but for the balanced-commutator
+construction we only need the ≤ direction (giving `‖α • σ‖ ≤ |α|`).
+-/
+
+/-- `‖σ_x‖ ≤ 1` under `linftyOpNorm`. -/
+theorem σ_x_norm_le_one : ‖σ_x‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]
+  have h : (Finset.univ.sup fun i : Fin 2 => ∑ j, ‖σ_x i j‖₊) ≤ 1 := by
+    refine Finset.sup_le fun i _ => ?_
+    fin_cases i
+    · show ∑ j, ‖σ_x 0 j‖₊ ≤ 1; simp [σ_x, Fin.sum_univ_two]
+    · show ∑ j, ‖σ_x 1 j‖₊ ≤ 1; simp [σ_x, Fin.sum_univ_two]
+  exact_mod_cast h
+
+/-- `‖σ_y‖ ≤ 1` under `linftyOpNorm`. -/
+theorem σ_y_norm_le_one : ‖σ_y‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]
+  have h : (Finset.univ.sup fun i : Fin 2 => ∑ j, ‖σ_y i j‖₊) ≤ 1 := by
+    refine Finset.sup_le fun i _ => ?_
+    fin_cases i
+    · show ∑ j, ‖σ_y 0 j‖₊ ≤ 1; simp [σ_y, Fin.sum_univ_two]
+    · show ∑ j, ‖σ_y 1 j‖₊ ≤ 1; simp [σ_y, Fin.sum_univ_two]
+  exact_mod_cast h
+
+/-- `‖σ_z‖ ≤ 1` under `linftyOpNorm`. -/
+theorem σ_z_norm_le_one : ‖σ_z‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]
+  have h : (Finset.univ.sup fun i : Fin 2 => ∑ j, ‖σ_z i j‖₊) ≤ 1 := by
+    refine Finset.sup_le fun i _ => ?_
+    fin_cases i
+    · show ∑ j, ‖σ_z 0 j‖₊ ≤ 1; simp [σ_z, Fin.sum_univ_two]
+    · show ∑ j, ‖σ_z 1 j‖₊ ≤ 1; simp [σ_z, Fin.sum_univ_two]
+  exact_mod_cast h
+
+/-! ## 2. Scalar-times-Pauli norm bound
+
+For α : ℝ, `‖(α : ℂ) • σ‖ ≤ |α|` for each Pauli σ.  Derived from the
+unit-norm bounds above via the scalar-multiplication norm law.
+-/
+
+/-- `‖(α : ℂ) • σ_x‖ ≤ |α|`. -/
+theorem smul_σ_x_norm_le (α : ℝ) : ‖(α : ℂ) • σ_x‖ ≤ |α| := by
+  rw [norm_smul]
+  have h1 : ‖(α : ℂ)‖ = |α| := by simp [Complex.norm_real]
+  rw [h1]
+  have h2 : |α| * ‖σ_x‖ ≤ |α| * 1 :=
+    mul_le_mul_of_nonneg_left σ_x_norm_le_one (abs_nonneg α)
+  linarith
+
+/-- `‖(α : ℂ) • σ_y‖ ≤ |α|`. -/
+theorem smul_σ_y_norm_le (α : ℝ) : ‖(α : ℂ) • σ_y‖ ≤ |α| := by
+  rw [norm_smul]
+  have h1 : ‖(α : ℂ)‖ = |α| := by simp [Complex.norm_real]
+  rw [h1]
+  have h2 : |α| * ‖σ_y‖ ≤ |α| * 1 :=
+    mul_le_mul_of_nonneg_left σ_y_norm_le_one (abs_nonneg α)
+  linarith
+
+/-- `‖(α : ℂ) • σ_z‖ ≤ |α|`. -/
+theorem smul_σ_z_norm_le (α : ℝ) : ‖(α : ℂ) • σ_z‖ ≤ |α| := by
+  rw [norm_smul]
+  have h1 : ‖(α : ℂ)‖ = |α| := by simp [Complex.norm_real]
+  rw [h1]
+  have h2 : |α| * ‖σ_z‖ ≤ |α| * 1 :=
+    mul_le_mul_of_nonneg_left σ_z_norm_le_one (abs_nonneg α)
+  linarith
+
+/-! ## 3. Hermiticity of `(α : ℂ) • σ` for real `α`
+
+The hermiticity of `(α : ℂ) • σ_i` for `α : ℝ` follows from `σ_i.IsHermitian`
+plus `conj (α : ℂ) = α` (since real-cast-to-complex is fixed by conjugation).
+-/
+
+/-- For real `α`, `(α : ℂ) • σ_x` is Hermitian. -/
+theorem smul_σ_x_isHermitian (α : ℝ) : ((α : ℂ) • σ_x).IsHermitian := by
+  unfold Matrix.IsHermitian
+  rw [Matrix.conjTranspose_smul, σ_x_hermitian]
+  simp [Complex.conj_ofReal]
+
+/-- `σ_y` is Hermitian (inline; not in `PauliMatrices.lean` because the
+σ_y entries (`i`, `-i`) require a small ring-tactic to discharge). -/
+theorem σ_y_hermitian : σ_y.conjTranspose = σ_y := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [σ_y, conjTranspose]
+
+/-- For real `α`, `(α : ℂ) • σ_y` is Hermitian. -/
+theorem smul_σ_y_isHermitian (α : ℝ) : ((α : ℂ) • σ_y).IsHermitian := by
+  unfold Matrix.IsHermitian
+  rw [Matrix.conjTranspose_smul, σ_y_hermitian]
+  simp [Complex.conj_ofReal]
+
+/-- For real `α`, `(α : ℂ) • σ_z` is Hermitian. -/
+theorem smul_σ_z_isHermitian (α : ℝ) : ((α : ℂ) • σ_z).IsHermitian := by
+  unfold Matrix.IsHermitian
+  rw [Matrix.conjTranspose_smul, σ_z_hermitian]
+  simp [Complex.conj_ofReal]
+
+/-! ## 4. The balanced-commutator core identity
+
+For real `α`, the matrix commutator of `(α : ℂ) • σ_y` and `(α : ℂ) • σ_x`
+equals `−(2·α²·i) • σ_z`.  This is the SUBSTANTIVE content of D-N Lemma 2
+in the Z-axis (coordinate) case.
+-/
+
+/-- **Balanced-commutator core identity (Z-axis coordinate case).**
+For any `α : ℝ`,
+
+  `[α·σ_y, α·σ_x] = α·σ_y · α·σ_x − α·σ_x · α·σ_y = −(2·α²·i) • σ_z`.
+
+Combining with `H := θ·σ_z` and `α := √(θ/2)`, we get
+`[F, G] = −(θ·i) • σ_z = −i·H`, matching D-N Eq. (12). -/
+theorem balanced_commutator_z_core (α : ℝ) :
+    ((α : ℂ) • σ_y) * ((α : ℂ) • σ_x) - ((α : ℂ) • σ_x) * ((α : ℂ) • σ_y)
+      = (-(2 * α^2 * Complex.I)) • σ_z := by
+  have h_yx_xy : σ_y * σ_x - σ_x * σ_y = (-(2 * Complex.I)) • σ_z := by
+    have h := comm_σ_x_σ_y
+    rw [show σ_y * σ_x - σ_x * σ_y = -(σ_x * σ_y - σ_y * σ_x) from by rw [neg_sub]]
+    rw [h, neg_smul]
+  calc ((α : ℂ) • σ_y) * ((α : ℂ) • σ_x) - ((α : ℂ) • σ_x) * ((α : ℂ) • σ_y)
+      = ((α : ℂ) * (α : ℂ)) • (σ_y * σ_x - σ_x * σ_y) := by
+        simp only [Matrix.smul_mul, Matrix.mul_smul, smul_sub, smul_smul]
+    _ = ((α : ℂ) * (α : ℂ)) • ((-(2 * Complex.I)) • σ_z) := by rw [h_yx_xy]
+    _ = ((α : ℂ) * (α : ℂ) * (-(2 * Complex.I))) • σ_z := by rw [smul_smul]
+    _ = (-(2 * α^2 * Complex.I)) • σ_z := by
+        congr 1
+        ring
+
+/-! ## 5. D-N Lemma 2: Z-axis balanced commutator decomposition
+
+For any θ ∈ [0, 1], setting
+
+  F := √(θ/2) · σ_y,    G := √(θ/2) · σ_x,    H := θ · σ_z
+
+yields F, G hermitian, ‖F‖, ‖G‖ ≤ √(θ/2), and  F·G − G·F = −i·H.
+
+The statement is packaged as a substantive existence theorem so downstream
+(Wave 2d.5-followup-full) can directly compose with `bch_order_2_cubic_thm`.
+-/
+
+/-- **D-N Lemma 2 (Z-axis case, substantive).** For any `θ : ℝ` with
+`0 ≤ θ ≤ 1`, there exist hermitian `F, G : Matrix (Fin 2) (Fin 2) ℂ` with
+`‖F‖, ‖G‖ ≤ Real.sqrt (θ/2)` such that
+
+  `F · G − G · F = −(θ · Complex.I) • σ_z = −i · H`
+
+where `H := (θ : ℂ) • σ_z` is the target traceless hermitian Z-axis matrix.
+
+The explicit witnesses are `F := √(θ/2) • σ_y`, `G := √(θ/2) • σ_x`.  This
+is **D-N Eq. (10-13) for the Z-axis coordinate case**.  The general
+axis case (n ∈ ℝ³ unit vector) factors through this via SU(2) rotation
+and is documented as a predicate-level scaffold (Wave 2d.3-followup-general). -/
+theorem qubit_balanced_commutator_z_axis
+    (θ : ℝ) (hθ_nn : 0 ≤ θ) (_hθ_le_one : θ ≤ 1) :
+    ∃ (F G : Matrix (Fin 2) (Fin 2) ℂ),
+      F.IsHermitian ∧ G.IsHermitian ∧
+      ‖F‖ ≤ Real.sqrt (θ/2) ∧ ‖G‖ ≤ Real.sqrt (θ/2) ∧
+      F * G - G * F = (-(θ * Complex.I)) • σ_z := by
+  set α := Real.sqrt (θ/2)
+  have hα_nn : 0 ≤ α := Real.sqrt_nonneg _
+  have hα_sq : α^2 = θ/2 := by
+    rw [sq]; exact Real.mul_self_sqrt (by linarith : (0 : ℝ) ≤ θ/2)
+  refine ⟨(α : ℂ) • σ_y, (α : ℂ) • σ_x, ?_, ?_, ?_, ?_, ?_⟩
+  · exact smul_σ_y_isHermitian α
+  · exact smul_σ_x_isHermitian α
+  · have := smul_σ_y_norm_le α; rwa [abs_of_nonneg hα_nn] at this
+  · have := smul_σ_x_norm_le α; rwa [abs_of_nonneg hα_nn] at this
+  · rw [balanced_commutator_z_core α]
+    congr 1
+    have h2α2 : (2 * α^2 : ℝ) = θ := by rw [hα_sq]; ring
+    rw [show (2 : ℂ) * (α : ℂ)^2 = ((2 * α^2 : ℝ) : ℂ) from by push_cast; ring]
+    rw [h2α2]
+
+/-! ## 6. Predicate-level scaffold for general-axis case (deferred)
+
+The general-axis case `H = θ · (n_x σ_x + n_y σ_y + n_z σ_z)` for unit
+`n ∈ ℝ³` reduces to the Z-axis case via SU(2) rotation:
+
+  ∃ R ∈ SU(2): R · σ_z · R† = n·σ  (Bloch sphere homogeneity)
+
+and then  `F := R · √(θ/2)σ_y · R†`,  `G := R · √(θ/2)σ_x · R†`  works.
+
+The SU(2) Bloch parametrization is genuinely new substrate (~200-400 LoC
+incl. the SO(3)-cover map + Euler angle decomposition).  We document the
+**predicate** here; the substantive proof is deferred. -/
+
+/-- Predicate-level scaffold for D-N Lemma 2 (general axis).  For any
+traceless hermitian `H : Matrix (Fin 2) (Fin 2) ℂ` with `‖H‖ ≤ 1`,
+there exist hermitian `F, G` with `‖F‖, ‖G‖ ≤ Real.sqrt (‖H‖ / 2)` such
+that `F · G − G · F = -Complex.I • H`.
+
+**Status:** predicate-only.  The Z-axis case is proved by
+`qubit_balanced_commutator_z_axis`; the general case factors through
+SU(2) rotation and is deferred to Wave 2d.3-followup-general. -/
+def QubitBalancedCommutatorGeneralAxis : Prop :=
+  ∀ (H : Matrix (Fin 2) (Fin 2) ℂ), H.IsHermitian → H.trace = 0 → ‖H‖ ≤ 1 →
+    ∃ (F G : Matrix (Fin 2) (Fin 2) ℂ),
+      F.IsHermitian ∧ G.IsHermitian ∧
+      ‖F‖ ≤ Real.sqrt (‖H‖ / 2) ∧ ‖G‖ ≤ Real.sqrt (‖H‖ / 2) ∧
+      F * G - G * F = -(Complex.I) • H
+
+/-! ## 7. Module summary
+
+`QubitBalancedCommutator.lean` (Phase 6p Wave 2d.3-followup, 2026-05-14):
+qubit Bloch-sphere balanced commutator (D-N §4.1 Eq. 10-13) — the
+substantive Lemma 2 content for the Z-axis coordinate case.
+
+**Shipped (zero new axioms):**
+  - **§1**: `σ_{x,y,z}_norm_le_one` — Pauli `linftyOpNorm` ≤ 1 (3 thms).
+  - **§2**: `smul_σ_{x,y,z}_norm_le` — `‖(α : ℂ) • σ‖ ≤ |α|` (3 thms).
+  - **§3**: `smul_σ_{x,y,z}_isHermitian` — hermiticity for real α (3 thms).
+  - **§4**: `balanced_commutator_z_core` — the core identity
+    `[α·σ_y, α·σ_x] = -(2·α²·i) • σ_z` via `comm_σ_x_σ_y` substantively.
+  - **§5**: `qubit_balanced_commutator_z_axis` — **the substantive D-N
+    Lemma 2 ship** (Z-axis case).  Existence of `F = √(θ/2)·σ_y`,
+    `G = √(θ/2)·σ_x` with the required hermiticity + norm + commutator
+    identity, for any `θ ∈ [0, 1]`.
+  - **§6**: `QubitBalancedCommutatorGeneralAxis` — predicate scaffold
+    for the general-axis case (deferred ~200-400 LoC of SU(2)/SO(3)
+    cover substrate).
+
+**Substantive content:**
+  (a) D-N Lemma 2 explicit construction proved for the coordinate case.
+  (b) Pauli `linftyOpNorm` ≤ 1 (3 results, new Mathlib-grade substrate).
+  (c) Scalar-multiplication hermiticity for real α (3 results).
+  (d) Predicate-level scaffold for general-axis case.
+
+**Cross-module bridge integrity** (Stage-3a pipeline check #6):
+  - imports `SKEFTHawking.PauliMatrices` and the proof of
+    `balanced_commutator_z_core` substantively calls `comm_σ_x_σ_y`
+    (not just docstring reference).
+  - imports needed for downstream: `Wave 2d.5-followup-full` can compose
+    `qubit_balanced_commutator_z_axis` with `MatrixBCHCubic.bch_order_2_cubic_thm`
+    to produce a single recursive SK step in the Z-axis coordinate case.
+
+**Pipeline-Invariant compliance:**
+  - Zero new project-local axioms (constructive proof grounded in
+    `PauliMatrices.comm_σ_x_σ_y` + Mathlib norm theory).
+  - Zero `maxHeartbeats` overrides; proofs ≤30 lines each.
+  - Pipeline Invariant #15 (no new axioms without sign-off) ✓.
+-/
+
+end SKEFTHawking.FKLW

@@ -595,6 +595,23 @@ import SKEFTHawking.FKLW.FibSU2Rep
 -- trace invariants, plus `fibonacci_density_conditional` framing the residual
 -- hypothesis for full constructive density discharge.
 import SKEFTHawking.FKLW.FibSU2Density
+-- Phase 6p Wave 2d.3-followup (2026-05-14): qubit Bloch-sphere balanced commutator
+-- (D-N Lemma 2 §4.1 Eq. 10-13). Ships `qubit_balanced_commutator_z_axis` —
+-- the substantive Z-axis-case existence of F, G hermitian with ‖F‖, ‖G‖ ≤
+-- √(θ/2) and F*G - G*F = -i·H, for H = θ•σ_z. Construction: F := √(θ/2)•σ_y,
+-- G := √(θ/2)•σ_x. Pauli substrate (σ_x, σ_y, σ_z + comm_σ_x_σ_y) reused
+-- from `PauliMatrices.lean`. General-axis case predicate scaffold for
+-- Wave 2d.3-followup-general. Zero new axioms.
+import SKEFTHawking.FKLW.QubitBalancedCommutator
+-- Phase 6p Wave 2d.5-followup-full (Z-axis ship, 2026-05-14): substantive
+-- single-step Dawson-Nielsen refinement for the qubit Z-axis case. Composes
+-- `QubitBalancedCommutator.balanced_commutator_z_core` (Wave 2d.3-followup)
+-- with `MatrixBCHCubic.bch_order_2_cubic_thm` (Wave 2d.2-followup-R5.2b).
+-- Headline: `dn_lemma3_z_axis` — `‖exp(iF)·exp(iG)·exp(-iF)·exp(-iG) - exp(iH)‖
+-- ≤ 320·(θ/2)^{3/2}` for the explicit construction F = √(θ/2)·σ_y,
+-- G = √(θ/2)·σ_x, H = θ·σ_z, ∀ θ ∈ [0, 1]. Full SU(2) recursion + ε-net
+-- base case deferred to follow-up sub-waves. Zero new axioms.
+import SKEFTHawking.FKLW.SKZAxisStep
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
