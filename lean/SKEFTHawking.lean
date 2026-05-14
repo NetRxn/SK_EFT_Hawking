@@ -622,6 +622,16 @@ import SKEFTHawking.FKLW.SKZAxisStep
 -- Final ε-discharge (Python-precomputed QCyc40Ext literal + QCyc40Ext
 -- real-projection ordering) deferred to follow-up sub-wave. Zero new axioms.
 import SKEFTHawking.FKLW.RouabahSplitBraid
+-- Phase 6p Wave 2c.4a-R4.2.d.4.3.d.1 (2026-05-14): Cartan substrate / identity-
+-- component infrastructure for the formal `H_Fib = ⊤` discharge. Ships generic
+-- §1 substrate (closed subgroup of compact T1 group + DiscreteTopology ⇒
+-- Finite; Finite ⇒ trivial identity component) + `H_Fib` specialization
+-- (`H_Fib_idComponent : Subgroup H_Fib`, finite ⇒ trivial) + dichotomy
+-- headlines (`H_Fib_dichotomy_discrete_or_accPt` composing D4.3.a with R5.1;
+-- `H_Fib_idComponent_ne_bot_implies_infinite` contrapositive). Cartan's
+-- closed-subgroup theorem + 1-parameter subgroup theorem + maximal-torus
+-- classification (D4.3.d.2+) remain Mathlib4 v4.29.0 gaps. Zero new axioms.
+import SKEFTHawking.FKLW.CartanSubstrate
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
