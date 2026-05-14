@@ -1441,6 +1441,18 @@ theorem H_Fib_card_ge_40_if_finite
   have hk_ge : 2 ≤ k := by omega
   omega
 
+/-- **Dichotomy**: `H_Fib` is either infinite or has cardinality ≥ 40.
+
+Clean trichotomy-ish statement bundling D4.3.a's two-case analysis. -/
+theorem H_Fib_infinite_or_card_ge_40 :
+    Set.Infinite (H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∨
+    40 ≤ Nat.card H_Fib := by
+  by_cases h : (H_Fib :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).Finite
+  · right; exact H_Fib_card_ge_40_if_finite h
+  · left; exact h
+
 end D4_3a_CardinalityBounds
 
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a})
