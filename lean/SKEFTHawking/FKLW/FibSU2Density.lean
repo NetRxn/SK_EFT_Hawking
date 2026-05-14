@@ -1455,7 +1455,134 @@ theorem H_Fib_infinite_or_card_ge_40 :
 
 end D4_3a_CardinalityBounds
 
-/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a})
+/-! ## 13. Two-cyclic-subgroup structure (Phase D4.3.b)
+
+D4.3.a established cardinality bounds via `⟨σ_Fib_1_SU⟩`. This section
+ships the symmetric facts for `⟨σ_Fib_2_SU⟩` and the **intersection
+cardinality bound** `|K_1 ∩ K_2| ≤ 10`.
+
+Why this matters: in the finite-subgroup classification of SU(2), any
+finite subgroup containing two distinct order-20 cyclic subgroups must
+either be cyclic (impossible — they'd equal) or binary dihedral BD_{4n}
+with both σ_Fib_{1,2}_SU forced into the cyclic part Z_{2n} (forcing
+commutation — contradicts D1). The cyclic-subgroup intersection bound
+narrows the BD candidate set.
+
+The full intersection bound `|K_1 ∩ K_2| ≤ 2` (which would push the
+finite cardinality bound to |H_Fib| ≥ 200) requires the scalar-
+centralizer argument (`u ∈ K_1 ∩ K_2 ⟹ u is scalar ⟹ u ∈ {I, -I}`),
+deferred to D4.3.c. -/
+
+section D4_3b_TwoCyclicStructure
+
+/-- `Subgroup.zpowers σ_Fib_2_SU ≤ H_Fib` (mirror of D4.3.a). -/
+theorem zpowers_σ_Fib_2_SU_le_H_Fib :
+    (Subgroup.zpowers σ_Fib_2_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ≤ H_Fib :=
+  Subgroup.zpowers_le.mpr σ_Fib_2_SU_mem_H_Fib
+
+/-- `σ_Fib_1_SU ∉ Subgroup.zpowers σ_Fib_2_SU` (mirror of D4.3.a's
+non-membership; symmetric argument). -/
+theorem σ_Fib_1_SU_not_mem_zpowers_σ_Fib_2_SU :
+    σ_Fib_1_SU ∉ Subgroup.zpowers σ_Fib_2_SU := by
+  intro h_mem
+  rw [Subgroup.mem_zpowers_iff] at h_mem
+  obtain ⟨n, hn⟩ := h_mem
+  apply σ_Fib_SU_not_commute
+  rw [← hn]
+  exact (Commute.zpow_left (Commute.refl _) n).eq
+
+/-- `Subgroup.zpowers σ_Fib_2_SU < H_Fib` strictly (mirror of D4.3.a). -/
+theorem zpowers_σ_Fib_2_SU_lt_H_Fib :
+    (Subgroup.zpowers σ_Fib_2_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) < H_Fib := by
+  refine lt_of_le_of_ne zpowers_σ_Fib_2_SU_le_H_Fib ?_
+  intro h_eq
+  apply σ_Fib_1_SU_not_mem_zpowers_σ_Fib_2_SU
+  rw [h_eq]
+  exact σ_Fib_1_SU_mem_H_Fib
+
+/-- `Nat.card (Subgroup.zpowers σ_Fib_2_SU) = 20` (mirror of D4.3.a). -/
+theorem Nat_card_zpowers_σ_Fib_2_SU :
+    Nat.card ↥(Subgroup.zpowers σ_Fib_2_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 20 := by
+  rw [Nat.card_zpowers, σ_Fib_2_SU_orderOf]
+
+/-- The two cyclic subgroups are distinct: `⟨σ_Fib_1_SU⟩ ≠ ⟨σ_Fib_2_SU⟩`.
+
+Proof: if equal, then σ_Fib_2_SU ∈ ⟨σ_Fib_1_SU⟩, contradicting
+`σ_Fib_2_SU_not_mem_zpowers_σ_Fib_1_SU` (D4.3.a). -/
+theorem zpowers_σ_Fib_1_SU_ne_zpowers_σ_Fib_2_SU :
+    (Subgroup.zpowers σ_Fib_1_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ≠
+    Subgroup.zpowers σ_Fib_2_SU := by
+  intro h_eq
+  apply σ_Fib_2_SU_not_mem_zpowers_σ_Fib_1_SU
+  rw [h_eq]
+  exact Subgroup.mem_zpowers σ_Fib_2_SU
+
+/-- **`Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU < Subgroup.zpowers σ_Fib_1_SU`**:
+the intersection is a STRICT subgroup of `⟨σ_Fib_1_SU⟩`.
+
+Proof: if equality held (i.e., `inter = ⟨σ_Fib_1_SU⟩`), then by
+`inf_eq_left`, `⟨σ_Fib_1_SU⟩ ≤ ⟨σ_Fib_2_SU⟩`, so σ_Fib_1_SU = σ_Fib_2_SU^k
+for some k, forcing σ_Fib_1_SU and σ_Fib_2_SU to commute (powers of x
+commute with x). Contradicts D1's `σ_Fib_SU_not_commute`. -/
+theorem inter_zpowers_lt_zpowers_σ_Fib_1_SU :
+    (Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) <
+    Subgroup.zpowers σ_Fib_1_SU := by
+  refine lt_of_le_of_ne inf_le_left ?_
+  intro h_eq
+  rw [inf_eq_left] at h_eq
+  have h_σ1_mem : σ_Fib_1_SU ∈ Subgroup.zpowers σ_Fib_2_SU :=
+    h_eq (Subgroup.mem_zpowers σ_Fib_1_SU)
+  rw [Subgroup.mem_zpowers_iff] at h_σ1_mem
+  obtain ⟨k, hk⟩ := h_σ1_mem
+  apply σ_Fib_SU_not_commute
+  rw [← hk]
+  exact (Commute.zpow_left (Commute.refl _) k).eq
+
+/-- **Intersection cardinality bound**: `|⟨σ_Fib_1_SU⟩ ∩ ⟨σ_Fib_2_SU⟩| ≤ 10`.
+
+Proof: the intersection is a subgroup of `⟨σ_Fib_1_SU⟩` (which has order
+20), so its cardinality divides 20. By `inter_zpowers_lt_zpowers_σ_Fib_1_SU`,
+the intersection is a STRICT subgroup of `⟨σ_Fib_1_SU⟩`, so its cardinality
+is strictly less than 20. The proper divisors of 20 are {1, 2, 4, 5, 10},
+all of which are ≤ 10. -/
+theorem inter_zpowers_card_le_10 :
+    Nat.card ↥(Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ≤ 10 := by
+  have h_card_K1 : Nat.card ↥(Subgroup.zpowers σ_Fib_1_SU :
+      Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 20 := by
+    rw [Nat.card_zpowers, σ_Fib_1_SU_orderOf]
+  have h_dvd : Nat.card ↥(Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+      Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∣ 20 := by
+    have := Subgroup.card_dvd_of_le (inf_le_left :
+      (Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ≤
+      Subgroup.zpowers σ_Fib_1_SU)
+    rw [h_card_K1] at this
+    exact this
+  have h_K1_finite : (Subgroup.zpowers σ_Fib_1_SU :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).Finite := by
+    have h_finOrder : IsOfFinOrder σ_Fib_1_SU :=
+      isOfFinOrder_iff_pow_eq_one.mpr ⟨20, by norm_num, σ_Fib_1_SU_pow_20_eq_one⟩
+    rw [← h_finOrder.powers_eq_zpowers]
+    exact h_finOrder.finite_powers
+  have h_lt : Nat.card ↥(Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) <
+      Nat.card ↥(Subgroup.zpowers σ_Fib_1_SU :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+    Set.Finite.card_lt_card h_K1_finite
+      (SetLike.coe_ssubset_coe.mpr inter_zpowers_lt_zpowers_σ_Fib_1_SU)
+  rw [h_card_K1] at h_lt
+  interval_cases (Nat.card ↥(Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+      Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) <;> omega
+
+end D4_3b_TwoCyclicStructure
+
+/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
@@ -1694,13 +1821,45 @@ dihedral with cyclic part Z_{2n} ⊇ ⟨σ_Fib_1_SU⟩), to be ruled out
 in D4.3.b by showing σ_Fib_2_SU ∉ Z_{2n} (forces non-cyclic-part,
 where elements have order 4, contradicting σ_Fib_2_SU's order 20).
 
-**Deferred to R4.2.d.4.3.b+**:
-  - **D4.3.b**: rule out the binary dihedral candidate via the
-    above "elements outside cyclic part have order 4" argument.
-    Requires showing the structure of BD_4n in SU(2) (substrate gap).
-  - **D4.3.c+**: complete formal Cartan classification of closed
-    subgroups of SU(2). Multi-session in-tree substrate build
-    (~500-1500 LoC remaining).
+**Theorems shipped in R4.2.d.4.3.b (this commit)** — two-cyclic-
+subgroup structure + intersection cardinality bound:
+
+  - `zpowers_σ_Fib_2_SU_le_H_Fib` : ⟨σ_Fib_2_SU⟩ ≤ H_Fib (mirror of D4.3.a).
+  - `σ_Fib_1_SU_not_mem_zpowers_σ_Fib_2_SU` : σ_1 ∉ ⟨σ_2⟩ (symmetric
+    non-membership via non-commute).
+  - `zpowers_σ_Fib_2_SU_lt_H_Fib` : strict containment.
+  - `Nat_card_zpowers_σ_Fib_2_SU` : |⟨σ_2⟩| = 20.
+  - `zpowers_σ_Fib_1_SU_ne_zpowers_σ_Fib_2_SU` : the two cyclic
+    subgroups are distinct.
+  - **`inter_zpowers_lt_zpowers_σ_Fib_1_SU`** : strict subgroup
+    containment ⟨σ_1⟩ ∩ ⟨σ_2⟩ < ⟨σ_1⟩. Proof: if equal then
+    ⟨σ_1⟩ ≤ ⟨σ_2⟩, forcing σ_1 = σ_2^k commute, contradicts D1.
+  - **`inter_zpowers_card_le_10`** : |⟨σ_1⟩ ∩ ⟨σ_2⟩| ≤ 10. Proof:
+    divides 20 (cyclic subgroup of cyclic) + strictly < 20 (proper)
+    → ∈ {1, 2, 4, 5, 10}.
+
+**Density implication after D4.3.b**: H_Fib contains TWO distinct
+order-20 cyclic subgroups, both included properly, with intersection
+of cardinality ≤ 10. The smallest finite SU(2) subgroup containing
+two such cyclic subgroups (after the D4.3.a ruleouts of cyclic Z_n,
+2T, 2O, 2I) is binary dihedral BD_{4n} (n ≥ 10). For both σ_1, σ_2 of
+order 20 to coexist in BD_{4n}, both must be in the cyclic part Z_{2n}
+(since outside elements of BD_{4n} have order exactly 4). But Z_{2n}
+is abelian → σ_1, σ_2 commute → contradicts D1. So H_Fib cannot be
+contained in BD_{4n} either. With this informal argument, H_Fib must
+be INFINITE; formal closure requires the "BD_{4n} outside-cyclic
+order is 4" substrate fact (D4.3.c).
+
+**Deferred to R4.2.d.4.3.c+**:
+  - **D4.3.c**: scalar-centralizer argument: u ∈ ⟨σ_1⟩ ∩ ⟨σ_2⟩
+    commutes with both σ_1 (diagonal) and σ_2 (F-conjugate of diag).
+    By centralizer arguments, u must be scalar in SU(2), hence
+    u ∈ {I, -I}. Tightens `inter_zpowers_card_le_10` to ≤ 2 and
+    `H_Fib_card_ge_40_if_finite` to ≥ 200. ~100-200 LoC matrix
+    algebra (F-conjugacy + scalar centralizer).
+  - **D4.3.d+**: rule out the BD_{4n} candidate formally + complete
+    Cartan classification of closed subgroups of SU(2). Multi-session
+    in-tree substrate build (~500-1500 LoC remaining).
 
 **Pipeline Invariant compliance**:
   - #10 (no `maxHeartbeats`): RESPECTED.
