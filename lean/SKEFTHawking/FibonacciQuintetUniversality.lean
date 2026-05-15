@@ -95,6 +95,45 @@ instance : Sub Mat5K := ⟨Mat5K.sub⟩
 instance : Zero Mat5K := ⟨Mat5K.zero⟩
 instance : One Mat5K := ⟨Mat5K.one⟩
 
+/-! ### Monoid laws on `Mat5K`
+
+These three laws (`mul_assoc`, `one_mul`, `mul_one`) state that `Mat5K`
+forms a monoid under the hand-rolled `Mat5K.mul` / `Mat5K.one`. The
+proofs are direct: `funext i k` then unfold the hand-rolled definitions
+to expose explicit unrolled sums, and discharge with `ring` (for
+associativity, where `CommRing QCyc5Ext` from PR #33 powers the
+polynomial identity) or per-row `fin_cases` (for the one-laws).
+
+We state these as standalone theorems rather than registering a
+`Monoid Mat5K` typeclass instance, because Mat5K's hand-rolled `Mul`
+instance overrides the default `Matrix.instMul` from
+`Matrix (Fin 5) (Fin 5) QCyc5Ext`; routing through Mathlib's monoid
+infrastructure would create a typeclass diamond that callers would
+have to navigate. The standalone form is simpler and sufficient. -/
+
+/-- Matrix multiplication on `Mat5K` is associative. The 25-term
+polynomial identity holds over any `CommRing`; we use the
+`CommRing QCyc5Ext` instance from PR #33. -/
+theorem mul_assoc (A B C : Mat5K) : (A * B) * C = A * (B * C) := by
+  funext i k
+  show Mat5K.mul (Mat5K.mul A B) C i k = Mat5K.mul A (Mat5K.mul B C) i k
+  unfold Mat5K.mul
+  ring
+
+/-- Identity matrix is a left unit: `1 * A = A`. -/
+theorem one_mul (A : Mat5K) : (1 : Mat5K) * A = A := by
+  funext i k
+  show Mat5K.mul Mat5K.one A i k = A i k
+  unfold Mat5K.mul Mat5K.one
+  fin_cases i <;> simp
+
+/-- Identity matrix is a right unit: `A * 1 = A`. -/
+theorem mul_one (A : Mat5K) : A * (1 : Mat5K) = A := by
+  funext i k
+  show Mat5K.mul A Mat5K.one i k = A i k
+  unfold Mat5K.mul Mat5K.one
+  fin_cases k <;> simp
+
 end Mat5K
 
 /-! ## 2. Block-extension embedding: qutrit Mat3K → Mat5K
