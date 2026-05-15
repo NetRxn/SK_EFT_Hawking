@@ -1,12 +1,12 @@
 # ADR-001: Roadmap to `CommRing QCyc5Ext` (and the wider `QCyc*`/`PolyQuot*` family)
 
-**Status:** Accepted; Units 1 + 2 shipped (PRs #29, #30, #31).
+**Status:** **CLOSED.** Units 1 + 2 + 4 shipped to main (PRs #29, #30, #31, #33). Unit 3 bypassed (Unit 4 lifted Unit-2's pattern directly to degree-2 over QCyc5). Higher-degree generalisations (Unit 5) remain optional.
 **Date:** 2026-05-15.
 **Scope:** Upstream Mathlib-shaped typeclass registration for the
 computable cyclotomic number fields built on `PolyQuotQ` and
 `PolyQuotOver`.
 **Owner:** Lean infrastructure (SKEFTHawking namespace).
-**Cross-repo PRs:** [#29](https://github.com/NetRxn/SK_EFT_Hawking/pull/29) (Unit 1a) · [#30](https://github.com/NetRxn/SK_EFT_Hawking/pull/30) (Unit 1b) · [#31](https://github.com/NetRxn/SK_EFT_Hawking/pull/31) (Unit 1c + Unit 2)
+**Cross-repo PRs:** [#29](https://github.com/NetRxn/SK_EFT_Hawking/pull/29) (Unit 1a) · [#30](https://github.com/NetRxn/SK_EFT_Hawking/pull/30) (Unit 1b) · [#31](https://github.com/NetRxn/SK_EFT_Hawking/pull/31) (Unit 1c + Unit 2) · [#33](https://github.com/NetRxn/SK_EFT_Hawking/pull/33) (Unit 4 — replaces auto-closed #32)
 
 ---
 
@@ -361,19 +361,23 @@ Architecture deviated from the plan in three places:
 |---|---|---|
 | 1a | shipped (PR #29) | `Array.getElem!_ofFn` outer-layer simp helper |
 | 1b | shipped (PR #30) | `buildPowerTable` inner-layer characterisation |
-| 1c | **shipped (PR #31)** | `mulReduce_coeffs` outer-layer Σ-form bridge |
-| 2 | **shipped (PR #31)** | `CommRing QCyc5` (8 axioms, kernel-only) |
-| 3 | unblocked | `CommRing PolyQuotOver` parameterised |
-| 4 | depends on 2+3 | `CommRing QCyc5Ext` (unblocks `Mat5K.mul_assoc`) |
-| 5 | optional | Higher-degree QCyc* generalisations |
+| 1c | shipped (PR #31) | `mulReduce_coeffs` outer-layer Σ-form bridge |
+| 2 | shipped (PR #31) | `CommRing QCyc5` (8 axioms, kernel-only) |
+| 3 | bypassed | `CommRing PolyQuotOver` parameterised — Unit 4 lifted Unit-2 pattern directly to degree-2 over QCyc5 |
+| 4 | shipped (PR #33) | `CommRing QCyc5Ext` (8 axioms, kernel-only) — the headline |
+| 5 | optional | Higher-degree QCyc* generalisations (QCyc40Ext, QCyc80Ext, ...) |
 
-Next: Unit 4 directly via the QCyc5Ext-specific Unit-2 pattern lifted
-to degree-2 over QCyc5 (skipping the full Unit 3 generality). The
-headline benefit is replacing `native_decide` in the existing
-`Mat5K = Fin 5 → Fin 5 → QCyc5Ext` consumer chain (chunked
-associativity + abstract-algebra reasoning currently blocked at the
-matrix level), which today costs 30+ minutes per dependent module
-because each Mat5K equality is a separate `native_decide` invocation.
+## 2026-05-15 session 3 close — Unit 4 shipped (PR #33); chain CLOSED
+
+**Unit 4 (closed)** — `instance instCommRing : CommRing QCyc5Ext` in `QCyc5Ext.lean`. Standard-kernel-only (`{propext, Classical.choice, Quot.sound}`); no `native_decide`, no project-local axioms. ~190 LoC into QCyc5Ext.lean.
+
+Architecture: `mulReduce2` has a closed form at degree 2 (`a₀b₀ + r₀·(a₁b₁)` and `a₀b₁ + a₁b₀ + r₁·(a₁b₁)`) — so the bridge is a 2-line `rfl` rather than a `buildPowerTable` characterisation chain. Combined with `CommRing QCyc5` (Unit 2), every CommRing axiom for QCyc5Ext reduces to a `ring`-closable polynomial identity over the base ring. Same extract-axiom-proofs-from-instance pattern as Unit 2; same `attribute [-simp]` shim pattern available for downstream consumers if needed (didn't trigger for Unit 4 — no analogous "QCyc5ExtExt" consumer using `n • (x : QCyc5Ext)`).
+
+**Process gotcha (carried forward as a workflow rule):** Stacked-PR + `--delete-branch` interaction. PR #32 was the original Unit 4 PR, stacked on PR #31's branch. When PR #31 was squash-merged with `--delete-branch`, GitHub auto-closed PR #32 (state CLOSED, not MERGED) because its base ref was deleted. `gh pr reopen` failed; had to rebase `commring-qcyc5ext-unit4` onto current main and open fresh PR #33 with same content. Lost the original PR thread but no semantic regression. **Workaround for future:** edit stacked PR's base to `main` BEFORE merging the parent, OR don't use `--delete-branch` until both stacks merge.
+
+**Downstream consequence (the headline benefit Unit 4 was always for):** `Mat5K = Fin 5 → Fin 5 → QCyc5Ext` consumers can now access `Matrix.mul_assoc` via the `CommRing QCyc5Ext` typeclass route. **However**, the existing `Mat5K.mul` is hand-rolled (5-term unrolled sum) rather than using Mathlib's `Matrix.mul`. To use `Matrix.mul_assoc` in downstream proofs, one more piece of plumbing is needed: either a `Mat5K_mul_eq_Matrix_mul` bridge lemma, or a direct `Mat5K_mul_assoc` proof using the new `CommRing QCyc5Ext`. Either is small (~20-50 LoC). The motivating downstream consumers (chunked-`native_decide` Mat5K associativity proofs in private NetRxnRD modules) currently consume 30+ minutes per dependent module per `lake build`; the Level-B retirement via `Matrix.mul_assoc` should drop that to seconds once the plumbing lands.
+
+**Chain status after this PR is CLOSED.** Future work in this area is optional Unit 5 (higher-degree generalisations).
 
 ## References
 
