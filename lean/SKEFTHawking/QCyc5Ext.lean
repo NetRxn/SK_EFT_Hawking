@@ -267,14 +267,184 @@ instance instAddCommGroup : AddCommGroup QCyc5Ext where
 
 end instAddCommGroup
 
-/-! ## 9. Module Summary -/
+/-! ## 9. CommRing structure (ADR-001 Unit 4 — the headline)
+
+This block discharges `CommRing QCyc5Ext` using `PolyQuotOver.mulReduce2`'s
+closed-form arithmetic plus the `CommRing QCyc5` instance shipped in the
+sister Unit 2 (`SKEFTHawking.QCyc5`).
+
+**Why this is shorter than Unit 2** (in the sense of fewer concrete lemmas):
+`mulReduce2` has a **closed form** at degree 2 (just `a₀b₀ + r₀·(a₁b₁)` and
+`a₀b₁ + a₁b₀ + r₁·(a₁b₁)`), so the bridge is a 2-line `rfl` rather than a
+`buildPowerTable` characterisation chain. Combined with the bottom-layer
+`CommRing QCyc5`, every CommRing axiom for `QCyc5Ext` reduces to a
+`ring`-closable polynomial identity in `x.re, x.im, y.re, y.im, z.re, z.im,
+reduction 0, reduction 1` over the base ring `QCyc5`.
+
+**Architecture (per ADR-001 §Unit 4 + the lift of Unit 2's pattern):**
+
+1. **Bridge lemmas** (`mulReduce2_coeffs_zero`, `mulReduce2_coeffs_one`):
+   `rfl`-true; expose the two polynomial coefficients of the product.
+
+2. **Projection lemmas** (`mul_re`, `mul_im`, `one_re`, `one_im`,
+   `zero_re`, `zero_im`, `add_re`, `add_im`, `toPoly_coeffs_zero`,
+   `toPoly_coeffs_one`): `rfl`-true; expose component access.
+
+3. **8 standalone CommRing axiom proofs** (`mul_assoc'`, `one_mul'`, …):
+   each is `apply QCyc5Ext.ext; · simp only [bridges]; ring; · simp only
+   [bridges]; ring` — the `ring` works because `QCyc5` is a `CommRing` (Unit 2).
+
+4. **CommRing instance**: thin record of references to the 8 axiom proofs.
+
+All proofs in this block are standard-kernel-only — `#print axioms
+QCyc5Ext.instCommRing` returns `{propext, Classical.choice, Quot.sound}`.
+No `native_decide`, no project-local axioms. -/
+
+/-! ### Bridge: `mulReduce2` closed form (rfl) -/
+
+theorem mulReduce2_coeffs_zero (x y : PolyQuotOver QCyc5 2) :
+    (PolyQuotOver.mulReduce2 reduction x y).coeffs 0 =
+    x.coeffs 0 * y.coeffs 0 + reduction 0 * (x.coeffs 1 * y.coeffs 1) := rfl
+
+theorem mulReduce2_coeffs_one (x y : PolyQuotOver QCyc5 2) :
+    (PolyQuotOver.mulReduce2 reduction x y).coeffs 1 =
+    x.coeffs 0 * y.coeffs 1 + x.coeffs 1 * y.coeffs 0 + reduction 1 * (x.coeffs 1 * y.coeffs 1) := rfl
+
+/-! ### Component projection lemmas (rfl) -/
+
+theorem mul_re (x y : QCyc5Ext) : (x * y).re =
+    (PolyQuotOver.mulReduce2 reduction x.toPoly y.toPoly).coeffs 0 := rfl
+theorem mul_im (x y : QCyc5Ext) : (x * y).im =
+    (PolyQuotOver.mulReduce2 reduction x.toPoly y.toPoly).coeffs 1 := rfl
+
+theorem one_re : (1 : QCyc5Ext).re = 1 := rfl
+theorem one_im : (1 : QCyc5Ext).im = 0 := rfl
+
+theorem toPoly_coeffs_zero (x : QCyc5Ext) : x.toPoly.coeffs 0 = x.re := rfl
+theorem toPoly_coeffs_one (x : QCyc5Ext) : x.toPoly.coeffs 1 = x.im := rfl
+
+-- Note: `add_re`, `add_im`, `zero_re`, `zero_im` are already declared @[simp] above
+-- (in the additive-structure section). Reuse those.
+
+/-! ### Standalone CommRing axiom proofs
+
+Same extract-from-instance pattern as `QCyc5.mul_assoc'` etc. — keeps
+`instCommRing`'s elaboration thin (avoids `isDefEq` heartbeat blow-up). -/
+
+theorem mul_assoc' (x y z : QCyc5Ext) : x * y * z = x * (y * z) := by
+  apply QCyc5Ext.ext
+  · simp only [mul_re, mul_im, mulReduce2_coeffs_zero, mulReduce2_coeffs_one,
+               toPoly_coeffs_zero, toPoly_coeffs_one]; ring
+  · simp only [mul_re, mul_im, mulReduce2_coeffs_zero, mulReduce2_coeffs_one,
+               toPoly_coeffs_zero, toPoly_coeffs_one]; ring
+
+theorem one_mul' (x : QCyc5Ext) : 1 * x = x := by
+  apply QCyc5Ext.ext
+  · simp only [mul_re, mulReduce2_coeffs_zero, toPoly_coeffs_zero, toPoly_coeffs_one,
+               one_re, one_im]; ring
+  · simp only [mul_im, mulReduce2_coeffs_one, toPoly_coeffs_zero, toPoly_coeffs_one,
+               one_re, one_im]; ring
+
+theorem mul_one' (x : QCyc5Ext) : x * 1 = x := by
+  apply QCyc5Ext.ext
+  · simp only [mul_re, mulReduce2_coeffs_zero, toPoly_coeffs_zero, toPoly_coeffs_one,
+               one_re, one_im]; ring
+  · simp only [mul_im, mulReduce2_coeffs_one, toPoly_coeffs_zero, toPoly_coeffs_one,
+               one_re, one_im]; ring
+
+theorem zero_mul' (x : QCyc5Ext) : 0 * x = 0 := by
+  apply QCyc5Ext.ext
+  · simp only [mul_re, mulReduce2_coeffs_zero, toPoly_coeffs_zero, toPoly_coeffs_one,
+               zero_re, zero_im]; ring
+  · simp only [mul_im, mulReduce2_coeffs_one, toPoly_coeffs_zero, toPoly_coeffs_one,
+               zero_re, zero_im]; ring
+
+theorem mul_zero' (x : QCyc5Ext) : x * 0 = 0 := by
+  apply QCyc5Ext.ext
+  · simp only [mul_re, mulReduce2_coeffs_zero, toPoly_coeffs_zero, toPoly_coeffs_one,
+               zero_re, zero_im]; ring
+  · simp only [mul_im, mulReduce2_coeffs_one, toPoly_coeffs_zero, toPoly_coeffs_one,
+               zero_re, zero_im]; ring
+
+theorem mul_comm' (x y : QCyc5Ext) : x * y = y * x := by
+  apply QCyc5Ext.ext
+  · simp only [mul_re, mulReduce2_coeffs_zero, toPoly_coeffs_zero, toPoly_coeffs_one]; ring
+  · simp only [mul_im, mulReduce2_coeffs_one, toPoly_coeffs_zero, toPoly_coeffs_one]; ring
+
+theorem left_distrib' (x y z : QCyc5Ext) : x * (y + z) = x * y + x * z := by
+  apply QCyc5Ext.ext
+  · simp only [add_re, mul_re, mulReduce2_coeffs_zero, toPoly_coeffs_zero, toPoly_coeffs_one,
+               add_re, add_im]; ring
+  · simp only [add_im, mul_im, mulReduce2_coeffs_one, toPoly_coeffs_zero, toPoly_coeffs_one,
+               add_re, add_im]; ring
+
+theorem right_distrib' (x y z : QCyc5Ext) : (x + y) * z = x * z + y * z := by
+  apply QCyc5Ext.ext
+  · simp only [add_re, mul_re, mulReduce2_coeffs_zero, toPoly_coeffs_zero, toPoly_coeffs_one,
+               add_re, add_im]; ring
+  · simp only [add_im, mul_im, mulReduce2_coeffs_one, toPoly_coeffs_zero, toPoly_coeffs_one,
+               add_re, add_im]; ring
+
+/-! ### `CommRing QCyc5Ext` -/
+
+instance instCommRing : CommRing QCyc5Ext where
+  __ := instAddCommGroup
+  one := 1
+  mul := (· * ·)
+  natCast n := ⟨(n : QCyc5), 0⟩
+  intCast n := ⟨(n : QCyc5), 0⟩
+  natCast_zero := by
+    show (⟨((0 : ℕ) : QCyc5), 0⟩ : QCyc5Ext) = (⟨0, 0⟩ : QCyc5Ext)
+    apply QCyc5Ext.ext <;> simp
+  natCast_succ n := by
+    show (⟨((n + 1 : ℕ) : QCyc5), 0⟩ : QCyc5Ext) =
+         (⟨((n : ℕ) : QCyc5), 0⟩ : QCyc5Ext) + (1 : QCyc5Ext)
+    apply QCyc5Ext.ext <;> simp [add_re, add_im, one_re, one_im]
+  intCast_ofNat n := by
+    show (⟨((n : ℕ) : QCyc5), (0 : QCyc5)⟩ : QCyc5Ext) =
+         (⟨((n : ℕ) : QCyc5), 0⟩ : QCyc5Ext)
+    rfl
+  intCast_negSucc n := by
+    show (⟨((Int.negSucc n : ℤ) : QCyc5), 0⟩ : QCyc5Ext) =
+         -(⟨((n + 1 : ℕ) : QCyc5), 0⟩ : QCyc5Ext)
+    apply QCyc5Ext.ext <;> push_cast [Int.negSucc_eq] <;> simp
+  npow := npowRec
+  npow_zero _ := rfl
+  npow_succ _ _ := rfl
+  mul_assoc := mul_assoc'
+  one_mul := one_mul'
+  mul_one := mul_one'
+  zero_mul := zero_mul'
+  mul_zero := mul_zero'
+  mul_comm := mul_comm'
+  left_distrib := left_distrib'
+  right_distrib := right_distrib'
+
+/-! ## Verification
+
+`#print axioms` outputs at module-load show standard-kernel-only deps. -/
+
+#print axioms instCommRing
+#print axioms mul_assoc'
+#print axioms one_mul'
+#print axioms mul_one'
+#print axioms zero_mul'
+#print axioms mul_zero'
+#print axioms mul_comm'
+#print axioms left_distrib'
+#print axioms right_distrib'
+
+/-! ## 10. Module Summary -/
 
 /-! ## Module summary
 
 QCyc5Ext module: K = Q(ζ₅, √φ), the degree-8 number field for Fibonacci universality.
   - QCyc5Ext: pairs (a,b) ∈ Q(ζ₅)² with w² = φ = -ζ²-ζ³
   - **`AddCommGroup QCyc5Ext`** registered (componentwise lift from QCyc5)
-  - Component projection simp lemmas for `+`, `-`, `neg`, `0`
+  - **`CommRing QCyc5Ext`** registered (ADR-001 Unit 4 = headline; via
+    `mulReduce2_coeffs_zero/_one` closed-form bridge + 8 standalone axiom
+    proofs leveraging `CommRing QCyc5`; standard-kernel-only)
+  - Component projection simp lemmas for `+`, `-`, `neg`, `0`, `1`, `*`
   - w² = φ PROVED, φ⁻¹/² squared = φ⁻¹ PROVED
   - Full F-matrix in unitary gauge: F² = I ALL 4 entries PROVED over K
   - F is symmetric PROVED
@@ -282,10 +452,18 @@ QCyc5Ext module: K = Q(ζ₅, √φ), the degree-8 number field for Fibonacci un
   - σ₂[0,1] = -(1+ζ²)·w PROVED (matches deep research exactly)
   - **Yang-Baxter relation: ALL 4 entries PROVED over K** (native_decide)
   - First Fibonacci braiding over the correct number field in any proof assistant
-  - Zero sorry, zero axioms.
+  - Zero sorry, zero project-local axioms.
 
-  CommRing is intentionally NOT registered — see `QCyc5.lean` module
-  summary for the architectural reason and the discharge plan.
+  Verification: `#print axioms QCyc5Ext.instCommRing` returns
+  `{propext, Classical.choice, Quot.sound}` — pure standard kernel.
+
+  Downstream: `Mat5K = Fin 5 → Fin 5 → QCyc5Ext` now inherits a
+  `Matrix (Fin 5) (Fin 5) QCyc5Ext`-compatible `CommRing`-aware
+  multiplication. `Matrix.mul_assoc` becomes available without
+  `native_decide`. This is the headline ADR-001 outcome — the
+  `Mat5K.mul` chunked-`native_decide` patterns in downstream consumers
+  can be retired in favour of `Matrix.mul_assoc`-based structural
+  composition.
 -/
 end QCyc5Ext
 
