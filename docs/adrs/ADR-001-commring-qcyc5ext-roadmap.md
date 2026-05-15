@@ -1,11 +1,12 @@
 # ADR-001: Roadmap to `CommRing QCyc5Ext` (and the wider `QCyc*`/`PolyQuot*` family)
 
-**Status:** Proposed.
+**Status:** Accepted; Units 1 + 2 shipped (PRs #29, #30, #31).
 **Date:** 2026-05-15.
 **Scope:** Upstream Mathlib-shaped typeclass registration for the
 computable cyclotomic number fields built on `PolyQuotQ` and
 `PolyQuotOver`.
 **Owner:** Lean infrastructure (SKEFTHawking namespace).
+**Cross-repo PRs:** [#29](https://github.com/NetRxn/SK_EFT_Hawking/pull/29) (Unit 1a) · [#30](https://github.com/NetRxn/SK_EFT_Hawking/pull/30) (Unit 1b) · [#31](https://github.com/NetRxn/SK_EFT_Hawking/pull/31) (Unit 1c + Unit 2)
 
 ---
 
@@ -291,6 +292,88 @@ non-mechanical step.
   reasoning about the relevant projections.
 
 ---
+
+## 2026-05-15 session 3 — Unit 1c + Unit 2 shipped (PR #31)
+
+The plan above estimated Unit 2 at "1–2 days" with risk of `ring` timing
+out on 16-term-per-component goals. Actual outcome via PR #31 (one
+focused session, foreground push):
+
+**Unit 1c (added)** — `mulReduce_coeffs` bridge lemma in
+`PolyQuotQCharacterisation`. The plan's §Unit 1 option (1a) called for
+this characterisation lemma but PRs #29 + #30 only shipped the inner
+helpers (`Array.getElem!_ofFn` + `buildPowerTable_*`). This PR closes
+the outer-layer gap. Two-line proof: `unfold mulReduce; simp only
+[Array.getElem!_ofFn]`.
+
+**Unit 2 (closed)** — `instance instCommRing : CommRing QCyc5` in
+`QCyc5.lean`. Standard-kernel-only (`{propext, Classical.choice,
+Quot.sound}`); no `native_decide`, no project-local axioms.
+
+Architecture deviated from the plan in three places:
+
+1. **28 concrete `powerTable_m_k` simp lemmas instead of one
+   characterisation theorem.** The plan suggested a single
+   `mulReduce_coeffs` lemma feeding `simp` for everything; in practice
+   the post-bridge goal still has `((buildPowerTable r)[p+q]![k]!)`
+   indexed by symbolic `(p, q)`, which doesn't fire the generic Unit-1b
+   lemma without a `Fin` instantiation hypothesis. Concrete table
+   entries (m∈{0..6}, k∈{0..3}) sidestep this — base by `rfl`, step by
+   `show <repeated shiftByXArr>; simp [shiftByXArr, reduction]`. Both
+   layers kernel-only.
+
+2. **8 standalone CommRing axiom proofs (`mul_assoc'`, `one_mul'`, …)
+   extracted from the instance.** When the proofs were inline in the
+   `instance ... where` block, instance elaboration hit `isDefEq`
+   heartbeat timeouts — Lean was checking definitional equality of the
+   instance against existing `Add QCyc5`, `Zero QCyc5`, etc. through
+   the AddCommGroup parent inheritance. Extracting the proofs to
+   standalone theorems lets each elaborate independently; the instance
+   becomes a thin record of references, no nested elaboration.
+
+3. **Local `attribute [-simp] nsmul_eq_mul zsmul_eq_mul` in
+   QCyc5Ext.** Registering `CommRing QCyc5` activates Mathlib's
+   `nsmul_eq_mul : @[simp] n • a = n * a` for QCyc5 globally. This
+   broke QCyc5Ext's `instAddCommGroup` proofs (which use `n • x.re`
+   for `x.re : QCyc5`) — simp would normalise into multiplicative form
+   that requires the new ring machinery to discharge. The fix is a
+   one-section `attribute [-simp]` shim in QCyc5Ext.lean covering its
+   `instAddCommGroup` declaration. No semantic change. This is a
+   pattern future Unit 4 will likely need to apply for QCyc5Ext-Ext
+   constructions if any exist.
+
+**Process learnings carried forward** (in `docs/WORKFLOW.md`):
+- `lean_run_code` MCP tool returns `success: true, diagnostics: []`
+  for proofs that fail with `simp` heartbeat timeouts or unknown
+  constants. Use file-based `lean_diagnostic_messages` as the source
+  of truth for non-trivial proofs.
+- CommRing instance elaboration with `__ := instAddCommGroup`-style
+  inheritance can blow up on `isDefEq` if proof bodies are inline;
+  extract proofs as standalone theorems.
+- CommRing registration ripples through the global simp set
+  (`nsmul_eq_mul`, `pow_succ`, etc.). Audit downstream consumers for
+  `n • x` patterns and apply local `attribute [-simp]` shims as
+  needed.
+
+**Chain status after this PR:**
+
+| Unit | Status | Description |
+|---|---|---|
+| 1a | shipped (PR #29) | `Array.getElem!_ofFn` outer-layer simp helper |
+| 1b | shipped (PR #30) | `buildPowerTable` inner-layer characterisation |
+| 1c | **shipped (PR #31)** | `mulReduce_coeffs` outer-layer Σ-form bridge |
+| 2 | **shipped (PR #31)** | `CommRing QCyc5` (8 axioms, kernel-only) |
+| 3 | unblocked | `CommRing PolyQuotOver` parameterised |
+| 4 | depends on 2+3 | `CommRing QCyc5Ext` (unblocks `Mat5K.mul_assoc`) |
+| 5 | optional | Higher-degree QCyc* generalisations |
+
+Next: Unit 4 directly via the QCyc5Ext-specific Unit-2 pattern lifted
+to degree-2 over QCyc5 (skipping the full Unit 3 generality). The
+headline benefit is replacing `native_decide` in the existing
+`Mat5K = Fin 5 → Fin 5 → QCyc5Ext` consumer chain (chunked
+associativity + abstract-algebra reasoning currently blocked at the
+matrix level), which today costs 30+ minutes per dependent module
+because each Mat5K equality is a separate `native_decide` invocation.
 
 ## References
 
