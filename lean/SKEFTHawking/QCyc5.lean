@@ -178,12 +178,93 @@ def fib_hopf_trace : QCyc5 := R1 * R1 + phi * (Rtau * Rtau)
     Matches S_{ττ}/S_{0τ} = (S_{02}²)/(S_{00}·S_{02}) computed from the S-matrix. -/
 theorem fib_hopf_value : fib_hopf_trace = ⟨-1, 0, 0, 0⟩ := by native_decide
 
+/-! ## Component projection simp lemmas
+
+These `rfl`-lemmas tag the field-projection equalities so that `simp`
+reduces e.g. `(x + y).c0` to `x.c0 + y.c0`. They are the foundation for
+the `AddCommGroup` instance below and any downstream abstract-algebra
+reasoning. -/
+
+@[simp] theorem add_c0 (x y : QCyc5) : (x + y).c0 = x.c0 + y.c0 := rfl
+@[simp] theorem add_c1 (x y : QCyc5) : (x + y).c1 = x.c1 + y.c1 := rfl
+@[simp] theorem add_c2 (x y : QCyc5) : (x + y).c2 = x.c2 + y.c2 := rfl
+@[simp] theorem add_c3 (x y : QCyc5) : (x + y).c3 = x.c3 + y.c3 := rfl
+@[simp] theorem sub_c0 (x y : QCyc5) : (x - y).c0 = x.c0 - y.c0 := rfl
+@[simp] theorem sub_c1 (x y : QCyc5) : (x - y).c1 = x.c1 - y.c1 := rfl
+@[simp] theorem sub_c2 (x y : QCyc5) : (x - y).c2 = x.c2 - y.c2 := rfl
+@[simp] theorem sub_c3 (x y : QCyc5) : (x - y).c3 = x.c3 - y.c3 := rfl
+@[simp] theorem neg_c0 (x : QCyc5) : (-x).c0 = -x.c0 := rfl
+@[simp] theorem neg_c1 (x : QCyc5) : (-x).c1 = -x.c1 := rfl
+@[simp] theorem neg_c2 (x : QCyc5) : (-x).c2 = -x.c2 := rfl
+@[simp] theorem neg_c3 (x : QCyc5) : (-x).c3 = -x.c3 := rfl
+@[simp] theorem zero_c0 : (0 : QCyc5).c0 = 0 := rfl
+@[simp] theorem zero_c1 : (0 : QCyc5).c1 = 0 := rfl
+@[simp] theorem zero_c2 : (0 : QCyc5).c2 = 0 := rfl
+@[simp] theorem zero_c3 : (0 : QCyc5).c3 = 0 := rfl
+
+/-! ## Additive commutative group structure
+
+`QCyc5 ≃ ℚ⁴` as an additive group, so `AddCommGroup` lifts pointwise
+from ℚ via the four-component projection. All axioms reduce to the
+corresponding ℚ axioms (one per component) through `ext + simp + ring`.
+
+This instance does NOT register a `Ring`/`CommRing` structure — the
+multiplication `(· * ·)` on `QCyc5` delegates to
+`PolyQuotQ.mulReduce 4 reduction` whose `Array.ofFn` + bang-indexed
+power-table representation is intentionally opaque to symbolic
+simp/decide reasoning (the design enables `native_decide` evaluation at
+the cost of abstract-algebra integration). See
+`docs/adrs/ADR-001-commring-qcyc5ext-roadmap.md` for the discharge plan
+and the multi-PR path to a full `CommRing` instance.
+
+Downstream consumers gain immediate access to:
+- `Mathlib.Algebra.AddTorsor` machinery
+- `Pi`-type `AddCommGroup` for `Fin n → QCyc5` (e.g., coefficient vectors)
+- `Finsupp` and free-module constructions over `QCyc5`. -/
+instance instAddCommGroup : AddCommGroup QCyc5 where
+  add := (· + ·)
+  zero := 0
+  neg x := -x
+  sub := (· - ·)
+  nsmul n x := ⟨n • x.c0, n • x.c1, n • x.c2, n • x.c3⟩
+  zsmul n x := ⟨n • x.c0, n • x.c1, n • x.c2, n • x.c3⟩
+  add_assoc a b c := by ext <;> simp [add_assoc]
+  zero_add a := by ext <;> simp
+  add_zero a := by ext <;> simp
+  add_comm a b := by ext <;> simp [add_comm]
+  neg_add_cancel a := by ext <;> simp
+  sub_eq_add_neg a b := by ext <;> simp [sub_eq_add_neg]
+  nsmul_zero a := by ext <;> simp
+  nsmul_succ n a := by ext <;> (show (n+1) • _ = n • _ + _; rw [succ_nsmul])
+  zsmul_zero' a := by ext <;> simp
+  zsmul_succ' n a := by
+    ext <;> (
+      show (Int.ofNat n + 1) • _ = _
+      rw [add_smul, one_smul]; simp)
+  zsmul_neg' n a := by
+    ext <;> (
+      show Int.negSucc n • _ = _
+      simp [Int.negSucc_eq]; ring)
+
+/-- `n • x` projects component-wise (ℕ scalar action). -/
+@[simp] theorem nsmul_c0 (n : ℕ) (x : QCyc5) : (n • x).c0 = n • x.c0 := rfl
+@[simp] theorem nsmul_c1 (n : ℕ) (x : QCyc5) : (n • x).c1 = n • x.c1 := rfl
+@[simp] theorem nsmul_c2 (n : ℕ) (x : QCyc5) : (n • x).c2 = n • x.c2 := rfl
+@[simp] theorem nsmul_c3 (n : ℕ) (x : QCyc5) : (n • x).c3 = n • x.c3 := rfl
+/-- `n • x` projects component-wise (ℤ scalar action). -/
+@[simp] theorem zsmul_c0 (n : ℤ) (x : QCyc5) : (n • x).c0 = n • x.c0 := rfl
+@[simp] theorem zsmul_c1 (n : ℤ) (x : QCyc5) : (n • x).c1 = n • x.c1 := rfl
+@[simp] theorem zsmul_c2 (n : ℤ) (x : QCyc5) : (n • x).c2 = n • x.c2 := rfl
+@[simp] theorem zsmul_c3 (n : ℤ) (x : QCyc5) : (n • x).c3 = n • x.c3 := rfl
+
 /-! ## Module Summary -/
 
 /-! ## Module summary
 
 QCyc5 module: Q(ζ₅) for Fibonacci braiding.
   - All arithmetic exact over Q⁴ with DecidableEq
+  - **`AddCommGroup QCyc5`** registered (pointwise lift from ℚ⁴)
+  - Component projection simp lemmas for `+`, `-`, `neg`, `0`, `n•`
   - ζ⁵ = 1 PROVED (native_decide)
   - Cyclotomic relation PROVED
   - R₁ = Rτ² PROVED, hexagon E1/E2/E3 ALL PROVED
@@ -192,6 +273,11 @@ QCyc5 module: Q(ζ₅) for Fibonacci braiding.
   - **Fibonacci Hopf link: PROVED** (native_decide)
   - φ² = φ+1 PROVED (golden ratio)
   - Zero sorry, zero axioms.
+
+  CommRing is intentionally NOT registered — the `mulReduce` machinery
+  is opaque to symbolic simp/decide, blocking the conventional
+  `ext + ring` discharge of `mul_assoc` / distributivity. See
+  `docs/adrs/ADR-001-commring-qcyc5ext-roadmap.md`.
 -/
 end QCyc5
 
