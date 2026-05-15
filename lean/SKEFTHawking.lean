@@ -1,4 +1,8 @@
 import SKEFTHawking.Basic
+-- Array helper lemmas (bang-indexed ofFn simp lemma) for cyclotomic-substrate
+-- symbolic reasoning. Upstream-contribution-quality; gating step for the
+-- CommRing QCyc5Ext roadmap (see docs/adrs/ADR-001-commring-qcyc5ext-roadmap.md).
+import SKEFTHawking.ArrayHelpers
 -- Phase 6n.γ Stage 2-3 — Glorioso-Liu axiomatic skeleton
 -- (Phase 6n session 5: substantive Stage 2-3 refactor shipped — all 7
 -- modules now parameterized over SKDoubling.SKAction with substantive
