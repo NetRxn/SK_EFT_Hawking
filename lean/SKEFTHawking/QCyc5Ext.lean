@@ -204,12 +204,67 @@ theorem fullBraid_11 :
     fullSigma2_10 * R1_ext * fullSigma2_01 + fullSigma2_11 * Rtau_ext * fullSigma2_11 := by
   native_decide
 
-/-! ## 7. Module Summary -/
+/-! ## 7. Component projection simp lemmas -/
+
+@[simp] theorem add_re (x y : QCyc5Ext) : (x + y).re = x.re + y.re := rfl
+@[simp] theorem add_im (x y : QCyc5Ext) : (x + y).im = x.im + y.im := rfl
+@[simp] theorem sub_re (x y : QCyc5Ext) : (x - y).re = x.re - y.re := rfl
+@[simp] theorem sub_im (x y : QCyc5Ext) : (x - y).im = x.im - y.im := rfl
+@[simp] theorem neg_re (x : QCyc5Ext) : (-x).re = -x.re := rfl
+@[simp] theorem neg_im (x : QCyc5Ext) : (-x).im = -x.im := rfl
+@[simp] theorem zero_re : (0 : QCyc5Ext).re = 0 := rfl
+@[simp] theorem zero_im : (0 : QCyc5Ext).im = 0 := rfl
+
+/-! ## 8. Additive commutative group structure
+
+`QCyc5Ext ≃ QCyc5 × QCyc5` as an additive group, so `AddCommGroup` lifts
+component-wise from the `AddCommGroup QCyc5` instance in
+`SKEFTHawking.QCyc5`. The discharge pattern for each axiom is
+`ext <;> simp [..]` reducing to QCyc5-level axioms.
+
+This instance does NOT register a `Ring`/`CommRing` structure on
+`QCyc5Ext`. The multiplication delegates to
+`PolyQuotOver.mulReduce2 reduction`, whose intermediate machinery
+(`Array.ofFn`, bang-indexing) is opaque to symbolic simp/decide
+reasoning. See `docs/adrs/ADR-001-commring-qcyc5ext-roadmap.md` for the
+discharge plan.
+
+Downstream consumers (e.g., `Mat5K = Fin 5 → Fin 5 → QCyc5Ext`) now
+inherit `AddCommGroup` automatically through Pi types. -/
+instance instAddCommGroup : AddCommGroup QCyc5Ext where
+  add := (· + ·)
+  zero := 0
+  neg x := -x
+  sub := (· - ·)
+  nsmul n x := ⟨n • x.re, n • x.im⟩
+  zsmul n x := ⟨n • x.re, n • x.im⟩
+  add_assoc a b c := by ext <;> simp [add_assoc]
+  zero_add a := by ext <;> simp
+  add_zero a := by ext <;> simp
+  add_comm a b := by ext <;> simp [add_comm]
+  neg_add_cancel a := by ext <;> simp
+  sub_eq_add_neg a b := by ext <;> simp [sub_eq_add_neg]
+  nsmul_zero a := by ext <;> simp
+  nsmul_succ n a := by ext <;> simp [succ_nsmul]
+  zsmul_zero' a := by ext <;> simp
+  zsmul_succ' n a := by
+    ext <;> (
+      show (Int.ofNat n + 1) • _ = _
+      rw [add_smul, one_smul]; simp)
+  zsmul_neg' n a := by
+    ext <;> (
+      show Int.negSucc n • _ = _
+      simp [Int.negSucc_eq]
+      ring)
+
+/-! ## 9. Module Summary -/
 
 /-! ## Module summary
 
 QCyc5Ext module: K = Q(ζ₅, √φ), the degree-8 number field for Fibonacci universality.
   - QCyc5Ext: pairs (a,b) ∈ Q(ζ₅)² with w² = φ = -ζ²-ζ³
+  - **`AddCommGroup QCyc5Ext`** registered (componentwise lift from QCyc5)
+  - Component projection simp lemmas for `+`, `-`, `neg`, `0`
   - w² = φ PROVED, φ⁻¹/² squared = φ⁻¹ PROVED
   - Full F-matrix in unitary gauge: F² = I ALL 4 entries PROVED over K
   - F is symmetric PROVED
@@ -218,6 +273,9 @@ QCyc5Ext module: K = Q(ζ₅, √φ), the degree-8 number field for Fibonacci un
   - **Yang-Baxter relation: ALL 4 entries PROVED over K** (native_decide)
   - First Fibonacci braiding over the correct number field in any proof assistant
   - Zero sorry, zero axioms.
+
+  CommRing is intentionally NOT registered — see `QCyc5.lean` module
+  summary for the architectural reason and the discharge plan.
 -/
 end QCyc5Ext
 
