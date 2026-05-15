@@ -231,6 +231,14 @@ discharge plan.
 
 Downstream consumers (e.g., `Mat5K = Fin 5 → Fin 5 → QCyc5Ext`) now
 inherit `AddCommGroup` automatically through Pi types. -/
+section instAddCommGroup
+-- Disable Ring-derived simp lemmas that would rewrite `n • x.re` (where
+-- `x.re : QCyc5`) into multiplicative form via the new `CommRing QCyc5`
+-- (registered in `SKEFTHawking.QCyc5`). Such rewrites move through
+-- non-definitionally-equal forms (AddCommGroup-nsmul vs Ring-nsmul) and blow
+-- up the elaboration cost of these additive-structure proofs.
+attribute [-simp] nsmul_eq_mul zsmul_eq_mul
+
 instance instAddCommGroup : AddCommGroup QCyc5Ext where
   add := (· + ·)
   zero := 0
@@ -256,6 +264,8 @@ instance instAddCommGroup : AddCommGroup QCyc5Ext where
       show Int.negSucc n • _ = _
       simp [Int.negSucc_eq]
       ring)
+
+end instAddCommGroup
 
 /-! ## 9. Module Summary -/
 

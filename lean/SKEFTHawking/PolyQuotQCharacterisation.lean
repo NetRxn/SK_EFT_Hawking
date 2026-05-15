@@ -228,6 +228,28 @@ theorem buildPowerTable_getElem!_step (r : Fin n → ℚ)
   congr 1
   rw [show state.size - 1 = n + j from by omega]
 
+/-! ## Outer-layer characterisation: `mulReduce` coefficient as explicit double sum
+
+The bridge from `(mulReduce n r x y).coeffs k` to a `Σ_p Σ_q` expression. This
+combines with `Array.getElem!_ofFn` (Unit 1a) to discharge the outer Array.ofFn
+of the materialised `outArr`. Together with the inner-layer
+`buildPowerTable_getElem!_lt` / `_step` lemmas (above), this enables
+abstract-algebra reasoning over `PolyQuotQ`-based number fields without
+`native_decide`.
+
+This is the Unit 1c piece called for in
+`docs/adrs/ADR-001-commring-qcyc5ext-roadmap.md` §Unit 1 option (1a):
+"add an `@[simp]` characterisation lemma … proved once (by Array reasoning),
+then used for all subsequent symbolic work." -/
+theorem mulReduce_coeffs (n : ℕ) (r : Fin n → ℚ)
+    (x y : PolyQuotQ n) (k : Fin n) :
+    (PolyQuotQ.mulReduce n r x y).coeffs k =
+    ∑ p : Fin n, ∑ q : Fin n,
+      x.coeffs p * y.coeffs q *
+        ((PolyQuotQ.buildPowerTable r)[p.val + q.val]!)[k.val]! := by
+  unfold PolyQuotQ.mulReduce
+  simp only [Array.getElem!_ofFn]
+
 end PolyQuotQ
 
 end SKEFTHawking
