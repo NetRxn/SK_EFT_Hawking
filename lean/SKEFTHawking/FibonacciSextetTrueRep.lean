@@ -403,4 +403,124 @@ theorem sigma4_inv_left  : sigma4_sextet_inv * sigma4_sextet = 1 := by native_de
 theorem sigma5_inv_right : sigma5_sextet * sigma5_sextet_inv = 1 := by native_decide
 theorem sigma5_inv_left  : sigma5_sextet_inv * sigma5_sextet = 1 := by native_decide
 
+/-! ## 4. Far-commutativity relations (B_6 braid group axiom 2)
+
+For `|i - j| ≥ 2`, the generators σ_i and σ_j commute. In B_6 there
+are 6 such pairs: (1,3), (1,4), (1,5), (2,4), (2,5), (3,5). Each
+discharges via `native_decide` on a single Mat13K_5Ext multiplication
+per side (1-mul chains). -/
+
+theorem far_comm_1_3 : sigma1_sextet * sigma3_sextet = sigma3_sextet * sigma1_sextet := by native_decide
+theorem far_comm_1_4 : sigma1_sextet * sigma4_sextet = sigma4_sextet * sigma1_sextet := by native_decide
+theorem far_comm_1_5 : sigma1_sextet * sigma5_sextet = sigma5_sextet * sigma1_sextet := by native_decide
+theorem far_comm_2_4 : sigma2_sextet * sigma4_sextet = sigma4_sextet * sigma2_sextet := by native_decide
+theorem far_comm_2_5 : sigma2_sextet * sigma5_sextet = sigma5_sextet * sigma2_sextet := by native_decide
+theorem far_comm_3_5 : sigma3_sextet * sigma5_sextet = sigma5_sextet * sigma3_sextet := by native_decide
+
+/-! ## 5. Yang-Baxter relations (B_6 braid group axiom 1)
+
+For adjacent generators σ_i, σ_{i+1}, the braid relation
+`σ_i σ_{i+1} σ_i = σ_{i+1} σ_i σ_{i+1}` holds. In B_6 there are 4
+such relations (i = 1, 2, 3, 4). Each discharges via `native_decide`
+on a 2-mul Mat13K_5Ext chain per side (within the ≤ 4-mul budget). -/
+
+theorem yang_baxter_1_2 :
+    sigma1_sextet * sigma2_sextet * sigma1_sextet =
+    sigma2_sextet * sigma1_sextet * sigma2_sextet := by native_decide
+
+theorem yang_baxter_2_3 :
+    sigma2_sextet * sigma3_sextet * sigma2_sextet =
+    sigma3_sextet * sigma2_sextet * sigma3_sextet := by native_decide
+
+theorem yang_baxter_3_4 :
+    sigma3_sextet * sigma4_sextet * sigma3_sextet =
+    sigma4_sextet * sigma3_sextet * sigma4_sextet := by native_decide
+
+theorem yang_baxter_4_5 :
+    sigma4_sextet * sigma5_sextet * sigma4_sextet =
+    sigma5_sextet * sigma4_sextet * sigma5_sextet := by native_decide
+
+/-! ## 6. Block-diagonality: sector preservation
+
+The 13-dim fusion space splits as 5-dim c=1 sector (indices {0..4})
++ 8-dim c=τ sector (indices {5..12}) per DR §Q2.1. Each σ_n
+preserves this decomposition (no cross-sector matrix elements):
+all entries with `(i.val < 5) ≠ (j.val < 5)` are zero. This is a
+structural property of the F-symbol-recoupled braid action and is
+exploited in Phase 2 to extract the per-sector computational
+sub-blocks independently.
+
+We express this via the `blockDiag` predicate: zeroing out
+cross-sector entries leaves the matrix unchanged. -/
+
+/-- The block-diagonal projector: zeros out cross-sector entries of a
+`Mat13K_5Ext`. A matrix `M` is block-diagonal w.r.t. the {0..4}/{5..12}
+split iff `M = blockDiag M`. -/
+def blockDiag (M : Mat13K_5Ext) : Mat13K_5Ext := fun i j =>
+  if (i.val < 5) = (j.val < 5) then M i j else 0
+
+theorem sigma1_block_diag : sigma1_sextet = blockDiag sigma1_sextet := by native_decide
+theorem sigma2_block_diag : sigma2_sextet = blockDiag sigma2_sextet := by native_decide
+theorem sigma3_block_diag : sigma3_sextet = blockDiag sigma3_sextet := by native_decide
+theorem sigma4_block_diag : sigma4_sextet = blockDiag sigma4_sextet := by native_decide
+theorem sigma5_block_diag : sigma5_sextet = blockDiag sigma5_sextet := by native_decide
+
+/-! ## 7. Computational sub-block extraction (TQSim ordering)
+
+The 13-dim fusion space carries two 4-dim computational sub-blocks
+(per DR Q2.1; one per sector). These are the sub-spaces that admit
+a 2-qubit interpretation:
+
+* **Sector 0** (c=1, vacuum total charge): indices `{1, 2, 3, 4}`
+  (matches both TQSim and DR ordering).
+* **Sector 1** (c=τ, Fibonacci total charge): indices
+  `{8, 9, 11, 12}` in TQSim ordering. (DR Table 2 uses
+  `{9, 10, 11, 12}`; the difference is a 3-cycle permutation at
+  `{8, 9, 10}` discovered in session 13. The Lean substrate uses
+  TQSim ordering as canonical — see module-header docstring.)
+
+We provide two extraction functions returning 4×4 matrices over
+QCyc5Ext, plus sanity-check identity-mapping theorems.
+-/
+
+/-- Sector-0 computational sub-block index map: `0↦1, 1↦2, 2↦3, 3↦4`. -/
+def sec0Idx (i : Fin 4) : Fin 13 :=
+  match i with
+  | ⟨0, _⟩ => ⟨1, by decide⟩
+  | ⟨1, _⟩ => ⟨2, by decide⟩
+  | ⟨2, _⟩ => ⟨3, by decide⟩
+  | ⟨_, _⟩ => ⟨4, by decide⟩
+
+/-- Sector-1 computational sub-block index map (TQSim ordering):
+`0↦8, 1↦9, 2↦11, 3↦12`. -/
+def sec1Idx (i : Fin 4) : Fin 13 :=
+  match i with
+  | ⟨0, _⟩ => ⟨8, by decide⟩
+  | ⟨1, _⟩ => ⟨9, by decide⟩
+  | ⟨2, _⟩ => ⟨11, by decide⟩
+  | ⟨_, _⟩ => ⟨12, by decide⟩
+
+/-- Extract the sector-0 computational sub-block (4×4 over QCyc5Ext). -/
+def computationalSec0 (M : Mat13K_5Ext) : Fin 4 → Fin 4 → QCyc5Ext :=
+  fun i j => M (sec0Idx i) (sec0Idx j)
+
+/-- Extract the sector-1 computational sub-block (4×4 over QCyc5Ext)
+in TQSim ordering. -/
+def computationalSec1 (M : Mat13K_5Ext) : Fin 4 → Fin 4 → QCyc5Ext :=
+  fun i j => M (sec1Idx i) (sec1Idx j)
+
+/-! ### Smoke tests: σ_1's sub-block extraction at corner entries
+
+These are not load-bearing for downstream proofs but exercise the
+extraction path on `native_decide` to catch toolchain regressions. -/
+
+theorem computationalSec0_sigma1_00 :
+    computationalSec0 sigma1_sextet 0 0 = R1_ext := by native_decide
+theorem computationalSec0_sigma1_33 :
+    computationalSec0 sigma1_sextet 3 3 = Rtau_ext := by native_decide
+theorem computationalSec1_sigma1_00 :
+    computationalSec1 sigma1_sextet 0 0 = R1_ext := by native_decide
+theorem computationalSec1_sigma1_33 :
+    computationalSec1 sigma1_sextet 3 3 = Rtau_ext := by native_decide
+
 end SKEFTHawking
