@@ -24,10 +24,22 @@ type over `QCyc5Ext = ℚ(ζ₅, √φ)` mirroring the `Mat5K` pattern from
 For N Fibonacci anyons, the dim-13 fusion space carries the natural
 braid-group action via R-matrix conjugation. The 6-strand case (N=6,
 2 logical qubits with 3 anyons per qubit) decomposes block-diagonally
-as a 5-dim c=1 (total-charge-vacuum) sub-block and an 8-dim c=τ
-(total-charge-Fibonacci) sub-block. Both sub-blocks carry 4-dim
-computational sub-spaces (indices {1,2,3,4} in the c=1 block; indices
-{9,10,11,12} in the c=τ block) plus 1+4 = 5 leakage dimensions.
+as a 5-dim c=1 (total-charge-vacuum) sub-block (indices {0..4}) and
+an 8-dim c=τ (total-charge-Fibonacci) sub-block (indices {5..12}).
+Both sub-blocks carry 4-dim computational sub-spaces (indices
+{1,2,3,4} in the c=1 block; indices **{8,9,11,12}** in the c=τ block
+under the **TQSim basis ordering**) plus 1+4 = 5 leakage dimensions.
+
+**Basis-ordering caveat (load-bearing for downstream consumers):**
+TQSim's `AnyonicCircuit(2, 3).basis` and DR Phase 6p Wave 3a.2.3b
+Table 2 agree at indices 0..7, 11, 12 but disagree at indices
+{8, 9, 10} (3-cycle permutation: TQSim has (|00⟩₁, |10⟩₁, |21⟩₁)
+where DR has (|21⟩₁, |00⟩₁, |10⟩₁)). The substrate that this module
+underpins (`FibonacciSextetTrueRep.lean`) adopts TQSim ordering as
+canonical (it's the extracted form). Sector-1 computational
+sub-block indices are therefore **{8, 9, 11, 12}**, NOT DR's
+{9, 10, 11, 12}. See `FibonacciSextetTrueRep.lean` header docstring
+for full justification.
 
 This module provides the underlying 13×13 matrix infrastructure;
 the explicit σ_1..σ_5 generators that populate it ship in the
@@ -170,6 +182,91 @@ theorem mul_one (A : Mat13K_5Ext) : A * (1 : Mat13K_5Ext) = A := by
   show Mat13K_5Ext.mul A Mat13K_5Ext.one i k = A i k
   unfold Mat13K_5Ext.mul Mat13K_5Ext.one
   fin_cases k <;> simp
+
+/-! ### Additive commutative group laws
+
+`Mat13K_5Ext` carries the pointwise additive structure of `QCyc5Ext`.
+These laws (associativity, commutativity, unit, inverse) make the
+substrate available for any algebraic reasoning that needs to add
+matrices, take differences, or apply distributivity. All proofs are
+structural: `funext + unfold + ring` over the underlying `CommRing
+QCyc5Ext`.
+
+These are standalone theorems rather than typeclass instances for the
+same reason as the monoid laws: registering `AddCommGroup` would
+collide with `Matrix (Fin 13) (Fin 13) QCyc5Ext.instAddCommGroup`. -/
+
+theorem add_assoc (A B C : Mat13K_5Ext) : (A + B) + C = A + (B + C) := by
+  funext i j
+  show Mat13K_5Ext.add (Mat13K_5Ext.add A B) C i j =
+       Mat13K_5Ext.add A (Mat13K_5Ext.add B C) i j
+  unfold Mat13K_5Ext.add
+  ring
+
+theorem add_comm (A B : Mat13K_5Ext) : A + B = B + A := by
+  funext i j
+  show Mat13K_5Ext.add A B i j = Mat13K_5Ext.add B A i j
+  unfold Mat13K_5Ext.add
+  ring
+
+theorem zero_add (A : Mat13K_5Ext) : (0 : Mat13K_5Ext) + A = A := by
+  funext i j
+  show Mat13K_5Ext.add Mat13K_5Ext.zero A i j = A i j
+  unfold Mat13K_5Ext.add Mat13K_5Ext.zero
+  ring
+
+theorem add_zero (A : Mat13K_5Ext) : A + (0 : Mat13K_5Ext) = A := by
+  funext i j
+  show Mat13K_5Ext.add A Mat13K_5Ext.zero i j = A i j
+  unfold Mat13K_5Ext.add Mat13K_5Ext.zero
+  ring
+
+theorem neg_add_cancel (A : Mat13K_5Ext) : (-A) + A = (0 : Mat13K_5Ext) := by
+  funext i j
+  show Mat13K_5Ext.add (Mat13K_5Ext.neg A) A i j = Mat13K_5Ext.zero i j
+  unfold Mat13K_5Ext.add Mat13K_5Ext.neg Mat13K_5Ext.zero
+  ring
+
+theorem add_neg_cancel (A : Mat13K_5Ext) : A + (-A) = (0 : Mat13K_5Ext) := by
+  funext i j
+  show Mat13K_5Ext.add A (Mat13K_5Ext.neg A) i j = Mat13K_5Ext.zero i j
+  unfold Mat13K_5Ext.add Mat13K_5Ext.neg Mat13K_5Ext.zero
+  ring
+
+/-! ### Multiplication-by-zero + distributivity
+
+These complete the (non-instance) Ring-like API. Distributivity is
+load-bearing for any algebraic manipulation that mixes addition and
+multiplication (e.g., expanding products of sums of matrices into
+sums of products in Phase 2 distance-bound proofs). -/
+
+theorem mul_zero (A : Mat13K_5Ext) : A * (0 : Mat13K_5Ext) = (0 : Mat13K_5Ext) := by
+  funext i k
+  show Mat13K_5Ext.mul A Mat13K_5Ext.zero i k = Mat13K_5Ext.zero i k
+  unfold Mat13K_5Ext.mul Mat13K_5Ext.zero
+  ring
+
+theorem zero_mul (A : Mat13K_5Ext) : (0 : Mat13K_5Ext) * A = (0 : Mat13K_5Ext) := by
+  funext i k
+  show Mat13K_5Ext.mul Mat13K_5Ext.zero A i k = Mat13K_5Ext.zero i k
+  unfold Mat13K_5Ext.mul Mat13K_5Ext.zero
+  ring
+
+/-- Left distributivity: `A * (B + C) = A * B + A * C`. -/
+theorem mul_add (A B C : Mat13K_5Ext) : A * (B + C) = A * B + A * C := by
+  funext i k
+  show Mat13K_5Ext.mul A (Mat13K_5Ext.add B C) i k =
+       Mat13K_5Ext.add (Mat13K_5Ext.mul A B) (Mat13K_5Ext.mul A C) i k
+  unfold Mat13K_5Ext.mul Mat13K_5Ext.add
+  ring
+
+/-- Right distributivity: `(A + B) * C = A * C + B * C`. -/
+theorem add_mul (A B C : Mat13K_5Ext) : (A + B) * C = A * C + B * C := by
+  funext i k
+  show Mat13K_5Ext.mul (Mat13K_5Ext.add A B) C i k =
+       Mat13K_5Ext.add (Mat13K_5Ext.mul A C) (Mat13K_5Ext.mul B C) i k
+  unfold Mat13K_5Ext.mul Mat13K_5Ext.add
+  ring
 
 /-! ### Smoke tests: identity self-product + structural sanity
 
