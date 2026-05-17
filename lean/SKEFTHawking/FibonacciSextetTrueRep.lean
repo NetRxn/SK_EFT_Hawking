@@ -465,6 +465,22 @@ theorem sigma3_block_diag : sigma3_sextet = blockDiag sigma3_sextet := by native
 theorem sigma4_block_diag : sigma4_sextet = blockDiag sigma4_sextet := by native_decide
 theorem sigma5_block_diag : sigma5_sextet = blockDiag sigma5_sextet := by native_decide
 
+/-! ### Block-diagonality of inverse generators
+
+The inverse generators σ_n⁻¹ also preserve the sector decomposition.
+This is structurally guaranteed by σ_n being block-diagonal (the
+inverse of a block-diagonal unitary is block-diagonal — proved
+substantively via `native_decide` on each entry). Load-bearing for
+Phase 2 chunk-tree compositions involving both σ_n and σ_n⁻¹:
+without this, mixed-product blocks could in principle leak across
+sectors. -/
+
+theorem sigma1_inv_block_diag : sigma1_sextet_inv = blockDiag sigma1_sextet_inv := by native_decide
+theorem sigma2_inv_block_diag : sigma2_sextet_inv = blockDiag sigma2_sextet_inv := by native_decide
+theorem sigma3_inv_block_diag : sigma3_sextet_inv = blockDiag sigma3_sextet_inv := by native_decide
+theorem sigma4_inv_block_diag : sigma4_sextet_inv = blockDiag sigma4_sextet_inv := by native_decide
+theorem sigma5_inv_block_diag : sigma5_sextet_inv = blockDiag sigma5_sextet_inv := by native_decide
+
 /-! ## 7. Computational sub-block extraction (TQSim ordering)
 
 The 13-dim fusion space carries two 4-dim computational sub-blocks
@@ -509,10 +525,15 @@ in TQSim ordering. -/
 def computationalSec1 (M : Mat13K_5Ext) : Fin 4 → Fin 4 → QCyc5Ext :=
   fun i j => M (sec1Idx i) (sec1Idx j)
 
-/-! ### Smoke tests: σ_1's sub-block extraction at corner entries
+/-! ### Smoke tests: sub-block extraction at corner entries
 
-These are not load-bearing for downstream proofs but exercise the
-extraction path on `native_decide` to catch toolchain regressions. -/
+These exercise the extraction path on `native_decide` to catch
+toolchain regressions. We test corner entries of σ_1 (diagonal
+sector-0 entry pattern (R_τ, R_1, R_τ, R_1, R_τ)) AND σ_4 (different
+diagonal pattern (R_τ, R_1, R_1, R_τ, R_τ)) on BOTH sectors —
+independent coverage catches drift in any of (a) the σ_n literals,
+(b) the `sec0Idx`/`sec1Idx` index maps, (c) the `computationalSec0/1`
+extractors, or (d) the `Rtau_ext`/`R1_ext` primitives. -/
 
 theorem computationalSec0_sigma1_00 :
     computationalSec0 sigma1_sextet 0 0 = R1_ext := by native_decide
@@ -522,5 +543,18 @@ theorem computationalSec1_sigma1_00 :
     computationalSec1 sigma1_sextet 0 0 = R1_ext := by native_decide
 theorem computationalSec1_sigma1_33 :
     computationalSec1 sigma1_sextet 3 3 = Rtau_ext := by native_decide
+
+/-- σ_4 sector-0 sub-block corner (0,0) = R_1 (TQSim index 1 of σ_4 is R_1). -/
+theorem computationalSec0_sigma4_00 :
+    computationalSec0 sigma4_sextet 0 0 = R1_ext := by native_decide
+/-- σ_4 sector-0 sub-block corner (3,3) = R_τ (TQSim index 4 of σ_4 is R_τ). -/
+theorem computationalSec0_sigma4_33 :
+    computationalSec0 sigma4_sextet 3 3 = Rtau_ext := by native_decide
+/-- σ_4 sector-1 sub-block corner (0,0) = R_1 (TQSim index 8 of σ_4 is R_1). -/
+theorem computationalSec1_sigma4_00 :
+    computationalSec1 sigma4_sextet 0 0 = R1_ext := by native_decide
+/-- σ_4 sector-1 sub-block corner (3,3) = R_τ (TQSim index 12 of σ_4 is R_τ). -/
+theorem computationalSec1_sigma4_33 :
+    computationalSec1 sigma4_sextet 3 3 = Rtau_ext := by native_decide
 
 end SKEFTHawking
