@@ -557,4 +557,79 @@ theorem computationalSec1_sigma4_00 :
 theorem computationalSec1_sigma4_33 :
     computationalSec1 sigma4_sextet 3 3 = Rtau_ext := by native_decide
 
+/-! ## 8. Block-diagonality closure under matrix algebra
+
+The 13×13 block-diagonal subspace (matrices whose only nonzero entries
+sit in the c=1 sector `{0..4}×{0..4}` or the c=τ sector `{5..12}×{5..12}`)
+is closed under matrix multiplication and contains the identity. Together
+with the per-generator theorems `sigma_n_block_diag` and `sigma_n_inv_block_diag`
+above, these closure properties enable a clean *structural* sector-preservation
+proof on any composition of σ-generators — for instance the 280-letter HZBS Fig 15
+CNOT braid word that downstream consumers may wish to analyze.
+
+Why this matters: a *coefficient-level* verification (each entry of the 280-
+letter product equals a specific Q(ζ₅, √φ) element) is blocked by coefficient
+explosion (max |coeff| grows ~10× per chunk-doubling, reaching ~10¹⁷ at the
+full witness — well past `native_decide`'s kernel budget for our hand-rolled
+`Mat13K_5Ext.mul`). The *structural* sector-preservation claim is the load-
+bearing topological-protection content of HZBS Fig 15; the numerical
+Frobenius distance from the target controlled-iX gate (sub-2×10⁻³ in both
+sectors) can be verified by downstream numerical pipelines.
+-/
+
+/-- The identity 13×13 matrix is block-diagonal. -/
+theorem one_block_diag : (1 : Mat13K_5Ext) = blockDiag 1 := by native_decide
+
+/-- The zero 13×13 matrix is block-diagonal. -/
+theorem zero_block_diag : (0 : Mat13K_5Ext) = blockDiag 0 := by native_decide
+
+/-- Helper: pointwise off-block characterization of block-diagonality.
+A matrix `M : Mat13K_5Ext` is block-diagonal (i.e. `M = blockDiag M`) iff
+all cross-sector entries vanish. -/
+theorem blockDiag_iff_off_block_zero (M : Mat13K_5Ext) :
+    M = blockDiag M ↔
+      ∀ i j : Fin 13, (i.val < 5) ≠ (j.val < 5) → M i j = 0 := by
+  constructor
+  · intro hM i j hne
+    have eq_ij := congrFun (congrFun hM i) j
+    unfold blockDiag at eq_ij
+    rw [if_neg hne] at eq_ij
+    exact eq_ij
+  · intro h
+    funext i j
+    unfold blockDiag
+    by_cases h_eq : (i.val < 5) = (j.val < 5)
+    · rw [if_pos h_eq]
+    · rw [if_neg h_eq]
+      exact h i j h_eq
+
+/-- **Closure property:** matrix multiplication preserves block-diagonality.
+If `A` and `B` are block-diagonal w.r.t. the {0..4}/{5..12} sector split,
+then so is `A * B`. Structural proof: each term `A i k * B k j` in the
+explicit 13-term sum (from `Mat13K_5Ext.mul`) vanishes when `(i.val<5)`
+and `(j.val<5)` differ — either the `A`-factor is off-block (so zero)
+or the `B`-factor is off-block (so zero). -/
+theorem mul_preserves_blockDiag {A B : Mat13K_5Ext}
+    (hA : A = blockDiag A) (hB : B = blockDiag B) :
+    A * B = blockDiag (A * B) := by
+  -- Convert to predicate form for cleaner manipulation.
+  rw [blockDiag_iff_off_block_zero] at hA hB ⊢
+  intro i j h_eq
+  -- Goal: (A * B) i j = 0 when (i.val<5) ≠ (j.val<5).
+  show Mat13K_5Ext.mul A B i j = 0
+  unfold Mat13K_5Ext.mul
+  -- Each term in the unrolled 13-term sum vanishes.
+  have zero_term : ∀ k : Fin 13, A i k * B k j = 0 := by
+    intro k
+    by_cases hki : (i.val < 5) = (k.val < 5)
+    · -- (k.val<5) = (i.val<5) ≠ (j.val<5), so B k j = 0.
+      have hkj : (k.val < 5) ≠ (j.val < 5) := fun heq => h_eq (hki.trans heq)
+      rw [hB k j hkj, mul_zero]
+    · -- (i.val<5) ≠ (k.val<5), so A i k = 0.
+      rw [hA i k hki, zero_mul]
+  rw [zero_term 0, zero_term 1, zero_term 2, zero_term 3, zero_term 4,
+      zero_term 5, zero_term 6, zero_term 7, zero_term 8, zero_term 9,
+      zero_term 10, zero_term 11, zero_term 12]
+  ring
+
 end SKEFTHawking
