@@ -417,6 +417,12 @@ import SKEFTHawking.IsingGates
 import SKEFTHawking.SPTStacking
 import SKEFTHawking.TPFDisentangler
 import SKEFTHawking.QCyc5Ext
+-- Wave 1.D.4 (f) Phase 1.2 substrate: hand-rolled 13×13 matrix type over
+-- Q(ζ₅, √φ), Mat5K analog for the 6-strand Fibonacci fusion space
+-- (5-dim c=1 sector + 8-dim c=τ sector = 13-dim total). Phase 1.2
+-- (this commit) ships Mat13K_5Ext + monoid laws + smoke tests;
+-- Phase 1.3 ships the σ_1..σ_5 generator matrices that populate it.
+import SKEFTHawking.Mat13K5Ext
 import SKEFTHawking.FibonacciQutrit
 import SKEFTHawking.FibonacciUniversality
 import SKEFTHawking.FibonacciQutritUniversality
