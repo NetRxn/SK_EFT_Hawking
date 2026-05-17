@@ -28,7 +28,14 @@ Per Wave 3a.2.3a DR (2026-05-12, `Lit-Search/Phase-6p/6p-Wave 3a.2.3a — HZBS F
 This module ships the explicit braid word as a `BraidWord 6` literal and a
 length-280 verification theorem. The substantive Frobenius-distance discharge
 against the Fibonacci 6-strand path-model representation is a follow-up
-wave (3a.2.3b) that requires the 6-strand R-matrix substrate over Q(ζ₄₀).
+wave (3a.2.3b) that requires the 6-strand R-matrix substrate over
+**K = Q(ζ₅, √φ) = `QCyc5Ext`** (NOT Q(ζ₄₀), as initially conjectured —
+per DR Phase 6p Wave 3a.2.3b §Q5.1, Kronecker–Weber proves √φ ∉ Q(ζ_n) for any
+n, so √φ requires a non-abelian degree-2 extension over Q(ζ₅); the minimal
+field carrying all 6-strand braiding data is therefore Q(ζ₅, √φ), which is
+already shipped as `QCyc5Ext` for the 4-strand `FibonacciQuintetTrueRep`).
+Phase 1.3 of Wave 1.D.4 (f) ships the explicit substrate as
+`FibonacciSextetTrueRep.lean`.
 
 Primary sources:
   - Hormozi-Zikos-Bonesteel-Simon 2007, PRB 75, 165310; arXiv:quant-ph/0610111
@@ -189,15 +196,19 @@ this is the unitary swapping rows/columns 2 ↔ 3 in the standard 4×4 CNOT:
 The full substantive verification `IsBHSZApprox ρ_6 cnotBraidTQSim CNOT_2→1 ε`
 with ε = 2 × 10⁻³ (per DR §3 recommendation: accommodates HZBS's 1.8 × 10⁻³
 worst-sector + TQSim's 1.73 × 10⁻³ with margin) requires the Fibonacci
-6-strand path-model representation `ρ_6 : BraidGroup 6 → Mat13K_40` over
-Q(ζ₄₀) (Hilbert dim 13 = 4 + 9 non-computational; the 4-dim computational
-subspace is what gets compared). That substrate is a Wave 3a.2.3b follow-up
-that builds on Wave 3a.2.2's Fibonacci-rep-over-QCyc40 infrastructure.
+6-strand path-model representation `ρ_6 : BraidGroup 6 → Mat13K_5Ext` over
+**K = Q(ζ₅, √φ) = `QCyc5Ext`** (Hilbert dim 13 = 4 + 9 non-computational;
+the 4-dim computational sub-space is what gets compared, with sector-0
+indices {1,2,3,4} and sector-1 indices {8,9,11,12} in TQSim ordering).
+That substrate is Wave 1.D.4 (f) Phase 1.3, shipping as
+`FibonacciSextetTrueRep.lean` on top of `Mat13K5Ext.lean`. (The original
+docstring proposed Q(ζ₄₀); that's insufficient per DR Phase 6p Wave 3a.2.3b
+§Q5.1 Kronecker–Weber: √φ ∉ Q(ζ_n) for any n.)
 
 DR §6 explicit risk-R: if `native_decide` times out on the length-280 product
-in Mat13K_40, fall back to (a) splitting the braid into halves via intermediate
-lemmas, OR (b) peephole-optimization. The TQSim 280-list is the substantive
-primary-source-cited starting point regardless. -/
+in Mat13K_5Ext, fall back to (a) splitting the braid into halves via
+intermediate lemmas, OR (b) peephole-optimization. The TQSim 280-list is the
+substantive primary-source-cited starting point regardless. -/
 
 /-! ## 5. Module summary
 

@@ -705,6 +705,13 @@ import SKEFTHawking.FibonacciQuintetUniversalityExt
 -- + far-commutativity, Pentagon-equation corollary, and 12-conjunct
 -- structurally-honest spanning closure for 𝔰𝔲(3) ⊕ 𝔰𝔲(2) ⊕ 𝔲(1) (DR §5.3 R5).
 import SKEFTHawking.FibonacciQuintetTrueRep
+-- Wave 1.D.4 (f) Phase 1.3 (2026-05-17): TRUE 6-strand Fibonacci representation
+-- on Mat13K_5Ext over ℚ(ζ₅, √φ) per DR Phase 6p Wave 3a.2.3b (HZBS Fig 15 /
+-- Tounsi 2023 §3). Ships σ_1..σ_5 + σ_1⁻¹..σ_5⁻¹ true 6-strand matrices
+-- (230 nonzero entries across 5 forward + 5 inverse, all closed-form
+-- Q(ζ₅, √φ) elements) + 10 inverse-identity theorems via native_decide.
+-- Public-side substrate for the 280-letter 6-strand CNOT braid word downstream.
+import SKEFTHawking.FibonacciSextetTrueRep
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
