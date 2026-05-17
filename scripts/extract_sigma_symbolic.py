@@ -229,16 +229,266 @@ def diagnose_sigma_structure(sigmas: List[np.ndarray]) -> None:
         print(f"σ_{n}: {len(nonzero)} non-zero entries; diagonal={is_diag}")
 
 
+# ---------------------------------------------------------------------------
+# Numerical → symbolic lookup table
+# ---------------------------------------------------------------------------
+# Each TQSim σ entry is a single Q(ζ_5, √φ) element drawn from a small
+# finite alphabet. The derivations below are from §K-matrix / F-symbol
+# analysis (DR Q2.3 + algebraic re-derivation; see derivation log in
+# session-14 notebook). All entries verified at 10⁻¹² residual through
+# `qe_to_complex` round-trip.
+
+# σ_1, σ_4 alphabet (pure diagonal phases)
+QE_R_1_SYM = QE_R_1                                                      # R_1 = ζ³
+QE_R_TAU_SYM = QE_R_TAU                                                  # R_τ = -ζ⁴ = 1+ζ+ζ²+ζ³
+
+# σ_2, σ_5 alphabet (B_ττ block entries)
+# τ·ζ² = -τ·e^{-iπ/5}: derived = ζ+ζ³
+QE_TAU_ZETA2 = qe_full((0, 1, 0, 1), (0, 0, 0, 0))
+# -√τ·ζ = √τ·e^{-i3π/5}: derived = √φ·(-1-ζ²)
+QE_NEG_SQRTTAU_ZETA = qe_full((0, 0, 0, 0), (-1, 0, -1, 0))
+# -τ: derived = 1+ζ²+ζ³
+QE_NEG_TAU = qe_full((1, 0, 1, 1), (0, 0, 0, 0))
+
+# σ_3 additional alphabet (above + the K-matrix-recoupled extras)
+# -τ·ζ = τ·e^{-i3π/5}: derived = -1-ζ²
+QE_NEG_TAU_ZETA = qe_full((-1, 0, -1, 0), (0, 0, 0, 0))
+# τ²·ζ: derived = -1+ζ-ζ²
+QE_TAU2_ZETA = qe_full((-1, 1, -1, 0), (0, 0, 0, 0))
+# τ·√τ·ζ: derived = √φ·(-1+ζ-ζ²)
+QE_TAUSQRTTAU_ZETA = qe_full((0, 0, 0, 0), (-1, 1, -1, 0))
+# -τ·√τ·ζ: negate previous
+QE_NEG_TAUSQRTTAU_ZETA = qe_full((0, 0, 0, 0), (1, -1, 1, 0))
+# -τ²·√τ·ζ: derived = √φ·(-2+ζ-2ζ²)
+QE_NEG_TAU2SQRTTAU_ZETA = qe_full((0, 0, 0, 0), (-2, 1, -2, 0))
+# Block A/C diagonal: 2τ²·R_τ + τ³·R_1 = 2+2ζ²+ζ³
+QE_BLOCK_A_DIAG = qe_full((2, 0, 2, 1), (0, 0, 0, 0))
+# Block D corner: (3-4τ)·R_τ + 2τ³·R_1 = 3-ζ+3ζ²+ζ³
+QE_BLOCK_D_DIAG = qe_full((3, -1, 3, 1), (0, 0, 0, 0))
+
+# σ_n_inv alphabet (conjugates of forward alphabet — σ_n is unitary, so
+# σ_n_inv = σ_n†, and individual entries satisfy [σ⁻¹]_ji = conj([σ]_ij)).
+# Conjugation in Q(ζ_5): ζ̄ = ζ⁴, with ζ⁴ = -1-ζ-ζ²-ζ³.
+QE_R_1_BAR = qe_full((0, 0, 1, 0), (0, 0, 0, 0))                         # R_1̄ = ζ²
+QE_R_TAU_BAR = qe_full((0, -1, 0, 0), (0, 0, 0, 0))                      # R_τ̄ = -ζ
+QE_TAU_ZETA2_BAR = qe_full((-1, -1, 0, -1), (0, 0, 0, 0))                # (τ·ζ²)̄ = τ·ζ³ = -1-ζ-ζ³
+QE_NEG_SQRTTAU_ZETA_BAR = qe_full((0, 0, 0, 0), (-1, 0, 0, -1))          # (-√τ·ζ)̄ = -√τ·ζ⁴
+QE_NEG_TAU_ZETA_BAR = qe_full((-1, 0, 0, -1), (0, 0, 0, 0))              # (-τ·ζ)̄ = -τ·ζ⁴ = -1-ζ³
+QE_TAU2_ZETA_BAR = qe_full((-2, -1, -1, -2), (0, 0, 0, 0))               # (τ²·ζ)̄ = τ²·ζ⁴
+QE_TAUSQRTTAU_ZETA_BAR = qe_full((0, 0, 0, 0), (-2, -1, -1, -2))         # (τ√τ·ζ)̄
+QE_NEG_TAUSQRTTAU_ZETA_BAR = qe_full((0, 0, 0, 0), (2, 1, 1, 2))         # (-τ√τ·ζ)̄
+QE_NEG_TAU2SQRTTAU_ZETA_BAR = qe_full((0, 0, 0, 0), (-3, -1, -1, -3))    # (-τ²√τ·ζ)̄
+QE_BLOCK_A_DIAG_BAR = qe_full((2, 0, 1, 2), (0, 0, 0, 0))                # Block A diag conjugate
+QE_BLOCK_D_DIAG_BAR = qe_full((4, 1, 2, 4), (0, 0, 0, 0))                # Block D corner conjugate
+
+
+def _build_symbolic_lookup() -> List[Tuple[complex, Tuple]]:
+    """Return the master list of (numerical_value, qe_tuple) pairs.
+
+    All entries appearing anywhere in σ_1..σ_5 are catalogued here. The
+    lookup is order-independent — entries are matched by numerical
+    proximity (10⁻¹² tolerance)."""
+    return [
+        # σ_1, σ_4 alphabet (and used elsewhere)
+        (qe_to_complex(QE_R_1_SYM), QE_R_1_SYM),
+        (qe_to_complex(QE_R_TAU_SYM), QE_R_TAU_SYM),
+        # σ_2, σ_5 alphabet
+        (qe_to_complex(QE_TAU_ZETA2), QE_TAU_ZETA2),
+        (qe_to_complex(QE_NEG_SQRTTAU_ZETA), QE_NEG_SQRTTAU_ZETA),
+        (qe_to_complex(QE_NEG_TAU), QE_NEG_TAU),
+        # σ_3 alphabet
+        (qe_to_complex(QE_NEG_TAU_ZETA), QE_NEG_TAU_ZETA),
+        (qe_to_complex(QE_TAU2_ZETA), QE_TAU2_ZETA),
+        (qe_to_complex(QE_TAUSQRTTAU_ZETA), QE_TAUSQRTTAU_ZETA),
+        (qe_to_complex(QE_NEG_TAUSQRTTAU_ZETA), QE_NEG_TAUSQRTTAU_ZETA),
+        (qe_to_complex(QE_NEG_TAU2SQRTTAU_ZETA), QE_NEG_TAU2SQRTTAU_ZETA),
+        (qe_to_complex(QE_BLOCK_A_DIAG), QE_BLOCK_A_DIAG),
+        (qe_to_complex(QE_BLOCK_D_DIAG), QE_BLOCK_D_DIAG),
+        # σ_n_inv alphabet (conjugates)
+        (qe_to_complex(QE_R_1_BAR), QE_R_1_BAR),
+        (qe_to_complex(QE_R_TAU_BAR), QE_R_TAU_BAR),
+        (qe_to_complex(QE_TAU_ZETA2_BAR), QE_TAU_ZETA2_BAR),
+        (qe_to_complex(QE_NEG_SQRTTAU_ZETA_BAR), QE_NEG_SQRTTAU_ZETA_BAR),
+        (qe_to_complex(QE_NEG_TAU_ZETA_BAR), QE_NEG_TAU_ZETA_BAR),
+        (qe_to_complex(QE_TAU2_ZETA_BAR), QE_TAU2_ZETA_BAR),
+        (qe_to_complex(QE_TAUSQRTTAU_ZETA_BAR), QE_TAUSQRTTAU_ZETA_BAR),
+        (qe_to_complex(QE_NEG_TAUSQRTTAU_ZETA_BAR), QE_NEG_TAUSQRTTAU_ZETA_BAR),
+        (qe_to_complex(QE_NEG_TAU2SQRTTAU_ZETA_BAR), QE_NEG_TAU2SQRTTAU_ZETA_BAR),
+        (qe_to_complex(QE_BLOCK_A_DIAG_BAR), QE_BLOCK_A_DIAG_BAR),
+        (qe_to_complex(QE_BLOCK_D_DIAG_BAR), QE_BLOCK_D_DIAG_BAR),
+    ]
+
+
+_LOOKUP_CACHE: List[Tuple[complex, Tuple]] = []
+
+
+def lookup_qe(value: complex, tol: float = 1e-10) -> Tuple:
+    """Return the QCyc5Ext symbolic form of a numerical complex value.
+
+    Matches against the master lookup table by absolute distance < tol.
+    Raises if no match — caller should add the missing entry to the
+    lookup table or check whether the input is genuinely outside the
+    σ alphabet."""
+    global _LOOKUP_CACHE
+    if not _LOOKUP_CACHE:
+        _LOOKUP_CACHE = _build_symbolic_lookup()
+    if abs(value) < tol:
+        return QE_ZERO
+    matches = [qe for (num, qe) in _LOOKUP_CACHE if abs(num - value) < tol]
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) == 0:
+        raise ValueError(
+            f"No symbolic match for numerical value {value:+.10f} "
+            f"(|·|={abs(value):.6f}). Catalog has {len(_LOOKUP_CACHE)} "
+            f"entries; consider adding this value's closed-form."
+        )
+    raise ValueError(
+        f"Ambiguous symbolic match for {value:+.10f}: {len(matches)} candidates."
+    )
+
+
+def lift_sigma_to_symbolic(M: np.ndarray, name: str, verbose: bool = False) -> Dict[Tuple[int, int], Tuple]:
+    """Convert each non-zero entry of a 13×13 σ matrix to its QCyc5Ext
+    symbolic form. Returns dict {(i,j): qe_tuple} for non-zero positions.
+
+    Verifies each lookup by embedding the symbolic form back to ℂ and
+    comparing with the input numerical value. Raises if any entry
+    deviates by more than 10⁻¹⁰."""
+    assert M.shape == (13, 13), f"{name}: expected (13,13), got {M.shape}"
+    result: Dict[Tuple[int, int], Tuple] = {}
+    max_residual = 0.0
+    for i in range(13):
+        for j in range(13):
+            v = M[i, j]
+            if abs(v) < 1e-12:
+                continue
+            qe = lookup_qe(v)
+            embedded = qe_to_complex(qe)
+            residual = abs(embedded - v)
+            max_residual = max(max_residual, residual)
+            if residual > 1e-10:
+                raise ValueError(
+                    f"{name}[{i},{j}]: numerical={v:+.10f} embeds to "
+                    f"{embedded:+.10f}, residual={residual:.2e}"
+                )
+            result[(i, j)] = qe
+            if verbose:
+                print(f"  {name}[{i:2d},{j:2d}] = {v:+.6f}  →  {_qe_to_lean(qe)}  (resid {residual:.2e})")
+    print(f"  {name}: {len(result)} entries lifted; max residual {max_residual:.2e}")
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Lean snippet emitter
+# ---------------------------------------------------------------------------
+
+def _q_to_lean(q: Fraction) -> str:
+    """Render a Fraction as a bare Lean numeric literal (cast handled by context).
+
+    Negative integers render bare (e.g. `-1`) since they appear inside
+    structure literals like `⟨-1, 0, -1, -1⟩` (matching existing
+    `phi_inv` convention in `QCyc5.lean`)."""
+    if q.denominator == 1:
+        return str(q.numerator)
+    return f"({q.numerator} / {q.denominator})"
+
+
+# Named primitives existing in QCyc5/QCyc5Ext modules — used to keep the
+# emitted literals compact + readable. Mapping: re-tuple/im-tuple → Lean term.
+_NAMED_QE: Dict[Tuple[Tuple[int, ...], Tuple[int, ...]], str] = {
+    # σ_1, σ_4 alphabet:
+    ((0, 0, 0, 1), (0, 0, 0, 0)): "R1_ext",            # R_1 = ζ³
+    ((1, 1, 1, 1), (0, 0, 0, 0)): "Rtau_ext",          # R_τ = -ζ⁴ = 1+ζ+ζ²+ζ³
+}
+
+
+def _qe_to_lean(qe: Tuple) -> str:
+    """Render a QCyc5Ext element as a Lean term.
+
+    Tries the existing named primitives first (R1_ext, Rtau_ext); falls
+    back to `ofQCyc5 ⟨...⟩` for pure-re entries, `⟨0, ⟨...⟩⟩` for pure-im,
+    and full `⟨⟨..⟩, ⟨..⟩⟩` for mixed."""
+    re_t, im_t = qe
+    re_int = tuple(int(c) if c.denominator == 1 else c for c in re_t)
+    im_int = tuple(int(c) if c.denominator == 1 else c for c in im_t)
+    key = (re_int, im_int)
+    if key in _NAMED_QE:
+        return _NAMED_QE[key]
+    re_zero = all(c == 0 for c in re_t)
+    im_zero = all(c == 0 for c in im_t)
+    re_str = ", ".join(_q_to_lean(c) for c in re_t)
+    im_str = ", ".join(_q_to_lean(c) for c in im_t)
+    if im_zero:
+        return f"ofQCyc5 ⟨{re_str}⟩"
+    if re_zero:
+        return f"⟨0, ⟨{im_str}⟩⟩"
+    return f"⟨⟨{re_str}⟩, ⟨{im_str}⟩⟩"
+
+
+def emit_lean_mat13k5ext_literal(name: str, sym: Dict[Tuple[int, int], Tuple]) -> str:
+    """Emit a Lean `Mat13K_5Ext` definition for a σ matrix.
+
+    Output form (matches Mat5K convention in FibonacciQuintetTrueRep):
+        def {name} : Mat13K_5Ext := fun i j =>
+          match (i.val, j.val) with
+          | (0, 0) => Rtau_ext
+          | (1, 1) => R1_ext
+          ...
+          | _ => 0
+    """
+    lines: List[str] = [f"def {name} : Mat13K_5Ext := fun i j =>"]
+    lines.append("  match (i.val, j.val) with")
+    for i in range(13):
+        for j in range(13):
+            qe = sym.get((i, j))
+            if qe is None:
+                continue
+            lines.append(f"  | ({i}, {j}) => {_qe_to_lean(qe)}")
+    lines.append("  | _ => 0")
+    return "\n".join(lines)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--diagnose-only", action="store_true",
                         help="Just report structure; don't do symbolic conversion")
+    parser.add_argument("--emit-lean", action="store_true",
+                        help="Emit Lean Mat13K_5Ext definitions for σ_1..σ_5")
+    parser.add_argument("--verbose", action="store_true",
+                        help="Print per-entry lift trace")
     args = parser.parse_args()
 
     _verify_constants()
     print()
     sigmas = extract_tqsim_sigmas()
     diagnose_sigma_structure(sigmas)
+    if args.diagnose_only:
+        return
+
+    print()
+    print("# Symbolic lift of σ_1 .. σ_5:")
+    symbolics: List[Dict[Tuple[int, int], Tuple]] = []
+    for n, s in enumerate(sigmas, start=1):
+        symbolics.append(lift_sigma_to_symbolic(s, f"σ_{n}", verbose=args.verbose))
+
+    print()
+    print("# Symbolic lift of σ_1⁻¹ .. σ_5⁻¹:")
+    inverses = [np.linalg.inv(s) for s in sigmas]
+    inv_symbolics: List[Dict[Tuple[int, int], Tuple]] = []
+    for n, sinv in enumerate(inverses, start=1):
+        inv_symbolics.append(lift_sigma_to_symbolic(sinv, f"σ_{n}⁻¹", verbose=args.verbose))
+
+    if args.emit_lean:
+        print()
+        print("# Lean Mat13K_5Ext definitions:")
+        print()
+        for n, sym in enumerate(symbolics, start=1):
+            print(emit_lean_mat13k5ext_literal(f"sigma{n}_sextet", sym))
+            print()
+        for n, sym in enumerate(inv_symbolics, start=1):
+            print(emit_lean_mat13k5ext_literal(f"sigma{n}_sextet_inv", sym))
+            print()
 
 
 if __name__ == "__main__":
