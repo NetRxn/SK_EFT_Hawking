@@ -148,6 +148,166 @@ def qe_to_complex(elt: Tuple) -> complex:
     return complex(re_part) + SQRT_PHI * complex(im_part)
 
 
+# ---------------------------------------------------------------------------
+# Exact symbolic arithmetic on QCyc5 and QCyc5Ext
+# ---------------------------------------------------------------------------
+# Mirrors the Lean substrate's `QCyc5.mul` + `QCyc5Ext.mul` definitions:
+#   QCyc5: (1, ζ, ζ², ζ³) basis with cyclotomic relation
+#          ζ⁴ = -1 - ζ - ζ² - ζ³.
+#   QCyc5Ext: (a, b) pair representing a + b·√φ, with
+#             √φ² = φ = -ζ²-ζ³ (in Q(ζ_5) coords, since φ = (1+√5)/2
+#             and √5 = 2τ + 1; substituting τ = -1 - ζ² - ζ³ gives
+#             √5 = -1 - 2ζ² - 2ζ³ ... wait let me re-derive).
+#
+# Cyclotomic identity: 1 + ζ + ζ² + ζ³ + ζ⁴ = 0
+# ⟹ ζ + ζ⁴ = -1 - ζ² - ζ³ = τ (since ζ + ζ⁴ = 2 cos(72°) = τ).
+# So τ = -1 - ζ² - ζ³ (the QE_TAU above).
+# And φ = 1 + τ = -ζ² - ζ³.
+# Therefore √φ² = φ = -ζ²-ζ³ as a QCyc5 element ⟨0, 0, -1, -1⟩.
+PHI_AS_QCYC5: Tuple[Fraction, ...] = (Fraction(0), Fraction(0), Fraction(-1), Fraction(-1))
+
+
+def qcyc5_add(p: Tuple[Fraction, ...], q: Tuple[Fraction, ...]) -> Tuple[Fraction, ...]:
+    """Add two QCyc5 elements (4-tuples of ℚ coefficients of (1, ζ, ζ², ζ³))."""
+    return tuple(p[i] + q[i] for i in range(4))
+
+
+def qcyc5_neg(p: Tuple[Fraction, ...]) -> Tuple[Fraction, ...]:
+    """Negate a QCyc5 element."""
+    return tuple(-p[i] for i in range(4))
+
+
+def qcyc5_mul(p: Tuple[Fraction, ...], q: Tuple[Fraction, ...]) -> Tuple[Fraction, ...]:
+    """Multiply two QCyc5 elements as polynomials in ζ mod Φ_5(ζ)
+    = 1 + ζ + ζ² + ζ³ + ζ⁴. Uses the cyclotomic-reduction
+    `ζ⁴ = -1 - ζ - ζ² - ζ³` to fold degrees ≥ 4 back down.
+
+    Polynomial product (p₀ + p₁ζ + p₂ζ² + p₃ζ³)(q₀ + q₁ζ + q₂ζ² + q₃ζ³)
+    has terms of degree 0..6. We collect coefficients into a length-7
+    intermediate then fold ζ⁴, ζ⁵, ζ⁶ via:
+      ζ⁴ = -1 - ζ - ζ² - ζ³
+      ζ⁵ = ζ · ζ⁴ = -ζ - ζ² - ζ³ - ζ⁴ = -ζ - ζ² - ζ³ - (-1 - ζ - ζ² - ζ³) = 1
+      ζ⁶ = ζ
+    """
+    # Polynomial product coefficients (degrees 0..6)
+    raw = [Fraction(0)] * 7
+    for i in range(4):
+        for j in range(4):
+            raw[i + j] += p[i] * q[j]
+    # Fold using ζ⁵ = 1, ζ⁶ = ζ, then ζ⁴ = -1 - ζ - ζ² - ζ³
+    # raw[5] is coefficient of ζ⁵ = 1; raw[6] is coefficient of ζ⁶ = ζ
+    raw[0] += raw[5]
+    raw[1] += raw[6]
+    raw[5] = Fraction(0)
+    raw[6] = Fraction(0)
+    # raw[4] is coefficient of ζ⁴
+    raw[0] -= raw[4]
+    raw[1] -= raw[4]
+    raw[2] -= raw[4]
+    raw[3] -= raw[4]
+    raw[4] = Fraction(0)
+    return tuple(raw[:4])
+
+
+def qe_add(a: Tuple, b: Tuple) -> Tuple:
+    """Add two QCyc5Ext elements (each = (re, im) pair of QCyc5 elements)."""
+    return (qcyc5_add(a[0], b[0]), qcyc5_add(a[1], b[1]))
+
+
+def qe_neg(a: Tuple) -> Tuple:
+    """Negate a QCyc5Ext element."""
+    return (qcyc5_neg(a[0]), qcyc5_neg(a[1]))
+
+
+def qe_mul(a: Tuple, b: Tuple) -> Tuple:
+    """Multiply two QCyc5Ext elements.
+
+    (a₁ + b₁·√φ)(a₂ + b₂·√φ) = (a₁·a₂ + φ·b₁·b₂) + (a₁·b₂ + a₂·b₁)·√φ
+
+    Mirrors `SKEFTHawking.QCyc5Ext.mul` in
+    `SK_EFT_Hawking/lean/SKEFTHawking/QCyc5Ext.lean`. The `φ·b₁·b₂` term
+    uses `PHI_AS_QCYC5 = -ζ² - ζ³` per Q(ζ_5) coordinatization of φ.
+    """
+    a_re, a_im = a
+    b_re, b_im = b
+    new_re = qcyc5_add(
+        qcyc5_mul(a_re, b_re),
+        qcyc5_mul(PHI_AS_QCYC5, qcyc5_mul(a_im, b_im)),
+    )
+    new_im = qcyc5_add(
+        qcyc5_mul(a_re, b_im),
+        qcyc5_mul(b_re, a_im),
+    )
+    return (new_re, new_im)
+
+
+# ---------------------------------------------------------------------------
+# Exact symbolic arithmetic on 13×13 matrices over QCyc5Ext
+# ---------------------------------------------------------------------------
+# Matrix representation: a dict mapping (i, j) ∈ Fin 13 × Fin 13 to a
+# QCyc5Ext element, with omitted entries treated as zero.
+
+Mat13Sym = Dict[Tuple[int, int], Tuple]
+
+
+def mat13_zero() -> Mat13Sym:
+    """The 13×13 zero matrix (all entries omitted)."""
+    return {}
+
+
+def mat13_one() -> Mat13Sym:
+    """The 13×13 identity matrix (1 on diagonal, omitted off-diagonal)."""
+    return {(i, i): QE_ONE for i in range(13)}
+
+
+def mat13_get(M: Mat13Sym, i: int, j: int) -> Tuple:
+    """Get the (i, j) entry, returning zero if not in dict."""
+    return M.get((i, j), QE_ZERO)
+
+
+def mat13_mul(A: Mat13Sym, B: Mat13Sym) -> Mat13Sym:
+    """Multiply two 13×13 matrices over QCyc5Ext (exact symbolic)."""
+    result: Mat13Sym = {}
+    for i in range(13):
+        for k in range(13):
+            acc = QE_ZERO
+            for j in range(13):
+                a_ij = mat13_get(A, i, j)
+                b_jk = mat13_get(B, j, k)
+                if a_ij == QE_ZERO or b_jk == QE_ZERO:
+                    continue
+                acc = qe_add(acc, qe_mul(a_ij, b_jk))
+            if acc != QE_ZERO:
+                result[(i, k)] = acc
+    return result
+
+
+def mat13_compose(matrices: List[Mat13Sym]) -> Mat13Sym:
+    """Compose a list of 13×13 matrices left-to-right: M_1 * M_2 * ... * M_n."""
+    if not matrices:
+        return mat13_one()
+    result = matrices[0]
+    for M in matrices[1:]:
+        result = mat13_mul(result, M)
+    return result
+
+
+def mat13_embed_complex(M: Mat13Sym) -> np.ndarray:
+    """Embed a symbolic 13×13 matrix into ℂ for numerical verification."""
+    arr = np.zeros((13, 13), dtype=complex)
+    for (i, j), elt in M.items():
+        arr[i, j] = qe_to_complex(elt)
+    return arr
+
+
+def mat13_from_numerical(M: np.ndarray, lift_fn) -> Mat13Sym:
+    """Convert a numerical 13×13 numpy matrix to symbolic Mat13Sym
+    via the provided `lift_fn(value) -> QCyc5Ext tuple`."""
+    return {(i, j): lift_fn(M[i, j])
+            for i in range(13) for j in range(13)
+            if abs(M[i, j]) > 1e-12}
+
+
 # Closed-form representations of the building blocks
 QE_ZERO = qe_full((0, 0, 0, 0), (0, 0, 0, 0))
 QE_ONE = qe_full((1, 0, 0, 0), (0, 0, 0, 0))
