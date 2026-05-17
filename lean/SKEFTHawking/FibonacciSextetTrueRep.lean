@@ -632,4 +632,44 @@ theorem mul_preserves_blockDiag {A B : Mat13K_5Ext}
       zero_term 10, zero_term 11, zero_term 12]
   ring
 
+/-! ### Additive-group closure (algebra completeness)
+
+The block-diagonal subspace is closed under the full additive structure
+on `Mat13K_5Ext`, not just multiplication. These three theorems complete
+the algebra: any `(+, -, 0)`-combination of block-diagonal matrices is
+block-diagonal. Pointwise proofs by `funext` + case-split on the sector
+predicate. Useful for downstream consumers that reason about linear
+combinations of braid evaluators (e.g. cosets, projectors, polynomial
+combinations of the underlying generators). -/
+
+/-- Block-diagonality is closed under pointwise addition. -/
+theorem add_preserves_blockDiag {A B : Mat13K_5Ext}
+    (hA : A = blockDiag A) (hB : B = blockDiag B) :
+    A + B = blockDiag (A + B) := by
+  rw [blockDiag_iff_off_block_zero] at hA hB ⊢
+  intro i j h_eq
+  show Mat13K_5Ext.add A B i j = 0
+  unfold Mat13K_5Ext.add
+  rw [hA i j h_eq, hB i j h_eq, add_zero]
+
+/-- Block-diagonality is closed under pointwise negation. -/
+theorem neg_preserves_blockDiag {A : Mat13K_5Ext}
+    (hA : A = blockDiag A) :
+    -A = blockDiag (-A) := by
+  rw [blockDiag_iff_off_block_zero] at hA ⊢
+  intro i j h_eq
+  show Mat13K_5Ext.neg A i j = 0
+  unfold Mat13K_5Ext.neg
+  rw [hA i j h_eq, neg_zero]
+
+/-- Block-diagonality is closed under pointwise subtraction. -/
+theorem sub_preserves_blockDiag {A B : Mat13K_5Ext}
+    (hA : A = blockDiag A) (hB : B = blockDiag B) :
+    A - B = blockDiag (A - B) := by
+  rw [blockDiag_iff_off_block_zero] at hA hB ⊢
+  intro i j h_eq
+  show Mat13K_5Ext.sub A B i j = 0
+  unfold Mat13K_5Ext.sub
+  rw [hA i j h_eq, hB i j h_eq, sub_zero]
+
 end SKEFTHawking
