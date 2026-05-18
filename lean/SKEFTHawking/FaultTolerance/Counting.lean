@@ -100,22 +100,22 @@ def steaneMalignancyCounts : MalignancyCounts steaneCode :=
 theorem steaneMalignancyCounts_A_CNOT_le_choose_two :
     steaneMalignancyCounts.A_CNOT ≤ steaneCNOTExRec.M.choose 2 := by
   show 35235 ≤ (575 : ℕ).choose 2
-  native_decide
+  rw [Nat.choose_two_right]; decide
 
 theorem steaneMalignancyCounts_A_prep_le_choose_two :
     steaneMalignancyCounts.A_prep ≤ steanePrepExRec.M.choose 2 := by
   show 16000 ≤ (240 : ℕ).choose 2
-  native_decide
+  rw [Nat.choose_two_right]; decide
 
 theorem steaneMalignancyCounts_A_meas_le_choose_two :
     steaneMalignancyCounts.A_meas ≤ steaneMeasExRec.M.choose 2 := by
   show 16000 ≤ (240 : ℕ).choose 2
-  native_decide
+  rw [Nat.choose_two_right]; decide
 
 theorem steaneMalignancyCounts_A_gate1_le_choose_two :
     steaneMalignancyCounts.A_gate1 ≤ steaneGate1ExRec.M.choose 2 := by
   show 16000 ≤ (295 : ℕ).choose 2
-  native_decide
+  rw [Nat.choose_two_right]; decide
 
 /-! ## 3. AGP-rigorous attestations for Steane -/
 
@@ -153,7 +153,7 @@ theorem agp_threshold_steane_bound :
 /-- A_CNOT is positive. -/
 theorem steaneMalignancyCounts_A_CNOT_pos : 0 < steaneMalignancyCounts.A_CNOT := by
   show 0 < 35235
-  native_decide
+  decide
 
 /-! ## 5. Module summary
 
