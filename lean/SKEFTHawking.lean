@@ -635,6 +635,13 @@ import SKEFTHawking.FKLW.SU2LocalDiffeo
 -- Composes Cartan-C IFT + Subtype.val continuity + mem_interior_iff_mem_nhds +
 -- closure_eq_univ_of_one_mem_interior. Plus H_Fib specialization.
 import SKEFTHawking.FKLW.SU2InteriorBridge
+-- Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer E (2026-05-19, session 39):
+-- Final Fibonacci density theorem composition. Ships
+-- fibonacci_density_from_exp_image_subset — conditional on the BCH-spanning
+-- witness hypothesis (exp '' U ⊆ H_Fib for some open U ∋ 0), produces
+-- DenseInSpecialUnitary 3 2 ρ_Fib_SU2. Direct composition of Cartan-D
+-- + H_Fib_eq_top_iff_closure_eq_univ + fibonacci_density_from_H_Fib_eq_top.
+import SKEFTHawking.FKLW.FibonacciDensityConditional
 -- Phase 6p Wave 2d.3-followup (2026-05-14): qubit Bloch-sphere balanced commutator
 -- (D-N Lemma 2 §4.1 Eq. 10-13). Ships `qubit_balanced_commutator_z_axis` —
 -- the substantive Z-axis-case existence of F, G hermitian with ‖F‖, ‖G‖ ≤
