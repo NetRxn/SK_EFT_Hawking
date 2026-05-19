@@ -214,6 +214,67 @@ theorem one_mem_closure_range_of_infinite_image
   apply subset_closure
   exact ⟨1, ρ_hom.map_one⟩
 
+/-! ## 2.5 Small-distance witness extractor (Wave 2c.4a-R5.4 Lemma 6.2 substrate)
+
+For the constructive discharge of `AccPt 1 (𝓟 H) → 1 ∈ interior (closure H)`
+via the BCH-spanning iteration argument (Aharonov-Arad Bridge Lemma 6.2),
+the AccPt hypothesis is too abstract to feed directly into the analytic
+shrinkage step. We need concrete witnesses: SU(d)-elements close to 1,
+distinct from 1, on demand.
+
+This sub-§ ships the bridge: in any pseudometric space, an AccPt
+hypothesis gives rise to a small-distance witness for every `ε > 0`.
+
+The proof is two unfoldings:
+  1. `accPt_iff_frequently`: `AccPt x (𝓟 C) ↔ ∃ᶠ y in 𝓝 x, y ≠ x ∧ y ∈ C`.
+  2. `Metric.nhds_basis_ball.frequently_iff`: extract a witness inside
+     `Metric.ball x ε` for any given `ε > 0`.
+
+Pure topology — no group structure, no Lie algebra, no analytic content.
+The downstream consumer (BCH iteration) is responsible for applying
+the small witness to feed `bch_group_commutator_quadratic_shrinkage`.
+
+Pipeline Invariant #15 RESPECTED — no new axioms, kernel-only proof. -/
+
+/-- **Small-distance witness from AccPt in a pseudometric space.**
+
+If `x` is an accumulation point of the principal filter on `C ⊆ X` in
+a pseudometric space `X`, then for every `ε > 0` there is some
+`y ∈ C` with `y ≠ x` and `dist y x < ε`.
+
+This is the concrete extractor consumed by the BCH-spanning iteration
+in AA Bridge Lemma 6.2: each ε supplies a candidate small element. -/
+theorem accPt_small_witness
+    {X : Type*} [PseudoMetricSpace X] {x : X} {C : Set X}
+    (h_acc : AccPt x (Filter.principal C))
+    {ε : ℝ} (hε : 0 < ε) :
+    ∃ y ∈ C, y ≠ x ∧ dist y x < ε := by
+  rw [accPt_iff_frequently] at h_acc
+  have h_basis :=
+    (Metric.nhds_basis_ball (x := x)).frequently_iff.mp h_acc ε hε
+  obtain ⟨y, hy_ball, hy_ne, hy_C⟩ := h_basis
+  exact ⟨y, hy_C, hy_ne, Metric.mem_ball.mp hy_ball⟩
+
+/-- **Specialization to infinite closed subgroup of a compact
+pseudometric-space topological group**: from `H : Subgroup G` closed
+infinite in compact `G`, get a small witness `h ∈ H, h ≠ 1, dist h 1 < ε`
+for every `ε > 0`. Direct composition of
+`one_accPt_of_infinite_closed_subgroup` + `accPt_small_witness`. -/
+theorem small_witness_of_infinite_closed_subgroup
+    {G : Type*} [Group G] [PseudoMetricSpace G] [IsTopologicalGroup G]
+    [CompactSpace G] (H : Subgroup G) (h_closed : IsClosed (H : Set G))
+    (h_inf : (H : Set G).Infinite) {ε : ℝ} (hε : 0 < ε) :
+    ∃ h ∈ (H : Set G), h ≠ 1 ∧ dist h 1 < ε :=
+  accPt_small_witness
+    (one_accPt_of_infinite_closed_subgroup H h_closed h_inf) hε
+
+/- The MonoidHom-bundled small-witness variant (mirror of
+`accPt_one_in_topClosure_of_hom` + `accPt_small_witness`) is deferred
+to the downstream H_Fib-specific caller in `FibSU2Density.lean`,
+since `Matrix.specialUnitaryGroup (Fin d) ℂ` does not auto-synthesize
+a `Dist` instance — the caller works at the underlying-matrix level
+where the Frobenius/operator norm is canonical. -/
+
 /-! ## 3. Module summary
 
 AharonovAradLemma6.lean (Wave 2c.4a-R5.1 ship, 2026-05-13):
@@ -227,6 +288,17 @@ AharonovAradLemma6.lean (Wave 2c.4a-R5.1 ship, 2026-05-13):
   - `accPt_one_in_topClosure_of_hom` — `BraidGroup n →* SU(d)` with
     infinite image ⇒ 1 is AccPt of `topologicalClosure of range`.
   - `one_mem_closure_range_of_infinite_image` — entry corollary.
+
+**Small-distance witness extractor** (Wave 2c.4a-R5.4 Layer A, axiom-free,
+shipped 2026-05-19 session 32):
+  - `accPt_small_witness` — generic pseudometric: AccPt at x → for every
+    ε > 0, exists y ∈ C, y ≠ x, dist y x < ε. The substantive extractor
+    consumed by the BCH-spanning iteration.
+  - `small_witness_of_infinite_closed_subgroup` — composes
+    `one_accPt_of_infinite_closed_subgroup` + `accPt_small_witness` for
+    subgroups in compact pseudometric topological groups.
+  - (FKLW MonoidHom specialization deferred to downstream caller in
+    `FibSU2Density.lean` where the Frobenius-norm setup is concrete.)
 
 **Honest status post-R5.1**:
   - The AA axiom `aa_residual_interior_at_one_for_hom` is NOT
