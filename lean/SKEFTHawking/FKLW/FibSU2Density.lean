@@ -4916,6 +4916,137 @@ theorem H_Fib_exists_small_sequence :
 
 end R5_4_LayerD_2_d_SmallSequence
 
+/-! ## 34. R5.4 Layer D.2.e: H_Fib commutator-of-conjugate explicit bounds
+
+Composes the iteration kernel (D.1.e) with the conjugation closure
+(D.2.a) to give the **commutator-of-conjugate** explicit ship: for
+`h ∈ H_Fib` at scale `δ`, the group commutator
+`[h, σ_Fib_1_SU · h · σ_Fib_1_SU⁻¹]_grp` is in H_Fib at scale `≤ 32·δ²`
+(quadratic shrinkage with concrete constant).
+
+This is the **direct concrete construction** of a "shrinking sequence
+of H_Fib elements with rotating Lie directions" that the AA Bridge
+Lemma 6.2 spanning argument iterates: starting from δ-small h, the
+commutator-of-conjugate is at scale 32·δ² (much smaller for δ < 1/32),
+with Lie direction approximately `[h - 1, Ad(σ_1)(h - 1)]` (perpendicular
+to both h - 1 and Ad(σ_1)(h - 1) in 𝔰𝔲(2) ≅ ℝ³ — the cross product).
+
+For Fibonacci-specific σ_1 (a non-trivial SO(3) rotation), the cross
+product is non-zero unless `h - 1` lies on σ_1's rotation axis. This
+gives the **2nd Lie direction** (perpendicular to h's direction) in
+the 3-direction spanning bundle.
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_2_e_ConjugateCommutator
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **H_Fib commutator-of-σ_1-conjugate explicit shrinkage**: for
+`h ∈ H_Fib` at scale `δ ≤ 1`, the group commutator of `h` with its
+σ_Fib_1_SU-conjugate is in H_Fib at scale `≤ 32·δ²`.
+
+Proof: composes `H_Fib_commutator_quadratic_step_explicit` (Layer D.1.e,
+`‖[g,h]_grp - 1‖ ≤ 8·‖g-1‖·‖h-1‖`) with `specialUnitary_conjugation_norm_le_four`
+(Layer D.2.a, `‖σhσ⁻¹ - 1‖ ≤ 4·‖h-1‖`). Result: `8·δ·(4δ) = 32·δ²`. -/
+theorem H_Fib_conj_σ1_commutator_quadratic_shrinkage
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_H : h ∈ H_Fib) (δ : ℝ) (hδ_le_one : δ ≤ 1)
+    (h_small : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ) :
+    -- Membership: in H_Fib
+    (h * (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) * h⁻¹ *
+     (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹)⁻¹) ∈ H_Fib ∧
+    -- Norm bound: ≤ 32·δ²
+    ‖((h * (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) * h⁻¹ *
+       (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹)⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 32 * δ ^ 2 := by
+  have hδ_nn : 0 ≤ δ := le_trans (norm_nonneg _) h_small
+  -- Step 1: σ_1·h·σ_1⁻¹ ∈ H_Fib (via D.1's H_Fib_conj_σ1_mem)
+  have h_conj_H : (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) ∈ H_Fib :=
+    H_Fib_conj_σ1_mem h h_H
+  -- Step 2: ‖(σ_1·h·σ_1⁻¹).val - 1‖ ≤ 4·δ (via D.2.a)
+  have h_conj_small : ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ := by
+    calc ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+            specialUnitary_conjugation_norm_le_four σ_Fib_1_SU h
+      _ ≤ 4 * δ := by
+          apply mul_le_mul_of_nonneg_left h_small
+          norm_num
+  -- Step 3: apply D.1.e to (h, σ_1·h·σ_1⁻¹)
+  have h_step := H_Fib_commutator_quadratic_step_explicit
+    h (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) h_H h_conj_H
+  -- h_step : ((h · σ_1·h·σ_1⁻¹ · h⁻¹ · (σ_1·h·σ_1⁻¹)⁻¹) ∈ H_Fib ∧
+  --           ‖. - 1‖ ≤ 8·‖h-1‖·‖σ_1·h·σ_1⁻¹ - 1‖)
+  refine ⟨h_step.1, ?_⟩
+  -- ‖. - 1‖ ≤ 8·‖h-1‖·‖σ_1·h·σ_1⁻¹ - 1‖ ≤ 8·δ·(4·δ) = 32·δ²
+  calc ‖((h * (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) * h⁻¹ *
+         (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹)⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+      ≤ 8 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+        ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := h_step.2
+    _ ≤ 8 * δ * (4 * δ) := by
+        apply mul_le_mul _ h_conj_small (norm_nonneg _) (by positivity)
+        apply mul_le_mul_of_nonneg_left h_small
+        norm_num
+    _ = 32 * δ ^ 2 := by ring
+
+/-- **H_Fib commutator-of-σ_2-conjugate explicit shrinkage** (mirror).
+Same bound `32·δ²` for the σ_Fib_2_SU-conjugate version. -/
+theorem H_Fib_conj_σ2_commutator_quadratic_shrinkage
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_H : h ∈ H_Fib) (δ : ℝ) (hδ_le_one : δ ≤ 1)
+    (h_small : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ) :
+    (h * (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) * h⁻¹ *
+     (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹)⁻¹) ∈ H_Fib ∧
+    ‖((h * (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) * h⁻¹ *
+       (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹)⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 32 * δ ^ 2 := by
+  have hδ_nn : 0 ≤ δ := le_trans (norm_nonneg _) h_small
+  have h_conj_H : (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) ∈ H_Fib :=
+    H_Fib_conj_σ2_mem h h_H
+  have h_conj_small : ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ := by
+    calc ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+            specialUnitary_conjugation_norm_le_four σ_Fib_2_SU h
+      _ ≤ 4 * δ := by
+          apply mul_le_mul_of_nonneg_left h_small
+          norm_num
+  have h_step := H_Fib_commutator_quadratic_step_explicit
+    h (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) h_H h_conj_H
+  refine ⟨h_step.1, ?_⟩
+  calc ‖((h * (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) * h⁻¹ *
+         (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹)⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+      ≤ 8 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+        ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := h_step.2
+    _ ≤ 8 * δ * (4 * δ) := by
+        apply mul_le_mul _ h_conj_small (norm_nonneg _) (by positivity)
+        apply mul_le_mul_of_nonneg_left h_small
+        norm_num
+    _ = 32 * δ ^ 2 := by ring
+
+end R5_4_LayerD_2_e_ConjugateCommutator
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
