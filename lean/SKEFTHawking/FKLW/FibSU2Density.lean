@@ -5663,6 +5663,172 @@ theorem σ_Fib_dispersion_non_scalar
 
 end R5_4_LayerD_3_e_GeneralCentralizer
 
+/-! ## 36.f R5.4 Layer D.3.f: Bundle-level dispersion — at least one
+σ_Fib_i conjugate of h is different from h
+
+Lifts the dispersion property (D.3.e) from the commutator form
+`σ · A ≠ A · σ` to the group-conjugation form `(σ · h · σ⁻¹).val ≠ h.val`,
+using the matrix-level identity `(σ · h · σ⁻¹).val = σ.val · h.val ·
+(σ⁻¹).val` and `(σ⁻¹).val · σ.val = 1` (matrix inverse coincides with
+group inverse for unitaries in SU(2)).
+
+For h ∈ SU(2) at scale `‖h.val - 1‖ < 2` with `h ≠ 1` (so h ≠ -I):
+(h.val - 1) is non-scalar (since h ∉ {±I}), hence by D.3.e dispersion
+applies, hence at least one σ_Fib_i doesn't commute with (h.val - 1)
+≡ doesn't commute with h.val ≡ (σ_Fib_i · h · σ_Fib_i⁻¹).val ≠ h.val.
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_3_f_BundleDispersion
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **Matrix-level group inverse**: for σ ∈ SU(2), `σ⁻¹.val · σ.val = 1`
+(at the matrix level). -/
+private theorem σ_SU_inv_mul_eq_one
+    (σ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) *
+    ((σ : Matrix (Fin 2) (Fin 2) ℂ)) = 1 := by
+  have h_grp : (σ⁻¹ * σ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 := inv_mul_cancel σ
+  have := congrArg (fun x : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
+      (x : Matrix (Fin 2) (Fin 2) ℂ)) h_grp
+  push_cast at this
+  exact this
+
+/-- **Commutator + group inverse equivalence**: `(σ · h · σ⁻¹).val = h.val`
+iff `σ.val · h.val = h.val · σ.val`. -/
+private theorem σ_SU_conj_eq_iff_commute
+    (σ h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ((σ * h * σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      ((h : Matrix (Fin 2) (Fin 2) ℂ)) ↔
+    ((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+      ((h : Matrix (Fin 2) (Fin 2) ℂ)) =
+    ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+      ((σ : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  push_cast
+  constructor
+  · intro h_eq
+    -- h_eq : σ.val · h.val · σ⁻¹.val = h.val
+    -- Multiply both sides by σ.val on right:
+    -- σ.val · h.val · σ⁻¹.val · σ.val = h.val · σ.val
+    -- Use σ⁻¹.val · σ.val = 1
+    have h_mul : ((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+                 ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+                 ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) *
+                 ((σ : Matrix (Fin 2) (Fin 2) ℂ)) =
+                 ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+                 ((σ : Matrix (Fin 2) (Fin 2) ℂ)) := by
+      rw [h_eq]
+    have h_assoc : ((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+                   ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+                   ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                      Matrix (Fin 2) (Fin 2) ℂ) *
+                   ((σ : Matrix (Fin 2) (Fin 2) ℂ)) =
+                   ((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+                   ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+                   (((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                      Matrix (Fin 2) (Fin 2) ℂ) *
+                    ((σ : Matrix (Fin 2) (Fin 2) ℂ))) := by noncomm_ring
+    rw [h_assoc, σ_SU_inv_mul_eq_one, Matrix.mul_one] at h_mul
+    exact h_mul
+  · intro h_comm
+    -- h_comm : σ.val · h.val = h.val · σ.val
+    -- Then σ.val · h.val · σ⁻¹.val = h.val · σ.val · σ⁻¹.val = h.val · 1 = h.val
+    have h_mul : ((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+                 ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+                 ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) =
+                 ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+                 ((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+                 ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) := by
+      rw [h_comm]
+    have h_sig_inv : ((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+                     ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                        Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+      have h_grp : (σ * σ⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 := mul_inv_cancel σ
+      have := congrArg (fun x : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
+          (x : Matrix (Fin 2) (Fin 2) ℂ)) h_grp
+      push_cast at this
+      exact this
+    rw [Matrix.mul_assoc ((h : Matrix (Fin 2) (Fin 2) ℂ)) _ _,
+        h_sig_inv, Matrix.mul_one] at h_mul
+    exact h_mul
+
+/-- **Subtraction-preserves-commutator**: `σ · A = A · σ` iff
+`σ · (A - 1) = (A - 1) · σ`. -/
+private theorem sub_one_commute_iff_commute
+    (σ A : Matrix (Fin 2) (Fin 2) ℂ) :
+    σ * A = A * σ ↔ σ * (A - 1) = (A - 1) * σ := by
+  constructor
+  · intro h
+    have : σ * (A - 1) = σ * A - σ * 1 := by noncomm_ring
+    rw [this, h]; noncomm_ring
+  · intro h
+    -- σ * (A - 1) = (A - 1) * σ ⟹ σ * A - σ = A * σ - σ ⟹ σ * A = A * σ
+    have h_expand : σ * A - σ * 1 = A * σ - 1 * σ := by
+      have hL : σ * (A - 1) = σ * A - σ * 1 := by noncomm_ring
+      have hR : (A - 1) * σ = A * σ - 1 * σ := by noncomm_ring
+      rw [hL, hR] at h
+      exact h
+    have h1 : σ * 1 = σ := Matrix.mul_one _
+    have h2 : (1 : Matrix (Fin 2) (Fin 2) ℂ) * σ = σ := Matrix.one_mul _
+    rw [h1, h2] at h_expand
+    -- h_expand : σ * A - σ = A * σ - σ. Cancel σ on right.
+    exact sub_left_inj.mp h_expand
+
+/-- **Bundle-level dispersion** (conditional on non-scalarity of h - 1):
+for h ∈ SU(2) with `h.val - 1` NOT a scalar multiple of I, AT LEAST one
+of the σ_Fib_i conjugates satisfies
+`(σ_Fib_i · h · σ_Fib_i⁻¹).val ≠ h.val`.
+
+This is the bundle-level version of `σ_Fib_dispersion_non_scalar`.
+The non-scalar hypothesis is straightforward to verify downstream: h
+non-scalar iff h ∉ {z·I : z ∈ ℂ} ∩ SU(2) = {±I}. For h ∈ SU(2) with
+`h ≠ 1` and `h ≠ -I` (the latter is automatic for `‖h.val - 1‖ < 2`
+since `‖-I - 1‖_{L∞-op} = 2`), h is non-scalar, hence (h - 1) is
+non-scalar (derivation in Layer D.3.g). -/
+theorem H_Fib_bundle_dispersion
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_non_scalar :
+      ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) ≠
+        ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) 0 0 •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ)) :
+    ((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) ≠
+      ((h : Matrix (Fin 2) (Fin 2) ℂ)) ∨
+    ((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) ≠
+      ((h : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  -- Apply dispersion D.3.e to (h - 1)
+  rcases σ_Fib_dispersion_non_scalar
+    ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) h_non_scalar with h_d | h_d
+  · -- σ_1 doesn't commute with (h - 1)
+    left
+    intro h_eq
+    apply h_d
+    have h_comm := (σ_SU_conj_eq_iff_commute σ_Fib_1_SU h).mp h_eq
+    exact (sub_one_commute_iff_commute _ _).mp h_comm
+  · -- σ_2 doesn't commute with (h - 1)
+    right
+    intro h_eq
+    apply h_d
+    have h_comm := (σ_SU_conj_eq_iff_commute σ_Fib_2_SU h).mp h_eq
+    exact (sub_one_commute_iff_commute _ _).mp h_comm
+
+end R5_4_LayerD_3_f_BundleDispersion
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
