@@ -2698,7 +2698,98 @@ theorem H_Fib_not_iso_of_card_lt_200 {G : Type*} [Group G]
 
 end D4_3d_QuaternionGroup_Ruleout
 
-/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter})
+/-! ## 19. Phase D4.3.e-conditional: density progress under partial Hurwitz
+
+This section ships the **load-bearing conditional bridge** from the
+D4.3.d-starter substrate (§18) to `Set.Infinite H_Fib`, assuming a
+*partial Hurwitz statement* `PartialHurwitzSU2` (much weaker than the
+full Hurwitz classification of finite subgroups of SU(2)).
+
+**Why partial Hurwitz suffices**: full Hurwitz says finite subgroups of
+SU(2) are exactly cyclic ∪ {QuaternionGroup n} ∪ {2T, 2O, 2I}.
+Our `PartialHurwitzSU2` asserts the *weaker* trichotomy "every finite
+subgroup of SU(2) is abelian (cyclic), or isomorphic to some
+QuaternionGroup n, or has cardinality < 200" — which gives the same
+conclusion for the H_Fib analysis since:
+  - 2T (order 24), 2O (48), 2I (120) all have card < 200.
+  - Cyclic subgroups (any cardinality) are abelian.
+
+**Substrate consumed**:
+  - `H_Fib_not_abelian` (shipped earlier in §11) — closes the abelian branch.
+  - `H_Fib_not_iso_QuaternionGroup` (D4.3.d-starter §18) — closes the
+    QuaternionGroup branch.
+  - `H_Fib_card_ge_200_if_finite` (D4.3.c.app.5b §17) — closes the
+    card < 200 branch.
+
+**What's still missing for full density**: this concludes `H_Fib` is
+infinite. To go from `Set.Infinite H_Fib` to `H_Fib = ⊤` (equivalently
+to `DenseInSpecialUnitary`) requires the topological-density chain:
+  - Closed infinite subgroup of SU(2) has positive-dim Lie subalgebra
+  - For non-abelian closed connected subgroups of SU(2), the Lie subalg
+    is either 1-dim (then SO(2)-like, but H_Fib non-abelian rules out)
+    or 3-dim (then SU(2) itself).
+  - The topological component analysis closes the case.
+This topological step requires Lie-group classification substrate that
+is also a Mathlib4 gap, but is independent of the Hurwitz classification.
+-/
+
+section D4_3e_PartialHurwitz_Conditional
+
+/-- **Partial Hurwitz classification of finite subgroups of SU(2)** —
+weaker than full Hurwitz but suffices for the H_Fib analysis.
+
+Asserts: every finite subgroup of SU(2) is either abelian, isomorphic
+to some `QuaternionGroup n` with `n ≠ 0`, or has cardinality < 200.
+
+Cardinality < 200 covers `2T (24), 2O (48), 2I (120)` and all small
+cyclic / dihedral cases. Hence this is weaker than (and implied by)
+full Hurwitz; correspondingly any *future* partial-Hurwitz Mathlib
+contribution targeting this restricted form would suffice. -/
+def PartialHurwitzSU2 : Prop :=
+    ∀ (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+        (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).Finite →
+        (∀ x y : ↥H, x * y = y * x) ∨
+        (∃ n : ℕ, n ≠ 0 ∧ Nonempty (↥H ≃* QuaternionGroup n)) ∨
+        Nat.card ↥H < 200
+
+/-- **D4.3.e-conditional headline — H_Fib is infinite under partial Hurwitz**.
+
+Combines all the D4.3.* substrate:
+  - `H_Fib_not_abelian` (§11) — kills the abelian branch.
+  - `H_Fib_not_iso_QuaternionGroup` (§18) — kills the QuaternionGroup branch.
+  - `H_Fib_card_ge_200_if_finite` (§17) — kills the cardinality < 200 branch.
+
+This is the FINAL step in the *algebraic* (Hurwitz-based) approach to
+closing density — only the topological step
+`Set.Infinite H_Fib → H_Fib = ⊤` (via Lie-subgroup classification of
+SU(2)) remains, and the D4 wrapper `fibonacci_density_from_H_Fib_eq_top`
+then closes density. -/
+theorem H_Fib_infinite_of_PartialHurwitz (H_pH : PartialHurwitzSU2) :
+    Set.Infinite (H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro h_fin
+  rcases H_pH H_Fib h_fin with h_abelian | ⟨n, h_n_ne, ⟨φ⟩⟩ | h_card_lt
+  · -- Abelian branch: contradicts H_Fib_not_abelian.
+    -- H_Fib_not_abelian : ∃ x y, x ∈ H_Fib ∧ y ∈ H_Fib ∧ x * y ≠ y * x.
+    obtain ⟨x, y, hx, hy, h_ne_comm⟩ := H_Fib_not_abelian
+    apply h_ne_comm
+    -- Apply h_abelian on the subtype version, then project down.
+    have h_sub_comm : (⟨x, hx⟩ : ↥H_Fib) * ⟨y, hy⟩ =
+                      ⟨y, hy⟩ * ⟨x, hx⟩ :=
+      h_abelian _ _
+    have h_val := congrArg (Subtype.val (p := fun z => z ∈ H_Fib)) h_sub_comm
+    exact h_val
+  · -- QuaternionGroup branch: contradicts H_Fib_not_iso_QuaternionGroup.
+    haveI : NeZero n := ⟨h_n_ne⟩
+    exact H_Fib_not_iso_QuaternionGroup n ⟨φ⟩
+  · -- Cardinality < 200 branch: contradicts H_Fib_card_ge_200_if_finite.
+    have h_ge_200 : 200 ≤ Nat.card ↥H_Fib :=
+      H_Fib_card_ge_200_if_finite h_fin
+    omega
+
+end D4_3e_PartialHurwitz_Conditional
+
+/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
@@ -2850,6 +2941,35 @@ card (2T/2O/2I) is ruled out by `H_Fib_not_iso_of_card_lt_200`. Hurwitz
 itself is a non-trivial Mathlib gap (cite: Mathlib4 PR list 2024-2026);
 the substrate shipped here is the "everything else" that composes with
 Hurwitz to immediately close density.
+
+**Theorems shipped in R4.2.d.4.3.e-conditional (Phase 6p Wave 2c.4a-R4.2.d.4.3.e-conditional,
+sub-§19, 2026-05-19 session 31)** — load-bearing CONDITIONAL bridge:
+
+  §19 (conditional density bridge):
+    - **`PartialHurwitzSU2 : Prop`** : partial-Hurwitz statement
+      sufficient for our use-case. Every finite subgroup of SU(2) is
+      abelian, isomorphic to some `QuaternionGroup n` with `n ≠ 0`, or
+      has `Nat.card < 200`. Weaker than full Hurwitz (which gives the
+      explicit list cyclic ∪ {QuaternionGroup n} ∪ {2T, 2O, 2I}) — the
+      `card < 200` clause subsumes 2T (24), 2O (48), 2I (120).
+    - **`H_Fib_infinite_of_PartialHurwitz`** : composes the D4.3.*
+      substrate to close `Set.Infinite H_Fib` under `PartialHurwitzSU2`.
+      Trichotomy: abelian → contradicts `H_Fib_not_abelian` via witness
+      extraction; QuaternionGroup → contradicts `H_Fib_not_iso_QuaternionGroup`;
+      small-card → contradicts `H_Fib_card_ge_200_if_finite`.
+
+**Final density chain status after §19**: shipped substrate closes the
+*algebraic* path to density modulo two Mathlib gaps:
+  1. `PartialHurwitzSU2` itself — a much smaller Mathlib4 upstream
+     contribution than full Hurwitz (focuses on the trichotomy alone,
+     not the explicit list 2T/2O/2I).
+  2. The topological-density step: `Set.Infinite H_Fib → H_Fib = ⊤`
+     via Lie-subgroup classification of SU(2) (independent of Hurwitz;
+     also a Mathlib gap, but addressable separately).
+
+Once both gaps close: `H_Fib_infinite_of_PartialHurwitz` + topological
+step + shipped `fibonacci_density_from_H_Fib_eq_top` →
+`DenseInSpecialUnitary 3 2 ρ_Fib_SU2`.
 
 **Theorems shipped in R4.2.d.4.3.c.foundation (Phase 6p Wave 2c.4a-R4.2.d.4.3.c,
 sub-§14, 2026-05-19)** — F-conjugate of diagonal off-diagonal computation
