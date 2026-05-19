@@ -56,6 +56,7 @@ References:
 -/
 
 import SKEFTHawking.FKLW.FibSU2Rep
+import SKEFTHawking.FKLW.AharonovAradBridgeIteration
 import Mathlib.GroupTheory.SpecificGroups.Quaternion
 
 set_option autoImplicit false
@@ -3214,6 +3215,69 @@ theorem SU2_trace_pow_of_finOrder (c : Matrix.specialUnitaryGroup (Fin 2) ℂ)
   norm_num
 
 end D3_PathII_TracePowers
+
+/-! ## 24. Phase D3-Path-ii AA-bridge integration: image-infinite connector
+
+This section ships **clean connector substrate** between the shipped
+HBS-Step-1 trace work (`σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_trace = (3-√5)/2`
++ closure substrate `H_Fib_infinite_of_inf_order_HBS_witness`) and the
+shipped Aharonov-Arad bridge infrastructure
+(`image_infinite_of_exists_not_finOrder` in `AharonovAradBridgeIteration.lean`).
+
+Specifically: given the infinite-order witness `¬IsOfFinOrder (σ_Fib_1_SU *
+σ_Fib_2_SU⁻¹)` (which is the remaining mathematical step — the non-root-
+of-unity argument for `(3-√5)/2`), we apply `image_infinite_of_exists_not_finOrder`
+with the braid word `b_HBS := σ₀ · σ₁⁻¹ ∈ BraidGroup 3` to conclude
+`(Set.range ρ_Fib_SU2).Infinite`.
+
+This bridges directly into the project's pre-planned Aharonov-Arad
+density chain (Wave 2c.1 deliverable).
+-/
+
+section D3_PathII_AABridgeConnector
+
+/-- The specific Fibonacci braid word `b_HBS := σ₀ · σ₁⁻¹` in
+`BraidGroup 3` whose image under `ρ_Fib_SU2` is `σ_Fib_1_SU · σ_Fib_2_SU⁻¹`. -/
+noncomputable def b_HBS : SKEFTHawking.BraidGroup 3 :=
+    SKEFTHawking.BraidGroup.σ (⟨0, by omega⟩ : Fin (3 - 1)) *
+    (SKEFTHawking.BraidGroup.σ (⟨1, by omega⟩ : Fin (3 - 1)))⁻¹
+
+/-- **Image of `b_HBS` under `ρ_Fib_SU2`**: equals `σ_Fib_1_SU · σ_Fib_2_SU⁻¹`.
+
+Direct application of `MonoidHom.map_mul + MonoidHom.map_inv` combined
+with shipped `ρ_Fib_SU2_apply_σ0 + ρ_Fib_SU2_apply_σ1`. -/
+theorem ρ_Fib_SU2_apply_b_HBS :
+    ρ_Fib_SU2 b_HBS = σ_Fib_1_SU * σ_Fib_2_SU⁻¹ := by
+  unfold b_HBS
+  rw [map_mul, map_inv, ρ_Fib_SU2_apply_σ0, ρ_Fib_SU2_apply_σ1]
+
+/-- **D3-Path-ii AA-connector**: given the infinite-order witness
+`¬IsOfFinOrder (σ_Fib_1_SU · σ_Fib_2_SU⁻¹)` (the non-root-of-unity step),
+conclude `(Set.range ρ_Fib_SU2).Infinite`.
+
+This is the bridge from the algebraic-number HBS Step 1 closure into the
+project's shipped Aharonov-Arad density chain. Once `h_inf` is closed
+(via the Chebyshev-cyclotomic / Galois argument for `(3-√5)/2`), the
+full FKLW density follows by:
+  - This theorem: range is infinite.
+  - Shipped `one_accPt_of_infinite_closed_subgroup` (`AharonovAradLemma6`):
+    1 is an accumulation point of `H_Fib`.
+  - Shipped Aharonov-Arad iteration substrate (R5.1 + R5.3) — bridges
+    AccPt to `1 ∈ interior(closure)`.
+  - Shipped `closure_eq_univ_of_one_mem_interior` + `bridge_FKLW_unitary_hom`
+    (`AharonovAradBridgeIteration`): full `DenseInSpecialUnitary`. -/
+theorem ρ_Fib_SU2_range_infinite_of_inf_order_HBS_witness
+    (h_inf : ¬ IsOfFinOrder
+        (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+            Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    (Set.range ρ_Fib_SU2).Infinite := by
+  apply SKEFTHawking.FKLW.AharonovAradBridge.image_infinite_of_exists_not_finOrder
+    ρ_Fib_SU2
+  refine ⟨b_HBS, ?_⟩
+  rw [ρ_Fib_SU2_apply_b_HBS]
+  exact h_inf
+
+end D3_PathII_AABridgeConnector
 
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
