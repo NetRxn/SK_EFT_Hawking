@@ -5047,6 +5047,113 @@ theorem H_Fib_conj_σ2_commutator_quadratic_shrinkage
 
 end R5_4_LayerD_2_e_ConjugateCommutator
 
+/-! ## 35. R5.4 Layer D.2.f: H_Fib 3-element bundle (h, σh σ⁻¹, [h, σhσ⁻¹])
+
+Bundles Layers D.1.e + D.2.a + D.2.e into the complete **3-element
+construction** for the AA Bridge Lemma 6.2 spanning argument: given a
+small h ∈ H_Fib, produce the triple (h, h_2nd, h_3rd) all in H_Fib
+with explicit scales (δ, 4δ, 32δ²).
+
+  - `h₁ := h`           ∈ H_Fib at scale δ
+  - `h₂ := σ·h·σ⁻¹`     ∈ H_Fib at scale 4·δ      (Lie direction ≈ Ad(σ) · (h - 1))
+  - `h₃ := [h₁, h₂]_grp` ∈ H_Fib at scale 32·δ²   (Lie direction ≈ [(h - 1), Ad(σ)(h - 1)])
+
+For σ = σ_Fib_1_SU OR σ = σ_Fib_2_SU. The Lie-bracket direction (h₃'s
+direction) is the cross product (h - 1) × Ad(σ)(h - 1) in 𝔰𝔲(2) ≅ ℝ³;
+non-zero unless (h - 1) is on σ's rotation axis. So for at least one
+of {σ_Fib_1_SU, σ_Fib_2_SU}, the 3 Lie directions are non-coplanar
+(since σ_Fib_{1,2} don't share an axis, by their non-commutation).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_2_f_ThreeElementBundle
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **3-element bundle in H_Fib with explicit scales** (σ_Fib_1_SU
+version): for any `h ∈ H_Fib` at scale `δ ≤ 1`, define the triple
+  `h₁ := h, h₂ := σ_Fib_1_SU·h·σ_Fib_1_SU⁻¹, h₃ := [h₁, h₂]_grp`.
+All three are in H_Fib, with scales δ, 4·δ, 32·δ² respectively. -/
+theorem H_Fib_three_element_bundle_σ1
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_H : h ∈ H_Fib) (δ : ℝ) (hδ_le_one : δ ≤ 1)
+    (h_small : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ) :
+    -- All three in H_Fib
+    h ∈ H_Fib ∧
+    (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) ∈ H_Fib ∧
+    (h * (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) * h⁻¹ *
+     (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹)⁻¹) ∈ H_Fib ∧
+    -- Scale δ for h
+    ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ ∧
+    -- Scale 4·δ for the conjugate
+    ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ ∧
+    -- Scale 32·δ² for the commutator (quadratic shrinkage)
+    ‖((h * (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) * h⁻¹ *
+       (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹)⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 32 * δ ^ 2 := by
+  have hδ_nn : 0 ≤ δ := le_trans (norm_nonneg _) h_small
+  have h_conj_H : (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) ∈ H_Fib :=
+    H_Fib_conj_σ1_mem h h_H
+  have h_conj_small : ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ := by
+    calc ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+            specialUnitary_conjugation_norm_le_four σ_Fib_1_SU h
+      _ ≤ 4 * δ := by
+          apply mul_le_mul_of_nonneg_left h_small
+          norm_num
+  have h_step := H_Fib_conj_σ1_commutator_quadratic_shrinkage
+    h h_H δ hδ_le_one h_small
+  exact ⟨h_H, h_conj_H, h_step.1, h_small, h_conj_small, h_step.2⟩
+
+/-- **3-element bundle in H_Fib with explicit scales** (σ_Fib_2_SU
+version; mirror). -/
+theorem H_Fib_three_element_bundle_σ2
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_H : h ∈ H_Fib) (δ : ℝ) (hδ_le_one : δ ≤ 1)
+    (h_small : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ) :
+    h ∈ H_Fib ∧
+    (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) ∈ H_Fib ∧
+    (h * (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) * h⁻¹ *
+     (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹)⁻¹) ∈ H_Fib ∧
+    ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ ∧
+    ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ ∧
+    ‖((h * (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) * h⁻¹ *
+       (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹)⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 32 * δ ^ 2 := by
+  have hδ_nn : 0 ≤ δ := le_trans (norm_nonneg _) h_small
+  have h_conj_H : (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) ∈ H_Fib :=
+    H_Fib_conj_σ2_mem h h_H
+  have h_conj_small : ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ := by
+    calc ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+            specialUnitary_conjugation_norm_le_four σ_Fib_2_SU h
+      _ ≤ 4 * δ := by
+          apply mul_le_mul_of_nonneg_left h_small
+          norm_num
+  have h_step := H_Fib_conj_σ2_commutator_quadratic_shrinkage
+    h h_H δ hδ_le_one h_small
+  exact ⟨h_H, h_conj_H, h_step.1, h_small, h_conj_small, h_step.2⟩
+
+end R5_4_LayerD_2_f_ThreeElementBundle
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
