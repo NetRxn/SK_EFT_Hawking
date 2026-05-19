@@ -2962,6 +2962,104 @@ theorem SU2_trace_mul_inv (A B : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
 
 end D3_PathII_TraceIdentity
 
+/-! ## 21. Phase D3-Path-ii Step 1: Fibonacci word trace + closed form
+
+Applies the SU(2) trace identity (§20) to the specific Fibonacci word
+`σ_Fib_1_SU · σ_Fib_2_SU⁻¹` to derive the closed-form trace
+`(3 - √5) / 2` (an algebraic number of degree 2 over ℚ). This trace
+is NOT of the form `2 cos(r·π)` for any rational `r`, so the
+corresponding eigenvalue is not a root of unity, hence the element has
+infinite order — the HBS Step 1 witness.
+
+This section ships the trace computation; the eigenvalue / non-root-of-unity
+step is the subsequent ship.
+-/
+
+section D3_PathII_FibonacciTrace
+
+/-- **cos²(7π/10) closed form**: `cos²(7π/10) = (5 - √5) / 8`.
+
+Derivation via double-angle: `4 cos²(7π/10) = 2 cos(7π/5) + 2`.
+Then `cos(7π/5) = cos(3π/5 - 2π) ·... wait cos has period 2π so
+`cos(7π/5) = cos(7π/5 - 2π) = cos(-3π/5) = cos(3π/5) = -cos(2π/5)`.
+By Mathlib's `cos_pi_div_five`: `cos(π/5) = (1+√5)/4`, then double-angle
+`cos(2π/5) = 2 cos²(π/5) - 1 = (√5-1)/4`. Substituting:
+`4 cos²(7π/10) = -2 (√5-1)/4 · 2 + 2 = -(√5-1) + 2 = 3 - √5`. -/
+private theorem cos_seven_pi_div_ten_sq :
+    Real.cos (7 * Real.pi / 10) ^ 2 = (5 - Real.sqrt 5) / 8 := by
+  -- 4 cos² θ = 2 (1 + cos(2θ)).
+  have h_double : Real.cos (7 * Real.pi / 10) ^ 2 =
+      (1 + Real.cos (2 * (7 * Real.pi / 10))) / 2 := by
+    have := Real.cos_sq (7 * Real.pi / 10)
+    linarith [this]
+  rw [h_double]
+  -- 2 * (7π/10) = 7π/5.
+  have h_arg : 2 * (7 * Real.pi / 10) = 7 * Real.pi / 5 := by ring
+  rw [h_arg]
+  -- cos(7π/5) = cos(-3π/5 + 2π) = cos(-3π/5) = cos(3π/5).
+  have h_period : Real.cos (7 * Real.pi / 5) = Real.cos (3 * Real.pi / 5) := by
+    have h1 : (7 * Real.pi / 5 : ℝ) = (-(3 * Real.pi / 5)) + 2 * Real.pi := by ring
+    rw [h1, Real.cos_add_two_pi, Real.cos_neg]
+  rw [h_period]
+  -- cos(3π/5) = cos(π - 2π/5) = -cos(2π/5).
+  have h_supp : Real.cos (3 * Real.pi / 5) = -Real.cos (2 * Real.pi / 5) := by
+    have h2 : (3 * Real.pi / 5 : ℝ) = Real.pi - 2 * Real.pi / 5 := by ring
+    rw [h2, Real.cos_pi_sub]
+  rw [h_supp]
+  -- cos(2π/5) = 2 cos²(π/5) - 1.
+  have h_cos2_eq : Real.cos (2 * Real.pi / 5) =
+      2 * Real.cos (Real.pi / 5) ^ 2 - 1 := by
+    have h3 : (2 * Real.pi / 5 : ℝ) = 2 * (Real.pi / 5) := by ring
+    rw [h3, Real.cos_two_mul]
+  rw [h_cos2_eq, Real.cos_pi_div_five]
+  -- Plug in (1+√5)/4 and simplify.
+  have h_sqrt5_sq : Real.sqrt 5 ^ 2 = 5 :=
+    Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 5)
+  nlinarith [h_sqrt5_sq, Real.sqrt_nonneg (5:ℝ)]
+
+/-- **Trace of the Fibonacci HBS word**: `tr(σ_Fib_1_SU · σ_Fib_2_SU⁻¹) = (3-√5)/2`.
+
+Headline derivation chain:
+  1. `SU2_trace_mul_inv` gives `tr(A · B⁻¹) = tr(A)·tr(B) - tr(A·B)`.
+  2. Apply with A = σ_Fib_1_SU, B = σ_Fib_2_SU:
+     `tr(σ_1 · σ_2⁻¹) = tr(σ_1)·tr(σ_2) - tr(σ_1·σ_2)`.
+  3. Substitute shipped: `tr(σ_1) = tr(σ_2) = (2 cos(7π/10) : ℝ) : ℂ`
+     (from D2's `σ_Fib_{1,2}_SU_mat_trace_eq_real_cos`).
+  4. Substitute shipped: `tr(σ_1·σ_2) = 1` (from D1's
+     `σ_Fib_1_SU_mul_σ_Fib_2_SU_trace`).
+  5. Get `tr(σ_1·σ_2⁻¹) = (2 cos(7π/10))² - 1`.
+  6. Apply `cos_seven_pi_div_ten_sq`: `cos²(7π/10) = (5-√5)/8`,
+     so `4 cos²(7π/10) - 1 = (5-√5)/2 - 1 = (3-√5)/2`. -/
+theorem σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_trace :
+    Matrix.trace ((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      (((3 - Real.sqrt 5) / 2 : ℝ) : ℂ) := by
+  -- Step 1-2: apply SU2_trace_mul_inv.
+  rw [SU2_trace_mul_inv σ_Fib_1_SU σ_Fib_2_SU]
+  -- Goal: tr σ_1 * tr σ_2 - tr (σ_1 * σ_2) = ((3-√5)/2 : ℝ) : ℂ
+  -- Step 3: Substitute shipped traces.
+  -- σ_Fib_1_SU coerces to σ_Fib_1_SU_mat by definition.
+  show Matrix.trace σ_Fib_1_SU_mat * Matrix.trace σ_Fib_2_SU_mat -
+       Matrix.trace (σ_Fib_1_SU_mat * σ_Fib_2_SU_mat) =
+       (((3 - Real.sqrt 5) / 2 : ℝ) : ℂ)
+  rw [σ_Fib_1_SU_mat_trace_eq_real_cos, σ_Fib_2_SU_mat_trace_eq_real_cos,
+      σ_Fib_1_SU_mul_σ_Fib_2_SU_trace]
+  -- Goal: ((2·cos(7π/10) : ℝ) : ℂ) * ((2·cos(7π/10) : ℝ) : ℂ) - 1 =
+  --       (((3 - √5)/2 : ℝ) : ℂ).
+  -- push_cast everything to ℂ-cast of ℝ, then congr down to ℝ.
+  have h_eq_real : (2 * Real.cos (7 * Real.pi / 10)) *
+                   (2 * Real.cos (7 * Real.pi / 10)) - 1 =
+                   (3 - Real.sqrt 5) / 2 := by
+    have h_sq : Real.cos (7 * Real.pi / 10) ^ 2 = (5 - Real.sqrt 5) / 8 :=
+      cos_seven_pi_div_ten_sq
+    nlinarith [h_sq, Real.sqrt_nonneg (5:ℝ)]
+  have h_lift := congrArg (fun (r : ℝ) => (r : ℂ)) h_eq_real
+  push_cast at h_lift ⊢
+  convert h_lift using 1
+
+end D3_PathII_FibonacciTrace
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
