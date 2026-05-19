@@ -616,6 +616,12 @@ import SKEFTHawking.FKLW.FibSU2Density
 -- ℝ-submodule + Pauli anti-Hermitian generators (i·σ_x, i·σ_y, i·σ_z).
 -- Mathlib4-PR-quality general substrate.
 import SKEFTHawking.FKLW.SU2LieAlgebra
+-- Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-B (2026-05-19, session 36):
+-- Matrix exponential substrate. Ships Matrix.IsSkewHermitian.exp_mem_unitaryGroup
+-- (exp of skew-Hermitian is unitary, via exp_conjTranspose + exp_add_of_commute
+-- + exp_zero) + expAmbient alias + expAmbient_zero. Mathlib4-PR-quality
+-- companion to existing Matrix.IsHermitian.exp.
+import SKEFTHawking.FKLW.SU2MatrixExp
 -- Phase 6p Wave 2d.3-followup (2026-05-14): qubit Bloch-sphere balanced commutator
 -- (D-N Lemma 2 §4.1 Eq. 10-13). Ships `qubit_balanced_commutator_z_axis` —
 -- the substantive Z-axis-case existence of F, G hermitian with ‖F‖, ‖G‖ ≤
