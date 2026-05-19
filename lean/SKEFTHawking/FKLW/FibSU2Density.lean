@@ -5154,6 +5154,180 @@ theorem H_Fib_three_element_bundle_σ2
 
 end R5_4_LayerD_2_f_ThreeElementBundle
 
+/-! ## 36. R5.4 Layer D.3.a: σ_Fib axes are DIFFERENT (witness σ_z)
+
+For the AA Bridge Lemma 6.2 spanning argument, we need that
+σ_Fib_1_SU and σ_Fib_2_SU have **different rotation axes** in SO(3)
+(equivalently: their centralizers in 𝔰𝔲(2) are different 1-dim
+subspaces).
+
+This section ships the concrete WITNESS for this fact: the Pauli
+σ_z = diag(1, -1) is fixed by Ad(σ_Fib_1_SU_mat) (both diagonal so
+commute) but NOT fixed by Ad(σ_Fib_2_SU_mat) (σ_Fib_2 has non-zero
+off-diagonal [0,1] entry via the F-conjugation structure).
+
+These are CONCRETE matrix-level computations using the shipped
+F-conjugation substrate (`F_conj_diag_offdiag_01` from D4.3.c.foundation).
+
+Substrate for the Layer D.3.b argument: ANY non-zero direction A in
+𝔰𝔲(2) — at least one of σ_Fib_1, σ_Fib_2 doesn't commute with A
+(since their fixed subspaces are different 1-dim lines through origin
+which intersect only at 0).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_3_a_DifferentAxes
+
+/-- **The Pauli σ_z matrix**: `diag(1, -1) ∈ Matrix (Fin 2) (Fin 2) ℂ`.
+Used as concrete witness direction for the σ_Fib_1-fixed subspace. -/
+private noncomputable def σ_z : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![1, 0; 0, -1]
+
+/-- σ_z entry [0,1] equals 0 (since σ_z is diagonal). -/
+private theorem σ_z_entry_01 : σ_z 0 1 = 0 := rfl
+
+/-- σ_z entry [0,0] = 1. -/
+private theorem σ_z_entry_00 : σ_z 0 0 = 1 := rfl
+
+/-- σ_z entry [1,1] = -1. -/
+private theorem σ_z_entry_11 : σ_z 1 1 = -1 := rfl
+
+/-- σ_Fib_1_SU_mat[0,1] = 0 — extracted from the diagonal pow form. -/
+private theorem σ_Fib_1_SU_mat_entry_01 : σ_Fib_1_SU_mat 0 1 = 0 := by
+  have h := σ_Fib_1_SU_mat_pow_eq_diag 1
+  simp [pow_one] at h
+  rw [h]
+  rfl
+
+/-- σ_Fib_1_SU_mat[1,0] = 0 — extracted from the diagonal pow form. -/
+private theorem σ_Fib_1_SU_mat_entry_10 : σ_Fib_1_SU_mat 1 0 = 0 := by
+  have h := σ_Fib_1_SU_mat_pow_eq_diag 1
+  simp [pow_one] at h
+  rw [h]
+  rfl
+
+/-- σ_Fib_1_SU_mat[0,0] = ω·R_1 — extracted from the diagonal pow form. -/
+private theorem σ_Fib_1_SU_mat_entry_00 :
+    σ_Fib_1_SU_mat 0 0 = ω_Fib_C * R1_C := by
+  have h := σ_Fib_1_SU_mat_pow_eq_diag 1
+  simp [pow_one] at h
+  rw [h]
+  rfl
+
+/-- σ_Fib_1_SU_mat[1,1] = ω·R_τ — extracted from the diagonal pow form. -/
+private theorem σ_Fib_1_SU_mat_entry_11 :
+    σ_Fib_1_SU_mat 1 1 = ω_Fib_C * Rtau_C := by
+  have h := σ_Fib_1_SU_mat_pow_eq_diag 1
+  simp [pow_one] at h
+  rw [h]
+  rfl
+
+/-- **σ_Fib_1_SU_mat commutes with σ_z**: both are diagonal, so commute.
+
+(`Ad(σ_Fib_1_SU_mat)` fixes the σ_z-direction in 𝔰𝔲(2).) -/
+theorem σ_Fib_1_SU_mat_σ_z_commute :
+    σ_Fib_1_SU_mat * σ_z = σ_z * σ_Fib_1_SU_mat := by
+  -- σ_Fib_1_SU_mat is diagonal: it equals diag(ω·R_1, ω·R_τ).
+  -- σ_z is diagonal: diag(1, -1). Two diagonal 2×2 matrices commute.
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two,
+          σ_z_entry_00, σ_z_entry_01, σ_z_entry_11,
+          show σ_z 1 0 = 0 from rfl,
+          σ_Fib_1_SU_mat_entry_00, σ_Fib_1_SU_mat_entry_01,
+          σ_Fib_1_SU_mat_entry_10, σ_Fib_1_SU_mat_entry_11]
+
+/-- **`σ_Fib_2_SU_mat` is NOT diagonal** — specifically its [0,1] entry
+is non-zero.
+
+Computation: `σ_Fib_2_SU_mat = F_C · σ_Fib_1_SU_mat · F_C` where
+σ_Fib_1_SU_mat = diag(ω·R_1, ω·R_τ). Applying `F_conj_diag_offdiag_01`:
+`(F_C · diag(ω·R_1, ω·R_τ) · F_C)[0,1] = φInv_C · φInvSqrt_C · (ω·R_1 - ω·R_τ)
+                                       = φInv_C · φInvSqrt_C · ω_C · (R_1 - R_τ)`
+which is non-zero (since `R_1 ≠ R_τ` (shipped) + φInv, φInvSqrt, ω all
+non-zero). -/
+theorem σ_Fib_2_SU_mat_entry_01_ne_zero :
+    σ_Fib_2_SU_mat 0 1 ≠ 0 := by
+  -- σ_Fib_2_SU_mat = F_C · σ_Fib_1_SU_mat · F_C
+  rw [σ_Fib_2_SU_mat_eq_F_conj]
+  -- σ_Fib_1_SU_mat = diag(ω_Fib·R_1, ω_Fib·R_τ) via σ_Fib_1_SU_mat_pow_eq_diag 1
+  have h_diag : σ_Fib_1_SU_mat =
+      !![ω_Fib_C * R1_C, 0; 0, ω_Fib_C * Rtau_C] := by
+    have h := σ_Fib_1_SU_mat_pow_eq_diag 1
+    simp [pow_one] at h
+    exact h
+  rw [h_diag]
+  -- Apply F_conj_diag_offdiag_01 with c := ω·R_1, d := ω·R_τ
+  rw [F_conj_diag_offdiag_01 (ω_Fib_C * R1_C) (ω_Fib_C * Rtau_C)]
+  -- Goal: φInv_C · φInvSqrt_C · (ω·R_1 - ω·R_τ) ≠ 0
+  have h_R1_ne_Rtau : R1_C ≠ Rtau_C := R1_C_ne_Rtau_C
+  have h_φInv_ne : φInv_C ≠ 0 := by
+    intro h_φ
+    have h := φInv_C_sq_add_self
+    rw [h_φ] at h
+    simp at h
+  have h_φInvSqrt_ne : φInvSqrt_C ≠ 0 := by
+    intro h_φ
+    have h := φInvSqrt_C_sq
+    rw [h_φ] at h
+    rw [sq, zero_mul] at h
+    exact h_φInv_ne h.symm
+  have h_ω_ne : ω_Fib_C ≠ 0 := by
+    unfold ω_Fib_C
+    exact Complex.exp_ne_zero _
+  have h_diff_ne : R1_C - Rtau_C ≠ 0 := sub_ne_zero.mpr h_R1_ne_Rtau
+  have h_ω_diff_ne : ω_Fib_C * R1_C - ω_Fib_C * Rtau_C ≠ 0 := by
+    rw [← mul_sub]
+    exact mul_ne_zero h_ω_ne h_diff_ne
+  exact mul_ne_zero (mul_ne_zero h_φInv_ne h_φInvSqrt_ne) h_ω_diff_ne
+
+/-- **`σ_Fib_2_SU_mat` does NOT commute with σ_z**.
+
+For diagonal σ_z = diag(1, -1) and any matrix M:
+  `(σ_z · M)[i,j] - (M · σ_z)[i,j] = (σ_z[i,i] - σ_z[j,j]) · M[i,j]`.
+At [0,1]: `(1 - (-1)) · M[0,1] = 2 · M[0,1]`. So commutativity
+requires `M[0,1] = 0`. Since `σ_Fib_2_SU_mat[0,1] ≠ 0`, no commute.
+
+(`Ad(σ_Fib_2_SU_mat)` does NOT fix the σ_z-direction; combined with
+the previous theorem this shows the two σ_Fib axes are different.) -/
+theorem σ_Fib_2_SU_mat_σ_z_not_commute :
+    σ_Fib_2_SU_mat * σ_z ≠ σ_z * σ_Fib_2_SU_mat := by
+  intro h_comm
+  -- Take [0,1] entry of both sides
+  have h_entry : (σ_Fib_2_SU_mat * σ_z) 0 1 = (σ_z * σ_Fib_2_SU_mat) 0 1 := by
+    rw [h_comm]
+  -- LHS = σ_Fib_2_SU_mat[0,0]·σ_z[0,1] + σ_Fib_2_SU_mat[0,1]·σ_z[1,1]
+  --     = ·0 + ·(-1) = -σ_Fib_2_SU_mat[0,1]
+  -- RHS = σ_z[0,0]·σ_Fib_2_SU_mat[0,1] + σ_z[0,1]·σ_Fib_2_SU_mat[1,1]
+  --     = 1·σ_Fib_2_SU_mat[0,1] + 0 = σ_Fib_2_SU_mat[0,1]
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             σ_z_entry_00, σ_z_entry_01, σ_z_entry_11,
+             show σ_z 1 0 = 0 from rfl] at h_entry
+  -- h_entry : σ_Fib_2_SU_mat[0,0] · 0 + σ_Fib_2_SU_mat[0,1] · (-1)
+  --         = 1 · σ_Fib_2_SU_mat[0,1] + 0 · σ_Fib_2_SU_mat[1,1]
+  -- Simplifies to: -σ_Fib_2_SU_mat[0,1] = σ_Fib_2_SU_mat[0,1]
+  -- Hence 2·σ_Fib_2_SU_mat[0,1] = 0, so σ_Fib_2_SU_mat[0,1] = 0
+  -- Contradicts σ_Fib_2_SU_mat_entry_01_ne_zero
+  have h_zero : σ_Fib_2_SU_mat 0 1 = 0 := by linear_combination -1/2 * h_entry
+  exact σ_Fib_2_SU_mat_entry_01_ne_zero h_zero
+
+/-- **σ_Fib axes are different** (witness form): σ_z is fixed by
+`Ad(σ_Fib_1_SU_mat)` (via commutation) but NOT fixed by
+`Ad(σ_Fib_2_SU_mat)` (via non-commutation).
+
+Headline corollary: the centralizers of σ_Fib_1, σ_Fib_2 in 𝔰𝔲(2)
+are DIFFERENT 1-dim subspaces. Their intersection is the {0} subspace
+(no common fixed direction). Hence for ANY non-zero direction A in
+𝔰𝔲(2), at least one of {σ_Fib_1, σ_Fib_2} doesn't commute with A. -/
+theorem σ_Fib_axes_distinct_witness :
+    (σ_Fib_1_SU_mat * σ_z = σ_z * σ_Fib_1_SU_mat) ∧
+    (σ_Fib_2_SU_mat * σ_z ≠ σ_z * σ_Fib_2_SU_mat) :=
+  ⟨σ_Fib_1_SU_mat_σ_z_commute, σ_Fib_2_SU_mat_σ_z_not_commute⟩
+
+end R5_4_LayerD_3_a_DifferentAxes
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
