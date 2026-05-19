@@ -58,6 +58,7 @@ References:
 import SKEFTHawking.FKLW.FibSU2Rep
 import SKEFTHawking.FKLW.AharonovAradBridgeIteration
 import SKEFTHawking.FKLW.AharonovAradLemma6
+import SKEFTHawking.FKLW.SpecialUnitaryTopology
 import SKEFTHawking.MatrixBCHCubic
 import Mathlib.GroupTheory.SpecificGroups.Quaternion
 
@@ -4193,6 +4194,183 @@ theorem H_Fib_commutator_quadratic_step
    matrix_group_commutator_norm_le_abstract g h⟩
 
 end R5_4_LayerD_1_d_HFibShrinkage
+
+/-! ## 31.e R5.4 Layer D.1.e: explicit L∞-op norm bounds for SU(2) unitaries
+
+Bounds `‖U.val‖_{L∞-op} ≤ d = 2` (and `‖U⁻¹.val‖ ≤ d = 2`) for any
+`U : SU(2)`, using the already-shipped (substantive)
+`unitaryGroup_entry_norm_le_one` (from `SpecialUnitaryTopology.lean`)
+combined with row-sum decomposition of the L∞-op norm.
+
+This closes the inverse-product factor of the Layer D.1.c bound:
+  `‖(g⁻¹ · h⁻¹).val‖ ≤ ‖g⁻¹.val‖ · ‖h⁻¹.val‖ ≤ 2 · 2 = 4`,
+
+giving the explicit quadratic shrinkage `‖[g,h]_grp - 1‖ ≤ 8·δ²` for
+g, h ∈ H_Fib at scale δ ≤ 1.
+
+Strategy: each row of U has entries `|U_{ij}| ≤ 1` (R5.4 shipped
+`unitaryGroup_entry_norm_le_one`); summing over 2 entries gives row
+sum `≤ 2`; the L∞-op norm is the max over rows so `≤ 2`. Same for
+star U (which has entries `conj U_{ji}`, also bounded by 1).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_1_e_UnitaryNormBound
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **L∞-op norm of a 2×2 unitary is bounded by 2**: for any
+`U : Matrix.unitaryGroup (Fin 2) ℂ`, `‖U.val‖ ≤ 2` in the L∞-operator
+norm.
+
+Proof: `Matrix.linfty_opNorm_def : ‖U‖ = max_i (∑_j ‖U_{ij}‖₊)` casts
+to `ℝ`; each entry `‖U_{ij}‖ ≤ 1` by `unitaryGroup_entry_norm_le_one`;
+hence each row sum `‖U_{i0}‖ + ‖U_{i1}‖ ≤ 1 + 1 = 2`; max over rows
+`≤ 2`. -/
+theorem unitaryGroup_two_linfty_opNorm_le_two
+    (U : ↥(Matrix.unitaryGroup (Fin 2) ℂ)) :
+    ‖((U : Matrix (Fin 2) (Fin 2) ℂ))‖ ≤ 2 := by
+  rw [Matrix.linfty_opNorm_def]
+  -- Goal: ↑((Finset.univ : Finset (Fin 2)).sup fun i => ∑ j, ‖↑U i j‖₊) ≤ 2
+  -- First establish the NNReal-level bound, then cast to ℝ.
+  have h_sup_le :
+      ((Finset.univ : Finset (Fin 2)).sup
+        (fun i => ∑ j : Fin 2,
+          ‖((U : Matrix (Fin 2) (Fin 2) ℂ)) i j‖₊)) ≤ (2 : NNReal) := by
+    refine Finset.sup_le ?_
+    intro i _
+    have h_entry : ∀ j : Fin 2,
+        ‖((U : Matrix (Fin 2) (Fin 2) ℂ)) i j‖₊ ≤ (1 : NNReal) := by
+      intro j
+      have h := Matrix.unitaryGroup_entry_norm_le_one U i j
+      exact_mod_cast h
+    calc (∑ j : Fin 2, ‖((U : Matrix (Fin 2) (Fin 2) ℂ)) i j‖₊)
+        ≤ ∑ _j : Fin 2, (1 : NNReal) :=
+          Finset.sum_le_sum (fun j _ => h_entry j)
+      _ = (2 : NNReal) := by
+          simp [Finset.sum_const, Finset.card_fin]
+  exact_mod_cast h_sup_le
+
+/-- **L∞-op norm of an SU(2) element is bounded by 2**: corollary of
+`unitaryGroup_two_linfty_opNorm_le_two` lifted through the SU(2)
+Subgroup ↪ unitaryGroup inclusion. -/
+theorem specialUnitaryGroup_two_linfty_opNorm_le_two
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖((U : Matrix (Fin 2) (Fin 2) ℂ))‖ ≤ 2 := by
+  -- Inline the row-sum bound argument; bypass U.val parsing via direct
+  -- use of `unitaryGroup_entry_norm_le_one` on `(U : Matrix _)`-with-
+  -- unitarity-witness.
+  rw [Matrix.linfty_opNorm_def]
+  have h_sup_le :
+      ((Finset.univ : Finset (Fin 2)).sup
+        (fun i => ∑ j : Fin 2,
+          ‖((U : Matrix (Fin 2) (Fin 2) ℂ)) i j‖₊)) ≤ (2 : NNReal) := by
+    refine Finset.sup_le ?_
+    intro i _
+    have h_entry : ∀ j : Fin 2,
+        ‖((U : Matrix (Fin 2) (Fin 2) ℂ)) i j‖₊ ≤ (1 : NNReal) := by
+      intro j
+      -- specialUnitaryGroup is `Submonoid (Matrix _)` directly, so
+      -- `(U : Matrix _) = U.val`. Membership in unitaryGroup follows
+      -- via `Matrix.specialUnitaryGroup_le_unitaryGroup`.
+      have h_unit : (U : Matrix (Fin 2) (Fin 2) ℂ) ∈
+          Matrix.unitaryGroup (Fin 2) ℂ :=
+        Matrix.specialUnitaryGroup_le_unitaryGroup U.property
+      have h := Matrix.unitaryGroup_entry_norm_le_one
+          ⟨(U : Matrix (Fin 2) (Fin 2) ℂ), h_unit⟩ i j
+      exact_mod_cast h
+    calc (∑ j : Fin 2, ‖((U : Matrix (Fin 2) (Fin 2) ℂ)) i j‖₊)
+        ≤ ∑ _j : Fin 2, (1 : NNReal) :=
+          Finset.sum_le_sum (fun j _ => h_entry j)
+      _ = (2 : NNReal) := by
+          simp [Finset.sum_const, Finset.card_fin]
+  exact_mod_cast h_sup_le
+
+/-- **Inverse-product norm bound for SU(2)**: for `g, h : SU(2)`,
+`‖(g⁻¹ · h⁻¹).val‖_{L∞-op} ≤ 4`.
+
+Composition of `norm_mul_le` (L∞-op submultiplicativity) with
+`specialUnitaryGroup_two_linfty_opNorm_le_two` applied to `g⁻¹` and
+`h⁻¹` (which are themselves elements of SU(2)). -/
+theorem specialUnitaryGroup_two_inv_mul_inv_linfty_opNorm_le_four
+    (g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 4 := by
+  push_cast
+  -- Goal: ‖↑g⁻¹ * ↑h⁻¹‖ ≤ 4 in Matrix L∞-op norm
+  calc ‖((g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) *
+        ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)‖
+      ≤ ‖((g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ *
+        ‖((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ := norm_mul_le _ _
+    _ ≤ 2 * 2 := by
+        apply mul_le_mul
+        · exact specialUnitaryGroup_two_linfty_opNorm_le_two g⁻¹
+        · exact specialUnitaryGroup_two_linfty_opNorm_le_two h⁻¹
+        · exact norm_nonneg _
+        · norm_num
+    _ = 4 := by norm_num
+
+/-- **H_Fib explicit quadratic shrinkage step**: combines Layer D.1.d's
+parameterized bound with the just-shipped inverse-product norm bound
+to give the **concrete quadratic shrinkage** with explicit constant 8.
+
+For `g, h ∈ H_Fib` with `‖g.val - 1‖ ≤ δ`, `‖h.val - 1‖ ≤ δ` (where δ
+is implicitly ≤ 1 for the bound to be useful), the group commutator
+`g·h·g⁻¹·h⁻¹ ∈ H_Fib` AND satisfies
+
+  `‖(g·h·g⁻¹·h⁻¹).val - 1‖ ≤ 8·‖g.val-1‖·‖h.val-1‖`.
+
+This is the **concrete iteration kernel** for the BCH-spanning
+argument: each application takes two H_Fib elements at scale δ and
+produces one H_Fib element at scale 8·δ². Iteration converges
+quadratically for δ < 1/8. -/
+theorem H_Fib_commutator_quadratic_step_explicit
+    (g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (g_H : g ∈ H_Fib) (h_H : h ∈ H_Fib) :
+    (g * h * g⁻¹ * h⁻¹) ∈ H_Fib ∧
+    ‖((g * h * g⁻¹ * h⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+      8 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+          ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := by
+  refine ⟨H_Fib_commutator_mem g h g_H h_H, ?_⟩
+  -- Apply Layer D.1.c bound, then bound the inverse-product factor by 4
+  have h_step : ‖((g * h * g⁻¹ * h⁻¹ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+      2 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+          ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+          ‖((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+    matrix_group_commutator_norm_le_abstract g h
+  have h_inv : ‖((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 4 :=
+    specialUnitaryGroup_two_inv_mul_inv_linfty_opNorm_le_four g h
+  -- Need: 2·‖g-1‖·‖h-1‖·(≤ 4) ≤ 8·‖g-1‖·‖h-1‖
+  have h_prod_nn : 0 ≤ 2 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+      ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := by positivity
+  calc ‖((g * h * g⁻¹ * h⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+      ≤ 2 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+            ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+            ‖((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ)‖ := h_step
+    _ ≤ 2 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+        ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ * 4 :=
+          mul_le_mul_of_nonneg_left h_inv h_prod_nn
+    _ = 8 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+        ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := by ring
+
+end R5_4_LayerD_1_e_UnitaryNormBound
 
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
