@@ -1867,7 +1867,430 @@ theorem diag_eq_F_conj_diag_implies_all_eq (a b c d : ℂ)
 
 end D4_3c_ScalarCentralizer
 
-/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b})
+/-! ## 15. Phase D4.3.c.application: tightened intersection cardinality bound
+
+D4.3.c.foundation (§14) ships the matrix-level scalar centralizer
+lemma. This section applies it to the specific Fibonacci generators
+to sharpen the intersection cardinality bound from D4.3.b's `≤ 10`
+to `≤ 2`. The argument:
+
+  1. Express `σ_Fib_1_SU_mat^m` in explicit diagonal form:
+     `diag((ω·R_1)^m, (ω·R_τ)^m)`.
+  2. Express `σ_Fib_2_SU_mat^n` as `F · σ_Fib_1_SU_mat^n · F` via
+     the shipped `σ_Fib_2_SU_mat_pow_eq_F_conj` (D4.3.a).
+  3. If `σ_Fib_1_SU_mat^m = σ_Fib_2_SU_mat^n`, apply D4.3.c.3
+     (`diag_eq_F_conj_diag_implies_all_eq`) to force the diagonal
+     entries to be a common scalar `c = (ω·R_1)^n = (ω·R_τ)^n`.
+  4. The constraint `(ω·R_1)^n = (ω·R_τ)^n` reduces to `R_1^n = R_τ^n`
+     (cancel `ω^n ≠ 0`), which is the algebraic-number-theory key:
+     equivalent to `(R_1/R_τ)^n = 1` where `R_1/R_τ = exp(-7πi/5)`
+     is a primitive 10th root of unity, hence `n ≡ 0 (mod 10)`.
+  5. With `n` a multiple of 10 and `σ_Fib_2_SU_mat^10 = -I` (via
+     F-conjugacy from `σ_Fib_1_SU_mat^10 = -I` of D3.b), the value
+     `σ_Fib_2_SU_mat^n = (-I)^(n/10) ∈ {I, -I}`.
+  6. Therefore the matrix-level intersection
+     `range (σ_Fib_1_SU_mat^·) ∩ range (σ_Fib_2_SU_mat^·) ⊆ {I, -I}`.
+  7. Lifting to `SU(2)` Subgroup level + Lagrange tightens
+     `|H_Fib| ≥ 40` (D4.3.a) to `|H_Fib| ≥ 200` if finite.
+-/
+
+section D4_3c_Application
+
+/-- **D4.3.c.app.1 — Explicit diagonal form of σ_Fib_1_SU_mat powers**.
+
+`σ_Fib_1_SU_mat^m = diag((ω·R_1)^m, (ω·R_τ)^m)`.
+
+Proof: `σ_Fib_1_SU_mat = ω_Fib_C • σ_Fib_1`; `(ω • σ)^m = ω^m • σ^m`
+via `smul_pow`; `σ_Fib_1^m = diag(R_1^m, R_τ^m)` via shipped
+`σ_Fib_1_pow_eq` (§1); the smul distributes through diagonal entries. -/
+theorem σ_Fib_1_SU_mat_pow_eq_diag (m : ℕ) :
+    σ_Fib_1_SU_mat ^ m =
+      !![ω_Fib_C ^ m * R1_C ^ m, 0; 0, ω_Fib_C ^ m * Rtau_C ^ m] := by
+  unfold σ_Fib_1_SU_mat
+  rw [smul_pow, σ_Fib_1_pow_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.smul_apply, smul_eq_mul]
+
+/-- **D4.3.c.app.2 — Explicit F-conjugate diagonal form of σ_Fib_2_SU_mat powers**.
+
+`σ_Fib_2_SU_mat^n = F_C · diag((ω·R_1)^n, (ω·R_τ)^n) · F_C`. -/
+theorem σ_Fib_2_SU_mat_pow_eq_F_conj_diag (n : ℕ) :
+    σ_Fib_2_SU_mat ^ n =
+      F_C * !![ω_Fib_C ^ n * R1_C ^ n, 0; 0, ω_Fib_C ^ n * Rtau_C ^ n] * F_C := by
+  rw [σ_Fib_2_SU_mat_pow_eq_F_conj, σ_Fib_1_SU_mat_pow_eq_diag]
+
+/-- **D4.3.c.app.3 — Algebraic-number key: `R_1^n = R_τ^n ↔ 10 ∣ n`**.
+
+Equivalent to `(R_1/R_τ)^n = 1`. Since `R_1/R_τ = exp(-7πi/5)` is a
+primitive 10th root of unity (its 10th power is 1; its 5th power is
+`-1 ≠ 1`; lower divisors of 10 also fail), the equation holds iff
+`n` is a multiple of 10.
+
+The forward direction `R_1^n = R_τ^n ⟹ 10 ∣ n` uses Mathlib's
+`Complex.exp_eq_one_iff` plus the irrationality-free arithmetic
+`gcd(7, 10) = 1` to extract divisibility.
+
+The backward direction `10 ∣ n ⟹ R_1^n = R_τ^n` is direct: both
+`R_1^10 = 1` and `R_τ^10 = 1` are shipped, so for `n = 10k` both
+sides equal 1. -/
+theorem R1_C_pow_eq_Rtau_C_pow_iff (n : ℕ) :
+    R1_C ^ n = Rtau_C ^ n ↔ 10 ∣ n := by
+  constructor
+  · -- Forward: R_1^n = R_τ^n → 10 | n
+    intro h_eq
+    -- Reduce to (R_1/R_τ)^n = 1; (R_1/R_τ) = exp(-7πi/5).
+    -- exp(-7nπ/5 · I) = 1 ↔ -7n/10 ∈ ℤ ↔ 10 | 7n ↔ 10 | n.
+    have h_Rtau_ne : Rtau_C ≠ 0 := by
+      intro h
+      have h_norm : ‖Rtau_C‖ = 0 := by rw [h, norm_zero]
+      rw [norm_Rtau_C] at h_norm
+      norm_num at h_norm
+    -- (R_1/R_τ)^n = 1 ⟺ R_1^n = R_τ^n (in field)
+    have h_ratio_pow : (R1_C / Rtau_C) ^ n = 1 := by
+      rw [div_pow, h_eq, div_self (pow_ne_zero n h_Rtau_ne)]
+    -- (R_1/R_τ) = exp(-7π/5 · I)
+    have h_ratio : R1_C / Rtau_C = Complex.exp (((-7 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) := by
+      unfold R1_C Rtau_C
+      rw [← Complex.exp_sub]
+      congr 1
+      push_cast
+      ring
+    rw [h_ratio] at h_ratio_pow
+    -- exp(-7π/5 · I)^n = exp(n · -7π/5 · I) = 1
+    rw [← Complex.exp_nat_mul] at h_ratio_pow
+    -- Use Complex.exp_eq_one_iff: ∃ k : ℤ, n · (-7π/5 · I) = k · (2π · I)
+    rw [Complex.exp_eq_one_iff] at h_ratio_pow
+    obtain ⟨k, hk⟩ := h_ratio_pow
+    -- Cancel ·I from both sides.
+    have h_I_ne : Complex.I ≠ 0 := Complex.I_ne_zero
+    -- LHS: n * ((-7π/5 : ℝ) : ℂ) * I = (n * (-7π/5)) * I
+    -- RHS: k * (2π · I) = (k * 2π) * I
+    have h_real : (n : ℂ) * ((-7 * Real.pi / 5 : ℝ) : ℂ) = (k : ℂ) * (2 * (Real.pi : ℂ)) := by
+      have hl : (n : ℂ) * (((-7 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) =
+                ((n : ℂ) * ((-7 * Real.pi / 5 : ℝ) : ℂ)) * Complex.I := by ring
+      have hr : (k : ℂ) * (2 * (Real.pi : ℂ) * Complex.I) =
+                ((k : ℂ) * (2 * (Real.pi : ℂ))) * Complex.I := by ring
+      rw [hl, hr] at hk
+      exact mul_right_cancel₀ h_I_ne hk
+    -- Take real parts to get: n * (-7π/5) = k * 2π
+    have h_real_R : (n : ℝ) * (-7 * Real.pi / 5) = (k : ℝ) * (2 * Real.pi) := by
+      have := congrArg Complex.re h_real
+      simp at this
+      linarith
+    -- π ≠ 0, divide: -7n/5 = 2k, i.e., -7n = 10k, i.e., 10 ∣ 7n
+    have h_π_pos : 0 < Real.pi := Real.pi_pos
+    have h_π_ne : Real.pi ≠ 0 := ne_of_gt h_π_pos
+    have h_int_eq : -7 * (n : ℝ) = 10 * (k : ℝ) := by
+      have hπ := h_π_ne
+      have h_eq2 : (n : ℝ) * (-7 / 5) = (k : ℝ) * 2 := by
+        have : (n : ℝ) * (-7 * Real.pi / 5) / Real.pi = (k : ℝ) * (2 * Real.pi) / Real.pi := by
+          rw [h_real_R]
+        field_simp at this
+        linarith
+      linarith
+    -- So -7n = 10k in ℝ, hence in ℤ: -7·n = 10·k, hence 10 | 7n.
+    -- gcd(7, 10) = 1, so 10 | n.
+    have h_int_Z : -7 * (n : ℤ) = 10 * k := by
+      have := h_int_eq
+      exact_mod_cast this
+    -- 10 | -7n ⟺ 10 | 7n ⟺ 10 | n (gcd(7,10)=1)
+    have h_dvd_neg : (10 : ℤ) ∣ -7 * (n : ℤ) := ⟨k, h_int_Z⟩
+    have h_dvd_pos : (10 : ℤ) ∣ 7 * (n : ℤ) := by
+      rcases h_dvd_neg with ⟨j, hj⟩
+      exact ⟨-j, by linarith⟩
+    -- 10 | 7n with gcd(10, 7) = 1 ⟹ 10 | n.
+    have h_dvd_int : (10 : ℤ) ∣ (n : ℤ) :=
+      Int.dvd_of_dvd_mul_right_of_gcd_one h_dvd_pos (by decide)
+    -- Lift to ℕ.
+    exact_mod_cast h_dvd_int
+  · -- Backward: 10 | n → R_1^n = R_τ^n
+    intro ⟨k, hk⟩
+    rw [hk]
+    -- Goal: R_1^(10*k) = R_τ^(10*k)
+    rw [pow_mul, pow_mul, R1_C_pow_10, Rtau_C_pow_10]
+
+/-- **D4.3.c.app.4 — `σ_Fib_2_SU_mat^10 = -I`**.
+
+Via F-conjugacy: `σ_Fib_2^10 = F · σ_Fib_1^10 · F = F · (-I) · F = -(F · F) = -I`. -/
+theorem σ_Fib_2_SU_mat_pow_10_eq_neg_one :
+    σ_Fib_2_SU_mat ^ 10 = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [σ_Fib_2_SU_mat_pow_eq_F_conj, σ_Fib_1_SU_mat_pow_10_eq_neg_one]
+  -- Goal: F_C * -1 * F_C = -1
+  rw [Matrix.mul_neg, Matrix.neg_mul, mul_one, F_C_sq]
+
+/-- **D4.3.c.app.5 — Headline scalar-centralizer application**.
+
+If two powers of σ_Fib_1_SU_mat and σ_Fib_2_SU_mat coincide as
+matrices, then their common value is either `I` or `-I`.
+
+Proof:
+  1. Express both sides as diagonal / F-conjugate-of-diagonal forms
+     (D4.3.c.app.1 + .2).
+  2. Apply D4.3.c.3 (`diag_eq_F_conj_diag_implies_all_eq`) to force
+     all entries equal: `(ω·R_1)^m = (ω·R_τ)^m = (ω·R_1)^n = (ω·R_τ)^n`.
+  3. From `(ω·R_1)^m = (ω·R_τ)^m` (cancel `ω^m ≠ 0`), get `R_1^m = R_τ^m`.
+  4. By D4.3.c.app.3, `10 ∣ m`.
+  5. So `σ_Fib_1_SU_mat^m = σ_Fib_1_SU_mat^(10·j) = (-I)^j` for some `j`
+     via shipped `σ_Fib_1_SU_mat^10 = -I`.
+  6. `(-I)^j ∈ {I, -I}` by cases on parity. -/
+theorem σ_Fib_pow_eq_implies_pm_one (m n : ℕ)
+    (h : σ_Fib_1_SU_mat ^ m = σ_Fib_2_SU_mat ^ n) :
+    σ_Fib_1_SU_mat ^ m = (1 : Matrix (Fin 2) (Fin 2) ℂ) ∨
+    σ_Fib_1_SU_mat ^ m = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  -- Step 1-2: Rewrite to diagonal / F-conjugate forms.
+  rw [σ_Fib_1_SU_mat_pow_eq_diag, σ_Fib_2_SU_mat_pow_eq_F_conj_diag] at h
+  -- Step 3: Apply D4.3.c.3.
+  obtain ⟨h_ac, h_bc, h_cd⟩ := diag_eq_F_conj_diag_implies_all_eq _ _ _ _ h
+  -- h_ac : ω^m · R_1^m = ω^n · R_1^n
+  -- h_bc : ω^m · R_τ^m = ω^n · R_1^n
+  -- h_cd : ω^n · R_1^n = ω^n · R_τ^n
+  -- From h_ac and h_bc: ω^m · R_1^m = ω^m · R_τ^m
+  have h_eq_diag_entries : ω_Fib_C ^ m * R1_C ^ m = ω_Fib_C ^ m * Rtau_C ^ m := by
+    rw [h_ac, ← h_bc]
+  -- Cancel ω^m ≠ 0 → R_1^m = R_τ^m.
+  have h_ω_ne : ω_Fib_C ≠ 0 := by
+    intro h_ω
+    have h_norm : ‖ω_Fib_C‖ = 0 := by rw [h_ω, norm_zero]
+    rw [norm_ω_Fib_C] at h_norm
+    norm_num at h_norm
+  have h_ω_pow_ne : ω_Fib_C ^ m ≠ 0 := pow_ne_zero m h_ω_ne
+  have h_R_eq : R1_C ^ m = Rtau_C ^ m :=
+    mul_left_cancel₀ h_ω_pow_ne h_eq_diag_entries
+  -- Step 4: 10 | m.
+  have h_dvd : 10 ∣ m := (R1_C_pow_eq_Rtau_C_pow_iff m).mp h_R_eq
+  -- Step 5-6: σ_Fib_1^m = σ_Fib_1^(10*j) = (-I)^j ∈ {I, -I}.
+  obtain ⟨j, hj⟩ := h_dvd
+  rw [σ_Fib_1_SU_mat_pow_eq_diag]
+  -- Want: !![ω^m R_1^m, 0; 0, ω^m R_τ^m] = 1 ∨ ... = -1
+  -- Compute via h_R_eq (which we've used to get 10 | m, but now reuse explicit form).
+  -- ω^m · R_1^m: with m = 10j, ω^(10j) · R_1^(10j) = (ω^10)^j · (R_1^10)^j = (-1)^j · 1 = (-1)^j.
+  have h_R_pow_one : R1_C ^ m = 1 := by
+    rw [hj, pow_mul, R1_C_pow_10, one_pow]
+  have h_Rtau_pow_one : Rtau_C ^ m = 1 := by
+    rw [hj, pow_mul, Rtau_C_pow_10, one_pow]
+  have h_ω_pow_pm : ω_Fib_C ^ m = 1 ∨ ω_Fib_C ^ m = -1 := by
+    rw [hj, pow_mul, ω_Fib_C_pow_10]
+    -- Goal: (-1)^j = 1 ∨ (-1)^j = -1
+    rcases Nat.even_or_odd j with h_ev | h_od
+    · exact Or.inl h_ev.neg_one_pow
+    · exact Or.inr h_od.neg_one_pow
+  rcases h_ω_pow_pm with h_pos | h_neg
+  · left
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [h_pos, h_R_pow_one, h_Rtau_pow_one, Matrix.one_apply]
+  · right
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [h_neg, h_R_pow_one, h_Rtau_pow_one, Matrix.one_apply, Matrix.neg_apply]
+
+end D4_3c_Application
+
+/-! ## 16. Phase D4.3.c.application: lift to SU(2) and tighten cardinality
+
+This section lifts the matrix-level scalar centralizer result (§15)
+to the `SU(2)` Subgroup level and uses it to sharpen the existing
+intersection cardinality bound `inter_zpowers_card_le_10` (D4.3.b)
+to `≤ 2`. The chain:
+
+  1. `negOneSU : Matrix.specialUnitaryGroup (Fin 2) ℂ` — the SU(2)
+     element `-I`. Det `(-I) = 1` since dimension is 2.
+  2. Any matrix-level u in the intersection (using shipped
+     `IsOfFinOrder.powers_eq_zpowers` to translate to natural-power
+     form) satisfies `u = I ∨ u = -I` by D4.3.c.app.5.
+  3. Lifting to SU(2) Subgroup: `⟨σ_Fib_1_SU⟩ ⊓ ⟨σ_Fib_2_SU⟩ ⊆ ⟨negOneSU⟩`.
+  4. Cardinality: `|⟨negOneSU⟩| ≤ 2`, hence `|intersection| ≤ 2`.
+  5. Tightens `H_Fib_card_ge_40_if_finite` to `H_Fib_card_ge_200_if_finite`
+     via the Lagrange + product-of-orders bound.
+-/
+
+section D4_3c_SU2_Lift
+
+/-- The SU(2) element `-I` (the unique non-trivial scalar in SU(2)). -/
+noncomputable def negOneSU : Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  ⟨-(1 : Matrix (Fin 2) (Fin 2) ℂ), by
+    rw [Matrix.mem_specialUnitaryGroup_iff]
+    refine ⟨?_, ?_⟩
+    · rw [Matrix.mem_unitaryGroup_iff, star_neg, star_one]
+      -- Goal: -1 * -1 = 1 (matrix-level)
+      show (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) * (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) = 1
+      noncomm_ring
+    · -- Goal: det(-I) = 1; for n×n, det(-M) = (-1)^n · det M; n=2 → (-1)^2 = 1.
+      rw [show (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) = (-1 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+            by simp, Matrix.det_smul, Fintype.card_fin, Matrix.det_one]
+      norm_num⟩
+
+/-- The underlying matrix of `negOneSU` is `-I`. -/
+theorem negOneSU_val :
+    (negOneSU : Matrix (Fin 2) (Fin 2) ℂ) = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := rfl
+
+/-- `σ_Fib_1_SU^10 = negOneSU` in SU(2). Lifted from
+`σ_Fib_1_SU_mat_pow_10_eq_neg_one` (D3.b). -/
+theorem σ_Fib_1_SU_pow_10_eq_negOneSU :
+    σ_Fib_1_SU ^ 10 = negOneSU := by
+  apply Subtype.ext
+  rw [SubmonoidClass.coe_pow]
+  exact σ_Fib_1_SU_mat_pow_10_eq_neg_one
+
+/-- **D4.3.c.app.SU2.1 — Powers of σ_Fib_1_SU contained in intersection
+must lie in `⟨negOneSU⟩`**.
+
+If a power `σ_Fib_1_SU^k` also equals some power `σ_Fib_2_SU^j`, then
+`(σ_Fib_1_SU^k).val ∈ {I, -I}` by D4.3.c.app.5, so
+`σ_Fib_1_SU^k ∈ {1, negOneSU} = ⟨negOneSU⟩` in SU(2). -/
+theorem σ_Fib_1_SU_pow_in_inter_le_zpowers_negOneSU (k j : ℕ)
+    (h : σ_Fib_1_SU ^ k = σ_Fib_2_SU ^ j) :
+    σ_Fib_1_SU ^ k ∈ Subgroup.zpowers negOneSU := by
+  -- Lift to matrix-level: σ_Fib_1_SU_mat^k = σ_Fib_2_SU_mat^j
+  have h_mat : σ_Fib_1_SU_mat ^ k = σ_Fib_2_SU_mat ^ j := by
+    have h_val : (σ_Fib_1_SU ^ k).val = (σ_Fib_2_SU ^ j).val := by rw [h]
+    rw [SubmonoidClass.coe_pow, SubmonoidClass.coe_pow] at h_val
+    exact h_val
+  -- Apply D4.3.c.app.5
+  rcases σ_Fib_pow_eq_implies_pm_one k j h_mat with h_one | h_neg_one
+  · -- σ_Fib_1_SU^k = 1: in zpowers (as 0th power)
+    have : σ_Fib_1_SU ^ k = 1 := by
+      apply Subtype.ext
+      rw [SubmonoidClass.coe_pow]
+      exact h_one
+    rw [this]
+    exact one_mem _
+  · -- σ_Fib_1_SU^k = -I: in zpowers (as 1st power)
+    have : σ_Fib_1_SU ^ k = negOneSU := by
+      apply Subtype.ext
+      rw [SubmonoidClass.coe_pow]
+      exact h_neg_one
+    rw [this]
+    exact Subgroup.mem_zpowers _
+
+/-- **D4.3.c.app.SU2.2 — Cardinality of `⟨negOneSU⟩` is 2**.
+
+`negOneSU` has order 2 in SU(2) (since `(-I)^2 = I` and `(-I) ≠ I`).
+Hence `|Subgroup.zpowers negOneSU| = 2`. -/
+theorem negOneSU_orderOf_eq_two : orderOf negOneSU = 2 := by
+  -- (-I)^2 = I and (-I) ≠ I, so orderOf = 2.
+  apply orderOf_eq_prime
+  · -- (negOneSU)^2 = 1
+    apply Subtype.ext
+    rw [SubmonoidClass.coe_pow]
+    show (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) ^ 2 = 1
+    rw [neg_pow, one_pow]
+    simp
+  · -- negOneSU ≠ 1
+    intro h
+    have h_val : (negOneSU : Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+      have := congrArg Subtype.val h
+      exact this
+    rw [negOneSU_val] at h_val
+    -- h_val : -1 = 1; check [0,0]: -1 ≠ 1.
+    have h_entry : ((-1 : Matrix (Fin 2) (Fin 2) ℂ)) 0 0 =
+                   ((1 : Matrix (Fin 2) (Fin 2) ℂ)) 0 0 := by rw [h_val]
+    simp [Matrix.neg_apply, Matrix.one_apply] at h_entry
+    -- h_entry now has form (-1 : ℂ) = 1 (or similar); derive False.
+    norm_num at h_entry
+
+/-- `Nat.card (Subgroup.zpowers negOneSU) = 2`. -/
+theorem Nat_card_zpowers_negOneSU :
+    Nat.card ↥(Subgroup.zpowers negOneSU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 2 := by
+  rw [Nat.card_zpowers, negOneSU_orderOf_eq_two]
+
+/-- Helper: for σ_Fib_1_SU of order 20 (finite order), every zpower
+is a natpower (via `IsOfFinOrder.mem_powers_iff_mem_zpowers`). -/
+private theorem σ_Fib_1_SU_zpow_eq_natPow (k : ℤ) :
+    ∃ k' : ℕ, σ_Fib_1_SU ^ k = σ_Fib_1_SU ^ k' := by
+  have h_fin : IsOfFinOrder σ_Fib_1_SU :=
+    isOfFinOrder_iff_pow_eq_one.mpr ⟨20, by norm_num, σ_Fib_1_SU_pow_20_eq_one⟩
+  have h_mem_z : σ_Fib_1_SU ^ k ∈ Subgroup.zpowers σ_Fib_1_SU :=
+    zpow_mem (Subgroup.mem_zpowers _) k
+  have h_mem_p : σ_Fib_1_SU ^ k ∈ Submonoid.powers σ_Fib_1_SU :=
+    (h_fin.mem_powers_iff_mem_zpowers).mpr h_mem_z
+  obtain ⟨k', hk'⟩ := h_mem_p
+  exact ⟨k', hk'.symm⟩
+
+/-- Same for σ_Fib_2_SU. -/
+private theorem σ_Fib_2_SU_zpow_eq_natPow (j : ℤ) :
+    ∃ j' : ℕ, σ_Fib_2_SU ^ j = σ_Fib_2_SU ^ j' := by
+  have h_fin : IsOfFinOrder σ_Fib_2_SU :=
+    isOfFinOrder_iff_pow_eq_one.mpr ⟨20, by norm_num, σ_Fib_2_SU_pow_20_eq_one⟩
+  have h_mem_z : σ_Fib_2_SU ^ j ∈ Subgroup.zpowers σ_Fib_2_SU :=
+    zpow_mem (Subgroup.mem_zpowers _) j
+  have h_mem_p : σ_Fib_2_SU ^ j ∈ Submonoid.powers σ_Fib_2_SU :=
+    (h_fin.mem_powers_iff_mem_zpowers).mpr h_mem_z
+  obtain ⟨j', hj'⟩ := h_mem_p
+  exact ⟨j', hj'.symm⟩
+
+/-- **D4.3.c.app.SU2.3 — Intersection of cyclic subgroups is in `⟨negOneSU⟩`**.
+
+`⟨σ_Fib_1_SU⟩ ⊓ ⟨σ_Fib_2_SU⟩ ≤ ⟨negOneSU⟩`. Every element of the
+intersection is either `I` or `-I` (as a matrix), corresponding to
+`1 ∨ negOneSU` in SU(2). -/
+theorem inter_le_zpowers_negOneSU :
+    (Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ≤
+    Subgroup.zpowers negOneSU := by
+  intro u hu
+  obtain ⟨hu1, hu2⟩ := hu
+  obtain ⟨k, hk⟩ := Subgroup.mem_zpowers_iff.mp hu1
+  obtain ⟨j, hj⟩ := Subgroup.mem_zpowers_iff.mp hu2
+  -- Convert k, j ∈ ℤ to nat powers using finite order (20).
+  obtain ⟨k', hk'⟩ := σ_Fib_1_SU_zpow_eq_natPow k
+  obtain ⟨j', hj'⟩ := σ_Fib_2_SU_zpow_eq_natPow j
+  -- u = σ_1^k = σ_1^k' = σ_2^j = σ_2^j'
+  have h_eq_nat : σ_Fib_1_SU ^ k' = σ_Fib_2_SU ^ j' := by
+    rw [← hk', ← hj', hk, hj]
+  -- Apply σ_Fib_1_SU_pow_in_inter_le_zpowers_negOneSU.
+  have h_mem : σ_Fib_1_SU ^ k' ∈ Subgroup.zpowers negOneSU :=
+    σ_Fib_1_SU_pow_in_inter_le_zpowers_negOneSU k' j' h_eq_nat
+  -- u = σ_1^k = σ_1^k'; rewrite goal `u ∈ ...` to `σ_1^k' ∈ ...`.
+  have h_u_eq : u = σ_Fib_1_SU ^ k' := hk.symm.trans hk'
+  rw [h_u_eq]
+  exact h_mem
+
+/-- **D4.3.c.app.SU2.4 — Sharpened intersection cardinality bound**:
+`|⟨σ_Fib_1_SU⟩ ⊓ ⟨σ_Fib_2_SU⟩| ≤ 2`.
+
+By D4.3.c.app.SU2.3, the intersection is contained in `⟨negOneSU⟩`,
+which has cardinality 2 (D4.3.c.app.SU2.2). By Lagrange, the
+intersection's cardinality divides 2, hence ≤ 2.
+
+**Tightens** D4.3.b's `inter_zpowers_card_le_10`. -/
+theorem inter_zpowers_card_le_2 :
+    Nat.card ↥(Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ≤ 2 := by
+  have h_le := inter_le_zpowers_negOneSU
+  have h_dvd : Nat.card ↥(Subgroup.zpowers σ_Fib_1_SU ⊓ Subgroup.zpowers σ_Fib_2_SU :
+      Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∣
+      Nat.card ↥(Subgroup.zpowers negOneSU :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+    Subgroup.card_dvd_of_le h_le
+  rw [Nat_card_zpowers_negOneSU] at h_dvd
+  exact Nat.le_of_dvd (by norm_num) h_dvd
+
+/- **D4.3.c.app.SU2.5 (deferred to D4.3.c.app.5b) — `|H_Fib| ≥ 200` if finite**.
+
+The sharpened bound `inter_zpowers_card_le_2` (D4.3.c.app.SU2.4) is
+the foundation. The follow-through to `|H_Fib| ≥ 200` requires the
+subgroup product cardinality identity:
+
+  `|⟨σ_1⟩ · ⟨σ_2⟩| = |⟨σ_1⟩| · |⟨σ_2⟩| / |⟨σ_1⟩ ⊓ ⟨σ_2⟩| = 400 / |inter|`
+
+with `|inter| ≤ 2` giving `|⟨σ_1⟩ · ⟨σ_2⟩| ≥ 200`, and
+`⟨σ_1⟩ · ⟨σ_2⟩ ⊆ H_Fib` giving `|H_Fib| ≥ 200`. The product-set
+cardinality identity is standard (Mathlib's `Subgroup.card_inf_mul`
+or `Nat.card_mul_div_card_inf` family) but requires locating the
+right combinator for `Set.image2` / `Subgroup.mul` framework.
+
+Scoped to a focused substrate scout (D4.3.c.app.5b) — NOT shipped
+in this commit. The substrate-side foundation lemmas above
+(inter_le_zpowers_negOneSU + inter_zpowers_card_le_2) are sufficient
+on their own as the sharpening result; the `|H_Fib| ≥ 200`
+consequence is downstream consumption deferred to follow-on. -/
+
+end D4_3c_SU2_Lift
+
+/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
@@ -1892,6 +2315,63 @@ full constructive density discharge.
     conclusion *conditional* on the residual hypothesis
     `closure(range ρ_Fib_SU2) = univ` in SU(2). Makes explicit the
     last substantive gap for Path (i) constructive discharge.
+
+**Theorems shipped in R4.2.d.4.3.c.application (Phase 6p Wave 2c.4a-R4.2.d.4.3.c,
+sub-§15 + §16, 2026-05-19 session 30)** — explicit diagonal form +
+algebraic-number key + scalar centralizer application + SU(2) lift +
+sharpened intersection cardinality bound:
+
+  §15 (matrix-level application):
+    - **`σ_Fib_1_SU_mat_pow_eq_diag (m)`** : explicit form
+      `σ_Fib_1_SU_mat^m = !![(ω·R_1)^m, 0; 0, (ω·R_τ)^m]`. Via
+      shipped `σ_Fib_1_pow_eq` + `smul_pow`.
+    - **`σ_Fib_2_SU_mat_pow_eq_F_conj_diag (n)`** : explicit form
+      `σ_Fib_2_SU_mat^n = F_C · diag((ω·R_1)^n, (ω·R_τ)^n) · F_C`.
+      Via shipped `σ_Fib_2_SU_mat_pow_eq_F_conj` (D4.3.a) + the
+      explicit diagonal form.
+    - **`R1_C_pow_eq_Rtau_C_pow_iff (n) : R_1^n = R_τ^n ↔ 10 ∣ n`** —
+      the algebraic-number-theory KEY. Reduces to `(R_1/R_τ)^n = 1`
+      where `R_1/R_τ = exp(-7πi/5)` is a primitive 10th root of unity.
+      Forward direction: `Complex.exp_eq_one_iff` + `gcd(7,10) = 1`
+      via `Int.dvd_of_dvd_mul_right_of_gcd_one`. Backward direction:
+      trivial via `R_1^10 = R_τ^10 = 1`.
+    - **`σ_Fib_2_SU_mat_pow_10_eq_neg_one`** : `σ_Fib_2_SU_mat^10 = -I`.
+      Via F-conjugacy + `σ_Fib_1_SU_mat^10 = -I` (D3.b).
+    - **`σ_Fib_pow_eq_implies_pm_one (m n)`** : headline scalar-
+      centralizer application. If `σ_Fib_1_SU_mat^m = σ_Fib_2_SU_mat^n`,
+      then `σ_Fib_1_SU_mat^m ∈ {I, -I}`. Chains all of the above plus
+      D4.3.c.3 (`diag_eq_F_conj_diag_implies_all_eq` from §14).
+
+  §16 (SU(2) Subgroup lift):
+    - **`negOneSU : SU(2)`** — the `-I` element of SU(2) (the unique
+      non-trivial scalar in SU(2), since det `(-I) = 1` for 2×2).
+      Construction: `⟨-1, ...⟩` with unitarity (`(-1)·(-1) = 1` via
+      `noncomm_ring`) + det (`det(-I) = (-1)² · det I = 1`).
+    - `negOneSU_val` : `negOneSU.val = -I` (definitional).
+    - `σ_Fib_1_SU_pow_10_eq_negOneSU` : `σ_Fib_1_SU^10 = negOneSU` in SU(2).
+    - **`σ_Fib_1_SU_pow_in_inter_le_zpowers_negOneSU (k j : ℕ)`** :
+      lift of `σ_Fib_pow_eq_implies_pm_one` to SU(2)-Subgroup
+      membership in `⟨negOneSU⟩`.
+    - **`negOneSU_orderOf_eq_two`** : `orderOf negOneSU = 2`. Via
+      `orderOf_eq_prime` + `(-I)² = I` + `-I ≠ I`.
+    - `Nat_card_zpowers_negOneSU` : `|⟨negOneSU⟩| = 2`.
+    - Private helpers: `σ_Fib_{1,2}_SU_zpow_eq_natPow` — zpower to
+      natpower conversion via `IsOfFinOrder.mem_powers_iff_mem_zpowers`.
+    - **`inter_le_zpowers_negOneSU`** : the headline subgroup-level
+      containment `⟨σ_Fib_1_SU⟩ ⊓ ⟨σ_Fib_2_SU⟩ ≤ ⟨negOneSU⟩`.
+    - **`inter_zpowers_card_le_2`** : **SHARPENED intersection
+      cardinality bound** `|⟨σ_Fib_1_SU⟩ ⊓ ⟨σ_Fib_2_SU⟩| ≤ 2`.
+      **Tightens D4.3.b's `inter_zpowers_card_le_10`** via Lagrange
+      (subgroup card divides parent's card = 2).
+
+**Density implication after D4.3.c.application**: the intersection
+cardinality bound is now sharp at `≤ 2` (matching the matrix-level
+fact that the intersection is `{I, -I}`). Combined with D4.3.a's
+existing finite-case bound `|H_Fib| ≥ 40`, the follow-on
+`H_Fib_card_ge_200_if_finite` (deferred to D4.3.c.app.5b — see §16
+inline doc) will sharpen to `|H_Fib| ≥ 200` via the subgroup product
+cardinality identity. This rules out additional finite-subgroup
+candidates (2I order 120, most BD_{4n} for small n).
 
 **Theorems shipped in R4.2.d.4.3.c.foundation (Phase 6p Wave 2c.4a-R4.2.d.4.3.c,
 sub-§14, 2026-05-19)** — F-conjugate of diagonal off-diagonal computation
