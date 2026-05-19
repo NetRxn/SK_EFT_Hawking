@@ -5554,6 +5554,50 @@ theorem σ_Fib_centralizer_intersection_traceless_trivial
 
 end R5_4_LayerD_3_c_σ2_Centralizer
 
+/-! ## 36.d R5.4 Layer D.3.d: Spanning dispersion — every non-zero
+traceless A has a non-commuting σ_Fib_i
+
+Contrapositive of Layer D.3.c (centralizer intersection in 𝔰𝔲(2)
+trivial): for ANY non-zero traceless `A ∈ Matrix 2×2 ℂ`, at least one
+of {σ_Fib_1_SU_mat, σ_Fib_2_SU_mat} does NOT commute with A.
+
+This is the **dispersion property** for the AA Bridge Lemma 6.2 spanning
+argument: starting from a small h ∈ H_Fib with non-zero traceless Lie
+direction, conjugation by at least one σ_Fib_i gives a non-parallel
+Lie direction (since `Ad(σ_i) A = σ_i · A · σ_i⁻¹ = A` iff σ_i · A
+= A · σ_i, and at least one σ_i fails this).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_3_d_SpanningDispersion
+
+/-- **Spanning dispersion**: for any non-zero traceless `A : Matrix _ _ ℂ`,
+at least one of {σ_Fib_1_SU_mat, σ_Fib_2_SU_mat} doesn't commute with A.
+
+Direct contrapositive of `σ_Fib_centralizer_intersection_traceless_trivial`. -/
+theorem σ_Fib_spanning_dispersion
+    (A : Matrix (Fin 2) (Fin 2) ℂ) (h_traceless : Matrix.trace A = 0)
+    (h_ne : A ≠ 0) :
+    (σ_Fib_1_SU_mat * A ≠ A * σ_Fib_1_SU_mat) ∨
+    (σ_Fib_2_SU_mat * A ≠ A * σ_Fib_2_SU_mat) := by
+  by_contra h_neg
+  push_neg at h_neg
+  obtain ⟨h_σ1, h_σ2⟩ := h_neg
+  -- A commutes with both σ_1 and σ_2; with traceless, A = 0
+  have h_zero : A = 0 :=
+    σ_Fib_centralizer_intersection_traceless_trivial A h_σ1 h_σ2 h_traceless
+  exact h_ne h_zero
+
+/-! **Group-level conjugate dispersion** (deferred to Layer D.3.e): the
+group-conjugation form `σ · h · σ⁻¹` is what the 3-element bundle
+actually produces. The commutator form `σ · A ≠ A · σ` (shipped above)
+combined with `matrix_conjugation_sub_one_eq` (Layer D.2.a) gives the
+needed dispersion at the bundle level. -/
+
+end R5_4_LayerD_3_d_SpanningDispersion
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
