@@ -622,6 +622,13 @@ import SKEFTHawking.FKLW.SU2LieAlgebra
 -- + exp_zero) + expAmbient alias + expAmbient_zero. Mathlib4-PR-quality
 -- companion to existing Matrix.IsHermitian.exp.
 import SKEFTHawking.FKLW.SU2MatrixExp
+-- Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-C (2026-05-19, session 37):
+-- IFT-derived local-diffeo at identity. Ships expAmbient_hasStrictFDerivAt_zero
+-- + expAmbient_hasStrictFDerivAt_zero_equiv (equivalence form for IFT API) +
+-- expAmbient_map_nhds_zero (map exp (𝓝 0) = 𝓝 1) + expAmbient_image_nhds_zero_subset_nhds_one
+-- (consumer-friendly: every nbhd 0 contains pre-image of nbhd 1).
+-- Mathlib4 IFT (HasStrictFDerivAt.toOpenPartialHomeomorph + map_nhds_eq_of_equiv) applied.
+import SKEFTHawking.FKLW.SU2LocalDiffeo
 -- Phase 6p Wave 2d.3-followup (2026-05-14): qubit Bloch-sphere balanced commutator
 -- (D-N Lemma 2 §4.1 Eq. 10-13). Ships `qubit_balanced_commutator_z_axis` —
 -- the substantive Z-axis-case existence of F, G hermitian with ‖F‖, ‖G‖ ≤
