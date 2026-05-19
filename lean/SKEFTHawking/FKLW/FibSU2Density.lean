@@ -4592,6 +4592,273 @@ theorem H_Fib_three_conjugates_bundle
 
 end R5_4_LayerD_2_b_ThreeConjugateBundle
 
+/-! ## 32.c R5.4 Layer D.2.c: Lie-bracket linearization (cubic error)
+
+For the spanning argument, we need the **Lie-bracket linearization** of
+the group commutator: for h₁, h₂ ∈ SU(2) close to 1, the group
+commutator `h₁·h₂·h₁⁻¹·h₂⁻¹ - 1` is approximately the matrix Lie
+bracket `[A₁, A₂] = A₁·A₂ - A₂·A₁` (where `Aᵢ = hᵢ - 1`) with cubic
+error in δ := max(‖h₁ - 1‖, ‖h₂ - 1‖).
+
+This is the analytical content needed to read off the "Lie algebra
+direction" of a group commutator: provided the cubic error term is
+smaller than the quadratic Lie-bracket term (i.e., δ is small), the
+Lie direction is dominated by [A₁, A₂].
+
+Derivation chain (built on Layer D.1.b's algebraic identity):
+  1. `(h₁·h₂·h₁⁻¹·h₂⁻¹) - 1 = ((h₁·h₂) - (h₂·h₁)) · (h₁⁻¹·h₂⁻¹)`     (D.1.b)
+  2. `h₁·h₂ - h₂·h₁ = [A₁, A₂]` (algebraic, D.1.c helper)
+  3. So `(h₁·h₂·h₁⁻¹·h₂⁻¹) - 1 = [A₁,A₂]·(h₁⁻¹·h₂⁻¹)`
+  4. `(h₁·h₂·h₁⁻¹·h₂⁻¹) - 1 - [A₁,A₂] = [A₁,A₂]·((h₁⁻¹·h₂⁻¹) - 1)`   (subtraction)
+  5. Bound via norm_mul_le: `‖·‖ ≤ ‖[A₁,A₂]‖ · ‖(h₁⁻¹·h₂⁻¹) - 1‖`
+  6. `‖[A₁,A₂]‖ ≤ 2·δ²` (commutator_norm_le from MatrixBCHCubic)
+  7. `‖(h₁⁻¹·h₂⁻¹) - 1‖` bounded via shipped Layer D.2.c.1/2 (inverse-
+     norm-difference bounds for SU(2)).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_2_c_LieBracketLinearization
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **Inverse-norm difference bound for SU(2)**: for `h : SU(2)`,
+`‖h⁻¹.val - 1‖ ≤ 2 · ‖h.val - 1‖`.
+
+Proof: algebraic identity `h⁻¹ - 1 = -(h - 1)·h⁻¹` + norm_mul_le +
+L∞-op bound on `‖h⁻¹.val‖ ≤ 2` (from Layer D.1.e
+`specialUnitaryGroup_two_linfty_opNorm_le_two`). -/
+theorem specialUnitary_inv_sub_one_norm_le_two_mul
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+      2 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := by
+  -- Identity: (h - 1) · h⁻¹ = 1 - h⁻¹, hence h⁻¹ - 1 = -((h - 1)·h⁻¹)
+  -- and ‖h⁻¹ - 1‖ = ‖(h - 1)·h⁻¹‖ ≤ ‖h - 1‖ · ‖h⁻¹‖ ≤ 2·‖h - 1‖.
+  have h_inv_one : ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+      ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+    have h_grp : (h * h⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 := mul_inv_cancel h
+    have := congrArg (fun x : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
+        (x : Matrix (Fin 2) (Fin 2) ℂ)) h_grp
+    push_cast at this
+    exact this
+  -- Key identity: (h - 1)·h⁻¹ = 1 - h⁻¹
+  have h_id : ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+        ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) =
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) -
+        ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) := by
+    calc ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+          ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)
+        = (h : Matrix (Fin 2) (Fin 2) ℂ) *
+            ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) -
+          ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) := by noncomm_ring
+      _ = 1 - ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) := by rw [h_inv_one]
+  -- ‖h⁻¹ - 1‖ = ‖-(1 - h⁻¹)‖ = ‖(h-1)·h⁻¹‖ ≤ ‖h - 1‖·‖h⁻¹‖ ≤ 2·‖h - 1‖
+  have h_neg : ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+      -(((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+        ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)) := by
+    rw [h_id]; abel
+  rw [h_neg, norm_neg]
+  calc ‖((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+        ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)‖
+      ≤ ‖((h : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ *
+        ‖((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)‖ := norm_mul_le _ _
+    _ ≤ ‖((h : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ * 2 :=
+          mul_le_mul_of_nonneg_left
+            (specialUnitaryGroup_two_linfty_opNorm_le_two h⁻¹)
+            (norm_nonneg _)
+    _ = 2 * ‖((h : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ := by ring
+
+/-- **Inverse-product norm difference bound for SU(2)**: for
+`h₁, h₂ : SU(2)` with `‖hᵢ.val - 1‖ ≤ δ` (δ ≤ 1), we have
+
+  `‖(h₁⁻¹·h₂⁻¹).val - 1‖ ≤ 6 · δ`.
+
+Proof: triangle decomposition
+  `h₁⁻¹·h₂⁻¹ - 1 = h₁⁻¹·(h₂⁻¹ - 1) + (h₁⁻¹ - 1)`
++ Layer D.2.c.1 (inverse-norm bound) + Layer D.1.e (`‖h⁻¹‖ ≤ 2`).
+Specifically: `‖h₁⁻¹·h₂⁻¹ - 1‖ ≤ ‖h₁⁻¹‖·‖h₂⁻¹ - 1‖ + ‖h₁⁻¹ - 1‖
+                                  ≤ 2·(2δ) + 2δ = 6δ`. -/
+theorem specialUnitary_inv_mul_inv_sub_one_norm_le_six_mul
+    (h₁ h₂ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (δ : ℝ)
+    (h₁_small : ‖(h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ)
+    (h₂_small : ‖(h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ) :
+    ‖((h₁⁻¹ * h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 6 * δ := by
+  have hδ_nn : 0 ≤ δ := le_trans (norm_nonneg _) h₁_small
+  -- h₁⁻¹·h₂⁻¹ - 1 = h₁⁻¹·(h₂⁻¹ - 1) + (h₁⁻¹ - 1)
+  -- (via h₁⁻¹·h₂⁻¹ - 1 = h₁⁻¹·h₂⁻¹ - h₁⁻¹ + h₁⁻¹ - 1
+  --                    = h₁⁻¹·(h₂⁻¹ - 1) + (h₁⁻¹ - 1))
+  push_cast
+  have h_id : ((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) *
+              ((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+              ((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) *
+              (((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1) +
+              (((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1) := by noncomm_ring
+  rw [h_id]
+  have h_norm : ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) *
+              (((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1) +
+              (((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1)‖
+              ≤ ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ)‖ *
+                ‖(((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ +
+                ‖(((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ := by
+    refine le_trans (norm_add_le _ _) ?_
+    have h_mul : ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) *
+                (((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1)‖
+                ≤ ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)‖ *
+                  ‖(((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ := norm_mul_le _ _
+    linarith
+  -- Combine bounds: ‖h₁⁻¹‖ ≤ 2, ‖h₂⁻¹ - 1‖ ≤ 2δ, ‖h₁⁻¹ - 1‖ ≤ 2δ
+  have h₁_inv_norm : ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 2 :=
+    specialUnitaryGroup_two_linfty_opNorm_le_two h₁⁻¹
+  have h₂_inv_sub : ‖((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 2 * δ := by
+    calc ‖((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 2 * ‖((h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ :=
+            specialUnitary_inv_sub_one_norm_le_two_mul h₂
+      _ ≤ 2 * δ := by
+          apply mul_le_mul_of_nonneg_left h₂_small
+          norm_num
+  have h₁_inv_sub : ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 2 * δ := by
+    calc ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 2 * ‖((h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ :=
+            specialUnitary_inv_sub_one_norm_le_two_mul h₁
+      _ ≤ 2 * δ := by
+          apply mul_le_mul_of_nonneg_left h₁_small
+          norm_num
+  calc ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) *
+            (((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1) +
+            (((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1)‖
+      ≤ ‖((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ)‖ *
+              ‖(((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ +
+              ‖(((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ := h_norm
+    _ ≤ 2 * (2 * δ) + 2 * δ := by
+        apply add_le_add
+        · apply mul_le_mul h₁_inv_norm h₂_inv_sub (norm_nonneg _) (by norm_num)
+        · exact h₁_inv_sub
+    _ = 6 * δ := by ring
+
+/-- **Lie-bracket linearization for SU(2) group commutators**: for
+`h₁, h₂ : SU(2)` at scale `δ ≤ 1`, the group commutator differs from
+the matrix Lie bracket `[A₁, A₂] = A₁·A₂ - A₂·A₁` (Aᵢ := hᵢ - 1) by
+at most `12·δ³` in L∞-op norm.
+
+  `‖(h₁·h₂·h₁⁻¹·h₂⁻¹).val - 1 - ([A₁, A₂])‖ ≤ 12·δ³`.
+
+This is the **cubic-order Lie linearization** of AA Bridge Lemma 6.1's
+quadratic shrinkage: the leading Lie direction is `[A₁, A₂]` (size
+quadratic in δ), and the error is cubic. For δ small enough, the
+linearization dominates the deviation.
+
+Substrate for Layer D.3 (open-mapping argument): the linearization
+identifies the Lie-algebra direction of the group commutator, enabling
+the spanning argument via algebraic linear independence on `[A₁, A₂]`. -/
+theorem H_Fib_commutator_lie_linearization
+    (h₁ h₂ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (δ : ℝ)
+    (hδ_le_one : δ ≤ 1)
+    (h₁_small : ‖(h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ)
+    (h₂_small : ‖(h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ) :
+    ‖((h₁ * h₂ * h₁⁻¹ * h₂⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1 -
+      (((h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+       ((h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1) -
+       ((h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+       ((h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1))‖ ≤ 12 * δ ^ 3 := by
+  have hδ_nn : 0 ≤ δ := le_trans (norm_nonneg _) h₁_small
+  -- Step 1: rewrite the group commutator using D.1.b's decomposition
+  rw [matrix_group_commutator_decomp_val]
+  -- Goal: ‖((h₁·h₂).val - (h₂·h₁).val)·(h₁⁻¹·h₂⁻¹).val - [A₁,A₂]‖ ≤ 12δ³
+  -- Step 2: rewrite (h₁·h₂).val - (h₂·h₁).val = A₁·A₂ - A₂·A₁ via push_cast + helper
+  push_cast
+  -- Now: (↑h₁·↑h₂ - ↑h₂·↑h₁)·(↑h₁⁻¹·↑h₂⁻¹) - (↑h₁-1)·(↑h₂-1) + (↑h₂-1)·(↑h₁-1) ≤ 12δ³
+  -- Use matrix_mul_sub_eq_commutator_of_diff: ↑h₁·↑h₂ - ↑h₂·↑h₁ = (↑h₁-1)·(↑h₂-1) - (↑h₂-1)·(↑h₁-1)
+  rw [matrix_mul_sub_eq_commutator_of_diff]
+  -- Now: ((↑h₁-1)·(↑h₂-1) - (↑h₂-1)·(↑h₁-1))·(↑h₁⁻¹·↑h₂⁻¹) - ((↑h₁-1)·(↑h₂-1) - (↑h₂-1)·(↑h₁-1))
+  --        = [A₁,A₂]·(↑h₁⁻¹·↑h₂⁻¹ - 1)
+  -- Factor:
+  set C : Matrix (Fin 2) (Fin 2) ℂ :=
+    ((h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+    ((h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1) -
+    ((h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+    ((h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1) with hC_def
+  set P : Matrix (Fin 2) (Fin 2) ℂ :=
+    ((h₁⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+      Matrix (Fin 2) (Fin 2) ℂ) *
+    ((h₂⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+      Matrix (Fin 2) (Fin 2) ℂ) with hP_def
+  -- Goal: ‖C·P - C‖ ≤ 12·δ³
+  -- = ‖C·(P - 1)‖ ≤ ‖C‖·‖P - 1‖ ≤ 2δ² · 6δ = 12δ³
+  have h_eq : C * P - C = C * (P - 1) := by noncomm_ring
+  rw [h_eq]
+  have h_C_norm : ‖C‖ ≤ 2 * δ ^ 2 := by
+    have h_commutator := SKEFTHawking.MatrixBCHCubic.commutator_norm_le
+      ((h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1)
+      ((h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1)
+    calc ‖C‖ ≤ 2 * ‖(h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+                 ‖(h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := h_commutator
+      _ ≤ 2 * δ * δ := by
+          apply mul_le_mul _ h₂_small (norm_nonneg _) (by positivity)
+          apply mul_le_mul_of_nonneg_left h₁_small
+          norm_num
+      _ = 2 * δ ^ 2 := by ring
+  have h_P_norm : ‖P - 1‖ ≤ 6 * δ := by
+    -- P - 1 = (h₁⁻¹·h₂⁻¹).val - 1; push_cast equivalently
+    have h_P_eq : P = ((h₁⁻¹ * h₂⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) := by
+      simp [hP_def]
+    rw [h_P_eq]
+    exact specialUnitary_inv_mul_inv_sub_one_norm_le_six_mul h₁ h₂ δ
+      h₁_small h₂_small
+  calc ‖C * (P - 1)‖
+      ≤ ‖C‖ * ‖P - 1‖ := norm_mul_le _ _
+    _ ≤ (2 * δ ^ 2) * (6 * δ) := by
+        apply mul_le_mul h_C_norm h_P_norm (norm_nonneg _) (by positivity)
+    _ = 12 * δ ^ 3 := by ring
+
+end R5_4_LayerD_2_c_LieBracketLinearization
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
