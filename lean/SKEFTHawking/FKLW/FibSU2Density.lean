@@ -3574,6 +3574,230 @@ theorem three_plus_sqrt5_div_two_sq :
 
 end D3_PathII_PolyTraceSeq
 
+/-! ## 28. Connector + Galois-invariance closure
+
+Ships the two final small connector lemmas that compose with the shipped
+substrate to close the non-root-of-unity HBS Step 1 step:
+
+  (a) `cFib_trace_pow_eq` : `tr(c.val^n) = ((polyTraceSeq n ((3-√5)/2)):ℝ):ℂ`
+      for `c := σ_Fib_1_SU * σ_Fib_2_SU⁻¹`.
+  (b) `cFib_finOrder_implies_polyTraceSeq_eq_2` : c has finite order ⟹
+      `∃ n ≥ 1, polyTraceSeq n ((3-√5)/2) = 2`.
+  (c) `cFib_not_isOfFinOrder` : the headline closure.
+-/
+
+section D3_PathII_Closure
+
+/-- Local abbreviation for the HBS Fibonacci witness. -/
+private noncomputable def cFib : Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+    σ_Fib_1_SU * σ_Fib_2_SU⁻¹
+
+/-- **Connector**: for the HBS witness `c := σ_Fib_1_SU * σ_Fib_2_SU⁻¹`,
+the trace of `c^n` (in ℂ) equals the ℂ-cast of `polyTraceSeq n ((3-√5)/2)`. -/
+theorem cFib_trace_pow_eq (n : ℕ) :
+    Matrix.trace ((cFib : Matrix (Fin 2) (Fin 2) ℂ) ^ n) =
+      ((polyTraceSeq n ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ) := by
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    match n with
+    | 0 =>
+      -- tr(c^0) = tr(I) = 2; polyTraceSeq 0 _ = 2.
+      show Matrix.trace ((cFib : Matrix (Fin 2) (Fin 2) ℂ) ^ 0) =
+           ((polyTraceSeq 0 ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ)
+      rw [pow_zero, Matrix.trace_one, Fintype.card_fin]
+      show ((2 : ℕ) : ℂ) = (((2 : ℝ)) : ℂ)
+      norm_cast
+    | 1 =>
+      -- tr(c^1) = tr(c) = ((3-√5)/2 : ℝ) : ℂ (shipped).
+      show Matrix.trace ((cFib : Matrix (Fin 2) (Fin 2) ℂ) ^ 1) =
+           ((polyTraceSeq 1 ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ)
+      rw [pow_one]
+      show Matrix.trace (cFib : Matrix (Fin 2) (Fin 2) ℂ) =
+           ((((3 - Real.sqrt 5) / 2 : ℝ)) : ℂ)
+      exact σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_trace
+    | k + 2 =>
+      -- tr(c^(k+2)) = tr(c) · tr(c^(k+1)) - tr(c^k) by SU2_trace_pow_recursion.
+      -- IH: tr(c^(k+1)) = (poly_(k+1) : ℝ : ℂ); tr(c^k) = (poly_k : ℝ : ℂ).
+      -- polyTraceSeq (k+2) t = t · poly_(k+1) - poly_k by def.
+      have h_ih_k1 := ih (k + 1) (by omega)
+      have h_ih_k := ih k (by omega)
+      rw [SU2_trace_pow_recursion cFib k, h_ih_k1, h_ih_k]
+      -- Now goal: (↑cFib).trace * (poly_(k+1) : ℂ) - (poly_k : ℂ) = (poly_(k+2) : ℂ)
+      -- Unfold cFib to apply the trace lemma.
+      show (Matrix.trace ((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+              Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+              Matrix (Fin 2) (Fin 2) ℂ)) *
+           ((polyTraceSeq (k + 1) ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ) -
+           ((polyTraceSeq k ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ) =
+           ((polyTraceSeq (k + 2) ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ)
+      rw [σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_trace]
+      -- Goal: ((3-√5)/2 : ℝ : ℂ) · (poly_(k+1) : ℝ : ℂ) - (poly_k : ℝ : ℂ) =
+      --       (poly_(k+2) : ℝ : ℂ).
+      show (((3 - Real.sqrt 5) / 2 : ℝ) : ℂ) *
+           ((polyTraceSeq (k + 1) ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ) -
+           ((polyTraceSeq k ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ) =
+           ((polyTraceSeq (k + 2) ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ)
+      show _ = (((3 - Real.sqrt 5) / 2 *
+                 polyTraceSeq (k + 1) ((3 - Real.sqrt 5) / 2) -
+                 polyTraceSeq k ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ)
+      push_cast
+      ring
+
+/-- **If `cFib` has finite order, then some power of its trace polynomial
+sequence equals 2**. -/
+theorem cFib_finOrder_implies_polyTraceSeq_eq_2
+    (h : IsOfFinOrder cFib) :
+    ∃ n : ℕ, 0 < n ∧ polyTraceSeq n ((3 - Real.sqrt 5) / 2) = 2 := by
+  obtain ⟨n, hn_pos, h_tr⟩ := SU2_trace_pow_of_finOrder cFib h
+  refine ⟨n, hn_pos, ?_⟩
+  -- h_tr : tr(cFib.val^n) = 2 (in ℂ).
+  -- Apply connector: ((poly_n : ℝ) : ℂ) = 2 (= ((2 : ℝ) : ℂ)).
+  have h_connect : Matrix.trace ((cFib : Matrix (Fin 2) (Fin 2) ℂ) ^ n) =
+      ((polyTraceSeq n ((3 - Real.sqrt 5) / 2) : ℝ) : ℂ) :=
+    cFib_trace_pow_eq n
+  rw [h_connect] at h_tr
+  -- h_tr : ((poly_n : ℝ) : ℂ) = 2. Extract real value.
+  have h_real : (polyTraceSeq n ((3 - Real.sqrt 5) / 2) : ℝ) =
+                (2 : ℝ) := by
+    have h_cast : (((polyTraceSeq n ((3 - Real.sqrt 5) / 2) : ℝ)) : ℂ) =
+                  (((2 : ℝ)) : ℂ) := by
+      rw [h_tr]; norm_cast
+    exact_mod_cast h_cast
+  exact h_real
+
+/-- **Galois invariance**: if the trace polynomial at `(3-√5)/2` equals 2,
+then it also equals 2 at the Galois conjugate `(3+√5)/2`.
+
+Proof: by shipped `polyTraceSeq_eq_pair`, polyTraceSeq n t = α_n + β_n · t
+under t² = 3t - 1. Both (3∓√5)/2 satisfy this. If
+α_n + β_n · ((3-√5)/2) = 2, the unique decomposition over ℚ ⊕ ℚ·t gives
+α_n = 2 ∧ β_n = 0 (since (3-√5)/2 is irrational). Hence
+α_n + β_n · ((3+√5)/2) = 2 + 0 = 2 also. -/
+theorem polyTraceSeq_Galois_invariant (n : ℕ)
+    (h : polyTraceSeq n ((3 - Real.sqrt 5) / 2) = 2) :
+    polyTraceSeq n ((3 + Real.sqrt 5) / 2) = 2 := by
+  -- Apply shipped polyTraceSeq_eq_pair at both values.
+  have h_quad_minus : ((3 - Real.sqrt 5) / 2 : ℝ)^2 =
+      3 * ((3 - Real.sqrt 5) / 2) - 1 := three_minus_sqrt5_div_two_sq
+  have h_quad_plus : ((3 + Real.sqrt 5) / 2 : ℝ)^2 =
+      3 * ((3 + Real.sqrt 5) / 2) - 1 := three_plus_sqrt5_div_two_sq
+  -- Reduce both via polyTraceSeq_eq_pair.
+  have h_minus_eq : polyTraceSeq n ((3 - Real.sqrt 5) / 2) =
+      ((polyTraceCoeffSeq n).1 : ℝ) +
+      ((polyTraceCoeffSeq n).2 : ℝ) * ((3 - Real.sqrt 5) / 2) :=
+    polyTraceSeq_eq_pair n _ h_quad_minus
+  have h_plus_eq : polyTraceSeq n ((3 + Real.sqrt 5) / 2) =
+      ((polyTraceCoeffSeq n).1 : ℝ) +
+      ((polyTraceCoeffSeq n).2 : ℝ) * ((3 + Real.sqrt 5) / 2) :=
+    polyTraceSeq_eq_pair n _ h_quad_plus
+  -- Combine h with h_minus_eq: α_n + β_n · ((3-√5)/2) = 2.
+  rw [h_minus_eq] at h
+  -- From h: ((α_n - 2) : ℝ) + (β_n : ℝ) · ((3-√5)/2) = 0
+  -- ⟹ since (3-√5)/2 is irrational (i.e., {1, (3-√5)/2} ℚ-linearly indep),
+  --   α_n = 2 ∧ β_n = 0.
+  -- Equivalently: ((α_n - 2)) · 2 + β_n · (3 - √5) = 0 (clearing /2),
+  -- so by separating ℚ part and √5 part: α_n = 2 - β_n · 3 / 2 + (β_n / 2) √5 = ...
+  -- Actually simpler: from α + β · ((3-√5)/2) = 2, get 2α + β(3-√5) = 4,
+  -- i.e., (2α + 3β - 4) - β·√5 = 0. Since 1 and √5 are ℚ-linearly indep,
+  -- 2α + 3β - 4 = 0 AND β = 0. The second gives β = 0, first gives α = 2.
+  have h_sqrt5_irr : Irrational (Real.sqrt 5) :=
+    Nat.Prime.irrational_sqrt (by decide : Nat.Prime 5)
+  -- From h, simplify to: (2 · α_n + 3 · β_n - 4) - β_n · √5 = 0.
+  have h_simp : ((polyTraceCoeffSeq n).2 : ℝ) * Real.sqrt 5 =
+      2 * ((polyTraceCoeffSeq n).1 : ℝ) +
+      3 * ((polyTraceCoeffSeq n).2 : ℝ) - 4 := by
+    have h_two_ne : (2 : ℝ) ≠ 0 := by norm_num
+    linarith [h]
+  -- If β_n ≠ 0, then √5 = rational, contradiction.
+  have h_beta_zero : (polyTraceCoeffSeq n).2 = 0 := by
+    by_contra h_beta_ne
+    -- β_n ≠ 0 (integer); cast to ℝ ne 0.
+    have h_beta_real_ne : ((polyTraceCoeffSeq n).2 : ℝ) ≠ 0 := by
+      exact_mod_cast h_beta_ne
+    -- √5 = (2 α_n + 3 β_n - 4) / β_n (rational).
+    have h_sqrt5_eq : Real.sqrt 5 =
+        (2 * ((polyTraceCoeffSeq n).1 : ℝ) +
+         3 * ((polyTraceCoeffSeq n).2 : ℝ) - 4) /
+        ((polyTraceCoeffSeq n).2 : ℝ) := by
+      field_simp
+      linarith [h_simp]
+    -- (2 α + 3 β - 4) / β is rational (ratio of integers).
+    apply h_sqrt5_irr
+    rw [h_sqrt5_eq]
+    refine ⟨(2 * (polyTraceCoeffSeq n).1 + 3 * (polyTraceCoeffSeq n).2 - 4 : ℚ) /
+           ((polyTraceCoeffSeq n).2 : ℚ), ?_⟩
+    push_cast
+    field_simp
+  -- Now β_n = 0. From h_simp: 0 = 2α_n + 3·0 - 4, so α_n = 2.
+  have h_alpha_eq : (polyTraceCoeffSeq n).1 = 2 := by
+    have h_beta_zero_real : ((polyTraceCoeffSeq n).2 : ℝ) = 0 := by
+      exact_mod_cast h_beta_zero
+    rw [h_beta_zero_real] at h_simp
+    have h_alpha_eq_real : ((polyTraceCoeffSeq n).1 : ℝ) = 2 := by linarith
+    exact_mod_cast h_alpha_eq_real
+  -- Conclude: polyTraceSeq n ((3+√5)/2) = α + β · ((3+√5)/2) = 2 + 0 = 2.
+  rw [h_plus_eq]
+  have h_alpha_real : ((polyTraceCoeffSeq n).1 : ℝ) = 2 := by exact_mod_cast h_alpha_eq
+  have h_beta_real : ((polyTraceCoeffSeq n).2 : ℝ) = 0 := by exact_mod_cast h_beta_zero
+  rw [h_alpha_real, h_beta_real]
+  ring
+
+/-- **Identification**: `aHat n = polyTraceSeq n ((3+√5)/2)` for all `n`.
+Both satisfy the same Chebyshev recursion with the same initial conditions. -/
+theorem aHat_eq_polyTraceSeq (n : ℕ) :
+    aHat n = polyTraceSeq n ((3 + Real.sqrt 5) / 2) := by
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    match n with
+    | 0 => rfl
+    | 1 => rfl
+    | k + 2 =>
+      -- aHat (k+2) = (3+√5)/2 · aHat (k+1) - aHat k.
+      -- polyTraceSeq (k+2) ((3+√5)/2) = (3+√5)/2 · polyTraceSeq (k+1) ((3+√5)/2)
+      --                                  - polyTraceSeq k ((3+√5)/2).
+      -- IH: aHat (k+1) = polyTraceSeq (k+1) ((3+√5)/2);
+      --     aHat k = polyTraceSeq k ((3+√5)/2).
+      have h_ih_k1 := ih (k + 1) (by omega)
+      have h_ih_k := ih k (by omega)
+      show aHat (k + 2) = polyTraceSeq (k + 2) ((3 + Real.sqrt 5) / 2)
+      rw [aHat_recursion k, h_ih_k1, h_ih_k]
+      rfl
+
+/-- **D3-Path-ii Step 1 closure (HEADLINE)**: `σ_Fib_1_SU * σ_Fib_2_SU⁻¹`
+has infinite order in `SU(2)`.
+
+Composes all the substrate to derive the contradiction:
+  - shipped `cFib_finOrder_implies_polyTraceSeq_eq_2`: finite order → poly_n = 2.
+  - shipped `polyTraceSeq_Galois_invariant`: poly_n((3-√5)/2) = 2 → poly_n((3+√5)/2) = 2.
+  - shipped `aHat_eq_polyTraceSeq`: aHat n = polyTraceSeq n ((3+√5)/2).
+  - shipped `aHat_gt_two_of_pos`: aHat n > 2 for n ≥ 1.
+
+Combination: finite order ⟹ ∃ n ≥ 1, polyTraceSeq n ((3+√5)/2) = 2
+⟹ aHat n = 2 ⟹ 2 < 2. Contradiction.
+
+**This is the residual mathematical content** for the non-root-of-unity
+HBS Step 1. Composing with shipped `ρ_Fib_SU2_range_infinite_of_inf_order_HBS_witness`
++ Aharonov-Arad bridge substrate gives the full FKLW density chain. -/
+theorem cFib_not_isOfFinOrder :
+    ¬ IsOfFinOrder cFib := by
+  intro h_fin
+  obtain ⟨n, hn_pos, h_poly⟩ := cFib_finOrder_implies_polyTraceSeq_eq_2 h_fin
+  have h_galois := polyTraceSeq_Galois_invariant n h_poly
+  have h_aHat_eq : aHat n = 2 := by
+    rw [aHat_eq_polyTraceSeq n, h_galois]
+  have h_aHat_gt := aHat_gt_two_of_pos n hn_pos
+  linarith
+
+/-- **HBS Step 1 headline (unfolded form)**: `σ_Fib_1_SU * σ_Fib_2_SU⁻¹`
+has infinite order in `SU(2)`. -/
+theorem σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder :
+    ¬ IsOfFinOrder
+        (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+            Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  cFib_not_isOfFinOrder
+
+end D3_PathII_Closure
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
