@@ -4136,6 +4136,64 @@ theorem matrix_group_commutator_norm_le_abstract
 
 end R5_4_LayerD_1_c_NormBound
 
+/-! ## 31.d R5.4 Layer D.1.d: H_Fib quadratic shrinkage step (composition)
+
+Combines the abstract matrix-norm bound (Layer D.1.c) with the
+H_Fib-membership closure (Layer D.1) to produce the **H_Fib-specific
+group-commutator quadratic shrinkage step**: starting from two H_Fib
+elements `g, h` close to 1, the group commutator `g·h·g⁻¹·h⁻¹` is in
+H_Fib with norm `≤ 2·‖g-1‖·‖h-1‖·‖(g⁻¹·h⁻¹).val‖`.
+
+This is the **single-step iteration kernel** for the BCH-spanning
+argument: each application takes two "scale-δ" elements (in the
+operator-norm sense) and produces one "scale-O(δ²)" element (modulo
+the inverse-product factor, which is `O(1)` for elements close to 1).
+
+The inverse-product factor `‖(g⁻¹·h⁻¹).val‖` is parameterized;
+downstream Layer D.1.e will bound it explicitly using
+`Matrix.linftyOpNorm`-on-unitary properties (≤ √d via Cauchy-Schwarz
+on L²-unit rows), giving the absolute quadratic bound `≤ 2d·δ²` for
+δ ≤ 1.
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_1_d_HFibShrinkage
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **H_Fib group-commutator quadratic shrinkage step** (composition
+of Layer D.1 commutator closure + Layer D.1.c matrix-norm bound).
+
+For `g, h ∈ H_Fib`, the group commutator `g·h·g⁻¹·h⁻¹` is in `H_Fib`
+AND satisfies the matrix-norm bound
+
+  `‖(g·h·g⁻¹·h⁻¹).val - 1‖ ≤ 2·‖g.val-1‖·‖h.val-1‖·‖(g⁻¹·h⁻¹).val‖`.
+
+This is the **iteration kernel** for the BCH-spanning argument
+toward AA Bridge Lemma 6.2: each application takes two H_Fib elements
+"at scale δ" (in operator-norm sense) and produces one H_Fib element
+"at scale O(δ²)" (modulo the inverse-product factor, which is O(1)
+for elements close to 1; downstream will bound this explicitly). -/
+theorem H_Fib_commutator_quadratic_step
+    (g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (g_H : g ∈ H_Fib) (h_H : h ∈ H_Fib) :
+    (g * h * g⁻¹ * h⁻¹) ∈ H_Fib ∧
+    ‖((g * h * g⁻¹ * h⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+      2 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+          ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+          ‖((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+  ⟨H_Fib_commutator_mem g h g_H h_H,
+   matrix_group_commutator_norm_le_abstract g h⟩
+
+end R5_4_LayerD_1_d_HFibShrinkage
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
