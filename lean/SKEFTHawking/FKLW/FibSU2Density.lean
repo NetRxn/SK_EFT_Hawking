@@ -5416,6 +5416,144 @@ theorem σ_Fib_1_SU_mat_commutes_implies_diagonal
 
 end R5_4_LayerD_3_b_σ1_Centralizer
 
+/-! ## 36.c R5.4 Layer D.3.c: σ_Fib_2 centralizer = F-conjugate of diagonal
+
+For ANY A commuting with σ_Fib_2_SU_mat: `(F_C · A · F_C)` commutes with
+σ_Fib_1_SU_mat (using σ_2 = F_C · σ_1 · F_C and F_C² = I). By Layer
+D.3.b, `(F_C · A · F_C)` is diagonal. So A = F_C · (diagonal) · F_C.
+
+Combined with σ_1 centralizer (D.3.b: A is also diagonal): A is
+diagonal AND F_C · A · F_C is diagonal. By `F_conj_diag_diagonal_iff_eq`
+(shipped D4.3.c.foundation), this forces A to be a scalar multiple of I.
+
+For TRACELESS A in σ_1 ∩ σ_2 centralizer: A = c·I and tr(A) = 2c = 0
+gives c = 0, hence A = 0.
+
+Conclusion: traceless A commutes with BOTH σ_Fib_1 and σ_Fib_2 iff A = 0.
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_3_c_σ2_Centralizer
+
+/-- **F_C · F_C = 1** — F_C is an involution (shipped earlier as
+`F_C_sq`; this alias makes the binary-mul form locally available). -/
+private theorem F_C_F_C_eq_one : F_C * F_C = (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
+  F_C_sq
+
+/-- **σ_Fib_2 centralizer transfer**: A commutes with σ_Fib_2_SU_mat iff
+(F_C·A·F_C) commutes with σ_Fib_1_SU_mat. -/
+theorem σ_Fib_2_SU_mat_commutes_iff_F_conj_commutes_σ1
+    (A : Matrix (Fin 2) (Fin 2) ℂ) :
+    (σ_Fib_2_SU_mat * A = A * σ_Fib_2_SU_mat) ↔
+    (σ_Fib_1_SU_mat * (F_C * A * F_C) = (F_C * A * F_C) * σ_Fib_1_SU_mat) := by
+  rw [σ_Fib_2_SU_mat_eq_F_conj]
+  -- Goal: F_C·σ_1·F_C · A = A · F_C·σ_1·F_C ↔ σ_1 · (F_C·A·F_C) = (F_C·A·F_C) · σ_1
+  -- Multiply by F_C on both sides; F_C² = 1.
+  constructor
+  · intro h
+    -- h : F_C·σ_1·F_C · A = A · F_C·σ_1·F_C
+    -- Multiply LHS by F_C on left and RHS by F_C on left:
+    -- F_C · (F_C·σ_1·F_C · A) · F_C = F_C · (A · F_C·σ_1·F_C) · F_C
+    -- LHS: (F_C·F_C)·σ_1·F_C·A·F_C = σ_1·(F_C·A·F_C)
+    -- RHS: F_C·A·F_C·σ_1·(F_C·F_C) = (F_C·A·F_C)·σ_1
+    have h_wrap : F_C * ((F_C * σ_Fib_1_SU_mat * F_C) * A) * F_C =
+                  F_C * (A * (F_C * σ_Fib_1_SU_mat * F_C)) * F_C := by
+      rw [h]
+    have h_LHS : F_C * ((F_C * σ_Fib_1_SU_mat * F_C) * A) * F_C =
+                 σ_Fib_1_SU_mat * (F_C * A * F_C) := by
+      have : F_C * ((F_C * σ_Fib_1_SU_mat * F_C) * A) * F_C =
+             (F_C * F_C) * σ_Fib_1_SU_mat * (F_C * A * F_C) := by noncomm_ring
+      rw [this, F_C_F_C_eq_one, one_mul]
+    have h_RHS : F_C * (A * (F_C * σ_Fib_1_SU_mat * F_C)) * F_C =
+                 (F_C * A * F_C) * σ_Fib_1_SU_mat := by
+      have : F_C * (A * (F_C * σ_Fib_1_SU_mat * F_C)) * F_C =
+             (F_C * A * F_C) * σ_Fib_1_SU_mat * (F_C * F_C) := by noncomm_ring
+      rw [this, F_C_F_C_eq_one, mul_one]
+    rw [h_LHS, h_RHS] at h_wrap
+    exact h_wrap
+  · intro h
+    -- Reverse direction: similar wrapping
+    have h_wrap : F_C * (σ_Fib_1_SU_mat * (F_C * A * F_C)) * F_C =
+                  F_C * ((F_C * A * F_C) * σ_Fib_1_SU_mat) * F_C := by
+      rw [h]
+    have h_LHS : F_C * (σ_Fib_1_SU_mat * (F_C * A * F_C)) * F_C =
+                 (F_C * σ_Fib_1_SU_mat * F_C) * A := by
+      have : F_C * (σ_Fib_1_SU_mat * (F_C * A * F_C)) * F_C =
+             (F_C * σ_Fib_1_SU_mat * F_C) * A * (F_C * F_C) := by noncomm_ring
+      rw [this, F_C_F_C_eq_one, mul_one]
+    have h_RHS : F_C * ((F_C * A * F_C) * σ_Fib_1_SU_mat) * F_C =
+                 A * (F_C * σ_Fib_1_SU_mat * F_C) := by
+      have : F_C * ((F_C * A * F_C) * σ_Fib_1_SU_mat) * F_C =
+             (F_C * F_C) * A * (F_C * σ_Fib_1_SU_mat * F_C) := by noncomm_ring
+      rw [this, F_C_F_C_eq_one, one_mul]
+    rw [h_LHS, h_RHS] at h_wrap
+    exact h_wrap
+
+/-- **σ_Fib_2 centralizer is F-conjugate of diagonal**: A commutes with
+σ_Fib_2_SU_mat implies F_C·A·F_C is diagonal. -/
+theorem σ_Fib_2_SU_mat_commutes_implies_F_conj_diagonal
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (h : σ_Fib_2_SU_mat * A = A * σ_Fib_2_SU_mat) :
+    (F_C * A * F_C) 0 1 = 0 ∧ (F_C * A * F_C) 1 0 = 0 := by
+  have h_σ1 : σ_Fib_1_SU_mat * (F_C * A * F_C) =
+              (F_C * A * F_C) * σ_Fib_1_SU_mat :=
+    (σ_Fib_2_SU_mat_commutes_iff_F_conj_commutes_σ1 A).mp h
+  exact σ_Fib_1_SU_mat_commutes_implies_diagonal _ h_σ1
+
+/-- **Centralizer intersection in 𝔰𝔲(2) is trivial** — for traceless A
+commuting with BOTH σ_Fib_1 and σ_Fib_2, A = 0.
+
+Proof:
+  - σ_1 centralizer: A is diagonal, so A = diag(a, b) for some a, b ∈ ℂ.
+  - σ_2 centralizer: F_C·A·F_C is diagonal. With A = diag(a, b),
+    F_C·A·F_C has off-diagonal [0,1] = φInv·φInvSqrt·(a - b). Equals 0
+    iff a = b. So A = diag(a, a) = a·I (scalar).
+  - Traceless A: tr(A) = 2a = 0, so a = 0.
+  - Hence A = 0. -/
+theorem σ_Fib_centralizer_intersection_traceless_trivial
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (h_σ1 : σ_Fib_1_SU_mat * A = A * σ_Fib_1_SU_mat)
+    (h_σ2 : σ_Fib_2_SU_mat * A = A * σ_Fib_2_SU_mat)
+    (h_traceless : Matrix.trace A = 0) :
+    A = 0 := by
+  -- A is diagonal (σ_1)
+  have h_diag := σ_Fib_1_SU_mat_commutes_implies_diagonal A h_σ1
+  -- F_C·A·F_C is diagonal (σ_2)
+  have h_F_diag := σ_Fib_2_SU_mat_commutes_implies_F_conj_diagonal A h_σ2
+  -- Express A = diag(A[0,0], A[1,1]) using h_diag
+  have h_A_form : A = !![A 0 0, 0; 0, A 1 1] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [h_diag.1, h_diag.2, Matrix.cons_val_zero, Matrix.cons_val_one,
+            Matrix.head_cons]
+  -- Now F_C·A·F_C with A = diag(A[0,0], A[1,1])
+  -- F_C·diag(A[0,0], A[1,1])·F_C has [0,1] = φInv·φInvSqrt·(A[0,0] - A[1,1])
+  -- Equals 0 (from h_F_diag.1) ⟹ A[0,0] = A[1,1]
+  have h_diag_eq : A 0 0 = A 1 1 := by
+    have h_F_off : (F_C * !![A 0 0, 0; 0, A 1 1] * F_C) 0 1 = 0 := by
+      rw [← h_A_form]; exact h_F_diag.1
+    have h_F_eq := F_conj_diag_diagonal_iff_eq (A 0 0) (A 1 1)
+    exact h_F_eq.mp h_F_off
+  -- traceless: trace(A) = A[0,0] + A[1,1] = 0
+  -- Combined with A[0,0] = A[1,1]: 2·A[0,0] = 0, so A[0,0] = 0
+  have h_trace_form : A 0 0 + A 1 1 = 0 := by
+    have := h_traceless
+    simp [Matrix.trace, Fin.sum_univ_two] at this
+    exact this
+  -- A 0 0 + A 1 1 = 0 ∧ A 0 0 = A 1 1 → A 0 0 = 0 and A 1 1 = 0
+  have h_00_zero : A 0 0 = 0 := by
+    linear_combination 1/2 * h_trace_form + 1/2 * h_diag_eq
+  have h_11_zero : A 1 1 = 0 := by
+    linear_combination 1/2 * h_trace_form - 1/2 * h_diag_eq
+  -- Combine to A = 0
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [h_diag.1, h_diag.2, h_00_zero, h_11_zero]
+
+end R5_4_LayerD_3_c_σ2_Centralizer
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
