@@ -610,6 +610,12 @@ import SKEFTHawking.FKLW.FibSU2Rep
 -- trace invariants, plus `fibonacci_density_conditional` framing the residual
 -- hypothesis for full constructive density discharge.
 import SKEFTHawking.FKLW.FibSU2Density
+-- Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A (2026-05-19, session 35):
+-- Foundational Lie algebra substrate 𝔰𝔲(2) as traceless skew-Hermitian 2x2
+-- complex matrices. Ships Matrix.IsSkewHermitian + tracelessSkewHermitian
+-- ℝ-submodule + Pauli anti-Hermitian generators (i·σ_x, i·σ_y, i·σ_z).
+-- Mathlib4-PR-quality general substrate.
+import SKEFTHawking.FKLW.SU2LieAlgebra
 -- Phase 6p Wave 2d.3-followup (2026-05-14): qubit Bloch-sphere balanced commutator
 -- (D-N Lemma 2 §4.1 Eq. 10-13). Ships `qubit_balanced_commutator_z_axis` —
 -- the substantive Z-axis-case existence of F, G hermitian with ‖F‖, ‖G‖ ≤
