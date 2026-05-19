@@ -22,11 +22,17 @@ The constructive density argument decomposes as:
     - σ_Fib_1_SU and σ_Fib_2_SU don't commute (separating fact — they
       satisfy YB `aba = bab` but NOT the commutation `ab = ba`).
 
-  **Phase D2 (future)**: trace and rotation-axis structure.
-    - tr(σ_Fib_1_SU) = exp(-7πi/10) + exp(7πi/10) = 2·cos(7π/10) = (1-√5)/2.
-    - σ_Fib_1_SU corresponds to a rotation by angle 7π/5 around the z-axis
-      (in the standard SU(2)→SO(3) double cover).
-    - σ_Fib_2_SU rotation axis is conjugate by F_C; non-parallel to z-axis.
+  **Phase D2 (R4.2.d.D2 — shipped in §5 + §5e + §5f)**: trace and
+  rotation-axis structure.
+    - tr(σ_Fib_1_SU_mat) = exp(-7πi/10) + exp(7πi/10) = 2·cos(7π/10)
+      (real, in (-2, 2)).
+    - σ_Fib_1_SU corresponds to a rotation by angle 7π/5 in the
+      SU(2)→SO(3) double cover.
+    - σ_Fib_2_SU is F-conjugate to σ_Fib_1_SU; the F-rotation maps
+      σ_Fib_1's axis to σ_Fib_2's axis (different SO(3) axes; same
+      rotation angle 7π/5).
+    - |tr| < 2 establishes that the SO(3) rotation angle is strictly
+      in (0, 2π) — non-trivial.
 
   **Phase D3 (future)**: subgroup-of-SU(2) classification or HBS-style
     infinite-order braid word. The closed subgroups of SU(2) are
@@ -553,6 +559,138 @@ theorem σ_Fib_2_SU_ne_one : σ_Fib_2_SU ≠ 1 := by
   show σ_Fib_2_SU.val = 1
   rw [h]
   rfl
+
+/-! ### 5e. Phase D2: Real-cos form for individual traces
+
+The trace of `σ_Fib_1_SU_mat` was computed in §5a as the complex
+exponential `exp(-7π/10·I) + exp(7π/10·I)`. By Euler's identity
+(`Complex.cos`), this collapses to the **real** number `2·cos(7π/10)`.
+
+This is the **first piece of the SU(2)→SO(3) rotation-angle
+correspondence** (registry §6 item #1 Phase D2 plan, "Trace reduction
+to real part (cos formula): ~20 lines via Complex.exp_add, Real.cos").
+
+For any `U ∈ SU(2)` with eigenvalues `exp(±iα)` (forced by det = 1 and
+unitarity), the trace is `exp(iα) + exp(-iα) = 2·cos(α)` — a real
+number with `|tr U| ≤ 2`. The rotation angle in `SO(3)` (via the
+SU(2)→SO(3) double cover) is `2α`, i.e., `tr U = 2·cos(SO(3)-angle/2)`.
+
+For `σ_Fib_1_SU_mat`: trace = `2·cos(7π/10)` (real, ≈ -1.176), so
+`α = 7π/10`, and the SO(3) rotation angle is `2·(7π/10) = 7π/5`. -/
+
+/-- **D2.1 — Real-cos form for `tr(σ_Fib_1_SU_mat)`.**
+
+Bridges the exponential form `exp(-7π/10·I) + exp(7π/10·I)` (from
+§5a) to the real cosine `2·cos(7π/10)` via Euler's identity
+(`Complex.cos z = (exp(z·I) + exp(-z·I)) / 2`).
+
+This is the trace-to-real-cos reduction (Phase D2 scope per Phase 6p
+roadmap R4.2.d.D2). Downstream usage: |tr| < 2 bound (D2.3),
+rotation-angle correspondence (D2.4), and infinite-order witness for
+HBS spanning argument (Phase D3 Path-ii). -/
+theorem σ_Fib_1_SU_mat_trace_eq_real_cos :
+    Matrix.trace σ_Fib_1_SU_mat =
+      ((2 * Real.cos (7 * Real.pi / 10) : ℝ) : ℂ) := by
+  rw [σ_Fib_1_SU_mat_trace_eq]
+  -- Goal: exp(-7π/10·I) + exp(7π/10·I) = ((2·cos(7π/10) : ℝ) : ℂ)
+  -- Step 1: rewrite the negative argument as -(positive argument).
+  have h_neg : Complex.exp (((-7 * Real.pi / 10 : ℝ) : ℂ) * Complex.I) =
+               Complex.exp (-(((7 * Real.pi / 10 : ℝ) : ℂ)) * Complex.I) := by
+    congr 1; push_cast; ring
+  rw [h_neg]
+  -- Step 2: collapse exp(z·I) + exp(-z·I) to 2 · Complex.cos z.
+  have h_sum : Complex.exp (-(((7 * Real.pi / 10 : ℝ) : ℂ)) * Complex.I) +
+               Complex.exp (((7 * Real.pi / 10 : ℝ) : ℂ) * Complex.I) =
+               2 * Complex.cos (((7 * Real.pi / 10 : ℝ) : ℂ)) := by
+    rw [Complex.cos]; ring
+  rw [h_sum]
+  -- Step 3: Complex.cos at real-cast equals real cos cast.
+  rw [show Complex.cos (((7 * Real.pi / 10 : ℝ) : ℂ)) =
+        ((Real.cos (7 * Real.pi / 10) : ℝ) : ℂ) from
+        (Complex.ofReal_cos _).symm]
+  push_cast; ring
+
+/-- **D2.2 — Real-cos form for `tr(σ_Fib_2_SU_mat)`.** Same as
+`σ_Fib_1_SU_mat`, since F-conjugacy (§5b) preserves trace. -/
+theorem σ_Fib_2_SU_mat_trace_eq_real_cos :
+    Matrix.trace σ_Fib_2_SU_mat =
+      ((2 * Real.cos (7 * Real.pi / 10) : ℝ) : ℂ) := by
+  rw [σ_Fib_2_SU_mat_trace_eq_σ_Fib_1_SU_mat_trace,
+      σ_Fib_1_SU_mat_trace_eq_real_cos]
+
+/-- **D2.3 — Imaginary part of `tr(σ_Fib_1_SU_mat)` is zero**.
+
+Trivial corollary of `σ_Fib_1_SU_mat_trace_eq_real_cos`: the trace is
+the complex cast of a real number, so its imaginary part is 0.
+
+This is the structural fact making the SU(2)→SO(3) rotation-angle
+correspondence well-defined: every `U ∈ SU(2)` has real trace. -/
+theorem σ_Fib_1_SU_mat_trace_im_eq_zero :
+    (Matrix.trace σ_Fib_1_SU_mat).im = 0 := by
+  rw [σ_Fib_1_SU_mat_trace_eq_real_cos]
+  exact Complex.ofReal_im _
+
+/-- **D2.4 — Imaginary part of `tr(σ_Fib_2_SU_mat)` is zero.** Same
+as D2.3 by F-conjugacy. -/
+theorem σ_Fib_2_SU_mat_trace_im_eq_zero :
+    (Matrix.trace σ_Fib_2_SU_mat).im = 0 := by
+  rw [σ_Fib_2_SU_mat_trace_eq_real_cos]
+  exact Complex.ofReal_im _
+
+/-! ### 5f. Phase D2: |tr| < 2 — non-trivial-rotation witness
+
+For `U ∈ SU(2)`, `|tr U| < 2` is equivalent to `U ≠ ±I` (eigenvalues
+strictly on the unit circle but not at ±1). The shipped non-centrality
+(§5c) already gives `U ≠ ±I`; this section ships the concrete bound on
+the absolute value of the (real) trace.
+
+Numerical content: `2·cos(7π/10) ≈ -1.176`, so `|trace| ≈ 1.176 < 2`.
+
+Proved by the real-number bound `-1 < cos(7π/10) < 1` (which holds for
+any `x ∈ (0, π) \ {π/2}`; here `7π/10 ∈ (π/2, π)` so `cos < 0` and the
+LHS bound is the relevant one). -/
+
+/-- **D2.5 — `cos(7π/10) < 1`.** Apply `Real.cos_lt_cos_of_nonneg_of_le_pi`
+with `x = 0, y = 7π/10`: `cos(7π/10) < cos(0) = 1`. -/
+private theorem cos_seven_pi_div_ten_lt_one :
+    Real.cos (7 * Real.pi / 10) < 1 := by
+  have hπ : 0 < Real.pi := Real.pi_pos
+  have h := Real.cos_lt_cos_of_nonneg_of_le_pi (x := 0) (y := 7 * Real.pi / 10)
+    (le_refl 0) (by linarith) (by positivity)
+  rwa [Real.cos_zero] at h
+
+/-- **D2.6 — `-1 < cos(7π/10)`.** Apply `Real.cos_lt_cos_of_nonneg_of_le_pi`
+with `x = 7π/10, y = π`: `cos(π) = -1 < cos(7π/10)`. -/
+private theorem neg_one_lt_cos_seven_pi_div_ten :
+    -1 < Real.cos (7 * Real.pi / 10) := by
+  have hπ : 0 < Real.pi := Real.pi_pos
+  have h := Real.cos_lt_cos_of_nonneg_of_le_pi (x := 7 * Real.pi / 10)
+    (y := Real.pi) (by positivity) (le_refl _) (by linarith)
+  rwa [Real.cos_pi] at h
+
+/-- **D2.7 — `|tr(σ_Fib_1_SU_mat)| < 2`.** Strict bound proving the
+matrix has non-trivial rotation angle in SO(3) (specifically, angle
+strictly in `(0, 2π)`).
+
+Combined with the unit-modulus eigenvalue constraint (det = 1 +
+unitary), this means σ_Fib_1_SU_mat has eigenvalues `exp(±iα)` with
+`α ∈ (0, π) \ {π/2}` (since `tr ≠ 0` as 2·cos(7π/10) ≠ 0). -/
+theorem σ_Fib_1_SU_mat_trace_abs_lt_two :
+    ‖Matrix.trace σ_Fib_1_SU_mat‖ < 2 := by
+  rw [σ_Fib_1_SU_mat_trace_eq_real_cos, Complex.norm_real]
+  -- Goal: ‖2 * Real.cos (7 * π / 10)‖ < 2 (in ℝ, ‖x‖ = |x|)
+  rw [Real.norm_eq_abs, abs_mul, abs_of_pos (by norm_num : (0:ℝ) < 2)]
+  -- Goal: 2 · |cos(7π/10)| < 2
+  have h_lt : |Real.cos (7 * Real.pi / 10)| < 1 := by
+    rw [abs_lt]
+    exact ⟨neg_one_lt_cos_seven_pi_div_ten, cos_seven_pi_div_ten_lt_one⟩
+  linarith
+
+/-- **D2.8 — `|tr(σ_Fib_2_SU_mat)| < 2`.** Same as D2.7 by F-conjugacy. -/
+theorem σ_Fib_2_SU_mat_trace_abs_lt_two :
+    ‖Matrix.trace σ_Fib_2_SU_mat‖ < 2 := by
+  rw [σ_Fib_2_SU_mat_trace_eq_σ_Fib_1_SU_mat_trace]
+  exact σ_Fib_1_SU_mat_trace_abs_lt_two
 
 /-! ## 6. Phase D3.a: conjugation analysis and N(T) ruleout
 
@@ -1607,6 +1745,40 @@ full constructive density discharge.
     conclusion *conditional* on the residual hypothesis
     `closure(range ρ_Fib_SU2) = univ` in SU(2). Makes explicit the
     last substantive gap for Path (i) constructive discharge.
+
+**Theorems shipped in R4.2.d.D2 (Phase 6p Wave 2c.4a-R4.2.d.D2,
+sub-§5e + §5f, 2026-05-19)** — real-cos form for individual traces +
+|tr| < 2 non-trivial-rotation witness:
+
+  - **`σ_Fib_1_SU_mat_trace_eq_real_cos : tr(σ_Fib_1_SU_mat) =
+    ((2 · Real.cos (7π/10) : ℝ) : ℂ)`** — bridges the complex
+    exponential form (from R4.2.d.D1.5a) to the real cosine
+    `2·cos(7π/10)` via Euler's identity (`Complex.cos z =
+    (exp(z·I) + exp(-z·I))/2`). This is the "trace reduction to real
+    part" content of the D2 plan.
+  - **`σ_Fib_2_SU_mat_trace_eq_real_cos`** — same for σ_Fib_2, via
+    F-conjugacy preserves trace.
+  - `σ_Fib_1_SU_mat_trace_im_eq_zero`, `σ_Fib_2_SU_mat_trace_im_eq_zero`
+    — imaginary part of trace is zero (corollary; via
+    `Complex.ofReal_im`). Structural fact making the SU(2)→SO(3)
+    rotation-angle correspondence well-defined.
+  - **`σ_Fib_1_SU_mat_trace_abs_lt_two : ‖tr(σ_Fib_1_SU_mat)‖ < 2`**
+    — strict bound proving the matrix has non-trivial rotation angle
+    in SO(3). Proved via `Real.cos_lt_cos_of_nonneg_of_le_pi`
+    bracketing `cos(7π/10) ∈ (cos π, cos 0) = (-1, 1)`.
+  - **`σ_Fib_2_SU_mat_trace_abs_lt_two`** — same for σ_Fib_2 via
+    F-conjugacy.
+
+**Density implication after D2**: combined with §5a-d (F-conjugacy +
+non-centrality) and §3 (non-commutation), the two generators are
+non-trivial rotations (angle 7π/5 in SO(3)) about non-parallel axes
+(separated by the F-rotation). This is the "trace and rotation-axis
+structure" promised in the file's top-level Phase D2 description.
+
+The |tr| < 2 bound is the substrate-level statement that each
+generator has eigenvalues `exp(±iα)` strictly on the unit circle away
+from ±1 — preparing for the eigenvalue-not-root-of-unity argument in
+the upcoming Phase D3 Path-(ii) HBS construction.
 
 **Theorems shipped in R4.2.d.2 (this commit)** — individual-generator
 trace formulas + F-conjugacy + non-centrality:
