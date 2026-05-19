@@ -5829,6 +5829,126 @@ theorem H_Fib_bundle_dispersion
 
 end R5_4_LayerD_3_f_BundleDispersion
 
+/-! ## 36.g R5.4 Layer D.3.g: (h - 1) non-scalar from h ≠ 1 ∧ h ≠ negOneSU
+
+For h ∈ SU(2): h.val is scalar (i.e., `h.val = c·I` for some `c ∈ ℂ`)
+iff `h ∈ {1, negOneSU}` (since `det(c·I) = c² = 1` forces `c = ±1`).
+
+Hence: h ≠ 1 AND h ≠ negOneSU ⟹ h.val is non-scalar ⟹ (h.val - 1) is
+non-scalar.
+
+This is the **unconditional bundle dispersion** companion to D.3.f:
+takes h ≠ 1 ∧ h ≠ negOneSU as input (both are easy to verify for
+small-witness H_Fib elements at scale < 2 since `‖negOneSU.val - 1‖
+= ‖-I - 1‖ = 2`).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_3_g_NonScalarFromNonId
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **h.val - 1 scalar implies h ∈ {1, negOneSU}**: for h ∈ SU(2), if
+`(h.val - 1) = c • I` for some c, then h ∈ {1, negOneSU}.
+
+Proof: rearrange `h.val = (c + 1) • I`; det constraint det h.val = 1
+gives `(c + 1)² = 1` so `c + 1 ∈ {1, -1}` so `c ∈ {0, -2}`; either
+h.val = I (so h = 1) or h.val = -I (so h = negOneSU). -/
+theorem H_Fib_scalar_implies_one_or_negOne
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_scalar : ∃ c : ℂ, (h : Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+                          c • (1 : Matrix (Fin 2) (Fin 2) ℂ)) :
+    h = 1 ∨ h = negOneSU := by
+  obtain ⟨c, hc⟩ := h_scalar
+  -- h.val = (c + 1) • I
+  have h_val_eq : (h : Matrix (Fin 2) (Fin 2) ℂ) =
+      (c + 1) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    have : (h : Matrix (Fin 2) (Fin 2) ℂ) = (h - 1) + 1 := by abel
+    rw [this, hc]
+    ext i j
+    by_cases h_ij : i = j
+    · simp [Matrix.smul_apply, Matrix.add_apply, smul_eq_mul,
+            Matrix.one_apply, h_ij]
+    · simp [Matrix.smul_apply, Matrix.add_apply, smul_eq_mul,
+            Matrix.one_apply, h_ij]
+  -- det h.val = 1 ⟹ (c + 1)² · det I = (c + 1)² = 1 ⟹ c + 1 = ±1
+  have h_unit : h.val ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ := h.property
+  rw [Matrix.mem_specialUnitaryGroup_iff] at h_unit
+  have h_det : (h : Matrix (Fin 2) (Fin 2) ℂ).det = 1 := h_unit.2
+  rw [h_val_eq] at h_det
+  -- det((c+1) • I) = (c+1)² for 2×2 matrices
+  rw [show ((c + 1) • (1 : Matrix (Fin 2) (Fin 2) ℂ)).det = (c + 1) ^ 2 by
+        rw [Matrix.det_smul, Matrix.det_one, mul_one]
+        simp [Fintype.card_fin]] at h_det
+  -- (c + 1)² = 1 ⟹ c + 1 = 1 ∨ c + 1 = -1
+  have h_cases : c + 1 = 1 ∨ c + 1 = -1 := by
+    have h_sq : (c + 1) ^ 2 - 1 = 0 := by linear_combination h_det
+    have h_factor : (c + 1 - 1) * (c + 1 + 1) = 0 := by linear_combination h_sq
+    rcases mul_eq_zero.mp h_factor with h1 | h1
+    · left; linear_combination h1
+    · right; linear_combination h1
+  rcases h_cases with h1 | h1
+  · -- c + 1 = 1, so c = 0, h.val = I, h = 1
+    left
+    apply Subtype.ext
+    rw [h_val_eq, h1, one_smul]
+    rfl
+  · -- c + 1 = -1, so c = -2, h.val = -I, h = negOneSU
+    right
+    apply Subtype.ext
+    rw [h_val_eq, h1, negOneSU_val]
+    ext i j
+    by_cases h_ij : i = j
+    · simp [Matrix.smul_apply, Matrix.neg_apply, Matrix.one_apply,
+            smul_eq_mul, h_ij]
+    · simp [Matrix.smul_apply, Matrix.neg_apply, Matrix.one_apply,
+            smul_eq_mul, h_ij]
+
+/-- **(h - 1) is non-scalar from h ≠ 1 ∧ h ≠ negOneSU**: the
+contrapositive of `H_Fib_scalar_implies_one_or_negOne`.
+
+For h ∈ SU(2) with h ≠ 1 AND h ≠ negOneSU, (h.val - 1) is NOT a
+scalar multiple of the identity. -/
+theorem H_Fib_sub_one_non_scalar_of_ne_one_ne_negOne
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_ne_one : h ≠ 1) (h_ne_negOne : h ≠ negOneSU) :
+    ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) ≠
+      ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) 0 0 •
+        (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  intro h_scalar_form
+  -- (h - 1) = (h - 1)[0,0] • I means (h - 1) is scalar
+  have h_exists : ∃ c : ℂ, (h : Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+                            c • (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
+    ⟨_, h_scalar_form⟩
+  rcases H_Fib_scalar_implies_one_or_negOne h h_exists with h_eq | h_eq
+  · exact h_ne_one h_eq
+  · exact h_ne_negOne h_eq
+
+/-- **Bundle dispersion (unconditional)**: for h ∈ SU(2) with h ≠ 1 AND
+h ≠ negOneSU, AT LEAST one of the σ_Fib_i conjugates differs from h.
+
+Direct composition of D.3.g (non-scalar derivation) with D.3.f
+(conditional bundle dispersion). -/
+theorem H_Fib_bundle_dispersion_unconditional
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_ne_one : h ≠ 1) (h_ne_negOne : h ≠ negOneSU) :
+    ((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) ≠
+      ((h : Matrix (Fin 2) (Fin 2) ℂ)) ∨
+    ((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) ≠
+      ((h : Matrix (Fin 2) (Fin 2) ℂ)) :=
+  H_Fib_bundle_dispersion h
+    (H_Fib_sub_one_non_scalar_of_ne_one_ne_negOne h h_ne_one h_ne_negOne)
+
+end R5_4_LayerD_3_g_NonScalarFromNonId
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
