@@ -242,9 +242,12 @@ class TestDimensionalLadderEvidence:
         assert ladder['1+1D']['status'] == 'PROVED'
         assert ladder['2+1D']['status'] == 'PROVED'
 
-    def test_three_d_axiomatized(self):
+    def test_three_d_tracked_prop(self):
+        """3+1D entry was AXIOMATIZED pre-2026-05-19; converted to
+        TRACKED_PROP (`TPFConjecture`) on 2026-05-19 per Pipeline
+        Invariant #15 (axioms are temporary scaffolding)."""
         ladder = fk_dimensional_ladder_evidence()
-        assert ladder['3+1D']['status'] == 'AXIOMATIZED'
+        assert ladder['3+1D']['status'] == 'TRACKED_PROP'
 
     def test_two_d_witness_is_fk_summary(self):
         ladder = fk_dimensional_ladder_evidence()
@@ -254,9 +257,11 @@ class TestDimensionalLadderEvidence:
         ladder = fk_dimensional_ladder_evidence()
         assert ladder['2+1D']['gap'] == fk_spectral_gap()
 
-    def test_three_d_witness_is_axiom(self):
+    def test_three_d_witness_is_tpf_conjecture(self):
+        """Witness updated from `gapped_interface_axiom` (pre-2026-05-19)
+        to `TPFConjecture` (post-Tracked-Prop conversion)."""
         ladder = fk_dimensional_ladder_evidence()
-        assert ladder['3+1D']['witness'] == 'gapped_interface_axiom'
+        assert ladder['3+1D']['witness'] == 'TPFConjecture'
 
 
 class TestModularityTheorem:

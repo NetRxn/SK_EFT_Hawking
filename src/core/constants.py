@@ -1349,16 +1349,52 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
         'module': 'GoltermanShamir',
     },
     'gapped_interface_axiom': {
-        'eliminability': 'hard',
-        'reason': 'TPF 2026 conjecture: gapped interface for anomaly-free SPT. '
-                  'Plausible but unproven. Machine-checked dimensional ladder of '
-                  'evidence: 1+1D proven (VillainHamiltonian, K-matrix gappability '
-                  'for 3450 model), 2+1D proven (FKGappedInterface, FK 16x16 '
+        'eliminability': 'closed',
+        'reason': 'Phase 5h Wave 2 (2026-05-19) retired the project-local axiom '
+                  'by repackaging the TPF 2026 conjecture as a tracked-hypothesis '
+                  'Prop (`TPFConjecture` in SPTClassification.lean). The '
+                  'substantive content is unchanged — the 3+1D / 4+1D conjecture '
+                  'is still asserted as a Prop (catalogued in '
+                  'PERMANENT_TRACKED_HYPOTHESES.md). The posture change is: '
+                  'rather than asserting the conjecture as a global axiom and '
+                  'silently propagating it through all downstream theorems, '
+                  'every consumer now takes `(H : TPFConjecture)` as an '
+                  'explicit hypothesis parameter, making the dependency surface '
+                  'visible at the type-signature level. This is the constructive '
+                  'alternative per CLAUDE.md Pipeline Invariant #15 ("axioms are '
+                  'temporary scaffolding, not permanent commitments"). The '
+                  'machine-checked dimensional ladder of evidence is unchanged: '
+                  '1+1D proven (VillainHamiltonian, K-matrix gappability for '
+                  '3450 model), 2+1D proven (FKGappedInterface, FK 16x16 '
                   'Hamiltonian, spectral gap Delta=14, native_decide). '
                   '3+1D / 4+1D remain conjectural — 4+1D numerically intractable. '
                   'Bridge theorem: gapped_interface_dimensional_ladder '
-                  '(SPTClassification.lean). Single bottleneck for TPF program.',
+                  '(SPTClassification.lean).',
         'module': 'SPTClassification',
+        'evidence_on_close': {
+            'wave': 'Phase 5h Wave 2 (TPFConjecture Tracked-Prop conversion)',
+            'date_closed': '2026-05-19',
+            'derivation_strategy': 'Replace `axiom gapped_interface_axiom` with '
+                                   '`def TPFConjecture : Prop`. All 4 consumer '
+                                   'theorems (anomaly_free_implies_chiral_gauge, '
+                                   'sm_generation_gapped_interface, '
+                                   'sm_three_gen_gapped_interface, '
+                                   'no_gap_implies_anomalous) take `(H : TPFConjecture)` '
+                                   'as explicit hypothesis. Anchor + falsifier '
+                                   'theorems (`TPFConjecture_iff_explicit`, '
+                                   '`TPFConjecture_falsifier_has_nonempty_hypothesis`) '
+                                   'ship alongside the Prop.',
+            'verification': 'lean_verify on TPFConjecture_iff_explicit + '
+                            'TPFConjecture_falsifier_has_nonempty_hypothesis + '
+                            '4 conditional theorems returns axioms = '
+                            '[propext, Classical.choice, Quot.sound] only '
+                            '(no gapped_interface_axiom in any closure).',
+            'posture_note': 'Per PERMANENT_TRACKED_HYPOTHESES.md catalogue: '
+                            'TPFConjecture is KEEP_AS_TRACKED (the substantive '
+                            'physics claim is a research-grade conjecture, not '
+                            'derivable within project scope; the tracked-Prop '
+                            'form is honest framing).',
+        },
         'evidence_ladder': {
             '1+1D': {
                 'status': 'proven',
@@ -1374,8 +1410,8 @@ AXIOM_METADATA: dict[str, dict[str, Any]] = {
                                 'spectral gap Delta = 14; ground state E0 = -14',
             },
             '3+1D / 4+1D': {
-                'status': 'conjectural (axiom)',
-                'witness': 'gapped_interface_axiom (this entry)',
+                'status': 'conjectural (TPFConjecture tracked-Prop)',
+                'witness': 'TPFConjecture (SPTClassification.lean)',
                 'framework': 'Numerically intractable (Hilbert space too large)',
                 'verification': 'No counterexample known; TPF "plausible but unproven"',
             },

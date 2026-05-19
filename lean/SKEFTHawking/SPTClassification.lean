@@ -1,29 +1,37 @@
 /-
-Phase 5h Wave 1: SPT Classification and Gapped Interface Axiom
+Phase 5h Wave 1: SPT Classification and Gapped Interface Conjecture
 
 Extends SMGClassification.lean with proper type-theoretic infrastructure for
 symmetry-protected topological (SPT) phases in 3+1D and 4+1D. The central
 construction is the gapped interface conjecture of Thorngren-Preskill-Fidkowski
-(arXiv:2601.04304, 2026), stated as a structured axiom.
+(arXiv:2601.04304, 2026), packaged here as a **tracked-hypothesis Prop**
+(`TPFConjecture`) rather than a project-local axiom (2026-05-19 posture
+change — see Pipeline Invariant #15 and PERMANENT_TRACKED_HYPOTHESES.md).
 
 Architecture:
   1. SPTPhaseData: classification data for an SPT phase
   2. FreeFermionSPT / CommutingProjectorSPT: two representations
   3. InterfaceData: the codimension-1 junction
-  4. gapped_interface_axiom: the TPF conjecture (AXIOM)
-  5. Conditional theorems deriving physical consequences
+  4. TPFConjecture: the TPF conjecture (Tracked-Prop, replaces the
+     pre-2026-05-19 `axiom gapped_interface_axiom`)
+  5. Conditional theorems deriving physical consequences (take
+     `(H : TPFConjecture)` as explicit hypothesis parameter)
 
-The gapped interface axiom states: for any anomaly-free SPT class, there
+The gapped interface conjecture states: for any anomaly-free SPT class, there
 exists a local, symmetric Hamiltonian on the interface between the free-fermion
 and commuting-projector realizations that is gapped with a unique ground state.
 
 This is the key conjecture of the TPF program. It is "plausible but unproven"
-(their words). Its formalization as an axiom allows us to derive consequences
-(chiral lattice gauge theory existence) while tracking exactly what is assumed.
+(their words). Its formalization as a tracked Prop (rather than a project-local
+axiom) allows downstream theorems to derive consequences (chiral lattice gauge
+theory existence) while tracking the dependency at the type-signature level —
+the cleaner alternative to silent axiom propagation.
 
 Key insight from deep research (Phase-5h/Mapping the 3+1D chirality wall.md):
   - The conjecture is precisely statable but untestable (4+1D numerically intractable)
-  - The exactly solvable 1+1D "3450" model provides the only evidence
+  - The exactly solvable 1+1D "3450" model provides one piece of evidence
+  - 2+1D `FKGappedInterface` provides a second machine-checked witness in an
+    independent (Cayley-calibration / Majorana) framework
   - Infinite-dimensional rotor Hilbert spaces are essential (evade Kapustin-Fidkowski)
 
 References:
@@ -194,16 +202,33 @@ structure GappedInterfaceProperties where
   /-- Short-range entangled (area-law entanglement entropy) -/
   short_range_entangled : Prop
 
-/-! ## 4. The Gapped Interface Axiom -/
+/-! ## 4. The Gapped Interface Conjecture (Tracked-Hypothesis Prop) -/
 
 /--
-**THE CENTRAL AXIOM** (Thorngren-Preskill-Fidkowski 2026):
+**THE THORNGREN-PRESKILL-FIDKOWSKI CONJECTURE** (TPF 2026), packaged as a
+**tracked-hypothesis Prop** rather than a project-local axiom.
 
-For an anomaly-free SPT phase, there exists a local, symmetric interface
-Hamiltonian that is gapped with a unique ground state.
+Statement: for an anomaly-free SPT phase, there exists a local, symmetric
+interface Hamiltonian that is gapped with a unique ground state.
 
-Consequence: If this axiom holds, then chiral lattice gauge theories exist
-(by gauging the vector-like bulk symmetry on the commuting-projector side).
+Consequence: If `TPFConjecture` holds, then chiral lattice gauge theories
+exist (by gauging the vector-like bulk symmetry on the commuting-projector
+side).
+
+**Posture change (2026-05-19):** This was previously asserted as a
+project-local `axiom gapped_interface_axiom`. Per `CLAUDE.md` Pipeline
+Invariant #15 ("axioms are temporary scaffolding, not permanent
+commitments"), and per the project's `PERMANENT_TRACKED_HYPOTHESES.md`
+catalogue posture (KEEP_AS_TRACKED vs DISCHARGE_FUTURE_PHASE), the
+substantive content is shipped here as a `def`-Prop. Consumers take
+`(H : TPFConjecture)` as an explicit hypothesis parameter, making the
+dependency surface visible at the type-signature level.
+
+This is the **constructive alternative** to a global axiom: instead of
+asserting the conjecture and silently propagating it through all
+downstream theorems, every theorem that consumes the conjecture
+declares so in its signature. The substantive physics content is
+unchanged; only the framing of the dependency surface differs.
 
 Evidence (machine-checked dimensional ladder — see
 `gapped_interface_dimensional_ladder` below):
@@ -211,78 +236,118 @@ Evidence (machine-checked dimensional ladder — see
     gappability — det K = 1 + two mutually-local null vectors) [TPF §4]
   - 2+1D analog: `FKGappedInterface.lean` (FK 16×16 Hamiltonian,
     spectral gap Δ = 14, parity-preserving ground state, native_decide)
-  - 3+1D / 4+1D: this axiom (no counterexample known in any dimension;
+  - 3+1D / 4+1D: `TPFConjecture` (still conjectural — 4+1D Hilbert
+    spaces are too large for any computer; no counterexample known;
     "plausible but unproven" per TPF's own assessment)
 
-This axiom is registered in AXIOM_METADATA with eliminability: 'hard'.
-The deep research assessment (Phase-5h) confirms this is:
+The deep-research assessment (Phase-5h) confirms this conjecture is:
   - Precisely statable (as formalized here)
   - Untestable numerically (4+1D too large for any computer)
   - The single bottleneck for the TPF program
 
-PROVIDED SOLUTION:
-This is an axiom — no proof required. Aristotle should recognize it as such.
+The pre-conversion axiom was registered in AXIOM_METADATA with
+eliminability: 'hard'. Post-conversion, the project-local axiom count
+drops by 1 (this was the most recently-added project-local axiom from
+the Phase-5h Wave-1 ship; it joins the project's "tracked hypothesis"
+surface area).
 -/
-axiom gapped_interface_axiom (spt : SPTPhaseData) (h_free : spt.anomaly_free) :
+def TPFConjecture : Prop :=
+  ∀ (spt : SPTPhaseData), spt.anomaly_free →
     ∃ (interface : InterfaceData spt) (props : GappedInterfaceProperties),
       interface.is_local ∧ interface.preserves_symmetry ∧
       props.unique_ground_state ∧ props.short_range_entangled
 
+/-! ### Non-vacuity: anchor + falsifier -/
+
+/--
+**Anchor (well-typed-ness):** the `TPFConjecture` Prop reduces to the
+expected `∀ spt h_free, ∃ interface props, …` statement by `Iff.rfl`.
+Confirms the Prop is the intended statement, not an artifact of
+elaboration. -/
+theorem TPFConjecture_iff_explicit :
+    TPFConjecture ↔
+      ∀ (spt : SPTPhaseData), spt.anomaly_free →
+        ∃ (interface : InterfaceData spt) (props : GappedInterfaceProperties),
+          interface.is_local ∧ interface.preserves_symmetry ∧
+          props.unique_ground_state ∧ props.short_range_entangled :=
+  Iff.rfl
+
+/--
+**Falsifier (non-vacuous hypothesis pool):** there exists at least one
+anomaly-free `SPTPhaseData` (specifically, `spt_4plus1d 16` =
+single-SM-generation; verified at `spt_one_generation_anomaly_free`).
+This guarantees that `TPFConjecture` makes a non-trivial assertion
+(applied to a real hypothesis), not a vacuous one.
+
+Combined with `TPFConjecture_iff_explicit`, this rules out the
+degenerate possibility of a `TPFConjecture` that holds for the empty
+hypothesis class. -/
+theorem TPFConjecture_falsifier_has_nonempty_hypothesis :
+    ∃ (spt : SPTPhaseData), spt.anomaly_free :=
+  ⟨spt_4plus1d 16, spt_one_generation_anomaly_free⟩
+
 /-! ## 5. Conditional Theorems -/
 
 /--
-Anomaly-free → chiral lattice gauge theory exists (conditional on axiom).
+Anomaly-free → chiral lattice gauge theory exists (conditional on the
+TPF conjecture).
 
 The argument: if the gapped interface exists, gauge the vector-like
 symmetry on the commuting-projector side. The opposite boundary retains
 its chiral fermions, now coupled to a dynamical gauge field on the lattice.
 
-This is the ENTIRE point of the TPF program. Our axiom makes this
-chain formally explicit.
+This is the ENTIRE point of the TPF program. The `(H : TPFConjecture)`
+hypothesis parameter makes the dependency on the conjecture explicit at
+the type-signature level. Consumers of this theorem inherit the
+dependency on `TPFConjecture` and must propagate it through their own
+signatures.
 -/
 theorem anomaly_free_implies_chiral_gauge (spt : SPTPhaseData)
-    (h_free : spt.anomaly_free) :
-    -- From the axiom, a gapped interface exists
+    (h_free : spt.anomaly_free) (H : TPFConjecture) :
+    -- From the conjecture, a gapped interface exists
     (∃ (interface : InterfaceData spt) (props : GappedInterfaceProperties),
       interface.is_local ∧ interface.preserves_symmetry ∧
-      props.unique_ground_state ∧ props.short_range_entangled) := by
-  exact gapped_interface_axiom spt h_free
+      props.unique_ground_state ∧ props.short_range_entangled) :=
+  H spt h_free
 
 /--
-SM application: 16 Majorana per generation → gapped interface exists.
+SM application: 16 Majorana per generation → gapped interface exists
+(conditional on `TPFConjecture`).
 -/
-theorem sm_generation_gapped_interface :
+theorem sm_generation_gapped_interface (H : TPFConjecture) :
     ∃ (interface : InterfaceData (spt_4plus1d 16))
       (props : GappedInterfaceProperties),
       interface.is_local ∧ interface.preserves_symmetry ∧
       props.unique_ground_state ∧ props.short_range_entangled :=
-  gapped_interface_axiom _ spt_one_generation_anomaly_free
+  H _ spt_one_generation_anomaly_free
 
 /--
-Three SM generations → gapped interface exists (same argument, n=48).
+Three SM generations → gapped interface exists (same argument, n=48;
+conditional on `TPFConjecture`).
 -/
-theorem sm_three_gen_gapped_interface :
+theorem sm_three_gen_gapped_interface (H : TPFConjecture) :
     ∃ (interface : InterfaceData (spt_4plus1d 48))
       (props : GappedInterfaceProperties),
       interface.is_local ∧ interface.preserves_symmetry ∧
       props.unique_ground_state ∧ props.short_range_entangled :=
-  gapped_interface_axiom _ spt_three_generations_anomaly_free
+  H _ spt_three_generations_anomaly_free
 
 /--
 Contrapositive: if NO gapped interface exists for a given SPT class,
-then the system is anomalous (not anomaly-free).
+then the system is anomalous (not anomaly-free) — conditional on
+`TPFConjecture`.
 
 This is the rigorous no-go direction — anomaly matching forbids
 gapping without breaking symmetry when the anomaly is nonzero.
 -/
-theorem no_gap_implies_anomalous (spt : SPTPhaseData)
+theorem no_gap_implies_anomalous (spt : SPTPhaseData) (H : TPFConjecture)
     (h_no_gap : ¬∃ (interface : InterfaceData spt)
                     (props : GappedInterfaceProperties),
                   interface.is_local ∧ interface.preserves_symmetry ∧
                   props.unique_ground_state ∧ props.short_range_entangled) :
     ¬spt.anomaly_free := by
   intro h_free
-  exact h_no_gap (gapped_interface_axiom spt h_free)
+  exact h_no_gap (H spt h_free)
 
 /-! ## 6. Bridge Theorems -/
 
@@ -325,7 +390,7 @@ theorem dim_1plus1_solvable_analog :
 /--
 **Dimensional ladder for the gapped interface conjecture (Wave 4 bridge).**
 
-The TPF `gapped_interface_axiom` states the existence of gapped symmetric
+The TPF `TPFConjecture` states the existence of gapped symmetric
 interfaces in 4+1D. We now have machine-checked witnesses in two lower
 dimensions, using **distinct mathematical frameworks**, providing
 independent evidence for the higher-dimensional conjecture:
@@ -338,7 +403,7 @@ independent evidence for the higher-dimensional conjecture:
   with minimal polynomial W³ + 12W² − 28W = 0 (eigenvalues {−14, 0, +2}),
   ground-state energy −14, spectral gap Δ = 14, fermion parity
   preserved. Cayley-calibration / Majorana framework.
-- **3+1D / 4+1D:** `gapped_interface_axiom` (still axiomatized —
+- **3+1D / 4+1D:** `TPFConjecture` (still conjectural / tracked-Prop —
   4+1D is numerically intractable; no counterexample known).
 
 Both witnesses are `native_decide`-verified on finite matrix data.
@@ -428,9 +493,13 @@ Phase 5h Wave 1 delivers:
   - SPTPhaseData: proper type-theoretic SPT classification
   - FreeFermionSPT / CommutingProjectorSPT: two SPT representations
   - InterfaceData: codimension-1 junction structure
-  - gapped_interface_axiom: the central TPF conjecture (AXIOM)
-  - 5 conditional theorems deriving physical consequences
+  - TPFConjecture: the central TPF conjecture (Tracked-Prop; was
+    `axiom gapped_interface_axiom` pre-2026-05-19)
+  - 5 conditional theorems deriving physical consequences (now take
+    `(H : TPFConjecture)` as explicit hypothesis parameter)
   - 4 bridge theorems connecting to existing infrastructure
+  - Anchor + falsifier theorems for the Tracked-Prop
+    (`TPFConjecture_iff_explicit`, `TPFConjecture_falsifier_has_nonempty_hypothesis`)
 -/
 theorem wave1_summary :
     (spt_4plus1d 16).anomaly_index = 0 ∧

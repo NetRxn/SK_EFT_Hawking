@@ -6053,22 +6053,25 @@ def fk_minimal_polynomial_residual(W):
 def fk_dimensional_ladder_evidence():
     """Summary of the gapped-interface dimensional-ladder evidence stack.
 
-    The `gapped_interface_axiom` (SPTClassification.lean) is the project's
-    sole load-bearing axiom. The Phase-5s ladder strengthens it with two
-    machine-checked dimensional analogs and one open conjecture:
+    The `TPFConjecture` (SPTClassification.lean; converted from
+    `axiom gapped_interface_axiom` on 2026-05-19 — see
+    `AXIOM_METADATA['gapped_interface_axiom']` for the conversion
+    provenance) is the project's TRACKED-Prop for the 3+1D / 4+1D
+    gapped-interface conjecture. The Phase-5s ladder strengthens it with
+    two machine-checked dimensional analogs and one open conjecture:
       1+1D: VillainHamiltonian.k3450_gappable (3450 model, K-matrix)
       2+1D: SKEFTHawking.FK.fk_summary (FK 8-Majorana, Cayley calibration)
-      3+1D: gapped_interface_axiom (still axiomatized — the conjecture)
+      3+1D: TPFConjecture (tracked-Prop; was axiom; still conjectural)
 
     The bridge theorem `gapped_interface_dimensional_ladder` in
-    SPTClassification.lean § "Dimensional ladder of evidence for
-    gapped_interface_axiom" compiles the 1+1D witnesses into a single
-    bundled statement consumed by AXIOM_METADATA's `evidence_ladder`
-    field for the dashboard's Proof Architecture tab.
+    SPTClassification.lean compiles the 1+1D + 2+1D witnesses into a
+    single bundled statement consumed by AXIOM_METADATA's
+    `evidence_ladder` field for the dashboard's Proof Architecture tab.
 
     Lean: SKEFTHawking.SPTClassification.gapped_interface_dimensional_ladder.
     Aristotle: N/A.
-    Source: Phase 5s Wave 4 ship memo (2026-04-18).
+    Source: Phase 5s Wave 4 ship memo (2026-04-18); Phase 5h Wave 2
+    Tracked-Prop conversion (2026-05-19).
 
     Returns:
         Dict with one entry per dimension: status, witness theorem name,
@@ -6088,9 +6091,10 @@ def fk_dimensional_ladder_evidence():
             'gap': 14,
         },
         '3+1D': {
-            'status': 'AXIOMATIZED',
-            'witness': 'gapped_interface_axiom',
-            'framework': 'TPF conjecture — open at literature frontier',
+            'status': 'TRACKED_PROP',
+            'witness': 'TPFConjecture',
+            'framework': 'TPF conjecture — open at literature frontier '
+                         '(converted from axiom on 2026-05-19)',
             'gap': None,
         },
     }

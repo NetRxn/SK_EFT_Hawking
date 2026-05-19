@@ -100,13 +100,55 @@ These consumers establish that `H_RT_Formula_Valid` is a **load-bearing boundary
 
 ---
 
-## 4. Posture summary
+## 4. `TPFConjecture` — KEEP_AS_TRACKED (converted from `axiom gapped_interface_axiom` on 2026-05-19)
+
+**File:** `lean/SKEFTHawking/SPTClassification.lean:254`
+
+**Statement.**
+
+```lean
+def TPFConjecture : Prop :=
+  ∀ (spt : SPTPhaseData), spt.anomaly_free →
+    ∃ (interface : InterfaceData spt) (props : GappedInterfaceProperties),
+      interface.is_local ∧ interface.preserves_symmetry ∧
+      props.unique_ground_state ∧ props.short_range_entangled
+```
+
+**What the Prop says.** The Thorngren-Preskill-Fidkowski (TPF) 2026 conjecture: for every anomaly-free SPT phase, there exists a local, symmetric interface Hamiltonian that is gapped with a unique ground state and short-range entanglement (between the free-fermion and commuting-projector realizations).
+
+**Anchor + falsifier.** `TPFConjecture_iff_explicit` (well-typed-ness — confirms `TPFConjecture` reduces to the expected `∀ spt h_free, ∃ interface props, …` statement) and `TPFConjecture_falsifier_has_nonempty_hypothesis` (non-vacuity — exhibits `spt_4plus1d 16` with `spt_one_generation_anomaly_free` to guarantee the hypothesis pool is non-empty).
+
+**Underlying physics status.** **Research-grade conjecture; "plausible but unproven" per TPF's own assessment.** The conjecture is precisely statable but numerically intractable in 3+1D / 4+1D (Hilbert space too large). Machine-checked dimensional ladder of evidence (`gapped_interface_dimensional_ladder` in `SPTClassification.lean`):
+
+- **1+1D analog (proven):** `VillainHamiltonian.k3450_gappable` — K-matrix gappability for the 3450 chiral gauge theory (det K = 1, two mutually-local null vectors).
+- **2+1D analog (proven, Wave 3 2026-04-15):** `FK.fk_summary` — explicit 16×16 FK Hamiltonian with spectral gap Δ = 14, ground-state energy E₀ = −14, fermion-parity preserved. Distinct framework (Cayley-calibration / Majorana) — the two-framework agreement is a non-trivial strengthening.
+- **3+1D / 4+1D (this Prop):** no counterexample known; "plausible but unproven."
+
+**Why KEEP_AS_TRACKED.** Discharging this Prop would require either (a) a constructive proof of TPF in 3+1D / 4+1D (open at the literature frontier; no known approach), or (b) a counterexample (which would also revolutionize the field). Both are out of project scope. The Tracked-Prop form is the **principled treatment**: the substantive 3+1D / 4+1D claim is preserved (still asserted as a Prop), but the dependency surface is now visible at the type-signature level of every downstream consumer, rather than silently propagating via a global axiom.
+
+**Conversion provenance.** This Prop replaced `axiom gapped_interface_axiom` (the Phase-5h Wave-1 original ship) on 2026-05-19 (Phase 5h Wave 2). Per CLAUDE.md Pipeline Invariant #15 ("axioms are temporary scaffolding, not permanent commitments"), the constructive alternative of a tracked Prop is preferred when the substantive content is genuinely conjectural. The pre-conversion project-local axiom count drops by 1 with this ship. See `AXIOM_METADATA['gapped_interface_axiom']` in `src/core/constants.py` — `eliminability: 'closed'` with full conversion details under `evidence_on_close`.
+
+**Consumers.** The 4 conditional theorems in `SPTClassification.lean`:
+
+- `anomaly_free_implies_chiral_gauge` (takes `(H : TPFConjecture)`)
+- `sm_generation_gapped_interface` (takes `(H : TPFConjecture)`)
+- `sm_three_gen_gapped_interface` (takes `(H : TPFConjecture)`)
+- `no_gap_implies_anomalous` (takes `(H : TPFConjecture)`)
+
+External writeups that consume these theorems propagate the dependency on `TPFConjecture` and should hedge appropriately: *"predicated on the TPFConjecture tracked hypothesis, the 3+1D / 4+1D analog of TPF (proven in 1+1D and 2+1D in independent frameworks; conjectural in 3+1D / 4+1D)"*.
+
+**Reassessment trigger.** If a future paper proves (or disproves) the 3+1D / 4+1D TPF conjecture, this entry would be revisited.
+
+---
+
+## 5. Posture summary
 
 | Prop | Status | Discharge LoE | Scheduled phase |
 |---|---|---|---|
 | `H_VestigialModeIsGraviton` | KEEP_AS_TRACKED (permanent) | N/A — requires different substrate | None |
 | `H_DESICompatibility` | DISCHARGE_FUTURE_PHASE | ~50 person-hours | Phase 6b.2 (not active) |
 | `H_RT_Formula_Valid` | KEEP_AS_TRACKED (permanent) | N/A — project-scope boundary | None |
+| `TPFConjecture` | KEEP_AS_TRACKED (permanent; converted from axiom on 2026-05-19) | N/A — open at literature frontier | None |
 
 **Net axiom-and-tracked-Prop count rationale.** The project minimizes both `axiom` declarations (per Pipeline Invariant #15) AND tracked-Prop count by:
 
@@ -118,12 +160,12 @@ This catalogue is the source of truth for the project's load-bearing tracked-Pro
 
 ---
 
-## 5. Cross-reference
+## 6. Cross-reference
 
 - Pipeline Invariant #15: see `CLAUDE.md` workspace-level (no new project-local axiom without explicit user sign-off + discharge plan).
 - Strengthening-pass discipline: see `CLAUDE.md` workspace-level §"Preemptive-strengthening discipline".
 - For `axiom`-declarations (as opposed to tracked Props), see the `AXIOM_METADATA` registry in `src/constants.py` and the per-axiom eliminability metadata.
-- For per-Prop consumer enumeration: `lean/SKEFTHawking/{GravitationalWaves,FLRWDynamics,RTCasiniHuertaBounds}.lean` and any `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_Formula_Valid" lean/`.
+- For per-Prop consumer enumeration: `lean/SKEFTHawking/{GravitationalWaves,FLRWDynamics,RTCasiniHuertaBounds,SPTClassification}.lean` and any `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_Formula_Valid\|TPFConjecture" lean/`.
 
 ---
 
