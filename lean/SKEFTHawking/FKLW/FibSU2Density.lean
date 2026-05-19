@@ -5328,6 +5328,94 @@ theorem σ_Fib_axes_distinct_witness :
 
 end R5_4_LayerD_3_a_DifferentAxes
 
+/-! ## 36.b R5.4 Layer D.3.b: σ_Fib_1 centralizer in Matrix 2×2 ℂ is exactly diagonal
+
+For the spanning argument, we need that ANY direction A ∈ Matrix 2×2 ℂ
+commuting with σ_Fib_1_SU_mat must be DIAGONAL.
+
+Proof: σ_Fib_1_SU_mat = diag(ω·R_1, ω·R_τ) has distinct eigenvalues
+(ω·R_1 ≠ ω·R_τ since R_1 ≠ R_τ and ω ≠ 0). For matrix A and
+diagonal σ = diag(λ, μ) with λ ≠ μ:
+  (σ·A)[i,j] - (A·σ)[i,j] = (σ[i,i] - σ[j,j])·A[i,j].
+For i ≠ j: σ[i,i] - σ[j,j] = λ - μ ≠ 0. Commutation forces A[i,j] = 0.
+For i = j: trivially zero. So A is diagonal.
+
+This section ships the entry-wise extraction of this fact for the
+σ_Fib_1 case.
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_3_b_σ1_Centralizer
+
+/-- **σ_Fib_1 centralizer is diagonal: [0,1] off-diagonal entry**.
+If A commutes with σ_Fib_1_SU_mat, then A[0,1] = 0. -/
+theorem σ_Fib_1_SU_mat_commutes_implies_entry_01_zero
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (h : σ_Fib_1_SU_mat * A = A * σ_Fib_1_SU_mat) :
+    A 0 1 = 0 := by
+  -- Take [0,1] entry of both sides.
+  -- LHS[0,1] = σ_1[0,0]·A[0,1] + σ_1[0,1]·A[1,1]
+  --         = (ω·R_1)·A[0,1] + 0·A[1,1] = (ω·R_1)·A[0,1]
+  -- RHS[0,1] = A[0,0]·σ_1[0,1] + A[0,1]·σ_1[1,1]
+  --         = A[0,0]·0 + A[0,1]·(ω·R_τ) = (ω·R_τ)·A[0,1]
+  -- So (ω·R_1)·A[0,1] = (ω·R_τ)·A[0,1], i.e., (ω·R_1 - ω·R_τ)·A[0,1] = 0.
+  have h_entry : (σ_Fib_1_SU_mat * A) 0 1 = (A * σ_Fib_1_SU_mat) 0 1 := by
+    rw [h]
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             σ_Fib_1_SU_mat_entry_00, σ_Fib_1_SU_mat_entry_01,
+             σ_Fib_1_SU_mat_entry_10, σ_Fib_1_SU_mat_entry_11] at h_entry
+  -- h_entry: ω·R_1·A[0,1] + 0·A[1,1] = A[0,0]·0 + A[0,1]·(ω·R_τ)
+  -- ≡ ω·R_1·A[0,1] = A[0,1]·ω·R_τ
+  -- ≡ ω·R_1·A[0,1] - A[0,1]·ω·R_τ = 0
+  -- ≡ (ω·R_1 - ω·R_τ)·A[0,1] = 0
+  have h_diff_ne : ω_Fib_C * R1_C - ω_Fib_C * Rtau_C ≠ 0 := by
+    rw [← mul_sub]
+    have h_ω_ne : ω_Fib_C ≠ 0 := by
+      unfold ω_Fib_C; exact Complex.exp_ne_zero _
+    exact mul_ne_zero h_ω_ne (sub_ne_zero.mpr R1_C_ne_Rtau_C)
+  have h_zero : (ω_Fib_C * R1_C - ω_Fib_C * Rtau_C) * A 0 1 = 0 := by
+    linear_combination h_entry
+  rcases mul_eq_zero.mp h_zero with h_eq | h_eq
+  · exact absurd h_eq h_diff_ne
+  · exact h_eq
+
+/-- **σ_Fib_1 centralizer is diagonal: [1,0] off-diagonal entry**.
+If A commutes with σ_Fib_1_SU_mat, then A[1,0] = 0. -/
+theorem σ_Fib_1_SU_mat_commutes_implies_entry_10_zero
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (h : σ_Fib_1_SU_mat * A = A * σ_Fib_1_SU_mat) :
+    A 1 0 = 0 := by
+  have h_entry : (σ_Fib_1_SU_mat * A) 1 0 = (A * σ_Fib_1_SU_mat) 1 0 := by
+    rw [h]
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             σ_Fib_1_SU_mat_entry_00, σ_Fib_1_SU_mat_entry_01,
+             σ_Fib_1_SU_mat_entry_10, σ_Fib_1_SU_mat_entry_11] at h_entry
+  have h_diff_ne : ω_Fib_C * Rtau_C - ω_Fib_C * R1_C ≠ 0 := by
+    rw [← mul_sub]
+    have h_ω_ne : ω_Fib_C ≠ 0 := by
+      unfold ω_Fib_C; exact Complex.exp_ne_zero _
+    have h_R_diff_ne : Rtau_C - R1_C ≠ 0 :=
+      sub_ne_zero.mpr fun h => R1_C_ne_Rtau_C h.symm
+    exact mul_ne_zero h_ω_ne h_R_diff_ne
+  have h_zero : (ω_Fib_C * Rtau_C - ω_Fib_C * R1_C) * A 1 0 = 0 := by
+    linear_combination h_entry
+  rcases mul_eq_zero.mp h_zero with h_eq | h_eq
+  · exact absurd h_eq h_diff_ne
+  · exact h_eq
+
+/-- **σ_Fib_1 centralizer structural fact**: A commutes with
+σ_Fib_1_SU_mat IMPLIES A is diagonal (both off-diagonal entries zero). -/
+theorem σ_Fib_1_SU_mat_commutes_implies_diagonal
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (h : σ_Fib_1_SU_mat * A = A * σ_Fib_1_SU_mat) :
+    A 0 1 = 0 ∧ A 1 0 = 0 :=
+  ⟨σ_Fib_1_SU_mat_commutes_implies_entry_01_zero A h,
+   σ_Fib_1_SU_mat_commutes_implies_entry_10_zero A h⟩
+
+end R5_4_LayerD_3_b_σ1_Centralizer
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
