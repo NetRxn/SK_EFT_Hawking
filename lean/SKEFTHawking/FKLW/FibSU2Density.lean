@@ -3331,6 +3331,129 @@ theorem SU2_trace_pow_recursion (c : Matrix.specialUnitaryGroup (Fin 2) ℂ)
 
 end D3_PathII_TraceRecursion
 
+/-! ## 26. Galois-conjugate trace sequence: monotone growth bound
+
+This section ships the **Galois-conjugate trace sequence** `aHat` and
+its monotone growth bound, the key piece for closing the non-root-of-
+unity HBS Step 1 step.
+
+**Mathematical setup**: define `aHat n := polyTraceSeq n ((3+√5)/2)`
+where `polyTraceSeq n t` is the integer-polynomial-coefficient sequence
+satisfying `polyTraceSeq 0 t = 2`, `polyTraceSeq 1 t = t`,
+`polyTraceSeq (n+2) t = t · polyTraceSeq (n+1) t - polyTraceSeq n t`.
+
+For `c ∈ SU(2)` with `tr(c) = (3-√5)/2`, the actual trace sequence is
+`a_n = polyTraceSeq n ((3-√5)/2) = tr(c^n)`. The **Galois conjugate**
+`aHat n = polyTraceSeq n ((3+√5)/2)` is what we'd get if we substituted
+the other root of the min poly `x² - 3x + 1`.
+
+**Key bound** (this section): `aHat n > 2` for all `n ≥ 1`, by joint
+induction with `aHat (n+1) ≥ aHat n` (monotone increasing).
+
+**Step 1 closure (next ship)**: if `a_n = tr(c^n) = 2` for some `n ≥ 1`,
+then by Galois invariance (polyTraceSeq has integer coefficients,
+x² - 3x + 1 is the min poly of both (3±√5)/2), `aHat n = 2` also.
+But `aHat n > 2` by this section. Contradiction.
+-/
+
+section D3_PathII_GaloisConjugate
+
+/-- The Galois-conjugate Chebyshev-trace sequence:
+  `aHat 0 = 2, aHat 1 = (3+√5)/2, aHat (n+2) = (3+√5)/2 · aHat (n+1) - aHat n`.
+
+This is the trace sequence one would get for a hypothetical SU(2)
+element with trace `(3+√5)/2` (the Galois conjugate of our actual
+trace `(3-√5)/2`). It satisfies `aHat n = 2 cos(n · θ̂)` where
+`2 cos(θ̂) = (3+√5)/2`, but we don't need this trigonometric form. -/
+noncomputable def aHat : ℕ → ℝ
+  | 0 => 2
+  | 1 => (3 + Real.sqrt 5) / 2
+  | n + 2 => (3 + Real.sqrt 5) / 2 * aHat (n + 1) - aHat n
+
+/-- `aHat 0 = 2`. -/
+theorem aHat_zero : aHat 0 = 2 := rfl
+
+/-- `aHat 1 = (3+√5)/2`. -/
+theorem aHat_one : aHat 1 = (3 + Real.sqrt 5) / 2 := rfl
+
+/-- Recursion: `aHat (n+2) = (3+√5)/2 · aHat (n+1) - aHat n`. -/
+theorem aHat_recursion (n : ℕ) :
+    aHat (n + 2) = (3 + Real.sqrt 5) / 2 * aHat (n + 1) - aHat n := rfl
+
+/-- `√5 > 1`. Direct from `4 < 5` + monotonicity of `√`. -/
+private theorem sqrt5_gt_one : (1 : ℝ) < Real.sqrt 5 := by
+  have h : (1 : ℝ) = Real.sqrt 1 := (Real.sqrt_one).symm
+  rw [h]
+  exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+
+/-- `√5 ≥ 0`. -/
+private theorem sqrt5_nn : (0 : ℝ) ≤ Real.sqrt 5 := Real.sqrt_nonneg 5
+
+/-- `(3+√5)/2 > 2`. -/
+private theorem tHat_gt_two : ((3 + Real.sqrt 5) / 2 : ℝ) > 2 := by
+  have h := sqrt5_gt_one
+  linarith
+
+/-- `(3+√5)/2 > 0`. -/
+private theorem tHat_pos : ((3 + Real.sqrt 5) / 2 : ℝ) > 0 := by
+  have := tHat_gt_two
+  linarith
+
+/-- **Galois-conjugate growth bound (joint induction)**: for all `n : ℕ`,
+`2 ≤ aHat n` AND `aHat n ≤ aHat (n+1)` (non-negative + monotone increasing
+starting from `aHat 0 = 2`). -/
+private theorem aHat_growth_joint (n : ℕ) :
+    2 ≤ aHat n ∧ aHat n ≤ aHat (n + 1) := by
+  induction n with
+  | zero =>
+    refine ⟨?_, ?_⟩
+    · -- aHat 0 = 2 ≤ 2
+      rw [aHat_zero]
+    · -- aHat 0 = 2 ≤ aHat 1 = (3+√5)/2
+      rw [aHat_zero, aHat_one]
+      have := sqrt5_gt_one
+      linarith
+  | succ k ih =>
+    obtain ⟨h_ge_k, h_mono_k⟩ := ih
+    -- h_ge_k : 2 ≤ aHat k; h_mono_k : aHat k ≤ aHat (k+1).
+    -- Derived: 2 ≤ aHat (k+1) by transitivity.
+    have h_ge_k1 : 2 ≤ aHat (k + 1) := le_trans h_ge_k h_mono_k
+    refine ⟨h_ge_k1, ?_⟩
+    -- Show aHat (k+1) ≤ aHat (k+2) = (3+√5)/2 · aHat (k+1) - aHat k.
+    -- Equivalent: aHat (k+1) + aHat k ≤ (3+√5)/2 · aHat (k+1).
+    -- Since aHat k ≤ aHat (k+1), LHS ≤ 2 · aHat (k+1).
+    -- And (3+√5)/2 > 2, aHat (k+1) ≥ 2 ≥ 0, so RHS ≥ 2 · aHat (k+1).
+    have h_recur : aHat (k + 2) =
+        (3 + Real.sqrt 5) / 2 * aHat (k + 1) - aHat k := aHat_recursion k
+    rw [h_recur]
+    have h_tHat_gt_two := tHat_gt_two
+    have h_pos_aHat_k1 : 0 ≤ aHat (k + 1) := by linarith
+    nlinarith [h_tHat_gt_two, h_pos_aHat_k1, h_mono_k, h_ge_k]
+
+/-- **Galois-conjugate strict growth bound** (extracted from joint induction):
+for `n ≥ 1`, `aHat n > 2`.
+
+This is the critical bound used to derive a contradiction from a
+hypothetical `a_n = 2` for some `n ≥ 1` (the c-finite-order assumption). -/
+theorem aHat_gt_two_of_pos (n : ℕ) (hn : 0 < n) : 2 < aHat n := by
+  -- aHat 1 = (3+√5)/2 > 2 strictly (since √5 > 1).
+  have h_aHat_one_gt : aHat 1 > 2 := by
+    rw [aHat_one]
+    have := sqrt5_gt_one
+    linarith
+  -- Need aHat n ≥ aHat 1 for n ≥ 1, via mono chain.
+  have h_mono_chain : ∀ k : ℕ, aHat 1 ≤ aHat (k + 1) := by
+    intro k
+    induction k with
+    | zero => exact le_refl _
+    | succ m ih =>
+      have h_jt := aHat_growth_joint (m + 1)
+      linarith [h_jt.2]
+  obtain ⟨m, rfl⟩ : ∃ m, n = m + 1 := ⟨n - 1, by omega⟩
+  exact lt_of_lt_of_le h_aHat_one_gt (h_mono_chain m)
+
+end D3_PathII_GaloisConjugate
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
