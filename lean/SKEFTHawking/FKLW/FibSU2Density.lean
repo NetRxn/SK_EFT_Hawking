@@ -4508,6 +4508,90 @@ theorem H_Fib_conj_mem_with_norm_bound
 
 end R5_4_LayerD_2_a_ConjugationNormBound
 
+/-! ## 32.b R5.4 Layer D.2.b: 3-conjugate small-element substrate for H_Fib
+
+Bundles the conjugation norm bound (Layer D.2.a) with the Fibonacci-
+specific generators σ_Fib_1_SU, σ_Fib_2_SU to construct **three
+small elements of H_Fib** from one:
+
+  - `h₀ := h`                               (direction A)
+  - `h₁ := σ_Fib_1_SU · h · σ_Fib_1_SU⁻¹`   (direction Ad(σ_1) A)
+  - `h₂ := σ_Fib_2_SU · h · σ_Fib_2_SU⁻¹`   (direction Ad(σ_2) A)
+
+All three are in H_Fib (via Layer D.1 closure), all three are at scale
+≤ 4·‖h - 1‖ (via Layer D.2.a conjugation bound; the trivial `h₀`
+satisfies ≤ 1·‖h - 1‖ ≤ 4·‖h - 1‖ a fortiori).
+
+These three are **candidates** for spanning 𝔰𝔲(2) at the Lie-algebra
+level; the spanning property follows from σ_Fib non-commutation +
+Fibonacci-specific Lie algebra structure (deferred to Layer D.2.c
+which establishes Ad(σ_1), Ad(σ_2) act non-trivially on `(h - 1)`'s
+Lie direction for generic h).
+
+This Layer D.2.b ships the **structural bundle**; downstream Layer
+D.2.c will iterate group commutators of this bundle to actually span
+𝔰𝔲(2).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_2_b_ThreeConjugateBundle
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **3-conjugate bundle in H_Fib at scale ≤ 4·δ**: for any
+`h ∈ H_Fib` at scale `δ` (i.e., `‖h.val - 1‖ ≤ δ`), the triple
+`(h, σ_Fib_1_SU · h · σ_Fib_1_SU⁻¹, σ_Fib_2_SU · h · σ_Fib_2_SU⁻¹)`
+all lie in H_Fib and are each at scale `≤ 4·δ` in matrix L∞-op norm.
+
+For the spanning argument, this gives 3 candidate "directions" in the
+Lie algebra 𝔰𝔲(2) ≅ ℝ³; spanning is generic when σ_Fib_{1,2} act
+non-trivially on h's Lie direction (non-commutation + generic h). -/
+theorem H_Fib_three_conjugates_bundle
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_H : h ∈ H_Fib) (δ : ℝ)
+    (hδ : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ) :
+    -- All three in H_Fib
+    h ∈ H_Fib ∧
+    (σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹) ∈ H_Fib ∧
+    (σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹) ∈ H_Fib ∧
+    -- All three at scale ≤ 4·δ (trivially ≤ 4·δ for h itself given δ ≥ 0)
+    ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ ∧
+    ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ ∧
+    ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ 4 * δ := by
+  have h_δ_nn : 0 ≤ δ := le_trans (norm_nonneg _) hδ
+  refine ⟨h_H, H_Fib_conj_σ1_mem h h_H, H_Fib_conj_σ2_mem h h_H,
+          ?_, ?_, ?_⟩
+  · -- ‖h - 1‖ ≤ δ ≤ 4·δ
+    linarith
+  · -- ‖σ_1·h·σ_1⁻¹ - 1‖ ≤ 4·‖h - 1‖ ≤ 4·δ
+    calc ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+            specialUnitary_conjugation_norm_le_four σ_Fib_1_SU h
+      _ ≤ 4 * δ := by
+          apply mul_le_mul_of_nonneg_left hδ
+          norm_num
+  · -- Mirror for σ_2
+    calc ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+            specialUnitary_conjugation_norm_le_four σ_Fib_2_SU h
+      _ ≤ 4 * δ := by
+          apply mul_le_mul_of_nonneg_left hδ
+          norm_num
+
+end R5_4_LayerD_2_b_ThreeConjugateBundle
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
