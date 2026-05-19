@@ -5598,6 +5598,71 @@ needed dispersion at the bundle level. -/
 
 end R5_4_LayerD_3_d_SpanningDispersion
 
+/-! ## 36.e R5.4 Layer D.3.e: General centralizer intersection = scalars
+
+Without the tracelessness assumption, the centralizer intersection of
+{σ_Fib_1, σ_Fib_2} in `Matrix 2×2 ℂ` consists exactly of scalar multiples
+of I.
+
+Proof: same chain as D.3.c. A commutes with both σ_i ⟹ A diagonal
+AND F_C·A·F_C diagonal ⟹ A = diag(a, b) with a = b ⟹ A = a·I.
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_3_e_GeneralCentralizer
+
+/-- **General centralizer intersection**: A commutes with BOTH
+σ_Fib_1_SU_mat AND σ_Fib_2_SU_mat ⟹ A = A[0,0] · I (scalar matrix).
+
+This is the un-traceless version of `σ_Fib_centralizer_intersection_traceless_trivial`;
+the traceless version is recovered by adding `tr(A) = 0` and concluding
+`A[0,0] = 0`. -/
+theorem σ_Fib_centralizer_intersection_scalar
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (h_σ1 : σ_Fib_1_SU_mat * A = A * σ_Fib_1_SU_mat)
+    (h_σ2 : σ_Fib_2_SU_mat * A = A * σ_Fib_2_SU_mat) :
+    A = A 0 0 • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  -- Same chain as D.3.c but without using tracelessness
+  have h_diag := σ_Fib_1_SU_mat_commutes_implies_diagonal A h_σ1
+  have h_F_diag := σ_Fib_2_SU_mat_commutes_implies_F_conj_diagonal A h_σ2
+  have h_A_form : A = !![A 0 0, 0; 0, A 1 1] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [h_diag.1, h_diag.2, Matrix.cons_val_zero, Matrix.cons_val_one,
+            Matrix.head_cons]
+  have h_diag_eq : A 0 0 = A 1 1 := by
+    have h_F_off : (F_C * !![A 0 0, 0; 0, A 1 1] * F_C) 0 1 = 0 := by
+      rw [← h_A_form]; exact h_F_diag.1
+    exact (F_conj_diag_diagonal_iff_eq (A 0 0) (A 1 1)).mp h_F_off
+  -- Now A = !![a, 0; 0, a] = a • I
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [h_diag.1, h_diag.2, h_diag_eq, Matrix.one_apply,
+          Matrix.smul_apply, smul_eq_mul]
+
+/-- **Spanning dispersion (non-scalar form)**: for ANY matrix A that is
+NOT a scalar multiple of I, at least one of {σ_Fib_1, σ_Fib_2} does NOT
+commute with A.
+
+Contrapositive of `σ_Fib_centralizer_intersection_scalar`. The form
+useful for h ∈ SU(2) close to 1: h - 1 is non-scalar iff h is non-scalar
+iff h ∉ {z·I : z ∈ ℂ}. For h ∈ SU(2) with `‖h - 1‖ < 2`: h ≠ -I (since
+‖-I - 1‖ = 2). For h ≠ 1: h ≠ I. So h is non-scalar, hence h - 1 is
+non-scalar, hence dispersion applies. -/
+theorem σ_Fib_dispersion_non_scalar
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (h_non_scalar : A ≠ A 0 0 • (1 : Matrix (Fin 2) (Fin 2) ℂ)) :
+    (σ_Fib_1_SU_mat * A ≠ A * σ_Fib_1_SU_mat) ∨
+    (σ_Fib_2_SU_mat * A ≠ A * σ_Fib_2_SU_mat) := by
+  by_contra h_neg
+  push_neg at h_neg
+  obtain ⟨h_σ1, h_σ2⟩ := h_neg
+  exact h_non_scalar (σ_Fib_centralizer_intersection_scalar A h_σ1 h_σ2)
+
+end R5_4_LayerD_3_e_GeneralCentralizer
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
