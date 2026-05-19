@@ -3155,6 +3155,66 @@ theorem H_Fib_infinite_of_inf_order_HBS_witness
 
 end D3_PathII_ClosureSubstrate
 
+/-! ## 23. SU(2) trace-of-powers substrate (Chebyshev recursion)
+
+This section ships the trace-of-power formulas for SU(2) matrices,
+needed for the non-root-of-unity argument completing HBS Step 1.
+
+For `c ∈ SU(2)` with eigenvalues `exp(±iθ)`: `trace(c^n) = 2 cos(nθ)`.
+At the matrix-level this is encoded as the Chebyshev-like recursion
+`trace(c^{n+1}) = trace(c) · trace(c^n) - trace(c^{n-1})` (from
+Cayley-Hamilton + cyclic trace).
+
+If `c` has finite order `n` in `SU(2)`, then `c^n = I`, so
+`trace(c^n) = 2`. Together with the recursion, this gives a strong
+necessary condition on `trace(c)` (the "Chebyshev necessary condition").
+For our `trace(c) = (3-√5)/2`, the necessary condition fails for all
+`n ≥ 1` (the upcoming non-root-of-unity closure).
+
+This section ships the base case `trace(c²) = trace(c)² - 2` as the
+starting point for the recursion.
+-/
+
+section D3_PathII_TracePowers
+
+/-- **SU(2) trace of square**: `trace(M²) = trace(M)² - 2` for `M ∈ SU(2)`.
+
+Direct from `SU2_CayleyHamilton`: `M² = trace(M) • M - I`, then
+`trace(M²) = trace(M) · trace(M) - trace(I) = trace(M)² - 2`. -/
+theorem SU2_trace_sq (M : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    Matrix.trace ((M : Matrix (Fin 2) (Fin 2) ℂ) ^ 2) =
+      (Matrix.trace (M : Matrix (Fin 2) (Fin 2) ℂ)) ^ 2 - 2 := by
+  rw [SU2_CayleyHamilton M, Matrix.trace_sub, Matrix.trace_smul,
+      smul_eq_mul, Matrix.trace_one, Fintype.card_fin]
+  push_cast
+  ring
+
+/-- **Necessary trace condition for finite order in SU(2)**: if
+`c ∈ SU(2)` has finite order `n ≥ 1`, then `trace(c^n) = 2`. -/
+theorem SU2_trace_pow_of_finOrder (c : Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h : IsOfFinOrder c) : ∃ n : ℕ, 0 < n ∧
+        Matrix.trace ((c : Matrix (Fin 2) (Fin 2) ℂ) ^ n) = 2 := by
+  rw [isOfFinOrder_iff_pow_eq_one] at h
+  obtain ⟨n, hn_pos, h_pow⟩ := h
+  refine ⟨n, hn_pos, ?_⟩
+  -- (c^n).val = (1 : SU(2)).val = (1 : Matrix _).
+  have h_val : ((c : Matrix (Fin 2) (Fin 2) ℂ)) ^ n =
+               (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    have h_val_eq : (((c ^ n : Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+        ((1 : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+            Matrix (Fin 2) (Fin 2) ℂ) := by rw [h_pow]
+    have h_pow_coe : (((c ^ n : Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+        ((c : Matrix (Fin 2) (Fin 2) ℂ)) ^ n := SubmonoidClass.coe_pow c n
+    rw [h_pow_coe] at h_val_eq
+    rw [h_val_eq]
+    rfl
+  rw [h_val, Matrix.trace_one, Fintype.card_fin]
+  norm_num
+
+end D3_PathII_TracePowers
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
