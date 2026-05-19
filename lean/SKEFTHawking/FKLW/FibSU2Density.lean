@@ -2660,6 +2660,42 @@ theorem H_Fib_not_iso_QuaternionGroup (n : ℕ) [NeZero n] :
   -- Contradicts σ_Fib_SU_not_commute.
   exact σ_Fib_SU_not_commute h_su_commute
 
+/-- **D4.3.d-starter — H_Fib is not isomorphic to any small finite group**.
+
+If `G` is a finite group with `Nat.card G < 200` and `H_Fib` is finite,
+then `H_Fib` is not isomorphic to `G`.
+
+Proof: such an isomorphism would force `Nat.card H_Fib = Nat.card G < 200`
+via `Nat.card_congr`, contradicting D4.3.c.app.5b's `H_Fib_card_ge_200_if_finite`.
+
+This is the cardinality-bridge companion to `H_Fib_not_iso_QuaternionGroup`.
+Together they rule out:
+  - All binary polyhedrals `2T (order 24)`, `2O (order 48)`,
+    `2I (order 120)` (card < 200).
+  - All cyclic groups `Z_n` for `n < 200`.
+  - All `QuaternionGroup n` for `n < 50` (where `4n < 200`).
+Combined with `H_Fib_not_iso_QuaternionGroup` (rules out `QuaternionGroup n`
+for ALL `n ≥ 1`) + `H_Fib_not_abelian` (rules out all cyclic), the only
+remaining finite-subgroup-of-SU(2) candidates (under Hurwitz) are `2T`,
+`2O`, `2I`, and `QuaternionGroup n` — all ruled out.
+
+So: given Hurwitz (Mathlib gap), `H_Fib` cannot be finite, hence is
+infinite, hence (via shipped closure-eq-univ chain) `DenseInSpecialUnitary`. -/
+theorem H_Fib_not_iso_of_card_lt_200 {G : Type*} [Group G]
+    (h_card : Nat.card G < 200)
+    (h_fin : (H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).Finite) :
+    ¬ Nonempty (↥H_Fib ≃* G) := by
+  rintro ⟨φ⟩
+  -- |H_Fib| ≥ 200 (D4.3.c.app.5b).
+  have h_h_fib_ge : 200 ≤ Nat.card ↥H_Fib :=
+    H_Fib_card_ge_200_if_finite h_fin
+  -- |H_Fib| = |G| via iso.
+  have h_card_eq : Nat.card ↥H_Fib = Nat.card G :=
+    Nat.card_congr φ.toEquiv
+  -- 200 ≤ Nat.card H_Fib = Nat.card G < 200 — contradiction.
+  omega
+
 end D4_3d_QuaternionGroup_Ruleout
 
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter})
@@ -2784,6 +2820,36 @@ polyhedral groups `BD_{4n}` with `4n ≥ 200` i.e. `n ≥ 50`. D4.3.d
 will rule these out via a sector-based argument (`σ_Fib_{1,2}_SU` are
 not both contained in any cyclic Z_{2n} subgroup — this would force
 commutation, contradicting `σ_Fib_SU_not_commute`).
+
+**Theorems shipped in R4.2.d.4.3.d-starter (Phase 6p Wave 2c.4a-R4.2.d.4.3.d-starter,
+sub-§18, 2026-05-19 session 31)** — abstract conditional ruleouts
+positioning for a future Hurwitz-classification density-closure:
+
+  §18 (binary-dihedral + small-card ruleouts via group isomorphism):
+    - `QuaternionGroup_order_gt_4_in_a` (private helper) : any element
+      of `QuaternionGroup n` with order > 4 is in the cyclic `a`-image
+      (via `cases` on constructors + `QuaternionGroup.orderOf_xa = 4`
+      contradicting on the `xa` branch).
+    - `QuaternionGroup_a_commute` (private helper) : `a` elements
+      commute via `QuaternionGroup.a_mul_a` + `add_comm` in `ZMod`.
+    - **`H_Fib_not_iso_QuaternionGroup (n : ℕ) [NeZero n]`** : rules
+      out `H_Fib ≃* QuaternionGroup n` for ANY `n`. Forces both order-20
+      generators into the cyclic `a`-part (since `20 > 4`); they then
+      commute, contradicting `σ_Fib_SU_not_commute` via `φ.injective`.
+    - **`H_Fib_not_iso_of_card_lt_200`** : cardinality-bridge companion.
+      Rules out `H_Fib ≃* G` for any finite `G` with `Nat.card G < 200`
+      (consumes shipped `H_Fib_card_ge_200_if_finite` + `Nat.card_congr`).
+      Rules out all `2T (24), 2O (48), 2I (120)` cases.
+
+**Density implication after D4.3.d-starter**: given Mathlib's eventual
+Hurwitz classification (finite subgroups of SU(2) are exactly cyclic ∪
+`{QuaternionGroup n}` ∪ `{2T, 2O, 2I}`), the substrate now suffices to
+close `H_Fib` is NOT finite: cyclic is ruled out by `H_Fib_not_abelian`;
+QuaternionGroup is ruled out by `H_Fib_not_iso_QuaternionGroup`; small-
+card (2T/2O/2I) is ruled out by `H_Fib_not_iso_of_card_lt_200`. Hurwitz
+itself is a non-trivial Mathlib gap (cite: Mathlib4 PR list 2024-2026);
+the substrate shipped here is the "everything else" that composes with
+Hurwitz to immediately close density.
 
 **Theorems shipped in R4.2.d.4.3.c.foundation (Phase 6p Wave 2c.4a-R4.2.d.4.3.c,
 sub-§14, 2026-05-19)** — F-conjugate of diagonal off-diagonal computation
