@@ -3060,6 +3060,101 @@ theorem σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_trace :
 
 end D3_PathII_FibonacciTrace
 
+/-! ## 22. Phase D3-Path-ii Step 1 closure substrate (alternative to Hurwitz)
+
+This section ships **clean closure substrate** (no `sorry`) for the
+D3 Path-ii HBS Step 1 line:
+
+  (a) `σ_Fib_1_SU * σ_Fib_2_SU⁻¹ ∈ H_Fib` (membership via group closure).
+  (b) `Set.Infinite H_Fib` follows from any infinite-order element in `H_Fib`.
+  (c) Combined: `H_Fib_infinite_of_inf_order_HBS_witness` —
+      given `¬ IsOfFinOrder (σ_Fib_1_SU * σ_Fib_2_SU⁻¹)`, conclude
+      `Set.Infinite H_Fib`.
+
+The conditional hypothesis "σ_Fib_1_SU * σ_Fib_2_SU⁻¹ has infinite order"
+is the residual mathematical content (the Kronecker / Chebyshev-cyclotomic
+step). Once shipped constructively (proving `(3-√5)/2` is not of form
+`2 cos(rπ)`), the chain closes: `H_Fib` infinite ⟹ density via the
+upcoming topological-density step + shipped `fibonacci_density_from_H_Fib_eq_top`.
+-/
+
+section D3_PathII_ClosureSubstrate
+
+/-- **Membership**: `σ_Fib_1_SU · σ_Fib_2_SU⁻¹ ∈ H_Fib`. By group closure
+(mul + inv of mems). -/
+theorem σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_mem_H_Fib :
+    (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ : Matrix.specialUnitaryGroup (Fin 2) ℂ) ∈
+        H_Fib :=
+  H_Fib.mul_mem σ_Fib_1_SU_mem_H_Fib (H_Fib.inv_mem σ_Fib_2_SU_mem_H_Fib)
+
+/-- **Witness-based infinite-H_Fib bridge**: any infinite-order element
+in `H_Fib` makes `H_Fib` an infinite set.
+
+Proof: if `c ∈ H_Fib` is not of finite order, then `⟨c⟩ ⊆ H_Fib` is an
+infinite cyclic subgroup (no positive power of `c` returns to identity),
+hence `H_Fib` as a Set contains the infinite range of `fun n => c^n`,
+hence is infinite. -/
+theorem H_Fib_infinite_of_exists_inf_order_mem
+    (c : Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (hc_mem : c ∈ H_Fib) (hc_inf : ¬ IsOfFinOrder c) :
+    Set.Infinite (H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  -- Strategy: exhibit infinite injection ℕ → SU(2) via n ↦ c^n.
+  -- The map is injective when c has infinite order; range ⊆ H_Fib.
+  set f : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+    fun n => c ^ n with hf
+  have h_range_sub : Set.range f ⊆ (H_Fib :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+    rintro x ⟨n, rfl⟩
+    exact H_Fib.pow_mem hc_mem n
+  have h_inj : Function.Injective f := by
+    intro m n h
+    -- Unfold f: h : c^m = c^n.
+    simp only [hf] at h
+    -- If m ≠ n, WLOG m < n, then c^(n-m) = 1, contradicting hc_inf.
+    rcases lt_trichotomy m n with hlt | heq | hgt
+    · exfalso
+      have h_pow_diff : c ^ (n - m) = 1 := by
+        have h_add : c ^ m * c ^ (n - m) = c ^ n := by
+          rw [← pow_add]; congr 1; omega
+        rw [← h] at h_add
+        exact mul_left_cancel (a := c ^ m) (by rw [h_add]; group)
+      apply hc_inf
+      rw [isOfFinOrder_iff_pow_eq_one]
+      exact ⟨n - m, by omega, h_pow_diff⟩
+    · exact heq
+    · exfalso
+      have h_pow_diff : c ^ (m - n) = 1 := by
+        have h_add : c ^ n * c ^ (m - n) = c ^ m := by
+          rw [← pow_add]; congr 1; omega
+        rw [h] at h_add
+        exact mul_left_cancel (a := c ^ n) (by rw [h_add]; group)
+      apply hc_inf
+      rw [isOfFinOrder_iff_pow_eq_one]
+      exact ⟨m - n, by omega, h_pow_diff⟩
+  -- Conclude: range f infinite, range f ⊆ H_Fib, so H_Fib infinite.
+  exact (Set.infinite_range_of_injective h_inj).mono h_range_sub
+
+/-- **D3-Path-ii Step 1 closure (conditional)**: if
+`σ_Fib_1_SU · σ_Fib_2_SU⁻¹` has infinite order in `SU(2)`, then
+`H_Fib` is infinite.
+
+This is a *clean* conditional ship (no `sorry`) — the hypothesis
+"σ_Fib_1_SU · σ_Fib_2_SU⁻¹ has infinite order" is what the upcoming
+Kronecker / Chebyshev-cyclotomic ship will close constructively (using
+the shipped `σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_trace = (3-√5)/2` + the fact
+that `(3-√5)/2 ≠ 2 cos(rπ)` for any rational `r`). -/
+theorem H_Fib_infinite_of_inf_order_HBS_witness
+    (h_inf : ¬ IsOfFinOrder
+        (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+            Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    Set.Infinite (H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+  H_Fib_infinite_of_exists_inf_order_mem
+    _ σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_mem_H_Fib h_inf
+
+end D3_PathII_ClosureSubstrate
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
