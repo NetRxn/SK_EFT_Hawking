@@ -4859,6 +4859,63 @@ theorem H_Fib_commutator_lie_linearization
 
 end R5_4_LayerD_2_c_LieBracketLinearization
 
+/-! ## 33. R5.4 Layer D.2.d: H_Fib small-sequence existence
+
+For the AA Bridge Lemma 6.2 limiting-direction argument, we need a
+**sequence** of small H_Fib elements tending to 1 (not just an
+on-demand witness). This is the natural concrete object for taking
+"limiting directions" in 𝔰𝔲(2): the sequence `(f n - 1) / ‖f n - 1‖`
+of normalized directions on the unit sphere of 𝔰𝔲(2) ⊆ Matrix, by
+sphere compactness, has a convergent subsequence whose limit is the
+"asymptotic Lie direction" of H_Fib's small-element family.
+
+This section ships:
+
+  - `H_Fib_exists_small_sequence` : there exists `f : ℕ → SU(2)` with
+    `f n ∈ H_Fib`, `f n ≠ 1`, and `f n → 1` in SU(2) topology.
+
+Proof: AccPt unfolds to NeBot of `𝓝 1 ⊓ 𝓟 (H_Fib \ {1})` (countably
+generated filter in the metric SU(2)); apply
+`Filter.exists_seq_tendsto`.
+
+Substrate for Layer D.3: with this sequence, the limit direction
+(taken via subsequence + sphere compactness in 𝔰𝔲(2)) gives one
+direction, then conjugates by σ_Fib_{1,2} give 2 more candidates for
+spanning 𝔰𝔲(2).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_2_d_SmallSequence
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **Sequence of small H_Fib elements tending to 1**: there exists
+`f : ℕ → SU(2)` such that the sequence converges to 1 within the
+H_Fib-deletion-singleton-1 filter (i.e., `f n → 1` AND `f n ∈ H_Fib`
+AND `f n ≠ 1` eventually).
+
+Proof: from `H_Fib_accPt_one : AccPt 1 (𝓟 H_Fib)`, the filter
+`nhdsWithin 1 (H_Fib \ {1})` is NeBot (by `accPt_principal_iff_nhdsWithin`)
+and is countably generated (SU(2) is metric, nhds and principal are
+both countably generated, inf preserves). Apply `Filter.exists_seq_tendsto`. -/
+theorem H_Fib_exists_small_sequence :
+    ∃ (f : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      Filter.Tendsto f Filter.atTop
+        (nhdsWithin (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+          ((H_Fib : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) \
+            {(1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))})) := by
+  have h_acc := H_Fib_accPt_one
+  rw [accPt_principal_iff_nhdsWithin] at h_acc
+  -- h_acc : (nhdsWithin 1 (H_Fib \ {1})).NeBot
+  haveI := h_acc  -- register NeBot as typeclass instance
+  exact Filter.exists_seq_tendsto _
+
+end R5_4_LayerD_2_d_SmallSequence
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
