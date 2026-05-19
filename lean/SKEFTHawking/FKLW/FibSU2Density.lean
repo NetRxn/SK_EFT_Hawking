@@ -2789,6 +2789,179 @@ theorem H_Fib_infinite_of_PartialHurwitz (H_pH : PartialHurwitzSU2) :
 
 end D4_3e_PartialHurwitz_Conditional
 
+/-! ## 20. Phase D3-Path-ii Step 1 substrate: SU(2) Cayley-Hamilton + trace identity
+
+This section ships infrastructure for the **D3 Path-ii HBS Step 1**
+program (finding a Fibonacci-anyon braid word with infinite order).
+
+The mathematical strategy: identify a specific braid word `w` in
+`⟨σ_Fib_1_SU, σ_Fib_2_SU⟩` whose eigenvalue is not a root of unity.
+By shipped `not_finOrder_of_eigenvalue_not_rootOfUnity` (FibRepInfiniteOrder),
+this gives `w` infinite order in SU(2), hence `H_Fib` infinite, hence
+(combined with the upcoming topological-density step) closes density
+without needing the Hurwitz classification at all.
+
+**The chosen candidate**: `c := σ_Fib_1_SU * σ_Fib_2_SU⁻¹`. By the SU(2)
+trace identity `tr(A · B⁻¹) = tr(A) · tr(B) - tr(A · B)`:
+  tr(c) = tr(σ_1) · tr(σ_2) - tr(σ_1 · σ_2)
+        = (2 cos(7π/10))² - 1
+        = 4 · (5 - √5)/8 - 1
+        = (3 - √5)/2.
+
+The value (3 - √5)/2 is in ℚ(√5) of degree 2 over ℚ. To show its
+eigenvalue is not a root of unity, we use: if eigenvalue ζ of c is
+a primitive n-th root of unity, then ζ + ζ⁻¹ = tr(c) has degree
+φ(n)/2 over ℚ, so φ(n) ≤ 4, so n ∈ {1, 2, 3, 4, 5, 6, 8, 10, 12}.
+Enumerating each, we verify (3-√5)/2 is not 2cos(2πk/n) for any
+admissible k.
+
+**Module organization**:
+  - This section ships the SU(2) Cayley-Hamilton + trace identity.
+  - Subsequent sections will ship trace computation + non-root-of-unity
+    via finite case analysis.
+-/
+
+section D3_PathII_TraceIdentity
+
+/-- **SU(2) Cayley-Hamilton**: any `M ∈ SU(2)` satisfies
+`M² = tr(M) · M - I` (matrix-level). Composed from Mathlib's
+`Matrix.charpoly_fin_two` + `Matrix.aeval_self_charpoly` +
+`Matrix.mem_specialUnitaryGroup_iff.det`. -/
+theorem SU2_CayleyHamilton (M : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    ((M : Matrix (Fin 2) (Fin 2) ℂ)) ^ 2 =
+      Matrix.trace (M : Matrix (Fin 2) (Fin 2) ℂ) •
+        (M : Matrix (Fin 2) (Fin 2) ℂ) - (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  set A : Matrix (Fin 2) (Fin 2) ℂ := (M : Matrix (Fin 2) (Fin 2) ℂ) with hA
+  -- charpoly_fin_two: A.charpoly = X² - C(tr A)·X + C(det A).
+  have h_charpoly : A.charpoly =
+      Polynomial.X ^ 2 - Polynomial.C A.trace * Polynomial.X +
+        Polynomial.C A.det := Matrix.charpoly_fin_two A
+  -- Cayley-Hamilton: aeval A A.charpoly = 0.
+  have h_CH : Polynomial.aeval A A.charpoly = 0 :=
+    Matrix.aeval_self_charpoly A
+  rw [h_charpoly] at h_CH
+  -- Expand the aeval.
+  simp only [map_add, map_sub, map_mul, map_pow, Polynomial.aeval_X,
+             Polynomial.aeval_C, Algebra.algebraMap_eq_smul_one] at h_CH
+  -- Use det = 1 since M ∈ SU(2).
+  have h_det : A.det = 1 := by
+    have h_in := M.2
+    rw [Matrix.mem_specialUnitaryGroup_iff] at h_in
+    exact h_in.2
+  rw [h_det] at h_CH
+  -- h_CH has form: A^2 - A.trace • 1 * A + 1 = 0 (after Algebra.algebraMap_eq_smul_one).
+  -- Simplify A.trace • 1 * A = A.trace • A, then rearrange to A^2 = A.trace • A - 1.
+  have h_smul_one : (1 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) = 1 := one_smul _ _
+  rw [h_smul_one] at h_CH
+  -- h_CH : A ^ 2 - A.trace • 1 * A + 1 = 0
+  -- Note A.trace • (1 : Matrix _) * A = A.trace • A.
+  have h_smul_mul : A.trace • (1 : Matrix (Fin 2) (Fin 2) ℂ) * A =
+                    A.trace • A := by
+    rw [Matrix.smul_mul, one_mul]
+  rw [h_smul_mul] at h_CH
+  -- h_CH : A ^ 2 - A.trace • A + 1 = 0  ⟹  A ^ 2 = A.trace • A - 1.
+  -- Direct abelian-group manipulation: add A.trace • A - 1 to both sides.
+  have h_rearr :
+      A ^ 2 = A.trace • A - 1 := by
+    have h_eq : A ^ 2 - A.trace • A + 1 + (A.trace • A - 1) =
+                0 + (A.trace • A - 1) := by rw [h_CH]
+    have h_lhs : A ^ 2 - A.trace • A + 1 + (A.trace • A - 1) = A ^ 2 := by abel
+    have h_rhs : (0 : Matrix (Fin 2) (Fin 2) ℂ) + (A.trace • A - 1) =
+                 A.trace • A - 1 := by abel
+    rw [h_lhs, h_rhs] at h_eq
+    exact h_eq
+  exact h_rearr
+
+/-- **SU(2) star (= group inverse) formula** at the matrix level:
+for `B ∈ SU(2)`, `star B = tr(B) • I - B`. Derived from `SU2_CayleyHamilton`
+by computing `B · (tr(B) • I - B) = I` and using unique-inverse + unitarity. -/
+theorem SU2_star_eq_trace_sub (B : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    star ((B : Matrix (Fin 2) (Fin 2) ℂ)) =
+      Matrix.trace (B : Matrix (Fin 2) (Fin 2) ℂ) •
+        (1 : Matrix (Fin 2) (Fin 2) ℂ) -
+      (B : Matrix (Fin 2) (Fin 2) ℂ) := by
+  set A : Matrix (Fin 2) (Fin 2) ℂ := (B : Matrix (Fin 2) (Fin 2) ℂ) with hA
+  have h_CH : A ^ 2 = A.trace • A - 1 := SU2_CayleyHamilton B
+  -- A · (tr A • 1 - A) = 1.
+  have h_witness : A * (A.trace • 1 - A) = 1 := by
+    rw [Matrix.mul_sub, Matrix.mul_smul, Matrix.mul_one, ← sq, h_CH]
+    abel
+  -- A is unitary so A · star A = 1 and star A · A = 1.
+  have h_A_in_unitary : A ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    (Matrix.mem_specialUnitaryGroup_iff.mp B.2).1
+  have h_A_star : A * star A = 1 :=
+    Matrix.mem_unitaryGroup_iff.mp h_A_in_unitary
+  have h_star_A : star A * A = 1 :=
+    Matrix.mem_unitaryGroup_iff'.mp h_A_in_unitary
+  -- Subtract: A · (star A - (tr A • 1 - A)) = 0.
+  have h_diff_zero : A * (star A - (A.trace • 1 - A)) = 0 := by
+    rw [Matrix.mul_sub, h_A_star, h_witness, sub_self]
+  -- Left-cancel A (using star A · A = 1).
+  have h_diff : star A - (A.trace • 1 - A) = 0 := by
+    have h_l : star A * (A * (star A - (A.trace • 1 - A))) =
+               star A * 0 := by rw [h_diff_zero]
+    rw [← Matrix.mul_assoc, h_star_A, Matrix.one_mul, Matrix.mul_zero] at h_l
+    exact h_l
+  -- Convert star A - X = 0 to star A = X via abel manipulation.
+  have h_eq : star A = A.trace • 1 - A := by
+    have := h_diff
+    have h_add : star A - (A.trace • 1 - A) + (A.trace • 1 - A) =
+                 0 + (A.trace • 1 - A) := by rw [this]
+    have h_lhs : star A - (A.trace • 1 - A) + (A.trace • 1 - A) = star A := by
+      abel
+    have h_rhs : (0 : Matrix (Fin 2) (Fin 2) ℂ) + (A.trace • 1 - A) =
+                 A.trace • 1 - A := by abel
+    rw [h_lhs, h_rhs] at h_add
+    exact h_add
+  exact h_eq
+
+/-- **SU(2) trace product identity**: for `A, B ∈ SU(2)`,
+`tr(A · B⁻¹) = tr(A) · tr(B) - tr(A · B)`.
+
+Headline derivation:
+  - `star B = tr(B) • I - B` (SU2_star_eq_trace_sub).
+  - `(B⁻¹).val = star B.val` (Matrix.star_eq_inv via SU(2) Inv instance).
+  - `(A · B⁻¹).val = A.val · star B.val = A.val · (tr(B) • I - B.val)`.
+  - Trace: linear, so `tr(A · star B) = tr(B) · tr(A) - tr(A · B)`. -/
+theorem SU2_trace_mul_inv (A B : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    Matrix.trace ((A * B⁻¹ : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      Matrix.trace ((A : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+          Matrix (Fin 2) (Fin 2) ℂ) *
+      Matrix.trace ((B : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+          Matrix (Fin 2) (Fin 2) ℂ) -
+      Matrix.trace ((A * B : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+          Matrix (Fin 2) (Fin 2) ℂ) := by
+  -- First: (A * B⁻¹).val = A.val * (B⁻¹).val (multiplication coercion).
+  -- And (B⁻¹).val = star B.val (Matrix.star_eq_inv at SU(2) level).
+  have h_inv_val : ((B⁻¹ : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+      Matrix (Fin 2) (Fin 2) ℂ) = star ((B : Matrix (Fin 2) (Fin 2) ℂ)) := by
+    have h_se := Matrix.star_eq_inv B  -- star B = B⁻¹ (as SU(2) elements)
+    have := congrArg (Subtype.val (p := fun x => x ∈ Matrix.specialUnitaryGroup _ _))
+      h_se.symm
+    -- this : (B⁻¹).val = (star B).val
+    -- star at SU(2) level coerces to star of matrix
+    -- The Subtype star is computed as star of underlying, definitionally.
+    exact this
+  have h_AB_val : ((A * B⁻¹ : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+      Matrix (Fin 2) (Fin 2) ℂ) =
+      ((A : Matrix (Fin 2) (Fin 2) ℂ) *
+        ((B⁻¹ : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+          Matrix (Fin 2) (Fin 2) ℂ)) := rfl
+  rw [h_AB_val, h_inv_val, SU2_star_eq_trace_sub B]
+  -- Goal: tr(A * (tr B • 1 - B)) = tr A * tr B - tr (A * B).
+  rw [Matrix.mul_sub, Matrix.mul_smul, Matrix.mul_one, Matrix.trace_sub,
+      Matrix.trace_smul, smul_eq_mul]
+  -- Reorder: tr B * tr A → tr A * tr B (Comm in ℂ).
+  -- And (A * B).val = A.val * B.val.
+  have h_AB_mul : ((A * B : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+      Matrix (Fin 2) (Fin 2) ℂ) =
+      ((A : Matrix (Fin 2) (Fin 2) ℂ) * (B : Matrix (Fin 2) (Fin 2) ℂ)) := rfl
+  rw [h_AB_mul]
+  ring
+
+end D3_PathII_TraceIdentity
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
