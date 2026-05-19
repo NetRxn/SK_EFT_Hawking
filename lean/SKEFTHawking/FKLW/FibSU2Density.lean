@@ -57,6 +57,8 @@ References:
 
 import SKEFTHawking.FKLW.FibSU2Rep
 import SKEFTHawking.FKLW.AharonovAradBridgeIteration
+import SKEFTHawking.FKLW.AharonovAradLemma6
+import SKEFTHawking.MatrixBCHCubic
 import Mathlib.GroupTheory.SpecificGroups.Quaternion
 
 set_option autoImplicit false
@@ -3828,6 +3830,93 @@ theorem H_Fib_infinite :
     σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder
 
 end D3_PathII_DownstreamUnconditional
+
+/-! ## 30. R5.4 Layer B+C: H_Fib AccPt + matrix-level small-distance witness
+
+Composes the just-shipped session 31 `H_Fib_infinite` with the shipped
+`H_Fib_isClosed` and the generic `one_accPt_of_infinite_closed_subgroup`
++ `accPt_small_witness` (from `AharonovAradLemma6.lean` §2.5, R5.4
+Layer A) to produce **H_Fib-specific tools** for the BCH-spanning
+iteration toward AA Bridge Lemma 6.2:
+
+  - `H_Fib_accPt_one` : `AccPt 1 (𝓟 H_Fib)` — direct composition.
+  - `H_Fib_small_witness_val` : for every `ε > 0`, exists `h ∈ H_Fib`
+    with `h ≠ 1` and `‖h.val - 1‖ < ε` at the *matrix-norm level*.
+    This is the form fed to BCH commutator bounds (which operate
+    on `Matrix (Fin 2) (Fin 2) ℂ`, not on the SU(2) subtype).
+
+The matrix-level form bypasses the missing `Dist` instance on
+`Matrix.specialUnitaryGroup` (the subtype topology is fine but the
+metric needs to be threaded through `Subtype.val`); we do this by
+working with the open preimage of `Metric.ball (1 : Matrix _) ε`
+under `Subtype.val`, which IS auto-derived as an open SU(2)-nhds of 1.
+
+These ships are the immediate consumers of session 31's
+`H_Fib_infinite` substrate and close the "AccPt at 1 → BCH-spanning
+iteration ready" preparation step. The follow-on iteration step
+(spanning 𝔰𝔲(2) at 1 via commutator + basis-rotation) consumes these.
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED.
+-/
+
+section R5_4_LayerBC_AccPtSmallWitness
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **AccPt 1 (𝓟 H_Fib)**: the identity is an accumulation point of
+H_Fib in SU(2). Direct composition of shipped session 31
+`H_Fib_isClosed` + `H_Fib_infinite` + R5.1
+`one_accPt_of_infinite_closed_subgroup` (Wave 2c.4a-R5.1 ship,
+2026-05-13). -/
+theorem H_Fib_accPt_one :
+    AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal (H_Fib :
+          Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) :=
+  SKEFTHawking.FKLW.one_accPt_of_infinite_closed_subgroup
+    H_Fib H_Fib_isClosed H_Fib_infinite
+
+/-- **SU(2)-distance small witness for H_Fib**: for every `ε > 0`,
+exists `h ∈ H_Fib` with `h ≠ 1` and `dist h 1 < ε` in SU(2).
+
+Direct composition of `H_Fib_accPt_one` with R5.4 Layer A
+`accPt_small_witness` from `AharonovAradLemma6.lean`. The SU(2)
+subtype inherits its `PseudoMetricSpace` from the underlying
+`Matrix (Fin 2) (Fin 2) ℂ` (via Matrix's L∞-operator-norm-induced
+metric, active in this section as a local instance for compatibility
+with the BCH machinery in `MatrixBCHCubic.lean`). -/
+theorem H_Fib_small_witness {ε : ℝ} (hε : 0 < ε) :
+    ∃ h ∈ (H_Fib : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+        h ≠ 1 ∧ dist h (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) < ε :=
+  SKEFTHawking.FKLW.accPt_small_witness H_Fib_accPt_one hε
+
+/-- **Matrix-norm small witness for H_Fib**: for every `ε > 0`,
+exists `h ∈ H_Fib` with `h ≠ 1` and `‖(h : Matrix _) - 1‖ < ε`
+where the norm is the L∞-operator norm on `Matrix (Fin 2) (Fin 2) ℂ`
+(matching the BCH module's convention).
+
+This is the form fed to the upcoming BCH-spanning iteration which
+operates at the matrix level. Derived from `H_Fib_small_witness` by
+two applications of `Subtype.dist_eq` chained through
+`specialUnitaryGroup → unitaryGroup → Matrix`. -/
+theorem H_Fib_small_witness_val {ε : ℝ} (hε : 0 < ε) :
+    ∃ h ∈ (H_Fib : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+        h ≠ 1 ∧ ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε := by
+  obtain ⟨h, h_H, h_ne, h_dist⟩ := H_Fib_small_witness hε
+  refine ⟨h, h_H, h_ne, ?_⟩
+  -- Bridge `dist h 1` (SU(2) subtype) to `‖h.val.val - 1‖` (Matrix norm)
+  -- via `Subtype.dist_eq` chain + `dist_eq_norm` (simp handles all).
+  have h_eq : dist h (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) =
+              ‖(h : Matrix (Fin 2) (Fin 2) ℂ) -
+                  (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+    simp only [Subtype.dist_eq, dist_eq_norm]; rfl
+  rw [h_eq] at h_dist
+  exact h_dist
+
+end R5_4_LayerBC_AccPtSmallWitness
 
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
