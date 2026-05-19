@@ -4372,6 +4372,142 @@ theorem H_Fib_commutator_quadratic_step_explicit
 
 end R5_4_LayerD_1_e_UnitaryNormBound
 
+/-! ## 32. R5.4 Layer D.2.a: conjugation norm bound for SU(2)
+
+For the BCH-spanning argument toward AA Bridge Lemma 6.2, we need to
+generate **multiple Lie-algebra directions** from a single small
+H_Fib element by conjugating with the Fibonacci braid generators
+σ_Fib_1_SU, σ_Fib_2_SU.
+
+The fundamental observation:
+  `σ · h · σ⁻¹ - 1 = σ · (h - 1) · σ⁻¹`
+
+so conjugation by σ preserves the "scale" of (h - 1) up to operator-
+norm factors `‖σ‖ · ‖σ⁻¹‖`. For SU(2) unitaries (from Layer D.1.e),
+both ≤ 2, giving a factor-of-4 expansion at most.
+
+This section ships:
+
+  - `matrix_conjugation_sub_one_eq` : algebraic identity
+    `(σ · h · σ⁻¹).val - 1 = σ.val · (h.val - 1) · σ⁻¹.val`.
+  - `specialUnitary_conjugation_norm_le_four` : the bound
+    `‖(σ · h · σ⁻¹).val - 1‖ ≤ 4 · ‖h.val - 1‖` for any σ ∈ SU(2).
+  - `H_Fib_conj_mem_with_norm_bound` : the H_Fib-specific composition:
+    for h ∈ H_Fib at scale δ and any g ∈ H_Fib, the conjugate
+    `g · h · g⁻¹ ∈ H_Fib` at scale ≤ 4·δ.
+
+Substrate for Layer D.2.b which uses three conjugates (id, σ_1, σ_2)
+to generate three small elements spanning 𝔰𝔲(2).
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_2_a_ConjugationNormBound
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **Matrix-level conjugation algebraic identity**: for any
+`σ, h : SU(2)`, `(σ · h · σ⁻¹).val - 1 = σ.val · (h.val - 1) · σ⁻¹.val`.
+
+Pure ring algebra (Lemma D.1.b style proof technique). -/
+theorem matrix_conjugation_sub_one_eq
+    (σ h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ((σ * h * σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+      (σ : Matrix (Fin 2) (Fin 2) ℂ) *
+      ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+      ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) := by
+  push_cast
+  -- Goal: ↑σ * ↑h * ↑σ⁻¹ - 1 = ↑σ * (↑h - 1) * ↑σ⁻¹
+  -- Need σ * σ⁻¹ = 1 at matrix level
+  have hσ : ((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+            ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+    have h_grp : (σ * σ⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 := mul_inv_cancel σ
+    have := congrArg (fun x : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
+        (x : Matrix (Fin 2) (Fin 2) ℂ)) h_grp
+    push_cast at this
+    exact this
+  -- Expand RHS: σ·(h-1)·σ⁻¹ = σ·h·σ⁻¹ - σ·1·σ⁻¹ = σ·h·σ⁻¹ - σ·σ⁻¹ = σ·h·σ⁻¹ - 1
+  calc ((σ : Matrix (Fin 2) (Fin 2) ℂ)) * h *
+            ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1
+      = (σ : Matrix (Fin 2) (Fin 2) ℂ) * h *
+            ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) -
+        ((σ : Matrix (Fin 2) (Fin 2) ℂ) *
+            ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ)) := by rw [hσ]
+    _ = (σ : Matrix (Fin 2) (Fin 2) ℂ) *
+        ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+        ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) := by noncomm_ring
+
+/-- **Conjugation norm bound for SU(2)**: for any `σ, h : SU(2)`,
+
+  `‖(σ · h · σ⁻¹).val - 1‖_{L∞-op} ≤ 4 · ‖h.val - 1‖_{L∞-op}`.
+
+Proof: combine `matrix_conjugation_sub_one_eq` (algebraic identity)
+with two applications of `norm_mul_le` (submultiplicativity) +
+`specialUnitaryGroup_two_linfty_opNorm_le_two` applied to both `σ`
+and `σ⁻¹` (each bounded by 2). -/
+theorem specialUnitary_conjugation_norm_le_four
+    (σ h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖((σ * h * σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+      4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := by
+  rw [matrix_conjugation_sub_one_eq]
+  -- Goal: ‖↑σ · (↑h - 1) · ↑σ⁻¹‖ ≤ 4 · ‖↑h - 1‖
+  -- Step 1: ‖A · B · C‖ ≤ ‖A · B‖ · ‖C‖ ≤ ‖A‖ · ‖B‖ · ‖C‖
+  have h_norm_sub : 0 ≤ ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := norm_nonneg _
+  calc ‖((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+        ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1) *
+        ((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)‖
+      ≤ ‖((σ : Matrix (Fin 2) (Fin 2) ℂ)) *
+            ((h : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ *
+        ‖((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)‖ := norm_mul_le _ _
+    _ ≤ (‖((σ : Matrix (Fin 2) (Fin 2) ℂ))‖ *
+            ‖((h : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖) *
+        ‖((σ⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+          mul_le_mul_of_nonneg_right (norm_mul_le _ _) (norm_nonneg _)
+    _ ≤ (2 * ‖((h : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖) * 2 := by
+        apply mul_le_mul
+        · apply mul_le_mul (specialUnitaryGroup_two_linfty_opNorm_le_two σ)
+            (le_refl _) (norm_nonneg _) (by norm_num)
+        · exact specialUnitaryGroup_two_linfty_opNorm_le_two σ⁻¹
+        · exact norm_nonneg _
+        · positivity
+    _ = 4 * ‖((h : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖ := by ring
+
+/-- **H_Fib-specific conjugation closure with norm bound**: for any
+`g ∈ H_Fib` and `h ∈ H_Fib`, the conjugate `g · h · g⁻¹ ∈ H_Fib`
+AND satisfies the matrix-norm bound
+`‖(g · h · g⁻¹).val - 1‖ ≤ 4 · ‖h.val - 1‖`.
+
+This combines `H_Fib.mul_mem` + `H_Fib.inv_mem` (membership) with
+`specialUnitary_conjugation_norm_le_four` (norm bound). The
+H_Fib-membership of g is *not* used for the norm bound (which is
+generic to SU(2)) — only for keeping the result inside H_Fib. -/
+theorem H_Fib_conj_mem_with_norm_bound
+    (g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (g_H : g ∈ H_Fib) (h_H : h ∈ H_Fib) :
+    (g * h * g⁻¹) ∈ H_Fib ∧
+    ‖((g * h * g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+      4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+  ⟨H_Fib.mul_mem (H_Fib.mul_mem g_H h_H) (H_Fib.inv_mem g_H),
+   specialUnitary_conjugation_norm_le_four g h⟩
+
+end R5_4_LayerD_2_a_ConjugationNormBound
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
