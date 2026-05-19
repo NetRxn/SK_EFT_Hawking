@@ -3971,6 +3971,171 @@ theorem H_Fib_conj_σ2_mem
 
 end R5_4_LayerD_1_CommutatorClosure
 
+/-! ## 31.b R5.4 Layer D.1.b: matrix-level algebraic commutator identity
+
+The key algebraic identity at the matrix level: for any unitary `g, h`,
+the group commutator decomposes as
+
+  `g·h·g⁻¹·h⁻¹ - 1 = (g·h - h·g) · g⁻¹·h⁻¹`     (at matrix level)
+
+Derivation chain (purely algebraic, no norm):
+  `(g·h - h·g) · g⁻¹·h⁻¹`
+    `= g·h·g⁻¹·h⁻¹ - h·g·g⁻¹·h⁻¹`               (distributivity)
+    `= g·h·g⁻¹·h⁻¹ - h·1·h⁻¹`                   (g·g⁻¹ = 1 for unitary)
+    `= g·h·g⁻¹·h⁻¹ - 1`                         (h·h⁻¹ = 1 for unitary)
+
+This isolates the algebraic content needed for the norm-bound step
+(Layer D.1.c) without depending on the matrix-norm machinery. -/
+
+section R5_4_LayerD_1_b_CommutatorIdentity
+
+/-- **Matrix-level algebraic identity for group commutator in SU(2)**:
+
+`(g·h·g⁻¹·h⁻¹).val - 1 = ((g·h).val - (h·g).val) · (g⁻¹·h⁻¹).val`
+
+at the matrix level. Pure algebra; uses only the `Group` structure of
+SU(2) (i.e., `g·g⁻¹ = 1`) and matrix-ring distributivity. -/
+theorem matrix_group_commutator_decomp_val
+    (g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ((g * h * g⁻¹ * h⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+      (((g * h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) -
+       ((h * g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)) *
+      ((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) := by
+  push_cast
+  -- Goal: ↑g * ↑h * ↑g⁻¹ * ↑h⁻¹ - 1 = (↑g * ↑h - ↑h * ↑g) * (↑g⁻¹ * ↑h⁻¹)
+  -- (all coercions are to Matrix (Fin 2) (Fin 2) ℂ)
+  -- Establish matrix-level inverse identities from SU(2) group structure
+  have hg : ((g : Matrix (Fin 2) (Fin 2) ℂ)) *
+            ((g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+    have h_grp : (g * g⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 := mul_inv_cancel g
+    have := congrArg (fun x : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
+        (x : Matrix (Fin 2) (Fin 2) ℂ)) h_grp
+    push_cast at this
+    exact this
+  have hh : ((h : Matrix (Fin 2) (Fin 2) ℂ)) *
+            ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+    have h_grp : (h * h⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 := mul_inv_cancel h
+    have := congrArg (fun x : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
+        (x : Matrix (Fin 2) (Fin 2) ℂ)) h_grp
+    push_cast at this
+    exact this
+  -- Now algebraic computation
+  calc ((g : Matrix (Fin 2) (Fin 2) ℂ)) * h * (g⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) * h⁻¹ - 1
+      = (g : Matrix (Fin 2) (Fin 2) ℂ) * h *
+            (g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) * h⁻¹ -
+          ((h : Matrix (Fin 2) (Fin 2) ℂ) *
+            (h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) := by
+        rw [hh]
+    _ = (g : Matrix (Fin 2) (Fin 2) ℂ) * h *
+            (g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) * h⁻¹ -
+          ((h : Matrix (Fin 2) (Fin 2) ℂ) *
+              ((g : Matrix (Fin 2) (Fin 2) ℂ) *
+                  (g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) *
+              (h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) := by
+        rw [hg, mul_one]
+    _ = ((g : Matrix (Fin 2) (Fin 2) ℂ) * h - h * g) *
+            ((g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) *
+                (h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) := by
+        noncomm_ring
+
+end R5_4_LayerD_1_b_CommutatorIdentity
+
+/-! ## 31.c R5.4 Layer D.1.c: matrix-norm bound on group commutator
+
+Combines the matrix-level algebraic identity (Layer D.1.b) with the
+shipped R5.3 substrate `commutator_norm_le` (from `MatrixBCHCubic.lean`)
+and `norm_mul_le` (L∞-operator-norm submultiplicativity) to ship the
+**abstract quadratic shrinkage bound** on group commutators:
+
+  `‖(g·h·g⁻¹·h⁻¹).val - 1‖ ≤ 2·‖g.val - 1‖·‖h.val - 1‖·‖(g⁻¹·h⁻¹).val‖`.
+
+The bound is intentionally parameterized by the **inverse-product norm**
+`‖(g⁻¹·h⁻¹).val‖`; downstream, this factor is bounded by a constant
+(specifically ≤ `‖g.val‖·‖h.val‖ ≤ (1+δ)² ≤ 4` for `δ ≤ 1` via
+`norm_mul_le` + triangle inequality on `‖g‖ ≤ ‖g - 1‖ + ‖1‖ ≤ 1 + δ`).
+
+Combined with the quadratic factor `‖g.val - 1‖·‖h.val - 1‖`, this
+gives a `≤ C·δ²` bound on group commutators of small H_Fib elements,
+which is the substantive content of AA Bridge Lemma 6.1 specialized to
+H_Fib (avoiding the BCH/log machinery used in `bch_group_commutator_quadratic_shrinkage`).
+
+The `commutator_norm_le` substrate (R5.3 ship from `MatrixBCHCubic.lean`):
+  `‖A·B - B·A‖ ≤ 2·‖A‖·‖B‖`
+applied to `A := g - 1`, `B := h - 1` (via the algebraic identity
+`g·h - h·g = (g - 1)·(h - 1) - (h - 1)·(g - 1)`) gives the quadratic
+factor.
+
+Pipeline Invariant compliance:
+  - #10 (no maxHeartbeats): RESPECTED.
+  - #15 (no new axioms): RESPECTED. -/
+
+section R5_4_LayerD_1_c_NormBound
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **Algebraic identity for commutator of differences from 1**: for
+any matrices `A, B`, `A·B - B·A = (A - 1)·(B - 1) - (B - 1)·(A - 1)`.
+The "Lie bracket of differences" form. Pure ring algebra. -/
+theorem matrix_mul_sub_eq_commutator_of_diff
+    (A B : Matrix (Fin 2) (Fin 2) ℂ) :
+    A * B - B * A = (A - 1) * (B - 1) - (B - 1) * (A - 1) := by
+  noncomm_ring
+
+/-- **Matrix-norm quadratic bound on group commutator (abstract)**:
+combines `matrix_group_commutator_decomp_val` (Layer D.1.b) with
+`commutator_norm_le` (R5.3 substrate) and `norm_mul_le` to give
+
+  `‖(g·h·g⁻¹·h⁻¹).val - 1‖ ≤ 2·‖g.val - 1‖·‖h.val - 1‖·‖(g⁻¹·h⁻¹).val‖`.
+
+The third factor `‖(g⁻¹·h⁻¹).val‖` is parameterized; downstream
+consumers bound it via `norm_mul_le` + triangle (≤ `(1 + ‖g - 1‖)·
+(1 + ‖h - 1‖) ≤ 4` for `‖g - 1‖, ‖h - 1‖ ≤ 1`). -/
+theorem matrix_group_commutator_norm_le_abstract
+    (g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖((g * h * g⁻¹ * h⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+      2 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+          ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+          ‖((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  rw [matrix_group_commutator_decomp_val]
+  -- Goal: ‖(↑(g*h) - ↑(h*g)) * ↑(g⁻¹*h⁻¹)‖ ≤ 2·‖↑g-1‖·‖↑h-1‖·‖↑(g⁻¹*h⁻¹)‖
+  -- Step 1: ‖X·Y‖ ≤ ‖X‖·‖Y‖
+  refine le_trans (norm_mul_le _ _) ?_
+  -- Goal: ‖↑(g*h) - ↑(h*g)‖ · ‖↑(g⁻¹*h⁻¹)‖ ≤ 2·‖↑g-1‖·‖↑h-1‖·‖↑(g⁻¹*h⁻¹)‖
+  -- Step 2: factor right side, then reduce to ‖↑(g*h) - ↑(h*g)‖ ≤ 2·‖↑g-1‖·‖↑h-1‖
+  rw [show (2 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+              ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+              ‖((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ)‖) =
+              (2 * ‖(g : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ *
+                  ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖) *
+              ‖((g⁻¹ * h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ)‖ from by ring]
+  apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
+  -- Goal: ‖↑(g*h) - ↑(h*g)‖ ≤ 2·‖↑g-1‖·‖↑h-1‖
+  -- Step 3: use the matrix algebraic identity to write ↑(g*h) - ↑(h*g)
+  --         = ↑g·↑h - ↑h·↑g = [↑g - 1, ↑h - 1] (commutator of diffs)
+  push_cast
+  rw [matrix_mul_sub_eq_commutator_of_diff]
+  -- Goal: ‖(↑g - 1)·(↑h - 1) - (↑h - 1)·(↑g - 1)‖ ≤ 2·‖↑g - 1‖·‖↑h - 1‖
+  exact SKEFTHawking.MatrixBCHCubic.commutator_norm_le _ _
+
+end R5_4_LayerD_1_c_NormBound
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
