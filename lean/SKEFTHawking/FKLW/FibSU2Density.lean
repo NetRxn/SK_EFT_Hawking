@@ -3918,6 +3918,59 @@ theorem H_Fib_small_witness_val {ε : ℝ} (hε : 0 < ε) :
 
 end R5_4_LayerBC_AccPtSmallWitness
 
+/-! ## 31. R5.4 Layer D.1: H_Fib group-commutator closure
+
+For the BCH-spanning iteration toward AA Bridge Lemma 6.2, we will
+take group commutators `[h₁, h₂]_grp := h₁·h₂·h₁⁻¹·h₂⁻¹` of small
+H_Fib elements and observe their quadratic shrinkage. This section
+ships the foundational *group-closure* fact:
+
+  - `H_Fib_commutator_mem` : H_Fib is closed under group commutator
+    (trivial via Subgroup `.mul_mem` / `.inv_mem` chain).
+
+The follow-on substantive content (matrix-level algebraic identity
++ quadratic norm bound + spanning iteration) is deferred to follow-on
+Layer D.1.b ships; this minimum ensures downstream consumers of the
+BCH iteration always have the H_Fib membership precondition met
+without separate boilerplate. -/
+
+section R5_4_LayerD_1_CommutatorClosure
+
+/-- **H_Fib is closed under group commutator**: for `h₁, h₂ ∈ H_Fib`,
+the group commutator `h₁·h₂·h₁⁻¹·h₂⁻¹ ∈ H_Fib`. Trivial via the
+Subgroup closure axioms. -/
+theorem H_Fib_commutator_mem
+    (h₁ h₂ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h₁_H : h₁ ∈ H_Fib) (h₂_H : h₂ ∈ H_Fib) :
+    h₁ * h₂ * h₁⁻¹ * h₂⁻¹ ∈ H_Fib :=
+  H_Fib.mul_mem
+    (H_Fib.mul_mem (H_Fib.mul_mem h₁_H h₂_H) (H_Fib.inv_mem h₁_H))
+    (H_Fib.inv_mem h₂_H)
+
+/-- **H_Fib is closed under conjugation by σ_Fib_1_SU**: for `h ∈ H_Fib`,
+`σ_Fib_1_SU · h · σ_Fib_1_SU⁻¹ ∈ H_Fib`. Substrate for the
+"conjugation-by-generator → second small element pointing in a
+different Lie-algebra direction" step in the BCH iteration. -/
+theorem H_Fib_conj_σ1_mem
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_H : h ∈ H_Fib) :
+    σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ ∈ H_Fib :=
+  H_Fib.mul_mem
+    (H_Fib.mul_mem σ_Fib_1_SU_mem_H_Fib h_H)
+    (H_Fib.inv_mem σ_Fib_1_SU_mem_H_Fib)
+
+/-- **H_Fib is closed under conjugation by σ_Fib_2_SU**: for `h ∈ H_Fib`,
+`σ_Fib_2_SU · h · σ_Fib_2_SU⁻¹ ∈ H_Fib`. Mirror of `H_Fib_conj_σ1_mem`. -/
+theorem H_Fib_conj_σ2_mem
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_H : h ∈ H_Fib) :
+    σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ ∈ H_Fib :=
+  H_Fib.mul_mem
+    (H_Fib.mul_mem σ_Fib_2_SU_mem_H_Fib h_H)
+    (H_Fib.inv_mem σ_Fib_2_SU_mem_H_Fib)
+
+end R5_4_LayerD_1_CommutatorClosure
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
