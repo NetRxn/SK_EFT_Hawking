@@ -5949,6 +5949,125 @@ theorem H_Fib_bundle_dispersion_unconditional
 
 end R5_4_LayerD_3_g_NonScalarFromNonId
 
+/-! ## 36.h. R5.4 Layer D.3.h: Small-pair non-parallel witness in H_Fib
+
+**Headline ship (this commit)**: `H_Fib_small_pair_with_distinct_conjugate`
+— for any `ε ∈ (0, 1]`, there exists `h ∈ H_Fib` with `‖h.val - 1‖ < ε`,
+`h ≠ 1`, `h ≠ negOneSU`, AND at least one of the two σ_Fib_i conjugates
+`σ_Fib_i · h · σ_Fib_i⁻¹` differs from h as a matrix.
+
+This composes the shipped Layer B+C `H_Fib_small_witness_val` (small
+matrix-norm witness) with shipped D.3.g `H_Fib_bundle_dispersion_unconditional`
+(at least one conjugate differs when h is non-central). The bridge is a
+norm-bound check: `negOneSU.val - 1 = -2·I` has L∞-op norm 2, so any
+`h` with `‖h.val - 1‖ < 2` cannot equal `negOneSU`.
+
+This is the **load-bearing input** for the upcoming iteration argument
+(either BCH-spanning toward 1 ∈ interior, or AA Lemma 6.2 bridge-unitary
+recipe): at every scale ε > 0, we can find an element of H_Fib that's
+both close to 1 AND non-central AND has at least one non-trivial
+conjugate direction.
+
+Sub-ships:
+  - `negOneSU_val_sub_one_eq_neg_two_smul_one` : matrix identity
+    `negOneSU.val - 1 = (-2 : ℂ) • 1`.
+  - `negOneSU_val_sub_one_linftyOpNorm_eq_two` : `‖negOneSU.val - 1‖ = 2`.
+  - `ne_negOneSU_of_norm_sub_one_lt_two` : `‖h.val - 1‖ < 2 → h ≠ negOneSU`.
+  - **`H_Fib_small_pair_with_distinct_conjugate`** (headline).
+-/
+
+section R5_4_LayerD_3_h_SmallPairNonParallel
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **`negOneSU.val - 1 = -2·I` as a matrix identity**. Definitional
+unfolding: `negOneSU.val = -I`, so `negOneSU.val - 1 = -I - I = -2·I`. -/
+private theorem negOneSU_val_sub_one_eq_neg_two_smul_one :
+    (negOneSU : Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+      (-2 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [negOneSU_val]
+  ext i j
+  by_cases h_ij : i = j
+  · simp [Matrix.smul_apply, Matrix.sub_apply, Matrix.neg_apply,
+          smul_eq_mul, h_ij]
+    ring
+  · simp [Matrix.smul_apply, Matrix.sub_apply, Matrix.neg_apply,
+          smul_eq_mul, h_ij]
+
+/-- **`‖negOneSU.val - 1‖ = 2` in L∞-operator norm**. The matrix is
+`-2·I = diag(-2, -2)`, so each row sum is `|-2| + 0 = 2`. -/
+private theorem negOneSU_val_sub_one_linftyOpNorm_eq_two :
+    ‖(negOneSU : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ = 2 := by
+  rw [negOneSU_val_sub_one_eq_neg_two_smul_one]
+  rw [norm_smul, norm_one, mul_one]
+  -- goal: ‖(-2 : ℂ)‖ = 2
+  rw [show ((-2 : ℂ)) = -(2 : ℂ) by ring, norm_neg]
+  norm_num
+
+/-- **Small witnesses can't equal negOneSU**: if `‖h.val - 1‖ < 2`,
+then `h ≠ negOneSU`. Contrapositive of the norm fact. -/
+private theorem ne_negOneSU_of_norm_sub_one_lt_two
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_norm : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 2) :
+    h ≠ negOneSU := by
+  intro h_eq
+  rw [h_eq] at h_norm
+  rw [negOneSU_val_sub_one_linftyOpNorm_eq_two] at h_norm
+  exact lt_irrefl _ h_norm
+
+/-- **HEADLINE — Small-pair non-parallel witness in H_Fib**: for every
+`ε ∈ (0, 1]`, there exists `h ∈ H_Fib` with:
+  • `‖h.val - 1‖ < ε`  (small)
+  • `h ≠ 1`  (non-identity)
+  • `h ≠ negOneSU`  (non-central)
+  • AT LEAST ONE of:
+       `(σ_Fib_1_SU · h · σ_Fib_1_SU⁻¹).val ≠ h.val`
+       OR `(σ_Fib_2_SU · h · σ_Fib_2_SU⁻¹).val ≠ h.val`.
+
+This is the load-bearing input for the downstream density iteration:
+at every scale, there is a small non-central H_Fib element with at
+least one non-trivial conjugate direction in the Fibonacci-generator
+basis. Combined with shipped D.2.f 3-element bundle (`H_Fib_three_element_bundle_σ1`
++ `_σ2`), this gives 3 small H_Fib elements at scales `(ε, 4ε, 32ε²)`
+with explicit Lie directions — the substrate needed by either:
+  (a) BCH-spanning iteration via R5.3 cubic linearization toward
+      `1 ∈ interior(H_Fib)`;
+  (b) AA Bridge Lemma 6.2 bridge-unitary construction via H_Fib's
+      spectral structure.
+
+**Proof**: compose `H_Fib_small_witness_val` (small + h ≠ 1) with
+`ne_negOneSU_of_norm_sub_one_lt_two` (h ≠ negOneSU for small h) and
+`H_Fib_bundle_dispersion_unconditional` (at least one conjugate differs
+when h non-central). -/
+theorem H_Fib_small_pair_with_distinct_conjugate
+    {ε : ℝ} (hε_pos : 0 < ε) (hε_le_one : ε ≤ 1) :
+    ∃ h ∈ (H_Fib : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+        ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε ∧
+        h ≠ 1 ∧
+        h ≠ negOneSU ∧
+        (((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) ≠
+          ((h : Matrix (Fin 2) (Fin 2) ℂ)) ∨
+        ((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) ≠
+          ((h : Matrix (Fin 2) (Fin 2) ℂ))) := by
+  obtain ⟨h, h_H, h_ne_one, h_norm⟩ := H_Fib_small_witness_val hε_pos
+  have h_norm_lt_two : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 2 := by
+    calc ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        < ε := h_norm
+      _ ≤ 1 := hε_le_one
+      _ < 2 := by norm_num
+  have h_ne_negOne : h ≠ negOneSU :=
+    ne_negOneSU_of_norm_sub_one_lt_two h h_norm_lt_two
+  refine ⟨h, h_H, h_norm, h_ne_one, h_ne_negOne, ?_⟩
+  exact H_Fib_bundle_dispersion_unconditional h h_ne_one h_ne_negOne
+
+end R5_4_LayerD_3_h_SmallPairNonParallel
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
