@@ -2268,29 +2268,281 @@ theorem inter_zpowers_card_le_2 :
   rw [Nat_card_zpowers_negOneSU] at h_dvd
   exact Nat.le_of_dvd (by norm_num) h_dvd
 
-/- **D4.3.c.app.SU2.5 (deferred to D4.3.c.app.5b) — `|H_Fib| ≥ 200` if finite**.
-
-The sharpened bound `inter_zpowers_card_le_2` (D4.3.c.app.SU2.4) is
-the foundation. The follow-through to `|H_Fib| ≥ 200` requires the
-subgroup product cardinality identity:
-
-  `|⟨σ_1⟩ · ⟨σ_2⟩| = |⟨σ_1⟩| · |⟨σ_2⟩| / |⟨σ_1⟩ ⊓ ⟨σ_2⟩| = 400 / |inter|`
-
-with `|inter| ≤ 2` giving `|⟨σ_1⟩ · ⟨σ_2⟩| ≥ 200`, and
-`⟨σ_1⟩ · ⟨σ_2⟩ ⊆ H_Fib` giving `|H_Fib| ≥ 200`. The product-set
-cardinality identity is standard (Mathlib's `Subgroup.card_inf_mul`
-or `Nat.card_mul_div_card_inf` family) but requires locating the
-right combinator for `Set.image2` / `Subgroup.mul` framework.
-
-Scoped to a focused substrate scout (D4.3.c.app.5b) — NOT shipped
-in this commit. The substrate-side foundation lemmas above
-(inter_le_zpowers_negOneSU + inter_zpowers_card_le_2) are sufficient
-on their own as the sharpening result; the `|H_Fib| ≥ 200`
-consequence is downstream consumption deferred to follow-on. -/
-
 end D4_3c_SU2_Lift
 
-/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application})
+/-! ## 17. Phase D4.3.c.app.5b: cardinality lower bound ≥ 200
+
+This section ships the headline cardinality lower bound:
+**`|H_Fib| ≥ 200` if `H_Fib` is finite**, tightening D4.3.a's
+`H_Fib_card_ge_40_if_finite`.
+
+**Approach** (mathematically): exhibit a `Function.Injective` map
+`Fin 20 × Fin 10 → ↥H_Fib` via
+`(i, j) ↦ σ_Fib_1_SU^i.val * σ_Fib_2_SU^j.val`.
+
+**Injectivity** uses §16's `inter_le_zpowers_negOneSU` plus the fact that
+`σ_Fib_2_SU^j ≠ negOneSU` for `j ∈ {0,...,9}` (the second factor is
+`Fin 10` not `Fin 20` precisely to make the `u = negOneSU` case vacuous).
+
+Given `f (i₁, j₁) = f (i₂, j₂)`:
+  σ_1^i₁ · σ_2^j₁ = σ_1^i₂ · σ_2^j₂
+  ⟹  u := (σ_1^i₂)⁻¹ · σ_1^i₁ = σ_2^j₂ · (σ_2^j₁)⁻¹  ∈  ⟨σ_1⟩ ⊓ ⟨σ_2⟩
+  ⟹  u ∈ ⟨negOneSU⟩          (by `inter_le_zpowers_negOneSU`)
+  ⟹  u = 1  ∨  u = negOneSU   (by `orderOf negOneSU = 2`).
+
+  Case u = 1: σ_1^i₁ = σ_1^i₂ ⟹ i₁ = i₂ (by `pow_inj_mod` + Fin bound);
+              then σ_2^j₁ = σ_2^j₂ ⟹ j₁ = j₂.
+  Case u = negOneSU: σ_2^j₂ = σ_2^(j₁+10), but j₂ < 10 < j₁+10 < 20
+              forces a contradiction via `pow_inj_mod`.
+
+**Density implication**: the FKLW Phase D2-D4 closure-equals-univ
+program now requires ruling out only binary-dihedral candidates
+`BD_{4n}` with `4n ≥ 200`, i.e. `n ≥ 50` (D4.3.d).
+-/
+
+section D4_3c_App5b_LowerBound
+
+/-- `σ_Fib_2_SU^10 = negOneSU` in SU(2). Companion to
+`σ_Fib_1_SU_pow_10_eq_negOneSU` (§16). Lifted from D4.3.c.app.4
+(`σ_Fib_2_SU_mat_pow_10_eq_neg_one`). -/
+theorem σ_Fib_2_SU_pow_10_eq_negOneSU :
+    σ_Fib_2_SU ^ 10 = negOneSU := by
+  apply Subtype.ext
+  rw [SubmonoidClass.coe_pow]
+  exact σ_Fib_2_SU_mat_pow_10_eq_neg_one
+
+/-- **Helper**: `σ_Fib_1_SU^i = σ_Fib_1_SU^i'` for `i, i' ∈ Fin 20`
+forces `i = i'`. Uses `pow_inj_mod` + `orderOf σ_Fib_1_SU = 20`. -/
+private theorem σ_Fib_1_SU_pow_eq_in_Fin_20 (i i' : Fin 20)
+    (h : σ_Fib_1_SU ^ i.val = σ_Fib_1_SU ^ i'.val) : i = i' := by
+  have h_mod : i.val % orderOf σ_Fib_1_SU = i'.val % orderOf σ_Fib_1_SU :=
+    pow_inj_mod.mp h
+  rw [σ_Fib_1_SU_orderOf, Nat.mod_eq_of_lt i.isLt,
+      Nat.mod_eq_of_lt i'.isLt] at h_mod
+  exact Fin.ext h_mod
+
+/-- **Helper**: `σ_Fib_2_SU^j = σ_Fib_2_SU^j'` for `j, j' ∈ Fin 10`
+forces `j = j'`. Uses `pow_inj_mod` + `orderOf σ_Fib_2_SU = 20` and
+`Fin 10 → < 20`. -/
+private theorem σ_Fib_2_SU_pow_eq_in_Fin_10 (j j' : Fin 10)
+    (h : σ_Fib_2_SU ^ j.val = σ_Fib_2_SU ^ j'.val) : j = j' := by
+  have h_mod : j.val % orderOf σ_Fib_2_SU = j'.val % orderOf σ_Fib_2_SU :=
+    pow_inj_mod.mp h
+  rw [σ_Fib_2_SU_orderOf] at h_mod
+  have h_j_lt : j.val < 20 := by have := j.isLt; omega
+  have h_j'_lt : j'.val < 20 := by have := j'.isLt; omega
+  rw [Nat.mod_eq_of_lt h_j_lt, Nat.mod_eq_of_lt h_j'_lt] at h_mod
+  exact Fin.ext h_mod
+
+/-- **Helper**: for `j ∈ Fin 10`, `σ_Fib_2_SU^j ≠ negOneSU`.
+
+Reason: `σ_Fib_2_SU^10 = negOneSU` is the *only* value in
+`{0,...,19}` achieving negOneSU. If `σ_2^j = negOneSU = σ_2^10`,
+then `pow_inj_mod` gives `j ≡ 10 (mod 20)`, impossible for `j < 10`. -/
+private theorem σ_Fib_2_SU_pow_lt_10_ne_negOneSU (j : Fin 10) :
+    σ_Fib_2_SU ^ j.val ≠ negOneSU := by
+  intro h_eq
+  have h_pow_10 : σ_Fib_2_SU ^ (10 : ℕ) = σ_Fib_2_SU ^ j.val := by
+    rw [σ_Fib_2_SU_pow_10_eq_negOneSU, h_eq]
+  have h_mod : (10 : ℕ) % orderOf σ_Fib_2_SU = j.val % orderOf σ_Fib_2_SU :=
+    pow_inj_mod.mp h_pow_10
+  rw [σ_Fib_2_SU_orderOf] at h_mod
+  have h_j_lt : j.val < 20 := by have := j.isLt; omega
+  rw [Nat.mod_eq_of_lt (by norm_num : (10 : ℕ) < 20),
+      Nat.mod_eq_of_lt h_j_lt] at h_mod
+  have := j.isLt
+  omega
+
+/-- **Helper**: every element of `Subgroup.zpowers negOneSU` is either
+`1` or `negOneSU`. Equivalently, `⟨negOneSU⟩ = {1, negOneSU}` as a set. -/
+private theorem zpowers_negOneSU_eq_one_or_negOneSU
+    (u : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hu : u ∈ Subgroup.zpowers negOneSU) :
+    u = 1 ∨ u = negOneSU := by
+  -- First: explicitly compute negOneSU^2 = 1 to witness IsOfFinOrder.
+  have h_pow_two : negOneSU ^ 2 =
+      (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+    apply Subtype.ext
+    rw [SubmonoidClass.coe_pow]
+    show (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) ^ 2 = 1
+    rw [neg_pow, one_pow]
+    simp
+  have h_fin : IsOfFinOrder negOneSU :=
+    isOfFinOrder_iff_pow_eq_one.mpr ⟨2, by norm_num, h_pow_two⟩
+  have hu_pow : u ∈ Submonoid.powers negOneSU :=
+    h_fin.mem_powers_iff_mem_zpowers.mpr hu
+  rw [Submonoid.mem_powers_iff] at hu_pow
+  obtain ⟨k, hk⟩ := hu_pow
+  -- hk : negOneSU ^ k = u. Reduce k mod 2 = orderOf negOneSU.
+  have h_pow_mod : negOneSU ^ (k % 2) = negOneSU ^ k := by
+    calc negOneSU ^ (k % 2)
+        = negOneSU ^ (k % orderOf negOneSU) := by
+          rw [negOneSU_orderOf_eq_two]
+      _ = negOneSU ^ k := pow_mod_orderOf negOneSU k
+  -- Replace `negOneSU ^ k` in hk with `negOneSU ^ (k % 2)`.
+  rw [← h_pow_mod] at hk
+  have h_lt : k % 2 < 2 := Nat.mod_lt _ (by norm_num)
+  interval_cases (k % 2)
+  · left; rw [← hk]; simp
+  · right; rw [← hk]; simp
+
+/-- **Headline injection map**: `(i, j) ∈ Fin 20 × Fin 10` maps to
+`σ_Fib_1_SU^i * σ_Fib_2_SU^j ∈ H_Fib`. -/
+private noncomputable def H_Fib_inj_map :
+    Fin 20 × Fin 10 → ↥H_Fib :=
+  fun ⟨i, j⟩ => ⟨σ_Fib_1_SU ^ i.val * σ_Fib_2_SU ^ j.val,
+    H_Fib.mul_mem
+      (H_Fib.pow_mem σ_Fib_1_SU_mem_H_Fib _)
+      (H_Fib.pow_mem σ_Fib_2_SU_mem_H_Fib _)⟩
+
+/-- **Injectivity of `H_Fib_inj_map`**: distinct `(i, j) ∈ Fin 20 × Fin 10`
+produce distinct products.
+
+Proof structure:
+  - From `f (i₁, j₁) = f (i₂, j₂)`, derive
+    `u := (σ_1^i₂)⁻¹ · σ_1^i₁ = σ_2^j₂ · (σ_2^j₁)⁻¹ ∈ ⟨σ_1⟩ ⊓ ⟨σ_2⟩`.
+  - `inter_le_zpowers_negOneSU` ⟹ `u ∈ ⟨negOneSU⟩`.
+  - `zpowers_negOneSU_eq_one_or_negOneSU` ⟹ `u = 1 ∨ u = negOneSU`.
+  - Case `u = 1`: `σ_1^i₁ = σ_1^i₂ ⟹ i₁ = i₂`, then `σ_2^j₁ = σ_2^j₂ ⟹ j₁ = j₂`.
+  - Case `u = negOneSU`: `σ_2^j₂ · (σ_2^j₁)⁻¹ = negOneSU = σ_2^10`
+    ⟹ `σ_2^j₂ = σ_2^(j₁+10)`. But `j₂ < 10 < j₁+10 < 20`, contradiction
+    via `pow_inj_mod`. -/
+private theorem H_Fib_inj_map_injective :
+    Function.Injective H_Fib_inj_map := by
+  rintro ⟨i₁, j₁⟩ ⟨i₂, j₂⟩ h_pair
+  -- Unwrap subtype equality.
+  have h_eq : σ_Fib_1_SU ^ i₁.val * σ_Fib_2_SU ^ j₁.val =
+              σ_Fib_1_SU ^ i₂.val * σ_Fib_2_SU ^ j₂.val := by
+    have := congrArg Subtype.val h_pair
+    exact this
+  -- Define u and show it lies in K_1 ⊓ K_2.
+  set u : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+    (σ_Fib_1_SU ^ i₂.val)⁻¹ * σ_Fib_1_SU ^ i₁.val with hu_def
+  -- u ∈ ⟨σ_1⟩ (it's a product of σ_1-powers).
+  have h_u_in_K1 : u ∈ Subgroup.zpowers σ_Fib_1_SU := by
+    rw [hu_def]
+    have h1 : (σ_Fib_1_SU ^ i₂.val)⁻¹ ∈ Subgroup.zpowers σ_Fib_1_SU :=
+      (Subgroup.zpowers σ_Fib_1_SU).inv_mem (Subgroup.pow_mem _
+        (Subgroup.mem_zpowers _) _)
+    have h2 : σ_Fib_1_SU ^ i₁.val ∈ Subgroup.zpowers σ_Fib_1_SU :=
+      Subgroup.pow_mem _ (Subgroup.mem_zpowers _) _
+    exact mul_mem h1 h2
+  -- u = σ_2^j₂ * (σ_2^j₁)⁻¹ (rearrange h_eq).
+  -- Algebraic identity: from σ_1^i₁ · σ_2^j₁ = σ_1^i₂ · σ_2^j₂,
+  -- left-multiply by (σ_1^i₂)⁻¹, right-multiply by (σ_2^j₁)⁻¹:
+  --   (σ_1^i₂)⁻¹ · σ_1^i₁ = σ_2^j₂ · (σ_2^j₁)⁻¹.
+  have h_u_alt : u = σ_Fib_2_SU ^ j₂.val * (σ_Fib_2_SU ^ j₁.val)⁻¹ := by
+    -- Step 1: derive intermediate (σ_1^i₂)⁻¹ * σ_1^i₁ * σ_2^j₁ = σ_2^j₂.
+    have h_step :
+        (σ_Fib_1_SU ^ i₂.val)⁻¹ * σ_Fib_1_SU ^ i₁.val * σ_Fib_2_SU ^ j₁.val =
+          σ_Fib_2_SU ^ j₂.val := by
+      calc (σ_Fib_1_SU ^ i₂.val)⁻¹ * σ_Fib_1_SU ^ i₁.val * σ_Fib_2_SU ^ j₁.val
+          = (σ_Fib_1_SU ^ i₂.val)⁻¹ *
+              (σ_Fib_1_SU ^ i₁.val * σ_Fib_2_SU ^ j₁.val) := by
+            rw [mul_assoc]
+        _ = (σ_Fib_1_SU ^ i₂.val)⁻¹ *
+              (σ_Fib_1_SU ^ i₂.val * σ_Fib_2_SU ^ j₂.val) := by rw [h_eq]
+        _ = σ_Fib_2_SU ^ j₂.val := by
+            rw [← mul_assoc, inv_mul_cancel, one_mul]
+    -- Step 2: right-multiply h_step by (σ_2^j₁)⁻¹.
+    rw [hu_def]
+    calc (σ_Fib_1_SU ^ i₂.val)⁻¹ * σ_Fib_1_SU ^ i₁.val
+        = ((σ_Fib_1_SU ^ i₂.val)⁻¹ * σ_Fib_1_SU ^ i₁.val) *
+            (σ_Fib_2_SU ^ j₁.val * (σ_Fib_2_SU ^ j₁.val)⁻¹) := by
+          rw [mul_inv_cancel, mul_one]
+      _ = ((σ_Fib_1_SU ^ i₂.val)⁻¹ * σ_Fib_1_SU ^ i₁.val *
+              σ_Fib_2_SU ^ j₁.val) * (σ_Fib_2_SU ^ j₁.val)⁻¹ := by
+          rw [← mul_assoc]
+      _ = σ_Fib_2_SU ^ j₂.val * (σ_Fib_2_SU ^ j₁.val)⁻¹ := by rw [h_step]
+  -- u ∈ ⟨σ_2⟩.
+  have h_u_in_K2 : u ∈ Subgroup.zpowers σ_Fib_2_SU := by
+    rw [h_u_alt]
+    have h1 : σ_Fib_2_SU ^ j₂.val ∈ Subgroup.zpowers σ_Fib_2_SU :=
+      Subgroup.pow_mem _ (Subgroup.mem_zpowers _) _
+    have h2 : (σ_Fib_2_SU ^ j₁.val)⁻¹ ∈ Subgroup.zpowers σ_Fib_2_SU :=
+      (Subgroup.zpowers σ_Fib_2_SU).inv_mem (Subgroup.pow_mem _
+        (Subgroup.mem_zpowers _) _)
+    exact mul_mem h1 h2
+  -- u ∈ ⟨negOneSU⟩.
+  have h_u_in_neg : u ∈ Subgroup.zpowers negOneSU :=
+    inter_le_zpowers_negOneSU ⟨h_u_in_K1, h_u_in_K2⟩
+  -- u = 1 ∨ u = negOneSU.
+  rcases zpowers_negOneSU_eq_one_or_negOneSU u h_u_in_neg with h_u_one | h_u_neg
+  · -- Case u = 1: derive i₁ = i₂ then j₁ = j₂.
+    have h_σ1_eq : σ_Fib_1_SU ^ i₁.val = σ_Fib_1_SU ^ i₂.val := by
+      have h_inv : (σ_Fib_1_SU ^ i₂.val)⁻¹ * σ_Fib_1_SU ^ i₁.val = 1 := by
+        rw [← hu_def]; exact h_u_one
+      have := eq_of_inv_mul_eq_one h_inv
+      exact this.symm
+    have h_i : i₁ = i₂ := σ_Fib_1_SU_pow_eq_in_Fin_20 i₁ i₂ h_σ1_eq
+    -- Substitute i₁ = i₂ into h_eq to get σ_2^j₁ = σ_2^j₂.
+    have h_σ2_eq : σ_Fib_2_SU ^ j₁.val = σ_Fib_2_SU ^ j₂.val := by
+      rw [h_i] at h_eq
+      exact mul_left_cancel h_eq
+    have h_j : j₁ = j₂ := σ_Fib_2_SU_pow_eq_in_Fin_10 j₁ j₂ h_σ2_eq
+    rw [h_i, h_j]
+  · -- Case u = negOneSU: derive contradiction via σ_2^j_2 = σ_2^(j_1+10).
+    exfalso
+    -- u = σ_2^j₂ * (σ_2^j₁)⁻¹ = negOneSU = σ_2^10
+    have h_eq_neg : σ_Fib_2_SU ^ j₂.val * (σ_Fib_2_SU ^ j₁.val)⁻¹ =
+                    σ_Fib_2_SU ^ (10 : ℕ) := by
+      rw [← h_u_alt, h_u_neg, ← σ_Fib_2_SU_pow_10_eq_negOneSU]
+    -- Rearrange to σ_2^j₂ = σ_2^10 * σ_2^j₁ = σ_2^(10 + j₁).
+    have h_σ2_eq : σ_Fib_2_SU ^ j₂.val = σ_Fib_2_SU ^ (10 + j₁.val) := by
+      have h_rearr : σ_Fib_2_SU ^ j₂.val =
+                     σ_Fib_2_SU ^ (10 : ℕ) * σ_Fib_2_SU ^ j₁.val := by
+        -- From σ_2^j₂ * (σ_2^j₁)⁻¹ = σ_2^10, apply mul_inv_eq_iff_eq_mul.
+        rwa [mul_inv_eq_iff_eq_mul] at h_eq_neg
+      rw [h_rearr, ← pow_add]
+    -- Apply pow_inj_mod to get j₂ ≡ 10 + j₁ (mod 20).
+    have h_mod : j₂.val % orderOf σ_Fib_2_SU =
+                 (10 + j₁.val) % orderOf σ_Fib_2_SU :=
+      pow_inj_mod.mp h_σ2_eq
+    rw [σ_Fib_2_SU_orderOf] at h_mod
+    have h_j₂_lt : j₂.val < 20 := by have := j₂.isLt; omega
+    have h_sum_lt : 10 + j₁.val < 20 := by have := j₁.isLt; omega
+    rw [Nat.mod_eq_of_lt h_j₂_lt, Nat.mod_eq_of_lt h_sum_lt] at h_mod
+    -- h_mod : j₂.val = 10 + j₁.val; but j₂.val < 10, contradiction.
+    have := j₂.isLt
+    have := j₁.isLt
+    omega
+
+/-- **D4.3.c.app.5b — Headline cardinality lower bound**: if `H_Fib`
+is finite, then `|H_Fib| ≥ 200`.
+
+Tightens `H_Fib_card_ge_40_if_finite` (D4.3.a) by a factor of 5.
+
+Proof: the injection `H_Fib_inj_map : Fin 20 × Fin 10 ↪ ↥H_Fib`
+combined with `Nat.card_le_card_of_injective` gives
+`200 = #(Fin 20 × Fin 10) ≤ #↥H_Fib`. -/
+theorem H_Fib_card_ge_200_if_finite
+    (h_fin : (H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).Finite) :
+    200 ≤ Nat.card ↥H_Fib := by
+  haveI : Finite ↥H_Fib := h_fin.to_subtype
+  have h_card_le := Nat.card_le_card_of_injective
+    H_Fib_inj_map H_Fib_inj_map_injective
+  -- h_card_le : Nat.card (Fin 20 × Fin 10) ≤ Nat.card ↥H_Fib
+  rw [Nat.card_prod, Nat.card_eq_fintype_card,
+      Nat.card_eq_fintype_card, Fintype.card_fin,
+      Fintype.card_fin] at h_card_le
+  -- h_card_le : 20 * 10 ≤ Nat.card ↥H_Fib
+  linarith
+
+/-- **Dichotomy** (sharpened from D4.3.a): `H_Fib` is either infinite
+or has cardinality ≥ 200. -/
+theorem H_Fib_infinite_or_card_ge_200 :
+    Set.Infinite (H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∨
+    200 ≤ Nat.card ↥H_Fib := by
+  by_cases h : (H_Fib :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).Finite
+  · right; exact H_Fib_card_ge_200_if_finite h
+  · left; exact h
+
+end D4_3c_App5b_LowerBound
+
+/-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b})
 
 This module ships **structural facts** about the concrete Fibonacci
 braid representation `ρ_Fib_SU2` from R4.2.c, in preparation for the
@@ -2368,10 +2620,50 @@ sharpened intersection cardinality bound:
 cardinality bound is now sharp at `≤ 2` (matching the matrix-level
 fact that the intersection is `{I, -I}`). Combined with D4.3.a's
 existing finite-case bound `|H_Fib| ≥ 40`, the follow-on
-`H_Fib_card_ge_200_if_finite` (deferred to D4.3.c.app.5b — see §16
-inline doc) will sharpen to `|H_Fib| ≥ 200` via the subgroup product
-cardinality identity. This rules out additional finite-subgroup
-candidates (2I order 120, most BD_{4n} for small n).
+`H_Fib_card_ge_200_if_finite` (now shipped in §17 as D4.3.c.app.5b)
+sharpens to `|H_Fib| ≥ 200` via a direct `Fin 20 × Fin 10 ↪ H_Fib`
+injection. This rules out additional finite-subgroup candidates (2I
+order 120, BD_{4n} for `4n < 200` i.e. `n ≤ 49`).
+
+**Theorems shipped in R4.2.d.4.3.c.app.5b (Phase 6p Wave 2c.4a-R4.2.d.4.3.c.app.5b,
+sub-§17, 2026-05-19 session 31)** — headline cardinality lower bound
+via product injection:
+
+  §17 (cardinality lower bound):
+    - **`σ_Fib_2_SU_pow_10_eq_negOneSU`** : `σ_Fib_2_SU^10 = negOneSU`
+      in SU(2). Companion to `σ_Fib_1_SU_pow_10_eq_negOneSU` (§16);
+      lifted from §15's `σ_Fib_2_SU_mat_pow_10_eq_neg_one` via
+      `Subtype.ext` + `SubmonoidClass.coe_pow`.
+    - Private helpers `σ_Fib_1_SU_pow_eq_in_Fin_20`,
+      `σ_Fib_2_SU_pow_eq_in_Fin_10`: power-injectivity within Fin n
+      via `pow_inj_mod` + `Nat.mod_eq_of_lt`.
+    - Private helper `σ_Fib_2_SU_pow_lt_10_ne_negOneSU` : for
+      `j ∈ Fin 10`, `σ_Fib_2_SU^j ≠ negOneSU`. The Fin 10 (not Fin 20)
+      bound is what makes the `u = negOneSU` case vacuous.
+    - Private helper `zpowers_negOneSU_eq_one_or_negOneSU` : every
+      element of `⟨negOneSU⟩` is `1` or `negOneSU`. Via
+      `Submonoid.mem_powers_iff` + `pow_mod_orderOf` +
+      `negOneSU_orderOf_eq_two` + `interval_cases`.
+    - **`H_Fib_inj_map : Fin 20 × Fin 10 → ↥H_Fib`** : the headline
+      injection `(i, j) ↦ σ_Fib_1_SU^i · σ_Fib_2_SU^j` (membership via
+      `H_Fib.mul_mem` + `H_Fib.pow_mem`).
+    - **`H_Fib_inj_map_injective`** : injectivity proof via
+      `u := (σ_1^i₂)⁻¹ · σ_1^i₁ = σ_2^j₂ · (σ_2^j₁)⁻¹` lying in
+      `⟨σ_1⟩ ⊓ ⟨σ_2⟩ ≤ ⟨negOneSU⟩`, then case analysis on
+      `u ∈ {1, negOneSU}` ruled out by Fin 10 second-factor bound.
+    - **`H_Fib_card_ge_200_if_finite`** : the headline cardinality
+      lower bound `|H_Fib| ≥ 200` when finite. Via
+      `Nat.card_le_card_of_injective` on the shipped injection.
+      **Tightens `H_Fib_card_ge_40_if_finite` (D4.3.a) by 5×.**
+    - **`H_Fib_infinite_or_card_ge_200`** : dichotomy bundling.
+
+**Density implication after D4.3.c.app.5b**: combined with the existing
+non-cyclic and non-abelian witnesses, the residual finite-subgroup
+candidates for `H_Fib` (within SU(2)) are restricted to binary
+polyhedral groups `BD_{4n}` with `4n ≥ 200` i.e. `n ≥ 50`. D4.3.d
+will rule these out via a sector-based argument (`σ_Fib_{1,2}_SU` are
+not both contained in any cyclic Z_{2n} subgroup — this would force
+commutation, contradicting `σ_Fib_SU_not_commute`).
 
 **Theorems shipped in R4.2.d.4.3.c.foundation (Phase 6p Wave 2c.4a-R4.2.d.4.3.c,
 sub-§14, 2026-05-19)** — F-conjugate of diagonal off-diagonal computation
