@@ -1720,6 +1720,153 @@ theorem inter_zpowers_card_le_10 :
 
 end D4_3b_TwoCyclicStructure
 
+/-! ## 14. Phase D4.3.c: scalar-centralizer argument (intersection tightening)
+
+The D4.3.b intersection bound `|⟨σ_Fib_1_SU⟩ ∩ ⟨σ_Fib_2_SU⟩| ≤ 10` is
+sharpened here to **≤ 2** via the scalar-centralizer argument:
+
+Any element in the intersection has two simultaneous descriptions:
+  * as `σ_Fib_1_SU^m`, hence a **diagonal** matrix (since σ_Fib_1 is
+    diagonal: `diag((ω·R_1)^m, (ω·R_τ)^m)`).
+  * as `σ_Fib_2_SU^n`, hence the **F-conjugate of a diagonal**:
+    `F·diag((ω·R_1)^n, (ω·R_τ)^n)·F` (using `σ_Fib_2 = F·σ_Fib_1·F`
+    composed with F²=I telescoping; cf. `σ_Fib_2_SU_mat_pow_eq_F_conj`).
+
+Equating these two forms at the **off-diagonal** [0,1] entry forces
+`(ω·R_1)^n = (ω·R_τ)^n`, i.e., `R_1^n = R_τ^n`, i.e., `10 ∣ n` (since
+`R_1/R_τ = exp(-7πi/5)` is a primitive 10th root of unity). Then the
+diagonal entries equate, forcing both diagonals to be the SAME scalar,
+hence the matrix is scalar.
+
+Scalar matrices in SU(2) are `{I, -I}` (det = c² = 1 ⟹ c = ±1). Hence
+the intersection has cardinality ≤ 2.
+
+**Density implication**: combined with D4.3.b's |H_Fib| ≥ 40 if finite,
+the tightening to |⟨σ₁⟩ ∩ ⟨σ₂⟩| ≤ 2 (instead of ≤ 10) pushes the
+finite-case cardinality to |H_Fib| ≥ 200, which rules out 2I (order
+120) and most BD_{4n} (orders 40, 44, ..., 196) as finite candidates.
+
+This section ships the foundational matrix-level computations
+(F-conjugate off-diagonal + commute-with-diagonal-distinct ⟹ diagonal)
+that downstream D4.3.d will apply to complete the BD_{4n} ruleout.
+-/
+
+section D4_3c_ScalarCentralizer
+
+/-- **D4.3.c.1 — F-conjugate of a diagonal matrix: off-diagonal [0,1]
+entry**.
+
+For any diagonal `diag(c, d)`, `(F_C · diag(c, d) · F_C)[0,1] =
+φInv·φInvSqrt·(c - d)`.
+
+Direct computation: F has entries (φInv, φInvSqrt; φInvSqrt, -φInv);
+so F·diag(c,d) = (φInv·c, φInvSqrt·d; φInvSqrt·c, -φInv·d), and
+(F·diag(c,d))·F[0,1] = φInv·c·φInvSqrt + φInvSqrt·d·(-φInv) =
+φInv·φInvSqrt·(c - d).
+
+**Significance**: this entry is nonzero unless c = d. Hence
+F-conjugate-of-diagonal is itself diagonal iff the diagonal is a
+scalar multiple of I. Key ingredient for the scalar-centralizer
+argument. -/
+theorem F_conj_diag_offdiag_01 (c d : ℂ) :
+    (F_C * !![c, 0; 0, d] * F_C) 0 1 =
+      φInv_C * φInvSqrt_C * (c - d) := by
+  simp only [Matrix.mul_apply, Fin.sum_univ_two,
+             show F_C 0 0 = φInv_C from rfl,
+             show F_C 0 1 = φInvSqrt_C from rfl,
+             show F_C 1 0 = φInvSqrt_C from rfl,
+             show F_C 1 1 = -φInv_C from rfl,
+             show (!![c, 0; 0, d] : Matrix (Fin 2) (Fin 2) ℂ) 0 0 = c from rfl,
+             show (!![c, 0; 0, d] : Matrix (Fin 2) (Fin 2) ℂ) 0 1 = 0 from rfl,
+             show (!![c, 0; 0, d] : Matrix (Fin 2) (Fin 2) ℂ) 1 0 = 0 from rfl,
+             show (!![c, 0; 0, d] : Matrix (Fin 2) (Fin 2) ℂ) 1 1 = d from rfl]
+  ring
+
+/-- **D4.3.c.2 — F-conjugate of a diagonal matrix is diagonal iff
+the diagonal is scalar**.
+
+Specifically: `(F · diag(c, d) · F)` is diagonal (i.e., its [0,1] entry
+is 0) iff `c = d`. -/
+theorem F_conj_diag_diagonal_iff_eq (c d : ℂ) :
+    (F_C * !![c, 0; 0, d] * F_C) 0 1 = 0 ↔ c = d := by
+  rw [F_conj_diag_offdiag_01]
+  -- Goal: φInv · φInvSqrt · (c - d) = 0 ↔ c = d
+  constructor
+  · intro h
+    have h_φInv_ne : φInv_C ≠ 0 := by
+      intro h_eq
+      have := φInv_C_sq_add_self
+      rw [h_eq] at this; norm_num at this
+    have h_φInvSqrt_ne : φInvSqrt_C ≠ 0 := by
+      intro h_eq
+      have := φInvSqrt_C_sq
+      rw [h_eq] at this
+      rw [sq, zero_mul] at this
+      exact h_φInv_ne this.symm
+    rcases mul_eq_zero.mp h with h_left | h_diff_zero
+    · rcases mul_eq_zero.mp h_left with h | h
+      · exact absurd h h_φInv_ne
+      · exact absurd h h_φInvSqrt_ne
+    · exact sub_eq_zero.mp h_diff_zero
+  · intro h_eq
+    rw [h_eq, sub_self, mul_zero]
+
+/-- Helper: a scalar diagonal `diag(d, d)` equals `d • I`. -/
+private theorem diag_scalar_eq_smul_one (d : ℂ) :
+    (!![d, 0; 0, d] : Matrix (Fin 2) (Fin 2) ℂ) =
+      d • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Matrix.one_apply]
+
+/-- Helper: `F_C · diag(d, d) · F_C = diag(d, d)`.
+
+Proof: `F · (d • I) · F = d • (F · I · F) = d • (F · F) = d • I` via
+`Matrix.smul_mul`, `Matrix.mul_smul`, `mul_one`, and `F_C_sq`. -/
+private theorem F_conj_scalar_diag (d : ℂ) :
+    F_C * !![d, 0; 0, d] * F_C =
+      (!![d, 0; 0, d] : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [diag_scalar_eq_smul_one]
+  rw [Matrix.mul_smul, Matrix.smul_mul]
+  rw [mul_one, F_C_sq]
+
+/-- **D4.3.c.3 — The matrix-level scalar centralizer lemma**.
+
+If `diag(a, b) = F · diag(c, d) · F` (i.e., the diagonal matrix
+`diag(a, b)` equals an F-conjugate of `diag(c, d)`), then `c = d` and
+the F-conjugate collapses to a scalar matrix `c·I`. Therefore
+`diag(a, b) = c·I` and so `a = b = c`.
+
+Captures the geometric content: in SU(2), the only matrices that are
+simultaneously diagonal in the σ_Fib_1 basis AND diagonal in the
+σ_Fib_2 (F-rotated) basis are scalars. -/
+theorem diag_eq_F_conj_diag_implies_all_eq (a b c d : ℂ)
+    (h : (!![a, 0; 0, b] : Matrix (Fin 2) (Fin 2) ℂ) =
+         F_C * !![c, 0; 0, d] * F_C) :
+    a = c ∧ b = c ∧ c = d := by
+  -- Off-diagonal [0,1] of LHS is 0 (by construction).
+  have h_lhs_01 : (!![a, 0; 0, b] : Matrix (Fin 2) (Fin 2) ℂ) 0 1 = 0 := rfl
+  -- By h, equal to F-conjugate's off-diagonal.
+  have h_rhs_01 : (F_C * !![c, 0; 0, d] * F_C) 0 1 = 0 := by
+    rw [← h]; exact h_lhs_01
+  -- Apply D4.3.c.2: c = d.
+  have h_cd : c = d := (F_conj_diag_diagonal_iff_eq c d).mp h_rhs_01
+  -- Substitute c = d in h, then use F_conj_scalar_diag to collapse.
+  rw [h_cd] at h
+  rw [F_conj_scalar_diag] at h
+  -- Now h : !![a, 0; 0, b] = !![d, 0; 0, d]
+  have h_a_eq_d : a = d := by
+    have := congr_fun (congr_fun h 0) 0
+    -- this : !![a, 0; 0, b] 0 0 = !![d, 0; 0, d] 0 0; both reduce to a = d / d
+    exact this
+  have h_b_eq_d : b = d := by
+    have := congr_fun (congr_fun h 1) 1
+    exact this
+  refine ⟨?_, ?_, h_cd⟩
+  · rw [h_a_eq_d, h_cd]
+  · rw [h_b_eq_d, h_cd]
+
+end D4_3c_ScalarCentralizer
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b})
 
 This module ships **structural facts** about the concrete Fibonacci
@@ -1745,6 +1892,41 @@ full constructive density discharge.
     conclusion *conditional* on the residual hypothesis
     `closure(range ρ_Fib_SU2) = univ` in SU(2). Makes explicit the
     last substantive gap for Path (i) constructive discharge.
+
+**Theorems shipped in R4.2.d.4.3.c.foundation (Phase 6p Wave 2c.4a-R4.2.d.4.3.c,
+sub-§14, 2026-05-19)** — F-conjugate of diagonal off-diagonal computation
++ scalar centralizer matrix lemma (substrate for D4.3.c application):
+
+  - **`F_conj_diag_offdiag_01 (c d)`** : `(F_C · diag(c, d) · F_C)[0,1]
+    = φInv·φInvSqrt·(c - d)`. Direct entry-wise computation; this entry
+    is nonzero iff `c ≠ d`. Key off-diagonal formula.
+  - **`F_conj_diag_diagonal_iff_eq (c d)`** : `(F_C · diag(c, d) · F_C)[0,1]
+    = 0 ↔ c = d`. The F-conjugate of a diagonal matrix is itself
+    diagonal iff the diagonal is scalar (`c·I`).
+  - `diag_scalar_eq_smul_one (d)` : `diag(d, d) = d • I`. Helper.
+  - `F_conj_scalar_diag (d)` : `F_C · diag(d, d) · F_C = diag(d, d)`.
+    F-conjugation fixes scalar matrices (via `F² = I` + smul-mul
+    commutativity). Helper.
+  - **`diag_eq_F_conj_diag_implies_all_eq (a b c d)`** : if
+    `diag(a, b) = F_C · diag(c, d) · F_C`, then `a = c ∧ b = c ∧ c = d`,
+    i.e., all four entries are equal and the F-conjugate-of-diagonal
+    collapses to a scalar matrix `c·I`.
+
+**Density implication after D4.3.c.foundation**: this is the matrix-
+level core of the scalar centralizer argument. Any element `u` of
+`⟨σ_Fib_1_SU⟩ ∩ ⟨σ_Fib_2_SU⟩` has matrix-level representations both
+as `σ_Fib_1_SU_mat^m` (diagonal: `diag((ω·R_1)^m, (ω·R_τ)^m)`) and as
+`σ_Fib_2_SU_mat^n = F·σ_Fib_1_SU_mat^n·F` (via the shipped
+`σ_Fib_2_SU_mat_pow_eq_F_conj` from D4.3.a). Applying
+`diag_eq_F_conj_diag_implies_all_eq` to these two representations
+forces `(ω·R_1)^m = (ω·R_τ)^m` (diagonal-entries-equal), which
+constrains `m` to a multiple of 10 (since `R_1/R_τ` is a primitive 10th
+root of unity). With `ord(σ_Fib_1_SU_mat) = 20` (D3.b), this leaves
+`u.val ∈ {I, σ_Fib_1_SU_mat^10} = {I, -I}` — sharpening the
+intersection cardinality bound from D4.3.b's `≤ 10` to `≤ 2` and
+correspondingly the finite-case `|H_Fib|` bound from `≥ 40` (D4.3.a)
+to `≥ 200`. The full quantitative application is deferred to
+**D4.3.c.application**, a follow-on wave consuming this foundation.
 
 **Theorems shipped in R4.2.d.D2 (Phase 6p Wave 2c.4a-R4.2.d.D2,
 sub-§5e + §5f, 2026-05-19)** — real-cos form for individual traces +
