@@ -3454,6 +3454,126 @@ theorem aHat_gt_two_of_pos (n : ℕ) (hn : 0 < n) : 2 < aHat n := by
 
 end D3_PathII_GaloisConjugate
 
+/-! ## 27. Polynomial trace sequence + integer-pair reduction
+
+Ships the abstract `polyTraceSeq` for the Chebyshev recursion + the
+integer-pair reduction `polyTraceCoeffSeq` for analyzing it under
+the relation `t² = 3t - 1` (the min poly of `(3-√5)/2`).
+
+The integer-pair sequence `(α_n, β_n)` satisfies
+`polyTraceSeq n t = α_n + β_n · t` whenever `t² = 3t - 1`. This
+provides the algebraic substrate for the Galois-invariance step:
+both `(3-√5)/2` and `(3+√5)/2` satisfy `t² = 3t - 1`, so the
+trace sequence reduces to the same integer-pair on both values,
+implying Galois invariance.
+-/
+
+section D3_PathII_PolyTraceSeq
+
+/-- **Abstract Chebyshev-trace recursion**: `polyTraceSeq n t`
+recursively computes the trace polynomial in `t` for SU(2) powers.
+
+Defining recursion:
+  `polyTraceSeq 0 t = 2`
+  `polyTraceSeq 1 t = t`
+  `polyTraceSeq (n+2) t = t · polyTraceSeq (n+1) t - polyTraceSeq n t`
+
+For `c ∈ SU(2)` with `tr(c) = t`, `polyTraceSeq n t = tr(c^n)`.
+This is `2 · T_n(t/2)` where `T_n` is the Chebyshev polynomial of the
+first kind. -/
+def polyTraceSeq : ℕ → ℝ → ℝ
+  | 0, _ => 2
+  | 1, t => t
+  | n + 2, t => t * polyTraceSeq (n + 1) t - polyTraceSeq n t
+
+/-- **Integer-pair reduction sequence**: the integer pair `(α_n, β_n)`
+such that `polyTraceSeq n t = α_n + β_n · t` whenever `t² = 3t - 1`.
+
+Defining recursion (derived from `polyTraceSeq` recursion + `t² = 3t - 1`
+reduction):
+  `(α_0, β_0) = (2, 0)`  (matches `polyTraceSeq 0 t = 2`)
+  `(α_1, β_1) = (0, 1)`  (matches `polyTraceSeq 1 t = t`)
+  `(α_{n+2}, β_{n+2}) = (-β_{n+1} - α_n, α_{n+1} + 3·β_{n+1} - β_n)`
+
+The recursion is derived by computing
+`t · (α_{n+1} + β_{n+1} t) - (α_n + β_n t)
+   = α_{n+1} t + β_{n+1} (3t - 1) - α_n - β_n t
+   = (-β_{n+1} - α_n) + (α_{n+1} + 3 β_{n+1} - β_n) t`
+under the relation `t² = 3t - 1`. -/
+def polyTraceCoeffSeq : ℕ → ℤ × ℤ
+  | 0 => (2, 0)
+  | 1 => (0, 1)
+  | n + 2 =>
+    let p := polyTraceCoeffSeq (n + 1)
+    let q := polyTraceCoeffSeq n
+    (-p.2 - q.1, p.1 + 3 * p.2 - q.2)
+
+/-- **Connection**: `polyTraceSeq n t = α_n + β_n · t` for any `t : ℝ`
+satisfying `t² = 3t - 1`. -/
+theorem polyTraceSeq_eq_pair (n : ℕ) (t : ℝ) (h_quad : t^2 = 3*t - 1) :
+    polyTraceSeq n t =
+      ((polyTraceCoeffSeq n).1 : ℝ) + ((polyTraceCoeffSeq n).2 : ℝ) * t := by
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    match n with
+    | 0 =>
+      show (2 : ℝ) = (2 : ℤ) + (0 : ℤ) * t
+      push_cast; ring
+    | 1 =>
+      show t = (0 : ℤ) + (1 : ℤ) * t
+      push_cast; ring
+    | k + 2 =>
+      -- polyTraceSeq (k+2) t = t · polyTraceSeq (k+1) t - polyTraceSeq k t
+      have h_ih_k1 : polyTraceSeq (k + 1) t =
+          ((polyTraceCoeffSeq (k + 1)).1 : ℝ) +
+          ((polyTraceCoeffSeq (k + 1)).2 : ℝ) * t :=
+        ih (k + 1) (by omega)
+      have h_ih_k : polyTraceSeq k t =
+          ((polyTraceCoeffSeq k).1 : ℝ) +
+          ((polyTraceCoeffSeq k).2 : ℝ) * t :=
+        ih k (by omega)
+      -- Compute polyTraceSeq (k+2) t directly.
+      show t * polyTraceSeq (k + 1) t - polyTraceSeq k t =
+          ((polyTraceCoeffSeq (k + 2)).1 : ℝ) +
+          ((polyTraceCoeffSeq (k + 2)).2 : ℝ) * t
+      rw [h_ih_k1, h_ih_k]
+      -- Unfold polyTraceCoeffSeq (k+2) explicitly.
+      show t * (↑(polyTraceCoeffSeq (k + 1)).1 +
+                ↑(polyTraceCoeffSeq (k + 1)).2 * t) -
+           (↑(polyTraceCoeffSeq k).1 + ↑(polyTraceCoeffSeq k).2 * t) =
+          ((polyTraceCoeffSeq (k + 2)).1 : ℝ) +
+          ((polyTraceCoeffSeq (k + 2)).2 : ℝ) * t
+      have h_unfold_1 : (polyTraceCoeffSeq (k + 2)).1 =
+          -(polyTraceCoeffSeq (k + 1)).2 - (polyTraceCoeffSeq k).1 := rfl
+      have h_unfold_2 : (polyTraceCoeffSeq (k + 2)).2 =
+          (polyTraceCoeffSeq (k + 1)).1 +
+            3 * (polyTraceCoeffSeq (k + 1)).2 -
+            (polyTraceCoeffSeq k).2 := rfl
+      rw [h_unfold_1, h_unfold_2]
+      -- Algebraic identity under t² = 3t - 1:
+      have h_t_sq : t * t = 3 * t - 1 := by
+        have h_sq : t^2 = t * t := sq t
+        linarith [h_quad, h_sq]
+      push_cast
+      linear_combination
+        ((polyTraceCoeffSeq (k + 1)).2 : ℝ) * h_t_sq
+
+/-- `(3-√5)/2` satisfies `t² = 3t - 1`. -/
+theorem three_minus_sqrt5_div_two_sq :
+    ((3 - Real.sqrt 5) / 2)^2 = 3 * ((3 - Real.sqrt 5) / 2) - 1 := by
+  have h_sqrt5_sq : Real.sqrt 5 ^ 2 = 5 :=
+    Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 5)
+  nlinarith [h_sqrt5_sq]
+
+/-- `(3+√5)/2` satisfies `t² = 3t - 1`. -/
+theorem three_plus_sqrt5_div_two_sq :
+    ((3 + Real.sqrt 5) / 2)^2 = 3 * ((3 + Real.sqrt 5) / 2) - 1 := by
+  have h_sqrt5_sq : Real.sqrt 5 ^ 2 = 5 :=
+    Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 5)
+  nlinarith [h_sqrt5_sq]
+
+end D3_PathII_PolyTraceSeq
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
