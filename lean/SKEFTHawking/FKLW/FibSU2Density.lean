@@ -3279,6 +3279,58 @@ theorem ρ_Fib_SU2_range_infinite_of_inf_order_HBS_witness
 
 end D3_PathII_AABridgeConnector
 
+/-! ## 25. SU(2) trace-of-powers Chebyshev recursion
+
+Ships the Chebyshev-style recursion `tr(c^{n+2}) = tr(c) · tr(c^{n+1}) - tr(c^n)`
+for `c ∈ SU(2)`, the substrate for finite case analysis closing the
+non-root-of-unity step.
+
+For `c ∈ SU(2)` with eigenvalues `exp(±iθ)`:
+  `tr(c^n) = 2 cos(nθ) = U_n(tr(c)/2) · 2`
+where U_n is the Chebyshev polynomial of the second kind.
+
+The recursion `tr(c^{n+2}) = tr(c) · tr(c^{n+1}) - tr(c^n)` follows
+directly from Cayley-Hamilton: `c^{n+2} = c² · c^n = (tr(c) · c - I) · c^n
+= tr(c) · c^{n+1} - c^n`, then take trace.
+
+For our specific HBS witness `c := σ_Fib_1_SU · σ_Fib_2_SU⁻¹` with
+`tr(c) = (3-√5)/2 ∈ ℚ(√5)`, the recursion generates an integer
+sequence in `ℤ[√5]`. The finite case analysis closes by showing the
+sequence never hits the value `2` (= tr(I)) for any `n ≥ 1`.
+-/
+
+section D3_PathII_TraceRecursion
+
+/-- **SU(2) trace-of-powers Chebyshev recursion**: for any `c ∈ SU(2)` and
+any `n : ℕ`,
+  `trace(c^{n+2}) = trace(c) · trace(c^{n+1}) - trace(c^n)`.
+
+Proof: `c^{n+2} = c² · c^n`. By `SU2_CayleyHamilton`, `c² = tr(c) · c - I`.
+So `c^{n+2} = (tr(c) · c - I) · c^n = tr(c) · c^{n+1} - c^n`. Take trace
+(linear) and use trace-of-product factorization. -/
+theorem SU2_trace_pow_recursion (c : Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (n : ℕ) :
+    Matrix.trace ((c : Matrix (Fin 2) (Fin 2) ℂ) ^ (n + 2)) =
+      Matrix.trace (c : Matrix (Fin 2) (Fin 2) ℂ) *
+        Matrix.trace ((c : Matrix (Fin 2) (Fin 2) ℂ) ^ (n + 1)) -
+      Matrix.trace ((c : Matrix (Fin 2) (Fin 2) ℂ) ^ n) := by
+  set A : Matrix (Fin 2) (Fin 2) ℂ := (c : Matrix (Fin 2) (Fin 2) ℂ) with hA
+  -- A^{n+2} = A^n · A^2.
+  have h_pow_split : A ^ (n + 2) = A ^ n * A ^ 2 := by
+    rw [← pow_add]
+  -- A^2 = tr(A) • A - 1 (Cayley-Hamilton).
+  have h_CH : A ^ 2 = A.trace • A - 1 := SU2_CayleyHamilton c
+  rw [h_pow_split, h_CH]
+  -- A^n * (tr(A) • A - 1) = tr(A) • (A^n * A) - A^n
+  --                       = tr(A) • A^{n+1} - A^n.
+  rw [Matrix.mul_sub, Matrix.mul_smul, Matrix.mul_one]
+  rw [show A ^ n * A = A ^ (n + 1) by rw [pow_succ]]
+  -- trace is additive + scalar-linear: tr(tr(A) • A^{n+1} - A^n)
+  --                                  = tr(A) · tr(A^{n+1}) - tr(A^n).
+  rw [Matrix.trace_sub, Matrix.trace_smul, smul_eq_mul]
+
+end D3_PathII_TraceRecursion
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
