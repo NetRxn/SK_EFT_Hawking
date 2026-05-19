@@ -3798,6 +3798,37 @@ theorem σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder :
 
 end D3_PathII_Closure
 
+/-! ## 29. Unconditional downstream: ρ_Fib_SU2 has infinite range + H_Fib is infinite
+
+Composes the shipped HBS-Step-1 closure (`cFib_not_isOfFinOrder`) with
+the shipped AA-bridge connector to ship the headline downstream facts
+UNCONDITIONALLY (no `h_inf` hypothesis):
+
+  - `ρ_Fib_SU2_range_infinite` : `(Set.range ρ_Fib_SU2).Infinite`.
+  - `H_Fib_infinite` : `Set.Infinite (H_Fib : Set _)`.
+
+The remaining substrate gap (AccPt at 1 → 1 ∈ interior(closure)) is the
+BCH-spanning iteration step; once that ships, the full chain closes
+density via shipped `closure_eq_univ_of_one_mem_interior` +
+`bridge_FKLW_unitary_hom` + `fibonacci_density_from_H_Fib_eq_top`.
+-/
+
+section D3_PathII_DownstreamUnconditional
+
+/-- **Headline (unconditional)**: `(Set.range ρ_Fib_SU2).Infinite`. -/
+theorem ρ_Fib_SU2_range_infinite : (Set.range ρ_Fib_SU2).Infinite :=
+  ρ_Fib_SU2_range_infinite_of_inf_order_HBS_witness
+    σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder
+
+/-- **Headline (unconditional)**: `H_Fib` is infinite as a Set. -/
+theorem H_Fib_infinite :
+    Set.Infinite (H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+  H_Fib_infinite_of_inf_order_HBS_witness
+    σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder
+
+end D3_PathII_DownstreamUnconditional
+
 /-! ## 9. Module summary (Phase 6p Wave 2c.4a-R4.2.d.{1,2,3a,3b,4.1,4.2,4.3.a,4.3.b,4.3.c.foundation,4.3.c.application,4.3.c.app.5b,4.3.d-starter,4.3.e-conditional})
 
 This module ships **structural facts** about the concrete Fibonacci
