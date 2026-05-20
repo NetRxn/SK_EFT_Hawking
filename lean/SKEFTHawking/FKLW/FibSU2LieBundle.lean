@@ -3131,4 +3131,89 @@ theorem liePartMat_σ_Fib_2_SU_mat_pauliDecomp :
   rw [liePartMat_σ_Fib_2_SU_mat_F_form, F_C_conj_paulI_z_pauliDecomp]
   module
 
+/-! ## §34. R5.4 Layer F.20.c.d.2.p.3.d — H_Fib witness σ_Fib_1·σ_Fib_2·σ_Fib_1⁻¹
+
+THE GAP-1 WITNESS. Numerical analysis (Monte Carlo + direct computation):
+
+  `h := σ_Fib_1_SU · σ_Fib_2_SU · σ_Fib_1_SU⁻¹ ∈ H_Fib`
+
+has `σ_Fib_lie_bundle_pauliDet (liePartMat h.val) ≈ +0.476 ≠ 0`.
+
+Numerically the candidates σ_Fib_1 and σ_Fib_2 ALONE have structural P=0
+(their liePart commutes with themselves under Ad-conjugation, reducing the
+3-bundle to rank ≤ 2). The conjugate `σ_Fib_1·σ_Fib_2·σ_Fib_1⁻¹` BREAKS
+this structural degeneracy by introducing a non-trivial y-component into
+liePart's Pauli decomp (sub-step 2's `liePartMat_σ_Fib_2_SU_mat_pauliDecomp`
+has y-coord 0; after σ_Fib_1's z-axis rotation, the y-component becomes
+non-trivial).
+
+This section ships:
+  • Group-theoretic membership in H_Fib (Subgroup.mul_mem + .inv_mem)
+  • Subtype-value-to-matrix bridge ((σ_Fib_1_SU⁻¹).val = σ_Fib_1_SU_mat†)
+  • Ad-equivariance-based closed form for liePartMat
+  • Pauli decomp: `(-sin(7π/10)·α·cs)·paulI_x + (-sin(7π/10)·α·sn)·paulI_y + (-sin(7π/10)·γ)·paulI_z`
+    where α := 2·φInv·φInvSqrt, γ := φInv² - φInvSqrt², cs := cos(7π/5), sn := sin(7π/5)
+
+The non-vanishing pauliDet proof is deferred to sub-step 3b (subsequent
+section). Numerically Pauli coords ≈ (0.243, 0.748, 0.191) with
+sin(7π/5) ≈ -0.951 the key contributor making y-coord non-trivial. -/
+
+/-- σ_Fib_1 · σ_Fib_2 · σ_Fib_1⁻¹ ∈ H_Fib (group closure). -/
+theorem σ_Fib_1_conj_σ_Fib_2_mem_H_Fib :
+    σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹ ∈ H_Fib :=
+  H_Fib.mul_mem
+    (H_Fib.mul_mem σ_Fib_1_SU_mem_H_Fib σ_Fib_2_SU_mem_H_Fib)
+    (H_Fib.inv_mem σ_Fib_1_SU_mem_H_Fib)
+
+/-- Bridge from subtype-level multiplication to matrix-level conjugation.
+
+`(σ_Fib_1_SU · σ_Fib_2_SU · σ_Fib_1_SU⁻¹).val = σ_Fib_1_SU_mat · σ_Fib_2_SU_mat ·
+σ_Fib_1_SU_mat.conjTranspose`.
+
+Uses the fact that for SU(2) elements g, `(g⁻¹).val = star g.val =
+g.val.conjTranspose` (definitionally via SU(2) Inv instance). -/
+theorem σ_Fib_1_conj_σ_Fib_2_val :
+    ((σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹).val :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * σ_Fib_1_SU_mat.conjTranspose := by
+  show σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * (σ_Fib_1_SU⁻¹).val =
+    σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * σ_Fib_1_SU_mat.conjTranspose
+  congr 1
+
+/-- **R5.4 Layer F.20.c.d.2.p.3.d — closed-form liePartMat at the Gap-1 witness**.
+
+`liePartMat (σ_Fib_1·σ_Fib_2·σ_Fib_1†) = (-sin(7π/10)·α·cs)·paulI_x +
+  (-sin(7π/10)·α·sn)·paulI_y + (-sin(7π/10)·γ)·paulI_z`
+
+where α := 2·φInv·φInvSqrt, γ := φInv²-φInvSqrt², cs := cos(7π/5), sn := sin(7π/5).
+
+Proof composes Ad-equivariance (`liePartMat_conj_σ_Fib_1_SU_mat`, F.13) with
+sub-step 2's closed form (`liePartMat_σ_Fib_2_SU_mat_pauliDecomp`) and σ_Fib_1's
+SO(3) Pauli-decomp z-axis rotation (`σ_Fib_1_SU_mat_conj_pauliDecomp_C`,
+F.20.c.d.2.m.6). The `module` tactic distributes the rotation through the
+scalar multiplications cleanly.
+
+Numerically (with α ≈ 0.972, γ ≈ -0.236, cs ≈ -0.309, sn ≈ -0.951,
+-sin(7π/10) ≈ -0.809):
+  Pauli coords ≈ (0.243, 0.748, 0.191).
+
+This breaks the σ_Fib_1 and σ_Fib_2 structural-degeneracy pattern (both had
+y-coord 0 in liePart). The σ_Fib_1 z-axis rotation injects non-trivial y from
+the original x-component of `liePartMat σ_Fib_2_SU_mat`. -/
+theorem liePartMat_σ_Fib_1_conj_σ_Fib_2_pauliDecomp :
+    liePartMat
+      (σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * σ_Fib_1_SU_mat.conjTranspose) =
+      (((-Real.sin (7 * Real.pi / 10) : ℝ) : ℂ) *
+        ((2 * φInv_C * φInvSqrt_C) *
+          ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ))) • paulI_x +
+      (((-Real.sin (7 * Real.pi / 10) : ℝ) : ℂ) *
+        ((2 * φInv_C * φInvSqrt_C) *
+          ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ))) • paulI_y +
+      (((-Real.sin (7 * Real.pi / 10) : ℝ) : ℂ) *
+        (φInv_C * φInv_C - φInvSqrt_C * φInvSqrt_C)) • paulI_z := by
+  rw [liePartMat_conj_σ_Fib_1_SU_mat]
+  rw [liePartMat_σ_Fib_2_SU_mat_pauliDecomp]
+  rw [σ_Fib_1_SU_mat_conj_pauliDecomp_C]
+  module
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
