@@ -1883,6 +1883,44 @@ theorem F_C_conj_paulI_z_eq :
           smul_eq_mul] <;>
     ring
 
+/-! ### F.20.c.d.2.j — F_C Ad-actions on paulI_x and paulI_y
+
+Completing the F_C Ad-action triple needed for σ_Fib_2's full SO(3)
+matrix. F_C is symmetric (`F_C_star`) and involutive (`F_C_sq : F·F = 1`),
+so its Ad-action is its own inverse — a "reflection" in 𝔰𝔲(2). -/
+
+/-- **F_C Ad-action on paulI_x**. Direct entry-wise computation. -/
+theorem F_C_conj_paulI_x_eq' :
+    F_C * paulI_x * F_C =
+      !![(2 * φInv_C * φInvSqrt_C) * Complex.I,
+         (φInvSqrt_C * φInvSqrt_C - φInv_C * φInv_C) * Complex.I;
+         (φInvSqrt_C * φInvSqrt_C - φInv_C * φInv_C) * Complex.I,
+         -((2 * φInv_C * φInvSqrt_C) * Complex.I)] := by
+  unfold F_C
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.of_apply, Matrix.cons_val_zero,
+          Matrix.cons_val_one, Matrix.head_cons,
+          paulI_x, SKEFTHawking.σ_x, Matrix.smul_apply,
+          smul_eq_mul] <;>
+    ring
+
+/-- **F_C Ad-action on paulI_y**. Direct entry-wise computation. -/
+theorem F_C_conj_paulI_y_eq :
+    F_C * paulI_y * F_C =
+      !![0, -(φInv_C * φInv_C + φInvSqrt_C * φInvSqrt_C);
+         (φInv_C * φInv_C + φInvSqrt_C * φInvSqrt_C), 0] := by
+  unfold F_C
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.of_apply, Matrix.cons_val_zero,
+          Matrix.cons_val_one, Matrix.head_cons,
+          paulI_y, SKEFTHawking.σ_y, Matrix.smul_apply,
+          smul_eq_mul] <;>
+    ring
+
 /-- **R5.4 Layer F.20.c.d.2.h — σ_Fib_1's Ad-action on a Pauli-decomposed
 element is a planar rotation by 7π/5 about the z-axis**.
 
