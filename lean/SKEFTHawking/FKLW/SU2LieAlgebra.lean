@@ -466,7 +466,79 @@ theorem matrixToPauliCoords_eq_zero_iff
     unfold matrixToPauliCoords
     simp
 
-/-! ## §7. Module summary
+/-! ## §7. Skew-Hermitian projection (Layer F.4, session 44)
+
+For any 2×2 complex matrix M, the **skew-Hermitian projection**
+  `(M - M†) / 2`
+is the canonical element of skew-Hermitian 2×2 matrices.
+
+For traceless M, this projection lands in `tracelessSkewHermitian (Fin 2)`
+(the Lie algebra 𝔰𝔲(2)). This is the substrate needed to extract
+"Lie-algebra components" from H_Fib elements (which are in SU(2), not
+𝔰𝔲(2) directly).
+-/
+
+/-- **Skew-Hermitian projection** for arbitrary square complex matrices.
+
+`skewHermitianProj M := (M - star M) / 2`. -/
+noncomputable def skewHermitianProj {n : Type*} [Fintype n] [DecidableEq n]
+    (M : Matrix n n ℂ) : Matrix n n ℂ :=
+  ((1/2 : ℂ)) • (M - M.conjTranspose)
+
+/-- The skew-Hermitian projection is indeed skew-Hermitian. -/
+theorem skewHermitianProj_isSkewHermitian {n : Type*} [Fintype n] [DecidableEq n]
+    (M : Matrix n n ℂ) : (skewHermitianProj M).IsSkewHermitian := by
+  show (skewHermitianProj M).conjTranspose = -(skewHermitianProj M)
+  unfold skewHermitianProj
+  rw [Matrix.conjTranspose_smul]
+  rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_conjTranspose]
+  ext i j
+  simp [Matrix.smul_apply, Matrix.sub_apply, Matrix.neg_apply, smul_eq_mul,
+        Complex.star_def]
+  ring
+
+/-- If `M` is traceless, then `skewHermitianProj M` is traceless. -/
+theorem skewHermitianProj_trace_zero {n : Type*} [Fintype n] [DecidableEq n]
+    {M : Matrix n n ℂ} (hM_tr : M.trace = 0) :
+    (skewHermitianProj M).trace = 0 := by
+  unfold skewHermitianProj
+  rw [Matrix.trace_smul, Matrix.trace_sub]
+  rw [hM_tr, Matrix.trace_conjTranspose, hM_tr]
+  simp
+
+/-- **For traceless M, `skewHermitianProj M ∈ tracelessSkewHermitian (Fin 2)`**. -/
+theorem skewHermitianProj_mem_tracelessSkewHermitian
+    {M : Matrix (Fin 2) (Fin 2) ℂ} (hM_tr : M.trace = 0) :
+    skewHermitianProj M ∈ tracelessSkewHermitian (Fin 2) :=
+  ⟨skewHermitianProj_isSkewHermitian M, skewHermitianProj_trace_zero hM_tr⟩
+
+/-- **For X already in `tracelessSkewHermitian (Fin 2)`,
+`skewHermitianProj X = X`**.
+
+Proof: skewHermitianProj X = (X - star X)/2 = (X - (-X))/2 = X. -/
+theorem skewHermitianProj_idempotent_on_tracelessSkewHermitian
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    skewHermitianProj X = X := by
+  obtain ⟨hX_skew, _⟩ := hX
+  unfold skewHermitianProj
+  rw [hX_skew]
+  ext i j
+  simp [Matrix.smul_apply, Matrix.sub_apply, Matrix.neg_apply, smul_eq_mul]
+  ring
+
+/-- **Skew-Hermitian projection of `(X - 1)` simplifies** since `1† = 1`.
+
+For X ∈ Matrix (Fin n) (Fin n) ℂ:
+  `skewHermitianProj (X - 1) = (1/2) • (X - X†)`. -/
+theorem skewHermitianProj_sub_one {n : Type*} [Fintype n] [DecidableEq n]
+    (X : Matrix n n ℂ) :
+    skewHermitianProj (X - 1) = (1/2 : ℂ) • (X - X.conjTranspose) := by
+  unfold skewHermitianProj
+  congr 1
+  rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_one]
+  abel
+
+/-! ## §8. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
 session 35; extended Layer F.1 session 41 + Layer F.2 session 42 +
