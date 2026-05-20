@@ -274,11 +274,110 @@ theorem paulI_linear_independent (a b c : ℝ)
     exact_mod_cast h_b
   exact ⟨ha, hb, hc⟩
 
-/-! ## §5. Module summary
+/-! ## §5. Pauli basis decomposition (Layer F.2, session 42)
+
+Every traceless skew-Hermitian 2×2 complex matrix decomposes uniquely as
+a real linear combination of the three Pauli anti-Hermitian generators
+`paulI_x, paulI_y, paulI_z`.
+
+The explicit coordinate formula:
+  X = (Im X[0,1])·paulI_x + (Re X[0,1])·paulI_y + (Im X[0,0])·paulI_z
+
+This makes `{paulI_x, paulI_y, paulI_z}` a basis for `tracelessSkewHermitian (Fin 2)`
+as a 3-dimensional ℝ-vector space (combined with §4 linear independence).
+-/
+
+/-- **Structural form of a traceless skew-Hermitian 2×2 complex matrix**.
+
+If X ∈ tracelessSkewHermitian (Fin 2), then:
+  X[0,0] is pure imaginary,
+  X[1,1] = -X[0,0],
+  X[1,0] = -conjugate(X[0,1]).
+-/
+private theorem tracelessSkewHermitian_entries
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    (X 0 0).re = 0 ∧ X 1 1 = -X 0 0 ∧ X 1 0 = -star (X 0 1) := by
+  obtain ⟨hX_skew, hX_tr⟩ := hX
+  -- X.conjTranspose = -X means (X j i)* = -X i j entrywise
+  -- For i = j = 0: (X 0 0)* = -X 0 0, so X 0 0 is pure imaginary (real part 0)
+  have h_diag_skew_00 : star (X 0 0) = -(X 0 0) := by
+    have := congr_fun (congr_fun hX_skew 0) 0
+    simpa [Matrix.conjTranspose_apply, Matrix.neg_apply] using this
+  have h_re_00 : (X 0 0).re = 0 := by
+    -- star z = -z in ℂ means z + star z = 0, i.e., 2 z.re = 0
+    have h_sum : X 0 0 + star (X 0 0) = 0 := by rw [h_diag_skew_00]; ring
+    have h_re_sum : (X 0 0).re + (star (X 0 0)).re = 0 := by
+      have := congr_arg Complex.re h_sum
+      simpa [Complex.add_re] using this
+    rw [Complex.star_def, Complex.conj_re] at h_re_sum
+    linarith
+  -- trace = 0: X 0 0 + X 1 1 = 0, so X 1 1 = -X 0 0
+  have h_11 : X 1 1 = -X 0 0 := by
+    have h_trace : X 0 0 + X 1 1 = 0 := by
+      have := hX_tr
+      simp [Matrix.trace, Fin.sum_univ_two] at this
+      linear_combination this
+    linear_combination h_trace
+  -- Off-diagonal: (X 0 1)* = -X 1 0, so X 1 0 = -(X 0 1)*
+  have h_offdiag : X 1 0 = -star (X 0 1) := by
+    have h_skew_01 : star (X 0 1) = -(X 1 0) := by
+      have := congr_fun (congr_fun hX_skew 1) 0
+      simpa [Matrix.conjTranspose_apply, Matrix.neg_apply] using this
+    -- From star (X 0 1) = -(X 1 0): X 1 0 = -star (X 0 1)
+    linear_combination h_skew_01
+  exact ⟨h_re_00, h_11, h_offdiag⟩
+
+/-- **Pauli basis decomposition** for traceless skew-Hermitian 2×2 matrices.
+
+For X ∈ tracelessSkewHermitian (Fin 2):
+  X = (X[0,1].im)·paulI_x + (X[0,1].re)·paulI_y + (X[0,0].im)·paulI_z. -/
+theorem tracelessSkewHermitian_decomp
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    X = ((X 0 1).im : ℂ) • paulI_x +
+        ((X 0 1).re : ℂ) • paulI_y +
+        ((X 0 0).im : ℂ) • paulI_z := by
+  obtain ⟨h_re_00, h_11, h_offdiag⟩ := tracelessSkewHermitian_entries hX
+  rw [paulI_combination_matrix]
+  ext i j
+  fin_cases i <;> fin_cases j
+  · -- [0,0]: X 0 0 = (X[0,0].im : ℂ) * I
+    -- X 0 0 is pure imaginary (re = 0), so X 0 0 = ↑(X 0 0).im · I
+    show X 0 0 = ((X 0 0).im : ℂ) * I
+    rw [Complex.ext_iff]
+    refine ⟨?_, ?_⟩
+    · simp [Complex.mul_re, Complex.I_re, Complex.I_im, h_re_00]
+    · simp [Complex.mul_im, Complex.I_re, Complex.I_im]
+  · -- [0,1]: X 0 1 = (X[0,1].im : ℂ) * I + (X[0,1].re : ℂ)
+    -- This is the (re, im) decomposition of X 0 1.
+    show X 0 1 = ((X 0 1).im : ℂ) * I + ((X 0 1).re : ℂ)
+    rw [Complex.ext_iff]
+    refine ⟨?_, ?_⟩
+    · simp [Complex.add_re, Complex.mul_re, Complex.I_re, Complex.I_im]
+    · simp [Complex.add_im, Complex.mul_im, Complex.I_re, Complex.I_im]
+  · -- [1,0]: X 1 0 = (X[0,1].im : ℂ) * I - (X[0,1].re : ℂ)
+    -- X 1 0 = -star (X 0 1) = -(re - im·I) = -re + im·I = im·I - re
+    show X 1 0 = ((X 0 1).im : ℂ) * I - ((X 0 1).re : ℂ)
+    rw [h_offdiag, Complex.star_def]
+    rw [Complex.ext_iff]
+    refine ⟨?_, ?_⟩
+    · simp [Complex.neg_re, Complex.conj_re, Complex.sub_re, Complex.mul_re,
+            Complex.I_re, Complex.I_im]
+    · simp [Complex.neg_im, Complex.conj_im, Complex.sub_im, Complex.mul_im,
+            Complex.I_re, Complex.I_im]
+  · -- [1,1]: X 1 1 = -(X[0,0].im : ℂ) * I = -X 0 0
+    show X 1 1 = -((X 0 0).im : ℂ) * I
+    rw [h_11, neg_mul]
+    rw [Complex.ext_iff]
+    refine ⟨?_, ?_⟩
+    · simp [Complex.neg_re, Complex.mul_re, Complex.I_re, Complex.I_im, h_re_00]
+    · simp [Complex.neg_im, Complex.mul_im, Complex.I_re, Complex.I_im]
+
+/-! ## §6. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
-session 35; extended Layer F.1 session 41): foundational Lie algebra
-substrate for the upstream-IFT path to Fibonacci density.
+session 35; extended Layer F.1 session 41 + Layer F.2 session 42):
+foundational Lie algebra substrate for the upstream-IFT path to
+Fibonacci density.
 
 **Shipped (zero new axioms)**:
 
