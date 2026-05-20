@@ -3406,4 +3406,157 @@ theorem σ_Fib_lie_bundle_pauliDet_at_gap1_factored :
   simp only []
   exact σ_Fib_lie_bundle_pauliDet_pauliDecomp_homog _ _ _ _
 
+/-! ## §38. R5.4 Layer F.20.c.d.2.p.3.e.5 — Closed-form polynomial value at Gap-1
+
+The substantial algebraic step: the cubic polynomial value at the factored
+direction `(α·cs, α·sn, γ)` simplifies to a CLEAN closed form via Groebner
+reduction under the algebraic constraints:
+
+  `pauliDet at (α·cs, α·sn, γ) = sin(7π/5) · (4·√5 - 8)`
+
+Discovery method: sympy `groebner + reduced` on the constraint ideal
+  { (√φ)⁻¹² - φ⁻¹ , sn² - (10+2√5)/16 , √5² - 5 , φ⁻¹ - (√5-1)/2 }
+
+yielded explicit polynomial coefficients for the `linear_combination` chain.
+The closed form arises from the structural identities α² + γ² = 1 (unit
+direction), γ² = 4γ + 1 (γ's minimal poly), and cs² + sn² = 1 (Pythagorean).
+
+Sign analysis on the closed form:
+  • sin(7π/5) < 0  (sin_7pi_div_5_neg from §35)
+  • 4·√5 - 8 > 0   (since √5 > 2)
+  • Combined with `(-sin(7π/10))³ < 0` (since sin(7π/10) > 0 from §35),
+    the full pauliDet at Gap-1 is (-)·(-)·(+) = + > 0 ≠ 0.
+
+Numerically the value is ≈ +0.476 (matches Monte Carlo + sympy direct eval). -/
+
+/-- Helper: `sin²(7π/5) = (10 + 2√5)/16`. From `cos(7π/5) = (1-√5)/4`
++ Pythagorean identity. -/
+theorem sin_sq_7pi_div_5 :
+    Real.sin (7 * Real.pi / 5)^2 = (10 + 2 * Real.sqrt 5) / 16 := by
+  have h := Real.sin_sq_add_cos_sq (7 * Real.pi / 5)
+  rw [cos_7pi_div_5] at h
+  have h5 : Real.sqrt 5^2 = 5 := Real.sq_sqrt (by norm_num)
+  nlinarith [h, h5, Real.sqrt_nonneg 5]
+
+/-- **R5.4 Layer F.20.c.d.2.p.3.e.5 — closed-form polynomial value at factored Gap-1**.
+
+`σ_Fib_lie_bundle_pauliDet (factored direction) = sin(7π/5) · (4√5 - 8)`.
+
+Proof method: substitute cs = (1-√5)/4 and φ⁻¹ = (√5-1)/2 via `rw`, then
+apply Groebner-derived `linear_combination` with coefficients in the variables
+q := (√φ)⁻¹, sn := sin(7π/5), √5. The constraints are q² = (√5-1)/2 (golden
+ratio + sqrt²), sn² = (10+2√5)/16 (Pythagorean), and √5² = 5.
+
+The coefficient polynomials were computed via `sympy.groebner` + `sympy.reduced`. -/
+theorem σ_Fib_lie_bundle_pauliDet_at_gap1_factored_value :
+    σ_Fib_lie_bundle_pauliDet
+      (let (a', b', c') := gap1_witness_pauliCoord_factored
+       ((a' : ℝ) : ℂ) • paulI_x + ((b' : ℝ) : ℂ) • paulI_y + ((c' : ℝ) : ℂ) • paulI_z) =
+    Real.sin (7 * Real.pi / 5) * (4 * Real.sqrt 5 - 8) := by
+  unfold gap1_witness_pauliCoord_factored
+  simp only []
+  rw [σ_Fib_lie_bundle_pauliDet_pauliDecomp]
+  simp only []
+  rw [cos_7pi_div_5]
+  rw [show Real.goldenRatio⁻¹ = (Real.sqrt 5 - 1)/2 from by
+        rw [Real.inv_goldenRatio]; unfold Real.goldenConj; ring]
+  set q : ℝ := (Real.sqrt Real.goldenRatio)⁻¹
+  set sn : ℝ := Real.sin (7 * Real.pi / 5)
+  have hq_sq : q^2 = (Real.sqrt 5 - 1)/2 := by
+    show (Real.sqrt Real.goldenRatio)⁻¹^2 = (Real.sqrt 5 - 1)/2
+    rw [inv_pow, Real.sq_sqrt (le_of_lt Real.goldenRatio_pos)]
+    rw [Real.inv_goldenRatio]; unfold Real.goldenConj; ring
+  have hsn_sq : sn^2 = (10 + 2 * Real.sqrt 5) / 16 := sin_sq_7pi_div_5
+  have h5 : Real.sqrt 5^2 = 5 := Real.sq_sqrt (by norm_num)
+  linear_combination
+    (-q^6*sn^3*Real.sqrt 5^2 + 2*q^6*sn^3*Real.sqrt 5 - q^6*sn^3 -
+      q^6*sn*Real.sqrt 5^4/16 - q^6*sn*Real.sqrt 5^3/4 + q^6*sn*Real.sqrt 5^2/8 +
+      3*q^6*sn*Real.sqrt 5/4 - 9*q^6*sn/16 + q^4*sn^3*Real.sqrt 5^5/2 -
+      7*q^4*sn^3*Real.sqrt 5^4/4 + 3*q^4*sn^3*Real.sqrt 5^3/2 +
+      2*q^4*sn^3*Real.sqrt 5^2 - 4*q^4*sn^3*Real.sqrt 5 + 7*q^4*sn^3/4 +
+      q^4*sn*Real.sqrt 5^7/32 - 3*q^4*sn*Real.sqrt 5^6/64 + 3*q^4*sn*Real.sqrt 5^5/32 -
+      35*q^4*sn*Real.sqrt 5^4/64 + 19*q^4*sn*Real.sqrt 5^3/32 +
+      39*q^4*sn*Real.sqrt 5^2/64 - 39*q^4*sn*Real.sqrt 5/32 + 31*q^4*sn/64 +
+      q^2*sn^5*Real.sqrt 5^4 - 4*q^2*sn^5*Real.sqrt 5^3 +
+      6*q^2*sn^5*Real.sqrt 5^2 - 4*q^2*sn^5*Real.sqrt 5 + q^2*sn^5 -
+      q^2*sn^3*Real.sqrt 5^7/16 + q^2*sn^3*Real.sqrt 5^6/2 -
+      21*q^2*sn^3*Real.sqrt 5^5/16 + q^2*sn^3*Real.sqrt 5^4/4 +
+      61*q^2*sn^3*Real.sqrt 5^3/16 - 5*q^2*sn^3*Real.sqrt 5^2 +
+      25*q^2*sn^3*Real.sqrt 5/16 + q^2*sn^3/4 - q^2*sn*Real.sqrt 5^9/256 +
+      q^2*sn*Real.sqrt 5^8/256 + 9*q^2*sn*Real.sqrt 5^7/128 -
+      19*q^2*sn*Real.sqrt 5^6/128 - 3*q^2*sn*Real.sqrt 5^5/32 +
+      17*q^2*sn*Real.sqrt 5^4/64 + 63*q^2*sn*Real.sqrt 5^3/128 -
+      173*q^2*sn*Real.sqrt 5^2/128 + 265*q^2*sn*Real.sqrt 5/256 - 69*q^2*sn/256 +
+      sn^5*Real.sqrt 5^5/2 - 5*sn^5*Real.sqrt 5^4/2 + 5*sn^5*Real.sqrt 5^3 -
+      5*sn^5*Real.sqrt 5^2 + 5*sn^5*Real.sqrt 5/2 - sn^5/2 -
+      sn^3*Real.sqrt 5^8/64 + 5*sn^3*Real.sqrt 5^7/32 - 11*sn^3*Real.sqrt 5^6/32 -
+      19*sn^3*Real.sqrt 5^5/32 + 13*sn^3*Real.sqrt 5^4/4 -
+      137*sn^3*Real.sqrt 5^3/32 + 51*sn^3*Real.sqrt 5^2/32 + 23*sn^3*Real.sqrt 5/32 -
+      31*sn^3/64 - sn*Real.sqrt 5^10/1024 + sn*Real.sqrt 5^9/512 +
+      15*sn*Real.sqrt 5^8/1024 - 3*sn*Real.sqrt 5^7/128 -
+      57*sn*Real.sqrt 5^6/512 + 63*sn*Real.sqrt 5^5/256 +
+      99*sn*Real.sqrt 5^4/512 - 135*sn*Real.sqrt 5^3/128 +
+      1299*sn*Real.sqrt 5^2/1024 - 343*sn*Real.sqrt 5/512 + 139*sn/1024) * hq_sq +
+    (sn^3*Real.sqrt 5^6/4 - 3*sn^3*Real.sqrt 5^5/2 + 15*sn^3*Real.sqrt 5^4/4 -
+      5*sn^3*Real.sqrt 5^3 + 15*sn^3*Real.sqrt 5^2/4 - 3*sn^3*Real.sqrt 5/2 +
+      sn^3/4 - sn*Real.sqrt 5^9/128 + 11*sn*Real.sqrt 5^8/128 -
+      7*sn*Real.sqrt 5^7/32 - 5*sn*Real.sqrt 5^6/32 + 93*sn*Real.sqrt 5^5/64 -
+      131*sn*Real.sqrt 5^4/64 + 9*sn*Real.sqrt 5^3/32 + 55*sn*Real.sqrt 5^2/32 -
+      193*sn*Real.sqrt 5/128 + 51*sn/128) * hsn_sq +
+    (-sn*Real.sqrt 5^9/2048 + sn*Real.sqrt 5^8/2048 + 5*sn*Real.sqrt 5^7/512 +
+      5*sn*Real.sqrt 5^6/512 - 155*sn*Real.sqrt 5^5/1024 +
+      319*sn*Real.sqrt 5^4/1024 - 67*sn*Real.sqrt 5^3/512 -
+      159*sn*Real.sqrt 5^2/512 + 1839*sn*Real.sqrt 5/2048 - 3351*sn/2048) * h5
+
+/-- **R5.4 Layer F.20.c.d.2.p.3.e.6 — full closed-form pauliDet at Gap-1**.
+
+`σ_Fib_lie_bundle_pauliDet (liePart (σ_Fib_1·σ_Fib_2·σ_Fib_1⁻¹)) =
+  -sin(7π/10)³ · sin(7π/5) · (4·√5 - 8)`
+
+Composes cubic-homogeneity factoring (`σ_Fib_lie_bundle_pauliDet_at_gap1_factored`)
+with the substantive closed form (`σ_Fib_lie_bundle_pauliDet_at_gap1_factored_value`). -/
+theorem σ_Fib_lie_bundle_pauliDet_at_gap1_eq :
+    σ_Fib_lie_bundle_pauliDet
+      (liePartMat (σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * σ_Fib_1_SU_mat.conjTranspose)) =
+    (-Real.sin (7 * Real.pi / 10))^3 *
+      Real.sin (7 * Real.pi / 5) * (4 * Real.sqrt 5 - 8) := by
+  have h1 := σ_Fib_lie_bundle_pauliDet_at_gap1_factored
+  have h2 := σ_Fib_lie_bundle_pauliDet_at_gap1_factored_value
+  simp only [] at h1 h2
+  rw [h1, h2]; ring
+
+/-- **R5.4 Layer F.20.c.d.2.p.3.e.7 — Gap-1 witness pauliDet is non-zero**.
+
+`σ_Fib_lie_bundle_pauliDet (liePart (σ_Fib_1·σ_Fib_2·σ_Fib_1⁻¹)) ≠ 0`
+
+Proof: three-factor sign argument:
+  • `(-sin(7π/10))³ < 0` since `0 < sin(7π/10)` (§35 `sin_7pi_div_10_pos`)
+  • `sin(7π/5) < 0` (§35 `sin_7pi_div_5_neg`)
+  • `4·√5 - 8 > 0` since `√5 > 2`
+  • Product: (-)·(-)·(+) = + > 0 ≠ 0 ✓
+
+Concretely the value ≈ +0.476. -/
+theorem σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero :
+    σ_Fib_lie_bundle_pauliDet
+      (liePartMat (σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * σ_Fib_1_SU_mat.conjTranspose)) ≠ 0 := by
+  rw [σ_Fib_lie_bundle_pauliDet_at_gap1_eq]
+  have h_sin10 : 0 < Real.sin (7 * Real.pi / 10) := sin_7pi_div_10_pos
+  have h_sin5 : Real.sin (7 * Real.pi / 5) < 0 := sin_7pi_div_5_neg
+  have h_sqrt5_gt_2 : Real.sqrt 5 > 2 := by
+    have h5 : Real.sqrt 5^2 = 5 := Real.sq_sqrt (by norm_num)
+    nlinarith [h5, Real.sqrt_nonneg 5]
+  have h_diff_pos : 4 * Real.sqrt 5 - 8 > 0 := by linarith
+  have h_cube_neg : (-Real.sin (7 * Real.pi / 10))^3 < 0 := by
+    have h_sin_pow_pos : Real.sin (7 * Real.pi / 10)^3 > 0 := pow_pos h_sin10 3
+    have h_eq : (-Real.sin (7 * Real.pi / 10))^3 = -(Real.sin (7 * Real.pi / 10)^3) := by ring
+    linarith [h_eq, h_sin_pow_pos]
+  -- Product (-)·(-)·(+) > 0
+  have h_prod_pos :
+      (-Real.sin (7 * Real.pi / 10))^3 * Real.sin (7 * Real.pi / 5) *
+        (4 * Real.sqrt 5 - 8) > 0 := by
+    have h_neg_neg : (-Real.sin (7 * Real.pi / 10))^3 * Real.sin (7 * Real.pi / 5) > 0 :=
+      mul_pos_of_neg_of_neg h_cube_neg h_sin5
+    exact mul_pos h_neg_neg h_diff_pos
+  linarith
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
