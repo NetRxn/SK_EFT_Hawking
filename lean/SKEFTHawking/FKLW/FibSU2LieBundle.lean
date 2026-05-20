@@ -3272,4 +3272,70 @@ theorem sin_7pi_div_5_neg : Real.sin (7 * Real.pi / 5) < 0 := by
     · have := Real.pi_pos; nlinarith
   linarith
 
+/-! ## §36. R5.4 Layer F.20.c.d.2.p.3.e.2 — Golden-ratio algebraic substrate
+
+For the closed-form pauliDet evaluation, we need explicit algebraic identities
+for the constants `α := 2·φInv·φInvSqrt` and `γ := φInv² - φInvSqrt²` that appear
+in the σ_Fib_2 SO(3) image Pauli-coord coefficients:
+
+  • `α² = 4·√5 - 8`
+  • `γ = 2 - √5`
+  • `φInv² = 1 - φInv` (golden ratio derived identity)
+
+These follow from `φ² = φ + 1` (Mathlib `Real.goldenRatio_sq`) and
+`(√φ)² = φ` (positivity-based).
+
+Numerically: φInv ≈ 0.618, φInvSqrt ≈ 0.786, α ≈ 0.972, γ ≈ -0.236,
+α² ≈ 0.944 = 4·2.236 - 8, γ = 2 - 2.236 ≈ -0.236. -/
+
+/-- `φInv² = 1 - φInv`, equivalent to `φInv² + φInv = 1`, from `φ² = φ + 1`. -/
+theorem golden_phi_inv_sq :
+    Real.goldenRatio⁻¹^2 = 1 - Real.goldenRatio⁻¹ := by
+  have hne : Real.goldenRatio ≠ 0 := Real.goldenRatio_ne_zero
+  have h_gold : Real.goldenRatio^2 = Real.goldenRatio + 1 := Real.goldenRatio_sq
+  have hne2 : Real.goldenRatio^2 ≠ 0 := pow_ne_zero _ hne
+  -- Multiply both sides by φ² to clear denominators:
+  -- φ⁻¹² · φ² = 1; (1 - φ⁻¹) · φ² = φ² - φ⁻¹·φ² = φ² - φ = 1
+  have h : Real.goldenRatio⁻¹^2 * Real.goldenRatio^2 =
+      (1 - Real.goldenRatio⁻¹) * Real.goldenRatio^2 := by
+    rw [show Real.goldenRatio⁻¹^2 * Real.goldenRatio^2 =
+        (Real.goldenRatio⁻¹ * Real.goldenRatio)^2 from by ring]
+    rw [inv_mul_cancel₀ hne]
+    rw [show (1 : ℝ)^2 = 1 from by ring]
+    rw [show (1 - Real.goldenRatio⁻¹) * Real.goldenRatio^2 =
+        Real.goldenRatio^2 - Real.goldenRatio⁻¹ * Real.goldenRatio^2 from by ring]
+    rw [show Real.goldenRatio⁻¹ * Real.goldenRatio^2 =
+        Real.goldenRatio⁻¹ * Real.goldenRatio * Real.goldenRatio from by ring]
+    rw [inv_mul_cancel₀ hne, one_mul]
+    linarith [h_gold]
+  exact mul_right_cancel₀ hne2 h
+
+/-- `α² = 4·√5 - 8` where `α := 2·φInv·φInvSqrt`. -/
+theorem golden_alpha_sq :
+    (2 * Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹)^2 =
+      4 * Real.sqrt 5 - 8 := by
+  have hpos : 0 ≤ Real.goldenRatio := le_of_lt Real.goldenRatio_pos
+  have hq2 : (Real.sqrt Real.goldenRatio)⁻¹^2 = Real.goldenRatio⁻¹ := by
+    rw [inv_pow, Real.sq_sqrt hpos]
+  have h_phi : Real.goldenRatio⁻¹^2 = 1 - Real.goldenRatio⁻¹ := golden_phi_inv_sq
+  have h_inv : Real.goldenRatio⁻¹ = (Real.sqrt 5 - 1) / 2 := by
+    rw [Real.inv_goldenRatio]; unfold Real.goldenConj; ring
+  have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num)
+  have h_expand : (2 * Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹)^2 =
+      4 * Real.goldenRatio⁻¹^2 * (Real.sqrt Real.goldenRatio)⁻¹^2 := by ring
+  rw [h_expand, hq2, h_phi, h_inv]
+  nlinarith [h5, Real.sqrt_nonneg 5]
+
+/-- `γ = 2 - √5` where `γ := φInv² - φInvSqrt²`. -/
+theorem golden_gamma_eq :
+    Real.goldenRatio⁻¹^2 - (Real.sqrt Real.goldenRatio)⁻¹^2 = 2 - Real.sqrt 5 := by
+  have hpos : 0 ≤ Real.goldenRatio := le_of_lt Real.goldenRatio_pos
+  have hq2 : (Real.sqrt Real.goldenRatio)⁻¹^2 = Real.goldenRatio⁻¹ := by
+    rw [inv_pow, Real.sq_sqrt hpos]
+  have h_phi_sq : Real.goldenRatio⁻¹^2 = 1 - Real.goldenRatio⁻¹ := golden_phi_inv_sq
+  have h_inv : Real.goldenRatio⁻¹ = (Real.sqrt 5 - 1) / 2 := by
+    rw [Real.inv_goldenRatio]; unfold Real.goldenConj; ring
+  rw [hq2, h_phi_sq, h_inv]
+  ring
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
