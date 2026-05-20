@@ -5295,4 +5295,43 @@ theorem pow_su2_chebyshev_decomp
     rw [mul_comm τ (chebyshevSU2 τ k).2]
     abel
 
+/-! ## §60. R5.4 Layer F.20.c.d.2.gg.2 — liePartMat formula for SU(2) powers
+
+Apply §59's `pow_su2_chebyshev_decomp` + `liePartMat_specialUnitary` (which
+applies to h^(n+1) ∈ SU(2)) to get the clean identity:
+
+  `liePartMat (h^(n+1)) = V_n • liePartMat h`
+
+where V_n is the Chebyshev value `(chebyshevSU2 (tr h) n).2`. -/
+
+/-- **liePartMat of SU(2) powers** (HEADLINE).
+
+For h ∈ SU(2) and n : ℕ:
+  `liePartMat (h^(n+1)) = V_n(tr h) • liePartMat h`
+where V_n(τ) = `(chebyshevSU2 τ n).2`.
+
+Proof: invoke `liePartMat_specialUnitary` on the bundled `h^(n+1) ∈ SU(2)`,
+substitute `pow_su2_chebyshev_decomp`, use trace linearity, simplify. -/
+theorem liePartMat_specialUnitary_pow
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (n : ℕ) :
+    liePartMat ((h : Matrix (Fin 2) (Fin 2) ℂ) ^ (n + 1)) =
+      (chebyshevSU2 (Matrix.trace (h : Matrix (Fin 2) (Fin 2) ℂ)) n).2 •
+        liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ) := by
+  -- h^(n+1) as bundled SU(2) element: its matrix form is (↑h)^(n+1)
+  have h_val_pow : ((h ^ (n + 1) :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      (h : Matrix (Fin 2) (Fin 2) ℂ) ^ (n + 1) :=
+    SubmonoidClass.coe_pow h (n + 1)
+  have h_lie_pow := liePartMat_specialUnitary (h ^ (n + 1))
+  rw [h_val_pow] at h_lie_pow
+  rw [h_lie_pow]
+  rw [pow_su2_chebyshev_decomp h n]
+  rw [Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_smul,
+      Matrix.trace_one, Fintype.card_fin]
+  rw [liePartMat_specialUnitary h]
+  -- Final algebraic identity in (V₁, V₂, τ, A, I)
+  simp only [Nat.cast_ofNat, smul_eq_mul]
+  module
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
