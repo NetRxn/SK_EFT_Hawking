@@ -4465,6 +4465,84 @@ theorem cFib_SU_mat_trace_expanded :
     rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
     σ_Fib_2_SU_mat_entry_00, σ_Fib_2_SU_mat_entry_11]
 
+/-- **σ_Fib_2_SU_mat entry (1,0)** (mirror of shipped entry_01).
+
+`σ_Fib_2_SU_mat 1 0 = ω · φInv · φInvSqrt · (R1 - Rτ)`.
+
+Note: σ_Fib_2_SU_mat is symmetric (NOT Hermitian) because F is symmetric and
+σ_Fib_1_SU_mat is diagonal. So entry_10 = entry_01 — but the two-step
+factoring `σ_Fib_2 = F·σ_Fib_1·F` yields the same closed form from the
+(1,0) matrix multiplication path. -/
+theorem σ_Fib_2_SU_mat_entry_10 :
+    σ_Fib_2_SU_mat 1 0 =
+      ω_Fib_C * (φInv_C * φInvSqrt_C * (R1_C - Rtau_C)) := by
+  unfold σ_Fib_2_SU_mat σ_Fib_2 σ_Fib_1 F_C
+  simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, smul_eq_mul]
+  left
+  ring
+
+/-! ## §49. R5.4 Layer F.20.c.d.2.z — cFib_SU_mat entry-wise closed forms
+
+For Pauli decomposition of liePartMat cFib_SU_mat, we need the four entries of
+cFib_SU_mat as closed forms in (ω, R1, Rτ, φInv, φInvSqrt). Since
+σ_Fib_1_SU_mat is diagonal, each cFib_SU_mat[i,j] reduces to a single product
+σ_Fib_1[i,i] · star(σ_Fib_2[j,i]). -/
+
+/-- **cFib_SU_mat entry (0,0)**. -/
+theorem cFib_SU_mat_entry_00 :
+    cFib_SU_mat 0 0 =
+      ω_Fib_C * R1_C * star (ω_Fib_C * (φInv_C * φInv_C * R1_C + φInv_C * Rtau_C)) := by
+  unfold cFib_SU_mat
+  rw [Matrix.mul_apply, Fin.sum_univ_two,
+      show σ_Fib_1_SU_mat 0 1 = 0 by rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+      Matrix.conjTranspose_apply, Matrix.conjTranspose_apply]
+  rw [show σ_Fib_1_SU_mat 0 0 = ω_Fib_C * R1_C by
+    rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+    σ_Fib_2_SU_mat_entry_00]
+  ring
+
+/-- **cFib_SU_mat entry (0,1)**. -/
+theorem cFib_SU_mat_entry_01 :
+    cFib_SU_mat 0 1 =
+      ω_Fib_C * R1_C *
+        star (ω_Fib_C * (φInv_C * φInvSqrt_C * (R1_C - Rtau_C))) := by
+  unfold cFib_SU_mat
+  rw [Matrix.mul_apply, Fin.sum_univ_two,
+      show σ_Fib_1_SU_mat 0 1 = 0 by rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+      Matrix.conjTranspose_apply, Matrix.conjTranspose_apply]
+  rw [show σ_Fib_1_SU_mat 0 0 = ω_Fib_C * R1_C by
+    rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+    σ_Fib_2_SU_mat_entry_10]
+  ring
+
+/-- **cFib_SU_mat entry (1,0)**. -/
+theorem cFib_SU_mat_entry_10 :
+    cFib_SU_mat 1 0 =
+      ω_Fib_C * Rtau_C *
+        star (ω_Fib_C * (φInv_C * φInvSqrt_C * (R1_C - Rtau_C))) := by
+  unfold cFib_SU_mat
+  rw [Matrix.mul_apply, Fin.sum_univ_two,
+      show σ_Fib_1_SU_mat 1 0 = 0 by rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+      Matrix.conjTranspose_apply, Matrix.conjTranspose_apply]
+  rw [show σ_Fib_1_SU_mat 1 1 = ω_Fib_C * Rtau_C by
+    rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+    σ_Fib_2_SU_mat_entry_01]
+  ring
+
+/-- **cFib_SU_mat entry (1,1)**. -/
+theorem cFib_SU_mat_entry_11 :
+    cFib_SU_mat 1 1 =
+      ω_Fib_C * Rtau_C *
+        star (ω_Fib_C * (φInv_C * R1_C + φInv_C * φInv_C * Rtau_C)) := by
+  unfold cFib_SU_mat
+  rw [Matrix.mul_apply, Fin.sum_univ_two,
+      show σ_Fib_1_SU_mat 1 0 = 0 by rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+      Matrix.conjTranspose_apply, Matrix.conjTranspose_apply]
+  rw [show σ_Fib_1_SU_mat 1 1 = ω_Fib_C * Rtau_C by
+    rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+    σ_Fib_2_SU_mat_entry_11]
+  ring
+
 /-! ## §48. R5.4 Layer F.20.c.d.2.y — cFib trace numerical closed form
 
 Reduces `cFib_SU_mat_trace_expanded` to the closed-form `(3 - √5)/2` via the
