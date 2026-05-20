@@ -3922,4 +3922,166 @@ theorem H_Fib_three_conjugates_span_generic
     rw [σ_Fib_2_conj_val_generic, liePartMat_conj_σ_Fib_2_SU_mat]]
   exact h_eq
 
+/-! ## §42. R5.4 Layer F.20.c.d.2.s — Three small spanning H_Fib elements from
+small h with non-zero pauliDet (Bridge Lemma 6.2 setup)
+
+Composes §41's generic spanning theorem with `specialUnitary_conjugation_norm_le_four`
+(D.2.a) to produce, from a HYPOTHESIS small h ∈ H_Fib with non-zero
+σ_Fib_lie_bundle_pauliDet at liePart, an explicit three-element H_Fib triple
+of small elements (scales ε, 4ε, 4ε) with ℝ-lin-indep liePartMat directions.
+
+**Strategic significance**: this makes the F.21 residual hypothesis EXPLICIT.
+With the §42 ship, the path from "small h with non-zero pauliDet" to "open
+neighborhood of 1 ⊆ H_Fib" reduces to:
+  1. (HYPOTHESIS) ∃ small h ∈ H_Fib with non-zero σ_Fib_lie_bundle_pauliDet (THIS IS THE F.21 RESIDUAL)
+  2. §42: produce three small spanning H_Fib elements
+  3. (TODO Bridge Lemma 6.2 substantive content) IFT/BCH-iteration from spanning triple to open nhd
+  4. `closure_eq_univ_of_one_mem_interior` + `fibonacci_density_from_H_Fib_open_at_one`
+
+Step 1 is the substantive remaining content; step 3 is the analytic IFT content.
+This ship clearly separates them. -/
+
+/-- **R5.4 Layer F.20.c.d.2.s — three small spanning H_Fib elements from small h
+with non-zero pauliDet**.
+
+If there exists `h ∈ H_Fib` with `‖h.val - 1‖ < ε` AND `σ_Fib_lie_bundle_pauliDet
+(liePartMat h.val) ≠ 0`, then there exist three SU(2)-elements `h₀, h₁, h₂`, all
+in H_Fib, with:
+  • `‖h₀.val - 1‖ < ε`
+  • `‖h₁.val - 1‖ < 4·ε`
+  • `‖h₂.val - 1‖ < 4·ε`
+
+and their liePartMat values are ℝ-linearly independent in 𝔰𝔲(2).
+
+**Construction**: take h₀ := h, h₁ := σ_Fib_1·h·σ_Fib_1⁻¹, h₂ := σ_Fib_2·h·σ_Fib_2⁻¹.
+
+  - h₀ ∈ H_Fib by hypothesis.
+  - h₁, h₂ ∈ H_Fib by `H_Fib_conj_σ{1,2}_mem` (subgroup closure).
+  - Norm bounds via `specialUnitary_conjugation_norm_le_four`
+    (`‖σ·g·σ⁻¹ - 1‖ ≤ 4·‖g - 1‖`).
+  - ℝ-lin-indep via §41's `H_Fib_three_conjugates_lin_indep_generic`.
+
+This is the **explicit consumer** of §41's generic spanning engine for the
+downstream Bridge Lemma 6.2 work. -/
+theorem H_Fib_three_small_spanning_from_small_pauliDet
+    {ε : ℝ}
+    (h_exists : ∃ h ∈ (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε ∧
+      σ_Fib_lie_bundle_pauliDet
+        (liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ)) ≠ 0) :
+    ∃ (h₀ h₁ h₂ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      h₀ ∈ (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      h₁ ∈ (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      h₂ ∈ (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      ‖(h₀ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε ∧
+      ‖(h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 4 * ε ∧
+      ‖(h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 4 * ε ∧
+      (∀ a b c : ℝ,
+        (a : ℂ) • liePartMat (h₀ : Matrix (Fin 2) (Fin 2) ℂ) +
+        (b : ℂ) • liePartMat (h₁ : Matrix (Fin 2) (Fin 2) ℂ) +
+        (c : ℂ) • liePartMat (h₂ : Matrix (Fin 2) (Fin 2) ℂ) = 0 →
+        a = 0 ∧ b = 0 ∧ c = 0) := by
+  obtain ⟨h, h_H, h_small, h_pauliDet_ne⟩ := h_exists
+  refine ⟨h, σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹, σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹, h_H, ?_, ?_, h_small, ?_, ?_, ?_⟩
+  · -- h₁ membership
+    exact SKEFTHawking.FKLW.H_Fib_conj_σ1_mem h h_H
+  · -- h₂ membership
+    exact SKEFTHawking.FKLW.H_Fib_conj_σ2_mem h h_H
+  · -- ‖h₁ - 1‖ < 4·ε
+    calc ‖((σ_Fib_1_SU * h * σ_Fib_1_SU⁻¹ :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+            SKEFTHawking.FKLW.specialUnitary_conjugation_norm_le_four σ_Fib_1_SU h
+      _ < 4 * ε := by
+          apply mul_lt_mul_of_pos_left h_small
+          norm_num
+  · -- ‖h₂ - 1‖ < 4·ε
+    calc ‖((σ_Fib_2_SU * h * σ_Fib_2_SU⁻¹ :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 4 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ :=
+            SKEFTHawking.FKLW.specialUnitary_conjugation_norm_le_four σ_Fib_2_SU h
+      _ < 4 * ε := by
+          apply mul_lt_mul_of_pos_left h_small
+          norm_num
+  · -- Linear independence via §41's generic theorem
+    intro a b c h_lin
+    have h_gen := H_Fib_three_conjugates_lin_indep_generic h h_H h_pauliDet_ne
+    exact h_gen.2.2 a b c h_lin
+
+/-! ## §43. R5.4 Layer F.20.c.d.2.t — F.21 residual hypothesis as explicit Prop
+
+Defines the **F.21 residual hypothesis** as a clean Prop. The hypothesis asserts
+that for every ε > 0, H_Fib contains an element of scale < ε with non-zero
+σ_Fib_lie_bundle_pauliDet at its liePart.
+
+If this hypothesis holds, then via §42 + the Bridge Lemma 6.2 follow-on
+(deferred substantive analytic content), F.21 unconditional Fibonacci density
+follows.
+
+The §39 existential (session 62) gives the NON-SMALL version at the Gap-1 witness;
+the residual is the SMALL version. The gap is approximately a continuity +
+density argument (or BCH iteration through the gap-1 witness's σ-conjugates).
+-/
+
+/-- **R5.4 Layer F.20.c.d.2.t — F.21 small-spanning residual hypothesis**.
+
+For every ε > 0, there exists h ∈ H_Fib with ‖h.val - 1‖ < ε AND non-zero
+σ_Fib_lie_bundle_pauliDet at liePartMat h.val.
+
+This is the **F.21 residual hypothesis**. The substantive content remaining for
+unconditional Fibonacci density (F.21) splits into:
+  1. **This hypothesis** (small spanning H_Fib element exists at every scale).
+  2. **Bridge Lemma 6.2** (small spanning triple → open neighborhood of 1).
+
+Session 63+64 provide the generic engine for (1). The §39 existential
+(session 62) gives the NON-SMALL version (Gap-1 witness in H_Fib has non-zero
+pauliDet). The residual gap (1) is: can we find small such elements?
+
+Approaches: (a) explicit iteration of σ-conjugates of the Gap-1 witness;
+(b) continuity + density argument leveraging H_Fib_accPt_one and the openness
+of the spanning locus; (c) Cartan classification (avoids the iteration entirely
+but needs Mathlib4 substrate not yet shipped). -/
+def F21_residual_small_spanning : Prop :=
+  ∀ ε : ℝ, 0 < ε →
+    ∃ h ∈ (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε ∧
+      σ_Fib_lie_bundle_pauliDet
+        (liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ)) ≠ 0
+
+/-- **R5.4 Layer F.20.c.d.2.t-app — small spanning triples at every scale, from
+the F.21 residual hypothesis**.
+
+Composes §43's residual hypothesis with §42 to produce, for every ε > 0, an
+explicit three-element small spanning H_Fib triple.
+
+This is the **clean structural API** that the Bridge Lemma 6.2 follow-on
+consumes. -/
+theorem F21_residual_implies_small_spanning_triples
+    (h_residual : F21_residual_small_spanning) :
+    ∀ ε : ℝ, 0 < ε →
+    ∃ (h₀ h₁ h₂ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      h₀ ∈ (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      h₁ ∈ (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      h₂ ∈ (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      ‖(h₀ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε ∧
+      ‖(h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 4 * ε ∧
+      ‖(h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 4 * ε ∧
+      (∀ a b c : ℝ,
+        (a : ℂ) • liePartMat (h₀ : Matrix (Fin 2) (Fin 2) ℂ) +
+        (b : ℂ) • liePartMat (h₁ : Matrix (Fin 2) (Fin 2) ℂ) +
+        (c : ℂ) • liePartMat (h₂ : Matrix (Fin 2) (Fin 2) ℂ) = 0 →
+        a = 0 ∧ b = 0 ∧ c = 0) := by
+  intro ε hε
+  exact H_Fib_three_small_spanning_from_small_pauliDet (h_residual ε hε)
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
