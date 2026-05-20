@@ -372,12 +372,106 @@ theorem tracelessSkewHermitian_decomp
     · simp [Complex.neg_re, Complex.mul_re, Complex.I_re, Complex.I_im, h_re_00]
     · simp [Complex.neg_im, Complex.mul_im, Complex.I_re, Complex.I_im]
 
-/-! ## §6. Module summary
+/-! ## §6. Linear independence criterion via Pauli coordinates (Layer F.3, session 43)
+
+For 3 matrices A, B, C ∈ `tracelessSkewHermitian (Fin 2)`, define their
+Pauli coordinate vectors (each in ℝ³). The 3 matrices are ℝ-linearly
+independent iff the 3×3 determinant of their stacked coordinate vectors
+is non-zero.
+
+This is the **load-bearing criterion** for downstream "3-direction Lie
+spanning" theorems on the H_Fib substrate: given 3 specific elements
+of 𝔰𝔲(2), check linear independence by computing a 3×3 determinant of
+their Pauli coords.
+-/
+
+/-- **Pauli coordinate extraction** for arbitrary 2×2 complex matrices.
+
+Maps `X ↦ (X[0,1].im, X[0,1].re, X[0,0].im) : ℝ × ℝ × ℝ`.
+
+For X ∈ tracelessSkewHermitian (Fin 2), these are the unique coefficients
+in the Pauli basis decomposition `X = a·paulI_x + b·paulI_y + c·paulI_z`
+(per `tracelessSkewHermitian_decomp` §5). -/
+def matrixToPauliCoords (X : Matrix (Fin 2) (Fin 2) ℂ) : ℝ × ℝ × ℝ :=
+  ((X 0 1).im, (X 0 1).re, (X 0 0).im)
+
+/-- **Pauli coordinate extraction respects ℝ-linear combinations**.
+
+For real scalars a, b, c and `X, Y, Z ∈ tracelessSkewHermitian (Fin 2)`,
+the Pauli coords of `a·X + b·Y + c·Z` are the corresponding linear
+combination of (coords X), (coords Y), (coords Z). -/
+theorem matrixToPauliCoords_smul (a : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    matrixToPauliCoords ((a : ℂ) • X) =
+      (a * (matrixToPauliCoords X).1,
+       a * (matrixToPauliCoords X).2.1,
+       a * (matrixToPauliCoords X).2.2) := by
+  unfold matrixToPauliCoords
+  simp [Matrix.smul_apply, smul_eq_mul, Complex.mul_im, Complex.mul_re,
+        Complex.ofReal_re, Complex.ofReal_im]
+
+theorem matrixToPauliCoords_add (X Y : Matrix (Fin 2) (Fin 2) ℂ) :
+    matrixToPauliCoords (X + Y) =
+      ((matrixToPauliCoords X).1 + (matrixToPauliCoords Y).1,
+       (matrixToPauliCoords X).2.1 + (matrixToPauliCoords Y).2.1,
+       (matrixToPauliCoords X).2.2 + (matrixToPauliCoords Y).2.2) := by
+  unfold matrixToPauliCoords
+  simp [Matrix.add_apply, Complex.add_im, Complex.add_re]
+
+/-- **Pauli coords of `paulI_x` = (1, 0, 0)**. -/
+theorem matrixToPauliCoords_paulI_x : matrixToPauliCoords paulI_x = (1, 0, 0) := by
+  unfold matrixToPauliCoords paulI_x
+  simp [Matrix.smul_apply, smul_eq_mul, SKEFTHawking.σ_x,
+        Complex.mul_im, Complex.mul_re, Complex.I_re, Complex.I_im]
+
+/-- **Pauli coords of `paulI_y` = (0, 1, 0)**. -/
+theorem matrixToPauliCoords_paulI_y : matrixToPauliCoords paulI_y = (0, 1, 0) := by
+  unfold matrixToPauliCoords paulI_y
+  simp [Matrix.smul_apply, smul_eq_mul, SKEFTHawking.σ_y,
+        Complex.mul_im, Complex.mul_re, Complex.I_re, Complex.I_im,
+        Complex.neg_im, Complex.neg_re]
+
+/-- **Pauli coords of `paulI_z` = (0, 0, 1)**. -/
+theorem matrixToPauliCoords_paulI_z : matrixToPauliCoords paulI_z = (0, 0, 1) := by
+  unfold matrixToPauliCoords paulI_z
+  simp [Matrix.smul_apply, smul_eq_mul, SKEFTHawking.σ_z,
+        Complex.mul_im, Complex.mul_re, Complex.I_re, Complex.I_im]
+
+/-- **Pauli coords injectivity on `tracelessSkewHermitian (Fin 2)`**:
+if `X ∈ tracelessSkewHermitian (Fin 2)` and `matrixToPauliCoords X = 0`,
+then `X = 0`.
+
+Combined with `tracelessSkewHermitian_decomp` (§5), this gives the
+isomorphism `tracelessSkewHermitian (Fin 2) ≅ ℝ³` via Pauli coords. -/
+theorem matrixToPauliCoords_eq_zero_iff
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    matrixToPauliCoords X = (0, 0, 0) ↔ X = 0 := by
+  refine ⟨fun h_coords => ?_, fun h_X => ?_⟩
+  · -- coords = 0 ⟹ X = 0
+    rw [tracelessSkewHermitian_decomp hX]
+    unfold matrixToPauliCoords at h_coords
+    have h1 : (X 0 1).im = 0 := by
+      have := h_coords; rw [Prod.mk.injEq] at this; exact this.1
+    have h2 : (X 0 1).re = 0 := by
+      have := h_coords; rw [Prod.mk.injEq] at this
+      have := this.2; rw [Prod.mk.injEq] at this; exact this.1
+    have h3 : (X 0 0).im = 0 := by
+      have := h_coords; rw [Prod.mk.injEq] at this
+      have := this.2; rw [Prod.mk.injEq] at this; exact this.2
+    rw [show ((X 0 1).im : ℂ) = 0 by rw [h1]; simp,
+        show ((X 0 1).re : ℂ) = 0 by rw [h2]; simp,
+        show ((X 0 0).im : ℂ) = 0 by rw [h3]; simp]
+    simp
+  · -- X = 0 ⟹ coords = 0
+    rw [h_X]
+    unfold matrixToPauliCoords
+    simp
+
+/-! ## §7. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
-session 35; extended Layer F.1 session 41 + Layer F.2 session 42):
-foundational Lie algebra substrate for the upstream-IFT path to
-Fibonacci density.
+session 35; extended Layer F.1 session 41 + Layer F.2 session 42 +
+Layer F.3 session 43): foundational Lie algebra substrate for the
+upstream-IFT path to Fibonacci density.
 
 **Shipped (zero new axioms)**:
 
