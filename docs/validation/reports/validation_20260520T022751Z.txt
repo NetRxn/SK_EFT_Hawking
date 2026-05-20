@@ -1,0 +1,13 @@
+SK-EFT Hawking Validation Report
+Generated: 20260520T022751Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] graph_integrity
+  + graph_size — 17693 nodes, 7895 edges
+  + conflicts — No verification conflicts
+  + orphan_nodes — 12339 orphan nodes: param:SFDM.c_s_subcluster_BK, param:SFDM.merger_Mach_canonical, param:SFDM.condensate_fraction_BK, param:SFDM.shock_extent_Bullet_kpc, param:SFDM.D_L_Bullet_Mpc (+12334 more)
+  + ungrounded_claims — 130 ungrounded claims: claim:paper10_modular_generation:0, claim:paper10_modular_generation:1, claim:paper10_modular_generation:2, claim:paper10_modular_generation:3, claim:paper10_modular_generation:4 (+125 more)
+  + broken_chains — 108 broken provenance chains: formula:polariton_spatial_attenuation, formula:polariton_tier1_validity, formula:stimulated_hawking_spectrum, formula:polariton_spatial_attenuation, formula:polariton_tier1_validity (+103 more)
+  + missing_provenance — 46 params without SOURCED_FROM: HBAR, K_B, A_BOHR, Rb87.mass, K39.mass (+41 more)
+
+Overall: 1/1 passed
