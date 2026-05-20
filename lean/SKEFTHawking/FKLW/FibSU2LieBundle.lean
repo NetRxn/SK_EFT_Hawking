@@ -1349,4 +1349,89 @@ theorem mem_nhds_pauliDet_liePartMat_ne_zero_at_rotPaulI_x_pi_div_two :
   rw [Real.sin_pi_div_two]
   exact one_ne_zero
 
+/-! ## §17. F.20.c.d.1 — Witnesses arbitrarily close to 1 (session 54)
+
+For `X ∈ 𝔰𝔲(2)`, `liePartMat (1 + X) = X` exactly (since `(1 + X) - 1 = X`
+and `lieProj` is idempotent on `𝔰𝔲(2)`). This is a **closed-form witness
+family**: every `1 + (t : ℂ) • paulI_x` (for `t ∈ ℝ \ {0}`) satisfies
+`σ_Fib_lie_bundle_pauliDet (liePartMat (1 + (t : ℂ) • paulI_x)) ≠ 0`.
+
+The matrix `1 + (t : ℂ) • paulI_x` is NOT in SU(2) (det = 1 + t² ≠ 1 for
+t ≠ 0) but DOES accumulate at `1 ∈ SU(2)` as `t → 0`. Combined with
+F.20.c.d.0 openness, this shows the spanning locus contains points
+arbitrarily close to 1 in matrix space.
+
+**Substrate downstream**: this gives an existential lower bound for
+F.20.c.d.{1,2} — there's no topological obstruction at 1 to finding
+spanning witnesses; what remains is to show that H_Fib elements (which
+are constrained to SU(2)) accumulate at 1 in "good directions" matching
+the spanning locus.
+
+**Ships**:
+  - `liePartMat_one_plus`: closed form for X ∈ 𝔰𝔲(2).
+  - `σ_Fib_lie_bundle_pauliDet_liePartMat_one_plus_paulI_x_ne_zero`:
+    explicit witness family `1 + (t : ℂ) • paulI_x` for `t ≠ 0`.
+  - `one_plus_real_smul_paulI_x_tendsto_one`: this family approaches 1
+    as `t → 0`.
+  - `mem_nhds_pauliDet_liePartMat_ne_zero_at_one_plus_smul_paulI_x`:
+    open neighborhood at each witness.
+-/
+
+/-- **Closed-form `liePartMat (1 + X)` for `X ∈ 𝔰𝔲(2)`**: equals `X`
+exactly (no first-order approximation needed). Direct from `(1 + X) - 1 = X`
+and `lieProj` idempotence on 𝔰𝔲(2). -/
+theorem liePartMat_one_plus
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    liePartMat ((1 : Matrix (Fin 2) (Fin 2) ℂ) + X) = X := by
+  unfold liePartMat
+  rw [show (1 + X - 1 : Matrix (Fin 2) (Fin 2) ℂ) = X by abel]
+  exact lieProj_idempotent_on_tracelessSkewHermitian hX
+
+/-- **Explicit witness family**: for any `t ∈ ℝ \ {0}`,
+`σ_Fib_lie_bundle_pauliDet (liePartMat (1 + (t : ℂ) • paulI_x)) ≠ 0`.
+
+This produces witnesses arbitrarily close to 1 in matrix space
+(`1 + (t : ℂ) • paulI_x → 1` as `t → 0`, by continuity of scalar
+multiplication and matrix addition). -/
+theorem σ_Fib_lie_bundle_pauliDet_liePartMat_one_plus_paulI_x_ne_zero
+    {t : ℝ} (ht : t ≠ 0) :
+    σ_Fib_lie_bundle_pauliDet
+      (liePartMat ((1 : Matrix (Fin 2) (Fin 2) ℂ) +
+        (t : ℂ) • paulI_x)) ≠ 0 := by
+  rw [liePartMat_one_plus
+    (tracelessSkewHermitian_complex_smul_real_mem
+      paulI_x_mem_tracelessSkewHermitian t)]
+  exact σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero ht
+
+/-- **Open neighborhood at each `1 + (t : ℂ) • paulI_x` witness**. -/
+theorem mem_nhds_pauliDet_liePartMat_ne_zero_at_one_plus_smul_paulI_x
+    {t : ℝ} (ht : t ≠ 0) :
+    {h : Matrix (Fin 2) (Fin 2) ℂ |
+      σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0} ∈
+        nhds ((1 : Matrix (Fin 2) (Fin 2) ℂ) + (t : ℂ) • paulI_x) := by
+  refine σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero_isOpen.mem_nhds ?_
+  exact σ_Fib_lie_bundle_pauliDet_liePartMat_one_plus_paulI_x_ne_zero ht
+
+/-- **The witness family approaches 1**: as `t → 0`,
+`1 + (t : ℂ) • paulI_x → 1` in matrix norm.
+
+Proof: `(t : ℂ) • paulI_x` is continuous in `t` and equals `0` at `t = 0`. -/
+theorem one_plus_real_smul_paulI_x_tendsto_one :
+    Filter.Tendsto (fun t : ℝ => (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+      (t : ℂ) • paulI_x) (nhds 0) (nhds 1) := by
+  have h_smul_tendsto :
+      Filter.Tendsto (fun t : ℝ => (t : ℂ) • paulI_x)
+        (nhds 0) (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+    rw [show (0 : Matrix (Fin 2) (Fin 2) ℂ) = ((0 : ℝ) : ℂ) • paulI_x from
+      by simp]
+    exact ((Complex.continuous_ofReal.smul continuous_const).tendsto 0)
+  have h_one : Filter.Tendsto (fun _ : ℝ => (1 : Matrix (Fin 2) (Fin 2) ℂ))
+      (nhds 0) (nhds 1) := tendsto_const_nhds
+  have h_combined :
+      Filter.Tendsto (fun t : ℝ => (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+        (t : ℂ) • paulI_x) (nhds 0) (nhds ((1 : Matrix _ _ ℂ) + 0)) :=
+    h_one.add h_smul_tendsto
+  simpa using h_combined
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
