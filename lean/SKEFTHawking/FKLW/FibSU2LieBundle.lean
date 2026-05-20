@@ -3338,4 +3338,25 @@ theorem golden_gamma_eq :
   rw [hq2, h_phi_sq, h_inv]
   ring
 
+/-- `γ² = 4γ + 1` — γ = 2-√5 satisfies the quadratic γ² - 4γ - 1 = 0.
+This is the minimal polynomial relation for γ over ℚ. -/
+theorem golden_gamma_sq :
+    (Real.goldenRatio⁻¹^2 - (Real.sqrt Real.goldenRatio)⁻¹^2)^2 =
+      4 * (Real.goldenRatio⁻¹^2 - (Real.sqrt Real.goldenRatio)⁻¹^2) + 1 := by
+  rw [golden_gamma_eq]
+  have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num)
+  nlinarith [h5, Real.sqrt_nonneg 5]
+
+/-- `α² + γ² = 1` — unitary-conjugation invariance: (α, 0, γ) is a unit
+vector (norm² = 1) as Pauli coords of `F·paulI_z·F` which is a unitary
+conjugate of `paulI_z` (norm 1 in Hilbert-Schmidt).
+
+Identity-derived: α² = 4√5 - 8, γ² = 9 - 4√5 (= 4γ + 1); sum = 1. -/
+theorem golden_alpha_sq_plus_gamma_sq :
+    (2 * Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹)^2 +
+      (Real.goldenRatio⁻¹^2 - (Real.sqrt Real.goldenRatio)⁻¹^2)^2 = 1 := by
+  rw [golden_alpha_sq, golden_gamma_eq]
+  have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num)
+  nlinarith [h5, Real.sqrt_nonneg 5]
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
