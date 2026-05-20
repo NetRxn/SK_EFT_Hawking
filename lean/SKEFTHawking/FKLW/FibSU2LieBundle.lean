@@ -125,4 +125,52 @@ theorem σ_Fib_lie_bundle_lin_indep
     a = 0 ∧ b = 0 ∧ c = 0 :=
   tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero h_det h_lin
 
+/-! ## §3. σ_Fib_1 Ad-action on paulI_x (Layer F.15, session 48)
+
+Substantive trigonometric content begins here. σ_Fib_1_SU_mat is
+diagonal (= `ω_Fib_C • σ_Fib_1` = `diag(ω·R1, ω·R_τ)`), so its
+Ad-conjugation of paulI_x has a clean closed form:
+`σ_Fib_1·paulI_x·σ_Fib_1† = !![0, (ω·R1)·conj(ω·R_τ)·I; (ω·R_τ)·conj(ω·R1)·I, 0]`.
+
+Substantive remaining content for the full spanning argument:
+  - **F.16**: extract Pauli coords of this matrix using
+    `(ω·R1)·conj(ω·R_τ) = R1·conj(R_τ) = exp(-7πi/5)` (unit-modulus
+    times unit-modulus conjugate cancellation).
+  - **F.17**: compute σ_Fib_2·paulI_x·σ_Fib_2† via F·σ_Fib_1·F.
+  - **F.18**: show pauliDet ≠ 0 and apply F.14.
+-/
+
+open Matrix in
+/-- **HEADLINE — diagonal 2×2 Ad-conjugation of paulI_x**.
+For any complex α, β, conjugation `diag(α, β) · paulI_x · diag(α, β)†`
+gives the off-diagonal matrix `!![0, α·conj β·I; β·conj α·I, 0]`. -/
+theorem diag_conj_paulI_x (α β : ℂ) :
+    (!![α, 0; 0, β] : Matrix (Fin 2) (Fin 2) ℂ) * paulI_x *
+      (!![α, 0; 0, β] : Matrix (Fin 2) (Fin 2) ℂ).conjTranspose =
+    !![0, α * star β * Complex.I;
+       β * star α * Complex.I, 0] := by
+  unfold paulI_x SKEFTHawking.σ_x
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
+          Matrix.smul_apply, smul_eq_mul] <;>
+    ring
+
+/-- σ_Fib_1_SU_mat in explicit 2×2 form: `diag(ω_Fib_C·R1_C, ω_Fib_C·R_τ_C)`. -/
+theorem σ_Fib_1_SU_mat_diagonal_form :
+    σ_Fib_1_SU_mat =
+    !![ω_Fib_C * R1_C, 0; 0, ω_Fib_C * Rtau_C] := by
+  unfold σ_Fib_1_SU_mat σ_Fib_1
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.smul_apply, smul_eq_mul]
+
+/-- **HEADLINE F.15 — σ_Fib_1 Ad-action on paulI_x explicit matrix form**.
+Composes `σ_Fib_1_SU_mat_diagonal_form` with `diag_conj_paulI_x`. -/
+theorem σ_Fib_1_SU_mat_conj_paulI_x_eq :
+    σ_Fib_1_SU_mat * paulI_x * σ_Fib_1_SU_mat.conjTranspose =
+    !![0, (ω_Fib_C * R1_C) * star (ω_Fib_C * Rtau_C) * Complex.I;
+       (ω_Fib_C * Rtau_C) * star (ω_Fib_C * R1_C) * Complex.I, 0] := by
+  rw [σ_Fib_1_SU_mat_diagonal_form, diag_conj_paulI_x]
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
