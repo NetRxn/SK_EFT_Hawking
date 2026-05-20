@@ -2593,4 +2593,56 @@ theorem exists_arbitrarily_small_pauliCoord_with_pauliDet_ne_zero
     have h_pos : (0 : ℝ) < ε / 2 := by positivity
     exact σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero h_pos.ne'
 
+/-! ## §26. R5.4 Layer F.20.c.d.2.o-app — Continuity + Pauli nbhd of paulI_x
+
+The σ_Fib_lie_bundle_pauliDet on Pauli-decomposed inputs is a CONTINUOUS
+function of the Pauli coords (a, b, c) ∈ ℝ³. Combined with F.18
+(σ_Fib_lie_bundle_pauliDet (paulI_x) ≠ 0), this gives an OPEN nhd in
+Pauli-coord space around (1, 0, 0) where the polynomial is non-zero.
+
+This refines F.20.c.d.2.o's countably-many-witnesses statement to an
+OPEN-set statement, which is more useful for downstream H_Fib direction
+analysis. -/
+
+/-- **R5.4 Layer F.20.c.d.2.o-app.1 — Continuity of pauliDet on Pauli decomp**.
+
+The function `(a, b, c) ↦ σ_Fib_lie_bundle_pauliDet (a•paulI_x + b•paulI_y + c•paulI_z)`
+is continuous as a function `ℝ³ → ℝ` (it is a polynomial — see F.20.c.d.2.n). -/
+theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_continuous :
+    Continuous (fun (abc : ℝ × ℝ × ℝ) =>
+      σ_Fib_lie_bundle_pauliDet
+        ((abc.1 : ℂ) • paulI_x + (abc.2.1 : ℂ) • paulI_y +
+         (abc.2.2 : ℂ) • paulI_z)) := by
+  -- σ_Fib_lie_bundle_pauliDet ∘ (Pauli sum embedding) is continuous
+  -- as composition of: σ_Fib_lie_bundle_pauliDet_continuous (shipped F.20.c.d.0)
+  -- with linear continuity of (a, b, c) ↦ a•x + b•y + c•z.
+  have h_embed : Continuous (fun (abc : ℝ × ℝ × ℝ) =>
+      (abc.1 : ℂ) • paulI_x + (abc.2.1 : ℂ) • paulI_y +
+        (abc.2.2 : ℂ) • paulI_z) := by
+    refine Continuous.add (Continuous.add ?_ ?_) ?_
+    · exact (Complex.continuous_ofReal.comp continuous_fst).smul continuous_const
+    · exact (Complex.continuous_ofReal.comp (continuous_fst.comp continuous_snd)).smul
+        continuous_const
+    · exact (Complex.continuous_ofReal.comp (continuous_snd.comp continuous_snd)).smul
+        continuous_const
+  exact σ_Fib_lie_bundle_pauliDet_continuous.comp h_embed
+
+/-- **R5.4 Layer F.20.c.d.2.o-app.2 — Pauli-coord locus is OPEN as ℝ³ set**.
+
+The set of Pauli triples `(a, b, c) ∈ ℝ³` such that
+`σ_Fib_lie_bundle_pauliDet (a•paulI_x + b•paulI_y + c•paulI_z) ≠ 0` is open
+in ℝ³, as the preimage of `{0}ᶜ ⊆ ℝ` under the continuous Pauli-decomp
+polynomial.
+
+This is the polynomial-side OPEN-set non-zero region (Pauli-coord level),
+complementing F.20.c.d.0's matrix-space-level openness. Useful as a stepping
+stone toward F.20.c.d.2.p which connects to H_Fib direction analysis. -/
+theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_isOpen_ne_zero_set :
+    IsOpen {p : ℝ × ℝ × ℝ |
+      σ_Fib_lie_bundle_pauliDet
+        ((p.1 : ℂ) • paulI_x + (p.2.1 : ℂ) • paulI_y +
+         (p.2.2 : ℂ) • paulI_z) ≠ 0} :=
+  σ_Fib_lie_bundle_pauliDet_pauliDecomp_continuous.isOpen_preimage {0}ᶜ
+    isOpen_compl_singleton
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
