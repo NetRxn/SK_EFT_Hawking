@@ -2690,4 +2690,32 @@ theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_homog (t a b c : ℝ) :
         ((c : ℝ) : ℂ) • paulI_z) := by
   rw [pauliDecomp_real_smul_eq, σ_Fib_lie_bundle_pauliDet_smul_uniform]
 
+/-! ## §28. R5.4 Layer F.20.c.d.2.o-app.5 — pauliDet ≠ 0 set ∈ nhds (1, 0, 0)
+
+The pauliDet ≠ 0 set in Pauli-coord space is an OPEN nhd of `(1, 0, 0)`.
+Filter-based statement avoids `Metric.ball` instance synthesis heartbeat
+issues. Downstream consumers can extract concrete δ via `Metric.mem_nhds_iff`
+at their own heartbeat budget. -/
+
+/-- **R5.4 Layer F.20.c.d.2.o-app.5 — pauliDet ≠ 0 set is in nhds of (1, 0, 0)**.
+
+The set `{(a, b, c) | σ_Fib_lie_bundle_pauliDet (a•x + b•y + c•z) ≠ 0}` is
+an open neighborhood of `(1, 0, 0)` in `ℝ × ℝ × ℝ`. Composes
+`σ_Fib_lie_bundle_pauliDet_pauliDecomp_isOpen_ne_zero_set` (openness) with
+F.18 (non-zero at paulI_x). -/
+theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_ne_zero_mem_nhds_paulI_x :
+    {p : ℝ × ℝ × ℝ |
+        σ_Fib_lie_bundle_pauliDet
+          ((p.1 : ℂ) • paulI_x + (p.2.1 : ℂ) • paulI_y +
+           (p.2.2 : ℂ) • paulI_z) ≠ 0} ∈
+      nhds ((1, 0, 0) : ℝ × ℝ × ℝ) := by
+  apply σ_Fib_lie_bundle_pauliDet_pauliDecomp_isOpen_ne_zero_set.mem_nhds
+  show σ_Fib_lie_bundle_pauliDet
+    (((1 : ℝ) : ℂ) • paulI_x + ((0 : ℝ) : ℂ) • paulI_y +
+     ((0 : ℝ) : ℂ) • paulI_z) ≠ 0
+  have h_eq : ((1 : ℝ) : ℂ) • paulI_x + ((0 : ℝ) : ℂ) • paulI_y +
+      ((0 : ℝ) : ℂ) • paulI_z = paulI_x := by simp
+  rw [h_eq]
+  exact σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
