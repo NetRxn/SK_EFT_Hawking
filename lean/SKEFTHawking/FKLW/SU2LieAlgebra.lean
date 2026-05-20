@@ -911,6 +911,129 @@ theorem tracelessSkewHermitian_conj_specialUnitary
   rw [h_eq]
   exact lieProj_mem_tracelessSkewHermitian _
 
+/-! ## §15. Cramer-rule SPANNING criterion (Layer F.20.a, session 50)
+
+Companion to §10 (Cramer-rule independence). Given 3 elements of `𝔰𝔲(2)`
+with non-zero `pauliDet`, every X ∈ 𝔰𝔲(2) admits an explicit real linear
+combination expressing X as `(a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃`.
+
+This is the spanning half of the linear-independence/spanning duality
+(§10 proves "lin-indep ⟹ unique combination"; §15 proves "lin-indep ⟹
+combination exists"). Together they establish that `(v₁, v₂, v₃)` is a
+basis of `𝔰𝔲(2)` under the `pauliDet ≠ 0` hypothesis.
+
+Proof: explicit Cramer formula for the inverse 3×3 matrix applied to
+the target Pauli coordinates of X. The algebraic identities are pure
+ℝ-polynomial identities closed by `field_simp; ring`. -/
+
+/-- The submodule `tracelessSkewHermitian (Fin 2)` is closed under
+ℂ-scalar action by real-cast coefficients. -/
+private theorem tracelessSkewHermitian_complex_smul_real_mem
+    {v : Matrix (Fin 2) (Fin 2) ℂ} (hv : v ∈ tracelessSkewHermitian (Fin 2))
+    (r : ℝ) : (r : ℂ) • v ∈ tracelessSkewHermitian (Fin 2) := by
+  rw [Complex.coe_smul r v]
+  exact Submodule.smul_mem _ r hv
+
+/-- **Cramer-rule explicit-combination spanning**: if `pauliDet v₁ v₂ v₃ ≠ 0`
+for `v₁, v₂, v₃ ∈ 𝔰𝔲(2)`, then every `X ∈ 𝔰𝔲(2)` has an explicit
+ℝ-coefficient triple `(a, b, c)` with
+`X = (a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃`.
+
+This is the SPAN companion to the LIN-INDEP criterion `tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero`
+in §10. Together they show `pauliDet ≠ 0` is **necessary and sufficient**
+for `(v₁, v₂, v₃)` to be a basis of `𝔰𝔲(2)`. -/
+theorem tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero
+    {v₁ v₂ v₃ : Matrix (Fin 2) (Fin 2) ℂ}
+    (hv₁ : v₁ ∈ tracelessSkewHermitian (Fin 2))
+    (hv₂ : v₂ ∈ tracelessSkewHermitian (Fin 2))
+    (hv₃ : v₃ ∈ tracelessSkewHermitian (Fin 2))
+    (h_det : pauliDet v₁ v₂ v₃ ≠ 0)
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    ∃ a b c : ℝ,
+      X = (a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃ := by
+  -- Extract Pauli coords as scalars
+  set xv1 := (matrixToPauliCoords v₁).1 with hxv1
+  set yv1 := (matrixToPauliCoords v₁).2.1 with hyv1
+  set zv1 := (matrixToPauliCoords v₁).2.2 with hzv1
+  set xv2 := (matrixToPauliCoords v₂).1 with hxv2
+  set yv2 := (matrixToPauliCoords v₂).2.1 with hyv2
+  set zv2 := (matrixToPauliCoords v₂).2.2 with hzv2
+  set xv3 := (matrixToPauliCoords v₃).1 with hxv3
+  set yv3 := (matrixToPauliCoords v₃).2.1 with hyv3
+  set zv3 := (matrixToPauliCoords v₃).2.2 with hzv3
+  set x := (matrixToPauliCoords X).1 with hx
+  set y := (matrixToPauliCoords X).2.1 with hy
+  set z := (matrixToPauliCoords X).2.2 with hz
+  -- Identify pauliDet expansion
+  set D := xv1 * (yv2 * zv3 - zv2 * yv3) - yv1 * (xv2 * zv3 - zv2 * xv3)
+           + zv1 * (xv2 * yv3 - yv2 * xv3) with hD_def
+  have hD_eq : pauliDet v₁ v₂ v₃ = D := rfl
+  have hD : D ≠ 0 := hD_eq ▸ h_det
+  -- Define explicit Cramer-rule coefficients
+  refine ⟨(x * (yv2 * zv3 - zv2 * yv3) - y * (xv2 * zv3 - zv2 * xv3)
+           + z * (xv2 * yv3 - yv2 * xv3)) / D,
+          (-(x * (yv1 * zv3 - zv1 * yv3)) + y * (xv1 * zv3 - zv1 * xv3)
+           - z * (xv1 * yv3 - yv1 * xv3)) / D,
+          (x * (yv1 * zv2 - zv1 * yv2) - y * (xv1 * zv2 - zv1 * xv2)
+           + z * (xv1 * yv2 - yv1 * xv2)) / D, ?_⟩
+  set a := (x * (yv2 * zv3 - zv2 * yv3) - y * (xv2 * zv3 - zv2 * xv3)
+            + z * (xv2 * yv3 - yv2 * xv3)) / D with ha_def
+  set b := (-(x * (yv1 * zv3 - zv1 * yv3)) + y * (xv1 * zv3 - zv1 * xv3)
+            - z * (xv1 * yv3 - yv1 * xv3)) / D with hb_def
+  set c := (x * (yv1 * zv2 - zv1 * yv2) - y * (xv1 * zv2 - zv1 * xv2)
+            + z * (xv1 * yv2 - yv1 * xv2)) / D with hc_def
+  -- Step 1: combo is in 𝔰𝔲(2)
+  have h_combo_mem :
+      (a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃ ∈
+        tracelessSkewHermitian (Fin 2) := by
+    refine Submodule.add_mem _ (Submodule.add_mem _ ?_ ?_) ?_
+    · exact tracelessSkewHermitian_complex_smul_real_mem hv₁ a
+    · exact tracelessSkewHermitian_complex_smul_real_mem hv₂ b
+    · exact tracelessSkewHermitian_complex_smul_real_mem hv₃ c
+  -- Step 2: Pauli coords of combo match X's coords
+  have h_coords_match :
+      matrixToPauliCoords ((a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃) =
+        matrixToPauliCoords X := by
+    rw [matrixToPauliCoords_add, matrixToPauliCoords_add,
+        matrixToPauliCoords_smul, matrixToPauliCoords_smul,
+        matrixToPauliCoords_smul]
+    refine Prod.ext ?_ (Prod.ext ?_ ?_)
+    · -- x-coord
+      show a * xv1 + b * xv2 + c * xv3 = x
+      simp only [ha_def, hb_def, hc_def]
+      field_simp
+      ring
+    · -- y-coord
+      show a * yv1 + b * yv2 + c * yv3 = y
+      simp only [ha_def, hb_def, hc_def]
+      field_simp
+      ring
+    · -- z-coord
+      show a * zv1 + b * zv2 + c * zv3 = z
+      simp only [ha_def, hb_def, hc_def]
+      field_simp
+      ring
+  -- Step 3: difference is in 𝔰𝔲(2) with zero coords ⟹ difference = 0 ⟹ X = combo
+  have h_diff_mem : X - ((a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃) ∈
+      tracelessSkewHermitian (Fin 2) := Submodule.sub_mem _ hX h_combo_mem
+  have h_diff_coords_zero :
+      matrixToPauliCoords (X - ((a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃)) =
+        (0, 0, 0) := by
+    rw [sub_eq_add_neg, matrixToPauliCoords_add]
+    have h_neg :
+        matrixToPauliCoords (-((a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃)) =
+        (-(matrixToPauliCoords ((a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃)).1,
+         -(matrixToPauliCoords ((a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃)).2.1,
+         -(matrixToPauliCoords ((a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃)).2.2) := by
+      unfold matrixToPauliCoords
+      simp [Matrix.neg_apply, Complex.neg_im, Complex.neg_re]
+    rw [h_neg, h_coords_match]
+    simp
+  have h_diff_zero :
+      X - ((a : ℂ) • v₁ + (b : ℂ) • v₂ + (c : ℂ) • v₃) = 0 :=
+    (matrixToPauliCoords_eq_zero_iff h_diff_mem).mp h_diff_coords_zero
+  exact sub_eq_zero.mp h_diff_zero
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
