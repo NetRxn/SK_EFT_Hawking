@@ -4322,4 +4322,157 @@ theorem fibonacci_density_F21_unified
   · exact fibonacci_density_from_F21_residual_and_bridge_lemma_62 h_residual h_bridge
   · exact fibonacci_density_from_cartan_classification h_cartan
 
+/-! ## §47. R5.4 Layer F.20.c.d.2.x — cFib closed form (Path A substrate, step 1)
+
+Substantive substrate toward F21_residual_small_spanning discharge: define the
+infinite-order element
+
+  `cFib_SU_mat := σ_Fib_1_SU_mat * σ_Fib_2_SU_mat.conjTranspose`
+
+(matrix-level realization of `cFib := σ_Fib_1_SU * σ_Fib_2_SU⁻¹` whose infinite
+order is shipped via `cFib_not_isOfFinOrder` in FibSU2Density.lean §28), and
+compute its trace closed form.
+
+The trace `tr(cFib_SU_mat) = (3 - √5)/2 ≈ 0.382` corresponds to a rotation by
+angle θ in SO(3) with `2·cos(θ/2) = (3-√5)/2`. Since this is irrational
+(involves √5), θ is not a rational multiple of π, confirming infinite order.
+
+**Substantive content**:
+  - Compute `σ_Fib_2_SU_mat[1,1]` closed form (mirror of shipped `σ_Fib_2_SU_mat_entry_00`)
+  - Use σ_Fib_1_SU_mat diagonal form (`σ_Fib_1_SU_mat_diagonal_form` §3)
+  - Combine via entry-wise trace expansion + ω-cancellation + R-eigenvalue
+    products (`R1_C_mul_star_Rtau_C` substrate)
+  - Final reduction: `2·φInv² + 2·φInv·cos(7π/5) = (3-√5)/2` via `golden_phi_inv_sq`
+    + `cos_7pi_div_5` (§§35-36 substrate). -/
+
+/-- **`σ_Fib_2_SU_mat` entry (1,1)** (mirror of shipped entry (0,0) in §6).
+
+`σ_Fib_2_SU_mat 1 1 = ω · (φInv·R1 + φInv²·Rτ)`. -/
+theorem σ_Fib_2_SU_mat_entry_11 :
+    σ_Fib_2_SU_mat 1 1 =
+      ω_Fib_C * (φInv_C * R1_C + φInv_C * φInv_C * Rtau_C) := by
+  have h_φInvSqrt_sq : φInvSqrt_C * φInvSqrt_C = φInv_C := by
+    have := φInvSqrt_C_sq; rw [sq] at this; exact this
+  unfold σ_Fib_2_SU_mat σ_Fib_2 σ_Fib_1 F_C
+  simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, smul_eq_mul]
+  left
+  linear_combination R1_C * h_φInvSqrt_sq
+
+/-- **cFib matrix realization**: `cFib_SU_mat := σ_Fib_1_SU_mat * σ_Fib_2_SU_mat.conjTranspose`.
+
+This is the underlying matrix of `cFib := σ_Fib_1_SU * σ_Fib_2_SU⁻¹` ∈ SU(2),
+which has infinite order via `cFib_not_isOfFinOrder`. -/
+noncomputable def cFib_SU_mat : Matrix (Fin 2) (Fin 2) ℂ :=
+  σ_Fib_1_SU_mat * σ_Fib_2_SU_mat.conjTranspose
+
+/-- **Subtype-value bridge**: the underlying matrix of `cFib = σ_Fib_1_SU · σ_Fib_2_SU⁻¹`
+equals `cFib_SU_mat`. -/
+theorem cFib_val_eq_cFib_SU_mat :
+    ((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) =
+      cFib_SU_mat := by
+  show σ_Fib_1_SU_mat * (σ_Fib_2_SU⁻¹).val = cFib_SU_mat
+  unfold cFib_SU_mat
+  congr 1
+
+/-- **Key identity**: `exp(-7πi/5) + exp(7πi/5) = 2·cos(7π/5)` (Euler's formula).
+
+For the trace computation, the cross terms `R1·star Rτ + Rτ·star R1` reduce to
+the real exponential sum via Euler. -/
+theorem exp_neg_seven_pi_div_five_add_conj :
+    Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I) +
+      Complex.exp (((7 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) =
+    ((2 * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) := by
+  -- exp(iθ) = cos(θ) + i·sin(θ); applied at ±7π/5 and sum cancels imaginary parts.
+  have h_neg : Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I) =
+      ((Real.cos (-(7 * Real.pi / 5)) : ℝ) : ℂ) +
+        ((Real.sin (-(7 * Real.pi / 5)) : ℝ) : ℂ) * Complex.I := by
+    rw [show (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I) =
+          (((-(7 * Real.pi / 5)) : ℝ) : ℂ) * Complex.I from rfl]
+    have := Complex.exp_mul_I ((-(7 * Real.pi / 5) : ℝ) : ℂ)
+    rw [this]
+    push_cast
+    ring
+  have h_pos : Complex.exp (((7 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) =
+      ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) +
+        ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I := by
+    have := Complex.exp_mul_I ((7 * Real.pi / 5 : ℝ) : ℂ)
+    rw [this]
+    push_cast
+    ring
+  rw [h_neg, h_pos, Real.cos_neg, Real.sin_neg]
+  push_cast
+  ring
+
+/-- **Cross-term sum**: `R1·star Rτ + Rτ·star R1 = 2·cos(7π/5)`. -/
+theorem R1_star_Rtau_add_Rtau_star_R1 :
+    R1_C * star Rtau_C + Rtau_C * star R1_C =
+      ((2 * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) := by
+  rw [R1_C_mul_star_Rtau_C]
+  -- Rτ·star R1 = star(R1·star Rτ) = star(exp(-7πi/5))
+  rw [show Rtau_C * star R1_C = star (R1_C * star Rtau_C) by
+    rw [star_mul, star_star, mul_comm], R1_C_mul_star_Rtau_C]
+  -- star(exp(-7πi/5)) = exp(7πi/5)
+  rw [show (star (Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I)) : ℂ)
+        = (starRingEnd ℂ) (Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I))
+        from rfl, ← Complex.exp_conj]
+  rw [map_mul, Complex.conj_ofReal, Complex.conj_I]
+  -- The exponent: conj((-(7π/5))·I) = (-(7π/5))·(-I) = (7π/5)·I
+  rw [show ((-(7 * Real.pi / 5 : ℝ) : ℝ) : ℂ) * -Complex.I =
+        ((7 * Real.pi / 5 : ℝ) : ℂ) * Complex.I by push_cast; ring]
+  exact exp_neg_seven_pi_div_five_add_conj
+
+/-- **Trace entry-wise expansion for cFib_SU_mat**.
+
+`tr(σ_Fib_1_SU_mat · σ_Fib_2_SU_mat†) = σ_Fib_1[0,0]·star(σ_Fib_2[0,0]) +
+  σ_Fib_1[1,1]·star(σ_Fib_2[1,1])` (since σ_Fib_1 is diagonal). -/
+theorem cFib_SU_mat_trace_entrywise :
+    Matrix.trace cFib_SU_mat =
+      σ_Fib_1_SU_mat 0 0 * star (σ_Fib_2_SU_mat 0 0) +
+      σ_Fib_1_SU_mat 1 1 * star (σ_Fib_2_SU_mat 1 1) := by
+  unfold cFib_SU_mat
+  rw [Matrix.trace_fin_two]
+  have h_entry_00 : (σ_Fib_1_SU_mat * σ_Fib_2_SU_mat.conjTranspose) 0 0 =
+      σ_Fib_1_SU_mat 0 0 * star (σ_Fib_2_SU_mat 0 0) := by
+    rw [Matrix.mul_apply, Fin.sum_univ_two,
+        show σ_Fib_1_SU_mat 0 1 = 0 by
+          rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+        Matrix.conjTranspose_apply, Matrix.conjTranspose_apply]
+    ring
+  have h_entry_11 : (σ_Fib_1_SU_mat * σ_Fib_2_SU_mat.conjTranspose) 1 1 =
+      σ_Fib_1_SU_mat 1 1 * star (σ_Fib_2_SU_mat 1 1) := by
+    rw [Matrix.mul_apply, Fin.sum_univ_two,
+        show σ_Fib_1_SU_mat 1 0 = 0 by
+          rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+        Matrix.conjTranspose_apply, Matrix.conjTranspose_apply]
+    ring
+  rw [h_entry_00, h_entry_11]
+
+/-- **Trace via diagonal entries** — substitute the closed forms of σ_Fib_1
+diagonal entries and σ_Fib_2 (0,0) + (1,1) entries.
+
+`Matrix.trace cFib_SU_mat = ω·R1 · star(ω·(φInv²·R1 + φInv·Rτ))
+                          + ω·Rτ · star(ω·(φInv·R1 + φInv²·Rτ))`. -/
+theorem cFib_SU_mat_trace_expanded :
+    Matrix.trace cFib_SU_mat =
+      ω_Fib_C * R1_C * star (ω_Fib_C * (φInv_C * φInv_C * R1_C + φInv_C * Rtau_C)) +
+      ω_Fib_C * Rtau_C * star (ω_Fib_C * (φInv_C * R1_C + φInv_C * φInv_C * Rtau_C)) := by
+  rw [cFib_SU_mat_trace_entrywise]
+  rw [show σ_Fib_1_SU_mat 0 0 = ω_Fib_C * R1_C by
+    rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+    show σ_Fib_1_SU_mat 1 1 = ω_Fib_C * Rtau_C by
+    rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
+    σ_Fib_2_SU_mat_entry_00, σ_Fib_2_SU_mat_entry_11]
+
+/-! ## §48. R5.4 Layer F.20.c.d.2.y — DEFERRED: cFib trace numerical closed form
+
+Future session will reduce `cFib_SU_mat_trace_expanded` to the closed-form
+`(3 - √5)/2` via:
+  - star-distribution (`star_mul`, `star_add`) + ω-cancellation (`hω_sq`)
+  - R-eigenvalue cross-term `R1·star Rτ + Rτ·star R1 = 2·cos(7π/5)` (shipped above)
+  - Golden-ratio + trig substrate (`golden_phi_inv_sq`, `cos_7pi_div_5`, etc.)
+The complex-algebraic friction in the final step is non-trivial; deferred for
+clean treatment in a follow-on. -/
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
