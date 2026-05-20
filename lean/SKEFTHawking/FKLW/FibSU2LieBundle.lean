@@ -1769,6 +1769,56 @@ theorem σ_Fib_lie_bundle_pauliDet_paulI_z_eq_zero :
   exact pauliDet_eq_zero_of_first_two_eq paulI_z
     (σ_Fib_2_SU_mat * paulI_z * σ_Fib_2_SU_mat.conjTranspose)
 
+/-- **R5.4 Layer F.20.c.d.2.f-app — every scalar-multiple-of-paulI_z is
+in the zero locus**.
+
+By trilinear homogeneity (`σ_Fib_lie_bundle_pauliDet_smul_uniform` from
+F.20.b), `σ_Fib_lie_bundle_pauliDet (c·paulI_z) = c³·0 = 0` for every
+`c ∈ ℝ`. -/
+theorem σ_Fib_lie_bundle_pauliDet_smul_paulI_z_eq_zero (c : ℝ) :
+    σ_Fib_lie_bundle_pauliDet ((c : ℂ) • paulI_z) = 0 := by
+  rw [σ_Fib_lie_bundle_pauliDet_smul_uniform,
+      σ_Fib_lie_bundle_pauliDet_paulI_z_eq_zero, mul_zero]
+
+/-! ### Ad-action of σ_Fib_1 on paulI_y (Layer F.20.c.d.2.g)
+
+Following the same anti-diagonal pattern as the paulI_x case
+(`diag_conj_paulI_x` + `σ_Fib_1_SU_mat_conj_paulI_x_eq`), we ship the
+generic `diag_conj_paulI_y` (purely matrix-algebraic) + the σ_Fib_1
+specialization. The structural conclusion: σ_Fib_1's Ad-action on paulI_y
+is anti-diagonal with entries `α·star β` and `-(β·star α)` for
+`α = ω·R_1, β = ω·R_τ`, i.e., the same rotation pattern as paulI_x but
+WITHOUT the global `·Complex.I` factor. -/
+
+/-- **Generic diagonal conjugation of paulI_y** (companion to
+`diag_conj_paulI_x` and `diag_conj_paulI_z`).
+
+For diagonal `D = !![α, 0; 0, β]` and `paulI_y = !![0, 1; -1, 0]`:
+`D · paulI_y · D† = !![0, α·star β; -(β·star α), 0]`. -/
+theorem diag_conj_paulI_y (α β : ℂ) :
+    (!![α, 0; 0, β] : Matrix (Fin 2) (Fin 2) ℂ) * paulI_y *
+        (!![α, 0; 0, β] : Matrix (Fin 2) (Fin 2) ℂ).conjTranspose =
+        !![0, α * star β; -(β * star α), 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, star_zero, paulI_y, SKEFTHawking.σ_y,
+          Matrix.smul_apply, smul_eq_mul] <;>
+    ring
+
+/-- **σ_Fib_1_SU_mat Ad-action on paulI_y — explicit form**.
+
+Composes `σ_Fib_1_SU_mat_diagonal_form` with `diag_conj_paulI_y`,
+then simplifies via ω cancellation (`ω_mul_X_mul_star_ω_mul_Y`). -/
+theorem σ_Fib_1_SU_mat_conj_paulI_y_eq :
+    σ_Fib_1_SU_mat * paulI_y * σ_Fib_1_SU_mat.conjTranspose =
+        !![0, R1_C * star Rtau_C;
+           -(Rtau_C * star R1_C), 0] := by
+  rw [σ_Fib_1_SU_mat_diagonal_form, diag_conj_paulI_y,
+      ω_mul_X_mul_star_ω_mul_Y R1_C Rtau_C,
+      ω_mul_X_mul_star_ω_mul_Y Rtau_C R1_C]
+
 /-! ## §22. R5.4 Layer F.20.c.d.2.d — SU(2)-subtype openness +
 nhd-of-1 spanning-locus witness
 
