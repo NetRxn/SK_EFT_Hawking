@@ -786,6 +786,76 @@ theorem lieProj_idempotent_on_tracelessSkewHermitian
   rw [skewHermitianProj_idempotent_on_tracelessSkewHermitian hX,
       tracelessProj_idempotent_on_tracelessSkewHermitian hX]
 
+/-! ## §12. Conjugation equivariance of `lieProj` (Layer F.10, session 48)
+
+For unitary `g`, the canonical 𝔰𝔲(2)-projection `lieProj` commutes
+with conjugation: `lieProj (g·M·g†) = g · lieProj M · g†`. This is the
+Ad-action equivariance that downstream H_Fib spanning needs — applying
+`lieProj` to the H_Fib 3-bundle `(h, σ_Fib_1·h·σ_Fib_1†, σ_Fib_2·h·σ_Fib_2†)`
+gives `(lieProj h, Ad(σ_Fib_1)(lieProj h), Ad(σ_Fib_2)(lieProj h))`,
+the bundle of Ad-rotated Lie directions.
+
+Key observation:
+  - `skewHermitianProj` is conjugation-equivariant unconditionally
+    (just needs `(gMg†)† = gM†g†`), no unitarity required.
+  - `tracelessProj` requires unitarity (`trace cyclic` needs `g†g = 1`,
+    `(tr M/2)•g·I·g† = (tr M/2)•I` needs `g·g† = 1`).
+-/
+
+/-- **`skewHermitianProj` conjugates with arbitrary matrices**: no
+unitarity required since `(g·M·g†)† = g·M†·g†` is a property of
+`conjTranspose` alone. -/
+theorem skewHermitianProj_conj_conjTranspose
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (g M : Matrix n n ℂ) :
+    skewHermitianProj (g * M * g.conjTranspose) =
+      g * skewHermitianProj M * g.conjTranspose := by
+  unfold skewHermitianProj
+  rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul,
+      Matrix.conjTranspose_conjTranspose]
+  -- Goal: (1/2) • (gMg† - g(M†g†)) = g · ((1/2) • (M - M†)) · g†
+  -- (conjTranspose rewrites leave the M†*g† term right-associated)
+  rw [Matrix.mul_smul, Matrix.smul_mul]
+  -- Goal: (1/2) • (gMg† - g(M†g†)) = (1/2) • (g · (M - M†) · g†)
+  congr 1
+  noncomm_ring
+
+/-- **`tracelessProj` is unitary-conjugation-equivariant** (n=2 only,
+matching the `tracelessProj` definition's domain). Uses both
+left-unitarity (`g† · g = 1`, for trace cyclic) and right-unitarity
+(`g · g† = 1`, for the scalar-identity term). -/
+theorem tracelessProj_conj_unitary
+    {g : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_left : g.conjTranspose * g = 1) (h_right : g * g.conjTranspose = 1)
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    tracelessProj (g * M * g.conjTranspose) =
+      g * tracelessProj M * g.conjTranspose := by
+  unfold tracelessProj
+  -- trace(g * M * g†) = trace(M * g† * g) = trace(M * 1) = trace M
+  have h_trace : (g * M * g.conjTranspose).trace = M.trace := by
+    -- trace_mul_cycle gives `trace(g† * g * M)` (left-associated `(g†*g)*M`)
+    rw [Matrix.trace_mul_cycle, h_left, Matrix.one_mul]
+  rw [h_trace]
+  -- Now: g M g† - (tr M / 2) • I  =  g · (M - (tr M / 2) • I) · g†
+  -- RHS = g·M·g† - g · ((tr M / 2) • I) · g†
+  --     = g·M·g† - (tr M / 2) • g · I · g†
+  --     = g·M·g† - (tr M / 2) • (g · g†)
+  --     = g·M·g† - (tr M / 2) • I
+  rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_smul, Matrix.smul_mul,
+      Matrix.mul_one, h_right]
+
+/-- **HEADLINE — `lieProj` is unitary-conjugation-equivariant**: for
+unitary `g`, `lieProj (g · M · g†) = g · lieProj M · g†`. -/
+theorem lieProj_conj_unitary
+    {g : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_left : g.conjTranspose * g = 1) (h_right : g * g.conjTranspose = 1)
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    lieProj (g * M * g.conjTranspose) =
+      g * lieProj M * g.conjTranspose := by
+  unfold lieProj
+  rw [skewHermitianProj_conj_conjTranspose,
+      tracelessProj_conj_unitary h_left h_right]
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
@@ -832,6 +902,11 @@ upstream-IFT path to Fibonacci density.
     imaginary for skew-Hermitian matrices. Companion lemmas:
     `lieProj_one_eq_zero` (1 ↦ 0) +
     `lieProj_idempotent_on_tracelessSkewHermitian`.
+  - **§12** (Layer F.10, session 48): `lieProj` Ad-equivariance.
+    `skewHermitianProj_conj_conjTranspose` (no unitarity needed),
+    `tracelessProj_conj_unitary` (needs both `g†g = 1` and `g·g† = 1`
+    for trace cyclic + scalar-identity), HEADLINE
+    `lieProj_conj_unitary`: `lieProj (g·M·g†) = g · lieProj M · g†`.
 
 **Substrate downstream (next sessions)**:
 
