@@ -3559,4 +3559,38 @@ theorem σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero :
     exact mul_pos h_neg_neg h_diff_pos
   linarith
 
+/-! ## §39. R5.4 Layer F.20.c.d.2.p.3.f — H_Fib existential composition
+
+The composition of the H_Fib-membership (§34) and the non-vanishing
+(§38 `σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero`) yields the existential
+form needed for downstream density work:
+
+  ∃ h ∈ H_Fib, σ_Fib_lie_bundle_pauliDet (liePartMat h.val) ≠ 0
+
+This is the CLEAN MILESTONE statement for the F.20.c.d.2 step. The
+witness is `σ_Fib_1_SU · σ_Fib_2_SU · σ_Fib_1_SU⁻¹`. Downstream F.21
+(unconditional Fibonacci density) reduces to applying the Aharonov-Arad
+iteration argument from this existential. -/
+
+/-- **R5.4 Layer F.20.c.d.2.p.3 HEADLINE — H_Fib contains a Gap-1 witness**.
+
+`∃ h ∈ H_Fib, σ_Fib_lie_bundle_pauliDet (liePartMat h.val) ≠ 0`.
+
+The witness is the Gap-1 element `σ_Fib_1_SU · σ_Fib_2_SU · σ_Fib_1_SU⁻¹`.
+Composes membership (§34 `σ_Fib_1_conj_σ_Fib_2_mem_H_Fib`) with the
+subtype-value bridge (§34 `σ_Fib_1_conj_σ_Fib_2_val`) and the non-vanishing
+theorem (§38 `σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero`).
+
+This closes the SUBSTANTIVE content of the F.20.c.d.2.p RISK step. The
+remaining bridge from this existential to F.21 unconditional density is
+the Aharonov-Arad iteration argument (multi-session). -/
+theorem exists_in_H_Fib_σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero :
+    ∃ h ∈ (SKEFTHawking.FKLW.H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      σ_Fib_lie_bundle_pauliDet
+        (liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ)) ≠ 0 := by
+  refine ⟨σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹, σ_Fib_1_conj_σ_Fib_2_mem_H_Fib, ?_⟩
+  rw [σ_Fib_1_conj_σ_Fib_2_val]
+  exact σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
