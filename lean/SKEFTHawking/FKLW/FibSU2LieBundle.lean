@@ -4822,4 +4822,81 @@ theorem cFib_SU_mat_matrixToPauliCoords :
   unfold matrixToPauliCoords
   rw [cFib_SU_mat_entry_01_im, cFib_SU_mat_entry_01_re, cFib_SU_mat_entry_00_im]
 
+/-! ## §53. R5.4 Layer F.20.c.d.2.cc — liePartMat cFib preservation
+
+`matrixToPauliCoords (liePartMat cFib_SU_mat) = matrixToPauliCoords cFib_SU_mat`,
+i.e. liePartMat preserves the Pauli coords shipped in §52.
+
+Reason: `liePartMat h = h - (tr h / 2)·1` for h ∈ SU(2) (per
+`liePartMat_specialUnitary`); the subtracted term `(tr/2)·1` has zero
+off-diagonal entries and zero `.im` on the diagonal (since `tr` is real),
+so neither `[0,1]` nor `.im` of `[0,0]` is affected.
+
+Composed with §52 → `matrixToPauliCoords (liePartMat cFib_SU_mat) = (a, b, c)`. -/
+
+/-- **Closed-form `liePartMat` for `cFib_SU_mat`**:
+`liePartMat cFib_SU_mat = cFib_SU_mat - ((3-√5)/4)·1`. -/
+theorem cFib_SU_mat_liePartMat :
+    liePartMat cFib_SU_mat =
+      cFib_SU_mat -
+        (((3 - Real.sqrt 5) / 4 : ℝ) : ℂ) •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h_lie :=
+    liePartMat_specialUnitary
+      (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+  rw [cFib_val_eq_cFib_SU_mat] at h_lie
+  rw [h_lie, cFib_SU_mat_trace]
+  congr 1
+  push_cast
+  ring
+
+/-- **(liePartMat cFib_SU_mat) [0,1] = cFib_SU_mat [0,1]** (off-diagonal unchanged).
+
+The subtracted scalar matrix has zero off-diagonal entries. -/
+theorem cFib_SU_mat_liePartMat_entry_01 :
+    (liePartMat cFib_SU_mat) 0 1 = cFib_SU_mat 0 1 := by
+  rw [cFib_SU_mat_liePartMat]
+  simp [Matrix.sub_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
+
+/-- **(liePartMat cFib_SU_mat)[0,0].im = (cFib_SU_mat 0 0).im**.
+
+The real scalar subtraction `(3-√5)/4` doesn't affect `.im`. -/
+theorem cFib_SU_mat_liePartMat_entry_00_im :
+    ((liePartMat cFib_SU_mat) 0 0).im = (cFib_SU_mat 0 0).im := by
+  rw [cFib_SU_mat_liePartMat]
+  simp [Matrix.sub_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul,
+        Complex.sub_im, Complex.mul_im, Complex.ofReal_im, Complex.ofReal_re,
+        Complex.one_im, Complex.one_re]
+
+/-- **R5.4 Layer F.20.c.d.2.cc HEADLINE — Pauli coords of `liePartMat cFib_SU_mat`**.
+
+`matrixToPauliCoords (liePartMat cFib_SU_mat) = matrixToPauliCoords cFib_SU_mat`,
+which equals the closed form `(a, b, c)` shipped in §52 via
+`cFib_SU_mat_matrixToPauliCoords`. -/
+theorem cFib_SU_mat_liePartMat_matrixToPauliCoords :
+    matrixToPauliCoords (liePartMat cFib_SU_mat) =
+      matrixToPauliCoords cFib_SU_mat := by
+  unfold matrixToPauliCoords
+  rw [cFib_SU_mat_liePartMat_entry_01, cFib_SU_mat_liePartMat_entry_00_im]
+
+/-- **R5.4 Layer F.20.c.d.2.cc HEADLINE 2 — closed-form Pauli coords of
+`liePartMat cFib_SU_mat`**.
+
+`matrixToPauliCoords (liePartMat cFib_SU_mat) = (a, b, c)` where:
+  - `a = φInv · φInvSqrt · sin(7π/5)`
+  - `b = φInv · φInvSqrt · (1 - cos(7π/5))`
+  - `c = -φInv · sin(7π/5)`
+
+Direct composition of `cFib_SU_mat_liePartMat_matrixToPauliCoords` with
+`cFib_SU_mat_matrixToPauliCoords`. Used by §54+ to evaluate
+`σ_Fib_lie_bundle_pauliDet (liePartMat cFib_SU_mat)` via the cubic form. -/
+theorem cFib_SU_mat_liePartMat_matrixToPauliCoords_closed :
+    matrixToPauliCoords (liePartMat cFib_SU_mat) =
+      (Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+         Real.sin (7 * Real.pi / 5),
+       Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+         (1 - Real.cos (7 * Real.pi / 5)),
+       -(Real.goldenRatio⁻¹ * Real.sin (7 * Real.pi / 5))) := by
+  rw [cFib_SU_mat_liePartMat_matrixToPauliCoords, cFib_SU_mat_matrixToPauliCoords]
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
