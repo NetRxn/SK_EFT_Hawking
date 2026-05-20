@@ -266,4 +266,102 @@ theorem σ_Fib_1_SU_mat_conj_paulI_x_pauliCoords :
         Complex.neg_im, Complex.ofReal_re, Complex.ofReal_im,
         Real.cos_neg, Real.sin_neg, Real.exp_zero, mul_one, one_mul]
 
+/-! ## §5. F.17.a — σ_Fib_2 = F·σ_Fib_1·F decomposition + F·paulI_x·F (session 49)
+
+Closes the substrate layer toward F.17.b's (σ_Fib_2·paulI_x·σ_Fib_2†)(0,0).im
+computation. Two pieces:
+
+  1. **`σ_Fib_2_SU_mat_F_decomp`**: σ_Fib_2_SU_mat = F_C · σ_Fib_1_SU_mat · F_C.
+     Direct consequence of `σ_Fib_2 = F · σ_Fib_1 · F` (FibSU2Rep) + scalar
+     commutativity for matrix product. The σ_Fib_1_SU_mat absorbs ω_Fib_C
+     transparently.
+
+  2. **`F_C_conj_paulI_x_eq`**: F·paulI_x·F = `!![a·I, b·I; b·I, -a·I]` where
+     a = 2/(φ√φ), b = 2/φ - 1 = (the F-conjugate Pauli coords). All
+     coefficients are real, so the result is in 𝔰𝔲(2) explicitly. This
+     uses `(1/√φ)² = 1/φ` (`φInvSqrt_C_sq`) + `1/φ + 1/φ² = 1` (from
+     `φ_C_sq` algebra). The substantive trig is deferred to F.17.b.
+-/
+
+/-- **σ_Fib_2_SU_mat F-decomposition** (Layer F.17.a step 1). The det-normalized
+σ_Fib_2 equals F_C-conjugation of det-normalized σ_Fib_1. Uses scalar-matrix
+commutativity: `ω • (F · σ_1 · F) = F · (ω • σ_1) · F` via `mul_smul_comm`
++ `smul_mul_assoc`. -/
+theorem σ_Fib_2_SU_mat_F_decomp :
+    σ_Fib_2_SU_mat = F_C * σ_Fib_1_SU_mat * F_C := by
+  unfold σ_Fib_2_SU_mat σ_Fib_1_SU_mat σ_Fib_2
+  -- Goal: ω • (F · σ_1 · F) = F · (ω • σ_1) · F
+  -- Strategy: rewrite RHS using `mul_smul_comm` then `smul_mul_assoc` to get
+  -- the LHS form `ω • ((F · σ_1) · F)`.
+  rw [show F_C * (ω_Fib_C • σ_Fib_1) * F_C =
+        ω_Fib_C • (F_C * σ_Fib_1 * F_C) from by
+      rw [mul_smul_comm, smul_mul_assoc]]
+
+/-- **σ_Fib_2_SU_mat.conjTranspose F-decomposition** (Layer F.17.a step 2).
+Take conjTranspose of the decomposition and use F's self-adjointness
+(`F_C_star : star F_C = F_C`) and `star = conjTranspose` for matrices. -/
+theorem σ_Fib_2_SU_mat_conjTranspose_F_decomp :
+    σ_Fib_2_SU_mat.conjTranspose =
+      F_C * σ_Fib_1_SU_mat.conjTranspose * F_C := by
+  rw [σ_Fib_2_SU_mat_F_decomp]
+  rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul]
+  -- Goal: F†·σ_Fib_1_SU† · F† · ... = F·σ_Fib_1_SU†·F
+  -- Use F† = F (from F_C_star : star F_C = F_C, with `star = conjTranspose` for matrices)
+  have hFstar : F_C.conjTranspose = F_C := by
+    have h := F_C_star
+    rwa [show (star F_C : Matrix (Fin 2) (Fin 2) ℂ) = F_C.conjTranspose from rfl] at h
+  rw [hFstar]
+  noncomm_ring
+
+/-- **F-conjugate of paulI_x — explicit matrix form** (Layer F.17.a step 3).
+`F · paulI_x · F = !![a·I, b·I; b·I, -a·I]` where `a = 2·(1/√φ)·(1/φ)` and
+`b = 2·(1/φ) - 1`. All coefficients are real. This is the bedrock
+Bonesteel-Hormozi-Simon F-action on the Pauli σ_x direction.
+
+Proof: entry-wise expansion + the identity `(1/√φ)² = 1/φ` (`φInvSqrt_C_sq`)
++ the relation `1/φ² + 1/φ = 1` (derivable from `φ_C_sq`). -/
+theorem F_C_conj_paulI_x_eq :
+    F_C * paulI_x * F_C =
+    !![(2 * φInvSqrt_C * φInv_C) * Complex.I, (2 * φInv_C - 1) * Complex.I;
+       (2 * φInv_C - 1) * Complex.I, -((2 * φInvSqrt_C * φInv_C) * Complex.I)] := by
+  -- The diagonal identity 1/φ² + 1/φ = 1 (private in FibSU2Rep — re-derive locally).
+  have h_φ_diag : φInv_C * φInv_C + φInvSqrt_C * φInvSqrt_C = 1 := by
+    -- Re-derive: φInvSqrt² = φInv (from φInvSqrt_C_sq), so reduces to
+    -- φInv² + φInv = 1. Multiply both sides by φ² to get φ + 1 = φ² (true).
+    have hsq : φInvSqrt_C * φInvSqrt_C = φInv_C := by
+      have := φInvSqrt_C_sq; rw [sq] at this; exact this
+    rw [hsq]
+    have h1 : φ_C * φInv_C = 1 := φ_C_mul_inv
+    have h2 : φ_C ^ 2 = φ_C + 1 := φ_C_sq
+    have hne : φ_C ≠ 0 := φ_C_ne_zero
+    have hsq_ne : φ_C ^ 2 ≠ 0 := pow_ne_zero _ hne
+    have key : φ_C ^ 2 * (φInv_C * φInv_C + φInv_C) = φ_C ^ 2 * 1 := by
+      calc φ_C ^ 2 * (φInv_C * φInv_C + φInv_C)
+          = (φ_C * φInv_C) * (φ_C * φInv_C) + φ_C * (φ_C * φInv_C) := by ring
+        _ = 1 * 1 + φ_C * 1 := by rw [h1]
+        _ = φ_C + 1 := by ring
+        _ = φ_C ^ 2 := h2.symm
+        _ = φ_C ^ 2 * 1 := by ring
+    exact mul_left_cancel₀ hsq_ne key
+  -- Also need φInvSqrt² = φInv (for collapsing (1/√φ)·(1/√φ) terms).
+  have h_φInvSqrt_sq : φInvSqrt_C * φInvSqrt_C = φInv_C := by
+    have := φInvSqrt_C_sq; rw [sq] at this; exact this
+  -- Entry-wise expansion.
+  unfold paulI_x SKEFTHawking.σ_x F_C
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two, smul_eq_mul]
+  -- Four entries to close:
+  -- (0,0): I·(2·φInvSqrt·φInv) — closes by ring
+  · ring
+  -- (0,1): I·(φInvSqrt² - φInv²) = (2·φInv - 1)·I.
+  -- Needs both `φInvSqrt² = φInv` and `φInv² + φInvSqrt² = 1` for the
+  -- 2·φInv reduction. Coefficient derivation:
+  --   G_L - G_R - 2·I·h_φInvSqrt_sq + I·h_φ_diag = 0 by ring.
+  · linear_combination 2 * Complex.I * h_φInvSqrt_sq - Complex.I * h_φ_diag
+  -- (1,0): symmetric to (0,1)
+  · linear_combination 2 * Complex.I * h_φInvSqrt_sq - Complex.I * h_φ_diag
+  -- (1,1): -I·(2·φInvSqrt·φInv)
+  · ring
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
