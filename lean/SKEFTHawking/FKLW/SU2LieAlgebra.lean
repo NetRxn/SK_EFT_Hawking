@@ -847,6 +847,93 @@ theorem lieProj_real_smul_one_eq_zero (r : ℝ) :
   rw [show ((0 : Matrix (Fin 2) (Fin 2) ℂ).trace / 2) = 0 by simp]
   rw [zero_smul, sub_zero]
 
+/-! ### Continuity of `skewHermitianProj`, `tracelessProj`, `lieProj` (Layer F.20.c.d.0, session 53)
+
+The three projection maps are continuous in the topology induced by
+`Matrix.linftyOpNormedAddCommGroup` (or any standard finite-dim topology
+on `Matrix (Fin n) (Fin n) ℂ`). Each is built from continuous
+combinators: `Matrix.add`, `Matrix.sub`, `Matrix.smul` (by a constant),
+`Matrix.conjTranspose`, and `Matrix.trace` — all continuous in the
+ambient matrix algebra.
+
+These continuity facts feed downstream openness arguments: the set
+`{h | pauliDet (liePartMat h) ≠ 0}` is open in `SU(2)` (or in `Matrix`),
+giving topological room for the BCH/IFT spanning argument. -/
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+
+/-- **`skewHermitianProj` is continuous**: built from `Matrix.sub`,
+`Matrix.conjTranspose`, and `const_smul`. -/
+theorem skewHermitianProj_continuous {n : Type*} [Fintype n] [DecidableEq n] :
+    Continuous (skewHermitianProj : Matrix n n ℂ → Matrix n n ℂ) := by
+  unfold skewHermitianProj
+  exact (continuous_id.sub continuous_id.matrix_conjTranspose).const_smul _
+
+/-- **`tracelessProj` is continuous**: built from `Matrix.sub`,
+`Matrix.trace`, scalar division, and `const_smul` by a (continuous)
+matrix function. -/
+theorem tracelessProj_continuous :
+    Continuous (tracelessProj :
+      Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold tracelessProj
+  -- M ↦ M - (M.trace / 2) • 1
+  refine continuous_id.sub ?_
+  -- (M.trace / 2) • (1 : Matrix _ _ ℂ) is continuous in M
+  refine Continuous.smul ?_ continuous_const
+  -- M ↦ M.trace / 2: trace continuous, division by constant continuous
+  exact (continuous_id.matrix_trace).div_const 2
+
+/-- **`lieProj` is continuous**: composition of the two projection maps. -/
+theorem lieProj_continuous :
+    Continuous (lieProj :
+      Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold lieProj
+  exact tracelessProj_continuous.comp skewHermitianProj_continuous
+
+/-! ### Continuity of `matrixToPauliCoords` and `pauliDet` (Layer F.20.c.d.0, session 53)
+
+`matrixToPauliCoords X := ((X 0 1).im, (X 0 1).re, (X 0 0).im)` is
+continuous as a function `Matrix (Fin 2) (Fin 2) ℂ → ℝ × ℝ × ℝ` —
+each component is `Re` or `Im` of a matrix entry, both continuous.
+
+`pauliDet` is then a polynomial in 9 reals, hence continuous as a
+function `(Matrix × Matrix × Matrix) → ℝ`. We ship the partial form
+`Continuous (fun X => pauliDet (f X) (g X) (h X))` via combinators. -/
+
+/-- **`matrixToPauliCoords` is continuous**. -/
+theorem matrixToPauliCoords_continuous :
+    Continuous (matrixToPauliCoords :
+      Matrix (Fin 2) (Fin 2) ℂ → ℝ × ℝ × ℝ) := by
+  unfold matrixToPauliCoords
+  refine Continuous.prodMk ?_ (Continuous.prodMk ?_ ?_)
+  · -- (X 0 1).im: continuous
+    exact Complex.continuous_im.comp (continuous_id.matrix_elem 0 1)
+  · -- (X 0 1).re: continuous
+    exact Complex.continuous_re.comp (continuous_id.matrix_elem 0 1)
+  · -- (X 0 0).im: continuous
+    exact Complex.continuous_im.comp (continuous_id.matrix_elem 0 0)
+
+/-- **`pauliDet` is continuous in each of its three matrix arguments**
+when given as a function `X ↦ pauliDet (A X) (B X) (C X)` for continuous
+`A, B, C`. Built from polynomial composition + `matrixToPauliCoords`. -/
+theorem pauliDet_continuous_of_continuous
+    {X : Type*} [TopologicalSpace X]
+    {A B C : X → Matrix (Fin 2) (Fin 2) ℂ}
+    (hA : Continuous A) (hB : Continuous B) (hC : Continuous C) :
+    Continuous (fun x => pauliDet (A x) (B x) (C x)) := by
+  unfold pauliDet
+  -- pauliDet is a polynomial in the 9 real Pauli-coord components.
+  -- Use matrixToPauliCoords_continuous + Continuous.fst/snd projections.
+  have hA' : Continuous (fun x => matrixToPauliCoords (A x)) :=
+    matrixToPauliCoords_continuous.comp hA
+  have hB' : Continuous (fun x => matrixToPauliCoords (B x)) :=
+    matrixToPauliCoords_continuous.comp hB
+  have hC' : Continuous (fun x => matrixToPauliCoords (C x)) :=
+    matrixToPauliCoords_continuous.comp hC
+  -- Extract each scalar component as a continuous real-valued function
+  -- Each is built from .fst / .snd projections (continuous)
+  fun_prop
+
 /-! ## §12. Conjugation equivariance of `lieProj` (Layer F.10, session 48)
 
 For unitary `g`, the canonical 𝔰𝔲(2)-projection `lieProj` commutes
