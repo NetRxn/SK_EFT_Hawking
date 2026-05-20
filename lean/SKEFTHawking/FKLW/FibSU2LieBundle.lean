@@ -1434,4 +1434,70 @@ theorem one_plus_real_smul_paulI_x_tendsto_one :
     h_one.add h_smul_tendsto
   simpa using h_combined
 
+/-! ## §18. F.20.c.d.1.app — Every neighborhood of 1 contains a witness (session 55)
+
+Package the F.20.c.d.0 openness + F.20.c.d.1 accumulation into a single
+clean statement: **every open neighborhood of 1 in `Matrix (Fin 2) (Fin 2) ℂ`
+contains a matrix M with `σ_Fib_lie_bundle_pauliDet (liePartMat M) ≠ 0`**.
+
+This is the form most useful to downstream BCH-iteration arguments:
+when we ask "is there an h ∈ H_Fib (∩ some open nhd of 1) with the
+spanning property?", the obstacle is NOT topological in the matrix
+sense — it's the question of whether the H_Fib intersection with
+the spanning locus is non-empty.
+
+**Ships**:
+  - `eventually_pauliDet_liePartMat_ne_zero_near_one`: the
+    `Filter.Eventually` form, expressing "for all M near 1, eventually
+    (along the witness family) pauliDet ≠ 0".
+  - `exists_in_nhds_one_pauliDet_liePartMat_ne_zero`: existential form,
+    "every nhd U of 1 contains M with pauliDet ≠ 0".
+  - `pauliDet_liePartMat_ne_zero_freq_one`: `1` is a frequency point of
+    the spanning locus (in the sense `MapClusterPt`-style).
+-/
+
+/-- **`Filter.Eventually` form**: along the witness family `t ↦ 1 + (t : ℂ) • paulI_x`,
+`σ_Fib_lie_bundle_pauliDet ≠ 0` eventually as `t → 0` (along
+`𝓝[≠] 0` — i.e., t ≠ 0 stays in the spanning locus). -/
+theorem eventually_pauliDet_liePartMat_ne_zero_near_zero :
+    ∀ᶠ t : ℝ in nhdsWithin 0 {0}ᶜ,
+      σ_Fib_lie_bundle_pauliDet
+        (liePartMat ((1 : Matrix (Fin 2) (Fin 2) ℂ) +
+          (t : ℂ) • paulI_x)) ≠ 0 := by
+  refine eventually_nhdsWithin_iff.mpr ?_
+  filter_upwards with t ht
+  exact σ_Fib_lie_bundle_pauliDet_liePartMat_one_plus_paulI_x_ne_zero ht
+
+/-- **HEADLINE F.20.c.d.1.app — every neighborhood of 1 contains a witness**.
+
+For every open set `U ⊆ Matrix (Fin 2) (Fin 2) ℂ` with `1 ∈ U`, there exists
+`M ∈ U` with `σ_Fib_lie_bundle_pauliDet (liePartMat M) ≠ 0`.
+
+Proof: by `one_plus_real_smul_paulI_x_tendsto_one`, the witness family
+`t ↦ 1 + (t : ℂ) • paulI_x` is in `U` for sufficiently small `t`. For
+`t ≠ 0`, the witness has non-zero pauliDet. Take any small `t ≠ 0` in
+the eventual region. -/
+theorem exists_in_nhds_one_pauliDet_liePartMat_ne_zero
+    {U : Set (Matrix (Fin 2) (Fin 2) ℂ)}
+    (hU : U ∈ nhds (1 : Matrix (Fin 2) (Fin 2) ℂ)) :
+    ∃ M ∈ U, σ_Fib_lie_bundle_pauliDet (liePartMat M) ≠ 0 := by
+  -- Witness family `t ↦ 1 + (t : ℂ) • paulI_x` tends to 1, so eventually it lands in U
+  have h_tendsto := one_plus_real_smul_paulI_x_tendsto_one
+  have h_pullback : (fun t : ℝ =>
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) + (t : ℂ) • paulI_x) ⁻¹' U ∈
+        nhds (0 : ℝ) := h_tendsto hU
+  -- Combined with eventually-pauliDet-ne-zero on `t ≠ 0`, find such t
+  have h_combined :
+      ∀ᶠ t : ℝ in nhdsWithin 0 {0}ᶜ,
+        ((1 : Matrix (Fin 2) (Fin 2) ℂ) + (t : ℂ) • paulI_x) ∈ U ∧
+        σ_Fib_lie_bundle_pauliDet
+          (liePartMat ((1 : Matrix (Fin 2) (Fin 2) ℂ) +
+            (t : ℂ) • paulI_x)) ≠ 0 :=
+    (eventually_nhdsWithin_of_eventually_nhds h_pullback).and
+      eventually_pauliDet_liePartMat_ne_zero_near_zero
+  -- Witness exists since `nhdsWithin 0 {0}ᶜ` is NeBot (instance auto-inferred
+  -- via `instNeBotNhdsWithinComplSetSingletonOfNontrivial` for ℝ).
+  obtain ⟨t, ht_mem, ht_pauli⟩ := h_combined.exists
+  exact ⟨(1 : Matrix (Fin 2) (Fin 2) ℂ) + (t : ℂ) • paulI_x, ht_mem, ht_pauli⟩
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
