@@ -2645,4 +2645,49 @@ theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_isOpen_ne_zero_set :
   σ_Fib_lie_bundle_pauliDet_pauliDecomp_continuous.isOpen_preimage {0}ᶜ
     isOpen_compl_singleton
 
+/-! ## §27. R5.4 Layer F.20.c.d.2.o-app extension — Polynomial-form homogeneity
+
+The σ_Fib_lie_bundle_pauliDet on Pauli-decomp inputs is a homogeneous polynomial
+of degree 3 in (a, b, c) ∈ ℝ³. Direct ℝ-scaling of all 3 Pauli coords scales the
+result by t³. Composes F.20.b's `σ_Fib_lie_bundle_pauliDet_smul_uniform` with
+the smul distributivity in the Pauli decomposition.
+
+This makes the cubic polynomial nature explicit and enables clean scaling-based
+arguments (e.g., "if P(d) ≠ 0 then P(t·d) ≠ 0 for all t ≠ 0"). -/
+
+/-- **R5.4 Layer F.20.c.d.2.o-app.3 — Pauli-coord scaling distributes**.
+
+For real `t` and Pauli triple `(a, b, c) ∈ ℝ³`:
+`(t·a)•paulI_x + (t·b)•paulI_y + (t·c)•paulI_z = (t:ℂ)·((a)•paulI_x + (b)•paulI_y + (c)•paulI_z)`.
+
+Pure ring identity in the smul algebra. -/
+theorem pauliDecomp_real_smul_eq (t a b c : ℝ) :
+    ((t * a : ℝ) : ℂ) • paulI_x + ((t * b : ℝ) : ℂ) • paulI_y +
+      ((t * c : ℝ) : ℂ) • paulI_z =
+    ((t : ℂ)) • (((a : ℝ) : ℂ) • paulI_x + ((b : ℝ) : ℂ) • paulI_y +
+      ((c : ℝ) : ℂ) • paulI_z) := by
+  rw [smul_add, smul_add, smul_smul, smul_smul, smul_smul]
+  push_cast
+  ring_nf
+
+/-- **R5.4 Layer F.20.c.d.2.o-app.4 — σ_Fib_lie_bundle_pauliDet polynomial-form homogeneity**.
+
+The polynomial `(a, b, c) ↦ σ_Fib_lie_bundle_pauliDet (a•x + b•y + c•z)` is
+HOMOGENEOUS of degree 3:
+`P(t·a, t·b, t·c) = t³ · P(a, b, c)` for all real `t`.
+
+This is the polynomial form of F.20.b's `σ_Fib_lie_bundle_pauliDet_smul_uniform`,
+specialized to Pauli-coord inputs. Useful for scaling arguments: if `P(a₀, b₀, c₀) ≠ 0`,
+then `P(t·a₀, t·b₀, t·c₀) ≠ 0` for all `t ≠ 0`, giving a 1-parameter family of
+arbitrarily-small non-zero witnesses (specializes to F.20.c.d.2.o for direction
+(a₀, b₀, c₀) = (1, 0, 0)). -/
+theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_homog (t a b c : ℝ) :
+    σ_Fib_lie_bundle_pauliDet
+      (((t * a : ℝ) : ℂ) • paulI_x + ((t * b : ℝ) : ℂ) • paulI_y +
+        ((t * c : ℝ) : ℂ) • paulI_z) =
+    t ^ 3 * σ_Fib_lie_bundle_pauliDet
+      (((a : ℝ) : ℂ) • paulI_x + ((b : ℝ) : ℂ) • paulI_y +
+        ((c : ℝ) : ℂ) • paulI_z) := by
+  rw [pauliDecomp_real_smul_eq, σ_Fib_lie_bundle_pauliDet_smul_uniform]
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
