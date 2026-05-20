@@ -1819,6 +1819,127 @@ theorem σ_Fib_1_SU_mat_conj_paulI_y_eq :
       ω_mul_X_mul_star_ω_mul_Y R1_C Rtau_C,
       ω_mul_X_mul_star_ω_mul_Y Rtau_C R1_C]
 
+/-- **σ_Fib_1 Ad-action on paulI_y in Pauli coords**.
+
+`matrixToPauliCoords (σ_Fib_1·paulI_y·σ_Fib_1†) = (-sin(7π/5), cos(7π/5), 0)`.
+
+Composes `σ_Fib_1_SU_mat_conj_paulI_y_eq` (explicit matrix form) with
+`R1_C_mul_star_Rtau_C = exp(-7πi/5)` and the matrixToPauliCoords
+definition. Together with the paulI_x version
+(`σ_Fib_1_SU_mat_conj_paulI_x_pauliCoords = (cos(7π/5), sin(7π/5), 0)`)
+and the paulI_z fixed-point (`σ_Fib_1_SU_mat_conj_paulI_z_eq = paulI_z`,
+so its coords are `(0, 0, 1)`), this gives the FULL 3×3 SO(3) matrix
+of σ_Fib_1's Ad-action: a rotation by `7π/5` about the z-axis in
+Pauli (x, y, z) coords. -/
+theorem σ_Fib_1_SU_mat_conj_paulI_y_pauliCoords :
+    matrixToPauliCoords
+      (σ_Fib_1_SU_mat * paulI_y * σ_Fib_1_SU_mat.conjTranspose) =
+    (-Real.sin (7 * Real.pi / 5), Real.cos (7 * Real.pi / 5), 0) := by
+  rw [σ_Fib_1_SU_mat_conj_paulI_y_eq, R1_C_mul_star_Rtau_C]
+  unfold matrixToPauliCoords
+  simp [Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Complex.zero_im, Complex.mul_re, Complex.mul_im, Complex.I_re,
+        Complex.I_im, Complex.exp_re, Complex.exp_im, Complex.neg_re,
+        Complex.neg_im, Complex.ofReal_re, Complex.ofReal_im,
+        Real.cos_neg, Real.sin_neg, Real.exp_zero, mul_one, one_mul]
+
+/-- **σ_Fib_1 Ad-conjugation is ℂ-linear** (general matrix-level fact). -/
+theorem σ_Fib_1_SU_mat_conj_add (X Y : Matrix (Fin 2) (Fin 2) ℂ) :
+    σ_Fib_1_SU_mat * (X + Y) * σ_Fib_1_SU_mat.conjTranspose =
+        σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose +
+        σ_Fib_1_SU_mat * Y * σ_Fib_1_SU_mat.conjTranspose := by
+  rw [mul_add, add_mul]
+
+/-- **σ_Fib_1 Ad-conjugation commutes with complex scalar mult** (matrix). -/
+theorem σ_Fib_1_SU_mat_conj_smul (c : ℂ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    σ_Fib_1_SU_mat * (c • X) * σ_Fib_1_SU_mat.conjTranspose =
+        c • (σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose) := by
+  rw [Matrix.mul_smul, Matrix.smul_mul]
+
+/-- **R5.4 Layer F.20.c.d.2.h — σ_Fib_1's Ad-action on a Pauli-decomposed
+element is a planar rotation by 7π/5 about the z-axis**.
+
+For `X = a·paulI_x + b·paulI_y + c·paulI_z ∈ 𝔰𝔲(2)`:
+  `σ_Fib_1·X·σ_Fib_1† = (a·cos(7π/5) - b·sin(7π/5))·paulI_x +
+                        (a·sin(7π/5) + b·cos(7π/5))·paulI_y +
+                        c·paulI_z`
+
+This is the canonical SO(3) image of σ_Fib_1's SU(2) element: a
+rotation by angle 7π/5 about the z-axis. Composes linearity of
+Ad-conjugation with the 3 Pauli base cases (paulI_x, paulI_y, paulI_z). -/
+theorem σ_Fib_1_SU_mat_conj_pauliDecomp (a b c : ℝ) :
+    σ_Fib_1_SU_mat *
+      ((a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z) *
+      σ_Fib_1_SU_mat.conjTranspose =
+    ((a * Real.cos (7 * Real.pi / 5) -
+        b * Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_x +
+    ((a * Real.sin (7 * Real.pi / 5) +
+        b * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_y +
+    ((c : ℝ) : ℂ) • paulI_z := by
+  -- Distribute Ad-conjugation over the sum, then apply each base case.
+  rw [σ_Fib_1_SU_mat_conj_add, σ_Fib_1_SU_mat_conj_add,
+      σ_Fib_1_SU_mat_conj_smul, σ_Fib_1_SU_mat_conj_smul,
+      σ_Fib_1_SU_mat_conj_smul]
+  -- Substitute each Ad-action: paulI_x → conj_paulI_x_eq with pauliCoords;
+  -- paulI_y → conj_paulI_y_eq; paulI_z → paulI_z (fixed).
+  rw [σ_Fib_1_SU_mat_conj_paulI_z_eq]
+  -- Now use the established Pauli-coord forms via tracelessSkewHermitian_decomp.
+  -- σ_Fib_1·paulI_x·σ_Fib_1† = cos(7π/5)·paulI_x + sin(7π/5)·paulI_y (z-coord 0)
+  have h_pauli_x_decomp :
+      σ_Fib_1_SU_mat * paulI_x * σ_Fib_1_SU_mat.conjTranspose =
+      ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_x +
+      ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_y +
+      ((0 : ℝ) : ℂ) • paulI_z := by
+    have h_mem : σ_Fib_1_SU_mat * paulI_x * σ_Fib_1_SU_mat.conjTranspose ∈
+        tracelessSkewHermitian (Fin 2) :=
+      tracelessSkewHermitian_conj_σ_Fib_1_SU_mat paulI_x_mem_tracelessSkewHermitian
+    have h_decomp := tracelessSkewHermitian_decomp h_mem
+    have h_coords := σ_Fib_1_SU_mat_conj_paulI_x_pauliCoords
+    unfold matrixToPauliCoords at h_coords
+    -- h_coords : (.im, .re, .im) = (cos(7π/5), sin(7π/5), 0)
+    -- Project via Prod accessors:
+    have h_im_01 : ((σ_Fib_1_SU_mat * paulI_x *
+        σ_Fib_1_SU_mat.conjTranspose) 0 1).im = Real.cos (7 * Real.pi / 5) :=
+      congrArg Prod.fst h_coords
+    have h_re_01 : ((σ_Fib_1_SU_mat * paulI_x *
+        σ_Fib_1_SU_mat.conjTranspose) 0 1).re = Real.sin (7 * Real.pi / 5) :=
+      congrArg (Prod.fst ∘ Prod.snd) h_coords
+    have h_im_00 : ((σ_Fib_1_SU_mat * paulI_x *
+        σ_Fib_1_SU_mat.conjTranspose) 0 0).im = 0 :=
+      congrArg (Prod.snd ∘ Prod.snd) h_coords
+    rw [h_decomp, h_im_01, h_re_01, h_im_00]
+  -- σ_Fib_1·paulI_y·σ_Fib_1† = -sin(7π/5)·paulI_x + cos(7π/5)·paulI_y (z-coord 0)
+  have h_pauli_y_decomp :
+      σ_Fib_1_SU_mat * paulI_y * σ_Fib_1_SU_mat.conjTranspose =
+      ((-Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_x +
+      ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_y +
+      ((0 : ℝ) : ℂ) • paulI_z := by
+    have h_mem : σ_Fib_1_SU_mat * paulI_y * σ_Fib_1_SU_mat.conjTranspose ∈
+        tracelessSkewHermitian (Fin 2) :=
+      tracelessSkewHermitian_conj_σ_Fib_1_SU_mat paulI_y_mem_tracelessSkewHermitian
+    have h_decomp := tracelessSkewHermitian_decomp h_mem
+    have h_coords := σ_Fib_1_SU_mat_conj_paulI_y_pauliCoords
+    unfold matrixToPauliCoords at h_coords
+    have h_im_01 : ((σ_Fib_1_SU_mat * paulI_y *
+        σ_Fib_1_SU_mat.conjTranspose) 0 1).im = -Real.sin (7 * Real.pi / 5) :=
+      congrArg Prod.fst h_coords
+    have h_re_01 : ((σ_Fib_1_SU_mat * paulI_y *
+        σ_Fib_1_SU_mat.conjTranspose) 0 1).re = Real.cos (7 * Real.pi / 5) :=
+      congrArg (Prod.fst ∘ Prod.snd) h_coords
+    have h_im_00 : ((σ_Fib_1_SU_mat * paulI_y *
+        σ_Fib_1_SU_mat.conjTranspose) 0 0).im = 0 :=
+      congrArg (Prod.snd ∘ Prod.snd) h_coords
+    rw [h_decomp, h_im_01, h_re_01, h_im_00]
+  rw [h_pauli_x_decomp, h_pauli_y_decomp]
+  -- Now the RHS has 6 terms; reorganize via push_cast + ring on the smul algebra
+  push_cast
+  -- Goal: a • (cos·x + sin·y + 0·z) + b • (-sin·x + cos·y + 0·z) + c • z =
+  --       (a·cos - b·sin) • x + (a·sin + b·cos) • y + c • z
+  -- Use smul distributivity
+  ext i j
+  simp only [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
+  ring
+
 /-! ## §22. R5.4 Layer F.20.c.d.2.d — SU(2)-subtype openness +
 nhd-of-1 spanning-locus witness
 
