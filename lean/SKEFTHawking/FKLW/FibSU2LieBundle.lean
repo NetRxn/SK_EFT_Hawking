@@ -5478,4 +5478,31 @@ theorem cFib_pow_liePartMat_axis_scaling_holds :
       rw [h_val_pow]
       exact h_lie_pow
 
+/-! ## §64. R5.4 Layer F.20.c.d.2.hh — Substrate toward cFib_powers_dense_at_one
+
+Structural substrate: `Subgroup.zpowers cFib_SU` is an INFINITE subgroup of
+compact SU(2). Its topological closure is a closed infinite subgroup.
+
+The discharge of `cFib_powers_dense_at_one` then reduces to:
+  (a) AccPt 1 on closure(zpowers) — via `one_accPt_of_infinite_closed_subgroup` ✓ (substrate ready)
+  (b) Closure-density extraction: AccPt at 1 in closure → small element in zpowers itself
+      (substantive topology, requires careful δ-management; deferred to a separate ship)
+  (c) ℤ → ℕ-positive translation via unitary norm-preserving inversion (deferred)
+
+Estimated remaining: ~80-120 LoC across 1-2 sessions. -/
+
+/-- **`Subgroup.zpowers cFib_SU` is infinite**: follows from cFib's infinite order.
+
+Composes `injective_zpow_iff_not_isOfFinOrder` with
+`σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder` + range injection. -/
+theorem zpowers_cFib_SU_infinite :
+    (Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).Infinite := by
+  -- zpowers a = Set.range (fun k : ℤ => a^k); injective ↔ ¬ IsOfFinOrder
+  rw [Subgroup.coe_zpowers]
+  exact Set.infinite_range_of_injective
+    ((injective_zpow_iff_not_isOfFinOrder).mpr
+      SKEFTHawking.FKLW.σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder)
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
