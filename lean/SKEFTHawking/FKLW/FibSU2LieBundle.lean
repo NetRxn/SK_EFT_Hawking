@@ -2718,4 +2718,91 @@ theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_ne_zero_mem_nhds_paulI_x :
   rw [h_eq]
   exact σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero
 
+/-! ## §29. R5.4 Layer F.20.c.d.2.p.1 — Analyticity of pauliDet on Pauli decomp
+
+The σ_Fib_lie_bundle_pauliDet on Pauli-decomposed inputs is `AnalyticOnNhd ℝ`
+on all of `ℝ³ = ℝ × ℝ × ℝ`. This follows directly from the closed-form cubic
+polynomial (F.20.c.d.2.n): the function is a polynomial in the Pauli coordinates
+(a, b, c) with real-constant coefficients (golden-ratio constants + cos/sin
+of 7π/5), hence analytic everywhere.
+
+This is the FIRST STEP in the HYBRID ANALYTIC-ZERO ROUTE for F.20.c.d.2.p
+(per Mathlib substrate scout findings, session 59 close memo). Combined with
+the F.20.c.d.2.o-app.5 non-vanishing-at-(1,0,0) witness, the next ship
+(F.20.c.d.2.p.2) will use `AnalyticOnNhd.eqOn_zero_of_preconnected_of_eventuallyEq_zero`
+contrapositive to conclude `interior {P = 0} = ∅`. -/
+
+/-- **R5.4 Layer F.20.c.d.2.p.1 — pauliDet on Pauli decomp is analytic on all of ℝ³**.
+
+The function `(a, b, c) ↦ σ_Fib_lie_bundle_pauliDet (a•paulI_x + b•paulI_y + c•paulI_z)`
+is `AnalyticOnNhd ℝ Set.univ`. Proof: rewrite via F.20.c.d.2.n's closed-form
+cubic polynomial (then the function is manifestly a polynomial in `(abc.1, abc.2.1, abc.2.2)`
+with real-constant coefficients), and build analyticity compositionally from
+`analyticOnNhd_fst`, `analyticOnNhd_snd`, `analyticOnNhd_const`, and the closure
+constructions `.add`, `.sub`, `.mul`, `.neg`. -/
+theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_analyticOnNhd :
+    AnalyticOnNhd ℝ (fun (abc : ℝ × ℝ × ℝ) =>
+      σ_Fib_lie_bundle_pauliDet
+        ((abc.1 : ℂ) • paulI_x + (abc.2.1 : ℂ) • paulI_y +
+         (abc.2.2 : ℂ) • paulI_z)) Set.univ := by
+  -- Constants
+  set cs : ℝ := Real.cos (7 * Real.pi / 5) with hcs_def
+  set sn : ℝ := Real.sin (7 * Real.pi / 5) with hsn_def
+  set α : ℝ := 2 * Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ with hα_def
+  set β : ℝ := 2 * Real.goldenRatio⁻¹ - 1 with hβ_def
+  set γ : ℝ := Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ -
+               (Real.sqrt Real.goldenRatio)⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ with hγ_def
+  -- Step 1: rewrite via F.20.c.d.2.n closed-form cubic polynomial,
+  -- inlining the constants (no let-bindings — they impede unification of `analyticOnNhd_const`).
+  have h_eq : (fun (abc : ℝ × ℝ × ℝ) =>
+        σ_Fib_lie_bundle_pauliDet
+          ((abc.1 : ℂ) • paulI_x + (abc.2.1 : ℂ) • paulI_y +
+           (abc.2.2 : ℂ) • paulI_z)) =
+      (fun (abc : ℝ × ℝ × ℝ) =>
+        abc.1 * ((abc.1 * sn + abc.2.1 * cs) *
+                  (((abc.1 * β + abc.2.2 * α) * cs + abc.2.1 * sn) * α +
+                   (abc.1 * α + abc.2.2 * γ) * γ) -
+                 abc.2.2 * (-((abc.1 * β + abc.2.2 * α) * sn) + abc.2.1 * cs)) -
+        abc.2.1 * ((abc.1 * cs - abc.2.1 * sn) *
+                    (((abc.1 * β + abc.2.2 * α) * cs + abc.2.1 * sn) * α +
+                     (abc.1 * α + abc.2.2 * γ) * γ) -
+                   abc.2.2 * (((abc.1 * β + abc.2.2 * α) * cs + abc.2.1 * sn) * β +
+                              (abc.1 * α + abc.2.2 * γ) * α)) +
+        abc.2.2 * ((abc.1 * cs - abc.2.1 * sn) *
+                    (-((abc.1 * β + abc.2.2 * α) * sn) + abc.2.1 * cs) -
+                   (abc.1 * sn + abc.2.1 * cs) *
+                    (((abc.1 * β + abc.2.2 * α) * cs + abc.2.1 * sn) * β +
+                     (abc.1 * α + abc.2.2 * γ) * α))) := by
+    funext abc
+    have := σ_Fib_lie_bundle_pauliDet_pauliDecomp abc.1 abc.2.1 abc.2.2
+    simp only [← hcs_def, ← hsn_def, ← hα_def, ← hβ_def, ← hγ_def] at this
+    convert this using 1
+  rw [h_eq]
+  -- Step 2: compositional analyticity of the explicit polynomial.
+  -- Projections are analytic (CLMs).
+  have ha : AnalyticOnNhd ℝ (fun (abc : ℝ × ℝ × ℝ) => abc.1) Set.univ :=
+    analyticOnNhd_fst
+  have hb : AnalyticOnNhd ℝ (fun (abc : ℝ × ℝ × ℝ) => abc.2.1) Set.univ :=
+    analyticOnNhd_fst.comp analyticOnNhd_snd (Set.mapsTo_univ _ _)
+  have hc : AnalyticOnNhd ℝ (fun (abc : ℝ × ℝ × ℝ) => abc.2.2) Set.univ :=
+    analyticOnNhd_snd.comp analyticOnNhd_snd (Set.mapsTo_univ _ _)
+  -- Constants (explicit values; lets unification work cleanly).
+  have hcs : AnalyticOnNhd ℝ (fun (_ : ℝ × ℝ × ℝ) => cs) Set.univ := analyticOnNhd_const
+  have hsn : AnalyticOnNhd ℝ (fun (_ : ℝ × ℝ × ℝ) => sn) Set.univ := analyticOnNhd_const
+  have hα : AnalyticOnNhd ℝ (fun (_ : ℝ × ℝ × ℝ) => α) Set.univ := analyticOnNhd_const
+  have hβ : AnalyticOnNhd ℝ (fun (_ : ℝ × ℝ × ℝ) => β) Set.univ := analyticOnNhd_const
+  have hγ : AnalyticOnNhd ℝ (fun (_ : ℝ × ℝ × ℝ) => γ) Set.univ := analyticOnNhd_const
+  -- Sub-expressions
+  have hAx := (ha.mul hcs).sub (hb.mul hsn)            -- a·cs - b·sn
+  have hAy := (ha.mul hsn).add (hb.mul hcs)            -- a·sn + b·cs
+  have hAB := (ha.mul hβ).add (hc.mul hα)              -- a·β + c·α
+  have hAG := (ha.mul hα).add (hc.mul hγ)              -- a·α + c·γ
+  have hMx := (((hAB.mul hcs).add (hb.mul hsn)).mul hβ).add (hAG.mul hα)
+  have hMy := ((hAB.mul hsn).neg).add (hb.mul hcs)
+  have hMz := (((hAB.mul hcs).add (hb.mul hsn)).mul hα).add (hAG.mul hγ)
+  -- Final composition: P = a·(A_y·M_z - A_z·M_y) - b·(A_x·M_z - A_z·M_x) + c·(A_x·M_y - A_y·M_x)
+  exact ((ha.mul ((hAy.mul hMz).sub (hc.mul hMy))).sub
+          (hb.mul ((hAx.mul hMz).sub (hc.mul hMx)))).add
+          (hc.mul ((hAx.mul hMy).sub (hAy.mul hMx)))
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
