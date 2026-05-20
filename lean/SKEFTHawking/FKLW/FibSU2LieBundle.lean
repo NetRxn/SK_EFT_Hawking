@@ -173,4 +173,97 @@ theorem σ_Fib_1_SU_mat_conj_paulI_x_eq :
        (ω_Fib_C * Rtau_C) * star (ω_Fib_C * R1_C) * Complex.I, 0] := by
   rw [σ_Fib_1_SU_mat_diagonal_form, diag_conj_paulI_x]
 
+/-! ## §4. ω-cancellation + Pauli coord extraction (Layer F.16, session 49)
+
+Closes Layer F.16 by computing the Pauli coords of σ_Fib_1·paulI_x·σ_Fib_1†.
+
+Strategy:
+  1. **ω-cancellation** (`ω_mul_X_mul_star_ω_mul_Y`): the det-normalization
+     factor `ω_Fib_C` cancels in the Ad-conjugation — since `‖ω‖ = 1` gives
+     `ω · star ω = 1`. Reduces `(ω·X)·star(ω·Y) = X·star Y`.
+  2. **R-eigenvalue product** (`R1_C_mul_star_Rtau_C`): the unit-modulus
+     R-eigenvalues combine to a single complex exponential: `R1·star Rτ =
+     exp((-4πi/5)) · exp((-3πi/5)) = exp(-7πi/5)`.
+  3. **HEADLINE** (`σ_Fib_1_SU_mat_conj_paulI_x_pauliCoords`): composes
+     F.15 with steps 1 + 2 + `Complex.exp_re/im` decomposition to extract
+     Pauli coords `(cos(7π/5), sin(7π/5), 0)`.
+
+This is **Ad(σ_Fib_1) acts on paulI_x as rotation by 7π/5 about the z-axis**
+— the bedrock geometric content. The same `ω_mul_X_mul_star_ω_mul_Y`
+identity will be reused in F.17 (σ_Fib_2 Ad-action via F-conjugate
+decomposition). -/
+
+/-- **Unit-modulus z gives `z · star z = 1`** — local re-export of the
+`unit_norm_mul_conj` helper from `FibSU2Rep` (which is `private` there). -/
+private theorem unit_norm_star_eq_one {z : ℂ} (hz : ‖z‖ = 1) :
+    z * star z = 1 := by
+  rw [show (star z : ℂ) = (starRingEnd ℂ) z from rfl, Complex.mul_conj]
+  have hnorm_sq : Complex.normSq z = ‖z‖ ^ 2 := by rw [Complex.sq_norm]
+  rw [hnorm_sq, hz]; norm_num
+
+/-- **ω-cancellation in the Ad-conjugation product** (Layer F.16 step 1).
+For unit-modulus `ω_Fib_C`, the factor cancels: `(ω·X)·star(ω·Y) = X·star Y`. -/
+private theorem ω_mul_X_mul_star_ω_mul_Y (X Y : ℂ) :
+    (ω_Fib_C * X) * star (ω_Fib_C * Y) = X * star Y := by
+  have hω : ω_Fib_C * star ω_Fib_C = 1 := unit_norm_star_eq_one norm_ω_Fib_C
+  have h : (ω_Fib_C * X) * star (ω_Fib_C * Y) =
+           (ω_Fib_C * star ω_Fib_C) * (X * star Y) := by
+    rw [star_mul]; ring
+  rw [h, hω, one_mul]
+
+/-- **R-eigenvalue product** (Layer F.16 step 2). `R1_C · star Rtau_C =
+exp(-7πi/5)`. Composes `R1_C = exp(-4πi/5)`, `star Rtau_C = exp(-3πi/5)`
+(star of `exp(iθ)` is `exp(-iθ)` for real θ), and `exp_add`. -/
+theorem R1_C_mul_star_Rtau_C :
+    R1_C * star Rtau_C =
+      Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I) := by
+  unfold R1_C Rtau_C
+  -- Step 1: convert `star (exp ...)` into `exp (star ...)`.
+  rw [show (star (Complex.exp (((3 * Real.pi / 5 : ℝ) : ℂ) * Complex.I)) : ℂ)
+        = (starRingEnd ℂ) (Complex.exp (((3 * Real.pi / 5 : ℝ) : ℂ) * Complex.I))
+        from rfl,
+      ← Complex.exp_conj,
+      ← Complex.exp_add]
+  congr 1
+  -- exponent: (-4π/5 : ℝ)·I + conj((3π/5 : ℝ)·I) = -(7π/5)·I.
+  -- `map_mul` distributes conj over `*`; `conj_ofReal` + `conj_I` simplify factors.
+  rw [map_mul, Complex.conj_ofReal, Complex.conj_I]
+  push_cast
+  ring
+
+/-- **`(z · I).re = -z.im`** — a basic helper for paulI_x conjugation. -/
+private theorem mul_I_re' (z : ℂ) : (z * Complex.I).re = -z.im := by
+  simp [Complex.mul_re, Complex.I_re, Complex.I_im]
+
+/-- **`(z · I).im = z.re`** — a basic helper for paulI_x conjugation. -/
+private theorem mul_I_im' (z : ℂ) : (z * Complex.I).im = z.re := by
+  simp [Complex.mul_im, Complex.I_re, Complex.I_im]
+
+/-- **HEADLINE F.16 — σ_Fib_1 Ad-action on paulI_x in Pauli coords**.
+
+`matrixToPauliCoords (σ_Fib_1·paulI_x·σ_Fib_1†) = (cos(7π/5), sin(7π/5), 0)`.
+
+Composes F.15 explicit matrix form with ω-cancellation + R-eigenvalue
+product + `Complex.exp_re/im` decomposition (parity of cos / sin under
+sign flip). This says **Ad(σ_Fib_1) rotates paulI_x = (1, 0, 0) to
+the vector `(cos(7π/5), sin(7π/5), 0)`** — the canonical SU(2) ↪ SO(3)
+double-cover rotation by 7π/5 about the z-axis. -/
+theorem σ_Fib_1_SU_mat_conj_paulI_x_pauliCoords :
+    matrixToPauliCoords
+      (σ_Fib_1_SU_mat * paulI_x * σ_Fib_1_SU_mat.conjTranspose) =
+    (Real.cos (7 * Real.pi / 5), Real.sin (7 * Real.pi / 5), 0) := by
+  rw [σ_Fib_1_SU_mat_conj_paulI_x_eq]
+  -- ω-cancellation: simplify (ω·R1)·star(ω·Rτ) → R1·star Rτ.
+  rw [show (ω_Fib_C * R1_C) * star (ω_Fib_C * Rtau_C) = R1_C * star Rtau_C
+        from ω_mul_X_mul_star_ω_mul_Y R1_C Rtau_C,
+      R1_C_mul_star_Rtau_C]
+  -- Now the (0,1) entry is exp(-7πi/5) · I; extract Pauli coords + reduce
+  -- cos/sin parities in one composite simp.
+  unfold matrixToPauliCoords
+  simp [Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Complex.zero_im, Complex.mul_re, Complex.mul_im, Complex.I_re,
+        Complex.I_im, Complex.exp_re, Complex.exp_im, Complex.neg_re,
+        Complex.neg_im, Complex.ofReal_re, Complex.ofReal_im,
+        Real.cos_neg, Real.sin_neg, Real.exp_zero, mul_one, one_mul]
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
