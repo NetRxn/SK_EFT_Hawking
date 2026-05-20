@@ -856,6 +856,34 @@ theorem lieProj_conj_unitary
   rw [skewHermitianProj_conj_conjTranspose,
       tracelessProj_conj_unitary h_left h_right]
 
+/-! ## §13. specialUnitaryGroup specialization (Layer F.11, session 48)
+
+Bridges the general `lieProj_conj_unitary` (which needs both
+unitarity directions as explicit hypotheses) to the
+`Matrix.specialUnitaryGroup` API used by `σ_Fib_*_SU`.
+
+For `g ∈ specialUnitaryGroup`, both unitarity hypotheses follow from
+`Matrix.mem_unitaryGroup_iff` (right) and `Matrix.mem_unitaryGroup_iff'`
+(left), since `star = conjTranspose` definitionally on matrices.
+-/
+
+/-- For `g : Matrix.specialUnitaryGroup (Fin 2) ℂ`, `lieProj` is
+conjugation-equivariant: `lieProj (g·M·g†) = g · lieProj M · g†`.
+
+This is the form used by the H_Fib bundle argument, since
+σ_Fib_1_SU, σ_Fib_2_SU live in `specialUnitaryGroup`. -/
+theorem lieProj_conj_specialUnitary
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    lieProj (g.val * M * g.val.conjTranspose) =
+      g.val * lieProj M * g.val.conjTranspose := by
+  have hg_uni : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    (Matrix.mem_specialUnitaryGroup_iff.mp g.property).1
+  exact lieProj_conj_unitary
+    (Matrix.mem_unitaryGroup_iff'.mp hg_uni)
+    (Matrix.mem_unitaryGroup_iff.mp hg_uni)
+    M
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
@@ -907,6 +935,11 @@ upstream-IFT path to Fibonacci density.
     `tracelessProj_conj_unitary` (needs both `g†g = 1` and `g·g† = 1`
     for trace cyclic + scalar-identity), HEADLINE
     `lieProj_conj_unitary`: `lieProj (g·M·g†) = g · lieProj M · g†`.
+  - **§13** (Layer F.11, session 48):
+    `lieProj_conj_specialUnitary` — for `g ∈ specialUnitaryGroup`,
+    Ad-equivariance follows from `mem_unitaryGroup_iff'` (left) +
+    `mem_unitaryGroup_iff` (right), since `star = conjTranspose`
+    definitionally on matrices. The form used by σ_Fib_*_SU.
 
 **Substrate downstream (next sessions)**:
 
