@@ -900,4 +900,88 @@ theorem σ_Fib_lie_bundle_scaled_paulI_x_spans
     (σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero ht)
     hX
 
+/-! ## §13. F.20.c.a — Lie part of SU(2) elements (session 51)
+
+For h ∈ SU(2), the **Lie part** is `lieProj (h - 1) ∈ 𝔰𝔲(2)`. This is the
+canonical "Lie-algebra component" of h, used in the BCH iteration argument:
+for h near 1, `h ≈ 1 + liePartMat h + O(‖h-1‖²)` (first-order Taylor
+approximation of exp at 0).
+
+**Substrate for F.20.c**: the BCH/IFT iteration argument needs to track
+how the Lie parts of `(h, σ_Fib_1·h·σ_Fib_1⁻¹, σ_Fib_2·h·σ_Fib_2⁻¹)`
+transform — this section ships the Ad-equivariance of `liePartMat`.
+
+**Shipped**:
+  - `liePartMat` (def): the canonical Lie-projection of `M - 1`.
+  - `liePartMat_mem_tracelessSkewHermitian`: output is in 𝔰𝔲(2).
+  - `liePartMat_one`: `liePartMat 1 = 0`.
+  - `liePartMat_conj_specialUnitary`: Ad-equivariance for any
+    g ∈ specialUnitaryGroup.
+  - `liePartMat_conj_σ_Fib_{1,2}_SU_mat`: concrete instances for
+    σ_Fib_1_SU_mat, σ_Fib_2_SU_mat.
+-/
+
+/-- **Lie part of a matrix relative to the identity**: `lieProj (M - 1)`.
+
+For `M = h` (an SU(2) matrix) near `1`, this approximates `log h` to
+first order: `liePartMat h ≈ h - 1` (since for `h - 1` small, the
+skew-Hermitian + traceless projections approximately preserve it). -/
+noncomputable def liePartMat (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  lieProj (M - 1)
+
+/-- The Lie part of any matrix lies in 𝔰𝔲(2). -/
+theorem liePartMat_mem_tracelessSkewHermitian
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    liePartMat M ∈ tracelessSkewHermitian (Fin 2) :=
+  lieProj_mem_tracelessSkewHermitian _
+
+/-- The Lie part of the identity matrix is zero. -/
+theorem liePartMat_one : liePartMat (1 : Matrix (Fin 2) (Fin 2) ℂ) = 0 := by
+  unfold liePartMat
+  rw [sub_self]
+  -- lieProj 0 = 0
+  unfold lieProj skewHermitianProj tracelessProj
+  simp
+
+/-- **Ad-equivariance of `liePartMat`**: for `g ∈ specialUnitaryGroup`,
+`liePartMat (g·M·g†) = g · liePartMat M · g†`.
+
+Proof composes:
+  1. For unitary g: `g · g† = 1` (Mathlib `mem_unitaryGroup_iff`).
+  2. Algebraic identity: `g·M·g† - 1 = g·M·g† - g·g† = g·(M-1)·g†`.
+  3. F.11 `lieProj_conj_specialUnitary`: `lieProj (g·X·g†) = g · lieProj X · g†`. -/
+theorem liePartMat_conj_specialUnitary
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    liePartMat (g.val * M * g.val.conjTranspose) =
+      g.val * liePartMat M * g.val.conjTranspose := by
+  -- Step 1: g · g† = 1
+  have hg_uni : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    (Matrix.mem_specialUnitaryGroup_iff.mp g.property).1
+  have hg_gdag : g.val * g.val.conjTranspose = 1 := by
+    have := Matrix.mem_unitaryGroup_iff.mp hg_uni
+    convert this
+  -- Step 2: g·M·g† - 1 = g·(M-1)·g†
+  have h_factor :
+      g.val * M * g.val.conjTranspose - 1 =
+      g.val * (M - 1) * g.val.conjTranspose := by
+    rw [Matrix.mul_sub, Matrix.sub_mul, Matrix.mul_one]
+    rw [show (1 : Matrix (Fin 2) (Fin 2) ℂ) = g.val * g.val.conjTranspose from hg_gdag.symm]
+  -- Step 3: apply lieProj equivariance
+  unfold liePartMat
+  rw [h_factor, lieProj_conj_specialUnitary]
+
+/-- **σ_Fib_1 Ad-equivariance of `liePartMat`**: concrete instance. -/
+theorem liePartMat_conj_σ_Fib_1_SU_mat (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    liePartMat (σ_Fib_1_SU_mat * M * σ_Fib_1_SU_mat.conjTranspose) =
+      σ_Fib_1_SU_mat * liePartMat M * σ_Fib_1_SU_mat.conjTranspose :=
+  liePartMat_conj_specialUnitary σ_Fib_1_SU M
+
+/-- **σ_Fib_2 Ad-equivariance of `liePartMat`**: concrete instance. -/
+theorem liePartMat_conj_σ_Fib_2_SU_mat (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    liePartMat (σ_Fib_2_SU_mat * M * σ_Fib_2_SU_mat.conjTranspose) =
+      σ_Fib_2_SU_mat * liePartMat M * σ_Fib_2_SU_mat.conjTranspose :=
+  liePartMat_conj_specialUnitary σ_Fib_2_SU M
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
