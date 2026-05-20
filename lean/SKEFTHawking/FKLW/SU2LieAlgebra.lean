@@ -189,6 +189,21 @@ theorem paulI_x_mem_tracelessSkewHermitian :
     paulI_x ∈ tracelessSkewHermitian (Fin 2) :=
   ⟨paulI_x_isSkewHermitian, paulI_x_trace⟩
 
+/-- **`paulI_x` squared equals `-1`** (in `Matrix (Fin 2) (Fin 2) ℂ`).
+
+Since `paulI_x = i · σ_x` and `σ_x² = 1`, `paulI_x² = i² · σ_x² = -1`.
+This is the **canonical anticommutation-relation consequence** that lets
+the 1-parameter subgroup `cos(t)·I + sin(t)·paulI_x` square to a clean
+`(c² + s²·I²) • I = -(c² - 1) • I` form. -/
+theorem paulI_x_sq : paulI_x * paulI_x = -1 := by
+  unfold paulI_x SKEFTHawking.σ_x
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.neg_apply,
+          Matrix.one_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I]
+
 /-- `i·σ_y ∈ 𝔰𝔲(2)`. -/
 theorem paulI_y_mem_tracelessSkewHermitian :
     paulI_y ∈ tracelessSkewHermitian (Fin 2) :=
@@ -785,6 +800,52 @@ theorem lieProj_idempotent_on_tracelessSkewHermitian
   unfold lieProj
   rw [skewHermitianProj_idempotent_on_tracelessSkewHermitian hX,
       tracelessProj_idempotent_on_tracelessSkewHermitian hX]
+
+/-- **Additivity of `lieProj`**: `lieProj (A + B) = lieProj A + lieProj B`.
+
+Both `skewHermitianProj` and `tracelessProj` are ℂ-linear in `M` (for
+`skewHermitianProj`, the `(M - star M)/2` formula is real-linear on a
+real subspace but here we only need additivity; `star (A + B) = star A
++ star B` makes the whole composition additive). -/
+theorem lieProj_add (A B : Matrix (Fin 2) (Fin 2) ℂ) :
+    lieProj (A + B) = lieProj A + lieProj B := by
+  unfold lieProj tracelessProj skewHermitianProj
+  rw [Matrix.conjTranspose_add]
+  -- skewHermitianProj (A + B) = skewHermitianProj A + skewHermitianProj B
+  rw [show (A + B - (A.conjTranspose + B.conjTranspose) :
+            Matrix (Fin 2) (Fin 2) ℂ) =
+       (A - A.conjTranspose) + (B - B.conjTranspose) by abel]
+  rw [smul_add]
+  -- Now compute the trace term
+  rw [Matrix.trace_add]
+  -- Goal: (sA + sB) - ((tA + tB)/2) • 1 = (sA - (tA/2) • 1) + (sB - (tB/2) • 1)
+  -- where sX := (1/2) • (X - X†) and tX := trace (sX)
+  set sA := (1/2 : ℂ) • (A - A.conjTranspose) with hsA
+  set sB := (1/2 : ℂ) • (B - B.conjTranspose) with hsB
+  rw [show (sA.trace + sB.trace) / 2 =
+      sA.trace / 2 + sB.trace / 2 from by ring]
+  rw [add_smul]
+  abel
+
+/-- **`lieProj` annihilates real-scalar multiples of the identity**.
+
+For `r : ℝ`, `lieProj ((r : ℂ) • 1) = 0`. The matrix `(r : ℂ) • 1` is
+Hermitian (since `r` is real, `star (r : ℂ) = r`), so the skew part
+vanishes, and the trace part is also killed downstream.
+
+Used in F.20.c.c to discharge the `(cos t - 1) • 1` summand of the
+rotation matrix decomposition. -/
+theorem lieProj_real_smul_one_eq_zero (r : ℝ) :
+    lieProj ((r : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) = 0 := by
+  unfold lieProj tracelessProj skewHermitianProj
+  -- ((r : ℂ) • 1).conjTranspose = (star (r : ℂ)) • 1 = (r : ℂ) • 1
+  rw [Matrix.conjTranspose_smul, Matrix.conjTranspose_one]
+  rw [show (star (r : ℂ)) = (r : ℂ) from Complex.conj_ofReal r]
+  -- Now (r : ℂ) • 1 - (r : ℂ) • 1 = 0
+  rw [sub_self, smul_zero]
+  -- tracelessProj 0 = 0
+  rw [show ((0 : Matrix (Fin 2) (Fin 2) ℂ).trace / 2) = 0 by simp]
+  rw [zero_smul, sub_zero]
 
 /-! ## §12. Conjugation equivariance of `lieProj` (Layer F.10, session 48)
 
