@@ -364,4 +364,133 @@ theorem F_C_conj_paulI_x_eq :
   -- (1,1): -I·(2·φInvSqrt·φInv)
   · ring
 
+/-! ## §6. F.17.b.1 — σ_Fib_2_SU_mat row 0 explicit entries (session 49)
+
+Closes the row-0 entry computation needed for F.17.b.2's
+`(σ_Fib_2·paulI_x·σ_Fib_2†)(0,0)` extraction.
+
+The key observation (from the Pauli structure of paulI_x = `!![0, I; I, 0]`):
+
+  `(M · paulI_x · M†) 0 0 = I · (A · star B + B · star A)` = `I · 2·Re(A·star B)`
+
+where `A := M 0 0`, `B := M 0 1`. So we only need row 0 of σ_Fib_2_SU_mat,
+not the full 2×2 matrix.
+
+Direct entry-wise computation via `Matrix.mul_apply` + `Fin.sum_univ_two`
++ `φInvSqrt² = φInv` substitution.
+-/
+
+/-- **σ_Fib_2_SU_mat entry (0,0)** (Layer F.17.b.1).
+`σ_Fib_2_SU_mat 0 0 = ω · (φInv²·R1 + φInv·Rτ)`.
+
+Proof note: simp on `ω • (...) 0 0 = ω · (...)` introduces a side condition
+`∨ ω_Fib_C = 0` (via Mathlib's `mul_eq_mul_left_iff`-style simp lemma).
+We take the left disjunct (the polynomial identity) and close by
+`linear_combination` using the `φInvSqrt² = φInv` identity. -/
+theorem σ_Fib_2_SU_mat_entry_00 :
+    σ_Fib_2_SU_mat 0 0 =
+      ω_Fib_C * (φInv_C * φInv_C * R1_C + φInv_C * Rtau_C) := by
+  have h_φInvSqrt_sq : φInvSqrt_C * φInvSqrt_C = φInv_C := by
+    have := φInvSqrt_C_sq; rw [sq] at this; exact this
+  unfold σ_Fib_2_SU_mat σ_Fib_2 σ_Fib_1 F_C
+  simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, smul_eq_mul]
+  left
+  linear_combination Rtau_C * h_φInvSqrt_sq
+
+/-- **σ_Fib_2_SU_mat entry (0,1)** (Layer F.17.b.1).
+`σ_Fib_2_SU_mat 0 1 = ω · φInv · φInvSqrt · (R1 - Rτ)`. -/
+theorem σ_Fib_2_SU_mat_entry_01 :
+    σ_Fib_2_SU_mat 0 1 =
+      ω_Fib_C * (φInv_C * φInvSqrt_C * (R1_C - Rtau_C)) := by
+  unfold σ_Fib_2_SU_mat σ_Fib_2 σ_Fib_1 F_C
+  simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, smul_eq_mul]
+  left
+  ring
+
+/-! ## §7. F.17.b.2 — (0,0) entry of σ_Fib_2 conj paulI_x (session 49)
+
+For `M = σ_Fib_2_SU_mat`, `paulI_x = !![0, I; I, 0]`, the (0,0) entry of
+`M · paulI_x · M†` follows from the Pauli structure:
+
+  `(M · paulI_x · M†) 0 0 = M(0,0) · I · star(M(0,1)) + M(0,1) · I · star(M(0,0))`
+                         `= I · (M(0,0)·star(M(0,1)) + M(0,1)·star(M(0,0)))`
+                         `= I · (A·star B + B·star A)`
+
+where A := M(0,0), B := M(0,1). The expression `A·star B + B·star A` is
+`2·Re(A·star B)` (a real number), so the (0,0) entry is `I · (real)`.
+
+This section ships **just the structural identity** (the (0,0) entry in
+terms of A, B). The substitution + .im closure happens in F.17.b.3.
+-/
+
+/-- **(0,0) entry of M·paulI_x·M† via Pauli structure** (Layer F.17.b.2).
+For any 2×2 complex M, `(M · paulI_x · M†)(0,0) = I · (A·star B + B·star A)`
+where `A := M 0 0`, `B := M 0 1`. -/
+private theorem mul_paulI_x_mul_conjTranspose_entry_00
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    (M * paulI_x * M.conjTranspose) 0 0 =
+      Complex.I * (M 0 0 * star (M 0 1) + M 0 1 * star (M 0 0)) := by
+  unfold paulI_x SKEFTHawking.σ_x
+  simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, smul_eq_mul,
+        Matrix.conjTranspose_apply]
+  ring
+
+/-! ## §8. F.17.b.3 — (0,0) entry closed form (session 49)
+
+Closes the substantive .im computation by substituting row-0 entries
+(F.17.b.1) into the structural identity (F.17.b.2) and applying the
+ω · star ω = R1 · star R1 = Rτ · star Rτ = 1 unit-modulus identities
+plus star-of-real for φ-quantities.
+
+Closed form: `(M · paulI_x · M†)(0,0) = I · (φInv · φInvSqrt) · (φInv - φInv²) ·
+                                          ((R1·star Rτ) + (Rτ·star R1) - 2)`
+
+Note: the φ-arithmetic factor `(φInv - φInv²)` is real and positive
+(equals `2·φInv - 1` after using `φInv + φInv² = 1`). The exp-factor
+`(R1·star Rτ + Rτ·star R1 - 2) = (2·cos(7π/5) - 2)` is real and
+negative (since cos(7π/5) < 1 strictly). So the product is a real
+negative number times I, giving a negative .im.
+-/
+
+/-- **F.17.b.3 — (0,0) entry of σ_Fib_2 Ad-action on paulI_x in closed form**.
+Substantive substrate combining F.17.b.1 + F.17.b.2 + unit-modulus
+identities + φ-real-star identities. -/
+theorem σ_Fib_2_SU_mat_conj_paulI_x_entry_00_eq :
+    (σ_Fib_2_SU_mat * paulI_x * σ_Fib_2_SU_mat.conjTranspose) 0 0 =
+      Complex.I *
+        (φInv_C * φInvSqrt_C * (φInv_C - φInv_C * φInv_C) *
+          (R1_C * star Rtau_C + Rtau_C * star R1_C - 2)) := by
+  rw [mul_paulI_x_mul_conjTranspose_entry_00,
+      σ_Fib_2_SU_mat_entry_00, σ_Fib_2_SU_mat_entry_01]
+  -- Unit-modulus + real-star identities
+  have hω : ω_Fib_C * star ω_Fib_C = 1 := unit_norm_star_eq_one norm_ω_Fib_C
+  have hR1 : R1_C * star R1_C = 1 := unit_norm_star_eq_one norm_R1_C
+  have hRτ : Rtau_C * star Rtau_C = 1 := unit_norm_star_eq_one norm_Rtau_C
+  have h_star_φInv : (star φInv_C : ℂ) = φInv_C := by
+    unfold φInv_C
+    rw [show (star ((Real.goldenRatio⁻¹ : ℝ) : ℂ) : ℂ) =
+          (starRingEnd ℂ) ((Real.goldenRatio⁻¹ : ℝ) : ℂ) from rfl]
+    exact Complex.conj_ofReal _
+  have h_star_φInvSqrt : (star φInvSqrt_C : ℂ) = φInvSqrt_C := by
+    unfold φInvSqrt_C
+    rw [show (star (((Real.sqrt Real.goldenRatio)⁻¹ : ℝ) : ℂ) : ℂ) =
+          (starRingEnd ℂ) (((Real.sqrt Real.goldenRatio)⁻¹ : ℝ) : ℂ) from rfl]
+    exact Complex.conj_ofReal _
+  -- Distribute star over products + sums, then reduce φInv, φInvSqrt stars.
+  simp only [star_mul, star_add, star_sub, h_star_φInv, h_star_φInvSqrt]
+  -- Coefficient derivation:
+  --   LHS = I · ω · star ω · stuff where stuff has R1·star R1 and Rτ·star Rτ
+  --   The R1·star R1 coefficient in stuff is 2·φInv³·φInvSqrt.
+  --   The Rτ·star Rτ coefficient in stuff is -2·φInv²·φInvSqrt.
+  --   So linear_combination with c_ω · hω + 2·I·φInv³·φInvSqrt · hR1
+  --                          + (-2·I·φInv²·φInvSqrt) · hRτ
+  linear_combination
+    (Complex.I *
+      ((φInv_C * φInv_C * R1_C + φInv_C * Rtau_C) *
+        (star R1_C - star Rtau_C) * φInvSqrt_C * φInv_C +
+       φInv_C * φInvSqrt_C * (R1_C - Rtau_C) *
+        (star R1_C * (φInv_C * φInv_C) + star Rtau_C * φInv_C))) * hω
+    + (2 * Complex.I * φInv_C * φInv_C * φInv_C * φInvSqrt_C) * hR1
+    + (-(2 * Complex.I * φInv_C * φInv_C * φInvSqrt_C)) * hRτ
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
