@@ -3359,4 +3359,51 @@ theorem golden_alpha_sq_plus_gamma_sq :
   have h5 : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num)
   nlinarith [h5, Real.sqrt_nonneg 5]
 
+/-! ## §37. R5.4 Layer F.20.c.d.2.p.3.e.4 — Cubic homogeneity factoring at Gap-1
+
+By cubic homogeneity (`σ_Fib_lie_bundle_pauliDet_pauliDecomp_homog`), the pauliDet
+at scaled Pauli coords factors out `t³`:
+
+  `pauliDet (t·a • paulI_x + t·b • paulI_y + t·c • paulI_z) = t³ · pauliDet (a • ... + ...)`
+
+Applied to the Gap-1 witness with `t := -sin(7π/10)` and `(a, b, c) = (α·cs, α·sn, γ)`,
+this factors out `-sin(7π/10)³` cleanly. -/
+
+/-- Real-valued Pauli coords of `liePartMat (σ_Fib_1·σ_Fib_2·σ_Fib_1⁻¹)` AFTER
+factoring out the common `-sin(7π/10)` factor.
+
+`(a', b', c') = (α·cs, α·sn, γ)` where `α := 2·φInv·φInvSqrt`, `cs := cos(7π/5)`,
+`sn := sin(7π/5)`, `γ := φInv² - φInvSqrt²`. -/
+noncomputable def gap1_witness_pauliCoord_factored :
+    ℝ × ℝ × ℝ :=
+  ( (2 * Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹) * Real.cos (7 * Real.pi / 5),
+    (2 * Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹) * Real.sin (7 * Real.pi / 5),
+    Real.goldenRatio⁻¹^2 - (Real.sqrt Real.goldenRatio)⁻¹^2 )
+
+/-- liePart at the Gap-1 witness factors as `-sin(7π/10)` times the unit-norm
+direction `(α·cs, α·sn, γ)`. -/
+theorem liePartMat_σ_Fib_1_conj_σ_Fib_2_real_factored :
+    let (a', b', c') := gap1_witness_pauliCoord_factored
+    liePartMat (σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * σ_Fib_1_SU_mat.conjTranspose) =
+      (((-Real.sin (7 * Real.pi / 10) * a' : ℝ) : ℂ) • paulI_x +
+        ((-Real.sin (7 * Real.pi / 10) * b' : ℝ) : ℂ) • paulI_y +
+        ((-Real.sin (7 * Real.pi / 10) * c' : ℝ) : ℂ) • paulI_z) := by
+  rw [liePartMat_σ_Fib_1_conj_σ_Fib_2_pauliDecomp]
+  unfold gap1_witness_pauliCoord_factored φInv_C φInvSqrt_C
+  simp only []
+  push_cast
+  module
+
+/-- Cubic homogeneity applied at the Gap-1 witness: pauliDet factors out `-sin(7π/10)³`. -/
+theorem σ_Fib_lie_bundle_pauliDet_at_gap1_factored :
+    let (a', b', c') := gap1_witness_pauliCoord_factored
+    σ_Fib_lie_bundle_pauliDet
+      (liePartMat (σ_Fib_1_SU_mat * σ_Fib_2_SU_mat * σ_Fib_1_SU_mat.conjTranspose)) =
+    (-Real.sin (7 * Real.pi / 10))^3 *
+      σ_Fib_lie_bundle_pauliDet
+        (((a' : ℝ) : ℂ) • paulI_x + ((b' : ℝ) : ℂ) • paulI_y + ((c' : ℝ) : ℂ) • paulI_z) := by
+  rw [liePartMat_σ_Fib_1_conj_σ_Fib_2_real_factored]
+  simp only []
+  exact σ_Fib_lie_bundle_pauliDet_pauliDecomp_homog _ _ _ _
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
