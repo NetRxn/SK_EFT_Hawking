@@ -3042,4 +3042,93 @@ theorem σ_Fib_lie_bundle_pauliDet_liePartMat_σ_Fib_1_SU_mat_eq_zero :
   rw [σ_Fib_lie_bundle_pauliDet_paulI_z_eq_zero]
   ring
 
+/-! ## §33. R5.4 Layer F.20.c.d.2.p.3.c — Closed-form liePart of σ_Fib_2_SU_mat
+
+`σ_Fib_2_SU_mat = F · σ_Fib_1_SU_mat · F` (existing substrate
+`σ_Fib_2_SU_mat_eq_F_conj`) and `F² = 1` (`F_C_sq`) gives:
+
+  `σ_Fib_2_SU_mat - 1 = F · (σ_Fib_1_SU_mat - 1) · F`
+
+Then unitary-conjugation equivariance of `lieProj` (`lieProj_conj_unitary`)
+and `F_C.conjTranspose = F_C` (F is Hermitian) yields:
+
+  `liePartMat σ_Fib_2_SU_mat = F · liePartMat σ_Fib_1_SU_mat · F`
+                           = `-sin(7π/10) · (F · paulI_z · F)`  (via .b)
+                           = `-sin(7π/10) · (α·paulI_x + 0·paulI_y + γ·paulI_z)`  (via F.20.c.d.2.m.2)
+
+Pauli coords: `(-sin(7π/10)·α, 0, -sin(7π/10)·γ)` where
+α := 2·φInv·φInvSqrt and γ := φInv² - φInvSqrt². -/
+
+/-- Helper: F is its own conjugate transpose (F_C is Hermitian).
+This is `F_C_star` expressed in conjTranspose form. -/
+private theorem F_C_conjTranspose_eq : F_C.conjTranspose = F_C := by
+  have h := F_C_star
+  rwa [show (star F_C : Matrix (Fin 2) (Fin 2) ℂ) = F_C.conjTranspose from rfl] at h
+
+/-- Helper: `σ_Fib_2_SU_mat - 1 = F · (σ_Fib_1_SU_mat - 1) · F`.
+
+Uses `σ_Fib_2_SU_mat = F · σ_Fib_1_SU_mat · F` (existing substrate
+`σ_Fib_2_SU_mat_eq_F_conj`) and `F · F = 1` (`F_C_sq`) to absorb the
+trailing `1`. -/
+theorem σ_Fib_2_SU_mat_sub_one_eq :
+    σ_Fib_2_SU_mat - 1 = F_C * (σ_Fib_1_SU_mat - 1) * F_C := by
+  rw [σ_Fib_2_SU_mat_eq_F_conj, Matrix.mul_sub, Matrix.sub_mul,
+      Matrix.mul_one, F_C_sq]
+
+/-- liePartMat is F-conjugation-equivariant: `liePartMat σ_Fib_2_SU_mat =
+F · liePartMat σ_Fib_1_SU_mat · F`.
+
+Bridges sub-step 1 (σ_Fib_1) to sub-step 2 (σ_Fib_2) via F-conjugation.
+Uses `lieProj_conj_unitary` (general unitary form, doesn't require det = 1)
+together with F's Hermiticity (F.conjTranspose = F) and involutivity (F² = 1). -/
+theorem liePartMat_σ_Fib_2_SU_mat_via_F_conj :
+    liePartMat σ_Fib_2_SU_mat =
+      F_C * liePartMat σ_Fib_1_SU_mat * F_C := by
+  show lieProj (σ_Fib_2_SU_mat - 1) = _
+  rw [σ_Fib_2_SU_mat_sub_one_eq]
+  have h_left : F_C.conjTranspose * F_C = 1 := by
+    rw [F_C_conjTranspose_eq]; exact F_C_sq
+  have h_right : F_C * F_C.conjTranspose = 1 := by
+    rw [F_C_conjTranspose_eq]; exact F_C_sq
+  rw [show F_C * (σ_Fib_1_SU_mat - 1) * F_C =
+        F_C * (σ_Fib_1_SU_mat - 1) * F_C.conjTranspose from
+          by rw [F_C_conjTranspose_eq]]
+  rw [lieProj_conj_unitary h_left h_right]
+  rw [F_C_conjTranspose_eq]; rfl
+
+/-- **R5.4 Layer F.20.c.d.2.p.3.c — closed-form `liePartMat σ_Fib_2_SU_mat`** (F-form).
+
+`liePartMat σ_Fib_2_SU_mat = -sin(7π/10) • (F · paulI_z · F)`.
+
+Composes sub-step 1 (`liePartMat_σ_Fib_1_SU_mat`) with the F-conjugation
+equivariance lemma. The (F · paulI_z · F) factor is unfolded to Pauli
+coords in the next theorem `liePartMat_σ_Fib_2_SU_mat_pauliDecomp`. -/
+theorem liePartMat_σ_Fib_2_SU_mat_F_form :
+    liePartMat σ_Fib_2_SU_mat =
+      ((-Real.sin (7 * Real.pi / 10) : ℝ) : ℂ) • (F_C * paulI_z * F_C) := by
+  rw [liePartMat_σ_Fib_2_SU_mat_via_F_conj, liePartMat_σ_Fib_1_SU_mat,
+      Matrix.mul_smul, Matrix.smul_mul]
+
+/-- **R5.4 Layer F.20.c.d.2.p.3.c (Pauli decomp form) — `liePartMat σ_Fib_2_SU_mat`**.
+
+`liePartMat σ_Fib_2_SU_mat = (-sin(7π/10)·α)·paulI_x + 0·paulI_y + (-sin(7π/10)·γ)·paulI_z`
+where α := 2·φInv·φInvSqrt and γ := φInv² - φInvSqrt².
+
+Composes `liePartMat_σ_Fib_2_SU_mat_F_form` (the F-form) with
+`F_C_conj_paulI_z_pauliDecomp` (F.20.c.d.2.m.2, F's Pauli decomp of paulI_z).
+The result confirms liePart(σ_Fib_2) is in the xz-plane (paulI_y coefficient = 0),
+consistent with F.20.c.d.2.k's `F_C_conj_paulI_y_eq_neg : F·paulI_y·F = -paulI_y`
+(F acts as -1 on the y-axis, which means F-conjugation preserves the xz-plane).
+
+Pauli coords: `(-sin(7π/10)·α, 0, -sin(7π/10)·γ)`. Numerically:
+`α ≈ 0.971, γ ≈ -0.236, sin(7π/10) ≈ 0.809`, so coords ≈ `(-0.786, 0, 0.191)`. -/
+theorem liePartMat_σ_Fib_2_SU_mat_pauliDecomp :
+    liePartMat σ_Fib_2_SU_mat =
+      (((-Real.sin (7 * Real.pi / 10) : ℝ) : ℂ) * (2 * φInv_C * φInvSqrt_C)) • paulI_x +
+      (0 : ℂ) • paulI_y +
+      (((-Real.sin (7 * Real.pi / 10) : ℝ) : ℂ) *
+        (φInv_C * φInv_C - φInvSqrt_C * φInvSqrt_C)) • paulI_z := by
+  rw [liePartMat_σ_Fib_2_SU_mat_F_form, F_C_conj_paulI_z_pauliDecomp]
+  module
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
