@@ -5229,4 +5229,70 @@ theorem F21_residual_small_spanning_from_cFib_powers
     rw [ht_eq, σ_Fib_lie_bundle_pauliDet_smul_uniform]
     exact mul_ne_zero (pow_ne_zero 3 ht_ne) cFib_SU_mat_liePartMat_pauliDet_ne_zero
 
+/-! ## §59. R5.4 Layer F.20.c.d.2.gg — SU(2) power-axis identity via Chebyshev recurrence
+
+For any `h ∈ SU(2)`, the powers `h^(n+1)` decompose linearly via SU(2)
+Cayley-Hamilton + a real Chebyshev-like sequence in the trace:
+
+  `h^(n+1) = chebyshevSU2 τ n.2 • h - chebyshevSU2 τ n.1 • I`
+
+where `chebyshevSU2 τ n = (V_{n-1}(τ), V_n(τ))` with initial `(0, 1)` and
+recurrence `V_{n+1} = τ · V_n - V_{n-1}`.
+
+The downstream identity (proof in §60):
+  `liePartMat (h^(n+1)) = V_n(τ) • liePartMat h`
+
+This will discharge `cFib_pow_liePartMat_axis_scaling`. -/
+
+/-- **Chebyshev-like sequence for SU(2) power recurrence**.
+
+`chebyshevSU2 τ` is a pair-valued sequence `(V_{n-1}(τ), V_n(τ))` with
+`V_{-1} = 0`, `V_0 = 1`, `V_{n+1} = τ · V_n - V_{n-1}`. The pair format
+avoids the awkward `V_{-1}` boundary by carrying both consecutive values.
+
+For SU(2) elements `h` with `τ = tr(h)`, the n-th power satisfies
+`h^(n+1) = (chebyshevSU2 τ n).2 • h - (chebyshevSU2 τ n).1 • I` (proof
+below in `pow_su2_chebyshev_decomp`). -/
+def chebyshevSU2 (τ : ℂ) : ℕ → ℂ × ℂ
+  | 0 => (0, 1)
+  | n+1 => ((chebyshevSU2 τ n).2,
+            τ * (chebyshevSU2 τ n).2 - (chebyshevSU2 τ n).1)
+
+/-- **`h^(n+1)` Chebyshev decomposition for SU(2) elements**.
+
+For `h ∈ SU(2)`, `h^(n+1) = V_n(tr h) • h - V_{n-1}(tr h) • I` where
+`V_n := (chebyshevSU2 (tr h) n).2`.
+
+Proof: induction on n using SU(2) Cayley-Hamilton (h² = tr(h)·h - I). -/
+theorem pow_su2_chebyshev_decomp
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (n : ℕ) :
+    ((h : Matrix (Fin 2) (Fin 2) ℂ)) ^ (n + 1) =
+      (chebyshevSU2 (Matrix.trace (h : Matrix (Fin 2) (Fin 2) ℂ)) n).2 •
+        (h : Matrix (Fin 2) (Fin 2) ℂ) -
+      (chebyshevSU2 (Matrix.trace (h : Matrix (Fin 2) (Fin 2) ℂ)) n).1 •
+        (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  set τ : ℂ := Matrix.trace (h : Matrix (Fin 2) (Fin 2) ℂ) with hτ
+  set A : Matrix (Fin 2) (Fin 2) ℂ := (h : Matrix (Fin 2) (Fin 2) ℂ) with hA
+  -- Cayley-Hamilton: A·A = τ·A - I  (in A*A form, not A^2)
+  have h_CH : A * A = τ • A - 1 := by
+    have hsq := SKEFTHawking.FKLW.SU2_CayleyHamilton h
+    rw [hA, hτ, ← pow_two]
+    exact hsq
+  induction n with
+  | zero =>
+    -- n=0: A^1 = (chebSU2 τ 0).2 • A - (chebSU2 τ 0).1 • I = 1·A - 0·I = A
+    simp [chebyshevSU2, pow_one]
+  | succ k ih =>
+    -- A^(k+2) = A^(k+1) · A; substitute ih, then use Cayley-Hamilton.
+    rw [pow_succ, ih]
+    -- ((V_k.2 • A - V_k.1 • I) * A) = V_k.2 • (A·A) - V_k.1 • A
+    rw [sub_mul, smul_mul_assoc, smul_mul_assoc, one_mul, h_CH]
+    -- V_k.2 • (τ•A - I) - V_k.1 • A = (τ·V_k.2 - V_k.1)•A - V_k.2•I
+    -- Match (chebyshevSU2 τ (k+1)).1 = V_k.2 and .2 = τ·V_k.2 - V_k.1
+    show _ = (chebyshevSU2 τ (k + 1)).2 • A - (chebyshevSU2 τ (k + 1)).1 • 1
+    simp only [chebyshevSU2]
+    rw [smul_sub, sub_smul, smul_smul]
+    rw [mul_comm τ (chebyshevSU2 τ k).2]
+    abel
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
