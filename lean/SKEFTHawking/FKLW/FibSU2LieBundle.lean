@@ -97,4 +97,32 @@ theorem σ_Fib_lie_bundle_pauliDet_eq (X : Matrix (Fin 2) (Fin 2) ℂ) :
         (σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose)
         (σ_Fib_2_SU_mat * X * σ_Fib_2_SU_mat.conjTranspose) := rfl
 
+/-! ## §2. Spanning reduction (Layer F.14, session 48)
+
+Closes the structural reduction: **σ_Fib 3-bundle ℝ-spans 𝔰𝔲(2)
+at X if and only if `σ_Fib_lie_bundle_pauliDet X ≠ 0`** (one direction
+of the iff — the load-bearing one — shipped here; the other direction
+is downstream when needed).
+
+Substantive remaining content: producing an explicit X ∈ 𝔰𝔲(2) with
+`σ_Fib_lie_bundle_pauliDet X ≠ 0`. Plan: for X = `paulI_x`, compute
+explicitly using σ_Fib_1's diagonal action + σ_Fib_2's F-conjugate
+structure (Layer F.15+, multi-session trig computation).
+-/
+
+/-- **HEADLINE — σ_Fib 3-bundle lin-indep from non-zero pauliDet**.
+If `σ_Fib_lie_bundle_pauliDet X ≠ 0`, then the 3-bundle
+`(X, σ_Fib_1·X·σ_Fib_1†, σ_Fib_2·X·σ_Fib_2†)` is ℝ-linearly
+independent in `Matrix (Fin 2) (Fin 2) ℂ`. Direct application of
+Layer F.8 `tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero`. -/
+theorem σ_Fib_lie_bundle_lin_indep
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_det : σ_Fib_lie_bundle_pauliDet X ≠ 0)
+    {a b c : ℝ}
+    (h_lin : (a : ℂ) • X +
+             (b : ℂ) • (σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose) +
+             (c : ℂ) • (σ_Fib_2_SU_mat * X * σ_Fib_2_SU_mat.conjTranspose) = 0) :
+    a = 0 ∧ b = 0 ∧ c = 0 :=
+  tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero h_det h_lin
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
