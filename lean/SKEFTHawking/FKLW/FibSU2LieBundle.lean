@@ -696,4 +696,50 @@ theorem σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero :
   exact mul_ne_zero sin_seven_pi_div_five_ne_zero
     σ_Fib_2_SU_mat_conj_paulI_x_entry_00_im_ne_zero
 
+/-! ## §10. F.19 — σ_Fib bundle ℝ-linearly independent at paulI_x (session 49)
+
+Direct composition of F.18 (`σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero`)
+with F.14 (`σ_Fib_lie_bundle_lin_indep`) to ship the concrete
+ℝ-linear-independence of the 3-conjugate bundle at the specific witness
+X = paulI_x.
+
+This is the final structural ship of R5.4's "ℝ-lin-indep witness" arc.
+The IFT bridge to unconditional density (F.20+) is structurally separate:
+it needs to produce the witness `U` for `fibonacci_density_from_exp_image_subset`
+(Layer E), bridging "Lie algebra spans at paulI_x" to "exp covers nbhd of 1
+in H_Fib's matrices". That requires the BCH-iteration substrate
+(shipped: D.3.h + D.3.i.1 + D.2.c + D.3.{e,f,g}) composed with the
+σ_Fib 3-bundle structure.
+
+**Structural map of the R5.4 arc as of session 49**:
+
+  - **F.1-F.7**: 𝔰𝔲(2) substrate + Pauli coords + pauliDet definition.
+  - **F.8**: pauliDet ≠ 0 ⟹ ℝ-lin-indep (Cramer rule).
+  - **F.9-F.12**: Ad-action preserves 𝔰𝔲(2) (5 layers).
+  - **F.13**: σ_Fib 3-bundle (paulI_x, σ_1 conj, σ_2 conj).
+  - **F.14**: bundle is ℝ-lin-indep if pauliDet ≠ 0 (composition).
+  - **F.15-F.16**: σ_Fib_1·paulI_x·σ_Fib_1† = rotation by 7π/5 about z.
+  - **F.17.a-b**: σ_Fib_2 F-decomp + (0,0) entry closed form.
+  - **F.18**: pauliDet ≠ 0 at paulI_x (closed form trig + φ algebra).
+  - **F.19** (this): bundle ℝ-lin-indep at paulI_x — final structural ship.
+  - **F.20+** (TBD): IFT bridge to unconditional density.
+-/
+
+/-- **HEADLINE F.19 — σ_Fib 3-bundle ℝ-linearly independent at paulI_x**.
+
+For real coefficients a, b, c, the ℝ-linear combination
+`a·paulI_x + b·(σ_Fib_1·paulI_x·σ_Fib_1†) + c·(σ_Fib_2·paulI_x·σ_Fib_2†) = 0`
+forces `a = b = c = 0`.
+
+Direct composition of F.18 (`σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero`)
+with F.14 (`σ_Fib_lie_bundle_lin_indep`). This is the CONCRETE
+linear-independence statement at the canonical witness X = paulI_x. -/
+theorem σ_Fib_lie_bundle_paulI_x_lin_indep
+    {a b c : ℝ}
+    (h_lin : (a : ℂ) • paulI_x +
+             (b : ℂ) • (σ_Fib_1_SU_mat * paulI_x * σ_Fib_1_SU_mat.conjTranspose) +
+             (c : ℂ) • (σ_Fib_2_SU_mat * paulI_x * σ_Fib_2_SU_mat.conjTranspose) = 0) :
+    a = 0 ∧ b = 0 ∧ c = 0 :=
+  σ_Fib_lie_bundle_lin_indep σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero h_lin
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
