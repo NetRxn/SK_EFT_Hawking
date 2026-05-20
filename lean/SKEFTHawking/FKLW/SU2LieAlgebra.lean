@@ -884,6 +884,33 @@ theorem lieProj_conj_specialUnitary
     (Matrix.mem_unitaryGroup_iff.mp hg_uni)
     M
 
+/-! ## §14. Ad-action preserves 𝔰𝔲(2) (Layer F.12, session 48)
+
+For `g ∈ specialUnitaryGroup` and X ∈ 𝔰𝔲(2), the Ad-conjugate
+`g.val · X · g.val†` lies again in 𝔰𝔲(2). This is the bedrock fact:
+**SU(2) acts on its Lie algebra by Ad**.
+
+Proof: `lieProj (g·X·g†) = g·(lieProj X)·g† = g·X·g†` (using F.11 +
+idempotence F.9), so `g·X·g†` equals its own `lieProj`, which is
+always in 𝔰𝔲(2) by `lieProj_mem_tracelessSkewHermitian` (F.9).
+-/
+
+/-- **HEADLINE — Ad-action of specialUnitaryGroup preserves 𝔰𝔲(2)**:
+for `g ∈ specialUnitaryGroup (Fin 2) ℂ` and X ∈ tracelessSkewHermitian,
+`g.val · X · g.val†` lies in tracelessSkewHermitian. -/
+theorem tracelessSkewHermitian_conj_specialUnitary
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    g.val * X * g.val.conjTranspose ∈ tracelessSkewHermitian (Fin 2) := by
+  -- g·X·g† = lieProj (g·X·g†) since lieProj preserves elements of 𝔰𝔲(2)
+  have h_eq : g.val * X * g.val.conjTranspose =
+      lieProj (g.val * X * g.val.conjTranspose) := by
+    rw [lieProj_conj_specialUnitary,
+        lieProj_idempotent_on_tracelessSkewHermitian hX]
+  rw [h_eq]
+  exact lieProj_mem_tracelessSkewHermitian _
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
@@ -940,6 +967,12 @@ upstream-IFT path to Fibonacci density.
     Ad-equivariance follows from `mem_unitaryGroup_iff'` (left) +
     `mem_unitaryGroup_iff` (right), since `star = conjTranspose`
     definitionally on matrices. The form used by σ_Fib_*_SU.
+  - **§14** (Layer F.12, session 48):
+    `tracelessSkewHermitian_conj_specialUnitary` — for
+    `g ∈ specialUnitaryGroup`, the Ad-conjugate
+    `g.val · X · g.val†` lies in 𝔰𝔲(2) when X does. The bedrock
+    "SU(2) acts on its Lie algebra by Ad" fact. Proof: compose
+    F.11 + F.9 idempotence + F.9 membership.
 
 **Substrate downstream (next sessions)**:
 
