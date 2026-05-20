@@ -1921,6 +1921,52 @@ theorem F_C_conj_paulI_y_eq :
           smul_eq_mul] <;>
     ring
 
+/-- **F_C Ad-conjugation is ℂ-linear** (matrix). -/
+theorem F_C_conj_add (X Y : Matrix (Fin 2) (Fin 2) ℂ) :
+    F_C * (X + Y) * F_C = F_C * X * F_C + F_C * Y * F_C := by
+  rw [mul_add, add_mul]
+
+/-- **F_C Ad-conjugation commutes with complex scalar mult** (matrix). -/
+theorem F_C_conj_smul (c : ℂ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    F_C * (c • X) * F_C = c • (F_C * X * F_C) := by
+  rw [Matrix.mul_smul, Matrix.smul_mul]
+
+/-- **F_C·paulI_y·F_C simplifies via φInv² + φInvSqrt² = 1**. -/
+theorem F_C_conj_paulI_y_eq_neg :
+    F_C * paulI_y * F_C = -paulI_y := by
+  rw [F_C_conj_paulI_y_eq]
+  -- φInv·φInv + φInvSqrt·φInvSqrt = 1 via F_C_diag_identity
+  -- But that's private. Re-derive via φInvSqrt² = φInv and 1/φ² + 1/φ = 1
+  have h_sq : φInvSqrt_C * φInvSqrt_C = φInv_C := by
+    have := φInvSqrt_C_sq; rw [sq] at this; exact this
+  rw [h_sq]
+  -- Goal: !![0, -(φInv·φInv + φInv); (φInv·φInv + φInv), 0] = -paulI_y
+  -- Need: φInv·φInv + φInv = 1
+  -- From 1/φ² + 1/φ = 1: multiply by φ², get 1 + φ = φ², so φ²·φInv² + φ²·φInv = φ²
+  -- Equivalently φInv² + φInv = 1.
+  have h_one : φInv_C * φInv_C + φInv_C = 1 := by
+    have h1 : φ_C * φInv_C = 1 := φ_C_mul_inv
+    have h2 : φ_C ^ 2 = φ_C + 1 := φ_C_sq
+    have hne : φ_C ≠ 0 := φ_C_ne_zero
+    have hsq_ne : φ_C ^ 2 ≠ 0 := pow_ne_zero _ hne
+    have key : φ_C ^ 2 * (φInv_C * φInv_C + φInv_C) = φ_C ^ 2 * 1 := by
+      calc φ_C ^ 2 * (φInv_C * φInv_C + φInv_C)
+          = (φ_C * φInv_C) * (φ_C * φInv_C) + φ_C * (φ_C * φInv_C) := by ring
+        _ = 1 * 1 + φ_C * 1 := by rw [h1]
+        _ = φ_C + 1 := by ring
+        _ = φ_C ^ 2 := h2.symm
+        _ = φ_C ^ 2 * 1 := by ring
+    exact mul_left_cancel₀ hsq_ne key
+  rw [h_one]
+  -- Goal: !![0, -1; 1, 0] = -paulI_y
+  -- paulI_y = !![0, 1; -1, 0], so -paulI_y = !![0, -1; 1, 0]
+  unfold paulI_y SKEFTHawking.σ_y
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.smul_apply, Matrix.neg_apply, smul_eq_mul,
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons]
+
 /-- **R5.4 Layer F.20.c.d.2.h — σ_Fib_1's Ad-action on a Pauli-decomposed
 element is a planar rotation by 7π/5 about the z-axis**.
 
