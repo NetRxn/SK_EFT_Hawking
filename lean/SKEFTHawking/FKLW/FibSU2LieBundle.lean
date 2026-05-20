@@ -5103,4 +5103,130 @@ theorem cFib_SU_mat_liePartMat_pauliDet_ne_zero :
     · norm_num
   linarith
 
+/-! ## §58. R5.4 Layer F.20.c.d.2.ff — Modular F21_residual_small_spanning via cFib powers
+
+Composition theorem connecting §57's non-vanishing pauliDet at the cFib axis
+with two substantive substrate Props for power iteration:
+
+  H_powers_dense — `∀ ε > 0, ∃ n > 0, ‖cFib^n - 1‖ < ε` (irrational rotation density)
+  H_axis_scaling — for any n > 0 with cFib^n ≠ 1,
+                   `liePartMat (cFib^n) = (some real scalar t_n ≠ 0) • liePartMat cFib`
+                   (rotation-axis preservation under powers)
+
+Combined with §57's pauliDet ≠ 0 + cubic homogeneity (§24's
+`σ_Fib_lie_bundle_pauliDet_smul_uniform`), these discharge
+`F21_residual_small_spanning` in a structured way.
+
+The two Props are deferred (substantive content for sessions S77+); this
+section composes them. -/
+
+/-- **Substrate Prop**: powers of `cFib_SU = σ_Fib_1_SU * σ_Fib_2_SU⁻¹` are dense at 1.
+
+For every ε > 0, ∃ n : ℕ with n > 0 such that the n-th power of `cFib_SU`
+is within ε of 1 in operator norm.
+
+This is the standard "irrational rotation in SU(2) has dense powers" theorem,
+applied to `cFib_SU` which has infinite order (via `σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder`).
+
+Substantive content: Mathlib substrate for closed-subgroup density in compact
+Lie groups (~50-150 LoC, possibly substantial Mathlib gap). Deferred to S77+. -/
+def cFib_powers_dense_at_one : Prop :=
+  ∀ ε : ℝ, 0 < ε →
+    ∃ n : ℕ, 0 < n ∧
+      ‖((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n :
+          Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε
+
+/-- **Substrate Prop**: axis preservation under cFib powers.
+
+For every n : ℕ with `cFib_SU^n ≠ 1`, ∃ real scalar t_n ≠ 0 such that
+`liePartMat (cFib_SU^n).val = (t_n : ℂ) • liePartMat cFib_SU_mat`.
+
+This is the standard "powers preserve rotation axis" theorem for SU(2):
+if h = exp(iθ X/2) where X is the rotation axis, then h^n = exp(inθ X/2)
+shares the axis. The liePartMat extracts (a scaled version of) the axis.
+
+Substantive content: SU(2) maximal torus structure + axis decomposition (~100-200 LoC). -/
+def cFib_pow_liePartMat_axis_scaling : Prop :=
+  ∀ n : ℕ,
+    ((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n :
+        Matrix (Fin 2) (Fin 2) ℂ) ≠ 1 →
+    ∃ t : ℝ, t ≠ 0 ∧
+      liePartMat
+        (((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n :
+            Matrix (Fin 2) (Fin 2) ℂ)) =
+        (t : ℂ) • liePartMat cFib_SU_mat
+
+/-- **R5.4 Layer F.20.c.d.2.ff HEADLINE — modular F21_residual_small_spanning discharge**.
+
+Given `cFib_powers_dense_at_one` (H1: density of cFib powers near 1) and
+`cFib_pow_liePartMat_axis_scaling` (H2: axis preservation), the
+`F21_residual_small_spanning` Prop is discharged.
+
+Construction: for ε > 0,
+  - H1 gives n > 0 with `‖cFib^n - 1‖ < ε`
+  - cFib^n ∈ H_Fib (subgroup closure under inverse + powers, using
+    `σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_mem_H_Fib`)
+  - If `cFib^n = 1` then liePartMat = 0 — but pauliDet of 0 is 0, contradiction.
+    So `cFib^n ≠ 1`, and H2 gives scalar t ≠ 0 with
+    `liePartMat (cFib^n) = t • liePartMat cFib`.
+  - Then pauliDet(liePartMat (cFib^n)) = t³ · pauliDet(liePartMat cFib_SU_mat)
+    by `σ_Fib_lie_bundle_pauliDet_smul_uniform`. Since t ≠ 0 and §57 gives
+    pauliDet(liePartMat cFib) ≠ 0, we have pauliDet(liePartMat (cFib^n)) ≠ 0. -/
+theorem F21_residual_small_spanning_from_cFib_powers
+    (h_dense : cFib_powers_dense_at_one)
+    (h_axis : cFib_pow_liePartMat_axis_scaling) :
+    F21_residual_small_spanning := by
+  intro ε hε
+  obtain ⟨n, hn_pos, hn_close⟩ := h_dense ε hε
+  -- cFib^n ∈ H_Fib (since cFib ∈ H_Fib and H_Fib is a subgroup)
+  have h_cFib_mem : (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∈ H_Fib :=
+    SKEFTHawking.FKLW.σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_mem_H_Fib
+  have h_pow_mem : (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n ∈ H_Fib :=
+    Subgroup.pow_mem _ h_cFib_mem n
+  refine ⟨(σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n, h_pow_mem, hn_close, ?_⟩
+  -- Show pauliDet(liePartMat (cFib^n)) ≠ 0
+  -- Case: cFib^n = 1 → liePartMat = 0 → pauliDet = 0 (contradiction with goal)
+  -- Case: cFib^n ≠ 1 → use h_axis
+  by_cases h_eq : ((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n :
+        Matrix (Fin 2) (Fin 2) ℂ) = 1
+  · -- If cFib^n = 1, then ‖cFib^n - 1‖ = 0 < ε but also liePartMat (1) = 0,
+    -- so pauliDet(liePartMat 1) = pauliDet 0 = 0. This means our witness fails
+    -- the non-zero pauliDet condition. So we need cFib^n ≠ 1, which is the
+    -- standard case from the density argument (it'd only equal 1 if cFib were
+    -- finite order, contradicting cFib_not_isOfFinOrder).
+    --
+    -- Strengthen `h_dense` to require cFib^n ≠ 1. (For now we rely on the fact
+    -- that if cFib^n = 1 for some n, then the orbit is finite, contradicting
+    -- the infinite-order property.)
+    exfalso
+    -- cFib^n = 1 in SU(2) implies cFib has order dividing n, contradicting
+    -- σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder.
+    have h_cFib_val_eq_one :
+        ((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 :=
+      Subtype.ext h_eq
+    -- From cFib^n = 1, cFib has finite order ≤ n
+    have h_fin :
+        IsOfFinOrder (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+      exact isOfFinOrder_iff_pow_eq_one.mpr ⟨n, hn_pos, h_cFib_val_eq_one⟩
+    exact SKEFTHawking.FKLW.σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder h_fin
+  · -- cFib^n ≠ 1: apply axis scaling to get liePartMat = t · liePartMat cFib
+    obtain ⟨t, ht_ne, ht_eq⟩ := h_axis n h_eq
+    -- Convert the goal's outside-coercion form to inside-coercion to match ht_eq
+    show σ_Fib_lie_bundle_pauliDet
+        (liePartMat ((σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n :
+            Matrix (Fin 2) (Fin 2) ℂ)) ≠ 0
+    rw [ht_eq, σ_Fib_lie_bundle_pauliDet_smul_uniform]
+    exact mul_ne_zero (pow_ne_zero 3 ht_ne) cFib_SU_mat_liePartMat_pauliDet_ne_zero
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
