@@ -1237,4 +1237,116 @@ theorem exists_specialUnitary_with_σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero
   rw [Real.sin_pi_div_two]
   exact one_ne_zero
 
+/-! ## §16. F.20.c.d.0 — Continuity of `σ_Fib_lie_bundle_pauliDet ∘ liePartMat`
+(session 53)
+
+Infrastructure substrate for F.20.c.d's BCH-iteration spanning step:
+`σ_Fib_lie_bundle_pauliDet ∘ liePartMat : Matrix (Fin 2) (Fin 2) ℂ → ℝ`
+is **continuous**. Consequence: the preimage of `ℝ \ {0}` is open, so
+the set `{h | σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0}` is an
+open subset of `Matrix (Fin 2) (Fin 2) ℂ`.
+
+This gives **topological room**: any neighborhood of `paulI_x` (or
+`rotPaulI_x t` for `sin t ≠ 0`) in the Matrix-norm topology contains
+matrices with the same non-zero pauliDet property. Downstream
+applications can leverage this to interpolate from explicit witnesses
+to constructive `h ∈ H_Fib` witnesses (via D.3.i.1 iteration sequence
++ approximation).
+
+**Ships**:
+  - `liePartMat_continuous` — direct composition of `lieProj_continuous`
+    + continuity of `M ↦ M - 1`.
+  - `σ_Fib_lie_bundle_continuous` — componentwise continuity (each entry
+    of the 3-tuple is a continuous function of X via `Matrix.mul`
+    continuity).
+  - `σ_Fib_lie_bundle_pauliDet_continuous` — composition of bundle
+    continuity + `pauliDet_continuous_of_continuous`.
+  - `σ_Fib_lie_bundle_pauliDet_liePartMat_continuous` — composition with
+    `liePartMat_continuous`.
+  - **HEADLINE `σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero_isOpen`**:
+    `{h | σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0}` is open.
+-/
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+
+/-- **`liePartMat` is continuous**: `lieProj ∘ (· - 1)`. -/
+theorem liePartMat_continuous :
+    Continuous (liePartMat :
+      Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold liePartMat
+  exact lieProj_continuous.comp (continuous_id.sub continuous_const)
+
+/-- **`σ_Fib_lie_bundle` is continuous**: each of the 3 components is
+a continuous function of `X` (entries built from matrix multiplication
+and `conjTranspose`, both continuous). -/
+theorem σ_Fib_lie_bundle_continuous :
+    Continuous (σ_Fib_lie_bundle :
+      Matrix (Fin 2) (Fin 2) ℂ →
+        Matrix (Fin 2) (Fin 2) ℂ × Matrix (Fin 2) (Fin 2) ℂ ×
+          Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold σ_Fib_lie_bundle
+  refine Continuous.prodMk continuous_id (Continuous.prodMk ?_ ?_)
+  · -- σ_Fib_1·X·σ_Fib_1†
+    exact (continuous_const.matrix_mul continuous_id).matrix_mul
+      continuous_const
+  · -- σ_Fib_2·X·σ_Fib_2†
+    exact (continuous_const.matrix_mul continuous_id).matrix_mul
+      continuous_const
+
+/-- **`σ_Fib_lie_bundle_pauliDet` is continuous**: composition of
+`pauliDet_continuous_of_continuous` with each of the 3 continuous bundle
+components. -/
+theorem σ_Fib_lie_bundle_pauliDet_continuous :
+    Continuous (σ_Fib_lie_bundle_pauliDet :
+      Matrix (Fin 2) (Fin 2) ℂ → ℝ) := by
+  unfold σ_Fib_lie_bundle_pauliDet
+  -- σ_Fib_lie_bundle_pauliDet X = pauliDet (σ_Fib_lie_bundle X).1
+  --                                       (σ_Fib_lie_bundle X).2.1
+  --                                       (σ_Fib_lie_bundle X).2.2
+  have h1 : Continuous (fun X => (σ_Fib_lie_bundle X).1) :=
+    continuous_fst.comp σ_Fib_lie_bundle_continuous
+  have h2 : Continuous (fun X => (σ_Fib_lie_bundle X).2.1) :=
+    (continuous_fst.comp continuous_snd).comp σ_Fib_lie_bundle_continuous
+  have h3 : Continuous (fun X => (σ_Fib_lie_bundle X).2.2) :=
+    (continuous_snd.comp continuous_snd).comp σ_Fib_lie_bundle_continuous
+  exact pauliDet_continuous_of_continuous h1 h2 h3
+
+/-- **`σ_Fib_lie_bundle_pauliDet ∘ liePartMat` is continuous**. -/
+theorem σ_Fib_lie_bundle_pauliDet_liePartMat_continuous :
+    Continuous (fun h : Matrix (Fin 2) (Fin 2) ℂ =>
+      σ_Fib_lie_bundle_pauliDet (liePartMat h)) :=
+  σ_Fib_lie_bundle_pauliDet_continuous.comp liePartMat_continuous
+
+/-- **HEADLINE F.20.c.d.0 — `{h | σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0}`
+is open in `Matrix (Fin 2) (Fin 2) ℂ`**.
+
+Direct consequence of continuity + openness of `ℝ \ {0}`. Provides the
+**topological room** for the BCH iteration argument to find `h ∈ H_Fib`
+in the spanning locus.
+
+In particular: there is an open neighborhood of `paulI_x` (the SU(2)
+witness from `exists_specialUnitary_with_σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero`)
+on which `σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0` holds. -/
+theorem σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero_isOpen :
+    IsOpen {h : Matrix (Fin 2) (Fin 2) ℂ |
+      σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0} := by
+  -- Preimage of {x : ℝ | x ≠ 0} under the continuous map is open
+  exact σ_Fib_lie_bundle_pauliDet_liePartMat_continuous.isOpen_preimage
+    {x : ℝ | x ≠ 0} isOpen_ne
+
+/-- **Witness consequence**: there is an open neighborhood of
+`rotPaulI_x (π/2)` (= `paulI_x`) in `Matrix` on which
+`σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0` holds for all `h` in the
+neighborhood. Combines `σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero_isOpen`
+with the explicit witness `rotPaulI_x_mem_specialUnitaryGroup (π/2)`. -/
+theorem mem_nhds_pauliDet_liePartMat_ne_zero_at_rotPaulI_x_pi_div_two :
+    {h : Matrix (Fin 2) (Fin 2) ℂ |
+      σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0} ∈
+        nhds (rotPaulI_x (Real.pi / 2)) := by
+  refine σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero_isOpen.mem_nhds ?_
+  show σ_Fib_lie_bundle_pauliDet (liePartMat (rotPaulI_x (Real.pi / 2))) ≠ 0
+  apply σ_Fib_lie_bundle_pauliDet_liePartMat_rotPaulI_x_ne_zero
+  rw [Real.sin_pi_div_two]
+  exact one_ne_zero
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
