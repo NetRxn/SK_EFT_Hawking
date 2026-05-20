@@ -538,7 +538,48 @@ theorem skewHermitianProj_sub_one {n : Type*} [Fintype n] [DecidableEq n]
   rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_one]
   abel
 
-/-! ## §8. Module summary
+/-! ## §8. Traceless projection (Layer F.6, session 46)
+
+For arbitrary 2×2 complex matrix M:
+  `tracelessProj M := M - (trace M / 2) • I`
+This makes M traceless without affecting the off-diagonal structure.
+
+The companion membership theorem `liePart_mem_tracelessSkewHermitian`
+(showing that `tracelessProj ∘ skewHermitianProj` lands in 𝔰𝔲(2) for
+any M) is deferred to a follow-on session as it requires careful
+handling of the trace's pure-imaginary structure on skew-Hermitian
+inputs.
+-/
+
+/-- **Traceless projection** for 2×2 complex matrices. Subtracts the
+trace-component-of-identity to land in traceless matrices. -/
+noncomputable def tracelessProj (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  M - ((M.trace / 2) • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+
+/-- `tracelessProj M` is traceless. -/
+theorem tracelessProj_trace_zero (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    (tracelessProj M).trace = 0 := by
+  unfold tracelessProj
+  rw [Matrix.trace_sub, Matrix.trace_smul]
+  simp [Matrix.trace_one, Fintype.card_fin]
+
+/-- **For X already traceless, `tracelessProj X = X`** (idempotence on
+the traceless subspace). -/
+theorem tracelessProj_of_traceless {M : Matrix (Fin 2) (Fin 2) ℂ}
+    (hM : M.trace = 0) : tracelessProj M = M := by
+  unfold tracelessProj
+  rw [hM]
+  simp
+
+/-- **For X ∈ tracelessSkewHermitian (Fin 2), `tracelessProj X = X`** —
+specialization of `tracelessProj_of_traceless`. -/
+theorem tracelessProj_idempotent_on_tracelessSkewHermitian
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    tracelessProj X = X :=
+  tracelessProj_of_traceless hX.2
+
+/-! ## §9. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
 session 35; extended Layer F.1 session 41 + Layer F.2 session 42 +
