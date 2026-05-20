@@ -701,6 +701,91 @@ theorem tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero
     have h_c' : c * pauliDet A B C = 0 := h_c
     exact (mul_eq_zero.mp h_c').resolve_right h_det
 
+/-! ## §11. Lie-algebra projection (Layer F.9, session 48)
+
+Discharges the deferred companion of §8: the **composition
+`tracelessProj ∘ skewHermitianProj` lands in `tracelessSkewHermitian (Fin 2)`
+for any 2×2 complex matrix M** — no traceless hypothesis on M required.
+
+The key fact: for `X.IsSkewHermitian`, `star X.trace = -X.trace`
+(trace is pure imaginary), so `(X.trace / 2) • I` is itself
+skew-Hermitian, and `X - (X.trace / 2) • I = tracelessProj X` remains
+skew-Hermitian.
+
+This packages the **canonical projection `lieProj : Matrix (Fin 2) (Fin 2) ℂ
+→ Matrix (Fin 2) (Fin 2) ℂ`** onto 𝔰𝔲(2), with key properties:
+
+  - `lieProj_mem_tracelessSkewHermitian` (HEADLINE): output is in 𝔰𝔲(2).
+  - `lieProj_one_eq_zero`: `lieProj 1 = 0` (since `M = 1` is Hermitian
+    + scalar, so `skewHermitianProj 1 = 0`).
+  - `lieProj_idempotent_on_tracelessSkewHermitian`: for X ∈ 𝔰𝔲(2),
+    `lieProj X = X`.
+-/
+
+/-- For a skew-Hermitian matrix, the trace is pure imaginary,
+i.e., `star (trace X) = - trace X`. -/
+theorem _root_.Matrix.IsSkewHermitian.star_trace_eq_neg
+    {n : Type*} [Fintype n] {X : Matrix n n ℂ} (hX : X.IsSkewHermitian) :
+    star X.trace = -X.trace := by
+  rw [← Matrix.trace_conjTranspose, hX, Matrix.trace_neg]
+
+/-- For a skew-Hermitian matrix in `Matrix (Fin 2) (Fin 2) ℂ`,
+`tracelessProj X` is also skew-Hermitian. -/
+theorem tracelessProj_isSkewHermitian
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X.IsSkewHermitian) :
+    (tracelessProj X).IsSkewHermitian := by
+  show (tracelessProj X).conjTranspose = -(tracelessProj X)
+  unfold tracelessProj
+  rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_smul,
+      Matrix.conjTranspose_one]
+  rw [show X.conjTranspose = -X from hX]
+  -- Goal: -X - star (X.trace / 2) • 1 = -(X - X.trace / 2 • 1)
+  -- Use: star (X.trace / 2) = star X.trace / star 2 = (-X.trace) / 2 = -X.trace / 2
+  have h_star : star (X.trace / 2 : ℂ) = -(X.trace / 2) := by
+    rw [star_div₀, hX.star_trace_eq_neg]
+    simp [neg_div]
+  rw [h_star]
+  ext i j
+  simp [Matrix.sub_apply, Matrix.neg_apply, Matrix.smul_apply, smul_eq_mul]
+  ring
+
+/-- For a skew-Hermitian matrix in `Matrix (Fin 2) (Fin 2) ℂ`,
+`tracelessProj X ∈ tracelessSkewHermitian (Fin 2)`. -/
+theorem tracelessProj_mem_tracelessSkewHermitian
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X.IsSkewHermitian) :
+    tracelessProj X ∈ tracelessSkewHermitian (Fin 2) :=
+  ⟨tracelessProj_isSkewHermitian hX, tracelessProj_trace_zero X⟩
+
+/-- **Canonical projection onto 𝔰𝔲(2)** (Layer F.9): `lieProj M` is the
+composition `tracelessProj ∘ skewHermitianProj`. -/
+noncomputable def lieProj (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  tracelessProj (skewHermitianProj M)
+
+/-- **HEADLINE — `lieProj M ∈ tracelessSkewHermitian (Fin 2)`** for any
+2×2 complex matrix M. The composition `tracelessProj ∘ skewHermitianProj`
+unconditionally lands in the Lie algebra 𝔰𝔲(2). -/
+theorem lieProj_mem_tracelessSkewHermitian (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    lieProj M ∈ tracelessSkewHermitian (Fin 2) :=
+  tracelessProj_mem_tracelessSkewHermitian (skewHermitianProj_isSkewHermitian M)
+
+/-- `lieProj 1 = 0`. The identity matrix is Hermitian + a scalar
+multiple of itself, so its image under both projections is 0. -/
+theorem lieProj_one_eq_zero :
+    lieProj (1 : Matrix (Fin 2) (Fin 2) ℂ) = 0 := by
+  unfold lieProj skewHermitianProj tracelessProj
+  ext i j
+  simp [Matrix.smul_apply, Matrix.sub_apply, Matrix.one_apply, smul_eq_mul]
+
+/-- For X already in `tracelessSkewHermitian (Fin 2)`, `lieProj X = X`
+(idempotence on the Lie algebra). -/
+theorem lieProj_idempotent_on_tracelessSkewHermitian
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    lieProj X = X := by
+  unfold lieProj
+  rw [skewHermitianProj_idempotent_on_tracelessSkewHermitian hX,
+      tracelessProj_idempotent_on_tracelessSkewHermitian hX]
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
@@ -739,6 +824,14 @@ upstream-IFT path to Fibonacci density.
     identities `a · det = (...) · h₁ - (...) · h₂ + (...) · h₃`
     closed by `linear_combination`, composed with `matrixToPauliCoords`
     linearity.
+  - **§11** (Layer F.9, session 48): `lieProj M := tracelessProj
+    (skewHermitianProj M)` — canonical projection onto 𝔰𝔲(2). HEADLINE
+    `lieProj_mem_tracelessSkewHermitian` discharges the §8-deferred
+    companion: unconditionally lands in 𝔰𝔲(2). Key sub-lemma
+    `Matrix.IsSkewHermitian.star_trace_eq_neg` says trace is pure
+    imaginary for skew-Hermitian matrices. Companion lemmas:
+    `lieProj_one_eq_zero` (1 ↦ 0) +
+    `lieProj_idempotent_on_tracelessSkewHermitian`.
 
 **Substrate downstream (next sessions)**:
 
