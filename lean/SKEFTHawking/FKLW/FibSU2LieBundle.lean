@@ -5505,4 +5505,30 @@ theorem zpowers_cFib_SU_infinite :
     ((injective_zpow_iff_not_isOfFinOrder).mpr
       SKEFTHawking.FKLW.σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder)
 
+/-- **Topological closure of cFib's zpowers is a closed infinite subgroup**. -/
+theorem zpowers_cFib_SU_topologicalClosure_infinite :
+    ((Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).topologicalClosure :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).Infinite := by
+  -- topologicalClosure contains the original subgroup (Subgroup.le_topologicalClosure)
+  exact zpowers_cFib_SU_infinite.mono
+    (Subgroup.le_topologicalClosure _)
+
+/-- **AccPt 1 on the topological closure of cFib's zpowers**.
+
+Direct composition of `one_accPt_of_infinite_closed_subgroup` (shipped in
+`AharonovAradLemma6`) with the infinite-closed-subgroup facts above. -/
+theorem cFib_SU_zpowers_topClosure_accPt_one :
+    AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal
+        ((Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).topologicalClosure :
+            Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) :=
+  SKEFTHawking.FKLW.one_accPt_of_infinite_closed_subgroup
+    (Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).topologicalClosure
+    (Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).isClosed_topologicalClosure
+    zpowers_cFib_SU_topologicalClosure_infinite
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
