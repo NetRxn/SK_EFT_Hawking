@@ -4935,4 +4935,172 @@ theorem cFib_SU_mat_liePartMat_pauli_decomposition :
   rw [cFib_SU_mat_liePartMat_entry_01, cFib_SU_mat_liePartMat_entry_00_im,
       cFib_SU_mat_entry_01_im, cFib_SU_mat_entry_01_re, cFib_SU_mat_entry_00_im]
 
+/-! ## §55. R5.4 Layer F.20.c.d.2.ee — Cubic polynomial value at cFib coords ((2 - φInv)/4)
+
+Substantive cubic-polynomial computation. After applying
+`σ_Fib_lie_bundle_pauliDet_pauliDecomp` at the (a, b, c) = (φInv·φInvSqrt·sin(7π/5),
+φInv·φInvSqrt·(1-cos(7π/5)), -φInv·sin(7π/5)) shipped in §52/§53/§54, the cubic
+polynomial reduces to a remarkably clean closed form:
+
+  `σ_Fib_lie_bundle_pauliDet (liePartMat cFib_SU_mat) = (2 - φInv) / 4`
+
+Using identities:
+  - `φInv² = 1 - φInv` (golden ratio)
+  - `φInvSqrt² = φInv` (= `1/φ` since `(1/√φ)² = 1/φ`)
+  - `cos(7π/5) = -φInv/2` (from `cos_7pi_div_5 = (1-√5)/4` + `φInv = (√5-1)/2`)
+  - `sin²(7π/5) = (3 + φInv)/4` (from sin² + cos² = 1)
+
+The linear_combination certificate (K_p, K_q, K_C, K_s coefficient polynomials)
+was derived via sympy's polynomial division using sequential elimination of
+(q², C, s², p²). Total: ~82 terms in the certificate; mechanical verification.
+
+This is **non-zero** since `φInv < 2`, hence `2 - φInv > 0`, hence `(2 - φInv)/4 > 0`. -/
+
+/-- **Algebraic identity** (real-valued) for the cubic polynomial reduction.
+
+For p, q, s, C ∈ ℝ satisfying:
+  - `p² = 1 - p`         (golden ratio)
+  - `q² = p`              (φInvSqrt² = φInv)
+  - `2C + p = 0`          (cos_7pi_div_5)
+  - `4s² = 3 + p`         (sin²_7pi_div_5)
+
+The cubic polynomial `σ_Fib_lie_bundle_pauliDet_pauliDecomp` evaluated at
+the substituted (a, b, c) = (pqs, pq(1-C), -ps) reduces to `(2 - p)/4`.
+
+Used in `cFib_SU_mat_liePartMat_pauliDet_value` to compute the closed-form value.
+
+Proof: linear_combination with sympy-derived 82-term certificate. -/
+theorem cFib_pauliDet_real_polynomial_identity
+    (p q s C : ℝ)
+    (h_p_sq : p * p = 1 - p)
+    (h_q_sq : q * q = p)
+    (h_C : 2 * C + p = 0)
+    (h_s_sq : 4 * s * s = 3 + p) :
+    -- Cubic polynomial at (a, b, c) = (pqs, pq(1-C), -ps); α=2pq, β=2p-1, γ=p²-q²
+    (p * q * s) *
+        ((p * q * s * s + p * q * (1 - C) * C) *
+            ((((p * q * s) * (2 * p - 1) + (-(p * s)) * (2 * p * q)) * C +
+                (p * q * (1 - C)) * s) * (2 * p * q) +
+              ((p * q * s) * (2 * p * q) + (-(p * s)) * (p * p - q * q)) *
+                (p * p - q * q)) -
+          (-(p * s)) *
+            (-((((p * q * s) * (2 * p - 1) + (-(p * s)) * (2 * p * q)) * s)) +
+              (p * q * (1 - C)) * C)) -
+      (p * q * (1 - C)) *
+        ((p * q * s * C - p * q * (1 - C) * s) *
+            ((((p * q * s) * (2 * p - 1) + (-(p * s)) * (2 * p * q)) * C +
+                (p * q * (1 - C)) * s) * (2 * p * q) +
+              ((p * q * s) * (2 * p * q) + (-(p * s)) * (p * p - q * q)) *
+                (p * p - q * q)) -
+          (-(p * s)) *
+            ((((p * q * s) * (2 * p - 1) + (-(p * s)) * (2 * p * q)) * C +
+                (p * q * (1 - C)) * s) * (2 * p - 1) +
+              ((p * q * s) * (2 * p * q) + (-(p * s)) * (p * p - q * q)) *
+                (2 * p * q))) +
+      (-(p * s)) *
+        ((p * q * s * C - p * q * (1 - C) * s) *
+            (-((((p * q * s) * (2 * p - 1) + (-(p * s)) * (2 * p * q)) * s)) +
+              (p * q * (1 - C)) * C) -
+          (p * q * s * s + p * q * (1 - C) * C) *
+            ((((p * q * s) * (2 * p - 1) + (-(p * s)) * (2 * p * q)) * C +
+                (p * q * (1 - C)) * s) * (2 * p - 1) +
+              ((p * q * s) * (2 * p * q) + (-(p * s)) * (p * p - q * q)) *
+                (2 * p * q))) =
+      (2 - p) / 4 := by
+  linear_combination
+    -- K_p · h_p_sq  (h_p_sq : p*p = 1 - p, "delta" = p² + p - 1)
+    (p^9/16 + 7*p^8/16 + 17*p^7/16 + 17*p^6/16 + 7*p^5/16 + 7*p^4/16 + p^3 +
+     3*p^2/4 + p/4 + 1/2) * h_p_sq +
+    -- K_q · h_q_sq  (h_q_sq : q*q = p, "delta" = q² - p)
+    (-4*C^3*p^5*s^2 - 4*C^3*p^4*q^2*s^2 + 4*C^3*p^4*s^2 + C^2*p^7*s^2 +
+     2*C^2*p^6*q^2*s^2 - 2*C^2*p^6*s^2 - 4*C^2*p^5*q^2*s^2 + 7*C^2*p^5*s^2 -
+     2*C^2*p^4*q^4*s^2 + 7*C^2*p^4*q^2*s^2 - 10*C^2*p^4*s^2 - C^2*p^3*q^4*s^2 +
+     C^2*p^3*s^2 - 2*C*p^7*s^2 - 4*C*p^6*q^2*s^2 + 4*C*p^6*s^2 +
+     8*C*p^5*q^2*s^2 - 4*C*p^5*s^4 - 2*C*p^5*s^2 + 4*C*p^4*q^4*s^2 -
+     4*C*p^4*q^2*s^4 - 2*C*p^4*q^2*s^2 - 4*C*p^4*s^4 + 8*C*p^4*s^2 +
+     2*C*p^3*q^4*s^2 - 2*C*p^3*s^2 + p^7*s^4 + p^7*s^2 + 2*p^6*q^2*s^4 +
+     2*p^6*q^2*s^2 + 2*p^6*s^4 - 2*p^6*s^2 + 4*p^5*q^2*s^4 - 4*p^5*q^2*s^2 +
+     3*p^5*s^4 - p^5*s^2 - 2*p^4*q^4*s^4 - 2*p^4*q^4*s^2 + 3*p^4*q^2*s^4 -
+     p^4*q^2*s^2 + 2*p^4*s^4 - 2*p^4*s^2 - p^3*q^4*s^4 - p^3*q^4*s^2 +
+     p^3*s^4 + p^3*s^2) * h_q_sq +
+    -- K_C · h_C  (h_C : 2*C + p = 0, "delta" = 2C + p)
+    (-2*C^2*p^6*s^2 + 2*C^2*p^5*s^2 + C*p^8*s^2/2 + 5*C*p^6*s^2/2 -
+     5*C*p^5*s^2 + C*p^4*s^2/2 - p^9*s^2/4 - p^8*s^2 + 3*p^7*s^2/4 -
+     2*p^6*s^4 + 3*p^6*s^2/2 - 2*p^5*s^4 + 15*p^5*s^2/4 - p^4*s^2) * h_C +
+    -- K_s · h_s_sq  (h_s_sq : 4*s*s = 3 + p, "delta" = 4s² - 3 - p)
+    (p^10/16 + 5*p^9/16 + p^8*s^2/4 + p^8/2 + p^7*s^2 + 3*p^7/16 +
+     5*p^6*s^2/4 - p^6/8 + p^5*s^2/2 + 3*p^5/16 + p^4*s^2/4 + 7*p^4/16) * h_s_sq
+
+/-! ## §56. R5.4 Layer F.20.c.d.2.ee.1 — pauliDet(liePartMat cFib_SU_mat) = (2-φInv)/4
+
+Apply `cFib_pauliDet_real_polynomial_identity` to the specific cFib values.
+
+The four substrate identities at the concrete cFib coords:
+  - `h_p_sq`: `φInv² = 1 - φInv` (from `golden_phi_inv_sq`)
+  - `h_q_sq`: `φInvSqrt² = φInv` (from `Real.sqrt` semantics + `φInvSqrt = (√φ)⁻¹`)
+  - `h_C`: `2·cos(7π/5) + φInv = 0` (from `cos_7pi_div_5` + `Real.inv_goldenRatio`)
+  - `h_s_sq`: `4·sin²(7π/5) = 3 + φInv` (from sin² + cos² = 1 + cos_7pi_div_5) -/
+
+/-- **R5.4 Layer F.20.c.d.2.ee.1 HEADLINE — closed-form `σ_Fib_lie_bundle_pauliDet`
+at `liePartMat cFib_SU_mat`**.
+
+  `σ_Fib_lie_bundle_pauliDet (liePartMat cFib_SU_mat) = (2 - φInv)/4`  (real)
+
+Composes `cFib_SU_mat_liePartMat_pauli_decomposition` (§54) + `σ_Fib_lie_bundle_pauliDet_pauliDecomp`
+(§24) + `cFib_pauliDet_real_polynomial_identity` (§55). -/
+theorem cFib_SU_mat_liePartMat_pauliDet_value :
+    σ_Fib_lie_bundle_pauliDet (liePartMat cFib_SU_mat) =
+      (2 - Real.goldenRatio⁻¹) / 4 := by
+  -- Substrate: golden ratio + trig identities
+  have h_p_sq : Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ = 1 - Real.goldenRatio⁻¹ := by
+    have := golden_phi_inv_sq; rw [sq] at this; exact this
+  have h_q_sq :
+      (Real.sqrt Real.goldenRatio)⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ =
+        Real.goldenRatio⁻¹ := by
+    rw [show (Real.sqrt Real.goldenRatio)⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ =
+          ((Real.sqrt Real.goldenRatio) * (Real.sqrt Real.goldenRatio))⁻¹ from by
+      rw [mul_inv]]
+    rw [Real.mul_self_sqrt (le_of_lt Real.goldenRatio_pos)]
+  have h_C : 2 * Real.cos (7 * Real.pi / 5) + Real.goldenRatio⁻¹ = 0 := by
+    rw [cos_7pi_div_5]
+    have : Real.goldenRatio⁻¹ = (Real.sqrt 5 - 1) / 2 := by
+      rw [Real.inv_goldenRatio]; unfold Real.goldenConj; ring
+    rw [this]; ring
+  have h_s_sq :
+      4 * Real.sin (7 * Real.pi / 5) * Real.sin (7 * Real.pi / 5) =
+        3 + Real.goldenRatio⁻¹ := by
+    have h_pyth : Real.sin (7 * Real.pi / 5) ^ 2 + Real.cos (7 * Real.pi / 5) ^ 2 = 1 :=
+      Real.sin_sq_add_cos_sq _
+    rw [cos_7pi_div_5] at h_pyth
+    have h_phi_inv : Real.goldenRatio⁻¹ = (Real.sqrt 5 - 1) / 2 := by
+      rw [Real.inv_goldenRatio]; unfold Real.goldenConj; ring
+    have h_5 : (Real.sqrt 5)^2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
+    rw [h_phi_inv]
+    nlinarith [h_pyth, h_5, sq_nonneg (Real.sin (7 * Real.pi / 5))]
+  -- Apply the abstract polynomial identity
+  rw [cFib_SU_mat_liePartMat_pauli_decomposition]
+  rw [σ_Fib_lie_bundle_pauliDet_pauliDecomp]
+  -- Apply the abstract identity directly (both sides ℝ-valued)
+  exact cFib_pauliDet_real_polynomial_identity
+    Real.goldenRatio⁻¹ (Real.sqrt Real.goldenRatio)⁻¹
+    (Real.sin (7 * Real.pi / 5)) (Real.cos (7 * Real.pi / 5))
+    h_p_sq h_q_sq h_C h_s_sq
+
+/-! ## §57. R5.4 Layer F.20.c.d.2.ee.2 — Non-vanishing of σ_Fib_lie_bundle_pauliDet at cFib -/
+
+/-- **R5.4 Layer F.20.c.d.2.ee.2 HEADLINE — `σ_Fib_lie_bundle_pauliDet (liePartMat cFib_SU_mat) ≠ 0`**.
+
+Direct consequence of `cFib_SU_mat_liePartMat_pauliDet_value = (2 - φInv)/4`
+combined with `φInv < 1 < 2`, giving `2 - φInv > 0` hence `(2 - φInv)/4 > 0`. -/
+theorem cFib_SU_mat_liePartMat_pauliDet_ne_zero :
+    σ_Fib_lie_bundle_pauliDet (liePartMat cFib_SU_mat) ≠ 0 := by
+  rw [cFib_SU_mat_liePartMat_pauliDet_value]
+  have h_one_lt_φ : (1 : ℝ) < Real.goldenRatio := Real.one_lt_goldenRatio
+  have h_φInv_lt_one : Real.goldenRatio⁻¹ < 1 := inv_lt_one_of_one_lt₀ h_one_lt_φ
+  have h_pos : (2 - Real.goldenRatio⁻¹) / 4 > 0 := by
+    apply div_pos
+    · linarith
+    · norm_num
+  linarith
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
