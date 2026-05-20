@@ -2556,4 +2556,41 @@ theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp (a b c : ℝ) :
       matrixToPauliCoords_σ_Fib_1_conj_pauliDecomp,
       matrixToPauliCoords_σ_Fib_2_conj_pauliDecomp]
 
+/-! ## §25. R5.4 Layer F.20.c.d.2.o — Arbitrarily small spanning Pauli-coord witnesses
+
+The cubic polynomial form (F.20.c.d.2.n) is non-zero (witness: paulI_x case, F.18).
+By homogeneity (F.20.b `pauliDet_smul_uniform`), the polynomial is non-zero on
+arbitrarily small scaled paulI_x. This shows the spanning locus in 𝔰𝔲(2)'s
+Pauli-coord parametrization accumulates at the origin.
+
+This is the polynomial-side density witness needed for F.20.c.d.2.p (the
+H_Fib intersection step) and F.21 (final density). -/
+
+/-- **R5.4 Layer F.20.c.d.2.o — arbitrarily small spanning Pauli-coord witness**.
+
+For every `ε > 0`, there exist Pauli coordinates `(a, b, c) ∈ ℝ³` with
+`a² + b² + c² < ε²` (i.e., within the open ε-ball in Pauli-coord space)
+such that `σ_Fib_lie_bundle_pauliDet (a•paulI_x + b•paulI_y + c•paulI_z) ≠ 0`.
+
+Concrete witness: `(ε/2, 0, 0)`. Uses F.20.b's homogeneity
+(`σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero`) which descends
+`σ_Fib_lie_bundle_pauliDet (t·paulI_x) ≠ 0` from `t ≠ 0` via cubic homogeneity. -/
+theorem exists_arbitrarily_small_pauliCoord_with_pauliDet_ne_zero
+    {ε : ℝ} (hε : 0 < ε) :
+    ∃ (a b c : ℝ), a^2 + b^2 + c^2 < ε^2 ∧
+      σ_Fib_lie_bundle_pauliDet
+        ((a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z) ≠ 0 := by
+  refine ⟨ε / 2, 0, 0, ?_, ?_⟩
+  · -- (ε/2)² + 0² + 0² = ε²/4 < ε² since 0 < ε.
+    nlinarith [sq_nonneg ε, hε]
+  · -- Reduce the sum (ε/2)•x + 0•y + 0•z to (ε/2)•x.
+    have h_simp :
+        ((ε / 2 : ℝ) : ℂ) • paulI_x + ((0 : ℝ) : ℂ) • paulI_y +
+            ((0 : ℝ) : ℂ) • paulI_z =
+        ((ε / 2 : ℝ) : ℂ) • paulI_x := by
+      simp
+    rw [h_simp]
+    have h_pos : (0 : ℝ) < ε / 2 := by positivity
+    exact σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero h_pos.ne'
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
