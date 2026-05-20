@@ -2211,4 +2211,208 @@ theorem exists_in_nhds_one_subtype_pauliDet_liePartMat_ne_zero
   refine ⟨⟨rotPaulI_x t, rotPaulI_x_mem_specialUnitaryGroup t⟩, ht_mem_U, ?_⟩
   exact ht_pauli
 
+/-! ## §23. R5.4 Layer F.20.c.d.2.m — σ_Fib_2's full SO(3) Ad-action in Pauli coords
+
+Composes shipped substrate to give σ_Fib_2's Ad-action on a Pauli-decomposed
+input X = a·paulI_x + b·paulI_y + c·paulI_z (a b c : ℝ) in closed
+Pauli-coordinate form:
+
+- F.17.a F_decomp: `σ_Fib_2 = F · σ_Fib_1 · F`, `σ_Fib_2† = F · σ_Fib_1† · F`
+- F.20.c.d.2.h: σ_Fib_1's Ad-action is a 7π/5 rotation about z-axis
+- F.20.c.d.2.l: F-conjugation is ℂ-linear (`F_C_conj_pauliDecomp`)
+- F.20.c.d.2.{i,j}: closed forms `F·paulI_α·F` (matrix entries)
+- F.20.c.d.2.k: paulI_y is F-eigenvector with eigenvalue -1
+
+The result is σ_Fib_2's SO(3) matrix in the (paulI_x, paulI_y, paulI_z) basis.
+This is the final piece before F.20.c.d.2.n's explicit cubic
+`σ_Fib_lie_bundle_pauliDet` polynomial form. -/
+
+/-- **R5.4 Layer F.20.c.d.2.m.1 — F·paulI_x·F as Pauli sum**.
+
+Re-expresses `F_C_conj_paulI_x_eq` in pauliDecomp form:
+`F · paulI_x · F = (2·φInv - 1)·paulI_x + 0·paulI_y + (2·φInvSqrt·φInv)·paulI_z`. -/
+theorem F_C_conj_paulI_x_pauliDecomp :
+    F_C * paulI_x * F_C =
+      ((2 * φInv_C - 1) : ℂ) • paulI_x +
+      (0 : ℂ) • paulI_y +
+      ((2 * φInvSqrt_C * φInv_C) : ℂ) • paulI_z := by
+  rw [F_C_conj_paulI_x_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [paulI_x, paulI_y, paulI_z, SKEFTHawking.σ_x, SKEFTHawking.σ_y, SKEFTHawking.σ_z,
+          Matrix.add_apply, smul_eq_mul, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one]
+
+/-- **R5.4 Layer F.20.c.d.2.m.2 — F·paulI_z·F as Pauli sum**.
+
+Re-expresses `F_C_conj_paulI_z_eq` in pauliDecomp form:
+`F · paulI_z · F = (2·φInv·φInvSqrt)·paulI_x + 0·paulI_y + (φInv² - φInvSqrt²)·paulI_z`.
+
+Note `φInv² - φInvSqrt² = 1 - 2·φInv = -(2·φInv - 1)`, so F's SO(3) matrix
+in (x,y,z) basis is the symmetric reflection
+`!![2·φInv-1, 0, 2·φInv·φInvSqrt; 0, -1, 0; 2·φInv·φInvSqrt, 0, -(2·φInv-1)]`. -/
+theorem F_C_conj_paulI_z_pauliDecomp :
+    F_C * paulI_z * F_C =
+      ((2 * φInv_C * φInvSqrt_C) : ℂ) • paulI_x +
+      (0 : ℂ) • paulI_y +
+      ((φInv_C * φInv_C - φInvSqrt_C * φInvSqrt_C) : ℂ) • paulI_z := by
+  rw [F_C_conj_paulI_z_eq]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [paulI_x, paulI_y, paulI_z, SKEFTHawking.σ_x, SKEFTHawking.σ_y, SKEFTHawking.σ_z,
+          Matrix.add_apply, smul_eq_mul, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one]
+
+/-- **R5.4 Layer F.20.c.d.2.m.3 — F·X·F collected by Pauli direction**.
+
+For X = a•paulI_x + b•paulI_y + c•paulI_z with complex coefficients:
+`F·X·F = (a·(2φInv-1) + c·(2φInv·φInvSqrt))·paulI_x +
+         (-b)·paulI_y +
+         (a·(2φInvSqrt·φInv) + c·(φInv²-φInvSqrt²))·paulI_z`. -/
+theorem F_C_conj_pauliDecomp_collected (a b c : ℂ) :
+    F_C * (a • paulI_x + b • paulI_y + c • paulI_z) * F_C =
+      (a * (2 * φInv_C - 1) + c * (2 * φInv_C * φInvSqrt_C)) • paulI_x +
+      (-b) • paulI_y +
+      (a * (2 * φInvSqrt_C * φInv_C) +
+         c * (φInv_C * φInv_C - φInvSqrt_C * φInvSqrt_C)) • paulI_z := by
+  rw [F_C_conj_pauliDecomp,
+      F_C_conj_paulI_x_pauliDecomp, F_C_conj_paulI_y_eq_neg,
+      F_C_conj_paulI_z_pauliDecomp]
+  -- Distribute the outer (a • ·), (b • ·), (c • ·) through the inner sums
+  -- and collect by paulI_α. Pure ring arithmetic in the smul algebra.
+  ext i j
+  simp only [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
+  ring
+
+/-- **R5.4 Layer F.20.c.d.2.m.4 — σ_Fib_1·paulI_x·σ_Fib_1† as Pauli sum**
+(public extraction of the inline `have h_pauli_x_decomp` from the
+proof of `σ_Fib_1_SU_mat_conj_pauliDecomp`).
+
+`σ_Fib_1 · paulI_x · σ_Fib_1† = cos(7π/5)·paulI_x + sin(7π/5)·paulI_y + 0·paulI_z`. -/
+theorem σ_Fib_1_SU_mat_conj_paulI_x_pauliDecomp :
+    σ_Fib_1_SU_mat * paulI_x * σ_Fib_1_SU_mat.conjTranspose =
+      ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_x +
+      ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_y +
+      ((0 : ℝ) : ℂ) • paulI_z := by
+  have h_mem : σ_Fib_1_SU_mat * paulI_x * σ_Fib_1_SU_mat.conjTranspose ∈
+      tracelessSkewHermitian (Fin 2) :=
+    tracelessSkewHermitian_conj_σ_Fib_1_SU_mat paulI_x_mem_tracelessSkewHermitian
+  have h_decomp := tracelessSkewHermitian_decomp h_mem
+  have h_coords := σ_Fib_1_SU_mat_conj_paulI_x_pauliCoords
+  unfold matrixToPauliCoords at h_coords
+  have h_im_01 : ((σ_Fib_1_SU_mat * paulI_x *
+      σ_Fib_1_SU_mat.conjTranspose) 0 1).im = Real.cos (7 * Real.pi / 5) :=
+    congrArg Prod.fst h_coords
+  have h_re_01 : ((σ_Fib_1_SU_mat * paulI_x *
+      σ_Fib_1_SU_mat.conjTranspose) 0 1).re = Real.sin (7 * Real.pi / 5) :=
+    congrArg (Prod.fst ∘ Prod.snd) h_coords
+  have h_im_00 : ((σ_Fib_1_SU_mat * paulI_x *
+      σ_Fib_1_SU_mat.conjTranspose) 0 0).im = 0 :=
+    congrArg (Prod.snd ∘ Prod.snd) h_coords
+  rw [h_decomp, h_im_01, h_re_01, h_im_00]
+
+/-- **R5.4 Layer F.20.c.d.2.m.5 — σ_Fib_1·paulI_y·σ_Fib_1† as Pauli sum**
+(public extraction of the inline `have h_pauli_y_decomp`).
+
+`σ_Fib_1 · paulI_y · σ_Fib_1† = -sin(7π/5)·paulI_x + cos(7π/5)·paulI_y + 0·paulI_z`. -/
+theorem σ_Fib_1_SU_mat_conj_paulI_y_pauliDecomp :
+    σ_Fib_1_SU_mat * paulI_y * σ_Fib_1_SU_mat.conjTranspose =
+      ((-Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_x +
+      ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_y +
+      ((0 : ℝ) : ℂ) • paulI_z := by
+  have h_mem : σ_Fib_1_SU_mat * paulI_y * σ_Fib_1_SU_mat.conjTranspose ∈
+      tracelessSkewHermitian (Fin 2) :=
+    tracelessSkewHermitian_conj_σ_Fib_1_SU_mat paulI_y_mem_tracelessSkewHermitian
+  have h_decomp := tracelessSkewHermitian_decomp h_mem
+  have h_coords := σ_Fib_1_SU_mat_conj_paulI_y_pauliCoords
+  unfold matrixToPauliCoords at h_coords
+  have h_im_01 : ((σ_Fib_1_SU_mat * paulI_y *
+      σ_Fib_1_SU_mat.conjTranspose) 0 1).im = -Real.sin (7 * Real.pi / 5) :=
+    congrArg Prod.fst h_coords
+  have h_re_01 : ((σ_Fib_1_SU_mat * paulI_y *
+      σ_Fib_1_SU_mat.conjTranspose) 0 1).re = Real.cos (7 * Real.pi / 5) :=
+    congrArg (Prod.fst ∘ Prod.snd) h_coords
+  have h_im_00 : ((σ_Fib_1_SU_mat * paulI_y *
+      σ_Fib_1_SU_mat.conjTranspose) 0 0).im = 0 :=
+    congrArg (Prod.snd ∘ Prod.snd) h_coords
+  rw [h_decomp, h_im_01, h_re_01, h_im_00]
+
+/-- **R5.4 Layer F.20.c.d.2.m.6 — complex version of σ_Fib_1's pauliDecomp**.
+
+Generalizes `σ_Fib_1_SU_mat_conj_pauliDecomp` from (a b c : ℝ) to (A B C : ℂ).
+Needed for σ_Fib_2 composition where the intermediate coefficients (after
+F·X·F) are complex-valued (containing `φInv_C, φInvSqrt_C`). -/
+theorem σ_Fib_1_SU_mat_conj_pauliDecomp_C (A B C : ℂ) :
+    σ_Fib_1_SU_mat *
+      (A • paulI_x + B • paulI_y + C • paulI_z) *
+      σ_Fib_1_SU_mat.conjTranspose =
+    (A * ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) -
+        B * ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ)) • paulI_x +
+    (A * ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) +
+        B * ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ)) • paulI_y +
+    C • paulI_z := by
+  -- Distribute Ad-conjugation over the sum, then apply each base case.
+  rw [σ_Fib_1_SU_mat_conj_add, σ_Fib_1_SU_mat_conj_add,
+      σ_Fib_1_SU_mat_conj_smul, σ_Fib_1_SU_mat_conj_smul,
+      σ_Fib_1_SU_mat_conj_smul]
+  rw [σ_Fib_1_SU_mat_conj_paulI_z_eq,
+      σ_Fib_1_SU_mat_conj_paulI_x_pauliDecomp,
+      σ_Fib_1_SU_mat_conj_paulI_y_pauliDecomp]
+  -- Now: A • (cs•x + sn•y + 0•z) + B • (-sn•x + cs•y + 0•z) + C • z =
+  --     (A·cs - B·sn) • x + (A·sn + B·cs) • y + C • z.
+  -- push_cast normalizes ↑(-Real.sin _) → -↑(Real.sin _).
+  ext i j
+  simp only [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
+  push_cast
+  ring
+
+/-- **R5.4 Layer F.20.c.d.2.m — HEADLINE: σ_Fib_2's full SO(3) Ad-action
+on a Pauli-decomposed element (complex form)**.
+
+For X = a•paulI_x + b•paulI_y + c•paulI_z with complex coefficients,
+σ_Fib_2 · X · σ_Fib_2† collects into Pauli sum with closed-form coefficients
+in α := 2·φInv·φInvSqrt, β := 2·φInv - 1, γ := φInv² - φInvSqrt², cs := cos(7π/5),
+sn := sin(7π/5).
+
+The proof composes via F.17.a (σ_Fib_2 = F·σ_Fib_1·F) + F.20.c.d.2.l (F-linearity)
++ F.20.c.d.2.{m.1,m.2,k} (F's Pauli-coord matrix) + F.20.c.d.2.{m.4,m.5,
+σ_Fib_1_conj_paulI_z_eq} (σ_Fib_1's z-axis rotation by 7π/5) + F.20.c.d.2.m.6
+(complex σ_Fib_1 pauliDecomp). -/
+theorem σ_Fib_2_SU_mat_conj_pauliDecomp_C (a b c : ℂ) :
+    σ_Fib_2_SU_mat * (a • paulI_x + b • paulI_y + c • paulI_z) *
+      σ_Fib_2_SU_mat.conjTranspose =
+    -- Use let bindings for readability. α, β, γ are real-valued complex
+    -- constants; cs, sn are ℝ→ℂ casts.
+    let α : ℂ := 2 * φInv_C * φInvSqrt_C
+    let β : ℂ := 2 * φInv_C - 1
+    let γ : ℂ := φInv_C * φInv_C - φInvSqrt_C * φInvSqrt_C
+    let cs : ℂ := ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ)
+    let sn : ℂ := ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ)
+    (((a * β + c * α) * cs + b * sn) * β + (a * α + c * γ) * α) • paulI_x +
+    (-((a * β + c * α) * sn) + b * cs) • paulI_y +
+    (((a * β + c * α) * cs + b * sn) * α + (a * α + c * γ) * γ) • paulI_z := by
+  -- Step 1: σ_Fib_2 = F·σ_Fib_1·F via F-decomp. Apply .conjTranspose
+  -- rewrite FIRST so the un-conjugated occurrence isn't absorbed.
+  rw [σ_Fib_2_SU_mat_conjTranspose_F_decomp, σ_Fib_2_SU_mat_F_decomp]
+  -- Step 2: Restructure brackets: (F·σ_1·F)·X·(F·σ_1†·F) = F·(σ_1·(F·X·F)·σ_1†)·F.
+  rw [show
+    F_C * σ_Fib_1_SU_mat * F_C *
+      (a • paulI_x + b • paulI_y + c • paulI_z) *
+      (F_C * σ_Fib_1_SU_mat.conjTranspose * F_C) =
+    F_C * (σ_Fib_1_SU_mat *
+      (F_C * (a • paulI_x + b • paulI_y + c • paulI_z) * F_C) *
+      σ_Fib_1_SU_mat.conjTranspose) * F_C
+    from by noncomm_ring]
+  -- Step 3: F·X·F → Pauli sum (inner F-conjugation).
+  rw [F_C_conj_pauliDecomp_collected]
+  -- Step 4: σ_Fib_1 · (Pauli sum) · σ_Fib_1† → Pauli sum (σ_Fib_1 z-rotation).
+  rw [σ_Fib_1_SU_mat_conj_pauliDecomp_C]
+  -- Step 5: F · (Pauli sum) · F → Pauli sum (outer F-conjugation).
+  rw [F_C_conj_pauliDecomp_collected]
+  -- Step 6: Match the target. The intermediate coefficients simplify via
+  -- ring arithmetic in the smul algebra.
+  ext i j
+  simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.neg_apply, smul_eq_mul]
+  ring
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
