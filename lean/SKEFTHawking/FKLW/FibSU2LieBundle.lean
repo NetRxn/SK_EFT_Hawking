@@ -984,4 +984,53 @@ theorem liePartMat_conj_σ_Fib_2_SU_mat (M : Matrix (Fin 2) (Fin 2) ℂ) :
       σ_Fib_2_SU_mat * liePartMat M * σ_Fib_2_SU_mat.conjTranspose :=
   liePartMat_conj_specialUnitary σ_Fib_2_SU M
 
+/-! ## §14. F.20.c.b — σ_Fib bundle commutes with liePartMat (session 51)
+
+**The σ_Fib bundle of Lie parts equals the Lie parts of the σ_Fib bundle**.
+
+For any matrix h, the σ_Fib bundle applied to `liePartMat h` produces the
+same triple as componentwise `liePartMat` applied to the σ_Fib bundle of h.
+This is the substrate that connects the small-h BCH iteration argument
+(operating on `h ∈ H_Fib`) to the Lie-algebra spanning analysis
+(operating on `liePartMat h ∈ 𝔰𝔲(2)`).
+
+Direct composition of `liePartMat_conj_σ_Fib_{1,2}_SU_mat` with the
+`σ_Fib_lie_bundle` definition.
+-/
+
+/-- **σ_Fib bundle commutes with `liePartMat`**: the σ_Fib bundle of
+the Lie part of h equals componentwise Lie part of the σ_Fib bundle of h.
+
+`σ_Fib_lie_bundle (liePartMat h) =
+  (liePartMat h, liePartMat (σ_Fib_1·h·σ_Fib_1†), liePartMat (σ_Fib_2·h·σ_Fib_2†))`
+
+Proof: σ_Fib_lie_bundle def + Ad-equivariance of liePartMat (§13). -/
+theorem σ_Fib_lie_bundle_liePartMat_eq
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    σ_Fib_lie_bundle (liePartMat M) =
+      (liePartMat M,
+       liePartMat (σ_Fib_1_SU_mat * M * σ_Fib_1_SU_mat.conjTranspose),
+       liePartMat (σ_Fib_2_SU_mat * M * σ_Fib_2_SU_mat.conjTranspose)) := by
+  unfold σ_Fib_lie_bundle
+  refine Prod.ext rfl (Prod.ext ?_ ?_)
+  · -- σ_Fib_1 component: σ_1·liePartMat M·σ_1† = liePartMat (σ_1·M·σ_1†)
+    show σ_Fib_1_SU_mat * liePartMat M * σ_Fib_1_SU_mat.conjTranspose =
+         liePartMat (σ_Fib_1_SU_mat * M * σ_Fib_1_SU_mat.conjTranspose)
+    rw [liePartMat_conj_σ_Fib_1_SU_mat]
+  · -- σ_Fib_2 component: analogous
+    show σ_Fib_2_SU_mat * liePartMat M * σ_Fib_2_SU_mat.conjTranspose =
+         liePartMat (σ_Fib_2_SU_mat * M * σ_Fib_2_SU_mat.conjTranspose)
+    rw [liePartMat_conj_σ_Fib_2_SU_mat]
+
+/-- **The σ_Fib bundle pauliDet of the Lie part equals the pauliDet of
+the Lie parts of the σ_Fib bundle**. Direct consequence of `σ_Fib_lie_bundle_liePartMat_eq`. -/
+theorem σ_Fib_lie_bundle_pauliDet_liePartMat_eq
+    (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    σ_Fib_lie_bundle_pauliDet (liePartMat M) =
+      pauliDet (liePartMat M)
+        (liePartMat (σ_Fib_1_SU_mat * M * σ_Fib_1_SU_mat.conjTranspose))
+        (liePartMat (σ_Fib_2_SU_mat * M * σ_Fib_2_SU_mat.conjTranspose)) := by
+  unfold σ_Fib_lie_bundle_pauliDet
+  rw [σ_Fib_lie_bundle_liePartMat_eq]
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
