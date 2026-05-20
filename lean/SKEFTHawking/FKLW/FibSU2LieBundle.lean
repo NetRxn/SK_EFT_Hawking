@@ -1033,4 +1033,208 @@ theorem σ_Fib_lie_bundle_pauliDet_liePartMat_eq
   unfold σ_Fib_lie_bundle_pauliDet
   rw [σ_Fib_lie_bundle_liePartMat_eq]
 
+/-! ## §15. F.20.c.c — Closed-form rotation-matrix witness (session 52)
+
+For each `t : ℝ`, define
+`rotPaulI_x t := (cos t : ℂ) • I + (sin t : ℂ) • paulI_x`.
+
+This is the SU(2) **rotation matrix** about the x-axis — manifestly in
+`specialUnitaryGroup (Fin 2) ℂ` (verified by direct entry-wise det and
+unitarity computation), avoiding any matrix-exponential machinery. Its
+`liePartMat` has the closed form `(sin t : ℂ) • paulI_x` (via `lieProj`
+additivity + `lieProj_real_smul_one_eq_zero` + idempotence on 𝔰𝔲(2)).
+
+**Headline ship**: for `sin t ≠ 0`,
+`σ_Fib_lie_bundle_pauliDet (liePartMat (rotPaulI_x t)) ≠ 0` —
+the existential WITNESS for "some `h ∈ SU(2)` has non-zero
+σ_Fib_lie_bundle_pauliDet at its Lie part". Combined with F.20.b
+(`σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero`), this populates
+the spanning locus for the BCH/IFT bridge to unconditional density.
+
+**Substrate downstream**:
+  - **F.20.c.d** (multi-session): lift "Lie parts span 𝔰𝔲(2)" via BCH
+    iteration to "products of bundle members cover open nbhd of 1".
+  - **F.21** (~20-50 LoC): compose with Layer E's
+    `fibonacci_density_from_exp_image_subset` for full
+    `DenseInSpecialUnitary 3 2 ρ_Fib_SU2`.
+
+**Note**: `rotPaulI_x t` is NOT in general in `H_Fib`. F.20.c.c here
+ships the SU(2)-level existence; promoting to an H_Fib witness happens
+in F.20.c.d via the BCH iteration substrate (D.3.h + D.3.i.1).
+-/
+
+/-- **Rotation matrix about the x-axis** in SU(2): closed-form analog
+of `exp(t · paulI_x)`. Manifestly unitary + special, sidestepping
+matrix-exponential infrastructure for the F.20.c.c witness ship. -/
+noncomputable def rotPaulI_x (t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  (Real.cos t : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+    (Real.sin t : ℂ) • paulI_x
+
+/-- **conjTranspose of `rotPaulI_x` in smul-form**: since `paulI_x` is
+skew-Hermitian and `cos t, sin t` are real,
+`(rotPaulI_x t)† = (cos t : ℂ) • 1 - (sin t : ℂ) • paulI_x`. -/
+theorem rotPaulI_x_conjTranspose (t : ℝ) :
+    (rotPaulI_x t).conjTranspose =
+      (Real.cos t : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) -
+        (Real.sin t : ℂ) • paulI_x := by
+  unfold rotPaulI_x
+  rw [Matrix.conjTranspose_add, Matrix.conjTranspose_smul,
+      Matrix.conjTranspose_smul, Matrix.conjTranspose_one]
+  rw [show star (Real.cos t : ℂ) = (Real.cos t : ℂ) from
+      Complex.conj_ofReal _]
+  rw [show star (Real.sin t : ℂ) = (Real.sin t : ℂ) from
+      Complex.conj_ofReal _]
+  rw [show (paulI_x : Matrix (Fin 2) (Fin 2) ℂ).conjTranspose = -paulI_x
+      from paulI_x_isSkewHermitian]
+  rw [smul_neg]
+  abel
+
+/-- **`rotPaulI_x t` is unitary**: `(rotPaulI_x t) · (rotPaulI_x t)† = 1`.
+
+Algebraic proof: with `c = cos t`, `s = sin t`,
+  `(c•1 + s•paulI_x) · (c•1 - s•paulI_x)`
+= `c²•1 - s²•(paulI_x²)`            [cross terms cancel since they commute via 1]
+= `c²•1 - s²•(-1)`                  [`paulI_x_sq`]
+= `(c² + s²)•1 = 1`                 [`cos²+sin²=1`]. -/
+theorem rotPaulI_x_mul_conjTranspose (t : ℝ) :
+    rotPaulI_x t * (rotPaulI_x t).conjTranspose = 1 := by
+  rw [rotPaulI_x_conjTranspose]
+  unfold rotPaulI_x
+  -- Algebraic expansion using commutativity with identity + paulI_x²=-1.
+  -- Step 1: distribute the product. Use Matrix.add_mul, Matrix.mul_sub.
+  rw [Matrix.add_mul, Matrix.mul_sub, Matrix.mul_sub]
+  -- Step 2: each of 4 terms is X•1 · Y•Z where X•1 is scalar, so X•1·(Y•Z) = (X·Y)•(1·Z) = (XY)•Z.
+  rw [Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul]    -- (c•1)(c•1) = c•(1·(c•1)) = c•(c•1)
+  rw [Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul]    -- (c•1)(s•paulI_x) → c•(s•paulI_x)
+  rw [Matrix.smul_mul, Matrix.mul_smul, Matrix.mul_one]    -- (s•paulI_x)(c•1) → s•(c•paulI_x)
+  rw [Matrix.smul_mul, Matrix.mul_smul]                     -- (s•paulI_x)(s•paulI_x) → s•(s•paulI_x²)
+  -- Combine the smul-of-smul into single scalar
+  rw [smul_smul, smul_smul, smul_smul, smul_smul]
+  rw [paulI_x_sq]
+  -- Goal now: (c·c) • 1 - ((c·s) • paulI_x) + ((s·c) • paulI_x - (s·s) • (-1)) = 1
+  -- Rearrange: the cross terms (c·s)•paulI_x and (s·c)•paulI_x cancel
+  rw [smul_neg, sub_neg_eq_add]
+  -- (c·c)•1 - (c·s)•paulI_x + ((s·c)•paulI_x + (s·s)•1) = 1
+  rw [show (Real.cos t : ℂ) * (Real.sin t : ℂ) =
+          (Real.sin t : ℂ) * (Real.cos t : ℂ) from mul_comm _ _]
+  -- (c·c)•1 - (s·c)•paulI_x + (s·c)•paulI_x + (s·s)•1 = 1
+  have h_trig : ((Real.cos t : ℂ) * (Real.cos t : ℂ)) +
+                ((Real.sin t : ℂ) * (Real.sin t : ℂ)) = 1 := by
+    rw [show ((Real.cos t : ℂ) * (Real.cos t : ℂ)) +
+             ((Real.sin t : ℂ) * (Real.sin t : ℂ)) =
+         ((Real.cos t : ℂ))^2 + ((Real.sin t : ℂ))^2 from by ring]
+    rw [Complex.ofReal_cos, Complex.ofReal_sin]
+    exact Complex.cos_sq_add_sin_sq ↑t
+  -- Rearrange using abel and apply h_trig
+  rw [show ((Real.cos t : ℂ) * (Real.cos t : ℂ)) •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) -
+        ((Real.sin t : ℂ) * (Real.cos t : ℂ)) • paulI_x +
+       (((Real.sin t : ℂ) * (Real.cos t : ℂ)) • paulI_x +
+        ((Real.sin t : ℂ) * (Real.sin t : ℂ)) • (1 : Matrix _ _ ℂ)) =
+       (((Real.cos t : ℂ) * (Real.cos t : ℂ)) +
+        ((Real.sin t : ℂ) * (Real.sin t : ℂ))) •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) from by
+    rw [add_smul]; abel]
+  rw [h_trig, one_smul]
+
+/-- **`rotPaulI_x t` has determinant 1**.
+
+Via Matrix.det_fin_two using explicit entry formula on rotPaulI_x. -/
+theorem rotPaulI_x_det (t : ℝ) :
+    (rotPaulI_x t).det = 1 := by
+  unfold rotPaulI_x paulI_x SKEFTHawking.σ_x
+  rw [Matrix.det_fin_two]
+  -- Entries computed:
+  -- (0,0) = cos t, (1,1) = cos t, (0,1) = i·sin t, (1,0) = i·sin t
+  -- det = cos²t - (i·sin t)² = cos²t - i²·sin²t = cos²t + sin²t = 1
+  simp [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply,
+        Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.head_cons, smul_eq_mul, Complex.I_mul_I]
+  -- State h_trig in Complex.cos form (matches the goal after simp)
+  have h_trig : (Complex.cos ↑t)^2 + (Complex.sin ↑t)^2 = 1 :=
+    Complex.cos_sq_add_sin_sq ↑t
+  have h_I_sq : Complex.I^2 = -1 := Complex.I_sq
+  linear_combination h_trig - (Complex.sin ↑t)^2 * h_I_sq
+
+/-- **`rotPaulI_x t ∈ specialUnitaryGroup (Fin 2) ℂ`** — the rotation
+matrix is in SU(2). -/
+theorem rotPaulI_x_mem_specialUnitaryGroup (t : ℝ) :
+    rotPaulI_x t ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ := by
+  rw [Matrix.mem_specialUnitaryGroup_iff]
+  refine ⟨?_, rotPaulI_x_det t⟩
+  rw [Matrix.mem_unitaryGroup_iff]
+  exact rotPaulI_x_mul_conjTranspose t
+
+/-- **HEADLINE F.20.c.c — closed-form `liePartMat` of the rotation matrix**:
+`liePartMat (rotPaulI_x t) = (sin t : ℂ) • paulI_x`.
+
+Proof:
+  1. `rotPaulI_x t - 1 = ((cos t - 1) : ℂ) • 1 + (sin t : ℂ) • paulI_x`
+     (by smul-distributivity of subtraction).
+  2. `lieProj` is additive (`SU2LieAlgebra.lieProj_add`).
+  3. `lieProj ((r : ℂ) • 1) = 0` for `r : ℝ`
+     (`SU2LieAlgebra.lieProj_real_smul_one_eq_zero`).
+  4. `(sin t : ℂ) • paulI_x ∈ tracelessSkewHermitian` so `lieProj` fixes
+     it (`SU2LieAlgebra.lieProj_idempotent_on_tracelessSkewHermitian`). -/
+theorem liePartMat_rotPaulI_x (t : ℝ) :
+    liePartMat (rotPaulI_x t) = (Real.sin t : ℂ) • paulI_x := by
+  unfold liePartMat rotPaulI_x
+  -- Step 1: rewrite `... - 1` as sum of two real-smul terms
+  have h_eq : (Real.cos t : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+      (Real.sin t : ℂ) • paulI_x - 1 =
+      ((Real.cos t - 1 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+        (Real.sin t : ℂ) • paulI_x := by
+    have h_smul : ((Real.cos t - 1 : ℝ) : ℂ) •
+        (1 : Matrix (Fin 2) (Fin 2) ℂ) =
+        (Real.cos t : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) - 1 := by
+      push_cast
+      rw [sub_smul, one_smul]
+    rw [h_smul]
+    abel
+  rw [h_eq]
+  -- Step 2: lieProj is additive
+  rw [lieProj_add]
+  -- Step 3: lieProj ((cos t - 1 : ℂ) • 1) = 0
+  rw [lieProj_real_smul_one_eq_zero]
+  rw [zero_add]
+  -- Step 4: lieProj ((sin t : ℂ) • paulI_x) = (sin t : ℂ) • paulI_x
+  exact lieProj_idempotent_on_tracelessSkewHermitian
+    (tracelessSkewHermitian_complex_smul_real_mem
+      paulI_x_mem_tracelessSkewHermitian (Real.sin t))
+
+/-- **HEADLINE F.20.c.c — `σ_Fib_lie_bundle_pauliDet (liePartMat (rotPaulI_x t)) ≠ 0`
+for `sin t ≠ 0`**.
+
+The existential WITNESS for "some SU(2) element `h` has non-zero
+`σ_Fib_lie_bundle_pauliDet (liePartMat h)`". Combined with F.20.b's
+uniform-scaling result, this populates the spanning locus around 1.
+
+Proof: `liePartMat (rotPaulI_x t) = (sin t : ℂ) • paulI_x`
+(`liePartMat_rotPaulI_x`), and F.20.b's
+`σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero` gives the result
+for any non-zero scalar coefficient. -/
+theorem σ_Fib_lie_bundle_pauliDet_liePartMat_rotPaulI_x_ne_zero
+    {t : ℝ} (ht : Real.sin t ≠ 0) :
+    σ_Fib_lie_bundle_pauliDet (liePartMat (rotPaulI_x t)) ≠ 0 := by
+  rw [liePartMat_rotPaulI_x]
+  exact σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero ht
+
+/-- **F.20.c.c existence consequence**: there exists `h ∈ specialUnitaryGroup (Fin 2) ℂ`
+with `σ_Fib_lie_bundle_pauliDet (liePartMat h) ≠ 0`.
+
+This is the **existential SU(2)-level witness** that promotes the
+abstract pauliDet ≠ 0 statement to a "there exists" form usable
+downstream by F.20.c.d (BCH iteration to small-h H_Fib witnesses) and
+F.21 (Layer E composition). Witness: `rotPaulI_x (π/2)` (giving
+`sin(π/2) = 1 ≠ 0`). -/
+theorem exists_specialUnitary_with_σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero :
+    ∃ h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      σ_Fib_lie_bundle_pauliDet (liePartMat h.val) ≠ 0 := by
+  refine ⟨⟨rotPaulI_x (Real.pi / 2),
+          rotPaulI_x_mem_specialUnitaryGroup (Real.pi / 2)⟩, ?_⟩
+  simp only
+  apply σ_Fib_lie_bundle_pauliDet_liePartMat_rotPaulI_x_ne_zero
+  rw [Real.sin_pi_div_two]
+  exact one_ne_zero
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
