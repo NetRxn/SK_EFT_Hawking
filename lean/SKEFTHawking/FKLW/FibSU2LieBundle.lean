@@ -32,6 +32,7 @@ import Mathlib
 import SKEFTHawking.FKLW.SU2LieAlgebra
 import SKEFTHawking.FKLW.FibSU2Rep
 import SKEFTHawking.FKLW.FibSU2Density
+import SKEFTHawking.FKLW.FibonacciDensityConditional
 
 set_option autoImplicit false
 
@@ -4083,5 +4084,120 @@ theorem F21_residual_implies_small_spanning_triples
         a = 0 ∧ b = 0 ∧ c = 0) := by
   intro ε hε
   exact H_Fib_three_small_spanning_from_small_pauliDet (h_residual ε hε)
+
+/-! ## §44. R5.4 Layer F.20.c.d.2.u — Modular F.21 statement: residual + Bridge Lemma 6.2 → density
+
+The MODULAR F.21 architecture splits the unconditional density into two clean
+substantive hypotheses + the existing density chain:
+
+  H1 := **F21_residual_small_spanning** (Layer F.20.c.d.2.t):
+        ∀ ε > 0, ∃ small h ∈ H_Fib with non-zero σ_Fib_lie_bundle_pauliDet.
+
+  H2 := **F21_BridgeLemma62_OpenNhd** (this section):
+        ∀ small spanning H_Fib triple, ∃ open neighborhood of 1 in H_Fib.
+
+The composition theorem `fibonacci_density_from_F21_residual_and_bridge_lemma_62`
+chains H1 + H2 through:
+  - §42 `H_Fib_three_small_spanning_from_small_pauliDet` (residual → triple)
+  - H2 (triple → open nhd)
+  - `fibonacci_density_from_H_Fib_open_at_one` (Layer E final composition)
+
+to deliver `DenseInSpecialUnitary 3 2 ρ_Fib_SU2` (= F.21).
+
+**This is the structurally clean state-of-the-art for F.21**:
+  - H1 substantive content: ~150 LoC (small spanning element existence)
+  - H2 substantive content: ~100-200 LoC (BCH-iteration IFT-style open nbhd)
+  - Composition: this section (~50 LoC, structural)
+-/
+
+/-- **R5.4 Layer F.20.c.d.2.u — F.21 Bridge Lemma 6.2 hypothesis (small spanning → open nhd)**.
+
+For every small spanning H_Fib triple — three H_Fib elements (h₀, h₁, h₂) at scales
+(ε, 4ε, 4ε) with ℝ-lin-indep liePartMat directions — there exists an open
+neighborhood of `(1 : SU(2))` contained in H_Fib.
+
+This is the **BCH/IFT iteration** content of Aharonov-Arad Bridge Lemma 6.2: integer
+products of small spanning Lie-algebra elements cover an open neighborhood. The
+substantive proof requires:
+  - Local diffeomorphism of `exp` at 0 (shipped: SU2LocalDiffeo Cartan-C).
+  - BCH cubic linearization for product approximation (shipped: MatrixBCHCubic).
+  - IFT-style 3D injection (m_1, m_2, m_3) → h₀^{m_1} h₁^{m_2} h₂^{m_3}.
+
+Estimated ~100-200 LoC to discharge directly. -/
+def F21_BridgeLemma62_OpenNhd : Prop :=
+  ∀ ε : ℝ, 0 < ε →
+    (∃ (h₀ h₁ h₂ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      h₀ ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      h₁ ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      h₂ ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      ‖(h₀ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε ∧
+      ‖(h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 4 * ε ∧
+      ‖(h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 4 * ε ∧
+      (∀ a b c : ℝ,
+        (a : ℂ) • liePartMat (h₀ : Matrix (Fin 2) (Fin 2) ℂ) +
+        (b : ℂ) • liePartMat (h₁ : Matrix (Fin 2) (Fin 2) ℂ) +
+        (c : ℂ) • liePartMat (h₂ : Matrix (Fin 2) (Fin 2) ℂ) = 0 →
+        a = 0 ∧ b = 0 ∧ c = 0)) →
+    ∃ V ∈ nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      V ⊆ (SKEFTHawking.FKLW.H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+
+/-- **R5.4 Layer F.20.c.d.2.u HEADLINE — Modular F.21 density theorem**.
+
+If the **F21 residual** (`F21_residual_small_spanning`) holds AND the **Bridge
+Lemma 6.2** (`F21_BridgeLemma62_OpenNhd`) holds, then the Fibonacci density
+predicate `DenseInSpecialUnitary 3 2 ρ_Fib_SU2` (= F.21) follows.
+
+This is the **modular F.21 statement**: it cleanly decomposes the unconditional
+density into two substantive hypotheses + the existing density chain
+(`fibonacci_density_from_H_Fib_open_at_one`).
+
+Proof structure:
+  1. From F21_residual + arbitrary ε > 0, get small h ∈ H_Fib with non-zero pauliDet.
+  2. Apply §42 to get small spanning triple.
+  3. Apply F21_BridgeLemma62_OpenNhd to get open V ⊆ H_Fib near 1.
+  4. Apply `fibonacci_density_from_H_Fib_open_at_one` (FibonacciDensityConditional).
+
+The ε is chosen as 1/64 (matching `H_Fib_iteration_scale_le_inv_64` for downstream
+BCH-iteration compatibility, though the Bridge Lemma 6.2 hypothesis doesn't
+require this specific choice). -/
+theorem fibonacci_density_from_F21_residual_and_bridge_lemma_62
+    (h_residual : F21_residual_small_spanning)
+    (h_bridge : F21_BridgeLemma62_OpenNhd) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) := by
+  -- Step 1: choose any ε > 0; here ε := 1/64 (arbitrary positive).
+  set ε : ℝ := (1 : ℝ) / 64 with hε_def
+  have hε_pos : 0 < ε := by norm_num [hε_def]
+  -- Step 2: F21 residual gives small h with non-zero pauliDet
+  obtain ⟨h, h_H, h_small, h_pauliDet_ne⟩ := h_residual ε hε_pos
+  -- Step 3: §42 gives small spanning triple
+  have h_triple_exists :
+      ∃ (h₀ h₁ h₂ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+        h₀ ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+        h₁ ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+        h₂ ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+        ‖(h₀ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε ∧
+        ‖(h₁ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 4 * ε ∧
+        ‖(h₂ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 4 * ε ∧
+        (∀ a b c : ℝ,
+          (a : ℂ) • liePartMat (h₀ : Matrix (Fin 2) (Fin 2) ℂ) +
+          (b : ℂ) • liePartMat (h₁ : Matrix (Fin 2) (Fin 2) ℂ) +
+          (c : ℂ) • liePartMat (h₂ : Matrix (Fin 2) (Fin 2) ℂ) = 0 →
+          a = 0 ∧ b = 0 ∧ c = 0) :=
+    H_Fib_three_small_spanning_from_small_pauliDet ⟨h, h_H, h_small, h_pauliDet_ne⟩
+  -- Step 4: Bridge Lemma 6.2 yields open V ⊆ H_Fib near 1
+  obtain ⟨V, hV_nhds, hV_sub⟩ := h_bridge ε hε_pos h_triple_exists
+  -- Step 5: apply fibonacci_density_from_H_Fib_open_at_one
+  exact
+    SKEFTHawking.FKLW.FibonacciDensityConditional.fibonacci_density_from_H_Fib_open_at_one
+      ⟨V, hV_nhds, hV_sub⟩
 
 end SKEFTHawking.FKLW.FibSU2LieBundle
