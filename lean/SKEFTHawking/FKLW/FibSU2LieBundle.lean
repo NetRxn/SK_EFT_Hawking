@@ -2938,4 +2938,108 @@ theorem σ_Fib_2_SU_mat_conj_paulI_z_pauliDecomp :
   rw [σ_Fib_2_SU_mat_conj_pauliDecomp_C 0 0 1]
   ring_nf
 
+/-! ## §32. R5.4 Layer F.20.c.d.2.p.3.b — Closed-form liePart of σ_Fib_1_SU_mat
+
+The σ_Fib bundle and its pauliDet are evaluated at `liePartMat h.val` for
+`h ∈ specialUnitaryGroup`. To analyze whether any `h ∈ H_Fib` lands in
+the non-zero locus of `σ_Fib_lie_bundle_pauliDet`, we need closed forms
+for `liePartMat` at concrete `h ∈ H_Fib`. This section ships the closed
+form for `h = σ_Fib_1_SU_mat`:
+
+  `liePartMat σ_Fib_1_SU_mat = -sin(7π/10) • paulI_z`.
+
+Pauli coords: `(0, 0, -sin(7π/10))`. The substantive consequence:
+`σ_Fib_lie_bundle_pauliDet (liePartMat σ_Fib_1_SU_mat) = 0`. This is
+STRUCTURAL (z-axis is in the zero locus per F.20.c.d.2.f) — `σ_Fib_1`
+fixes its own liePart under Ad-conjugation, so the σ_Fib bundle reduces
+to rank ≤ 2.
+
+This means `h = σ_Fib_1` itself is NOT a Gap-1 witness. The next sections
+ship closed forms for `σ_Fib_2_SU_mat` and composed products (e.g.,
+`σ_Fib_1 · σ_Fib_2`) where the bundle does NOT structurally degenerate.
+
+Engineering note: helper `complex_exp_minus_star_eq` computes
+`exp(iθ) - (exp(iθ))* = 2I · sin(θ)`, the foundational complex-conjugation
+identity for converting diagonal exponential matrices to skew-Hermitian
+form. -/
+
+/-- Helper: `exp(iθ) - (exp(iθ))* = 2I · sin(θ)` for real `θ`. -/
+private theorem complex_exp_minus_star_eq (θ : ℝ) :
+    Complex.exp ((θ : ℂ) * Complex.I) -
+      (starRingEnd ℂ) (Complex.exp ((θ : ℂ) * Complex.I)) =
+    (2 * Complex.I) * ((Real.sin θ : ℝ) : ℂ) := by
+  rw [show (starRingEnd ℂ) (Complex.exp ((θ : ℂ) * Complex.I)) =
+        Complex.exp (- ((θ : ℂ) * Complex.I)) by
+    rw [← Complex.exp_conj]; congr 1
+    simp [Complex.conj_I, mul_comm]]
+  rw [Complex.exp_mul_I,
+      show -((θ : ℂ) * Complex.I) = ((-θ : ℝ) : ℂ) * Complex.I by push_cast; ring,
+      Complex.exp_mul_I]
+  push_cast; simp; ring
+
+/-- **R5.4 Layer F.20.c.d.2.p.3.b — closed-form `liePartMat σ_Fib_1_SU_mat`**.
+
+`liePartMat σ_Fib_1_SU_mat = -sin(7π/10) • paulI_z`.
+
+Proof: `σ_Fib_1_SU_mat = diag(exp(-7πi/10), exp(7πi/10))` (via
+`σ_Fib_1_SU_mat_diagonal_form` + ω-R₁ / ω-R_τ exponent identities).
+The skew-Hermitian projection (1/2)·(M - M*) of `(σ_Fib_1_SU_mat - 1)`
+equals `diag(-i·sin(7π/10), i·sin(7π/10)) = -sin(7π/10) · paulI_z`
+(using `complex_exp_minus_star_eq`). This is already traceless
+(`-i·sin + i·sin = 0`), so `tracelessProj` is the identity. -/
+theorem liePartMat_σ_Fib_1_SU_mat :
+    liePartMat σ_Fib_1_SU_mat =
+      ((-Real.sin (7 * Real.pi / 10) : ℝ) : ℂ) • paulI_z := by
+  have h_ω_R1 : ω_Fib_C * R1_C = Complex.exp (((-7 * Real.pi / 10 : ℝ) : ℂ) * Complex.I) := by
+    unfold ω_Fib_C R1_C; rw [← Complex.exp_add]; congr 1; push_cast; ring
+  have h_ω_Rτ : ω_Fib_C * Rtau_C = Complex.exp (((7 * Real.pi / 10 : ℝ) : ℂ) * Complex.I) := by
+    unfold ω_Fib_C Rtau_C; rw [← Complex.exp_add]; congr 1; push_cast; ring
+  have h_skew :
+      skewHermitianProj (σ_Fib_1_SU_mat - 1) =
+        ((-Real.sin (7 * Real.pi / 10) : ℝ) : ℂ) • paulI_z := by
+    rw [σ_Fib_1_SU_mat_diagonal_form, h_ω_R1, h_ω_Rτ]
+    unfold skewHermitianProj
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [paulI_z, SKEFTHawking.σ_z, Matrix.sub_apply, Matrix.conjTranspose_apply,
+            Matrix.smul_apply, Matrix.of_apply, Matrix.cons_val_zero,
+            Matrix.cons_val_one, smul_eq_mul, star_zero]
+    · have h := complex_exp_minus_star_eq (-7 * Real.pi / 10)
+      push_cast at h
+      have hsin : Complex.sin (-(7 * (Real.pi : ℂ)) / 10) =
+                  - Complex.sin (7 * (Real.pi : ℂ) / 10) := by
+        rw [show (-(7 * (Real.pi : ℂ)) / 10) = -(7 * (Real.pi : ℂ) / 10) by ring,
+            Complex.sin_neg]
+      rw [show (-7 * (Real.pi : ℂ) / 10) = (-(7 * (Real.pi : ℂ)) / 10) by ring] at h
+      rw [hsin] at h
+      linear_combination (1 / 2 : ℂ) * h
+    · have h := complex_exp_minus_star_eq (7 * Real.pi / 10)
+      push_cast at h
+      linear_combination (1 / 2 : ℂ) * h
+  have h_trace_skew : (skewHermitianProj (σ_Fib_1_SU_mat - 1)).trace = 0 := by
+    rw [h_skew]
+    simp [paulI_z, SKEFTHawking.σ_z, Matrix.trace_fin_two,
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one, smul_eq_mul]
+  show lieProj (σ_Fib_1_SU_mat - 1) = _
+  unfold lieProj
+  rw [tracelessProj_of_traceless h_trace_skew]
+  exact h_skew
+
+/-- **`σ_Fib_lie_bundle_pauliDet` at `liePartMat σ_Fib_1_SU_mat` is zero**.
+
+Direct consequence of the closed form `liePartMat σ_Fib_1_SU_mat =
+-sin(7π/10) • paulI_z` (in the paulI_z direction) combined with
+F.20.c.d.2.f `σ_Fib_lie_bundle_pauliDet_paulI_z_eq_zero` (paulI_z is in
+the zero locus) and the cubic homogeneity of pauliDet (F.20.b
+`σ_Fib_lie_bundle_pauliDet_smul_uniform`).
+
+This shows σ_Fib_1 ITSELF is NOT a Gap-1 witness for the H_Fib bridge —
+its liePart is structurally in the zero locus. -/
+theorem σ_Fib_lie_bundle_pauliDet_liePartMat_σ_Fib_1_SU_mat_eq_zero :
+    σ_Fib_lie_bundle_pauliDet (liePartMat σ_Fib_1_SU_mat) = 0 := by
+  rw [liePartMat_σ_Fib_1_SU_mat]
+  rw [σ_Fib_lie_bundle_pauliDet_smul_uniform]
+  rw [σ_Fib_lie_bundle_pauliDet_paulI_z_eq_zero]
+  ring
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
