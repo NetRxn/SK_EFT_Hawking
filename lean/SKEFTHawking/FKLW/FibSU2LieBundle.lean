@@ -1691,6 +1691,84 @@ theorem H_Fib_iteration_starting_point_with_liePartMat_ne_zero
   have hδ_le_one : δ₀ ≤ 1 := by linarith [hδ_le]
   exact H_Fib_small_witness_with_liePartMat_ne_zero hδ_pos hδ_le_one
 
+/-! ## §22a. R5.4 Layer F.20.c.d.2.f — Zero-locus diagnostic at paulI_z
+
+The polynomial `σ_Fib_lie_bundle_pauliDet : Matrix _ _ ℂ → ℝ` has a
+NON-TRIVIAL zero locus: while F.18 (session 49) showed
+`σ_Fib_lie_bundle_pauliDet paulI_x ≠ 0`, the value AT `paulI_z` is
+ZERO. The reason: `σ_Fib_1_SU_mat` is DIAGONAL (with eigenvalues
+`ωR_1, ωR_τ` of unit modulus), so its Ad-action on the diagonal Pauli
+generator `paulI_z` is the IDENTITY. The first two components of
+`σ_Fib_lie_bundle paulI_z` are therefore equal, and `pauliDet`
+vanishes whenever two of its three matrix arguments are equal.
+
+This establishes that the zero locus of `σ_Fib_lie_bundle_pauliDet`
+is a PROPER (i.e., non-empty AND non-full) closed subset of 𝔰𝔲(2),
+which is the structural prerequisite for the polynomial-zero-locus
+analysis (Path A toward F.20.c.d.2 / F.21). -/
+
+/-- **Pauli determinant vanishes when first two arguments are equal**.
+The 3×3 determinant of Pauli coords has two equal rows hence vanishes. -/
+theorem pauliDet_eq_zero_of_first_two_eq
+    (X C : Matrix (Fin 2) (Fin 2) ℂ) :
+    pauliDet X X C = 0 := by
+  unfold pauliDet
+  obtain ⟨xX, yX, zX⟩ := matrixToPauliCoords X
+  obtain ⟨xC, yC, zC⟩ := matrixToPauliCoords C
+  ring
+
+/-- **Generic diagonal conjugation of paulI_z** (companion to `diag_conj_paulI_x`).
+
+For a diagonal matrix `D = !![α, 0; 0, β]`, the Ad-conjugation of `paulI_z`
+is `!![‖α‖² · I, 0; 0, -‖β‖² · I]`. Stated in `α · star α` form (= `‖α‖²` as ℂ). -/
+theorem diag_conj_paulI_z (α β : ℂ) :
+    (!![α, 0; 0, β] : Matrix (Fin 2) (Fin 2) ℂ) * paulI_z *
+        (!![α, 0; 0, β] : Matrix (Fin 2) (Fin 2) ℂ).conjTranspose =
+        !![α * star α * Complex.I, 0; 0, -(β * star β * Complex.I)] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.conjTranspose_apply,
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, star_zero, paulI_z, SKEFTHawking.σ_z,
+          Matrix.smul_apply, smul_eq_mul] <;>
+    ring
+
+/-- **σ_Fib_1_SU_mat fixes paulI_z under Ad-conjugation**.
+
+Because `σ_Fib_1_SU_mat = !![ω·R_1, 0; 0, ω·R_τ]` is diagonal with
+unit-modulus entries, its Ad-action on the diagonal Pauli generator
+`paulI_z` is the identity. Composition of `σ_Fib_1_SU_mat_diagonal_form`
++ `diag_conj_paulI_z` + unit-norm of ω, R_1, R_τ. -/
+theorem σ_Fib_1_SU_mat_conj_paulI_z_eq :
+    σ_Fib_1_SU_mat * paulI_z * σ_Fib_1_SU_mat.conjTranspose = paulI_z := by
+  rw [σ_Fib_1_SU_mat_diagonal_form, diag_conj_paulI_z]
+  -- Two unit-norm products:
+  have h_α_norm : (ω_Fib_C * R1_C) * star (ω_Fib_C * R1_C) = 1 :=
+    unit_norm_star_eq_one (by
+      rw [norm_mul, norm_ω_Fib_C, norm_R1_C, mul_one])
+  have h_β_norm : (ω_Fib_C * Rtau_C) * star (ω_Fib_C * Rtau_C) = 1 :=
+    unit_norm_star_eq_one (by
+      rw [norm_mul, norm_ω_Fib_C, norm_Rtau_C, mul_one])
+  rw [h_α_norm, h_β_norm]
+  -- Goal: !![1 * I, 0; 0, -(1 * I)] = paulI_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [paulI_z, SKEFTHawking.σ_z, Matrix.smul_apply, smul_eq_mul,
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons]
+
+/-- **R5.4 Layer F.20.c.d.2.f — `σ_Fib_lie_bundle_pauliDet paulI_z = 0`**.
+
+The first two components of `σ_Fib_lie_bundle paulI_z` are equal (both
+= `paulI_z`) since `σ_Fib_1_SU_mat` fixes `paulI_z` under Ad-conjugation
+(diagonal-on-diagonal). The pauliDet of three matrices with two equal
+arguments vanishes by `pauliDet_eq_zero_of_first_two_eq`. -/
+theorem σ_Fib_lie_bundle_pauliDet_paulI_z_eq_zero :
+    σ_Fib_lie_bundle_pauliDet paulI_z = 0 := by
+  rw [σ_Fib_lie_bundle_pauliDet_eq, σ_Fib_1_SU_mat_conj_paulI_z_eq]
+  exact pauliDet_eq_zero_of_first_two_eq paulI_z
+    (σ_Fib_2_SU_mat * paulI_z * σ_Fib_2_SU_mat.conjTranspose)
+
 /-! ## §22. R5.4 Layer F.20.c.d.2.d — SU(2)-subtype openness +
 nhd-of-1 spanning-locus witness
 
