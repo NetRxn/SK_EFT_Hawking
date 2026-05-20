@@ -608,12 +608,98 @@ theorem pauliDet_paulI_basis : pauliDet paulI_x paulI_y paulI_z = 1 := by
   simp [matrixToPauliCoords_paulI_x, matrixToPauliCoords_paulI_y,
         matrixToPauliCoords_paulI_z]
 
-/- **The full Cramer-rule linear-independence theorem
-`tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero` is deferred to a
-follow-on session.** It requires careful destructuring of the 3-tuple
-Pauli-coord output + Cramer's-rule algebra; planned via `Matrix.det`
-machinery rather than ad-hoc nlinarith. Substrate via `matrixToPauliCoords`
-linearity (Layer F.3) + `pauliDet` (above) is in place. -/
+/-! ### Cramer-rule cofactor identities (Layer F.8 helpers, session 48)
+
+The three identities below are pure ℝ-polynomial identities expressing
+`x_i · det(N) = (cofactor of column i) · h_1 - ... + ... · h_3`
+where `N` is the 3×3 real matrix whose columns are the Pauli-coord
+triples of A, B, C, and `h_1, h_2, h_3 = 0` are the three real linear
+equations obtained from `a • A + b • B + c • C = 0` by Pauli-coord
+extraction. Each identity follows from a cofactor expansion of
+`det(N)` and the fact that a 3×3 determinant with two equal rows
+vanishes. Closed by `linear_combination` with explicit cofactor
+coefficients. -/
+
+private lemma pauliDet_cramer_a
+    (xA yA zA xB yB zB xC yC zC a b c : ℝ)
+    (h1 : a * xA + b * xB + c * xC = 0)
+    (h2 : a * yA + b * yB + c * yC = 0)
+    (h3 : a * zA + b * zB + c * zC = 0) :
+    a * (xA * (yB * zC - zB * yC) - yA * (xB * zC - zB * xC)
+         + zA * (xB * yC - yB * xC)) = 0 := by
+  linear_combination
+    (yB * zC - zB * yC) * h1 - (xB * zC - zB * xC) * h2
+    + (xB * yC - yB * xC) * h3
+
+private lemma pauliDet_cramer_b
+    (xA yA zA xB yB zB xC yC zC a b c : ℝ)
+    (h1 : a * xA + b * xB + c * xC = 0)
+    (h2 : a * yA + b * yB + c * yC = 0)
+    (h3 : a * zA + b * zB + c * zC = 0) :
+    b * (xA * (yB * zC - zB * yC) - yA * (xB * zC - zB * xC)
+         + zA * (xB * yC - yB * xC)) = 0 := by
+  linear_combination
+    -(yA * zC - zA * yC) * h1 + (xA * zC - zA * xC) * h2
+    - (xA * yC - yA * xC) * h3
+
+private lemma pauliDet_cramer_c
+    (xA yA zA xB yB zB xC yC zC a b c : ℝ)
+    (h1 : a * xA + b * xB + c * xC = 0)
+    (h2 : a * yA + b * yB + c * yC = 0)
+    (h3 : a * zA + b * zB + c * zC = 0) :
+    c * (xA * (yB * zC - zB * yC) - yA * (xB * zC - zB * xC)
+         + zA * (xB * yC - yB * xC)) = 0 := by
+  linear_combination
+    (yA * zB - zA * yB) * h1 - (xA * zB - zA * xB) * h2
+    + (xA * yB - yA * xB) * h3
+
+/-- **HEADLINE — Cramer-rule linear independence for 3 traceless
+skew-Hermitian matrices (Layer F.8)**.
+
+If three matrices `A, B, C : Matrix (Fin 2) (Fin 2) ℂ` satisfy
+`pauliDet A B C ≠ 0` and a real-linear combination
+`(a:ℂ) • A + (b:ℂ) • B + (c:ℂ) • C = 0`, then `a = b = c = 0`.
+
+This is the **load-bearing linear-independence criterion** for the
+H_Fib 3-bundle spanning argument (Layer F.9+). The proof composes
+`matrixToPauliCoords` linearity (Layer F.3) with the Cramer-rule
+cofactor identities above.
+
+Note: the hypothesis `pauliDet A B C ≠ 0` alone suffices — the
+matrices need not be in `tracelessSkewHermitian (Fin 2)`. The
+namesake "tracelessSkewHermitian" refers to the downstream use case
+where this criterion is applied to Lie-algebra-valued matrices. -/
+theorem tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero
+    {A B C : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_det : pauliDet A B C ≠ 0)
+    {a b c : ℝ}
+    (h_zero : (a : ℂ) • A + (b : ℂ) • B + (c : ℂ) • C = 0) :
+    a = 0 ∧ b = 0 ∧ c = 0 := by
+  -- Step 1: apply matrixToPauliCoords to both sides of h_zero
+  have h_coords := congrArg matrixToPauliCoords h_zero
+  rw [matrixToPauliCoords_add, matrixToPauliCoords_add,
+      matrixToPauliCoords_smul, matrixToPauliCoords_smul,
+      matrixToPauliCoords_smul] at h_coords
+  -- Step 2: matrixToPauliCoords 0 = (0, 0, 0)
+  have h_zero_zero : matrixToPauliCoords (0 : Matrix (Fin 2) (Fin 2) ℂ)
+      = (0, 0, 0) := by
+    unfold matrixToPauliCoords
+    simp
+  rw [h_zero_zero] at h_coords
+  -- Step 3: destructure the triple equality into three scalar equations
+  rw [Prod.mk.injEq, Prod.mk.injEq] at h_coords
+  obtain ⟨h1, h2, h3⟩ := h_coords
+  -- Step 4: each of a, b, c times pauliDet equals 0; pauliDet ≠ 0 ⟹ each = 0
+  refine ⟨?_, ?_, ?_⟩
+  · have h_a := pauliDet_cramer_a _ _ _ _ _ _ _ _ _ a b c h1 h2 h3
+    have h_a' : a * pauliDet A B C = 0 := h_a
+    exact (mul_eq_zero.mp h_a').resolve_right h_det
+  · have h_b := pauliDet_cramer_b _ _ _ _ _ _ _ _ _ a b c h1 h2 h3
+    have h_b' : b * pauliDet A B C = 0 := h_b
+    exact (mul_eq_zero.mp h_b').resolve_right h_det
+  · have h_c := pauliDet_cramer_c _ _ _ _ _ _ _ _ _ a b c h1 h2 h3
+    have h_c' : c * pauliDet A B C = 0 := h_c
+    exact (mul_eq_zero.mp h_c').resolve_right h_det
 
 /-! ## §10. Module summary
 
@@ -633,6 +719,26 @@ upstream-IFT path to Fibonacci density.
     three Pauli generators are ℝ-linearly independent in `Matrix _ _ ℂ`.
     Proof: explicit matrix-form decomposition `a·paulI_x + b·paulI_y +
     c·paulI_z = !![c·i, a·i+b; a·i-b, -c·i]`, then entry-wise comparison.
+  - **§5** (Layer F.2, session 42): `tracelessSkewHermitian_decomp` —
+    explicit `X = (X 0 1).im • paulI_x + (X 0 1).re • paulI_y +
+    (X 0 0).im • paulI_z` for any traceless skew-Hermitian X.
+  - **§6** (Layer F.3, session 43): `matrixToPauliCoords` — extraction
+    map `X ↦ ((X 0 1).im, (X 0 1).re, (X 0 0).im) : ℝ × ℝ × ℝ` +
+    linearity + `matrixToPauliCoords_eq_zero_iff` (X ∈ tracelessSH ∧
+    coords = 0 ↔ X = 0).
+  - **§7** (Layer F.4, session 44): `skewHermitianProj X := (1/2)•(X - X*)`
+    projection onto skew-Hermitian + idempotence on tracelessSH.
+  - **§8** (Layer F.6, session 46): `tracelessProj X := X - (tr X / 2)•I`
+    projection onto traceless + idempotence on tracelessSH.
+  - **§9** (Layer F.7, session 47): `pauliDet` (def) +
+    `pauliDet_paulI_basis = 1` (canonical basis normalization).
+  - **§9** (Layer F.8, session 48): **HEADLINE**
+    `tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero` — the full
+    Cramer-rule criterion: `pauliDet A B C ≠ 0` ⟹ `A, B, C` are
+    ℝ-linearly independent in `Matrix _ _ ℂ`. Proof: 3 cofactor
+    identities `a · det = (...) · h₁ - (...) · h₂ + (...) · h₃`
+    closed by `linear_combination`, composed with `matrixToPauliCoords`
+    linearity.
 
 **Substrate downstream (next sessions)**:
 
