@@ -579,7 +579,43 @@ theorem tracelessProj_idempotent_on_tracelessSkewHermitian
     tracelessProj X = X :=
   tracelessProj_of_traceless hX.2
 
-/-! ## §9. Module summary
+/-! ## §9. Conditional linear-independence criterion (Layer F.7, session 47)
+
+For 3 matrices A, B, C ∈ `tracelessSkewHermitian (Fin 2)`, the criterion
+for ℝ-linear independence is: the 3×3 determinant of their Pauli
+coordinate vectors (3-tuples in ℝ³) is non-zero.
+
+This is the **load-bearing criterion** for downstream "3-direction Lie
+spanning" theorems on the H_Fib substrate.
+
+The relation `paulI_combination_matrix` from §4 says that
+  `a·X_A + b·X_B + c·X_C = 0`
+expanded into Pauli coords gives a 3×3 linear system in `(a, b, c)`.
+Non-singular system ⟹ unique solution `a = b = c = 0`.
+-/
+
+/-- **Pauli determinant** of three matrices in `Matrix (Fin 2) (Fin 2) ℂ`. -/
+def pauliDet (A B C : Matrix (Fin 2) (Fin 2) ℂ) : ℝ :=
+  let (xA, yA, zA) := matrixToPauliCoords A
+  let (xB, yB, zB) := matrixToPauliCoords B
+  let (xC, yC, zC) := matrixToPauliCoords C
+  xA * (yB * zC - zB * yC) - yA * (xB * zC - zB * xC) + zA * (xB * yC - yB * xC)
+
+/-- **Pauli determinant of `{paulI_x, paulI_y, paulI_z} = 1`** —
+the canonical basis is "normalized" in the determinant sense. -/
+theorem pauliDet_paulI_basis : pauliDet paulI_x paulI_y paulI_z = 1 := by
+  unfold pauliDet
+  simp [matrixToPauliCoords_paulI_x, matrixToPauliCoords_paulI_y,
+        matrixToPauliCoords_paulI_z]
+
+/- **The full Cramer-rule linear-independence theorem
+`tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero` is deferred to a
+follow-on session.** It requires careful destructuring of the 3-tuple
+Pauli-coord output + Cramer's-rule algebra; planned via `Matrix.det`
+machinery rather than ad-hoc nlinarith. Substrate via `matrixToPauliCoords`
+linearity (Layer F.3) + `pauliDet` (above) is in place. -/
+
+/-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
 session 35; extended Layer F.1 session 41 + Layer F.2 session 42 +
