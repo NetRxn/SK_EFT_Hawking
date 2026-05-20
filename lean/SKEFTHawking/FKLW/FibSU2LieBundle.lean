@@ -2281,7 +2281,7 @@ theorem F_C_conj_pauliDecomp_collected (a b c : ℂ) :
   -- Distribute the outer (a • ·), (b • ·), (c • ·) through the inner sums
   -- and collect by paulI_α. Pure ring arithmetic in the smul algebra.
   ext i j
-  simp only [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul]
+  simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.neg_apply, smul_eq_mul]
   ring
 
 /-- **R5.4 Layer F.20.c.d.2.m.4 — σ_Fib_1·paulI_x·σ_Fib_1† as Pauli sum**
@@ -2414,5 +2414,146 @@ theorem σ_Fib_2_SU_mat_conj_pauliDecomp_C (a b c : ℂ) :
   ext i j
   simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.neg_apply, smul_eq_mul]
   ring
+
+/-! ## §24. R5.4 Layer F.20.c.d.2.n — σ_Fib_lie_bundle_pauliDet as cubic polynomial
+
+Composes the closed-form SO(3) actions for σ_Fib_1 (F.20.c.d.2.h) and σ_Fib_2
+(F.20.c.d.2.m) into a closed-form cubic polynomial expression for
+`σ_Fib_lie_bundle_pauliDet (a•paulI_x + b•paulI_y + c•paulI_z)` over (a, b, c) ∈ ℝ³.
+
+This is the polynomial whose non-zero locus we must show is non-empty + dense
+(en route to F.21 unconditional density). F.18 already establishes the
+(1, 0, 0) witness; F.20.c.d.2.o will use this polynomial form to derive
+the open-dense complement of the zero locus. -/
+
+/-- **R5.4 Layer F.20.c.d.2.n.1 — Pauli coords of a generic complex Pauli sum**.
+
+For complex coefficients `s_x, s_y, s_z`, the Pauli coords of
+`s_x • paulI_x + s_y • paulI_y + s_z • paulI_z` are
+`(s_x.re + s_y.im, s_y.re - s_x.im, s_z.re)`.
+
+When the coefficients are real-cast (im = 0), this reduces to `(s_x.re, s_y.re, s_z.re)`. -/
+theorem matrixToPauliCoords_complex_pauliDecomp (s_x s_y s_z : ℂ) :
+    matrixToPauliCoords (s_x • paulI_x + s_y • paulI_y + s_z • paulI_z) =
+      (s_x.re + s_y.im, s_y.re - s_x.im, s_z.re) := by
+  unfold matrixToPauliCoords paulI_x paulI_y paulI_z
+         SKEFTHawking.σ_x SKEFTHawking.σ_y SKEFTHawking.σ_z
+  refine Prod.mk.injEq .. |>.mpr ⟨?_, ?_⟩
+  · -- .1: ((sum) 0 1).im = s_x.re + s_y.im
+    simp [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Complex.add_im, Complex.mul_im, Complex.mul_re,
+          Complex.I_re, Complex.I_im]
+  · refine Prod.mk.injEq .. |>.mpr ⟨?_, ?_⟩
+    · -- .2.1: ((sum) 0 1).re = s_y.re - s_x.im
+      simp [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, Matrix.of_apply,
+            Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+            Complex.add_re, Complex.mul_re, Complex.mul_im,
+            Complex.I_re, Complex.I_im]
+      ring
+    · -- .2.2: ((sum) 0 0).im = s_z.re
+      simp [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, Matrix.of_apply,
+            Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+            Complex.add_im, Complex.mul_im, Complex.mul_re,
+            Complex.I_re, Complex.I_im]
+
+/-- **R5.4 Layer F.20.c.d.2.n.2 — Pauli coords of a real-cast Pauli sum**.
+
+Specialization of `matrixToPauliCoords_complex_pauliDecomp` to real coefficients
+(via `((·:ℝ):ℂ)` cast). The imaginary parts vanish, giving the natural
+`(a, b, c) ↦ (a, b, c)` identity. -/
+theorem matrixToPauliCoords_real_pauliDecomp (a b c : ℝ) :
+    matrixToPauliCoords
+      ((a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z) =
+      (a, b, c) := by
+  rw [matrixToPauliCoords_complex_pauliDecomp]
+  simp
+
+/-- **R5.4 Layer F.20.c.d.2.n.3 — σ_Fib_1's image Pauli coords (real form)**.
+
+For X = a•paulI_x + b•paulI_y + c•paulI_z (a b c : ℝ):
+`matrixToPauliCoords (σ_Fib_1·X·σ_Fib_1†) = (a·cs - b·sn, a·sn + b·cs, c)`
+where `cs := cos(7π/5)`, `sn := sin(7π/5)`. -/
+theorem matrixToPauliCoords_σ_Fib_1_conj_pauliDecomp (a b c : ℝ) :
+    matrixToPauliCoords
+      (σ_Fib_1_SU_mat * ((a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z) *
+        σ_Fib_1_SU_mat.conjTranspose) =
+    (a * Real.cos (7 * Real.pi / 5) - b * Real.sin (7 * Real.pi / 5),
+     a * Real.sin (7 * Real.pi / 5) + b * Real.cos (7 * Real.pi / 5),
+     c) := by
+  rw [σ_Fib_1_SU_mat_conj_pauliDecomp]
+  exact matrixToPauliCoords_real_pauliDecomp _ _ _
+
+/-- **R5.4 Layer F.20.c.d.2.n.4 — σ_Fib_2's image Pauli coords (real form)**.
+
+For X = a•paulI_x + b•paulI_y + c•paulI_z (a b c : ℝ), the Pauli coords of
+σ_Fib_2·X·σ_Fib_2† are the closed-form real polynomials derived from F's
+SO(3) reflection composed twice with σ_Fib_1's z-rotation. -/
+theorem matrixToPauliCoords_σ_Fib_2_conj_pauliDecomp (a b c : ℝ) :
+    matrixToPauliCoords
+      (σ_Fib_2_SU_mat * ((a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z) *
+        σ_Fib_2_SU_mat.conjTranspose) =
+    let α := 2 * Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹
+    let β := 2 * Real.goldenRatio⁻¹ - 1
+    let γ := Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ -
+             (Real.sqrt Real.goldenRatio)⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹
+    let cs := Real.cos (7 * Real.pi / 5)
+    let sn := Real.sin (7 * Real.pi / 5)
+    (((a * β + c * α) * cs + b * sn) * β + (a * α + c * γ) * α,
+     -((a * β + c * α) * sn) + b * cs,
+     ((a * β + c * α) * cs + b * sn) * α + (a * α + c * γ) * γ) := by
+  rw [σ_Fib_2_SU_mat_conj_pauliDecomp_C, matrixToPauliCoords_complex_pauliDecomp]
+  -- Extract .re/.im of each complex coefficient. The coefficients are
+  -- composed entirely of real-cast pieces (φInv_C, φInvSqrt_C, cs/sn casts),
+  -- so .im = 0 and .re collapses to the real polynomial. `simp` (not `simp only`)
+  -- handles Complex.re/im of numeric literals via norm_cast.
+  unfold φInv_C φInvSqrt_C
+  simp only [Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im,
+             Complex.sub_re, Complex.sub_im, Complex.neg_re, Complex.neg_im,
+             Complex.ofReal_re, Complex.ofReal_im, Complex.one_re, Complex.one_im,
+             Complex.re_ofNat, Complex.im_ofNat]
+  refine Prod.mk.injEq .. |>.mpr ⟨by ring, ?_⟩
+  refine Prod.mk.injEq .. |>.mpr ⟨by ring, by ring⟩
+
+/-- **R5.4 Layer F.20.c.d.2.n — HEADLINE: σ_Fib_lie_bundle_pauliDet as cubic polynomial**.
+
+The σ_Fib 3-bundle determinant `σ_Fib_lie_bundle_pauliDet (a•paulI_x + b•paulI_y + c•paulI_z)`
+is a homogeneous cubic polynomial in (a, b, c) ∈ ℝ³, with coefficients
+that are real polynomials in golden-ratio constants and trig values
+`cos(7π/5)`, `sin(7π/5)`.
+
+Explicitly:
+  `pauliDet = a · (A_y · M_z - A_z · M_y) - b · (A_x · M_z - A_z · M_x)
+              + c · (A_x · M_y - A_y · M_x)`
+where (A_x, A_y, A_z) are the σ_Fib_1 Pauli coords and (M_x, M_y, M_z) are
+the σ_Fib_2 Pauli coords.
+
+This is the polynomial whose non-zero locus we must establish is non-empty
+(F.18 + (1,0,0) witness already done) and dense (F.20.c.d.2.o via continuity
++ analytic continuation argument). Together with F.21 (Layer E composition),
+this closes the AA Bridge Lemma route to unconditional Fibonacci density. -/
+theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp (a b c : ℝ) :
+    σ_Fib_lie_bundle_pauliDet
+      ((a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z) =
+    let cs := Real.cos (7 * Real.pi / 5)
+    let sn := Real.sin (7 * Real.pi / 5)
+    let α := 2 * Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹
+    let β := 2 * Real.goldenRatio⁻¹ - 1
+    let γ := Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ -
+             (Real.sqrt Real.goldenRatio)⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹
+    let A_x := a * cs - b * sn
+    let A_y := a * sn + b * cs
+    let A_z := c
+    let M_x := ((a * β + c * α) * cs + b * sn) * β + (a * α + c * γ) * α
+    let M_y := -((a * β + c * α) * sn) + b * cs
+    let M_z := ((a * β + c * α) * cs + b * sn) * α + (a * α + c * γ) * γ
+    a * (A_y * M_z - A_z * M_y) -
+      b * (A_x * M_z - A_z * M_x) +
+      c * (A_x * M_y - A_y * M_x) := by
+  unfold σ_Fib_lie_bundle_pauliDet σ_Fib_lie_bundle pauliDet
+  simp only []
+  rw [matrixToPauliCoords_real_pauliDecomp,
+      matrixToPauliCoords_σ_Fib_1_conj_pauliDecomp,
+      matrixToPauliCoords_σ_Fib_2_conj_pauliDecomp]
 
 end SKEFTHawking.FKLW.FibSU2LieBundle
