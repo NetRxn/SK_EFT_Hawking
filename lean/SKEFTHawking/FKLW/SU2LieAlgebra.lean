@@ -199,11 +199,86 @@ theorem paulI_z_mem_tracelessSkewHermitian :
     paulI_z ∈ tracelessSkewHermitian (Fin 2) :=
   ⟨paulI_z_isSkewHermitian, paulI_z_trace⟩
 
-/-! ## §4. Module summary
+/-! ## §4. Linear independence of the Pauli basis (Layer F.1, session 41)
+
+The three Pauli anti-Hermitian generators `paulI_x, paulI_y, paulI_z`
+are linearly independent over ℝ as elements of `Matrix (Fin 2) (Fin 2) ℂ`.
+
+This is the foundational linear-algebra fact downstream of which any
+"3-direction Lie spanning" theorem for our Fibonacci substrate is
+articulated.
+
+**Proof**: a real linear combination `a·paulI_x + b·paulI_y + c·paulI_z`
+written as a 2×2 complex matrix equals
+  `[[c·i, a·i + b], [a·i - b, -c·i]]`
+Setting this to zero and reading off entries gives `a = b = c = 0`.
+-/
+
+/-- **Real linear combination of `paulI_{x,y,z}` has explicit matrix form**. -/
+private theorem paulI_combination_matrix (a b c : ℝ) :
+    ((a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z) =
+      !![(c : ℂ) * I, (a : ℂ) * I + (b : ℂ);
+         (a : ℂ) * I - (b : ℂ), -(c : ℂ) * I] := by
+  unfold paulI_x paulI_y paulI_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul,
+          SKEFTHawking.σ_x, SKEFTHawking.σ_y, SKEFTHawking.σ_z] <;>
+    ring
+
+/-- **Real-LinearIndependent of `{paulI_x, paulI_y, paulI_z}`** in
+`Matrix (Fin 2) (Fin 2) ℂ` (treated as a ℝ-module via complex
+embedding).
+
+Concretely: if `(a : ℂ)·paulI_x + (b : ℂ)·paulI_y + (c : ℂ)·paulI_z = 0`
+for real `a b c`, then `a = b = c = 0`. -/
+theorem paulI_linear_independent (a b c : ℝ)
+    (h : (a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z =
+      (0 : Matrix (Fin 2) (Fin 2) ℂ)) :
+    a = 0 ∧ b = 0 ∧ c = 0 := by
+  rw [paulI_combination_matrix] at h
+  -- h : !![c·i, a·i+b; a·i-b, -c·i] = 0
+  -- Read off the four matrix entries.
+  have h00 : ((c : ℂ) * I) = 0 := by
+    have := congr_fun (congr_fun h 0) 0
+    simpa using this
+  have h01 : ((a : ℂ) * I + (b : ℂ)) = 0 := by
+    have := congr_fun (congr_fun h 0) 1
+    simpa using this
+  have h10 : ((a : ℂ) * I - (b : ℂ)) = 0 := by
+    have := congr_fun (congr_fun h 1) 0
+    simpa using this
+  -- From h00: c = 0 (since I ≠ 0).
+  have hc : c = 0 := by
+    have h_c_eq : (c : ℂ) = 0 := by
+      have := mul_eq_zero.mp h00
+      rcases this with h_c | h_I
+      · exact h_c
+      · exfalso; exact Complex.I_ne_zero h_I
+    exact_mod_cast h_c_eq
+  -- From h01 + h10: 2·b = 0 (subtract) and 2·a·i = 0 (add), so b = 0 and a = 0.
+  have h_sum : 2 * ((a : ℂ) * I) = 0 := by linear_combination h01 + h10
+  have ha : a = 0 := by
+    have h_aI : (a : ℂ) * I = 0 := by linear_combination h_sum / 2
+    have h_a : (a : ℂ) = 0 := by
+      rcases mul_eq_zero.mp h_aI with h_a | h_I
+      · exact h_a
+      · exfalso; exact Complex.I_ne_zero h_I
+    exact_mod_cast h_a
+  have hb : b = 0 := by
+    -- From h01: a·i + b = 0, with a = 0, so b = 0.
+    have h_b : (b : ℂ) = 0 := by
+      have : (b : ℂ) = -((a : ℂ) * I) := by linear_combination h01
+      rw [this]
+      simp [ha]
+    exact_mod_cast h_b
+  exact ⟨ha, hb, hc⟩
+
+/-! ## §5. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
-session 35): foundational Lie algebra substrate for the upstream-IFT
-path to Fibonacci density.
+session 35; extended Layer F.1 session 41): foundational Lie algebra
+substrate for the upstream-IFT path to Fibonacci density.
 
 **Shipped (zero new axioms)**:
 
@@ -212,6 +287,10 @@ path to Fibonacci density.
     of `Matrix n n ℂ`. The real Lie algebra 𝔰𝔲(n).
   - **§3**: `paulI_x`, `paulI_y`, `paulI_z` (the three i·σ_k generators
     of 𝔰𝔲(2)) + skew-Hermicity + tracelessness + membership lemmas.
+  - **§4** (Layer F.1, session 41): `paulI_linear_independent` — the
+    three Pauli generators are ℝ-linearly independent in `Matrix _ _ ℂ`.
+    Proof: explicit matrix-form decomposition `a·paulI_x + b·paulI_y +
+    c·paulI_z = !![c·i, a·i+b; a·i-b, -c·i]`, then entry-wise comparison.
 
 **Substrate downstream (next sessions)**:
 
