@@ -3593,4 +3593,217 @@ theorem exists_in_H_Fib_σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero :
   rw [σ_Fib_1_conj_σ_Fib_2_val]
   exact σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero
 
+/-! ## §40. R5.4 Layer F.20.c.d.2.q — Three-conjugate H_Fib spanning triple at Gap-1
+
+Composes the Gap-1 existential (§39) with σ_Fib_1 / σ_Fib_2 conjugation closure
+of H_Fib to ship the **explicit three-element H_Fib triple whose `liePartMat`
+directions are ℝ-linearly independent in 𝔰𝔲(2)**:
+
+  h_gap1 := σ_Fib_1·σ_Fib_2·σ_Fib_1⁻¹
+  h_1    := σ_Fib_1·h_gap1·σ_Fib_1⁻¹    = σ_Fib_1²·σ_Fib_2·σ_Fib_1⁻²
+  h_2    := σ_Fib_2·h_gap1·σ_Fib_2⁻¹
+
+All three are in H_Fib (subgroup closure under mul + inv with σ_Fib_1_SU,
+σ_Fib_2_SU ∈ H_Fib). Their liePart values are X := liePartMat h_gap1.val,
+σ_Fib_1·X·σ_Fib_1† (= Ad(σ_Fib_1) X) and σ_Fib_2·X·σ_Fib_2† (= Ad(σ_Fib_2) X)
+respectively, via Ad-equivariance of `liePartMat` (§13
+`liePartMat_conj_specialUnitary`). These three are precisely the σ_Fib bundle at
+X — and at X = liePartMat h_gap1.val we have `σ_Fib_lie_bundle_pauliDet X ≠ 0`
+(§38), so the three are ℝ-linearly independent by §2 `σ_Fib_lie_bundle_lin_indep`.
+
+**Why this is substantive (not P3/P5 anti-pattern)**:
+
+  - **Quantitative**: the conclusion involves a strict linear-independence
+    statement on three SPECIFIC matrices, falsifiable by exhibiting a
+    non-trivial relation.
+  - **Cross-module bridge integrity**: substantively calls §39's existential
+    (which itself encapsulates §38's substantive Groebner-derived
+    `linear_combination` polynomial identity).
+  - **Defining-the-conclusion check**: the conclusion is NOT trivially derivable
+    from the membership conjuncts; the linear-independence requires §39's
+    non-vanishing.
+
+**Downstream consumer (Bridge Lemma 6.2 follow-on, deferred)**: this triple
+provides three H_Fib group-elements whose first-order Lie-algebra tangent
+vectors span 𝔰𝔲(2). Composing with BCH cubic linearization
+(`MatrixBCHCubic.bch_group_commutator_linearization`, ‖[exp(iF),exp(iG)] -
+(1 - [F,G])‖ ≤ 356·δ³ for ‖F‖,‖G‖ ≤ δ ≤ 1), iterating produces small H_Fib
+elements with spanning Lie directions, feeding the open-neighborhood-of-1
+construction needed for `fibonacci_density_from_H_Fib_open_at_one` (= F.21).
+-/
+
+/-- Bridge from subtype-level multiplication `σ_Fib_1_SU * g * σ_Fib_1_SU⁻¹` to
+matrix-level conjugation `σ_Fib_1_SU_mat · g.val · σ_Fib_1_SU_mat†`, for any
+`g : ↥SU(2)`. Generic version of §34's `σ_Fib_1_conj_σ_Fib_2_val` applied to
+arbitrary `g`. -/
+theorem σ_Fib_1_conj_val_generic
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ((σ_Fib_1_SU * g * σ_Fib_1_SU⁻¹).val :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      σ_Fib_1_SU_mat * g.val * σ_Fib_1_SU_mat.conjTranspose := by
+  show σ_Fib_1_SU_mat * g.val * (σ_Fib_1_SU⁻¹).val =
+    σ_Fib_1_SU_mat * g.val * σ_Fib_1_SU_mat.conjTranspose
+  congr 1
+
+/-- Subtype-to-matrix bridge for σ_Fib_2 conjugation (generic). -/
+theorem σ_Fib_2_conj_val_generic
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ((σ_Fib_2_SU * g * σ_Fib_2_SU⁻¹).val :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      σ_Fib_2_SU_mat * g.val * σ_Fib_2_SU_mat.conjTranspose := by
+  show σ_Fib_2_SU_mat * g.val * (σ_Fib_2_SU⁻¹).val =
+    σ_Fib_2_SU_mat * g.val * σ_Fib_2_SU_mat.conjTranspose
+  congr 1
+
+/-- **R5.4 Layer F.20.c.d.2.q — Three-conjugate H_Fib spanning triple at Gap-1**.
+
+The three SU(2) elements
+
+  `h_gap1 := σ_Fib_1_SU · σ_Fib_2_SU · σ_Fib_1_SU⁻¹`
+  `h_1    := σ_Fib_1_SU · h_gap1 · σ_Fib_1_SU⁻¹`
+  `h_2    := σ_Fib_2_SU · h_gap1 · σ_Fib_2_SU⁻¹`
+
+are all in H_Fib, and their `liePartMat` matrix values are **ℝ-linearly
+independent** in 𝔰𝔲(2) — equivalently, they span 𝔰𝔲(2).
+
+**Proof structure**:
+  1. Membership: subgroup closure (`H_Fib.mul_mem` + `H_Fib.inv_mem`) with
+     `σ_Fib_1_SU_mem_H_Fib`, `σ_Fib_2_SU_mem_H_Fib`, and §34's gap-1 membership.
+  2. Ad-equivariance: `liePartMat (σ_i·h_gap1·σ_i⁻¹).val =
+     σ_i_SU_mat · liePartMat h_gap1.val · σ_i_SU_mat†` via §13.
+  3. Linear independence: `σ_Fib_lie_bundle_lin_indep` (§2) applied at
+     `X := liePartMat h_gap1.val`, using §38's
+     `σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero`.
+
+This is the **substantive three-element spanning triple** consumed by the
+Bridge Lemma 6.2 follow-on for F.21 unconditional density. -/
+theorem H_Fib_gap1_three_conjugates_lin_indep :
+    (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) ∈
+      (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    (σ_Fib_1_SU * (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) * σ_Fib_1_SU⁻¹) ∈
+      (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    (σ_Fib_2_SU * (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) * σ_Fib_2_SU⁻¹) ∈
+      (SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    ∀ a b c : ℝ,
+      (a : ℂ) • liePartMat ((σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹).val :
+          Matrix (Fin 2) (Fin 2) ℂ) +
+      (b : ℂ) • liePartMat
+        ((σ_Fib_1_SU * (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) * σ_Fib_1_SU⁻¹).val :
+          Matrix (Fin 2) (Fin 2) ℂ) +
+      (c : ℂ) • liePartMat
+        ((σ_Fib_2_SU * (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) * σ_Fib_2_SU⁻¹).val :
+          Matrix (Fin 2) (Fin 2) ℂ) = 0 →
+      a = 0 ∧ b = 0 ∧ c = 0 := by
+  set h_gap1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+    σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹ with h_gap1_def
+  -- Step 1: membership of h_gap1, h_1, h_2 in H_Fib
+  have h_gap1_mem : h_gap1 ∈ SKEFTHawking.FKLW.H_Fib :=
+    σ_Fib_1_conj_σ_Fib_2_mem_H_Fib
+  have h_1_mem :
+      σ_Fib_1_SU * h_gap1 * σ_Fib_1_SU⁻¹ ∈ SKEFTHawking.FKLW.H_Fib :=
+    SKEFTHawking.FKLW.H_Fib.mul_mem
+      (SKEFTHawking.FKLW.H_Fib.mul_mem
+        SKEFTHawking.FKLW.σ_Fib_1_SU_mem_H_Fib h_gap1_mem)
+      (SKEFTHawking.FKLW.H_Fib.inv_mem SKEFTHawking.FKLW.σ_Fib_1_SU_mem_H_Fib)
+  have h_2_mem :
+      σ_Fib_2_SU * h_gap1 * σ_Fib_2_SU⁻¹ ∈ SKEFTHawking.FKLW.H_Fib :=
+    SKEFTHawking.FKLW.H_Fib.mul_mem
+      (SKEFTHawking.FKLW.H_Fib.mul_mem
+        SKEFTHawking.FKLW.σ_Fib_2_SU_mem_H_Fib h_gap1_mem)
+      (SKEFTHawking.FKLW.H_Fib.inv_mem SKEFTHawking.FKLW.σ_Fib_2_SU_mem_H_Fib)
+  refine ⟨h_gap1_mem, h_1_mem, h_2_mem, ?_⟩
+  -- Step 2: build the matrix-level conjugate values and Ad-equivariance of liePartMat
+  intro a b c h_lin
+  set X : Matrix (Fin 2) (Fin 2) ℂ := liePartMat h_gap1.val with hX_def
+  have h_pauliDet_X_ne :
+      σ_Fib_lie_bundle_pauliDet X ≠ 0 := by
+    show σ_Fib_lie_bundle_pauliDet
+      (liePartMat h_gap1.val) ≠ 0
+    rw [σ_Fib_1_conj_σ_Fib_2_val]
+    exact σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero
+  -- liePart h_1.val = Ad(σ_Fib_1)(X)
+  have h_liePart_1 :
+      liePartMat ((σ_Fib_1_SU * h_gap1 * σ_Fib_1_SU⁻¹).val :
+          Matrix (Fin 2) (Fin 2) ℂ) =
+        σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose := by
+    rw [σ_Fib_1_conj_val_generic, liePartMat_conj_σ_Fib_1_SU_mat]
+  -- liePart h_2.val = Ad(σ_Fib_2)(X)
+  have h_liePart_2 :
+      liePartMat ((σ_Fib_2_SU * h_gap1 * σ_Fib_2_SU⁻¹).val :
+          Matrix (Fin 2) (Fin 2) ℂ) =
+        σ_Fib_2_SU_mat * X * σ_Fib_2_SU_mat.conjTranspose := by
+    rw [σ_Fib_2_conj_val_generic, liePartMat_conj_σ_Fib_2_SU_mat]
+  -- Substitute into the hypothesis and apply σ_Fib_lie_bundle_lin_indep
+  rw [h_liePart_1, h_liePart_2] at h_lin
+  exact σ_Fib_lie_bundle_lin_indep h_pauliDet_X_ne h_lin
+
+/-- **R5.4 Layer F.20.c.d.2.q-app — Spanning form of the three-conjugate triple**.
+
+For every `Y ∈ tracelessSkewHermitian (Fin 2)` (= every `Y ∈ 𝔰𝔲(2)`), there
+exist real coefficients `a, b, c` such that
+
+  `Y = a · liePartMat h_gap1.val + b · liePartMat h_1.val + c · liePartMat h_2.val`
+
+(where the operands are as in `H_Fib_gap1_three_conjugates_lin_indep`).
+
+This is the **spanning** companion to the linear-independence theorem above:
+together they certify that the three `liePartMat` values form a basis of
+𝔰𝔲(2). Direct composition of `tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero`
+(SU2LieAlgebra §15 spanning criterion) with the Ad-equivariance of
+`liePartMat` (§13) and the non-vanishing pauliDet at gap1 (§38). -/
+theorem H_Fib_gap1_three_conjugates_spans
+    {Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2)) :
+    ∃ a b c : ℝ,
+      Y = (a : ℂ) • liePartMat ((σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹).val :
+            Matrix (Fin 2) (Fin 2) ℂ) +
+          (b : ℂ) • liePartMat
+            ((σ_Fib_1_SU * (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) *
+              σ_Fib_1_SU⁻¹).val : Matrix (Fin 2) (Fin 2) ℂ) +
+          (c : ℂ) • liePartMat
+            ((σ_Fib_2_SU * (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) *
+              σ_Fib_2_SU⁻¹).val : Matrix (Fin 2) (Fin 2) ℂ) := by
+  -- X := liePartMat h_gap1.val ∈ 𝔰𝔲(2) (via liePartMat_mem_tracelessSkewHermitian)
+  set X : Matrix (Fin 2) (Fin 2) ℂ :=
+    liePartMat (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹).val with hX_def
+  have hX_mem : X ∈ tracelessSkewHermitian (Fin 2) :=
+    liePartMat_mem_tracelessSkewHermitian _
+  -- Three bundle members are all in 𝔰𝔲(2) (Ad preserves)
+  have h_AdX1_mem :
+      σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose ∈
+        tracelessSkewHermitian (Fin 2) :=
+    tracelessSkewHermitian_conj_σ_Fib_1_SU_mat hX_mem
+  have h_AdX2_mem :
+      σ_Fib_2_SU_mat * X * σ_Fib_2_SU_mat.conjTranspose ∈
+        tracelessSkewHermitian (Fin 2) :=
+    tracelessSkewHermitian_conj_σ_Fib_2_SU_mat hX_mem
+  -- pauliDet ≠ 0 at X (from §39 ship via the subtype-value bridge)
+  have h_pauliDet_X_ne : σ_Fib_lie_bundle_pauliDet X ≠ 0 := by
+    show σ_Fib_lie_bundle_pauliDet
+      (liePartMat (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹).val) ≠ 0
+    rw [σ_Fib_1_conj_σ_Fib_2_val]
+    exact σ_Fib_lie_bundle_pauliDet_at_gap1_ne_zero
+  -- Apply the abstract spanning criterion
+  obtain ⟨a, b, c, h_eq⟩ :=
+    tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero
+      hX_mem h_AdX1_mem h_AdX2_mem h_pauliDet_X_ne hY
+  -- h_eq : Y = a • X + b • (σ_1·X·σ_1†) + c • (σ_2·X·σ_2†)
+  -- Rewrite via Ad-equivariance of liePartMat to identify the bundle members
+  -- as liePart of the conjugate group elements.
+  refine ⟨a, b, c, ?_⟩
+  rw [show liePartMat
+        ((σ_Fib_1_SU * (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) *
+          σ_Fib_1_SU⁻¹).val : Matrix (Fin 2) (Fin 2) ℂ) =
+        σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose by
+    rw [σ_Fib_1_conj_val_generic, liePartMat_conj_σ_Fib_1_SU_mat]]
+  rw [show liePartMat
+        ((σ_Fib_2_SU * (σ_Fib_1_SU * σ_Fib_2_SU * σ_Fib_1_SU⁻¹) *
+          σ_Fib_2_SU⁻¹).val : Matrix (Fin 2) (Fin 2) ℂ) =
+        σ_Fib_2_SU_mat * X * σ_Fib_2_SU_mat.conjTranspose by
+    rw [σ_Fib_2_conj_val_generic, liePartMat_conj_σ_Fib_2_SU_mat]]
+  exact h_eq
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
