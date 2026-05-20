@@ -742,4 +742,54 @@ theorem σ_Fib_lie_bundle_paulI_x_lin_indep
     a = 0 ∧ b = 0 ∧ c = 0 :=
   σ_Fib_lie_bundle_lin_indep σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero h_lin
 
+/-! ## §11. F.20.a — σ_Fib bundle SPANS 𝔰𝔲(2) at paulI_x (session 50)
+
+Composition of F.18 (`σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero`) with
+the abstract SU2LieAlgebra §15 spanning criterion
+(`tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero`).
+
+For every `X ∈ 𝔰𝔲(2)`, there exist real coefficients `(a, b, c)` such
+that `X = a·paulI_x + b·(σ_Fib_1·paulI_x·σ_Fib_1†) +
+            c·(σ_Fib_2·paulI_x·σ_Fib_2†)`.
+
+This establishes the σ_Fib 3-bundle at paulI_x is a **BASIS** of 𝔰𝔲(2)
+(combining with F.19 ℝ-lin-indep). It is the algebraic foundation for
+the IFT/BCH bridge to unconditional Fibonacci density (F.20.b/c, F.21).
+
+**Architectural significance**: the BCH-iteration substrate
+(D.3.h + D.3.i.1 + D.2.c + D.3.{e,f,g}) produces small-scale H_Fib
+elements whose Ad-conjugates by σ_Fib_1, σ_Fib_2 generate three nearly
+ℝ-linearly-independent Lie directions. With F.20.a giving the
+"3 lin-indep ⟹ span" structural fact, BCH-spanning yields a nbhd
+of 1 in H_Fib, satisfying the `fibonacci_density_from_exp_image_subset`
+hypothesis.
+-/
+
+/-- **HEADLINE F.20.a — σ_Fib 3-bundle SPANS 𝔰𝔲(2) at paulI_x**.
+
+For every `X ∈ 𝔰𝔲(2)`, there exist real coefficients `a, b, c` such that
+`X = (a : ℂ) • paulI_x + (b : ℂ) • (σ_Fib_1·paulI_x·σ_Fib_1†) +
+       (c : ℂ) • (σ_Fib_2·paulI_x·σ_Fib_2†)`.
+
+Combined with F.19 (`σ_Fib_lie_bundle_paulI_x_lin_indep`), this shows
+the σ_Fib bundle at paulI_x is a **basis** of 𝔰𝔲(2).
+
+Proof: F.18 gives `σ_Fib_lie_bundle_pauliDet paulI_x ≠ 0`. Apply the
+abstract SU2LieAlgebra §15 spanning criterion
+`tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero` to the three
+bundle members (which lie in 𝔰𝔲(2) via F.13). -/
+theorem σ_Fib_lie_bundle_paulI_x_spans
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    ∃ a b c : ℝ,
+      X = (a : ℂ) • paulI_x +
+          (b : ℂ) • (σ_Fib_1_SU_mat * paulI_x * σ_Fib_1_SU_mat.conjTranspose) +
+          (c : ℂ) • (σ_Fib_2_SU_mat * paulI_x * σ_Fib_2_SU_mat.conjTranspose) :=
+  tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero
+    paulI_x_mem_tracelessSkewHermitian
+    (tracelessSkewHermitian_conj_σ_Fib_1_SU_mat paulI_x_mem_tracelessSkewHermitian)
+    (tracelessSkewHermitian_conj_σ_Fib_2_SU_mat paulI_x_mem_tracelessSkewHermitian)
+    σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero
+    hX
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
