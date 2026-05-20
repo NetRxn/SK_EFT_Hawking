@@ -4627,4 +4627,81 @@ theorem cFib_SU_mat_trace :
     ring
   rw [h_lhs, h_C_id]
 
+/-! ## §51. R5.4 Layer F.20.c.d.2.aa — Simplified cFib entries (after ω-cancellation)
+
+Reduce the §49 cFib entry closed forms to simpler form using ω·star ω = 1 and
+the R-eigenvalue identities. Foundation for Pauli decomposition.
+
+**Substantive content**:
+- cFib[0,0] = φInv² + φInv·exp(-7πi/5)
+- cFib[1,1] = φInv² + φInv·exp(7πi/5)  (= star cFib[0,0])
+- cFib[0,1] = φInv·φInvSqrt·(1 - exp(-7πi/5))
+
+The (1,0) entry is omitted here since the Pauli decomposition only uses [0,1]
+and [0,0] entries (per `matrixToPauliCoords` definition). -/
+
+/-- **φInvSqrt_C is self-adjoint** (real cast). -/
+theorem φInvSqrt_C_isSelfAdjoint : star φInvSqrt_C = φInvSqrt_C := by
+  show star (((Real.sqrt Real.goldenRatio)⁻¹ : ℝ) : ℂ) =
+    (((Real.sqrt Real.goldenRatio)⁻¹ : ℝ) : ℂ)
+  exact Complex.conj_ofReal _
+
+/-- **cFib_SU_mat entry (0,0) simplified**: `φInv² + φInv·exp(-7πi/5)`. -/
+theorem cFib_SU_mat_entry_00_simplified :
+    cFib_SU_mat 0 0 =
+      φInv_C * φInv_C +
+      φInv_C * Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I) := by
+  rw [cFib_SU_mat_entry_00]
+  simp only [star_mul, star_add, φInv_C_isSelfAdjoint]
+  have hω_sq : ω_Fib_C * star ω_Fib_C = 1 := unit_norm_star_eq_one norm_ω_Fib_C
+  have hR1_sq : R1_C * star R1_C = 1 := unit_norm_star_eq_one norm_R1_C
+  have hR1starRtau := R1_C_mul_star_Rtau_C
+  linear_combination
+    R1_C * (φInv_C * φInv_C * star R1_C + φInv_C * star Rtau_C) * hω_sq +
+    φInv_C * φInv_C * hR1_sq +
+    φInv_C * hR1starRtau
+
+/-- **cFib_SU_mat entry (1,1) simplified**: `φInv² + φInv·exp(7πi/5)`. -/
+theorem cFib_SU_mat_entry_11_simplified :
+    cFib_SU_mat 1 1 =
+      φInv_C * φInv_C +
+      φInv_C * Complex.exp (((7 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) := by
+  rw [cFib_SU_mat_entry_11]
+  simp only [star_mul, star_add, φInv_C_isSelfAdjoint]
+  have hω_sq : ω_Fib_C * star ω_Fib_C = 1 := unit_norm_star_eq_one norm_ω_Fib_C
+  have hRtau_sq : Rtau_C * star Rtau_C = 1 := unit_norm_star_eq_one norm_Rtau_C
+  -- Rτ·star R1 = exp(7πi/5) (conjugate of R1·star Rτ = exp(-7πi/5))
+  have hRtaustarR1 :
+      Rtau_C * star R1_C = Complex.exp (((7 * Real.pi / 5 : ℝ) : ℂ) * Complex.I) := by
+    have hR1starRtau := R1_C_mul_star_Rtau_C
+    have h_eq : Rtau_C * star R1_C = star (R1_C * star Rtau_C) := by
+      rw [star_mul, star_star, mul_comm]
+    rw [h_eq, hR1starRtau]
+    rw [show (star (Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I)) : ℂ)
+          = (starRingEnd ℂ) (Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I))
+          from rfl, ← Complex.exp_conj]
+    rw [map_mul, Complex.conj_ofReal, Complex.conj_I]
+    congr 1
+    push_cast
+    ring
+  linear_combination
+    Rtau_C * (φInv_C * star R1_C + φInv_C * φInv_C * star Rtau_C) * hω_sq +
+    φInv_C * φInv_C * hRtau_sq +
+    φInv_C * hRtaustarR1
+
+/-- **cFib_SU_mat entry (0,1) simplified**: `φInv·φInvSqrt·(1 - exp(-7πi/5))`. -/
+theorem cFib_SU_mat_entry_01_simplified :
+    cFib_SU_mat 0 1 =
+      φInv_C * φInvSqrt_C *
+        (1 - Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I)) := by
+  rw [cFib_SU_mat_entry_01]
+  simp only [star_mul, star_sub, φInv_C_isSelfAdjoint, φInvSqrt_C_isSelfAdjoint]
+  have hω_sq : ω_Fib_C * star ω_Fib_C = 1 := unit_norm_star_eq_one norm_ω_Fib_C
+  have hR1_sq : R1_C * star R1_C = 1 := unit_norm_star_eq_one norm_R1_C
+  have hR1starRtau := R1_C_mul_star_Rtau_C
+  linear_combination
+    R1_C * (φInv_C * φInvSqrt_C * (star R1_C - star Rtau_C)) * hω_sq +
+    φInv_C * φInvSqrt_C * hR1_sq -
+    φInv_C * φInvSqrt_C * hR1starRtau
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
