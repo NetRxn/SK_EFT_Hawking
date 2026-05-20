@@ -1931,6 +1931,23 @@ theorem F_C_conj_smul (c : ℂ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
     F_C * (c • X) * F_C = c • (F_C * X * F_C) := by
   rw [Matrix.mul_smul, Matrix.smul_mul]
 
+/-- **R5.4 Layer F.20.c.d.2.l — F_C Ad-action on Pauli-decomposed element**.
+
+For `X = a·paulI_x + b·paulI_y + c·paulI_z`:
+  `F · X · F = a·(F·paulI_x·F) + b·(F·paulI_y·F) + c·(F·paulI_z·F)`
+
+Direct linearity composition; the closed forms for each `F·paulI_α·F`
+are shipped above (F.20.c.d.2.{i,j}). Combined with σ_Fib_1's
+SO(3) pauliDecomp form (F.20.c.d.2.h) and `σ_Fib_2 = F·σ_Fib_1·F`,
+this gives the full σ_Fib_2 SO(3) Ad-matrix as a composition. -/
+theorem F_C_conj_pauliDecomp (a b c : ℂ) :
+    F_C * (a • paulI_x + b • paulI_y + c • paulI_z) * F_C =
+        a • (F_C * paulI_x * F_C) +
+        b • (F_C * paulI_y * F_C) +
+        c • (F_C * paulI_z * F_C) := by
+  rw [F_C_conj_add, F_C_conj_add,
+      F_C_conj_smul, F_C_conj_smul, F_C_conj_smul]
+
 /-- **F_C·paulI_y·F_C simplifies via φInv² + φInvSqrt² = 1**. -/
 theorem F_C_conj_paulI_y_eq_neg :
     F_C * paulI_y * F_C = -paulI_y := by
