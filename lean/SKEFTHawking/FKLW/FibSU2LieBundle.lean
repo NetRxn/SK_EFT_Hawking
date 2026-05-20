@@ -4292,4 +4292,34 @@ theorem fibonacci_density_from_cartan_classification
   -- Apply fibonacci_density_from_H_Fib_eq_top (existing substrate)
   exact SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top h_H_top
 
+/-! ## §46. R5.4 Layer F.20.c.d.2.w — Unified F.21 statement: EITHER modular path discharges density
+
+Bundles the §44 (residual + Bridge Lemma 6.2) and §45 (Cartan classification) modular
+F.21 paths into a single disjunction theorem. Discharging EITHER suffices for F.21.
+
+This is the **architectural state-of-the-art** for F.21 unconditional Fibonacci density.
+Future substantive work targets ONE of:
+  - §44 path: F21_residual_small_spanning ∧ F21_BridgeLemma62_OpenNhd (~300 LoC)
+  - §45 path: CartanClassificationOfSU2_Subgroup (~500-1000 LoC; Phase 5 Step 13)
+
+Either path discharges F.21 unconditionally. -/
+
+/-- **R5.4 Layer F.20.c.d.2.w HEADLINE — Unified F.21 statement via EITHER modular path**.
+
+If EITHER the §44 residual+BridgeLemma62 modular path OR the §45 Cartan classification
+modular path holds, then F.21 unconditional Fibonacci density follows.
+
+This is the **structurally complete modular F.21 architecture**: the unconditional
+density is reduced to one of two substantive content packages, each shippable
+independently. -/
+theorem fibonacci_density_F21_unified
+    (h_paths : (F21_residual_small_spanning ∧ F21_BridgeLemma62_OpenNhd) ∨
+               CartanClassificationOfSU2_Subgroup) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) := by
+  rcases h_paths with ⟨h_residual, h_bridge⟩ | h_cartan
+  · exact fibonacci_density_from_F21_residual_and_bridge_lemma_62 h_residual h_bridge
+  · exact fibonacci_density_from_cartan_classification h_cartan
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
