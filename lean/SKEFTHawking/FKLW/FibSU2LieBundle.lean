@@ -3216,4 +3216,60 @@ theorem liePartMat_σ_Fib_1_conj_σ_Fib_2_pauliDecomp :
   rw [σ_Fib_1_SU_mat_conj_pauliDecomp_C]
   module
 
+/-! ## §35. R5.4 Layer F.20.c.d.2.p.3.e.1 — Trig substrate at multiples of π/5
+
+For the non-vanishing proof at sub-step 3.e, we need closed forms and sign
+information for `Real.cos (7π/5)`, `Real.sin (7π/5)`, `Real.sin (7π/10)`,
+and `Real.sin (π/5)`. Only `Real.cos_pi_div_five = (1 + √5)/4` is in Mathlib
+directly; we derive the others.
+
+These are general trig identities (independent of the σ_Fib substrate) and
+could plausibly be upstream PR candidates for Mathlib. -/
+
+/-- `Real.cos (7π/5) = (1 - √5)/4`.
+
+Derivation: `7π/5 = 2·(π/5) + π`, so `cos(7π/5) = -cos(2π/5) = -(2cos²(π/5) - 1)`.
+With `cos(π/5) = (1+√5)/4`, this gives `cos(7π/5) = -(2·((1+√5)/4)² - 1) = (1-√5)/4`.
+
+(Upstream-Mathlib-PR candidate.) -/
+theorem cos_7pi_div_5 : Real.cos (7 * Real.pi / 5) = (1 - Real.sqrt 5) / 4 := by
+  have h1 : (7 * Real.pi / 5 : ℝ) = 2 * (Real.pi / 5) + Real.pi := by ring
+  rw [h1, Real.cos_add_pi, Real.cos_two_mul, Real.cos_pi_div_five]
+  have h_sqrt : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
+  nlinarith [h_sqrt, Real.sqrt_nonneg 5]
+
+/-- `Real.sin (π/5)² = (10 - 2√5)/16` via `sin² + cos² = 1`. -/
+theorem sin_sq_pi_div_5 :
+    Real.sin (Real.pi / 5) ^ 2 = (10 - 2 * Real.sqrt 5) / 16 := by
+  have h := Real.sin_sq_add_cos_sq (Real.pi / 5)
+  rw [Real.cos_pi_div_five] at h
+  have h_sqrt : Real.sqrt 5 ^ 2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
+  nlinarith [h, h_sqrt, Real.sqrt_nonneg 5]
+
+/-- `Real.sin (π/5) > 0` since `0 < π/5 < π`. -/
+theorem sin_pi_div_5_pos : 0 < Real.sin (Real.pi / 5) := by
+  apply Real.sin_pos_of_pos_of_lt_pi
+  · positivity
+  · have := Real.pi_pos
+    linarith
+
+/-- `Real.sin (7π/10) > 0` since `0 < 7π/10 < π`. -/
+theorem sin_7pi_div_10_pos : 0 < Real.sin (7 * Real.pi / 10) := by
+  apply Real.sin_pos_of_pos_of_lt_pi
+  · have := Real.pi_pos
+    positivity
+  · have := Real.pi_pos
+    nlinarith
+
+/-- `Real.sin (7π/5) < 0` since `7π/5 = π + 2π/5` and `sin(π + x) = -sin(x)`,
+with `0 < sin(2π/5)`. -/
+theorem sin_7pi_div_5_neg : Real.sin (7 * Real.pi / 5) < 0 := by
+  have h1 : (7 * Real.pi / 5 : ℝ) = 2 * (Real.pi / 5) + Real.pi := by ring
+  rw [h1, Real.sin_add_pi]
+  have h_pos : 0 < Real.sin (2 * (Real.pi / 5)) := by
+    apply Real.sin_pos_of_pos_of_lt_pi
+    · have := Real.pi_pos; positivity
+    · have := Real.pi_pos; nlinarith
+  linarith
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
