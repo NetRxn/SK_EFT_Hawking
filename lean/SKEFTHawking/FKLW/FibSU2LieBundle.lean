@@ -493,4 +493,207 @@ theorem σ_Fib_2_SU_mat_conj_paulI_x_entry_00_eq :
     + (2 * Complex.I * φInv_C * φInv_C * φInv_C * φInvSqrt_C) * hR1
     + (-(2 * Complex.I * φInv_C * φInv_C * φInvSqrt_C)) * hRτ
 
+/-! ## §9. F.18 — σ_Fib bundle pauliDet ≠ 0 at paulI_x (session 49)
+
+**HEADLINE FOR THE WHOLE R5.4 STRUCTURAL CHAIN**: shows the witness X = paulI_x
+satisfies `σ_Fib_lie_bundle_pauliDet X ≠ 0`. Composed with F.14
+(`σ_Fib_lie_bundle_lin_indep`), this gives ℝ-linear independence of the
+3-conjugate bundle in `Matrix (Fin 2) (Fin 2) ℂ`. Composed further with
+F.10/F.11/F.12 (Ad-action preserves 𝔰𝔲(2)), the bundle ℝ-spans 𝔰𝔲(2).
+
+Structural reduction: for A = paulI_x, B = σ_Fib_1·paulI_x·σ_Fib_1†,
+C = σ_Fib_2·paulI_x·σ_Fib_2†:
+
+  `pauliDet A B C = sin(7π/5) · zC`
+
+where zC = (C 0 0).im (Pauli z-coordinate of C). The pauliDet formula
+collapses because xA = 1, yA = zA = 0, zB = 0.
+
+Closed form: `pauliDet = sin(7π/5) · 2·(cos(7π/5) - 1) · (φ-real product)`.
+
+Both `sin(7π/5)` and `(cos(7π/5) - 1)` are < 0 (in (π, 2π), sin < 0;
+cos < 1 strictly except at multiples of 2π). The φ-real product > 0.
+So `pauliDet > 0`.
+-/
+
+/-- **F.18 structural reduction** (Layer F.18 step 1).
+For X = paulI_x, the pauliDet of the σ_Fib 3-bundle collapses to
+`sin(7π/5) · (C 0 0).im` where C is the σ_Fib_2-conjugate of paulI_x. -/
+theorem σ_Fib_lie_bundle_pauliDet_paulI_x_eq_sin_zCoord :
+    σ_Fib_lie_bundle_pauliDet paulI_x =
+      Real.sin (7 * Real.pi / 5) *
+        ((σ_Fib_2_SU_mat * paulI_x * σ_Fib_2_SU_mat.conjTranspose) 0 0).im := by
+  unfold σ_Fib_lie_bundle_pauliDet σ_Fib_lie_bundle pauliDet
+  simp only []
+  rw [matrixToPauliCoords_paulI_x, σ_Fib_1_SU_mat_conj_paulI_x_pauliCoords]
+  unfold matrixToPauliCoords
+  ring
+
+/-- **`sin(7π/5) < 0`** (Layer F.18 step 2). Uses
+`7π/5 = π + 2π/5` + `Real.sin_add` + `Real.sin_pi` / `Real.cos_pi`
++ `sin(2π/5) > 0`. -/
+theorem sin_seven_pi_div_five_neg : Real.sin (7 * Real.pi / 5) < 0 := by
+  have h_sin_pos : Real.sin (2 * Real.pi / 5) > 0 := by
+    apply Real.sin_pos_of_pos_of_lt_pi
+    · positivity
+    · have h := Real.pi_pos; linarith
+  have h_eq : Real.sin (7 * Real.pi / 5) = -Real.sin (2 * Real.pi / 5) := by
+    rw [show (7 * Real.pi / 5 : ℝ) = Real.pi + 2 * Real.pi / 5 from by ring,
+        Real.sin_add, Real.sin_pi, Real.cos_pi]
+    ring
+  linarith
+
+/-- **`sin(7π/5) ≠ 0`** (Layer F.18 step 2 corollary). -/
+theorem sin_seven_pi_div_five_ne_zero : Real.sin (7 * Real.pi / 5) ≠ 0 :=
+  ne_of_lt sin_seven_pi_div_five_neg
+
+/-- **`cos(7π/5) < 1` strictly** (Layer F.18 step 3). Uses
+`7π/5 = π + 2π/5` + `Real.cos_add` + `cos(2π/5) > 0` so
+`cos(7π/5) = -cos(2π/5) - 0 < 0 < 1`. -/
+theorem cos_seven_pi_div_five_lt_one : Real.cos (7 * Real.pi / 5) < 1 := by
+  have h_cos_pos : Real.cos (2 * Real.pi / 5) > 0 := by
+    apply Real.cos_pos_of_mem_Ioo
+    refine ⟨?_, ?_⟩
+    · have h := Real.pi_pos; linarith
+    · have h := Real.pi_pos; linarith
+  have h_eq : Real.cos (7 * Real.pi / 5) = -Real.cos (2 * Real.pi / 5) := by
+    rw [show (7 * Real.pi / 5 : ℝ) = Real.pi + 2 * Real.pi / 5 from by ring,
+        Real.cos_add, Real.sin_pi, Real.cos_pi]
+    ring
+  linarith
+
+/-- **`cos(7π/5) - 1 ≠ 0`** (Layer F.18 step 3 corollary). -/
+theorem cos_seven_pi_div_five_sub_one_ne_zero : Real.cos (7 * Real.pi / 5) - 1 ≠ 0 := by
+  have := cos_seven_pi_div_five_lt_one
+  linarith
+
+/-- **F.18 substep — the φ-real product as a real-cast complex** (Layer F.18 step 4a).
+The Q-factor in F.17.b.3's closed form is real-cast: φInv · φInvSqrt · (φInv - φInv²)
+in ℂ equals the cast of the corresponding real product. -/
+private theorem Q_factor_eq_ofReal :
+    φInv_C * φInvSqrt_C * (φInv_C - φInv_C * φInv_C) =
+    ((Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+      (Real.goldenRatio⁻¹ - Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹) : ℝ) : ℂ) := by
+  unfold φInv_C φInvSqrt_C
+  push_cast
+  ring
+
+/-- **F.18 substep — `z + star z = ↑(2 · z.re)` for any complex z**. -/
+private theorem add_star_eq_ofReal_two_re (z : ℂ) :
+    z + star z = ((2 * z.re : ℝ) : ℂ) := by
+  apply Complex.ext
+  · simp [Complex.add_re, Complex.star_def, Complex.conj_re,
+          Complex.ofReal_re]; ring
+  · simp [Complex.add_im, Complex.star_def, Complex.conj_im,
+          Complex.ofReal_im]
+
+/-- **F.18 substep — the S-factor sum of conjugates equals real-cast** (Layer F.18 step 4b).
+`R1·star Rτ + Rτ·star R1 = 2·cos(7π/5)` (cast to ℂ).  -/
+private theorem S_factor_sum_eq_ofReal :
+    R1_C * star Rtau_C + Rtau_C * star R1_C =
+    ((2 * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) := by
+  -- R1 · star Rτ = exp(-7πi/5) from F.16.
+  rw [R1_C_mul_star_Rtau_C]
+  -- For Rτ · star R1: prove = star(R1 · star Rτ) = star(exp(-7πi/5))
+  have h_swap : Rtau_C * star R1_C = star (R1_C * star Rtau_C) := by
+    rw [star_mul, star_star]
+  rw [h_swap, R1_C_mul_star_Rtau_C]
+  -- Use generic `z + star z = ↑(2 · z.re)`.
+  rw [add_star_eq_ofReal_two_re]
+  -- Goal: ↑(2 · (exp(↑(-7π/5)·I)).re) = ↑(2 · cos(7π/5))
+  -- Compute (exp(↑(-7π/5)·I)).re = cos(7π/5) (via parity + exp_re).
+  congr 1
+  rw [Complex.exp_re]
+  simp [Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+        Complex.I_re, Complex.I_im, Real.cos_neg, Real.exp_zero]
+
+/-- **F.18 substep — the (C 0 0).im evaluates explicitly**.
+For C = σ_Fib_2·paulI_x·σ_Fib_2†, the imaginary part of entry (0,0) equals
+the real product `(φInv · φInvSqrt · (φInv - φInv²)) · (2·cos(7π/5) - 2)`. -/
+theorem σ_Fib_2_SU_mat_conj_paulI_x_entry_00_im_eq :
+    ((σ_Fib_2_SU_mat * paulI_x * σ_Fib_2_SU_mat.conjTranspose) 0 0).im =
+      ((Real.goldenRatio⁻¹) * ((Real.sqrt Real.goldenRatio)⁻¹) *
+        ((Real.goldenRatio⁻¹) - (Real.goldenRatio⁻¹) * (Real.goldenRatio⁻¹))) *
+        (2 * Real.cos (7 * Real.pi / 5) - 2) := by
+  rw [σ_Fib_2_SU_mat_conj_paulI_x_entry_00_eq]
+  rw [Q_factor_eq_ofReal]
+  -- Convert (R1·star Rτ + Rτ·star R1 - 2) to real-cast.
+  have h_S_eq : R1_C * star Rtau_C + Rtau_C * star R1_C - 2 =
+        ((2 * Real.cos (7 * Real.pi / 5) - 2 : ℝ) : ℂ) := by
+    have h_sum := S_factor_sum_eq_ofReal
+    have h_split :
+        ((2 * Real.cos (7 * Real.pi / 5) - 2 : ℝ) : ℂ) =
+        ((2 * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) - 2 := by
+      push_cast; ring
+    rw [h_split, ← h_sum]
+  rw [h_S_eq]
+  -- Combine the two real-cast factors into one.
+  set r : ℝ :=
+    Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+      (Real.goldenRatio⁻¹ - Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹) *
+      (2 * Real.cos (7 * Real.pi / 5) - 2) with hr_def
+  set q : ℝ :=
+    Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+      (Real.goldenRatio⁻¹ - Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹) with hq_def
+  set s : ℝ := 2 * Real.cos (7 * Real.pi / 5) - 2 with hs_def
+  have h_combine :
+      Complex.I * (((q : ℝ) : ℂ) * ((s : ℝ) : ℂ)) =
+      Complex.I * ((r : ℝ) : ℂ) := by
+    have h_rqs : r = q * s := by rw [hr_def, hq_def, hs_def]
+    rw [h_rqs]; push_cast; ring
+  rw [h_combine]
+  -- Now compute (I · ↑r).im = r for real r.
+  simp [Complex.mul_im, Complex.I_re, Complex.I_im, Complex.ofReal_re,
+        Complex.ofReal_im]
+
+/-- **(C 0 0).im ≠ 0** (Layer F.18 step 4). Composes `_eq` with positivity
+of the φ-real product + strict negativity of `2·cos(7π/5) - 2`. -/
+theorem σ_Fib_2_SU_mat_conj_paulI_x_entry_00_im_ne_zero :
+    ((σ_Fib_2_SU_mat * paulI_x * σ_Fib_2_SU_mat.conjTranspose) 0 0).im ≠ 0 := by
+  rw [σ_Fib_2_SU_mat_conj_paulI_x_entry_00_im_eq]
+  have h_φ_pos : (Real.goldenRatio : ℝ) > 0 := Real.goldenRatio_pos
+  have h_one_lt_φ : (1 : ℝ) < Real.goldenRatio := Real.one_lt_goldenRatio
+  have h_φInv_pos : Real.goldenRatio⁻¹ > 0 := inv_pos.mpr h_φ_pos
+  have h_sqrt_φ_pos : Real.sqrt Real.goldenRatio > 0 :=
+    Real.sqrt_pos.mpr h_φ_pos
+  have h_sqrt_φ_inv_pos : (Real.sqrt Real.goldenRatio)⁻¹ > 0 :=
+    inv_pos.mpr h_sqrt_φ_pos
+  -- φInv < 1 since φ > 1: derive via inv_lt_one_iff
+  have h_φInv_lt_one : Real.goldenRatio⁻¹ < 1 := inv_lt_one_of_one_lt₀ h_one_lt_φ
+  -- φInv² < φInv: multiply both sides by positive φInv.
+  have h_φInv_sq_lt_φInv :
+      Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ < Real.goldenRatio⁻¹ := by
+    have h := mul_lt_mul_of_pos_left h_φInv_lt_one h_φInv_pos
+    rw [mul_one] at h
+    exact h
+  have h_diff_pos :
+      Real.goldenRatio⁻¹ - Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ > 0 := by
+    linarith
+  have h_product_pos :
+      Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+        (Real.goldenRatio⁻¹ - Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹) > 0 :=
+    mul_pos (mul_pos h_φInv_pos h_sqrt_φ_inv_pos) h_diff_pos
+  have h_cos_factor :
+      2 * Real.cos (7 * Real.pi / 5) - 2 < 0 := by
+    have := cos_seven_pi_div_five_lt_one
+    linarith
+  -- product > 0, cos_factor < 0 ⇒ their product < 0 ≠ 0.
+  apply ne_of_lt
+  exact mul_neg_of_pos_of_neg h_product_pos h_cos_factor
+
+/-- **HEADLINE F.18 — σ_Fib bundle pauliDet ≠ 0 at paulI_x**.
+
+The capstone of R5.4's structural chain. Combined with F.14
+(`σ_Fib_lie_bundle_lin_indep`), gives ℝ-linear independence of
+`(paulI_x, σ_Fib_1·paulI_x·σ_Fib_1†, σ_Fib_2·paulI_x·σ_Fib_2†)` as
+elements of `Matrix (Fin 2) (Fin 2) ℂ`. Combined with F.12 (Ad-action
+preserves 𝔰𝔲(2)), the 3-bundle ℝ-spans 𝔰𝔲(2). The final IFT bridge
+to density (F.19+) composes this spanning with shipped Cartan-D
+substrate. -/
+theorem σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero :
+    σ_Fib_lie_bundle_pauliDet paulI_x ≠ 0 := by
+  rw [σ_Fib_lie_bundle_pauliDet_paulI_x_eq_sin_zCoord]
+  exact mul_ne_zero sin_seven_pi_div_five_ne_zero
+    σ_Fib_2_SU_mat_conj_paulI_x_entry_00_im_ne_zero
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
