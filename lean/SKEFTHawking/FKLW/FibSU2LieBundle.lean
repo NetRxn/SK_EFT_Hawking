@@ -2898,4 +2898,44 @@ theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_ne_zero_dense :
   exact interior_eq_empty_iff_dense_compl.mp
     σ_Fib_lie_bundle_pauliDet_pauliDecomp_zero_interior_empty
 
+/-! ## §31. R5.4 Layer F.20.c.d.2.p.3.a — Explicit Ad(σ_Fib_2)(paulI_z) Pauli decomp
+
+The substrate-shipped `σ_Fib_2_SU_mat_conj_pauliDecomp_C` (F.20.c.d.2.m) gives
+σ_Fib_2's full SO(3) Ad-action on a general Pauli-decomposed element. Specializing
+to (a, b, c) = (0, 0, 1) yields the explicit Pauli-coords of `Ad(σ_Fib_2)(paulI_z)`,
+which is the key direction for the F.20.c.d.2.p.3 H_Fib bridge:
+
+`σ_Fib_2 · paulI_z · σ_Fib_2† = (α·(β·cs + γ))·paulI_x + (-α·sn)·paulI_y + (α²·cs + γ²)·paulI_z`
+
+This is the IMAGE direction under Ad(σ_Fib_2) of the z-axis, used in the
+H_Fib bridge: if H_Fib's small witness has liePartMat in (or near) the paulI_z
+direction, conjugation by σ_Fib_2 maps to this image direction. Whether
+`σ_Fib_lie_bundle_pauliDet` at this image is non-zero is the substantive
+Gap-1 check toward .p.3 (numerically ~0.898; symbolic exact form involves
+hundreds of terms in φ⁻¹, √(φ⁻¹), cos/sin(7π/5)).
+
+Engineering note: the proof rewrites `paulI_z = 0·paulI_x + 0·paulI_y + 1·paulI_z`
+and applies F.20.c.d.2.m at (a, b, c) = (0, 0, 1); `ring_nf` then handles the
+simplification. -/
+
+/-- **R5.4 Layer F.20.c.d.2.p.3.a — explicit Pauli-coord form of Ad(σ_Fib_2)(paulI_z)**.
+
+Specializes F.20.c.d.2.m `σ_Fib_2_SU_mat_conj_pauliDecomp_C` to (a, b, c) = (0, 0, 1).
+The image direction is `(α·(β·cs + γ))·paulI_x + (-α·sn)·paulI_y + (α²·cs + γ²)·paulI_z`. -/
+theorem σ_Fib_2_SU_mat_conj_paulI_z_pauliDecomp :
+    σ_Fib_2_SU_mat * paulI_z * σ_Fib_2_SU_mat.conjTranspose =
+      let α : ℂ := 2 * φInv_C * φInvSqrt_C
+      let β : ℂ := 2 * φInv_C - 1
+      let γ : ℂ := φInv_C * φInv_C - φInvSqrt_C * φInvSqrt_C
+      let cs : ℂ := ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ)
+      let sn : ℂ := ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ)
+      (α * (β * cs + γ)) • paulI_x +
+      (- (α * sn)) • paulI_y +
+      (α^2 * cs + γ^2) • paulI_z := by
+  have h_pz : paulI_z =
+      (0 : ℂ) • paulI_x + (0 : ℂ) • paulI_y + (1 : ℂ) • paulI_z := by simp
+  conv_lhs => rw [h_pz]
+  rw [σ_Fib_2_SU_mat_conj_pauliDecomp_C 0 0 1]
+  ring_nf
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
