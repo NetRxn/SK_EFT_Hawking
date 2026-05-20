@@ -792,4 +792,112 @@ theorem σ_Fib_lie_bundle_paulI_x_spans
     σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero
     hX
 
+/-! ## §12. F.20.b — pauliDet uniform-smul scaling (session 50)
+
+`pauliDet` is **trilinear-homogeneous**: scaling all three inputs by the
+same real scalar `t` scales `pauliDet` by `t³`. Proof: `matrixToPauliCoords`
+is ℝ-linear (`matrixToPauliCoords_smul`), so the expanded determinant
+formula (sum of products of 3 Pauli coords) scales as t³.
+
+**Direct application to the σ_Fib bundle**: since the Ad-action by
+σ_Fib_1, σ_Fib_2 is ℝ-linear in the conjugated argument,
+`σ_Fib_lie_bundle (t·X) = t · σ_Fib_lie_bundle X` componentwise, hence
+`σ_Fib_lie_bundle_pauliDet (t·X) = t³ · σ_Fib_lie_bundle_pauliDet X`.
+
+**Consequence (HEADLINE)**: for any non-zero `t : ℝ` and the canonical
+witness `paulI_x`, `σ_Fib_lie_bundle_pauliDet ((t : ℂ) • paulI_x) ≠ 0`,
+hence the σ_Fib bundle at `t · paulI_x` is also a basis of 𝔰𝔲(2).
+
+This is the **uniform-scale spanning** fact for the IFT/BCH iteration
+bridge: arbitrarily-small witnesses `t · paulI_x` (for `t > 0`) remain
+in the spanning locus of the σ_Fib bundle, so BCH iteration at any
+small scale produces 3-bundles whose Lie-direction parts span 𝔰𝔲(2). -/
+
+/-- **`pauliDet` is trilinear-homogeneous**: scaling all three arguments
+by the same `(t : ℂ)` (for `t : ℝ`) scales the result by `t³`. -/
+theorem pauliDet_smul_uniform (t : ℝ) (A B C : Matrix (Fin 2) (Fin 2) ℂ) :
+    pauliDet ((t : ℂ) • A) ((t : ℂ) • B) ((t : ℂ) • C) =
+      t ^ 3 * pauliDet A B C := by
+  unfold pauliDet
+  simp only [matrixToPauliCoords_smul]
+  ring
+
+/-- **σ_Fib_lie_bundle componentwise scaling under uniform smul**. -/
+theorem σ_Fib_lie_bundle_smul_uniform (t : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    σ_Fib_lie_bundle ((t : ℂ) • X) =
+      ((t : ℂ) • X,
+       (t : ℂ) • (σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose),
+       (t : ℂ) • (σ_Fib_2_SU_mat * X * σ_Fib_2_SU_mat.conjTranspose)) := by
+  unfold σ_Fib_lie_bundle
+  refine Prod.ext rfl (Prod.ext ?_ ?_)
+  · -- σ_Fib_1 conj distributes over ℂ-smul
+    show σ_Fib_1_SU_mat * ((t : ℂ) • X) * σ_Fib_1_SU_mat.conjTranspose =
+         (t : ℂ) • (σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose)
+    rw [Matrix.mul_smul, Matrix.smul_mul]
+  · -- σ_Fib_2 conj distributes over ℂ-smul
+    show σ_Fib_2_SU_mat * ((t : ℂ) • X) * σ_Fib_2_SU_mat.conjTranspose =
+         (t : ℂ) • (σ_Fib_2_SU_mat * X * σ_Fib_2_SU_mat.conjTranspose)
+    rw [Matrix.mul_smul, Matrix.smul_mul]
+
+/-- **σ_Fib bundle pauliDet scaling**: `pauliDet` of the σ_Fib bundle
+at `(t : ℂ) • X` equals `t³ · σ_Fib_lie_bundle_pauliDet X`. -/
+theorem σ_Fib_lie_bundle_pauliDet_smul_uniform
+    (t : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    σ_Fib_lie_bundle_pauliDet ((t : ℂ) • X) =
+      t ^ 3 * σ_Fib_lie_bundle_pauliDet X := by
+  rw [σ_Fib_lie_bundle_pauliDet_eq, σ_Fib_lie_bundle_pauliDet_eq]
+  -- Note: by σ_Fib_lie_bundle_eq, the bundle at (t • X) is
+  -- (t • X, t • σ_1 conj X, t • σ_2 conj X), so pauliDet scales as t³.
+  have h_eq :
+      pauliDet ((t : ℂ) • X)
+        (σ_Fib_1_SU_mat * ((t : ℂ) • X) * σ_Fib_1_SU_mat.conjTranspose)
+        (σ_Fib_2_SU_mat * ((t : ℂ) • X) * σ_Fib_2_SU_mat.conjTranspose) =
+      pauliDet ((t : ℂ) • X)
+        ((t : ℂ) • (σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose))
+        ((t : ℂ) • (σ_Fib_2_SU_mat * X * σ_Fib_2_SU_mat.conjTranspose)) := by
+    congr 1
+    · rw [Matrix.mul_smul, Matrix.smul_mul]
+    · rw [Matrix.mul_smul, Matrix.smul_mul]
+  rw [h_eq]
+  exact pauliDet_smul_uniform t _ _ _
+
+/-- **HEADLINE F.20.b — σ_Fib bundle SPANS at every non-zero scalar
+multiple of paulI_x**.
+
+For any `t : ℝ` with `t ≠ 0`, `σ_Fib_lie_bundle_pauliDet ((t : ℂ) • paulI_x) ≠ 0`.
+
+Combined with F.14 (`σ_Fib_lie_bundle_lin_indep`) + F.20.a-app spanning,
+this shows the σ_Fib bundle at every `t · paulI_x` (`t ≠ 0`) is a
+basis of 𝔰𝔲(2). Useful for arbitrarily-small spanning witnesses
+in the BCH/IFT iteration argument. -/
+theorem σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero
+    {t : ℝ} (ht : t ≠ 0) :
+    σ_Fib_lie_bundle_pauliDet ((t : ℂ) • paulI_x) ≠ 0 := by
+  rw [σ_Fib_lie_bundle_pauliDet_smul_uniform]
+  exact mul_ne_zero (pow_ne_zero _ ht) σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero
+
+/-- **Scaled spanning: σ_Fib bundle is a basis at every non-zero scalar
+multiple of paulI_x**. -/
+theorem σ_Fib_lie_bundle_scaled_paulI_x_spans
+    {t : ℝ} (ht : t ≠ 0)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
+    ∃ a b c : ℝ,
+      X = (a : ℂ) • ((t : ℂ) • paulI_x) +
+          (b : ℂ) • (σ_Fib_1_SU_mat * ((t : ℂ) • paulI_x) *
+                        σ_Fib_1_SU_mat.conjTranspose) +
+          (c : ℂ) • (σ_Fib_2_SU_mat * ((t : ℂ) • paulI_x) *
+                        σ_Fib_2_SU_mat.conjTranspose) :=
+  tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero
+    (tracelessSkewHermitian_complex_smul_real_mem
+      paulI_x_mem_tracelessSkewHermitian t)
+    (tracelessSkewHermitian_conj_σ_Fib_1_SU_mat
+      (tracelessSkewHermitian_complex_smul_real_mem
+        paulI_x_mem_tracelessSkewHermitian t))
+    (tracelessSkewHermitian_conj_σ_Fib_2_SU_mat
+      (tracelessSkewHermitian_complex_smul_real_mem
+        paulI_x_mem_tracelessSkewHermitian t))
+    (σ_Fib_lie_bundle_pauliDet_scaled_paulI_x_ne_zero ht)
+    hX
+
 end SKEFTHawking.FKLW.FibSU2LieBundle

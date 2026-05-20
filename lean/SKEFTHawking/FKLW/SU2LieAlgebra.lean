@@ -927,8 +927,10 @@ the target Pauli coordinates of X. The algebraic identities are pure
 ℝ-polynomial identities closed by `field_simp; ring`. -/
 
 /-- The submodule `tracelessSkewHermitian (Fin 2)` is closed under
-ℂ-scalar action by real-cast coefficients. -/
-private theorem tracelessSkewHermitian_complex_smul_real_mem
+ℂ-scalar action by real-cast coefficients. Bridges the ℂ-action
+`(r : ℂ) • v` used in coefficient-style theorems to the ℝ-submodule's
+native ℝ-action via `Complex.coe_smul`. -/
+theorem tracelessSkewHermitian_complex_smul_real_mem
     {v : Matrix (Fin 2) (Fin 2) ℂ} (hv : v ∈ tracelessSkewHermitian (Fin 2))
     (r : ℝ) : (r : ℂ) • v ∈ tracelessSkewHermitian (Fin 2) := by
   rw [Complex.coe_smul r v]
