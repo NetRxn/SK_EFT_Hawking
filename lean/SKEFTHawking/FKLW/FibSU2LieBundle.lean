@@ -1856,6 +1856,33 @@ theorem σ_Fib_1_SU_mat_conj_smul (c : ℂ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
         c • (σ_Fib_1_SU_mat * X * σ_Fib_1_SU_mat.conjTranspose) := by
   rw [Matrix.mul_smul, Matrix.smul_mul]
 
+/-- **F_C Ad-action on paulI_z** (toward F.20.c.d.2.i — σ_Fib_2's Ad-action
+on paulI_z via the `σ_Fib_2 = F·σ_Fib_1·F` decomposition).
+
+Direct entry-wise computation: for `F_C = !![φ⁻¹, φ⁻¹ᐟ²; φ⁻¹ᐟ², -φ⁻¹]` and
+`paulI_z = !![I, 0; 0, -I]`, the F-conjugate `F·paulI_z·F` produces an
+explicit 2×2 matrix mixing diagonal and off-diagonal entries with
+coefficients `φ⁻¹·φ⁻¹ - φ⁻¹ᐟ²·φ⁻¹ᐟ² = φ⁻¹² - φ⁻¹` (real)
+and `2·φ⁻¹·φ⁻¹ᐟ²` (real).
+
+Since F_C is symmetric and `star F_C = F_C` (`F_C_star`), the
+"conjugation" here uses `F_C` on both sides (no separate transpose). -/
+theorem F_C_conj_paulI_z_eq :
+    F_C * paulI_z * F_C =
+      !![(φInv_C * φInv_C - φInvSqrt_C * φInvSqrt_C) * Complex.I,
+         (2 * φInv_C * φInvSqrt_C) * Complex.I;
+         (2 * φInv_C * φInvSqrt_C) * Complex.I,
+         -((φInv_C * φInv_C - φInvSqrt_C * φInvSqrt_C) * Complex.I)] := by
+  unfold F_C
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.of_apply, Matrix.cons_val_zero,
+          Matrix.cons_val_one, Matrix.head_cons,
+          paulI_z, SKEFTHawking.σ_z, Matrix.smul_apply,
+          smul_eq_mul] <;>
+    ring
+
 /-- **R5.4 Layer F.20.c.d.2.h — σ_Fib_1's Ad-action on a Pauli-decomposed
 element is a planar rotation by 7π/5 about the z-axis**.
 
