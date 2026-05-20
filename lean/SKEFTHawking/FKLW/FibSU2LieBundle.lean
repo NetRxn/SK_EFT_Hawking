@@ -4704,4 +4704,122 @@ theorem cFib_SU_mat_entry_01_simplified :
     φInv_C * φInvSqrt_C * hR1_sq -
     φInv_C * φInvSqrt_C * hR1starRtau
 
+/-! ## §52. R5.4 Layer F.20.c.d.2.bb — cFib Pauli coordinates (closed form)
+
+Extract `matrixToPauliCoords cFib_SU_mat` in closed form using §51's simplified
+entries + Euler's formula `exp(iθ) = cos θ + i·sin θ`:
+
+  a = (cFib[0,1]).im = φInv·φInvSqrt·sin(7π/5)
+  b = (cFib[0,1]).re = φInv·φInvSqrt·(1 - cos(7π/5))
+  c = (cFib[0,0]).im = -φInv·sin(7π/5)
+
+Since `liePartMat h = h - (tr h / 2)·1` subtracts a REAL scalar multiple of
+identity, the off-diagonal entries are unchanged and `.im` of the diagonal
+is unchanged — therefore `matrixToPauliCoords (liePartMat cFib_SU_mat)`
+equals these same coords (next ship).
+
+Used to evaluate `σ_Fib_lie_bundle_pauliDet (liePartMat cFib_SU_mat)` via §24's
+cubic-polynomial closed form. -/
+
+/-- **Euler form for `exp(-(7π/5)·i)`**: separated into real cos + sin·i parts.
+
+`exp(-(7π/5)·i) = cos(7π/5) - sin(7π/5)·i` (using cos even, sin odd). -/
+theorem exp_neg_seven_pi_div_five_eulerForm :
+    Complex.exp (((-(7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I) =
+      ((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) -
+      ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I := by
+  rw [Complex.exp_mul_I,
+      show Complex.cos (((-(7 * Real.pi / 5) : ℝ) : ℂ)) =
+            ((Real.cos (-(7 * Real.pi / 5)) : ℝ) : ℂ) from
+            (Complex.ofReal_cos _).symm,
+      show Complex.sin (((-(7 * Real.pi / 5) : ℝ) : ℂ)) =
+            ((Real.sin (-(7 * Real.pi / 5)) : ℝ) : ℂ) from
+            (Complex.ofReal_sin _).symm]
+  rw [Real.cos_neg, Real.sin_neg]
+  push_cast
+  ring
+
+/-- **cFib_SU_mat (0,0) in Re + Im·I real-cast form**.
+
+`cFib[0,0] = (φInv² + φInv·cos(7π/5)) + (-φInv·sin(7π/5))·I` (real-cast). -/
+theorem cFib_SU_mat_entry_00_re_im_form :
+    cFib_SU_mat 0 0 =
+      ((Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ +
+         Real.goldenRatio⁻¹ * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) +
+      ((-(Real.goldenRatio⁻¹ * Real.sin (7 * Real.pi / 5)) : ℝ) : ℂ) *
+        Complex.I := by
+  rw [cFib_SU_mat_entry_00_simplified, exp_neg_seven_pi_div_five_eulerForm]
+  show ((Real.goldenRatio⁻¹ : ℝ) : ℂ) * ((Real.goldenRatio⁻¹ : ℝ) : ℂ) +
+        ((Real.goldenRatio⁻¹ : ℝ) : ℂ) *
+          (((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) -
+            ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I) = _
+  push_cast
+  ring
+
+/-- **(cFib_SU_mat 0 0).im closed form**: `-φInv · sin(7π/5)`. -/
+theorem cFib_SU_mat_entry_00_im :
+    (cFib_SU_mat 0 0).im =
+      -(Real.goldenRatio⁻¹ * Real.sin (7 * Real.pi / 5)) := by
+  rw [cFib_SU_mat_entry_00_re_im_form, Complex.add_im, Complex.mul_im,
+      Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im]
+  ring
+
+/-- **cFib_SU_mat (0,1) in Re + Im·I real-cast form**.
+
+`cFib[0,1] = (φInv·φInvSqrt·(1 - cos(7π/5))) + (φInv·φInvSqrt·sin(7π/5))·I`. -/
+theorem cFib_SU_mat_entry_01_re_im_form :
+    cFib_SU_mat 0 1 =
+      ((Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+         (1 - Real.cos (7 * Real.pi / 5)) : ℝ) : ℂ) +
+      ((Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+         Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I := by
+  rw [cFib_SU_mat_entry_01_simplified, exp_neg_seven_pi_div_five_eulerForm]
+  show ((Real.goldenRatio⁻¹ : ℝ) : ℂ) *
+        (((Real.sqrt Real.goldenRatio)⁻¹ : ℝ) : ℂ) *
+        (1 - (((Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) -
+              ((Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) * Complex.I)) = _
+  push_cast
+  ring
+
+/-- **(cFib_SU_mat 0 1).re closed form**: `φInv · φInvSqrt · (1 - cos(7π/5))`. -/
+theorem cFib_SU_mat_entry_01_re :
+    (cFib_SU_mat 0 1).re =
+      Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+        (1 - Real.cos (7 * Real.pi / 5)) := by
+  rw [cFib_SU_mat_entry_01_re_im_form, Complex.add_re, Complex.mul_re,
+      Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im]
+  ring
+
+/-- **(cFib_SU_mat 0 1).im closed form**: `φInv · φInvSqrt · sin(7π/5)`. -/
+theorem cFib_SU_mat_entry_01_im :
+    (cFib_SU_mat 0 1).im =
+      Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+        Real.sin (7 * Real.pi / 5) := by
+  rw [cFib_SU_mat_entry_01_re_im_form, Complex.add_im, Complex.mul_im,
+      Complex.ofReal_re, Complex.ofReal_im, Complex.I_re, Complex.I_im]
+  ring
+
+/-- **R5.4 Layer F.20.c.d.2.bb HEADLINE — Pauli coords of `cFib_SU_mat`**.
+
+`matrixToPauliCoords cFib_SU_mat = (a, b, c)` where:
+  - `a = φInv · φInvSqrt · sin(7π/5)`        (the `paulI_x` coefficient)
+  - `b = φInv · φInvSqrt · (1 - cos(7π/5))`  (the `paulI_y` coefficient)
+  - `c = -φInv · sin(7π/5)`                   (the `paulI_z` coefficient)
+
+Composes the three entry-Re/Im closed forms via the `matrixToPauliCoords`
+unfolding `X ↦ (X[0,1].im, X[0,1].re, X[0,0].im)`.
+
+Note: since `sin(7π/5) < 0` (`sin_seven_pi_div_five_neg`), `a < 0` and `c > 0`.
+The non-vanishing of these coords is the key fact for showing
+`σ_Fib_lie_bundle_pauliDet (liePartMat cFib_SU_mat) ≠ 0`. -/
+theorem cFib_SU_mat_matrixToPauliCoords :
+    matrixToPauliCoords cFib_SU_mat =
+      (Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+         Real.sin (7 * Real.pi / 5),
+       Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+         (1 - Real.cos (7 * Real.pi / 5)),
+       -(Real.goldenRatio⁻¹ * Real.sin (7 * Real.pi / 5))) := by
+  unfold matrixToPauliCoords
+  rw [cFib_SU_mat_entry_01_im, cFib_SU_mat_entry_01_re, cFib_SU_mat_entry_00_im]
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
