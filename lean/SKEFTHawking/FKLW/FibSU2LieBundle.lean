@@ -4899,4 +4899,40 @@ theorem cFib_SU_mat_liePartMat_matrixToPauliCoords_closed :
        -(Real.goldenRatio⁻¹ * Real.sin (7 * Real.pi / 5))) := by
   rw [cFib_SU_mat_liePartMat_matrixToPauliCoords, cFib_SU_mat_matrixToPauliCoords]
 
+/-! ## §54. R5.4 Layer F.20.c.d.2.dd — Pauli decomposition of liePartMat cFib_SU_mat
+
+Bridge from §53's Pauli coords to the explicit Pauli-basis decomposition.
+
+Since `liePartMat cFib_SU_mat ∈ tracelessSkewHermitian (Fin 2)` (per
+`liePartMat_mem_tracelessSkewHermitian`), the basis decomposition
+`tracelessSkewHermitian_decomp` gives:
+
+  `liePartMat cFib_SU_mat = (a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z`
+
+where (a, b, c) are exactly the closed forms shipped in §52/§53.
+
+This bridge is consumed by §55+ which applies
+`σ_Fib_lie_bundle_pauliDet_pauliDecomp` to expand the cubic polynomial. -/
+
+/-- **R5.4 Layer F.20.c.d.2.dd HEADLINE — Pauli basis decomposition of `liePartMat cFib_SU_mat`**.
+
+`liePartMat cFib_SU_mat = (a : ℂ) • paulI_x + (b : ℂ) • paulI_y + (c : ℂ) • paulI_z`
+where:
+  - `a = φInv · φInvSqrt · sin(7π/5)`
+  - `b = φInv · φInvSqrt · (1 - cos(7π/5))`
+  - `c = -φInv · sin(7π/5)`
+
+Composes `tracelessSkewHermitian_decomp` (Pauli basis decomp for any
+X ∈ 𝔰𝔲(2)) with the entry-level closed forms from §52/§53. -/
+theorem cFib_SU_mat_liePartMat_pauli_decomposition :
+    liePartMat cFib_SU_mat =
+      ((Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+          Real.sin (7 * Real.pi / 5) : ℝ) : ℂ) • paulI_x +
+      ((Real.goldenRatio⁻¹ * (Real.sqrt Real.goldenRatio)⁻¹ *
+          (1 - Real.cos (7 * Real.pi / 5)) : ℝ) : ℂ) • paulI_y +
+      ((-(Real.goldenRatio⁻¹ * Real.sin (7 * Real.pi / 5)) : ℝ) : ℂ) • paulI_z := by
+  rw [tracelessSkewHermitian_decomp (liePartMat_mem_tracelessSkewHermitian _)]
+  rw [cFib_SU_mat_liePartMat_entry_01, cFib_SU_mat_liePartMat_entry_00_im,
+      cFib_SU_mat_entry_01_im, cFib_SU_mat_entry_01_re, cFib_SU_mat_entry_00_im]
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
