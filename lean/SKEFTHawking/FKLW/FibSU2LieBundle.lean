@@ -5334,4 +5334,148 @@ theorem liePartMat_specialUnitary_pow
   simp only [Nat.cast_ofNat, smul_eq_mul]
   module
 
+/-! ## §61. R5.4 Layer F.20.c.d.2.gg.3 — chebyshev real-cast preservation
+
+For a real input τ ∈ ℝ cast to ℂ, the chebyshev pair `chebyshevSU2 τ n`
+has both components real-cast. Used to extract a real scalar from the
+complex chebyshev for cFib_pow_liePartMat_axis_scaling. -/
+
+/-- **`chebyshevSU2` real-cast preservation**: at a real-cast input,
+the chebyshev pair is real-cast in both components.
+
+The induction on n shows both `(chebyshevSU2 ((τ : ℝ) : ℂ) n).1` and `.2`
+equal real-cast values, with the recurrence preserving the real cast. -/
+theorem chebyshevSU2_real_cast (τ : ℝ) :
+    ∀ n : ℕ, ∃ x y : ℝ,
+      chebyshevSU2 ((τ : ℝ) : ℂ) n =
+        (((x : ℝ) : ℂ), ((y : ℝ) : ℂ)) := by
+  intro n
+  induction n with
+  | zero => exact ⟨0, 1, by simp [chebyshevSU2]⟩
+  | succ k ih =>
+    obtain ⟨x_k, y_k, h_eq_k⟩ := ih
+    refine ⟨y_k, τ * y_k - x_k, ?_⟩
+    simp [chebyshevSU2, h_eq_k]
+
+/-! ## §62. R5.4 Layer F.20.c.d.2.gg.4 — cFib^n ≠ negOneSU (from infinite order)
+
+If cFib^n = negOneSU then cFib^(2n) = negOneSU² = 1, giving cFib finite
+order ≤ 2n. This contradicts `σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder`. -/
+
+/-- **cFib^n ≠ negOneSU**: powers of `cFib_SU = σ_Fib_1_SU · σ_Fib_2_SU⁻¹` are
+never `negOneSU` for `n > 0`.
+
+Direct contradiction with `cFib_not_isOfFinOrder` via order-2 of negOneSU. -/
+theorem cFib_SU_pow_ne_negOneSU
+    {n : ℕ} (hn : 0 < n) :
+    (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^n ≠
+      SKEFTHawking.FKLW.negOneSU := by
+  intro h_eq
+  -- cFib^n = negOneSU ⟹ cFib^(2n) = (negOneSU)^2
+  have h_neg_sq : SKEFTHawking.FKLW.negOneSU ^ 2 =
+      (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+    have := SKEFTHawking.FKLW.negOneSU_orderOf_eq_two
+    rw [orderOf_eq_iff (by norm_num : 0 < 2)] at this
+    exact this.1
+  -- cFib^(2n) = 1
+  have h_pow2n : (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))^(2 * n) = 1 := by
+    rw [show 2 * n = n * 2 from by ring, pow_mul, h_eq, h_neg_sq]
+  -- cFib has finite order
+  have h_fin : IsOfFinOrder (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+    refine isOfFinOrder_iff_pow_eq_one.mpr ⟨2 * n, ?_, h_pow2n⟩
+    omega
+  exact SKEFTHawking.FKLW.σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_not_isOfFinOrder h_fin
+
+/-! ## §63. R5.4 Layer F.20.c.d.2.gg.5 — Discharge cFib_pow_liePartMat_axis_scaling
+
+Compose §60 (Chebyshev liePartMat formula) + §61 (real-cast) + §62
+(cFib^n ≠ -I) + kernel-of-liePartMat (existing substrate). -/
+
+/-- **R5.4 Layer F.20.c.d.2.gg.5 HEADLINE — discharge of
+`cFib_pow_liePartMat_axis_scaling`**.
+
+For any `n` with `cFib^n ≠ 1`:
+  liePartMat(cFib^n) = (t : ℂ) • liePartMat(cFib_SU_mat) for some t : ℝ ≠ 0.
+
+Constructive: t is the real-valued Chebyshev scalar `(chebyshevReal n).2`
+extracted from `chebyshevSU2 ((3-√5)/2 : ℝ) n.pred`. -/
+theorem cFib_pow_liePartMat_axis_scaling_holds :
+    cFib_pow_liePartMat_axis_scaling := by
+  intro n h_ne_one
+  -- Case split on n: n = 0 contradicts h_ne_one; n = k+1 uses §60.
+  match n, h_ne_one with
+  | 0, h_ne =>
+    -- cFib^0 = 1 (in Matrix), contradicts h_ne_one
+    exfalso
+    apply h_ne
+    simp [pow_zero, Submonoid.coe_one]
+  | k + 1, h_ne =>
+    -- Apply §60 at the bundled cFib_SU
+    set cFib_SU := (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) with h_cFib_def
+    -- The matrix form of (cFib_SU)^(k+1) is (↑cFib_SU)^(k+1) = (cFib_SU_mat)^(k+1)
+    have h_val_pow : (((cFib_SU)^(k+1) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) =
+        (cFib_SU : Matrix (Fin 2) (Fin 2) ℂ)^(k+1) :=
+      SubmonoidClass.coe_pow cFib_SU (k+1)
+    have h_val_cFib_mat : (cFib_SU : Matrix (Fin 2) (Fin 2) ℂ) = cFib_SU_mat := by
+      rw [h_cFib_def]; exact cFib_val_eq_cFib_SU_mat
+    -- §60 closed form for liePartMat(cFib^(k+1))
+    have h_lie_pow := liePartMat_specialUnitary_pow cFib_SU k
+    -- §61: extract real-cast chebyshev value
+    have h_tr_cFib : Matrix.trace (cFib_SU : Matrix (Fin 2) (Fin 2) ℂ) =
+        (((3 - Real.sqrt 5) / 2 : ℝ) : ℂ) := by
+      rw [h_val_cFib_mat]
+      exact cFib_SU_mat_trace
+    rw [h_tr_cFib] at h_lie_pow
+    obtain ⟨_x, y_k, h_cheb_eq⟩ := chebyshevSU2_real_cast ((3 - Real.sqrt 5) / 2) k
+    rw [h_cheb_eq] at h_lie_pow
+    -- h_lie_pow : liePartMat ((↑cFib_SU)^(k+1)) = (y_k : ℂ) • liePartMat (↑cFib_SU)
+    -- Convert to use cFib_SU_mat on the RHS
+    rw [h_val_cFib_mat] at h_lie_pow
+    -- Witness: t := y_k
+    refine ⟨y_k, ?_, ?_⟩
+    · -- y_k ≠ 0: by contrapositive, if y_k = 0 then liePartMat (cFib^(k+1)) = 0,
+      -- so cFib^(k+1) ∈ {1, negOneSU} by liePartMat_specialUnitary_eq_zero_iff.
+      -- Rule out cFib^(k+1) = 1 (hypothesis) and ≠ negOneSU (§62).
+      intro h_yk_zero
+      apply h_ne
+      rw [h_yk_zero] at h_lie_pow
+      simp at h_lie_pow
+      -- liePartMat ((↑cFib_SU)^(k+1)) = 0
+      -- By liePartMat_specialUnitary_ne_zero_iff_ne_one_ne_negOne:
+      -- ⟹ cFib_SU^(k+1) = 1 ∨ cFib_SU^(k+1) = negOneSU
+      have h_lie_zero : liePartMat
+          ((cFib_SU^(k+1) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) = 0 := by
+        rw [h_val_pow]; exact h_lie_pow
+      have h_cases :
+          (cFib_SU^(k+1) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 ∨
+          (cFib_SU^(k+1) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) =
+            SKEFTHawking.FKLW.negOneSU := by
+        by_contra h_both
+        push_neg at h_both
+        exact ((liePartMat_specialUnitary_ne_zero_iff_ne_one_ne_negOne
+          (cFib_SU^(k+1))).mpr h_both) h_lie_zero
+      rcases h_cases with h_eq_one | h_eq_negOne
+      · -- cFib_SU^(k+1) = 1 (bundled), so its matrix = 1
+        have : ((cFib_SU^(k+1) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) =
+            (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+          rw [h_eq_one]; rfl
+        rw [h_val_pow] at this
+        exact this
+      · -- cFib_SU^(k+1) = negOneSU contradicts §62
+        exfalso
+        exact cFib_SU_pow_ne_negOneSU (by omega : 0 < k+1) h_eq_negOne
+    · -- liePartMat(cFib_SU_mat^(k+1)) = (y_k : ℂ) • liePartMat cFib_SU_mat
+      rw [← h_val_pow]
+      -- This is exactly h_lie_pow after rewriting ↑cFib_SU = cFib_SU_mat (already done)
+      rw [h_val_pow]
+      exact h_lie_pow
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
