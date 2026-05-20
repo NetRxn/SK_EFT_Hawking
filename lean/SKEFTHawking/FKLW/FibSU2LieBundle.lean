@@ -4465,14 +4465,88 @@ theorem cFib_SU_mat_trace_expanded :
     rw [σ_Fib_1_SU_mat_diagonal_form]; rfl,
     σ_Fib_2_SU_mat_entry_00, σ_Fib_2_SU_mat_entry_11]
 
-/-! ## §48. R5.4 Layer F.20.c.d.2.y — DEFERRED: cFib trace numerical closed form
+/-! ## §48. R5.4 Layer F.20.c.d.2.y — cFib trace numerical closed form
 
-Future session will reduce `cFib_SU_mat_trace_expanded` to the closed-form
-`(3 - √5)/2` via:
-  - star-distribution (`star_mul`, `star_add`) + ω-cancellation (`hω_sq`)
-  - R-eigenvalue cross-term `R1·star Rτ + Rτ·star R1 = 2·cos(7π/5)` (shipped above)
-  - Golden-ratio + trig substrate (`golden_phi_inv_sq`, `cos_7pi_div_5`, etc.)
-The complex-algebraic friction in the final step is non-trivial; deferred for
-clean treatment in a follow-on. -/
+Reduces `cFib_SU_mat_trace_expanded` to the closed-form `(3 - √5)/2` via the
+algebraic substrate shipped above. -/
+
+/-- **φInv_C is self-adjoint** (real cast). -/
+theorem φInv_C_isSelfAdjoint : star φInv_C = φInv_C := by
+  show star (((Real.goldenRatio⁻¹ : ℝ) : ℂ)) = ((Real.goldenRatio⁻¹ : ℝ) : ℂ)
+  exact Complex.conj_ofReal _
+
+/-- **R5.4 Layer F.20.c.d.2.y — Reduced algebraic form of `cFib_SU_mat_trace`**.
+
+After star expansion + ω/R cancellation + golden-ratio identities, the trace
+equals `2·φInv² + 2·φInv·cos(7π/5)`. -/
+theorem cFib_SU_mat_trace_reduced :
+    Matrix.trace cFib_SU_mat =
+      (2 : ℂ) * φInv_C * φInv_C +
+      φInv_C * ((2 * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) := by
+  rw [cFib_SU_mat_trace_expanded]
+  -- Apply star distributions via simp only (terminates because no looping)
+  simp only [star_mul, star_add, φInv_C_isSelfAdjoint]
+  -- Use ω·star ω = 1, R1·star R1 = 1, Rτ·star Rτ = 1, and the cross-term identity
+  have hω_sq : ω_Fib_C * star ω_Fib_C = 1 := unit_norm_star_eq_one norm_ω_Fib_C
+  have hR1_sq : R1_C * star R1_C = 1 := unit_norm_star_eq_one norm_R1_C
+  have hRtau_sq : Rtau_C * star Rtau_C = 1 := unit_norm_star_eq_one norm_Rtau_C
+  have h_cross := R1_star_Rtau_add_Rtau_star_R1
+  linear_combination
+    R1_C * (φInv_C * φInv_C * star R1_C + φInv_C * star Rtau_C) * hω_sq +
+    Rtau_C * (φInv_C * star R1_C + φInv_C * φInv_C * star Rtau_C) * hω_sq +
+    φInv_C * φInv_C * hR1_sq + φInv_C * φInv_C * hRtau_sq +
+    φInv_C * h_cross
+
+/-- **R5.4 Layer F.20.c.d.2.y HEADLINE — closed-form trace of `cFib_SU_mat`**.
+
+`Matrix.trace cFib_SU_mat = ((3 - √5)/2 : ℝ)` (cast to ℂ).
+
+Composes `cFib_SU_mat_trace_reduced` (2·φInv² + 2·φInv·cos(7π/5)) with
+substrate identities:
+  - `Real.inv_goldenRatio`: φInv = (√5-1)/2 → cast to ℂ
+  - `cos_7pi_div_5`: cos(7π/5) = (1-√5)/4
+  - `Real.sq_sqrt`: √5² = 5
+
+Final reduction in ℝ → cast to ℂ via push_cast. -/
+theorem cFib_SU_mat_trace :
+    Matrix.trace cFib_SU_mat = (((3 - Real.sqrt 5) / 2 : ℝ) : ℂ) := by
+  rw [cFib_SU_mat_trace_reduced]
+  -- Real-valued identities first
+  have h_phi_inv_real : Real.goldenRatio⁻¹ = (Real.sqrt 5 - 1) / 2 := by
+    rw [Real.inv_goldenRatio]
+    show -Real.goldenConj = (Real.sqrt 5 - 1) / 2
+    unfold Real.goldenConj
+    ring
+  have h_5 : (Real.sqrt 5)^2 = 5 := Real.sq_sqrt (by norm_num : (5 : ℝ) ≥ 0)
+  -- Final real-valued algebraic identity:
+  -- 2·φInv² + φInv·(2·cos(7π/5)) = (3-√5)/2
+  -- = 2·((√5-1)/2)² + ((√5-1)/2)·(2·(1-√5)/4)
+  -- = (√5-1)² / 2 + (√5-1)·(1-√5)/4
+  -- = (5-2√5+1)/2 + (-(√5-1)²)/4
+  -- = (6-2√5)/2 + (-(6-2√5))/4
+  -- = 3-√5 - (3-√5)/2 = (3-√5)/2 ✓
+  have h_real_id :
+      (2 : ℝ) * Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ +
+        Real.goldenRatio⁻¹ * (2 * Real.cos (7 * Real.pi / 5)) =
+      (3 - Real.sqrt 5) / 2 := by
+    rw [h_phi_inv_real, cos_7pi_div_5]
+    nlinarith [h_5, Real.sqrt_nonneg 5]
+  -- Cast the real identity to ℂ
+  have h_C_id :
+      (((2 : ℝ) * Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ +
+        Real.goldenRatio⁻¹ * (2 * Real.cos (7 * Real.pi / 5)) : ℝ) : ℂ) =
+      (((3 - Real.sqrt 5) / 2 : ℝ) : ℂ) := by
+    rw [h_real_id]
+  -- Identify the LHS with the goal's LHS via push_cast
+  have h_lhs :
+      (2 : ℂ) * φInv_C * φInv_C +
+        φInv_C * ((2 * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) =
+      (((2 : ℝ) * Real.goldenRatio⁻¹ * Real.goldenRatio⁻¹ +
+          Real.goldenRatio⁻¹ * (2 * Real.cos (7 * Real.pi / 5)) : ℝ) : ℂ) := by
+    show (2 : ℂ) * ((Real.goldenRatio⁻¹ : ℝ) : ℂ) * ((Real.goldenRatio⁻¹ : ℝ) : ℂ) +
+      ((Real.goldenRatio⁻¹ : ℝ) : ℂ) * ((2 * Real.cos (7 * Real.pi / 5) : ℝ) : ℂ) = _
+    push_cast
+    ring
+  rw [h_lhs, h_C_id]
 
 end SKEFTHawking.FKLW.FibSU2LieBundle
