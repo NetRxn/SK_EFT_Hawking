@@ -1636,4 +1636,202 @@ theorem exists_in_nhds_one_pauliDet_liePartMat_ne_zero
   obtain ⟨t, ht_mem, ht_pauli⟩ := h_combined.exists
   exact ⟨(1 : Matrix (Fin 2) (Fin 2) ℂ) + (t : ℂ) • paulI_x, ht_mem, ht_pauli⟩
 
+/-! ## §20. R5.4 Layer F.20.c.d.2.c — H_Fib small-witness with non-zero liePart
+
+Composes session-30 small-witness substrate (`H_Fib_small_witness_val`)
+with session-31 / D.3.h substrate (`ne_negOneSU_of_norm_sub_one_lt_two`)
+and the §19 closed form (`liePartMat_specialUnitary_ne_zero_iff_ne_one_ne_negOne`)
+to ship: for every `ε ∈ (0, 1]`, there exists `h ∈ H_Fib` with
+`‖h.val - 1‖ < ε` AND `liePartMat h.val ≠ 0`.
+
+This RESOLVES the first "non-emptiness" sub-question for the F.20.c.d.2
+directionality argument: H_Fib has arbitrarily-close-to-1 elements
+whose `liePartMat` is non-trivial (i.e., they're not on the
+`{1, negOneSU}` zero locus of `liePartMat`). What remains is the
+"directionality" sub-question — whether the `σ_Fib_lie_bundle_pauliDet`
+of these witnesses is also non-zero. -/
+
+/-- **R5.4 Layer F.20.c.d.2.c — H_Fib has small witnesses with non-zero liePart**.
+
+For every `ε ∈ (0, 1]`, there exists `h ∈ H_Fib` with
+`‖h.val - 1‖ < ε` AND `liePartMat h.val ≠ 0`. -/
+theorem H_Fib_small_witness_with_liePartMat_ne_zero
+    {ε : ℝ} (hε_pos : 0 < ε) (hε_le_one : ε ≤ 1) :
+    ∃ h ∈ (SKEFTHawking.FKLW.H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+        ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < ε ∧
+        liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0 := by
+  obtain ⟨h, h_H, h_ne_one, h_norm⟩ :=
+    SKEFTHawking.FKLW.H_Fib_small_witness_val hε_pos
+  have h_norm_lt_two : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 2 := by
+    calc ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        < ε := h_norm
+      _ ≤ 1 := hε_le_one
+      _ < 2 := by norm_num
+  have h_ne_negOne : h ≠ SKEFTHawking.FKLW.negOneSU :=
+    SKEFTHawking.FKLW.ne_negOneSU_of_norm_sub_one_lt_two h h_norm_lt_two
+  refine ⟨h, h_H, h_norm, ?_⟩
+  exact (liePartMat_specialUnitary_ne_zero_iff_ne_one_ne_negOne h).mpr
+    ⟨h_ne_one, h_ne_negOne⟩
+
+/-- **R5.4 Layer F.20.c.d.2.c-app — iteration starting points with
+non-zero liePart**.
+
+For any `δ₀ ∈ (0, 1/64]`, there exists a starting point `h₀ ∈ H_Fib`
+with `‖h₀.val - 1‖ < δ₀` AND `liePartMat h₀.val ≠ 0`. Composes
+`H_Fib_small_witness_with_liePartMat_ne_zero` with the `1/64 ≤ 1`
+inequality so the iteration sequence machinery (which requires
+`δ₀ ≤ 1/64`) can be seeded by a non-trivial-liePart starting point. -/
+theorem H_Fib_iteration_starting_point_with_liePartMat_ne_zero
+    {δ₀ : ℝ} (hδ_pos : 0 < δ₀) (hδ_le : δ₀ ≤ 1 / 64) :
+    ∃ h₀ ∈ (SKEFTHawking.FKLW.H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+        ‖(h₀ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < δ₀ ∧
+        liePartMat (h₀ : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0 := by
+  have hδ_le_one : δ₀ ≤ 1 := by linarith [hδ_le]
+  exact H_Fib_small_witness_with_liePartMat_ne_zero hδ_pos hδ_le_one
+
+/-! ## §22. R5.4 Layer F.20.c.d.2.d — SU(2)-subtype openness +
+nhd-of-1 spanning-locus witness
+
+The matrix-space spanning locus `S_mat := {M | σ_Fib_lie_bundle_pauliDet
+(liePartMat M) ≠ 0}` was shown OPEN in §16 (`F.20.c.d.0`). Here we
+pull this back to SU(2) (subtype topology) via the continuous embedding
+`Subtype.val` and combine with the `rotPaulI_x` family to give an
+SU(2)-level (rather than matrix-level) witness near `1`.
+
+This is the SU(2)-subtype analogue of `exists_in_nhds_one_pauliDet_liePartMat_ne_zero`
+(§19's matrix-level closing theorem) and is the form consumed by
+downstream IFT-based closure arguments which operate on the subgroup
+topology of SU(2). -/
+
+/-- **R5.4 Layer F.20.c.d.2.d — pullback of the spanning locus is OPEN
+in SU(2) (subtype topology)**.
+
+The set `{h ∈ SU(2) | σ_Fib_lie_bundle_pauliDet (liePartMat h.val) ≠ 0}`
+is open in the subtype topology, as the preimage of an open set
+in `Matrix (Fin 2) (Fin 2) ℂ` under the continuous embedding
+`Subtype.val`. -/
+theorem σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero_isOpen_subtype :
+    IsOpen
+      {h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) |
+        σ_Fib_lie_bundle_pauliDet
+          (liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ)) ≠ 0} := by
+  have h_cont :
+      Continuous (Subtype.val :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) →
+          Matrix (Fin 2) (Fin 2) ℂ) :=
+    continuous_subtype_val
+  have h_open_mat :
+      IsOpen {M : Matrix (Fin 2) (Fin 2) ℂ |
+        σ_Fib_lie_bundle_pauliDet (liePartMat M) ≠ 0} :=
+    σ_Fib_lie_bundle_pauliDet_liePartMat_ne_zero_isOpen
+  exact h_open_mat.preimage h_cont
+
+/-- **R5.4 Layer F.20.c.d.2.d — SU(2)-subtype tendsto-1 of `rotPaulI_x t`**.
+
+The family `t ↦ rotPaulI_x t : ℝ → SU(2)` tends to `(1 : SU(2))` as
+`t → 0` in the subtype topology. Lifts the matrix-level
+`rotPaulI_x_mul_conjTranspose` smoothness via `Topology.IsInducing.subtypeVal`. -/
+theorem rotPaulI_x_tendsto_one_subtype :
+    Filter.Tendsto
+      (fun t : ℝ => (⟨rotPaulI_x t, rotPaulI_x_mem_specialUnitaryGroup t⟩ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+      (nhds 0) (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) := by
+  have h_inducing :
+      Topology.IsInducing
+        (Subtype.val : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) →
+          Matrix (Fin 2) (Fin 2) ℂ) :=
+    Topology.IsInducing.subtypeVal
+  rw [h_inducing.tendsto_nhds_iff]
+  -- Goal: Tendsto (fun t => rotPaulI_x t) (nhds 0) (nhds (1 : Matrix _ _ ℂ))
+  -- rotPaulI_x t = cos t • 1 + sin t • paulI_x → 1 as t → 0
+  -- (cos 0 = 1, sin 0 = 0, so the limit value is 1•1 + 0•paulI_x = 1)
+  -- Strategy: show continuity of t ↦ rotPaulI_x t at t = 0 + evaluate at 0
+  have h_cont : Continuous (fun t : ℝ => rotPaulI_x t) := by
+    unfold rotPaulI_x
+    refine Continuous.add ?_ ?_
+    · exact ((Complex.continuous_ofReal.comp Real.continuous_cos).smul
+        continuous_const)
+    · exact ((Complex.continuous_ofReal.comp Real.continuous_sin).smul
+        continuous_const)
+  have h_at_zero : rotPaulI_x 0 = 1 := by
+    unfold rotPaulI_x
+    simp [Real.cos_zero, Real.sin_zero]
+  rw [show ((1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+      Matrix (Fin 2) (Fin 2) ℂ) = rotPaulI_x 0 by rw [h_at_zero]; rfl]
+  exact h_cont.continuousAt
+
+/-- **R5.4 Layer F.20.c.d.2.d — HEADLINE: every SU(2)-nhd of `(1 : SU(2))`
+contains a spanning-locus witness via `rotPaulI_x t`**.
+
+For every neighborhood `U` of `(1 : SU(2))` in the subtype topology,
+there exists `h ∈ U` (concretely of the form `rotPaulI_x t` for some
+`t ≠ 0` near zero) with `σ_Fib_lie_bundle_pauliDet (liePartMat h.val) ≠ 0`.
+
+This is the SU(2)-subtype analogue of §19's matrix-level closing
+theorem `exists_in_nhds_one_pauliDet_liePartMat_ne_zero`, and gives
+the genuine SU(2)-level witness in every nhd of `1`. -/
+theorem exists_in_nhds_one_subtype_pauliDet_liePartMat_ne_zero
+    {U : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hU : U ∈ nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) :
+    ∃ h ∈ U,
+        σ_Fib_lie_bundle_pauliDet
+          (liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ)) ≠ 0 := by
+  -- Pull U back through the rotPaulI_x family
+  have h_tendsto := rotPaulI_x_tendsto_one_subtype
+  have h_pullback :
+      (fun t : ℝ =>
+        (⟨rotPaulI_x t, rotPaulI_x_mem_specialUnitaryGroup t⟩ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) ⁻¹' U ∈ nhds (0 : ℝ) :=
+    h_tendsto hU
+  -- Combine with eventually-pauliDet-ne-zero on `sin t ≠ 0`
+  -- The set {t : ℝ | sin t ≠ 0} is open and contains an interval around 0
+  -- minus {0}, so in nhdsWithin 0 {0}ᶜ (sufficient).
+  -- For Real.sin we have eventually_ne for {t | sin t ≠ 0} near 0:
+  -- there exists ε > 0 such that for 0 < |t| < ε, sin t ≠ 0. We use the
+  -- fact that `sin 0 = 0` is an isolated zero (sin is non-zero in a
+  -- punctured neighborhood of 0).
+  have h_combined :
+      ∀ᶠ t : ℝ in nhdsWithin 0 {0}ᶜ,
+        (⟨rotPaulI_x t, rotPaulI_x_mem_specialUnitaryGroup t⟩ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∈ U ∧
+        σ_Fib_lie_bundle_pauliDet
+          (liePartMat (rotPaulI_x t)) ≠ 0 := by
+    refine (eventually_nhdsWithin_of_eventually_nhds h_pullback).and ?_
+    -- For sin t ≠ 0: there is a punctured nhd of 0 where sin t ≠ 0
+    -- via Real.sin's analytic structure (sin t = 0 iff t = nπ)
+    have h_sin_ne_zero_punctured : ∀ᶠ t : ℝ in nhdsWithin 0 {0}ᶜ,
+        Real.sin t ≠ 0 := by
+      -- The set of zeros of sin is {nπ : n ∈ ℤ}; 0 is isolated in this set,
+      -- so on (-π, π) \ {0}, sin t ≠ 0.
+      -- Use: Real.sin is continuous, sin 0 = 0, sin is locally non-zero away from 0.
+      have h_interval : Set.Ioo (-Real.pi) Real.pi ∈ nhds (0 : ℝ) := by
+        apply Ioo_mem_nhds
+        · linarith [Real.pi_pos]
+        · exact Real.pi_pos
+      have h_pi_pos : (0 : ℝ) < Real.pi := Real.pi_pos
+      rw [eventually_nhdsWithin_iff]
+      filter_upwards [h_interval] with t ht ht_ne_zero
+      rcases ht with ⟨h_lt_pi_neg, h_lt_pi_pos⟩
+      -- For t ∈ (-π, π) with t ≠ 0, sin t ≠ 0
+      intro h_sin_zero
+      apply ht_ne_zero
+      -- sin t = 0 and t ∈ (-π, π) ⟹ t = 0
+      have : t = 0 := by
+        have h_abs_lt_pi : |t| < Real.pi := by
+          rw [abs_lt]
+          exact ⟨h_lt_pi_neg, h_lt_pi_pos⟩
+        -- For t ∈ (-π, π), sin t = 0 iff t = 0
+        -- Use: Real.sin_eq_zero_iff_of_lt_of_lt (or similar)
+        rcases (Real.sin_eq_zero_iff_of_lt_of_lt h_lt_pi_neg h_lt_pi_pos).mp
+          h_sin_zero with h_eq
+        exact h_eq
+      exact this
+    filter_upwards [h_sin_ne_zero_punctured] with t h_sin_ne_zero
+    exact σ_Fib_lie_bundle_pauliDet_liePartMat_rotPaulI_x_ne_zero h_sin_ne_zero
+  obtain ⟨t, ht_mem_U, ht_pauli⟩ := h_combined.exists
+  refine ⟨⟨rotPaulI_x t, rotPaulI_x_mem_specialUnitaryGroup t⟩, ht_mem_U, ?_⟩
+  exact ht_pauli
+
 end SKEFTHawking.FKLW.FibSU2LieBundle

@@ -5984,7 +5984,7 @@ attribute [local instance] Matrix.linftyOpNormedAddCommGroup
 
 /-- **`negOneSU.val - 1 = -2·I` as a matrix identity**. Definitional
 unfolding: `negOneSU.val = -I`, so `negOneSU.val - 1 = -I - I = -2·I`. -/
-private theorem negOneSU_val_sub_one_eq_neg_two_smul_one :
+theorem negOneSU_val_sub_one_eq_neg_two_smul_one :
     (negOneSU : Matrix (Fin 2) (Fin 2) ℂ) - 1 =
       (-2 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
   rw [negOneSU_val]
@@ -5998,7 +5998,7 @@ private theorem negOneSU_val_sub_one_eq_neg_two_smul_one :
 
 /-- **`‖negOneSU.val - 1‖ = 2` in L∞-operator norm**. The matrix is
 `-2·I = diag(-2, -2)`, so each row sum is `|-2| + 0 = 2`. -/
-private theorem negOneSU_val_sub_one_linftyOpNorm_eq_two :
+theorem negOneSU_val_sub_one_linftyOpNorm_eq_two :
     ‖(negOneSU : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ = 2 := by
   rw [negOneSU_val_sub_one_eq_neg_two_smul_one]
   rw [norm_smul, norm_one, mul_one]
@@ -6008,7 +6008,7 @@ private theorem negOneSU_val_sub_one_linftyOpNorm_eq_two :
 
 /-- **Small witnesses can't equal negOneSU**: if `‖h.val - 1‖ < 2`,
 then `h ≠ negOneSU`. Contrapositive of the norm fact. -/
-private theorem ne_negOneSU_of_norm_sub_one_lt_two
+theorem ne_negOneSU_of_norm_sub_one_lt_two
     (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
     (h_norm : ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 2) :
     h ≠ negOneSU := by
@@ -6222,6 +6222,139 @@ theorem H_Fib_iteration_sequence_scale
         (H_Fib_iteration_scale δ₀ k) h_k_le_one ih
     simp only [H_Fib_iteration_sequence, H_Fib_iteration_scale]
     exact h_step.2
+
+/-- **Geometric upper bound on iteration scales** (R5.4 Layer D.3.i.1-bound).
+
+For `δ₀ ≤ 1/64`, the iteration scale `δ_n` is bounded geometrically by
+`δ₀ · (1/2)^n`. Proof: `δ_{n+1} = 32·δ_n² ≤ 32·δ_n·(1/64) = δ_n/2 ≤
+δ₀·(1/2)^n / 2 = δ₀·(1/2)^(n+1)`. -/
+private theorem H_Fib_iteration_scale_le_geom
+    {δ₀ : ℝ} (hδ_nn : 0 ≤ δ₀) (hδ_le : δ₀ ≤ 1 / 64) :
+    ∀ n, H_Fib_iteration_scale δ₀ n ≤ δ₀ * (1 / 2 : ℝ) ^ n := by
+  intro n
+  induction n with
+  | zero => simp [H_Fib_iteration_scale]
+  | succ k ih =>
+    have hk_nn : 0 ≤ H_Fib_iteration_scale δ₀ k :=
+      H_Fib_iteration_scale_nonneg hδ_nn k
+    have hk_le_inv64 : H_Fib_iteration_scale δ₀ k ≤ 1 / 64 :=
+      H_Fib_iteration_scale_le_inv_64 hδ_nn hδ_le k
+    show 32 * H_Fib_iteration_scale δ₀ k ^ 2 ≤ δ₀ * (1 / 2 : ℝ) ^ (k + 1)
+    have h_sq_bound :
+        32 * H_Fib_iteration_scale δ₀ k ^ 2
+          ≤ (1 / 2 : ℝ) * H_Fib_iteration_scale δ₀ k := by
+      have h_one_factor :
+          H_Fib_iteration_scale δ₀ k * H_Fib_iteration_scale δ₀ k
+            ≤ (1 / 64 : ℝ) * H_Fib_iteration_scale δ₀ k :=
+        mul_le_mul_of_nonneg_right hk_le_inv64 hk_nn
+      have : 32 * (H_Fib_iteration_scale δ₀ k *
+              H_Fib_iteration_scale δ₀ k)
+            ≤ 32 * ((1 / 64 : ℝ) * H_Fib_iteration_scale δ₀ k) :=
+        mul_le_mul_of_nonneg_left h_one_factor (by norm_num)
+      calc 32 * H_Fib_iteration_scale δ₀ k ^ 2
+          = 32 * (H_Fib_iteration_scale δ₀ k *
+              H_Fib_iteration_scale δ₀ k) := by ring
+        _ ≤ 32 * ((1 / 64 : ℝ) * H_Fib_iteration_scale δ₀ k) := this
+        _ = (1 / 2 : ℝ) * H_Fib_iteration_scale δ₀ k := by ring
+    calc 32 * H_Fib_iteration_scale δ₀ k ^ 2
+        ≤ (1 / 2 : ℝ) * H_Fib_iteration_scale δ₀ k := h_sq_bound
+      _ ≤ (1 / 2 : ℝ) * (δ₀ * (1 / 2 : ℝ) ^ k) :=
+          mul_le_mul_of_nonneg_left ih (by norm_num)
+      _ = δ₀ * (1 / 2 : ℝ) ^ (k + 1) := by ring
+
+/-- **R5.4 Layer F.20.c.d.2.b — iteration scale tends to 0**.
+
+For `δ₀ ≤ 1/64`, the recursive scale sequence `δ_n` (with
+`δ_{n+1} = 32·δ_n²`) converges to zero.
+
+Proof: composes geometric upper bound `δ_n ≤ δ₀·(1/2)^n` with
+`tendsto_pow_atTop_nhds_zero_of_lt_one` via `squeeze_zero`. -/
+theorem H_Fib_iteration_scale_tendsto_zero
+    {δ₀ : ℝ} (hδ_nn : 0 ≤ δ₀) (hδ_le : δ₀ ≤ 1 / 64) :
+    Filter.Tendsto (H_Fib_iteration_scale δ₀) Filter.atTop (nhds 0) := by
+  have h_lower : ∀ n, 0 ≤ H_Fib_iteration_scale δ₀ n :=
+    H_Fib_iteration_scale_nonneg hδ_nn
+  have h_upper : ∀ n, H_Fib_iteration_scale δ₀ n ≤ δ₀ * (1 / 2 : ℝ) ^ n :=
+    H_Fib_iteration_scale_le_geom hδ_nn hδ_le
+  have h_pow_tendsto :
+      Filter.Tendsto (fun n : ℕ => (1 / 2 : ℝ) ^ n) Filter.atTop (nhds 0) :=
+    tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  have h_geom_tendsto :
+      Filter.Tendsto (fun n : ℕ => δ₀ * (1 / 2 : ℝ) ^ n)
+        Filter.atTop (nhds (δ₀ * 0)) := by
+    exact h_pow_tendsto.const_mul δ₀
+  rw [mul_zero] at h_geom_tendsto
+  exact squeeze_zero h_lower h_upper h_geom_tendsto
+
+/-- **R5.4 Layer F.20.c.d.2.b — H_Fib iteration sequence converges to 1
+in matrix norm**.
+
+Composes `H_Fib_iteration_sequence_scale` (per-term scale bound) with
+`H_Fib_iteration_scale_tendsto_zero` (scale convergence) via the
+`Metric.tendsto_atTop` characterization: `‖x_n.val - 1‖ ≤ δ_n → 0`
+implies `dist x_n.val 1 → 0` implies `x_n.val → 1`.
+
+This is the MISSING piece previously only stubbed in the docstring of
+`R5_4_LayerD_3_i_1_IterationSequence`; combined with the matrix-space
+F.20.c.d.* topological substrate, it gives a genuine convergence
+witness from H_Fib at all scales. -/
+theorem H_Fib_iteration_sequence_val_tendsto_one
+    (h₀ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (h₀_H : h₀ ∈ H_Fib)
+    {δ₀ : ℝ} (hδ_nn : 0 ≤ δ₀) (hδ_le : δ₀ ≤ 1 / 64)
+    (h_small : ‖(h₀ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ₀) :
+    Filter.Tendsto
+      (fun n => ((H_Fib_iteration_sequence h₀ n :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  -- Switch to "norm of difference tends to zero" form via Metric.tendsto_atTop
+  rw [Metric.tendsto_atTop]
+  intro ε hε_pos
+  -- Get N from scale tendsto: ∀ n ≥ N, δ_n < ε
+  have h_scale_tendsto :=
+    H_Fib_iteration_scale_tendsto_zero hδ_nn hδ_le
+  rw [Metric.tendsto_atTop] at h_scale_tendsto
+  obtain ⟨N, hN⟩ := h_scale_tendsto ε hε_pos
+  refine ⟨N, fun n hn => ?_⟩
+  -- For n ≥ N: dist (x_n.val) 1 = ‖x_n.val - 1‖ ≤ δ_n < ε
+  have h_term_le : ‖((H_Fib_iteration_sequence h₀ n :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ H_Fib_iteration_scale δ₀ n :=
+    H_Fib_iteration_sequence_scale h₀ h₀_H hδ_nn hδ_le h_small n
+  have h_scale_nn : 0 ≤ H_Fib_iteration_scale δ₀ n :=
+    H_Fib_iteration_scale_nonneg hδ_nn n
+  have h_scale_bound : H_Fib_iteration_scale δ₀ n < ε := by
+    have := hN n hn
+    rw [Real.dist_eq, sub_zero] at this
+    rwa [abs_of_nonneg h_scale_nn] at this
+  -- dist in normed group = norm of difference
+  rw [dist_eq_norm]
+  exact lt_of_le_of_lt h_term_le h_scale_bound
+
+/-- **R5.4 Layer F.20.c.d.2.b-app — H_Fib iteration sequence converges to
+1 in SU(2) subtype topology**.
+
+Lifts `H_Fib_iteration_sequence_val_tendsto_one` (matrix-norm
+convergence) to the subtype topology via
+`Topology.IsInducing.subtypeVal`. This is the consumer-friendly form
+for downstream IFT / closure arguments at the SU(2) level. -/
+theorem H_Fib_iteration_sequence_tendsto_one_subtype
+    (h₀ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (h₀_H : h₀ ∈ H_Fib)
+    {δ₀ : ℝ} (hδ_nn : 0 ≤ δ₀) (hδ_le : δ₀ ≤ 1 / 64)
+    (h_small : ‖(h₀ : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ₀) :
+    Filter.Tendsto (H_Fib_iteration_sequence h₀) Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) := by
+  have h_inducing :
+      Topology.IsInducing
+        (Subtype.val : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) →
+          Matrix (Fin 2) (Fin 2) ℂ) :=
+    Topology.IsInducing.subtypeVal
+  rw [h_inducing.tendsto_nhds_iff]
+  -- Goal: Tendsto (Subtype.val ∘ H_Fib_iteration_sequence h₀) atTop
+  --         (nhds (Subtype.val (1 : SU(2))))
+  -- Since Subtype.val (1 : SU(2)) = (1 : Matrix _ _ ℂ) definitionally, reduces to
+  -- the matrix-norm convergence theorem.
+  exact H_Fib_iteration_sequence_val_tendsto_one h₀ h₀_H hδ_nn hδ_le h_small
 
 end R5_4_LayerD_3_i_1_IterationSequence
 
