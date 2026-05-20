@@ -31,6 +31,7 @@ bridge SU2LieAlgebra's general Ad-action API to the σ_Fib_*_SU-specific
 import Mathlib
 import SKEFTHawking.FKLW.SU2LieAlgebra
 import SKEFTHawking.FKLW.FibSU2Rep
+import SKEFTHawking.FKLW.FibSU2Density
 
 set_option autoImplicit false
 
@@ -1467,6 +1468,141 @@ theorem eventually_pauliDet_liePartMat_ne_zero_near_zero :
   refine eventually_nhdsWithin_iff.mpr ?_
   filter_upwards with t ht
   exact σ_Fib_lie_bundle_pauliDet_liePartMat_one_plus_paulI_x_ne_zero ht
+
+/-! ## §19. F.20.c.d.2.a — Closed-form `liePartMat` on SU(2) (session 56)
+
+For `h ∈ SU(2)`, `liePartMat h.val` has a clean closed form:
+`liePartMat h.val = h.val - (trace h.val / 2) • 1`.
+
+Derivation (composes session 31's `SU2_star_eq_trace_sub`):
+  1. `(h - 1)† = h.conjTranspose - 1 = star h - 1`
+  2. For h ∈ SU(2): `star h = trace h • 1 - h` (SU2_star_eq_trace_sub).
+  3. `skewHermitianProj (h - 1) = (1/2) • (h - 1 - (h - 1)†)
+                                  = (1/2) • (h - h†)
+                                  = (1/2) • (h - (trace h • 1 - h))
+                                  = (1/2) • (2h - trace h • 1)
+                                  = h - (trace h / 2) • 1`
+  4. The result above has trace `tr h - (tr h / 2) · 2 = 0`, so
+     `tracelessProj` is the identity on it.
+  5. Hence `liePartMat h.val = h.val - (trace h.val / 2) • 1`.
+
+**Consequence**: `liePartMat h.val = 0 ↔ h.val = (trace h.val / 2) • 1`
+↔ h.val is a scalar matrix. Combined with `det h.val = 1`: the scalar
+must be `±1`, so `h.val ∈ {1, -1}`, so `h ∈ {1, negOneSU}`.
+
+**HEADLINE**: `liePartMat h.val ≠ 0 ↔ h ≠ 1 ∧ h ≠ negOneSU`. -/
+
+/-- **Closed-form `liePartMat` for SU(2)**:
+`liePartMat h.val = h.val - (trace h.val / 2) • 1`.
+
+Composes session 31's `SU2_star_eq_trace_sub` (`star h = tr h • 1 - h`
+for h ∈ SU(2)) with `skewHermitianProj` definition + tracelessness. -/
+theorem liePartMat_specialUnitary
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ) =
+      (h : Matrix (Fin 2) (Fin 2) ℂ) -
+        (Matrix.trace (h : Matrix (Fin 2) (Fin 2) ℂ) / 2) •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  set A : Matrix (Fin 2) (Fin 2) ℂ := (h : Matrix (Fin 2) (Fin 2) ℂ) with hA
+  -- Closed-form for star A from SU2_star_eq_trace_sub
+  have h_star_A : star A =
+      (Matrix.trace A) • (1 : Matrix (Fin 2) (Fin 2) ℂ) - A :=
+    SKEFTHawking.FKLW.SU2_star_eq_trace_sub h
+  -- conjTranspose IS star on matrices
+  have h_ct_A : A.conjTranspose = star A := rfl
+  -- skewHermitianProj (A - 1) = (1/2) • ((A - 1) - (star A - 1)) = (1/2) • (A - star A)
+  have h_skewProj : skewHermitianProj (A - 1) =
+      A - (Matrix.trace A / 2) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    unfold skewHermitianProj
+    -- Unfold conjTranspose and substitute star formula
+    rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_one, h_ct_A, h_star_A]
+    -- Goal: (1/2) • (A - 1 - (trace A • 1 - A - 1)) = A - (trace A / 2) • 1
+    rw [show (A - 1 - ((Matrix.trace A) • (1 : Matrix (Fin 2) (Fin 2) ℂ) - A - 1)) =
+        (2 : ℂ) • A - (Matrix.trace A) • (1 : Matrix (Fin 2) (Fin 2) ℂ) from by
+      rw [show ((2 : ℂ)) • A = A + A from by rw [two_smul]]
+      abel]
+    rw [smul_sub]
+    rw [smul_smul, smul_smul]
+    -- (1/2) · 2 = 1 and (1/2) · trace A = trace A / 2
+    congr 1
+    · rw [show (1/2 : ℂ) * 2 = 1 from by norm_num, one_smul]
+    · congr 1
+      ring
+  -- The skewHermitianProj result is already traceless
+  have h_traceless : Matrix.trace (A - (Matrix.trace A / 2) •
+      (1 : Matrix (Fin 2) (Fin 2) ℂ)) = 0 := by
+    rw [Matrix.trace_sub, Matrix.trace_smul, Matrix.trace_one]
+    simp [Fintype.card_fin, smul_eq_mul]
+  -- tracelessProj is identity on traceless matrices
+  unfold liePartMat
+  show tracelessProj (skewHermitianProj (A - 1)) = _
+  rw [h_skewProj]
+  exact tracelessProj_of_traceless h_traceless
+
+/-- **`liePartMat h.val = 0` ↔ `h.val` is scalar matrix**: from the
+closed form, vanishing of `liePartMat` is equivalent to `h.val = (tr h.val / 2) • 1`. -/
+theorem liePartMat_specialUnitary_eq_zero_iff_scalar
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ) = 0 ↔
+      (h : Matrix (Fin 2) (Fin 2) ℂ) =
+        (Matrix.trace (h : Matrix (Fin 2) (Fin 2) ℂ) / 2) •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [liePartMat_specialUnitary]
+  exact sub_eq_zero
+
+/-- **HEADLINE F.20.c.d.2.a — `liePartMat h ≠ 0 ↔ h ∉ {1, negOneSU}`** for
+h ∈ SU(2). The non-zero locus of `liePartMat` on SU(2) is exactly the
+complement of `{1, negOneSU}`.
+
+Combined with the F.20.c.d.* topological substrate, this characterizes
+the "domain" of the F.20.c.d.2 directionality argument: among
+h ∈ specialUnitaryGroup, the relevant elements are h ∉ {1, negOneSU}. -/
+theorem liePartMat_specialUnitary_ne_zero_iff_ne_one_ne_negOne
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    liePartMat (h : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0 ↔
+      h ≠ 1 ∧ h ≠ SKEFTHawking.FKLW.negOneSU := by
+  rw [Ne, liePartMat_specialUnitary_eq_zero_iff_scalar]
+  constructor
+  · intro h_ne
+    refine ⟨?_, ?_⟩
+    · intro h_eq_one
+      apply h_ne
+      -- h = 1 ⟹ h.val = 1, tr h.val = 2, (tr h.val / 2) • 1 = 1
+      have h_val : (h : Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+        rw [h_eq_one]; rfl
+      rw [h_val, Matrix.trace_one, Fintype.card_fin]
+      push_cast
+      simp
+    · intro h_eq_negOne
+      apply h_ne
+      -- h = negOneSU ⟹ h.val = -1, tr h.val = -2, (tr h.val / 2) • 1 = -1
+      have h_val : (h : Matrix (Fin 2) (Fin 2) ℂ) = -1 := by
+        rw [h_eq_negOne]
+        rfl
+      rw [h_val, Matrix.trace_neg, Matrix.trace_one, Fintype.card_fin]
+      push_cast
+      ext i j
+      by_cases hij : i = j
+      · simp [Matrix.smul_apply, Matrix.neg_apply, Matrix.one_apply, hij,
+              smul_eq_mul]
+      · simp [Matrix.smul_apply, Matrix.neg_apply, Matrix.one_apply, hij,
+              smul_eq_mul]
+  · rintro ⟨h_ne_one, h_ne_negOne⟩
+    intro h_scalar
+    -- Set c := trace h.val / 2, then h.val = c • 1, hence (h - 1) = (c - 1) • 1
+    set c : ℂ := Matrix.trace (h : Matrix (Fin 2) (Fin 2) ℂ) / 2 with hc_def
+    have h_exists : ∃ c' : ℂ, (h : Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+        c' • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+      refine ⟨c - 1, ?_⟩
+      rw [h_scalar]
+      rw [show (c • (1 : Matrix (Fin 2) (Fin 2) ℂ) - 1) =
+              c • (1 : Matrix (Fin 2) (Fin 2) ℂ) -
+              (1 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) by rw [one_smul]]
+      rw [← sub_smul]
+    rcases SKEFTHawking.FKLW.H_Fib_scalar_implies_one_or_negOne h h_exists with
+      h1 | h1
+    · exact h_ne_one h1
+    · exact h_ne_negOne h1
 
 /-- **HEADLINE F.20.c.d.1.app — every neighborhood of 1 contains a witness**.
 
