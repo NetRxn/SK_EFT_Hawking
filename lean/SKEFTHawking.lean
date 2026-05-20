@@ -642,6 +642,13 @@ import SKEFTHawking.FKLW.SU2InteriorBridge
 -- DenseInSpecialUnitary 3 2 ρ_Fib_SU2. Direct composition of Cartan-D
 -- + H_Fib_eq_top_iff_closure_eq_univ + fibonacci_density_from_H_Fib_eq_top.
 import SKEFTHawking.FKLW.FibonacciDensityConditional
+-- Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer F.13 (FibSU2LieBundle, session 48):
+-- bridges general SU2LieAlgebra Ad-action API (F.9-F.12) to σ_Fib_*_SU-specific
+-- 3-bundle. Ships σ_Fib_lie_bundle X = (X, Ad(σ_Fib_1)X, Ad(σ_Fib_2)X) + closure
+-- of each component in 𝔰𝔲(2) + pauliDet shortcut. Substrate for F.14+: showing
+-- the 3-bundle's pauliDet is non-zero generically (via Layer F.8 Cramer-rule
+-- lin-indep) closes the spanning argument.
+import SKEFTHawking.FKLW.FibSU2LieBundle
 -- Phase 6p Wave 2d.3-followup (2026-05-14): qubit Bloch-sphere balanced commutator
 -- (D-N Lemma 2 §4.1 Eq. 10-13). Ships `qubit_balanced_commutator_z_axis` —
 -- the substantive Z-axis-case existence of F, G hermitian with ‖F‖, ‖G‖ ≤
