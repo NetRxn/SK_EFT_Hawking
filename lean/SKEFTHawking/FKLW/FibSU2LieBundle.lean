@@ -2805,4 +2805,97 @@ theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_analyticOnNhd :
           (hb.mul ((hAx.mul hMz).sub (hc.mul hMx)))).add
           (hc.mul ((hAx.mul hMy).sub (hAy.mul hMx)))
 
+/-! ## §30. R5.4 Layer F.20.c.d.2.p.2 — Zero locus has empty interior; non-zero set is dense
+
+By analytic uniqueness: if `P : ℝ × ℝ × ℝ → ℝ` is `AnalyticOnNhd ℝ Set.univ`
+(F.20.c.d.2.p.1) and `P(1, 0, 0) ≠ 0` (F.20.c.d.2.o-app.5 substrate), then `P`
+cannot be zero on any open set (else uniqueness would force `P = 0` everywhere
+on the preconnected `ℝ × ℝ × ℝ`, contradicting `P(1, 0, 0) ≠ 0`).
+
+Equivalent forms shipped here:
+- `interior {p | P p = 0} = ∅`
+- `Dense {p | P p ≠ 0}` (the non-zero set is dense)
+
+Both forms are useful for downstream F.20.c.d.2.p.3 H_Fib bridge analysis. -/
+
+/-- **R5.4 Layer F.20.c.d.2.p.2 — zero locus has empty interior**.
+
+The zero set of the Pauli-decomp pauliDet polynomial has empty interior in ℝ³.
+Proof: if some `x` were in the interior, then `P` would be eventually zero on a
+neighborhood of `x`, and analytic uniqueness on the preconnected set `Set.univ`
+would force `P = 0` everywhere — contradicting non-vanishing at `(1, 0, 0)`
+(F.20.c.d.2.o-app.5 via F.18).
+
+Engineering note: the proof aliases the Pauli-decomp polynomial as a local
+`set f := ...` before applying the analytic-uniqueness lemma. Without this
+alias, elaboration of `eqOn_zero_of_preconnected_of_eventuallyEq_zero` on
+the nested-lambda form hits the `whnf` heartbeat budget (200000) — the same
+class of issue documented in F.20.c.d.2.o-app.2 engineering note. -/
+theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_zero_interior_empty :
+    interior {p : ℝ × ℝ × ℝ |
+      σ_Fib_lie_bundle_pauliDet
+        ((p.1 : ℂ) • paulI_x + (p.2.1 : ℂ) • paulI_y +
+         (p.2.2 : ℂ) • paulI_z) = 0} = ∅ := by
+  set f : ℝ × ℝ × ℝ → ℝ := fun abc =>
+      σ_Fib_lie_bundle_pauliDet
+        ((abc.1 : ℂ) • paulI_x + (abc.2.1 : ℂ) • paulI_y +
+         (abc.2.2 : ℂ) • paulI_z) with hf_def
+  have hf_analytic : AnalyticOnNhd ℝ f Set.univ :=
+    σ_Fib_lie_bundle_pauliDet_pauliDecomp_analyticOnNhd
+  ext x
+  simp only [Set.mem_empty_iff_false, iff_false]
+  intro hx
+  -- hx : x ∈ interior {f = 0} ⟹ {f = 0} ∈ nhds x ⟹ f =ᶠ[nhds x] 0
+  have h_nhds : {p | f p = 0} ∈ nhds x := mem_interior_iff_mem_nhds.mp hx
+  have h_event : f =ᶠ[nhds x] 0 := by
+    rw [Filter.eventuallyEq_iff_exists_mem]
+    refine ⟨{p | f p = 0}, h_nhds, ?_⟩
+    intro p hp; exact hp
+  -- Analytic uniqueness on preconnected Set.univ.
+  have h_zero : Set.EqOn f 0 Set.univ :=
+    hf_analytic.eqOn_zero_of_preconnected_of_eventuallyEq_zero
+      isPreconnected_univ (Set.mem_univ x) h_event
+  -- Contradict at (1, 0, 0) via F.18.
+  have h_ne_one : f (1, 0, 0) ≠ 0 := by
+    show σ_Fib_lie_bundle_pauliDet
+      (((1 : ℝ) : ℂ) • paulI_x + ((0 : ℝ) : ℂ) • paulI_y +
+       ((0 : ℝ) : ℂ) • paulI_z) ≠ 0
+    have h_simp : ((1 : ℝ) : ℂ) • paulI_x + ((0 : ℝ) : ℂ) • paulI_y +
+        ((0 : ℝ) : ℂ) • paulI_z = paulI_x := by simp
+    rw [h_simp]
+    exact σ_Fib_lie_bundle_pauliDet_paulI_x_ne_zero
+  exact h_ne_one (h_zero (Set.mem_univ _))
+
+/-- **R5.4 Layer F.20.c.d.2.p.2 (Dense form) — non-zero set of pauliDet polynomial is dense**.
+
+The set of Pauli triples where `σ_Fib_lie_bundle_pauliDet (a•x + b•y + c•z) ≠ 0`
+is dense in `ℝ × ℝ × ℝ`. Direct consequence of
+`σ_Fib_lie_bundle_pauliDet_pauliDecomp_zero_interior_empty` via complement-
+interior identity (the complement of a set with empty interior is dense).
+
+This is a form downstream `F.20.c.d.2.p.3` H_Fib direction analysis can consume:
+even if H_Fib is a countable subset, its accumulation at 1 can intersect this
+DENSE non-zero set provided the H_Fib elements' Pauli directions are themselves
+sufficiently distributed (which uses the σ_Fib_1/σ_Fib_2 algebraic structure
+under Ad-conjugation, captured by F.20.c.d.2.{j,k,l,m} F_C Ad-action). -/
+theorem σ_Fib_lie_bundle_pauliDet_pauliDecomp_ne_zero_dense :
+    Dense {p : ℝ × ℝ × ℝ |
+      σ_Fib_lie_bundle_pauliDet
+        ((p.1 : ℂ) • paulI_x + (p.2.1 : ℂ) • paulI_y +
+         (p.2.2 : ℂ) • paulI_z) ≠ 0} := by
+  -- The non-zero set is the complement of the zero set.
+  have h_compl : {p : ℝ × ℝ × ℝ |
+        σ_Fib_lie_bundle_pauliDet
+          ((p.1 : ℂ) • paulI_x + (p.2.1 : ℂ) • paulI_y +
+           (p.2.2 : ℂ) • paulI_z) ≠ 0} =
+      {p : ℝ × ℝ × ℝ |
+        σ_Fib_lie_bundle_pauliDet
+          ((p.1 : ℂ) • paulI_x + (p.2.1 : ℂ) • paulI_y +
+           (p.2.2 : ℂ) • paulI_z) = 0}ᶜ := by
+    ext p; simp [Set.mem_compl_iff]
+  rw [h_compl]
+  -- `interior s = ∅ ↔ Dense sᶜ`
+  exact interior_eq_empty_iff_dense_compl.mp
+    σ_Fib_lie_bundle_pauliDet_pauliDecomp_zero_interior_empty
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
