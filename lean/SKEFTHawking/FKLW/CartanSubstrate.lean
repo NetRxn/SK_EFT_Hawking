@@ -129,6 +129,8 @@ References:
 import Mathlib
 import SKEFTHawking.FKLW.FibSU2Density
 import SKEFTHawking.FKLW.AharonovAradLemma6
+import SKEFTHawking.FKLW.SU2LieAlgebra
+import SKEFTHawking.FKLW.SU2MatrixExp
 
 set_option autoImplicit false
 
@@ -862,6 +864,100 @@ def CartanFinalStep_SU2_v2 : Prop :=
     OneParamSubgroupInSU2 H →
     (∃ g₁ g₂, g₁ ∈ H ∧ g₂ ∈ H ∧
         (g₂ * g₁ * g₂⁻¹) * g₁ ≠ g₁ * (g₂ * g₁ * g₂⁻¹)) →
+    H = ⊤
+
+/-! ## §4.8.b 🚨 SOUNDNESS FLAG: `CartanFinalStep_SU2_v2` is also FALSE
+
+(2026-05-21 PM finding — discovered after v2 was shipped in `033313f`.)
+
+**The v2 predicate above is PROVABLY FALSE.** Counter-example in
+`N(stdTorus_SU2)`:
+
+  - Let `g₁ := torusElem(π/8) · weylElem` and `g₂ := weylElem`.
+  - Both lie in `Subgroup.normalizer stdTorus_SU2 ≤ SU(2)`.
+  - `g₂ · g₁ · g₂⁻¹ = w · (t · w) · w⁻¹ = w · t` (where `t = torusElem(π/8)`,
+    `w = weylElem`; uses `w² = -I` and `w · w⁻¹ = 1`)
+  - `(g₂g₁g₂⁻¹) · g₁ = (w · t) · (t · w) = torusElem(-π/8) · torusElem(-π/8) · w²`
+    `= torusElem(-π/4) · (-I) = torusElem(3π/4)`
+  - `g₁ · (g₂g₁g₂⁻¹) = (t · w) · (w · t) = t · w² · t = (-I) · t² = torusElem(5π/4)`
+  - `torusElem(3π/4) ≠ torusElem(5π/4)` since `e^{i·3π/4} ≠ e^{i·5π/4}`
+
+(All four v2 antecedents hold for `H = N(stdTorus_SU2)`: closed ✓,
+`OneParamSubgroupInSU2 N(T)` via `torusElem` ⊆ N(T) ✓, conjugate
+noncommuting via the above ✓, yet `N(T) ≠ ⊤`.)
+
+**Where the v2 docstring reasoning failed** (lines 817-823): the
+docstring claims `g₂·g₁·g₂⁻¹ ∈ T` when both `g₁, g₂ ∈ T·w`, but actually
+`g₂·g₁·g₂⁻¹ ∈ T·w` generically. Conjugation in `N(T) = T ⊔ T·w` does
+NOT preserve cosets-as-orbits; instead conjugation by `T·w` elements
+of `T·w` elements lands back in `T·w` (not `T`).
+
+**Status of derived headlines**: STALE — depends on FALSE predicate:
+  - `H_Fib_eq_top_of_strengthened_chain_v2` (CartanSubstrate.lean §4.8)
+  - `fibonacci_density_F21_from_strengthened_chain_v2` (same)
+  - `H_Fib_eq_top_of_cartan_final_v2_only` (§4.9)
+  - `fibonacci_density_F21_from_cartan_final_v2_only` (§4.9)
+  - `H_Fib_eq_top_from_cartan_final_v2_only` (OneParameterSubgroupSU2.lean §10c)
+  - `fibonacci_density_F21_from_cartan_final_v2_only` (same)
+
+These are NOT removed from the file (they remain as Prop-level statements
+conditional on v2), but consumers should NOT compose them into F.21.
+
+**Recommended fix**: `CartanFinalStep_SU2_v3` (next ship) replaces the
+conjugate-noncommuting form with a stronger "two ℝ-LI 1-parameter
+subgroups" condition. The 2-LI tangent directions force the Lie
+subalgebra of H to be ≥2-dim, hence equal to su(2) (no 2-dim Lie
+subalgebra of su(2) exists), hence H ⊇ exp(su(2)) = SU(2). -/
+
+/-- **Tracked Mathlib4 gap #3-v3** (third attempt at SU(2) Cartan
+final step, after v1 and v2 were both provably FALSE).
+
+Statement: a closed `H ≤ SU(2)` containing TWO continuous nontrivial
+1-parameter subgroups with ℝ-LI tangents is `⊤`.
+
+This is sound because:
+  - Two ℝ-LI tangents X, Y ∈ ts span a 2-dim subspace.
+  - su(2) has NO 2-dim Lie subalgebra (since `[X, Y]` is ℝ-LI from X, Y
+    by `SU2LieAlgebra.tracelessSkewHermitian_X_Y_bracket_lin_indep` §20).
+  - So `ℝ-span{X, Y, [X, Y]} = ts = su(2)`.
+  - For closed H ⊇ exp(ℝ·X), exp(ℝ·Y), BCH bracket-closure (Step 3,
+    deferred ~400-800 LoC) gives exp(ℝ·[X, Y]) ⊆ H, hence exp covers
+    a nhd of 1 in H, hence H open in SU(2) (interior point),
+    hence H = ⊤ (Step 4, shipped in §12 OneParameterSubgroupSU2.lean).
+
+**Soundness check for N(T)**: in N(T), every closed-subgroup-contained
+1-parameter subgroup has tangent in the 1-dim Lie subalgebra of T (= ℝ·X
+for X spanning T's tangent). Any TWO 1-param subgroups with image in
+N(T) have tangents in this 1-dim line, hence NOT ℝ-LI. So v3 is not
+satisfied by N(T). ✓
+
+**Status**: predicate (Prop `def`), not axiom. Discharge plan: still
+requires the full Cartan classification (~400-700 LoC), but the
+hypothesis is now MUCH stronger and the corresponding H_Fib
+sub-Prop (two ℝ-LI 1-param subgroups in H_Fib) is dischargeable
+once Step 1.6 (t-linearity) + Step 2 (second tangent via Ad-conjugation)
+are shipped. -/
+def CartanFinalStep_SU2_v3 : Prop :=
+  ∀ (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+    IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) →
+    -- Two 1-parameter subgroups in H with ℝ-LI tangents
+    (∃ φ₁ φ₂ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+        Continuous φ₁ ∧ Continuous φ₂ ∧
+        φ₁ 0 = 1 ∧ φ₂ 0 = 1 ∧
+        (∀ s t, φ₁ (s + t) = φ₁ s * φ₁ t) ∧
+        (∀ s t, φ₂ (s + t) = φ₂ s * φ₂ t) ∧
+        (∀ t, φ₁ t ∈ H) ∧ (∀ t, φ₂ t ∈ H) ∧
+        -- ℝ-LI tangent witness: ∃ ℝ-LI X, Y ∈ ts and anchor pts s₁, s₂
+        -- with expAmbient(sᵢ•Xᵢ) = (φᵢ sᵢ).val and X, Y ℝ-LI.
+        (∃ s₁ s₂ : ℝ, s₁ ≠ 0 ∧ s₂ ≠ 0 ∧
+            ∃ X₁ X₂ : Matrix (Fin 2) (Fin 2) ℂ,
+                X₁ ∈ SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+                X₂ ∈ SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+                SKEFTHawking.FKLW.SU2MatrixExp.expAmbient (((s₁ : ℝ) : ℂ) • X₁)
+                  = (φ₁ s₁).val ∧
+                SKEFTHawking.FKLW.SU2MatrixExp.expAmbient (((s₂ : ℝ) : ℂ) • X₂)
+                  = (φ₂ s₂).val ∧
+                (∀ a b : ℝ, (a : ℂ) • X₁ + (b : ℂ) • X₂ = 0 → a = 0 ∧ b = 0))) →
     H = ⊤
 
 /-- **H_Fib non-central-conjugate witness — tracked sub-Prop**.
