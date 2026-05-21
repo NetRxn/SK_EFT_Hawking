@@ -621,4 +621,75 @@ theorem complex_exp_natCast_succ_mul_I_ne_one (n : ℕ) :
     push_cast
     ring
 
+/-- **`torusElem ((n + 1 : ℕ) : ℝ) ≠ 1`** — subtype-level lift of
+`complex_exp_natCast_succ_mul_I_ne_one`.
+
+If `torusElem ((n+1) : ℝ) = 1`, projecting to the `[0,0]` matrix entry
+gives `exp(((n+1):ℝ) · I) = 1`, contradicting the shipped core lemma. -/
+theorem torusElem_natCast_succ_ne_one (n : ℕ) :
+    torusElem ((n + 1 : ℕ) : ℝ) ≠ 1 := by
+  intro h_eq
+  apply complex_exp_natCast_succ_mul_I_ne_one n
+  have h_val := congrArg Subtype.val h_eq
+  have h_00 : torusMatrix ((n + 1 : ℕ) : ℝ) 0 0 =
+              (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0 := by
+    exact congrArg (fun M => M 0 0) h_val
+  simp [torusMatrix, Matrix.cons_val', Matrix.cons_val_zero,
+        Matrix.empty_val', Matrix.cons_val_fin_one] at h_00
+  -- Cast alignment: ((n+1:ℕ):ℝ):ℂ = ↑n + 1
+  push_cast
+  exact h_00
+
+/-- **`stdTorus_SU2` is infinite.**
+
+The map `ℕ → stdTorus_SU2` sending `n ↦ torusElem (n : ℝ)` is injective:
+if `torusElem (n : ℝ) = torusElem (m : ℝ)` for distinct `n, m : ℕ`,
+then (WLOG `n < m`) `torusElem ((m - n : ℕ) : ℝ) = 1`, contradicting
+`torusElem_natCast_succ_ne_one`. -/
+theorem stdTorus_SU2_infinite :
+    Set.Infinite (stdTorus_SU2 :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  apply Set.Infinite.mono (s := Set.range (fun n : ℕ => torusElem (n : ℝ)))
+  · -- range ⊆ stdTorus_SU2
+    rintro _ ⟨n, rfl⟩
+    exact ⟨(n : ℝ), rfl⟩
+  · -- range is infinite via injectivity
+    apply Set.infinite_range_of_injective
+    intro n m h_eq
+    by_contra h_ne
+    -- Two symmetric cases: n < m or n > m.
+    rcases lt_or_gt_of_ne h_ne with h_lt | h_gt
+    · -- Case n < m: derive torusElem ((m-n):ℝ) = 1, contradict.
+      have h_pos : 0 < m - n := Nat.sub_pos_of_lt h_lt
+      obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.pos_iff_ne_zero.mp h_pos)
+      have h_sub_eq_one : torusElem ((m - n : ℕ) : ℝ) = 1 := by
+        have h_decomp : ((m - n : ℕ) : ℝ) + (n : ℝ) = (m : ℝ) := by
+          rw [Nat.cast_sub (le_of_lt h_lt)]; ring
+        have h_add : torusElem (((m - n : ℕ) : ℝ) + (n : ℝ)) =
+                     torusElem (m : ℝ) := by rw [h_decomp]
+        rw [torusElem_add] at h_add
+        have h_eq' : (fun n : ℕ => torusElem (n : ℝ)) n =
+                     (fun n : ℕ => torusElem (n : ℝ)) m := h_eq
+        simp only at h_eq'
+        rw [← h_eq'] at h_add
+        exact mul_eq_right.mp h_add
+      rw [hk] at h_sub_eq_one
+      exact absurd h_sub_eq_one (torusElem_natCast_succ_ne_one k)
+    · -- Case n > m: symmetric.
+      have h_pos : 0 < n - m := Nat.sub_pos_of_lt h_gt
+      obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero (Nat.pos_iff_ne_zero.mp h_pos)
+      have h_sub_eq_one : torusElem ((n - m : ℕ) : ℝ) = 1 := by
+        have h_decomp : ((n - m : ℕ) : ℝ) + (m : ℝ) = (n : ℝ) := by
+          rw [Nat.cast_sub (le_of_lt h_gt)]; ring
+        have h_add : torusElem (((n - m : ℕ) : ℝ) + (m : ℝ)) =
+                     torusElem (n : ℝ) := by rw [h_decomp]
+        rw [torusElem_add] at h_add
+        have h_eq' : (fun n : ℕ => torusElem (n : ℝ)) n =
+                     (fun n : ℕ => torusElem (n : ℝ)) m := h_eq
+        simp only at h_eq'
+        rw [h_eq'] at h_add
+        exact mul_eq_right.mp h_add
+      rw [hk] at h_sub_eq_one
+      exact absurd h_sub_eq_one (torusElem_natCast_succ_ne_one k)
+
 end SKEFTHawking.FKLW
