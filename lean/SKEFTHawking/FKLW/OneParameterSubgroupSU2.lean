@@ -3454,6 +3454,45 @@ theorem exists_tangent_with_anchor_identity
     rw [h_smul_cancel]
     exact expAmbient_su2Log hφs_target
 
+/-! ### §11.h. ℕ-multiple t-linearity at the anchor
+
+Lifts the anchor identity `expAmbient (s • X) = (φ s).val` to all
+natural-number multiples of the anchor: `expAmbient ((n*s) • X) = (φ (n*s)).val`.
+
+Proof: factor `(n*s) • X = n • (s • X)` via cast-smul, apply
+`NormedSpace.exp_nsmul` for `expAmbient (n • Y) = (expAmbient Y)^n`,
+substitute the anchor identity, then `(φ s)^n = φ (n*s)` via
+`hom_pow_nat`, bridged through `SubmonoidClass.coe_pow`.
+-/
+
+/-- **ℕ-multiple t-linearity**: `expAmbient ((n*s) • X) = (φ (n*s)).val`
+for all `n : ℕ`, given the anchor identity at `s`. -/
+theorem expAmbient_nat_smul_anchor
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {s : ℝ}
+    (h_anchor : SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • X) = (φ s).val)
+    (n : ℕ) :
+    SU2MatrixExp.expAmbient ((((n : ℝ) * s : ℝ) : ℂ) • X)
+      = (φ ((n : ℝ) * s)).val := by
+  -- Step 1: cast smul to ℕ-smul
+  have h_smul_cast :
+      (((n : ℝ) * s : ℝ) : ℂ) • X
+      = (n : ℕ) • (((s : ℝ) : ℂ) • X) := by
+    rw [show (((n : ℝ) * s : ℝ) : ℂ) = (n : ℂ) * ((s : ℝ) : ℂ) from by
+      push_cast; ring]
+    rw [SemigroupAction.mul_smul, Nat.cast_smul_eq_nsmul ℂ]
+  rw [h_smul_cast]
+  -- Step 2: expAmbient (n • Y) = (expAmbient Y)^n
+  unfold SU2MatrixExp.expAmbient
+  rw [NormedSpace.exp_nsmul]
+  -- Step 3: substitute h_anchor
+  unfold SU2MatrixExp.expAmbient at h_anchor
+  rw [h_anchor]
+  -- Step 4: ((φ s).val)^n = (φ ((n:ℝ)*s)).val via hom_pow_nat + SubmonoidClass.coe_pow
+  rw [hom_pow_nat hzero hhom n s]
+  exact (SubmonoidClass.coe_pow _ _).symm
+
 end OneParamSubgroupSU2
 
 /-! ## §5. Module summary (current ship)
