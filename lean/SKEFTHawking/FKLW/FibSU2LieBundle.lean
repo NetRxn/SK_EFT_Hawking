@@ -5705,4 +5705,25 @@ theorem F21_residual_small_spanning_holds :
     cFib_powers_dense_at_one_holds
     cFib_pow_liePartMat_axis_scaling_holds
 
+/-! ## §66. R5.4 Layer F.20.c.d.2.jj — F.21 reduced to a SINGLE remaining hypothesis
+
+With `F21_residual_small_spanning_holds` shipped, F.21 unconditional density
+now follows from EITHER:
+  (a) `F21_BridgeLemma62_OpenNhd` (Path A, Bridge Lemma 6.2)
+  (b) `CartanClassificationOfSU2_Subgroup` (Path B, Phase 5 Step 13)
+
+Each path's density theorem is direct composition. -/
+
+/-- **R5.4 Layer F.20.c.d.2.jj HEADLINE — F.21 density from JUST Bridge Lemma 6.2**.
+
+F.21 unconditional density follows from `F21_BridgeLemma62_OpenNhd` alone,
+since F21_residual_small_spanning is now unconditionally proven (§65). -/
+theorem fibonacci_density_from_bridge_lemma_62_alone
+    (h_bridge : F21_BridgeLemma62_OpenNhd) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  fibonacci_density_from_F21_residual_and_bridge_lemma_62
+    F21_residual_small_spanning_holds h_bridge
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
