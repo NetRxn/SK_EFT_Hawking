@@ -3176,6 +3176,59 @@ theorem hom_pow_nat
     rw [show ((k + 1 : ℕ) : ℝ) * s = ((k : ℕ) : ℝ) * s + s from by push_cast; ring,
         hhom, ih, pow_succ]
 
+/-- **Nontriviality-in-target**: for a nontrivial continuous 1-parameter
+subgroup `φ : ℝ → SU(2)`, there exists `s : ℝ` with `s ≠ 0`,
+`(φ s).val ∈ expAmbientPartialHomeo.target`, AND `φ s ≠ 1`.
+
+This combines `val_eventually_in_target` (Metric form via ε-ball) with
+`hom_pow_nat` (lifts nontriviality of `φ` at `t₀` to nontriviality at
+`t₀/n` for any `n ∈ ℕ`).
+
+The construction: from `val_eventually_in_target` extract `ε > 0` such
+that `|t| < ε ⟹ (φ t).val ∈ target`. From nontriviality, pick `t₀`
+with `φ t₀ ≠ 1`. Pick `n` large enough that `|t₀/n| < ε`. Then
+`s := t₀/n` works: `(φ s).val ∈ target` and `φ s ≠ 1`
+(else `φ t₀ = (φ s)^n = 1`, contradiction). -/
+theorem exists_nontrivial_in_target
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1)
+    (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hnontriv : ∃ t, φ t ≠ 1) :
+    ∃ s : ℝ, s ≠ 0 ∧ φ s ≠ 1 ∧
+      (φ s).val ∈ expAmbientPartialHomeo.target := by
+  obtain ⟨t₀, ht₀_ne⟩ := hnontriv
+  -- Step 1: t₀ ≠ 0.
+  have ht₀_nonzero : t₀ ≠ 0 := fun h => ht₀_ne (h ▸ hzero)
+  -- Step 2: Use Metric to extract ε such that |t| < ε → (φ t).val ∈ target.
+  have h_eventually := val_eventually_in_target hcts hzero
+  rw [Metric.eventually_nhds_iff] at h_eventually
+  obtain ⟨ε, hε_pos, hε⟩ := h_eventually
+  -- Step 3: Pick n : ℕ with n ≥ 1 such that |t₀| / n < ε.
+  -- Equivalently: n > |t₀| / ε.
+  obtain ⟨n, hn_pos, hn_lt⟩ : ∃ n : ℕ, 0 < n ∧ |t₀| < n * ε := by
+    obtain ⟨n, hn⟩ := exists_nat_gt (|t₀| / ε)
+    have habs_nn : (0 : ℝ) ≤ |t₀| / ε := div_nonneg (abs_nonneg t₀) hε_pos.le
+    have hn_pos_real : (0 : ℝ) < n := lt_of_le_of_lt habs_nn hn
+    have hn_pos : 0 < n := by exact_mod_cast hn_pos_real
+    rw [div_lt_iff₀ hε_pos] at hn
+    exact ⟨n, hn_pos, hn⟩
+  -- Step 4: s := t₀ / n.
+  have hn_pos_real : (0 : ℝ) < (n : ℝ) := by exact_mod_cast hn_pos
+  have hn_ne : (n : ℝ) ≠ 0 := ne_of_gt hn_pos_real
+  refine ⟨t₀ / (n : ℝ), ?_, ?_, ?_⟩
+  · exact div_ne_zero ht₀_nonzero hn_ne
+  · -- φ (t₀ / n) ≠ 1
+    intro hφ_eq_one
+    apply ht₀_ne
+    -- φ t₀ = (φ (t₀/n))^n = 1
+    have h_t₀_factor : t₀ = (n : ℝ) * (t₀ / (n : ℝ)) := by field_simp
+    rw [h_t₀_factor, hom_pow_nat hzero hhom n (t₀ / (n : ℝ)), hφ_eq_one, one_pow]
+  · -- (φ (t₀ / n)).val ∈ target
+    apply hε
+    rw [Real.dist_eq, sub_zero]
+    rw [abs_div, abs_of_pos hn_pos_real, div_lt_iff₀ hn_pos_real]
+    linarith [hn_lt]
+
 end OneParamSubgroupSU2
 
 /-! ## §5. Module summary (current ship)
