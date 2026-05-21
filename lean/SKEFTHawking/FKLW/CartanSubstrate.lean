@@ -987,6 +987,80 @@ def H_Fib_NonCentralConjugateWitness : Prop :=
   ∃ g₁ g₂, g₁ ∈ H_Fib ∧ g₂ ∈ H_Fib ∧
     (g₂ * g₁ * g₂⁻¹) * g₁ ≠ g₁ * (g₂ * g₁ * g₂⁻¹)
 
+/-! ## §4.8.c. H_Fib two-ℝ-LI-tangents tracked sub-Prop (v3 path)
+
+The H_Fib instance of the v3 antecedent: H_Fib contains TWO 1-parameter
+subgroups with ℝ-LI tangents.
+
+**Discharge plan (deferred ~200-400 LoC, multi-session)**: combine
+
+  1. **First 1-param subgroup** in H_Fib: from
+     `OneParamSubgroupFromAccPt_SU2_unconditional` (already shipped) we get
+     `OneParamSubgroupInSU2 H_Fib`, hence φ₁ : ℝ → SU(2) continuous
+     nontrivial hom with image in H_Fib.
+
+  2. **Tangent X₁ from φ₁**: from §11.f
+     `exists_nonzero_tangent_in_ts` we get X₁ ∈ ts \ {0} with anchor
+     identity `expAmbient(s₁ • X₁) = (φ₁ s₁).val` for some `s₁ ≠ 0`.
+
+  3. **Second 1-param subgroup via conjugation**: from §13
+     `OneParamSubgroupInSU2_conj` with g := some g₂ ∈ H_Fib, we get
+     ψ₂(t) := g₂ · φ₁(t) · g₂⁻¹ also a continuous nontrivial hom with
+     image in H_Fib.
+
+  4. **Tangent X₂ from ψ₂**: from §13.b `conj_tangent_anchor_identity`,
+     X₂ := g₂.val · X₁ · star g₂.val is the tangent of ψ₂ at the
+     same anchor s₁.
+
+  5. **ℝ-LI condition**: need Ad(g₂)·X₁ NOT a ℝ-multiple of X₁. This
+     reduces to "g₂ does NOT centralize the 1-param subgroup with
+     tangent X₁". For H_Fib, this requires careful choice of g₂ —
+     the σ_Fib_2 generator likely works but needs verification that
+     it doesn't lie in the centralizer of X₁'s torus.
+
+The structural pieces (1)-(4) are shipped. Piece (5) is the substantive
+H_Fib-specific work remaining. -/
+def H_Fib_TwoLITangents : Prop :=
+  ∃ φ₁ φ₂ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+    Continuous φ₁ ∧ Continuous φ₂ ∧
+    φ₁ 0 = 1 ∧ φ₂ 0 = 1 ∧
+    (∀ s t, φ₁ (s + t) = φ₁ s * φ₁ t) ∧
+    (∀ s t, φ₂ (s + t) = φ₂ s * φ₂ t) ∧
+    (∀ t, φ₁ t ∈ H_Fib) ∧ (∀ t, φ₂ t ∈ H_Fib) ∧
+    (∃ s₁ s₂ : ℝ, s₁ ≠ 0 ∧ s₂ ≠ 0 ∧
+        ∃ X₁ X₂ : Matrix (Fin 2) (Fin 2) ℂ,
+            X₁ ∈ SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+            X₂ ∈ SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+            SKEFTHawking.FKLW.SU2MatrixExp.expAmbient (((s₁ : ℝ) : ℂ) • X₁)
+              = (φ₁ s₁).val ∧
+            SKEFTHawking.FKLW.SU2MatrixExp.expAmbient (((s₂ : ℝ) : ℂ) • X₂)
+              = (φ₂ s₂).val ∧
+            (∀ a b : ℝ, (a : ℂ) • X₁ + (b : ℂ) • X₂ = 0 → a = 0 ∧ b = 0))
+
+/-- **v3 SU(2) Wedge B headline — H_Fib = ⊤ via sound predicate v3**.
+
+Composes `CartanFinalStep_SU2_v3` directly with `H_Fib_TwoLITangents`.
+This replaces `H_Fib_eq_top_of_strengthened_chain_v2` which depends on
+the unsound v2 predicate. -/
+theorem H_Fib_eq_top_of_cartan_final_v3
+    (H_cartan_final_v3 : CartanFinalStep_SU2_v3)
+    (H_two_LI : H_Fib_TwoLITangents) :
+    H_Fib = ⊤ :=
+  H_cartan_final_v3 H_Fib H_Fib_isClosed H_two_LI
+
+/-- **v3 F.21 headline — Fibonacci density via sound v3 chain**.
+
+Replaces `fibonacci_density_F21_from_strengthened_chain_v2` which
+depends on unsound v2. -/
+theorem fibonacci_density_F21_from_cartan_final_v3
+    (H_cartan_final_v3 : CartanFinalStep_SU2_v3)
+    (H_two_LI : H_Fib_TwoLITangents) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top
+    (H_Fib_eq_top_of_cartan_final_v3 H_cartan_final_v3 H_two_LI)
+
 /-- **Corrected strengthened Wedge B headline — H_Fib = ⊤ via sound
 predicate**.
 
