@@ -327,6 +327,12 @@ theorem torusElem_pi_half_ne_one :
   have h_im := congrArg Complex.im h_00
   simp [Complex.I_im] at h_im
 
+/-- `negOneSU ∈ Subgroup.normalizer stdTorus_SU2` — trivially, since
+`negOneSU ∈ stdTorus_SU2` and every subgroup is in its own normalizer. -/
+theorem negOneSU_mem_normalizer_stdTorus :
+    negOneSU ∈ Subgroup.normalizer stdTorus_SU2 :=
+  Subgroup.le_normalizer negOneSU_mem_stdTorus_SU2
+
 /-- `negOneSU` commutes with every SU(2) element (it is central). -/
 theorem negOneSU_mem_center :
     ∀ g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
