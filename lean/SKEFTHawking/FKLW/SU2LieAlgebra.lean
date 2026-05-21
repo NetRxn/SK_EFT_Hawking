@@ -1441,6 +1441,149 @@ theorem matrixToPauliCoords_bracket
     simp [Complex.mul_im, Complex.I_re, Complex.I_im,
           Complex.ofReal_re, Complex.ofReal_im]
 
+/-! ## §19. LI ⇒ nonzero bracket — the substantive Lie-algebra non-abelianness
+
+(2026-05-21 — corollary toward CartanFinalStep_SU2_v2)
+
+For `X, Y ∈ tracelessSkewHermitian (Fin 2)` that are ℝ-linearly
+independent, the Lie bracket `X·Y - Y·X` is nonzero. This is the
+substantive "su(2) has no 2-dimensional abelian subspace" property
+needed for the dim-counting argument in the SU(2) Cartan classification.
+
+Argument: by contradiction, suppose `X·Y - Y·X = 0`. Then by §18's
+`matrixToPauliCoords_bracket`, the three Pauli coordinates of the
+bracket vanish:
+  - `aX.3·aY.2 = aX.2·aY.3`,
+  - `aX.1·aY.3 = aX.3·aY.1`,
+  - `aX.2·aY.1 = aX.1·aY.2`.
+
+These three "cross-product zero" conditions force the Pauli coords
+`aX, aY ∈ ℝ³` to be ℝ-proportional (or one to be zero). A case
+analysis on which component of `aY` is nonzero yields `aX = k · aY`
+for some `k : ℝ`. Then `matrixToPauliCoords (X - k • Y) = 0`, which by
+`matrixToPauliCoords_eq_zero_iff` on `tracelessSkewHermitian (Fin 2)`
+gives `X = k • Y`. This contradicts ℝ-linear independence (taking
+`a = 1, b = -k`). -/
+
+/-- **Key Lie-algebra fact**: if `X, Y ∈ su(2)` are ℝ-linearly
+independent, then their bracket `X·Y - Y·X` is nonzero. -/
+theorem tracelessSkewHermitian_bracket_ne_zero_of_lin_indep
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2))
+    (h_LI : ∀ (a b : ℝ), (a : ℂ) • X + (b : ℂ) • Y = 0 → a = 0 ∧ b = 0) :
+    X * Y - Y * X ≠ 0 := by
+  intro h_bracket_zero
+  -- From bracket zero, derive that matrixToPauliCoords of bracket is (0, 0, 0).
+  have h_pauli_coords_zero : matrixToPauliCoords (X * Y - Y * X) = (0, 0, 0) := by
+    rw [h_bracket_zero]
+    unfold matrixToPauliCoords
+    simp [Matrix.zero_apply]
+  -- Apply matrixToPauliCoords_bracket formula.
+  rw [matrixToPauliCoords_bracket hX hY] at h_pauli_coords_zero
+  -- Extract the three cross-product equations.
+  have h_eq1 : (matrixToPauliCoords X).2.2 * (matrixToPauliCoords Y).2.1 =
+               (matrixToPauliCoords X).2.1 * (matrixToPauliCoords Y).2.2 := by
+    have := h_pauli_coords_zero
+    rw [Prod.mk.injEq] at this
+    linarith [this.1]
+  have h_eq2 : (matrixToPauliCoords X).1 * (matrixToPauliCoords Y).2.2 =
+               (matrixToPauliCoords X).2.2 * (matrixToPauliCoords Y).1 := by
+    have := h_pauli_coords_zero
+    rw [Prod.mk.injEq] at this
+    have := this.2; rw [Prod.mk.injEq] at this
+    linarith [this.1]
+  have h_eq3 : (matrixToPauliCoords X).2.1 * (matrixToPauliCoords Y).1 =
+               (matrixToPauliCoords X).1 * (matrixToPauliCoords Y).2.1 := by
+    have := h_pauli_coords_zero
+    rw [Prod.mk.injEq] at this
+    have := this.2; rw [Prod.mk.injEq] at this
+    linarith [this.2]
+  -- Set aX := matrixToPauliCoords X, aY := matrixToPauliCoords Y.
+  set aX := matrixToPauliCoords X with haX
+  set aY := matrixToPauliCoords Y with haY
+  -- Case-split: aY = (0, 0, 0) or not.
+  by_cases h_aY_zero : aY = (0, 0, 0)
+  · -- Case Y = 0 (via injectivity)
+    have h_Y_zero : Y = 0 := (matrixToPauliCoords_eq_zero_iff hY).mp h_aY_zero
+    -- LI with (a=0, b=1): 0•X + 1•Y = 0 by Y = 0, so 0=0 ∧ 1=0, false.
+    have := h_LI 0 1 (by rw [h_Y_zero]; simp)
+    exact absurd this.2 one_ne_zero
+  · -- Case aY ≠ 0: at least one component nonzero.
+    -- Case-split on which component of aY is nonzero.
+    have h_some_ne : aY.1 ≠ 0 ∨ aY.2.1 ≠ 0 ∨ aY.2.2 ≠ 0 := by
+      by_contra h_all_zero
+      push_neg at h_all_zero
+      apply h_aY_zero
+      ext
+      · exact h_all_zero.1
+      · exact h_all_zero.2.1
+      · exact h_all_zero.2.2
+    -- In each sub-case, derive aX = k · aY for some k : ℝ.
+    have h_proportional : ∃ k : ℝ, aX.1 = k * aY.1 ∧ aX.2.1 = k * aY.2.1 ∧ aX.2.2 = k * aY.2.2 := by
+      rcases h_some_ne with h1 | h21 | h22
+      · -- aY.1 ≠ 0
+        refine ⟨aX.1 / aY.1, ?_, ?_, ?_⟩
+        · field_simp
+        · -- aX.2.1 = (aX.1 / aY.1) * aY.2.1
+          field_simp
+          linarith [h_eq3]
+        · -- aX.2.2 = (aX.1 / aY.1) * aY.2.2
+          field_simp
+          linarith [h_eq2]
+      · -- aY.2.1 ≠ 0
+        refine ⟨aX.2.1 / aY.2.1, ?_, ?_, ?_⟩
+        · -- aX.1 = (aX.2.1 / aY.2.1) * aY.1; from h_eq3 we have aX.2.1 * aY.1 = aX.1 * aY.2.1
+          field_simp
+          linarith [h_eq3]
+        · field_simp
+        · -- aX.2.2 = (aX.2.1 / aY.2.1) * aY.2.2; from h_eq1
+          field_simp
+          linarith [h_eq1]
+      · -- aY.2.2 ≠ 0
+        refine ⟨aX.2.2 / aY.2.2, ?_, ?_, ?_⟩
+        · -- aX.1 = (aX.2.2 / aY.2.2) * aY.1; from h_eq2: aX.1 * aY.2.2 = aX.2.2 * aY.1
+          field_simp
+          linarith [h_eq2]
+        · -- aX.2.1 = (aX.2.2 / aY.2.2) * aY.2.1; from h_eq1
+          field_simp
+          linarith [h_eq1]
+        · field_simp
+    -- Lift proportionality of coords to X = k • Y.
+    obtain ⟨k, hk1, hk2, hk3⟩ := h_proportional
+    -- Strategy: matrixToPauliCoords (X + (-k) • Y) = (0, 0, 0) via linearity.
+    have h_add_form : X - ((k : ℝ) : ℂ) • Y = X + ((-k : ℝ) : ℂ) • Y := by
+      have h_neg : ((-k : ℝ) : ℂ) = -((k : ℝ) : ℂ) := by push_cast; ring
+      rw [h_neg, neg_smul, ← sub_eq_add_neg]
+    have h_smul_coords :
+        matrixToPauliCoords (((-k : ℝ) : ℂ) • Y) = (-k * aY.1, -k * aY.2.1, -k * aY.2.2) := by
+      rw [matrixToPauliCoords_smul (-k) Y]
+    have h_add_coords :
+        matrixToPauliCoords (X + ((-k : ℝ) : ℂ) • Y) =
+          (aX.1 + -k * aY.1, aX.2.1 + -k * aY.2.1, aX.2.2 + -k * aY.2.2) := by
+      rw [matrixToPauliCoords_add, h_smul_coords]
+    have h_diff_coords :
+        matrixToPauliCoords (X - ((k : ℝ) : ℂ) • Y) = (0, 0, 0) := by
+      rw [h_add_form, h_add_coords]
+      refine Prod.ext ?_ (Prod.ext ?_ ?_) <;>
+        show _ + _ = (0 : ℝ) <;>
+        linarith [hk1, hk2, hk3]
+    -- Apply matrixToPauliCoords_eq_zero_iff to lift.
+    have h_smul_mem : ((k : ℝ) : ℂ) • Y ∈ tracelessSkewHermitian (Fin 2) := by
+      rw [Complex.coe_smul]
+      exact Submodule.smul_mem _ k hY
+    have h_sub_mem : X - ((k : ℝ) : ℂ) • Y ∈ tracelessSkewHermitian (Fin 2) :=
+      Submodule.sub_mem _ hX h_smul_mem
+    have h_diff_eq_zero : X - ((k : ℝ) : ℂ) • Y = 0 :=
+      (matrixToPauliCoords_eq_zero_iff h_sub_mem).mp h_diff_coords
+    -- Contradict LI: 1 • X + (-k) • Y = X - k • Y = 0, but LI says 1 = 0.
+    have h_combo : ((1 : ℝ) : ℂ) • X + ((-k : ℝ) : ℂ) • Y = 0 := by
+      have h_neg_cast : ((-k : ℝ) : ℂ) = -((k : ℝ) : ℂ) := by push_cast; ring
+      have h_one_cast : ((1 : ℝ) : ℂ) = (1 : ℂ) := by push_cast; rfl
+      rw [h_neg_cast, h_one_cast, neg_smul, one_smul, ← sub_eq_add_neg]
+      exact h_diff_eq_zero
+    exact one_ne_zero (h_LI 1 (-k) h_combo).1
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
