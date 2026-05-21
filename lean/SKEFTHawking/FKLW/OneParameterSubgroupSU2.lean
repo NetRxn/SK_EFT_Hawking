@@ -1598,7 +1598,62 @@ theorem vonNeumann_su2Mat_pow_seq_tendsto
   filter_upwards [h_ev_subseq] with k hk
   rw [hk]
 
-/-! ## §§4.i-5. (Next ship — substrate roadmap)
+/-! ### §4.i. SU(2)-subtype zpow lift to matrix-zpow
+
+To lift the §4.h.2 matrix-level convergence
+`(seq (φ k)).val ^ m_k → expAmbient (t • X)` to the SU(2)-subtype level,
+we need the algebraic identity:
+
+  `((g ^ m).val : Matrix _ _ ℂ) = ((g.val : Matrix _ _ ℂ)) ^ m`
+
+for `g : ↥(specialUnitaryGroup n α)` and `m : ℤ`. This is *not* a direct
+corollary of `SubmonoidClass.coe_pow` (which gives the ℕ-case only),
+because `Matrix _ _ ℂ` is not a Group (singular matrices), so
+`Subgroup.coe_zpow` does not apply. The proof requires:
+- Case `m = ofNat k` (ℕ): direct `SubmonoidClass.coe_pow`.
+- Case `m = negSucc k` (negative integers): unfolds via `zpow_negSucc` to
+  `((h^(k+1))⁻¹).val`, where the subtype inverse is `star` (by
+  `Matrix.instInvSubtypeMemSubmonoidSpecialUnitaryGroup`). For unitary
+  matrices, `star M = M⁻¹` (matrix inverse) follows from
+  `M * star M = 1` + `Matrix.inv_eq_right_inv`.
+
+This sub-lemma is a clean Mathlib-upstream-PR candidate. -/
+
+/-- **§4.i.1. SU(2)-subtype zpow lifts to matrix-zpow**: for any
+`g : ↥(specialUnitaryGroup n α)` over a normed-commutative-ring α and
+any `m : ℤ`, `((g ^ m).val : Matrix _ _ α) = (g.val : Matrix _ _ α) ^ m`. -/
+theorem specialUnitaryGroup_coe_zpow
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (m : ℤ) :
+    ((g ^ m).val : Matrix (Fin 2) (Fin 2) ℂ) =
+      (g.val : Matrix (Fin 2) (Fin 2) ℂ) ^ m := by
+  cases m with
+  | ofNat k =>
+    show ((g ^ (k : ℤ)).val : Matrix (Fin 2) (Fin 2) ℂ) = g.val ^ (k : ℤ)
+    rw [zpow_natCast, zpow_natCast]
+    exact SubmonoidClass.coe_pow _ _
+  | negSucc k =>
+    show ((g ^ (Int.negSucc k)).val : Matrix (Fin 2) (Fin 2) ℂ) =
+         g.val ^ (Int.negSucc k)
+    rw [zpow_negSucc, zpow_negSucc]
+    -- (g^(k+1))⁻¹.val = star ((g^(k+1)).val)  [subtype-Inv via star]
+    have h_inv_eq_star :
+        ((g ^ (k+1))⁻¹).val = star ((g ^ (k+1)).val) := rfl
+    rw [h_inv_eq_star]
+    -- (g^(k+1)).val = g.val ^ (k+1)  [ℕ-pow lift]
+    rw [SubmonoidClass.coe_pow]
+    -- star (g.val ^ (k+1)) = (g.val ^ (k+1))⁻¹  [unitary + Matrix.inv_eq_right_inv]
+    -- g^(k+1) is in specialUnitaryGroup since that's a Submonoid.
+    have h_pow_unitary : (g ^ (k+1)).val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+      (Matrix.mem_specialUnitaryGroup_iff.mp (g ^ (k+1)).property).1
+    have h_pow_val_eq : (g ^ (k+1)).val = g.val ^ (k+1) :=
+      SubmonoidClass.coe_pow _ _
+    have h_mul_star : ((g.val ^ (k+1)) * star (g.val ^ (k+1)) :
+        Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+      rw [← h_pow_val_eq]
+      exact Matrix.mem_unitaryGroup_iff.mp h_pow_unitary
+    exact (Matrix.inv_eq_right_inv h_mul_star).symm
+
+/-! ## §§4.i.2-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
