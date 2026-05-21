@@ -899,7 +899,63 @@ theorem oneParamSU2Map_continuous
   refine Continuous.subtype_mk ?_ _
   exact oneParamMatrixMap_continuous X
 
-/-! ## §§4. (Next ship — substrate roadmap)
+/-! ## §4. Von Neumann sequence extraction
+
+From `AccPt 1 (Filter.principal H)` for a closed subgroup `H ≤ SU(2)`,
+we extract a sequence `(h_n : ℕ → ↥SU(2))` with `h_n ∈ H \ {1}` and
+`h_n → 1`. This is the entry point for the von Neumann construction:
+the sequence supplies the "infinitesimal generators" of `H`.
+
+Substrate used: SU(2) is metric (hence first-countable, hence
+Frechet-Urysohn), so `mem_closure_iff_seq_limit` gives sequence
+extraction; `AccPt → 1 ∈ closure (H \ {1})` is the structural bridge. -/
+
+/-- For any topological space, `AccPt x (Filter.principal s) → x ∈ closure (s \ {x})`. -/
+theorem mem_closure_diff_singleton_of_accPt
+    {X : Type*} [TopologicalSpace X] {x : X} {s : Set X}
+    (h : AccPt x (Filter.principal s)) :
+    x ∈ closure (s \ {x}) := by
+  rw [accPt_iff_frequently] at h
+  apply Filter.Frequently.mem_closure
+  exact h.mono (fun y hy => ⟨hy.2, fun heq => hy.1 heq⟩)
+
+/-- **Von Neumann sequence extraction**: from a closed subgroup `H ≤ SU(2)`
+with `AccPt 1 (Filter.principal H)`, extract a sequence `seq : ℕ → ↥SU(2)`
+with `seq n ∈ H`, `seq n ≠ 1` for all n, and `seq → 1`.
+
+Composes `accPt_iff_frequently` + `mem_closure_iff_seq_limit` (using
+SU(2)'s first-countable / Frechet-Urysohn nature). -/
+theorem vonNeumann_extract_sequence
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hH : AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    ∃ seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      (∀ n, seq n ∈ H) ∧ (∀ n, seq n ≠ 1) ∧
+      Filter.Tendsto seq Filter.atTop
+        (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) := by
+  have h_closure : (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∈
+      closure ((H : Set _) \ {1}) :=
+    mem_closure_diff_singleton_of_accPt hH
+  obtain ⟨seq, h_in, h_tendsto⟩ :=
+    (mem_closure_iff_seq_limit (s := (H : Set _) \ {1})
+      (a := (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))).mp h_closure
+  refine ⟨seq, ?_, ?_, h_tendsto⟩
+  · intro n
+    exact (h_in n).1
+  · intro n hne
+    have : seq n ∈ ({1} : Set _) := by rw [Set.mem_singleton_iff]; exact hne
+    exact (h_in n).2 this
+
+/-- **Specialization to `H_Fib`**: extract a sequence in `H_Fib \ {1}`
+tending to 1, using the shipped `H_Fib_accPt_one_unconditional`. -/
+theorem H_Fib_vonNeumann_sequence :
+    ∃ seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      (∀ n, seq n ∈ H_Fib) ∧ (∀ n, seq n ≠ 1) ∧
+      Filter.Tendsto seq Filter.atTop
+        (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) :=
+  vonNeumann_extract_sequence H_Fib H_Fib_accPt_one_unconditional
+
+/-! ## §§4.b-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
