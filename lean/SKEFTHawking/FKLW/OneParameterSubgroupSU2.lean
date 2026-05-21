@@ -227,43 +227,194 @@ theorem exists_nhds_one_SU2_su2Log_defined :
     rw [h_val_one]; exact expAmbientPartialHomeo_target_mem_nhds_one
   exact continuous_subtype_val.continuousAt h_target_nhds_val
 
-/-! ## §2. (Next ship — substrate roadmap)
+/-! ## §2. Cayley-Hamilton specialization for su(2): `X² = -r² • 1`
 
-This file currently scaffolds §1 (local matrix logarithm near identity)
-and §1.5 (SU(2) consumer-friendly form). The remaining substrate, to be
-delivered in subsequent ships:
+**Defined (this ship):** the polar-radius-squared `su2RadiusSq X`.
 
-  **§2. `su2Log h ∈ tracelessSkewHermitian (Fin 2)` for `h ∈ SU(2) ∩ target`.**
+**Headline theorem (next ship):** for X ∈ `tracelessSkewHermitian (Fin 2)`,
+`X² = -(su2RadiusSq X) • I`. This is the key algebraic identity that
+enables the closed-form analysis of `exp X` (§3) and ultimately the
+discharge of `OneParamSubgroupFromAccPt_SU2` (§4).
 
-  The matrix log of an SU(2) element near `1` lies in the Lie algebra
-  `su(2) = tracelessSkewHermitian (Fin 2)`. Substrate:
-    - Skew-Hermitian direction: `h * h.conjTranspose = 1` (unitary) +
-      `expAmbient (su2Log h) = h` ⇒ `(su2Log h).conjTranspose = -su2Log h`.
-      Uses `Matrix.exp_conjTranspose` for the conjugate direction.
-    - Traceless direction: `Matrix.det h = 1` (SL₂) ⇒ `(su2Log h).trace = 0`.
-      Uses `det(exp X) = exp(tr X)` (Mathlib gap — would need to ship
-      either generally or specialized to 2×2).
+Structural form (from the already-shipped private
+`SU2LieAlgebra.tracelessSkewHermitian_entries`):
+`X = !![iα, β; -β̄, -iα]` with `α = (X 0 0).im ∈ ℝ`, `β = X 0 1 ∈ ℂ`,
+so direct 2×2 matrix multiplication yields
+`X² = -(α² + |β|²) • I`. -/
 
-  **§3. The von Neumann sequence construction.**
+/-- **Real polar-radius-squared of an su(2) element.**
+
+For X ∈ `tracelessSkewHermitian (Fin 2)` of the form `!![iα, β; -β̄, -iα]`,
+returns `α² + |β|²`, a non-negative real. By the (next-ship)
+Cayley-Hamilton specialization, `X² = -(su2RadiusSq X) • I` always.
+
+Defined for any 2×2 complex matrix; the geometric meaning is only valid
+on `tracelessSkewHermitian`. -/
+noncomputable def su2RadiusSq (X : Matrix (Fin 2) (Fin 2) ℂ) : ℝ :=
+  ((X 0 0).im) ^ 2 + ‖X 0 1‖ ^ 2
+
+/-- `su2RadiusSq` is non-negative. -/
+theorem su2RadiusSq_nonneg (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    0 ≤ su2RadiusSq X := by
+  unfold su2RadiusSq
+  positivity
+
+/-- **CAYLEY-HAMILTON SPECIALIZATION** (NEXT SHIP — proof in flight, this
+declaration is the target statement). For X ∈ tracelessSkewHermitian (Fin 2),
+`X² = -(su2RadiusSq X) • 1`.
+
+This is the key algebraic identity that enables the closed-form
+analysis of `exp` on su(2): even powers of X are scalar multiples of I,
+odd powers are scalar multiples of X.
+
+Proof outline (deferred to next work block — local-pwd issue resolved):
+use `Matrix.two_mul_expl` to obtain all 4 entry equations of `X * X`,
+substitute the structural-form replacements `X 0 0 = iα`, `X 1 1 = -X 0 0`,
+`X 1 0 = -star (X 0 1)` from membership in `tracelessSkewHermitian`,
+and verify each entry via `Complex.mul_conj` + `Complex.I_sq` + `nlinarith`. -/
+example : True := trivial -- placeholder for next-ship target
+/-
+theorem tracelessSkewHermitian_two_sq
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
+    X * X = (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  -- Extract the entry constraints from membership in tracelessSkewHermitian.
+  obtain ⟨hX_skew, hX_tr⟩ := hX
+  -- Re-derive the structural form (matches the private
+  -- `tracelessSkewHermitian_entries`).
+  have h_diag_skew_00 : star (X 0 0) = -(X 0 0) := by
+    have := congr_fun (congr_fun hX_skew 0) 0
+    simpa [Matrix.conjTranspose_apply, Matrix.neg_apply] using this
+  have h_re_00 : (X 0 0).re = 0 := by
+    have h_sum : X 0 0 + star (X 0 0) = 0 := by rw [h_diag_skew_00]; ring
+    have h_re_sum : (X 0 0).re + (star (X 0 0)).re = 0 := by
+      have := congr_arg Complex.re h_sum
+      simpa [Complex.add_re] using this
+    rw [Complex.star_def, Complex.conj_re] at h_re_sum
+    linarith
+  have h_11 : X 1 1 = -X 0 0 := by
+    have h_trace : X 0 0 + X 1 1 = 0 := by
+      have := hX_tr
+      simp [Matrix.trace, Fin.sum_univ_two] at this
+      linear_combination this
+    linear_combination h_trace
+  have h_offdiag : X 1 0 = -star (X 0 1) := by
+    have h_skew_01 : star (X 0 1) = -(X 1 0) := by
+      have := congr_fun (congr_fun hX_skew 1) 0
+      simpa [Matrix.conjTranspose_apply, Matrix.neg_apply] using this
+    linear_combination h_skew_01
+  -- Reformulate diagonal as X 0 0 = i · α with α := (X 0 0).im.
+  have h_X00 : X 0 0 = (((X 0 0).im : ℝ) : ℂ) * Complex.I := by
+    have := (Complex.re_add_im (X 0 0)).symm
+    rw [h_re_00, Complex.ofReal_zero, zero_add] at this
+    exact this
+  -- Also reformulate the (1, 0) off-diagonal using complex conjugation.
+  have h_X10 : X 1 0 = -((starRingEnd ℂ) (X 0 1)) := by
+    rw [h_offdiag]
+    rfl
+  -- Substrate: ‖X 0 1‖² = (X 0 1).re² + (X 0 1).im² in ℝ.
+  have h_norm_sq : (‖X 0 1‖ ^ 2 : ℂ) =
+      (((X 0 1).re : ℝ) : ℂ) ^ 2 + (((X 0 1).im : ℝ) : ℂ) ^ 2 := by
+    rw [show (‖X 0 1‖ ^ 2 : ℂ) = ((‖X 0 1‖ ^ 2 : ℝ) : ℂ) by push_cast; rfl,
+        Complex.sq_norm, Complex.normSq_apply]
+    push_cast; ring
+  -- Two key complex-conjugate identities.
+  have h_conj_left : X 0 1 * (starRingEnd ℂ) (X 0 1) =
+      (((X 0 1).re : ℝ) : ℂ) ^ 2 + (((X 0 1).im : ℝ) : ℂ) ^ 2 := by
+    rw [mul_comm, Complex.mul_conj]
+    push_cast; rw [Complex.normSq_apply]; push_cast; ring
+  have h_conj_right : (starRingEnd ℂ) (X 0 1) * X 0 1 =
+      (((X 0 1).re : ℝ) : ℂ) ^ 2 + (((X 0 1).im : ℝ) : ℂ) ^ 2 := by
+    rw [Complex.mul_conj]
+    push_cast; rw [Complex.normSq_apply]; push_cast; ring
+  -- Use Matrix.two_mul_expl to get all 4 entry equations at once.
+  obtain ⟨h_00, h_01, h_10, h_11_entry⟩ := Matrix.two_mul_expl X X
+  -- Replace X via h_X00, h_X10, h_11 in each entry equation.
+  have hI2 : Complex.I ^ 2 = -1 := Complex.I_sq
+  -- Now build the target matrix entry-by-entry.
+  ext i j
+  fin_cases i <;> fin_cases j
+  · -- (0, 0)
+    rw [h_00, h_X00]
+    show (((X 0 0).im : ℝ) : ℂ) * Complex.I * ((((X 0 0).im : ℝ) : ℂ) * Complex.I) +
+         X 0 1 * X 1 0 =
+         (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0
+    rw [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one,
+        h_X10, su2RadiusSq]
+    push_cast
+    rw [h_conj_left]
+    nlinarith [hI2, sq_nonneg ((X 0 0).im : ℝ),
+               sq_nonneg ((X 0 1).re : ℝ), sq_nonneg ((X 0 1).im : ℝ)]
+  · -- (0, 1)
+    rw [h_01, h_X00, h_11]
+    show (((X 0 0).im : ℝ) : ℂ) * Complex.I * X 0 1 +
+         X 0 1 * (-(((X 0 0).im : ℝ) : ℂ) * Complex.I) =
+         (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 1
+    rw [Matrix.smul_apply,
+        Matrix.one_apply_ne (by decide : (0 : Fin 2) ≠ 1),
+        smul_zero]
+    ring
+  · -- (1, 0)
+    rw [h_10, h_11, h_X10, h_X00]
+    show -((starRingEnd ℂ) (X 0 1)) * ((((X 0 0).im : ℝ) : ℂ) * Complex.I) +
+         (-(((X 0 0).im : ℝ) : ℂ) * Complex.I) * -((starRingEnd ℂ) (X 0 1)) =
+         (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 0
+    rw [Matrix.smul_apply,
+        Matrix.one_apply_ne (by decide : (1 : Fin 2) ≠ 0),
+        smul_zero]
+    ring
+  · -- (1, 1)
+    rw [h_11_entry, h_X10, h_11, h_X00]
+    show -((starRingEnd ℂ) (X 0 1)) * X 0 1 +
+         -(((X 0 0).im : ℝ) : ℂ) * Complex.I *
+            (-(((X 0 0).im : ℝ) : ℂ) * Complex.I) =
+         (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 1
+    rw [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one,
+        h_conj_right, su2RadiusSq]
+    push_cast
+    nlinarith [hI2, sq_nonneg ((X 0 0).im : ℝ),
+               sq_nonneg ((X 0 1).re : ℝ), sq_nonneg ((X 0 1).im : ℝ)]
+-/
+
+/-! ## §§3-4. (Next ship — substrate roadmap)
+
+The remaining substantive content (Mathlib-upstream-PR-quality):
+
+  **§3. Closed-form analysis of `expAmbient X` for X ∈ su(2)**:
+
+  From `tracelessSkewHermitian_two_sq` (above) we have `X² = -r² • I` for
+  `r² := su2RadiusSq X ≥ 0`. Hence:
+    - `X^{2k} = (-r²)^k • I`,
+    - `X^{2k+1} = (-r²)^k • X`.
+  The power-series `exp X = Σ X^n/n!` splits into even/odd parts that
+  recognize as `cos(r) • I + (sinc r) • X` (with the limit
+  `sinc 0 = 1`). Yields:
+    - `(expAmbient X).det = 1` (closed-form `cos² + r² · sinc²`)
+    - `expAmbient X ∈ specialUnitaryGroup (Fin 2) ℂ`
+    - The 1-parameter subgroup `φ t := expAmbient (t • X)` is continuous,
+      satisfies `φ 0 = 1`, `φ (s + t) = φ s * φ t` (`exp_add_of_commute`).
+
+  **§4. Von Neumann construction + discharge of
+       `OneParamSubgroupFromAccPt_SU2`**:
 
   From a sequence (h_n) → 1 in `H \ {1}`:
-    - Y_n := su2Log h_n ∈ su(2), Y_n → 0.
-    - X_n := Y_n / ‖Y_n‖ in the unit sphere of `tracelessSkewHermitian (Fin 2)`.
-    - BW (finite-dim ⇒ proper ⇒ closed-bounded compact) → subseq X_{n_k} → X.
-    - For any `t : ℝ`, `k_n := ⌊t / ‖Y_n‖⌋` integer.
+    - Y_n := su2Log h_n ∈ su(2), Y_n → 0 (uses §2 + the §2.next "su2Log
+      lands in su(2)" sublemma, derivable from §3's well-defined exp on
+      su(2) plus local inverse uniqueness).
+    - X_n := Y_n / ‖Y_n‖ in the unit sphere of `tracelessSkewHermitian
+      (Fin 2)` (finite-dim ⇒ proper ⇒ compact sphere).
+    - BW → subseq X_{n_k} → X with `‖X‖ = 1`.
+    - For any `t : ℝ`, `k_n := round(t / ‖Y_n‖)` integer.
     - `h_n^{k_n} = expAmbient (k_n • Y_n)` (via `NormedSpace.exp_nsmul`).
     - `k_n • Y_n → t • X` (since `k_n · ‖Y_n‖ → t` and `X_n → X`).
     - exp continuous ⇒ `h_n^{k_n} → expAmbient (t • X)`.
     - H closed ⇒ `expAmbient (t • X) ∈ H` for all `t`.
 
-  **§4. Discharge of `OneParamSubgroupFromAccPt_SU2`.**
+  Set `φ t := ⟨expAmbient (t • X), ... ∈ SU(2)⟩` and verify the
+  `OneParamSubgroupInSU2 H` conjuncts.
 
-  Set `φ t := ⟨expAmbient (t • X), ... ∈ SU(2)⟩` and verify:
-  continuous (exp continuous), `φ 0 = 1` (exp_zero), `φ (s + t) =
-  φ s · φ t` (exp_add_of_commute on commuting scalar multiples),
-  nontrivial (X ≠ 0 from `‖X‖ = 1`), image-in-H (from §3).
   Result: `OneParamSubgroupFromAccPt_SU2` is theorem (not predicate),
-  discharging gap #2 substantively. Together with §4.7's strengthening,
+  discharging gap #2 substantively. Combined with §4.7's strengthening,
   this reduces F.21 unconditional density to a single remaining tracked
   Cartan predicate (`CartanFinalStep_SU2`).
 -/
