@@ -3665,6 +3665,77 @@ theorem expAmbient_real_smul_continuous
     exact NormedSpace.exp_continuous
   exact h3.comp (h2.comp h1)
 
+/-! ### §11.h.add. Additivity of the anchor identity
+
+If the anchor identity `expAmbient((a : ℂ) • X) = (φ a).val` holds at
+two points `a, b ∈ ℝ`, then it holds at `a + b`. Pure substrate piece
+combining `add_smul` (smul distributes over addition), `Matrix.exp_add_of_commute`
+(applies since `(a : ℂ) • X` commutes with `(b : ℂ) • X` as both are
+scalar multiples of `X`), and the 1-parameter subgroup multiplicativity
+`φ (a + b) = φ a * φ b`.
+
+**Substrate role**: foundation for any density-based extension of the
+anchor identity from a discrete set to all of ℝ. The set
+`A := {t : ℝ | expAmbient((t : ℂ) • X) = (φ t).val}` is closed under
+addition by this lemma; it is also closed under negation (via §11.h.ℤ
+with `z = -1`). Hence `A` is a subgroup of `(ℝ, +)`. Combined with
+continuity (§11.h.ℝ), `A` is a CLOSED subgroup of `(ℝ, +)`.
+-/
+
+/-- **Anchor additivity**: if anchor identity at `a` and at `b`, then at `a + b`. -/
+theorem expAmbient_anchor_add
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    {a b : ℝ}
+    (h_a : SU2MatrixExp.expAmbient (((a : ℝ) : ℂ) • X) = (φ a).val)
+    (h_b : SU2MatrixExp.expAmbient (((b : ℝ) : ℂ) • X) = (φ b).val) :
+    SU2MatrixExp.expAmbient ((((a + b : ℝ)) : ℂ) • X) = (φ (a + b)).val := by
+  -- Step 1: distribute the cast and smul: ((a+b) : ℂ) • X = (a : ℂ) • X + (b : ℂ) • X
+  have h_smul_add : (((a + b : ℝ) : ℂ) • X)
+      = ((a : ℝ) : ℂ) • X + ((b : ℝ) : ℂ) • X := by
+    rw [show (((a + b : ℝ) : ℂ)) = ((a : ℝ) : ℂ) + ((b : ℝ) : ℂ) from by push_cast; ring,
+        add_smul]
+  rw [h_smul_add]
+  -- Step 2: exp(Y + Z) = exp(Y) * exp(Z) when Y, Z commute. Y = (a:ℂ)•X, Z = (b:ℂ)•X both ∝ X.
+  unfold SU2MatrixExp.expAmbient
+  rw [Matrix.exp_add_of_commute (h := ?_)]
+  · -- Step 3: substitute anchors
+    unfold SU2MatrixExp.expAmbient at h_a h_b
+    rw [h_a, h_b]
+    -- Step 4: convert (φ a).val * (φ b).val = (φ (a + b)).val via hhom + Submonoid coe_mul
+    rw [hhom a b]
+    rfl
+  · -- Commute proof: (a:ℂ)•X and (b:ℂ)•X both scalar multiples of X, hence commute.
+    exact (Commute.refl X).smul_left _ |>.smul_right _
+
+/-! ### §11.h.ℤ.H. ℤ-mult anchor membership in H
+
+Composition: if `H ≤ SU(2)` contains the entire 1-param subgroup image
+and the anchor identity holds at `s`, then for every `z : ℤ`, the
+matrix `expAmbient((z*s) • X)` arises as `M.val` for some `M ∈ H`.
+
+Trivial composition of `expAmbient_int_smul_anchor` (§11.h.ℤ) with
+`himage : ∀ t, φ t ∈ H`. Useful for any closed-subgroup argument:
+combined with `H` closed, the ℤ-lattice `{ℤ·s • X}` is "trapped" in `H.val`
+and discrete subgroup structure of (ℝ, +) applies.
+-/
+
+/-- **ℤ-mult anchor membership in H**: `expAmbient((z*s) • X)` equals
+`M.val` for `M := φ (z*s) ∈ H`. -/
+theorem expAmbient_int_anchor_mem_H
+    {H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (himage : ∀ t, φ t ∈ H)
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {s : ℝ}
+    (h_anchor : SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • X) = (φ s).val)
+    (z : ℤ) :
+    ∃ M : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      M ∈ H ∧ M.val = SU2MatrixExp.expAmbient ((((z : ℝ) * s : ℝ) : ℂ) • X) :=
+  ⟨φ ((z : ℝ) * s), himage _,
+    (expAmbient_int_smul_anchor hzero hhom h_anchor z).symm⟩
+
 end OneParamSubgroupSU2
 
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
