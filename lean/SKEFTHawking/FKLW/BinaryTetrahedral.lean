@@ -273,6 +273,24 @@ theorem negOneSU_mem_binaryTetrahedralFull :
     weylElem_mem_binaryTetrahedralFull
     weylElem_mem_binaryTetrahedralFull
 
+/-- `binaryTetrahedralFull` is non-trivial (contains weylElem ≠ 1). -/
+theorem binaryTetrahedralFull_ne_bot :
+    binaryTetrahedralFull ≠ ⊥ := by
+  intro h_eq
+  -- If 2T = ⊥, then every element is 1. weylElem ∈ 2T but weylElem ≠ 1.
+  have h_weyl_mem : weylElem ∈ binaryTetrahedralFull :=
+    weylElem_mem_binaryTetrahedralFull
+  rw [h_eq, Subgroup.mem_bot] at h_weyl_mem
+  -- h_weyl_mem : weylElem = 1, contradicting weylElem ≠ 1 (since weyl² = negOneSU ≠ 1).
+  have h_sq : weylElem * weylElem = (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+    rw [h_weyl_mem, one_mul]
+  rw [weylElem_sq_eq_negOneSU] at h_sq
+  -- h_sq : negOneSU = 1. Contradiction via .val 0 0 = -1 vs 1.
+  have h_val := congrArg Subtype.val h_sq
+  have h_00 := congrArg (fun M => M 0 0) h_val
+  simp [negOneSU_val, Matrix.neg_apply, Matrix.one_apply] at h_00
+  exact absurd h_00 (by norm_num)
+
 /-- **2T is non-abelian**: the i-quaternion `torusElem(π/2)` and the
 j-quaternion `weylElem` do NOT commute (`ij = -ji = k` in quaternions). -/
 theorem binaryTetrahedralFull_non_abelian :
