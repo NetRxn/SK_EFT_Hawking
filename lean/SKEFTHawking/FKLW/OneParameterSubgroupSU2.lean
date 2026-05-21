@@ -3736,6 +3736,73 @@ theorem expAmbient_int_anchor_mem_H
   ⟨φ ((z : ℝ) * s), himage _,
     (expAmbient_int_smul_anchor hzero hhom h_anchor z).symm⟩
 
+/-! ### §11.h.G. The anchor set as a closed additive subgroup of ℝ
+
+The set `{t : ℝ | expAmbient((t:ℂ)•X) = (φ t).val}` is:
+  - closed under (+) by §11.h.add;
+  - closed under (-) by §11.h.ℤ with `z = -1`;
+  - contains `0` (both sides are `1`);
+  - closed (topology) by joint continuity of both sides.
+
+Hence it is a CLOSED additive subgroup of `(ℝ, +)`. By Mathlib's
+`AddSubgroup.dense_or_cyclic` for archimedean linearly ordered groups,
+it is either DENSE in ℝ (hence `= ℝ` since closed) or CYCLIC `= ⟨α⟩` for
+some `α : ℝ`.
+
+**Substrate role**: foundation for ruling out the cyclic case and
+concluding the anchor identity extends to ALL of ℝ. The cyclic case is
+ruled out by the IFT (exp is a local diffeo at 0), which forces small
+real `t` to satisfy the anchor identity via uniqueness of the 1-param
+subgroup with given tangent.
+-/
+
+/-- **Anchor additive subgroup of ℝ**: bundles the set of points where
+the anchor identity holds. -/
+def anchorAddSubgroup
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (X : Matrix (Fin 2) (Fin 2) ℂ) : AddSubgroup ℝ where
+  carrier := {t | SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X) = (φ t).val}
+  zero_mem' := by
+    -- expAmbient((0 : ℂ) • X) = expAmbient 0 = 1; (φ 0).val = (1 : ↥(...)).val = 1.
+    show SU2MatrixExp.expAmbient (((0 : ℝ) : ℂ) • X) = (φ 0).val
+    rw [Complex.ofReal_zero, zero_smul]
+    rw [hzero]
+    show SU2MatrixExp.expAmbient 0 = (1 : Matrix (Fin 2) (Fin 2) ℂ)
+    exact SU2MatrixExp.expAmbient_zero
+  add_mem' := by
+    intro a b h_a h_b
+    exact expAmbient_anchor_add hhom h_a h_b
+  neg_mem' := by
+    intro a h_a
+    -- Use expAmbient_int_smul_anchor with z = -1: at z = -1, ((-1)*a:ℝ:ℂ)•X = (-a:ℝ:ℂ)•X
+    show SU2MatrixExp.expAmbient (((-a : ℝ) : ℂ) • X) = (φ (-a)).val
+    have h_int := expAmbient_int_smul_anchor hzero hhom h_a (-1 : ℤ)
+    -- h_int : expAmbient ((((-1:ℤ):ℝ) * a : ℂ) • X) = (φ ((-1:ℤ):ℝ) * a)).val
+    have h_neg_one : ((-1 : ℤ) : ℝ) = -1 := by norm_cast
+    rw [h_neg_one] at h_int
+    -- h_int : expAmbient (((-1 : ℝ) * a : ℝ : ℂ) • X) = (φ (-1 * a)).val
+    have h_arg : (-1 : ℝ) * a = -a := by ring
+    rw [h_arg] at h_int
+    exact h_int
+
+/-- **The anchor set is topologically closed in ℝ**. -/
+theorem anchorAddSubgroup_isClosed
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hcts : Continuous φ)
+    (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    IsClosed (anchorAddSubgroup hzero hhom X : Set ℝ) := by
+  -- The carrier is {t | f t = g t} for two continuous functions f, g : ℝ → Matrix.
+  set f : ℝ → Matrix (Fin 2) (Fin 2) ℂ :=
+    fun t => SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X) with hf
+  set g : ℝ → Matrix (Fin 2) (Fin 2) ℂ := fun t => (φ t).val with hg
+  have hf_cts : Continuous f := expAmbient_real_smul_continuous X
+  have hg_cts : Continuous g := by
+    -- continuity of (φ t).val: continuous φ + continuous Subtype.val
+    exact (continuous_subtype_val.comp hcts)
+  exact isClosed_eq hf_cts hg_cts
+
 end OneParamSubgroupSU2
 
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
