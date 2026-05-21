@@ -519,6 +519,36 @@ theorem binaryTetrahedralElem_sq_ne_one :
         Complex.one_re, Complex.one_im, Complex.normSq] at h_re
   linarith
 
+/-- **`orderOf binaryTetrahedralElem = 6`** — the half-integer quaternion
+generator has order exactly 6 in SU(2).
+
+Discharges via `orderOf_eq_of_pow_and_pow_div_prime`: primes dividing 6
+are {2, 3}; for each, `gen ^ (6/p) ≠ 1` (i.e., `gen ^ 3 ≠ 1` and
+`gen ^ 2 ≠ 1` per `_cube_ne_one` and `_sq_ne_one`). -/
+theorem binaryTetrahedralElem_orderOf_eq_six :
+    orderOf binaryTetrahedralElem = 6 := by
+  refine orderOf_eq_of_pow_and_pow_div_prime (by norm_num)
+    binaryTetrahedralElem_sixth ?_
+  intro p hp hpd
+  -- Primes dividing 6 are {2, 3}: case-split.
+  have h_le : p ≤ 6 := Nat.le_of_dvd (by norm_num) hpd
+  have h_ge : 2 ≤ p := hp.two_le
+  interval_cases p
+  · -- p = 2: show gen ^ (6/2) = gen ^ 3 ≠ 1
+    show binaryTetrahedralElem ^ (6 / 2) ≠ 1
+    rw [show (6 / 2 : ℕ) = 3 from rfl]
+    exact binaryTetrahedralElem_cube_ne_one
+  · -- p = 3: show gen ^ (6/3) = gen ^ 2 ≠ 1
+    show binaryTetrahedralElem ^ (6 / 3) ≠ 1
+    rw [show (6 / 3 : ℕ) = 2 from rfl]
+    exact binaryTetrahedralElem_sq_ne_one
+  · -- p = 4: not prime
+    exact absurd hp (by decide)
+  · -- p = 5: 5 ∤ 6
+    exact absurd hpd (by decide)
+  · -- p = 6: not prime
+    exact absurd hp (by decide)
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
