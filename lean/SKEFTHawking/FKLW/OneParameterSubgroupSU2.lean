@@ -4033,6 +4033,63 @@ theorem OneParamSubgroupSU2.anchor_halve
   rw [show v = u from h_uv.symm]
   exact h_exp_u
 
+/-- **Anchor division by n**: generalization of `anchor_halve` to any
+positive `n : ℕ`. Anchor at t + n-th-root smallness conditions ⟹ anchor at t/n.
+
+Parallel to `anchor_halve` with n = 2 replaced by arbitrary positive n. -/
+theorem OneParamSubgroupSU2.anchor_div_n
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    {t : ℝ} {n : ℕ} (hn_pos : 0 < n)
+    (h_anchor : SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X) = (φ t).val)
+    (h_target : (φ (t/n)).val ∈ expAmbientPartialHomeo.target)
+    (h_src_nu : n • su2Log ((φ (t/n)).val) ∈ expAmbientPartialHomeo.source)
+    (h_src_nv : n • (((t/n : ℝ) : ℂ) • X) ∈ expAmbientPartialHomeo.source) :
+    SU2MatrixExp.expAmbient (((t/n : ℝ) : ℂ) • X) = (φ (t/n)).val := by
+  set u : Matrix (Fin 2) (Fin 2) ℂ := su2Log ((φ (t/n)).val) with hu
+  set v : Matrix (Fin 2) (Fin 2) ℂ := ((t/n : ℝ) : ℂ) • X with hv
+  -- expAmbient(u) = (φ(t/n)).val.
+  have h_exp_u : SU2MatrixExp.expAmbient u = (φ (t/n)).val := expAmbient_su2Log h_target
+  -- expAmbient(n•u) = ((φ(t/n)).val)^n.
+  have h_exp_nu : SU2MatrixExp.expAmbient (n • u) = ((φ (t/n)).val)^n := by
+    unfold SU2MatrixExp.expAmbient
+    rw [NormedSpace.exp_nsmul]
+    show (NormedSpace.exp u)^n = ((φ (t/n)).val)^n
+    rw [show (NormedSpace.exp u) = (φ (t/n)).val from h_exp_u]
+  -- ((φ(t/n)).val)^n = (φ t).val via hom_pow_nat with s := t/n, then n*(t/n) = t.
+  have h_pow_phi : ((φ (t/n)).val)^n = (φ t).val := by
+    have h_pow_subtype : (φ (t/n))^n = φ t := by
+      have h_hom_pow := hom_pow_nat hzero hhom n (t/n)
+      -- h_hom_pow : φ ((n : ℝ) * (t/n)) = (φ (t/n)) ^ n
+      have h_n_ne : (n : ℝ) ≠ 0 := by
+        exact_mod_cast Nat.pos_iff_ne_zero.mp hn_pos
+      have h_arg : (n : ℝ) * (t/n) = t := by
+        field_simp
+      rw [h_arg] at h_hom_pow
+      exact h_hom_pow.symm
+    have h_pow_val : ((φ (t/n))^n :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val = ((φ (t/n)).val)^n :=
+      SubmonoidClass.coe_pow _ _
+    rw [← h_pow_val, h_pow_subtype]
+  -- n•v = (t:ℂ)•X (when n > 0)
+  have h_nv_eq : n • v = ((t : ℝ) : ℂ) • X := by
+    show n • (((t/n : ℝ) : ℂ) • X) = ((t : ℝ) : ℂ) • X
+    rw [← Nat.cast_smul_eq_nsmul ℂ n]
+    rw [smul_smul]
+    congr 1
+    push_cast
+    rw [mul_div_cancel₀]
+    exact_mod_cast Nat.pos_iff_ne_zero.mp hn_pos
+  have h_exp_nu_eq_nv : SU2MatrixExp.expAmbient (n • u)
+      = SU2MatrixExp.expAmbient (n • v) := by
+    rw [h_exp_nu, h_pow_phi, ← h_anchor, h_nv_eq]
+  have h_uv : u = v :=
+    expAmbient_nsmul_injOn hn_pos h_src_nu h_src_nv h_exp_nu_eq_nv
+  show SU2MatrixExp.expAmbient v = (φ (t/n)).val
+  rw [show v = u from h_uv.symm]
+  exact h_exp_u
+
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
 
 For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
