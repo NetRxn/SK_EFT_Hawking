@@ -686,6 +686,14 @@ import SKEFTHawking.FKLW.RouabahSplitBraid
 -- closed-subgroup theorem + 1-parameter subgroup theorem + maximal-torus
 -- classification (D4.3.d.2+) remain Mathlib4 v4.29.0 gaps. Zero new axioms.
 import SKEFTHawking.FKLW.CartanSubstrate
+-- Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan strengthening (2026-05-21):
+-- Von Neumann 1-parameter subgroup theorem for SU(2) — discharges the
+-- strengthened gap-#2 predicate `OneParamSubgroupFromAccPt_SU2`
+-- (defined in CartanSubstrate §4.7). This ship §1: local matrix
+-- logarithm `su2Log` extracted from existing IFT substrate
+-- (Mathlib-upstream-PR-quality). Subsequent ships: §2 `su2Log h ∈ su(2)`,
+-- §3 von Neumann construction, §4 discharge. Zero new axioms.
+import SKEFTHawking.FKLW.OneParameterSubgroupSU2
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
