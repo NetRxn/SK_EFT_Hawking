@@ -2437,7 +2437,74 @@ theorem SU2_X_h_mem_tracelessSkewHermitian
     rw [h_tr_eq]
     simp
 
-/-! ### §9.5. (Next ships — Y_h construction + expAmbient Y_h = h)
+/-! ### §9.5. `su2RadiusSq X_h` closed form
+
+For h ∈ SU(2), `su2RadiusSq X_h = 1 - (h.trace.re / 2)²`. This is the
+"sin²(θ_h)" where θ_h := arccos(h.trace.re/2), the angle of h. Once
+established, combined with `tracelessSkewHermitian_two_sq`:
+  X_h * X_h = -(su2RadiusSq X_h : ℂ) • 1 = -(1 - (h.trace.re/2)²) • 1
+i.e., X_h² = -(sin²θ_h) • 1. -/
+
+/-- **§9.5. su2RadiusSq X_h closed form**: for h ∈ SU(2),
+`su2RadiusSq (h - (h.trace.re/2) • 1) = 1 - (h.trace.re/2)²`. -/
+theorem SU2_su2RadiusSq_X_h_eq
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    su2RadiusSq
+      (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+      1 - (h.trace.re / 2) ^ 2 := by
+  unfold su2RadiusSq
+  have h_X_00 : (h - ((h.trace.re / 2 : ℝ) : ℂ) •
+        (1 : Matrix (Fin 2) (Fin 2) ℂ)) 0 0
+      = h 0 0 - ((h.trace.re / 2 : ℝ) : ℂ) := by
+    simp [Matrix.sub_apply, Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul]
+  have h_X_01 : (h - ((h.trace.re / 2 : ℝ) : ℂ) •
+        (1 : Matrix (Fin 2) (Fin 2) ℂ)) 0 1
+      = h 0 1 := by
+    simp [Matrix.sub_apply, Matrix.smul_apply,
+          Matrix.one_apply_ne (by decide : (0 : Fin 2) ≠ 1), smul_eq_mul]
+  rw [h_X_00, h_X_01]
+  have h_im_X_00 : (h 0 0 - ((h.trace.re / 2 : ℝ) : ℂ)).im = (h 0 0).im := by
+    simp [Complex.sub_im, Complex.ofReal_im]
+  rw [h_im_X_00]
+  have h_add_star := SU2_add_star_eq_trace_smul_one hh
+  have h_tr_eq := SU2_trace_eq_ofReal_re hh
+  have h_00_re : (h 0 0).re = h.trace.re / 2 := by
+    have hadd := congrFun (congrFun h_add_star 0) 0
+    simp [Matrix.add_apply, Matrix.star_apply, Matrix.smul_apply,
+          Matrix.one_apply_eq, smul_eq_mul] at hadd
+    -- hadd : h 0 0 + (starRingEnd ℂ) (h 0 0) = h.trace
+    have h_re_eq : (h 0 0).re + ((starRingEnd ℂ) (h 0 0)).re = h.trace.re := by
+      rw [← Complex.add_re, hadd]
+    rw [Complex.conj_re] at h_re_eq
+    linarith
+  have h_unitary : h ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    (Matrix.mem_specialUnitaryGroup_iff.mp hh).1
+  have h_mul_star : h * star h = 1 := Matrix.mem_unitaryGroup_iff.mp h_unitary
+  have h_norm_sum : ‖h 0 0‖ ^ 2 + ‖h 0 1‖ ^ 2 = 1 := by
+    have hmul := congrFun (congrFun h_mul_star 0) 0
+    simp [Matrix.mul_apply, Matrix.star_apply, Fin.sum_univ_two,
+          Matrix.one_apply_eq] at hmul
+    have h_re_00 : ‖h 0 0‖ ^ 2 = (h 0 0 * star (h 0 0)).re := by
+      rw [Complex.sq_norm, Complex.normSq_apply, Complex.mul_re,
+          Complex.star_def, Complex.conj_re, Complex.conj_im]; ring
+    have h_re_01 : ‖h 0 1‖ ^ 2 = (h 0 1 * star (h 0 1)).re := by
+      rw [Complex.sq_norm, Complex.normSq_apply, Complex.mul_re,
+          Complex.star_def, Complex.conj_re, Complex.conj_im]; ring
+    rw [h_re_00, h_re_01]
+    -- Both `star` and `(starRingEnd ℂ)` mean the same thing for ℂ:
+    have h_star_eq : ∀ z : ℂ, star z = (starRingEnd ℂ) z := fun _ => rfl
+    rw [show (h 0 0 * star (h 0 0)).re + (h 0 1 * star (h 0 1)).re =
+          (h 0 0 * (starRingEnd ℂ) (h 0 0) + h 0 1 * (starRingEnd ℂ) (h 0 1)).re by
+        rw [← h_star_eq, ← h_star_eq]; exact (Complex.add_re _ _).symm]
+    rw [hmul]; simp
+  have h_norm_00 : ‖h 0 0‖ ^ 2 = (h 0 0).re ^ 2 + (h 0 0).im ^ 2 := by
+    rw [Complex.sq_norm, Complex.normSq_apply]; ring
+  rw [h_norm_00] at h_norm_sum
+  rw [h_00_re] at h_norm_sum
+  linarith [h_norm_sum]
+
+/-! ### §9.6. (Next ships — Y_h construction + expAmbient Y_h = h)
 
 For non-trivial h ∈ target ∩ SU(2), we need to construct a witness
 `Y ∈ source ∩ ts` with `expAmbient Y = h`. The cleanest construction
