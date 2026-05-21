@@ -5744,4 +5744,58 @@ theorem fibonacci_density_F21_from_single_remaining_hypothesis
   · exact fibonacci_density_from_bridge_lemma_62_alone h_bridge
   · exact fibonacci_density_from_cartan_classification h_cartan
 
+/-! ## §67. R5.4 Layer F.20.c.d.2.kk — F.21 from closure(H_Fib) = univ directly
+
+The cleanest scoping of F.21 unconditional density: it holds iff
+`closure(H_Fib) = univ` (as a Set in SU(2)). This is the most "atomic"
+hypothesis for the remaining work. -/
+
+/-- **R5.4 Layer F.20.c.d.2.kk HEADLINE — F.21 density from closure(H_Fib) = univ**.
+
+If the topological closure of H_Fib (as a Set in SU(2)) equals univ, then
+F.21 unconditional density follows.
+
+Composes:
+  - `H_Fib_eq_top_iff_closure_eq_univ` (closure = univ ↔ H_Fib = ⊤)
+  - `fibonacci_density_from_H_Fib_eq_top` (H_Fib = ⊤ → density) -/
+theorem fibonacci_density_from_H_Fib_closure_eq_univ
+    (h_closure :
+      closure ((SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) =
+        Set.univ) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) := by
+  -- H_Fib carrier = closure(range ρ_Fib_SU2). Then closure(H_Fib carrier) = closure(closure(range))
+  -- which by closure idempotence = closure(range).
+  have h_carrier : ((SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) =
+      closure (Set.range SKEFTHawking.FKLW.ρ_Fib_SU2) := by
+    unfold SKEFTHawking.FKLW.H_Fib
+    rw [Subgroup.topologicalClosure_coe]
+    rw [SKEFTHawking.FKLW.ρ_Fib_SU2.coe_range]
+  rw [h_carrier] at h_closure
+  rw [closure_closure] at h_closure
+  have h_top : SKEFTHawking.FKLW.H_Fib = ⊤ :=
+    SKEFTHawking.FKLW.H_Fib_eq_top_iff_closure_eq_univ.mpr h_closure
+  exact SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top h_top
+
+/-- **R5.4 Layer F.20.c.d.2.kk HEADLINE 2 — F.21 density from 1 ∈ interior(closure H_Fib)**.
+
+The most topologically natural hypothesis. Via `closure_eq_univ_of_one_mem_interior`
+(open-subgroup-of-connected-group = univ), this implies closure(H_Fib) = univ. -/
+theorem fibonacci_density_from_H_Fib_one_mem_interior_closure
+    (h_int : (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∈
+      interior (closure ((SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) := by
+  apply fibonacci_density_from_H_Fib_closure_eq_univ
+  exact SKEFTHawking.FKLW.AharonovAradBridge.closure_eq_univ_of_one_mem_interior
+    SKEFTHawking.FKLW.H_Fib h_int
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
