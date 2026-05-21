@@ -3804,6 +3804,33 @@ theorem ts_Ad_LD_iff_commute_or_anticommute
     rw [Matrix.mul_assoc (U * X), h_star_U_U, Matrix.mul_one] at h1
     rw [h1, Matrix.neg_mul]
 
+/-- **Ad-LI from non-commute + non-anticommute**: direct contrapositive
+of `ts_Ad_LD_iff_commute_or_anticommute`. For X ∈ ts (Fin 2), X ≠ 0,
+U unitary, if U neither commutes nor anti-commutes with X (as matrices),
+then (X, U·X·star U) ℝ-LI.
+
+This is the application form for H_Fib_TwoLITangents step (5): given
+σ_Fib elements known to neither commute nor anti-commute with a target
+X ∈ ts, the (X, Ad(g)·X) pair is automatically ℝ-LI. -/
+theorem ts_Ad_LI_of_not_commute_anticommute
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0)
+    {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    (h_not_commute : U * X ≠ X * U)
+    (h_not_anticommute : U * X ≠ -(X * U)) :
+    ∀ a b : ℝ, (a : ℂ) • X + (b : ℂ) • (U * X * star U) = 0 → a = 0 ∧ b = 0 := by
+  intro a b h_zero
+  by_contra h_not_both
+  -- h_not_both : ¬(a = 0 ∧ b = 0)
+  have h_LD : ¬ (∀ a b : ℝ, (a : ℂ) • X + (b : ℂ) • (U * X * star U) = 0 →
+      a = 0 ∧ b = 0) := by
+    intro h_all
+    exact h_not_both (h_all a b h_zero)
+  rcases ts_Ad_LD_iff_commute_or_anticommute hX hX_ne hU h_LD with h_c | h_a
+  · exact h_not_commute h_c
+  · exact h_not_anticommute h_a
+
 /-- **Ad-exp commutation for unitary conjugation**. -/
 theorem expAmbient_unitary_conj
     {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
