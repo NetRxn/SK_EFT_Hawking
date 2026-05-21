@@ -3892,6 +3892,40 @@ theorem OneParamSubgroupSU2.anchorAddSubgroup_eq_top_of_nhd_zero
     AddSubgroup.isOpen_of_mem_nhds _ h_nhd
   exact AddSubgroup.eq_top_of_isOpen_of_connected _ h_open
 
+/-- **anchor identity for ALL real t**: if `anchorAddSubgroup = ⊤`, then
+for every `t : ℝ`, `expAmbient((t:ℂ)•X) = (φ t).val`. -/
+theorem OneParamSubgroupSU2.anchor_identity_of_top
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_top : OneParamSubgroupSU2.anchorAddSubgroup hzero hhom X = ⊤)
+    (t : ℝ) :
+    SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X) = (φ t).val := by
+  have h_mem : t ∈ ((OneParamSubgroupSU2.anchorAddSubgroup hzero hhom X) : Set ℝ) := by
+    rw [h_top]
+    exact AddSubgroup.mem_top t
+  exact h_mem
+
+/-- **exp curve subset of H from anchor = ⊤**: composition closing the
+chain "anchor identity for all t" + "φ image in H" ⟹ "every point on
+the exp-curve `t ↦ expAmbient(t·X)` lies in `H.val`".
+
+Substrate for the v3 discharge: combined with the IFT-based proof that
+`anchorAddSubgroup = ⊤`, this gives `exp(ℝ·X) ⊆ H.val` for the tangent
+X of any 1-param subgroup in closed `H ≤ SU(2)`. -/
+theorem OneParamSubgroupSU2.exp_curve_subset_H_of_anchor_top
+    {H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (himage : ∀ t, φ t ∈ H)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_top : OneParamSubgroupSU2.anchorAddSubgroup hzero hhom X = ⊤)
+    (t : ℝ) :
+    ∃ M : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      M ∈ H ∧ M.val = SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X) :=
+  ⟨φ t, himage t,
+    (OneParamSubgroupSU2.anchor_identity_of_top hzero hhom h_top t).symm⟩
+
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
 
 For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
