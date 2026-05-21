@@ -710,6 +710,15 @@ theorem torusElem_mul_weylElem_eq (t : ℝ) :
   rw [neg_neg] at h
   exact h.symm
 
+/-- **Specialization at `t = π/2`**: `τ_{π/2} · w = w · τ_{-(π/2)}`.
+
+Dual form of `weylElem_mul_torusElem_pi_half_eq`. Used in 2T orbit
+computations where the torus factor appears on the left. -/
+theorem torusElem_pi_half_mul_weylElem_eq :
+    torusElem (Real.pi / 2) * weylElem =
+      weylElem * torusElem (-(Real.pi / 2)) :=
+  torusElem_mul_weylElem_eq (Real.pi / 2)
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
