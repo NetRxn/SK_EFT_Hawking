@@ -4193,6 +4193,106 @@ theorem fibonacci_density_F21_from_cartan_v3_cFib_torus
   SKEFTHawking.FKLW.fibonacci_density_F21_from_cartan_final_v3
     h_cartan_v3 (H_Fib_TwoLITangents_of_cFib_torus h_cFib_torus)
 
+/-! ## §74. Anti-commute lemma: SU(2) element anti-commuting with ts ⟹ traceless
+
+**Generic SU(2) fact**: for `g ∈ Matrix (Fin 2) (Fin 2) ℂ`, `X ∈ ts(Fin 2)`,
+`X ≠ 0`, if `g * X = -(X * g)` then `trace(g) = 0`.
+
+Proof (clean version):
+1. From `g·X = -X·g`, `X·g·X = X·(-(g·X)) = -X·g·X` ... wait that's circular.
+   Try: `X·g·X = (X·g)·X`. From `g·X = -X·g`, taking neg: `-(g·X) = X·g`, so
+   `X·g = -(g·X)`. Then `X·g·X = (-(g·X))·X = -g·X² = -g·(-‖X‖²·1) = ‖X‖²·g`.
+2. Take trace: `tr(X·g·X) = ‖X‖²·tr(g)`.
+3. Also `tr(X·g·X) = tr(g·X·X) = tr(g·X²) = tr(g·(-‖X‖²·1)) = -‖X‖²·tr(g)`.
+4. Equate: `2·‖X‖²·tr(g) = 0`, with `‖X‖² > 0` (X ≠ 0), gives `tr(g) = 0`. -/
+
+/-- **SU(2) anti-commute with ts ⟹ traceless**: for any matrix `g` and `X ∈ ts(Fin 2)`
+with `X ≠ 0`, if `g * X = -(X * g)` then `g.trace = 0`. -/
+theorem SU2_anticommute_ts_implies_trace_zero
+    {g X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0)
+    (h_anti : g * X = -(X * g)) :
+    g.trace = 0 := by
+  -- Step 1: Cayley-Hamilton on ts: X * X = -(su2RadiusSq X : ℂ) • 1
+  have h_X_sq :
+      X * X = ((-(su2RadiusSq X) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    have := tracelessSkewHermitian_two_sq hX
+    rw [this]
+    push_cast
+    ring_nf
+  -- Step 2: X·g = -(g·X) (rearranging h_anti)
+  have h_Xg : X * g = -(g * X) := by
+    rw [h_anti]
+    exact (neg_neg _).symm
+  -- Step 3: X * g * X = (su2RadiusSq X : ℂ) • g
+  have h_XgX : X * g * X = ((su2RadiusSq X : ℝ) : ℂ) • g := by
+    -- X * g * X = (X * g) * X = (-(g * X)) * X = -(g * X * X) = -(g * (X * X))
+    --           = -(g * ((-(su2RadiusSq X)) • 1)) = -(-(su2RadiusSq X) • g)
+    --           = (su2RadiusSq X) • g
+    rw [h_Xg, Matrix.neg_mul, Matrix.mul_assoc, h_X_sq, Matrix.mul_smul, Matrix.mul_one]
+    push_cast
+    rw [show -((-((su2RadiusSq X : ℝ) : ℂ)) • g) = ((su2RadiusSq X : ℝ) : ℂ) • g from by
+      rw [neg_smul]; exact neg_neg _]
+  -- Step 4: trace(X * g * X) = (su2RadiusSq X) * trace(g) (via h_XgX)
+  have h_trace1 : (X * g * X).trace = ((su2RadiusSq X : ℝ) : ℂ) * g.trace := by
+    rw [h_XgX, Matrix.trace_smul, smul_eq_mul]
+  -- Step 5: trace(X * g * X) = trace(g * (X * X)) via cyclic
+  have h_trace2 : (X * g * X).trace = (g * (X * X)).trace := by
+    rw [Matrix.trace_mul_cycle, Matrix.trace_mul_comm]
+  -- Step 6: trace(g * (X * X)) = -(su2RadiusSq X) * trace(g) via X² = scalar
+  have h_trace3 : (g * (X * X)).trace = (-(su2RadiusSq X : ℝ) : ℂ) * g.trace := by
+    rw [h_X_sq, Matrix.mul_smul, Matrix.mul_one, Matrix.trace_smul, smul_eq_mul]
+    push_cast; ring
+  -- Combine: (su2RadiusSq X) * trace(g) = -(su2RadiusSq X) * trace(g)
+  have h_combine :
+      ((su2RadiusSq X : ℝ) : ℂ) * g.trace =
+        (-(su2RadiusSq X : ℝ) : ℂ) * g.trace := by
+    rw [← h_trace1, h_trace2, h_trace3]
+  -- 2 * (su2RadiusSq X) * trace(g) = 0
+  have h_zero : (2 * (su2RadiusSq X : ℝ) : ℂ) * g.trace = 0 := by
+    have h_rearrange :
+        ((su2RadiusSq X : ℝ) : ℂ) * g.trace +
+          ((su2RadiusSq X : ℝ) : ℂ) * g.trace = 0 := by
+      rw [show ((su2RadiusSq X : ℝ) : ℂ) * g.trace +
+            ((su2RadiusSq X : ℝ) : ℂ) * g.trace =
+            ((su2RadiusSq X : ℝ) : ℂ) * g.trace -
+              (-((su2RadiusSq X : ℝ) : ℂ) * g.trace) from by ring]
+      rw [show -((su2RadiusSq X : ℝ) : ℂ) * g.trace =
+            (-(su2RadiusSq X : ℝ) : ℂ) * g.trace from by push_cast; ring]
+      rw [← h_combine]
+      ring
+    have h_two_mul : (2 * (su2RadiusSq X : ℝ) : ℂ) * g.trace =
+        ((su2RadiusSq X : ℝ) : ℂ) * g.trace +
+          ((su2RadiusSq X : ℝ) : ℂ) * g.trace := by
+      push_cast; ring
+    rw [h_two_mul]; exact h_rearrange
+  -- su2RadiusSq X > 0 since X ≠ 0
+  have h_pos : 0 < su2RadiusSq X :=
+    OneParameterSubgroupSU2.tracelessSkewHermitian_su2RadiusSq_pos hX hX_ne
+  have h_ne : (2 * (su2RadiusSq X : ℝ) : ℂ) ≠ 0 := by
+    have h_real_ne : (2 * (su2RadiusSq X : ℝ)) ≠ 0 := by linarith
+    exact_mod_cast h_real_ne
+  exact (mul_eq_zero.mp h_zero).resolve_left h_ne
+
+/-! ## §75. SU(2) commute with ts ⟹ liePart-LD substrate
+
+For `g ∈ Matrix (Fin 2) (Fin 2) ℂ` and `X ∈ ts(Fin 2)` with `g * X = X * g`,
+the commutator `[g, X] = 0`. Decomposing `g = (trace g / 2)·I + (g - (trace g / 2)·I)`,
+the trace-part commutes trivially. So the residual `(g - (trace g / 2)·I)` commutes
+with X.
+
+For `g ∈ SU(2)`, the residual is a complex scalar multiple of an element in ts (the
+"Lie part" of g). Specifically `liePartMat g = (1/2)·(g - g†) ∈ ts` and is parallel
+to the residual (up to scalar).
+
+This connects to §23.1 `tracelessSkewHermitian_lin_dep_of_commute`: residual commutes
+with X ⟹ residual, X ℝ-LD. Hence `liePartMat g`, X ℝ-LD. -/
+
+end SKEFTHawking.FKLW.OneParameterSubgroupSU2
+
+namespace SKEFTHawking.FKLW.OneParameterSubgroupSU2
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
