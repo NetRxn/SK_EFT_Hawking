@@ -671,6 +671,23 @@ theorem torusElem_pi_half_sq_eq_weylElem_sq :
     torusElem (Real.pi / 2) ^ 2 = weylElem ^ 2 := by
   rw [sq, sq, torusElem_pi_half_sq, weylElem_sq_eq_negOneSU]
 
+/-- `weylElem * torusElem (π/2) = torusElem (-(π/2)) * weylElem` —
+specialization of the Weyl conjugation `w·τ_t·w⁻¹ = τ_{-t}` at `t = π/2`.
+
+This is the canonical anti-commutation relation `ji = -k = (-i)j` in the
+quaternion algebra (since τ_{-π/2} = τ_{π/2}⁻¹ = i⁻¹ = -i). -/
+theorem weylElem_mul_torusElem_pi_half_eq :
+    weylElem * torusElem (Real.pi / 2) =
+      torusElem (-(Real.pi / 2)) * weylElem := by
+  have h := weylElem_conj_torusElem (Real.pi / 2)
+  -- h : weylElem * torusElem (π/2) * weylElem⁻¹ = torusElem (-(π/2))
+  -- Multiply both sides on the right by weylElem.
+  have h' : (weylElem * torusElem (Real.pi / 2) * weylElem⁻¹) * weylElem =
+            torusElem (-(Real.pi / 2)) * weylElem := by
+    rw [h]
+  rw [mul_assoc, inv_mul_cancel, mul_one] at h'
+  exact h'
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
