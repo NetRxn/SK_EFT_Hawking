@@ -747,4 +747,57 @@ theorem centralizer_stdTorus_eq_stdTorus_of_cartan_gap_4
       Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = stdTorus_SU2 :=
   h_cartan_gap_4
 
+/-! ## §17. Substantive discharge: off-diagonal vanishing from torus commutation -/
+
+/-- **Off-diagonal vanishing from torus(π/2) commutation**: if a matrix
+`M : Matrix (Fin 2) (Fin 2) ℂ` commutes with `torusMatrix (π/2)`, then
+`M 0 1 = 0` and `M 1 0 = 0`.
+
+Computational core: `torusMatrix (π/2) = !![I, 0; 0, -I]`, so the [0,1]
+entry of the commutation equation gives `-I · M[0,1] = I · M[0,1]`, hence
+`2I · M[0,1] = 0`, hence `M[0,1] = 0`. Symmetric for [1,0]. -/
+theorem commutes_torusMatrix_pi_half_diagonal
+    (M : Matrix (Fin 2) (Fin 2) ℂ)
+    (h_comm : M * torusMatrix (Real.pi / 2) = torusMatrix (Real.pi / 2) * M) :
+    M 0 1 = 0 ∧ M 1 0 = 0 := by
+  -- torusMatrix (π/2) [0,0] = exp(iπ/2) = I, [1,1] = exp(-iπ/2) = -I.
+  have h_tm_00 : torusMatrix (Real.pi / 2) 0 0 = Complex.I := by
+    show Complex.exp (((Real.pi / 2 : ℝ) : ℂ) * Complex.I) = Complex.I
+    rw [show (((Real.pi / 2 : ℝ) : ℂ) * Complex.I) =
+         ((Real.pi : ℂ) / 2 * Complex.I) by push_cast; ring,
+        Complex.exp_pi_div_two_mul_I]
+  have h_tm_11 : torusMatrix (Real.pi / 2) 1 1 = -Complex.I := by
+    show Complex.exp (-(((Real.pi / 2 : ℝ) : ℂ) * Complex.I)) = -Complex.I
+    rw [show (-(((Real.pi / 2 : ℝ) : ℂ) * Complex.I)) =
+         (-(Real.pi : ℂ) / 2 * Complex.I) by push_cast; ring,
+        Complex.exp_neg_pi_div_two_mul_I]
+  have h_tm_01 : torusMatrix (Real.pi / 2) 0 1 = 0 := rfl
+  have h_tm_10 : torusMatrix (Real.pi / 2) 1 0 = 0 := rfl
+  -- Compare [0,1] entries: (M · t)[0,1] vs (t · M)[0,1].
+  have h_comm_01 := congrArg (fun A => A 0 1) h_comm
+  -- LHS [0,1] = M[0,0]·t[0,1] + M[0,1]·t[1,1] = 0 + M[0,1]·(-I) = -I·M[0,1].
+  -- RHS [0,1] = t[0,0]·M[0,1] + t[0,1]·M[1,1] = I·M[0,1] + 0 = I·M[0,1].
+  simp [Matrix.mul_apply, Fin.sum_univ_two,
+        h_tm_00, h_tm_11, h_tm_01, h_tm_10] at h_comm_01
+  -- Compare [1,0] entries similarly.
+  have h_comm_10 := congrArg (fun A => A 1 0) h_comm
+  simp [Matrix.mul_apply, Fin.sum_univ_two,
+        h_tm_00, h_tm_11, h_tm_01, h_tm_10] at h_comm_10
+  -- h_comm_01: M[0,1] * (-I) = I * M[0,1].
+  -- h_comm_10: M[1,0] * I = -I * M[1,0].
+  refine ⟨?_, ?_⟩
+  · -- M[0,1] * -I = I * M[0,1] ⟹ -I · M[0,1] = I · M[0,1] ⟹ M[0,1] · (-2I) = 0.
+    have h_eq : M 0 1 * (Complex.I + Complex.I) = 0 := by linear_combination -h_comm_01
+    have h_two_I_ne_zero : Complex.I + Complex.I ≠ 0 := by
+      intro h
+      have h_im := congrArg Complex.im h
+      simp [Complex.I_im] at h_im
+    exact (mul_eq_zero.mp h_eq).resolve_right h_two_I_ne_zero
+  · have h_eq : M 1 0 * (Complex.I + Complex.I) = 0 := by linear_combination h_comm_10
+    have h_two_I_ne_zero : Complex.I + Complex.I ≠ 0 := by
+      intro h
+      have h_im := congrArg Complex.im h
+      simp [Complex.I_im] at h_im
+    exact (mul_eq_zero.mp h_eq).resolve_right h_two_I_ne_zero
+
 end SKEFTHawking.FKLW
