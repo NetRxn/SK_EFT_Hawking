@@ -1202,6 +1202,71 @@ theorem fibonacci_density_F21_from_cartan_final_v2_only
   SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top
     (H_Fib_eq_top_of_cartan_final_v2_only H_strong H_cartan_final_v2)
 
+/-! ## §4.10. `OneParamSubgroupInSU2 H → Set.Infinite H` — Cartan-classification building block
+
+(2026-05-21 next-substrate-step)
+
+Toward discharging `CartanFinalStep_SU2_v2` (the SU(2) closed-subgroup
+classification), this section ships the "1-param ⇒ infinite" reduction:
+any closed subgroup `H ≤ SU(2)` admitting a continuous nontrivial 1-parameter
+subgroup is necessarily infinite as a set. This **excludes all finite cases**
+of the Cartan classification (trivial subgroup, binary polyhedral 2D_n / 2T /
+2O / 2I) in a single composition.
+
+**Argument** (no Cartan needed):
+  - `φ : ℝ → SU(2)` continuous with `φ 0 = 1`, `φ t ≠ 1` for some `t`,
+    image in `H`. So `Set.range φ ⊆ H`.
+  - Suppose `H` is finite as a set. Then `Set.range φ` is finite (as a
+    subset of a finite set).
+  - In `T1Space SU(2)`, a finite set is discrete (`Set.Finite.isDiscrete`).
+  - `Set.range φ` is connected: continuous image of `ℝ` (which is a
+    `PreconnectedSpace`) under `φ` (`isPreconnected_range`).
+  - A connected discrete space is a singleton
+    (`PreconnectedSpace.trivial_of_discrete`).
+  - But `Set.range φ` contains both `1` (= `φ 0`) and `φ t ≠ 1`,
+    contradiction.
+
+This is a Mathlib-upstream-PR-quality general lemma about continuous
+1-parameter subgroups in Hausdorff topological groups. -/
+
+/-- **`OneParamSubgroupInSU2 H` implies `H` is infinite as a set.**
+
+Mathlib-upstream-PR-quality: the analogous statement holds for any
+continuous nontrivial group homomorphism `ℝ → G` with `G` a `T1Space`. -/
+theorem OneParamSubgroupInSU2_implies_infinite
+    {H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h : OneParamSubgroupInSU2 H) :
+    Set.Infinite (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  obtain ⟨φ, hcts, hzero, _hom, ⟨t₀, ht₀⟩, hmem⟩ := h
+  intro hfin
+  -- Set.range φ ⊆ H, so finite.
+  have h_range_subset : Set.range φ ⊆
+      (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+    Set.range_subset_iff.mpr hmem
+  have h_range_finite : (Set.range φ).Finite := hfin.subset h_range_subset
+  -- Set.range φ is connected (continuous image of ℝ).
+  have h_range_preconn : IsPreconnected (Set.range φ) := isPreconnected_range hcts
+  -- T1Space + Finite ⇒ IsDiscrete (set predicate).
+  have h_range_discrete : IsDiscrete (Set.range φ) := h_range_finite.isDiscrete
+  -- IsDiscrete ⇒ DiscreteTopology (subtype).
+  haveI : DiscreteTopology ↑(Set.range φ) := h_range_discrete.to_subtype
+  -- IsPreconnected ⇒ PreconnectedSpace (subtype).
+  haveI : PreconnectedSpace ↑(Set.range φ) :=
+    Subtype.preconnectedSpace h_range_preconn
+  -- PreconnectedSpace + DiscreteTopology ⇒ Subsingleton.
+  haveI h_subsing : Subsingleton ↑(Set.range φ) :=
+    PreconnectedSpace.trivial_of_discrete
+  -- φ 0 = 1 and φ t₀ ≠ 1 both lie in Set.range φ; Subsingleton forces equality.
+  have h_mem_0 : (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∈ Set.range φ :=
+    ⟨0, hzero⟩
+  have h_mem_t : φ t₀ ∈ Set.range φ := ⟨t₀, rfl⟩
+  have h_eq : (⟨(1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)), h_mem_0⟩ :
+                ↑(Set.range φ)) =
+              ⟨φ t₀, h_mem_t⟩ := Subsingleton.elim _ _
+  have h_one_eq : (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = φ t₀ :=
+    Subtype.mk.injEq .. |>.mp h_eq
+  exact ht₀ h_one_eq.symm
+
 /-! ## §5. Module summary
 
 `CartanSubstrate.lean` (Phase 6p Wave 2c.4a-R4.2.d.4.3.d.1, 2026-05-14;
