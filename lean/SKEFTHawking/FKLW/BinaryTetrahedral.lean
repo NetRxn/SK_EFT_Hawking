@@ -283,6 +283,15 @@ theorem weylElem_ne_one :
         Matrix.cons_val_one, Matrix.head_cons, Matrix.empty_val',
         Matrix.cons_val_fin_one, Matrix.one_apply] at h_01
 
+/-- `torusElem (π/2)² = negOneSU` — the i-quaternion squares to -I.
+
+Composes torusElem_add + torusElem_pi_eq_negOneSU. -/
+theorem torusElem_pi_half_sq :
+    torusElem (Real.pi / 2) * torusElem (Real.pi / 2) = negOneSU := by
+  rw [← torusElem_add]
+  have h_sum : Real.pi / 2 + Real.pi / 2 = Real.pi := by ring
+  rw [h_sum, torusElem_pi_eq_negOneSU]
+
 /-- `torusElem (π/2) ≠ 1` — the i-quaternion is not the identity
 (via [0,0] entry: exp(iπ/2) = I ≠ 1). -/
 theorem torusElem_pi_half_ne_one :
