@@ -1852,31 +1852,86 @@ theorem vonNeumann_BW_limit_mem_tracelessSkewHermitian
     h_tracked h_seq
   exact hφ.tendsto_atTop.eventually h_ev
 
-/-! ### §4.i.6. (Next ship — final composition)
+/-! ### §4.i.6. Image-in-H: `oneParamSU2Map hX h_det t ∈ H`
 
-With §4.i.5 giving `X ∈ tracelessSkewHermitian` (conditional on
-`Su2LogMemTracelessSkewHermitian_SU2`), we have all the pieces for the
-final SU(2)-subtype lift and assembly:
+The substantive bridge: combining §4.i.4's matrix-level `expAmbient (t • X)
+∈ H_mat` with the structural identity `oneParamMatrixMap X t =
+expAmbient (t • X)` (real-vs-complex smul agree on Matrix _ _ ℂ).
+By Subtype.val injectivity, the lifted SU(2)-element
+`oneParamSU2Map hX h_det t` is in H. -/
 
-1. **`expAmbient (t • X) ∈ specialUnitaryGroup`**: from
-   `expAmbient_mem_specialUnitary_of_DetExpZeroOnSu2 h_det
-      (real_smul_tracelessSkewHermitian hX t)` where `hX = §4.i.5c result`,
-   `h_det : DetExpZeroOnSu2_SU2`.
-2. **Lift to subtype**: form `⟨expAmbient (t • X), proof⟩ : ↥SU(2)`.
-3. **Image in H**: from §4.i.4's `vonNeumann_expAmbient_mem_H_mat`,
-   `expAmbient (t • X) ∈ H_mat`. By Subtype.val injectivity, the lifted
-   element is in H.
-4. **Nontriviality**: from §4.d's `vonNeumann_BW_limit_norm_eq_one`,
-   `‖X‖ = 1` so `X ≠ 0`. For small `t ≠ 0`, `t • X` is in the source
-   neighborhood + nonzero, and expAmbient is locally injective (from
-   the OpenPartialHomeomorph structure), so `expAmbient (t • X) ≠
-   expAmbient 0 = 1`.
-5. **Assemble**: `oneParamSU2Map hX h_det` provides φ : ℝ → ↥SU(2)
-   continuous, φ(0) = 1, φ(s+t) = φ s * φ t (§3.5d shipped).
-   Combined with (3) and (4): `OneParamSubgroupInSU2 H` holds.
+/-- **Bridge**: `oneParamMatrixMap X t = expAmbient (t • X)` for `t : ℝ`,
+where the LHS uses ℂ-smul (`(t : ℂ) • X`) and the RHS uses ℝ-smul.
+The two smul forms agree on `Matrix (Fin 2) (Fin 2) ℂ` via
+`Complex.real_smul`. -/
+lemma oneParamMatrixMap_eq_expAmbient_real_smul
+    (X : Matrix (Fin 2) (Fin 2) ℂ) (t : ℝ) :
+    oneParamMatrixMap X t =
+      SU2MatrixExp.expAmbient ((t : ℝ) • X) := by
+  unfold oneParamMatrixMap
+  rw [← real_smul_matrix2C_eq_complex_smul t X]
 
-Then `OneParamSubgroupFromAccPt_SU2` discharges conditionally on
-`DetExpZeroOnSu2_SU2 ∧ Su2LogMemTracelessSkewHermitian_SU2`. -/
+/-- **§4.i.6. `oneParamSU2Map hX h_det t ∈ H`** (conditional on both
+tracked Props): the SU(2)-subtype-lifted version of `expAmbient (t • X)`
+is in H, for every `t : ℝ`. -/
+theorem vonNeumann_oneParamSU2Map_mem_H
+    (h_det : DetExpZeroOnSu2_SU2)
+    {H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_mem : ∀ n, seq n ∈ H)
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))))
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    oneParamSU2Map hX h_det t ∈ H := by
+  -- Step 1: expAmbient (t • X) ∈ H_mat (from §4.i.4).
+  have h_inH_mat := vonNeumann_expAmbient_mem_H_mat
+    hH_closed h_mem hφ h_seq h_ev_ne h_log_tendsto h_unit_tendsto t
+  -- Step 2: unpack the image membership.
+  obtain ⟨h_witness, h_witness_mem, h_witness_val⟩ := h_inH_mat
+  -- Step 3: oneParamMatrixMap X t = expAmbient (t • X) (via ℂ-vs-ℝ smul bridge).
+  have h_bridge := oneParamMatrixMap_eq_expAmbient_real_smul X t
+  -- Step 4: (oneParamSU2Map hX h_det t).val = h_witness.val (in Matrix _ _ ℂ).
+  have h_val_eq : (oneParamSU2Map hX h_det t).val =
+      h_witness.val := by
+    show oneParamMatrixMap X t = h_witness.val
+    rw [h_bridge]
+    exact h_witness_val.symm
+  -- Step 5: by Subtype.val injectivity, the SU(2)-elements are equal.
+  have h_eq : oneParamSU2Map hX h_det t = h_witness :=
+    Subtype.ext h_val_eq
+  rw [h_eq]
+  exact h_witness_mem
+
+/-! ### §4.i.7. (Next ship — nontriviality + final discharge)
+
+Final pieces remaining for the discharge of `OneParamSubgroupFromAccPt_SU2`:
+
+1. **Nontriviality**: `∃ t, oneParamSU2Map hX h_det t ≠ 1`.
+   Argument: `‖X‖ = 1` (§4.d's `vonNeumann_BW_limit_norm_eq_one`) so
+   `X ≠ 0`. Pick small `t ≠ 0` with `(t : ℂ) • X ∈ source`
+   (source open + 0 ∈ source + scalar continuity). Then
+   `su2Log (expAmbient ((t : ℂ) • X)) = (t : ℂ) • X ≠ 0`
+   (su2Log_expAmbient on source + `t • X ≠ 0` from `t ≠ 0 ∧ X ≠ 0`).
+   Hence `expAmbient ((t : ℂ) • X) ≠ 1` (else `su2Log 1 = 0`
+   contradicts). Lifting to subtype: `oneParamSU2Map hX h_det t ≠ 1`.
+
+2. **Final discharge**: combine `vonNeumann_sequence_with_log` + §4.d BW
+   + §4.i.5c (X ∈ ts) + §4.i.6 (image-in-H) + nontriviality +
+   `oneParamSU2Map`'s 0/add/continuous to construct
+   `OneParamSubgroupInSU2 H`. Then discharge `OneParamSubgroupFromAccPt_SU2`
+   conditional on `DetExpZeroOnSu2_SU2 ∧ Su2LogMemTracelessSkewHermitian_SU2`. -/
 
 /-! ## §5. Module summary (current ship)
 
