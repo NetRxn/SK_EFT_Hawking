@@ -324,6 +324,11 @@ theorem negOneSU_mul_self :
          noncomm_ring]
   exact one_mul _
 
+/-- `negOneSU⁻¹ = negOneSU` — order-2 implies self-inverse. -/
+theorem negOneSU_inv_eq_self :
+    negOneSU⁻¹ = negOneSU :=
+  (eq_inv_of_mul_eq_one_left negOneSU_mul_self).symm
+
 /-- `negOneSU ≠ 1` — the SU(2) element -I is not the identity. -/
 theorem negOneSU_ne_one :
     negOneSU ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
