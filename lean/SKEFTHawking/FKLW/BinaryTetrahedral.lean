@@ -601,6 +601,12 @@ theorem negOneSU_pow_two :
     negOneSU ^ 2 = (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
   rw [sq]; exact negOneSU_mul_self
 
+/-- `Nat.card (Subgroup.zpowers negOneSU) = 2` — the cyclic subgroup ⟨-I⟩
+has 2 elements: `{1, -I}`. -/
+theorem negOneSU_zpowers_card :
+    Nat.card (Subgroup.zpowers negOneSU) = 2 := by
+  rw [Nat.card_zpowers, negOneSU_orderOf_eq_two]
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
