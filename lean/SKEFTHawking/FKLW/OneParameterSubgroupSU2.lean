@@ -2852,6 +2852,60 @@ proof is refactored to use §9.11 directly.
 The refactor is a downstream proof change in §4.i.5b. Will be shipped
 in next iteration. -/
 
+/-! ### §9.12. Unconditional refactor of §4.i.5b
+
+Using `Su2LogMem_on_nhd_one` (§9.11) directly, we can ship an
+UNCONDITIONAL version of `vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually`
+that does NOT require the tracked Prop hypothesis. -/
+
+/-- **§9.12a. UNCONDITIONAL eventually-in-ts**: the §4.i.5b consumer
+without requiring the `Su2LogMemTracelessSkewHermitian_SU2` tracked Prop.
+Uses §9.11 + sequence-convergence to derive the eventually-in-ts result. -/
+theorem vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually_uncond
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    ∀ᶠ n in Filter.atTop,
+      vonNeumannUnitMatrixSeq seq n ∈
+        SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  obtain ⟨V, hV, hV_discharge⟩ := Su2LogMem_on_nhd_one
+  have h_val_tendsto := subtype_val_tendsto_one_of_tendsto h_seq
+  have h_ev_V : ∀ᶠ n in Filter.atTop, (seq n).val ∈ V :=
+    h_val_tendsto.eventually hV
+  filter_upwards [eventually_val_mem_target h_seq, h_ev_V] with n hn_target hn_V
+  unfold vonNeumannUnitMatrixSeq
+  by_cases h_zero : su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) = 0
+  · simp only [h_zero, dif_pos]
+    exact (SU2LieAlgebra.tracelessSkewHermitian (Fin 2)).zero_mem
+  · simp only [dif_neg h_zero]
+    rw [show ((‖su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)‖⁻¹ : ℂ) •
+            su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)) =
+            ((‖su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)‖⁻¹ : ℝ) •
+            su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)) by
+      ext i j
+      simp [Matrix.smul_apply, Complex.real_smul]]
+    have h_Y_ts : su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ∈
+        SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+      hV_discharge _ hn_V hn_target (seq n).property
+    exact (SU2LieAlgebra.tracelessSkewHermitian (Fin 2)).smul_mem _ h_Y_ts
+
+/-- **§9.12b. UNCONDITIONAL BW-limit-in-ts**: parallel to
+`vonNeumann_BW_limit_mem_tracelessSkewHermitian` but without the tracked
+Prop hypothesis. -/
+theorem vonNeumann_BW_limit_mem_tracelessSkewHermitian_uncond
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))))
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X)) :
+    X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  apply tracelessSkewHermitian_isClosed.mem_of_tendsto h_unit_tendsto
+  have h_ev := vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually_uncond h_seq
+  exact hφ.tendsto_atTop.eventually h_ev
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
