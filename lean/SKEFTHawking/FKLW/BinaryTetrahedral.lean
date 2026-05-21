@@ -646,6 +646,24 @@ theorem torusElem_pi_half_inv_eq_pow_three :
   rw [← pow_succ]
   exact torusElem_pi_half_pow_four
 
+/-- `weylElem⁻¹ ∈ binaryTetrahedralFull` — inverse of the j-quaternion
+is in 2T (subgroups are closed under inversion). -/
+theorem weylElem_inv_mem_binaryTetrahedralFull :
+    weylElem⁻¹ ∈ binaryTetrahedralFull :=
+  binaryTetrahedralFull.inv_mem weylElem_mem_binaryTetrahedralFull
+
+/-- `(torusElem (π/2))⁻¹ ∈ binaryTetrahedralFull` — inverse of the
+i-quaternion is in 2T. -/
+theorem torusElem_pi_half_inv_mem_binaryTetrahedralFull :
+    (torusElem (Real.pi / 2))⁻¹ ∈ binaryTetrahedralFull :=
+  binaryTetrahedralFull.inv_mem torusElem_pi_half_mem_binaryTetrahedralFull
+
+/-- `binaryTetrahedralElem⁻¹ ∈ binaryTetrahedralFull` — inverse of the
+half-integer quaternion is in 2T. -/
+theorem binaryTetrahedralElem_inv_mem_binaryTetrahedralFull :
+    binaryTetrahedralElem⁻¹ ∈ binaryTetrahedralFull :=
+  binaryTetrahedralFull.inv_mem binaryTetrahedralElem_mem_full
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
