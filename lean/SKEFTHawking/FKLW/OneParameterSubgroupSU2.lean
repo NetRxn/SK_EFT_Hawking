@@ -1528,7 +1528,77 @@ theorem vonNeumann_exp_pow_seq_tendsto
   unfold SU2MatrixExp.expAmbient
   exact Matrix.exp_zsmul _ _
 
-/-! ## §§4.h-5. (Next ship — substrate roadmap)
+/-! ### §4.h. SU(2)-matrix-level convergence (matrix-pow form)
+
+The §4.g chain concludes with `(expAmbient Y_{n_k}) ^ m_k → expAmbient (t • X)`
+in `Matrix (Fin 2) (Fin 2) ℂ`. We refine this using §1's
+`expAmbient_su2Log` + §4.b's `eventually_val_mem_target` to identify
+the LHS as the matrix integer-power of `(seq (φ k)).val`, the SU(2)
+element underlying our sequence. The resulting statement is:
+
+  `(seq (φ k)).val ^ m_k → expAmbient (t • X)` in `Matrix (Fin 2) (Fin 2) ℂ`.
+
+This is the **matrix-level form of the final convergence**. The next
+step (§4.i) lifts this through the SU(2) subtype and uses H closed to
+conclude `expAmbient (t • X) ∈ (range of H in Matrix _ _ ℂ)`, which
+combined with §3.5d's `DetExpZeroOnSu2_SU2` tracked-Prop will give the
+SU(2)-subtype inclusion needed for `OneParamSubgroupInSU2 H`. -/
+
+/-- **§4.h.1. Matrix-level rewrite (eventually)**: under `seq → 1`,
+eventually `expAmbient (su2Log (seq n).val) = (seq n).val`.
+
+From §4.b's `eventually_val_mem_target` (gives eventually-in-target)
++ §1's `expAmbient_su2Log` (right-inverse on target). -/
+theorem expAmbient_su2Log_seq_eventually
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    ∀ᶠ n in Filter.atTop,
+      SU2MatrixExp.expAmbient (su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+        = ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) := by
+  filter_upwards [eventually_val_mem_target h_seq] with n hn
+  exact expAmbient_su2Log hn
+
+/-- **§4.h.2. SU(2)-matrix-level convergence**: under the §4 hypothesis
+pack — including `seq → 1` (needed for matrix-log eventually-equality)
+— the integer-power sequence of the underlying SU(2) matrices converges
+to `expAmbient (t • X)` in `Matrix (Fin 2) (Fin 2) ℂ`.
+
+This is the natural pre-step before lifting through the SU(2) subtype
+in §4.i (which needs §3.5d's `DetExpZeroOnSu2_SU2` tracked Prop). -/
+theorem vonNeumann_su2Mat_pow_seq_tendsto
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))))
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ) ^
+          (⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋ : ℤ))
+      Filter.atTop
+      (nhds (SU2MatrixExp.expAmbient (t • X))) := by
+  -- §4.g.4 conclusion: (expAmbient Y_{n_k})^m_k → expAmbient (t • X)
+  have h_g4 :=
+    vonNeumann_exp_pow_seq_tendsto hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  -- §4.h.1 specialized to subsequence
+  have h_ev_subseq := hφ.tendsto_atTop.eventually
+    (expAmbient_su2Log_seq_eventually h_seq)
+  -- Apply rewrite via Tendsto.congr'.
+  refine Filter.Tendsto.congr' ?_ h_g4
+  filter_upwards [h_ev_subseq] with k hk
+  rw [hk]
+
+/-! ## §§4.i-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
