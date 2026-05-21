@@ -1023,7 +1023,88 @@ theorem vonNeumann_sequence_with_log
   obtain ⟨seq, h_mem, h_ne, h_tendsto⟩ := vonNeumann_extract_sequence H hH
   exact ⟨seq, h_mem, h_ne, h_tendsto, su2Log_seq_tendsto_zero h_tendsto⟩
 
-/-! ## §§4.c-5. (Next ship — substrate roadmap)
+/-! ### §4.c. Normalization toward the unit sphere of su(2)
+
+From `su2Log_seq_tendsto_zero` (§4.b), the matrix-log sequence `Y_n →
+0`. To extract a unit-norm direction via BW, we first show `Y_n ≠ 0`
+eventually (so the normalization `Y_n / ‖Y_n‖` is well-defined), then
+construct the unit-sphere sequence.
+
+The `Y_n ≠ 0` argument uses **local-inverse uniqueness** of `su2Log`:
+if `su2Log h = 0` for h in `target`, then `expAmbient (su2Log h) = h`
+gives `h = expAmbient 0 = 1`. Contrapositive: `h ≠ 1 ∧ h ∈ target ⟹
+su2Log h ≠ 0`.
+
+For the seq from §4.a, `seq n ≠ 1` ⟹ `(seq n).val ≠ 1` (subtype
+injectivity), combined with `(seq n).val ∈ target` eventually, yields
+`Y_n ≠ 0` eventually. -/
+
+/-- **Local injectivity of `su2Log` at 1**: for `h ∈ target`, if
+`su2Log h = 0`, then `h = 1`. -/
+theorem h_eq_one_of_su2Log_eq_zero
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ expAmbientPartialHomeo.target)
+    (h_log : su2Log h = 0) : h = 1 := by
+  have h_exp : SU2MatrixExp.expAmbient (su2Log h) = h := expAmbient_su2Log hh
+  rw [h_log] at h_exp
+  rw [← h_exp]
+  exact SU2MatrixExp.expAmbient_zero
+
+/-- **Contrapositive**: for `h ∈ target` with `h ≠ 1`, `su2Log h ≠ 0`. -/
+theorem su2Log_ne_zero_of_ne_one
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ expAmbientPartialHomeo.target)
+    (h_ne : h ≠ 1) : su2Log h ≠ 0 :=
+  fun h_log => h_ne (h_eq_one_of_su2Log_eq_zero hh h_log)
+
+/-- **Subtype value distinct from identity**: for `seq n ≠ 1` in SU(2),
+`(seq n).val ≠ 1` as matrices. -/
+theorem subtype_val_ne_one_of_ne_one
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)} {n : ℕ}
+    (h_ne : seq n ≠ 1) :
+    ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 1 := by
+  intro h_eq
+  apply h_ne
+  apply Subtype.ext
+  exact h_eq
+
+/-- **Eventually `Y_n ≠ 0`**: from `seq → 1` + `seq n ≠ 1`, the matrix-log
+sequence has nonzero entries (eventually). -/
+theorem eventually_su2Log_seq_ne_zero
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_ne : ∀ n, seq n ≠ 1)
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0 := by
+  have h_target_ev := eventually_val_mem_target h_seq
+  filter_upwards [h_target_ev] with n hn
+  exact su2Log_ne_zero_of_ne_one hn (subtype_val_ne_one_of_ne_one (h_ne n))
+
+/-- **Unit-sphere matrix sequence**: normalized matrix-log sequence
+(defined for any n; gives 0 when `Y_n = 0`). For n in the
+"eventually nonzero" set, `‖X_n‖ = 1`. -/
+noncomputable def vonNeumannUnitMatrixSeq
+    (seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (n : ℕ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  let Y := su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)
+  if h_ne : Y = 0 then 0 else (‖Y‖⁻¹ : ℂ) • Y
+
+/-- The unit-sphere matrix sequence has norm 1 when `Y_n ≠ 0`. -/
+theorem vonNeumannUnitMatrixSeq_norm_eq_one
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)} {n : ℕ}
+    (h_ne : su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0) :
+    ‖vonNeumannUnitMatrixSeq seq n‖ = 1 := by
+  unfold vonNeumannUnitMatrixSeq
+  simp only [dif_neg h_ne]
+  rw [norm_smul]
+  have h_norm_ne : ‖su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)‖ ≠ 0 := by
+    rw [norm_ne_zero_iff]; exact h_ne
+  rw [norm_inv, Complex.norm_real, Real.norm_eq_abs,
+      abs_of_nonneg (norm_nonneg _)]
+  field_simp
+
+/-! ## §§4.d-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
