@@ -2698,7 +2698,27 @@ theorem Su2LogMem_partial_discharge
     (SU2_Y_h_mem_tracelessSkewHermitian hh)
     (SU2_expAmbient_Y_h_eq hh h_ne_neg_two)
 
-/-! ### §9.9. (Next ships — Y_h continuity + neighborhood-based discharge)
+/-! ### §9.9. Y_h boundary at h = 1
+
+`Y_h 1 = 0`, hence `Y_h 1 ∈ source`. Combined with continuity of Y_h
+(deferred), this gives a nhd of 1 on which Y_h ∈ source. -/
+
+/-- **§9.9a. Y_h at h = 1 vanishes**: `Y_h 1 = 0`. -/
+theorem Y_h_one_eq_zero :
+    Y_h (1 : Matrix (Fin 2) (Fin 2) ℂ) = 0 := by
+  unfold Y_h
+  have h_tr : (1 : Matrix (Fin 2) (Fin 2) ℂ).trace = 2 := by
+    simp [Matrix.trace, Fin.sum_univ_two, Matrix.one_apply]
+  rw [h_tr]
+  simp [Real.arccos_one, Real.sinc_zero]
+
+/-- **§9.9b. Y_h 1 ∈ source**: immediate from §9.9a + `zero_mem_source`. -/
+theorem Y_h_one_mem_source :
+    Y_h (1 : Matrix (Fin 2) (Fin 2) ℂ) ∈ expAmbientPartialHomeo.source := by
+  rw [Y_h_one_eq_zero]
+  exact zero_mem_expAmbientPartialHomeo_source
+
+/-! ### §9.10. (Next ships — Y_h continuity + neighborhood-based discharge)
 
 Two remaining steps for the full unconditional discharge:
 
