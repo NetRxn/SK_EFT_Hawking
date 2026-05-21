@@ -3637,6 +3637,34 @@ theorem expAmbient_int_smul_anchor
     rw [h_one] at h_val
     exact Matrix.inv_eq_left_inv h_val
 
+/-! ### §11.h.ℝ. Continuity of `t ↦ expAmbient(t • X)`
+
+Composition of continuous `Complex.ofReal : ℝ → ℂ`, continuous smul
+`c ↦ c • X` on a normed module, and continuous `NormedSpace.exp` on
+the matrix ring. Pure Mathlib substrate composition; ~10 LoC.
+
+**Substrate role**: ℝ-density precursor. Combined with the ℤ-mult
+anchor identity, any continuity-extension argument can lift ℤ-mult
+equalities to ℝ-mult equalities via density of ℤ in ℝ (in the strict
+form, modulo periodicity considerations). Useful for any subsequent
+discharge of CartanFinalStep_SU2_v3 via Cartan classification, since
+"closed H + 1-param subgroup ⊆ H" must extend to "exp(ℝ•X) ⊆ H" for
+all real t (uses closure).
+-/
+
+/-- **`expAmbient ((t : ℂ) • X)` is continuous in `t : ℝ`** for any
+fixed `X : Matrix (Fin 2) (Fin 2) ℂ`. -/
+theorem expAmbient_real_smul_continuous
+    (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    Continuous (fun t : ℝ => SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X)) := by
+  have h1 : Continuous (fun t : ℝ => ((t : ℝ) : ℂ)) := Complex.continuous_ofReal
+  have h2 : Continuous (fun c : ℂ => c • X) := continuous_id.smul continuous_const
+  have h3 : Continuous (SU2MatrixExp.expAmbient :
+      Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) := by
+    unfold SU2MatrixExp.expAmbient
+    exact NormedSpace.exp_continuous
+  exact h3.comp (h2.comp h1)
+
 end OneParamSubgroupSU2
 
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
