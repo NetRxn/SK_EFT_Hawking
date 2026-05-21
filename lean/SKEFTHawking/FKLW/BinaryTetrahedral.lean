@@ -445,6 +445,23 @@ theorem negOneSU_ne_one :
   simp [negOneSU_val, Matrix.neg_apply, Matrix.one_apply] at h_00
   exact absurd h_00 (by norm_num)
 
+/-- `weylElem ^ 2 ≠ 1` — Weyl element has order > 2 (since weyl² = -I ≠ 1).
+
+Combined with `weylElem_orderOf_le_four` and `weylElem_pow_four`, this rules
+out `orderOf = 1, 2` for `weylElem` (positive divisors of 4 are 1, 2, 4). -/
+theorem weylElem_sq_ne_one :
+    weylElem ^ 2 ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  rw [sq, weylElem_sq_eq_negOneSU]
+  exact negOneSU_ne_one
+
+/-- `torusElem (π/2) ^ 2 ≠ 1` — the i-quaternion has order > 2
+(since torusElem(π/2)² = negOneSU = -I ≠ 1). -/
+theorem torusElem_pi_half_sq_ne_one :
+    torusElem (Real.pi / 2) ^ 2 ≠
+      (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  rw [sq, torusElem_pi_half_sq]
+  exact negOneSU_ne_one
+
 /-- `binaryTetrahedralFull` is non-trivial (contains weylElem ≠ 1). -/
 theorem binaryTetrahedralFull_ne_bot :
     binaryTetrahedralFull ≠ ⊥ := by
