@@ -342,9 +342,150 @@ theorem H_Fib_finite_card_ge_40_and_idComponent_bot_or_infinite :
     intro h_finite_set
     exact h_fin h_finite_set.to_subtype
 
+/-! ## §4.5. Wedge A — Cartan substrate bridge (predicate substrate)
+
+(Phase 5 Step 13 Path (i) — Wedge A, 2026-05-20)
+
+This section ships the **predicate-substrate** for the two Cartan
+theorems Wedge B will consume to discharge the 1-parameter subgroup
+chain. The substrate consists of:
+
+  - `H_Fib_accPt_one_unconditional` — strengthens `H_Fib_dichotomy_*`
+    to drop the discrete branch via the shipped session-31 unconditional
+    `H_Fib_infinite`. The Cartan-precondition AccPt witness for `1`
+    on `H_Fib` is now unconditional.
+
+  - `OneParamSubgroupInSU2 (H : Subgroup _) : Prop` — predicate
+    expressing "H contains a continuous nontrivial 1-parameter subgroup
+    (real-additive → SU(2)-multiplicative)".
+
+  - **Tracked Mathlib gap #1** `CartanInfiniteImpliesIdComponentNonTrivial_SU2 : Prop`
+    — "every closed infinite subgroup of SU(2) has nontrivial identity
+    component". This is the converse direction the §4 contrapositive
+    documented as the Mathlib4 v4.29.0 Cartan gap.
+
+  - **Tracked Mathlib gap #2** `CartanIdComponentContainsOneParamSubgroup_SU2 : Prop`
+    — "every closed subgroup of SU(2) with nontrivial identity
+    component contains a continuous 1-parameter subgroup". The SU(2)
+    specialization of the von Neumann 1-parameter subgroup theorem.
+
+  - Forward composition theorems building `H_Fib`-specific conclusions
+    from the tracked Props plus shipped substrate:
+    `H_Fib_idComponent_ne_bot_of_cartan`,
+    `H_Fib_contains_oneParamSubgroup_of_cartan`.
+
+**Pipeline Invariant #15 posture**: the two `Cartan...` declarations are
+**predicates (`Prop` `def`s), not axioms**. Downstream consumers
+(Wedge B + Wedge C) take them as explicit hypothesis parameters. No
+user sign-off required for shipping the predicates themselves; sign-off
+would be required only to *discharge* them as axioms — deferred either
+to a Mathlib upstream PR (Cartan's closed-subgroup theorem for compact
+Lie groups) or to a constructive project-local proof (~300-500 LoC,
+exp-surjectivity onto idComponent in compact Lie groups, multi-session).
+
+References (Mathlib4 substrate the predicates would consume if discharged):
+  - `Subgroup.connectedComponentOfOne` (already in use at §2).
+  - `MonoidHom`, `Continuous` (in `Mathlib.Topology.Algebra.Group.Basic`).
+-/
+
+/-- **Unconditional AccPt witness for 1 on `H_Fib`**.
+
+Strengthens `H_Fib_dichotomy_discrete_or_accPt` by ruling out the
+discrete-and-finite branch via the shipped session-31 unconditional
+`H_Fib_infinite` (commit `825384f` / `e176b9f` chain). If `H_Fib`
+had `DiscreteTopology` it would also be finite (closed-in-compact +
+discrete ⇒ finite), contradicting `H_Fib_infinite`. The dichotomy's
+right branch is therefore forced unconditionally. -/
+theorem H_Fib_accPt_one_unconditional :
+    AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal
+        (H_Fib : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) := by
+  rcases H_Fib_dichotomy_discrete_or_accPt with ⟨_h_disc, h_fin, _h_card⟩ | h_accPt
+  · exfalso
+    exact H_Fib_infinite (Set.toFinite _)
+  · exact h_accPt
+
+/-- **Predicate substrate**: a closed subgroup `H ≤ SU(2)` *contains a
+continuous 1-parameter subgroup* iff there is a continuous function
+`φ : ℝ → SU(2)` that is a homomorphism (`φ 0 = 1`, `φ (s + t) = φ s · φ t`),
+is nontrivial (`∃ t, φ t ≠ 1`), and whose image lies in `H`.
+
+This is the structural condition Wedge B consumes: combined with D3.a's
+normalizer ruleout it will force `H_Fib = ⊤`. -/
+def OneParamSubgroupInSU2
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Prop :=
+  ∃ φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+    Continuous φ ∧
+    φ 0 = 1 ∧
+    (∀ s t, φ (s + t) = φ s * φ t) ∧
+    (∃ t, φ t ≠ 1) ∧
+    (∀ t, φ t ∈ H)
+
+/-- **Tracked Mathlib4 gap #1** (Cartan, infinite → idComponent direction).
+
+"Every closed infinite subgroup `H` of SU(2) has nontrivial identity
+component (`Subgroup.connectedComponentOfOne ↥H ≠ ⊥`)."
+
+This is the converse of `H_Fib_idComponent_ne_bot_implies_infinite`
+(§4) and is the Mathlib4 v4.29.0 gap. The provable direction
+(`idComponent ≠ ⊥ ⇒ infinite`) holds for any compact T1 topological
+group; the converse fails in general (profinite counterexamples) but
+holds for compact Lie groups via Cartan's closed-subgroup theorem.
+
+**Status**: predicate (Prop `def`), not axiom. Downstream consumers
+take it as an explicit hypothesis. Discharge plan: either Mathlib
+upstream PR (Cartan for compact Lie groups) or constructive
+project-local proof via exp-surjectivity in SU(2). -/
+def CartanInfiniteImpliesIdComponentNonTrivial_SU2 : Prop :=
+  ∀ (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+    IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) →
+    Set.Infinite (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) →
+    Subgroup.connectedComponentOfOne (G := ↥H) ≠ ⊥
+
+/-- **Tracked Mathlib4 gap #2** (von Neumann 1-parameter subgroup theorem
+for SU(2)).
+
+"Every closed subgroup `H` of SU(2) with nontrivial identity component
+contains a continuous 1-parameter subgroup."
+
+In a compact Lie group, positive-dimensional closed subgroups contain
+1-parameter subgroups via the Lie-algebra exponential map. Mathlib4
+v4.29.0 lacks the exp-surjectivity onto positive-dimensional
+idComponents needed to discharge this constructively.
+
+**Status**: predicate (Prop `def`), not axiom. Same Pipeline Invariant
+#15 posture as gap #1: ship as hypothesis-tracked. -/
+def CartanIdComponentContainsOneParamSubgroup_SU2 : Prop :=
+  ∀ (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+    IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) →
+    Subgroup.connectedComponentOfOne (G := ↥H) ≠ ⊥ →
+    OneParamSubgroupInSU2 H
+
+/-- **Forward composition**: `H_Fib` has nontrivial identity component
+under Cartan tracked gap #1.
+
+Composes shipped substrate (`H_Fib_isClosed`, `H_Fib_infinite`) with
+the `CartanInfiniteImpliesIdComponentNonTrivial_SU2` hypothesis. -/
+theorem H_Fib_idComponent_ne_bot_of_cartan
+    (H_cartan : CartanInfiniteImpliesIdComponentNonTrivial_SU2) :
+    Subgroup.connectedComponentOfOne (G := ↥H_Fib) ≠ ⊥ :=
+  H_cartan H_Fib H_Fib_isClosed H_Fib_infinite
+
+/-- **Forward composition (Wedge A headline)**: `H_Fib` contains a
+continuous 1-parameter subgroup under both Cartan tracked gaps.
+
+This is the substrate Wedge B will consume to derive `H_Fib = ⊤`. -/
+theorem H_Fib_contains_oneParamSubgroup_of_cartan
+    (H_cartan_inf : CartanInfiniteImpliesIdComponentNonTrivial_SU2)
+    (H_cartan_one : CartanIdComponentContainsOneParamSubgroup_SU2) :
+    OneParamSubgroupInSU2 H_Fib :=
+  H_cartan_one H_Fib H_Fib_isClosed
+    (H_Fib_idComponent_ne_bot_of_cartan H_cartan_inf)
+
 /-! ## §5. Module summary
 
-`CartanSubstrate.lean` (Phase 6p Wave 2c.4a-R4.2.d.4.3.d.1, 2026-05-14):
+`CartanSubstrate.lean` (Phase 6p Wave 2c.4a-R4.2.d.4.3.d.1, 2026-05-14;
+Wedge A 2026-05-20):
 identity-component substrate for the Cartan classification of closed
 subgroups of SU(2).
 
@@ -367,6 +508,15 @@ subgroups of SU(2).
     of §3) +
     **`H_Fib_finite_card_ge_40_and_idComponent_bot_or_infinite`**
     (packaged D4.3.a + identity-component composition).
+  - **§4.5** (Wedge A 2026-05-20): Cartan substrate **bridge**.
+    `H_Fib_accPt_one_unconditional` (strengthens §4 dichotomy by
+    ruling out the discrete branch via shipped `H_Fib_infinite`),
+    `OneParamSubgroupInSU2` predicate, tracked Cartan-gap predicates
+    `CartanInfiniteImpliesIdComponentNonTrivial_SU2` (gap #1) +
+    `CartanIdComponentContainsOneParamSubgroup_SU2` (gap #2), and
+    composition headlines `H_Fib_idComponent_ne_bot_of_cartan` +
+    **`H_Fib_contains_oneParamSubgroup_of_cartan`** (the Wedge A
+    deliverable consumed by Wedge B).
 
 **Substantive content:**
   (a) The §1 generic substrate is reusable for any closed subgroup of
@@ -395,15 +545,23 @@ subgroups of SU(2).
   - Zero `maxHeartbeats` overrides.
   - Pipeline Invariant #15 (no new axioms without sign-off) ✓.
 
-**Deferred to D4.3.d.2+ (multi-session)**:
+**Deferred to D4.3.d.2+ (multi-session — Wedge B/C work)**:
 
-  - Cartan's closed-subgroup theorem (Mathlib4 v4.29.0 gap; ~300-500 LoC
-    if shipped directly; could be eventually upstreamed to Mathlib).
-  - 1-parameter subgroup theorem (von Neumann): positive-dim closed
-    subgroup of SU(2) contains a continuous 1-parameter subgroup
-    conjugate to the standard torus T.
-  - Maximal-torus classification: combined with D3.a's `N(T)` ruleout
-    and D2's non-centrality, forces `H_Fib = SU(2)`.
+  - **Discharge of Cartan tracked gap #1** (shipped here as
+    `CartanInfiniteImpliesIdComponentNonTrivial_SU2`): closed-subgroup
+    theorem for compact Lie groups specialized to SU(2)
+    (~300-500 LoC if proved project-local, or upstream Mathlib PR).
+  - **Discharge of Cartan tracked gap #2** (shipped here as
+    `CartanIdComponentContainsOneParamSubgroup_SU2`): von Neumann
+    1-parameter subgroup theorem for SU(2).
+  - Maximal-torus classification + non-centrality + D3.a's `N(T)`
+    ruleout (Wedge B): composes Wedge A's `H_Fib_contains_oneParamSubgroup_of_cartan`
+    with the §44 normalizer ruleout to force `H_Fib = SU(2)` and
+    discharge `FibSU2LieBundle.CartanClassificationOfSU2_Subgroup`
+    (the higher-level umbrella predicate consumed by §70
+    `fibonacci_density_from_cartan_via_H_Fib`).
+  - Binary polyhedral classification (Wedge C, optional polish):
+    `2D_n, 2T, 2O, 2I` enumeration to close the finite-case branch.
 
 References:
   - Knapp, *Lie Groups Beyond an Introduction* (2002), §IV.4 (Cartan's
