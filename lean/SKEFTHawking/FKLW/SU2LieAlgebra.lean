@@ -1982,6 +1982,32 @@ theorem pair_AC_lin_indep_of_pauliDet_ne_zero
     tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero h_det h_zero3
   exact ⟨ha, hc⟩
 
+/-! ## §23. Commute ⟹ ℝ-LD contrapositive (ts in Fin 2)
+
+For X, Y ∈ tracelessSkewHermitian (Fin 2), if X and Y commute as
+matrices (X·Y = Y·X), then they are ℝ-linearly dependent.
+
+This is the contrapositive of §19 `tracelessSkewHermitian_bracket_ne_zero_of_lin_indep`:
+LI ⟹ X·Y - Y·X ≠ 0. Contrapositively, X·Y - Y·X = 0 ⟹ ¬LI = LD.
+
+Useful for the H_Fib_TwoLITangents step (5) discharge — instead of
+constructing Ad(g)·X explicitly LI from X, we can argue by
+contradiction: assume Ad(g)·X ℝ-LD with X, derive matrix commutation,
+then derive g commutes with X's 1-param subgroup. -/
+
+/-- **Matrix-commute ⟹ ℝ-LD** for X, Y ∈ ts (Fin 2). Contrapositive of §19. -/
+theorem tracelessSkewHermitian_lin_dep_of_commute
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2))
+    (h_commute : X * Y = Y * X) :
+    ¬ (∀ a b : ℝ, (a : ℂ) • X + (b : ℂ) • Y = 0 → a = 0 ∧ b = 0) := by
+  intro h_LI
+  have h_bracket_ne : X * Y - Y * X ≠ 0 :=
+    tracelessSkewHermitian_bracket_ne_zero_of_lin_indep hX hY h_LI
+  apply h_bracket_ne
+  rw [h_commute, sub_self]
+
 /-- **2-LI from 3-LI via pauliDet** (pair BC): (B, C) ℝ-LI from
 `pauliDet A B C ≠ 0`. -/
 theorem pair_BC_lin_indep_of_pauliDet_ne_zero
