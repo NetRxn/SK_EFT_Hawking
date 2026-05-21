@@ -793,7 +793,113 @@ theorem expAmbient_mem_span_one_X_of_tracelessSkewHermitian
   exact expAmbient_mem_span_one_X_of_sq_eq_scalar
     (tracelessSkewHermitian_two_sq hX)
 
-/-! ## §§3.5d-4. (Next ship — substrate roadmap)
+/-! ### §3.5d. Tracked-Prop bridge for SU(2) determinant claim
+
+The remaining piece for full SU(2) inclusion of `expAmbient X` is
+`(expAmbient X).det = 1` for X ∈ tracelessSkewHermitian (Fin 2). This
+follows from the structural shipments above (§3.5: det closed form,
+§3.5c: exp X ∈ span ℂ {1, X}) once we identify the α, β coefficients
+as `cos r` and `sinc r` via cos/sin power-series recognition.
+
+**Pragmatic posture (this ship)**: introduce a smaller tracked predicate
+`DetExpZeroOnSu2_SU2` capturing exactly this missing piece, and use it
+to unblock the §4 von Neumann construction. The full discharge is
+documented as a substantive substrate ship for a subsequent work block.
+
+**Pipeline Invariant #15 posture**: this is a NEW tracked Prop. Per
+the user's explicit authorization in the loop prompt (continuation of
+the gap #2 discharge arc), we may introduce sub-tracked-Props that
+serve as compositional bridges, provided their discharge plan is
+documented. The discharge plan is in the docstring of
+`DetExpZeroOnSu2_SU2` below: either (a) cos/sin power-series
+recognition (Mathlib `Real.cos_eq_tsum` + the §3.5c+3.5 substrate), or
+(b) `Matrix.IsHermitian.spectral_theorem` on `Complex.I • X`. -/
+
+/-- **Tracked Prop**: for every X ∈ tracelessSkewHermitian (Fin 2),
+the determinant of `expAmbient X` equals 1.
+
+Mathematically a theorem; ship-status is **TRACKED**.
+
+Discharge plan (documented):
+* Combine §3.5 `det_alpha_one_plus_beta_smul_tracelessSkewHermitian`
+  with §3.5c `expAmbient_mem_span_one_X_of_tracelessSkewHermitian`
+  to get `det(expAmbient X) = α² + β² · su2RadiusSq X` for some α, β ∈ ℂ.
+* Then identify α = `cos r`, β = `sinc r` (r := √(su2RadiusSq X)) via
+  the cos/sin power-series recognition (Mathlib `Real.cos_eq_tsum`,
+  `Real.sin_eq_tsum`).
+* Conclude α² + β² · r² = cos²(r) + sin²(r) = 1.
+
+Alternative (spectral): apply `Matrix.IsHermitian.spectral_theorem` to
+`Complex.I • X` (Hermitian for X skew-Hermitian), decompose
+`X = U · diag(-iλ₁, -iλ₂) · U⁻¹` with λ_i ∈ ℝ summing to 0 (from
+tracelessness), then `det(exp X) = exp(-i(λ₁+λ₂)) = 1`.
+
+Either path: ~200-400 LoC of substantive Mathlib-PR-quality substrate.
+-/
+def DetExpZeroOnSu2_SU2 : Prop :=
+  ∀ {X : Matrix (Fin 2) (Fin 2) ℂ},
+    X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) →
+    Matrix.det (SU2MatrixExp.expAmbient X) = 1
+
+/-- Under the tracked Prop, `expAmbient X ∈ specialUnitaryGroup (Fin 2) ℂ`
+for X ∈ tracelessSkewHermitian (Fin 2). -/
+theorem expAmbient_mem_specialUnitary_of_DetExpZeroOnSu2
+    (h_det : DetExpZeroOnSu2_SU2)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
+    SU2MatrixExp.expAmbient X ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ := by
+  rw [Matrix.mem_specialUnitaryGroup_iff]
+  refine ⟨?_, h_det hX⟩
+  exact Matrix.IsSkewHermitian.exp_mem_unitaryGroup hX.1
+
+/-- The 1-parameter subgroup map at the SU(2) subtype level (conditional
+on `DetExpZeroOnSu2_SU2`). -/
+noncomputable def oneParamSU2Map
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (h_det : DetExpZeroOnSu2_SU2)
+    (t : ℝ) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  ⟨oneParamMatrixMap X t,
+   expAmbient_mem_specialUnitary_of_DetExpZeroOnSu2 h_det
+     (real_smul_tracelessSkewHermitian hX t)⟩
+
+/-- `(oneParamSU2Map hX h_det 0) = 1`. -/
+theorem oneParamSU2Map_zero
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (h_det : DetExpZeroOnSu2_SU2) :
+    oneParamSU2Map hX h_det 0 = 1 := by
+  apply Subtype.ext
+  show oneParamMatrixMap X 0 = (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ).val
+  rw [oneParamMatrixMap_zero]
+  rfl
+
+/-- `oneParamSU2Map hX h_det (s+t) = oneParamSU2Map hX h_det s * oneParamSU2Map hX h_det t`. -/
+theorem oneParamSU2Map_add
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (h_det : DetExpZeroOnSu2_SU2) (s t : ℝ) :
+    oneParamSU2Map hX h_det (s + t) =
+      oneParamSU2Map hX h_det s * oneParamSU2Map hX h_det t := by
+  apply Subtype.ext
+  show oneParamMatrixMap X (s + t) =
+       oneParamMatrixMap X s * oneParamMatrixMap X t
+  exact oneParamMatrixMap_add X s t
+
+/-- `oneParamSU2Map` is continuous in `t`. -/
+theorem oneParamSU2Map_continuous
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (h_det : DetExpZeroOnSu2_SU2) :
+    Continuous (oneParamSU2Map hX h_det) := by
+  rw [show (oneParamSU2Map hX h_det : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      = fun t => ⟨oneParamMatrixMap X t,
+        expAmbient_mem_specialUnitary_of_DetExpZeroOnSu2 h_det
+          (real_smul_tracelessSkewHermitian hX t)⟩ from rfl]
+  refine Continuous.subtype_mk ?_ _
+  exact oneParamMatrixMap_continuous X
+
+/-! ## §§4. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
