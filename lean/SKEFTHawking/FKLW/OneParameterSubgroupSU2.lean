@@ -1752,41 +1752,131 @@ theorem vonNeumann_expAmbient_mem_H_mat
   filter_upwards with k
   exact vonNeumann_mat_pow_mem_H_mat h_mem φ t k
 
-/-! ### §4.i.5-6. (Next ship — depends on tracked Props)
+/-! ### §4.i.5. BW-limit X lies in `tracelessSkewHermitian` (conditional)
 
-The remaining steps to complete the discharge of
-`OneParamSubgroupFromAccPt_SU2`:
+For the SU(2) lift of `expAmbient (t • X)` we need
+`X ∈ tracelessSkewHermitian (Fin 2)`. This follows from:
+- (TRACKED) `su2Log h ∈ tracelessSkewHermitian` for `h` in the local
+  exp target — the structural Lie-theoretic fact that matrix log near
+  identity of an SU(2) element is in `su(2)`.
+- `tracelessSkewHermitian` is a finite-dim ℝ-Submodule of
+  `Matrix (Fin 2) (Fin 2) ℂ`, hence CLOSED (via
+  `Submodule.closed_of_finiteDimensional`).
+- The normalized unit-sphere sequence `vonNeumannUnitMatrixSeq seq n`
+  is eventually in `tracelessSkewHermitian` (since `Y_n ∈ ts` + ℝ-smul
+  preserves `ts`).
+- BW limit of sequence in closed set is in the closed set. -/
 
-**§4.i.5**: Lift `expAmbient (t • X) ∈ H_mat` back to the SU(2)
-subtype. Two pieces required:
-  1. `expAmbient (t • X) ∈ specialUnitaryGroup` — provided by
-     `expAmbient_mem_specialUnitary_of_DetExpZeroOnSu2 h_det hX`
-     where `h_det : DetExpZeroOnSu2_SU2` (tracked Prop §3.5d) and
-     `hX : t • X ∈ tracelessSkewHermitian (Fin 2)`.
-  2. `hX` requires `X ∈ tracelessSkewHermitian`, which requires
-     `su2Log h ∈ tracelessSkewHermitian (Fin 2)` for h ∈ SU(2) ∩ target,
-     plus closedness of `tracelessSkewHermitian` (as finite-dim
-     ℝ-Submodule), plus the §4.d/4.c chain showing X is a limit of
-     normalized su2Log values.
+/-- **Tracked Prop**: `su2Log h ∈ tracelessSkewHermitian (Fin 2)` for
+every `h` in the local exp target.
 
-  These are substantive substrate ships; the §4.i.5 ship will introduce
-  a NEW tracked Prop `Su2LogMemTracelessSkewHermitian_SU2 : Prop`
-  capturing the first piece, with discharge plan via spectral theorem
-  on `i • h_skew = (h - h⁻¹) / 2`.
+Mathematically a theorem; ship-status is **TRACKED** (per Pipeline
+Invariant #15, with user authorization for the gap-#2 discharge arc).
 
-**§4.i.6**: Once §4.i.5 gives `expAmbient_SU2 : ↥SU(2)` with
-`expAmbient_SU2.val = expAmbient (t • X)`, combined with
-`vonNeumann_expAmbient_mem_H_mat`, conclude `expAmbient_SU2 ∈ H` by
-Subtype.val injectivity. Then assemble `OneParamSubgroupInSU2 H` via
-§3.5d's `oneParamSU2Map` infrastructure, with nontriviality from
-`X ≠ 0` (since ‖X‖ = 1 by §4.d's BW_limit_norm_eq_one) + injectivity
-of expAmbient on a neighborhood of 0.
+Discharge plan: the local IFT inverse `su2Log = expAmbientPartialHomeo.symm`
+is generic and doesn't *itself* know about Lie algebras. For h ∈ SU(2)
+near 1, su2Log h is the unique Y ∈ source with expAmbient Y = h. For h
+unitary, the spectral decomposition gives `h = U · diag(e^{iα}, e^{iβ}) · U⁻¹`
+with `α + β = 0` (from det = 1), and the principal log
+`Y = U · diag(iα, iβ) · U⁻¹` is skew-Hermitian (since i α, i β are pure
+imaginary) and traceless (since i(α+β) = 0). Identifying this Y with
+`su2Log h` (via local uniqueness of matrix log) gives the claim.
 
-**§5**: Final discharge of `OneParamSubgroupFromAccPt_SU2` as
-a conditional theorem under tracked Props:
-- `DetExpZeroOnSu2_SU2` (§3.5d, exists)
-- `Su2LogMemTracelessSkewHermitian_SU2` (NEW, §4.i.5)
-- the discharge becomes `OneParamSubgroupFromAccPt_SU2_of_tracked_props`. -/
+This is a Mathlib-upstream-PR-quality substrate (~200-400 LoC of work,
+mostly the spectral identification of the principal log). -/
+def Su2LogMemTracelessSkewHermitian_SU2 : Prop :=
+  ∀ {h : Matrix (Fin 2) (Fin 2) ℂ},
+    h ∈ expAmbientPartialHomeo.target →
+    h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ →
+    su2Log h ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)
+
+/-- **§4.i.5a. `tracelessSkewHermitian` is closed in `Matrix _ _ ℂ`**
+via `Submodule.closed_of_finiteDimensional` (finite-dim ℝ-Submodule). -/
+theorem tracelessSkewHermitian_isClosed :
+    IsClosed (SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :
+      Set (Matrix (Fin 2) (Fin 2) ℂ)) :=
+  (SU2LieAlgebra.tracelessSkewHermitian (Fin 2)).closed_of_finiteDimensional
+
+/-- **§4.i.5b. The unit-matrix-seq is eventually in `tracelessSkewHermitian`
+(conditional on the tracked Prop)**: under `seq → 1` + `seq n ∈ SU(2) by subtype`
++ `Su2LogMemTracelessSkewHermitian_SU2`, `vonNeumannUnitMatrixSeq seq n
+∈ tracelessSkewHermitian` for all n.
+
+Proof: Y_n = su2Log (seq n).val ∈ ts eventually (tracked Prop applied
+on the eventually-in-target set). Then `(‖Y_n‖⁻¹ : ℂ) • Y_n` is
+ℝ-smul-equivalent to `(‖Y_n‖⁻¹ : ℝ) • Y_n`, which is in ts (ℝ-Submodule
+closed under ℝ-smul). For n where Y_n = 0, vonNeumannUnitMatrixSeq = 0 ∈ ts. -/
+theorem vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually
+    (h_tracked : Su2LogMemTracelessSkewHermitian_SU2)
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    ∀ᶠ n in Filter.atTop,
+      vonNeumannUnitMatrixSeq seq n ∈
+        SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  filter_upwards [eventually_val_mem_target h_seq] with n hn
+  unfold vonNeumannUnitMatrixSeq
+  by_cases h_zero : su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) = 0
+  · -- If Y_n = 0, the seq value is 0 ∈ ts
+    simp only [h_zero, dif_pos]
+    exact (SU2LieAlgebra.tracelessSkewHermitian (Fin 2)).zero_mem
+  · -- Y_n ≠ 0: seq value is (‖Y_n‖⁻¹ : ℂ) • Y_n
+    simp only [dif_neg h_zero]
+    -- Convert ℂ-smul to ℝ-smul.
+    rw [show ((‖su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)‖⁻¹ : ℂ) •
+            su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)) =
+            ((‖su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)‖⁻¹ : ℝ) •
+            su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ)) by
+      ext i j
+      simp [Matrix.smul_apply, Complex.real_smul]]
+    -- Apply ℝ-smul closure on the tracked Prop's su2Log ∈ ts.
+    have h_Y_ts : su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ∈
+        SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+      h_tracked hn (seq n).property
+    exact (SU2LieAlgebra.tracelessSkewHermitian (Fin 2)).smul_mem _ h_Y_ts
+
+/-- **§4.i.5c. BW-limit X is in `tracelessSkewHermitian`** (conditional). -/
+theorem vonNeumann_BW_limit_mem_tracelessSkewHermitian
+    (h_tracked : Su2LogMemTracelessSkewHermitian_SU2)
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))))
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X)) :
+    X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  apply tracelessSkewHermitian_isClosed.mem_of_tendsto h_unit_tendsto
+  have h_ev := vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually
+    h_tracked h_seq
+  exact hφ.tendsto_atTop.eventually h_ev
+
+/-! ### §4.i.6. (Next ship — final composition)
+
+With §4.i.5 giving `X ∈ tracelessSkewHermitian` (conditional on
+`Su2LogMemTracelessSkewHermitian_SU2`), we have all the pieces for the
+final SU(2)-subtype lift and assembly:
+
+1. **`expAmbient (t • X) ∈ specialUnitaryGroup`**: from
+   `expAmbient_mem_specialUnitary_of_DetExpZeroOnSu2 h_det
+      (real_smul_tracelessSkewHermitian hX t)` where `hX = §4.i.5c result`,
+   `h_det : DetExpZeroOnSu2_SU2`.
+2. **Lift to subtype**: form `⟨expAmbient (t • X), proof⟩ : ↥SU(2)`.
+3. **Image in H**: from §4.i.4's `vonNeumann_expAmbient_mem_H_mat`,
+   `expAmbient (t • X) ∈ H_mat`. By Subtype.val injectivity, the lifted
+   element is in H.
+4. **Nontriviality**: from §4.d's `vonNeumann_BW_limit_norm_eq_one`,
+   `‖X‖ = 1` so `X ≠ 0`. For small `t ≠ 0`, `t • X` is in the source
+   neighborhood + nonzero, and expAmbient is locally injective (from
+   the OpenPartialHomeomorph structure), so `expAmbient (t • X) ≠
+   expAmbient 0 = 1`.
+5. **Assemble**: `oneParamSU2Map hX h_det` provides φ : ℝ → ↥SU(2)
+   continuous, φ(0) = 1, φ(s+t) = φ s * φ t (§3.5d shipped).
+   Combined with (3) and (4): `OneParamSubgroupInSU2 H` holds.
+
+Then `OneParamSubgroupFromAccPt_SU2` discharges conditionally on
+`DetExpZeroOnSu2_SU2 ∧ Su2LogMemTracelessSkewHermitian_SU2`. -/
 
 /-! ## §5. Module summary (current ship)
 
