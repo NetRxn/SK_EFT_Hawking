@@ -587,6 +587,15 @@ theorem negOneSU_mem_binaryTetrahedralCyclic :
   rw [← binaryTetrahedralElem_cube]
   exact Subgroup.npow_mem_zpowers binaryTetrahedralElem 3
 
+/-- **`binaryTetrahedralElem⁻¹ = binaryTetrahedralElem^5`** — inverse of
+the order-6 generator is its fifth power, since `gen * gen^5 = gen^6 = 1`. -/
+theorem binaryTetrahedralElem_inv_eq_pow_five :
+    binaryTetrahedralElem⁻¹ = binaryTetrahedralElem ^ 5 := by
+  refine (eq_inv_of_mul_eq_one_left ?_).symm
+  -- Goal: binaryTetrahedralElem ^ 5 * binaryTetrahedralElem = 1
+  rw [← pow_succ]
+  exact binaryTetrahedralElem_sixth
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
