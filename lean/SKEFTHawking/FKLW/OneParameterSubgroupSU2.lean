@@ -2191,6 +2191,114 @@ lemma cos_hasSum_su2 (r : ℝ) :
   rw [← h_eq]
   exact h_cos
 
+/-- **§7.7. Sinc identification**: for real r, the scalar series
+Σ_k (-r²)^k / (2k+1)! equals `Real.sinc r` (cast to ℂ).
+
+Proof: case split on r=0 (sinc 0 = 1, only k=0 term contributes) vs
+r≠0 (via `Complex.hasSum_sin / r`). -/
+lemma sinc_hasSum_su2 (r : ℝ) :
+    HasSum (fun k => ((-(r^2) : ℝ) : ℂ)^k / ((2 * k + 1).factorial : ℂ))
+      ((Real.sinc r : ℝ) : ℂ) := by
+  by_cases h : r = 0
+  · subst h
+    -- Only the k = 0 term is nonzero: 0^0 / 1! = 1 = Real.sinc 0
+    have h_eq : (fun k => ((-((0 : ℝ)^2) : ℝ) : ℂ)^k / ((2 * k + 1).factorial : ℂ)) =
+                (fun k => if k = 0 then (1 : ℂ) else 0) := by
+      funext k
+      by_cases hk : k = 0
+      · subst hk; simp
+      · have : ((-((0 : ℝ)^2) : ℝ) : ℂ) = 0 := by norm_num
+        rw [this, zero_pow hk, zero_div]
+        simp [hk]
+    rw [h_eq]
+    rw [show ((Real.sinc 0 : ℝ) : ℂ) = 1 by rw [Real.sinc_zero]; push_cast; rfl]
+    exact hasSum_single 0 (fun b hb => if_neg hb)
+  · rw [Real.sinc, if_neg h]
+    have h_sin := Complex.hasSum_sin (r : ℂ)
+    have hr_ne : (r : ℂ) ≠ 0 := by exact_mod_cast h
+    have hd := h_sin.div_const (r : ℂ)
+    have h_target : Complex.sin (r : ℂ) / (r : ℂ) = ((Real.sin r / r : ℝ) : ℂ) := by
+      rw [← Complex.ofReal_sin]; push_cast; ring
+    rw [h_target] at hd
+    have h_eq : (fun i => (-1 : ℂ) ^ i * (r : ℂ) ^ (2 * i + 1) /
+        ((2 * i + 1).factorial : ℂ) / (r : ℂ))
+              = (fun k => ((-(r^2) : ℝ) : ℂ)^k / ((2 * k + 1).factorial : ℂ)) := by
+      funext k
+      push_cast
+      field_simp
+      ring
+    rw [← h_eq]
+    exact hd
+
+/-- **§7.8. DISCHARGE of `DetExpZeroOnSu2_SU2`**: combining the §7
+power-series machinery, this CLOSES the first of the two remaining
+tracked Props from the gap-#2 conditional discharge arc.
+
+Proof strategy:
+1. Set r := √(su2RadiusSq X), so r² = su2RadiusSq X.
+2. X ∈ ts → X² = -(su2RadiusSq X : ℂ) • 1 = (-(r²) : ℂ) • 1.
+3. Apply `expAmbient_decomp_of_sq_eq_scalar` with α := Complex.cos r,
+   β := Real.sinc r (cast to ℂ).
+4. `det(α • 1 + β • X) = α² + β² · su2RadiusSq X` (§3.5).
+5. = (cos r)² + (sinc r · r)² = cos² r + sin² r = 1
+   (via Real.cos_sq_add_sin_sq + sinc_mul = sin identity).
+
+This is standard-kernel-only (verified via `lean_verify` on import). -/
+theorem DetExpZeroOnSu2_SU2_discharged : DetExpZeroOnSu2_SU2 := by
+  intro X hX
+  let r : ℝ := Real.sqrt (su2RadiusSq X)
+  have hr_sq : r ^ 2 = su2RadiusSq X :=
+    Real.sq_sqrt (su2RadiusSq_nonneg X)
+  have hX_sq : X * X = ((-(r^2) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    rw [tracelessSkewHermitian_two_sq hX, hr_sq]
+    push_cast; ring_nf
+  have h_decomp := expAmbient_decomp_of_sq_eq_scalar hX_sq
+    (cos_hasSum_su2 r) (sinc_hasSum_su2 r)
+  rw [h_decomp, det_alpha_one_plus_beta_smul_tracelessSkewHermitian hX, ← hr_sq]
+  have h_sinc_r : (Real.sinc r : ℂ) * (r : ℂ) = (Real.sin r : ℂ) := by
+    rw [← Complex.ofReal_mul]
+    congr 1
+    rw [Real.sinc]
+    by_cases h : r = 0
+    · rw [h]; simp
+    · simp [h]
+  have h_cos_sin : (Real.cos r : ℂ)^2 + (Real.sin r : ℂ)^2 = 1 := by
+    have h := Real.cos_sq_add_sin_sq r
+    exact_mod_cast h
+  rw [show Complex.cos (r : ℂ) = (Real.cos r : ℂ) from (Complex.ofReal_cos r).symm]
+  have h_pow_cast : ((r^2 : ℝ) : ℂ) = ((r : ℂ))^2 := by push_cast; rfl
+  rw [h_pow_cast]
+  have h_sq : ((Real.sinc r : ℂ))^2 * ((r : ℂ))^2 = ((Real.sin r : ℂ))^2 := by
+    rw [← mul_pow, h_sinc_r]
+  rw [h_sq]
+  exact h_cos_sin
+
+/-! ## §8. Reduced-conditional headlines
+
+With `DetExpZeroOnSu2_SU2_discharged` shipped, the F.21 headline now
+needs only ONE remaining new tracked Prop (`Su2LogMemTracelessSkewHermitian_SU2`)
++ the original `CartanFinalStep_SU2`. This is **one fewer hypothesis**
+than the §6 versions. -/
+
+/-- **Reduced-conditional F.21 from TWO tracked Props** (absorbing
+`DetExpZeroOnSu2_SU2` via §7.8's discharge). -/
+theorem fibonacci_density_F21_from_two_tracked_props
+    (h_log_tracked : Su2LogMemTracelessSkewHermitian_SU2)
+    (h_cartan_final : SKEFTHawking.FKLW.CartanFinalStep_SU2) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  fibonacci_density_F21_from_three_tracked_props
+    DetExpZeroOnSu2_SU2_discharged h_log_tracked h_cartan_final
+
+/-- **Reduced-conditional `H_Fib = ⊤`** (absorbing `DetExpZeroOnSu2_SU2`). -/
+theorem H_Fib_eq_top_from_two_tracked_props
+    (h_log_tracked : Su2LogMemTracelessSkewHermitian_SU2)
+    (h_cartan_final : SKEFTHawking.FKLW.CartanFinalStep_SU2) :
+    SKEFTHawking.FKLW.H_Fib = ⊤ :=
+  H_Fib_eq_top_from_three_tracked_props
+    DetExpZeroOnSu2_SU2_discharged h_log_tracked h_cartan_final
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
