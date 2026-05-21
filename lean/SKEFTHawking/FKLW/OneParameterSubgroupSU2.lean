@@ -3627,6 +3627,134 @@ theorem su2RadiusSq_unitary_conj
   simp [Matrix.smul_apply, Matrix.one_apply_eq] at this
   exact this
 
+/-- **`su2RadiusSq` smul rule**: for real scalar `c` and any matrix `X`,
+`su2RadiusSq (c • X) = c² · su2RadiusSq X`.
+
+Proof: direct entry calculation. `c • X` entries are `(c : ℂ) * X entries`,
+so `(c • X) 0 0` has `.im = c * (X 0 0).im` (since c is real, `.re = c`),
+and `‖(c • X) 0 1‖² = c² · ‖X 0 1‖²` (norm of scalar product).
+Both squared terms contribute `c²` factor. -/
+theorem su2RadiusSq_smul (c : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    su2RadiusSq (((c : ℝ) : ℂ) • X) = c^2 * su2RadiusSq X := by
+  unfold su2RadiusSq
+  simp only [Matrix.smul_apply, smul_eq_mul]
+  have h_im : ((↑c : ℂ) * X 0 0).im = c * (X 0 0).im := by
+    rw [Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, zero_mul, add_zero]
+  have h_norm_sq : ‖(↑c : ℂ) * X 0 1‖^2 = c^2 * ‖X 0 1‖^2 := by
+    rw [norm_mul, Complex.norm_real, Real.norm_eq_abs, mul_pow, sq_abs]
+  rw [h_im, h_norm_sq]
+  ring
+
+/-- **`su2RadiusSq` zero iff X = 0 on ts**: for X ∈ ts (Fin 2),
+`su2RadiusSq X = 0 ↔ X = 0`.
+
+For X ∈ ts, X = 0 iff all entries are 0. su2RadiusSq encodes
+`(X 0 0).im² + ‖X 0 1‖²`. Both = 0 iff `(X 0 0).im = 0` and `X 0 1 = 0`.
+For X ∈ ts: `(X 0 0).re = 0` (skew-Hermitian forces purely imaginary
+diagonal), `X 1 1 = -X 0 0` (traceless), `X 1 0 = -star(X 0 1)`
+(skew-Hermitian off-diagonal). So `X 0 0 = 0, X 0 1 = 0 ⟹ X 1 0 = 0,
+X 1 1 = 0 ⟹ X = 0`. -/
+theorem tracelessSkewHermitian_su2RadiusSq_eq_zero_iff
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
+    su2RadiusSq X = 0 ↔ X = 0 := by
+  constructor
+  · intro h
+    unfold su2RadiusSq at h
+    -- (X 0 0).im² + ‖X 0 1‖² = 0
+    have h_sum_zero : (X 0 0).im ^ 2 + ‖X 0 1‖ ^ 2 = 0 := h
+    have h_im_sq_nn : 0 ≤ (X 0 0).im ^ 2 := sq_nonneg _
+    have h_norm_sq_nn : 0 ≤ ‖X 0 1‖ ^ 2 := sq_nonneg _
+    have h_im_sq : (X 0 0).im ^ 2 = 0 := by linarith
+    have h_norm_sq : ‖X 0 1‖ ^ 2 = 0 := by linarith
+    have h_im : (X 0 0).im = 0 := pow_eq_zero_iff (n := 2) (by norm_num) |>.mp h_im_sq
+    have h_norm : ‖X 0 1‖ = 0 := pow_eq_zero_iff (n := 2) (by norm_num) |>.mp h_norm_sq
+    have h_X01_zero : X 0 1 = 0 := norm_eq_zero.mp h_norm
+    -- Extract (X 0 0).re = 0 via skew-Hermicity
+    obtain ⟨hX_skew, hX_trace⟩ := hX
+    -- Skew-Hermicity gives X.conjTranspose = -X, so X 0 0 = -star (X 0 0)
+    have h_X00_skew : star (X 0 0) = -(X 0 0) := by
+      have : X.conjTranspose 0 0 = (-X) 0 0 := by rw [hX_skew]
+      simp [Matrix.conjTranspose, Matrix.neg_apply] at this
+      exact this
+    -- From star(X 0 0) = -X 0 0 and (X 0 0).im = 0: X 0 0 = 0
+    have h_X00_zero : X 0 0 = 0 := by
+      have h_re : (X 0 0).re = -(X 0 0).re := by
+        have := congrArg Complex.re h_X00_skew
+        simp [Complex.star_def, Complex.conj_re, Complex.neg_re] at this
+        exact this
+      have h_re_zero : (X 0 0).re = 0 := by linarith
+      apply Complex.ext
+      · exact h_re_zero
+      · exact h_im
+    -- Traceless: X 0 0 + X 1 1 = 0, so X 1 1 = 0
+    have h_X11_zero : X 1 1 = 0 := by
+      have : X.trace = 0 := hX_trace
+      rw [Matrix.trace_fin_two] at this
+      rw [h_X00_zero, zero_add] at this
+      exact this
+    -- Skew-Hermitian off-diagonal: X 1 0 = -star(X 0 1) = 0
+    have h_X10_zero : X 1 0 = 0 := by
+      have h_skew_10 : X.conjTranspose 1 0 = (-X) 1 0 := by rw [hX_skew]
+      simp only [Matrix.conjTranspose_apply, Matrix.neg_apply,
+                 RCLike.star_def, Complex.star_def] at h_skew_10
+      -- h_skew_10 : starRingEnd ℂ (X 0 1) = -X 1 0
+      rw [h_X01_zero, map_zero] at h_skew_10
+      -- h_skew_10 : 0 = -X 1 0
+      have h_neg_eq : -X 1 0 = 0 := h_skew_10.symm
+      exact neg_eq_zero.mp h_neg_eq
+    -- Now all entries are 0
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [h_X00_zero, h_X01_zero, h_X10_zero, h_X11_zero, Matrix.zero_apply]
+  · intro h
+    rw [h]
+    unfold su2RadiusSq
+    simp
+
+/-- **`su2RadiusSq X > 0` for X ∈ ts, X ≠ 0**. -/
+theorem tracelessSkewHermitian_su2RadiusSq_pos
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0) :
+    0 < su2RadiusSq X := by
+  have h_nonneg := su2RadiusSq_nonneg X
+  have h_ne : su2RadiusSq X ≠ 0 := by
+    intro h
+    exact hX_ne ((tracelessSkewHermitian_su2RadiusSq_eq_zero_iff hX).mp h)
+  exact lt_of_le_of_ne h_nonneg (Ne.symm h_ne)
+
+/-- **Ad-real-scalar forces |α| = 1**: for X ∈ ts (Fin 2), X ≠ 0, U unitary,
+if `U·X·star U = α • X` for some `α : ℝ`, then `α² = 1` (i.e., `α ∈ {±1}`).
+
+Proof via Frobenius norm preservation (`su2RadiusSq_unitary_conj`):
+- `su2RadiusSq (U·X·star U) = su2RadiusSq X` (preservation)
+- `su2RadiusSq (α • X) = α² · su2RadiusSq X` (smul rule)
+- Hence `α² · su2RadiusSq X = su2RadiusSq X`
+- Cancel `su2RadiusSq X > 0` (for X ≠ 0 in ts): `α² = 1`. -/
+theorem ts_Ad_real_scalar_sq_eq_one
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0)
+    {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    {α : ℝ}
+    (h_scaled : U * X * star U = ((α : ℝ) : ℂ) • X) :
+    α^2 = 1 := by
+  have h_radius_eq : su2RadiusSq (U * X * star U) = α^2 * su2RadiusSq X := by
+    rw [h_scaled]
+    exact su2RadiusSq_smul α X
+  rw [su2RadiusSq_unitary_conj hX hU] at h_radius_eq
+  -- h_radius_eq : su2RadiusSq X = α^2 * su2RadiusSq X
+  have h_pos : 0 < su2RadiusSq X := tracelessSkewHermitian_su2RadiusSq_pos hX hX_ne
+  have h_ne : su2RadiusSq X ≠ 0 := ne_of_gt h_pos
+  -- (1 - α²) · su2RadiusSq X = 0, su2RadiusSq X ≠ 0, so α² = 1
+  have : (α^2 - 1) * su2RadiusSq X = 0 := by linarith
+  have h_factor : α^2 - 1 = 0 := by
+    rcases mul_eq_zero.mp this with h | h
+    · exact h
+    · exact absurd h h_ne
+  linarith
+
 /-- **Ad-exp commutation for unitary conjugation**. -/
 theorem expAmbient_unitary_conj
     {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
