@@ -1281,24 +1281,89 @@ algebraic identity `(m_k · ‖Y_{n_k}‖) • X_k = (m_k : ℝ) • Y_{n_k}`
 (when `Y_{n_k} ≠ 0`) rewrites this into the form needed for
 `exp_smul` / `exp_zsmul`. -/
 
--- (Auxiliary helper deferred — direct ℝ-smul convergence statement
--- below suffices for §4.f without it.)
+/-! #### Real-scalar continuity infrastructure
 
-/-! **Scalar-vector convergence (ℂ-smul form, deferred)**: combining §4.d
-and §4.e via `Tendsto.smul` requires the `ContinuousSMul ℝ (Matrix _ _ ℂ)`
-instance, which is *not* auto-derived from the local
-`Matrix.linftyOpNormedAlgebra` (a ℂ-algebra structure giving
-ContinuousSMul ℂ, not ℝ).
+The local `Matrix.linftyOpNormedAlgebra` is a ℂ-normed-algebra structure
+and provides `ContinuousSMul ℂ (Matrix (Fin 2) (Fin 2) ℂ)`, but does
+*not* synthesize `ContinuousSMul ℝ` automatically (Mathlib does not
+provide a generic `ContinuousSMul ℂ → ContinuousSMul ℝ` derivation;
+see also `Complex.continuousSMul` style instances which are explicit).
 
-The discharge plan: either (a) provide an explicit `ContinuousSMul ℝ
-(Matrix _ _ ℂ)` instance via `RestrictScalars` or `Module.compHom`
-machinery, or (b) reformulate the convergence using ℂ-scalar smul
-(`((t : ℂ) • X)`) and bridge via `Complex.continuous_ofReal`. The
-latter is cleaner but requires the cast-handling shown to be tricky
-in this turn (the goal mismatches between `((α * β : ℝ) : ℂ)` and
-`((α : ℝ) : ℂ) * ((β : ℝ) : ℂ)` after coe-distribution).
+We provide the explicit ℝ-instance below via composition of:
+- `Complex.continuous_ofReal : Continuous (↑ : ℝ → ℂ)`,
+- the existing `ContinuousSMul ℂ (Matrix (Fin 2) (Fin 2) ℂ)`,
+- the entry-wise identity `(r : ℝ) • M = (r : ℂ) • M`
+  (from `Complex.real_smul : (r : ℝ) • (z : ℂ) = ↑r * z`).
 
-Deferred to next work block. -/
+This is a *small Mathlib-upstream-PR-quality contribution*: an
+explicit `ContinuousSMul ℝ` instance on `Matrix _ _ ℂ` available
+locally via the `linftyOp` topology. -/
+
+/-- Entry-wise: real-scalar smul on a complex matrix equals coerced
+complex-scalar smul. Used to reduce ℝ-continuity to ℂ-continuity. -/
+lemma real_smul_matrix2C_eq_complex_smul
+    (r : ℝ) (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    (r : ℝ) • M = ((r : ℂ) • M) := by
+  ext i j
+  simp [Matrix.smul_apply, Complex.real_smul]
+
+/-- **Explicit `ContinuousSMul ℝ` instance on `Matrix (Fin 2) (Fin 2) ℂ`**:
+the real-scalar smul `(r, M) ↦ r • M` is continuous as a map
+`ℝ × Matrix _ _ ℂ → Matrix _ _ ℂ`.
+
+Proof: via entry-wise identity `(r : ℝ) • M = (r : ℂ) • M` plus
+continuity of `Complex.ofReal` and of `ℂ`-smul on the ℂ-algebra
+`Matrix _ _ ℂ`. -/
+noncomputable instance continuousSMul_real_Matrix2C :
+    ContinuousSMul ℝ (Matrix (Fin 2) (Fin 2) ℂ) := by
+  constructor
+  -- Rewrite the smul as ℂ-smul via the entry-wise identity.
+  have h_eq : (fun p : ℝ × Matrix (Fin 2) (Fin 2) ℂ => p.1 • p.2) =
+              (fun p : ℝ × Matrix (Fin 2) (Fin 2) ℂ => (p.1 : ℂ) • p.2) := by
+    funext p
+    exact real_smul_matrix2C_eq_complex_smul p.1 p.2
+  rw [h_eq]
+  -- Now compose: (r, M) ↦ ((r : ℂ), M) ↦ (r : ℂ) • M.
+  exact continuous_smul.comp
+    ((Complex.continuous_ofReal.comp continuous_fst).prodMk continuous_snd)
+
+/-! #### §4.f main theorem
+
+**Scalar-vector convergence**: combining §4.d (BW unit-matrix limit
+`X_k → X`) with §4.e (floor-times-scale `(m_k · ‖Y_{n_k}‖) → t`) via
+`Filter.Tendsto.smul` (using the just-defined `ContinuousSMul ℝ`
+instance) gives `(m_k · ‖Y_{n_k}‖) • X_k → t • X`. -/
+
+/-- **§4.f. Scalar-vector convergence (ℝ-smul form)**: under the §4
+hypothesis pack — strictly monotone `φ`, eventually-nonzero matrix-log
+sequence, log-tendsto-zero, BW-extracted unit-matrix limit `X`, and a
+real `t` — the scaled-by-floor-times-norm subsequence converges to
+`t • X` in `Matrix (Fin 2) (Fin 2) ℂ`.
+
+This is the bridge that converts §4.d's BW limit and §4.e's
+integer-rounding convergence into the form needed for §4.g's
+`expAmbient` composition (`(m_k : ℤ) • Y_{n_k} → t • X`). -/
+theorem vonNeumann_scaled_unit_tendsto_real
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        (((⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋ : ℤ) : ℝ) *
+          ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖) •
+          vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop
+      (nhds (t • X)) :=
+  (vonNeumann_floor_scale_tendsto hφ h_ev_ne h_log_tendsto t).smul h_unit_tendsto
 
 /-! ## §§4.g-5. (Next ship — substrate roadmap)
 
