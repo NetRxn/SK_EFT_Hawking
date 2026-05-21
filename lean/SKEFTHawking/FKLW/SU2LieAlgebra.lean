@@ -1938,4 +1938,31 @@ theorem tracelessSkewHermitian_unitary_conj
   rw [Matrix.mul_one]
   exact hX.2
 
+/-! ## §22. 2-LI corollary from 3-vector LI
+
+For 3 matrices A, B, C ∈ Matrix (Fin 2) (Fin 2) ℂ with `pauliDet A B C ≠ 0`,
+any pair extracted from {A, B, C} is ℝ-LI as matrices.
+
+This is a direct consequence of the 3-LI criterion: from `a • A + b • B = 0`
+we get `a • A + b • B + 0 • C = 0`, and 3-LI ⟹ `a = b = 0`.
+
+Useful corollary for the H_Fib_TwoLITangents discharge: from
+`σ_Fib_lie_bundle_pauliDet ≠ 0` (already shipped for 3 σ_Fib elements),
+extract any 2-LI pair.
+-/
+
+/-- **2-LI from 3-LI via pauliDet**: pairs from a 3-LI triple are 2-LI. -/
+theorem pair_lin_indep_of_pauliDet_ne_zero
+    {A B C : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_det : pauliDet A B C ≠ 0) :
+    ∀ a b : ℝ, (a : ℂ) • A + (b : ℂ) • B = 0 → a = 0 ∧ b = 0 := by
+  intro a b h_zero
+  -- a • A + b • B + 0 • C = 0
+  have h_zero3 : (a : ℂ) • A + (b : ℂ) • B + ((0 : ℝ) : ℂ) • C = 0 := by
+    rw [Complex.ofReal_zero, zero_smul, add_zero]
+    exact h_zero
+  obtain ⟨ha, hb, _⟩ :=
+    tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero h_det h_zero3
+  exact ⟨ha, hb⟩
+
 end SKEFTHawking.FKLW.SU2LieAlgebra
