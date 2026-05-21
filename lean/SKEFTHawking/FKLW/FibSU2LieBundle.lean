@@ -5566,4 +5566,143 @@ theorem specialUnitary_inv_norm_le_two_mul
         · exact SKEFTHawking.FKLW.specialUnitaryGroup_two_linfty_opNorm_le_two h⁻¹
         · exact norm_nonneg _
 
+/-- **R5.4 Layer F.20.c.d.2.hh HEADLINE — discharge of `cFib_powers_dense_at_one`**.
+
+For any ε > 0, ∃ n > 0 with `‖cFib^n - 1‖ < ε`.
+
+Proof structure:
+1. `cFib_SU_zpowers_topClosure_accPt_one` gives AccPt 1 on closure(zpowers).
+2. `accPt_small_witness` at ε/4 gives z ∈ closure, z ≠ 1, dist z 1 < ε/4.
+3. `Metric.mem_closure_iff` extracts w ∈ zpowers with dist w z < min(ε/4, dist z 1/2).
+4. Triangle inequality gives dist w 1 < ε/2 and w ≠ 1.
+5. w = cFib^k for some k ∈ ℤ \ {0} via `Subgroup.mem_zpowers_iff`.
+6. Case split on sign(k):
+   - k > 0: n := k.toNat, gives cFib^n.val = w.val, bound holds directly.
+   - k < 0: n := (-k).toNat, gives cFib^n.val = (cFib^k).val⁻¹ = w⁻¹.val;
+     apply `specialUnitary_inv_norm_le_two_mul` for 2× expansion: total bound ε. -/
+theorem cFib_powers_dense_at_one_holds : cFib_powers_dense_at_one := by
+  intro ε hε
+  set cFib_SU := (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) with h_cFib_def
+  -- Step 1-2: AccPt 1 in closure + small witness
+  have h_acc := cFib_SU_zpowers_topClosure_accPt_one
+  have ⟨z, hz_in, hz_ne, hz_dist⟩ :=
+    SKEFTHawking.FKLW.accPt_small_witness h_acc (by linarith : (0 : ℝ) < ε / 4)
+  -- Step 3: z in closure of zpowers → extract w in zpowers
+  have h_dist_z_one_pos : 0 < dist z 1 := dist_pos.mpr hz_ne
+  set δ : ℝ := min (ε / 4) (dist z 1 / 2) with hδ_def
+  have hδ_pos : 0 < δ := lt_min (by linarith) (by linarith)
+  have hz_in_closure :
+      z ∈ closure ((Subgroup.zpowers cFib_SU :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+    rw [← Subgroup.topologicalClosure_coe]
+    exact hz_in
+  obtain ⟨w, hw_zp, hw_close_zw⟩ : ∃ w ∈ (Subgroup.zpowers cFib_SU :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)), dist z w < δ :=
+    Metric.mem_closure_iff.mp hz_in_closure δ hδ_pos
+  have hw_close : dist w z < δ := by rw [dist_comm]; exact hw_close_zw
+  -- Step 4: bounds on dist w 1
+  have hw_dist_lt_half : dist w 1 < ε / 2 := by
+    have : dist w 1 ≤ dist w z + dist z 1 := dist_triangle _ _ _
+    have hδ_le : δ ≤ ε / 4 := min_le_left _ _
+    linarith
+  have hw_ne : w ≠ 1 := by
+    intro h_eq
+    have : dist w 1 = 0 := h_eq ▸ dist_self _
+    -- But dist w 1 ≥ dist z 1 - dist w z > dist z 1 / 2 > 0
+    have h_lower : dist z 1 / 2 < dist w 1 := by
+      have h_triangle' : dist z 1 ≤ dist z w + dist w 1 := dist_triangle _ _ _
+      have h_sym : dist z w = dist w z := dist_comm _ _
+      have hδ_le_z : δ ≤ dist z 1 / 2 := min_le_right _ _
+      have hw_close' : dist w z < dist z 1 / 2 := lt_of_lt_of_le hw_close hδ_le_z
+      linarith [h_sym ▸ hw_close', h_triangle']
+    linarith
+  -- Step 5: w = cFib^k for some k : ℤ
+  rw [SetLike.mem_coe, Subgroup.mem_zpowers_iff] at hw_zp
+  obtain ⟨k, hk_eq⟩ := hw_zp
+  -- k ≠ 0 (else w = cFib^0 = 1)
+  have hk_ne : k ≠ 0 := by
+    intro h_k_zero
+    apply hw_ne
+    rw [← hk_eq, h_k_zero, zpow_zero]
+  -- Step 6: case split on sign(k)
+  rcases lt_or_gt_of_ne hk_ne with hk_neg | hk_pos
+  · -- k < 0: take n := (-k).toNat = -k as ℕ
+    have h_neg_k_pos : 0 < -k := by omega
+    have h_neg_k_toNat_pos : 0 < (-k).toNat := by
+      rcases Nat.eq_zero_or_pos (-k).toNat with h | h
+      · exfalso
+        have : -k = 0 := by
+          have h_le : -k ≤ 0 := by
+            have := Int.toNat_le_toNat (show -k ≤ 0 from by omega)
+            omega
+          omega
+        omega
+      · exact h
+    refine ⟨(-k).toNat, h_neg_k_toNat_pos, ?_⟩
+    -- cFib^(-k).toNat = cFib^(-k) = (cFib^k)⁻¹ = w⁻¹ (in subtype)
+    have h_pow_eq_inv : (cFib_SU ^ (-k).toNat : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) =
+        w⁻¹ := by
+      rw [← zpow_natCast, Int.toNat_of_nonneg h_neg_k_pos.le, zpow_neg, ← hk_eq]
+    -- Goal: ‖↑(cFib_SU)^(-k).toNat - 1‖ < ε; convert via SubmonoidClass.coe_pow
+    rw [show ((cFib_SU : Matrix (Fin 2) (Fin 2) ℂ))^(-k).toNat =
+          (((cFib_SU)^(-k).toNat :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) from
+        (SubmonoidClass.coe_pow cFib_SU (-k).toNat).symm,
+        h_pow_eq_inv]
+    -- ‖w⁻¹.val - 1‖ ≤ 2 · ‖w.val - 1‖ = 2 · dist w 1 < 2 · (ε/2) = ε
+    have h_inv_bound := specialUnitary_inv_norm_le_two_mul w
+    have h_dist_eq : ‖(w : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ = dist w 1 := by
+      rw [Subtype.dist_eq]
+      exact (dist_eq_norm _ _).symm
+    rw [h_dist_eq] at h_inv_bound
+    calc ‖((w⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+        ≤ 2 * dist w 1 := h_inv_bound
+      _ < 2 * (ε / 2) := by linarith
+      _ = ε := by ring
+  · -- k > 0: take n := k.toNat
+    have hk_nat_pos : 0 < k.toNat := by
+      rcases Nat.eq_zero_or_pos k.toNat with h | h
+      · exfalso
+        have : k = 0 := by
+          rw [Int.toNat_eq_zero] at h
+          omega
+        omega
+      · exact h
+    refine ⟨k.toNat, hk_nat_pos, ?_⟩
+    have h_pow_eq : (cFib_SU ^ k.toNat :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = w := by
+      rw [← zpow_natCast, Int.toNat_of_nonneg (by omega : (0 : ℤ) ≤ k), hk_eq]
+    rw [show ((cFib_SU : Matrix (Fin 2) (Fin 2) ℂ))^k.toNat =
+          (((cFib_SU)^k.toNat :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) from
+        (SubmonoidClass.coe_pow cFib_SU k.toNat).symm,
+        h_pow_eq]
+    have h_dist_eq : ‖(w : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ = dist w 1 := by
+      rw [Subtype.dist_eq]
+      exact (dist_eq_norm _ _).symm
+    rw [h_dist_eq]
+    linarith
+
+/-! ## §65. R5.4 Layer F.20.c.d.2.ii — UNCONDITIONAL discharge of F21_residual_small_spanning
+
+Direct composition of §63's `cFib_pow_liePartMat_axis_scaling_holds` with §64's
+`cFib_powers_dense_at_one_holds` via §58's
+`F21_residual_small_spanning_from_cFib_powers`. -/
+
+/-- **R5.4 Layer F.20.c.d.2.ii HEADLINE — UNCONDITIONAL F21_residual_small_spanning**.
+
+The first of two Path A substrate Props for F.21 unconditional density is now
+proven without hypotheses. F.21 remaining: F21_BridgeLemma62_OpenNhd (Path A
+side, BCH-iteration ~100-200 LoC) OR Cartan classification (Path B). -/
+theorem F21_residual_small_spanning_holds :
+    F21_residual_small_spanning :=
+  F21_residual_small_spanning_from_cFib_powers
+    cFib_powers_dense_at_one_holds
+    cFib_pow_liePartMat_axis_scaling_holds
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
