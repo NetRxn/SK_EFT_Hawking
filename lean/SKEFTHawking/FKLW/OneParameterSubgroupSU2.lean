@@ -678,7 +678,66 @@ theorem tracelessSkewHermitian_real_smul_two_sq
   push_cast
   ring
 
-/-! ## §§3.5b-4. (Next ship — substrate roadmap)
+/-! ### §3.5b. Powers of X stay in `span ℂ {1, X}` when `X² = c • 1`
+
+The structural fact behind the closed-form analysis of `expAmbient X`:
+if X satisfies X² = c • 1 for some c ∈ ℂ (Cayley-Hamilton form), then
+every power X^n is a ℂ-linear combination of 1 and X. Consequently each
+partial sum of the exp series lives in `span ℂ {1, X}`, and the limit
+(= expAmbient X) does too (since finite-dim submodules are closed in a
+normed space). -/
+
+/-- **Every power of an X with `X² = c • 1` is in `span ℂ {1, X}`**.
+
+For X ∈ Matrix (Fin 2) (Fin 2) ℂ satisfying X² = c • 1 for some scalar
+c ∈ ℂ, the powers `X^n` all lie in the 2-dimensional ℂ-submodule
+spanned by 1 and X. Pattern (induction on n):
+  - X^0 = 1 ∈ span,
+  - X^1 = X ∈ span,
+  - X^(n+2) = X^n · X² = X^n · (c • 1) = c • X^n ∈ span (by IH on n).
+
+Note: the inductive step uses `X^(n+2) = X^n * X * X = X^n * X²`, which
+requires associativity + matrix-multiplication mechanics. -/
+theorem pow_mem_span_one_X_of_sq_eq_scalar
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {c : ℂ}
+    (hX : X * X = c • (1 : Matrix (Fin 2) (Fin 2) ℂ)) (n : ℕ) :
+    X ^ n ∈ Submodule.span ℂ
+      ({1, X} : Set (Matrix (Fin 2) (Fin 2) ℂ)) := by
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    match n with
+    | 0 =>
+      simp only [pow_zero]
+      exact Submodule.subset_span (by simp)
+    | 1 =>
+      simp only [pow_one]
+      exact Submodule.subset_span (by simp)
+    | k + 2 =>
+      -- X^(k+2) = X^k · X^2 = X^k · (c • 1) = c • X^k
+      have h_pow : X ^ (k + 2) = c • X ^ k := by
+        rw [show k + 2 = k + 1 + 1 from rfl, pow_succ, pow_succ]
+        rw [mul_assoc, hX]
+        rw [mul_smul_comm, mul_one]
+      rw [h_pow]
+      exact Submodule.smul_mem _ c (ih k (by omega))
+
+/-- The Submodule `span ℂ {1, X}` is finite-dimensional (rank ≤ 2). -/
+theorem span_one_X_finiteDimensional (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    FiniteDimensional ℂ
+      (Submodule.span ℂ ({1, X} : Set (Matrix (Fin 2) (Fin 2) ℂ))) := by
+  rw [show ({1, X} : Set (Matrix (Fin 2) (Fin 2) ℂ)) = ↑({1, X} : Finset _) by
+    simp]
+  exact FiniteDimensional.span_of_finite ℂ (Set.toFinite _)
+
+/-- The Submodule `span ℂ {1, X}` is closed in `Matrix (Fin 2) (Fin 2) ℂ`. -/
+theorem span_one_X_isClosed (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    IsClosed (Submodule.span ℂ
+      ({1, X} : Set (Matrix (Fin 2) (Fin 2) ℂ)) :
+      Set (Matrix (Fin 2) (Fin 2) ℂ)) :=
+  haveI := span_one_X_finiteDimensional X
+  Submodule.closed_of_finiteDimensional _
+
+/-! ## §§3.5c-4. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
