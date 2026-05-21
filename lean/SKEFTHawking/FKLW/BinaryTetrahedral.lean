@@ -700,6 +700,16 @@ theorem weylElem_mul_torusElem_eq (t : ℝ) :
   rw [mul_assoc, inv_mul_cancel, mul_one] at h'
   exact h'
 
+/-- **Dual Weyl anti-commutation** `τ_t · w = w · τ_{-t}` for any `t`.
+
+Mirror of `weylElem_mul_torusElem_eq` obtained by `t → -t` and `neg_neg`.
+Convenient when the torus factor is on the left. -/
+theorem torusElem_mul_weylElem_eq (t : ℝ) :
+    torusElem t * weylElem = weylElem * torusElem (-t) := by
+  have h := weylElem_mul_torusElem_eq (-t)
+  rw [neg_neg] at h
+  exact h.symm
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
