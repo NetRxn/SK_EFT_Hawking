@@ -2718,7 +2718,95 @@ theorem Y_h_one_mem_source :
   rw [Y_h_one_eq_zero]
   exact zero_mem_expAmbientPartialHomeo_source
 
-/-! ### §9.10. (Next ships — Y_h continuity + neighborhood-based discharge)
+/-! ### §9.10. Y_h continuity at h = 1 + nhd-based discharge
+
+Y_h is continuous at h = 1 (using `Real.continuous_arccos`,
+`Real.continuous_sinc`, `Matrix.continuous_trace`, `Complex.continuous_re`,
+`Complex.continuous_ofReal`, ContinuousSMul, etc.). Combined with
+`Y_h_one_mem_source` and source's openness, we get a nhd of 1 on which
+Y_h ∈ source. This unlocks the unconditional discharge over that nhd. -/
+
+/-- **§9.10a. ContinuousAt Y_h 1**: Y_h is continuous at the identity. -/
+theorem Y_h_continuousAt_one :
+    ContinuousAt (Y_h : Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) 1 := by
+  unfold Y_h
+  refine ContinuousAt.smul ?_ ?_
+  · have h_trace_cont : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace) 1 :=
+      (Continuous.matrix_trace continuous_id).continuousAt
+    have h_re_cont : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace.re) 1 :=
+      Complex.continuous_re.continuousAt.comp h_trace_cont
+    have h_div : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace.re / 2) 1 :=
+      h_re_cont.div_const 2
+    have h_arccos : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ => Real.arccos (h.trace.re / 2)) 1 :=
+      Real.continuous_arccos.continuousAt.comp h_div
+    have h_sinc : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ =>
+        Real.sinc (Real.arccos (h.trace.re / 2))) 1 :=
+      Real.continuous_sinc.continuousAt.comp h_arccos
+    have h_sinc_at_1 :
+        Real.sinc (Real.arccos ((1 : Matrix (Fin 2) (Fin 2) ℂ).trace.re / 2)) = 1 := by
+      have : (1 : Matrix (Fin 2) (Fin 2) ℂ).trace.re = 2 := by
+        simp [Matrix.trace, Fin.sum_univ_two, Matrix.one_apply]
+      rw [this]; simp [Real.arccos_one, Real.sinc_zero]
+    have h_inv : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ =>
+        (Real.sinc (Real.arccos (h.trace.re / 2)))⁻¹) 1 := by
+      apply ContinuousAt.inv₀ h_sinc
+      rw [h_sinc_at_1]; norm_num
+    exact Complex.continuous_ofReal.continuousAt.comp h_inv
+  · have h_id : ContinuousAt
+      (id : Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) 1 :=
+      continuous_id.continuousAt
+    have h_trace_re_cast : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ => ((h.trace.re / 2 : ℝ) : ℂ)) 1 := by
+      have h_trace_cont : ContinuousAt
+        (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace) 1 :=
+        (Continuous.matrix_trace continuous_id).continuousAt
+      have h_re_cont : ContinuousAt
+        (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace.re) 1 :=
+        Complex.continuous_re.continuousAt.comp h_trace_cont
+      have h_div : ContinuousAt
+        (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace.re / 2) 1 :=
+        h_re_cont.div_const 2
+      exact Complex.continuous_ofReal.continuousAt.comp h_div
+    have h_smul : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ => ((h.trace.re / 2 : ℝ) : ℂ) •
+        (1 : Matrix (Fin 2) (Fin 2) ℂ)) 1 :=
+      h_trace_re_cast.smul continuousAt_const
+    exact h_id.sub h_smul
+
+/-- **§9.10b. Y_h ∈ source on a nhd of 1**: combining §9.10a + §9.9b
++ source openness gives `{h | Y_h h ∈ source} ∈ nhds 1`. -/
+theorem Y_h_mem_source_nhds_one :
+    {h : Matrix (Fin 2) (Fin 2) ℂ | Y_h h ∈ expAmbientPartialHomeo.source} ∈
+      nhds (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h_source_nhds : expAmbientPartialHomeo.source ∈
+      nhds (Y_h (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+    rw [Y_h_one_eq_zero]
+    exact expAmbientPartialHomeo_source_mem_nhds_zero
+  exact Y_h_continuousAt_one h_source_nhds
+
+/-- **§9.10c. h.trace.re ≠ -2 on a nhd of 1**: continuity of trace.re
++ (1.trace.re = 2 ≠ -2). -/
+theorem trace_re_ne_neg_two_nhds_one :
+    {h : Matrix (Fin 2) (Fin 2) ℂ | h.trace.re ≠ -2} ∈
+      nhds (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h_trace_cont : ContinuousAt
+    (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace.re) 1 := by
+    have h_tr : ContinuousAt
+      (fun h : Matrix (Fin 2) (Fin 2) ℂ => h.trace) 1 :=
+      (Continuous.matrix_trace continuous_id).continuousAt
+    exact Complex.continuous_re.continuousAt.comp h_tr
+  have h_at_1 : (1 : Matrix (Fin 2) (Fin 2) ℂ).trace.re = 2 := by
+    simp [Matrix.trace, Fin.sum_univ_two, Matrix.one_apply]
+  have h_ne : (1 : Matrix (Fin 2) (Fin 2) ℂ).trace.re ≠ -2 := by rw [h_at_1]; norm_num
+  exact h_trace_cont (isOpen_ne.mem_nhds h_ne)
+
+/-! ### §9.11. (Next ships — combine + Su2LogMem discharge on nhd of 1)
 
 Two remaining steps for the full unconditional discharge:
 
