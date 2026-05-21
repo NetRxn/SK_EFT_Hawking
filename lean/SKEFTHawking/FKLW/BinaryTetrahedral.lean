@@ -485,6 +485,40 @@ theorem binaryTetrahedralElem_cube_ne_one :
   rw [binaryTetrahedralElem_cube]
   exact negOneSU_ne_one
 
+/-- `binaryTetrahedralElem ^ 2 ≠ 1` — the square of the half-integer
+quaternion has [0,0] entry `(i-1)/2 ≠ 1`, ruling out the prime divisor 2
+of orderOf = 6.
+
+Direct computation: `gen^2 [0,0] = ((1+i)/2)² + ((1+i)/2)((-1+i)/2)
+= 2i/4 + (-2)/4 = (i-1)/2`. -/
+theorem binaryTetrahedralElem_sq_ne_one :
+    binaryTetrahedralElem ^ 2 ≠
+      (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro h_eq
+  have h_val : (binaryTetrahedralElem ^ 2 :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val =
+               (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :=
+    congrArg Subtype.val h_eq
+  have h_sq_unfold :
+      (binaryTetrahedralElem ^ 2 :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val =
+      binaryTetrahedralGen * binaryTetrahedralGen := by
+    show binaryTetrahedralGen ^ 2 = binaryTetrahedralGen * binaryTetrahedralGen
+    rw [sq]
+  rw [h_sq_unfold] at h_val
+  have h_00 := congrArg (fun M => M 0 0) h_val
+  simp [binaryTetrahedralGen, Matrix.mul_apply, Fin.sum_univ_two,
+        Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.head_cons, Matrix.empty_val',
+        Matrix.cons_val_fin_one, Matrix.one_apply] at h_00
+  -- h_00 : (i-1)/2 = 1 (or equivalent algebraic form)
+  -- Take .re: ((i-1)/2).re = -1/2 ≠ 1.re = 1
+  have h_re := congrArg Complex.re h_00
+  simp [Complex.div_re, Complex.add_re, Complex.sub_re,
+        Complex.mul_re, Complex.I_re, Complex.I_im,
+        Complex.one_re, Complex.one_im, Complex.normSq] at h_re
+  linarith
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
