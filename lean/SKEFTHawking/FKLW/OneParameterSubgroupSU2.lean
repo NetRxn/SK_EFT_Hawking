@@ -259,122 +259,180 @@ theorem su2RadiusSq_nonneg (X : Matrix (Fin 2) (Fin 2) ℂ) :
   unfold su2RadiusSq
   positivity
 
-/-- **CAYLEY-HAMILTON SPECIALIZATION** (NEXT SHIP — proof in flight, this
-declaration is the target statement). For X ∈ tracelessSkewHermitian (Fin 2),
+/-! ### §2.0. Pauli-product helpers
+
+Direct entry calculations for the standard Pauli relations needed in
+the Cayley-Hamilton proof below:
+
+  - `paulI_y_sq`, `paulI_z_sq`: `paulI_α² = -1` (analog of shipped
+    `paulI_x_sq`). Each follows from `(iσ_α)² = -1·σ_α² = -1·1 = -1`.
+  - Three anti-commutation identities `paulI_α · paulI_β + paulI_β ·
+    paulI_α = 0` for α ≠ β, from `(iσ_α)(iσ_β) + (iσ_β)(iσ_α) = -(σ_α σ_β
+    + σ_β σ_α) = -(0) = 0`.
+
+Each proof: unfold to underlying σ-matrices, `ext`+`fin_cases`, simp +
+`Complex.I_mul_I`. Direct 2×2 computation, no coercion gymnastics. -/
+
+/-- `paulI_y² = -1`. -/
+theorem paulI_y_sq :
+    SU2LieAlgebra.paulI_y * SU2LieAlgebra.paulI_y =
+      (-1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold SU2LieAlgebra.paulI_y SKEFTHawking.σ_y
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.neg_apply,
+          Matrix.one_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I]
+
+/-- `paulI_z² = -1`. -/
+theorem paulI_z_sq :
+    SU2LieAlgebra.paulI_z * SU2LieAlgebra.paulI_z =
+      (-1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold SU2LieAlgebra.paulI_z SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.neg_apply,
+          Matrix.one_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I]
+
+/-- `paulI_x · paulI_y + paulI_y · paulI_x = 0` (anti-commutation). -/
+theorem paulI_xy_anticomm :
+    SU2LieAlgebra.paulI_x * SU2LieAlgebra.paulI_y +
+      SU2LieAlgebra.paulI_y * SU2LieAlgebra.paulI_x =
+        (0 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold SU2LieAlgebra.paulI_x SU2LieAlgebra.paulI_y
+        SKEFTHawking.σ_x SKEFTHawking.σ_y
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply,
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Fin.sum_univ_two, smul_eq_mul,
+          Complex.I_mul_I]
+
+/-- `paulI_x · paulI_z + paulI_z · paulI_x = 0` (anti-commutation). -/
+theorem paulI_xz_anticomm :
+    SU2LieAlgebra.paulI_x * SU2LieAlgebra.paulI_z +
+      SU2LieAlgebra.paulI_z * SU2LieAlgebra.paulI_x =
+        (0 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold SU2LieAlgebra.paulI_x SU2LieAlgebra.paulI_z
+        SKEFTHawking.σ_x SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply,
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Fin.sum_univ_two, smul_eq_mul,
+          Complex.I_mul_I]
+
+/-- `paulI_y · paulI_z + paulI_z · paulI_y = 0` (anti-commutation). -/
+theorem paulI_yz_anticomm :
+    SU2LieAlgebra.paulI_y * SU2LieAlgebra.paulI_z +
+      SU2LieAlgebra.paulI_z * SU2LieAlgebra.paulI_y =
+        (0 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold SU2LieAlgebra.paulI_y SU2LieAlgebra.paulI_z
+        SKEFTHawking.σ_y SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply,
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Fin.sum_univ_two, smul_eq_mul,
+          Complex.I_mul_I]
+
+/-! ### §2.1. Cayley-Hamilton on Pauli linear combinations
+
+The intermediate result decoupling the Pauli-algebra structure from
+the X-as-element-of-su(2) structural form. Once
+`pauliLinearCombo_sq : (a•paulI_x + b•paulI_y + c•paulI_z)² =
+-(a² + b² + c²) • 1` is in hand, the headline
+`tracelessSkewHermitian_two_sq` follows by `tracelessSkewHermitian_decomp`
+plus the norm-squared algebra. -/
+
+/-- Cayley-Hamilton for the generic Pauli linear combination:
+`(a·σᵢ + b·σⱼ + c·σz)² = -(a² + b² + c²) • 1`.
+
+Direct entry computation on the explicit Pauli matrices; each entry
+expands to a polynomial in `a, b, c, I` that closes via `ring` after
+applying `Complex.I_sq` (i.e., `I² = -1`). -/
+theorem pauliLinearCombo_sq (a b c : ℂ) :
+    ((a • SU2LieAlgebra.paulI_x + b • SU2LieAlgebra.paulI_y +
+      c • SU2LieAlgebra.paulI_z) *
+     (a • SU2LieAlgebra.paulI_x + b • SU2LieAlgebra.paulI_y +
+      c • SU2LieAlgebra.paulI_z) :
+      Matrix (Fin 2) (Fin 2) ℂ) =
+    (-(a^2 + b^2 + c^2) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold SU2LieAlgebra.paulI_x SU2LieAlgebra.paulI_y SU2LieAlgebra.paulI_z
+        SKEFTHawking.σ_x SKEFTHawking.σ_y SKEFTHawking.σ_z
+  ext i j
+  have hI2 : Complex.I ^ 2 = -1 := Complex.I_sq
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.add_apply, Matrix.smul_apply,
+          Matrix.neg_apply, Matrix.one_apply_eq,
+          Matrix.one_apply_ne (by decide : (0 : Fin 2) ≠ 1),
+          Matrix.one_apply_ne (by decide : (1 : Fin 2) ≠ 0),
+          Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Fin.sum_univ_two, smul_eq_mul]
+  all_goals ring_nf
+  all_goals (try rw [show Complex.I ^ 2 = -1 from Complex.I_sq])
+  all_goals ring
+
+/-! ### §2.2. Cayley-Hamilton specialization (headline) -/
+
+/-- **CAYLEY-HAMILTON SPECIALIZATION** for `tracelessSkewHermitian (Fin 2)`:
 `X² = -(su2RadiusSq X) • 1`.
 
-This is the key algebraic identity that enables the closed-form
-analysis of `exp` on su(2): even powers of X are scalar multiples of I,
-odd powers are scalar multiples of X.
+The key algebraic identity that enables the closed-form analysis of
+`exp` on su(2): even powers of X are scalar multiples of I, odd powers
+are scalar multiples of X.
 
-Proof outline (deferred to next work block — local-pwd issue resolved):
-use `Matrix.two_mul_expl` to obtain all 4 entry equations of `X * X`,
-substitute the structural-form replacements `X 0 0 = iα`, `X 1 1 = -X 0 0`,
-`X 1 0 = -star (X 0 1)` from membership in `tracelessSkewHermitian`,
-and verify each entry via `Complex.mul_conj` + `Complex.I_sq` + `nlinarith`. -/
-example : True := trivial -- placeholder for next-ship target
-/-
+Proof strategy (Pauli-decomposition approach): write
+`X = a·paulI_x + b·paulI_y + c·paulI_z` with `a := (X 0 1).im`,
+`b := (X 0 1).re`, `c := (X 0 0).im` (the shipped
+`tracelessSkewHermitian_decomp`), then apply the intermediate result
+`pauliLinearCombo_sq` and use `Complex.sq_norm` to identify
+`a² + b² + c²` with `su2RadiusSq X`. -/
 theorem tracelessSkewHermitian_two_sq
     {X : Matrix (Fin 2) (Fin 2) ℂ}
     (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
     X * X = (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
-  -- Extract the entry constraints from membership in tracelessSkewHermitian.
-  obtain ⟨hX_skew, hX_tr⟩ := hX
-  -- Re-derive the structural form (matches the private
-  -- `tracelessSkewHermitian_entries`).
-  have h_diag_skew_00 : star (X 0 0) = -(X 0 0) := by
-    have := congr_fun (congr_fun hX_skew 0) 0
-    simpa [Matrix.conjTranspose_apply, Matrix.neg_apply] using this
-  have h_re_00 : (X 0 0).re = 0 := by
-    have h_sum : X 0 0 + star (X 0 0) = 0 := by rw [h_diag_skew_00]; ring
-    have h_re_sum : (X 0 0).re + (star (X 0 0)).re = 0 := by
-      have := congr_arg Complex.re h_sum
-      simpa [Complex.add_re] using this
-    rw [Complex.star_def, Complex.conj_re] at h_re_sum
-    linarith
-  have h_11 : X 1 1 = -X 0 0 := by
-    have h_trace : X 0 0 + X 1 1 = 0 := by
-      have := hX_tr
-      simp [Matrix.trace, Fin.sum_univ_two] at this
-      linear_combination this
-    linear_combination h_trace
-  have h_offdiag : X 1 0 = -star (X 0 1) := by
-    have h_skew_01 : star (X 0 1) = -(X 1 0) := by
-      have := congr_fun (congr_fun hX_skew 1) 0
-      simpa [Matrix.conjTranspose_apply, Matrix.neg_apply] using this
-    linear_combination h_skew_01
-  -- Reformulate diagonal as X 0 0 = i · α with α := (X 0 0).im.
-  have h_X00 : X 0 0 = (((X 0 0).im : ℝ) : ℂ) * Complex.I := by
-    have := (Complex.re_add_im (X 0 0)).symm
-    rw [h_re_00, Complex.ofReal_zero, zero_add] at this
-    exact this
-  -- Also reformulate the (1, 0) off-diagonal using complex conjugation.
-  have h_X10 : X 1 0 = -((starRingEnd ℂ) (X 0 1)) := by
-    rw [h_offdiag]
-    rfl
-  -- Substrate: ‖X 0 1‖² = (X 0 1).re² + (X 0 1).im² in ℝ.
-  have h_norm_sq : (‖X 0 1‖ ^ 2 : ℂ) =
-      (((X 0 1).re : ℝ) : ℂ) ^ 2 + (((X 0 1).im : ℝ) : ℂ) ^ 2 := by
-    rw [show (‖X 0 1‖ ^ 2 : ℂ) = ((‖X 0 1‖ ^ 2 : ℝ) : ℂ) by push_cast; rfl,
-        Complex.sq_norm, Complex.normSq_apply]
-    push_cast; ring
-  -- Two key complex-conjugate identities.
-  have h_conj_left : X 0 1 * (starRingEnd ℂ) (X 0 1) =
-      (((X 0 1).re : ℝ) : ℂ) ^ 2 + (((X 0 1).im : ℝ) : ℂ) ^ 2 := by
-    rw [mul_comm, Complex.mul_conj]
-    push_cast; rw [Complex.normSq_apply]; push_cast; ring
-  have h_conj_right : (starRingEnd ℂ) (X 0 1) * X 0 1 =
-      (((X 0 1).re : ℝ) : ℂ) ^ 2 + (((X 0 1).im : ℝ) : ℂ) ^ 2 := by
-    rw [Complex.mul_conj]
-    push_cast; rw [Complex.normSq_apply]; push_cast; ring
-  -- Use Matrix.two_mul_expl to get all 4 entry equations at once.
-  obtain ⟨h_00, h_01, h_10, h_11_entry⟩ := Matrix.two_mul_expl X X
-  -- Replace X via h_X00, h_X10, h_11 in each entry equation.
-  have hI2 : Complex.I ^ 2 = -1 := Complex.I_sq
-  -- Now build the target matrix entry-by-entry.
-  ext i j
-  fin_cases i <;> fin_cases j
-  · -- (0, 0)
-    rw [h_00, h_X00]
-    show (((X 0 0).im : ℝ) : ℂ) * Complex.I * ((((X 0 0).im : ℝ) : ℂ) * Complex.I) +
-         X 0 1 * X 1 0 =
-         (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0
-    rw [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one,
-        h_X10, su2RadiusSq]
-    push_cast
-    rw [h_conj_left]
-    nlinarith [hI2, sq_nonneg ((X 0 0).im : ℝ),
-               sq_nonneg ((X 0 1).re : ℝ), sq_nonneg ((X 0 1).im : ℝ)]
-  · -- (0, 1)
-    rw [h_01, h_X00, h_11]
-    show (((X 0 0).im : ℝ) : ℂ) * Complex.I * X 0 1 +
-         X 0 1 * (-(((X 0 0).im : ℝ) : ℂ) * Complex.I) =
-         (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 1
-    rw [Matrix.smul_apply,
-        Matrix.one_apply_ne (by decide : (0 : Fin 2) ≠ 1),
-        smul_zero]
+  -- Use the shipped Pauli decomposition.
+  have hX_decomp :
+      X = ((X 0 1).im : ℂ) • SU2LieAlgebra.paulI_x +
+          ((X 0 1).re : ℂ) • SU2LieAlgebra.paulI_y +
+          ((X 0 0).im : ℂ) • SU2LieAlgebra.paulI_z :=
+    SU2LieAlgebra.tracelessSkewHermitian_decomp hX
+  -- Scalar identity: -(a² + b² + c²) = -(su2RadiusSq X) where a, b, c
+  -- are the Pauli coefficients ((X 0 1).im, (X 0 1).re, (X 0 0).im).
+  have h_norm_real : (‖X 0 1‖ : ℝ) ^ 2 = (X 0 1).im ^ 2 + (X 0 1).re ^ 2 := by
+    rw [Complex.sq_norm, Complex.normSq_apply]
     ring
-  · -- (1, 0)
-    rw [h_10, h_11, h_X10, h_X00]
-    show -((starRingEnd ℂ) (X 0 1)) * ((((X 0 0).im : ℝ) : ℂ) * Complex.I) +
-         (-(((X 0 0).im : ℝ) : ℂ) * Complex.I) * -((starRingEnd ℂ) (X 0 1)) =
-         (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 0
-    rw [Matrix.smul_apply,
-        Matrix.one_apply_ne (by decide : (1 : Fin 2) ≠ 0),
-        smul_zero]
-    ring
-  · -- (1, 1)
-    rw [h_11_entry, h_X10, h_11, h_X00]
-    show -((starRingEnd ℂ) (X 0 1)) * X 0 1 +
-         -(((X 0 0).im : ℝ) : ℂ) * Complex.I *
-            (-(((X 0 0).im : ℝ) : ℂ) * Complex.I) =
-         (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) 1 1
-    rw [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one,
-        h_conj_right, su2RadiusSq]
+  have h_scalar :
+      (-(((((X 0 1).im : ℝ) : ℂ) ^ 2 + (((X 0 1).re : ℝ) : ℂ) ^ 2 +
+          (((X 0 0).im : ℝ) : ℂ) ^ 2)) : ℂ) =
+      (-(su2RadiusSq X) : ℂ) := by
+    have h_rad_real : (su2RadiusSq X : ℝ) =
+        (X 0 1).im ^ 2 + (X 0 1).re ^ 2 + (X 0 0).im ^ 2 := by
+      unfold su2RadiusSq
+      rw [h_norm_real]
+      ring
     push_cast
-    nlinarith [hI2, sq_nonneg ((X 0 0).im : ℝ),
-               sq_nonneg ((X 0 1).re : ℝ), sq_nonneg ((X 0 1).im : ℝ)]
--/
+    rw [h_rad_real]
+    push_cast
+    ring
+  calc X * X
+      = (((X 0 1).im : ℂ) • SU2LieAlgebra.paulI_x +
+         ((X 0 1).re : ℂ) • SU2LieAlgebra.paulI_y +
+         ((X 0 0).im : ℂ) • SU2LieAlgebra.paulI_z) *
+        (((X 0 1).im : ℂ) • SU2LieAlgebra.paulI_x +
+         ((X 0 1).re : ℂ) • SU2LieAlgebra.paulI_y +
+         ((X 0 0).im : ℂ) • SU2LieAlgebra.paulI_z) := by
+          conv_lhs => rw [hX_decomp]
+    _ = (-(((((X 0 1).im : ℝ) : ℂ) ^ 2 + (((X 0 1).re : ℝ) : ℂ) ^ 2 +
+            (((X 0 0).im : ℝ) : ℂ) ^ 2)) : ℂ) •
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
+        pauliLinearCombo_sq _ _ _
+    _ = (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+          rw [h_scalar]
 
 /-! ## §§3-4. (Next ship — substrate roadmap)
 
