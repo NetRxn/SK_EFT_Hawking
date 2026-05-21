@@ -306,4 +306,95 @@ theorem stdTorus_SU2_oneParamSubgroup :
   intro t
   exact ⟨t, rfl⟩
 
+/-! ## §11. The Weyl element `w := !![0, 1; -1, 0]` (session 88) -/
+
+/-- **The Weyl matrix** `w := !![0, 1; -1, 0]` ∈ SU(2).
+
+Used in Cartan classification of closed subgroups of SU(2): the
+normalizer `N(T)` of the standard torus is `T ∪ wT`. The Weyl
+element implements the non-trivial Weyl-group action on `T` by
+conjugation: `w · diag(z, z⁻¹) · w⁻¹ = diag(z⁻¹, z)`. -/
+noncomputable def weylMatrix : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![0, 1; -1, 0]
+
+/-- `det weylMatrix = 1`. -/
+private theorem weylMatrix_det : weylMatrix.det = 1 := by
+  rw [Matrix.det_fin_two]
+  simp [weylMatrix, Matrix.cons_val', Matrix.cons_val_zero,
+        Matrix.cons_val_one, Matrix.head_cons,
+        Matrix.empty_val', Matrix.cons_val_fin_one]
+
+/-- `star weylMatrix = !![0, -1; 1, 0]`. -/
+private theorem star_weylMatrix :
+    star weylMatrix = !![0, -1; 1, 0] := by
+  rw [Matrix.star_eq_conjTranspose]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [weylMatrix, Matrix.conjTranspose_apply,
+          Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Matrix.empty_val',
+          Matrix.cons_val_fin_one, map_neg, map_one]
+
+/-- `weylMatrix · star weylMatrix = 1` — unitarity. -/
+private theorem weylMatrix_mul_star : weylMatrix * star weylMatrix = 1 := by
+  rw [star_weylMatrix]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [weylMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Matrix.empty_val',
+          Matrix.cons_val_fin_one, Matrix.one_apply]
+
+/-- **`weylMatrix ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ`** — SU(2) membership. -/
+theorem weylMatrix_mem_specialUnitaryGroup :
+    weylMatrix ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  Matrix.mem_specialUnitaryGroup_iff.mpr
+    ⟨Matrix.mem_unitaryGroup_iff.mpr weylMatrix_mul_star,
+     weylMatrix_det⟩
+
+/-- The Weyl element bundled as an SU(2) subtype. -/
+noncomputable def weylElem :
+    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  ⟨weylMatrix, weylMatrix_mem_specialUnitaryGroup⟩
+
+/-- `weylElem.val = weylMatrix`. -/
+@[simp] theorem weylElem_val :
+    (weylElem : Matrix (Fin 2) (Fin 2) ℂ) = weylMatrix := rfl
+
+/-! ## §12. Weyl conjugation inverts the standard torus -/
+
+/-- `weylMatrix · torusMatrix t · star weylMatrix = torusMatrix (-t)` —
+Weyl conjugation inverts torus elements at the matrix level. -/
+private theorem weylMatrix_conj_torusMatrix (t : ℝ) :
+    weylMatrix * torusMatrix t * star weylMatrix = torusMatrix (-t) := by
+  rw [star_weylMatrix]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [weylMatrix, torusMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Matrix.empty_val',
+          Matrix.cons_val_fin_one,
+          show ((-t : ℝ) : ℂ) * I = -((t : ℂ) * I) by push_cast; ring,
+          show -(((-t : ℝ) : ℂ) * I) = ((t : ℂ) * I) by push_cast; ring]
+
+/-- **HEADLINE — Weyl conjugation inverts the standard torus**.
+
+`weylElem · torusElem t · weylElem⁻¹ = torusElem (-t)`. This is the
+key Weyl-group structure that makes `N(stdTorus_SU2) = T ∪ wT`. Used
+in the Cartan classification: any closed subgroup `H ⊃ T` is either
+`T` or `N(T)` or `⊤`. -/
+theorem weylElem_conj_torusElem (t : ℝ) :
+    weylElem * torusElem t * weylElem⁻¹ = torusElem (-t) := by
+  apply Subtype.ext
+  -- weylElem⁻¹.val = star weylMatrix (via Matrix.star_eq_inv)
+  have h_inv_val :
+      ((weylElem⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) = star weylMatrix := by
+    have h_star : star weylElem = weylElem⁻¹ := Matrix.star_eq_inv weylElem
+    rw [← h_star]
+    rfl
+  show weylMatrix * torusMatrix t * _ = torusMatrix (-t)
+  rw [h_inv_val]
+  exact weylMatrix_conj_torusMatrix t
+
 end SKEFTHawking.FKLW
