@@ -2604,7 +2604,71 @@ theorem SU2_su2RadiusSq_Y_h_eq
     rw [show Real.sinc θ = Real.sin θ / θ by simp [Real.sinc, h_θ]]
     field_simp
 
-/-! ### §9.7. (Next ships — expAmbient Y_h = h + final discharge)
+/-! ### §9.7. expAmbient Y_h = h
+
+The CENTRAL IDENTITY. For h ∈ SU(2) with `h.trace.re ≠ -2` (i.e., h ≠ -1
+boundary case), `expAmbient (Y_h h) = h`. Proof composition:
+1. Y_h ∈ ts, su2RadiusSq Y_h = θ_h² ⟹ Y_h² = -(θ_h² : ℂ) • 1 (Cayley-Hamilton).
+2. Apply §7 substrate `expAmbient_decomp_of_sq_eq_scalar` with c = -(θ_h² : ℂ):
+   `expAmbient Y_h = Complex.cos θ_h • 1 + (Real.sinc θ_h : ℂ) • Y_h`.
+3. Substitute Y_h = (Real.sinc θ_h)⁻¹ • X_h. The `sinc · sinc⁻¹ = 1` (when
+   sinc θ_h ≠ 0; from `h.trace.re ≠ -2 ⟹ θ_h < π ⟹ sin θ_h > 0`).
+4. So `expAmbient Y_h = Complex.cos θ_h • 1 + X_h`.
+5. `Complex.cos θ_h = ↑(Real.cos θ_h) = ↑(h.trace.re / 2)` (via `cos_arccos`
+   valid since `h.trace.re/2 ∈ [-1, 1]`).
+6. `expAmbient Y_h = (h.trace.re/2 : ℂ) • 1 + (h - (h.trace.re/2 : ℂ) • 1) = h`. -/
+
+/-- **§9.7. expAmbient Y_h = h**: the central matrix-exponential identity
+for the Su2LogMem discharge, conditional on `h.trace.re ≠ -2`. -/
+theorem SU2_expAmbient_Y_h_eq
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_ne_neg_two : h.trace.re ≠ -2) :
+    SU2MatrixExp.expAmbient (Y_h h) = h := by
+  have h_Y_ts := SU2_Y_h_mem_tracelessSkewHermitian hh
+  have h_Y_sq_radius := SU2_su2RadiusSq_Y_h_eq hh h_ne_neg_two
+  set θ : ℝ := Real.arccos (h.trace.re / 2) with hθ_def
+  have h_Y_sq : Y_h h * Y_h h = ((-(θ^2) : ℝ) : ℂ) •
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    have := tracelessSkewHermitian_two_sq h_Y_ts
+    rw [h_Y_sq_radius] at this
+    rw [this]
+    push_cast; ring_nf
+  have h_decomp := expAmbient_decomp_of_sq_eq_scalar h_Y_sq
+    (cos_hasSum_su2 θ) (sinc_hasSum_su2 θ)
+  rw [h_decomp]
+  unfold Y_h
+  have h_bound := SU2_trace_re_div_two_mem_Icc hh
+  have h_cos : Real.cos θ = h.trace.re / 2 := by
+    rw [hθ_def]; exact Real.cos_arccos h_bound.1 h_bound.2
+  have h_θ_le : θ ≤ Real.pi := by rw [hθ_def]; exact Real.arccos_le_pi _
+  have h_θ_lt_pi : θ < Real.pi := by
+    by_contra h_eq
+    push_neg at h_eq
+    have h_θ_eq_pi : θ = Real.pi := le_antisymm h_θ_le h_eq
+    have : h.trace.re / 2 = -1 := by rw [← h_cos, h_θ_eq_pi, Real.cos_pi]
+    apply h_ne_neg_two; linarith
+  have h_sinc_ne : Real.sinc θ ≠ 0 := by
+    by_cases h_θ_zero : θ = 0
+    · rw [h_θ_zero, Real.sinc_zero]; norm_num
+    · rw [show Real.sinc θ = Real.sin θ / θ by simp [Real.sinc, h_θ_zero]]
+      have h_θ_pos : 0 < θ := lt_of_le_of_ne (Real.arccos_nonneg _) (Ne.symm h_θ_zero)
+      have h_sin_pos := Real.sin_pos_of_pos_of_lt_pi h_θ_pos h_θ_lt_pi
+      exact div_ne_zero (ne_of_gt h_sin_pos) (ne_of_gt h_θ_pos)
+  rw [show ((Real.sinc θ : ℝ) : ℂ) • (((Real.sinc θ)⁻¹ : ℝ) : ℂ) •
+        (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+        (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) by
+    rw [smul_smul]
+    rw [show ((Real.sinc θ : ℝ) : ℂ) * (((Real.sinc θ)⁻¹ : ℝ) : ℂ) = 1 by
+      push_cast
+      exact mul_inv_cancel₀ (by exact_mod_cast h_sinc_ne)]
+    rw [one_smul]]
+  rw [show Complex.cos (θ : ℂ) = ((Real.cos θ : ℝ) : ℂ) from
+        (Complex.ofReal_cos θ).symm]
+  rw [h_cos]
+  abel
+
+/-! ### §9.8. (Next ship — final Su2LogMem discharge via uniqueness)
 
 For non-trivial h ∈ target ∩ SU(2), we need to construct a witness
 `Y ∈ source ∩ ts` with `expAmbient Y = h`. The cleanest construction
