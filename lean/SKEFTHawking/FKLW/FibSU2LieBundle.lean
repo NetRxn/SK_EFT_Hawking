@@ -5531,4 +5531,39 @@ theorem cFib_SU_zpowers_topClosure_accPt_one :
       ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).isClosed_topologicalClosure
     zpowers_cFib_SU_topologicalClosure_infinite
 
+/-- **SU(2) inverse norm-to-identity bound**: for `h ∈ SU(2) (Fin 2) ℂ`,
+`‖↑h⁻¹ - 1‖ ≤ 2 · ‖↑h - 1‖`.
+
+Composes submultiplicativity (`Matrix.linfty_opNorm_mul`) with the existing
+`specialUnitaryGroup_two_linfty_opNorm_le_two` to bound the inverse via
+`h⁻¹ - 1 = -h⁻¹·(h - 1)`. -/
+theorem specialUnitary_inv_norm_le_two_mul
+    (h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+      2 * ‖(h : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ := by
+  -- h⁻¹ - 1 = -h⁻¹·(h - 1) (group algebra: h⁻¹ - 1 = h⁻¹·(1 - h))
+  set A : Matrix (Fin 2) (Fin 2) ℂ := (h : Matrix (Fin 2) (Fin 2) ℂ) with hA
+  set Ainv : Matrix (Fin 2) (Fin 2) ℂ :=
+      ((h⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) with hAinv
+  have h_inv_mul : Ainv * A = 1 := by
+    rw [hA, hAinv]
+    show ((h⁻¹ * h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) = _
+    rw [inv_mul_cancel]
+    rfl
+  have h_rewrite : Ainv - 1 = -(Ainv * (A - 1)) := by
+    have h_mul_sub : Ainv * (A - 1) = Ainv * A - Ainv := by
+      rw [mul_sub, mul_one]
+    rw [h_mul_sub, h_inv_mul]
+    abel
+  rw [h_rewrite]
+  rw [norm_neg]
+  calc ‖Ainv * (A - 1)‖ ≤ ‖Ainv‖ * ‖A - 1‖ := Matrix.linfty_opNorm_mul _ _
+    _ ≤ 2 * ‖A - 1‖ := by
+        apply mul_le_mul_of_nonneg_right
+        · exact SKEFTHawking.FKLW.specialUnitaryGroup_two_linfty_opNorm_le_two h⁻¹
+        · exact norm_nonneg _
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
