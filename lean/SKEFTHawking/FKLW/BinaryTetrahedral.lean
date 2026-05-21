@@ -370,6 +370,7 @@ theorem torusElem_neg_pi_half :
     torusElem (-(Real.pi / 2)) = (torusElem (Real.pi / 2))⁻¹ :=
   torusElem_neg (Real.pi / 2)
 
+
 /-- `negOneSU * negOneSU = 1` — order-2 verification at subtype level.
 
 Uses (-I)·(-I) = I·I = I = identity matrix. -/
@@ -386,6 +387,14 @@ theorem negOneSU_mul_self :
 theorem negOneSU_inv_eq_self :
     negOneSU⁻¹ = negOneSU :=
   (eq_inv_of_mul_eq_one_left negOneSU_mul_self).symm
+
+/-- `weylElem⁻¹ = negOneSU * weylElem` — using `weylElem² = negOneSU`
+and `negOneSU² = 1`. -/
+theorem weylElem_inv_eq_negOneSU_mul_weylElem :
+    weylElem⁻¹ = negOneSU * weylElem := by
+  refine (eq_inv_of_mul_eq_one_left ?_).symm
+  -- (negOneSU * weylElem) * weylElem = negOneSU * weylElem² = negOneSU² = 1.
+  rw [mul_assoc, weylElem_sq_eq_negOneSU, negOneSU_mul_self]
 
 /-- `negOneSU ≠ 1` — the SU(2) element -I is not the identity. -/
 theorem negOneSU_ne_one :
