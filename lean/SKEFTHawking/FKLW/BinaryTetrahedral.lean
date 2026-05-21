@@ -327,6 +327,16 @@ theorem torusElem_pi_half_ne_one :
   have h_im := congrArg Complex.im h_00
   simp [Complex.I_im] at h_im
 
+/-- `negOneSU` commutes with every SU(2) element (it is central). -/
+theorem negOneSU_mem_center :
+    ∀ g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      negOneSU * g = g * negOneSU := by
+  intro g
+  apply Subtype.ext
+  show (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) * g.val =
+       g.val * (-(1 : Matrix (Fin 2) (Fin 2) ℂ))
+  noncomm_ring
+
 /-- `negOneSU * negOneSU = 1` — order-2 verification at subtype level.
 
 Uses (-I)·(-I) = I·I = I = identity matrix. -/
