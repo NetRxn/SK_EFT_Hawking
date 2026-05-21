@@ -4320,6 +4320,60 @@ theorem σ_Fib_2_SU_mat_not_anticommute_ts
   have h_trace_zero := SU2_anticommute_ts_implies_trace_zero hX hX_ne h_anti
   exact SKEFTHawking.FKLW.σ_Fib_2_SU_mat_trace_ne_zero h_trace_zero
 
+/-! ## §77. Composite: ∃ g ∈ {σ_Fib_1_SU_mat, σ_Fib_2_SU_mat} with no commute/anti-commute
+
+The key disjunction: for any X ∈ ts \ {0}, either σ_Fib_1 doesn't commute
+with X, or σ_Fib_1 does commute (forcing X ∥ paulI_z by §74), in which case
+σ_Fib_2 doesn't commute with X (since σ_Fib_2 doesn't commute with paulI_z by §75).
+Combined with §76 (no anti-commute for either σ_Fib_i), we get the desired
+g ∈ {σ_Fib_1, σ_Fib_2}. -/
+
+/-- **Existence of non-commuting non-anti-commuting σ_Fib_i**:
+for any X ∈ ts(Fin 2) \ {0}, at least one of `σ_Fib_1_SU_mat`, `σ_Fib_2_SU_mat`
+neither commutes nor anti-commutes with X (matrix-wise). -/
+theorem exists_σ_Fib_SU_mat_not_commute_not_anticommute
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0) :
+    ∃ g : Matrix (Fin 2) (Fin 2) ℂ,
+      (g = SKEFTHawking.FKLW.σ_Fib_1_SU_mat ∨
+        g = SKEFTHawking.FKLW.σ_Fib_2_SU_mat) ∧
+      g * X ≠ X * g ∧
+      g * X ≠ -(X * g) := by
+  by_cases h_comm_1 :
+      SKEFTHawking.FKLW.σ_Fib_1_SU_mat * X = X * SKEFTHawking.FKLW.σ_Fib_1_SU_mat
+  · -- σ_Fib_1 commutes with X. Then by §74, X = c • paulI_z for some c ∈ ℝ.
+    obtain ⟨c, h_X_eq⟩ :=
+      SKEFTHawking.FKLW.FibSU2LieBundle.σ_Fib_1_SU_mat_commute_ts_implies_paulI_z_real_smul
+        hX h_comm_1
+    -- c ≠ 0 (else X = 0, contradicting hX_ne)
+    have h_c_complex_ne : ((c : ℝ) : ℂ) ≠ 0 := by
+      intro h_c_zero
+      apply hX_ne
+      rw [h_X_eq, h_c_zero, zero_smul]
+    -- Use σ_Fib_2 as g
+    refine ⟨SKEFTHawking.FKLW.σ_Fib_2_SU_mat, Or.inr rfl, ?_, ?_⟩
+    · -- σ_Fib_2 doesn't commute with X = c•paulI_z
+      intro h_comm_2
+      -- Substitute and cancel c
+      rw [h_X_eq] at h_comm_2
+      -- σ_Fib_2 * (c • paulI_z) = (c • paulI_z) * σ_Fib_2
+      -- = c • (σ_Fib_2 * paulI_z) = c • (paulI_z * σ_Fib_2)
+      rw [Matrix.mul_smul, Matrix.smul_mul] at h_comm_2
+      -- Cancel c ≠ 0
+      have h_eq : SKEFTHawking.FKLW.σ_Fib_2_SU_mat *
+                    SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z =
+                  SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z *
+                    SKEFTHawking.FKLW.σ_Fib_2_SU_mat :=
+        smul_right_injective (Matrix (Fin 2) (Fin 2) ℂ) h_c_complex_ne h_comm_2
+      exact SKEFTHawking.FKLW.FibSU2LieBundle.σ_Fib_2_SU_mat_not_commute_paulI_z h_eq
+    · -- σ_Fib_2 doesn't anti-commute (no anti-commute with anything in ts \ {0})
+      exact σ_Fib_2_SU_mat_not_anticommute_ts hX hX_ne
+  · -- σ_Fib_1 doesn't commute with X
+    refine ⟨SKEFTHawking.FKLW.σ_Fib_1_SU_mat, Or.inl rfl, h_comm_1, ?_⟩
+    -- σ_Fib_1 doesn't anti-commute
+    exact σ_Fib_1_SU_mat_not_anticommute_ts hX hX_ne
+
 end SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
 namespace SKEFTHawking.FKLW.OneParameterSubgroupSU2
