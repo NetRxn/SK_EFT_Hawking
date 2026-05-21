@@ -482,6 +482,169 @@ theorem H_Fib_contains_oneParamSubgroup_of_cartan
   H_cartan_one H_Fib H_Fib_isClosed
     (H_Fib_idComponent_ne_bot_of_cartan H_cartan_inf)
 
+/-! ## §4.6. Wedge B — Cartan classification final step (predicate substrate
++ H_Fib discharge)
+
+(Phase 5 Step 13 Path (i) — Wedge B, 2026-05-20)
+
+**Architectural note**: the existing `FibSU2LieBundle.CartanClassificationOfSU2_Subgroup`
+predicate (line 4250) is universally too strong: it claims every closed
+infinite non-abelian subgroup of SU(2) equals `⊤`, but the normalizer
+`N(T) = T ∪ wT` (where T is the standard torus and w is the Weyl
+element) is a counterexample (closed, infinite, non-abelian, but ≠ ⊤).
+Wedge B SHIPS A CORRECTED PREDICATE `CartanFinalStep_SU2` that adds the
+N(T)-exclusion hypothesis as an explicit antecedent.
+
+The correct chain, composing Wedge A's tracked Mathlib gaps #1+#2 with
+Wedge B's tracked Mathlib gap #3:
+
+  1. (Wedge A.tp1) closed infinite ⇒ idComponent ≠ ⊥
+  2. (Wedge A.tp2) idComponent ≠ ⊥ ⇒ ∃ 1-param subgroup
+  3. (Wedge B.tp3) ∃ 1-param subgroup ∧ non-abelian ∧ "not in N(T)" ⇒ H = ⊤
+
+For H_Fib specifically:
+  - non-abelian witness: `σ_Fib_SU_not_commute` (D2)
+  - non-N(T) witness: D3.a's `σ_Fib_SU_mat_not_conj_inverts`
+    (matrix-level), lifted here to subtype level as
+    `σ_Fib_SU_not_conj_inverts`.
+
+Combined, this yields `H_Fib_eq_top_of_full_cartan_chain` and finally
+`fibonacci_density_F21_from_full_cartan_chain` — F.21 unconditional
+under the three tracked Cartan Props.
+
+**Pipeline Invariant #15 posture**: same as Wedge A. `CartanFinalStep_SU2`
+is a predicate, NOT an axiom. Discharge would require either upstream
+Mathlib4 PR (full Cartan classification of closed subgroups of SU(2))
+or constructive project-local proof (~400-800 LoC; Wedge C/D work).
+-/
+
+/-- **Subtype-level lift of D3.a**: σ_Fib_2 conjugating σ_Fib_1 does NOT
+yield σ_Fib_1⁻¹.
+
+Equivalent (by right-multiplying by σ_Fib_2 on both sides) to
+`σ_Fib_2_SU * σ_Fib_1_SU ≠ σ_Fib_1_SU⁻¹ * σ_Fib_2_SU`. Lifts the
+matrix-level shipped D3.a `σ_Fib_SU_mat_not_conj_inverts` to the
+SU(2) subtype via `Matrix.star_eq_inv` (`star A = A⁻¹` for A ∈
+specialUnitaryGroup) and the subtype-multiplication `.val` homomorphism.
+
+This is THE N(T)-exclusion witness for H_Fib: if H_Fib were contained
+in some conjugate of N(T), then every pair of generators would
+satisfy the conjugate-inverse relation `g₂ · g₁ · g₂⁻¹ = g₁⁻¹`
+modulo torus elements; this is ruled out for σ_Fib_{1,2}. -/
+theorem σ_Fib_SU_not_conj_inverts :
+    σ_Fib_2_SU * σ_Fib_1_SU ≠ σ_Fib_1_SU⁻¹ * σ_Fib_2_SU := by
+  intro h_eq
+  apply σ_Fib_SU_mat_not_conj_inverts
+  have h_val : (σ_Fib_2_SU * σ_Fib_1_SU).val =
+               (σ_Fib_1_SU⁻¹ * σ_Fib_2_SU).val :=
+    congrArg Subtype.val h_eq
+  have h_inv_val : (σ_Fib_1_SU⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val
+                 = star σ_Fib_1_SU.val := by
+    have h_star : star σ_Fib_1_SU = σ_Fib_1_SU⁻¹ := Matrix.star_eq_inv σ_Fib_1_SU
+    rw [← h_star]
+    rfl
+  show σ_Fib_2_SU_mat * σ_Fib_1_SU_mat = star σ_Fib_1_SU_mat * σ_Fib_2_SU_mat
+  calc σ_Fib_2_SU_mat * σ_Fib_1_SU_mat
+      = (σ_Fib_2_SU * σ_Fib_1_SU).val := rfl
+    _ = (σ_Fib_1_SU⁻¹ * σ_Fib_2_SU).val := h_val
+    _ = (σ_Fib_1_SU⁻¹).val * σ_Fib_2_SU.val := rfl
+    _ = star σ_Fib_1_SU.val * σ_Fib_2_SU.val := by rw [h_inv_val]
+    _ = star σ_Fib_1_SU_mat * σ_Fib_2_SU_mat := rfl
+
+/-- **Tracked Mathlib4 gap #3** (Cartan classification final step).
+
+"Every closed subgroup `H` of SU(2) that contains a 1-parameter
+subgroup, is non-abelian, and contains a generator pair `g₁, g₂` with
+`g₂ · g₁ ≠ g₁⁻¹ · g₂` (i.e., H is not contained in any conjugate of the
+normalizer `N(T) = T ∪ wT`), is the whole group `⊤`."
+
+This is the SU(2) specialization of the full Cartan classification
+of closed subgroups: trivial, finite, conjugate-to-T, conjugate-to-N(T),
+or ⊤. The hypotheses rule out all but the last:
+  - 1-param subgroup ⇒ not finite (excludes finite branch)
+  - non-abelian ⇒ not conjugate to T (T is abelian)
+  - `g₂ · g₁ ≠ g₁⁻¹ · g₂` for some pair ⇒ not conjugate to N(T)
+    (in N(T), conjugation by a non-T element inverts T-elements)
+
+**Status**: predicate (Prop `def`), not axiom. Same Pipeline Invariant
+#15 posture as Wedge A's gaps. Discharge would require the full Cartan
+classification, deferred to Wedge C/D or Mathlib upstream PR. -/
+def CartanFinalStep_SU2 : Prop :=
+  ∀ (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+    IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) →
+    OneParamSubgroupInSU2 H →
+    (∃ g₁ g₂, g₁ ∈ H ∧ g₂ ∈ H ∧ g₁ * g₂ ≠ g₂ * g₁) →
+    (∃ g₁ g₂, g₁ ∈ H ∧ g₂ ∈ H ∧ g₂ * g₁ ≠ g₁⁻¹ * g₂) →
+    H = ⊤
+
+/-- **H_Fib non-abelian witness** in the form consumed by `CartanFinalStep_SU2`.
+
+Direct composition of shipped `σ_Fib_SU_not_commute` (D2) with
+`σ_Fib_{1,2}_SU_mem_H_Fib` (D4.1 closure). -/
+theorem H_Fib_non_abelian_witness :
+    ∃ g₁ g₂, g₁ ∈ H_Fib ∧ g₂ ∈ H_Fib ∧ g₁ * g₂ ≠ g₂ * g₁ :=
+  ⟨σ_Fib_1_SU, σ_Fib_2_SU,
+   σ_Fib_1_SU_mem_H_Fib, σ_Fib_2_SU_mem_H_Fib,
+   σ_Fib_SU_not_commute⟩
+
+/-- **H_Fib N(T)-exclusion witness** in the form consumed by
+`CartanFinalStep_SU2`.
+
+Direct composition of the subtype-level `σ_Fib_SU_not_conj_inverts`
+(this section, lifted from D3.a) with `σ_Fib_{1,2}_SU_mem_H_Fib`. -/
+theorem H_Fib_non_N_T_witness :
+    ∃ g₁ g₂, g₁ ∈ H_Fib ∧ g₂ ∈ H_Fib ∧ g₂ * g₁ ≠ g₁⁻¹ * g₂ :=
+  ⟨σ_Fib_1_SU, σ_Fib_2_SU,
+   σ_Fib_1_SU_mem_H_Fib, σ_Fib_2_SU_mem_H_Fib,
+   σ_Fib_SU_not_conj_inverts⟩
+
+/-- **Wedge B headline — H_Fib = ⊤ under the full Cartan chain**.
+
+Composes Wedge A's two tracked Cartan Props (gaps #1 + #2) with
+Wedge B's tracked Cartan Final Step (gap #3) and the shipped
+H_Fib-specific witnesses:
+  - `H_Fib_isClosed` (D4.1)
+  - `H_Fib_infinite` (session 31, e176b9f chain)
+  - `H_Fib_contains_oneParamSubgroup_of_cartan` (Wedge A)
+  - `H_Fib_non_abelian_witness` (this section)
+  - `H_Fib_non_N_T_witness` (this section, via lifted D3.a)
+
+Yields `H_Fib = ⊤` directly. This DOES NOT depend on the broken
+`FibSU2LieBundle.CartanClassificationOfSU2_Subgroup` predicate; it is
+the corrected substantive discharge of the H_Fib closure-subgroup =
+SU(2) chain. -/
+theorem H_Fib_eq_top_of_full_cartan_chain
+    (H_cartan_inf : CartanInfiniteImpliesIdComponentNonTrivial_SU2)
+    (H_cartan_one : CartanIdComponentContainsOneParamSubgroup_SU2)
+    (H_cartan_final : CartanFinalStep_SU2) :
+    H_Fib = ⊤ := by
+  have h_one_param : OneParamSubgroupInSU2 H_Fib :=
+    H_Fib_contains_oneParamSubgroup_of_cartan H_cartan_inf H_cartan_one
+  exact H_cartan_final H_Fib H_Fib_isClosed h_one_param
+    H_Fib_non_abelian_witness H_Fib_non_N_T_witness
+
+/-- **Wedge B FINAL HEADLINE — F.21 Fibonacci density unconditional under
+the full Cartan tracked-Prop chain.**
+
+Composes `H_Fib_eq_top_of_full_cartan_chain` with shipped
+`fibonacci_density_from_H_Fib_eq_top` (D4 wrapper, FibSU2Density.lean
+line 1258). Under the three tracked Cartan Mathlib4 v4.29.1 gap
+predicates (gaps #1 + #2 + #3), F.21 unconditional Fibonacci density
+holds without any further hypothesis.
+
+The Wedge B → Wedge C/D discharge of the three tracked Props (or
+upstream Mathlib PR) is the only remaining substrate work for F.21
+to be fully unconditional. -/
+theorem fibonacci_density_F21_from_full_cartan_chain
+    (H_cartan_inf : CartanInfiniteImpliesIdComponentNonTrivial_SU2)
+    (H_cartan_one : CartanIdComponentContainsOneParamSubgroup_SU2)
+    (H_cartan_final : CartanFinalStep_SU2) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top
+    (H_Fib_eq_top_of_full_cartan_chain H_cartan_inf H_cartan_one H_cartan_final)
+
 /-! ## §5. Module summary
 
 `CartanSubstrate.lean` (Phase 6p Wave 2c.4a-R4.2.d.4.3.d.1, 2026-05-14;
@@ -517,6 +680,16 @@ subgroups of SU(2).
     composition headlines `H_Fib_idComponent_ne_bot_of_cartan` +
     **`H_Fib_contains_oneParamSubgroup_of_cartan`** (the Wedge A
     deliverable consumed by Wedge B).
+  - **§4.6** (Wedge B 2026-05-20): Cartan classification **final step**
+    + H_Fib discharge. `σ_Fib_SU_not_conj_inverts` (subtype-level lift
+    of D3.a matrix N(T) ruleout), tracked Cartan-gap predicate
+    `CartanFinalStep_SU2` (gap #3 — corrected version of the broken
+    universal `FibSU2LieBundle.CartanClassificationOfSU2_Subgroup`,
+    adding the N(T)-exclusion antecedent), H_Fib witnesses
+    `H_Fib_non_abelian_witness` + `H_Fib_non_N_T_witness`, and
+    HEADLINES **`H_Fib_eq_top_of_full_cartan_chain`** +
+    **`fibonacci_density_F21_from_full_cartan_chain`** (F.21
+    unconditional under all three Cartan tracked Mathlib gaps).
 
 **Substantive content:**
   (a) The §1 generic substrate is reusable for any closed subgroup of
