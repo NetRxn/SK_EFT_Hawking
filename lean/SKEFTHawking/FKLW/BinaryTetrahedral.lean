@@ -615,6 +615,21 @@ theorem negOneSU_zpowers_le_binaryTetrahedralFull :
   rw [Subgroup.zpowers_le]
   exact negOneSU_mem_binaryTetrahedralFull
 
+/-- `weylElem ^ 3 = negOneSU * weylElem` — Cube of Weyl element via
+the squaring identity `w² = -I`. -/
+theorem weylElem_pow_three :
+    weylElem ^ 3 = negOneSU * weylElem := by
+  rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add, pow_one, sq,
+      weylElem_sq_eq_negOneSU]
+
+/-- `torusElem (π/2) ^ 3 = negOneSU * torusElem (π/2)` — Cube of the
+i-quaternion via the squaring identity `τ² = -I`. -/
+theorem torusElem_pi_half_pow_three :
+    torusElem (Real.pi / 2) ^ 3 =
+      negOneSU * torusElem (Real.pi / 2) := by
+  rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add, pow_one, sq,
+      torusElem_pi_half_sq]
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
