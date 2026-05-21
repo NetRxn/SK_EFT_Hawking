@@ -1104,7 +1104,94 @@ theorem vonNeumannUnitMatrixSeq_norm_eq_one
       abs_of_nonneg (norm_nonneg _)]
   field_simp
 
-/-! ## §§4.d-5. (Next ship — substrate roadmap)
+/-! ### §4.d. Bolzano-Weierstrass extraction
+
+The unit-sphere matrix sequence lives in the closed unit ball of
+`Matrix (Fin 2) (Fin 2) ℂ`, which is a finite-dimensional ℝ-normed
+space hence a `ProperSpace`. The closed ball is therefore compact, and
+the sequence has a convergent subsequence by Bolzano-Weierstrass.
+
+The eventually-nonzero result (§4.c) gives us "frequently in the unit
+sphere," and `IsCompact.tendsto_subseq'` extracts the subsequence. -/
+
+/-- `Matrix (Fin 2) (Fin 2) ℂ` is finite-dimensional over ℝ. (4 complex
+entries × 2 real components each = 8-dimensional ℝ-vector space.) -/
+instance : FiniteDimensional ℝ (Matrix (Fin 2) (Fin 2) ℂ) := inferInstance
+
+/-- The closed unit ball in `Matrix (Fin 2) (Fin 2) ℂ` is compact, via
+`ProperSpace.isCompact_closedBall` (finite-dim ⟹ proper). -/
+theorem isCompact_closedBall_one :
+    IsCompact (Metric.closedBall (0 : Matrix (Fin 2) (Fin 2) ℂ) 1) :=
+  ProperSpace.isCompact_closedBall (0 : Matrix (Fin 2) (Fin 2) ℂ) 1
+
+/-- The unit-sphere matrix sequence is eventually in `closedBall 0 1`
+(in fact has norm exactly 1 when `Y_n ≠ 0`, and norm 0 otherwise). -/
+theorem vonNeumannUnitMatrixSeq_mem_closedBall_one
+    (seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (n : ℕ) :
+    vonNeumannUnitMatrixSeq seq n ∈
+      Metric.closedBall (0 : Matrix (Fin 2) (Fin 2) ℂ) 1 := by
+  by_cases h : su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) = 0
+  · -- Y_n = 0 → vonNeumannUnitMatrixSeq = 0, which has norm 0 ≤ 1.
+    have : vonNeumannUnitMatrixSeq seq n = 0 := by
+      unfold vonNeumannUnitMatrixSeq
+      simp [h]
+    simp [this, Metric.mem_closedBall]
+  · -- Y_n ≠ 0 → norm = 1.
+    rw [Metric.mem_closedBall, dist_zero_right]
+    apply le_of_eq
+    exact vonNeumannUnitMatrixSeq_norm_eq_one h
+
+/-- **BW EXTRACTION**: from a sequence with eventually-nonzero matrix-log
+values, extract a subsequence converging to some X ∈ closedBall 0 1.
+Combined with the eventually-norm-1 property, the limit has norm 1. -/
+theorem vonNeumann_BW_extract
+    (seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ∃ X ∈ Metric.closedBall (0 : Matrix (Fin 2) (Fin 2) ℂ) 1,
+      ∃ φ : ℕ → ℕ, StrictMono φ ∧
+        Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+          Filter.atTop (nhds X) := by
+  exact isCompact_closedBall_one.tendsto_subseq
+    (vonNeumannUnitMatrixSeq_mem_closedBall_one seq)
+
+/-- **Limit has norm 1**: under the eventually-nonzero hypothesis, the
+BW-extracted limit X has `‖X‖ = 1`.
+
+The subsequence stays in the unit sphere (norm = 1) eventually
+(frequently is enough), so the limit (in the closed unit ball) has
+norm 1 by continuity of the norm. -/
+theorem vonNeumann_BW_limit_norm_eq_one
+    (seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {φ : ℕ → ℕ}
+    (hφ : StrictMono φ)
+    (h_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X)) :
+    ‖X‖ = 1 := by
+  -- The norms of the subsequence converge to ‖X‖.
+  have h_norm_tendsto :
+      Filter.Tendsto (fun k => ‖vonNeumannUnitMatrixSeq seq (φ k)‖)
+        Filter.atTop (nhds ‖X‖) :=
+    (continuous_norm.tendsto X).comp h_tendsto
+  -- Eventually the subsequence has norm 1.
+  have h_subseq_ne : ∀ᶠ k in Filter.atTop,
+      su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0 :=
+    hφ.tendsto_atTop.eventually h_ev_ne
+  have h_subseq_norm_one : ∀ᶠ k in Filter.atTop,
+      ‖vonNeumannUnitMatrixSeq seq (φ k)‖ = 1 := by
+    filter_upwards [h_subseq_ne] with k hk
+    exact vonNeumannUnitMatrixSeq_norm_eq_one hk
+  -- Apply uniqueness of limits.
+  have h_const_tendsto :
+      Filter.Tendsto (fun k => ‖vonNeumannUnitMatrixSeq seq (φ k)‖)
+        Filter.atTop (nhds 1) := by
+    refine Filter.Tendsto.congr' ?_ tendsto_const_nhds
+    filter_upwards [h_subseq_norm_one] with k hk
+    rw [hk]
+  exact tendsto_nhds_unique h_norm_tendsto h_const_tendsto
+
+/-! ## §§4.e-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
