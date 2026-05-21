@@ -462,6 +462,48 @@ theorem torusElem_pi_half_sq_ne_one :
   rw [sq, torusElem_pi_half_sq]
   exact negOneSU_ne_one
 
+/-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
+
+This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
+the only-prime-divisor-of-4-is-2 mechanism (`orderOf_eq_of_pow_and_pow_div_prime`). -/
+theorem weylElem_orderOf_eq_four :
+    orderOf weylElem = 4 := by
+  refine orderOf_eq_of_pow_and_pow_div_prime (by norm_num) weylElem_pow_four ?_
+  intro p hp hpd
+  -- Only prime dividing 4 is 2; reduce to `weylElem ^ 2 ≠ 1`.
+  have hp2 : p = 2 := by
+    have h_le : p ≤ 4 := Nat.le_of_dvd (by norm_num) hpd
+    have h_ge : 2 ≤ p := hp.two_le
+    interval_cases p
+    · rfl
+    · exact absurd hpd (by decide)
+    · exact absurd hp (by decide)
+  subst hp2
+  show weylElem ^ (4 / 2) ≠ 1
+  rw [show (4 / 2 : ℕ) = 2 from rfl]
+  exact weylElem_sq_ne_one
+
+/-- **`orderOf (torusElem (π/2)) = 4`** — the i-quaternion has order exactly 4.
+
+Analogous to `weylElem_orderOf_eq_four`: pow_four = 1 plus pow_two ≠ 1, with
+the only prime divisor of 4 being 2. -/
+theorem torusElem_pi_half_orderOf_eq_four :
+    orderOf (torusElem (Real.pi / 2)) = 4 := by
+  refine orderOf_eq_of_pow_and_pow_div_prime (by norm_num)
+    torusElem_pi_half_pow_four ?_
+  intro p hp hpd
+  have hp2 : p = 2 := by
+    have h_le : p ≤ 4 := Nat.le_of_dvd (by norm_num) hpd
+    have h_ge : 2 ≤ p := hp.two_le
+    interval_cases p
+    · rfl
+    · exact absurd hpd (by decide)
+    · exact absurd hp (by decide)
+  subst hp2
+  show torusElem (Real.pi / 2) ^ (4 / 2) ≠ 1
+  rw [show (4 / 2 : ℕ) = 2 from rfl]
+  exact torusElem_pi_half_sq_ne_one
+
 /-- `binaryTetrahedralFull` is non-trivial (contains weylElem ≠ 1). -/
 theorem binaryTetrahedralFull_ne_bot :
     binaryTetrahedralFull ≠ ⊥ := by
