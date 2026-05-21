@@ -5827,4 +5827,34 @@ theorem closure_zpowers_cFib_subset_closure_H_Fib :
         Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
   closure_mono zpowers_cFib_SU_subset_H_Fib
 
+/-- **`Subgroup.zpowers cFib_SU` is abelian**: any cyclic-generated subgroup
+is abelian since `cFib^a · cFib^b = cFib^(a+b) = cFib^b · cFib^a`. -/
+theorem zpowers_cFib_SU_isCommutative :
+    ∀ x y : ↥(Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))),
+      x * y = y * x := by
+  intro x y
+  -- x, y ∈ zpowers ⟹ x = cFib^a, y = cFib^b for some a, b ∈ ℤ
+  obtain ⟨a, ha⟩ := Subgroup.mem_zpowers_iff.mp x.2
+  obtain ⟨b, hb⟩ := Subgroup.mem_zpowers_iff.mp y.2
+  -- Show equality at the value level
+  apply Subtype.ext
+  -- LHS: x.val * y.val = cFib^a * cFib^b
+  -- RHS: y.val * x.val = cFib^b * cFib^a
+  -- These are equal by zpow_add + commutativity of ℤ addition
+  show (x : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) *
+      (y : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) =
+    (y : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) *
+      (x : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+  rw [← ha, ← hb, ← zpow_add, ← zpow_add, add_comm]
+
+/-- **`topologicalClosure(Subgroup.zpowers cFib_SU)` is a CommGroup**:
+the abelian subgroup property is preserved by topological closure (in T2 groups). -/
+noncomputable instance topologicalClosure_zpowers_cFib_isCommGroup :
+    CommGroup
+      (((Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).topologicalClosure :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) :=
+  Subgroup.commGroupTopologicalClosure _ zpowers_cFib_SU_isCommutative
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
