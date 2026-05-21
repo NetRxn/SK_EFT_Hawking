@@ -737,7 +737,63 @@ theorem span_one_X_isClosed (X : Matrix (Fin 2) (Fin 2) ℂ) :
   haveI := span_one_X_finiteDimensional X
   Submodule.closed_of_finiteDimensional _
 
-/-! ## §§3.5c-4. (Next ship — substrate roadmap)
+/-! ### §3.5c. `expAmbient X ∈ span ℂ {1, X}` for X with `X² = c • 1`
+
+Composing §3.5b's `pow_mem_span_one_X_of_sq_eq_scalar` with the
+exp-series convergence: each partial sum of `Σ_n (n!)⁻¹ • X^n` lies in
+`span ℂ {1, X}` (sum of memberships), the partial sums converge to
+`expAmbient X` (by `NormedSpace.expSeries_hasSum_exp`), and the span
+is closed (§3.5b), so the limit is in the span.
+
+In particular for X ∈ tracelessSkewHermitian (Fin 2), Cayley-Hamilton
+(§2 `tracelessSkewHermitian_two_sq`) supplies the `X² = c • 1` premise. -/
+
+/-- **`expAmbient X` is a ℂ-linear combination of 1 and X**, for X
+satisfying the Cayley-Hamilton form `X² = c • 1`. -/
+theorem expAmbient_mem_span_one_X_of_sq_eq_scalar
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {c : ℂ}
+    (hX : X * X = c • (1 : Matrix (Fin 2) (Fin 2) ℂ)) :
+    SU2MatrixExp.expAmbient X ∈ Submodule.span ℂ
+      ({1, X} : Set (Matrix (Fin 2) (Fin 2) ℂ)) := by
+  unfold SU2MatrixExp.expAmbient
+  -- The exp series is summable.
+  have h_sum : HasSum
+      (fun n => (↑n.factorial : ℂ)⁻¹ • X ^ n) (NormedSpace.exp X) := by
+    have := NormedSpace.expSeries_hasSum_exp (𝕂 := ℂ) X
+    convert this using 1
+    ext n
+    simp [NormedSpace.expSeries, smul_eq_mul]
+  -- Partial sums tend to exp X.
+  have h_tendsto :
+      Filter.Tendsto
+        (fun n => ∑ i ∈ Finset.range n, (↑i.factorial : ℂ)⁻¹ • X ^ i)
+        Filter.atTop (nhds (NormedSpace.exp X)) :=
+    HasSum.tendsto_sum_nat h_sum
+  -- Each partial sum is in span.
+  have h_partial_in_span : ∀ n,
+      (∑ i ∈ Finset.range n, (↑i.factorial : ℂ)⁻¹ • X ^ i) ∈
+        Submodule.span ℂ ({1, X} : Set (Matrix (Fin 2) (Fin 2) ℂ)) := by
+    intro n
+    apply Submodule.sum_mem
+    intro i _hi
+    exact Submodule.smul_mem _ _ (pow_mem_span_one_X_of_sq_eq_scalar hX i)
+  -- Apply IsClosed.mem_of_tendsto.
+  exact IsClosed.mem_of_tendsto (span_one_X_isClosed X) h_tendsto
+    (Filter.Eventually.of_forall h_partial_in_span)
+
+/-- **`expAmbient X` is in `span ℂ {1, X}` for X ∈ tracelessSkewHermitian (Fin 2)**.
+
+Specialization to su(2) using §2 `tracelessSkewHermitian_two_sq` to
+supply the Cayley-Hamilton premise. -/
+theorem expAmbient_mem_span_one_X_of_tracelessSkewHermitian
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
+    SU2MatrixExp.expAmbient X ∈ Submodule.span ℂ
+      ({1, X} : Set (Matrix (Fin 2) (Fin 2) ℂ)) := by
+  exact expAmbient_mem_span_one_X_of_sq_eq_scalar
+    (tracelessSkewHermitian_two_sq hX)
+
+/-! ## §§3.5d-4. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
