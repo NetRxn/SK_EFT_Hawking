@@ -6094,4 +6094,69 @@ theorem σ_Fib_1_SU_mat_not_anticommute_liePartMat_cFib :
     exact this
   exact one_ne_zero h_one_zero.1
 
+/-! ## §72. Concrete ℝ-LI tangent pair in ts (Phase 6p Wave 2c.4a-R5.4)
+
+Headline result combining §70 (concrete 2-LI from cFib pauliDet) + §71
+(σ_Fib non-commute/anti-commute) + ts membership (via liePartMat /
+unitary conjugation).
+
+This is the **complete LI-pair construction** for the v3
+`H_Fib_TwoLITangents` discharge. The pair:
+
+  - X₁ := liePartMat cFib_SU_mat ∈ ts
+  - X₂ := σ_Fib_1_SU_mat * X₁ * σ_Fib_1_SU_mat.conjTranspose ∈ ts
+
+satisfies:
+  - Both nonzero
+  - ℝ-LI as matrices
+
+Remaining for v3 discharge: prove ∃ 1-parameter subgroup in H_Fib with
+anchor identity at each Xᵢ. The §13 conjugate-1-param-subgroup
+constructor handles the second once the first is shipped.
+-/
+
+/-- **liePartMat cFib_SU_mat ∈ tracelessSkewHermitian (Fin 2)** (specialization). -/
+theorem liePartMat_cFib_mem_ts :
+    liePartMat cFib_SU_mat ∈ tracelessSkewHermitian (Fin 2) :=
+  liePartMat_mem_tracelessSkewHermitian _
+
+/-- **liePartMat cFib_SU_mat ≠ 0** — directly from §70 LI (if 0, applying
+LI with (a, b) = (1, 0) gives a contradiction trivially). Cleaner: a
+nonzero entry from the closed form. -/
+theorem liePartMat_cFib_ne_zero :
+    liePartMat cFib_SU_mat ≠ 0 := by
+  intro h
+  -- From the LI of (X₁, X₂), if X₁ = 0 then 1 • X₁ + 0 • X₂ = 0 gives
+  -- the LI conclusion (1, 0) = (0, 0), which fails 1 = 0.
+  have h_LI := liePartMat_cFib_Ad_σ_Fib_1_lin_indep 1 0
+  have h_zero : (1 : ℂ) • liePartMat cFib_SU_mat +
+                (0 : ℂ) •
+                  (σ_Fib_1_SU_mat * liePartMat cFib_SU_mat *
+                    σ_Fib_1_SU_mat.conjTranspose) = 0 := by
+    rw [h, smul_zero, zero_smul, add_zero]
+  have : (1 : ℝ) = 0 ∧ (0 : ℝ) = 0 := h_LI (by push_cast; exact h_zero)
+  exact one_ne_zero this.1
+
+/-- **σ_Fib_1 conj of liePartMat cFib ∈ ts** via §21 unitary conjugation closure. -/
+theorem Ad_σ_Fib_1_liePartMat_cFib_mem_ts :
+    σ_Fib_1_SU_mat * liePartMat cFib_SU_mat * star σ_Fib_1_SU_mat
+      ∈ tracelessSkewHermitian (Fin 2) := by
+  have hU : σ_Fib_1_SU_mat ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    Matrix.specialUnitaryGroup_le_unitaryGroup σ_Fib_1_SU.property
+  exact SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian_unitary_conj
+    liePartMat_cFib_mem_ts hU
+
+/-- **σ_Fib_1 conj of liePartMat cFib ≠ 0** — from §70 LI applied with (0, 1). -/
+theorem Ad_σ_Fib_1_liePartMat_cFib_ne_zero :
+    σ_Fib_1_SU_mat * liePartMat cFib_SU_mat * σ_Fib_1_SU_mat.conjTranspose ≠ 0 := by
+  intro h
+  have h_LI := liePartMat_cFib_Ad_σ_Fib_1_lin_indep 0 1
+  have h_zero : (0 : ℂ) • liePartMat cFib_SU_mat +
+                (1 : ℂ) •
+                  (σ_Fib_1_SU_mat * liePartMat cFib_SU_mat *
+                    σ_Fib_1_SU_mat.conjTranspose) = 0 := by
+    rw [h, smul_zero, zero_smul, zero_add]
+  have : (0 : ℝ) = 0 ∧ (1 : ℝ) = 0 := h_LI (by push_cast; exact h_zero)
+  exact one_ne_zero this.2
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
