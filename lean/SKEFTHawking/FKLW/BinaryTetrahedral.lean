@@ -630,6 +630,22 @@ theorem torusElem_pi_half_pow_three :
   rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add, pow_one, sq,
       torusElem_pi_half_sq]
 
+/-- `weylElem⁻¹ = weylElem ^ 3` — inverse of the order-4 Weyl element
+is its cube, since `w * w^3 = w^4 = 1`. -/
+theorem weylElem_inv_eq_pow_three :
+    weylElem⁻¹ = weylElem ^ 3 := by
+  refine (eq_inv_of_mul_eq_one_left ?_).symm
+  rw [← pow_succ]
+  exact weylElem_pow_four
+
+/-- `torusElem (π/2)⁻¹ = torusElem (π/2) ^ 3` — inverse of the order-4
+i-quaternion is its cube. -/
+theorem torusElem_pi_half_inv_eq_pow_three :
+    (torusElem (Real.pi / 2))⁻¹ = torusElem (Real.pi / 2) ^ 3 := by
+  refine (eq_inv_of_mul_eq_one_left ?_).symm
+  rw [← pow_succ]
+  exact torusElem_pi_half_pow_four
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
