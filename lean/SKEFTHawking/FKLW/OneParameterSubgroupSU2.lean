@@ -3947,6 +3947,92 @@ theorem OneParamSubgroupSU2.expAmbient_real_smul_tendsto_one
   rw [← h_at_zero]
   exact h_cts.tendsto 0
 
+/-! ### §11.h.halve. Anchor halving via n-th-root uniqueness (IFT step)
+
+If the anchor identity holds at `t` AND the conditions for n=2 root
+uniqueness apply, then the anchor identity also holds at `t/2`. The
+key composition is:
+
+  - From `expAmbient((t:ℂ)•X) = (φ t).val` (h_anchor at t)
+  - And `((φ(t/2)).val)² = (φ t).val` (via hhom)
+  - Define `u := su2Log((φ(t/2)).val)` ∈ source (when (φ(t/2)).val ∈ target).
+  - Then `expAmbient(2•u) = ((φ(t/2)).val)² = (φ t).val = expAmbient((t:ℂ)•X)
+    = expAmbient(2•((t/2:ℂ)•X))`.
+  - By `expAmbient_nsmul_injOn` (n=2; shipped §1.6.b), assuming `2•u` and
+    `2•((t/2:ℂ)•X)` are both in source: `u = (t/2:ℂ)•X`.
+  - Hence `(φ(t/2)).val = expAmbient(u) = expAmbient((t/2:ℂ)•X)`. ✓
+
+**Substrate role**: this is the n=2 "n-th root" step of the IFT-based
+linearity argument. For SMALL ENOUGH `t`, the smallness conditions on
+2•u and 2•((t/2:ℂ)•X) hold automatically by continuity, and the lemma
+gives anchor at t/2. Iterated, we extend anchor identity to t/2^k for
+all k. By density of {t/2^k : k ∈ ℕ} accumulating at 0, combined with
+continuity of both sides, the anchor identity holds in a NEIGHBORHOOD
+of 0. Applying §12.add `anchorAddSubgroup_eq_top_of_nhd_zero` then gives
+`anchorAddSubgroup = ⊤` and §12.add.app gives `exp(ℝ•X) ⊆ H`.
+
+The smallness conditions can be made automatic via continuity-based
+quantitative bounds (next iteration; needs care with norms in source).
+-/
+
+/-- **Anchor halving lemma**: anchor at t + smallness conditions ⟹
+anchor at t/2. Uses n=2 root uniqueness on
+`expAmbientPartialHomeo.source`. -/
+theorem OneParamSubgroupSU2.anchor_halve
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    {t : ℝ}
+    (h_anchor : SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X) = (φ t).val)
+    (h_target : (φ (t/2)).val ∈ expAmbientPartialHomeo.target)
+    (h_src_2u : (2 : ℕ) • su2Log ((φ (t/2)).val) ∈ expAmbientPartialHomeo.source)
+    (h_src_2v : (2 : ℕ) • (((t/2 : ℝ) : ℂ) • X) ∈ expAmbientPartialHomeo.source) :
+    SU2MatrixExp.expAmbient (((t/2 : ℝ) : ℂ) • X) = (φ (t/2)).val := by
+  -- Step 1: set u := su2Log((φ(t/2)).val) and v := (t/2:ℂ)•X
+  set u : Matrix (Fin 2) (Fin 2) ℂ := su2Log ((φ (t/2)).val) with hu
+  set v : Matrix (Fin 2) (Fin 2) ℂ := ((t/2 : ℝ) : ℂ) • X with hv
+  -- Step 2: expAmbient(u) = (φ(t/2)).val (since u in source via target hypothesis)
+  have h_exp_u : SU2MatrixExp.expAmbient u = (φ (t/2)).val := expAmbient_su2Log h_target
+  -- Step 3: expAmbient(2•u) = ((φ(t/2)).val)² via exp_nsmul + h_exp_u
+  have h_exp_2u : SU2MatrixExp.expAmbient ((2 : ℕ) • u) = ((φ (t/2)).val)^2 := by
+    unfold SU2MatrixExp.expAmbient
+    rw [NormedSpace.exp_nsmul]
+    show (NormedSpace.exp u)^(2 : ℕ) = ((φ (t/2)).val)^(2 : ℕ)
+    rw [show (NormedSpace.exp u) = (φ (t/2)).val from h_exp_u]
+  -- Step 4: ((φ(t/2)).val)² = (φ t).val via hhom + Submonoid.coe_pow
+  have h_pow_phi : ((φ (t/2)).val)^2 = (φ t).val := by
+    have h_mul : φ (t/2) * φ (t/2) = φ t := by
+      rw [← hhom]
+      congr 1
+      ring
+    have h_sq_val : ((φ (t/2)) * (φ (t/2)) :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val
+        = (φ (t/2)).val * (φ (t/2)).val := rfl
+    have := congrArg
+      (Subtype.val : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) → _) h_mul
+    rw [h_sq_val] at this
+    rw [sq]
+    exact this
+  -- Step 5: 2•v = (t:ℂ)•X via nsmul-smul algebra
+  have h_2v_eq : (2 : ℕ) • v = ((t : ℝ) : ℂ) • X := by
+    show (2 : ℕ) • (((t/2 : ℝ) : ℂ) • X) = ((t : ℝ) : ℂ) • X
+    rw [← Nat.cast_smul_eq_nsmul ℂ ((2 : ℕ) : ℕ)]
+    rw [smul_smul]
+    congr 1
+    push_cast
+    ring
+  -- Step 6: expAmbient(2•u) = (φ t).val = expAmbient((t:ℂ)•X) = expAmbient(2•v)
+  have h_exp_2u_eq_2v : SU2MatrixExp.expAmbient ((2 : ℕ) • u)
+      = SU2MatrixExp.expAmbient ((2 : ℕ) • v) := by
+    rw [h_exp_2u, h_pow_phi, ← h_anchor, h_2v_eq]
+  -- Step 7: by injectivity on source, u = v.
+  have h_uv : u = v :=
+    expAmbient_nsmul_injOn (by decide : 0 < 2) h_src_2u h_src_2v h_exp_2u_eq_2v
+  -- Step 8: expAmbient(v) = expAmbient(u) = (φ(t/2)).val
+  show SU2MatrixExp.expAmbient v = (φ (t/2)).val
+  rw [show v = u from h_uv.symm]
+  exact h_exp_u
+
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
 
 For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
