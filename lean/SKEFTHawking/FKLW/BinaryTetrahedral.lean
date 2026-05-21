@@ -224,6 +224,30 @@ theorem binaryTetrahedralCyclic_le_full :
   rw [Subgroup.zpowers_le]
   exact Subgroup.subset_closure (by simp)
 
+/-- `binaryTetrahedralElem ∈ binaryTetrahedralFull`. -/
+theorem binaryTetrahedralElem_mem_full :
+    binaryTetrahedralElem ∈ binaryTetrahedralFull :=
+  Subgroup.subset_closure (by simp)
+
+/-- `weylElem ∈ binaryTetrahedralFull`. -/
+theorem weylElem_mem_binaryTetrahedralFull :
+    weylElem ∈ binaryTetrahedralFull :=
+  Subgroup.subset_closure (by simp)
+
+/-- `torusElem (π/2) ∈ binaryTetrahedralFull`. -/
+theorem torusElem_pi_half_mem_binaryTetrahedralFull :
+    torusElem (Real.pi / 2) ∈ binaryTetrahedralFull :=
+  Subgroup.subset_closure (by simp)
+
+/-- `negOneSU ∈ binaryTetrahedralFull` — the SU(2) element `-I` is in
+2T. Via `weylElem ∈ 2T` and `weylElem² = negOneSU` (session 90). -/
+theorem negOneSU_mem_binaryTetrahedralFull :
+    negOneSU ∈ binaryTetrahedralFull := by
+  rw [← weylElem_sq_eq_negOneSU]
+  exact binaryTetrahedralFull.mul_mem
+    weylElem_mem_binaryTetrahedralFull
+    weylElem_mem_binaryTetrahedralFull
+
 /-! ## §5. binaryTetrahedralElem is NOT in stdTorus_SU2 -/
 
 /-- **`binaryTetrahedralElem ∉ stdTorus_SU2`** — 2T contains elements
