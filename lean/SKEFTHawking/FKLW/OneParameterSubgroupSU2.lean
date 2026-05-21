@@ -5350,6 +5350,44 @@ theorem fibonacci_density_F21_from_cartan_v4_only
   SKEFTHawking.FKLW.fibonacci_density_F21_from_cartan_final_v4
     h_cartan_v4 H_Fib_v4_witness_unconditional
 
+/-! ## §81. IFT-on-submanifold: exp(ts ∩ source) covers nbhd of 1 in SU(2)
+
+For every SU(2) element h sufficiently close to 1, there exists Y ∈ ts ∩ source
+with `expAmbient Y = h`. Combined with the local-diffeo machinery, this gives
+that `exp` restricted to ts is a local SURJECTION onto SU(2) near 1.
+
+**Substrate role**: this is the IFT-on-submanifold gravity well for v4
+discharge. Combined with v4's hypothesis "exp(ℝ•X_i) ⊆ H" (gives flow lines
+in H) and the BCH closure (still gravity well), this would give 1 ∈ interior(H)
+hence H = ⊤ (§12 shipped).
+
+Composes shipped substrate:
+  - `Su2LogMem_on_nhd_one` (§9.11): h ∈ nhd-of-1 ∩ target ∩ SU(2) ⟹ su2Log h ∈ ts.
+  - `expAmbient_su2Log` (§1): h ∈ target ⟹ expAmbient(su2Log h) = h.
+  - `su2Log_mem_source` (§11.h.small.src): h ∈ target ⟹ su2Log h ∈ source. -/
+
+/-- **§81.1. SU(2) nbhd of 1 covered by exp of ts ∩ source**. -/
+theorem SU2_nhd_one_covered_by_exp_ts :
+    ∃ W ∈ nhds (1 : Matrix (Fin 2) (Fin 2) ℂ),
+      ∀ h, h ∈ W → h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ →
+        ∃ Y, Y ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+             Y ∈ expAmbientPartialHomeo.source ∧
+             SU2MatrixExp.expAmbient Y = h := by
+  -- Get the Su2LogMem nbhd V
+  obtain ⟨V, hV_nhd, hV_su2log_ts⟩ := Su2LogMem_on_nhd_one
+  -- Define W := V ∩ target (both are nbhds of 1, so intersection is)
+  refine ⟨V ∩ expAmbientPartialHomeo.target,
+          Filter.inter_mem hV_nhd expAmbientPartialHomeo_target_mem_nhds_one, ?_⟩
+  intro h ⟨hh_V, hh_target⟩ hh_su2
+  -- Y := su2Log h
+  refine ⟨su2Log h, ?_, ?_, ?_⟩
+  · -- su2Log h ∈ ts via §9.11
+    exact hV_su2log_ts h hh_V hh_target hh_su2
+  · -- su2Log h ∈ source via su2Log_mem_source (§11.h.small.src)
+    exact OneParamSubgroupSU2.su2Log_mem_source hh_target
+  · -- expAmbient(su2Log h) = h via §1
+    exact expAmbient_su2Log hh_target
+
 end SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
 namespace SKEFTHawking.FKLW.OneParameterSubgroupSU2
