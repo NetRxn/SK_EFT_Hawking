@@ -3755,6 +3755,55 @@ theorem ts_Ad_real_scalar_sq_eq_one
     · exact absurd h h_ne
   linarith
 
+/-- **Ad-LD trichotomy**: for X ∈ ts (Fin 2), X ≠ 0 and U ∈ unitaryGroup,
+if (X, U·X·star U) ℝ-LD then `U·X = X·U` (commute) or `U·X = -X·U` (anti-commute).
+
+Proof composes:
+- `SU2LieAlgebra.Ad_LD_implies_scalar` : ℝ-LD ⟹ U·X·star U = α • X
+- `ts_Ad_real_scalar_sq_eq_one` : α² = 1, so α ∈ {±1}
+- `SU2LieAlgebra.unitary_Ad_fix_iff_commute` : Ad(U)·X = X ↔ U·X = X·U
+- Analogous for α = -1: Ad(U)·X = -X ↔ U·X = -X·U
+
+This is the headline result for the H_Fib_TwoLITangents step (5) discharge:
+finding g ∈ H_Fib with Ad(g)·X ℝ-LI from X is equivalent to finding
+g ∈ H_Fib that neither commutes nor anti-commutes with X (as matrices).
+-/
+theorem ts_Ad_LD_iff_commute_or_anticommute
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0)
+    {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    (h_LD : ¬ (∀ a b : ℝ, (a : ℂ) • X + (b : ℂ) • (U * X * star U) = 0 →
+        a = 0 ∧ b = 0)) :
+    U * X = X * U ∨ U * X = -(X * U) := by
+  -- Step 1: from LD, get α
+  obtain ⟨α, hα⟩ := SU2LieAlgebra.Ad_LD_implies_scalar hX hX_ne hU h_LD
+  -- Step 2: α² = 1
+  have h_α_sq : α^2 = 1 := ts_Ad_real_scalar_sq_eq_one hX hX_ne hU hα
+  -- Step 3: α = 1 or α = -1
+  have h_α_pm : α = 1 ∨ α = -1 := by
+    have : (α - 1) * (α + 1) = 0 := by ring_nf; linarith
+    rcases mul_eq_zero.mp this with h | h
+    · left; linarith
+    · right; linarith
+  rcases h_α_pm with h_α_one | h_α_neg_one
+  · -- α = 1: U·X·star U = X, then by unitary_Ad_fix_iff_commute, U·X = X·U
+    left
+    have h_ad_fix : U * X * star U = X := by
+      rw [hα, h_α_one, Complex.ofReal_one, one_smul]
+    exact (SU2LieAlgebra.unitary_Ad_fix_iff_commute hU).mp h_ad_fix
+  · -- α = -1: U·X·star U = -X, derive U·X = -X·U
+    right
+    have h_ad_neg : U * X * star U = -X := by
+      rw [hα, h_α_neg_one]
+      push_cast
+      rw [neg_smul, one_smul]
+    -- From U·X·star U = -X, multiply by U on right: U·X·(star U · U) = -X·U
+    have h1 : U * X * star U * U = (-X) * U := by rw [h_ad_neg]
+    have h_star_U_U : star U * U = 1 := (Matrix.mem_unitaryGroup_iff').mp hU
+    rw [Matrix.mul_assoc (U * X), h_star_U_U, Matrix.mul_one] at h1
+    rw [h1, Matrix.neg_mul]
+
 /-- **Ad-exp commutation for unitary conjugation**. -/
 theorem expAmbient_unitary_conj
     {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
