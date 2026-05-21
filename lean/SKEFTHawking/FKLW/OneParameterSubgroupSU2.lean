@@ -3560,6 +3560,83 @@ theorem expAmbient_nat_smul_anchor
   rw [hom_pow_nat hzero hhom n s]
   exact (SubmonoidClass.coe_pow _ _).symm
 
+/-! ### §11.h.ℤ. ℤ-multiple t-linearity at the anchor
+
+Extends §11.h's ℕ-mult version to ℤ-multiples by case-splitting on the
+sign of `z`. The positive case reuses `expAmbient_nat_smul_anchor`
+directly; the negative case combines the ℕ-mult identity with
+`hom_neg` (which says `φ(-t) = (φ t)⁻¹`) and the matrix-level identity
+`expAmbient(-Y) = (expAmbient Y)⁻¹` (consequence of
+`Matrix.exp_neg` for `Matrix.exp` of skew-Hermitian → unitary).
+
+**Substrate role**: needed for any path that lifts the anchor identity
+to negative-t (e.g. exp(-s•X) = (φ (-s)).val), or more generally for
+proving exp(ℝ•X) ⊆ H from the anchor identity. Pure substrate piece
+with no Trotter / no new Mathlib deps.
+-/
+
+/-- **ℤ-multiple t-linearity**: `expAmbient ((z*s) • X) = (φ (z*s)).val`
+for all `z : ℤ`, given the anchor identity at `s`. Extends
+`expAmbient_nat_smul_anchor` to negative multiples via case-split. -/
+theorem expAmbient_int_smul_anchor
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {s : ℝ}
+    (h_anchor : SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • X) = (φ s).val)
+    (z : ℤ) :
+    SU2MatrixExp.expAmbient ((((z : ℝ) * s : ℝ) : ℂ) • X)
+      = (φ ((z : ℝ) * s)).val := by
+  cases z with
+  | ofNat n =>
+    -- Positive (or zero) case: reduce to ℕ-mult version
+    rw [Int.ofNat_eq_coe, Int.cast_natCast]
+    exact expAmbient_nat_smul_anchor hzero hhom h_anchor n
+  | negSucc n =>
+    -- Negative case: z = -(n+1). Show
+    --   expAmbient ((-(n+1) * s) • X) = (φ (-(n+1) * s)).val
+    -- via expAmbient(-Y) = (expAmbient Y)⁻¹ and hom_neg.
+    rw [Int.cast_negSucc]
+    -- Goal: expAmbient ((-((n+1):ℝ) * s : ℝ : ℂ) • X) = (φ (-((n+1):ℝ) * s)).val
+    -- Step 1: rewrite the argument: -((n+1):ℝ) * s = -(((n+1):ℝ) * s).
+    have h_arg_eq : (-((n + 1 : ℕ) : ℝ)) * s = -(((n + 1 : ℕ) : ℝ) * s) := by ring
+    rw [h_arg_eq]
+    -- Goal: expAmbient ((-(↑(n+1) * s) : ℝ : ℂ) • X) = (φ (-(↑(n+1) * s))).val
+    -- Step 2: cast neg through ofReal and convert to neg of smul.
+    rw [show (((-(((n + 1 : ℕ) : ℝ) * s)) : ℝ) : ℂ)
+            = -((((n + 1 : ℕ) : ℝ) * s : ℝ) : ℂ) from by push_cast; ring,
+        neg_smul]
+    -- Goal: expAmbient (-(((↑(n+1) * s):ℝ:ℂ) • X)) = (φ (-(↑(n+1) * s))).val
+    -- Step 3: expAmbient(-Y) = (expAmbient Y)⁻¹ via Matrix.exp_neg.
+    unfold SU2MatrixExp.expAmbient
+    rw [Matrix.exp_neg]
+    -- Goal: (NormedSpace.exp (((↑(n+1) * s):ℝ:ℂ) • X))⁻¹ = (φ (-(↑(n+1) * s))).val
+    -- Step 4: substitute ℕ-anchor for the positive direction.
+    have h_pos : SU2MatrixExp.expAmbient
+        (((((n + 1 : ℕ) : ℝ) * s : ℝ) : ℂ) • X)
+        = (φ (((n + 1 : ℕ) : ℝ) * s)).val :=
+      expAmbient_nat_smul_anchor hzero hhom h_anchor (n + 1)
+    unfold SU2MatrixExp.expAmbient at h_pos
+    rw [h_pos]
+    -- Goal: ((φ ((↑(n+1)) * s)).val)⁻¹ = (φ (-((↑(n+1)) * s))).val
+    rw [hom_neg hzero hhom (((n + 1 : ℕ) : ℝ) * s)]
+    -- Goal: ((φ ((↑(n+1)) * s)).val)⁻¹ = ((φ ((↑(n+1)) * s))⁻¹).val
+    -- Use Matrix.inv_eq_left_inv: B * A = 1 → A⁻¹ = B, applied to
+    -- B := (φ x)⁻¹.val, A := (φ x).val, with B * A = ((φ x)⁻¹ * φ x).val = (1).val = 1.
+    set M := φ (((n + 1 : ℕ) : ℝ) * s) with hM
+    have h_inv_mul : (M⁻¹ * M : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 :=
+      inv_mul_cancel M
+    have h_val := congrArg
+      (Subtype.val : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) → _) h_inv_mul
+    -- h_val : (M⁻¹ * M).val = 1
+    have h_mul : (M⁻¹ * M : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val
+                = (M⁻¹).val * M.val := rfl
+    rw [h_mul] at h_val
+    -- h_val : (M⁻¹).val * M.val = 1
+    have h_one : ((1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) = 1 := rfl
+    rw [h_one] at h_val
+    exact Matrix.inv_eq_left_inv h_val
+
 end OneParamSubgroupSU2
 
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
