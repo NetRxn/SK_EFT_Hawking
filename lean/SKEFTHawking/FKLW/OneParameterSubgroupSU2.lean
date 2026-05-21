@@ -513,7 +513,130 @@ theorem oneParamMatrixMap_mem_unitaryGroup
     real_smul_tracelessSkewHermitian hX t
   exact Matrix.IsSkewHermitian.exp_mem_unitaryGroup h_smul_mem.1
 
-/-! ## §§3.5-4. (Next ship — substrate roadmap)
+/-! ## §3.5. Determinant closed form for linear combinations `α·I + β·X`
+
+For X ∈ tracelessSkewHermitian (Fin 2), any linear combination
+`α • I + β • X` (α, β ∈ ℂ) has determinant given by the closed form
+`α² + β² · su2RadiusSq X`. This is the algebraic key for the
+`det(expAmbient X) = 1` claim of the next sub-ship.
+
+Derivation (Cayley-Hamilton on 2×2 with tr X = 0, det X = su2RadiusSq X):
+`det(α · I + β · X) = α² + α·β·tr(X) + β²·det(X)
+                    = α² + 0      + β²·su2RadiusSq X`. -/
+
+/-- For X ∈ tracelessSkewHermitian (Fin 2), `det X = su2RadiusSq X` (cast to ℂ).
+
+Direct computation via `Matrix.det_fin_two` + structural form
+`X = !![iα, β; -β̄, -iα]`. -/
+theorem tracelessSkewHermitian_det_eq_su2RadiusSq
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
+    Matrix.det X = ((su2RadiusSq X : ℝ) : ℂ) := by
+  obtain ⟨hX_skew, hX_tr⟩ := hX
+  -- Reuse the structural form derivation from tracelessSkewHermitian_two_sq.
+  have h_diag_skew_00 : star (X 0 0) = -(X 0 0) := by
+    have := congr_fun (congr_fun hX_skew 0) 0
+    simpa [Matrix.conjTranspose_apply, Matrix.neg_apply] using this
+  have h_re_00 : (X 0 0).re = 0 := by
+    have h_sum : X 0 0 + star (X 0 0) = 0 := by rw [h_diag_skew_00]; ring
+    have h_re_sum : (X 0 0).re + (star (X 0 0)).re = 0 := by
+      have := congr_arg Complex.re h_sum
+      simpa [Complex.add_re] using this
+    rw [Complex.star_def, Complex.conj_re] at h_re_sum
+    linarith
+  have h_11 : X 1 1 = -X 0 0 := by
+    have h_trace : X 0 0 + X 1 1 = 0 := by
+      have := hX_tr
+      simp [Matrix.trace, Fin.sum_univ_two] at this
+      linear_combination this
+    linear_combination h_trace
+  have h_offdiag : X 1 0 = -star (X 0 1) := by
+    have h_skew_01 : star (X 0 1) = -(X 1 0) := by
+      have := congr_fun (congr_fun hX_skew 1) 0
+      simpa [Matrix.conjTranspose_apply, Matrix.neg_apply] using this
+    linear_combination h_skew_01
+  have h_X00 : X 0 0 = (((X 0 0).im : ℝ) : ℂ) * Complex.I := by
+    have := (Complex.re_add_im (X 0 0)).symm
+    rw [h_re_00, Complex.ofReal_zero, zero_add] at this
+    exact this
+  -- Compute det X = X[0,0] · X[1,1] - X[0,1] · X[1,0].
+  rw [Matrix.det_fin_two, h_11, h_offdiag, h_X00]
+  -- Goal: (iα) · (-(iα)) - X 0 1 · (-(star (X 0 1))) = ↑(su2RadiusSq X)
+  -- We'll compute LHS = α² + |X 0 1|² and recognize as su2RadiusSq X.
+  have hI2 : Complex.I ^ 2 = -1 := Complex.I_sq
+  -- |X 0 1|² in ℂ via mul_conj.
+  have h_conj : X 0 1 * star (X 0 1) =
+      ((Complex.normSq (X 0 1) : ℝ) : ℂ) := by
+    rw [show star (X 0 1) = (starRingEnd ℂ) (X 0 1) from rfl,
+        Complex.mul_conj]
+  -- Now compute.
+  have h_calc :
+      (((X 0 0).im : ℝ) : ℂ) * Complex.I * -((((X 0 0).im : ℝ) : ℂ) * Complex.I) -
+        X 0 1 * -star (X 0 1) =
+      (((X 0 0).im : ℝ) : ℂ) ^ 2 + ((Complex.normSq (X 0 1) : ℝ) : ℂ) := by
+    have h1 : (((X 0 0).im : ℝ) : ℂ) * Complex.I *
+                -((((X 0 0).im : ℝ) : ℂ) * Complex.I) =
+              (((X 0 0).im : ℝ) : ℂ) ^ 2 := by
+      have : (((X 0 0).im : ℝ) : ℂ) * Complex.I *
+              -((((X 0 0).im : ℝ) : ℂ) * Complex.I) =
+             -(((X 0 0).im : ℝ) : ℂ) ^ 2 * Complex.I ^ 2 := by ring
+      rw [this, hI2]; ring
+    rw [h1]
+    linear_combination h_conj
+  rw [h_calc]
+  -- Final: ↑(X 0 0).im² + ↑(normSq (X 0 1)) = ↑(su2RadiusSq X)
+  unfold su2RadiusSq
+  rw [show ((Complex.normSq (X 0 1) : ℝ) : ℂ) = ((‖X 0 1‖ ^ 2 : ℝ) : ℂ) by
+    rw [show (Complex.normSq (X 0 1) : ℝ) = ‖X 0 1‖ ^ 2 from
+      (Complex.sq_norm (X 0 1)).symm]]
+  push_cast
+  ring
+
+/-- **Determinant closed form for `α • I + β • X` on su(2)**:
+for X ∈ tracelessSkewHermitian (Fin 2) and any α, β ∈ ℂ,
+`det(α • I + β • X) = α² + β² · su2RadiusSq X`.
+
+Uses `Matrix.det_fin_two` + tracelessness (tr X = 0) + the just-proved
+`tracelessSkewHermitian_det_eq_su2RadiusSq`. This is the algebraic key
+that, combined with the closed-form `exp X = cos(r) • I + sinc(r) • X`,
+will give `det(exp X) = cos²(r) + sin²(r) = 1` in the next sub-ship. -/
+theorem det_alpha_one_plus_beta_smul_tracelessSkewHermitian
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (α β : ℂ) :
+    Matrix.det (α • (1 : Matrix (Fin 2) (Fin 2) ℂ) + β • X) =
+      α ^ 2 + β ^ 2 * ((su2RadiusSq X : ℝ) : ℂ) := by
+  have hX_tr := hX.2
+  -- Use Matrix.det_fin_two on the explicit linear combination.
+  rw [Matrix.det_fin_two]
+  -- Entries of α • 1 + β • X:
+  --   [0,0] = α + β·X[0,0]
+  --   [0,1] = β·X[0,1]
+  --   [1,0] = β·X[1,0]
+  --   [1,1] = α + β·X[1,1]
+  simp only [Matrix.add_apply, Matrix.smul_apply, Matrix.one_apply_eq,
+             Matrix.one_apply_ne (by decide : (0 : Fin 2) ≠ 1),
+             Matrix.one_apply_ne (by decide : (1 : Fin 2) ≠ 0),
+             smul_eq_mul, mul_one, mul_zero, add_zero, zero_add]
+  -- Goal: (α + β · X 0 0) · (α + β · X 1 1) - β · X 0 1 · (β · X 1 0)
+  --     = α² + β² · ↑(su2RadiusSq X)
+  -- Expand and use tr X = 0 → X 0 0 + X 1 1 = 0, plus
+  -- det X (from det_fin_two with X 0 0 · X 1 1 - X 0 1 · X 1 0)
+  -- = su2RadiusSq X.
+  have h_tr : X 0 0 + X 1 1 = 0 := by
+    have := hX_tr
+    simp [Matrix.trace, Fin.sum_univ_two] at this
+    linear_combination this
+  have h_det : X 0 0 * X 1 1 - X 0 1 * X 1 0 = ((su2RadiusSq X : ℝ) : ℂ) := by
+    have h_X_det : Matrix.det X = ((su2RadiusSq X : ℝ) : ℂ) :=
+      tracelessSkewHermitian_det_eq_su2RadiusSq hX
+    rw [Matrix.det_fin_two] at h_X_det
+    exact h_X_det
+  linear_combination
+    α * β * h_tr +
+    β ^ 2 * h_det
+
+/-! ## §§3.5b-4. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
