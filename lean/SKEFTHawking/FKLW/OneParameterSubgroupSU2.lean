@@ -3615,6 +3615,52 @@ theorem SU2_subgroup_eq_top_of_one_mem_interior
     H = ⊤ :=
   SU2_subgroup_eq_top_of_isOpen H (H.isOpen_of_one_mem_interior h_1_int)
 
+/-! ## §13. Conjugate 1-parameter subgroup constructor
+
+Given φ : ℝ → SU(2) continuous group homomorphism with image in H ≤ SU(2),
+and g₂ ∈ H, the conjugate ψ(t) := g₂ · φ(t) · g₂⁻¹ is also a continuous
+group homomorphism with image in H. This is Step 2 substrate for
+CartanFinalStep_SU2_v2 second-tangent extraction.
+-/
+
+/-- **Conjugate 1-parameter subgroup**: for `φ` a continuous nontrivial
+group homomorphism `ℝ → SU(2)` with image in `H`, and any `g ∈ H`, the
+conjugate `t ↦ g · φ(t) · g⁻¹` is also a continuous nontrivial group
+homomorphism with image in `H`.
+
+(Note: `OneParamSubgroupInSU2 H` is asymmetric; it's `∃ φ : ℝ → SU(2)`,
+so conjugation doesn't preserve `H` as a fixed reference — it constructs
+*a new* 1-param subgroup.) -/
+theorem OneParamSubgroupInSU2_conj
+    {H : _root_.Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_one_param : SKEFTHawking.FKLW.OneParamSubgroupInSU2 H)
+    {g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)} (hg : g ∈ H) :
+    SKEFTHawking.FKLW.OneParamSubgroupInSU2 H := by
+  obtain ⟨φ, hcts, hzero, hhom, hnontriv, himage⟩ := h_one_param
+  refine ⟨fun t => g * φ t * g⁻¹, ?_, ?_, ?_, ?_, ?_⟩
+  · -- continuous
+    exact (continuous_const.mul hcts).mul continuous_const
+  · -- ψ(0) = 1
+    show g * φ 0 * g⁻¹ = 1
+    rw [hzero, mul_one, mul_inv_cancel]
+  · -- homomorphism
+    intro s t
+    show g * φ (s + t) * g⁻¹ = (g * φ s * g⁻¹) * (g * φ t * g⁻¹)
+    rw [hhom]
+    group
+  · -- nontrivial
+    obtain ⟨t, ht⟩ := hnontriv
+    refine ⟨t, ?_⟩
+    intro h_eq
+    apply ht
+    have h_eq' : g * φ t * g⁻¹ = 1 := h_eq
+    have h_eq'' : g⁻¹ * (g * φ t * g⁻¹) * g = g⁻¹ * 1 * g := by rw [h_eq']
+    simpa [mul_assoc, inv_mul_cancel, mul_inv_cancel] using h_eq''
+  · -- image ⊆ H
+    intro t
+    show g * φ t * g⁻¹ ∈ H
+    exact H.mul_mem (H.mul_mem hg (himage t)) (H.inv_mem hg)
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
