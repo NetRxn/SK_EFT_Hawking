@@ -3355,6 +3355,45 @@ theorem exists_su2Log_mem_ts_ne_zero
     show (φ s).val = (1 : Matrix (Fin 2) (Fin 2) ℂ)
     exact h_exp_log.symm
 
+/-- **Tangent extraction headline (concrete X)**: for a nontrivial
+continuous 1-parameter subgroup `φ : ℝ → SU(2)`, there exists a NONZERO
+element `X ∈ tracelessSkewHermitian (Fin 2) ℂ` (defined explicitly via
+`X := (1/s) • su2Log((φ s).val)` for the `s` from §11.e).
+
+This is the **concrete tangent witness** for the dim-counting argument
+of CartanFinalStep_SU2_v2 discharge. The next step (deferred) is to
+show `φ(t) = expAmbient(t • X)` for all `t`, which establishes that
+`exp(t • X) ∈ H` for all `t` (when `φ`'s image lies in `H`).
+
+(For the dim-counting CartanFinalStep_SU2_v2 discharge, we'll need this
+PLUS a second tangent Y from the non-central conjugate witness, then
+§20 of SU2LieAlgebra gives `{X, Y, [X, Y]}` spans su(2).) -/
+theorem exists_nonzero_tangent_in_ts
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1)
+    (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hnontriv : ∃ t, φ t ≠ 1) :
+    ∃ X : Matrix (Fin 2) (Fin 2) ℂ,
+      X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧ X ≠ 0 := by
+  obtain ⟨s, hs_ne, _hφs_ne, _hφs_target, h_log_ts, h_log_ne_zero⟩ :=
+    exists_su2Log_mem_ts_ne_zero hcts hzero hhom hnontriv
+  -- X := (1/s) • su2Log((φ s).val) ∈ ts (ts is ℝ-submodule, (1/s) ∈ ℝ).
+  refine ⟨((1/s : ℝ) : ℂ) • su2Log ((φ s).val), ?_, ?_⟩
+  · -- ts is a Submodule under ℝ-smul (via Complex.coe_smul bridge).
+    rw [Complex.coe_smul]
+    exact Submodule.smul_mem _ (1/s : ℝ) h_log_ts
+  · -- X ≠ 0: scalar multiple by nonzero scalar of nonzero element.
+    intro h_zero
+    apply h_log_ne_zero
+    -- From ((1/s : ℝ) : ℂ) • Y = 0 with (1/s) ≠ 0, derive Y = 0.
+    have h_one_over_s_ne : (1/s : ℝ) ≠ 0 := by
+      have : (1 : ℝ) ≠ 0 := one_ne_zero
+      exact div_ne_zero this hs_ne
+    have h_cast_ne : ((1/s : ℝ) : ℂ) ≠ 0 := by
+      simp only [ne_eq, Complex.ofReal_eq_zero]
+      exact h_one_over_s_ne
+    exact (smul_eq_zero.mp h_zero).resolve_left h_cast_ne
+
 end OneParamSubgroupSU2
 
 /-! ## §5. Module summary (current ship)
