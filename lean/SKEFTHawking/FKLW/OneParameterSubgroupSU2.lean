@@ -3804,6 +3804,57 @@ theorem ts_Ad_LD_iff_commute_or_anticommute
     rw [Matrix.mul_assoc (U * X), h_star_U_U, Matrix.mul_one] at h1
     rw [h1, Matrix.neg_mul]
 
+/-! ### Unconditional SU(2) 1-parameter subgroup from ts element
+
+Since `DetExpZeroOnSu2_SU2_discharged` is shipped, we have unconditional
+`oneParamSU2Map_uncond` — the 1-parameter subgroup `ℝ → SU(2)` from any
+X ∈ tracelessSkewHermitian (Fin 2) (the canonical exp-flow). -/
+
+/-- **Unconditional SU(2) 1-parameter subgroup from ts element**. -/
+noncomputable def oneParamSU2Map_uncond
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (t : ℝ) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  oneParamSU2Map hX DetExpZeroOnSu2_SU2_discharged t
+
+/-- `oneParamSU2Map_uncond hX 0 = 1`. -/
+theorem oneParamSU2Map_uncond_zero
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
+    oneParamSU2Map_uncond hX 0 = 1 :=
+  oneParamSU2Map_zero hX DetExpZeroOnSu2_SU2_discharged
+
+/-- Homomorphism: `oneParamSU2Map_uncond hX (s+t) = oneParamSU2Map_uncond hX s * oneParamSU2Map_uncond hX t`. -/
+theorem oneParamSU2Map_uncond_add
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) (s t : ℝ) :
+    oneParamSU2Map_uncond hX (s + t) =
+      oneParamSU2Map_uncond hX s * oneParamSU2Map_uncond hX t :=
+  oneParamSU2Map_add hX DetExpZeroOnSu2_SU2_discharged s t
+
+/-- Continuity. -/
+theorem oneParamSU2Map_uncond_continuous
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
+    Continuous (oneParamSU2Map_uncond hX) :=
+  oneParamSU2Map_continuous hX DetExpZeroOnSu2_SU2_discharged
+
+/-- **Anchor identity**: `(oneParamSU2Map_uncond hX 1).val = expAmbient X`. -/
+theorem oneParamSU2Map_uncond_one
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) :
+    (oneParamSU2Map_uncond hX 1).val = SU2MatrixExp.expAmbient X := by
+  show oneParamMatrixMap X 1 = SU2MatrixExp.expAmbient X
+  unfold oneParamMatrixMap
+  rw [Complex.ofReal_one, one_smul]
+
+/-- **Anchor identity at any s**: `(oneParamSU2Map_uncond hX s).val = expAmbient ((s : ℂ) • X)`. -/
+theorem oneParamSU2Map_uncond_apply_val
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) (s : ℝ) :
+    (oneParamSU2Map_uncond hX s).val =
+      SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • X) := rfl
+
 /-- **Ad-LI from non-commute + non-anticommute**: direct contrapositive
 of `ts_Ad_LD_iff_commute_or_anticommute`. For X ∈ ts (Fin 2), X ≠ 0,
 U unitary, if U neither commutes nor anti-commutes with X (as matrices),
