@@ -2080,6 +2080,117 @@ theorem fibonacci_density_F21_from_three_tracked_props
     (OneParamSubgroupFromAccPt_SU2_of_tracked_props h_det h_log_tracked)
     h_cartan_final
 
+/-! ## §7. Substrate: `expAmbient X = α • 1 + β • X` for X² = c • 1
+
+Power-series machinery for the closed-form `expAmbient X` decomposition.
+For X with `X * X = c • 1`, we have:
+- X^(2k) = c^k • 1
+- X^(2k+1) = c^k • X
+So the matrix exp series splits into:
+- Even: Σ_k ((2k)!)⁻¹ • X^(2k) = (Σ_k c^k / (2k)!) • 1 = α • 1
+- Odd: Σ_k ((2k+1)!)⁻¹ • X^(2k+1) = (Σ_k c^k / (2k+1)!) • X = β • X
+
+Combined via `HasSum.even_add_odd`: expAmbient X = α • 1 + β • X.
+
+For X ∈ tracelessSkewHermitian with c = -(su2RadiusSq X : ℂ), we then
+identify α with `Complex.cos r` (r := √(su2RadiusSq X)) via
+`Complex.hasSum_cos`.
+
+This is the substrate for discharging `DetExpZeroOnSu2_SU2` (the
+tracked Prop introduced in §3.5d). -/
+
+/-- **§7.1. X^(2k) closed form**: for X with X² = c • 1,
+X^(2k) = c^k • 1. -/
+lemma pow_two_mul_of_sq_eq_scalar
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {c : ℂ}
+    (hX_sq : X * X = c • (1 : Matrix (Fin 2) (Fin 2) ℂ)) (k : ℕ) :
+    X ^ (2 * k) = c^k • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    rw [Nat.mul_succ, show 2 * k + 2 = 2 * k + 1 + 1 from rfl, pow_succ, pow_succ]
+    rw [mul_assoc, hX_sq, mul_smul_comm, mul_one, ih, pow_succ, smul_smul]
+    ring_nf
+
+/-- **§7.2. X^(2k+1) closed form**: for X with X² = c • 1,
+X^(2k+1) = c^k • X. -/
+lemma pow_two_mul_add_one_of_sq_eq_scalar
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {c : ℂ}
+    (hX_sq : X * X = c • (1 : Matrix (Fin 2) (Fin 2) ℂ)) (k : ℕ) :
+    X ^ (2 * k + 1) = c^k • X := by
+  rw [pow_succ, pow_two_mul_of_sq_eq_scalar hX_sq, smul_mul_assoc, one_mul]
+
+/-- **§7.3. Even-part HasSum**: for X with X² = c • 1 and `HasSum
+(fun k => c^k / (2k)!) α`, the even-indexed terms of the exp series
+sum to `α • 1`. -/
+lemma even_part_hasSum_of_sq_eq_scalar
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {c : ℂ}
+    (hX_sq : X * X = c • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+    {α : ℂ} (hα : HasSum (fun k => c^k / ((2 * k).factorial : ℂ)) α) :
+    HasSum (fun k => (((2*k).factorial : ℂ)⁻¹ : ℂ) • X ^ (2 * k))
+      (α • (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  have h_eq : (fun k => (((2*k).factorial : ℂ)⁻¹ : ℂ) • X ^ (2 * k)) =
+              (fun k => (c^k / ((2 * k).factorial : ℂ)) •
+                (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+    funext k
+    rw [pow_two_mul_of_sq_eq_scalar hX_sq, smul_smul, div_eq_inv_mul, mul_comm]
+  rw [h_eq]
+  exact hα.smul_const 1
+
+/-- **§7.4. Odd-part HasSum**: dual to §7.3. -/
+lemma odd_part_hasSum_of_sq_eq_scalar
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {c : ℂ}
+    (hX_sq : X * X = c • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+    {β : ℂ} (hβ : HasSum (fun k => c^k / ((2 * k + 1).factorial : ℂ)) β) :
+    HasSum (fun k => (((2*k+1).factorial : ℂ)⁻¹ : ℂ) • X ^ (2 * k + 1))
+      (β • X) := by
+  have h_eq : (fun k => (((2*k+1).factorial : ℂ)⁻¹ : ℂ) • X ^ (2 * k + 1)) =
+              (fun k => (c^k / ((2 * k + 1).factorial : ℂ)) • X) := by
+    funext k
+    rw [pow_two_mul_add_one_of_sq_eq_scalar hX_sq, smul_smul, div_eq_inv_mul, mul_comm]
+  rw [h_eq]
+  exact hβ.smul_const X
+
+/-- **§7.5. Combined decomposition**: `expAmbient X = α • 1 + β • X`
+for X² = c • 1, when α and β are given as scalar series sums. -/
+theorem expAmbient_decomp_of_sq_eq_scalar
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {c : ℂ}
+    (hX_sq : X * X = c • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+    {α β : ℂ}
+    (hα : HasSum (fun k => c^k / ((2 * k).factorial : ℂ)) α)
+    (hβ : HasSum (fun k => c^k / ((2 * k + 1).factorial : ℂ)) β) :
+    SU2MatrixExp.expAmbient X = α • (1 : Matrix (Fin 2) (Fin 2) ℂ) + β • X := by
+  have h_even := even_part_hasSum_of_sq_eq_scalar hX_sq hα
+  have h_odd := odd_part_hasSum_of_sq_eq_scalar hX_sq hβ
+  have h_combined : HasSum (fun n => ((n.factorial : ℂ)⁻¹ : ℂ) • X ^ n)
+      (α • (1 : Matrix (Fin 2) (Fin 2) ℂ) + β • X) :=
+    HasSum.even_add_odd h_even h_odd
+  have h_exp_sum : HasSum (fun n => ((n.factorial : ℂ)⁻¹ : ℂ) • X ^ n)
+      (SU2MatrixExp.expAmbient X) := by
+    unfold SU2MatrixExp.expAmbient
+    have := NormedSpace.expSeries_hasSum_exp (𝕂 := ℂ) X
+    convert this using 1
+    ext n
+    simp [NormedSpace.expSeries, smul_eq_mul]
+  exact h_exp_sum.unique h_combined
+
+/-- **§7.6. Cos identification**: for real r, the scalar series
+Σ_k (-r²)^k / (2k)! equals `Complex.cos r`.
+
+Proof: `Complex.hasSum_cos` gives Σ_n (-1)^n · r^(2n) / (2n)!, and
+(-r²)^k = (-1)^k · r^(2k). -/
+lemma cos_hasSum_su2 (r : ℝ) :
+    HasSum (fun k => ((-(r^2) : ℝ) : ℂ)^k / ((2 * k).factorial : ℂ))
+      (Complex.cos (r : ℂ)) := by
+  have h_cos := Complex.hasSum_cos (r : ℂ)
+  have h_eq : (fun n => (-1 : ℂ) ^ n * (r : ℂ) ^ (2 * n) / ((2 * n).factorial : ℂ))
+            = (fun k => ((-(r^2) : ℝ) : ℂ)^k / ((2 * k).factorial : ℂ)) := by
+    funext n
+    push_cast
+    ring
+  rw [← h_eq]
+  exact h_cos
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
