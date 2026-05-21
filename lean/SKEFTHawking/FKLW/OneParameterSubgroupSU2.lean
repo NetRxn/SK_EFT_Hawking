@@ -3803,6 +3803,43 @@ theorem anchorAddSubgroup_isClosed
     exact (continuous_subtype_val.comp hcts)
   exact isClosed_eq hf_cts hg_cts
 
+/-- **Dense + closed anchor set ⟹ anchor set is all of ℝ**. -/
+theorem anchorAddSubgroup_eq_top_of_dense
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hcts : Continuous φ)
+    (X : Matrix (Fin 2) (Fin 2) ℂ)
+    (h_dense : Dense ((anchorAddSubgroup hzero hhom X) : Set ℝ)) :
+    anchorAddSubgroup hzero hhom X = ⊤ := by
+  have h_closed := anchorAddSubgroup_isClosed hzero hhom hcts X
+  have h_univ : ((anchorAddSubgroup hzero hhom X) : Set ℝ) = Set.univ := by
+    rw [← h_closed.closure_eq]
+    exact h_dense.closure_eq
+  rw [AddSubgroup.eq_top_iff']
+  intro t
+  have : t ∈ ((anchorAddSubgroup hzero hhom X) : Set ℝ) := h_univ ▸ Set.mem_univ t
+  exact this
+
+/-- **Dichotomy headline**: the anchor set is either all of ℝ (dense case)
+or cyclic `⟨α⟩` for some `α : ℝ` (discrete case). Direct application of
+Mathlib's `AddSubgroup.dense_or_cyclic` to the closed anchor subgroup.
+
+The dense case immediately closes anchor identity for all real t. The
+cyclic case requires ruling out (via the IFT/local-diffeomorphism argument
+at 0, in a subsequent ship) to conclude H = ⊤ in v3. -/
+theorem anchorAddSubgroup_dense_or_cyclic
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hcts : Continuous φ)
+    (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    anchorAddSubgroup hzero hhom X = ⊤ ∨
+    ∃ α : ℝ, anchorAddSubgroup hzero hhom X = AddSubgroup.closure {α} := by
+  rcases AddSubgroup.dense_or_cyclic (anchorAddSubgroup hzero hhom X) with h_dense | h_cyclic
+  · left
+    exact anchorAddSubgroup_eq_top_of_dense hzero hhom hcts X h_dense
+  · right
+    exact h_cyclic
+
 end OneParamSubgroupSU2
 
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
