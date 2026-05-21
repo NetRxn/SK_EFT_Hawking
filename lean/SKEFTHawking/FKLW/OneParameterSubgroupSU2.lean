@@ -955,7 +955,75 @@ theorem H_Fib_vonNeumann_sequence :
         (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) :=
   vonNeumann_extract_sequence H_Fib H_Fib_accPt_one_unconditional
 
-/-! ## §§4.b-5. (Next ship — substrate roadmap)
+/-! ### §4.b. Lifting the sequence to matrix space + matrix log
+
+From `seq → 1` in `↥SU(2)`, derive `seq.val → 1` in `Matrix _ _ ℂ` via
+continuity of `Subtype.val`, then use the IFT target nbhd
+(`expAmbientPartialHomeo_target_mem_nhds_one`) to show eventually
+`seq n.val ∈ target` so that `su2Log (seq n).val` is meaningful.
+
+Then use continuity of `su2Log` on `target` + `su2Log 1 = 0` to derive
+`su2Log (seq n).val → 0` in matrix space. -/
+
+/-- **Sequence.val tendsto identity**: if `seq → 1` in SU(2), then
+`(seq n).val → (1 : Matrix _ _ ℂ)`. -/
+theorem subtype_val_tendsto_one_of_tendsto
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    Filter.Tendsto (fun n => ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  have h_val_one : ((1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+      Matrix (Fin 2) (Fin 2) ℂ) = 1 := rfl
+  rw [← h_val_one]
+  exact continuous_subtype_val.continuousAt.tendsto.comp h_seq
+
+/-- **Eventually in target**: from `seq.val → 1`, eventually
+`seq n.val ∈ expAmbientPartialHomeo.target`. -/
+theorem eventually_val_mem_target
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    ∀ᶠ n in Filter.atTop,
+      ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ∈ expAmbientPartialHomeo.target := by
+  have h_val_tendsto := subtype_val_tendsto_one_of_tendsto h_seq
+  exact h_val_tendsto.eventually expAmbientPartialHomeo_target_mem_nhds_one
+
+/-- **`su2Log` of sequence converges to 0** in `Matrix _ _ ℂ`. From
+`seq.val → 1` and `seq.val` eventually in `target`, use continuity of
+`su2Log` on `target` + `su2Log 1 = 0`. -/
+theorem su2Log_seq_tendsto_zero
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    Filter.Tendsto (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  have h_val_tendsto := subtype_val_tendsto_one_of_tendsto h_seq
+  have h_su2Log_cont :=
+    su2Log_continuousOn.continuousAt expAmbientPartialHomeo_target_mem_nhds_one
+  have := h_su2Log_cont.tendsto.comp h_val_tendsto
+  rw [su2Log_one] at this
+  exact this
+
+/-- **Combined von Neumann sequence + matrix-log lift**: for closed H ⊆ SU(2)
+with `AccPt 1 (Filter.principal H)`, there exist sequences
+`seq : ℕ → ↥SU(2)` with `seq n ∈ H ∧ seq n ≠ 1 ∧ seq → 1` AND
+`Y_n : ℕ → Matrix _ _ ℂ` with `Y_n → 0` and (eventually) `expAmbient Y_n =
+(seq n).val`. -/
+theorem vonNeumann_sequence_with_log
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hH : AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    ∃ (seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+      (∀ n, seq n ∈ H) ∧ (∀ n, seq n ≠ 1) ∧
+      Filter.Tendsto seq Filter.atTop
+        (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) ∧
+      Filter.Tendsto (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+        Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  obtain ⟨seq, h_mem, h_ne, h_tendsto⟩ := vonNeumann_extract_sequence H hH
+  exact ⟨seq, h_mem, h_ne, h_tendsto, su2Log_seq_tendsto_zero h_tendsto⟩
+
+/-! ## §§4.c-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
