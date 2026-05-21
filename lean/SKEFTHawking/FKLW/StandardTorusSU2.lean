@@ -692,4 +692,23 @@ theorem stdTorus_SU2_infinite :
       rw [hk] at h_sub_eq_one
       exact absurd h_sub_eq_one (torusElem_natCast_succ_ne_one k)
 
+/-! ## §15. Structural inclusion: stdTorus ≤ centralizer(stdTorus) -/
+
+/-- **`stdTorus_SU2 ≤ centralizer(stdTorus_SU2 : Set _)`** — every torus
+element commutes with every torus element (since the torus is abelian).
+
+The reverse inclusion (centralizer ⊆ stdTorus_SU2, requiring the polar-form
+parametrization `Complex.norm_eq_one_iff` to lift diagonal SU(2) elements
+into torusElem range) is substantive Cartan content — deferred to a
+subsequent Wedge C session. -/
+theorem stdTorus_SU2_le_centralizer :
+    stdTorus_SU2 ≤
+    Subgroup.centralizer (stdTorus_SU2 :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro g hg
+  rw [Subgroup.mem_centralizer_iff]
+  intro h hh
+  -- h, g ∈ stdTorus_SU2 (abelian) → h * g = g * h.
+  exact stdTorus_SU2_abelian h g hh hg
+
 end SKEFTHawking.FKLW
