@@ -130,4 +130,29 @@ theorem binaryTetrahedralGen_cube :
   all_goals ring_nf
   all_goals (rw [Complex.I_sq]; ring)
 
+/-- **`binaryTetrahedralGen^6 = 1`** — sixth power is identity.
+
+Direct corollary: `gen^6 = (gen^3)² = (-I)² = I`. -/
+theorem binaryTetrahedralGen_sixth :
+    binaryTetrahedralGen ^ 6 = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h_cube_eq :
+      binaryTetrahedralGen * binaryTetrahedralGen * binaryTetrahedralGen =
+      -(1 : Matrix (Fin 2) (Fin 2) ℂ) := binaryTetrahedralGen_cube
+  -- gen^6 = (gen^3)^2 = (gen·gen·gen)·(gen·gen·gen) = (-1)·(-1) = 1.
+  have h_pow3 : binaryTetrahedralGen ^ 3 =
+                binaryTetrahedralGen * binaryTetrahedralGen * binaryTetrahedralGen := by
+    rw [show (3 : ℕ) = 2 + 1 from rfl, pow_add, pow_succ, pow_one]
+  have h_pow6 : binaryTetrahedralGen ^ 6 =
+                (binaryTetrahedralGen * binaryTetrahedralGen * binaryTetrahedralGen) *
+                (binaryTetrahedralGen * binaryTetrahedralGen * binaryTetrahedralGen) := by
+    rw [show (6 : ℕ) = 3 + 3 from rfl, pow_add, h_pow3]
+  rw [h_pow6, h_cube_eq]
+  -- Now goal: (-1) * (-1) = 1 (matrix level).
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply,
+          Matrix.one_apply, Matrix.cons_val', Matrix.cons_val_zero,
+          Matrix.cons_val_one, Matrix.head_cons, Matrix.empty_val',
+          Matrix.cons_val_fin_one]
+
 end SKEFTHawking.FKLW
