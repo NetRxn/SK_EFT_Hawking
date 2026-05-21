@@ -699,8 +699,8 @@ element commutes with every torus element (since the torus is abelian).
 
 The reverse inclusion (centralizer ⊆ stdTorus_SU2, requiring the polar-form
 parametrization `Complex.norm_eq_one_iff` to lift diagonal SU(2) elements
-into torusElem range) is substantive Cartan content — deferred to a
-subsequent Wedge C session. -/
+into torusElem range) is substantive Cartan content — shipped here as the
+tracked Mathlib gap #4 predicate `CentralizerStdTorusEqualsStdTorus_SU2`. -/
 theorem stdTorus_SU2_le_centralizer :
     stdTorus_SU2 ≤
     Subgroup.centralizer (stdTorus_SU2 :
@@ -710,5 +710,41 @@ theorem stdTorus_SU2_le_centralizer :
   intro h hh
   -- h, g ∈ stdTorus_SU2 (abelian) → h * g = g * h.
   exact stdTorus_SU2_abelian h g hh hg
+
+/-! ## §16. Tracked Cartan gap #4: centralizer(stdTorus) = stdTorus -/
+
+/-- **Tracked Mathlib4 v4.29.1 Cartan gap #4** (centralizer = torus for SU(2)).
+
+"The centralizer of the standard torus in SU(2) is the standard torus itself":
+every SU(2) element commuting with every torus element must itself be a
+torus element.
+
+**Substantive content**: this is the SU(2)-specific fact that diagonal-
+commuting forces diagonality, then SU(2)-diagonal forces the explicit
+`torusElem t` form via `Complex.norm_eq_one_iff`.
+
+**Status**: predicate (Prop `def`), not axiom. Same Pipeline Invariant
+#15 posture as Wedges A and B. Substantive discharge requires composing:
+  - matrix-level "commute with torusMatrix(π/2) forces off-diagonal = 0"
+    (entry-wise argument using `exp(iπ/2) - exp(-iπ/2) = 2i ≠ 0`)
+  - SU(2)-diagonal det/unitary structure analysis
+  - `Complex.norm_eq_one_iff` polar-form parametrization
+
+This is ~100-200 LoC of careful Lean engineering — deferred for a focused
+future Wedge C session. -/
+def CentralizerStdTorusEqualsStdTorus_SU2 : Prop :=
+  Subgroup.centralizer (stdTorus_SU2 :
+    Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = stdTorus_SU2
+
+/-- **Conditional centralizer equality + N(T)-structure substrate**.
+
+Under `CentralizerStdTorusEqualsStdTorus_SU2`, the centralizer-of-T is
+exactly T. Combined with `stdTorus_SU2_le_centralizer` (shipped, easy
+direction), this gives full bidirection. -/
+theorem centralizer_stdTorus_eq_stdTorus_of_cartan_gap_4
+    (h_cartan_gap_4 : CentralizerStdTorusEqualsStdTorus_SU2) :
+    Subgroup.centralizer (stdTorus_SU2 :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = stdTorus_SU2 :=
+  h_cartan_gap_4
 
 end SKEFTHawking.FKLW
