@@ -2987,6 +2987,48 @@ theorem OneParamSubgroupFromAccPt_SU2_unconditional :
   intro H hH_closed hH_accPt
   exact vonNeumann_assemble_OneParamSubgroupInSU2_unconditional H hH_closed hH_accPt
 
+/-- **§9.13c. STRONGER UNCONDITIONAL ASSEMBLY: explicit X with all-t identity**.
+
+Returns the explicit tangent X ∈ ts \ {0} together with the ALL-t identity
+`∀ t : ℝ, ∃ M ∈ H, M.val = expAmbient((t:ℂ)•X)`.
+
+This is strictly stronger than `OneParamSubgroupFromAccPt_SU2_unconditional`
+which returns the abstract `OneParamSubgroupInSU2 H` (just an existential
+of 1-param subgroups with anchor at one s, not all t).
+
+**Strategic role**: bypasses the v3-required IFT anchor-extension gravity
+well for ANY application where the 1-param subgroup comes from AccPt
+construction (in particular for H_Fib). The explicit `oneParamSU2Map`
+form gives `(M).val = expAmbient((t:ℂ)•X)` by rfl. -/
+theorem vonNeumann_assemble_explicit_X_unconditional
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+    (hH_accPt : AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    ∃ X : Matrix (Fin 2) (Fin 2) ℂ,
+      X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+      X ≠ 0 ∧
+      ∀ t : ℝ, ∃ M : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+        M ∈ H ∧ M.val = SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X) := by
+  obtain ⟨seq, h_mem, h_ne, h_seq, h_log_tendsto⟩ :=
+    vonNeumann_sequence_with_log H hH_accPt
+  have h_ev_ne := eventually_su2Log_seq_ne_zero h_ne h_seq
+  obtain ⟨X, _hX_ball, φ, hφ, h_unit_tendsto⟩ := vonNeumann_BW_extract seq
+  have h_norm_one : ‖X‖ = 1 :=
+    vonNeumann_BW_limit_norm_eq_one seq h_ev_ne hφ h_unit_tendsto
+  have hX_ne : X ≠ 0 := fun h => by
+    rw [h, norm_zero] at h_norm_one; norm_num at h_norm_one
+  have hX_ts : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+    vonNeumann_BW_limit_mem_tracelessSkewHermitian_uncond h_seq hφ h_unit_tendsto
+  refine ⟨X, hX_ts, hX_ne, ?_⟩
+  intro t
+  refine ⟨oneParamSU2Map hX_ts DetExpZeroOnSu2_SU2_discharged t, ?_, ?_⟩
+  · exact vonNeumann_oneParamSU2Map_mem_H DetExpZeroOnSu2_SU2_discharged hH_closed
+      h_mem hφ h_seq h_ev_ne h_log_tendsto hX_ts h_unit_tendsto t
+  · -- (oneParamSU2Map hX_ts h_det t).val = oneParamMatrixMap X t = expAmbient((t:ℂ)•X)
+    show oneParamMatrixMap X t = SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X)
+    rfl
+
 /-! ### §10. UNCONDITIONAL F.21 from ONE tracked Prop
 
 With gap #2 discharged unconditionally, F.21 unconditional density
@@ -5183,6 +5225,130 @@ theorem fibonacci_density_F21_from_cartan_v3_only
           Matrix (Fin 2) (Fin 2) ℂ)) :=
   SKEFTHawking.FKLW.fibonacci_density_F21_from_cartan_final_v3
     h_cartan_v3 H_Fib_TwoLITangents_unconditional
+
+/-! ## §80. H_Fib_v4_witness UNCONDITIONAL discharge
+
+Builds the H_Fib_v4_witness (the v4 hypothesis at H_Fib) directly via:
+  - `vonNeumann_assemble_explicit_X_unconditional` (§9.13c shipped)
+    gives explicit X₁ with `∀ t, ∃ M ∈ H_Fib, M.val = expAmbient((t:ℂ)•X₁)`.
+  - σ_Fib choice via §77 gives g ∈ {σ_Fib_1, σ_Fib_2} not commute/anti-commute with X₁.
+  - X₂ := g.val * X₁ * star g.val.
+  - `∀ t, ∃ M ∈ H_Fib, M.val = expAmbient((t:ℂ)•X₂)`: take
+    M := g * (witness for X₁ at t) * g⁻¹ ∈ H_Fib (mul/inv closure), use Ad-exp.
+  - ℝ-LI via `ts_Ad_LI_of_not_commute_anticommute`.
+
+**MAJOR RESULT**: H_Fib_v4_witness is UNCONDITIONAL. F.21 now depends on
+ONLY `CartanFinalStep_SU2_v4` (strictly weaker gravity wells than v3:
+no IFT anchor extension required). -/
+
+/-- **H_Fib_v4_witness unconditional discharge**. -/
+theorem H_Fib_v4_witness_unconditional :
+    SKEFTHawking.FKLW.H_Fib_v4_witness := by
+  -- Step 1: get explicit X₁ with all-t identity via §9.13c.
+  obtain ⟨X₁, hX₁_ts, hX₁_ne, h_all_t_X₁⟩ :=
+    vonNeumann_assemble_explicit_X_unconditional
+      SKEFTHawking.FKLW.H_Fib
+      SKEFTHawking.FKLW.H_Fib_isClosed
+      SKEFTHawking.FKLW.H_Fib_accPt_one_unconditional
+  -- Step 2: choose g ∈ {σ_Fib_1, σ_Fib_2} via §77.
+  obtain ⟨g_mat, hg_choice, hg_nc, hg_na⟩ :=
+    exists_σ_Fib_SU_mat_not_commute_not_anticommute hX₁_ts hX₁_ne
+  -- Step 3: case-split on g choice.
+  rcases hg_choice with hg_eq1 | hg_eq2
+  · -- g_mat = σ_Fib_1_SU_mat. Use g := σ_Fib_1_SU.
+    set g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+      SKEFTHawking.FKLW.σ_Fib_1_SU with hg_def
+    have hg_val : (g : Matrix (Fin 2) (Fin 2) ℂ) = g_mat := by
+      rw [hg_def, hg_eq1]; rfl
+    have hg_in_H : g ∈ SKEFTHawking.FKLW.H_Fib :=
+      SKEFTHawking.FKLW.σ_Fib_1_SU_mem_H_Fib
+    have hg_unitary : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+      Matrix.specialUnitaryGroup_le_unitaryGroup g.property
+    set X₂ : Matrix (Fin 2) (Fin 2) ℂ := g.val * X₁ * star g.val with hX₂_def
+    have hX₂_ts : X₂ ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+      SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian_unitary_conj
+        hX₁_ts hg_unitary
+    have hg_nc_val : g.val * X₁ ≠ X₁ * g.val := by rw [hg_val]; exact hg_nc
+    have hg_na_val : g.val * X₁ ≠ -(X₁ * g.val) := by rw [hg_val]; exact hg_na
+    have h_LI : ∀ a b : ℝ, (a : ℂ) • X₁ + (b : ℂ) • X₂ = 0 → a = 0 ∧ b = 0 :=
+      ts_Ad_LI_of_not_commute_anticommute hX₁_ts hX₁_ne hg_unitary hg_nc_val hg_na_val
+    refine ⟨X₁, X₂, hX₁_ts, hX₂_ts, h_all_t_X₁, ?_, h_LI⟩
+    -- ∀ t, ∃ M ∈ H_Fib, M.val = expAmbient((t:ℂ)•X₂).
+    intro t
+    obtain ⟨M₁, hM₁_inH, hM₁_val⟩ := h_all_t_X₁ t
+    refine ⟨g * M₁ * g⁻¹, ?_, ?_⟩
+    · -- g * M₁ * g⁻¹ ∈ H_Fib (mul/inv closure)
+      exact SKEFTHawking.FKLW.H_Fib.mul_mem
+        (SKEFTHawking.FKLW.H_Fib.mul_mem hg_in_H hM₁_inH)
+        (SKEFTHawking.FKLW.H_Fib.inv_mem hg_in_H)
+    · -- M.val = expAmbient((t:ℂ)•X₂) via Ad-exp
+      have h_mul_val : (g * M₁ * g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val
+          = g.val * M₁.val * (g⁻¹).val := rfl
+      rw [h_mul_val, hM₁_val]
+      -- Goal: g.val * expAmbient((t:ℂ)•X₁) * (g⁻¹).val = expAmbient((t:ℂ)•X₂)
+      -- (g⁻¹).val = star g.val (via Matrix.specialUnitaryGroup.coe_star + Matrix.star_eq_inv)
+      have h_inv_val : (g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val = star g.val := by
+        rw [← Matrix.star_eq_inv, Matrix.specialUnitaryGroup.coe_star]
+      rw [h_inv_val]
+      -- Goal: g.val * expAmbient((t:ℂ)•X₁) * star g.val = expAmbient((t:ℂ)•X₂)
+      rw [← expAmbient_unitary_conj hg_unitary]
+      -- Goal: expAmbient(g.val * ((t:ℂ)•X₁) * star g.val) = expAmbient((t:ℂ)•X₂)
+      congr 1
+      -- Goal: g.val * ((t:ℂ)•X₁) * star g.val = (t:ℂ)•(g.val * X₁ * star g.val)
+      rw [hX₂_def]
+      rw [show g.val * (((t : ℝ) : ℂ) • X₁) * star g.val
+            = ((t : ℝ) : ℂ) • (g.val * X₁ * star g.val) from by
+        rw [mul_smul_comm, smul_mul_assoc]]
+  · -- g_mat = σ_Fib_2_SU_mat. Use g := σ_Fib_2_SU.
+    set g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+      SKEFTHawking.FKLW.σ_Fib_2_SU with hg_def
+    have hg_val : (g : Matrix (Fin 2) (Fin 2) ℂ) = g_mat := by
+      rw [hg_def, hg_eq2]; rfl
+    have hg_in_H : g ∈ SKEFTHawking.FKLW.H_Fib :=
+      SKEFTHawking.FKLW.σ_Fib_2_SU_mem_H_Fib
+    have hg_unitary : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+      Matrix.specialUnitaryGroup_le_unitaryGroup g.property
+    set X₂ : Matrix (Fin 2) (Fin 2) ℂ := g.val * X₁ * star g.val with hX₂_def
+    have hX₂_ts : X₂ ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+      SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian_unitary_conj
+        hX₁_ts hg_unitary
+    have hg_nc_val : g.val * X₁ ≠ X₁ * g.val := by rw [hg_val]; exact hg_nc
+    have hg_na_val : g.val * X₁ ≠ -(X₁ * g.val) := by rw [hg_val]; exact hg_na
+    have h_LI : ∀ a b : ℝ, (a : ℂ) • X₁ + (b : ℂ) • X₂ = 0 → a = 0 ∧ b = 0 :=
+      ts_Ad_LI_of_not_commute_anticommute hX₁_ts hX₁_ne hg_unitary hg_nc_val hg_na_val
+    refine ⟨X₁, X₂, hX₁_ts, hX₂_ts, h_all_t_X₁, ?_, h_LI⟩
+    intro t
+    obtain ⟨M₁, hM₁_inH, hM₁_val⟩ := h_all_t_X₁ t
+    refine ⟨g * M₁ * g⁻¹, ?_, ?_⟩
+    · exact SKEFTHawking.FKLW.H_Fib.mul_mem
+        (SKEFTHawking.FKLW.H_Fib.mul_mem hg_in_H hM₁_inH)
+        (SKEFTHawking.FKLW.H_Fib.inv_mem hg_in_H)
+    · have h_mul_val : (g * M₁ * g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val
+          = g.val * M₁.val * (g⁻¹).val := rfl
+      rw [h_mul_val, hM₁_val]
+      have h_inv_val : (g⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val = star g.val := by
+        rw [← Matrix.star_eq_inv, Matrix.specialUnitaryGroup.coe_star]
+      rw [h_inv_val]
+      rw [← expAmbient_unitary_conj hg_unitary]
+      congr 1
+      rw [hX₂_def]
+      rw [show g.val * (((t : ℝ) : ℂ) • X₁) * star g.val
+            = ((t : ℝ) : ℂ) • (g.val * X₁ * star g.val) from by
+        rw [mul_smul_comm, smul_mul_assoc]]
+
+/-- **F.21 Fibonacci density from CartanFinalStep_SU2_v4 ALONE** (NEW HEADLINE).
+
+F.21 unconditional density follows from `CartanFinalStep_SU2_v4` only,
+since `H_Fib_v4_witness` is now unconditional (§80). The v4 hypothesis is
+strictly stronger than v3, so v4 discharge requires fewer gravity wells
+(bypasses the IFT anchor-extension step). -/
+theorem fibonacci_density_F21_from_cartan_v4_only
+    (h_cartan_v4 : SKEFTHawking.FKLW.CartanFinalStep_SU2_v4) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_F21_from_cartan_final_v4
+    h_cartan_v4 H_Fib_v4_witness_unconditional
 
 end SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
