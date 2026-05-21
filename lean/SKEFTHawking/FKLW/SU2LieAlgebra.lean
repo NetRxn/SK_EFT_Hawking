@@ -1951,7 +1951,7 @@ Useful corollary for the H_Fib_TwoLITangents discharge: from
 extract any 2-LI pair.
 -/
 
-/-- **2-LI from 3-LI via pauliDet**: pairs from a 3-LI triple are 2-LI. -/
+/-- **2-LI from 3-LI via pauliDet** (pair AB): pairs from a 3-LI triple are 2-LI. -/
 theorem pair_lin_indep_of_pauliDet_ne_zero
     {A B C : Matrix (Fin 2) (Fin 2) ℂ}
     (h_det : pauliDet A B C ≠ 0) :
@@ -1964,5 +1964,37 @@ theorem pair_lin_indep_of_pauliDet_ne_zero
   obtain ⟨ha, hb, _⟩ :=
     tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero h_det h_zero3
   exact ⟨ha, hb⟩
+
+/-- **2-LI from 3-LI via pauliDet** (pair AC): (A, C) ℝ-LI from
+`pauliDet A B C ≠ 0`. -/
+theorem pair_AC_lin_indep_of_pauliDet_ne_zero
+    {A B C : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_det : pauliDet A B C ≠ 0) :
+    ∀ a c : ℝ, (a : ℂ) • A + (c : ℂ) • C = 0 → a = 0 ∧ c = 0 := by
+  intro a c h_zero
+  -- a • A + 0 • B + c • C = 0
+  have h_zero3 : (a : ℂ) • A + ((0 : ℝ) : ℂ) • B + (c : ℂ) • C = 0 := by
+    rw [Complex.ofReal_zero, zero_smul]
+    rw [show (a : ℂ) • A + 0 + (c : ℂ) • C = (a : ℂ) • A + (c : ℂ) • C from by
+      rw [add_zero]]
+    exact h_zero
+  obtain ⟨ha, _, hc⟩ :=
+    tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero h_det h_zero3
+  exact ⟨ha, hc⟩
+
+/-- **2-LI from 3-LI via pauliDet** (pair BC): (B, C) ℝ-LI from
+`pauliDet A B C ≠ 0`. -/
+theorem pair_BC_lin_indep_of_pauliDet_ne_zero
+    {A B C : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_det : pauliDet A B C ≠ 0) :
+    ∀ b c : ℝ, (b : ℂ) • B + (c : ℂ) • C = 0 → b = 0 ∧ c = 0 := by
+  intro b c h_zero
+  -- 0 • A + b • B + c • C = 0
+  have h_zero3 : ((0 : ℝ) : ℂ) • A + (b : ℂ) • B + (c : ℂ) • C = 0 := by
+    rw [Complex.ofReal_zero, zero_smul, zero_add]
+    exact h_zero
+  obtain ⟨_, hb, hc⟩ :=
+    tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero h_det h_zero3
+  exact ⟨hb, hc⟩
 
 end SKEFTHawking.FKLW.SU2LieAlgebra
