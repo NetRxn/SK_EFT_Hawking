@@ -348,6 +348,12 @@ theorem negOneSU_mul_weylElem_eq_weylElem_mul_negOneSU :
     negOneSU * weylElem = weylElem * negOneSU :=
   negOneSU_mem_center weylElem
 
+/-- `negOneSU * torusElem t = torusElem (t + π)` — multiplying by `-I`
+shifts the torus angle by π (since `negOneSU = torusElem π` and T is abelian). -/
+theorem negOneSU_mul_torusElem (t : ℝ) :
+    negOneSU * torusElem t = torusElem (t + Real.pi) := by
+  rw [← torusElem_pi_eq_negOneSU, ← torusElem_add, add_comm]
+
 /-- `negOneSU * negOneSU = 1` — order-2 verification at subtype level.
 
 Uses (-I)·(-I) = I·I = I = identity matrix. -/
