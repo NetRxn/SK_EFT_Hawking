@@ -607,6 +607,14 @@ theorem negOneSU_zpowers_card :
     Nat.card (Subgroup.zpowers negOneSU) = 2 := by
   rw [Nat.card_zpowers, negOneSU_orderOf_eq_two]
 
+/-- `Subgroup.zpowers negOneSU ≤ binaryTetrahedralFull` — the order-2
+center-cyclic ⟨-I⟩ is contained in 2T (since `-I ∈ 2T` via
+`negOneSU_mem_binaryTetrahedralFull`). -/
+theorem negOneSU_zpowers_le_binaryTetrahedralFull :
+    Subgroup.zpowers negOneSU ≤ binaryTetrahedralFull := by
+  rw [Subgroup.zpowers_le]
+  exact negOneSU_mem_binaryTetrahedralFull
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
