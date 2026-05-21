@@ -596,6 +596,11 @@ theorem binaryTetrahedralElem_inv_eq_pow_five :
   rw [← pow_succ]
   exact binaryTetrahedralElem_sixth
 
+/-- `negOneSU ^ 2 = 1` — square of the scalar `-I` is the identity. -/
+theorem negOneSU_pow_two :
+    negOneSU ^ 2 = (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  rw [sq]; exact negOneSU_mul_self
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
