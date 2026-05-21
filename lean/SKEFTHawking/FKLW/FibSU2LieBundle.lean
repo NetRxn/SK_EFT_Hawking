@@ -5857,4 +5857,44 @@ noncomputable instance topologicalClosure_zpowers_cFib_isCommGroup :
           Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) :=
   Subgroup.commGroupTopologicalClosure _ zpowers_cFib_SU_isCommutative
 
+/-- **closure(zpowers cFib) carrier is infinite** (as a Set in SU(2)). -/
+theorem closure_zpowers_cFib_carrier_infinite :
+    Set.Infinite
+      (((Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).topologicalClosure :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+  zpowers_cFib_SU_infinite.mono (Subgroup.le_topologicalClosure _)
+
+/-- **Summary HEADLINE — `topologicalClosure(zpowers cFib_SU)` is a closed, infinite,
+commutative subgroup of SU(2)**.
+
+Three structural properties packaged for downstream Cartan-style reasoning:
+  - `IsClosed` from `Subgroup.isClosed_topologicalClosure`
+  - `Set.Infinite` from `closure_zpowers_cFib_carrier_infinite`
+  - `CommGroup` from `topologicalClosure_zpowers_cFib_isCommGroup`
+
+In SU(2), commutative closed infinite subgroups are conjugate to the maximal torus
+U(1) (classical Lie theory, Mathlib4 v4.29.0 gap). Combined with the non-abelian
+content of H_Fib (σ_Fib_1, σ_Fib_2 don't commute, both in H_Fib), this gives
+the closure-eq-univ argument needed for F.21 discharge. -/
+theorem closure_zpowers_cFib_isClosed_infinite_commutative :
+    IsClosed (((Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).topologicalClosure :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    Set.Infinite
+      (((Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).topologicalClosure :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    (∀ x y : ↥(((Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).topologicalClosure :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))),
+      x * y = y * x) :=
+  ⟨(Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))).isClosed_topologicalClosure,
+   closure_zpowers_cFib_carrier_infinite,
+   fun x y => mul_comm x y⟩
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
