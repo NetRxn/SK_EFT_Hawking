@@ -309,7 +309,7 @@ If X ∈ tracelessSkewHermitian (Fin 2), then:
   X[1,1] = -X[0,0],
   X[1,0] = -conjugate(X[0,1]).
 -/
-private theorem tracelessSkewHermitian_entries
+theorem tracelessSkewHermitian_entries
     {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
     (X 0 0).re = 0 ∧ X 1 1 = -X 0 0 ∧ X 1 0 = -star (X 0 1) := by
   obtain ⟨hX_skew, hX_tr⟩ := hX
@@ -1316,6 +1316,130 @@ theorem tracelessSkewHermitian_mul_sub_mul_mem {n : Type*} [Fintype n] [Decidabl
     X * Y - Y * X ∈ tracelessSkewHermitian n := by
   refine ⟨Matrix.IsSkewHermitian.mul_sub_mul hX.1 hY.1, ?_⟩
   rw [Matrix.trace_sub, Matrix.trace_mul_comm X Y, sub_self]
+
+/-! ## §18. Bracket entry-wise formula for su(2) and the LI ⇒ nonzero-bracket corollary
+
+(2026-05-21 — toward CartanFinalStep_SU2_v2 discharge)
+
+For `X, Y ∈ tracelessSkewHermitian (Fin 2)`, we compute the entries of
+the matrix commutator `X·Y - Y·X` and extract the Pauli coordinates.
+The resulting coordinates are (up to sign and scaling by 2) the
+**cross product** of the Pauli coordinates of `X` and `Y`.
+
+This gives a clean spectral algebraic discharge of:
+  **`X, Y ∈ su(2)` ℝ-linearly independent ⟹ `X·Y - Y·X ≠ 0`.**
+
+Argument:
+  - Direct entry-wise computation of `(X·Y - Y·X) 0 0` and
+    `(X·Y - Y·X) 0 1` using `tracelessSkewHermitian_entries`.
+  - `(X·Y - Y·X) 0 0 = 2 i · (β γ' - β' γ)` where (·) are real
+    components of off-diagonal entries.
+  - `(X·Y - Y·X) 0 1 = 2 (α' γ - α γ') + 2 i · (α β' - α' β)`.
+  - Three bracket vanishing conditions: `αβ' - α'β = 0`,
+    `αγ' - α'γ = 0`, `βγ' - β'γ = 0` ⟺ Pauli coords of X, Y
+    are ℝ-proportional ⟺ X, Y are ℝ-linearly dependent in su(2).
+
+The corollary is the substantive Lie-algebra fact that su(2) has no
+2-dimensional abelian subspace — needed for the dim-counting argument
+in the Cartan classification. -/
+
+/-- **Bracket [0,0]-entry formula** for `X, Y ∈ tracelessSkewHermitian (Fin 2)`.
+
+`(X·Y - Y·X) 0 0 = 2 i · ((X[0,1].re · Y[0,1].im) - (X[0,1].im · Y[0,1].re))`. -/
+theorem tracelessSkewHermitian_bracket_apply_00
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2)) :
+    (X * Y - Y * X) 0 0 =
+      (2 : ℂ) * Complex.I *
+        (((X 0 1).re * (Y 0 1).im - (X 0 1).im * (Y 0 1).re : ℝ) : ℂ) := by
+  obtain ⟨h_X_re_00, _h_X_11, h_X_10⟩ := tracelessSkewHermitian_entries hX
+  obtain ⟨h_Y_re_00, _h_Y_11, h_Y_10⟩ := tracelessSkewHermitian_entries hY
+  simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
+  rw [h_X_10, h_Y_10]
+  apply Complex.ext <;>
+    simp only [Complex.sub_re, Complex.sub_im, Complex.add_re, Complex.add_im,
+               Complex.mul_re, Complex.mul_im,
+               Complex.neg_re, Complex.neg_im, Complex.star_def,
+               Complex.conj_re, Complex.conj_im,
+               Complex.I_re, Complex.I_im,
+               Complex.ofReal_re, Complex.ofReal_im,
+               Complex.re_ofNat, Complex.im_ofNat,
+               h_X_re_00, h_Y_re_00] <;>
+    ring
+
+/-- **Bracket [0,1]-entry formula** for `X, Y ∈ tracelessSkewHermitian (Fin 2)`.
+
+`(X·Y - Y·X) 0 1 = 2 (Y[0,0].im · X[0,1].im - X[0,0].im · Y[0,1].im)`
+                  ` + 2 i · (X[0,0].im · Y[0,1].re - Y[0,0].im · X[0,1].re)`. -/
+theorem tracelessSkewHermitian_bracket_apply_01
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2)) :
+    (X * Y - Y * X) 0 1 =
+      ((2 * ((Y 0 0).im * (X 0 1).im - (X 0 0).im * (Y 0 1).im) : ℝ) : ℂ) +
+      (2 : ℂ) * Complex.I *
+        (((X 0 0).im * (Y 0 1).re - (Y 0 0).im * (X 0 1).re : ℝ) : ℂ) := by
+  obtain ⟨h_X_re_00, h_X_11, _h_X_10⟩ := tracelessSkewHermitian_entries hX
+  obtain ⟨h_Y_re_00, h_Y_11, _h_Y_10⟩ := tracelessSkewHermitian_entries hY
+  simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two]
+  rw [h_X_11, h_Y_11]
+  apply Complex.ext <;>
+    simp only [Complex.sub_re, Complex.sub_im, Complex.add_re, Complex.add_im,
+               Complex.mul_re, Complex.mul_im,
+               Complex.neg_re, Complex.neg_im, Complex.star_def,
+               Complex.conj_re, Complex.conj_im,
+               Complex.I_re, Complex.I_im,
+               Complex.ofReal_re, Complex.ofReal_im,
+               Complex.re_ofNat, Complex.im_ofNat,
+               h_X_re_00, h_Y_re_00] <;>
+    ring
+
+/-- **`matrixToPauliCoords` of the Lie bracket** in terms of Pauli coords of
+the operands.
+
+For `X, Y ∈ tracelessSkewHermitian (Fin 2)` with Pauli coordinates
+`aX = (X[0,1].im, X[0,1].re, X[0,0].im)` and similarly for `Y`,
+
+  `matrixToPauliCoords (X·Y - Y·X) =`
+  `  (2(aX.3·aY.2 - aX.2·aY.3),`
+  `   2(aX.1·aY.3 - aX.3·aY.1),`
+  `   2(aX.2·aY.1 - aX.1·aY.2))`.
+
+This is (up to sign) the cross product of the Pauli coordinates. -/
+theorem matrixToPauliCoords_bracket
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2)) :
+    matrixToPauliCoords (X * Y - Y * X) =
+      (2 * ((matrixToPauliCoords X).2.2 * (matrixToPauliCoords Y).2.1 -
+            (matrixToPauliCoords X).2.1 * (matrixToPauliCoords Y).2.2),
+       2 * ((matrixToPauliCoords X).1 * (matrixToPauliCoords Y).2.2 -
+            (matrixToPauliCoords X).2.2 * (matrixToPauliCoords Y).1),
+       2 * ((matrixToPauliCoords X).2.1 * (matrixToPauliCoords Y).1 -
+            (matrixToPauliCoords X).1 * (matrixToPauliCoords Y).2.1)) := by
+  unfold matrixToPauliCoords
+  refine Prod.ext ?_ (Prod.ext ?_ ?_)
+  · -- ((X*Y - Y*X) 0 1).im = 2 (X[0,0].im · Y[0,1].re - X[0,1].re · Y[0,0].im)
+    show ((X * Y - Y * X) 0 1).im =
+      2 * ((X 0 0).im * (Y 0 1).re - (X 0 1).re * (Y 0 0).im)
+    rw [tracelessSkewHermitian_bracket_apply_01 hX hY]
+    simp [Complex.add_im, Complex.mul_im, Complex.I_re, Complex.I_im,
+          Complex.ofReal_re, Complex.ofReal_im]
+    ring
+  · -- ((X*Y - Y*X) 0 1).re = 2 (Y[0,0].im · X[0,1].im - X[0,0].im · Y[0,1].im)
+    show ((X * Y - Y * X) 0 1).re =
+      2 * ((X 0 1).im * (Y 0 0).im - (X 0 0).im * (Y 0 1).im)
+    rw [tracelessSkewHermitian_bracket_apply_01 hX hY]
+    simp [Complex.add_re, Complex.mul_re, Complex.I_re, Complex.I_im,
+          Complex.ofReal_re, Complex.ofReal_im]
+    ring
+  · -- ((X*Y - Y*X) 0 0).im = 2 (X[0,1].re · Y[0,1].im - X[0,1].im · Y[0,1].re)
+    show ((X * Y - Y * X) 0 0).im =
+      2 * ((X 0 1).re * (Y 0 1).im - (X 0 1).im * (Y 0 1).re)
+    rw [tracelessSkewHermitian_bracket_apply_00 hX hY]
+    simp [Complex.mul_im, Complex.I_re, Complex.I_im,
+          Complex.ofReal_re, Complex.ofReal_im]
 
 /-! ## §10. Module summary
 
