@@ -636,6 +636,48 @@ theorem det_alpha_one_plus_beta_smul_tracelessSkewHermitian
     α * β * h_tr +
     β ^ 2 * h_det
 
+/-! ### §3.5a. Scaled Cayley-Hamilton
+
+For X ∈ tracelessSkewHermitian (Fin 2), real-scalar multiples preserve
+membership (already shipped as `real_smul_tracelessSkewHermitian`), and
+the Cayley-Hamilton identity scales accordingly:
+`(t • X)² = -(t² · su2RadiusSq X) • 1`.
+
+This is the form needed for power-series analysis of `expAmbient (t • X)`. -/
+
+/-- `su2RadiusSq` scales quadratically under real scalar multiplication. -/
+theorem su2RadiusSq_real_smul
+    (X : Matrix (Fin 2) (Fin 2) ℂ) (t : ℝ) :
+    su2RadiusSq ((t : ℂ) • X) = t ^ 2 * su2RadiusSq X := by
+  unfold su2RadiusSq
+  rw [show ((((t : ℂ) • X) 0 0).im) = t * (X 0 0).im from by
+        rw [Matrix.smul_apply, smul_eq_mul, Complex.im_ofReal_mul],
+      show ((((t : ℂ) • X) 0 1)) = ((t : ℂ)) * X 0 1 from by
+        rw [Matrix.smul_apply, smul_eq_mul]]
+  rw [show ‖((t : ℂ)) * X 0 1‖ = |t| * ‖X 0 1‖ from by
+        rw [norm_mul, Complex.norm_real, Real.norm_eq_abs]]
+  nlinarith [sq_abs t, sq_nonneg ((X 0 0).im), sq_nonneg ‖X 0 1‖]
+
+/-- **Scaled Cayley-Hamilton**: for X ∈ tracelessSkewHermitian (Fin 2)
+and `t : ℝ`, `(t • X)² = -(t² · su2RadiusSq X) • 1`. -/
+theorem tracelessSkewHermitian_real_smul_two_sq
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (t : ℝ) :
+    ((t : ℂ) • X) * ((t : ℂ) • X) =
+      (-(t ^ 2 * su2RadiusSq X : ℝ) : ℂ) •
+        (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h_smul_mem : ((t : ℂ) • X) ∈
+      SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+    real_smul_tracelessSkewHermitian hX t
+  have h_main := tracelessSkewHermitian_two_sq h_smul_mem
+  rw [h_main]
+  congr 1
+  push_cast
+  rw [su2RadiusSq_real_smul]
+  push_cast
+  ring
+
 /-! ## §§3.5b-4. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
