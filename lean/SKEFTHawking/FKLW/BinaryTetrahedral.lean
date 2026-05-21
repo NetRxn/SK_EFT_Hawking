@@ -729,6 +729,20 @@ theorem weylElem_torusElem_commutator (t : ℝ) :
   rw [weylElem_conj_torusElem, ← torusElem_neg, ← torusElem_add]
   ring_nf
 
+/-- **`[w, τ_{π/2}] = negOneSU`** — the commutator at the i-quaternion
+is the central element `-I`. Direct from `weylElem_torusElem_commutator`
+at `t = π/2`, using `τ_{-π} = negOneSU` and `2 · (π/2) = π`. -/
+theorem weylElem_torusElem_pi_half_commutator :
+    weylElem * torusElem (Real.pi / 2) * weylElem⁻¹ *
+      (torusElem (Real.pi / 2))⁻¹ = negOneSU := by
+  rw [weylElem_torusElem_commutator]
+  -- Goal: torusElem (-(2 * (π/2))) = negOneSU
+  rw [show -(2 * (Real.pi / 2)) = -Real.pi from by ring]
+  rw [torusElem_neg, ← torusElem_pi_eq_negOneSU]
+  exact (eq_inv_of_mul_eq_one_left (by
+    rw [← torusElem_add, neg_add_cancel]
+    exact torusElem_zero)).symm
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via

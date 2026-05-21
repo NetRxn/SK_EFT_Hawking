@@ -3525,6 +3525,38 @@ theorem expAmbient_nat_smul_anchor
 
 end OneParamSubgroupSU2
 
+/-! ## §11.j. Ad-exp commutation for unitary conjugation
+
+For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
+`expAmbient (U * X * star U) = U * expAmbient X * star U`.
+
+This is the bridge between Lie algebra Ad action and group conjugation:
+`Ad(U)·X = U·X·U⁻¹` at the Lie-algebra level becomes group conjugation
+at the exp level.
+
+Substrate for Step 2 (second-tangent construction): from a 1-param
+subgroup φ with image in H ≤ SU(2), the conjugate `ψ(t) := g · φ(t) · g⁻¹`
+is also a 1-param subgroup. Its tangent at 0 is `Ad(g)·X = g·X·g⁻¹`.
+-/
+
+/-- **Ad-exp commutation for unitary conjugation**. -/
+theorem expAmbient_unitary_conj
+    {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    SU2MatrixExp.expAmbient (U * X * star U)
+      = U * SU2MatrixExp.expAmbient X * star U := by
+  -- Construct the Unit (Matrix _ _ ℂ)ˣ from U + star U as inverse.
+  let u : (Matrix (Fin 2) (Fin 2) ℂ)ˣ :=
+    ⟨U, star U,
+      (Matrix.mem_unitaryGroup_iff).mp hU,
+      (Matrix.mem_unitaryGroup_iff').mp hU⟩
+  have hU_val : (u : Matrix (Fin 2) (Fin 2) ℂ) = U := rfl
+  have hU_inv : (↑u⁻¹ : Matrix (Fin 2) (Fin 2) ℂ) = star U := rfl
+  unfold SU2MatrixExp.expAmbient
+  show NormedSpace.exp (U * X * star U) = U * NormedSpace.exp X * star U
+  rw [← hU_val, ← hU_inv]
+  exact Matrix.exp_units_conj u X
+
 /-! ## §12. Open subgroup of a connected topological group is ⊤
 
 For a topological group `G` with `SeparatelyContinuousMul` and
