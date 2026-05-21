@@ -3176,6 +3176,25 @@ theorem hom_pow_nat
     rw [show ((k + 1 : ℕ) : ℝ) * s = ((k : ℕ) : ℝ) * s + s from by push_cast; ring,
         hhom, ih, pow_succ]
 
+/-- **Generic eventually-in-nhd**: for `φ` continuous with `φ(0) = 1`
+and any `W` in the matrix-level neighborhood of 1, `(φ t).val ∈ W`
+eventually as `t → 0`.
+
+Specialization of `val_eventually_in_target` to arbitrary neighborhoods.
+Used to combine `expAmbientPartialHomeo.target` with `Su2LogMem_on_nhd_one`'s
+`V` for the strengthened ts-membership extraction. -/
+theorem val_eventually_in_nhd_of_one
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1)
+    {W : Set (Matrix (Fin 2) (Fin 2) ℂ)}
+    (hW : W ∈ nhds (1 : Matrix (Fin 2) (Fin 2) ℂ)) :
+    ∀ᶠ t in (nhds (0 : ℝ)), (φ t).val ∈ W := by
+  have h_val_cts : Continuous (fun t => (φ t).val) := val_continuous hcts
+  have h_at_zero : (φ 0).val = 1 := val_at_zero_eq_one hzero
+  have h_at : (fun t => (φ t).val) 0 = 1 := h_at_zero
+  have h_W_at : W ∈ nhds ((fun t => (φ t).val) 0) := h_at ▸ hW
+  exact h_val_cts.continuousAt.preimage_mem_nhds h_W_at
+
 /-- **Nontriviality-in-target**: for a nontrivial continuous 1-parameter
 subgroup `φ : ℝ → SU(2)`, there exists `s : ℝ` with `s ≠ 0`,
 `(φ s).val ∈ expAmbientPartialHomeo.target`, AND `φ s ≠ 1`.
@@ -3228,6 +3247,68 @@ theorem exists_nontrivial_in_target
     rw [Real.dist_eq, sub_zero]
     rw [abs_div, abs_of_pos hn_pos_real, div_lt_iff₀ hn_pos_real]
     linarith [hn_lt]
+
+/-- **Nontriviality + double-neighborhood lift**: combines
+`exists_nontrivial_in_target` with `val_eventually_in_nhd_of_one` to
+get `s ≠ 0`, `φ s ≠ 1`, AND `(φ s).val ∈ target ∩ W` for any `W ∈ nhds 1`.
+
+This is the form needed for ts-membership extraction via
+`Su2LogMem_on_nhd_one`: pick `W` to be the nhd-of-1 from that lemma,
+and the resulting `s` has `(φ s).val` in BOTH target (for su2Log to be
+well-defined) AND `V` (for su2Log to land in ts). -/
+theorem exists_nontrivial_in_target_and_nhd
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1)
+    (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hnontriv : ∃ t, φ t ≠ 1)
+    {W : Set (Matrix (Fin 2) (Fin 2) ℂ)}
+    (hW : W ∈ nhds (1 : Matrix (Fin 2) (Fin 2) ℂ)) :
+    ∃ s : ℝ, s ≠ 0 ∧ φ s ≠ 1 ∧
+      (φ s).val ∈ expAmbientPartialHomeo.target ∧
+      (φ s).val ∈ W := by
+  -- Replace `val_eventually_in_target` use with `target ∩ W` instead.
+  obtain ⟨t₀, ht₀_ne⟩ := hnontriv
+  have ht₀_nonzero : t₀ ≠ 0 := fun h => ht₀_ne (h ▸ hzero)
+  -- Combined neighborhood: target ∩ W (intersection of two nhds of 1).
+  have h_target_nhd : expAmbientPartialHomeo.target ∈
+      nhds (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
+    expAmbientPartialHomeo.open_target.mem_nhds
+      one_mem_expAmbientPartialHomeo_target
+  have h_combined : expAmbientPartialHomeo.target ∩ W ∈
+      nhds (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
+    Filter.inter_mem h_target_nhd hW
+  have h_eventually := val_eventually_in_nhd_of_one hcts hzero h_combined
+  rw [Metric.eventually_nhds_iff] at h_eventually
+  obtain ⟨ε, hε_pos, hε⟩ := h_eventually
+  obtain ⟨n, hn_pos, hn_lt⟩ : ∃ n : ℕ, 0 < n ∧ |t₀| < n * ε := by
+    obtain ⟨n, hn⟩ := exists_nat_gt (|t₀| / ε)
+    have habs_nn : (0 : ℝ) ≤ |t₀| / ε := div_nonneg (abs_nonneg t₀) hε_pos.le
+    have hn_pos_real : (0 : ℝ) < n := lt_of_le_of_lt habs_nn hn
+    have hn_pos : 0 < n := by exact_mod_cast hn_pos_real
+    rw [div_lt_iff₀ hε_pos] at hn
+    exact ⟨n, hn_pos, hn⟩
+  have hn_pos_real : (0 : ℝ) < (n : ℝ) := by exact_mod_cast hn_pos
+  have hn_ne : (n : ℝ) ≠ 0 := ne_of_gt hn_pos_real
+  refine ⟨t₀ / (n : ℝ), div_ne_zero ht₀_nonzero hn_ne, ?_, ?_, ?_⟩
+  · -- φ (t₀ / n) ≠ 1
+    intro hφ_eq_one
+    apply ht₀_ne
+    have h_t₀_factor : t₀ = (n : ℝ) * (t₀ / (n : ℝ)) := by field_simp
+    rw [h_t₀_factor, hom_pow_nat hzero hhom n (t₀ / (n : ℝ)), hφ_eq_one, one_pow]
+  · -- (φ (t₀/n)).val ∈ target (first part of intersection)
+    have h_in_inter : (φ (t₀ / (n : ℝ))).val ∈
+        expAmbientPartialHomeo.target ∩ W := by
+      apply hε
+      rw [Real.dist_eq, sub_zero, abs_div, abs_of_pos hn_pos_real, div_lt_iff₀ hn_pos_real]
+      linarith [hn_lt]
+    exact h_in_inter.1
+  · -- (φ (t₀/n)).val ∈ W (second part of intersection)
+    have h_in_inter : (φ (t₀ / (n : ℝ))).val ∈
+        expAmbientPartialHomeo.target ∩ W := by
+      apply hε
+      rw [Real.dist_eq, sub_zero, abs_div, abs_of_pos hn_pos_real, div_lt_iff₀ hn_pos_real]
+      linarith [hn_lt]
+    exact h_in_inter.2
 
 end OneParamSubgroupSU2
 
