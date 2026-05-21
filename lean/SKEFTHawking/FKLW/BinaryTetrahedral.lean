@@ -430,6 +430,11 @@ theorem torusElem_pi_half_isOfFinOrder :
   isOfFinOrder_iff_pow_eq_one.mpr
     ⟨4, by norm_num, torusElem_pi_half_pow_four⟩
 
+/-- `orderOf (torusElem (π/2)) ≤ 4`. -/
+theorem torusElem_pi_half_orderOf_le_four :
+    orderOf (torusElem (Real.pi / 2)) ≤ 4 :=
+  orderOf_le_of_pow_eq_one (by norm_num) torusElem_pi_half_pow_four
+
 /-- `negOneSU ≠ 1` — the SU(2) element -I is not the identity. -/
 theorem negOneSU_ne_one :
     negOneSU ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
