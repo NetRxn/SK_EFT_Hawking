@@ -2299,6 +2299,67 @@ theorem H_Fib_eq_top_from_two_tracked_props
   H_Fib_eq_top_from_three_tracked_props
     DetExpZeroOnSu2_SU2_discharged h_log_tracked h_cartan_final
 
+/-! ## §9. Substrate for `Su2LogMemTracelessSkewHermitian_SU2` discharge
+
+The second remaining tracked Prop from the gap-#2 closure. Statement:
+for `h ∈ target ∩ SU(2)`, `su2Log h ∈ tracelessSkewHermitian (Fin 2)`.
+
+**Discharge strategy via uniqueness of local IFT inverse.** Since
+`su2Log` is the inverse of `expAmbient` on `source` and the IFT gives
+us `su2Log_expAmbient : Y ∈ source → su2Log (expAmbient Y) = Y`, if we
+can EXHIBIT a `Y ∈ source ∩ ts` with `expAmbient Y = h`, then by
+uniqueness `su2Log h = Y ∈ ts`. This shifts the discharge from
+analyzing `su2Log` (defined abstractly via IFT) to *constructing* a
+witness `Y` for each `h ∈ target ∩ SU(2)`. -/
+
+/-- **§9.1. Uniqueness sub-lemma**: if `Y ∈ source ∩ ts` satisfies
+`expAmbient Y = h`, then `su2Log h = Y ∈ ts`. -/
+theorem su2Log_mem_tracelessSkewHermitian_of_witness
+    {h Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hY_source : Y ∈ expAmbientPartialHomeo.source)
+    (hY_ts : Y ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hY_exp : SU2MatrixExp.expAmbient Y = h) :
+    su2Log h ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  rw [show su2Log h = Y by rw [← hY_exp]; exact su2Log_expAmbient hY_source]
+  exact hY_ts
+
+/-- **§9.2. Trivial case h = 1**: `su2Log 1 = 0 ∈ ts`. -/
+theorem su2Log_one_mem_tracelessSkewHermitian :
+    su2Log (1 : Matrix (Fin 2) (Fin 2) ℂ) ∈
+      SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  rw [su2Log_one]
+  exact (SU2LieAlgebra.tracelessSkewHermitian (Fin 2)).zero_mem
+
+/-! ### §9.3. (Next ships — substantive construction of witness Y)
+
+For non-trivial h ∈ target ∩ SU(2), we need to construct a witness
+`Y ∈ source ∩ ts` with `expAmbient Y = h`. The cleanest construction
+uses the closed form:
+
+  `Y := θ · X_unit`
+
+where:
+- `θ := Real.arccos ((Complex.trace h).re / 2)` ∈ [0, π]
+- `X_unit := (h - star h) / (2 · sin θ : ℂ)` for `sin θ ≠ 0`, else 0.
+
+Properties needed:
+1. `X_unit ∈ ts` (clear: scaled skew-Hermitian part of h).
+2. `X_unit² = -1 • 1` (i.e., su2RadiusSq X_unit = 1, by SU(2) decomp).
+3. `h = cos θ · 1 + sin θ · X_unit` (the SU(2) parameterization).
+4. `expAmbient (θ · X_unit) = h` (via §7 substrate's cos/sinc decomp).
+5. `Y = θ · X_unit ∈ source` for `h ∈ target` (continuity at θ = 0).
+
+The substantive work is (3): showing that any h ∈ SU(2) has this
+"matrix cosine + matrix sine" decomposition. This is essentially the
+spectral theorem for SU(2) elements, with the diagonalizing unitary
+absorbed into `X_unit`.
+
+**Alternative path (spectral)**: use `Matrix.IsHermitian.spectral_theorem`
+on `(h - star h) / (2 * Complex.I)` (Hermitian for h unitary) to extract
+eigenvalues directly. ~300-500 LoC of substantive Mathlib work.
+
+Deferred to next ship; ~200-400 LoC remaining for full discharge. -/
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
