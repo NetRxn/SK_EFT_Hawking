@@ -1191,7 +1191,88 @@ theorem vonNeumann_BW_limit_norm_eq_one
     rw [hk]
   exact tendsto_nhds_unique h_norm_tendsto h_const_tendsto
 
-/-! ## §§4.e-5. (Next ship — substrate roadmap)
+/-! ### §4.e. Integer-rounding convergence
+
+For any `t : ℝ` and a sequence `r_k : ℕ → ℝ` with `r_k → 0` and `r_k > 0`,
+the integer sequence `m_k := ⌊t / r_k⌋ : ℤ` satisfies
+`(m_k : ℝ) · r_k → t`. This is the algebraic key for the von Neumann
+"integer-rounding" step: scaling by a near-integer multiple of `r_k`
+approximates `t`.
+
+For our use case: `r_k := ‖su2Log (seq (φ k)).val‖` (eventually nonzero
+positive reals, → 0). Then `m_k · Y_k = (m_k · r_k) · X_k → t · X` where
+`X_k := Y_k / r_k` and `X_k → X`. -/
+
+/-- **Floor-times-scale converges**: for `r_k → 0` with `r_k > 0`
+eventually, the sequence `(⌊t / r_k⌋ : ℝ) · r_k → t`. -/
+theorem floor_times_scale_tendsto
+    {r : ℕ → ℝ} (h_pos : ∀ᶠ k in Filter.atTop, 0 < r k)
+    (h_tendsto : Filter.Tendsto r Filter.atTop (nhds 0))
+    (t : ℝ) :
+    Filter.Tendsto (fun k => ((⌊t / r k⌋ : ℤ) : ℝ) * r k)
+      Filter.atTop (nhds t) := by
+  -- |⌊x⌋ - x| < 1, so |⌊t/r⌋ · r - t| = |(⌊t/r⌋ - t/r) · r| ≤ 1 · |r| → 0.
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  -- Eventually |r k| < ε.
+  have h_lt : ∀ᶠ k in Filter.atTop, |r k| < ε := by
+    rw [Metric.tendsto_nhds] at h_tendsto
+    have := h_tendsto ε hε
+    filter_upwards [this] with k hk
+    rwa [Real.dist_eq, sub_zero] at hk
+  filter_upwards [h_lt, h_pos] with k hk_lt hk_pos
+  rw [Real.dist_eq]
+  -- |⌊t/r_k⌋ · r_k - t| ≤ |r_k|
+  have h_floor_bound : |((⌊t / r k⌋ : ℤ) : ℝ) - t / r k| < 1 := by
+    have h1 := Int.floor_le (t / r k)
+    have h2 := Int.lt_floor_add_one (t / r k)
+    rw [abs_lt]
+    constructor
+    · linarith
+    · linarith
+  have h_rk_ne : r k ≠ 0 := ne_of_gt hk_pos
+  calc |((⌊t / r k⌋ : ℤ) : ℝ) * r k - t|
+      = |(((⌊t / r k⌋ : ℤ) : ℝ) - t / r k) * r k| := by
+        congr 1
+        field_simp
+    _ = |((⌊t / r k⌋ : ℤ) : ℝ) - t / r k| * |r k| := abs_mul _ _
+    _ ≤ 1 * |r k| := by
+        apply mul_le_mul_of_nonneg_right _ (abs_nonneg _)
+        exact le_of_lt h_floor_bound
+    _ = |r k| := one_mul _
+    _ < ε := hk_lt
+
+/-- **Approximation lemma**: for the BW subsequence, `(m_k : ℝ) · ‖Y_k‖
+→ t` where `m_k := ⌊t / ‖Y_k‖⌋`. -/
+theorem vonNeumann_floor_scale_tendsto
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k => ((⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋
+                  : ℤ) : ℝ) *
+                ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖)
+      Filter.atTop (nhds t) := by
+  apply floor_times_scale_tendsto
+  · -- Eventually ‖Y_{n_k}‖ > 0 (from eventually-ne-zero + norm_pos_iff).
+    have h_subseq_ne :=
+      hφ.tendsto_atTop.eventually h_ev_ne
+    filter_upwards [h_subseq_ne] with k hk
+    exact norm_pos_iff.mpr hk
+  · -- ‖Y_{n_k}‖ → 0 (continuous norm + subseq tendsto).
+    have h_subseq_tendsto :=
+      h_log_tendsto.comp hφ.tendsto_atTop
+    have := (continuous_norm.tendsto (0 : Matrix (Fin 2) (Fin 2) ℂ)).comp
+      h_subseq_tendsto
+    simp [norm_zero] at this
+    exact this
+
+/-! ## §§4.f-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
