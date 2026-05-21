@@ -1890,4 +1890,52 @@ upstream-IFT path to Fibonacci density.
 viable.
 -/
 
+/-! ## §21. Adjoint action: `ts` closed under unitary conjugation
+
+For `X ∈ tracelessSkewHermitian (Fin n)` and `U ∈ unitaryGroup (Fin n) ℂ`,
+the conjugate `U * X * star U` is also in `tracelessSkewHermitian (Fin n)`.
+
+Proof:
+  - Skew-Hermicity: `(U·X·U†)† = U·X†·U† = U·(-X)·U† = -(U·X·U†)`.
+  - Trace: `trace(U·X·U†) = trace(U†·U·X) = trace(X) = 0` (cyclic property
+    + unitarity `U†·U = 1`).
+
+This is Step 2.a substrate for the second-tangent construction in
+CartanFinalStep_SU2_v2: from the conjugate-noncommuting witness, the
+conjugate `g₂·g₁·g₂⁻¹` has tangent `Ad(g₂)·X = g₂·X·g₂⁻¹` which lives
+in `ts` by this lemma. -/
+
+theorem _root_.Matrix.IsSkewHermitian.unitary_conj
+    {n : Type*} [Fintype n] [DecidableEq n]
+    {X : Matrix n n ℂ} (hX : X.IsSkewHermitian)
+    {U : Matrix n n ℂ} (_hU : U ∈ Matrix.unitaryGroup n ℂ) :
+    (U * X * star U).IsSkewHermitian := by
+  show (U * X * star U).conjTranspose = -(U * X * star U)
+  -- conjTranspose distributes contravariantly: (a*b)† = b†·a†.
+  rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul]
+  -- Goal: (star U)ᴴ * (Xᴴ * Uᴴ) = -(U * X * star U)
+  rw [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_conjTranspose]
+  -- Goal: U * (Xᴴ * Uᴴ) = -(U * X * star U)
+  rw [hX]
+  -- Goal: U * (-X * Uᴴ) = -(U * X * star U)
+  rw [Matrix.neg_mul, Matrix.mul_neg, ← Matrix.mul_assoc]
+
+/-- **`ts` closed under unitary conjugation**: for `X ∈ tracelessSkewHermitian (Fin n)`
+and `U ∈ unitaryGroup (Fin n) ℂ`, the conjugate `U * X * star U ∈ ts`. -/
+theorem tracelessSkewHermitian_unitary_conj
+    {n : Type*} [Fintype n] [DecidableEq n]
+    {X : Matrix n n ℂ}
+    (hX : X ∈ tracelessSkewHermitian n)
+    {U : Matrix n n ℂ} (hU : U ∈ Matrix.unitaryGroup n ℂ) :
+    U * X * star U ∈ tracelessSkewHermitian n := by
+  rw [tracelessSkewHermitian_mem_iff] at hX ⊢
+  refine ⟨Matrix.IsSkewHermitian.unitary_conj hX.1 hU, ?_⟩
+  -- trace(U * X * star U) = trace(star U * U * X) = trace(1 * X) = trace X = 0
+  rw [show U * X * star U = U * (X * star U) from by rw [Matrix.mul_assoc]]
+  rw [Matrix.trace_mul_comm]
+  rw [show X * star U * U = X * (star U * U) from by rw [Matrix.mul_assoc]]
+  rw [(Matrix.mem_unitaryGroup_iff').mp hU]
+  rw [Matrix.mul_one]
+  exact hX.2
+
 end SKEFTHawking.FKLW.SU2LieAlgebra
