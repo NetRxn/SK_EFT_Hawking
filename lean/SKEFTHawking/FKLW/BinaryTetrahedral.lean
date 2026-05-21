@@ -354,6 +354,17 @@ theorem negOneSU_mul_torusElem (t : ℝ) :
     negOneSU * torusElem t = torusElem (t + Real.pi) := by
   rw [← torusElem_pi_eq_negOneSU, ← torusElem_add, add_comm]
 
+/-- `torusElem (-t) = (torusElem t)⁻¹` — inverse of a torus element is
+the negation parameter. -/
+theorem torusElem_neg (t : ℝ) :
+    torusElem (-t) = (torusElem t)⁻¹ := by
+  have h_mul :
+      torusElem (-t) * torusElem t =
+      (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+    rw [← torusElem_add, neg_add_cancel]
+    exact torusElem_zero
+  exact eq_inv_of_mul_eq_one_left h_mul
+
 /-- `negOneSU * negOneSU = 1` — order-2 verification at subtype level.
 
 Uses (-I)·(-I) = I·I = I = identity matrix. -/
