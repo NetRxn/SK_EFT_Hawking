@@ -1283,6 +1283,40 @@ theorem paulI_z_paulI_x_commutator :
   simp [Matrix.smul_apply, Matrix.neg_apply, Matrix.sub_apply, smul_eq_mul]
   ring
 
+/-! ## §17. Lie bracket closure of `tracelessSkewHermitian`
+
+(2026-05-21 — Lie-algebra-closure step toward CartanFinalStep_SU2_v2)
+
+The Lie bracket `[X, Y] := X·Y - Y·X` of two elements of su(n) is again
+in su(n). This is the "su(n) is a Lie algebra under the matrix commutator"
+property and is necessary for the eventual dim-counting argument in the
+Cartan classification.
+
+  - **Skew-Hermitian**: `(X·Y - Y·X)† = Y†·X† - X†·Y†
+    = (-Y)·(-X) - (-X)·(-Y) = YX - XY = -(XY - YX)`. ✓
+  - **Traceless**: `tr(XY - YX) = tr(XY) - tr(YX) = 0` (trace cyclic). ✓ -/
+
+/-- The Lie bracket of two skew-Hermitian matrices is skew-Hermitian. -/
+theorem Matrix.IsSkewHermitian.mul_sub_mul {n : Type*} [Fintype n] [DecidableEq n]
+    {X Y : Matrix n n ℂ} (hX : X.IsSkewHermitian) (hY : Y.IsSkewHermitian) :
+    (X * Y - Y * X).IsSkewHermitian := by
+  show (X * Y - Y * X).conjTranspose = -(X * Y - Y * X)
+  rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul]
+  have h1 : X.conjTranspose = -X := hX
+  have h2 : Y.conjTranspose = -Y := hY
+  rw [h1, h2]
+  ext i j
+  simp [Matrix.sub_apply, Matrix.mul_apply, Matrix.neg_apply, Finset.sum_neg_distrib,
+        neg_mul, mul_neg, neg_neg, sub_neg_eq_add]
+
+/-- The Lie bracket of two su(n) elements is in su(n). -/
+theorem tracelessSkewHermitian_mul_sub_mul_mem {n : Type*} [Fintype n] [DecidableEq n]
+    {X Y : Matrix n n ℂ}
+    (hX : X ∈ tracelessSkewHermitian n) (hY : Y ∈ tracelessSkewHermitian n) :
+    X * Y - Y * X ∈ tracelessSkewHermitian n := by
+  refine ⟨Matrix.IsSkewHermitian.mul_sub_mul hX.1 hY.1, ?_⟩
+  rw [Matrix.trace_sub, Matrix.trace_mul_comm X Y, sub_self]
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
