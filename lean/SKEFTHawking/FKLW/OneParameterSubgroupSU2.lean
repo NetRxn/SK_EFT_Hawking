@@ -3575,6 +3575,58 @@ subgroup φ with image in H ≤ SU(2), the conjugate `ψ(t) := g · φ(t) · g�
 is also a 1-param subgroup. Its tangent at 0 is `Ad(g)·X = g·X·g⁻¹`.
 -/
 
+/-- **`su2RadiusSq` preservation under unitary conjugation**.
+
+For `X ∈ tracelessSkewHermitian (Fin 2)` and `U ∈ unitaryGroup (Fin 2) ℂ`,
+`su2RadiusSq (U * X * star U) = su2RadiusSq X`.
+
+Proof via Cayley-Hamilton (§2.2 `tracelessSkewHermitian_two_sq`):
+- `(U·X·star U)² = U·X²·star U` (matrix algebra + `star U · U = 1`)
+- `X² = -(su2RadiusSq X) • 1`, so `U·X²·star U = -(su2RadiusSq X) • 1`
+- Also `(U·X·star U)² = -(su2RadiusSq (U·X·star U)) • 1` (Cayley-Hamilton on ts)
+- Equating the scalars yields `su2RadiusSq (U·X·star U) = su2RadiusSq X`. -/
+theorem su2RadiusSq_unitary_conj
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ) :
+    su2RadiusSq (U * X * star U) = su2RadiusSq X := by
+  -- Step 1: U·X·star U ∈ ts via §21
+  have hUX_ts : U * X * star U ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+    SU2LieAlgebra.tracelessSkewHermitian_unitary_conj hX hU
+  -- Step 2: Apply Cayley-Hamilton to both
+  have hX_sq := tracelessSkewHermitian_two_sq hX
+  have hUX_sq := tracelessSkewHermitian_two_sq hUX_ts
+  -- Step 3: Compute (U·X·star U) * (U·X·star U) = U · (X*X) · star U
+  have h_star_U_U : star U * U = 1 := (Matrix.mem_unitaryGroup_iff').mp hU
+  have h_U_star_U : U * star U = 1 := (Matrix.mem_unitaryGroup_iff).mp hU
+  have h_sq_compute : (U * X * star U) * (U * X * star U) = U * (X * X) * star U := by
+    -- Direct manipulation: (UXU†)(UXU†) = UX(U†U)XU† = UX·1·XU† = UXXU† = U(XX)U†
+    have h_step1 : star U * (U * X * star U) = X * star U := by
+      rw [show U * X * star U = (U * X) * star U from rfl,
+          ← Matrix.mul_assoc, ← Matrix.mul_assoc, h_star_U_U, Matrix.one_mul]
+    calc (U * X * star U) * (U * X * star U)
+        = U * X * (star U * (U * X * star U)) := by rw [Matrix.mul_assoc]
+      _ = U * X * (X * star U) := by rw [h_step1]
+      _ = U * (X * X) * star U := by
+          rw [← Matrix.mul_assoc (U * X), Matrix.mul_assoc U X X]
+  -- Step 4: substitute X*X = -(su2RadiusSq X) • 1
+  rw [hX_sq] at h_sq_compute
+  -- (U·X·star U)² = U · (-(su2RadiusSq X) • 1) · star U
+  have h_simplify :
+      U * ((-(↑(su2RadiusSq X)) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) * star U
+        = (-(↑(su2RadiusSq X)) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    rw [Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, h_U_star_U]
+  rw [h_simplify] at h_sq_compute
+  -- Combining: (Cayley-Hamilton on Ad-conj) and h_sq_compute
+  have h_eq :
+      (-(↑(su2RadiusSq (U * X * star U))) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+        = (-(↑(su2RadiusSq X)) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    rw [← hUX_sq, h_sq_compute]
+  -- Extract scalar: examine [0][0] entry — simp aggressively simplifies through to real
+  have := congrArg (fun M => M 0 0) h_eq
+  simp [Matrix.smul_apply, Matrix.one_apply_eq] at this
+  exact this
+
 /-- **Ad-exp commutation for unitary conjugation**. -/
 theorem expAmbient_unitary_conj
     {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
