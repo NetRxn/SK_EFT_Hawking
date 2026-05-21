@@ -5959,4 +5959,56 @@ theorem fibonacci_density_from_cartan_via_H_Fib
     h_cartan SKEFTHawking.FKLW.H_Fib h_closed h_inf h_nab
   exact SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top h_top
 
+/-! ## §70. Concrete 2-LI pairs from cFib bundle (Phase 6p Wave 2c.4a-R5.4)
+
+The `σ_Fib_lie_bundle (liePartMat cFib_SU_mat)` is a triple
+(liePartMat cFib, σ_Fib_1·liePartMat cFib·σ_Fib_1†, σ_Fib_2·liePartMat cFib·σ_Fib_2†)
+with non-zero pauliDet (shipped §57). By §22 (`pair_lin_indep_of_pauliDet_ne_zero`
+and the AC/BC variants in SU2LieAlgebra), any pair is ℝ-LI.
+
+These 2-LI pairs are the concrete ingredients for the v3
+`H_Fib_TwoLITangents` discharge:
+  - X₁ := liePartMat cFib_SU_mat ∈ ts
+  - X₂ := σ_Fib_1 · X₁ · σ_Fib_1†  (= Ad(σ_Fib_1)·X₁ matrix-level)
+  - or X₂' := σ_Fib_2 · X₁ · σ_Fib_2† (alternative second tangent)
+
+Both are ℝ-LI from X₁.
+-/
+
+/-- **(liePartMat cFib, Ad(σ_Fib_1)·liePartMat cFib) ℝ-LI** — direct 2-LI
+extraction from cFib pauliDet. -/
+theorem liePartMat_cFib_Ad_σ_Fib_1_lin_indep :
+    ∀ a b : ℝ,
+      (a : ℂ) • liePartMat cFib_SU_mat +
+        (b : ℂ) •
+          (σ_Fib_1_SU_mat * liePartMat cFib_SU_mat *
+              σ_Fib_1_SU_mat.conjTranspose) = 0 →
+      a = 0 ∧ b = 0 :=
+  SKEFTHawking.FKLW.SU2LieAlgebra.pair_lin_indep_of_pauliDet_ne_zero
+    cFib_SU_mat_liePartMat_pauliDet_ne_zero
+
+/-- **(liePartMat cFib, Ad(σ_Fib_2)·liePartMat cFib) ℝ-LI** — alternative pair. -/
+theorem liePartMat_cFib_Ad_σ_Fib_2_lin_indep :
+    ∀ a c : ℝ,
+      (a : ℂ) • liePartMat cFib_SU_mat +
+        (c : ℂ) •
+          (σ_Fib_2_SU_mat * liePartMat cFib_SU_mat *
+              σ_Fib_2_SU_mat.conjTranspose) = 0 →
+      a = 0 ∧ c = 0 :=
+  SKEFTHawking.FKLW.SU2LieAlgebra.pair_AC_lin_indep_of_pauliDet_ne_zero
+    cFib_SU_mat_liePartMat_pauliDet_ne_zero
+
+/-- **(Ad(σ_Fib_1)·liePartMat cFib, Ad(σ_Fib_2)·liePartMat cFib) ℝ-LI** — BC pair. -/
+theorem liePartMat_cFib_Ad_σ_Fib_1_2_lin_indep :
+    ∀ b c : ℝ,
+      (b : ℂ) •
+          (σ_Fib_1_SU_mat * liePartMat cFib_SU_mat *
+              σ_Fib_1_SU_mat.conjTranspose) +
+        (c : ℂ) •
+          (σ_Fib_2_SU_mat * liePartMat cFib_SU_mat *
+              σ_Fib_2_SU_mat.conjTranspose) = 0 →
+      b = 0 ∧ c = 0 :=
+  SKEFTHawking.FKLW.SU2LieAlgebra.pair_BC_lin_indep_of_pauliDet_ne_zero
+    cFib_SU_mat_liePartMat_pauliDet_ne_zero
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
