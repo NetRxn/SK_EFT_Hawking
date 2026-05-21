@@ -248,6 +248,44 @@ theorem negOneSU_mem_binaryTetrahedralFull :
     weylElem_mem_binaryTetrahedralFull
     weylElem_mem_binaryTetrahedralFull
 
+/-- **2T is non-abelian**: the i-quaternion `torusElem(π/2)` and the
+j-quaternion `weylElem` do NOT commute (`ij = -ji = k` in quaternions). -/
+theorem binaryTetrahedralFull_non_abelian :
+    ∃ g h, g ∈ binaryTetrahedralFull ∧ h ∈ binaryTetrahedralFull ∧
+      g * h ≠ h * g := by
+  refine ⟨torusElem (Real.pi / 2), weylElem,
+          torusElem_pi_half_mem_binaryTetrahedralFull,
+          weylElem_mem_binaryTetrahedralFull, ?_⟩
+  intro h_comm
+  -- Project to [0,1] entry: should differ (I vs -I).
+  have h_val :
+      (torusElem (Real.pi / 2) * weylElem :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val =
+      (weylElem * torusElem (Real.pi / 2) :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :=
+    congrArg Subtype.val h_comm
+  have h_01 : (torusMatrix (Real.pi / 2) * weylMatrix) 0 1 =
+              (weylMatrix * torusMatrix (Real.pi / 2)) 0 1 :=
+    congrArg (fun M => M 0 1) h_val
+  -- LHS [0,1] = exp(iπ/2) · weylMatrix[0,1] + 0 · weylMatrix[1,1] = I · 1 = I.
+  -- RHS [0,1] = weylMatrix[0,0] · 0 + weylMatrix[0,1] · exp(-iπ/2) = 0 + 1 · (-I) = -I.
+  have h_exp_neg : Complex.exp (-((Real.pi : ℂ) / 2 * Complex.I)) = -Complex.I := by
+    have := Complex.exp_neg_pi_div_two_mul_I
+    convert this using 2
+    ring
+  simp [torusMatrix, weylMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+        Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.empty_val', Matrix.cons_val_fin_one,
+        show ((Real.pi / 2 : ℝ) : ℂ) * Complex.I =
+             (Real.pi : ℂ) / 2 * Complex.I by push_cast; ring,
+        show -(((Real.pi / 2 : ℝ) : ℂ) * Complex.I) =
+             -((Real.pi : ℂ) / 2 * Complex.I) by push_cast; ring,
+        Complex.exp_pi_div_two_mul_I, h_exp_neg] at h_01
+  -- h_01 : I = -I, contradiction via .im.
+  have h_im := congrArg Complex.im h_01
+  simp [Complex.I_im, Complex.neg_im] at h_im
+  linarith
+
 /-! ## §5. binaryTetrahedralElem is NOT in stdTorus_SU2 -/
 
 /-- **`binaryTetrahedralElem ∉ stdTorus_SU2`** — 2T contains elements
