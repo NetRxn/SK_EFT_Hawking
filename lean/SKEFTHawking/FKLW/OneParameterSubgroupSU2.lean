@@ -2035,6 +2035,51 @@ theorem OneParamSubgroupFromAccPt_SU2_of_tracked_props
   exact vonNeumann_assemble_OneParamSubgroupInSU2
     h_det h_log_tracked H hH_closed hH_accPt
 
+/-! ## §6. F.21 Fibonacci density — composition under TWO tracked sub-Props
+
+Combining the §4.i.8b conditional discharge with the upstream chain in
+`CartanSubstrate.lean §4.7` yields a strengthened F.21 statement where
+the Cartan-stack dependencies are reduced from 3 original gaps
+(#1+#2+#3) to 3 new Props (CartanFinalStep + DetExp + Su2LogMem), but
+the NEW Props are FOCUSED bridge lemmas with explicit spectral-theorem
+discharge plans, vs the original broader Cartan-classification predicates.
+-/
+
+/-- **`H_Fib = ⊤` from THREE tracked Props** (super-strengthened
+Wedge B headline): combines `OneParamSubgroupFromAccPt_SU2_of_tracked_props`
+with `H_Fib_eq_top_of_strengthened_chain` (CartanSubstrate.lean §4.7).
+
+Compared to the original `H_Fib_eq_top_of_full_cartan_chain` (Cartan
+gaps #1+#2+#3), this version replaces gaps #1+#2 with the two focused
+tracked Props `DetExpZeroOnSu2_SU2` + `Su2LogMemTracelessSkewHermitian_SU2`. -/
+theorem H_Fib_eq_top_from_three_tracked_props
+    (h_det : DetExpZeroOnSu2_SU2)
+    (h_log_tracked : Su2LogMemTracelessSkewHermitian_SU2)
+    (h_cartan_final : SKEFTHawking.FKLW.CartanFinalStep_SU2) :
+    SKEFTHawking.FKLW.H_Fib = ⊤ :=
+  SKEFTHawking.FKLW.H_Fib_eq_top_of_strengthened_chain
+    (OneParamSubgroupFromAccPt_SU2_of_tracked_props h_det h_log_tracked)
+    h_cartan_final
+
+/-- **F.21 Fibonacci density from THREE tracked Props** (final composition
+headline): combines `OneParamSubgroupFromAccPt_SU2_of_tracked_props` with
+`fibonacci_density_F21_from_strengthened_chain` (CartanSubstrate.lean §4.7).
+
+This is the **headline F.21 statement under the post-gap-#2-discharge
+chain**: unconditional Fibonacci density in `SU(3)_2 ↪ SU(2)` under
+exactly THREE focused tracked Props, all with explicit Mathlib-substrate
+discharge plans. -/
+theorem fibonacci_density_F21_from_three_tracked_props
+    (h_det : DetExpZeroOnSu2_SU2)
+    (h_log_tracked : Su2LogMemTracelessSkewHermitian_SU2)
+    (h_cartan_final : SKEFTHawking.FKLW.CartanFinalStep_SU2) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_F21_from_strengthened_chain
+    (OneParamSubgroupFromAccPt_SU2_of_tracked_props h_det h_log_tracked)
+    h_cartan_final
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
