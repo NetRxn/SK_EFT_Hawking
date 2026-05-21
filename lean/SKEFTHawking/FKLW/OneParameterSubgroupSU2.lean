@@ -1914,24 +1914,126 @@ theorem vonNeumann_oneParamSU2Map_mem_H
   rw [h_eq]
   exact h_witness_mem
 
-/-! ### §4.i.7. (Next ship — nontriviality + final discharge)
+/-! ### §4.i.7. Nontriviality of `oneParamSU2Map`
 
-Final pieces remaining for the discharge of `OneParamSubgroupFromAccPt_SU2`:
+For the BW-extracted X with `‖X‖ = 1` (hence X ≠ 0), the 1-parameter
+subgroup `oneParamSU2Map hX h_det` is nontrivial: ∃ t ≠ 0, the lift
+is not equal to 1. Proof: continuity of ℂ-smul gives a neighborhood of
+0 in ℝ where `(t : ℂ) • X ∈ source` (the local-IFT domain); pick small
+nonzero t in this neighborhood; apply `su2Log_expAmbient` (left-inverse
+on source) and `su2Log_one = 0` to conclude `expAmbient ((t : ℂ) • X) ≠ 1`,
+hence the SU(2)-lifted version is not the identity. -/
 
-1. **Nontriviality**: `∃ t, oneParamSU2Map hX h_det t ≠ 1`.
-   Argument: `‖X‖ = 1` (§4.d's `vonNeumann_BW_limit_norm_eq_one`) so
-   `X ≠ 0`. Pick small `t ≠ 0` with `(t : ℂ) • X ∈ source`
-   (source open + 0 ∈ source + scalar continuity). Then
-   `su2Log (expAmbient ((t : ℂ) • X)) = (t : ℂ) • X ≠ 0`
-   (su2Log_expAmbient on source + `t • X ≠ 0` from `t ≠ 0 ∧ X ≠ 0`).
-   Hence `expAmbient ((t : ℂ) • X) ≠ 1` (else `su2Log 1 = 0`
-   contradicts). Lifting to subtype: `oneParamSU2Map hX h_det t ≠ 1`.
+/-- **§4.i.7. Nontriviality**: for X ≠ 0 ∈ `tracelessSkewHermitian`,
+`∃ t : ℝ, oneParamSU2Map hX h_det t ≠ 1`. -/
+theorem vonNeumann_oneParamSU2Map_nontrivial
+    {X : Matrix (Fin 2) (Fin 2) ℂ} (hX_ne : X ≠ 0)
+    (hX_ts : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (h_det : DetExpZeroOnSu2_SU2) :
+    ∃ t : ℝ, oneParamSU2Map hX_ts h_det t ≠ 1 := by
+  -- Step 1: smul continuity gives eventually (t : ℂ) • X ∈ source.
+  have h_smul_cont : Filter.Tendsto (fun t : ℝ => (t : ℂ) • X)
+      (nhds 0) (nhds 0) := by
+    have h_zero : ((0 : ℝ) : ℂ) • X = (0 : Matrix (Fin 2) (Fin 2) ℂ) := by
+      push_cast; simp
+    rw [show (0 : Matrix (Fin 2) (Fin 2) ℂ) = ((0 : ℝ) : ℂ) • X from h_zero.symm]
+    exact (continuous_smul.comp
+      (Complex.continuous_ofReal.prodMk continuous_const)).tendsto 0
+  have h_ev : ∀ᶠ t : ℝ in nhds 0, (t : ℂ) • X ∈ expAmbientPartialHomeo.source :=
+    h_smul_cont expAmbientPartialHomeo_source_mem_nhds_zero
+  -- Step 2: extract ε > 0 from Metric.eventually_nhds_iff.
+  rw [Metric.eventually_nhds_iff] at h_ev
+  obtain ⟨ε, hε_pos, h_ball⟩ := h_ev
+  -- Step 3: pick t := ε/2 (positive, distance ε/2 < ε from 0).
+  refine ⟨ε / 2, ?_⟩
+  have h_t_ne : (ε / 2 : ℝ) ≠ 0 := by linarith
+  have h_in_source : ((ε / 2 : ℝ) : ℂ) • X ∈ expAmbientPartialHomeo.source := by
+    apply h_ball
+    rw [Real.dist_eq, sub_zero]
+    simp [abs_of_pos (by linarith : (0:ℝ) < ε/2)]
+    linarith
+  -- Step 4: lift via Subtype.ext_iff + su2Log_expAmbient.
+  intro h_eq
+  have h_val_eq : (oneParamSU2Map hX_ts h_det (ε/2)).val =
+      (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val := by
+    rw [h_eq]
+  unfold oneParamSU2Map at h_val_eq
+  simp at h_val_eq
+  unfold oneParamMatrixMap at h_val_eq
+  have h_log_eq : su2Log (SU2MatrixExp.expAmbient (((ε/2 : ℝ) : ℂ) • X)) =
+      su2Log (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    rw [h_val_eq]
+  rw [su2Log_expAmbient h_in_source, su2Log_one] at h_log_eq
+  -- h_log_eq : ((ε/2 : ℝ) : ℂ) • X = 0, contradicting t ≠ 0 ∧ X ≠ 0.
+  exact (smul_ne_zero (by exact_mod_cast h_t_ne) hX_ne) h_log_eq
 
-2. **Final discharge**: combine `vonNeumann_sequence_with_log` + §4.d BW
-   + §4.i.5c (X ∈ ts) + §4.i.6 (image-in-H) + nontriviality +
-   `oneParamSU2Map`'s 0/add/continuous to construct
-   `OneParamSubgroupInSU2 H`. Then discharge `OneParamSubgroupFromAccPt_SU2`
-   conditional on `DetExpZeroOnSu2_SU2 ∧ Su2LogMemTracelessSkewHermitian_SU2`. -/
+/-! ### §4.i.8. Full assembly + conditional discharge of `OneParamSubgroupFromAccPt_SU2`
+
+The full chain from `IsClosed H + AccPt 1 H` to `OneParamSubgroupInSU2 H`,
+conditional on the two tracked Props `DetExpZeroOnSu2_SU2` +
+`Su2LogMemTracelessSkewHermitian_SU2`. This CLOSES gap #2 in the
+strengthened form. -/
+
+/-- **§4.i.8a. Full vonNeumann assembly (conditional)**: given the tracked
+Props and the strengthened gap-#2 hypothesis (H closed + AccPt 1 H),
+construct `OneParamSubgroupInSU2 H`. -/
+theorem vonNeumann_assemble_OneParamSubgroupInSU2
+    (h_det : DetExpZeroOnSu2_SU2)
+    (h_log_tracked : Su2LogMemTracelessSkewHermitian_SU2)
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+    (hH_accPt : AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    SKEFTHawking.FKLW.OneParamSubgroupInSU2 H := by
+  -- Step 1: extract sequence + matrix-log convergence.
+  obtain ⟨seq, h_mem, h_ne, h_seq, h_log_tendsto⟩ :=
+    vonNeumann_sequence_with_log H hH_accPt
+  -- Step 2: eventually Y_n ≠ 0.
+  have h_ev_ne := eventually_su2Log_seq_ne_zero h_ne h_seq
+  -- Step 3: BW extraction.
+  obtain ⟨X, _hX_ball, φ, hφ, h_unit_tendsto⟩ := vonNeumann_BW_extract seq
+  -- Step 4: ‖X‖ = 1, so X ≠ 0.
+  have h_norm_one : ‖X‖ = 1 :=
+    vonNeumann_BW_limit_norm_eq_one seq h_ev_ne hφ h_unit_tendsto
+  have hX_ne : X ≠ 0 := fun h => by
+    rw [h, norm_zero] at h_norm_one; norm_num at h_norm_one
+  -- Step 5: X ∈ tracelessSkewHermitian (conditional on tracked Prop).
+  have hX_ts : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+    vonNeumann_BW_limit_mem_tracelessSkewHermitian h_log_tracked h_seq hφ
+      h_unit_tendsto
+  -- Step 6: assemble φ := oneParamSU2Map hX_ts h_det.
+  refine ⟨oneParamSU2Map hX_ts h_det, ?_, ?_, ?_, ?_, ?_⟩
+  · -- Continuous
+    exact oneParamSU2Map_continuous hX_ts h_det
+  · -- φ 0 = 1
+    exact oneParamSU2Map_zero hX_ts h_det
+  · -- φ (s + t) = φ s * φ t
+    intro s t
+    exact oneParamSU2Map_add hX_ts h_det s t
+  · -- Nontriviality
+    exact vonNeumann_oneParamSU2Map_nontrivial hX_ne hX_ts h_det
+  · -- Image in H
+    intro t
+    exact vonNeumann_oneParamSU2Map_mem_H h_det hH_closed h_mem hφ h_seq
+      h_ev_ne h_log_tendsto hX_ts h_unit_tendsto t
+
+/-- **§4.i.8b. CONDITIONAL DISCHARGE of `OneParamSubgroupFromAccPt_SU2`**:
+under the two tracked Props `DetExpZeroOnSu2_SU2` (§3.5d) +
+`Su2LogMemTracelessSkewHermitian_SU2` (§4.i.5), the strengthened gap-#2
+predicate holds.
+
+This CLOSES gap #2 conditional on the two named tracked Props. Combined
+with `H_Fib_eq_top_of_strengthened_chain` (CartanSubstrate.lean §4.7),
+this reduces F.21 unconditional density to ONLY the Wedge-B
+`CartanFinalStep_SU2` predicate + these two new tracked Props (still
+fewer total Props than the original 3 gaps #1+#2+#3). -/
+theorem OneParamSubgroupFromAccPt_SU2_of_tracked_props
+    (h_det : DetExpZeroOnSu2_SU2)
+    (h_log_tracked : Su2LogMemTracelessSkewHermitian_SU2) :
+    SKEFTHawking.FKLW.OneParamSubgroupFromAccPt_SU2 := by
+  intro H hH_closed hH_accPt
+  exact vonNeumann_assemble_OneParamSubgroupInSU2
+    h_det h_log_tracked H hH_closed hH_accPt
 
 /-! ## §5. Module summary (current ship)
 
