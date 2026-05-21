@@ -1811,6 +1811,37 @@ theorem tracelessSkewHermitian_X_Y_bracket_lin_indep
   exact tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero
     (pauliDet_X_Y_bracket_ne_zero hX hY h_LI) h_zero
 
+/-- **HEADLINE: `{X, Y, X·Y - Y·X}` spans `tracelessSkewHermitian (Fin 2)`
+when X, Y are ℝ-LI.**
+
+Composition of:
+  - `tracelessSkewHermitian_mul_sub_mul_mem` (§17): `X·Y - Y·X ∈ ts`.
+  - `pauliDet_X_Y_bracket_ne_zero` (§9): `pauliDet X Y (X·Y - Y·X) ≠ 0`.
+  - `tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero` (§6): any
+    triple in ts with non-zero pauliDet spans ts.
+
+This is the SPANS companion to `tracelessSkewHermitian_X_Y_bracket_lin_indep`.
+Together they assert `{X, Y, X·Y - Y·X}` is a basis of `𝔰𝔲(2)` (as a
+3-dim ℝ-vector space) whenever X, Y are ℝ-LI.
+
+**Substrate role**: dim-counting piece for CartanFinalStep_SU2_v3 discharge.
+Given two ℝ-LI tangents X, Y from 1-param subgroups in closed H ≤ SU(2),
+the Lie algebra of H contains {X, Y} (via the anchor-set ⊤ argument) and
+[X, Y] (via the BCH-style closure under brackets — gravity well, deferred).
+Then by this spanning lemma, any direction Z ∈ ts is reachable. -/
+theorem tracelessSkewHermitian_X_Y_bracket_spans
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2))
+    (h_LI : ∀ (a b : ℝ), (a : ℂ) • X + (b : ℂ) • Y = 0 → a = 0 ∧ b = 0)
+    {Z : Matrix (Fin 2) (Fin 2) ℂ}
+    (hZ : Z ∈ tracelessSkewHermitian (Fin 2)) :
+    ∃ a b c : ℝ,
+      Z = (a : ℂ) • X + (b : ℂ) • Y + (c : ℂ) • (X * Y - Y * X) :=
+  tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero
+    hX hY (tracelessSkewHermitian_mul_sub_mul_mem hX hY)
+    (pauliDet_X_Y_bracket_ne_zero hX hY h_LI) hZ
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
