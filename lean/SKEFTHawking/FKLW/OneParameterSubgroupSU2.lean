@@ -2330,7 +2330,114 @@ theorem su2Log_one_mem_tracelessSkewHermitian :
   rw [su2Log_one]
   exact (SU2LieAlgebra.tracelessSkewHermitian (Fin 2)).zero_mem
 
-/-! ### §9.3. (Next ships — substantive construction of witness Y)
+/-! ### §9.3. SU(2) algebraic identities
+
+For h ∈ SU(2), the Cayley-Hamilton identity combined with `det h = 1`
+and `h⁻¹ = star h` gives the key structural fact:
+
+  `h + star h = (trace h) • 1`
+
+(diagonal-only, with both diagonal entries equal to `trace h`). This
+implies `trace h` is real (sum of conjugates of an entry on diagonal). -/
+
+/-- **§9.3a. h + star h = (trace h) • 1 for h ∈ SU(2)**. Via Cayley-Hamilton
+on 2×2 with det = 1: h² - (tr h) h + 1 = 0, multiplied by h⁻¹ = star h.
+Implemented via direct entry-wise computation using `adjugate`. -/
+theorem SU2_add_star_eq_trace_smul_one
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    h + star h = (h.trace : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h_unitary : h ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    (Matrix.mem_specialUnitaryGroup_iff.mp hh).1
+  have h_det : h.det = 1 := (Matrix.mem_specialUnitaryGroup_iff.mp hh).2
+  have h_mul_star : h * star h = 1 := Matrix.mem_unitaryGroup_iff.mp h_unitary
+  have h_star_eq_inv : (star h : Matrix (Fin 2) (Fin 2) ℂ) = h⁻¹ :=
+    (Matrix.inv_eq_right_inv h_mul_star).symm
+  rw [h_star_eq_inv]
+  have h_inv : h⁻¹ = h.adjugate := by
+    rw [Matrix.inv_def, h_det]; simp
+  rw [h_inv]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.add_apply, Matrix.smul_apply, Matrix.trace, Fin.sum_univ_two,
+          Matrix.adjugate_fin_two] <;>
+    ring
+
+/-- **§9.3b. trace h is real for h ∈ SU(2)**: (trace h).im = 0. Via §9.3a's
+trace-equals-diagonal identity + `Complex.add_conj_im` on `h 0 0 + conj (h 0 0)`. -/
+theorem SU2_trace_im_eq_zero
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    h.trace.im = 0 := by
+  have h_add_star := SU2_add_star_eq_trace_smul_one hh
+  have h_00 : (h + star h) 0 0 = h.trace := by
+    rw [h_add_star]; simp [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul]
+  have h_eq : (h + star h) 0 0 = h 0 0 + star (h 0 0) := by
+    simp [Matrix.add_apply, Matrix.star_apply]
+  rw [h_00] at h_eq
+  rw [h_eq, Complex.add_im, Complex.star_def, Complex.conj_im]
+  ring
+
+/-- **§9.3c. trace h cast identity**: `(h.trace : ℂ) = ((h.trace.re : ℝ) : ℂ)`
+for h ∈ SU(2). -/
+theorem SU2_trace_eq_ofReal_re
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    (h.trace : ℂ) = ((h.trace.re : ℝ) : ℂ) := by
+  apply Complex.ext
+  · simp
+  · simp [SU2_trace_im_eq_zero hh]
+
+/-- **§9.4. X_h := h - (trace h.re / 2) • 1 is in tracelessSkewHermitian**
+for h ∈ SU(2).
+
+Skew-Hermitian: star X_h = star h - (tr h.re / 2) • 1; using §9.3a,
+star h = (tr h.re) • 1 - h, so star X_h = (tr h.re) • 1 - h - (tr h.re / 2) • 1
+= -(h - (tr h.re / 2) • 1) = -X_h. ✓
+
+Traceless: trace X_h = trace h - (tr h.re / 2) · 2 = trace h - tr h.re;
+using §9.3c, trace h = (tr h.re : ℂ), so trace X_h = 0. ✓ -/
+theorem SU2_X_h_mem_tracelessSkewHermitian
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) ∈
+      SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  have h_add_star := SU2_add_star_eq_trace_smul_one hh
+  have h_tr_eq := SU2_trace_eq_ofReal_re hh
+  refine ⟨?_, ?_⟩
+  · -- Skew-Hermitian
+    show (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ))ᴴ =
+         -(h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+    rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_smul, Matrix.conjTranspose_one]
+    rw [show (star (((h.trace.re / 2 : ℝ) : ℂ))) = ((h.trace.re / 2 : ℝ) : ℂ) by
+      simp]
+    rw [show hᴴ = star h from rfl]
+    have h_star_h : star h =
+        ((h.trace.re : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) - h := by
+      have h_combine : h + star h =
+          ((h.trace.re : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+        rw [h_add_star]; rw [← h_tr_eq]
+      rw [eq_sub_iff_add_eq, add_comm]
+      exact h_combine
+    rw [h_star_h]
+    -- Goal: (re : ℂ) • 1 - h - (re/2 : ℂ) • 1 = -(h - (re/2 : ℂ) • 1)
+    -- Rewrite (re : ℝ → ℂ) = 2 * (re/2 : ℝ → ℂ) for scalar manipulation
+    have h_split : ((h.trace.re : ℝ) : ℂ) =
+        ((h.trace.re / 2 : ℝ) : ℂ) + ((h.trace.re / 2 : ℝ) : ℂ) := by
+      push_cast; ring
+    rw [h_split, add_smul]
+    abel
+  · -- Traceless
+    show (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)).trace = 0
+    rw [Matrix.trace_sub, Matrix.trace_smul]
+    rw [show Matrix.trace (1 : Matrix (Fin 2) (Fin 2) ℂ) = (2 : ℂ) by
+      simp [Matrix.trace, Fin.sum_univ_two, Matrix.one_apply]]
+    rw [smul_eq_mul]
+    rw [show ((h.trace.re / 2 : ℝ) : ℂ) * 2 = (h.trace.re : ℂ) by push_cast; ring]
+    rw [h_tr_eq]
+    simp
+
+/-! ### §9.5. (Next ships — Y_h construction + expAmbient Y_h = h)
 
 For non-trivial h ∈ target ∩ SU(2), we need to construct a witness
 `Y ∈ source ∩ ts` with `expAmbient Y = h`. The cleanest construction
