@@ -283,6 +283,35 @@ theorem weylElem_ne_one :
         Matrix.cons_val_one, Matrix.head_cons, Matrix.empty_val',
         Matrix.cons_val_fin_one, Matrix.one_apply] at h_01
 
+/-- `torusElem (π/2) ≠ 1` — the i-quaternion is not the identity
+(via [0,0] entry: exp(iπ/2) = I ≠ 1). -/
+theorem torusElem_pi_half_ne_one :
+    torusElem (Real.pi / 2) ≠
+    (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro h_eq
+  have h_val : (torusElem (Real.pi / 2)).val =
+               (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    have := congrArg Subtype.val h_eq
+    exact this
+  have h_00 : (torusElem (Real.pi / 2)).val 0 0 =
+              (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0 :=
+    congrArg (fun M => M 0 0) h_val
+  -- LHS = exp(iπ/2) = I; RHS = 1. Compare via .im.
+  have h_lhs : (torusElem (Real.pi / 2)).val 0 0 = Complex.I := by
+    show torusMatrix (Real.pi / 2) 0 0 = Complex.I
+    have h_simp : torusMatrix (Real.pi / 2) 0 0 =
+                  Complex.exp (((Real.pi / 2 : ℝ) : ℂ) * Complex.I) := by
+      simp [torusMatrix, Matrix.cons_val', Matrix.cons_val_zero,
+            Matrix.empty_val', Matrix.cons_val_fin_one]
+    rw [h_simp,
+        show (((Real.pi / 2 : ℝ) : ℂ) * Complex.I) =
+             (↑Real.pi / 2 * Complex.I) by push_cast; ring,
+        Complex.exp_pi_div_two_mul_I]
+  rw [h_lhs] at h_00
+  simp [Matrix.one_apply] at h_00
+  have h_im := congrArg Complex.im h_00
+  simp [Complex.I_im] at h_im
+
 /-- `binaryTetrahedralFull` is non-trivial (contains weylElem ≠ 1). -/
 theorem binaryTetrahedralFull_ne_bot :
     binaryTetrahedralFull ≠ ⊥ := by
