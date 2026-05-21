@@ -5798,4 +5798,33 @@ theorem fibonacci_density_from_H_Fib_one_mem_interior_closure
   exact SKEFTHawking.FKLW.AharonovAradBridge.closure_eq_univ_of_one_mem_interior
     SKEFTHawking.FKLW.H_Fib h_int
 
+/-! ## §68. R5.4 Layer F.20.c.d.2.ll — zpowers cFib in H_Fib closure
+
+Small structural fact: the closure of `Subgroup.zpowers cFib_SU` is contained
+in the closure of H_Fib. This is the bridge from "cFib's powers densely fill
+the maximal torus through cFib" to "H_Fib closure contains this maximal torus". -/
+
+/-- **Zpowers cFib ⊆ H_Fib carrier**: each integer power of `cFib_SU` is in `H_Fib`. -/
+theorem zpowers_cFib_SU_subset_H_Fib :
+    (Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ⊆
+      (SKEFTHawking.FKLW.H_Fib :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro x hx
+  rw [SetLike.mem_coe, Subgroup.mem_zpowers_iff] at hx
+  obtain ⟨k, hk⟩ := hx
+  rw [← hk]
+  exact zpow_mem SKEFTHawking.FKLW.σ_Fib_1_SU_mul_σ_Fib_2_SU_inv_mem_H_Fib k
+
+/-- **closure(zpowers cFib) ⊆ closure(H_Fib)**: by monotonicity of closure. -/
+theorem closure_zpowers_cFib_subset_closure_H_Fib :
+    closure ((Subgroup.zpowers (σ_Fib_1_SU * σ_Fib_2_SU⁻¹ :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) ⊆
+      closure ((SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+  closure_mono zpowers_cFib_SU_subset_H_Fib
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
