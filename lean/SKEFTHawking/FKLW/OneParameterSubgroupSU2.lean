@@ -3735,6 +3735,53 @@ theorem conj_tangent_anchor_identity
   -- Step 4: structural reduce (g * φ s * g⁻¹).val to product
   rfl
 
+/-! ### §13.c. Combined "two anchored tangents from one 1-param subgroup + g"
+
+Given an existing 1-param subgroup φ in H with anchored tangent X
+(from §11.g), and any g ∈ H, we get a SECOND 1-param subgroup ψ in H
+(via §13 OneParamSubgroupInSU2_conj) with anchored tangent
+Y = g.val · X · star g.val (via §13.b conj_tangent_anchor_identity)
+in ts (via §21 tracelessSkewHermitian_unitary_conj).
+
+This is the COMBINED "two tangents" extractor — given a single 1-param
+subgroup and an arbitrary g ∈ H, we get TWO 1-param subgroups in H with
+their anchored tangents (X, Y) both in ts. The ℝ-LI condition Y ≠ ℝ·X
+remains to be discharged (substantive H_Fib-specific work for
+H_Fib_TwoLITangents).
+-/
+
+/-- **Combined two-anchored-tangents extractor**: from φ ∈ OneParamSubgroupInSU2 H
+with anchor identity at X, and any g ∈ H, get a second 1-param subgroup
+ψ in H with anchor identity at Y = Ad(g)·X. Both tangents in ts.
+
+The remaining condition for v3 discharge is `(X, Y) ℝ-LI`. -/
+theorem exists_two_anchored_tangents
+    {H : _root_.Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1)
+    (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hnontriv : ∃ t, φ t ≠ 1)
+    (himage : ∀ t, φ t ∈ H)
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (hg : g ∈ H) :
+    ∃ (X Y : Matrix (Fin 2) (Fin 2) ℂ) (s : ℝ),
+      X ∈ SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+      X ≠ 0 ∧
+      Y ∈ SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+      s ≠ 0 ∧
+      SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • X) = (φ s).val ∧
+      SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • Y) = (g * φ s * g⁻¹).val ∧
+      Y = g.val * X * star g.val := by
+  obtain ⟨X, s, hX_ts, hX_ne, hs_ne, h_anchor⟩ :=
+    OneParamSubgroupSU2.exists_tangent_with_anchor_identity hcts hzero hhom hnontriv
+  refine ⟨X, g.val * X * star g.val, s, hX_ts, hX_ne, ?_, hs_ne, h_anchor, ?_, rfl⟩
+  · -- Y ∈ ts via §21 tracelessSkewHermitian_unitary_conj
+    have hg_unitary : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+      Matrix.specialUnitaryGroup_le_unitaryGroup g.property
+    exact SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian_unitary_conj
+      hX_ts hg_unitary
+  · -- anchor for Y = Ad(g)·X via §13.b
+    exact OneParameterSubgroupSU2.conj_tangent_anchor_identity h_anchor g
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
