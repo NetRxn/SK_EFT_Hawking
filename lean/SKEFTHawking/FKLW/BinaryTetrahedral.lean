@@ -312,6 +312,18 @@ theorem torusElem_pi_half_ne_one :
   have h_im := congrArg Complex.im h_00
   simp [Complex.I_im] at h_im
 
+/-- `negOneSU * negOneSU = 1` — order-2 verification at subtype level.
+
+Uses (-I)·(-I) = I·I = I = identity matrix. -/
+theorem negOneSU_mul_self :
+    negOneSU * negOneSU = (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  apply Subtype.ext
+  show (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) * (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) = 1
+  rw [show (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) * (-(1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+       (1 : Matrix (Fin 2) (Fin 2) ℂ) * (1 : Matrix (Fin 2) (Fin 2) ℂ) from by
+         noncomm_ring]
+  exact one_mul _
+
 /-- `negOneSU ≠ 1` — the SU(2) element -I is not the identity. -/
 theorem negOneSU_ne_one :
     negOneSU ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
