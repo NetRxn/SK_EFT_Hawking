@@ -2504,7 +2504,107 @@ theorem SU2_su2RadiusSq_X_h_eq
   rw [h_00_re] at h_norm_sum
   linarith [h_norm_sum]
 
-/-! ### §9.6. (Next ships — Y_h construction + expAmbient Y_h = h)
+/-! ### §9.6. SU(2) bound + scaling identities + Y_h definition
+
+Preparation for the substantive Y_h construction step toward
+`Su2LogMemTracelessSkewHermitian_SU2` discharge. -/
+
+/-- **§9.6a. SU(2) trace.re bound**: for h ∈ SU(2), `h.trace.re / 2 ∈ [-1, 1]`.
+Follows from §9.5's `su2RadiusSq X_h = 1 - (h.trace.re/2)²` and `su2RadiusSq_nonneg`. -/
+theorem SU2_trace_re_div_two_mem_Icc
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    -1 ≤ h.trace.re / 2 ∧ h.trace.re / 2 ≤ 1 := by
+  have h_su2RadiusSq := SU2_su2RadiusSq_X_h_eq hh
+  have h_nonneg := su2RadiusSq_nonneg
+    (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+  rw [h_su2RadiusSq] at h_nonneg
+  refine ⟨?_, ?_⟩
+  · nlinarith [h_nonneg, sq_nonneg (h.trace.re / 2 + 1)]
+  · nlinarith [h_nonneg, sq_nonneg (h.trace.re / 2 - 1)]
+
+/-- **§9.6b. su2RadiusSq scaling**: `su2RadiusSq ((r : ℂ) • X) = r² · su2RadiusSq X`
+for real r and X ∈ Matrix (Fin 2) (Fin 2) ℂ. -/
+theorem su2RadiusSq_smul_real_eq
+    (r : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    su2RadiusSq (((r : ℝ) : ℂ) • X) = r^2 * su2RadiusSq X := by
+  unfold su2RadiusSq
+  rw [show ((((r : ℝ) : ℂ) • X) 0 0) = ((r : ℝ) : ℂ) * X 0 0 from by
+    simp [Matrix.smul_apply, smul_eq_mul]]
+  rw [show ((((r : ℝ) : ℂ) • X) 0 1) = ((r : ℝ) : ℂ) * X 0 1 from by
+    simp [Matrix.smul_apply, smul_eq_mul]]
+  rw [Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im]
+  rw [show ‖((r : ℝ) : ℂ) * X 0 1‖ = |r| * ‖X 0 1‖ by
+    rw [norm_mul]; simp]
+  rw [mul_pow, sq_abs]
+  ring
+
+/-- **§9.6c. Y_h definition**: `Y_h := ((Real.sinc θ_h)⁻¹ : ℂ) • X_h` where
+`θ_h := Real.arccos (h.trace.re / 2)`. For h = 1: θ_h = 0, sinc 0 = 1, Y_h = 0.
+For h ≠ 1 with θ_h ∈ (0, π): sinc θ_h = sin θ_h / θ_h, Y_h = (θ_h / sin θ_h) • X_h.
+-/
+noncomputable def Y_h (h : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  (((Real.sinc (Real.arccos (h.trace.re / 2)))⁻¹ : ℝ) : ℂ) •
+    (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+
+/-- **§9.6d. Y_h ∈ tracelessSkewHermitian** for h ∈ SU(2). Follows from
+§9.4 (X_h ∈ ts) + ℝ-Submodule closure under real-scalar smul. -/
+theorem SU2_Y_h_mem_tracelessSkewHermitian
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    Y_h h ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  have hX := SU2_X_h_mem_tracelessSkewHermitian hh
+  unfold Y_h
+  have h_real_smul : (((Real.sinc (Real.arccos (h.trace.re / 2)))⁻¹ : ℝ) : ℂ) •
+      (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+      ((Real.sinc (Real.arccos (h.trace.re / 2)))⁻¹ : ℝ) •
+      (h - ((h.trace.re / 2 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+    ext i j
+    simp [Matrix.smul_apply, Complex.real_smul]
+  rw [h_real_smul]
+  exact (SU2LieAlgebra.tracelessSkewHermitian (Fin 2)).smul_mem _ hX
+
+/-- **§9.6e. su2RadiusSq Y_h = θ_h²** for h ∈ SU(2) AND `h.trace.re ≠ -2`
+(equivalently θ_h < π; excludes the boundary case h = -1).
+Combines §9.6b scaling + §9.5 su2RadiusSq X_h + `Real.cos_arccos` (valid since
+h.trace.re/2 ∈ [-1, 1] by §9.6a) + Pythagorean identity. -/
+theorem SU2_su2RadiusSq_Y_h_eq
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_ne_neg_two : h.trace.re ≠ -2) :
+    su2RadiusSq (Y_h h) = (Real.arccos (h.trace.re / 2)) ^ 2 := by
+  unfold Y_h
+  rw [su2RadiusSq_smul_real_eq]
+  rw [SU2_su2RadiusSq_X_h_eq hh]
+  set θ : ℝ := Real.arccos (h.trace.re / 2) with hθ_def
+  have h_bound := SU2_trace_re_div_two_mem_Icc hh
+  have h_cos : Real.cos θ = h.trace.re / 2 := by
+    rw [hθ_def]; exact Real.cos_arccos h_bound.1 h_bound.2
+  rw [show (1 - (h.trace.re / 2) ^ 2 : ℝ) = (Real.sin θ)^2 from by
+    rw [← h_cos]; have := Real.sin_sq_add_cos_sq θ; linarith]
+  -- sin θ ≠ 0 from h.trace.re ≠ -2 (which means θ ≠ π) plus θ ≥ 0 (arccos)
+  by_cases h_θ : θ = 0
+  · rw [h_θ]; simp
+  · -- θ ≠ 0 and θ ≤ π (arccos range); need θ ≠ π too.
+    have h_θ_lt_pi : θ < Real.pi := by
+      rw [hθ_def]
+      by_contra h_eq
+      push_neg at h_eq
+      have h_θ_le := Real.arccos_le_pi (h.trace.re / 2)
+      have h_θ_eq_pi : Real.arccos (h.trace.re / 2) = Real.pi := le_antisymm h_θ_le h_eq
+      have h_cos_neg_one : h.trace.re / 2 = -1 := by
+        have := Real.cos_arccos h_bound.1 h_bound.2
+        rw [h_θ_eq_pi, Real.cos_pi] at this
+        exact this.symm
+      apply h_ne_neg_two; linarith
+    have h_sin_ne : Real.sin θ ≠ 0 := by
+      have h_θ_pos : 0 < θ := lt_of_le_of_ne (Real.arccos_nonneg _) (Ne.symm h_θ)
+      exact ne_of_gt (Real.sin_pos_of_pos_of_lt_pi h_θ_pos h_θ_lt_pi)
+    rw [show Real.sinc θ = Real.sin θ / θ by simp [Real.sinc, h_θ]]
+    field_simp
+
+/-! ### §9.7. (Next ships — expAmbient Y_h = h + final discharge)
 
 For non-trivial h ∈ target ∩ SU(2), we need to construct a witness
 `Y ∈ source ∩ ts` with `expAmbient Y = h`. The cleanest construction
