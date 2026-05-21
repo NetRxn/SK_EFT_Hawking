@@ -167,6 +167,20 @@ theorem su2Log_expAmbient
   rw [← expAmbientPartialHomeo_coe]
   exact expAmbientPartialHomeo.left_inv hY
 
+/-- **`expAmbient` injective on source**: for `A B ∈ expAmbientPartialHomeo.source`,
+if `expAmbient A = expAmbient B` then `A = B`.
+
+This is the building block for q-th-root uniqueness near 1: if `u^q = v^q = h`
+for `u, v ∈ SU(2)` close to 1, then `su2Log u` and `su2Log v` are both in source
+and exp lift to the same h, so they're equal. -/
+theorem expAmbient_injOn_source :
+    Set.InjOn SU2MatrixExp.expAmbient expAmbientPartialHomeo.source := by
+  intro A hA B hB h_eq
+  -- Apply su2Log to both sides; both lie in source so the inverse round-trips.
+  have h_A : su2Log (SU2MatrixExp.expAmbient A) = A := su2Log_expAmbient hA
+  have h_B : su2Log (SU2MatrixExp.expAmbient B) = B := su2Log_expAmbient hB
+  rw [← h_A, h_eq, h_B]
+
 /-- The local-homeomorphism source is open in `Matrix (Fin 2) (Fin 2) ℂ`. -/
 theorem expAmbientPartialHomeo_source_isOpen :
     IsOpen expAmbientPartialHomeo.source :=
