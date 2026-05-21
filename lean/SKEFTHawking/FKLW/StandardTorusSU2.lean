@@ -933,4 +933,28 @@ to discharge the Cartan tracked Prop. -/
 theorem cartan_gap_4_holds : CentralizerStdTorusEqualsStdTorus_SU2 :=
   centralizer_stdTorus_eq_stdTorus
 
+/-! ## §19. `stdTorus_SU2` is closed — corollary of gap #4 discharge -/
+
+/-- **`stdTorus_SU2` is closed in SU(2)** — corollary of
+`centralizer_stdTorus_eq_stdTorus`.
+
+In a Hausdorff topological group with continuous multiplication, the set
+centralizer of any set is closed (`Set.isClosed_centralizer`). Since
+`stdTorus_SU2 = centralizer(stdTorus_SU2 : Set _)` (gap #4 discharged in
+§18) and the underlying set of a `Subgroup.centralizer` equals the
+`Set.centralizer`, `stdTorus_SU2` is closed as a set. -/
+theorem stdTorus_SU2_isClosed :
+    IsClosed (stdTorus_SU2 :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  rw [show (stdTorus_SU2 :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) =
+       (Subgroup.centralizer (stdTorus_SU2 :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) by
+      rw [centralizer_stdTorus_eq_stdTorus]]
+  -- Subgroup.centralizer's underlying set IS the Set.centralizer.
+  show IsClosed (Set.centralizer (stdTorus_SU2 :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+  exact Set.isClosed_centralizer _
+
 end SKEFTHawking.FKLW
