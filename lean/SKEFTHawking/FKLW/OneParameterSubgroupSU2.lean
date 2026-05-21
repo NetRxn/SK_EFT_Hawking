@@ -57,6 +57,7 @@ import Mathlib
 import SKEFTHawking.FKLW.SU2LocalDiffeo
 import SKEFTHawking.FKLW.SU2LieAlgebra
 import SKEFTHawking.FKLW.CartanSubstrate
+import SKEFTHawking.FKLW.FibSU2LieBundle
 
 set_option autoImplicit false
 
@@ -4088,6 +4089,89 @@ theorem exists_two_anchored_tangents
       hX_ts hg_unitary
   · -- anchor for Y = Ad(g)·X via §13.b
     exact OneParameterSubgroupSU2.conj_tangent_anchor_identity h_anchor g
+
+/-! ### v3 H_Fib_TwoLITangents discharge from cFib_torus_subset_H_Fib
+
+Conditional discharge: given the topological tracked Prop
+`cFib_torus_subset_H_Fib` (cFib's 1-torus ⊆ H_Fib), the v3 predicate
+`H_Fib_TwoLITangents` is dischargeable from already-shipped substrate.
+-/
+
+/-- **v3 H_Fib_TwoLITangents discharge from cFib_torus_subset_H_Fib**.
+
+Composes shipped substrate (§70/§71/§72 concrete LI pair, §13 conjugate
+1-param subgroup, §13.b conjugate-tangent anchor identity, §73 tracked
+topological gap) → H_Fib_TwoLITangents. -/
+theorem H_Fib_TwoLITangents_of_cFib_torus
+    (h_torus : SKEFTHawking.FKLW.FibSU2LieBundle.cFib_torus_subset_H_Fib) :
+    SKEFTHawking.FKLW.H_Fib_TwoLITangents := by
+  let X₁ : Matrix (Fin 2) (Fin 2) ℂ :=
+    SKEFTHawking.FKLW.FibSU2LieBundle.liePartMat
+      SKEFTHawking.FKLW.FibSU2LieBundle.cFib_SU_mat
+  have hX₁_ts : X₁ ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+    SKEFTHawking.FKLW.FibSU2LieBundle.liePartMat_cFib_mem_ts
+  let φ₁ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+    OneParameterSubgroupSU2.oneParamSU2Map_uncond hX₁_ts
+  let g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) := SKEFTHawking.FKLW.σ_Fib_1_SU
+  let φ₂ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+    (fun t => g * φ₁ t * g⁻¹)
+  let X₂ : Matrix (Fin 2) (Fin 2) ℂ := g.val * X₁ * star g.val
+  have hg_unitary : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    Matrix.specialUnitaryGroup_le_unitaryGroup g.property
+  have hX₂_ts : X₂ ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+    SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian_unitary_conj
+      hX₁_ts hg_unitary
+  have h_φ₁_anchor :
+      SU2MatrixExp.expAmbient (((1 : ℝ) : ℂ) • X₁) = (φ₁ 1).val := by
+    show SU2MatrixExp.expAmbient (((1 : ℝ) : ℂ) • X₁) =
+      (OneParameterSubgroupSU2.oneParamSU2Map_uncond hX₁_ts 1).val
+    rw [OneParameterSubgroupSU2.oneParamSU2Map_uncond_apply_val hX₁_ts 1]
+  refine ⟨φ₁, φ₂, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact OneParameterSubgroupSU2.oneParamSU2Map_uncond_continuous hX₁_ts
+  · have hφ₁_cts := OneParameterSubgroupSU2.oneParamSU2Map_uncond_continuous hX₁_ts
+    exact (continuous_const.mul hφ₁_cts).mul continuous_const
+  · show OneParameterSubgroupSU2.oneParamSU2Map_uncond hX₁_ts 0 = 1
+    exact OneParameterSubgroupSU2.oneParamSU2Map_uncond_zero hX₁_ts
+  · show g * φ₁ 0 * g⁻¹ = 1
+    have : φ₁ 0 = 1 :=
+      OneParameterSubgroupSU2.oneParamSU2Map_uncond_zero hX₁_ts
+    rw [this, mul_one, mul_inv_cancel]
+  · intro s t
+    show OneParameterSubgroupSU2.oneParamSU2Map_uncond hX₁_ts (s + t) =
+      OneParameterSubgroupSU2.oneParamSU2Map_uncond hX₁_ts s *
+      OneParameterSubgroupSU2.oneParamSU2Map_uncond hX₁_ts t
+    exact OneParameterSubgroupSU2.oneParamSU2Map_uncond_add hX₁_ts s t
+  · intro s t
+    show g * φ₁ (s + t) * g⁻¹ = (g * φ₁ s * g⁻¹) * (g * φ₁ t * g⁻¹)
+    have : φ₁ (s + t) = φ₁ s * φ₁ t :=
+      OneParameterSubgroupSU2.oneParamSU2Map_uncond_add hX₁_ts s t
+    rw [this]
+    group
+  · intro t
+    obtain ⟨h, hh_mem, hh_val⟩ := h_torus t
+    have h_φ₁_val : (φ₁ t).val = NormedSpace.exp (((t : ℝ) : ℂ) • X₁) :=
+      OneParameterSubgroupSU2.oneParamSU2Map_uncond_apply_val hX₁_ts t
+    have h_eq : φ₁ t = h := Subtype.ext (by rw [h_φ₁_val, hh_val])
+    rw [h_eq]
+    exact hh_mem
+  · intro t
+    show g * φ₁ t * g⁻¹ ∈ SKEFTHawking.FKLW.H_Fib
+    obtain ⟨h, hh_mem, hh_val⟩ := h_torus t
+    have h_φ₁_val : (φ₁ t).val = NormedSpace.exp (((t : ℝ) : ℂ) • X₁) :=
+      OneParameterSubgroupSU2.oneParamSU2Map_uncond_apply_val hX₁_ts t
+    have h_eq : φ₁ t = h := Subtype.ext (by rw [h_φ₁_val, hh_val])
+    rw [h_eq]
+    exact SKEFTHawking.FKLW.H_Fib.mul_mem
+      (SKEFTHawking.FKLW.H_Fib.mul_mem
+        SKEFTHawking.FKLW.σ_Fib_1_SU_mem_H_Fib hh_mem)
+      (SKEFTHawking.FKLW.H_Fib.inv_mem SKEFTHawking.FKLW.σ_Fib_1_SU_mem_H_Fib)
+  · refine ⟨1, 1, one_ne_zero, one_ne_zero, X₁, X₂, hX₁_ts, hX₂_ts, h_φ₁_anchor,
+            ?_, ?_⟩
+    · show SU2MatrixExp.expAmbient (((1 : ℝ) : ℂ) • X₂) = (g * φ₁ 1 * g⁻¹).val
+      exact OneParameterSubgroupSU2.conj_tangent_anchor_identity h_φ₁_anchor g
+    · intro a b h_zero
+      exact SKEFTHawking.FKLW.FibSU2LieBundle.liePartMat_cFib_Ad_σ_Fib_1_lin_indep
+        a b h_zero
 
 /-! ## §5. Module summary (current ship)
 
