@@ -3310,6 +3310,51 @@ theorem exists_nontrivial_in_target_and_nhd
       linarith [hn_lt]
     exact h_in_inter.2
 
+/-- **Candidate tangent witness — `(φ s).val` admits non-zero ts-valued log.**
+
+For a nontrivial continuous 1-parameter subgroup `φ : ℝ → SU(2)`, there
+exists `s ≠ 0` such that:
+  - `φ s ≠ 1`,
+  - `(φ s).val ∈ target ∩ V` for `V` the nhd from `Su2LogMem_on_nhd_one`,
+  - `su2Log((φ s).val) ∈ tracelessSkewHermitian (Fin 2)` (from §9.11),
+  - `su2Log((φ s).val) ≠ 0` (since `(φ s).val ≠ 1` and `expAmbient_su2Log`).
+
+This gives a concrete **non-zero element of su(2) in the H-image-tangent**:
+`X := (1/s) • su2Log((φ s).val) ∈ tracelessSkewHermitian`, `X ≠ 0`. -/
+theorem exists_su2Log_mem_ts_ne_zero
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1)
+    (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hnontriv : ∃ t, φ t ≠ 1) :
+    ∃ s : ℝ, s ≠ 0 ∧ φ s ≠ 1 ∧
+      (φ s).val ∈ expAmbientPartialHomeo.target ∧
+      su2Log ((φ s).val) ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+      su2Log ((φ s).val) ≠ 0 := by
+  -- Extract V from Su2LogMem_on_nhd_one
+  obtain ⟨V, hV_nhd, hV⟩ := Su2LogMem_on_nhd_one
+  -- Combine target ∩ V via exists_nontrivial_in_target_and_nhd
+  obtain ⟨s, hs_ne_zero, hφs_ne_one, hφs_target, hφs_V⟩ :=
+    exists_nontrivial_in_target_and_nhd hcts hzero hhom hnontriv hV_nhd
+  refine ⟨s, hs_ne_zero, hφs_ne_one, hφs_target, ?_, ?_⟩
+  · -- su2Log((φ s).val) ∈ ts
+    apply hV _ hφs_V hφs_target
+    -- (φ s).val ∈ SU(2): subtype membership
+    exact (φ s).property
+  · -- su2Log((φ s).val) ≠ 0
+    intro h_log_zero
+    apply hφs_ne_one
+    -- If su2Log h = 0, then h = expAmbient 0 = 1.
+    -- Use expAmbient_su2Log: for h ∈ target, expAmbient (su2Log h) = h.
+    have h_exp_log : SU2MatrixExp.expAmbient (su2Log ((φ s).val)) = (φ s).val :=
+      expAmbient_su2Log hφs_target
+    rw [h_log_zero, SU2MatrixExp.expAmbient_zero] at h_exp_log
+    -- Now h_exp_log : 1 = (φ s).val.
+    -- Need φ s = 1 at SU(2)-subtype level. (φ s).val = 1.val, so φ s = 1 by Subtype.ext.
+    apply Subtype.ext
+    show (φ s).val = (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val
+    show (φ s).val = (1 : Matrix (Fin 2) (Fin 2) ℂ)
+    exact h_exp_log.symm
+
 end OneParamSubgroupSU2
 
 /-! ## §5. Module summary (current ship)
