@@ -4115,6 +4115,58 @@ theorem OneParamSubgroupSU2.anchor_at_rational_multiple
   -- Step 2: extend to z-multiples via expAmbient_int_smul_anchor
   exact OneParamSubgroupSU2.expAmbient_int_smul_anchor hzero hhom h_anchor_sn z
 
+/-! ### §11.h.small. Smallness conditions for n large via continuity
+
+The first of three smallness conditions required by `anchor_div_n`:
+for n large, `(φ (s/n)).val ∈ expAmbientPartialHomeo.target`. This is a
+direct consequence of:
+  - `t ↦ (φ t).val` continuous at 0 (composition of continuous Subtype.val
+    with continuous φ);
+  - (φ 0).val = 1 ∈ target;
+  - target is open;
+  - s/n → 0 as n → ∞.
+
+Hence for any sufficiently large n, (φ(s/n)).val ∈ target.
+-/
+
+/-- **h_target smallness for n large**: for any continuous nontrivial
+1-param subgroup φ with φ(0) = 1, ∃ N such that ∀ n ≥ N, (φ(s/n)).val
+is in the IFT target nbhd of 1. -/
+theorem OneParamSubgroupSU2.h_target_for_n_large
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1)
+    (s : ℝ) :
+    ∀ᶠ n : ℕ in Filter.atTop,
+      (φ (s/n)).val ∈ expAmbientPartialHomeo.target := by
+  -- The function t ↦ (φ t).val is continuous at 0; value at 0 is 1 ∈ target.
+  have h_val_cts : Continuous (fun t : ℝ => (φ t).val) :=
+    continuous_subtype_val.comp hcts
+  have h_val_zero : (fun t : ℝ => (φ t).val) 0 = 1 := by
+    show (φ 0).val = 1
+    rw [hzero]
+    rfl
+  -- target is open and contains 1.
+  have h_target_nhd : expAmbientPartialHomeo.target ∈
+      nhds (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
+    expAmbientPartialHomeo_target_mem_nhds_one
+  -- Pull back to nbhd of 0 in ℝ via the continuous map.
+  have h_preimage_nhd :
+      (fun t : ℝ => (φ t).val) ⁻¹' expAmbientPartialHomeo.target ∈ nhds (0 : ℝ) := by
+    rw [← h_val_zero] at h_target_nhd
+    exact h_val_cts.continuousAt.preimage_mem_nhds h_target_nhd
+  -- s/n → 0 as n → ∞: s/n = s · (1/n) → s · 0 = 0
+  have h_recip : Filter.Tendsto (fun n : ℕ => (1 : ℝ) / n) Filter.atTop (nhds 0) :=
+    tendsto_one_div_atTop_nhds_zero_nat
+  have h_tendsto : Filter.Tendsto (fun n : ℕ => s / n) Filter.atTop (nhds (0 : ℝ)) := by
+    have h_eq : (fun n : ℕ => s / n) = (fun n : ℕ => s * (1 / n)) := by
+      funext n
+      rw [mul_one_div]
+    rw [h_eq]
+    have := h_recip.const_mul s
+    simpa using this
+  -- Pull back from atTop in ℕ.
+  exact h_tendsto h_preimage_nhd
+
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
 
 For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
