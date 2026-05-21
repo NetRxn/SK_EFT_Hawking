@@ -719,6 +719,16 @@ theorem torusElem_pi_half_mul_weylElem_eq :
       weylElem * torusElem (-(Real.pi / 2)) :=
   torusElem_mul_weylElem_eq (Real.pi / 2)
 
+/-- **Weyl-torus commutator**: `[w, τ_t] := w · τ_t · w⁻¹ · τ_t⁻¹ = τ_{-2t}`.
+
+Direct composition of the Weyl conjugation `w · τ_t · w⁻¹ = τ_{-t}`
+followed by the inverse-as-parameter-negation identity. -/
+theorem weylElem_torusElem_commutator (t : ℝ) :
+    weylElem * torusElem t * weylElem⁻¹ * (torusElem t)⁻¹ =
+      torusElem (-(2 * t)) := by
+  rw [weylElem_conj_torusElem, ← torusElem_neg, ← torusElem_add]
+  ring_nf
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
