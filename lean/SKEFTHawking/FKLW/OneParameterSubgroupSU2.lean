@@ -4167,6 +4167,77 @@ theorem OneParamSubgroupSU2.h_target_for_n_large
   -- Pull back from atTop in ℕ.
   exact h_tendsto h_preimage_nhd
 
+/-- **`su2Log` maps target to source**: for `h ∈ expAmbientPartialHomeo.target`,
+`su2Log h ∈ expAmbientPartialHomeo.source`. Direct consequence of
+`OpenPartialHomeomorph.map_target`. -/
+theorem OneParamSubgroupSU2.su2Log_mem_source
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ expAmbientPartialHomeo.target) :
+    su2Log h ∈ expAmbientPartialHomeo.source :=
+  expAmbientPartialHomeo.map_target hh
+
+/-! ### §11.h.small.src. Source-membership of original anchor
+
+The third smallness condition (h_src_nv) reduces to `(s:ℂ)•X ∈ source`
+because `n • ((s/n:ℂ)•X) = (s:ℂ)•X`. We ship this here as a corollary
+of the anchor construction: the original anchor `s•X = su2Log((φ s).val)`
+is in source whenever `(φ s).val ∈ target`.
+-/
+
+/-- **Strengthened anchor extraction**: gives an anchor identity at `s` with
+the additional clauses that `(s:ℂ)•X ∈ source` and `(φ s).val ∈ target`.
+
+Direct strengthening of `exists_tangent_with_anchor_identity`; useful for
+downstream IFT compositions. -/
+theorem exists_tangent_with_anchor_identity_in_source
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1)
+    (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (hnontriv : ∃ t, φ t ≠ 1) :
+    ∃ (X : Matrix (Fin 2) (Fin 2) ℂ) (s : ℝ),
+      X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) ∧
+      X ≠ 0 ∧
+      s ≠ 0 ∧
+      SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • X) = (φ s).val ∧
+      ((((s : ℝ) : ℂ) • X) ∈ expAmbientPartialHomeo.source) ∧
+      ((φ s).val ∈ expAmbientPartialHomeo.target) := by
+  obtain ⟨s, hs_ne, _hφs_ne, hφs_target, h_log_ts, h_log_ne_zero⟩ :=
+    OneParamSubgroupSU2.exists_su2Log_mem_ts_ne_zero hcts hzero hhom hnontriv
+  refine ⟨((1/s : ℝ) : ℂ) • su2Log ((φ s).val), s, ?_, ?_, hs_ne, ?_, ?_, hφs_target⟩
+  · rw [Complex.coe_smul]
+    exact Submodule.smul_mem _ (1/s : ℝ) h_log_ts
+  · intro h_zero
+    apply h_log_ne_zero
+    have h_one_over_s_ne : (1/s : ℝ) ≠ 0 := div_ne_zero one_ne_zero hs_ne
+    have h_cast_ne : ((1/s : ℝ) : ℂ) ≠ 0 := by
+      simp only [ne_eq, Complex.ofReal_eq_zero]
+      exact h_one_over_s_ne
+    exact (smul_eq_zero.mp h_zero).resolve_left h_cast_ne
+  · -- expAmbient((s : ℂ) • X) = (φ s).val (same as original)
+    have h_smul_cancel :
+        ((s : ℝ) : ℂ) • (((1/s : ℝ) : ℂ) • su2Log ((φ s).val))
+        = su2Log ((φ s).val) := by
+      rw [smul_smul]
+      have h_one : ((s : ℝ) : ℂ) * ((1/s : ℝ) : ℂ) = 1 := by
+        rw [← Complex.ofReal_mul]
+        have : s * (1/s) = 1 := by field_simp
+        rw [this]; simp
+      rw [h_one, one_smul]
+    rw [h_smul_cancel]
+    exact expAmbient_su2Log hφs_target
+  · -- (s : ℂ) • X ∈ source (uses h_smul_cancel : (s : ℂ)•X = su2Log((φ s).val) ∈ source)
+    have h_smul_cancel :
+        ((s : ℝ) : ℂ) • (((1/s : ℝ) : ℂ) • su2Log ((φ s).val))
+        = su2Log ((φ s).val) := by
+      rw [smul_smul]
+      have h_one : ((s : ℝ) : ℂ) * ((1/s : ℝ) : ℂ) = 1 := by
+        rw [← Complex.ofReal_mul]
+        have : s * (1/s) = 1 := by field_simp
+        rw [this]; simp
+      rw [h_one, one_smul]
+    rw [h_smul_cancel]
+    exact OneParamSubgroupSU2.su2Log_mem_source hφs_target
+
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
 
 For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
