@@ -3525,6 +3525,54 @@ theorem expAmbient_nat_smul_anchor
 
 end OneParamSubgroupSU2
 
+/-! ## §12. Open subgroup of a connected topological group is ⊤
+
+For a topological group `G` with `SeparatelyContinuousMul` and
+`PreconnectedSpace G`, any open subgroup `H ≤ G` equals `⊤`.
+
+Proof: open subgroups in topological groups are automatically closed
+(`Subgroup.isClosed_of_isOpen`), hence clopen. In a preconnected space,
+any nonempty clopen set equals `Set.univ` (`isClopen_iff`). The
+subgroup is nonempty (contains 1), so it equals `Set.univ` as a set,
+hence equals `⊤` as a subgroup.
+
+This is Step 4 of the CartanFinalStep_SU2_v2 discharge: once we have
+{X, Y, [X, Y]} spanning su(2) (§20 SU2LieAlgebra) and exp covering a
+nhd of 1 in H, H is open ⇒ H = ⊤ (since SU(2) is connected).
+-/
+
+/-- **General**: an open subgroup of a preconnected topological group
+equals `⊤`.
+
+(Requires `SeparatelyContinuousMul G` for `Subgroup.isClosed_of_isOpen`;
+PreconnectedSpace G` for `isClopen_iff`.) -/
+theorem _root_.Subgroup.eq_top_of_isOpen_of_connected
+    {G : Type*} [Group G] [TopologicalSpace G] [SeparatelyContinuousMul G]
+    [PreconnectedSpace G]
+    (H : _root_.Subgroup G) (hOpen : IsOpen ((H : Set G))) :
+    H = ⊤ := by
+  apply SetLike.coe_injective
+  show (H : Set G) = ((⊤ : _root_.Subgroup G) : Set G)
+  rw [Subgroup.coe_top]
+  have h_closed : IsClosed ((H : Set G)) := H.isClosed_of_isOpen hOpen
+  have h_clopen : IsClopen ((H : Set G)) := ⟨h_closed, hOpen⟩
+  rcases isClopen_iff.mp h_clopen with h_empty | h_univ
+  · exfalso
+    have h_one_mem : (1 : G) ∈ (H : Set G) := H.one_mem
+    rw [h_empty] at h_one_mem
+    exact h_one_mem
+  · exact h_univ
+
+/-- **SU(2) corollary**: an open subgroup of `SU(2)` equals `⊤`.
+
+Uses the project-local `ConnectedSpace` instance for
+`Matrix.specialUnitaryGroup (Fin 2) ℂ` (from `SpecialUnitaryPathConnected.lean`). -/
+theorem SU2_subgroup_eq_top_of_isOpen
+    (H : _root_.Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hOpen : IsOpen ((H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    H = ⊤ :=
+  Subgroup.eq_top_of_isOpen_of_connected H hOpen
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
