@@ -4374,6 +4374,120 @@ theorem exists_σ_Fib_SU_mat_not_commute_not_anticommute
     -- σ_Fib_1 doesn't anti-commute
     exact σ_Fib_1_SU_mat_not_anticommute_ts hX hX_ne
 
+/-! ## §78. v3 H_Fib_TwoLITangents UNCONDITIONAL discharge
+
+Composes:
+  - `OneParamSubgroupFromAccPt_SU2_unconditional` (shipped) — gets 1-param
+    subgroup φ₁ : ℝ → SU(2) in H_Fib from `H_Fib_accPt_one_unconditional`.
+  - `exists_tangent_with_anchor_identity` (§11.g) — extracts X₁ ∈ ts \ {0}
+    with anchor identity exp(s₁ • X₁) = (φ₁ s₁).val.
+  - `exists_σ_Fib_SU_mat_not_commute_not_anticommute` (§77) — picks
+    g ∈ {σ_Fib_1_SU, σ_Fib_2_SU} not commuting/anti-commuting with X₁.
+  - §13 `OneParamSubgroupInSU2_conj` constructs φ₂(t) := g · φ₁(t) · g⁻¹.
+  - §13.b `conj_tangent_anchor_identity` gives the anchored tangent
+    X₂ = Ad(g)·X₁ for φ₂.
+  - `ts_Ad_LI_of_not_commute_anticommute` (§23) gives (X₁, X₂) ℝ-LI. -/
+
+/-- **UNCONDITIONAL discharge of v3 H_Fib_TwoLITangents**.
+
+No tracked Prop hypothesis needed — H_Fib has TWO 1-parameter subgroups
+with ℝ-LI tangents, constructively. The argument extracts the first
+tangent from accumulation-point analysis (via `cFib_powers_dense_at_one_holds`)
+and the second via Ad-conjugation by an appropriately-chosen σ_Fib_i. -/
+theorem H_Fib_TwoLITangents_unconditional :
+    SKEFTHawking.FKLW.H_Fib_TwoLITangents := by
+  -- Step 1: get 1-param subgroup φ₁ in H_Fib via the unconditional discharge
+  have h_one_param : SKEFTHawking.FKLW.OneParamSubgroupInSU2
+      SKEFTHawking.FKLW.H_Fib :=
+    OneParamSubgroupFromAccPt_SU2_unconditional
+      SKEFTHawking.FKLW.H_Fib
+      SKEFTHawking.FKLW.H_Fib_isClosed
+      SKEFTHawking.FKLW.H_Fib_accPt_one_unconditional
+  obtain ⟨φ₁, hcts₁, hzero₁, hhom₁, hnontriv₁, himage₁⟩ := h_one_param
+  -- Step 2: extract tangent X₁ via §11.g
+  obtain ⟨X₁, s₁, hX₁_ts, hX₁_ne, hs₁_ne, h_anchor₁⟩ :=
+    OneParamSubgroupSU2.exists_tangent_with_anchor_identity
+      hcts₁ hzero₁ hhom₁ hnontriv₁
+  -- Step 3: §77 picks g ∈ {σ_Fib_1, σ_Fib_2} not commute/anti-commute with X₁
+  obtain ⟨g_mat, hg_choice, hg_nc, hg_na⟩ :=
+    exists_σ_Fib_SU_mat_not_commute_not_anticommute hX₁_ts hX₁_ne
+  -- Step 4: lift g_mat to SU(2) subtype
+  rcases hg_choice with hg_eq1 | hg_eq2
+  · -- g_mat = σ_Fib_1_SU_mat. Use g := σ_Fib_1_SU.
+    set g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) := SKEFTHawking.FKLW.σ_Fib_1_SU with hg_def
+    have hg_val : (g : Matrix (Fin 2) (Fin 2) ℂ) = g_mat := by
+      rw [hg_def, hg_eq1]; rfl
+    let φ₂ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+      fun t => g * φ₁ t * g⁻¹
+    let X₂ : Matrix (Fin 2) (Fin 2) ℂ := g.val * X₁ * star g.val
+    have hg_unitary : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+      Matrix.specialUnitaryGroup_le_unitaryGroup g.property
+    have hX₂_ts : X₂ ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+      SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian_unitary_conj
+        hX₁_ts hg_unitary
+    have hcts₂ : Continuous φ₂ :=
+      (continuous_const.mul hcts₁).mul continuous_const
+    have hzero₂ : φ₂ 0 = 1 := by
+      show g * φ₁ 0 * g⁻¹ = 1
+      rw [hzero₁, mul_one, mul_inv_cancel]
+    have hhom₂ : ∀ s t, φ₂ (s + t) = φ₂ s * φ₂ t := by
+      intro s t
+      show g * φ₁ (s + t) * g⁻¹ = (g * φ₁ s * g⁻¹) * (g * φ₁ t * g⁻¹)
+      rw [hhom₁]; group
+    have hg_in_H : g ∈ SKEFTHawking.FKLW.H_Fib :=
+      SKEFTHawking.FKLW.σ_Fib_1_SU_mem_H_Fib
+    have himage₂ : ∀ t, φ₂ t ∈ SKEFTHawking.FKLW.H_Fib := by
+      intro t
+      show g * φ₁ t * g⁻¹ ∈ SKEFTHawking.FKLW.H_Fib
+      exact SKEFTHawking.FKLW.H_Fib.mul_mem
+        (SKEFTHawking.FKLW.H_Fib.mul_mem hg_in_H (himage₁ t))
+        (SKEFTHawking.FKLW.H_Fib.inv_mem hg_in_H)
+    have hg_nc_val : g.val * X₁ ≠ X₁ * g.val := by rw [hg_val]; exact hg_nc
+    have hg_na_val : g.val * X₁ ≠ -(X₁ * g.val) := by rw [hg_val]; exact hg_na
+    have h_LI : ∀ a b : ℝ, (a : ℂ) • X₁ + (b : ℂ) • X₂ = 0 → a = 0 ∧ b = 0 :=
+      SKEFTHawking.FKLW.OneParameterSubgroupSU2.ts_Ad_LI_of_not_commute_anticommute
+        hX₁_ts hX₁_ne hg_unitary hg_nc_val hg_na_val
+    refine ⟨φ₁, φ₂, hcts₁, hcts₂, hzero₁, hzero₂, hhom₁, hhom₂, himage₁, himage₂, ?_⟩
+    refine ⟨s₁, s₁, hs₁_ne, hs₁_ne, X₁, X₂, hX₁_ts, hX₂_ts, h_anchor₁, ?_, h_LI⟩
+    exact conj_tangent_anchor_identity h_anchor₁ g
+  · -- g_mat = σ_Fib_2_SU_mat. Use g := σ_Fib_2_SU.
+    set g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) := SKEFTHawking.FKLW.σ_Fib_2_SU with hg_def
+    have hg_val : (g : Matrix (Fin 2) (Fin 2) ℂ) = g_mat := by
+      rw [hg_def, hg_eq2]; rfl
+    let φ₂ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+      fun t => g * φ₁ t * g⁻¹
+    let X₂ : Matrix (Fin 2) (Fin 2) ℂ := g.val * X₁ * star g.val
+    have hg_unitary : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+      Matrix.specialUnitaryGroup_le_unitaryGroup g.property
+    have hX₂_ts : X₂ ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+      SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian_unitary_conj
+        hX₁_ts hg_unitary
+    have hcts₂ : Continuous φ₂ :=
+      (continuous_const.mul hcts₁).mul continuous_const
+    have hzero₂ : φ₂ 0 = 1 := by
+      show g * φ₁ 0 * g⁻¹ = 1
+      rw [hzero₁, mul_one, mul_inv_cancel]
+    have hhom₂ : ∀ s t, φ₂ (s + t) = φ₂ s * φ₂ t := by
+      intro s t
+      show g * φ₁ (s + t) * g⁻¹ = (g * φ₁ s * g⁻¹) * (g * φ₁ t * g⁻¹)
+      rw [hhom₁]; group
+    have hg_in_H : g ∈ SKEFTHawking.FKLW.H_Fib :=
+      SKEFTHawking.FKLW.σ_Fib_2_SU_mem_H_Fib
+    have himage₂ : ∀ t, φ₂ t ∈ SKEFTHawking.FKLW.H_Fib := by
+      intro t
+      show g * φ₁ t * g⁻¹ ∈ SKEFTHawking.FKLW.H_Fib
+      exact SKEFTHawking.FKLW.H_Fib.mul_mem
+        (SKEFTHawking.FKLW.H_Fib.mul_mem hg_in_H (himage₁ t))
+        (SKEFTHawking.FKLW.H_Fib.inv_mem hg_in_H)
+    have hg_nc_val : g.val * X₁ ≠ X₁ * g.val := by rw [hg_val]; exact hg_nc
+    have hg_na_val : g.val * X₁ ≠ -(X₁ * g.val) := by rw [hg_val]; exact hg_na
+    have h_LI : ∀ a b : ℝ, (a : ℂ) • X₁ + (b : ℂ) • X₂ = 0 → a = 0 ∧ b = 0 :=
+      SKEFTHawking.FKLW.OneParameterSubgroupSU2.ts_Ad_LI_of_not_commute_anticommute
+        hX₁_ts hX₁_ne hg_unitary hg_nc_val hg_na_val
+    refine ⟨φ₁, φ₂, hcts₁, hcts₂, hzero₁, hzero₂, hhom₁, hhom₂, himage₁, himage₂, ?_⟩
+    refine ⟨s₁, s₁, hs₁_ne, hs₁_ne, X₁, X₂, hX₁_ts, hX₂_ts, h_anchor₁, ?_, h_LI⟩
+    exact conj_tangent_anchor_identity h_anchor₁ g
+
 end SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
 namespace SKEFTHawking.FKLW.OneParameterSubgroupSU2
