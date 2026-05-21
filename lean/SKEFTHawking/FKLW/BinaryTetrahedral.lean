@@ -234,6 +234,7 @@ theorem binaryTetrahedralCyclic_card_le_six :
   rw [Nat.card_zpowers]
   exact binaryTetrahedralElem_orderOf_le_six
 
+
 /-! ## §5b. Full 2T as Subgroup.closure -/
 
 /-- **`binaryTetrahedralFull`** — the full binary tetrahedral group 2T ⊆ SU(2)
@@ -556,6 +557,12 @@ Direct corollary of `Nat.card_zpowers` + `_orderOf_eq_six`. -/
 theorem binaryTetrahedralElem_zpowers_card :
     Nat.card (Subgroup.zpowers binaryTetrahedralElem) = 6 := by
   rw [Nat.card_zpowers, binaryTetrahedralElem_orderOf_eq_six]
+
+/-- **`Nat.card binaryTetrahedralCyclic = 6`** — strengthened cardinality
+equality (versus the prior `_le_six` bound) using the orderOf = 6 result. -/
+theorem binaryTetrahedralCyclic_card_eq_six :
+    Nat.card binaryTetrahedralCyclic = 6 :=
+  binaryTetrahedralElem_zpowers_card
 
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
