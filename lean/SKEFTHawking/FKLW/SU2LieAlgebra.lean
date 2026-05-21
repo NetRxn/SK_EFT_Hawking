@@ -2018,6 +2018,55 @@ theorem unitary_Ad_fix_iff_commute
     -- U·X = X·U ⟹ U·X·star U = X·U·star U = X·(U · star U) = X
     rw [h, Matrix.mul_assoc, (Matrix.mem_unitaryGroup_iff).mp hU, Matrix.mul_one]
 
+/-- **ℝ-LD characterization in ts**: for X, Y ∈ ts (Fin 2) with X ≠ 0,
+ℝ-LD ⟹ Y = α • X for some α ∈ ℝ.
+
+This is the textbook 2-LD form when the non-zero element is named. -/
+theorem ts_LD_implies_scalar
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0)
+    (h_LD : ¬ (∀ a b : ℝ, (a : ℂ) • X + (b : ℂ) • Y = 0 → a = 0 ∧ b = 0)) :
+    ∃ α : ℝ, Y = (α : ℂ) • X := by
+  -- push_neg on the ∀: ∃ a b, P ∧ ¬(a = 0 ∧ b = 0)
+  push_neg at h_LD
+  obtain ⟨a, b, h_zero, h_not_both_zero⟩ := h_LD
+  -- Case analysis on b
+  by_cases hb : b = 0
+  · -- b = 0 ⟹ (a : ℂ) • X = 0 ⟹ a = 0 (since X ≠ 0), contradiction
+    exfalso
+    rw [hb, Complex.ofReal_zero, zero_smul, add_zero] at h_zero
+    -- (a : ℂ) • X = 0, X ≠ 0, so (a : ℂ) = 0
+    have h_a_complex : (a : ℂ) = 0 := by
+      rcases smul_eq_zero.mp h_zero with ha | hX_zero
+      · exact ha
+      · exact absurd hX_zero hX_ne
+    have h_a : a = 0 := by
+      simpa using h_a_complex
+    -- Now a = 0 and b = 0 contradicts h_not_both_zero
+    exact h_not_both_zero h_a hb
+  · -- b ≠ 0: Y = -(a/b) • X
+    refine ⟨-(a / b), ?_⟩
+    -- From a • X + b • Y = 0: b • Y = -a • X, so Y = -(a/b) • X.
+    have h_b_complex : (b : ℂ) ≠ 0 := by
+      simp only [ne_eq, Complex.ofReal_eq_zero]; exact hb
+    -- Step 1: (b : ℂ) • Y = -((a : ℂ) • X) (from h_zero by additive rearrange)
+    have h_solve : (b : ℂ) • Y = -((a : ℂ) • X) :=
+      eq_neg_of_add_eq_zero_left (by rw [add_comm]; exact h_zero)
+    -- Step 2: Y = (b : ℂ)⁻¹ • ((b : ℂ) • Y) = (b : ℂ)⁻¹ • (-(a : ℂ) • X)
+    -- = (-a/b : ℂ) • X = (-(a/b : ℝ) : ℂ) • X
+    have h_Y : Y = (b : ℂ)⁻¹ • ((b : ℂ) • Y) := by
+      rw [smul_smul, inv_mul_cancel₀ h_b_complex, one_smul]
+    rw [h_Y, h_solve, smul_neg, smul_smul]
+    -- Now: -(((b : ℂ)⁻¹ * (a : ℂ)) • X) = (((-(a/b)) : ℝ) : ℂ) • X
+    -- Combine: c₁ • X = c₂ • X iff c₁ = c₂ (or X = 0); use that (b : ℂ)⁻¹ * (a : ℂ) = (a/b : ℝ)
+    have h_scalar : -(((b : ℂ)⁻¹ * (a : ℂ))) = (((-(a/b)) : ℝ) : ℂ) := by
+      push_cast
+      field_simp
+    rw [show -(((b : ℂ)⁻¹ * (a : ℂ)) • X) = ((-((b : ℂ)⁻¹ * (a : ℂ))) • X) from
+      (neg_smul _ _).symm]
+    rw [h_scalar]
+
 /-- **Matrix-commute ⟹ ℝ-LD** for X, Y ∈ ts (Fin 2). Contrapositive of §19. -/
 theorem tracelessSkewHermitian_lin_dep_of_commute
     {X Y : Matrix (Fin 2) (Fin 2) ℂ}
