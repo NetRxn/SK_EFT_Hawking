@@ -273,6 +273,16 @@ theorem negOneSU_mem_binaryTetrahedralFull :
     weylElem_mem_binaryTetrahedralFull
     weylElem_mem_binaryTetrahedralFull
 
+/-- `weylElem ≠ 1` — the Weyl element is not the identity (via [0,1] entries). -/
+theorem weylElem_ne_one :
+    weylElem ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro h_eq
+  have h_val := congrArg Subtype.val h_eq
+  have h_01 := congrArg (fun M => M 0 1) h_val
+  simp [weylMatrix, Matrix.cons_val', Matrix.cons_val_zero,
+        Matrix.cons_val_one, Matrix.head_cons, Matrix.empty_val',
+        Matrix.cons_val_fin_one, Matrix.one_apply] at h_01
+
 /-- `binaryTetrahedralFull` is non-trivial (contains weylElem ≠ 1). -/
 theorem binaryTetrahedralFull_ne_bot :
     binaryTetrahedralFull ≠ ⊥ := by
