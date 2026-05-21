@@ -3842,6 +3842,56 @@ theorem anchorAddSubgroup_dense_or_cyclic
 
 end OneParamSubgroupSU2
 
+/-! ## §12.add. AddSubgroup analogue of `eq_top_of_isOpen_of_connected`
+
+Generic infrastructure: an open AddSubgroup of a preconnected topological
+additive group equals `⊤`. Same proof structure as the multiplicative §12:
+open + `AddSubgroup.isClosed_of_isOpen` ⟹ clopen ⟹ either empty or
+univ; empty contradicts `0 ∈ H`, so univ.
+
+**Substrate role**: applicable to ℝ (connected) for any AddSubgroup we
+can show is open. In particular, if `anchorAddSubgroup` has `0` as an
+interior point (i.e., the anchor identity holds in a nbhd of 0 ∈ ℝ),
+then it is open as a subgroup, hence `= ⊤`. The nbhd-of-0 condition is
+the IFT-based step at exp's local diffeomorphism near 0 (substrate in
+`SU2LocalDiffeo.lean`).
+-/
+
+/-- **AddSubgroup.eq_top_of_isOpen_of_connected**: an open additive subgroup
+of a preconnected topological additive group equals `⊤`. -/
+theorem _root_.AddSubgroup.eq_top_of_isOpen_of_connected
+    {G : Type*} [AddGroup G] [TopologicalSpace G] [ContinuousAdd G]
+    [PreconnectedSpace G]
+    (H : AddSubgroup G) (hOpen : IsOpen ((H : Set G))) :
+    H = ⊤ := by
+  apply SetLike.coe_injective
+  show (H : Set G) = ((⊤ : AddSubgroup G) : Set G)
+  rw [AddSubgroup.coe_top]
+  have h_closed : IsClosed ((H : Set G)) := H.isClosed_of_isOpen hOpen
+  have h_clopen : IsClopen ((H : Set G)) := ⟨h_closed, hOpen⟩
+  rcases isClopen_iff.mp h_clopen with h_empty | h_univ
+  · exfalso
+    have h_zero_mem : (0 : G) ∈ (H : Set G) := H.zero_mem
+    rw [h_empty] at h_zero_mem
+    exact h_zero_mem
+  · exact h_univ
+
+/-- **Application to anchorAddSubgroup over ℝ**: if the anchor set is a
+neighborhood of `0 ∈ ℝ`, then `anchorAddSubgroup = ⊤` (anchor identity
+holds for all real t).
+
+Composes `AddSubgroup.isOpen_of_mem_nhds` with the general
+`AddSubgroup.eq_top_of_isOpen_of_connected` and ℝ's connectedness. -/
+theorem OneParamSubgroupSU2.anchorAddSubgroup_eq_top_of_nhd_zero
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (X : Matrix (Fin 2) (Fin 2) ℂ)
+    (h_nhd : ((OneParamSubgroupSU2.anchorAddSubgroup hzero hhom X) : Set ℝ) ∈ nhds (0 : ℝ)) :
+    OneParamSubgroupSU2.anchorAddSubgroup hzero hhom X = ⊤ := by
+  have h_open : IsOpen ((OneParamSubgroupSU2.anchorAddSubgroup hzero hhom X) : Set ℝ) :=
+    AddSubgroup.isOpen_of_mem_nhds _ h_nhd
+  exact AddSubgroup.eq_top_of_isOpen_of_connected _ h_open
+
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
 
 For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
