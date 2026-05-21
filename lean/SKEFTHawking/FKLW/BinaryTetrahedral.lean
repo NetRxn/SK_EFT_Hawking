@@ -403,6 +403,12 @@ theorem weylElem_pow_four :
     rw [show (4 : ℕ) = 2 + 2 from rfl, pow_add, sq]
   rw [h, weylElem_sq_eq_negOneSU, negOneSU_mul_self]
 
+/-- **`weylElem` has finite order**, with order ≤ 4. -/
+theorem weylElem_isOfFinOrder :
+    IsOfFinOrder weylElem :=
+  isOfFinOrder_iff_pow_eq_one.mpr
+    ⟨4, by norm_num, weylElem_pow_four⟩
+
 /-- `negOneSU ≠ 1` — the SU(2) element -I is not the identity. -/
 theorem negOneSU_ne_one :
     negOneSU ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
