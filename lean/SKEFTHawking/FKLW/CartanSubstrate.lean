@@ -923,6 +923,285 @@ theorem fibonacci_density_F21_from_strengthened_chain_v2
   SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top
     (H_Fib_eq_top_of_strengthened_chain_v2 H_strong H_cartan_final_v2 H_witness)
 
+/-! ## §4.9. Discharge of `H_Fib_NonCentralConjugateWitness`
+
+(2026-05-21 follow-on)
+
+Discharges the H_Fib-specific tracked Prop introduced in §4.8 by direct
+matrix computation, bringing the F.21 chain down to **only**
+`CartanFinalStep_SU2_v2` (Wedge B residual).
+
+**Strategy.** Take the pair `(σ_Fib_1_SU, σ_Fib_2_SU)`. By contradiction,
+assume `c := σ_Fib_2_SU · σ_Fib_1_SU · σ_Fib_2_SU⁻¹` commutes with
+`σ_Fib_1_SU` at the SU(2) subtype level. Lift to matrices:
+`c.val · σ_Fib_1_SU_mat = σ_Fib_1_SU_mat · c.val`.
+
+  - **Step 1.** `σ_Fib_1_SU_mat` is diagonal with distinct entries
+    `ω·R_1 ≠ ω·R_τ`. Projecting the commutator equation to entry [0, 1]
+    gives `c.val[0, 1] · ω · (R_τ - R_1) = 0`, hence `c.val[0, 1] = 0`.
+
+  - **Step 2.** From `c.val = σ_Fib_2_SU_mat · σ_Fib_1_SU_mat ·
+    star σ_Fib_2_SU_mat` and `star σ_Fib_2_SU_mat · σ_Fib_2_SU_mat = 1`
+    (unitarity), `c.val · σ_Fib_2_SU_mat = σ_Fib_2_SU_mat ·
+    σ_Fib_1_SU_mat`.
+
+  - **Step 3.** Projecting this equation to [0, 0] (and using
+    `c.val[0, 1] = 0` from Step 1) gives
+    `c.val[0, 0] · σ_Fib_2_SU_mat[0, 0] = σ_Fib_2_SU_mat[0, 0] · ω · R_1`.
+    Cancel `σ_Fib_2_SU_mat[0, 0] ≠ 0` to get `c.val[0, 0] = ω · R_1`.
+
+  - **Step 4.** Projecting to [0, 1] (using `c.val[0, 1] = 0`) gives
+    `c.val[0, 0] · σ_Fib_2_SU_mat[0, 1] = σ_Fib_2_SU_mat[0, 1] · ω · R_τ`.
+    Cancel `σ_Fib_2_SU_mat[0, 1] ≠ 0` to get `c.val[0, 0] = ω · R_τ`.
+
+  - **Step 5.** Steps 3 and 4 together give `ω · R_1 = ω · R_τ`.
+    Cancel `ω ≠ 0`: `R_1 = R_τ`, contradicting `R1_C_ne_Rtau_C`. -/
+
+/-! ### Helper non-vanishing facts (public extractions) -/
+
+/-- `ω_Fib_C ≠ 0` (extraction from `norm_ω_Fib_C : ‖ω_Fib_C‖ = 1`). -/
+theorem ω_Fib_C_ne_zero : SKEFTHawking.FKLW.ω_Fib_C ≠ 0 := by
+  intro h
+  have h_norm : ‖SKEFTHawking.FKLW.ω_Fib_C‖ = 0 := by rw [h, norm_zero]
+  rw [SKEFTHawking.FKLW.norm_ω_Fib_C] at h_norm
+  norm_num at h_norm
+
+/-- `φInv_C ≠ 0` (from `φInv_C² + φInv_C = 1`). -/
+theorem φInv_C_ne_zero : SKEFTHawking.FKLW.φInv_C ≠ 0 := by
+  intro h
+  have h_sq := SKEFTHawking.FKLW.φInv_C_sq_add_self
+  rw [h] at h_sq
+  simp at h_sq
+
+/-- `φInvSqrt_C ≠ 0` (from `φInvSqrt² = φInv ≠ 0`). -/
+theorem φInvSqrt_C_ne_zero : SKEFTHawking.FKLW.φInvSqrt_C ≠ 0 := by
+  intro h
+  have h_sq := SKEFTHawking.FKLW.φInvSqrt_C_sq
+  rw [h, zero_pow (by norm_num : (2 : ℕ) ≠ 0)] at h_sq
+  exact φInv_C_ne_zero h_sq.symm
+
+/-- `σ_Fib_2[0, 1] ≠ 0`. -/
+theorem σ_Fib_2_apply_01_ne_zero : SKEFTHawking.FKLW.σ_Fib_2 0 1 ≠ 0 := by
+  rw [SKEFTHawking.FKLW.σ_Fib_2_apply_01]
+  exact mul_ne_zero (mul_ne_zero φInv_C_ne_zero φInvSqrt_C_ne_zero)
+    (sub_ne_zero.mpr SKEFTHawking.FKLW.R1_C_ne_Rtau_C)
+
+/-! ### `σ_Fib_1_SU_mat` and `σ_Fib_2_SU_mat` entry lemmas -/
+
+theorem σ_Fib_1_SU_mat_apply_00 :
+    SKEFTHawking.FKLW.σ_Fib_1_SU_mat 0 0 =
+      SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.R1_C := by
+  show (SKEFTHawking.FKLW.ω_Fib_C • SKEFTHawking.FKLW.σ_Fib_1) 0 0 =
+       SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.R1_C
+  rw [Matrix.smul_apply, smul_eq_mul]
+  rfl
+
+theorem σ_Fib_1_SU_mat_apply_01 : SKEFTHawking.FKLW.σ_Fib_1_SU_mat 0 1 = 0 := by
+  show (SKEFTHawking.FKLW.ω_Fib_C • SKEFTHawking.FKLW.σ_Fib_1) 0 1 = 0
+  rw [Matrix.smul_apply, smul_eq_mul]
+  show SKEFTHawking.FKLW.ω_Fib_C * (SKEFTHawking.FKLW.σ_Fib_1 0 1) = 0
+  rw [show SKEFTHawking.FKLW.σ_Fib_1 0 1 = 0 from rfl, mul_zero]
+
+theorem σ_Fib_1_SU_mat_apply_10 : SKEFTHawking.FKLW.σ_Fib_1_SU_mat 1 0 = 0 := by
+  show (SKEFTHawking.FKLW.ω_Fib_C • SKEFTHawking.FKLW.σ_Fib_1) 1 0 = 0
+  rw [Matrix.smul_apply, smul_eq_mul]
+  show SKEFTHawking.FKLW.ω_Fib_C * (SKEFTHawking.FKLW.σ_Fib_1 1 0) = 0
+  rw [show SKEFTHawking.FKLW.σ_Fib_1 1 0 = 0 from rfl, mul_zero]
+
+theorem σ_Fib_1_SU_mat_apply_11 :
+    SKEFTHawking.FKLW.σ_Fib_1_SU_mat 1 1 =
+      SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.Rtau_C := by
+  show (SKEFTHawking.FKLW.ω_Fib_C • SKEFTHawking.FKLW.σ_Fib_1) 1 1 =
+       SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.Rtau_C
+  rw [Matrix.smul_apply, smul_eq_mul]
+  rfl
+
+theorem σ_Fib_2_SU_mat_apply_00_ne_zero :
+    SKEFTHawking.FKLW.σ_Fib_2_SU_mat 0 0 ≠ 0 := by
+  show (SKEFTHawking.FKLW.ω_Fib_C • SKEFTHawking.FKLW.σ_Fib_2) 0 0 ≠ 0
+  rw [Matrix.smul_apply, smul_eq_mul]
+  exact mul_ne_zero ω_Fib_C_ne_zero SKEFTHawking.FKLW.σ_Fib_2_apply_00_ne_zero
+
+theorem σ_Fib_2_SU_mat_apply_01_ne_zero :
+    SKEFTHawking.FKLW.σ_Fib_2_SU_mat 0 1 ≠ 0 := by
+  show (SKEFTHawking.FKLW.ω_Fib_C • SKEFTHawking.FKLW.σ_Fib_2) 0 1 ≠ 0
+  rw [Matrix.smul_apply, smul_eq_mul]
+  exact mul_ne_zero ω_Fib_C_ne_zero σ_Fib_2_apply_01_ne_zero
+
+/-! ### Main discharge -/
+
+/-- **`H_Fib_NonCentralConjugateWitness` is discharged unconditionally.**
+
+The witness pair is `(σ_Fib_1_SU, σ_Fib_2_SU)`. See §4.9 docstring for the
+spectral/diagonal argument. -/
+theorem H_Fib_NonCentralConjugateWitness_discharged :
+    H_Fib_NonCentralConjugateWitness := by
+  refine ⟨SKEFTHawking.FKLW.σ_Fib_1_SU, SKEFTHawking.FKLW.σ_Fib_2_SU,
+          SKEFTHawking.FKLW.σ_Fib_1_SU_mem_H_Fib,
+          SKEFTHawking.FKLW.σ_Fib_2_SU_mem_H_Fib, ?_⟩
+  intro h_comm
+  -- Set c := σ_Fib_2_SU * σ_Fib_1_SU * σ_Fib_2_SU⁻¹.
+  set c : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+    SKEFTHawking.FKLW.σ_Fib_2_SU * SKEFTHawking.FKLW.σ_Fib_1_SU *
+      SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹ with hc_def
+  -- Lift h_comm to matrix equation
+  have h_comm_val : c.val * SKEFTHawking.FKLW.σ_Fib_1_SU_mat =
+                    SKEFTHawking.FKLW.σ_Fib_1_SU_mat * c.val := by
+    have h := congrArg Subtype.val h_comm
+    exact h
+  -- c.val expanded
+  have h_inv_val : (SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹ :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val =
+                   star SKEFTHawking.FKLW.σ_Fib_2_SU_mat := by
+    have h_star : star SKEFTHawking.FKLW.σ_Fib_2_SU =
+                  SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹ :=
+      Matrix.star_eq_inv SKEFTHawking.FKLW.σ_Fib_2_SU
+    rw [← h_star]
+    rfl
+  have h_cval : c.val =
+      SKEFTHawking.FKLW.σ_Fib_2_SU_mat * SKEFTHawking.FKLW.σ_Fib_1_SU_mat *
+        star SKEFTHawking.FKLW.σ_Fib_2_SU_mat := by
+    show (SKEFTHawking.FKLW.σ_Fib_2_SU * SKEFTHawking.FKLW.σ_Fib_1_SU *
+          SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹).val = _
+    have h1 : (SKEFTHawking.FKLW.σ_Fib_2_SU * SKEFTHawking.FKLW.σ_Fib_1_SU *
+               SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹).val =
+              SKEFTHawking.FKLW.σ_Fib_2_SU.val * SKEFTHawking.FKLW.σ_Fib_1_SU.val *
+                (SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹).val := rfl
+    rw [h1, h_inv_val]
+    rfl
+  -- Step 1: c.val 0 1 = 0
+  have h_proj_01 : c.val 0 1 = 0 := by
+    have h := congrArg (fun M => M 0 1) h_comm_val
+    simp only [Matrix.mul_apply, Fin.sum_univ_two,
+               σ_Fib_1_SU_mat_apply_00, σ_Fib_1_SU_mat_apply_01,
+               σ_Fib_1_SU_mat_apply_10, σ_Fib_1_SU_mat_apply_11] at h
+    -- h : c.val 0 0 * 0 + c.val 0 1 * (ω * R_τ) =
+    --     (ω * R_1) * c.val 0 1 + 0 * c.val 1 1
+    have h_clean :
+        c.val 0 1 * (SKEFTHawking.FKLW.ω_Fib_C *
+                     (SKEFTHawking.FKLW.Rtau_C - SKEFTHawking.FKLW.R1_C)) = 0 := by
+      have : c.val 0 1 *
+              (SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.Rtau_C) =
+             SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.R1_C * c.val 0 1 := by
+        linear_combination h
+      linear_combination this
+    have h_factor_ne : SKEFTHawking.FKLW.ω_Fib_C *
+                       (SKEFTHawking.FKLW.Rtau_C - SKEFTHawking.FKLW.R1_C) ≠ 0 :=
+      mul_ne_zero ω_Fib_C_ne_zero
+        (sub_ne_zero.mpr (fun h => SKEFTHawking.FKLW.R1_C_ne_Rtau_C h.symm))
+    exact (mul_eq_zero.mp h_clean).resolve_right h_factor_ne
+  -- Step 2: c.val * σ_Fib_2_SU_mat = σ_Fib_2_SU_mat * σ_Fib_1_SU_mat
+  have h_cval_mul_σ2 :
+      c.val * SKEFTHawking.FKLW.σ_Fib_2_SU_mat =
+        SKEFTHawking.FKLW.σ_Fib_2_SU_mat * SKEFTHawking.FKLW.σ_Fib_1_SU_mat := by
+    rw [h_cval]
+    -- Use star σ_2_SU_mat * σ_2_SU_mat = 1 (inverse property in SU(2)).
+    have h_star_mul : star SKEFTHawking.FKLW.σ_Fib_2_SU_mat *
+                      SKEFTHawking.FKLW.σ_Fib_2_SU_mat = 1 := by
+      have h_inv_mul :
+          (SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹ * SKEFTHawking.FKLW.σ_Fib_2_SU :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = 1 := inv_mul_cancel _
+      have h_val := congrArg
+        (Subtype.val : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) → _) h_inv_mul
+      have h_lhs : (SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹ *
+                    SKEFTHawking.FKLW.σ_Fib_2_SU :
+                   ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val =
+                   (SKEFTHawking.FKLW.σ_Fib_2_SU⁻¹).val *
+                     SKEFTHawking.FKLW.σ_Fib_2_SU_mat := rfl
+      have h_one : ((1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+                    Matrix (Fin 2) (Fin 2) ℂ) = (1 : Matrix (Fin 2) (Fin 2) ℂ) := rfl
+      rw [h_lhs, h_inv_val] at h_val
+      rw [h_one] at h_val
+      exact h_val
+    rw [show SKEFTHawking.FKLW.σ_Fib_2_SU_mat * SKEFTHawking.FKLW.σ_Fib_1_SU_mat *
+           star SKEFTHawking.FKLW.σ_Fib_2_SU_mat *
+           SKEFTHawking.FKLW.σ_Fib_2_SU_mat =
+         SKEFTHawking.FKLW.σ_Fib_2_SU_mat * SKEFTHawking.FKLW.σ_Fib_1_SU_mat *
+            (star SKEFTHawking.FKLW.σ_Fib_2_SU_mat *
+             SKEFTHawking.FKLW.σ_Fib_2_SU_mat) from by
+      rw [mul_assoc]]
+    rw [h_star_mul, mul_one]
+  -- Step 3: c.val 0 0 = ω * R_1
+  have h_cval_00_R1 :
+      c.val 0 0 = SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.R1_C := by
+    have h := congrArg (fun M => M 0 0) h_cval_mul_σ2
+    simp only [Matrix.mul_apply, Fin.sum_univ_two,
+               σ_Fib_1_SU_mat_apply_00, σ_Fib_1_SU_mat_apply_01,
+               σ_Fib_1_SU_mat_apply_10, σ_Fib_1_SU_mat_apply_11,
+               h_proj_01] at h
+    -- h : c.val 0 0 * σ_Fib_2_SU_mat 0 0 + 0 * σ_Fib_2_SU_mat 1 0 =
+    --     σ_Fib_2_SU_mat 0 0 * (ω * R_1) + σ_Fib_2_SU_mat 0 1 * 0
+    have h_clean : c.val 0 0 * SKEFTHawking.FKLW.σ_Fib_2_SU_mat 0 0 =
+                   SKEFTHawking.FKLW.σ_Fib_2_SU_mat 0 0 *
+                     (SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.R1_C) := by
+      linear_combination h
+    have h_eq : (c.val 0 0 - SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.R1_C) *
+                SKEFTHawking.FKLW.σ_Fib_2_SU_mat 0 0 = 0 := by
+      linear_combination h_clean
+    have h_factor : c.val 0 0 - SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.R1_C = 0 :=
+      (mul_eq_zero.mp h_eq).resolve_right σ_Fib_2_SU_mat_apply_00_ne_zero
+    exact sub_eq_zero.mp h_factor
+  -- Step 4: c.val 0 0 = ω * R_τ
+  have h_cval_00_Rtau :
+      c.val 0 0 = SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.Rtau_C := by
+    have h := congrArg (fun M => M 0 1) h_cval_mul_σ2
+    simp only [Matrix.mul_apply, Fin.sum_univ_two,
+               σ_Fib_1_SU_mat_apply_00, σ_Fib_1_SU_mat_apply_01,
+               σ_Fib_1_SU_mat_apply_10, σ_Fib_1_SU_mat_apply_11,
+               h_proj_01] at h
+    -- h : c.val 0 0 * σ_Fib_2_SU_mat 0 1 + 0 * σ_Fib_2_SU_mat 1 1 =
+    --     σ_Fib_2_SU_mat 0 0 * 0 + σ_Fib_2_SU_mat 0 1 * (ω * R_τ)
+    have h_clean : c.val 0 0 * SKEFTHawking.FKLW.σ_Fib_2_SU_mat 0 1 =
+                   SKEFTHawking.FKLW.σ_Fib_2_SU_mat 0 1 *
+                     (SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.Rtau_C) := by
+      linear_combination h
+    have h_eq : (c.val 0 0 - SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.Rtau_C) *
+                SKEFTHawking.FKLW.σ_Fib_2_SU_mat 0 1 = 0 := by
+      linear_combination h_clean
+    have h_factor :
+        c.val 0 0 - SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.Rtau_C = 0 :=
+      (mul_eq_zero.mp h_eq).resolve_right σ_Fib_2_SU_mat_apply_01_ne_zero
+    exact sub_eq_zero.mp h_factor
+  -- Step 5: contradiction
+  have h_eq : SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.R1_C =
+              SKEFTHawking.FKLW.ω_Fib_C * SKEFTHawking.FKLW.Rtau_C :=
+    h_cval_00_R1.symm.trans h_cval_00_Rtau
+  exact SKEFTHawking.FKLW.R1_C_ne_Rtau_C
+    (mul_left_cancel₀ ω_Fib_C_ne_zero h_eq)
+
+/-- **F.21 unconditional on a SINGLE tracked Prop** — `CartanFinalStep_SU2_v2`
+(soundness-fixed). Composes `H_Fib_eq_top_of_strengthened_chain_v2` with the
+shipped unconditional `OneParamSubgroupFromAccPt_SU2` and the just-discharged
+`H_Fib_NonCentralConjugateWitness_discharged`.
+
+This is the *culmination of the §4.8 soundness fix*: F.21 now depends on
+exactly one tracked Cartan Prop — `CartanFinalStep_SU2_v2`, the SU(2)
+closed-subgroup classification (Wedge B residual).
+
+Note: the `OneParamSubgroupFromAccPt_SU2` argument is the *predicate*; its
+discharge `OneParamSubgroupFromAccPt_SU2_unconditional` is shipped in
+`OneParameterSubgroupSU2.lean §9.13b`. The final composition into a
+hypothesis-free-but-for-`CartanFinalStep_SU2_v2` headline is provided in
+`OneParameterSubgroupSU2.lean §10c`. -/
+theorem H_Fib_eq_top_of_cartan_final_v2_only
+    (H_strong : OneParamSubgroupFromAccPt_SU2)
+    (H_cartan_final_v2 : CartanFinalStep_SU2_v2) :
+    H_Fib = ⊤ :=
+  H_Fib_eq_top_of_strengthened_chain_v2 H_strong H_cartan_final_v2
+    H_Fib_NonCentralConjugateWitness_discharged
+
+/-- **F.21 with H_Fib witness absorbed**. Same as
+`fibonacci_density_F21_from_strengthened_chain_v2` but with the H_Fib
+witness automatically discharged. -/
+theorem fibonacci_density_F21_from_cartan_final_v2_only
+    (H_strong : OneParamSubgroupFromAccPt_SU2)
+    (H_cartan_final_v2 : CartanFinalStep_SU2_v2) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top
+    (H_Fib_eq_top_of_cartan_final_v2_only H_strong H_cartan_final_v2)
+
 /-! ## §5. Module summary
 
 `CartanSubstrate.lean` (Phase 6p Wave 2c.4a-R4.2.d.4.3.d.1, 2026-05-14;

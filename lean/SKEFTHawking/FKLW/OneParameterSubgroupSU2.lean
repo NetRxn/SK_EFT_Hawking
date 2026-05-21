@@ -3019,6 +3019,40 @@ theorem fibonacci_density_F21_from_two_tracked_props_v2
     h_cartan_final_v2
     h_witness
 
+/-! ### §10c. UNCONDITIONAL F.21 via the SOUND predicate, H_Fib witness DISCHARGED
+
+(2026-05-21 — H_Fib witness ship.)
+
+With `H_Fib_NonCentralConjugateWitness_discharged` (CartanSubstrate.lean §4.9)
+shipped, the F.21 chain now depends on **only ONE tracked Cartan Prop** —
+`CartanFinalStep_SU2_v2` (the SU(2) closed-subgroup classification,
+Wedge B residual).
+
+This restores the pre-soundness-fix one-Prop dependency while operating
+on the SOUND predicate. -/
+
+/-- **§10c.1. UNCONDITIONAL `H_Fib = ⊤` from a SINGLE sound tracked Prop**. -/
+theorem H_Fib_eq_top_from_cartan_final_v2_only
+    (h_cartan_final_v2 : SKEFTHawking.FKLW.CartanFinalStep_SU2_v2) :
+    SKEFTHawking.FKLW.H_Fib = ⊤ :=
+  SKEFTHawking.FKLW.H_Fib_eq_top_of_cartan_final_v2_only
+    OneParamSubgroupFromAccPt_SU2_unconditional
+    h_cartan_final_v2
+
+/-- **§10c.2. UNCONDITIONAL F.21 from a SINGLE sound tracked Prop** —
+the CORRECTED final headline (replaces both §10's
+`fibonacci_density_F21_from_one_tracked_prop` which depends on the broken
+`CartanFinalStep_SU2`, and §10b's two-Prop version with the H_Fib witness
+already absorbed). -/
+theorem fibonacci_density_F21_from_cartan_final_v2_only
+    (h_cartan_final_v2 : SKEFTHawking.FKLW.CartanFinalStep_SU2_v2) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_F21_from_cartan_final_v2_only
+    OneParamSubgroupFromAccPt_SU2_unconditional
+    h_cartan_final_v2
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
