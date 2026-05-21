@@ -365,6 +365,11 @@ theorem torusElem_neg (t : ℝ) :
     exact torusElem_zero
   exact eq_inv_of_mul_eq_one_left h_mul
 
+/-- `torusElem (-π/2) = (torusElem (π/2))⁻¹` — specialization. -/
+theorem torusElem_neg_pi_half :
+    torusElem (-(Real.pi / 2)) = (torusElem (Real.pi / 2))⁻¹ :=
+  torusElem_neg (Real.pi / 2)
+
 /-- `negOneSU * negOneSU = 1` — order-2 verification at subtype level.
 
 Uses (-I)·(-I) = I·I = I = identity matrix. -/
