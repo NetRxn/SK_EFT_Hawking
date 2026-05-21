@@ -688,6 +688,18 @@ theorem weylElem_mul_torusElem_pi_half_eq :
   rw [mul_assoc, inv_mul_cancel, mul_one] at h'
   exact h'
 
+/-- **General Weyl anti-commutation** `w · τ_t = τ_{-t} · w` for any `t`.
+
+The right-multiplied form of `weylElem_conj_torusElem`. Strengthens the
+prior π/2-specialization to the universal statement. -/
+theorem weylElem_mul_torusElem_eq (t : ℝ) :
+    weylElem * torusElem t = torusElem (-t) * weylElem := by
+  have h := weylElem_conj_torusElem t
+  have h' : (weylElem * torusElem t * weylElem⁻¹) * weylElem =
+            torusElem (-t) * weylElem := by rw [h]
+  rw [mul_assoc, inv_mul_cancel, mul_one] at h'
+  exact h'
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
