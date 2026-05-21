@@ -6235,6 +6235,72 @@ theorem σ_Fib_1_SU_mat_commute_ts_implies_paulI_z_real_smul
   rw [h_01]
   simp
 
+/-! ## §75. σ_Fib_2 does NOT commute with paulI_z
+
+paulI_z = !!![i, 0; 0, -i] is diagonal. Commutator entry [0,1]:
+  ([M, paulI_z])[0,1] = M[0,1]·(-i) - i·M[0,1] = -2i·M[0,1].
+Zero iff M[0,1] = 0. For σ_Fib_2_SU_mat, M[0,1] ≠ 0 (shipped). -/
+
+/-- **Generic helper**: matrix M with `M 0 1 ≠ 0` does NOT commute with paulI_z. -/
+private theorem matrix_offdiag_01_ne_zero_not_commute_paulI_z
+    {M : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_offdiag : M 0 1 ≠ 0) :
+    M * SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z ≠
+      SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z * M := by
+  intro h_eq
+  -- Compute entry [0,1] of both sides
+  have h_entry : (M * SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z) 0 1
+              = (SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z * M) 0 1 :=
+    congrFun (congrFun h_eq 0) 1
+  -- Unfold paulI_z = I • σ_z and σ_z = !!![1, 0; 0, -1]
+  simp only [SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z, Matrix.mul_apply,
+             Fin.sum_univ_two, Matrix.smul_apply, smul_eq_mul,
+             SKEFTHawking.σ_z, Matrix.cons_val_zero, Matrix.cons_val_one,
+             Matrix.head_cons, Matrix.head_fin_const, Matrix.of_apply,
+             Matrix.cons_val', Matrix.cons_val_fin_one, Matrix.empty_val'] at h_entry
+  -- h_entry: M[0,0]·I·0 + M[0,1]·I·(-1) = I·1·M[0,1] + I·0·M[1,1]
+  --        = -I·M[0,1] = I·M[0,1]
+  -- Hence 2·I·M[0,1] = 0 ⟹ M[0,1] = 0 (contradicting h_offdiag)
+  have h_collected : Complex.I * M 0 1 + Complex.I * M 0 1 = 0 := by
+    linear_combination -h_entry
+  have h_mul : Complex.I * (M 0 1 + M 0 1) = 0 := by linear_combination h_collected
+  have h_factor : Complex.I * (2 * M 0 1) = 0 := by linear_combination h_mul
+  -- Complex.I ≠ 0, 2 ≠ 0 ⟹ M 0 1 = 0, contradiction
+  have h_I_ne : Complex.I ≠ 0 := Complex.I_ne_zero
+  have h_2M : 2 * M 0 1 = 0 := (mul_eq_zero.mp h_factor).resolve_left h_I_ne
+  have h_M : M 0 1 = 0 := by
+    have h_2_ne : (2 : ℂ) ≠ 0 := by norm_num
+    exact (mul_eq_zero.mp h_2M).resolve_left h_2_ne
+  exact h_offdiag h_M
+
+/-- **σ_Fib_2_SU_mat does NOT commute with paulI_z**. From `σ_Fib_2_SU_mat[0,1] ≠ 0`
+(inlined here since CartanSubstrate not available) + the generic offdiag helper. -/
+theorem σ_Fib_2_SU_mat_not_commute_paulI_z :
+    σ_Fib_2_SU_mat * SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z ≠
+      SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z * σ_Fib_2_SU_mat := by
+  apply matrix_offdiag_01_ne_zero_not_commute_paulI_z
+  -- σ_Fib_2_SU_mat 0 1 = ω · σ_Fib_2 0 1 = ω · φInv · φInvSqrt · (R_1 - R_τ) ≠ 0
+  have h_ω_ne : ω_Fib_C ≠ 0 := by
+    intro h_ω
+    have h_norm : ‖ω_Fib_C‖ = 0 := by rw [h_ω, norm_zero]
+    rw [norm_ω_Fib_C] at h_norm
+    norm_num at h_norm
+  have h_φInv_ne : φInv_C ≠ 0 := by
+    intro h_φ
+    have h := φInv_C_sq_add_self
+    rw [h_φ] at h
+    simp at h
+  have h_φInvSqrt_ne : φInvSqrt_C ≠ 0 := by
+    intro h_φ
+    have h := φInvSqrt_C_sq
+    rw [h_φ, sq, zero_mul] at h
+    exact h_φInv_ne h.symm
+  show (ω_Fib_C • σ_Fib_2) 0 1 ≠ 0
+  rw [Matrix.smul_apply, smul_eq_mul, σ_Fib_2_apply_01]
+  exact mul_ne_zero h_ω_ne
+    (mul_ne_zero (mul_ne_zero h_φInv_ne h_φInvSqrt_ne)
+      (sub_ne_zero.mpr R1_C_ne_Rtau_C))
+
 /-- **Tracked sub-Prop**: cFib's 1-torus is contained in H_Fib.
 
 Formulated at the matrix level (so usable in this file without
