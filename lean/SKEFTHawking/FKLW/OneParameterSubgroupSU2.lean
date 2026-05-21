@@ -1272,7 +1272,35 @@ theorem vonNeumann_floor_scale_tendsto
     simp [norm_zero] at this
     exact this
 
-/-! ## §§4.f-5. (Next ship — substrate roadmap)
+/-! ### §4.f. Scalar-vector convergence `m_k • Y_{n_k} → t • X`
+
+Combine §4.d (the BW limit `X_k := Y_{n_k} / ‖Y_{n_k}‖ → X`) with §4.e
+(`m_k · ‖Y_{n_k}‖ → t`) via `Filter.Tendsto.smul` (real-scalar smul on
+the matrix ℝ-module) to get `(m_k · ‖Y_{n_k}‖) • X_k → t • X`. The
+algebraic identity `(m_k · ‖Y_{n_k}‖) • X_k = (m_k : ℝ) • Y_{n_k}`
+(when `Y_{n_k} ≠ 0`) rewrites this into the form needed for
+`exp_smul` / `exp_zsmul`. -/
+
+-- (Auxiliary helper deferred — direct ℝ-smul convergence statement
+-- below suffices for §4.f without it.)
+
+/-! **Scalar-vector convergence (ℂ-smul form, deferred)**: combining §4.d
+and §4.e via `Tendsto.smul` requires the `ContinuousSMul ℝ (Matrix _ _ ℂ)`
+instance, which is *not* auto-derived from the local
+`Matrix.linftyOpNormedAlgebra` (a ℂ-algebra structure giving
+ContinuousSMul ℂ, not ℝ).
+
+The discharge plan: either (a) provide an explicit `ContinuousSMul ℝ
+(Matrix _ _ ℂ)` instance via `RestrictScalars` or `Module.compHom`
+machinery, or (b) reformulate the convergence using ℂ-scalar smul
+(`((t : ℂ) • X)`) and bridge via `Complex.continuous_ofReal`. The
+latter is cleaner but requires the cast-handling shown to be tricky
+in this turn (the goal mismatches between `((α * β : ℝ) : ℂ)` and
+`((α : ℝ) : ℂ) * ((β : ℝ) : ℂ)` after coe-distribution).
+
+Deferred to next work block. -/
+
+/-! ## §§4.g-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
