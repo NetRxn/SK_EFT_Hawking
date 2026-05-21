@@ -5726,4 +5726,22 @@ theorem fibonacci_density_from_bridge_lemma_62_alone
   fibonacci_density_from_F21_residual_and_bridge_lemma_62
     F21_residual_small_spanning_holds h_bridge
 
+/-- **R5.4 Layer F.20.c.d.2.jj HEADLINE 2 — F.21 density from EITHER single hypothesis**.
+
+Strengthened version of §46's `fibonacci_density_F21_unified`: after §65's
+unconditional discharge of F21_residual_small_spanning, F.21 density follows
+from **either** of:
+  - `F21_BridgeLemma62_OpenNhd` (Path A's only remaining hypothesis)
+  - `CartanClassificationOfSU2_Subgroup` (Path B / Phase 5 Step 13)
+
+This is the cleanest possible reduction of F.21 unconditional density. -/
+theorem fibonacci_density_F21_from_single_remaining_hypothesis
+    (h_paths : F21_BridgeLemma62_OpenNhd ∨ CartanClassificationOfSU2_Subgroup) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) := by
+  rcases h_paths with h_bridge | h_cartan
+  · exact fibonacci_density_from_bridge_lemma_62_alone h_bridge
+  · exact fibonacci_density_from_cartan_classification h_cartan
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
