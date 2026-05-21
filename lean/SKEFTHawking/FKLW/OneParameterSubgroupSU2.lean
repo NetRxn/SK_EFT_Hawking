@@ -3158,6 +3158,24 @@ theorem su2Log_comp_val_tendsto_zero_at_zero
   rw [← h_at_zero]
   exact (su2Log_comp_val_continuousAt_zero hcts hzero).tendsto
 
+/-- **Power-rule for 1-parameter subgroups**: for a continuous group
+homomorphism `φ : ℝ → SU(2)` with `φ 0 = 1` and `φ (s + t) = φ s · φ t`,
+we have `φ ((n : ℝ) * s) = (φ s)^n` for all `n : ℕ`.
+
+Foundational fact for the tangent-extraction argument: it lets us
+derive `φ s ≠ 1` from `φ (n · s) ≠ 1`, by contraposition. -/
+theorem hom_pow_nat
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (n : ℕ) (s : ℝ) :
+    φ ((n : ℝ) * s) = (φ s)^n := by
+  induction n with
+  | zero =>
+    rw [show ((0 : ℕ) : ℝ) * s = 0 from by push_cast; ring, hzero, pow_zero]
+  | succ k ih =>
+    rw [show ((k + 1 : ℕ) : ℝ) * s = ((k : ℕ) : ℝ) * s + s from by push_cast; ring,
+        hhom, ih, pow_succ]
+
 end OneParamSubgroupSU2
 
 /-! ## §5. Module summary (current ship)
