@@ -106,4 +106,28 @@ theorem binaryTetrahedralGen_mem_specialUnitaryGroup :
     ⟨Matrix.mem_unitaryGroup_iff.mpr binaryTetrahedralGen_mul_star,
      binaryTetrahedralGen_det⟩
 
+/-! ## §3. Order-6 element verification: cube = -I -/
+
+/-- **`binaryTetrahedralGen ^ 3 = -1`** — the half-integer quaternion
+has order 6.
+
+For the unit quaternion `q = (1+i+j+k)/2`, we have `q² = (-1+i+j+k)/2`
+and `q³ = -1`. This makes `q` an order-6 element. Verified at the
+matrix level via direct multiplication. -/
+theorem binaryTetrahedralGen_cube :
+    binaryTetrahedralGen * binaryTetrahedralGen * binaryTetrahedralGen =
+      -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [binaryTetrahedralGen, Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Matrix.empty_val',
+          Matrix.cons_val_fin_one, Matrix.neg_apply, Matrix.one_apply]
+  all_goals ring_nf
+  all_goals
+    rw [show Complex.I^3 = -Complex.I from by
+      rw [pow_succ, Complex.I_sq]; ring]
+  all_goals ring_nf
+  all_goals (rw [Complex.I_sq]; ring)
+
 end SKEFTHawking.FKLW
