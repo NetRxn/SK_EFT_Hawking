@@ -434,42 +434,125 @@ theorem tracelessSkewHermitian_two_sq
     _ = (-(su2RadiusSq X) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
           rw [h_scalar]
 
-/-! ## §§3-4. (Next ship — substrate roadmap)
+/-! ## §3. 1-parameter subgroup machinery on `tracelessSkewHermitian (Fin 2)`
 
-The remaining substantive content (Mathlib-upstream-PR-quality):
+Given X ∈ tracelessSkewHermitian (Fin 2), the map `φ t := expAmbient (t • X)`
+defines a continuous 1-parameter subgroup at the matrix level. Properties
+we ship in this section:
 
-  **§3. Closed-form analysis of `expAmbient X` for X ∈ su(2)**:
+  - `oneParamMatrixMap X 0 = 1`
+  - `oneParamMatrixMap X (s + t) = oneParamMatrixMap X s * oneParamMatrixMap X t`
+  - `Continuous (oneParamMatrixMap X)`
+  - X.IsSkewHermitian ⟹ ∀ t, (oneParamMatrixMap X t).IsSkewHermitian
+    *propagation of skew-Hermitian* (NOT correct — exp of skew-Hermitian
+    is unitary, not skew-Hermitian; instead we ship the *unitary*
+    membership directly).
+  - `oneParamMatrixMap_mem_unitaryGroup`: for X ∈ tracelessSkewHermitian
+    (Fin 2), `expAmbient (t • X) ∈ Matrix.unitaryGroup (Fin 2) ℂ`.
 
-  From `tracelessSkewHermitian_two_sq` (above) we have `X² = -r² • I` for
-  `r² := su2RadiusSq X ≥ 0`. Hence:
-    - `X^{2k} = (-r²)^k • I`,
-    - `X^{2k+1} = (-r²)^k • X`.
-  The power-series `exp X = Σ X^n/n!` splits into even/odd parts that
-  recognize as `cos(r) • I + (sinc r) • X` (with the limit
-  `sinc 0 = 1`). Yields:
-    - `(expAmbient X).det = 1` (closed-form `cos² + r² · sinc²`)
-    - `expAmbient X ∈ specialUnitaryGroup (Fin 2) ℂ`
-    - The 1-parameter subgroup `φ t := expAmbient (t • X)` is continuous,
-      satisfies `φ 0 = 1`, `φ (s + t) = φ s * φ t` (`exp_add_of_commute`).
+The **substantive SU(2) inclusion** (det = 1) is the followup §3.5:
+either via closed-form `exp X = cos(r) • I + sinc(r) • X` with
+`r² = su2RadiusSq X` (using `tracelessSkewHermitian_two_sq` to identify
+even/odd power series with cos/sin), or via spectral theorem for the
+underlying Hermitian `i • X`. Deferred substrate. -/
+
+/-- The 1-parameter subgroup map at the matrix level.
+`oneParamMatrixMap X t := expAmbient ((t : ℂ) • X)`. -/
+noncomputable def oneParamMatrixMap
+    (X : Matrix (Fin 2) (Fin 2) ℂ) (t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
+  SU2MatrixExp.expAmbient ((t : ℂ) • X)
+
+/-- `oneParamMatrixMap X 0 = 1`. -/
+theorem oneParamMatrixMap_zero (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    oneParamMatrixMap X 0 = 1 := by
+  unfold oneParamMatrixMap
+  simp [SU2MatrixExp.expAmbient]
+
+/-- `oneParamMatrixMap X (s + t) = oneParamMatrixMap X s * oneParamMatrixMap X t`.
+
+Uses `NormedSpace.exp_add_of_commute` for the commuting case (s•X and t•X
+both commute with each other since they're scalar multiples of the same
+matrix). -/
+theorem oneParamMatrixMap_add
+    (X : Matrix (Fin 2) (Fin 2) ℂ) (s t : ℝ) :
+    oneParamMatrixMap X (s + t) =
+      oneParamMatrixMap X s * oneParamMatrixMap X t := by
+  unfold oneParamMatrixMap SU2MatrixExp.expAmbient
+  rw [show (((s + t : ℝ) : ℂ) • X) = ((s : ℂ) • X) + ((t : ℂ) • X) by
+        push_cast; rw [add_smul]]
+  exact NormedSpace.exp_add_of_commute (Commute.smul_left
+    (Commute.smul_right (Commute.refl X) t) s)
+
+/-- `oneParamMatrixMap X` is continuous. -/
+theorem oneParamMatrixMap_continuous (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    Continuous (oneParamMatrixMap X) := by
+  unfold oneParamMatrixMap SU2MatrixExp.expAmbient
+  exact NormedSpace.exp_continuous.comp
+    (Complex.continuous_ofReal.smul continuous_const)
+
+/-- For X ∈ tracelessSkewHermitian (Fin 2), `t • X` is also in
+tracelessSkewHermitian (real scalar smul preserves skew-Hermitian +
+traceless). -/
+theorem real_smul_tracelessSkewHermitian
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) (t : ℝ) :
+    ((t : ℂ) • X) ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+  SU2LieAlgebra.tracelessSkewHermitian_complex_smul_real_mem hX t
+
+/-- **Unitary membership for the 1-parameter subgroup**: for X ∈
+tracelessSkewHermitian (Fin 2), `oneParamMatrixMap X t ∈ unitaryGroup`.
+
+Via the shipped `Matrix.IsSkewHermitian.exp_mem_unitaryGroup`. -/
+theorem oneParamMatrixMap_mem_unitaryGroup
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2)) (t : ℝ) :
+    oneParamMatrixMap X t ∈ Matrix.unitaryGroup (Fin 2) ℂ := by
+  unfold oneParamMatrixMap SU2MatrixExp.expAmbient
+  have h_smul_mem : ((t : ℂ) • X) ∈
+      SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+    real_smul_tracelessSkewHermitian hX t
+  exact Matrix.IsSkewHermitian.exp_mem_unitaryGroup h_smul_mem.1
+
+/-! ## §§3.5-4. (Next ship — substrate roadmap)
+
+  **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
+
+  Need `det (expAmbient (t • X)) = 1` for X ∈ tracelessSkewHermitian (Fin 2).
+
+  Approach (closed-form): from `tracelessSkewHermitian_two_sq` we have
+  `(t•X)² = -(t² · su2RadiusSq X) • I`. The power series for
+  `expAmbient (t • X)` thus splits into even/odd parts that recognize as
+  `cos(t·r) • I + sinc(t·r) • (t•X)` (with `r := √(su2RadiusSq X)`).
+  Then `det(α • I + β • (t•X))` for traceless `t•X` ∈ M_2(ℂ) equals
+  `α² + β² · det(t•X) = α² + β² · t² · su2RadiusSq X`, which evaluates
+  to `cos²(t·r) + sin²(t·r) = 1`.
+
+  Formalization: requires showing the partial-sum recognition with
+  `Real.cos`, `Real.sin`. Approximately 200-400 LoC of substantive
+  power-series work.
+
+  Alternative (spectral): via `Matrix.IsHermitian.spectral_theorem` on
+  `i • X` (Hermitian). Decomposes `t • X = U · diag(λ₁, λ₂) · U†` with
+  λ_i pure imaginary, sum = 0 (from tracelessness). Then
+  `det(expAmbient (t•X)) = exp(λ₁) · exp(λ₂) = exp(λ₁+λ₂) = exp(0) = 1`.
+  Similar LoE.
 
   **§4. Von Neumann construction + discharge of
        `OneParamSubgroupFromAccPt_SU2`**:
 
-  From a sequence (h_n) → 1 in `H \ {1}`:
-    - Y_n := su2Log h_n ∈ su(2), Y_n → 0 (uses §2 + the §2.next "su2Log
-      lands in su(2)" sublemma, derivable from §3's well-defined exp on
-      su(2) plus local inverse uniqueness).
-    - X_n := Y_n / ‖Y_n‖ in the unit sphere of `tracelessSkewHermitian
-      (Fin 2)` (finite-dim ⇒ proper ⇒ compact sphere).
-    - BW → subseq X_{n_k} → X with `‖X‖ = 1`.
-    - For any `t : ℝ`, `k_n := round(t / ‖Y_n‖)` integer.
-    - `h_n^{k_n} = expAmbient (k_n • Y_n)` (via `NormedSpace.exp_nsmul`).
-    - `k_n • Y_n → t • X` (since `k_n · ‖Y_n‖ → t` and `X_n → X`).
-    - exp continuous ⇒ `h_n^{k_n} → expAmbient (t • X)`.
-    - H closed ⇒ `expAmbient (t • X) ∈ H` for all `t`.
-
-  Set `φ t := ⟨expAmbient (t • X), ... ∈ SU(2)⟩` and verify the
-  `OneParamSubgroupInSU2 H` conjuncts.
+  Once §3.5 is in hand:
+  - From AccPt 1 in H, extract sequence (h_n) → 1 in H \ {1}.
+  - Y_n := su2Log h_n; show Y_n ∈ tracelessSkewHermitian (using §3.5's
+    SU(2) inclusion + local inverse uniqueness — this is the SHIPPED-substrate
+    "log of SU(2) element near 1 is in su(2)" sub-lemma).
+  - X_n := Y_n / ‖Y_n‖_op in unit sphere of finite-dim
+    `tracelessSkewHermitian (Fin 2) ≅ ℝ³`.
+  - BW → subseq X_{n_k} → X with ‖X‖ = 1.
+  - For any t ∈ ℝ, k_n := round(t / ‖Y_n‖). h_n^{k_n} = expAmbient
+    (k_n • Y_n) ∈ H. Show this → expAmbient (t • X) (uses unitary norm
+    1 + telescoping bound). H closed → exp(t • X) ∈ H.
+  - Define φ t := ⟨oneParamMatrixMap X t, ...⟩; verify all
+    `OneParamSubgroupInSU2 H` conjuncts using §3 lemmas above.
 
   Result: `OneParamSubgroupFromAccPt_SU2` is theorem (not predicate),
   discharging gap #2 substantively. Combined with §4.7's strengthening,
