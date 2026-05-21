@@ -6159,4 +6159,32 @@ theorem Ad_σ_Fib_1_liePartMat_cFib_ne_zero :
   have : (0 : ℝ) = 0 ∧ (1 : ℝ) = 0 := h_LI (by push_cast; exact h_zero)
   exact one_ne_zero this.2
 
+/-! ## §73. cFib's 1-torus subset H_Fib — tracked sub-Prop for v3 discharge
+
+The remaining topological gap for the v3 `H_Fib_TwoLITangents` discharge:
+the 1-torus through cFib (= exp(ℝ · liePartMat cFib_SU_mat)) must be
+contained in H_Fib.
+
+This follows from cFib's irrational rotation angle:
+  - cFib_powers_dense_at_one_holds: <cFib> is dense at 1
+  - For irrational angles, <cFib> is dense in T_cFib (equidistribution)
+  - H_Fib closed + contains <cFib> ⊇ dense subset of T_cFib ⟹ T_cFib ⊆ H_Fib
+
+The full discharge requires the equidistribution argument (~200-400 LoC,
+multi-session). Defining it here as a single tracked Prop enables the
+modular F.21 chain.
+-/
+
+/-- **Tracked sub-Prop**: cFib's 1-torus is contained in H_Fib.
+
+Formulated at the matrix level (so usable in this file without
+OneParameterSubgroupSU2 import). The matrix `expAmbient((t : ℂ) • liePartMat cFib)`
+is in SU(2) for all `t ∈ ℝ` (since `liePartMat cFib ∈ ts`), and the
+statement requires it to lift to an element of H_Fib for all t. -/
+def cFib_torus_subset_H_Fib : Prop :=
+  ∀ t : ℝ,
+    ∃ h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      h ∈ SKEFTHawking.FKLW.H_Fib ∧
+      h.val = NormedSpace.exp (((t : ℝ) : ℂ) • liePartMat cFib_SU_mat)
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
