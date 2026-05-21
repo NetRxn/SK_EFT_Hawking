@@ -6175,6 +6175,66 @@ multi-session). Defining it here as a single tracked Prop enables the
 modular F.21 chain.
 -/
 
+/-! ## §74. σ_Fib_1 commute with ts ⟹ X axis-parallel to paulI_z
+
+For X ∈ ts(Fin 2), if `σ_Fib_1_SU_mat * X = X * σ_Fib_1_SU_mat`, then by
+the diagonal structure of σ_Fib_1 with distinct entries (`R_1 ≠ R_τ`),
+the off-diagonal entry `X 0 1 = 0`. For X ∈ ts (skew-Hermitian traceless),
+`X 0 1 = 0` forces `X 1 0 = -conj(X 0 1) = 0`, and X is diagonal with
+`X 0 0 = -X 1 1` purely imaginary. Hence `X = (X 0 0).im • paulI_z`. -/
+
+/-- **Off-diagonal-zero from σ_Fib_1 commute**: σ_Fib_1·X = X·σ_Fib_1 ⟹ X[0,1] = 0
+(for any matrix X, not just ts). -/
+theorem σ_Fib_1_SU_mat_commute_implies_offdiag_01_zero
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_comm : σ_Fib_1_SU_mat * X = X * σ_Fib_1_SU_mat) :
+    X 0 1 = 0 := by
+  -- Entry [0,1] of the commutator
+  have h_entry : (σ_Fib_1_SU_mat * X) 0 1 = (X * σ_Fib_1_SU_mat) 0 1 :=
+    congrFun (congrFun h_comm 0) 1
+  -- σ_Fib_1 is diagonal: σ_Fib_1[0,0] = ω·R_1, σ_Fib_1[1,1] = ω·R_τ, off-diag = 0
+  rw [σ_Fib_1_SU_mat_diagonal_form] at h_entry
+  simp [Matrix.mul_apply, Fin.sum_univ_two] at h_entry
+  -- h_entry: (ω·R_1) * X 0 1 = X 0 1 * (ω·R_τ)
+  -- Rewrite as (ω·R_1 - ω·R_τ) * X 0 1 = 0
+  have h_factor : (ω_Fib_C * R1_C - ω_Fib_C * Rtau_C) * X 0 1 = 0 := by
+    linear_combination h_entry
+  -- ω·R_1 ≠ ω·R_τ (since ω ≠ 0 and R_1 ≠ R_τ)
+  have h_ω_ne : ω_Fib_C ≠ 0 := by
+    intro h_ω
+    have h_norm : ‖ω_Fib_C‖ = 0 := by rw [h_ω, norm_zero]
+    rw [norm_ω_Fib_C] at h_norm
+    norm_num at h_norm
+  have h_ne : ω_Fib_C * R1_C - ω_Fib_C * Rtau_C ≠ 0 := by
+    have h_factor_eq : ω_Fib_C * R1_C - ω_Fib_C * Rtau_C = ω_Fib_C * (R1_C - Rtau_C) := by
+      ring
+    rw [h_factor_eq]
+    exact mul_ne_zero h_ω_ne (sub_ne_zero.mpr R1_C_ne_Rtau_C)
+  exact (mul_eq_zero.mp h_factor).resolve_left h_ne
+
+/-- **σ_Fib_1 commute with X ∈ ts ⟹ X is real-scalar multiple of paulI_z**.
+
+Uses `σ_Fib_1_SU_mat_commute_implies_offdiag_01_zero` (X 0 1 = 0) +
+`tracelessSkewHermitian_decomp` (Pauli basis decomp). Since the
+paulI_x and paulI_y coefficients are (X 0 1).im and (X 0 1).re, both
+zero when X 0 1 = 0, we get X = (X 0 0).im • paulI_z. -/
+theorem σ_Fib_1_SU_mat_commute_ts_implies_paulI_z_real_smul
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (h_comm : σ_Fib_1_SU_mat * X = X * σ_Fib_1_SU_mat) :
+    ∃ c : ℝ, X = ((c : ℝ) : ℂ) • SKEFTHawking.FKLW.SU2LieAlgebra.paulI_z := by
+  have h_01 : X 0 1 = 0 :=
+    σ_Fib_1_SU_mat_commute_implies_offdiag_01_zero h_comm
+  refine ⟨(X 0 0).im, ?_⟩
+  -- Apply the Pauli basis decomp + use X[0,1] = 0 to kill paulI_x and paulI_y terms
+  have h_decomp :=
+    SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian_decomp hX
+  conv_lhs => rw [h_decomp]
+  -- Goal: (X 0 1).im • paulI_x + (X 0 1).re • paulI_y + (X 0 0).im • paulI_z
+  --       = (X 0 0).im • paulI_z
+  rw [h_01]
+  simp
+
 /-- **Tracked sub-Prop**: cFib's 1-torus is contained in H_Fib.
 
 Formulated at the matrix level (so usable in this file without
