@@ -664,6 +664,13 @@ theorem binaryTetrahedralElem_inv_mem_binaryTetrahedralFull :
     binaryTetrahedralElem⁻¹ ∈ binaryTetrahedralFull :=
   binaryTetrahedralFull.inv_mem binaryTetrahedralElem_mem_full
 
+/-- `torusElem (π/2) ^ 2 = weylElem ^ 2` — both squares equal `negOneSU`,
+giving a structural identity between the i-quaternion² and j-quaternion²
+in SU(2). Both express the order-2 center element. -/
+theorem torusElem_pi_half_sq_eq_weylElem_sq :
+    torusElem (Real.pi / 2) ^ 2 = weylElem ^ 2 := by
+  rw [sq, sq, torusElem_pi_half_sq, weylElem_sq_eq_negOneSU]
+
 /-- **`orderOf weylElem = 4`** — the Weyl element has order exactly 4 in SU(2).
 
 This follows from `weylElem ^ 4 = 1` together with `weylElem ^ 2 ≠ 1` via
