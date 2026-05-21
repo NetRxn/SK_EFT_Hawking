@@ -283,6 +283,12 @@ theorem weylElem_ne_one :
         Matrix.cons_val_one, Matrix.head_cons, Matrix.empty_val',
         Matrix.cons_val_fin_one, Matrix.one_apply] at h_01
 
+/-- `torusElem (π/2) ∈ Subgroup.normalizer stdTorus_SU2` — every torus
+element is in the normalizer of T (trivially, since T ⊆ N(T)). -/
+theorem torusElem_pi_half_mem_normalizer :
+    torusElem (Real.pi / 2) ∈ Subgroup.normalizer stdTorus_SU2 :=
+  Subgroup.le_normalizer ⟨Real.pi / 2, rfl⟩
+
 /-- `torusElem (π/2)² = negOneSU` — the i-quaternion squares to -I.
 
 Composes torusElem_add + torusElem_pi_eq_negOneSU. -/
