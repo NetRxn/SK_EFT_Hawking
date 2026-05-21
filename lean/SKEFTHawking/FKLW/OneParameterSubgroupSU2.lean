@@ -3926,6 +3926,27 @@ theorem OneParamSubgroupSU2.exp_curve_subset_H_of_anchor_top
   ⟨φ t, himage t,
     (OneParamSubgroupSU2.anchor_identity_of_top hzero hhom h_top t).symm⟩
 
+/-! ### §11.h.ℝ.t0. Tendsto-form of exp curve at 0
+
+For any `X : Matrix (Fin 2) (Fin 2) ℂ`, `expAmbient((t:ℂ)•X) → 1` as
+`t → 0`. Trivial from `expAmbient_real_smul_continuous` (§11.h.ℝ) +
+`expAmbient_zero` (value at 0). Infrastructure for "for small t" arguments
+in the IFT-based discharge step. -/
+
+/-- **`expAmbient((t:ℂ)•X)` tendsto 1 as t → 0**. -/
+theorem OneParamSubgroupSU2.expAmbient_real_smul_tendsto_one
+    (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    Filter.Tendsto (fun t : ℝ => SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X))
+      (nhds (0 : ℝ)) (nhds (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  have h_cts := OneParamSubgroupSU2.expAmbient_real_smul_continuous X
+  have h_at_zero :
+      (fun t : ℝ => SU2MatrixExp.expAmbient (((t : ℝ) : ℂ) • X)) 0
+      = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    simp only [Complex.ofReal_zero, zero_smul]
+    exact SU2MatrixExp.expAmbient_zero
+  rw [← h_at_zero]
+  exact h_cts.tendsto 0
+
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
 
 For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
