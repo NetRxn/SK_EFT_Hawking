@@ -312,6 +312,16 @@ theorem torusElem_pi_half_ne_one :
   have h_im := congrArg Complex.im h_00
   simp [Complex.I_im] at h_im
 
+/-- `negOneSU ≠ 1` — the SU(2) element -I is not the identity. -/
+theorem negOneSU_ne_one :
+    negOneSU ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  intro h_eq
+  have h_val := congrArg Subtype.val h_eq
+  have h_00 : negOneSU.val 0 0 = (1 : Matrix (Fin 2) (Fin 2) ℂ) 0 0 :=
+    congrArg (fun M => M 0 0) h_val
+  simp [negOneSU_val, Matrix.neg_apply, Matrix.one_apply] at h_00
+  exact absurd h_00 (by norm_num)
+
 /-- `binaryTetrahedralFull` is non-trivial (contains weylElem ≠ 1). -/
 theorem binaryTetrahedralFull_ne_bot :
     binaryTetrahedralFull ≠ ⊥ := by
