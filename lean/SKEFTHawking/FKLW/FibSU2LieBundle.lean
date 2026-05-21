@@ -6011,4 +6011,87 @@ theorem liePartMat_cFib_Ad_σ_Fib_1_2_lin_indep :
   SKEFTHawking.FKLW.SU2LieAlgebra.pair_BC_lin_indep_of_pauliDet_ne_zero
     cFib_SU_mat_liePartMat_pauliDet_ne_zero
 
+/-! ## §71. σ_Fib non-commute/anti-commute with liePartMat cFib
+
+Concrete matrix-level results: σ_Fib_1 (resp. σ_Fib_2) neither commutes
+nor anti-commutes with liePartMat cFib_SU_mat.
+
+Proof: from §70 LI of (liePartMat cFib, σ_Fib_i · liePartMat cFib · σ_Fib_i†)
+contrapositive. If σ_Fib_i matrix-commuted (resp. anti-commuted), then
+Ad(σ_Fib_i) · X = X (resp. = -X), making the bundle pair ℝ-LD,
+contradicting §57 cFib_SU_mat_liePartMat_pauliDet_ne_zero.
+
+These are the **concrete σ_Fib witnesses** needed for the v3
+`H_Fib_TwoLITangents` step (5) discharge: combined with §13 conjugate
+1-param subgroup constructor + `ts_Ad_LI_of_not_commute_anticommute`,
+they give the ℝ-LI second tangent.
+-/
+
+private theorem _root_.Matrix.IsUnitary.commute_imp_Ad_eq_self
+    {U X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    (h_commute : U * X = X * U) :
+    U * X * U.conjTranspose = X := by
+  -- Multiply h_commute by U.conjTranspose on the right.
+  have h1 : U * X * U.conjTranspose = X * U * U.conjTranspose := by rw [h_commute]
+  rw [h1, Matrix.mul_assoc]
+  rw [show U * U.conjTranspose = 1 from (Matrix.mem_unitaryGroup_iff).mp hU]
+  rw [Matrix.mul_one]
+
+private theorem _root_.Matrix.IsUnitary.anticommute_imp_Ad_eq_neg
+    {U X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    (h_anti : U * X = -(X * U)) :
+    U * X * U.conjTranspose = -X := by
+  have h1 : U * X * U.conjTranspose = (-(X * U)) * U.conjTranspose := by rw [h_anti]
+  rw [h1, Matrix.neg_mul, Matrix.mul_assoc]
+  rw [show U * U.conjTranspose = 1 from (Matrix.mem_unitaryGroup_iff).mp hU]
+  rw [Matrix.mul_one]
+
+/-- **σ_Fib_1 does NOT commute with liePartMat cFib** at the matrix level. -/
+theorem σ_Fib_1_SU_mat_not_commute_liePartMat_cFib :
+    σ_Fib_1_SU_mat * liePartMat cFib_SU_mat ≠
+      liePartMat cFib_SU_mat * σ_Fib_1_SU_mat := by
+  intro h_commute
+  have hU : σ_Fib_1_SU_mat ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    Matrix.specialUnitaryGroup_le_unitaryGroup σ_Fib_1_SU.property
+  have h_ad : σ_Fib_1_SU_mat * liePartMat cFib_SU_mat *
+              σ_Fib_1_SU_mat.conjTranspose = liePartMat cFib_SU_mat :=
+    Matrix.IsUnitary.commute_imp_Ad_eq_self hU h_commute
+  -- Now the pair (X, Ad(σ_Fib_1)·X) = (X, X) is LD; contradicts §70.
+  -- Apply liePartMat_cFib_Ad_σ_Fib_1_lin_indep with a = 1, b = -1.
+  have h_LI := liePartMat_cFib_Ad_σ_Fib_1_lin_indep 1 (-1)
+  have h_zero : (1 : ℂ) • liePartMat cFib_SU_mat +
+                (-1 : ℂ) •
+                  (σ_Fib_1_SU_mat * liePartMat cFib_SU_mat *
+                    σ_Fib_1_SU_mat.conjTranspose) = 0 := by
+    rw [h_ad, one_smul, neg_smul, one_smul, add_neg_cancel]
+  have h_one_zero : (1 : ℝ) = 0 ∧ (-1 : ℝ) = 0 := by
+    have := h_LI (by push_cast; exact h_zero)
+    exact this
+  exact one_ne_zero h_one_zero.1
+
+/-- **σ_Fib_1 does NOT anti-commute with liePartMat cFib** at the matrix level. -/
+theorem σ_Fib_1_SU_mat_not_anticommute_liePartMat_cFib :
+    σ_Fib_1_SU_mat * liePartMat cFib_SU_mat ≠
+      -(liePartMat cFib_SU_mat * σ_Fib_1_SU_mat) := by
+  intro h_anti
+  have hU : σ_Fib_1_SU_mat ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    Matrix.specialUnitaryGroup_le_unitaryGroup σ_Fib_1_SU.property
+  have h_ad : σ_Fib_1_SU_mat * liePartMat cFib_SU_mat *
+              σ_Fib_1_SU_mat.conjTranspose = -liePartMat cFib_SU_mat :=
+    Matrix.IsUnitary.anticommute_imp_Ad_eq_neg hU h_anti
+  -- Now the pair (X, Ad(σ_Fib_1)·X) = (X, -X) is LD; contradicts §70.
+  -- Apply liePartMat_cFib_Ad_σ_Fib_1_lin_indep with a = 1, b = 1.
+  have h_LI := liePartMat_cFib_Ad_σ_Fib_1_lin_indep 1 1
+  have h_zero : (1 : ℂ) • liePartMat cFib_SU_mat +
+                (1 : ℂ) •
+                  (σ_Fib_1_SU_mat * liePartMat cFib_SU_mat *
+                    σ_Fib_1_SU_mat.conjTranspose) = 0 := by
+    rw [h_ad, one_smul, one_smul, add_neg_cancel]
+  have h_one_zero : (1 : ℝ) = 0 ∧ (1 : ℝ) = 0 := by
+    have := h_LI (by push_cast; exact h_zero)
+    exact this
+  exact one_ne_zero h_one_zero.1
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
