@@ -397,6 +397,54 @@ theorem weylElem_conj_torusElem (t : ℝ) :
   rw [h_inv_val]
   exact weylMatrix_conj_torusMatrix t
 
+/-- **`weylElem⁻¹ · torusElem t · weylElem = torusElem (-t)`** —
+the inverse Weyl conjugation also inverts. Since the Weyl-conjugation
+automorphism `f(g) := w · g · w⁻¹` is involutive on T (because
+w² = -1 commutes with all of T), `f⁻¹|T = f|T`. -/
+theorem weylElem_inv_conj_torusElem (t : ℝ) :
+    weylElem⁻¹ * torusElem t * weylElem = torusElem (-t) := by
+  -- Apply weylElem_conj_torusElem at -t: w · t_{-t} · w⁻¹ = t_t.
+  have h1 : weylElem * torusElem (-t) * weylElem⁻¹ = torusElem t := by
+    have := weylElem_conj_torusElem (-t)
+    rwa [neg_neg] at this
+  -- Conjugate both sides by w⁻¹ / w to peel off the outer w's.
+  have h2 : weylElem⁻¹ * (weylElem * torusElem (-t) * weylElem⁻¹) * weylElem
+          = weylElem⁻¹ * torusElem t * weylElem := by rw [h1]
+  -- LHS simplifies via group axioms.
+  have h3 : weylElem⁻¹ * (weylElem * torusElem (-t) * weylElem⁻¹) * weylElem
+          = torusElem (-t) := by group
+  rw [h3] at h2
+  exact h2.symm
+
+/-- **`weylElem ∈ N(stdTorus_SU2)`** — the Weyl element normalizes
+the standard torus.
+
+Substantive content: ∀ h ∈ SU(2), h ∈ T ↔ w · h · w⁻¹ ∈ T. Forward
+direction via `weylElem_conj_torusElem`; backward direction via
+`weylElem_inv_conj_torusElem` (the inverse Weyl conjugation also
+maps T → T). -/
+theorem weylElem_mem_normalizer_stdTorus :
+    weylElem ∈ Subgroup.normalizer stdTorus_SU2 := by
+  rw [Subgroup.mem_normalizer_iff]
+  intro h
+  constructor
+  · -- h ∈ T → w · h · w⁻¹ ∈ T.
+    rintro ⟨t, ht⟩
+    refine ⟨-t, ?_⟩
+    rw [← ht]
+    exact (weylElem_conj_torusElem t).symm
+  · -- w · h · w⁻¹ ∈ T → h ∈ T (via w⁻¹ · (w·h·w⁻¹) · w = h).
+    rintro ⟨t, ht⟩
+    refine ⟨-t, ?_⟩
+    -- ht : torusElem t = weylElem * h * weylElem⁻¹
+    -- Derive h = weylElem⁻¹ * torusElem t * weylElem
+    have h_eq : h = weylElem⁻¹ * torusElem t * weylElem := by
+      have : weylElem⁻¹ * (weylElem * h * weylElem⁻¹) * weylElem = h := by group
+      rw [← ht] at this
+      exact this.symm
+    rw [h_eq]
+    exact (weylElem_inv_conj_torusElem t).symm
+
 /-- **`weylElem` does NOT lie in `stdTorus_SU2`**.
 
 If `w ∈ T`, then conjugation by `w` would preserve every element of T
