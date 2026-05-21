@@ -396,6 +396,13 @@ theorem weylElem_inv_eq_negOneSU_mul_weylElem :
   -- (negOneSU * weylElem) * weylElem = negOneSU * weylElem² = negOneSU² = 1.
   rw [mul_assoc, weylElem_sq_eq_negOneSU, negOneSU_mul_self]
 
+/-- `weylElem ^ 4 = 1` — Weyl element has order 4. -/
+theorem weylElem_pow_four :
+    weylElem ^ 4 = (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  have h : weylElem ^ 4 = (weylElem * weylElem) * (weylElem * weylElem) := by
+    rw [show (4 : ℕ) = 2 + 2 from rfl, pow_add, sq]
+  rw [h, weylElem_sq_eq_negOneSU, negOneSU_mul_self]
+
 /-- `negOneSU ≠ 1` — the SU(2) element -I is not the identity. -/
 theorem negOneSU_ne_one :
     negOneSU ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
