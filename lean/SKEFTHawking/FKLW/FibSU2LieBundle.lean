@@ -5897,4 +5897,43 @@ theorem closure_zpowers_cFib_isClosed_infinite_commutative :
    closure_zpowers_cFib_carrier_infinite,
    fun x y => mul_comm x y⟩
 
+/-! ## §69. R5.4 Layer F.20.c.d.2.mm — H_Fib non-abelian witness package
+
+For Cartan-style reasoning, we need an explicit non-abelian witness for H_Fib:
+`∃ g, h ∈ H_Fib, g * h ≠ h * g`. Direct from σ_Fib_1, σ_Fib_2 ∈ H_Fib and
+`σ_Fib_not_commute`. -/
+
+/-- **H_Fib is non-abelian**: explicit witness via σ_Fib_1, σ_Fib_2. -/
+theorem H_Fib_non_abelian :
+    ∃ g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      g ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      h ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      g * h ≠ h * g :=
+  ⟨σ_Fib_1_SU, σ_Fib_2_SU,
+   SKEFTHawking.FKLW.σ_Fib_1_SU_mem_H_Fib,
+   SKEFTHawking.FKLW.σ_Fib_2_SU_mem_H_Fib,
+   SKEFTHawking.FKLW.σ_Fib_SU_not_commute⟩
+
+/-- **H_Fib structural summary HEADLINE**: H_Fib is closed, infinite, and non-abelian.
+
+This is the precondition input for the `CartanClassificationOfSU2_Subgroup` predicate. -/
+theorem H_Fib_isClosed_infinite_non_abelian :
+    IsClosed ((SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    Set.Infinite ((SKEFTHawking.FKLW.H_Fib :
+        Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+    (∃ g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ),
+      g ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      h ∈ (SKEFTHawking.FKLW.H_Fib :
+          Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∧
+      g * h ≠ h * g) :=
+  ⟨SKEFTHawking.FKLW.H_Fib_isClosed,
+   SKEFTHawking.FKLW.H_Fib_infinite,
+   H_Fib_non_abelian⟩
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
