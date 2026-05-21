@@ -697,6 +697,47 @@ theorem σ_Fib_2_SU_mat_trace_abs_lt_two :
   rw [σ_Fib_2_SU_mat_trace_eq_σ_Fib_1_SU_mat_trace]
   exact σ_Fib_1_SU_mat_trace_abs_lt_two
 
+/-- **D2.9 — `cos(7π/10) < 0`.** Since `7π/10 ∈ (π/2, π)`, `cos` is
+strictly decreasing on `[0, π]`, and `cos(π/2) = 0`. -/
+private theorem cos_seven_pi_div_ten_neg :
+    Real.cos (7 * Real.pi / 10) < 0 := by
+  have hπ : 0 < Real.pi := Real.pi_pos
+  have h := Real.cos_lt_cos_of_nonneg_of_le_pi (x := Real.pi / 2)
+    (y := 7 * Real.pi / 10) (by linarith) (by linarith) (by linarith)
+  rwa [Real.cos_pi_div_two] at h
+
+/-- **D2.10 — `Real.cos (7 * Real.pi / 10) ≠ 0`.** Immediate from D2.9. -/
+theorem cos_seven_pi_div_ten_ne_zero :
+    Real.cos (7 * Real.pi / 10) ≠ 0 :=
+  ne_of_lt cos_seven_pi_div_ten_neg
+
+/-- **D2.11 — `tr(σ_Fib_1_SU_mat) ≠ 0`.**
+
+Composes `σ_Fib_1_SU_mat_trace_eq_real_cos : trace = 2·cos(7π/10)` with
+`cos_seven_pi_div_ten_ne_zero : cos(7π/10) ≠ 0`.
+
+This is the key fact for ruling out anti-commutation: by §74's
+`SU2_anticommute_ts_implies_trace_zero`, an SU(2) matrix anti-commuting
+with any non-zero `X ∈ ts` must be traceless. Since σ_Fib_1_SU_mat is
+NOT traceless, it never anti-commutes with any non-zero element of ts. -/
+theorem σ_Fib_1_SU_mat_trace_ne_zero :
+    Matrix.trace σ_Fib_1_SU_mat ≠ 0 := by
+  rw [σ_Fib_1_SU_mat_trace_eq_real_cos]
+  -- Goal: ((2 * Real.cos (7 * π / 10) : ℝ) : ℂ) ≠ 0
+  intro h
+  have h_real : (2 * Real.cos (7 * Real.pi / 10) : ℝ) = 0 := by
+    exact_mod_cast h
+  have h_cos : Real.cos (7 * Real.pi / 10) = 0 := by
+    have : 2 ≠ (0 : ℝ) := by norm_num
+    exact (mul_eq_zero.mp h_real).resolve_left this
+  exact cos_seven_pi_div_ten_ne_zero h_cos
+
+/-- **D2.12 — `tr(σ_Fib_2_SU_mat) ≠ 0`.** Same as D2.11 by F-conjugacy. -/
+theorem σ_Fib_2_SU_mat_trace_ne_zero :
+    Matrix.trace σ_Fib_2_SU_mat ≠ 0 := by
+  rw [σ_Fib_2_SU_mat_trace_eq_σ_Fib_1_SU_mat_trace]
+  exact σ_Fib_1_SU_mat_trace_ne_zero
+
 /-! ## 6. Phase D3.a: conjugation analysis and N(T) ruleout
 
 A closed subgroup G ⊆ SU(2) of dimension 1 is either a maximal torus

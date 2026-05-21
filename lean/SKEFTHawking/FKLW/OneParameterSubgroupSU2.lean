@@ -4289,6 +4289,37 @@ to the residual (up to scalar).
 This connects to §23.1 `tracelessSkewHermitian_lin_dep_of_commute`: residual commutes
 with X ⟹ residual, X ℝ-LD. Hence `liePartMat g`, X ℝ-LD. -/
 
+/-! ## §76. σ_Fib_i never anti-commute with non-zero ts elements (corollary of §74)
+
+Composing §74's generic `SU2_anticommute_ts_implies_trace_zero` with the
+shipped `σ_Fib_1_SU_mat_trace_ne_zero` and `σ_Fib_2_SU_mat_trace_ne_zero`
+(FibSU2Density D2.11 + D2.12), neither σ_Fib_1 nor σ_Fib_2 can anti-commute
+with any non-zero element of ts(Fin 2).
+
+This is half of the unconditional H_Fib_TwoLITangents discharge. -/
+
+/-- **σ_Fib_1 never anti-commutes with non-zero `X ∈ ts(Fin 2)`**. -/
+theorem σ_Fib_1_SU_mat_not_anticommute_ts
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0) :
+    SKEFTHawking.FKLW.σ_Fib_1_SU_mat * X
+      ≠ -(X * SKEFTHawking.FKLW.σ_Fib_1_SU_mat) := by
+  intro h_anti
+  have h_trace_zero := SU2_anticommute_ts_implies_trace_zero hX hX_ne h_anti
+  exact SKEFTHawking.FKLW.σ_Fib_1_SU_mat_trace_ne_zero h_trace_zero
+
+/-- **σ_Fib_2 never anti-commutes with non-zero `X ∈ ts(Fin 2)`**. -/
+theorem σ_Fib_2_SU_mat_not_anticommute_ts
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0) :
+    SKEFTHawking.FKLW.σ_Fib_2_SU_mat * X
+      ≠ -(X * SKEFTHawking.FKLW.σ_Fib_2_SU_mat) := by
+  intro h_anti
+  have h_trace_zero := SU2_anticommute_ts_implies_trace_zero hX hX_ne h_anti
+  exact SKEFTHawking.FKLW.σ_Fib_2_SU_mat_trace_ne_zero h_trace_zero
+
 end SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
 namespace SKEFTHawking.FKLW.OneParameterSubgroupSU2
