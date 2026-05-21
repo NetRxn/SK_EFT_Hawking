@@ -3697,6 +3697,44 @@ theorem OneParamSubgroupInSU2_conj
     show g * φ t * g⁻¹ ∈ H
     exact H.mul_mem (H.mul_mem hg (himage t)) (H.inv_mem hg)
 
+/-! ### §13.b. Conjugate-tangent anchor identity
+
+For the conjugate 1-param subgroup ψ(t) := g · φ(t) · g⁻¹ from §13,
+the anchor identity transports: `expAmbient(s • Y) = (ψ s).val`
+where `Y := g.val · X · star g.val` is the Ad-conjugate of the original
+tangent X.
+
+This is the Lie-algebra Ad action explicitly identified at the tangent
+level: the tangent of ψ at 0 (witness at anchor s) is `Ad(g)·X = g·X·star g`.
+
+Compositions used:
+  - smul commutes with conjugation (`smul_mul_assoc`, `mul_smul_comm`)
+  - §11.j `expAmbient_unitary_conj` Ad-exp commutation
+  - SU(2) subtype coe lemmas (coe_mul, coe_inv via star)
+-/
+
+/-- **Conjugate-tangent anchor identity**: `expAmbient(s • (g · X · star g)) = (g · φ s · g⁻¹).val`. -/
+theorem conj_tangent_anchor_identity
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {X : Matrix (Fin 2) (Fin 2) ℂ} {s : ℝ}
+    (h_anchor : SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • X) = (φ s).val)
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • (g.val * X * star g.val))
+      = (g * φ s * g⁻¹).val := by
+  -- Step 1: smul commutes with conjugation
+  have h_smul_conj : ((s : ℝ) : ℂ) • (g.val * X * star g.val)
+      = g.val * (((s : ℝ) : ℂ) • X) * star g.val := by
+    rw [← smul_mul_assoc, mul_smul_comm]
+  rw [h_smul_conj]
+  -- Step 2: Ad-exp commutation (§11.j)
+  have hg_unitary : g.val ∈ Matrix.unitaryGroup (Fin 2) ℂ :=
+    Matrix.specialUnitaryGroup_le_unitaryGroup g.property
+  rw [expAmbient_unitary_conj hg_unitary]
+  -- Step 3: substitute anchor identity
+  rw [h_anchor]
+  -- Step 4: structural reduce (g * φ s * g⁻¹).val to product
+  rfl
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
