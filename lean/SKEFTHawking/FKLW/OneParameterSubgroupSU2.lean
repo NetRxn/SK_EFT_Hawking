@@ -1365,7 +1365,170 @@ theorem vonNeumann_scaled_unit_tendsto_real
       (nhds (t • X)) :=
   (vonNeumann_floor_scale_tendsto hφ h_ev_ne h_log_tendsto t).smul h_unit_tendsto
 
-/-! ## §§4.g-5. (Next ship — substrate roadmap)
+/-! ### §4.g. Reduction of scaled-unit to real-scalar smul + `expAmbient` composition
+
+The §4.f conclusion has the form
+  `(m_k_real * r_k) • ((r_k⁻¹ : ℂ) • Y_{n_k}) → t • X`,
+where `r_k = ‖Y_{n_k}‖`. The algebraic identity
+  `(c * r) • ((r⁻¹ : ℂ) • Y) = c • Y`  (when `r ≠ 0`)
+reduces the LHS to `(m_k_real : ℝ) • Y_{n_k}`, which then becomes
+the ℤ-smul form `(m_k : ℤ) • Y_{n_k}` via `Int.cast_smul_eq_zsmul`.
+Composition with `expAmbient` continuity + `Matrix.exp_zsmul` finally
+yields
+  `expAmbient (m_k • Y_{n_k}) = (expAmbient Y_{n_k}) ^ m_k → expAmbient (t • X)`,
+the form needed for the von Neumann SU(2)-inclusion step. -/
+
+/-- **Algebraic identity (real-scalar form)**: for `Y ≠ 0` and any
+real `c`, `(c * ‖Y‖) • ((‖Y‖⁻¹ : ℂ) • Y) = c • Y` in `Matrix (Fin 2) (Fin 2) ℂ`.
+
+Proof: convert the inner ℂ-smul to ℝ-smul via `Complex.real_smul`, then
+collapse the two ℝ-smuls via `smul_smul` and `field_simp`. -/
+lemma scaled_unit_eq_real_smul
+    {Y : Matrix (Fin 2) (Fin 2) ℂ} (hY : Y ≠ 0) (c : ℝ) :
+    (c * ‖Y‖) • ((‖Y‖⁻¹ : ℂ) • Y) = c • Y := by
+  have h_norm_ne : (‖Y‖ : ℝ) ≠ 0 := by
+    rw [Ne, norm_eq_zero]; exact hY
+  have h_inner : ((‖Y‖⁻¹ : ℂ) • Y) = ((‖Y‖⁻¹ : ℝ) • Y) := by
+    ext i j
+    simp [Matrix.smul_apply, Complex.real_smul]
+  rw [h_inner, smul_smul]
+  congr 1
+  field_simp
+
+/-- **§4.g.1. Real-scalar smul convergence**: the §4.f result rewrites
+to `(m_k_real : ℝ) • Y_{n_k} → t • X` where `m_k_real := (⌊t/r_k⌋ : ℤ) : ℝ`.
+
+Combines §4.f with `scaled_unit_eq_real_smul`, requiring the
+eventually-nonzero hypothesis to apply the algebraic identity. -/
+theorem vonNeumann_intReal_smul_tendsto
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        ((⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋ : ℤ) : ℝ) •
+          su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop
+      (nhds (t • X)) := by
+  -- Start from the §4.f tendsto.
+  have h_f := vonNeumann_scaled_unit_tendsto_real
+                hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  -- Eventually rewrite each term via the algebraic identity.
+  have h_ev_ne_sub : ∀ᶠ k in Filter.atTop,
+      su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0 :=
+    hφ.tendsto_atTop.eventually h_ev_ne
+  refine Filter.Tendsto.congr' ?_ h_f
+  filter_upwards [h_ev_ne_sub] with k hk
+  -- Identity: (c * r) • ((r⁻¹ : ℂ) • Y) = c • Y  with Y := Y_{n_k}, c := m_k_real
+  -- Unfold the unit-matrix-seq via dif_neg hk.
+  unfold vonNeumannUnitMatrixSeq
+  simp only [dif_neg hk]
+  exact scaled_unit_eq_real_smul hk _
+
+/-- **§4.g.2. ℤ-smul convergence**: trivial cast from §4.g.1 via
+`Int.cast_smul_eq_zsmul`. -/
+theorem vonNeumann_zsmul_seq_tendsto
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        (⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋ : ℤ) •
+          su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop
+      (nhds (t • X)) := by
+  have h_real :=
+    vonNeumann_intReal_smul_tendsto hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  refine Filter.Tendsto.congr ?_ h_real
+  intro k
+  exact Int.cast_smul_eq_zsmul ℝ _ _
+
+/-- **§4.g.3. `expAmbient` convergence**: applies `expAmbient` continuity
+to the ℤ-smul tendsto. -/
+theorem vonNeumann_exp_zsmul_seq_tendsto
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        SU2MatrixExp.expAmbient
+          ((⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋ : ℤ) •
+            su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)))
+      Filter.atTop
+      (nhds (SU2MatrixExp.expAmbient (t • X))) := by
+  have h_zsmul :=
+    vonNeumann_zsmul_seq_tendsto hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  have h_cont :
+      Filter.Tendsto (fun M : Matrix (Fin 2) (Fin 2) ℂ => SU2MatrixExp.expAmbient M)
+        (nhds (t • X)) (nhds (SU2MatrixExp.expAmbient (t • X))) := by
+    have : Continuous (SU2MatrixExp.expAmbient :
+        Matrix (Fin 2) (Fin 2) ℂ → Matrix (Fin 2) (Fin 2) ℂ) := by
+      unfold SU2MatrixExp.expAmbient
+      exact NormedSpace.exp_continuous
+    exact this.tendsto _
+  exact h_cont.comp h_zsmul
+
+/-- **§4.g.4. Integer-power form**: rewrite the §4.g.3 limit using
+`Matrix.exp_zsmul` to express it as `(expAmbient Y_{n_k}) ^ m_k`.
+
+This is the form consumed by the next step: combined with
+`expAmbient (su2Log h) = h` (from §1), it identifies the limit
+sequence as `h_{n_k} ^ m_k`, a sequence of integer powers in SU(2). -/
+theorem vonNeumann_exp_pow_seq_tendsto
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        SU2MatrixExp.expAmbient (su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)) ^
+          (⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋ : ℤ))
+      Filter.atTop
+      (nhds (SU2MatrixExp.expAmbient (t • X))) := by
+  have h_exp :=
+    vonNeumann_exp_zsmul_seq_tendsto hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  refine Filter.Tendsto.congr ?_ h_exp
+  intro k
+  -- expAmbient ((m : ℤ) • Y) = expAmbient Y ^ m  via Matrix.exp_zsmul
+  unfold SU2MatrixExp.expAmbient
+  exact Matrix.exp_zsmul _ _
+
+/-! ## §§4.h-5. (Next ship — substrate roadmap)
 
   **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
 
