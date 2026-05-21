@@ -414,6 +414,22 @@ theorem weylElem_orderOf_le_four :
     orderOf weylElem ≤ 4 :=
   orderOf_le_of_pow_eq_one (by norm_num) weylElem_pow_four
 
+/-- `torusElem (π/2) ^ 4 = 1` — order ≤ 4 for the i-quaternion. -/
+theorem torusElem_pi_half_pow_four :
+    torusElem (Real.pi / 2) ^ 4 =
+    (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  have h : torusElem (Real.pi / 2) ^ 4 =
+           (torusElem (Real.pi / 2) * torusElem (Real.pi / 2)) *
+           (torusElem (Real.pi / 2) * torusElem (Real.pi / 2)) := by
+    rw [show (4 : ℕ) = 2 + 2 from rfl, pow_add, sq]
+  rw [h, torusElem_pi_half_sq, negOneSU_mul_self]
+
+/-- `torusElem (π/2)` has finite order ≤ 4. -/
+theorem torusElem_pi_half_isOfFinOrder :
+    IsOfFinOrder (torusElem (Real.pi / 2)) :=
+  isOfFinOrder_iff_pow_eq_one.mpr
+    ⟨4, by norm_num, torusElem_pi_half_pow_four⟩
+
 /-- `negOneSU ≠ 1` — the SU(2) element -I is not the identity. -/
 theorem negOneSU_ne_one :
     negOneSU ≠ (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
