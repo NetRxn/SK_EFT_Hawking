@@ -800,4 +800,137 @@ theorem commutes_torusMatrix_pi_half_diagonal
       simp [Complex.I_im] at h_im
     exact (mul_eq_zero.mp h_eq).resolve_right h_two_I_ne_zero
 
+/-! ## §18. SU(2) diagonal ⟹ torusElem (polar form) -/
+
+/-- **SU(2) diagonal element has unit-norm diagonal entry [0,0]**.
+
+From `g · star g = 1` (unitarity) restricted to the [0,0] entry with
+off-diagonal zero: `g[0,0] · star g[0,0] = 1`, hence `‖g[0,0]‖ = 1`. -/
+private theorem SU2_diagonal_g00_norm_one
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_01 : g.val 0 1 = 0) :
+    ‖g.val 0 0‖ = 1 := by
+  have h_g_mem := g.property
+  rw [Matrix.mem_specialUnitaryGroup_iff] at h_g_mem
+  obtain ⟨h_unit, _⟩ := h_g_mem
+  rw [Matrix.mem_unitaryGroup_iff] at h_unit
+  -- (g.val · star g.val)[0,0] = 1.
+  have h_00 := congrArg (fun N => N 0 0) h_unit
+  simp [Matrix.mul_apply, Fin.sum_univ_two,
+        Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply,
+        h_01] at h_00
+  -- h_00: g.val[0,0] * star (g.val[0,0]) = 1.
+  have h_norm_sq : ((‖g.val 0 0‖ : ℝ) : ℂ) ^ 2 = 1 := by
+    rw [← Complex.mul_conj', ← Complex.star_def]
+    exact h_00
+  have h_norm_sq_real : ‖g.val 0 0‖ ^ 2 = 1 := by
+    have h_cast : ((‖g.val 0 0‖ ^ 2 : ℝ) : ℂ) = (1 : ℂ) := by
+      push_cast; exact h_norm_sq
+    exact_mod_cast h_cast
+  have h_nn : (0 : ℝ) ≤ ‖g.val 0 0‖ := norm_nonneg _
+  nlinarith [sq_nonneg (‖g.val 0 0‖ - 1)]
+
+/-- **SU(2) diagonal element: g[1,1] = star g[0,0]**.
+
+From det g = 1 + diagonal structure: g[0,0] · g[1,1] = 1. Combined with
+g[0,0] · star g[0,0] = 1 (and g[0,0] ≠ 0), this forces g[1,1] = star g[0,0]. -/
+private theorem SU2_diagonal_g11_eq_star_g00
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_01 : g.val 0 1 = 0)
+    (h_10 : g.val 1 0 = 0) :
+    g.val 1 1 = star (g.val 0 0) := by
+  have h_g_mem := g.property
+  rw [Matrix.mem_specialUnitaryGroup_iff] at h_g_mem
+  obtain ⟨h_unit, h_det⟩ := h_g_mem
+  rw [Matrix.mem_unitaryGroup_iff] at h_unit
+  -- det g = 1 + diagonal ⟹ g.val[0,0] · g.val[1,1] = 1.
+  have h_det_form : g.val 0 0 * g.val 1 1 = 1 := by
+    have h := h_det
+    simp [Matrix.det_fin_two, h_01, h_10] at h
+    exact h
+  -- (g.val * star g.val)[0,0] = g.val[0,0] · star g.val[0,0] = 1.
+  have h_unit_00 := congrArg (fun N => N 0 0) h_unit
+  simp [Matrix.mul_apply, Fin.sum_univ_two,
+        Matrix.star_eq_conjTranspose, Matrix.conjTranspose_apply,
+        h_01] at h_unit_00
+  have h_g00_ne : g.val 0 0 ≠ 0 := by
+    intro h_zero
+    rw [h_zero, zero_mul] at h_unit_00
+    exact absurd h_unit_00 zero_ne_one
+  have h_combine : g.val 0 0 * g.val 1 1 = g.val 0 0 * star (g.val 0 0) := by
+    rw [h_det_form]
+    rw [show star (g.val 0 0 : ℂ) = (starRingEnd ℂ) (g.val 0 0) from rfl]
+    exact h_unit_00.symm
+  exact mul_left_cancel₀ h_g00_ne h_combine
+
+/-- **HEADLINE — SU(2) diagonal element ∈ stdTorus_SU2**.
+
+Polar-form parametrization: any `g ∈ SU(2)` with zero off-diagonal
+entries lies in the standard torus. -/
+theorem SU2_diagonal_mem_stdTorus
+    (g : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_01 : g.val 0 1 = 0)
+    (h_10 : g.val 1 0 = 0) :
+    g ∈ stdTorus_SU2 := by
+  -- |g.val[0,0]| = 1, so ∃ t : ℝ, exp(it) = g.val[0,0].
+  have h_norm := SU2_diagonal_g00_norm_one g h_01
+  obtain ⟨t, ht⟩ := (Complex.norm_eq_one_iff _).mp h_norm
+  -- g.val[1,1] = star g.val[0,0].
+  have h_11 := SU2_diagonal_g11_eq_star_g00 g h_01 h_10
+  refine ⟨t, ?_⟩
+  apply Subtype.ext
+  show torusMatrix t = g.val
+  ext i j
+  fin_cases i <;> fin_cases j
+  · show Complex.exp ((t : ℂ) * Complex.I) = g.val 0 0
+    exact ht
+  · show (0 : ℂ) = g.val 0 1
+    exact h_01.symm
+  · show (0 : ℂ) = g.val 1 0
+    exact h_10.symm
+  · show Complex.exp (-((t : ℂ) * Complex.I)) = g.val 1 1
+    rw [h_11, ← ht, Complex.exp_neg]
+    have h_exp_norm : ‖Complex.exp ((t : ℂ) * Complex.I)‖ = 1 := by
+      rw [ht]; exact h_norm
+    exact Complex.inv_eq_conj h_exp_norm
+
+/-- **Wedge C HEADLINE — Substantive discharge of Cartan gap #4**.
+
+`Subgroup.centralizer (stdTorus_SU2 : Set _) = stdTorus_SU2`.
+
+Composes the two-direction equality:
+  - (⊆) g commutes with torusElem(π/2) ⟹ g.val diagonal (§17)
+        ⟹ g ∈ stdTorus_SU2 (§18 polar form).
+  - (⊇) easy direction (§15, T abelian). -/
+theorem centralizer_stdTorus_eq_stdTorus :
+    Subgroup.centralizer (stdTorus_SU2 :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = stdTorus_SU2 := by
+  apply le_antisymm
+  · -- Centralizer ⊆ stdTorus
+    intro g h_g_cent
+    rw [Subgroup.mem_centralizer_iff] at h_g_cent
+    -- g commutes with torusElem(π/2) ∈ stdTorus.
+    have h_torus_pi_half_mem : torusElem (Real.pi / 2) ∈ stdTorus_SU2 :=
+      ⟨Real.pi / 2, rfl⟩
+    have h_comm := h_g_cent (torusElem (Real.pi / 2)) h_torus_pi_half_mem
+    -- Lift to matrix level.
+    have h_val_comm :
+        (g : Matrix (Fin 2) (Fin 2) ℂ) * torusMatrix (Real.pi / 2) =
+        torusMatrix (Real.pi / 2) * (g : Matrix (Fin 2) (Fin 2) ℂ) := by
+      have := congrArg Subtype.val h_comm.symm
+      exact this
+    -- Apply §17 to get off-diagonal vanishing.
+    obtain ⟨h_01, h_10⟩ := commutes_torusMatrix_pi_half_diagonal _ h_val_comm
+    -- Apply §18 polar form.
+    exact SU2_diagonal_mem_stdTorus g h_01 h_10
+  · -- stdTorus ⊆ centralizer (easy direction).
+    exact stdTorus_SU2_le_centralizer
+
+/-- **`CentralizerStdTorusEqualsStdTorus_SU2` UNCONDITIONALLY DISCHARGED**.
+
+Composes `centralizer_stdTorus_eq_stdTorus` (substantively shipped above)
+to discharge the Cartan tracked Prop. -/
+theorem cartan_gap_4_holds : CentralizerStdTorusEqualsStdTorus_SU2 :=
+  centralizer_stdTorus_eq_stdTorus
+
 end SKEFTHawking.FKLW
