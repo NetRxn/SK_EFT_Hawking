@@ -4193,6 +4193,7 @@ theorem fibonacci_density_F21_from_cartan_v3_cFib_torus
   SKEFTHawking.FKLW.fibonacci_density_F21_from_cartan_final_v3
     h_cartan_v3 (H_Fib_TwoLITangents_of_cFib_torus h_cFib_torus)
 
+
 /-! ## §74. Anti-commute lemma: SU(2) element anti-commuting with ts ⟹ traceless
 
 **Generic SU(2) fact**: for `g ∈ Matrix (Fin 2) (Fin 2) ℂ`, `X ∈ ts(Fin 2)`,
@@ -4487,6 +4488,25 @@ theorem H_Fib_TwoLITangents_unconditional :
     refine ⟨φ₁, φ₂, hcts₁, hcts₂, hzero₁, hzero₂, hhom₁, hhom₂, himage₁, himage₂, ?_⟩
     refine ⟨s₁, s₁, hs₁_ne, hs₁_ne, X₁, X₂, hX₁_ts, hX₂_ts, h_anchor₁, ?_, h_LI⟩
     exact conj_tangent_anchor_identity h_anchor₁ g
+
+/-! ## §79. F.21 Fibonacci density from JUST CartanFinalStep_SU2_v3
+
+Composes §78 `H_Fib_TwoLITangents_unconditional` with `CartanFinalStep_SU2_v3`.
+This is the cleanest, minimal-dependency F.21 statement: only ONE sound
+tracked Prop remains (CartanFinalStep_SU2_v3, the Wedge B residual). -/
+
+/-- **F.21 Fibonacci density from CartanFinalStep_SU2_v3 ALONE** (MAJOR HEADLINE).
+
+F.21 unconditional density follows from `CartanFinalStep_SU2_v3` only, since
+`H_Fib_TwoLITangents` is now an unconditional theorem (§78). This is the
+post-soundness-fix F.21 status: ONE sound tracked Prop remaining. -/
+theorem fibonacci_density_F21_from_cartan_v3_only
+    (h_cartan_v3 : SKEFTHawking.FKLW.CartanFinalStep_SU2_v3) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_F21_from_cartan_final_v3
+    h_cartan_v3 H_Fib_TwoLITangents_unconditional
 
 end SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
