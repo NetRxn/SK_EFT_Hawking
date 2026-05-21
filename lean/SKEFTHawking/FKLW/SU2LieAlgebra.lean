@@ -2067,6 +2067,22 @@ theorem ts_LD_implies_scalar
       (neg_smul _ _).symm]
     rw [h_scalar]
 
+/-- **Ad-LD characterization**: for X ∈ ts (Fin 2), X ≠ 0, U unitary,
+if (X, U·X·star U) ℝ-LD then U·X·star U = α • X for some α ∈ ℝ.
+
+Combines §23 ts_LD_implies_scalar with the fact that U·X·star U ∈ ts
+(via §21). -/
+theorem Ad_LD_implies_scalar
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hX_ne : X ≠ 0)
+    {U : Matrix (Fin 2) (Fin 2) ℂ}
+    (_hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    (h_LD : ¬ (∀ a b : ℝ, (a : ℂ) • X + (b : ℂ) • (U * X * star U) = 0 →
+        a = 0 ∧ b = 0)) :
+    ∃ α : ℝ, U * X * star U = (α : ℂ) • X :=
+  ts_LD_implies_scalar hX hX_ne h_LD
+
 /-- **Matrix-commute ⟹ ℝ-LD** for X, Y ∈ ts (Fin 2). Contrapositive of §19. -/
 theorem tracelessSkewHermitian_lin_dep_of_commute
     {X Y : Matrix (Fin 2) (Fin 2) ℂ}
