@@ -275,6 +275,21 @@ noncomputable def stdTorus_SU2 :
       eq_inv_of_mul_eq_one_right h_inv
     rw [h_inv_unique, ht]
 
+/-! ## §8a. `stdTorus_SU2` is abelian -/
+
+/-- **`stdTorus_SU2` is commutative**: any two elements of the standard
+torus commute.
+
+Direct consequence of the group-homomorphism property of `torusElem`:
+`torusElem s * torusElem t = torusElem (s + t) = torusElem (t + s) =
+torusElem t * torusElem s`. -/
+theorem stdTorus_SU2_abelian (g h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hg : g ∈ stdTorus_SU2) (hh : h ∈ stdTorus_SU2) :
+    g * h = h * g := by
+  obtain ⟨s, hs⟩ := hg
+  obtain ⟨t, ht⟩ := hh
+  rw [← hs, ← ht, ← torusElem_add, ← torusElem_add, add_comm]
+
 /-! ## §8. `stdTorus_SU2` satisfies `OneParamSubgroupInSU2` -/
 
 /-- **Wedge C session-1 headline — `stdTorus_SU2` is a 1-parameter
