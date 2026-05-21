@@ -397,4 +397,65 @@ theorem weylElem_conj_torusElem (t : ℝ) :
   rw [h_inv_val]
   exact weylMatrix_conj_torusMatrix t
 
+/-- **`weylElem` does NOT lie in `stdTorus_SU2`**.
+
+If `w ∈ T`, then conjugation by `w` would preserve every element of T
+pointwise (T is abelian, so `w · t · w⁻¹ = t`). But Weyl conjugation
+gives `w · t · w⁻¹ = t⁻¹` for `t ∈ T`. Combining: every `t ∈ T`
+satisfies `t = t⁻¹`. Taking `t := torusElem (π/2)` yields
+`I = -I` (via the [0,0] entry comparison), contradicting `Complex.I.im = 1`. -/
+theorem weylElem_not_mem_stdTorus :
+    weylElem ∉ stdTorus_SU2 := by
+  intro h_mem
+  -- Step 1: w = torusElem s for some s ∈ ℝ.
+  obtain ⟨s, hs⟩ := h_mem
+  -- Step 2: Weyl conjugation: w · t · w⁻¹ = t⁻¹ for t = torusElem (π/2).
+  have h_weyl : weylElem * torusElem (Real.pi / 2) * weylElem⁻¹
+              = torusElem (-(Real.pi / 2)) := weylElem_conj_torusElem _
+  -- Step 3: but w ∈ T abelian, so w · t = t · w, hence w · t · w⁻¹ = t.
+  have h_comm : weylElem * torusElem (Real.pi / 2) =
+                torusElem (Real.pi / 2) * weylElem := by
+    rw [← hs, ← torusElem_add, ← torusElem_add, add_comm]
+  have h_triv : weylElem * torusElem (Real.pi / 2) * weylElem⁻¹
+              = torusElem (Real.pi / 2) := by
+    rw [h_comm]; group
+  -- Step 4: Combining h_weyl and h_triv: torusElem (π/2) = torusElem (-π/2).
+  rw [h_triv] at h_weyl
+  -- Step 5: Project to [0,0] entry; should give I = -I.
+  have h_val : (torusElem (Real.pi / 2)).val =
+               (torusElem (-(Real.pi / 2))).val :=
+    congrArg Subtype.val h_weyl
+  have h_00 : (torusElem (Real.pi / 2)).val 0 0 =
+              (torusElem (-(Real.pi / 2))).val 0 0 :=
+    congrArg (fun M => M 0 0) h_val
+  -- LHS [0,0] = exp((π/2)·I) = I (via Complex.exp_pi_div_two_mul_I).
+  -- RHS [0,0] = exp((-π/2)·I) = -I (via Complex.exp_neg_pi_div_two_mul_I).
+  have h_lhs : (torusElem (Real.pi / 2)).val 0 0 = Complex.I := by
+    show torusMatrix (Real.pi / 2) 0 0 = Complex.I
+    have h_simp : torusMatrix (Real.pi / 2) 0 0 =
+                  Complex.exp (((Real.pi / 2 : ℝ) : ℂ) * Complex.I) := by
+      simp [torusMatrix, Matrix.cons_val', Matrix.cons_val_zero,
+            Matrix.empty_val', Matrix.cons_val_fin_one]
+    rw [h_simp,
+        show (((Real.pi / 2 : ℝ) : ℂ) * Complex.I) =
+             (↑Real.pi / 2 * Complex.I) by push_cast; ring,
+        Complex.exp_pi_div_two_mul_I]
+  have h_rhs : (torusElem (-(Real.pi / 2))).val 0 0 = -Complex.I := by
+    show torusMatrix (-(Real.pi / 2)) 0 0 = -Complex.I
+    have h_simp : torusMatrix (-(Real.pi / 2)) 0 0 =
+                  Complex.exp (((-(Real.pi / 2) : ℝ) : ℂ) * Complex.I) := by
+      simp [torusMatrix, Matrix.cons_val', Matrix.cons_val_zero,
+            Matrix.empty_val', Matrix.cons_val_fin_one]
+    rw [h_simp,
+        show (((-(Real.pi / 2) : ℝ) : ℂ) * Complex.I) =
+             (-↑Real.pi / 2 * Complex.I) by push_cast; ring,
+        Complex.exp_neg_pi_div_two_mul_I]
+  -- h_00 + h_lhs + h_rhs: I = -I.
+  rw [h_lhs, h_rhs] at h_00
+  -- Show I ≠ -I via imaginary part.
+  have h_im : Complex.I.im = (-Complex.I).im := congrArg Complex.im h_00
+  -- LHS = 1, RHS = -1.
+  simp [Complex.I_im, Complex.neg_im] at h_im
+  linarith
+
 end SKEFTHawking.FKLW
