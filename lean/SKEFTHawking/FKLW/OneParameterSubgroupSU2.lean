@@ -2806,33 +2806,51 @@ theorem trace_re_ne_neg_two_nhds_one :
   have h_ne : (1 : Matrix (Fin 2) (Fin 2) ℂ).trace.re ≠ -2 := by rw [h_at_1]; norm_num
   exact h_trace_cont (isOpen_ne.mem_nhds h_ne)
 
-/-! ### §9.11. (Next ships — combine + Su2LogMem discharge on nhd of 1)
+/-! ### §9.11. Su2LogMem-style discharge on a nhd of 1
 
-Two remaining steps for the full unconditional discharge:
+Combining §9.8 (partial discharge under 2 hypotheses) + §9.10b/c
+(both hypotheses hold on a nhd of 1) gives: for some V ∈ nhds 1,
+all h ∈ V ∩ target ∩ SU(2) satisfy `su2Log h ∈ ts`.
 
-**(A) Y_h continuity**: prove `Continuous Y_h` (or at least `ContinuousAt Y_h 1`).
-This requires:
-- continuity of `Real.arccos` (Mathlib has it on `[-1, 1]`)
-- continuity of `Real.sinc` (continuous on ℝ)
-- continuity of matrix entries h ↦ h.trace.re (linear)
-- continuity of X_h = h - (h.trace.re/2) • 1 (linear in h)
-- combined: Y_h continuous at h = 1 (or globally on appropriate nhd).
+This is the **strongest unconditional statement** we get from the Y_h
+construction approach. The full unconditional Su2LogMem Prop (over
+ALL of target) would require either:
+- Showing the IFT-chosen target ⊆ V (depends on IFT specifics), or
+- Refactoring §4.i.5b's consumer to use the eventually-near-1
+  property (sufficient since seq → 1 + Filter.eventually). -/
 
-**(B) Source-membership at 1**: `Y_h 1 = 0 ∈ source`. The h = 1 case:
-- h.trace = 2 ∈ ℝ ⊆ ℂ, h.trace.re = 2, h.trace.re/2 = 1.
-- arccos 1 = 0, sinc 0 = 1, X_1 = 1 - 1 • 1 = 0, Y_h 1 = 1 • 0 = 0 ∈ source.
+/-- **§9.11. Su2LogMem on a nhd of 1**: `∃ V ∈ nhds 1, ∀ h ∈ V, h ∈ target
+→ h ∈ SU(2) → su2Log h ∈ ts`. Combines §9.10b + §9.10c + §9.8. -/
+theorem Su2LogMem_on_nhd_one :
+    ∃ V ∈ nhds (1 : Matrix (Fin 2) (Fin 2) ℂ),
+      ∀ h ∈ V,
+        h ∈ expAmbientPartialHomeo.target →
+        h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ →
+        su2Log h ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) := by
+  -- V := {h | Y_h h ∈ source} ∩ {h | h.trace.re ≠ -2}
+  refine ⟨{h | Y_h h ∈ expAmbientPartialHomeo.source} ∩
+          {h | h.trace.re ≠ -2}, ?_, ?_⟩
+  · exact Filter.inter_mem Y_h_mem_source_nhds_one trace_re_ne_neg_two_nhds_one
+  · intro h hh_V hh_target hh_su2
+    exact Su2LogMem_partial_discharge hh_target hh_su2 hh_V.2 hh_V.1
 
-Combined, (A) + (B) + source openness gives ∃ V ∈ nhds(1) with
-`∀ h ∈ V, Y_h h ∈ source`. The condition `h.trace.re ≠ -2` also holds
-on a nhd of 1 (continuity of trace + 2 ≠ -2).
+/-! ### §9.12. (Next ships — refactor §4.i.5b to use the nhd-based discharge)
 
-So the discharge holds on `target ∩ V ∩ SU(2)` (a nhd of 1 in target).
-The remaining question is whether this nhd equals all of target. If
-the IFT was constructed with target = nhd of 1 small enough, then yes.
+The F.21 consumer in §4.i.5b uses `Su2LogMemTracelessSkewHermitian_SU2` on
+the sequence `(seq n).val ∈ target`. Since seq → 1 in SU(2) (Subtype),
+`(seq n).val → 1` in Matrix _ _ ℂ. Hence `(seq n).val` is eventually
+in any nhd of 1.
 
-For the F.21 consumer in §4.i.5b: only need eventually-in-V on the
-sequence → 1, which follows automatically from continuity of `(seq n).val
-→ 1` + V ∈ nhds 1. -/
+So `(seq n).val ∈ V` eventually, where V is the nhd from §9.11. Combined
+with §9.11, `su2Log ((seq n).val) ∈ ts` eventually.
+
+This DISCHARGES the §4.i.5b consumer WITHOUT needing the full
+`Su2LogMemTracelessSkewHermitian_SU2` predicate. The tracked Prop can
+therefore be RETIRED — gap #2 closes UNCONDITIONALLY when the §4.i.5b
+proof is refactored to use §9.11 directly.
+
+The refactor is a downstream proof change in §4.i.5b. Will be shipped
+in next iteration. -/
 
 /-! ## §5. Module summary (current ship)
 
