@@ -3454,6 +3454,36 @@ theorem exists_tangent_with_anchor_identity
     rw [h_smul_cancel]
     exact expAmbient_su2Log hφs_target
 
+/-- **Inversion property**: `φ (-t) = (φ t)⁻¹` for a 1-parameter
+subgroup. Follows from `φ t * φ (-t) = φ (t + (-t)) = φ 0 = 1`. -/
+theorem hom_neg
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (t : ℝ) :
+    φ (-t) = (φ t)⁻¹ := by
+  have h_sum : φ t * φ (-t) = 1 := by
+    rw [← hhom, add_neg_cancel]
+    exact hzero
+  exact (eq_inv_of_mul_eq_one_right h_sum)
+
+/-- **ℤ-power rule for 1-parameter subgroups**: for a continuous group
+homomorphism `φ : ℝ → SU(2)` with `φ 0 = 1` and `φ (s + t) = φ s · φ t`,
+we have `φ ((z : ℝ) * s) = (φ s) ^ z` for all `z : ℤ`. -/
+theorem hom_pow_int
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    (z : ℤ) (s : ℝ) :
+    φ ((z : ℝ) * s) = (φ s) ^ z := by
+  cases z with
+  | ofNat n =>
+    rw [Int.ofNat_eq_coe, Int.cast_natCast, zpow_natCast]
+    exact hom_pow_nat hzero hhom n s
+  | negSucc n =>
+    rw [Int.cast_negSucc, zpow_negSucc]
+    -- Goal: φ (-↑(n + 1) * s) = (φ s ^ (n + 1))⁻¹
+    rw [show (-((n + 1 : ℕ) : ℝ)) * s = -(((n + 1 : ℕ) : ℝ) * s) from by push_cast; ring]
+    rw [hom_neg hzero hhom, hom_pow_nat hzero hhom (n + 1) s]
+
 /-! ### §11.h. ℕ-multiple t-linearity at the anchor
 
 Lifts the anchor identity `expAmbient (s • X) = (φ s).val` to all
