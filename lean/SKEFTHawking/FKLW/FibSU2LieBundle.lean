@@ -5936,4 +5936,27 @@ theorem H_Fib_isClosed_infinite_non_abelian :
    SKEFTHawking.FKLW.H_Fib_infinite,
    H_Fib_non_abelian⟩
 
+/-! ## §70. R5.4 Layer F.20.c.d.2.nn — F.21 from Cartan directly via the H_Fib structure
+
+Cleanest possible Cartan-path discharge: H_Fib structural properties + Cartan
+classification give H_Fib = ⊤ → F.21 density. This is essentially the §45 path
+but with the structural witnesses now packaged. -/
+
+/-- **R5.4 Layer F.20.c.d.2.nn HEADLINE — Direct F.21 from Cartan**.
+
+The H_Fib version of `fibonacci_density_from_cartan_classification`: given the
+Cartan classification, we can directly construct H_Fib = ⊤ using the shipped
+structural witnesses (closed ∧ infinite ∧ non-abelian). -/
+theorem fibonacci_density_from_cartan_via_H_Fib
+    (h_cartan : CartanClassificationOfSU2_Subgroup) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) := by
+  -- Use packaged structure
+  obtain ⟨h_closed, h_inf, h_nab⟩ := H_Fib_isClosed_infinite_non_abelian
+  have h_top : SKEFTHawking.FKLW.H_Fib = (⊤ :
+      Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
+    h_cartan SKEFTHawking.FKLW.H_Fib h_closed h_inf h_nab
+  exact SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top h_top
+
 end SKEFTHawking.FKLW.FibSU2LieBundle
