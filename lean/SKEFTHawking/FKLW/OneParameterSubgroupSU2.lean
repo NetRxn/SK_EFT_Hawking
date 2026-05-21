@@ -2668,35 +2668,63 @@ theorem SU2_expAmbient_Y_h_eq
   rw [h_cos]
   abel
 
-/-! ### §9.8. (Next ship — final Su2LogMem discharge via uniqueness)
+/-! ### §9.8. Partial discharge via uniqueness sub-lemma
 
-For non-trivial h ∈ target ∩ SU(2), we need to construct a witness
-`Y ∈ source ∩ ts` with `expAmbient Y = h`. The cleanest construction
-uses the closed form:
+For h ∈ target ∩ SU(2) satisfying both `h.trace.re ≠ -2` (excluding the
+h = -1 boundary, needed for §9.7's identity) AND `Y_h h ∈ source`
+(needed for §9.1's uniqueness sub-lemma), we conclude `su2Log h ∈ ts`.
 
-  `Y := θ · X_unit`
+The full unconditional discharge of `Su2LogMemTracelessSkewHermitian_SU2`
+requires proving the second hypothesis (`Y_h h ∈ source`) for ALL
+h ∈ target. This depends on whether the IFT-chosen source/target are
+small enough that the construction `Y_h` always lands in source.
 
-where:
-- `θ := Real.arccos ((Complex.trace h).re / 2)` ∈ [0, π]
-- `X_unit := (h - star h) / (2 · sin θ : ℂ)` for `sin θ ≠ 0`, else 0.
+For the F.21 chain's actual consumer in §4.i.5b, only EVENTUAL property
+on a sequence → 1 is needed, which would follow from continuity of `Y_h`
+in h + `Y_h 1 = 0 ∈ source`. -/
 
-Properties needed:
-1. `X_unit ∈ ts` (clear: scaled skew-Hermitian part of h).
-2. `X_unit² = -1 • 1` (i.e., su2RadiusSq X_unit = 1, by SU(2) decomp).
-3. `h = cos θ · 1 + sin θ · X_unit` (the SU(2) parameterization).
-4. `expAmbient (θ · X_unit) = h` (via §7 substrate's cos/sinc decomp).
-5. `Y = θ · X_unit ∈ source` for `h ∈ target` (continuity at θ = 0).
+/-- **§9.8. Partial Su2LogMem discharge** (under both restrictions): for
+h ∈ target ∩ SU(2) with `h.trace.re ≠ -2` AND `Y_h h ∈ source`,
+su2Log h ∈ tracelessSkewHermitian. -/
+theorem Su2LogMem_partial_discharge
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (_ : h ∈ expAmbientPartialHomeo.target)
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_ne_neg_two : h.trace.re ≠ -2)
+    (h_Y_source : Y_h h ∈ expAmbientPartialHomeo.source) :
+    su2Log h ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+  su2Log_mem_tracelessSkewHermitian_of_witness
+    h_Y_source
+    (SU2_Y_h_mem_tracelessSkewHermitian hh)
+    (SU2_expAmbient_Y_h_eq hh h_ne_neg_two)
 
-The substantive work is (3): showing that any h ∈ SU(2) has this
-"matrix cosine + matrix sine" decomposition. This is essentially the
-spectral theorem for SU(2) elements, with the diagonalizing unitary
-absorbed into `X_unit`.
+/-! ### §9.9. (Next ships — Y_h continuity + neighborhood-based discharge)
 
-**Alternative path (spectral)**: use `Matrix.IsHermitian.spectral_theorem`
-on `(h - star h) / (2 * Complex.I)` (Hermitian for h unitary) to extract
-eigenvalues directly. ~300-500 LoC of substantive Mathlib work.
+Two remaining steps for the full unconditional discharge:
 
-Deferred to next ship; ~200-400 LoC remaining for full discharge. -/
+**(A) Y_h continuity**: prove `Continuous Y_h` (or at least `ContinuousAt Y_h 1`).
+This requires:
+- continuity of `Real.arccos` (Mathlib has it on `[-1, 1]`)
+- continuity of `Real.sinc` (continuous on ℝ)
+- continuity of matrix entries h ↦ h.trace.re (linear)
+- continuity of X_h = h - (h.trace.re/2) • 1 (linear in h)
+- combined: Y_h continuous at h = 1 (or globally on appropriate nhd).
+
+**(B) Source-membership at 1**: `Y_h 1 = 0 ∈ source`. The h = 1 case:
+- h.trace = 2 ∈ ℝ ⊆ ℂ, h.trace.re = 2, h.trace.re/2 = 1.
+- arccos 1 = 0, sinc 0 = 1, X_1 = 1 - 1 • 1 = 0, Y_h 1 = 1 • 0 = 0 ∈ source.
+
+Combined, (A) + (B) + source openness gives ∃ V ∈ nhds(1) with
+`∀ h ∈ V, Y_h h ∈ source`. The condition `h.trace.re ≠ -2` also holds
+on a nhd of 1 (continuity of trace + 2 ≠ -2).
+
+So the discharge holds on `target ∩ V ∩ SU(2)` (a nhd of 1 in target).
+The remaining question is whether this nhd equals all of target. If
+the IFT was constructed with target = nhd of 1 small enough, then yes.
+
+For the F.21 consumer in §4.i.5b: only need eventually-in-V on the
+sequence → 1, which follows automatically from continuity of `(seq n).val
+→ 1` + V ∈ nhds 1. -/
 
 /-! ## §5. Module summary (current ship)
 
