@@ -2978,6 +2978,47 @@ theorem fibonacci_density_F21_from_one_tracked_prop
     OneParamSubgroupFromAccPt_SU2_unconditional
     h_cartan_final
 
+/-! ### §10b. UNCONDITIONAL F.21 via the SOUNDNESS-FIXED predicate
+
+(2026-05-21 soundness pass.)
+
+The §10 chain above (`fibonacci_density_F21_from_one_tracked_prop`)
+consumes `CartanFinalStep_SU2`, but per `CartanSubstrate.lean` §4.8
+that predicate is **provably FALSE** (N(T) counter-example). The
+§10b chain consumes the SOUND replacement
+`CartanFinalStep_SU2_v2` + the tracked
+`H_Fib_NonCentralConjugateWitness`.
+
+The §10 chain remains in the file to make the soundness flag
+visible to downstream readers; it should not be used in new
+work. -/
+
+/-- **§10b.1. UNCONDITIONAL `H_Fib = ⊤` via the sound predicate**. -/
+theorem H_Fib_eq_top_from_two_tracked_props_v2
+    (h_cartan_final_v2 : SKEFTHawking.FKLW.CartanFinalStep_SU2_v2)
+    (h_witness : SKEFTHawking.FKLW.H_Fib_NonCentralConjugateWitness) :
+    SKEFTHawking.FKLW.H_Fib = ⊤ :=
+  SKEFTHawking.FKLW.H_Fib_eq_top_of_strengthened_chain_v2
+    OneParamSubgroupFromAccPt_SU2_unconditional
+    h_cartan_final_v2
+    h_witness
+
+/-- **§10b.2. UNCONDITIONAL F.21 via the sound predicate** (the
+CORRECTED final headline). Composes the unconditional gap-#2
+discharge with the soundness-fixed `CartanFinalStep_SU2_v2` and the
+tracked H_Fib witness. Both remaining hypotheses have an explicit
+discharge plan in `CartanSubstrate.lean` §4.8. -/
+theorem fibonacci_density_F21_from_two_tracked_props_v2
+    (h_cartan_final_v2 : SKEFTHawking.FKLW.CartanFinalStep_SU2_v2)
+    (h_witness : SKEFTHawking.FKLW.H_Fib_NonCentralConjugateWitness) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_F21_from_strengthened_chain_v2
+    OneParamSubgroupFromAccPt_SU2_unconditional
+    h_cartan_final_v2
+    h_witness
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
