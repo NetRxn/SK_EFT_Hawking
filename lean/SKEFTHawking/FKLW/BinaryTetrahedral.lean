@@ -34,6 +34,7 @@ power is 1).
 -/
 
 import Mathlib
+import SKEFTHawking.FKLW.StandardTorusSU2
 
 set_option autoImplicit false
 
@@ -176,5 +177,39 @@ theorem binaryTetrahedralElem_sixth_val :
   -- Subtype.val is multiplicative; (g^6).val = g.val^6.
   show binaryTetrahedralGen ^ 6 = 1
   exact binaryTetrahedralGen_sixth
+
+/-! ## §5. binaryTetrahedralElem is NOT in stdTorus_SU2 -/
+
+/-- **`binaryTetrahedralElem ∉ stdTorus_SU2`** — 2T contains elements
+outside the standard torus.
+
+The half-integer quaternion has off-diagonal entry `(1+I)/2 ≠ 0`, but
+every element of `stdTorus_SU2` is `torusElem t = diag(exp(it), exp(-it))`
+with off-diagonal entries = 0. Contradiction.
+
+This shows 2T strictly extends `stdTorus_SU2` (within SU(2)). -/
+theorem binaryTetrahedralElem_not_mem_stdTorus :
+    binaryTetrahedralElem ∉ stdTorus_SU2 := by
+  intro h_mem
+  obtain ⟨t, ht⟩ := h_mem
+  -- ht : torusElem t = binaryTetrahedralElem
+  -- Project to [0,1] entry: should be 0 (torus) but is (1+I)/2 (2T gen).
+  have h_val : (torusElem t).val = binaryTetrahedralElem.val :=
+    congrArg Subtype.val ht
+  have h_01 : torusMatrix t 0 1 = binaryTetrahedralGen 0 1 :=
+    congrArg (fun M => M 0 1) h_val
+  -- LHS [0,1] = 0; RHS [0,1] = (1+I)/2.
+  simp [torusMatrix, binaryTetrahedralGen, Matrix.cons_val',
+        Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.head_cons, Matrix.empty_val',
+        Matrix.cons_val_fin_one] at h_01
+  -- Show (1+I)/2 ≠ 0 (i.e., 1+I ≠ 0).
+  have h_oneAddI_ne : (1 + Complex.I : ℂ) ≠ 0 := by
+    intro h
+    have h_re := congrArg Complex.re h
+    simp [Complex.add_re, Complex.one_re, Complex.I_re] at h_re
+  have h_div_ne : ((1 + Complex.I) / 2 : ℂ) ≠ 0 :=
+    div_ne_zero h_oneAddI_ne (by norm_num)
+  exact h_div_ne h_01.symm
 
 end SKEFTHawking.FKLW
