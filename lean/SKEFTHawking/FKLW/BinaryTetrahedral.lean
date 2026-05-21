@@ -1,0 +1,109 @@
+/-
+Phase 6p Wave 2c.4a-R4.2.d.4.3.d.4 Wedge D session 1
+(2026-05-20): Binary tetrahedral group 2T ⊆ SU(2) — first concrete
+generator.
+
+## Status
+
+Wedge D of Phase 5 Step 13 Path (i) — binary polyhedral classification
+for the finite-case branch of Cartan classification.
+
+This file ships the **first concrete element of 2T**: the half-integer
+unit quaternion `(1+i+j+k)/2`, which corresponds via the standard
+quaternion → SU(2) isomorphism to:
+
+  `!![(1+I)/2, (1+I)/2; (-1+I)/2, (1-I)/2]`
+
+This element has order 6 in SU(2) (its cube is -I = negOneSU; sixth
+power is 1).
+
+## Shipped
+
+§1 — `binaryTetrahedralGen : Matrix (Fin 2) (Fin 2) ℂ`:
+  the concrete matrix `!![(1+I)/2, (1+I)/2; (-1+I)/2, (1-I)/2]`.
+
+§2 — `binaryTetrahedralGen_mem_specialUnitaryGroup`:
+  membership in SU(2), via unitarity + det = 1.
+
+## Mathlib4 substrate consumed
+
+  - `Matrix.specialUnitaryGroup`
+  - `Matrix.mem_specialUnitaryGroup_iff`,
+    `Matrix.mem_unitaryGroup_iff`
+  - `Matrix.det_fin_two`, `Matrix.star_eq_conjTranspose`
+-/
+
+import Mathlib
+
+set_option autoImplicit false
+
+namespace SKEFTHawking.FKLW
+
+open Matrix Complex
+
+/-! ## §1. The binary tetrahedral generator -/
+
+/-- **`(1+i+j+k)/2` as an SU(2) matrix**.
+
+The standard quaternion → SU(2) isomorphism maps `a + b·i + c·j + d·k`
+to `!![a + bI, c + dI; -c + dI, a - bI]`. With `a = b = c = d = 1/2`,
+this gives `!![(1+I)/2, (1+I)/2; (-1+I)/2, (1-I)/2]`.
+
+This is an order-6 element of the binary tetrahedral group 2T ⊆ SU(2). -/
+noncomputable def binaryTetrahedralGen : Matrix (Fin 2) (Fin 2) ℂ :=
+  !![(1 + Complex.I) / 2, (1 + Complex.I) / 2;
+     (-1 + Complex.I) / 2, (1 - Complex.I) / 2]
+
+/-! ## §2. SU(2) membership -/
+
+/-- `star binaryTetrahedralGen = !![(1-I)/2, (-1-I)/2; (1-I)/2, (1+I)/2]`. -/
+private theorem star_binaryTetrahedralGen :
+    star binaryTetrahedralGen =
+      !![(1 - Complex.I) / 2, (-1 - Complex.I) / 2;
+         (1 - Complex.I) / 2, (1 + Complex.I) / 2] := by
+  rw [Matrix.star_eq_conjTranspose]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [binaryTetrahedralGen, Matrix.conjTranspose_apply,
+          Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Matrix.empty_val',
+          Matrix.cons_val_fin_one, Complex.div_I, Complex.conj_I,
+          map_div₀, map_add, map_sub, map_neg, map_one, Complex.conj_I]
+  all_goals ring_nf
+
+/-- `binaryTetrahedralGen * star binaryTetrahedralGen = 1`. -/
+private theorem binaryTetrahedralGen_mul_star :
+    binaryTetrahedralGen * star binaryTetrahedralGen = 1 := by
+  rw [star_binaryTetrahedralGen]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [binaryTetrahedralGen, Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Matrix.empty_val',
+          Matrix.cons_val_fin_one, Matrix.one_apply]
+  all_goals ring_nf
+  all_goals
+    first
+      | (rw [show Complex.I^2 = -1 by simp [Complex.I_sq]]; ring)
+      | rfl
+
+/-- `det binaryTetrahedralGen = 1`. -/
+private theorem binaryTetrahedralGen_det :
+    binaryTetrahedralGen.det = 1 := by
+  rw [Matrix.det_fin_two]
+  simp [binaryTetrahedralGen, Matrix.cons_val', Matrix.cons_val_zero,
+        Matrix.cons_val_one, Matrix.head_cons,
+        Matrix.empty_val', Matrix.cons_val_fin_one]
+  ring_nf
+  rw [show Complex.I^2 = -1 by simp [Complex.I_sq]]
+  ring
+
+/-- **`binaryTetrahedralGen ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ`** —
+SU(2) membership. -/
+theorem binaryTetrahedralGen_mem_specialUnitaryGroup :
+    binaryTetrahedralGen ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  Matrix.mem_specialUnitaryGroup_iff.mpr
+    ⟨Matrix.mem_unitaryGroup_iff.mpr binaryTetrahedralGen_mul_star,
+     binaryTetrahedralGen_det⟩
+
+end SKEFTHawking.FKLW
