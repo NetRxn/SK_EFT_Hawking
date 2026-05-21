@@ -167,4 +167,14 @@ noncomputable def binaryTetrahedralElem :
     (binaryTetrahedralElem : Matrix (Fin 2) (Fin 2) ℂ) =
     binaryTetrahedralGen := rfl
 
+/-- `(binaryTetrahedralElem^6).val = 1` — sixth power is identity at
+the matrix level, via subtype-power expansion + session-102 result. -/
+theorem binaryTetrahedralElem_sixth_val :
+    ((binaryTetrahedralElem ^ 6 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+    (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  -- Subtype.val is multiplicative; (g^6).val = g.val^6.
+  show binaryTetrahedralGen ^ 6 = 1
+  exact binaryTetrahedralGen_sixth
+
 end SKEFTHawking.FKLW
