@@ -4090,6 +4090,31 @@ theorem OneParamSubgroupSU2.anchor_div_n
   rw [show v = u from h_uv.symm]
   exact h_exp_u
 
+/-- **Anchor at ℚ-multiples of s**: combines `anchor_div_n` (anchor at s/n)
+with `expAmbient_int_smul_anchor` (ℤ-mult) to give anchor at z*s/n for
+any z ∈ ℤ, n ∈ ℕ⁺ (modulo smallness conditions).
+
+Substrate role: the set {z*s/n : z ∈ ℤ, n ∈ ℕ⁺} = ℚ*s. For s ≠ 0, ℚ*s
+is dense in ℝ. So once smallness conditions are validated for sufficient
+n, the anchor set contains ℚ*s ⊂ anchorAddSubgroup, hence is dense ⊂ ℝ,
+hence (since closed) = ⊤. -/
+theorem OneParamSubgroupSU2.anchor_at_rational_multiple
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) (hhom : ∀ s t, φ (s + t) = φ s * φ t)
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    {s : ℝ} {n : ℕ} (hn_pos : 0 < n) (z : ℤ)
+    (h_anchor : SU2MatrixExp.expAmbient (((s : ℝ) : ℂ) • X) = (φ s).val)
+    (h_target : (φ (s/n)).val ∈ expAmbientPartialHomeo.target)
+    (h_src_nu : n • su2Log ((φ (s/n)).val) ∈ expAmbientPartialHomeo.source)
+    (h_src_nv : n • (((s/n : ℝ) : ℂ) • X) ∈ expAmbientPartialHomeo.source) :
+    SU2MatrixExp.expAmbient ((((z : ℝ) * (s/n) : ℝ) : ℂ) • X)
+      = (φ ((z : ℝ) * (s/n))).val := by
+  -- Step 1: anchor at s/n via anchor_div_n
+  have h_anchor_sn : SU2MatrixExp.expAmbient (((s/n : ℝ) : ℂ) • X) = (φ (s/n)).val :=
+    OneParamSubgroupSU2.anchor_div_n hzero hhom hn_pos h_anchor h_target h_src_nu h_src_nv
+  -- Step 2: extend to z-multiples via expAmbient_int_smul_anchor
+  exact OneParamSubgroupSU2.expAmbient_int_smul_anchor hzero hhom h_anchor_sn z
+
 /-! ## §11.j. Ad-exp commutation for unitary conjugation
 
 For `U ∈ unitaryGroup (Fin 2) ℂ` and any `X : Matrix _ _ ℂ`,
