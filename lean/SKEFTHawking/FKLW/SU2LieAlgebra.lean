@@ -1184,6 +1184,105 @@ theorem tracelessSkewHermitian_exists_combo_of_pauliDet_ne_zero
     (matrixToPauliCoords_eq_zero_iff h_diff_mem).mp h_diff_coords_zero
   exact sub_eq_zero.mp h_diff_zero
 
+/-! ## §16. Pauli product and commutator relations
+
+(2026-05-21 — substrate for Cartan classification)
+
+The Pauli anti-Hermitian basis `{paulI_x, paulI_y, paulI_z}` satisfies the
+canonical Lie-bracket structure of su(2):
+
+  `paulI_x * paulI_y = -paulI_z`,  `paulI_y * paulI_x =  paulI_z`,
+  `paulI_y * paulI_z = -paulI_x`,  `paulI_z * paulI_y =  paulI_x`,
+  `paulI_z * paulI_x = -paulI_y`,  `paulI_x * paulI_z =  paulI_y`.
+
+These follow from `σ_a σ_b = i σ_c` (Pauli matrix identities) under
+`paulI_a = i σ_a`: `paulI_a · paulI_b = i² σ_a σ_b = -i σ_c = -paulI_c`.
+
+The commutator relations follow immediately:
+  `[paulI_x, paulI_y] = -2 paulI_z`,  cyclically.
+
+These are the substantive Lie-algebra structure constants of su(2),
+needed for the "two LI elements + their bracket span su(2)" criterion
+toward `CartanFinalStep_SU2_v2`. -/
+
+/-- `paulI_x * paulI_y = -paulI_z`. -/
+theorem paulI_x_mul_paulI_y : paulI_x * paulI_y = -paulI_z := by
+  unfold paulI_x paulI_y paulI_z SKEFTHawking.σ_x SKEFTHawking.σ_y SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.neg_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I] <;> ring
+
+/-- `paulI_y * paulI_x = paulI_z`. -/
+theorem paulI_y_mul_paulI_x : paulI_y * paulI_x = paulI_z := by
+  unfold paulI_x paulI_y paulI_z SKEFTHawking.σ_x SKEFTHawking.σ_y SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I] <;> ring
+
+/-- `paulI_y * paulI_z = -paulI_x`. -/
+theorem paulI_y_mul_paulI_z : paulI_y * paulI_z = -paulI_x := by
+  unfold paulI_x paulI_y paulI_z SKEFTHawking.σ_x SKEFTHawking.σ_y SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.neg_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I] <;> ring
+
+/-- `paulI_z * paulI_y = paulI_x`. -/
+theorem paulI_z_mul_paulI_y : paulI_z * paulI_y = paulI_x := by
+  unfold paulI_x paulI_y paulI_z SKEFTHawking.σ_x SKEFTHawking.σ_y SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I] <;> ring
+
+/-- `paulI_z * paulI_x = -paulI_y`. -/
+theorem paulI_z_mul_paulI_x : paulI_z * paulI_x = -paulI_y := by
+  unfold paulI_x paulI_y paulI_z SKEFTHawking.σ_x SKEFTHawking.σ_y SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.neg_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I] <;> ring
+
+/-- `paulI_x * paulI_z = paulI_y`. -/
+theorem paulI_x_mul_paulI_z : paulI_x * paulI_z = paulI_y := by
+  unfold paulI_x paulI_y paulI_z SKEFTHawking.σ_x SKEFTHawking.σ_y SKEFTHawking.σ_z
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.smul_apply, Matrix.of_apply,
+          Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+          Fin.sum_univ_two, smul_eq_mul, Complex.I_mul_I] <;> ring
+
+/-- **Pauli commutator `[paulI_x, paulI_y] = -2 paulI_z`**. -/
+theorem paulI_x_paulI_y_commutator :
+    paulI_x * paulI_y - paulI_y * paulI_x = (-2 : ℂ) • paulI_z := by
+  rw [paulI_x_mul_paulI_y, paulI_y_mul_paulI_x]
+  ext i j
+  simp [Matrix.smul_apply, Matrix.neg_apply, Matrix.sub_apply, smul_eq_mul]
+  ring
+
+/-- **Pauli commutator `[paulI_y, paulI_z] = -2 paulI_x`**. -/
+theorem paulI_y_paulI_z_commutator :
+    paulI_y * paulI_z - paulI_z * paulI_y = (-2 : ℂ) • paulI_x := by
+  rw [paulI_y_mul_paulI_z, paulI_z_mul_paulI_y]
+  ext i j
+  simp [Matrix.smul_apply, Matrix.neg_apply, Matrix.sub_apply, smul_eq_mul]
+  ring
+
+/-- **Pauli commutator `[paulI_z, paulI_x] = -2 paulI_y`**. -/
+theorem paulI_z_paulI_x_commutator :
+    paulI_z * paulI_x - paulI_x * paulI_z = (-2 : ℂ) • paulI_y := by
+  rw [paulI_z_mul_paulI_x, paulI_x_mul_paulI_z]
+  ext i j
+  simp [Matrix.smul_apply, Matrix.neg_apply, Matrix.sub_apply, smul_eq_mul]
+  ring
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
