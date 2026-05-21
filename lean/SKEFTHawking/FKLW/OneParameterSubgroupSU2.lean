@@ -181,6 +181,28 @@ theorem expAmbient_injOn_source :
   have h_B : su2Log (SU2MatrixExp.expAmbient B) = B := su2Log_expAmbient hB
   rw [← h_A, h_eq, h_B]
 
+/-- **n-th-root uniqueness via `expAmbient` source injectivity**: for matrices
+`u, v` with `n • u, n • v ∈ expAmbientPartialHomeo.source` (n ≥ 1) and
+`expAmbient (n • u) = expAmbient (n • v)`, we have `u = v`.
+
+Proof: by injectivity on source `n • u = n • v`, and since the ambient matrix
+ring has characteristic zero (no n-torsion), this gives `u = v`. -/
+theorem expAmbient_nsmul_injOn
+    {u v : Matrix (Fin 2) (Fin 2) ℂ}
+    {n : ℕ} (hn_pos : 0 < n)
+    (hnu : (n • u : Matrix (Fin 2) (Fin 2) ℂ) ∈ expAmbientPartialHomeo.source)
+    (hnv : (n • v : Matrix (Fin 2) (Fin 2) ℂ) ∈ expAmbientPartialHomeo.source)
+    (h_eq : SU2MatrixExp.expAmbient (n • u) = SU2MatrixExp.expAmbient (n • v)) :
+    u = v := by
+  have h_nsmul_eq : (n • u : Matrix _ _ ℂ) = n • v :=
+    expAmbient_injOn_source hnu hnv h_eq
+  -- Convert ℕ-smul to ℂ-smul via Nat.cast_smul_eq_nsmul; cancel by (n : ℂ) ≠ 0
+  have h_smul : (n : ℂ) • u = (n : ℂ) • v := by
+    rw [Nat.cast_smul_eq_nsmul ℂ, Nat.cast_smul_eq_nsmul ℂ]
+    exact h_nsmul_eq
+  have hn_ne : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.mpr (Nat.pos_iff_ne_zero.mp hn_pos)
+  exact smul_right_injective (M := Matrix (Fin 2) (Fin 2) ℂ) hn_ne h_smul
+
 /-- The local-homeomorphism source is open in `Matrix (Fin 2) (Fin 2) ℂ`. -/
 theorem expAmbientPartialHomeo_source_isOpen :
     IsOpen expAmbientPartialHomeo.source :=
