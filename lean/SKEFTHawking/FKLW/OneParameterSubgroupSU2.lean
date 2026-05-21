@@ -3605,6 +3605,16 @@ theorem SU2_subgroup_eq_top_of_isOpen
     H = ⊤ :=
   Subgroup.eq_top_of_isOpen_of_connected H hOpen
 
+/-- **SU(2) corollary via interior point at 1**: if `1 ∈ interior H`
+then `H = ⊤`. Composes `Subgroup.isOpen_of_one_mem_interior` (subgroups
+with interior point at 1 are open) with `SU2_subgroup_eq_top_of_isOpen`. -/
+theorem SU2_subgroup_eq_top_of_one_mem_interior
+    (H : _root_.Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_1_int : (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) ∈
+      interior ((H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    H = ⊤ :=
+  SU2_subgroup_eq_top_of_isOpen H (H.isOpen_of_one_mem_interior h_1_int)
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
