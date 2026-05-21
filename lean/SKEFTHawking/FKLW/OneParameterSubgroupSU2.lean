@@ -2906,6 +2906,78 @@ theorem vonNeumann_BW_limit_mem_tracelessSkewHermitian_uncond
   have h_ev := vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually_uncond h_seq
   exact hφ.tendsto_atTop.eventually h_ev
 
+/-! ### §9.13. UNCONDITIONAL gap-#2 closure
+
+The full unconditional discharge of `OneParamSubgroupFromAccPt_SU2`,
+replicating `vonNeumann_assemble_OneParamSubgroupInSU2` but using
+the §9.12 unconditional substrates + `DetExpZeroOnSu2_SU2_discharged`
+(also unconditional). NO tracked Prop hypotheses. -/
+
+/-- **§9.13a. UNCONDITIONAL assembly**: `OneParamSubgroupInSU2 H` for
+H closed + AccPt 1 H, with NO tracked Prop hypotheses. -/
+theorem vonNeumann_assemble_OneParamSubgroupInSU2_unconditional
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+    (hH_accPt : AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))) :
+    SKEFTHawking.FKLW.OneParamSubgroupInSU2 H := by
+  obtain ⟨seq, h_mem, h_ne, h_seq, h_log_tendsto⟩ :=
+    vonNeumann_sequence_with_log H hH_accPt
+  have h_ev_ne := eventually_su2Log_seq_ne_zero h_ne h_seq
+  obtain ⟨X, _hX_ball, φ, hφ, h_unit_tendsto⟩ := vonNeumann_BW_extract seq
+  have h_norm_one : ‖X‖ = 1 :=
+    vonNeumann_BW_limit_norm_eq_one seq h_ev_ne hφ h_unit_tendsto
+  have hX_ne : X ≠ 0 := fun h => by
+    rw [h, norm_zero] at h_norm_one; norm_num at h_norm_one
+  have hX_ts : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 2) :=
+    vonNeumann_BW_limit_mem_tracelessSkewHermitian_uncond h_seq hφ h_unit_tendsto
+  refine ⟨oneParamSU2Map hX_ts DetExpZeroOnSu2_SU2_discharged, ?_, ?_, ?_, ?_, ?_⟩
+  · exact oneParamSU2Map_continuous hX_ts DetExpZeroOnSu2_SU2_discharged
+  · exact oneParamSU2Map_zero hX_ts DetExpZeroOnSu2_SU2_discharged
+  · intro s t
+    exact oneParamSU2Map_add hX_ts DetExpZeroOnSu2_SU2_discharged s t
+  · exact vonNeumann_oneParamSU2Map_nontrivial hX_ne hX_ts DetExpZeroOnSu2_SU2_discharged
+  · intro t
+    exact vonNeumann_oneParamSU2Map_mem_H DetExpZeroOnSu2_SU2_discharged hH_closed
+      h_mem hφ h_seq h_ev_ne h_log_tendsto hX_ts h_unit_tendsto t
+
+/-- **§9.13b. UNCONDITIONAL DISCHARGE of `OneParamSubgroupFromAccPt_SU2`**.
+The strengthened gap-#2 predicate holds **with no tracked Prop hypothesis**.
+
+Combined with §6.7's discharge: gap #2 is now UNCONDITIONALLY CLOSED. -/
+theorem OneParamSubgroupFromAccPt_SU2_unconditional :
+    SKEFTHawking.FKLW.OneParamSubgroupFromAccPt_SU2 := by
+  intro H hH_closed hH_accPt
+  exact vonNeumann_assemble_OneParamSubgroupInSU2_unconditional H hH_closed hH_accPt
+
+/-! ### §10. UNCONDITIONAL F.21 from ONE tracked Prop
+
+With gap #2 discharged unconditionally, F.21 unconditional density
+now depends on **ONLY** `CartanFinalStep_SU2` (Wedge B residual). -/
+
+/-- **§10.1. UNCONDITIONAL `H_Fib = ⊤` from one tracked Prop**. -/
+theorem H_Fib_eq_top_from_one_tracked_prop
+    (h_cartan_final : SKEFTHawking.FKLW.CartanFinalStep_SU2) :
+    SKEFTHawking.FKLW.H_Fib = ⊤ :=
+  SKEFTHawking.FKLW.H_Fib_eq_top_of_strengthened_chain
+    OneParamSubgroupFromAccPt_SU2_unconditional
+    h_cartan_final
+
+/-- **§10.2. UNCONDITIONAL F.21 from ONE tracked Prop** (the FINAL HEADLINE):
+Fibonacci density in SU(3)_2 ↪ SU(2) unconditional on the original 3-gap
+Cartan chain — needs ONLY the Wedge-B `CartanFinalStep_SU2` predicate.
+
+This is the **culmination of the Phase 6p Wave 2c.4a-R5.4 gap-#2
+discharge arc** (15+ commits, ~1500+ LoC). -/
+theorem fibonacci_density_F21_from_one_tracked_prop
+    (h_cartan_final : SKEFTHawking.FKLW.CartanFinalStep_SU2) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_F21_from_strengthened_chain
+    OneParamSubgroupFromAccPt_SU2_unconditional
+    h_cartan_final
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
