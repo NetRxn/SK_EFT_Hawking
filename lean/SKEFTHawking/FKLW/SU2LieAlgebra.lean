@@ -1995,6 +1995,29 @@ constructing Ad(g)·X explicitly LI from X, we can argue by
 contradiction: assume Ad(g)·X ℝ-LD with X, derive matrix commutation,
 then derive g commutes with X's 1-param subgroup. -/
 
+/-- **Ad(U)·X = X iff U·X = X·U** for unitary U: Ad fixing a matrix iff
+left/right multiplication commutes.
+
+Proof: forward — `U·X·star U = X` ⟹ `U·X = X·U` by multiplying by `U` on
+right using `star U · U = 1`. Backward — symmetric.
+
+This is the structural fact: Ad-centralizer of X = matrix-centralizer of X
+(intersected with unitaries). -/
+theorem unitary_Ad_fix_iff_commute
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    {U : Matrix (Fin 2) (Fin 2) ℂ} (hU : U ∈ Matrix.unitaryGroup (Fin 2) ℂ) :
+    U * X * star U = X ↔ U * X = X * U := by
+  constructor
+  · intro h
+    -- U·X·star U = X ⟹ U·X·star U · U = X · U ⟹ U·X = X·U
+    have h1 : U * X * star U * U = X * U := by rw [h]
+    rw [Matrix.mul_assoc (U * X), (Matrix.mem_unitaryGroup_iff').mp hU,
+        Matrix.mul_one] at h1
+    exact h1
+  · intro h
+    -- U·X = X·U ⟹ U·X·star U = X·U·star U = X·(U · star U) = X
+    rw [h, Matrix.mul_assoc, (Matrix.mem_unitaryGroup_iff).mp hU, Matrix.mul_one]
+
 /-- **Matrix-commute ⟹ ℝ-LD** for X, Y ∈ ts (Fin 2). Contrapositive of §19. -/
 theorem tracelessSkewHermitian_lin_dep_of_commute
     {X Y : Matrix (Fin 2) (Fin 2) ℂ}
