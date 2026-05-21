@@ -3053,6 +3053,113 @@ theorem fibonacci_density_F21_from_cartan_final_v2_only
     OneParamSubgroupFromAccPt_SU2_unconditional
     h_cartan_final_v2
 
+/-! ## §11. Tangent extraction from 1-parameter subgroups in SU(2)
+
+(2026-05-21 — toward CartanFinalStep_SU2_v2 discharge)
+
+For `φ ∈ OneParamSubgroupInSU2 H` (continuous nontrivial group homomorphism
+`ℝ → SU(2)` with image in `H`), the classical Lie group structure
+theorem gives `φ(t) = expAmbient(t • X)` for some unique
+`X ∈ tracelessSkewHermitian (Fin 2)` ("the tangent at 0").
+
+This section ships **infrastructure building blocks** for that
+extraction. The full identification `φ(t) = expAmbient(t • X)` is a
+multi-session ship; here we ship the foundational continuity +
+neighborhood-of-1 facts that the eventual tangent construction will
+consume.
+
+The eventual extraction (TODO multi-session):
+  - Pick small `t₀ > 0` with `φ(t₀).val ∈ expAmbientPartialHomeo.target`
+    (via eventually-in-target).
+  - Define `X := su2Log(φ(t₀).val) / t₀`.
+  - Show `X ∈ tracelessSkewHermitian (Fin 2)` via `Su2LogMem_on_nhd_one`.
+  - Show `φ(t) = expAmbient(t • X)` for all `t ∈ ℝ` (the hard step;
+    uses homomorphism property + density of integer/dyadic multiples of t₀
+    + continuity). -/
+
+namespace OneParamSubgroupSU2
+
+open SKEFTHawking.FKLW
+
+/-- The lift of a 1-parameter subgroup to the matrix level is continuous. -/
+theorem val_continuous
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) :
+    Continuous (fun t => (φ t).val) :=
+  continuous_subtype_val.comp hcts
+
+/-- The lift evaluated at 0 equals the identity matrix. -/
+theorem val_at_zero_eq_one
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hzero : φ 0 = 1) :
+    (φ 0).val = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [hzero]
+  rfl
+
+/-- **Eventually-in-target near 0**: for `φ` continuous with `φ(0) = 1`,
+the matrix-level lift `(φ t).val` lies in `expAmbientPartialHomeo.target`
+for `t` in a neighborhood of 0.
+
+This is the substrate that lets us *evaluate* `su2Log` on `(φ t).val`
+for small `t`. -/
+theorem val_eventually_in_target
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1) :
+    ∀ᶠ t in (nhds (0 : ℝ)),
+      (φ t).val ∈ expAmbientPartialHomeo.target := by
+  -- Continuity: t ↦ (φ t).val is continuous (val_continuous).
+  -- At t = 0: (φ 0).val = 1 ∈ target (one_mem_expAmbientPartialHomeo_target).
+  -- Target is open ⇒ preimage of target under continuous map is open ⇒
+  -- contains a neighborhood of 0.
+  have h_val_cts : Continuous (fun t => (φ t).val) := val_continuous hcts
+  have h_target_open : IsOpen expAmbientPartialHomeo.target :=
+    expAmbientPartialHomeo.open_target
+  have h_at_zero : (φ 0).val ∈ expAmbientPartialHomeo.target := by
+    rw [val_at_zero_eq_one hzero]
+    exact one_mem_expAmbientPartialHomeo_target
+  exact (h_val_cts.continuousAt.preimage_mem_nhds (h_target_open.mem_nhds h_at_zero))
+
+/-- **`su2Log ∘ φ.val` continuous at 0**: for `φ` continuous with `φ(0) = 1`,
+the composition `t ↦ su2Log((φ t).val)` is continuous at `t = 0`.
+
+This is the candidate-tangent definition's continuity foundation: the
+eventual `X := lim_{t→0} su2Log((φ t).val) / t` requires this
+continuity. -/
+theorem su2Log_comp_val_continuousAt_zero
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1) :
+    ContinuousAt (fun t => su2Log ((φ t).val)) 0 := by
+  have h_val_cts : Continuous (fun t => (φ t).val) := val_continuous hcts
+  have h_at_zero : (φ 0).val ∈ expAmbientPartialHomeo.target := by
+    rw [val_at_zero_eq_one hzero]
+    exact one_mem_expAmbientPartialHomeo_target
+  have h_su2Log_at : ContinuousAt su2Log ((φ 0).val) :=
+    su2Log_continuousOn.continuousAt
+      (expAmbientPartialHomeo.open_target.mem_nhds h_at_zero)
+  unfold ContinuousAt
+  have h_val_tendsto : Filter.Tendsto (fun t => (φ t).val) (nhds 0) (nhds (φ 0).val) :=
+    h_val_cts.continuousAt
+  exact h_su2Log_at.tendsto.comp h_val_tendsto
+
+/-- **`su2Log ∘ φ.val → 0` at 0**: for `φ` continuous with `φ(0) = 1`,
+`su2Log((φ t).val)` tends to 0 as `t → 0`.
+
+Follows from continuity + `su2Log_one = 0`. This is the foundational
+limit fact for the eventual `lim_{t→0} su2Log((φ t).val) / t` tangent
+extraction. -/
+theorem su2Log_comp_val_tendsto_zero_at_zero
+    {φ : ℝ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hcts : Continuous φ) (hzero : φ 0 = 1) :
+    Filter.Tendsto (fun t => su2Log ((φ t).val))
+      (nhds 0) (nhds 0) := by
+  have h_at_zero : (fun t => su2Log ((φ t).val)) 0 = 0 := by
+    show su2Log ((φ 0).val) = 0
+    rw [val_at_zero_eq_one hzero, su2Log_one]
+  rw [← h_at_zero]
+  exact (su2Log_comp_val_continuousAt_zero hcts hzero).tendsto
+
+end OneParamSubgroupSU2
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
