@@ -1584,6 +1584,233 @@ theorem tracelessSkewHermitian_bracket_ne_zero_of_lin_indep
       exact h_diff_eq_zero
     exact one_ne_zero (h_LI 1 (-k) h_combo).1
 
+/-! ## §20. `pauliDet X Y [X, Y] ≠ 0` — {X, Y, [X, Y]} span su(2)
+
+(2026-05-21 — final piece of the dim-counting substrate)
+
+For `X, Y ∈ tracelessSkewHermitian (Fin 2)` that are ℝ-linearly
+independent, the triple `(X, Y, X·Y - Y·X)` has nonzero Pauli
+determinant — i.e., these three matrices ℝ-linearly span all of su(2).
+
+The argument computes `pauliDet X Y [X, Y]` symbolically using the §18
+bracket-coord formula and the Lagrange identity:
+
+  `pauliDet X Y [X, Y] = -2 · (|aX|² · |aY|² - (aX · aY)²)`
+                       `= -2 · |aX × aY|²`
+
+The "cross-product magnitude squared" is positive when `aX, aY` are
+ℝ-LI in ℝ³, which follows from X, Y ℝ-LI in su(2) via the
+matrixToPauliCoords isomorphism. -/
+
+/-- **Pauli-coords linear independence ⟸ matrix linear independence**
+(in `tracelessSkewHermitian (Fin 2)`).
+
+If X, Y ∈ tracelessSkewHermitian (Fin 2) are ℝ-linearly independent as
+matrices, then their Pauli coordinates are ℝ-linearly independent as
+triples in ℝ³. -/
+theorem matrixToPauliCoords_lin_indep_of_lin_indep
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2))
+    (h_LI : ∀ (a b : ℝ), (a : ℂ) • X + (b : ℂ) • Y = 0 → a = 0 ∧ b = 0) :
+    ∀ (a b : ℝ),
+      (a * (matrixToPauliCoords X).1 + b * (matrixToPauliCoords Y).1 = 0) →
+      (a * (matrixToPauliCoords X).2.1 + b * (matrixToPauliCoords Y).2.1 = 0) →
+      (a * (matrixToPauliCoords X).2.2 + b * (matrixToPauliCoords Y).2.2 = 0) →
+      a = 0 ∧ b = 0 := by
+  intro a b ha1 ha2 ha3
+  -- Use matrixToPauliCoords_smul and matrixToPauliCoords_add to lift the
+  -- Pauli-coord LD to matrix LD, then apply h_LI.
+  have h_smul_mem_X : (a : ℂ) • X ∈ tracelessSkewHermitian (Fin 2) := by
+    rw [Complex.coe_smul]
+    exact Submodule.smul_mem _ a hX
+  have h_smul_mem_Y : (b : ℂ) • Y ∈ tracelessSkewHermitian (Fin 2) := by
+    rw [Complex.coe_smul]
+    exact Submodule.smul_mem _ b hY
+  have h_add_mem : (a : ℂ) • X + (b : ℂ) • Y ∈ tracelessSkewHermitian (Fin 2) :=
+    Submodule.add_mem _ h_smul_mem_X h_smul_mem_Y
+  have h_add_coords :
+      matrixToPauliCoords ((a : ℂ) • X + (b : ℂ) • Y) = (0, 0, 0) := by
+    rw [matrixToPauliCoords_add, matrixToPauliCoords_smul, matrixToPauliCoords_smul]
+    show (a * (matrixToPauliCoords X).1 + b * (matrixToPauliCoords Y).1,
+          a * (matrixToPauliCoords X).2.1 + b * (matrixToPauliCoords Y).2.1,
+          a * (matrixToPauliCoords X).2.2 + b * (matrixToPauliCoords Y).2.2) = (0, 0, 0)
+    rw [ha1, ha2, ha3]
+  have h_add_zero : (a : ℂ) • X + (b : ℂ) • Y = 0 :=
+    (matrixToPauliCoords_eq_zero_iff h_add_mem).mp h_add_coords
+  exact h_LI a b h_add_zero
+
+/-- **Substantive: {X, Y, [X, Y]} ℝ-LI for X, Y ∈ su(2) ℝ-LI** — the
+"two LI elements + their Lie bracket span su(2)" criterion.
+
+Equivalent formulation: `pauliDet X Y (X·Y - Y·X) ≠ 0`. -/
+theorem pauliDet_X_Y_bracket_ne_zero
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2))
+    (h_LI : ∀ (a b : ℝ), (a : ℂ) • X + (b : ℂ) • Y = 0 → a = 0 ∧ b = 0) :
+    pauliDet X Y (X * Y - Y * X) ≠ 0 := by
+  -- Unfold pauliDet using the bracket-coords formula.
+  unfold pauliDet
+  rw [matrixToPauliCoords_bracket hX hY]
+  -- The 3×3 determinant expands to a polynomial in aX, aY components.
+  -- By the Lagrange identity, it equals -2 · (|aX|² · |aY|² - (aX · aY)²).
+  set xa := (matrixToPauliCoords X).1
+  set ya := (matrixToPauliCoords X).2.1
+  set za := (matrixToPauliCoords X).2.2
+  set xb := (matrixToPauliCoords Y).1
+  set yb := (matrixToPauliCoords Y).2.1
+  set zb := (matrixToPauliCoords Y).2.2
+  -- After unfolding the let-bindings in pauliDet, the expression becomes
+  -- xa·(yb·zC - zb·yC) - ya·(xb·zC - zb·xC) + za·(xb·yC - yb·xC)
+  -- where (xC, yC, zC) are the bracket coords = (2(za·yb - ya·zb), ..., ...).
+  show (xa * (yb * (2 * (ya * xb - xa * yb)) - zb * (2 * (xa * zb - za * xb))) -
+        ya * (xb * (2 * (ya * xb - xa * yb)) - zb * (2 * (za * yb - ya * zb))) +
+        za * (xb * (2 * (xa * zb - za * xb)) - yb * (2 * (za * yb - ya * zb)))) ≠ 0
+  -- Apply Lagrange identity:
+  --   The above = -2 · ((xa² + ya² + za²) · (xb² + yb² + zb²) - (xa·xb + ya·yb + za·zb)²)
+  have h_lagrange :
+      xa * (yb * (2 * (ya * xb - xa * yb)) - zb * (2 * (xa * zb - za * xb))) -
+      ya * (xb * (2 * (ya * xb - xa * yb)) - zb * (2 * (za * yb - ya * zb))) +
+      za * (xb * (2 * (xa * zb - za * xb)) - yb * (2 * (za * yb - ya * zb))) =
+        -2 * ((xa^2 + ya^2 + za^2) * (xb^2 + yb^2 + zb^2) -
+              (xa*xb + ya*yb + za*zb)^2) := by ring
+  rw [h_lagrange]
+  -- Show |aX|² · |aY|² - (aX · aY)² > 0 when aX, aY ℝ-LI.
+  -- Equivalently: ≠ 0 since by Cauchy-Schwarz it's ≥ 0 and = 0 iff LD.
+  intro h_zero
+  -- From h_zero: -2 · (Gram) = 0 ⇒ Gram = 0.
+  have h_gram_zero : (xa^2 + ya^2 + za^2) * (xb^2 + yb^2 + zb^2) -
+                     (xa*xb + ya*yb + za*zb)^2 = 0 := by linarith
+  -- Cauchy-Schwarz with equality: aX, aY ℝ-LD. Derive a, b ∈ ℝ with a • aX + b • aY = 0.
+  -- Algebraic identity for ℝ³:
+  --   |aX|²·|aY|² - (aX·aY)² = (xa·yb - ya·xb)² + (xa·zb - za·xb)² + (ya·zb - za·yb)²
+  -- Each square ≥ 0; sum = 0 ⇒ each = 0.
+  have h_sum_sq :
+      (xa*yb - ya*xb)^2 + (xa*zb - za*xb)^2 + (ya*zb - za*yb)^2 = 0 := by
+    have h_identity :
+        (xa*yb - ya*xb)^2 + (xa*zb - za*xb)^2 + (ya*zb - za*yb)^2 =
+        (xa^2 + ya^2 + za^2) * (xb^2 + yb^2 + zb^2) -
+        (xa*xb + ya*yb + za*zb)^2 := by ring
+    linarith
+  have h_each_sq_nonneg : (xa*yb - ya*xb)^2 ≥ 0 ∧ (xa*zb - za*xb)^2 ≥ 0 ∧ (ya*zb - za*yb)^2 ≥ 0 :=
+    ⟨sq_nonneg _, sq_nonneg _, sq_nonneg _⟩
+  have h_first_zero : (xa*yb - ya*xb)^2 = 0 := by linarith
+  have h_second_zero : (xa*zb - za*xb)^2 = 0 := by linarith
+  have h_third_zero : (ya*zb - za*yb)^2 = 0 := by linarith
+  have h_d1 : xa*yb - ya*xb = 0 := by
+    have := sq_eq_zero_iff.mp h_first_zero; exact this
+  have h_d2 : xa*zb - za*xb = 0 := by
+    have := sq_eq_zero_iff.mp h_second_zero; exact this
+  have h_d3 : ya*zb - za*yb = 0 := by
+    have := sq_eq_zero_iff.mp h_third_zero; exact this
+  -- The three relations: xa·yb = ya·xb, xa·zb = za·xb, ya·zb = za·yb.
+  -- These give Pauli coords (xa, ya, za), (xb, yb, zb) ℝ-LD in ℝ³.
+  -- Case split: (xb, yb, zb) = 0 or not.
+  by_cases h_aY_zero : xb = 0 ∧ yb = 0 ∧ zb = 0
+  · -- Y has zero Pauli coords, so Y = 0.
+    have h_aY_eq_zero : matrixToPauliCoords Y = (0, 0, 0) := by
+      refine Prod.ext ?_ (Prod.ext ?_ ?_)
+      · show xb = 0; exact h_aY_zero.1
+      · show yb = 0; exact h_aY_zero.2.1
+      · show zb = 0; exact h_aY_zero.2.2
+    have h_Y_zero : Y = 0 := (matrixToPauliCoords_eq_zero_iff hY).mp h_aY_eq_zero
+    -- LI(X, Y) with (a, b) = (0, 1): 0 • X + 1 • Y = Y = 0 ⇒ 1 = 0, false.
+    have := h_LI 0 1 (by rw [h_Y_zero]; simp)
+    exact one_ne_zero this.2
+  · -- Some component of (xb, yb, zb) is nonzero. Derive LD then contradict LI.
+    push_neg at h_aY_zero
+    have h_LI_pauli :=
+      matrixToPauliCoords_lin_indep_of_lin_indep hX hY h_LI
+    -- Use the three relations to construct LD and contradict.
+    -- Easiest: find k such that (xa, ya, za) = k · (xb, yb, zb), then
+    -- xa - k·xb = 0, etc., apply LI_pauli with (a = 1, b = -k).
+    by_cases h_xb : xb ≠ 0
+    · -- k := xa / xb. Show xa = k·xb, ya = k·yb, za = k·zb.
+      have h_xa_kxb : xa = (xa / xb) * xb := by field_simp
+      have h_ya_kyb : ya = (xa / xb) * yb := by
+        field_simp; linarith [h_d1]
+      have h_za_kzb : za = (xa / xb) * zb := by
+        field_simp; linarith [h_d2]
+      -- Now (xa - (xa/xb)*xb) = 0, etc.
+      have h_zero1 : 1 * xa + (-(xa/xb)) * xb = 0 := by
+        rw [one_mul, neg_mul, neg_eq_iff_add_eq_zero] at *; linarith
+      have h_zero2 : 1 * ya + (-(xa/xb)) * yb = 0 := by linarith [h_ya_kyb]
+      have h_zero3 : 1 * za + (-(xa/xb)) * zb = 0 := by linarith [h_za_kzb]
+      have := h_LI_pauli 1 (-(xa/xb)) h_zero1 h_zero2 h_zero3
+      exact one_ne_zero this.1
+    · push_neg at h_xb
+      -- xb = 0, so (yb, zb) ≠ (0, 0).
+      have h_yb_or_zb : yb ≠ 0 ∨ zb ≠ 0 := by
+        by_contra h_both
+        push_neg at h_both
+        -- h_aY_zero : xb = 0 → yb = 0 → zb ≠ 0
+        exact h_aY_zero h_xb h_both.1 h_both.2
+      by_cases h_yb : yb ≠ 0
+      · -- k := ya / yb. xb = 0 ⇒ xa = 0 (from xa·yb = ya·xb = 0).
+        have h_xa_zero : xa = 0 := by
+          have h_prod : xa * yb = 0 := by
+            have h_swap : xa * yb = ya * xb := by linarith [h_d1]
+            rw [h_swap, h_xb, mul_zero]
+          rcases mul_eq_zero.mp h_prod with hh | hh
+          · exact hh
+          · exact absurd hh h_yb
+        -- ya = (ya/yb)·yb, za = (ya/yb)·zb (from ya·zb = za·yb).
+        have h_ya_kyb : ya = (ya / yb) * yb := by field_simp
+        have h_za_kzb : za = (ya / yb) * zb := by
+          field_simp; linarith [h_d3]
+        have h_zero1 : 1 * xa + (-(ya/yb)) * xb = 0 := by
+          rw [h_xa_zero, h_xb]; ring
+        have h_zero2 : 1 * ya + (-(ya/yb)) * yb = 0 := by linarith [h_ya_kyb]
+        have h_zero3 : 1 * za + (-(ya/yb)) * zb = 0 := by linarith [h_za_kzb]
+        have := h_LI_pauli 1 (-(ya/yb)) h_zero1 h_zero2 h_zero3
+        exact one_ne_zero this.1
+      · push_neg at h_yb
+        -- xb = 0, yb = 0, so zb ≠ 0.
+        rcases h_yb_or_zb with h | h_zb
+        · exact absurd h_yb h
+        -- xa = ya = 0, za free.
+        have h_xa_zero : xa = 0 := by
+          have h_prod : xa * zb = 0 := by
+            have h_swap : xa * zb = za * xb := by linarith [h_d2]
+            rw [h_swap, h_xb, mul_zero]
+          rcases mul_eq_zero.mp h_prod with hh | hh
+          · exact hh
+          · exact absurd hh h_zb
+        have h_ya_zero : ya = 0 := by
+          have h_prod : ya * zb = 0 := by
+            have h_swap : ya * zb = za * yb := by linarith [h_d3]
+            rw [h_swap, h_yb, mul_zero]
+          rcases mul_eq_zero.mp h_prod with hh | hh
+          · exact hh
+          · exact absurd hh h_zb
+        have h_za_kzb : za = (za / zb) * zb := by field_simp
+        have h_zero1 : 1 * xa + (-(za/zb)) * xb = 0 := by
+          rw [h_xa_zero, h_xb]; ring
+        have h_zero2 : 1 * ya + (-(za/zb)) * yb = 0 := by
+          rw [h_ya_zero, h_yb]; ring
+        have h_zero3 : 1 * za + (-(za/zb)) * zb = 0 := by linarith [h_za_kzb]
+        have := h_LI_pauli 1 (-(za/zb)) h_zero1 h_zero2 h_zero3
+        exact one_ne_zero this.1
+
+/-- **HEADLINE: `{X, Y, X·Y - Y·X}` is ℝ-linearly independent in
+`tracelessSkewHermitian (Fin 2)` when X, Y are ℝ-LI.**
+
+This is the "two LI elements + their bracket span all 3 dimensions of
+su(2)" criterion — the final substantive piece needed for the
+dim-counting argument in CartanFinalStep_SU2_v2 discharge. -/
+theorem tracelessSkewHermitian_X_Y_bracket_lin_indep
+    {X Y : Matrix (Fin 2) (Fin 2) ℂ}
+    (hX : X ∈ tracelessSkewHermitian (Fin 2))
+    (hY : Y ∈ tracelessSkewHermitian (Fin 2))
+    (h_LI : ∀ (a b : ℝ), (a : ℂ) • X + (b : ℂ) • Y = 0 → a = 0 ∧ b = 0) :
+    ∀ (a b c : ℝ),
+      (a : ℂ) • X + (b : ℂ) • Y + (c : ℂ) • (X * Y - Y * X) = 0 →
+      a = 0 ∧ b = 0 ∧ c = 0 := by
+  intro a b c h_zero
+  exact tracelessSkewHermitian_lin_indep_of_pauliDet_ne_zero
+    (pauliDet_X_Y_bracket_ne_zero hX hY h_LI) h_zero
+
 /-! ## §10. Module summary
 
 `SU2LieAlgebra.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Layer Cartan-A,
