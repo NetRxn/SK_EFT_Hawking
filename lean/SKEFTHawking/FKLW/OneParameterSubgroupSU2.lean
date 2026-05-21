@@ -1653,52 +1653,140 @@ theorem specialUnitaryGroup_coe_zpow
       exact Matrix.mem_unitaryGroup_iff.mp h_pow_unitary
     exact (Matrix.inv_eq_right_inv h_mul_star).symm
 
-/-! ## §§4.i.2-5. (Next ship — substrate roadmap)
+/-! ### §4.i.2. Topological closure properties
 
-  **§3.5. SU(2) inclusion `oneParamMatrixMap X t ∈ specialUnitaryGroup`**:
-
-  Need `det (expAmbient (t • X)) = 1` for X ∈ tracelessSkewHermitian (Fin 2).
-
-  Approach (closed-form): from `tracelessSkewHermitian_two_sq` we have
-  `(t•X)² = -(t² · su2RadiusSq X) • I`. The power series for
-  `expAmbient (t • X)` thus splits into even/odd parts that recognize as
-  `cos(t·r) • I + sinc(t·r) • (t•X)` (with `r := √(su2RadiusSq X)`).
-  Then `det(α • I + β • (t•X))` for traceless `t•X` ∈ M_2(ℂ) equals
-  `α² + β² · det(t•X) = α² + β² · t² · su2RadiusSq X`, which evaluates
-  to `cos²(t·r) + sin²(t·r) = 1`.
-
-  Formalization: requires showing the partial-sum recognition with
-  `Real.cos`, `Real.sin`. Approximately 200-400 LoC of substantive
-  power-series work.
-
-  Alternative (spectral): via `Matrix.IsHermitian.spectral_theorem` on
-  `i • X` (Hermitian). Decomposes `t • X = U · diag(λ₁, λ₂) · U†` with
-  λ_i pure imaginary, sum = 0 (from tracelessness). Then
-  `det(expAmbient (t•X)) = exp(λ₁) · exp(λ₂) = exp(λ₁+λ₂) = exp(0) = 1`.
-  Similar LoE.
-
-  **§4. Von Neumann construction + discharge of
-       `OneParamSubgroupFromAccPt_SU2`**:
-
-  Once §3.5 is in hand:
-  - From AccPt 1 in H, extract sequence (h_n) → 1 in H \ {1}.
-  - Y_n := su2Log h_n; show Y_n ∈ tracelessSkewHermitian (using §3.5's
-    SU(2) inclusion + local inverse uniqueness — this is the SHIPPED-substrate
-    "log of SU(2) element near 1 is in su(2)" sub-lemma).
-  - X_n := Y_n / ‖Y_n‖_op in unit sphere of finite-dim
-    `tracelessSkewHermitian (Fin 2) ≅ ℝ³`.
-  - BW → subseq X_{n_k} → X with ‖X‖ = 1.
-  - For any t ∈ ℝ, k_n := round(t / ‖Y_n‖). h_n^{k_n} = expAmbient
-    (k_n • Y_n) ∈ H. Show this → expAmbient (t • X) (uses unitary norm
-    1 + telescoping bound). H closed → exp(t • X) ∈ H.
-  - Define φ t := ⟨oneParamMatrixMap X t, ...⟩; verify all
-    `OneParamSubgroupInSU2 H` conjuncts using §3 lemmas above.
-
-  Result: `OneParamSubgroupFromAccPt_SU2` is theorem (not predicate),
-  discharging gap #2 substantively. Combined with §4.7's strengthening,
-  this reduces F.21 unconditional density to a single remaining tracked
-  Cartan predicate (`CartanFinalStep_SU2`).
+`Matrix.specialUnitaryGroup (Fin 2) ℂ`, viewed as a subset of
+`Matrix (Fin 2) (Fin 2) ℂ`, is closed (as the intersection of the
+unitary group with the determinant-1 locus). The image of `H` under
+the subtype embedding `Subtype.val : ↥SU(2) → Matrix _ _ ℂ` is also
+closed in `Matrix _ _ ℂ` (image of closed set under closed embedding).
 -/
+
+/-- **`Matrix.specialUnitaryGroup (Fin 2) ℂ` is closed in
+`Matrix (Fin 2) (Fin 2) ℂ`** (with the linftyOp topology). Direct
+construction: `specialUnitaryGroup = unitaryGroup ∩ det⁻¹{1}`, both
+closed (unitaryGroup via `isClosed_unitary`; det⁻¹{1} via
+continuity of `Matrix.det`). -/
+theorem specialUnitaryGroup_isClosed :
+    IsClosed ((Matrix.specialUnitaryGroup (Fin 2) ℂ :
+        Set (Matrix (Fin 2) (Fin 2) ℂ))) := by
+  rw [show ((Matrix.specialUnitaryGroup (Fin 2) ℂ :
+        Set (Matrix (Fin 2) (Fin 2) ℂ))) =
+      (Matrix.unitaryGroup (Fin 2) ℂ : Set (Matrix (Fin 2) (Fin 2) ℂ)) ∩
+        {M | M.det = 1} from ?_]
+  · exact IsClosed.inter isClosed_unitary
+      (isClosed_eq (Continuous.matrix_det continuous_id) continuous_const)
+  · ext M
+    simp [Matrix.mem_specialUnitaryGroup_iff]
+
+/-- **H_mat (image of H in `Matrix _ _ ℂ`) is closed** when `H` is
+closed in the SU(2) subspace topology. Combines `specialUnitaryGroup_isClosed`
++ `IsClosed.isClosedEmbedding_subtypeVal` (Subtype.val from a closed
+subset is a closed embedding) + `Topology.IsClosedEmbedding.isClosed_iff_image_isClosed`. -/
+theorem H_mat_isClosed
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) :
+    IsClosed ((fun h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) => h.val) ''
+              (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) := by
+  exact (specialUnitaryGroup_isClosed.isClosedEmbedding_subtypeVal.isClosed_iff_image_isClosed).mp
+        hH_closed
+
+/-! ### §4.i.3. Sequence-in-H_mat membership
+
+For the §4.h.2 sequence `f k := (seq (φ k)).val ^ m_k` to identify the
+limit as in H_mat, we need each `f k ∈ H_mat`. Combining:
+- `seq (φ k) ∈ H` (from the §4.b hypothesis `∀ n, seq n ∈ H` lifted to subseq)
+- `H` is a Subgroup → closed under zpow → `(seq (φ k)) ^ m_k ∈ H`
+- §4.i.1 → `(((seq (φ k))^m_k).val : Matrix _ _ ℂ) = (seq (φ k)).val ^ m_k`
+- Hence the matrix-power lies in H_mat. -/
+
+/-- **§4.i.3. Matrix-pow seq is in H_mat (eventually trivially: for all k)**. -/
+theorem vonNeumann_mat_pow_mem_H_mat
+    {H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_mem : ∀ n, seq n ∈ H)
+    (φ : ℕ → ℕ) (t : ℝ) (k : ℕ) :
+    ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ) ^
+        (⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋ : ℤ) ∈
+      (fun h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) => h.val) ''
+        (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  -- The element (seq (φ k))^m_k in ↥SU(2) is in H.
+  set m : ℤ := ⌊t / ‖su2Log ((seq (φ k)).val : Matrix (Fin 2) (Fin 2) ℂ)‖⌋
+  refine ⟨(seq (φ k)) ^ m, ?_, ?_⟩
+  · -- (seq (φ k)) ^ m ∈ H
+    exact H.zpow_mem (h_mem (φ k)) m
+  · -- ((seq (φ k))^m).val = (seq (φ k)).val ^ m
+    exact specialUnitaryGroup_coe_zpow _ _
+
+/-! ### §4.i.4. Limit is in H_mat
+
+Combining §4.h.2 (matrix-pow seq tendsto), §4.i.2 (H_mat closed), and
+§4.i.3 (sequence in H_mat) via `IsClosed.mem_of_tendsto`. -/
+
+/-- **§4.i.4. `expAmbient (t • X)` is in H_mat**: the limit of the
+matrix-pow sequence is in the image of H in `Matrix _ _ ℂ`. -/
+theorem vonNeumann_expAmbient_mem_H_mat
+    {H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)}
+    (h_mem : ∀ n, seq n ∈ H)
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))))
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => su2Log ((seq n).val : Matrix (Fin 2) (Fin 2) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin 2) (Fin 2) ℂ)))
+    {X : Matrix (Fin 2) (Fin 2) ℂ}
+    (h_unit_tendsto : Filter.Tendsto
+      (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    SU2MatrixExp.expAmbient (t • X) ∈
+      (fun h : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) => h.val) ''
+        (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  have h_pow_tendsto := vonNeumann_su2Mat_pow_seq_tendsto
+    hφ h_seq h_ev_ne h_log_tendsto h_unit_tendsto t
+  apply (H_mat_isClosed H hH_closed).mem_of_tendsto h_pow_tendsto
+  filter_upwards with k
+  exact vonNeumann_mat_pow_mem_H_mat h_mem φ t k
+
+/-! ### §4.i.5-6. (Next ship — depends on tracked Props)
+
+The remaining steps to complete the discharge of
+`OneParamSubgroupFromAccPt_SU2`:
+
+**§4.i.5**: Lift `expAmbient (t • X) ∈ H_mat` back to the SU(2)
+subtype. Two pieces required:
+  1. `expAmbient (t • X) ∈ specialUnitaryGroup` — provided by
+     `expAmbient_mem_specialUnitary_of_DetExpZeroOnSu2 h_det hX`
+     where `h_det : DetExpZeroOnSu2_SU2` (tracked Prop §3.5d) and
+     `hX : t • X ∈ tracelessSkewHermitian (Fin 2)`.
+  2. `hX` requires `X ∈ tracelessSkewHermitian`, which requires
+     `su2Log h ∈ tracelessSkewHermitian (Fin 2)` for h ∈ SU(2) ∩ target,
+     plus closedness of `tracelessSkewHermitian` (as finite-dim
+     ℝ-Submodule), plus the §4.d/4.c chain showing X is a limit of
+     normalized su2Log values.
+
+  These are substantive substrate ships; the §4.i.5 ship will introduce
+  a NEW tracked Prop `Su2LogMemTracelessSkewHermitian_SU2 : Prop`
+  capturing the first piece, with discharge plan via spectral theorem
+  on `i • h_skew = (h - h⁻¹) / 2`.
+
+**§4.i.6**: Once §4.i.5 gives `expAmbient_SU2 : ↥SU(2)` with
+`expAmbient_SU2.val = expAmbient (t • X)`, combined with
+`vonNeumann_expAmbient_mem_H_mat`, conclude `expAmbient_SU2 ∈ H` by
+Subtype.val injectivity. Then assemble `OneParamSubgroupInSU2 H` via
+§3.5d's `oneParamSU2Map` infrastructure, with nontriviality from
+`X ≠ 0` (since ‖X‖ = 1 by §4.d's BW_limit_norm_eq_one) + injectivity
+of expAmbient on a neighborhood of 0.
+
+**§5**: Final discharge of `OneParamSubgroupFromAccPt_SU2` as
+a conditional theorem under tracked Props:
+- `DetExpZeroOnSu2_SU2` (§3.5d, exists)
+- `Su2LogMemTracelessSkewHermitian_SU2` (NEW, §4.i.5)
+- the discharge becomes `OneParamSubgroupFromAccPt_SU2_of_tracked_props`. -/
 
 /-! ## §5. Module summary (current ship)
 
