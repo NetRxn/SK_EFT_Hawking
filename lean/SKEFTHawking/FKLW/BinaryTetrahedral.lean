@@ -343,6 +343,11 @@ theorem negOneSU_mem_center :
        g.val * (-(1 : Matrix (Fin 2) (Fin 2) ℂ))
   noncomm_ring
 
+/-- `negOneSU * weylElem = weylElem * negOneSU` — specialization of centrality. -/
+theorem negOneSU_mul_weylElem_eq_weylElem_mul_negOneSU :
+    negOneSU * weylElem = weylElem * negOneSU :=
+  negOneSU_mem_center weylElem
+
 /-- `negOneSU * negOneSU = 1` — order-2 verification at subtype level.
 
 Uses (-I)·(-I) = I·I = I = identity matrix. -/
