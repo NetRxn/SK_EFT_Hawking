@@ -4173,6 +4173,26 @@ theorem H_Fib_TwoLITangents_of_cFib_torus
       exact SKEFTHawking.FKLW.FibSU2LieBundle.liePartMat_cFib_Ad_σ_Fib_1_lin_indep
         a b h_zero
 
+/-! ### F.21 unconditional from v3 + cFib_torus_subset_H_Fib
+
+The composed headline reducing F.21 to TWO sound tracked Props.
+-/
+
+/-- **F.21 Fibonacci density from CartanFinalStep_SU2_v3 + cFib_torus_subset_H_Fib**.
+
+This is the cleanest F.21 statement: F.21 density follows from the two
+sound tracked Props:
+  - `CartanFinalStep_SU2_v3` (general Cartan classification, Wedge B residual)
+  - `cFib_torus_subset_H_Fib` (concrete H_Fib topological: cFib's 1-torus ⊆ H_Fib) -/
+theorem fibonacci_density_F21_from_cartan_v3_cFib_torus
+    (h_cartan_v3 : SKEFTHawking.FKLW.CartanFinalStep_SU2_v3)
+    (h_cFib_torus : SKEFTHawking.FKLW.FibSU2LieBundle.cFib_torus_subset_H_Fib) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_F21_from_cartan_final_v3
+    h_cartan_v3 (H_Fib_TwoLITangents_of_cFib_torus h_cFib_torus)
+
 /-! ## §5. Module summary (current ship)
 
 `OneParameterSubgroupSU2.lean` (Phase 6p Wave 2c.4a-R4.2.d.R5.4 Cartan
