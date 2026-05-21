@@ -155,4 +155,16 @@ theorem binaryTetrahedralGen_sixth :
           Matrix.cons_val_one, Matrix.head_cons, Matrix.empty_val',
           Matrix.cons_val_fin_one]
 
+/-! ## §4. Bundled SU(2) subtype version -/
+
+/-- The bundled SU(2) subtype version of `binaryTetrahedralGen`. -/
+noncomputable def binaryTetrahedralElem :
+    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  ⟨binaryTetrahedralGen, binaryTetrahedralGen_mem_specialUnitaryGroup⟩
+
+/-- `binaryTetrahedralElem.val = binaryTetrahedralGen`. -/
+@[simp] theorem binaryTetrahedralElem_val :
+    (binaryTetrahedralElem : Matrix (Fin 2) (Fin 2) ℂ) =
+    binaryTetrahedralGen := rfl
+
 end SKEFTHawking.FKLW
