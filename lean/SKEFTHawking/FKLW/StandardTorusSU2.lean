@@ -506,4 +506,69 @@ theorem weylElem_not_mem_stdTorus :
   simp [Complex.I_im, Complex.neg_im] at h_im
   linarith
 
+/-! ## §13. Structural intersections with `negOneSU` -/
+
+/-- `exp(-iπ) = -1`. -/
+private theorem exp_neg_pi_mul_I :
+    Complex.exp (-((Real.pi : ℂ) * Complex.I)) = -1 := by
+  rw [Complex.exp_neg, Complex.exp_pi_mul_I]
+  norm_num
+
+/-- `torusElem π = negOneSU` (the SU(2) element `-I`).
+
+Direct matrix verification: `torusMatrix π = !![exp(iπ), 0; 0, exp(-iπ)] =
+!![-1, 0; 0, -1] = -I = negOneSU.val`. -/
+theorem torusElem_pi_eq_negOneSU :
+    torusElem Real.pi = negOneSU := by
+  apply Subtype.ext
+  show torusMatrix Real.pi = (negOneSU : Matrix (Fin 2) (Fin 2) ℂ)
+  rw [negOneSU_val]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [torusMatrix, Matrix.cons_val', Matrix.cons_val_zero,
+          Matrix.cons_val_one, Matrix.empty_val',
+          Matrix.cons_val_fin_one,
+          Matrix.neg_apply, Matrix.one_apply,
+          Complex.exp_pi_mul_I, exp_neg_pi_mul_I]
+
+/-- **`negOneSU ∈ stdTorus_SU2`** — the SU(2) element `-I` lies in the
+standard torus.
+
+Direct consequence of `torusElem_pi_eq_negOneSU`. -/
+theorem negOneSU_mem_stdTorus_SU2 : negOneSU ∈ stdTorus_SU2 :=
+  ⟨Real.pi, torusElem_pi_eq_negOneSU⟩
+
+/-! ## §14. The Weyl element squares to `-I` -/
+
+/-- `weylMatrix² = -(1 : Matrix _ _ ℂ)`. -/
+private theorem weylMatrix_sq :
+    weylMatrix * weylMatrix = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [weylMatrix, Matrix.mul_apply, Fin.sum_univ_two,
+          Matrix.cons_val', Matrix.cons_val_zero, Matrix.cons_val_one,
+          Matrix.head_cons, Matrix.empty_val',
+          Matrix.cons_val_fin_one, Matrix.neg_apply, Matrix.one_apply]
+
+/-- **`weylElem² = negOneSU`** — the Weyl element has order 4.
+
+Direct consequence of `weylMatrix_sq` lifted to the subtype.
+
+This is THE structural fact making `N(T) / T ≅ ℤ/2`: the Weyl element
+is order-4 in SU(2), order-2 modulo `T` (since `w² ∈ T`). The
+Weyl-group quotient `N(T) / T` thus has the standard {1, w}
+representative structure. -/
+theorem weylElem_sq_eq_negOneSU :
+    weylElem * weylElem = negOneSU := by
+  apply Subtype.ext
+  show weylMatrix * weylMatrix = (negOneSU : Matrix (Fin 2) (Fin 2) ℂ)
+  rw [negOneSU_val, weylMatrix_sq]
+
+/-- **`weylElem² ∈ stdTorus_SU2`** — corollary composing
+`weylElem_sq_eq_negOneSU` with `negOneSU_mem_stdTorus_SU2`. -/
+theorem weylElem_sq_mem_stdTorus_SU2 :
+    weylElem * weylElem ∈ stdTorus_SU2 := by
+  rw [weylElem_sq_eq_negOneSU]
+  exact negOneSU_mem_stdTorus_SU2
+
 end SKEFTHawking.FKLW
