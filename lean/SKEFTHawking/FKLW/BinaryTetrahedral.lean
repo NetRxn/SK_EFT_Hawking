@@ -194,6 +194,36 @@ theorem binaryTetrahedralElem_mem_cyclic :
     binaryTetrahedralElem ∈ binaryTetrahedralCyclic :=
   Subgroup.mem_zpowers _
 
+/-! ## §5b. Full 2T as Subgroup.closure -/
+
+/-- **`binaryTetrahedralFull`** — the full binary tetrahedral group 2T ⊆ SU(2)
+defined as the closure of three explicit generators:
+  - `binaryTetrahedralElem` (half-integer quaternion (1+i+j+k)/2, order 6),
+  - `weylElem` (the j-quaternion `!![0,1;-1,0]`, order 4),
+  - `torusElem (π/2)` (the i-quaternion `diag(I, -I)`, order 4).
+
+These three generate the full 2T subgroup of order 24 — substantive
+verification of `Nat.card binaryTetrahedralFull = 24` is deferred to
+future sessions.
+
+Strategic value: provides a concrete reference point for the
+binary-polyhedral classification + composes with shipped
+`H_Fib_card_ge_200_if_finite` to rule out H_Fib ≅ 2T (since 24 < 200). -/
+noncomputable def binaryTetrahedralFull :
+    Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  Subgroup.closure
+    ({binaryTetrahedralElem, weylElem, torusElem (Real.pi / 2)} :
+      Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+
+/-- `binaryTetrahedralCyclic ≤ binaryTetrahedralFull` — the cyclic
+subgroup is contained in the full 2T. -/
+theorem binaryTetrahedralCyclic_le_full :
+    binaryTetrahedralCyclic ≤ binaryTetrahedralFull := by
+  -- binaryTetrahedralCyclic = zpowers gen; gen ∈ closure {gen, ...}; so zpowers ⊆ closure.
+  unfold binaryTetrahedralCyclic
+  rw [Subgroup.zpowers_le]
+  exact Subgroup.subset_closure (by simp)
+
 /-! ## §5. binaryTetrahedralElem is NOT in stdTorus_SU2 -/
 
 /-- **`binaryTetrahedralElem ∉ stdTorus_SU2`** — 2T contains elements
