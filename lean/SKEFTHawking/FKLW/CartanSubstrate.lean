@@ -645,6 +645,125 @@ theorem fibonacci_density_F21_from_full_cartan_chain
   SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top
     (H_Fib_eq_top_of_full_cartan_chain H_cartan_inf H_cartan_one H_cartan_final)
 
+/-! ## §4.7. Strengthening — accumulation-point hypothesis bypasses gaps #1+#2
+
+(Strengthening pass 2026-05-20, post-Wedge-D-pivot)
+
+**Motivation.** The original F.21 reduction goes through gap #1 (closed +
+infinite ⇒ idComponent ≠ ⊥) then gap #2 (idComponent ≠ ⊥ ⇒ 1-param
+subgroup). But there is a *strictly stronger* hypothesis that already
+appears in the shipped substrate:
+
+   `H_Fib_accPt_one_unconditional` : `AccPt 1 (Filter.principal H_Fib)`
+
+This was shipped UNCONDITIONALLY (no Cartan dependence) by composing
+the generic `one_accPt_of_infinite_closed_subgroup`
+(`AharonovAradLemma6.lean`) with `H_Fib_isClosed` + `H_Fib_infinite`.
+
+**Strengthening observation.** Von Neumann's 1-parameter-subgroup
+construction in SU(2) only needs a *sequence in `H` converging to 1*,
+i.e., an accumulation point of `H` at `1`. It does NOT need
+`idComponent ≠ ⊥` as an intermediate step. So the natural strong form
+of gap #2 is:
+
+   **OneParamSubgroupFromAccPt_SU2** : For every closed subgroup `H ≤
+   SU(2)` with `1 ∈ AccPt H`, `H` contains a continuous 1-parameter
+   subgroup.
+
+This is **strictly stronger** than gap #2 (since `idComponent ≠ ⊥ ⇒
+accPt 1` is the deep "idComponent is path-connected with > 1 point"
+fact, which itself uses Cartan-style argument), and it is **exactly
+the substantive content** of von Neumann's theorem for SU(2).
+
+**Strategic payoff.** Combined with the shipped
+`H_Fib_accPt_one_unconditional`, this strengthened predicate
+discharges `OneParamSubgroupInSU2 H_Fib` *without* gaps #1 or #2.
+Therefore the F.21 unconditional chain reduces from **three** tracked
+Cartan predicates to **one** (`CartanFinalStep_SU2` only).
+
+**Pipeline Invariant #15 posture.** `OneParamSubgroupFromAccPt_SU2` is
+a predicate (Prop `def`), not an axiom. Its substantive discharge
+lives in `OneParameterSubgroupSU2.lean` (companion file shipping
+the von Neumann theorem for SU(2) — Mathlib-upstream-PR-quality
+substrate). -/
+
+/-- **Strengthened tracked predicate** (replaces gap #2 in the F.21 chain).
+
+"Every closed subgroup `H` of SU(2) with `1` as an accumulation point of
+`H` contains a continuous 1-parameter subgroup."
+
+This is the canonical von Neumann statement for SU(2): in any compact
+Lie group, a closed subgroup that accumulates at the identity contains
+a 1-parameter subgroup along a tangent direction at 1. Cleaner than
+gap #2 because:
+
+  - The hypothesis `AccPt 1 (Filter.principal H)` is unconditionally
+    provable from `IsClosed H ∧ Set.Infinite H` via shipped
+    `one_accPt_of_infinite_closed_subgroup` (no Cartan needed).
+  - For H_Fib specifically, this is `H_Fib_accPt_one_unconditional`,
+    already shipped.
+
+The substantive discharge is the von Neumann argument: pick a sequence
+`(h_n) → 1` in `H \ {1}`, lift to `(Y_n) → 0` in `su(2)` via local
+exp-inverse, normalize and extract a convergent subsequence
+`Y_n / ‖Y_n‖ → X` with `‖X‖ = 1` (compactness of unit sphere in
+finite-dim su(2)), then show `exp(t · X) ∈ H` for all `t ∈ ℝ` via
+integer-rounding of `t / ‖Y_n‖`. See `OneParameterSubgroupSU2.lean`
+for the full discharge. -/
+def OneParamSubgroupFromAccPt_SU2 : Prop :=
+  ∀ (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+    IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) →
+    AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (Filter.principal (H : Set ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))) →
+    OneParamSubgroupInSU2 H
+
+/-- **Forward composition (strengthened Wedge A headline).**
+
+Given the strengthened predicate, `H_Fib` contains a continuous
+1-parameter subgroup **without any reliance on gaps #1 or #2**. The
+accumulation-point hypothesis is discharged by the shipped
+`H_Fib_accPt_one_unconditional`. -/
+theorem H_Fib_contains_oneParamSubgroup_from_strengthening
+    (H_strong : OneParamSubgroupFromAccPt_SU2) :
+    OneParamSubgroupInSU2 H_Fib :=
+  H_strong H_Fib H_Fib_isClosed H_Fib_accPt_one_unconditional
+
+/-- **Strengthened Wedge B headline — H_Fib = ⊤ from a single tracked
+Cartan predicate.**
+
+Composes `H_Fib_contains_oneParamSubgroup_from_strengthening` (uses the
+strengthened predicate + shipped accPt) with the Wedge B
+`CartanFinalStep_SU2` predicate. The original
+`H_Fib_eq_top_of_full_cartan_chain` requires THREE tracked Cartan
+predicates (gaps #1 + #2 + #3); this strengthened version requires
+ONLY the new strengthened predicate + gap #3. -/
+theorem H_Fib_eq_top_of_strengthened_chain
+    (H_strong : OneParamSubgroupFromAccPt_SU2)
+    (H_cartan_final : CartanFinalStep_SU2) :
+    H_Fib = ⊤ := by
+  have h_one_param : OneParamSubgroupInSU2 H_Fib :=
+    H_Fib_contains_oneParamSubgroup_from_strengthening H_strong
+  exact H_cartan_final H_Fib H_Fib_isClosed h_one_param
+    H_Fib_non_abelian_witness H_Fib_non_N_T_witness
+
+/-- **STRENGTHENED F.21 HEADLINE — Fibonacci density unconditional under
+TWO tracked predicates** (strengthened gap #2 + gap #3 only; gaps #1+#2
+of the original chain absorbed into the strengthened predicate).
+
+Composes `H_Fib_eq_top_of_strengthened_chain` with the shipped
+`fibonacci_density_from_H_Fib_eq_top` (D4 wrapper, FibSU2Density.lean
+line 1258). The substantive discharge of `OneParamSubgroupFromAccPt_SU2`
+(in `OneParameterSubgroupSU2.lean`) closes F.21 to a *single* remaining
+Cartan tracked predicate (`CartanFinalStep_SU2`). -/
+theorem fibonacci_density_F21_from_strengthened_chain
+    (H_strong : OneParamSubgroupFromAccPt_SU2)
+    (H_cartan_final : CartanFinalStep_SU2) :
+    SKEFTHawking.FKLW.AharonovAradBridge.DenseInSpecialUnitary 3 2
+      (fun b => (SKEFTHawking.FKLW.ρ_Fib_SU2 b :
+          Matrix (Fin 2) (Fin 2) ℂ)) :=
+  SKEFTHawking.FKLW.fibonacci_density_from_H_Fib_eq_top
+    (H_Fib_eq_top_of_strengthened_chain H_strong H_cartan_final)
+
 /-! ## §5. Module summary
 
 `CartanSubstrate.lean` (Phase 6p Wave 2c.4a-R4.2.d.4.3.d.1, 2026-05-14;
