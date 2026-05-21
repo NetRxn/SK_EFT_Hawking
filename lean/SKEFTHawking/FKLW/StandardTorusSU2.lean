@@ -571,4 +571,54 @@ theorem weylElem_sq_mem_stdTorus_SU2 :
   rw [weylElem_sq_eq_negOneSU]
   exact negOneSU_mem_stdTorus_SU2
 
+/-! ## §10. Substrate for `stdTorus_SU2` infinitude (irrational rotation) -/
+
+/-- **Key non-vanishing lemma**: `Complex.exp ((n+1 : ℝ) · I) ≠ 1` for `n : ℕ`.
+
+If `exp((n+1) · I) = 1`, then by `Complex.exp_eq_one_iff`,
+`(n+1) · I = m · (2π · I)` for some integer `m`. Canceling `I` gives
+the real equation `(n+1) = 2π · m`. Case-splitting on `m`:
+  - `m = 0` ⇒ `n + 1 = 0`, impossible.
+  - `m ≠ 0` ⇒ `π = (n+1)/(2m)` is rational, contradicting `irrational_pi`. -/
+theorem complex_exp_natCast_succ_mul_I_ne_one (n : ℕ) :
+    Complex.exp ((((n + 1 : ℕ) : ℝ) : ℂ) * Complex.I) ≠ 1 := by
+  intro h_exp
+  obtain ⟨m, hm⟩ := Complex.exp_eq_one_iff.mp h_exp
+  -- Cancel I to get a real equation.
+  have h_C : (((n + 1 : ℕ) : ℝ) : ℂ) = (m : ℂ) * (2 * (Real.pi : ℂ)) := by
+    have h_C_I : (((n + 1 : ℕ) : ℝ) : ℂ) * Complex.I =
+                 ((m : ℂ) * (2 * (Real.pi : ℂ))) * Complex.I := by
+      rw [hm]; ring
+    exact mul_right_cancel₀ Complex.I_ne_zero h_C_I
+  -- Take real parts: (n+1 : ℝ) = 2π · m.
+  have h_real : ((n + 1 : ℕ) : ℝ) = (m : ℝ) * (2 * Real.pi) := by
+    have h_re := congrArg Complex.re h_C
+    simp [Complex.mul_re, Complex.add_re, Complex.ofReal_re,
+          Complex.intCast_re, Complex.intCast_im, Complex.ofReal_im,
+          Complex.one_re] at h_re
+    push_cast
+    linarith
+  -- LHS ≥ 1 > 0.
+  have h_lhs_pos : (1 : ℝ) ≤ ((n + 1 : ℕ) : ℝ) := by
+    have : (1 : ℝ) ≤ (n : ℝ) + 1 := by linarith [Nat.cast_nonneg n (α := ℝ)]
+    push_cast
+    linarith
+  -- Case-split on m.
+  rcases eq_or_ne m 0 with hm_zero | hm_ne
+  · -- m = 0 ⇒ RHS = 0 ⇒ LHS = 0, contradicting LHS ≥ 1.
+    rw [hm_zero] at h_real
+    push_cast at h_real
+    linarith
+  · -- m ≠ 0 ⇒ π = (n+1) / (2m) is rational.
+    have h_2_ne : (2 : ℝ) ≠ 0 := by norm_num
+    have h_m_ne : (m : ℝ) ≠ 0 := by exact_mod_cast hm_ne
+    have h_pi_eq : Real.pi = ((n + 1 : ℕ) : ℝ) / (2 * (m : ℝ)) := by
+      field_simp
+      linarith
+    -- Real.pi equals a rational; contradicts irrational_pi.
+    refine irrational_pi ⟨((n + 1 : ℤ) : ℚ) / ((2 : ℚ) * (m : ℚ)), ?_⟩
+    rw [h_pi_eq]
+    push_cast
+    ring
+
 end SKEFTHawking.FKLW
