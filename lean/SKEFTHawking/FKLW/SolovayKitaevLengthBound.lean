@@ -175,56 +175,47 @@ to conclude `100 ≤ 1000 · (Real.log (1/ε))^skLengthExponent`. -/
 theorem skLengthAtEpsilon_unconditional : SkLengthAtEpsilon := by
   intro ε hε_pos hε_le
   refine ⟨0, ?_⟩
-  -- Step 1: descend ε ≤ ε₀ to the explicit ε ≤ 1/2.
-  have hε_le_half : ε ≤ 1 / 2 := by
-    have h := ε₀_eq_half
+  -- Step 1: descend `ε ≤ ε₀ = 1/819200` to the explicit `ε ≤ 1/819200`.
+  have hε_le_val : ε ≤ 1 / 819200 := by
+    have h := ε₀_value
     linarith
-  -- Step 2: 1/ε ≥ 2.
-  have h_inv : (2 : ℝ) ≤ 1 / ε := by
+  -- Step 2: `1/ε ≥ 819200`.
+  have h_inv : (819200 : ℝ) ≤ 1 / ε := by
     rw [le_div_iff₀ hε_pos]; linarith
-  -- Step 3: positive/nonneg arithmetic on log 2.
-  have h_log_two_pos : 0 < Real.log 2 := Real.log_pos (by norm_num)
-  have h_log_two_le_one : Real.log 2 ≤ 1 := by
-    have h := Real.log_two_lt_d9
-    linarith
-  have h_log_ge : Real.log 2 ≤ Real.log (1 / ε) :=
-    Real.log_le_log (by norm_num : (0:ℝ) < 2) h_inv
-  -- Step 4: base-monotonicity: (log 2)^c ≤ (log (1/ε))^c at exponent c ≥ 0.
-  have h_c_pos : 0 ≤ skLengthExponent := le_of_lt skLengthExponent_pos
-  have h_log2_nonneg : 0 ≤ Real.log 2 := le_of_lt h_log_two_pos
-  have h_rpow_base : (Real.log 2)^skLengthExponent
-      ≤ (Real.log (1 / ε))^skLengthExponent :=
-    Real.rpow_le_rpow h_log2_nonneg h_log_ge h_c_pos
-  -- Step 5: exponent-monotonicity (for base ≤ 1): (log 2)^4 ≤ (log 2)^c.
-  have h_rpow_exp : (Real.log 2)^(4:ℝ) ≤ (Real.log 2)^skLengthExponent :=
-    Real.rpow_le_rpow_of_exponent_ge h_log_two_pos h_log_two_le_one
-      (le_of_lt skLengthExponent_lt_four)
-  -- Step 6: numerics — (0.693)^4 ≥ 1/10 and (0.693)^4 ≤ (log 2)^4.
-  have h_log2_lower : (0.693 : ℝ) ≤ Real.log 2 := by
+  -- Step 3: `log(1/ε) ≥ log 819200 > 1` (since 819200 > e ≈ 2.718).
+  have h_log_inv_pos : 0 < Real.log 819200 := Real.log_pos (by norm_num)
+  have h_log_ge : Real.log 819200 ≤ Real.log (1 / ε) :=
+    Real.log_le_log (by norm_num : (0:ℝ) < 819200) h_inv
+  -- Step 4: `1 ≤ log 819200` (since log 819200 ≈ 13.62 > 1).
+  -- Bound via Real.log_two_gt_d9: log 2 ≥ 0.693, and 819200 = 2^? ≫ 2.
+  -- Use simpler: log 819200 ≥ log 4 = 2·log 2 ≥ 2·0.693 = 1.386 > 1.
+  have h_log_4_lower : (1 : ℝ) ≤ Real.log 4 := by
+    have h_log_4 : Real.log 4 = 2 * Real.log 2 := by
+      rw [show (4 : ℝ) = 2^2 from by norm_num, Real.log_pow]; ring
+    rw [h_log_4]
     have h := Real.log_two_gt_d9
     linarith
-  have h_pow_nat : (0.693:ℝ)^(4:ℕ) ≤ (Real.log 2)^(4:ℕ) :=
-    pow_le_pow_left₀ (by norm_num) h_log2_lower 4
-  have h_bridge : (Real.log 2)^(4:ℕ) = (Real.log 2)^(4:ℝ) := by
-    rw [← Real.rpow_natCast]; norm_num
-  have h_pow_real : (0.693:ℝ)^(4:ℕ) ≤ (Real.log 2)^(4:ℝ) := by
-    rw [← h_bridge]; exact h_pow_nat
-  have h_num : (1 / 10 : ℝ) ≤ (0.693:ℝ)^(4:ℕ) := by norm_num
-  -- Step 7: chain to conclude (Real.log (1/ε))^c ≥ 1/10.
-  have h_final : (1 / 10 : ℝ) ≤ (Real.log (1 / ε))^skLengthExponent :=
-    h_num.trans (h_pow_real.trans (h_rpow_exp.trans h_rpow_base))
-  -- Step 8: skLength 0 = 100 closed-form.
+  have h_log_ge_4 : Real.log 4 ≤ Real.log 819200 :=
+    Real.log_le_log (by norm_num : (0:ℝ) < 4) (by norm_num)
+  have h_log_ge_one : (1 : ℝ) ≤ Real.log (1 / ε) :=
+    le_trans h_log_4_lower (le_trans h_log_ge_4 h_log_ge)
+  -- Step 5: `(log(1/ε))^c ≥ 1` since base ≥ 1 and exponent ≥ 0.
+  have h_c_pos : 0 ≤ skLengthExponent := le_of_lt skLengthExponent_pos
+  have h_rpow_ge_one : (1 : ℝ) ≤ (Real.log (1 / ε))^skLengthExponent :=
+    Real.one_le_rpow h_log_ge_one h_c_pos
+  -- Step 6: `skLength 0 = 100` closed-form.
   have h_skLen0 : skLength 0 = 100 := by
     unfold skLength skLengthBaseCase skBalancedDecompCost
     norm_num
   rw [h_skLen0]
   show (100 : ℝ) ≤ skLengthConst * (Real.log (1 / ε))^skLengthExponent
   unfold skLengthConst
-  have h_scaled : (100 : ℝ) ≤ 1000 * (Real.log (1 / ε))^skLengthExponent := by
-    have h_eq : (100 : ℝ) = 1000 * (1 / 10) := by norm_num
-    rw [h_eq]
-    exact mul_le_mul_of_nonneg_left h_final (by norm_num)
-  exact h_scaled
+  -- 100 ≤ 1000 · (log(1/ε))^c since (log(1/ε))^c ≥ 1 and 1000 ≥ 100.
+  have h_chain : (100 : ℝ) ≤ 1000 * 1 := by norm_num
+  calc (100 : ℝ)
+      ≤ 1000 * 1 := h_chain
+    _ ≤ 1000 * (Real.log (1 / ε))^skLengthExponent :=
+        mul_le_mul_of_nonneg_left h_rpow_ge_one (by norm_num)
 
 /-! ## 4. Module summary
 

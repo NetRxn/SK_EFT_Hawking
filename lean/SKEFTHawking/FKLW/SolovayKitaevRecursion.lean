@@ -53,29 +53,51 @@ attribute [local instance] Matrix.linftyOpNormedAddCommGroup
 open Matrix SKEFTHawking.FKLW SKEFTHawking.FKLW.FibonacciEpsilonNet
 open SKEFTHawking.FKLW.SU2BalancedCommutator
 
-/-! ## 1. The SK base-case threshold `ε₀`
+/-! ## 1. The SK base-case threshold `ε₀` + cubic-remainder constant
 
 The Wave 3 ε₀-net provides a base-case approximation at any target precision
-`ε₀ > 0`. For SK to converge super-quadratically, `ε₀` must be small enough
-that the balanced-commutator threshold (Wave 2) is satisfied. Pick
-`ε₀ := 1/(4·C_balance²)` — this guarantees `2·ε₀ ≤ 1/(2·C_balance²)`, which
-is below the Wave 2 balanced-commutator threshold for the cubic remainder. -/
+`ε₀ > 0`. For SK to converge super-quadratically via the Wave 1 cubic-remainder
+lemma `groupCommutator_lie_bracket_cubic_remainder` (with constant K = 320),
+`ε₀` must satisfy `K² · ε₀ < 1` — equivalently `ε₀ < 1 / K² = 1 / 102400`.
 
-/-- The SK base-case threshold. -/
-noncomputable def ε₀ : ℝ := 1 / (4 * C_balance ^ 2)
+This was originally set as `ε₀ := 1/(4·C_balance²) = 1/2` (Phase 6t initial
+ship) but that value is provably too loose: with K = 320, `K²·(2·ε₀) =
+102400 · 1 = 102400 ≫ 1`, violating the SK convergence condition. Updated
+2026-05-22 PM post-deep-research to the rigorous value `ε₀ := 1/(8·K²) =
+1/819200`, giving `K²·(2·ε₀) = 1/4 < 1` ✓. -/
+
+/-- The cubic-remainder constant from Wave 1's `bch_order_2_cubic_thm`:
+`‖groupCommutator(exp(iF), exp(iG)) - exp(-[F,G])‖ ≤ K · δ³` with K = 320. -/
+noncomputable def K_cubic : ℝ := 320
+
+/-- `K_cubic > 0`. -/
+lemma K_cubic_pos : 0 < K_cubic := by unfold K_cubic; norm_num
+
+/-- The SK base-case threshold: chosen so that `K²·(2·ε₀) = 1/4 < 1`,
+the rigorous Dawson-Nielsen super-quadratic convergence condition. -/
+noncomputable def ε₀ : ℝ := 1 / (8 * K_cubic ^ 2)
 
 /-- `ε₀ > 0`. -/
 lemma ε₀_pos : 0 < ε₀ := by
   unfold ε₀
-  have h_C := C_balance_pos
-  have h_C2_pos : 0 < C_balance ^ 2 := by positivity
+  have h_K := K_cubic_pos
   positivity
 
-/-- `ε₀ = 1/2` (the explicit numerical value, given `C_balance = √(1/2)`). -/
-lemma ε₀_eq_half : ε₀ = 1 / 2 := by
-  unfold ε₀ C_balance
-  rw [Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 1 / 2)]
-  ring
+/-- The explicit numerical value: `ε₀ = 1/819200`. -/
+lemma ε₀_value : ε₀ = 1 / 819200 := by
+  unfold ε₀ K_cubic; norm_num
+
+/-- `2 · ε₀ = 1 / 409600 < 1` — used by the contract's length bound. -/
+lemma two_ε₀_value : 2 * ε₀ = 1 / 409600 := by
+  rw [ε₀_value]; norm_num
+
+/-- `2 · ε₀ < 1` — ensures `log(2·ε₀) ≠ 0` (avoids div-by-zero in `skLevel`). -/
+lemma two_ε₀_lt_one : 2 * ε₀ < 1 := by
+  rw [two_ε₀_value]; norm_num
+
+/-- `0 < 2 · ε₀` — straightforward positivity. -/
+lemma two_ε₀_pos : 0 < 2 * ε₀ := by
+  rw [two_ε₀_value]; norm_num
 
 /-! ## 2. The SK recursion structure
 
@@ -166,69 +188,20 @@ theorem skApprox_zero_error_bound
   rw [skApprox_zero]
   exact fibonacciEpsilonNet_findNearest_approx_opNorm U ε₀ ε₀_pos
 
-/-! ## 4b. Tracked-Prop discharges at K=1 (Phase 6t Task #35, Wave 4-followup
-    2026-05-22 PM post-compact)
+/-! ## 4b. Task #35 trivial discharges ROLLED BACK (2026-05-22 PM post-deep-research)
 
-The Wave-4-followup tracked Props `SkApproxErrorShrinkage` and
-`SkApproxErrorBound` are discharged at the parameter `K = 1` as a
-consequence of:
-  - The current placeholder `skApprox (n+1) U := skApprox n U` (i.e.,
-    level-(n+1) reuses level-n's braid word).
-  - The Wave 4 base-case headline `skApprox_zero_error_bound` giving
-    `‖V_0 - U‖ ≤ 2·ε₀ = 1`.
-  - The integer-cast subtlety: `(3 / 2 : ℕ) = 1` (integer division), so
-    the Shrinkage exponent collapses to a linear bound `‖V_{n+1} - U‖ ≤
-    K · ‖V_n - U‖`, which holds trivially with placeholder + K = 1.
-  - The numerical closure: `2·ε₀ = 1` implies `(2·ε₀)^x = 1` for any
-    real `x`, so the Bound RHS reduces to `K = 1` for all `n`.
+The earlier `K=1` trivial discharges of `SkApproxErrorShrinkage` and
+`SkApproxErrorBound` (commit dec0d21) were valid under the OLD `ε₀ = 1/2`
+which gave `2·ε₀ = 1` and a constant-1 RHS in the Bound. Under the new
+rigorous `ε₀ = 1/819200`, those K=1 discharges no longer hold:
+`(2·ε₀)^x` for `x = (3/2)^n` SHRINKS in n (since `2·ε₀ < 1`), but under
+the placeholder `skApprox (n+1) U = skApprox n U`, `‖V_n - U‖ = ‖V_0 - U‖
+≤ 2·ε₀` stays constant — exceeding the tighter level-n bound.
 
-These discharges are **structurally complete** but the substantive
-"super-quadratic shrinkage" content of the Dawson-Nielsen recursion
-requires a substantive refactor of `skApprox (n+1)`'s body to do real
-recursive composition (consuming Wave 2's `balancedCommutatorGeneralAxisGroup_holds`
-+ Wave 1's `groupCommutator_stability` + matrix-log/BCH substrate not
-yet in Mathlib). That refactor is deferred to a substrate-completion
-follow-up.
-
-Eliminates 1 of 2 remaining Phase 6t tracked Props (2 → 1). -/
-
-/-- **HEADLINE (Phase 6t Task #35, Wave 4-followup DISCHARGE)**:
-`SkApproxErrorShrinkage 1` holds under the current placeholder
-`skApprox (n+1) U := skApprox n U`.
-
-Eliminates 1 of 2 remaining Phase 6t tracked Props (down from 2 → 1).
-
-Note: the substantive Dawson-Nielsen super-quadratic content is contingent
-on a substantive refactor of `skApprox (n+1)`'s body — deferred. -/
-theorem skApproxErrorShrinkage_one_holds : SkApproxErrorShrinkage 1 := by
-  intro n U
-  rw [skApprox_succ]
-  simp
-
-/-- **HEADLINE (Phase 6t Task #35, Wave 4-followup DISCHARGE)**:
-`SkApproxErrorBound 1` holds under the current placeholder.
-
-Proof: by induction on `n`. The base case uses `skApprox_zero_error_bound`
-+ `ε₀ = 1/2` (so `2·ε₀ = 1`). The successor case uses the placeholder
-`skApprox (n+1) U = skApprox n U` + the constant-1 RHS. -/
-theorem skApproxErrorBound_one_holds : SkApproxErrorBound 1 := by
-  intro n U
-  induction n with
-  | zero =>
-    have h := skApprox_zero_error_bound U
-    rw [ε₀_eq_half] at h
-    have h_one : (2 : ℝ) * (1/2) = 1 := by norm_num
-    rw [h_one] at h
-    rw [pow_zero, Real.rpow_one, ε₀_eq_half, h_one, one_mul]
-    exact h
-  | succ k ih =>
-    rw [skApprox_succ]
-    rw [ε₀_eq_half]
-    have h_two_e0 : (2 : ℝ) * (1/2) = 1 := by norm_num
-    rw [h_two_e0, Real.one_rpow, one_mul]
-    have h_ih := ih
-    rw [ε₀_eq_half, h_two_e0, Real.one_rpow, one_mul] at h_ih
-    exact h_ih
+The Wave 4-followup substantive discharges (with substantive recursion via
+`balancedCommutatorGeneralAxisGroup_holds` + Wave 1 cubic remainder +
+OneParameterSubgroupSU2 matrix log) are tracked for iteration 2 of the
+substantive refactor. -/
 
 /-! ## 5. Module summary
 
