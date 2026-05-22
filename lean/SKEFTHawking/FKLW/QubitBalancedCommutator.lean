@@ -336,6 +336,51 @@ theorem qubit_balanced_commutator_y_axis
     rw [show (2 : ℂ) * (α : ℂ)^2 = ((2 * α^2 : ℝ) : ℂ) from by push_cast; ring]
     rw [h2α2]
 
+/-! ## 5c. Cross-product to commutator bridge — Pauli-linear-combination form
+    (Phase 6t Wave 2-followup substrate 2026-05-22 PM post-compact)
+
+The 𝔰𝔲(2) Lie algebra has the structure constants `[σ_i, σ_j] = 2i·ε_{ijk}·σ_k`,
+which in Pauli-coordinate notation gives the bridge:
+
+  `[a·σ̄, b·σ̄] = 2i·(a × b)·σ̄`
+
+where `a, b ∈ ℝ³` (the Pauli coefficient vectors), `×` is the standard ℝ³ cross
+product, and `σ̄ = (σ_x, σ_y, σ_z)`. This is the load-bearing identity for
+discharging `BalancedCommutatorGeneralAxisGroup` via the Pauli-coordinate
+construction: given target -i·θ·H = -i·θ·h·σ̄, find F̂ × Ĝ = -(θ/2)·h, choose
+F̂, Ĝ from the perpendicular plane to h, and apply this bridge.
+
+Mathlib upstream-PR candidate: any field's σ-like structure constants admit
+the same cross-product factorization. -/
+
+/-- **Cross-product to commutator bridge (Mathlib upstream-PR candidate)**:
+for any real Pauli coefficient vectors `a, b ∈ ℝ³`, the commutator of the
+corresponding 𝔰𝔲(2) elements factors through the standard ℝ³ cross product:
+
+  `[a₁·σ_x + a₂·σ_y + a₃·σ_z, b₁·σ_x + b₂·σ_y + b₃·σ_z] = 2i·((a×b)₁·σ_x + (a×b)₂·σ_y + (a×b)₃·σ_z)`
+
+where `(a × b)_1 = a₂b₃ - a₃b₂`, etc.
+
+Proof strategy: per-entry computation via `ext + fin_cases + simp + ring`,
+following the established Pauli-matrix proof pattern from `comm_σ_x_σ_y` etc.
+This is the load-bearing substrate for the Wave 2-followup general-axis
+discharge of `BalancedCommutatorGeneralAxisGroup`. -/
+theorem pauli_linear_commutator_eq
+    (a₁ a₂ a₃ b₁ b₂ b₃ : ℝ) :
+    (((a₁ : ℂ) • σ_x + (a₂ : ℂ) • σ_y + (a₃ : ℂ) • σ_z) *
+        ((b₁ : ℂ) • σ_x + (b₂ : ℂ) • σ_y + (b₃ : ℂ) • σ_z) -
+      ((b₁ : ℂ) • σ_x + (b₂ : ℂ) • σ_y + (b₃ : ℂ) • σ_z) *
+        ((a₁ : ℂ) • σ_x + (a₂ : ℂ) • σ_y + (a₃ : ℂ) • σ_z))
+    = (2 * Complex.I) •
+        ((((a₂ * b₃ - a₃ * b₂) : ℝ) : ℂ) • σ_x +
+         (((a₃ * b₁ - a₁ * b₃) : ℝ) : ℂ) • σ_y +
+         (((a₁ * b₂ - a₂ * b₁) : ℝ) : ℂ) • σ_z) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σ_x, σ_y, σ_z, Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply,
+          Matrix.smul_apply, Fin.sum_univ_two, Complex.ext_iff, smul_eq_mul] <;>
+    refine ⟨?_, ?_⟩ <;> ring
+
 /-! ## 6. Predicate-level scaffold for general-axis case (deferred)
 
 The general-axis case `H = θ · (n_x σ_x + n_y σ_y + n_z σ_z)` for unit
