@@ -291,11 +291,130 @@ theorem groupCommutator_stability
   have h_eq : 4 * M ^ 3 * ε = ε * M ^ 3 + ε * M ^ 3 + ε * M ^ 3 + ε * M ^ 3 := by ring
   linarith
 
+/-! ## 5b. Matrix-inverse difference bound + invertible-specialized stability
+    (Phase 6t Wave 1 strengthening 2026-05-22 PM post-compact)
+
+For invertible matrices `g, g'`, the algebraic identity
+`g'⁻¹ - g⁻¹ = g'⁻¹·(g - g')·g⁻¹` (Mathlib's `Matrix.inv_sub_inv`) combined
+with operator-norm submultiplicativity yields:
+  `‖g'⁻¹ - g⁻¹‖ ≤ ‖g'⁻¹‖ · ‖g - g'‖ · ‖g⁻¹‖ ≤ M · ε · M = M² · ε`.
+
+This drops 2 of the 4 ε-bound hypotheses from `groupCommutator_stability`
+when the matrices are invertible, at the cost of the stability constant
+going from `4·M³·ε` to `4·M⁵·ε` (for `M ≥ 1`, the typical case for
+unitary matrices in `d`-dim SU(d) with `M = √d`).
+
+Note: the original Task #42 framing ("‖U⁻¹ - V⁻¹‖ = ‖U - V‖ via adjoint
+isometry") was incorrect for `Matrix.linftyOpNorm` — that's the row-sum
+operator norm, NOT the l2 spectral norm. The correct bound (factor of M²,
+not equality) is what we ship here. -/
+
+/-- **Matrix-inverse difference bound (Mathlib upstream-PR candidate)**.
+For invertible matrices `g, g' : Matrix (Fin d) (Fin d) ℂ`, the difference
+of inverses is bounded by the direct difference scaled by the product of
+inverse-norms:
+
+  `‖g'⁻¹ - g⁻¹‖ ≤ ‖g'⁻¹‖ · ‖g' - g‖ · ‖g⁻¹‖`.
+
+Specialized to a uniform bound `‖g⁻¹‖, ‖g'⁻¹‖ ≤ M` and `‖g' - g‖ ≤ ε`:
+
+  `‖g'⁻¹ - g⁻¹‖ ≤ M² · ε`. -/
+lemma matrix_inv_diff_norm_le
+    {d : ℕ} (g g' : Matrix (Fin d) (Fin d) ℂ)
+    (hg : IsUnit g.det) (hg' : IsUnit g'.det)
+    (M : ℝ) (hM_nn : 0 ≤ M)
+    (h_g_inv : ‖g⁻¹‖ ≤ M) (h_g'_inv : ‖g'⁻¹‖ ≤ M)
+    (ε : ℝ) (hε_nn : 0 ≤ ε) (h_diff : ‖g' - g‖ ≤ ε) :
+    ‖g'⁻¹ - g⁻¹‖ ≤ M ^ 2 * ε := by
+  -- Bridge: `IsUnit g ↔ IsUnit g'.det` via `Matrix.isUnit_iff_isUnit_det`.
+  have hg_unit : IsUnit g := (Matrix.isUnit_iff_isUnit_det g).mpr hg
+  have hg'_unit : IsUnit g' := (Matrix.isUnit_iff_isUnit_det g').mpr hg'
+  have h_iff : IsUnit g' ↔ IsUnit g := ⟨fun _ => hg_unit, fun _ => hg'_unit⟩
+  -- Algebraic identity from Mathlib:
+  have h_id : g'⁻¹ - g⁻¹ = g'⁻¹ * (g - g') * g⁻¹ := Matrix.inv_sub_inv h_iff
+  rw [h_id]
+  -- Direct-diff sign normalization.
+  have h_g_neg : ‖g - g'‖ = ‖g' - g‖ := by
+    rw [show g - g' = -(g' - g) from by abel, norm_neg]
+  -- Submultiplicativity chain.
+  have h_g_inv_nn : 0 ≤ ‖g⁻¹‖ := norm_nonneg _
+  have h_g'_inv_nn : 0 ≤ ‖g'⁻¹‖ := norm_nonneg _
+  have h_step1 : ‖g'⁻¹ * (g - g') * g⁻¹‖ ≤ ‖g'⁻¹ * (g - g')‖ * ‖g⁻¹‖ :=
+    norm_mul_le _ _
+  have h_step2 : ‖g'⁻¹ * (g - g')‖ ≤ ‖g'⁻¹‖ * ‖g - g'‖ :=
+    norm_mul_le _ _
+  have h_step2' : ‖g'⁻¹ * (g - g')‖ ≤ ‖g'⁻¹‖ * ‖g' - g‖ := by
+    rw [h_g_neg] at h_step2; exact h_step2
+  -- Chain numerical bounds.
+  have h_a : ‖g'⁻¹‖ * ‖g' - g‖ ≤ M * ε :=
+    mul_le_mul h_g'_inv h_diff (norm_nonneg _) hM_nn
+  have h_Mε_nn : 0 ≤ M * ε := by positivity
+  have h_b : ‖g'⁻¹ * (g - g')‖ * ‖g⁻¹‖ ≤ M * ε * M := by
+    have h_step3 : ‖g'⁻¹ * (g - g')‖ * ‖g⁻¹‖ ≤ (M * ε) * ‖g⁻¹‖ :=
+      mul_le_mul_of_nonneg_right (h_step2'.trans h_a) h_g_inv_nn
+    have h_step4 : (M * ε) * ‖g⁻¹‖ ≤ M * ε * M :=
+      mul_le_mul_of_nonneg_left h_g_inv h_Mε_nn
+    linarith
+  have h_eq : M * ε * M = M ^ 2 * ε := by ring
+  linarith
+
+/-- **HEADLINE 4 (Phase 6t Wave 1 strengthening — invertible-specialized
+stability)**: drops 2 of the 4 ε-bound hypotheses from
+`groupCommutator_stability` for invertible `g, h, g', h'`.
+
+Given uniform norm bound `M` on all 8 forward + inverse norms,
+`M ≥ 1` (typical for unitary matrices), and direct-diff bounds
+`‖g' - g‖, ‖h' - h‖ ≤ ε`:
+
+  `‖groupCommutator g' h' - groupCommutator g h‖ ≤ 4 · M⁵ · ε`.
+
+The constant is `M⁵` (instead of `M³` in the generic stability) because the
+inverse-difference bounds are derived (not assumed) via
+`matrix_inv_diff_norm_le`, giving `‖g'⁻¹ - g⁻¹‖ ≤ M² · ε` per inverse.
+
+For SU(2) (the Solovay-Kitaev application) with `M = √2`, this gives
+`‖[g',h'] - [g,h]‖ ≤ 4 · 4√2 · ε ≈ 22.6 · ε`. -/
+theorem groupCommutator_stability_invertible
+    {d : ℕ} (g h g' h' : Matrix (Fin d) (Fin d) ℂ)
+    (ε M : ℝ)
+    (hM_nn : 0 ≤ M) (hM_ge_one : 1 ≤ M)
+    (h_h_norm : ‖h‖ ≤ M)
+    (h_g'_norm : ‖g'‖ ≤ M) (h_h'_norm : ‖h'‖ ≤ M)
+    (h_g_inv_norm : ‖g⁻¹‖ ≤ M) (h_h_inv_norm : ‖h⁻¹‖ ≤ M)
+    (h_g'_inv_norm : ‖g'⁻¹‖ ≤ M) (h_h'_inv_norm : ‖h'⁻¹‖ ≤ M)
+    (hg_det : IsUnit g.det) (hg'_det : IsUnit g'.det)
+    (hh_det : IsUnit h.det) (hh'_det : IsUnit h'.det)
+    (h_g_diff : ‖g' - g‖ ≤ ε) (h_h_diff : ‖h' - h‖ ≤ ε)
+    (hε_nn : 0 ≤ ε) :
+    ‖groupCommutator g' h' - groupCommutator g h‖ ≤ 4 * M ^ 5 * ε := by
+  -- Derive inverse-difference bounds via `matrix_inv_diff_norm_le`.
+  have h_g_inv_diff : ‖g'⁻¹ - g⁻¹‖ ≤ M ^ 2 * ε :=
+    matrix_inv_diff_norm_le g g' hg_det hg'_det M hM_nn
+      h_g_inv_norm h_g'_inv_norm ε hε_nn h_g_diff
+  have h_h_inv_diff : ‖h'⁻¹ - h⁻¹‖ ≤ M ^ 2 * ε :=
+    matrix_inv_diff_norm_le h h' hh_det hh'_det M hM_nn
+      h_h_inv_norm h_h'_inv_norm ε hε_nn h_h_diff
+  -- Apply generic stability with ε' = M² · ε (which is ≥ ε for M ≥ 1).
+  have h_M2_nn : 0 ≤ M ^ 2 := by positivity
+  have h_M2_ge_one : 1 ≤ M ^ 2 := by nlinarith
+  have h_M2_eps : ε ≤ M ^ 2 * ε := by nlinarith
+  have h_g_diff' : ‖g' - g‖ ≤ M ^ 2 * ε := le_trans h_g_diff h_M2_eps
+  have h_h_diff' : ‖h' - h‖ ≤ M ^ 2 * ε := le_trans h_h_diff h_M2_eps
+  have h_M2_eps_nn : 0 ≤ M ^ 2 * ε := by positivity
+  have h_stability :=
+    groupCommutator_stability g h g' h' (M ^ 2 * ε) M hM_nn h_h_norm
+      h_g'_norm h_h'_norm h_g_inv_norm h_h_inv_norm h_g'_inv_norm
+      h_g_diff' h_h_diff' h_g_inv_diff h_h_inv_diff h_M2_eps_nn
+  -- 4·M³·(M²·ε) = 4·M⁵·ε.
+  have h_eq : 4 * M ^ 3 * (M ^ 2 * ε) = 4 * M ^ 5 * ε := by ring
+  linarith
+
 end SKEFTHawking.FKLW.GroupCommutator
 
 /-! ## 6. Module summary
 
-GroupCommutator.lean (Phase 6t Wave 1 SHIP, 2026-05-22 PM):
+GroupCommutator.lean (Phase 6t Wave 1 SHIP 2026-05-22 PM
++ Wave 1 strengthening 2026-05-22 PM post-compact):
 **Group-commutator substrate for the Dawson-Nielsen Solovay-Kitaev recursion**.
 
   *Definitions:*
@@ -305,11 +424,19 @@ GroupCommutator.lean (Phase 6t Wave 1 SHIP, 2026-05-22 PM):
   - `exp_smul_I_inv` — `(exp(iF))⁻¹ = exp(-iF)`
   - `groupCommutator_exp_eq` — bridge to the BCH 4-fold product
   - `groupCommutator_telescope` — 4-term algebraic decomposition for stability
+  - **`matrix_inv_diff_norm_le`** — Mathlib upstream-PR candidate:
+    `‖g'⁻¹ - g⁻¹‖ ≤ M² · ε` for invertible `g, g'` with inverse-norms ≤ M
+    and direct difference ≤ ε.
 
-  *Headline theorems (3 total):*
+  *Headline theorems (4 total):*
   - **`groupCommutator_norm_le_quadratic`** — quadratic shrinkage `≤ 338·δ²`
   - **`groupCommutator_lie_bracket_cubic_remainder`** — cubic linearization `≤ 320·δ³`
-  - **`groupCommutator_stability`** — perturbation bound `≤ 4·M³·ε`
+  - **`groupCommutator_stability`** — generic perturbation bound `≤ 4·M³·ε`
+    (consumes 4 explicit ε-bounds)
+  - **`groupCommutator_stability_invertible`** (Wave 1 strengthening) —
+    invertible-specialized perturbation bound `≤ 4·M⁵·ε` (consumes only
+    2 direct-diff bounds + invertibility hyps; derives inv-diff bounds
+    from `matrix_inv_diff_norm_le`)
 
   *Pipeline Invariant compliance:*
   - Invariant #10 (no `maxHeartbeats`): RESPECTED

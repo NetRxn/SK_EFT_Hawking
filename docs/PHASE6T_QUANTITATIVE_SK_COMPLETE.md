@@ -2,7 +2,7 @@
 
 **Date:** 2026-05-22 PM (Waves 1-7 ship) + 2026-05-22 PM post-compact (strengthening pass 1)
 **Status:** ✅ **WAVES 1-7 LEAN SUBSTRATE SHIPPED** — kernel-only headline + 6 supporting modules. Wave 8 closeout in progress (this document is Stage 12 of the Wave 8 closeout).
-**Strengthening pass 1 (2026-05-22 PM post-compact):** ✅ Wave 5 `SkLengthAtEpsilon` unconditionally discharged (1 tracked Prop eliminated; 4 → 3). ✅ Wave 2 X-axis + Y-axis subcases unconditionally discharged. ✅ Wave 5 `3 < c < 4` sanity bounds.
+**Strengthening pass 1 (2026-05-22 PM post-compact):** ✅ Wave 5 `SkLengthAtEpsilon` unconditionally discharged (1 tracked Prop eliminated; 4 → 3). ✅ Wave 2 X-axis + Y-axis subcases unconditionally discharged. ✅ Wave 5 `3 < c < 4` sanity bounds. ✅ Wave 1 invertible-specialized stability `groupCommutator_stability_invertible` + `matrix_inv_diff_norm_le` substrate lemma (Mathlib upstream-PR candidate).
 **Predecessor:** Phase 5 Step 13 Path (i) — F.21 unconditional density (2026-05-22 PM).
 **Successor:** Phase 6t Wave 2/4/6-followups (3 remaining tracked-Prop discharges, simplified by the strengthening pass), then Phase 6u (Chain A ∘ B FT composition).
 
@@ -81,10 +81,11 @@ Phase 6t enables a v4 preprint refresh promoting Chain B Step B5 from "density t
 
 ### Mathlib upstream-PR candidates
 
-Three Mathlib upstream-PR-quality lemmas identified for post-Phase-6t contribution:
+Four Mathlib upstream-PR-quality lemmas identified for post-Phase-6t contribution:
 1. `groupCommutator_stability` (Wave 1) — generic perturbation bound for group commutators in normed rings (any d, any field).
-2. `Real.toNNReal` + `Finset.sup` + `linfty_opNorm_def` integration (Wave 3) — generic 2×2 matrix entrywise→opNorm bridge (any d via parameterized constant).
-3. `skLength` recurrence solution form (Wave 5) — generic geometric recurrence `x_{n+1} = a·x_n + b` closed form.
+2. **`matrix_inv_diff_norm_le`** (Wave 1 strengthening) — generic matrix-inverse difference bound `‖g'⁻¹ - g⁻¹‖ ≤ ‖g'⁻¹‖·‖g' - g‖·‖g⁻¹‖` for invertible matrices in any normed ring (any d). Uses Mathlib's `Matrix.inv_sub_inv` + submultiplicativity.
+3. `Real.toNNReal` + `Finset.sup` + `linfty_opNorm_def` integration (Wave 3) — generic 2×2 matrix entrywise→opNorm bridge (any d via parameterized constant).
+4. `skLength` recurrence solution form (Wave 5) — generic geometric recurrence `x_{n+1} = a·x_n + b` closed form.
 
 These are not on the critical path for Phase 6t closeout; opportunistic upstream contribution post-discharge.
 
