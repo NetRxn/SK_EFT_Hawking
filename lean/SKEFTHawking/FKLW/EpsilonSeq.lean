@@ -1,0 +1,181 @@
+/-
+SK_EFT_Hawking Phase 6t Iteration 2 sub-ship 3a (2026-05-22 PM late):
+**The Dawson-Nielsen `ε_seq` error sequence**.
+
+For a `(3/2)`-power recurrence `ε_{n+1} = K · ε_n^(3/2)`, define the sequence
+recursively and prove the convergence properties needed by `skApprox_exists`
+(forthcoming sub-ship 3b).
+
+## Recursive definition + closed-form correspondence
+
+  - `ε_seq K ε₀ 0 = ε₀`
+  - `ε_seq K ε₀ (n+1) = K · (ε_seq K ε₀ n)^(3/2)`
+
+The closed form (used in inductive bounds) is:
+
+  `ε_seq K ε₀ n = (K^2 · ε₀)^((3/2)^n) / K^2`
+
+with the convention that `f_n := K^2 · ε_seq K ε₀ n` satisfies `f_{n+1} =
+f_n^(3/2)`. Under `f_0 = K^2 · ε₀ < 1`, `f_n → 0` super-quadratically.
+
+## Phase 6t roadmap alignment
+
+  - Sub-ship 3a (this module) → consumed by sub-ship 3b
+    (`skApprox_exists` inductive proof). The recurrence form drives the
+    induction; the closed form bounds give the asymptotic precision.
+
+## Pipeline Invariant compliance
+
+  - Invariant #10 (no `maxHeartbeats`): RESPECTED.
+  - Invariant #15 (no new axioms): RESPECTED.
+
+Primary source: Dawson & Nielsen, *Quantum Info. & Comp.* 6 (2006), 81–95;
+                arXiv:quant-ph/0505030, §3.1.
+-/
+
+import Mathlib
+
+set_option autoImplicit false
+
+namespace SKEFTHawking.FKLW.EpsilonSeq
+
+/-! ## 1. Recursive definition -/
+
+/-- **The Dawson-Nielsen error sequence (recursive form)**.
+
+For parameters `K > 0` (the recursion's composite constant) and `ε₀ > 0`
+(the base-case precision):
+  - `ε_seq K ε₀ 0 = ε₀`
+  - `ε_seq K ε₀ (n+1) = K · (ε_seq K ε₀ n)^(3/2)`. -/
+noncomputable def ε_seq (K ε₀ : ℝ) : ℕ → ℝ
+  | 0 => ε₀
+  | n + 1 => K * (ε_seq K ε₀ n) ^ (3 / 2 : ℝ)
+
+/-- Base-case unfolding (defeq). -/
+lemma ε_seq_zero (K ε₀ : ℝ) : ε_seq K ε₀ 0 = ε₀ := rfl
+
+/-- Successor-case unfolding (defeq). -/
+lemma ε_seq_succ (K ε₀ : ℝ) (n : ℕ) :
+    ε_seq K ε₀ (n + 1) = K * (ε_seq K ε₀ n) ^ (3 / 2 : ℝ) := rfl
+
+/-! ## 2. Positivity + monotonicity
+
+Under the convergence condition `K^2 · ε₀ < 1` (equivalently
+`K · √ε₀ < 1`), the sequence is positive and `≤ ε₀` for all `n`. -/
+
+/-- For `0 < K` and `0 < ε₀`, every `ε_seq K ε₀ n` is positive. -/
+lemma ε_seq_pos (K ε₀ : ℝ) (hK_pos : 0 < K) (hε₀_pos : 0 < ε₀) :
+    ∀ (n : ℕ), 0 < ε_seq K ε₀ n
+  | 0 => hε₀_pos
+  | n + 1 => by
+      rw [ε_seq_succ]
+      have h_pos := ε_seq_pos K ε₀ hK_pos hε₀_pos n
+      have h_rpow_pos : 0 < (ε_seq K ε₀ n) ^ (3 / 2 : ℝ) :=
+        Real.rpow_pos_of_pos h_pos _
+      exact mul_pos hK_pos h_rpow_pos
+
+/-- For `0 < K` and `0 < ε₀`, `ε_seq K ε₀ n` is non-negative. -/
+lemma ε_seq_nonneg (K ε₀ : ℝ) (hK_pos : 0 < K) (hε₀_pos : 0 < ε₀) (n : ℕ) :
+    0 ≤ ε_seq K ε₀ n :=
+  le_of_lt (ε_seq_pos K ε₀ hK_pos hε₀_pos n)
+
+/-- **Decreasingness step**: if `0 < K · ε^(1/2) ≤ 1`, then `K · ε^(3/2) ≤ ε`.
+
+This is the per-step shrinkage: the next-level precision is `≤` current. -/
+lemma ε_seq_step_le
+    (K ε : ℝ) (hK_pos : 0 < K) (hε_pos : 0 < ε)
+    (h_conv : K * ε ^ (1 / 2 : ℝ) ≤ 1) :
+    K * ε ^ (3 / 2 : ℝ) ≤ ε := by
+  -- `K · ε^(3/2) = (K · ε^(1/2)) · ε^1`.
+  -- If `K · ε^(1/2) ≤ 1`, then `(K · ε^(1/2)) · ε ≤ 1 · ε = ε`.
+  have h_split : K * ε ^ (3 / 2 : ℝ) = (K * ε ^ (1 / 2 : ℝ)) * ε := by
+    have h_split_rpow : ε ^ (3 / 2 : ℝ) = ε ^ (1 / 2 : ℝ) * ε ^ (1 : ℝ) := by
+      rw [← Real.rpow_add hε_pos]
+      norm_num
+    rw [h_split_rpow, Real.rpow_one]
+    ring
+  rw [h_split]
+  calc K * ε ^ (1 / 2 : ℝ) * ε
+      ≤ 1 * ε := mul_le_mul_of_nonneg_right h_conv hε_pos.le
+    _ = ε := one_mul ε
+
+/-- **Decreasing**: under the convergence condition `K · √ε₀ ≤ 1`, the
+sequence is monotonically non-increasing: `ε_seq K ε₀ (n+1) ≤ ε_seq K ε₀ n`.
+
+Note: the convergence condition `K^2 · ε₀ ≤ 1` (used in `ε_seq_le_ε_zero`)
+is equivalent to `K · √ε₀ ≤ 1` via `K^2 · ε₀ = (K · √ε₀)^2`. -/
+lemma ε_seq_decreasing
+    (K ε₀ : ℝ) (hK_pos : 0 < K) (hε₀_pos : 0 < ε₀)
+    (h_conv : K * ε₀ ^ (1 / 2 : ℝ) ≤ 1) :
+    ∀ (n : ℕ), ε_seq K ε₀ (n + 1) ≤ ε_seq K ε₀ n := by
+  intro n
+  -- Induction shows each ε_seq K ε₀ n satisfies the same convergence form
+  -- (since K · (ε_seq K ε₀ n)^(1/2) ≤ K · ε₀^(1/2) ≤ 1 for ε_seq n ≤ ε₀).
+  rw [ε_seq_succ]
+  have h_pos : 0 < ε_seq K ε₀ n := ε_seq_pos K ε₀ hK_pos hε₀_pos n
+  -- We need `K · (ε_seq K ε₀ n)^(1/2) ≤ 1`. Bootstrap via induction.
+  have h_bound_aux : ∀ m, ε_seq K ε₀ m ≤ ε₀ ∧
+                          K * (ε_seq K ε₀ m) ^ (1 / 2 : ℝ) ≤ 1 := by
+    intro m
+    induction m with
+    | zero =>
+      refine ⟨le_refl _, ?_⟩
+      simpa [ε_seq_zero] using h_conv
+    | succ k ih =>
+      obtain ⟨h_le, h_K_sqrt⟩ := ih
+      have h_k_pos : 0 < ε_seq K ε₀ k := ε_seq_pos K ε₀ hK_pos hε₀_pos k
+      -- ε_seq (k+1) = K · ε_k^(3/2) ≤ ε_k (by step_le) ≤ ε₀ (IH).
+      have h_step : K * (ε_seq K ε₀ k) ^ (3 / 2 : ℝ) ≤ ε_seq K ε₀ k :=
+        ε_seq_step_le K (ε_seq K ε₀ k) hK_pos h_k_pos h_K_sqrt
+      refine ⟨?_, ?_⟩
+      · rw [ε_seq_succ]; exact le_trans h_step h_le
+      · -- K · ε_{k+1}^(1/2) ≤ K · ε_k^(1/2) ≤ 1 (since ε_{k+1} ≤ ε_k).
+        have h_succ_le_k : ε_seq K ε₀ (k + 1) ≤ ε_seq K ε₀ k := by
+          rw [ε_seq_succ]; exact h_step
+        have h_succ_pos : 0 < ε_seq K ε₀ (k + 1) :=
+          ε_seq_pos K ε₀ hK_pos hε₀_pos (k + 1)
+        have h_rpow_mono :
+            (ε_seq K ε₀ (k + 1)) ^ (1 / 2 : ℝ) ≤ (ε_seq K ε₀ k) ^ (1 / 2 : ℝ) :=
+          Real.rpow_le_rpow h_succ_pos.le h_succ_le_k (by norm_num)
+        calc K * (ε_seq K ε₀ (k + 1)) ^ (1 / 2 : ℝ)
+            ≤ K * (ε_seq K ε₀ k) ^ (1 / 2 : ℝ) :=
+              mul_le_mul_of_nonneg_left h_rpow_mono hK_pos.le
+          _ ≤ 1 := h_K_sqrt
+  exact ε_seq_step_le K (ε_seq K ε₀ n) hK_pos h_pos (h_bound_aux n).2
+
+/-- **Bounded by ε₀**: under the convergence condition, every level satisfies
+`ε_seq K ε₀ n ≤ ε₀`. -/
+lemma ε_seq_le_ε_zero
+    (K ε₀ : ℝ) (hK_pos : 0 < K) (hε₀_pos : 0 < ε₀)
+    (h_conv : K * ε₀ ^ (1 / 2 : ℝ) ≤ 1)
+    (n : ℕ) :
+    ε_seq K ε₀ n ≤ ε₀ := by
+  induction n with
+  | zero => exact le_refl _
+  | succ k ih =>
+      have h_step : ε_seq K ε₀ (k + 1) ≤ ε_seq K ε₀ k :=
+        ε_seq_decreasing K ε₀ hK_pos hε₀_pos h_conv k
+      exact le_trans h_step ih
+
+end SKEFTHawking.FKLW.EpsilonSeq
+
+/-! ## 3. Module summary
+
+EpsilonSeq.lean (Phase 6t Iteration 2 sub-ship 3a, 2026-05-22 PM late):
+**The Dawson-Nielsen error sequence (recursive form)**.
+
+  *Definition:*
+  - `ε_seq K ε₀ n` — recursive: `0 ↦ ε₀`, `n+1 ↦ K · ε_seq K ε₀ n ^ (3/2)`
+
+  *Headlines:*
+  - `ε_seq_zero`, `ε_seq_succ` — defeq unfoldings
+  - `ε_seq_pos`, `ε_seq_nonneg` — positivity
+  - `ε_seq_step_le` — per-step shrinkage `K · ε^(3/2) ≤ ε` under `K · √ε ≤ 1`
+  - `ε_seq_decreasing` — `ε_seq K ε₀ (n+1) ≤ ε_seq K ε₀ n` under `K · √ε₀ ≤ 1`
+  - `ε_seq_le_ε_zero` — `ε_seq K ε₀ n ≤ ε₀` under the same condition
+
+  *Pipeline Invariant compliance:*
+  - Invariant #10 (no `maxHeartbeats`): RESPECTED
+  - Invariant #15 (no new axioms): RESPECTED
+
+Zero new project-local axioms. Pre-Phase-6t axiom count UNCHANGED. -/

@@ -158,7 +158,7 @@ def SkApproxErrorShrinkage (K : ℝ) : Prop :=
     ‖(ρ_Fib_SU2 (skApprox (n + 1) U) : Matrix (Fin 2) (Fin 2) ℂ) -
         (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
     K * ‖(ρ_Fib_SU2 (skApprox n U) : Matrix (Fin 2) (Fin 2) ℂ) -
-        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ^ (3 / 2 : ℕ)
+        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ^ (3 / 2 : ℝ)
 
 /-- **Tracked Prop**: the level-`n` error bound (closed-form solution to the
 recursion).
