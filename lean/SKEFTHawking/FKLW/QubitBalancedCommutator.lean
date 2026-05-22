@@ -463,6 +463,79 @@ theorem pauli_linear_norm_le (a b c : ℝ) :
   | 0 => exact h_row0
   | 1 => exact h_row1
 
+/-! ## 5e. Pauli-coordinate extraction for Hermitian traceless 2×2 matrices
+    (Phase 6t Wave 2-followup substrate 2026-05-22 PM post-compact, Task #45)
+
+Any 2×2 Hermitian traceless matrix `H : Matrix (Fin 2) (Fin 2) ℂ` decomposes as
+`H = a·σ_x + b·σ_y + c·σ_z` for unique reals `(a, b, c)`. The closed-form
+extraction is:
+
+  a := (H 0 1).re    (real part of off-diagonal)
+  b := -(H 0 1).im   (negated imaginary part of off-diagonal)
+  c := (H 0 0).re    (real diagonal entry)
+
+This is the load-bearing substrate for the Wave 2-followup general-axis
+discharge of `BalancedCommutatorGeneralAxisGroup`: given an arbitrary
+Hermitian traceless `H` of unit linftyOp-norm, we obtain Pauli coefficients
+`(a, b, c)` to feed into the constructive perpendicular-vector machinery.
+
+Mathlib upstream-PR candidate: the natural generalization to the basis of
+generalized Gell-Mann matrices admits a similar extraction. -/
+
+/-- **Pauli coordinate extraction (Mathlib upstream-PR candidate)**: any 2×2
+Hermitian traceless matrix decomposes as `(H 0 1).re·σ_x + (-(H 0 1).im)·σ_y
++ (H 0 0).re·σ_z`.
+
+Proof: by entrywise computation. Uses `Matrix.IsHermitian.apply` to give
+`H i j = star (H j i)`, which forces the diagonal entries to be real and
+the off-diagonal entries to be complex conjugates of each other. Combined
+with tracelessness `H 0 0 + H 1 1 = 0`, the four matrix entries match the
+Pauli expansion entry by entry. -/
+theorem pauli_decomp_of_hermitian_traceless
+    (H : Matrix (Fin 2) (Fin 2) ℂ) (hH : H.IsHermitian) (htr : H.trace = 0) :
+    H = ((H 0 1).re : ℂ) • σ_x + (-(H 0 1).im : ℂ) • σ_y + ((H 0 0).re : ℂ) • σ_z := by
+  have h_swap : ∀ i j : Fin 2, H i j = star (H j i) := fun i j => (hH.apply i j).symm
+  have h_00_real : (H 0 0).im = 0 := by
+    have h := h_swap 0 0
+    have h_im_eq : (H 0 0).im = -(H 0 0).im := by
+      have := congrArg Complex.im h
+      simp at this
+      exact this
+    linarith
+  have h_11_eq : H 1 1 = -(H 0 0) := by
+    have h_trace_eq : H.trace = H 0 0 + H 1 1 := by
+      simp [Matrix.trace, Fin.sum_univ_two]
+    have : H 0 0 + H 1 1 = 0 := by rw [← h_trace_eq]; exact htr
+    linear_combination this
+  ext i j
+  rcases i with ⟨ki, hki⟩
+  rcases j with ⟨kj, hkj⟩
+  interval_cases ki <;> interval_cases kj <;>
+    simp only [Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, σ_x, σ_y, σ_z,
+               Matrix.of_apply, Matrix.cons_val', Matrix.empty_val',
+               Matrix.cons_val_fin_one]
+  · apply Complex.ext
+    · simp
+    · show (H ⟨0, hki⟩ ⟨0, hkj⟩).im = _
+      have : H ⟨0, hki⟩ ⟨0, hkj⟩ = H 0 0 := rfl
+      rw [this]
+      simp [h_00_real]
+  · have : H ⟨0, hki⟩ ⟨1, hkj⟩ = H 0 1 := rfl
+    rw [this]
+    apply Complex.ext
+    · simp
+    · simp
+  · have h_eq : H ⟨1, hki⟩ ⟨0, hkj⟩ = H 1 0 := rfl
+    rw [h_eq, h_swap 1 0]
+    apply Complex.ext
+    · simp
+    · simp
+  · have h_eq : H ⟨1, hki⟩ ⟨1, hkj⟩ = H 1 1 := rfl
+    rw [h_eq, h_11_eq]
+    apply Complex.ext
+    · simp
+    · simp [h_00_real]
+
 /-! ## 6. Predicate-level scaffold for general-axis case (deferred)
 
 The general-axis case `H = θ · (n_x σ_x + n_y σ_y + n_z σ_z)` for unit
