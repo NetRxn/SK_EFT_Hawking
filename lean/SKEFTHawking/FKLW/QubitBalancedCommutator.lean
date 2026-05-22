@@ -463,6 +463,63 @@ theorem pauli_linear_norm_le (a b c : ℝ) :
   | 0 => exact h_row0
   | 1 => exact h_row1
 
+/-! ## 5d2. Pauli-linear-combination linftyOp norm lower bound + equality
+    (Phase 6t Task #34 substrate prerequisite, 2026-05-22 PM post-compact)
+
+The lower-bound direction of `pauli_linear_norm_le`: the linftyOp operator
+norm is at least the row-0 sum, which equals `|c| + √(a²+b²)`. Combined
+with the upper bound, this gives the EXACT formula
+`‖a·σ_x + b·σ_y + c·σ_z‖_linftyOp = |c| + √(a²+b²)`. -/
+
+/-- **Pauli-linear-combination linftyOp norm lower bound (`≥` direction)**:
+for any real `a, b, c`,
+  `|c| + √(a²+b²) ≤ ‖a·σ_x + b·σ_y + c·σ_z‖_linftyOp`.
+
+Proof: apply `Finset.le_sup` at row 0 to the linftyOp `Finset.univ.sup`
+of row sums, then push the NNReal coercion through to ℝ. -/
+theorem pauli_linear_norm_ge (a b c : ℝ) :
+    |c| + Real.sqrt (a^2 + b^2) ≤
+    ‖((a : ℂ) • σ_x + (b : ℂ) • σ_y + (c : ℂ) • σ_z :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  set M : Matrix (Fin 2) (Fin 2) ℂ :=
+    (a : ℂ) • σ_x + (b : ℂ) • σ_y + (c : ℂ) • σ_z with hM_def
+  have h_norm_real_c : ‖(c : ℂ)‖ = |c| := by simp [Complex.norm_real]
+  have h_norm_aib_sub : ‖(a : ℂ) - (b : ℂ) * Complex.I‖ = Real.sqrt (a^2 + b^2) := by
+    rw [Complex.norm_def]
+    congr 1
+    simp [Complex.normSq, Complex.sub_re, Complex.sub_im, Complex.mul_re, Complex.mul_im,
+          Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.ofReal_im]
+    ring
+  have h_M00 : M 0 0 = (c : ℂ) := by
+    simp [hM_def, σ_x, σ_y, σ_z, smul_eq_mul]
+  have h_M01 : M 0 1 = (a : ℂ) - (b : ℂ) * Complex.I := by
+    simp [hM_def, σ_x, σ_y, σ_z, smul_eq_mul]
+    ring
+  have h_row0_real : (∑ j : Fin 2, ‖M 0 j‖) = |c| + Real.sqrt (a^2 + b^2) := by
+    rw [Fin.sum_univ_two, h_M00, h_M01, h_norm_real_c, h_norm_aib_sub]
+  rw [Matrix.linfty_opNorm_def]
+  have h_le_sup_nn :
+      (∑ j : Fin 2, ‖M 0 j‖₊) ≤ Finset.univ.sup (fun i : Fin 2 => ∑ j, ‖M i j‖₊) :=
+    Finset.le_sup (f := fun i => ∑ j, ‖M i j‖₊) (Finset.mem_univ 0)
+  have h_le_sup_real :
+      ((∑ j : Fin 2, ‖M 0 j‖₊ : NNReal) : ℝ) ≤
+      ((Finset.univ.sup (fun i : Fin 2 => ∑ j, ‖M i j‖₊) : NNReal) : ℝ) := by
+    exact_mod_cast h_le_sup_nn
+  have h_coe_sum : ((∑ j : Fin 2, ‖M 0 j‖₊ : NNReal) : ℝ) = ∑ j : Fin 2, ‖M 0 j‖ := by
+    push_cast; rfl
+  rw [h_coe_sum] at h_le_sup_real
+  rw [h_row0_real] at h_le_sup_real
+  exact h_le_sup_real
+
+/-- **Pauli-linear-combination linftyOp norm EXACT formula (Mathlib upstream-PR
+candidate)**: combining `pauli_linear_norm_le` and `pauli_linear_norm_ge`,
+
+  `‖a·σ_x + b·σ_y + c·σ_z‖_linftyOp = |c| + √(a²+b²)`. -/
+theorem pauli_linear_norm_eq (a b c : ℝ) :
+    ‖((a : ℂ) • σ_x + (b : ℂ) • σ_y + (c : ℂ) • σ_z :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ = |c| + Real.sqrt (a^2 + b^2) :=
+  le_antisymm (pauli_linear_norm_le a b c) (pauli_linear_norm_ge a b c)
+
 /-! ## 5e. Pauli-coordinate extraction for Hermitian traceless 2×2 matrices
     (Phase 6t Wave 2-followup substrate 2026-05-22 PM post-compact, Task #45)
 
