@@ -273,6 +273,179 @@ theorem groupCommutator_balanced_y_axis
     rw [h_lie_eq] at h_cubic
     exact h_cubic
 
+/-! ## 2c. General-axis discharge (Phase 6t Task #34, Wave 2-followup
+    2026-05-22 PM post-compact)
+
+The general-axis case discharged via Pauli-coordinate construction. For
+any 2×2 Hermitian traceless `H` with `‖H‖_linftyOp = 1`, we extract the
+Pauli coordinates `(h₁, h₂, h₃)` via `pauli_decomp_of_hermitian_traceless`,
+then construct `F, G` Hermitian with `‖F‖, ‖G‖ ≤ √(θ/2)` such that
+`F * G - G * F = -(θ·I)·H` via:
+  - **Z-axis-aligned case** (h₁ = h₂ = 0, |h₃| = 1): `F := √(θ/2)·σ_x`,
+    `G := (-h₃·√(θ/2))·σ_y`. Commutator via `comm_σ_x_σ_y`.
+  - **General case** (h₁² + h₂² > 0): `F := α·((h₂/r)·σ_x - (h₁/r)·σ_y)`,
+    `G := -α·((h₁·h₃/r)·σ_x + (h₂·h₃/r)·σ_y - r·σ_z)` where
+    `α := √(θ/2)`, `r := √(h₁²+h₂²)`. Commutator via
+    `pauli_linear_commutator_eq`. Norm bound uses `pauli_linear_norm_le`
+    + the constraint `|h₃| + r = 1` from `‖H‖ = 1` via `pauli_linear_norm_eq`. -/
+
+/-- **Lie-algebra-level helper for general-axis discharge**. -/
+theorem balanced_commutator_general_axis_lie
+    (H : Matrix (Fin 2) (Fin 2) ℂ) (hH : H.IsHermitian) (htr : H.trace = 0)
+    (hH_norm : ‖H‖ = 1) (θ : ℝ) (hθ_nn : 0 ≤ θ) (_hθ_le_one : θ ≤ 1) :
+    ∃ (F G : Matrix (Fin 2) (Fin 2) ℂ),
+      F.IsHermitian ∧ G.IsHermitian ∧
+      ‖F‖ ≤ Real.sqrt (θ / 2) ∧ ‖G‖ ≤ Real.sqrt (θ / 2) ∧
+      F * G - G * F = -((θ : ℂ) * Complex.I) • H := by
+  -- Extract Pauli coords
+  set h₁ : ℝ := (H 0 1).re with h₁_def
+  set h₂ : ℝ := -(H 0 1).im with h₂_def
+  set h₃ : ℝ := (H 0 0).re with h₃_def
+  -- Massage decomposition to use h₂ (cast normalization issue: pauli_decomp returns
+  -- `-↑(H 0 1).im • σ_y` but `↑h₂ = -↑(H 0 1).im` only modulo push_cast).
+  have hH_decomp : H = (h₁ : ℂ) • σ_x + (h₂ : ℂ) • σ_y + (h₃ : ℂ) • σ_z := by
+    have h := pauli_decomp_of_hermitian_traceless H hH htr
+    rw [h]
+    simp only [h₁_def, h₂_def, h₃_def]
+    push_cast
+    ring
+  have h_norm_one : |h₃| + Real.sqrt (h₁^2 + h₂^2) = 1 := by
+    have h_eq : ‖((h₁ : ℂ) • σ_x + (h₂ : ℂ) • σ_y + (h₃ : ℂ) • σ_z :
+                  Matrix (Fin 2) (Fin 2) ℂ)‖
+             = |h₃| + Real.sqrt (h₁^2 + h₂^2) := pauli_linear_norm_eq h₁ h₂ h₃
+    rw [← hH_decomp] at h_eq
+    linarith
+  set α := Real.sqrt (θ / 2) with hα_def
+  have hα_nn : 0 ≤ α := Real.sqrt_nonneg _
+  have hα_sq : α^2 = θ / 2 := by
+    rw [sq]; exact Real.mul_self_sqrt (by linarith)
+  have h_2α2_θ : 2 * α^2 = θ := by linarith
+  have h_2α2_θ_C : ((2 * α^2 : ℝ) : ℂ) = ((θ : ℝ) : ℂ) := by exact_mod_cast h_2α2_θ
+  push_cast at h_2α2_θ_C
+  by_cases h_r_zero : h₁^2 + h₂^2 = 0
+  · -- ===================== Subcase A: Z-axis aligned =====================
+    have h₁_zero : h₁ = 0 := by nlinarith [sq_nonneg h₁, sq_nonneg h₂]
+    have h₂_zero : h₂ = 0 := by nlinarith [sq_nonneg h₁, sq_nonneg h₂]
+    have h_r_sqrt : Real.sqrt (h₁^2 + h₂^2) = 0 := by rw [h_r_zero, Real.sqrt_zero]
+    have h_h3_abs_one : |h₃| = 1 := by linarith
+    refine ⟨(α : ℂ) • σ_x, ((-h₃ * α : ℝ) : ℂ) • σ_y, ?_, ?_, ?_, ?_, ?_⟩
+    · exact smul_σ_x_isHermitian α
+    · exact smul_σ_y_isHermitian (-h₃ * α)
+    · have := smul_σ_x_norm_le α
+      rwa [abs_of_nonneg hα_nn] at this
+    · have := smul_σ_y_norm_le (-h₃ * α)
+      have h_abs : |(-h₃ * α)| = α := by
+        rw [abs_mul, abs_neg, h_h3_abs_one, one_mul, abs_of_nonneg hα_nn]
+      linarith
+    · -- Commutator
+      rw [hH_decomp, h₁_zero, h₂_zero]
+      calc ((α : ℂ) • σ_x) * (((-h₃ * α : ℝ) : ℂ) • σ_y) -
+           (((-h₃ * α : ℝ) : ℂ) • σ_y) * ((α : ℂ) • σ_x)
+          = ((α : ℂ) * ((-h₃ * α : ℝ) : ℂ)) • (σ_x * σ_y) -
+            (((-h₃ * α : ℝ) : ℂ) * (α : ℂ)) • (σ_y * σ_x) := by
+            rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul,
+                Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+        _ = ((α : ℂ) * ((-h₃ * α : ℝ) : ℂ)) • (σ_x * σ_y) -
+            ((α : ℂ) * ((-h₃ * α : ℝ) : ℂ)) • (σ_y * σ_x) := by
+            rw [mul_comm (((-h₃ * α : ℝ) : ℂ)) ((α : ℂ))]
+        _ = ((α : ℂ) * ((-h₃ * α : ℝ) : ℂ)) • (σ_x * σ_y - σ_y * σ_x) := by
+            rw [← smul_sub]
+        _ = ((α : ℂ) * ((-h₃ * α : ℝ) : ℂ)) • ((2 * Complex.I) • σ_z) := by
+            rw [comm_σ_x_σ_y]
+        _ = ((α : ℂ) * ((-h₃ * α : ℝ) : ℂ) * (2 * Complex.I)) • σ_z := by
+            rw [smul_smul]
+        _ = -((θ : ℂ) * Complex.I * (h₃ : ℂ)) • σ_z := by
+            congr 1
+            push_cast
+            linear_combination -h₃ * Complex.I * h_2α2_θ_C
+        _ = -((θ : ℂ) * Complex.I) • (((0 : ℝ) : ℂ) • σ_x +
+              ((0 : ℝ) : ℂ) • σ_y + (h₃ : ℂ) • σ_z) := by
+            rw [show (((0 : ℝ) : ℂ) • σ_x +
+                  ((0 : ℝ) : ℂ) • σ_y + (h₃ : ℂ) • σ_z :
+                  Matrix (Fin 2) (Fin 2) ℂ) = (h₃ : ℂ) • σ_z from by
+              push_cast; simp]
+            rw [smul_smul]; congr 1; ring
+  · -- ===================== Subcase B: General =====================
+    push_neg at h_r_zero
+    have h_r_pos : 0 < h₁^2 + h₂^2 := by
+      have h_nn : 0 ≤ h₁^2 + h₂^2 := by positivity
+      exact lt_of_le_of_ne h_nn (Ne.symm h_r_zero)
+    set r := Real.sqrt (h₁^2 + h₂^2) with hr_def
+    have hr_pos : 0 < r := Real.sqrt_pos.mpr h_r_pos
+    have hr_sq : r^2 = h₁^2 + h₂^2 := by
+      rw [sq]; exact Real.mul_self_sqrt (le_of_lt h_r_pos)
+    have hr_ne : r ≠ 0 := ne_of_gt hr_pos
+    refine ⟨((α * h₂ / r : ℝ) : ℂ) • σ_x + ((-α * h₁ / r : ℝ) : ℂ) • σ_y +
+              ((0 : ℝ) : ℂ) • σ_z,
+            ((-α * h₁ * h₃ / r : ℝ) : ℂ) • σ_x + ((-α * h₂ * h₃ / r : ℝ) : ℂ) • σ_y +
+                ((α * r : ℝ) : ℂ) • σ_z,
+            ?_, ?_, ?_, ?_, ?_⟩
+    -- F Hermitian
+    · unfold Matrix.IsHermitian
+      rw [Matrix.conjTranspose_add, Matrix.conjTranspose_add,
+          Matrix.conjTranspose_smul, Matrix.conjTranspose_smul, Matrix.conjTranspose_smul,
+          σ_x_hermitian, σ_y_hermitian, σ_z_hermitian]
+      simp [Complex.conj_ofReal]
+    -- G Hermitian
+    · unfold Matrix.IsHermitian
+      rw [Matrix.conjTranspose_add, Matrix.conjTranspose_add,
+          Matrix.conjTranspose_smul, Matrix.conjTranspose_smul, Matrix.conjTranspose_smul,
+          σ_x_hermitian, σ_y_hermitian, σ_z_hermitian]
+      simp [Complex.conj_ofReal]
+    -- ‖F‖ ≤ α
+    · have h_le := pauli_linear_norm_le (α * h₂ / r) (-α * h₁ / r) 0
+      have h_a3 : |(0 : ℝ)| = 0 := abs_zero
+      have h_sq_eq : (α * h₂ / r)^2 + (-α * h₁ / r)^2 = α^2 := by
+        have h_eq : α^2 = α^2 * (h₁^2 + h₂^2) / r^2 := by
+          rw [← hr_sq]; field_simp
+        rw [h_eq]; field_simp; ring
+      have h_sqrt_eq : Real.sqrt ((α * h₂ / r)^2 + (-α * h₁ / r)^2) = α := by
+        rw [h_sq_eq]; exact Real.sqrt_sq hα_nn
+      rw [h_a3, h_sqrt_eq, zero_add] at h_le
+      exact h_le
+    -- ‖G‖ ≤ α
+    · have h_le := pauli_linear_norm_le (-α * h₁ * h₃ / r) (-α * h₂ * h₃ / r) (α * r)
+      have h_b3 : |α * r| = α * r := by rw [abs_of_nonneg]; positivity
+      have h_sq_eq : (-α * h₁ * h₃ / r)^2 + (-α * h₂ * h₃ / r)^2 = α^2 * h₃^2 := by
+        have h_eq : α^2 * h₃^2 = α^2 * h₃^2 * (h₁^2 + h₂^2) / r^2 := by
+          rw [← hr_sq]; field_simp
+        rw [h_eq]; field_simp
+      have h_sqrt_eq : Real.sqrt ((-α * h₁ * h₃ / r)^2 + (-α * h₂ * h₃ / r)^2) = α * |h₃| := by
+        rw [h_sq_eq]
+        have h_re : α^2 * h₃^2 = (α * |h₃|)^2 := by rw [mul_pow, sq_abs]
+        rw [h_re]; exact Real.sqrt_sq (by positivity)
+      rw [h_b3, h_sqrt_eq] at h_le
+      have h_sum_eq : α * r + α * |h₃| = α := by
+        have : α * r + α * |h₃| = α * (|h₃| + r) := by ring
+        rw [this, h_norm_one, mul_one]
+      linarith
+    -- Commutator equation
+    · have h_comm := pauli_linear_commutator_eq (α * h₂ / r) (-α * h₁ / r) 0
+                                                (-α * h₁ * h₃ / r) (-α * h₂ * h₃ / r) (α * r)
+      have h_cx : (-α * h₁ / r) * (α * r) - (0 : ℝ) * (-α * h₂ * h₃ / r) = -α^2 * h₁ := by
+        field_simp; ring
+      have h_cy : (0 : ℝ) * (-α * h₁ * h₃ / r) - (α * h₂ / r) * (α * r) = -α^2 * h₂ := by
+        field_simp; ring
+      have h_cz : (α * h₂ / r) * (-α * h₂ * h₃ / r) - (-α * h₁ / r) * (-α * h₁ * h₃ / r)
+                = -α^2 * h₃ := by
+        have h_eq : (α * h₂ / r) * (-α * h₂ * h₃ / r) - (-α * h₁ / r) * (-α * h₁ * h₃ / r)
+                  = -α^2 * h₃ * (h₁^2 + h₂^2) / r^2 := by field_simp; ring
+        rw [h_eq, ← hr_sq]; field_simp
+      rw [h_cx, h_cy, h_cz] at h_comm
+      rw [h_comm, hH_decomp]
+      -- Goal: (2 * I) • ((-α² · h₁ : ℂ) • σ_x + ... ) = -(θ * I) • (h₁·σ_x + h₂·σ_y + h₃·σ_z)
+      have h_scalar : (2 : ℂ) * Complex.I * ((-α^2 : ℝ) : ℂ) = -((θ : ℂ) * Complex.I) := by
+        push_cast
+        linear_combination -Complex.I * h_2α2_θ_C
+      simp only [smul_add, smul_smul]
+      rw [show (2 : ℂ) * Complex.I * ((-α^2 * h₁ : ℝ) : ℂ) =
+          (2 * Complex.I * ((-α^2 : ℝ) : ℂ)) * (h₁ : ℂ) from by push_cast; ring]
+      rw [show (2 : ℂ) * Complex.I * ((-α^2 * h₂ : ℝ) : ℂ) =
+          (2 * Complex.I * ((-α^2 : ℝ) : ℂ)) * (h₂ : ℂ) from by push_cast; ring]
+      rw [show (2 : ℂ) * Complex.I * ((-α^2 * h₃ : ℝ) : ℂ) =
+          (2 * Complex.I * ((-α^2 : ℝ) : ℂ)) * (h₃ : ℂ) from by push_cast; ring]
+      rw [h_scalar]
+
 /-! ## 3. General-axis case — predicate scaffold
 
 The general-axis case `V = exp(iθ·H)` with `H` an arbitrary unit Hermitian
@@ -300,6 +473,49 @@ def BalancedCommutatorGeneralAxisGroup : Prop :=
           (NormedSpace.exp (Complex.I • G)) -
           NormedSpace.exp ((Complex.I * (θ : ℂ)) • H)‖
         ≤ 320 * (Real.sqrt (θ / 2)) ^ 3
+
+/-- **HEADLINE (Phase 6t Task #34, Wave 2-followup UNCONDITIONAL DISCHARGE
+2026-05-22 PM post-compact)**: `BalancedCommutatorGeneralAxisGroup` is
+unconditionally true, via Pauli-coordinate construction composed with the
+Wave 1 cubic-remainder bound. **Eliminates 1 of the 3 remaining Phase 6t
+tracked Props** (3 → 2). -/
+theorem balancedCommutatorGeneralAxisGroup_holds :
+    BalancedCommutatorGeneralAxisGroup := by
+  intro H θ hH htr hH_norm hθ_nn hθ_le_one
+  obtain ⟨F, G, hF_herm, hG_herm, hF_norm, hG_norm, hFG_comm⟩ :=
+    balanced_commutator_general_axis_lie H hH htr hH_norm θ hθ_nn hθ_le_one
+  refine ⟨F, G, hF_herm, hG_herm, ?_, ?_, ?_⟩
+  -- C_balance · √θ bound for ‖F‖
+  · have h_eq : Real.sqrt (θ / 2) = C_balance * Real.sqrt θ := by
+      unfold C_balance
+      rw [show θ / 2 = (1 / 2) * θ from by ring]
+      rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
+    linarith
+  -- C_balance · √θ bound for ‖G‖
+  · have h_eq : Real.sqrt (θ / 2) = C_balance * Real.sqrt θ := by
+      unfold C_balance
+      rw [show θ / 2 = (1 / 2) * θ from by ring]
+      rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
+    linarith
+  -- Cubic group-commutator remainder via Wave 1 Headline 2
+  · set δ := Real.sqrt (θ / 2) with hδ_def
+    have hδ_nn : 0 ≤ δ := Real.sqrt_nonneg _
+    have hδ_le_one : δ ≤ 1 := by
+      have h : δ ≤ Real.sqrt 1 := by
+        rw [hδ_def]; exact Real.sqrt_le_sqrt (by linarith)
+      rwa [Real.sqrt_one] at h
+    have h_cubic := groupCommutator_lie_bracket_cubic_remainder
+      δ hδ_nn hδ_le_one F G hF_norm hG_norm
+    -- The cubic-remainder lemma gives an `exp(-⁅F, G⁆)` form; rewrite using
+    -- `⁅F, G⁆ = F * G - G * F = -(θ * I) • H` to match the predicate's target.
+    have h_lie_eq : -⁅F, G⁆ = (Complex.I * (θ : ℂ)) • H := by
+      have h1 : ⁅F, G⁆ = F * G - G * F := rfl
+      have h2 : -⁅F, G⁆ = ((θ : ℂ) * Complex.I) • H := by
+        rw [h1, hFG_comm]
+        module
+      rw [h2]; congr 1; ring
+    rw [h_lie_eq] at h_cubic
+    exact h_cubic
 
 /-! ## 4. Module summary
 
