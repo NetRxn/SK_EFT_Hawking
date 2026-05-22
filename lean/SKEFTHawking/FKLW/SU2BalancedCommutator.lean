@@ -164,6 +164,115 @@ theorem groupCommutator_balanced_z_axis
     rw [h_lie_eq] at h_cubic
     exact h_cubic
 
+/-! ## 2b. X-axis + Y-axis group-commutator balanced commutators
+    (Phase 6t Wave 2 strengthening 2026-05-22 PM post-compact)
+
+These are symmetric counterparts of `groupCommutator_balanced_z_axis`
+that ship the unconditional X-axis and Y-axis cases. They close 2 of the 3
+axis-coordinate gaps in `BalancedCommutatorGeneralAxisGroup`; the genuinely
+general (non-axis-coordinate) case retains its Wave 2-followup discharge
+via SU(2) Bloch parametrization. -/
+
+/-- **HEADLINE (Phase 6t Wave 2 strengthening — X-axis case)**:
+balanced-commutator construction in group-commutator form for the X-axis
+special case. Symmetric counterpart of `groupCommutator_balanced_z_axis`. -/
+theorem groupCommutator_balanced_x_axis
+    (θ : ℝ) (hθ_nn : 0 ≤ θ) (hθ_le_one : θ ≤ 1) :
+    ∃ (F G : Matrix (Fin 2) (Fin 2) ℂ),
+      F.IsHermitian ∧ G.IsHermitian ∧
+      ‖F‖ ≤ C_balance * Real.sqrt θ ∧ ‖G‖ ≤ C_balance * Real.sqrt θ ∧
+      ‖groupCommutator (NormedSpace.exp (Complex.I • F))
+          (NormedSpace.exp (Complex.I • G)) -
+          NormedSpace.exp ((Complex.I * (θ : ℂ)) • σ_x)‖
+        ≤ 320 * (Real.sqrt (θ / 2)) ^ 3 := by
+  obtain ⟨F, G, hF_herm, hG_herm, hF_norm, hG_norm, hFG_eq⟩ :=
+    qubit_balanced_commutator_x_axis θ hθ_nn hθ_le_one
+  refine ⟨F, G, hF_herm, hG_herm, ?_, ?_, ?_⟩
+  · have h_eq : Real.sqrt (θ / 2) = C_balance * Real.sqrt θ := by
+      unfold C_balance
+      rw [show θ / 2 = (1 / 2) * θ from by ring]
+      rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
+    linarith
+  · have h_eq : Real.sqrt (θ / 2) = C_balance * Real.sqrt θ := by
+      unfold C_balance
+      rw [show θ / 2 = (1 / 2) * θ from by ring]
+      rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
+    linarith
+  · set δ := Real.sqrt (θ / 2) with hδ_def
+    have hδ_nn : 0 ≤ δ := Real.sqrt_nonneg _
+    have hδ_le_one : δ ≤ 1 := by
+      have : δ ≤ Real.sqrt 1 := by
+        rw [hδ_def]
+        exact Real.sqrt_le_sqrt (by linarith)
+      rwa [Real.sqrt_one] at this
+    have h_cubic := groupCommutator_lie_bracket_cubic_remainder
+      δ hδ_nn hδ_le_one F G hF_norm hG_norm
+    have h_lie_eq : -⁅F, G⁆ = (Complex.I * (θ : ℂ)) • σ_x := by
+      have h1 : ⁅F, G⁆ = F * G - G * F := rfl
+      have h2 : -⁅F, G⁆ = -(F * G - G * F) := by rw [h1]
+      rw [h2, hFG_eq]
+      have h3 : ((-((θ : ℂ) * Complex.I)) • σ_x : Matrix (Fin 2) (Fin 2) ℂ) =
+                -(((θ : ℂ) * Complex.I) • σ_x) := neg_smul _ _
+      rw [h3]
+      have h4 : -(-(((θ : ℂ) * Complex.I) • σ_x) :
+                Matrix (Fin 2) (Fin 2) ℂ) =
+                ((θ : ℂ) * Complex.I) • σ_x := neg_neg _
+      rw [h4]
+      congr 1
+      ring
+    rw [h_lie_eq] at h_cubic
+    exact h_cubic
+
+/-- **HEADLINE (Phase 6t Wave 2 strengthening — Y-axis case)**:
+balanced-commutator construction in group-commutator form for the Y-axis
+special case. Symmetric counterpart of `groupCommutator_balanced_z_axis`. -/
+theorem groupCommutator_balanced_y_axis
+    (θ : ℝ) (hθ_nn : 0 ≤ θ) (hθ_le_one : θ ≤ 1) :
+    ∃ (F G : Matrix (Fin 2) (Fin 2) ℂ),
+      F.IsHermitian ∧ G.IsHermitian ∧
+      ‖F‖ ≤ C_balance * Real.sqrt θ ∧ ‖G‖ ≤ C_balance * Real.sqrt θ ∧
+      ‖groupCommutator (NormedSpace.exp (Complex.I • F))
+          (NormedSpace.exp (Complex.I • G)) -
+          NormedSpace.exp ((Complex.I * (θ : ℂ)) • σ_y)‖
+        ≤ 320 * (Real.sqrt (θ / 2)) ^ 3 := by
+  obtain ⟨F, G, hF_herm, hG_herm, hF_norm, hG_norm, hFG_eq⟩ :=
+    qubit_balanced_commutator_y_axis θ hθ_nn hθ_le_one
+  refine ⟨F, G, hF_herm, hG_herm, ?_, ?_, ?_⟩
+  · have h_eq : Real.sqrt (θ / 2) = C_balance * Real.sqrt θ := by
+      unfold C_balance
+      rw [show θ / 2 = (1 / 2) * θ from by ring]
+      rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
+    linarith
+  · have h_eq : Real.sqrt (θ / 2) = C_balance * Real.sqrt θ := by
+      unfold C_balance
+      rw [show θ / 2 = (1 / 2) * θ from by ring]
+      rw [Real.sqrt_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
+    linarith
+  · set δ := Real.sqrt (θ / 2) with hδ_def
+    have hδ_nn : 0 ≤ δ := Real.sqrt_nonneg _
+    have hδ_le_one : δ ≤ 1 := by
+      have : δ ≤ Real.sqrt 1 := by
+        rw [hδ_def]
+        exact Real.sqrt_le_sqrt (by linarith)
+      rwa [Real.sqrt_one] at this
+    have h_cubic := groupCommutator_lie_bracket_cubic_remainder
+      δ hδ_nn hδ_le_one F G hF_norm hG_norm
+    have h_lie_eq : -⁅F, G⁆ = (Complex.I * (θ : ℂ)) • σ_y := by
+      have h1 : ⁅F, G⁆ = F * G - G * F := rfl
+      have h2 : -⁅F, G⁆ = -(F * G - G * F) := by rw [h1]
+      rw [h2, hFG_eq]
+      have h3 : ((-((θ : ℂ) * Complex.I)) • σ_y : Matrix (Fin 2) (Fin 2) ℂ) =
+                -(((θ : ℂ) * Complex.I) • σ_y) := neg_smul _ _
+      rw [h3]
+      have h4 : -(-(((θ : ℂ) * Complex.I) • σ_y) :
+                Matrix (Fin 2) (Fin 2) ℂ) =
+                ((θ : ℂ) * Complex.I) • σ_y := neg_neg _
+      rw [h4]
+      congr 1
+      ring
+    rw [h_lie_eq] at h_cubic
+    exact h_cubic
+
 /-! ## 3. General-axis case — predicate scaffold
 
 The general-axis case `V = exp(iθ·H)` with `H` an arbitrary unit Hermitian
@@ -202,12 +311,18 @@ recursion**.
   - `C_balance := √(1/2)` — Kuperberg-2009-tight balanced-commutator constant
   - `BalancedCommutatorGeneralAxisGroup` — general-axis predicate scaffold
 
-  *Headline theorem (Z-axis case):*
-  - **`groupCommutator_balanced_z_axis`** — existence of `F, G` with
-    `‖F‖, ‖G‖ ≤ C_balance · √θ` and group commutator approximating
-    `V = exp(iθ·σ_z)` within cubic remainder `320·(θ/2)^(3/2)`.
+  *Headline theorems (3 coordinate cases):*
+  - **`groupCommutator_balanced_z_axis`** — Z-axis case: existence of
+    `F, G` with `‖F‖, ‖G‖ ≤ C_balance · √θ` and group commutator
+    approximating `V = exp(iθ·σ_z)` within cubic remainder `320·(θ/2)^(3/2)`.
+  - **`groupCommutator_balanced_x_axis`** — X-axis case (Wave 2
+    strengthening 2026-05-22 PM post-compact): symmetric counterpart for
+    target `V = exp(iθ·σ_x)` via `[α·σ_z, α·σ_y] = -(2α²·i)·σ_x`.
+  - **`groupCommutator_balanced_y_axis`** — Y-axis case (Wave 2
+    strengthening 2026-05-22 PM post-compact): symmetric counterpart for
+    target `V = exp(iθ·σ_y)` via `[α·σ_x, α·σ_z] = -(2α²·i)·σ_y`.
 
-  *General-axis discharge plan (Wave 2-followup):*
+  *General-axis discharge plan (Wave 2-followup, retained):*
   - Build SU(2) Bloch parametrization (~150 LoC): for any unit traceless
     hermitian `H`, exhibit `R ∈ SU(2)` with `R · H · R⁻¹ = σ_z`.
   - Conjugate the Z-axis construction by `R`: `F_general := R · F_z · R⁻¹`,

@@ -235,6 +235,107 @@ theorem qubit_balanced_commutator_z_axis
     rw [show (2 : ℂ) * (α : ℂ)^2 = ((2 * α^2 : ℝ) : ℂ) from by push_cast; ring]
     rw [h2α2]
 
+/-! ## 5b. X-axis + Y-axis coordinate cases (Phase 6t Wave 2 strengthening 2026-05-22 PM)
+
+These are symmetric counterparts of `balanced_commutator_z_core` +
+`qubit_balanced_commutator_z_axis` for the X-axis and Y-axis targets,
+using `comm_σ_y_σ_z` (= 2i·σ_x) and `comm_σ_z_σ_x` (= 2i·σ_y)
+respectively. They close 2 of the 3 axis-coordinate gaps in
+`BalancedCommutatorGeneralAxisGroup` (Wave 2-followup retains the
+genuinely general-axis case via SU(2) Bloch parametrization). -/
+
+/-- **Balanced-commutator core identity (X-axis coordinate case).**
+For any `α : ℝ`,
+
+  `[α·σ_z, α·σ_y] = α·σ_z · α·σ_y − α·σ_y · α·σ_z = −(2·α²·i) • σ_x`.
+
+Combining with `H := θ·σ_x` and `α := √(θ/2)`, we get
+`[F, G] = −(θ·i) • σ_x = −i·H`. -/
+theorem balanced_commutator_x_core (α : ℝ) :
+    ((α : ℂ) • σ_z) * ((α : ℂ) • σ_y) - ((α : ℂ) • σ_y) * ((α : ℂ) • σ_z)
+      = (-(2 * α^2 * Complex.I)) • σ_x := by
+  have h_zy_yz : σ_z * σ_y - σ_y * σ_z = (-(2 * Complex.I)) • σ_x := by
+    have h := comm_σ_y_σ_z
+    rw [show σ_z * σ_y - σ_y * σ_z = -(σ_y * σ_z - σ_z * σ_y) from by rw [neg_sub]]
+    rw [h, neg_smul]
+  calc ((α : ℂ) • σ_z) * ((α : ℂ) • σ_y) - ((α : ℂ) • σ_y) * ((α : ℂ) • σ_z)
+      = ((α : ℂ) * (α : ℂ)) • (σ_z * σ_y - σ_y * σ_z) := by
+        simp only [Matrix.smul_mul, Matrix.mul_smul, smul_sub, smul_smul]
+    _ = ((α : ℂ) * (α : ℂ)) • ((-(2 * Complex.I)) • σ_x) := by rw [h_zy_yz]
+    _ = ((α : ℂ) * (α : ℂ) * (-(2 * Complex.I))) • σ_x := by rw [smul_smul]
+    _ = (-(2 * α^2 * Complex.I)) • σ_x := by
+        congr 1
+        ring
+
+/-- **Balanced-commutator core identity (Y-axis coordinate case).**
+For any `α : ℝ`,
+
+  `[α·σ_x, α·σ_z] = α·σ_x · α·σ_z − α·σ_z · α·σ_x = −(2·α²·i) • σ_y`.
+
+Combining with `H := θ·σ_y` and `α := √(θ/2)`, we get
+`[F, G] = −(θ·i) • σ_y = −i·H`. -/
+theorem balanced_commutator_y_core (α : ℝ) :
+    ((α : ℂ) • σ_x) * ((α : ℂ) • σ_z) - ((α : ℂ) • σ_z) * ((α : ℂ) • σ_x)
+      = (-(2 * α^2 * Complex.I)) • σ_y := by
+  have h_xz_zx : σ_x * σ_z - σ_z * σ_x = (-(2 * Complex.I)) • σ_y := by
+    have h := comm_σ_z_σ_x
+    rw [show σ_x * σ_z - σ_z * σ_x = -(σ_z * σ_x - σ_x * σ_z) from by rw [neg_sub]]
+    rw [h, neg_smul]
+  calc ((α : ℂ) • σ_x) * ((α : ℂ) • σ_z) - ((α : ℂ) • σ_z) * ((α : ℂ) • σ_x)
+      = ((α : ℂ) * (α : ℂ)) • (σ_x * σ_z - σ_z * σ_x) := by
+        simp only [Matrix.smul_mul, Matrix.mul_smul, smul_sub, smul_smul]
+    _ = ((α : ℂ) * (α : ℂ)) • ((-(2 * Complex.I)) • σ_y) := by rw [h_xz_zx]
+    _ = ((α : ℂ) * (α : ℂ) * (-(2 * Complex.I))) • σ_y := by rw [smul_smul]
+    _ = (-(2 * α^2 * Complex.I)) • σ_y := by
+        congr 1
+        ring
+
+/-- **D-N Lemma 2 (X-axis case, substantive).** Symmetric counterpart of
+`qubit_balanced_commutator_z_axis` for the X-axis target. -/
+theorem qubit_balanced_commutator_x_axis
+    (θ : ℝ) (hθ_nn : 0 ≤ θ) (_hθ_le_one : θ ≤ 1) :
+    ∃ (F G : Matrix (Fin 2) (Fin 2) ℂ),
+      F.IsHermitian ∧ G.IsHermitian ∧
+      ‖F‖ ≤ Real.sqrt (θ/2) ∧ ‖G‖ ≤ Real.sqrt (θ/2) ∧
+      F * G - G * F = (-(θ * Complex.I)) • σ_x := by
+  set α := Real.sqrt (θ/2)
+  have hα_nn : 0 ≤ α := Real.sqrt_nonneg _
+  have hα_sq : α^2 = θ/2 := by
+    rw [sq]; exact Real.mul_self_sqrt (by linarith : (0 : ℝ) ≤ θ/2)
+  refine ⟨(α : ℂ) • σ_z, (α : ℂ) • σ_y, ?_, ?_, ?_, ?_, ?_⟩
+  · exact smul_σ_z_isHermitian α
+  · exact smul_σ_y_isHermitian α
+  · have := smul_σ_z_norm_le α; rwa [abs_of_nonneg hα_nn] at this
+  · have := smul_σ_y_norm_le α; rwa [abs_of_nonneg hα_nn] at this
+  · rw [balanced_commutator_x_core α]
+    congr 1
+    have h2α2 : (2 * α^2 : ℝ) = θ := by rw [hα_sq]; ring
+    rw [show (2 : ℂ) * (α : ℂ)^2 = ((2 * α^2 : ℝ) : ℂ) from by push_cast; ring]
+    rw [h2α2]
+
+/-- **D-N Lemma 2 (Y-axis case, substantive).** Symmetric counterpart of
+`qubit_balanced_commutator_z_axis` for the Y-axis target. -/
+theorem qubit_balanced_commutator_y_axis
+    (θ : ℝ) (hθ_nn : 0 ≤ θ) (_hθ_le_one : θ ≤ 1) :
+    ∃ (F G : Matrix (Fin 2) (Fin 2) ℂ),
+      F.IsHermitian ∧ G.IsHermitian ∧
+      ‖F‖ ≤ Real.sqrt (θ/2) ∧ ‖G‖ ≤ Real.sqrt (θ/2) ∧
+      F * G - G * F = (-(θ * Complex.I)) • σ_y := by
+  set α := Real.sqrt (θ/2)
+  have hα_nn : 0 ≤ α := Real.sqrt_nonneg _
+  have hα_sq : α^2 = θ/2 := by
+    rw [sq]; exact Real.mul_self_sqrt (by linarith : (0 : ℝ) ≤ θ/2)
+  refine ⟨(α : ℂ) • σ_x, (α : ℂ) • σ_z, ?_, ?_, ?_, ?_, ?_⟩
+  · exact smul_σ_x_isHermitian α
+  · exact smul_σ_z_isHermitian α
+  · have := smul_σ_x_norm_le α; rwa [abs_of_nonneg hα_nn] at this
+  · have := smul_σ_z_norm_le α; rwa [abs_of_nonneg hα_nn] at this
+  · rw [balanced_commutator_y_core α]
+    congr 1
+    have h2α2 : (2 * α^2 : ℝ) = θ := by rw [hα_sq]; ring
+    rw [show (2 : ℂ) * (α : ℂ)^2 = ((2 * α^2 : ℝ) : ℂ) from by push_cast; ring]
+    rw [h2α2]
+
 /-! ## 6. Predicate-level scaffold for general-axis case (deferred)
 
 The general-axis case `H = θ · (n_x σ_x + n_y σ_y + n_z σ_z)` for unit

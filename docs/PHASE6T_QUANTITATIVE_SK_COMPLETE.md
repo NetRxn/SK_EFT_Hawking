@@ -1,9 +1,10 @@
 # Phase 6t — Quantitative Solovay-Kitaev for Fibonacci Anyons: Substrate Ship
 
-**Date:** 2026-05-22 PM
+**Date:** 2026-05-22 PM (Waves 1-7 ship) + 2026-05-22 PM post-compact (strengthening pass 1)
 **Status:** ✅ **WAVES 1-7 LEAN SUBSTRATE SHIPPED** — kernel-only headline + 6 supporting modules. Wave 8 closeout in progress (this document is Stage 12 of the Wave 8 closeout).
+**Strengthening pass 1 (2026-05-22 PM post-compact):** ✅ Wave 5 `SkLengthAtEpsilon` unconditionally discharged (1 tracked Prop eliminated; 4 → 3). ✅ Wave 2 X-axis + Y-axis subcases unconditionally discharged. ✅ Wave 5 `3 < c < 4` sanity bounds.
 **Predecessor:** Phase 5 Step 13 Path (i) — F.21 unconditional density (2026-05-22 PM).
-**Successor:** Phase 6t Wave 2/4/5/6-followups (substantive discharges of tracked Props), then Phase 6u (Chain A ∘ B FT composition).
+**Successor:** Phase 6t Wave 2/4/6-followups (3 remaining tracked-Prop discharges, simplified by the strengthening pass), then Phase 6u (Chain A ∘ B FT composition).
 
 ---
 
@@ -49,15 +50,18 @@ where:
 **Unconditional in this ship:**
 - The 3 Wave-1 group-commutator headlines (quadratic shrinkage, cubic linearization, stability)
 - The Wave-2 Z-axis balanced commutator (`groupCommutator_balanced_z_axis`)
+- **NEW (2026-05-22 PM post-compact strengthening):** Wave-2 X-axis + Y-axis balanced commutators (`groupCommutator_balanced_{x,y}_axis`) — close 2 of 3 axis-coordinate subcases of `BalancedCommutatorGeneralAxisGroup`
 - The Wave-3 ε₀-net correctness (`fibonacciEpsilonNet_findNearest_approx_opNorm`, both entrywise and opNorm)
 - The Wave-4 level-0 error bound (base case)
+- **NEW (2026-05-22 PM post-compact strengthening):** Wave-5 length asymptotic `skLengthAtEpsilon_unconditional` for ε ∈ (0, ε₀ = 1/2] (natural Dawson-Nielsen domain) — eliminates `SkLengthAtEpsilon` from the tracked-Prop set
+- **NEW (2026-05-22 PM post-compact strengthening):** Wave-5 sanity bounds `three_lt_skLengthExponent` + `skLengthExponent_lt_four` (concrete `c ∈ (3, 4)`)
 - All sanity-check positivity/nonneg lemmas
 
-**Tracked Props (discharged in followup sessions):**
-- `BalancedCommutatorGeneralAxisGroup` (Wave 2-followup, ~200-400 LoC)
+**Tracked Props (3 remaining post-strengthening; discharged in followup sessions):**
+- `BalancedCommutatorGeneralAxisGroup` (Wave 2-followup, ~150-300 LoC; reduced from ~200-400 LoC after axis-coordinate subcases shipped)
 - `SkApproxErrorShrinkage` + `SkApproxErrorBound` (Wave 4-followup, ~300-500 LoC; depends on Wave 2-followup)
-- `SkLengthAtEpsilon` (Wave 5-followup, ~150-300 LoC; depends on Wave 4-followup)
-- `SolovayKitaevQuantitativeContract` (Wave 6-followup, ~100-200 LoC; composition of the above)
+- `SolovayKitaevQuantitativeContract` (Wave 6-followup, ~100-200 LoC; composition of Wave 4-followup + Wave 5 already-shipped)
+- ~~`SkLengthAtEpsilon`~~ ✅ **ELIMINATED 2026-05-22 PM post-compact** via Wave 5 unconditional discharge.
 
 **No new project-local axioms** — pre-Phase-6t axiom count UNCHANGED at 1 (`gapped_interface_axiom`, effective 0 post-TPFConjecture conversion).
 
