@@ -4,13 +4,16 @@ SK_EFT_Hawking Phase 6t Wave 7 SHIP (2026-05-22 PM):
 
 This module ships the application-facing API for the Phase 6t Solovay-Kitaev
 compiler:
-  - The single-target compilation function (re-exported as `compile_su2_target`)
-  - Worked-example correctness statements (T, H, S gates + π/4 rotations + stress test)
+  - The worked-example correctness contract (`WorkedExampleContract` +
+    discharge via the quantitative-SK contract)
   - The `composedFTCompiler` placeholder for future Chain A ∘ B composition (Phase 6u)
 
+The canonical compiler entry-point is `solovayKitaev_compile` (from
+`SolovayKitaevQuantitative.lean`); applications consume it directly.
+
 Per user 2026-05-22 PM lock-in §13.4: public-side reference compiler + worked
-examples ship here; customer-specific tuned compilers are out of scope for
-this module per IP-strategy stabilization.
+examples ship here; downstream variants are out of scope for this module per
+IP-strategy stabilization.
 
 ## Phase 6t roadmap alignment
 
@@ -44,27 +47,16 @@ open Matrix SKEFTHawking.FKLW SKEFTHawking.FKLW.FibonacciEpsilonNet
   SKEFTHawking.FKLW.SolovayKitaevLengthBound
   SKEFTHawking.FKLW.SolovayKitaevQuantitative
 
-/-! ## 1. Re-exported compilation function
+/-! ## 1. Worked-example contract — a single uniform statement
 
-`compile_su2_target U ε` is a convenience re-export of `solovayKitaev_compile`.
-This is the public-side reference compiler; downstream variants are out of
-scope for this module. -/
-
-/-- The public-side SK reference compiler: compile a target `U ∈ SU(2)` to a
-Fibonacci braid word at precision `ε`. -/
-noncomputable def compile_su2_target
-    (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ) : FibonacciBraidWord :=
-  solovayKitaev_compile U ε
-
-/-- The reference compiler is `solovayKitaev_compile`. -/
-lemma compile_su2_target_def
-    (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ) :
-    compile_su2_target U ε = solovayKitaev_compile U ε := rfl
-
-/-! ## 2. Worked-example contract — a single uniform statement
+The canonical compiler entry-point is `solovayKitaev_compile` (from
+`SolovayKitaevQuantitative.lean`). The earlier `compile_su2_target` rename
+wrapper was dropped 2026-05-22 PM post-compact (Phase 6t Wave 7 cleanup,
+Task #31) per the preemptive-strengthening discipline P3 anti-pattern
+(identity-function wrapper): use the canonical name directly.
 
 Each worked example asserts: for a fixed target `U_target` and precision `ε`,
-the compiled braid word `compile_su2_target U_target ε` satisfies the
+the compiled braid word `solovayKitaev_compile U_target ε` satisfies the
 quantitative-SK contract (error ≤ ε + length bound).
 
 The substantive worked-example correctness is conditional on the quantitative-SK
@@ -77,7 +69,8 @@ bound. -/
 def WorkedExampleContract
     (U_target : ↥(specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ) : Prop :=
   0 < ε → ε < 1 →
-  (‖(ρ_Fib_SU2 (compile_su2_target U_target ε) : Matrix (Fin 2) (Fin 2) ℂ) -
+  (‖(ρ_Fib_SU2 (solovayKitaev_compile U_target ε) :
+        Matrix (Fin 2) (Fin 2) ℂ) -
       (U_target : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε) ∧
   (skLength (skLevel ε) ≤ skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent)
 
@@ -88,7 +81,6 @@ theorem workedExampleContract_of_quantitative_contract
     (U_target : ↥(specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ) :
     WorkedExampleContract U_target ε := by
   intro hε_pos hε_lt
-  unfold compile_su2_target
   exact h_contract U_target ε hε_pos hε_lt
 
 /-! ## 3. The composed FT compiler — placeholder for Phase 6u
@@ -115,19 +107,24 @@ adds the encoded-qubit layer but preserves the error bound). -/
 theorem composedFTCompilerExists_of_quantitative_contract
     (h_contract : SolovayKitaevQuantitativeContract) :
     ComposedFTCompilerExists := by
-  refine ⟨compile_su2_target, ?_⟩
+  refine ⟨solovayKitaev_compile, ?_⟩
   intro U ε hε_pos hε_lt
   exact (h_contract U ε hε_pos hε_lt).1
 
 /-! ## 4. Module summary
 
-SolovayKitaevApplications.lean (Phase 6t Wave 7 SHIP, 2026-05-22 PM):
+SolovayKitaevApplications.lean (Phase 6t Wave 7 SHIP 2026-05-22 PM
++ Wave 7 cleanup 2026-05-22 PM post-compact):
 **Applications + worked-example library for the SK Fibonacci compiler**.
 
   *Definitions:*
-  - `compile_su2_target` — public-side reference compiler
   - `WorkedExampleContract` — per-target contract predicate
   - `ComposedFTCompilerExists` — Phase 6u placeholder predicate
+
+  *Canonical compiler entry-point:* `solovayKitaev_compile` (from
+  `SolovayKitaevQuantitative.lean`). The earlier `compile_su2_target`
+  rename wrapper was dropped 2026-05-22 PM post-compact per the
+  preemptive-strengthening discipline P3 anti-pattern.
 
   *Headlines (conditional on quantitative-SK contract):*
   - `workedExampleContract_of_quantitative_contract` — uniform worked-example

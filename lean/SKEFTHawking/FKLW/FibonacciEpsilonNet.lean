@@ -53,6 +53,60 @@ attribute [local instance] Matrix.linftyOpNormedAddCommGroup
 
 open Matrix SKEFTHawking.FKLW SKEFTHawking.FKLW.AharonovAradBridge
 
+/-! ## 0. Generic substrate (Mathlib upstream-PR candidate, Phase 6t Wave 3
+    strengthening 2026-05-22 PM post-compact)
+
+For any matrix with entrywise norm bound `M`, the linfty operator norm
+(= max row sum of absolute values) satisfies `‖A‖ ≤ (Fintype.card n) · M`,
+where `n` is the column-index type. This is the natural generalization of
+the 2×2 specialization originally shipped in Wave 3 (Task #33). -/
+
+/-- **Generic substrate** (Mathlib upstream-PR candidate): for any matrix
+`A : Matrix m n ℂ` with each entry bounded by `M` in norm, the linfty
+operator norm is bounded by `(Fintype.card n) · M`.
+
+Proof: `‖A‖ = sup_i (∑_j ‖A i j‖)` (from `Matrix.linfty_opNorm_def`).
+For each row `i`, `∑_j ‖A i j‖ ≤ ∑_j M = (card n) · M`. Hence the sup is
+also bounded by `(card n) · M`. -/
+theorem linftyOpNorm_le_card_mul_of_entries_le
+    {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m n ℂ) (M : ℝ) (hM_nn : 0 ≤ M)
+    (h_entries : ∀ i j, ‖A i j‖ ≤ M) :
+    ‖A‖ ≤ (Fintype.card n : ℝ) * M := by
+  have h_card_M_nn : (0 : ℝ) ≤ (Fintype.card n : ℝ) * M := by positivity
+  rw [Matrix.linfty_opNorm_def]
+  rw [show ((Fintype.card n : ℝ) * M : ℝ) =
+      (((Fintype.card n : ℝ) * M).toNNReal : ℝ) from
+      (Real.coe_toNNReal _ h_card_M_nn).symm]
+  rw [NNReal.coe_le_coe]
+  apply Finset.sup_le
+  intro i _
+  rw [show ((Fintype.card n : ℝ) * M).toNNReal =
+      ⟨(Fintype.card n : ℝ) * M, h_card_M_nn⟩ from
+      Real.toNNReal_of_nonneg h_card_M_nn]
+  rw [← NNReal.coe_le_coe]
+  -- Goal: (∑ j, ‖A i j‖₊ : ℝ) ≤ (Fintype.card n : ℝ) * M
+  have h_coe : ((∑ j : n, ‖A i j‖₊ : NNReal) : ℝ) = ∑ j : n, ‖A i j‖ := by
+    push_cast
+    rfl
+  rw [h_coe]
+  calc ∑ j : n, ‖A i j‖
+      ≤ ∑ _j : n, M := Finset.sum_le_sum (fun j _ => h_entries i j)
+    _ = (Fintype.card n) • M := by
+        rw [Finset.sum_const, Finset.card_univ]
+    _ = (Fintype.card n : ℝ) * M := by rw [nsmul_eq_mul]
+
+/-- **Strict-inequality variant** (convenience form for downstream consumers):
+if entries are strictly bounded by `M`, the operator norm is bounded by
+`(Fintype.card n) · M`. -/
+theorem linftyOpNorm_le_card_mul_of_entries_lt
+    {m n : Type*} [Fintype m] [Fintype n]
+    (A : Matrix m n ℂ) (M : ℝ) (hM_nn : 0 ≤ M)
+    (h_entries : ∀ i j, ‖A i j‖ < M) :
+    ‖A‖ ≤ (Fintype.card n : ℝ) * M :=
+  linftyOpNorm_le_card_mul_of_entries_le A M hM_nn
+    (fun i j => le_of_lt (h_entries i j))
+
 /-! ## 1. Fibonacci braid-word type alias
 
 The braid representation `ρ_Fib_SU2 : BraidGroup 3 →* SU(2)` is the
@@ -102,40 +156,21 @@ consumed by the Solovay-Kitaev recursion. -/
 
 /-- **HEADLINE 2 (Phase 6t Wave 3)**: correctness of the nearest-finder in
 linfty-operator-norm form. The ε₀-precision in entrywise form implies a
-`2·ε₀`-precision in linfty-op-norm for 2×2 matrices. -/
+`2·ε₀`-precision in linfty-op-norm for 2×2 matrices.
+
+Refactored 2026-05-22 PM post-compact to consume the generic substrate
+`linftyOpNorm_le_card_mul_of_entries_lt` (Wave 3 strengthening, Task #33). -/
 theorem fibonacciEpsilonNet_findNearest_approx_opNorm
     (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) (ε₀ : ℝ) (hε₀ : 0 < ε₀) :
     ‖(ρ_Fib_SU2 (fibonacciEpsilonNet_findNearest U ε₀ hε₀) :
         Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 2 * ε₀ := by
-  -- Entrywise bound from Headline 1.
   have h_entry := fibonacciEpsilonNet_findNearest_approx_entrywise U ε₀ hε₀
   set A := (ρ_Fib_SU2 (fibonacciEpsilonNet_findNearest U ε₀ hε₀) :
              Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ) with hA_def
-  have h2ε₀_nn : (0 : ℝ) ≤ 2 * ε₀ := by linarith
-  -- Bound each row sum (in real) by 2·ε₀.
-  have h_each_row_real : ∀ i : Fin 2,
-      ((∑ j : Fin 2, ‖A i j‖₊ : NNReal) : ℝ) ≤ 2 * ε₀ := by
-    intro i
-    have h_coe : ((∑ j : Fin 2, ‖A i j‖₊ : NNReal) : ℝ) = ∑ j : Fin 2, ‖A i j‖ := by
-      push_cast
-      rfl
-    rw [h_coe]
-    have h_le : ∑ j : Fin 2, ‖A i j‖ ≤ ∑ _j : Fin 2, ε₀ := by
-      apply Finset.sum_le_sum
-      intro j _
-      exact le_of_lt (h_entry i j)
-    have h_const : ∑ _j : Fin 2, (ε₀ : ℝ) = 2 * ε₀ := by
-      simp [Finset.sum_const, Finset.card_univ, Fintype.card_fin, two_mul]
-    linarith
-  -- Use linfty_opNorm_def to express the norm.
-  rw [Matrix.linfty_opNorm_def]
-  -- Convert the NNReal-coerced sup bound.
-  rw [show (2 * ε₀ : ℝ) = ((2 * ε₀).toNNReal : ℝ) from
-      (Real.coe_toNNReal _ h2ε₀_nn).symm]
-  rw [NNReal.coe_le_coe]
-  apply Finset.sup_le
-  intro i _
-  rw [show (2 * ε₀ : ℝ).toNNReal = ⟨2 * ε₀, h2ε₀_nn⟩ from
-      Real.toNNReal_of_nonneg h2ε₀_nn]
-  rw [← NNReal.coe_le_coe]
-  simpa using h_each_row_real i
+  -- Apply the generic Fin d substrate with d = 2.
+  have h_gen := linftyOpNorm_le_card_mul_of_entries_lt A ε₀ (le_of_lt hε₀) h_entry
+  -- Specialize `Fintype.card (Fin 2) = 2`:
+  have h_card : (Fintype.card (Fin 2) : ℝ) = 2 := by
+    rw [Fintype.card_fin]; norm_num
+  rw [h_card] at h_gen
+  exact h_gen
