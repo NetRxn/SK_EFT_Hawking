@@ -694,6 +694,33 @@ import SKEFTHawking.FKLW.CartanSubstrate
 -- (Mathlib-upstream-PR-quality). Subsequent ships: §2 `su2Log h ∈ su(2)`,
 -- §3 von Neumann construction, §4 discharge. Zero new axioms.
 import SKEFTHawking.FKLW.OneParameterSubgroupSU2
+-- Phase 6p Wave 2c.4a-R4.2.d.4.3.d.2-Wedge-D / Phase 5 Step 13 Path (i)
+-- FINAL: substantive discharge of `CartanFinalStep_SU2_v4` via BCH bracket
+-- closure (Trotter limit) + IFT 3-direction map. STRUCTURAL SHELL ship —
+-- the Trotter convergence sub-lemma `exp_bracket_mem_H` and the IFT
+-- 3-direction composition in `CartanFinalStep_SU2_v4_holds` are decomposed
+-- into clearly-stated sub-goals with `sorry`s, ready for follow-up commits.
+import SKEFTHawking.FKLW.SU2BCHBracketClosure
+-- Phase 6t Wave 1-7 SHIP (2026-05-22 PM): Quantitative Solovay-Kitaev for
+-- Fibonacci anyons (Dawson-Nielsen 2006). Seven modules under FKLW/:
+--   - GroupCommutator (Wave 1): group-commutator substrate + 3 headlines
+--     (norm_le_quadratic, lie_bracket_cubic_remainder, stability)
+--   - SU2BalancedCommutator (Wave 2): SU(2) balanced commutator Z-axis case
+--     + general-axis predicate scaffold
+--   - FibonacciEpsilonNet (Wave 3): ε₀-net via F.21 density Classical.choose
+--   - SolovayKitaevRecursion (Wave 4): skApprox recursion + level-0 error bound
+--   - SolovayKitaevLengthBound (Wave 5): length recurrence + DN exponent c ≈ 3.97
+--   - SolovayKitaevQuantitative (Wave 6): headline theorem composition
+--   - SolovayKitaevApplications (Wave 7): worked-example contracts + Phase 6u placeholder
+-- Headline: `solovayKitaev_dawson_nielsen_quantitative_fibonacci`
+-- (kernel-only [propext, Classical.choice, Quot.sound]).
+import SKEFTHawking.FKLW.GroupCommutator
+import SKEFTHawking.FKLW.SU2BalancedCommutator
+import SKEFTHawking.FKLW.FibonacciEpsilonNet
+import SKEFTHawking.FKLW.SolovayKitaevRecursion
+import SKEFTHawking.FKLW.SolovayKitaevLengthBound
+import SKEFTHawking.FKLW.SolovayKitaevQuantitative
+import SKEFTHawking.FKLW.SolovayKitaevApplications
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound

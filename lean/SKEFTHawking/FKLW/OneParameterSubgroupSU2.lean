@@ -233,6 +233,35 @@ theorem su2Log_continuousOn :
   show ContinuousOn expAmbientPartialHomeo.symm expAmbientPartialHomeo.target
   exact expAmbientPartialHomeo.continuousOn_symm
 
+/-- **`su2Log` has strict Fréchet derivative `id` at `1`.**
+
+Via Mathlib's `HasStrictFDerivAt.to_local_left_inverse`: since
+`expAmbient` has identity strict Fréchet derivative at `0` and `su2Log`
+is its local left-inverse on a neighborhood of `0`, `su2Log` inherits the
+inverse derivative `(id).symm = id` at `expAmbient 0 = 1`.
+
+This is the substrate for chain-rule arguments composing `su2Log ∘ Φ`
+where `Φ : E → Matrix _ _ ℂ` near `0` lands near `1`. -/
+theorem su2Log_hasStrictFDerivAt_one :
+    HasStrictFDerivAt su2Log
+      (ContinuousLinearMap.id ℝ (Matrix (Fin 2) (Fin 2) ℂ))
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have h_left_inv : ∀ᶠ x in nhds (0 : Matrix (Fin 2) (Fin 2) ℂ),
+      su2Log (SU2MatrixExp.expAmbient x) = x := by
+    filter_upwards [expAmbientPartialHomeo_source_mem_nhds_zero] with x hx
+    exact su2Log_expAmbient hx
+  have h_exp_zero : SU2MatrixExp.expAmbient (0 : Matrix (Fin 2) (Fin 2) ℂ) = 1 :=
+    SU2MatrixExp.expAmbient_zero
+  have h_to_inv :
+      HasStrictFDerivAt su2Log
+        ((ContinuousLinearEquiv.refl ℝ (Matrix (Fin 2) (Fin 2) ℂ)).symm :
+            Matrix _ _ ℂ →L[ℝ] Matrix _ _ ℂ)
+        (SU2MatrixExp.expAmbient 0) :=
+    SU2LocalDiffeo.expAmbient_hasStrictFDerivAt_zero_equiv.to_local_left_inverse
+      h_left_inv
+  rw [h_exp_zero] at h_to_inv
+  exact h_to_inv
+
 /-! ## §1.5. SU(2) elements near identity are in the domain of `su2Log`
 
 A specialization: for SU(2) elements (viewed as their underlying
