@@ -377,9 +377,91 @@ theorem pauli_linear_commutator_eq
          (((a₁ * b₂ - a₂ * b₁) : ℝ) : ℂ) • σ_z) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [σ_x, σ_y, σ_z, Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply,
-          Matrix.smul_apply, Fin.sum_univ_two, Complex.ext_iff, smul_eq_mul] <;>
+    simp [σ_x, σ_y, σ_z, Matrix.sub_apply, Matrix.smul_apply, Complex.ext_iff,
+          smul_eq_mul] <;>
     refine ⟨?_, ?_⟩ <;> ring
+
+/-! ## 5d. Pauli-linear-combination linftyOp norm bound
+    (Phase 6t Wave 2-followup substrate 2026-05-22 PM post-compact, Task #44)
+
+The exact linftyOp operator norm of a real-linear combination of Pauli matrices
+is `‖a·σ_x + b·σ_y + c·σ_z‖_linftyOp = |c| + √(a²+b²)`. This module ships the
+upper-bound direction (`≤`), which is the form load-bearing for the Wave
+2-followup general-axis discharge of `BalancedCommutatorGeneralAxisGroup`.
+
+Computation: M := a·σ_x + b·σ_y + c·σ_z has matrix entries
+  M[0][0] = c,     M[0][1] = a - ib
+  M[1][0] = a + ib, M[1][1] = -c
+Row 0 sum of norms: |c| + |a - ib| = |c| + √(a²+b²)
+Row 1 sum of norms: |a + ib| + |-c| = √(a²+b²) + |c|
+sup over rows = |c| + √(a²+b²).
+
+Mathlib upstream-PR candidate: the natural generalization for `n×n` Hermitian
+matrices over ℂ admits a similar entrywise/spectral-norm correspondence. -/
+
+/-- **Pauli-linear-combination linftyOp norm bound (`≤` direction)**:
+for any real `a, b, c`,
+
+  `‖a·σ_x + b·σ_y + c·σ_z‖_linftyOp ≤ |c| + √(a²+b²)`.
+
+This is the load-bearing tight-bound substrate for the Wave 2-followup
+general-axis discharge of `BalancedCommutatorGeneralAxisGroup`.
+
+Proof strategy: compute the explicit matrix entries, evaluate each row's
+sum of entry-norms, and apply `Matrix.linfty_opNorm_def` + `Finset.sup_le`. -/
+theorem pauli_linear_norm_le (a b c : ℝ) :
+    ‖((a : ℂ) • σ_x + (b : ℂ) • σ_y + (c : ℂ) • σ_z :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ |c| + Real.sqrt (a^2 + b^2) := by
+  set M : Matrix (Fin 2) (Fin 2) ℂ :=
+    (a : ℂ) • σ_x + (b : ℂ) • σ_y + (c : ℂ) • σ_z with hM_def
+  have h_rhs_nn : (0 : ℝ) ≤ |c| + Real.sqrt (a^2 + b^2) := by
+    have h1 : 0 ≤ |c| := abs_nonneg c
+    have h2 : 0 ≤ Real.sqrt (a^2 + b^2) := Real.sqrt_nonneg _
+    linarith
+  have h_norm_real_c : ‖(c : ℂ)‖ = |c| := by simp [Complex.norm_real]
+  have h_norm_aib_sub : ‖(a : ℂ) - (b : ℂ) * Complex.I‖ = Real.sqrt (a^2 + b^2) := by
+    rw [Complex.norm_def]
+    congr 1
+    simp [Complex.normSq, Complex.sub_re, Complex.sub_im, Complex.mul_re, Complex.mul_im,
+          Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.ofReal_im]
+    ring
+  have h_norm_aib_add : ‖(a : ℂ) + (b : ℂ) * Complex.I‖ = Real.sqrt (a^2 + b^2) := by
+    rw [Complex.norm_def]
+    congr 1
+    simp [Complex.normSq, Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im,
+          Complex.I_re, Complex.I_im, Complex.ofReal_re, Complex.ofReal_im]
+    ring
+  have h_row0 : ‖M 0 0‖ + ‖M 0 1‖ ≤ |c| + Real.sqrt (a^2 + b^2) := by
+    have h_M00 : M 0 0 = (c : ℂ) := by
+      simp [hM_def, σ_x, σ_y, σ_z, smul_eq_mul]
+    have h_M01 : M 0 1 = (a : ℂ) - (b : ℂ) * Complex.I := by
+      simp [hM_def, σ_x, σ_y, σ_z, smul_eq_mul]
+      ring
+    rw [h_M00, h_M01, h_norm_real_c, h_norm_aib_sub]
+  have h_row1 : ‖M 1 0‖ + ‖M 1 1‖ ≤ |c| + Real.sqrt (a^2 + b^2) := by
+    have h_M10 : M 1 0 = (a : ℂ) + (b : ℂ) * Complex.I := by
+      simp [hM_def, σ_x, σ_y, σ_z, smul_eq_mul]
+    have h_M11 : M 1 1 = -(c : ℂ) := by
+      simp [hM_def, σ_x, σ_y, σ_z, smul_eq_mul]
+    rw [h_M10, h_M11, norm_neg, h_norm_real_c, h_norm_aib_add]
+    linarith
+  rw [Matrix.linfty_opNorm_def]
+  rw [show (|c| + Real.sqrt (a^2 + b^2) : ℝ) =
+      ((|c| + Real.sqrt (a^2 + b^2)).toNNReal : ℝ) from
+      (Real.coe_toNNReal _ h_rhs_nn).symm]
+  rw [NNReal.coe_le_coe]
+  apply Finset.sup_le
+  intro i _
+  rw [show (|c| + Real.sqrt (a^2 + b^2)).toNNReal =
+      ⟨|c| + Real.sqrt (a^2 + b^2), h_rhs_nn⟩ from
+      Real.toNNReal_of_nonneg h_rhs_nn]
+  rw [← NNReal.coe_le_coe]
+  have h_coe : ((∑ j : Fin 2, ‖M i j‖₊ : NNReal) : ℝ) = ∑ j, ‖M i j‖ := by
+    push_cast; rfl
+  rw [h_coe, Fin.sum_univ_two]
+  match i with
+  | 0 => exact h_row0
+  | 1 => exact h_row1
 
 /-! ## 6. Predicate-level scaffold for general-axis case (deferred)
 
