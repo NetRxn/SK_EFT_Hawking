@@ -942,6 +942,122 @@ lemma ρ_Fib_SU2_groupCommutator_val (a b : SKEFTHawking.BraidGroup 3) :
   rw [ρ_Fib_SU2_mul_val, ρ_Fib_SU2_mul_val, ρ_Fib_SU2_mul_val,
       ρ_Fib_SU2_inv_val, ρ_Fib_SU2_inv_val]
 
+/-- **dnStepFG balanced-commutator identity (LOAD-BEARING)**: in the valid branch
+(`0 < θ ∧ θ ≤ 1`), the F, G matrices extracted by `dnStepFG` satisfy
+`F * G - G * F = -Y_h(V_n⁻¹·U)`.
+
+Derivation chain:
+  - Wave 2 conclusion: `F*G - G*F = -(θ·i) • H_unit` where `H_unit := (1/θ) • H`.
+  - `H := (-i)·Y_h Δ` per dnStepFG def.
+  - Scalar composition: `-(θ·i) • ((1/θ) • ((-i)·Y_h Δ)) = -(θ·i·(1/θ)·(-i)) • Y_h Δ
+    = -(-i·i) • Y_h Δ = -(1) • Y_h Δ = -Y_h Δ`.
+
+This identity is consumed by the inductive step to bridge Wave 2's balanced
+commutator output to the §9.7 `SU2_expAmbient_Y_h_eq` central identity:
+`exp(-[F, G]) = exp(Y_h Δ) = Δ`. -/
+lemma dnStepFG_commutator_identity_valid
+    (V_n_braid : FibonacciBraidWord)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_valid : 0 < ‖((-Complex.I) • Y_h
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ∧
+        ‖((-Complex.I) • Y_h
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 1) :
+    let data := dnStepFG V_n_braid U
+    let Δ := ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+                ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    data.F * data.G - data.G * data.F = -Y_h Δ.val := by
+  -- Unfold dnStepFG and take the valid branch.
+  simp only [dnStepFG]
+  set Δ_local := (((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+                     ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+  set H_local : Matrix (Fin 2) (Fin 2) ℂ :=
+    ((-Complex.I) : ℂ) • Y_h Δ_local.val
+  set θ_local : ℝ := ‖H_local‖
+  rw [dif_pos h_valid]
+  -- The Wave 2 balanced_commutator returns ⟨F, G, ..., F*G - G*F = -(θ·i) • H_unit⟩
+  -- with H_unit := (1/θ_local) • H_local.
+  set ex_data := balanced_commutator_general_axis_lie_traceless
+      (((1 / θ_local : ℝ) : ℂ) • H_local)
+      (IsHermitian_real_smul (neg_I_smul_Y_h_isHermitian Δ_local.property)
+        (1 / θ_local))
+      (smul_trace_zero (neg_I_smul_Y_h_trace_zero Δ_local.property) _)
+      (norm_normalize h_valid.1)
+      θ_local h_valid.1.le h_valid.2 with hex_def
+  -- The commutator equation: F*G - G*F = -(θ·i) • H_unit
+  have h_comm_eq : ex_data.choose * ex_data.choose_spec.choose -
+                   ex_data.choose_spec.choose * ex_data.choose =
+                   -(((θ_local : ℂ) * Complex.I)) •
+                     (((1 / θ_local : ℝ) : ℂ) • H_local) :=
+    ex_data.choose_spec.choose_spec.2.2.2.2.2.2
+  -- Simplify the scalar: -(θ·i) • ((1/θ) • H) = -(θ·i·(1/θ)) • H = -(i) • H
+  --                                          = -(i) • ((-i) • Y_h Δ) = -(i·(-i)) • Y_h Δ
+  --                                          = -(1) • Y_h Δ = -Y_h Δ
+  have h_theta_pos : (0 : ℝ) < θ_local := h_valid.1
+  have h_theta_ne : (θ_local : ℂ) ≠ 0 := by
+    have : (θ_local : ℝ) ≠ 0 := ne_of_gt h_theta_pos
+    exact_mod_cast this
+  -- Scalar composition: -(θ·I) * ((1/θ : ℝ) : ℂ) = -I
+  have h_scalar : -((θ_local : ℂ) * Complex.I) * (((1 / θ_local : ℝ) : ℂ)) =
+                  -Complex.I := by
+    have h_div : ((1 / θ_local : ℝ) : ℂ) = ((θ_local : ℂ))⁻¹ := by
+      push_cast
+      rw [one_div]
+    rw [h_div]
+    field_simp
+  -- Now simplify the RHS of h_comm_eq:
+  -- -(θ·i) • ((1/θ) • H_local) = -i • H_local = -i • (-i • Y_h Δ) = -Y_h Δ
+  rw [h_comm_eq, smul_smul, h_scalar]
+  -- Goal: -Complex.I • H_local = -Y_h Δ_local.val
+  -- H_local = (-i) • Y_h Δ
+  show -Complex.I • ((-Complex.I : ℂ) • Y_h Δ_local.val) = -Y_h Δ_local.val
+  rw [smul_smul]
+  congr 1
+  -- Show: -I * -I = -1
+  ring_nf
+  simp [Complex.I_sq]
+
+/-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
+
+The Option-C-tightened Y_h Lipschitz bound (`Y_h_norm_le_half_pi_norm_sub_one`,
+c=π/2) enables the substantive inductive composition for `K_compose = 1024`.
+
+Calibration arithmetic (per `phase6t-path-a-calibration-audit.md`):
+
+  - θ ≤ (π/2)·√2·ε_n at level n (via `H_norm_bound_from_V_diff_half_pi`)
+  - δ := max(‖F‖, ‖G‖) ≤ √(θ/2) ≤ (π/(2√2))^{1/2}·√(ε_n)
+  - δ³ ≤ (π/(2√2))^{3/2}·ε_n^{3/2} ≈ 1.171·ε_n^{3/2}
+  - BCH cubic: ‖gC(exp(iF), exp(iG)) - exp(-[F,G])‖ ≤ 320·δ³ ≈ 374·ε_n^{3/2}
+  - Stability ~ 12·ε_n·η + ε_n² with η ≤ 2·δ ≈ 2·(π/(2√2))^{1/2}·√(ε_n)
+  - V_n linftyOp factor ≤ √2
+  - K_proof ≈ √2·(374 + ~12) ≈ 546 ≤ K_compose = 1024 ✓ (~478 K-margin)
+
+Substrate composition (matching the 11-step chain blueprint):
+
+  Step 1 (IH): ‖ρ(V_n_braid) - U‖ ≤ ε_n
+  Step 2 (Residual): ‖Δ - 1‖ ≤ √2·ε_n  via `residual_norm_le_sqrt_two_mul`
+  Step 3 (Regime check 1): √2·ε_n < 1/4   (numerical from ε_n ≤ 2·ε₀)
+  Step 4 (H norm): θ ≤ (π/2)·√2·ε_n      via `H_norm_bound_from_V_diff_half_pi`
+  Step 5 (Hermiticity): H = -i·Y_h(Δ), Hermitian + traceless
+  Step 6: θ := ‖H‖
+  Step 7 (Regime check 2): θ ≤ 1
+  Step 8 (F, G norms): ‖F‖, ‖G‖ ≤ √(θ/2)  via `dnStepFG_F/G_norm_le_sqrt_theta_half`
+  Step 9 (IH on A_F, A_G): same IH applied to expIsu2(F), expIsu2(G)
+  Step 10 (Composition): ρ(skApproxC (n+1) U) = V_n · gC(ρ(skA_F), ρ(skA_G))
+  Step 11 (Error): cubic + stability + √2 unitarity = K_proof · ε_n^{3/2}
+
+The substantive Lean composition is shipped in
+`SkApproxCSuperQuadraticBound_holds_strong` (next ship — Phase 6t.1
+focused MCP-supported session). The substrate cascade for the discharge
+is fully in place per commits `dd4f06b` (Y_h π/2) + `7053f61` (ρ_Fib_SU2
+matrix-level helpers).
+
+This section documents the calibration arithmetic + step blueprint to
+preserve context across compacts. -/
+
 /-! ## 8. Path A unconditional strict headline for loose ε regime
 
 For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
