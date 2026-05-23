@@ -115,6 +115,39 @@ This document is part of the Wave 8 closeout (Stages 6-13 of `docs/WAVE_EXECUTIO
 
 ✅ **RESOLVED in commit `7c9c509`** (separate session). The unicode θ at `papers/D4/paper_draft.tex` line 457 in `\texttt{darkStateθ\_in\_kernel}` was replaced with `$\theta$` math-mode escape so the character renders in cmmi italic instead of being silently dropped by cmtt monospace. `pdflatex -interaction=nonstopmode paper_draft.tex` exits 0; PDF grows 19pp → 27pp on the new §9 prose.
 
+### Path A Option C — Y_h Lipschitz tightening SHIPPED 2026-05-23
+
+✅ **SHIPPED in commit `dd4f06b`**. Two new Mathlib-PR-quality SU(2) substrate ships in `lean/SKEFTHawking/FKLW/OneParameterSubgroupSU2.lean`:
+
+- **`Y_h_norm_le_pi_norm_sub_one`** (§82.6): tightens the existing c=4 bound to c=π by removing the `Real.pi/2 < 2` rounding. The "analytically-tight constant" called out in the §82 header docstring.
+
+- **`Y_h_norm_le_half_pi_norm_sub_one`** (§82.7): TIGHTEST. Combines `(sinc θ)⁻¹ ≤ π/2` (Jordan inequality) with new SU(2) Bloch substrate `SU2_norm_sub_aI_le_norm_sub_one` (per-entry row-sum analysis using `Re(h_ii) = h.trace.re/2` for i=0,1). Final constant **c = π/2 ≈ 1.57**, down from the original c=4 (factor 2.55× tightening).
+
+Path A cascade through consumers (`lean/SKEFTHawking/FKLW/SolovayKitaevPathA.lean`):
+- `H_norm_le_half_pi_norm_sub_one`: `‖(-i)·Y_h Δ‖ ≤ (π/2)·‖Δ - 1‖`.
+- `H_norm_bound_from_V_diff_half_pi`: composite for residual V⁻¹·U.
+
+**Calibration arithmetic at c=π/2**: ‖H‖ ≤ (π·√2/2)·ε_n; δ³ ≤ 1.171·ε_n^(3/2); cubic ≈ 374·ε_n^(3/2); K_proof ≈ √2·374 ≈ 530 ≤ K_compose = 1024 with comfortable 490-margin in K. The calibration gap is closed at the substrate level.
+
+Build clean (8626 jobs, zero new sorry, zero new axioms). Pipeline Invariants #10, #15 RESPECTED. Project axiom count UNCHANGED at 1.
+
+### Remaining: substantive inductive discharge of `SkApproxCSuperQuadraticBound K_compose`
+
+The substrate cascade is now in place; the remaining piece is the substantive ~300-500 LoC compositional proof of `SkApproxCSuperQuadraticBound_holds` (inductive level-n→(n+1) error bound) composing:
+
+1. **IH on V_n**: `‖ρ(V_n_braid) - U‖ ≤ ε_n` — assumption.
+2. **Residual**: `‖V_n⁻¹·U - 1‖ ≤ √2·ε_n` via `residual_norm_le_sqrt_two_mul`.
+3. **H norm (TIGHTENED)**: `‖H‖ ≤ (π/2)·√2·ε_n` via `H_norm_bound_from_V_diff_half_pi`.
+4. **F, G norms**: `‖F‖, ‖G‖ ≤ √(θ/2)` via `dnStepFG_F/G_norm_le_sqrt_theta_half`.
+5. **IH on A_F, A_G**: universal-quantified IH applied to `A_F := expIsu2 F`, `A_G := expIsu2 G`.
+6. **BCH cubic**: `‖[exp(iF), exp(iG)] - exp(-[F,G])‖ ≤ 320·δ³` via `groupCommutator_lie_bracket_cubic_remainder`.
+7. **Balanced commutator → exp identity**: `[F, G] = -Y_h(V_n⁻¹·U)`, hence `exp(-[F,G]) = exp(Y_h(V_n⁻¹·U)) = V_n⁻¹·U` via `SU2_expAmbient_Y_h_eq` (§9.7 central identity).
+8. **Stability**: `‖gC(ρ(A_F_braid), ρ(A_G_braid)) - gC(A_F, A_G)‖ ≤ stability` via `groupCommutator_stability_nearIdentity` with M=√2, δ=ε_n, η=√(ε_n) (since A_F, A_G near identity).
+9. **Composition**: `ρ(skApproxC (n+1) U) = ρ(V_n_braid) · gC(ρ(A_F_braid), ρ(A_G_braid))` (using ρ_Fib_SU2 MonoidHom multiplicativity).
+10. **Triangle inequality + numerical chain**: yields `ε_{n+1} ≤ K_proof · ε_n^(3/2) ≤ K_compose · ε_n^(3/2)`.
+
+This discharge is well-scoped Phase 6t.1 substrate-strengthening work; the substrate composition is the final remaining piece between conditional and unconditional Path A. All upstream pieces (steps 1-8 substrate) are shipped. Best done as a focused session with MCP live goal inspection (`lean_goal`, `lean_multi_attempt`) for iterative tactic validation.
+
 ### Newly unblocked Wave 8 review chain
 
 - **Stage 9** (figure review): `physics-qa:figure-reviewer` against the two new Stage-8 figures.

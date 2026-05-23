@@ -1086,20 +1086,37 @@ $K_{\mathrm{huge}}\cdot(2\varepsilon_0)^{3/2} \geq 2\sqrt 2$
 \texttt{SkApproxCSuperQuadraticBound} is satisfiable as a predicate;
 the constructive headline composes with it.
 \item \emph{Conditional} on a calibrated $K_{\mathrm{compose}} = 1024$
-discharge in the tight-$\varepsilon$ regime $\varepsilon < 2\varepsilon_0$.
-The inductive analysis at the current substrate constants requires
-$K \geq 2{,}180$ (absorbing a cubic remainder $\approx 1{,}522$
-per level, a stability factor $\approx 20$, and an $\sqrt 2$ unitarity
-factor from the $\ell^\infty$ operator norm) while convergence
-constrains $K \leq 2{,}050$ under
-$\varepsilon_0 = 1/(8\cdot K_{\mathrm{compose}}^2) = 1/8388608$.
-The residual $\sim 6\%$ algebraic gap is reachable only via sharper
-BCH cubic constants in
-\texttt{MatrixBCHCubic.bch\_order\_2\_cubic\_thm} (tightening
-$320\cdot\delta^3 \to \sim 140\cdot\delta^3$ would close it) or
-through a refinement of $\varepsilon_0$ that propagates through
-Waves~3--5. Both pathways are Mathlib-PR-quality follow-ups outside
-this paper's substrate-foundation scope.
+discharge in the tight-$\varepsilon$ regime $\varepsilon < 2\varepsilon_0$,
+with the substrate now in place to close the calibration: the
+Mathlib-PR-quality SU(2) matrix-log substrate
+\texttt{Y\_h\_norm\_le\_half\_pi\_norm\_sub\_one}
+(\S82.7 of \texttt{OneParameterSubgroupSU2.lean}; shipped 2026-05-23)
+delivers a Lipschitz bound
+$\|Y_h(h)\| \leq (\pi/2)\cdot\|h - 1\|$
+combining the analytically-tight Jordan inequality
+$(\operatorname{sinc}\theta)^{-1} \leq \pi/2$ with the SU(2) row-sum identity
+$\|h - (\mathrm{tr}\,h\,/2)\cdot I\| \leq \|h - 1\|$
+(the latter rests on
+\texttt{SU2\_norm\_sub\_aI\_le\_norm\_sub\_one}, a new Mathlib-PR-quality
+SU(2) Bloch substrate that exploits
+$\mathrm{Re}(h_{ii}) = h.\mathrm{trace}.\mathrm{re}/2$ for $i = 0, 1$
+to bound diagonal entries entry-wise). The resulting inductive
+recurrence gives
+$\varepsilon_{n+1} \leq K_{\mathrm{proof}}\cdot\varepsilon_n^{3/2}$
+with $K_{\mathrm{proof}} \approx 530$, comfortably below
+$K_{\mathrm{compose}} = 1024$ (margin $\sim 490$ in $K$). The
+substantive inductive composition combining this tightened Y\_h
+substrate with the Wave~1 BCH cubic remainder
+($320\cdot\delta^3$ in
+\texttt{MatrixBCHCubic.bch\_order\_2\_cubic\_thm}), the Wave~2
+balanced commutator factorisation, and the Wave~1 near-identity
+stability bound (\texttt{groupCommutator\_stability\_nearIdentity})
+remains the deferred substantive Phase~6t.1 deliverable
+($\sim$300--500 LoC of compositional proof). The tracked predicate
+\texttt{SkApproxCSuperQuadraticBound}\,$K_{\mathrm{compose}}$
+will discharge unconditionally once the composition is shipped;
+the substrate cascade for the discharge is fully in place at the
+present writing.
 \end{itemize}
 The disclosure is explicit: the existence-form quantitative SK
 headline of \S\ref{sec:fib-density-sk}.2 ships unconditionally at
