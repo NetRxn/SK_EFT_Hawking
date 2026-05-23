@@ -157,6 +157,81 @@ lemma ε_seq_le_ε_zero
         ε_seq_decreasing K ε₀ hK_pos hε₀_pos h_conv k
       exact le_trans h_step ih
 
+/-! ## 3. Half-shrinkage + existence-of-level
+
+Under the STRICTER convergence condition `K · √a ≤ 1/2` (used by Phase 6t
+Iteration 2 sub-ship 3b's `K_compose_sqrt_two_ε₀_lt_one`), the sequence
+shrinks by a factor of at least `1/2` per step. This gives geometric
+shrinkage `ε_seq K a n ≤ (1/2)^n · a`, which (via Archimedean property
+on `(1/2)^n → 0`) gives ∃ a level `n` for any target precision `ε > 0`. -/
+
+/-- **Per-step half-shrinkage**: under `K · √a ≤ 1/2`, the sequence shrinks
+by a factor of at least 1/2 each step: `ε_seq K a (n+1) ≤ (1/2) · ε_seq K a n`. -/
+lemma ε_seq_step_half_le
+    (K a : ℝ) (hK_pos : 0 < K) (ha_pos : 0 < a)
+    (h_conv_half : K * a ^ (1 / 2 : ℝ) ≤ 1 / 2) (n : ℕ) :
+    ε_seq K a (n + 1) ≤ (1 / 2) * ε_seq K a n := by
+  rw [ε_seq_succ]
+  have h_n_pos : 0 < ε_seq K a n := ε_seq_pos K a hK_pos ha_pos n
+  have h_n_le : ε_seq K a n ≤ a := by
+    apply ε_seq_le_ε_zero K a hK_pos ha_pos
+    linarith
+  have h_split : (ε_seq K a n) ^ (3 / 2 : ℝ) =
+      ε_seq K a n * (ε_seq K a n) ^ (1 / 2 : ℝ) := by
+    have h_decomp : (3 / 2 : ℝ) = 1 + 1 / 2 := by norm_num
+    rw [h_decomp, Real.rpow_add h_n_pos, Real.rpow_one]
+  rw [h_split]
+  have h_sqrt_le : (ε_seq K a n) ^ (1 / 2 : ℝ) ≤ a ^ (1 / 2 : ℝ) :=
+    Real.rpow_le_rpow h_n_pos.le h_n_le (by norm_num)
+  have h_K_sqrt : K * (ε_seq K a n) ^ (1 / 2 : ℝ) ≤ 1 / 2 := by
+    calc K * (ε_seq K a n) ^ (1 / 2 : ℝ)
+        ≤ K * a ^ (1 / 2 : ℝ) :=
+            mul_le_mul_of_nonneg_left h_sqrt_le hK_pos.le
+      _ ≤ 1 / 2 := h_conv_half
+  calc K * (ε_seq K a n * (ε_seq K a n) ^ (1 / 2 : ℝ))
+      = (K * (ε_seq K a n) ^ (1 / 2 : ℝ)) * ε_seq K a n := by ring
+    _ ≤ (1 / 2) * ε_seq K a n :=
+        mul_le_mul_of_nonneg_right h_K_sqrt h_n_pos.le
+
+/-- **Geometric upper bound**: under `K · √a ≤ 1/2`, `ε_seq K a n ≤ (1/2)^n · a`. -/
+lemma ε_seq_le_half_pow
+    (K a : ℝ) (hK_pos : 0 < K) (ha_pos : 0 < a)
+    (h_conv_half : K * a ^ (1 / 2 : ℝ) ≤ 1 / 2) :
+    ∀ (n : ℕ), ε_seq K a n ≤ (1 / 2) ^ n * a := by
+  intro n
+  induction n with
+  | zero =>
+      rw [ε_seq_zero, pow_zero, one_mul]
+  | succ k ih =>
+      have h_step := ε_seq_step_half_le K a hK_pos ha_pos h_conv_half k
+      calc ε_seq K a (k + 1)
+          ≤ (1 / 2) * ε_seq K a k := h_step
+        _ ≤ (1 / 2) * ((1 / 2) ^ k * a) :=
+            mul_le_mul_of_nonneg_left ih (by norm_num)
+        _ = (1 / 2) ^ (k + 1) * a := by ring
+
+/-- **Existence of a level**: under `K · √a ≤ 1/2`, for any target precision
+`ε > 0`, there exists a level `n` such that `ε_seq K a n ≤ ε`.
+
+This is the key substrate for `skLevel_compose ε := Classical.choose`-based
+selection in `SolovayKitaevRecursion.lean` (Phase 6t Iteration 2 sub-ship 4). -/
+lemma exists_n_ε_seq_le
+    (K a : ℝ) (hK_pos : 0 < K) (ha_pos : 0 < a)
+    (h_conv_half : K * a ^ (1 / 2 : ℝ) ≤ 1 / 2)
+    (ε : ℝ) (hε_pos : 0 < ε) :
+    ∃ n : ℕ, ε_seq K a n ≤ ε := by
+  -- Find `n` such that `(1/2)^n < ε/a`.
+  have hεa_pos : 0 < ε / a := div_pos hε_pos ha_pos
+  obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hεa_pos (by norm_num : (1 / 2 : ℝ) < 1)
+  refine ⟨n, ?_⟩
+  have h_bound := ε_seq_le_half_pow K a hK_pos ha_pos h_conv_half n
+  have h_strict : ε_seq K a n < ε := by
+    calc ε_seq K a n
+        ≤ (1 / 2) ^ n * a := h_bound
+      _ < (ε / a) * a := mul_lt_mul_of_pos_right hn ha_pos
+      _ = ε := div_mul_cancel₀ ε (ne_of_gt ha_pos)
+  exact h_strict.le
+
 end SKEFTHawking.FKLW.EpsilonSeq
 
 /-! ## 3. Module summary

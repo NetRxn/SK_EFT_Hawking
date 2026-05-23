@@ -502,6 +502,155 @@ theorem skApprox_exists :
           SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_compose (2 * ε₀) n :=
   skApprox_exists_of_inductiveStep SkApproxInductiveStep_holds
 
+/-! ## 4d. `skLevel_compose` + `solovayKitaev_compile_strict` (Phase 6t Iteration 2
+sub-ship 4, 2026-05-22 PM)
+
+For Path B execution of Task #35/#36: rather than refactoring the placeholder
+`skApprox` substantively (Path A, ~200-300 LoC DN composition), pivot to a
+Classical.choose-based level-selector + compiler that builds directly atop
+the unconditional existential `skApprox_exists`.
+
+`skLevel_compose ε : ℕ` is the level whose ε_seq value is ≤ ε. Existence is
+guaranteed by `exists_n_ε_seq_le` (substrate, sub-ship 4 prep) given the
+strict convergence condition `K_compose · √(2·ε₀) ≤ 1/2`. Choice is via
+`Classical.choose`.
+
+`solovayKitaev_compile_strict U ε : FibonacciBraidWord` is the resulting
+compiled braid word: at level `skLevel_compose ε` extracted from the
+existential `skApprox_exists`. Its error bound `≤ ε_seq K_compose (2·ε₀)
+(skLevel_compose ε) ≤ ε` follows compositionally. -/
+
+/-- **Strict convergence condition** in `rpow` form (needed by `ε_seq`'s API):
+`K_compose · (2·ε₀) ^ (1/2 : ℝ) ≤ 1/2`. Equivalent to `K_compose_sqrt_two_ε₀_lt_one`
+via `Real.rpow_one_div_two_eq_sqrt`. -/
+lemma K_compose_rpow_two_ε₀_le_half :
+    K_compose * (2 * ε₀) ^ (1 / 2 : ℝ) ≤ 1 / 2 := by
+  have h_rpow_eq : (2 * ε₀) ^ (1 / 2 : ℝ) = Real.sqrt (2 * ε₀) :=
+    (Real.sqrt_eq_rpow (2 * ε₀)).symm
+  rw [h_rpow_eq]
+  exact K_compose_sqrt_two_ε₀_lt_one
+
+/-- **Explicit level formula**: the number of halving-steps needed to bring
+the geometric upper bound `(1/2)^n · (2·ε₀)` below `ε`. Since
+`ε_seq K_compose (2·ε₀) n ≤ (1/2)^n · (2·ε₀)` (from `ε_seq_le_half_pow`),
+this is sufficient.
+
+For `ε ≥ 2·ε₀`: `log((2·ε₀)/ε) ≤ 0` so `⌈⌉₊ = 0` — level 0 suffices.
+For `ε < 2·ε₀`: gives the precise number of halvings needed. -/
+noncomputable def skLevel_compose (ε : ℝ) : ℕ :=
+  ⌈Real.log ((2 * ε₀) / ε) / Real.log 2⌉₊
+
+/-- Helper: `Real.log 2 > 0` (used in the algebra of `skLevel_compose_spec`). -/
+private lemma log_two_pos' : 0 < Real.log 2 := Real.log_pos (by norm_num)
+
+/-- Helper: `(1/2)^(skLevel_compose ε) · (2·ε₀) ≤ ε` for `ε > 0`.
+
+Proof: Let `r := log((2·ε₀)/ε) / log 2` (the real-valued level). Then
+`skLevel_compose ε = ⌈r⌉₊ ≥ r` (by `Nat.le_ceil` applied to nonneg case;
+when `r ≤ 0`, `⌈r⌉₊ = 0` and the inequality reduces to `2·ε₀ ≤ ε`, which
+also gives `(1/2)^0 · (2·ε₀) = 2·ε₀ ≤ ε`).
+
+We then have `2^(skLevel_compose ε) ≥ 2^r = (2·ε₀)/ε`, hence
+`(1/2)^(skLevel_compose ε) ≤ ε/(2·ε₀)`, hence the desired product bound. -/
+private lemma half_pow_skLevel_le (ε : ℝ) (hε_pos : 0 < ε) :
+    ((1 : ℝ) / 2) ^ (skLevel_compose ε) * (2 * ε₀) ≤ ε := by
+  set n := skLevel_compose ε with hn_def
+  set r : ℝ := Real.log ((2 * ε₀) / ε) / Real.log 2 with hr_def
+  have h_log_two_pos := log_two_pos'
+  have h_2ε₀_pos := two_ε₀_pos
+  have h_2ε₀_div_ε_pos : 0 < (2 * ε₀) / ε := div_pos h_2ε₀_pos hε_pos
+  -- Case split on whether r ≤ 0 or 0 < r
+  by_cases h_r_nn : 0 ≤ r
+  · -- r ≥ 0: n = ⌈r⌉₊ ≥ r, so (1/2)^n ≤ (1/2)^r in the rpow sense.
+    have h_n_ge_r : (n : ℝ) ≥ r := by
+      have h := Nat.le_ceil r
+      have h_ceil_eq : (⌈r⌉₊ : ℝ) = ⌈r⌉₊ := rfl
+      rw [hn_def]; unfold skLevel_compose
+      exact_mod_cast Nat.le_ceil r
+    -- (1/2)^n ≤ (1/2)^r as Real.rpow (since 1/2 < 1, rpow is antitone)
+    have h_pow_eq : ((1 : ℝ) / 2) ^ n = ((1 : ℝ) / 2) ^ (n : ℝ) :=
+      (Real.rpow_natCast (1 / 2) n).symm
+    have h_rpow_le : ((1 : ℝ) / 2) ^ (n : ℝ) ≤ ((1 : ℝ) / 2) ^ r := by
+      apply Real.rpow_le_rpow_of_exponent_ge (by norm_num : (0:ℝ) < 1/2)
+        (by norm_num : (1 : ℝ) / 2 ≤ 1) h_n_ge_r
+    -- (1/2)^r = (1/2)^(log((2*ε₀)/ε) / log 2) = ε / (2·ε₀)
+    have h_half_eq_inv_two : ((1 : ℝ) / 2) = 2⁻¹ := by norm_num
+    have h_rpow_inv_two_r : ((1 : ℝ) / 2) ^ r = (2 ^ r)⁻¹ := by
+      rw [h_half_eq_inv_two, Real.inv_rpow (by norm_num : (0:ℝ) ≤ 2)]
+    rw [h_rpow_inv_two_r] at h_rpow_le
+    -- 2^r = (2·ε₀)/ε via the definition of r as log((2·ε₀)/ε)/log 2
+    have h_2_pow_r : (2 : ℝ) ^ r = (2 * ε₀) / ε := by
+      rw [Real.rpow_def_of_pos (by norm_num : (0:ℝ) < 2) r]
+      rw [hr_def]
+      rw [show Real.log 2 * (Real.log ((2 * ε₀) / ε) / Real.log 2)
+            = Real.log ((2 * ε₀) / ε) from by
+        field_simp]
+      exact Real.exp_log h_2ε₀_div_ε_pos
+    rw [h_2_pow_r] at h_rpow_le
+    -- h_rpow_le : (1/2)^n ≤ ((2·ε₀)/ε)⁻¹ = ε/(2·ε₀)
+    rw [show ((2 * ε₀) / ε)⁻¹ = ε / (2 * ε₀) from by
+      rw [inv_div]] at h_rpow_le
+    rw [h_pow_eq]
+    calc ((1 : ℝ) / 2) ^ (n : ℝ) * (2 * ε₀)
+        ≤ (ε / (2 * ε₀)) * (2 * ε₀) :=
+            mul_le_mul_of_nonneg_right h_rpow_le h_2ε₀_pos.le
+      _ = ε := div_mul_cancel₀ ε (ne_of_gt h_2ε₀_pos)
+  · -- r < 0: this means log((2·ε₀)/ε) < 0, i.e., (2·ε₀)/ε < 1, i.e., ε > 2·ε₀.
+    -- Then n = ⌈r⌉₊ = 0 (since r ≤ 0).
+    push_neg at h_r_nn
+    have h_r_le_zero : r ≤ 0 := le_of_lt h_r_nn
+    have h_n_zero : n = 0 := by
+      rw [hn_def]; unfold skLevel_compose
+      exact Nat.ceil_eq_zero.mpr h_r_le_zero
+    -- Need: ε ≥ 2·ε₀.
+    -- r ≤ 0 ⟺ log((2·ε₀)/ε)/log 2 ≤ 0 ⟺ log((2·ε₀)/ε) ≤ 0 (since log 2 > 0) ⟺ (2·ε₀)/ε ≤ 1
+    have h_log_le_zero : Real.log ((2 * ε₀) / ε) ≤ 0 := by
+      have h_div_nonneg : 0 ≤ Real.log ((2 * ε₀) / ε) / Real.log 2 → 0 ≤ Real.log ((2 * ε₀) / ε) := by
+        intro hh
+        have := mul_nonneg hh h_log_two_pos.le
+        rwa [div_mul_cancel₀ _ (ne_of_gt h_log_two_pos)] at this
+      by_contra h_pos
+      push_neg at h_pos
+      have h_div_pos : 0 < Real.log ((2 * ε₀) / ε) / Real.log 2 :=
+        div_pos h_pos h_log_two_pos
+      linarith
+    have h_div_le_one : (2 * ε₀) / ε ≤ 1 :=
+      (Real.log_nonpos_iff h_2ε₀_div_ε_pos.le).mp h_log_le_zero
+    have h_2ε₀_le_ε : 2 * ε₀ ≤ ε :=
+      (div_le_one hε_pos).mp h_div_le_one
+    rw [h_n_zero, pow_zero, one_mul]
+    exact h_2ε₀_le_ε
+
+/-- **`skLevel_compose` defining spec**: at level `skLevel_compose ε`, the
+ε_seq value is bounded by `ε`. -/
+theorem skLevel_compose_spec (ε : ℝ) (hε_pos : 0 < ε) :
+    SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_compose (2 * ε₀) (skLevel_compose ε) ≤ ε := by
+  have h_geom := SKEFTHawking.FKLW.EpsilonSeq.ε_seq_le_half_pow
+    K_compose (2 * ε₀) K_compose_pos two_ε₀_pos
+    K_compose_rpow_two_ε₀_le_half (skLevel_compose ε)
+  have h_half := half_pow_skLevel_le ε hε_pos
+  linarith
+
+/-- **The Phase 6t Path B compiler**: produces a Fibonacci braid word
+approximating `U` to within `ε` in linftyOp norm. UNCONDITIONAL given
+`skApprox_exists`. -/
+noncomputable def solovayKitaev_compile_strict
+    (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ) :
+    FibonacciBraidWord :=
+  (skApprox_exists (skLevel_compose ε) U).choose
+
+/-- **Strict-compiler error bound (UNCONDITIONAL)**: for any `U ∈ SU(2)` and
+`ε > 0`, the strict compiler returns a braid word approximating `U` to
+within `ε` in linftyOp norm. -/
+theorem solovayKitaev_compile_strict_error_le
+    (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ) (hε_pos : 0 < ε) :
+    ‖(ρ_Fib_SU2 (solovayKitaev_compile_strict U ε) :
+        Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε := by
+  have h_ε_seq_le := skLevel_compose_spec ε hε_pos
+  have h_choose := (skApprox_exists (skLevel_compose ε) U).choose_spec
+  unfold solovayKitaev_compile_strict
+  linarith
+
 /-! ## 4b. Task #35 trivial discharges ROLLED BACK (2026-05-22 PM post-deep-research)
 
 The earlier `K=1` trivial discharges of `SkApproxErrorShrinkage` and
