@@ -97,15 +97,106 @@ theorem expIsu2_val (F : Matrix (Fin 2) (Fin 2) ℂ) (hF : F.IsHermitian)
     (expIsu2 F hF htr : Matrix (Fin 2) (Fin 2) ℂ) =
       SU2MatrixExp.expAmbient (Complex.I • F) := rfl
 
-/-! ## 2. (next ship) Constructive `skApproxC`
+/-! ## 2. Small substrate for the per-step Dawson-Nielsen composition
 
-Step 3 of Path A. To be shipped next session. -/
+Helper lemmas for normalizing the residual matrix log into the unit-norm
+Hermitian traceless form required by `balanced_commutator_general_axis_lie_traceless`. -/
 
-/-! ## 3. (next ship) Inductive error bound
+/-- Real-scalar multiplication preserves the Hermitian property. -/
+lemma IsHermitian_real_smul {M : Matrix (Fin 2) (Fin 2) ℂ}
+    (hM : M.IsHermitian) (c : ℝ) : ((c : ℂ) • M).IsHermitian := by
+  show ((c : ℂ) • M).conjTranspose = (c : ℂ) • M
+  rw [Matrix.conjTranspose_smul,
+      show star (c : ℂ) = (c : ℂ) from by
+        rw [Complex.star_def, Complex.conj_ofReal],
+      show M.conjTranspose = M from hM]
 
-Step 4 of Path A. -/
+/-- Scalar multiplication of a traceless matrix is traceless. -/
+lemma smul_trace_zero {M : Matrix (Fin 2) (Fin 2) ℂ}
+    (htr : M.trace = 0) (c : ℂ) : (c • M).trace = 0 := by
+  rw [Matrix.trace_smul, htr, smul_zero]
 
-/-! ## 4. (next ship) Constructive strict headline
+/-- Norm of a real-scalar multiple. -/
+lemma norm_real_smul (c : ℝ) (M : Matrix (Fin 2) (Fin 2) ℂ) :
+    ‖((c : ℂ) • M)‖ = |c| * ‖M‖ := by
+  rw [norm_smul, Complex.norm_real, Real.norm_eq_abs]
+
+/-- Normalizing a nonzero matrix gives unit norm. -/
+lemma norm_normalize {M : Matrix (Fin 2) (Fin 2) ℂ} (h : 0 < ‖M‖) :
+    ‖((1 / ‖M‖ : ℝ) : ℂ) • M‖ = 1 := by
+  rw [norm_real_smul, abs_of_pos (by positivity : (0:ℝ) < 1 / ‖M‖)]
+  field_simp
+
+/-- For `h ∈ SU(2)`, `(-Complex.I) • Y_h h` is Hermitian.
+
+The Bloch-sphere matrix log `Y_h h` lands in `tracelessSkewHermitian (Fin 2)`
+(per `SU2_Y_h_mem_tracelessSkewHermitian`). Multiplying by `-i` flips
+skew-Hermitian to Hermitian. -/
+lemma neg_I_smul_Y_h_isHermitian
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    ((-Complex.I) • Y_h h).IsHermitian := by
+  have hY_skew : (Y_h h).IsSkewHermitian :=
+    (SU2_Y_h_mem_tracelessSkewHermitian hh).1
+  show ((-Complex.I) • Y_h h).conjTranspose = ((-Complex.I) • Y_h h)
+  rw [Matrix.conjTranspose_smul,
+      show (star (-Complex.I) : ℂ) = Complex.I from by
+        rw [star_neg, Complex.star_def, Complex.conj_I, neg_neg],
+      show (Y_h h).conjTranspose = -(Y_h h) from hY_skew,
+      smul_neg, neg_smul]
+
+/-- For `h ∈ SU(2)`, `(-Complex.I) • Y_h h` is traceless. -/
+lemma neg_I_smul_Y_h_trace_zero
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    ((-Complex.I) • Y_h h).trace = 0 := by
+  have hY_tr : (Y_h h).trace = 0 :=
+    (SU2_Y_h_mem_tracelessSkewHermitian hh).2
+  rw [Matrix.trace_smul, hY_tr, smul_zero]
+
+/-! ## 3. (next ship) Constructive `skApproxC`
+
+Step 3 of Path A. To be shipped next session.
+
+Design plan:
+  - Use `Classical.propDecidable` to allow `if-then-else` on undecidable Props
+  - Define `pauliFG H θ : Matrix × Matrix` extracting (F, G) from
+    `balanced_commutator_general_axis_lie_traceless` when valid, else `(0, 0)`
+  - Define `skApproxC_dnStep rec V_n_braid U` doing one DN composition:
+    - Compute Δ = U · (ρ_Fib_SU2 V_n_braid)⁻¹
+    - Compute H_skew = Y_h Δ, H = -i • H_skew, θ = ‖H‖
+    - Normalize H_unit = (1/θ) • H (if θ > 0)
+    - Extract (F, G) via `pauliFG H_unit θ`
+    - Recurse: A_F = rec (expIsu2 F), A_G = rec (expIsu2 G)
+    - Return V_n_braid · groupCommutator A_F A_G
+  - Define `skApproxC : ℕ → SU(2) → FibonacciBraidWord` via Nat-rec, using
+    skApproxC_dnStep for the inductive case.
+
+Substrate ready (shipped in §1+§2):
+  - `expIsu2` — SU(2) lift for traceless Hermitian (§1)
+  - `IsHermitian_real_smul`, `smul_trace_zero`, `norm_normalize` (§2)
+  - `neg_I_smul_Y_h_isHermitian`, `neg_I_smul_Y_h_trace_zero` (§2) -/
+
+/-! ## 4. (next ship) Inductive error bound
+
+Step 4 of Path A. To be shipped after Step 3.
+
+Per-step error bound chain (per memory file `project_phase6t_strict_headline_2026_05_22.md`):
+
+  1. IH: ‖V_n - U‖ ≤ ε_n
+  2. ‖Δ - 1‖ ≤ √2·ε_n via `SU2_linftyOpNorm_le_sqrt_two` on V_n⁻¹
+  3. Verify ‖Δ - 1‖ < 1/4 (holds since √2·ε_n ≤ √2·2·ε₀ ≪ 1/4)
+  4. §82: ‖H_skew‖ ≤ 4·‖Δ-1‖ ≤ 4√2·ε_n  (via `Y_h_norm_le_four_norm_sub_one`)
+  5. H = -i·H_skew Hermitian + traceless (via §2 substrate)
+  6. θ := ‖H‖ ≤ 4√2·ε_n
+  7. Verify θ ≤ 1 (holds for ε_n ≪ 1/(4√2) ≈ 0.177)
+  8. Task #34 (strengthened, §1 Step 1): F, G with ‖F‖,‖G‖ ≤ √(θ/2)
+  9. Recurse: ‖ρ A_F - exp(iF)‖ ≤ ε_n, ‖ρ A_G - exp(iG)‖ ≤ ε_n via IH
+  10. Compose: ρ A_{n+1} = V_n · groupCommutator(ρ A_F, ρ A_G)
+  11. Error: ‖result - U‖ ≤ cubic + stability ≤ K_compose · ε_n^(3/2)
+-/
+
+/-! ## 5. (next ship) Constructive strict headline
 
 Step 5 of Path A. -/
 
