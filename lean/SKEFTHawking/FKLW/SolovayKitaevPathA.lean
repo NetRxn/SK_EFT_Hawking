@@ -870,6 +870,78 @@ theorem SkApproxCSuperQuadraticBound_huge_holds :
     have h_seq_ge := h_ε_seq_large (m + 1) (by omega)
     linarith
 
+/-! ## 7.5. Substrate for the substantive inductive discharge
+
+Helpers consumed by the eventual `SkApproxCSuperQuadraticBound K_compose`
+inductive proof. Each helper is independently provable and Mathlib-PR-quality
+substrate. -/
+
+/-- **ρ_Fib_SU2 multiplicativity at the matrix level**: for braid words
+`a, b ∈ BraidGroup 3`, `(ρ_Fib_SU2 (a * b)).val = (ρ_Fib_SU2 a).val * (ρ_Fib_SU2 b).val`.
+
+Direct consequence of `ρ_Fib_SU2` being a `MonoidHom` plus the SU(2)
+subtype multiplication. -/
+lemma ρ_Fib_SU2_mul_val (a b : SKEFTHawking.BraidGroup 3) :
+    ((ρ_Fib_SU2 (a * b) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      ((ρ_Fib_SU2 a : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) *
+      ((ρ_Fib_SU2 b : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [map_mul]
+  rfl
+
+/-- **SU(2) subtype-group inverse equals matrix inverse**: for
+`A : ↥(specialUnitaryGroup (Fin 2) ℂ)`, the underlying matrix of the
+group inverse `A⁻¹` equals the matrix nonsing inverse of `A.val`.
+
+Proof: from `A * A⁻¹ = 1` at the group level, extract `A.val * (A⁻¹).val = 1`
+as matrices, then apply `Matrix.inv_eq_right_inv`. -/
+lemma SU2_subtype_inv_val_eq_matrix_inv
+    (A : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ((A⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      ((A : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ)⁻¹ := by
+  have h_mul : A * A⁻¹ = 1 := mul_inv_cancel A
+  have h_mul_val : (A : Matrix (Fin 2) (Fin 2) ℂ) *
+      ((A⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+    have : ((A * A⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) =
+           (A : Matrix (Fin 2) (Fin 2) ℂ) *
+             ((A⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) := rfl
+    rw [← this, h_mul]
+    rfl
+  exact (Matrix.inv_eq_right_inv h_mul_val).symm
+
+/-- **ρ_Fib_SU2 inverse at the matrix level**: for braid word `a`,
+`(ρ_Fib_SU2 a⁻¹).val = ((ρ_Fib_SU2 a).val)⁻¹` (matrix nonsing inverse). -/
+lemma ρ_Fib_SU2_inv_val (a : SKEFTHawking.BraidGroup 3) :
+    ((ρ_Fib_SU2 a⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      ((ρ_Fib_SU2 a : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ)⁻¹ := by
+  rw [map_inv]
+  exact SU2_subtype_inv_val_eq_matrix_inv _
+
+/-- **ρ_Fib_SU2 of group commutator** at the matrix level: for braid words
+`a, b`, the SU(2) image of `a * b * a⁻¹ * b⁻¹` equals the matrix-level
+group commutator of `ρ_Fib_SU2 a` and `ρ_Fib_SU2 b`. -/
+lemma ρ_Fib_SU2_groupCommutator_val (a b : SKEFTHawking.BraidGroup 3) :
+    ((ρ_Fib_SU2 (a * b * a⁻¹ * b⁻¹) :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) =
+      SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+        ((ρ_Fib_SU2 a : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)
+        ((ρ_Fib_SU2 b : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) := by
+  unfold SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+  rw [ρ_Fib_SU2_mul_val, ρ_Fib_SU2_mul_val, ρ_Fib_SU2_mul_val,
+      ρ_Fib_SU2_inv_val, ρ_Fib_SU2_inv_val]
+
 /-! ## 8. Path A unconditional strict headline for loose ε regime
 
 For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
