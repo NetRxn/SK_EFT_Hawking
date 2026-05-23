@@ -1081,6 +1081,31 @@ lemma dnStepFG_exp_neg_comm_eq_Delta
       SU2MatrixExp.expAmbient (Y_h Δ.val) from rfl]
   exact h_expAmbient
 
+/-- **`expIsu2` near-identity bound**: for `F` Hermitian-traceless with
+`‖F‖ ≤ δ`, the matrix `(expIsu2 F).val = exp(I·F)` satisfies
+`‖(expIsu2 F).val - 1‖ ≤ δ · exp(δ)`.
+
+Direct composition of `expIsu2_val` (which gives
+`(expIsu2 F).val = expAmbient (I•F) = NormedSpace.exp (I•F)`) with
+`MatrixBCH.norm_exp_I_smul_sub_one_le`. -/
+lemma expIsu2_norm_sub_one_le
+    (F : Matrix (Fin 2) (Fin 2) ℂ) (hF : F.IsHermitian) (htr : F.trace = 0)
+    (δ : ℝ) (hF_norm : ‖F‖ ≤ δ) :
+    ‖((expIsu2 F hF htr : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ * Real.exp δ := by
+  rw [expIsu2_val]
+  have h_base : ‖SU2MatrixExp.expAmbient (Complex.I • F) - 1‖ ≤
+                  ‖F‖ * Real.exp ‖F‖ :=
+    MatrixBCH.norm_exp_I_smul_sub_one_le F
+  have h_F_nn : (0 : ℝ) ≤ ‖F‖ := norm_nonneg _
+  have h_exp_le : Real.exp ‖F‖ ≤ Real.exp δ := Real.exp_le_exp.mpr hF_norm
+  have h_exp_nn : (0 : ℝ) ≤ Real.exp ‖F‖ := le_of_lt (Real.exp_pos _)
+  have h_δ_nn : (0 : ℝ) ≤ δ := le_trans h_F_nn hF_norm
+  calc ‖SU2MatrixExp.expAmbient (Complex.I • F) - 1‖
+      ≤ ‖F‖ * Real.exp ‖F‖ := h_base
+    _ ≤ δ * Real.exp ‖F‖ := mul_le_mul_of_nonneg_right hF_norm h_exp_nn
+    _ ≤ δ * Real.exp δ := mul_le_mul_of_nonneg_left h_exp_le h_δ_nn
+
 /-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
 
 The Option-C-tightened Y_h Lipschitz bound (`Y_h_norm_le_half_pi_norm_sub_one`,
