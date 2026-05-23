@@ -641,4 +641,129 @@ theorem skApproxC_diameter_bound (n : ℕ)
   | succ m =>
     exact skApproxC_succ_trivial_bound m U
 
+/-! ## 7. Step 4 discharge for large K via diameter bound
+
+For K large enough that `ε_seq K (2·ε₀) n ≥ 2√2` for all n ≥ 1, the
+predicate `SkApproxCSuperQuadraticBound K` reduces to the diameter
+bound. This is the STRUCTURAL discharge: shows the tracked Prop is
+satisfiable (the predicate isn't vacuous), enabling downstream
+consumers to instantiate the conditional headline.
+
+Note: this discharge uses LOOSE K (huge value), so the strict-headline
+error bound becomes ‖V_n - U‖ ≤ ε ≈ K·(...)^(3/2) which is way larger
+than user-specified ε for tight ε. The TIGHT K (≤ 2200, calibration
+limit) substantive discharge is the deferred follow-up. -/
+
+/-- A "huge" K value: chosen so big that `K · (2·ε₀)² ≥ 2√2`, leveraging
+the rpow monotonicity `x^(3/2) ≥ x^2` for `x ∈ (0, 1]`. -/
+noncomputable def K_path_a_huge : ℝ := 10^30
+
+lemma K_path_a_huge_pos : 0 < K_path_a_huge := by
+  unfold K_path_a_huge; norm_num
+
+/-- For `x ∈ (0, 1]`, `x^(3/2) ≥ x^2` (rpow is anti-monotone in exponent
+when base is ≤ 1). -/
+lemma rpow_three_halves_ge_sq (x : ℝ) (hx_pos : 0 < x) (hx_le_one : x ≤ 1) :
+    x ^ (2 : ℝ) ≤ x ^ (3 / 2 : ℝ) := by
+  apply Real.rpow_le_rpow_of_exponent_ge hx_pos hx_le_one
+  norm_num
+
+/-- **Path A Step 4 discharge for K_path_a_huge** — UNCONDITIONAL.
+
+Discharges `SkApproxCSuperQuadraticBound K_path_a_huge` via:
+  - n = 0: matches base case (2·ε₀ = ε_seq K 0)
+  - n ≥ 1: diameter bound 2√2, combined with ε_seq K (n) ≥ 2√2 inductively
+
+The key step at n = 1: `ε_seq K 1 = K · (2·ε₀)^(3/2) ≥ K · (2·ε₀)² ≥ 2√2`
+where the first inequality uses `rpow_three_halves_ge_sq` and the second
+is numerical (`K · 4·ε₀² = 4·10^30 / 2^46 ≈ 5.68e16 ≫ 2√2`). -/
+theorem SkApproxCSuperQuadraticBound_huge_holds :
+    SkApproxCSuperQuadraticBound K_path_a_huge := by
+  intro n
+  -- First show ε_seq K n ≥ 2√2 for n ≥ 1.
+  have h_ε_seq_large : ∀ m : ℕ, 1 ≤ m →
+      2 * Real.sqrt 2 ≤
+        SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_path_a_huge (2 * ε₀) m := by
+    intro m hm
+    induction m with
+    | zero => omega
+    | succ k ih_k =>
+      rcases Nat.eq_zero_or_pos k with hk_zero | hk_pos
+      · -- k = 0: ε_seq K 1 = K · (2·ε₀)^(3/2). Lower-bound via x^(3/2) ≥ x^2.
+        subst hk_zero
+        rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_succ,
+            SKEFTHawking.FKLW.EpsilonSeq.ε_seq_zero]
+        have h_2ε₀_pos : 0 < 2 * ε₀ := two_ε₀_pos
+        have h_2ε₀_lt_one : 2 * ε₀ ≤ 1 := by
+          rw [two_ε₀_value]; norm_num
+        -- x^(3/2) ≥ x^2 = x * x for x ∈ (0, 1]
+        have h_rpow_ge : (2 * ε₀ : ℝ) ^ (2 : ℝ) ≤ (2 * ε₀) ^ (3 / 2 : ℝ) :=
+          rpow_three_halves_ge_sq _ h_2ε₀_pos h_2ε₀_lt_one
+        -- (2·ε₀)^2 = (2·ε₀) * (2·ε₀)
+        have h_rpow_two : (2 * ε₀ : ℝ) ^ (2 : ℝ) = (2 * ε₀) * (2 * ε₀) := by
+          rw [show (2 : ℝ) = ((2 : ℕ) : ℝ) from by norm_num]
+          rw [Real.rpow_natCast]; ring
+        rw [h_rpow_two] at h_rpow_ge
+        -- Goal: 2√2 ≤ K_huge · (2·ε₀)^(3/2)
+        -- Bound: K_huge · (2·ε₀)^(3/2) ≥ K_huge · (2·ε₀) · (2·ε₀) = K_huge · 4·ε₀²
+        have h_K_pos : 0 < K_path_a_huge := K_path_a_huge_pos
+        have h_lower : K_path_a_huge * ((2 * ε₀) * (2 * ε₀)) ≤
+            K_path_a_huge * (2 * ε₀) ^ (3 / 2 : ℝ) := by
+          gcongr
+        -- Numerical: K_huge · (2·ε₀)² ≥ 2√2
+        -- 2·ε₀ = 1/4194304, so (2·ε₀)² = 1/4194304² = 1/17592186044416
+        -- K_huge · (2·ε₀)² = 10^30 / 17592186044416 ≈ 5.68e16
+        -- 2√2 ≤ 3, so we need 3 ≤ 5.68e16. ✓
+        have h_num : 2 * Real.sqrt 2 ≤ K_path_a_huge * ((2 * ε₀) * (2 * ε₀)) := by
+          have h_sqrt_two : Real.sqrt 2 ≤ 3/2 := by
+            rw [show (3/2 : ℝ) = Real.sqrt (9/4) from by
+              rw [show (9/4 : ℝ) = (3/2)^2 from by norm_num,
+                  Real.sqrt_sq (by norm_num : (0:ℝ) ≤ 3/2)]]
+            exact Real.sqrt_le_sqrt (by norm_num)
+          have h_2ε₀_val : 2 * ε₀ = 1 / 4194304 := two_ε₀_value
+          rw [h_2ε₀_val]
+          unfold K_path_a_huge
+          nlinarith [h_sqrt_two]
+        linarith
+      · -- k ≥ 1: ε_seq K (k+1) = K · (ε_seq K k)^(3/2).
+        -- By IH: ε_seq K k ≥ 2√2 ≥ 1. So (ε_seq K k)^(3/2) ≥ 1, and
+        -- K · (ε_seq K k)^(3/2) ≥ K ≥ 2√2.
+        have ih_k_apply := ih_k hk_pos
+        rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_succ]
+        have h_seq_ge_one : (1 : ℝ) ≤
+            SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_path_a_huge (2 * ε₀) k := by
+          have h_sqrt_two_ge : (1 : ℝ) ≤ Real.sqrt 2 := by
+            rw [show (1 : ℝ) = Real.sqrt 1 from (Real.sqrt_one).symm]
+            exact Real.sqrt_le_sqrt (by norm_num)
+          linarith
+        have h_rpow_ge_one : (1 : ℝ) ≤
+            (SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_path_a_huge (2 * ε₀) k) ^
+              (3 / 2 : ℝ) :=
+          Real.one_le_rpow h_seq_ge_one (by norm_num : (0 : ℝ) ≤ 3/2)
+        have h_K_ge : (2 * Real.sqrt 2 : ℝ) ≤ K_path_a_huge := by
+          unfold K_path_a_huge
+          have h_sqrt : Real.sqrt 2 ≤ 2 := by
+            rw [show (2 : ℝ) = Real.sqrt 4 from by
+              rw [show (4 : ℝ) = 2^2 from by norm_num,
+                  Real.sqrt_sq (by norm_num : (0:ℝ) ≤ 2)]]
+            exact Real.sqrt_le_sqrt (by norm_num)
+          linarith
+        have h_K_pos : 0 < K_path_a_huge := K_path_a_huge_pos
+        calc (2 * Real.sqrt 2 : ℝ) ≤ K_path_a_huge := h_K_ge
+          _ = K_path_a_huge * 1 := (mul_one _).symm
+          _ ≤ K_path_a_huge *
+              (SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_path_a_huge (2 * ε₀) k) ^
+                (3 / 2 : ℝ) := by gcongr
+  -- Main induction
+  induction n with
+  | zero =>
+    intro U
+    rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_zero]
+    exact skApproxC_zero_error_bound U
+  | succ m _ =>
+    intro U
+    have h_diam := skApproxC_diameter_bound (m + 1) U
+    have h_seq_ge := h_ε_seq_large (m + 1) (by omega)
+    linarith
+
 end SKEFTHawking.FKLW.SolovayKitaevPathA
