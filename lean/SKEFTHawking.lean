@@ -721,6 +721,10 @@ import SKEFTHawking.FKLW.SolovayKitaevRecursion
 import SKEFTHawking.FKLW.SolovayKitaevLengthBound
 import SKEFTHawking.FKLW.SolovayKitaevQuantitative
 import SKEFTHawking.FKLW.SolovayKitaevApplications
+-- Phase 6t Path A (2026-05-22 PM): constructive variant of skApprox + strict
+-- headline. SU(2) lift helper `expIsu2` shipped; constructive `skApproxC` +
+-- inductive error bound + constructive headline forthcoming.
+import SKEFTHawking.FKLW.SolovayKitaevPathA
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
