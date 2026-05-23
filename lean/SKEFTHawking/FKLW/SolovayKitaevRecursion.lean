@@ -651,7 +651,158 @@ theorem solovayKitaev_compile_strict_error_le
   unfold solovayKitaev_compile_strict
   linarith
 
-/-! ## 4b. Task #35 trivial discharges ROLLED BACK (2026-05-22 PM post-deep-research)
+/-! ## 4e. Polylog skLevel formula via ε_seq closed form (Phase 6t Iteration 2
+sub-ship 4 continued, 2026-05-22 PM)
+
+The geometric `skLevel_compose ε = ⌈log((2·ε₀)/ε)/log 2⌉₊` (§4d) grows
+LINEARLY in `log(1/ε)`, giving POLYNOMIAL length bound `5^skLevel ~ (1/ε)^c`.
+This is NOT the Solovay-Kitaev rate.
+
+The proper SK-rate level is `skLevel_polylog ε := ⌈log(log(1/(K²·ε))/log 4) /
+log(3/2)⌉₊`, which grows DOUBLE-LOGARITHMICALLY in `1/ε`, giving the
+correct polylog length bound `5^skLevel ~ (log(1/ε))^c`. The corresponding
+spec uses the ε_seq closed form `ε_seq K_compose (2·ε₀) n = (1/4)^((3/2)^n) /
+K_compose²`. -/
+
+/-- **Polylog SK level**: `⌈log(log(1/(K_compose²·ε))/log 4)/log(3/2)⌉₊`.
+
+This is the Solovay-Kitaev standard formula: at this level, the actual
+super-quadratic ε_seq recurrence has reached precision `≤ ε`, and the level
+itself grows only as `log(log(1/ε))`. -/
+noncomputable def skLevel_polylog (ε : ℝ) : ℕ :=
+  ⌈Real.log (Real.log (1 / (K_compose^2 * ε)) / Real.log 4) /
+    Real.log (3 / 2)⌉₊
+
+/-- **Closed-form values of constants** (for direct computation):
+`K_compose^2 = 1048576`, `K_compose^2 * 2*ε₀ = 1/4`. -/
+private lemma K_compose_sq_value : K_compose^2 = 1048576 := by
+  unfold K_compose; norm_num
+
+private lemma K_compose_sq_times_two_ε₀ : K_compose^2 * (2 * ε₀) = 1 / 4 := by
+  rw [K_compose_sq_value, two_ε₀_value]; norm_num
+
+/-- Helper: `log(3/2) > 0`. -/
+private lemma log_three_halves_pos : 0 < Real.log (3/2) :=
+  Real.log_pos (by norm_num)
+
+/-- Helper: `log 4 > 0`. -/
+private lemma log_four_pos : 0 < Real.log 4 :=
+  Real.log_pos (by norm_num)
+
+/-- **`skLevel_polylog` spec**: for `ε ≤ ε₀`, the polylog level achieves
+`ε_seq K_compose (2·ε₀) (skLevel_polylog ε) ≤ ε`.
+
+Proof: uses `ε_seq_closed_form` to write `ε_seq n = (1/4)^((3/2)^n) / K²`,
+then bounds `(1/4)^((3/2)^skLevel_polylog) ≤ K²·ε` via:
+  - `skLevel_polylog ε ≥ log(M)/log(3/2)` where `M := log(1/(K²·ε))/log 4`
+  - `(3/2)^skLevel_polylog ≥ M`
+  - `M · log 4 ≥ log(1/(K²·ε))`, i.e., `(1/4)^M ≤ K²·ε`
+  - So `(1/4)^((3/2)^skLevel_polylog) ≤ (1/4)^M ≤ K²·ε`. -/
+theorem skLevel_polylog_spec (ε : ℝ) (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) :
+    SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_compose (2 * ε₀) (skLevel_polylog ε) ≤ ε := by
+  -- Step 1: ε ≤ ε₀ = 1/(8·K_compose²) ⟹ K_compose²·ε ≤ 1/8 < 1.
+  have h_K_sq_pos : 0 < K_compose^2 := pow_pos K_compose_pos 2
+  have h_K_sq_eps_pos : 0 < K_compose^2 * ε := mul_pos h_K_sq_pos hε_pos
+  have h_eps_le_inv : ε ≤ 1 / (8 * K_compose^2) := by
+    have h_ε₀_eq : ε₀ = 1 / (8 * K_compose^2) := rfl
+    linarith [h_ε₀_eq ▸ hε_le]
+  have h_K_eps_le : K_compose^2 * ε ≤ 1 / 8 := by
+    have h_K_sq_ne : K_compose^2 ≠ 0 := ne_of_gt h_K_sq_pos
+    have h_K_ne : K_compose ≠ 0 := ne_of_gt K_compose_pos
+    calc K_compose^2 * ε
+        ≤ K_compose^2 * (1 / (8 * K_compose^2)) :=
+            mul_le_mul_of_nonneg_left h_eps_le_inv h_K_sq_pos.le
+      _ = K_compose^2 / (8 * K_compose^2) := by ring
+      _ = 1 / 8 := by field_simp
+  have h_inv_K_eps_pos : 0 < 1 / (K_compose^2 * ε) := by positivity
+  have h_inv_K_eps_gt_8 : (8 : ℝ) ≤ 1 / (K_compose^2 * ε) := by
+    rw [le_div_iff₀ h_K_sq_eps_pos]; linarith
+  -- Step 2: log(1/(K²·ε)) ≥ log 8 > 0.
+  have h_log_inv : Real.log 8 ≤ Real.log (1 / (K_compose^2 * ε)) :=
+    Real.log_le_log (by norm_num) h_inv_K_eps_gt_8
+  have h_log_8_pos : 0 < Real.log 8 := Real.log_pos (by norm_num)
+  have h_log_inv_pos : 0 < Real.log (1 / (K_compose^2 * ε)) :=
+    lt_of_lt_of_le h_log_8_pos h_log_inv
+  -- Step 3: M := log(1/(K²·ε)) / log 4 > 0.
+  set M : ℝ := Real.log (1 / (K_compose^2 * ε)) / Real.log 4 with hM_def
+  have h_M_pos : 0 < M := div_pos h_log_inv_pos log_four_pos
+  -- Step 4: skLevel_polylog ε = ⌈log M / log(3/2)⌉₊.
+  -- For M > 1, log M > 0; for M ≤ 1, log M ≤ 0 and ⌈⌉₊ may be 0.
+  -- We need to bound (3/2)^skLevel_polylog ≥ M either way.
+  -- Substep: log 8 / log 4 = 3/2, so M ≥ 3/2 > 1.
+  have h_M_ge : M ≥ 3 / 2 := by
+    rw [hM_def, ge_iff_le, le_div_iff₀ log_four_pos]
+    have h_log_4_eq : Real.log 4 = 2 * Real.log 2 := by
+      rw [show (4 : ℝ) = 2^2 from by norm_num, Real.log_pow]; ring
+    have h_log_8_eq : Real.log 8 = 3 * Real.log 2 := by
+      rw [show (8 : ℝ) = 2^3 from by norm_num, Real.log_pow]; ring
+    calc 3 / 2 * Real.log 4
+        = 3 / 2 * (2 * Real.log 2) := by rw [h_log_4_eq]
+      _ = 3 * Real.log 2 := by ring
+      _ = Real.log 8 := h_log_8_eq.symm
+      _ ≤ Real.log (1 / (K_compose^2 * ε)) := h_log_inv
+  have h_M_gt_one : 1 < M := by linarith
+  have h_log_M_pos : 0 < Real.log M := Real.log_pos h_M_gt_one
+  -- Step 5: skLevel_polylog ε ≥ log M / log(3/2).
+  set n := skLevel_polylog ε with hn_def
+  have h_ratio_nn : 0 ≤ Real.log M / Real.log (3 / 2) :=
+    div_nonneg h_log_M_pos.le log_three_halves_pos.le
+  have h_n_ge : (n : ℝ) ≥ Real.log M / Real.log (3 / 2) := by
+    rw [hn_def]; unfold skLevel_polylog
+    exact_mod_cast Nat.le_ceil _
+  -- Step 6: (3/2)^n ≥ M.
+  -- Use: (3/2)^(log M / log(3/2)) = exp(log M) = M, and rpow monotone in exponent.
+  have h_rpow_le_pow : (3 / 2 : ℝ) ^ (n : ℝ) = (3 / 2 : ℝ) ^ n :=
+    Real.rpow_natCast (3/2) n
+  have h_3_2_pow_n_ge : ((3 / 2 : ℝ)) ^ n ≥ M := by
+    have h_rpow_mono : (3 / 2 : ℝ) ^ (Real.log M / Real.log (3 / 2)) ≤
+        (3 / 2 : ℝ) ^ (n : ℝ) :=
+      Real.rpow_le_rpow_of_exponent_le (by norm_num : (1 : ℝ) ≤ 3 / 2) h_n_ge
+    have h_3_2_pow_log_M : (3 / 2 : ℝ) ^ (Real.log M / Real.log (3 / 2)) = M := by
+      rw [Real.rpow_def_of_pos (by norm_num : (0:ℝ) < 3/2)]
+      rw [show Real.log (3 / 2) * (Real.log M / Real.log (3 / 2)) = Real.log M from by
+        field_simp]
+      exact Real.exp_log h_M_pos
+    rw [h_3_2_pow_log_M] at h_rpow_mono
+    rw [← h_rpow_le_pow]; exact h_rpow_mono
+  -- Step 7: ε_seq closed form + (1/4)^((3/2)^n) ≤ K²·ε.
+  have h_closed := SKEFTHawking.FKLW.EpsilonSeq.ε_seq_closed_form
+    K_compose (2 * ε₀) K_compose_pos two_ε₀_pos n
+  rw [K_compose_sq_times_two_ε₀] at h_closed
+  -- h_closed : ε_seq K_compose (2·ε₀) n = (1/4)^((3/2)^n) / K_compose²
+  rw [h_closed]
+  rw [div_le_iff₀ h_K_sq_pos]
+  -- Goal: (1/4)^((3/2)^n) ≤ ε · K_compose²
+  -- (1/4) < 1, so (1/4)^x is antitone in x: (3/2)^n ≥ M ⟹ (1/4)^((3/2)^n) ≤ (1/4)^M
+  have h_quarter_pos : (0 : ℝ) < 1 / 4 := by norm_num
+  have h_quarter_lt_one : (1 / 4 : ℝ) < 1 := by norm_num
+  have h_quarter_le_one : (1 / 4 : ℝ) ≤ 1 := h_quarter_lt_one.le
+  have h_quarter_nn : (0 : ℝ) ≤ 1 / 4 := h_quarter_pos.le
+  -- (1/4)^((3/2)^n) (as Real.rpow with real exponent (3/2)^n)
+  -- Need to bridge nat-pow to Real.rpow.
+  have h_3_2_n_nn : 0 ≤ ((3 / 2 : ℝ)) ^ n := pow_nonneg (by norm_num) n
+  have h_rpow_antitone :
+      (1 / 4 : ℝ) ^ ((3 / 2 : ℝ) ^ n) ≤ (1 / 4 : ℝ) ^ M :=
+    Real.rpow_le_rpow_of_exponent_ge h_quarter_pos h_quarter_le_one h_3_2_pow_n_ge
+  have h_quarter_M_le : (1 / 4 : ℝ) ^ M ≤ K_compose^2 * ε := by
+    -- (1/4)^M = exp(log(1/4) · M) = exp(-log 4 · M) = exp(-log(1/(K²·ε))) = K²·ε
+    rw [Real.rpow_def_of_pos h_quarter_pos]
+    have h_log_quarter : Real.log (1 / 4) = -Real.log 4 := by
+      rw [Real.log_div (by norm_num) (by norm_num), Real.log_one]; ring
+    rw [h_log_quarter]
+    rw [show -Real.log 4 * M = -(Real.log 4 * M) by ring]
+    have h_M_unfold : Real.log 4 * M = Real.log (1 / (K_compose^2 * ε)) := by
+      rw [hM_def]; field_simp
+    rw [h_M_unfold]
+    rw [show -Real.log (1 / (K_compose^2 * ε)) = Real.log (K_compose^2 * ε) by
+      rw [Real.log_div (by norm_num) (ne_of_gt h_K_sq_eps_pos), Real.log_one]
+      ring]
+    exact (Real.exp_log h_K_sq_eps_pos).le
+  have h_chain : (1 / 4 : ℝ) ^ ((3 / 2 : ℝ) ^ n) ≤ K_compose^2 * ε :=
+    le_trans h_rpow_antitone h_quarter_M_le
+  linarith
+
+/-! ## 4f. Task #35 trivial discharges ROLLED BACK (2026-05-22 PM post-deep-research)
 
 The earlier `K=1` trivial discharges of `SkApproxErrorShrinkage` and
 `SkApproxErrorBound` (commit dec0d21) were valid under the OLD `ε₀ = 1/2`
