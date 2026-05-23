@@ -5441,7 +5441,7 @@ Substrate composition:
 
 Direct consequence of `Matrix.linfty_opNNNorm_def`: the linftyOp norm is the
 max row-sum of entry NNNorms, which dominates any single entry. -/
-private lemma linftyOpNorm_entry_le_two
+lemma linftyOpNorm_entry_le_two
     (M : Matrix (Fin 2) (Fin 2) ℂ) (i j : Fin 2) :
     ‖M i j‖ ≤ ‖M‖ := by
   have h_def : ‖M‖₊ = Finset.univ.sup (fun i' => ∑ k, ‖M i' k‖₊) :=
@@ -5460,7 +5460,7 @@ private lemma linftyOpNorm_entry_le_two
 
 For h ∈ SU(2), `h + star h = (h.trace : ℂ) • 1` (§9.3a). Evaluated at entry
 (0,0) and taking real parts: `2 · (h 0 0).re = h.trace.re`. -/
-private lemma SU2_h_zero_zero_re_eq_trace_div_two
+lemma SU2_h_zero_zero_re_eq_trace_div_two
     {h : Matrix (Fin 2) (Fin 2) ℂ}
     (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
     (h 0 0).re = h.trace.re / 2 := by
@@ -5483,7 +5483,7 @@ private lemma SU2_h_zero_zero_re_eq_trace_div_two
 
 Proof chain: `1 - h.trace.re/2 = 1 - (h 0 0).re ≤ |(h 0 0 - 1).re| ≤ ‖h 0 0 - 1‖
 ≤ ‖h - 1‖_linftyOp`. -/
-private lemma SU2_one_sub_trace_re_div_two_le_norm_sub_one
+lemma SU2_one_sub_trace_re_div_two_le_norm_sub_one
     {h : Matrix (Fin 2) (Fin 2) ℂ}
     (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
     1 - h.trace.re / 2 ≤ ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
@@ -5508,7 +5508,7 @@ for `0 ≤ θ ≤ π/2`, `2 / Real.pi ≤ Real.sinc θ`.
 
 For θ = 0: `Real.sinc 0 = 1 ≥ 2/π`. For 0 < θ ≤ π/2: use Mathlib's
 `Real.mul_le_sin`: `(2/π) · θ ≤ sin θ`, then divide by θ > 0. -/
-private lemma sinc_ge_two_div_pi
+lemma sinc_ge_two_div_pi
     {θ : ℝ} (hθ_nn : 0 ≤ θ) (hθ_le : θ ≤ Real.pi / 2) :
     2 / Real.pi ≤ Real.sinc θ := by
   rcases eq_or_lt_of_le hθ_nn with hθ_eq | hθ_pos
@@ -5628,7 +5628,7 @@ theorem Y_h_norm_le_four_norm_sub_one
 For h ∈ SU(2), `(h 1 1).re = h.trace.re / 2`. Companion to the (0,0)
 identity `SU2_h_zero_zero_re_eq_trace_div_two` — follows from
 `h.trace = h 0 0 + h 1 1` and the (0,0) result. -/
-private lemma SU2_h_one_one_re_eq_trace_div_two
+lemma SU2_h_one_one_re_eq_trace_div_two
     {h : Matrix (Fin 2) (Fin 2) ℂ}
     (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
     (h 1 1).re = h.trace.re / 2 := by

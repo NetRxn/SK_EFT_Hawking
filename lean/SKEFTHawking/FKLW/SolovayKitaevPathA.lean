@@ -1280,22 +1280,80 @@ lemma half_pi_sqrt_two_mul_eps_le_one
       _ < 1 := by norm_num
   exact le_of_lt h_chain
 
-/-! **Note on the θ = 0 case in dnStepFG**: when the inductive step's
-`dnStepFG` invalid branch is entered (θ = 0, equivalent to `Y_h Δ = 0`),
-the regime check `‖Δ - 1‖ < 1/4` combined with the SU(2) algebraic
-constraint forces Δ = 1 (the antipodal Δ = -1 is excluded by ‖Δ - 1‖
-small). Hence V_n = U exactly, and the recursion's level-(m+1) error is
-0 ≤ K_compose · ε_n^{3/2} trivially.
+/-- **Y_h vanishing implies near-identity in regime**: for h ∈ SU(2) with
+`‖h - 1‖ < 1/4`, if `Y_h h = 0` then `h = 1` (matrix identity).
 
-A formal helper `Y_h_eq_zero_in_regime_implies_eq_one` is the natural
-substrate for this case (it would use Y_h's polar decomposition + the
-SU(2) `det = 1` constraint to conclude h = 1 from Y_h h = 0 in the
-near-identity regime). This is left as a forward-compatible Mathlib-PR-
-quality candidate; the inductive step can also handle the θ = 0 case
-by bounding via `skApproxC_diameter_bound` (giving ε ≤ 2·√2) AND
-showing the level-(m+1) braid degenerates trivially (gC of identical
-braid words = 1 in BraidGroup), reducing the level-(m+1) error to the
-IH bound on V_n_braid. -/
+Consumed by the inductive step's θ = 0 case (dnStepFG invalid branch)
+to conclude V_n = U exactly, giving level-(m+1) error = 0.
+
+Mechanism:
+  - Y_h h = (sinc θ_h)⁻¹ • (h - a·1) where a = h.trace.re/2.
+  - (sinc θ_h)⁻¹ > 0 in our regime (a > 3/4 ⟹ θ_h ∈ [0, π/2)).
+  - Hence Y_h h = 0 ⟺ h = a·1 (scalar matrix).
+  - For h ∈ SU(2): h = a·1 ⟹ det(a·1) = a² = 1 ⟹ a = ±1.
+  - In regime a > 3/4: a = 1, hence h = 1. -/
+lemma Y_h_eq_zero_in_regime_implies_eq_one
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_small : ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1 / 4)
+    (h_Y_h_zero : Y_h h = 0) :
+    h = 1 := by
+  set a : ℝ := h.trace.re / 2 with ha_def
+  have h_a_le_one : a ≤ 1 := (SU2_trace_re_div_two_mem_Icc hh).2
+  have h_one_sub_a_le : 1 - a ≤ ‖h - 1‖ :=
+    SU2_one_sub_trace_re_div_two_le_norm_sub_one hh
+  have h_a_gt_three_quarters : 3/4 < a := by linarith
+  set θ : ℝ := Real.arccos a with hθ_def
+  have h_θ_nn : 0 ≤ θ := Real.arccos_nonneg _
+  have h_θ_le_pi_div_two : θ ≤ Real.pi / 2 := by
+    rw [hθ_def]
+    exact Real.arccos_le_pi_div_two.mpr (by linarith)
+  have h_sinc_ge : 2 / Real.pi ≤ Real.sinc θ := sinc_ge_two_div_pi h_θ_nn h_θ_le_pi_div_two
+  have h_two_div_pi_pos : 0 < 2 / Real.pi := by positivity
+  have h_sinc_pos : 0 < Real.sinc θ := lt_of_lt_of_le h_two_div_pi_pos h_sinc_ge
+  have h_Y_h_unfold : Y_h h =
+      (((Real.sinc θ)⁻¹ : ℝ) : ℂ) •
+        (h - ((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+    unfold Y_h; rfl
+  rw [h_Y_h_unfold] at h_Y_h_zero
+  have h_inv_sinc_pos : 0 < (Real.sinc θ)⁻¹ := inv_pos.mpr h_sinc_pos
+  -- The coercion form in h_Y_h_zero: ((Real.sinc θ)⁻¹ : ℝ) cast to ℂ
+  have h_inv_sinc_ne_real : ((Real.sinc θ)⁻¹ : ℝ) ≠ 0 := ne_of_gt h_inv_sinc_pos
+  have h_inv_sinc_ne : (((Real.sinc θ)⁻¹ : ℝ) : ℂ) ≠ 0 := by
+    exact_mod_cast h_inv_sinc_ne_real
+  -- c • v = 0 with c ≠ 0 ⟹ v = 0
+  have h_operand_zero : h - ((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) = 0 := by
+    rcases smul_eq_zero.mp h_Y_h_zero with h_c | h_v
+    · exact absurd h_c h_inv_sinc_ne
+    · exact h_v
+  have h_eq_a_one : h = ((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    have := sub_eq_zero.mp h_operand_zero
+    exact this
+  -- From SU(2): det(h) = 1. With h = a·1: det(a·1) = a²
+  rw [Matrix.mem_specialUnitaryGroup_iff] at hh
+  obtain ⟨_h_unitary, h_det⟩ := hh
+  rw [h_eq_a_one] at h_det
+  have h_det_smul : Matrix.det (((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+      ((a : ℝ) : ℂ) ^ 2 := by
+    rw [Matrix.det_smul]
+    simp [Matrix.det_one, Fintype.card_fin]
+  rw [h_det_smul] at h_det
+  have h_a_sq : (a : ℝ) ^ 2 = 1 := by
+    have : ((a : ℝ) : ℂ) ^ 2 = (1 : ℂ) := h_det
+    have h_cast : (((a : ℝ) : ℂ))^2 = (((a : ℝ)^2 : ℝ) : ℂ) := by push_cast; ring
+    rw [h_cast] at this
+    exact_mod_cast this
+  have h_a_eq_one : a = 1 := by
+    have : (a - 1) * (a + 1) = 0 := by nlinarith
+    rcases mul_eq_zero.mp this with h1 | h2
+    · linarith
+    · linarith
+  rw [h_eq_a_one, h_a_eq_one]
+  ext i j
+  by_cases h_ij : i = j
+  · subst h_ij
+    simp [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul]
+  · simp [Matrix.smul_apply, Matrix.one_apply_ne h_ij, smul_eq_mul]
 
 /-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
 
