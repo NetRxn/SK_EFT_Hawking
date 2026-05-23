@@ -1,7 +1,7 @@
 # Phase 6t — Quantitative Solovay-Kitaev for Fibonacci Anyons: Substrate Ship
 
 **Date:** 2026-05-22 PM (Waves 1-7 ship) + 2026-05-22 PM post-compact (strengthening pass 1)
-**Status:** ✅ **WAVES 1-7 LEAN SUBSTRATE SHIPPED** — kernel-only headline + 6 supporting modules. Wave 8 closeout in progress (this document is Stage 12 of the Wave 8 closeout).
+**Status:** ✅ **WAVES 1-7 LEAN SUBSTRATE SHIPPED + WAVE 8 AUTONOMOUS PORTION COMPLETE (2026-05-23)** — kernel-only headline + 7 supporting modules + Path A constructive variant + Wave 8 Stage 6+8+10(skeleton)+11+12 shipped autonomously. Remaining (gated): Stage 10.E manual D4 §9 prose + LaTeX θ fix + Stages 9/10/13 reviews.
 **Strengthening pass 1 (2026-05-22 PM post-compact):** ✅ Wave 5 `SkLengthAtEpsilon` unconditionally discharged (1 tracked Prop eliminated; 4 → 3). ✅ Wave 2 X-axis + Y-axis subcases unconditionally discharged. ✅ Wave 5 `3 < c < 4` sanity bounds. ✅ Wave 1 invertible-specialized stability `groupCommutator_stability_invertible` + `matrix_inv_diff_norm_le` substrate lemma (Mathlib upstream-PR candidate).
 **Predecessor:** Phase 5 Step 13 Path (i) — F.21 unconditional density (2026-05-22 PM).
 **Successor:** Phase 6t Wave 2/4/6-followups (3 remaining tracked-Prop discharges, simplified by the strengthening pass), then Phase 6u (Chain A ∘ B FT composition).
@@ -95,13 +95,29 @@ These are not on the critical path for Phase 6t closeout; opportunistic upstream
 - **Invariant #15** (no new project-local axioms): RESPECTED. Pre-Phase-6t axiom count UNCHANGED at 1. Verified via `grep -rn "^axiom " lean/SKEFTHawking/`.
 - **Preemptive-strengthening discipline** (P2/P3/P4/P5/P6 per `SK_EFT_Hawking/CLAUDE.md`): applied prospectively to each headline statement. No retroactive strengthening required.
 
-## Wave 8 closeout (in progress)
+## Wave 8 closeout (autonomous portion COMPLETE 2026-05-23)
 
-This document is part of the Wave 8 closeout (Stages 6-13 of `docs/WAVE_EXECUTION_PIPELINE.md` + LATE_PHASE6_ABSORPTION_PROTOCOL.md Branch D.4 sourceless absorption into D4 §9):
+This document is part of the Wave 8 closeout (Stages 6-13 of `docs/WAVE_EXECUTION_PIPELINE.md` + LATE_PHASE6_ABSORPTION_PROTOCOL.md Branch D.4 sourceless absorption into D4 §9). Status by stage:
 
-- **Stage 12** (document sync): this milestone doc, registry update, inventory index update.
-- **Stage 10** (paper draft via D4 bundle absorption): Wave 6t's `_phase6t_lean_only` synthetic source-paper handle added to `docs/PAPER_DRAFT_MAPPING.md` Table 1; D4 bundle absorption via `scripts/bundle_append.py` queued for next session (the actual LaTeX prose authoring for D4 §9 is the non-autonomous step in Wave 8 §10.E).
-- **Stage 13** (bundle-level adversarial review): scheduled for post-discharge of Wave 4-followup + Wave 5-followup + Wave 6-followup.
+### Autonomously shipped (2026-05-23 session, 3 commits)
+
+- **Stage 6** (Python smoke tests): `tests/test_sk_compiler.py` ships 15 PASS tests across 5 classes verifying the Dawson-Nielsen exponent ∈ (3, 4), constants positive, polylogarithmic length-bound formula, ε₀ ground floor, and figure renderers. Wave 7 native-extraction reference-compiler corpus smoke test is properly marked `@pytest.mark.skip` (gated on constructive (F,G) extraction + closed-form SU(2) exp). Commit `dbff76e`.
+- **Stage 8** (Visualizations): two new figures in `src/core/visualizations.py` — `fig_sk_length_bound_curve` (log-log L(ε) vs ε with Dawson-Nielsen amber curve + linear/quartic reference scalings) and `fig_fibonacci_braid_word_t_gate_example` (8-letter T-gate braid word strand diagram over BraidGroup 3). Both registered in `scripts/review_figures.py`; `uv run python scripts/review_figures.py` reports both ✓ PASS with zero new warnings. Commit `dbff76e`.
+- **Stage 10 (mechanical skeleton)**: two D.4 sourceless mapping rows added to `docs/PAPER_DRAFT_MAPPING.md` Table 1 (`_phase6p_W2cd_lean_only` → D4 §9.1-9.2 + F §7; `_phase6t_lean_only` → D4 §9.3-9.5 + F §7); `scripts/bundle_append.py` invoked twice producing skeleton §9 sections in `papers/D4/paper_draft.tex` (lines 946-965). `bundle_metadata.json` updated: stage{9,10,13}_status = pending, stage13_redo_required = true, freshness_stale = false, last_lift = 2026-05-23T08:19:16Z. `validate.py --check bundle_source_freshness` PASS. Commit `f14432e`.
+- **Stage 11** (Notebooks): `notebooks/Phase6t_SolovayKitaev_Technical.ipynb` (13 cells; F.21 refresher + quantitative SK statement + Lean pipeline + worked examples + numerical sanity + end-to-end logical chain + references) and `notebooks/Phase6t_SolovayKitaev_Stakeholder.ipynb` (9 cells; accessible-language framing). Both execute cleanly via `jupyter nbconvert --execute`; `validate.py --check notebooks` PASS both; `--check viz_consistency` PASS both clean. Commit `cbf6149`.
+- **Stage 12** (Document sync): this milestone doc update (in this commit) + memory entry `project_phase6t_wave8_closeout_2026_05_23.md`. `update_counts.py` regen pending.
+
+### Non-autonomous (manual / human-gated) — deferred
+
+- **Stage 10.E** (manual D4 §9 prose authoring): 6-10 pages of LaTeX prose following the existing D4 sectioning conventions; cites Lean theorem names by fully-qualified name; cross-bridges to existing D4 §6 doublon-SWAP via "SK as universal-gate-set machinery". Per roadmap §17.3 explicit non-autonomous flag.
+
+### Gated on Stage 10.E + LaTeX θ fix
+
+- **Stage 9** (figure review): `physics-qa:figure-reviewer` against the two new Stage-8 figures.
+- **Stage 10.F** (claims review): `physics-qa:claims-reviewer --bundle D4` against the new §9 content.
+- **Stage 13** (bundle-level adversarial review): `physics-qa:adversarial-reviewer --bundle D4` (+ F if absorbed downstream).
+
+A pre-existing baseline LaTeX compile blocker (unicode θ at `papers/D4/paper_draft.tex` line 457 in `\texttt{darkStateθ\_in\_kernel}` from prior paper11 absorption) blocks all three reviews and has been spawned as a separate task.
 
 ## Cross-references
 
@@ -109,4 +125,8 @@ This document is part of the Wave 8 closeout (Stages 6-13 of `docs/WAVE_EXECUTIO
 - DR landscape scan: `Lit-Search/Phase-6t/Phase 6t Solovay-Kitaev Formal-Verification Landscape Scan.md`
 - Predecessor milestone: `SK_EFT_Hawking/docs/PHASE5_STEP13_COMPLETE.md`
 - Registry (private, off-tree): substrate-deferred-registry Item #21 (cross-repo tracker — workspace-level)
-- Memory entry: `~/.claude/.../memory/project_phase6t_dawson_nielsen_active_2026_05_22.md`
+- Memory entries:
+  - `~/.claude/.../memory/project_phase6t_dawson_nielsen_active_2026_05_22.md` (Wave 1-7 substrate ship)
+  - `~/.claude/.../memory/project_phase6t_path_a_active_2026_05_22.md` (Path A constructive variant)
+  - `~/.claude/.../memory/project_phase6t_strict_headline_2026_05_22.md` (strict-headline ship)
+  - `~/.claude/.../memory/project_phase6t_wave8_closeout_2026_05_23.md` (this Wave 8 autonomous-portion closeout)
