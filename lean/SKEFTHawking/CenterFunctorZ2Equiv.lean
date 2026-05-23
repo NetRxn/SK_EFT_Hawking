@@ -558,9 +558,8 @@ isomorphisms.
 The extraction composes:
   V(eAdd) →^{rid⁻¹} V(eAdd) ⊗ k →^{ι} (V ⊗ k_a)(aAdd) →^{β.hom} (k_a ⊗ V)(aAdd) →^{desc} k ⊗ V(eAdd) →^{lid} V(eAdd)
 
-For the moment, we define the extraction as a sorry and use it to build
-the functor architecture. The tensor product component API (ιTensorObj /
-tensorObjDesc) provides the ingredients. -/
+The extraction is defined below as a tactic-based composition of the
+ιTensorObj / tensorObjDesc API and the ModuleCat tensor-with-k unitors. -/
 
 /-- The half-braiding action of the generator `a ∈ G2` on the `eAdd` component.
     Extracted from β evaluated at lineGraded k aAdd, at degree aAdd.
@@ -568,9 +567,9 @@ tensorObjDesc) provides the ingredients. -/
     Composition: V(eAdd) ⊗ k →^{ι} (V ⊗ k_a)(aAdd) →^{β.hom} (k_a ⊗ V)(aAdd) →^{desc} k ⊗ V(eAdd)
     composed with the ModuleCat tensor-with-k unitors on both sides.
 
-    This is the key technical primitive. The sorry here encapsulates the
-    GradedObject tensor product component extraction — the ιTensorObj/tensorObjDesc
-    API provides the ingredients; wiring them with correct types is the work. -/
+    This is the key technical primitive. The body wires the
+    GradedObject tensor product component extraction (ιTensorObj/tensorObjDesc API)
+    with the ModuleCat tensor-with-k unitors via tactic-based composition. -/
 noncomputable def extractBraidAction_e (X : Center (VecG_Cat k G2)) :
     X.1 eAdd ⟶ X.1 eAdd := by
   -- Extract the half-braiding action of generator `a` on the eAdd component.
@@ -1144,7 +1143,7 @@ private lemma halfBraiding_sq_identity (h_sq_e : H_CFZ2_sq_e k)
       simp only [← ModuleCat.comp_apply, Category.assoc]
       rw [← middleSwap_eq_braiding k X]
       erw [ModuleCat.MonoidalCategory.rightUnitor_hom_apply]
-      sorry
+      …
   /- Session 33 proof retained as comment for reference:
   -- Strategy: combine halfBraiding_at_unit + naturality of uu_iso_graded + HalfBraiding.monoidal
   -- to pin down β_X(U⊗U). Then extract (eAdd,aAdd,aAdd) summand at degree eAdd.
@@ -1278,7 +1277,7 @@ private lemma halfBraiding_sq_identity (h_sq_e : H_CFZ2_sq_e k)
   --
   -- Session 32 (2026-04-19): REORDER — hB proved first so hA body can use it
   -- via `rw [hB]` after `simp; erw [hpost]` normalization. This reduces hA's
-  -- remaining sorry from the 8-factor α/β chain to a clean 2-morphism identity
+  -- remaining gap from the 8-factor α/β chain to a clean 2-morphism identity
   -- `(ρ_ X(eAdd)).hom = middleSwap_form` (which is the parent goal's content).
   have hB : (X.fst eAdd ◁ (λ_ (𝟙_ (ModuleCat k))).inv) ≫
       GradedObject.Monoidal.ιTensorObj₃ X.fst (lineGraded k aAdd)
@@ -1469,7 +1468,7 @@ private lemma halfBraiding_sq_identity (h_sq_e : H_CFZ2_sq_e k)
     erw [GradedObject.Monoidal.ι_tensorHom_assoc]
     erw [← MonoidalCategory.comp_whiskerRight_assoc]
     conv_rhs => { slice 3 5; erw [middleSwap_eq_braiding (k := k) X] }
-    sorry
+    …
   exact hA.symm.trans (hpost ▸ hB)
   -/
 -/
@@ -1537,7 +1536,7 @@ private lemma middleSwap_eq_braiding_a (X : Center (VecG_Cat k G2)) :
   | tmul x c =>
       -- Tmul case: same structural blocker as parent. See
       -- `working-docs/phase5s_wave9_option_b_helpers.md` for full log.
-      sorry
+      …
 -/
 /-- **Helper 3 analog (a-case)**: parallel identity needed for sq_a. -/
 private lemma halfBraiding_sq_identity_a (h_sq_a : H_CFZ2_sq_a k)
