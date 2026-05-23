@@ -389,7 +389,43 @@ lemma H_norm_le_four_norm_sub_one
   -- Apply Y_h_norm_le_four_norm_sub_one
   exact Y_h_norm_le_four_norm_sub_one hΔ h_small
 
-/-! ## 5. (next ship) Constructive strict headline
+/-- **Composite H norm bound from V_n - U residual**: for `V, U ∈ SU(2)`
+with `√2·‖V - U‖ < 1/4`, the matrix `H = (-i)•Y_h(V⁻¹·U)` has linftyOp
+norm at most `4√2·‖V - U‖`.
+
+Composes `residual_norm_le_sqrt_two_mul` (Step 2) with
+`H_norm_le_four_norm_sub_one` (Step 4). Captures Steps 2-4 of the DN
+chain in a single substrate lemma. -/
+lemma H_norm_bound_from_V_diff
+    (V U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_small : Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1/4) :
+    ‖((-Complex.I) • Y_h ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val)
+        : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      4 * Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  set Δ := (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) with hΔ_def
+  have h_residual : ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+                      (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+                    Real.sqrt 2 *
+                      ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+                        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+    residual_norm_le_sqrt_two_mul V U
+  have h_residual_lt : ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+                          (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1/4 :=
+    lt_of_le_of_lt h_residual h_small
+  have h_H := H_norm_le_four_norm_sub_one Δ.property h_residual_lt
+  calc ‖((-Complex.I) • Y_h Δ.val : Matrix (Fin 2) (Fin 2) ℂ)‖
+      ≤ 4 * ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+              (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := h_H
+    _ ≤ 4 * (Real.sqrt 2 *
+            ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+              (U : Matrix (Fin 2) (Fin 2) ℂ)‖) := by gcongr
+    _ = 4 * Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+          (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by ring
+
+/-! ## 6. (next ship) Constructive strict headline
 
 Step 5 of Path A. -/
 
