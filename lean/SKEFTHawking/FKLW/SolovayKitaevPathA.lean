@@ -1481,6 +1481,31 @@ lemma dnStepFG_gC_minus_Delta_norm_le_cubic
   rw [← h_exp_eq_Δ]
   exact h_bch
 
+/-! ## 7.7. INVALID branch handling — `skApproxC` recursion degenerates
+
+When the dnStepFG validity check fails (θ = 0, equivalent to V_n = U
+exactly in our regime via `Y_h_eq_zero_in_regime_implies_eq_one`),
+the level-(m+1) recursion's braid word equals the level-m braid
+unchanged: the group commutator of two identical braid words is trivially
+1 in BraidGroup. -/
+
+/-- **dnStepFG invalid branch gives F = G = 0**: structural unfolding. -/
+lemma dnStepFG_invalid_F_zero
+    (V_n_braid : FibonacciBraidWord)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_invalid : ¬(0 < ‖((-Complex.I) • Y_h
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ∧
+        ‖((-Complex.I) • Y_h
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 1)) :
+    (dnStepFG V_n_braid U).F = 0 ∧ (dnStepFG V_n_braid U).G = 0 := by
+  simp only [dnStepFG]
+  rw [dif_neg h_invalid]
+  exact ⟨rfl, rfl⟩
+
 /-! ## 8. Path A unconditional strict headline for loose ε regime
 
 For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
