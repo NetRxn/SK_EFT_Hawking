@@ -154,28 +154,120 @@ lemma neg_I_smul_Y_h_trace_zero
     (SU2_Y_h_mem_tracelessSkewHermitian hh).2
   rw [Matrix.trace_smul, hY_tr, smul_zero]
 
-/-! ## 3. (next ship) Constructive `skApproxC`
+/-! ## 3. Constructive `skApproxC` definition (Path A Step 3b)
 
-Step 3 of Path A. To be shipped next session.
+The Dawson-Nielsen recursion implemented as a visible compositional
+function. At level 0, `skApproxC` falls back to the Wave 3 ε₀-net. At
+level (n+1), `skApproxC` performs ONE explicit Dawson-Nielsen step:
 
-Design plan:
-  - Use `Classical.propDecidable` to allow `if-then-else` on undecidable Props
-  - Define `pauliFG H θ : Matrix × Matrix` extracting (F, G) from
-    `balanced_commutator_general_axis_lie_traceless` when valid, else `(0, 0)`
-  - Define `skApproxC_dnStep rec V_n_braid U` doing one DN composition:
-    - Compute Δ = U · (ρ_Fib_SU2 V_n_braid)⁻¹
-    - Compute H_skew = Y_h Δ, H = -i • H_skew, θ = ‖H‖
-    - Normalize H_unit = (1/θ) • H (if θ > 0)
-    - Extract (F, G) via `pauliFG H_unit θ`
-    - Recurse: A_F = rec (expIsu2 F), A_G = rec (expIsu2 G)
-    - Return V_n_braid · groupCommutator A_F A_G
-  - Define `skApproxC : ℕ → SU(2) → FibonacciBraidWord` via Nat-rec, using
-    skApproxC_dnStep for the inductive case.
+  V_{n+1} := V_n · groupCommutator (skApproxC n A_F) (skApproxC n A_G)
 
-Substrate ready (shipped in §1+§2):
-  - `expIsu2` — SU(2) lift for traceless Hermitian (§1)
-  - `IsHermitian_real_smul`, `smul_trace_zero`, `norm_normalize` (§2)
-  - `neg_I_smul_Y_h_isHermitian`, `neg_I_smul_Y_h_trace_zero` (§2) -/
+where `V_n := skApproxC n U`, `A_F := exp(I•F)`, `A_G := exp(I•G)`, and
+F, G are the traceless balanced commutator decomposition of the
+normalized residual log `H_unit := (1/θ)·H` with `H := -i·Y_h(U·V_n⁻¹)`.
+
+The validity branch (θ in `(0, 1]`) covers the inductive regime when
+the level-n error is bounded by `2·ε₀`; outside this regime the
+function falls back to V_n_braid (this happens at level 0 when the
+ε₀-net already exhausts the precision budget).
+
+Decidability of `0 < θ ∧ θ ≤ 1` is provided by `Classical.propDecidable`
+via `open Classical in`.
+
+The F, G extraction logic is factored into the helper `dnStepFG` (returning
+a `DNStepData` struct that bundles F, G with their Hermitian + traceless
+properties) so that the recursive `skApproxC` body stays small enough to
+avoid elaboration timeouts. -/
+
+/-- Bundle of (F, G) matrices with Hermitian + traceless properties,
+returned by `dnStepFG`. -/
+structure DNStepData where
+  F : Matrix (Fin 2) (Fin 2) ℂ
+  G : Matrix (Fin 2) (Fin 2) ℂ
+  hF_herm : F.IsHermitian
+  hG_herm : G.IsHermitian
+  hF_tr : F.trace = 0
+  hG_tr : G.trace = 0
+
+open Classical in
+/-- **Path A — F, G extraction helper for one Dawson-Nielsen step**.
+
+Given the current level-n braid word `V_n_braid` and target `U`, extract
+the (F, G) pair (with Hermitian + traceless proofs) used to build the
+level-(n+1) composition via the traceless balanced commutator. Falls back
+to `(0, 0)` when the residual is outside the valid regime
+(`‖H‖ ∉ (0, 1]`). -/
+noncomputable def dnStepFG
+    (V_n_braid : FibonacciBraidWord)
+    (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) : DNStepData :=
+  let V_n : ↥(specialUnitaryGroup (Fin 2) ℂ) := ρ_Fib_SU2 V_n_braid
+  let Δ : ↥(specialUnitaryGroup (Fin 2) ℂ) := U * V_n⁻¹
+  let H : Matrix (Fin 2) (Fin 2) ℂ := ((-Complex.I) : ℂ) • Y_h Δ.val
+  let θ : ℝ := ‖H‖
+  if h : 0 < θ ∧ θ ≤ 1 then
+    let H_unit : Matrix (Fin 2) (Fin 2) ℂ := ((1 / θ : ℝ) : ℂ) • H
+    let hH_herm : H.IsHermitian := neg_I_smul_Y_h_isHermitian Δ.property
+    let hH_tr : H.trace = 0 := neg_I_smul_Y_h_trace_zero Δ.property
+    let hH_unit_herm : H_unit.IsHermitian :=
+      IsHermitian_real_smul hH_herm (1 / θ)
+    let hH_unit_tr : H_unit.trace = 0 := smul_trace_zero hH_tr _
+    let hH_unit_norm : ‖H_unit‖ = 1 := norm_normalize h.1
+    let ex := balanced_commutator_general_axis_lie_traceless
+                H_unit hH_unit_herm hH_unit_tr hH_unit_norm θ h.1.le h.2
+    { F := ex.choose
+      G := ex.choose_spec.choose
+      hF_herm := ex.choose_spec.choose_spec.1
+      hG_herm := ex.choose_spec.choose_spec.2.1
+      hF_tr := ex.choose_spec.choose_spec.2.2.1
+      hG_tr := ex.choose_spec.choose_spec.2.2.2.1 }
+  else
+    { F := 0, G := 0
+      hF_herm := Matrix.isHermitian_zero
+      hG_herm := Matrix.isHermitian_zero
+      hF_tr := Matrix.trace_zero (Fin 2) ℂ
+      hG_tr := Matrix.trace_zero (Fin 2) ℂ }
+
+/-- **Path A Step 3 — Constructive Dawson-Nielsen Solovay-Kitaev recursion**.
+
+For every level `n` and target `U ∈ SU(2)`, `skApproxC n U` returns a
+Fibonacci braid word constructed as a level-n Dawson-Nielsen composition.
+
+  - Level 0: the Wave 3 ε₀-net's nearest-neighbor approximation.
+  - Level (n+1): the visible composition
+    `V_n · groupCommutator (skApproxC n (expIsu2 F)) (skApproxC n (expIsu2 G))`
+    where F, G are the traceless balanced commutator decomposition
+    of the residual matrix log (via `dnStepFG`).
+
+This makes the per-step DN structure visible in the output type, in
+contrast to `solovayKitaev_compile_strict`'s `Classical.choose`-based
+opaque extraction. -/
+noncomputable def skApproxC :
+    ℕ → ↥(specialUnitaryGroup (Fin 2) ℂ) → FibonacciBraidWord
+  | 0, U => fibonacciEpsilonNet_findNearest U ε₀ ε₀_pos
+  | n + 1, U =>
+    let V_n_braid : FibonacciBraidWord := skApproxC n U
+    let data : DNStepData := dnStepFG V_n_braid U
+    let A_F : ↥(specialUnitaryGroup (Fin 2) ℂ) :=
+      expIsu2 data.F data.hF_herm data.hF_tr
+    let A_G : ↥(specialUnitaryGroup (Fin 2) ℂ) :=
+      expIsu2 data.G data.hG_herm data.hG_tr
+    let A_F_braid : FibonacciBraidWord := skApproxC n A_F
+    let A_G_braid : FibonacciBraidWord := skApproxC n A_G
+    V_n_braid * (A_F_braid * A_G_braid * A_F_braid⁻¹ * A_G_braid⁻¹)
+
+/-- Level-0 unfolding: the base case is the ε₀-net's nearest-neighbor word. -/
+lemma skApproxC_zero (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) :
+    skApproxC 0 U = fibonacciEpsilonNet_findNearest U ε₀ ε₀_pos := rfl
+
+/-- Level-(n+1) unfolding: the visible DN composition structure. -/
+lemma skApproxC_succ (n : ℕ) (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) :
+    skApproxC (n + 1) U =
+      let V_n_braid := skApproxC n U
+      let data := dnStepFG V_n_braid U
+      let A_F := expIsu2 data.F data.hF_herm data.hF_tr
+      let A_G := expIsu2 data.G data.hG_herm data.hG_tr
+      V_n_braid * (skApproxC n A_F * skApproxC n A_G *
+                    (skApproxC n A_F)⁻¹ * (skApproxC n A_G)⁻¹) := rfl
 
 /-! ## 4. (next ship) Inductive error bound
 
