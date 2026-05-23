@@ -232,6 +232,54 @@ lemma exists_n_ε_seq_le
       _ = ε := div_mul_cancel₀ ε (ne_of_gt ha_pos)
   exact h_strict.le
 
+/-! ## 4. Closed form
+
+The recurrence `ε_seq K a (n+1) = K · ε_seq K a n ^ (3/2)` solves explicitly
+as `ε_seq K a n = (K² · a)^((3/2)^n) / K²`. This is the substantive Dawson-
+Nielsen closed form needed by Phase 6t Iteration 2 sub-ship 4 (polylog
+skLevel formula).
+
+Equivalent form using `f_n := K² · ε_seq K a n`: `f_{n+1} = f_n^(3/2)` with
+`f_0 = K² · a`, hence `f_n = f_0^((3/2)^n)`. -/
+
+/-- **Closed form of `ε_seq`**: `ε_seq K a n = (K² · a)^((3/2)^n) / K²`. -/
+lemma ε_seq_closed_form
+    (K a : ℝ) (hK_pos : 0 < K) (ha_pos : 0 < a) :
+    ∀ n : ℕ, ε_seq K a n = (K^2 * a) ^ ((3/2 : ℝ)^n) / K^2 := by
+  intro n
+  induction n with
+  | zero =>
+      rw [ε_seq_zero, pow_zero, Real.rpow_one]
+      have hK_sq_pos : 0 < K^2 := pow_pos hK_pos 2
+      field_simp
+  | succ k ih =>
+      rw [ε_seq_succ, ih]
+      have h_K_sq_pos : 0 < K^2 := pow_pos hK_pos 2
+      have h_K2_a_pos : 0 < K^2 * a := mul_pos h_K_sq_pos ha_pos
+      have h_K2_a_nn : 0 ≤ K^2 * a := h_K2_a_pos.le
+      have h_K2_nn : 0 ≤ K^2 := h_K_sq_pos.le
+      have h_K_nn : 0 ≤ K := hK_pos.le
+      have h_rpow_pos : 0 < (K^2 * a) ^ ((3/2 : ℝ)^k) :=
+        Real.rpow_pos_of_pos h_K2_a_pos _
+      -- Step 1: ((K^2*a)^((3/2)^k) / K^2) ^ (3/2 : ℝ)
+      --       = ((K^2*a)^((3/2)^k))^(3/2) / (K^2)^(3/2)
+      rw [Real.div_rpow h_rpow_pos.le h_K2_nn]
+      -- Step 2: ((K^2*a)^((3/2)^k))^(3/2) = (K^2*a)^((3/2)^k * 3/2)
+      rw [← Real.rpow_mul h_K2_a_nn]
+      have h_exp_succ : ((3/2 : ℝ))^k * (3/2 : ℝ) = (3/2 : ℝ)^(k + 1) := by
+        rw [pow_succ]
+      rw [h_exp_succ]
+      -- Step 3: (K^2)^(3/2) = K^3.
+      have h_K2_rpow_three_half : (K^2 : ℝ) ^ (3/2 : ℝ) = K^3 := by
+        rw [show (K^2 : ℝ) = K ^ ((2 : ℕ) : ℝ) from (Real.rpow_natCast K 2).symm]
+        rw [← Real.rpow_mul h_K_nn]
+        rw [show ((2 : ℕ) : ℝ) * (3 / 2 : ℝ) = ((3 : ℕ) : ℝ) by norm_num]
+        rw [Real.rpow_natCast]
+      rw [h_K2_rpow_three_half]
+      -- Step 4: K * (X / K^3) = X / K^2.
+      have h_K_ne : (K : ℝ) ≠ 0 := ne_of_gt hK_pos
+      field_simp
+
 end SKEFTHawking.FKLW.EpsilonSeq
 
 /-! ## 3. Module summary
