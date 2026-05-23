@@ -5781,6 +5781,62 @@ CITATION_REGISTRY = {
         'notes': 'Verified 2026-05-11 via WebFetch arXiv:quant-ph/9707021 (D4 Stage-13 fix-pass). Title, author string, journal, and arXiv ID populated from canonical published form; metadata restored from auto-generated stub.',
     },
 
+    # ────────────────────────────────────────────────────────────────────
+    # Phase 6t — Solovay-Kitaev quantitative compilation (D4 §9 prose)
+    # Introduced by Stage 10.E D4 §9 prose commit 62f1185 (2026-05-23).
+    # ────────────────────────────────────────────────────────────────────
+
+    'AharonovArad2017': {
+        'authors': 'Aharonov, D. and Arad, I.',
+        'title': 'The BQP-hardness of approximating the Jones polynomial',
+        'journal': 'New Journal of Physics',
+        'volume': 13,
+        'page': '035019',
+        'year': 2011,
+        'doi': '10.1088/1367-2630/13/3/035019',
+        'arxiv': 'quant-ph/0605181',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AharonovArad2017.abstract.txt',
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Bibkey carried over from earlier phase (year suffix 2017 inherited); actual publication year is 2011 (New J. Phys. 13, 035019) with arXiv preprint 2006. Lemma 6.1 provides group-commutator quadratic-shrinkage substrate consumed by the F.21 density argument. arXiv ID verified via arxiv.org 2026-05-23.',
+    },
+
+    'DawsonNielsen2006': {
+        'authors': 'Dawson, C. M. and Nielsen, M. A.',
+        'title': 'The Solovay-Kitaev algorithm',
+        'journal': 'Quantum Information and Computation',
+        'volume': 6,
+        'page': '81-95',
+        'year': 2006,
+        'doi': None,
+        'arxiv': 'quant-ph/0505030',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DawsonNielsen2006.abstract.txt',
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'Canonical reference for the polylogarithmic length bound of the Solovay-Kitaev algorithm. Cited in D4 §9 Stage 10.E prose alongside KitaevShenVyalyi2002 (existence form) and AharonovArad2017 (group-commutator substrate).',
+    },
+
+    'KitaevShenVyalyi2002': {
+        'authors': 'Kitaev, A. Yu., Shen, A. H., Vyalyi, M. N.',
+        'title': 'Classical and Quantum Computation',
+        'journal': 'Graduate Studies in Mathematics',
+        'volume': 47,
+        'page': None,
+        'year': 2002,
+        'doi': None,
+        'arxiv': None,
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': None,  # textbook — no arXiv PDF
+        'used_in': ['papers/D4/paper_draft.tex'],
+        'provides': [],
+        'notes': 'American Mathematical Society, Graduate Studies in Mathematics vol. 47 (ISBN 978-0-8218-2161-8). Textbook existence-form statement of the Solovay-Kitaev theorem (Theorem 8.3), prior to Dawson-Nielsen quantitative refinement. Textbook-exempt per validate.py textbook rule (no arXiv, primary-source-path None).',
+    },
+
     'Lickorish1997': {
         'authors': 'Lickorish, W. B. R.',
         'title': 'An Introduction to Knot Theory',
