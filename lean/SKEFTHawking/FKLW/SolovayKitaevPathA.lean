@@ -2498,6 +2498,38 @@ theorem SkApproxCSuperQuadraticBound_holds :
       rw [h_lhs_zero]
       exact h_rhs_nn
 
+/-! ## 7.9. **UNCONDITIONAL STRICT HEADLINE** (Path A Option C — tight ε regime)
+
+The conditional headline `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive`
+(§6) is upgraded to UNCONDITIONAL by applying the substantive discharge
+`SkApproxCSuperQuadraticBound_holds` (§7.8). Path A's strict headline now
+holds without any tracked-Prop hypothesis — the canonical quantitative
+Solovay-Kitaev statement for Fibonacci anyons. -/
+
+/-- **UNCONDITIONAL Path A strict headline (tight ε regime)**.
+
+For any target `U ∈ SU(2)` and precision `ε ∈ (0, ε₀]`, the constructive
+Dawson-Nielsen Solovay-Kitaev compiler `solovayKitaev_compile_strict_constructive`
+achieves BOTH:
+  - **Error**: `‖ρ(compile U ε) - U‖ ≤ ε` (super-quadratic convergence)
+  - **Length**: polylog `O(log(1/ε)^skLengthExponent)` braid-word length
+
+Both bounds at the SAME algorithmic level `skLevel_polylog ε`. This is the
+canonical strict-headline form expected by classical Solovay-Kitaev statements
+(e.g., Dawson-Nielsen 2006, Aharonov-Arad 2017, Kitaev-Shen-Vyalyi 2002).
+
+Discharged unconditionally via `SkApproxCSuperQuadraticBound_holds`
+(Phase 6t Path A Option C, K_compose = 1024 calibrated). -/
+theorem solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ)
+    (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) :
+    ‖(ρ_Fib_SU2 (solovayKitaev_compile_strict_constructive U ε) :
+        Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε ∧
+    skLength (skLevel_polylog ε) ≤
+      skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent :=
+  solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive
+    SkApproxCSuperQuadraticBound_holds U ε hε_pos hε_le
+
 /-! ## 8. Path A unconditional strict headline for loose ε regime
 
 For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
