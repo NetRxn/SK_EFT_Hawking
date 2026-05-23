@@ -766,4 +766,25 @@ theorem SkApproxCSuperQuadraticBound_huge_holds :
     have h_seq_ge := h_ε_seq_large (m + 1) (by omega)
     linarith
 
+/-! ## 8. Path A unconditional strict headline for loose ε regime
+
+For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
+the strict headline holds UNCONDITIONALLY. -/
+
+/-- **Path A UNCONDITIONAL strict headline (loose ε regime)**: for any
+target `U ∈ SU(2)` and precision `ε ≥ 2·ε₀`, the level-0 constructive
+approximation `skApproxC 0 U = fibonacciEpsilonNet_findNearest U ε₀ ε₀_pos`
+achieves error ≤ ε.
+
+This is the level-0 unconditional headline. For tight ε (ε < 2·ε₀), the
+substantive super-quadratic discharge is required (calibration-gated). -/
+theorem solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_unconditional
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ)
+    (h_ε : 2 * ε₀ ≤ ε) :
+    ‖(ρ_Fib_SU2 (skApproxC 0 U) : Matrix (Fin 2) (Fin 2) ℂ) -
+        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε := by
+  have h_base := skApproxC_zero_error_bound U
+  rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_zero] at h_base
+  linarith
+
 end SKEFTHawking.FKLW.SolovayKitaevPathA
