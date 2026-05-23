@@ -37,6 +37,7 @@ import Mathlib
 import SKEFTHawking.FKLW.SolovayKitaevRecursion
 import SKEFTHawking.FKLW.SolovayKitaevLengthBound
 import SKEFTHawking.FKLW.OneParameterSubgroupSU2
+import SKEFTHawking.FKLW.GroupCommutatorNearIdentity
 
 set_option autoImplicit false
 
@@ -1516,6 +1517,986 @@ lemma expIsu2_zero_val :
         Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
   rw [expIsu2_val]
   simp [SU2MatrixExp.expAmbient_zero]
+
+/-! ## 7.7b. Numerical K-chain helper for the valid-branch discharge.
+
+Extracted as a top-level lemma to keep the main theorem under the
+200,000-heartbeat limit. Pure real-valued numerical chain using:
+  - `Real.pi_lt_d2`  (π < 3.15)
+  - `Real.exp_one_lt_three`  (e < 3)
+  - `Real.sqrt 2 ≤ 3/2`  (via `Real.sqrt_lt_sqrt`)
+  - `Real.sqrt (2·ε₀) ≤ 1/2048`  (via two_ε₀_value)
+  - Tight (π/4)·√2 ≤ 6/5  (via π·√2 < 3.15·1.5 = 4.725 → not enough; need
+    π·√2 ≤ 4.8 i.e. ≤ 24/5).  Actually (3.15/4)·(3/2) = 9.45/8 = 189/160 ≤ 6/5. ✓
+  - `((π/4)·√2)^(1/2) ≤ 6/5`  via `Real.rpow_le_rpow` + `rpow_le_self` on (6/5)
+  - `((π/4)·√2)^(3/2) ≤ 36/25`  via rpow_split + (6/5)·(6/5) -/
+
+/-- **K-chain numerical bound** for the Path A valid-branch composition.
+
+States: `√2·(K_stab1 + K_stab2) + K_cubic ≤ K_compose = 1024` where
+  - K_stab1 := 12·√2·e·((π/4)·√2)^(1/2)
+  - K_stab2 := 12·√(2·ε₀)
+  - K_cubic := √2·320·((π/4)·√2)^(3/2)
+
+Numerical: with (π/4)·√2 ≤ 6/5, K_stab1 ≤ 64.8, K_stab2 < 1, K_cubic ≤ 691.2.
+Total K_proof ≤ √2·(64.8 + 1) + 691.2 ≤ (3/2)·65.8 + 691.2 ≈ 789.9 ≤ 1024 ✓. -/
+private lemma valid_branch_K_chain_le_K_compose_numeric :
+    Real.sqrt 2 *
+      (12 * Real.sqrt 2 * Real.exp 1 *
+        ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) +
+       12 * Real.sqrt (2 * ε₀)) +
+    Real.sqrt 2 * 320 * ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) ≤
+    K_compose := by
+  rw [show K_compose = 1024 from rfl]
+  -- Setup basic bounds
+  have h_sqrt2_nn : (0 : ℝ) ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have h_e_pos : 0 < Real.exp 1 := Real.exp_pos _
+  have h_e_nn : (0 : ℝ) ≤ Real.exp 1 := h_e_pos.le
+  have h_pi_pos : 0 < Real.pi := Real.pi_pos
+  have h_pi_nn : (0 : ℝ) ≤ Real.pi := h_pi_pos.le
+  have h_C0_nn : (0 : ℝ) ≤ (Real.pi / 4) * Real.sqrt 2 := by positivity
+  -- √2 ≤ 3/2
+  have h_sqrt2_le : Real.sqrt 2 ≤ 3/2 := by
+    rw [show (3/2 : ℝ) = Real.sqrt ((3/2)^2) from (Real.sqrt_sq (by norm_num)).symm]
+    apply Real.sqrt_le_sqrt; norm_num
+  -- exp 1 ≤ 3
+  have h_e_le : Real.exp 1 ≤ 3 := Real.exp_one_lt_three.le
+  -- π < 3.15
+  have h_pi_lt : Real.pi < 3.15 := Real.pi_lt_d2
+  -- (π/4)·√2 ≤ 6/5
+  have h_C0_le : (Real.pi / 4) * Real.sqrt 2 ≤ 6/5 := by
+    have h_pi_4_lt : Real.pi / 4 < 3.15 / 4 := by linarith
+    calc (Real.pi / 4) * Real.sqrt 2
+        ≤ (3.15 / 4) * Real.sqrt 2 :=
+          mul_le_mul_of_nonneg_right h_pi_4_lt.le h_sqrt2_nn
+      _ ≤ (3.15 / 4) * (3/2) :=
+          mul_le_mul_of_nonneg_left h_sqrt2_le (by norm_num)
+      _ = 189 / 160 := by norm_num
+      _ ≤ 6/5 := by norm_num
+  -- (6/5)^(1/2) ≤ 6/5
+  have h_six_five_half_le : ((6/5 : ℝ)) ^ (1 / 2 : ℝ) ≤ 6/5 := by
+    have h_chain : (6/5 : ℝ) ^ (1 / 2 : ℝ) ≤ (6/5 : ℝ) ^ (1 : ℝ) :=
+      Real.rpow_le_rpow_of_exponent_le (by norm_num : (1 : ℝ) ≤ 6/5)
+        (by norm_num : (1/2 : ℝ) ≤ 1)
+    rwa [Real.rpow_one] at h_chain
+  -- ((π/4)·√2)^(1/2) ≤ 6/5
+  have h_C0_half_le : ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) ≤ 6/5 := by
+    have h_step : ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) ≤
+                    (6/5 : ℝ) ^ (1 / 2 : ℝ) :=
+      Real.rpow_le_rpow h_C0_nn h_C0_le (by norm_num)
+    linarith
+  -- ((π/4)·√2)^(3/2) = ((π/4)·√2) · ((π/4)·√2)^(1/2) — via rpow_add
+  -- We bound directly: ((π/4)·√2)^(3/2) ≤ (6/5)^(3/2) ≤ (6/5)·(6/5) = 36/25
+  have h_six_five_pos : (0 : ℝ) < 6/5 := by norm_num
+  have h_C0_three_halves_le : ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) ≤ 36/25 := by
+    have h_step1 : ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) ≤
+                    (6/5 : ℝ) ^ (3 / 2 : ℝ) :=
+      Real.rpow_le_rpow h_C0_nn h_C0_le (by norm_num)
+    have h_split : (6/5 : ℝ) ^ (3 / 2 : ℝ) =
+                    (6/5 : ℝ) * (6/5 : ℝ) ^ (1 / 2 : ℝ) := by
+      rw [show (3 / 2 : ℝ) = 1 + 1 / 2 from by norm_num,
+          Real.rpow_add h_six_five_pos, Real.rpow_one]
+    have h_step2 : (6/5 : ℝ) * (6/5 : ℝ) ^ (1 / 2 : ℝ) ≤ (6/5 : ℝ) * (6/5 : ℝ) :=
+      mul_le_mul_of_nonneg_left h_six_five_half_le (by norm_num)
+    have h_eq : (6/5 : ℝ) * (6/5 : ℝ) = 36/25 := by norm_num
+    linarith
+  -- √(2·ε₀) ≤ 1/2048 (since 2·ε₀ = 1/4194304 = (1/2048)²)
+  have h_sqrt_2ε₀_le : Real.sqrt (2 * ε₀) ≤ 1 / 2048 := by
+    rw [show (2 * ε₀ : ℝ) = 1 / 4194304 from two_ε₀_value]
+    rw [show (1 / 4194304 : ℝ) = (1 / 2048 : ℝ) ^ 2 from by norm_num]
+    rw [Real.sqrt_sq (by norm_num : (0 : ℝ) ≤ 1 / 2048)]
+  -- Rpow nonneg
+  have h_rpow_half_nn : (0 : ℝ) ≤ ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) :=
+    Real.rpow_nonneg h_C0_nn _
+  have h_rpow_three_halves_nn : (0 : ℝ) ≤ ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) :=
+    Real.rpow_nonneg h_C0_nn _
+  -- 12·√2·e·((π/4)·√2)^(1/2) ≤ 12·(3/2)·3·(6/5) = 324/5 = 64.8
+  have h_K_stab1_le :
+      12 * Real.sqrt 2 * Real.exp 1 *
+        ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) ≤ 324 / 5 := by
+    calc 12 * Real.sqrt 2 * Real.exp 1 *
+            ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ)
+        ≤ 12 * (3/2) * Real.exp 1 *
+            ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) := by
+          apply mul_le_mul_of_nonneg_right _ h_rpow_half_nn
+          apply mul_le_mul_of_nonneg_right _ h_e_nn
+          exact mul_le_mul_of_nonneg_left h_sqrt2_le (by norm_num)
+      _ ≤ 12 * (3/2) * 3 *
+            ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) := by
+          apply mul_le_mul_of_nonneg_right _ h_rpow_half_nn
+          apply mul_le_mul_of_nonneg_left h_e_le
+          norm_num
+      _ ≤ 12 * (3/2) * 3 * (6/5) := by
+          apply mul_le_mul_of_nonneg_left h_C0_half_le
+          norm_num
+      _ = 324 / 5 := by norm_num
+  -- 12·√(2·ε₀) ≤ 12·(1/2048) = 12/2048 = 3/512
+  have h_K_stab2_le : 12 * Real.sqrt (2 * ε₀) ≤ 3 / 512 := by
+    have h_step : 12 * Real.sqrt (2 * ε₀) ≤ 12 * (1/2048) :=
+      mul_le_mul_of_nonneg_left h_sqrt_2ε₀_le (by norm_num)
+    linarith
+  -- √2·320·((π/4)·√2)^(3/2) ≤ (3/2)·320·(36/25) = (3·320·36)/(2·25) = 17280/25 = 691.2
+  have h_K_cubic_le :
+      Real.sqrt 2 * 320 * ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) ≤
+        17280 / 25 := by
+    calc Real.sqrt 2 * 320 * ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ)
+        ≤ (3/2) * 320 * ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) := by
+          apply mul_le_mul_of_nonneg_right _ h_rpow_three_halves_nn
+          exact mul_le_mul_of_nonneg_right h_sqrt2_le (by norm_num)
+      _ ≤ (3/2) * 320 * (36/25) := by
+          apply mul_le_mul_of_nonneg_left h_C0_three_halves_le
+          norm_num
+      _ = 17280 / 25 := by norm_num
+  -- Combine: √2·(K_stab1 + K_stab2) + K_cubic ≤ (3/2)·(324/5 + 3/512) + 17280/25
+  -- Compute: (3/2)·(324/5) = 486/5 = 97.2
+  -- (3/2)·(3/512) = 9/1024 ≈ 0.0088
+  -- 17280/25 = 691.2
+  -- Total ≈ 97.2 + 0.009 + 691.2 = 788.41 ≤ 1024 ✓
+  -- Lift √2·(K_stab1 + K_stab2) ≤ (3/2)·(324/5 + 3/512)
+  have h_sum_pos : 0 ≤
+      12 * Real.sqrt 2 * Real.exp 1 *
+        ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) +
+      12 * Real.sqrt (2 * ε₀) := by
+    apply add_nonneg
+    · positivity
+    · positivity
+  have h_sum_le : (12 * Real.sqrt 2 * Real.exp 1 *
+                   ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) +
+                  12 * Real.sqrt (2 * ε₀)) ≤ 324/5 + 3/512 :=
+    add_le_add h_K_stab1_le h_K_stab2_le
+  have h_sqrt2_mul_sum_le :
+      Real.sqrt 2 *
+        (12 * Real.sqrt 2 * Real.exp 1 *
+          ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) +
+         12 * Real.sqrt (2 * ε₀)) ≤
+      (3/2) * (324/5 + 3/512) := by
+    calc Real.sqrt 2 *
+          (12 * Real.sqrt 2 * Real.exp 1 *
+            ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) +
+           12 * Real.sqrt (2 * ε₀))
+        ≤ Real.sqrt 2 * (324/5 + 3/512) :=
+          mul_le_mul_of_nonneg_left h_sum_le h_sqrt2_nn
+      _ ≤ (3/2) * (324/5 + 3/512) :=
+          mul_le_mul_of_nonneg_right h_sqrt2_le (by norm_num : (0:ℝ) ≤ 324/5 + 3/512)
+  -- Now: total ≤ (3/2)·(324/5 + 3/512) + 17280/25 ≤ 1024
+  calc Real.sqrt 2 *
+        (12 * Real.sqrt 2 * Real.exp 1 *
+          ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) +
+         12 * Real.sqrt (2 * ε₀)) +
+       Real.sqrt 2 * 320 * ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ)
+      ≤ (3/2) * (324/5 + 3/512) + 17280 / 25 :=
+        add_le_add h_sqrt2_mul_sum_le h_K_cubic_le
+    _ ≤ 1024 := by norm_num
+
+/-! ## 7.8. **HEADLINE**: unconditional discharge of `SkApproxCSuperQuadraticBound K_compose`
+
+The Option-C-tightened substrate cascade (Y_h Lipschitz π/2 + ρ_Fib_SU2
+matrix-level helpers + load-bearing identities + near-identity bounds +
+regime checks + DN cubic composition + invalid-branch helpers) enables the
+substantive inductive composition for `K_compose = 1024`.
+
+The proof case-splits on the dnStepFG validity:
+  - **VALID** (`0 < θ ∧ θ ≤ 1`): substantive composition of the DN cubic
+    bound (via `dnStepFG_gC_minus_Delta_norm_le_cubic`) with the
+    near-identity stability bound (via `groupCommutator_stability_nearIdentity`),
+    multiplied by the V_n linftyOp √2 factor (via `SU2_linftyOpNorm_le_sqrt_two`).
+  - **INVALID** (`θ = 0` in regime — the only failure mode since regime
+    forces `θ ≤ 1`): `Y_h_eq_zero_in_regime_implies_eq_one` forces
+    `Δ.val = 1`, so `V_n = U` exactly; the recursion's group commutator
+    structure on the identical-input braids `skApproxC m 1` collapses
+    to the identity braid (via `mul_inv_cancel`), so the level-`(m+1)`
+    output equals `V_n_braid`, giving error `= 0 ≤ K_compose · ε_n^(3/2)`. -/
+
+/-- **HEADLINE — Phase 6t Path A Option C substantive discharge**.
+The constructive Dawson-Nielsen compiler `skApproxC` achieves super-quadratic
+error convergence at the calibrated rate `K_compose = 1024` for all levels
+`n` and targets `U ∈ SU(2)`. With K_compose = 1024 (round value with explicit
+margin over K_proof ≈ 546), the inductive composition closes cleanly using
+the shipped substrate cascade. -/
+theorem SkApproxCSuperQuadraticBound_holds :
+    SkApproxCSuperQuadraticBound K_compose := by
+  intro n
+  induction n with
+  | zero =>
+    intro U
+    exact skApproxC_zero_error_bound U
+  | succ m ih =>
+    intro U
+    -- Goal: ‖ρ(skApproxC (m+1) U) - U‖ ≤ ε_seq K_compose (2·ε₀) (m+1)
+    rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_succ]
+    -- ε_n notation and bounds
+    set ε_n : ℝ :=
+      SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_compose (2 * ε₀) m with hε_n_def
+    have h_ε_n_le_2ε₀ : ε_n ≤ 2 * ε₀ := ε_seq_K_compose_two_ε₀_le_two_ε₀ m
+    have h_ε_n_nn : 0 ≤ ε_n :=
+      SKEFTHawking.FKLW.EpsilonSeq.ε_seq_nonneg K_compose (2 * ε₀)
+        K_compose_pos two_ε₀_pos m
+    -- IH on V_n_braid (the level-m approximation to U)
+    have h_V_n_bound :
+        ‖((ρ_Fib_SU2 (skApproxC m U) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) -
+          (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε_n := ih U
+    -- Setup: V_n, Δ, H, θ
+    set V_n_braid : FibonacciBraidWord := skApproxC m U with hV_n_braid_def
+    set V_n_SU2 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+      ρ_Fib_SU2 V_n_braid with hV_n_SU2_def
+    set Δ_SU2 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+      V_n_SU2⁻¹ * U with hΔ_SU2_def
+    set H : Matrix (Fin 2) (Fin 2) ℂ :=
+      ((-Complex.I) : ℂ) • Y_h Δ_SU2.val with hH_def
+    set θ : ℝ := ‖H‖ with hθ_def
+    -- Regime: √2·ε_n < 1/4
+    have h_sqrt2_eps_lt : Real.sqrt 2 * ε_n < 1 / 4 :=
+      sqrt_two_mul_eps_lt_one_quarter ε_n h_ε_n_nn h_ε_n_le_2ε₀
+    -- Regime: (π/2)·√2·ε_n ≤ 1
+    have h_half_pi_eps_le : (Real.pi / 2) * Real.sqrt 2 * ε_n ≤ 1 :=
+      half_pi_sqrt_two_mul_eps_le_one ε_n h_ε_n_nn h_ε_n_le_2ε₀
+    -- ‖Δ.val - 1‖ ≤ √2·ε_n (via residual + IH)
+    have h_Δ_norm_le : ‖(Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤
+                        Real.sqrt 2 * ε_n := by
+      calc ‖(Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+          ≤ Real.sqrt 2 *
+              ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) -
+                (U : Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+            residual_norm_le_sqrt_two_mul V_n_SU2 U
+        _ ≤ Real.sqrt 2 * ε_n := by
+            exact mul_le_mul_of_nonneg_left h_V_n_bound (Real.sqrt_nonneg _)
+    -- ‖Δ.val - 1‖ < 1/4
+    have h_Δ_norm_lt : ‖(Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ) - 1‖ < 1/4 :=
+      lt_of_le_of_lt h_Δ_norm_le h_sqrt2_eps_lt
+    -- θ ≤ (π/2)·√2·ε_n
+    have h_θ_le : θ ≤ (Real.pi / 2) * Real.sqrt 2 * ε_n := by
+      have h_H_bound :
+          ‖((-Complex.I) • Y_h
+              ((V_n_SU2⁻¹ * U :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+            (Real.pi / 2) * Real.sqrt 2 *
+              ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) -
+                (U : Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+        H_norm_bound_from_V_diff_half_pi V_n_SU2 U
+          (lt_of_le_of_lt (mul_le_mul_of_nonneg_left h_V_n_bound
+            (Real.sqrt_nonneg _)) h_sqrt2_eps_lt)
+      have h_θ_eq_H : θ = ‖((-Complex.I) • Y_h
+                            ((V_n_SU2⁻¹ * U :
+                                ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val) :
+                            Matrix (Fin 2) (Fin 2) ℂ)‖ := rfl
+      rw [h_θ_eq_H]
+      calc ‖((-Complex.I) • Y_h
+              ((V_n_SU2⁻¹ * U :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖
+          ≤ (Real.pi / 2) * Real.sqrt 2 *
+              ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) -
+                (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := h_H_bound
+        _ ≤ (Real.pi / 2) * Real.sqrt 2 * ε_n := by
+            have h_nn : (0 : ℝ) ≤ (Real.pi / 2) * Real.sqrt 2 := by positivity
+            exact mul_le_mul_of_nonneg_left h_V_n_bound h_nn
+    -- θ ≤ 1 (always in regime)
+    have h_θ_le_one : θ ≤ 1 := le_trans h_θ_le h_half_pi_eps_le
+    -- θ ≥ 0
+    have h_θ_nn : 0 ≤ θ := norm_nonneg _
+    -- Case split on dnStepFG validity
+    by_cases h_θ_pos : 0 < θ
+    · -- VALID branch: substantive DN composition
+      have h_valid : 0 < θ ∧ θ ≤ 1 := ⟨h_θ_pos, h_θ_le_one⟩
+      -- δ_lie := √(θ/2), the Lie-algebra near-identity radius
+      set δ_lie : ℝ := Real.sqrt (θ / 2) with hδ_lie_def
+      have h_δ_lie_nn : 0 ≤ δ_lie := Real.sqrt_nonneg _
+      have h_θ_div_two_nn : (0 : ℝ) ≤ θ / 2 := by linarith
+      have h_δ_lie_sq : δ_lie ^ 2 = θ / 2 := Real.sq_sqrt h_θ_div_two_nn
+      have h_δ_lie_le_one : δ_lie ≤ 1 := by
+        rw [show (1 : ℝ) = Real.sqrt 1 from Real.sqrt_one.symm]
+        exact Real.sqrt_le_sqrt (by linarith)
+      -- F, G norm bounds: ‖F‖, ‖G‖ ≤ δ_lie = √(θ/2)
+      have h_F_norm : ‖(dnStepFG V_n_braid U).F‖ ≤ δ_lie :=
+        dnStepFG_F_norm_le_sqrt_theta_half V_n_braid U
+      have h_G_norm : ‖(dnStepFG V_n_braid U).G‖ ≤ δ_lie :=
+        dnStepFG_G_norm_le_sqrt_theta_half V_n_braid U
+      -- Trace ≠ -2 (regime gives this for ‖Δ - 1‖ < 1/4)
+      have h_trace_ne :
+          (Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ).trace.re ≠ -2 :=
+        SU2_trace_re_ne_neg_two_of_norm_sub_one_lt_quarter
+          Δ_SU2.property h_Δ_norm_lt
+      -- Define A_F, A_G
+      set A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+        expIsu2 (dnStepFG V_n_braid U).F
+          (dnStepFG V_n_braid U).hF_herm (dnStepFG V_n_braid U).hF_tr
+        with hA_F_def
+      set A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+        expIsu2 (dnStepFG V_n_braid U).G
+          (dnStepFG V_n_braid U).hG_herm (dnStepFG V_n_braid U).hG_tr
+        with hA_G_def
+      -- DN cubic bound: ‖gC(A_F.val, A_G.val) - Δ.val‖ ≤ 320 · δ_lie^3
+      have h_cubic :
+          ‖SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+              ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ)
+              ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) -
+            ((Δ_SU2 : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 320 * δ_lie ^ 3 :=
+        dnStepFG_gC_minus_Delta_norm_le_cubic V_n_braid U h_valid h_trace_ne
+          δ_lie h_δ_lie_nn h_δ_lie_le_one h_F_norm h_G_norm
+      -- Near-identity bounds: ‖A_F.val - 1‖, ‖A_G.val - 1‖ ≤ δ_lie · exp(δ_lie)
+      have h_A_F_near_one :
+          ‖((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ_lie * Real.exp δ_lie :=
+        expIsu2_norm_sub_one_le _
+          (dnStepFG V_n_braid U).hF_herm (dnStepFG V_n_braid U).hF_tr
+          δ_lie h_F_norm
+      have h_A_G_near_one :
+          ‖((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ δ_lie * Real.exp δ_lie :=
+        expIsu2_norm_sub_one_le _
+          (dnStepFG V_n_braid U).hG_herm (dnStepFG V_n_braid U).hG_tr
+          δ_lie h_G_norm
+      -- Matrix-inverse near-identity bounds: ‖A_F.val⁻¹ - 1‖, ‖A_G.val⁻¹ - 1‖
+      have h_A_F_inv_near_one :
+          ‖((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)⁻¹ - 1‖ ≤
+            Real.sqrt 2 * (δ_lie * Real.exp δ_lie) :=
+        expIsu2_inv_norm_sub_one_le _
+          (dnStepFG V_n_braid U).hF_herm (dnStepFG V_n_braid U).hF_tr
+          δ_lie h_F_norm
+      have h_A_G_inv_near_one :
+          ‖((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)⁻¹ - 1‖ ≤
+            Real.sqrt 2 * (δ_lie * Real.exp δ_lie) :=
+        expIsu2_inv_norm_sub_one_le _
+          (dnStepFG V_n_braid U).hG_herm (dnStepFG V_n_braid U).hG_tr
+          δ_lie h_G_norm
+      -- IH on A_F, A_G
+      have h_IH_F :
+          ‖((ρ_Fib_SU2 (skApproxC m A_F) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) -
+            ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε_n := ih A_F
+      have h_IH_G :
+          ‖((ρ_Fib_SU2 (skApproxC m A_G) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) -
+            ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε_n := ih A_G
+      -- M-bounds: ‖SU(2) val‖ ≤ √2
+      have h_sqrt2_nn : (0 : ℝ) ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+      have h_V_n_M : ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ Real.sqrt 2 :=
+        SU2_linftyOpNorm_le_sqrt_two V_n_SU2.property
+      have h_ρA_F_M :
+          ‖((ρ_Fib_SU2 (skApproxC m A_F) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ Real.sqrt 2 :=
+        SU2_linftyOpNorm_le_sqrt_two (ρ_Fib_SU2 (skApproxC m A_F)).property
+      have h_ρA_G_M :
+          ‖((ρ_Fib_SU2 (skApproxC m A_G) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ Real.sqrt 2 :=
+        SU2_linftyOpNorm_le_sqrt_two (ρ_Fib_SU2 (skApproxC m A_G)).property
+      have h_A_F_M :
+          ‖((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ Real.sqrt 2 :=
+        SU2_linftyOpNorm_le_sqrt_two A_F.property
+      have h_A_G_M :
+          ‖((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ Real.sqrt 2 :=
+        SU2_linftyOpNorm_le_sqrt_two A_G.property
+      -- Matrix-inverse M-bounds
+      have h_A_F_inv_M :
+          ‖((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)⁻¹‖ ≤ Real.sqrt 2 := by
+        rw [← SU2_subtype_inv_val_eq_matrix_inv A_F]
+        exact SU2_linftyOpNorm_le_sqrt_two (A_F⁻¹).property
+      have h_A_G_inv_M :
+          ‖((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)⁻¹‖ ≤ Real.sqrt 2 := by
+        rw [← SU2_subtype_inv_val_eq_matrix_inv A_G]
+        exact SU2_linftyOpNorm_le_sqrt_two (A_G⁻¹).property
+      have h_ρA_F_inv_M :
+          ‖((ρ_Fib_SU2 (skApproxC m A_F) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)⁻¹‖ ≤ Real.sqrt 2 := by
+        rw [← SU2_subtype_inv_val_eq_matrix_inv (ρ_Fib_SU2 (skApproxC m A_F))]
+        exact SU2_linftyOpNorm_le_sqrt_two
+          (ρ_Fib_SU2 (skApproxC m A_F))⁻¹.property
+      have h_ρA_G_inv_M :
+          ‖((ρ_Fib_SU2 (skApproxC m A_G) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)⁻¹‖ ≤ Real.sqrt 2 := by
+        rw [← SU2_subtype_inv_val_eq_matrix_inv (ρ_Fib_SU2 (skApproxC m A_G))]
+        exact SU2_linftyOpNorm_le_sqrt_two
+          (ρ_Fib_SU2 (skApproxC m A_G))⁻¹.property
+      -- IsUnit det for invertibility
+      have h_A_F_det : IsUnit (A_F : Matrix (Fin 2) (Fin 2) ℂ).det :=
+        SU2_val_det_isUnit A_F
+      have h_A_G_det : IsUnit (A_G : Matrix (Fin 2) (Fin 2) ℂ).det :=
+        SU2_val_det_isUnit A_G
+      have h_ρA_F_det :
+          IsUnit ((ρ_Fib_SU2 (skApproxC m A_F) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ).det :=
+        SU2_val_det_isUnit _
+      have h_ρA_G_det :
+          IsUnit ((ρ_Fib_SU2 (skApproxC m A_G) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ).det :=
+        SU2_val_det_isUnit _
+      -- Define η := √2 · δ_lie · exp(δ_lie) (max of the two near-identity bounds)
+      set η : ℝ := Real.sqrt 2 * (δ_lie * Real.exp δ_lie) with hη_def
+      have h_δ_lie_exp_nn : (0 : ℝ) ≤ δ_lie * Real.exp δ_lie :=
+        mul_nonneg h_δ_lie_nn (Real.exp_pos _).le
+      have h_η_nn : (0 : ℝ) ≤ η :=
+        mul_nonneg h_sqrt2_nn h_δ_lie_exp_nn
+      -- The η bounds we need for stability (h - 1 with h = A_G.val, g⁻¹ - 1 with g = A_F.val)
+      have h_h_near_id_η :
+          ‖((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) - 1‖ ≤ η := by
+        calc ‖((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) - 1‖
+            ≤ δ_lie * Real.exp δ_lie := h_A_G_near_one
+          _ ≤ Real.sqrt 2 * (δ_lie * Real.exp δ_lie) := by
+              have h_one_le_sqrt2 : (1 : ℝ) ≤ Real.sqrt 2 := by
+                rw [show (1 : ℝ) = Real.sqrt 1 from Real.sqrt_one.symm]
+                exact Real.sqrt_le_sqrt (by norm_num)
+              nlinarith
+      have h_g_inv_near_id_η :
+          ‖((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)⁻¹ - 1‖ ≤ η := h_A_F_inv_near_one
+      -- Perturbation (δ in stability) bounds: ‖ρA_F - A_F‖, ‖ρA_G - A_G‖ ≤ ε_n
+      have h_g_diff_ε :
+          ‖((ρ_Fib_SU2 (skApproxC m A_F) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) -
+            ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε_n := h_IH_F
+      have h_h_diff_ε :
+          ‖((ρ_Fib_SU2 (skApproxC m A_G) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) -
+            ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε_n := h_IH_G
+      -- Apply groupCommutator_stability_nearIdentity
+      have h_stability :
+          ‖SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+              ((ρ_Fib_SU2 (skApproxC m A_F) :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ)
+              ((ρ_Fib_SU2 (skApproxC m A_G) :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) -
+            SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+              ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ)
+              ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+            2 * (Real.sqrt 2 ^ 2 + Real.sqrt 2 ^ 4) * ε_n * η +
+            (Real.sqrt 2 ^ 4 + Real.sqrt 2 ^ 6) * ε_n ^ 2 :=
+        SKEFTHawking.FKLW.GroupCommutatorNearIdentity.groupCommutator_stability_nearIdentity
+          (A_F : Matrix (Fin 2) (Fin 2) ℂ)
+          (A_G : Matrix (Fin 2) (Fin 2) ℂ)
+          ((ρ_Fib_SU2 (skApproxC m A_F) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)
+          ((ρ_Fib_SU2 (skApproxC m A_G) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ)
+          η ε_n (Real.sqrt 2)
+          h_η_nn h_ε_n_nn h_sqrt2_nn
+          h_ρA_F_M h_ρA_G_M
+          h_A_F_inv_M h_A_G_inv_M
+          h_ρA_F_inv_M h_ρA_G_inv_M
+          h_h_near_id_η h_g_inv_near_id_η
+          h_g_diff_ε h_h_diff_ε
+          h_A_F_det h_ρA_F_det h_A_G_det h_ρA_G_det
+      -- ρ(skApproxC (m+1) U) = V_n_SU2.val * gC(ρA_F.val, ρA_G.val)
+      have h_skApproxC_succ_val :
+          ((ρ_Fib_SU2 (skApproxC (m + 1) U) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) =
+            (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+            SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+              ((ρ_Fib_SU2 (skApproxC m A_F) :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ)
+              ((ρ_Fib_SU2 (skApproxC m A_G) :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) := by
+        rw [skApproxC_succ]
+        show ((ρ_Fib_SU2 (V_n_braid * (skApproxC m A_F * skApproxC m A_G *
+                  (skApproxC m A_F)⁻¹ * (skApproxC m A_G)⁻¹)) :
+                ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                Matrix (Fin 2) (Fin 2) ℂ) = _
+        rw [ρ_Fib_SU2_mul_val, ρ_Fib_SU2_groupCommutator_val]
+      -- Final composition: split via gC(A_F, A_G), bound each piece.
+      -- ‖V_n_SU2 · gC(ρA_F, ρA_G) - U‖
+      --   ≤ ‖V_n_SU2‖ · ‖gC(ρA_F, ρA_G) - gC(A_F, A_G)‖
+      --     + ‖V_n_SU2 · gC(A_F, A_G) - U‖
+      -- where ‖V_n_SU2 · gC(A_F, A_G) - U‖
+      --      = ‖V_n_SU2 · gC(A_F, A_G) - V_n_SU2 · Δ.val‖   (V_n·Δ = U)
+      --      ≤ ‖V_n_SU2‖ · ‖gC(A_F, A_G) - Δ.val‖
+      --      ≤ √2 · 320·δ_lie^3                              (h_cubic)
+      have h_V_n_Δ_eq_U :
+          (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+            (Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ) =
+            (U : Matrix (Fin 2) (Fin 2) ℂ) := by
+        have h_mul_def : V_n_SU2 * Δ_SU2 = V_n_SU2 * (V_n_SU2⁻¹ * U) := by
+          rw [hΔ_SU2_def]
+        have h_simp : V_n_SU2 * Δ_SU2 = U := by
+          rw [h_mul_def]
+          rw [← mul_assoc, mul_inv_cancel, one_mul]
+        have h_val : ((V_n_SU2 * Δ_SU2 :
+                          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                       Matrix (Fin 2) (Fin 2) ℂ) =
+                     (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+                     (Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ) := rfl
+        rw [← h_val, h_simp]
+      -- Bound term 2: ‖V_n_SU2 · gC(A_F.val, A_G.val) - U‖ ≤ √2 · 320·δ_lie^3
+      have h_term2 :
+          ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+            (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+            Real.sqrt 2 * (320 * δ_lie ^ 3) := by
+        rw [← h_V_n_Δ_eq_U]
+        rw [show (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              (Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ) =
+              (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              (SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              (Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ)) from by noncomm_ring]
+        calc ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              (SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              (Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ))‖
+            ≤ ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ)‖ *
+              ‖SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              (Δ_SU2 : Matrix (Fin 2) (Fin 2) ℂ)‖ := norm_mul_le _ _
+          _ ≤ Real.sqrt 2 * (320 * δ_lie ^ 3) := by
+              have h_cubic_nn : (0 : ℝ) ≤ 320 * δ_lie ^ 3 := by positivity
+              exact mul_le_mul h_V_n_M h_cubic (norm_nonneg _) h_sqrt2_nn
+      -- Bound term 1: ‖V_n_SU2 · (gC(ρA_F, ρA_G) - gC(A_F, A_G))‖ ≤ √2 · stability
+      set stab_bound : ℝ :=
+        2 * (Real.sqrt 2 ^ 2 + Real.sqrt 2 ^ 4) * ε_n * η +
+        (Real.sqrt 2 ^ 4 + Real.sqrt 2 ^ 6) * ε_n ^ 2 with hstab_def
+      have h_term1 :
+          ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((ρ_Fib_SU2 (skApproxC m A_F) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((ρ_Fib_SU2 (skApproxC m A_G) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+            (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+            Real.sqrt 2 * stab_bound := by
+        rw [show (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((ρ_Fib_SU2 (skApproxC m A_F) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((ρ_Fib_SU2 (skApproxC m A_G) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) =
+              (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              (SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((ρ_Fib_SU2 (skApproxC m A_F) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((ρ_Fib_SU2 (skApproxC m A_G) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)) from by noncomm_ring]
+        calc ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              (SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((ρ_Fib_SU2 (skApproxC m A_F) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((ρ_Fib_SU2 (skApproxC m A_G) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ))‖
+            ≤ ‖(V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ)‖ *
+              ‖SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((ρ_Fib_SU2 (skApproxC m A_F) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((ρ_Fib_SU2 (skApproxC m A_G) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)‖ := norm_mul_le _ _
+          _ ≤ Real.sqrt 2 * stab_bound := by
+              have h_stab_nn : (0 : ℝ) ≤ stab_bound := by
+                rw [hstab_def]
+                positivity
+              exact mul_le_mul h_V_n_M h_stability (norm_nonneg _) h_sqrt2_nn
+      -- Combine via triangle inequality
+      have h_combined_norm :
+          ‖((ρ_Fib_SU2 (skApproxC (m + 1) U) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) -
+            (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+            Real.sqrt 2 * stab_bound + Real.sqrt 2 * (320 * δ_lie ^ 3) := by
+        rw [h_skApproxC_succ_val]
+        -- Decompose: (V_n · gC(ρA_F, ρA_G) - U) = (V_n · gC(ρA_F, ρA_G) - V_n · gC(A_F, A_G)) + (V_n · gC(A_F, A_G) - U)
+        have h_decomp :
+            (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((ρ_Fib_SU2 (skApproxC m A_F) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((ρ_Fib_SU2 (skApproxC m A_G) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              (U : Matrix (Fin 2) (Fin 2) ℂ) =
+            ((V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((ρ_Fib_SU2 (skApproxC m A_F) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((ρ_Fib_SU2 (skApproxC m A_G) :
+                    ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              (V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)) +
+            ((V_n_SU2 : Matrix (Fin 2) (Fin 2) ℂ) *
+              SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+                ((A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ)
+                ((A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) -
+              (U : Matrix (Fin 2) (Fin 2) ℂ)) := by noncomm_ring
+        rw [h_decomp]
+        exact le_trans (norm_add_le _ _) (add_le_add h_term1 h_term2)
+      -- Numerical chain: √2·stab_bound + √2·320·δ_lie^3 ≤ K_compose · ε_n^(3/2)
+      -- δ_lie^2 = θ/2 ≤ (π/4)·√2·ε_n
+      have h_δ_lie_sq_le : δ_lie ^ 2 ≤ (Real.pi / 4) * Real.sqrt 2 * ε_n := by
+        rw [h_δ_lie_sq]
+        linarith [h_θ_le]
+      -- δ_lie^3 = (δ_lie^2)^(3/2 · 1/2)·... Actually use (δ_lie^2)·δ_lie
+      -- δ_lie^3 ≤ ((π/4)·√2)^(3/2) · ε_n^(3/2)
+      have h_C_cubic_nn : (0 : ℝ) ≤ (Real.pi / 4) * Real.sqrt 2 := by positivity
+      have h_δ_lie_pow3_le :
+          δ_lie ^ 3 ≤ ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) *
+                      ε_n ^ (3 / 2 : ℝ) := by
+        -- (δ_lie^2)^(3/2) = δ_lie^3 for nonneg δ_lie
+        have h_sq_nn : (0 : ℝ) ≤ δ_lie ^ 2 := sq_nonneg _
+        have h_eq1 : δ_lie ^ 3 = (δ_lie ^ 2) ^ (3 / 2 : ℝ) := by
+          -- (δ_lie^2)^(3/2) = (δ_lie^2)^1 · (δ_lie^2)^(1/2)
+          --                = δ_lie^2 · √(δ_lie^2)
+          --                = δ_lie^2 · δ_lie = δ_lie^3
+          rw [show (3 / 2 : ℝ) = 1 + 1 / 2 from by norm_num,
+              Real.rpow_add_of_nonneg h_sq_nn (by norm_num) (by norm_num),
+              Real.rpow_one, ← Real.sqrt_eq_rpow,
+              Real.sqrt_sq h_δ_lie_nn]
+          ring
+        rw [h_eq1]
+        -- (δ_lie^2)^(3/2) ≤ ((π/4)·√2·ε_n)^(3/2)
+        have h_step : (δ_lie ^ 2) ^ (3 / 2 : ℝ) ≤
+                      ((Real.pi / 4) * Real.sqrt 2 * ε_n) ^ (3 / 2 : ℝ) :=
+          Real.rpow_le_rpow (sq_nonneg _) h_δ_lie_sq_le (by norm_num)
+        calc (δ_lie ^ 2) ^ (3 / 2 : ℝ)
+            ≤ ((Real.pi / 4) * Real.sqrt 2 * ε_n) ^ (3 / 2 : ℝ) := h_step
+          _ = ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) *
+              ε_n ^ (3 / 2 : ℝ) := by
+              rw [Real.mul_rpow (by positivity) h_ε_n_nn]
+      -- exp(δ_lie) ≤ exp(1) = e
+      have h_exp_le_e : Real.exp δ_lie ≤ Real.exp 1 :=
+        Real.exp_le_exp.mpr h_δ_lie_le_one
+      have h_e_nn : (0 : ℝ) ≤ Real.exp 1 := (Real.exp_pos _).le
+      -- η = √2 · δ_lie · exp(δ_lie) ≤ √2 · δ_lie · e
+      have h_η_le : η ≤ Real.sqrt 2 * (δ_lie * Real.exp 1) := by
+        rw [hη_def]
+        have h_δ_exp_le : δ_lie * Real.exp δ_lie ≤ δ_lie * Real.exp 1 :=
+          mul_le_mul_of_nonneg_left h_exp_le_e h_δ_lie_nn
+        exact mul_le_mul_of_nonneg_left h_δ_exp_le h_sqrt2_nn
+      -- δ_lie ≤ √((π/4)·√2) · √ε_n = ((π/4)·√2)^(1/2) · ε_n^(1/2)
+      have h_δ_lie_le_rpow :
+          δ_lie ≤ ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) *
+                  ε_n ^ (1 / 2 : ℝ) := by
+        rw [← Real.mul_rpow h_C_cubic_nn h_ε_n_nn]
+        rw [← Real.sqrt_eq_rpow]
+        rw [show δ_lie = Real.sqrt (δ_lie ^ 2) from (Real.sqrt_sq h_δ_lie_nn).symm]
+        exact Real.sqrt_le_sqrt h_δ_lie_sq_le
+      -- ε_n^2 = ε_n^(3/2) · ε_n^(1/2) ≤ ε_n^(3/2) · √(2·ε₀)
+      have h_ε_n_sq_le :
+          ε_n ^ 2 ≤ Real.sqrt (2 * ε₀) * ε_n ^ (3 / 2 : ℝ) := by
+        have h_split : ε_n ^ 2 = ε_n ^ (3 / 2 : ℝ) * ε_n ^ (1 / 2 : ℝ) := by
+          rw [← Real.rpow_natCast ε_n 2]
+          rw [show ((2 : ℕ) : ℝ) = 3 / 2 + 1 / 2 from by norm_num]
+          exact Real.rpow_add_of_nonneg h_ε_n_nn (by norm_num) (by norm_num)
+        rw [h_split]
+        have h_ε_n_rpow_nn : (0 : ℝ) ≤ ε_n ^ (3 / 2 : ℝ) := Real.rpow_nonneg h_ε_n_nn _
+        have h_ε_n_half_le : ε_n ^ (1 / 2 : ℝ) ≤ Real.sqrt (2 * ε₀) := by
+          rw [Real.sqrt_eq_rpow]
+          exact Real.rpow_le_rpow h_ε_n_nn h_ε_n_le_2ε₀ (by norm_num)
+        calc ε_n ^ (3 / 2 : ℝ) * ε_n ^ (1 / 2 : ℝ)
+            ≤ ε_n ^ (3 / 2 : ℝ) * Real.sqrt (2 * ε₀) :=
+              mul_le_mul_of_nonneg_left h_ε_n_half_le h_ε_n_rpow_nn
+          _ = Real.sqrt (2 * ε₀) * ε_n ^ (3 / 2 : ℝ) := by ring
+      -- Now bound stab_bound ≤ K_stab · ε_n^(3/2)
+      -- stab_bound = 12·ε_n·η + 12·ε_n^2 (with M=√2: M²=2, M⁴=4, M⁶=8, 2(M²+M⁴)=12, M⁴+M⁶=12)
+      have h_sqrt2_sq : Real.sqrt 2 ^ 2 = 2 := Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2)
+      have h_sqrt2_pow4 : Real.sqrt 2 ^ 4 = 4 := by
+        have h_eq : Real.sqrt 2 ^ 4 = (Real.sqrt 2 ^ 2) ^ 2 := by ring
+        rw [h_eq, h_sqrt2_sq]
+        norm_num
+      have h_sqrt2_pow6 : Real.sqrt 2 ^ 6 = 8 := by
+        have h_eq : Real.sqrt 2 ^ 6 = (Real.sqrt 2 ^ 2) ^ 3 := by ring
+        rw [h_eq, h_sqrt2_sq]
+        norm_num
+      have h_stab_simplified :
+          stab_bound = 12 * ε_n * η + 12 * ε_n ^ 2 := by
+        rw [hstab_def, h_sqrt2_sq, h_sqrt2_pow4, h_sqrt2_pow6]; ring
+      -- Bound 12·ε_n·η ≤ 12·ε_n · √2·δ_lie·e ≤ 12·√2·e · ε_n · ((π/4)√2)^(1/2)·ε_n^(1/2)
+      --                = 12·√2·e·((π/4)·√2)^(1/2) · ε_n^(3/2)
+      set K_stab1 : ℝ := 12 * Real.sqrt 2 * Real.exp 1 *
+                          ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ)
+        with hKstab1_def
+      have h_K_stab1_nn : (0 : ℝ) ≤ K_stab1 := by
+        rw [hKstab1_def]
+        positivity
+      have h_term_η_le :
+          12 * ε_n * η ≤ K_stab1 * ε_n ^ (3 / 2 : ℝ) := by
+        -- 12 · ε_n · η ≤ 12 · ε_n · (√2 · δ_lie · e)
+        --              ≤ 12 · ε_n · (√2 · (((π/4)√2)^(1/2)·ε_n^(1/2)) · e)
+        --              = 12·√2·e·((π/4)·√2)^(1/2) · ε_n · ε_n^(1/2)
+        --              = K_stab1 · ε_n^(3/2)
+        have h_ε_n_eq : ε_n * ε_n ^ (1 / 2 : ℝ) = ε_n ^ (3 / 2 : ℝ) := by
+          rw [show (3 / 2 : ℝ) = 1 + 1 / 2 from by norm_num,
+              Real.rpow_add_of_nonneg h_ε_n_nn (by norm_num : (0:ℝ) ≤ 1)
+                (by norm_num : (0:ℝ) ≤ 1/2),
+              Real.rpow_one]
+        have h_chain :
+            12 * ε_n * η ≤
+            12 * ε_n * (Real.sqrt 2 * (δ_lie * Real.exp 1)) :=
+          mul_le_mul_of_nonneg_left h_η_le (by positivity)
+        have h_chain2 :
+            12 * ε_n * (Real.sqrt 2 * (δ_lie * Real.exp 1)) ≤
+            12 * ε_n * (Real.sqrt 2 *
+              ((((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) *
+                ε_n ^ (1 / 2 : ℝ)) * Real.exp 1)) := by
+          apply mul_le_mul_of_nonneg_left
+          · apply mul_le_mul_of_nonneg_left
+            · apply mul_le_mul_of_nonneg_right h_δ_lie_le_rpow h_e_nn
+            · exact h_sqrt2_nn
+          · positivity
+        have h_rearrange :
+            12 * ε_n * (Real.sqrt 2 *
+              ((((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) *
+                ε_n ^ (1 / 2 : ℝ)) * Real.exp 1)) =
+            K_stab1 * ε_n ^ (3 / 2 : ℝ) := by
+          rw [hKstab1_def]
+          rw [show 12 * ε_n * (Real.sqrt 2 *
+              ((((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ) *
+                ε_n ^ (1 / 2 : ℝ)) * Real.exp 1)) =
+              (12 * Real.sqrt 2 * Real.exp 1 *
+                ((Real.pi / 4) * Real.sqrt 2) ^ (1 / 2 : ℝ)) *
+              (ε_n * ε_n ^ (1 / 2 : ℝ)) from by ring]
+          rw [h_ε_n_eq]
+        linarith
+      -- Bound 12·ε_n^2 ≤ 12·√(2ε₀) · ε_n^(3/2)
+      set K_stab2 : ℝ := 12 * Real.sqrt (2 * ε₀) with hKstab2_def
+      have h_K_stab2_nn : (0 : ℝ) ≤ K_stab2 := by
+        rw [hKstab2_def]; positivity
+      have h_term_sq_le :
+          12 * ε_n ^ 2 ≤ K_stab2 * ε_n ^ (3 / 2 : ℝ) := by
+        rw [hKstab2_def]
+        have h_step : 12 * ε_n ^ 2 ≤ 12 * (Real.sqrt (2 * ε₀) * ε_n ^ (3 / 2 : ℝ)) :=
+          mul_le_mul_of_nonneg_left h_ε_n_sq_le (by norm_num : (0:ℝ) ≤ 12)
+        linarith
+      -- Bound stab_bound ≤ (K_stab1 + K_stab2) · ε_n^(3/2)
+      have h_stab_bound_le :
+          stab_bound ≤ (K_stab1 + K_stab2) * ε_n ^ (3 / 2 : ℝ) := by
+        rw [h_stab_simplified, add_mul]
+        exact add_le_add h_term_η_le h_term_sq_le
+      -- Bound cubic: √2 · 320 · δ_lie^3 ≤ √2·320·((π/4)·√2)^(3/2) · ε_n^(3/2)
+      set K_cubic : ℝ := Real.sqrt 2 * 320 *
+                          ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ)
+        with hKcubic_def
+      have h_K_cubic_nn : (0 : ℝ) ≤ K_cubic := by
+        rw [hKcubic_def]; positivity
+      have h_cubic_le :
+          Real.sqrt 2 * (320 * δ_lie ^ 3) ≤ K_cubic * ε_n ^ (3 / 2 : ℝ) := by
+        rw [hKcubic_def]
+        have h_320_nn : (0 : ℝ) ≤ 320 := by norm_num
+        have h_step :
+            320 * δ_lie ^ 3 ≤ 320 * (((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) *
+                              ε_n ^ (3 / 2 : ℝ)) :=
+          mul_le_mul_of_nonneg_left h_δ_lie_pow3_le h_320_nn
+        calc Real.sqrt 2 * (320 * δ_lie ^ 3)
+            ≤ Real.sqrt 2 * (320 * (((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) *
+                              ε_n ^ (3 / 2 : ℝ))) :=
+              mul_le_mul_of_nonneg_left h_step h_sqrt2_nn
+          _ = Real.sqrt 2 * 320 * ((Real.pi / 4) * Real.sqrt 2) ^ (3 / 2 : ℝ) *
+              ε_n ^ (3 / 2 : ℝ) := by ring
+      -- Final: ‖result - U‖ ≤ √2·stab_bound + √2·320·δ_lie^3
+      --                     ≤ (K_stab1 + K_stab2)·ε_n^(3/2) + K_cubic·ε_n^(3/2)  -- with √2 mult
+      -- Actually we need to carry √2 through stab too: √2 · stab_bound, so
+      --   √2 · stab_bound ≤ √2 · (K_stab1 + K_stab2) · ε_n^(3/2)
+      have h_sqrt2_stab_le :
+          Real.sqrt 2 * stab_bound ≤
+            Real.sqrt 2 * (K_stab1 + K_stab2) * ε_n ^ (3 / 2 : ℝ) := by
+        rw [mul_assoc]
+        exact mul_le_mul_of_nonneg_left h_stab_bound_le h_sqrt2_nn
+      -- Total K_proof = √2·(K_stab1 + K_stab2) + K_cubic ≤ K_compose
+      have h_total_le :
+          Real.sqrt 2 * stab_bound + Real.sqrt 2 * (320 * δ_lie ^ 3) ≤
+            (Real.sqrt 2 * (K_stab1 + K_stab2) + K_cubic) *
+            ε_n ^ (3 / 2 : ℝ) := by
+        rw [add_mul]
+        exact add_le_add h_sqrt2_stab_le h_cubic_le
+      -- K_proof ≤ K_compose (numerical verification)
+      -- We need: √2 · (K_stab1 + K_stab2) + K_cubic ≤ K_compose = 1024
+      have h_K_proof_le_K_compose :
+          Real.sqrt 2 * (K_stab1 + K_stab2) + K_cubic ≤ K_compose := by
+        rw [hKstab1_def, hKstab2_def, hKcubic_def]
+        exact valid_branch_K_chain_le_K_compose_numeric
+      -- Final assembly
+      calc ‖((ρ_Fib_SU2 (skApproxC (m + 1) U) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) -
+            (U : Matrix (Fin 2) (Fin 2) ℂ)‖
+          ≤ Real.sqrt 2 * stab_bound + Real.sqrt 2 * (320 * δ_lie ^ 3) :=
+            h_combined_norm
+        _ ≤ (Real.sqrt 2 * (K_stab1 + K_stab2) + K_cubic) *
+            ε_n ^ (3 / 2 : ℝ) := h_total_le
+        _ ≤ K_compose * ε_n ^ (3 / 2 : ℝ) := by
+            have h_rpow_nn : (0 : ℝ) ≤ ε_n ^ (3 / 2 : ℝ) :=
+              Real.rpow_nonneg h_ε_n_nn _
+            exact mul_le_mul_of_nonneg_right h_K_proof_le_K_compose h_rpow_nn
+    · -- INVALID branch: θ = 0 (regime forces this since θ ≤ 1 always)
+      have h_θ_le_zero : θ ≤ 0 := not_lt.mp h_θ_pos
+      have h_θ_zero : θ = 0 := le_antisymm h_θ_le_zero h_θ_nn
+      -- Construct the invalid hypothesis in the exact form dnStepFG expects.
+      have h_invalid_check :
+          ¬(0 < ‖((-Complex.I) • Y_h
+              ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ ∧
+              ‖((-Complex.I) • Y_h
+              ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+                  ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+              Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 1) := by
+        intro ⟨h_pos, _⟩
+        -- h_pos : 0 < ‖explicit form‖, but this IS θ (by set unfolding)
+        exact h_θ_pos h_pos
+      -- F = G = 0 in dnStepFG output
+      have h_FG_zero : (dnStepFG V_n_braid U).F = 0 ∧
+                        (dnStepFG V_n_braid U).G = 0 :=
+        dnStepFG_invalid_F_zero V_n_braid U h_invalid_check
+      -- A_F = A_G via Subtype.ext (matrix equality at .val)
+      set A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+        expIsu2 (dnStepFG V_n_braid U).F
+          (dnStepFG V_n_braid U).hF_herm (dnStepFG V_n_braid U).hF_tr
+        with hA_F_def
+      set A_G : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+        expIsu2 (dnStepFG V_n_braid U).G
+          (dnStepFG V_n_braid U).hG_herm (dnStepFG V_n_braid U).hG_tr
+        with hA_G_def
+      have h_A_F_eq_A_G : A_F = A_G := by
+        apply Subtype.ext
+        rw [hA_F_def, hA_G_def, expIsu2_val, expIsu2_val, h_FG_zero.1, h_FG_zero.2]
+      -- skApproxC m A_F = skApproxC m A_G
+      have h_skA_eq : skApproxC m A_F = skApproxC m A_G := by
+        rw [h_A_F_eq_A_G]
+      -- The braid-level (m+1) word equals V_n_braid (group commutator collapses)
+      have h_skApproxC_succ_eq : skApproxC (m + 1) U = V_n_braid := by
+        rw [skApproxC_succ]
+        -- Goal contains let bindings; show V_n_braid * (gC of two A_F_braids) = V_n_braid
+        show V_n_braid * (skApproxC m A_F * skApproxC m A_G *
+              (skApproxC m A_F)⁻¹ * (skApproxC m A_G)⁻¹) = V_n_braid
+        rw [h_skA_eq]
+        -- Now: V_n_braid * (g * g * g⁻¹ * g⁻¹) = V_n_braid
+        group
+      -- Now derive ρ(skApproxC (m+1) U) = V_n_SU2
+      have h_ρ_eq : (ρ_Fib_SU2 (skApproxC (m + 1) U) :
+                      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) = V_n_SU2 := by
+        rw [h_skApproxC_succ_eq]
+      -- From θ = 0: H = 0, hence Y_h Δ.val = 0
+      have h_H_zero : H = 0 := by
+        have h_norm_zero : ‖H‖ = 0 := h_θ_zero
+        exact norm_eq_zero.mp h_norm_zero
+      have h_neg_I_ne : ((-Complex.I) : ℂ) ≠ 0 := neg_ne_zero.mpr Complex.I_ne_zero
+      have h_Y_h_zero : Y_h Δ_SU2.val = 0 := by
+        have h_unfold : H = ((-Complex.I) : ℂ) • Y_h Δ_SU2.val := rfl
+        rw [h_unfold] at h_H_zero
+        rcases smul_eq_zero.mp h_H_zero with hh | hh
+        · exact absurd hh h_neg_I_ne
+        · exact hh
+      -- Y_h injectivity: Δ.val = 1 (matrix), so Δ_SU2 = 1 (SU(2))
+      have h_Δ_val_eq_one : Δ_SU2.val = 1 :=
+        Y_h_eq_zero_in_regime_implies_eq_one Δ_SU2.property h_Δ_norm_lt h_Y_h_zero
+      have h_Δ_SU2_eq_one : Δ_SU2 = 1 := Subtype.ext h_Δ_val_eq_one
+      -- From V_n⁻¹ * U = 1, derive U = V_n_SU2
+      have h_eq_in_SU2 : V_n_SU2⁻¹ * U = 1 := h_Δ_SU2_eq_one
+      have h_U_eq_V_n : U = V_n_SU2 := by
+        calc U = 1 * U := (one_mul _).symm
+          _ = V_n_SU2 * V_n_SU2⁻¹ * U := by rw [mul_inv_cancel]
+          _ = V_n_SU2 * (V_n_SU2⁻¹ * U) := mul_assoc _ _ _
+          _ = V_n_SU2 * 1 := by rw [h_eq_in_SU2]
+          _ = V_n_SU2 := mul_one _
+      -- Now ‖ρ(skApproxC (m+1) U) - U‖ = ‖V_n_SU2 - V_n_SU2‖ = 0
+      have h_lhs_zero :
+          ‖((ρ_Fib_SU2 (skApproxC (m + 1) U) :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) -
+            (U : Matrix (Fin 2) (Fin 2) ℂ)‖ = 0 := by
+        rw [h_ρ_eq, h_U_eq_V_n]
+        simp
+      -- RHS ≥ 0
+      have h_rhs_nn : (0 : ℝ) ≤ K_compose * ε_n ^ (3 / 2 : ℝ) := by
+        have h_K_nn : (0 : ℝ) ≤ K_compose := K_compose_pos.le
+        have h_rpow_nn : (0 : ℝ) ≤ ε_n ^ (3 / 2 : ℝ) := Real.rpow_nonneg h_ε_n_nn _
+        exact mul_nonneg h_K_nn h_rpow_nn
+      rw [h_lhs_zero]
+      exact h_rhs_nn
 
 /-! ## 8. Path A unconditional strict headline for loose ε regime
 
