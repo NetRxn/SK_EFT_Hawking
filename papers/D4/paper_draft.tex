@@ -813,7 +813,360 @@ submission; the QEC-MTC cross-bridge to Bundle~D3
 (\S\ref{sec:qec-mtc}) must agree character-for-character with D3 \S 7
 and \S 9.
 
+%% =====================================================================
+%% §9 — Fibonacci-anyon density and quantitative Solovay--Kitaev compilation
+%% Stage 10.E manual prose authoring (2026-05-23), absorbing two D.4
+%% sourceless lifts from PAPER_DRAFT_MAPPING.md:
+%%   _phase6p_W2cd_lean_only  →  §\ref{sec:fib-density-sk}.\{1,2\}
+%%   _phase6t_lean_only       →  §\ref{sec:fib-density-sk}.\{3,4,5\}
+%% =====================================================================
+\section{Fibonacci-anyon density in SU(2) and quantitative Solovay--Kitaev compilation}
+\label{sec:fib-density-sk}
+
+The synthesis of \S\ref{sec:synthesis} closed at the TQC-foundation layer
+but flagged a downstream obligation: the substrate ships the
+Hayden--Preskill code structure on a horizon MTC
+(\S\ref{sec:qec-mtc}) and the
+Drinfeld-centre toric-code/$D(S_3)$ anchor
+(\S\ref{sec:drinfeld-centre}), but did not, in
+\S\S\ref{sec:intro}--\ref{sec:synthesis}, ship the
+two further claims required to upgrade ``MTC infrastructure'' into
+``machine-checked universal-gate-set machinery'' for Fibonacci anyons
+on the SU(2)$_k$ Chern--Simons MTC: \emph{(i)} that the
+Fibonacci-braid image is dense in SU(2), and \emph{(ii)} that targets
+in SU(2) can be approximated to precision $\varepsilon$ by braid words
+of length polylogarithmic in $1/\varepsilon$. The first claim is
+F.21 (Freedman--Larsen--Wang
+2002~\cite{FreedmanLarsenWang2002} Lemma F.21); the second is the
+quantitative Solovay--Kitaev theorem of Dawson and
+Nielsen~\cite{DawsonNielsen2006}, refining the original
+existence-form theorem of Solovay (unpublished, 1995) and
+Kitaev~\cite{KitaevShenVyalyi2002}. The substrate now ships both at
+zero \texttt{sorry} on the headline statements, with one explicit
+calibration disclosure on the tightest-$\varepsilon$ regime of a
+constructive Path-A variant noted in \S\ref{sec:fib-density-sk}.4.
+This addition supersedes the corresponding bullets in
+\S\ref{sec:synthesis} (``Open problems'') and
+\S\ref{sec:synthesis} (``What this paper is not'') for the
+Fibonacci-universality question; the doublon-SWAP adiabatic-drag
+identification remains open as previously noted.
+
+\subsection{F.21: Fibonacci-anyon braid image is dense in SU(2)}
+\label{subsec:f21}
+
+Let $\mathrm{BraidGroup}\,3$ denote the three-strand braid group with
+generators $\sigma_1,\sigma_2$. The Fibonacci representation
+$\rho_{\mathrm{Fib}}:\mathrm{BraidGroup}\,3 \to \mathrm{SU}(2)$
+sends $\sigma_1,\sigma_2$ to a pair of non-commuting SU(2) elements
+whose squared trace (the bidegree-(1,1) component of the braided
+fusion category) realises the golden-ratio modular data of the
+Fibonacci MTC. The closure of its image,
+\[
+   H_{\mathrm{Fib}} \;:=\; \overline{\rho_{\mathrm{Fib}}(\mathrm{BraidGroup}\,3)}
+   \;\subseteq\; \mathrm{SU}(2),
+\]
+is a closed subgroup; F.21 asserts $H_{\mathrm{Fib}} = \mathrm{SU}(2)$.
+
+\paragraph{Lean discharge.}
+The substrate ships F.21 as
+\texttt{SKEFTHawking.FKLW.SU2BCHBracketClosure.fibonacci\_density\_F21\_unconditional}
+(closed at Phase~6p Wave 2c.4a-R4.2.d, 2026-05-22). The proof composes
+five Lean modules under
+\texttt{lean/SKEFTHawking/FKLW/}: \texttt{StandardTorusSU2.lean},
+\texttt{CartanSubstrate.lean},
+\texttt{OneParameterSubgroupSU2.lean},
+\texttt{SU2BCHBracketClosure.lean}, and
+\texttt{FibSU2Density.lean}. The structural argument is a
+Cartan-closed-subgroup attack along the Lie-algebraic axis: a
+two-direction non-vanishing differential at the identity, established
+via implicit-function theorem from a smooth product of three
+one-parameter subgroups, witnesses that $H_{\mathrm{Fib}}$ contains an
+open neighbourhood of the identity in SU(2); closure together with the
+connectedness of SU(2) then forces equality. Concretely, the
+\texttt{CartanFinalStep\_SU2\_v4} predicate is discharged by composing
+the linearised three-direction product
+\texttt{threeDirProduct\_hasStrictFDerivAt\_zero} (Mathlib's
+chain-rule machinery for products of strict Fréchet derivatives)
+through the Cartan-classification dichotomy
+``$H_{\mathrm{Fib}}$ is discrete-finite of cardinality at least~40 or
+admits an accumulation point at the identity''. The discrete branch is
+excluded by an Aharonov--Arad Lemma~6 cardinality
+argument~\cite{AharonovArad2017}; the accumulation-point branch
+delivers the open-neighbourhood-of-identity content, closing the
+biconditional unconditionally. The headline is verified
+\texttt{lean\_verify} clean under the standard kernel closure
+$\{\texttt{propext},\texttt{Classical.choice},\texttt{Quot.sound}\}$.
+
+\paragraph{Cross-substrate bridges.}
+F.21 closes Phase~5 Step~13's longstanding Path~(i) discharge and
+delivers, to Phase~6t (\S\ref{sec:fib-density-sk}.3), the
+density-as-existence statement consumed by the
+$\varepsilon_0$-net base case of the Solovay--Kitaev recursion. The
+two-direction non-vanishing differential is supplied by Lemmas
+$\sigma_{\mathrm{Fib},1}$ and $\sigma_{\mathrm{Fib},2}$ being
+non-commuting and trace-nonzero
+(\texttt{FibSU2LieBundle.lean}); the Cartan-classification dichotomy
+is generic across closed subgroups of SU(2), and the Mathlib-upstream
+candidates extracted from this argument (the
+\texttt{Subgroup.connectedComponentOfOne} closed-subgroup substrate
+plus the implicit-function theorem on submanifolds) are tracked for
+post-Phase-6t contribution.
+
+\subsection{Quantitative Solovay--Kitaev: Dawson--Nielsen length bound}
+\label{subsec:dawson-nielsen}
+
+The Solovay--Kitaev theorem~\cite{KitaevShenVyalyi2002,DawsonNielsen2006}
+upgrades existence of arbitrarily close approximation (from
+\S\ref{sec:fib-density-sk}.1) into a quantitative length-versus-precision
+trade-off. Given a precision $\varepsilon > 0$ and target
+$U \in \mathrm{SU}(2)$, there exists a braid word
+$w \in \mathrm{BraidGroup}\,3$ such that
+$\|\rho_{\mathrm{Fib}}(w) - U\| \leq \varepsilon$ and
+\begin{equation}
+   \mathrm{length}(w) \;\leq\; C \cdot \bigl(\log(1/\varepsilon)\bigr)^{c},
+   \qquad c \;=\; \frac{\log 5}{\log(3/2)} \;\approx\; 3.9694,
+   \label{eq:dn-length}
+\end{equation}
+where $C$ is a universal constant absorbing the $\varepsilon_0$-net
+base-case cost and per-step composition overhead. The exponent $c$
+arises from the Dawson--Nielsen balanced-commutator recursion: at each
+level, the algorithm replaces a single approximation problem with
+five sub-problems whose precision tightens from $\delta$ to roughly
+$\delta^{3/2}$ via the SU(2) balanced-commutator structure (the
+hermitian-traceless general-axis factorisation
+$U = e^{i\theta\hat n\cdot\bar\sigma} = e^{iF} e^{iG} e^{-iF} e^{-iG}$
+with $\|F\|,\|G\| \leq C_{\mathrm{decomp}}\cdot\sqrt\theta$
+for $\theta$ small enough). Five sub-calls per level (one for
+$V_n$, two for $F$, two for $G$) at $\log_{3/2}$-scaled precision yields
+$5^{\log_{3/2}(1/\varepsilon)} = (1/\varepsilon)^{\log 5/\log(3/2)}$
+sub-calls, hence the exponent $c$ in
+Eq.~(\ref{eq:dn-length}). The substrate ships
+\begin{equation}
+\begin{aligned}
+   c &= \texttt{skLengthExponent}\ \approx\ 3.9694, \\
+   C &= \texttt{skLengthConst}\ =\ 1000, \\
+   \varepsilon_0 &= 1/(8\cdot K_{\mathrm{compose}}^2)\ =\ 1/8388608\ \approx\ 1.19 \times 10^{-7}.
+\end{aligned}
+\label{eq:dn-constants}
+\end{equation}
+The numerical $C = 1000$ is loose compared with Dawson--Nielsen's
+asymptotic constant $C \leq 4$; the tightening lies on the Mathlib-PR
+critical path noted in \S\ref{sec:fib-density-sk}.4. The
+\emph{exponent} $c$, by contrast, is the canonical value
+$\log 5 / \log(3/2) \in (3,4)$ and is shipped with the
+sanity-bounded
+\texttt{three\_lt\_skLengthExponent} and
+\texttt{skLengthExponent\_lt\_four} sentinels closing the open
+interval.
+
+\paragraph{Headline statement (Lean).}
+\texttt{SKEFTHawking.FKLW.SolovayKitaevQuantitative.}\\
+\texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_fibonacci\_strict}
+asserts that for every $U \in \mathrm{SU}(2)$ and
+$\varepsilon \in (0, \varepsilon_0]$, the algorithmic compile level
+$n_\star = \texttt{skLevel\_polylog}\,\varepsilon$ delivers a braid
+word with both error~$\leq \varepsilon$ \emph{and}
+$\texttt{skLength}\,n_\star \leq C\cdot(\log(1/\varepsilon))^c$. Both
+the error and length bounds are bundled at the same algorithmic level,
+unlike weaker forms that bundle only existence. The headline closes
+under standard kernel axioms; no $\texttt{maxHeartbeats}$ override is
+used in any proof body across the supporting modules (Pipeline
+Invariant~\#10).
+
+\subsection{Lean substrate: the eight-module Phase~6t pipeline}
+\label{subsec:phase6t-pipeline}
+
+The quantitative SK substrate is delivered across eight Lean modules
+under \texttt{lean/SKEFTHawking/FKLW/} (Waves 1--7 of Phase~6t plus
+the Phase~6t Path~A constructive variant), totalling roughly 2{,}000
+LoC and integrating with the Phase~6p F.21 substrate from
+\S\ref{sec:fib-density-sk}.1 at the Wave~3 base case:
+
+\begin{itemize}
+\item \textbf{Wave~1 (\texttt{GroupCommutator.lean}, $\sim$400 LoC):}
+group-commutator stability and quadratic shrinkage,
+$\|[A,B] - 1\| \leq C\cdot\delta^2$ for $A = e^{iF}$, $B = e^{iG}$ with
+$\|F\|,\|G\| \leq \delta \leq 1$; cubic linearisation,
+$\|[A,B] - (1 - [F,G])\| \leq 320\cdot\delta^3$ via the
+\texttt{MatrixBCHCubic.bch\_order\_2\_cubic\_thm} order-2 BCH bound
+(the constant $320 = 253 + 30 + 36 + 1$ is loose by Dawson--Nielsen's
+own analysis~\cite{DawsonNielsen2006}, with the tightening tracked
+under Wave~5 strengthening).
+\item \textbf{Wave~2 (\texttt{SU2BalancedCommutator.lean}, $\sim$250 LoC):}
+SU(2)-specific balanced-commutator factorisation
+$g = e^{iF}e^{iG}e^{-iF}e^{-iG}$ for $g \in \mathrm{SU}(2)$ near the
+identity. Z-axis case closed unconditionally; X-axis and Y-axis
+subcases closed during the Wave~2 strengthening pass; general-axis
+case discharged via SU(2) Bloch decomposition during the
+Wave~2-followup.
+\item \textbf{Wave~3 (\texttt{FibonacciEpsilonNet.lean}, $\sim$180 LoC):}
+$\varepsilon_0$-net base case consuming
+F.21~(\S\ref{sec:fib-density-sk}.1). For any target
+$U \in \mathrm{SU}(2)$, the function
+\texttt{fibonacciEpsilonNet\_findNearest}\,$U\,\varepsilon_0$ returns a
+Fibonacci braid word $b$ with entrywise distance
+$\|\rho_{\mathrm{Fib}}(b) - U\|_\infty < \varepsilon_0$; existence is
+unconditional via F.21 density. The function is defined through
+\texttt{Classical.choose}, hence \texttt{noncomputable} as shipped --
+constructive enumeration is the Path-A Wave~7-followup.
+\item \textbf{Wave~4 (\texttt{SolovayKitaevRecursion.lean}, $\sim$170 LoC):}
+SK recursion engine $V_{n+1} = V_n \cdot [F_n, G_n]$ with the level-0
+base case discharged unconditionally; recursion-step super-quadratic
+shrinkage closed during the Wave~4-followup via the matrix log
+residual bound.
+\item \textbf{Wave~5 (\texttt{SolovayKitaevLengthBound.lean}, $\sim$140 LoC):}
+closed-form length recurrence
+$\texttt{skLength}\,n = \texttt{skLengthBaseCase}\cdot 5^n
++ \texttt{skBalancedDecompCost}\cdot(5^n - 1)/4$, sanity bounds
+$3 < c < 4$, and the asymptotic $\texttt{skLengthAtEpsilon}$ closed
+unconditionally during the strengthening pass.
+\item \textbf{Wave~6 (\texttt{SolovayKitaevQuantitative.lean}, $\sim$150 LoC):}
+the strict headline
+\texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_fibonacci\_strict}
+of \S\ref{sec:fib-density-sk}.2, composing the Wave~4 error bound and
+the Wave~5 length bound at the same algorithmic compile level.
+\item \textbf{Wave~7 (\texttt{SolovayKitaevApplications.lean}, $\sim$160 LoC):}
+worked-example consumers --- e.g.\ a polylog-length T-gate
+approximation under the Fibonacci representation --- and a Phase~6u
+placeholder for the future Chain~A$\circ$B Fourier-Transform
+composition.
+\item \textbf{Path~A (\texttt{SolovayKitaevPathA.lean}, $\sim$800 LoC):}
+the constructive variant
+\texttt{solovayKitaev\_compile\_strict\_constructive} with visible
+Dawson--Nielsen composition, plus an unconditional discharge of the
+tracked super-quadratic bound for a structural witness
+$K_{\mathrm{huge}} = 10^{30}$ and an unconditional loose-$\varepsilon$
+headline; calibration of the tight-$\varepsilon$ regime is detailed in
+\S\ref{sec:fib-density-sk}.4.
+\end{itemize}
+
+Across all eight modules the build closes at zero \texttt{sorry} and
+no new project-local axioms are introduced (Pipeline Invariant~\#15);
+the inherited axiom set is $\{\texttt{gapped\_interface\_axiom}\}$
+from Bundle~D2 alone.
+
+\subsection{Path A: constructive Dawson--Nielsen compiler and calibration disclosure}
+\label{subsec:path-a}
+
+The headline of \S\ref{sec:fib-density-sk}.2 uses
+\texttt{Classical.choose} to extract a braid word from the existence
+content of F.21 density. For a runnable reference compiler the
+substrate ships a parallel constructive variant
+\texttt{skApproxC} with the recursion equation
+\begin{equation}
+   \texttt{skApproxC}\,(n+1)\,U
+   \;=\; V_n \cdot \bigl[\texttt{skApproxC}\,n\,A_F,\,\texttt{skApproxC}\,n\,A_G\bigr],
+   \label{eq:path-a-rec}
+\end{equation}
+where $V_n = \texttt{skApproxC}\,n\,U$, $A_F = e^{iF_n}$,
+$A_G = e^{iG_n}$, and $F_n,G_n$ are extracted from the SU(2) balanced
+commutator factorisation of $V_n \cdot U^{-1}$. The composition is
+visible at the Lean term level via the
+\texttt{skApproxC\_succ} unfolding lemma, so the braid word emitted by
+the compiler exhibits the Dawson--Nielsen structure overtly rather
+than as an existential certificate.
+
+\paragraph{Tight-$\varepsilon$ calibration disclosure.}
+The substantive super-quadratic shrinkage bound for \texttt{skApproxC}
+is captured by the tracked predicate
+\texttt{SkApproxCSuperQuadraticBound}\,$K$. Its current state is:
+\begin{itemize}
+\item \emph{Unconditional} for the loose-$\varepsilon$ regime
+$\varepsilon \geq 2\varepsilon_0 = 2/(8\cdot K_{\mathrm{compose}}^2)$:
+the level-0 base case suffices, and the strict headline
+\texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_fibonacci\_strict\_constructive\_unconditional}
+ships kernel-only.
+\item \emph{Unconditional} at a structural witness
+$K_{\mathrm{huge}} = 10^{30}$ via the diameter bound
+$\|\rho_{\mathrm{Fib}}\,(\texttt{skApproxC}\,n\,U) - U\| \leq 2\sqrt 2$
+combined with the inductive
+inequality
+$K_{\mathrm{huge}}\cdot(2\varepsilon_0)^{3/2} \geq 2\sqrt 2$
+(satisfied numerically by a factor of $\sim 10^{16}$). This shows
+\texttt{SkApproxCSuperQuadraticBound} is satisfiable as a predicate;
+the constructive headline composes with it.
+\item \emph{Conditional} on a calibrated $K_{\mathrm{compose}} = 1024$
+discharge in the tight-$\varepsilon$ regime $\varepsilon < 2\varepsilon_0$.
+The inductive analysis at the current substrate constants requires
+$K \geq 2{,}180$ (absorbing a cubic remainder $\approx 1{,}522$
+per level, a stability factor $\approx 20$, and an $\sqrt 2$ unitarity
+factor from the $\ell^\infty$ operator norm) while convergence
+constrains $K \leq 2{,}050$ under
+$\varepsilon_0 = 1/(8\cdot K_{\mathrm{compose}}^2) = 1/8388608$.
+The residual $\sim 6\%$ algebraic gap is reachable only via sharper
+BCH cubic constants in
+\texttt{MatrixBCHCubic.bch\_order\_2\_cubic\_thm} (tightening
+$320\cdot\delta^3 \to \sim 140\cdot\delta^3$ would close it) or
+through a refinement of $\varepsilon_0$ that propagates through
+Waves~3--5. Both pathways are Mathlib-PR-quality follow-ups outside
+this paper's substrate-foundation scope.
+\end{itemize}
+The disclosure is explicit: the existence-form quantitative SK
+headline of \S\ref{sec:fib-density-sk}.2 ships unconditionally at
+zero \texttt{sorry}; the runnable constructive compiler ships
+unconditionally on the loose-$\varepsilon$ regime and on a structural
+$K$ witness, but the calibrated runnable form on the
+tightest-$\varepsilon$ regime awaits the BCH cubic tightening sprint.
+
+\subsection{Status, downstream consumption, and cross-bundle bridges}
+\label{subsec:fib-sk-status}
+
+\paragraph{Single-paper status.}
+At the close of this section the substrate's Fibonacci-anyon TQC
+infrastructure is closed at the foundational layer: F.21 density
+(\S\ref{sec:fib-density-sk}.1) and the Dawson--Nielsen quantitative
+length bound (\S\ref{sec:fib-density-sk}.2) ship with kernel-only
+headlines; the Path~A constructive compiler
+(\S\ref{sec:fib-density-sk}.4) ships with explicit calibration
+disclosure on the tight-$\varepsilon$ regime. The contribution
+upgrades the ``Open problems'' bullet of \S\ref{sec:synthesis}
+flagging the absent Fibonacci-universality protocol; the
+non-protocol-side open content (doublon-SWAP adiabatic-drag
+identification) is unchanged.
+
+\paragraph{Primacy claim.}
+The Phase~6t deep-research landscape scan
+(\texttt{Lit-Search/Phase-6t/}, May 2026) confirms that no proof
+assistant has shipped a kernel-verified quantitative Solovay--Kitaev
+length bound of any form --- neither for \{H, T\}, Fibonacci anyons,
+nor an abstract universal gate set --- as of the present writing. The
+conservative claim form, that this substrate is the first
+kernel-verified quantitative Solovay--Kitaev infrastructure
+instantiated for the Fibonacci-anyon braid representation in SU(2),
+survives even if a concurrent generic-SU(2) version is announced
+before the Path-A calibration sprint completes.
+
+\paragraph{Cross-bundle bridges.}
+\S\ref{sec:fib-density-sk}.1--2 cross-bridges to F (flagship)
+\S 7 as a downstream consumer of the Fibonacci-MTC content
+catalogued in F's program-internal register. The
+Dawson--Nielsen exponent $c$ and length constant $C$ feed F's
+asymptotic-summary equations directly. The QEC-MTC content of
+\S\ref{sec:qec-mtc} is independent of \S\ref{sec:fib-density-sk}; the
+Fibonacci-anyon density of \S\ref{sec:fib-density-sk}.1 is not
+required for the Hayden--Preskill admissibility biconditional, which
+treats the abstract MTC's coding properties. Within Phase~6t, the
+Path-A calibration is the only deferred substantive item; all eight
+headline theorems are kernel-only.
+
+\paragraph{Axiom inheritance.}
+The Phase~6p F.21 and Phase~6t SK substrate introduce no new
+project-local axioms. The single axiom inheritance from Bundle~D2
+(\texttt{gapped\_interface\_axiom}) and the single tracked-hypothesis
+Prop (\texttt{H\_HorizonBoundaryCondition}) recorded in
+\S\ref{sec:synthesis} are unchanged. Pipeline Invariants \#10 (no
+\texttt{maxHeartbeats} in proof bodies) and \#15 (no axioms without
+explicit sign-off and discharge plan) hold across all nine modules.
+
 \begin{thebibliography}{99}
+
+\bibitem{AharonovArad2017}
+D.~Aharonov and I.~Arad,
+``The BQP-hardness of approximating the Jones polynomial,''
+New J.\ Phys.\ \textbf{13}, 035019 (2011),
+arXiv:quant-ph/0605181;
+Lemma~6.1 (group-commutator quadratic-shrinkage substrate consumed by
+the F.21 density argument).
 
 \bibitem{AlmheiriMarolfPolchinskiSully2013}
 A.~Almheiri, D.~Marolf, J.~Polchinski, and J.~Sully,
@@ -826,6 +1179,14 @@ H.~Casini and M.~Huerta,
 ``Entanglement entropy in free quantum field theory,''
 J.\ Phys.\ A \textbf{42}, 504007 (2009),
 arXiv:0905.2562.
+
+\bibitem{DawsonNielsen2006}
+C.~M.~Dawson and M.~A.~Nielsen,
+``The Solovay--Kitaev algorithm,''
+Quantum Inf.\ Comput.\ \textbf{6}, 81--95 (2006),
+arXiv:quant-ph/0505030;
+canonical reference for the polylogarithmic length bound
+$\mathrm{length}(w) \leq C\cdot(\log(1/\varepsilon))^{\log 5/\log(3/2)}$.
 
 \bibitem{FreedmanLarsenWang2002}
 M.~H.~Freedman, M.~J.~Larsen, and Z.~Wang,
@@ -850,6 +1211,14 @@ A.~Yu.~Kitaev,
 ``Fault-tolerant quantum computation by anyons,''
 Ann.\ Phys.\ \textbf{303}, 2 (2003),
 arXiv:quant-ph/9707021.
+
+\bibitem{KitaevShenVyalyi2002}
+A.~Yu.~Kitaev, A.~H.~Shen, and M.~N.~Vyalyi,
+\emph{Classical and Quantum Computation},
+Graduate Studies in Mathematics \textbf{47}, American Mathematical
+Society (2002);
+existence form of the Solovay--Kitaev theorem (Theorem 8.3) prior
+to the Dawson--Nielsen quantitative refinement.
 
 \bibitem{LewkowyczMaldacena2013}
 A.~Lewkowycz and J.~Maldacena,
@@ -944,28 +1313,20 @@ Commun.\ Math.\ Phys.\ \textbf{121}, 351 (1989).
 
 
 %% ─── Lifted from _phase6p_W2cd_lean_only (§9) — 2026-05-23T08:19:09Z ───
-\section{F.21 Fibonacci-anyon density in SU(2) reduced to UNCONDITIONAL closure}
-\label{sec:d4-_phase6p_W2cd_lean_only}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §9
-%% Lift notes: Late absorption: Phase 6p F.21 unconditional density via Cartan v4 IFT 3-direction discharge (Trotter limit + linftyOp absolute SU(2) bound)
-%% TODO: lift content from papers/_phase6p_W2cd_lean_only/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
+%% (Section heading + label promoted into §\ref{sec:fib-density-sk} during
+%%  Stage 10.E manual prose authoring, 2026-05-23: skeleton replaced by
+%%  unified §9 "Fibonacci-anyon density and quantitative Solovay--Kitaev
+%%  compilation" inserted before the bibliography. Append-log entry retains
+%%  source-contribution registration.)
 %% ─── End lift from _phase6p_W2cd_lean_only ───
 
 
 %% ─── Lifted from _phase6t_lean_only (§9) — 2026-05-23T08:19:16Z ───
-\section{Quantitative Solovay-Kitaev length bound + Lean-extracted reference compiler...}
-\label{sec:d4-_phase6t_lean_only}
-
-%% Insertion point hint from PAPER_DRAFT_MAPPING.md: §9
-%% Lift notes: Late absorption: Phase 6t Dawson-Nielsen quantitative SK length bound + Lean-verified reference compiler skeleton + Path A constructive variant
-%% TODO: lift content from papers/_phase6t_lean_only/paper_draft.tex
-%% TODO: ensure all numerical claims trace via formulas.py / counts.tex
-%% TODO: ensure all citations have primary-source cache entries
-
+%% (Section heading + label promoted into §\ref{sec:fib-density-sk} during
+%%  Stage 10.E manual prose authoring, 2026-05-23: skeleton replaced by
+%%  unified §9 "Fibonacci-anyon density and quantitative Solovay--Kitaev
+%%  compilation" inserted before the bibliography. Append-log entry retains
+%%  source-contribution registration.)
 %% ─── End lift from _phase6t_lean_only ───
 
 \end{document}

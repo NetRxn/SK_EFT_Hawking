@@ -57,3 +57,11 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: §9
 - Stage-13 redo required: yes
 - Notes: Late absorption: Phase 6t Dawson-Nielsen quantitative SK length bound + Lean-verified reference compiler skeleton + Path A constructive variant
+
+## 2026-05-23 — Stage 10.E manual prose authoring (§9)
+
+- Source: authored fresh as synthesis-driven new composition (no per-paper-draft source)
+- Lift action: Stage10E-prose-authoring
+- Insertion point: §9 (BEFORE bibliography; supersedes the two post-bibliography D.4 sourceless skeletons)
+- Stage-13 redo required: yes
+- Notes: User-authorized 2026-05-23 (originally deferred as non-autonomous per roadmap §17.3). Unified §9 "Fibonacci-anyon density and quantitative Solovay--Kitaev compilation" authored with five subsections (~3500 words LaTeX): F.21 density (Phase 6p), Dawson--Nielsen quantitative length bound (Phase 6t Wave 6), eight-module Lean pipeline, Path A constructive variant + tight-ε calibration disclosure, status + cross-bundle bridges. Three new bibitems added: AharonovArad2017, DawsonNielsen2006, KitaevShenVyalyi2002. The two post-bibliography skeletons (formerly at lines 947+960) reduced to bookkeeping audit pointers; conventional pre-bibliography section placement adopted. LaTeX compile clean (27pp / 368224B). Calibration disclosure honest: Path A unconditional on loose-ε regime + structural K_huge witness; tight-ε regime gated on Mathlib-PR-quality BCH cubic tightening (320·δ³ → ~140·δ³) deferred. Stage 9/10/13 reviews now unblocked; primary-source cache files for the 3 new bibitems are a separate follow-up before Stage 13.

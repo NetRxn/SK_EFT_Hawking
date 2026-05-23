@@ -1,7 +1,7 @@
 # Phase 6t — Quantitative Solovay-Kitaev for Fibonacci Anyons: Substrate Ship
 
 **Date:** 2026-05-22 PM (Waves 1-7 ship) + 2026-05-22 PM post-compact (strengthening pass 1)
-**Status:** ✅ **WAVES 1-7 LEAN SUBSTRATE SHIPPED + WAVE 8 AUTONOMOUS PORTION COMPLETE (2026-05-23)** — kernel-only headline + 7 supporting modules + Path A constructive variant + Wave 8 Stage 6+8+10(skeleton)+11+12 shipped autonomously. Remaining (gated): Stage 10.E manual D4 §9 prose + LaTeX θ fix + Stages 9/10/13 reviews.
+**Status:** ✅ **WAVES 1-7 LEAN SUBSTRATE SHIPPED + WAVE 8 STAGE-10.E SHIPPED + LaTeX θ FIX SHIPPED (2026-05-23)** — kernel-only headline + 7 supporting modules + Path A constructive variant + Wave 8 Stage 6+8+10(full)+11+12 shipped + LaTeX θ blocker resolved. Remaining: Stages 9/10/13 review chain (now unblocked) + primary-source cache for 3 new §9 bibitems.
 **Strengthening pass 1 (2026-05-22 PM post-compact):** ✅ Wave 5 `SkLengthAtEpsilon` unconditionally discharged (1 tracked Prop eliminated; 4 → 3). ✅ Wave 2 X-axis + Y-axis subcases unconditionally discharged. ✅ Wave 5 `3 < c < 4` sanity bounds. ✅ Wave 1 invertible-specialized stability `groupCommutator_stability_invertible` + `matrix_inv_diff_norm_le` substrate lemma (Mathlib upstream-PR candidate).
 **Predecessor:** Phase 5 Step 13 Path (i) — F.21 unconditional density (2026-05-22 PM).
 **Successor:** Phase 6t Wave 2/4/6-followups (3 remaining tracked-Prop discharges, simplified by the strengthening pass), then Phase 6u (Chain A ∘ B FT composition).
@@ -107,17 +107,21 @@ This document is part of the Wave 8 closeout (Stages 6-13 of `docs/WAVE_EXECUTIO
 - **Stage 11** (Notebooks): `notebooks/Phase6t_SolovayKitaev_Technical.ipynb` (13 cells; F.21 refresher + quantitative SK statement + Lean pipeline + worked examples + numerical sanity + end-to-end logical chain + references) and `notebooks/Phase6t_SolovayKitaev_Stakeholder.ipynb` (9 cells; accessible-language framing). Both execute cleanly via `jupyter nbconvert --execute`; `validate.py --check notebooks` PASS both; `--check viz_consistency` PASS both clean. Commit `cbf6149`.
 - **Stage 12** (Document sync): this milestone doc update (in this commit) + memory entry `project_phase6t_wave8_closeout_2026_05_23.md`. `update_counts.py` regen pending.
 
-### Non-autonomous (manual / human-gated) — deferred
+### Non-autonomous (manual / human-gated) — SHIPPED 2026-05-23
 
-- **Stage 10.E** (manual D4 §9 prose authoring): 6-10 pages of LaTeX prose following the existing D4 sectioning conventions; cites Lean theorem names by fully-qualified name; cross-bridges to existing D4 §6 doublon-SWAP via "SK as universal-gate-set machinery". Per roadmap §17.3 explicit non-autonomous flag.
+- **Stage 10.E** (manual D4 §9 prose authoring): ✅ **SHIPPED 2026-05-23**. User authorized 2026-05-23 ("ok to draft text"), overriding the roadmap §17.3 non-autonomous flag. Unified §9 "Fibonacci-anyon density and quantitative Solovay--Kitaev compilation" authored fresh as synthesis-driven new composition (5 subsections, ~3500 words LaTeX) replacing two post-bibliography D.4 sourceless skeletons. Section inserted in conventional pre-bibliography position. Three new bibitems added: `AharonovArad2017`, `DawsonNielsen2006`, `KitaevShenVyalyi2002`. LaTeX compile clean: 27pp / 368224B (was 19pp / 307685B post-θ-fix). Calibration gap honestly disclosed in §9.4 (Path A tight-ε regime gated on Mathlib-PR-quality BCH cubic tightening 320·δ³ → ~140·δ³).
 
-### Gated on Stage 10.E + LaTeX θ fix
+### Pre-existing LaTeX θ compile blocker — RESOLVED 2026-05-23
+
+✅ **RESOLVED in commit `7c9c509`** (separate session). The unicode θ at `papers/D4/paper_draft.tex` line 457 in `\texttt{darkStateθ\_in\_kernel}` was replaced with `$\theta$` math-mode escape so the character renders in cmmi italic instead of being silently dropped by cmtt monospace. `pdflatex -interaction=nonstopmode paper_draft.tex` exits 0; PDF grows 19pp → 27pp on the new §9 prose.
+
+### Newly unblocked Wave 8 review chain
 
 - **Stage 9** (figure review): `physics-qa:figure-reviewer` against the two new Stage-8 figures.
 - **Stage 10.F** (claims review): `physics-qa:claims-reviewer --bundle D4` against the new §9 content.
 - **Stage 13** (bundle-level adversarial review): `physics-qa:adversarial-reviewer --bundle D4` (+ F if absorbed downstream).
 
-A pre-existing baseline LaTeX compile blocker (unicode θ at `papers/D4/paper_draft.tex` line 457 in `\texttt{darkStateθ\_in\_kernel}` from prior paper11 absorption) blocks all three reviews and has been spawned as a separate task.
+Recommended primary-source cache files for the 3 new bibitems (`back_fill_primary_sources.py --fetch --bibkey AharonovArad2017,DawsonNielsen2006,KitaevShenVyalyi2002`) should land before Stage 13.
 
 ## Cross-references
 

@@ -11,6 +11,8 @@
   "freshness_stale": false,
   "source_manifest_last_regen": "2026-05-23T08:19:16Z",
   "last_lift": "2026-05-23T08:19:16Z",
+  "stage10E_status": "shipped",
+  "last_stage10E_authoring": "2026-05-23",
   "last_stage9_review": "2026-05-07T01:00:00Z",
   "last_stage10_review": "2026-05-06T23:55:00Z",
   "last_stage13_review": "2026-05-07T00:50:00Z",
