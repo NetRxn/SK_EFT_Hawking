@@ -788,22 +788,14 @@ theorem solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_
   rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_zero] at h_base
   linarith
 
-/-- **Path A UNCONDITIONAL strict headline (loose ε regime, BUNDLED)**:
-for any target `U ∈ SU(2)` and precision `ε ∈ [2·ε₀, ε₀]`, the level-0
-constructive compiler achieves error ≤ ε AND a length bound matching
-the existing strict headline pattern.
+/-! **Note on `_bundled_loose`**: an earlier version of this file shipped a
+"bundled" theorem with hypotheses `2·ε₀ ≤ ε ∧ ε ≤ ε₀`. Those hypotheses
+are MUTUALLY EXCLUSIVE for ε₀ > 0 (they'd require `ε₀ ≤ 0`), so the
+theorem was vacuously true. We dropped it.
 
-The length bound at level 0 is just the base case length (independent of
-the strict polylog formula). For tight ε (ε < 2·ε₀), the substantive
-discharge is required. -/
-theorem solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_bundled_loose
-    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ)
-    (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) (h_ε : 2 * ε₀ ≤ ε) :
-    ‖(ρ_Fib_SU2 (skApproxC 0 U) : Matrix (Fin 2) (Fin 2) ℂ) -
-        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε ∧
-    skLength (skLevel_polylog ε) ≤
-      skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent := by
-  refine ⟨?_, skLength_at_skLevel_polylog_le ε hε_pos hε_le⟩
-  exact solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_unconditional U ε h_ε
+The honest unconditional ship is the unbundled `_unconditional` form
+(error only, for loose ε ≥ 2·ε₀). The substantive bundled form (error +
+polylog length for tight ε ∈ (0, ε₀]) requires the calibration-gated
+discharge of `SkApproxCSuperQuadraticBound K_compose`. -/
 
 end SKEFTHawking.FKLW.SolovayKitaevPathA
