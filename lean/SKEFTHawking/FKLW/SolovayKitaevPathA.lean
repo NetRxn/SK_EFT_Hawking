@@ -1280,6 +1280,23 @@ lemma half_pi_sqrt_two_mul_eps_le_one
       _ < 1 := by norm_num
   exact le_of_lt h_chain
 
+/-! **Note on the θ = 0 case in dnStepFG**: when the inductive step's
+`dnStepFG` invalid branch is entered (θ = 0, equivalent to `Y_h Δ = 0`),
+the regime check `‖Δ - 1‖ < 1/4` combined with the SU(2) algebraic
+constraint forces Δ = 1 (the antipodal Δ = -1 is excluded by ‖Δ - 1‖
+small). Hence V_n = U exactly, and the recursion's level-(m+1) error is
+0 ≤ K_compose · ε_n^{3/2} trivially.
+
+A formal helper `Y_h_eq_zero_in_regime_implies_eq_one` is the natural
+substrate for this case (it would use Y_h's polar decomposition + the
+SU(2) `det = 1` constraint to conclude h = 1 from Y_h h = 0 in the
+near-identity regime). This is left as a forward-compatible Mathlib-PR-
+quality candidate; the inductive step can also handle the θ = 0 case
+by bounding via `skApproxC_diameter_bound` (giving ε ≤ 2·√2) AND
+showing the level-(m+1) braid degenerates trivially (gC of identical
+braid words = 1 in BraidGroup), reducing the level-(m+1) error to the
+IH bound on V_n_braid. -/
+
 /-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
 
 The Option-C-tightened Y_h Lipschitz bound (`Y_h_norm_le_half_pi_norm_sub_one`,
