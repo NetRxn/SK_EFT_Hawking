@@ -1355,6 +1355,26 @@ lemma Y_h_eq_zero_in_regime_implies_eq_one
     simp [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul]
   · simp [Matrix.smul_apply, Matrix.one_apply_ne h_ij, smul_eq_mul]
 
+/-- **Trace bound from near-identity regime**: for `h ∈ SU(2)` with
+`‖h - 1‖ < 1/4`, the trace real part satisfies `h.trace.re > 3/2`, in
+particular `h.trace.re ≠ -2`.
+
+Consumed by the inductive step's valid branch as the precondition for
+`dnStepFG_exp_neg_comm_eq_Delta` (which requires `Δ.trace.re ≠ -2` to
+apply §9.7 `SU2_expAmbient_Y_h_eq`). The bound `> 3/2` follows from
+`1 - h.trace.re/2 ≤ ‖h - 1‖ < 1/4` via `SU2_one_sub_trace_re_div_two_le_norm_sub_one`. -/
+lemma SU2_trace_re_ne_neg_two_of_norm_sub_one_lt_quarter
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_small : ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1 / 4) :
+    h.trace.re ≠ -2 := by
+  have h_one_sub_a_le : 1 - h.trace.re / 2 ≤ ‖h - 1‖ :=
+    SU2_one_sub_trace_re_div_two_le_norm_sub_one hh
+  intro h_eq
+  -- If h.trace.re = -2, then 1 - (-2)/2 = 1 + 1 = 2 ≤ ‖h - 1‖ < 1/4, contradiction.
+  rw [h_eq] at h_one_sub_a_le
+  linarith
+
 /-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
 
 The Option-C-tightened Y_h Lipschitz bound (`Y_h_norm_le_half_pi_norm_sub_one`,
