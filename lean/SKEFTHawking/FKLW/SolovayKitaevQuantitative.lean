@@ -170,27 +170,26 @@ remaining substantive step is just the length-bound composition.
   - Invariant #10 (no `maxHeartbeats`): RESPECTED.
   - Invariant #15 (no new axioms): RESPECTED. -/
 
-/-- **HEADLINE THEOREM (Phase 6t Iteration 2 sub-ship 4 UNCONDITIONAL,
+/-- **HEADLINE THEOREM (Phase 6t Iteration 2 sub-ship 4 STRONG UNCONDITIONAL,
 2026-05-22 PM continued autonomous loop)** — Quantitative Solovay-Kitaev
 for the Fibonacci-anyon braid representation in SU(2), strict regime.
 
 For every `U ∈ SU(2)` and `ε ∈ (0, ε₀]`:
   - The strict compiler `solovayKitaev_compile_strict U ε` produces a
     Fibonacci braid word `w` with `‖ρ_Fib_SU2 w - U‖ ≤ ε`.
-  - There exists a recursion level `n` whose `skLength` is bounded by
-    `skLengthConst · (Real.log (1/ε))^skLengthExponent`.
+  - The `skLength` AT THE EXACT COMPILE LEVEL `skLevel_polylog ε` is bounded
+    by `skLengthConst · (Real.log (1/ε))^skLengthExponent`.
 
-This is the UNCONDITIONAL strict-regime form. The bundled-at-same-level
-form is the future strengthening (requires transcendental bookkeeping
-on `5^(skLevel_polylog ε) ≤ const · (log(1/ε))^c`). -/
+This is the STRONG bundled UNCONDITIONAL form: error AND length both at
+the algorithmic level. -/
 theorem solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict
     (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ)
     (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) :
     ‖(ρ_Fib_SU2 (solovayKitaev_compile_strict U ε) :
         Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε ∧
-    ∃ (n : ℕ), skLength n ≤
+    skLength (skLevel_polylog ε) ≤
       skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent :=
   ⟨solovayKitaev_compile_strict_error_le U ε hε_pos,
-   skLengthAtEpsilon_unconditional ε hε_pos hε_le⟩
+   skLength_at_skLevel_polylog_le ε hε_pos hε_le⟩
 
 end SKEFTHawking.FKLW.SolovayKitaevQuantitative
