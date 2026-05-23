@@ -1204,6 +1204,82 @@ lemma SU2_val_mem_unitaryGroup
   rw [Matrix.mem_specialUnitaryGroup_iff] at h_mem
   exact h_mem.1
 
+/-- **Regime: `√2 · ε_n < 1/4` for any `ε_n ≤ 2·ε₀`**.
+
+Consumed by the inductive step's Step 3 regime check (the §82
+`Y_h_norm_le_half_pi_norm_sub_one` precondition `‖Δ - 1‖ < 1/4`,
+where ‖Δ - 1‖ ≤ √2·ε_n via `residual_norm_le_sqrt_two_mul`).
+
+Numerical: `√2 · 2·ε₀ = √2 / 4194304 ≈ 3.4e-7 << 1/4`. -/
+lemma sqrt_two_mul_eps_lt_one_quarter
+    (ε_n : ℝ) (h_nn : 0 ≤ ε_n) (h_le : ε_n ≤ 2 * ε₀) :
+    Real.sqrt 2 * ε_n < 1 / 4 := by
+  have h_two_ε₀ : 2 * ε₀ = 1 / 4194304 := two_ε₀_value
+  have h_sqrt2_lt : Real.sqrt 2 < 2 := by
+    have h_sqrt2_lt_sqrt4 : Real.sqrt 2 < Real.sqrt 4 :=
+      Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+    have h_sqrt4 : Real.sqrt 4 = 2 := by
+      rw [show (4 : ℝ) = 2 ^ 2 from by norm_num,
+          Real.sqrt_sq (by norm_num : (0 : ℝ) ≤ 2)]
+    rwa [h_sqrt4] at h_sqrt2_lt_sqrt4
+  have h_sqrt2_nn : (0 : ℝ) ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have h_2ε₀_pos : 0 < 2 * ε₀ := two_ε₀_pos
+  -- √2 · ε_n ≤ √2 · 2·ε₀ < 2 · 2·ε₀ = 1/2097152 < 1/4
+  calc Real.sqrt 2 * ε_n
+      ≤ Real.sqrt 2 * (2 * ε₀) :=
+        mul_le_mul_of_nonneg_left h_le h_sqrt2_nn
+    _ < 2 * (2 * ε₀) := by
+        exact (mul_lt_mul_iff_of_pos_right h_2ε₀_pos).mpr h_sqrt2_lt
+    _ = 2 * (1 / 4194304) := by rw [h_two_ε₀]
+    _ < 1 / 4 := by norm_num
+
+/-- **Regime: `(π/2)·√2·ε_n ≤ 1` for any `ε_n ≤ 2·ε₀`**.
+
+Consumed by the inductive step's Step 7 regime check (the `dnStepFG`
+validity hypothesis `θ ≤ 1` where θ ≤ (π/2)·√2·ε_n via
+`H_norm_bound_from_V_diff_half_pi`).
+
+Numerical: `(π/2)·√2·2·ε₀ < 4·2·ε₀ = 2·ε₀·4 = 1/524288 << 1`. -/
+lemma half_pi_sqrt_two_mul_eps_le_one
+    (ε_n : ℝ) (h_nn : 0 ≤ ε_n) (h_le : ε_n ≤ 2 * ε₀) :
+    (Real.pi / 2) * Real.sqrt 2 * ε_n ≤ 1 := by
+  have h_two_ε₀ : 2 * ε₀ = 1 / 4194304 := two_ε₀_value
+  have h_sqrt2_lt_2 : Real.sqrt 2 < 2 := by
+    have h_sqrt2_lt_sqrt4 : Real.sqrt 2 < Real.sqrt 4 :=
+      Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+    have h_sqrt4 : Real.sqrt 4 = 2 := by
+      rw [show (4 : ℝ) = 2 ^ 2 from by norm_num,
+          Real.sqrt_sq (by norm_num : (0 : ℝ) ≤ 2)]
+    rwa [h_sqrt4] at h_sqrt2_lt_sqrt4
+  have h_sqrt2_nn : (0 : ℝ) ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  have h_pi_lt : Real.pi < 4 := by linarith [Real.pi_lt_d2]
+  have h_half_pi_lt_two : Real.pi / 2 < 2 := by linarith
+  have h_pi_pos : (0 : ℝ) < Real.pi := Real.pi_pos
+  have h_half_pi_nn : (0 : ℝ) ≤ Real.pi / 2 := by positivity
+  -- Combined: (π/2) · √2 < 2 · 2 = 4.
+  have h_prod_lt : (Real.pi / 2) * Real.sqrt 2 < 4 := by
+    have h_step1 : (Real.pi / 2) * Real.sqrt 2 < 2 * Real.sqrt 2 :=
+      (mul_lt_mul_iff_of_pos_right (by
+        have : Real.sqrt 2 > 0 := by
+          rw [show (0 : ℝ) = Real.sqrt 0 from Real.sqrt_zero.symm]
+          exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+        exact this)).mpr h_half_pi_lt_two
+    have h_step2 : 2 * Real.sqrt 2 < 2 * 2 :=
+      (mul_lt_mul_iff_of_pos_left (by norm_num : (0 : ℝ) < 2)).mpr h_sqrt2_lt_2
+    linarith
+  -- (π/2)·√2·ε_n ≤ (π/2)·√2·(2·ε₀) < 4·(2·ε₀) = 1/524288 ≤ 1
+  have h_prod_nn : (0 : ℝ) ≤ (Real.pi / 2) * Real.sqrt 2 := by positivity
+  have h_chain : (Real.pi / 2) * Real.sqrt 2 * ε_n < 1 := by
+    calc (Real.pi / 2) * Real.sqrt 2 * ε_n
+        ≤ (Real.pi / 2) * Real.sqrt 2 * (2 * ε₀) :=
+          mul_le_mul_of_nonneg_left h_le h_prod_nn
+      _ < 4 * (2 * ε₀) := by
+          have h_2ε₀_pos : 0 < 2 * ε₀ := two_ε₀_pos
+          exact (mul_lt_mul_iff_of_pos_right h_2ε₀_pos).mpr h_prod_lt
+      _ = 4 * (1 / 4194304) := by rw [h_two_ε₀]
+      _ < 1 := by norm_num
+  exact le_of_lt h_chain
+
 /-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
 
 The Option-C-tightened Y_h Lipschitz bound (`Y_h_norm_le_half_pi_norm_sub_one`,
