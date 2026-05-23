@@ -1506,6 +1506,17 @@ lemma dnStepFG_invalid_F_zero
   rw [dif_neg h_invalid]
   exact ⟨rfl, rfl⟩
 
+/-- **`expIsu2 0 = 1`**: the SU(2) lift of the zero Hermitian-traceless
+matrix equals the SU(2) identity. Direct unfolding via
+`expIsu2_val` + `expAmbient_zero`. -/
+lemma expIsu2_zero_val :
+    ((expIsu2 (0 : Matrix (Fin 2) (Fin 2) ℂ) Matrix.isHermitian_zero
+              (Matrix.trace_zero (Fin 2) ℂ) :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+  rw [expIsu2_val]
+  simp [SU2MatrixExp.expAmbient_zero]
+
 /-! ## 8. Path A unconditional strict headline for loose ε regime
 
 For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
