@@ -1178,6 +1178,32 @@ lemma expIsu2_inv_norm_sub_one_le
         gcongr
     _ ≤ Real.sqrt 2 * (δ * Real.exp δ) := by gcongr
 
+/-- **SU(2) det is a unit**: for `A : ↥(specialUnitaryGroup (Fin 2) ℂ)`,
+`IsUnit A.val.det`. Trivially true since `det A.val = 1` for SU(2)
+elements, and `IsUnit 1` holds. Consumed by
+`groupCommutator_stability_nearIdentity` (which requires invertibility
+of the perturbation arguments). -/
+lemma SU2_val_det_isUnit
+    (A : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    IsUnit (A : Matrix (Fin 2) (Fin 2) ℂ).det := by
+  have h_mem : (A : Matrix (Fin 2) (Fin 2) ℂ) ∈
+               Matrix.specialUnitaryGroup (Fin 2) ℂ := A.property
+  rw [Matrix.mem_specialUnitaryGroup_iff] at h_mem
+  obtain ⟨_, h_det⟩ := h_mem
+  rw [h_det]
+  exact isUnit_one
+
+/-- **SU(2) val is in unitaryGroup** (companion to `SU2_val_det_isUnit`):
+for `A : ↥(specialUnitaryGroup (Fin 2) ℂ)`, the underlying matrix is in
+`unitaryGroup (Fin 2) ℂ`. Direct unfold of the membership condition. -/
+lemma SU2_val_mem_unitaryGroup
+    (A : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    (A : Matrix (Fin 2) (Fin 2) ℂ) ∈ Matrix.unitaryGroup (Fin 2) ℂ := by
+  have h_mem : (A : Matrix (Fin 2) (Fin 2) ℂ) ∈
+               Matrix.specialUnitaryGroup (Fin 2) ℂ := A.property
+  rw [Matrix.mem_specialUnitaryGroup_iff] at h_mem
+  exact h_mem.1
+
 /-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
 
 The Option-C-tightened Y_h Lipschitz bound (`Y_h_norm_le_half_pi_norm_sub_one`,
