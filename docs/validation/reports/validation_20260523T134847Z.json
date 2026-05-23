@@ -1,0 +1,29 @@
+{
+  "timestamp": "20260523T134847Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "citation_primary_sources_present": {
+      "passed": false,
+      "error": null,
+      "details": [
+        {
+          "name": "summary",
+          "passed": false,
+          "message": "416 bibkeys cited across 57 papers \u2014 286 cached / 30 inprep-exempt / 97 textbook-exempt / 0 need cache / 3 missing-from-registry",
+          "warning": false
+        },
+        {
+          "name": "missing_from_registry",
+          "passed": false,
+          "message": "3 cited bibkeys absent from CITATION_REGISTRY: AharonovArad2017, DawsonNielsen2006, KitaevShenVyalyi2002",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  }
+}

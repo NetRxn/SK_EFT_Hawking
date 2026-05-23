@@ -1,0 +1,23 @@
+SK-EFT Hawking Validation Report
+Generated: 20260523T094410Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] bundle_source_freshness
+  + summary — 15 sub-findings: 0 FAIL / 7 WARN / 8 PASS
+  + bundle:D1 — freshness-stale: 4 of 9 source paper(s) modified after last_lift (2026-05-12); sample: paper12_polariton(2026-05-22), paper1_first_order(2026-05-22), paper2_second_order(2026-05-22) ... and 1 more
+  + bundle:D2 — freshness-stale: 2 of 6 source paper(s) modified after last_lift (2026-05-12); sample: paper7_chirality_formal(2026-05-22), paper8_chirality_master(2026-05-22)
+  + bundle:D3 — freshness-stale: 1 of 31 source paper(s) modified after last_lift (2026-05-12); sample: paper40_higher_curvature(2026-05-22)
+  + bundle:D4 — stage13_redo_required=true (set by bundle_append.py); Stage-13 reviewer agent must re-clear before bundle close
+  + bundle:D4 — fresh: all 12 source paper(s) older than last_lift (2026-05-23)
+  + bundle:D5 — fresh: all 9 source paper(s) older than last_lift (2026-05-12)
+  + bundle:E1 — freshness-stale: 1 of 3 source paper(s) modified after last_lift (2026-05-11); sample: paper12_polariton(2026-05-22)
+  + bundle:E2 — fresh: all 2 source paper(s) older than last_lift (2026-05-12)
+  + bundle:F — freshness-stale: 9 of 52 source paper(s) modified after last_lift (2026-05-12); sample: paper11_quantum_group(2026-05-22), paper12_polariton(2026-05-22), paper15_methodology(2026-05-22) ... and 6 more
+  + bundle:I1 — freshness-stale: 1 of 6 source paper(s) modified after last_lift (2026-05-12); sample: paper15_methodology(2026-05-22)
+  + bundle:I2 — fresh: all 1 source paper(s) older than last_lift (2026-05-06)
+  + bundle:I3 — fresh: all 1 source paper(s) older than last_lift (2026-05-06)
+  + bundle:L1 — fresh: all 2 source paper(s) older than last_lift (2026-05-06)
+  + bundle:L2 — fresh: all 1 source paper(s) older than last_lift (2026-05-12)
+  + bundle:L3 — fresh: all 4 source paper(s) older than last_lift (2026-05-06)
+
+Overall: 1/1 passed
