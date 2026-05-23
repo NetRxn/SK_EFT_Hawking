@@ -313,6 +313,82 @@ theorem skApproxC_zero_error_bound
   -- The bound is exactly 2·ε₀
   exact h
 
+/-! ## 5. Step 4 substrate lemmas
+
+Reusable substrate for the level-(n+1) inductive error bound. Each lemma
+encapsulates one of the 11 sub-steps of the DN error analysis. -/
+
+/-- **Residual norm bound**: for `V, U ∈ SU(2)`, the residual `V⁻¹·U - 1`
+has linftyOp norm at most `√2 · ‖V - U‖`.
+
+Proof: `V⁻¹·U - 1 = V⁻¹·(U - V)`, then ‖V⁻¹‖ ≤ √2 (SU(2) bound) and
+`‖U - V‖ = ‖V - U‖` by norm symmetry. -/
+lemma residual_norm_le_sqrt_two_mul
+    (V U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  -- Use subtype-level mul-val to expose V⁻¹.val * U.val
+  have h_mul_val : ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) =
+                   (V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val *
+                   U.val := rfl
+  rw [h_mul_val]
+  -- V⁻¹.val * U.val - 1 = V⁻¹.val * (U.val - V.val)  (since V⁻¹.val * V.val = 1)
+  have h_V_inv_mem : (V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val ∈
+                      Matrix.specialUnitaryGroup (Fin 2) ℂ := (V⁻¹).property
+  have h_V_inv_norm : ‖(V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val‖ ≤
+                      Real.sqrt 2 := SU2_linftyOpNorm_le_sqrt_two h_V_inv_mem
+  -- V⁻¹.val * V.val = (V⁻¹ * V).val = (1 : SU(2)).val = 1
+  have h_inv_left : (V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val * V.val = 1 := by
+    have h := inv_mul_cancel V
+    have : ((V⁻¹ * V : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) =
+           (V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val * V.val := rfl
+    rw [← this, h]
+    rfl
+  -- Rewrite V⁻¹.val * U.val - 1 = V⁻¹.val * (U.val - V.val)
+  have h_factor : (V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val * U.val -
+                    (1 : Matrix (Fin 2) (Fin 2) ℂ) =
+                  (V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val *
+                    (U.val - V.val) := by
+    rw [Matrix.mul_sub]
+    rw [h_inv_left]
+  rw [h_factor]
+  -- ‖V⁻¹.val * (U.val - V.val)‖ ≤ ‖V⁻¹.val‖ · ‖U.val - V.val‖
+  -- (sub-multiplicativity of linftyOp norm on matrices)
+  have h_sub_mul := norm_mul_le
+    ((V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val) (U.val - V.val)
+  -- ‖U.val - V.val‖ = ‖V.val - U.val‖ by norm_sub_rev
+  have h_norm_sub_sym : ‖U.val - V.val‖ = ‖V.val - U.val‖ := norm_sub_rev _ _
+  calc ‖(V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val * (U.val - V.val)‖
+      ≤ ‖(V⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val‖ * ‖U.val - V.val‖
+        := h_sub_mul
+    _ ≤ Real.sqrt 2 * ‖U.val - V.val‖ := by
+        gcongr
+    _ = Real.sqrt 2 * ‖V.val - U.val‖ := by rw [h_norm_sub_sym]
+
+/-- **H norm bound**: for `Δ ∈ SU(2)` with `‖Δ.val - 1‖ < 1/4`,
+the `H = (-Complex.I) • Y_h Δ.val` matrix has linftyOp norm at most
+`4 · ‖Δ.val - 1‖`.
+
+Proof: `‖(-i) • Y_h Δ‖ = |i| · ‖Y_h Δ‖ = 1 · ‖Y_h Δ‖`, then apply
+`Y_h_norm_le_four_norm_sub_one`. -/
+lemma H_norm_le_four_norm_sub_one
+    {Δ : Matrix (Fin 2) (Fin 2) ℂ}
+    (hΔ : Δ ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_small : ‖Δ - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1 / 4) :
+    ‖((-Complex.I) • Y_h Δ : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      4 * ‖Δ - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  -- ‖(-i) • Y_h Δ‖ = ‖-i‖ · ‖Y_h Δ‖ = 1 · ‖Y_h Δ‖
+  rw [norm_smul]
+  have h_norm_neg_I : ‖(-Complex.I)‖ = 1 := by
+    rw [norm_neg, Complex.norm_I]
+  rw [h_norm_neg_I, one_mul]
+  -- Apply Y_h_norm_le_four_norm_sub_one
+  exact Y_h_norm_le_four_norm_sub_one hΔ h_small
+
 /-! ## 5. (next ship) Constructive strict headline
 
 Step 5 of Path A. -/
