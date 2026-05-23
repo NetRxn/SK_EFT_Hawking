@@ -1106,6 +1106,78 @@ lemma expIsu2_norm_sub_one_le
     _ ≤ δ * Real.exp ‖F‖ := mul_le_mul_of_nonneg_right hF_norm h_exp_nn
     _ ≤ δ * Real.exp δ := mul_le_mul_of_nonneg_left h_exp_le h_δ_nn
 
+/-- **`expIsu2` matrix-inverse near-identity bound**: for `F` Hermitian-traceless
+with `‖F‖ ≤ δ`, the matrix inverse of `(expIsu2 F).val` satisfies
+
+  `‖((expIsu2 F).val)⁻¹ - 1‖ ≤ √2 · δ · exp(δ)`
+
+where `⁻¹` is `Matrix.nonsing_inv` and the SU(2) linftyOp bound √2 enters
+via the identity `A⁻¹ - 1 = -A⁻¹·(A - 1)`. -/
+lemma expIsu2_inv_norm_sub_one_le
+    (F : Matrix (Fin 2) (Fin 2) ℂ) (hF : F.IsHermitian) (htr : F.trace = 0)
+    (δ : ℝ) (hF_norm : ‖F‖ ≤ δ) :
+    ‖((expIsu2 F hF htr : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ)⁻¹ - 1‖ ≤ Real.sqrt 2 * (δ * Real.exp δ) := by
+  set A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) := expIsu2 F hF htr with hA_F_def
+  -- Bridge: A_F.val⁻¹ = (A_F⁻¹ : SU(2)).val via SU2_subtype_inv_val_eq_matrix_inv.
+  rw [← SU2_subtype_inv_val_eq_matrix_inv A_F]
+  -- A_F.val⁻¹ - 1 = (A_F⁻¹).val - 1. Use the identity:
+  --   (A_F⁻¹).val - 1 = -(A_F⁻¹).val · ((A_F).val - 1)  [via (A_F⁻¹).val · A_F.val = 1]
+  have h_inv_mul : ((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                     Matrix (Fin 2) (Fin 2) ℂ) *
+                   (A_F : Matrix (Fin 2) (Fin 2) ℂ) = 1 := by
+    have h := inv_mul_cancel A_F
+    have h_eq : ((A_F⁻¹ * A_F : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) =
+           ((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+              Matrix (Fin 2) (Fin 2) ℂ) *
+           (A_F : Matrix (Fin 2) (Fin 2) ℂ) := rfl
+    rw [← h_eq, h]
+    rfl
+  have h_id : ((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) - 1 =
+              -((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                  Matrix (Fin 2) (Fin 2) ℂ) *
+              ((A_F : Matrix (Fin 2) (Fin 2) ℂ) - 1) := by
+    have h_calc : -((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                    Matrix (Fin 2) (Fin 2) ℂ) *
+                  ((A_F : Matrix (Fin 2) (Fin 2) ℂ) - 1) =
+                  -(((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                      Matrix (Fin 2) (Fin 2) ℂ) *
+                    (A_F : Matrix (Fin 2) (Fin 2) ℂ)) +
+                  ((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                      Matrix (Fin 2) (Fin 2) ℂ) := by
+      noncomm_ring
+    rw [h_calc, h_inv_mul]
+    abel
+  rw [h_id]
+  -- ‖-(A_F⁻¹).val · (A_F.val - 1)‖ ≤ ‖(A_F⁻¹).val‖ · ‖A_F.val - 1‖ ≤ √2 · δ · exp(δ)
+  have h_mul_le := norm_mul_le
+      (-((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ))
+      ((A_F : Matrix (Fin 2) (Fin 2) ℂ) - 1)
+  have h_inv_norm : ‖((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                       Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ Real.sqrt 2 :=
+    SU2_linftyOpNorm_le_sqrt_two (A_F⁻¹).property
+  have h_neg_norm : ‖-((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+                       Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ Real.sqrt 2 := by
+    rw [norm_neg]; exact h_inv_norm
+  have h_sub_one_norm : ‖((A_F : Matrix (Fin 2) (Fin 2) ℂ)) - 1‖ ≤
+                        δ * Real.exp δ :=
+    expIsu2_norm_sub_one_le F hF htr δ hF_norm
+  have h_sub_one_nn : (0 : ℝ) ≤ ‖((A_F : Matrix (Fin 2) (Fin 2) ℂ)) - 1‖ :=
+    norm_nonneg _
+  have h_sqrt2_nn : (0 : ℝ) ≤ Real.sqrt 2 := Real.sqrt_nonneg _
+  calc ‖-((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) *
+        ((A_F : Matrix (Fin 2) (Fin 2) ℂ) - 1)‖
+      ≤ ‖-((A_F⁻¹ : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)‖ *
+        ‖((A_F : Matrix (Fin 2) (Fin 2) ℂ)) - 1‖ := h_mul_le
+    _ ≤ Real.sqrt 2 * ‖((A_F : Matrix (Fin 2) (Fin 2) ℂ)) - 1‖ := by
+        gcongr
+    _ ≤ Real.sqrt 2 * (δ * Real.exp δ) := by gcongr
+
 /-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
 
 The Option-C-tightened Y_h Lipschitz bound (`Y_h_norm_le_half_pi_norm_sub_one`,
