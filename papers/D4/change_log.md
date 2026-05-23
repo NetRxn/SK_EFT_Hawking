@@ -41,3 +41,19 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-05-12 first-claim-removal: paper11_quantum_group abstract + introduction + conclusions rewritten (multiple primacy claims removed including 'first quantum group library', 'first verified MTC instances', 'first Hopf algebra', 'first parameterized quantum group definition' - replaced with descriptive content); paper14_braided_mtc title changed ('First Formally Verified ...' -> 'Formally Verified ...'), abstract + body + conclusion rewritten to descriptive; paper16_wrt_tqft title changed ('The First Formalization of the' -> 'A Formalization of the'), abstract + body + conclusion rewritten.
+
+## 2026-05-23 — Lift-section from `_phase6p_W2cd_lean_only` (§9)
+
+- Source title: F.21 Fibonacci-anyon density in SU(2) reduced to UNCONDITIONAL closure
+- Lift action: Lift-section
+- Insertion point: §9
+- Stage-13 redo required: yes
+- Notes: Late absorption: Phase 6p F.21 unconditional density via Cartan v4 IFT 3-direction discharge (Trotter limit + linftyOp absolute SU(2) bound)
+
+## 2026-05-23 — Lift-section from `_phase6t_lean_only` (§9)
+
+- Source title: Quantitative Solovay-Kitaev length bound + Lean-extracted reference compiler...
+- Lift action: Lift-section
+- Insertion point: §9
+- Stage-13 redo required: yes
+- Notes: Late absorption: Phase 6t Dawson-Nielsen quantitative SK length bound + Lean-verified reference compiler skeleton + Path A constructive variant

@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-05-11
+**Auto-generated:** 2026-05-23
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable.
@@ -15,12 +15,12 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Verdict |
 |---|---:|---:|---:|---:|---|:---:|
-| **F** | 0 | 50 | 4 | 1 | 1 major, 3 minor | 🔴 RED |
+| **F** | 0 | 52 | 22 | 8 | 3 advisory, 2 critical, 6 major, 11 minor | 🔴 RED |
 | **D1** | 1 | 9 | 1 | 0 | 1 minor | 🟢 GREEN |
 | **D2** | 1 | 6 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **D3** | 1 | 31 | 1 | 0 | 1 minor | 🟢 GREEN |
-| **D4** | 1 | 10 | 2 | 1 | 1 major, 1 minor | 🔴 RED |
-| **D5** | 1 | 9 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D3** | 1 | 31 | 10 | 5 | 5 major, 5 minor | 🔴 RED |
+| **D4** | 1 | 12 | 4 | 1 | 1 major, 3 minor | 🔴 RED |
+| **D5** | 1 | 9 | 7 | 2 | 3 advisory, 2 critical, 2 minor | 🔴 RED |
 | **L1** | 2 | 2 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L2** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L3** | 2 | 4 | 0 | 0 | _(none)_ | 🟢 GREEN |
@@ -32,22 +32,22 @@
 
 ## Gate × Bundle distribution (open findings)
 
-| Bundle | CitationIntegrity | ParameterProvenanc | unclassified |
-|---|---:|---:|---:|
-| **F** | 2 | 1 | 1 |
-| **D1** | 0 | 0 | 1 |
-| **D2** | 0 | 0 | 0 |
-| **D3** | 1 | 0 | 0 |
-| **D4** | 1 | 1 | 0 |
-| **D5** | 0 | 0 | 0 |
-| **L1** | 0 | 0 | 0 |
-| **L2** | 0 | 0 | 0 |
-| **L3** | 0 | 0 | 0 |
-| **I1** | 0 | 0 | 0 |
-| **I2** | 0 | 0 | 0 |
-| **I3** | 0 | 0 | 0 |
-| **E1** | 0 | 0 | 0 |
-| **E2** | 0 | 0 | 1 |
+| Bundle | CitationIntegrity | CountFreshness | ParameterProvenanc | unclassified |
+|---|---:|---:|---:|---:|
+| **F** | 9 | 1 | 3 | 9 |
+| **D1** | 0 | 0 | 0 | 1 |
+| **D2** | 0 | 0 | 0 | 0 |
+| **D3** | 6 | 0 | 0 | 4 |
+| **D4** | 1 | 0 | 2 | 1 |
+| **D5** | 2 | 1 | 1 | 3 |
+| **L1** | 0 | 0 | 0 | 0 |
+| **L2** | 0 | 0 | 0 | 0 |
+| **L3** | 0 | 0 | 0 | 0 |
+| **I1** | 0 | 0 | 0 | 0 |
+| **I2** | 0 | 0 | 0 | 0 |
+| **I3** | 0 | 0 | 0 | 0 |
+| **E1** | 0 | 0 | 0 | 0 |
+| **E2** | 0 | 0 | 0 | 1 |
 
 ## Notes
 

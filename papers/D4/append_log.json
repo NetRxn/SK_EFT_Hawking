@@ -69,6 +69,42 @@
       "stage13_redo_required": false,
       "agent_run_id": "first-claim-removal-bookkeeping-2026-05-12T13:00:00Z",
       "notes": "2026-05-12 first-claim-removal: paper11_quantum_group abstract + introduction + conclusions rewritten (multiple primacy claims removed including 'first quantum group library', 'first verified MTC instances', 'first Hopf algebra', 'first parameterized quantum group definition' - replaced with descriptive content); paper14_braided_mtc title changed ('First Formally Verified ...' -> 'Formally Verified ...'), abstract + body + conclusion rewritten to descriptive; paper16_wrt_tqft title changed ('The First Formalization of the' -> 'A Formalization of the'), abstract + body + conclusion rewritten."
+    },
+    {
+      "date": "2026-05-23T08:19:09Z",
+      "source_paper": "_phase6p_W2cd_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a79",
+      "lean_modules_referenced": [
+        "SU2BCHBracketClosure",
+        "OneParameterSubgroupSU2",
+        "SU2LieAlgebra",
+        "MatrixBCHCubic"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-23T08:19:09Z",
+      "notes": "Late absorption: Phase 6p F.21 unconditional density via Cartan v4 IFT 3-direction discharge (Trotter limit + linftyOp absolute SU(2) bound)"
+    },
+    {
+      "date": "2026-05-23T08:19:16Z",
+      "source_paper": "_phase6t_lean_only",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a79",
+      "lean_modules_referenced": [
+        "GroupCommutator",
+        "SU2BalancedCommutator",
+        "FibonacciEpsilonNet",
+        "SolovayKitaevRecursion",
+        "SolovayKitaevLengthBound",
+        "SolovayKitaevQuantitative",
+        "SolovayKitaevApplications",
+        "SolovayKitaevPathA"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-23T08:19:16Z",
+      "notes": "Late absorption: Phase 6t Dawson-Nielsen quantitative SK length bound + Lean-verified reference compiler skeleton + Path A constructive variant"
     }
   ]
 }

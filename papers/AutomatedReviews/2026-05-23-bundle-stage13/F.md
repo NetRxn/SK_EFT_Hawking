@@ -1,0 +1,112 @@
+# Bundle F — Stage-13 readiness summary
+
+**Date:** 2026-05-23
+**Tool:** `scripts/bundle_readiness.py`
+**Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
+**Anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`F`
+
+This is an *aggregation* of the existing per-paper Stage-13 review
+findings, partitioned by the per-paper → per-bundle assignment. It is
+NOT a fresh-context LLM Stage-13 review — that is user-triggered per
+memory `feedback_stages_11_13_reflexive.md`.
+
+## Source papers (52)
+
+- `papers/D5_phase6m_lean_only/paper_draft.tex`
+- `papers/_phase6n_W1b_lean_only/paper_draft.tex`
+- `papers/_phase6n_W1c_writeup/paper_draft.tex`
+- `papers/_phase6n_W2d_lean_only/paper_draft.tex`
+- `papers/_phase6o_W1a_lean_only/paper_draft.tex`
+- `papers/_phase6o_W1b_lean_only/paper_draft.tex`
+- `papers/_phase6o_W1c_writeup/paper_draft.tex`
+- `papers/_phase6o_W2a_lean_only/paper_draft.tex`
+- `papers/_phase6o_W4a_lean_only/paper_draft.tex`
+- `papers/_phase6p_W2cd_lean_only/paper_draft.tex`
+- `papers/_phase6t_lean_only/paper_draft.tex`
+- `papers/note_rt_ch_bounds/paper_draft.tex`
+- `papers/paper10_modular_generation/paper_draft.tex`
+- `papers/paper11_quantum_group/paper_draft.tex`
+- `papers/paper12_polariton/paper_draft.tex`
+- `papers/paper14_braided_mtc/paper_draft.tex`
+- `papers/paper15_methodology/paper_draft.tex`
+- `papers/paper16_graphene_sk_eft/paper_draft.tex`
+- `papers/paper16_wrt_tqft/paper_draft.tex`
+- `papers/paper17_dark_sector/paper_draft.tex`
+- `papers/paper18_doublon_gate/paper_draft.tex`
+- `papers/paper1_first_order/paper_draft.tex`
+- `papers/paper20_scalar_rung/paper_draft.tex`
+- `papers/paper21_majorana_rung/paper_draft.tex`
+- `papers/paper22_ew_phase_transition/paper_draft.tex`
+- `papers/paper23_linearized_efe/paper_draft.tex`
+- `papers/paper25_gravitational_waves/paper_draft.tex`
+- `papers/paper26_bh_entropy/paper_draft.tex`
+- `papers/paper27_bh_thermodynamics_four_laws/paper_draft.tex`
+- `papers/paper29_bbn_unified/paper_draft.tex`
+- `papers/paper2_second_order/paper_draft.tex`
+- `papers/paper32_strong_cp_de/paper_draft.tex`
+- `papers/paper33_ewbg_chirality_wall/paper_draft.tex`
+- `papers/paper34_equivalence_principle/paper_draft.tex`
+- `papers/paper35_qec_holography/paper_draft.tex`
+- `papers/paper36_center_symmetry/paper_draft.tex`
+- `papers/paper37_chiral_ssb/paper_draft.tex`
+- `papers/paper38_cfl/paper_draft.tex`
+- `papers/paper39_heat_kernel_expansion/paper_draft.tex`
+- `papers/paper3_gauge_erasure/paper_draft.tex`
+- `papers/paper40_higher_curvature/paper_draft.tex`
+- `papers/paper41_diff_invariance/paper_draft.tex`
+- `papers/paper42_nonlinear_efe/paper_draft.tex`
+- `papers/paper42b_cc_emergent/paper_draft.tex`
+- `papers/paper43_einstein_cartan/paper_draft.tex`
+- `papers/paper44_riemannian_connection/paper_draft.tex`
+- `papers/paper4_wkb_connection/paper_draft.tex`
+- `papers/paper5_adw_gap/paper_draft.tex`
+- `papers/paper6_vestigial/paper_draft.tex`
+- `papers/paper7_chirality_formal/paper_draft.tex`
+- `papers/paper8_chirality_master/paper_draft.tex`
+- `papers/paper9_sm_anomaly_drinfeld/paper_draft.tex`
+
+## Aggregated finding counts
+
+- **Total findings (lifetime):** 344
+- **Open findings (post-supersession):** 22
+- **Blocker-class (critical + major):** 8
+- **Severity mix:** 3 advisory, 2 critical, 6 major, 11 minor
+- **Gate mix:** 9 CitationIntegrity, 1 CountFreshness, 3 ParameterProvenance, 9 unclassified
+
+## Readiness verdict
+
+**RED**
+
+- GREEN: 0 blockers, ≤5 open advisories
+- YELLOW: 0 blockers, advisory residuals only
+- RED: ≥1 blocker (critical or major severity)
+
+## Sample open finding IDs (first 10)
+
+- `review:2026-05-04-bundle-stage13:D3:1.3`
+- `review:2026-05-11-1730-bundle-stage13-reinvocation:E2:1.1`
+- `review:2026-05-11-1550-bundle-stage13:I2:4.1`
+- `review:2026-04-23-2153-internal-adversarial:paper18_doublon_gate:5.2`
+- `review:2026-04-23-2153-internal-adversarial:paper18_doublon_gate:2.1`
+- `review:2026-05-11-1251-bundle-stage13:L2:1.3`
+- `review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:1.2`
+- `review:2026-04-25-2002-internal-adversarial:paper22_ew_phase_transition:3.3`
+- `review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:1.2`
+- `review:2026-04-26-1923-internal-adversarial:paper22_ew_phase_transition:3.3`
+
+## Next actions
+
+- **GREEN:** ready for fresh-context Stage-13 LLM sweep when user
+  authorizes; pair with `validate.py --check bundle_consistency` to
+  ensure cross-bundle cross-bridges (anchor table in
+  `docs/agents/claims-reviewer-bundle-prompts.md`) hold.
+- **YELLOW:** review the open advisory list; decide per-finding whether
+  to fix-in-place or supersede via `docs/review_finding_supersessions.json`.
+- **RED:** address blocker findings before promoting to Stage-13
+  fresh-context review. Walk each open critical/major finding via
+  `scripts/build_graph.py:extract_review_finding_nodes` filtered by
+  `inferred_paper` ∈ {bundle source set}.
+
+---
+
+*Generated by `scripts/bundle_readiness.py` (Phase 6i Wave 7.4).*
