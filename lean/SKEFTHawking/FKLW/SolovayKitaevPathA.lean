@@ -1020,6 +1020,67 @@ lemma dnStepFG_commutator_identity_valid
   ring_nf
   simp [Complex.I_sq]
 
+/-- **dnStepFG exp(-[F, G]) = Δ identity** (composes
+`dnStepFG_commutator_identity_valid` with §9.7 `SU2_expAmbient_Y_h_eq`).
+
+In the valid branch with `Δ.trace.re ≠ -2` (excluded only at the antipodal
+case `Δ = -1`, which is impossible for `‖Δ - 1‖ < 1/4`):
+
+  `NormedSpace.exp (-(F * G - G * F)) = Δ.val`
+
+Proof:
+  - [F, G] = -Y_h Δ via `dnStepFG_commutator_identity_valid`.
+  - Negate: -[F, G] = Y_h Δ.
+  - exp(Y_h Δ) = expAmbient(Y_h Δ) (def-unfold).
+  - expAmbient(Y_h Δ) = Δ.val via `SU2_expAmbient_Y_h_eq` (§9.7).
+
+This is the bridge between Wave 2's balanced commutator and the
+recursion's exact-cancellation property `V_n · exp(-[F, G]) = U`. -/
+lemma dnStepFG_exp_neg_comm_eq_Delta
+    (V_n_braid : FibonacciBraidWord)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_valid : 0 < ‖((-Complex.I) • Y_h
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ∧
+        ‖((-Complex.I) • Y_h
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 1)
+    (h_ne_neg_two : ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val.trace.re ≠ -2) :
+    let data := dnStepFG V_n_braid U
+    let Δ := ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+                ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    NormedSpace.exp (-(data.F * data.G - data.G * data.F)) = Δ.val := by
+  -- Unfold the let binders explicitly.
+  dsimp only
+  set Δ := ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+              ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) with hΔ_def
+  -- Step 1: [F, G] = -Y_h Δ from dnStepFG_commutator_identity_valid
+  have h_comm := dnStepFG_commutator_identity_valid V_n_braid U h_valid
+  dsimp only at h_comm
+  -- h_comm : (dnStepFG V_n_braid U).F * (dnStepFG V_n_braid U).G -
+  --           (dnStepFG V_n_braid U).G * (dnStepFG V_n_braid U).F = -Y_h Δ.val
+  -- Step 2: -(F*G - G*F) = Y_h Δ.val
+  have h_neg_comm : -((dnStepFG V_n_braid U).F * (dnStepFG V_n_braid U).G -
+                       (dnStepFG V_n_braid U).G * (dnStepFG V_n_braid U).F) =
+                    Y_h Δ.val := by
+    have h1 : -((dnStepFG V_n_braid U).F * (dnStepFG V_n_braid U).G -
+              (dnStepFG V_n_braid U).G * (dnStepFG V_n_braid U).F) =
+           -(-Y_h Δ.val) := by rw [h_comm]
+    rw [h1]
+    exact neg_neg _
+  rw [h_neg_comm]
+  -- Step 3: expAmbient(Y_h Δ) = Δ.val via §9.7
+  have h_expAmbient :=
+    SU2_expAmbient_Y_h_eq Δ.property h_ne_neg_two
+  -- Step 4: expAmbient = NormedSpace.exp (definitional via SU2MatrixExp.expAmbient)
+  show NormedSpace.exp (Y_h Δ.val) = Δ.val
+  rw [show NormedSpace.exp (Y_h Δ.val) =
+      SU2MatrixExp.expAmbient (Y_h Δ.val) from rfl]
+  exact h_expAmbient
+
 /-! ## 7.6. Substantive inductive discharge — `SkApproxCSuperQuadraticBound K_compose`
 
 The Option-C-tightened Y_h Lipschitz bound (`Y_h_norm_le_half_pi_norm_sub_one`,
