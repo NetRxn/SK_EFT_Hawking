@@ -1427,6 +1427,60 @@ lemma ε_seq_K_compose_two_ε₀_le_two_ε₀ (n : ℕ) :
     rw [show ((1 : ℝ) / 2) = (1 / 2 : ℝ) from rfl, ← Real.sqrt_eq_rpow]
     linarith [K_compose_sqrt_two_ε₀_lt_one]
 
+/-- **DN composition bound (valid branch)**: in the dnStepFG valid branch
+with the regime hypothesis `Δ.trace.re ≠ -2`, the group commutator of
+the lifted SU(2) elements approximates Δ.val up to BCH cubic error:
+
+  `‖gC(A_F.val, A_G.val) - Δ.val‖ ≤ 320 · δ³`
+
+where δ := max(‖F‖, ‖G‖). Direct composition of `dnStepFG_exp_neg_comm_eq_Delta`
+(giving `exp(-[F,G]) = Δ.val`) with Wave 1's `groupCommutator_lie_bracket_cubic_remainder`
+(giving the BCH cubic bound). -/
+lemma dnStepFG_gC_minus_Delta_norm_le_cubic
+    (V_n_braid : FibonacciBraidWord)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_valid : 0 < ‖((-Complex.I) • Y_h
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ∧
+        ‖((-Complex.I) • Y_h
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val :
+        Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 1)
+    (h_ne_neg_two : ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val.trace.re ≠ -2)
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (hF_norm : ‖(dnStepFG V_n_braid U).F‖ ≤ δ)
+    (hG_norm : ‖(dnStepFG V_n_braid U).G‖ ≤ δ) :
+    ‖SKEFTHawking.FKLW.GroupCommutator.groupCommutator
+        ((expIsu2 (dnStepFG V_n_braid U).F (dnStepFG V_n_braid U).hF_herm
+                  (dnStepFG V_n_braid U).hF_tr :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ)
+        ((expIsu2 (dnStepFG V_n_braid U).G (dnStepFG V_n_braid U).hG_herm
+                  (dnStepFG V_n_braid U).hG_tr :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) -
+        ((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val‖ ≤ 320 * δ ^ 3 := by
+  -- Identify the expIsu2 lifts with NormedSpace.exp via expIsu2_val.
+  rw [expIsu2_val, expIsu2_val]
+  -- BCH cubic gives the bound w.r.t. exp(-[F,G]).
+  have h_bch := SKEFTHawking.FKLW.GroupCommutator.groupCommutator_lie_bracket_cubic_remainder
+                  δ hδ_nn hδ_le_one (dnStepFG V_n_braid U).F (dnStepFG V_n_braid U).G
+                  hF_norm hG_norm
+  -- The exp(-[F,G]) = Δ.val identity gives the substitution.
+  have h_exp_eq_Δ := dnStepFG_exp_neg_comm_eq_Delta V_n_braid U h_valid h_ne_neg_two
+  dsimp only at h_exp_eq_Δ
+  -- expAmbient = NormedSpace.exp definitionally
+  rw [show SU2MatrixExp.expAmbient (Complex.I • (dnStepFG V_n_braid U).F) =
+      NormedSpace.exp (Complex.I • (dnStepFG V_n_braid U).F) from rfl]
+  rw [show SU2MatrixExp.expAmbient (Complex.I • (dnStepFG V_n_braid U).G) =
+      NormedSpace.exp (Complex.I • (dnStepFG V_n_braid U).G) from rfl]
+  -- Use h_exp_eq_Δ to rewrite Δ.val as exp(-(F·G - G·F)).
+  rw [← h_exp_eq_Δ]
+  exact h_bch
+
 /-! ## 8. Path A unconditional strict headline for loose ε regime
 
 For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
