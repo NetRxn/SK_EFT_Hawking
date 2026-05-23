@@ -517,6 +517,39 @@ theorem balancedCommutatorGeneralAxisGroup_holds :
     rw [h_lie_eq] at h_cubic
     exact h_cubic
 
+/-! ## 3.5. Reusable substrate for Path A constructive Solovay-Kitaev
+(Phase 6t Iteration 2 sub-ship 5 prep, 2026-05-22 PM final)
+
+The full Path A constructive `skApprox` ship requires (1) a traceless
+companion to `balancedCommutatorGeneralAxisGroup_holds` (showing F, G are
+traceless, since they're built from Pauli linear combinations), (2)
+`exp(I • F) ∈ SU(2)` substrate for traceless Hermitian F, (3) substantive
+`skApprox` def via Dawson-Nielsen composition, (4) 11-step inductive
+proof of the error bound.
+
+This section ships the small reusable substrate lemma that lays the
+foundation for (1) without committing to the full 500-700 LoC of the
+substantive companion theorem (which requires replicating the proof body
+of `balanced_commutator_general_axis_lie` with extra trace = 0 clauses).
+
+The traceless conclusion is mathematically TRUE — the construction builds
+F, G as linear combinations of σ_x, σ_y, σ_z (all traceless), but the
+existential form of Task #34's conclusion doesn't expose this. The future
+sub-ship 5 will strengthen the conclusion via a copy-paste-with-additions
+of the construction. -/
+
+/-- **Pauli linear combinations are traceless** (Mathlib-PR-quality):
+for any real coefficients `a, b, c`, the matrix `a·σ_x + b·σ_y + c·σ_z` has
+trace zero. Composes `Matrix.trace_add` + `Matrix.trace_smul` with the
+Pauli matrix trace formulas `σ_x_trace = 0`, `σ_y_trace = 0`, `σ_z_trace = 0`. -/
+lemma pauli_linear_traceless (a b c : ℝ) :
+    (((a : ℂ) • σ_x + (b : ℂ) • σ_y + (c : ℂ) • σ_z :
+        Matrix (Fin 2) (Fin 2) ℂ)).trace = 0 := by
+  rw [Matrix.trace_add, Matrix.trace_add,
+      Matrix.trace_smul, Matrix.trace_smul, Matrix.trace_smul,
+      SKEFTHawking.σ_x_trace, SKEFTHawking.σ_y_trace, SKEFTHawking.σ_z_trace]
+  simp
+
 /-! ## 4. Module summary
 
 SU2BalancedCommutator.lean (Phase 6t Wave 2 SHIP — Z-axis CASE, 2026-05-22 PM):
