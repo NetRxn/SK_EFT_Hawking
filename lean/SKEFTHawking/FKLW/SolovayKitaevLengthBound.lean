@@ -175,27 +175,29 @@ to conclude `100 ≤ 1000 · (Real.log (1/ε))^skLengthExponent`. -/
 theorem skLengthAtEpsilon_unconditional : SkLengthAtEpsilon := by
   intro ε hε_pos hε_le
   refine ⟨0, ?_⟩
-  -- Step 1: descend `ε ≤ ε₀ = 1/819200` to the explicit `ε ≤ 1/819200`.
-  have hε_le_val : ε ≤ 1 / 819200 := by
+  -- Step 1: descend `ε ≤ ε₀ = 1/8388608` to the explicit `ε ≤ 1/8388608`.
+  -- (ε₀ was tightened from 1/819200 to 1/8388608 in Iteration 2 sub-ship 3b
+  -- to accommodate the FULL per-step composition constant `K_compose = 1024`.)
+  have hε_le_val : ε ≤ 1 / 8388608 := by
     have h := ε₀_value
     linarith
-  -- Step 2: `1/ε ≥ 819200`.
-  have h_inv : (819200 : ℝ) ≤ 1 / ε := by
+  -- Step 2: `1/ε ≥ 8388608`.
+  have h_inv : (8388608 : ℝ) ≤ 1 / ε := by
     rw [le_div_iff₀ hε_pos]; linarith
-  -- Step 3: `log(1/ε) ≥ log 819200 > 1` (since 819200 > e ≈ 2.718).
-  have h_log_inv_pos : 0 < Real.log 819200 := Real.log_pos (by norm_num)
-  have h_log_ge : Real.log 819200 ≤ Real.log (1 / ε) :=
-    Real.log_le_log (by norm_num : (0:ℝ) < 819200) h_inv
-  -- Step 4: `1 ≤ log 819200` (since log 819200 ≈ 13.62 > 1).
-  -- Bound via Real.log_two_gt_d9: log 2 ≥ 0.693, and 819200 = 2^? ≫ 2.
-  -- Use simpler: log 819200 ≥ log 4 = 2·log 2 ≥ 2·0.693 = 1.386 > 1.
+  -- Step 3: `log(1/ε) ≥ log 8388608 > 1` (since 8388608 ≫ e).
+  have h_log_inv_pos : 0 < Real.log 8388608 := Real.log_pos (by norm_num)
+  have h_log_ge : Real.log 8388608 ≤ Real.log (1 / ε) :=
+    Real.log_le_log (by norm_num : (0:ℝ) < 8388608) h_inv
+  -- Step 4: `1 ≤ log 8388608` (since log 8388608 ≈ 15.94 ≫ 1).
+  -- Bound via Real.log_two_gt_d9: log 2 ≥ 0.693, and 8388608 = 2^23 ≫ 4.
+  -- Use simpler: log 8388608 ≥ log 4 = 2·log 2 ≥ 2·0.693 = 1.386 > 1.
   have h_log_4_lower : (1 : ℝ) ≤ Real.log 4 := by
     have h_log_4 : Real.log 4 = 2 * Real.log 2 := by
       rw [show (4 : ℝ) = 2^2 from by norm_num, Real.log_pow]; ring
     rw [h_log_4]
     have h := Real.log_two_gt_d9
     linarith
-  have h_log_ge_4 : Real.log 4 ≤ Real.log 819200 :=
+  have h_log_ge_4 : Real.log 4 ≤ Real.log 8388608 :=
     Real.log_le_log (by norm_num : (0:ℝ) < 4) (by norm_num)
   have h_log_ge_one : (1 : ℝ) ≤ Real.log (1 / ε) :=
     le_trans h_log_4_lower (le_trans h_log_ge_4 h_log_ge)

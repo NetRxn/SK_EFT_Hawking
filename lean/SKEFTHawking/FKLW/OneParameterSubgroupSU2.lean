@@ -5417,6 +5417,212 @@ theorem SU2_nhd_one_covered_by_exp_ts :
   · -- expAmbient(su2Log h) = h via §1
     exact expAmbient_su2Log hh_target
 
+/-! ## §82. Explicit-radius Lipschitz bound for `Y_h`
+
+For Phase 6t Iteration 2 sub-ship 3b (`skApprox_exists`), the Solovay-Kitaev
+recursion needs an EXPLICIT-domain Lipschitz bound on the Bloch-sphere
+matrix log `Y_h` (§9.6c). This section ships:
+
+  **`Y_h_norm_le_four_norm_sub_one`** :
+  `∀ h ∈ SU(2), ‖h - 1‖ < 1/4 → ‖Y_h h‖ ≤ 4 · ‖h - 1‖`
+
+with EXPLICIT constants. Composes §9 substrate + Mathlib's Jordan
+inequality (`Real.mul_le_sin`). The Lipschitz constant `K = 4` is loose
+(the analytically-tight constant is `π ≈ 3.14`); `K = 4` is chosen for
+proof simplicity (no transcendental π comparisons in numerical inequalities).
+
+Substrate composition:
+  - §9.6c: `Y_h h := ((Real.sinc θ)⁻¹ : ℂ) • (h - (trace.re/2 : ℂ) • 1)`
+    with `θ := Real.arccos (h.trace.re / 2)`.
+  - §9.3a + Mathlib `Matrix.linfty_opNNNorm_def` for entry-level bounds.
+  - Mathlib `Real.mul_le_sin` (Jordan's inequality) for `2/π ≤ sin(θ)/θ`. -/
+
+/-- **§82.1. linftyOp entry bound**: for any 2×2 matrix `M`, `‖M i j‖ ≤ ‖M‖`.
+
+Direct consequence of `Matrix.linfty_opNNNorm_def`: the linftyOp norm is the
+max row-sum of entry NNNorms, which dominates any single entry. -/
+private lemma linftyOpNorm_entry_le_two
+    (M : Matrix (Fin 2) (Fin 2) ℂ) (i j : Fin 2) :
+    ‖M i j‖ ≤ ‖M‖ := by
+  have h_def : ‖M‖₊ = Finset.univ.sup (fun i' => ∑ k, ‖M i' k‖₊) :=
+    Matrix.linfty_opNNNorm_def M
+  have h_le : ‖M i j‖₊ ≤ ‖M‖₊ := by
+    rw [h_def]
+    calc ‖M i j‖₊
+        ≤ ∑ k, ‖M i k‖₊ :=
+          Finset.single_le_sum (f := fun k => ‖M i k‖₊)
+            (fun k _ => zero_le _) (Finset.mem_univ j)
+      _ ≤ Finset.univ.sup (fun i' => ∑ k, ‖M i' k‖₊) :=
+          Finset.le_sup (f := fun i' => ∑ k, ‖M i' k‖₊) (Finset.mem_univ i)
+  exact_mod_cast h_le
+
+/-- **§82.2. SU(2) symmetry on entry `(0,0)`**: `(h 0 0).re = h.trace.re / 2`.
+
+For h ∈ SU(2), `h + star h = (h.trace : ℂ) • 1` (§9.3a). Evaluated at entry
+(0,0) and taking real parts: `2 · (h 0 0).re = h.trace.re`. -/
+private lemma SU2_h_zero_zero_re_eq_trace_div_two
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    (h 0 0).re = h.trace.re / 2 := by
+  have h_add_star := SU2_add_star_eq_trace_smul_one hh
+  -- h + star h = trace • 1; evaluate at (0,0).
+  have h_eval : (h + star h) 0 0 = h.trace := by
+    rw [h_add_star]
+    simp [Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul]
+  have h_sum_entry : (h + star h) 0 0 = h 0 0 + star (h 0 0) := by
+    simp [Matrix.add_apply, Matrix.star_apply]
+  rw [h_sum_entry] at h_eval
+  -- h_eval : h 0 0 + star (h 0 0) = h.trace
+  have h_re_sum : (h 0 0).re + (star (h 0 0)).re = h.trace.re := by
+    have := congr_arg Complex.re h_eval
+    simpa [Complex.add_re] using this
+  rw [Complex.star_def, Complex.conj_re] at h_re_sum
+  linarith
+
+/-- **§82.3. SU(2) near-1 bound**: `1 - h.trace.re / 2 ≤ ‖h - 1‖_linftyOp`.
+
+Proof chain: `1 - h.trace.re/2 = 1 - (h 0 0).re ≤ |(h 0 0 - 1).re| ≤ ‖h 0 0 - 1‖
+≤ ‖h - 1‖_linftyOp`. -/
+private lemma SU2_one_sub_trace_re_div_two_le_norm_sub_one
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    1 - h.trace.re / 2 ≤ ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  rw [← SU2_h_zero_zero_re_eq_trace_div_two hh]
+  have h_entry : (h - (1 : Matrix (Fin 2) (Fin 2) ℂ)) 0 0 = h 0 0 - 1 := by
+    simp [Matrix.sub_apply, Matrix.one_apply_eq]
+  have h_norm_entry : ‖h 0 0 - 1‖ ≤ ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+    have := linftyOpNorm_entry_le_two (h - 1) 0 0
+    rw [h_entry] at this
+    exact this
+  have h_re : (h 0 0 - 1).re = (h 0 0).re - 1 := by
+    simp [Complex.sub_re]
+  have h_eq : 1 - (h 0 0).re = -((h 0 0 - 1).re) := by rw [h_re]; ring
+  rw [h_eq]
+  calc -((h 0 0 - 1).re)
+      ≤ |(h 0 0 - 1).re| := neg_le_abs _
+    _ ≤ ‖h 0 0 - 1‖ := Complex.abs_re_le_norm _
+    _ ≤ ‖h - 1‖ := h_norm_entry
+
+/-- **§82.4. Sinc lower bound via Jordan's inequality**:
+for `0 ≤ θ ≤ π/2`, `2 / Real.pi ≤ Real.sinc θ`.
+
+For θ = 0: `Real.sinc 0 = 1 ≥ 2/π`. For 0 < θ ≤ π/2: use Mathlib's
+`Real.mul_le_sin`: `(2/π) · θ ≤ sin θ`, then divide by θ > 0. -/
+private lemma sinc_ge_two_div_pi
+    {θ : ℝ} (hθ_nn : 0 ≤ θ) (hθ_le : θ ≤ Real.pi / 2) :
+    2 / Real.pi ≤ Real.sinc θ := by
+  rcases eq_or_lt_of_le hθ_nn with hθ_eq | hθ_pos
+  · -- θ = 0 ⟹ sinc 0 = 1 ≥ 2/π.
+    rw [← hθ_eq, Real.sinc_zero]
+    have hπ_pos : 0 < Real.pi := Real.pi_pos
+    rw [div_le_one hπ_pos]
+    linarith [Real.pi_gt_three]
+  · -- 0 < θ ≤ π/2. Use Jordan's inequality.
+    have h_sinc_eq : Real.sinc θ = Real.sin θ / θ := by
+      simp [Real.sinc, hθ_pos.ne']
+    rw [h_sinc_eq]
+    have h_sin_ge : 2 / Real.pi * θ ≤ Real.sin θ :=
+      Real.mul_le_sin hθ_pos.le hθ_le
+    rw [le_div_iff₀ hθ_pos]
+    linarith
+
+/-- **§82.5. HEADLINE**: For h ∈ SU(2) with `‖h - 1‖ < 1/4`,
+`‖Y_h h‖ ≤ 4 · ‖h - 1‖`.
+
+This is the explicit-radius Lipschitz bound consumed by Phase 6t Iteration 2
+sub-ship 3b (`skApprox_exists`). Proof composition:
+  1. `1 - h.trace.re/2 ≤ ‖h - 1‖ < 1/4` (§82.3 + hypothesis) ⟹ `h.trace.re/2 > 3/4`.
+  2. `θ := arccos(h.trace.re/2) ∈ [0, π/2]` (since `h.trace.re/2 ≥ 0`).
+  3. `Real.sinc θ ≥ 2/π > 1/2` (§82.4 + numerical).
+  4. `‖h - (h.trace.re/2 : ℂ) • 1‖ ≤ ‖h - 1‖ + |1 - h.trace.re/2| ≤ 2·‖h - 1‖`.
+  5. `‖Y_h h‖ = (1/sinc θ) · ‖h - (trace/2)•I‖ ≤ 2 · 2 · ‖h - 1‖ = 4·‖h - 1‖`. -/
+theorem Y_h_norm_le_four_norm_sub_one
+    {h : Matrix (Fin 2) (Fin 2) ℂ}
+    (hh : h ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_small : ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1 / 4) :
+    ‖Y_h h‖ ≤ 4 * ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  -- Step 1: extract a := h.trace.re / 2 ∈ (3/4, 1]
+  set a : ℝ := h.trace.re / 2 with ha_def
+  have h_a_le_one : a ≤ 1 := (SU2_trace_re_div_two_mem_Icc hh).2
+  have h_one_sub_a_le : 1 - a ≤ ‖h - 1‖ :=
+    SU2_one_sub_trace_re_div_two_le_norm_sub_one hh
+  have h_a_pos : 3/4 < a := by linarith
+  have h_a_nn : 0 ≤ a := by linarith
+  -- Step 2: θ := arccos a ∈ [0, π/2]
+  set θ : ℝ := Real.arccos a with hθ_def
+  have h_θ_nn : 0 ≤ θ := Real.arccos_nonneg _
+  have h_θ_le_pi_div_two : θ ≤ Real.pi / 2 := by
+    -- arccos is decreasing; arccos 0 = π/2; arccos a ≤ arccos 0 since a ≥ 0.
+    rw [hθ_def]
+    have := Real.arccos_le_pi_div_two.mpr h_a_nn
+    exact this
+  -- Step 3: sinc θ ≥ 2/π
+  have h_sinc_ge : 2 / Real.pi ≤ Real.sinc θ := sinc_ge_two_div_pi h_θ_nn h_θ_le_pi_div_two
+  have hπ_pos : 0 < Real.pi := Real.pi_pos
+  have h_two_div_pi_pos : 0 < 2 / Real.pi := by positivity
+  have h_sinc_pos : 0 < Real.sinc θ := lt_of_lt_of_le h_two_div_pi_pos h_sinc_ge
+  -- Step 4: ‖h - a • 1‖ ≤ 2·‖h - 1‖
+  have h_norm_inner : ‖h - ((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)‖
+      ≤ 2 * ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+    -- h - a·I = (h - 1) + (1 - a)·I; ‖I‖ = 1 (linftyOp).
+    have h_split : h - ((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) =
+        (h - 1) + ((1 - a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+      have h_one_smul_split : (((1 - a : ℝ)) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) =
+          (1 : Matrix (Fin 2) (Fin 2) ℂ) - ((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+        rw [show (((1 - a : ℝ)) : ℂ) = ((1 : ℝ) : ℂ) - ((a : ℝ) : ℂ) by push_cast; ring]
+        rw [sub_smul]
+        simp
+      rw [h_one_smul_split]
+      abel
+    rw [h_split]
+    calc ‖(h - 1) + ((1 - a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)‖
+        ≤ ‖h - 1‖ + ‖((1 - a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+          norm_add_le _ _
+      _ = ‖h - 1‖ + ‖((1 - a : ℝ) : ℂ)‖ * ‖(1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+          rw [norm_smul]
+      _ ≤ ‖h - 1‖ + |1 - a| * 1 := by
+          -- ‖(1 : Matrix _ _ ℂ)‖_linftyOp ≤ 1 via NormOneClass (auto from linftyOpNormedRing).
+          have h_norm_one_le : ‖(1 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 1 := norm_one.le
+          have h_norm_ofReal : ‖((1 - a : ℝ) : ℂ)‖ = |1 - a| := by
+            rw [Complex.norm_real, Real.norm_eq_abs]
+          rw [h_norm_ofReal]
+          have h_abs_nn : 0 ≤ |1 - a| := abs_nonneg _
+          have h_prod_le : |1 - a| * ‖(1 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ |1 - a| * 1 :=
+            mul_le_mul_of_nonneg_left h_norm_one_le h_abs_nn
+          linarith
+      _ = ‖h - 1‖ + |1 - a| := by ring
+      _ ≤ ‖h - 1‖ + ‖h - 1‖ := by
+          have h_abs_eq : |1 - a| = 1 - a := abs_of_nonneg (by linarith : (0:ℝ) ≤ 1 - a)
+          linarith
+      _ = 2 * ‖h - 1‖ := by ring
+  -- Step 5: ‖Y_h h‖ = (1/sinc θ) · ‖h - a•I‖
+  have h_Y_h_unfold : Y_h h =
+      (((Real.sinc θ)⁻¹ : ℝ) : ℂ) •
+        (h - ((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+    unfold Y_h; rfl
+  rw [h_Y_h_unfold]
+  -- ‖(c : ℂ) • M‖ = |c| · ‖M‖
+  rw [norm_smul]
+  rw [show ‖(((Real.sinc θ)⁻¹ : ℝ) : ℂ)‖ = (Real.sinc θ)⁻¹ from by
+    rw [Complex.norm_real, Real.norm_eq_abs, abs_of_nonneg]
+    exact inv_nonneg.mpr h_sinc_pos.le]
+  -- Goal: (sinc θ)⁻¹ · ‖h - a•I‖ ≤ 4 · ‖h - 1‖.
+  -- (sinc θ)⁻¹ ≤ π/2 (from sinc ≥ 2/π).
+  have h_inv_sinc_le : (Real.sinc θ)⁻¹ ≤ Real.pi / 2 := by
+    rw [show Real.pi / 2 = (2 / Real.pi)⁻¹ by rw [inv_div]]
+    exact inv_anti₀ h_two_div_pi_pos h_sinc_ge
+  -- π/2 < 2 (numerical fact: π < 3.15 < 4).
+  have h_pi_div_two_lt : Real.pi / 2 < 2 := by
+    have := Real.pi_lt_d2
+    linarith
+  have h_inv_sinc_lt_two : (Real.sinc θ)⁻¹ < 2 := lt_of_le_of_lt h_inv_sinc_le h_pi_div_two_lt
+  have h_norm_sub_one_nn : 0 ≤ ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := norm_nonneg _
+  calc (Real.sinc θ)⁻¹ * ‖h - ((a : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)‖
+      ≤ 2 * (2 * ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖) := by
+        apply mul_le_mul h_inv_sinc_lt_two.le h_norm_inner (norm_nonneg _)
+        linarith
+    _ = 4 * ‖h - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by ring
+
 end SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
 namespace SKEFTHawking.FKLW.OneParameterSubgroupSU2
