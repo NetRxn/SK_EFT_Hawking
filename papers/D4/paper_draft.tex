@@ -56,11 +56,13 @@ provides a substrate-level topological-quantum-information primitive;
 and the QEC--RT cross-bridge (\S\S 7--8) ties black-hole interior
 recovery to the same MTC as the boundary-entropy structure. The
 substrate's load-bearing claims here ship with Lean~4 modules at
-zero \texttt{sorry}; one tracked-hypothesis Prop record
-(\texttt{H\_HorizonBoundaryCondition}) carries the boundary-condition
-choice (its five fields are itemised honestly in \S\ref{sec:rt-ch-bounds});
-one true axiom carries over from Bundle~D2 (the 4+1D
-gapped-interface conjecture). The MTC-side definitional-encoding plus
+zero \texttt{sorry} and zero project-local axioms; two
+tracked-hypothesis Prop records carry the substrate's structural
+commitments --- \texttt{H\_HorizonBoundaryCondition} (D3, consumed in
+\S 7, with its five fields itemised honestly in
+\S\ref{sec:rt-ch-bounds}) and \texttt{TPFConjecture} (D2's 4+1D
+gapped-interface conjecture, refactored from a project-local axiom
+into a tracked-Prop record on 2026-05-19 under Pipeline Invariant~\#15). The MTC-side definitional-encoding plus
 proved-identity register across $U_q(\mathfrak{sl}_2)$,
 $U_q(\mathfrak{sl}_3)$, the Ising braided fusion category, and WRT
 TQFT on $S^{2}\times S^{1}$ provides the substrate's program-internal
@@ -755,26 +757,31 @@ abelian-MTC-falsifier knife-edge). The synthesis-level claim of
 single-MTC unification depends on these bridges agreeing
 character-for-character across D2, D3, and D4.
 
-\subsection{Single axiom inheritance}
+\subsection{Axiom posture: zero project-local axioms}
 
-D4 inherits Bundle~D2's single true axiom
-\texttt{gapped\_interface\_axiom} (the 4+1D conjecture sitting at the
-intersection of mechanisms (ii) and (iii) of D2). No new axioms are
-introduced in D4. The
+D4 introduces no new project-local axioms. As of 2026-05-19 the
+project-wide axiom count is zero (\texttt{counts.json}:
+\texttt{axiom\_names: []}); the previously-inherited
+\texttt{gapped\_interface\_axiom} from Bundle~D2 was refactored on that
+date into a tracked-hypothesis Prop \texttt{TPFConjecture}
+(\texttt{SPTClassification.lean}, Phase 5h Wave~1 posture change under
+Pipeline Invariant~\#15). The Bundle~D4 substrate inherits this
+posture: every load-bearing claim across the seven threads closes at
+zero \texttt{sorry} and zero project-local axioms over standard kernel
+axioms \{\texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}\}.
+Two tracked-hypothesis Prop records carry well-defined structural
+commitments that the substrate does not attempt to discharge: D2's
+\texttt{TPFConjecture} (4+1D commuting-projector / free-fermion
+gapped-interface conjecture, sitting at the intersection of mechanisms
+(ii) and (iii) of D2) and the
 \texttt{BHEntropyMicroscopic.H\_HorizonBoundaryCondition} structure
-(defined in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}) is a
-tracked-hypothesis Prop record, not an axiom; D4 \S 7 consumes it
-through the QEC-MTC cross-bridge. The doublon-SWAP gate's
-adiabatic-drag premise remains in the deferred T13--T15 layer of
-\texttt{FermiHubbardDimer.lean} (\S\ref{sec:doublon-gate});
-when that layer is closed in future work, the adiabatic-drag premise
-will be encoded as a tracked-hypothesis Prop record within the same
-module.
-Across D4's seven threads, the substrate's load-bearing claims close
-at zero \texttt{sorry} across the modules listed above; one
-tracked-hypothesis Prop record (\texttt{H\_HorizonBoundaryCondition})
-carries the boundary-condition choice (its five fields as itemised in
-\S\ref{sec:qec-mtc} and \S\ref{sec:rt-ch-bounds}).
+(defined in Bundle~D3's \texttt{BHEntropyMicroscopic.lean}), which D4
+\S 7 consumes through the QEC-MTC cross-bridge. The doublon-SWAP
+gate's adiabatic-drag premise remains in the deferred T13--T15 layer
+of \texttt{FermiHubbardDimer.lean} (\S\ref{sec:doublon-gate}); when
+that layer is closed in future work, the adiabatic-drag premise will
+be encoded as a tracked-hypothesis Prop record within the same module.
 
 \subsection{What this paper is not}
 
@@ -890,7 +897,7 @@ chain-rule machinery for products of strict Fréchet derivatives)
 through the Cartan-classification dichotomy
 ``$H_{\mathrm{Fib}}$ is discrete-finite of cardinality at least~40 or
 admits an accumulation point at the identity''. The discrete branch is
-excluded by an Aharonov--Arad Lemma~6 cardinality
+excluded by an Aharonov--Arad Lemma~6.1 cardinality
 argument~\cite{AharonovArad2017}; the accumulation-point branch
 delivers the open-neighbourhood-of-identity content, closing the
 biconditional unconditionally. The headline is verified
@@ -978,12 +985,12 @@ Invariant~\#10).
 
 The quantitative SK substrate is delivered across eight Lean modules
 under \texttt{lean/SKEFTHawking/FKLW/} (Waves 1--7 of Phase~6t plus
-the Phase~6t Path~A constructive variant), totalling roughly 2{,}000
-LoC and integrating with the Phase~6p F.21 substrate from
-\S\ref{sec:fib-density-sk}.1 at the Wave~3 base case:
+the Phase~6t Path~A constructive variant), totalling 5{,}640 LoC
+across the eight modules and integrating with the Phase~6p F.21
+substrate from \S\ref{sec:fib-density-sk}.1 at the Wave~3 base case:
 
 \begin{itemize}
-\item \textbf{Wave~1 (\texttt{GroupCommutator.lean}, $\sim$400 LoC):}
+\item \textbf{Wave~1 (\texttt{GroupCommutator.lean}, $\sim$445 LoC):}
 group-commutator stability and quadratic shrinkage,
 $\|[A,B] - 1\| \leq C\cdot\delta^2$ for $A = e^{iF}$, $B = e^{iG}$ with
 $\|F\|,\|G\| \leq \delta \leq 1$; cubic linearisation,
@@ -992,14 +999,14 @@ $\|[A,B] - (1 - [F,G])\| \leq 320\cdot\delta^3$ via the
 (the constant $320 = 253 + 30 + 36 + 1$ is loose by Dawson--Nielsen's
 own analysis~\cite{DawsonNielsen2006}, with the tightening tracked
 under Wave~5 strengthening).
-\item \textbf{Wave~2 (\texttt{SU2BalancedCommutator.lean}, $\sim$250 LoC):}
+\item \textbf{Wave~2 (\texttt{SU2BalancedCommutator.lean}, $\sim$762 LoC):}
 SU(2)-specific balanced-commutator factorisation
 $g = e^{iF}e^{iG}e^{-iF}e^{-iG}$ for $g \in \mathrm{SU}(2)$ near the
 identity. Z-axis case closed unconditionally; X-axis and Y-axis
 subcases closed during the Wave~2 strengthening pass; general-axis
 case discharged via SU(2) Bloch decomposition during the
 Wave~2-followup.
-\item \textbf{Wave~3 (\texttt{FibonacciEpsilonNet.lean}, $\sim$180 LoC):}
+\item \textbf{Wave~3 (\texttt{FibonacciEpsilonNet.lean}, $\sim$176 LoC):}
 $\varepsilon_0$-net base case consuming
 F.21~(\S\ref{sec:fib-density-sk}.1). For any target
 $U \in \mathrm{SU}(2)$, the function
@@ -1009,28 +1016,30 @@ $\|\rho_{\mathrm{Fib}}(b) - U\|_\infty < \varepsilon_0$; existence is
 unconditional via F.21 density. The function is defined through
 \texttt{Classical.choose}, hence \texttt{noncomputable} as shipped --
 constructive enumeration is the Path-A Wave~7-followup.
-\item \textbf{Wave~4 (\texttt{SolovayKitaevRecursion.lean}, $\sim$170 LoC):}
+\item \textbf{Wave~4 (\texttt{SolovayKitaevRecursion.lean}, $\sim$852 LoC):}
 SK recursion engine $V_{n+1} = V_n \cdot [F_n, G_n]$ with the level-0
 base case discharged unconditionally; recursion-step super-quadratic
 shrinkage closed during the Wave~4-followup via the matrix log
 residual bound.
-\item \textbf{Wave~5 (\texttt{SolovayKitaevLengthBound.lean}, $\sim$140 LoC):}
+\item \textbf{Wave~5 (\texttt{SolovayKitaevLengthBound.lean}, $\sim$504 LoC):}
 closed-form length recurrence
 $\texttt{skLength}\,n = \texttt{skLengthBaseCase}\cdot 5^n
 + \texttt{skBalancedDecompCost}\cdot(5^n - 1)/4$, sanity bounds
-$3 < c < 4$, and the asymptotic $\texttt{skLengthAtEpsilon}$ closed
-unconditionally during the strengthening pass.
-\item \textbf{Wave~6 (\texttt{SolovayKitaevQuantitative.lean}, $\sim$150 LoC):}
+$3 < c < 4$, and the asymptotic length-at-precision Prop
+\texttt{SkLengthAtEpsilon} (capital S, an \texttt{O((log(1/$\varepsilon$))$^c$)} headline composition) discharged unconditionally by the
+theorem \texttt{skLengthAtEpsilon\_unconditional} during the
+strengthening pass.
+\item \textbf{Wave~6 (\texttt{SolovayKitaevQuantitative.lean}, $\sim$195 LoC):}
 the strict headline
 \texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_fibonacci\_strict}
 of \S\ref{sec:fib-density-sk}.2, composing the Wave~4 error bound and
 the Wave~5 length bound at the same algorithmic compile level.
-\item \textbf{Wave~7 (\texttt{SolovayKitaevApplications.lean}, $\sim$160 LoC):}
+\item \textbf{Wave~7 (\texttt{SolovayKitaevApplications.lean}, $\sim$141 LoC):}
 worked-example consumers --- e.g.\ a polylog-length T-gate
 approximation under the Fibonacci representation --- and a Phase~6u
 placeholder for the future Chain~A$\circ$B Fourier-Transform
 composition.
-\item \textbf{Path~A (\texttt{SolovayKitaevPathA.lean}, $\sim$800 LoC):}
+\item \textbf{Path~A (\texttt{SolovayKitaevPathA.lean}, $\sim$2{,}565 LoC):}
 the constructive variant
 \texttt{solovayKitaev\_compile\_strict\_constructive} with visible
 Dawson--Nielsen composition, plus an unconditional discharge of the
@@ -1042,8 +1051,11 @@ headline; calibration of the tight-$\varepsilon$ regime is detailed in
 
 Across all eight modules the build closes at zero \texttt{sorry} and
 no new project-local axioms are introduced (Pipeline Invariant~\#15);
-the inherited axiom set is $\{\texttt{gapped\_interface\_axiom}\}$
-from Bundle~D2 alone.
+the project-wide axiom count is zero
+(\texttt{counts.json}: \texttt{axiom\_names: []}), as the previously
+inherited \texttt{gapped\_interface\_axiom} was refactored on
+2026-05-19 into the tracked-hypothesis Prop \texttt{TPFConjecture}
+under \texttt{SPTClassification.lean}.
 
 \subsection{Path A: constructive Dawson--Nielsen compiler (three-regime unconditional ship)}
 \label{subsec:path-a}
@@ -1083,7 +1095,9 @@ $\|\rho_{\mathrm{Fib}}\,(\texttt{skApproxC}\,n\,U) - U\| \leq 2\sqrt 2$
 combined with the inductive
 inequality
 $K_{\mathrm{huge}}\cdot(2\varepsilon_0)^{3/2} \geq 2\sqrt 2$
-(satisfied numerically by a factor of $\sim 10^{16}$). This shows
+(satisfied numerically by a factor of $\sim 4\times 10^{19}$ at
+$K_{\mathrm{huge}} = 10^{30}$, $\varepsilon_0 = 1/8{,}388{,}608$, since
+$10^{30}\cdot(2\varepsilon_0)^{3/2}/(2\sqrt 2) \approx 1.16\times 10^{20}/2.83 \approx 4.1\times 10^{19}$). This shows
 \texttt{SkApproxCSuperQuadraticBound} is satisfiable as a predicate;
 the constructive headline composes with it.
 \item \emph{Unconditional} at the calibrated $K_{\mathrm{compose}} = 1024$
@@ -1201,12 +1215,16 @@ the three Path-A constructive variants of \S\ref{subsec:path-a} plus
 the five supporting wave headlines) are kernel-only with zero
 \texttt{sorry} project-wide.
 
-\paragraph{Axiom inheritance.}
+\paragraph{Axiom posture.}
 The Phase~6p F.21 and Phase~6t SK substrate introduce no new
-project-local axioms. The single axiom inheritance from Bundle~D2
-(\texttt{gapped\_interface\_axiom}) and the single tracked-hypothesis
-Prop (\texttt{H\_HorizonBoundaryCondition}) recorded in
-\S\ref{sec:synthesis} are unchanged. Pipeline Invariants \#10 (no
+project-local axioms. The project-wide axiom count is zero
+(\texttt{counts.json}: \texttt{axiom\_names: []}); the previously
+inherited \texttt{gapped\_interface\_axiom} from Bundle~D2 was
+refactored into the tracked-hypothesis Prop \texttt{TPFConjecture} on
+2026-05-19 (\S\ref{sec:synthesis}). Both \texttt{TPFConjecture} (D2)
+and \texttt{H\_HorizonBoundaryCondition} (D3, consumed in \S 7) remain
+the substrate's two structural commitments as tracked-hypothesis Prop
+records, not axioms. Pipeline Invariants \#10 (no
 \texttt{maxHeartbeats} in proof bodies) and \#15 (no axioms without
 explicit sign-off and discharge plan) hold across all nine modules.
 

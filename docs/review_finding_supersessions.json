@@ -4986,6 +4986,160 @@
       "closed_by": "verified-accurate-2026-05-11T19:15:00Z",
       "note": "\u00a75 file/line reference 'LDPLinearResponse.lean lines 597-600' verified accurate against actual source (IsLDPRateFunction instance at lines 597-600). No update needed.",
       "applied_at": "2026-05-11T19:15:00Z"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:1.1",
+      "status": "fixed",
+      "superseded_by": "src/core/citations.py Kitaev2003 entry (stub \u2192 fully populated)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:1.1; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] BLOCKER 1.1: Kitaev2003 registry entry was stub-quality (empty title, author string containing journal). Patched src/core/citations.py:5764-5779 with title='Fault-tolerant quantum computation by anyons', authors='Kitaev, A. Yu.', journal='Annals of Physics', volume=303, page='2', year=2003, doi='10.1016/S0003-4916(02)00018-0', arxiv='quant-ph/9707021', doi_verified='2026-05-11', primary_source_path='Lit-Search/Phase-5b/primary-sources/Kitaev2003.pdf', added 'papers/D4/paper_draft.tex' to used_in. Verified via WebFetch arXiv:quant-ph/9707021 (per review evidence). Primary-source PDF cached via back_fill_primary_sources.py --bibkey Kitaev2003 --force. validate.py --check citation_primary_sources_present PASSES.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:1.2",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a77 + abstract + intro (added \\cite{HaydenPreskill2007, PastawskiYoshidaHarlowPreskill2015, AlmheiriMarolfPolchinskiSully2013})",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:1.2; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] BLOCKER 1.2: \u00a77 (Hayden-Preskill QEC) cited zero primary literature. Added \\cite{HaydenPreskill2007, PastawskiYoshidaHarlowPreskill2015, AlmheiriMarolfPolchinskiSully2013} to \u00a77 intro (matching D3 \u00a79 citation set), abstract, and intro 'Program-internal formalisation register' paragraph. Added bibitems for all three to D4 \\begin{thebibliography} block. Updated CITATION_REGISTRY used_in to include 'papers/D4/paper_draft.tex' for all three entries. validate.py PASSES.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:1.3",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a78 + abstract (added \\cite{RyuTakayanagi2006, CasiniHuerta2009, HolzheyLarsenWilczek1994, LewkowyczMaldacena2013})",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:1.3; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] REQUIRED 1.3: \u00a78 (RT / Casini-Huerta) cited zero primary literature. Added \\cite{RyuTakayanagi2006, LewkowyczMaldacena2013} to \u00a78 opening and \u00a78.1 (replica trick), \\cite{CasiniHuerta2009, HolzheyLarsenWilczek1994} to \u00a78 opening and \u00a78.2 (Casini-Huerta modular Hamiltonian). Bibitems added; CITATION_REGISTRY used_in updated. All four entries have primary-source caches.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:1.4",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a75 + abstract (added \\cite{Lickorish1997}); src/core/citations.py (new Lickorish1997 entry)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:1.4; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] RECOMMENDED 1.4: \u00a75 'Lickorish surgery presentation' introduced without citing Lickorish. Added \\cite{Lickorish1997} to abstract, \u00a75.2 (S^3 surgery), and \u00a75.3 (Lickorish surgery formula on three-manifolds). Added new Lickorish1997 entry to CITATION_REGISTRY (Graduate Texts in Mathematics 175, Springer 1997; textbook-exempt per validate.py textbook rule: no arXiv, primary_source_path=None, doi=None). Added bibitem to D4 bibliography.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:2.1",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a74 (Drinfeld centre rewrite \u2014 D4 claims both abelian toric-code anchor + non-abelian Z(Vec_{S_3}) extension)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:2.1; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] BLOCKER 2.1: D4 \u2194 D2 mutual punt on Z(Vec_{S_3}) closed. D4 \u00a74 rewritten: (a) toric-code Z(Vec_{Z_2}) explicitly identified as the abelian anchor D2 \u00a73.4 consumes; (b) non-abelian generalization Z(Vec_{S_3}) \u2243 Rep(D(S_3)) explicitly claimed within D4 with citations to existing substantive Lean content in S3CenterAnyons.lean (s3_anyon_count, class_equation, centralizer_order_formula, quantumDimS3, s3_global_dim_sq, A3_is_nonabelian, B_anyons_dim_3, s3_center_summary \u2014 8-anyon spectrum, |Irr(D(S_3))| = 8, global dim^2 = 36 = |S_3|^2). D2 unmodified. Open-problems section + abstract + cross-bundle bridges all updated to reflect this division of labor.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:2.2",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a74 (minimal-MTC self-contradiction resolved)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:2.2; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] BLOCKER 2.2: D4 \u00a74 line 292-294 'Z(Vec_{S_3}) is the minimal MTC anchoring D2's chirality-wall classification' contradicted \u00a74.2 line 307-314 'toric-code Z(Vec_{Z_2}) is the minimal Drinfeld-centre anchor'. D2's actual \u00a73.4 uses Z(Vec_{Z_2}) (toric code). \u00a74 opening paragraph rewritten: 'Bundle D2 \u00a73.4 anchors the Standard-Model chirality-wall classification on the toric-code MTC Z(Vec_{Z_2}) \u2243 Rep(D(Z_2)), the abelian Drinfeld-centre supplying the Z_2 braiding ... D4 supplies the categorical infrastructure shared by both the abelian anchor and the non-abelian generalisation Z(Vec_{S_3}) \u2243 Rep(D(S_3)).' Subsection 4.2 retained as the abelian anchor. New \u00a74.3 introduces non-abelian extension. Contradiction fully resolved.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:2.3",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a78.5 (D3 cross-bridge softened to forward-pointing within D4; D3 not touched)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:2.3; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] REQUIRED 2.3: D4 \u00a78 \u2194 D3 \u00a77 RT/CH cross-bridge was one-sided (D3 has zero Ryu/Casini/Huerta/RT/CH mentions). Fix per review option (b): \u00a78.5 softened to a forward-pointing cross-bridge claim within D4: 'This is a forward-pointing cross-bridge from D4: D3 \u00a77's prose retains its existing abelian-MTC-falsifier framing; the explicit identification of the RT/CH knife-edge biconditional as the mathematical underpinning of that falsifier is established here, and any future D3 absorption of RT/CH content should reference rt_eq_kaulMajumdar_iff_trivial_reduced_area as the bridge.' D3 untouched. Reciprocity deferred to next D3 wave (advisory-level).",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:5.1",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a76 (doublon-SWAP rewritten to FermiHubbardDimer.lean; DoublonGate.lean references removed; first-claim removed)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:5.1; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] BLOCKER 5.1: \u00a76 cited nonexistent DoublonGate.lean module and berryPhase_eq_pi theorem. Fix per review option (a): \u00a76 rewritten to point at actual FermiHubbardDimer.lean content (darkVec / dark_state_in_kernel / darkVec_ne_zero / darkState\u03b8_in_kernel / U_SWAP \u00b7 darkVec = -darkVec sign-flip \u2014 all substantive existing content), with explicit disclosure that the Berry-phase / adiabatic-drag identification (theorems T13-T15) is deferred in the module and remains deferred in the paper. All four DoublonGate.lean / berryPhase_eq_pi mentions removed from \u00a76.2, \u00a79.3 (line 631-634), \u00a79.5 (line 659-668), abstract. 'First symmetry-protected topological gate' claims removed from \u00a76 title, line 33, line 149, line 423, line 690 per first-claim removal policy.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:5.2",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a75 (WRT theorems honestly described as definitional encodings + rfl sanity-checks, not 'verifications')",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:5.2; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] REQUIRED 5.2: \u00a75.1/\u00a75.2 WRT theorems wrt_S2xS1_eq_rank and wrt_S3_formula are rfl on definitional unfoldings (verified in WRTInvariant.lean lines 81-99). \u00a75.1/\u00a75.2 rewritten: 'We _define_ WRTInvariant.wrtS2xS1 as C.n (the rank) directly... the companion theorem wrt_S2xS1_eq_rank is a definitional sanity-check (rfl on the definitional unfolding), not a proof of the Verlinde-formula chain.' Same honest pattern for \u00a75.2 (wrtS3 + wrt_S3_formula as Kirby-colour normalization, not Kirby-move invariance proof). \u00a75.4 'first-formalisation claim' deleted; replaced with 'Program-internal status' subsection.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:5.3",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a73.5 (figure-eight in-flight rewritten as closure citing FigureEightKnot.lean)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:5.3; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] RECOMMENDED 5.3: \u00a73.5 'figure-eight in flight' prose was stale; FigureEightKnot.lean exists with figure_eight_trace_neg_one (line 117-118) and figure_eight_normalized (line 121-122) proved via native_decide. \u00a73.5 rewritten as a closure subsection citing both theorems and the explicit braid-word representation \u03c3_1\u00b7\u03c3_2^{-1}\u00b7\u03c3_1\u00b7\u03c3_2^{-1}, the amphichirality observation, and the closed-form RT(4_1, \u03c3) = -1/\u221a2. \u00a79.3 line 622-624 in-flight claim deleted. Knot-invariant paragraph in intro updated to cite figure_eight_normalized.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:6.1",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a77.1 + \u00a78.4 (H_HorizonBoundaryCondition five-field structure disclosed; True placeholders itemised)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:6.1; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] REQUIRED 6.1: \u00a77.1 and \u00a78.4 referenced H_HorizonBoundaryCondition without disclosing that two of its five fields (modularInvariant, anomalyMatch) are literal True placeholders (BHEntropyMicroscopic.lean lines 373-380). \u00a77.1 expanded with explicit field-by-field itemisation: 'three substantive (positivity, areaLeading, secondLaw) and two explicit-True-placeholder fields (modularInvariant, intended for (ST)^3 = S^2 modular-group action at the abstract level; anomalyMatch, intended for Walker-Wang anomaly inflow at the abstract level). The two placeholder fields are not yet bundled into the substrate; the Prop's load-bearing content is the three substantive conjuncts.' \u00a78.4 cross-references \u00a77.1's itemisation. Falsifier set listed as the four substantive theorems (positivity / logBound / secondLaw / quarterCoefficient) plus non-abelian envelope.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:7.1",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex (all 16 first-claim instances removed per policy; program-history attributions retained where appropriate)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:7.1; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] BLOCKER 7.1: All 16 first-claim instances enumerated in the review (lines 25, 27-29, 33, 50, 57-61, 106, 121-122, 149-150, 179, 260-261, 265-266, 375-376, 387, 393-394, 423-425, 690) fully removed via mechanical pass: abstract rewritten ('We consolidate seven formally verified threads...' \u2192 no first-claim hedges; replaced with descriptive 'machine-checked constructions' / 'partition-function definitional encodings' framing); intro 'First machine-checked claims' paragraph \u2192 'Program-internal formalisation register' paragraph; intro 'Symmetry-protected topological gates' paragraph \u2192 'Symmetry-protected topological gate substrate'; \u00a72 title 'First machine-checked U_q(sl_2) and U_q(sl_3)' \u2192 'U_q(sl_2) and U_q(sl_3)'; \u00a72.4 'First-formalisation claim' \u2192 'Program-internal status'; \u00a73.3 trefoil 'first non-trivial knot-invariant' / 'first complete machine-checked' lines deleted; \u00a75.4 'first-formalisation claim' \u2192 'Program-internal status'; \u00a76 title 'first symmetry-protected topological gate' \u2192 'dark-state sign flip and SPT framing'; \u00a76.1 'first concrete SPT' / \u00a76.3 'first symmetry-protected' deleted; \u00a79.2 'First-formalisation register' \u2192 'Program-internal formalisation register' with program-history framing; \u00a79.7 'What this paper is' (line 690) first-claim deleted. grep verifies zero matches for: first machine|first formally|first compute|to our knowledge.*the first|first.formali|first symmetry|first concrete.*topological|first non-trivial|first complete machine|first formalised|in any proof assistant.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:7.2",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex (all 11 'in flight' / 'deferred to a subsequent iteration' hedges removed or relocated)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:7.2; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] REQUIRED 7.2: All 'in flight' / 'in flight for the next iteration' / 'is in flight' / 'deferred to a subsequent iteration' hedges eliminated. Figure-eight (lines 123, 277-282, 622-625) closed via finding 5.3 (cite FigureEightKnot.lean). DoublonGate.lean (lines 411, 624, 633, 661, 666-668) closed via finding 5.1 (cite FermiHubbardDimer.lean honestly with deferred-layer disclosure). Lickorish surgery (lines 370, 378) reframed to honest future-work language: 'explicit applications to specific 3-manifolds (lens spaces, Seifert-fibred manifolds) are deferred to future work once Mathlib's braided-fusion-category infrastructure upstreams'. Open-problems section \u00a79.3 retains only honest deferred-work items. grep 'in flight' returns zero matches.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:7.3",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a71 intro (line 82-84 tautology rewritten)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:7.3; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] RECOMMENDED 7.3: 'closes infrastructure-grade infrastructure' tautology rewritten as 'consolidates seven formally verified threads ... into a single substrate account suitable for downstream topological-quantum-computation applications'. Per review suggestion.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1550-bundle-stage13:D4:7.4",
+      "status": "fixed",
+      "superseded_by": "papers/D4/paper_draft.tex \u00a79 submission-gate (sequencing claim softened)",
+      "evidence": "[ID-format mirror of bundle-stage13:D4-2026-05-11-1550:7.4; build_graph.py emits review-prefixed IDs while older ledger entries used bundle-stage13: prefix. Same finding; appended 2026-05-23 to bring heatmap state in sync.] RECOMMENDED 7.4: 'second-shipped Tier-1 deep paper after D3' sequencing claim softened to neutral 'D4 ships at this Phase 7 close-out gate per the project strategy', without committing to ordering that may change. The submission-gate paragraph retains its content but drops the auto-stale 'second-shipped' claim.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D4_r1:1.4",
+      "status": "fixed",
+      "superseded_by": "papers/AutomatedReviews/2026-05-23-bundle-stage13/D4.md",
+      "evidence": "r1 minor \u2192 superseded by 2026-05-11-1550 round (which itself is fully fixed per existing ledger entries)",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D4_r1:5.1",
+      "status": "fixed",
+      "superseded_by": "papers/AutomatedReviews/2026-05-23-bundle-stage13/D4.md",
+      "evidence": "r1 minor \u2192 superseded by 2026-05-11-1550 round (which itself is fully fixed per existing ledger entries)",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D4_r1:7.1",
+      "status": "fixed",
+      "superseded_by": "papers/AutomatedReviews/2026-05-23-bundle-stage13/D4.md",
+      "evidence": "r1 minor \u2192 superseded by 2026-05-11-1550 round (which itself is fully fixed per existing ledger entries)",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-11-1730-bundle-stage13-reinvocation:D4:1.1",
+      "status": "fixed",
+      "superseded_by": "papers/AutomatedReviews/2026-05-23-bundle-stage13/D4.md",
+      "evidence": "major \u2192 re-invocation finding; superseded by subsequent rounds (current state per 2026-05-23 round-2 fresh-context review: GREEN, 0 BLOCKER)",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D4_r1:1.1",
+      "status": "accepted",
+      "superseded_by": "papers/AutomatedReviews/2026-05-23-bundle-stage13/D4.md",
+      "evidence": "r1 REQUIRED \u2014 tracked-hypothesis wording carryover, recurring as fu:D4:r2:1 in subsequent reviews. Accepted as advisory: \u00a78.4 heading wording is style-only, not factually wrong. Open for next D4 revision cycle (cosmetic).",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D4_r1:1.2",
+      "status": "fixed",
+      "superseded_by": "papers/AutomatedReviews/2026-05-23-bundle-stage13/D4.md",
+      "evidence": "r1 REQUIRED \u2014 \"Sixteen\" count was unenumerated; resolved by removing the load-bearing \"Sixteen\" wording in later revisions. fu:D4:r2:2 confirmed as \"candidate for supersession\" in 2026-05-23 round-4 review (string removed). Verified by grep of current paper_draft.tex.",
+      "date": "2026-05-23"
+    },
+    {
+      "finding_id": "review:2026-05-04-bundle-stage13:D4_r1:1.3",
+      "status": "fixed",
+      "superseded_by": "papers/AutomatedReviews/2026-05-23-bundle-stage13/D4.md",
+      "evidence": "r1 RECOMMENDED \u2014 TN residual 3 QECHolographyBridge.HPCode.* un-prefixed names. CLOSED per 2026-05-23 round-4 reconciliation: lines 542 + 544 of papers/D4/paper_draft.tex now have HPCode prefix.",
+      "date": "2026-05-23"
     }
   ]
 }
