@@ -269,11 +269,18 @@ lemma skApproxC_succ (n : ℕ) (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) :
       V_n_braid * (skApproxC n A_F * skApproxC n A_G *
                     (skApproxC n A_F)⁻¹ * (skApproxC n A_G)⁻¹) := rfl
 
-/-! ## 4. (next ship) Inductive error bound
+/-! ## 4. Inductive error bound (Path A Step 4)
 
-Step 4 of Path A. To be shipped after Step 3.
+The level-n error bound: for every level `n`, `‖ρ_Fib_SU2 (skApproxC n U) - U‖
+≤ ε_seq K_compose (2·ε₀) n`, where `ε_seq` is the Dawson-Nielsen recurrence
+sequence (defined in `EpsilonSeq.lean`).
 
-Per-step error bound chain (per memory file `project_phase6t_strict_headline_2026_05_22.md`):
+Level-0 (base case) is shipped here. The level-(n+1) inductive case (the
+substantive Dawson-Nielsen analysis) is deferred to Step 4b (next session,
+~250-400 LoC).
+
+Per-step error bound chain (Step 4b plan, per memory file
+`project_phase6t_strict_headline_2026_05_22.md`):
 
   1. IH: ‖V_n - U‖ ≤ ε_n
   2. ‖Δ - 1‖ ≤ √2·ε_n via `SU2_linftyOpNorm_le_sqrt_two` on V_n⁻¹
@@ -287,6 +294,22 @@ Per-step error bound chain (per memory file `project_phase6t_strict_headline_202
   10. Compose: ρ A_{n+1} = V_n · groupCommutator(ρ A_F, ρ A_G)
   11. Error: ‖result - U‖ ≤ cubic + stability ≤ K_compose · ε_n^(3/2)
 -/
+
+/-- **Level-0 base case of `skApproxC` error bound (UNCONDITIONAL)**.
+
+The base case approximation is exactly the Wave 3 ε₀-net nearest-neighbor,
+which is guaranteed within `2·ε₀` of any target. This matches the
+`ε_seq K_compose (2·ε₀) 0` value (= `2·ε₀` by `ε_seq_zero`). -/
+theorem skApproxC_zero_error_bound
+    (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖(ρ_Fib_SU2 (skApproxC 0 U) : Matrix (Fin 2) (Fin 2) ℂ) -
+        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_compose (2 * ε₀) 0 := by
+  rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_zero, skApproxC_zero]
+  -- ε₀-net base case: nearest-neighbor approximation within 2·ε₀
+  have h := fibonacciEpsilonNet_findNearest_approx_opNorm U ε₀ ε₀_pos
+  -- The bound is exactly 2·ε₀
+  exact h
 
 /-! ## 5. (next ship) Constructive strict headline
 
