@@ -12,17 +12,19 @@
 
 Phase 6t delivers the **first kernel-verified quantitative Solovay-Kitaev length bound infrastructure in any proof assistant**, instantiated for the Fibonacci-anyon braid representation in SU(2). The substrate ships across seven new Lean modules under `SK_EFT_Hawking/lean/SKEFTHawking/FKLW/`:
 
-| Wave | Module | LoC | Headlines | Status |
+| Wave | Module | LoC | Headlines | Status (post-2026-05-23 PM) |
 |---|---|---|---|---|
 | 1 | `GroupCommutator.lean` | ~400 | 3 (norm_le_quadratic, lie_bracket_cubic_remainder, stability) | ✅ UNCONDITIONAL, kernel-only |
-| 2 | `SU2BalancedCommutator.lean` | ~250 | 1 (groupCommutator_balanced_z_axis) + 1 predicate (general-axis) | ✅ Z-axis UNCONDITIONAL; general-axis tracked Prop |
+| 1+ | `GroupCommutatorNearIdentity.lean` | ~440 | 1 (`groupCommutator_stability_nearIdentity`) — near-identity-sharpened stability | ✅ UNCONDITIONAL, kernel-only (Iteration 2 substrate) |
+| 2 | `SU2BalancedCommutator.lean` | ~250 | 1 (groupCommutator_balanced_z_axis) + Wave 2-followup (X, Y axes + general-axis discharge) | ✅ ALL UNCONDITIONAL post-followup |
 | 3 | `FibonacciEpsilonNet.lean` | ~180 | 2 (entrywise + opNorm correctness) | ✅ UNCONDITIONAL, kernel-only |
-| 4 | `SolovayKitaevRecursion.lean` | ~170 | 1 (level-0 error bound) + 2 predicates (shrinkage, bound) | ✅ Level-0 UNCONDITIONAL; recursion-step tracked Prop |
-| 5 | `SolovayKitaevLengthBound.lean` | ~140 | 3 sanity (positivity, nonneg) + 1 predicate (length asymptotic) | ✅ Sanity UNCONDITIONAL; asymptotic tracked Prop |
-| 6 | `SolovayKitaevQuantitative.lean` | ~150 | 1 HEADLINE (`solovayKitaev_dawson_nielsen_quantitative_fibonacci`) + 1 predicate (contract) | ✅ Kernel-only conditional on Wave-4/5-followup |
-| 7 | `SolovayKitaevApplications.lean` | ~160 | 2 (worked example + Phase 6u placeholder) + 2 predicates | ✅ Conditional on Wave 6 contract |
+| 4 | `SolovayKitaevRecursion.lean` | ~170 | 1 (level-0 error bound) + Wave 4-followup discharges (shrinkage, bound) | ✅ ALL UNCONDITIONAL post-followup |
+| 5 | `SolovayKitaevLengthBound.lean` | ~140 | 3 sanity + Wave 5 unconditional `skLengthAtEpsilon_unconditional` | ✅ ALL UNCONDITIONAL |
+| 6 | `SolovayKitaevQuantitative.lean` | ~150 | 1 HEADLINE (`solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict`) | ✅ UNCONDITIONAL post-Wave-6-followup |
+| 7 | `SolovayKitaevApplications.lean` | ~160 | 2 worked examples | ✅ UNCONDITIONAL post-Wave-6 |
+| Option C | `SolovayKitaevPathA.lean` | **~2500** | **3 HEADLINES**: `SkApproxCSuperQuadraticBound_holds` (commit `5eaa861`); `valid_branch_K_chain_le_K_compose_numeric` (numerical chain helper); `_strict_constructive_tight` (commit `0ec1522`) | ✅ **UNCONDITIONAL kernel-only as of 2026-05-23 PM** |
 
-**Total:** ~1,450 LoC across 7 modules. Build clean at 8624 jobs (+7 over baseline 8617). All headlines pass `lean_verify` with kernel-only axiom closure `[propext, Classical.choice, Quot.sound]`.
+**Total:** ~4,000 LoC across 9 modules post Path-A Option C. Build clean at 8627 jobs. All headlines pass `lean_verify` with kernel-only axiom closure `[propext, Classical.choice, Quot.sound]`. **Project axiom count UNCHANGED at 1 (`gapped_interface_axiom`) — zero new project-local axioms across all Phase 6t work.**
 
 ## The HEADLINE theorem
 
@@ -47,21 +49,33 @@ where:
 
 ## What's conditional vs. unconditional
 
-**Unconditional in this ship:**
+**ALL Phase 6t tracked Props have been discharged unconditionally as of 2026-05-23 PM.** The final remaining piece — `SkApproxCSuperQuadraticBound K_compose` — shipped at K_compose = 1024 in commit `5eaa861`, kernel-only `{propext, Classical.choice, Quot.sound}`. Project axiom count UNCHANGED at 1.
+
+**Unconditional in this ship (chronological):**
 - The 3 Wave-1 group-commutator headlines (quadratic shrinkage, cubic linearization, stability)
 - The Wave-2 Z-axis balanced commutator (`groupCommutator_balanced_z_axis`)
-- **NEW (2026-05-22 PM post-compact strengthening):** Wave-2 X-axis + Y-axis balanced commutators (`groupCommutator_balanced_{x,y}_axis`) — close 2 of 3 axis-coordinate subcases of `BalancedCommutatorGeneralAxisGroup`
+- Wave-2 X-axis + Y-axis balanced commutators (`groupCommutator_balanced_{x,y}_axis`) — 2026-05-22 PM post-compact
+- **Wave 2-followup**: `BalancedCommutatorGeneralAxisGroup` discharged unconditionally via SU(2) Bloch (task #34) — 2026-05-22 PM
 - The Wave-3 ε₀-net correctness (`fibonacciEpsilonNet_findNearest_approx_opNorm`, both entrywise and opNorm)
 - The Wave-4 level-0 error bound (base case)
-- **NEW (2026-05-22 PM post-compact strengthening):** Wave-5 length asymptotic `skLengthAtEpsilon_unconditional` for ε ∈ (0, ε₀ = 1/2] (natural Dawson-Nielsen domain) — eliminates `SkLengthAtEpsilon` from the tracked-Prop set
-- **NEW (2026-05-22 PM post-compact strengthening):** Wave-5 sanity bounds `three_lt_skLengthExponent` + `skLengthExponent_lt_four` (concrete `c ∈ (3, 4)`)
-- All sanity-check positivity/nonneg lemmas
+- **Wave 4-followup**: `SkApproxErrorShrinkage` + `SkApproxErrorBound` discharged (task #35) — 2026-05-22 PM
+- Wave-5 length asymptotic `skLengthAtEpsilon_unconditional` for ε ∈ (0, ε₀] (2026-05-22 PM)
+- Wave-5 sanity bounds `three_lt_skLengthExponent` + `skLengthExponent_lt_four` (2026-05-22 PM)
+- **Wave 6-followup**: `SolovayKitaevQuantitativeContract` discharged (task #36) — 2026-05-22 PM
+- **Iteration 1+2 (2026-05-22)**: ε₀ refinement, matrix log residual bound, ε_seq + skApprox_exists
+- **Path A Steps 1-5 (2026-05-22)**: `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive` conditional headline + loose-ε / structural-K_huge unconditional variants
+- **Path A Option C (2026-05-23 PM, 19 commits)** — the FINAL discharge:
+  - Y_h Lipschitz tightening 4 → π/2 (`Y_h_norm_le_half_pi_norm_sub_one`)
+  - ρ_Fib_SU2 matrix-level helpers (`ρ_Fib_SU2_groupCommutator_val` etc.)
+  - Load-bearing identities `[F, G] = -Y_h Δ` + `exp(-[F,G]) = Δ`
+  - Near-identity bounds + regime checks + Y_h injectivity in regime
+  - DN cubic composition `dnStepFG_gC_minus_Delta_norm_le_cubic`
+  - Invalid-branch helpers (`dnStepFG_invalid_F_zero`, `expIsu2_zero_val`)
+  - **HEADLINE 1**: `SkApproxCSuperQuadraticBound_holds` (commit `5eaa861`) — UNCONDITIONAL discharge at K_compose = 1024
+  - **HEADLINE 2**: `valid_branch_K_chain_le_K_compose_numeric` — pure numerical chain helper (Mathlib-PR-quality)
+  - **HEADLINE 3**: `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight` (commit `0ec1522`) — UNCONDITIONAL strict headline for tight ε ∈ (0, ε₀] bundling BOTH error AND length at the same algorithmic level
 
-**Tracked Props (3 remaining post-strengthening; discharged in followup sessions):**
-- `BalancedCommutatorGeneralAxisGroup` (Wave 2-followup, ~150-300 LoC; reduced from ~200-400 LoC after axis-coordinate subcases shipped)
-- `SkApproxErrorShrinkage` + `SkApproxErrorBound` (Wave 4-followup, ~300-500 LoC; depends on Wave 2-followup)
-- `SolovayKitaevQuantitativeContract` (Wave 6-followup, ~100-200 LoC; composition of Wave 4-followup + Wave 5 already-shipped)
-- ~~`SkLengthAtEpsilon`~~ ✅ **ELIMINATED 2026-05-22 PM post-compact** via Wave 5 unconditional discharge.
+**Tracked Props remaining**: ✅ NONE. All Phase 6t predicates are discharged unconditionally.
 
 **No new project-local axioms** — pre-Phase-6t axiom count UNCHANGED at 1 (`gapped_interface_axiom`, effective 0 post-TPFConjecture conversion).
 
@@ -81,13 +95,24 @@ Phase 6t enables a v4 preprint refresh promoting Chain B Step B5 from "density t
 
 ### Mathlib upstream-PR candidates
 
-Four Mathlib upstream-PR-quality lemmas identified for post-Phase-6t contribution:
-1. `groupCommutator_stability` (Wave 1) — generic perturbation bound for group commutators in normed rings (any d, any field).
-2. **`matrix_inv_diff_norm_le`** (Wave 1 strengthening) — generic matrix-inverse difference bound `‖g'⁻¹ - g⁻¹‖ ≤ ‖g'⁻¹‖·‖g' - g‖·‖g⁻¹‖` for invertible matrices in any normed ring (any d). Uses Mathlib's `Matrix.inv_sub_inv` + submultiplicativity.
-3. `Real.toNNReal` + `Finset.sup` + `linfty_opNorm_def` integration (Wave 3) — generic 2×2 matrix entrywise→opNorm bridge (any d via parameterized constant).
-4. `skLength` recurrence solution form (Wave 5) — generic geometric recurrence `x_{n+1} = a·x_n + b` closed form.
+Eight Mathlib upstream-PR-quality lemmas identified across Phase 6t — opportunistic post-discharge contribution targets:
 
-These are not on the critical path for Phase 6t closeout; opportunistic upstream contribution post-discharge.
+**Generic group-commutator + matrix lemmas:**
+1. `groupCommutator_stability` (Wave 1) — generic perturbation bound for group commutators in normed rings (any d, any field).
+2. `matrix_inv_diff_norm_le` (Wave 1 strengthening) — generic matrix-inverse difference bound `‖g'⁻¹ - g⁻¹‖ ≤ ‖g'⁻¹‖·‖g' - g‖·‖g⁻¹‖` for invertible matrices in any normed ring.
+3. `Real.toNNReal` + `Finset.sup` + `linfty_opNorm_def` integration (Wave 3) — generic 2×2 matrix entrywise→opNorm bridge.
+4. `skLength` recurrence solution form (Wave 5) — generic geometric recurrence `x_{n+1} = a·x_n + b` closed form.
+5. **`groupCommutator_stability_nearIdentity`** (Iteration 2 substrate) — near-identity-sharpened group commutator stability `‖[g',h'] - [g,h]‖ ≤ 2(M²+M⁴)·δ·η + (M⁴+M⁶)·δ²` with leading term linear in the near-identity radius η (vs the generic linear-in-δ bound). Substantially tighter for Dawson-Nielsen-style recursions where the operands are near-identity.
+
+**SU(2) matrix-log substrate (Option C, 2026-05-23):**
+6. **`SU2_norm_sub_aI_le_norm_sub_one`** — SU(2) row-sum identity `‖h - a·I‖ ≤ ‖h - 1‖` for a = trace(h)/2. Exploits `Re(h_ii) = h.trace.re/2` for i = 0, 1 to bound diagonal entries entry-wise.
+7. **`Y_h_norm_le_half_pi_norm_sub_one`** — Tightest matrix-log Lipschitz bound `‖Y_h(h)‖ ≤ (π/2)·‖h - 1‖` combining `(sinc θ)⁻¹ ≤ π/2` (Jordan) with SU(2) Bloch row-sum.
+8. **`SU2_subtype_inv_val_eq_matrix_inv`** — Bridge identity `(A⁻¹ : SU(2)).val = (A.val)⁻¹` (subtype group inverse equals matrix nonsing inverse).
+
+**Numerical chain helper (Option C, 2026-05-23):**
+9. **`valid_branch_K_chain_le_K_compose_numeric`** — pure real-valued numerical chain establishing the calibration arithmetic for Solovay-Kitaev recursions. Generalizable template for SK constant calibration at arbitrary K.
+
+These are not on the critical path for Phase 6t closeout (now COMPLETE); opportunistic upstream contribution.
 
 ## Pipeline Invariant compliance
 
@@ -131,22 +156,37 @@ Path A cascade through consumers (`lean/SKEFTHawking/FKLW/SolovayKitaevPathA.lea
 
 Build clean (8626 jobs, zero new sorry, zero new axioms). Pipeline Invariants #10, #15 RESPECTED. Project axiom count UNCHANGED at 1.
 
-### Remaining: substantive inductive discharge of `SkApproxCSuperQuadraticBound K_compose`
+### ✅ SHIPPED 2026-05-23 PM: substantive inductive discharge of `SkApproxCSuperQuadraticBound K_compose`
 
-The substrate cascade is now in place; the remaining piece is the substantive ~300-500 LoC compositional proof of `SkApproxCSuperQuadraticBound_holds` (inductive level-n→(n+1) error bound) composing:
+The substantive compositional proof (`SkApproxCSuperQuadraticBound_holds`, commit `5eaa861`, ~981 LoC) discharges the predicate unconditionally at K_compose = 1024. Proof structure:
 
-1. **IH on V_n**: `‖ρ(V_n_braid) - U‖ ≤ ε_n` — assumption.
+1. **IH on V_n**: `‖ρ(V_n_braid) - U‖ ≤ ε_n` via `ih U` (induction hypothesis).
 2. **Residual**: `‖V_n⁻¹·U - 1‖ ≤ √2·ε_n` via `residual_norm_le_sqrt_two_mul`.
 3. **H norm (TIGHTENED)**: `‖H‖ ≤ (π/2)·√2·ε_n` via `H_norm_bound_from_V_diff_half_pi`.
-4. **F, G norms**: `‖F‖, ‖G‖ ≤ √(θ/2)` via `dnStepFG_F/G_norm_le_sqrt_theta_half`.
-5. **IH on A_F, A_G**: universal-quantified IH applied to `A_F := expIsu2 F`, `A_G := expIsu2 G`.
-6. **BCH cubic**: `‖[exp(iF), exp(iG)] - exp(-[F,G])‖ ≤ 320·δ³` via `groupCommutator_lie_bracket_cubic_remainder`.
-7. **Balanced commutator → exp identity**: `[F, G] = -Y_h(V_n⁻¹·U)`, hence `exp(-[F,G]) = exp(Y_h(V_n⁻¹·U)) = V_n⁻¹·U` via `SU2_expAmbient_Y_h_eq` (§9.7 central identity).
-8. **Stability**: `‖gC(ρ(A_F_braid), ρ(A_G_braid)) - gC(A_F, A_G)‖ ≤ stability` via `groupCommutator_stability_nearIdentity` with M=√2, δ=ε_n, η=√(ε_n) (since A_F, A_G near identity).
-9. **Composition**: `ρ(skApproxC (n+1) U) = ρ(V_n_braid) · gC(ρ(A_F_braid), ρ(A_G_braid))` (using ρ_Fib_SU2 MonoidHom multiplicativity).
-10. **Triangle inequality + numerical chain**: yields `ε_{n+1} ≤ K_proof · ε_n^(3/2) ≤ K_compose · ε_n^(3/2)`.
+4. **Case split** on dnStepFG validity (`0 < ‖H‖ ∧ ‖H‖ ≤ 1`):
+   - **VALID branch** (substantive):
+     - `δ_lie := √(θ/2)`, with `δ_lie² ≤ (π/4)·√2·ε_n` (regime)
+     - F, G norms: `‖F‖, ‖G‖ ≤ δ_lie` via `dnStepFG_F/G_norm_le_sqrt_theta_half`
+     - IH on A_F, A_G: `‖ρ A_F_braid - A_F.val‖ ≤ ε_n` and similarly for A_G
+     - DN cubic: `‖gC(A_F.val, A_G.val) - Δ.val‖ ≤ 320·δ_lie³` via `dnStepFG_gC_minus_Delta_norm_le_cubic` (composing Wave 1 `groupCommutator_lie_bracket_cubic_remainder` + Wave 2 `balanced_commutator_general_axis_lie_traceless` + §9.7 `SU2_expAmbient_Y_h_eq`)
+     - Stability: `‖gC(ρ A_F_braid, ρ A_G_braid) - gC(A_F.val, A_G.val)‖ ≤ stab_bound` via `groupCommutator_stability_nearIdentity` with M = √2, η = √2·δ_lie·exp(δ_lie), δ = ε_n
+     - Composition: `ρ(skApproxC (n+1) U) = V_n · gC(ρ A_F_braid, ρ A_G_braid)` (ρ_Fib_SU2 MonoidHom + matrix gC identity `ρ_Fib_SU2_groupCommutator_val`)
+     - Triangle inequality decomposing into `√2·stab_bound + √2·320·δ_lie³`
+     - Numerical chain via `valid_branch_K_chain_le_K_compose_numeric`: bounds K_proof ≤ 788 ≤ K_compose = 1024 (margin ~236)
+   - **INVALID branch** (`‖H‖ = 0`, the only failure mode in regime since `‖H‖ ≤ 1` always):
+     - `Y_h(Δ.val) = 0` (from H = -i·Y_h(Δ.val) = 0)
+     - `Δ.val = 1` via `Y_h_eq_zero_in_regime_implies_eq_one`
+     - Hence `V_n.val = U.val` (since Δ_SU2 = V_n_SU2⁻¹ * U = 1)
+     - F = G = 0 via `dnStepFG_invalid_F_zero`; A_F = A_G via `expIsu2_val` + F = G; braid commutator [g, g] = 1
+     - So `skApproxC (m+1) U = V_n_braid` (braid equality); `ρ(skApproxC (m+1) U) = V_n_SU2 = U`
+     - Error = 0 ≤ K_compose · ε_n^(3/2) ✓
 
-This discharge is well-scoped Phase 6t.1 substrate-strengthening work; the substrate composition is the final remaining piece between conditional and unconditional Path A. All upstream pieces (steps 1-8 substrate) are shipped. Best done as a focused session with MCP live goal inspection (`lean_goal`, `lean_multi_attempt`) for iterative tactic validation.
+The wrapper `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight` (commit `0ec1522`) applies `SkApproxCSuperQuadraticBound_holds` to the conditional strict headline of §6, dropping the `h_bound` hypothesis. Path A is now UNCONDITIONAL on all three regimes.
+
+**Architecture lessons saved for future SK discharges:**
+- Pipeline Invariant #10 forbids `set_option maxHeartbeats` — required extracting the numerical chain into a top-level helper (`valid_branch_K_chain_le_K_compose_numeric`) to fit the 200,000-heartbeat per-theorem ceiling.
+- `noncomm_ring` (not `ring`) for matrix distributivity rewrites `a·b - a·c = a·(b - c)`.
+- Tighter (π/4)·√2 ≤ 6/5 bound (via π < 3.15 + √2 ≤ 3/2) brings K_proof ≤ 788 under K_compose = 1024; loose bounds (π ≤ 4, etc.) overshoot at ~1440.
 
 ### Newly unblocked Wave 8 review chain
 
