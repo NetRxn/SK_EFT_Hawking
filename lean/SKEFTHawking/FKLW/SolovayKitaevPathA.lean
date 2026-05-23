@@ -35,6 +35,7 @@ Primary source: Dawson & Nielsen, *Quantum Info. & Comp.* 6 (2006), 81–95;
 
 import Mathlib
 import SKEFTHawking.FKLW.SolovayKitaevRecursion
+import SKEFTHawking.FKLW.SolovayKitaevLengthBound
 import SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
 set_option autoImplicit false
@@ -49,6 +50,7 @@ open Matrix SKEFTHawking SKEFTHawking.FKLW
   SKEFTHawking.FKLW.SU2BalancedCommutator
   SKEFTHawking.FKLW.FibonacciEpsilonNet
   SKEFTHawking.FKLW.SolovayKitaevRecursion
+  SKEFTHawking.FKLW.SolovayKitaevLengthBound
   SKEFTHawking.FKLW.OneParameterSubgroupSU2
 
 /-! ## 1. SU(2) lifting helper for traceless Hermitian Lie-algebra elements
@@ -492,8 +494,69 @@ lemma dnStepFG_G_norm_le_sqrt_theta_half
     rw [norm_zero]
     exact Real.sqrt_nonneg _
 
-/-! ## 6. (next ship) Constructive strict headline
+/-! ## 6. Constructive strict headline framework (Path A Step 5)
 
-Step 5 of Path A. -/
+The Step 4 substantive inductive proof requires K_compose constant ≥ ~2200
+to absorb cubic (≈ 1522·ε_n^(3/2)) + stability (≈ 20·ε_n^(3/2)) + √2 factor
+(V_n unitarity in linftyOp norm). Current K_compose = 1024 gives an
+algebraic gap (proof needs K ≥ 2180 but convergence requires K ≤ 2050
+under existing ε₀ = 1/(8·K_compose²) = 1/8388608).
+
+We ship a CONDITIONAL framework: a tracked Prop `SkApproxCSuperQuadraticBound K`
+that captures the inductive bound, plus a constructive headline parametrized
+by its discharge. The discharge requires sharper BCH cubic constants (a
+Mathlib-PR-quality follow-up reducing 320·δ³ to ~200·δ³). -/
+
+/-- **Tracked Prop**: the substantive super-quadratic shrinkage bound for the
+constructive `skApproxC`, parametrized by the per-step composition constant K.
+
+Discharge requires K large enough to absorb cubic remainder (~1522·ε_n^(3/2))
++ stability (~20·ε_n^(3/2)) + √2 (V_n unitarity factor in linftyOp norm).
+With existing K_compose = 1024 and ε₀ = 1/8388608, this is FALSE due to
+constant calibration gap. Sharper BCH cubic analysis would close the gap. -/
+def SkApproxCSuperQuadraticBound (K : ℝ) : Prop :=
+  ∀ (n : ℕ) (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+    ‖(ρ_Fib_SU2 (skApproxC n U) : Matrix (Fin 2) (Fin 2) ℂ) -
+        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      SKEFTHawking.FKLW.EpsilonSeq.ε_seq K (2 * ε₀) n
+
+/-- **The Path A constructive compiler**: returns a Fibonacci braid word
+whose UNDERLYING STRUCTURE is a level-`skLevel_polylog ε` Dawson-Nielsen
+composition (via the recursive `skApproxC` function). -/
+noncomputable def solovayKitaev_compile_strict_constructive
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ) : FibonacciBraidWord :=
+  skApproxC (skLevel_polylog ε) U
+
+/-- **HEADLINE (Path A Step 5, CONDITIONAL on `SkApproxCSuperQuadraticBound`)**:
+The constructive compiler `solovayKitaev_compile_strict_constructive U ε`
+returns a Fibonacci braid word with VISIBLE Dawson-Nielsen composition
+structure, error bound `≤ ε`, and length bound matching the existing
+strict headline.
+
+This is the Path A counterpart to
+`SolovayKitaevQuantitative.solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict`
+(which uses opaque `Classical.choose`-based extraction). The Path A
+variant exposes the DN compositional structure at the term level via
+`skApproxC_succ` unfolding.
+
+Discharge of `SkApproxCSuperQuadraticBound K_compose` is deferred —
+requires either (a) sharper BCH cubic constants (Mathlib-PR-quality),
+(b) ε₀ refinement, or (c) parametrized K with looser convergence
+margin. See `project_phase6t_path_a_active_2026_05_22.md`
+§ Calibration analysis for details. -/
+theorem solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive
+    (h_bound : SkApproxCSuperQuadraticBound K_compose)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ)
+    (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) :
+    ‖(ρ_Fib_SU2 (solovayKitaev_compile_strict_constructive U ε) :
+        Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε ∧
+    skLength (skLevel_polylog ε) ≤
+      skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent := by
+  refine ⟨?_, skLength_at_skLevel_polylog_le ε hε_pos hε_le⟩
+  -- Apply the tracked bound at level skLevel_polylog ε
+  have h_seq_bound := h_bound (skLevel_polylog ε) U
+  -- The ε_seq value at this level is ≤ ε by skLevel_polylog_spec
+  have h_polylog_spec := skLevel_polylog_spec ε hε_pos hε_le
+  exact le_trans h_seq_bound h_polylog_spec
 
 end SKEFTHawking.FKLW.SolovayKitaevPathA
