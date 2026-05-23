@@ -1,16 +1,16 @@
 {
-  "generated": "2026-05-22T16:35:30.513765",
+  "generated": "2026-05-23T03:45:19.647803",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 13346,
-    "theorems_total": 7154,
-    "theorems_substantive": 7129,
+    "total_declarations": 13429,
+    "theorems_total": 7213,
+    "theorems_substantive": 7188,
     "theorems_placeholder": 25,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 376,
+    "modules": 378,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -110,6 +110,7 @@
       "SKEFTHawking.FKLW.BridgeProp",
       "SKEFTHawking.FKLW.CartanSubstrate",
       "SKEFTHawking.FKLW.EpsilonNet",
+      "SKEFTHawking.FKLW.EpsilonSeq",
       "SKEFTHawking.FKLW.FibRepInfiniteOrder",
       "SKEFTHawking.FKLW.FibSU2Density",
       "SKEFTHawking.FKLW.FibSU2LieBundle",
@@ -131,6 +132,7 @@
       "SKEFTHawking.FKLW.SolovayKitaevApplications",
       "SKEFTHawking.FKLW.SolovayKitaevConstructive",
       "SKEFTHawking.FKLW.SolovayKitaevLengthBound",
+      "SKEFTHawking.FKLW.SolovayKitaevPathA",
       "SKEFTHawking.FKLW.SolovayKitaevQuantitative",
       "SKEFTHawking.FKLW.SolovayKitaevRecursion",
       "SKEFTHawking.FKLW.SpecialUnitaryPathConnected",
@@ -389,18 +391,18 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 5464,
-    "structures": 252,
+    "definitions": 5487,
+    "structures": 253,
     "instances": 389,
     "inductives": 87
   },
   "python": {
     "python_modules": 130,
-    "test_files": 99,
-    "pytest_cases": 4179,
-    "notebooks": 87,
+    "test_files": 100,
+    "pytest_cases": 4195,
+    "notebooks": 89,
     "papers": 42,
-    "figures": 154
+    "figures": 156
   },
   "aristotle": {
     "aristotle_proved": 322,
