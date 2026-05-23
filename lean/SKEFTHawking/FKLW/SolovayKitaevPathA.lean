@@ -425,6 +425,73 @@ lemma H_norm_bound_from_V_diff
         ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
           (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by ring
 
+/-- **dnStepFG F-norm bound**: the F matrix extracted by `dnStepFG` has
+norm bounded by `√(θ/2)` where `θ := ‖(-Complex.I) • Y_h Δ.val‖` (Δ is
+the residual `V_n⁻¹·U`).
+
+Proof: case-split on the validity branch.
+  - Valid case (`0 < θ ∧ θ ≤ 1`): F comes from
+    `balanced_commutator_general_axis_lie_traceless`, which gives
+    `‖F‖ ≤ √(θ/2)` directly.
+  - Invalid case: F = 0, so `‖F‖ = 0 ≤ √(θ/2)` (since θ ≥ 0). -/
+lemma dnStepFG_F_norm_le_sqrt_theta_half
+    (V_n_braid : FibonacciBraidWord)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    let V_n := ρ_Fib_SU2 V_n_braid
+    let Δ := (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    let θ := ‖((-Complex.I) • Y_h Δ.val : Matrix (Fin 2) (Fin 2) ℂ)‖
+    ‖(dnStepFG V_n_braid U).F‖ ≤ Real.sqrt (θ / 2) := by
+  simp only [dnStepFG]
+  split_ifs with h_valid
+  · -- Valid branch: extract from balanced_commutator_general_axis_lie_traceless
+    set Δ_local := (((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+                       ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+    set H_local : Matrix (Fin 2) (Fin 2) ℂ :=
+      ((-Complex.I) : ℂ) • Y_h Δ_local.val
+    set θ_local : ℝ := ‖H_local‖
+    -- The choose-spec gives ‖F‖ ≤ √(θ_local/2)
+    have h_ex_spec :=
+      (balanced_commutator_general_axis_lie_traceless
+        (((1 / θ_local : ℝ) : ℂ) • H_local)
+        (IsHermitian_real_smul (neg_I_smul_Y_h_isHermitian Δ_local.property)
+          (1 / θ_local))
+        (smul_trace_zero (neg_I_smul_Y_h_trace_zero Δ_local.property) _)
+        (norm_normalize h_valid.1)
+        θ_local h_valid.1.le h_valid.2).choose_spec.choose_spec
+    exact h_ex_spec.2.2.2.2.1
+  · -- Invalid branch: F = 0
+    show ‖(0 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ _
+    rw [norm_zero]
+    exact Real.sqrt_nonneg _
+
+/-- **dnStepFG G-norm bound**: symmetric to `dnStepFG_F_norm_le_sqrt_theta_half`. -/
+lemma dnStepFG_G_norm_le_sqrt_theta_half
+    (V_n_braid : FibonacciBraidWord)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    let V_n := ρ_Fib_SU2 V_n_braid
+    let Δ := (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    let θ := ‖((-Complex.I) • Y_h Δ.val : Matrix (Fin 2) (Fin 2) ℂ)‖
+    ‖(dnStepFG V_n_braid U).G‖ ≤ Real.sqrt (θ / 2) := by
+  simp only [dnStepFG]
+  split_ifs with h_valid
+  · set Δ_local := (((ρ_Fib_SU2 V_n_braid)⁻¹ * U :
+                       ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)))
+    set H_local : Matrix (Fin 2) (Fin 2) ℂ :=
+      ((-Complex.I) : ℂ) • Y_h Δ_local.val
+    set θ_local : ℝ := ‖H_local‖
+    have h_ex_spec :=
+      (balanced_commutator_general_axis_lie_traceless
+        (((1 / θ_local : ℝ) : ℂ) • H_local)
+        (IsHermitian_real_smul (neg_I_smul_Y_h_isHermitian Δ_local.property)
+          (1 / θ_local))
+        (smul_trace_zero (neg_I_smul_Y_h_trace_zero Δ_local.property) _)
+        (norm_normalize h_valid.1)
+        θ_local h_valid.1.le h_valid.2).choose_spec.choose_spec
+    exact h_ex_spec.2.2.2.2.2.1
+  · show ‖(0 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ _
+    rw [norm_zero]
+    exact Real.sqrt_nonneg _
+
 /-! ## 6. (next ship) Constructive strict headline
 
 Step 5 of Path A. -/
