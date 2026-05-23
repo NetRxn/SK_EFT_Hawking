@@ -1413,6 +1413,20 @@ matrix-level helpers).
 This section documents the calibration arithmetic + step blueprint to
 preserve context across compacts. -/
 
+/-- **`ε_seq K_compose (2·ε₀) n ≤ 2·ε₀`** for all n — direct application of
+`ε_seq_le_ε_zero` with the convergence condition coming from
+`K_compose_sqrt_two_ε₀_lt_one`. -/
+lemma ε_seq_K_compose_two_ε₀_le_two_ε₀ (n : ℕ) :
+    SKEFTHawking.FKLW.EpsilonSeq.ε_seq K_compose (2 * ε₀) n ≤ 2 * ε₀ := by
+  apply SKEFTHawking.FKLW.EpsilonSeq.ε_seq_le_ε_zero
+  · exact K_compose_pos
+  · exact two_ε₀_pos
+  · -- Need K_compose · (2·ε₀)^(1/2) ≤ 1.
+    -- We have K_compose · √(2·ε₀) ≤ 1/2 ≤ 1 (from K_compose_sqrt_two_ε₀_lt_one).
+    -- Use Real.sqrt_eq_rpow to bridge: √x = x ^ (1/2).
+    rw [show ((1 : ℝ) / 2) = (1 / 2 : ℝ) from rfl, ← Real.sqrt_eq_rpow]
+    linarith [K_compose_sqrt_two_ε₀_lt_one]
+
 /-! ## 8. Path A unconditional strict headline for loose ε regime
 
 For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
