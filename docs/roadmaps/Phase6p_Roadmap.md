@@ -341,9 +341,11 @@ impractical. Two such DRs dropped 2026-05-12 PM in `Lit-Search/Tasks/submitted/`
 
 ---
 
-## Wave catalog — Shape D (3 Tracks × 6 Waves; matches Phase 6n/6o format)
+## Wave catalog — Shape D (3 Tracks × 6 Waves + Track 4 axiom-elimination cluster added 2026-05-12; matches Phase 6n/6o format)
 
-Six waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substrate + theorem). Track 2 = FKLW Fibonacci-anyon density (2 waves; algebraic universality + density). Track 3 = applications + cross-bridges (2 waves; concrete fault-tolerant gate compilation + cross-bridge to D4 / new-bundle decision).
+*Note (refreshed 2026-05-23 audit):* The original Phase 6p catalog was "3 Tracks × 6 Waves" (per 2026-05-12 AM scope). Track 4 (Waves 1c, 2c, 2d, 2b.3.2, 3a.2.2, 3a.2.3) was added 2026-05-12 PM via PR #17 and is fully populated in the table below. The Wave 2c.4a R5 chain + R4.2 chain (executed 2026-05-13/14) are **Phase 6p sub-waves**, not relabelings of any other phase — they shipped substantive Cartan-substrate + AA-bridge machinery toward F.21 density. F.21 unconditional was eventually shipped 2026-05-22 PM via a **different proof path** than the D4.3.c+ scalar-centralizer route originally deferred at line 404 (the successful route was AccPt tangent extraction in Phase 5 Step 13, see `project_phase6p_F21_one_sound_tracked_prop_2026_05_21.md`); the D4.3.c+ DEFERRED note below is therefore historical / superseded. **Phase 6t (`Phase6t_Roadmap.md`, commit `294c8cb`) is a separate downstream phase that *consumes* the Phase 6p F.21 unconditional density as its Wave 3 base case** (per Phase 6t Roadmap §AGENT INSTRUCTIONS line 23). The Wave 2c.4a R5/R4.2 rows below are not Phase 6t content — they are the Phase 6p substrate that fed F.21, which Phase 6t then built on.
+
+Six core waves across three Tracks. Track 1 = AGP threshold theorem (2 waves; substrate + theorem). Track 2 = FKLW Fibonacci-anyon density (2 waves; algebraic universality + density). Track 3 = applications + cross-bridges (2 waves; concrete fault-tolerant gate compilation + cross-bridge to D4 / new-bundle decision). Track 4 added 2026-05-12 (6 additional axiom-elimination + sub-wave entries).
 
 **Status legend:**
 - ✅ **SHIPPED** — Lean / numerical / memo deliverables committed; bundle absorption deferred per Phase 6p convention.
@@ -545,7 +547,7 @@ of R4.1's `braidGroup3HomFromPair`).
 
 ---
 
-## Wave 1a — AGP substrate analysis + threshold-theorem predicate scaffolding 🟡 1a.1 DR RETURNED (other sub-waves NOT STARTED)
+## Wave 1a — AGP substrate analysis + threshold-theorem predicate scaffolding ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog: 1a.1 DR returned + 1a.2 working doc + 1a.3 cross-prover survey all SHIPPED; bundle absorption DEFERRED pending G15)
 
 **Sub-wave decomposition (post-DR-return):**
 
@@ -587,7 +589,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 1b — AGP concatenated distance-3 threshold theorem ⏳ NOT STARTED
+## Wave 1b — AGP concatenated distance-3 threshold theorem ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog: 1b.1 + 1b.2 + 1b.3 + 1b.4 shipped; 10 modules under `FaultTolerance/`; bundle absorption DEFERRED pending G15). G4/G5 (AGP §-pin + Reichardt 2006 comparison) remain quality-improvement caveats — not Phase 6p blockers (A_CNOT=36000 conservative value yields ε₀ > 2.77e-5 > DR commitment 2.73e-5).
 
 **Sub-wave decomposition (DR-locked-in 2026-05-12 per Wave 1a.1 return §6d):**
 
@@ -618,7 +620,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 2a — Fibonacci-anyon density substrate analysis + Lie-algebra-spanning predicate scaffolding 🟡 2a.1 DR RETURNED (other sub-waves NOT STARTED)
+## Wave 2a — Fibonacci-anyon density substrate analysis + Lie-algebra-spanning predicate scaffolding ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog: 2a.1 DR returned + 2a.2 BraidGroup + 2a.3 BridgeProp AXIOM all shipped; the BridgeProp axiom has since been ELIMINATED via Wave 2c PR #17 — project axiom count now 0)
 
 **Sub-wave decomposition (post-DR-return; primary source corrections applied):**
 
@@ -643,7 +645,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 2b — FKLW density theorem ⏳ NOT STARTED
+## Wave 2b — FKLW density theorem ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog: 2b.2 SolovayKitaev AXIOM + 2b.3 quintet scaffold via block-extension shipped). The SK axiom has since been ELIMINATED via Wave 2d PR #17 (`sk_axiom_Dawson_Nielsen` retired) and the full quantitative SK length bound shipped via Phase 6t (Wave 6 `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict`). Project axiom count now 0.
 
 **Sub-wave decomposition (DR-locked-in 2026-05-12 per Wave 2a.1 return §7.2):**
 
@@ -675,7 +677,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 3a — Concrete fault-tolerant gate compilation on Fibonacci MTC substrate 🟡 3a.1 DR RETURNED (other sub-waves NOT STARTED)
+## Wave 3a — Concrete fault-tolerant gate compilation on Fibonacci MTC substrate ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog: 3a.1 DR returned + 3a.2 QCyc40 + GateCompilation + 3a.3 FaultTolerantUQC conditional composition all shipped). Track 4 follow-ups (3a.2.2 + 3a.2.3) also shipped via PR #17. Remaining T-gate ε ≤ 10⁻³ tightening (R5.6 GA-SK) flagged separable; not blocking.
 
 **Sub-wave decomposition (DR-locked-in 2026-05-12; canonical inputs + composition framing committed):**
 
@@ -721,7 +723,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 3b — Cross-bridge to D4 / new-bundle decision + flagship-F positioning ⏳ NOT STARTED
+## Wave 3b — Cross-bridge to D4 / new-bundle decision + flagship-F positioning ✅ SHIPPED working doc (status refreshed 2026-05-23 audit; per catalog: 3b.1 working doc `wave_3b_bundle_decision.md` shipped; awaits **G15 user-authorization** for D4-extension vs new-bundle decision). 🔒 **G15 — user direction 2026-05-23**: keep **DEFERRED until remaining Phase 6 work completes**. D4 may be re-opened later. Phase 6t's D4 close-out (commit `caee77c`, Stage 9/10/13 GREEN) does NOT implicitly resolve G15; the bundle-architecture call is reserved for post-Phase-6 unified review.
 
 **Sub-wave decomposition (proposed):**
 
@@ -745,7 +747,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 1c — MeasureTheory-grounded NoiseModel ⏳ NOT STARTED (NEW — added 2026-05-12 post-strengthening Pass 2)
+## Wave 1c — MeasureTheory-grounded NoiseModel ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog row 366: PR #17 commit `ad0057a`, 290 LoC, zero new axioms). Bernoulli-product bridge to LocalStochasticNoise.
 
 **Sub-wave decomposition:**
 
@@ -776,7 +778,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 2c — Substantive FKLW density bridge (AXIOM ELIMINATION) ⏳ NOT STARTED (NEW — added 2026-05-12)
+## Wave 2c — Substantive FKLW density bridge (AXIOM ELIMINATION) ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog row 368: PR #17, ~385 LoC; `bridge_axiom_FKLW` retired → theorem; residual `bridge_axiom_FKLW_general` strictly weaker (`1 ≤ d` guard); G16 user-auth obtained 2026-05-12). Subsequent R5 program (2026-05-13 onward, lines 373-405) decomposes and further discharges the residual; this work evolved into Phase 6t. Project axiom count now 0.
 
 **Goal:** discharge `bridge_axiom_FKLW` (in `SKEFTHawking/FKLW/BridgeProp.lean`) constructively. Quality bar: standard kernel only.
 
@@ -813,7 +815,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 2d — Substantive Solovay-Kitaev (AXIOM ELIMINATION) ⏳ NOT STARTED (NEW — added 2026-05-12)
+## Wave 2d — Substantive Solovay-Kitaev (AXIOM ELIMINATION) ✅ SHIPPED + SUBSTANTIVE FOLLOWUP (status refreshed 2026-05-23 audit; per catalog row 369: PR #17, ~1084 LoC; `sk_axiom_Dawson_Nielsen` eliminated; G17 user-auth obtained 2026-05-12). Full quantitative Solovay-Kitaev length bound shipped via **Phase 6t Waves 1-8 + Path A Option C** (2026-05-22 to 2026-05-23; `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict` UNCONDITIONAL for ε ∈ (0, ε₀]). See `Phase6t_Roadmap.md`. Project axiom count now 0.
 
 **Goal:** discharge `sk_axiom_Dawson_Nielsen` (in `SKEFTHawking/FKLW/SolovayKitaev.lean`) constructively. Quality bar: standard kernel only.
 
@@ -847,7 +849,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 2b.3.2 — Full quintet 24-conjunct spanning enumeration ⏳ NOT STARTED (NEW — added 2026-05-12)
+## Wave 2b.3.2 — Full quintet 24-conjunct spanning enumeration ⚠️ PARTIAL SHIPPED + SUBSTANTIVE FOLLOWUP (status refreshed 2026-05-23 audit; per catalog row 367: 8/24 conjuncts shipped via PR #17, 180 LoC). True 4-strand representation per DR §4 shipped 2026-05-12 PM as `FibonacciQuintetTrueRep.lean` (427 LoC, P2 strengthening 12→8 conjunct closure — see Wave 2b.3.2-followup-substantive at catalog row 383). Full 24-conjunct enumeration still NOT STARTED if needed; the 8-conjunct close was the audit-corrected target.
 
 **Goal:** complete the substantive spanning side of Wave 2b.3 (`FibonacciQuintetUniversality.lean`) — currently ships only 4 block-inherited conjuncts from paper14 + `qutrit_spanning_data_lift` cross-module application. Full content: ~24 conjuncts including {3,4}-block + cross-block directions, which require explicit 4-strand F-symbol structure beyond block-extension.
 
@@ -879,7 +881,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 3a.2.2 — Explicit Rouabah 30-crossing ε-discharge ⏳ NOT STARTED (NEW — added 2026-05-12)
+## Wave 3a.2.2 — Explicit Rouabah 30-crossing ε-discharge ✅ SUBSTRATE SHIPPED (status refreshed 2026-05-23 audit; per catalog row 370: PR #17, ~440 LoC; `QCyc40Ext` field + Fibonacci 3-strand qubit-sector rep with F²=I + σ·σ⁻¹=I + Yang-Baxter all native_decide-verified). Full 30-deep Frobenius native_decide is in **3a.2.2c-followup** (split-braid Frobenius infrastructure shipped 2026-05-14, catalog row 381). Final native_decide discharge on split-form deferred (Python-precomputed literal needed); quality improvement, not blocking.
 
 **Goal:** complete the Rouabah Hadamard verification — currently ships only the BraidWord (verbatim from arXiv:2008.03542 Eq. 36) + crossing-count proof. Strengthening Pass 2 (2026-05-12) shipped all substrate primitives (`Mat2K_40`, `hadamardTarget`, `frobNormSq`, `hadamardTarget_unitary`, QCyc40 `Mul`). This wave produces the load-bearing `IsBHSZApprox rouabah_hadamard hadamardTarget (6.57e-3)` theorem.
 
@@ -907,7 +909,7 @@ Dependencies: Mathlib4 v4.29.0 only (`Mathlib/Probability/Moments/SubGaussian.le
 
 ---
 
-## Wave 3a.2.3 — CNOT (HZBS Fig 15) + T-gate (KBS algorithm) explicit braid words ⏳ NOT STARTED (NEW — added 2026-05-12)
+## Wave 3a.2.3 — CNOT (HZBS Fig 15) + T-gate (KBS algorithm) explicit braid words ✅ SHIPPED (status refreshed 2026-05-23 audit; per catalog row 371: PR #17, ~640 LoC; TQSim 280-crossing CNOT verbatim; **FIRST Fibonacci T-gate braid published anywhere** at L=17, ε≈7.5e-2 spectral). Precision-tightening to ε≤10⁻³ via **3a.2.3c-followup** (substrate shipped 2026-05-12 PM, 5.4× tightening to L=46 ε≈1.38e-2; Kronecker-Weber parity obstruction documented). Final ε ≤ 10⁻³ via GA-SK iteration is Wave 3a.2.3c-R5.6 — ⏳ separable, NOT STARTED. **Related DR RETURNED (2026-05-23 audit follow-up):** `Lit-Search/Phase-6p/Phase 6p Wave 3a.2.3b Deep Research- 6-Strand Fibonacci R-Matrix Substrate for SK_EFT_Hawking.md` — 6-strand Fibonacci R-matrix substrate; relevant to 3a.2.3 follow-up precision work. Task tracker file in `Lit-Search/Tasks/complete/20260517_phase6p_wave_3a_2_3b_6strand_fibonacci_R_matrix_substrate.md`.
 
 **Goal:** complete the substantive content of Wave 3a (gates G13 + G14 from §G DR-return state) — explicit CNOT and T-gate braid words on Fibonacci 3-strand substrate.
 

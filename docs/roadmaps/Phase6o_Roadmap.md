@@ -108,7 +108,7 @@ Sub-wave numbering (e.g., Wave 1a.1, 1a.2, …) replaces the Greek sub-wave labe
 
 ---
 
-## Wave 1a — G3 boostless / Carrollian soft-theorem program ⏳ NOT STARTED
+## Wave 1a — G3 boostless / Carrollian soft-theorem program ✅ SHIPPED Sessions 35-37 (status refreshed 2026-05-23 audit; 5 modules verified on disk under `lean/SKEFTHawking/SoftTheorems/`)
 
 **Sub-wave decomposition (proposed; matures during session execution):**
 
@@ -149,7 +149,7 @@ SKEFTHawking/SoftTheorems/
 
 ---
 
-## Wave 1b — G4-Kerr-Schild classical double-copy on Petrov-D analog ⏳ NOT STARTED
+## Wave 1b — G4-Kerr-Schild classical double-copy on Petrov-D analog ✅ SHIPPED Session 38 (status refreshed 2026-05-23 audit; 5 modules verified on disk under `lean/SKEFTHawking/DoubleCopy/`)
 
 **Wave dependency:** Wave 1b uses Wave 1a's emergent-IR-sector framework (boostless / Carrollian framework) as natural context, but the Kerr-Schild track is **algebraically independent** and CAN start in parallel via the algebraic substrate alone (Bahjat-Abbas-Luna-White arXiv:1710.01953 + Luna-Monteiro-Nicholson-O'Connell arXiv:1810.08183).
 
@@ -190,7 +190,7 @@ SKEFTHawking/DoubleCopy/
 
 ---
 
-## Wave 1c — G1-NO-GO writeup (dissipative SK-EFT bootstrap can't produce uniqueness with current axioms) ⏳ NOT STARTED
+## Wave 1c — G1-NO-GO writeup (dissipative SK-EFT bootstrap can't produce uniqueness with current axioms) ✅ SHIPPED Session 32 (status refreshed 2026-05-23 audit) — ✅ **WRITEUP FILE LOCATED 2026-05-23**: lives at **workspace-root** `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md` (211 lines, physics-paper-grade math sketch with TL;DR + 3 structural obstructions: KMS-replaces-unitarity, no SK-crossing analog, SDP positive-functional structure breaks on complex contour). NOT at project-level `SK_EFT_Hawking/temporary/...` — the roadmap references in §A and throughout used the bare `temporary/` path which is ambiguous; the file is at the workspace root, consistent with the CLAUDE.md workspace-vs-project split. No bundle-absorption blocker.
 
 **Sub-wave decomposition (proposed; this wave is intentionally writeup-only — no Lean novelty):**
 
@@ -217,7 +217,7 @@ SKEFTHawking/DoubleCopy/
 
 ---
 
-## Wave 2a — APS-η for analog-horizon backgrounds ⏳ NOT STARTED
+## Wave 2a — APS-η for analog-horizon backgrounds ✅ SHIPPED Session 31 (status refreshed 2026-05-23 audit; 6 modules verified on disk under `lean/SKEFTHawking/APSEta/`)
 
 **Genesis:** surfaced from Phase 6n Wave 1c (G8-W1 AS reformulation memo) §6.3 — "APS eta-invariant for analog-horizon backgrounds: the program does not currently compute η(D|_Σ) for the BEC-acoustic, ADW, or ³He-A horizons. This is a non-trivial computation that would (a) sharpen the L3 regime-partition claim with a topological-invariant distinction between the two regimes, (b) provide the first systematic substrate-side APS-eta computation on analog horizons, (c) connect to Phase 6n Wave 1b SymTFT audit via the Witten-Yonekura η-invariant identification."
 
@@ -263,7 +263,7 @@ SKEFTHawking/APSEta/
 
 ---
 
-## Wave 2b — G1-Schellekens chain ⏳ NOT STARTED
+## Wave 2b — G1-Schellekens chain ✅ SHIPPED Session 39 (status refreshed 2026-05-23 audit; 6 modules verified on disk under `lean/SKEFTHawking/Schellekens/`). D.3 user-auth gate (D2 reframing pre-draft) remains HELD for unified bundle-absorption pass per Session-5 user direction.
 
 **🚨 USER AUTHORIZATION GATE (D.3 absorption candidate):**
 
@@ -358,7 +358,7 @@ SKEFTHawking/ETH/
 
 ---
 
-## Wave 3b — I3 Itô + LDP-α + LDP-β (community Mathlib4 contribution) ⏳ NOT STARTED
+## Wave 3b — I3 Itô + LDP-α + LDP-β (community Mathlib4 contribution) ✅ SHIPPED Session 40 (status refreshed 2026-05-23 audit; 12 modules verified on disk: 6 under `lean/SKEFTHawking/Itô/` + 6 under `lean/SKEFTHawking/LDP/`). I3 bundle architecture user-auth GRANTED Phase 6n Session 4. Mathlib upstream PR campaign is the Phase 6s Track 2 deliverable (still pending user-auth on Wave 2a).
 
 **🚨 USER AUTHORIZATION GATE (Pipeline Invariant #14):** **GRANTED 2026-05-04 (Phase 6n Session 4).** Bundle architecture went 13 → 14. Scoping document at `temporary/working-docs/phase6n/i3_bundle_scoping.md`. Bundle directory scaffolded at `papers/I3/` with `bundle_metadata.json`, `source_manifest.md`, `change_log.md`, `append_log.json`. PAPER_STRATEGY.md §2.4 updated with Tier-3 #3 entry. PAPER_DRAFT_MAPPING.md headline updated. claims-reviewer-bundle-prompts.md gains I3 anchor block. `_VALID_BUNDLE_TARGETS` / `_TIER_OF` / `_BUNDLE_TITLES` / `_BUNDLE_TARGET_JOURNAL` / `_BUNDLE_SUBPHASE` (in `scripts/sentence_state.py`, `scripts/bundle_source_manifest.py`, `scripts/datastar_bundles.py`) all updated. Phase 6o Wave 3b is now unblocked at the bundle-target layer; remaining gate is the substantive Lean module work itself.
 
@@ -432,7 +432,7 @@ SKEFTHawking/LDP/
 
 ---
 
-## Wave 4a — Substrate-derived Sakharov Λ_J ↔ Λ_HK biconditional refactor ⏳ NOT STARTED
+## Wave 4a — Substrate-derived Sakharov Λ_J ↔ Λ_HK biconditional refactor ✅ SHIPPED 2026-05-08 (status refreshed 2026-05-23 audit). Verdict (B) honest one-way closure shipped via 5 substantive theorems JTGR16-JTGR20 + 3 new bibitems (FinazziLiberatiSindoni2012PRL/Proc, BelenchiaLiberatiMohd2014). Working-doc closure memo at `temporary/working-docs/phase6o/wave_4a_session1_close.md` (the catalog references `wave_4a_sakharov_lambda_substrate_refactor_close.md` — that exact filename was not created; the substrate doc at `wave_4a_sakharov_lambda_substrate_refactor.md` plus the session-1 close are the actual closure artifacts).
 
 **Genesis:** Phase 7 absorption Session 4 (2026-05-07) post-wave audit on D5 surfaced that the existing `JacobsonThermoGRDarkEnergy.sakharov_induced_gravity_criterion_implies_lambda_j_eq_lambda_hk` theorem is mathematically a *one-way* implication despite the underlying Phase 6e claim being phrased as a biconditional. Investigation confirmed `lambdaJEqLambdaHK := S.lambdaEffEqLambdaHK` is a literal Boolean projection (the "biconditional" reduces to `S.x = true → S.x = true`, a vacuous P5 anti-pattern) and substrate witnesses (`volovikJannes_he3a`, `flsBEC`) do not independently set `lambdaJ` and `lambdaHK` from physics inputs. Session-4 user-call C2 authorized this as a Phase-6X dedicated wave for substrate-derived refactor; Session 5 (2026-05-08) committed it as Phase 6o Wave 4a. **Risk-disclosed at user-call:** the (⇐) direction may not hold without further conditions, in which case the wave ships the same Lean state with substantively deeper substrate encoding (and the biconditional reading gets retired in D5 §11 prose).
 
@@ -535,7 +535,7 @@ Phase 6{p,q,r,s} open in parallel after Phase 6o ships and Phase 7 publication t
 
 **Authoritative post-Session-40 counts:** Lake build clean at **8585 jobs (+36 vs Phase 6n Session 29 close 8549)**. All substantive headlines verified standard-kernel-only `[propext, Classical.choice, Quot.sound]`. MCP-driven, zero Aristotle, zero new sorry, zero new axioms.
 
-**Phase 6o ALL 7 WAVES COMPLETE.** Bundle absorption (D.2/D.3 events across all 7 waves) HELD per Phase 6n Session-5 user direction; runs as one coherent unified Phase 6n + 6o → Phase 7 absorption pass at user trigger.
+**Phase 6o ALL 8 WAVES COMPLETE.** *(Status note refreshed 2026-05-23 audit: original phrasing was "7 WAVES" dated 2026-05-06 close; Wave 4a was added 2026-05-08 post-facto, taking the wave count to 8.)* Bundle absorption (D.2/D.3 events across all 8 waves) HELD per Phase 6n Session-5 user direction; runs as one coherent unified Phase 6n + 6o → Phase 7 absorption pass at user trigger.
 
 **Next-up:** unified Phase 6n + 6o → Phase 7 absorption pass per `LATE_PHASE6_ABSORPTION_PROTOCOL.md` Stages A–G. Three D.3 user-auth gates (Phase 6n Wave 2a I1, Phase 6n Wave 2d D3+L3, Phase 6o Wave 2b D2 reframing) trigger at start of that pass. Pre-drafts at `temporary/working-docs/phase6n/` + `temporary/working-docs/phase6o/` ready for user review.
 

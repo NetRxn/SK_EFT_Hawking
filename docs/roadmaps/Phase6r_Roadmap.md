@@ -122,13 +122,15 @@
 
 - **`temporary/working-docs/phase6n/6n_eta_AS_reformulation_memo.md`** — referenced in `APSEta/SymTFTBridge.lean` (L17-21, L62-63) but NOT located by scout. The implicit AS-index identification substance is in those `APSEta/SymTFTBridge.lean` comments + arXiv:1909.08775 (Witten-Yonekura). **Wave 1b.2 should NOT block on this memo; extract substance from the in-comments references + primary source.**
 
-### E. Submitted DR prompts (dispatched 2026-05-12)
+### E. Submitted DR prompts (dispatched 2026-05-12; **ALL 3 RETURNED as of 2026-05-23**)
 
-| File | Wave | Status |
+| File | Wave | Status (2026-05-23) |
 |---|---|---|
-| `Lit-Search/Tasks/submitted/20260512_phase6r_wave_1a_SymTFT_2024_2026_substrate.md` | 1a.1 | dispatched — **load-bearing entry point of Phase 6r; cannot proceed without this return.** Returns to `Lit-Search/Phase-6r/wave_1a_SymTFT_2024_2026_substrate_return.md` |
-| `Lit-Search/Tasks/submitted/20260512_phase6r_wave_2a_spin_SymTFT_fermionic_extension.md` | 2a.1 | dispatched (intended to process AFTER Wave 1a.1 return). Returns to `Lit-Search/Phase-6r/wave_2a_spin_SymTFT_fermionic_extension_return.md` |
-| `Lit-Search/Tasks/submitted/20260512_phase6r_wave_3a_SM_matter_topological_boundary.md` | 3a.1 | dispatched (intended to process AFTER Wave 1a.1 + Wave 2a.1 returns). Returns to `Lit-Search/Phase-6r/wave_3a_SM_matter_topological_boundary_return.md` |
+| `20260512_phase6r_wave_1a_SymTFT_2024_2026_substrate.md` | 1a.1 | ✅ **RETURNED 2026-05-12** at `Lit-Search/Phase-6r/Phase 6r Wave 1a.1 — SymTFT 2024–2026 Substrate Deep Research Return.md` (44.8 KB). KOZ + FMT-wrapper framework committed. |
+| `20260512_phase6r_wave_2a_spin_SymTFT_fermionic_extension.md` (rewritten 2026-05-23 to ingest 1a.1) | 2a.1 | ✅ **RETURNED 2026-05-23** at `Lit-Search/Phase-6r/wave_2a_spin_SymTFT_fermionic_extension_return.md` (~5,500 words). Composed-construction recommended; CRITICAL Pin⁺ bordism correction + TY citation corrections (see Wave 2a section). |
+| `20260512_phase6r_wave_3a_SM_matter_topological_boundary.md` (rewritten 2026-05-23 to ingest 1a.1) | 3a.1 | ✅ **RETURNED 2026-05-23** at `Lit-Search/Phase-6r/wave_3a_SM_matter_topological_boundary_return.md` (~6,200 words). Anchor confirmed = Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 *Boundary SymTFT*; arXiv:2207.04050 → 2207.10700 correction; HOLD on F2 bundle (default F-extension). |
+
+**Lit-Search hygiene action (recommended at next housekeeping pass):** all 3 task files should be moved from `Lit-Search/Tasks/{submitted,in-progress}/` → `Lit-Search/Tasks/complete/`.
 
 ---
 
@@ -145,15 +147,15 @@ Eight waves across three Tracks. Track 1 = SymTFT axiomatization (the bulk-side 
 | Wave | Codename | Status | Bundle absorption | Branch | User-auth gate |
 |---|---|---|---|---|---|
 | **Track 1 — SymTFT axiomatization (bulk-side substrate)** | | | | | |
-| **Wave 1a** | SymTFT substrate analysis + fresh DR | ⏳ NOT STARTED | n/a (working doc) | n/a | **YES** — fresh DR dispatch required pre-Wave |
+| **Wave 1a** | SymTFT substrate analysis + fresh DR | 🟡 **1a.1 DR DISPATCHED + RETURNED 2026-05-12** (`Lit-Search/Phase-6r/Phase 6r Wave 1a.1 — SymTFT 2024–2026 Substrate Deep Research Return.md`, 44.8 KB; KOZ-style Drinfeld-center + FMT-wrapper formalization confirmed tractable; zero prior SymTFT formalization in any prover). **Wave 1a.2 substrate analysis working doc + Wave 1a.3 predicate scaffolding not yet started.** | n/a (working doc) | n/a | DR-dispatch gate ✅ CLEARED 2026-05-12 |
 | **Wave 1b** | Bulk SymTFT data: 3D TQFT predicate + Z(C) Drinfeld-center reading | ⏳ NOT STARTED | D4 extension + new bundle candidate — DEFERRED | **D.4 candidate** | none |
 | **Wave 1c** | Boundary condition substrate: gapped boundaries + Lagrangian-algebra characterization | ⏳ NOT STARTED | D4 extension — DEFERRED | **D.2** | none |
 | **Wave 1d** | SymTFT bulk-boundary correspondence: Drinfeld-center ≃ Z(boundary-algebra-Lagrangian) | ⏳ NOT STARTED | D4 + D2 (anomaly) — DEFERRED | **D.2** | none |
 | **Track 2 — SymTFT-with-fermions extension** | | | | | |
-| **Wave 2a** | Spin-SymTFT axiomatization (fermionic extension) | ⏳ NOT STARTED | D2 (anomaly substrate) + D4 — DEFERRED | **D.2** | none |
+| **Wave 2a** | Spin-SymTFT axiomatization (fermionic extension) | 🟡 **2a.1 DR RETURNED 2026-05-23** (`Lit-Search/Phase-6r/wave_2a_spin_SymTFT_fermionic_extension_return.md`; verdicts: Q1 PARTIAL-VIABLE / Q2-Q6 GO; composed-construction recommended — no canonical 3+1d spin-SymTFT anchor exists; D2 cluster bond PRESERVED, no D4/L2 rewrite needed). **Sub-wave decomposition specified:** Wave 2a.2 PinBordism+SpinSymTFT (~350-500 LoC), Wave 2a.3 substantive instance (~120-180 LoC), Wave 2a.4 alignment-only Schellekens cross-bridge (~80-120 LoC). Wave 2a.2 is unblocked and immediately actionable. | D2 (anomaly substrate) + D4 — DEFERRED | **D.2** | none |
 | **Wave 2b** | Z₁₆ classification via Spin-SymTFT (Witten-Yonekura connection) | ⏳ NOT STARTED | D2 (refines Z₁₆ section) — DEFERRED | **D.3 candidate** | possibly **YES** (D2 reframing) |
 | **Track 3 — SM matter on topological boundary** | | | | | |
-| **Wave 3a** | SM matter content as topological-boundary-condition data | ⏳ NOT STARTED | D2 + L2 — DEFERRED | **D.2** | none |
+| **Wave 3a** | SM matter content as topological-boundary-condition data | 🟡 **3a.1 DR RETURNED 2026-05-23** (`Lit-Search/Phase-6r/wave_3a_SM_matter_topological_boundary_return.md`). **Anchor CONFIRMED:** Bhardwaj-Copetti-Pajer-Schäfer-Nameki *Boundary SymTFT* arXiv:2409.02166 (SciPost Phys. 19 (2025) 061) PRIMARY; KOZ + FMT SECONDARY. **Bundle architecture verdict: HOLD on F2; default to F-extension** (4 explicit GO conditions for F2 promotion stated, re-evaluate at Wave 3b.2 close). **Sub-wave decomposition specified:** Wave 3a.2 skeleton (~430-600 LoC), Wave 3a.3 substantive proofs (~700-1000 LoC), Wave 3b.1 dark sector (paper-17-conditional), Wave 3b.2 flagship prose (~25-40pp). Wave 3a.2 is unblocked. | D2 + L2 — DEFERRED | **D.2** | none |
 | **Wave 3b** | Substrate-to-bulk-SymTFT identification + flagship-F unification chapter | ⏳ NOT STARTED | F flagship (substantive new chapter) + new bundle candidate — DEFERRED | **D.3 candidate** | possibly **YES** (F flagship reframing) |
 
 **Wave dependencies:**
@@ -168,22 +170,33 @@ Eight waves across three Tracks. Track 1 = SymTFT axiomatization (the bulk-side 
 
 **Coherent sub-narrative.** The phase produces a single substantive sub-narrative: *"the program's emergent-physics-from-substrate substrate is the boundary condition of a SymTFT bulk."* Each component (categorical substrate, fermionic extension, SM matter as boundary data) builds toward the flagship-F unification chapter at Wave 3b. The flagship-F chapter is the **unification crown** — the substantive reframing that makes the program's various bundles cohere under a single conceptual umbrella.
 
-**Recommended next-up order:**
+**Recommended next-up order (refreshed 2026-05-23 post 1a.1+2a.1+3a.1 returns):**
 
-1. **Wave 1a** SymTFT substrate analysis (REQUIRES fresh DR dispatch; this is the deepest substrate-discovery surface of the 4 new phases).
-2. **Wave 1b** Bulk SymTFT data (in parallel with Wave 1c after Wave 1a closes).
-3. **Wave 1c** Boundary condition substrate (in parallel with Wave 1b).
-4. **Wave 1d** Bulk-boundary correspondence (after Waves 1b + 1c).
-5. **Wave 2a** Spin-SymTFT axiomatization (after Wave 1d).
-6. **Wave 2b** Z₁₆ classification via Spin-SymTFT (after Wave 2a).
-7. **Wave 3a** SM matter on topological boundary (after Wave 1d; possibly in parallel with Waves 2a-2b).
-8. **Wave 3b** Substrate-to-bulk identification + flagship-F unification (after all prior waves; the unification crown).
+1. ✅ **Wave 1a.1 DR returned 2026-05-12** — framework committed: KOZ + FMT-wrapper.
+2. ✅ **Wave 2a.1 DR returned 2026-05-23** — composed-construction; sub-wave decomposition specified.
+3. ✅ **Wave 3a.1 DR returned 2026-05-23** — Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 anchor confirmed.
+4. ⏳ **Wave 1a.2 + 1a.3** substrate analysis working doc + `SymTFT/Predicate.lean` scaffolding (entry point; unblocks Waves 1b + 1c in parallel).
+5. ⏳ **Wave 2a.2** `PinBordism.lean` + `SpinSymTFT.lean` predicate scaffolding (~350-500 LoC, 2-3 sessions). **Must use corrected `Ω_4^{Pin⁺}` + `TP_5(Pin⁺)` axiom naming + corrected TY citations** — see Wave 2a section below. Independent of Track 1; can run in parallel with Wave 1a.2.
+6. ⏳ **Wave 3a.2** `LagrangianAlgebra.lean` + `GappedBoundary.lean` skeleton (~430-600 LoC, 2-3 sessions). Independent of Wave 2a; can run in parallel.
+7. ⏳ **Wave 1b** Bulk SymTFT data (depends on Wave 1a.2 close).
+8. ⏳ **Wave 1c** Boundary condition substrate (depends on Wave 1a.2 close; parallel with 1b).
+9. ⏳ **Wave 1d** Bulk-boundary correspondence (after Waves 1b + 1c).
+10. ⏳ **Wave 2a.3** substantive instance theorem (`wave_2a_3_substantive_instance` biconditional with `Z16AnomalyCancels`; ~120-180 LoC, 1-2 sessions).
+11. ⏳ **Wave 2a.4** alignment-only Schellekens cross-bridge (~80-120 LoC, 1 session).
+12. ⏳ **Wave 2b** Z₁₆ classification via Spin-SymTFT (after Wave 2a.3; D.3 candidate user-auth gate HELD).
+13. ⏳ **Wave 3a.3** `IsSMMatterTopologicalBoundary.lean` + `CrossBridges/SMMatterAsSymTFTBoundary.lean` + `APSEta/SubstrateBulkAsymmetry.lean` (~700-1000 LoC, 4-6 sessions). Maintain Z₂₄ vs Z₁₆ distinction discipline.
+14. ⏳ **Wave 3b.1** (paper-17-conditional) — follow-up DR scout on paper 17 recommended BEFORE landing `AlternativeBoundaries.lean`.
+15. ⏳ **Wave 3b.2** flagship-F unification chapter (gated on user authorization for D.3 absorption).
+
+**Parallelism note:** Tracks 1 / 2 / 3 substrate scaffolding (Waves 1a.2-1a.3, 2a.2, 3a.2) can run concurrently now that all three load-bearing DRs have returned. Cross-bundle dependencies bind at Wave 1d, 2a.3, 3a.3 close.
 
 **Pre-Phase-7 bundle absorption gate:** all 8 Phase 6r Waves close → unified Phase 6r → Phase 7 absorption pass. **Two D.3 candidate gates:** Wave 2b (D2 Z₁₆ reframing via SymTFT) and Wave 3b (F flagship unification chapter) require user-authorization at bundle-absorption pass.
 
 ---
 
-## Wave 1a — SymTFT substrate analysis + fresh DR ⏳ NOT STARTED
+## Wave 1a — SymTFT substrate analysis + fresh DR 🟡 1a.1 DR RETURNED 2026-05-12 (gate UNBLOCKED; Waves 1a.2 + 1a.3 not yet started)
+
+> **STATUS (refreshed 2026-05-23 audit):** Wave 1a.1 fresh DR dispatched 2026-05-12 and returned same day. Dossier at `Lit-Search/Phase-6r/Phase 6r Wave 1a.1 — SymTFT 2024–2026 Substrate Deep Research Return.md` (44.8 KB). **Decision-ready verdict:** KOZ-style Drinfeld-center + FMT-wrapper predicate formalization is the recommended path; zero prior SymTFT formalization exists in any proof assistant (including PhysLean); field not converged but tractable subset identified. **The DR-dispatch user-auth gate is CLEARED.** Phase 6r working-docs directory does not exist yet. Wave 1a.2 substrate-analysis working doc + Wave 1a.3 `SymTFT/Predicate.lean` scaffolding are unblocked and immediately actionable. Once shipped, Waves 1b + 1c become unblocked in parallel. **Lit-Search hygiene note:** the Wave 1a.1 task file is still in `Lit-Search/Tasks/in-progress/` despite the return shipping; should be moved to `Lit-Search/Tasks/complete/` at next housekeeping pass.
 
 **Sub-wave decomposition (proposed):**
 
@@ -287,7 +300,27 @@ SKEFTHawking/SymTFT/
 
 ---
 
-## Wave 2a — Spin-SymTFT axiomatization (fermionic extension) ⏳ NOT STARTED
+## Wave 2a — Spin-SymTFT axiomatization (fermionic extension) 🟡 2a.1 DR RETURNED 2026-05-23 (Wave 2a.2 unblocked + immediately actionable)
+
+> **STATUS (refreshed 2026-05-23 audit):** Wave 2a.1 DR returned at `Lit-Search/Phase-6r/wave_2a_spin_SymTFT_fermionic_extension_return.md` (~5,500 words). **Verdicts:** Q1 PARTIAL-VIABLE (composed construction — KOZ + FMT-wrapper + Freed-Hopkins + Witten-Yonekura + KTTW + García-Etxebarria-Montero; no canonical 3+1d spin-SymTFT anchor exists in 2024-2026 literature); Q2-Q6 GO.
+>
+> **⚠ CRITICAL MATHEMATICAL CORRECTION (LOAD-BEARING for Wave 2a.2):** The dispatch's and Wave 1a.1 §2.4 hypothesis-wrap target `Ω_5^{Pin⁺}(pt) ≅ ℤ_16` is **incorrect as a bordism statement**. Correct content (Kirby-Taylor 1990, *A calculation of Pin⁺ bordism groups*, Comment. Math. Helv. 65 (1990) 434):
+> - `Ω_4^{Pin⁺}(pt) ≅ ℤ/16` (bordism group; generator RP⁴ with Pin⁺ structure).
+> - `Ω_5^{Pin⁺}(pt) = 0` (vanishes).
+> - `TP_5(Pin⁺) ≅ ℤ/16` (Anderson-dual 5D SPT classification; Freed-Hopkins arXiv:1604.06527 + Kirby-Taylor).
+>
+> The substrate's `z16_class ∈ ZMod 16` in `Z16AnomalyForcesThetaBar.lean` is best interpreted as taking values in **TP_5(Pin⁺)** (the 5D bulk SPT class). No currently-shipped Lean theorem is broken (substrate code uses `ZMod 16` directly, interpretation-agnostic), but Wave 2a.2 `PinBordism.lean` must wrap BOTH `Ω_4^{Pin⁺}` and `TP_5(Pin⁺)` with the Anderson-dual relation as a derived axiom.
+>
+> **⚠ CITATION CORRECTIONS (LOAD-BEARING):**
+> - `arXiv:1610.07478` is **NOT** Tachikawa-Yonekura — it is *"Need for Structure in Quantum LDPC Codes"* by Eldar-Ozols-Thompson (quant-ph). The likely-intended Tachikawa-Yonekura paper is `arXiv:1610.07010` ("On time-reversal anomaly of 2+1d topological phases," PTEP 2017 033B04).
+> - `arXiv:1910.04962` is **NOT** Tachikawa-Yonekura — it is Córdova-Ohmori *"Anomaly Obstructions to Symmetry Preserving Gapped Phases."*
+> - **Recommended TY-series citation set** for Wave 2a.2 docstrings: `arXiv:1803.10796` (Yonekura solo), `arXiv:1909.08775` (Witten-Yonekura — the η-inflow paper), `arXiv:2003.11550` (Hsieh-Tachikawa-Yonekura), plus `arXiv:1610.07010` if the time-reversal-anomaly paper is intended.
+>
+> **D2 cluster bond PRESERVED:** Wave 2b reframing does NOT require D4/L2 rewrite. Wave 2a.3 substantive instance theorem is a biconditional with `Z16AnomalyCancels` — extends interpretation without invalidating prior theorems.
+>
+> **Schellekens cross-bridge is alignment-only, NOT rigidification:** ℤ/16 (Pin⁺ fermionic) and ℤ/24 (c=24 bosonic Witt) intersect at substrate level but are not unified; Wave 2a.4 cross-bridge confirms one-way alignment via existing `wave_2a_6_symtft_bridge_closure`.
+>
+> **Sub-wave LoC estimates (program-velocity deflated 5×-10×):** Wave 2a.2 ~350-500 LoC (2-3 sessions), Wave 2a.3 ~120-180 LoC (1-2 sessions), Wave 2a.4 ~80-120 LoC (1 session). Total Wave 2a ~550-800 LoC, 3-5 sessions.
 
 **Sub-wave decomposition (proposed):**
 
@@ -335,7 +368,27 @@ SKEFTHawking/SymTFT/
 
 ---
 
-## Wave 3a — SM matter on topological boundary ⏳ NOT STARTED
+## Wave 3a — SM matter on topological boundary 🟡 3a.1 DR RETURNED 2026-05-23 (Wave 3a.2 unblocked + immediately actionable)
+
+> **STATUS (refreshed 2026-05-23 audit):** Wave 3a.1 DR returned at `Lit-Search/Phase-6r/wave_3a_SM_matter_topological_boundary_return.md` (~6,200 words).
+>
+> **ANCHOR CONFIRMED for Wave 3a.3:** Bhardwaj-Copetti-Pajer-Schäfer-Nameki, *"Boundary SymTFT,"* `arXiv:2409.02166` (SciPost Phys. 19 (2025) 061). Verbatim warrants: *"transformation properties, or (generalized) charges, of BCs are captured by topological BCs of Symmetry Topological Field Theory"* + *"Gapped boundary conditions are in one-to-one correspondence with Lagrangian algebras L in the Drinfeld center."* PRIMARY anchor. KOZ (arXiv:2209.11062) + FMT (arXiv:2209.07471) as SECONDARY. Choi-Lam-Shao, Cordova-Ohmori, Cordova-Hsin-Zhang, Heckman-Hübner-Murdia, Tachikawa-Yonekura series as SUPPORTING.
+>
+> **⚠ CITATION CORRECTION (LOAD-BEARING):** `arXiv:2207.04050` is **NOT** Davighi-Gripaios-Lohitsiri — that ID resolves to *"Few-Example Clustering via Contrastive Learning"* (Jang et al., ML, 2022). **Correct ID: `arXiv:2207.10700`** (Davighi-Gripaios-Lohitsiri, *"Anomalies of non-Abelian finite groups via cobordism,"* JHEP 09 (2022) 147).
+>
+> **Bundle architecture verdict (Q6, MEDIUM-HIGH confidence): HOLD on F2 creation; default to F-extension.** Phase 6r Track 3 sits right at the new-bundle threshold (≥3 major theorems + ≥1 experimental signature) but is thematically continuous with F's existing arc. **GO-conditions for F2 promotion at Wave 3b.2 close (2-of-4 trips → promote):** (a) F draft exceeds ~50pp finished prose; (b) ≥6 named top-level theorems land (currently estimating 3-5); (c) paper 17 turns out to be a fully independent dark-sector flagship; (d) cross-bundle cross-references to D2/D4/L2/D5 become so tangled that flagship-F narrative breaks.
+>
+> **⚠ Z₂₄ vs Z₁₆ distinction discipline:** the Witt class of the SymTFT bulk has TWO sectors — modular ℤ/24 (chiral central charge, DMNO 2010) and Pin⁺ spin-extension ℤ/16 (Ising-Witt-subgroup, Davydov-Nikshych-Ostrik arXiv:1109.5558). Both live in the same Witt-group structure but are easily confused. Maintain strict distinction in Lean.
+>
+> **Theorem signature recommended for Wave 3a.3:** `theorem sm_3gen_via_symtft : ∀ N_f : ℕ, IsSpinSymTFTBoundary (sm_boundary_data N_f) → (WittInvariant (sm_bulk N_f) = 0 ↔ 3 ∣ N_f)`. CORRECTION from dispatch sketch: use explicit `Prop`-valued hypothesis (NOT bracketed instance syntax) because the program needs to *prove* it for specific SM-boundary data, not dispatch by typeclass search.
+>
+> **Paper 17 NOT directly accessed.** Wave 3b.1 dark-sector cross-bridge is HOLD pending a follow-up DR scout on paper 17 directly. Plausible Q3 priors documented (sterile νR + axion-like alternative Lagrangian algebra on same bulk) but unverified.
+>
+> **Cross-prover survey CONFIRMED:** Phase 6r Lean modules (`LagrangianAlgebra`, `GappedBoundary`, `IsSMMatterTopologicalBoundary`, `CrossBridges/SMMatterAsSymTFTBoundary`) — once landed — would be **the first SymTFT-bulk-boundary formalization in any major proof assistant + the first SM-as-SymTFT-boundary-data formalization** (hedge: "to our knowledge, after surveying Mathlib + Lean physlib + Coq UniMath + Isabelle AFP + Agda 1Lab/agda-categories as of May 2026").
+>
+> **`HasLagrangianAlgebra` tracked-sorry approach recommended** with primary-source citation (Mathlib only has Drinfeld center, not full MTC theory per Mizuno BIMSA review).
+>
+> **Sub-wave decomposition (Q8):** Wave 3a.2 skeleton — `LagrangianAlgebra.lean` (250-350) + `GappedBoundary.lean` (180-250) — 2-3 sessions. Wave 3a.3 substantive — `IsSMMatterTopologicalBoundary.lean` (200-280) + `CrossBridges/SMMatterAsSymTFTBoundary.lean` (300-450) + `APSEta/SubstrateBulkAsymmetry.lean` (200-300) — 4-6 sessions. Wave 3b.1 — `AlternativeBoundaries.lean` (150-250) — 2-4 sessions (paper-17-conditional). Wave 3b.2 — flagship-F chapter draft (~25-40pp), 4-6 sessions (gated on user authorization).
 
 **Sub-wave decomposition (proposed):**
 
