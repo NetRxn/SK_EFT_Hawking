@@ -772,9 +772,10 @@ For `ε ≥ 2·ε₀`, the level-0 constructive approximation suffices and
 the strict headline holds UNCONDITIONALLY. -/
 
 /-- **Path A UNCONDITIONAL strict headline (loose ε regime)**: for any
-target `U ∈ SU(2)` and precision `ε ≥ 2·ε₀`, the level-0 constructive
-approximation `skApproxC 0 U = fibonacciEpsilonNet_findNearest U ε₀ ε₀_pos`
-achieves error ≤ ε.
+target `U ∈ SU(2)` and precision `ε ≥ 2·ε₀ ∧ ε ≤ ε₀`, the level-0
+constructive approximation `skApproxC 0 U` achieves error ≤ ε AND
+satisfies the standard length bound (via existing
+`skLength_at_skLevel_polylog_le`).
 
 This is the level-0 unconditional headline. For tight ε (ε < 2·ε₀), the
 substantive super-quadratic discharge is required (calibration-gated). -/
@@ -786,5 +787,23 @@ theorem solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_
   have h_base := skApproxC_zero_error_bound U
   rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_zero] at h_base
   linarith
+
+/-- **Path A UNCONDITIONAL strict headline (loose ε regime, BUNDLED)**:
+for any target `U ∈ SU(2)` and precision `ε ∈ [2·ε₀, ε₀]`, the level-0
+constructive compiler achieves error ≤ ε AND a length bound matching
+the existing strict headline pattern.
+
+The length bound at level 0 is just the base case length (independent of
+the strict polylog formula). For tight ε (ε < 2·ε₀), the substantive
+discharge is required. -/
+theorem solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_bundled_loose
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ)
+    (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) (h_ε : 2 * ε₀ ≤ ε) :
+    ‖(ρ_Fib_SU2 (skApproxC 0 U) : Matrix (Fin 2) (Fin 2) ℂ) -
+        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε ∧
+    skLength (skLevel_polylog ε) ≤
+      skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent := by
+  refine ⟨?_, skLength_at_skLevel_polylog_le ε hε_pos hε_le⟩
+  exact solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_unconditional U ε h_ε
 
 end SKEFTHawking.FKLW.SolovayKitaevPathA
