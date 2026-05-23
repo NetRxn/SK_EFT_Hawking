@@ -427,6 +427,110 @@ lemma H_norm_bound_from_V_diff
         ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
           (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by ring
 
+/-- **TIGHT H norm bound (Option C, 2026-05-23)**: same shape as
+`H_norm_le_four_norm_sub_one` but with the analytically-tight Lipschitz
+constant `π` instead of the loose `4`. Composes
+`Y_h_norm_le_pi_norm_sub_one` via the `‖-i‖ = 1` factorization. -/
+lemma H_norm_le_pi_norm_sub_one
+    {Δ : Matrix (Fin 2) (Fin 2) ℂ}
+    (hΔ : Δ ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_small : ‖Δ - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1 / 4) :
+    ‖((-Complex.I) • Y_h Δ : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      Real.pi * ‖Δ - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  rw [norm_smul]
+  have h_norm_neg_I : ‖(-Complex.I)‖ = 1 := by
+    rw [norm_neg, Complex.norm_I]
+  rw [h_norm_neg_I, one_mul]
+  exact Y_h_norm_le_pi_norm_sub_one hΔ h_small
+
+/-- **TIGHTEST H norm bound (Option C SU(2)-Bloch, 2026-05-23)**: combines
+`Y_h_norm_le_half_pi_norm_sub_one` (which uses SU(2) row-sum analysis to
+get Step 4's `‖h - a·I‖ ≤ ‖h - 1‖` factor of 1, then composes with
+analytically-tight `(sinc θ)⁻¹ ≤ π/2`) via the `‖-i‖ = 1` factorization.
+Tightest reachable constant: `c = π/2 ≈ 1.57`. -/
+lemma H_norm_le_half_pi_norm_sub_one
+    {Δ : Matrix (Fin 2) (Fin 2) ℂ}
+    (hΔ : Δ ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (h_small : ‖Δ - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1 / 4) :
+    ‖((-Complex.I) • Y_h Δ : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      (Real.pi / 2) * ‖Δ - (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  rw [norm_smul]
+  have h_norm_neg_I : ‖(-Complex.I)‖ = 1 := by
+    rw [norm_neg, Complex.norm_I]
+  rw [h_norm_neg_I, one_mul]
+  exact Y_h_norm_le_half_pi_norm_sub_one hΔ h_small
+
+/-- **TIGHTEST composite H norm bound from V_n - U residual (Option C SU(2)-Bloch)**:
+for `V, U ∈ SU(2)` with `√2·‖V - U‖ < 1/4`,
+`‖(-i)·Y_h(V⁻¹·U)‖ ≤ (π/2)·√2·‖V - U‖`. Composes
+`residual_norm_le_sqrt_two_mul` (Step 2) with
+`H_norm_le_half_pi_norm_sub_one` (tightest Step 4 via SU(2) Bloch). -/
+lemma H_norm_bound_from_V_diff_half_pi
+    (V U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_small : Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1/4) :
+    ‖((-Complex.I) • Y_h ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val)
+        : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      (Real.pi / 2) * Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  set Δ := (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) with hΔ_def
+  have h_residual : ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+                      (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+                    Real.sqrt 2 *
+                      ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+                        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+    residual_norm_le_sqrt_two_mul V U
+  have h_residual_lt : ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+                          (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1/4 :=
+    lt_of_le_of_lt h_residual h_small
+  have h_H := H_norm_le_half_pi_norm_sub_one Δ.property h_residual_lt
+  have h_half_pi_nn : (0 : ℝ) ≤ Real.pi / 2 := by positivity
+  calc ‖((-Complex.I) • Y_h Δ.val : Matrix (Fin 2) (Fin 2) ℂ)‖
+      ≤ (Real.pi / 2) * ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+              (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := h_H
+    _ ≤ (Real.pi / 2) * (Real.sqrt 2 *
+            ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+              (U : Matrix (Fin 2) (Fin 2) ℂ)‖) := by gcongr
+    _ = (Real.pi / 2) * Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+          (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by ring
+
+/-- **TIGHT composite H norm bound (Option C, 2026-05-23)**: same shape
+as `H_norm_bound_from_V_diff` but with the analytically-tight Lipschitz
+constant. For `V, U ∈ SU(2)` with `√2·‖V - U‖ < 1/4`,
+`‖(-i)·Y_h(V⁻¹·U)‖ ≤ π·√2·‖V - U‖`. Composes
+`residual_norm_le_sqrt_two_mul` (Step 2) with
+`H_norm_le_pi_norm_sub_one` (tightened Step 4). -/
+lemma H_norm_bound_from_V_diff_pi
+    (V U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (h_small : Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1/4) :
+    ‖((-Complex.I) • Y_h ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)).val)
+        : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+      Real.pi * Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by
+  set Δ := (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) with hΔ_def
+  have h_residual : ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+                      (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤
+                    Real.sqrt 2 *
+                      ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+                        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ :=
+    residual_norm_le_sqrt_two_mul V U
+  have h_residual_lt : ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+                          (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ < 1/4 :=
+    lt_of_le_of_lt h_residual h_small
+  have h_H := H_norm_le_pi_norm_sub_one Δ.property h_residual_lt
+  have hπ_nn : (0 : ℝ) ≤ Real.pi := Real.pi_pos.le
+  calc ‖((-Complex.I) • Y_h Δ.val : Matrix (Fin 2) (Fin 2) ℂ)‖
+      ≤ Real.pi * ‖(Δ : Matrix (Fin 2) (Fin 2) ℂ) -
+              (1 : Matrix (Fin 2) (Fin 2) ℂ)‖ := h_H
+    _ ≤ Real.pi * (Real.sqrt 2 *
+            ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+              (U : Matrix (Fin 2) (Fin 2) ℂ)‖) := by gcongr
+    _ = Real.pi * Real.sqrt 2 *
+        ‖(V : Matrix (Fin 2) (Fin 2) ℂ) -
+          (U : Matrix (Fin 2) (Fin 2) ℂ)‖ := by ring
+
 /-- **dnStepFG F-norm bound**: the F matrix extracted by `dnStepFG` has
 norm bounded by `√(θ/2)` where `θ := ‖(-Complex.I) • Y_h Δ.val‖` (Δ is
 the residual `V_n⁻¹·U`).
