@@ -201,7 +201,9 @@ noncomputable def dnStepFG
     (V_n_braid : FibonacciBraidWord)
     (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) : DNStepData :=
   let V_n : ↥(specialUnitaryGroup (Fin 2) ℂ) := ρ_Fib_SU2 V_n_braid
-  let Δ : ↥(specialUnitaryGroup (Fin 2) ℂ) := U * V_n⁻¹
+  -- Δ := V_n⁻¹ U is the residual; V_n · Δ = U ensures the level-(n+1)
+  -- composition `V_n · groupCommutator(A_F, A_G) ≈ V_n · Δ = U`
+  let Δ : ↥(specialUnitaryGroup (Fin 2) ℂ) := V_n⁻¹ * U
   let H : Matrix (Fin 2) (Fin 2) ℂ := ((-Complex.I) : ℂ) • Y_h Δ.val
   let θ : ℝ := ‖H‖
   if h : 0 < θ ∧ θ ≤ 1 then
