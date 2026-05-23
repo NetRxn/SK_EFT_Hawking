@@ -1045,7 +1045,7 @@ no new project-local axioms are introduced (Pipeline Invariant~\#15);
 the inherited axiom set is $\{\texttt{gapped\_interface\_axiom}\}$
 from Bundle~D2 alone.
 
-\subsection{Path A: constructive Dawson--Nielsen compiler and calibration disclosure}
+\subsection{Path A: constructive Dawson--Nielsen compiler (three-regime unconditional ship)}
 \label{subsec:path-a}
 
 The headline of \S\ref{sec:fib-density-sk}.2 uses
@@ -1066,10 +1066,11 @@ visible at the Lean term level via the
 the compiler exhibits the Dawson--Nielsen structure overtly rather
 than as an existential certificate.
 
-\paragraph{Tight-$\varepsilon$ calibration disclosure.}
+\paragraph{Three-regime unconditional ship.}
 The substantive super-quadratic shrinkage bound for \texttt{skApproxC}
 is captured by the tracked predicate
-\texttt{SkApproxCSuperQuadraticBound}\,$K$. Its current state is:
+\texttt{SkApproxCSuperQuadraticBound}\,$K$. All three regimes ship
+unconditionally as of 2026-05-23:
 \begin{itemize}
 \item \emph{Unconditional} for the loose-$\varepsilon$ regime
 $\varepsilon \geq 2\varepsilon_0 = 2/(8\cdot K_{\mathrm{compose}}^2)$:
@@ -1085,45 +1086,67 @@ $K_{\mathrm{huge}}\cdot(2\varepsilon_0)^{3/2} \geq 2\sqrt 2$
 (satisfied numerically by a factor of $\sim 10^{16}$). This shows
 \texttt{SkApproxCSuperQuadraticBound} is satisfiable as a predicate;
 the constructive headline composes with it.
-\item \emph{Conditional} on a calibrated $K_{\mathrm{compose}} = 1024$
-discharge in the tight-$\varepsilon$ regime $\varepsilon < 2\varepsilon_0$,
-with the substrate now in place to close the calibration: the
-Mathlib-PR-quality SU(2) matrix-log substrate
+\item \emph{Unconditional} at the calibrated $K_{\mathrm{compose}} = 1024$
+on the tight-$\varepsilon$ regime $\varepsilon \in (0, \varepsilon_0]$.
+The discharge ships as
+\texttt{SkApproxCSuperQuadraticBound\_holds} (commit \texttt{5eaa861},
+kernel-only \{\texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}\}) and the tight-$\varepsilon$ bundled headline
+\texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_fibonacci\_strict\_constructive\_tight}
+(commit \texttt{0ec1522}) packages BOTH error
+$\|\rho_{\mathrm{Fib}}\,(\texttt{compile}\,U\,\varepsilon) - U\| \leq \varepsilon$
+AND polylog length
+$\texttt{skLength}\,(\texttt{skLevel\_polylog}\,\varepsilon) \leq C\cdot(\log(1/\varepsilon))^c$
+at the same algorithmic level \texttt{skLevel\_polylog}\,$\varepsilon$.
+The discharge rests on a 17-commit substrate cascade culminating in:
+the Mathlib-PR-quality SU(2) matrix-log Lipschitz bound
 \texttt{Y\_h\_norm\_le\_half\_pi\_norm\_sub\_one}
-(\S82.7 of \texttt{OneParameterSubgroupSU2.lean}; shipped 2026-05-23)
-delivers a Lipschitz bound
-$\|Y_h(h)\| \leq (\pi/2)\cdot\|h - 1\|$
-combining the analytically-tight Jordan inequality
-$(\operatorname{sinc}\theta)^{-1} \leq \pi/2$ with the SU(2) row-sum identity
-$\|h - (\mathrm{tr}\,h\,/2)\cdot I\| \leq \|h - 1\|$
-(the latter rests on
-\texttt{SU2\_norm\_sub\_aI\_le\_norm\_sub\_one}, a new Mathlib-PR-quality
-SU(2) Bloch substrate that exploits
-$\mathrm{Re}(h_{ii}) = h.\mathrm{trace}.\mathrm{re}/2$ for $i = 0, 1$
-to bound diagonal entries entry-wise). The resulting inductive
-recurrence gives
+(\S82.7 of \texttt{OneParameterSubgroupSU2.lean}, $\|Y_h(h)\| \leq (\pi/2)\cdot\|h - 1\|$
+via the analytically-tight Jordan inequality
+$(\operatorname{sinc}\theta)^{-1} \leq \pi/2$ and the SU(2) row-sum identity
+$\|h - (\mathrm{tr}\,h\,/2)\cdot I\| \leq \|h - 1\|$, the latter via
+\texttt{SU2\_norm\_sub\_aI\_le\_norm\_sub\_one}); the
+$\rho_{\mathrm{Fib\_SU2}}$ matrix-level helpers
+(\texttt{$\rho$\_Fib\_SU2\_groupCommutator\_val} composing the braid
+group-commutator with the SU(2) matrix group-commutator); the
+load-bearing identity
+$[F,G] = -Y_h\,\Delta$ giving $\exp(-[F,G]) = \Delta$
+via \S 9.7's $\exp \circ Y_h = \mathrm{id}$; near-identity bounds for
+$\exp(iF) - 1$ and its inverse; regime checks bounding
+$\sqrt{2}\,\varepsilon_n < 1/4$ and $(\pi/2)\sqrt{2}\,\varepsilon_n \leq 1$;
+$Y_h$ injectivity in the near-identity regime
+(\texttt{Y\_h\_eq\_zero\_in\_regime\_implies\_eq\_one});
+a Dawson--Nielsen cubic composition bound
+$\|\mathrm{gC}(A_F, A_G) - \Delta\| \leq 320\,\delta_{\mathrm{lie}}^3$;
+plus the helper
+\texttt{valid\_branch\_K\_chain\_le\_K\_compose\_numeric}
+(a Mathlib-PR-quality pure numerical chain establishing the
+calibration arithmetic via tight bounds $\pi < 3.15$,
+$e < 3$, $\sqrt 2 \leq 3/2$, $(\pi/4)\sqrt 2 \leq 6/5$). The
+inductive recurrence gives
 $\varepsilon_{n+1} \leq K_{\mathrm{proof}}\cdot\varepsilon_n^{3/2}$
-with $K_{\mathrm{proof}} \approx 530$, comfortably below
-$K_{\mathrm{compose}} = 1024$ (margin $\sim 490$ in $K$). The
-substantive inductive composition combining this tightened Y\_h
-substrate with the Wave~1 BCH cubic remainder
-($320\cdot\delta^3$ in
-\texttt{MatrixBCHCubic.bch\_order\_2\_cubic\_thm}), the Wave~2
-balanced commutator factorisation, and the Wave~1 near-identity
-stability bound (\texttt{groupCommutator\_stability\_nearIdentity})
-remains the deferred substantive Phase~6t.1 deliverable
-($\sim$300--500 LoC of compositional proof). The tracked predicate
-\texttt{SkApproxCSuperQuadraticBound}\,$K_{\mathrm{compose}}$
-will discharge unconditionally once the composition is shipped;
-the substrate cascade for the discharge is fully in place at the
-present writing.
+with the Lean-proven bound $K_{\mathrm{proof}} \leq 788$
+(true value $\sim 600$ under tighter $\exp(\delta_{\mathrm{lie}}) \approx 1$
+arithmetic; either way comfortably below $K_{\mathrm{compose}} = 1024$
+with margin $\geq 236$). The proof is structured around a
+case-split on the \texttt{dnStepFG} validity hypothesis
+$(0 < \|H\| \wedge \|H\| \leq 1)$: the valid branch composes the DN
+cubic with the near-identity stability bound
+\texttt{groupCommutator\_stability\_nearIdentity}; the invalid
+branch ($\|H\| = 0$, the only failure mode in regime since
+$\|H\| \leq 1$ always) is closed by $Y_h$ injectivity forcing
+$\Delta = 1$ hence $V_n = U$, with the braid commutator $[g, g] = 1$
+collapsing the recursion.
 \end{itemize}
-The disclosure is explicit: the existence-form quantitative SK
-headline of \S\ref{sec:fib-density-sk}.2 ships unconditionally at
-zero \texttt{sorry}; the runnable constructive compiler ships
-unconditionally on the loose-$\varepsilon$ regime and on a structural
-$K$ witness, but the calibrated runnable form on the
-tightest-$\varepsilon$ regime awaits the BCH cubic tightening sprint.
+The substrate is now complete on three regimes: the existence-form
+quantitative SK headline of \S\ref{sec:fib-density-sk}.2 ships
+unconditionally at zero \texttt{sorry}; the runnable constructive
+compiler ships unconditionally on the loose-$\varepsilon$ regime
+(level-0 base case), on a structural-$K$ witness (diameter bound),
+and on the calibrated tight-$\varepsilon$ regime
+(Option C $Y_h$ tightening cascade) --- giving full coverage of all
+$\varepsilon > 0$ with the canonical bundled error-and-length form
+on the tightest precisions.
 
 \subsection{Status, downstream consumption, and cross-bundle bridges}
 \label{subsec:fib-sk-status}
@@ -1134,8 +1157,11 @@ infrastructure is closed at the foundational layer: F.21 density
 (\S\ref{sec:fib-density-sk}.1) and the Dawson--Nielsen quantitative
 length bound (\S\ref{sec:fib-density-sk}.2) ship with kernel-only
 headlines; the Path~A constructive compiler
-(\S\ref{sec:fib-density-sk}.4) ships with explicit calibration
-disclosure on the tight-$\varepsilon$ regime. The contribution
+(\S\ref{subsec:path-a}) now ships unconditionally on all three
+regimes (loose, structural-$K$, and calibrated tight-$\varepsilon$),
+with the canonical bundled error-and-length form
+\texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_fibonacci\_strict\_constructive\_tight}
+delivered kernel-only at $K_{\mathrm{compose}} = 1024$. The contribution
 upgrades the ``Open problems'' bullet of \S\ref{sec:synthesis}
 flagging the absent Fibonacci-universality protocol; the
 non-protocol-side open content (doublon-SWAP adiabatic-drag
@@ -1150,8 +1176,11 @@ nor an abstract universal gate set --- as of the present writing. The
 conservative claim form, that this substrate is the first
 kernel-verified quantitative Solovay--Kitaev infrastructure
 instantiated for the Fibonacci-anyon braid representation in SU(2),
-survives even if a concurrent generic-SU(2) version is announced
-before the Path-A calibration sprint completes.
+combined with the first kernel-verified
+bundled error-and-length unconditional strict headline at a
+calibrated $K_{\mathrm{compose}}$ (here $K_{\mathrm{compose}} = 1024$
+with proven margin $\geq 236$), survives even if a concurrent
+generic-SU(2) version is announced shortly hereafter.
 
 \paragraph{Cross-bundle bridges.}
 \S\ref{sec:fib-density-sk}.1--2 cross-bridges to F (flagship)
@@ -1162,9 +1191,15 @@ asymptotic-summary equations directly. The QEC-MTC content of
 \S\ref{sec:qec-mtc} is independent of \S\ref{sec:fib-density-sk}; the
 Fibonacci-anyon density of \S\ref{sec:fib-density-sk}.1 is not
 required for the Hayden--Preskill admissibility biconditional, which
-treats the abstract MTC's coding properties. Within Phase~6t, the
-Path-A calibration is the only deferred substantive item; all eight
-headline theorems are kernel-only.
+treats the abstract MTC's coding properties. Within Phase~6t, all
+Path-A headlines (loose, structural, and tight regimes) now ship
+unconditionally with kernel-only axiom closure
+\{\texttt{propext}, \texttt{Classical.choice}, \texttt{Quot.sound}\};
+all nine headline theorems
+(\S\ref{sec:fib-density-sk}.2's existence-form quantitative SK plus
+the three Path-A constructive variants of \S\ref{subsec:path-a} plus
+the five supporting wave headlines) are kernel-only with zero
+\texttt{sorry} project-wide.
 
 \paragraph{Axiom inheritance.}
 The Phase~6p F.21 and Phase~6t SK substrate introduce no new
