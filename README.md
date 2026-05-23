@@ -106,7 +106,7 @@ Phase 6a Track B (Wave 2) formalizes gravitational-wave propagation under the Vo
 
 ### Bekenstein-Hawking entropy from MTC state counting (Kaul-Majumdar SU(2)_k closed form + Outcome-3 tracked-hypothesis bundle)
 
-Phase 6a Track C (Wave 3) formalizes the Bekenstein-Hawking entropy `S = A/(4 G_N) − (3/2)log(A/(4 G_N)) + c_0` at a horizon labeled by simple objects of a Modular Tensor Category (MTC). Per the deep-research literature survey (`Lit-Search/Phase-6a/6a-Horizon MTC boundary conditions...Wave 3.md`, 2026-04-25), no published paper places any specific MTC at the horizon of a 4D non-extremal black hole in an ADW substrate, so `BHEntropyMicroscopic.lean` ships in **Outcome-3 tracked-hypothesis mode** for the general case + an **Outcome-2 SU(2)_k sub-corollary** anchored on the Kaul-Majumdar derivation (gr-qc/0002040). Three machine-checked structural results: (i) the −3/2 log coefficient decomposes as (−1/2 from the Gaussian saddle) + (−1 from the SU(2) singlet projection in the I₀ − I₁ cancellation, Kaul-Majumdar Eq. (15)); (ii) the leading 1/4 prefactor is structurally a TUNING (Immirzi γ; Domagala-Lewandowski 0.2375 vs Meissner 0.2739 yield identical −3/2 under their respective counting prescriptions); (iii) Sen 2013 (arXiv:1205.0971) heat-kernel result for 4D Schwarzschild gives c_log = +(212/45 − 3) ≈ +1.71, an explicit non-universality witness encoded as `sen_4d_disagrees_with_kaul_majumdar`. The general-MTC tracked hypothesis bundles as `H_HorizonBoundaryCondition` with five falsifier theorems; the toric-code abelian falsifier triggers F2 (log d_max = 0 ⇒ κ_C = 0). Wave 3 introduces one new axiom `gaussianSaddleAsymptotic` (eliminability: hard, classified in `AXIOM_METADATA`) — the Laplace-method asymptotic bound, which a Mathlib PR could eventually retire. Paper 26 documents the synthesis "SU(2)_k MTC + ADW substrate + Walker-Wang Z₂-time-reversal anomaly inflow" as a research-level conjecture novelty-flagged across the manuscript. **Adversarial-review followup pass closed 2026-04-26-0330**: 14 Stage 13 findings (5 BLOCKER + 7 REQUIRED + 2 RECOMMENDED) all addressed and verified closed by re-invocation; substantive `H_HorizonBoundaryCondition_implies_nonabelian_envelope` theorem replaces the prior trivial-projection corollary; +10 golden-identity tests in `tests/test_bh_entropy.py` (47 → 57); 16 paper26-related bibkeys flipped `doi_verified: True` after WebFetch verification.
+Phase 6a Track C (Wave 3) formalizes the Bekenstein-Hawking entropy `S = A/(4 G_N) − (3/2)log(A/(4 G_N)) + c_0` at a horizon labeled by simple objects of a Modular Tensor Category (MTC). Per the deep-research literature survey (`Lit-Search/Phase-6a/6a-Horizon MTC boundary conditions...Wave 3.md`, 2026-04-25), no published paper places any specific MTC at the horizon of a 4D non-extremal black hole in an ADW substrate, so `BHEntropyMicroscopic.lean` ships in **Outcome-3 tracked-hypothesis mode** for the general case + an **Outcome-2 SU(2)_k sub-corollary** anchored on the Kaul-Majumdar derivation (gr-qc/0002040). Three machine-checked structural results: (i) the −3/2 log coefficient decomposes as (−1/2 from the Gaussian saddle) + (−1 from the SU(2) singlet projection in the I₀ − I₁ cancellation, Kaul-Majumdar Eq. (15)); (ii) the leading 1/4 prefactor is structurally a TUNING (Immirzi γ; Domagala-Lewandowski 0.2375 vs Meissner 0.2739 yield identical −3/2 under their respective counting prescriptions); (iii) Sen 2013 (arXiv:1205.0971) heat-kernel result for 4D Schwarzschild gives c_log = +(212/45 − 3) ≈ +1.71, an explicit non-universality witness encoded as `sen_4d_disagrees_with_kaul_majumdar`. The general-MTC tracked hypothesis bundles as `H_HorizonBoundaryCondition` with five falsifier theorems; the toric-code abelian falsifier triggers F2 (log d_max = 0 ⇒ κ_C = 0). Wave 3 originally introduced one new axiom `gaussianSaddleAsymptotic` — the Laplace-method asymptotic bound — which was subsequently retired in Phase 6a Wave 7 by shipping a project-local `LaplaceMethod.lean` derivation. Paper 26 documents the synthesis "SU(2)_k MTC + ADW substrate + Walker-Wang Z₂-time-reversal anomaly inflow" as a research-level conjecture novelty-flagged across the manuscript. **Adversarial-review followup pass closed 2026-04-26-0330**: 14 Stage 13 findings (5 BLOCKER + 7 REQUIRED + 2 RECOMMENDED) all addressed and verified closed by re-invocation; substantive `H_HorizonBoundaryCondition_implies_nonabelian_envelope` theorem replaces the prior trivial-projection corollary; +10 golden-identity tests in `tests/test_bh_entropy.py` (47 → 57); 16 paper26-related bibkeys flipped `doi_verified: True` after WebFetch verification.
 
 ### BCH four laws + regime partition for emergent-gravity ADW black holes (Schwarzschild ↔ ADW-extremality, Schottky-saturation cooling-toward-extremality)
 
@@ -136,11 +136,17 @@ Phase 6n consolidates the mathematical substrate underneath the three-layer arch
 
 Phase 6o ships substantive first-of-kind results across five tracks. **Boostless / Carrollian soft theorems** are formalized on three substrates — BEC, ADW, and polariton — closing the Strominger triangle (asymptotic symmetries ↔ soft theorems ↔ memory effects) at the substrate-physics level. **G4 — Kerr-Schild classical double-copy** on a Petrov-type-D acoustic metric: this is the **first explicit classical double-copy on an analog-gravity substrate in the literature**, accompanied by a 3-obstruction strong-form BCJ NO-GO that bounds where the double-copy generalizes. **APS-η for analog horizons:** parity-symmetric BEC and ADW substrates give η = 0; ³He-A gives a non-zero APS-η, distinguishing the substrates at the index-theory level. **G1 — Schellekens chain reframing:** the divisibility `24 | c₋` is reframed as a corollary of Möller-Scheithauer 2024 c = 24 holomorphic-VOA classification, sharpening the Phase 5b modular-generation argument. **ETH-α refutation tableau:** three concrete refutation theorems on five candidate predicates close the eigenstate-thermalization-hypothesis branch at the substrate level. The Itô calculus + LDP framework + `LDPCompatibleSKEFT` typeclass form the substrate for the I3 publication bundle ("Verified Stochastic Calculus for Mathlib4").
 
+### Fibonacci-anyon density and quantitative Solovay–Kitaev (Phase 5 Step 13 + Phase 6t)
+
+Two interlocking results close the topological-quantum-computation chain at the kernel-verified level. **Phase 5 Step 13 (2026-05-22)** ships the unconditional density half of the Freedman–Kitaev–Larsen–Wang theorem: the two-strand braid representation of the Fibonacci anyon model, restricted to the Fibonacci subsector and embedded as a homomorphism `B_2 → SU(2)`, has dense image in `SU(2)`. The terminal theorem `SKEFTHawking.FKLW.fibonacci_density_F21_unconditional` has axiom closure `[propext, Classical.choice, Quot.sound]` (Lean standard kernel only) and zero tracked propositional hypotheses; it is the first kernel-verified unconditional FKLW density statement for Fibonacci anyons in any proof assistant. The proof was discharged via a Cartan v4 Inverse Function Theorem 3-direction composition through `↥𝔰𝔲(2)` (~370 LoC), much lighter than the originally scoped closed-subgroup classification route. Supporting modules under `lean/SKEFTHawking/FKLW/` include `SU2BCHBracketClosure.lean`, `OneParameterSubgroupSU2.lean`, `SU2LieAlgebra.lean`, `SU2MatrixExp.lean`, `SU2LocalDiffeo.lean`, `SU2InteriorBridge.lean`, and `FibonacciDensityConditional.lean`.
+
+**Phase 6t Path A Option C (2026-05-23)** instantiates this on the compiler side: a constructive Dawson–Nielsen Solovay–Kitaev compiler `skApproxC` with VISIBLE composition (no opaque `Classical.choose`) is fully discharged for the tight-ε regime via a Y_h Lipschitz π/2 tightening (Mathlib-PR-quality substrate cascade, ~900 LoC). The strict headline `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight` is UNCONDITIONAL for ε ∈ (0, ε₀] and bundles BOTH the error bound `‖ρ(compile U ε) − U‖ ≤ ε` AND the length bound `skLength ≤ skLengthConst · (log(1/ε))^skLengthExponent` at the same algorithmic compile level (with `skLengthExponent := log 5 / log(3/2) ≈ 3.97`, the canonical Dawson–Nielsen exponent). This is the **first kernel-verified quantitative Solovay–Kitaev length bound in any proof assistant**. Paper bundle D4 documents the end-to-end chain; see `docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md` for the canonical ship summary.
+
 ---
 
 ## Technical Summary
 
-**Lean 4 formalization:** **5,855 theorems** (5,830 substantive + 25 placeholder) across **322 modules**. **1 axiom** (`gapped_interface_axiom`, eliminability: hard — the 4+1D gapped-interface conjecture, a standard open problem in lattice QFT and not a project-originated assumption; the previously-tracked `gaussianSaddleAsymptotic` was retired in Phase 6a Wave 7 via a project-local `LaplaceMethod.lean` derivation, leaving `gapped_interface_axiom` as the sole structural axiom). **0 sorry project-wide**. 322 theorems Aristotle-proved across 44 runs. Lean 4.29.0, Mathlib commit `8850ed93`. **Synced 2026-05-07** — counts refreshed from `docs/counts.json` (2026-05-06).
+**Lean 4 formalization:** **7,342 theorems** (7,317 substantive + 25 placeholder) across **389 modules**. **0 axioms project-wide** (Phase 5h Wave 1, 2026-05-19: the last structural axiom `gapped_interface_axiom` was retired by conversion into the tracked-Prop `TPFConjecture` — see `docs/PERMANENT_TRACKED_HYPOTHESES.md`; the prior `gaussianSaddleAsymptotic` was retired in Phase 6a Wave 7 via a project-local `LaplaceMethod.lean` derivation). The project's posture is that load-bearing research-grade physical assumptions are carried as explicit *tracked-Prop hypotheses* on consumer theorems rather than as global axioms — making the claim surface visible at the type-signature level. **0 sorry project-wide**. 322 theorems Aristotle-proved across 44 runs. Lean 4.29.1, Mathlib commit `5e932f97` (Mathlib v4.29.1 tag, 2026-04-17). **Synced 2026-05-23 PM** post Phase 6q close — counts refreshed from `docs/counts.json` (generated 2026-05-23T16:12).
 
 **Representative formal-verification firsts** (each phase has delivered at least one):
 - First formally verified anomaly constraint in particle physics (`N_f ≡ 0 mod 3`, Phases 5a–5b–5q).
@@ -158,6 +164,8 @@ Phase 6o ships substantive first-of-kind results across five tracks. **Boostless
 - First Fermi-Hubbard geometric SWAP + minimal Berry-phase theorem (Phase 5t).
 - First graphene-Dirac-fluid analog-Hawking formalization with Keldysh + Landauer–Büttiker noise formula (Phase 5w).
 - First Gibbs–Duhem emergent-vacuum obstruction theorem + closed-form vestigial-gravity EOS (Phase 5y).
+- First kernel-verified unconditional density of the Fibonacci-anyon two-strand braid representation in SU(2) — the density half of the Freedman–Kitaev–Larsen–Wang theorem (Phase 5 Step 13, 2026-05-22).
+- First kernel-verified quantitative Solovay–Kitaev length bound in any proof assistant, instantiated for the Fibonacci-anyon compiler (Phase 6t Path A Option C, 2026-05-23).
 
 **Three-layer verification:** Python numerics ↔ Lean 4 formal proofs ↔ Aristotle automated theorem prover.
 
@@ -165,7 +173,7 @@ Phase 6o ships substantive first-of-kind results across five tracks. **Boostless
 
 ## Paper Strategy and Phase 7 Bundle Architecture
 
-Beginning Phase 6i Wave 7, the project's external communication is organized as **14 publication targets** rather than as one paper per wave. The architecture is one Tier-0 flagship review (F) + five Tier-1 themed deep papers (D1–D5) + three Tier-2 PRL-style headline letters (L1–L3) + three Tier-3 infrastructure papers (I1, I2, I3) + two Tier-4 experimental letters (E1, E2). I3 ("Verified Stochastic Calculus for Mathlib4") was added in Phase 6n Session 4 on top of the original 13-bundle architecture. **All 14 bundles are GREEN per `docs/BUNDLE_READINESS_HEATMAP.md` (auto-regenerated 2026-05-06).**
+Beginning Phase 6i Wave 7, the project's external communication is organized as **14 publication targets** rather than as one paper per wave. The architecture is one Tier-0 flagship review (F) + five Tier-1 themed deep papers (D1–D5) + three Tier-2 PRL-style headline letters (L1–L3) + three Tier-3 infrastructure papers (I1, I2, I3) + two Tier-4 experimental letters (E1, E2). I3 ("Verified Stochastic Calculus for Mathlib4") was added in Phase 6n Session 4 on top of the original 13-bundle architecture. As of the 2026-05-23 heatmap regeneration, **bundles D1, D2, L1, L2, L3, I1, I2, I3, E1, and E2 are GREEN**; bundles F, D3, D4, and D5 carry open Stage-13 findings (post-supersession) and are working toward closure (D4 was closed at GREEN with cross-bundle reciprocity advisories on 2026-05-23 PM; the remaining RED bundles are tracked in `docs/BUNDLE_READINESS_HEATMAP.md`).
 
 The frozen 14-step lift procedure for moving per-paper draft content into a bundle is documented at `docs/BUNDLE_LIFT_PROCEDURE.md`; the protocol for absorbing late Phase-6 waves into already-drafted bundles (without redrafting) is at `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md`. Phase 7 absorption Sessions 1–5 (2026-05-06 → 2026-05-08) absorbed all Phase 6n / 6o substrate content into the bundles via D.2 / D.3 / D.4 branches of the absorption protocol.
 
@@ -173,119 +181,31 @@ The frozen 14-step lift procedure for moving per-paper draft content into a bund
 
 ```
 SK_EFT_Hawking/
-├── lean/                              # Lean 4 formalization (5855 theorems, 1 axiom, 322 modules, 0 sorry)
-│   ├── lakefile.toml                  # Lake build config (pinned Mathlib 8850ed93)
-│   ├── lean-toolchain                 # Lean 4 v4.29.0
-│   ├── SKEFTHawking.lean              # Root module (imports all 131 theorem modules)
-│   └── SKEFTHawking/
+├── lean/                              # Lean 4 formalization (7213 theorems, 0 axioms, 389 modules, 0 sorry)
+│   ├── lakefile.toml                  # Lake build config (pinned Mathlib 5e932f97, v4.29.1)
+│   ├── lean-toolchain                 # Lean 4 v4.29.1
+│   ├── SKEFTHawking.lean              # Root module (imports all theorem modules; 389 modules in `docs/counts.json`)
+│   └── SKEFTHawking/                  # 389 modules organized into nine functional areas
+│       │                              # (acoustic-Hawking foundation; emergent gauge fields & chirality;
+│       │                              #  anomaly classification & modular invariance; quantum groups,
+│       │                              #  Hopf algebras & fusion categories; modular tensor categories,
+│       │                              #  braiding & TQFT; topological quantum computation; emergent
+│       │                              #  gravity; dark sector; verified statistics & substrate
+│       │                              #  infrastructure). See "Formalization at a Glance" below and
+│       │                              #  `SK_EFT_Hawking_Inventory_Index.md` for the per-module map.
 │       ├── Basic.lean                 # Shared types and definitions
-│       ├── AcousticMetric.lean        # Structure A: acoustic metric (8 theorems)
-│       ├── SKDoubling.lean            # Structure B: SK doubling + KMS (9 theorems)
-│       ├── HawkingUniversality.lean   # Structure C: universality + κ-crossing + spin-sonic (9 theorems)
-│       ├── HubbardStratonovichRHMC.lean # Phase 5: HS identity, Kramers, complex pseudofermion (22 theorems)
-│       ├── SecondOrderSK.lean         # Phase 2: second-order counting + stress tests (19 theorems)
-│       ├── WKBAnalysis.lean           # Phase 2: WKB + Bogoliubov bound (15 theorems)
-│       ├── CGLTransform.lean          # Phase 2: CGL FDR derivation (7 theorems)
-│       ├── ThirdOrderSK.lean          # Phase 3: third-order EFT + parity alternation (14 theorems)
-│       ├── GaugeErasure.lean          # Phase 3: gauge erasure theorem (12 theorems)
-│       ├── WKBConnection.lean         # Phase 3: exact WKB connection formula (17 theorems)
-│       ├── ADWMechanism.lean          # Phase 3: ADW tetrad condensation (21 theorems)
-│       ├── ChiralityWall.lean         # Phase 4: chirality wall analysis (17 theorems)
-│       ├── VestigialGravity.lean      # Phase 4: vestigial metric phase (18 theorems)
-│       ├── FractonHydro.lean          # Phase 4: fracton hydrodynamics (17 theorems)
-│       ├── FractonGravity.lean        # Phase 4: fracton-gravity bootstrap (20 theorems)
-│       ├── FractonNonAbelian.lean     # Phase 4: non-Abelian fracton obstruction (14 theorems)
-│       ├── KappaScaling.lean          # Phase 5: crossover balance, regime classification (11 theorems)
-│       ├── PolaritonTier1.lean        # Phase 5: attenuation bounds, BEC recovery (6 theorems)
-│       ├── SU2PseudoReality.lean      # Phase 5: one-link normalization, Binder limits (10 theorems)
-│       ├── FermionBag4D.lean          # Phase 5: SO(4) integration, bag positivity (16 theorems)
-│       ├── LatticeHamiltonian.lean    # Phase 5: BZ compact, GS conditions, TPF violations (28 theorems)
-│       ├── MajoranaKramers.lean       # Phase 5: Majorana Kramers degeneracy, sign-free determinant (25 theorems)
-│       ├── GoltermanShamir.lean       # Phase 5: 9 GS Props, Fock space finite (14 theorems)
-│       ├── TPFEvasion.lean            # Phase 5: master synthesis, 5 violations (12 theorems)
-│       ├── KLinearCategory.lean       # Phase 5: semisimple, Schur, fusion rules (16 theorems)
-│       ├── SphericalCategory.lean     # Phase 5: FIRST-EVER pivotal + spherical (18 theorems)
-│       ├── FusionCategory.lean        # Phase 5: fusion axioms, pentagon, F-symbols (14 theorems)
-│       ├── FusionExamples.lean        # Phase 5: Vec_Z2/Z3, Rep_S3, Fibonacci (30 theorems)
-│       ├── VecG.lean                  # Phase 5: Day convolution, graded spaces (9 theorems)
-│       ├── DrinfeldDouble.lean        # Phase 5: D(G) twisted multiplication (15 theorems)
-│       ├── GaugeEmergence.lean        # Phase 5: Z(Vec_G)≅Rep(D(G)), chirality (14 theorems)
-│       ├── SO4Weingarten.lean         # Phase 5: Weingarten 2nd/4th moment, channel positivity (14 theorems)
-│       ├── FractonFormulas.lean       # Phase 5: charge counting, dispersion, DOF gap (45 theorems)
-│       ├── WetterichNJL.lean          # Phase 5: Fierz completeness, NJL channels (18 theorems)
-│       ├── VestigialSusceptibility.lean # Phase 5: RPA susceptibility, vestigial_before_tetrad (16 theorems)
-│       ├── QuaternionGauge.lean       # Phase 5: SO(4) quaternion gauge, heatbath (10 theorems)
-│       ├── GaugeFermionBag.lean       # Phase 5: tetrad covariance, bag weight, SMW update (9 theorems)
-│       ├── OnsagerAlgebra.lean        # Phase 5a: Dolan-Grady, Davies isomorphism, Chevalley (24 theorems)
-│       ├── OnsagerContraction.lean    # Phase 5a: Inönü-Wigner contraction O→su(2) (12 theorems)
-│       ├── Z16Classification.lean     # Phase 5a: Z₁₆ classification, super-modular, 16-fold way (22 theorems, axiom discharged)
-│       ├── SteenrodA1.lean            # Phase 5a: A(1) sub-Hopf algebra, Adem, Ext→Z₁₆ (17 theorems)
-│       ├── SMGClassification.lean     # Phase 5a: AZ tenfold way, SMG data, spectral gap (13 theorems)
-│       ├── PauliMatrices.lean         # Phase 5a: σ_x,σ_y,σ_z, commutation, anti-commutation (15 theorems)
-│       ├── WilsonMass.lean            # Phase 5a: M(k)=3-Σcos, zero locus, bounds (11 theorems)
-│       ├── BdGHamiltonian.lean        # Phase 5a: BdG 4x4, σ⊗τ Kronecker, chiral charge (8 theorems)
-│       ├── GTCommutation.lean         # Phase 5a: [H,Q_A]=0 central theorem, GS evasion (10 theorems)
-│       ├── GTWeylDoublet.lean         # Phase 5a: Weyl doublet, Onsager→SU(2), Witten anomaly (12 theorems)
-│       ├── ChiralityWallMaster.lean   # Phase 5a: Three-pillar synthesis theorem (17 theorems)
-│       ├── SMFermionData.lean         # Phase 5b: SM fermion ℤ₄ charges, component counts (19 theorems)
-│       ├── Z16AnomalyComputation.lean # Phase 5b: SM anomaly in ℤ₁₆, hidden sector theorem (23 theorems, 2 axioms discharged)
-│       ├── GenerationConstraint.lean  # Phase 5b: N_f ≡ 0 mod 3 (conditional on 24|8N_f) (13 theorems, axioms discharged/removed)
-│       ├── DrinfeldCenterBridge.lean  # Phase 5b: Half-braiding ↔ D(G)-module, Mathlib Center (18 theorems)
-│       ├── VecGMonoidal.lean          # Phase 5b: MonoidalCategory(Vec_G), Center(Vec_G) (12 theorems)
-│       ├── ToricCodeCenter.lean       # Phase 5b: Toric code from Center(Vec_{ℤ/2}), R(e,m)=-1 (25 theorems)
-│       ├── S3CenterAnyons.lean        # Phase 5b: Non-abelian Center(Vec_{S₃}), 8 anyons, D²=36 (22 theorems)
-│       ├── CenterEquivalenceZ2.lean   # Phase 5b: Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2) bijection (10 theorems)
-│       ├── DrinfeldDoubleAlgebra.lean # Phase 5b: D(G) twisted convolution, unit/assoc (9 theorems)
-│       ├── DrinfeldDoubleRing.lean    # Phase 5b: D(G) as Ring + Algebra k (3 thms + instances)
-│       ├── DrinfeldEquivalence.lean   # Phase 5b: Z(Vec_G)≅Rep(D(G)) structure (12 theorems)
-│       ├── WangBridge.lean            # Phase 5b: c₋=8N_f from 16 Weyl, ν_R required (9 theorems)
-│       ├── ModularInvarianceConstraint.lean # Phase 5b: framing anomaly, η→24→3|N_f (12 theorems)
-│       ├── RokhlinBridge.lean         # Phase 5b: Rokhlin "16" convergence (14 theorems)
-│       ├── QNumber.lean               # Phase 5b: q-integers [n]_q, classical limit (11 theorems)
-│       ├── Uqsl2.lean                 # Phase 5b: FIRST quantum group U_q(sl₂), zero axioms (6 theorems)
-│       ├── Uqsl2Hopf.lean            # Phase 5c-5d: FIRST Hopf algebra on U_q(sl₂), coproduct/counit/antipode/Serre (66 theorems, all proved)
-│       ├── SU2kFusion.lean           # Phase 5c: SU(2)_k fusion at k=1,2,3, Ising/Fibonacci (29 theorems)
-│       ├── Uqsl2Affine.lean          # Phase 5c: U_q(sl_2 hat) affine quantum group (9 theorems)
-│       ├── SU2kSMatrix.lean          # Phase 5c: SU(2)_k S-matrices, unitarity, Verlinde (16 theorems, all proved)
-│       ├── RestrictedUq.lean         # Phase 5c: restricted quantum group u_q(sl₂), nilpotency (11 theorems, all proved)
-│       ├── RibbonCategory.lean       # Phase 5c: Balanced/Ribbon/MTC definitions (4 theorems, all proved)
-│       ├── E8Lattice.lean            # Phase 5c: E8 Cartan, Rokhlin gap, classification (19 theorems, all proved)
-│       ├── AlgebraicRokhlin.lean     # Phase 5c: algebraic Serre theorem σ≡0 mod 8 (10 theorems, all proved)
-│       ├── SpinBordism.lean          # Phase 5c: spin bordism → Rokhlin → Wang chain (8 theorems, all proved)
-│       ├── VerifiedJackknife.lean    # Phase 5c: verified jackknife/autocorrelation estimators (5 theorems, all proved)
-│       ├── TetradGapEquation.lean    # Phase 5d: NJL-type gap equation, critical coupling, bifurcation (20 theorems, 1 sorry)
-│       ├── SU2kMTC.lean             # Phase 5d: Ising MTC F-symbols, pentagon, ModularTensorData (11 theorems, ALL PROVED, zero sorry)
-│       ├── QSqrt2.lean              # Phase 5d: Q(√2) number field for Ising MTC (3 theorems, all proved)
-│       ├── QSqrt5.lean              # Phase 5d: Q(√5) number field, golden ratio (7 theorems, all proved)
-│       ├── FibonacciMTC.lean        # Phase 5d: Fibonacci MTC F-symbols, PreModularData (11 theorems, ALL PROVED, zero sorry)
-│       ├── Uqsl2AffineHopf.lean     # Phase 5d: U_q(ŝl₂) Hopf algebra (4 theorems, 3 sorry)
-│       ├── VerifiedStatistics.lean   # Phase 5d: statistics extension, Cauchy-Schwarz, jackknife (6 theorems, 4 sorry)
-│       ├── KerrSchild.lean          # Phase 5d: Kerr-Schild metrics, Sherman-Morrison (7 theorems, 1 sorry)
-│       ├── CoidealEmbedding.lean    # Phase 5d: coideal subalgebra embedding (6 theorems, 4 sorry)
-│       ├── RepUqFusion.lean         # Phase 5d: Rep(u_q) → SU(2)_k fusion correspondence (13 theorems, 2 sorry)
-│       ├── StimulatedHawking.lean   # Phase 5d: stimulated Hawking amplification (11 theorems, 7 sorry)
-│       ├── CenterFunctor.lean       # Phase 5d: Center(Vec_G) → ModuleCat(DG) functor (9 theorems, 5 sorry)
-│       ├── QCyc16.lean             # Phase 5e: Q(ζ₁₆) cyclotomic field (6 theorems, all proved)
-│       ├── QCyc5.lean              # Phase 5e: Q(ζ₅) cyclotomic field + Fibonacci hexagon (9 theorems, all proved)
-│       ├── IsingBraiding.lean      # Phase 5e: COMPLETE braided Ising MTC, trefoil=-1 (23 theorems, all proved)
-│       ├── QSqrt3.lean             # Phase 5e: Q(√3) for SU(2)₄ S-matrix unitarity (8 theorems, all proved)
-│       ├── QLevel3.lean            # Phase 5e: Q[x]/(20x⁴-10x²+1) for SU(2)₃ unitarity (19 theorems, all proved)
-│       ├── SPTClassification.lean  # Phase 5h: SPT classification, gapped interface axiom (15 theorems, all proved)
-│       ├── TQFTPartition.lean     # Phase 5f: TQFT partition functions from MTC data, Verlinde formula (16 theorems, all proved)
-│       ├── FigureEightKnot.lean   # Phase 5f: figure-eight knot invariant from Ising MTC (6 theorems, all proved)
-│       ├── EmergentGravityBounds.lean # Phase 5f: Wen coupling deficit, G_c NLO invariance (14 theorems, 2 sorry)
-│       ├── GaugingStep.lean       # Phase 5h: gauging obstruction, non-on-site symmetry, SMG phase (34 theorems, all proved)
-│       ├── Uqsl3.lean             # Phase 5i: FIRST rank-2 quantum group U_q(sl₃), 21 Chevalley relations (21 theorems, all proved)
-│       ├── Uqsl3Hopf.lean        # Phase 5i: U_q(sl₃) Hopf algebra, coproduct/counit/antipode (2 theorems, 4 sorry)
-│       ├── SU3kFusion.lean       # Phase 5i: FIRST SU(3)_k fusion, Z₃ at k=1, 6 anyons at k=2 (99 theorems, all proved)
-│       ├── PolyQuotQ.lean        # Phase 5i: Q(ζ₃) cyclotomic field for SU(3)₁ S-matrix (15 theorems, all proved)
-│       └── FermiPointTopology.lean # Phase 5j: Fermi-point topological charge, emergent gauge fields (28 theorems, all proved)
+│       ├── FKLW/                      # Phase 5-6t: FKLW density, Solovay-Kitaev compiler,
+│       │                              #             Cartan substrate, BCH bracket closure
+│       ├── QuantumCrooks/             # Phase 6n: Quantum-Crooks no-go architecture
+│       ├── CrooksAnalogHawking/       # Phase 6c: Sakharov ↔ horizon-Crooks unification
+│       └── …                          # Module-by-module breakdown lives in `SK_EFT_Hawking_Inventory.md`;
+│                                      # authoritative list at `docs/counts.json::module_names`.
 │
 ├── src/
 │   ├── core/                          # Shared infrastructure
 │   │   ├── transonic_background.py    # 1D BEC transonic flow solver + δ_diss estimates
 │   │   ├── aristotle_interface.py     # Aristotle API + sorry-gap registry (322 proved, 0 sorry)
-│   │   ├── visualizations.py          # Plotly figures (89 functions) + COLORS palette
+│   │   ├── visualizations.py          # Plotly figures (156 functions) + COLORS palette
 │   │   ├── provenance.py             # Parameter provenance registry (Phase 5 Wave 9D)
 │   │   └── citations.py              # Citation registry with DOIs (Phase 5 Wave 9D)
 │   ├── first_order/                   # Phase 1 specific analysis
@@ -355,100 +275,41 @@ SK_EFT_Hawking/
 │       ├── transport_counting.py      # 2+1D charged conformal-fluid transport coefficients
 │       └── wkb_spectrum.py            # Quasi-1D WKB spectrum for graphene
 │
-├── papers/
-│   ├── paper1_first_order/            # PRL submission
-│   │   └── paper_draft.tex
-│   ├── paper2_second_order/           # PRD companion paper
-│   │   └── paper_draft.tex
-│   ├── paper3_gauge_erasure/          # PRL gauge erasure
-│   │   └── paper_draft.tex
-│   ├── paper4_wkb_connection/         # PRD exact WKB
-│   │   └── paper_draft.tex
-│   ├── paper5_adw_gap/               # PRD ADW gap equation
-│   │   └── paper_draft.tex
-│   ├── paper6_vestigial/             # PRD vestigial gravity + production MC (Phase 4-5)
-│   │   └── paper_draft.tex
-│   ├── paper7_chirality_formal/      # PRD/CPC GS no-go + TPF evasion in Lean 4 (Phase 5)
-│   │   └── paper_draft.tex
-│   ├── paper8_chirality_master/      # PRL three-pillar chirality wall (Phase 5a)
-│   │   └── paper_draft.tex
-│   ├── paper9_sm_anomaly_drinfeld/   # PRL SM anomaly + Drinfeld center (Phase 5b)
-│   │   └── paper_draft.tex
-│   ├── paper10_modular_generation/   # PRD modular generation constraint (Phase 5b)
-│   │   └── paper_draft.tex
-│   ├── paper11_quantum_group/        # PRD first quantum group formalization (Phase 5b)
-│   │   └── paper_draft.tex
-│   ├── paper12_polariton/            # PRL polariton analog Hawking (Phase 5d)
-│   │   └── paper_draft.tex
-│   ├── paper14_braided_mtc/          # PRD braided modular tensor categories (Phase 5e-5f)
-│   │   └── paper_draft.tex
-│   ├── paper15_methodology/          # CPC formal verification methodology (Phase 5h)
-│   │   └── paper_draft.tex
-│   ├── paper16_graphene_sk_eft/     # Graphene Dirac-fluid analog Hawking (Phase 5w)
-│   │   └── paper_draft.tex
-│   ├── paper16_wrt_tqft/            # First formal WRT TQFT pipeline (Phase 5k)
-│   │   └── paper_draft.tex
-│   ├── paper17_dark_sector/         # Dark-sector connections + Gibbs-Duhem no-go (Phase 5x-5y)
-│   │   └── paper_draft.tex
-│   ├── paper18_doublon_gate/        # Formal verification of a geometric quantum gate (Phase 5t)
-│   │   └── paper_draft.tex
-│   ├── AutomatedReviews/            # Stage 13 adversarial-reviewer output per paper (Phase 5v)
-│   └── experimental_predictions/     # Standalone prediction tables (Phase 4)
+├── papers/                            # 42 per-wave drafts + 14 publication bundles (F, D1-D5, L1-L3, I1-I3, E1-E2)
+│   │                                  # Per-wave drafts (`paperN_*/paper_draft.tex`) are historical source material;
+│   │                                  # external communication routes through the bundles per `docs/PAPER_STRATEGY.md`.
+│   │                                  # Current bundle readiness lives in `docs/BUNDLE_READINESS_HEATMAP.md`.
+│   ├── F/                             # Tier 0: flagship review (1 paper)
+│   ├── D1/ … D5/                      # Tier 1: themed deep papers (5 papers, PRD/JHEP-class)
+│   ├── L1/ L2/ L3/                    # Tier 2: PRL-style headline letters (3 papers)
+│   ├── I1/ I2/ I3/                    # Tier 3: infrastructure papers (3 papers, including I3 "Verified Stochastic Calculus for Mathlib4")
+│   ├── E1/ E2/                        # Tier 4: experimental letters (2 papers)
+│   ├── paperN_*/                      # 42 per-wave drafts (paper1_first_order through paper45_phase6m_review)
+│   ├── AutomatedReviews/              # Stage 13 adversarial-reviewer output per paper (Phase 5v)
+│   ├── claim_clusters.json            # Cross-paper claim clusters
+│   ├── cluster_bundle_index.json      # Cross-bundle cluster registry
+│   └── experimental_predictions/      # Standalone prediction tables (Phase 4)
 │       └── prediction_tables.tex
 │
-├── notebooks/
-│   ├── Phase1_Technical.ipynb         # Full paper computation (23 cells, 6 Plotly figs)
-│   ├── Phase1_Stakeholder.ipynb       # Lay-person version (20 cells)
-│   ├── Phase2_Technical.ipynb         # Second-order computation (30 cells, 9+ Plotly figs)
-│   ├── Phase2_Stakeholder.ipynb       # Lay-person version (19 cells)
-│   ├── Phase3a_ThirdOrder_Technical.ipynb       # Phase 3 Wave 1: third-order EFT
-│   ├── Phase3a_ThirdOrder_Stakeholder.ipynb
-│   ├── Phase3b_GaugeErasure_Technical.ipynb     # Phase 3 Wave 1: gauge erasure
-│   ├── Phase3b_GaugeErasure_Stakeholder.ipynb
-│   ├── Phase3c_WKBConnection_Technical.ipynb    # Phase 3 Wave 2: exact WKB
-│   ├── Phase3c_WKBConnection_Stakeholder.ipynb
-│   ├── Phase3d_ADW_Technical.ipynb              # Phase 3 Wave 3: ADW gap equation
-│   ├── Phase3d_ADW_Stakeholder.ipynb
-│   ├── Phase4a_ExperimentalPredictions_Technical.ipynb  # Phase 4 Wave 1: predictions
-│   ├── Phase4a_ExperimentalPredictions_Stakeholder.ipynb
-│   ├── Phase4b_Vestigial_Technical.ipynb        # Phase 4 Wave 2: vestigial gravity
-│   ├── Phase4b_Vestigial_Stakeholder.ipynb
-│   ├── Phase5a_ChiralityWall_Technical.ipynb    # Phase 5: chirality wall formal verification
-│   ├── Phase5a_ChiralityWall_Stakeholder.ipynb
-│   ├── Phase5a_GTChiralFermion_Technical.ipynb   # Phase 5a: GT chiral fermion, Onsager, Z₁₆
-│   ├── Phase5a_GTChiralFermion_Stakeholder.ipynb
-│   ├── Phase5b_Synthesis_Technical.ipynb        # Phase 5: kappa-scaling, categorical, Drinfeld
-│   ├── Phase5b_Synthesis_Stakeholder.ipynb
-│   ├── Phase5b_SMAnomalyDrinfeld_Technical.ipynb # Phase 5b: SM anomaly, Drinfeld center
-│   ├── Phase5b_SMAnomalyDrinfeld_Stakeholder.ipynb
-│   ├── Phase5b_ModularGeneration_Technical.ipynb # Phase 5b: modular generation constraint
-│   ├── Phase5b_ModularGeneration_Stakeholder.ipynb
-│   ├── Phase5b_QuantumGroup_Technical.ipynb     # Phase 5b: first quantum group formalization
-│   ├── Phase5b_QuantumGroup_Stakeholder.ipynb
-│   ├── Phase5c_HopfAlgebra_Technical.ipynb      # Phase 5c: Hopf algebra on U_q(sl₂)
-│   ├── Phase5c_HopfAlgebra_Stakeholder.ipynb
-│   ├── Phase5c_SU2kFusion_Technical.ipynb       # Phase 5c: SU(2)_k fusion, S-matrix, Ising/Fibonacci
-│   ├── Phase5c_SU2kFusion_Stakeholder.ipynb
-│   ├── Phase5c_E8Rokhlin_Technical.ipynb        # Phase 5c: E8, Rokhlin, spin bordism
-│   ├── Phase5c_E8Rokhlin_Stakeholder.ipynb
-│   ├── Phase5d_TetradGap_Technical.ipynb        # Phase 5d: tetrad gap equation
-│   ├── Phase5d_TetradGap_Stakeholder.ipynb
-│   ├── Phase5d_Polariton_Technical.ipynb        # Phase 5d: polariton analog Hawking
-│   ├── Phase5d_Polariton_Stakeholder.ipynb
-│   ├── Phase5d_MTC_Technical.ipynb              # Phase 5d: Ising/Fibonacci MTC instances
-│   └── Phase5d_MTC_Stakeholder.ipynb
+├── notebooks/                         # 89 Jupyter notebooks, one Technical + one Stakeholder version per wave
+│   │                                  # spanning Phases 1, 2, 3a-3d, 4a-4b, 5a-5z, 6b-6t.
+│   │                                  # Technical notebooks reproduce the wave's full computation pipeline
+│   │                                  # (Plotly figures, transport-coefficient tables, MC histograms);
+│   │                                  # Stakeholder notebooks present the lay-audience narrative.
+│   │                                  # Recent additions: `Phase6t_SolovayKitaev_{Technical,Stakeholder}.ipynb`
+│   │                                  # (the quantitative Dawson-Nielsen compiler).
 │
 ├── docker/
 │   └── docker-compose.graph.yml       # PG+AGE container for knowledge graph (port 5433)
 │
 ├── docs/
 │   ├── KNOWLEDGE_GRAPH.md             # Knowledge graph documentation and guide
-│   ├── roadmaps/                      # Phase 1 + Phase 2 technical roadmaps
+│   ├── roadmaps/                      # Per-phase execution roadmaps (Phase 1 through Phase 5y + Phase 6 forward register)
 │   ├── stakeholder/                   # Implications, strategic positioning, companion guides
-│   ├── aristotle_results/             # All 43+ Aristotle run archives
+│   ├── aristotle_results/             # All 44 Aristotle run archives (322 theorems proved)
 │   └── archive/                       # Superseded artifacts
 │
-├── tests/                             # pytest suite (4179 tests across 99 files)
+├── tests/                             # pytest suite (4195 tests across 100 files; default `uv run pytest tests/` is fast (deselects `slow`); add `-m ''` for full run)
 │   ├── test_transonic_background.py   # Physics validation (12 tests)
 │   ├── test_second_order.py           # Enumeration + WKB tests (12 tests)
 │   ├── test_gauge_erasure.py          # Gauge erasure theorem tests (25 tests)
@@ -461,10 +322,10 @@ SK_EFT_Hawking/
 │   ├── test_hs_rhmc.py              # HS+RHMC algorithm (32 tests)
 │   └── test_paper_provenance_v2.py    # Phase 5v Wave 10 sentence-level pipeline (16 tests)
 │
-├── figures/                           # 113 pipeline figures (PNG + HTML) + provenance_graph.json
+├── figures/                           # 156 figure functions (PNG + HTML rendered in `figures/`) + provenance_graph.json
 ├── scripts/
 │   ├── submit_to_aristotle.py         # Aristotle submission + integration script
-│   ├── validate.py                    # 17 cross-layer validation checks (incl. graph_integrity, claim_clusters_fresh)
+│   ├── validate.py                    # ~28 cross-layer validation checks (incl. graph_integrity, claim_clusters_fresh, bundle_consistency, bundle_source_freshness, bibitem_title_primary_source — run `validate.py --list` for the live set)
 │   ├── build_graph.py                 # Knowledge graph extraction (25 node types, 25 edge types)
 │   ├── graph_integrity.py             # Graph integrity queries (orphans, conflicts, chains, sentence-level)
 │   ├── extract_lean_deps.py           # Lean declaration + axiom-deps registry extraction
@@ -541,7 +402,7 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Understand the physics and results | This README (above) |
 | See the big picture assessment | [`docs/RESEARCH_STATUS_OVERVIEW.md`](docs/RESEARCH_STATUS_OVERVIEW.md) — proven chains, gaps, implications |
 | See what's been built and its status | [`SK_EFT_Hawking_Inventory_Index.md`](SK_EFT_Hawking_Inventory_Index.md) — counts, module map |
-| Understand the execution process | [`docs/WAVE_EXECUTION_PIPELINE.md`](docs/WAVE_EXECUTION_PIPELINE.md) — 12-stage pipeline |
+| Understand the execution process | [`docs/WAVE_EXECUTION_PIPELINE.md`](docs/WAVE_EXECUTION_PIPELINE.md) — 14-stage pipeline |
 | Explore the provenance graph | [`docs/KNOWLEDGE_GRAPH.md`](docs/KNOWLEDGE_GRAPH.md) — interactive D3 visualization |
 | Browse the dashboard | `uv run python scripts/provenance_dashboard.py` → http://localhost:8050 |
 | Read non-technical summaries | `docs/stakeholder/` — implications and strategic positioning per phase |
@@ -549,177 +410,57 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 | Understand predictive scope | [`docs/ARCHITECTURE_SCOPE.md`](docs/ARCHITECTURE_SCOPE.md) — Layer 3 boundary: SM+GR in scope, dark-energy sector out under tested mechanisms |
 | Understand the broader research program | [`docs/Fluid-Based Approach to Fundamental Physics  Feasibility Study.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics%20%20Feasibility%20Study.md) |
 | Read the critical review | [`docs/Fluid-Based Approach to Fundamental Physics- Consolidated Critical Review v3.md`](docs/Fluid-Based%20Approach%20to%20Fundamental%20Physics-%20Consolidated%20Critical%20Review%20v3.md) |
-| See the deep research corpus | [`Lit-Search/`](../Lit-Search/) — research files organized Phase-1 through Phase-5z |
+| See the deep research corpus | [`Lit-Search/`](../Lit-Search/) — research files organized Phase-1 through Phase-6t |
 | Work with Aristotle | [`docs/references/Theorm_Proving_Aristotle_Lean.md`](docs/references/Theorm_Proving_Aristotle_Lean.md) |
 | Check the full inventory | [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md) — comprehensive source of truth |
 
-## Theorem Inventory (~3,950 theorems — 1 axiom, **0 sorry**)
+## Formalization at a Glance
 
-**Canonical counts** live in `docs/counts.json`, regenerated by `scripts/update_counts.py`. The table below summarizes the module-level inventory by phase; for live numbers consult the JSON.
+**7,342 theorems across 378 Lean 4 modules, with 0 axioms and 0 sorry project-wide.** Canonical counts live in `docs/counts.json`, regenerated by `scripts/update_counts.py`; the full per-module breakdown lives in [`SK_EFT_Hawking_Inventory_Index.md`](SK_EFT_Hawking_Inventory_Index.md) and [`SK_EFT_Hawking_Inventory.md`](SK_EFT_Hawking_Inventory.md).
 
-| Module | Phase | Theorems | Notes |
-|---|---|---|---|
-| AcousticMetric.lean | 1 | 8 | Aristotle: 082e6776, a87f425a, 88cf2000 |
-| SKDoubling.lean | 1 | 9 | Aristotle: 082e6776, 638c5ff3, 270e77a0, 20556034 |
-| HawkingUniversality.lean | 1+3 | 9 | +κ-crossing, spin-sonic |
-| SecondOrderSK.lean | 2 | 19 | Aristotle: d61290fd, c4d73ca8, 3eedcabb |
-| WKBAnalysis.lean | 2+3 | 15 | Aristotle: 518636d7 |
-| CGLTransform.lean | 2 | 7 | CGL FDR derivation |
-| ThirdOrderSK.lean | 3 | 14 | Parity alternation theorem |
-| GaugeErasure.lean | 3 | 12 | Gauge erasure (axiom removed) |
-| WKBConnection.lean | 3 | 17 | Exact WKB connection |
-| ADWMechanism.lean | 3 | 21 | Vergeles counting, phase classification |
-| ChiralityWall.lean | 4 | 17 | GS conditions, TPF evasion, wall status |
-| VestigialGravity.lean | 4 | 18 | Phase hierarchy, EP violation |
-| FractonHydro.lean | 4 | 17 | Multipole conservation, information retention |
-| FractonGravity.lean | 4 | 20 | Bootstrap gap, DOF mismatch |
-| FractonNonAbelian.lean | 4 | 14 | Non-Abelian fracton obstruction |
-| KappaScaling.lean | 5 | 11 | Crossover balance, regime classification |
-| PolaritonTier1.lean | 5 | 6 | Attenuation bounds, BEC recovery |
-| SU2PseudoReality.lean | 5 | 10 | One-link normalization, Binder limits |
-| FermionBag4D.lean | 5 | 16 | SO(4) integration, bag positivity |
-| LatticeHamiltonian.lean | 5 | 28 | BZ compact, GS 9 conditions, TPF 3 violations |
-| GoltermanShamir.lean | 5 | 14 | 9 GS Props, Fock space finite, TPF evasion (axiom removed) |
-| TPFEvasion.lean | 5 | 12 | Master synthesis, 5 violations |
-| KLinearCategory.lean | 5 | 16 | SemisimpleCategory, Schur, Vec_G D² |
-| SphericalCategory.lean | 5 | 18 | PivotalCategory (FIRST-EVER), quantumDim |
-| FusionCategory.lean | 5 | 14 | FusionCategoryData, pentagon, F-symbols |
-| FusionExamples.lean | 5 | 30 | Vec_Z2/Z3, Rep_S3, Fibonacci |
-| VecG.lean | 5 | 9 | Day convolution, graded spaces |
-| DrinfeldDouble.lean | 5 | 15 | D(G) twisted multiplication, anyon counting |
-| GaugeEmergence.lean | 5 | 14 | Z(Vec_G)≅Rep(D(G)), chirality limitation |
-| SO4Weingarten.lean | 5 | 14 | Weingarten 2nd/4th moment, channel positivity, Planck occupation |
-| FractonFormulas.lean | 5 | 45 | Charge counting, dispersion, retention, DOF gap, YM obstructions |
-| WetterichNJL.lean | 5 | 18 | Fierz completeness, NJL channels, ADW correspondence |
-| VestigialSusceptibility.lean | 5 | 16 | Gamma trace, RPA susceptibility, vestigial window |
-| QuaternionGauge.lean | 5 | 10 | SO(4) quaternion gauge, plaquette bounds, heatbath |
-| GaugeFermionBag.lean | 5 | 9 | Tetrad covariance, bag weight, SMW update |
-| HubbardStratonovichRHMC.lean | 5 | 22 | HS identity, Kramers, multi-shift CG, complex pseudofermion |
-| MajoranaKramers.lean | 5 | 25 | Majorana Kramers degeneracy, sign-free determinant, 8x8 block |
-| OnsagerAlgebra.lean | 5a | 24 | Dolan-Grady definition, Davies isomorphism, Chevalley embedding, GT connection. Aristotle: 9d6f2432 |
-| OnsagerContraction.lean | 5a | 12 | Inönü-Wigner contraction O→su(2), rescaling, anomaly encoding. Aristotle: 36b7796f |
-| Z16Classification.lean | 5a | 22 | Z₁₆ classification (axiom discharged), super-modular categories, 16-fold way, chirality mod 8→16 |
-| SteenrodA1.lean | 5a | 17 | A(1) F₂-algebra, Adem relations, multiplication table, Ext→Z₁₆ |
-| SMGClassification.lean | 5a | 13 | AZ tenfold way, SMG symmetry data, spectral gap typeclass, gapped interface |
-| PauliMatrices.lean | 5a | 15 | Pauli σ_x,σ_y,σ_z, commutation [σ_i,σ_j]=2iε σ_k, involutivity, traces. Aristotle: 90ed1a98 |
-| WilsonMass.lean | 5a | 11 | Wilson mass M(k), M=0 iff k=0 for all finite L, non-negativity, bounds. Aristotle: 90ed1a98 |
-| BdGHamiltonian.lean | 5a | 8 | BdG 4x4 Kronecker structure, H_BdG(k), q_A(k), Kronecker comm identity. Aristotle: 90ed1a98 |
-| GTCommutation.lean | 5a | 10 | **[H,Q_A]=0**: 2x2 τ-space trig identity, full 4x4, GS evasion. Aristotle: 18969de2 |
-| GTWeylDoublet.lean | 5a | 12 | Model 2: Q_V+Q_A→Onsager, emanant SU(2), Witten ℤ₂=elem 8∈ℤ₁₆, bridges |
-| ChiralityWallMaster.lean | 5a | 17 | Three-pillar synthesis: GS no-go + GT positive + Z₁₆ anomaly |
-| SMFermionData.lean | 5b | 19 | SM fermion enum, ℤ₄ charges X=5(B-L)-4Y, all odd, component counts 16/15 |
-| Z16AnomalyComputation.lean | 5b | 23 | SM anomaly 16≡0/15≡-1 mod 16, hidden sector theorem, "16" convergence (2 axioms discharged) |
-| GenerationConstraint.lean | 5b | 13 | N_f≡0(3) conditional on 24|8N_f (axioms discharged/removed). Aristotle: a1dfcbde |
-| DrinfeldCenterBridge.lean | 5b | 18 | Half-braiding ↔ D(G)-module bijection, Mathlib Center API, bidirectional |
-| VecGMonoidal.lean | 5b | 12 | **MonoidalCategory(Vec_G)**, Center(Vec_G) monoidal, forgetful functor |
-| ToricCodeCenter.lean | 5b | 25 | First computed Drinfeld center: 4 toric code anyons, R(e,m)=-1 |
-| S3CenterAnyons.lean | 5b | 22 | First non-abelian center: 8 D(S₃) anyons, d=2,3, D²=36 |
-| CenterEquivalenceZ2.lean | 5b | 10 | Concrete Z(Vec_{ℤ/2}) ↔ D(ℤ/2): bijection, fusion, braiding preserved |
-| DrinfeldDoubleAlgebra.lean | 5b | 9 | D(G) as k-algebra: twisted convolution, unit laws, assoc. Aristotle: 878b181f |
-| DrinfeldDoubleRing.lean | 5b | 3 | DG wrapper → Ring + Algebra k instances, distrib. Aristotle: 52992d6a |
-| DrinfeldEquivalence.lean | 5b | 12 | Z(Vec_G)≅Rep(D(G)): simple counts, Hopf structure, antipode, gauge bridge |
-| WangBridge.lean | 5b | 9 | c₋=8N_f derived from 16 Weyl, fractional c₋ forces ν_R, full chain |
-| ModularInvarianceConstraint.lean | 5b | 12 | Framing anomaly from η, q-parameter shift, 24\|c₋, complete chain η→24→3\|N_f. Aristotle: b54f9611 |
-| RokhlinBridge.lean | 5b | 14 | Rokhlin "16" convergence, with/without ν_R analysis |
-| QNumber.lean | 5b | 11 | q-integers [n]_q as Laurent polynomials, classical limit [n]_1=n, [2]_1^4=16. Aristotle: 7d8efa8f |
-| Uqsl2.lean | 5b | 6 | **FIRST quantum group in a proof assistant**: U_q(sl₂) via FreeAlgebra+RingQuot, zero axioms. Aristotle: 7d8efa8f |
-| Uqsl2Hopf.lean | 5c-5d | 66 | **FIRST Hopf algebra in a proof assistant**: coproduct/counit/antipode, S²=Ad(K), Serre coproduct (ALL PROVED) |
-| SU2kFusion.lean | 5c | 29 | SU(2)_k fusion at k=1,2,3: Ising σ²=1+ψ, Fibonacci τ²=1+τ, charge conjugation (ALL PROVED by native_decide) |
-| Uqsl2Affine.lean | 5c | 9 | U_q(sl_2 hat) affine quantum group, Chevalley + cross-relations, coideal property |
-| SU2kSMatrix.lean | 5c | 16 | SU(2)_k S-matrices at k=1,2: unitarity, Verlinde formula, modularity (ALL PROVED) |
-| RestrictedUq.lean | 5c | 11 | Restricted quantum group u_q(sl₂): nilpotency E^ell=0, torsion K^ell=1, SU(2)_k connection (ALL PROVED) |
-| RibbonCategory.lean | 5c | 4 | Balanced, Ribbon, MTC definitions (FIRST in any proof assistant) (ALL PROVED) |
-| E8Lattice.lean | 5c | 19 | E8 Cartan: det=1, even unimodular, Rokhlin gap σ=8, Serre bound, classification (ALL PROVED) |
-| AlgebraicRokhlin.lean | 5c | 10 | Algebraic Serre theorem σ≡0 mod 8, unimodular/even/symmetric defs, characteristic vectors (ALL PROVED) |
-| SpinBordism.lean | 5c | 8 | Spin bordism → Rokhlin → Wang chain, SpinBordismData, anomaly with/without ν_R (ALL PROVED) |
-| VerifiedJackknife.lean | 5c | 5 | First verified statistical estimators: jackknife, autocorrelation, intAutocorrTime (ALL PROVED) |
-| TetradGapEquation.lean | 5d | 20 | First tetrad gap equation: NJL-type gap, critical coupling, bifurcation (1 sorry) |
-| SU2kMTC.lean | 5d | 11 | Ising MTC F-symbols, pentagon, ModularTensorData (ALL PROVED, zero sorry — native_decide) |
-| QSqrt2.lean | 5d | 3 | Q(√2) number field for Ising MTC (ALL PROVED) |
-| QSqrt5.lean | 5d | 7 | Q(√5) number field, golden ratio (ALL PROVED) |
-| FibonacciMTC.lean | 5d | 11 | Fibonacci MTC F-symbols, PreModularData (ALL PROVED, zero sorry — native_decide) |
-| Uqsl2AffineHopf.lean | 5d | 4 | U_q(ŝl₂) Hopf algebra (3 sorry) |
-| VerifiedStatistics.lean | 5d | 6 | Statistics extension: Cauchy-Schwarz, jackknife, N_eff (4 sorry) |
-| KerrSchild.lean | 5d | 7 | Kerr-Schild metrics, Sherman-Morrison inverse (1 sorry) |
-| CoidealEmbedding.lean | 5d | 6 | Coideal subalgebra embedding (4 sorry) |
-| RepUqFusion.lean | 5d | 13 | Rep(u_q) → SU(2)_k fusion correspondence (2 sorry) |
-| StimulatedHawking.lean | 5d | 11 | Stimulated Hawking amplification (7 sorry) |
-| CenterFunctor.lean | 5d | 9 | Center(Vec_G) → ModuleCat(DG) functor (5 sorry) |
-| QCyc16.lean | 5e | 6 | Q(ζ₁₆) cyclotomic field (all proved, native_decide) |
-| QCyc5.lean | 5e | 9 | Q(ζ₅) + Fibonacci hexagon E1-E3 (all proved, native_decide) |
-| IsingBraiding.lean | 5e | 23 | COMPLETE braided Ising: hexagon, ribbon, trefoil=-1 (all proved) |
-| QSqrt3.lean | 5e | 8 | Q(√3) + SU(2)₄ S-matrix unitarity (all proved) |
-| QLevel3.lean | 5e | 19 | SU(2)₃ S-matrix unitarity, quantum dim golden ratio (all proved) |
-| TQFTPartition.lean | 5f | 16 | TQFT partition functions: Ising + Fibonacci at genus 0-4, Verlinde formula (all proved) |
-| FigureEightKnot.lean | 5f | 6 | Figure-eight knot RT invariant from Ising MTC braiding data (all proved) |
-| EmergentGravityBounds.lean | 5f | 14 | Wen coupling deficit ~6000x, G_c NLO invariance, tetrad channel advantage (2 sorry) |
-| SPTClassification.lean | 5h | 15 | SPT phase classification, gapped interface axiom, TPF conditional theorems (all proved, 1 axiom) |
-| GaugingStep.lean | 5h | 34 | Gauging obstruction, non-on-site symmetry, SMG phase, GS propagator-zero (all proved) |
-| Uqsl3.lean | 5i | 21 | **FIRST rank-2 quantum group** U_q(sl₃): 8 generators, 21 Chevalley relations (all proved) |
-| Uqsl3Hopf.lean | 5i | 2 | U_q(sl₃) Hopf: coproduct/counit/antipode, S²=Ad(K₁K₂) (4 sorry) |
-| SU3kFusion.lean | 5i | 99 | **FIRST SU(3)_k fusion**: Z₃ at k=1, 6 anyons at k=2, Fibonacci subcategory (all proved, native_decide) |
-| PolyQuotQ.lean | 5i | 15 | Q(ζ₃) cyclotomic field for SU(3)₁ S-matrix (all proved) |
-| FermiPointTopology.lean | 5j | 28+ | Fermi-point topological charge, |N|=1→U(1), |N|=2→SU(2) gauge emergence (all proved) |
-| TemperleyLieb.lean | 5k | — | First TL algebra in any proof assistant; Jones–Wenzl prerequisite |
-| SurgeryPresentation.lean | 5k | — | Kirby-calculus surgery presentation of 3-manifolds |
-| WRTInvariant.lean | 5k | — | Witten–Reshetikhin–Turaev TQFT invariant (definition) |
-| WRTComputation.lean | 5k | — | WRT invariants of S³, S²×S¹, lens spaces, figure-eight complement |
-| JonesWenzl.lean | 5l | — | Jones–Wenzl idempotents at roots of unity |
-| IsingGates.lean | 5l | — | Ising anyon gates generate the Clifford group (Microsoft-Majorana relevance) |
-| FibonacciBraiding.lean | 5l | — | Fibonacci braid-group action at level k=3 |
-| FibonacciUniversality.lean | 5l | — | Braiding Lie-algebra spanning → universality for quantum computation |
-| FibonacciQutrit.lean | 5l | — | Qutrit braid construction |
-| FibonacciQutritUniversality.lean | 5l | — | Qutrit universality |
-| StringNet.lean | 5l | — | First string-net condensation formalization; toric code from Vec_{ℤ/2} |
-| QuantumGroupGeneric.lean | 5m | 29 | `QuantumGroup k A` over arbitrary Cartan matrix A — first parameterized QG |
-| QuantumGroupCoproduct.lean | 5m | 44 | Generic coproduct Δ for U_q(𝔤) |
-| QuantumGroupAntipode.lean | 5m | 25 | Generic antipode S for U_q(𝔤) via MulOpposite |
-| QuantumGroupHopf.lean | 5m | 31 | First generic HopfAlgebra instance for U_q(𝔤) |
-| QuantumGroupInstantiation.lean | 5m | 39 | Equivalences qgA1 ≃ Uqsl2, qgA2 ≃ Uqsl3 |
-| QuantumGroupMeta.lean | 5m | 16 | Exceptional Cartan matrices E₆/E₇/E₈/F₄ |
-| KacWaltonFusion.lean | 5m | 63 | First Kac–Walton fusion algorithm in any proof assistant |
-| KMatrixAnomaly.lean | 5n | — | K-matrix anomaly inflow / 3450 model gappability |
-| VillainHamiltonian.lean | 5n | — | First Villain Hamiltonian formalization |
-| TPFDisentangler.lean | 5n | — | TPF disentangler properties (chirality-wall 1+1D) |
-| SPTStacking.lean | 5n | — | SPT phase stacking (chirality-wall 1+1D) |
-| MugerCenter.lean | 5p | — | First Muger-center formalization; general dual-closure theorem |
-| FPDimension.lean | 5p | — | Frobenius–Perron dimensions derived from fusion matrices |
-| D2Formula.lean | 5p | — | Global-dimension formula D² = Σ (dim V)² |
-| A1Ring.lean | 5q | — | A(1) Steenrod sub-algebra as F₂-algebra (structure + ring) |
-| A1Resolution.lean | 5q | — | Minimal free resolution of F₂ over A(1) through degree 5 |
-| A1Ext.lean | 5q | — | Ext dimensions 1, 2, 2, 2, 3, 4 — first Ext over a Steenrod sub-algebra |
-| ExtBordismBridge.lean | 5q | — | Bridge from Ext to spin-bordism (H1/H3/H4 as focused hypotheses) |
-| ChangeOfRings.lean | 5r | — | Ext_A ≅ Ext_{A(1)} via Hom-tensor adjunction; discharges topological H2 |
-| FKGappedInterface.lean | 5s | — | First Fidkowski–Kitaev 2+1D Cayley-calibrated gapped interface, Δ=14 |
-| ModularityTheorem.lean | 5s | — | General det(S) ≠ 0 → Z₂ trivial (pure linear algebra) |
-| InstantonZeroModes.lean | 5s | — | Zero-mode counting bypassing the 4D index theorem via Clifford separation |
-| CenterFunctorZ2.lean + CenterFunctorZ2Equiv.lean | 5s | — | Continuation of Center(Vec_{ℤ/2}) ≅ Rep(D(ℤ/2)) formalization |
-| FermiHubbardDimer.lean | 5t | 143 | Fermi-Hubbard doublon geometric SWAP + minimal Berry-phase theorem |
-| DiracFluidMetric.lean | 5w | 9 | 3×3 graphene Dirac-fluid acoustic metric, block-diag for quasi-1D |
-| GrapheneHawking.lean | 5w | 7 | Dispersive correction, T_eff positivity, EFT validity for graphene |
-| DiracFluidSK.lean | 5w | 9 | Conformal transport, KSS bound, EFT perturbativity |
-| GrapheneNoiseFormula.lean | 5w | 8 | ΔS_I(ω) from Keldysh FDT + Landauer–Büttiker |
-| QuasiOneDReduction.lean | 5w | — | Quasi-1D bound correction + greybody validation |
-| HiddenSectorClassification.lean | 5x | — | ℤ₁₆-anomaly-driven SM-singlet Weyl enumeration |
-| HiddenSectorMixedCharge.lean | 5x | — | Wan–Wang mixed-charge hidden-sector channel |
-| CosmologicalConstant.lean | 5x | 8 | ADW-derived Λ magnitude + Volovik/Gibbons-Hawking doubling |
-| FangGuTorsionDM.lean | 5x | 10 | Fang–Gu torsion-DM kinematic obstruction (w = 1/3) |
-| FractonDarkMatter.lean | 5x | 25 | p-wave dipole superfluid viability; Arrhenius + BBN conditions |
-| SFDMMergerForecast.lean | 5x | 30 | SFDM merger sonic-boom forecast; Rankine–Hugoniot closed form |
-| DarkSectorSynthesis.lean | 5x | 22 | Seven cross-connection theorems; empirical-hook ranking |
-| GibbsDuhemTheorem.lean | 5y | 16 | First emergent-vacuum obstruction: `w_vac = −1` locked by Lorentz + Gibbs–Duhem |
-| QTheoryNoGoTheorem.lean | 5y | 12 | Obstruction realization-independent across 4 KV q-theory constructions |
-| DarkEnergyObstructionPrinciple.lean | 5y | 8 | Four-factor orthogonality decomposition |
-| DESIComparison.lean | 5y | 8 | DESI DR2 comparison infrastructure |
-| VestigialEOS.lean | 5y | 20 | First closed-form `w_vest(τ) = (1−τ²)/(5τ²−1)` + `c_s²`, `ζ_vest` |
-| VestigialMapping.lean | 5y | 8 | Charge-4e superconductor → vestigial-gravity dictionary |
-| CondensedMatterAnalog.lean | 5y | 10 | Fernandes–Fu condensed-matter EOS correspondence |
-| ClassificationTableDark.lean | 5y | 8 | Dark-sector candidate classification consolidation |
-| ExtractDeps.lean | infra | — | Environment walker / axiom-closure extractor (Invariant #10 exception) |
+### Library architecture
+
+The Lean library is organized into roughly nine functional areas:
+
+- **Acoustic-Hawking foundation** — acoustic metric, SK doubling, universality, WKB and exact WKB connection formula, second- and third-order SK-EFT, CGL FDR derivation, dispersive corrections.
+- **Emergent gauge fields and chirality** — gauge erasure (no non-Abelian gauge survives the fluid layer), Fermi-point topological charge → emergent U(1) and SU(2), chirality-wall analysis (Golterman–Shamir conditions, TPF evasion, three-pillar master synthesis).
+- **Anomaly classification and modular invariance** — Z₁₆ classification, Pauli matrices, Wilson mass, BdG Hamiltonian, GT commutation `[H, Q_A] = 0`, Steenrod A(1) algebra, the SM ℤ₁₆-anomaly computation, the generation constraint `N_f ≡ 0 (mod 3)` and its modular-invariance derivation.
+- **Quantum groups, Hopf algebras, and fusion categories** — the first quantum group `U_q(sl₂)` in any proof assistant, its Hopf-algebra structure, the first rank-2 quantum group `U_q(sl₃)` with `SU(3)_k` fusion, a parameterized `QuantumGroup k A` typeclass over arbitrary Cartan matrices, the Kac–Walton fusion algorithm, restricted quantum groups, generic Hopf instance.
+- **Modular tensor categories, braiding, and TQFT** — Ising and Fibonacci MTC F-symbols and pentagon equations, hexagon, ribbon, Reshetikhin–Turaev knot invariants (trefoil = −1, figure-eight), TQFT partition functions on closed surfaces, WRT invariants via surgery, Temperley–Lieb, Jones–Wenzl, Müger center, Frobenius–Perron dimensions, dual-closure, string-net condensation.
+- **Topological quantum computation** — Ising anyon gates (Clifford group), Fibonacci braiding and universality (Lie-algebra spanning), `SU(3)_k` Fibonacci subcategory at level 2, the FKLW density theorem for Fibonacci anyons in `SU(2)` (first kernel-verified unconditional version), the constructive Dawson–Nielsen Solovay–Kitaev compiler with quantitative length bound (Phase 6t), the Fermi-Hubbard doublon geometric SWAP gate.
+- **Emergent gravity** — ADW tetrad-condensation gap equation, fracton hydrodynamics → full-GR obstruction, vestigial gravity, the linearized Einstein equations and their Sakharov–Adler form, FLRW cosmology with Friedmann I/II and Bianchi consistency, gravitational-wave propagation under the vestigial-graviton identification (and its GW170817 falsification), Bekenstein–Hawking entropy from MTC state counting, the BCH four laws partitioned by mass regime, the classical-GR algebraic backbone (Riemann/Ricci/Einstein tensors, energy conditions, exact solutions, ADM 3+1), causal structure, singularities, no-hair, three-track dark-energy closure.
+- **Dark sector** — ℤ₁₆-anomaly-driven SM-singlet hidden sectors, fracton dark matter, Fang–Gu torsion DM, the superfluid-dark-matter merger forecast, the Gibbs–Duhem emergent-vacuum no-go, the closed-form vestigial-gravity EOS, the four-factor dark-energy obstruction principle, DESI DR2 comparison infrastructure.
+- **Verified statistics and substrate infrastructure** — jackknife variance and autocorrelation estimators (first verified in any proof assistant), Cauchy–Schwarz, effective sample size; the Glorioso–Liu SK-EFT axiomatic skeleton, the quantum-Crooks no-go architecture, Itô calculus and large-deviation linear-response, the SymTFT audit substrate (Drinfeld center via Witt-equivalence, Deligne tensor, pseudo-unitarity).
+
+### Headline theorems
+
+The following kernel-verified theorems are the load-bearing public claims of the project. Each is closed under the standard Lean kernel `[propext, Classical.choice, Quot.sound]` and carries 0 sorry.
+
+| Theorem | Module | What it says |
+|---|---|---|
+| `fibonacci_density_F21_unconditional` | `SKEFTHawking/FKLW/SU2BCHBracketClosure.lean` | The two-strand Fibonacci-anyon braid representation has dense image in `SU(2)` — first kernel-verified unconditional FKLW density statement (Phase 5 Step 13, 2026-05-22). |
+| `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight` | `SKEFTHawking/FKLW/SolovayKitaevPathA.lean` | A constructive Dawson–Nielsen compiler achieves error `‖ρ(compile U ε) − U‖ ≤ ε` and length `≤ skLengthConst · (log(1/ε))^{log 5 / log(3/2)}` at the same compile level — first kernel-verified quantitative Solovay–Kitaev length bound (Phase 6t, 2026-05-23). |
+| `generation_constraint_iff` | `SKEFTHawking/GenerationConstraint.lean` | The number of Standard-Model generations satisfies `3 ∣ N_f` iff `24 ∣ 8 N_f` — first formally verified anomaly constraint on SM particle content. |
+| `wang_bridge_full_chain` | `SKEFTHawking/WangBridge.lean` | The 16-Weyl spectrum forces the chiral central charge `c₋ = 8 N_f`; fractional `c₋` requires right-handed neutrinos. |
+| `pillar1_tpf_escapes` + `pillar2_chiral_symmetry_exists` + `pillar3_z16_strengthens` | `SKEFTHawking/ChiralityWallMaster.lean` | Three-pillar chirality-wall synthesis: TPF construction escapes the Golterman–Shamir no-go, GT positive construction realizes a chiral charge with `[H, Q_A] = 0`, and the Z₁₆ anomaly anchors the algebraic side. |
+| `gauge_erasure` + `su2_erased` + `su3_erased` + `u1_survives` | `SKEFTHawking/GaugeErasure.lean` | Non-Abelian gauge symmetries (SU(2), SU(3)) cannot survive passage through a fluid-like layer; only U(1) is preserved. |
+| `dof_mismatch_4d` + `bootstrap_gap_order_2` + `fracton_fails_diffeo` | `SKEFTHawking/FractonGravity.lean` | Fracton hydrodynamics reproduce weak-field gravity (order 1) but disagree with full GR from order 2 onward; structural DoF mismatch (4 vs 2 in 4D) and diffeomorphism-invariance failure. |
+| `wVac_eq_neg_one_of_rhoV_ne_zero` + `selftuning_two_cases` | `SKEFTHawking/GibbsDuhemTheorem.lean` | Any single-scalar self-tuning emergent-vacuum framework with Gibbs–Duhem equilibrium locks `w_vac = −1` (or `ρ_vac = 0`) by Lorentz invariance — first machine-checked emergent-vacuum obstruction. |
+| `vestigial_natural_range_violates_ligo` + `natural_range_disjoint_from_ligo_window` | `SKEFTHawking/GravitationalWaves.lean` | Under the Volovik vestigial-second-sound graviton identification, the natural susceptibility range gives `Δc/c ∈ [−0.68, +2.16]`, exceeding the GW170817 cap by `~7 × 10¹⁴` — both endpoints proved as falsifier theorems. |
+| `G_N_emerg_match_at_planck_anchor` | `SKEFTHawking/LinearizedEFE.lean` | The ADW emergent Newton constant is `G_N^emerg = α_ADW · 12π / (N_f Λ²)`; at the Planck anchor `Λ = M_P^obs` the match `G_N^emerg = G_N^obs` reduces to `α_ADW · 12π = N_f`, giving `α_ADW* ∈ [0.40, 1.27]` for SM `N_f ∈ {15, 16, 45, 48}` (inside the Vergeles natural range). |
+| `kaul_majumdar_log_coefficient` + `kaul_majumdar_log_decomposition` | `SKEFTHawking/BHEntropyMicroscopic.lean` | The Bekenstein–Hawking entropy is `S = A/(4 G_N) − (3/2) log(A/(4 G_N)) + c₀` with the −3/2 log coefficient decomposing as `(−1/2)` (Gaussian saddle) + `(−1)` (SU(2) singlet projection) — first formal MTC-state-counting derivation. |
+| `agp_threshold_steane_strict` | `SKEFTHawking/FaultTolerance/AGP/Threshold.lean` | Threshold theorem under the Aharonov–Ben-Or AGP rate: logical-error suppression at every fault-tolerant level for sufficiently small per-gate error. |
+| `jackknifeVariance_nonneg` | `SKEFTHawking/VerifiedJackknife.lean` | The jackknife variance estimator is non-negative — first verified statistical estimator in any proof assistant. |
+| `dark_state_dynamical_phase_vanishes` + `geometric_phase_minus_one_on_pi_loop` | `SKEFTHawking/FermiHubbardDimer.lean` | The Fermi-Hubbard doublon dark state has vanishing dynamical phase under a π-sweep and picks up a purely geometric −1 holonomy — first formally verified symmetry-protected (non-topological) two-qubit gate. |
+| `diracFluidMetric_txBlock_lorentzian_at_horizon` + `diracFluid_hawkingTemp_eq_BEC` | `SKEFTHawking/DiracFluidMetric.lean` | The 3×3 graphene Dirac-fluid acoustic metric block-diagonalizes for quasi-1D flow (the t–x block is Lorentzian at the horizon and the Hawking temperature reduces to the BEC form), enabling reuse of the BEC WKB machinery for the Dean bilayer-graphene sonic horizon. |
+
+### Tracked-hypothesis Props
+
+The project carries **four load-bearing tracked-hypothesis Props** on consumer theorems rather than as global axioms — `H_VestigialModeIsGraviton`, `H_DESICompatibility`, `H_RT_Formula_Valid`, and `TPFConjecture` (the last converted from the former `gapped_interface_axiom` on 2026-05-19). Each is documented with its physics status, non-vacuity witnesses, consumers, and discharge posture in [`docs/PERMANENT_TRACKED_HYPOTHESES.md`](docs/PERMANENT_TRACKED_HYPOTHESES.md). This makes the project's claim surface visible at the type-signature level: any theorem that depends on a research-grade physical assumption propagates that dependency explicitly.
 
 ## Build Environment
 
-- **Lean:** 4.29.0 with Mathlib (pinned in `lean/lakefile.toml`, currently commit `8850ed93`).
+- **Lean:** 4.29.1 with Mathlib (pinned in `lean/lakefile.toml` at commit `5e932f97`, the v4.29.1 tag). The Lean REPL (used by the `lean-lsp-mcp` interactive dev loop) is pinned at v4.29.0 — patch-level compatible with the toolchain since the REPL is a thin protocol wrapper.
 - **Python:** ≥ 3.14, managed via uv. Key deps: numpy, scipy, sympy, mpmath, plotly, aristotlelib, torch, maturin.
 - **Rust:** PyO3 extension for RHMC (`rust/src/lib.rs`). Rebuild with `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 uv pip install -e rust/ --force-reinstall --no-deps`.
 - **Visualization:** Plotly (not matplotlib). Color scheme: #2E86AB steel blue, #A23B72 berry, #F18F01 amber.
@@ -727,7 +468,7 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 ## Key References
 
 **Project documentation:**
-- [Wave Execution Pipeline](docs/WAVE_EXECUTION_PIPELINE.md) — the 12-stage process governing all work
+- [Wave Execution Pipeline](docs/WAVE_EXECUTION_PIPELINE.md) — the 14-stage process governing all work
 - [Inventory Index](SK_EFT_Hawking_Inventory_Index.md) — quick reference: module map, counts, pipeline invariants
 - [Knowledge Graph](docs/KNOWLEDGE_GRAPH.md) — interactive provenance visualization
 - [Dashboard](docs/DASHBOARD.md) — parameter verification, proof architecture, paper claims
@@ -736,8 +477,8 @@ uv run python scripts/provenance_dashboard.py          # Opens http://localhost:
 
 **Stakeholder docs:** [`docs/stakeholder/`](docs/stakeholder/) contains non-technical implications and strategic positioning documents per phase, plus the Phase 5y closure memo and its four cross-phase impact notes.
 
-**Deep research:** [`Lit-Search/`](../Lit-Search/) is organized by phase (`Phase-1-and-Background` through `Phase-5z`) covering quantum groups, modular tensor categories, Rokhlin's theorem, the ADW gap equation, fracton hydrodynamics and gravity, verified statistics, polariton protocols, TQFT partition functions, gauging obstructions, SU(3)_k fusion, Fermi-point topology, chirality-wall 3+1D, FK gapped interface, instanton zero-mode counting, graphene Dirac-fluid transport, dark-sector phenomenology, and Klinkhamer–Volovik q-theory obstruction analysis.
+**Deep research:** [`Lit-Search/`](../Lit-Search/) is organized by phase (`Phase-1-and-Background` through `Phase-6t`) covering quantum groups, modular tensor categories, Rokhlin's theorem, the ADW gap equation, fracton hydrodynamics and gravity, verified statistics, polariton protocols, TQFT partition functions, gauging obstructions, SU(3)_k fusion, Fermi-point topology, chirality-wall 3+1D, FK gapped interface, instanton zero-mode counting, graphene Dirac-fluid transport, dark-sector phenomenology, Klinkhamer–Volovik q-theory obstruction analysis, classical-GR backbone, heat-kernel calibration, three-track dark-energy closure, and the FKLW + quantitative Solovay–Kitaev substrate.
 
 ---
 
-*Last updated: 2026-04-24-1439. Counts are a rolling snapshot — `docs/counts.json` is the single source of truth (regenerated by `scripts/update_counts.py`).*
+*Last updated: 2026-05-23. Counts are a rolling snapshot — `docs/counts.json` is the single source of truth (regenerated by `scripts/update_counts.py`).*

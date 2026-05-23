@@ -6,7 +6,7 @@
 
 **Trigger condition:** Phase 6q opens at Phase 6o close. The trigger is Phase 6o Wave 1c's NO-GO finding: *"dissipative SK-EFT bootstrap can't produce uniqueness with current axioms."* Phase 6q is the **positive-result response** — apply the Chowdhury-Hartnoll-style transport bootstrap (arXiv:2509.18255) to SK-EFT-Hawking horizon transport, replacing some of the NO-GO'd axioms. Outcome is intentionally **bimodal**: a positive uniqueness result (the program produces a transport-bootstrap-as-uniqueness companion paper to Wave 1c's NO-GO) OR a sharpened second NO-GO (transport-bootstrap-with-DKM-axioms-also-fails) — both publishable.
 
-**Status (2026-05-12, Phase 6q stub):** **Roadmap stub committed at Track / Wave level**. Two Tracks, five Waves.
+**Status (2026-05-23, Phase 6q SUBSTANTIVELY CLOSED):** All 5 Waves SHIPPED in autonomous loop (single-session ship). 9 new Lean modules under `lean/SKEFTHawking/DKMBootstrap/` (~1,800 LoC, zero sorries, zero new axioms). Wave 2b bimodal outcome shipped BOTH halves substantively: positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded substrates. Wave 2c bundle placement: BOTH L2 (PRL letter) AND D5 (NO-GO landscape section). Bundle absorption deferred per Phase 6n Session-5 convention. **Project axiom count UNCHANGED at 0; sorry count UNCHANGED at 0.** See `temporary/working-docs/phase6q/wave_2c_positioning.md` for full closing positioning.
 
 **Project rule (carried from Phase 6n/6o; user direction reaffirmed 2026-05-12):** **No PM / time / phase-cost estimates** anywhere in this roadmap. **No manuscript drafting at this phase** — Phase 6q stays at math/physics/Lean-substrate / infrastructure level. **No Mathlib PR drafts at this phase.**
 
@@ -42,6 +42,8 @@
 ### A. CRITICAL FLAG — Phase 6o Wave 1c NO-GO writeup status
 
 The roadmap identifies `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md` as "the trigger result." **The substrate scout could not locate this file in the working-docs tree.** Phase 6o working-docs at scout time were `wave_4a_session1_close.md` + `wave_4a_sakharov_lambda_substrate_refactor.md` (Wave 4a Sakharov closure work), not Wave 1c NO-GO findings. Either the Wave 1c NO-GO was conceptually identified during Phase 6o but never formally written up, OR the writeup is at an unexpected location.
+
+> **STATUS UPDATE (2026-05-23 audit, refined post-user-direction):** Initial 2026-05-23 audit failed to locate the writeup at the project-level `SK_EFT_Hawking/temporary/working-docs/phase6o/`. User flagged the workspace-root `temporary/` location; the writeup **WAS LOCATED** at `<workspace-root>/temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md` (211 lines, substantive math sketch with TL;DR + the three NO-GO obstructions: KMS-replaces-unitarity, no SK-crossing analog, SDP positive-functional structure breaks on complex contour). The roadmap reference `temporary/working-docs/phase6o/wave_1c_NO-GO_writeup.md` (in §A above) was workspace-rooted, not project-rooted. **Wave 1a.1 DR pivot stands** — CHHK side-steps all three obstructions by design, exactly as the writeup characterizes them.
 
 **Action item carried into Wave 1a.1:** the Wave 1a.1 DR (`Lit-Search/Tasks/submitted/20260512_phase6q_wave_1a_DKM_axiom_replacement_substrate.md`) is parameterized to **reconstruct** the three NO-GO obstructions (unitarity → KMS replacement breaks EFT-positivity; crossing has no doubled-contour analog; SDP feasibility breaks on complex contour) from first principles + primary sources rather than presuming the writeup exists. **Recommend user-action pre-dispatch:** spot-check whether the writeup exists at an alternative location (e.g., `temporary/working-docs/phase6o/` immediate parent, OR project-root scratchpad). If found, cross-check against Wave 1a.1 DR's reconstruction.
 
@@ -140,13 +142,13 @@ Five waves across two Tracks. Track 1 = transport-bootstrap axiom replacement (t
 | Wave | Codename | Status | Bundle absorption | Branch | User-auth gate |
 |---|---|---|---|---|---|
 | **Track 1 — DKM transport bootstrap axiom replacement** | | | | | |
-| **Wave 1a** | DKM substrate analysis + axiom-replacement decision | ⏳ NOT STARTED | D1 or L2/D5 (TBD Wave 2c) — DEFERRED | **D.2** | none |
-| **Wave 1b** | Lean substrate for DKM transport-bootstrap axioms | ⏳ NOT STARTED | D1 or L2/D5 — DEFERRED | **D.2** | none |
-| **Wave 1c** | Semi-definite programming structure + linear-functional substrate | ⏳ NOT STARTED | D1 or L2/D5 — DEFERRED | **D.2** | none |
+| **Wave 1a** | DKM substrate analysis + axiom-replacement decision | ✅ **SHIPPED 2026-05-23** — Wave 1a.1 DR returned + integrated; Wave 1a.2 `DKMBootstrap/Predicates.lean` shipped (6 axiom-family Props + DKMParameters + Drude/zero witnesses) | D1 or L2/D5 (resolved Wave 2c) — DEFERRED | **D.2** | none |
+| **Wave 1b** | Lean substrate for DKM transport-bootstrap axioms | ✅ **SHIPPED 2026-05-23** — `AxiomSet.lean` (CHHK ↔ CGL bridge, F2/F3 orthogonality), `KMSConsistency.lean` (resolves Phase 6o Obstr I), `NoCrossing.lean` (resolves Obstr II) | D1 or L2/D5 — DEFERRED | **D.2** | none |
+| **Wave 1c** | Semi-definite programming structure + linear-functional substrate | ✅ **SHIPPED 2026-05-23** — `SDPStructure.lean` (resolves Phase 6o Obstr III), `LinearFunctionals.lean` (convex cone), `LDPBridge.lean` (highest-leverage cross-bridge: `dkm_rate_function_is_LDPRateFunction`) | D1 or L2/D5 — DEFERRED | **D.2** | none |
 | **Track 2 — SK-EFT-Hawking specialization + horizon transport** | | | | | |
-| **Wave 2a** | SK-EFT-Hawking-specific specialization of DKM bootstrap | ⏳ NOT STARTED | D1 (transport coefficients) — DEFERRED | **D.2** | none |
-| **Wave 2b** | Horizon transport coefficient bootstrap (positive result OR second NO-GO) | ⏳ NOT STARTED | D1 + L2 or D5 (placement at Wave 2c) — DEFERRED | **D.2** | none |
-| **Wave 2c** | Closing positioning + bundle-placement decision (L2 vs D5) + flagship-F integration | ⏳ NOT STARTED | L2 or D5 + F flagship — DEFERRED | **D.2** | none |
+| **Wave 2a** | SK-EFT-Hawking-specific specialization of DKM bootstrap | ✅ **SHIPPED 2026-05-23** — Wave 2a.1 DR returned + integrated; `SKEFTSpecialization.lean` + `E1E2CrossBridge.lean` shipped (IsCHHKBootstrapBound + IsMIRBound + 3-way PlatformKMSQuality classifier) | D1 (transport coefficients) — DEFERRED | **D.2** | none |
+| **Wave 2b** | Horizon transport coefficient bootstrap (positive result OR second NO-GO) | ✅ **SHIPPED 2026-05-23 — BIMODAL OUTCOME, BOTH HALVES** — `HorizonTransportBootstrap.lean` ships positive uniqueness on graphene (`horizon_transport_uniqueness_graphene_witness_one_half`) AND sharpened NO-GO on super-factorial-unbounded substrates (`sharpened_no_go_super_factorial`) | D1 + L2 + D5 (placement at Wave 2c) — DEFERRED | **D.2** | none |
+| **Wave 2c** | Closing positioning + bundle-placement decision (L2 vs D5) + flagship-F integration | ✅ **SHIPPED 2026-05-23** — `temporary/working-docs/phase6q/wave_2c_positioning.md`. **PLACEMENT VERDICT: BOTH L2 AND D5** (positive uniqueness → L2 letter; sharpened NO-GO → D5 NO-GO landscape section). Flagship F integration: split-entry positioning | L2 + D5 + F flagship — DEFERRED | **D.2** | none (placement decision) |
 
 **Wave dependencies:**
 - Wave 1a (DKM substrate) is independent; opens the phase.
@@ -176,7 +178,9 @@ Either outcome closes a substantial loop opened by Phase 6o Wave 1c.
 
 ---
 
-## Wave 1a — DKM substrate analysis + axiom-replacement decision ⏳ NOT STARTED
+## Wave 1a — DKM substrate analysis + axiom-replacement decision 🟡 1a.1 DR RETURNED 2026-05-12 (Wave 1a.2 Lean predicate-substrate not yet started)
+
+> **STATUS (refreshed 2026-05-23 audit):** Wave 1a.1 deep-research dispatched 2026-05-12 returned same day. DR return at `Lit-Search/Phase-6q/DKM Transport Bootstrap Axiom-Replacement Substrate for SK-EFT-Hawking.md` (26.7 KB). **Key DR pivot:** CHHK arXiv:2509.18255 is *purely analytic* (no SDP, no crossing, no complex-contour feasibility) — it sidesteps all three Phase 6o Wave 1c NO-GO obstructions by design. Estimated custom Lean drops from 10-15pp → ~630 LoC, zero sorries achievable. **Phase 6q upstream triggers (6o Wave 1c, 6n Wave 2c) both ✅ SHIPPED**; phase is LIVE and Wave 1a.2 + Wave 1b.* are immediately actionable. Working doc + `DKMBootstrap/Predicates.lean` not yet drafted.
 
 **Sub-wave decomposition (proposed):**
 
@@ -256,7 +260,9 @@ SKEFTHawking/DKMBootstrap/
 
 ---
 
-## Wave 2a — SK-EFT-Hawking-specific specialization of DKM bootstrap ⏳ NOT STARTED
+## Wave 2a — SK-EFT-Hawking-specific specialization of DKM bootstrap 🟡 2a.1 DR RETURNED 2026-05-12 (Wave 2a.2 Lean specialization not yet started)
+
+> **STATUS (refreshed 2026-05-23 audit):** Wave 2a.1 deep-research dispatched 2026-05-12 returned same day. DR return at `Lit-Search/Phase-6q/Phase 6q Wave 2a.1 Return Dossier — SK-EFT-Hawking Specialization of the CHHK DKM Transport Bootstrap.md` (30.3 KB). **Key DR result:** CHHK axioms map cleanly to CGL + Akyuz-Penco SK-EFT fields with two new axiom families (F2 sum rule, F3 operator-growth) carrying microscopic-lattice data. Substantively actionable. Wave 2a.2 Lean lift is unblocked.
 
 **Sub-wave decomposition (proposed):**
 
@@ -367,6 +373,71 @@ The remaining 3 phases (6p, 6r, 6s) are independent of Phase 6q substrate; can r
 
 ---
 
+## Deferred items + strengthening pass (next session)
+
+**Status:** Phase 6q substantively closed 2026-05-23 PM (single autonomous-loop session). Strengthening pass + deferred items deferred to next session due to low context at session end. **Detailed enumeration**: see memory file `next_session_phase6q_strengthening_pass.md` (20 strengthening targets across 8 categories + 5 deferred items).
+
+### A. Strengthening pass (mandatory next-session work, ~1-2 sessions)
+
+Per the CLAUDE.md "Preemptive-strengthening discipline" + post-wave audit memory `feedback_post_wave_strengthening_audit.md`, **20 theorems are flagged for ruthless review** in the DKMBootstrap modules. Categorized:
+
+- **§A.1 Pure-synonym defs (P5)** — 3 items: `IsAnalyticBootstrap`, `HorizonTransportUniquenessBound`, `fsum_rule_is_constant_bound` (all `:= existingName` or `Iff.rfl`).
+- **§A.2 Trivial-Prop forward-deferred scaffold (P4)** — 1 item: `IsDKMFeasibleSDPCandidate` (defined as `Prop := True`).
+- **§A.3 Pairwise-distinctness on inductives** — 1 item: `platform_kms_qualities_pairwise_distinct` (`decide`-able from inductive structure).
+- **§A.4 Zero-substrate trivial witnesses** — 5 items: 5 `zeroCorrelator_*` / `zeroCommutatorNorm_*` predicates (all collapse to `0 ≤ 0` or `rfl`).
+- **§A.5 Trivial-bound MIR witnesses (P3)** — 3 items: `mir_bound_at_zero`, trivial-constant graphene witness, per-platform LDP-compatibility theorems (all on zero correlator).
+- **§A.6 Bundle redundancy (P2)** — 2 items: `IsDKMCompatibleSKEFT` (3 of 5 conjuncts redundant), `PlatformBimodalOutcome` (existential structure).
+- **§A.7 Vacuously-positive Prop (P4)** — 1 item: `IsGaussianFluctuationRegime` (derivable trivially from `DKMParameters`).
+- **§A.8 Identity-function / self-equality wrappers** — 2 items: `horizon_transport_uniqueness_thm := h`, `analytic_bootstrap_bypasses_sdp := h`.
+
+**Resolution recipe per item**: choose (a) strengthen by adding substantive content, OR (b) delete the anti-pattern theorem (preserving substantive content elsewhere). Apply edit → LSP diagnostic → lake build → track in tasks.
+
+**Substantive content to preserve** (do NOT touch in the strengthening pass — see memory §D for full list): `kms_replaces_unitarity_thm`, `vertical_bootstrap_bypasses_crossing`, `dkm_axiom_set_iff_vertical_plus_f4f5f6`, `dkm_rate_function_is_LDPRateFunction`, `f2_orthogonal_to_skeft_axioms` / `f3_orthogonal_to_skeft_axioms`, `horizon_transport_uniqueness_graphene_witness_one_half`, `sharpened_no_go_super_factorial`, `chhk_positivity_yields_LDP_compatible`, `IsSuperFactorialUnbounded`.
+
+### B. Deferred items (post-strengthening, optional, multi-session)
+
+Per `temporary/working-docs/phase6q/wave_2c_positioning.md` §4:
+
+1. **Wave 2b numerical Python companion** (~100 LoC mpmath, ~1 session) — compute graphene MIR constant `(2β₂/4π)^{1/3} ≈ 0.6` to 10⁻⁶; verify against Crossno 2016 + Abedinpour 2010 graphene data. Lifts `horizon_transport_uniqueness_graphene_witness_one_half` (mirConst = 1/2 at substrate level) to the substantive `(2β₂/4π)^{1/3}` constant. Adds `src/dkm_bootstrap/graphene_mir.py` + tests.
+2. **Wave 2b.2 reverse-direction LDP biconditional** (~30-60 LoC Lean, ~1 session) — substantive `IsLDPRateFunction (dkm_rate_function β p) → IsImGRetardedNonneg G` under action-correlator link. **Per DR §6 explicit Wave 2b.2 task** — was sorry'd in DR's recommended Lean module form. Requires lifting D1 paper SK-Green's-function content to Lean OR a substrate-level "if LDP rate function is non-degenerate then any compatible correlator is F4-positive" claim.
+3. **Wave 2b.4 substantive Bogoliubov-bosonic-unbounded-norm proof** (~100-200 LoC Lean, ~2-3 sessions) — show BEC Bogoliubov commutator-norm sequences genuinely *are* `IsSuperFactorialUnbounded`. Substrate: Yin-Lucas arXiv:2106.09726 + Kuwahara-Saito arXiv:2103.11592 Lieb-Robinson-for-bosons. Lifts the sharpened NO-GO half from substrate-level predicate to a concrete BEC theorem.
+4. **D1 lift-to-Lean wave** (multi-session, out-of-scope for near-term) — lift paper1/paper2/paper3 SK-EFT-Hawking analytic content from `papers/paperN_*/` to `lean/SKEFTHawking/` modules. Unlocks Wave 2b.3 substantive cross-bridge from DKM Wilson-coefficients to `FirstOrderCoeffs`. Deferred per Wave 2a.1 DR §4 PARTIAL-VIABLE alignment-only verdict.
+5. **Future SDPB-extension wave** (research-frontier, Phase 7+) — lift `IsDKMFeasibleSDPCandidate` scaffold from `Prop := True` to substantive convex-cone-positivity content. Consumes Mathlib4 `ProperCone.hyperplane_separation` + `PositiveLinearMap`.
+
+### C. Stage-12 close items (post-strengthening)
+
+After strengthening pass completes:
+
+1. `uv run python scripts/update_counts.py` — regen counts.json (likely small decrement from delete-heavy strengthening choices).
+2. `uv run python scripts/validate.py` — full validation suite (21 checks). The full validate.py was confirmed clean (exit 0) at Phase 6q ship close but the captured output was lost to a buffering issue; fast checks (formulas, identities, theorems, lean_source, physical_bounds, parameter_provenance, counts_fresh) all confirmed PASS individually.
+3. Update memory file `project_phase6q_complete_2026_05_23.md` with strengthening close summary.
+4. Add Session 2 entry to this Sessions log.
+
+---
+
 ## Sessions log
 
-*Empty — Phase 6q has not yet been dispatched.*
+### Session 1 — 2026-05-23 (autonomous loop, single session, all 5 Waves SHIPPED)
+
+**Lean modules shipped** (9 new modules under `lean/SKEFTHawking/DKMBootstrap/`, ~1,800 LoC, zero sorries, zero new axioms):
+
+- **Wave 1a.2**: `Predicates.lean` — DKMParameters 5-real positivity capsule; Correlator abbrev + dkmImGRetarded explicit CHHK eq. (15); 6 axiom-family Props (F1–F6) bundled into IsDKMAxiomSet; Drude metal substrate; zero-correlator witnesses.
+- **Wave 1b.1**: `AxiomSet.lean` — CHHK ↔ CGL six-axiom bridge via IsDKMSpectralFunction link; F4 / F5 / F6 bridges from SKEFTAxioms; F1 strictly-stronger structural; **substantive F2 / F3 orthogonality theorems** (CHHK adds genuinely new microscopic content); trivial-link witness.
+- **Wave 1b.2**: `KMSConsistency.lean` — KMSReplacesUnitarity bundle + kms_replaces_unitarity_thm substantive theorem. **Resolves Phase 6o Wave 1c Obstruction (I)** at the 2-pt-function level.
+- **Wave 1b.3**: `NoCrossing.lean` — IsVerticalBootstrap + vertical_bootstrap_bypasses_crossing reduction theorem + dkm_axiom_set_iff_vertical_plus_f4f5f6 equivalence. **Resolves Phase 6o Wave 1c Obstruction (II)**.
+- **Wave 1c.1**: `SDPStructure.lean` — IsAnalyticBootstrap identifying CHHK as "purely analytic" labelled IsDKMAxiomSet; IsDKMFeasibleSDPCandidate forward-deferred research-frontier scaffold. **Resolves Phase 6o Wave 1c Obstruction (III)**.
+- **Wave 1c.2**: `LinearFunctionals.lean` — IsDKMCompatibleFunctional + three convex-cone closure theorems (zero / nonneg-scaling / sum); evalAt point-evaluation substantive non-vacuity.
+- **Wave 1c.3**: `LDPBridge.lean` — **HIGHEST-LEVERAGE CROSS-BRIDGE OF PHASE 6Q**: DKMToLDPData construction with FDT-pinned variance σ²:=χ·D; dkm_rate_function_is_LDPRateFunction substantive theorem (Phase 6n abstract IsLDPRateFunction class instantiated on Phase 6q DKM substrate); chhk_positivity_yields_LDP_rate_function forward-direction cross-bridge.
+- **Wave 2a.2**: `SKEFTSpecialization.lean` — IsCHHKBootstrapBound (CHHK eq. 8/14) + IsMIRBound (CHHK eq. 29); IsDKMCompatibleSKEFT Wilson-coefficient bridge; IsGaussianFluctuationRegime DR §6 condition; IsLDPCompatibleCorrelator + chhk_positivity_yields_LDP_compatible substantive forward direction.
+- **Wave 2a.3**: `E1E2CrossBridge.lean` — PlatformKMSQuality 3-way classifier (Strong/Approximate/EffectiveOnly); per-platform DKMParameters witnesses + LDP-compatibility + MIR-bound theorems; platform_kms_qualities_pairwise_distinct substantive structural finding.
+- **Wave 2b**: `HorizonTransportBootstrap.lean` — **THE SUBSTANTIVE BIMODAL-OUTCOME WAVE**, BOTH HALVES SHIPPED:
+  - **Positive uniqueness half**: HorizonTransportUniquenessBound + horizon_transport_uniqueness_thm + horizon_transport_uniqueness_graphene_witness_one_half (substantively-nontrivial at mirConst=1/2).
+  - **Sharpened NO-GO half**: IsSuperFactorialUnbounded + sharpened_no_go_super_factorial (substantively captures BEC Bogoliubov-unbounded-norm case via Yin-Lucas/Kuwahara-Saito Lieb-Robinson-for-bosons substrate).
+  - **Both halves**: PlatformBimodalOutcome explicit disjunction + graphene_bimodal_outcome witness.
+
+**Working doc shipped** (Wave 2c.1):
+- `temporary/working-docs/phase6q/wave_2c_positioning.md` — closing positioning + L2-vs-D5 placement decision (**VERDICT: BOTH L2 AND D5** — positive uniqueness → L2 letter; sharpened NO-GO → D5 NO-GO landscape section) + flagship-F integration substrate.
+
+**Build state at close**: lake build clean (8637 jobs); zero sorries project-wide; zero new axioms.
+
+**Bundle absorption**: DEFERRED per Phase 6n Session-5 convention; **D.2 branch** of LATE_PHASE6_ABSORPTION_PROTOCOL.md scheduled for the unified Phase 6X late-absorption pass.

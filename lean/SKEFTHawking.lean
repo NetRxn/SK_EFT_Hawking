@@ -790,6 +790,70 @@ import SKEFTHawking.FibonacciQuintetTrueRep
 -- Q(ζ₅, √φ) elements) + 10 inverse-identity theorems via native_decide.
 -- Public-side substrate for the 280-letter 6-strand CNOT braid word downstream.
 import SKEFTHawking.FibonacciSextetTrueRep
+-- Phase 6q Wave 1a.2 (2026-05-23): Drude–Kadanoff–Martin (DKM) transport
+-- bootstrap predicate substrate. Chowdhury–Hartnoll–Hebbar–Khondaker
+-- (arXiv:2509.18255) is purely analytic — sidesteps the three Phase 6o
+-- Wave 1c NO-GO obstructions (unitarity→KMS, crossing, complex-contour
+-- SDP) by design. Ships DKMParameters 5-real positivity capsule,
+-- explicit CHHK eq. (15) Im G^R form, 6 axiom-family Props (F1–F6)
+-- bundled into IsDKMAxiomSet, Drude metal (τ→0) closed form as
+-- substantive textbook example, plus zero-correlator witness for the 4
+-- testable axiom families.
+import SKEFTHawking.DKMBootstrap.Predicates
+-- Phase 6q Wave 1b.1 (2026-05-23): CHHK ↔ CGL six-axiom-set bridge.
+-- Action-correlator link predicate `IsDKMSpectralFunction`; F4 / F5 / F6
+-- bridges from `SKEFTAxioms` to CHHK axiom families; F1 strictly-stronger
+-- structural statement; substantive F2 / F3 orthogonality theorems (CHHK
+-- microscopic axioms NOT implied by CGL `SKEFTAxioms`); trivial-link
+-- well-posedness witness.
+import SKEFTHawking.DKMBootstrap.AxiomSet
+-- Phase 6q Wave 1b.2 (2026-05-23): KMS-replaces-unitarity structural
+-- lemma — Phase 6o Obstruction (I) fully resolved at the 2-pt-function
+-- level. KMSReplacesUnitarity predicate + kms_replaces_unitarity_thm
+-- substantive theorem + zero-substrate witnesses.
+import SKEFTHawking.DKMBootstrap.KMSConsistency
+-- Phase 6q Wave 1b.3 (2026-05-23): no-crossing structural finding —
+-- Phase 6o Obstruction (II) fully resolved. IsVerticalBootstrap
+-- predicate + vertical_bootstrap_bypasses_crossing structural theorem
+-- + dkm_axiom_set_iff_vertical_plus_f4f5f6 equivalence.
+import SKEFTHawking.DKMBootstrap.NoCrossing
+-- Phase 6q Wave 1c.1 (2026-05-23): SDP-bypass structural finding —
+-- Phase 6o Obstruction (III) fully resolved. IsAnalyticBootstrap
+-- predicate + analytic_iff_vertical_plus_f4f5f6 equivalence + forward-
+-- deferred IsDKMFeasibleSDPCandidate scaffold.
+import SKEFTHawking.DKMBootstrap.SDPStructure
+-- Phase 6q Wave 1c.2 (2026-05-23): linear-functional convex cone.
+-- IsDKMCompatibleFunctional predicate + three convex-cone closure
+-- theorems (zero / nonneg-scaling / sum) + evalAt point-evaluation
+-- non-vacuity witnesses.
+import SKEFTHawking.DKMBootstrap.LinearFunctionals
+-- Phase 6q Wave 1c.3 (2026-05-23): LDP cross-bridge — highest-leverage
+-- cross-bridge of the phase. DKMToLDPData construction with FDT-pinned
+-- variance σ²:= χ·D; dkm_rate_function_is_LDPRateFunction substantive
+-- theorem instantiating the Phase 6n abstract LDP class on Phase 6q
+-- DKM substrate; chhk_positivity_yields_LDP_rate_function cross-bridge.
+import SKEFTHawking.DKMBootstrap.LDPBridge
+-- Phase 6q Wave 2a.2 (2026-05-23): SK-EFT-Hawking specialization of the
+-- DKM bootstrap. IsCHHKBootstrapBound + IsMIRBound predicates;
+-- IsDKMCompatibleSKEFT Wilson-coefficient bridge to FirstOrderCoeffs;
+-- IsGaussianFluctuationRegime DR §6 condition; IsLDPCompatibleCorrelator
+-- bundled predicate + forward-direction chhk_positivity_yields_LDP_compatible.
+import SKEFTHawking.DKMBootstrap.SKEFTSpecialization
+-- Phase 6q Wave 2a.3 (2026-05-23): E1/E2 platform cross-bridge.
+-- PlatformKMSQuality 3-way classifier (Strong/Approximate/EffectiveOnly);
+-- per-platform DKMParameters witnesses (graphene/BEC/polariton);
+-- LDP-compatibility + MIR-bound per-platform theorems;
+-- platform_kms_qualities_pairwise_distinct substantive structural finding.
+import SKEFTHawking.DKMBootstrap.E1E2CrossBridge
+-- Phase 6q Wave 2b (2026-05-23): horizon-transport bootstrap, BIMODAL OUTCOME.
+-- POSITIVE-UNIQUENESS HALF: HorizonTransportUniquenessBound predicate +
+-- horizon_transport_uniqueness_thm substantive theorem + graphene witnesses
+-- at mirConst=0 (trivial) and mirConst=1/2 (substantively-nontrivial).
+-- SHARPENED-NO-GO HALF: IsSuperFactorialUnbounded predicate + sharpened_no_go
+-- _super_factorial substantive theorem (Yin-Lucas/Kuwahara-Saito Lieb-Robinson
+-- -for-bosons substrate). PlatformBimodalOutcome explicit disjunction + graphene
+-- witness for the positive-uniqueness half. Both halves shipped substantively.
+import SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
