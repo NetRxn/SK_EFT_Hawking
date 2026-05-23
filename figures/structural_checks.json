@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-04-29T17:00:44.878507+00:00",
+  "timestamp": "2026-05-23T08:15:25.877677+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -128,6 +128,12 @@
       "message": "xaxis title '' missing expected 'anyon'"
     },
     {
+      "figure": "fig_fk_dimensional_ladder",
+      "severity": "error",
+      "check": "generation",
+      "message": "Failed to generate: 'TRACKED_PROP'"
+    },
+    {
       "figure": "fig_phase5x_candidate_viability_matrix",
       "severity": "warning",
       "check": "axis_label",
@@ -170,40 +176,22 @@
       "message": "Color #2ca02c not in COLORS dict"
     },
     {
-      "figure": "fig_lambda_emerg_parameter_scan",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #2ca02c not in COLORS dict"
-    },
-    {
-      "figure": "fig_lambda_emerg_parameter_scan",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #9467bd not in COLORS dict"
-    },
-    {
-      "figure": "fig_lambda_emerg_parameter_scan",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #2ca02c not in COLORS dict"
-    },
-    {
-      "figure": "fig_torsion_obs_bound",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #2ca02c not in COLORS dict"
-    },
-    {
-      "figure": "fig_torsion_obs_bound",
-      "severity": "warning",
-      "check": "color_palette",
-      "message": "Color #9467bd not in COLORS dict"
-    },
-    {
       "figure": "fig_exact_solutions_catalog",
       "severity": "warning",
       "check": "axis_label",
       "message": "yaxis title 'g<sub>tt</sub>' missing expected 'T_H'"
+    },
+    {
+      "figure": "fig_tetrad_metric_equivalence",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "xaxis title '\u03bd index' missing expected '\u03b1_EC'"
+    },
+    {
+      "figure": "fig_tetrad_metric_equivalence",
+      "severity": "warning",
+      "check": "axis_label",
+      "message": "yaxis title '\u03bc index' missing expected 'EC residual'"
     },
     {
       "figure": "fig_ewbg_allowed_region",
@@ -264,10 +252,28 @@
       "severity": "warning",
       "check": "axis_label",
       "message": "xaxis title 'T / T_c' missing expected 'T/T_c'"
+    },
+    {
+      "figure": "i1_fig1_three_layer_architecture",
+      "severity": "warning",
+      "check": "trace_count",
+      "message": "Expected \u22651 traces, got 0"
+    },
+    {
+      "figure": "i1_fig2_pipeline_14_stages",
+      "severity": "warning",
+      "check": "trace_count",
+      "message": "Expected \u22651 traces, got 0"
+    },
+    {
+      "figure": "i1_fig3_sentence_state_clusters",
+      "severity": "warning",
+      "check": "trace_count",
+      "message": "Expected \u22651 traces, got 0"
     }
   ],
   "summary": {
-    "errors": 0,
+    "errors": 1,
     "warnings": 44
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-04-29T15:33:00.630349+00:00",
+  "generated": "2026-05-23T08:15:22.117869+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1856,16 +1856,39 @@
     {
       "name": "fig_fk_spectrum",
       "function": "fig_fk_spectrum",
-      "caption": "FK 8-Majorana spectrum: eigenvalues -7,-5,-1,+1,+3 with multiplicities 1,1,4,7,3. Gap Delta=2.",
+      "caption": "FK 8-Majorana spectrum (Cayley): eigenvalues -14,0,+2 with Spin(7) multiplicities 1,8,7. Gap Delta=14.",
       "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fk_spectrum.png",
       "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fk_spectrum.html",
-      "expected_traces": 5,
+      "expected_traces": 3,
       "expected_axes": {
         "yaxis": "energy"
       },
       "physics_checks": [],
       "color_keys": [
-        "dissipative"
+        "trento"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_fk_dimensional_ladder",
+      "function": "fig_fk_dimensional_ladder",
+      "caption": "Phase 5s Wave 4 bridge theorem: dimensional-ladder evidence for gapped_interface_axiom (1+1D and 2+1D PROVED, 3+1D AXIOMATIZED).",
+      "png_path": null,
+      "html_path": null,
+      "expected_traces": 0,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "sage",
+        "amber"
       ],
       "review_criteria": [
         "Axes labels readable and correct",
@@ -2308,6 +2331,110 @@
       ]
     },
     {
+      "name": "fig_energy_conditions_perfect_fluid_regions",
+      "function": "fig_energy_conditions_perfect_fluid_regions",
+      "caption": "Phase 6f Wave 3 \u2014 Perfect-fluid energy-condition regions in (\u03c1, p) plane (Minkowski rest frame, signature \u2212+++). Four-panel grid for NEC (\u03c1 + p \u2265 0), WEC (\u03c1 \u2265 0 AND \u03c1 + p \u2265 0), DEC (\u03c1 \u2265 |p|), SEC (\u03c1 + 3p \u2265 0 AND \u03c1 + p \u2265 0). Steel-blue = condition holds; amber-orange = violated; dotted black = boundary. The two named Lean counterexample witnesses are marked: \u2605 cosmologicalLambda at (\u03c1, p) = (1, -1) \u2014 satisfies NEC, WEC, DEC and violates SEC (Lean witness for `cosmologicalLambda_violates_SEC`); \u25c6 stiff fluid at (\u03c1, p) = (1, 2) \u2014 satisfies NEC, WEC, SEC and violates DEC (Lean witness for `stiff_fluid_violates_DEC`). The ghost-scalar NEC violator lives outside the perfect-fluid (\u03c1, p) plane (its T_\u03bc\u03bd = -n_\u03bc n_\u03bd is rank-1, not diagonal), so it appears as a separate rank-1 region not marked here. Lean: NEC, WEC, DEC, SEC, cosmologicalLambda_violates_SEC, stiff_fluid_violates_DEC. Source: Hawking & Ellis 1973 Table I \u00a74.3; Carroll 2004 \u00a74.6 Fig 4.7.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_energy_conditions_perfect_fluid_regions.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_energy_conditions_perfect_fluid_regions.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "\u03c1",
+        "yaxis": "p"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_exact_solutions_catalog",
+      "function": "fig_exact_solutions_catalog",
+      "caption": "Phase 6f Wave 4 \u2014 Exact solutions of the Einstein field equations: three-panel catalog visualization. Left panel: Schwarzschild g_tt(r) = -(1 - 2M/r) showing the t-direction character flip at the horizon r = 2M (g_tt < 0 timelike outside, g_tt = 0 null at horizon, g_tt > 0 spacelike inside). Center panel: cosmological constant \u039b vs sectional curvature K showing the linear \u039b = 3K branch with three anchored solutions: dS\u2084 at (K=1, \u039b=3) blue star, Minkowski at (K=0, \u039b=0) black diamond (the unique \u039b=0 vacuum), AdS\u2084 at (K=-1, \u039b=-3) orange star. Right panel: Schwarzschild BH thermodynamic invariants vs mass on log-log axes: T_H = 1/(8\u03c0M) (slope -1), A_H = 16\u03c0M\u00b2 (slope +2), S_BH = 4\u03c0M\u00b2 (slope +2, dotted = A_H/4). Lean: deSitter_lambda_vacuum_iff, minkowski_lambda_zero_iff_K_zero, schwarzschild_horizon_iff, schwarzschild_g_tt_outside_horizon_neg / _at_horizon_zero / _inside_horizon_pos, schwarzschild_T_H_times_M, schwarzschild_area_eq_16pi_M_sq, schwarzschild_S_BH_eq_4pi_M_sq. Source: Wald 1984 \u00a75.2, \u00a76.1; MTW 1973 \u00a717.2, \u00a731; Hawking 1975.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_exact_solutions_catalog.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_exact_solutions_catalog.html",
+      "expected_traces": 8,
+      "expected_axes": {
+        "xaxis": "M",
+        "yaxis": "T_H"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "sage"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_adm_constraint_surface",
+      "function": "fig_adm_constraint_surface",
+      "caption": "Phase 6f Wave 5 \u2014 ADM (3+1) constraint visualization. Two-panel figure. Left panel: Yamabe-form Hamiltonian constraint at moment-of-time-symmetry (K = 0): the load-bearing line \u00b3R = 16\u03c0G\u03c1 in (\u00b3R, \u03c1) plane (Lean: hamiltonianConstraint_moment_of_time_symmetry_iff). Coloring: blue/red diverging contour map of H_constraint = \u00b3R - 16\u03c0G\u03c1; black dashed line = H = 0 Yamabe locus; \u2605 Minkowski at (\u00b3R=0, \u03c1=0); \u25c6 Schwarzschild moment-of-time-symmetry sample (\u00b3R sourced by mass with matching \u03c1). Right panel: dS flat-slicing \u039b-H balance: \u039b = 3H\u00b2 parabola (Lean: deSitter_flat_slicing_hamiltonian_iff). The ADM Hamiltonian constraint at flat slicing balances iff \u039b = 3H\u00b2, recovering the 6f.4 cross-bridge deSitter_lambda_eq_three_H_squared at the ADM level. Markers \u2605 H=1/\u039b=3 + \u25c6 H=2/\u039b=12 anchor the parabola. Lean: hamiltonianConstraint_moment_of_time_symmetry_iff, deSitter_flat_slicing_hamiltonian_iff. Source: Wald 1984 \u00a710.2 + \u00a711.2; MTW 1973 \u00a721.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_adm_constraint_surface.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_adm_constraint_surface.html",
+      "expected_traces": 6,
+      "expected_axes": {
+        "xaxis": "\u00b3R",
+        "yaxis": "\u03c1"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_tetrad_metric_equivalence",
+      "function": "fig_tetrad_metric_equivalence",
+      "caption": "Phase 6f Wave 6 \u2014 Tetrad-metric formalism equivalence. Two-panel figure (closes Phase 6f). Left panel: tetrad-induced metric heatmap for the Minkowski tetrad e^a_\u03bc = \u03b4^a_\u03bc visualizing the named identity g_\u03bc\u03bd = \u03b7_{ab} e^a_\u03bc e^b_\u03bd = \u03b7_\u03bc\u03bd componentwise (red diagonal at (0,0)=-1, blue spatial diagonals (i,i)=+1, white off-diagonals = 0). Right panel: |EC residual| vs \u03b1_EC on log-y axis showing the Levi-Civita reduction at \u03b1_EC = 1 (vertical anchor); the residual vanishes at \u03b1_EC = 1 and grows linearly with \u03b1_EC - 1 in the deviation region. Cross-bridge to Phase 6e.6 EinsteinCartanExtension: tetrad formalism reduces to metric formalism iff the Einstein-Cartan rescaling parameter \u03b1_EC equals 1 (torsion-free Levi-Civita connection). Lean: minkowskiTetrad_induces_minkowski_metric, tetrad_levi_civita_iff_alpha_unity. Source: Ort\u00edn *Gravity and Strings* (2015) \u00a71.4; Hehl et al. *Rev. Mod. Phys.* **48**, 393 (1976).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_tetrad_metric_equivalence.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_tetrad_metric_equivalence.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "\u03b1_EC",
+        "yaxis": "EC residual"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
       "name": "fig_ewbg_allowed_region",
       "function": "fig_ewbg_allowed_region",
       "caption": "Phase 6c Wave 2 \u2014 EW baryogenesis verdict over the (chirality wall \u00d7 transition order) decomposition. Left panel: 2\u00d72 outcome matrix. Wall \u00d7 transition combinations give one allowed quadrant (cracked wall + first-order strong, BSM target marker, gold star) and three forbidden quadrants (gray): SM-as-is sits at (intact wall + crossover), doubly forbidden (red \u2717); SM+3\u03bd_R at (cracked wall + crossover), transition-blocked under H_KLRS (steel-blue diamond). Right panel: the (m_H, cubic E) phase diagram with the KLRS lattice endpoint at m_H = 72.4 GeV (CFH 1999, refining KLRS 1996). The full SM at m_H = 125.20 GeV sits to the right of the endpoint (overshoot ratio \u2248 1.73); strict-LO E = 0.01 first-order is moot because lattice corrections drive E \u2192 0 for m_H > endpoint. Lean: ewbg_forbidden_iff_wall_intact_or_not_viable, sm_no_nu_R_ewbg_doubly_forbidden, sm_klrs_overshoot_ratio_gt_threshold.",
@@ -2719,6 +2846,329 @@
       "color_keys": [
         "steel_blue",
         "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i1_fig1_three_layer_architecture",
+      "function": "fig_i1_three_layer_architecture",
+      "caption": "Three-layer verification architecture (paper I1 \u00a72). Layer 1 (Python numerics) feeds Layer 2 (Lean 4 formal proofs) feeds Layer 3 (Aristotle automated theorem prover); the curved feedback arrow back to Layer 1 represents counterexample-driven refinement (e.g. Aristotle run 270e77a0).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig1_three_layer_architecture.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig1_three_layer_architecture.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "sage",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i1_fig2_pipeline_14_stages",
+      "function": "fig_i1_pipeline_14_stages",
+      "caption": "Wave-execution pipeline (paper I1 \u00a76). Fifteen-grid layout of 14 stages; gates listed beneath each stage; new stages (3a Lean MCP loop, 13 Adversarial review, 14 Meta-process QI) highlighted in amber.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig2_pipeline_14_stages.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig2_pipeline_14_stages.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i1_fig3_sentence_state_clusters",
+      "function": "fig_i1_sentence_state_clusters",
+      "caption": "Sentence-state claim clusters across paper bundles (paper I1 \u00a78). Three papers, six sentences each; curved lines connect sentences sharing a claim_cluster; the amber cluster (C2) is cross_bundle: true and survives bundle consolidation.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig3_sentence_state_clusters.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig3_sentence_state_clusters.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "sage"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i1_fig4_firstorderkms_grid",
+      "function": "fig_i1_firstorderkms_grid",
+      "caption": "FirstOrderKMS 9-coefficient constraint grid (paper I1 \u00a73, Aristotle run 270e77a0). Left: original weak axiom constrains 4 of 9 coefficients; counterexample vector c = (0,0,0,0,0,0,0,1,0) highlighted in carmine. Right: strengthened axiom constrains all 9 (including i\u2083 = 0 explicitly).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig4_firstorderkms_grid.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig4_firstorderkms_grid.html",
+      "expected_traces": 2,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i1_fig5_gap_counterexample",
+      "function": "fig_i1_gap_counterexample",
+      "caption": "Gap-equation counterexample (paper I1 \u00a74). Gap solution \u0394(G) for N_f = 1, \u039b = 1: trivial branch \u0394 = 0 for G < G_c; non-trivial branch saturates \u039b at G* = 2/(1 \u2212 log 2) \u2248 6.518. The folklore claim \u0394 < \u039b fails for G \u2265 G* (corrected statement in Aristotle run 79e07d55).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig5_gap_counterexample.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig5_gap_counterexample.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "G",
+        "yaxis": "\u0394"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "horizon",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i1_fig6_chirality_wall_tree",
+      "function": "fig_i1_chirality_wall_tree",
+      "caption": "Chirality-wall axiom decomposition tree (paper I1 \u00a75). The original monolithic sm_no_nu_R_ewbg_doubly_forbidden (50-term goal, Aristotle-intractable) decomposes into 2 obstructions \u00d7 3 sub-lemmas = 9 leaves, each \u2264 12 terms; all 9 closed in a single Aristotle priority batch.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig6_chirality_wall_tree.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i1_fig6_chirality_wall_tree.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "carmine"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i2_fig1_categorical_hierarchy",
+      "function": "fig_i2_categorical_hierarchy",
+      "caption": "Categorical hierarchy poset (paper I2 \u00a73). Hasse-diagram of Monoidal -> Braided -> Balanced -> Pivotal -> Ribbon -> Fusion -> Modular: Mathlib substrate (steel blue) extended with the four library-original classes (amber) \u2014 BalancedCategory, PivotalCategory, RibbonCategory, FusionCategory \u2014 that culminate in ModularTensorData.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig1_categorical_hierarchy.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig1_categorical_hierarchy.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "dispersive",
+        "amber",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i2_fig2_module_dependencies",
+      "function": "fig_i2_module_dependencies",
+      "caption": "lean-tensor-categories module dependency graph (paper I2 \u00a77). 28 modules organized in 4 tiers \u2014 categorical hierarchy (4), Hopf algebra (4), number fields (9), MTC instances (11) \u2014 with Sankey flows from instances down through number fields and the Hopf layer to the categorical core.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig2_module_dependencies.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig2_module_dependencies.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "amber",
+        "Rb87",
+        "Na23",
+        "steel_blue"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i2_fig3_mtc_instances",
+      "function": "fig_i2_mtc_instances",
+      "caption": "MTC instances comparison (paper I2 \u00a76). Eight concrete modular-tensor-category instances (SU(2)_1..5, SU(3)_2, Ising, Fibonacci) with shipped-component status: simple-object count, representative q-dimensions, S-matrix, T-matrix, F-symbols, Verlinde verification, and number field of definition.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig3_mtc_instances.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig3_mtc_instances.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "dispersive",
+        "amber",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i2_fig4_jackknife_dependencies",
+      "function": "fig_i2_jackknife_dependencies",
+      "caption": "VerifiedJackknife theorem dependency graph (paper I2 \u00a72). Four project theorems (jackknifeVariance_nonneg, autocovariance_zero_nonneg, intAutocorrTime_uncorrelated, intAutocorrTime_ge_half) and the Mathlib lemmas they invoke (mul_nonneg, Finset.sum_nonneg, sq_nonneg, mul_self_nonneg). Each project theorem is annotated with its corresponding test in tests/test_jackknife.py.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig4_jackknife_dependencies.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig4_jackknife_dependencies.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "amber",
+        "dispersive",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "i2_fig5_mathlib_upstream_flow",
+      "function": "fig_i2_mathlib_upstream_flow",
+      "caption": "Mathlib upstream coordination flow (paper I2 \u00a77). The three relationship-building gates (R1 Zulip introduction, R2 AI-tool-assistance disclosure, R3 PR-strategy discussion) feed into the four-PR atomic chain (PR-1 QSqrt2/ComputableAdjoinRoot bridge, PR-2 PivotalCategory/RibbonCategory, PR-3 QuasitriangularBialgebra/RibbonHopfAlgebra, PR-4+ MTC instances). A separate cool-grey branch shows the software-only / JOSS-update fallback if Mathlib AI-content acceptance is delayed past six months.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig5_mathlib_upstream_flow.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/i2_fig5_mathlib_upstream_flow.html",
+      "expected_traces": 1,
+      "expected_axes": {},
+      "physics_checks": [],
+      "color_keys": [
+        "dispersive",
+        "amber",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_sk_length_bound_curve",
+      "function": "fig_sk_length_bound_curve",
+      "caption": "Phase 6t Wave 8 Stage 8 \u2014 Quantitative Solovay-Kitaev length bound L(\u03b5) \u2264 skLengthConst \u00b7 (log(1/\u03b5))^c with c = log 5 / log(3/2) \u2248 3.9694 (canonical Dawson-Nielsen exponent, in (3, 4)). Log-log curve over \u03b5 \u2208 [10\u207b\u00b9\u00b2, 10\u207b\u00b9] shown with linear (log 1/\u03b5)^1 and quartic (log 1/\u03b5)^4 reference scalings. Lean: SolovayKitaevLengthBound.skLengthExponent + SolovayKitaevLengthBound.skLengthConst + SolovayKitaevQuantitative.solovayKitaev_dawson_nielsen_quantitative_fibonacci.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sk_length_bound_curve.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_sk_length_bound_curve.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "precision",
+        "yaxis": "braid-word length"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "amber",
+        "steel_blue"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_fibonacci_braid_word_t_gate_example",
+      "function": "fig_fibonacci_braid_word_t_gate_example",
+      "caption": "Phase 6t Wave 8 Stage 8 \u2014 Fibonacci-anyon T-gate worked example: 8-letter braid word (\u03c3\u2081 \u03c3\u2082\u207b\u00b9 \u03c3\u2081 \u03c3\u2082 \u03c3\u2081\u207b\u00b9 \u03c3\u2082\u207b\u00b9 \u03c3\u2081 \u03c3\u2082) over BraidGroup 3 drawn as a strand diagram. Illustrative member of the Wave 3 \u03b5\u2080-net (\u03b5\u2080 \u2248 1.2 \u00d7 10\u207b\u2077) representing the shape of Wave 7 reference-compiler output. Lean: FibonacciEpsilonNet.lean (\u03b5\u2080-net) + SolovayKitaevApplications.lean (worked-example library).",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fibonacci_braid_word_t_gate_example.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fibonacci_braid_word_t_gate_example.html",
+      "expected_traces": 19,
+      "expected_axes": {
+        "xaxis": "generator position",
+        "yaxis": ""
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "sage"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

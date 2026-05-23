@@ -1758,6 +1758,45 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["dispersive", "amber", "cross"],
     ),
+    # ─── Phase 6t Wave 8 Stage 8 — Quantitative Solovay-Kitaev figures ───
+    FigureSpec(
+        name="fig_sk_length_bound_curve",
+        function="fig_sk_length_bound_curve",
+        caption=(
+            "Phase 6t Wave 8 Stage 8 — Quantitative Solovay-Kitaev "
+            "length bound L(ε) ≤ skLengthConst · (log(1/ε))^c with "
+            "c = log 5 / log(3/2) ≈ 3.9694 (canonical Dawson-Nielsen "
+            "exponent, in (3, 4)). Log-log curve over ε ∈ [10⁻¹², 10⁻¹] "
+            "shown with linear (log 1/ε)^1 and quartic (log 1/ε)^4 "
+            "reference scalings. Lean: "
+            "SolovayKitaevLengthBound.skLengthExponent + "
+            "SolovayKitaevLengthBound.skLengthConst + "
+            "SolovayKitaevQuantitative."
+            "solovayKitaev_dawson_nielsen_quantitative_fibonacci."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "precision", "yaxis": "braid-word length"},
+        physics_checks=[],
+        color_keys=["amber", "steel_blue"],
+    ),
+    FigureSpec(
+        name="fig_fibonacci_braid_word_t_gate_example",
+        function="fig_fibonacci_braid_word_t_gate_example",
+        caption=(
+            "Phase 6t Wave 8 Stage 8 — Fibonacci-anyon T-gate worked "
+            "example: 8-letter braid word "
+            "(σ₁ σ₂⁻¹ σ₁ σ₂ σ₁⁻¹ σ₂⁻¹ σ₁ σ₂) over BraidGroup 3 drawn "
+            "as a strand diagram. Illustrative member of the Wave 3 "
+            "ε₀-net (ε₀ ≈ 1.2 × 10⁻⁷) representing the shape of "
+            "Wave 7 reference-compiler output. Lean: "
+            "FibonacciEpsilonNet.lean (ε₀-net) + "
+            "SolovayKitaevApplications.lean (worked-example library)."
+        ),
+        needs_experiments=False, expected_traces=19,
+        expected_axes={"xaxis": "generator position", "yaxis": ""},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "sage"],
+    ),
 ]
 
 
@@ -1918,6 +1957,9 @@ def generate_figures() -> dict[str, Path]:
         fig_i2_mtc_instances,
         fig_i2_jackknife_dependencies,
         fig_i2_mathlib_upstream_flow,
+        # Phase 6t Wave 8 Stage 8 — Quantitative Solovay-Kitaev
+        fig_sk_length_bound_curve,
+        fig_fibonacci_braid_word_t_gate_example,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -2077,6 +2119,10 @@ def generate_figures() -> dict[str, Path]:
         "fig_i2_mtc_instances": fig_i2_mtc_instances,
         "fig_i2_jackknife_dependencies": fig_i2_jackknife_dependencies,
         "fig_i2_mathlib_upstream_flow": fig_i2_mathlib_upstream_flow,
+        # Phase 6t Wave 8 Stage 8 — Quantitative Solovay-Kitaev
+        "fig_sk_length_bound_curve": fig_sk_length_bound_curve,
+        "fig_fibonacci_braid_word_t_gate_example":
+            fig_fibonacci_braid_word_t_gate_example,
     }
 
     paths = {}
@@ -2271,6 +2317,9 @@ def run_structural_checks() -> list[CheckIssue]:
         fig_i2_mtc_instances,
         fig_i2_jackknife_dependencies,
         fig_i2_mathlib_upstream_flow,
+        # Phase 6t Wave 8 Stage 8 — Quantitative Solovay-Kitaev
+        fig_sk_length_bound_curve,
+        fig_fibonacci_braid_word_t_gate_example,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -2428,6 +2477,10 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_i2_mtc_instances": fig_i2_mtc_instances,
         "fig_i2_jackknife_dependencies": fig_i2_jackknife_dependencies,
         "fig_i2_mathlib_upstream_flow": fig_i2_mathlib_upstream_flow,
+        # Phase 6t Wave 8 Stage 8 — Quantitative Solovay-Kitaev
+        "fig_sk_length_bound_curve": fig_sk_length_bound_curve,
+        "fig_fibonacci_braid_word_t_gate_example":
+            fig_fibonacci_braid_word_t_gate_example,
     }
 
     issues: list[CheckIssue] = []
