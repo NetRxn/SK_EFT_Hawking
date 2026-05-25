@@ -48,7 +48,7 @@ Catalogued at `temporary/working-docs/phase6r/wave_1a_SymTFT_substrate.md` §4. 
 | 3 | `IsAndersonDualPinPlusRelation` | `SymTFT/PinBordism.lean` | Transitive on #1 + #2 |
 | 4 | `IsWittenYonekuraInflow` | `SymTFT/PinBordism.lean` | **W4 (APS-η + Witten-Yonekura)** |
 | 5 | `IsAndersonDualSpinBulk` | `SymTFT/PinBordism.lean` | Transitive on #1 + #2 (currently `KT ∧ AD`) |
-| 6 | `IsDMNOWittTrivialIffLagrangianAlgebra` | `SymTFT/LagrangianAlgebra.lean` | **W2 (MTC + Lagrangian-algebra substrate)** |
+| 6 | `IsDMNOBiconditional` (renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in W2.3 v2 adversarial-review remediation, 2026-05-25) | `SymTFT/LagrangianAlgebra.lean` | **W2 (MTC + Lagrangian-algebra substrate) — SHIPPED W2.3 v2** |
 | 7 | `IsKapustinSaulinaGappedBoundary` | `SymTFT/LagrangianAlgebra.lean` | Transitive on #6 (corollary at boundary side) |
 | 8 | `IsBoundarySymTFTCorrespondence` | `SymTFT/Basic.lean` | **W2** (predicate-level discharge) |
 | 9 | `IsToricCodeTwoLagrangianAlgebraStructure` | `SymTFT/ToricCodeLagrangian.lean` | **C1 (toric-code substantive instance, becomes specialization of W2)** |

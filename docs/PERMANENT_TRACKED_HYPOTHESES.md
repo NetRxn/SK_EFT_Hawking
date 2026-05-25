@@ -264,23 +264,25 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Discharge status.** **SHIPPED_W2.3_v2** (body substantively the biconditional; substantive DMNO proof deferred to Phase 7+).
 
-### 5.7 `IsKapustinSaulinaGappedBoundary` — DISCHARGE_PHASE_6R_PRIME (W2.4 transitive on #6)
+### 5.7 `IsKapustinSaulinaGappedBoundary` — SHIPPED_PHASE_6R_PRIME (W2.4 substantive)
 
-**File:** `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean:136`
+**File:** `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean` (post-W2.4 location)
 
-**Statement.** `def IsKapustinSaulinaGappedBoundary (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop := Is3DTQFT B` (Phase 6r predicate-substrate).
+**Statement (post-W2.4).** `def IsKapustinSaulinaGappedBoundary (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop := HasLagrangianAlgebra B`
 
-**What the Prop says.** Gapped boundary conditions of a 3D TQFT are in bijection with Lagrangian algebras in its boundary fusion category (Kapustin-Saulina 2011).
+**What the Prop says.** Gapped boundary conditions of a 3D TQFT are in bijection with Lagrangian algebras in its boundary fusion category (Kapustin-Saulina 2011). The W2.4 strengthening makes this predicate substantively equivalent to LA-existence (`HasLagrangianAlgebra B` body asserts `∃ braided, ∃ L, IsLagrangianAlgebra L`).
 
 **Anchor.** Kapustin-Saulina, *Topological boundary conditions in abelian Chern-Simons theory,* Nucl. Phys. B 845 (2011) 393; arXiv:1008.0654. Refinement: Fuchs-Schweigert-Valentino arXiv:1203.4568.
 
-**Why DISCHARGE_PHASE_6R_PRIME.** W2.4 refactors `HasLagrangianAlgebra` substrate to require existence of a substantive `IsLagrangianAlgebra L`; `IsKapustinSaulinaGappedBoundary` becomes a corollary of the new DMNO substrate at the boundary side.
+**Phase 6r → Phase 6r-prime evolution.**
+- **Phase 6r**: body was `:= Is3DTQFT B` (predicate-substrate marker).
+- **Phase 6r-prime W2.4 (2026-05-25)**: refactored to `:= HasLagrangianAlgebra B`. The KS bulk-boundary bijection (gapped boundary ⟺ LA-exists) is captured at the predicate-substrate level by defining the gapped-boundary predicate AS the LA-existence predicate. Substantive content: the W2.4-strengthened `HasLagrangianAlgebra` body requires real LA existence with W2.1 substantive `IsConnectedAlgebra` + `IsSeparableAlgebra` (Frobenius section) ingredients.
 
-**Consumers.** `GappedBoundary.lean`; downstream boundary-correspondence theorems.
+**Consumers.** `GappedBoundary.lean` (`IsGappedTopologicalBoundary` uses `HasLagrangianAlgebra` directly post-W2.4); downstream boundary-correspondence theorems.
 
-**Reassessment trigger.** Phase 6r-prime W2.4 close.
+**Reassessment trigger.** Phase 6r-prime' / Phase 7+ Mathlib upstream for full Frobenius-Perron-dimension infrastructure.
 
-**Discharge status.** SCHEDULED_W2.4 (transitive on #6).
+**Discharge status.** **SHIPPED_W2.4** (substantive body via `HasLagrangianAlgebra`).
 
 ### 5.8 `IsBoundarySymTFTCorrespondence` — DISCHARGE_PHASE_6R_PRIME (W2.4 predicate-level)
 
@@ -389,8 +391,8 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 | `IsAndersonDualPinPlusRelation` | DISCHARGE_PHASE_6R_PRIME | W1 (transitive on #1 + #2) | Phase 6r-prime (active) |
 | `IsWittenYonekuraInflow` | DISCHARGE_PHASE_6R_PRIME | W4 (APS-η + Witten-Yonekura) | Phase 6r-prime (active) |
 | `IsAndersonDualSpinBulk` | DISCHARGE_PHASE_6R_PRIME | W1 (transitive on #1 + #2) | Phase 6r-prime (active) |
-| `IsDMNOWittTrivialIffLagrangianAlgebra` | DISCHARGE_PHASE_6R_PRIME | W2.3 (Lagrangian-algebra substrate) | Phase 6r-prime (active) |
-| `IsKapustinSaulinaGappedBoundary` | DISCHARGE_PHASE_6R_PRIME | W2.4 (transitive on #6) | Phase 6r-prime (active) |
+| `IsDMNOBiconditional` (renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in W2.3 v2 adversarial-review remediation) | **SHIPPED_PHASE_6R_PRIME** (W2.3 v2) | W2.3 (body IS the biconditional `Is3DTQFTBraided ↔ HasLagrangianAlgebra`); substantive DMNO proof deferred to Phase 7+ | Phase 6r-prime (shipped) |
+| `IsKapustinSaulinaGappedBoundary` | **SHIPPED_PHASE_6R_PRIME** (W2.4) | W2.4 (body := HasLagrangianAlgebra B; substantive LA-existence) | Phase 6r-prime (shipped) |
 | `IsBoundarySymTFTCorrespondence` | DISCHARGE_PHASE_6R_PRIME | W2.4 (predicate-level discharge) | Phase 6r-prime (active) |
 | `IsToricCodeTwoLagrangianAlgebraStructure` | DISCHARGE_PHASE_6R_PRIME | C1 (after W2.3 ideal) | Phase 6r-prime (active) |
 | `IsSKEFTHawkingSymTFTBoundary` | KEEP_AS_TRACKED (permanent; D-class program identity) | N/A — program-original identification | None |

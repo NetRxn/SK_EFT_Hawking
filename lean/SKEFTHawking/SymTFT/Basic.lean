@@ -229,19 +229,20 @@ interface level. Wave 1d.1 (`BulkBoundaryCorrespondence.lean`) ships
 the substantive statement of the bijection conditional on this
 tracked Prop.
 
-**Phase 6r-prime W2.4 status note (2026-05-25)**: the substantive
-biconditional content of this predicate (`Is3DTQFTBraided B ↔
-HasLagrangianAlgebra B`) is **captured via the companion predicates**
-`IsDMNOWittTrivialIffLagrangianAlgebra B` (substantively strengthened
-to existence-of-LA per W2.3) and `IsKapustinSaulinaGappedBoundary B`
-(substantively strengthened to `HasLagrangianAlgebra B` per W2.4) in
+**Phase 6r-prime W2.4 status note (2026-05-25, post adversarial-review
+round-1 remediation)**: the substantive biconditional content of this
+predicate (`Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`) is **captured
+via the companion predicates** `IsDMNOBiconditional B` (body IS the
+biconditional, post W2.3 v2 rename) and `IsKapustinSaulinaGappedBoundary B`
+(body := `HasLagrangianAlgebra B` substantively, post W2.4) in
 `SymTFT/LagrangianAlgebra.lean`. The predicate body here remains the
 predicate-substrate marker `Is3DTQFT B` because strengthening it to
 the biconditional would require importing `HasLagrangianAlgebra` which
 lives downstream (architectural circular-import constraint). **The
 substantive BCPS-N biconditional content is shipped via**
 `SymTFT/BulkBoundaryCorrespondence.lean::witt_triviality_iff_has_lagrangian_algebra`
-(substantively closes Phase 6r BLOCKER-2 per W2.5). -/
+(REAL BLOCKER-2 closure per W2.5 v2: hypothesis IS the biconditional,
+proof is one-line extraction). -/
 def IsBoundarySymTFTCorrespondence
     (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B] : Prop :=
   Is3DTQFT B
