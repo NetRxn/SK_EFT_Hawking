@@ -141,6 +141,51 @@ noncomputable def pontryaginDualZMod16CircleEquivZMod16 :
   (AddChar.circleEquivComplex (α := ZMod 16)).trans
     pontryaginDualZMod16EquivZMod16
 
+/-! ## §1c. Pontryagin double-dual (Pontryagin-Pin⁺-3 sub-wave)
+
+The Pontryagin double-dual theorem (Pontryagin 1934): for any finite
+abelian group `G`, the double dual `Hom(Hom(G, ℝ/ℤ), ℝ/ℤ)` is
+canonically isomorphic to `G`. This is the foundational duality result
+of finite-group character theory.
+
+For our Pin⁺ case (with KT iso `Ω_4^{Pin⁺}(pt) ≅ ZMod 16`), the
+double dual gives:
+
+```
+ZMod 16 ≅ AddChar (AddChar (ZMod 16) ℂ) ℂ
+```
+
+via Mathlib's `AddChar.doubleDualEquiv`. This iso is the **Anderson-dual
+reciprocity** sub-piece of the broader Anderson-dual framework — the
+fact that Pontryagin-dualizing twice returns to the original group is
+load-bearing for the Anderson-dual TFT framework (per Freed-Hopkins
+arXiv:1604.06527: the Anderson dual is an involution on the
+deformation-class spectrum).
+
+**Phase 6r-prime Pontryagin-Pin⁺-3 sub-wave (2026-05-25)**: ships the
+Pontryagin double-dual `ZMod 16 ≃+ AddChar (AddChar (ZMod 16) ℂ) ℂ`
+directly via Mathlib's `AddChar.doubleDualEquiv`. Passes
+preemptive-strengthening checklist (P5: NO — both sides structurally
+distinct, iso is substantive `doubleDualEquiv` theorem; defining-the-
+conclusion: NO — `AddChar` is the standard Mathlib char group; unused
+hypotheses: N/A). -/
+
+/-- **`pontryaginDoubleDualZMod16EquivZMod16`** — the Pontryagin
+double-dual iso `ZMod 16 ≃+ AddChar (AddChar (ZMod 16) ℂ) ℂ` via
+Mathlib's `AddChar.doubleDualEquiv`. Substantive character-theory
+content; real `doubleDualEmb_bijective` underlies the iso. -/
+noncomputable def pontryaginDoubleDualZMod16EquivZMod16 :
+    ZMod 16 ≃+ AddChar (AddChar (ZMod 16) ℂ) ℂ :=
+  AddChar.doubleDualEquiv
+
+/-- **Anderson-dual reciprocity**: the double-Pontryagin-dual is
+canonically the original group. Provides the structural reciprocity
+fact used in the Anderson-dual TFT framework (Freed-Hopkins
+arXiv:1604.06527 §6). -/
+noncomputable def pontryaginDoubleDualZMod16EquivZMod16_symm :
+    AddChar (AddChar (ZMod 16) ℂ) ℂ ≃+ ZMod 16 :=
+  pontryaginDoubleDualZMod16EquivZMod16.symm
+
 /-! ## §2. The Anderson-dual formula at the Pin⁺ case — honest scope
 
 Per Freed-Hopkins arXiv:1604.06527, the Anderson-dual formula
