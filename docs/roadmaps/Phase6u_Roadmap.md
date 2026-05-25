@@ -813,6 +813,23 @@ only.
 **Remaining Phase 6u work**: CP2 adversarial review on the complete
 Track T-S chain + final strengthening sweep.
 
+**CP2 adversarial review PASSED**: 0 BLOCKER, 0 REQUIRED, 3 RECOMMENDED,
+5 ADVISORY findings. `lean_verify` confirms all 4 load-bearing headlines
+(`solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional`,
+`cliffordT_v4_witness_discharged`, `cliffordT_accPt_one_unconditional`,
+`exists_cliffordT_generator_not_commute_not_anticommute`) use ONLY
+standard kernel axioms `{propext, Classical.choice, Quot.sound}`. Pipeline
+invariants #10 + #15 verified clean. Trace identity + algebraic-integer
+obstruction chain manually verified. v4-witness discharge in
+`CliffordTV4WitnessDischarge.lean` is faithful step-for-step transcription
+of `H_Fib_v4_witness_unconditional` (Phase 5 Step 13). RECOMMENDED:
+  - R1: stale CP1 RC5 docstring (Niven path moots phase-factor concern).
+  - R2: length-bound conjunct decoupled from compiled word (Mathlib-PR
+    follow-up; affects all generating-set instances, not Clifford+T
+    specific).
+  - R3: duplicated `H_SU_T_SU_apply_0_1` private lemma in two files
+    (cosmetic; both private so no collision).
+
 **CP2 adversarial review (post T-S.2 discharge):** to run after T-S.2
 unconditional discharge ships; will verify the new substantive content
 across the entire Track T-S chain (no fresh-context review of T-S.5
