@@ -81,6 +81,7 @@ classification infrastructure not currently shipped in `SymTFT/PinBordism.lean`
 import SKEFTHawking.APSEta.SymTFTBridge
 import SKEFTHawking.SymTFT.PinBordism
 import SKEFTHawking.SymTFT.SpinSymTFT
+import SKEFTHawking.SymTFT.SubstrateEtaInvariant
 
 namespace SKEFTHawking.APSEta
 
@@ -176,6 +177,53 @@ theorem wave_3a_3_substrate_bulk_asymmetry_closure :
     IsSubstantivePinPlusSPTAsymmetry :=
   ⟨analogHawking_substrate_z16_trivial,
    sm_substrate_data_z16_cancels,
+   isSubstantivePinPlusSPTAsymmetry_holds⟩
+
+/-! ## §6. W5-η-bridge sub-wave — η-invariant cross-bridge to Phase 6r-prime W4-η substrate
+
+**Phase 6r-prime sub-wave W5-η-bridge-1 (2026-05-25)**: cross-bridge
+linking the existing `wave_3a_3_substrate_bulk_asymmetry_closure`
+substrate-data layer to the Phase 6r-prime W4-η-1+2 substantive
+η-invariant content (`SymTFT/SubstrateEtaInvariant.lean`).
+
+**Substantive content**: the SM-with-νR substrate `sm_substrate_data
+N_f` has z16_class = 16·N_f ≡ 0 mod 16 (anomaly-cancellation per
+`sm_substrate_data_z16_cancels`); the W4-η-1 substantive predicate
+`substrateEtaInvariant_zero_of_anomaly_cancels` then gives the
+η-invariant vanishes. The combined statement: SM-with-νR substrate has
+both ℤ/16-trivial z16_class AND ℝ/ℤ-trivial η-invariant. This is the
+**joint** content of the substrate-bulk symmetry at the Pin⁺ Anderson-
+dual TFT level.
+
+Per Witten-Yonekura arXiv:1909.08775: the η-invariant captures the
+anomaly content of the substrate in a way that respects the substrate's
+z16_class structure. The W5-η-bridge ties the Phase 6r tracked Props
+(KT, AD, GEM realization) to the W4-η-1+2 substantive η-formula. -/
+
+/-- **W5-η-bridge substantive theorem**: the SM-with-νR substrate has
+vanishing η-invariant per the W4-η-1 substantive Witten-Yonekura formula
+(η = z16_class / 16 mod 1 = 0 because z16_class = 16·N_f ≡ 0 mod 16). -/
+theorem sm_substrate_data_eta_invariant_vanishes (N_f : ℕ) :
+    SymTFT.substrateEtaInvariant (sm_substrate_data N_f) = 0 :=
+  SymTFT.substrateEtaInvariant_zero_of_anomaly_cancels
+    (sm_substrate_data N_f) (sm_substrate_data_z16_cancels N_f)
+
+/-- **W5-η-bridge cross-bridge closure**: composed substrate-bulk
+asymmetry result at BOTH the ℤ/16-counting layer (Phase 6r baseline)
+AND the η-invariant ℝ/ℤ-formula layer (W4-η-1 substantive). For the
+SM-with-νR substrate, both layers give the same trivial classification
+(z16_class = 0 ⟹ η = 0). For analog-Hawking substrates, same. The
+substantive realization-level asymmetry (per GEM 1808.00009) lives at
+the Pin⁺ SPT class layer, NOT at either of these substrate-data layers. -/
+theorem wave_3a_3_with_W4_η_cross_bridge_closure :
+    -- Phase 6r baseline: SM-with-νR substrate is z16-trivial
+    (∀ N_f : ℕ, Z16AnomalyCancels (sm_substrate_data N_f)) ∧
+    -- W4-η-1 substantive: SM-with-νR substrate has trivial η-invariant
+    (∀ N_f : ℕ, SymTFT.substrateEtaInvariant (sm_substrate_data N_f) = 0) ∧
+    -- Substantive Pin⁺ SPT realization asymmetry (GEM tracked Prop)
+    IsSubstantivePinPlusSPTAsymmetry :=
+  ⟨sm_substrate_data_z16_cancels,
+   sm_substrate_data_eta_invariant_vanishes,
    isSubstantivePinPlusSPTAsymmetry_holds⟩
 
 end SKEFTHawking.APSEta
