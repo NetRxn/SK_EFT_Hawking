@@ -4,6 +4,7 @@ import SKEFTHawking.APSEta.BECAcoustic
 import SKEFTHawking.APSEta.ADWHorizon
 import SKEFTHawking.APSEta.He3A
 import SKEFTHawking.SymTFTAudit.WittClass
+import SKEFTHawking.SymTFT.SubstrateEtaInvariant
 
 /-!
 # Phase 6o Wave 2a.6: APS-η ↔ Phase 6n Wave 1b SymTFT cross-bridge
@@ -188,5 +189,49 @@ theorem wave_2a_6_symtft_bridge_closure :
   ⟨witten_yonekura_BECAcoustic, witten_yonekura_ADWHorizon,
    witten_yonekura_He3A_placeholder,
    apsEta_to_symtft_chain⟩
+
+end SKEFTHawking.APSEta
+
+/-! ## §3. W4-η-5 — cross-bridge to W4-η Mathlib bridge
+
+**Phase 6r-prime sub-wave W4-η-5 (2026-05-25)**: cross-bridge tying
+the W4-η-1 `SymTFT.substrateEtaInvariant` (operating on the SymTFT
+`SubstrateConfig` struct with `z16_class : ZMod 16` + `theta_bar : ℝ`)
+to the existing Phase 6o `wittenYonekuraToZ16` (operating on the
+analog-Hawking `Substrate` inductive sum of BECAcoustic/ADWHorizon/
+He3AMovingDomainWall).
+
+**Substantive content**: defines an adapter `analogSubstrateConfig`
+that lifts each analog-Hawking platform to a SymTFT SubstrateConfig
+via the `wittenYonekuraToZ16` z16-class assignment, then composes with
+W4-η-1's `substrateEtaInvariant_zero_of_anomaly_cancels` to derive
+substrate-level η-vanishing for each platform. This demonstrates that
+the W4-η Mathlib bridge (`ZMod.toAddCircle`) composes correctly across
+the SymTFT ↔ APSEta module boundary. -/
+
+namespace SKEFTHawking.APSEta
+
+open SKEFTHawking.SymTFT SKEFTHawking.Z16AnomalyForcesThetaBar
+
+/-- **W4-η-5 adapter**: each analog-Hawking platform's
+`Substrate` lifts to a SymTFT `SubstrateConfig` whose `z16_class`
+is the Phase 6o `wittenYonekuraToZ16` image and whose `theta_bar`
+is 0 (the analog substrates have no nonperturbative-θ content at
+the substrate-data layer per Phase 6o Wave 2a). -/
+noncomputable def analogSubstrateConfig (s : Substrate) : SubstrateConfig where
+  z16_class := wittenYonekuraToZ16 s
+  theta_bar := 0
+
+/-- **W4-η-5 cross-bridge headline**: each analog-Hawking platform's
+SubstrateConfig adapter has vanishing Witten-Yonekura η-invariant
+in `ℝ/ℤ`. The proof composes Phase 6o `wittenYonekuraToZ16_zero` with
+W4-η-1's `substrateEtaInvariant_zero_of_anomaly_cancels`, demonstrating
+the W4-η Mathlib bridge composes correctly with the analog-Hawking
+substrate layer. -/
+theorem analogSubstrateConfig_eta_invariant_vanishes (s : Substrate) :
+    substrateEtaInvariant (analogSubstrateConfig s) = 0 := by
+  apply substrateEtaInvariant_zero_of_anomaly_cancels
+  show wittenYonekuraToZ16 s = 0
+  exact wittenYonekuraToZ16_zero s
 
 end SKEFTHawking.APSEta
