@@ -260,6 +260,12 @@ import SKEFTHawking.SymTFT.ToricCodeLagrangian
 import SKEFTHawking.SymTFT.BulkBoundaryCorrespondence
 -- Wave 2a — Spin-SymTFT axiomatization (Pin⁺ Z/16 + Anderson-dual + W-Y inflow)
 import SKEFTHawking.SymTFT.PinBordism
+-- Phase 6r-prime sub-wave (Pontryagin-Pin⁺-1, 2026-05-25): substantive
+-- Pontryagin-dual computation `AddChar (ZMod 16) ℂ ≃+ ZMod 16` via
+-- Mathlib `AddChar.zmodAddEquiv`. Substantive character-theory ship —
+-- captures the Pontryagin-dual sub-piece of the Anderson-dual formula
+-- `TP_5(Pin⁺) ≅ Hom(Ω_4^Pin⁺, ℝ/ℤ)` (with Ω_5^Pin⁺ = 0).
+import SKEFTHawking.SymTFT.PontryaginDualPinPlus
 import SKEFTHawking.SymTFT.SpinSymTFT
 import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
 -- Wave 2b — Z₁₆ classification via Spin-SymTFT
