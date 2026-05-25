@@ -129,6 +129,10 @@ theorem T_SU_mat_never_anticommute_ts
   -- Show X = 0 entrywise. We extract each (i,j) entry from h_sum_zero.
   -- For T_SU diagonal, (T_SU·X + X·T_SU)(i,j) = T_SU(i,i)·X(i,j) + X(i,j)·T_SU(j,j).
   -- (0,0): 2α·X(0,0) = 0; (0,1): (α+β)·X(0,1) = 0; (1,0): same; (1,1): 2β·X(1,1) = 0.
+  -- Fin 2 literal bridges (simp/Fin.sum_univ_two emits `0`/`1` literal form;
+  -- our T_SU lookups use `⟨0/1, by decide⟩` form; these are rfl-equal).
+  have h0eq : (0 : Fin 2) = ⟨0, by decide⟩ := rfl
+  have h1eq : (1 : Fin 2) = ⟨1, by decide⟩ := rfl
   have h_T00 : T_SU_mat ⟨0, by decide⟩ ⟨0, by decide⟩ = α := rfl
   have h_T01 : T_SU_mat ⟨0, by decide⟩ ⟨1, by decide⟩ = 0 := rfl
   have h_T10 : T_SU_mat ⟨1, by decide⟩ ⟨0, by decide⟩ = 0 := rfl
@@ -136,46 +140,43 @@ theorem T_SU_mat_never_anticommute_ts
   have h_X00_zero : X ⟨0, by decide⟩ ⟨0, by decide⟩ = 0 := by
     have h_entry := congr_fun (congr_fun h_sum_zero ⟨0, by decide⟩) ⟨0, by decide⟩
     simp only [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two,
-               h_T00, h_T01, h_T10, h_T11,
-               Matrix.zero_apply, zero_mul, mul_zero, add_zero, zero_add] at h_entry
-    -- h_entry : α * X(0,0) + X(0,0) * α = 0
+               Matrix.zero_apply] at h_entry
+    rw [h0eq, h1eq, h_T00, h_T01, h_T10] at h_entry
+    -- h_entry should now be: α * X(0,0) + 0 * X(1,0) + (X(0,0) * α + X(0,1) * 0) = 0
     have h_eq : (2 * α) * X ⟨0, by decide⟩ ⟨0, by decide⟩ = 0 := by
       linear_combination h_entry
     exact (mul_eq_zero.mp h_eq).resolve_left h2α_ne
   have h_X01_zero : X ⟨0, by decide⟩ ⟨1, by decide⟩ = 0 := by
     have h_entry := congr_fun (congr_fun h_sum_zero ⟨0, by decide⟩) ⟨1, by decide⟩
     simp only [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two,
-               h_T00, h_T01, h_T10, h_T11,
-               Matrix.zero_apply, zero_mul, mul_zero, add_zero, zero_add] at h_entry
-    -- h_entry : α * X(0,1) + X(0,1) * β = 0
+               Matrix.zero_apply] at h_entry
+    rw [h0eq, h1eq, h_T00, h_T01, h_T11] at h_entry
     have h_eq : (α + β) * X ⟨0, by decide⟩ ⟨1, by decide⟩ = 0 := by
       linear_combination h_entry
     exact (mul_eq_zero.mp h_eq).resolve_left hαβ_ne
   have h_X10_zero : X ⟨1, by decide⟩ ⟨0, by decide⟩ = 0 := by
     have h_entry := congr_fun (congr_fun h_sum_zero ⟨1, by decide⟩) ⟨0, by decide⟩
     simp only [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two,
-               h_T00, h_T01, h_T10, h_T11,
-               Matrix.zero_apply, zero_mul, mul_zero, add_zero, zero_add] at h_entry
+               Matrix.zero_apply] at h_entry
+    rw [h0eq, h1eq, h_T00, h_T10, h_T11] at h_entry
     have h_eq : (α + β) * X ⟨1, by decide⟩ ⟨0, by decide⟩ = 0 := by
       linear_combination h_entry
     exact (mul_eq_zero.mp h_eq).resolve_left hαβ_ne
   have h_X11_zero : X ⟨1, by decide⟩ ⟨1, by decide⟩ = 0 := by
     have h_entry := congr_fun (congr_fun h_sum_zero ⟨1, by decide⟩) ⟨1, by decide⟩
     simp only [Matrix.add_apply, Matrix.mul_apply, Fin.sum_univ_two,
-               h_T00, h_T01, h_T10, h_T11,
-               Matrix.zero_apply, zero_mul, mul_zero, add_zero, zero_add] at h_entry
+               Matrix.zero_apply] at h_entry
+    rw [h0eq, h1eq, h_T01, h_T10, h_T11] at h_entry
     have h_eq : (2 * β) * X ⟨1, by decide⟩ ⟨1, by decide⟩ = 0 := by
       linear_combination h_entry
     exact (mul_eq_zero.mp h_eq).resolve_left h2β_ne
-  -- All entries are zero, so X = 0.
+  -- All entries are zero, so X = 0. Use Matrix.ext with Fin.forall_fin_two-style.
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    · show X _ _ = 0
-      first
-      | exact h_X00_zero
-      | exact h_X01_zero
-      | exact h_X10_zero
-      | exact h_X11_zero
+  fin_cases i <;> fin_cases j
+  · exact h_X00_zero
+  · exact h_X01_zero
+  · exact h_X10_zero
+  · exact h_X11_zero
 
 
 /-! ## Sub-lemma 2: T_SU commutator characterization
@@ -199,18 +200,12 @@ theorem T_SU_mat_commute_ts_iff_paulI_z
 
 /-! ## Sub-lemma 3: H_SU doesn't commute with c·paulI_z (c ≠ 0)
 
-Strategy: H_SU = (i/√2)·!![1, 1; 1, -1], paulI_z = !![i, 0; 0, -i].
-
-H_SU · paulI_z = (i/√2) · !![i·1 + 0, 0 + 1·(-i); i·1 + 0, 0 + (-1)·(-i)]
-              = (i/√2) · !![i, -i; i, i]
-
-paulI_z · H_SU = !![i·(i/√2) + 0·(i/√2), i·(i/√2) + 0·(-i/√2);
-                    0 + (-i)·(i/√2), 0 + (-i)·(-i/√2)]
-              = (i/√2) · !![i, i; -i, i]  (wait let me redo)
-
-Hmm let me just compute directly. The key: H_SU and paulI_z have an
-explicit commutator, and that commutator is non-zero (proportional to
-σ_x - σ_x = ... actually a non-trivial Pauli). -/
+Strategy: at entry (0,1), LHS = c/√2 and RHS = -c/√2; equality forces
+`2c/√2 = 0`, hence `c = 0`. WIP — full proof attempted but blocked on
+`simp` not fully reducing `vecCons`-form matrix-element lookups; the
+substantive math is correct, the Lean-DSL friction is in the index
+representation. Will be filled in next session via alternative tactic
+chain (likely use `Matrix.mul_fin_two` or explicit `show`+`decide`). -/
 theorem H_SU_mat_not_commute_paulI_z_real_smul
     (c : ℝ) (h_ne : (c : ℂ) ≠ 0) :
     H_SU_mat * ((c : ℂ) • SU2LieAlgebra.paulI_z) ≠
@@ -219,8 +214,7 @@ theorem H_SU_mat_not_commute_paulI_z_real_smul
 
 /-! ## Sub-lemma 4: H_SU doesn't anti-commute with c·paulI_z (c ≠ 0)
 
-Strategy: similar entrywise computation. The anti-commutator equals
-c·(i·√2)·I (a non-zero scalar matrix), so it vanishes iff c = 0. -/
+Same shape as sub-lemma 3 with anti-commutator at (0,0). -/
 theorem H_SU_mat_not_anticommute_paulI_z_real_smul
     (c : ℝ) (h_ne : (c : ℂ) ≠ 0) :
     H_SU_mat * ((c : ℂ) • SU2LieAlgebra.paulI_z) ≠
