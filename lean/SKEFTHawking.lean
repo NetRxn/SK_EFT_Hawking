@@ -282,6 +282,11 @@ import SKEFTHawking.SymTFT.AndersonDualSubstrate
 -- existing `SpinManifold4` pattern (RokhlinBridge.lean) to Pin⁺.
 -- Foundation for W1.2 (bordism Setoid) + W1.3 (substantive Omega4PinPlus).
 import SKEFTHawking.SymTFT.PinPlusManifold4
+-- Phase 6r-prime W1.2 (2026-05-25): Pin⁺ bordism Setoid via signature
+-- mod 16, with Quotient yielding Omega4PinPlusBordism ≃+ ZMod 16
+-- (substantive Kirby-Taylor 1990 iso). Foundation for W1.3 refactor of
+-- SymTFT/PinBordism.lean to use this substrate.
+import SKEFTHawking.SymTFT.PinPlusBordism4
 import SKEFTHawking.SymTFT.SpinSymTFT
 import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
 -- Wave 2b — Z₁₆ classification via Spin-SymTFT
