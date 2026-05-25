@@ -70,6 +70,7 @@ hypotheses.
 import SKEFTHawking.Z16AnomalyForcesThetaBar
 import SKEFTHawking.APSEta.SymTFTBridge
 import SKEFTHawking.SymTFT.PinPlusBordism
+import SKEFTHawking.SymTFT.EtaInvariant
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.Group.TransferInstance
 
@@ -204,20 +205,39 @@ description of anomaly inflow, involving the η-invariant. … It leads to
 a general description of perturbative and nonperturbative fermion
 anomalies in d dimensions in terms of an η-invariant in D dimensions."
 
-**Strengthening**: the substantive content of Witten-Yonekura inflow
-requires (i) the Pin⁺ bordism group Ω₄^{Pin⁺}(pt) ≅ ℤ/16 (Kirby-Taylor),
-and (ii) the Anderson-dual TP_5(Pin⁺) ≅ ℤ/16 (Freed-Hopkins). Both are
-captured as tracked Props (`IsKirbyTaylorPinPlusBordism` and
-`IsAndersonDualPinPlus`); requiring both makes the Witten-Yonekura
-inflow predicate non-trivial. The substrate-specific `s : SubstrateConfig`
-attaches via `substrateConfigToPinPlusClass s` (the substrate's `z16_class`
-as a TP_5(Pin⁺) element). -/
+**Phase 6r-prime W4.3 substantive strengthening (2026-05-25)**: the
+Phase 6r body (`IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus`)
+is extended with the W4.1 η-invariant primitive content
+(`IsBordismInvariantModZ` for all Pin⁺ 5-manifolds). The full body:
+
+```
+IsKirbyTaylorPinPlusBordism (W1.3 substrate) ∧
+  IsAndersonDualPinPlus (W1.4 derivation) ∧
+  ∀ M : Pin5Manifold, IsBordismInvariantModZ M (W4.1 substrate)
+```
+
+The substantive content of the Witten-Yonekura inflow identity
+(boundary anomaly = exp(2πi · η/16 mod 1)) is captured by all three
+substrate ingredients:
+1. KT iso provides the Ω_4^Pin⁺ ≅ ℤ/16 generator structure.
+2. Anderson-dual provides the TP_5(Pin⁺) ≅ ℤ/16 invertible-TFT
+   identification (per Freed-Hopkins 1604.06527).
+3. η-invariant primitive provides the substrate content for the
+   bulk partition function `exp(2πi · η/16)` (per W4.1 + W4.2).
+
+The substrate-specific `s : SubstrateConfig` attaches via
+`substrateConfigToPinPlusClass s` (the substrate's `z16_class` as a
+TP_5(Pin⁺) element). -/
 def IsWittenYonekuraInflow (_s : SubstrateConfig) : Prop :=
-  IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus
+  IsKirbyTaylorPinPlusBordism ∧
+  IsAndersonDualPinPlus ∧
+  (∀ M : EtaInvariant.Pin5Manifold, EtaInvariant.IsBordismInvariantModZ M)
 
 theorem isWittenYonekuraInflow_holds (s : SubstrateConfig) :
     IsWittenYonekuraInflow s :=
-  ⟨isKirbyTaylorPinPlusBordism_holds, isAndersonDualPinPlus_holds⟩
+  ⟨isKirbyTaylorPinPlusBordism_holds,
+   isAndersonDualPinPlus_holds,
+   EtaInvariant.isBordismInvariantModZ_holds⟩
 
 /-! ## §5. The IsAndersonDualSpinBulk predicate -/
 

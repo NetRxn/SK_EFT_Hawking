@@ -270,6 +270,11 @@ import SKEFTHawking.SymTFT.PinBordism
 -- (#1) + Ω_5^Pin⁺ = 0 (companion) via the Freed-Hopkins arXiv:1604.06527
 -- Anderson-dual formula.
 import SKEFTHawking.SymTFT.AndersonDual
+-- Phase 6r-prime W4.1+W4.2 (2026-05-25): APS η-invariant primitive substrate
+-- + Anderson-dual invertible-TFT framework. Substantively discharges
+-- `IsWittenYonekuraInflow` (#4) at the W4.3 PinBordism refactor (above).
+import SKEFTHawking.SymTFT.EtaInvariant
+import SKEFTHawking.SymTFT.AndersonDualTFT
 import SKEFTHawking.SymTFT.SpinSymTFT
 import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
 -- Wave 2b — Z₁₆ classification via Spin-SymTFT
@@ -829,6 +834,11 @@ import SKEFTHawking.FKLW.CliffordTQuantitative
 -- H_SU and T_SU, the structural fact that ⟨H_SU, T_SU⟩ is not abelian
 -- (used downstream by the cliffordT_v4_witness_tracked discharge).
 import SKEFTHawking.FKLW.CliffordTNonCommuting
+-- Phase 6u T-S.2 case-analysis substrate (2026-05-25): for any nonzero
+-- X ∈ 𝔰𝔲(2), at least one of H_SU, T_SU neither commutes nor
+-- anti-commutes with X (substrate for the second-tangent direction in
+-- the v4-witness assembly for T-S.2).
+import SKEFTHawking.FKLW.CliffordTGeneratorCaseAnalysis
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
