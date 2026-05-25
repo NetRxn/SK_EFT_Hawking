@@ -104,6 +104,27 @@ where
 > A non-degenerate braided fusion category `B` is Witt-trivial (= a
 > Drinfeld center) iff it admits a Lagrangian algebra.
 
+**Phase 6r-prime W2.3 substantive ship (2026-05-25)**: replaces the
+Phase 6r `:= Is3DTQFTBraided B` predicate-substrate redundancy
+(BLOCKER-2 from Phase 6r adversarial review round 1: predicate body
+defeq to one of its hypotheses) with the substantive
+existence-of-Lagrangian-algebra body:
+
+```
+∃ (braided : BraidedCategory B), letI := braided
+  ∃ (L : B) (_ : MonObj L) (_ : ComonObj L), IsLagrangianAlgebra L
+```
+
+The new body asserts B carries a braided structure AND there exists a
+substantive Lagrangian algebra in it (per the W2.1-strengthened
+predicates: `IsConnectedAlgebra L = Mono (MonObj.one)` +
+`IsSeparableAlgebra L = ∃ s, s ≫ μ = 𝟙`). This is the **forward
+direction** of DMNO 2010 (Lagrangian-algebra existence ⇒ Witt-trivial /
+Drinfeld center realization). The **reverse direction** (Witt-trivial
+⇒ Lagrangian algebra) is the load-bearing categorical-algebra content
+supplied externally per DMNO 2010 arXiv:1009.2117 (consumers carry the
+biconditional as a tracked Prop with primary-source citation).
+
 Per Wave 3a.1 §Q2(c) Recommendation 3, this is the load-bearing
 DMNO 2010 anchor; consumers (Wave 1d.1 `BulkBoundaryCorrespondence.lean`,
 Wave 3a.3 `CrossBridges/SMMatterAsSymTFTBoundary.lean`) take this as
@@ -114,17 +135,45 @@ centers of fusion categories as non-degenerate braided fusion
 categories containing a Lagrangian algebra." -/
 def IsDMNOWittTrivialIffLagrangianAlgebra
     (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
-  -- Predicate-substrate body: braided structure exists on `B`.
-  -- Substantive content (the biconditional with Lagrangian-algebra
-  -- existence) is supplied externally per DMNO 2010.
-  Is3DTQFTBraided B
+  ∃ (braided : BraidedCategory B),
+    letI := braided
+    ∃ (L : B) (_ : MonObj L) (_ : ComonObj L),
+      IsLagrangianAlgebra L
 
-/-! ## §3. The Kapustin-Saulina gapped-boundary correspondence (tracked Prop) -/
+/-! ## §3. The `HasLagrangianAlgebra` predicate (W2.4 substantive)
+
+**Phase 6r-prime W2.4 substantive ship (2026-05-25)**: moved here from
+`SymTFT/GappedBoundary.lean` so that `IsKapustinSaulinaGappedBoundary`
+can substantively reference it without circular imports. The body
+is the substantive existence-of-Lagrangian-algebra statement (same
+as the W2.3-strengthened `IsDMNOWittTrivialIffLagrangianAlgebra`
+body). -/
+
+/-- **`HasLagrangianAlgebra B`** — predicate on a SymTFT bulk `B`
+stating that `B` admits at least one Lagrangian algebra (in the DMNO
+2010 sense from `IsLagrangianAlgebra` above).
+
+**Phase 6r-prime W2.4 substantive body**: existence of (braided
+structure, Lagrangian algebra in B with that braided structure). -/
+def HasLagrangianAlgebra
+    (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
+  ∃ (braided : BraidedCategory B),
+    letI := braided
+    ∃ (L : B) (_ : MonObj L) (_ : ComonObj L),
+      IsLagrangianAlgebra L
+
+/-! ## §4. The Kapustin-Saulina gapped-boundary correspondence (tracked Prop) -/
 
 /-- **`IsKapustinSaulinaGappedBoundary B`** — Kapustin-Saulina 2011
 (arXiv:1008.0654, Nucl. Phys. B 845 (2011) 393) tracked Prop encoding
 the load-bearing statement that gapped boundary conditions of a 3D TQFT
 are in bijection with Lagrangian algebras in its boundary fusion category.
+
+**Phase 6r-prime W2.4 substantive ship (2026-05-25)**: replaces the
+Phase 6r `:= Is3DTQFT B` predicate-substrate placeholder with the
+substantive `HasLagrangianAlgebra B` body. By the KS 2011 bulk-boundary
+bijection, "B has a gapped boundary" ⟺ "B admits a Lagrangian algebra"
+— the predicate body is now this substantive existence statement.
 
 Per Wave 3a.1 §Q2(c) Recommendation 3, refined by Fuchs-Schweigert-
 Valentino arXiv:1203.4568, Commun. Math. Phys. 321 (2013) 543 to the
@@ -135,6 +184,6 @@ to Lagrangian subgroups in the finite abelian group classifying bulk
 line operators." -/
 def IsKapustinSaulinaGappedBoundary
     (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
-  Is3DTQFT B
+  HasLagrangianAlgebra B
 
 end SKEFTHawking.SymTFT

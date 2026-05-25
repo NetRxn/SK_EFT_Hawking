@@ -53,23 +53,15 @@ the tracked Prop `IsKapustinSaulinaGappedBoundary`. -/
 def IsGapped (C : Type u) [Category.{v} C] [MonoidalCategory C] : Prop :=
   True
 
-/-! ## §2. The `HasLagrangianAlgebra` predicate -/
+/-! ## §2. The `HasLagrangianAlgebra` predicate (re-exported from `LagrangianAlgebra`)
 
-/-- **`HasLagrangianAlgebra B`** — predicate on a SymTFT bulk `B`
-stating that `B` admits at least one Lagrangian algebra (in the DMNO
-2010 sense from `LagrangianAlgebra.lean`).
-
-Per Wave 3a.1 §Q2 + Q3, this is the load-bearing predicate that
-parameterizes the bulk-boundary correspondence: a SymTFT bulk has a
-gapped Lagrangian-algebra boundary iff `HasLagrangianAlgebra` holds,
-iff (by DMNO) the bulk is Witt-trivial.
-
-The predicate-substrate body records that `B` satisfies `Is3DTQFT`;
-the substantive Lagrangian-algebra existence is the tracked Prop
-content supplied via `IsDMNOWittTrivialIffLagrangianAlgebra`. -/
-def HasLagrangianAlgebra
-    (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
-  Is3DTQFT B
+**Phase 6r-prime W2.4 substantive ship (2026-05-25)**: `HasLagrangianAlgebra`
+moved to `SymTFT/LagrangianAlgebra.lean` to break a circular-import
+issue with the W2.4-strengthened `IsKapustinSaulinaGappedBoundary`
+(which now references `HasLagrangianAlgebra` substantively). The
+substantive body is the existence-of-(braided structure, Lagrangian
+algebra) per W2.3/W2.4 strengthening. This file's downstream consumers
+get `HasLagrangianAlgebra` via the import of `LagrangianAlgebra`. -/
 
 /-! ## §3. Gapped topological boundaries
 

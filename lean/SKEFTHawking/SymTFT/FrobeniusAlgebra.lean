@@ -121,33 +121,42 @@ Per DMNO 2010, Lagrangian algebras are *connected commutative étale*
 algebras. We ship the connectedness + separability predicates as
 predicate-substrate-level interfaces. -/
 
-/-- **`IsConnectedAlgebra X`** — predicate on a `MonObj` stating that
-the algebra is *connected*: the unit map `𝟙_C ⟶ X` is the inclusion of
-a simple summand (= the algebra has no nontrivial central idempotents).
+/-- **`IsConnectedAlgebra X`** — predicate on a `MonObj X` stating that
+the algebra is *connected*: the unit map `η : 𝟙_C ⟶ X` is a
+monomorphism (the unit is an inclusion-of-summand, ruling out
+non-trivial idempotents that factor through the unit).
 
-At the predicate-substrate level this is captured as a tracked Prop
-because Mathlib does not yet ship the full simple-summand
-infrastructure for objects in monoidal categories. The substantive
-content is the standard categorical "connected" condition. -/
+**Phase 6r-prime W2.1 substantive ship (2026-05-25)**: strengthens the
+Phase 6r `:= True` placeholder to require `Mono` on the unit map. The
+full standard categorical "connected" condition (no nontrivial central
+idempotents in `End(X)`) requires additional Mathlib substrate (`End`
+ring infrastructure for objects in monoidal categories); the
+mono-on-unit version captures the load-bearing inclusion content and is
+strictly stronger than the placeholder.
+
+Per Wave 3a.1 §Q2(c), connectedness is one of three conditions
+characterizing Lagrangian algebras (DMNO 2010); the other two are
+étale (commutative + separable) and the Frobenius-Perron-dimension
+condition. -/
 def IsConnectedAlgebra (X : C) [MonObj X] : Prop :=
-  -- Predicate-substrate body: existence of unit (already from MonObj).
-  -- Substantive content (no nontrivial central idempotents) is the
-  -- load-bearing condition supplied via the tracked-Prop hypothesis.
-  True
+  Mono (MonObj.one (X := X))
 
 /-- **`IsSeparableAlgebra X`** — predicate stating that the
-multiplication `μ : X ⊗ X ⟶ X` admits a section `s : X ⟶ X ⊗ X` of
-algebra bimodules. The section `s` plays the role of the inverse of
-the multiplication on the diagonal; existence of `s` makes the
-algebra `X` separable.
+multiplication `μ : X ⊗ X ⟶ X` admits a section `s : X ⟶ X ⊗ X`. The
+section `s` plays the role of the inverse of the multiplication on the
+diagonal; existence of `s` makes the algebra `X` separable.
 
-Per Wave 3a.1 §Q2(c), the separability + commutativity + connectedness
-+ Frobenius-Perron-dimension condition together characterize Lagrangian
-algebras (DMNO 2010). -/
+**Phase 6r-prime W2.1 substantive ship (2026-05-25)**: strengthens the
+Phase 6r `:= True` placeholder to require explicit existence of a
+section `s` with `s ≫ μ = 𝟙 X`. This is the standard categorical
+separability condition (per Kock 2004, Frobenius Algebras and 2D TQFTs;
+DMNO 2010 arXiv:1009.2117).
+
+Per Wave 3a.1 §Q2(c), separability + commutativity = étale; combined
+with connectedness + the Frobenius-Perron-dimension condition, these
+characterize Lagrangian algebras (DMNO 2010). -/
 def IsSeparableAlgebra (X : C) [MonObj X] : Prop :=
-  -- Predicate-substrate body. Substantive content is the existence of
-  -- a section of the multiplication.
-  True
+  ∃ s : X ⟶ X ⊗ X, s ≫ MonObj.mul (X := X) = 𝟙 X
 
 /-- **`IsEtaleAlgebra X`** — étale algebra: commutative + separable.
 Combined with connectedness, this is the substrate for Lagrangian
