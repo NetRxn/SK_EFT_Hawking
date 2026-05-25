@@ -762,6 +762,31 @@ substantive discharge:
 
 Then CP2 adversarial review + final strengthening sweep.
 
+**Mid-session progress (after Agent A return):**
+
+  - Agent A `a3542bbfe27d01e4a` completed. Sub-lemmas 2, 3, 4 + composition
+    headline `exists_cliffordT_generator_not_commute_not_anticommute`
+    all shipped in `CliffordTGeneratorCaseAnalysis.lean` (committed in
+    `df1f211`). File now in root imports. Technical resolution: dropped
+    `Matrix.smul_apply` from the simp set (interfered with vecCons
+    reduction), used `Complex.I_sq` + `linear_combination` for the
+    `Complex.I * Complex.I` normalization. Build clean at 8672 jobs.
+
+  - Conditional v4-witness discharge shipped: `cliffordT_v4_witness_from_accPt`
+    in new `CliffordTV4WitnessDischarge.lean` (commit `2fa0330`, ~140 LoC
+    kernel-only). Direct transcription of Phase 5 Step 13's
+    `H_Fib_v4_witness_unconditional` with H_SU/T_SU substitutions.
+    Discharges `cliffordT_v4_witness_tracked` GIVEN `AccPt 1 (Filter.principal
+    (H_of_G cliffordTGS : Set _))`. The AccPt 1 hypothesis is the only
+    remaining substantive piece, awaiting Agent B's Niven-based infinite-order
+    proof.
+
+  - Agent B `a95346d894d2619ea` still in-flight (Niven-based infinite-order).
+    Once Agent B ships `cliffordT_accPt_one_unconditional`, composing it
+    with `cliffordT_v4_witness_from_accPt` yields
+    `cliffordT_v4_witness_discharged` (UNCONDITIONAL discharge of the
+    tracked Prop) → T-S.5 Clifford+T headline becomes FULLY UNCONDITIONAL.
+
 **CP2 adversarial review (post T-S.2 discharge):** to run after T-S.2
 unconditional discharge ships; will verify the new substantive content
 across the entire Track T-S chain (no fresh-context review of T-S.5
