@@ -130,4 +130,41 @@ theorem isWittenYonekuraInflowSubstantive_holds (s : SubstrateConfig) :
     IsWittenYonekuraInflowSubstantive s :=
   substrateEtaInvariant_zero_of_anomaly_cancels s
 
+/-! ## §3. W4-η-2 sub-wave — η-invariant non-vanishing on non-trivial Pin⁺ classes
+
+**Phase 6r-prime sub-wave W4-η-2 (2026-05-25)**: substantive
+non-vanishing theorems for the η-invariant on substrates with
+non-trivial z16_class. Uses `ZMod.toAddCircle_injective` to derive
+that `η = 0 ↔ z16_class = 0` (the biconditional, strengthening the
+W4-η-1 forward-only direction).
+
+Substantive content: distinguishes substrates with different Pin⁺
+deformation classes at the η-invariant level. -/
+
+/-- **W4-η-2 substantive biconditional**: η-invariant vanishes IFF
+z16_class vanishes (strengthening W4-η-1's forward direction). Uses
+`ZMod.toAddCircle_injective` for the reverse direction. -/
+theorem substrateEtaInvariant_eq_zero_iff_z16_zero (s : SubstrateConfig) :
+    substrateEtaInvariant s = 0 ↔ s.z16_class = 0 := by
+  unfold substrateEtaInvariant
+  constructor
+  · intro h
+    -- ZMod.toAddCircle s.z16_class = 0 → s.z16_class = 0 via injectivity
+    have h0 : ZMod.toAddCircle s.z16_class = ZMod.toAddCircle (0 : ZMod 16) := by
+      rw [h]; exact (map_zero ZMod.toAddCircle).symm
+    exact substrateEtaInvariant_injective_on_z16 h0
+  · intro h
+    rw [h]
+    exact map_zero ZMod.toAddCircle
+
+/-- **W4-η-2 substantive non-vanishing**: for substrates with non-zero
+z16_class (i.e., anomalous substrates with non-trivial Pin⁺ class),
+the η-invariant is non-zero in ℝ/ℤ. This is the substantive content
+distinguishing anomalous substrates at the η level (per Witten-Yonekura
+arXiv:1909.08775). -/
+theorem substrateEtaInvariant_nonzero_of_z16_nonzero (s : SubstrateConfig)
+    (h : s.z16_class ≠ 0) :
+    substrateEtaInvariant s ≠ 0 :=
+  fun heq => h ((substrateEtaInvariant_eq_zero_iff_z16_zero s).mp heq)
+
 end SKEFTHawking.SymTFT
