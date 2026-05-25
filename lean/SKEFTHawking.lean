@@ -792,6 +792,15 @@ import SKEFTHawking.FKLW.GenericSolovayKitaevLengthBound
 -- skLevel_polylog ε. Fibonacci-instance specialization is unconditional via
 -- the Wave 4a Fibonacci bridge.
 import SKEFTHawking.FKLW.GenericSolovayKitaevQuantitative
+-- Phase 6u Wave 4b (2026-05-25): UNCONDITIONAL alphabet-agnostic discharge of
+-- SkApproxCSuperQuadraticBound_generic K_compose for any GeneratingSet + base
+-- finder satisfying BaseFinder_approximates_within (2 * ε₀). Substantive port
+-- of Phase 6t Path A Option C's SkApproxCSuperQuadraticBound_holds (~800 LoC)
+-- to the generic substrate, with Fibonacci-specific ρ_Fib_SU2_* multiplicativity
+-- lemmas replaced by generic gs.ρ_hom MonoidHom map_mul/map_inv. Bundles the
+-- UNCONDITIONAL generic bundled-strict headline
+-- (solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight_unconditional).
+import SKEFTHawking.FKLW.GenericSolovayKitaevRecursionDischarge
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
