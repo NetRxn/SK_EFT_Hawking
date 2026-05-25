@@ -771,6 +771,27 @@ import SKEFTHawking.FKLW.GenericSU2GeneratingSet
 -- alphabet-agnostic CartanFinalStep_SU2_v4_holds to dispatch any witness into
 -- H_of_G gs = ⊤, then isDenseInSU2_gs_of_eq_top gives the generic density.
 import SKEFTHawking.FKLW.GenericClosureDenseWitness
+-- Phase 6u Wave 3 (2026-05-25): generic ε₀-net findNearest via existential
+-- form (Classical.choose extraction of Wave-2 density). Substantive
+-- constructive (finite-Finset) enumeration is per-alphabet (Track T-S
+-- ships Ross-Selinger Z[ω][1/√2] symbolic discharge).
+import SKEFTHawking.FKLW.GenericEpsilonNet
+-- Phase 6u Wave 4a (2026-05-25): generic SK recursion engine. Defines
+-- dnStepFG_su2 (alphabet-agnostic), skApproxC_generic gs baseFinder, the
+-- super-quadratic bound predicate, and Fibonacci-instance discharge via
+-- the existing Phase 6t Path A Option C `SkApproxCSuperQuadraticBound_holds`.
+-- Wave 4b ships the substantive generic discharge (alphabet-agnostic
+-- ~800-1000 LoC port of the Phase 6t cubic/stability/V_n-unitarity proof).
+import SKEFTHawking.FKLW.GenericSolovayKitaevRecursion
+-- Phase 6u Wave 5 (2026-05-25): generic length bound at skLevel_polylog ε.
+-- Re-export of the already-alphabet-agnostic SolovayKitaevLengthBound.
+import SKEFTHawking.FKLW.GenericSolovayKitaevLengthBound
+-- Phase 6u Wave 6 (2026-05-25): generic bundled-strict headline. Conditional
+-- on SkApproxCSuperQuadraticBound_generic, conjoins the super-quadratic
+-- error bound + the length bound at the SAME algorithmic compile level
+-- skLevel_polylog ε. Fibonacci-instance specialization is unconditional via
+-- the Wave 4a Fibonacci bridge.
+import SKEFTHawking.FKLW.GenericSolovayKitaevQuantitative
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound

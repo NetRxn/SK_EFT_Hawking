@@ -44,13 +44,14 @@ Six primary substrate waves, plus four alphabet-instantiation tracks. The substr
 
 | Wave | Codename | Status | Bundle absorption |
 |---|---|---|---|
-| **Wave 1** | Parametrize `H_Fib` → `H_G : Subgroup ↥SU(2)` over a generic `G : Finset ↥SU(2)` | ⏳ NOT STARTED | D4 §9.6 (TBD) |
-| **Wave 2** | Abstract closure-dense witness predicate `IsDenseInSU2 G` + canonical instantiator from a v4-style explicit-X₁-X₂ witness | ⏳ NOT STARTED | D4 §9.6 |
-| **Wave 3** | Generic ε₀-net structure `Sn2EpsilonNet G ε₀` + nearest-neighbor lookup `findNearest` + Lean-verified coverage interface | ⏳ NOT STARTED | D4 §9.6 |
-| **Wave 4** | Generic recursion engine `skApproxC_generic` returning words over alphabet `G` instead of `FibonacciBraidWord` | ⏳ NOT STARTED | D4 §9.7 |
-| **Wave 5** | Generic length bound `SolovayKitaevLengthBound_generic` + closed-form `skLength_generic` + `skLevel_polylog_generic` | ⏳ NOT STARTED | D4 §9.7 |
-| **Wave 6** | Bundled-strict headline parametric over `G`: `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight` | ⏳ NOT STARTED | D4 §9.7 |
-| **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999) | ⏳ NOT STARTED | D4 §9.8 |
+| **Wave 1** | Parametrize `H_Fib` → `H_of_G : Subgroup ↥SU(2)` over a generic `GeneratingSet` (W, ρ_hom, gens) | ✅ SHIPPED 2026-05-25 | D4 §9.6 |
+| **Wave 2** | Abstract closure-dense witness `ClosureDenseWitness gs` + `H_of_G_eq_top_of_witness` + `IsDenseInSU2_gs` + Fibonacci instance | ✅ SHIPPED 2026-05-25 | D4 §9.6 |
+| **Wave 3** | Generic ε₀-net `epsilonNet_findNearest gs h_dense U ε₀` via existential extraction + correctness lemma + Fibonacci validation | ✅ SHIPPED 2026-05-25 | D4 §9.6 |
+| **Wave 4a** | Generic recursion engine `skApproxC_generic gs baseFinder` + `dnStepFG_su2` (alphabet-agnostic) + Fibonacci-instance discharge via Phase 6t bridge | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
+| **Wave 4b** | Generic discharge of `SkApproxCSuperQuadraticBound_generic K_compose gs baseFinder` — alphabet-agnostic super-quadratic bound (~800-1000 LoC port of Phase 6t Path A Option C) | 🟡 IN-PROGRESS (Wave 4a Fibonacci bridge unconditional; substantive generic discharge tracked) | D4 §9.7 |
+| **Wave 5** | Generic length bound at `skLevel_polylog ε` — alphabet-independent re-export of existing `skLength_at_skLevel_polylog_le` | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
+| **Wave 6** | Generic bundled-strict headline `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight` + Fibonacci unconditional validation | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
+| **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999): T-S.1 generating set + T-S.2 closure-density witness + T-S.3 ε₀-net + T-S.4 calibration + T-S.5 headline | ⏳ NOT STARTED (depends on Wave 4b) | D4 §9.8 |
 | **Track T-A1 (Tier A)** | Instantiate at trapped-ion native gate set (Mølmer-Sørensen MS(θ) discretized at some grid + arbitrary 1Q rotations) | ⏳ NOT STARTED | (was "likely Phase 6v"; **Phase 6v scope finalized 2026-05-25 does NOT include this track** — re-slot to Phase 6x or later) |
 | **Track T-A2 (Tier A)** | Instantiate at Clifford+CCZ for 3-qubit primitives (target group SU(8) not SU(2); substantial substrate extension) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
 | **Track T-B (Tier B)** | Instantiate at Read-Rezayi SU(2)_k for k ∈ {5, 7} (next universal anyons beyond Fibonacci) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
@@ -397,6 +398,141 @@ Per `BUNDLE_LIFT_PROCEDURE.md` Stage 13 hard gate:
 
 - **#10 (no `maxHeartbeats`)**: RESPECTED throughout. The Phase 6t valid-branch composition lesson (`valid_branch_K_chain_le_K_compose_numeric` helper extraction) applies to Phase 6u — if any wave's main theorem hits the heartbeat budget, decompose via top-level numerical helpers.
 - **#15 (no new axioms without user sign-off)**: RESPECTED. Pivot rule explicit: if any track's closure-density witness requires algebraic-number-theoretic work beyond Mathlib4 v4.29.1, YIELD for user sign-off.
+
+---
+
+## Sessions log
+
+### Session 1 — 2026-05-25 (Phase 6u kickoff)
+
+Goal: ship Waves 1-6 substrate scaffolding + lay groundwork for Wave 4b
+substantive generic discharge.
+
+**Waves 1, 2, 3, 4a, 5, 6 SHIPPED (5 new modules, ~1,200 LoC, zero new
+axioms, kernel-only):**
+
+  * `lean/SKEFTHawking/FKLW/GenericSU2GeneratingSet.lean` (Wave 1):
+    `structure GeneratingSet` carrying `(W, ρ_hom, gens, gens_generate)`;
+    `H_of_G gs := gs.ρ_hom.range.topologicalClosure`; Fibonacci instance
+    `fibonacciGeneratingSet` with `H_of_G_specialize_Fib : H_of_G ... = H_Fib`
+    by reflexivity.
+
+  * `lean/SKEFTHawking/FKLW/GenericClosureDenseWitness.lean` (Wave 2):
+    `structure ClosureDenseWitness gs` carrying two ℝ-LI traceless
+    skew-Hermitian flow-line tangents; `H_of_G_eq_top_of_witness` composes
+    `CartanFinalStep_SU2_v4_holds` (Phase 5 Step 13, alphabet-agnostic)
+    to dispatch any witness into `H_of_G gs = ⊤`; `IsDenseInSU2_gs gs`
+    generic density predicate; `isDenseInSU2_gs_of_eq_top` gives the
+    `H_of_G = ⊤ ⟹ density` chain (via `Subgroup.topologicalClosure_coe`
+    + continuous push-forward via `Subtype.val`); `fibonacciClosureDenseWitness`
+    extracts from `H_Fib_v4_witness_unconditional` (Prop → Type via
+    `Nonempty.some` + Classical.choice).
+
+  * `lean/SKEFTHawking/FKLW/GenericEpsilonNet.lean` (Wave 3):
+    `epsilonNet_findNearest gs h_dense U ε₀ hε₀_pos : gs.W` via
+    Classical.choose on `IsDenseInSU2_gs`; correctness lemma
+    `epsilonNet_findNearest_approx_opNorm`; convenience composition
+    `epsilonNet_findNearest_of_witness` straight from a
+    `ClosureDenseWitness`; Fibonacci validation.
+
+  * `lean/SKEFTHawking/FKLW/GenericSolovayKitaevRecursion.lean` (Wave 4a):
+    `dnStepFG_su2 V_n U` (alphabet-agnostic version of Phase 6t's
+    `dnStepFG`, with `dnStepFG_su2_eq_dnStepFG` validating refl-equivalence
+    at Fibonacci); `skApproxC_generic gs baseFinder` parametric SK
+    recursion; `SkApproxCSuperQuadraticBound_generic K gs baseFinder`
+    predicate; `BaseFinder_approximates_within` predicate;
+    `fibonacciBaseFinder`; `skApproxC_generic_fibonacci_eq` reduction
+    lemma (by structural rfl after induction); `SkApproxCSuperQuadraticBound_generic_fibonacci`
+    UNCONDITIONAL Fibonacci-instance discharge by composing the reduction
+    with Phase 6t's `SkApproxCSuperQuadraticBound_holds`;
+    `solovayKitaev_compile_strict_constructive_generic` wrapper at
+    `skLevel_polylog ε`.
+
+  * `lean/SKEFTHawking/FKLW/GenericSolovayKitaevLengthBound.lean` (Wave 5):
+    re-export of the already-alphabet-agnostic
+    `skLength_at_skLevel_polylog_le` with `GeneratingSet`-aware naming.
+
+  * `lean/SKEFTHawking/FKLW/GenericSolovayKitaevQuantitative.lean` (Wave 6):
+    GENERIC bundled-strict headline
+    `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight`
+    (conditional on `SkApproxCSuperQuadraticBound_generic K_compose gs baseFinder`);
+    Fibonacci-instance specialization
+    `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight_via_generic`
+    UNCONDITIONAL via the Wave 4a Fibonacci bridge — recovers Phase 6t's
+    canonical strict headline through the generic substrate.
+
+**Key design decisions (Session 1):**
+
+  1. **`GeneratingSet` carries the word type `W : Type` (a Group) plus
+     a representation homomorphism `ρ_hom : W →* SU(2)`** — instead of
+     the roadmap's original `Finset ↥SU(2)` shape. Rationale: Fibonacci
+     uses `W = BraidGroup 3` and Clifford+T uses (e.g.) `W = FreeGroup
+     (Fin 3)`. Both fit naturally; the `Finset ↥SU(2)` shape would lose
+     the BraidGroup typing for Fibonacci. The explicit generator field
+     `gens : Finset W` with `gens_generate` keeps the ε₀-net's word-
+     enumeration interface viable.
+
+  2. **`H_of_G` defined via `ρ_hom.range.topologicalClosure`** — by
+     definition this matches `H_Fib` for Fibonacci, giving
+     `H_of_G_specialize_Fib` by reflexivity (no rewriting). This is
+     critical for `dnStepFG_su2_eq_dnStepFG` and
+     `skApproxC_generic_fibonacci_eq` to close by rfl/induction-rfl
+     respectively.
+
+  3. **Wave 4 split into 4a (definitions + Fibonacci bridge) and 4b
+     (substantive generic discharge)** — Wave 4a ships in this session
+     and provides an UNCONDITIONAL Fibonacci-instance headline (validates
+     the abstraction). Wave 4b is the ~800-1000 LoC substantive port of
+     Phase 6t Path A Option C's `SkApproxCSuperQuadraticBound_holds`
+     adapted to arbitrary `GeneratingSet` + `baseFinder` satisfying
+     `BaseFinder_approximates_within` (i.e., the base-case ε₀-approx
+     property). Wave 4b is the prerequisite for Track T-S Clifford+T
+     to land with UNCONDITIONAL discharge.
+
+**Open work for next session(s):**
+
+  * **Wave 4b substantive discharge** (highest priority). Port the
+    `SkApproxCSuperQuadraticBound_holds` proof (`SolovayKitaevPathA.lean`
+    §7.8, ~981 LoC) to a generic `SkApproxCSuperQuadraticBound_generic_holds`
+    parametric over `gs` + a base-finder satisfying the ε₀-approx property.
+    All substrate lemmas (cubic, stability, V_n unitarity, etc.) are
+    already alphabet-agnostic; the port is mostly substitution
+    `ρ_Fib_SU2 ↦ gs.ρ_hom` + `FibonacciBraidWord ↦ gs.W` + recursive-call
+    renames. Should close Wave 4b without re-deriving SU(2)-geometric
+    substrate.
+
+  * **Track T-S substantive ship** (after Wave 4b). T-S.1 (generating
+    set) is small. T-S.2 (closure-density witness from Boykin-Mor-Pulver-
+    Roychowdhury-Vatan 1999) is the LOAD-BEARING substantive piece
+    (~500-800 LoC). T-S.3 (ε₀-net via Ross-Selinger ℤ[ω][1/√2] or
+    computational enumeration) is ~250-500 LoC. T-S.4 + T-S.5 are
+    thin wrappers given Wave 4b done.
+
+  * **CP1 + CP2 adversarial reviews** + **strengthening pass** after
+    Wave 4b + Track T-S land.
+
+**Build state (end of Session 1, after Waves 1-6 ship):**
+
+  - `lake build SKEFTHawking.FKLW.GenericSolovayKitaevQuantitative` clean
+    (8285 jobs).
+  - Zero new project-local axioms.
+  - Zero sorries introduced.
+  - Standard-kernel-only headlines (`{propext, Classical.choice, Quot.sound}`).
+
+**Publication-strategy impact (Session 1):**
+
+  - **D4 bundle §9.6-§9.8 absorption**: Wave 1-6 substrate provides the
+    *generic* alphabet-independent quantitative Solovay-Kitaev result.
+    When D4's late absorption protocol runs, §9.6 (Fibonacci closure-
+    density), §9.7 (Fibonacci quantitative SK), and §9.8 (alphabet
+    survey) all gain the generic substrate as their PRIMARY exposition
+    target — Fibonacci becomes the canonical first instance, with
+    Clifford+T (Track T-S, pending Wave 4b) as the canonical second
+    instance demonstrating the abstraction's utility. No content changes
+    needed for D4 §9.1-§9.5 (Fibonacci-specific deep results stand);
+    §9.6 onward should reference the generic substrate as the
+    canonical-presentation target. Add a note to `docs/PAPER_DRAFT_MAPPING.md`
+    once Wave 4b + Track T-S close.
 
 ---
 
