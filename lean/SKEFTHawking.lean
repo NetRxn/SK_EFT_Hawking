@@ -834,6 +834,11 @@ import SKEFTHawking.FKLW.CliffordTQuantitative
 -- H_SU and T_SU, the structural fact that ⟨H_SU, T_SU⟩ is not abelian
 -- (used downstream by the cliffordT_v4_witness_tracked discharge).
 import SKEFTHawking.FKLW.CliffordTNonCommuting
+-- Phase 6u T-S.2 substantive substrate (2026-05-25): infinite-order witness
+-- for `H_SU * T_SU` via Niven-style algebraic-integer obstruction. Ships
+-- the headline `cliffordT_accPt_one_unconditional` (AccPt 1 on H_of_G
+-- cliffordTGS) consumed by the `cliffordT_v4_witness_tracked` discharge.
+import SKEFTHawking.FKLW.CliffordTInfiniteOrder
 -- Phase 6u T-S.2 case-analysis substrate (2026-05-25): for any nonzero
 -- X ∈ 𝔰𝔲(2), at least one of H_SU, T_SU neither commutes nor
 -- anti-commutes with X (substrate for the second-tangent direction in
