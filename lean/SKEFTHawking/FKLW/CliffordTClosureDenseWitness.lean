@@ -75,17 +75,22 @@ Prop is shipped *conditional* with explicit user sign-off requested for:
     procedure should reference `cliffordT_v4_witness_tracked` and its
     discharge status).
 
-**Note on SU(2)-correction phase factors (CP1 RC5):** `H_SU` and `T_SU`
-(see `CliffordTGeneratingSet.lean`) are the SU(2)-corrected forms of the
-textbook Hadamard and T-gate (det = +1 lifts). BMPRV 1999 proves
-closure-density of `⟨H, T⟩` in PU(2) for the textbook (U(2)) versions.
-The SU(2) lift via global phase factors preserves the *projection* onto
-PU(2), so the closure-density argument transfers: if `⟨H, T⟩` (textbook)
-is dense in PU(2), then `⟨H_SU, T_SU⟩` (SU(2)-corrected) is dense in
-SU(2) (or differs only by a discrete U(1) phase factor, which the v4
-witness handles cleanly via 1-parameter-subgroup extraction). The
-substantive discharge of `cliffordT_v4_witness_tracked` must explicitly
-handle this phase-factor transport.
+**Note on SU(2)-correction phase factors (CP1 RC5 → moot per CP2):**
+`H_SU` and `T_SU` (see `CliffordTGeneratingSet.lean`) are the
+SU(2)-corrected forms of the textbook Hadamard and T-gate (det = +1
+lifts). BMPRV 1999 proves closure-density of `⟨H, T⟩` in PU(2) for the
+textbook (U(2)) versions.
+
+**Phase 6u Session 2 substantive discharge chose the direct-SU(2)-eigenvalue
+route** (Niven's theorem applied to the trace `√2·sin(π/8)` of
+`H_SU·T_SU` via the half-angle algebraic-integer obstruction
+`(2·cos(θ))² = 1 − √2/2 ⟹ 1/2 algebraic integer ⟹ contradiction`).
+See `CliffordTInfiniteOrder.lean::cliffordT_accPt_one_unconditional`.
+The Niven-on-SU(2) path proves the AccPt-1 statement DIRECTLY on the
+SU(2)-corrected generators, NEVER invoking BMPRV's PU(2) result; the
+phase-factor lift is therefore **moot for the discharge of
+`cliffordT_v4_witness_tracked`** (and was correctly bypassed by the
+shipped substantive proof). CP2 RC1 audit closed.
 
 ## Pipeline invariants
 
