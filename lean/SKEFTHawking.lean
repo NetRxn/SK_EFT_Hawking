@@ -260,12 +260,18 @@ import SKEFTHawking.SymTFT.ToricCodeLagrangian
 import SKEFTHawking.SymTFT.BulkBoundaryCorrespondence
 -- Wave 2a — Spin-SymTFT axiomatization (Pin⁺ Z/16 + Anderson-dual + W-Y inflow)
 import SKEFTHawking.SymTFT.PinBordism
--- Phase 6r-prime sub-wave (Pontryagin-Pin⁺-1, 2026-05-25): substantive
--- Pontryagin-dual computation `AddChar (ZMod 16) ℂ ≃+ ZMod 16` via
--- Mathlib `AddChar.zmodAddEquiv`. Substantive character-theory ship —
--- captures the Pontryagin-dual sub-piece of the Anderson-dual formula
--- `TP_5(Pin⁺) ≅ Hom(Ω_4^Pin⁺, ℝ/ℤ)` (with Ω_5^Pin⁺ = 0).
+-- Phase 6r-prime sub-wave (Pontryagin-Pin⁺-1/2/3/4, 2026-05-25):
+-- substantive Pontryagin-dual machinery for ZMod 16 via Mathlib
+-- character theory (zmodAddEquiv + circleEquivComplex + doubleDualEquiv
+-- + sum orthogonality). Captures the Anderson-dual character-theory
+-- chain at the Pin⁺ case (Freed-Hopkins arXiv:1604.06527).
 import SKEFTHawking.SymTFT.PontryaginDualPinPlus
+-- Phase 6r-prime sub-wave (W4-η-1, 2026-05-25): substantive Witten-
+-- Yonekura η-invariant `SubstrateConfig → UnitAddCircle` via Mathlib's
+-- `ZMod.toAddCircle`. Real substrate-level η-formula content per
+-- Witten-Yonekura arXiv:1909.08775; not the prior opaque-inductive
+-- smoke (walked back in commit 2a73bea).
+import SKEFTHawking.SymTFT.SubstrateEtaInvariant
 import SKEFTHawking.SymTFT.SpinSymTFT
 import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
 -- Wave 2b — Z₁₆ classification via Spin-SymTFT
