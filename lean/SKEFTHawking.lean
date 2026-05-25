@@ -801,6 +801,20 @@ import SKEFTHawking.FKLW.GenericSolovayKitaevQuantitative
 -- UNCONDITIONAL generic bundled-strict headline
 -- (solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight_unconditional).
 import SKEFTHawking.FKLW.GenericSolovayKitaevRecursionDischarge
+-- Phase 6u Track T-S.1 (2026-05-25): Clifford+T generating set instance.
+-- SU(2)-corrected gates H_SU := (i/√2)[[1,1],[1,-1]], T_SU := diag(e^{-iπ/8}, e^{iπ/8}).
+-- cliffordTGeneratingSet with W = FreeGroup (Fin 2), ρ_CliffT representation.
+import SKEFTHawking.FKLW.CliffordTGeneratingSet
+-- Phase 6u Track T-S.2 (2026-05-25): Clifford+T closure-density witness
+-- conditional on tracked Prop cliffordT_v4_witness_tracked (BMPRV 1999 v4 shape).
+-- Substantive discharge multi-session (BMPRV 1999 in Lean — accumulation-at-1
+-- via Niven-style irrationality + second-tangent case analysis on Pauli).
+import SKEFTHawking.FKLW.CliffordTClosureDenseWitness
+-- Phase 6u Track T-S.3+T-S.4+T-S.5 (2026-05-25): Clifford+T ε₀-net base finder
+-- + calibration (UNCONDITIONALLY DISCHARGED via Wave 4b) + bundled-strict
+-- headline solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight.
+-- Conditional ONLY on T-S.2's tracked Prop.
+import SKEFTHawking.FKLW.CliffordTQuantitative
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound

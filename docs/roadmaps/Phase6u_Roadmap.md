@@ -48,10 +48,10 @@ Six primary substrate waves, plus four alphabet-instantiation tracks. The substr
 | **Wave 2** | Abstract closure-dense witness `ClosureDenseWitness gs` + `H_of_G_eq_top_of_witness` + `IsDenseInSU2_gs` + Fibonacci instance | ✅ SHIPPED 2026-05-25 | D4 §9.6 |
 | **Wave 3** | Generic ε₀-net `epsilonNet_findNearest gs h_dense U ε₀` via existential extraction + correctness lemma + Fibonacci validation | ✅ SHIPPED 2026-05-25 | D4 §9.6 |
 | **Wave 4a** | Generic recursion engine `skApproxC_generic gs baseFinder` + `dnStepFG_su2` (alphabet-agnostic) + Fibonacci-instance discharge via Phase 6t bridge | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
-| **Wave 4b** | Generic discharge of `SkApproxCSuperQuadraticBound_generic K_compose gs baseFinder` — alphabet-agnostic super-quadratic bound (~800-1000 LoC port of Phase 6t Path A Option C) | 🟡 IN-PROGRESS (Wave 4a Fibonacci bridge unconditional; substantive generic discharge tracked) | D4 §9.7 |
+| **Wave 4b** | Generic discharge of `SkApproxCSuperQuadraticBound_generic K_compose gs baseFinder` — alphabet-agnostic super-quadratic bound (~800-1000 LoC port of Phase 6t Path A Option C) | ✅ SHIPPED 2026-05-25 (1226 LoC kernel-only via background agent; UNCONDITIONAL modulo `BaseFinder_approximates_within (2·ε₀)`) | D4 §9.7 |
 | **Wave 5** | Generic length bound at `skLevel_polylog ε` — alphabet-independent re-export of existing `skLength_at_skLevel_polylog_le` | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
 | **Wave 6** | Generic bundled-strict headline `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight` + Fibonacci unconditional validation | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
-| **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999): T-S.1 generating set ✅ + T-S.2 closure-density witness 🟡 + T-S.3 ε₀-net + T-S.4 calibration + T-S.5 headline | 🟡 IN-PROGRESS (T-S.1 SHIPPED 2026-05-25; T-S.2 substantive multi-session work) | D4 §9.8 |
+| **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999): T-S.1 generating set ✅ + T-S.2 closure-density witness 🟡 + T-S.3 ε₀-net ✅ + T-S.4 calibration ✅ + T-S.5 headline ✅ | 🟡 IN-PROGRESS (T-S.1, T-S.3-5 SHIPPED 2026-05-25; T-S.4 calibration UNCONDITIONAL via Wave 4b; T-S.5 headline CONDITIONAL ONLY on T-S.2 tracked Prop; T-S.2 substantive discharge = multi-session BMPRV 1999 in Lean) | D4 §9.8 |
 | **Track T-A1 (Tier A)** | Instantiate at trapped-ion native gate set (Mølmer-Sørensen MS(θ) discretized at some grid + arbitrary 1Q rotations) | ⏳ NOT STARTED | (was "likely Phase 6v"; **Phase 6v scope finalized 2026-05-25 does NOT include this track** — re-slot to Phase 6x or later) |
 | **Track T-A2 (Tier A)** | Instantiate at Clifford+CCZ for 3-qubit primitives (target group SU(8) not SU(2); substantial substrate extension) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
 | **Track T-B (Tier B)** | Instantiate at Read-Rezayi SU(2)_k for k ∈ {5, 7} (next universal anyons beyond Fibonacci) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
@@ -543,6 +543,69 @@ axioms, kernel-only):**
     `cliffordTGeneratingSet : GeneratingSet`, derived `S_SU := T_SU²`,
     and generator-membership lemmas `H_SU_mem_H_of_G_cliffordT`,
     `T_SU_mem_H_of_G_cliffordT`, `S_SU_mem_H_of_G_cliffordT`.
+
+**Wave 4b SUBSTANTIVE GENERIC DISCHARGE shipped (late Session 1, background agent):**
+
+  - `lean/SKEFTHawking/FKLW/GenericSolovayKitaevRecursionDischarge.lean`
+    (1226 LoC, commit `14eda8a`). UNCONDITIONAL discharge of
+    `SkApproxCSuperQuadraticBound_generic K_compose gs baseFinder` for
+    ANY `GeneratingSet gs` and `baseFinder` satisfying
+    `BaseFinder_approximates_within gs baseFinder (2 * ε₀)`. Standard
+    kernel only `{propext, Classical.choice, Quot.sound}`. Built clean
+    8663 jobs.
+
+  - Substrate ports: `dnStepFG_su2_F_norm_le_sqrt_theta_half`,
+    `dnStepFG_su2_G_norm_le_sqrt_theta_half`,
+    `dnStepFG_su2_commutator_identity_valid`,
+    `dnStepFG_su2_exp_neg_comm_eq_Delta`,
+    `dnStepFG_su2_gC_minus_Delta_norm_le_cubic`,
+    `dnStepFG_su2_invalid_F_zero` (alphabet-agnostic versions of Phase
+    6t's Fibonacci-typed `dnStepFG_*` lemmas). Generic multiplicativity
+    `ρ_hom_mul_val`/`_inv_val`/`_groupCommutator_val` (replacing
+    Fibonacci `ρ_Fib_SU2_*` versions via `MonoidHom.map_mul`/`map_inv`).
+    Numerical K-bound extracted top-level as
+    `valid_branch_K_chain_le_K_compose_numeric_generic` (Invariant #10
+    compliance: avoided monolithic `maxHeartbeats` override by
+    extraction).
+
+  - **Bonus HEADLINE shipped**:
+    `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight_unconditional`
+    — composes the generic discharge with Wave 6's conditional headline
+    to produce the alphabet-independent canonical quantitative SK
+    statement, UNCONDITIONAL modulo the standard ε₀-net base-finder
+    hypothesis.
+
+**Track T-S.3-T-S.5 (LATE Session 1, post Wave 4b):**
+
+  - `lean/SKEFTHawking/FKLW/CliffordTClosureDenseWitness.lean` (~180 LoC).
+    Tracked Prop `cliffordT_v4_witness_tracked` (v4-witness shape at
+    `H_of_G cliffordTGeneratingSet`); `cliffordTClosureDenseWitness_of_tracked`
+    Type-extraction via `Nonempty.some`; `cliffordT_density_of_tracked`
+    + `cliffordT_H_of_G_eq_top_of_tracked` (conditional Clifford+T
+    density + closure-equals-top, composing the tracked Prop with
+    Wave 2's `densityFromWitness` / `H_of_G_eq_top_of_witness`).
+
+  - `lean/SKEFTHawking/FKLW/CliffordTQuantitative.lean` (~170 LoC).
+    T-S.3 `cliffordTBaseFinder` (Classical extraction from T-S.2);
+    T-S.3 correctness `cliffordTBaseFinder_approx_opNorm`;
+    `cliffordTBaseFinder_approximates_within_ε₀` + the `_two_ε₀`
+    extension via `< ε₀ < 2 * ε₀` transitivity; T-S.4
+    `cliffordT_calibration_holds` (UNCONDITIONAL via Wave 4b's
+    `SkApproxCSuperQuadraticBound_generic_holds`);
+    **T-S.5 HEADLINE**
+    `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight`
+    — bundled-strict Clifford+T error + length bound at the SAME
+    compile level `skLevel_polylog ε`. **CONDITIONAL ONLY on T-S.2's
+    tracked Prop `cliffordT_v4_witness_tracked`**.
+
+**Posture as of end of Session 1:**
+
+  - Phase 6u substrate (Waves 1-6 + Wave 4b + Track T-S.1, .3, .4, .5)
+    all SHIPPED kernel-only.
+  - Track T-S.5 Clifford+T strict headline closes CONDITIONAL ONLY on
+    T-S.2's `cliffordT_v4_witness_tracked` (BMPRV 1999 v4 shape).
+  - Substantive T-S.2 discharge IS the remaining substantive multi-session
+    work for Phase 6u to close fully unconditionally.
 
 **Outstanding work for Track T-S.2 (multi-session):**
 
