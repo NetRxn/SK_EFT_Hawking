@@ -141,7 +141,239 @@ External writeups that consume these theorems propagate the dependency on `TPFCo
 
 ---
 
-## 5. Posture summary
+## 5. Phase 6r SymTFT tracked Props (12 entries, added 2026-05-25)
+
+The Phase 6r SymTFT formalization (substrate-to-bulk unification under the Kaidi–Ohmori–Zheng + Freed–Moore–Teleman + Bhardwaj-Copetti-Pajer-Schäfer-Nameki framework) shipped 18 Lean modules under `lean/SKEFTHawking/SymTFT/` + `lean/SKEFTHawking/CrossBridges/` + `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean` (~2,650 LoC) and introduced 12 tracked Props as load-bearing predicate-substrate scaffolding. **11 of the 12 are scheduled for substantive discharge in Phase 6r-prime** (per `docs/roadmaps/Phase6r_prime_Roadmap.md`); only #10 `IsSKEFTHawkingSymTFTBoundary` is a permanent KEEP (D-class program identity by design).
+
+This section locks the **"before" state for Phase 6r-prime adversarial review**. Entries follow the §1–§4 format but compactly. The "Discharge status" field is **new for Phase 6r-prime tracking** (records which wave substantively discharges the Prop).
+
+### 5.1 `IsKirbyTaylorPinPlusBordism` — DISCHARGE_PHASE_6R_PRIME (W1 substrate + W3 KT proof)
+
+**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:128`
+
+**Statement.** `def IsKirbyTaylorPinPlusBordism : Prop := Nonempty (Omega4PinPlus ≃+ ZMod 16)` where `Omega4PinPlus := ZMod 16` is a Phase 6r placeholder type (W1 substantively refactors to `Quotient PinPlusBordism4Setoid`).
+
+**What the Prop says.** Pin⁺ bordism group at dimension 4 is isomorphic to ℤ/16; equivalently, [RP⁴, Pin⁺] generates the group of order 16 (Kirby-Taylor 1990).
+
+**Anchor.** Kirby-Taylor, *A calculation of Pin⁺ bordism groups,* Comment. Math. Helv. 65 (1990) 434, Theorem. A-class published mathematics.
+
+**Underlying physics status.** A-class published mathematics; the Lean placeholder body (`Omega4PinPlus := ZMod 16`) carries the substantive content at the type level, but the substantive interpretation (the bordism quotient) is not constructed at the Phase 6r layer.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** Mathlib4 (v4.29.1) lacks a cobordism category and Pin⁺ structure typeclass; ship in-project per the `LaplaceMethod.lean` precedent. W1 (Tier A) ships the substantive substrate (`Omega4PinPlus := Quotient PinPlusBordism4Setoid`); W3 (Tier B + C) ships the substantive KT proof (Path α: η-invariant on RP⁴ + AHSS; Path β: Pin⁺/Spin bordism long exact sequence). First formalization of any Pin⁺ bordism group in any proof assistant per Wave 1a.1 §6 cross-prover survey.
+
+**Consumers.** `IsAndersonDualPinPlus` (transitive), `IsAndersonDualSpinBulk` (KT ∧ AD body), `IsWittenYonekuraInflow` (KT ∧ AD body), `IsSubstantivePinPlusSPTAsymmetry` (KT ∧ AD body), `wave_2a_3_substantive_instance` (Wave 2a.3 biconditional via spin-SymTFT consumers).
+
+**Reassessment trigger.** Phase 6r-prime W3 close.
+
+**Discharge status.** SCHEDULED_W1 (substrate) + SCHEDULED_W3 (full discharge).
+
+### 5.2 `IsAndersonDualPinPlus` — DISCHARGE_PHASE_6R_PRIME (W1.4)
+
+**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:142`
+
+**Statement.** `def IsAndersonDualPinPlus : Prop := Nonempty (TP5PinPlus ≃+ ZMod 16)`.
+
+**What the Prop says.** The 5D Pin⁺ SPT classification group `TP_5(Pin⁺)` is isomorphic to ℤ/16, via the Anderson-dual computation `TP_5(Pin⁺) ≅ Hom(Ω_4^{Pin⁺}, ℝ/ℤ) ⊕ Ext(Ω_5^{Pin⁺}, ℤ) ≅ ℤ/16` (with Ω_5^{Pin⁺} = 0).
+
+**Anchor.** Freed-Hopkins, *Reflection positivity and invertible topological phases,* Geom. Topol. 25 (2021) 1165; arXiv:1604.06527. A-class published mathematics.
+
+**Underlying physics status.** A-class published mathematics; derivable as the Anderson dual of #1.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** W1.4 ships the generic Anderson-dual functor `IZOmega n` and derives `TP5PinPlus ≃+ ZMod 16` from `Omega4PinPlus ≃+ ZMod 16` + `Omega5PinPlus ≃+ 0` via the Anderson-dual formula. After W1.4: `IsAndersonDualPinPlus` becomes a constructive corollary of #1 + the `Omega5PinPlus = 0` companion tracked Prop.
+
+**Consumers.** Same as #1 (cascades through the KT ∧ AD body).
+
+**Reassessment trigger.** Phase 6r-prime W1.4 close.
+
+**Discharge status.** SCHEDULED_W1.4.
+
+### 5.3 `IsAndersonDualPinPlusRelation` — DISCHARGE_PHASE_6R_PRIME (transitive via W1)
+
+**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:153`
+
+**Statement.** `def IsAndersonDualPinPlusRelation : Prop := Nonempty (TP5PinPlus ≃+ Omega4PinPlus)`.
+
+**What the Prop says.** TP_5(Pin⁺) and Ω_4^{Pin⁺} are isomorphic as abelian groups (both ≅ ℤ/16 by #1 + #2). Records the Anderson-dual identification at the equivalence level.
+
+**Anchor.** Composition of Kirby-Taylor 1990 + Freed-Hopkins arXiv:1604.06527.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** Transitive corollary of #1 + #2 after W1.3 + W1.4 ship.
+
+**Consumers.** Cross-bridge users in `APSEta/SymTFTBridge.lean` and downstream.
+
+**Reassessment trigger.** Phase 6r-prime W1.4 close.
+
+**Discharge status.** SCHEDULED_W1 (transitive on #1 + #2).
+
+### 5.4 `IsWittenYonekuraInflow` — DISCHARGE_PHASE_6R_PRIME (W4 substantive)
+
+**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:198`
+
+**Statement.** `def IsWittenYonekuraInflow (_s : SubstrateConfig) : Prop := IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus` (Phase 6r strengthening; pre-strengthening was `True`).
+
+**What the Prop says.** The 4d boundary anomaly equals the bulk Pin⁺ partition function (= η/16 mod 1 evaluated on the 5D Pin⁺ manifold) — Witten-Yonekura's nonperturbative anomaly-inflow description.
+
+**Anchor.** Witten-Yonekura, *Anomaly Inflow and the η-Invariant,* arXiv:1909.08775 (in *Shoucheng Zhang Memorial Workshop* proceedings, 2021). A-class published physics.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** W4 ships the APS η-invariant primitive (W4.1) + the Anderson-dual invertible-TFT framework (W4.2) and refactors the Prop body to the full substantive inflow statement (W4.3): boundary anomaly = bulk Pin⁺ partition fn at η/16 mod 1. Substantive proof depends on W1 substrate.
+
+**Consumers.** Downstream substrate-bulk asymmetry consumers; SM-as-boundary witnesses.
+
+**Reassessment trigger.** Phase 6r-prime W4 close.
+
+**Discharge status.** SCHEDULED_W4.
+
+### 5.5 `IsAndersonDualSpinBulk` — DISCHARGE_PHASE_6R_PRIME (transitive on #1 + #2 via W1)
+
+**File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:219`
+
+**Statement.** `def IsAndersonDualSpinBulk (_z : TP5PinPlus) : Prop := IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus`.
+
+**What the Prop says.** A Pin⁺ class `z : TP5PinPlus` parameterizes an Anderson-dual spin bulk (in the Freed-Hopkins 1604.06527 sense — invertible TFT obtained as the Anderson dual of the Pin⁺ bordism group).
+
+**Anchor.** Freed-Hopkins arXiv:1604.06527 + Yonekura arXiv:1803.10796.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** Transitive on #1 + #2 after W1 ships. The substantive content is in the substrate-level Kirby-Taylor + Anderson-dual relations.
+
+**Consumers.** `IsSpinSymTFTConsistent s` (Wave 2a.3 body); cascade through SM-as-boundary witnesses.
+
+**Reassessment trigger.** Phase 6r-prime W1 close.
+
+**Discharge status.** SCHEDULED_W1 (transitive).
+
+### 5.6 `IsDMNOWittTrivialIffLagrangianAlgebra` — DISCHARGE_PHASE_6R_PRIME (W2.3 substantive)
+
+**File:** `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean:115`
+
+**Statement.** `def IsDMNOWittTrivialIffLagrangianAlgebra (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop := Is3DTQFTBraided B` (Phase 6r predicate-substrate; W2.3 substantively refactors).
+
+**What the Prop says.** A non-degenerate braided fusion category B is Witt-trivial (= a Drinfeld center) iff it admits a Lagrangian algebra (DMNO 2010 Theorem).
+
+**Anchor.** Davydov-Müger-Nikshych-Ostrik, *The Witt group of non-degenerate braided fusion categories,* J. Reine Angew. Math. 677 (2013) 135; arXiv:1009.2117. A-class published mathematics.
+
+**Underlying physics/math status.** A-class published mathematics; deep categorical algebra. The Phase 6r body `:= Is3DTQFTBraided B` is the predicate-substrate redundancy flagged as Phase 6r adversarial-review BLOCKER-2 (`witt_triviality_iff_has_lagrangian_algebra` as predicate-substrate tautology).
+
+**Why DISCHARGE_PHASE_6R_PRIME.** W2.3 ships substantive `IsLagrangianAlgebra L` with full structural content (IsCommFrobeniusAlgebra + IsConnectedAlgebra + IsSeparableAlgebra + FPdim(L)² = FPdim(C)) and substantively discharges the biconditional body. **W2's substantive ship automatically closes Phase 6r BLOCKER-2** (the substrate-level proof becomes a real theorem, not `intro h; exact h`). Substantive proof may stop at "statement substantive, both directions tracked-Prop" if full categorical algebra exceeds session budget.
+
+**Consumers.** `BulkBoundaryCorrespondence.lean` (`wave_1d_bulk_boundary_correspondence_closure`); `CrossBridges/SMMatterAsSymTFTBoundary.lean`.
+
+**Reassessment trigger.** Phase 6r-prime W2.3 close.
+
+**Discharge status.** SCHEDULED_W2.3.
+
+### 5.7 `IsKapustinSaulinaGappedBoundary` — DISCHARGE_PHASE_6R_PRIME (W2.4 transitive on #6)
+
+**File:** `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean:136`
+
+**Statement.** `def IsKapustinSaulinaGappedBoundary (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop := Is3DTQFT B` (Phase 6r predicate-substrate).
+
+**What the Prop says.** Gapped boundary conditions of a 3D TQFT are in bijection with Lagrangian algebras in its boundary fusion category (Kapustin-Saulina 2011).
+
+**Anchor.** Kapustin-Saulina, *Topological boundary conditions in abelian Chern-Simons theory,* Nucl. Phys. B 845 (2011) 393; arXiv:1008.0654. Refinement: Fuchs-Schweigert-Valentino arXiv:1203.4568.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** W2.4 refactors `HasLagrangianAlgebra` substrate to require existence of a substantive `IsLagrangianAlgebra L`; `IsKapustinSaulinaGappedBoundary` becomes a corollary of the new DMNO substrate at the boundary side.
+
+**Consumers.** `GappedBoundary.lean`; downstream boundary-correspondence theorems.
+
+**Reassessment trigger.** Phase 6r-prime W2.4 close.
+
+**Discharge status.** SCHEDULED_W2.4 (transitive on #6).
+
+### 5.8 `IsBoundarySymTFTCorrespondence` — DISCHARGE_PHASE_6R_PRIME (W2.4 predicate-level)
+
+**File:** `lean/SKEFTHawking/SymTFT/Basic.lean:231`
+
+**Statement.** `def IsBoundarySymTFTCorrespondence (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B] : Prop := Is3DTQFT B` (Phase 6r predicate-substrate).
+
+**What the Prop says.** For every SymTFT bulk B, gapped boundary conditions of B are in bijection with Lagrangian algebras in the Drinfeld center realizing B (Bhardwaj-Copetti-Pajer-Schäfer-Nameki "Boundary SymTFT" framework).
+
+**Anchor.** Bhardwaj-Copetti-Pajer-Schäfer-Nameki, *Boundary SymTFT,* arXiv:2409.02166, SciPost Phys. 19 (2025) 061. **PRIMARY anchor** for the Phase 6r SM-as-boundary identification.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** W2.4 strengthens body to require full bulk-boundary biconditional content using W2.3 substrate (Frobenius-Perron dimensions + non-degenerate braided fusion + Lagrangian-algebra existence).
+
+**Consumers.** `IsToricCodeTwoLagrangianAlgebraStructure` (current body wraps this Prop); `CrossBridges/SMMatterAsSymTFTBoundary.lean`.
+
+**Reassessment trigger.** Phase 6r-prime W2.4 close.
+
+**Discharge status.** SCHEDULED_W2.4 (predicate-level discharge; statement-level substantive after W2.5).
+
+### 5.9 `IsToricCodeTwoLagrangianAlgebraStructure` — DISCHARGE_PHASE_6R_PRIME (C1, after W2)
+
+**File:** `lean/SKEFTHawking/SymTFT/ToricCodeLagrangian.lean:88`
+
+**Statement.** `def IsToricCodeTwoLagrangianAlgebraStructure : Prop := IsBoundarySymTFTCorrespondence toricCodeBulk` (Phase 6r predicate-substrate).
+
+**What the Prop says.** The toric-code SymTFT bulk `Center (Discrete (ZMod 2))` admits exactly two Lagrangian algebras up to equivalence: electric `𝟙 ⊕ e` and magnetic `𝟙 ⊕ m`.
+
+**Anchor.** Kitaev-Kong, *Models for gapped boundaries and domain walls,* Commun. Math. Phys. 313 (2012) 351; arXiv:1104.5047. Concrete-instance content: Bombin-Martín-Delgado arXiv:0803.5046.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** C1 ships substantive electric + magnetic Lagrangian algebras as concrete `Object (Center (Discrete (ZMod 2)))` with `MonObj` + `ComonObj` + `IsCommFrobeniusAlgebra` instances. **First proof-assistant formalization of the Lagrangian-algebra / gapped-boundary correspondence for toric code** per Wave 1a.1 §5.3 cross-prover survey. Most elegant after W2.3 ships (uses new Lagrangian-algebra substrate); ships standalone as fallback.
+
+**Consumers.** `AlternativeBoundaries.lean` (toric-code labels for SM-vs-dark-sector); dark-sector boundary witnesses (paper-17).
+
+**Reassessment trigger.** Phase 6r-prime C1 close.
+
+**Discharge status.** SCHEDULED_C1 (after W2.3 ideal; standalone fallback).
+
+### 5.10 `IsSKEFTHawkingSymTFTBoundary` — KEEP_AS_TRACKED (permanent; D-class program identity)
+
+**File:** `lean/SKEFTHawking/SymTFT/SubstrateToBulkIdentification.lean:68`
+
+**Statement.** `def IsSKEFTHawkingSymTFTBoundary (s : APSEta.Substrate) : Prop := wittenYonekuraToZ16 s = 0`.
+
+**What the Prop says.** A substrate `s : APSEta.Substrate` (one of BEC, ADW, ³He-A) admits a SymTFT-boundary-data reading in the Bhardwaj-Copetti-Pajer-Schäfer-Nameki sense (predicate body: the Witten-Yonekura η/16 lift is well-defined and trivial at the substrate-data layer).
+
+**Anchor.** Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 (substrate-side framework) + program-original D-class synthesis (substrate identification).
+
+**Underlying status.** **Program-original identification**, NOT an A-class published result. The Phase 6r Wave 3b.1 substantive identification (`wave_3b_1_substrate_to_bulk_identification`) ships the predicate-level statement; the substantive identification IS the program's D-class contribution.
+
+**Why KEEP_AS_TRACKED.** The Prop body IS the program's D-class identity statement — discharging it would mean dissolving the identity claim into A-class substrate content, which is structurally inappropriate (program-original D-class content does not get "discharged" the way A-class scaffolding does). Per Phase 6r close-out: this is the ONLY KEEP among the 12 Phase 6r tracked Props.
+
+**Consumers.** `wave_3b_1_substrate_to_bulk_identification`, `wave_3b_1_closure`, and downstream substrate-as-boundary witnesses.
+
+**Reassessment trigger.** N/A (permanent).
+
+**Discharge status.** **KEEP** (permanent; D-class program identity by design).
+
+### 5.11 `IsDarkSectorTopologicalBoundary` — DISCHARGE_PHASE_6R_PRIME (C2)
+
+**File:** `lean/SKEFTHawking/SymTFT/AlternativeBoundaries.lean:99`
+
+**Statement.** `def IsDarkSectorTopologicalBoundary (s : Z16AnomalyForcesThetaBar.SubstrateConfig) : Prop := IsSpinSymTFTConsistent s` (Phase 6r predicate-substrate marker, paper-17-conditional).
+
+**What the Prop says.** A substrate `s : SubstrateConfig` carries a dark-sector topological boundary structure (an *alternative* Lagrangian-algebra boundary to the SM-matter one — magnetic vs electric label on the same SymTFT bulk).
+
+**Anchor.** Paper 17 dark-sector substrate (HiddenSectorClassification.lean + FractonDarkMatter.lean + SFDMMergerForecast.lean + FangGuTorsionDM.lean) + Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 + DMNO 2010 (alternative Lagrangian-algebra labels).
+
+**Why DISCHARGE_PHASE_6R_PRIME.** C2 substantively reads paper 17 (`papers/paper17_dark_sector/paper_draft.tex`, 860 lines) and refactors the Prop body to tie to paper-17's hidden-ℤ/16-sector + sterile-νR + fracton DM substrate predicates. Substantive theorem: SM-vs-dark-sector boundaries correspond to electric vs magnetic Lagrangian-algebra labels (per Wave 3a.1 §Q3(b)). HOLD on Wave 3b.1 dark-sector cross-bridge was specifically Phase-6r-deferred pending paper-17 direct read.
+
+**Consumers.** `wave_3b_1b_alternative_boundary_structural_closure`.
+
+**Reassessment trigger.** Phase 6r-prime C2 close.
+
+**Discharge status.** SCHEDULED_C2.
+
+### 5.12 `IsSubstantivePinPlusSPTAsymmetry` — DISCHARGE_PHASE_6R_PRIME (transitive on #1 + #2 via W1, plus GEM-bridge)
+
+**File:** `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean:156`
+
+**Statement.** `def IsSubstantivePinPlusSPTAsymmetry : Prop := IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus`.
+
+**What the Prop says.** The substantive Pin⁺ SPT realization asymmetry between analog-Hawking substrates (BEC, ADW, ³He-A — all ℤ/16-trivial at substrate-data layer) and the SM-with-νR substrate (ℤ/16-non-trivial per García-Etxebarria-Montero arXiv:1808.00009 at the realization layer, despite bare counting `16·N_f ≡ 0 mod 16`).
+
+**Anchor.** García-Etxebarria-Montero, *Dai-Freed anomalies in particle physics,* JHEP 08 (2019) 003; arXiv:1808.00009. Composed with Kapustin-Thorngren-Turzillo-Wang arXiv:1406.7329.
+
+**Why DISCHARGE_PHASE_6R_PRIME.** Transitive on #1 + #2 after W1 ships substantive substrate; the GEM-bridge content lives at the Pin⁺ SPT classification realization layer (separate from the bare ℤ/16 counting layer per the Wave 3a.1 §Caveats discipline).
+
+**Consumers.** `analogHawking_vs_SM_bulk_asymmetry_substrate_data`, `wave_3a_3_substrate_bulk_asymmetry_closure`, `wave_3b_1_closure`.
+
+**Reassessment trigger.** Phase 6r-prime W1 close (transitive) + Phase 6r-prime W4 close (composed with GEM-bridge if formalized).
+
+**Discharge status.** SCHEDULED_W1 (transitive substrate) + Phase 6r-prime' or 7+ (full GEM-bridge formalization).
+
+---
+
+## 6. Posture summary
 
 | Prop | Status | Discharge LoE | Scheduled phase |
 |---|---|---|---|
@@ -149,6 +381,18 @@ External writeups that consume these theorems propagate the dependency on `TPFCo
 | `H_DESICompatibility` | DISCHARGE_FUTURE_PHASE | ~50 person-hours | Phase 6b.2 (not active) |
 | `H_RT_Formula_Valid` | KEEP_AS_TRACKED (permanent) | N/A — project-scope boundary | None |
 | `TPFConjecture` | KEEP_AS_TRACKED (permanent; converted from axiom on 2026-05-19) | N/A — open at literature frontier | None |
+| `IsKirbyTaylorPinPlusBordism` | DISCHARGE_PHASE_6R_PRIME | W1 substrate + W3 KT proof | Phase 6r-prime (active) |
+| `IsAndersonDualPinPlus` | DISCHARGE_PHASE_6R_PRIME | W1.4 (Anderson-dual functor) | Phase 6r-prime (active) |
+| `IsAndersonDualPinPlusRelation` | DISCHARGE_PHASE_6R_PRIME | W1 (transitive on #1 + #2) | Phase 6r-prime (active) |
+| `IsWittenYonekuraInflow` | DISCHARGE_PHASE_6R_PRIME | W4 (APS-η + Witten-Yonekura) | Phase 6r-prime (active) |
+| `IsAndersonDualSpinBulk` | DISCHARGE_PHASE_6R_PRIME | W1 (transitive on #1 + #2) | Phase 6r-prime (active) |
+| `IsDMNOWittTrivialIffLagrangianAlgebra` | DISCHARGE_PHASE_6R_PRIME | W2.3 (Lagrangian-algebra substrate) | Phase 6r-prime (active) |
+| `IsKapustinSaulinaGappedBoundary` | DISCHARGE_PHASE_6R_PRIME | W2.4 (transitive on #6) | Phase 6r-prime (active) |
+| `IsBoundarySymTFTCorrespondence` | DISCHARGE_PHASE_6R_PRIME | W2.4 (predicate-level discharge) | Phase 6r-prime (active) |
+| `IsToricCodeTwoLagrangianAlgebraStructure` | DISCHARGE_PHASE_6R_PRIME | C1 (after W2.3 ideal) | Phase 6r-prime (active) |
+| `IsSKEFTHawkingSymTFTBoundary` | KEEP_AS_TRACKED (permanent; D-class program identity) | N/A — program-original identification | None |
+| `IsDarkSectorTopologicalBoundary` | DISCHARGE_PHASE_6R_PRIME | C2 (paper-17 substantive) | Phase 6r-prime (active) |
+| `IsSubstantivePinPlusSPTAsymmetry` | DISCHARGE_PHASE_6R_PRIME | W1 (transitive substrate); full GEM-bridge deferred | Phase 6r-prime (active) + Phase 7+ |
 
 **Net axiom-and-tracked-Prop count rationale.** The project minimizes both `axiom` declarations (per Pipeline Invariant #15) AND tracked-Prop count by:
 
@@ -160,12 +404,14 @@ This catalogue is the source of truth for the project's load-bearing tracked-Pro
 
 ---
 
-## 6. Cross-reference
+## 7. Cross-reference
 
 - Pipeline Invariant #15: see `CLAUDE.md` workspace-level (no new project-local axiom without explicit user sign-off + discharge plan).
 - Strengthening-pass discipline: see `CLAUDE.md` workspace-level §"Preemptive-strengthening discipline".
-- For `axiom`-declarations (as opposed to tracked Props), see the `AXIOM_METADATA` registry in `src/constants.py` and the per-axiom eliminability metadata.
-- For per-Prop consumer enumeration: `lean/SKEFTHawking/{GravitationalWaves,FLRWDynamics,RTCasiniHuertaBounds,SPTClassification}.lean` and any `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_Formula_Valid\|TPFConjecture" lean/`.
+- For `axiom`-declarations (as opposed to tracked Props), see the `AXIOM_METADATA` registry in `src/core/constants.py` and the per-axiom eliminability metadata.
+- For per-Prop consumer enumeration of the original 4 entries: `lean/SKEFTHawking/{GravitationalWaves,FLRWDynamics,RTCasiniHuertaBounds,SPTClassification}.lean` and any `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_Formula_Valid\|TPFConjecture" lean/`.
+- For Phase 6r SymTFT tracked Props (entries §5.1–§5.12): `lean/SKEFTHawking/SymTFT/` + `lean/SKEFTHawking/CrossBridges/SMMatterAsSymTFTBoundary.lean` + `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean`. Discharge plan: `docs/roadmaps/Phase6r_prime_Roadmap.md`. Source-of-truth catalogue: this doc §5 (this entry); supersedes any ad-hoc enumeration in working docs.
+- Phase 6r close-out + Phase 6r-prime planning: see `docs/roadmaps/Phase6r_Roadmap.md` Sessions log + `docs/roadmaps/Phase6r_prime_Roadmap.md` substrate-state snapshot §A.
 
 ---
 
