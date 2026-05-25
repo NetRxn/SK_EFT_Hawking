@@ -109,6 +109,9 @@ Since the 2026-04-24 snapshot, the program has shipped Phase 6 e/f/g/m/n/o subst
 - **First explicit classical Kerr-Schild double-copy on analog gravity in literature** (Phase 6o W1b) — positive Kerr-Schild + 3-obstruction strong-form BCJ NO-GO theorem-pair on Petrov-D acoustic metric.
 - **Schellekens chain reframing of $24 | c_-$ → $N_{\rm gen} \equiv 0 \pmod 3$** (Phase 6o W2b) — reframed as theorem-quality classification corollary of Möller-Scheithauer 2024 c=24 holomorphic-VOA classification. Modular Bootstrap DR §8 Tier 1(a) "highest-leverage move."
 - **Sakharov 4-criterion ↔ $\Lambda_J = \Lambda_{\rm HK}$ biconditional retired** in favor of honest one-way implication + load-bearing depletion factor (Phase 6o W4a verdict B). Per Volovik-Jannes 2012 §VII forward-only argument + FLS BEC primary-source verification.
+- **First alphabet-independent kernel-verified quantitative Solovay-Kitaev substrate** (Phase 6u Waves 1–6 + Wave 4b). The Lie-algebraic core of Solovay-Kitaev (Dawson-Nielsen recursion, Cartan v4 classification, BCH bracket-closure, ε₀-net) packaged behind a generic `GeneratingSet` abstraction. Future quantum-gate-set formalizations now instantiate rather than re-derive.
+- **First kernel-verified UNCONDITIONAL Clifford+T quantitative Solovay-Kitaev compiler** (Phase 6u Track T-S.5). The bundled-strict headline `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional` conjoins error bound `≤ ε` and polylog length bound at the same compile level. Clifford+T is the canonical fault-tolerant gate set; this is the verified specification.
+- **First kernel-verified ⟨H, T⟩ density in SU(2)** (Phase 6u T-S.2) via Niven-based algebraic-integer obstruction on `√2·sin(π/8)` (the trace of `H_SU·T_SU`). The 1999 BMPRV folklore result, now machine-verified. The methodology generalizes to future alphabet density proofs (Read-Rezayi, etc.).
 - **Paper-bundle architecture frozen** (Phase 7a). 14 publication targets: 1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure (I3 added Phase 6n Session 4 under Pipeline Invariant #14) + 2 Tier-4 experimental. 14-step BUNDLE_LIFT_PROCEDURE + LATE_PHASE6_ABSORPTION_PROTOCOL frozen.
 - **All 14 bundles 🟢 GREEN** at Phase 7 absorption Session-5 close. The L1 → arXiv-voucher gate is the only remaining program-level blocker for the first three Tier-2 PRL splashes.
 - **Standing primary-source WebFetch + verify policy** adopted at Session 5 ("do that kind of thing from now on"). Caught Luciano AIC vs Bayes methodology mismatch + BelgiornoCacciatori2024 fabricated-bibitem entry. 51 PDF caches → 0 missing.
@@ -181,6 +184,7 @@ The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, 
 | Phase 6m (three-track dark-energy NO-GO closure) | [`Phase6m_Implications.md`](Phase6m_Implications.md) + [`Phase6m_Strategic_Positioning.md`](Phase6m_Strategic_Positioning.md) |
 | Phase 6n (math-substrate compression) | [`Phase6n_Implications.md`](Phase6n_Implications.md) + [`Phase6n_Strategic_Positioning.md`](Phase6n_Strategic_Positioning.md) |
 | Phase 6o (substrate-findings + first-mover discoveries) | [`Phase6o_Implications.md`](Phase6o_Implications.md) + [`Phase6o_Strategic_Positioning.md`](Phase6o_Strategic_Positioning.md) |
+| Phase 6u (alphabet-independent quantum-compiler substrate + Clifford+T) | [`Phase6u_Implications.md`](Phase6u_Implications.md) + [`Phase6u_Strategic_Positioning.md`](Phase6u_Strategic_Positioning.md) |
 | Phase 7 (paper-bundle architecture + absorption Sessions 1–5) | [`Phase7_Implications.md`](Phase7_Implications.md) + [`Phase7_Strategic_Positioning.md`](Phase7_Strategic_Positioning.md) |
 | Predictive-scope boundary | [`docs/ARCHITECTURE_SCOPE.md`](../ARCHITECTURE_SCOPE.md) — Layer 3 scope: SM+GR in, dark sector out under all tested mechanisms |
 | Bundle readiness heatmap | [`docs/BUNDLE_READINESS_HEATMAP.md`](../BUNDLE_READINESS_HEATMAP.md) — auto-regenerated per-bundle Stage-9/10/13 status |
@@ -192,4 +196,4 @@ The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, 
 
 ---
 
-*Last updated: 2026-05-07.*
+*Last updated: 2026-05-25 (Phase 6u closure).*
