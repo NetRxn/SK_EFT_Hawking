@@ -52,9 +52,9 @@ Six primary substrate waves, plus four alphabet-instantiation tracks. The substr
 | **Wave 5** | Generic length bound at `skLevel_polylog ε` — alphabet-independent re-export of existing `skLength_at_skLevel_polylog_le` | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
 | **Wave 6** | Generic bundled-strict headline `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight` + Fibonacci unconditional validation | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
 | **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999): T-S.1 generating set ✅ + T-S.2 closure-density witness ✅ + T-S.3 ε₀-net ✅ + T-S.4 calibration ✅ + T-S.5 headline ✅ | ✅ FULLY SHIPPED 2026-05-25 (T-S.5 Clifford+T strict headline is UNCONDITIONAL via Niven-based infinite-order proof — see `cliffordT_v4_witness_discharged` + `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional` in commit `2e79504`) | D4 §9.8 |
-| **Track T-A1 (Tier A)** | Instantiate at trapped-ion native gate set (Mølmer-Sørensen MS(θ) discretized at some grid + arbitrary 1Q rotations) | ⏳ NOT STARTED | (was "likely Phase 6v"; **Phase 6v scope finalized 2026-05-25 does NOT include this track** — re-slot to Phase 6x or later) |
-| **Track T-A2 (Tier A)** | Instantiate at Clifford+CCZ for 3-qubit primitives (target group SU(8) not SU(2); substantial substrate extension) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
-| **Track T-B (Tier B)** | Instantiate at Read-Rezayi SU(2)_k for k ∈ {5, 7} (next universal anyons beyond Fibonacci) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
+| **Track T-A1 (Tier A)** | Instantiate at trapped-ion native gate set (Mølmer-Sørensen MS(θ) discretized at some grid + arbitrary 1Q rotations) | ➡️ **MOVED TO Phase 6x** (`docs/roadmaps/Phase6x_Roadmap.md` Track T-A1) | D4 §9.8 + E1 cross-bridge |
+| **Track T-A2 (Tier A)** | Instantiate at Clifford+CCZ for 3-qubit primitives (target group SU(8) not SU(2); substantial substrate extension) | ➡️ **MOVED TO Phase 6x** (`docs/roadmaps/Phase6x_Roadmap.md` Track T-A2) | D4 §9.8 (higher-rank alphabet showcase) |
+| **Track T-B (Tier B)** | Instantiate at Read-Rezayi SU(2)_k for k ∈ {5, 7} (next universal anyons beyond Fibonacci) | ➡️ **MOVED TO Phase 6x** (`docs/roadmaps/Phase6x_Roadmap.md` Track T-B) | D4 §9.8 (Read-Rezayi-extended multi-alphabet showcase) |
 
 **Wave dependencies:**
 - W1 → W2 → W3 must be sequential (each depends on the predicate framework from the previous).
@@ -867,6 +867,15 @@ at 8294 jobs).
 **Cumulative Lean LoC for Phase 6u**: ~3,900 across 15 modules under
 `lean/SKEFTHawking/FKLW/Generic*.lean` and `lean/SKEFTHawking/FKLW/CliffordT*.lean`,
 plus 1 background-agent ship `CliffordTInfiniteOrder.lean` (560 LoC).
+
+**Phase 6x continuation roadmap shipped**: see
+[`docs/roadmaps/Phase6x_Roadmap.md`](Phase6x_Roadmap.md) for the
+additional-alphabet instantiations re-slotted from Phase 6u (Track T-A1
+trapped-ion + Track T-A2 Clifford+CCZ at SU(8) + Track T-B Read-Rezayi
+`SU(2)_k` for `k ∈ {5, 7}`) plus the three Mathlib4 upstream-PR-quality
+lemma extractions identified in Phase 6u Strategic Positioning (Track M:
+generic BCH order-2 cubic bound, generic Cartan v4 density-from-witness,
+three-direction-product strict differentiability).
 
 **Key first-of-kind results shipped:**
 
