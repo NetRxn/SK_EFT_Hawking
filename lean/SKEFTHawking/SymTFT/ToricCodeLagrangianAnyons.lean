@@ -194,8 +194,7 @@ theorem not_isLagrangianAnyonSet_brokenFermion :
     condition 3 is load-bearing).
 
 This is the substantive C1.1 deliverable. The C1.2 classification
-(exactly these two satisfy the criterion) is shipped in a subsequent
-sub-wave. -/
+(exactly these two satisfy the criterion) is shipped below in §8. -/
 theorem c1_1_closure :
     IsLagrangianAnyonSet lagrangianElectricSet ∧
     IsLagrangianAnyonSet lagrangianMagneticSet ∧
@@ -205,5 +204,139 @@ theorem c1_1_closure :
    isLagrangianAnyonSet_magnetic,
    lagrangianElectricSet_ne_magneticSet,
    not_isLagrangianAnyonSet_brokenFermion⟩
+
+/-! ## §8. C1.2 classification theorem -/
+
+/-- **C1.2 enumeration lemma**: every 2-element subset of `ToricAnyon`
+containing `vacuum` is one of `{vacuum, electric}`, `{vacuum, magnetic}`,
+or `{vacuum, fermion}`. Discharged via finite case analysis on the
+3 non-vacuum anyons (the 2-element set with vacuum is uniquely
+determined by its other element). -/
+theorem twoElementSetContainingVacuum_classification
+    (S : Finset ToricAnyon) (hvac : ToricAnyon.vacuum ∈ S)
+    (hcard : S.card = 2) :
+    S = lagrangianElectricSet ∨
+    S = lagrangianMagneticSet ∨
+    S = brokenFermionSet := by
+  -- Since |S| = 2 and vacuum ∈ S, S = {vacuum, x} for unique x ≠ vacuum.
+  -- The other element x must be in {electric, magnetic, fermion}.
+  -- Enumerate via the membership of each non-vacuum anyon.
+  by_cases he : ToricAnyon.electric ∈ S
+  · -- S contains vacuum and electric, |S| = 2 ⇒ S = {vacuum, electric}
+    left
+    apply Finset.eq_of_subset_of_card_le
+    · intro a ha
+      fin_cases a
+      · exact (by decide : ToricAnyon.vacuum ∈ lagrangianElectricSet)
+      · exact (by decide : ToricAnyon.electric ∈ lagrangianElectricSet)
+      · -- magnetic ∈ S would force |S| ≥ 3
+        exfalso
+        have : ({ToricAnyon.vacuum, ToricAnyon.electric, ToricAnyon.magnetic} : Finset _) ⊆ S := by
+          intro b hb; fin_cases hb <;> first | exact hvac | exact he | exact ha
+        have h3 : S.card ≥ 3 := by
+          have : ({ToricAnyon.vacuum, ToricAnyon.electric, ToricAnyon.magnetic} : Finset _).card = 3 := by decide
+          calc S.card ≥ ({ToricAnyon.vacuum, ToricAnyon.electric, ToricAnyon.magnetic} : Finset _).card :=
+                Finset.card_le_card ‹_›
+            _ = 3 := this
+        omega
+      · -- fermion ∈ S would force |S| ≥ 3
+        exfalso
+        have : ({ToricAnyon.vacuum, ToricAnyon.electric, ToricAnyon.fermion} : Finset _) ⊆ S := by
+          intro b hb; fin_cases hb <;> first | exact hvac | exact he | exact ha
+        have h3 : S.card ≥ 3 := by
+          have : ({ToricAnyon.vacuum, ToricAnyon.electric, ToricAnyon.fermion} : Finset _).card = 3 := by decide
+          calc S.card ≥ ({ToricAnyon.vacuum, ToricAnyon.electric, ToricAnyon.fermion} : Finset _).card :=
+                Finset.card_le_card ‹_›
+            _ = 3 := this
+        omega
+    · rw [hcard]; decide
+  · -- electric ∉ S; check magnetic
+    by_cases hm : ToricAnyon.magnetic ∈ S
+    · -- S contains vacuum and magnetic, |S| = 2 ⇒ S = {vacuum, magnetic}
+      right; left
+      apply Finset.eq_of_subset_of_card_le
+      · intro a ha
+        fin_cases a
+        · decide
+        · exact absurd ha he
+        · decide
+        · exfalso
+          have : ({ToricAnyon.vacuum, ToricAnyon.magnetic, ToricAnyon.fermion} : Finset _) ⊆ S := by
+            intro b hb; fin_cases hb <;> first | exact hvac | exact hm | exact ha
+          have h3 : S.card ≥ 3 := by
+            have : ({ToricAnyon.vacuum, ToricAnyon.magnetic, ToricAnyon.fermion} : Finset _).card = 3 := by decide
+            calc S.card ≥ ({ToricAnyon.vacuum, ToricAnyon.magnetic, ToricAnyon.fermion} : Finset _).card :=
+                  Finset.card_le_card ‹_›
+              _ = 3 := this
+          omega
+      · rw [hcard]; decide
+    · -- electric ∉ S, magnetic ∉ S; the only other element is fermion
+      by_cases hf : ToricAnyon.fermion ∈ S
+      · right; right
+        apply Finset.eq_of_subset_of_card_le
+        · intro a ha
+          fin_cases a
+          · decide
+          · exact absurd ha he
+          · exact absurd ha hm
+          · decide
+        · rw [hcard]; decide
+      · -- All non-vacuum anyons not in S ⇒ S = {vacuum} ⇒ |S| = 1, contradiction
+        exfalso
+        have : S = {ToricAnyon.vacuum} := by
+          apply Finset.eq_of_subset_of_card_le
+          · intro a ha
+            fin_cases a
+            · decide
+            · exact absurd ha he
+            · exact absurd ha hm
+            · exact absurd ha hf
+          · have : ({ToricAnyon.vacuum} : Finset _).card = 1 := by decide
+            rw [this]; omega
+        rw [this] at hcard
+        simp at hcard
+
+/-- **C1.2 main classification theorem**: every Lagrangian-algebra
+anyon set in toric code MTC equals either `lagrangianElectricSet`
+or `lagrangianMagneticSet`.
+
+Per Kitaev-Kong arXiv:1104.5047 Theorem 5.4: the toric code has
+*exactly two* Lagrangian algebras up to equivalence. This theorem
+makes that classification explicit at the substantive anyon-set level.
+
+The proof composes: (a) the cardinality-2 + vacuum-membership
+constraint reduces S to one of three candidates ({vac,e}, {vac,m},
+{vac,fermion}); (b) the braiding-triviality condition rules out
+the fermion candidate (via `not_isLagrangianAnyonSet_brokenFermion`).
+
+This is the substantive C1.2 deliverable: the "exactly two" classification
+content backing the Phase 6r tracked Prop
+`IsToricCodeTwoLagrangianAlgebraStructure`. -/
+theorem isLagrangianAnyonSet_classification (S : Finset ToricAnyon)
+    (h : IsLagrangianAnyonSet S) :
+    S = lagrangianElectricSet ∨ S = lagrangianMagneticSet := by
+  rcases twoElementSetContainingVacuum_classification S h.vacuum_mem h.correct_dimension with
+    helec | hmag | hfer
+  · left; exact helec
+  · right; exact hmag
+  · -- The fermion case is ruled out by braiding triviality
+    exfalso
+    apply not_isLagrangianAnyonSet_brokenFermion
+    rw [← hfer]
+    exact h
+
+/-- **C1.2 closure**: bundles the C1.1 + C1.2 substantive content into
+a single statement. The substantive deliverable: toric code has
+EXACTLY two Lagrangian-algebra anyon sets, both distinct. -/
+theorem c1_classification_closure :
+    IsLagrangianAnyonSet lagrangianElectricSet ∧
+    IsLagrangianAnyonSet lagrangianMagneticSet ∧
+    lagrangianElectricSet ≠ lagrangianMagneticSet ∧
+    (∀ S : Finset ToricAnyon, IsLagrangianAnyonSet S →
+      S = lagrangianElectricSet ∨ S = lagrangianMagneticSet) :=
+  ⟨isLagrangianAnyonSet_electric,
+   isLagrangianAnyonSet_magnetic,
+   lagrangianElectricSet_ne_magneticSet,
+   isLagrangianAnyonSet_classification⟩
 
 end SKEFTHawking.SymTFT
