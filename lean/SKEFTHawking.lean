@@ -850,6 +850,14 @@ import SKEFTHawking.FKLW.CliffordTGeneratorCaseAnalysis
 -- (vonNeumann_assemble_explicit_X_unconditional + ts_Ad_LI + expAmbient_unitary_conj).
 -- Unconditional version awaits the in-flight Niven-based AccPt 1 proof.
 import SKEFTHawking.FKLW.CliffordTV4WitnessDischarge
+-- Phase 6u T-S.2 UNCONDITIONAL v4-witness discharge + T-S.5 unconditional
+-- headline (2026-05-25): composes the conditional discharge with the
+-- Niven-based cliffordT_accPt_one_unconditional to ship
+-- cliffordT_v4_witness_discharged and
+-- solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional.
+-- This CLOSES Phase 6u Track T-S — the Clifford+T quantitative SK headline
+-- is now FULLY UNCONDITIONAL (kernel-only).
+import SKEFTHawking.FKLW.CliffordTV4WitnessUnconditional
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
