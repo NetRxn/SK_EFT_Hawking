@@ -9,17 +9,12 @@ Clifford+T analog of Phase 6t's
 `exists_σ_Fib_SU_mat_not_commute_not_anticommute`, and is substrate for
 the second-tangent direction in the v4-witness assembly for T-S.2.
 
-## Status (WORK-IN-PROGRESS — not yet imported by root)
+## Status (COMPLETE — all four sub-lemmas + composition headline shipped)
 
-This file is being incrementally developed. It is **NOT** added to
-`SKEFTHawking.lean` until all `sorry`s are eliminated. The headline
-theorem structure is shipped (the composition pattern); the four
-substantive sub-lemmas are tracked as `sorry`-placeholders for explicit
-Pauli-matrix entrywise computation.
-
-The proof strategy is documented in detail; each `sorry` corresponds to
-a concrete computation that can be filled in via `simp` + `ring` + Pauli
-relations.
+All four substantive sub-lemmas and the composition headline are
+discharged kernel-only via explicit Pauli-matrix entrywise computation.
+This file is imported by `SKEFTHawking.lean` and contributes the
+Clifford+T case-analysis substrate to the root build.
 
 ## Headline
 
@@ -31,34 +26,34 @@ relations.
 
 The cleanest split (computed via Pauli-matrix decomposition):
 
-  - **T_SU's bad set**: `T_SU.val · X = X · T_SU.val` iff `X = c · σ_z`
+  - **T_SU's bad set**: `T_SU.val · X = X · T_SU.val` iff `X = c · paulI_z`
     for some `c : ℝ`. Anti-commute case is trivial: `T_SU.val` NEVER
     anti-commutes with any non-zero `X ∈ ts`.
 
-  - **H_SU's coverage of T_SU's bad set**: for `X = c · σ_z` with `c ≠ 0`,
+  - **H_SU's coverage of T_SU's bad set**: for `X = c · paulI_z` with `c ≠ 0`,
     `H_SU.val` neither commutes nor anti-commutes.
 
-Sub-lemmas (TODO):
-  1. `T_SU_mat_never_anticommute_ts` (the easiest; ~80 LoC explicit
-     entrywise computation showing the anti-commutator vanishes only
-     when X = 0).
-  2. `T_SU_mat_commute_ts_iff_paulI_z` (~100 LoC; centralizer
-     characterization via diagonal matrices).
-  3. `H_SU_mat_not_commute_paulI_z_real_smul` (~50 LoC).
-  4. `H_SU_mat_not_anticommute_paulI_z_real_smul` (~50 LoC).
+Sub-lemmas:
+  1. `T_SU_mat_never_anticommute_ts` — explicit entrywise computation
+     showing the anti-commutator vanishes only when X = 0.
+  2. `T_SU_mat_commute_ts_iff_paulI_z` — centralizer characterization
+     via diagonal matrices (forward via α ≠ β; reverse by direct
+     entrywise computation on the diagonal product).
+  3. `H_SU_mat_not_commute_paulI_z_real_smul` — entry (0,1) computation
+     reduces to `c = -c` after multiplication by `√2` and `I² = -1`.
+  4. `H_SU_mat_not_anticommute_paulI_z_real_smul` — entry (0,0)
+     computation, same shape as sub-lemma 3.
 
 ## Pipeline invariants
 
 - **#10** (no `maxHeartbeats`): respected.
-- **#15** (no new axioms): respected (the `sorry`s are placeholders for
-  in-progress substantive proofs, not axioms).
-- **ADR-003** (zero sorry in shipped code): file is NOT imported by
-  `SKEFTHawking.lean` while `sorry`s remain. This complies with the
-  zero-sorry-in-shipped-build invariant.
+- **#15** (no new axioms): respected.
+- **ADR-003** (zero sorry in shipped code): respected (zero sorries).
 
 -/
 
 import SKEFTHawking.FKLW.CliffordTGeneratingSet
+import SKEFTHawking.FKLW.CliffordTNonCommuting
 import SKEFTHawking.FKLW.SU2LieAlgebra
 
 set_option autoImplicit false
@@ -196,21 +191,159 @@ theorem T_SU_mat_commute_ts_iff_paulI_z
     (hX : X ∈ tracelessSkewHermitian (Fin 2)) :
     T_SU_mat * X = X * T_SU_mat ↔
     ∃ c : ℝ, X = (c : ℂ) • SU2LieAlgebra.paulI_z := by
-  sorry
+  -- Set up scalar names α, β.
+  set α : ℂ := Complex.exp (-(Complex.I * (Real.pi : ℂ) / 8)) with hα_def
+  set β : ℂ := Complex.exp (Complex.I * (Real.pi : ℂ) / 8) with hβ_def
+  have hα_ne : α ≠ 0 := Complex.exp_ne_zero _
+  have hβ_ne : β ≠ 0 := Complex.exp_ne_zero _
+  -- α ≠ β: exp(-iπ/8) ≠ exp(iπ/8).
+  have hαβ_distinct : α ≠ β := by
+    intro h_eq
+    -- If α = β, then exp(iπ/4) = exp(iπ/8) / exp(-iπ/8) = β/α = 1.
+    -- That contradicts our existing lemma exp_I_pi_8_ne_exp_neg_I_pi_8.
+    apply exp_I_pi_8_ne_exp_neg_I_pi_8
+    rw [hβ_def, hα_def] at h_eq
+    exact h_eq.symm
+  have hαβ_diff_ne : α - β ≠ 0 := sub_ne_zero.mpr hαβ_distinct
+  have hβα_diff_ne : β - α ≠ 0 := sub_ne_zero.mpr (Ne.symm hαβ_distinct)
+  -- Fin 2 literal bridges.
+  have h0eq : (0 : Fin 2) = ⟨0, by decide⟩ := rfl
+  have h1eq : (1 : Fin 2) = ⟨1, by decide⟩ := rfl
+  have h_T00 : T_SU_mat ⟨0, by decide⟩ ⟨0, by decide⟩ = α := rfl
+  have h_T01 : T_SU_mat ⟨0, by decide⟩ ⟨1, by decide⟩ = 0 := rfl
+  have h_T10 : T_SU_mat ⟨1, by decide⟩ ⟨0, by decide⟩ = 0 := rfl
+  have h_T11 : T_SU_mat ⟨1, by decide⟩ ⟨1, by decide⟩ = β := rfl
+  refine ⟨fun h_comm => ?_, ?_⟩
+  · -- Forward: commutativity ⟹ X = c • paulI_z.
+    -- Entry-by-entry analysis of T_SU·X - X·T_SU = 0:
+    --   (0,0): α·X(0,0) - X(0,0)·α = 0 (trivially)
+    --   (0,1): α·X(0,1) - X(0,1)·β = (α-β)·X(0,1) = 0 ⟹ X(0,1) = 0
+    --   (1,0): β·X(1,0) - X(1,0)·α = (β-α)·X(1,0) = 0 ⟹ X(1,0) = 0
+    --   (1,1): trivially 0
+    have h_diff_zero : T_SU_mat * X - X * T_SU_mat = 0 := sub_eq_zero.mpr h_comm
+    have h_X01_zero : X ⟨0, by decide⟩ ⟨1, by decide⟩ = 0 := by
+      have h_entry := congr_fun (congr_fun h_diff_zero ⟨0, by decide⟩) ⟨1, by decide⟩
+      simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two,
+                 Matrix.zero_apply] at h_entry
+      rw [h0eq, h1eq, h_T00, h_T01, h_T11] at h_entry
+      have h_eq : (α - β) * X ⟨0, by decide⟩ ⟨1, by decide⟩ = 0 := by
+        linear_combination h_entry
+      exact (mul_eq_zero.mp h_eq).resolve_left hαβ_diff_ne
+    have h_X10_zero : X ⟨1, by decide⟩ ⟨0, by decide⟩ = 0 := by
+      have h_entry := congr_fun (congr_fun h_diff_zero ⟨1, by decide⟩) ⟨0, by decide⟩
+      simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two,
+                 Matrix.zero_apply] at h_entry
+      rw [h0eq, h1eq, h_T00, h_T10, h_T11] at h_entry
+      have h_eq : (β - α) * X ⟨1, by decide⟩ ⟨0, by decide⟩ = 0 := by
+        linear_combination h_entry
+      exact (mul_eq_zero.mp h_eq).resolve_left hβα_diff_ne
+    -- Now use the ts-structure: X(0,0) is pure imaginary, X(1,1) = -X(0,0).
+    obtain ⟨h_re_00, h_11, _h_offdiag⟩ := tracelessSkewHermitian_entries hX
+    -- So X(0,0) = (X(0,0).im : ℂ) * I; let c := X(0,0).im.
+    set c : ℝ := (X ⟨0, by decide⟩ ⟨0, by decide⟩).im with hc_def
+    refine ⟨c, ?_⟩
+    -- Show X = c • paulI_z entrywise.
+    ext i j
+    fin_cases i <;> fin_cases j
+    · -- (0,0): X(0,0) = c • paulI_z(0,0) = c • I = c·I
+      show X ⟨0, by decide⟩ ⟨0, by decide⟩ =
+        ((c : ℂ) • SU2LieAlgebra.paulI_z) ⟨0, by decide⟩ ⟨0, by decide⟩
+      have h_pz : (SU2LieAlgebra.paulI_z) ⟨0, by decide⟩ ⟨0, by decide⟩ = Complex.I := by
+        simp [SU2LieAlgebra.paulI_z, SKEFTHawking.σ_z, Matrix.smul_apply, smul_eq_mul]
+      rw [Matrix.smul_apply, h_pz, smul_eq_mul]
+      -- Goal: X(0,0) = (c : ℂ) * I where c = X(0,0).im, and X(0,0).re = 0.
+      have := h_re_00
+      -- X(0,0) is pure imaginary
+      apply Complex.ext
+      · simp [Complex.mul_re, Complex.I_re, Complex.I_im, Complex.ofReal_re,
+              Complex.ofReal_im]
+        exact this
+      · simp [Complex.mul_im, Complex.I_re, Complex.I_im, Complex.ofReal_re,
+              Complex.ofReal_im, hc_def]
+    · -- (0,1): X(0,1) = c • paulI_z(0,1) = c • 0 = 0
+      show X ⟨0, by decide⟩ ⟨1, by decide⟩ =
+        ((c : ℂ) • SU2LieAlgebra.paulI_z) ⟨0, by decide⟩ ⟨1, by decide⟩
+      have h_pz : (SU2LieAlgebra.paulI_z) ⟨0, by decide⟩ ⟨1, by decide⟩ = 0 := by
+        simp [SU2LieAlgebra.paulI_z, SKEFTHawking.σ_z, Matrix.smul_apply, smul_eq_mul]
+      rw [Matrix.smul_apply, h_pz, smul_eq_mul, mul_zero]
+      exact h_X01_zero
+    · -- (1,0): X(1,0) = c • paulI_z(1,0) = c • 0 = 0
+      show X ⟨1, by decide⟩ ⟨0, by decide⟩ =
+        ((c : ℂ) • SU2LieAlgebra.paulI_z) ⟨1, by decide⟩ ⟨0, by decide⟩
+      have h_pz : (SU2LieAlgebra.paulI_z) ⟨1, by decide⟩ ⟨0, by decide⟩ = 0 := by
+        simp [SU2LieAlgebra.paulI_z, SKEFTHawking.σ_z, Matrix.smul_apply, smul_eq_mul]
+      rw [Matrix.smul_apply, h_pz, smul_eq_mul, mul_zero]
+      exact h_X10_zero
+    · -- (1,1): X(1,1) = -X(0,0) = -c·I = c • paulI_z(1,1) = c • (-I)
+      show X ⟨1, by decide⟩ ⟨1, by decide⟩ =
+        ((c : ℂ) • SU2LieAlgebra.paulI_z) ⟨1, by decide⟩ ⟨1, by decide⟩
+      have h_pz : (SU2LieAlgebra.paulI_z) ⟨1, by decide⟩ ⟨1, by decide⟩ = -Complex.I := by
+        simp [SU2LieAlgebra.paulI_z, SKEFTHawking.σ_z, Matrix.smul_apply, smul_eq_mul]
+      rw [Matrix.smul_apply, h_pz, smul_eq_mul]
+      -- Goal: X(1,1) = c • (-I) = -(c·I)
+      -- X(1,1) = -X(0,0). X(0,0) = c·I. So X(1,1) = -c·I.
+      rw [show X ⟨1, by decide⟩ ⟨1, by decide⟩ = -X ⟨0, by decide⟩ ⟨0, by decide⟩ from h_11]
+      apply Complex.ext
+      · simp [Complex.mul_re, Complex.neg_re, Complex.I_re, Complex.I_im,
+              Complex.ofReal_re, Complex.ofReal_im]
+        exact h_re_00
+      · simp [Complex.mul_im, Complex.neg_im, Complex.I_re, Complex.I_im,
+              Complex.ofReal_re, Complex.ofReal_im, hc_def]
+  · -- Reverse: X = c·paulI_z ⟹ commute.
+    rintro ⟨c, hc⟩
+    rw [hc]
+    -- T_SU * (c • paulI_z) = (c • paulI_z) * T_SU. Both are diagonal.
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [T_SU_mat, SU2LieAlgebra.paulI_z, SKEFTHawking.σ_z,
+            Matrix.mul_apply, Fin.sum_univ_two, smul_eq_mul] <;>
+      ring
 
 /-! ## Sub-lemma 3: H_SU doesn't commute with c·paulI_z (c ≠ 0)
 
-Strategy: at entry (0,1), LHS = c/√2 and RHS = -c/√2; equality forces
-`2c/√2 = 0`, hence `c = 0`. WIP — full proof attempted but blocked on
-`simp` not fully reducing `vecCons`-form matrix-element lookups; the
-substantive math is correct, the Lean-DSL friction is in the index
-representation. Will be filled in next session via alternative tactic
-chain (likely use `Matrix.mul_fin_two` or explicit `show`+`decide`). -/
+Strategy: extract entry (0,1) of the commutator. After `simp` reduction:
+LHS = `-(I/√2 · (c·I))`, RHS = `c·I · (I/√2)`. Multiply both sides by
+`√2`; using `I² = -1`, LHS·√2 = c and RHS·√2 = -c, so `c = -c`, hence
+`2c = 0`, hence `c = 0` (contradiction). -/
 theorem H_SU_mat_not_commute_paulI_z_real_smul
     (c : ℝ) (h_ne : (c : ℂ) ≠ 0) :
     H_SU_mat * ((c : ℂ) • SU2LieAlgebra.paulI_z) ≠
       ((c : ℂ) • SU2LieAlgebra.paulI_z) * H_SU_mat := by
-  sorry
+  intro h_eq
+  -- Extract entry (0,1) and reduce both sides via Complex.I_mul_I.
+  have h_at_0_1 := congr_fun (congr_fun h_eq ⟨0, by decide⟩) ⟨1, by decide⟩
+  simp [H_SU_mat, SU2LieAlgebra.paulI_z, SKEFTHawking.σ_z,
+        Matrix.mul_apply, Fin.sum_univ_two, smul_eq_mul]
+    at h_at_0_1
+  -- After simp: -(I / √2 * (c * I)) = c * I * (I / √2).
+  -- Multiply both sides by √2. Use I * I = -1.
+  -- LHS · √2 = -(I * c * I) = -c · (-1) = c.
+  -- RHS · √2 = c · I · I = c · (-1) = -c.
+  -- So c = -c, hence 2c = 0, hence c = 0.
+  have h_sqrt_ne : ((Real.sqrt 2 : ℝ) : ℂ) ≠ 0 := by
+    exact_mod_cast (Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 2)).ne'
+  have h_clear : (c : ℂ) = -(c : ℂ) := by
+    have h_mul : (-(Complex.I / ((Real.sqrt 2 : ℝ) : ℂ) * ((c : ℂ) * Complex.I))) *
+                   ((Real.sqrt 2 : ℝ) : ℂ) =
+                 ((c : ℂ) * Complex.I * (Complex.I / ((Real.sqrt 2 : ℝ) : ℂ))) *
+                   ((Real.sqrt 2 : ℝ) : ℂ) := by
+      rw [h_at_0_1]
+    have h_lhs : (-(Complex.I / ((Real.sqrt 2 : ℝ) : ℂ) * ((c : ℂ) * Complex.I))) *
+                   ((Real.sqrt 2 : ℝ) : ℂ) = (c : ℂ) := by
+      field_simp
+      linear_combination -Complex.I_sq
+    have h_rhs : ((c : ℂ) * Complex.I * (Complex.I / ((Real.sqrt 2 : ℝ) : ℂ))) *
+                   ((Real.sqrt 2 : ℝ) : ℂ) = -(c : ℂ) := by
+      field_simp
+      linear_combination Complex.I_sq
+    rw [h_lhs, h_rhs] at h_mul
+    exact h_mul
+  -- From c = -c: 2c = 0.
+  have h_2c_zero : (2 : ℂ) * (c : ℂ) = 0 := by linear_combination h_clear
+  have h_two_ne : (2 : ℂ) ≠ 0 := by norm_num
+  rcases mul_eq_zero.mp h_2c_zero with h_2 | h_c
+  · exact absurd h_2 h_two_ne
+  · exact h_ne h_c
 
 /-! ## Sub-lemma 4: H_SU doesn't anti-commute with c·paulI_z (c ≠ 0)
 
@@ -219,7 +352,48 @@ theorem H_SU_mat_not_anticommute_paulI_z_real_smul
     (c : ℝ) (h_ne : (c : ℂ) ≠ 0) :
     H_SU_mat * ((c : ℂ) • SU2LieAlgebra.paulI_z) ≠
       -(((c : ℂ) • SU2LieAlgebra.paulI_z) * H_SU_mat) := by
-  sorry
+  intro h_eq
+  -- Extract entry (0,0) and reduce.
+  have h_at_0_0 := congr_fun (congr_fun h_eq ⟨0, by decide⟩) ⟨0, by decide⟩
+  simp [H_SU_mat, SU2LieAlgebra.paulI_z, SKEFTHawking.σ_z,
+        Matrix.mul_apply, Fin.sum_univ_two, smul_eq_mul,
+        Matrix.neg_apply]
+    at h_at_0_0
+  -- After simp: I/√2 * (c·I) = -((c·I) * (I/√2)) (or similar).
+  -- LHS = c·I²/√2 = -c/√2.
+  -- RHS = -(c·I²/√2) = -(-c/√2) = c/√2.
+  -- So -c/√2 = c/√2 ⟹ 2c/√2 = 0 ⟹ c = 0.
+  have h_sqrt_ne : ((Real.sqrt 2 : ℝ) : ℂ) ≠ 0 := by
+    exact_mod_cast (Real.sqrt_pos.mpr (by norm_num : (0 : ℝ) < 2)).ne'
+  have h_clear : (c : ℂ) = -(c : ℂ) := by
+    -- Multiply both sides of h_at_0_0 by √2.
+    have h_mul : h_at_0_0.symm = h_at_0_0.symm := rfl
+    -- We need to reduce. After simp, h_at_0_0 typically has the form
+    --   I / ↑√2 * (↑c * I) = -(↑c * I * (I / ↑√2))
+    -- Multiply LHS · √2 = -c, RHS · √2 = -(-c) = c.
+    -- So -c = c, i.e., c = -c.
+    have h_step : (Complex.I / ((Real.sqrt 2 : ℝ) : ℂ) * ((c : ℂ) * Complex.I)) *
+                    ((Real.sqrt 2 : ℝ) : ℂ) =
+                  (-((c : ℂ) * Complex.I * (Complex.I / ((Real.sqrt 2 : ℝ) : ℂ)))) *
+                    ((Real.sqrt 2 : ℝ) : ℂ) := by
+      rw [h_at_0_0]
+    have h_lhs : (Complex.I / ((Real.sqrt 2 : ℝ) : ℂ) * ((c : ℂ) * Complex.I)) *
+                   ((Real.sqrt 2 : ℝ) : ℂ) = -(c : ℂ) := by
+      field_simp
+      linear_combination Complex.I_sq
+    have h_rhs : (-((c : ℂ) * Complex.I * (Complex.I / ((Real.sqrt 2 : ℝ) : ℂ)))) *
+                   ((Real.sqrt 2 : ℝ) : ℂ) = (c : ℂ) := by
+      field_simp
+      linear_combination -Complex.I_sq
+    rw [h_lhs, h_rhs] at h_step
+    -- h_step : -c = c, so c = -c.
+    linear_combination -h_step
+  have h_2c_zero : (2 : ℂ) * (c : ℂ) = 0 := by linear_combination h_clear
+  have h_two_ne : (2 : ℂ) ≠ 0 := by norm_num
+  apply h_ne
+  rcases mul_eq_zero.mp h_2c_zero with h_2 | h_c
+  · exact absurd h_2 h_two_ne
+  · exact h_c
 
 /-! ## Composition: case-analysis headline -/
 
