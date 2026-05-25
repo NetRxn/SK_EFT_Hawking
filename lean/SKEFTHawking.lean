@@ -277,6 +277,11 @@ import SKEFTHawking.SymTFT.SubstrateEtaInvariant
 -- the Pontryagin substrate (Pontryagin-Pin⁺-2 + Freed-Hopkins arXiv:
 -- 1604.06527 §6 Anderson-dual formula at the Pin⁺ case).
 import SKEFTHawking.SymTFT.AndersonDualSubstrate
+-- Phase 6r-prime W1.1 (2026-05-25): Pin⁺ 4-manifold substrate with
+-- substantive signature-additivity AddCommGroup. Extends the project's
+-- existing `SpinManifold4` pattern (RokhlinBridge.lean) to Pin⁺.
+-- Foundation for W1.2 (bordism Setoid) + W1.3 (substantive Omega4PinPlus).
+import SKEFTHawking.SymTFT.PinPlusManifold4
 import SKEFTHawking.SymTFT.SpinSymTFT
 import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
 -- Wave 2b — Z₁₆ classification via Spin-SymTFT
