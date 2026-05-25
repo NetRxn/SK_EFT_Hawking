@@ -111,7 +111,7 @@ structure DKMParameters where
 
 namespace DKMParameters
 
-/-- The collective mean free path `ℓ := √(τ·D)`. CHHK eq. (26) MIR-style
+/-- The collective mean free path `ℓ := √(τ·D)`. CHHK eq. (9) v2 [= eq. (26) v1] MIR-style
 master bound is phrased in terms of `ℓ/a`. -/
 noncomputable def collectiveMeanFreePath (p : DKMParameters) : ℝ :=
   Real.sqrt (p.τ * p.D)
@@ -295,13 +295,30 @@ theorem drude_positivity_at_zero_k (p : DKMParameters) :
   unfold drudeCorrelator
   simp
 
-/-! **Substantive non-vacuity witness: zero correlator.**
+/-! **Substrate-API non-vacuity witnesses: zero correlator.**
 
 The constantly-zero correlator `G ≡ 0` satisfies F4 (positivity), F5
-(trivially), F6 (parity) for any `DKMParameters`. This is the *zero
-witness* (analog of `zeroAction` in `GloriosoLiu/Axioms.lean`) — used
-to verify the predicates compose and have non-degenerate type
-structure. The genuine Drude / graphene witnesses live in Wave 2a. -/
+(trivially), F6 (parity), F2 (f-sum rule with nonneg bound) for any
+`DKMParameters`; the zero commutator-norm sequence satisfies F3
+(operator-growth bound) for any positive `(ε, n0Norm)`. These are the
+*zero witnesses* (analog of `zeroAction` in `GloriosoLiu/Axioms.lean`)
+— substrate-API checks that the predicates compose and have non-
+degenerate type structure.
+
+**Post-strengthening 2026-05-25 (A.4 audit):** these are **substrate-
+API non-vacuity witnesses, not substantive physics theorems**. They
+are LOAD-BEARING (consumed across 3 downstream DKMBootstrap modules
+— AxiomSet.lean, LDPBridge.lean, SKEFTSpecialization.lean — at 10+
+sites total). The substantive physics witnesses live in:
+- `drudeCorrelator` (§5 above) — closed-form Drude metal correlator,
+  the textbook CHHK §4 benchmark (non-trivial spectral function).
+- `becBogoliubovCommutatorNorm` (`BECBogoliubovBosonicGrowth.lean`) —
+  concrete (2κ)! sequence, the Wave 2b.4 sharpened-NO-GO witness.
+- `grapheneDKMParameters` (`E1E2CrossBridge.lean`) + the substantive
+  `(2·β_2/(4π))^(1/3) ≈ 0.0756` from `src/dkm_bootstrap/graphene_mir.py`.
+
+A partial F4/F5/F6 bundle `trivial_link_witness` (AxiomSet.lean) ties
+these into the CGL six-axiom skeleton via the spectral-function link. -/
 
 /-- **The constantly-zero correlator.** -/
 def zeroCorrelator : Correlator := fun _ _ => 0

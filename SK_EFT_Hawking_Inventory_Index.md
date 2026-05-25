@@ -2,7 +2,7 @@
 
 **Purpose.** LLM-friendly comprehensive index for the SK-EFT Hawking project. **This file is pointers only — no embedded content.** Every entry is `file path + one-line summary`. For full content read the pointed-to file. For comprehensive prose see `SK_EFT_Hawking_Inventory.md`. For live counts read `docs/counts.json`.
 
-**Last synced:** 2026-05-23 (Phase 6q close). **Sync source:** `docs/counts.json` (generated 2026-05-23T16:12 after Phase 6q ship) + live filesystem.
+**Last synced:** 2026-05-25 (Phase 6q strengthening close). **Sync source:** `docs/counts.json` (generated 2026-05-25T08:12 after strengthening + B.1/B.2/B.3 substantive lifts ship) + live filesystem.
 
 **Size discipline.** Target ~50–80 KB. Keep under 100 KB so future LLM bootstraps can read it in a single `Read` call (the harness truncates files >256 KB and may skip files much smaller than that). When this file approaches 100 KB, prune narrative — move it to `SK_EFT_Hawking_Inventory.md` or `temporary/working-docs/`. Do NOT inline session logs, wave-history, or per-commit detail; those belong in `temporary/working-docs/` or the prose inventory.
 
@@ -19,26 +19,26 @@
 
 ## 1. One-page state snapshot
 
-**Counts (from `docs/counts.json`, generated 2026-05-23T16:12 post Phase 6q ship):**
+**Counts (from `docs/counts.json`, generated 2026-05-25T08:12 post Phase 6q strengthening close):**
 
 | Metric | Value |
 |---|---:|
-| Lean theorems (total) | 7342 |
-| Lean theorems (substantive) | 7317 |
+| Lean theorems (total) | 7339 |
+| Lean theorems (substantive) | 7314 |
 | Lean theorems (placeholder `True := trivial`) | 25 |
-| Lean modules | 389 |
-| Lean total declarations | 13630 |
-| Lean definitions | 5552 |
-| Lean structures | 253 |
-| Lean instances | 389 |
+| Lean modules | 390 |
+| Lean total declarations | 13628 |
+| Lean definitions | 5553 |
+| Lean structures | 257 |
+| Lean instances | 391 |
 | Lean inductives | 88 |
 | Lean axioms | **0** (project-local) |
 | Lean sorries | **0** |
 | Aristotle-proved theorems | 322 |
 | Aristotle runs | 44 |
-| Python source modules | 130 |
-| Test files | 100 |
-| Pytest cases | 4195 |
+| Python source modules | 131 |
+| Test files | 101 |
+| Pytest cases | 4218 |
 | Figures (PNG) | 156 |
 | Notebooks | 89 |
 | Papers (drafts) | 42 |
@@ -52,7 +52,8 @@
 - Rust: PyO3 abi3-forward-compat (`rust/`).
 
 **Recent ships (newest first):**
-- **2026-05-23 PM** Phase 6q DKM transport bootstrap SUBSTANTIVELY CLOSED — all 5 Waves shipped in single autonomous-loop session; 10 new Lean modules under `lean/SKEFTHawking/DKMBootstrap/` (~1,800 LoC, zero sorries, zero new axioms); bimodal outcome BOTH halves shipped substantively (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded substrates). Bundle placement BOTH L2 + D5. See `temporary/working-docs/phase6q/wave_2c_positioning.md` for full closing positioning.
+- **2026-05-25** Phase 6q strengthening close + 3 substantive deferred-item lifts SHIPPED — §A 20-item resolution (5 deletions, 3 abbrev demotions, A.6 conjunct cleanup, A.3 substantive companion, A.4/A.7 docstring strengthening) + B.1 Python graphene MIR companion (substantive `(2·β_2/(4π))^(1/3) ≈ 0.0756`; the Lean substrate-level `1/2` placeholder is a safe upper bound) + B.2 reverse-direction LDP biconditional + B.3 BEC Bogoliubov substantive unbounded-norm proof (new module `BECBogoliubovBosonicGrowth.lean` with witnessed concrete `(2κ)!` sequence; both halves of bimodal outcome now witnessed by distinct concrete substrates). All headlines kernel-only; lake build 8638 jobs clean; pytest 4220 total / 4152 default-run / 68 slow-deselected, 0 failures; zero new axioms. See `docs/roadmaps/Phase6q_Roadmap.md` Sessions log Session 2.
+- **2026-05-23 PM** Phase 6q DKM transport bootstrap SUBSTANTIVELY CLOSED — all 5 Waves shipped in single autonomous-loop session; 10 new Lean modules under `lean/SKEFTHawking/DKMBootstrap/` (~2,375 LoC Session 1; zero sorries, zero new axioms); bimodal outcome BOTH halves shipped substantively (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded substrates). Bundle placement BOTH L2 + D5. See `temporary/working-docs/phase6q/wave_2c_positioning.md` for full closing positioning.
 - **2026-05-23** Phase 6t Path A Option C ship — `SkApproxCSuperQuadraticBound_holds` + unconditional tight-ε strict headline `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight` in `lean/SKEFTHawking/FKLW/SolovayKitaevPathA.lean`. Kernel-only. See `docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`.
 - **2026-05-23** D4 bundle closed at GREEN-with-advisories (Stage 9/10/13 round-2 cycle). 10/14 bundles GREEN. See `docs/BUNDLE_READINESS_HEATMAP.md`.
 - **2026-05-22** Phase 5 Step 13 — `fibonacci_density_F21_unconditional` discharged kernel-only in `lean/SKEFTHawking/FKLW/SU2BCHBracketClosure.lean`. See `docs/PHASE5_STEP13_COMPLETE.md`.
@@ -102,7 +103,7 @@ For the public narrative of what the project does, see `README.MD`. Key story ar
 | `lean/SKEFTHawking/SoftTheorems/` | Boostless / Carrollian cosmological soft theorems; dissipative no-go; noise-floor prediction. | `ls lean/SKEFTHawking/SoftTheorems/` |
 | `lean/SKEFTHawking/ETH/` | Eigenstate thermalization hypothesis refutation on horizon-MTC substrate. | `ls lean/SKEFTHawking/ETH/` |
 | `lean/SKEFTHawking/QCyc40/` | Q(ζ₄₀) cyclotomic-field substrate (Phase 6p T-gate compiler). | `ls lean/SKEFTHawking/QCyc40/` |
-| `lean/SKEFTHawking/DKMBootstrap/` | Phase 6q DKM transport bootstrap on SK-EFT-Hawking horizon transport (Chowdhury-Hartnoll-Hebbar-Khondaker arXiv:2509.18255 specialization). 10 modules (~1,800 LoC, zero sorries). Two tracks: Track 1 (Predicates/AxiomSet/KMSConsistency/NoCrossing/SDPStructure/LinearFunctionals/LDPBridge) builds DKM substrate + resolves three Phase 6o Wave 1c NO-GO obstructions; Track 2 (SKEFTSpecialization/E1E2CrossBridge/HorizonTransportBootstrap) specializes to 3 platforms (graphene/BEC/polariton) with bimodal outcome (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded). | `ls lean/SKEFTHawking/DKMBootstrap/` |
+| `lean/SKEFTHawking/DKMBootstrap/` | Phase 6q DKM transport bootstrap on SK-EFT-Hawking horizon transport (Chowdhury-Hartnoll-Hebbar-Khondaker arXiv:2509.18255 specialization). **11 modules, 2,716 LoC** (Session 1: 10 modules, ~2,375 LoC, 2026-05-23; Session 2: BECBogoliubovBosonicGrowth.lean, 341 LoC, 2026-05-25 strengthening close); zero sorries, zero new axioms. Track 1 (Predicates/AxiomSet/KMSConsistency/NoCrossing/SDPStructure/LinearFunctionals/LDPBridge) builds DKM substrate + resolves three Phase 6o Wave 1c NO-GO obstructions; Track 2 (SKEFTSpecialization/E1E2CrossBridge/HorizonTransportBootstrap) specializes to 3 platforms (graphene/BEC/polariton) with bimodal outcome (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded). Wave 2b.4 module `BECBogoliubovBosonicGrowth.lean` lifts the sharpened-NO-GO half to a witnessed concrete substrate-level stand-in sequence `(2κ)!` (substantive Lieb-Robinson-for-bosons derivation deferred). Python numerical companion at `src/dkm_bootstrap/` ships substantive graphene MIR constant `(2·β_2/(4π))^(1/3) = 0.07562892800257...` (30 dps mpmath). | `ls lean/SKEFTHawking/DKMBootstrap/` |
 
 ### 3.2 Topical groupings (top-level `.lean` files)
 
@@ -193,9 +194,12 @@ Load-bearing top-level theorems. Each row: fully-qualified name + module path + 
 | `vertical_bootstrap_bypasses_crossing` | `DKMBootstrap/NoCrossing.lean` | Substantive resolution of Phase 6o Wave 1c Obstruction (II): vertical bootstrap + F4/F5/F6 ⇒ full CHHK axiom set without any crossing identity. |
 | `dkm_axiom_set_iff_vertical_plus_f4f5f6` | `DKMBootstrap/NoCrossing.lean` | Equivalence: `IsDKMAxiomSet ↔ IsVerticalBootstrap ∧ F4 ∧ F5 ∧ F6`. |
 | `dkm_rate_function_is_LDPRateFunction` | `DKMBootstrap/LDPBridge.lean` | **Highest-leverage cross-bridge of Phase 6q**: Phase 6n abstract `IsLDPRateFunction` class instantiated on Phase 6q DKM substrate via FDT-pinned variance `σ²:=χ·D`. |
-| `horizon_transport_uniqueness_graphene_witness_one_half` | `DKMBootstrap/HorizonTransportBootstrap.lean` | **Positive uniqueness half of Phase 6q bimodal outcome** — graphene Dirac fluid substrate's collective mean free path bounded below by `mirConst = 1/2` (substantive O(0.6) constant ships Python-side). |
+| `chhk_F4_existence_iff_LDP_rate_function_holds` | `DKMBootstrap/LDPBridge.lean` | Substrate-level biconditional closure of the Wave 2a.1 DR §6 cross-bridge (Wave 2b.2 substantive lift 2026-05-25). |
+| `horizon_transport_uniqueness_graphene_witness_one_half` | `DKMBootstrap/HorizonTransportBootstrap.lean` | **Positive uniqueness half of Phase 6q bimodal outcome** — graphene Dirac fluid substrate's collective mean free path bounded below by `mirConst = 1/2` (substantive constant `(2·β_2/(4π))^(1/3) ≈ 0.0756` ships Python-side in `src/dkm_bootstrap/graphene_mir.py`; the Lean `1/2` placeholder is a safe upper bound). |
 | `sharpened_no_go_super_factorial` | `DKMBootstrap/HorizonTransportBootstrap.lean` | **Sharpened NO-GO half of Phase 6q bimodal outcome** — CHHK bootstrap inapplicable to super-factorial-unbounded commutator-norm substrates (BEC Bogoliubov case via Yin-Lucas/Kuwahara-Saito Lieb-Robinson-for-bosons). |
-| `platform_kms_qualities_pairwise_distinct` | `DKMBootstrap/E1E2CrossBridge.lean` | Substantive structural finding: graphene (Strong) / BEC (Approximate) / polariton (EffectiveOnly) KMS-quality classifications are pairwise-distinct. |
+| `becBogoliubovCommutatorNorm_isSuperFactorialUnbounded` | `DKMBootstrap/BECBogoliubovBosonicGrowth.lean` | **Wave 2b.4 substantive lift (2026-05-25)** — concrete BEC Bogoliubov-bosonic commutator-norm sequence `(2κ)!` substantively instantiates the `IsSuperFactorialUnbounded` predicate, witnessing the sharpened-NO-GO half at concrete-substrate-instance level. |
+| `bec_falls_under_sharpened_no_go` | `DKMBootstrap/BECBogoliubovBosonicGrowth.lean` | Wave 2b.4 cross-bridge: BEC platform fails CHHK F3 operator-growth axiom for any positive microscopic constants. |
+| `platform_kms_qualities_pairwise_distinct` | `DKMBootstrap/E1E2CrossBridge.lean` | Classifier-level distinctness: graphene (Strong) / BEC (Approximate) / polariton (EffectiveOnly) KMS-quality classifications are pairwise-distinct. Substantive companion: `bec_distinguishes_from_graphene_super_factorial` in `BECBogoliubovBosonicGrowth.lean`. |
 | `f2_orthogonal_to_skeft_axioms`, `f3_orthogonal_to_skeft_axioms` | `DKMBootstrap/AxiomSet.lean` | Substantive structural finding: CHHK F2 (f-sum rule) and F3 (operator-growth) microscopic axioms are NOT implied by CGL `SKEFTAxioms` — they carry genuinely new microscopic-lattice content. |
 
 ### 4.5 Hawking pipeline / SK-EFT
@@ -378,6 +382,7 @@ Authority: `docs/PAPER_STRATEGY.md` (architecture) + `docs/PAPER_DRAFT_MAPPING.m
 | `src/ew_phase_transition/` | Phase 6g/6k: `baryogenesis_compatibility.py`, `order_classifier.py`, `potential.py`. |
 | `src/ew_baryogenesis/` | Phase 6g: `bridge_check.py`, `sphaleron_computation.py`. |
 | `src/resurgence/` | Phase 6n: `bdg_self_energy.py`, `borel.py`. |
+| `src/dkm_bootstrap/` | Phase 6q Wave 2b numerical companion (2026-05-25 strengthening close): `graphene_mir.py` — CHHK MIR constant `(2·β_2/(4π))^(1/3) ≈ 0.0756` with Crossno 2016 graphene-data confrontation. Canonical formulas in `src/core/formulas.py` (`chhk_beta_d`, `chhk_mir_constant`, `graphene_mir_constant`, `graphene_mir_constant_mpmath`, `unit_sphere_surface`); platform-specific specialization here. |
 
 ---
 
@@ -424,7 +429,7 @@ Authority: `docs/PAPER_STRATEGY.md` (architecture) + `docs/PAPER_DRAFT_MAPPING.m
 
 ### 10.2 `docs/roadmaps/` — phase roadmaps
 
-Per-phase roadmaps (Phase 1 through Phase 7a) in `docs/roadmaps/Phase<N>_Roadmap.md`. Active roadmaps as of 2026-05-23: Phase 6t (quantitative SK), Phase 7a (paper-bundle architecture freeze). All Phase 5+ phases through 6p are substantively closed.
+Per-phase roadmaps (Phase 1 through Phase 7a) in `docs/roadmaps/Phase<N>_Roadmap.md`. Active roadmaps as of 2026-05-25: Phase 6v (external-substrate alignment + creates D6 bundle, 7 waves NOT STARTED), Phase 6w (classical-simulability + tensor-network substrate, 7 waves NOT STARTED), Phase 6t (quantitative SK — Path A Option C close 2026-05-23), Phase 7a (paper-bundle architecture freeze). Phase 6u (Generic-Alphabet SK substrate) is a NOT-STARTED planning skeleton with T-A2 / T-B tracks re-slotted from "(likely Phase 6w)" to Phase 6x or later per ADR 008. All Phase 5+ phases through 6p are substantively closed.
 
 ### 10.3 `docs/references/` — manuals
 

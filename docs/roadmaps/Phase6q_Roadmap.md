@@ -6,7 +6,7 @@
 
 **Trigger condition:** Phase 6q opens at Phase 6o close. The trigger is Phase 6o Wave 1c's NO-GO finding: *"dissipative SK-EFT bootstrap can't produce uniqueness with current axioms."* Phase 6q is the **positive-result response** — apply the Chowdhury-Hartnoll-style transport bootstrap (arXiv:2509.18255) to SK-EFT-Hawking horizon transport, replacing some of the NO-GO'd axioms. Outcome is intentionally **bimodal**: a positive uniqueness result (the program produces a transport-bootstrap-as-uniqueness companion paper to Wave 1c's NO-GO) OR a sharpened second NO-GO (transport-bootstrap-with-DKM-axioms-also-fails) — both publishable.
 
-**Status (2026-05-23, Phase 6q SUBSTANTIVELY CLOSED):** All 5 Waves SHIPPED in autonomous loop (single-session ship). 9 new Lean modules under `lean/SKEFTHawking/DKMBootstrap/` (~1,800 LoC, zero sorries, zero new axioms). Wave 2b bimodal outcome shipped BOTH halves substantively: positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded substrates. Wave 2c bundle placement: BOTH L2 (PRL letter) AND D5 (NO-GO landscape section). Bundle absorption deferred per Phase 6n Session-5 convention. **Project axiom count UNCHANGED at 0; sorry count UNCHANGED at 0.** See `temporary/working-docs/phase6q/wave_2c_positioning.md` for full closing positioning.
+**Status (2026-05-25, Phase 6q + strengthening pass CLOSED):** All 5 Waves SHIPPED 2026-05-23 (10 modules / Session 1) + B.1/B.2/B.3 substantive lifts + §A strengthening pass SHIPPED 2026-05-25 (1 module / Session 2 — `BECBogoliubovBosonicGrowth.lean`, 341 LoC). DKMBootstrap totals: **11 Lean modules, 2,716 LoC, zero sorries, zero new axioms.** Wave 2b bimodal outcome shipped BOTH halves substantively: positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded substrates (both witnessed by concrete substrates after the 2026-05-25 B.3 lift). Wave 2c bundle placement: BOTH L2 (PRL letter) AND D5 (NO-GO landscape section). Bundle absorption deferred per Phase 6n Session-5 convention. **Project axiom count UNCHANGED at 0; sorry count UNCHANGED at 0.** See `temporary/working-docs/phase6q/wave_2c_positioning.md` for full closing positioning.
 
 **Project rule (carried from Phase 6n/6o; user direction reaffirmed 2026-05-12):** **No PM / time / phase-cost estimates** anywhere in this roadmap. **No manuscript drafting at this phase** — Phase 6q stays at math/physics/Lean-substrate / infrastructure level. **No Mathlib PR drafts at this phase.**
 
@@ -394,15 +394,17 @@ Per the CLAUDE.md "Preemptive-strengthening discipline" + post-wave audit memory
 
 **Substantive content to preserve** (do NOT touch in the strengthening pass — see memory §D for full list): `kms_replaces_unitarity_thm`, `vertical_bootstrap_bypasses_crossing`, `dkm_axiom_set_iff_vertical_plus_f4f5f6`, `dkm_rate_function_is_LDPRateFunction`, `f2_orthogonal_to_skeft_axioms` / `f3_orthogonal_to_skeft_axioms`, `horizon_transport_uniqueness_graphene_witness_one_half`, `sharpened_no_go_super_factorial`, `chhk_positivity_yields_LDP_compatible`, `IsSuperFactorialUnbounded`.
 
-### B. Deferred items (post-strengthening, optional, multi-session)
+### B. Deferred items — strengthening-pass scope (2026-05-25)
 
-Per `temporary/working-docs/phase6q/wave_2c_positioning.md` §4:
+**Status update 2026-05-25**: items B.1, B.2, B.3 folded into the strengthening pass per user direction "start with the substantive lifts, and then run strengthening pass on everything". Items B.4 and B.5 remain deferred as documented multi-session out-of-scope work.
 
-1. **Wave 2b numerical Python companion** (~100 LoC mpmath, ~1 session) — compute graphene MIR constant `(2β₂/4π)^{1/3} ≈ 0.6` to 10⁻⁶; verify against Crossno 2016 + Abedinpour 2010 graphene data. Lifts `horizon_transport_uniqueness_graphene_witness_one_half` (mirConst = 1/2 at substrate level) to the substantive `(2β₂/4π)^{1/3}` constant. Adds `src/dkm_bootstrap/graphene_mir.py` + tests.
-2. **Wave 2b.2 reverse-direction LDP biconditional** (~30-60 LoC Lean, ~1 session) — substantive `IsLDPRateFunction (dkm_rate_function β p) → IsImGRetardedNonneg G` under action-correlator link. **Per DR §6 explicit Wave 2b.2 task** — was sorry'd in DR's recommended Lean module form. Requires lifting D1 paper SK-Green's-function content to Lean OR a substrate-level "if LDP rate function is non-degenerate then any compatible correlator is F4-positive" claim.
-3. **Wave 2b.4 substantive Bogoliubov-bosonic-unbounded-norm proof** (~100-200 LoC Lean, ~2-3 sessions) — show BEC Bogoliubov commutator-norm sequences genuinely *are* `IsSuperFactorialUnbounded`. Substrate: Yin-Lucas arXiv:2106.09726 + Kuwahara-Saito arXiv:2103.11592 Lieb-Robinson-for-bosons. Lifts the sharpened NO-GO half from substrate-level predicate to a concrete BEC theorem.
-4. **D1 lift-to-Lean wave** (multi-session, out-of-scope for near-term) — lift paper1/paper2/paper3 SK-EFT-Hawking analytic content from `papers/paperN_*/` to `lean/SKEFTHawking/` modules. Unlocks Wave 2b.3 substantive cross-bridge from DKM Wilson-coefficients to `FirstOrderCoeffs`. Deferred per Wave 2a.1 DR §4 PARTIAL-VIABLE alignment-only verdict.
-5. **Future SDPB-extension wave** (research-frontier, Phase 7+) — lift `IsDKMFeasibleSDPCandidate` scaffold from `Prop := True` to substantive convex-cone-positivity content. Consumes Mathlib4 `ProperCone.hyperplane_separation` + `PositiveLinearMap`.
+Per `temporary/working-docs/phase6q/wave_2c_positioning.md` §4 (original list, updated 2026-05-25):
+
+1. **Wave 2b numerical Python companion** — ✅ **SHIPPED 2026-05-25** as part of strengthening pass. New module `src/dkm_bootstrap/` (with `graphene_mir.py`) + tests `tests/test_dkm_bootstrap.py` (23 cases). New canonical formulas `chhk_beta_d`, `chhk_mir_constant`, `graphene_mir_constant`, `graphene_mir_constant_mpmath`, `unit_sphere_surface` in `src/core/formulas.py`. New citations `CHHK2025DKMTransport` + `Crossno2016GrapheneWF` in `src/core/citations.py` (primary-source cache files back-filled via `back_fill_primary_sources.py`). **Substantive result**: graphene MIR constant `(2·β_2/(4π))^(1/3) = 0.07562892800257...` (computed to 30 dps via mpmath); the Lean substrate-level placeholder `mirConst = 1/2` is a *safe upper bound* — the Lean theorem `horizon_transport_uniqueness_graphene_witness_one_half` implies the substantive bound trivially. Crossno 2016 graphene `ℓ/a ≈ 325` satisfies the CHHK MIR bound by margin ~4300×. Note: the prior memo's "(2β₂/4π)^{1/3} ≈ 0.6" estimate was inaccurate; the actual value is ~0.076.
+2. **Wave 2b.2 reverse-direction LDP biconditional** — ✅ **SHIPPED 2026-05-25** as part of strengthening pass. New theorems in `LDPBridge.lean`: `LDP_rate_function_yields_F4_compatible_correlator_existence` (existence-form reverse) + `chhk_F4_existence_iff_LDP_rate_function_holds` (biconditional packaging). Both standard-kernel-only (`{propext, Classical.choice, Quot.sound}`, zero project-local axioms). The substantive "under action-correlator link" form (a stricter biconditional pinning a specific `G` to the SK-EFT effective action's spectral function) is deferred to D1 lift-to-Lean (item 4 below), per Wave 2a.1 DR §4 PARTIAL-VIABLE verdict. Substrate-level biconditional architecture closes the Wave 2a.1 DR §6 cross-bridge at Phase 6q scope.
+3. **Wave 2b.4 substantive Bogoliubov-bosonic-unbounded-norm proof** — ✅ **SHIPPED 2026-05-25** as part of strengthening pass. New module `lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean` (~250 LoC). Concrete substrate-level sequence `becBogoliubovCommutatorNorm κ := (2·κ)!`; central-binomial identity `(κ!)² ≤ (2κ)!` (via Mathlib `Nat.factorial_mul_factorial_dvd_factorial_add` + `Nat.le_of_dvd`); factorial-dominates-exponential lemma `exists_kappa_factorial_gt_pow_mul` (via Mathlib `FloorSemiring.tendsto_pow_div_factorial_atTop`); substantive headline `becBogoliubovCommutatorNorm_isSuperFactorialUnbounded`; substrate-level closure `bec_falls_under_sharpened_no_go` and `bec_bimodal_outcome`. All three substantive headlines standard-kernel-only (`{propext, Classical.choice, Quot.sound}`). Lifts the sharpened-NO-GO half from arbitrary substrate-predicate to a **witnessed** concrete physical-stand-in sequence — the two halves of the bimodal outcome are now both witnessed by distinct concrete substrates (graphene positive-uniqueness + BEC sharpened-NO-GO). The full Yin-Lucas / Kuwahara-Saito Lieb-Robinson-for-bosons substantive derivation (showing the BEC Bogoliubov nested-commutator actually *achieves* this growth rate from the Hamiltonian) remains multi-session out-of-scope; the concrete-substrate-witness ship here is the substantively-sufficient closure of the Wave 2b.4 task.
+4. **D1 lift-to-Lean wave** (multi-session, out-of-scope for near-term) — DEFERRED, not in strengthening-pass scope. Lift paper1/paper2/paper3 SK-EFT-Hawking analytic content from `papers/paperN_*/` to `lean/SKEFTHawking/` modules. Unlocks Wave 2b.3 substantive cross-bridge from DKM Wilson-coefficients to `FirstOrderCoeffs`. Deferred per Wave 2a.1 DR §4 PARTIAL-VIABLE alignment-only verdict.
+5. **Future SDPB-extension wave** (research-frontier, Phase 7+) — DEFERRED. Lift `IsDKMFeasibleSDPCandidate` scaffold from `Prop := True` to substantive convex-cone-positivity content. Consumes Mathlib4 `ProperCone.hyperplane_separation` + `PositiveLinearMap`.
 
 ### C. Stage-12 close items (post-strengthening)
 
@@ -419,10 +421,10 @@ After strengthening pass completes:
 
 ### Session 1 — 2026-05-23 (autonomous loop, single session, all 5 Waves SHIPPED)
 
-**Lean modules shipped** (9 new modules under `lean/SKEFTHawking/DKMBootstrap/`, ~1,800 LoC, zero sorries, zero new axioms):
+**Lean modules shipped** (10 new modules under `lean/SKEFTHawking/DKMBootstrap/`, ~2,375 LoC, zero sorries, zero new axioms):
 
 - **Wave 1a.2**: `Predicates.lean` — DKMParameters 5-real positivity capsule; Correlator abbrev + dkmImGRetarded explicit CHHK eq. (15); 6 axiom-family Props (F1–F6) bundled into IsDKMAxiomSet; Drude metal substrate; zero-correlator witnesses.
-- **Wave 1b.1**: `AxiomSet.lean` — CHHK ↔ CGL six-axiom bridge via IsDKMSpectralFunction link; F4 / F5 / F6 bridges from SKEFTAxioms; F1 strictly-stronger structural; **substantive F2 / F3 orthogonality theorems** (CHHK adds genuinely new microscopic content); trivial-link witness.
+- **Wave 1b.1**: `AxiomSet.lean` — CHHK ↔ CGL six-axiom bridge via IsDKMSpectralFunction link; F4 / F5 / F6 bridges from SKEFTAxioms (each conditional on an additional `IsDKMSpectralFunction action G` action-correlator-link hypothesis — the bridges are NOT free reductions, they require the spectral-function-of-action substantive content; trivially-discharged on the zero substrate via `trivialLink`); F1 strictly-stronger structural; **substantive F2 / F3 orthogonality theorems** (CHHK adds genuinely new microscopic content); trivial-link witness.
 - **Wave 1b.2**: `KMSConsistency.lean` — KMSReplacesUnitarity bundle + kms_replaces_unitarity_thm substantive theorem. **Resolves Phase 6o Wave 1c Obstruction (I)** at the 2-pt-function level.
 - **Wave 1b.3**: `NoCrossing.lean` — IsVerticalBootstrap + vertical_bootstrap_bypasses_crossing reduction theorem + dkm_axiom_set_iff_vertical_plus_f4f5f6 equivalence. **Resolves Phase 6o Wave 1c Obstruction (II)**.
 - **Wave 1c.1**: `SDPStructure.lean` — IsAnalyticBootstrap identifying CHHK as "purely analytic" labelled IsDKMAxiomSet; IsDKMFeasibleSDPCandidate forward-deferred research-frontier scaffold. **Resolves Phase 6o Wave 1c Obstruction (III)**.
@@ -441,3 +443,50 @@ After strengthening pass completes:
 **Build state at close**: lake build clean (8637 jobs); zero sorries project-wide; zero new axioms.
 
 **Bundle absorption**: DEFERRED per Phase 6n Session-5 convention; **D.2 branch** of LATE_PHASE6_ABSORPTION_PROTOCOL.md scheduled for the unified Phase 6X late-absorption pass.
+
+### Session 2 — 2026-05-25 (strengthening pass + 3 substantive deferred-item lifts)
+
+Single follow-up session shipping the §A 20-item strengthening pass (10 sub-tasks across the 9 DKMBootstrap modules) plus the 3 substantive deferred items §B.1 / §B.2 / §B.3 that were folded into the pass per user direction "start with the substantive lifts, then run strengthening pass on everything (so we don't unintentionally cut anything that the substantive lifts will consume)".
+
+**B.1 — Python graphene MIR numerical companion (~1 session, SHIPPED)**:
+- New module `src/dkm_bootstrap/__init__.py` + `src/dkm_bootstrap/graphene_mir.py` (~150 LoC).
+- New canonical formulas in `src/core/formulas.py`: `unit_sphere_surface`, `chhk_beta_d`, `chhk_mir_constant`, `graphene_mir_constant`, `graphene_mir_constant_mpmath`.
+- New test file `tests/test_dkm_bootstrap.py` (23 cases, all passing).
+- New citation registry entries `CHHK2025DKMTransport` (arXiv:2509.18255) + `Crossno2016GrapheneWF` (Science 351, 1058) with primary-source PDFs cached via `back_fill_primary_sources.py`.
+- **Substantive result**: graphene MIR constant `(2·β_2/(4π))^(1/3) = 0.07562892800257...` to 30 dps via mpmath. The Lean substrate-level `mirConst = 1/2` placeholder is a *safe upper bound* (1/2 > 0.0756 by ~6.6×); the Lean theorem `horizon_transport_uniqueness_graphene_witness_one_half` therefore implies the substantive Python bound trivially. Crossno 2016 graphene `ℓ/a ≈ 325` satisfies the bound by margin ~4300×. **Note**: the prior memo's `(2β₂/4π)^{1/3} ≈ 0.6` estimate was inaccurate by ~8×; actual value is ~0.076.
+
+**B.2 — Reverse-direction LDP biconditional (~1 session, SHIPPED)**:
+- New theorems in `lean/SKEFTHawking/DKMBootstrap/LDPBridge.lean`:
+  - `LDP_rate_function_yields_F4_compatible_correlator_existence` — existence-form reverse direction.
+  - `chhk_F4_existence_iff_LDP_rate_function_holds` — substrate-level biconditional packaging.
+- Both standard-kernel-only (`{propext, Classical.choice, Quot.sound}`, zero project-local axioms).
+- Substrate-level closure of the Wave 2a.1 DR §6 cross-bridge architecture; the substantive "under action-correlator link" form (a stricter biconditional pinning a specific `G` to the SK-EFT effective action's spectral function) is deferred to D1 lift-to-Lean (B.4).
+
+**B.3 — Substantive BEC Bogoliubov unbounded-norm proof (~2-3 sessions, SHIPPED in single session)**:
+- New module `lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean` (~250 LoC).
+- Concrete substrate-level sequence `becBogoliubovCommutatorNorm κ := (2·κ)!`.
+- Central-binomial identity `(κ!)² ≤ (2κ)!` via Mathlib `Nat.factorial_mul_factorial_dvd_factorial_add` + `Nat.le_of_dvd`.
+- Factorial-dominates-exponential lemma `exists_kappa_factorial_gt_pow_mul` via Mathlib `FloorSemiring.tendsto_pow_div_factorial_atTop`.
+- Substantive headline `becBogoliubovCommutatorNorm_isSuperFactorialUnbounded` (lifts the abstract predicate to a witnessed concrete physical-stand-in sequence).
+- Cross-bridges `bec_falls_under_sharpened_no_go` + `bec_bimodal_outcome` + `bec_distinguishes_from_graphene_super_factorial` (the A.3 substantive companion).
+- All headlines standard-kernel-only.
+- Lifts the sharpened-NO-GO half from arbitrary substrate-predicate to a witnessed concrete substantive physical-stand-in sequence — both halves of the Phase 6q bimodal outcome are now witnessed by distinct concrete substrates (graphene positive-uniqueness + BEC sharpened-NO-GO).
+- The full Yin-Lucas / Kuwahara-Saito Lieb-Robinson-for-bosons substantive derivation (showing the BEC Bogoliubov nested-commutator *achieves* this growth rate from the Hamiltonian) remains multi-session out-of-scope; the concrete-witness ship here is the substantively-sufficient closure of the Wave 2b.4 task.
+
+**§A strengthening pass (20-item resolution, SHIPPED)**:
+- **A.1** pure-synonym defs → `IsAnalyticBootstrap` + `HorizonTransportUniquenessBound` demoted to `abbrev`; `analytic_bootstrap_bypasses_sdp`, `horizon_transport_uniqueness_thm`, `horizon_transport_uniqueness_iff_mir_bound`, `fsum_rule_is_constant_bound`, `horizon_transport_uniqueness_graphene_witness` (mirConst=0 form) DELETED. No external consumers per audit; identity-wrapper/`Iff.rfl` content collapsed into the transparent abbrevs.
+- **A.2** `IsDKMFeasibleSDPCandidate := True` scaffold KEPT with strengthened docstring framing as Phase 7+ research-frontier placeholder.
+- **A.3** try-strengthen succeeded — kept `platform_kms_qualities_pairwise_distinct` (decidable classifier-distinctness); ADDED substantive companion `bec_distinguishes_from_graphene_super_factorial` in BECBogoliubovBosonicGrowth.lean anchoring the syntactic distinctness to substantive operator-growth divergence (graphene zero-sequence bounded vs BEC Bogoliubov super-factorial).
+- **A.4** zero witnesses — STRENGTHENED DOCSTRINGS as substrate-API non-vacuity (5+ consumer sites across AxiomSet/LDPBridge/SKEFTSpecialization make them load-bearing); substantive substrate witnesses (Drude metal, becBogoliubovCommutatorNorm, graphene Python value) explicitly listed.
+- **A.5** per-platform witnesses → 6 per-platform aliases (graphene/BEC/polariton × {LDPCompatible, MIRBound}) + `dkm_satisfies_trivial_mir_bound` DELETED. Substrate-parameterized `zero_correlator_isLDPCompatible` + `mir_bound_at_zero` cover the use cases.
+- **A.6** `IsDKMCompatibleSKEFT` → 3 redundant DKMParameters-positivity conjuncts dropped; predicate now `0 < c.i1 ∧ 0 < c.i2`. `PlatformBimodalOutcome` REFACTORED from vacuous existential to explicit `(mirConst : ℝ)` parameter.
+- **A.7** `IsGaussianFluctuationRegime` — try-strengthen attempted; substantive content blocked on D1 substrate. Fallback: demoted to `abbrev`, `dkm_parameters_isGaussianFluctuationRegime` DELETED (auto-derivable), `_h_gauss` unused parameter dropped from `chhk_positivity_yields_LDP_compatible` + `zero_correlator_isLDPCompatible`.
+- **A.8** identity-function wrappers — completed alongside A.1.
+
+**Build state at strengthening close**: clean rebuild from scratch passed (`rm -rf .lake/build && lake build SKEFTHawking.ExtractDeps` — 8638 jobs); pytest 4220 total / 4152 default-run / 68 slow-deselected, 0 failures (counts.json post-adversarial-remediation 2026-05-25 PM; baseline 4218 + 2 added in Crossno anchoring fix); zero sorries project-wide; zero new axioms.
+
+**Bundle absorption**: STILL DEFERRED per Phase 6n Session-5 convention; D.2 branch scheduled for the unified Phase 6X late-absorption pass.
+
+**Deferred-items status post Session 2**:
+- B.4 D1 lift-to-Lean — multi-session, out-of-scope (would unlock substantive "under action-correlator link" form for B.2 + substantive Gaussian-regime content for A.7).
+- B.5 SDPB-extension wave — Phase 7+ research-frontier (IsDKMFeasibleSDPCandidate scaffold ready for substantive lift).

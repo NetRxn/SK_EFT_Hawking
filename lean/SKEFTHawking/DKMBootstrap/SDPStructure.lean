@@ -59,35 +59,30 @@ plus standard mathematical analysis (Cauchy integral formula,
 factorial / Stirling estimates) — no convex-cone optimisation, no
 semidefinite-programming feasibility check, no numerical SDPB run. -/
 
-/-- **Analytic bootstrap predicate.** A bootstrap is *analytic* on the
-correlator `G` if its content can be expressed entirely through the
-F1–F6 axiom families (i.e., it admits an `IsDKMAxiomSet` witness) —
-which together suffice for the analytic Lehmann-representation +
-operator-growth-bound + Stirling-estimate chain that CHHK uses to
-derive all of eqs. (8), (14), (23), (26), (29).
+/-- **Analytic bootstrap predicate** (`abbrev` for `IsDKMAxiomSet`).
+A bootstrap is *analytic* on the correlator `G` if its content can be
+expressed entirely through the F1–F6 axiom families — i.e., it admits an
+`IsDKMAxiomSet` witness, which together suffice for the analytic Lehmann-
+representation + operator-growth-bound + Stirling-estimate chain that
+CHHK uses to derive all of eqs. (8), (14), (23), (26), (29).
 
-Equivalently (per Wave 1b.3): an analytic bootstrap is a vertical
-bootstrap with F4 + F5 + F6 trio, where neither verticality nor
-F4/F5/F6 invoke crossing or SDP. -/
-def IsAnalyticBootstrap
+Shipped as a transparent `abbrev` rather than an opaque `def` (post-
+strengthening 2026-05-25): the substantive content is the *labelling*
+that identifies CHHK's approach as purely analytic; the predicate is
+defeq to `IsDKMAxiomSet` so consumers can use either name. Equivalently
+(per Wave 1b.3): an analytic bootstrap is a vertical bootstrap with
+F4 + F5 + F6 trio, where neither verticality nor F4/F5/F6 invoke
+crossing or SDP. -/
+abbrev IsAnalyticBootstrap
     (G : Correlator) (p : DKMParameters)
     (commutatorNorm : ℕ → ℝ) (n0Norm boundData : ℝ) : Prop :=
   IsDKMAxiomSet G p commutatorNorm n0Norm boundData
 
-/-! ## §2. The structural theorem — analyticity bypasses SDP.
+/-! ## §2. Analyticity composes with the Wave 1b.3 vertical-equivalence.
 
-By construction, `IsAnalyticBootstrap` IS `IsDKMAxiomSet` — the
-substantive content is the *labelling* identifying the CHHK approach as
-purely analytic, plus the equivalence theorem. -/
-
-/-- **The structural theorem: analytic-bootstrap content is exactly the
-DKM axiom set.** No SDP feasibility predicate enters the derivation —
-the bootstrap's content is captured entirely by the F1–F6 Props. -/
-theorem analytic_bootstrap_bypasses_sdp
-    {G : Correlator} {p : DKMParameters}
-    {commutatorNorm : ℕ → ℝ} {n0Norm boundData : ℝ}
-    (h : IsAnalyticBootstrap G p commutatorNorm n0Norm boundData) :
-    IsDKMAxiomSet G p commutatorNorm n0Norm boundData := h
+Post-strengthening 2026-05-25: the prior `analytic_bootstrap_bypasses_sdp`
+identity wrapper `h := h` was removed (its content is now `rfl` via the
+`abbrev` above). The substantive composition with verticality is kept. -/
 
 /-- **Analyticity + verticality + (F4, F5, F6) are mutually equivalent.**
 Combines the Wave 1b.3 vertical-bootstrap-iff-CHHK-axiom-set equivalence
@@ -125,7 +120,16 @@ condition on a substantive convex-cone of test correlators. **At Wave
 substantive convex-cone-positivity content (Mathlib4 substrate:
 `ProperCone.hyperplane_separation`, `PositiveLinearMap` on
 C*-algebras) ships if and when the project attempts a future SDPB-
-extension beyond CHHK analytic bounds. -/
+extension beyond CHHK analytic bounds.
+
+**Strengthening-pass disposition (2026-05-25):** *KEEP as-is.* The
+`Prop := True` shape is intentional research-frontier scaffolding, not
+a vacuous predicate to be cut. Phase 7+ SDPB-extension wave will lift
+this to substantive convex-cone-positivity content (consuming Mathlib4
+`ProperCone.hyperplane_separation` + `PositiveLinearMap`). Removing the
+predicate now would erase the architectural marker for the deferred
+substantive lift; the placeholder explicitly *advertises* the future
+work to downstream readers. -/
 def IsDKMFeasibleSDPCandidate
     (_F : Correlator → ℝ) (_G : Correlator) : Prop :=
   True
@@ -160,10 +164,11 @@ theorem analytic_independent_of_sdp_candidate
 /-! ## §5. Closure summary — Wave 1c.1 SDP-bypass.
 
 This module ships:
-- **`IsAnalyticBootstrap`** predicate identifying CHHK's "no SDP,
-  purely analytic" content as a labelled form of `IsDKMAxiomSet`.
-- **`analytic_bootstrap_bypasses_sdp`** — structural theorem: analytic
-  bootstrap content is captured entirely by F1–F6.
+- **`IsAnalyticBootstrap`** — `abbrev` for `IsDKMAxiomSet` identifying
+  CHHK's "no SDP, purely analytic" content (post-strengthening 2026-05-25
+  the prior `def` plus identity-wrapper `analytic_bootstrap_bypasses_sdp`
+  collapsed into a transparent `abbrev`; the labelling is preserved
+  without a redundant wrapper theorem).
 - **`analytic_iff_vertical_plus_f4f5f6`** — composition with the Wave
   1b.3 vertical equivalence.
 - **`IsDKMFeasibleSDPCandidate`** — forward-deferred SDP scaffold for

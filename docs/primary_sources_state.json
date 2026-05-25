@@ -1,6 +1,6 @@
 {
   "_schema_version": 1,
-  "generated_at": "2026-05-11T16:20:59+00:00",
+  "generated_at": "2026-05-25T14:13:36+00:00",
   "entries": {
     "ABP1967": {
       "bibkey": "ABP1967",
@@ -45,6 +45,17 @@
       "size_bytes": 10938,
       "url_used": "https://api.crossref.org/works/10.1103/PhysRevD.99.105009",
       "note": "no arxiv id"
+    },
+    "AbaninDeRoeckHuveneers2015": {
+      "bibkey": "AbaninDeRoeckHuveneers2015",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/AbaninDeRoeckHuveneers2015.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-25T14:03:14+00:00",
+      "size_bytes": 354534,
+      "url_used": "https://arxiv.org/pdf/1507.01474",
+      "note": null
     },
     "Abbott2017GW170817": {
       "bibkey": "Abbott2017GW170817",
@@ -849,6 +860,17 @@
       "url_used": "https://arxiv.org/pdf/1701.07817",
       "note": null
     },
+    "CHHK2025DKMTransport": {
+      "bibkey": "CHHK2025DKMTransport",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/CHHK2025DKMTransport.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-25T12:12:38+00:00",
+      "size_bytes": 671514,
+      "url_used": "https://arxiv.org/pdf/2509.18255",
+      "note": null
+    },
     "CadoniCasadioGiustiMuckTuveri2018": {
       "bibkey": "CadoniCasadioGiustiMuckTuveri2018",
       "phase": "Phase-6m",
@@ -1276,6 +1298,17 @@
       "fetched_at": "2026-05-11T16:14:19+00:00",
       "size_bytes": 1109199,
       "url_used": "https://arxiv.org/pdf/1511.03646",
+      "note": null
+    },
+    "Crossno2016GrapheneWF": {
+      "bibkey": "Crossno2016GrapheneWF",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/Crossno2016GrapheneWF.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-25T12:12:30+00:00",
+      "size_bytes": 1256030,
+      "url_used": "https://arxiv.org/pdf/1509.04713",
       "note": null
     },
     "Csaki2024": {
@@ -2994,6 +3027,17 @@
       "url_used": "https://arxiv.org/pdf/1205.0559",
       "note": null
     },
+    "KuwaharaSaito2021LiebRobinsonBosons": {
+      "bibkey": "KuwaharaSaito2021LiebRobinsonBosons",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/KuwaharaSaito2021LiebRobinsonBosons.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-25T14:03:13+00:00",
+      "size_bytes": 1785742,
+      "url_used": "https://arxiv.org/pdf/2103.11592",
+      "note": null
+    },
     "LEGEND1000": {
       "bibkey": "LEGEND1000",
       "phase": "Phase-5z",
@@ -3674,6 +3718,17 @@
       "fetched_at": "2026-05-01T18:16:12+00:00",
       "size_bytes": 34190634,
       "url_used": "https://arxiv.org/pdf/2501.03480",
+      "note": null
+    },
+    "ParkerEtAl2019OperatorGrowth": {
+      "bibkey": "ParkerEtAl2019OperatorGrowth",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/ParkerEtAl2019OperatorGrowth.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-25T14:03:17+00:00",
+      "size_bytes": 1343831,
+      "url_used": "https://arxiv.org/pdf/1812.08657",
       "note": null
     },
     "PastawskiYoshidaHarlowPreskill2015": {
@@ -4556,6 +4611,17 @@
       "url_used": "https://api.crossref.org/works/10.1103/RevModPhys.93.025010",
       "note": "no arxiv id"
     },
+    "ToledoTudeEastham2024Polariton": {
+      "bibkey": "ToledoTudeEastham2024Polariton",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/ToledoTudeEastham2024Polariton.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-25T14:13:36+00:00",
+      "size_bytes": 7184123,
+      "url_used": "https://arxiv.org/pdf/2403.06861",
+      "note": null
+    },
     "Tong2022": {
       "bibkey": "Tong2022",
       "phase": "Phase-5e",
@@ -5192,6 +5258,17 @@
       "fetched_at": "2026-05-11T16:14:58+00:00",
       "size_bytes": 261481,
       "url_used": "https://arxiv.org/pdf/hep-th/9803131",
+      "note": null
+    },
+    "YinLucas2022LiebRobinsonBosons": {
+      "bibkey": "YinLucas2022LiebRobinsonBosons",
+      "phase": "Phase-1-and-Background",
+      "tier_achieved": "arxiv-pdf",
+      "primary_source_path": "Lit-Search/Phase-1-and-Background/primary-sources/YinLucas2022LiebRobinsonBosons.pdf",
+      "verdict": "success",
+      "fetched_at": "2026-05-25T14:03:12+00:00",
+      "size_bytes": 745639,
+      "url_used": "https://arxiv.org/pdf/2106.09726",
       "note": null
     },
     "YinWang2025SNSystematics": {

@@ -76,10 +76,12 @@ capsules with strictly-positive components. -/
 
 /-- **Graphene Dirac-fluid DKM parameters (substrate-level normalised).**
 Per Wave 2a.1 DR §1: a = 0.246 nm physical, here normalised to 1.0;
-τ, D, χ, ε all O(1) dimensionless. The substantive numerical values for
-the MIR-bound discharge (`(2β₂/4π)^{1/3} ≈ 0.6` graphene MIR constant
-per Wave 2a.1 DR §5) ship Python-side in the Wave 2b numerical
-companion. -/
+τ, D, χ, ε all O(1) dimensionless. The substantive numerical value for
+the MIR-bound discharge is `(2·β_2/(4π))^(1/3) = 0.07562892800257...`
+(CHHK eq. (12) v2 = eq. (29) v1 with `β_d` from eq. (9) v2 = eq. (26)
+v1, V_1 = 2π unit-circle-circumference convention; computed Python-side
+to 30 dps mpmath precision in `src/dkm_bootstrap/graphene_mir.py`). The
+prior Wave 2a.1 DR `≈ 0.6` estimate was inaccurate by ~8×. -/
 noncomputable def grapheneDKMParameters : DKMParameters where
   τ := 1
   D := 1
@@ -142,51 +144,31 @@ theorem bec_kms_quality_approximate :
 theorem polariton_kms_quality_effective_only :
     platformKMSQuality "polariton" = PlatformKMSQuality.EffectiveOnly := rfl
 
-/-! ## §4. Per-platform LDP-compatibility (forward direction). -/
+/-! ## §4-5. Per-platform LDP-compatibility + MIR-bound witnesses.
 
-/-- **Graphene LDP-compatibility witness.** The zero correlator on the
-graphene DKM substrate is LDP-compatible at any β > 0 — substantive
-non-vacuity witness for the cross-bridge in the graphene platform. -/
-theorem graphene_zero_correlator_isLDPCompatible
-    (β : ℝ) (hβ : 0 < β) :
-    IsLDPCompatibleCorrelator zeroCorrelator β grapheneDKMParameters :=
-  zero_correlator_isLDPCompatible β hβ grapheneDKMParameters
+Post-strengthening 2026-05-25 (A.5 consolidation pass): the 6 prior
+per-platform alias theorems
+(`graphene_zero_correlator_isLDPCompatible`, `bec_*`, `polariton_*`,
+`graphene_satisfies_trivial_mir_bound`, `bec_*`, `polariton_*`) were
+removed. They were structural aliases adding no content beyond the
+generic substrate-parameterized witnesses already shipped:
 
-/-- **BEC LDP-compatibility witness.** -/
-theorem bec_zero_correlator_isLDPCompatible
-    (β : ℝ) (hβ : 0 < β) :
-    IsLDPCompatibleCorrelator zeroCorrelator β becDKMParameters :=
-  zero_correlator_isLDPCompatible β hβ becDKMParameters
+- For LDP-compatibility, use `zero_correlator_isLDPCompatible β hβ p`
+  from `SKEFTSpecialization.lean` with any of
+  `grapheneDKMParameters`, `becDKMParameters`, `polaritonDKMParameters`.
+- For trivial-MIR-bound, use `mir_bound_at_zero p` from
+  `SKEFTSpecialization.lean` with the same.
 
-/-- **Polariton LDP-compatibility witness.** The polariton case carries
-the same substrate-level LDP-compatibility predicate as graphene/BEC;
-the substantive `EffectiveOnly` KMS-quality caveat affects the *physical
-interpretation* but not the predicate-level Lean content. The Wave
-2a.3 ship documents this distinction structurally via the KMS-quality
-classifier (§3). -/
-theorem polariton_zero_correlator_isLDPCompatible
-    (β : ℝ) (hβ : 0 < β) :
-    IsLDPCompatibleCorrelator zeroCorrelator β polaritonDKMParameters :=
-  zero_correlator_isLDPCompatible β hβ polaritonDKMParameters
-
-/-! ## §5. Per-platform MIR bound (trivial substrate level). -/
-
-/-- **Graphene MIR bound at the trivial constant.** The substantive
-graphene constant `(2β₂/4π)^{1/3} ≈ 0.6` per Wave 2a.1 DR §5 ships
-Python-side; substrate-level we ship the `mirConst = 0` instance. -/
-theorem graphene_satisfies_trivial_mir_bound :
-    IsMIRBound grapheneDKMParameters 0 :=
-  dkm_satisfies_trivial_mir_bound grapheneDKMParameters
-
-/-- **BEC trivial MIR bound.** -/
-theorem bec_satisfies_trivial_mir_bound :
-    IsMIRBound becDKMParameters 0 :=
-  dkm_satisfies_trivial_mir_bound becDKMParameters
-
-/-- **Polariton trivial MIR bound.** -/
-theorem polariton_satisfies_trivial_mir_bound :
-    IsMIRBound polaritonDKMParameters 0 :=
-  dkm_satisfies_trivial_mir_bound polaritonDKMParameters
+The substantive per-platform witnesses live elsewhere:
+- Graphene positive uniqueness: `horizon_transport_uniqueness_graphene_witness_one_half`
+  in `HorizonTransportBootstrap.lean` (substrate-level mirConst=1/2);
+  Python-side substantive `(2·β_2/(4π))^(1/3) ≈ 0.0756` in
+  `src/dkm_bootstrap/graphene_mir.py`.
+- BEC sharpened-NO-GO: `bec_falls_under_sharpened_no_go` in
+  `BECBogoliubovBosonicGrowth.lean` (Wave 2b.4 substantive lift).
+- Polariton: substrate-level only via the generic witnesses above; full
+  non-equilibrium driven-dissipative substrate ships in a future wave
+  (per Toledo-Tude & Eastham 2024). -/
 
 /-! ## §6. Cross-platform comparison theorem — KMS-quality distinguishes
 the platforms.
@@ -195,7 +177,21 @@ The substantive structural finding: the three platforms have
 *distinct* KMS qualities, and this distinction is decidable at the
 classifier level. -/
 
-/-- **The three platform KMS qualities are pairwise distinct.** -/
+/-- **The three platform KMS qualities are pairwise distinct.**
+
+This is the *syntactic* / classifier-level distinctness witness — the
+three constructors of `PlatformKMSQuality` are distinct by the inductive
+definition. The *substantive* platform-level distinction (graphene zero-
+sequence trivially bounded vs BEC Bogoliubov-bosonic sequence super-
+factorial unbounded) lives downstream at
+`bec_distinguishes_from_graphene_super_factorial` in
+`BECBogoliubovBosonicGrowth.lean` — that's where the syntactic
+distinctness is anchored to substantive operator-growth-bound physics
+(Wave 2b.4 substantive lift).
+
+Post-strengthening 2026-05-25: docstring updated to flag the
+downstream substantive companion; theorem statement preserved as the
+classifier-distinctness witness (decidable from inductive structure). -/
 theorem platform_kms_qualities_pairwise_distinct :
     platformKMSQuality "graphene" ≠ platformKMSQuality "BEC" ∧
     platformKMSQuality "BEC" ≠ platformKMSQuality "polariton" ∧
@@ -210,17 +206,21 @@ This module ships:
 - **Per-platform `DKMParameters` witnesses** — `grapheneDKMParameters`,
   `becDKMParameters`, `polaritonDKMParameters` (substrate-level
   normalised; full physical-unit values lift in Wave 2b Python).
-- **Per-platform LDP-compatibility theorems** — zero correlator carries
-  `IsLDPCompatibleCorrelator` on each platform's DKM substrate.
-- **Per-platform MIR-bound theorems** — trivial constant level, each
-  platform satisfies the substrate-level MIR predicate.
-- **`platform_kms_qualities_pairwise_distinct`** — substantive
-  structural finding: the three platforms' KMS qualities are
-  pairwise-distinct (decidable structural inequality).
+- **`platform_kms_qualities_pairwise_distinct`** — classifier-level
+  pairwise-distinctness witness (decidable structural inequality);
+  substantive operator-growth contrast in
+  `bec_distinguishes_from_graphene_super_factorial`
+  (`BECBogoliubovBosonicGrowth.lean`).
 
-The substantive numerical Wave 2b content (graphene MIR constant
-`(2β₂/4π)^{1/3} ≈ 0.6`, BEC Bogoliubov scale UV cutoff, polariton
-exciton-photon Hopfield decomposition) ships in Wave 2b (graphene
-witness) + Python numerical companion. -/
+Post-strengthening 2026-05-25 (A.5 consolidation): the 6 prior per-
+platform LDP-compatibility + MIR-bound alias theorems were removed
+(structural aliases of the substrate-parameterized
+`zero_correlator_isLDPCompatible` and `mir_bound_at_zero`; no external
+consumers). The substantive per-platform witnesses (graphene
+`(2·β_2/(4π))^(1/3) ≈ 0.0756`, BEC Bogoliubov super-factorial via
+Yin-Lucas/Kuwahara-Saito, polariton non-equilibrium driven-dissipative
+deferred) ship in the downstream modules
+`HorizonTransportBootstrap.lean` + `BECBogoliubovBosonicGrowth.lean` +
+Python companion `src/dkm_bootstrap/graphene_mir.py`. -/
 
 end SKEFTHawking.DKMBootstrap

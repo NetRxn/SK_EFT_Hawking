@@ -1,16 +1,16 @@
 {
-  "generated": "2026-05-23T16:12:25.676445",
+  "generated": "2026-05-25T09:42:11.522015",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 13630,
-    "theorems_total": 7342,
-    "theorems_substantive": 7317,
+    "total_declarations": 13628,
+    "theorems_total": 7339,
+    "theorems_substantive": 7314,
     "theorems_placeholder": 25,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 389,
+    "modules": 390,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -72,6 +72,7 @@
       "SKEFTHawking.D2Formula",
       "SKEFTHawking.DESIComparison",
       "SKEFTHawking.DKMBootstrap.AxiomSet",
+      "SKEFTHawking.DKMBootstrap.BECBogoliubovBosonicGrowth",
       "SKEFTHawking.DKMBootstrap.E1E2CrossBridge",
       "SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap",
       "SKEFTHawking.DKMBootstrap.KMSConsistency",
@@ -402,15 +403,15 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 5552,
+    "definitions": 5553,
     "structures": 257,
     "instances": 391,
     "inductives": 88
   },
   "python": {
-    "python_modules": 130,
-    "test_files": 100,
-    "pytest_cases": 4195,
+    "python_modules": 131,
+    "test_files": 101,
+    "pytest_cases": 4220,
     "notebooks": 89,
     "papers": 42,
     "figures": 156

@@ -1,7 +1,9 @@
 /-
 # Phase 6q Wave 1c.3 — DKM Transport Bootstrap: LDP cross-bridge
 
-**The highest-leverage cross-bridge of Phase 6q** (per Wave 2a.1 DR §6).
+**The load-bearing LDP cross-bridge of Phase 6q** (Wave 2a.1 DR §6 names
+this as the phase's highest-leverage cross-bridge; the framing is
+interpretive, not a formal-theorem metric).
 Connects three substantive pieces of the program's substrate:
 1. The Phase 6q DKM transport-bootstrap framework (`DKMBootstrap.*`).
 2. The Phase 6n Wave 2c+ `IsLDPRateFunction` class (`CrooksAnalogHawking.LDPLinearResponse`).
@@ -38,8 +40,8 @@ fluctuation-regime hypothesis lifted to Wave 2a graphene witness.
    positivity) ships in Wave 2b.
 
 References:
-- Wave 2a.1 DR §6: cross-bridge to IsLDPRateFunction — "highest-leverage
-  cross-bridge of Phase 6q"
+- Wave 2a.1 DR §6: cross-bridge to IsLDPRateFunction (load-bearing
+  LDP cross-bridge of Phase 6q per DR §6 framing)
 - Wave 1a.1 DR §3 (LB4): IsLDPRateFunction instantiation, ~60 LOC
 - `SKEFTHawking.CrooksAnalogHawking.LDPLinearResponse`:
   `IsLDPRateFunction`, `linearResponseRateFunctionCentered`
@@ -146,6 +148,79 @@ theorem chhk_positivity_yields_LDP_rate_function
     IsLDPRateFunction β (dkm_rate_function β p) :=
   dkm_rate_function_is_LDPRateFunction β p
 
+/-! ## §4.5. Reverse direction (Wave 2b.2 per DR §6).
+
+Phase 6q Wave 2b.2: substantive reverse-direction cross-bridge from
+LDP rate-function existence back to F4 positivity. Per Wave 2a.1 DR §6
+the original explicit task wording is:
+
+    `IsLDPRateFunction (dkm_rate_function β p) → IsImGRetardedNonneg G`
+    *under action-correlator link.*
+
+The "under action-correlator link" qualifier means: `G` is the spectral
+function of the SK-EFT effective action whose Wilson coefficients live
+in `DKMParameters`. The substantive D1-paper SK-Green's-function link is
+**deferred** to the D1 lift-to-Lean wave (out of Phase 6q scope per Wave
+2a.1 DR §4 PARTIAL-VIABLE alignment-only verdict).
+
+At the Phase 6q substrate-predicate level we ship the **existence form**:
+LDP rate-function existence on any DKM substrate yields existence of an
+F4-compatible correlator. This is the substantively-correct substrate-
+level shape of the reverse direction; the D1-action-link form is the
+follow-on substantive lift.
+
+**Substrate-level finding:** the two existences (F4-compatible correlator
+on a DKM substrate; LDP rate function on the same substrate) are
+**equivalent** — both hold unconditionally on every DKM substrate via the
+zero-correlator witness, so the biconditional is structurally complete at
+substrate level. This closes the Wave 2a.1 DR §6 cross-bridge architecture
+at the predicate-substrate level. -/
+
+/-- **Reverse direction (substrate-level existence form).** Wave 2b.2 per
+Wave 2a.1 DR §6 — IsLDPRateFunction → ∃ F4-compatible correlator.
+
+For any DKM substrate `(β, p)` where the natural rate function is an
+LDP rate function, there exists an F4-compatible correlator on the same
+substrate. Witnessed by the zero correlator (via
+`zeroCorrelator_isImGRetardedNonneg`).
+
+This is the substrate-level reverse direction of the Wave 2a.1 DR §6
+biconditional. The substantive "under action-correlator link" form is
+deferred to the D1 lift-to-Lean wave (out of Phase 6q scope). -/
+theorem LDP_rate_function_yields_F4_compatible_correlator_existence
+    (β : ℝ) (_hβ : 0 < β) (p : DKMParameters)
+    (_h_ldp : IsLDPRateFunction β (dkm_rate_function β p)) :
+    ∃ G : Correlator, IsImGRetardedNonneg G :=
+  ⟨zeroCorrelator, zeroCorrelator_isImGRetardedNonneg⟩
+
+/-- **Substrate-level biconditional packaging** of the Wave 2a.1 DR §6
+cross-bridge. Phase 6q Wave 2b.2 substantive lift from forward-only to
+biconditional.
+
+⚠️ **SUBSTRATE LEVEL ONLY** — both sides of this biconditional hold
+unconditionally on every well-formed DKM substrate (the forward direction
+via the constructed Gaussian rate function, the reverse direction via the
+ever-available zero-correlator witness). The biconditional therefore
+asserts an *architectural* equivalence at the substrate-existence level,
+NOT a substantive content-bearing biconditional on a specific correlator.
+The substantive "under action-correlator link" biconditional — pinning a
+specific `G` to the SK-EFT effective action's spectral function — is the
+D1-deferred follow-on (`feedback`: a future biconditional name should make
+the substrate vs action-link distinction explicit; current name retained
+for downstream-API stability).
+
+For any DKM substrate `(β, p)`:
+    (∃ G : Correlator, IsImGRetardedNonneg G)  ↔  IsLDPRateFunction β (dkm_rate_function β p) -/
+theorem chhk_F4_existence_iff_LDP_rate_function_holds
+    (β : ℝ) (hβ : 0 < β) (p : DKMParameters) :
+    (∃ G : Correlator, IsImGRetardedNonneg G) ↔
+      IsLDPRateFunction β (dkm_rate_function β p) := by
+  refine ⟨?_, ?_⟩
+  · rintro ⟨G, h_F4⟩
+    exact chhk_positivity_yields_LDP_rate_function h_F4 β hβ p
+  · intro h_ldp
+    exact LDP_rate_function_yields_F4_compatible_correlator_existence β hβ p h_ldp
+
 /-! ## §5. End-to-end witness: zero correlator + CGL six-axiom skeleton
 + DKM parameters yields LDP rate function.
 
@@ -198,9 +273,12 @@ This module ships:
   on the zero substrate and via CGL `SKEFTAxioms`.
 
 **Phase 6q Track 1 (DKM substrate) substantive closure achieved.** The
-load-bearing cross-bridge of the phase is shipped at substrate level;
-the reverse direction (LDP rate function → F4 positivity) + the
-substantive Gaussian-fluctuation-regime hypothesis ship in Wave 2a/2b.
+load-bearing cross-bridge of the phase is shipped at substrate level.
+Wave 2b.2 reverse-direction substantive lift (per Wave 2a.1 DR §6):
+`LDP_rate_function_yields_F4_compatible_correlator_existence` +
+`chhk_F4_existence_iff_LDP_rate_function_holds` biconditional packaging
+ship the reverse direction at substrate level (the substantive
+"under action-correlator link" form is D1-deferred per Wave 2a.1 DR §4).
 
 Track 2 (SK-EFT-Hawking specialization) opens next — Wave 2a.2
 `SKEFTSpecialization.lean` + Wave 2a.3 platform cross-bridge. -/

@@ -10608,3 +10608,159 @@ def torsion_residual(amplitude):
     Source: Ortín 2015 §1.4 (Cartan structure equations).
     """
     return float(amplitude)
+
+
+# ============================================================================
+# PHASE 6Q WAVE 2B NUMERICAL COMPANION — DKM TRANSPORT BOOTSTRAP MIR CONSTANT
+# ============================================================================
+#
+# Substantive numerical lift of the Lean substrate-level placeholder
+# `horizon_transport_uniqueness_graphene_witness_one_half` (mirConst = 1/2)
+# to the substantive Chowdhury-Hartnoll-Hebbar-Khondaker (CHHK) closed-form
+# geometric constant `(d·β_d / (4π))^(1/(d+1))` at d=2 for graphene Dirac
+# fluid. Per Phase 6q Wave 2a.1 DR §5.
+#
+# References:
+#   CHHK arXiv:2509.18255 (2025) eq. (29) — super-Planckian MIR-style limit.
+#   Crossno et al. Science 351, 1058 (2016) — graphene WF violation / Dirac
+#     fluid mean-free-path anchor (~50-100 nm at T ~ 75 K).
+#   Castro Neto et al. RMP 81, 109 (2009) — graphene tight-binding a = 0.246 nm.
+# ============================================================================
+
+
+def unit_sphere_surface(d):
+    """Surface area of the unit (d-1)-sphere V_{d-1} = 2·π^(d/2) / Γ(d/2).
+
+    Standard physics convention: V_{d-1} is the (d-1)-volume of the unit
+    sphere bounding the d-ball. Examples: V_0 = 2 (two endpoints of [-1,1]);
+    V_1 = 2π (circle circumference); V_2 = 4π (unit-sphere surface area).
+
+    Args:
+        d: ambient dimension (sphere lives in d-dim space).
+
+    Returns:
+        float V_{d-1} = surface area of unit (d-1)-sphere.
+
+    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+        (geometric prefactor consumed by the substantive `(2·β_2/(4π))^(1/3)`
+        graphene MIR constant that lifts the Lean substrate-level `mirConst = 1/2`.)
+    Aristotle: manual
+    Source: standard differential-geometry identity; see e.g. Lee 2012 ch. 1.
+    """
+    from math import gamma, pi
+    return 2.0 * pi**(d / 2.0) / gamma(d / 2.0)
+
+
+def chhk_beta_d(d):
+    """CHHK eq. (9) v2 [= eq. (26) v1] geometric prefactor β_d.
+
+    Closed-form: β_d = (1/π) · (V_{d-1} / (2π)^d) · (1 - π/4) / (d+2)
+
+    Appears in the MIR-style master bound:
+        β_d / (1 - e^(-1/(T·τ))) ≤ (ℓ/a)^d · (τ/(χ·a^d)) · ⟨n₀²⟩_T
+    and in the super-Planckian limit eq. (29):
+        (d·β_d / (4π))^(1/(d+1)) ≤ ℓ/a.
+
+    Returned as a Python float (sufficient for everyday usage). For 10^{-30}
+    precision suitable for cross-checking Lean numeric literals, use
+    `graphene_mir_constant_mpmath()` instead.
+
+    Args:
+        d: spatial dimension (graphene Dirac fluid: d = 2).
+
+    Returns:
+        float β_d.
+
+    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+    Aristotle: manual
+    Source: CHHK arXiv:2509.18255 eq. (26).
+    """
+    from math import pi
+    V_dm1 = unit_sphere_surface(d)
+    return (1.0 / pi) * (V_dm1 / (2.0 * pi)**d) * (1.0 - pi / 4.0) / (d + 2)
+
+
+def chhk_mir_constant(d):
+    """CHHK eq. (12) v2 [= eq. (29) v1] super-Planckian MIR-style constant `(d·β_d / (4π))^(1/(d+1))`.
+
+    The bound `(d·β_d / (4π))^(1/(d+1)) ≤ ℓ/a` states that any Drude-Kadanoff-
+    Martin transport correlator satisfying the six CHHK axiom families must
+    have collective mean free path `ℓ = √(τ·D)` at least this multiple of the
+    microscopic lattice scale `a`. Saturation occurs at the Planckian
+    bad-metal regime.
+
+    For d=2 graphene Dirac fluid:
+        (2·β_2 / (4π))^(1/3) = ((1 - π/4) / (16·π^3))^(1/3) ≈ 0.0757
+    in standard physics convention V_1 = 2π.
+
+    Args:
+        d: spatial dimension.
+
+    Returns:
+        float MIR constant.
+
+    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+        (the Lean theorem ships at substrate-level `mirConst = 1/2`; this
+        Python function ships the substantive geometric constant that the
+        substrate-level placeholder is the next-up-from-zero stand-in for.)
+    Aristotle: manual
+    Source: CHHK arXiv:2509.18255 eq. (29).
+    """
+    from math import pi
+    beta_d = chhk_beta_d(d)
+    return (d * beta_d / (4.0 * pi))**(1.0 / (d + 1))
+
+
+def graphene_mir_constant():
+    """d=2 specialization of `chhk_mir_constant`. Phase 6q Wave 2b numerical companion.
+
+    Returns the graphene Dirac-fluid MIR constant `(2·β_2 / (4π))^(1/3)`
+    as a Python float (~10^{-15} double precision). Per Phase 6q Wave 2a.1
+    DR §5, this is the substantive lift of the Lean substrate-level
+    placeholder `horizon_transport_uniqueness_graphene_witness_one_half`
+    at `mirConst = 1/2`.
+
+    Computed value: ≈ 0.0757 (V_1 = 2π convention). The Lean
+    `mirConst = 1/2` substrate-level placeholder is therefore *strictly
+    larger than* the substantive bound — the Lean theorem already implies
+    the substantive bound, so the Python value here is the *physically
+    sharpened* constant the Lean stand-in approximates from above.
+
+    Returns:
+        float graphene MIR constant.
+
+    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+    Aristotle: manual
+    Source: CHHK arXiv:2509.18255 eq. (29) at d=2.
+    """
+    return chhk_mir_constant(2)
+
+
+def graphene_mir_constant_mpmath(dps=30):
+    """High-precision graphene MIR constant via mpmath.
+
+    Returns the d=2 graphene MIR constant `(2·β_2 / (4π))^(1/3)` to `dps`
+    decimal digits of precision. Default 30 dps is far beyond the
+    10^{-6} target stated in Wave 2a.1 DR §6 for committing Lean numeric
+    literals.
+
+    The closed-form-derived value is:
+        ((1 - π/4) / (16·π^3))^(1/3)
+    using V_1 = 2π (unit-circle circumference) convention.
+
+    Args:
+        dps: decimal places of precision (default 30).
+
+    Returns:
+        mpmath.mpf graphene MIR constant.
+
+    Lean: SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap.horizon_transport_uniqueness_graphene_witness_one_half
+    Aristotle: manual
+    Source: CHHK arXiv:2509.18255 eq. (29) at d=2.
+    """
+    import mpmath
+    with mpmath.workdps(dps):
+        pi = mpmath.pi
+        V_1 = 2 * pi
+        beta_2 = (1 / pi) * (V_1 / (2 * pi)**2) * (1 - pi / 4) / 4
+        return mpmath.cbrt(2 * beta_2 / (4 * pi))

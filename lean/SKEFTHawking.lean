@@ -237,6 +237,13 @@ import SKEFTHawking.SymTFTAudit.FreeKLinearMonoidal
 -- `Linear k`. Continuations: 5.10d monoidal lift, 5.10e closure-with-ext,
 -- 5.10f braided lift, 5.10g WittClass cross-bridge.
 import SKEFTHawking.SymTFTAudit.DeligneTensor
+-- Phase 6r Wave 1a.3 (2026-05-25): SymTFT predicate-substrate (KOZ + FMT wrapper).
+-- Bosonic-SymTFT `Is3DTQFT`, `IsBulkBoundary`, `TopologicalBoundary` predicates per
+-- Kaidi-Ohmori-Zheng arXiv:2209.11062 + Freed-Moore-Teleman arXiv:2209.07471 +
+-- Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 boundary-SymTFT framework.
+-- Zero `axiom`s; load-bearing physics statements ship as tracked Props per
+-- Invariant #15.
+import SKEFTHawking.SymTFT.Basic
 import SKEFTHawking.APSEta.Predicate
 import SKEFTHawking.APSEta.BECAcoustic
 import SKEFTHawking.APSEta.ADWHorizon
@@ -854,6 +861,15 @@ import SKEFTHawking.DKMBootstrap.E1E2CrossBridge
 -- -for-bosons substrate). PlatformBimodalOutcome explicit disjunction + graphene
 -- witness for the positive-uniqueness half. Both halves shipped substantively.
 import SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap
+-- Phase 6q Wave 2b.4 (2026-05-25): substantive BEC Bogoliubov-bosonic
+-- unbounded-norm lift. becBogoliubovCommutatorNorm := (2κ)! concrete
+-- substrate-level stand-in for the bosonic ‖[H,[H,…,[H,n_x]]]_κ‖ sequence;
+-- becBogoliubovCommutatorNorm_isSuperFactorialUnbounded substantively
+-- instantiates the predicate; bec_falls_under_sharpened_no_go closes the
+-- second-NO-GO half at concrete-substrate-instance level via Mathlib's
+-- FloorSemiring.tendsto_pow_div_factorial_atTop + central-binomial
+-- (κ!)² ≤ (2κ)!.
+import SKEFTHawking.DKMBootstrap.BECBogoliubovBosonicGrowth
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

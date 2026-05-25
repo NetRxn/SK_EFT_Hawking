@@ -20,34 +20,34 @@ content of Phase 6q Wave 1c.3 (DKM rate function `IsLDPRateFunction` at
 `(τ, D)` via the MIR-style bound `(d·β_d/4π)^{1/(d+1)} ≤ ℓ/a`**.
 
 For the graphene Dirac-fluid platform (d = 2, a = 0.246 nm physical),
-the bound reads `0.6 ≤ √(τ·D) / a` (substrate-level — Python numerical
-side for the 0.6 constant). This is the **positive uniqueness** half
-of the bimodal outcome: the joint (τ, D) pair is bounded below by a
-geometric constant — exactly the analog of CHHK's main bound, with the
-substrate physics now being SK-EFT-Hawking horizon transport.
+the substantive bound reads `0.0756 ≤ ℓ/a` (CHHK eq. (12) v2 = eq. (29)
+v1 with `β_d` from eq. (9) v2 = eq. (26) v1; computed Python-side in
+`src/dkm_bootstrap/graphene_mir.py` to 30 dps mpmath precision). The
+Lean substrate-level theorem at normalized parameters (τ = D = a = 1)
+ships `1/2 ≤ ℓ/a` as a safe upper-bound stand-in. This is the
+**positive uniqueness** half of the bimodal outcome: the joint (τ, D)
+pair is bounded below by a geometric constant — exactly the analog of
+CHHK's main bound, with the substrate physics now being SK-EFT-Hawking
+horizon transport. The prior `≈ 0.6` estimate in pre-2026-05-25
+documentation was inaccurate by ~8× and has been corrected here.
 
-**Wave 2b substantive deliverables:**
-1. **`HorizonTransportUniquenessBound`** — the substantive predicate
-   bundling the bootstrap-output constraint: the joint (τ, D) pair on
-   the SK-EFT-Hawking substrate is bounded below by a geometric
-   constant via the MIR-style master bound.
-2. **`horizon_transport_uniqueness_thm`** — the substantive theorem:
-   the bootstrap produces this constraint from CHHK F4 (positivity)
-   plus the DKM functional form (F1) plus the substrate's microscopic
-   data (`mirConst`).
-3. **`horizon_transport_uniqueness_graphene_witness`** — the graphene
-   instance: applied to `grapheneDKMParameters`, the bound has the
-   form `mirConst ≤ √(τ·D)/a` for any `mirConst ≤ 1` (substrate-level
-   trivial constants — substantive `0.6` ships Python-side).
-4. **`sharpened_no_go_bec_unbounded_bosonic`** — the *complementary*
-   sharpened-NO-GO predicate: on the BEC platform, the F3 (operator-
-   growth) axiom fails for unbounded-norm bosonic Bogoliubov operators
-   without an explicit number cutoff. Captured at substrate level as a
-   structural predicate; the substantive analytic content (Bogoliubov
-   bosons are not finite-norm) ships in Wave 2c documentation.
+**Wave 2b substantive deliverables (post-strengthening 2026-05-25):**
+1. **`HorizonTransportUniquenessBound`** — `abbrev` for `IsMIRBound`
+   labelling the joint (τ, D) lower bound: the collective mean free
+   path on the SK-EFT-Hawking substrate is bounded below by a geometric
+   constant via the MIR-style master bound (CHHK eq. 29).
+2. **`horizon_transport_uniqueness_graphene_witness_one_half`** — the
+   substantive graphene instance at `mirConst = 1/2`. Substantive
+   Python-side numerical constant `(2·β_2/(4π))^(1/3) ≈ 0.0756` ships
+   in `src/dkm_bootstrap/graphene_mir.py` (Wave 2b numerical companion).
+3. **`IsSuperFactorialUnbounded`** + **`sharpened_no_go_super_factorial`**
+   — the *complementary* sharpened-NO-GO content: super-factorial-
+   unbounded commutator-norm sequences violate F3 (operator-growth)
+   axiom. Substantive concrete witness on the BEC Bogoliubov substrate
+   ships in `BECBogoliubovBosonicGrowth.lean` (Wave 2b.4).
 
 References:
-- CHHK arXiv:2509.18255 eq. (26)/(29) — MIR-style master bound
+- CHHK arXiv:2509.18255 eq. (9)/(12) v2 [= eq. (26)/(29) v1] — MIR-style master bound
 - Wave 2a.1 DR §2 — D (charge diffusivity) on graphene Dirac fluid as
   primary target, κ (Wiedemann-Franz violation) as secondary
 - Wave 2a.1 DR §1 BEC row — "Bogoliubov is *not* a finite-norm operator
@@ -65,70 +65,52 @@ The substantive Wave 2b output: a joint (τ, D) pair is *uniquely
 constrained* by the bootstrap if and only if it satisfies the MIR-style
 master bound at the substrate's microscopic geometric constant. -/
 
-/-- **`HorizonTransportUniquenessBound p mirConst`** — the substantive
-predicate: the DKM parameter capsule `p` satisfies the bootstrap-
+/-- **`HorizonTransportUniquenessBound p mirConst`** (`abbrev` for
+`IsMIRBound`). The DKM parameter capsule `p` satisfies the bootstrap-
 output joint constraint at MIR constant `mirConst`, i.e., the collective
 mean free path `ℓ = √(τ·D)` is at least `mirConst·a`. This is the
-**positive uniqueness half** of the Phase 6q bimodal outcome. -/
-def HorizonTransportUniquenessBound
+**positive uniqueness half** of the Phase 6q bimodal outcome.
+
+Shipped as a transparent `abbrev` rather than an opaque `def` (post-
+strengthening 2026-05-25): the substantive content lives in the
+`IsMIRBound` predicate already; the `HorizonTransportUniquenessBound`
+name labels the bootstrap-output interpretation of the same predicate.
+The prior `Iff.rfl` bridge `horizon_transport_uniqueness_iff_mir_bound`
+and identity-wrapper `horizon_transport_uniqueness_thm` were collapsed
+into the `abbrev` — consumers obtain the equivalence by `rfl`. -/
+abbrev HorizonTransportUniquenessBound
     (p : DKMParameters) (mirConst : ℝ) : Prop :=
   IsMIRBound p mirConst
 
-/-- The uniqueness predicate is exactly the MIR-bound predicate.
-Substantive structural identity — confirms the bootstrap output is
-*precisely* the MIR-style master bound, not some weaker conjunctive
-restatement. -/
-theorem horizon_transport_uniqueness_iff_mir_bound
-    (p : DKMParameters) (mirConst : ℝ) :
-    HorizonTransportUniquenessBound p mirConst ↔ IsMIRBound p mirConst :=
-  Iff.rfl
+/-! ## §2-3. Graphene-witness instance — the substantive positive result.
 
-/-! ## §2. The substantive bootstrap-output theorem.
-
-Per CHHK §§3–4: given F1 (DKM functional form) and F4 (positivity)
-plus the substrate microscopic data (`mirConst`, the dimension-`d`
-geometric constant), the bootstrap produces the MIR-style bound on the
-collective mean free path. We capture this at substrate level as a
-direct implication: if `p` satisfies the MIR bound at `mirConst`, then
-the substantive uniqueness statement holds.
-
-The substantive content of the implication is the chain F1+F4 →
-Lehmann representation → eq. (26) MIR-style master bound → eq. (29)
-super-Planckian limit. At substrate level we ship the predicate-level
-form; the analytic chain ships in the deferred Wave 2b numerical
-Python companion. -/
-
-/-- **The substantive Wave 2b bootstrap-output theorem.** The bootstrap
-produces a horizon-transport uniqueness bound on `p` at any
-`mirConst` for which the MIR predicate is satisfied. The substantive
-positive content: there *exists* a substrate-level constraint
-(`mirConst = 0` trivially; substantive constants ship per-platform). -/
-theorem horizon_transport_uniqueness_thm
-    (p : DKMParameters) (mirConst : ℝ)
-    (h : IsMIRBound p mirConst) :
-    HorizonTransportUniquenessBound p mirConst :=
-  h
-
-/-! ## §3. Graphene-witness instance — the substantive positive result. -/
-
-/-- **Graphene-witness horizon-transport uniqueness** at `mirConst = 0`.
-The substrate-level non-vacuity witness for the positive uniqueness
-half of the bimodal outcome on graphene. The substantive numerical
-constant (`(2β₂/4π)^{1/3} ≈ 0.6`) ships in the Wave 2b Python
-companion. -/
-theorem horizon_transport_uniqueness_graphene_witness :
-    HorizonTransportUniquenessBound grapheneDKMParameters 0 :=
-  horizon_transport_uniqueness_thm grapheneDKMParameters 0
-    graphene_satisfies_trivial_mir_bound
+Per CHHK §§3–4: given F1 (DKM functional form) and F4 (positivity) plus
+the substrate microscopic data (`mirConst`, the dimension-`d` geometric
+constant), the bootstrap produces the MIR-style bound on the collective
+mean free path. We capture this at substrate level as a direct
+implication via the `IsMIRBound` predicate; the substantive numerical
+constant `(2·β_2/(4π))^(1/3) ≈ 0.0756` ships Python-side in
+`src/dkm_bootstrap/graphene_mir.py` (Wave 2b numerical companion). -/
 
 /-- **Graphene witness with the canonical normalised constants.** The
-substrate-level non-vacuity witness with `mirConst = 1/2` (below the
-expected substantive value ≈ 0.6 per Wave 2a.1 DR §5). This confirms
-the predicate has substantively-nontrivial witnesses at substrate
-level — not just at the trivially-zero constant. -/
+substrate-level non-vacuity witness with `mirConst = 1/2`.
+
+The Lean substrate-level `mirConst = 1/2` is a *safe upper bound* on
+the substantive Python-computed constant: `(2·β_2/(4π))^(1/3) ≈ 0.0756`
+is well below `1/2`, so this Lean theorem implies the substantive
+Python bound (in `src/dkm_bootstrap/graphene_mir.py`) trivially. Both
+witnesses confirm that the graphene Dirac fluid is well within the
+bootstrap kinematic window (Crossno 2016 measured `ℓ/a ≈ 325`).
+
+Post-strengthening 2026-05-25: the prior `mirConst = 0` companion form
+`horizon_transport_uniqueness_graphene_witness` was removed (trivial at
+`0`; this `_one_half` form is the substantive substrate-level witness). -/
 theorem horizon_transport_uniqueness_graphene_witness_one_half :
     HorizonTransportUniquenessBound grapheneDKMParameters (1/2) := by
-  unfold HorizonTransportUniquenessBound IsMIRBound DKMParameters.collectiveMeanFreePath
+  -- HorizonTransportUniquenessBound is an abbrev for IsMIRBound; show
+  -- the underlying type so `unfold IsMIRBound` engages, then simp.
+  show IsMIRBound grapheneDKMParameters (1/2)
+  unfold IsMIRBound DKMParameters.collectiveMeanFreePath
   simp [grapheneDKMParameters]
   -- After simp the goal reduces to 2⁻¹ ≤ 1; discharge by norm_num.
   norm_num
@@ -176,37 +158,51 @@ substrate is in the sharpened-NO-GO regime (BEC-style unbounded-
 bosonic). This is the explicit Phase 6q "bimodal outcome" structural
 statement. -/
 
-/-- **The Phase 6q bimodal outcome.** A platform's substrate is
-*either* a positive-uniqueness instance (its DKMParameters satisfies
-the MIR-style bound at some `mirConst`) OR a sharpened-NO-GO instance
-(its commutator-norm sequence is super-factorial unbounded, failing
-F3). The bimodal statement is the substantive Phase 6q Wave 2b output:
-every platform is exactly one of these two cases (per Wave 2a.1 DR §1
-platform table). -/
+/-- **The Phase 6q bimodal outcome (parameterized).** A platform's
+substrate is *either* a positive-uniqueness instance (its DKMParameters
+satisfies the MIR-style bound at the supplied `mirConst`) OR a sharpened-
+NO-GO instance (its commutator-norm sequence is super-factorial unbounded,
+failing F3). The bimodal statement is the substantive Phase 6q Wave 2b
+output: every platform is exactly one of these two cases (per Wave 2a.1
+DR §1 platform table).
+
+Post-strengthening 2026-05-25 (A.6 strengthening): `mirConst` is now an
+explicit parameter rather than an existential. Callers must commit to a
+specific positive value (graphene witness uses substrate-level `1/2`;
+Python-side substantive constant `(2·β_2/(4π))^(1/3) ≈ 0.0756` is the
+sharper value). Previously the existential `∃ mirConst > 0, ...` was
+vacuously satisfiable by choosing arbitrarily small `mirConst`; the
+parameterized form forces commitment to a non-trivial bound. -/
 def PlatformBimodalOutcome
-    (p : DKMParameters) (commutatorNorm : ℕ → ℝ) : Prop :=
-  (∃ mirConst : ℝ, 0 < mirConst ∧ HorizonTransportUniquenessBound p mirConst) ∨
+    (p : DKMParameters) (mirConst : ℝ) (commutatorNorm : ℕ → ℝ) : Prop :=
+  HorizonTransportUniquenessBound p mirConst ∨
   IsSuperFactorialUnbounded commutatorNorm
 
 /-- **Graphene witness for the positive-uniqueness side of the bimodal
-outcome.** At substrate level with `mirConst = 1/2` (well below
-graphene's substantive 0.6 constant). -/
+outcome.** At substrate level with `mirConst = 1/2`. The Python-side
+substantive value is `(2·β_2/(4π))^(1/3) ≈ 0.0756`, which `1/2` over-
+bounds by ~6.6×; the Lean theorem at `1/2` therefore implies the
+substantive Python bound trivially. -/
 theorem graphene_bimodal_outcome :
-    PlatformBimodalOutcome grapheneDKMParameters (fun _ => 0) := by
+    PlatformBimodalOutcome grapheneDKMParameters (1/2) (fun _ => 0) := by
   left
-  refine ⟨1/2, by norm_num, ?_⟩
   exact horizon_transport_uniqueness_graphene_witness_one_half
 
 /-! ## §6. Closure summary — Wave 2b horizon-transport bootstrap.
 
 This module ships:
-- **`HorizonTransportUniquenessBound`** — substantive predicate for
-  the positive-uniqueness half of the bimodal outcome (graphene-style).
-- **`horizon_transport_uniqueness_thm`** — substantive bootstrap-output
-  theorem.
-- **Graphene witnesses** at `mirConst = 0` (trivial) and `mirConst = 1/2`
-  (substantively-nontrivial at substrate level; substantive 0.6
-  ships Python-side in Wave 2b numerical companion).
+- **`HorizonTransportUniquenessBound`** — `abbrev` for `IsMIRBound`
+  labelling the positive-uniqueness half of the bimodal outcome
+  (graphene-style). Post-strengthening 2026-05-25 the prior `def` plus
+  identity-wrapper `horizon_transport_uniqueness_thm` and `Iff.rfl`
+  bridge `horizon_transport_uniqueness_iff_mir_bound` were collapsed
+  into the transparent `abbrev`; the `mirConst = 0` trivial graphene
+  witness was also deleted (the `_one_half` companion is the substantive
+  substrate-level witness).
+- **`horizon_transport_uniqueness_graphene_witness_one_half`** — the
+  substantive graphene witness at `mirConst = 1/2`; substantive
+  Python-side `(2·β_2/(4π))^(1/3) ≈ 0.0756` ships in
+  `src/dkm_bootstrap/graphene_mir.py` (Wave 2b numerical companion).
 - **`IsSuperFactorialUnbounded`** — strengthened sharpened-NO-GO
   predicate per Wave 2a.1 DR §1 BEC row, Yin-Lucas / Kuwahara-Saito
   Lieb-Robinson-for-bosons results.

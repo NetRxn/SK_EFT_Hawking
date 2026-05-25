@@ -41,9 +41,9 @@ References:
 - Wave 2a.1 DR: `Lit-Search/Phase-6q/Phase 6q Wave 2a.1 Return Dossier
   — SK-EFT-Hawking Specialization of the CHHK DKM Transport Bootstrap.md`
 - CHHK eq. (8): integrated spectral-weight inequality
-- CHHK eq. (26): MIR-style master bound `β_d/(1−e^{−1/(Tτ)}) ≤
+- CHHK eq. (9) v2 [= eq. (26) v1]: MIR-style master bound `β_d/(1−e^{−1/(Tτ)}) ≤
   (ℓ/a)^d · (τ/(χ·a^d))·⟨n₀²⟩_T`
-- CHHK eq. (29): super-Planckian limit `(d·β_d/4π)^{1/(d+1)} ≤ ℓ/a`
+- CHHK eq. (12) v2 [= eq. (29) v1]: super-Planckian limit `(d·β_d/4π)^{1/(d+1)} ≤ ℓ/a`
 - Crossno et al. Science 351, 1058 (2016) — Wiedemann-Franz violation
   experimental anchor for graphene
 - Abedinpour et al. arXiv:1101.4291 — exchange-renormalized Drude weight
@@ -74,14 +74,13 @@ def IsCHHKBootstrapBound
     ∀ Ω k : ℝ, ω ≤ Ω → Ω ≤ Λ → 0 < Ω →
       G Ω k / Ω ≤ boundFunctional ω Λ
 
-/-- **Structural identity** between `IsCHHKBootstrapBound` and a single-
-window slice of `HasFSumRule`. The `HasFSumRule` predicate of Wave 1a.2
-is the *constant-bound* specialization of `IsCHHKBootstrapBound`. -/
-theorem fsum_rule_is_constant_bound
-    (G : Correlator) (boundData : ℝ) :
-    HasFSumRule G boundData ↔
-    IsCHHKBootstrapBound G (fun _ _ => boundData) :=
-  Iff.rfl
+-- Note (post-strengthening 2026-05-25): the prior `Iff.rfl` bridge
+-- `fsum_rule_is_constant_bound : HasFSumRule G boundData ↔
+-- IsCHHKBootstrapBound G (fun _ _ => boundData)` was removed. The
+-- definitional unfolding between the two predicates is now obtained by
+-- `rfl` directly; the structural fact that `HasFSumRule` is the
+-- constant-bound specialization of `IsCHHKBootstrapBound` is preserved
+-- in this docstring and by the predicate shapes themselves.
 
 /-! ## §2. The Mott-Ioffe-Regel master bound (CHHK eq. 29).
 
@@ -131,36 +130,38 @@ captures the substantive structural map between the two coefficient
 families. -/
 
 /-- **DKM ↔ SK-EFT FirstOrderCoeffs compatibility.** The substrate-
-level structural map: the DKM parameter `D` (charge diffusivity) is
-identified with the dissipative Wilson coefficient `i1` (the imaginary/
-dissipative part of FirstOrderCoeffs), and `τ⁻¹` is identified with
-the ratio `i2/r2` (schematic leading-order parametrization). The
-substantive identifications are guarded by the existence of an SK-EFT
-linear-response regime in which these identifications are operational —
-captured as a Prop predicate. -/
-def IsDKMCompatibleSKEFT (p : DKMParameters) (c : FirstOrderCoeffs) : Prop :=
-  -- Substantive content: positive dissipative coefficients + positive
-  -- DKM parameters + the substrate-level identification `D ↔ i1`.
-  -- For Wave 2a.2 we ship the structural-shape predicate; substantive
-  -- proof of the precise correspondence ships in the deferred D1
-  -- lift-to-Lean wave.
-  0 < c.i1 ∧ 0 < c.i2 ∧ 0 < p.τ ∧ 0 < p.D ∧ 0 < p.χ
+level structural map (DR §4: PARTIAL-VIABLE alignment): the DKM
+parameter `D` (charge diffusivity) is identified with the dissipative
+Wilson coefficient `i1` (the imaginary/dissipative part of
+FirstOrderCoeffs), and `τ⁻¹` is identified with the ratio `i2/r2`
+(schematic leading-order parametrization).
+
+The new substantive content of the predicate is the **positivity of the
+dissipative Wilson coefficients `i1, i2`** (the new content on
+FirstOrderCoeffs); DKMParameters' own positivity witnesses (`τ_pos`,
+`D_pos`, `χ_pos`) are already structurally guaranteed and need not be
+re-asserted in the bundle.
+
+Post-strengthening 2026-05-25 (A.6 conjunct cleanup): the 3 prior
+conjuncts `0 < p.τ ∧ 0 < p.D ∧ 0 < p.χ` were dropped — they were
+redundant with the built-in `DKMParameters` positivity witnesses.
+The cross-bridge docstring framing (DR §4: PARTIAL-VIABLE alignment-
+only) is preserved. -/
+def IsDKMCompatibleSKEFT (_p : DKMParameters) (c : FirstOrderCoeffs) : Prop :=
+  0 < c.i1 ∧ 0 < c.i2
 
 /-- **Substantive non-vacuity of the SKEFT compatibility predicate.**
 The substrate level non-vacuously witnesses the predicate: given any
 DKM parameter capsule, there exists a FirstOrderCoeffs witness
 compatible with it (specifically, choose `i1 := p.D`, `i2 := 1`, all
-other coefficients = 0 — substrate-level). -/
+other coefficients = 0). -/
 theorem dkm_compatible_skeft_exists (p : DKMParameters) :
     ∃ c : FirstOrderCoeffs, IsDKMCompatibleSKEFT p c := by
-  refine ⟨⟨0, 0, 0, 0, 0, 0, p.D, 1, 0⟩, ?_, ?_, ?_, ?_, ?_⟩
+  refine ⟨⟨0, 0, 0, 0, 0, 0, p.D, 1, 0⟩, ?_, ?_⟩
   · -- 0 < c.i1 = p.D
     exact p.D_pos
   · -- 0 < c.i2 = 1
     exact one_pos
-  · exact p.τ_pos
-  · exact p.D_pos
-  · exact p.χ_pos
 
 /-! ## §4. Gaussian fluctuation regime predicate (DR §6 substrate condition).
 
@@ -170,20 +171,24 @@ this as a predicate `IsGaussianFluctuationRegime p` that captures the
 substantive content (Lorentzian spectral form ↔ Gaussian rate function
 at quadratic order). -/
 
-/-- **Gaussian-fluctuation-regime predicate.** A DKM parameter capsule
-is in the Gaussian fluctuation regime if its variance `χ·D` is strictly
-positive (which it is by `DKMParameters` positivity witnesses) — the
-substantive content is that the LDP rate function constructed from
-`(χ·D)` is non-degenerate. This is the substrate-level statement of
-the DR §6 condition (1) and (2). -/
-def IsGaussianFluctuationRegime (p : DKMParameters) : Prop :=
-  0 < p.χ * p.D
+/-- **Gaussian-fluctuation-regime predicate** (`abbrev` for `0 < χ·D`).
+A DKM parameter capsule is in the Gaussian fluctuation regime if its
+variance `χ·D` is strictly positive (which it is structurally by
+`DKMParameters` positivity witnesses) — the substantive content is the
+DR §6 condition that the LDP rate function constructed from `(χ·D)` is
+non-degenerate. This is the substrate-level statement of the DR §6
+conditions (1) and (2).
 
-/-- **Every DKM parameter capsule is in the Gaussian fluctuation
-regime.** Direct from the positivity witnesses on `χ` and `D`. -/
-theorem dkm_parameters_isGaussianFluctuationRegime (p : DKMParameters) :
-    IsGaussianFluctuationRegime p :=
-  mul_pos p.χ_pos p.D_pos
+Post-strengthening 2026-05-25 (A.7): demoted from `def` to `abbrev`
+since the substantive Gaussian-regime content (rate function being a
+specific polynomial form; cumulant expansion truncating at second order)
+is blocked on D1 paper-side action-correlator-link substrate. At Phase
+6q scope the predicate functions as a labelling convenience pointing to
+the DR §6 condition; the substantive Gaussian-regime physics ships in
+the future D1 lift-to-Lean wave. The prior `dkm_parameters_isGaussianFluctuationRegime`
+theorem was removed (auto-derivable as `mul_pos p.χ_pos p.D_pos`). -/
+abbrev IsGaussianFluctuationRegime (p : DKMParameters) : Prop :=
+  0 < p.χ * p.D
 
 /-! ## §5. The substantive Wave 2a.2 cross-bridge — forward direction.
 
@@ -204,14 +209,31 @@ def IsLDPCompatibleCorrelator
   IsImGRetardedNonneg G ∧ IsLDPRateFunction β (dkm_rate_function β p)
 
 /-- **CHHK F4 positivity → LDP rate function** (Wave 2a.2 forward
-direction). Under the Gaussian-fluctuation-regime hypothesis at
-substrate level (vacuously satisfied by `DKMParameters` positivity per
-§4), the F4 positivity content of `G` plus the constructed DKM rate
-function yields an `IsLDPCompatibleCorrelator` witness. -/
+direction). The F4 positivity content of `G` plus the DKM parameter data
+yields an `IsLDPCompatibleCorrelator` witness.
+
+**Substantive engine clarification (post-adversarial-review 2026-05-25,
+finding 6.1):** the load-bearing analytical step of the discharge is
+*DKMParameters positivity* (`χ_pos`, `D_pos`), NOT the F4 hypothesis
+`h_pos`. The F4 hypothesis is preserved in the output pair (first
+component of `IsLDPCompatibleCorrelator`) but is *not consumed* by the
+rate-function construction in `chhk_positivity_yields_LDP_rate_function`
+— that construction builds the rate function from `(β, p.χ · p.D)`
+alone. The theorem name is retained for downstream-API stability and
+because in the substantive (D1-lifted) form, F4 *would* be the engine
+via the action-correlator link; at substrate level here it is preserved
+pass-through-only.
+
+The DR §6 Gaussian-fluctuation-regime condition is automatically
+satisfied at substrate level by `DKMParameters` positivity
+(`IsGaussianFluctuationRegime p` is defeq to `0 < p.χ · p.D`, derivable
+from `mul_pos p.χ_pos p.D_pos`); we therefore do not surface it as a
+hypothesis here. The substantive Gaussian-regime content (rate function
+as polynomial, cumulant truncation) ships in the future D1 lift-to-Lean
+wave. -/
 theorem chhk_positivity_yields_LDP_compatible
     {G : Correlator} (h_pos : IsImGRetardedNonneg G)
-    (β : ℝ) (hβ : 0 < β) (p : DKMParameters)
-    (_h_gauss : IsGaussianFluctuationRegime p) :
+    (β : ℝ) (hβ : 0 < β) (p : DKMParameters) :
     IsLDPCompatibleCorrelator G β p :=
   ⟨h_pos, chhk_positivity_yields_LDP_rate_function h_pos β hβ p⟩
 
@@ -222,19 +244,12 @@ theorem zero_correlator_isLDPCompatible
     IsLDPCompatibleCorrelator zeroCorrelator β p :=
   chhk_positivity_yields_LDP_compatible
     zeroCorrelator_isImGRetardedNonneg β hβ p
-    (dkm_parameters_isGaussianFluctuationRegime p)
 
-/-! ## §6. Substantive substrate-level theorem: SKEFTAxioms + DKM
-parameters → MIR bound. -/
-
-/-- **Substrate-level MIR-bound discharge.** Any DKM parameter capsule
-satisfies the MIR bound for `mirConst = 0` (substantive trivial
-constant). The substantive non-trivial bound (graphene's `(2·β_2/4π)^{1/3}
-≈ 0.6` per Wave 2a.1 DR §5) is shipped in Wave 2b.1 via the
-per-platform witness. -/
-theorem dkm_satisfies_trivial_mir_bound (p : DKMParameters) :
-    IsMIRBound p 0 :=
-  mir_bound_at_zero p
+-- Post-strengthening 2026-05-25 (A.5 consolidation): the prior
+-- `dkm_satisfies_trivial_mir_bound` theorem was removed. It was a pure
+-- alias of `mir_bound_at_zero` (§2 above); only consumers were the
+-- 3 per-platform witnesses in `E1E2CrossBridge.lean`, which were also
+-- removed in the same pass. Direct callers can use `mir_bound_at_zero p`.
 
 /-! ## §7. Closure summary — Wave 2a.2 SK-EFT-Hawking specialization.
 
@@ -245,14 +260,17 @@ This module ships:
   `mir_bound_anti_monotone` + `mir_bound_at_zero` substrate lemmas.
 - **`IsDKMCompatibleSKEFT`** — predicate-substrate Wilson-coefficient
   bridge between DKMParameters and `FirstOrderCoeffs`.
-- **`IsGaussianFluctuationRegime`** — DR §6 condition predicate;
-  `dkm_parameters_isGaussianFluctuationRegime` — every `DKMParameters`
-  capsule satisfies it (structural).
+- **`IsGaussianFluctuationRegime`** — `abbrev` for `0 < p.χ · p.D`,
+  labelling the DR §6 condition. Post-strengthening 2026-05-25 (A.7):
+  demoted from `def` and the trivial discharge theorem removed (the
+  substantive Gaussian-regime polynomial-rate-function content ships in
+  the future D1 lift-to-Lean wave; at Phase 6q scope this is a labelling
+  convenience only).
 - **`IsLDPCompatibleCorrelator`** + **`chhk_positivity_yields_LDP_compatible`**
   — substantive forward direction of the DR §6 cross-bridge.
 - **`zero_correlator_isLDPCompatible`** — substantive non-vacuity witness.
-- **`dkm_satisfies_trivial_mir_bound`** — substrate-level MIR-bound
-  non-vacuity witness.
+- (`dkm_satisfies_trivial_mir_bound` was removed in the 2026-05-25 A.5
+  strengthening pass; use `mir_bound_at_zero` from §2 directly.)
 
 The reverse direction of the DR §6 biconditional is the Wave 2b.2
 task (the full bicondtional `IsImGRetardedNonneg ↔ IsLDPRateFunction`

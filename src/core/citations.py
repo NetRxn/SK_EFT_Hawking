@@ -9858,6 +9858,146 @@ CITATION_REGISTRY = {
     # one used_in entry) were artifacts of repeated promote_primary_sources
     # passes per `feedback_promote_primary_sources_duplicate_keys.md`.
     # ════════════════════════════════════════════════════════════════
+
+    # ──────────────────────────────────────────────────────────────
+    # Phase 6q strengthening pass (2026-05-25): registry adds for
+    # Wave 2b numerical companion — graphene MIR-bound substantive
+    # lift. Primary source CHHK (the formula); experimental anchor
+    # Crossno 2016 (graphene mean-free-path comparison).
+    # ──────────────────────────────────────────────────────────────
+
+    'CHHK2025DKMTransport': {
+        'authors': 'Chowdhury, S. D., Hartnoll, S. A., Hebbar, A., and Khondaker, R.',
+        'title': 'Bootstrapping transport in the Drude-Kadanoff-Martin model',
+        'journal': 'arXiv',
+        'volume': None,
+        'page': None,
+        'year': 2025,
+        'doi': None,
+        'arxiv': '2509.18255',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/CHHK2025DKMTransport.pdf',
+        'used_in': ['src/core/formulas.py', 'src/dkm_bootstrap/graphene_mir.py'],
+        'provides': ['DKM transport bootstrap eq. (15) spectral form, eq. (26) MIR master bound, eq. (29) super-Planckian limit (d β_d/(4π))^(1/(d+1)) ≤ ℓ/a — the Phase 6q substrate'],
+        'notes': 'Purely-analytic bootstrap that side-steps the three Phase 6o Wave 1c NO-GO obstructions (unitarity→KMS, crossing, complex-contour SDP) by design. Wave 1a.1 DR primary source. Author-name verification: prior Wave 1a.1 dispatch contained the wrong author string "Christ-Hartman-Hartman-Kologlu"; verified via arXiv abs page 2026-05-25 to be correct as listed (Chowdhury / Hartnoll / Hebbar / Khondaker). Equation numbering note: registry-internal references cite v2 (14 May 2026) numbering; the prior `eq. (26)/(29)` references in pre-2026-05-25 documentation are the v1 (22 Sep 2025) numbers — corresponding v2 numbers are `eq. (9)/(12)`.',
+    },
+
+    'Crossno2016GrapheneWF': {
+        'authors': 'Crossno, J., Shi, J. K., Wang, K., Liu, X., Harzheim, A., Lucas, A., Sachdev, S., Kim, P., Taniguchi, T., Watanabe, K., Ohki, T. A., and Fong, K. C.',
+        'title': 'Observation of the Dirac fluid and the breakdown of the Wiedemann-Franz law in graphene',
+        'journal': 'Science',
+        'volume': 351,
+        'page': '1058',
+        'year': 2016,
+        'doi': '10.1126/science.aad0343',
+        'arxiv': '1509.04713',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Crossno2016GrapheneWF.pdf',
+        'used_in': ['src/dkm_bootstrap/graphene_mir.py', 'tests/test_dkm_bootstrap.py'],
+        'provides': ['Graphene Dirac-fluid momentum-relaxation length ℓ_m: S1=1.5 μm, S2=0.6 μm, S3=0.034 μm at 60 K (Fig. 3C caption) for CHHK MIR-bound comparison; Wiedemann-Franz violation L/L_0 anchor'],
+        'notes': 'Phase 6q Wave 2b numerical companion graphene-data anchor; Crossno 2016 measurement of WF violation in graphene Dirac fluid establishes the hydrodynamic regime where the CHHK MIR bound applies. Pre-2026-05-25 the project cited an unanchored "80 nm representative" value; corrected via adversarial-review finding 2.1 to the paper-anchored per-sample ℓ_m values.',
+    },
+
+    # ──────────────────────────────────────────────────────────────
+    # Phase 6q adversarial-review finding 1.1 (2026-05-25): 5 secondary
+    # substrate-references cited in Lean docstrings under
+    # lean/SKEFTHawking/DKMBootstrap/ — registry-backing added so the
+    # CITATION_REGISTRY tracks the load-bearing Lieb-Robinson-for-bosons +
+    # nested-commutator-bound substrate references.
+    # ──────────────────────────────────────────────────────────────
+
+    'YinLucas2022LiebRobinsonBosons': {
+        'authors': 'Yin, C. and Lucas, A.',
+        'title': 'Bound on quantum scrambling with all-to-all interactions',
+        'journal': 'Phys. Rev. X',
+        'volume': 12,
+        'page': '021039',
+        'year': 2022,
+        'doi': '10.1103/PhysRevX.12.021039',
+        'arxiv': '2106.09726',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/YinLucas2022LiebRobinsonBosons.pdf',
+        'used_in': ['lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean',
+                    'lean/SKEFTHawking/DKMBootstrap/HorizonTransportBootstrap.lean'],
+        'provides': ['Lieb-Robinson-for-bosons substrate: super-factorial commutator-norm growth on bosonic Fock space (the substantive physical content underlying the BEC Bogoliubov-bosonic sharpened-NO-GO half)'],
+        'notes': 'Phase 6q Wave 2b.4 BEC substantive-stand-in substrate reference. Concrete derivation of (2κ)!-like growth from the BEC Bogoliubov Hamiltonian is deferred to a future multi-session lift; the current Lean module uses a postulated stand-in sequence citing this paper as the physical substrate.',
+    },
+
+    'KuwaharaSaito2021LiebRobinsonBosons': {
+        'authors': 'Kuwahara, T. and Saito, K.',
+        'title': 'Lieb-Robinson Bound and Almost-Linear Light Cone in Interacting Boson Systems',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 127,
+        'page': '070403',
+        'year': 2021,
+        'doi': '10.1103/PhysRevLett.127.070403',
+        'arxiv': '2103.11592',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/KuwaharaSaito2021LiebRobinsonBosons.pdf',
+        'used_in': ['lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean',
+                    'lean/SKEFTHawking/DKMBootstrap/HorizonTransportBootstrap.lean'],
+        'provides': ['Continuum bosonic Lieb-Robinson bound with super-factorial commutator-norm growth; companion to Yin-Lucas 2022 for the BEC Bogoliubov substantive substrate'],
+        'notes': 'Phase 6q Wave 2b.4 BEC substantive-stand-in substrate reference. Almost-linear light-cone result is the continuum analog of Yin-Lucas all-to-all Lieb-Robinson; together they characterize the bosonic operator-growth scale that the CHHK F3 axiom fails for.',
+    },
+
+    'AbaninDeRoeckHuveneers2015': {
+        'authors': 'Abanin, D. A., De Roeck, W., and Huveneers, F.',
+        'title': 'Exponentially Slow Heating in Periodically Driven Many-Body Systems',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 115,
+        'page': '256803',
+        'year': 2015,
+        'doi': '10.1103/PhysRevLett.115.256803',
+        'arxiv': '1507.01474',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/AbaninDeRoeckHuveneers2015.pdf',
+        'used_in': ['lean/SKEFTHawking/DKMBootstrap/Predicates.lean',
+                    'lean/SKEFTHawking/DKMBootstrap/NoCrossing.lean',
+                    'lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean'],
+        'provides': ['Fermionic nested-commutator factorial-exponential bound `‖[H,…,n₀]_κ‖ ≤ κ!·ε^κ·‖n₀‖` (CHHK F3 axiom is this with the κ!→e·κ! improvement); the bosonic case violates this (BEC sharpened-NO-GO substrate)'],
+        'notes': 'Phase 6q F3 axiom-family substrate reference. CHHK arXiv:2509.18255 builds F3 on this bound with an improvement factor of e in the constant; the BEC bosonic case is the contrapositive instance (Yin-Lucas / Kuwahara-Saito show bosons exceed the bound).',
+    },
+
+    'ToledoTudeEastham2024Polariton': {
+        'authors': 'Toledo Tude, L. and Eastham, P. R.',
+        'title': 'Quantum thermodynamics of driven-dissipative condensates',
+        'journal': 'APL Quantum',
+        'volume': 1,
+        'page': '036108',
+        'year': 2024,
+        'doi': '10.1063/5.0208352',
+        'arxiv': '2403.06861',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/ToledoTudeEastham2024Polariton.pdf',
+        'used_in': ['lean/SKEFTHawking/DKMBootstrap/E1E2CrossBridge.lean'],
+        'provides': ['Polariton driven-dissipative quantum-thermodynamics analysis; substrate for the `EffectiveOnly` KMS-quality classification on the polariton platform (vs `Strong` on graphene, `Approximate` on BEC). Polariton condensation is modelled as the output of a thermal machine with explicit thermodynamic constraints, characterizing the non-equilibrium driven-dissipative regime where strict KMS fails but effective dynamical-KMS Z₂ survives.',
+                     'Phase 6q Wave 2a.3 polariton platform substrate reference. Primary source corrected via adversarial-review remediation 2026-05-25: original registry entry had wrong DOI (10.1063/5.0218534 → 10.1063/5.0208352), wrong title (fluctuation-theorems framing → quantum-thermodynamics framing), and wrong first-author initial (A → L). arXiv preprint discovered at 2403.06861.'],
+        'notes': 'Phase 6q Wave 2a.3 polariton platform substrate reference. Polariton breaks strict KMS due to pump/loss; effective dynamical-KMS Z₂ symmetry survives in the emergent hydro limit only. Primary-source cache now back-filled via arXiv 2403.06861 (initial Crossref DOI fetch failed in 2026-05-25 adversarial-review remediation; arXiv lookup recovered the preprint).',
+    },
+
+    'ParkerEtAl2019OperatorGrowth': {
+        'authors': 'Parker, D. E., Cao, X., Avdoshkin, A., Scaffidi, T., and Altman, E.',
+        'title': 'A Universal Operator Growth Hypothesis',
+        'journal': 'Phys. Rev. X',
+        'volume': 9,
+        'page': '041017',
+        'year': 2019,
+        'doi': '10.1103/PhysRevX.9.041017',
+        'arxiv': '1812.08657',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/ParkerEtAl2019OperatorGrowth.pdf',
+        'used_in': ['lean/SKEFTHawking/DKMBootstrap/Predicates.lean',
+                    'lean/SKEFTHawking/DKMBootstrap/NoCrossing.lean'],
+        'provides': ['Universal operator-growth hypothesis: nested-commutator Lanczos coefficients grow linearly in κ for generic non-integrable Hamiltonians, yielding the κ! factorial-exponential bound CHHK F3 axiomatizes'],
+        'notes': 'Phase 6q F3 axiom-family substrate reference. Together with Abanin-De Roeck-Huveneers, characterizes the fermionic / bounded-norm Hamiltonian regime where F3 holds; the BEC bosonic case (Yin-Lucas, Kuwahara-Saito) falls outside this regime.',
+    },
 }
 
 
