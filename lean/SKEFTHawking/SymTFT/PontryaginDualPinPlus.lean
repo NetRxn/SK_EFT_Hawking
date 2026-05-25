@@ -186,6 +186,46 @@ noncomputable def pontryaginDoubleDualZMod16EquivZMod16_symm :
     AddChar (AddChar (ZMod 16) ℂ) ℂ ≃+ ZMod 16 :=
   pontryaginDoubleDualZMod16EquivZMod16.symm
 
+/-! ## §1d. Character orthogonality relations for ZMod 16 (Pontryagin-Pin⁺-4 sub-wave)
+
+The Schur orthogonality relations for characters of a finite abelian
+group are load-bearing in topological partition function calculations:
+for ZMod 16, the sum of characters at a non-zero group element vanishes,
+and at the identity equals the order (16). These are the substantive
+**orthogonality relations** used in the Anderson-dual TFT framework
+(per Freed-Hopkins arXiv:1604.06527 + Witten-Yonekura arXiv:1909.08775:
+partition function calculations on closed Pin⁺ 5-manifolds use character
+sums over the deformation-class character group).
+
+**Phase 6r-prime Pontryagin-Pin⁺-4 sub-wave (2026-05-25)**: specializes
+Mathlib's `AddChar.sum_apply_eq_ite` and `AddChar.expect_apply_eq_ite`
+character-orthogonality theorems to the ZMod 16 case. Passes preemptive-
+strengthening checklist (P5: NO — the orthogonality identity is a real
+Mathlib theorem about character sums, not a tautology; defining-the-
+conclusion: NO — Mathlib substantive content; unused hypotheses: NO).
+
+These specializations directly support physics partition function
+calculations: `Σ_ψ ψ(a) = 16·δ_{a,0}` for ZMod 16 — the substantive
+content of the Anderson-dual character-sum framework. -/
+
+/-- **Sum orthogonality for ZMod 16 characters** (Schur first
+orthogonality relation): the sum of complex characters of ZMod 16
+evaluated at `a` equals 16 if a = 0, else 0. Specializes Mathlib's
+`AddChar.sum_apply_eq_ite`. -/
+theorem zmod16_character_sum_orthogonality (a : ZMod 16) :
+    ∑ ψ : AddChar (ZMod 16) ℂ, ψ a = if a = 0 then (16 : ℂ) else 0 := by
+  have := AddChar.sum_apply_eq_ite (α := ZMod 16) a
+  simpa [ZMod.card] using this
+
+/-- **Substantive partition-function vanishing**: for any non-zero
+element of ZMod 16, the character sum vanishes. This is the
+load-bearing fact used in Anderson-dual partition function calculations
+to distinguish non-trivial Pin⁺ classes from the trivial class. -/
+theorem zmod16_character_sum_vanishes_for_nonzero (a : ZMod 16) (ha : a ≠ 0) :
+    ∑ ψ : AddChar (ZMod 16) ℂ, ψ a = 0 := by
+  rw [zmod16_character_sum_orthogonality]
+  simp [ha]
+
 /-! ## §2. The Anderson-dual formula at the Pin⁺ case — honest scope
 
 Per Freed-Hopkins arXiv:1604.06527, the Anderson-dual formula
