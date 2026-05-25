@@ -205,7 +205,7 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Discharge status.** SCHEDULED_W1 (transitive on #1 + #2).
 
-### 5.4 `IsWittenYonekuraInflow` — DISCHARGE_PHASE_6R_PRIME (W4 substantive)
+### 5.4 `IsWittenYonekuraInflow` — PARTIAL_DISCHARGE_PHASE_6R_PRIME (W4 substrate-level shipped; full APS framework deferred)
 
 **File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:198`
 
@@ -215,13 +215,13 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Anchor.** Witten-Yonekura, *Anomaly Inflow and the η-Invariant,* arXiv:1909.08775 (in *Shoucheng Zhang Memorial Workshop* proceedings, 2021). A-class published physics.
 
-**Why DISCHARGE_PHASE_6R_PRIME.** W4 ships the APS η-invariant primitive (W4.1) + the Anderson-dual invertible-TFT framework (W4.2) and refactors the Prop body to the full substantive inflow statement (W4.3): boundary anomaly = bulk Pin⁺ partition fn at η/16 mod 1. Substantive proof depends on W1 substrate.
+**Why PARTIAL_DISCHARGE_PHASE_6R_PRIME.** Substrate-level W4 + W4.2 substantive discharges shipped 2026-05-25 (W4-η-1: `substrateEtaInvariant` via `ZMod.toAddCircle`; W4-η-2: biconditional `η = 0 ↔ z16 = 0`; W4-η-3: anomalous-substrate witness; W4-η-4 / C2-honest-3: broken-paper-17 falsifier; Pontryagin-Pin⁺-1/2/3/4/5: AddChar + character-sum bridge). Plus substantive *alternative* predicate `IsWittenYonekuraInflowSubstantive s := Z16AnomalyCancels s → substrateEtaInvariant s = 0` (in `SymTFT/SubstrateEtaInvariant.lean`). The Prop body itself (`KT ∧ AD`) is now substantively backed by the W4-η substrate-level Mathlib bridge. Full APS index theorem in Mathlib (W4.1 elliptic-operator substrate at the level required to discharge the original "boundary anomaly = bulk Pin⁺ partition fn at η/16 mod 1" identity) remains deferred to Phase 7+ Mathlib upstream.
 
-**Consumers.** Downstream substrate-bulk asymmetry consumers; SM-as-boundary witnesses.
+**Consumers.** Downstream substrate-bulk asymmetry consumers; SM-as-boundary witnesses (now backed by `sm_substrate_data_eta_invariant_vanishes` and `sm_boundary_data_eta_invariant_vanishes`).
 
-**Reassessment trigger.** Phase 6r-prime W4 close.
+**Reassessment trigger.** Phase 6r-prime W4 close (substrate-level ✅) + Mathlib upstream APS-index PR (full).
 
-**Discharge status.** SCHEDULED_W4.
+**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits 25dd97a / f03e8ad / f1107dd / bceb350 / 83f368b / 1705a6e / a2e1dab / 5a80671); APS-framework full discharge → Phase 7+.
 
 ### 5.5 `IsAndersonDualSpinBulk` — DISCHARGE_PHASE_6R_PRIME (transitive on #1 + #2 via W1)
 
@@ -340,7 +340,7 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Discharge status.** **KEEP** (permanent; D-class program identity by design).
 
-### 5.11 `IsDarkSectorTopologicalBoundary` — DISCHARGE_PHASE_6R_PRIME (C2)
+### 5.11 `IsDarkSectorTopologicalBoundary` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (C2 + W5-η-bridge-3)
 
 **File:** `lean/SKEFTHawking/SymTFT/AlternativeBoundaries.lean:99`
 
@@ -350,13 +350,13 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Anchor.** Paper 17 dark-sector substrate (HiddenSectorClassification.lean + FractonDarkMatter.lean + SFDMMergerForecast.lean + FangGuTorsionDM.lean) + Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 + DMNO 2010 (alternative Lagrangian-algebra labels).
 
-**Why DISCHARGE_PHASE_6R_PRIME.** C2 substantively reads paper 17 (`papers/paper17_dark_sector/paper_draft.tex`, 860 lines) and refactors the Prop body to tie to paper-17's hidden-ℤ/16-sector + sterile-νR + fracton DM substrate predicates. Substantive theorem: SM-vs-dark-sector boundaries correspond to electric vs magnetic Lagrangian-algebra labels (per Wave 3a.1 §Q3(b)). HOLD on Wave 3b.1 dark-sector cross-bridge was specifically Phase-6r-deferred pending paper-17 direct read.
+**Why SUBSTRATE_DISCHARGED_PHASE_6R_PRIME.** C2 substantively shipped 2026-05-25 via three sub-waves: (a) C2-honest-1 (commit c8a67b6): paper-17 read + `sm_plus_paper17_hidden_substrate` SubstrateConfig with substantive `-3 + 3 = 0` cancellation arithmetic + `paper17_hidden_sector_charge_eq_three_singlets` cross-bridge to Phase 5x `HiddenSectorClassification.three_singlets_satisfy_hidden_sector`; (b) C2-honest-2 / W5-η-bridge-3 (commit 83f368b): η-level discharge via `sm_plus_paper17_hidden_substrate_eta_invariant_vanishes` + bundled corollary `*_dark_topological_AND_eta_trivial`; (c) C2-honest-3 / W4-η-4 (commit a2e1dab): broken-paper-17 falsifier (`broken_paper17_hidden_sector_charge := 2` vs substantive `+3`) demonstrating framework distinguishes valid from invalid configurations. Working doc at `temporary/working-docs/phase6r-prime/c2_paper17_substantive.md`. Full electric/magnetic Lagrangian-algebra label correspondence at the categorical level remains for Phase 6r-prime' / Phase 7+ MTC follow-up.
 
-**Consumers.** `wave_3b_1b_alternative_boundary_structural_closure`.
+**Consumers.** `wave_3b_1b_alternative_boundary_structural_closure` + new `sm_plus_paper17_hidden_substrate_*` witness chain.
 
-**Reassessment trigger.** Phase 6r-prime C2 close.
+**Reassessment trigger.** Phase 6r-prime' / Phase 7+ MTC follow-up (categorical-level LA-label correspondence).
 
-**Discharge status.** SCHEDULED_C2.
+**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits c8a67b6 / 83f368b / a2e1dab); categorical-level full discharge → Phase 7+.
 
 ### 5.12 `IsSubstantivePinPlusSPTAsymmetry` — DISCHARGE_PHASE_6R_PRIME (transitive on #1 + #2 via W1, plus GEM-bridge)
 
