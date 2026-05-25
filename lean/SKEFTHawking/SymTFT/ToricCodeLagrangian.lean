@@ -107,17 +107,22 @@ they correspond to condensing the electric vs magnetic anyon.
 
 **Phase 6r-prime C1 partial ship (2026-05-25)**: extended the Phase 6r
 `:= IsBoundarySymTFTCorrespondence toricCodeBulk` predicate-substrate
-marker with a **substantive label-distinctness conjunct**:
+marker with a **label-distinctness conjunct**:
 
 ```
 IsBoundarySymTFTCorrespondence toricCodeBulk ∧
   (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic)
 ```
 
-The 2nd conjunct (label-distinctness) IS substantive Kitaev-Kong/BMD
-content at the label level — the two boundary phases are genuinely
-distinct (per `toricCode_labels_distinct`, discharged by `decide` on
-the 2-constructor inductive).
+**Honest scope** (per CLAUDE.md preemptive-strengthening checklist): the
+2nd conjunct is **label-LEVEL distinctness** — a notational fact about
+the chosen `ToricCodeLagrangianLabel` inductive (2 constructors are
+definitionally distinct, discharged by `decide`). It is NOT the full
+Kitaev-Kong/BMD statement that the underlying electric/magnetic
+Lagrangian algebras are non-isomorphic *as Frobenius-algebra objects in
+the Drinfeld center*. The label conjunct names the substantive
+distinction in the math; the substantive proof of object-level
+non-isomorphism requires the concrete-object construction (deferred).
 
 **Phase 6r-prime 2026-05-25 honest revert**: a prior C1 ship added a 3rd
 conjunct `∀ l, l = electric ∨ l = magnetic` — structurally trivial
@@ -126,7 +131,8 @@ Kitaev-Kong classification content). Reverted.
 
 The substantive **concrete-object** construction (the explicit
 Frobenius-algebra structure on `𝟙 ⊕ e` and `𝟙 ⊕ m` as
-`Object (Center (Discrete (ZMod 2)))`) requires direct-sum structure on
+`Object (Center (Discrete (ZMod 2)))` with `MonObj` + `ComonObj` +
+`IsCommFrobeniusAlgebra` instances) requires direct-sum structure on
 the Drinfeld center that Mathlib does not currently expose at the right
 typeclass level — separate state-of-the-art sub-wave ship. -/
 def IsToricCodeTwoLagrangianAlgebraStructure : Prop :=

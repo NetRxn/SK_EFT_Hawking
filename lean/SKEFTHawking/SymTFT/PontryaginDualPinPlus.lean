@@ -29,6 +29,17 @@ Combined with the tracked Kirby-Taylor iso `Ω_4^{Pin⁺} ≃+ ZMod 16`,
 this gives a substantive computational realization of the Anderson-dual
 formula for the Pin⁺ case.
 
+**Honest ℂ-vs-ℝ/ℤ scope note** (per CLAUDE.md preemptive-strengthening
+checklist): the Anderson-dual formula uses `Hom(_, ℝ/ℤ)`; Mathlib's
+`AddChar.zmodAddEquiv` uses complex-valued characters `AddChar (_) ℂ`.
+For finite abelian groups, these are equivalent via Mathlib's
+`AddChar.circleEquivComplex` (the circle-valued characters of a finite
+abelian group are the same as its complex-valued characters; the
+circle `S¹ ⊂ ℂ` corresponds to `ℝ/ℤ` via `exp(2πi·)`). This module
+ships the complex-valued form via direct use of `zmodAddEquiv`; the
+correspondence to the `ℝ/ℤ`-valued Anderson-dual form is the standard
+Pontryagin-dual identification for finite groups.
+
 **Strict honesty check** (per CLAUDE.md preemptive-strengthening
 checklist):
 - **P5 (structural tautology)**: NO — `AddChar (ZMod 16) ℂ` is NOT
