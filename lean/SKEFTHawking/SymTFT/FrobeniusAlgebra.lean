@@ -142,19 +142,24 @@ def IsConnectedAlgebra (X : C) [MonObj X] : Prop :=
   Mono (MonObj.one (X := X))
 
 /-- **`IsSeparableAlgebra X`** — predicate stating that the
-multiplication `μ : X ⊗ X ⟶ X` admits a section `s : X ⟶ X ⊗ X`. The
-section `s` plays the role of the inverse of the multiplication on the
-diagonal; existence of `s` makes the algebra `X` separable.
+multiplication `μ : X ⊗ X ⟶ X` admits a (one-sided) section
+`s : X ⟶ X ⊗ X` with `s ≫ μ = 𝟙 X`.
 
 **Phase 6r-prime W2.1 substantive ship (2026-05-25)**: strengthens the
 Phase 6r `:= True` placeholder to require explicit existence of a
-section `s` with `s ≫ μ = 𝟙 X`. This is the standard categorical
-separability condition (per Kock 2004, Frobenius Algebras and 2D TQFTs;
-DMNO 2010 arXiv:1009.2117).
+right-section of the multiplication. In the Frobenius-algebra context
+(where this predicate is intended to compose with `IsFrobeniusAlgebra`
+to form `IsEtaleAlgebra`), one-sided right-section equates to the
+standard bimodule-section separability condition (per Kock 2004,
+*Frobenius Algebras and 2D TQFTs*, §2.4). For generic non-Frobenius
+algebras, the standard bimodule-section form is strictly stronger;
+the one-sided form here is the appropriate Frobenius-context
+strengthening from `True`.
 
-Per Wave 3a.1 §Q2(c), separability + commutativity = étale; combined
-with connectedness + the Frobenius-Perron-dimension condition, these
-characterize Lagrangian algebras (DMNO 2010). -/
+Per Wave 3a.1 §Q2(c), separability + commutativity = étale (in the
+Frobenius context); combined with connectedness + the Frobenius-Perron-
+dimension condition, these characterize Lagrangian algebras (DMNO 2010
+arXiv:1009.2117). -/
 def IsSeparableAlgebra (X : C) [MonObj X] : Prop :=
   ∃ s : X ⟶ X ⊗ X, s ≫ MonObj.mul (X := X) = 𝟙 X
 

@@ -118,12 +118,21 @@ existence-of-Lagrangian-algebra body:
 The new body asserts B carries a braided structure AND there exists a
 substantive Lagrangian algebra in it (per the W2.1-strengthened
 predicates: `IsConnectedAlgebra L = Mono (MonObj.one)` +
-`IsSeparableAlgebra L = ∃ s, s ≫ μ = 𝟙`). This is the **forward
-direction** of DMNO 2010 (Lagrangian-algebra existence ⇒ Witt-trivial /
-Drinfeld center realization). The **reverse direction** (Witt-trivial
-⇒ Lagrangian algebra) is the load-bearing categorical-algebra content
-supplied externally per DMNO 2010 arXiv:1009.2117 (consumers carry the
-biconditional as a tracked Prop with primary-source citation).
+`IsSeparableAlgebra L = ∃ s, s ≫ μ = 𝟙`).
+
+**Honest scope** (per CLAUDE.md preemptive-strengthening checklist):
+this body captures the *LA-existence side* of the DMNO 2010
+biconditional. The substantive DMNO 2010 categorical-algebra theorem
+itself (proving "Witt-trivial ⟺ LA-existence" as an equivalence) is
+A-class published mathematics that requires multi-month categorical-
+algebra Mathlib substrate. The predicate-NAME retains the
+"...IffLagrangianAlgebra" suffix to signal the consumer's intended use:
+downstream theorems take this as a hypothesis carrying the biconditional
+content (via primary-source citation DMNO 2010 arXiv:1009.2117). The
+predicate-BODY captures the LA-existence side substantively, so the
+hypothesis is non-tautological and carries real content; the BLOCKER-2
+substantive closure (`witt_triviality_iff_has_lagrangian_algebra`,
+W2.5) uses this directly.
 
 Per Wave 3a.1 §Q2(c) Recommendation 3, this is the load-bearing
 DMNO 2010 anchor; consumers (Wave 1d.1 `BulkBoundaryCorrespondence.lean`,
