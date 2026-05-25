@@ -94,15 +94,6 @@ theorem cliffordTBaseFinder_approx_opNorm
   epsilonNet_findNearest_of_witness_approx_opNorm cliffordTGeneratingSet
     (cliffordTClosureDenseWitness_of_tracked h_tracked) U ε₀ ε₀_pos
 
-/-- The Clifford+T base finder satisfies the
-`BaseFinder_approximates_within` property at `ε₀` (which implies
-approximation within `2 * ε₀` as well, by transitivity with `< ε₀ < 2 * ε₀`). -/
-theorem cliffordTBaseFinder_approximates_within_ε₀
-    (h_tracked : cliffordT_v4_witness_tracked) :
-    BaseFinder_approximates_within cliffordTGeneratingSet
-      (cliffordTBaseFinder h_tracked) ε₀ :=
-  fun U => cliffordTBaseFinder_approx_opNorm h_tracked U
-
 /-! ## T-S.4 — Clifford+T calibration discharge (via Wave 4b)
 
 With Wave 4b's `SkApproxCSuperQuadraticBound_generic_holds` shipped, the

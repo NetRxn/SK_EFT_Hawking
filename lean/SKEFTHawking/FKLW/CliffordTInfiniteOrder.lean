@@ -41,8 +41,12 @@ The latter is the headline consumed by the T-S.2 discharge.
 
 ## Headline theorems
 
-  * `cliffordT_M_trace_eq` — `tr (H_SU · T_SU) = √2 · sin(π/8)`
-  * `H_SU_mul_T_SU_eigenvalue_exists` — explicit eigenvector witness
+  * `H_SU_mul_T_SU_eigen` — explicit eigenvector / eigenvalue equation
+    `(H_SU · T_SU) · v_HT = lam_HT • v_HT` (consumes the private trace
+    `2·α_HT` and det-1 facts plus the characteristic-poly identity
+    `lam_HT² = 2α·lam_HT - 1` from `lambda_HT_sq`)
+  * `lambda_HT_not_root_of_unity` — Niven-style algebraic-integer
+    obstruction: `lam_HT^n ≠ 1` for every `n ≥ 1`
   * `H_SU_mul_T_SU_infinite_order` — `¬ IsOfFinOrder (H_SU * T_SU)`
   * `H_SU_mul_T_SU_pow_injective` — `(H·T)^n` injective in n
   * `H_of_G_cliffordT_isInfinite` — the closed subgroup is infinite

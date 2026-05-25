@@ -13,7 +13,8 @@ to arbitrary `GeneratingSet`s.
   * `dnStepFG_su2 V_n U` — alphabet-agnostic version of `dnStepFG`. Takes
     the V_n SU(2) value directly (instead of as a braid word). Body is
     structurally identical, ensuring `dnStepFG V_n_braid U` ≡
-    `dnStepFG_su2 (ρ_Fib_SU2 V_n_braid) U`.
+    `dnStepFG_su2 (ρ_Fib_SU2 V_n_braid) U` definitionally (consumed by
+    `skApproxC_generic_fibonacci_eq` via `rfl` in its inductive step).
 
   * `skApproxC_generic gs baseFinder : ℕ → SU(2) → gs.W` — the
     parametric SK recursion. Takes a `baseFinder : SU(2) → gs.W`
@@ -115,21 +116,6 @@ noncomputable def dnStepFG_su2
       hG_herm := Matrix.isHermitian_zero
       hF_tr := Matrix.trace_zero (Fin 2) ℂ
       hG_tr := Matrix.trace_zero (Fin 2) ℂ }
-
-/-- **Compatibility with Phase 6t `dnStepFG`**: at the Fibonacci instance,
-`dnStepFG_su2 (ρ_Fib_SU2 V_n_braid) U` reduces to `dnStepFG V_n_braid U`.
-
-Holds by definitional unfolding (`rfl`); the equality is the Phase 6u
-bridge invariant by construction (`dnStepFG_su2`'s body is structurally
-identical to `dnStepFG`'s body after the initial
-`V_n := ρ_Fib_SU2 V_n_braid` evaluation step). This rfl is load-bearing
-for `skApproxC_generic_fibonacci_eq` (the structural induction reducing
-the generic recursion at the Fibonacci instance to Phase 6t's recursion). -/
-theorem dnStepFG_su2_eq_dnStepFG
-    (V_n_braid : FibonacciBraidWord)
-    (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) :
-    dnStepFG_su2 (ρ_Fib_SU2 V_n_braid) U = dnStepFG V_n_braid U := by
-  rfl
 
 /-! ## 2. The generic Solovay-Kitaev recursion `skApproxC_generic`
 
@@ -243,7 +229,9 @@ theorem skApproxC_generic_fibonacci_eq
     simp only [ih]
     -- After ih, the V_n_word, A_F, A_G are identical to Phase 6t's V_n_braid.
     -- Need: gs.ρ_hom = ρ_Fib_SU2 (definitional for fibonacciGeneratingSet).
-    -- dnStepFG_su2 (ρ_Fib_SU2 ...) = dnStepFG ... by dnStepFG_su2_eq_dnStepFG.
+    -- dnStepFG_su2 (ρ_Fib_SU2 ...) = dnStepFG ... holds definitionally
+    -- (dnStepFG_su2's body is structurally identical to dnStepFG's body
+    -- after the initial V_n := ρ_Fib_SU2 V_n_braid evaluation step).
     rfl
 
 /-- **Fibonacci-instance super-quadratic bound discharge**.

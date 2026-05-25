@@ -26,9 +26,11 @@ Clifford+T single-qubit universal gate set.
     `ρ_hom := FreeGroup.lift (![H_SU, T_SU] ∘ .)`, `gens_generate`
     discharged via `FreeGroup.closure_range_of`.
 
-  * `S_SU_mat = T_SU_mat^2` and `S_SU = T_SU^2` — the SU(2)-corrected
-    S-gate as a derived element. Since `S = T²`, no separate generator
-    is needed; the closure `⟨H_SU, T_SU⟩` contains S automatically.
+  * `S_SU_mat = T_SU_mat^2` — the SU(2)-corrected S-gate as a derived
+    matrix. Since `S = T²`, no separate generator is needed; the closure
+    `⟨H_SU, T_SU⟩` contains S automatically (callers wanting `S`
+    membership in `H_of_G cliffordTGeneratingSet` compose
+    `T_SU_mem_H_of_G_cliffordT` with `Subgroup.mul_mem` inline).
 
 ## BMPRV reference
 
@@ -51,8 +53,10 @@ file's job is the lightweight `GeneratingSet`-instance setup.
   consumption (the `cliffordTGeneratingSet` is the Track T-S substrate
   for all subsequent T-S.2–5 work); `H_SU_mem_specialUnitaryGroup` and
   `T_SU_mem_specialUnitaryGroup` are load-bearing for the SU(2)-bundled
-  versions; the `S_SU` derived equality is consumed by anyone needing
-  `S` access through the generating set.
+  versions; `S_SU_mat` is kept as a derived matrix for callers needing
+  the explicit `diag(e^{-iπ/4}, e^{iπ/4})` form, but no `S_SU` bundled
+  element or membership theorem is shipped (would be P3 plumbing — every
+  caller just composes via `Subgroup.mul_mem` inline).
 
 -/
 
@@ -282,19 +286,13 @@ noncomputable def cliffordTGeneratingSet : GeneratingSet where
   gens_nonempty := cliffordTGens_nonempty
   gens_generate := cliffordTGens_generate
 
-/-! ## 6. S-gate as a derived element
-
-Since `S = T²` (up to phase), the SU(2)-corrected `S_SU` is `T_SU²`.
-This is a derived value, not a separate generator. -/
-
-/-- **`S_SU` as a derived element**: `S_SU := T_SU²`. -/
-noncomputable def S_SU : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
-  T_SU ^ 2
-
-/-! ## 7. Generator membership in `H_of_G cliffordTGeneratingSet`
+/-! ## 6. Generator membership in `H_of_G cliffordTGeneratingSet`
 
 Both H_SU and T_SU are in `H_of_G cliffordTGeneratingSet` (since they are
-images of `FreeGroup.of 0` and `FreeGroup.of 1` under `ρ_CliffT`). -/
+images of `FreeGroup.of 0` and `FreeGroup.of 1` under `ρ_CliffT`). The
+S-gate is a derived element (S = T²); no separate definition is shipped
+since membership of products in the closed subgroup is automatic via
+`Subgroup.mul_mem` at every call site. -/
 
 /-- `H_SU ∈ H_of_G cliffordTGeneratingSet`. -/
 theorem H_SU_mem_H_of_G_cliffordT :
@@ -310,13 +308,5 @@ theorem T_SU_mem_H_of_G_cliffordT :
   apply Subgroup.le_topologicalClosure
   refine ⟨FreeGroup.of (⟨1, by decide⟩ : Fin 2), ?_⟩
   exact ρ_CliffT_of_1
-
-/-- `S_SU ∈ H_of_G cliffordTGeneratingSet` (as a derived element T_SU²). -/
-theorem S_SU_mem_H_of_G_cliffordT :
-    S_SU ∈ H_of_G cliffordTGeneratingSet := by
-  unfold S_SU
-  rw [sq]
-  exact (H_of_G cliffordTGeneratingSet).mul_mem
-    T_SU_mem_H_of_G_cliffordT T_SU_mem_H_of_G_cliffordT
 
 end SKEFTHawking.FKLW.GenericSU2
