@@ -51,9 +51,9 @@ Six primary substrate waves, plus four alphabet-instantiation tracks. The substr
 | **Wave 5** | Generic length bound `SolovayKitaevLengthBound_generic` + closed-form `skLength_generic` + `skLevel_polylog_generic` | ⏳ NOT STARTED | D4 §9.7 |
 | **Wave 6** | Bundled-strict headline parametric over `G`: `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight` | ⏳ NOT STARTED | D4 §9.7 |
 | **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999) | ⏳ NOT STARTED | D4 §9.8 |
-| **Track T-A1 (Tier A)** | Instantiate at trapped-ion native gate set (Mølmer-Sørensen MS(θ) discretized at some grid + arbitrary 1Q rotations) | ⏳ NOT STARTED | (likely Phase 6v) |
-| **Track T-A2 (Tier A)** | Instantiate at Clifford+CCZ for 3-qubit primitives (target group SU(8) not SU(2); substantial substrate extension) | ⏳ NOT STARTED | (likely Phase 6w) |
-| **Track T-B (Tier B)** | Instantiate at Read-Rezayi SU(2)_k for k ∈ {5, 7} (next universal anyons beyond Fibonacci) | ⏳ NOT STARTED | (likely Phase 6w) |
+| **Track T-A1 (Tier A)** | Instantiate at trapped-ion native gate set (Mølmer-Sørensen MS(θ) discretized at some grid + arbitrary 1Q rotations) | ⏳ NOT STARTED | (was "likely Phase 6v"; **Phase 6v scope finalized 2026-05-25 does NOT include this track** — re-slot to Phase 6x or later) |
+| **Track T-A2 (Tier A)** | Instantiate at Clifford+CCZ for 3-qubit primitives (target group SU(8) not SU(2); substantial substrate extension) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
+| **Track T-B (Tier B)** | Instantiate at Read-Rezayi SU(2)_k for k ∈ {5, 7} (next universal anyons beyond Fibonacci) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
 
 **Wave dependencies:**
 - W1 → W2 → W3 must be sequential (each depends on the predicate framework from the previous).
