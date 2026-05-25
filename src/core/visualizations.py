@@ -6694,12 +6694,13 @@ def fig_fk_dimensional_ladder() -> go.Figure:
 
     The Phase 5s Wave 4 bridge theorem
     (`SKEFTHawking.SPTClassification.gapped_interface_dimensional_ladder`)
-    summarises the project's evidence stack for the sole load-bearing
-    axiom (`gapped_interface_axiom`):
+    summarises the project's evidence stack for the gapped-interface
+    conjecture (the `TPFConjecture` tracked Prop, converted from the
+    former `axiom gapped_interface_axiom` on 2026-05-19):
 
       1+1D — PROVED: VillainHamiltonian.k3450_gappable (K-matrix, 3450 model)
       2+1D — PROVED: SKEFTHawking.FK.fk_summary (Cayley Spin(7), Δ=14)
-      3+1D — AXIOMATIZED: gapped_interface_axiom (open at literature frontier)
+      3+1D — TRACKED_PROP: TPFConjecture (open at literature frontier)
 
     The 1+1D and 2+1D witnesses are independent of one another
     (different model classes, different proof frameworks); together they
@@ -6708,9 +6709,10 @@ def fig_fk_dimensional_ladder() -> go.Figure:
     Machine-checked Lean witnesses:
       VillainHamiltonian.lean — k3450 K-matrix gappability
       FKGappedInterface.lean — 12 theorems, 0 sorry, all native_decide
-      SPTClassification.lean — gapped_interface_dimensional_ladder
-      AXIOM_METADATA['gapped_interface_axiom'].evidence_ladder
-    Source: Phase 5s Wave 4 ship memo (2026-04-18); Phase 5s roadmap §A.
+      SPTClassification.lean — gapped_interface_dimensional_ladder + TPFConjecture
+      AXIOM_METADATA['gapped_interface_axiom'].evidence_ladder (history)
+    Source: Phase 5s Wave 4 ship memo (2026-04-18); Phase 5h Wave 2
+    TPFConjecture tracked-Prop conversion (2026-05-19).
     """
     from src.core.formulas import fk_dimensional_ladder_evidence
 
@@ -6724,8 +6726,13 @@ def fig_fk_dimensional_ladder() -> go.Figure:
     fig = go.Figure()
 
     proved_color = COLORS.get('sage', '#7BA05B')
-    axiom_color = COLORS.get('amber', '#D4A843')
-    color_map = {'PROVED': proved_color, 'AXIOMATIZED': axiom_color}
+    # Tracked-Prop / axiom (both styled the same — open conjecture).
+    open_color = COLORS.get('amber', '#D4A843')
+    color_map = {
+        'PROVED': proved_color,
+        'AXIOMATIZED': open_color,     # legacy label (pre-2026-05-19)
+        'TRACKED_PROP': open_color,    # post-2026-05-19 conversion
+    }
 
     for i, (dim, info) in enumerate(rows):
         color = color_map[info['status']]
