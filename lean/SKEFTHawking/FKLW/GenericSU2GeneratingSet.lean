@@ -92,11 +92,23 @@ structure GeneratingSet where
   [Wgroup : Group W]
   /-- Representation as a group homomorphism into SU(2). -/
   ρ_hom : W →* ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)
-  /-- Explicit finite generator set. Used by the ε₀-net enumeration in Wave 3. -/
+  /-- Explicit finite generator set.
+
+  **Status (Phase 6u Session 1):** the `gens` field is NOT consumed by
+  the shipped Wave 3 existential ε₀-net (which uses `Classical.choose`
+  directly from Wave 2's density). It IS consumed at instantiation
+  sites (Fibonacci, Clifford+T) to provide the structural
+  finitely-generated constraint via `gens_generate`. The field is
+  forward-looking substrate for the constructive ε₀-net (per-alphabet
+  enumeration), which is per-alphabet Track work. CP1 RC1 audit
+  acknowledged: this is **anticipatory abstraction** rather than dead
+  code, since the constructive-net path will need it. -/
   gens : Finset W
   /-- The generator set is non-empty. -/
   gens_nonempty : gens.Nonempty
-  /-- `gens` generates `W` as a group. -/
+  /-- `gens` generates `W` as a group. Load-bearing for the structural
+  constraint that `W` is finitely generated and `gens` is a complete
+  generating set; consumed by future constructive ε₀-net work. -/
   gens_generate : Subgroup.closure (gens : Set W) = (⊤ : Subgroup W)
 
 attribute [instance] GeneratingSet.Wgroup

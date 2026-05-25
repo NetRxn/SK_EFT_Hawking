@@ -1180,27 +1180,37 @@ theorem SkApproxCSuperQuadraticBound_generic_holds
       rw [h_lhs_zero]
       exact h_rhs_nn
 
-/-! ## 6. UNCONDITIONAL bundled-strict generic headline (Bonus task)
+/-! ## 6. Bundled-strict generic headline (conditional on the base-finder ε₀-net hypothesis)
 
-Composes the generic discharge above with Wave 6's conditional bundled
-headline to produce the UNCONDITIONAL alphabet-independent canonical
-quantitative Solovay-Kitaev statement, parametric over `gs` and any base
-finder satisfying the (2·ε₀)-approximation property. -/
+Composes the generic super-quadratic discharge above with Wave 6's
+conditional bundled headline. The result is **conditional on the standard
+ε₀-net base-finder hypothesis** `BaseFinder_approximates_within gs
+baseFinder (2 * ε₀)`. When that hypothesis is itself discharged (as at
+the Fibonacci instance via Wave 4a's bridge, or per-alphabet via a
+shipped ε₀-net), the headline becomes unconditional for that alphabet. -/
 
-/-- **UNCONDITIONAL bundled-strict generic headline**.
+/-- **Bundled-strict generic headline — conditional on the base-finder
+ε₀-net hypothesis**.
 
 For any `GeneratingSet gs`, any base finder `baseFinder` satisfying
-`BaseFinder_approximates_within gs baseFinder (2 * ε₀)`, any target
-`U ∈ SU(2)`, and any precision `ε ∈ (0, ε₀]`, the generic constructive
-Dawson-Nielsen Solovay-Kitaev compiler achieves BOTH:
+`BaseFinder_approximates_within gs baseFinder (2 * ε₀)` (the standard
+ε₀-net hypothesis), any target `U ∈ SU(2)`, and any precision
+`ε ∈ (0, ε₀]`, the generic constructive Dawson-Nielsen Solovay-Kitaev
+compiler achieves BOTH:
 
   - **Error**: `‖gs.ρ_hom (compile U ε) - U‖ ≤ ε`
   - **Length**: polylog `O(log(1/ε)^skLengthExponent)` word length
 
 at the SAME algorithmic compile level `skLevel_polylog ε`. This is the
-**alphabet-independent canonical quantitative Solovay-Kitaev statement**
-discharged UNCONDITIONALLY (modulo only the base-finder approximation
-property `h_baseFinder`, which is the standard ε₀-net hypothesis).
+**alphabet-independent canonical quantitative Solovay-Kitaev statement**,
+parametric over the GeneratingSet AND a base finder discharging the
+`BaseFinder_approximates_within … (2·ε₀)` predicate.
+
+Unconditionality at a specific alphabet requires discharging
+`BaseFinder_approximates_within` for that alphabet's choice of base
+finder. For Fibonacci, the Wave-3 ε₀-net via `fibonacciEpsilonNet_findNearest`
+discharges this; for Clifford+T (Track T-S), the discharge composes
+through T-S.2's closure-density witness.
 
 Closes Phase 6u Wave 4b: the substantive generic discharge
 (`SkApproxCSuperQuadraticBound_generic_holds`) composed with Wave 6's

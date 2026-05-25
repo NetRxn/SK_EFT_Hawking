@@ -133,35 +133,45 @@ theorem IsDenseInSU2.of_v4_witness (gs : GeneratingSet)
 
 ---
 
-### Wave 3 — Generic ε₀-net structure
+### Wave 3 — Generic ε₀-net structure (SHIPPED 2026-05-25, existential form)
 
-**Goal:** ship `lean/SKEFTHawking/FKLW/GenericEpsilonNet.lean` defining the abstract finite-net structure.
+**Goal:** ship `lean/SKEFTHawking/FKLW/GenericEpsilonNet.lean` providing
+the ε₀-net lookup substrate.
 
-**Key declarations:**
+**Shipped form (existential ε₀-net via Classical.choose):**
 ```lean
-structure SU2EpsilonNet (gs : GeneratingSet) (ε₀ : ℝ) : Type where
-  ε₀_pos : 0 < ε₀
-  net : Finset (FreeMonoid gs.G)  -- finite set of words over the generating alphabet
-  net_nonempty : net.Nonempty
-  net_covers : ∀ (U : ↥(specialUnitaryGroup (Fin 2) ℂ)),
-    ∃ w ∈ net, ‖(evaluateWord w : Matrix _ _ ℂ) - (U : Matrix _ _ ℂ)‖ ≤ 2 * ε₀
+noncomputable def epsilonNet_findNearest
+    (gs : GeneratingSet) (h_dense : IsDenseInSU2_gs gs)
+    (U : ↥(specialUnitaryGroup (Fin 2) ℂ))
+    (ε₀ : ℝ) (hε₀_pos : 0 < ε₀) : gs.W :=
+  (h_dense U ε₀ hε₀_pos).choose
 
-noncomputable def findNearest (gs : GeneratingSet) (ε₀ : ℝ)
-    (net : SU2EpsilonNet gs ε₀) (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) :
-    FreeMonoid gs.G := ...  -- argmin over net.net
-
-theorem findNearest_approx_opNorm (gs ε₀ net U) :
-    ‖(evaluateWord (findNearest gs ε₀ net U) : Matrix _ _ ℂ) - (U : Matrix _ _ ℂ)‖ ≤ 2 * ε₀
+theorem epsilonNet_findNearest_approx_opNorm
+    (gs h_dense U ε₀ hε₀_pos) :
+    ‖((gs.ρ_hom (epsilonNet_findNearest gs h_dense U ε₀ hε₀_pos) : ...).val :
+        Matrix (Fin 2) (Fin 2) ℂ) - (U : Matrix _ _ ℂ)‖ < ε₀ :=
+  (h_dense U ε₀ hε₀_pos).choose_spec
 ```
 
-**Coverage-verification interface:** Wave 3 defines the predicate `net_covers` but does NOT discharge it abstractly. Discharge happens per-alphabet (Track T-S, T-A1, etc.) using one of three strategies:
-1. **Computational** — brute-force enumerate words up to length L0, port the `Finset` literal to Lean, verify coverage at a Haar-grid of test points via `decide` or `native_decide`. Mechanical but slow at large L0.
-2. **Symbolic** — leverage an algebraic-number-theoretic structure on the alphabet (e.g., Z[ω][1/√2] for Clifford+T per Ross-Selinger; algebraic-number-theoretic structure on σ_Fib generators for Fibonacci). More elegant but harder to formalize.
-3. **Hybrid** — short-word net (length ≤ 5) symbolic + extension via SK iteration to ε₀.
+The existential form takes a `IsDenseInSU2_gs gs` hypothesis (Wave 2's
+generic density predicate) and returns the Classical-choice extracted
+word + correctness. There is no `Finset`-based net structure; the
+classical-extraction approach is sufficient for downstream Wave 4-6
+work (which composes existential bounds through induction).
 
-**Risk:** MEDIUM. The abstract structure is straightforward; per-alphabet coverage verification is the load-bearing engineering cost (deferred to track instantiations).
+**Originally-planned form (`SU2EpsilonNet` Finset structure with
+`net_covers` coverage predicate, ~250-500 LoC):** deferred to
+follow-on work — would be the per-alphabet *constructive* ε₀-net
+(brute-force enumeration / symbolic Ross-Selinger). The shipped
+existential form is sufficient for the headline theorems and aligns
+with the Phase 6t `FibonacciEpsilonNet` posture (also existential
+via `Classical.choose`). The deferred constructive form is per-alphabet
+work in Track instantiations.
 
-**Estimated LoC (substrate only):** ~250-500.
+**Risk:** LOW for existential form (shipped). MEDIUM for per-alphabet
+constructive form (deferred; substantial engineering cost per alphabet).
+
+**Estimated LoC (existential form, as shipped):** ~145.
 
 ---
 

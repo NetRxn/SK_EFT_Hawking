@@ -75,6 +75,18 @@ Prop is shipped *conditional* with explicit user sign-off requested for:
     procedure should reference `cliffordT_v4_witness_tracked` and its
     discharge status).
 
+**Note on SU(2)-correction phase factors (CP1 RC5):** `H_SU` and `T_SU`
+(see `CliffordTGeneratingSet.lean`) are the SU(2)-corrected forms of the
+textbook Hadamard and T-gate (det = +1 lifts). BMPRV 1999 proves
+closure-density of `⟨H, T⟩` in PU(2) for the textbook (U(2)) versions.
+The SU(2) lift via global phase factors preserves the *projection* onto
+PU(2), so the closure-density argument transfers: if `⟨H, T⟩` (textbook)
+is dense in PU(2), then `⟨H_SU, T_SU⟩` (SU(2)-corrected) is dense in
+SU(2) (or differs only by a discrete U(1) phase factor, which the v4
+witness handles cleanly via 1-parameter-subgroup extraction). The
+substantive discharge of `cliffordT_v4_witness_tracked` must explicitly
+handle this phase-factor transport.
+
 ## Pipeline invariants
 
 - **#10** (no `maxHeartbeats`): respected.

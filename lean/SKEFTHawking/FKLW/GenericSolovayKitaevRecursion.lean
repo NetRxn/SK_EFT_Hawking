@@ -117,7 +117,14 @@ noncomputable def dnStepFG_su2
       hG_tr := Matrix.trace_zero (Fin 2) ℂ }
 
 /-- **Compatibility with Phase 6t `dnStepFG`**: at the Fibonacci instance,
-`dnStepFG_su2 (ρ_Fib_SU2 V_n_braid) U` reduces to `dnStepFG V_n_braid U`. -/
+`dnStepFG_su2 (ρ_Fib_SU2 V_n_braid) U` reduces to `dnStepFG V_n_braid U`.
+
+Holds by definitional unfolding (`rfl`); the equality is the Phase 6u
+bridge invariant by construction (`dnStepFG_su2`'s body is structurally
+identical to `dnStepFG`'s body after the initial
+`V_n := ρ_Fib_SU2 V_n_braid` evaluation step). This rfl is load-bearing
+for `skApproxC_generic_fibonacci_eq` (the structural induction reducing
+the generic recursion at the Fibonacci instance to Phase 6t's recursion). -/
 theorem dnStepFG_su2_eq_dnStepFG
     (V_n_braid : FibonacciBraidWord)
     (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) :
