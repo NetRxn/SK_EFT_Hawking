@@ -477,4 +477,76 @@ SKEFTHawking/SymTFT/
 
 ## Sessions log
 
-*Empty — Phase 6r has not yet been dispatched. **Note:** Wave 1a fresh DR dispatch is required before Lean work can begin.*
+### Session 1 — 2026-05-25 (all 8 Waves shipped in single autonomous-loop session)
+
+**Outcome:** Phase 6r SUBSTANTIVELY CLOSED. All 8 Waves shipped + strengthening pass + 2-round adversarial review.
+
+**Ships:**
+
+- **Wave 1a.2** (substrate-analysis working doc): `temporary/working-docs/phase6r/wave_1a_SymTFT_substrate.md` (architecture-ratification working doc consuming the three returned DRs: 1a.1, 2a.1, 3a.1).
+- **Wave 1a.3** (predicate scaffolding): `lean/SKEFTHawking/SymTFT/Basic.lean` (~235 LoC). `Is3DTQFT`, `IsBulkBoundary`, `IsSymTFTSlab`, `TopologicalBoundary`, `IsBoundarySymTFTCorrespondence` FMT-wrapper predicates per KOZ + FMT framework. Predicate-on-typeclass shape (chosen over structure-wrapping to avoid Mathlib `Center C : Type (max u₁ v₁)` universe-mismatch issues).
+- **Wave 1b** (bulk SymTFT data): `lean/SKEFTHawking/SymTFT/BulkTQFT.lean` (~104 LoC, `Is3DTQFTBraided`, `IsNonDegBraidedFusion`, `IsModularBulk`), `DrinfeldCenterAsBulk.lean` (~103 LoC, `drinfeldCenter_is3DTQFT` + `drinfeldCenter_isBoundarySymTFTCorrespondence`), `BulkInstances.lean` (~142 LoC, Dijkgraaf-Witten + toric-code specializations).
+- **Wave 1c** (boundary substrate): `lean/SKEFTHawking/SymTFT/FrobeniusAlgebra.lean` (~169 LoC, `IsFrobeniusAlgebra` + `IsCommFrobeniusAlgebra` + `IsEtaleAlgebra` + supporting predicates), `LagrangianAlgebra.lean` (~140 LoC, `IsLagrangianAlgebra` + `IsDMNOWittTrivialIffLagrangianAlgebra` + `IsKapustinSaulinaGappedBoundary` tracked Props), `GappedBoundary.lean` (~102 LoC, `IsGapped` + `HasLagrangianAlgebra` + `IsGappedTopologicalBoundary`), `ToricCodeLagrangian.lean` (~126 LoC, electric/magnetic Lagrangian-algebra labels + distinctness theorem).
+- **Wave 1d** (bulk-boundary correspondence): `lean/SKEFTHawking/SymTFT/BulkBoundaryCorrespondence.lean` (~138 LoC; substantive `witt_triviality_iff_has_lagrangian_algebra` + `anomaly_classification_via_witt_invariant` + `bulk_boundary_eta16_bridge` consuming Phase 6o `wave_2a_6_symtft_bridge_closure`).
+- **Wave 2a** (spin-SymTFT, ~580 LoC across 3 modules): `lean/SKEFTHawking/SymTFT/PinBordism.lean` (Ω_4^{Pin⁺} ≅ ℤ/16 [Kirby-Taylor 1990] + TP_5(Pin⁺) ≅ ℤ/16 [Freed-Hopkins 1604.06527] tracked Props + Witten-Yonekura inflow predicate), `SpinSymTFT.lean` (`IsSpinSymTFT`, `IsSpinSymTFTConsistent`, `boundaryAnomaly`, `IsAnomalyFree`, `wave_2a_3_substantive_instance` biconditional with `Z16AnomalyCancels`), `SpinSymTFTSchellekensAlignment.lean` (`wave_2a_schellekens_alignment` alignment-only cross-bridge + `Z24_and_Z16_are_disjoint_sectors` Z₂₄-vs-Z₁₆ discipline marker).
+- **Wave 2b** (Z₁₆ classification via Spin-SymTFT): `lean/SKEFTHawking/SymTFT/Z16ViaSpinSymTFT.lean` (~108 LoC, `z16_classification_via_spin_symtft` + `z16_classification_via_witten_yonekura` + `wave_2b_closure`). D2 reframing pre-draft at `temporary/working-docs/phase6r/wave_2b_D2_reframing_predraft.md` (HELD per user-auth gate).
+- **Wave 3a** (SM matter on topological boundary): `lean/SKEFTHawking/SymTFT/IsSMMatterTopologicalBoundary.lean` (~245 LoC after strengthening + remediation; load-bearing `sm_3gen_via_symtft` unconditional biconditional + `sm_boundary_data_is_topological_boundary` consistency witness + `sm_3gen_via_symtft_under_boundary_hyp` hypothesis-bearing variant + quantitative-connection witnesses), `CrossBridges/SMMatterAsSymTFTBoundary.lean` (~105 LoC after strengthening; `witt_triviality_iff_has_lagrangian_algebra` cross-bridge + `witt_class_bridges_to_chiral_central_charge` + `sm_matter_as_symtft_boundary_closure` + `sm_3gen_cross_bridge_integrity` Phase 5b/6n/6r 3-leg explicit cross-module invocation), `APSEta/SubstrateBulkAsymmetry.lean` (~165 LoC after remediation; `analogHawking_substrate_z16_trivial`, `sm_substrate_data`, `IsSubstantivePinPlusSPTAsymmetry` tracked Prop + `wave_3a_3_substrate_bulk_asymmetry_closure`).
+- **Wave 3b.1** (substrate-to-bulk identification + paper-17-conditional alternative-boundary substrate): `lean/SKEFTHawking/SymTFT/SubstrateToBulkIdentification.lean` (~123 LoC; `IsSKEFTHawkingSymTFTBoundary` + `wave_3b_1_substrate_to_bulk_identification` + `wave_3b_1_closure`), `AlternativeBoundaries.lean` (~150 LoC; `IsDarkSectorTopologicalBoundary` + `wave_3b_1b_alternative_boundary_structural_closure`).
+- **Wave 3b.2** (flagship-F unification chapter pre-draft): `temporary/working-docs/phase6r/wave_3b_F_unification_chapter_predraft.md` (HELD per D.3 user-auth gate; documents 5-section outline + cross-bundle deltas + hedging templates + F2-promotion 4-GO-condition framework).
+- **Wave 3b.3** (bundle-architecture impact): documented in same flagship pre-draft. Recommendation: HOLD on F2; default to F-extension.
+
+**Aggregate stats:**
+- 18 new Lean modules (16 under `SymTFT/`, 1 under `CrossBridges/`, 1 under `APSEta/`)
+- ~2,650 LoC (load-bearing physics statements + tracked Props + theorem proofs)
+- ~135 declarations (theorems + defs + structures + instances)
+- **0 new axioms** (per project Invariant #15; load-bearing physics ships as tracked Props with primary-source citation)
+- 0 sorries
+- Build clean (8658 jobs)
+
+**Citation corrections applied (load-bearing):**
+- `arXiv:2207.04050` → `arXiv:2207.10700` (Davighi-Gripaios-Lohitsiri; the original ID is a non-physics ML paper).
+- `arXiv:1610.07478` → `arXiv:1610.07010` (Tachikawa-Yonekura; the original is Eldar-Ozols-Thompson quantum LDPC codes).
+- `arXiv:1910.04962` dropped from TY series (the paper is Córdova-Ohmori, not TY).
+- "Ω_5^{Pin⁺}(pt) ≅ ℤ_16" corrected to "Ω_4^{Pin⁺}(pt) ≅ ℤ/16 (Kirby-Taylor 1990, bordism) + TP_5(Pin⁺) ≅ ℤ/16 (Freed-Hopkins 1604.06527, Anderson dual)" + "Ω_5^{Pin⁺}(pt) = 0".
+
+**Primary anchor confirmed:** Bhardwaj-Copetti-Pajer-Schäfer-Nameki, "Boundary SymTFT," arXiv:2409.02166, SciPost Phys. 19 (2025) 061 — primary anchor for Wave 3a.3 substantive content (verbatim claims used in `IsBoundarySymTFTCorrespondence` + `IsSMMatterTopologicalBoundary` docstrings).
+
+**Quality control:**
+- **Strengthening pass:** applied to load-bearing tracked Props (`IsAndersonDualSpinBulk` + `IsWittenYonekuraInflow` strengthened to require KT + AD tracked Props; trivial-discharge `True`-body predicates given substantive content); `sm_3gen_via_symtft` reorganized to ship unconditional + hypothesis-bearing variants; quantitative-connection witnesses added (`sm_3gen_chiral_central_charge_eq_24`, `sm_3gen_minimal`, `next_multiple_of_3_after_3`, `sm_6gen_witt_trivial`).
+- **Adversarial review round 1:** found 3 BLOCKERs + 3 REQUIREDs + 3 ADVISORYs. All BLOCKERs + REQUIREDs + ADVISORY-1 remediated. Round-2 verdict: GREEN-with-advisories (3 minor advisories from remediations).
+- **Adversarial review round 2:** all 3 new advisories remediated. Build clean at 8658 jobs; zero warnings in any Phase 6r module.
+- **Reports:** `temporary/working-docs/phase6r/adversarial_review_round1.md` + `adversarial_review_round2.md`.
+
+**User-authorization gates HELD:**
+- Wave 2b.3 D2 reframing pre-draft (HELD for unified bundle-absorption pass).
+- Wave 3b.2 flagship-F unification chapter (HELD for unified bundle-absorption pass).
+- Wave 3b.3 F2 bundle creation decision (HOLD on F2; default F-extension; 4 GO conditions documented for re-evaluation at next bundle-absorption pass).
+
+**Publication-strategy visibility notes:**
+- **D2 bundle**: gains ~1.5-2 pp "Spin-SymTFT interpretation of the Z₁₆ anomaly" subsection at bundle-absorption pass (additive; no rewrite needed; cluster bond D2 ↔ D4 ↔ L2 preserved per Wave 2a.1 §4.4).
+- **F flagship**: gains 5-section "The SK-EFT-Hawking Substrate, in SymTFT Language" chapter (~25-40 pp) at bundle-absorption pass; cross-bundle deltas: D4 +1-2 pp, L2 +0.5-1 pp, D5 +1 pp (paper-17-conditional), E1+E2 +0.5 pp each.
+- **Paper 17 dependence**: Wave 3b.1 dark-sector alternative-boundary substantive content HELD pending direct paper-17 verification (recommended follow-up DR scout per Wave 3a.1 §Recommendation 5).
+
+**Cross-bundle freshness signals for next bundle-absorption pass** (per `validate.py --check bundle_source_freshness`): D2, D4, L2, F, E1, E2 may flag `freshness-stale=true` once Phase 6r modules are imported into the SKEFTHawking root.
+
+**Tracked Props introduced (per `docs/PERMANENT_TRACKED_HYPOTHESES.md` posture):**
+- `IsKirbyTaylorPinPlusBordism` (PinBordism.lean): Ω_4^{Pin⁺} ≅ ℤ/16 — Kirby-Taylor 1990
+- `IsAndersonDualPinPlus` (PinBordism.lean): TP_5(Pin⁺) ≅ ℤ/16 — Freed-Hopkins arXiv:1604.06527
+- `IsAndersonDualPinPlusRelation`: TP_5(Pin⁺) ≅ Ω_4^{Pin⁺}
+- `IsWittenYonekuraInflow`: composed of KT + AD tracked Props
+- `IsAndersonDualSpinBulk z`: composed of KT + AD tracked Props
+- `IsDMNOWittTrivialIffLagrangianAlgebra`: DMNO 2010 — arXiv:1009.2117
+- `IsKapustinSaulinaGappedBoundary`: Kapustin-Saulina 2011 — arXiv:1008.0654
+- `IsBoundarySymTFTCorrespondence`: Bhardwaj-Copetti-Pajer-Schäfer-Nameki — arXiv:2409.02166
+- `IsToricCodeTwoLagrangianAlgebraStructure`: Kitaev-Kong 2012 + Bombin-Martín-Delgado 2009
+- `IsSKEFTHawkingSymTFTBoundary`: program-original D-class identification
+- `IsDarkSectorTopologicalBoundary` (paper-17-conditional)
+- `IsSubstantivePinPlusSPTAsymmetry`: García-Etxebarria-Montero arXiv:1808.00009 + KTTW arXiv:1406.7329
+
+These should be added to `docs/PERMANENT_TRACKED_HYPOTHESES.md` at the next cross-doc-sync pass.
+
+**Sequencing context (in-flight concurrent work):** Phase 6q DKM transport bootstrap finalization was in flight on a separate agent during this session; Phase 6r work was scoped to NEW files only (zero overlap with 6q's DKMBootstrap modules + counts/inventory regeneration). Phase 6r close-out commits 6r-only files; inventory + counts re-sync to be handled at next workspace-level sync.
+
+---
+
+*Status as of session 1 close (2026-05-25): Phase 6r SUBSTANTIVELY COMPLETE. All 8 Waves shipped; strengthening pass + 2-round adversarial review CLEAN (GREEN). Bundle absorption (Waves 2b.3 D2 reframing + 3b.2 flagship-F unification chapter + 3b.3 bundle-architecture-decision) HELD for unified user-authorized bundle-absorption pass.*

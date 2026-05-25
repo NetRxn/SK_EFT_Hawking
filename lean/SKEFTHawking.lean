@@ -237,13 +237,41 @@ import SKEFTHawking.SymTFTAudit.FreeKLinearMonoidal
 -- `Linear k`. Continuations: 5.10d monoidal lift, 5.10e closure-with-ext,
 -- 5.10f braided lift, 5.10g WittClass cross-bridge.
 import SKEFTHawking.SymTFTAudit.DeligneTensor
--- Phase 6r Wave 1a.3 (2026-05-25): SymTFT predicate-substrate (KOZ + FMT wrapper).
--- Bosonic-SymTFT `Is3DTQFT`, `IsBulkBoundary`, `TopologicalBoundary` predicates per
--- Kaidi-Ohmori-Zheng arXiv:2209.11062 + Freed-Moore-Teleman arXiv:2209.07471 +
--- Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 boundary-SymTFT framework.
--- Zero `axiom`s; load-bearing physics statements ship as tracked Props per
--- Invariant #15.
+-- Phase 6r SymTFT formalization (2026-05-25): substrate-to-bulk unification under
+-- the Symmetry Topological Field Theory umbrella. Composed construction per
+-- Wave 1a.1 DR: KOZ arXiv:2209.11062 Drinfeld-center + Freed-Moore-Teleman
+-- arXiv:2209.07471 axiomatic wrapper + Bhardwaj-Copetti-Pajer-Schäfer-Nameki
+-- arXiv:2409.02166 boundary-SymTFT correspondence (PRIMARY anchor for Wave 3a.3
+-- SM-as-boundary identification). Zero new `axiom`s; load-bearing physics ships
+-- as tracked Props per Invariant #15. See `docs/roadmaps/Phase6r_Roadmap.md` and
+-- `temporary/working-docs/phase6r/wave_1a_SymTFT_substrate.md`.
+-- Wave 1a — Predicate scaffolding (FMT wrapper)
 import SKEFTHawking.SymTFT.Basic
+-- Wave 1b — Bulk SymTFT data (3D TQFT predicate + Drinfeld-center realization)
+import SKEFTHawking.SymTFT.BulkTQFT
+import SKEFTHawking.SymTFT.DrinfeldCenterAsBulk
+import SKEFTHawking.SymTFT.BulkInstances
+-- Wave 1c — Boundary substrate (Frobenius algebra + Lagrangian algebra + toric code)
+import SKEFTHawking.SymTFT.FrobeniusAlgebra
+import SKEFTHawking.SymTFT.LagrangianAlgebra
+import SKEFTHawking.SymTFT.GappedBoundary
+import SKEFTHawking.SymTFT.ToricCodeLagrangian
+-- Wave 1d — Bulk-boundary correspondence (DMNO 2010 + Witten-Yonekura η/16 bridge)
+import SKEFTHawking.SymTFT.BulkBoundaryCorrespondence
+-- Wave 2a — Spin-SymTFT axiomatization (Pin⁺ Z/16 + Anderson-dual + W-Y inflow)
+import SKEFTHawking.SymTFT.PinBordism
+import SKEFTHawking.SymTFT.SpinSymTFT
+import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
+-- Wave 2b — Z₁₆ classification via Spin-SymTFT
+import SKEFTHawking.SymTFT.Z16ViaSpinSymTFT
+-- Wave 3a — SM matter on topological boundary
+import SKEFTHawking.SymTFT.IsSMMatterTopologicalBoundary
+import SKEFTHawking.CrossBridges.SMMatterAsSymTFTBoundary
+import SKEFTHawking.APSEta.SubstrateBulkAsymmetry
+-- Wave 3b.1 — Substrate-to-bulk identification (unification crown) + paper-17
+-- conditional alternative-boundary structural framework
+import SKEFTHawking.SymTFT.SubstrateToBulkIdentification
+import SKEFTHawking.SymTFT.AlternativeBoundaries
 import SKEFTHawking.APSEta.Predicate
 import SKEFTHawking.APSEta.BECAcoustic
 import SKEFTHawking.APSEta.ADWHorizon
@@ -732,6 +760,17 @@ import SKEFTHawking.FKLW.SolovayKitaevApplications
 -- headline. SU(2) lift helper `expIsu2` shipped; constructive `skApproxC` +
 -- inductive error bound + constructive headline forthcoming.
 import SKEFTHawking.FKLW.SolovayKitaevPathA
+-- Phase 6u Wave 1 (2026-05-25): generic GeneratingSet framework abstracting
+-- the Phase 6t Fibonacci-specific H_Fib substrate over an arbitrary word-type
+-- W (a group) plus a representation ρ_hom : W →* SU(2). Fibonacci specializes:
+-- H_of_G fibonacciGeneratingSet = H_Fib by definitional reduction.
+import SKEFTHawking.FKLW.GenericSU2GeneratingSet
+-- Phase 6u Wave 2 (2026-05-25): generic closure-dense witness + culmination.
+-- ClosureDenseWitness structure carrying two ℝ-LI traceless skew-Hermitian
+-- tangents + flow lines. H_of_G_eq_top_of_witness composes Phase 5 Step 13's
+-- alphabet-agnostic CartanFinalStep_SU2_v4_holds to dispatch any witness into
+-- H_of_G gs = ⊤, then isDenseInSU2_gs_of_eq_top gives the generic density.
+import SKEFTHawking.FKLW.GenericClosureDenseWitness
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
