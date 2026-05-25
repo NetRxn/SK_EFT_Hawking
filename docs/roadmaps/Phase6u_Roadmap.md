@@ -693,6 +693,33 @@ template):
   Upon completion, ALL Phase 6u headlines become UNCONDITIONAL, closing
   the Phase 6u substrate refactor fully.
 
+**REVISION (2026-05-25 PM, read-only scout):** the original estimate of
+"~750-1900 LoC over 4-5 sessions" was significantly too pessimistic.
+A triple-check scout (commit `cb43d82`) revealed three major findings:
+
+  1. **Niven IS in Mathlib v4.29.1** (`Mathlib/NumberTheory/Niven.lean`)
+     with `Real.isIntegral_two_mul_cos_rat_mul_pi` and the Niven theorem
+     itself. Sub-strategy 1.A reduces from "build cyclotomic substrate"
+     to "direct application".
+
+  2. **`FibRepInfiniteOrder.lean` ships alphabet-agnostic substrate**:
+     `matrix_no_pow_eq_one_of_eigenvalue_not_rootOfUnity`,
+     `not_finOrder_of_eigenvalue_not_rootOfUnity`. Combined with Niven,
+     the infinite-order proof for `H_SU·T_SU` becomes ~150-300 LoC.
+
+  3. **`BinaryTetrahedral.lean` (890 LoC)** is project-local SU(2)
+     finite-subgroup substrate (not previously documented in this
+     roadmap). Fallback path if Niven approach unexpectedly stalls.
+
+  4. **WIP `CliffordTGeneratorCaseAnalysis.lean::T_SU_mat_never_anticommute_ts`
+     is 95% done** — only a 4-spot mechanical `Fin 2` representation fix
+     (`(0 : Fin 2) = ⟨0, by decide⟩ := rfl` + `rw`) blocks closure. The
+     fix was verified to compile via `lean_multi_attempt` by the scout.
+
+**Revised total remaining work**: ~400-600 LoC over 1-2 focused sessions
+(not multi-month). See `temporary/working-docs/PHASE6U_POST_COMPACT_HANDOFF.md`
+for the detailed action plan + verified Lean snippets.
+
 **CP2 adversarial review (post T-S.2 discharge):** to run after T-S.2
 unconditional discharge ships; will verify the new substantive content
 across the entire Track T-S chain (no fresh-context review of T-S.5
