@@ -259,22 +259,7 @@ import SKEFTHawking.SymTFT.ToricCodeLagrangian
 -- Wave 1d — Bulk-boundary correspondence (DMNO 2010 + Witten-Yonekura η/16 bridge)
 import SKEFTHawking.SymTFT.BulkBoundaryCorrespondence
 -- Wave 2a — Spin-SymTFT axiomatization (Pin⁺ Z/16 + Anderson-dual + W-Y inflow)
--- Phase 6r-prime W1.1+W1.2 (2026-05-25): substantive Pin⁺ bordism substrate
--- (`Omega4PinPlusBordism = ℤ ⧸ 16ℤ`), replacing the Phase 6r placeholder.
--- Re-exported by `SymTFT.PinBordism` (W1.3) for backward compatibility.
-import SKEFTHawking.SymTFT.PinPlusBordism
 import SKEFTHawking.SymTFT.PinBordism
--- Phase 6r-prime W1.4 (2026-05-25): Anderson-dual derivation chain —
--- substantively discharges `IsAndersonDualPinPlus` (#2) and
--- `IsAndersonDualPinPlusRelation` (#3) from `IsKirbyTaylorPinPlusBordism`
--- (#1) + Ω_5^Pin⁺ = 0 (companion) via the Freed-Hopkins arXiv:1604.06527
--- Anderson-dual formula.
-import SKEFTHawking.SymTFT.AndersonDual
--- Phase 6r-prime W4.1+W4.2 (2026-05-25): APS η-invariant primitive substrate
--- + Anderson-dual invertible-TFT framework. Substantively discharges
--- `IsWittenYonekuraInflow` (#4) at the W4.3 PinBordism refactor (above).
-import SKEFTHawking.SymTFT.EtaInvariant
-import SKEFTHawking.SymTFT.AndersonDualTFT
 import SKEFTHawking.SymTFT.SpinSymTFT
 import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
 -- Wave 2b — Z₁₆ classification via Spin-SymTFT

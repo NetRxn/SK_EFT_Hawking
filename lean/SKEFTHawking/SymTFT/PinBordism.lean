@@ -69,8 +69,6 @@ hypotheses.
 -/
 import SKEFTHawking.Z16AnomalyForcesThetaBar
 import SKEFTHawking.APSEta.SymTFTBridge
-import SKEFTHawking.SymTFT.PinPlusBordism
-import SKEFTHawking.SymTFT.EtaInvariant
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.Group.TransferInstance
 
@@ -78,33 +76,36 @@ namespace SKEFTHawking.SymTFT
 
 open SKEFTHawking SKEFTHawking.Z16AnomalyForcesThetaBar
 
-/-! ## §1. Pin⁺ bordism types (Phase 6r-prime W1.3 substantive substrate)
+/-! ## §1. Hypothesis-level bordism placeholder types
 
-**Phase 6r-prime W1.3 refactor (2026-05-25):** the Phase 6r placeholder
-type `def Omega4PinPlus : Type := ZMod 16` is replaced by the
-substantive bordism substrate from `SymTFT/PinPlusBordism.lean`
-(W1.1+W1.2). The new `Omega4PinPlus` is `ℤ ⧸ 16ℤ` — a genuine quotient
-construction, not a placeholder.
+Per Wave 2a.1 §2.4, Mathlib does not currently ship Pin⁺ bordism
+infrastructure (no `Mathlib/AlgebraicTopology/Cobordism` directory).
+We ship the load-bearing primitives as placeholder types with named
+tracked Props recording the bordism-class isomorphism content.
 
-The tracked Prop `IsKirbyTaylorPinPlusBordism : Prop := Nonempty
-(Omega4PinPlus ≃+ ZMod 16)` is now **substantively discharged at the
-single-generator-model level** via `omega4PinPlusBordismEquivZMod16`
-(Mathlib's `Int.quotientZMultiplesNatEquivZMod 16`). The **substantive
-bordism-geometric content** (the canonical correspondence between the
-single-generator model and the full Pin⁺ bordism category
-Ω_4^{Pin⁺}(pt)) is the W3 target. -/
+**Phase 6r-prime 2026-05-25 honest revert**: a prior W1.3 ship attempted
+to refactor `Omega4PinPlus` to `ℤ ⧸ AddSubgroup.zmultiples (16 : ℤ)` —
+this is the "defining-the-conclusion" antipattern (CLAUDE.md
+preemptive-strengthening checklist #5): the iso `Omega4PinPlus ≃+
+ZMod 16` becomes a trivial Mathlib computation by choice of the
+boundary subgroup, smuggling the substantive Kirby-Taylor 1990 content
+into the definition rather than proving it. Reverted to the honest
+predicate-substrate placeholder form. Real substantive discharge
+remains the W3 target (multi-month real bordism category substrate). -/
 
-/-- **`Omega4PinPlus`** — the Pin⁺ bordism group at degree 4.
-
-**Phase 6r-prime W1.3 substantive substrate:** re-exported from
-`SymTFT/PinPlusBordism.lean` as `Omega4PinPlusBordism = ℤ ⧸ 16ℤ`. The
-substantive bordism-geometric content (Kirby-Taylor 1990 theorem at the
-full bordism-category level) is targeted by W3
-(`SymTFT/KirbyTaylor.lean`, Path α / Path β). -/
-def Omega4PinPlus : Type := Omega4PinPlusBordism
+/-- Placeholder type for Pin⁺ bordism classes at degree 4. The
+substantive content (Ω_4^{Pin⁺}(pt) ≅ ℤ/16) is the Kirby-Taylor 1990
+result; carried as the tracked Prop `IsKirbyTaylorPinPlusBordism`. -/
+def Omega4PinPlus : Type := ZMod 16
 
 instance : AddCommGroup Omega4PinPlus :=
-  inferInstanceAs (AddCommGroup Omega4PinPlusBordism)
+  inferInstanceAs (AddCommGroup (ZMod 16))
+
+instance : DecidableEq Omega4PinPlus :=
+  inferInstanceAs (DecidableEq (ZMod 16))
+
+instance : Fintype Omega4PinPlus :=
+  inferInstanceAs (Fintype (ZMod 16))
 
 /-- Placeholder type for the 5D Anderson-dual Pin⁺ SPT class group. By
 Freed-Hopkins 1604.06527 + Kirby-Taylor 1990, this is isomorphic to
@@ -131,19 +132,14 @@ generator [RP⁴, Pin⁺].
 Anchor: Kirby-Taylor, *A calculation of Pin⁺ bordism groups,* Comment.
 Math. Helv. 65 (1990) 434, Theorem.
 
-**Phase 6r-prime W1.3 substantive discharge:** `Omega4PinPlus` is now
-the substantive bordism quotient `ℤ ⧸ 16ℤ` (from
-`SymTFT/PinPlusBordism.lean`). The iso `Omega4PinPlus ≃+ ZMod 16` is
-discharged at the **single-generator-model level** via
-`omega4PinPlusBordismEquivZMod16`. The **substantive bordism-geometric
-proof** of the canonical correspondence between the single-generator
-model and the full Pin⁺ bordism category (the load-bearing Kirby-Taylor
-1990 result) is the W3 target. -/
+Predicate-substrate body: `Omega4PinPlus` is constructed as `ZMod 16`,
+witnessing the isomorphism at the type level. The substantive content
+(the bordism interpretation) is the A-class primary-source content. -/
 def IsKirbyTaylorPinPlusBordism : Prop :=
   Nonempty (Omega4PinPlus ≃+ ZMod 16)
 
 theorem isKirbyTaylorPinPlusBordism_holds : IsKirbyTaylorPinPlusBordism :=
-  ⟨omega4PinPlusBordismEquivZMod16⟩
+  ⟨AddEquiv.refl _⟩
 
 /-- **Freed-Hopkins 1604.06527 + Kirby-Taylor tracked Prop**:
 `TP_5(Pin⁺) ≅ ℤ/16`, via the Anderson-dual computation.
@@ -162,17 +158,13 @@ theorem isAndersonDualPinPlus_holds : IsAndersonDualPinPlus :=
 /-- **Anderson-dual relation**: `TP_5(Pin⁺) ≅ Hom(Ω_4^{Pin⁺}, ℝ/ℤ)`
 (Pontryagin / Anderson dual at degree 4 → 5).
 
-**Phase 6r-prime W1.3 substantive discharge:** TP_5(Pin⁺) (modeled as
-`ZMod 16`) and Omega4PinPlus (modeled as `ℤ ⧸ 16ℤ`) are no longer
-definitionally equal — the iso is a real composition through
-`omega4PinPlusBordismEquivZMod16.symm`. The substantive Anderson-dual
-duality identification (Freed-Hopkins 1604.06527) is the W1.4 +
-Phase 6r-prime W4 substrate content. -/
+Both sides are ℤ/16 in our placeholder construction; the substantive
+content is the duality identification. -/
 def IsAndersonDualPinPlusRelation : Prop :=
   Nonempty (TP5PinPlus ≃+ Omega4PinPlus)
 
 theorem isAndersonDualPinPlusRelation_holds : IsAndersonDualPinPlusRelation :=
-  ⟨omega4PinPlusBordismEquivZMod16.symm⟩
+  ⟨AddEquiv.refl _⟩
 
 /-! ## §3. The substrate-config Pin⁺ class
 
@@ -205,39 +197,29 @@ description of anomaly inflow, involving the η-invariant. … It leads to
 a general description of perturbative and nonperturbative fermion
 anomalies in d dimensions in terms of an η-invariant in D dimensions."
 
-**Phase 6r-prime W4.3 substantive strengthening (2026-05-25)**: the
-Phase 6r body (`IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus`)
-is extended with the W4.1 η-invariant primitive content
-(`IsBordismInvariantModZ` for all Pin⁺ 5-manifolds). The full body:
-
-```
-IsKirbyTaylorPinPlusBordism (W1.3 substrate) ∧
-  IsAndersonDualPinPlus (W1.4 derivation) ∧
-  ∀ M : Pin5Manifold, IsBordismInvariantModZ M (W4.1 substrate)
-```
-
-The substantive content of the Witten-Yonekura inflow identity
-(boundary anomaly = exp(2πi · η/16 mod 1)) is captured by all three
-substrate ingredients:
-1. KT iso provides the Ω_4^Pin⁺ ≅ ℤ/16 generator structure.
-2. Anderson-dual provides the TP_5(Pin⁺) ≅ ℤ/16 invertible-TFT
-   identification (per Freed-Hopkins 1604.06527).
-3. η-invariant primitive provides the substrate content for the
-   bulk partition function `exp(2πi · η/16)` (per W4.1 + W4.2).
-
+**Strengthening** (Phase 6r round-1 adversarial review remediation): the
+substantive content of Witten-Yonekura inflow requires (i) the Pin⁺
+bordism group Ω₄^{Pin⁺}(pt) ≅ ℤ/16 (Kirby-Taylor), and (ii) the
+Anderson-dual TP_5(Pin⁺) ≅ ℤ/16 (Freed-Hopkins). Both are captured as
+tracked Props (`IsKirbyTaylorPinPlusBordism` and `IsAndersonDualPinPlus`);
+requiring both makes the Witten-Yonekura inflow predicate non-trivial.
 The substrate-specific `s : SubstrateConfig` attaches via
 `substrateConfigToPinPlusClass s` (the substrate's `z16_class` as a
-TP_5(Pin⁺) element). -/
+TP_5(Pin⁺) element).
+
+**Phase 6r-prime 2026-05-25 honest revert**: a prior W4.3 ship added a
+3rd conjunct `∀ M : Pin5Manifold, IsBordismInvariantModZ M` from a
+constructively-trivial η-invariant inductive (the `EtaInvariant.lean`
+module had only `empty5` + `dunion` constructors, making η identically
+zero by induction; the bordism-invariance-mod-ℤ axiom was trivially
+satisfied with no actual η-invariant content). Reverted to the
+Phase 6r honest 2-conjunct body. -/
 def IsWittenYonekuraInflow (_s : SubstrateConfig) : Prop :=
-  IsKirbyTaylorPinPlusBordism ∧
-  IsAndersonDualPinPlus ∧
-  (∀ M : EtaInvariant.Pin5Manifold, EtaInvariant.IsBordismInvariantModZ M)
+  IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus
 
 theorem isWittenYonekuraInflow_holds (s : SubstrateConfig) :
     IsWittenYonekuraInflow s :=
-  ⟨isKirbyTaylorPinPlusBordism_holds,
-   isAndersonDualPinPlus_holds,
-   EtaInvariant.isBordismInvariantModZ_holds⟩
+  ⟨isKirbyTaylorPinPlusBordism_holds, isAndersonDualPinPlus_holds⟩
 
 /-! ## §5. The IsAndersonDualSpinBulk predicate -/
 

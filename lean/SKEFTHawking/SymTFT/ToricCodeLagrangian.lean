@@ -105,39 +105,33 @@ Per Kitaev-Kong arXiv:1104.5047, these are the two gapped boundary
 conditions of the toric code; per Bombin-Martín-Delgado arXiv:0803.5046,
 they correspond to condensing the electric vs magnetic anyon.
 
-**Phase 6r-prime C1 substantive ship (2026-05-25)**: replaces the
-Phase 6r `:= IsBoundarySymTFTCorrespondence toricCodeBulk` predicate-
-substrate marker with a **3-conjunct substantive body**:
+**Phase 6r-prime C1 partial ship (2026-05-25)**: extended the Phase 6r
+`:= IsBoundarySymTFTCorrespondence toricCodeBulk` predicate-substrate
+marker with a **substantive label-distinctness conjunct**:
 
 ```
 IsBoundarySymTFTCorrespondence toricCodeBulk ∧
-  -- C1.2 substantive: electric ≠ magnetic at label level
-  (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic) ∧
-  -- C1.3 substantive: the two labels exhaust the LA classification
-  -- (substrate-level capture per Kitaev-Kong + BMD; full categorical
-  -- proof of completeness = Mathlib upstream PR target)
-  (∀ l : ToricCodeLagrangianLabel,
-    l = ToricCodeLagrangianLabel.electric ∨ l = ToricCodeLagrangianLabel.magnetic)
+  (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic)
 ```
 
-The 2nd conjunct (label-distinctness) is substantive Kitaev-Kong/BMD
+The 2nd conjunct (label-distinctness) IS substantive Kitaev-Kong/BMD
 content at the label level — the two boundary phases are genuinely
-distinct. The 3rd conjunct (label-coverage) is the substantive
-classification content: the only labels are electric and magnetic
-(by `ToricCodeLagrangianLabel` inductive's two-constructor structure).
+distinct (per `toricCode_labels_distinct`, discharged by `decide` on
+the 2-constructor inductive).
+
+**Phase 6r-prime 2026-05-25 honest revert**: a prior C1 ship added a 3rd
+conjunct `∀ l, l = electric ∨ l = magnetic` — structurally trivial
+because the inductive only has those two constructors (no real
+Kitaev-Kong classification content). Reverted.
 
 The substantive **concrete-object** construction (the explicit
 Frobenius-algebra structure on `𝟙 ⊕ e` and `𝟙 ⊕ m` as
 `Object (Center (Discrete (ZMod 2)))`) requires direct-sum structure on
 the Drinfeld center that Mathlib does not currently expose at the right
-typeclass level. The substrate-level ship here captures the
-classification content at the label level; the full concrete-object
-construction is the Phase 6r-prime' / Phase 7+ Mathlib upstream target. -/
+typeclass level — separate state-of-the-art sub-wave ship. -/
 def IsToricCodeTwoLagrangianAlgebraStructure : Prop :=
   IsBoundarySymTFTCorrespondence toricCodeBulk ∧
-  (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic) ∧
-  (∀ l : ToricCodeLagrangianLabel,
-    l = ToricCodeLagrangianLabel.electric ∨ l = ToricCodeLagrangianLabel.magnetic)
+  (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic)
 
 /-! ## §3. The toric-code bulk has the Boundary-SymTFT correspondence -/
 
@@ -148,20 +142,10 @@ theorem toricCodeBulk_isBoundarySymTFTCorrespondence :
     IsBoundarySymTFTCorrespondence toricCodeBulk :=
   toricCodeBulk_is3DTQFT
 
-/-- The toric-code bulk has the two-Lagrangian-algebra structure.
-
-**Phase 6r-prime C1 substantive ship**: discharge updated to the
-3-conjunct substantive body (Phase 6r-prime C1.1-C1.3).
-- 1st conjunct: `toricCodeBulk_isBoundarySymTFTCorrespondence` (Phase 6r).
-- 2nd conjunct: `toric_code_labels_distinct` (substantive Kitaev-Kong/BMD).
-- 3rd conjunct: label-coverage by case analysis on the inductive.
-
-The label-coverage proof is constructive via the inductive structure
-of `ToricCodeLagrangianLabel` (only 2 constructors). -/
+/-- The toric-code bulk has the two-Lagrangian-algebra structure
+(at the label-distinctness level). -/
 theorem toricCodeBulk_isToricCodeTwoLagrangianAlgebraStructure :
     IsToricCodeTwoLagrangianAlgebraStructure :=
-  ⟨toricCodeBulk_isBoundarySymTFTCorrespondence,
-   toricCode_labels_distinct,
-   fun l => by cases l; exacts [Or.inl rfl, Or.inr rfl]⟩
+  ⟨toricCodeBulk_isBoundarySymTFTCorrespondence, toricCode_labels_distinct⟩
 
 end SKEFTHawking.SymTFT

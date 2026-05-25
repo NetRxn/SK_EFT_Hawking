@@ -91,46 +91,24 @@ substrate `s : SubstrateConfig` carries a dark-sector topological
 boundary structure (an *alternative* Lagrangian-algebra boundary to
 the SM-matter one).
 
-**Phase 6r-prime C2.2 substantive ship (2026-05-25)**: replaces the
-Phase 6r `:= IsSpinSymTFTConsistent s` predicate-substrate marker
-with the substantive conjunction:
+The predicate-substrate body matches `IsSMMatterTopologicalBoundary`
+(both must be spin-SymTFT-consistent), with the distinction at the
+Lagrangian-algebra label level. Per Wave 3a.1 §Q3(b), the dark sector
+corresponds to a *magnetic* Lagrangian-algebra label on the same
+SymTFT bulk where SM corresponds to *electric*.
 
-```
-IsSpinSymTFTConsistent s ∧ ∃ (label), label = ToricCodeLagrangianLabel.magnetic
-```
-
-The first conjunct (spin-SymTFT consistency) inherits from Phase 6r —
-both SM and dark-sector substrates must be anomaly-free at the
-combined-system level (per `sm_substrate_data_z16_cancels`).
-
-The second conjunct (magnetic-label witness) is the substantive Wave 3a.1
-§Q3(b) content: the dark sector corresponds to the **magnetic**
-Lagrangian-algebra label on the same SymTFT bulk where SM corresponds
-to the **electric** label (per `toricCode_labels_distinct`). The
-existence of the magnetic-label witness substantively distinguishes
-dark-sector boundaries from SM-matter boundaries at the categorical-
-label level.
-
-**Paper 17 cross-bridge** (per `c2_paper17_substantive.md` working doc):
-the substantive paper-17 dark-sector content — hidden-ℤ/16-sector (+3
-mod 16, paper 17 §2), three viable substrate candidates T-0/S-0/C-1
-(Wang topological order, sterile νR, Wan-Wang mixed-charge), fracton DM
-viability (paper 17 §4 via gapless p-wave dipole superfluid) — is
-captured at the LA-label-distinctness level per Wave 3a.1 §Q3(b). The
-substantive paper-17-specific content is shipped in the existing Phase
-5x dark-sector modules (`HiddenSectorClassification.lean`,
-`FractonDarkMatter.lean`, `SFDMMergerForecast.lean`,
-`FangGuTorsionDM.lean`); this predicate provides the SymTFT-boundary-
-framing cross-bridge.
-
-Per Wave 3a.1 §Q3(b), the dark sector corresponds to a *magnetic*
-Lagrangian-algebra label on the same SymTFT bulk where SM corresponds
-to *electric*. -/
+**Phase 6r-prime 2026-05-25 honest revert**: a prior C2.2 ship added a
+2nd conjunct `∃ (label : ToricCodeLagrangianLabel), label = magnetic`
+that did NOT reference the substrate parameter `s` — pure P5
+structural-tautology (vacuous existential over a 2-constructor enum,
+trivially discharged by `⟨magnetic, rfl⟩`). Reverted to Phase 6r body.
+Honest substantive C2 discharge requires a real cross-bridge to the
+existing Phase 5x dark-sector substrate (`HiddenSectorClassification.
+lean`, `FractonDarkMatter.lean`, etc.), which is a separate state-of-
+the-art sub-wave ship. -/
 def IsDarkSectorTopologicalBoundary
     (s : Z16AnomalyForcesThetaBar.SubstrateConfig) : Prop :=
-  IsSpinSymTFTConsistent s ∧
-  ∃ (label : ToricCodeLagrangianLabel),
-    label = ToricCodeLagrangianLabel.magnetic
+  IsSpinSymTFTConsistent s
 
 /-! ## §2. Alternative-boundary structural theorem -/
 
@@ -176,59 +154,7 @@ theorem wave_3b_1b_alternative_boundary_structural_closure :
     have : IsSpinSymTFTConsistent (sm_boundary_data N_f) := h
     exact (wave_2a_3_substantive_instance _).mp this
   · intro s h
-    -- C2.2 substantive: IsDarkSectorTopologicalBoundary is now a conjunction;
-    -- extract spin-SymTFT consistency from the first conjunct.
-    have : IsSpinSymTFTConsistent s := h.1
+    have : IsSpinSymTFTConsistent s := h
     exact (wave_2a_3_substantive_instance _).mp this
-
-/-! ## §4. C2.3 substantive cross-bridge theorems (paper-17-tied) -/
-
-/-- **C2.3 substantive cross-bridge**: every dark-sector topological
-boundary substrate carries the magnetic Lagrangian-algebra label
-(extracted directly from the W2.2-strengthened body). -/
-theorem darkSectorTopologicalBoundary_carries_magnetic_label
-    (s : SubstrateConfig) (h : IsDarkSectorTopologicalBoundary s) :
-    ∃ (label : ToricCodeLagrangianLabel),
-      label = ToricCodeLagrangianLabel.magnetic :=
-  h.2
-
-/-- **C2.3 substantive cross-bridge**: every SM matter topological
-boundary substrate is *categorically distinguished* from every
-dark-sector topological boundary substrate at the Lagrangian-algebra
-label level — SM carries electric, dark sector carries magnetic, and
-the labels are pairwise distinct. -/
-theorem sm_dark_categorically_distinct_at_label_level
-    (s_sm s_dark : SubstrateConfig)
-    (_h_sm : IsSMMatterTopologicalBoundary s_sm)
-    (h_dark : IsDarkSectorTopologicalBoundary s_dark) :
-    ∃ (l_sm l_dark : ToricCodeLagrangianLabel),
-      l_sm = ToricCodeLagrangianLabel.electric ∧
-      l_dark = ToricCodeLagrangianLabel.magnetic ∧
-      l_sm ≠ l_dark := by
-  obtain ⟨l_dark, h_l_dark⟩ := h_dark.2
-  exact ⟨ToricCodeLagrangianLabel.electric, l_dark, rfl, h_l_dark,
-         by rw [h_l_dark]; exact toricCode_labels_distinct⟩
-
-/-! ## §5. C2 closure: substantive paper-17 SymTFT-boundary identification -/
-
-/-- **C2 closure theorem** (Phase 6r-prime 2026-05-25): the substantive
-paper-17 dark-sector SymTFT-boundary cross-bridge ships at the level of:
-
-1. Each dark-sector topological boundary is spin-SymTFT-consistent.
-2. Each dark-sector topological boundary carries the magnetic LA label.
-3. SM and dark-sector boundaries are categorically distinct at the LA-
-   label level (per Wave 3a.1 §Q3(b) substantive identification).
-
-Substantively discharges Phase 6r tracked Prop #11
-`IsDarkSectorTopologicalBoundary` at the SymTFT-boundary-framing level
-(paper-17-specific substrate content shipped in Phase 5x dark-sector
-modules). -/
-theorem c2_paper17_substantive_closure (s : SubstrateConfig)
-    (h : IsDarkSectorTopologicalBoundary s) :
-    IsSpinSymTFTConsistent s ∧
-    (∃ (label : ToricCodeLagrangianLabel),
-      label = ToricCodeLagrangianLabel.magnetic) ∧
-    (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic) :=
-  ⟨h.1, h.2, toricCode_labels_distinct⟩
 
 end SKEFTHawking.SymTFT
