@@ -292,6 +292,13 @@ import SKEFTHawking.SymTFT.PinPlusBordism4
 -- IsLagrangianAnyonSet predicate + electric/magnetic witnesses +
 -- fermion-set falsifier (braiding-triviality is load-bearing).
 import SKEFTHawking.SymTFT.ToricCodeLagrangianAnyons
+-- Phase 6r-prime FPdim upstream-PR-quality ship (2026-05-25):
+-- FrobeniusPerronDim typeclass for monoidal categories + concrete
+-- instance on toric-code anyon substrate. Closes the explicit FPdim
+-- deferral in LagrangianAlgebra.lean:89-96 (was "Mathlib upstream-PR-
+-- quality work; currently absent from Mathlib"). Honest discipline:
+-- ship the Mathlib-style substrate in our repo.
+import SKEFTHawking.SymTFT.FrobeniusPerronDim
 import SKEFTHawking.SymTFT.SpinSymTFT
 import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
 -- Wave 2b — Z₁₆ classification via Spin-SymTFT
