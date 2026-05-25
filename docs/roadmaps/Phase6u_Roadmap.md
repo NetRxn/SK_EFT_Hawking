@@ -720,6 +720,48 @@ A triple-check scout (commit `cb43d82`) revealed three major findings:
 (not multi-month). See `temporary/working-docs/PHASE6U_POST_COMPACT_HANDOFF.md`
 for the detailed action plan + verified Lean snippets.
 
+**Session 2 (2026-05-25 PM continued, mid-session):** sub-lemma 1
+shipped substantively (`T_SU_mat_never_anticommute_ts`, commit `c800e7a`,
+~80 LoC kernel-only with explicit Fin 2 representation bridge + `linear_combination`).
+Sub-lemma 1 done, sub-lemmas 2, 3, 4 remain as `sorry` placeholders in
+`CliffordTGeneratorCaseAnalysis.lean` (file NOT yet in root imports).
+
+**Two background agents dispatched in parallel** to finish T-S.2
+substantive discharge:
+
+  * Agent `a3542bbfe27d01e4a`: completing `CliffordTGeneratorCaseAnalysis.lean`
+    sub-lemmas 2 (T_SU centralizer = ℝ·paulI_z), 3 (H_SU vs c·paulI_z
+    commute), 4 (H_SU vs c·paulI_z anti-commute). Each ~50-100 LoC of
+    explicit Pauli matrix algebra. Once done, file goes into root.
+
+  * Agent `a95346d894d2619ea`: shipping NEW
+    `CliffordTInfiniteOrder.lean` with the Niven-based infinite-order
+    proof — H_SU·T_SU has eigenvalue `exp(iθ)` with `cos(θ) = √2·sin(π/8)/2`,
+    show `θ/π ∉ ℚ` via Niven's theorem (in Mathlib v4.29.1 at
+    `Mathlib.NumberTheory.Niven`) + minimal polynomial `2x⁴ - 4x² + 1`
+    (Eisenstein-irreducible at p=2, NOT monic-integer → 2·cos(θ) NOT
+    algebraic integer over ℤ); apply alphabet-agnostic
+    `not_finOrder_of_eigenvalue_not_rootOfUnity` substrate to conclude
+    H_SU·T_SU has infinite order in SU(2); lift to
+    `(H_of_G cliffordTGeneratingSet : Set _).Infinite`; apply
+    alphabet-agnostic `one_accPt_of_infinite_closed_subgroup` to get
+    `AccPt 1`.
+
+**Once both agents complete**: write the final compose in
+`CliffordTV4WitnessDischarge.lean` (or directly extend
+`CliffordTClosureDenseWitness.lean`) that:
+  - Takes `AccPt 1` from Agent 2.
+  - Calls `vonNeumann_assemble_explicit_X_unconditional` to get X₁.
+  - Calls `exists_cliffordT_generator_not_commute_not_anticommute` from
+    Agent 1 to pick g ∈ {H_SU, T_SU}.
+  - Builds X₂ := g·X₁·star(g) via `expAmbient_unitary_conj` +
+    `ts_Ad_LI_of_not_commute_anticommute`.
+  - Bundles into `cliffordT_v4_witness_tracked` discharge.
+  - Replaces the tracked Prop hypothesis in T-S.5's headline → T-S.5
+    becomes UNCONDITIONAL.
+
+Then CP2 adversarial review + final strengthening sweep.
+
 **CP2 adversarial review (post T-S.2 discharge):** to run after T-S.2
 unconditional discharge ships; will verify the new substantive content
 across the entire Track T-S chain (no fresh-context review of T-S.5
