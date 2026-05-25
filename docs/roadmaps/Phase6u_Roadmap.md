@@ -822,13 +822,76 @@ standard kernel axioms `{propext, Classical.choice, Quot.sound}`. Pipeline
 invariants #10 + #15 verified clean. Trace identity + algebraic-integer
 obstruction chain manually verified. v4-witness discharge in
 `CliffordTV4WitnessDischarge.lean` is faithful step-for-step transcription
-of `H_Fib_v4_witness_unconditional` (Phase 5 Step 13). RECOMMENDED:
+of `H_Fib_v4_witness_unconditional` (Phase 5 Step 13).
   - R1: stale CP1 RC5 docstring (Niven path moots phase-factor concern).
+    **CLOSED in commit `039970e`** — docstring updated to note that the
+    Niven-based discharge bypasses the PU(2)-lift concern entirely.
   - R2: length-bound conjunct decoupled from compiled word (Mathlib-PR
     follow-up; affects all generating-set instances, not Clifford+T
-    specific).
-  - R3: duplicated `H_SU_T_SU_apply_0_1` private lemma in two files
-    (cosmetic; both private so no collision).
+    specific). Documented for future Mathlib upstreaming.
+  - R3: cosmetic only — names differ (`H_SU_T_SU_apply_0_1` in
+    `CliffordTNonCommuting.lean`, `_apply_0_1_pub` in
+    `CliffordTInfiniteOrder.lean`), both `private`, no collision.
+
+**Final strengthening sweep PASSED**: 4 mechanical findings remediated
+in commit `4191d62`:
+  - F1 (P7): deleted unused `cliffordTBaseFinder_approximates_within_ε₀`
+    (5 LoC).
+  - F2 (P3/P5): deleted unused `S_SU` bundled element +
+    `S_SU_mem_H_of_G_cliffordT` (kept `S_SU_mat` for explicit-form callers).
+  - F3 (P3): deleted unused `dnStepFG_su2_eq_dnStepFG` (rfl theorem).
+  - F4 (P6): fixed docstring drift in `CliffordTInfiniteOrder.lean`
+    "Headline theorems" list.
+
+Total: +25/−52 LoC. Zero structural findings. Build state preserved
+(`lake build SKEFTHawking.FKLW.CliffordTV4WitnessUnconditional` clean
+at 8294 jobs).
+
+---
+
+## PHASE 6u COMPLETE (end of Session 2, 2026-05-25)
+
+**Phase 6u closure summary:**
+
+  - **Waves 1-6 + Wave 4b + Track T-S.1, T-S.2, T-S.3, T-S.4, T-S.5**:
+    ALL SHIPPED UNCONDITIONAL.
+  - **Zero project-local axioms** introduced.
+  - **Zero sorries** in shipped build.
+  - **Standard kernel only** (`{propext, Classical.choice, Quot.sound}`)
+    on all load-bearing headlines.
+  - **CP1 + CP2 adversarial reviews**: both PASSED clean (0 BLOCKER, 0
+    REQUIRED post-remediation).
+  - **Final strengthening sweep**: 4 mechanical findings remediated;
+    zero structural findings.
+
+**Cumulative Lean LoC for Phase 6u**: ~3,900 across 15 modules under
+`lean/SKEFTHawking/FKLW/Generic*.lean` and `lean/SKEFTHawking/FKLW/CliffordT*.lean`,
+plus 1 background-agent ship `CliffordTInfiniteOrder.lean` (560 LoC).
+
+**Key first-of-kind results shipped:**
+
+  - First **alphabet-independent generic-`GeneratingSet` quantitative
+    Solovay-Kitaev substrate** (Waves 1-6 + Wave 4b).
+  - First **kernel-verified UNCONDITIONAL Clifford+T quantitative
+    Solovay-Kitaev statement** with bundled error+length bound at
+    the same compile level (Track T-S.5 headline). Matches the
+    canonical Dawson-Nielsen 2006 form.
+  - First **kernel-verified UNCONDITIONAL proof that `⟨H, T⟩` is dense
+    in SU(2)** via the Niven-based algebraic-integer obstruction
+    (alphabet-specific, but uses alphabet-agnostic substrate
+    `FibRepInfiniteOrder` + `AharonovAradLemma6` + Mathlib's
+    `NumberTheory.Niven`).
+  - First **alphabet-agnostic `vonNeumann_assemble_explicit_X` consumption
+    pattern** demonstrated on a non-Fibonacci alphabet (Clifford+T),
+    validating Phase 5 Step 13's substrate as truly generic.
+
+**Bundle D4 §9.6-§9.8 absorption ready**: the Phase 6u generic substrate
++ Clifford+T instance are ready for D4 bundle-lift work. The canonical
+exposition target shifts: §9.6-§9.8 now have BOTH Fibonacci (Phase 5 +
+6t) AND Clifford+T (Phase 6u) as instances of the same generic
+substrate, demonstrating universality.
+
+Phase 6u CLOSED.
 
 **CP2 adversarial review (post T-S.2 discharge):** to run after T-S.2
 unconditional discharge ships; will verify the new substantive content
