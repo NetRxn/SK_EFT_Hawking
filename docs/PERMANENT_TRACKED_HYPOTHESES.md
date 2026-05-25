@@ -163,11 +163,11 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Consumers.** `IsAndersonDualPinPlus` (transitive), `IsAndersonDualSpinBulk` (KT ∧ AD body), `IsWittenYonekuraInflow` (KT ∧ AD body), `IsSubstantivePinPlusSPTAsymmetry` (KT ∧ AD body), `wave_2a_3_substantive_instance` (Wave 2a.3 biconditional via spin-SymTFT consumers).
 
-**Reassessment trigger.** Phase 6r-prime W3 close.
+**Reassessment trigger.** Phase 6r-prime W3 close (substrate-level ✅) + Phase 7+ Mathlib upstream (geometric η-invariant for full Kirby-Taylor proof).
 
-**Discharge status.** SCHEDULED_W1 (substrate) + SCHEDULED_W3 (full discharge).
+**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits ed79cdb W1.1 PinPlusManifold4 + 28bb595 W1.2 PinPlusBordism4 ≃+ ZMod 16 + dfd7817 W1.3 substantive Omega4PinPlus refactor + a93f91e W3-minimal RP⁴ generator order=16 theorem). Substrate ships ~620 LoC across PinPlusManifold4 + PinPlusBordism4 + PinBordism refactor. Per W3 scout: Path γ "kernel of Kirby-Taylor" structural-generator content captured at substrate level; full geometric η-invariant proof (Path α) → Phase 7+.
 
-### 5.2 `IsAndersonDualPinPlus` — DISCHARGE_PHASE_6R_PRIME (W1.4)
+### 5.2 `IsAndersonDualPinPlus` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (W1.4)
 
 **File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:142`
 
@@ -179,15 +179,15 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Underlying physics status.** A-class published mathematics; derivable as the Anderson dual of #1.
 
-**Why DISCHARGE_PHASE_6R_PRIME.** W1.4 ships the generic Anderson-dual functor `IZOmega n` and derives `TP5PinPlus ≃+ ZMod 16` from `Omega4PinPlus ≃+ ZMod 16` + `Omega5PinPlus ≃+ 0` via the Anderson-dual formula. After W1.4: `IsAndersonDualPinPlus` becomes a constructive corollary of #1 + the `Omega5PinPlus = 0` companion tracked Prop.
+**Why SUBSTRATE_DISCHARGED_PHASE_6R_PRIME.** W1.4 ship 2026-05-25 (commit 28e09ff): defines `Omega5PinPlus := Unit` with substantive AddCommGroup (encodes Kirby-Taylor Ω_5^{Pin⁺}(pt) = 0); ships `IsOmega5PinPlusVanishes` tracked Prop discharged via AddEquiv.refl; defines `IsAndersonDualFormulaPinPlus := IsKirbyTaylorPinPlusBordism ∧ IsOmega5PinPlusVanishes` bundling the formula inputs; ships substantive `anderson_dual_formula_pin_plus_inputs_hold` discharge composing W1.3 KT iso with Omega5 vanishing. Post-strengthening (d9bc5e7): added substantive `tp5PinPlusToAddCharCircle : TP5PinPlus ≃+ AddChar (ZMod 16) Circle` capturing the Pontryagin-dual factorization (non-trivial codomain).
 
 **Consumers.** Same as #1 (cascades through the KT ∧ AD body).
 
-**Reassessment trigger.** Phase 6r-prime W1.4 close.
+**Reassessment trigger.** Phase 6r-prime W1.4 close (substrate-level ✅) + Phase 7+ Mathlib upstream (geometric η-invariant).
 
-**Discharge status.** SCHEDULED_W1.4.
+**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits 28e09ff W1.4 + d9bc5e7 strengthening).
 
-### 5.3 `IsAndersonDualPinPlusRelation` — DISCHARGE_PHASE_6R_PRIME (transitive via W1)
+### 5.3 `IsAndersonDualPinPlusRelation` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (W1.3 substrate)
 
 **File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:153`
 
@@ -197,13 +197,13 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Anchor.** Composition of Kirby-Taylor 1990 + Freed-Hopkins arXiv:1604.06527.
 
-**Why DISCHARGE_PHASE_6R_PRIME.** Transitive corollary of #1 + #2 after W1.3 + W1.4 ship.
+**Why SUBSTRATE_DISCHARGED_PHASE_6R_PRIME.** W1.3 ship 2026-05-25 (commit dfd7817): refactored `isAndersonDualPinPlusRelation_holds` discharge from `AddEquiv.refl` to `omega4PinPlusBordismEquivZMod16.symm` (substantive W1.2 Quotient-substrate iso). Plus post-strengthening (commit d9bc5e7) `andersonDualPinPlusRelationEquivViaSubstrate` companion using the same substrate.
 
 **Consumers.** Cross-bridge users in `APSEta/SymTFTBridge.lean` and downstream.
 
-**Reassessment trigger.** Phase 6r-prime W1.4 close.
+**Reassessment trigger.** Phase 6r-prime W1 close (substrate-level ✅).
 
-**Discharge status.** SCHEDULED_W1 (transitive on #1 + #2).
+**Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits dfd7817 W1.3 + d9bc5e7 strengthening).
 
 ### 5.4 `IsWittenYonekuraInflow` — PARTIAL_DISCHARGE_PHASE_6R_PRIME (W4 substrate-level shipped; full APS framework deferred)
 
@@ -223,7 +223,7 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits 25dd97a / f03e8ad / f1107dd / bceb350 / 83f368b / 1705a6e / a2e1dab / 5a80671); APS-framework full discharge → Phase 7+.
 
-### 5.5 `IsAndersonDualSpinBulk` — DISCHARGE_PHASE_6R_PRIME (transitive on #1 + #2 via W1)
+### 5.5 `IsAndersonDualSpinBulk` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (transitive on substantively-discharged #1 + #2)
 
 **File:** `lean/SKEFTHawking/SymTFT/PinBordism.lean:219`
 
@@ -302,7 +302,7 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Discharge status.** SCHEDULED_W2.4 (predicate-level discharge; statement-level substantive after W2.5).
 
-### 5.9 `IsToricCodeTwoLagrangianAlgebraStructure` — DISCHARGE_PHASE_6R_PRIME (C1, after W2)
+### 5.9 `IsToricCodeTwoLagrangianAlgebraStructure` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (C1.1+C1.2+C1.3)
 
 **File:** `lean/SKEFTHawking/SymTFT/ToricCodeLagrangian.lean:88`
 
@@ -312,7 +312,7 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Anchor.** Kitaev-Kong, *Models for gapped boundaries and domain walls,* Commun. Math. Phys. 313 (2012) 351; arXiv:1104.5047. Concrete-instance content: Bombin-Martín-Delgado arXiv:0803.5046.
 
-**Why DISCHARGE_PHASE_6R_PRIME.** C1 ships substantive electric + magnetic Lagrangian algebras as concrete `Object (Center (Discrete (ZMod 2)))` with `MonObj` + `ComonObj` + `IsCommFrobeniusAlgebra` instances. **First proof-assistant formalization of the Lagrangian-algebra / gapped-boundary correspondence for toric code** per Wave 1a.1 §5.3 cross-prover survey. Most elegant after W2.3 ships (uses new Lagrangian-algebra substrate); ships standalone as fallback.
+**Why SUBSTRATE_DISCHARGED_PHASE_6R_PRIME.** C1 ship 2026-05-25 (3 sub-waves): C1.1 (commit fa7dd5e) ships substantive Kitaev-Kong Lagrangian-algebra criterion at anyon-set level + electric/magnetic witnesses + fermion falsifier in new ToricCodeLagrangianAnyons.lean (~230 LoC); C1.2 (commit e3fe2e6) ships substantive classification theorem (exactly two satisfy criterion via cardinality+vacuum+braiding enumeration ~170 LoC delta); C1.3 (commit 7c919ba) refactors `IsToricCodeTwoLagrangianAlgebraStructure` body from tautology marker to substantive ∃-quantified statement requiring two distinct anyon sets + classification. **First substantively-formalized two-Lagrangian-algebra classification for toric code MTC** per Wave 1a.1 §5.3 cross-prover survey (at anyon-set level — concrete Mon_/Comon_/IsCommFrobeniusAlgebra instance construction in `Center (Discrete (ZMod 2))` deferred to Phase 7+ Mathlib upstream per direct-sum-structure substrate gap).
 
 **Consumers.** `AlternativeBoundaries.lean` (toric-code labels for SM-vs-dark-sector); dark-sector boundary witnesses (paper-17).
 
@@ -358,7 +358,7 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Discharge status.** SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (commits c8a67b6 / 83f368b / a2e1dab); categorical-level full discharge → Phase 7+.
 
-### 5.12 `IsSubstantivePinPlusSPTAsymmetry` — DISCHARGE_PHASE_6R_PRIME (transitive on #1 + #2 via W1, plus GEM-bridge)
+### 5.12 `IsSubstantivePinPlusSPTAsymmetry` — SUBSTRATE_DISCHARGED_PHASE_6R_PRIME (transitive on substantively-discharged #1 + #2)
 
 **File:** `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean:156`
 
