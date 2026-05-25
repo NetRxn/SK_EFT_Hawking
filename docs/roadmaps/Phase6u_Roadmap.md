@@ -617,6 +617,87 @@ axioms, kernel-only):**
   - Substantive T-S.2 discharge IS the remaining substantive multi-session
     work for Phase 6u to close fully unconditionally.
 
+**CP1 adversarial review (end of Session 1):**
+
+  - Fresh-context review on all 10 Phase 6u Lean files + roadmap.
+  - 0 BLOCKER / 2 REQUIRED / 7 RECOMMENDED / 6 ADVISORY findings.
+  - High-priority remediation shipped this session: R1 (Wave 4b
+    "_unconditional" docstring overclaim corrected), R2 (`gens` field
+    forward-looking documentation), RC3 (`dnStepFG_su2_eq_dnStepFG`
+    rfl flag), RC5 (SU(2)-correction phase-factor note for Clifford+T),
+    A2 (roadmap Wave 3 existential-form sync).
+  - Deferred lower-priority findings (RC1, RC2, RC4, RC6, RC7, A1, A3,
+    A4, A5, A6) documented as future-strengthening targets.
+
+**Next-session focus (T-S.2 substantive discharge):**
+
+The remaining substantive piece is discharging `cliffordT_v4_witness_tracked`
+unconditionally. The cleanest path (per Phase 6t `H_Fib_accPt_one_unconditional`
+template):
+
+  1. Prove `(H_of_G cliffordTGeneratingSet : Set _).Infinite`.
+
+     **Sub-strategy 1.A** (Niven-style irrationality for `H_SU·T_SU`):
+       - Trace of `H_SU · T_SU` = `√2 · sin(π/8)`.
+       - `2·cos(θ) = √2·sin(π/8)` ⟹ `cos²(θ) = (2-√2)/8`.
+       - Minimal polynomial of `2·cos(θ)`: `2x⁴ - 4x² + 1` (Eisenstein
+         at p=2, hence irreducible over ℚ).
+       - Candidate `n ∈ {8, 10, 12, 15}` (from `φ(2n) = 8`); enumerate
+         `m` with `gcd(m,n)=1`, verify `2·cos(mπ/n)` minimal polynomial
+         is NOT `2x⁴ - 4x² + 1`.
+       - Conclude `θ/π ∉ ℚ`, hence `H_SU · T_SU` has infinite order,
+         hence `H_of_G cliffordTGS` is infinite.
+       - Estimate: ~400-600 LoC for the finite-case enumeration +
+         minimal-polynomial computation.
+
+     **Sub-strategy 1.B** (direct enumeration of 200+ distinct elements):
+       - Analog of `H_Fib_card_ge_200_if_finite` (Phase 6t Wave
+         2c.4a-R5.4-§17). Show 200+ pairwise-distinct elements of
+         `⟨H_SU, T_SU⟩` directly.
+       - Estimate: ~500-800 LoC.
+
+  2. Apply existing generic substrate
+     `one_accPt_of_infinite_closed_subgroup` (Phase 6t,
+     `AharonovAradLemma6.lean:112`) to get `AccPt 1`.
+     **No new code needed** — direct re-use of alphabet-agnostic substrate.
+
+  3. Apply `vonNeumann_assemble_explicit_X_unconditional` (Phase 5 Step
+     13, `OneParameterSubgroupSU2.lean:3032`) to extract X₁ ∈ 𝔰𝔲(2) with
+     `∀ t, exp(t·X₁) ∈ H_of_G`.
+     **No new code needed** — direct re-use.
+
+  4. Case analysis (analog of Fibonacci's
+     `exists_σ_Fib_SU_mat_not_commute_not_anticommute`): show that for
+     any non-zero X₁ ∈ 𝔰𝔲(2), at least one of {H_SU, T_SU} satisfies
+     "not commute AND not anti-commute" with X₁.
+       - H_SU = `(i/√2)(σ_X + σ_Z)`: centralizer in 𝔰𝔲(2) is 1-dim
+         (`ℝ·(σ_X + σ_Z)`); anti-commutator vanishes for 2-dim subset
+         (X₁ = a·(σ_X - σ_Z) + b·σ_Y).
+       - T_SU = `exp(-iπ/8 σ_Z)`: centralizer is `ℝ·σ_Z`; anti-commutator
+         needs computation but for T_SU diagonal with `e^{iπ/8}`
+         eigenvalues, the anti-commutator structure is special.
+       - The intersection of "H_SU bad" and "T_SU bad" should be empty
+         (substantive argument).
+       - Estimate: ~150-300 LoC of Pauli-decomposition case analysis.
+
+  5. Compose: X₂ := H_SU·X₁·star(H_SU) (or T_SU·X₁·star(T_SU)) gives
+     the second tangent. Apply `ts_Ad_LI_of_not_commute_anticommute` to
+     get ℝ-LI. Apply `expAmbient_unitary_conj` to get flow line. Bundle
+     into `cliffordT_v4_witness_tracked` discharge.
+     Estimate: ~100-200 LoC.
+
+  **Total estimate for substantive T-S.2 discharge:** ~750-1900 LoC
+  (depending on sub-strategy choice). Multi-session work spanning
+  approximately Phase 6u Sessions 2-5.
+
+  Upon completion, ALL Phase 6u headlines become UNCONDITIONAL, closing
+  the Phase 6u substrate refactor fully.
+
+**CP2 adversarial review (post T-S.2 discharge):** to run after T-S.2
+unconditional discharge ships; will verify the new substantive content
+across the entire Track T-S chain (no fresh-context review of T-S.5
+needed at conditional stage since CP1 already covered it).
+
 **Outstanding work for Track T-S.2 (multi-session):**
 
   - **T-S.2 substantive closure-density witness for Clifford+T**. The
