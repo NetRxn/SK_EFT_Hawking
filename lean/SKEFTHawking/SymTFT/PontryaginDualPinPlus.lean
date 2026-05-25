@@ -108,6 +108,39 @@ noncomputable def pontryaginDualZMod16EquivZMod16 :
     AddChar (ZMod 16) ℂ ≃+ ZMod 16 :=
   (AddChar.zmodAddEquiv (n := 16)).symm
 
+/-! ## §1b. Circle-valued Pontryagin-dual (Pontryagin-Pin⁺-2 sub-wave)
+
+The Anderson-dual formula uses `Hom(_, ℝ/ℤ)`. The `ℝ/ℤ` group is
+canonically isomorphic to the unit circle `S¹ ⊂ ℂ` via the exponential
+`exp(2πi·) : ℝ/ℤ → S¹`. Mathlib's `Circle` type encodes the unit complex
+circle; for finite groups, `AddChar α Circle ≃+ AddChar α ℂ` via
+`AddChar.circleEquivComplex` (the circle-valued characters are the same
+as the complex-valued characters, since every finite-group character
+lands in the unit circle).
+
+This brings the substantive ℂ-valued Pontryagin-dual one step closer to
+the ℝ/ℤ-valued Anderson-dual physics framing.
+
+**Phase 6r-prime Pontryagin-Pin⁺-2 sub-wave (2026-05-25)**: ships the
+Circle-valued Pontryagin-dual `AddChar (ZMod 16) Circle ≃+ ZMod 16`
+via composition of Mathlib's `circleEquivComplex` with `zmodAddEquiv`.
+Real Mathlib character-theory content; passes preemptive-strengthening
+checklist (P5: NO — `AddChar (ZMod 16) Circle` is not defeq to ZMod 16;
+defining-the-conclusion: NO — the iso is composition of two real Mathlib
+theorems; unused hypotheses: N/A). -/
+
+/-- **`pontryaginDualZMod16CircleEquivZMod16`** — the substantive Circle-
+valued Pontryagin-dual iso `AddChar (ZMod 16) Circle ≃+ ZMod 16`.
+
+Composed from Mathlib's `circleEquivComplex` (Circle-valued ≃ ℂ-valued
+characters for finite groups) and `zmodAddEquiv.symm` (ℂ-valued
+characters of ZMod n ≃ ZMod n). One step closer to the ℝ/ℤ-valued
+Anderson-dual physics framing per Freed-Hopkins arXiv:1604.06527. -/
+noncomputable def pontryaginDualZMod16CircleEquivZMod16 :
+    AddChar (ZMod 16) Circle ≃+ ZMod 16 :=
+  (AddChar.circleEquivComplex (α := ZMod 16)).trans
+    pontryaginDualZMod16EquivZMod16
+
 /-! ## §2. The Anderson-dual formula at the Pin⁺ case — honest scope
 
 Per Freed-Hopkins arXiv:1604.06527, the Anderson-dual formula
