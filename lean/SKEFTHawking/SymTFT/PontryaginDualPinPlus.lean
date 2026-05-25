@@ -88,7 +88,7 @@ import SKEFTHawking.SymTFT.PinBordism
 
 namespace SKEFTHawking.SymTFT.PontryaginDualPinPlus
 
-open AddChar SKEFTHawking.SymTFT
+open AddChar SKEFTHawking.SymTFT SKEFTHawking.Z16AnomalyForcesThetaBar
 
 /-! ## §1. Substantive Pontryagin-dual of ZMod 16 -/
 
@@ -263,5 +263,56 @@ predicate's discharge. A future sub-wave can ship a STRENGTHENED
 Anderson-dual predicate that incorporates the Pontryagin-dual content
 substantively at the predicate level (this would refactor downstream
 consumers; deliberately deferred). -/
+
+/-! ## §3. Pontryagin-Pin⁺-5 — character-sum bridge to substrate anomaly cancellation
+
+**Phase 6r-prime Pontryagin-Pin⁺-5 sub-wave (2026-05-25)**: cross-bridge
+tying the Pontryagin character-sum (Schur orthogonality §1) to the
+SubstrateConfig anomaly-cancellation predicate. The substantive content:
+applying Schur first-orthogonality at the substrate's `z16_class`
+distinguishes anomaly-cancelling substrates (`z16_class = 0`, character
+sum = 16) from anomalous substrates (`z16_class ≠ 0`, character sum = 0).
+
+**Substantive content**: this is the character-sum-level analog of the
+W4-η-1 substrate-η bridge. Both relate `SubstrateConfig` data to a
+Pontryagin/η-invariant evaluation; this one operates at the
+character-sum-over-ZMod-16-dual level rather than the ℝ/ℤ-valued
+η-invariant level. -/
+
+/-- **Pontryagin-Pin⁺-5 character-sum biconditional**: a SubstrateConfig
+has anomaly cancellation IFF the sum of its Pontryagin character
+evaluations is 16. Composes Schur first-orthogonality
+(`zmod16_character_sum_orthogonality`) with the definition of
+`Z16AnomalyCancels`. -/
+theorem substrate_character_sum_eq_16_iff_anomaly_cancels
+    (s : SubstrateConfig) :
+    (∑ ψ : AddChar (ZMod 16) ℂ, ψ s.z16_class) = 16 ↔
+    Z16AnomalyCancels s := by
+  rw [zmod16_character_sum_orthogonality s.z16_class]
+  constructor
+  · intro h
+    by_contra hne
+    have hne' : s.z16_class ≠ 0 := hne
+    simp [hne'] at h
+  · intro h
+    have hzero : s.z16_class = 0 := h
+    simp [hzero]
+
+/-- **Pontryagin-Pin⁺-5 character-sum complement**: a SubstrateConfig
+fails anomaly cancellation IFF the sum of its Pontryagin character
+evaluations vanishes (= 0). The character-sum-level analog of
+W4-η-3's anomalous-substrate-witness construction. -/
+theorem substrate_character_sum_eq_zero_iff_anomalous
+    (s : SubstrateConfig) :
+    (∑ ψ : AddChar (ZMod 16) ℂ, ψ s.z16_class) = 0 ↔
+    ¬ Z16AnomalyCancels s := by
+  rw [zmod16_character_sum_orthogonality s.z16_class]
+  constructor
+  · intro h hcancel
+    have hzero : s.z16_class = 0 := hcancel
+    simp [hzero] at h
+  · intro h
+    have hne : s.z16_class ≠ 0 := fun heq => h heq
+    simp [hne]
 
 end SKEFTHawking.SymTFT.PontryaginDualPinPlus
