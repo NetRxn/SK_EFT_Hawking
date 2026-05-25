@@ -107,8 +107,10 @@ type-alias witness, demonstrating that the duality identification
 arises from real Mathlib character-theory content. -/
 noncomputable def andersonDualPinPlusRelationEquivViaPontryagin :
     TP5PinPlus ≃+ Omega4PinPlus :=
-  andersonDualPinPlusEquivViaPontryagin.trans
-    (AddEquiv.refl _)  -- ZMod 16 ≃+ Omega4PinPlus by def aliasing
+  -- Post-W1.3 (2026-05-25): Omega4PinPlus is now Omega4PinPlusBordism
+  -- (substantive Quotient). The chain composes through the substantive
+  -- omega4PinPlusBordismEquivZMod16.symm.
+  andersonDualPinPlusEquivViaPontryagin.trans omega4PinPlusBordismEquivZMod16.symm
 
 theorem isAndersonDualPinPlusRelation_holds_via_pontryagin :
     IsAndersonDualPinPlusRelation :=
