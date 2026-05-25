@@ -51,7 +51,7 @@ Six primary substrate waves, plus four alphabet-instantiation tracks. The substr
 | **Wave 4b** | Generic discharge of `SkApproxCSuperQuadraticBound_generic K_compose gs baseFinder` — alphabet-agnostic super-quadratic bound (~800-1000 LoC port of Phase 6t Path A Option C) | ✅ SHIPPED 2026-05-25 (1226 LoC kernel-only via background agent; UNCONDITIONAL modulo `BaseFinder_approximates_within (2·ε₀)`) | D4 §9.7 |
 | **Wave 5** | Generic length bound at `skLevel_polylog ε` — alphabet-independent re-export of existing `skLength_at_skLevel_polylog_le` | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
 | **Wave 6** | Generic bundled-strict headline `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight` + Fibonacci unconditional validation | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
-| **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999): T-S.1 generating set ✅ + T-S.2 closure-density witness 🟡 + T-S.3 ε₀-net ✅ + T-S.4 calibration ✅ + T-S.5 headline ✅ | 🟡 IN-PROGRESS (T-S.1, T-S.3-5 SHIPPED 2026-05-25; T-S.4 calibration UNCONDITIONAL via Wave 4b; T-S.5 headline CONDITIONAL ONLY on T-S.2 tracked Prop; T-S.2 substantive discharge = multi-session BMPRV 1999 in Lean) | D4 §9.8 |
+| **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999): T-S.1 generating set ✅ + T-S.2 closure-density witness ✅ + T-S.3 ε₀-net ✅ + T-S.4 calibration ✅ + T-S.5 headline ✅ | ✅ FULLY SHIPPED 2026-05-25 (T-S.5 Clifford+T strict headline is UNCONDITIONAL via Niven-based infinite-order proof — see `cliffordT_v4_witness_discharged` + `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional` in commit `2e79504`) | D4 §9.8 |
 | **Track T-A1 (Tier A)** | Instantiate at trapped-ion native gate set (Mølmer-Sørensen MS(θ) discretized at some grid + arbitrary 1Q rotations) | ⏳ NOT STARTED | (was "likely Phase 6v"; **Phase 6v scope finalized 2026-05-25 does NOT include this track** — re-slot to Phase 6x or later) |
 | **Track T-A2 (Tier A)** | Instantiate at Clifford+CCZ for 3-qubit primitives (target group SU(8) not SU(2); substantial substrate extension) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
 | **Track T-B (Tier B)** | Instantiate at Read-Rezayi SU(2)_k for k ∈ {5, 7} (next universal anyons beyond Fibonacci) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
@@ -781,11 +781,37 @@ Then CP2 adversarial review + final strengthening sweep.
     remaining substantive piece, awaiting Agent B's Niven-based infinite-order
     proof.
 
-  - Agent B `a95346d894d2619ea` still in-flight (Niven-based infinite-order).
-    Once Agent B ships `cliffordT_accPt_one_unconditional`, composing it
-    with `cliffordT_v4_witness_from_accPt` yields
-    `cliffordT_v4_witness_discharged` (UNCONDITIONAL discharge of the
-    tracked Prop) → T-S.5 Clifford+T headline becomes FULLY UNCONDITIONAL.
+  - Agent B `a95346d894d2619ea` completed. Ships
+    `lean/SKEFTHawking/FKLW/CliffordTInfiniteOrder.lean` (560 LoC,
+    commit `0448366`). Niven-based infinite-order proof via the cleaner
+    half-angle algebraic-integer obstruction (avoiding the quartic
+    minimal polynomial route): if `cos(θ) = √2·sin(π/8)/2` were
+    `cos(rπ)` for rational r, then by `Real.isIntegral_two_mul_cos_rat_mul_pi`,
+    `2cos(θ) = √2·sin(π/8)` would be an algebraic integer; using
+    half-angle `2sin²(π/8) = 1-cos(π/4)`, deduce `1/2` is an algebraic
+    integer — contradicting `1/2 ∉ ℤ`. Headline:
+    `cliffordT_accPt_one_unconditional`.
+
+**T-S.5 UNCONDITIONAL HEADLINE SHIPPED (commit `2e79504`)**: composing
+the conditional v4-witness discharge with the Niven-based AccPt-1 yields:
+  - `cliffordT_v4_witness_discharged : cliffordT_v4_witness_tracked`
+    (UNCONDITIONAL discharge of the tracked Prop)
+  - `cliffordT_density_unconditional : IsDenseInSU2_gs cliffordTGeneratingSet`
+  - `cliffordT_H_of_G_eq_top_unconditional : H_of_G cliffordTGeneratingSet = ⊤`
+  - **`solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional`** —
+    the canonical Clifford+T quantitative Solovay-Kitaev headline,
+    kernel-only `{propext, Classical.choice, Quot.sound}`. Both error
+    bound (`‖ρ_CliffT (compile U ε) - U‖ ≤ ε`) AND polylog length bound
+    at the SAME compile level `skLevel_polylog ε`.
+
+**PHASE 6u TRACK T-S CLOSED**. The last tracked Prop is substantively
+discharged via the full chain (Agent A case-analysis + my conditional
+v4-witness + Agent B Niven-based AccPt 1 + my composition). Zero
+project-local axioms. Zero sorries in shipped build. Standard kernel
+only.
+
+**Remaining Phase 6u work**: CP2 adversarial review on the complete
+Track T-S chain + final strengthening sweep.
 
 **CP2 adversarial review (post T-S.2 discharge):** to run after T-S.2
 unconditional discharge ships; will verify the new substantive content
