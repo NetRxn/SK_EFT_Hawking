@@ -73,6 +73,7 @@ import SKEFTHawking.SymTFT.LagrangianAlgebra
 import SKEFTHawking.SymTFT.GappedBoundary
 import SKEFTHawking.SymTFT.IsSMMatterTopologicalBoundary
 import SKEFTHawking.SymTFT.ToricCodeLagrangian
+import SKEFTHawking.SymTFT.SubstrateEtaInvariant
 import SKEFTHawking.APSEta.SubstrateBulkAsymmetry
 
 namespace SKEFTHawking.SymTFT
@@ -221,5 +222,44 @@ theorem paper17_hidden_sector_charge_eq_three_singlets :
     paper17_hidden_sector_charge = ((3 : ℕ) : ZMod 16) := by
   show (3 : ZMod 16) = ((3 : ℕ) : ZMod 16)
   rfl
+
+/-! ## §5. C2-honest-2 / W5-η-bridge-3 — dark-sector η-invariant cross-bridge
+
+**Phase 6r-prime sub-wave W5-η-bridge-3 (2026-05-25)**: cross-bridge
+applying the substantive Witten-Yonekura η-invariant (W4-η-1) to the
+paper-17 combined SM + hidden-sector substrate (C2-honest-1). The
+substantive content: the same `-3 + 3 = 0 mod 16` cancellation that
+makes the combined substrate a dark-sector topological boundary also
+forces the η-invariant in `ℝ/ℤ` to vanish.
+
+**Substantive content**: this cross-bridge is the η-level analog of
+W5-η-bridge-2 (which did the same for the SM-only substrate). The two
+substrates differ — `sm_substrate_data N_f` has `z16_class = 16·N_f`
+which cancels trivially per the 16-fermions-per-generation convention,
+whereas `sm_plus_paper17_hidden_substrate` has `z16_class = -3 + 3`
+which is the substantive paper-17 cancellation arithmetic — yet both
+vanish at the η level via the same substrate-level lemma
+`substrateEtaInvariant_zero_of_anomaly_cancels`. -/
+
+/-- **W5-η-bridge-3 / C2-honest-2**: the combined SM + paper-17
+hidden-sector substrate has vanishing Witten-Yonekura η-invariant.
+The proof composes the C2-honest-1 anomaly-cancellation theorem with
+the W4-η-1 substrate-level vanishing lemma. -/
+theorem sm_plus_paper17_hidden_substrate_eta_invariant_vanishes :
+    substrateEtaInvariant sm_plus_paper17_hidden_substrate = 0 :=
+  substrateEtaInvariant_zero_of_anomaly_cancels
+    sm_plus_paper17_hidden_substrate
+    sm_plus_paper17_hidden_substrate_anomaly_cancels
+
+/-- **W5-η-bridge-3 bundled corollary**: the combined SM + paper-17
+hidden-sector substrate is simultaneously a dark-sector topological
+boundary AND has vanishing η-invariant. Mirrors the SM-only bundled
+corollary `sm_boundary_data_topological_AND_eta_trivial` from
+W5-η-bridge-2. -/
+theorem sm_plus_paper17_hidden_substrate_dark_topological_AND_eta_trivial :
+    IsDarkSectorTopologicalBoundary sm_plus_paper17_hidden_substrate ∧
+    substrateEtaInvariant sm_plus_paper17_hidden_substrate = 0 :=
+  ⟨sm_plus_paper17_hidden_substrate_is_dark_sector_topological_boundary,
+   sm_plus_paper17_hidden_substrate_eta_invariant_vanishes⟩
 
 end SKEFTHawking.SymTFT
