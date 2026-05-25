@@ -58,6 +58,7 @@ surfacing the hypothesis at consumer type signatures.
 import SKEFTHawking.SymTFT.Basic
 import SKEFTHawking.SymTFT.BulkTQFT
 import SKEFTHawking.SymTFT.FrobeniusAlgebra
+import SKEFTHawking.SymTFT.FrobeniusPerronDim
 import Mathlib.CategoryTheory.Monoidal.Mon_
 import Mathlib.CategoryTheory.Monoidal.Comon_
 
@@ -107,6 +108,43 @@ realizes a Lagrangian algebra" (DMNO 2010 Theorem) — is the tracked Prop
 def IsLagrangianAlgebra
     [BraidedCategory C] (L : C) [MonObj L] [ComonObj L] : Prop :=
   IsConnectedAlgebra L ∧ IsEtaleAlgebra L
+
+/-! ## §1a. FPdim-refined Lagrangian-algebra predicate (Mathlib-style upstream)
+
+**Phase 6r-prime FPdim upstream ship (2026-05-25)** — closes the
+explicit FPdim deferral noted in §1's `IsLagrangianAlgebra` docstring
+lines 89-96. Once the `FrobeniusPerronDim` typeclass is available (now
+shipped in `lean/SKEFTHawking/SymTFT/FrobeniusPerronDim.lean`), the
+FPdim condition `FPdim(L)² = globalFPdim(C)` can be expressed
+substantively at the predicate level.
+
+This refined predicate is offered as a COMPANION to `IsLagrangianAlgebra`
+to avoid breaking existing downstream consumers; consumers wanting the
+full DMNO-strength predicate (matching the literature definition with
+FPdim condition) opt in to this refined version.
+
+Per Davydov-Müger-Nikshych-Ostrik arXiv:1009.2117 + Kitaev-Kong
+arXiv:1104.5047 §3, the FPdim condition `FPdim(L)² = FPdim(C)` is the
+load-bearing dimension-count axiom (≡ "L has half the total quantum
+dimension squared"). -/
+
+/-- **`IsLagrangianAlgebraFPdimRefined`** — the full DMNO Lagrangian-
+algebra predicate including the FPdim condition. Composes
+`IsLagrangianAlgebra` (connected + étale) with the substantive
+FPdim²(L) = globalFPdimSquared condition (`globalFPdimSquared` is
+provided as a parameter; for toric code it's 4 per the
+`toricGlobalFPdimSquared` ship in `FrobeniusPerronDim.lean`).
+
+This is the Mathlib-style upstream-PR-quality predicate that the
+`IsLagrangianAlgebra` docstring at §1 lines 89-96 acknowledged was
+deferred. Now substantively expressible via the FrobeniusPerronDim
+typeclass companion ship. -/
+def IsLagrangianAlgebraFPdimRefined
+    [BraidedCategory C] [FrobeniusPerronDim C]
+    (L : C) [MonObj L] [ComonObj L]
+    (globalFPdimSquared : NNReal) : Prop :=
+  IsLagrangianAlgebra L ∧
+  (FrobeniusPerronDim.FPdim L) ^ 2 = globalFPdimSquared
 
 /-! ## §2. The DMNO 2010 Lagrangian-algebra correspondence (tracked Prop) -/
 
