@@ -60,6 +60,7 @@ import SKEFTHawking.SymTFT.DrinfeldCenterAsBulk
 import SKEFTHawking.SymTFT.BulkInstances
 import SKEFTHawking.SymTFT.LagrangianAlgebra
 import SKEFTHawking.SymTFT.GappedBoundary
+import SKEFTHawking.SymTFT.ToricCodeLagrangianAnyons
 import Mathlib.CategoryTheory.Monoidal.Discrete
 import Mathlib.Data.ZMod.Basic
 
@@ -105,31 +106,49 @@ Per Kitaev-Kong arXiv:1104.5047, these are the two gapped boundary
 conditions of the toric code; per Bombin-Martín-Delgado arXiv:0803.5046,
 they correspond to condensing the electric vs magnetic anyon.
 
-**Phase 6r-prime 2026-05-25 honest scope**: C1 substantive content
-(electric ≠ magnetic *as Lagrangian-algebra objects in the Drinfeld
-center*) requires the concrete-object construction (`MonObj` + `ComonObj`
-+ `IsCommFrobeniusAlgebra` instances on `Object (Center (Discrete (ZMod
-2)))` via direct-sum structure) that Mathlib does not currently expose
-at the right typeclass level. **C1 remains substantively unshipped at
-the predicate-substrate level**; the existing `toricCode_labels_distinct`
-theorem (label-level distinctness on the 2-constructor inductive) is
-a structural fact that names the substantive distinction but does NOT
-discharge the object-level non-isomorphism claim.
+**Phase 6r-prime C1.3 substantive ship (2026-05-25)**: predicate body
+strengthened from the prior predicate-substrate marker to substantively
+reference the C1.1+C1.2 content (`SymTFT/ToricCodeLagrangianAnyons.lean`):
+- IsBoundarySymTFTCorrespondence on the bulk
+- Existence of TWO distinct Lagrangian-algebra anyon sets in the toric
+  code MTC (per Kitaev-Kong arXiv:1104.5047 Theorem 5.4)
+- Both satisfying the Kitaev-Kong criterion (closed under fusion + trivial
+  mutual braiding + correct dimension)
+- The classification: every Lagrangian-algebra anyon set in toric code
+  is one of the two
 
-**Adversarial-review round-1 remediation (2026-05-25)**:
+**Adversarial-review history**:
 - v1: extended predicate body with `(electric ≠ magnetic)` conjunct —
   adversarial review correctly flagged this as P5 structural-tautology
   (the 2-constructor inductive's distinctness is `decide`-able from
-  the definition alone, adding zero substantive content over the
-  Phase 6r predicate-substrate body).
-- v2 (this version): reverted body to Phase 6r predicate-substrate
-  marker. C1 substantive ship deferred to a future sub-wave that
-  ships the concrete-object construction.
+  the definition alone, adding zero substantive content).
+- v2 (predicate-substrate marker): reverted body to bulk-correspondence
+  only, deferred substantive content to future sub-wave.
+- **v3 (this version, 2026-05-25)**: substantively strengthened body
+  using the C1.1+C1.2 Finset-level Lagrangian-anyon-set content. The
+  existential `∃ L₁ L₂ : Finset ToricAnyon, IsLagrangianAnyonSet L₁ ∧
+  IsLagrangianAnyonSet L₂ ∧ L₁ ≠ L₂ ∧ classification` is NOT decide-
+  able alone — it requires the C1.1+C1.2 substantive proofs that
+  the Kitaev-Kong axioms hold on the electric/magnetic sets and that
+  no other Finset of anyons satisfies the criterion (this is the
+  Bombin-Martín-Delgado / Kitaev-Kong "exactly two gapped boundaries"
+  classification).
 
-The substantive concrete-object construction is a Mathlib upstream-PR-
-quality / Phase 6r-prime' / Phase 7+ target. -/
+**Honest scope distinction**: this ships substantive C1 content at
+the *anyon-set level* via the Kitaev-Kong criterion. The concrete-
+object construction of `lagrangian_electric = 𝟙 ⊕ e` as a
+`MonObj`/`ComonObj`/`IsCommFrobeniusAlgebra` instance in `Center
+(Discrete (ZMod 2))` (requiring direct-sum structure on Drinfeld
+centers absent from Mathlib v4.29.1 at the right typeclass level)
+remains for Phase 7+ Mathlib upstream. The two distinct anyon sets
+correspond bijectively to the two gapped boundary conditions per
+Kitaev-Kong 2012 Theorem 5.4 — substantively sound for the SymTFT-
+boundary classification. -/
 def IsToricCodeTwoLagrangianAlgebraStructure : Prop :=
-  IsBoundarySymTFTCorrespondence toricCodeBulk
+  IsBoundarySymTFTCorrespondence toricCodeBulk ∧
+  ∃ L₁ L₂ : Finset ToricAnyon,
+    IsLagrangianAnyonSet L₁ ∧ IsLagrangianAnyonSet L₂ ∧ L₁ ≠ L₂ ∧
+    (∀ S : Finset ToricAnyon, IsLagrangianAnyonSet S → S = L₁ ∨ S = L₂)
 
 /-! ## §3. The toric-code bulk has the Boundary-SymTFT correspondence -/
 
@@ -140,10 +159,19 @@ theorem toricCodeBulk_isBoundarySymTFTCorrespondence :
     IsBoundarySymTFTCorrespondence toricCodeBulk :=
   toricCodeBulk_is3DTQFT
 
-/-- The toric-code bulk has the two-Lagrangian-algebra structure
-(at the predicate-substrate marker level). -/
+/-- **C1.3 substantive discharge** (2026-05-25): the toric-code bulk
+has the two-Lagrangian-algebra structure, substantively witnessed by
+the C1.1+C1.2 content. The existential is discharged using
+`lagrangianElectricSet` and `lagrangianMagneticSet` from
+`SymTFT/ToricCodeLagrangianAnyons.lean`; the universal classification
+uses `isLagrangianAnyonSet_classification`. -/
 theorem toricCodeBulk_isToricCodeTwoLagrangianAlgebraStructure :
     IsToricCodeTwoLagrangianAlgebraStructure :=
-  toricCodeBulk_isBoundarySymTFTCorrespondence
+  ⟨toricCodeBulk_isBoundarySymTFTCorrespondence,
+   lagrangianElectricSet, lagrangianMagneticSet,
+   isLagrangianAnyonSet_electric,
+   isLagrangianAnyonSet_magnetic,
+   lagrangianElectricSet_ne_magneticSet,
+   isLagrangianAnyonSet_classification⟩
 
 end SKEFTHawking.SymTFT
