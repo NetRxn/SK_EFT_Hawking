@@ -141,27 +141,28 @@ condition. -/
 def IsConnectedAlgebra (X : C) [MonObj X] : Prop :=
   Mono (MonObj.one (X := X))
 
-/-- **`IsSeparableAlgebra X`** — predicate stating that the
-multiplication `μ : X ⊗ X ⟶ X` admits a (one-sided) section
-`s : X ⟶ X ⊗ X` with `s ≫ μ = 𝟙 X`.
+/-- **`IsSeparableAlgebra X`** — Kock 2004 §2.4 separability condition
+for a Frobenius algebra: the comultiplication `Δ : X ⟶ X ⊗ X` is a
+right-section of the multiplication `μ : X ⊗ X ⟶ X`, i.e.,
+`Δ ≫ μ = 𝟙 X`.
 
-**Phase 6r-prime W2.1 substantive ship (2026-05-25)**: strengthens the
-Phase 6r `:= True` placeholder to require explicit existence of a
-right-section of the multiplication. In the Frobenius-algebra context
-(where this predicate is intended to compose with `IsFrobeniusAlgebra`
-to form `IsEtaleAlgebra`), one-sided right-section equates to the
-standard bimodule-section separability condition (per Kock 2004,
-*Frobenius Algebras and 2D TQFTs*, §2.4). For generic non-Frobenius
-algebras, the standard bimodule-section form is strictly stronger;
-the one-sided form here is the appropriate Frobenius-context
-strengthening from `True`.
+**Phase 6r-prime W2.1 substantive ship (2026-05-25) + adversarial-review
+round-1 remediation (2026-05-25)**:
+- v1: strengthened the Phase 6r `:= True` placeholder to `∃ s : X ⟶ X ⊗ X,
+  s ≫ μ = 𝟙 X` — flagged by adversarial review as too weak (the existential
+  witness `s` had no connection to the `ComonObj` coalgebra structure;
+  this is a generic retract condition, not Kock §2.4 separability).
+- v2 (this version): tied the section explicitly to the coalgebra
+  comultiplication. Now requires `ComonObj X` as a typeclass argument
+  (consistent with the `IsEtaleAlgebra` consumer, which already has both
+  `MonObj X` and `ComonObj X`). Body is the standard Frobenius-separability
+  `comul ≫ mul = 𝟙 X` per Kock 2004 §2.4 and DMNO 2010 arXiv:1009.2117.
 
-Per Wave 3a.1 §Q2(c), separability + commutativity = étale (in the
-Frobenius context); combined with connectedness + the Frobenius-Perron-
-dimension condition, these characterize Lagrangian algebras (DMNO 2010
-arXiv:1009.2117). -/
-def IsSeparableAlgebra (X : C) [MonObj X] : Prop :=
-  ∃ s : X ⟶ X ⊗ X, s ≫ MonObj.mul (X := X) = 𝟙 X
+Per Wave 3a.1 §Q2(c), separability + commutativity = étale; combined
+with connectedness + the Frobenius-Perron-dimension condition, these
+characterize Lagrangian algebras (DMNO 2010 arXiv:1009.2117). -/
+def IsSeparableAlgebra (X : C) [MonObj X] [ComonObj X] : Prop :=
+  ComonObj.comul (X := X) ≫ MonObj.mul (X := X) = 𝟙 X
 
 /-- **`IsEtaleAlgebra X`** — étale algebra: commutative + separable.
 Combined with connectedness, this is the substrate for Lagrangian

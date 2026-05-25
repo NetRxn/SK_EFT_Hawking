@@ -62,7 +62,7 @@ Anchored on `Phase 6r Wave 1d.1 SymTFT/BulkBoundaryCorrespondence.lean::
 witt_triviality_iff_has_lagrangian_algebra`. -/
 theorem witt_triviality_iff_has_lagrangian_algebra
     (B : Type) [CategoryTheory.Category B] [CategoryTheory.MonoidalCategory B]
-    (hDMNO : IsDMNOWittTrivialIffLagrangianAlgebra B) :
+    (hDMNO : IsDMNOBiconditional B) :
     Is3DTQFTBraided B ↔ HasLagrangianAlgebra B :=
   SymTFT.witt_triviality_iff_has_lagrangian_algebra B hDMNO
 

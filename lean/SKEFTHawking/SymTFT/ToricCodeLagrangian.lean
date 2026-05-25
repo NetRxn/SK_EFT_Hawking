@@ -105,39 +105,31 @@ Per Kitaev-Kong arXiv:1104.5047, these are the two gapped boundary
 conditions of the toric code; per Bombin-Martín-Delgado arXiv:0803.5046,
 they correspond to condensing the electric vs magnetic anyon.
 
-**Phase 6r-prime C1 partial ship (2026-05-25)**: extended the Phase 6r
-`:= IsBoundarySymTFTCorrespondence toricCodeBulk` predicate-substrate
-marker with a **label-distinctness conjunct**:
+**Phase 6r-prime 2026-05-25 honest scope**: C1 substantive content
+(electric ≠ magnetic *as Lagrangian-algebra objects in the Drinfeld
+center*) requires the concrete-object construction (`MonObj` + `ComonObj`
++ `IsCommFrobeniusAlgebra` instances on `Object (Center (Discrete (ZMod
+2)))` via direct-sum structure) that Mathlib does not currently expose
+at the right typeclass level. **C1 remains substantively unshipped at
+the predicate-substrate level**; the existing `toricCode_labels_distinct`
+theorem (label-level distinctness on the 2-constructor inductive) is
+a structural fact that names the substantive distinction but does NOT
+discharge the object-level non-isomorphism claim.
 
-```
-IsBoundarySymTFTCorrespondence toricCodeBulk ∧
-  (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic)
-```
+**Adversarial-review round-1 remediation (2026-05-25)**:
+- v1: extended predicate body with `(electric ≠ magnetic)` conjunct —
+  adversarial review correctly flagged this as P5 structural-tautology
+  (the 2-constructor inductive's distinctness is `decide`-able from
+  the definition alone, adding zero substantive content over the
+  Phase 6r predicate-substrate body).
+- v2 (this version): reverted body to Phase 6r predicate-substrate
+  marker. C1 substantive ship deferred to a future sub-wave that
+  ships the concrete-object construction.
 
-**Honest scope** (per CLAUDE.md preemptive-strengthening checklist): the
-2nd conjunct is **label-LEVEL distinctness** — a notational fact about
-the chosen `ToricCodeLagrangianLabel` inductive (2 constructors are
-definitionally distinct, discharged by `decide`). It is NOT the full
-Kitaev-Kong/BMD statement that the underlying electric/magnetic
-Lagrangian algebras are non-isomorphic *as Frobenius-algebra objects in
-the Drinfeld center*. The label conjunct names the substantive
-distinction in the math; the substantive proof of object-level
-non-isomorphism requires the concrete-object construction (deferred).
-
-**Phase 6r-prime 2026-05-25 honest revert**: a prior C1 ship added a 3rd
-conjunct `∀ l, l = electric ∨ l = magnetic` — structurally trivial
-because the inductive only has those two constructors (no real
-Kitaev-Kong classification content). Reverted.
-
-The substantive **concrete-object** construction (the explicit
-Frobenius-algebra structure on `𝟙 ⊕ e` and `𝟙 ⊕ m` as
-`Object (Center (Discrete (ZMod 2)))` with `MonObj` + `ComonObj` +
-`IsCommFrobeniusAlgebra` instances) requires direct-sum structure on
-the Drinfeld center that Mathlib does not currently expose at the right
-typeclass level — separate state-of-the-art sub-wave ship. -/
+The substantive concrete-object construction is a Mathlib upstream-PR-
+quality / Phase 6r-prime' / Phase 7+ target. -/
 def IsToricCodeTwoLagrangianAlgebraStructure : Prop :=
-  IsBoundarySymTFTCorrespondence toricCodeBulk ∧
-  (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic)
+  IsBoundarySymTFTCorrespondence toricCodeBulk
 
 /-! ## §3. The toric-code bulk has the Boundary-SymTFT correspondence -/
 
@@ -149,9 +141,9 @@ theorem toricCodeBulk_isBoundarySymTFTCorrespondence :
   toricCodeBulk_is3DTQFT
 
 /-- The toric-code bulk has the two-Lagrangian-algebra structure
-(at the label-distinctness level). -/
+(at the predicate-substrate marker level). -/
 theorem toricCodeBulk_isToricCodeTwoLagrangianAlgebraStructure :
     IsToricCodeTwoLagrangianAlgebraStructure :=
-  ⟨toricCodeBulk_isBoundarySymTFTCorrespondence, toricCode_labels_distinct⟩
+  toricCodeBulk_isBoundarySymTFTCorrespondence
 
 end SKEFTHawking.SymTFT

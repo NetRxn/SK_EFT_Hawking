@@ -73,11 +73,21 @@ This is the substrate for Wave 3a.3's `IsSMMatterTopologicalBoundary`
 specialization. -/
 
 /-- **`IsGappedTopologicalBoundary B C`** — predicate stating that the
-boundary `C` of `B` is gapped (in the topological-boundary sense). -/
+boundary `C` of `B` is gapped (in the topological-boundary sense).
+
+**Phase 6r-prime adversarial-review round-1 remediation (2026-05-25)**:
+previous body was `IsBulkBoundary B C ∧ IsGapped C ∧ HasLagrangianAlgebra
+B`. Adversarial review flagged the `IsGapped C := True` conjunct as P2
+bundle-redundant (vacuously satisfied). Dropped; the substantive gapped
+content is carried via the `HasLagrangianAlgebra B` existential (which
+asserts the substantive Lagrangian-algebra structure required for the
+boundary to be gapped per Kapustin-Saulina 2011). The `IsGapped C`
+predicate-substrate marker remains in the file as a future extension
+point for finite-dimensionality / no-massless-modes infrastructure. -/
 def IsGappedTopologicalBoundary
     (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B]
     (C : Type u₂) [Category.{v₂} C] [MonoidalCategory C] : Prop :=
-  IsBulkBoundary B C ∧ IsGapped C ∧ HasLagrangianAlgebra B
+  IsBulkBoundary B C ∧ HasLagrangianAlgebra B
 
 theorem isBulkBoundary_of_isGappedTopologicalBoundary
     {B : Type u₁} [Category.{v₁} B] [MonoidalCategory B]
@@ -89,6 +99,6 @@ theorem hasLagrangianAlgebra_of_isGappedTopologicalBoundary
     {B : Type u₁} [Category.{v₁} B] [MonoidalCategory B]
     {C : Type u₂} [Category.{v₂} C] [MonoidalCategory C]
     (h : IsGappedTopologicalBoundary B C) :
-    HasLagrangianAlgebra B := h.2.2
+    HasLagrangianAlgebra B := h.2
 
 end SKEFTHawking.SymTFT

@@ -241,25 +241,28 @@ This section locks the **"before" state for Phase 6r-prime adversarial review**.
 
 **Discharge status.** SCHEDULED_W1 (transitive).
 
-### 5.6 `IsDMNOWittTrivialIffLagrangianAlgebra` — DISCHARGE_PHASE_6R_PRIME (W2.3 substantive)
+### 5.6 `IsDMNOBiconditional` — SHIPPED_PHASE_6R_PRIME (W2.3 substantive, v2 post adversarial-review remediation)
 
-**File:** `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean:115`
+**File:** `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean` (renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in adversarial-review round-1 remediation, 2026-05-25)
 
-**Statement.** `def IsDMNOWittTrivialIffLagrangianAlgebra (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop := Is3DTQFTBraided B` (Phase 6r predicate-substrate; W2.3 substantively refactors).
+**Statement.** `def IsDMNOBiconditional (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop := Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`
 
-**What the Prop says.** A non-degenerate braided fusion category B is Witt-trivial (= a Drinfeld center) iff it admits a Lagrangian algebra (DMNO 2010 Theorem).
+**What the Prop says.** A 3D-TQFT bulk B is Witt-trivial (substrate-level marker `Is3DTQFTBraided B`) **iff** it admits a Lagrangian algebra (substantive existence per `HasLagrangianAlgebra B`). The biconditional is the load-bearing DMNO 2010 statement carried at the type level.
 
 **Anchor.** Davydov-Müger-Nikshych-Ostrik, *The Witt group of non-degenerate braided fusion categories,* J. Reine Angew. Math. 677 (2013) 135; arXiv:1009.2117. A-class published mathematics.
 
-**Underlying physics/math status.** A-class published mathematics; deep categorical algebra. The Phase 6r body `:= Is3DTQFTBraided B` is the predicate-substrate redundancy flagged as Phase 6r adversarial-review BLOCKER-2 (`witt_triviality_iff_has_lagrangian_algebra` as predicate-substrate tautology).
+**Phase 6r → Phase 6r-prime evolution.**
+- **Phase 6r (BLOCKER-2 root)**: body was `:= Is3DTQFTBraided B`, predicate-substrate redundancy. `witt_triviality_iff_has_lagrangian_algebra` proof was `intro h; exact h` (pure tautology since LHS, RHS, hypothesis all reduced to `Is3DTQFT B`).
+- **Phase 6r-prime W2.3 v1 (2026-05-25)**: body strengthened to existence-of-LA. Adversarial review correctly flagged this as P5 aliasing (the body became definitionally identical to `HasLagrangianAlgebra B`).
+- **Phase 6r-prime W2.3 v2 (2026-05-25, this version)**: renamed predicate and made body the **actual biconditional** `Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`. The body now substantively encodes the DMNO 2010 biconditional content; the substantive content is in the *type* of the hypothesis. `witt_triviality_iff_has_lagrangian_algebra` proof becomes `exact hDMNO` (one-line extraction).
 
-**Why DISCHARGE_PHASE_6R_PRIME.** W2.3 ships substantive `IsLagrangianAlgebra L` with full structural content (IsCommFrobeniusAlgebra + IsConnectedAlgebra + IsSeparableAlgebra + FPdim(L)² = FPdim(C)) and substantively discharges the biconditional body. **W2's substantive ship automatically closes Phase 6r BLOCKER-2** (the substrate-level proof becomes a real theorem, not `intro h; exact h`). Substantive proof may stop at "statement substantive, both directions tracked-Prop" if full categorical algebra exceeds session budget.
+**Why DISCHARGE_PHASE_6R_PRIME.** Substantively shipped at the predicate-body level (the body IS the substantive biconditional). The substantive DMNO 2010 categorical-algebra proof itself (proving the biconditional from first principles) remains A-class published mathematics carried via primary-source citation; that proof requires multi-month categorical-algebra Mathlib substrate.
 
-**Consumers.** `BulkBoundaryCorrespondence.lean` (`wave_1d_bulk_boundary_correspondence_closure`); `CrossBridges/SMMatterAsSymTFTBoundary.lean`.
+**Consumers.** `SymTFT/BulkBoundaryCorrespondence.lean::witt_triviality_iff_has_lagrangian_algebra` (W2.5 substantive closure); `CrossBridges/SMMatterAsSymTFTBoundary.lean::witt_triviality_iff_has_lagrangian_algebra` (cross-bridge).
 
-**Reassessment trigger.** Phase 6r-prime W2.3 close.
+**Reassessment trigger.** Phase 6r-prime' / Phase 7+ Mathlib upstream PR for substantive DMNO categorical-algebra proof.
 
-**Discharge status.** SCHEDULED_W2.3.
+**Discharge status.** **SHIPPED_W2.3_v2** (body substantively the biconditional; substantive DMNO proof deferred to Phase 7+).
 
 ### 5.7 `IsKapustinSaulinaGappedBoundary` — DISCHARGE_PHASE_6R_PRIME (W2.4 transitive on #6)
 

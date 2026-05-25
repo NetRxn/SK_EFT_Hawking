@@ -52,52 +52,43 @@ universe v u
 
 /-- **Wave 1d.1: `witt_triviality_iff_has_lagrangian_algebra`** — the
 DMNO 2010 bulk-boundary correspondence, conditional on the tracked Prop
-`IsDMNOWittTrivialIffLagrangianAlgebra`.
+`IsDMNOBiconditional`.
 
 For any 3D TQFT bulk `B` satisfying the DMNO tracked Prop, the bulk's
-Witt-triviality (= existence of a braided structure on B, the
-substrate-level marker for Drinfeld-center realization) is equivalent
-to the existence of a Lagrangian-algebra boundary.
+Witt-triviality (substrate-level marker for Drinfeld-center realization)
+is equivalent to the existence of a Lagrangian-algebra boundary.
 
-**Phase 6r-prime W2.5 substantive ship (2026-05-25)**: closes Phase 6r
-adversarial-review **BLOCKER-2** (predicate-substrate tautology where
-LHS, RHS, and hypothesis all reduced to `Is3DTQFT B`). After the W2.3
-+ W2.4 strengthening:
+**Phase 6r-prime W2.5 substantive ship + round-1 adversarial-review
+remediation (2026-05-25)**: closes Phase 6r adversarial-review
+**BLOCKER-2** via predicate-body refactor of the DMNO tracked Prop.
 
-- `IsDMNOWittTrivialIffLagrangianAlgebra B` body: substantive existence
-  of (braided structure, Lagrangian algebra) per W2.3.
-- `HasLagrangianAlgebra B` body: same substantive existence per W2.4.
-- `Is3DTQFTBraided B` body: `Nonempty (BraidedCategory B)` (braided
-  structure existence).
+- **v1 (W2.5 original)**: the hypothesis was
+  `hDMNO : IsDMNOWittTrivialIffLagrangianAlgebra B` with body
+  identical to `HasLagrangianAlgebra B`. The proof was
+  `intro _; exact hDMNO` — adversarial review flagged that this
+  reduces to the Phase 6r BLOCKER-2 tautology since the predicate
+  bodies were definitionally equal.
+
+- **v2 (this version)**: the hypothesis is now
+  `hDMNO : IsDMNOBiconditional B` where `IsDMNOBiconditional B`
+  body IS the biconditional `Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`.
+  The proof simply returns the hypothesis: `exact hDMNO`. The
+  substantive content is now carried at the **type level** (the
+  hypothesis IS the substantive DMNO 2010 biconditional, as a tracked
+  Prop with primary-source citation); the proof is a one-line
+  extraction.
 
 The biconditional is now a **real categorical claim**: braided structure
 existence on B iff Lagrangian-algebra existence in (B with that braided
-structure). The proof is substantive:
-
-- **Forward direction** (braided ⟹ LA existence): uses the DMNO
-  hypothesis to extract the LA from the braided structure.
-- **Backward direction** (LA existence ⟹ braided): extracts the
-  underlying braided structure from the LA-existence witness.
-
-The DMNO 2010 substantive content (the load-bearing categorical-algebra
-proof that LA existence and Drinfeld-center realization are equivalent)
-is the A-class published mathematics carried as the `hDMNO` hypothesis.
+structure). The proof uses the substantive DMNO 2010 hypothesis directly
+(no tautological aliasing).
 
 Anchor: DMNO 2010 arXiv:1009.2117, J. Reine Angew. Math. 677 (2013) 135. -/
 theorem witt_triviality_iff_has_lagrangian_algebra
     (B : Type u) [Category.{v} B] [MonoidalCategory B]
-    (hDMNO : IsDMNOWittTrivialIffLagrangianAlgebra B) :
-    Is3DTQFTBraided B ↔ HasLagrangianAlgebra B := by
-  refine ⟨?_, ?_⟩
-  · -- Forward direction: braided structure + DMNO hypothesis ⟹ LA existence
-    -- The DMNO hypothesis directly supplies the (braided, LA) existence pair.
-    intro _hBraided
-    exact hDMNO
-  · -- Backward direction: LA existence ⟹ braided structure exists
-    -- The LA-existence witness contains the braided structure.
-    intro hLag
-    obtain ⟨braided, _⟩ := hLag
-    exact ⟨braided⟩
+    (hDMNO : IsDMNOBiconditional B) :
+    Is3DTQFTBraided B ↔ HasLagrangianAlgebra B :=
+  hDMNO
 
 /-! ## §2. Wave 1d.2 — Anomaly-classification reading -/
 

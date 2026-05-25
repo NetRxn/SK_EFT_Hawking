@@ -108,7 +108,7 @@ noncomputable def pontryaginDualZMod16EquivZMod16 :
     AddChar (ZMod 16) ℂ ≃+ ZMod 16 :=
   (AddChar.zmodAddEquiv (n := 16)).symm
 
-/-! ## §2. The substantive Anderson-dual formula at the Pin⁺ case
+/-! ## §2. The Anderson-dual formula at the Pin⁺ case — honest scope
 
 Per Freed-Hopkins arXiv:1604.06527, the Anderson-dual formula
 `TP_{n+1}(G) ≅ Hom(Ω_n(G), ℝ/ℤ) ⊕ Ext(Ω_{n+1}(G), ℤ)` for finite
@@ -117,56 +117,33 @@ abelian Ω_n. For Pin⁺ at n=4 (computing TP_5(Pin⁺)):
 - `Ω_5^{Pin⁺}(pt) = 0` ⇒ Ext term vanishes.
 - `Ω_4^{Pin⁺}(pt) ≅ ZMod 16` (Kirby-Taylor 1990, tracked Prop).
 - ⇒ `TP_5(Pin⁺) ≅ Hom(ZMod 16, ℝ/ℤ) ≅ ZMod 16` (Pontryagin duality —
-  shipped substantively in §1).
+  the substantive ingredient is shipped in §1 via
+  `pontryaginDualZMod16EquivZMod16`).
 
 The `Hom(_, ℝ/ℤ)` part of the Anderson-dual formula corresponds, via
 the exponential map `exp : ℝ/ℤ ↪ ℂˣ`, to `AddChar (_) ℂ` for finite
-groups. So this module's `AddChar (ZMod 16) ℂ ≃+ ZMod 16` is the
-Pontryagin-dual content of the Anderson-dual formula at the Pin⁺ case. -/
-
-/-- **`IsPontryaginDualAndersonChain`** — the substantive Pontryagin-dual
+groups. So §1's `AddChar (ZMod 16) ℂ ≃+ ZMod 16` is the Pontryagin-dual
 content of the Anderson-dual formula at the Pin⁺ case.
 
-This predicate captures the substantive Pontryagin-dual ingredient:
-`AddChar (ZMod 16) ℂ ≃+ ZMod 16`. It is shipped UNCONDITIONALLY via
-`pontryaginDualZMod16EquivZMod16`, requiring no Phase 6r tracked Prop. -/
-def IsPontryaginDualAndersonChain : Prop :=
-  Nonempty (AddChar (ZMod 16) ℂ ≃+ ZMod 16)
+**Honest scope note** (per adversarial-review round-1 remediation,
+2026-05-25): this module deliberately ships ONLY the substantive
+`pontryaginDualZMod16EquivZMod16` `noncomputable def`. A prior
+revision wrapped this in `IsPontryaginDualAndersonChain : Prop :=
+Nonempty (AddChar (ZMod 16) ℂ ≃+ ZMod 16)` with an immediate
+discharge theorem and a closure wrapper — adversarial review
+correctly identified this as defining-the-conclusion layering
+(the predicate was designed around the explicit witness already in
+hand, adding no verifiable content over just having the `def`).
+Removed; `pontryaginDualZMod16EquivZMod16` is the load-bearing
+substantive ship.
 
-theorem isPontryaginDualAndersonChain_holds_unconditionally :
-    IsPontryaginDualAndersonChain :=
-  ⟨pontryaginDualZMod16EquivZMod16⟩
-
-/-! ## §3. Honest scope note — Phase 6r `IsAndersonDualPinPlus` relationship
-
-The Phase 6r tracked Prop `IsAndersonDualPinPlus := Nonempty (TP5PinPlus
-≃+ ZMod 16)` with `TP5PinPlus := ZMod 16` is trivially discharged at the
-predicate-substrate level via `AddEquiv.refl _`. The substantive
-Pontryagin-dual content shipped here in §1+§2 does NOT add to that
-predicate's discharge — the predicate is already trivially true by defeq.
-
-**What this module DOES add substantively**: a separate, non-trivial
-Pontryagin-dual iso `AddChar (ZMod 16) ℂ ≃+ ZMod 16` (not reflexivity)
-that captures the substantive Pontryagin-dual content of the
-Anderson-dual formula. Downstream consumers wanting the substantive
-Anderson-dual content should use `IsPontryaginDualAndersonChain` /
-`pontryaginDualZMod16EquivZMod16` directly, NOT the Phase 6r predicate.
-
-A future sub-wave can ship a STRENGTHENED Anderson-dual predicate
-(e.g., `IsAndersonDualPinPlusViaCharGroup := IsPontryaginDualAndersonChain
-∧ <KT-tracked-iso>`) that captures the substantive Anderson-dual chain
-at the predicate level. That ship would refactor downstream consumers
-to use the strengthened predicate; it's deliberately scoped out of this
-sub-wave to keep the substantive content focused on the Pontryagin-dual
-piece.
-
-## §4. Closure: substantive Pontryagin-dual ship -/
-
-/-- **Sub-wave closure theorem**: the substantive Pontryagin-dual content
-of the Anderson-dual formula for Pin⁺ is shipped via Mathlib's
-character-theory substrate, unconditionally and non-tautologically. -/
-theorem pontryagin_dual_anderson_chain_closure :
-    IsPontryaginDualAndersonChain :=
-  isPontryaginDualAndersonChain_holds_unconditionally
+The Phase 6r tracked Prop `IsAndersonDualPinPlus := Nonempty
+(TP5PinPlus ≃+ ZMod 16)` with `TP5PinPlus := ZMod 16` is trivially
+discharged at the predicate-substrate level via `AddEquiv.refl _`. The
+substantive Pontryagin-dual `def` shipped here does NOT add to that
+predicate's discharge. A future sub-wave can ship a STRENGTHENED
+Anderson-dual predicate that incorporates the Pontryagin-dual content
+substantively at the predicate level (this would refactor downstream
+consumers; deliberately deferred). -/
 
 end SKEFTHawking.SymTFT.PontryaginDualPinPlus
