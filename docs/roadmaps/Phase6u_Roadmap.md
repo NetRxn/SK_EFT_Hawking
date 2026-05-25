@@ -51,7 +51,7 @@ Six primary substrate waves, plus four alphabet-instantiation tracks. The substr
 | **Wave 4b** | Generic discharge of `SkApproxCSuperQuadraticBound_generic K_compose gs baseFinder` — alphabet-agnostic super-quadratic bound (~800-1000 LoC port of Phase 6t Path A Option C) | 🟡 IN-PROGRESS (Wave 4a Fibonacci bridge unconditional; substantive generic discharge tracked) | D4 §9.7 |
 | **Wave 5** | Generic length bound at `skLevel_polylog ε` — alphabet-independent re-export of existing `skLength_at_skLevel_polylog_le` | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
 | **Wave 6** | Generic bundled-strict headline `solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight` + Fibonacci unconditional validation | ✅ SHIPPED 2026-05-25 | D4 §9.7 |
-| **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999): T-S.1 generating set + T-S.2 closure-density witness + T-S.3 ε₀-net + T-S.4 calibration + T-S.5 headline | ⏳ NOT STARTED (depends on Wave 4b) | D4 §9.8 |
+| **Track T-S (Tier S)** | Instantiate at Clifford+T (`G = {H, T, S}` ⊂ SU(2), dense closure per Boykin et al. 1999): T-S.1 generating set ✅ + T-S.2 closure-density witness 🟡 + T-S.3 ε₀-net + T-S.4 calibration + T-S.5 headline | 🟡 IN-PROGRESS (T-S.1 SHIPPED 2026-05-25; T-S.2 substantive multi-session work) | D4 §9.8 |
 | **Track T-A1 (Tier A)** | Instantiate at trapped-ion native gate set (Mølmer-Sørensen MS(θ) discretized at some grid + arbitrary 1Q rotations) | ⏳ NOT STARTED | (was "likely Phase 6v"; **Phase 6v scope finalized 2026-05-25 does NOT include this track** — re-slot to Phase 6x or later) |
 | **Track T-A2 (Tier A)** | Instantiate at Clifford+CCZ for 3-qubit primitives (target group SU(8) not SU(2); substantial substrate extension) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
 | **Track T-B (Tier B)** | Instantiate at Read-Rezayi SU(2)_k for k ∈ {5, 7} (next universal anyons beyond Fibonacci) | ⏳ NOT STARTED | **RE-SLOT NEEDED 2026-05-25:** Phase 6w now claimed for Tindall/Sels + Aalto material per strategy synthesis D-8. Re-slot to Phase 6x or later. |
@@ -511,13 +511,63 @@ axioms, kernel-only):**
   * **CP1 + CP2 adversarial reviews** + **strengthening pass** after
     Wave 4b + Track T-S land.
 
-**Build state (end of Session 1, after Waves 1-6 ship):**
+**Build state (end of Session 1, after Waves 1-6 + T-S.1 ship):**
 
-  - `lake build SKEFTHawking.FKLW.GenericSolovayKitaevQuantitative` clean
-    (8285 jobs).
+  - `lake build SKEFTHawking.FKLW.GenericSolovayKitaevQuantitative
+    SKEFTHawking.FKLW.CliffordTGeneratingSet` clean (8285 jobs).
   - Zero new project-local axioms.
   - Zero sorries introduced.
   - Standard-kernel-only headlines (`{propext, Classical.choice, Quot.sound}`).
+
+**Strengthening pass on Waves 1-6 (mid-Session 1):**
+
+  - Wave 5: dropped the dummy `_gs : GeneratingSet` parameter on
+    `skLength_at_skLevel_polylog_le_generic` (P5 anti-pattern: dummy
+    cosmetic parameter that doesn't affect the conclusion). The wrapped
+    theorem retains its alphabet-agnostic content as a direct alias of
+    `SolovayKitaevLengthBound.skLength_at_skLevel_polylog_le`. Wave 6's
+    headline correspondingly drops the `gs` argument in its `skLength`
+    call. All five preemptive-strengthening checks (bundle redundancy P2,
+    quantitative connection, cross-module bridge integrity P6,
+    trivial-discharge P3/P4/P5, defining-the-conclusion) audited on
+    Waves 1-6; no other targets identified.
+
+**Track T-S.1 ship (mid-Session 1):**
+
+  - `lean/SKEFTHawking/FKLW/CliffordTGeneratingSet.lean` (~340 LoC).
+    Defines `H_SU_mat`, `T_SU_mat` (SU(2)-corrected Hadamard and T-gate),
+    SU(2) membership proofs (`H_SU_mat_mem_specialUnitaryGroup`,
+    `T_SU_mat_mem_specialUnitaryGroup` via factored algebraic helpers
+    `sqrt_two_cast_sq` + `cexp_imag_mul_conj_eq_one`), bundled
+    `H_SU`/`T_SU`, FreeGroup-based representation `ρ_CliffT`,
+    `cliffordTGeneratingSet : GeneratingSet`, derived `S_SU := T_SU²`,
+    and generator-membership lemmas `H_SU_mem_H_of_G_cliffordT`,
+    `T_SU_mem_H_of_G_cliffordT`, `S_SU_mem_H_of_G_cliffordT`.
+
+**Outstanding work for Track T-S.2 (multi-session):**
+
+  - **T-S.2 substantive closure-density witness for Clifford+T**. The
+    BMPRV 1999 closure-density of `⟨H, T⟩` in SU(2) requires either
+    (a) a Niven-style irrationality argument for the SU(2) trace
+    `2·cos(θ) = √2 sin(π/8)` (showing θ/π ∉ ℚ to get dense-orbit-implies-
+    accumulation-at-1), or (b) an explicit construction of two ℝ-LI
+    1-parameter subgroup directions in 𝔰𝔲(2) inside `H_of_G
+    cliffordTGeneratingSet`. The substrate for (b) is in place via
+    Phase 5 Step 13 (`OneParamSubgroupFromAccPt_SU2_unconditional`,
+    `vonNeumann_assemble_explicit_X_unconditional`,
+    `ts_Ad_LI_of_not_commute_anticommute`); the accumulation-point
+    extraction at 1 is the load-bearing missing piece, requiring
+    proof that some element of `⟨H_SU, T_SU⟩` has eigenvalue
+    `exp(iθ)` with θ/π irrational.
+
+  - Alternative pivot per Phase 6u roadmap "Pivot rule" (Pipeline
+    Invariant #15): ship T-S.2 conditional on a tracked Prop
+    `CliffordTAccumulationAtOne` and request user sign-off. This
+    propagates the conditionality through Track T-S.4 and T-S.5
+    transparently in the type signatures.
+
+  - Current Session 1 close posture: defer T-S.2 substantive to Session 2,
+    document the structural argument and substrate readiness here.
 
 **Publication-strategy impact (Session 1):**
 

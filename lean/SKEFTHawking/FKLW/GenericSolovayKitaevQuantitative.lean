@@ -97,7 +97,7 @@ theorem solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_ti
         (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε ∧
     skLength (skLevel_polylog ε) ≤
       skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent := by
-  refine ⟨?_, skLength_at_skLevel_polylog_le_generic gs ε hε_pos hε_le⟩
+  refine ⟨?_, skLength_at_skLevel_polylog_le_generic ε hε_pos hε_le⟩
   -- Apply the tracked bound at level skLevel_polylog ε.
   have h_seq_bound :=
     h_calibration (skLevel_polylog ε) U

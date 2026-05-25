@@ -58,27 +58,29 @@ open SKEFTHawking.FKLW
 open SKEFTHawking.FKLW.SolovayKitaevLengthBound
 open SKEFTHawking.FKLW.SolovayKitaevRecursion
 
-/-! ## 1. Generic length bound (re-export with `GeneratingSet`-aware naming)
+/-! ## 1. Documentation: the existing length bound IS the generic length bound
 
-For any `GeneratingSet gs` and any base finder, the level-n word
-length `skLength n` (the conservative upper bound on word size in the
-recursion) is bounded above by `skLengthConst · (log(1/ε))^skLengthExponent`
-when evaluated at `n = skLevel_polylog ε`, for any ε in the
-calibration regime `(0, ε₀]`. -/
+The Phase 6t `skLength_at_skLevel_polylog_le` is already alphabet-agnostic
+— `skLength` counts the words produced by the SK recursion regardless of
+the underlying alphabet (it depends only on the 5-fold branching + level-0
+base cost + per-level decomp cost, which are universally bounded by
+`skLengthBaseCase` and `skBalancedDecompCost`). No re-export is needed;
+downstream consumers (Wave 6 generic headline, Track instantiations)
+call `skLength_at_skLevel_polylog_le` directly.
 
-/-- **Generic length bound at `skLevel_polylog ε`** (alphabet-independent).
+This module exists as a **DOCUMENTATION ANCHOR** for the Phase 6u Wave 5
+deliverable: it codifies the observation that Phase 6t's length bound is
+the generic length bound (no rework needed), and serves as the
+strengthening-pass discharge target for Wave 6's `skLength` reference. -/
 
-The existing `SolovayKitaevLengthBound.skLength_at_skLevel_polylog_le`
-is alphabet-agnostic: `skLength` counts the words produced by the SK
-recursion regardless of the underlying alphabet (it depends only on
-the 5-fold branching + level-0 base cost + per-level decomp cost,
-which are universally bounded by `skLengthBaseCase` and
-`skBalancedDecompCost`).
+/-- **Wave 5 anchor**: explicit alias of `skLength_at_skLevel_polylog_le`
+under the Phase 6u Generic naming, with no superfluous `gs` parameter
+(strengthening pass §P5: dummy-parameter elimination).
 
-This re-export simply applies the existing bound at any
-`GeneratingSet`. -/
+The Phase 6t bound IS the generic bound; this alias makes the
+Wave-5-as-deliverable explicit without adding a dummy argument. -/
 theorem skLength_at_skLevel_polylog_le_generic
-    (_gs : GeneratingSet) (ε : ℝ) (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) :
+    (ε : ℝ) (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) :
     skLength (skLevel_polylog ε) ≤
       skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent :=
   skLength_at_skLevel_polylog_le ε hε_pos hε_le
