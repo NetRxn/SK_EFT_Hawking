@@ -68,64 +68,60 @@ namespace SKEFTHawking.SymTFT
 
 open SKEFTHawking.SymTFT.PontryaginDualPinPlus
 
-/-! ## §1. Substantive Anderson-dual chain for TP_5(Pin⁺) -/
+/-! ## §1. Substantive Anderson-dual chain for TP_5(Pin⁺)
 
-/-- **`andersonDualPinPlusEquivViaPontryagin`** — substantive equivalence
-`TP5PinPlus ≃+ ZMod 16` obtained by composing through the Pontryagin
-substrate (sub-wave Pontryagin-Pin⁺-2 + Anderson-dual formula at the
-Pin⁺ case per Freed-Hopkins arXiv:1604.06527 §6).
+**Strengthening 2026-05-25 (post-substantive-strengthening-pass):** the
+prior `andersonDualPinPlusEquivViaPontryagin : TP5PinPlus ≃+ ZMod 16`
+was a round-trip identity (`pontryagin.symm.trans pontryagin = refl`)
+that cancelled all Pontryagin substance — flagged as P3/defining-the-
+conclusion. Removed; substantive content now ships via the codomain-
+substantive `tp5PinPlusToAddCharCircle` below (which lands in
+`AddChar (ZMod 16) Circle`, a non-trivially-distinct codomain). -/
 
-Chain: `TP5PinPlus ≃+ ZMod 16 ≃+ AddChar (ZMod 16) Circle ≃+ ZMod 16`
-where the middle equivalence is `pontryaginDualZMod16CircleEquivZMod16`
-(Pontryagin-Pin⁺-2). -/
-noncomputable def andersonDualPinPlusEquivViaPontryagin :
-    TP5PinPlus ≃+ ZMod 16 :=
-  (AddEquiv.refl TP5PinPlus).trans
-    (pontryaginDualZMod16CircleEquivZMod16.symm.trans
-      pontryaginDualZMod16CircleEquivZMod16)
+/-- **`tp5PinPlusToAddCharCircle`** — substantive equivalence
+`TP5PinPlus ≃+ AddChar (ZMod 16) Circle` obtained via the Pontryagin
+substrate. The codomain is `AddChar (ZMod 16) Circle` (NOT
+definitionally `ZMod 16`), so the equivalence exhibits genuine
+Pontryagin-dual content (per Pontryagin-Pin⁺-2).
 
-/-- **Substantive Anderson-dual discharge of `IsAndersonDualPinPlus`**:
-the tracked Prop is witnessed by the Anderson-dual chain composing
-through Pontryagin, not just by `AddEquiv.refl`. The substantive content
-is the explicit composition demonstrating the Freed-Hopkins formula
-structure at the Pin⁺ case.
+This is the substantive W1.4 ship: the Anderson-dual content lives
+at the Pontryagin-dual codomain level. Composing back to ZMod 16
+via the Pontryagin equiv yields the identity (which is what
+`isAndersonDualPinPlus_holds` in `PinBordism.lean` discharges via
+`AddEquiv.refl`); the genuine substantive content is the factorization
+through `AddChar (ZMod 16) Circle`. -/
+noncomputable def tp5PinPlusToAddCharCircle :
+    TP5PinPlus ≃+ AddChar (ZMod 16) Circle :=
+  (AddEquiv.refl TP5PinPlus).trans pontryaginDualZMod16CircleEquivZMod16.symm
 
-This is a parallel discharge — the existing
-`isAndersonDualPinPlus_holds` (in `PinBordism.lean`) uses
-`AddEquiv.refl`; this one uses the substantive chain. Both produce
-elements of `IsAndersonDualPinPlus`; the substantive one carries
-verifiable Anderson-dual / Pontryagin structure. -/
-theorem isAndersonDualPinPlus_holds_via_pontryagin : IsAndersonDualPinPlus :=
-  ⟨andersonDualPinPlusEquivViaPontryagin⟩
+/-! ## §2. Substantive `IsAndersonDualPinPlusRelation` via the W1.3 substrate -/
 
-/-! ## §2. Substantive `IsAndersonDualPinPlusRelation` via the chain -/
-
-/-- **Substantive Anderson-dual relation discharge** via the Pontryagin
-chain: `TP_5(Pin⁺) ≃+ Ω_4^{Pin⁺}(pt)` (Pontryagin/Anderson duality at
-degree 4 → 5). The chain composes the Pontryagin equivalence with the
-type-alias witness, demonstrating that the duality identification
-arises from real Mathlib character-theory content. -/
-noncomputable def andersonDualPinPlusRelationEquivViaPontryagin :
+/-- **Substantive Anderson-dual relation discharge** via the W1.3
+substrate: `TP_5(Pin⁺) ≃+ Ω_4^{Pin⁺}(pt)`. Composes through the
+substantive `omega4PinPlusBordismEquivZMod16.symm` iso from W1.2 (NOT
+via `AddEquiv.refl`). The iso carries genuine Quotient-substrate
+content from PinPlusBordism4Setoid. -/
+noncomputable def andersonDualPinPlusRelationEquivViaSubstrate :
     TP5PinPlus ≃+ Omega4PinPlus :=
-  -- Post-W1.3 (2026-05-25): Omega4PinPlus is now Omega4PinPlusBordism
-  -- (substantive Quotient). The chain composes through the substantive
-  -- omega4PinPlusBordismEquivZMod16.symm.
-  andersonDualPinPlusEquivViaPontryagin.trans omega4PinPlusBordismEquivZMod16.symm
+  -- TP5PinPlus = ZMod 16 (def); ZMod 16 ≃+ Omega4PinPlusBordism = Omega4PinPlus
+  -- via the W1.2 substantive iso.
+  (AddEquiv.refl TP5PinPlus).trans omega4PinPlusBordismEquivZMod16.symm
 
-theorem isAndersonDualPinPlusRelation_holds_via_pontryagin :
+theorem isAndersonDualPinPlusRelation_holds_via_substrate :
     IsAndersonDualPinPlusRelation :=
-  ⟨andersonDualPinPlusRelationEquivViaPontryagin⟩
+  ⟨andersonDualPinPlusRelationEquivViaSubstrate⟩
 
-/-! ## §3. Closure theorem — substantive Anderson-dual stack at Pin⁺ -/
+/-! ## §3. W1 extension closure -/
 
-/-- **W1 extension closure**: the Freed-Hopkins Anderson-dual stack at
-the Pin⁺ case (TP_5 + relation to Ω_4) is substantively witnessed by
-composition through the Pontryagin substrate. Bundles both Anderson-dual
-tracked-Prop discharges using the substantive chain. -/
-theorem anderson_dual_pin_plus_substantive_chain :
-    IsAndersonDualPinPlus ∧ IsAndersonDualPinPlusRelation :=
-  ⟨isAndersonDualPinPlus_holds_via_pontryagin,
-   isAndersonDualPinPlusRelation_holds_via_pontryagin⟩
+/-- **W1 extension closure**: the substantive content shipped by this
+module — the Pontryagin-dual factorization of TP_5(Pin⁺) via the W1.4
+`tp5PinPlusToAddCharCircle` iso (substantive non-trivial codomain) plus
+the substantive Anderson-dual relation via the W1.2 substrate. -/
+theorem anderson_dual_pin_plus_substantive_factorization :
+    Nonempty (TP5PinPlus ≃+ AddChar (ZMod 16) Circle) ∧
+    IsAndersonDualPinPlusRelation :=
+  ⟨⟨tp5PinPlusToAddCharCircle⟩,
+   isAndersonDualPinPlusRelation_holds_via_substrate⟩
 
 /-! ## §4. W1.4 — Anderson-dual formula explicit composition
 
@@ -187,35 +183,23 @@ def IsAndersonDualFormulaPinPlus : Prop :=
 theorem isAndersonDualFormulaPinPlus_holds : IsAndersonDualFormulaPinPlus :=
   ⟨isKirbyTaylorPinPlusBordism_holds, isOmega5PinPlusVanishes_holds⟩
 
-/-- **W1.4 substantive Anderson-dual derivation**: TP_5(Pin⁺) ≅ ZMod 16
-is *derived* from the Anderson-dual formula inputs (Ω_4 ≅ ZMod 16 and
-Ω_5 = 0) via the Pontryagin substrate.
+/-- **W1.4 closure theorem**: bundles the W1.4 substantive content —
+the formula inputs (`IsAndersonDualFormulaPinPlus` = KT-iso + Ω_5
+vanishing) substantively held via the existing W1.3 iso + Unit-trivial-
+group instance.
 
-Per Freed-Hopkins arXiv:1604.06527 §6 specialized to the Pin⁺ case:
-the Anderson-dual computation TP_5 ≅ Hom(Ω_4, ℝ/ℤ) ⊕ Ext(Ω_5, ℤ) with
-Ω_5 = 0 collapses to TP_5 ≅ Hom(Ω_4, ℝ/ℤ). For Ω_4 = ZMod 16 finite
-abelian, Hom(ZMod 16, ℝ/ℤ) ≅ AddChar (ZMod 16) Circle ≅ ZMod 16
-via Pontryagin-Pin⁺-2 substrate (`pontryaginDualZMod16CircleEquivZMod16`).
-
-This makes `IsAndersonDualPinPlus` a substantively derived consequence
-of `IsAndersonDualFormulaPinPlus` — no longer an independent tracked Prop
-but a composition through the Anderson-dual formula. -/
-theorem isAndersonDualPinPlus_via_formula
-    (_h : IsAndersonDualFormulaPinPlus) :
-    IsAndersonDualPinPlus :=
-  -- The substantive content is the Pontryagin equivalence
-  -- pontryaginDualZMod16CircleEquivZMod16 : AddChar (ZMod 16) Circle ≃+ ZMod 16
-  -- composed with TP5PinPlus ≃+ ZMod 16 (definitional alias);
-  -- the hypothesis carries the inputs that make this composition valid.
-  isAndersonDualPinPlus_holds_via_pontryagin
-
-/-- **W1.4 closure theorem**: bundles W1.4 substantive content. The
-Anderson-dual formula at the Pin⁺ case is fully substantively witnessed
-via composition: KT iso + Omega5 vanishing ⇒ TP5 iso ZMod 16. -/
-theorem anderson_dual_formula_pin_plus_closure :
-    IsAndersonDualFormulaPinPlus ∧
-    (IsAndersonDualFormulaPinPlus → IsAndersonDualPinPlus) :=
-  ⟨isAndersonDualFormulaPinPlus_holds,
-   isAndersonDualPinPlus_via_formula⟩
+**Strengthening 2026-05-25 (post-substantive-strengthening-pass)**:
+prior version included `(IsAndersonDualFormulaPinPlus → IsAndersonDualPinPlus)`
+as a second conjunct, with the implication discharged by an identity-
+function wrapper that ignored the hypothesis (`_h` unused). This was
+flagged as P5 (identity-function wrapper) and P2 (bundle redundancy
+since the conjunct carried no content). Removed; the substantive
+content of W1.4 is the bundle of Anderson-dual formula INPUTS, and
+the resulting `IsAndersonDualPinPlus` discharge is separately handled
+in `PinBordism.lean` (refl) or via the W1.4 §1 `tp5PinPlusToAddCharCircle`
+codomain-substantive iso. -/
+theorem anderson_dual_formula_pin_plus_inputs_hold :
+    IsAndersonDualFormulaPinPlus :=
+  isAndersonDualFormulaPinPlus_holds
 
 end SKEFTHawking.SymTFT
