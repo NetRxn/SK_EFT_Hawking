@@ -103,6 +103,7 @@ import SKEFTHawking.SymTFT.LagrangianAlgebra
 import SKEFTHawking.SymTFT.GappedBoundary
 import SKEFTHawking.SymTFT.PinBordism
 import SKEFTHawking.SymTFT.SpinSymTFT
+import SKEFTHawking.SymTFT.SubstrateEtaInvariant
 import SKEFTHawking.SymTFTAudit.WittClass
 import SKEFTHawking.GenerationConstraint
 
@@ -288,5 +289,43 @@ theorem next_multiple_of_3_after_3 :
 /-- The 6-generation case is also Witt-trivial. -/
 theorem sm_6gen_witt_trivial : sm_bulk 6 = 0 := by
   exact (sm_3gen_via_symtft 6).mpr (by decide)
+
+/-! ## §5. W5-η-bridge-2 — η-invariant cross-bridge for SM matter boundary
+
+**Phase 6r-prime sub-wave W5-η-bridge-2 (2026-05-25)**: ties the
+substantive Wave 3a.3 SM-as-topological-boundary content (existing
+`sm_boundary_data_is_topological_boundary`) to the Phase 6r-prime W4-η-1+2
+substantive η-invariant content. Substantive cross-bridge: the SM-with-νR
+substrate `sm_boundary_data N_f` has both (a) IsSMMatterTopologicalBoundary
+holding and (b) vanishing η-invariant in ℝ/ℤ.
+
+Per Witten-Yonekura arXiv:1909.08775: the η-invariant captures the
+substrate-level anomaly content; for the SM-with-νR (16 fermions per gen,
+z16_class = 16·N_f ≡ 0 mod 16), the η-invariant vanishes — consistent
+with the SM being a *topological* (anomaly-cancelled) boundary of the
+SymTFT bulk per Wave 3a.1 §Q1(a) Bhardwaj-Copetti-Pajer-Schäfer-Nameki
+framework.
+
+Substantive: uses the W4-η-1 `substrateEtaInvariant_zero_of_anomaly_cancels`
+applied to the Phase 6r `sm_boundary_data_z16_cancels`. -/
+
+/-- **W5-η-bridge-2 substantive theorem**: the SM-with-νR substrate's
+η-invariant vanishes (η = 16·N_f / 16 mod 1 = 0). Combines Phase 6r
+`sm_boundary_data_z16_cancels` with W4-η-1
+`substrateEtaInvariant_zero_of_anomaly_cancels`. -/
+theorem sm_boundary_data_eta_invariant_vanishes (N_f : ℕ) :
+    substrateEtaInvariant (sm_boundary_data N_f) = 0 :=
+  substrateEtaInvariant_zero_of_anomaly_cancels
+    (sm_boundary_data N_f) (sm_boundary_data_z16_cancels N_f)
+
+/-- **W5-η-bridge-2 composed closure**: the SM-with-νR substrate is
+SM-matter-topological-boundary AND has vanishing η-invariant. Joint
+content at both the Phase 6r predicate-substrate level and the
+Phase 6r-prime W4-η substantive level. -/
+theorem sm_boundary_data_topological_AND_eta_trivial (N_f : ℕ) :
+    IsSMMatterTopologicalBoundary (sm_boundary_data N_f) ∧
+    substrateEtaInvariant (sm_boundary_data N_f) = 0 :=
+  ⟨sm_boundary_data_is_topological_boundary N_f,
+   sm_boundary_data_eta_invariant_vanishes N_f⟩
 
 end SKEFTHawking.SymTFT
