@@ -839,6 +839,12 @@ import SKEFTHawking.FKLW.CliffordTNonCommuting
 -- anti-commutes with X (substrate for the second-tangent direction in
 -- the v4-witness assembly for T-S.2).
 import SKEFTHawking.FKLW.CliffordTGeneratorCaseAnalysis
+-- Phase 6u T-S.2 v4-witness conditional discharge (2026-05-25): given
+-- AccPt 1 on H_of_G cliffordTGS, discharges cliffordT_v4_witness_tracked
+-- via the standard Phase-5-Step-13 substrate
+-- (vonNeumann_assemble_explicit_X_unconditional + ts_Ad_LI + expAmbient_unitary_conj).
+-- Unconditional version awaits the in-flight Niven-based AccPt 1 proof.
+import SKEFTHawking.FKLW.CliffordTV4WitnessDischarge
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
