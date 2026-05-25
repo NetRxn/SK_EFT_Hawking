@@ -272,6 +272,11 @@ import SKEFTHawking.SymTFT.PontryaginDualPinPlus
 -- Witten-Yonekura arXiv:1909.08775; not the prior opaque-inductive
 -- smoke (walked back in commit 2a73bea).
 import SKEFTHawking.SymTFT.SubstrateEtaInvariant
+-- Phase 6r-prime W1 extension (2026-05-25): substantive Anderson-dual
+-- chain witness for `IsAndersonDualPinPlus` via composition through
+-- the Pontryagin substrate (Pontryagin-Pin⁺-2 + Freed-Hopkins arXiv:
+-- 1604.06527 §6 Anderson-dual formula at the Pin⁺ case).
+import SKEFTHawking.SymTFT.AndersonDualSubstrate
 import SKEFTHawking.SymTFT.SpinSymTFT
 import SKEFTHawking.SymTFT.SpinSymTFTSchellekensAlignment
 -- Wave 2b — Z₁₆ classification via Spin-SymTFT
