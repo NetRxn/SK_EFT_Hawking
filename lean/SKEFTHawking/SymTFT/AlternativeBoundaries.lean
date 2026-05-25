@@ -262,4 +262,52 @@ theorem sm_plus_paper17_hidden_substrate_dark_topological_AND_eta_trivial :
   ⟨sm_plus_paper17_hidden_substrate_is_dark_sector_topological_boundary,
    sm_plus_paper17_hidden_substrate_eta_invariant_vanishes⟩
 
+/-! ## §6. C2-honest-3 / W4-η-4 — broken paper-17 substrate falsifier
+
+**Phase 6r-prime sub-wave C2-honest-3 / W4-η-4 (2026-05-25)**:
+negative counterpoint to C2-honest-1+2. Constructs a "broken"
+paper-17 substrate where the hidden-sector charge is `+2` instead of
+the substantive `+3` from paper 17 §2. The mismatch breaks anomaly
+cancellation (`-3 + 2 = -1 ≠ 0 mod 16`) and per W4-η-2 yields a
+non-zero η-invariant in `ℝ/ℤ`.
+
+**Substantive content**: demonstrates the substrate framework
+DISTINGUISHES valid paper-17 hidden-sector charges (which yield
+topological-boundary configurations with vanishing η) from invalid
+ones (which yield non-topological-boundary configurations with
+non-vanishing η). This is the substantive falsifier counterpart to
+the C2-honest-1+2 positive substrate ships. -/
+
+/-- **W4-η-4 / C2-honest-3 broken hidden-sector charge**: `+2 mod 16`,
+which differs from paper 17 §2's substantive `+3`. The mismatch is
+the falsifier mechanism. -/
+def broken_paper17_hidden_sector_charge : ZMod 16 := 2
+
+/-- **W4-η-4 / C2-honest-3 broken substrate**: SM + broken-paper-17
+combined substrate. Net z16_class = -3 + 2 = -1 ≠ 0 (anomaly does
+NOT cancel). -/
+def sm_plus_broken_paper17_substrate : SubstrateConfig where
+  z16_class := sm_three_gen_no_nuR_anomaly + broken_paper17_hidden_sector_charge
+  theta_bar := 0
+
+/-- **W4-η-4 / C2-honest-3 falsifier**: the broken substrate does NOT
+satisfy `Z16AnomalyCancels`. Discharged via `decide` on `ZMod 16`. -/
+theorem sm_plus_broken_paper17_substrate_anomaly_does_not_cancel :
+    ¬ Z16AnomalyCancels sm_plus_broken_paper17_substrate := by
+  intro h
+  have : (sm_plus_broken_paper17_substrate.z16_class : ZMod 16) = 0 := h
+  revert this
+  show sm_three_gen_no_nuR_anomaly + broken_paper17_hidden_sector_charge ≠ 0
+  decide
+
+/-- **W4-η-4 substantive η-non-vanishing on broken substrate**: by
+composition with W4-η-2, the broken substrate has non-zero η-invariant
+in `ℝ/ℤ`. The mismatch `+2 ≠ +3` in the hidden-sector charge is
+substantively detected at the η level. -/
+theorem sm_plus_broken_paper17_substrate_eta_invariant_nonzero :
+    substrateEtaInvariant sm_plus_broken_paper17_substrate ≠ 0 := by
+  apply substrateEtaInvariant_nonzero_of_z16_nonzero
+  show sm_three_gen_no_nuR_anomaly + broken_paper17_hidden_sector_charge ≠ 0
+  decide
+
 end SKEFTHawking.SymTFT
