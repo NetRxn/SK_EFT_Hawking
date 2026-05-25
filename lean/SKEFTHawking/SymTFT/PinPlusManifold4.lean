@@ -207,10 +207,9 @@ def spinToPinPlusLift (M : SpinManifold4) : PinPlusManifold4 :=
 @[simp] theorem spinToPinPlusLift_signature (M : SpinManifold4) :
     (spinToPinPlusLift M).signature = M.signature := rfl
 
-/-- The Spin→Pin⁺ lift is signature-preserving (the underlying
-intersection form is the same; only the structure typeclass changes). -/
-theorem spinToPinPlusLift_signature_eq (M : SpinManifold4) :
-    (spinToPinPlusLift M).signature = M.signature := rfl
+-- (Removed `spinToPinPlusLift_signature_eq` 2026-05-25 per R.1
+-- REQUIRED-2: it was an identical-body duplicate of the above
+-- `@[simp]`-tagged lemma.)
 
 /-- The Spin→Pin⁺ lift respects the additive structure (disjoint union
 of Spin manifolds lifts to disjoint union of Pin⁺ manifolds). -/

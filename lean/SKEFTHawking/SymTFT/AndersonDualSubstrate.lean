@@ -146,42 +146,31 @@ The resulting `isAndersonDualPinPlus_via_formula` discharge demonstrates
 that IsAndersonDualPinPlus is a *derived consequence* of the Anderson-
 dual formula plus its inputs, not an independent tracked Prop. -/
 
-/-- **`Omega5PinPlus`** — Pin⁺ bordism at degree 5. Per Kirby-Taylor
-1990, this group VANISHES. We ship `Unit` as the type-level
-realization (a one-element type, isomorphic as additive group to the
-trivial group). This makes the Ext term in the Anderson-dual formula
-vanish substantively. -/
-def Omega5PinPlus : Type := Unit
+/-- **W1.4 Anderson-dual formula tracked Prop** — bundles the
+substantive input for the Anderson-dual formula at degree 4→5:
+Ω_4^{Pin⁺} ≅ ZMod 16 (via #1 IsKirbyTaylorPinPlusBordism, substrate-
+discharged through W1.3).
 
-instance : AddCommGroup Omega5PinPlus :=
-  { add := fun _ _ => ()
-    zero := ()
-    neg := fun _ => ()
-    add_assoc := fun _ _ _ => rfl
-    zero_add := fun _ => rfl
-    add_zero := fun _ => rfl
-    neg_add_cancel := fun _ => rfl
-    add_comm := fun _ _ => rfl
-    nsmul := fun _ _ => ()
-    zsmul := fun _ _ => () }
+**Honest scope on Ω_5^{Pin⁺}(pt) = 0** (Kirby-Taylor 1990): the
+vanishing of Ω_5^{Pin⁺} is a load-bearing input to the Anderson-dual
+formula (makes the Ext term vanish so TP_5 ≅ Hom(Ω_4, ℝ/ℤ)) but is
+NOT shipped as a separate Lean tracked Prop. Reason (per R.1 review
+REQUIRED-1, 2026-05-25): any type-level encoding `Omega5PinPlus := T`
+with `Nonempty (T ≃+ Unit)` is self-discharging via type alias
+(`Unit ≃+ Unit` is `AddEquiv.refl _` trivially), which falls under
+the P4 trivial-discharge / defining-the-conclusion antipattern. The
+honest framing is to document Ω_5 = 0 as a primary-source-cited
+mathematical fact (Kirby-Taylor 1990) consumed at the formula-input
+level, rather than wrap it in a vacuous Lean tracked Prop.
 
-/-- **W1.4 tracked Prop**: `Omega5PinPlus ≃+ Unit` (the additive
-group equivalence to the trivial group). Per Kirby-Taylor 1990
-Ω_5^{Pin⁺}(pt) = 0. Substrate-level: encoded via Unit. -/
-def IsOmega5PinPlusVanishes : Prop :=
-  Nonempty (Omega5PinPlus ≃+ Unit)
-
-theorem isOmega5PinPlusVanishes_holds : IsOmega5PinPlusVanishes :=
-  ⟨AddEquiv.refl _⟩
-
-/-- **W1.4 Anderson-dual formula tracked Prop**: bundles the two
-required inputs for the Anderson-dual formula at degree 4→5: (a)
-Ω_4^{Pin⁺} ≅ ZMod 16, (b) Ω_5^{Pin⁺} = 0. -/
+The full geometric Pin⁺-bordism computation of Ω_5^{Pin⁺}(pt) = 0
+requires Mathlib elliptic-operator / cobordism-category infrastructure
+absent in v4.29.1; deferred to Phase 7+ Mathlib upstream. -/
 def IsAndersonDualFormulaPinPlus : Prop :=
-  IsKirbyTaylorPinPlusBordism ∧ IsOmega5PinPlusVanishes
+  IsKirbyTaylorPinPlusBordism
 
 theorem isAndersonDualFormulaPinPlus_holds : IsAndersonDualFormulaPinPlus :=
-  ⟨isKirbyTaylorPinPlusBordism_holds, isOmega5PinPlusVanishes_holds⟩
+  isKirbyTaylorPinPlusBordism_holds
 
 /-- **W1.4 closure theorem**: bundles the W1.4 substantive content —
 the formula inputs (`IsAndersonDualFormulaPinPlus` = KT-iso + Ω_5
