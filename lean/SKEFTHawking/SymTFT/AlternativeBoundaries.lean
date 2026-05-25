@@ -75,6 +75,7 @@ import SKEFTHawking.SymTFT.IsSMMatterTopologicalBoundary
 import SKEFTHawking.SymTFT.ToricCodeLagrangian
 import SKEFTHawking.SymTFT.SubstrateEtaInvariant
 import SKEFTHawking.APSEta.SubstrateBulkAsymmetry
+import SKEFTHawking.HiddenSectorClassification
 
 namespace SKEFTHawking.SymTFT
 
@@ -113,16 +114,18 @@ def IsDarkSectorTopologicalBoundary
 
 /-! ## §2. Alternative-boundary structural theorem -/
 
-/-- **`sm_dark_alternative_boundary_labels`** — at the labels level,
-the SM matter content corresponds to the *electric* Lagrangian-algebra
-label and the dark sector corresponds to the *magnetic* label;
-the two labels are distinct (per Wave 1c.3
-`toricCode_labels_distinct`). -/
-theorem sm_dark_alternative_boundary_labels :
-    ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic :=
-  toricCode_labels_distinct
+/-! ## §3. Wave 3b.1b structural closure (paper-17-conditional)
 
-/-! ## §3. Wave 3b.1b structural closure (paper-17-conditional) -/
+**Strengthening 2026-05-25**: prior version shipped a 3-conjunct bundle
+with conjunct 1 (`∀ N_f, IsSMMatterTopologicalBoundary → Z16Anomaly...`)
+and conjunct 2 (`∀ s, IsDarkSectorTopologicalBoundary → Z16Anomaly...`)
+algebraically equivalent (since both predicates definitionally equal
+`IsSpinSymTFTConsistent`). Conjunct 1 is now a specialization of the
+generic conjunct 2 (instantiated at `s := sm_boundary_data N_f`).
+P2-redundancy strengthening per `feature-dev:code-reviewer`
+strengthening-pass 2026-05-25. Also: prior shipped a P5 alias
+`sm_dark_alternative_boundary_labels := toricCode_labels_distinct`
+which is now inlined here. -/
 
 /-- **`wave_3b_1b_alternative_boundary_structural_closure`** — the
 predicate-substrate-level structural closure for the alternative-
@@ -133,30 +136,26 @@ substantive theorem; the substantive paper-17-specific content is
 HELD pending paper-17 direct verification (per
 §Recommendations 5).
 
-Three structural facts:
-1. The SM-matter boundary predicate is well-defined (Wave 3a.3 ship).
-2. The dark-sector boundary predicate is well-defined (this module).
-3. The two correspond to distinct Lagrangian-algebra labels.
-
-The full substantive content requires paper-17 verification; this
-module ships the Lean infrastructure for the future paper-17-specific
-substantive ship. -/
+Two structural facts:
+1. The generic boundary-predicate-implies-anomaly-cancellation
+   correspondence (covers SM matter side via specialization and dark
+   sector side directly, since both `IsSMMatterTopologicalBoundary`
+   and `IsDarkSectorTopologicalBoundary` are definitionally
+   `IsSpinSymTFTConsistent`).
+2. The two boundary types correspond to distinct Lagrangian-algebra
+   labels (electric vs magnetic). -/
 theorem wave_3b_1b_alternative_boundary_structural_closure :
-    -- SM matter boundary well-defined: needs anti-anomaly substrate
-    (∀ N_f : ℕ, IsSMMatterTopologicalBoundary (sm_boundary_data N_f) →
-      Z16AnomalyCancels (sm_boundary_data N_f)) ∧
-    -- Dark sector boundary well-defined symmetrically (paper-17-conditional)
+    -- Generic substrate-side: any topological-boundary substrate has
+    -- anomaly cancellation (covers SM side via sm_boundary_data and
+    -- dark-sector side directly)
     (∀ s : SubstrateConfig, IsDarkSectorTopologicalBoundary s →
       Z16AnomalyCancels s) ∧
-    -- The labels are distinct
+    -- The boundary labels (electric vs magnetic) are distinct
     (ToricCodeLagrangianLabel.electric ≠ ToricCodeLagrangianLabel.magnetic) := by
-  refine ⟨?_, ?_, sm_dark_alternative_boundary_labels⟩
-  · intro N_f h
-    have : IsSpinSymTFTConsistent (sm_boundary_data N_f) := h
-    exact (wave_2a_3_substantive_instance _).mp this
-  · intro s h
-    have : IsSpinSymTFTConsistent s := h
-    exact (wave_2a_3_substantive_instance _).mp this
+  refine ⟨?_, toricCode_labels_distinct⟩
+  intro s h
+  have : IsSpinSymTFTConsistent s := h
+  exact (wave_2a_3_substantive_instance _).mp this
 
 /-! ## §4. C2 substantive paper-17 cross-bridge (sub-wave C2-honest-1)
 
@@ -215,13 +214,14 @@ theorem sm_plus_paper17_hidden_substrate_is_dark_sector_topological_boundary :
 
 /-- **Cross-bridge to Phase 5x `HiddenSectorClassification`**: the
 paper-17 hidden-sector charge of +3 mod 16 is exactly the value that
-Phase 5x's `three_singlets_satisfy_hidden_sector` theorem witnesses
-via the minimal S-0 scenario (three sterile singlets). This ties the
-substrate-level paper-17 content to the existing Phase 5x classification. -/
+Phase 5x's `SKEFTHawking.three_singlets_satisfy_hidden_sector` theorem
+witnesses via the minimal S-0 scenario (three sterile singlets).
+**Strengthening 2026-05-25**: prior version's proof was `rfl` with a
+docstring-only cross-module reference (P6 drift). Refactored to call
+the Phase 5x theorem substantively. -/
 theorem paper17_hidden_sector_charge_eq_three_singlets :
-    paper17_hidden_sector_charge = ((3 : ℕ) : ZMod 16) := by
-  show (3 : ZMod 16) = ((3 : ℕ) : ZMod 16)
-  rfl
+    paper17_hidden_sector_charge = ((3 : ℕ) : ZMod 16) :=
+  (SKEFTHawking.three_singlets_satisfy_hidden_sector).symm
 
 /-! ## §5. C2-honest-2 / W5-η-bridge-3 — dark-sector η-invariant cross-bridge
 

@@ -77,12 +77,6 @@ substrate's z16_class. Distinct z16_classes give distinct η-values
 noncomputable def substrateEtaInvariant (s : SubstrateConfig) : UnitAddCircle :=
   ZMod.toAddCircle s.z16_class
 
-/-- **Witten-Yonekura formula at the substrate level**: the η-invariant
-of a substrate is the canonical image of its z16_class under the
-`ZMod.toAddCircle` AddMonoidHom. -/
-theorem substrateEtaInvariant_formula (s : SubstrateConfig) :
-    substrateEtaInvariant s = ZMod.toAddCircle s.z16_class := rfl
-
 /-- **η-invariant vanishing on anomaly-cancelling substrates**: if
 `Z16AnomalyCancels s` (i.e., `s.z16_class = 0`), then the η-invariant
 vanishes (= 0 in ℝ/ℤ). -/
@@ -100,37 +94,7 @@ theorem substrateEtaInvariant_injective_on_z16 :
     Function.Injective (ZMod.toAddCircle (N := 16)) :=
   ZMod.toAddCircle_injective 16
 
-/-! ## §2. Substantive Witten-Yonekura inflow predicate (W4-η-1 alternative) -/
-
-/-- **`IsWittenYonekuraInflowSubstantive s`** — substantive Witten-
-Yonekura inflow conditional predicate: anomaly-cancellation at the
-z16 level implies the η-invariant vanishes in ℝ/ℤ.
-
-**Substantive content (per CLAUDE.md preemptive-strengthening
-checklist):**
-- Body: `Z16AnomalyCancels s → substrateEtaInvariant s = 0`.
-- This is a real conditional, NOT a rfl: the LHS is `s.z16_class = 0`
-  (a ZMod 16 equation), the RHS is `ZMod.toAddCircle s.z16_class = 0`
-  (a UnitAddCircle equation). The implication requires using
-  `ZMod.toAddCircle`'s `map_zero` property (a real Mathlib lemma).
-- P5 structural-tautology: NO — the conditional ties two genuinely
-  different equations via a real Mathlib AddMonoidHom property.
-
-**Honest distinction from Phase 6r `IsWittenYonekuraInflow`**: the
-Phase 6r predicate has body `IsKirbyTaylorPinPlusBordism ∧
-IsAndersonDualPinPlus` (carries KT + AD bordism content). This W4-η-1
-predicate has substrate-level η-formula content (conditional vanishing
-under anomaly cancellation). Both are substantive in distinct scopes:
-the Phase 6r one carries Pin⁺ bordism class data; this one carries
-the substrate-level η-formula. -/
-def IsWittenYonekuraInflowSubstantive (s : SubstrateConfig) : Prop :=
-  Z16AnomalyCancels s → substrateEtaInvariant s = 0
-
-theorem isWittenYonekuraInflowSubstantive_holds (s : SubstrateConfig) :
-    IsWittenYonekuraInflowSubstantive s :=
-  substrateEtaInvariant_zero_of_anomaly_cancels s
-
-/-! ## §3. W4-η-2 sub-wave — η-invariant non-vanishing on non-trivial Pin⁺ classes
+/-! ## §2. W4-η-2 sub-wave — η-invariant non-vanishing on non-trivial Pin⁺ classes
 
 **Phase 6r-prime sub-wave W4-η-2 (2026-05-25)**: substantive
 non-vanishing theorems for the η-invariant on substrates with
@@ -167,7 +131,7 @@ theorem substrateEtaInvariant_nonzero_of_z16_nonzero (s : SubstrateConfig)
     substrateEtaInvariant s ≠ 0 :=
   fun heq => h ((substrateEtaInvariant_eq_zero_iff_z16_zero s).mp heq)
 
-/-! ## §4. W4-η-3 sub-wave — concrete anomalous-substrate witness
+/-! ## §3. W4-η-3 sub-wave — concrete anomalous-substrate witness
 
 **Phase 6r-prime sub-wave W4-η-3 (2026-05-25)**: substantive concrete
 witness instance demonstrating that the W4-η machinery distinguishes

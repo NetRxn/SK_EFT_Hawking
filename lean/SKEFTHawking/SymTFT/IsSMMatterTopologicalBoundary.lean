@@ -230,19 +230,6 @@ theorem sm_boundary_data_is_topological_boundary (N_f : ℕ) :
   · show boundaryAnomaly (sm_boundary_data N_f) = 0
     exact sm_boundary_data_z16_cancels N_f
 
-/-- **`sm_3gen_via_symtft_under_boundary_hyp`** — the
-hypothesis-bearing variant of `sm_3gen_via_symtft` for type-level
-documentation. Under `IsSMMatterTopologicalBoundary` consistency, the
-modular SymTFT bulk's Witt invariant is trivial iff `3 ∣ N_f`. The
-hypothesis is automatically satisfied (via
-`sm_boundary_data_is_topological_boundary`); this variant exposes the
-spin-SymTFT consistency requirement at the type-signature level for
-consumers who want to surface it. -/
-theorem sm_3gen_via_symtft_under_boundary_hyp (N_f : ℕ)
-    (_h : IsSMMatterTopologicalBoundary (sm_boundary_data N_f)) :
-    sm_bulk N_f = 0 ↔ 3 ∣ N_f :=
-  sm_3gen_via_symtft N_f
-
 /-! ## §4. Concrete SM 3-generation witness -/
 
 /-- The SM 3-generation case satisfies the SymTFT-boundary-trivial-Witt

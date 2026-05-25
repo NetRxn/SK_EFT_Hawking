@@ -103,11 +103,16 @@ made visible at type-signature level by the companion theorem
 `chiralCentralCharge_wittTrivial_iff_three_dvd_N_f` (Phase 6n Wave 1b
 Stage 5) + `sm_3gen_via_symtft` (Wave 3a.3) in its proof term. -/
 theorem sm_matter_as_symtft_boundary_closure (N_f : ℕ)
-    (h : IsSMMatterTopologicalBoundary (sm_boundary_data N_f)) :
-    sm_bulk N_f = 0 ↔ 3 ∣ N_f := by
+    (_h : IsSMMatterTopologicalBoundary (sm_boundary_data N_f)) :
+    sm_bulk N_f = 0 ↔ 3 ∣ N_f :=
   -- Route via Wave 3a.3 substantive theorem (uses Phase 6n Wave 1b Stage 5
   -- internally, which itself uses Phase 5b generation_constraint_iff).
-  exact SymTFT.sm_3gen_via_symtft_under_boundary_hyp N_f h
+  -- The hypothesis `_h` is surfaced at type-signature level to document
+  -- the boundary-consistency context; the conclusion `sm_3gen_via_symtft`
+  -- holds unconditionally. Strengthening 2026-05-25: prior version
+  -- invoked the now-deleted `sm_3gen_via_symtft_under_boundary_hyp`
+  -- alias (identity-function wrapper, P5 strengthening-pass finding 3).
+  SymTFT.sm_3gen_via_symtft N_f
 
 /-- **Cross-bridge integrity witness** — explicit demonstration that
 the Phase 6n Wave 1b Stage 4 cross-bridge
