@@ -167,4 +167,56 @@ theorem substrateEtaInvariant_nonzero_of_z16_nonzero (s : SubstrateConfig)
     substrateEtaInvariant s ≠ 0 :=
   fun heq => h ((substrateEtaInvariant_eq_zero_iff_z16_zero s).mp heq)
 
+/-! ## §4. W4-η-3 sub-wave — concrete anomalous-substrate witness
+
+**Phase 6r-prime sub-wave W4-η-3 (2026-05-25)**: substantive concrete
+witness instance demonstrating that the W4-η machinery distinguishes
+anomalous from anomaly-cancelling substrates. The generic theorem
+`substrateEtaInvariant_nonzero_of_z16_nonzero` (W4-η-2) says "any
+substrate with non-zero z16_class has non-zero η"; this sub-wave
+exhibits a concrete substrate where the conclusion holds non-trivially.
+
+Substantive content: ships a `SubstrateConfig` with `z16_class = 1`
+(the minimal non-trivial Pin⁺ deformation class) and proves its
+η-invariant is non-zero in `ℝ/ℤ`. This is the witness counterpart
+to `IsWittenYonekuraInflowSubstantive`'s anomaly-cancelling
+substrates (where η vanishes). -/
+
+/-- **W4-η-3 anomalous-substrate witness**: a concrete SubstrateConfig
+with `z16_class = 1` (the minimal non-trivial Pin⁺ class). Witnesses
+that anomalous substrates exist in the substrate framework, contrasting
+with `sm_substrate_data` / `sm_plus_paper17_hidden_substrate` which
+both satisfy `Z16AnomalyCancels`. -/
+def anomalous_substrate_witness_one : SubstrateConfig where
+  z16_class := 1
+  theta_bar := 0
+
+/-- **W4-η-3 z16_class is non-zero**: the witness substrate's
+`z16_class = 1` is non-zero in `ZMod 16`. Discharged via `decide`. -/
+theorem anomalous_substrate_witness_one_z16_class_ne_zero :
+    anomalous_substrate_witness_one.z16_class ≠ (0 : ZMod 16) := by
+  show (1 : ZMod 16) ≠ 0
+  decide
+
+/-- **W4-η-3 substantive witness theorem**: the witness substrate's
+η-invariant is non-zero in `ℝ/ℤ`, exhibiting the W4-η-2 non-vanishing
+content on a concrete witness. Composes
+`substrateEtaInvariant_nonzero_of_z16_nonzero` (W4-η-2) with the
+witness's `z16_class ≠ 0` proof. -/
+theorem anomalous_substrate_witness_one_eta_invariant_nonzero :
+    substrateEtaInvariant anomalous_substrate_witness_one ≠ 0 :=
+  substrateEtaInvariant_nonzero_of_z16_nonzero
+    anomalous_substrate_witness_one
+    anomalous_substrate_witness_one_z16_class_ne_zero
+
+/-- **W4-η-3 anomalous-substrate is NOT a Witten-Yonekura inflow
+solution**: the witness substrate satisfies `IsWittenYonekuraInflowSubstantive`
+vacuously (since its z16_class ≠ 0 makes the hypothesis false), but
+demonstrates the contrapositive content: if the antecedent's anomaly
+cancellation FAILED, η would not vanish. -/
+theorem anomalous_substrate_witness_one_not_anomaly_cancels :
+    ¬ Z16AnomalyCancels anomalous_substrate_witness_one := by
+  intro h
+  exact anomalous_substrate_witness_one_z16_class_ne_zero h
+
 end SKEFTHawking.SymTFT
