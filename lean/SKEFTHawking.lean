@@ -815,6 +815,10 @@ import SKEFTHawking.FKLW.CliffordTClosureDenseWitness
 -- headline solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight.
 -- Conditional ONLY on T-S.2's tracked Prop.
 import SKEFTHawking.FKLW.CliffordTQuantitative
+-- Phase 6u T-S.2 substantive substrate (2026-05-25): non-commutativity of
+-- H_SU and T_SU, the structural fact that ⟨H_SU, T_SU⟩ is not abelian
+-- (used downstream by the cliffordT_v4_witness_tracked discharge).
+import SKEFTHawking.FKLW.CliffordTNonCommuting
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
