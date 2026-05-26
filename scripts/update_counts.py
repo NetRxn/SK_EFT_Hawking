@@ -36,39 +36,43 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent
 LEAN_DIR = PROJECT_ROOT / "lean"
 LEAN_DEPS = LEAN_DIR / "lean_deps.json"
+SCRIPTS_DIR = PROJECT_ROOT / "scripts"
 
 
-def regenerate_lean_deps():
-    """Regenerate lean_deps.json from the Lean environment.
+def refresh_lean_deps():
+    """Refresh lean_deps.json via the canonical extract_lean_deps wrapper.
 
-    Runs ExtractDeps.lean in interpreted mode (no native linking required).
-    The olean is built by `lake build` since ExtractDeps imports the root module.
+    Delegates to scripts/extract_lean_deps.py's load_lean_deps(), which
+    uses a SHA-256 content hash at lean/lean_deps.json.hash to decide
+    whether to re-run ExtractDeps.lean. Most invocations are near-instant
+    (hash matches → no regen); only genuine source-content changes
+    trigger the ~30-min interpreted-Lean walk.
+
+    Consolidated 2026-05-26 PM: previously this script reimplemented the
+    regen logic with mtime-based staleness (over-aggressive: every
+    editor save / git checkout flipped mtime even without content
+    change). The companion script's hash-based cache is the canonical
+    path; calling it directly eliminates the duplicate logic + inherits
+    the hash check.
+
+    Returns the parsed deps list on success, or None on failure (caller
+    falls back to reading the cached file if it exists).
     """
-    print("Regenerating lean_deps.json from Lean environment...")
-    tmp_path = Path("/tmp/lean_deps_new.json")
-    # Timeout: 1800s = 30 min. ExtractDeps walks every declaration in the
-    # SKEFTHawking namespace (~5000+ decls post-Phase-6m) and runs
-    # `collectAxioms` on each — runtime scales with project size.
-    # Phase 7a sub-wave 7a.0.4 bump from 600s after observed timeout.
-    result = subprocess.run(
-        ["lake", "env", "lean", "--run", "SKEFTHawking/ExtractDeps.lean"],
-        capture_output=True, text=True, cwd=LEAN_DIR, timeout=1800,
-    )
-    if result.returncode != 0:
-        print(f"ERROR: ExtractDeps failed:\n{result.stderr[:500]}")
-        print("Hint: run `lake build` first to ensure oleans are current.")
-        return False
+    sys.path.insert(0, str(SCRIPTS_DIR))
+    try:
+        from extract_lean_deps import load_lean_deps
+    except ImportError as e:
+        print(f"WARNING: could not import extract_lean_deps: {e}")
+        print("Proceeding with cached lean_deps.json if available.")
+        return None
+    try:
+        return load_lean_deps()
+    except Exception as e:
+        print(f"ERROR refreshing lean_deps.json: {e}")
+        print("Proceeding with cached lean_deps.json if available.")
+        return None
 
-    # Write to temp then copy (atomic)
-    tmp_path.write_text(result.stdout)
-    if tmp_path.stat().st_size < 100:
-        print(f"ERROR: ExtractDeps produced {tmp_path.stat().st_size} bytes (expected >100KB)")
-        return False
 
-    import shutil
-    shutil.copy2(tmp_path, LEAN_DEPS)
-    print(f"  lean_deps.json regenerated: {LEAN_DEPS.stat().st_size:,} bytes")
-    return True
 SRC_DIR = PROJECT_ROOT / "src"
 TESTS_DIR = PROJECT_ROOT / "tests"
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
@@ -78,14 +82,21 @@ OUTPUT_JSON = PROJECT_ROOT / "docs" / "counts.json"
 OUTPUT_TEX = PROJECT_ROOT / "docs" / "counts.tex"
 
 
-def count_lean(deps_path: Path) -> dict:
-    """Extract Lean counts from lean_deps.json (authoritative, environment-based)."""
-    if not deps_path.exists():
+def count_lean(deps_path: Path, preloaded: list | None = None) -> dict:
+    """Extract Lean counts from lean_deps.json (authoritative, environment-based).
+
+    If `preloaded` is provided (from `refresh_lean_deps()`), uses that
+    in-memory data directly and skips re-reading the file. Otherwise
+    reads from `deps_path`.
+    """
+    if preloaded is not None:
+        data = preloaded
+    elif not deps_path.exists():
         print(f"WARNING: {deps_path} not found. Run ExtractDeps.lean first.")
         return {"error": "lean_deps.json not found"}
-
-    with open(deps_path) as f:
-        data = json.load(f)
+    else:
+        with open(deps_path) as f:
+            data = json.load(f)
 
     theorems = [d for d in data if d["kind"] == "theorem"]
     # Standalone placeholders: theorems whose type is exactly `True`
@@ -394,24 +405,15 @@ def generate_tex(counts: dict, path: Path):
 
 
 def main():
-    # Regenerate lean_deps.json if stale or missing
-    if not LEAN_DEPS.exists() or LEAN_DEPS.stat().st_size < 100:
-        if not regenerate_lean_deps():
-            print("Proceeding with stale/missing lean_deps.json")
-    else:
-        # Check if any .lean file is newer than lean_deps.json
-        # NOTE: rglob (not glob) — must walk subdirectories (GloriosoLiu/,
-        # CrooksAnalogHawking/, QuantumCrooks/, SymTFTAudit/, Resurgence/, etc.)
-        # so that changes inside namespace folders trigger regeneration. Same
-        # bug class as the Session-7 fix in extract_lean_deps.py:compute_lean_hash.
-        lean_deps_mtime = LEAN_DEPS.stat().st_mtime
-        lean_files = list((LEAN_DIR / "SKEFTHawking").rglob("*.lean"))
-        newest_lean = max(f.stat().st_mtime for f in lean_files) if lean_files else 0
-        if newest_lean > lean_deps_mtime:
-            print("Lean files changed since last extraction.")
-            regenerate_lean_deps()
+    # Refresh lean_deps.json via the canonical hash-based cache wrapper.
+    # extract_lean_deps.load_lean_deps() returns the parsed deps list AND
+    # ensures lean_deps.json + lean_deps.json.hash are current. If the
+    # SHA-256 of all .lean source files matches the stored hash, the
+    # cached JSON is reused (near-instant); otherwise ExtractDeps.lean
+    # is re-run (~30 min interpreted-Lean walk).
+    deps_data = refresh_lean_deps()
 
-    lean_counts = count_lean(LEAN_DEPS)
+    lean_counts = count_lean(LEAN_DEPS, preloaded=deps_data)
     python_counts = count_python()
     aristotle_counts = count_aristotle()
 
