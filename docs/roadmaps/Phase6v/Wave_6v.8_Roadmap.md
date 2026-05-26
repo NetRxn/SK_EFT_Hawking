@@ -49,7 +49,21 @@ F. Colangelo et al., "Unveiling Intrinsic Triplet Superconductivity in Noncentro
 
 ## Tracked Prop introduced (`H_NbReWindingNumberIdentity`)
 
-The full 3D non-centrosymmetric BdG sub-wave 8.C requires a 3D winding-number identity that Mathlib doesn't yet have (the project's existing winding-number substrate is 1D + 2D only). Per Pipeline Invariant #15: ships as a TRACKED PROP, not a new project-local axiom. Discharge plan: a future Mathlib-3D-winding-number-substrate wave (LoE ~300-500 LoC infrastructure; outside Phase 6v scope).
+The full 3D non-centrosymmetric BdG sub-wave 8.C requires a 3D winding-number identity that Mathlib doesn't yet have (the project's existing winding-number substrate is 1D + 2D only). Per Pipeline Invariant #15: ships as a TRACKED PROP, not a new project-local axiom.
+
+**Sharpened LoE (post-scout 2026-05-26):** the original "300-500 LoC infrastructure" estimate was incorrect. Scout (agent `a51d7013c4ff46efa`) confirmed Mathlib v4.29.1 has NO `MapDegree` / Brouwer-degree theory for general continuous maps — discharging via the canonical "S³ → SU(2) continuous-map degree" pathway requires **~2000 LoC** of Mathlib upstream contribution (singular-homology axiomatization + degree extraction + Pontryagin Z₂ projection).
+
+**Decomposition-pathway DR dispatched 2026-05-26.** Before committing to a 2000+ LoC Mathlib upstream contribution, a deep-research prompt has been dropped at `Lit-Search/tasks/submitted/20260526_phase6v_wave_6v8c_NbRe_DIII_Z2_decomposition.md` asking whether the DIII Z₂ invariant can be substantively discharged via a cheaper decomposition pathway. Five candidate pathways under evaluation:
+
+- **Pathway A — Fu-Kane TRIM-product invariant** (finite-momentum lattice form): leverages the project's existing `BdGHamiltonian.lean` 4×4 Pfaffian substrate; ~50 LoC if applicable.
+- **Pathway B — Project Z₁₆ mod-2 projection**: leverages existing `Z16Classification.lean` axiomatized `Ω₄^{Pin⁺} ≅ ℤ₁₆`; ~30 LoC if applicable.
+- **Pathway C — 3D = 2D-weak + 1D-strong decomposition**: leverages existing `FermiPointTopology.lean` 2D winding machinery; ~80 LoC if applicable.
+- **Pathway D — Berry-phase Wilson-loop integral** (1D contour over BZ): `intervalIntegral`-amenable from Mathlib; ~150 LoC if applicable.
+- **Pathway E — Topological-K-theory Karoubi-triple invariant**: leverages the project's recent Phase 6r-prime Karoubi mod-2 binomial work; ~80 LoC if applicable.
+
+The DR is expected to identify ONE pathway with an ≤500 LoC discharge budget. Sub-wave 8.C will execute against that pathway once the DR returns. If all five pathways still require ≥1000 LoC, the original "MapDegree upstream contribution" remains the right answer.
+
+Discharge plan timeline: DR dispatch 2026-05-26 → DR return (~1-2 weeks) → sub-wave 8.C execution session (target: ≤500 LoC).
 
 ## No-axiom discipline
 

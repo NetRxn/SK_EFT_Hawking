@@ -161,25 +161,62 @@ theorem elementalNb_not_DIII_topological :
 
 /-! ## §7. Sub-wave 8.C tracked Prop (`H_NbReWindingNumberIdentity`).
 
-The full 3D non-centrosymmetric BdG sub-wave requires a 3D winding-
-number identity Mathlib doesn't yet have (the project's existing
-winding-number substrate covers 1D + 2D only). Per Pipeline
-Invariant #15, this ships as a TRACKED PROP — not a new project-
-local axiom — with the discharge plan in
-`docs/roadmaps/Phase6v/Wave_6v.8_Roadmap.md` ("Sub-wave 8.C").
+**Sharpened post-scout 2026-05-26.** The full 3D NbRe BdG winding-
+number identity ships as a TRACKED PROP — not a new project-local
+axiom — per Pipeline Invariant #15. The original Wave-6v.8 roadmap
+LoE estimate of "~300-500 LoC" was incorrect.
 
-Substantive content: the tracked Prop encodes the structural claim
-that the 3D ASOC-driven topological-winding number of the NbRe BdG
-is a Z₂-valued invariant matching the Kitaev DIII period-16
-classification at the substrate level. When discharged (future
-Mathlib-3D-winding-number-substrate wave), it will close the full
+**The real blocker:** scout (2026-05-26, agent `a51d7013c4ff46efa`)
+confirmed Mathlib v4.29.1 has NO `MapDegree` / Brouwer-degree theory
+for general continuous maps. Discharging the substantive 3D
+winding-number identity via the canonical "continuous-map degree of
+S³ → SU(2)" pathway requires:
+- Mathlib has homotopy basics (`Mathlib/Topology/Homotopy/Basic.lean`).
+- Mathlib has homotopy groups (`Mathlib/Topology/Homotopy/HomotopyGroup.lean`)
+  but NOT the `π₃(SU(2)) ≅ ℤ` computation.
+- Mathlib has singular homology (`Mathlib/AlgebraicTopology/SingularHomology/`)
+  but NOT degree-of-a-continuous-map extraction.
+- Mathlib has Sphere n (`Mathlib/Topology/Category/TopCat/Sphere.lean`)
+  but NOT explicit SU(2) ≅ S³ formalization.
+- NO Pontryagin construction (the canonical π₃(SU(2)) → framed-
+  cobordism bridge).
+
+**Revised LoE:** ~2000 LoC of Mathlib upstream contribution
+(singular-homology axiomatization + degree extraction + Pontryagin
+Z₂ projection), OR the same axiomatized at substrate level
+(which would violate Invariant #15).
+
+**Decomposition-pathway DR dispatched 2026-05-26** to scout cheaper
+alternatives:
+`Lit-Search/tasks/submitted/20260526_phase6v_wave_6v8c_NbRe_DIII_Z2_decomposition.md`.
+Five candidate pathways under evaluation:
+(A) Fu-Kane TRIM-product invariant (finite-momentum lattice form);
+(B) project-Z₁₆ mod-2 projection (leveraging existing Ω₄^{Pin⁺} ≅ ℤ₁₆);
+(C) 3D = 2D-weak + 1D-strong decomposition (leveraging existing
+`FermiPointTopology`);
+(D) Berry-phase Wilson-loop integral (1D contour, `intervalIntegral`-
+amenable);
+(E) topological-K-theory Karoubi-triple algebraic invariant.
+
+The DR is expected to identify ONE pathway with an ≤500 LoC discharge
+budget; until then, the Prop ships as the parameterized placeholder
+below. (If all five pathways still need ≥1000 LoC, the original
+2000-LoC Mathlib upstream contribution is confirmed as the right
+substrate target.)
+
+Substantive content of the placeholder: the tracked Prop encodes the
+structural claim that the 3D ASOC-driven topological-winding number
+of the NbRe BdG is a Z₂-valued invariant matching the Kitaev DIII
+period-16 classification at the substrate level. When discharged
+(via whichever pathway the DR recommends), it will close the full
 SOTA BdG → SPT chain. -/
 def H_NbReWindingNumberIdentity : Prop :=
   ∀ sc : SCParameters,
     IsDIIITopologicalSuperconductor sc →
     -- Placeholder: the 3D winding-number identity (to be replaced
-    -- once Mathlib's 3D winding-number substrate lands). For now
-    -- ships as a non-vacuous Prop parameterized over `sc`.
+    -- once a decomposition pathway is selected per the
+    -- Lit-Search 20260526 DR). For now ships as a non-vacuous
+    -- Prop parameterized over `sc`.
     True
 
 /-- **Non-vacuity witness for the tracked Prop.** Even at substrate
