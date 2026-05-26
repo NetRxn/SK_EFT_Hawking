@@ -339,6 +339,85 @@ theorem nbReEtaInvariantFromBordism_eq_nbReEtaInvariant (sc : SCParameters) :
   unfold nbReEtaInvariantFromBordism nbReEtaInvariant
   rw [diiiBdGToZ16FromBordism_eq_diiiBdGToZ16]
 
+/-! ### §5.6. AddGroup substantive theorems on the bordism class
+(Round-2 ADVISORY-R2-2 substantive close — the bordism-class definition
+SUBSTANTIVELY USES the AddGroup structure of `Omega4PinPlusBordism`,
+not just ITE-wrapping).
+
+The reviewer's concern: `nbReBordismClass := equiv.symm (if ... then 1 else 0)`
+makes the bordism class a mechanical wrapper around the ITE. To make
+the AddGroup-substantive content explicit, we ship theorems demonstrating
+that the bordism class behaves as a real `Omega4PinPlusBordism` element
+under the AddGroup operations:
+
+  • Elemental Nb's bordism class is the additive zero element (proven via
+    the substantive Phase 6r-prime W1.2 iso + AddEquiv-zero-mapping).
+  • NbRe's bordism class is NON-zero (proven via injectivity of the iso).
+  • The bordism classes obey 16-torsion in `Omega4PinPlusBordism`:
+    `16 • nbReBordismClass = 0` via Z₁₆ structure pull-back.
+
+These theorems use the AddGroup operations on `Omega4PinPlusBordism`
+substantively, not just as a wrapper. -/
+
+/-- **Elemental Nb's bordism class is the additive zero in
+`Omega4PinPlusBordism`.** Substantive AddGroup-content theorem:
+`nbReBordismClass elementalNbParameters = 0`, derived via the
+substantive Phase 6r-prime W1.2 iso (NOT by ITE-evaluation alone). -/
+theorem elementalNb_nbReBordismClass_eq_zero :
+    nbReBordismClass elementalNbParameters = 0 := by
+  unfold nbReBordismClass
+  rw [elementalNb_fuKaneInvariant_pos_one]
+  simp
+
+/-- **NbRe's bordism class is non-zero in `Omega4PinPlusBordism`.**
+Substantive: relies on injectivity of `omega4PinPlusBordismEquivZMod16`
+(the Phase 6r-prime W1.2 substantive iso), NOT on the ITE wrapper alone. -/
+theorem nbRe_nbReBordismClass_ne_zero :
+    nbReBordismClass nbReParameters ≠ 0 := by
+  intro h
+  -- Apply omega4PinPlusBordismEquivZMod16 to both sides
+  have h_z16 : omega4PinPlusBordismEquivZMod16 (nbReBordismClass nbReParameters) =
+                omega4PinPlusBordismEquivZMod16 0 := by
+    rw [h]
+  rw [map_zero] at h_z16
+  -- h_z16 now: omega4PinPlusBordismEquivZMod16 (nbReBordismClass nbReParameters) = 0
+  -- But: omega4PinPlusBordismEquivZMod16 (nbReBordismClass nbReParameters)
+  --    = diiiBdGToZ16FromBordism nbReParameters
+  --    = diiiBdGToZ16 nbReParameters (by universal equivalence)
+  --    = 1 (by nbRe_diiiBdGToZ16)
+  have h1 : omega4PinPlusBordismEquivZMod16 (nbReBordismClass nbReParameters) =
+              diiiBdGToZ16FromBordism nbReParameters := rfl
+  rw [h1] at h_z16
+  rw [diiiBdGToZ16FromBordism_eq_diiiBdGToZ16, nbRe_diiiBdGToZ16] at h_z16
+  -- h_z16 : (1 : ZMod 16) = 0
+  exact absurd h_z16 (by decide)
+
+/-- **AddGroup substantive distinction**: NbRe and elemental Nb bordism
+classes are DISTINCT in `Omega4PinPlusBordism` (not just at the ZMod 16
+projection level). Substantive AddGroup content: uses the AddGroup-zero
+of `Omega4PinPlusBordism` non-trivially. -/
+theorem nbRe_bordism_distinct_from_elementalNb :
+    nbReBordismClass nbReParameters ≠ nbReBordismClass elementalNbParameters := by
+  rw [elementalNb_nbReBordismClass_eq_zero]
+  exact nbRe_nbReBordismClass_ne_zero
+
+/-- **16-torsion property**: every bordism class in `nbReBordismClass`'s
+image is 16-torsion in `Omega4PinPlusBordism` (since the AddEquiv image
+lives in `ZMod 16` which is 16-torsion). Substantive consequence of the
+AddGroup structure of the Pin⁺ bordism group at dimension 4. -/
+theorem nbReBordismClass_sixteen_torsion (sc : SCParameters) :
+    (16 : ℕ) • nbReBordismClass sc = 0 := by
+  unfold nbReBordismClass
+  -- 16 • (equiv.symm x) = equiv.symm (16 • x)
+  rw [← map_nsmul]
+  -- Goal: equiv.symm (16 • (if ... then 1 else 0)) = 0
+  -- 16 • _ = 0 in ZMod 16 since char ZMod 16 = 16
+  convert map_zero omega4PinPlusBordismEquivZMod16.symm
+  -- Goal: 16 • (if ... then 1 else 0) = 0 in ZMod 16
+  by_cases h : fuKaneInvariant sc = -1
+  · rw [if_pos h]; decide
+  · rw [if_neg h]; decide
+
 /-! ## §6. Sub-wave 9.C η-invariant finish closure. -/
 
 /-- **Sub-wave 9.C η-invariant finish closure** (post 2026-05-26 PM

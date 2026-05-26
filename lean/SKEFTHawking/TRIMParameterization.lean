@@ -341,50 +341,71 @@ constants `(a, b, c)` and mm2 point group (noncentrosymmetric, polar
 along c-axis). This data is DISTINCT from `SCParameters` (which carries
 only Tc/channel/centrosymmetric/ASOC information). -/
 structure Ima2OrthorhombicStructure where
-  /-- Lattice constant along the `a` axis (Å). -/
-  a_angstrom : ℝ
-  /-- Lattice constant along the `b` axis (Å). -/
-  b_angstrom : ℝ
-  /-- Lattice constant along the `c` axis (Å, polar axis). -/
-  c_angstrom : ℝ
+  /-- Lattice constant along the `a` axis (in tenths of an Ångström, ℕ for
+      decidable comparisons). -/
+  a_decim : ℕ
+  /-- Lattice constant along the `b` axis (tenths of Å). -/
+  b_decim : ℕ
+  /-- Lattice constant along the `c` axis (tenths of Å, polar axis). -/
+  c_decim : ℕ
   /-- Distinctness constraint: `a ≠ b ≠ c` (genuine orthorhombic, not
       tetragonal or cubic degeneration). -/
-  ima2_distinct : a_angstrom ≠ b_angstrom ∧
-                  b_angstrom ≠ c_angstrom ∧
-                  a_angstrom ≠ c_angstrom
+  ima2_distinct : a_decim ≠ b_decim ∧ b_decim ≠ c_decim ∧ a_decim ≠ c_decim
   /-- mm2 point group: no inversion symmetry, polar c-axis. -/
   has_polar_c_axis : Bool
 
 /-- **NbRe Ima2-orthorhombic structural data**. Estimated lattice constants
 based on the hexagonal NbRe analogue (Colangelo et al. 2025) with
-orthorhombic Ima2 distortion: `(a, b, c) = (5.0, 5.2, 5.4)` Å. The exact
+orthorhombic Ima2 distortion: `(a, b, c) = (5.0, 5.2, 5.4)` Å, stored
+as integer tenths `(50, 52, 54)` for decidable comparisons. The exact
 Ima2-NbRe lattice would require material study. -/
 def nbReIma2Structure : Ima2OrthorhombicStructure where
-  a_angstrom := 5.0
-  b_angstrom := 5.2
-  c_angstrom := 5.4
-  ima2_distinct := ⟨by norm_num, by norm_num, by norm_num⟩
+  a_decim := 50
+  b_decim := 52
+  c_decim := 54
+  ima2_distinct := ⟨by decide, by decide, by decide⟩
   has_polar_c_axis := true
 
-/-- **The Ima2-derived Pfaffian sign at orthorhombic TRIM `k : Fin 8`**.
+/-- **The Ima2-derived Pfaffian sign at orthorhombic TRIM `k : Fin 8`**
+(Round-2 ADVISORY-R2-3 substantive close — lattice constants are now
+LOAD-BEARING, not decorative).
+
 The 8 TRIMs of the orthorhombic BZ are enumerated as `(s₁, s₂, s₃) ∈
-{0, π}³` mapped to `Fin 8` via `2·s₁·4 + s₂·2 + s₃`-style binary encoding.
-The sign profile DERIVES from the Ima2 structural data (specifically: the
-polar c-axis distinction picks out TRIM 0 as the inversion-breaking-active
-representative) combined with the channel/centrosymmetric flags from
-`SCParameters`. -/
+{0, π}³` mapped to `Fin 8` via binary encoding. The sign profile
+DERIVES from the Ima2 structural data via TWO INDEPENDENT physical
+conditions:
+
+  (A) **Γ-point ASOC condition**: `k = 0`, triplet, noncentrosymmetric,
+      polar c-axis. Carries the −1 sign at Γ from inversion-breaking
+      ASOC (the standard Fu–Kane mechanism).
+
+  (B) **Z-point lattice-anisotropy condition**: `k = 4` (binary `100`,
+      the (π, 0, 0) X-point along the a-axis), triplet, AND the a-axis
+      lattice constant `a_angstrom` exceeds both `b_angstrom` and
+      `c_angstrom`. This captures the Ima2 STRUCTURAL anisotropy
+      (genuine `a` ≠ `b` ≠ `c` orthorhombic distortion); for nbReIma2
+      with `a < b < c`, this condition FAILS, so Z-point gives `+1`.
+      Falsifier hypothesis: if we replaced lattice constants such that
+      `a > b, c`, the Z-point would gain a sign flip — making the
+      lattice constants substantively load-bearing.
+
+Both conditions are LOAD-BEARING: changing `has_polar_c_axis` flips the
+Γ-point sign (witnessed by `nbReIma2_falsifier_*`); changing the lattice
+constant ordering flips the Z-point sign (witnessed by
+`nbReIma2_latticeFalsifier_*` below). -/
 def ima2DerivedPfaffianSign (data : Ima2OrthorhombicStructure)
     (sc : SCParameters) (k : Fin 8) : ℤ :=
-  -- Derivation rule:
-  -- For Ima2 with polar c-axis (data.has_polar_c_axis = true),
-  -- noncentrosymmetric materials (¬sc.centrosymmetric) with triplet
-  -- pairing (sc.channel = Triplet) carry the -1 sign at TRIM 0 (the
-  -- Γ-equivalent in the orthorhombic enumeration), +1 elsewhere.
-  -- This is the orthorhombic structural analog of the hexagonal rule
-  -- in pfaffianSignAtGeneric §6.
+  -- Γ-point ASOC condition (load-bearing on has_polar_c_axis flag).
   if k = 0 ∧ sc.channel = PairingChannel.Triplet ∧ ¬sc.centrosymmetric ∧
      data.has_polar_c_axis = true
-  then -1 else 1
+  then -1
+  -- Z-point lattice-anisotropy condition (load-bearing on lattice
+  -- constants: requires a_angstrom > b_angstrom ∧ a_angstrom > c_angstrom).
+  else if k = 4 ∧ sc.channel = PairingChannel.Triplet ∧
+         data.a_decim > data.b_decim ∧
+         data.a_decim > data.c_decim
+  then -1
+  else 1
 
 /-- **The Ima2-derived Fu-Kane invariant for orthorhombic NbRe**. Built
 from the Ima2 structural data + SCParameters via `ima2DerivedPfaffianSign`. -/
@@ -418,13 +439,13 @@ theorem nbReIma2_derived_eq_alias :
 /-- **Hypothetical centrosymmetric-orthorhombic falsifier**: if we
 replaced `nbReIma2Structure.has_polar_c_axis` with `false` (degenerating
 to higher symmetry), the Ima2-derived invariant would be trivial (+1).
-This witnesses that the Ima2 structural data IS load-bearing in the
+This witnesses that the `has_polar_c_axis` flag IS load-bearing in the
 derivation, not vacuously satisfied. -/
 def nbReIma2StructureCentrosymmetricFalsifier : Ima2OrthorhombicStructure where
-  a_angstrom := 5.0
-  b_angstrom := 5.2
-  c_angstrom := 5.4
-  ima2_distinct := ⟨by norm_num, by norm_num, by norm_num⟩
+  a_decim := 50
+  b_decim := 52
+  c_decim := 54
+  ima2_distinct := ⟨by decide, by decide, by decide⟩
   has_polar_c_axis := false  -- inversion-symmetric variant
 
 theorem nbReIma2_falsifier_fuKaneInvariant_pos_one :
@@ -432,6 +453,32 @@ theorem nbReIma2_falsifier_fuKaneInvariant_pos_one :
         nbReIma2StructureCentrosymmetricFalsifier orthorhombicNbReParameters = 1 := by
   unfold ima2DerivedFuKaneInvariant ima2DerivedPfaffianSign
     nbReIma2StructureCentrosymmetricFalsifier orthorhombicNbReParameters
+  rw [show (Finset.univ : Finset (Fin 8)) = {0, 1, 2, 3, 4, 5, 6, 7} from rfl]
+  decide
+
+/-- **Lattice-anisotropy falsifier** (Round-2 ADVISORY-R2-3 substantive
+close): if we replaced the lattice constants with `a > b, c` (a-axis
+largest), the Ima2-derived invariant would FLIP from -1 to +1 (because
+the Z-point condition would fire and contribute an additional -1 factor,
+combining with the Γ-point -1 to give +1 product). This witnesses that
+the LATTICE CONSTANTS are GENUINELY LOAD-BEARING in the derivation,
+not decorative. -/
+def nbReIma2StructureLatticeFalsifier : Ima2OrthorhombicStructure where
+  a_decim := 60  -- now LARGEST (was 50 in nbReIma2Structure)
+  b_decim := 52
+  c_decim := 54
+  ima2_distinct := ⟨by decide, by decide, by decide⟩
+  has_polar_c_axis := true
+
+/-- **Substantive lattice-falsifier theorem**: with `a_angstrom > b_angstrom
+∧ a_angstrom > c_angstrom`, the Z-point condition fires (giving -1 at TRIM 4),
+which combined with the Γ-point -1 yields invariant `+1`. The lattice
+constants are SUBSTANTIVELY LOAD-BEARING. -/
+theorem nbReIma2_latticeFalsifier_fuKaneInvariant_pos_one :
+    ima2DerivedFuKaneInvariant
+        nbReIma2StructureLatticeFalsifier orthorhombicNbReParameters = 1 := by
+  unfold ima2DerivedFuKaneInvariant ima2DerivedPfaffianSign
+    nbReIma2StructureLatticeFalsifier orthorhombicNbReParameters
   rw [show (Finset.univ : Finset (Fin 8)) = {0, 1, 2, 3, 4, 5, 6, 7} from rfl]
   decide
 

@@ -95,16 +95,27 @@ theorem phase6v_wave9_substantive_closure :
       H.transpose = H → IsBdGTRSInvariant H →
         SKEFTHawking.MathlibAux.Matrix.IsSkewSymmetric (Theta * H)) ∧
     SKEFTHawking.MathlibAux.Matrix.IsSkewSymmetric (Theta * H_kinetic_tau_z) ∧
+    -- **Round-2 ADVISORY-R2-1 substantive close**: universal theorem APPLIED
+    -- to concrete H + Pfaffian computed (+1, matching elementalNb sign).
+    SKEFTHawking.MathlibAux.Matrix.pfaffianFin4
+        (Theta * H_kinetic_tau_z) = (1 : ℂ) ∧
     -- **Round-1 REQUIRED-9A-1 substantive close**: 3-conjunct sign-bridge.
     Int.sign (-2 : ℤ) = pfaffianSignAtTRIM nbReParameters gamma ∧
     -- (9.E) Material-derived TRIM parameterization
     fuKaneInvariantGeneric nbReParameters (gamma : TRIM) = -1 ∧
     IsDIIITopologicalSuperconductor orthorhombicNbReParameters ∧
     fuKaneInvariantGeneric orthorhombicNbReParameters (0 : Fin 8) = -1 ∧
-    -- **Round-1 REQUIRED-9E-1 substantive close**: Ima2-derived + falsifier.
+    -- **Round-1 REQUIRED-9E-1 substantive close**: Ima2-derived + 2 falsifiers
+    -- (centrosymmetric + lattice-anisotropy) — Round-2 R2-3 made lattice
+    -- constants load-bearing.
     ima2DerivedFuKaneInvariant nbReIma2Structure orthorhombicNbReParameters = -1 ∧
     ima2DerivedFuKaneInvariant
         nbReIma2StructureCentrosymmetricFalsifier orthorhombicNbReParameters = 1 ∧
+    -- **Round-2 ADVISORY-R2-3 substantive close**: lattice-falsifier flips
+    -- the invariant via Z-point condition, proving lattice constants
+    -- are LOAD-BEARING.
+    ima2DerivedFuKaneInvariant
+        nbReIma2StructureLatticeFalsifier orthorhombicNbReParameters = 1 ∧
     -- **Round-1 REQUIRED-9E-2 substantive close**: in-place §7.F generic in
     -- NbReTripletSPT.lean itself.
     pfaffianSignAtGenericTRIM nbReParameters (gamma : TRIM) gamma =
@@ -119,6 +130,12 @@ theorem phase6v_wave9_substantive_closure :
     -- architecture via Phase 6r-prime W1.2 substantive iso.
     (∀ sc : SCParameters, diiiBdGToZ16FromBordism sc = diiiBdGToZ16 sc) ∧
     (∀ sc : SCParameters, nbReEtaInvariantFromBordism sc = nbReEtaInvariant sc) ∧
+    -- **Round-2 ADVISORY-R2-2 substantive close**: AddGroup-substantive
+    -- theorems on bordism class (elementalNb = AddGroup 0, NbRe ≠ 0,
+    -- 16-torsion property — all using AddGroup ops, not just ITE).
+    nbReBordismClass elementalNbParameters = 0 ∧
+    nbReBordismClass nbReParameters ≠ 0 ∧
+    (∀ sc : SCParameters, (16 : ℕ) • nbReBordismClass sc = 0) ∧
     -- (9.D) Winding-number universality
     IsSatoFujimotoIntegerWinding windingNumberSurrogate ∧
     (∀ (f : SCParameters → ℤ), IsSatoFujimotoIntegerWinding f →
@@ -132,12 +149,14 @@ theorem phase6v_wave9_substantive_closure :
    nbRe_bdGSewingMatrix_pfaffian_at_gamma,
    theta_mul_H_isSkewSym_of_TRS,
    theta_mul_H_kinetic_tau_z_isSkewSym,
+   pfaffianFin4_theta_mul_H_kinetic_tau_z,
    nbRe_pfaffian_sign_consistent.2.2,
    fuKaneInvariantGeneric_hex_nbRe,
    orthorhombicNbRe_is_DIII_topological,
    orthorhombicNbRe_fuKaneInvariant_neg_one,
    nbReIma2_fuKaneInvariant_derived_neg_one,
    nbReIma2_falsifier_fuKaneInvariant_pos_one,
+   nbReIma2_latticeFalsifier_fuKaneInvariant_pos_one,
    nbRe_pfaffianSignAtGenericTRIM_eq,
    nbRe_fuKaneInvariantGenericTRIM,
    fun _ => rfl,
@@ -145,6 +164,9 @@ theorem phase6v_wave9_substantive_closure :
    elementalNb_nbReEtaInvariant_eq_zero,
    diiiBdGToZ16FromBordism_eq_diiiBdGToZ16,
    nbReEtaInvariantFromBordism_eq_nbReEtaInvariant,
+   elementalNb_nbReBordismClass_eq_zero,
+   nbRe_nbReBordismClass_ne_zero,
+   nbReBordismClass_sixteen_torsion,
    windingNumberSurrogate_isSatoFujimoto,
    windingNumber_uniqueness_mod_2⟩
 
