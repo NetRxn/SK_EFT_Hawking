@@ -256,10 +256,34 @@ substrate ships:
 \item \verb|wave_6v_5_substantive_closure|: 3-conjunct bundling
   (rate-above-half + falsifier + hashing-bound witness).
 \end{itemize}
-The substantive Shannon-entropy analytic content
-(\verb|Real.log|-based $H_2(p)$ continuity and monotonicity) lifts
-in the Wave 6v.5b follow-up (post-scout 2026-05-26;
-see \S\ref{sec:apmldpc} addendum).
+\paragraph{Wave 6v.5b substantive Shannon-entropy lift
+(post-scout 2026-05-26).}
+The Wave 6v.5 hashing-bound predicate `IsHashingBoundAchievable c H\_bound`
+ships with `H\_bound` parameterized over rational thresholds. Post-scout,
+the substantive Komoto-Kasai form ships:
+\begin{itemize}
+\item \texttt{H\_2 (p : $\mathbb{R}$) := Real.binEntropy p / Real.log 2}
+  --- the base-2 wrapper of Mathlib's natural-log
+  \texttt{Real.binEntropy} (which is in
+  \texttt{Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean}).
+\item Structural theorems \texttt{H\_2\_zero}, \texttt{H\_2\_nonneg},
+  \texttt{H\_2\_one\_half} ($= 1$, max-entropy), \texttt{H\_2\_le\_one}.
+\item \texttt{IsHashingBoundAchievableAt c (p : $\mathbb{R}$)}\,$:=$\,$c.{\rm rate} \leq 1 - H_2\,p$ ---
+  the substantive Komoto-Kasai-form predicate.
+\item \texttt{apmLdpc\_hashing\_bound\_at\_zero\_noise}: substantive
+  corner-case witness at $p = 0$ ($1 - H_2(0) = 1$; every code
+  with rate $\leq 1$ is achievable).
+\item \texttt{apmLdpc\_quEraHarvard\_not\_achievable\_at\_one\_half\_noise}:
+  substantive \emph{falsifier} at $p = 1/2$ (maximum-entropy noise;
+  capacity vanishes, so no positive-rate code is achievable). This is
+  the substrate-class boundary pinning the non-vacuity of the predicate.
+\end{itemize}
+A future sub-wave will prove the tight numerical bound
+$H_2(0.1) \leq 0.469$ giving $1 - H_2(0.1) \approx 0.531 > 580/1152$
+(matches the Komoto-Kasai depolarizing-channel regime at $p = 0.1$);
+that requires real-interval-arithmetic substrate currently absent
+from Mathlib v4.29.1. The structural ship above is non-vacuous at the
+substrate-class boundary.
 
 \subsection{Sub-wave coda — substrate connection to existing
 project LDP}

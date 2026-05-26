@@ -101,6 +101,54 @@ def test_quera_harvard_mit_below_komoto_kasai_threshold():
     assert rate <= threshold
 
 
+def test_h_2_at_endpoints_and_midpoint():
+    """Wave 6v.5b: Python mirror of Lean H_2 = binEntropy / log 2.
+    H_2(0) = 0, H_2(1) = 0, H_2(1/2) = 1 (max-entropy point)."""
+    import math
+
+    def h_2(p: float) -> float:
+        if p == 0 or p == 1:
+            return 0.0
+        return (-p * math.log(p) - (1 - p) * math.log(1 - p)) / math.log(2)
+
+    assert h_2(0.0) == 0.0
+    assert h_2(1.0) == 0.0
+    assert abs(h_2(0.5) - 1.0) < 1e-10  # max-entropy point
+    assert 0.0 <= h_2(0.1) <= 1.0
+    assert 0.0 <= h_2(0.25) <= 1.0
+
+
+def test_h_2_at_p_one_tenth_substantively_below_capacity_margin():
+    """Substantive Komoto-Kasai claim: 1 - H_2(0.1) ≈ 0.531 > 580/1152 ≈ 0.5035."""
+    import math
+
+    def h_2(p):
+        return (-p * math.log(p) - (1 - p) * math.log(1 - p)) / math.log(2)
+
+    bound_at_p_one_tenth = 1 - h_2(0.1)
+    qhm_rate = 580 / 1152
+    assert bound_at_p_one_tenth > qhm_rate
+    # Concrete margin: bound ≈ 0.531, QHM rate ≈ 0.5035, gap ≈ 0.028
+    assert (bound_at_p_one_tenth - qhm_rate) > 0.025
+
+
+def test_qhm_not_achievable_at_max_entropy_noise():
+    """Substantive falsifier (matches Lean `apmLdpc_quEraHarvard_not_achievable_at_one_half_noise`):
+    at p=1/2 (maximum-entropy depolarizing noise), the hashing-bound capacity
+    1 - H_2(1/2) = 0 strictly excludes any positive-rate code."""
+    import math
+
+    def h_2(p):
+        if p == 0 or p == 1:
+            return 0.0
+        return (-p * math.log(p) - (1 - p) * math.log(1 - p)) / math.log(2)
+
+    bound_at_one_half = 1 - h_2(0.5)
+    qhm_rate = 580 / 1152
+    assert abs(bound_at_one_half) < 1e-10  # capacity vanishes at max-entropy
+    assert qhm_rate > bound_at_one_half  # QHM rate strictly exceeds → NOT achievable
+
+
 def test_komoto_kasai_threshold_substantively_exceeds_qhm_rate():
     """The 53/100 threshold strictly exceeds the QHM rate, so the
     hashing-bound predicate is non-vacuously witnessed."""
