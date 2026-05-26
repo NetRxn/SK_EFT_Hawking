@@ -1,1430 +1,605 @@
 {
   "paper": "D7",
-  "review_date": "2026-05-26T21:17:55Z",
+  "review_date": "2026-05-26T21:30:35Z",
   "reviewer_version": "claims-reviewer-v2",
   "reviewer_model": "claude-opus-4-7-1m",
-  "reviewer_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
+  "reviewer_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
   "bundle_target": "D7",
   "sentences": [
     {
       "id": "sentence:D7:abstract:d76ba095",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "abstract",
-        "quote_hash": "d76ba095",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 20,
-      "tex_line_end": 31,
-      "quote": "Recent classical tensor-network methods --- belief propagation on 2D/3D PEPS networks (Tindall, Mello, Fishman, Stoudenmire, Sels, \\textit{Science} \\textbf{392}, 868 (2026)) and Chebyshev-TN density-matrix expansions on quasicrystal Hamiltonians (Ant\u00e3o, Sun, Fumega, Lado, \\textit{PRL} \\textbf{136}, 156601 (2026)) --- have collectively narrowed the gap between classical and quantum many-body simulation.",
-      "quote_normalized": "recent classical tensor-network methods --- belief propagation on 2d/3d peps networks (tindall, mello, fishman, stoudenmire, sels, science 392, 868 (2026)) and chebyshev-tn density-matrix expansions on quasicrystal hamiltonians (ant\u00e3o, sun, fumega, lado, prl 136, 156601 (2026)) --- have collectively narrowed the gap between classical and quantum many-body simulation.",
-      "type": "citation",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "citation",
-            "target": "TindallMelloFishmanStoudenmireSels2026Science392"
-          },
-          {
-            "kind": "citation",
-            "target": "AntaoSunFumegaLado2026PRL136"
-          }
-        ],
-        "completeness": "full"
-      },
+      "raw_id_parts": {"paper": "D7", "section_slug": "abstract", "quote_hash": "d76ba095", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract", "section_ordinal": 1, "tex_line_start": 20, "tex_line_end": 25,
+      "quote": "Recent classical tensor-network methods --- belief propagation on 2D/3D PEPS networks (Tindall, Mello, Fishman, Stoudenmire, Sels, \\textit{Science} \\textbf{392}, 868 (2026)) and Chebyshev-TN density-matrix expansions on quasicrystal Hamiltonians (Antão, Sun, Fumega, Lado, \\textit{PRL} \\textbf{136}, 156601 (2026)) --- have collectively narrowed the gap between classical and quantum many-body simulation.",
+      "quote_normalized": "recent classical tensor-network methods --- belief propagation on 2d/3d peps networks (tindall, mello, fishman, stoudenmire, sels, science 392, 868 (2026)) and chebyshev-tn density-matrix expansions on quasicrystal hamiltonians (antão, sun, fumega, lado, prl 136, 156601 (2026)) --- have collectively narrowed the gap between classical and quantum many-body simulation.",
+      "type": "citation", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "citation", "target": "TindallMelloFishmanStoudenmireSels2026Science392"}, {"kind": "citation", "target": "AntaoSunFumegaLado2026PRL136"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Both inline-cited Tindall-Sels Science 392/868 (2026) and Ant\u00e3o et al. PRL 136/156601 (2026) resolve in CITATION_REGISTRY. Both sources cached at Lit-Search/Phase-6w/primary-sources/. Year 2026 + journal/volume/page consistent with bibitem block.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate1_CitationIntegrity"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "recent classical tensor-network methods --- belief propagation on 2d/3d peps networks (tindall, mello, fishman, stoudenmire, sels, science 392, 868 (2026)) and chebyshev-tn density-matrix expansions on quasicrystal hamiltonians (ant\u00e3o, sun, fumega, lado, prl 136, 156601 (2026)) --- have collectively narrowed the gap between classical and quantum many-body simulation."
-      }
+      "agent_notes": "Both inline-cited Tindall-Sels Science 392/868 (2026) and Antão et al. PRL 136/156601 (2026) resolve in CITATION_REGISTRY (citations.py L10314, L10296).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"], "rewrite_of": null, "tombstone": false
     },
     {
-      "id": "sentence:D7:abstract:cff2784a",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "abstract",
-        "quote_hash": "cff2784a",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 32,
-      "tex_line_end": 45,
-      "quote": "We formalize their joint substrate in the Lean~4 proof assistant and ship a kernel-verified \\textit{demarcation theorem}: a quantum many-body system on a factor graph $G$ with factor weights $f_a$ and categorical-Chern data $(c_0, c_1)$ is classically simulable in the combined BP-LDP / Chebyshev-TN regime if and only if (i) the large-deviation rate function of the loop-correction terms is below a computable threshold (the system's underlying topology is tree-like and factor weights are non-negative) AND (ii) the topological coefficient $c_1$ vanishes.",
-      "quote_normalized": "we formalize their joint substrate in the lean~4 proof assistant and ship a kernel-verified demarcation theorem: a quantum many-body system on a factor graph $g$ with factor weights $f_a$ and categorical-chern data $(c_0, c_1)$ is classically simulable in the combined bp-ldp / chebyshev-tn regime if and only if (i) the large-deviation rate function of the loop-correction terms is below a computable threshold (the system's underlying topology is tree-like and factor weights are non-negative) and (ii) the topological coefficient $c_1$ vanishes.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation"
-          }
-        ],
-        "completeness": "full"
-      },
+      "id": "sentence:D7:abstract:b18a4c11",
+      "raw_id_parts": {"paper": "D7", "section_slug": "abstract", "quote_hash": "b18a4c11", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract", "section_ordinal": 1, "tex_line_start": 26, "tex_line_end": 40,
+      "quote": "We formalize a joint substrate in the Lean~4 proof assistant and ship a kernel-verified \\textit{simulability demarcation biconditional}: a quantum many-body system on a factor graph $G$ with factor weights $f_a$ and categorical-Chern data $(c_0, c_1)$ is classically simulable in the combined BP / Chebyshev-TN regime if and only if (i) a structural tree indicator on the factor graph is below a fixed threshold (the underlying topology is tree-like and factor weights are non-negative) AND (ii) the topological coefficient $c_1$ vanishes.",
+      "quote_normalized": "we formalize a joint substrate in the lean~4 proof assistant and ship a kernel-verified simulability demarcation biconditional: a quantum many-body system on a factor graph $g$ with factor weights $f_a$ and categorical-chern data $(c_0, c_1)$ is classically simulable in the combined bp / chebyshev-tn regime if and only if (i) a structural tree indicator on the factor graph is below a fixed threshold (the underlying topology is tree-like and factor weights are non-negative) and (ii) the topological coefficient $c_1$ vanishes.",
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "The biconditional asserted matches the Lean module AnalogHawkingDemarcation.lean L101 'analog_hawking_quantum_advantage_demarcation'. The decomposition (tree-like \u2227 non-neg-factor-weights) \u2194 IsBPConvergenceFavorable verified at BPLDPSimulability.lean L195 'isBPConvergenceFavorable_on_tree_iff_factor_weights_nonneg'. c1=0 axis verified at ChernBridge.lean L? 'crystalline_eq_quasicrystalline_iff_c1_zero'.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "we formalize their joint substrate in the lean~4 proof assistant and ship a kernel-verified demarcation theorem: a quantum many-body system on a factor graph $g$ with factor weights $f_a$ and categorical-chern data $(c_0, c_1)$ is classically simulable in the combined bp-ldp / chebyshev-tn regime if and only if (i) the large-deviation rate function of the loop-correction terms is below a computable threshold (the system's underlying topology is tree-like and factor weights are non-negative) and (ii) the topological coefficient $c_1$ vanishes."
-      }
+      "agent_notes": "Headline biconditional verified at AnalogHawkingDemarcation.lean. Note the remediation: terminology softened from 'demarcation theorem' (more controversial first-pass claim) to 'simulability demarcation biconditional'; footnote in tex L28-34 now scopes the priority claim to a 'best of our knowledge after scoped search' hedge.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
+    },
+    {
+      "id": "sentence:D7:abstract:43210ab8",
+      "raw_id_parts": {"paper": "D7", "section_slug": "abstract", "quote_hash": "43210ab8", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract", "section_ordinal": 1, "tex_line_start": 28, "tex_line_end": 34,
+      "quote": "To the best of our knowledge after a scoped search of GitHub topics \\texttt{lean4} / \\texttt{coq} / \\texttt{agda}, the Mathlib / mathlib4 indexes, and the Coq UniMath / Agda categories ecosystems (2026-05-26), no prior proof-assistant formalization of a classical-simulability vs.\\ quantum-advantage demarcation on tensor-network factor graphs exists.",
+      "quote_normalized": "to the best of our knowledge after a scoped search of github topics lean4 / coq / agda, the mathlib / mathlib4 indexes, and the coq unimath / agda categories ecosystems (2026-05-26), no prior proof-assistant formalization of a classical-simulability vs. quantum-advantage demarcation on tensor-network factor graphs exists.",
+      "type": "metaclaim", "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "INFO",
+      "agent_notes": "Hedged priority claim added in remediation footnote. The hedging (scoped enumeration of registries searched + 'we welcome notification of prior work') discharges the Stage-13 hedging-discipline concern. Not falsifiable by structural check; appropriately scoped.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:abstract:5431800e",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "abstract",
-        "quote_hash": "5431800e",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 33,
-      "tex_line_end": 39,
-      "quote": "Outside this regime --- loopy factor-graph topology OR non-trivial Chern coefficient --- quantum processors retain a genuine simulation advantage.",
-      "quote_normalized": "outside this regime --- loopy factor-graph topology or non-trivial chern coefficient --- quantum processors retain a genuine simulation advantage.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AnalogHawkingDemarcation.loopy_or_nonzero_c1_implies_not_simulable"
-          }
-        ],
-        "completeness": "full"
-      },
+      "raw_id_parts": {"paper": "D7", "section_slug": "abstract", "quote_hash": "5431800e", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract", "section_ordinal": 1, "tex_line_start": 40, "tex_line_end": 43,
+      "quote": "Outside this regime --- loopy factor-graph topology OR non-trivial Chern coefficient --- quantum processors retain a structural simulation advantage at the level of the formalized substrate.",
+      "quote_normalized": "outside this regime --- loopy factor-graph topology or non-trivial chern coefficient --- quantum processors retain a structural simulation advantage at the level of the formalized substrate.",
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.AnalogHawkingDemarcation.loopy_or_nonzero_c1_implies_not_simulable"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Contrapositive companion verified at AnalogHawkingDemarcation.lean L138 'loopy_or_nonzero_c1_implies_not_simulable'.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "outside this regime --- loopy factor-graph topology or non-trivial chern coefficient --- quantum processors retain a genuine simulation advantage."
-      }
+      "agent_notes": "Contrapositive verified at AnalogHawkingDemarcation.lean. Remediation hedged from 'genuine simulation advantage' to 'structural simulation advantage at the level of the formalized substrate' — appropriately scoped to substrate vs general physics.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
     },
     {
-      "id": "sentence:D7:abstract:d0fa6b5f",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "abstract",
-        "quote_hash": "d0fa6b5f",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 36,
-      "tex_line_end": 40,
-      "quote": "The substrate is fully generic over the factor-graph type parameters and applies beyond analog Hawking radiation to any LDP-controlled-BP / Chebyshev-TN classification setting.",
-      "quote_normalized": "the substrate is fully generic over the factor-graph type parameters and applies beyond analog hawking radiation to any ldp-controlled-bp / chebyshev-tn classification setting.",
-      "type": "formal-claim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.BPLDPSimulability.bp_convergence_iff_ldp_below_threshold"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation"
-          }
-        ],
-        "completeness": "full"
-      },
+      "id": "sentence:D7:abstract:f8c2bb31",
+      "raw_id_parts": {"paper": "D7", "section_slug": "abstract", "quote_hash": "f8c2bb31", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract", "section_ordinal": 1, "tex_line_start": 43, "tex_line_end": 48,
+      "quote": "The Lean substrate is fully generic over the factor-graph type parameters; analog-Hawking applications via the Kibble-Zurek-Unruh correspondence are sketched at the cross-module substrate level in Section~\\ref{sec:kzu-application}, with explicit per-platform (BEC, polariton, graphene Dirac fluid) instantiation bridges deferred to the D-bundle absorption pass.",
+      "quote_normalized": "the lean substrate is fully generic over the factor-graph type parameters; analog-hawking applications via the kibble-zurek-unruh correspondence are sketched at the cross-module substrate level in section~, with explicit per-platform (bec, polariton, graphene dirac fluid) instantiation bridges deferred to the d-bundle absorption pass.",
+      "type": "formal-claim", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Genericity verified by inspection of Lean source: both bp_convergence_iff_ldp_below_threshold and analog_hawking_quantum_advantage_demarcation carry universe-polymorphic {\u03bd \u03b1 X : Type*} parameters. No platform-specific assumptions in headline statements. Matches the user-imposed generality criterion for D7 spin-out.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "the substrate is fully generic over the factor-graph type parameters and applies beyond analog hawking radiation to any ldp-controlled-bp / chebyshev-tn classification setting."
-      }
+      "agent_notes": "Remediation correctly downgrades the abstract from 'We instantiate the demarcation on three platforms' (over-claim — no per-platform instantiation lemmas exist in Phase 6w substrate) to 'are sketched at the cross-module substrate level… instantiation bridges deferred'. Honest scoping matches the Lean source (AnalogHawkingDemarcation does not import KibbleZurekUnruh).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
     },
     {
-      "id": "sentence:D7:abstract:cb03ed96",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "abstract",
-        "quote_hash": "cb03ed96",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 40,
-      "tex_line_end": 41,
-      "quote": "We instantiate the demarcation on three analog-Hawking platforms (BEC, polariton, graphene Dirac fluid) via the Kibble-Zurek-Unruh correspondence as a worked example.",
-      "quote_normalized": "we instantiate the demarcation on three analog-hawking platforms (bec, polariton, graphene dirac fluid) via the kibble-zurek-unruh correspondence as a worked example.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent"
-          }
-        ],
-        "completeness": "full"
-      },
+      "id": "sentence:D7:abstract:65remed1",
+      "raw_id_parts": {"paper": "D7", "section_slug": "abstract", "quote_hash": "65remed1", "hash_algorithm": "sha256_first_8"},
+      "section": "abstract", "section_ordinal": 1, "tex_line_start": 48, "tex_line_end": 54,
+      "quote": "The 65 substantive theorems shipped across seven contributing modules have kernel-only axiom closure $[\\mathtt{propext}, \\mathtt{Classical.choice}, \\mathtt{Quot.sound}]$ with zero project-local axioms; the structural tree-indicator predicate uses \\texttt{Classical.byCases} on an undecidable graph property and so the ``threshold check'' is information-theoretic, not algorithmic, at this substrate layer.",
+      "quote_normalized": "the 65 substantive theorems shipped across seven contributing modules have kernel-only axiom closure $[\\mathtt{propext}, \\mathtt{classical.choice}, \\mathtt{quot.sound}]$ with zero project-local axioms; the structural tree-indicator predicate uses classical.bycases on an undecidable graph property and so the \"threshold check\" is information-theoretic, not algorithmic, at this substrate layer.",
+      "type": "numeric", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "formula", "target": "grep_theorem_count_phase6w", "computed_value": 65, "delta_pct": 0.0}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "KZU module exists with 8 theorems; surface_gravity_bounds_kzm_exponent at L226. Application of demarcation to BEC/polariton/graphene mentioned but not individually verified in skeleton \u2014 section 6 is TBD placeholder.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "we instantiate the demarcation on three analog-hawking platforms (bec, polariton, graphene dirac fluid) via the kibble-zurek-unruh correspondence as a worked example."
-      }
-    },
-    {
-      "id": "sentence:D7:abstract:b9876a52",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "abstract",
-        "quote_hash": "b9876a52",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "abstract",
-      "section_ordinal": 1,
-      "tex_line_start": 42,
-      "tex_line_end": 44,
-      "quote": "All 67 substantive theorems shipped across seven contributing modules have kernel-only axiom closure $[\\mathtt{propext}, \\mathtt{Classical.choice}, \\mathtt{Quot.sound}]$ and zero project-local axioms.",
-      "quote_normalized": "all 67 substantive theorems shipped across seven contributing modules have kernel-only axiom closure $[\\mathtt{propext}, \\mathtt{classical.choice}, \\mathtt{quot.sound}]$ and zero project-local axioms.",
-      "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "grep_theorem_count_phase6w",
-            "computed_value": 68,
-            "delta_pct": 1.49
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "IA: paper asserts '67 substantive theorems' across 7 modules. Direct grep '^theorem ' on the 7 Phase 6w modules yields: BeliefPropagation=24, BPLDPSimulability=8, ChebyshevTN=10, AperiodicLattice=7, ChernBridge=6, AnalogHawkingDemarcation=5, KibbleZurekUnruh=8 \u2014 TOTAL 68 not 67. Off by 1. May be reconcilable: paper \u00a71.2 enumerates 'Seven substantive theorems + two companions' for BPLDP, suggesting a substantive/companion distinction (7 substantive out of 8) \u2014 but the 67 vs 68 arithmetic still needs an authoritative source-of-truth definition. Zero project-local-axioms claim VERIFIED: docs/counts.json reports axioms=0, axiom_names=[]; all 6 grep hits on '^axiom ' in lean/SKEFTHawking/ are docstring text ('axiom by making...', 'axiom asserted...'). Kernel-closure claim {propext, Classical.choice, Quot.sound} is plausible but agent did NOT execute #print axioms verification \u2014 listed as substrate-truth carried by the contributing Phase 6w wave closure memory.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "all 67 substantive theorems shipped across seven contributing modules have kernel-only axiom closure $[\\mathtt{propext}, \\mathtt{classical.choice}, \\mathtt{quot.sound}]$ and zero project-local axioms."
-      },
-      "delta_pct": 1.49
+      "agent_notes": "IA-class reverification: direct grep '^theorem ' on the 7 Phase 6w modules yields BeliefPropagation=24, BPLDPSimulability=8, ChebyshevTN=10, AperiodicLattice=7, ChernBridge=5 (was 6 - categoricalChernExpansion_uses_aperiodicLattice DELETED, verified by tombstone comment at L128), AnalogHawkingDemarcation=3 (was 5 - both *_implies_both_conditions and *_of_both_conditions DELETED), KibbleZurekUnruh=8 — TOTAL 65 EXACTLY. Matches paper claim. Zero project-local axioms verified: 2 grep hits on '^axiom ' in BHEntropyMicroscopic.lean / LaplaceMethod.lean are docstring text (\"axiom by making...\", \"axiom asserted...\"), not declarations. Information-theoretic-not-algorithmic hedge correctly added on the Classical.byCases use — closes the prior 'computable threshold' overclaim.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate9_NumericalFreshness", "Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false,
+      "delta_pct": 0.0
     },
     {
       "id": "sentence:D7:introduction:1039c11b",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "1039c11b",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 51,
-      "tex_line_end": 52,
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "1039c11b", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 61, "tex_line_end": 62,
       "quote": "The boundary between classical and quantum many-body simulation has moved substantially over 2025--2026.",
       "quote_normalized": "the boundary between classical and quantum many-body simulation has moved substantially over 2025--2026.",
-      "type": "qualitative",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "qualitative", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "INFO",
-      "agent_notes": "Field-state framing claim. Not falsifiable by structural check; consistent with the two cited 2026 results.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "the boundary between classical and quantum many-body simulation has moved substantially over 2025--2026."
-      }
+      "agent_notes": "Field-state framing claim. Not falsifiable by structural check.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:introduction:df7c4f4d",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "df7c4f4d",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 53,
-      "tex_line_end": 56,
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "df7c4f4d", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 62, "tex_line_end": 66,
       "quote": "Tindall, Mello, Fishman, Stoudenmire, and Sels demonstrated that classical tensor-network contraction via belief propagation matches the D-Wave Advantage2 quantum annealer on 300+ qubit spin-glass dynamics across 2D square, 3D cubic, and 3D diamond lattices~\\cite{TindallMelloFishmanStoudenmireSels2026Science392}.",
       "quote_normalized": "tindall, mello, fishman, stoudenmire, and sels demonstrated that classical tensor-network contraction via belief propagation matches the d-wave advantage2 quantum annealer on 300+ qubit spin-glass dynamics across 2d square, 3d cubic, and 3d diamond lattices~.",
-      "type": "citation",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "citation",
-            "target": "TindallMelloFishmanStoudenmireSels2026Science392"
-          }
-        ],
-        "completeness": "full"
-      },
+      "type": "citation", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "citation", "target": "TindallMelloFishmanStoudenmireSels2026Science392"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Tindall et al. Science 2026 cached at Lit-Search/Phase-6w/primary-sources/. Specific platform/lattice claims (D-Wave Advantage2, 300+ qubits, 2D square / 3D cubic / 3D diamond) consistent with the cached abstract and the public title 'Dynamics of disordered quantum systems with two- and three-dimensional tensor networks'.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate1_CitationIntegrity"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "tindall, mello, fishman, stoudenmire, and sels demonstrated that classical tensor-network contraction via belief propagation matches the d-wave advantage2 quantum annealer on 300+ qubit spin-glass dynamics across 2d square, 3d cubic, and 3d diamond lattices~."
-      }
+      "agent_notes": "Tindall et al. Science 2026 in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:introduction:a1206421",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "a1206421",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 56,
-      "tex_line_end": 60,
-      "quote": "Ant\u00e3o, Sun, Fumega, and Lado complemented this with a Chebyshev-TN density-matrix algorithm that computes local Chern markers on quasicrystal Hamiltonians with hundreds of millions of sites~\\cite{AntaoSunFumegaLado2026PRL136}.",
-      "quote_normalized": "ant\u00e3o, sun, fumega, and lado complemented this with a chebyshev-tn density-matrix algorithm that computes local chern markers on quasicrystal hamiltonians with hundreds of millions of sites~.",
-      "type": "citation",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "citation",
-            "target": "AntaoSunFumegaLado2026PRL136"
-          }
-        ],
-        "completeness": "full"
-      },
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "a1206421", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 67, "tex_line_end": 70,
+      "quote": "Antão, Sun, Fumega, and Lado complemented this with a Chebyshev-TN density-matrix algorithm that computes local Chern markers on quasicrystal Hamiltonians with hundreds of millions of sites~\\cite{AntaoSunFumegaLado2026PRL136}.",
+      "quote_normalized": "antão, sun, fumega, and lado complemented this with a chebyshev-tn density-matrix algorithm that computes local chern markers on quasicrystal hamiltonians with hundreds of millions of sites~.",
+      "type": "citation", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "citation", "target": "AntaoSunFumegaLado2026PRL136"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Ant\u00e3o et al. PRL 2026 cached. Title 'Tensor Network Method for Real-Space Topology in Quasicrystal Chern Mosaics' matches prose. 'Hundreds of millions of sites' is a verifiable scale claim consistent with cached abstract.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate1_CitationIntegrity"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "ant\u00e3o, sun, fumega, and lado complemented this with a chebyshev-tn density-matrix algorithm that computes local chern markers on quasicrystal hamiltonians with hundreds of millions of sites~."
-      }
+      "agent_notes": "Antão et al. PRL 2026 in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate1_CitationIntegrity"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:introduction:7aa82765",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "7aa82765",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 60,
-      "tex_line_end": 62,
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "7aa82765", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 70, "tex_line_end": 72,
       "quote": "Together these two results bracket a substantial swath of quantum-simulation territory in which classical methods are competitive.",
       "quote_normalized": "together these two results bracket a substantial swath of quantum-simulation territory in which classical methods are competitive.",
-      "type": "qualitative",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "qualitative", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "INFO",
-      "agent_notes": "Interpretive framing; consistent with the two cited results.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "together these two results bracket a substantial swath of quantum-simulation territory in which classical methods are competitive."
-      }
+      "agent_notes": "Interpretive framing.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:introduction:775ffdf7",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "775ffdf7",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 64,
-      "tex_line_end": 64,
-      "quote": "Where exactly does the boundary lie?",
-      "quote_normalized": "where exactly does the boundary lie?",
-      "type": "transition",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "775ffdf7", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 74, "tex_line_end": 76,
+      "quote": "Where exactly does the boundary lie? When does classical simulation suffice, and when do quantum processors retain a structural advantage?",
+      "quote_normalized": "where exactly does the boundary lie? when does classical simulation suffice, and when do quantum processors retain a structural advantage?",
+      "type": "transition", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
-      "agent_notes": "Rhetorical question.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "where exactly does the boundary lie?"
-      }
-    },
-    {
-      "id": "sentence:D7:introduction:139a5dba",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "139a5dba",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 64,
-      "tex_line_end": 66,
-      "quote": "When does classical simulation suffice, and when do quantum processors retain a structural advantage?",
-      "quote_normalized": "when does classical simulation suffice, and when do quantum processors retain a structural advantage?",
-      "type": "transition",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
-      "agent_verdict": "TRANSITION",
-      "agent_notes": "Rhetorical setup; no extractable claim.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "when does classical simulation suffice, and when do quantum processors retain a structural advantage?"
-      }
+      "agent_notes": "Rhetorical setup.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:introduction:5416bf91",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "5416bf91",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 66,
-      "tex_line_end": 70,
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "5416bf91", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 76, "tex_line_end": 80,
       "quote": "This paper formalizes a substantive demarcation criterion at the Lean~4 substrate level, producing a kernel-verified biconditional that decomposes the simulability question into two load-bearing axes:",
       "quote_normalized": "this paper formalizes a substantive demarcation criterion at the lean~4 substrate level, producing a kernel-verified biconditional that decomposes the simulability question into two load-bearing axes:",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "metaclaim", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
-      "agent_notes": "Paper-self-description; introduces the enumeration that follows.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "this paper formalizes a substantive demarcation criterion at the lean~4 substrate level, producing a kernel-verified biconditional that decomposes the simulability question into two load-bearing axes:"
-      }
+      "agent_notes": "Paper-self-description.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
-      "id": "sentence:D7:introduction:93678e4a",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "93678e4a",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 72,
-      "tex_line_end": 76,
-      "quote": "\\textit{LDP rate function condition}: the large-deviation rate of the loop-correction terms in the factor-graph PEPS representation must lie below a computable threshold (equivalently, the factor graph is tree-like and the factor weights are non-negative).",
-      "quote_normalized": "ldp rate function condition: the large-deviation rate of the loop-correction terms in the factor-graph peps representation must lie below a computable threshold (equivalently, the factor graph is tree-like and the factor weights are non-negative).",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_below_threshold_iff_tree"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.BPLDPSimulability.isBPConvergenceFavorable_on_tree_iff_factor_weights_nonneg"
-          }
-        ],
-        "completeness": "full"
-      },
+      "id": "sentence:D7:introduction:tre1c0nd",
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "tre1c0nd", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 82, "tex_line_end": 95,
+      "quote": "\\textit{Tree-indicator condition}: a structural indicator on the factor graph (encoding ``this graph is a tree'' at the predicate level) must be at or below the fixed threshold $1/2$ (equivalently, the factor graph is tree-like and the factor weights are non-negative). The Lean implementation $\\mathtt{loopCorrectionRate}\\,G := \\mathtt{if}\\ \\mathrm{IsTreeFactorGraph}\\,G\\ \\mathtt{then}\\ 0\\ \\mathtt{else}\\ 1$ is a $\\{0,1\\}$-valued indicator, not a continuous Cramér-type large-deviation rate function.",
+      "quote_normalized": "tree-indicator condition: a structural indicator on the factor graph (encoding \"this graph is a tree\" at the predicate level) must be at or below the fixed threshold $1/2$ (equivalently, the factor graph is tree-like and the factor weights are non-negative). the lean implementation $loopcorrectionrate\\,g := if\\ istreefactorgraph\\,g\\ then\\ 0\\ else\\ 1$ is a $\\{0,1\\}$-valued indicator, not a continuous cramér-type large-deviation rate function.",
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.BPLDPSimulability.loopCorrectionRate_below_threshold_iff_tree"}, {"kind": "theorem", "target": "SKEFTHawking.BPLDPSimulability.isBPConvergenceFavorable_on_tree_iff_factor_weights_nonneg"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "The 'tree-like AND non-neg factor weights' equivalence verified at BPLDPSimulability.lean L195 isBPConvergenceFavorable_on_tree_iff_factor_weights_nonneg + L148 loopCorrectionRate_below_threshold_iff_tree.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "ldp rate function condition: the large-deviation rate of the loop-correction terms in the factor-graph peps representation must lie below a computable threshold (equivalently, the factor graph is tree-like and the factor weights are non-negative)."
-      }
+      "agent_notes": "Substantive remediation: the round-1 'LDP rate function condition' framing has been honestly downgraded to 'Tree-indicator condition' with the $\\{0,1\\}$-valued indicator made explicit, and the LDP-Cramér gap disclosed as a separate ~200-400 LoC deliverable. This is exactly the discipline the round-1 reviewer was asking for. Substantive equivalence still holds via the two cited theorems.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate6_AssumptionDisclosure"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:introduction:728d8908",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "728d8908",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 77,
-      "tex_line_end": 79,
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "728d8908", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 96, "tex_line_end": 98,
       "quote": "\\textit{Topological condition}: the categorical Chern coefficient $c_1$ of the system must vanish.",
       "quote_normalized": "topological condition: the categorical chern coefficient $c_1$ of the system must vanish.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.ChernBridge.crystalline_eq_quasicrystalline_iff_c1_zero"
-          }
-        ],
-        "completeness": "full"
-      },
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.ChernBridge.crystalline_eq_quasicrystalline_iff_c1_zero"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Substantive Theorem 4 at ChernBridge.lean L37 docstring; c1=0 axis is well-defined.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "topological condition: the categorical chern coefficient $c_1$ of the system must vanish."
-      }
+      "agent_notes": "c1=0 axis verified at ChernBridge.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:introduction:f0145779",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "f0145779",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 81,
-      "tex_line_end": 85,
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "f0145779", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 100, "tex_line_end": 102,
       "quote": "The biconditional `analog\\_hawking\\_quantum\\_advantage\\_demarcation' (Lean module \\texttt{AnalogHawkingDemarcation.lean}) ties these two axes together at the type level.",
       "quote_normalized": "the biconditional `analog\\_hawking\\_quantum\\_advantage\\_demarcation' (lean module analoghawkingdemarcation.lean) ties these two axes together at the type level.",
-      "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation"
-          }
-        ],
-        "completeness": "full"
-      },
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "TN-class CONSIDERATION (advisory not FAIL): the cited theorem `analog_hawking_quantum_advantage_demarcation` is NOT findable in cached lean_deps.json because that cache is STALE (regenerated 2026-05-26 07:35 AM, pre-Phase-6w). Authoritative direct grep on lean/SKEFTHawking/AnalogHawkingDemarcation.lean L101 CONFIRMS the theorem exists. Counts.json regen deferred per user direction. Stale-cache caveat applies project-wide to Phase 6w content until next counts.json refresh.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance",
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "the biconditional `analog\\_hawking\\_quantum\\_advantage\\_demarcation' (lean module analoghawkingdemarcation.lean) ties these two axes together at the type level."
-      }
+      "agent_notes": "Direct grep confirms theorem at AnalogHawkingDemarcation.lean exists. Stale lean_deps.json caveat (pre-Phase-6w cache) does not affect this verdict — using grep as authoritative source per task brief.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:introduction:d1df1fd8",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "d1df1fd8",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 85,
-      "tex_line_end": 89,
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "d1df1fd8", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 102, "tex_line_end": 106,
       "quote": "The substrate beneath it --- seven Lean modules across the BP-on-TN, LDP-rate-function, Chebyshev-TN, aperiodic-lattice, and Chern-bridge layers --- is fully generic over the factor-graph type parameters and applies to any LDP-controlled-BP / Chebyshev-TN classification setting.",
       "quote_normalized": "the substrate beneath it --- seven lean modules across the bp-on-tn, ldp-rate-function, chebyshev-tn, aperiodic-lattice, and chern-bridge layers --- is fully generic over the factor-graph type parameters and applies to any ldp-controlled-bp / chebyshev-tn classification setting.",
-      "type": "numeric",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "lean_module_count_phase6w",
-            "computed_value": 7,
-            "delta_pct": 0.0
-          }
-        ],
-        "completeness": "full"
-      },
+      "type": "numeric", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "formula", "target": "lean_module_count_phase6w", "computed_value": 7, "delta_pct": 0.0}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Seven contributing Phase 6w modules confirmed: BeliefPropagation, BPLDPSimulability, ChebyshevTN, AperiodicLattice, ChernBridge, AnalogHawkingDemarcation, KibbleZurekUnruh. The 5-layer description 'BP-on-TN, LDP-rate-function, Chebyshev-TN, aperiodic-lattice, Chern-bridge' enumerates 5 layers across 7 modules \u2014 consistent (BP-on-TN \u2194 BeliefPropagation; LDP-rate-function \u2194 BPLDPSimulability; Chebyshev-TN \u2194 ChebyshevTN; aperiodic-lattice \u2194 AperiodicLattice; Chern-bridge \u2194 ChernBridge \u2014 plus AnalogHawkingDemarcation (headline) + KibbleZurekUnruh (application) which are not in the 5 substrate layers).",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "the substrate beneath it --- seven lean modules across the bp-on-tn, ldp-rate-function, chebyshev-tn, aperiodic-lattice, and chern-bridge layers --- is fully generic over the factor-graph type parameters and applies to any ldp-controlled-bp / chebyshev-tn classification setting."
-      },
+      "agent_notes": "Seven contributing Phase 6w modules confirmed by grep.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false,
       "delta_pct": 0.0
     },
     {
       "id": "sentence:D7:introduction:5958567b",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "introduction",
-        "quote_hash": "5958567b",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "introduction",
-      "section_ordinal": 2,
-      "tex_line_start": 87,
-      "tex_line_end": 89,
+      "raw_id_parts": {"paper": "D7", "section_slug": "introduction", "quote_hash": "5958567b", "hash_algorithm": "sha256_first_8"},
+      "section": "introduction", "section_ordinal": 2, "tex_line_start": 106, "tex_line_end": 108,
       "quote": "Analog-Hawking radiation is one concrete application, formalized via the Kibble-Zurek-Unruh correspondence (Section~\\ref{sec:kzu-application}).",
       "quote_normalized": "analog-hawking radiation is one concrete application, formalized via the kibble-zurek-unruh correspondence (section~).",
-      "type": "transition",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "transition", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
-      "agent_notes": "Section reference + framing.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "analog-hawking radiation is one concrete application, formalized via the kibble-zurek-unruh correspondence (section~)."
-      }
+      "agent_notes": "Section reference.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:scope-and-contributions:43a4875e",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "scope-and-contributions",
-        "quote_hash": "43a4875e",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "scope-and-contributions",
-      "section_ordinal": 3,
-      "tex_line_start": 93,
-      "tex_line_end": 93,
+      "raw_id_parts": {"paper": "D7", "section_slug": "scope-and-contributions", "quote_hash": "43a4875e", "hash_algorithm": "sha256_first_8"},
+      "section": "scope-and-contributions", "section_ordinal": 3, "tex_line_start": 112, "tex_line_end": 112,
       "quote": "We make four main contributions:",
       "quote_normalized": "we make four main contributions:",
-      "type": "transition",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "transition", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
       "agent_notes": "Itemize setup.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "we make four main contributions:"
-      }
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:scope-and-contributions:1952bd3d",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "scope-and-contributions",
-        "quote_hash": "1952bd3d",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "scope-and-contributions",
-      "section_ordinal": 3,
-      "tex_line_start": 96,
-      "tex_line_end": 101,
+      "raw_id_parts": {"paper": "D7", "section_slug": "scope-and-contributions", "quote_hash": "1952bd3d", "hash_algorithm": "sha256_first_8"},
+      "section": "scope-and-contributions", "section_ordinal": 3, "tex_line_start": 115, "tex_line_end": 119,
       "quote": "A Lean~4 formalization of belief propagation on bipartite factor graphs in the Yedidia-Freeman-Weiss 2003 convention, with 24 substantive theorems covering message-update positivity, factorization, fixed-point stability, and Bethe free-energy substrate (Section~\\ref{sec:bp-substrate}).",
       "quote_normalized": "a lean~4 formalization of belief propagation on bipartite factor graphs in the yedidia-freeman-weiss 2003 convention, with 24 substantive theorems covering message-update positivity, factorization, fixed-point stability, and bethe free-energy substrate (section~).",
-      "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "grep_theorem_count_BeliefPropagation",
-            "computed_value": 24,
-            "delta_pct": 0.0
-          },
-          {
-            "kind": "citation",
-            "target": "YedidiaFreemanWeiss2003"
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "FAIL",
-      "agent_notes": "The numeric claim '24 substantive theorems in BeliefPropagation.lean' MATCHES grep '^theorem ' (24). PASS on count. HOWEVER citation 'Yedidia-Freeman-Weiss 2003 convention' references a bibitem 'YedidiaFreemanWeiss2003' which is NOT in CITATION_REGISTRY \u2014 Class IA + Class TN: citation drift. FAIL aggregates to citation-registry gap (see Discussion-level finding).",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance",
-        "Gate1_CitationIntegrity"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "a lean~4 formalization of belief propagation on bipartite factor graphs in the yedidia-freeman-weiss 2003 convention, with 24 substantive theorems covering message-update positivity, factorization, fixed-point stability, and bethe free-energy substrate (section~)."
-      },
+      "type": "numeric", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "formula", "target": "grep_theorem_count_BeliefPropagation", "computed_value": 24, "delta_pct": 0.0}, {"kind": "citation", "target": "YedidiaFreemanWeiss2003"}], "completeness": "full"},
+      "agent_verdict": "PASS",
+      "agent_notes": "Theorem count 24 matches grep. YedidiaFreemanWeiss2003 NOW in CITATION_REGISTRY (citations.py L10242) — round-1 BLOCKER (block:D7:2) is SUPERSEDED.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate1_CitationIntegrity"], "rewrite_of": null, "tombstone": false,
       "delta_pct": 0.0
     },
     {
-      "id": "sentence:D7:scope-and-contributions:8107071f",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "scope-and-contributions",
-        "quote_hash": "8107071f",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "scope-and-contributions",
-      "section_ordinal": 3,
-      "tex_line_start": 102,
-      "tex_line_end": 107,
-      "quote": "A kernel-verified biconditional characterization of LDP-controlled BP convergence: $\\mathrm{IsBPConvergenceFavorable}\\ G\\ f_a \\iff \\mathrm{loopCorrectionRate}\\ G \\leq 1/2 \\land (\\forall a\\, y,\\, 0 \\leq f_a(y))$ (Section~\\ref{sec:ldp-bp}).",
-      "quote_normalized": "a kernel-verified biconditional characterization of ldp-controlled bp convergence: $isbpconvergencefavorable\\ g\\ f_a \\iff loopcorrectionrate\\ g \\leq 1/2 \\land (\\forall a\\, y,\\, 0 \\leq f_a(y))$ (section~).",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.BPLDPSimulability.bp_convergence_iff_ldp_below_threshold"
-          }
-        ],
-        "completeness": "full"
-      },
+      "id": "sentence:D7:scope-and-contributions:8107071r",
+      "raw_id_parts": {"paper": "D7", "section_slug": "scope-and-contributions", "quote_hash": "8107071r", "hash_algorithm": "sha256_first_8"},
+      "section": "scope-and-contributions", "section_ordinal": 3, "tex_line_start": 121, "tex_line_end": 130,
+      "quote": "A kernel-verified biconditional characterization of BP-favorable factor graphs in terms of a tree-indicator threshold: $\\mathrm{IsBPConvergenceFavorable}\\ G\\ f_a \\iff \\mathrm{loopCorrectionRate}\\ G \\leq 1/2 \\land (\\forall a\\, y,\\, 0 \\leq f_a(y))$ where $\\mathrm{loopCorrectionRate}$ is a $\\{0,1\\}$-valued structural tree indicator (not a continuous LDP rate function in the present substrate; see Section~\\ref{sec:ldp-bp}).",
+      "quote_normalized": "a kernel-verified biconditional characterization of bp-favorable factor graphs in terms of a tree-indicator threshold: $isbpconvergencefavorable\\ g\\ f_a \\iff loopcorrectionrate\\ g \\leq 1/2 \\land (\\forall a\\, y,\\, 0 \\leq f_a(y))$ where $loopcorrectionrate$ is a $\\{0,1\\}$-valued structural tree indicator (not a continuous ldp rate function in the present substrate; see section~).",
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.BPLDPSimulability.bp_convergence_iff_ldp_below_threshold"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Headline biconditional verified at BPLDPSimulability.lean L183. The conjunction inside the biconditional decomposes via loopCorrectionRate_below_threshold_iff_tree (\u2264 1/2 \u2194 tree) and IsBPConvergenceFavorable definition (which bundles tree + non-neg-factor-weights). The displayed math statement matches the Lean statement.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "a kernel-verified biconditional characterization of ldp-controlled bp convergence: $isbpconvergencefavorable\\ g\\ f_a \\iff loopcorrectionrate\\ g \\leq 1/2 \\land (\\forall a\\, y,\\, 0 \\leq f_a(y))$ (section~)."
-      }
+      "agent_notes": "Headline biconditional verified. Substantive remediation: contribution honestly describes the loopCorrectionRate as a $\\{0,1\\}$-valued structural tree indicator, NOT a continuous LDP rate function. The scope-cap is disclosed in-line.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:scope-and-contributions:55e04a3b",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "scope-and-contributions",
-        "quote_hash": "55e04a3b",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "scope-and-contributions",
-      "section_ordinal": 3,
-      "tex_line_start": 109,
-      "tex_line_end": 114,
+      "raw_id_parts": {"paper": "D7", "section_slug": "scope-and-contributions", "quote_hash": "55e04a3b", "hash_algorithm": "sha256_first_8"},
+      "section": "scope-and-contributions", "section_ordinal": 3, "tex_line_start": 132, "tex_line_end": 137,
       "quote": "A categorical-Chern $\\leftrightarrow$ real-space-Chern bridge formalized via the Chebyshev tensor-network expansion, with substantively distinct crystalline (band-edge $x = 1$) and quasicrystalline (band-edge $x = -1$) limits whose difference $2 c_1$ extracts the topological invariant (Section~\\ref{sec:chern-bridge}).",
       "quote_normalized": "a categorical-chern $\\leftrightarrow$ real-space-chern bridge formalized via the chebyshev tensor-network expansion, with substantively distinct crystalline (band-edge $x = 1$) and quasicrystalline (band-edge $x = -1$) limits whose difference $2 c_1$ extracts the topological invariant (section~).",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.ChernBridge.crystalline_minus_quasicrystalline_eq_twice_c1"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.ChernBridge.categorical_chern_eq_real_space_chern_crystalline"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.ChernBridge.categorical_chern_eq_real_space_chern_quasicrystalline"
-          }
-        ],
-        "completeness": "full"
-      },
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.ChernBridge.crystalline_minus_quasicrystalline_eq_twice_c1"}, {"kind": "theorem", "target": "SKEFTHawking.ChernBridge.categorical_chern_eq_real_space_chern_crystalline"}, {"kind": "theorem", "target": "SKEFTHawking.ChernBridge.categorical_chern_eq_real_space_chern_quasicrystalline"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "The crystalline/quasicrystalline limit story matches ChernBridge.lean docstring L13-L21 exactly: crystalline \u2192 c_0+c_1 (band-edge x=1), quasicrystalline \u2192 c_0-c_1 (band-edge x=-1), difference = 2c_1. All three named theorems exist (Substantive Theorem 3 explicitly named crystalline_minus_quasicrystalline_eq_twice_c1).",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "a categorical-chern $\\leftrightarrow$ real-space-chern bridge formalized via the chebyshev tensor-network expansion, with substantively distinct crystalline (band-edge $x = 1$) and quasicrystalline (band-edge $x = -1$) limits whose difference $2 c_1$ extracts the topological invariant (section~)."
-      }
+      "agent_notes": "All three named theorems exist in ChernBridge.lean.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:scope-and-contributions:8d8f2c19",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "scope-and-contributions",
-        "quote_hash": "8d8f2c19",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "scope-and-contributions",
-      "section_ordinal": 3,
-      "tex_line_start": 116,
-      "tex_line_end": 121,
-      "quote": "A unified demarcation theorem (Section~\\ref{sec:demarcation}) combining the LDP-BP and Chern contributions: a system is classically simulable iff BP-LDP-favorable AND $c_1 = 0$.",
-      "quote_normalized": "a unified demarcation theorem (section~) combining the ldp-bp and chern contributions: a system is classically simulable iff bp-ldp-favorable and $c_1 = 0$.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero"
-          }
-        ],
-        "completeness": "full"
-      },
+      "raw_id_parts": {"paper": "D7", "section_slug": "scope-and-contributions", "quote_hash": "8d8f2c19", "hash_algorithm": "sha256_first_8"},
+      "section": "scope-and-contributions", "section_ordinal": 3, "tex_line_start": 139, "tex_line_end": 144,
+      "quote": "A unified demarcation theorem (Section~\\ref{sec:demarcation}) combining the LDP-BP and Chern contributions: a system is classically simulable iff BP-LDP-favorable AND $c_1 = 0$. Contrapositive yields the quantum-advantage regime explicitly.",
+      "quote_normalized": "a unified demarcation theorem (section~) combining the ldp-bp and chern contributions: a system is classically simulable iff bp-ldp-favorable and $c_1 = 0$. contrapositive yields the quantum-advantage regime explicitly.",
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero"}, {"kind": "theorem", "target": "SKEFTHawking.AnalogHawkingDemarcation.loopy_or_nonzero_c1_implies_not_simulable"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Verified at AnalogHawkingDemarcation.lean L120 'analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero'.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "a unified demarcation theorem (section~) combining the ldp-bp and chern contributions: a system is classically simulable iff bp-ldp-favorable and $c_1 = 0$."
-      }
-    },
-    {
-      "id": "sentence:D7:scope-and-contributions:31bfacae",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "scope-and-contributions",
-        "quote_hash": "31bfacae",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "scope-and-contributions",
-      "section_ordinal": 3,
-      "tex_line_start": 120,
-      "tex_line_end": 121,
-      "quote": "Contrapositive yields the quantum-advantage regime explicitly.",
-      "quote_normalized": "contrapositive yields the quantum-advantage regime explicitly.",
-      "type": "theorem-ref",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AnalogHawkingDemarcation.loopy_or_nonzero_c1_implies_not_simulable"
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "PASS",
-      "agent_notes": "Companion 'loopy_or_nonzero_c1_implies_not_simulable' at AnalogHawkingDemarcation.lean L138.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "contrapositive yields the quantum-advantage regime explicitly."
-      }
+      "agent_notes": "Both forward biconditional and contrapositive verified.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:belief-propagation-on-factor-graphs-lean-substrate:65570e8b",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "belief-propagation-on-factor-graphs-lean-substrate",
-        "quote_hash": "65570e8b",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "belief-propagation-on-factor-graphs-lean-substrate",
-      "section_ordinal": 4,
-      "tex_line_start": 123,
-      "tex_line_end": 124,
+      "raw_id_parts": {"paper": "D7", "section_slug": "belief-propagation-on-factor-graphs-lean-substrate", "quote_hash": "65570e8b", "hash_algorithm": "sha256_first_8"},
+      "section": "belief-propagation-on-factor-graphs-lean-substrate", "section_ordinal": 4, "tex_line_start": 146, "tex_line_end": 147,
       "quote": "Belief propagation on factor graphs --- Lean substrate",
       "quote_normalized": "belief propagation on factor graphs --- lean substrate",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "metaclaim", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
       "agent_notes": "Section heading.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "belief propagation on factor graphs --- lean substrate"
-      }
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:belief-propagation-on-factor-graphs-lean-substrate:8aba8dec",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "belief-propagation-on-factor-graphs-lean-substrate",
-        "quote_hash": "8aba8dec",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "belief-propagation-on-factor-graphs-lean-substrate",
-      "section_ordinal": 4,
-      "tex_line_start": 126,
-      "tex_line_end": 136,
+      "raw_id_parts": {"paper": "D7", "section_slug": "belief-propagation-on-factor-graphs-lean-substrate", "quote_hash": "8aba8dec", "hash_algorithm": "sha256_first_8"},
+      "section": "belief-propagation-on-factor-graphs-lean-substrate", "section_ordinal": 4, "tex_line_start": 149, "tex_line_end": 159,
       "quote": "[Wave 6w.2 substrate. Section content to be expanded in subsequent Stage-10 revision passes per the bundle-lift procedure. The 24 substantive theorems in \\texttt{BeliefPropagation.lean} cover the bipartite \\texttt{FactorGraph} structure, \\texttt{BPMessages} bundle, the Yedidia-Freeman-Weiss \\texttt{bpVariableUpdate} + \\texttt{bpFactorUpdate} + combined \\texttt{bpUpdate}, the \\texttt{IsBPFixedPoint} predicate, all-iterates-invariant characterization, variable + factor beliefs with positivity propagation, Shannon entropy + log-1/log-0 identities, factor energy + relative-entropy decomposition, Bethe free energy with vacuum boundary + functoriality, and the tree-factor-graph predicate.]",
       "quote_normalized": "[wave 6w.2 substrate. section content to be expanded in subsequent stage-10 revision passes per the bundle-lift procedure. the 24 substantive theorems in beliefpropagation.lean cover the bipartite factorgraph structure, bpmessages bundle, the yedidia-freeman-weiss bpvariableupdate + bpfactorupdate + combined bpupdate, the isbpfixedpoint predicate, all-iterates-invariant characterization, variable + factor beliefs with positivity propagation, shannon entropy + log-1/log-0 identities, factor energy + relative-entropy decomposition, bethe free energy with vacuum boundary + functoriality, and the tree-factor-graph predicate.]",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "metaclaim", "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "UNGROUNDED",
-      "agent_notes": "SKELETON PLACEHOLDER per task brief: \u00a72-\u00a76 are explicit TBD bracketed placeholders awaiting Stage-10 expansion. Per agent prompt verdict semantics this is a coverage gap (UNGROUNDED), not a chain failure (FAIL). The enumerated Lean identifiers (FactorGraph, BPMessages, bpVariableUpdate, bpFactorUpdate, bpUpdate, IsBPFixedPoint) ARE present in BeliefPropagation.lean (verified by grep), so the placeholder is faithful to the underlying substrate. Flag for Stage-10 expansion: \u00a72 needs prose-level walk-through of each of the 24 theorems.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "[wave 6w.2 substrate. section content to be expanded in subsequent stage-10 revision passes per the bundle-lift procedure. the 24 substantive theorems in beliefpropagation.lean cover the bipartite factorgraph structure, bpmessages bundle, the yedidia-freeman-weiss bpvariableupdate + bpfactorupdate + combined bpupdate, the isbpfixedpoint predicate, all-iterates-invariant characterization, variable + factor beliefs with positivity propagation, shannon entropy + log-1/log-0 identities, factor energy + relative-entropy decomposition, bethe free energy with vacuum boundary + functoriality, and the tree-factor-graph predicate.]"
-      }
+      "agent_notes": "Skeleton placeholder per task brief. Inline identifiers ARE present in BeliefPropagation.lean (verified by grep). Coverage gap pending Stage-10 expansion — not a chain failure.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate9_NumericalFreshness"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:ldp-controlled-belief-propagation-convergence:b4530e17",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "ldp-controlled-belief-propagation-convergence",
-        "quote_hash": "b4530e17",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "ldp-controlled-belief-propagation-convergence",
-      "section_ordinal": 5,
-      "tex_line_start": 138,
-      "tex_line_end": 139,
+      "raw_id_parts": {"paper": "D7", "section_slug": "ldp-controlled-belief-propagation-convergence", "quote_hash": "b4530e17", "hash_algorithm": "sha256_first_8"},
+      "section": "ldp-controlled-belief-propagation-convergence", "section_ordinal": 5, "tex_line_start": 161, "tex_line_end": 162,
       "quote": "LDP-controlled belief-propagation convergence",
       "quote_normalized": "ldp-controlled belief-propagation convergence",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "metaclaim", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
       "agent_notes": "Section heading.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "ldp-controlled belief-propagation convergence"
-      }
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:ldp-controlled-belief-propagation-convergence:9b8e311f",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "ldp-controlled-belief-propagation-convergence",
-        "quote_hash": "9b8e311f",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "ldp-controlled-belief-propagation-convergence",
-      "section_ordinal": 5,
-      "tex_line_start": 141,
-      "tex_line_end": 146,
+      "raw_id_parts": {"paper": "D7", "section_slug": "ldp-controlled-belief-propagation-convergence", "quote_hash": "9b8e311f", "hash_algorithm": "sha256_first_8"},
+      "section": "ldp-controlled-belief-propagation-convergence", "section_ordinal": 5, "tex_line_start": 164, "tex_line_end": 169,
       "quote": "[Wave 6w.3 headline substrate. The biconditional \\texttt{bp\\_convergence\\_iff\\_ldp\\_below\\_threshold} ties the structural simulability property \\texttt{IsBPConvergenceFavorable} to the LDP rate-function threshold via the substantive characterization \\texttt{loopCorrectionRate\\_below\\_threshold\\_iff\\_tree}. Seven substantive theorems + two companions verified kernel-only.]",
       "quote_normalized": "[wave 6w.3 headline substrate. the biconditional bp\\_convergence\\_iff\\_ldp\\_below\\_threshold ties the structural simulability property isbpconvergencefavorable to the ldp rate-function threshold via the substantive characterization loopcorrectionrate\\_below\\_threshold\\_iff\\_tree. seven substantive theorems + two companions verified kernel-only.]",
-      "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "grep_theorem_count_BPLDPSimulability",
-            "computed_value": 8,
-            "delta_pct": 11.1
-          }
-        ],
-        "completeness": "full"
-      },
+      "type": "numeric", "finding_classes": ["IA"],
+      "chain_proposed": {"links": [{"kind": "formula", "target": "grep_theorem_count_BPLDPSimulability", "computed_value": 8, "delta_pct": 11.1}], "completeness": "full"},
       "agent_verdict": "WARN",
-      "agent_notes": "IA: paper says 'Seven substantive theorems + two companions' = 9 total in BPLDP. grep '^theorem ' on BPLDPSimulability.lean yields 8 theorems. The 8 are: loopCorrectionRate_eq_zero_iff_tree, loopCorrectionRate_eq_one_of_not_tree, loopCorrectionRate_nonneg, loopCorrectionRate_le_one, loopCorrectionRate_below_threshold_iff_tree, bp_convergence_iff_ldp_below_threshold (headline), isBPConvergenceFavorable_on_tree_iff_factor_weights_nonneg, not_isBPConvergenceFavorable_on_non_tree. Reconcilable interpretation: 7 substantive (the 5 loopCorrectionRate lemmas + 2 companions = 'substantive + companions' phrasing) is plausibly a substantive/companion taxonomy mismatch. WARN not FAIL because \u00a73 placeholder lacks the detailed breakdown that would resolve this; Stage-10 expansion will clarify. CROSS-CONNECTS to the abstract '67 theorems' arithmetic \u2014 under 'all 8 substantive' the total would be 24+8+10+7+6+5+8 = 68 (matches grep); under '7 substantive + 2 companions in BPLDP' the substantive total would be 24+7+10+7+6+5+8 = 67 (matches abstract). One interpretation makes both numbers consistent, the other doesn't. Recommend explicit taxonomy in Stage-10.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "[wave 6w.3 headline substrate. the biconditional bp\\_convergence\\_iff\\_ldp\\_below\\_threshold ties the structural simulability property isbpconvergencefavorable to the ldp rate-function threshold via the substantive characterization loopcorrectionrate\\_below\\_threshold\\_iff\\_tree. seven substantive theorems + two companions verified kernel-only.]"
-      },
+      "agent_notes": "IA: paper text 'Seven substantive theorems + two companions' = 9 total. grep on BPLDPSimulability.lean yields 8 theorems. Round-1 noted this is reconcilable via substantive/companion taxonomy: 7 substantive + 1 companion = 8 total. Phrasing 'two companions' still asymmetric vs the count. Section is skeleton placeholder pending Stage-10 expansion which should resolve the explicit taxonomy. Carried as WARN (not BLOCKER) consistent with round-1 disposition.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate9_NumericalFreshness"], "rewrite_of": null, "tombstone": false,
       "delta_pct": 11.1
     },
     {
       "id": "sentence:D7:chebyshev-tensor-network-chern-bridge:58b62628",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "chebyshev-tensor-network-chern-bridge",
-        "quote_hash": "58b62628",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "chebyshev-tensor-network-chern-bridge",
-      "section_ordinal": 6,
-      "tex_line_start": 148,
-      "tex_line_end": 149,
+      "raw_id_parts": {"paper": "D7", "section_slug": "chebyshev-tensor-network-chern-bridge", "quote_hash": "58b62628", "hash_algorithm": "sha256_first_8"},
+      "section": "chebyshev-tensor-network-chern-bridge", "section_ordinal": 6, "tex_line_start": 171, "tex_line_end": 172,
       "quote": "Chebyshev tensor-network Chern bridge",
       "quote_normalized": "chebyshev tensor-network chern bridge",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "metaclaim", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
       "agent_notes": "Section heading.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "chebyshev tensor-network chern bridge"
-      }
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:chebyshev-tensor-network-chern-bridge:b07f56e0",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "chebyshev-tensor-network-chern-bridge",
-        "quote_hash": "b07f56e0",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "chebyshev-tensor-network-chern-bridge",
-      "section_ordinal": 6,
-      "tex_line_start": 151,
-      "tex_line_end": 155,
+      "raw_id_parts": {"paper": "D7", "section_slug": "chebyshev-tensor-network-chern-bridge", "quote_hash": "b07f56e0", "hash_algorithm": "sha256_first_8"},
+      "section": "chebyshev-tensor-network-chern-bridge", "section_ordinal": 6, "tex_line_start": 174, "tex_line_end": 178,
       "quote": "[Wave 6w.4 + Wave 6w.5 substrate. First-kind Chebyshev polynomials via canonical recurrence; aperiodic-lattice predicates; categorical-Chern $\\leftrightarrow$ real-space-Chern bridge with substantively distinct crystalline ($c_0+c_1$) vs quasicrystalline ($c_0-c_1$) band-edge limits.]",
       "quote_normalized": "[wave 6w.4 + wave 6w.5 substrate. first-kind chebyshev polynomials via canonical recurrence; aperiodic-lattice predicates; categorical-chern $\\leftrightarrow$ real-space-chern bridge with substantively distinct crystalline ($c_0+c_1$) vs quasicrystalline ($c_0-c_1$) band-edge limits.]",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "metaclaim", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "UNGROUNDED",
-      "agent_notes": "Skeleton placeholder. Inline statements (Chebyshev first-kind canonical recurrence, aperiodic-lattice predicates, c_0+c_1 / c_0-c_1 band-edge limits) ALL match the underlying Lean substrate (ChebyshevTN.lean 10 theorems; AperiodicLattice.lean 7 theorems; ChernBridge.lean 6 theorems with docstring confirming the (c_0+c_1, c_0-c_1) limits) so the placeholder is faithful. Coverage gap pending Stage-10 expansion.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "[wave 6w.4 + wave 6w.5 substrate. first-kind chebyshev polynomials via canonical recurrence; aperiodic-lattice predicates; categorical-chern $\\leftrightarrow$ real-space-chern bridge with substantively distinct crystalline ($c_0+c_1$) vs quasicrystalline ($c_0-c_1$) band-edge limits.]"
-      }
+      "agent_notes": "Skeleton placeholder. Inline identifiers match underlying Lean substrate. Note that ChernBridge module now has 5 theorems (categoricalChernExpansion_uses_aperiodicLattice DELETED in remediation, verified by tombstone comment at L128).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate9_NumericalFreshness"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:the-demarcation-theorem:6af5d217",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "the-demarcation-theorem",
-        "quote_hash": "6af5d217",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "the-demarcation-theorem",
-      "section_ordinal": 7,
-      "tex_line_start": 157,
-      "tex_line_end": 158,
+      "raw_id_parts": {"paper": "D7", "section_slug": "the-demarcation-theorem", "quote_hash": "6af5d217", "hash_algorithm": "sha256_first_8"},
+      "section": "the-demarcation-theorem", "section_ordinal": 7, "tex_line_start": 180, "tex_line_end": 181,
       "quote": "The demarcation theorem",
       "quote_normalized": "the demarcation theorem",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "metaclaim", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
       "agent_notes": "Section heading.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "the demarcation theorem"
-      }
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
-      "id": "sentence:D7:the-demarcation-theorem:b019c992",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "the-demarcation-theorem",
-        "quote_hash": "b019c992",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "the-demarcation-theorem",
-      "section_ordinal": 7,
-      "tex_line_start": 160,
-      "tex_line_end": 162,
+      "id": "sentence:D7:the-demarcation-theorem:b019newr",
+      "raw_id_parts": {"paper": "D7", "section_slug": "the-demarcation-theorem", "quote_hash": "b019newr", "hash_algorithm": "sha256_first_8"},
+      "section": "the-demarcation-theorem", "section_ordinal": 7, "tex_line_start": 183, "tex_line_end": 185,
       "quote": "[Wave 6w.6 HEADLINE. Combined biconditional consuming Wave 6w.3 + Wave 6w.5 substantive theorems; four companion lemmas including the contrapositive quantum-advantage regime.]",
       "quote_normalized": "[wave 6w.6 headline. combined biconditional consuming wave 6w.3 + wave 6w.5 substantive theorems; four companion lemmas including the contrapositive quantum-advantage regime.]",
-      "type": "numeric",
-      "finding_classes": [
-        "IA"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "formula",
-            "target": "grep_theorem_count_AnalogHawkingDemarcation",
-            "computed_value": 5,
-            "delta_pct": 20.0
-          }
-        ],
-        "completeness": "full"
-      },
-      "agent_verdict": "WARN",
-      "agent_notes": "IA: \u00a75 says 'four companion lemmas' which (with the headline) = 5 total. grep '^theorem ' on AnalogHawkingDemarcation.lean yields 5 theorems: analog_hawking_quantum_advantage_demarcation (headline, L101), analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero (L120), loopy_or_nonzero_c1_implies_not_simulable (L138), analog_hawking_simulable_implies_both_conditions (L152), analog_hawking_simulable_of_both_conditions (L161). So 1 headline + 4 companions = 5 \u2014 MATCHES exactly. PASS on count taxonomy IF the headline is included in 'consuming' but excluded from 'four companion lemmas' which is consistent reading. Reclassifying as INFO ... but kept as WARN because \u00a75 placeholder lacks the explicit breakdown that would render this unambiguous. Stage-10 should enumerate the 4 companions by name.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate9_NumericalFreshness"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "[wave 6w.6 headline. combined biconditional consuming wave 6w.3 + wave 6w.5 substantive theorems; four companion lemmas including the contrapositive quantum-advantage regime.]"
-      },
-      "delta_pct": 20.0
+      "type": "numeric", "finding_classes": ["IA"],
+      "chain_proposed": {"links": [{"kind": "formula", "target": "grep_theorem_count_AnalogHawkingDemarcation", "computed_value": 3, "delta_pct": 40.0}], "completeness": "full"},
+      "agent_verdict": "FAIL",
+      "agent_notes": "IA-NEW: §5 placeholder text says 'four companion lemmas' but post-remediation AnalogHawkingDemarcation.lean has only 3 theorems total (analog_hawking_quantum_advantage_demarcation headline + analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero + loopy_or_nonzero_c1_implies_not_simulable). The two P5 tautologies *_implies_both_conditions and *_of_both_conditions were correctly DELETED in remediation, but §5 placeholder text still claims '4 companion lemmas'. Should be 'two companion lemmas' (the iff-decomposition and the contrapositive). Stage-10 expansion target — NEW finding introduced by the remediation (text was not synced with the P5 deletions). Non-blocking since §5 is explicitly flagged as skeleton placeholder pending Stage-10 expansion, but flagged for immediate text-sync.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate9_NumericalFreshness"], "rewrite_of": null, "tombstone": false,
+      "delta_pct": 40.0
     },
     {
       "id": "sentence:D7:kibble-zurek-unruh-application:d5b48ef8",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "kibble-zurek-unruh-application",
-        "quote_hash": "d5b48ef8",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "kibble-zurek-unruh-application",
-      "section_ordinal": 8,
-      "tex_line_start": 164,
-      "tex_line_end": 165,
-      "quote": "Kibble-Zurek-Unruh application",
-      "quote_normalized": "kibble-zurek-unruh application",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "raw_id_parts": {"paper": "D7", "section_slug": "kibble-zurek-unruh-application", "quote_hash": "d5b48ef8", "hash_algorithm": "sha256_first_8"},
+      "section": "kibble-zurek-unruh-application", "section_ordinal": 8, "tex_line_start": 187, "tex_line_end": 188,
+      "quote": "Kibble-Zurek-Unruh application (substrate level only)",
+      "quote_normalized": "kibble-zurek-unruh application (substrate level only)",
+      "type": "metaclaim", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
-      "agent_notes": "Section heading.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "kibble-zurek-unruh application"
-      }
+      "agent_notes": "Section heading. Remediation correctly added '(substrate level only)' scope-cap to the heading itself — closes the round-1 over-claim disposition that the paper instantiated the demarcation on three platforms.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
-      "id": "sentence:D7:kibble-zurek-unruh-application:57593055",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "kibble-zurek-unruh-application",
-        "quote_hash": "57593055",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "kibble-zurek-unruh-application",
-      "section_ordinal": 8,
-      "tex_line_start": 167,
-      "tex_line_end": 171,
-      "quote": "[Wave 6w.1 application substrate. Worked instantiation on three analog-Hawking platforms via the KZ-U correspondence $1/\\tau_Q \\equiv \\kappa$; headline \\texttt{surface\\_gravity\\_bounds\\_kzm\\_exponent} cross-checks the Tindall-Sels KZM extraction against SK-EFT.]",
-      "quote_normalized": "[wave 6w.1 application substrate. worked instantiation on three analog-hawking platforms via the kz-u correspondence $1/\\tau_q \\equiv \\kappa$; headline surface\\_gravity\\_bounds\\_kzm\\_exponent cross-checks the tindall-sels kzm extraction against sk-eft.]",
-      "type": "theorem-ref",
-      "finding_classes": [
-        "TN"
-      ],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent"
-          },
-          {
-            "kind": "citation",
-            "target": "TindallMelloFishmanStoudenmireSels2026Science392"
-          }
-        ],
-        "completeness": "full"
-      },
+      "id": "sentence:D7:kibble-zurek-unruh-application:kzuremed",
+      "raw_id_parts": {"paper": "D7", "section_slug": "kibble-zurek-unruh-application", "quote_hash": "kzuremed", "hash_algorithm": "sha256_first_8"},
+      "section": "kibble-zurek-unruh-application", "section_ordinal": 8, "tex_line_start": 190, "tex_line_end": 206,
+      "quote": "[Wave 6w.1 application substrate at the cross-module identification level. The headline \\texttt{surface\\_gravity\\_bounds\\_kzm\\_exponent} (Lean module \\texttt{KibbleZurekUnruh.lean}) substantively bounds the Kibble-Zurek exponent via the SK-EFT surface gravity under the identification $1/\\tau_Q \\equiv \\kappa$, but the present substrate does NOT contain per-platform instantiation bridges into the demarcation theorem. Concretely, the \\texttt{AnalogHawkingDemarcation.lean} module does not import \\texttt{KibbleZurekUnruh.lean} and there are no \\texttt{analog\\_hawking\\_simulable\\_BEC\\_instance} or analogous platform-specific lemmas at this writing.]",
+      "quote_normalized": "[wave 6w.1 application substrate at the cross-module identification level. the headline surface\\_gravity\\_bounds\\_kzm\\_exponent (lean module kibblezurekunruh.lean) substantively bounds the kibble-zurek exponent via the sk-eft surface gravity under the identification $1/\\tau_q \\equiv \\kappa$, but the present substrate does not contain per-platform instantiation bridges into the demarcation theorem.",
+      "type": "theorem-ref", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "surface_gravity_bounds_kzm_exponent verified at KibbleZurekUnruh.lean L226. TN-class CONSIDERATION (advisory): stale lean_deps.json would not find it; authoritative grep does. The 'three analog-Hawking platforms' claim (BEC/polariton/graphene per abstract) is a coverage-gap claim \u2014 skeleton text doesn't enumerate them. KZ-U correspondence 1/\u03c4_Q \u2261 \u03ba is a definitional bridge identity standard in the literature (Zurek-derived; not independently re-derived in claims-review scope).",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "[wave 6w.1 application substrate. worked instantiation on three analog-hawking platforms via the kz-u correspondence $1/\\tau_q \\equiv \\kappa$; headline surface\\_gravity\\_bounds\\_kzm\\_exponent cross-checks the tindall-sels kzm extraction against sk-eft.]"
-      }
+      "agent_notes": "Substantive remediation: §6 now explicitly discloses (a) the headline theorem at substrate level, (b) the lack of import from AnalogHawkingDemarcation into KibbleZurekUnruh, (c) the absence of per-platform analog_hawking_simulable_*_instance lemmas. This is a textbook example of substantive disclosure replacing over-claim. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance", "Gate6_AssumptionDisclosure"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:discussion:3cc61024",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "discussion",
-        "quote_hash": "3cc61024",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "discussion",
-      "section_ordinal": 9,
-      "tex_line_start": 173,
-      "tex_line_end": 174,
+      "raw_id_parts": {"paper": "D7", "section_slug": "discussion", "quote_hash": "3cc61024", "hash_algorithm": "sha256_first_8"},
+      "section": "discussion", "section_ordinal": 9, "tex_line_start": 208, "tex_line_end": 209,
       "quote": "Discussion",
       "quote_normalized": "discussion",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [],
-        "completeness": "none"
-      },
+      "type": "metaclaim", "finding_classes": [], "chain_proposed": {"links": [], "completeness": "none"},
       "agent_verdict": "TRANSITION",
       "agent_notes": "Section heading.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "discussion"
-      }
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": [], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:discussion:2e05c88a",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "discussion",
-        "quote_hash": "2e05c88a",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "discussion",
-      "section_ordinal": 9,
-      "tex_line_start": 175,
-      "tex_line_end": 178,
-      "quote": "The Phase 6w D7 bundle's central contribution is a kernel-verified demarcation between regimes where classical tensor-network methods suffice and where quantum processors retain a structural advantage.",
-      "quote_normalized": "the phase 6w d7 bundle's central contribution is a kernel-verified demarcation between regimes where classical tensor-network methods suffice and where quantum processors retain a structural advantage.",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation"
-          }
-        ],
-        "completeness": "full"
-      },
+      "raw_id_parts": {"paper": "D7", "section_slug": "discussion", "quote_hash": "2e05c88a", "hash_algorithm": "sha256_first_8"},
+      "section": "discussion", "section_ordinal": 9, "tex_line_start": 210, "tex_line_end": 214,
+      "quote": "The Phase 6w D7 bundle's central contribution is a kernel-verified biconditional demarcation between regimes where the formalized classical tensor-network substrate suffices and where the formalization identifies a structural simulation advantage for quantum processors.",
+      "quote_normalized": "the phase 6w d7 bundle's central contribution is a kernel-verified biconditional demarcation between regimes where the formalized classical tensor-network substrate suffices and where the formalization identifies a structural simulation advantage for quantum processors.",
+      "type": "metaclaim", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "Self-summary; consistent with verified headline theorem. NOTE: 'Phase 6w D7 bundle' is a project-internal phase reference; per Stage-13 hedging discipline external readers may need a one-sentence gloss in the published version, but flagged as recommend-not-blocker.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "the phase 6w d7 bundle's central contribution is a kernel-verified demarcation between regimes where classical tensor-network methods suffice and where quantum processors retain a structural advantage."
-      }
+      "agent_notes": "Self-summary; consistent with headline theorem. Remediation phrased as 'the formalization identifies a structural simulation advantage' — appropriately scoped to substrate vs general physics.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
     },
     {
       "id": "sentence:D7:discussion:a8bf6512",
-      "raw_id_parts": {
-        "paper": "D7",
-        "section_slug": "discussion",
-        "quote_hash": "a8bf6512",
-        "hash_algorithm": "sha256_first_8"
-      },
-      "section": "discussion",
-      "section_ordinal": 9,
-      "tex_line_start": 178,
-      "tex_line_end": 180,
-      "quote": "The demarcation is falsifiable on two distinct axes and the substrate is generic enough to apply beyond analog Hawking to any LDP-controlled-BP / Chebyshev-TN classification setting.",
-      "quote_normalized": "the demarcation is falsifiable on two distinct axes and the substrate is generic enough to apply beyond analog hawking to any ldp-controlled-bp / chebyshev-tn classification setting.",
-      "type": "metaclaim",
-      "finding_classes": [],
-      "chain_proposed": {
-        "links": [
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.BPLDPSimulability.bp_convergence_iff_ldp_below_threshold"
-          },
-          {
-            "kind": "theorem",
-            "target": "SKEFTHawking.ChernBridge.crystalline_eq_quasicrystalline_iff_c1_zero"
-          }
-        ],
-        "completeness": "full"
-      },
+      "raw_id_parts": {"paper": "D7", "section_slug": "discussion", "quote_hash": "a8bf6512", "hash_algorithm": "sha256_first_8"},
+      "section": "discussion", "section_ordinal": 9, "tex_line_start": 214, "tex_line_end": 217,
+      "quote": "The demarcation is falsifiable on two distinct axes (tree-indicator threshold + Chern coefficient) and the substrate is generic enough at the type level to apply beyond analog Hawking to any factor-graph + Chebyshev-TN classification setting.",
+      "quote_normalized": "the demarcation is falsifiable on two distinct axes (tree-indicator threshold + chern coefficient) and the substrate is generic enough at the type level to apply beyond analog hawking to any factor-graph + chebyshev-tn classification setting.",
+      "type": "metaclaim", "finding_classes": [],
+      "chain_proposed": {"links": [{"kind": "theorem", "target": "SKEFTHawking.BPLDPSimulability.bp_convergence_iff_ldp_below_threshold"}, {"kind": "theorem", "target": "SKEFTHawking.ChernBridge.crystalline_eq_quasicrystalline_iff_c1_zero"}], "completeness": "full"},
       "agent_verdict": "PASS",
-      "agent_notes": "The two axes (LDP-BP, Chern) are independently falsifiable by Lean source inspection. Genericity claim PASS per the universe-polymorphic theorem statements. Matches the user-imposed D7 spin-out generality criterion.",
-      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:17:55Z",
-      "gates_invoked": [
-        "Gate5_LeanProofSubstance"
-      ],
-      "rewrite_of": null,
-      "tombstone": false,
-      "meta": {
-        "quote_normalized": "the demarcation is falsifiable on two distinct axes and the substrate is generic enough to apply beyond analog hawking to any ldp-controlled-bp / chebyshev-tn classification setting."
-      }
+      "agent_notes": "Two falsification axes verified at the substrate level. 'tree-indicator threshold' replaces round-1's 'LDP rate function' — terminology now matches the substrate honestly.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate5_LeanProofSubstance"], "rewrite_of": null, "tombstone": false
+    },
+    {
+      "id": "sentence:D7:discussion:scope-i",
+      "raw_id_parts": {"paper": "D7", "section_slug": "discussion", "quote_hash": "scope-i0", "hash_algorithm": "sha256_first_8"},
+      "section": "discussion", "section_ordinal": 9, "tex_line_start": 219, "tex_line_end": 232,
+      "quote": "We are explicit about the substrate's current scope: (i) the ``loopCorrectionRate'' is a structural tree indicator, not a continuous LDP rate function --- the LDP-framing terminology motivates the predicate but is not encoded substantively in the present Lean substrate; an upgrade to a Cramér-type rate function on loop-correction terms is a separate ~200--400 LoC deliverable; (ii) the per-platform analog-Hawking bridges (BEC, polariton, graphene Dirac fluid) are at the cross-module substrate level via the \\texttt{KibbleZurekUnruh.lean} foundation theorem but are NOT yet shipped as platform-specific instantiation lemmas attached to the demarcation predicate; (iii) the threshold check is information-theoretic rather than algorithmic (the tree-indicator predicate uses \\texttt{Classical.byCases} on an undecidable graph property). Each scope-limitation point is a clean future-revision target.",
+      "quote_normalized": "we are explicit about the substrate's current scope: (i) the \"loopcorrectionrate\" is a structural tree indicator, not a continuous ldp rate function --- the ldp-framing terminology motivates the predicate but is not encoded substantively in the present lean substrate; an upgrade to a cramér-type rate function on loop-correction terms is a separate ~200--400 loc deliverable; (ii) the per-platform analog-hawking bridges (bec, polariton, graphene dirac fluid) are at the cross-module substrate level via the kibblezurekunruh.lean foundation theorem but are not yet shipped as platform-specific instantiation lemmas attached to the demarcation predicate; (iii) the threshold check is information-theoretic rather than algorithmic (the tree-indicator predicate uses classical.bycases on an undecidable graph property). each scope-limitation point is a clean future-revision target.",
+      "type": "metaclaim", "finding_classes": [],
+      "chain_proposed": {"links": [], "completeness": "none"},
+      "agent_verdict": "PASS",
+      "agent_notes": "NEW expanded scope-limitations paragraph introduced by remediation. The three explicit scope-limitations (i) LDP rate function vs structural tree indicator (ii) per-platform bridges deferred (iii) information-theoretic vs algorithmic threshold are each a substantive disclosure that closes a round-1 adversarial-reviewer finding. This paragraph is exactly the kind of scope discipline a Stage-13 reviewer wants to see — falsifiable, non-hedging, action-oriented.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-26T21:30:35Z",
+      "gates_invoked": ["Gate6_AssumptionDisclosure"], "rewrite_of": null, "tombstone": false
     }
   ],
-  "non_reproducing_prior_findings": [],
+
+  "non_reproducing_prior_findings": [
+    {
+      "prior_finding_id": "block:D7:1",
+      "prior_run_date": "2026-05-26T21:17:55Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "Theorem count post-remediation matches paper claim of 65. Three P5 tautologies (analog_hawking_simulable_implies_both_conditions, analog_hawking_simulable_of_both_conditions, categoricalChernExpansion_uses_aperiodicLattice) were DELETED in commit 89cae29, bringing total from 68 to 65 substantive theorems. Paper text updated from '67' to '65' to match.",
+      "deterministic_recheck": {
+        "kind": "lake_theorem_grep_total",
+        "modules": ["BeliefPropagation", "BPLDPSimulability", "ChebyshevTN", "AperiodicLattice", "ChernBridge", "AnalogHawkingDemarcation", "KibbleZurekUnruh"],
+        "per_module_counts": {"BeliefPropagation": 24, "BPLDPSimulability": 8, "ChebyshevTN": 10, "AperiodicLattice": 7, "ChernBridge": 5, "AnalogHawkingDemarcation": 3, "KibbleZurekUnruh": 8},
+        "prior_paper_value": 67,
+        "prior_grep_value": 68,
+        "current_paper_value": 65,
+        "current_grep_value": 65,
+        "command": "for m in BeliefPropagation BPLDPSimulability ChebyshevTN AperiodicLattice ChernBridge AnalogHawkingDemarcation KibbleZurekUnruh; do grep -c '^theorem ' lean/SKEFTHawking/$m.lean; done"
+      }
+    },
+    {
+      "prior_finding_id": "block:D7:2",
+      "prior_run_date": "2026-05-26T21:17:55Z",
+      "status": "superseded",
+      "auto_closed": true,
+      "reason": "All three missing bibkeys (YedidiaFreemanWeiss2003, Zurek1985, BiancoResta2011) added to CITATION_REGISTRY in commit 89cae29. Cached primary sources also added under Lit-Search/Phase-6w/primary-sources/.",
+      "deterministic_recheck": {
+        "kind": "citation_registry_lookup",
+        "missing_keys_prior": ["YedidiaFreemanWeiss2003", "Zurek1985", "BiancoResta2011"],
+        "missing_keys_current": [],
+        "command": "grep -n 'YedidiaFreemanWeiss2003\\|Zurek1985\\|BiancoResta2011' src/core/citations.py"
+      }
+    },
+    {
+      "prior_finding_id": "followup:D7:1",
+      "prior_run_date": "2026-05-26T21:17:55Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "lean_deps.json staleness caveat unchanged in this run (cache still pre-Phase-6w per task brief); direct grep continues to serve as authoritative check. Carrying as candidate_for_supersession pending counts.json refresh.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "followup:D7:2",
+      "prior_run_date": "2026-05-26T21:17:55Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Skeleton placeholders in §2-§6 unchanged; Stage-10 expansion remains as future work. Sentences in those sections still UNGROUNDED-not-FAIL.",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "followup:D7:3",
+      "prior_run_date": "2026-05-26T21:17:55Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Kernel-axiom-closure claim still not per-theorem #print-axioms verified in this run. Remains advisory. Project-wide axiom count = 0 verified by grep (the 2 grep hits on '^axiom ' are docstring text in BHEntropyMicroscopic.lean / LaplaceMethod.lean, not declarations).",
+      "deterministic_recheck": null
+    },
+    {
+      "prior_finding_id": "followup:D7:4",
+      "prior_run_date": "2026-05-26T21:17:55Z",
+      "status": "candidate_for_supersession",
+      "auto_closed": false,
+      "reason": "Skeleton enumeration concern unchanged; carried forward as the §5 placeholder still references 'four companion lemmas' (which is now WRONG post-remediation — only 2 companions remain after P5 tautology deletions). See new finding block:D7:3.",
+      "deterministic_recheck": null
+    }
+  ],
+
   "summary": {
-    "total_sentences": 37,
+    "total_sentences": 33,
     "by_type": {
       "citation": 3,
-      "theorem-ref": 11,
+      "theorem-ref": 9,
       "formal-claim": 1,
-      "numeric": 5,
+      "numeric": 4,
       "qualitative": 2,
-      "transition": 4,
-      "metaclaim": 11
+      "transition": 5,
+      "metaclaim": 9
     },
     "by_verdict": {
-      "PASS": 18,
-      "FAIL": 2,
-      "INFO": 2,
-      "TRANSITION": 11,
+      "PASS": 17,
+      "FAIL": 1,
+      "INFO": 3,
+      "TRANSITION": 9,
       "UNGROUNDED": 2,
-      "WARN": 2
+      "WARN": 1
     },
     "by_finding_class": {
-      "IA": 4,
+      "IA": 2,
       "TP": 0,
       "SD": 0,
-      "TN": 2,
+      "TN": 0,
       "HD": 0
     },
-    "non_reproducing_count": 0,
-    "non_reproducing_auto_closed": 0,
-    "non_reproducing_candidates": 0,
-    "agent_text": "37 sentences | 18 PASS | 2 UNGROUNDED | 2 FAIL | 2 WARN | 2 INFO | 11 TRANSITION | first review of D7 (no prior findings to reconcile)"
+    "non_reproducing_count": 6,
+    "non_reproducing_auto_closed": 2,
+    "non_reproducing_candidates": 4,
+    "agent_text": "33 sentences | 17 PASS | 2 UNGROUNDED | 1 FAIL | 1 WARN | 3 INFO | 9 TRANSITION | 2 prior BLOCKERS SUPERSEDED via deterministic recheck (theorem-count 67→65 + 3 bibkeys added) | 4 prior LLM-judgment findings carried as candidates_for_supersession | 1 NEW finding introduced by remediation (§5 placeholder text mentions 'four companion lemmas' but only 2 remain after P5 deletions)"
   },
-  "blocking_issues": [
-    {
-      "id": "block:D7:1",
-      "summary": "Abstract '67 substantive theorems' contradicts grep total of 68 across the 7 Phase 6w modules \u2014 off by 1. Either the count is wrong or a substantive-vs-companion taxonomy needs to be made explicit (consistent reading is 7 substantive + 1 companion in BPLDPSimulability, giving 67 substantive + 1 companion = 68 total; not yet codified in prose).",
-      "sentences": [
-        "sentence:D7:abstract:b9876a52"
-      ],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "IA"
-    },
-    {
-      "id": "block:D7:2",
-      "summary": "3 of 5 paper bibitems missing from CITATION_REGISTRY: YedidiaFreemanWeiss2003, Zurek1985, BiancoResta2011. These are foundational refs (BP convention, Kibble-Zurek mechanism origin, Chern marker real-space construction). Must be added before Stage-13 close.",
-      "sentences": [
-        "sentence:D7:scope-and-contributions:43a4875e"
-      ],
-      "gate": "Gate1_CitationIntegrity",
-      "finding_class": "TN"
-    }
-  ],
+
+  "blocking_issues": [],
+
   "non_blocking_followups": [
     {
-      "id": "followup:D7:1",
-      "summary": "lean_deps.json + docs/counts.json are stale (last regen 2026-05-26 07:35 AM, pre-Phase-6w); Class TN lookups on Phase 6w theorem names false-negative against the cached registries. Authoritative check is direct grep on lean/SKEFTHawking/*.lean. Counts.json regen deferred per user direction; cache will refresh on next sweep.",
-      "sentences": [
-        "sentence:D7:introduction:f0145779",
-        "sentence:D7:ldp-controlled-belief-propagation-convergence:9b8e311f"
-      ],
-      "gate": "Gate9_NumericalFreshness",
-      "finding_class": "TN"
-    },
-    {
-      "id": "followup:D7:2",
-      "summary": "Skeleton \u00a72-\u00a76 placeholders are intentional pending Stage-10 revision (per task brief). Each placeholder's inline identifiers verify against the underlying Lean source. UNGROUNDED verdicts on those sentences are coverage gaps, not chain failures.",
-      "sentences": [
-        "sentence:D7:belief-propagation-on-factor-graphs-lean-substrate:65570e8b",
-        "sentence:D7:chebyshev-tensor-network-chern-bridge:58b62628"
-      ],
+      "id": "block:D7:3",
+      "summary": "NEW finding introduced by remediation: §5 (the-demarcation-theorem) placeholder text says 'four companion lemmas' but after the round-1 BLOCKER remediation that DELETED *_implies_both_conditions and *_of_both_conditions, only TWO companion lemmas remain in AnalogHawkingDemarcation.lean (analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero + loopy_or_nonzero_c1_implies_not_simulable). Text-sync needed: 'four companion lemmas' → 'two companion lemmas'. Non-blocking because §5 is explicitly a skeleton placeholder pending Stage-10 expansion, but flagged for immediate text-sync.",
+      "sentences": ["sentence:D7:the-demarcation-theorem:b019newr"],
       "gate": "Gate9_NumericalFreshness",
       "finding_class": "IA"
     },
     {
-      "id": "followup:D7:3",
-      "summary": "Kernel-axiom-closure claim '[propext, Classical.choice, Quot.sound]' on the 67 theorems is plausible (project-wide axiom count is 0 per counts.json) but the agent did not execute per-theorem #print axioms verification. Recommend a one-shot Bash verification pass against the 7 Phase 6w module entry points before submission.",
-      "sentences": [
-        "sentence:D7:abstract:b9876a52"
-      ],
+      "id": "followup:D7:5",
+      "summary": "§3 (ldp-controlled-belief-propagation-convergence) placeholder still says 'Seven substantive theorems + two companions' = 9 total but grep yields 8 in BPLDPSimulability.lean. Reconcilable via substantive/companion taxonomy (7+1=8) but text phrasing 'two companions' is asymmetric. Stage-10 expansion should explicitly enumerate.",
+      "sentences": ["sentence:D7:ldp-controlled-belief-propagation-convergence:9b8e311f"],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "IA"
+    },
+    {
+      "id": "followup:D7:6",
+      "summary": "lean_deps.json + docs/counts.json remain stale (pre-Phase-6w); Class TN lookups on Phase 6w theorem names still false-negative against cached registries. Authoritative check is direct grep on lean/SKEFTHawking/*.lean. Counts.json regen deferred per user direction.",
+      "sentences": ["sentence:D7:introduction:f0145779"],
+      "gate": "Gate9_NumericalFreshness",
+      "finding_class": "TN"
+    },
+    {
+      "id": "followup:D7:7",
+      "summary": "Kernel-axiom-closure claim '[propext, Classical.choice, Quot.sound]' across all 65 theorems is plausible (project-wide axiom count is 0; 2 grep hits on '^axiom ' are docstring text, not declarations) but per-theorem #print axioms verification not executed in this run. Recommend one-shot Bash verification pass against the 7 Phase 6w module entry points before submission.",
+      "sentences": ["sentence:D7:abstract:65remed1"],
       "gate": "Gate5_LeanProofSubstance",
       "finding_class": "IA"
     },
     {
-      "id": "followup:D7:4",
-      "summary": "Sections \u00a72-\u00a76 are skeleton placeholders; per task brief these will be expanded in subsequent Stage-10 revision. Recommend Stage-10 also explicitly enumerates which theorems are 'substantive' vs 'companion' in each module so the abstract arithmetic is reproducible.",
-      "sentences": [
-        "sentence:D7:ldp-controlled-belief-propagation-convergence:b4530e17",
-        "sentence:D7:the-demarcation-theorem:6af5d217"
-      ],
+      "id": "followup:D7:8",
+      "summary": "Skeleton §2-§6 placeholders intentional pending Stage-10 expansion per task brief. Each placeholder's inline identifiers verify against the underlying Lean source. UNGROUNDED verdicts are coverage gaps, not chain failures.",
+      "sentences": ["sentence:D7:belief-propagation-on-factor-graphs-lean-substrate:8aba8dec", "sentence:D7:chebyshev-tensor-network-chern-bridge:b07f56e0"],
       "gate": "Gate9_NumericalFreshness",
       "finding_class": "IA"
     }

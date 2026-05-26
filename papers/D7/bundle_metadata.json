@@ -5,18 +5,20 @@
   "target_journal": "PRX Quantum or Physical Review X",
   "phase7_subphase": "7w (Phase 6w D7 spin-out)",
   "stage9_status": "not_started",
-  "stage10_status": "in_progress",
-  "stage13_status": "blocked",
-  "stage13_redo_required": true,
+  "stage10_status": "green",
+  "stage13_status": "green",
+  "stage13_redo_required": false,
   "freshness_stale": false,
   "source_manifest_last_regen": null,
   "last_lift": "2026-05-26T20:00:00Z",
   "last_stage9_review": null,
-  "last_stage10_review": "2026-05-26T21:12:00Z",
-  "last_stage13_review": "2026-05-26T21:12:00Z",
+  "last_stage10_review": "2026-05-26T21:35:00Z",
+  "last_stage10_review_round1": "2026-05-26T21:12:00Z",
+  "last_stage13_review": "2026-05-26T21:29:00Z",
   "blockers_open": 0,
   "advisories_open": 0,
-  "stage13_review_doc": "papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md",
+  "stage13_review_doc": "papers/AutomatedReviews/2026-05-26-2129-internal-adversarial/D7.md",
+  "stage13_review_doc_round1": "papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md",
   "stage10_review_doc": "papers/D7/claims_review.json",
   "audit_log_path": "papers/D7/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
@@ -62,7 +64,34 @@
         "If GREEN on re-review: flip stage13_status to 'green' + clear stage13_redo_required.",
         "File QI candidate qi-gate-5-self-audit-blind-spot to docs/QI_REGISTER.md."
       ]
+    },
+    {
+      "date": "2026-05-26T21:29:00Z",
+      "trigger": "Stage-13 adversarial-reviewer ROUND 2 fresh-context re-review 2026-05-26T21:29:00Z (post-remediation verification pass)",
+      "review_doc": "papers/AutomatedReviews/2026-05-26-2129-internal-adversarial/D7.md",
+      "findings_summary": "Adversarial Round 2: 0 BLOCKER + 0 REQUIRED + 1 RECOMMENDED (N1.1 = author-side bundle_metadata.json ledger flip — this very change closes it). 15 of 16 prior Round-1 findings verdict-ed SUPERSEDED via deterministic recheck; the 16th (7.3 metadata flip) is the carried-forward author-side action closed by this metadata update.",
+      "substantive_fixes": [
+        "Closed N1.1 (mechanical metadata ledger flip): stage13_status 'blocked' → 'green'; stage13_redo_required true → false; last_stage13_review updated to round-2 timestamp 2026-05-26T21:29:00Z; stage13_review_doc updated to round-2 report path; round-1 report path preserved as stage13_review_doc_round1 for audit trail.",
+        "Filed qi-gate-5-self-audit-blind-spot-on-sibling-tautologies to docs/QI_REGISTER.md (commit 04f1c38)."
+      ],
+      "remaining_action_items": [
+        "Stage 9 (figure review) — not started; D7 has no figures yet (skeleton paper), so Stage-9 is vacuous-pass eligible per BUNDLE_LIFT_PROCEDURE.md.",
+        "Claims-reviewer round 2 in-flight at metadata-flip time; results pending."
+      ]
+    },
+    {
+      "date": "2026-05-26T21:35:00Z",
+      "trigger": "Stage-10 claims-reviewer ROUND 2 fresh-context re-review 2026-05-26T21:35:00Z (post-remediation verification pass)",
+      "review_doc": "papers/D7/claims_review.json",
+      "findings_summary": "Claims Round 2: 0 BLOCKER (was 2; both Round-1 BLOCKERs deterministically auto-closed); 1 new IA finding block:D7:3 (text-sync: §5 placeholder said 'four companion lemmas' but post-adversarial-deletions only 2 remain) — fixed substantively immediately; 5 non-blocking followups carried as candidate_for_supersession per LLM-judgment protocol.",
+      "substantive_fixes": [
+        "Fixed §5 placeholder text-sync: 'four companion lemmas' → 'two companion lemmas (the post-adversarial-remediation count, after the three P5 tautologies caught by the Round-1 review were deleted)'. D7 LaTeX re-compiles clean (3 pages)."
+      ],
+      "remaining_action_items": [
+        "Stage 9 (figure review) — D7 has no figures (skeleton paper), so Stage-9 vacuous-PASS eligible per BUNDLE_LIFT_PROCEDURE.md §9.",
+        "Final commit + push of round-2 remediation + memory entry."
+      ]
     }
   ],
-  "notes": "D7 bundle created 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass. Synthesizes the Phase 6w substrate into a unified classical-simulability ↔ quantum-advantage demarcation paper. Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation) + Antão-Sun-Fumega-Lado PRL 136, 156601 (2026) (Chebyshev-TN quasicrystal Chern markers). Stage 13 adversarial review surfaced 4 BLOCKERs + 5 REQUIREDs + 4 RECOMMENDEDs; remediation applied; re-review pending."
+  "notes": "D7 bundle created 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass. Synthesizes the Phase 6w substrate into a unified classical-simulability ↔ quantum-advantage demarcation paper. Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation) + Antão-Sun-Fumega-Lado PRL 136, 156601 (2026) (Chebyshev-TN quasicrystal Chern markers). Stage 13 adversarial review Round 1 surfaced 4 BLOCKERs + 5 REQUIREDs + 4 RECOMMENDEDs; Stage 10 claims-reviewer Round 1 surfaced 2 BLOCKERs (1 IA count drift + 1 TN registry absence). Substantive remediation applied (3 P5 tautology theorems deleted, _c0 decorative parameter dropped, 3 missing bibkeys added with primary-source caching, paper prose down-toned to honestly describe substrate state). Round 2 fresh-context re-reviews on both sides verified prior findings SUPERSEDED via deterministic recheck. Final state: Stage-10 GREEN (0 BLOCKER, 5 LLM-judgment carry-forwards); Stage-13 GREEN (0 BLOCKER + 0 REQUIRED + 0 open RECOMMENDED). Bundle Stage-13 SUBMISSION-READY pending Stage 9 (vacuous-PASS eligible — no figures)."
 }
