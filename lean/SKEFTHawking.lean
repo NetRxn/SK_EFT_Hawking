@@ -1218,6 +1218,16 @@ import SKEFTHawking.MathlibAux.Pfaffian
 -- structurally consistent with the substrate-level `sewingCoeffsAt`
 -- `f`-coefficient sign. Zero new project-local axioms.
 import SKEFTHawking.BdGHamiltonianNbRe
+-- Phase 6v Sub-wave 8.F (2026-05-26 PM): Z₁₆ Rokhlin cross-bridge.
+-- Lifts the documentation-only Phase-6r-Pin⁺/ℤ₁₆ connection in
+-- `NbReTripletSPT.lean §6` to a Lean theorem-level map. Defines
+-- `diiiBdGToZ16 : SCParameters → ZMod 16`; ships theorems
+-- `nbRe_diiiBdGToZ16 = 1`, `elementalNb_diiiBdGToZ16 = 0`, and
+-- the bridge `diiiBdGToOmega4PinPlus` via Phase 6r-prime W1.2's
+-- substantive `omega4PinPlusBordismEquivZMod16` iso. Unifies NbRe's
+-- Pfaffian-Z₂ substrate (Sub-waves 8.C / 8.E) with the project's
+-- existing ~9,910 LoC Phase 6r Pin⁺/ℤ₁₆ infrastructure.
+import SKEFTHawking.CrossBridges.NbReDIIIToPinPlusZ16
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
