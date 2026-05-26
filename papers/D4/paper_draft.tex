@@ -1228,6 +1228,32 @@ records, not axioms. Pipeline Invariants \#10 (no
 \texttt{maxHeartbeats} in proof bodies) and \#15 (no axioms without
 explicit sign-off and discharge plan) hold across all nine modules.
 
+\paragraph{Topological-qubit substrate candidate — NbRe (Phase 6v
+Wave 6v.8 cross-bridge).}
+%% Provenance: D4 §"topological-qubit substrate candidates" cross-bridge
+%% from D2 §"SPT material exhibits" — both populated by Wave 6v.8.
+%% Lean substrate: lean/SKEFTHawking/NbReTripletSPT.lean.
+A natural material candidate for topological-qubit substrate
+engineering is the noncentrosymmetric triplet superconductor
+NbRe~\cite{Colangelo2025NbReTripletSpinValve}, recently shown via
+inverse-spin-valve effects to be an intrinsic equal-spin-triplet
+superconductor. NbRe's DIII-class topological structure
+(noncentrosymmetric $\land$ triplet-paired, $T_c \approx 8.7$ K,
+ASOC $\sim 10$ meV) sits at the boundary between the
+Fibonacci-anyon / Ising-anyon machinery covered above and the
+proximity-engineered topological-superconductor families (e.g.,
+Microsoft Majorana). The cross-bridge to D2 is explicit:
+the same Rokhlin period-16 structure that anchors the SM
+$\mathbb{Z}_{16}$ anomaly classification in D2 also classifies
+DIII-class topological superconductors, of which NbRe is now a
+substrate-level material exhibit (Wave 6v.8). The Lean substrate
+\texttt{lean/SKEFTHawking/NbReTripletSPT.lean} ships the
+substantive contrast between NbRe (DIII-class) and elemental Nb
+(canonical s-wave singlet, NOT DIII-class), plus the
+\texttt{H\_NbReWindingNumberIdentity} tracked Prop for the full
+3D BdG sub-wave (8.C, deferred to a future Mathlib-3D-winding-
+number-substrate wave).
+
 \begin{thebibliography}{99}
 
 \bibitem{AharonovArad2017}
@@ -1336,6 +1362,13 @@ arXiv:hep-th/0603001.
 E.~Witten,
 ``Quantum field theory and the Jones polynomial,''
 Commun.\ Math.\ Phys.\ \textbf{121}, 351 (1989).
+
+\bibitem{Colangelo2025NbReTripletSpinValve}
+F.~Colangelo \emph{et al.},
+``Unveiling Intrinsic Triplet Superconductivity in
+Noncentrosymmetric NbRe through Inverse Spin-Valve Effects,''
+Phys.\ Rev.\ Lett.\ \textbf{135}, 226002 (2025)
+[arXiv:2510.08110], doi:10.1103/q1nb-cvh6.
 
 \end{thebibliography}
 

@@ -583,6 +583,35 @@ explicit in \S\ref{sec:chirality-wall} via the
 Onsager-algebra $\mathbb{Z}_2 \hookrightarrow \mathbb{Z}_{16}$
 embedding.
 
+\paragraph{SPT material exhibit — NbRe noncentrosymmetric triplet
+superconductor (Phase 6v Wave 6v.8).}
+%% Provenance: Wave 6v.8 substantive ship into D2 §"SPT classification —
+%% material exhibits". Cross-reference Lean substrate
+%% lean/SKEFTHawking/NbReTripletSPT.lean (nbRe_is_DIII_topological + falsifier).
+A natural material exhibit of the $\mathbb{Z}_{16}$-class
+topological-superconductor structure is the noncentrosymmetric
+triplet superconductor NbRe~\cite{Colangelo2025NbReTripletSpinValve},
+recently established as an intrinsic equal-spin-triplet
+superconductor via inverse-spin-valve effects on
+Py/NbRe/Py heterostructures. NbRe's noncentrosymmetric crystal
+structure (lacking spatial-inversion symmetry, enabling
+antisymmetric spin-orbit coupling on the $\sim 10\,\mathrm{meV}$
+scale at $T_c \approx 8.7\,\mathrm{K}$) combined with its triplet
+pairing channel places it in the Kitaev DIII topological class —
+which connects to the same Rokhlin period-16 structure that
+underlies the SM $\mathbb{Z}_{16}$ anomaly classification of this
+section. The Lean substrate ships the substantive contrast in
+\texttt{lean/SKEFTHawking/NbReTripletSPT.lean}:
+\verb|nbRe_is_DIII_topological| witnesses NbRe in the DIII class
+(noncentrosymmetric $\land$ triplet), while
+\verb|elementalNb_not_DIII_topological| pins the falsifier-class
+contrast against elemental Nb (canonical s-wave singlet, bcc
+centrosymmetric). The full 3D BdG $\to$ DIII-class
+winding-number-identity sub-wave (8.C in the wave roadmap) ships
+as a tracked Prop (\verb|H_NbReWindingNumberIdentity|, NOT a new
+project-local axiom) with discharge plan on the future Mathlib 3D
+winding-number substrate.
+
 %% ══════════════════════════════════════════════════════════════════
 \section{The chirality wall: a three-pillar synthesis}
 \label{sec:chirality-wall}
@@ -1133,6 +1162,13 @@ S.~M\"oller and N.~R.~Scheithauer,
 algebras of central charge $24$,''
 Algebra \& Number Theory \textbf{18}, 1891 (2024),
 arXiv:2112.12291.
+
+\bibitem{Colangelo2025NbReTripletSpinValve}
+F.~Colangelo \emph{et al.},
+``Unveiling Intrinsic Triplet Superconductivity in
+Noncentrosymmetric NbRe through Inverse Spin-Valve Effects,''
+Phys.\ Rev.\ Lett.\ \textbf{135}, 226002 (2025)
+[arXiv:2510.08110], doi:10.1103/q1nb-cvh6.
 
 \end{thebibliography}
 

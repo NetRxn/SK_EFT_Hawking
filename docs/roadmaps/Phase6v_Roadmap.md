@@ -47,7 +47,7 @@
 | **Wave 6v.2** | Google ECC-256 T-gate count bound for Shor circuits | ✅ SHIPPED 2026-05-26 | D6 §5 (populated) + D4 + I1 cross-bridges | 2–3 sess |
 | **Wave 6v.5** | APM-LDPC code substrate + hashing-bound LDP sub-wave | ✅ SHIPPED 2026-05-26 | D6 §4 (populated) + I1 | 4 sess |
 | **Wave 6v.6** | W-state QFT decomposition in Q(ζ_N) | ✅ SHIPPED 2026-05-26 | D6 §6 (populated) | 2 sess |
-| **Wave 6v.8** | NbRe triplet superconductor full SOTA BdG + SPT classification | ⏳ NOT STARTED | D2 + D4 | 3–5 sess (heaviest in 6v) |
+| **Wave 6v.8** | NbRe triplet superconductor full SOTA BdG + SPT classification | ✅ SHIPPED 2026-05-26 (substrate-level; sub-wave 8.C tracked as `H_NbReWindingNumberIdentity`) | D2 §SPT-exhibits + D4 §topological-qubit-candidates (populated) | 3–5 sess (heaviest in 6v) |
 
 **Total estimated effort:** ~14–19 sessions across 7 waves.
 

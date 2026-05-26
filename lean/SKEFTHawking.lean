@@ -1182,6 +1182,15 @@ import SKEFTHawking.FaultTolerance.APMLdpcHashingBound
 -- n = 5 (QCyc5), n = 8 (QCyc16), n = 40 (QCyc40) project-substrate
 -- sizes. Lifts into D6 §6.
 import SKEFTHawking.FaultTolerance.WStateQFT
+-- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
+-- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
+-- DIII-class topological-superconductor predicate + substantive contrast
+-- against elemental-Nb canonical s-wave singlet baseline. Cross-bridge to
+-- D2 SPT classification + D4 topological-qubit substrate. Sub-wave 8.C
+-- (full 3D BdG winding-number identity) ships as tracked Prop
+-- H_NbReWindingNumberIdentity per Pipeline Invariant #15. Lifts into
+-- D2 + D4 (NOT D6).
+import SKEFTHawking.NbReTripletSPT
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

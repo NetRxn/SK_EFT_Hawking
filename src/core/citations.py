@@ -370,6 +370,39 @@ CITATION_REGISTRY = {
         'provides': [],
         'notes': 'Polariton analog Hawking proposal.',
     },
+    'Colangelo2025NbReTripletSpinValve': {
+        'authors': 'Colangelo, F. et al.',
+        'title': 'Unveiling Intrinsic Triplet Superconductivity in Noncentrosymmetric NbRe through Inverse Spin-Valve Effects',
+        'journal': 'Phys. Rev. Lett.',
+        'volume': 135,
+        'page': '226002',
+        'year': 2025,
+        'doi': '10.1103/q1nb-cvh6',
+        'arxiv': '2510.08110',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/Colangelo2025NbReTripletSpinValve.pdf',
+        'used_in': ['lean/SKEFTHawking/NbReTripletSPT.lean',
+                    'papers/D2/paper_draft.tex',
+                    'papers/D4/paper_draft.tex'],
+        'provides': [
+            'nbReParameters',
+            'IsTripletSuperconductor',
+            'IsDIIITopologicalSuperconductor',
+        ],
+        'notes': 'Colangelo et al. PRL 135, 226002 (Nov 25, 2025). '
+                 'Inverse-spin-valve effects on Py/NbRe/Py heterostructures '
+                 'establish NbRe as an intrinsic equal-spin-triplet '
+                 'superconductor. Substrate-level lift in Wave 6v.8: NbRe '
+                 'as a DIII-class topological superconductor material '
+                 'exhibit, sibling to the SM Z_16 anomaly classification '
+                 '(D2) via the Rokhlin period-16 structure; cross-bridge '
+                 'into D4 as topological-qubit substrate candidate. Full '
+                 '3D BdG sub-wave (8.C) ships as tracked Prop '
+                 '`H_NbReWindingNumberIdentity` (NOT a new project-local '
+                 'axiom) with discharge plan on the future Mathlib-3D-'
+                 'winding-number-substrate wave.',
+    },
     'DurVidalCirac2000WState': {
         'authors': 'Dür, W., Vidal, G., Cirac, J. I.',
         'title': 'Three qubits can be entangled in two inequivalent ways',
