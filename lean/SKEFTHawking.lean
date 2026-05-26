@@ -1140,6 +1140,14 @@ import SKEFTHawking.DKMBootstrap.HorizonTransportBootstrap
 -- FloorSemiring.tendsto_pow_div_factorial_atTop + central-binomial
 -- (κ!)² ≤ (2κ)!.
 import SKEFTHawking.DKMBootstrap.BECBogoliubovBosonicGrowth
+-- Phase 6v Wave 6v.3 (2026-05-26): polariton DKM F3 bound + bimodal-branch
+-- resolution. Closes the Phase 6q open question: polariton, under a finite
+-- pump-energy operating constraint (Penn TMD 4 fJ → 1.44×10⁴ photons/mode
+-- ≪ n_threshold ≈ 10⁶), takes the POSITIVE-uniqueness branch of
+-- PlatformBimodalOutcome — inheriting the graphene witness at substrate
+-- normalized mirConst = 1/2. polariton_dkm_f3_holds_at_pump_below_threshold
+-- is the substantive contrapositive of sharpened_no_go_super_factorial.
+import SKEFTHawking.DKMBootstrap.PolaritonF3Bound
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

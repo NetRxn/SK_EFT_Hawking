@@ -80,6 +80,13 @@ PAPER_TO_PHASE: dict[str, str] = {
     'paper43_einstein_cartan':               'Phase-6e',
     # Phase 6m (dark-energy review paper — causal-set / entropic-gravity / Jacobson-thermo-GR)
     'paper45_phase6m_review':                'Phase-6m',
+    # Note: publication bundles (F, D1–D5, L1–L3, I1–I3, E1, E2) are *not*
+    # registered here. Bundle-cited bibkeys fall through to the
+    # `Phase-1-and-Background` FALLBACK in `bibkey_phase` callers. The
+    # convention as of Phase 6v Wave 6v.3 (2026-05-26) is: new bibkeys
+    # first cited in a bundle place their primary-source cache file in
+    # `Lit-Search/Phase-1-and-Background/primary-sources/`. Per-wave
+    # phase-routed mappings are reserved for per-wave paper drafts.
 }
 
 
@@ -374,7 +381,7 @@ CITATION_REGISTRY = {
         'arxiv': '2411.16635',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-6v/primary-sources/WangKimBZHe2026PennTMDPolariton.pdf',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/WangKimBZHe2026PennTMDPolariton.pdf',
         'used_in': ['src/core/constants.py', 'papers/E1/paper_draft.tex'],
         'provides': [
             'Penn_TMD_MoSe2.g_meV',
@@ -9953,9 +9960,11 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/YinLucas2022LiebRobinsonBosons.pdf',
         'used_in': ['lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean',
-                    'lean/SKEFTHawking/DKMBootstrap/HorizonTransportBootstrap.lean'],
+                    'lean/SKEFTHawking/DKMBootstrap/HorizonTransportBootstrap.lean',
+                    'lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean',
+                    'papers/E1/paper_draft.tex'],
         'provides': ['Lieb-Robinson-for-bosons substrate: super-factorial commutator-norm growth on bosonic Fock space (the substantive physical content underlying the BEC Bogoliubov-bosonic sharpened-NO-GO half)'],
-        'notes': 'Phase 6q Wave 2b.4 BEC substantive-stand-in substrate reference. Concrete derivation of (2κ)!-like growth from the BEC Bogoliubov Hamiltonian is deferred to a future multi-session lift; the current Lean module uses a postulated stand-in sequence citing this paper as the physical substrate.',
+        'notes': 'Phase 6q Wave 2b.4 BEC substantive-stand-in substrate reference. Concrete derivation of (2κ)!-like growth from the BEC Bogoliubov Hamiltonian is deferred to a future multi-session lift; the current Lean module uses a postulated stand-in sequence citing this paper as the physical substrate. Wave 6v.3 cross-cites this paper from E1 as the physical anchor for the F3-break onset threshold n_threshold ≈ 10⁶ below which polariton operating regimes sit.',
     },
 
     'KuwaharaSaito2021LiebRobinsonBosons': {
@@ -9971,7 +9980,9 @@ CITATION_REGISTRY = {
         'inprep': False,
         'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/KuwaharaSaito2021LiebRobinsonBosons.pdf',
         'used_in': ['lean/SKEFTHawking/DKMBootstrap/BECBogoliubovBosonicGrowth.lean',
-                    'lean/SKEFTHawking/DKMBootstrap/HorizonTransportBootstrap.lean'],
+                    'lean/SKEFTHawking/DKMBootstrap/HorizonTransportBootstrap.lean',
+                    'lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean',
+                    'papers/E1/paper_draft.tex'],
         'provides': ['Continuum bosonic Lieb-Robinson bound with super-factorial commutator-norm growth; companion to Yin-Lucas 2022 for the BEC Bogoliubov substantive substrate'],
         'notes': 'Phase 6q Wave 2b.4 BEC substantive-stand-in substrate reference. Almost-linear light-cone result is the continuum analog of Yin-Lucas all-to-all Lieb-Robinson; together they characterize the bosonic operator-growth scale that the CHHK F3 axiom fails for.',
     },

@@ -55,7 +55,7 @@ Z. Wang, B. Kim, B. Zhen, L. He, "Strongly nonlinear nanocavity exciton-polarito
 - **Modified Lean:** `lean/SKEFTHawking/PolaritonTier1.lean` (+1 platform record def + 1 theorem; ~30 LoC).
 - **Modified paper:** `papers/E1/paper_draft.tex` §2 (one paragraph + cite).
 - **New stakeholder:** `docs/stakeholder/Phase6v_Wave6v.4_Implications.md`, `Phase6v_Wave6v.4_Strategic_Positioning.md`.
-- **Primary-source cache:** `Lit-Search/Phase-6v/primary-sources/WangKimBZHe2026PennTMDPolariton.pdf` (1.15 MB, downloaded 2026-05-26).
+- **Primary-source cache:** `Lit-Search/Phase-1-and-Background/primary-sources/WangKimBZHe2026PennTMDPolariton.pdf` (1.15 MB, downloaded 2026-05-26). Phase-1-and-Background is the canonical home for bundle-cited bibkeys (per the `bibkey_phase` FALLBACK; bundle keys are not yet registered in `PAPER_TO_PHASE`). The initial Phase-6v/primary-sources/ placement was reverted to align with this convention.
 
 ## Cross-wave dependencies
 

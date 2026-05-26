@@ -912,6 +912,46 @@ def polariton_spatial_attenuation(Gamma_pol, L, v_g):
     return np.exp(Gamma_pol * L / v_g)
 
 
+def polariton_mode_occupation_per_pulse(pulse_energy_J, photon_energy_eV):
+    """
+    Per-cavity-mode photon count for an optical-switching pulse.
+
+    n_per_pulse = E_pulse / (ℏω_cav)
+
+    For the UPenn nanocavity-polariton platform (Wang et al. 2026) the
+    4 fJ switching threshold at 1.736 eV gives ≈ 1.44 × 10⁴ photons per
+    pulse per mode — well below the DKM-F3 breaking onset (≈ 10⁶) for
+    continuum-bosonic substrates via Yin-Lucas / Kuwahara-Saito
+    Lieb-Robinson-for-bosons. This places the polariton platform on the
+    POSITIVE-uniqueness branch of the Phase 6q `PlatformBimodalOutcome`
+    (resolves the Wave 6v.3 open question).
+
+    Lean: polariton_dkm_f3_holds_at_pump_below_threshold (Wave 6v.3,
+          lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean)
+    Aristotle: manual
+    Source: Wang et al., PRL 136, 146901 (2026) — switching threshold;
+            Yin-Lucas arXiv:2106.09726 + Kuwahara-Saito arXiv:2103.11592
+            — Lieb-Robinson-for-bosons F3-break onset.
+
+    Args:
+        pulse_energy_J: total pulse energy [J]
+        photon_energy_eV: cavity / polariton resonance energy [eV]
+
+    Returns:
+        n_per_pulse: per-mode photon count (dimensionless, ≥ 0)
+    """
+    if pulse_energy_J < 0:
+        raise ValueError(
+            f"pulse_energy_J must be non-negative; got {pulse_energy_J}"
+        )
+    if photon_energy_eV <= 0:
+        raise ValueError(
+            f"photon_energy_eV must be positive; got {photon_energy_eV}"
+        )
+    J_PER_EV = 1.602176634e-19  # exact SI 2019
+    return pulse_energy_J / (photon_energy_eV * J_PER_EV)
+
+
 def polariton_tier1_validity(Gamma_pol, kappa):
     """
     Tier 1 validity parameter: Γ_pol / κ.

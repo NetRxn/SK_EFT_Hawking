@@ -1234,6 +1234,35 @@ remains at the $1\sigma$-box edge. The closure programme thus has a
 2-3-year quantitative outlook even for the conditional CLEARED-R5
 candidates.
 
+\paragraph{Polariton substrate placement — bimodal-branch resolution
+(Phase~6v.3, 2026-05-26).}
+%% Provenance: Wave 6v.3 cross-reference into D5's substrate-constraints
+%% framing. Numerical anchor: src/dkm_polariton/polariton_occupation_bound.py.
+%% Lean: SKEFTHawking.DKMBootstrap.polariton_dkm_f3_holds_at_pump_below_threshold
+%% + polariton_inherits_graphene_uniqueness_result
+%% (lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean).
+A complementary substrate-level finding that lives outside the
+dark-energy closure but completes the D5 \emph{substrate constraints
+by platform} picture: the Phase~6q DKM transport bootstrap's
+explicit open question on polariton-platform placement — left
+unresolved at Phase~6q close (\texttt{project\_phase6q\_complete\_2026\_05\_23}
+memory) — has been resolved by Phase~6v Wave~6v.3. The UPenn
+nanocavity-polariton 4~fJ switching threshold pins the per-pulse
+per-mode photon count at $n_{\rm per\ pulse} \approx 1.44 \times 10^4$,
+some $70\times$ below the $n_{\rm threshold} \approx 10^6$ regime
+that breaks the F3 operator-growth axiom on continuum-bosonic
+substrates (Yin--Lucas, Kuwahara--Saito Lieb--Robinson-for-bosons).
+The polariton platform therefore takes the \emph{same} positive-
+uniqueness branch of the \texttt{PlatformBimodalOutcome} as graphene
+(formal statement \texttt{polariton\_inherits\_graphene\_uniqueness\_result}
+in \texttt{lean/SKEFTHawking/DKMBootstrap/PolaritonF3Bound.lean};
+kernel-only; no new project-local axioms). The D5 \emph{constraint
+landscape by platform} now reads: graphene + polariton on the
+positive-uniqueness branch; BEC Bogoliubov continuum-bosonic
+substrates on the sharpened-NO-GO branch (Phase~6q
+Wave~2b.4). This closes the explicit Phase~6q open question for
+the D5 substrate-constraints reading.
+
 The bundle ships at $\totaltheorems$ Lean theorems / $\leanmodules$
 modules / zero active sorry / 1 tracked axiom
 (\texttt{gapped\_interface\_axiom} from Phase~5s, unrelated to the

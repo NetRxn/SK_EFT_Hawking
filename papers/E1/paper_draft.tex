@@ -178,6 +178,49 @@ admirably for its actual purpose of nonlinear cavity QED — but
 it pins which polariton physics the present paper can soundly
 claim to govern.
 
+\paragraph{DKM F3 holds at device-operating pump energies — polariton
+inherits the graphene positive-uniqueness branch.}
+%% Provenance: this paragraph is the Wave 6v.3 deliverable on the E1 side.
+%% Numerical anchor traces to
+%%   src/dkm_polariton/polariton_occupation_bound.py
+%%   src/core/formulas.py :: polariton_mode_occupation_per_pulse
+%% Lean theorem: SKEFTHawking.DKMBootstrap.polariton_dkm_f3_holds_at_pump_below_threshold
+%% (PolaritonF3Bound.lean, kernel-only). Resolves the explicit Phase 6q
+%% open question on polariton bimodal-branch placement.
+A complementary positive scope statement comes from the Phase~6q
+Chowdhury–Hartnoll–Hebbar–Khondaker (CHHK) transport bootstrap
+substrate (\texttt{lean/SKEFTHawking/DKMBootstrap/}). The Phase~6q
+\emph{bimodal outcome} disjunction places every analog-Hawking
+platform on exactly one of two branches: (i) the
+\emph{positive-uniqueness} branch (graphene Dirac fluid), satisfying
+the Mott--Ioffe--Regel-style joint $(\tau, D)$ bound; or (ii) the
+\emph{sharpened NO-GO} branch (BEC Bogoliubov continuum-bosonic
+substrates), where the operator-growth axiom F3 fails via Yin--Lucas
+\cite{YinLucas2022LiebRobinsonBosons},
+Kuwahara--Saito \cite{KuwaharaSaito2021LiebRobinsonBosons}
+Lieb--Robinson-for-bosons. The polariton placement was left open in
+Phase~6q. The UPenn 4~fJ switching threshold pins it: at
+$\hbar\omega_{\rm cav} = 1.736$~eV the per-pulse per-mode photon count
+is
+\begin{equation}
+n_{\rm per\ pulse} = E_{\rm pulse} / (\hbar \omega_{\rm cav})
+                   \approx 1.44 \times 10^4 \ \text{photons / mode},
+\label{eq:n_per_pulse_penn}
+\end{equation}
+some \emph{seventy times} below the $n_{\rm threshold} \approx 10^6$
+regime that breaks F3 on continuum-bosonic substrates. The Paris-LKB
+platform at $1$~nW pump over the standard 8~ps cavity-coherence time
+sits at $\approx 3.4 \times 10^{-2}$ per mode — a further seven
+orders of magnitude below. Polariton therefore takes the \emph{same}
+branch as graphene under any device-operating pump constraint. The
+formal statement is kernel-verified as
+\texttt{polariton\_dkm\_f3\_holds\_at\_pump\_below\_threshold}, and
+the bimodal-branch resolution as
+\texttt{polariton\_inherits\_graphene\_uniqueness\_result}, in
+\texttt{PolaritonF3Bound.lean}; both proofs use only the standard
+Lean kernel (no new axioms, no tracked Props). This closes the
+explicit open question left in Phase~6q.
+
 %% ══════════════════════════════════════════════════════════════════
 \section{Hawking temperature and dispersive correction}
 
@@ -446,6 +489,16 @@ Phys.\ Rev.\ Lett.\ \textbf{130}, 111501 (2023).
 Z.~Wang, B.~Kim, B.~Zhen, and L.~He,
 Phys.\ Rev.\ Lett.\ \textbf{136}, 146901 (2026)
 [arXiv:2411.16635], doi:10.1103/gc15-qsvf.
+
+\bibitem{YinLucas2022LiebRobinsonBosons}
+C.~Yin and A.~Lucas,
+Phys.\ Rev.\ X \textbf{12}, 021039 (2022)
+[arXiv:2106.09726], doi:10.1103/PhysRevX.12.021039.
+
+\bibitem{KuwaharaSaito2021LiebRobinsonBosons}
+T.~Kuwahara and K.~Saito,
+Phys.\ Rev.\ Lett.\ \textbf{127}, 070403 (2021)
+[arXiv:2103.11592], doi:10.1103/PhysRevLett.127.070403.
 \end{thebibliography}
 
 
