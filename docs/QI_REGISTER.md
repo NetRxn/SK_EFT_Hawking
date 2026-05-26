@@ -16,6 +16,18 @@ This is the Stage 14 (advisory) register. Each QI item is a **process-level** is
 
 ## Open Items
 
+### qi-gate-5-self-audit-blind-spot-on-sibling-tautologies — opened 2026-05-26 PM by Phase 6w D7 Stage-13 adversarial-reviewer
+
+- **First observed:** 2026-05-26 PM Phase 6w D7 Stage-13 fresh-context adversarial-reviewer pass.
+- **Pattern summary:** Self-conducted P3/P5 audits applied to one theorem in a module systematically miss SIBLING theorems sharing the same defect class on the same definitional target. Specific Phase 6w instance: self-audit correctly remediated T2 of `AnalogHawkingDemarcation.lean` (`_iff_loopRate_ok_and_c1_zero` → `_iff_tree_and_nonneg_and_c1_zero`) but missed T4 + T5 — `analog_hawking_simulable_implies_both_conditions` (`:= h` identity-function on the same And) + `analog_hawking_simulable_of_both_conditions` (`⟨h_bp, h_c1⟩` trivial And-constructor on the same definitional target). Also missed `categoricalChernExpansion_uses_aperiodicLattice` in `ChernBridge.lean` (statement `(IsPeriodic2D L ∨ IsAperiodic2D L) ∧ already-proved`; first conjunct LEM-vacuous since `IsAperiodic2D := ¬ IsPeriodic2D`; second independent of `L`; decorative parameter). All three caught by fresh-context adversarial-reviewer; ZERO caught by self-audit. **Occurrence count: 3 within a single 7-module self-audit pass.**
+- **Pipeline stage affected:** Stage 13 (adversarial review) when bypassed via self-conducted audit substitute. When `physics-qa:adversarial-reviewer` IS invoked, this pattern is caught; when it isn't, the pattern slips through.
+- **Proposed structural prevention:** Two-layer fix:
+  - **(a) Tighten self-audit checklist:** When one P5 is caught in a module, the auditor MUST inspect EVERY OTHER theorem in that module returning a hypothesis directly OR using `⟨_, _⟩` / `And.intro` / trivial-constructor bodies on the same definitional target, before clearing the module GREEN.
+  - **(b) Stronger:** ALWAYS invoke `physics-qa:adversarial-reviewer` + `physics-qa:claims-reviewer` plugin agents at wave close. Self-conducted audits are insufficient substitutes for fresh-context independent review. Add this to `WAVE_EXECUTION_PIPELINE.md` Stage 13 as a hard rule.
+- **Owner:** unassigned. **Target:** apply on next wave close (Phase 6x onward).
+- **Status:** open.
+- **Evidence:** `papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md` (findings 3.1, 3.2, 3.3 + QI Candidate section); commit `89cae29` remediation chain.
+
 ### qi-leantheoremdrift — opened 2026-05-04 by Phase 7c sub-waves 7c.1-7c.4 (D1+D2+D3+D4 lifts)
 
 - **First observed:** 2026-05-04 across D1 (5 BLOCKERs), D2 (9 BLOCKERs), D3 (13 BLOCKERs), D4 (1 BLOCKER cluster) Stage-10 round-1 reviews — **~32 instances of Class TN theorem-name drift** in 4 first-pass drafts.
