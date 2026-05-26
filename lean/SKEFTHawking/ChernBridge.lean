@@ -125,28 +125,27 @@ theorem crystalline_eq_quasicrystalline_iff_c1_zero (c0 c1 : ℝ) :
   · intro h; linarith
   · intro h; linarith
 
-/-- **Substantive Theorem 5.** Lattice-substrate compatibility: the
-    Chern bridge applies whenever the underlying `Lattice2D` is
-    periodic OR aperiodic. The bridge identity is independent of the
-    lattice substrate, which is the substantive content that justifies
-    applying the Chebyshev-TN method to both crystalline matter
-    (Brillouin-zone Chern) and quasicrystal Chern mosaics (Aalto). -/
-theorem categoricalChernExpansion_uses_aperiodicLattice
-    (c0 c1 : ℝ) (L : Lattice2D) :
-    (IsPeriodic2D L ∨ IsAperiodic2D L) ∧
-      realSpaceChernAt (categoricalChernExpansion c0 c1) 1 = c0 + c1 := by
-  refine ⟨?_, categorical_chern_eq_real_space_chern_crystalline c0 c1⟩
-  by_cases h : IsPeriodic2D L
-  · exact Or.inl h
-  · exact Or.inr h
+-- T5 (categoricalChernExpansion_uses_aperiodicLattice) deleted
+-- 2026-05-26 PM post adversarial-reviewer Stage-13 finding 3.3:
+-- the statement was `(IsPeriodic2D L ∨ IsAperiodic2D L) ∧
+-- realSpaceChernAt (categoricalChernExpansion c0 c1) 1 = c0 + c1`.
+-- The first conjunct is law-of-excluded-middle (since
+-- `IsAperiodic2D L := ¬ IsPeriodic2D L`, it is `P ∨ ¬P` —
+-- vacuously true). The second conjunct is independent of `L`
+-- (no `L` appears in `realSpaceChernAt` / `categoricalChernExpansion`
+-- / `evalChebyshev`) and reduces to the already-proved
+-- `categorical_chern_eq_real_space_chern_crystalline`. The
+-- "lattice-substrate compatibility" docstring claim was decorative;
+-- the theorem was `LEM ∧ already-proved-theorem` — P2 (bundle
+-- redundancy) + P3 (LEM tautology) anti-pattern.
 
-/-- **Substantive Theorem 6.** The bridge ratifies Aalto's empirical
+/-- **Substantive Theorem 6 → T5 (renumbered after T5 deletion).** The bridge ratifies Aalto's empirical
     observation that the same Chebyshev-TN methodology applies to
     both crystalline and quasicrystalline systems at the substrate
     level: the categorical-Chern expansion `[c_0, c_1]` produces a
     well-defined real-space Chern marker at every `x ∈ ℝ`, with
-    distinct band-edge values that the underlying lattice topology
-    cannot change. -/
+    distinct band-edge values are a structural property of the
+    Chebyshev expansion. -/
 theorem chernBridge_uniform_in_band_edge (c0 c1 : ℝ) (x : ℝ) :
     realSpaceChernAt (categoricalChernExpansion c0 c1) x = c0 + c1 * x := by
   unfold realSpaceChernAt categoricalChernExpansion

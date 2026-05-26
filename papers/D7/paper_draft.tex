@@ -23,25 +23,35 @@ Recent classical tensor-network methods --- belief propagation on
 matrix expansions on quasicrystal Hamiltonians (Antão, Sun, Fumega,
 Lado, \textit{PRL} \textbf{136}, 156601 (2026)) --- have collectively
 narrowed the gap between classical and quantum many-body simulation.
-We formalize their joint substrate in the Lean~4 proof assistant and
-ship a kernel-verified \textit{demarcation theorem}: a quantum
-many-body system on a factor graph $G$ with factor weights $f_a$ and
-categorical-Chern data $(c_0, c_1)$ is classically simulable in the
-combined BP-LDP / Chebyshev-TN regime if and only if (i) the
-large-deviation rate function of the loop-correction terms is below a
-computable threshold (the system's underlying topology is tree-like
-and factor weights are non-negative) AND (ii) the topological
-coefficient $c_1$ vanishes. Outside this regime --- loopy
+We formalize a joint substrate in the Lean~4 proof assistant and
+ship a kernel-verified \textit{simulability demarcation
+biconditional}\footnote{To the best of our knowledge after a scoped
+search of GitHub topics \texttt{lean4} / \texttt{coq} / \texttt{agda},
+the Mathlib / mathlib4 indexes, and the Coq UniMath / Agda categories
+ecosystems (2026-05-26), no prior proof-assistant formalization of a
+classical-simulability vs.\ quantum-advantage demarcation on tensor-
+network factor graphs exists. We make no broader first-claim and
+welcome notification of prior work.}: a quantum many-body system on a
+factor graph $G$ with factor weights $f_a$ and categorical-Chern data
+$(c_0, c_1)$ is classically simulable in the combined BP / Chebyshev-
+TN regime if and only if (i) a structural tree indicator on the
+factor graph is below a fixed threshold (the underlying topology is
+tree-like and factor weights are non-negative) AND (ii) the
+topological coefficient $c_1$ vanishes. Outside this regime --- loopy
 factor-graph topology OR non-trivial Chern coefficient --- quantum
-processors retain a genuine simulation advantage. The substrate is
-fully generic over the factor-graph type parameters and applies
-beyond analog Hawking radiation to any LDP-controlled-BP / Chebyshev-
-TN classification setting. We instantiate the demarcation on three
-analog-Hawking platforms (BEC, polariton, graphene Dirac fluid) via
-the Kibble-Zurek-Unruh correspondence as a worked example. All
-67 substantive theorems shipped across seven contributing modules
-have kernel-only axiom closure $[\mathtt{propext}, \mathtt{Classical.choice},
-\mathtt{Quot.sound}]$ and zero project-local axioms.
+processors retain a structural simulation advantage at the level of
+the formalized substrate. The Lean substrate is fully generic over
+the factor-graph type parameters; analog-Hawking applications via the
+Kibble-Zurek-Unruh correspondence are sketched at the cross-module
+substrate level in Section~\ref{sec:kzu-application}, with explicit
+per-platform (BEC, polariton, graphene Dirac fluid) instantiation
+bridges deferred to the D-bundle absorption pass. The 65 substantive
+theorems shipped across seven contributing modules have kernel-only
+axiom closure $[\mathtt{propext}, \mathtt{Classical.choice},
+\mathtt{Quot.sound}]$ with zero project-local axioms; the structural
+tree-indicator predicate uses \texttt{Classical.byCases} on an
+undecidable graph property and so the "threshold check" is
+information-theoretic, not algorithmic, at this substrate layer.
 \end{abstract}
 
 \maketitle
@@ -69,11 +79,20 @@ biconditional that decomposes the simulability question into two
 load-bearing axes:
 
 \begin{enumerate}
-\item \textit{LDP rate function condition}: the
-large-deviation rate of the loop-correction terms in the factor-
-graph PEPS representation must lie below a computable threshold
+\item \textit{Tree-indicator condition}: a structural indicator
+on the factor graph (encoding "this graph is a tree" at the
+predicate level) must be at or below the fixed threshold $1/2$
 (equivalently, the factor graph is tree-like and the factor weights
-are non-negative).
+are non-negative). The Lean implementation
+$\mathtt{loopCorrectionRate}\,G := \mathtt{if}\
+\mathrm{IsTreeFactorGraph}\,G\ \mathtt{then}\ 0\ \mathtt{else}\ 1$
+is a $\{0,1\}$-valued indicator, not a continuous Cramér-type large-
+deviation rate function. The "LDP" framing in the Tindall-Sels
+literature motivates the predicate but is not encoded inside the
+present substrate; an upgrade to a substantive Cramér rate
+function on loop-correction terms is a separate deliverable
+(estimated ~200--400 LoC against the existing project LDP module
+suite) flagged for a future revision.
 \item \textit{Topological condition}: the
 categorical Chern coefficient $c_1$ of the system must vanish.
 \end{enumerate}
@@ -99,12 +118,16 @@ substantive theorems covering message-update positivity, factorization,
 fixed-point stability, and Bethe free-energy substrate
 (Section~\ref{sec:bp-substrate}).
 
-\item A kernel-verified biconditional characterization of LDP-
-controlled BP convergence:
+\item A kernel-verified biconditional characterization of BP-
+favorable factor graphs in terms of a tree-indicator threshold:
 $\mathrm{IsBPConvergenceFavorable}\ G\ f_a \iff
 \mathrm{loopCorrectionRate}\ G \leq 1/2 \land
-(\forall a\, y,\, 0 \leq f_a(y))$
-(Section~\ref{sec:ldp-bp}).
+(\forall a\, y,\, 0 \leq f_a(y))$ where $\mathrm{loopCorrectionRate}$
+is a $\{0,1\}$-valued structural tree indicator (not a continuous
+LDP rate function in the present substrate; see
+Section~\ref{sec:ldp-bp}). The threshold $1/2$ is fixed; the
+biconditional collapses to the tree-predicate-plus-non-negativity
+pair (Section~\ref{sec:ldp-bp}).
 
 \item A categorical-Chern $\leftrightarrow$ real-space-Chern bridge
 formalized via the Chebyshev tensor-network expansion, with
@@ -161,23 +184,52 @@ limits.]
 Wave 6w.5 substantive theorems; four companion lemmas including the
 contrapositive quantum-advantage regime.]
 
-\section{Kibble-Zurek-Unruh application}
+\section{Kibble-Zurek-Unruh application (substrate level only)}
 \label{sec:kzu-application}
 
-[Wave 6w.1 application substrate. Worked instantiation on three
-analog-Hawking platforms via the KZ-U correspondence
-$1/\tau_Q \equiv \kappa$; headline
-\texttt{surface\_gravity\_bounds\_kzm\_exponent} cross-checks the
-Tindall-Sels KZM extraction against SK-EFT.]
+[Wave 6w.1 application substrate at the cross-module identification
+level. The headline
+\texttt{surface\_gravity\_bounds\_kzm\_exponent} (Lean module
+\texttt{KibbleZurekUnruh.lean}) substantively bounds the
+Kibble-Zurek exponent via the SK-EFT surface gravity under the
+identification $1/\tau_Q \equiv \kappa$, but the present substrate
+does NOT contain per-platform instantiation bridges into the
+demarcation theorem. Concretely, the \texttt{AnalogHawkingDemarcation.lean}
+module does not import \texttt{KibbleZurekUnruh.lean} and there are
+no \texttt{analog\_hawking\_simulable\_BEC\_instance} or analogous
+platform-specific lemmas at this writing. Per-platform bridges (BEC,
+polariton, graphene Dirac fluid) are deferred to a subsequent D-bundle
+absorption pass; the present paper's claim is limited to the
+substrate-level identification and the cross-module-level cross-check
+that the KZM exponent extraction by Tindall-Sels classical
+simulation is in the same universal-scaling regime as the SK-EFT
+analog-Hawking prediction.]
 
 \section{Discussion}
 
 The Phase 6w D7 bundle's central contribution is a kernel-verified
-demarcation between regimes where classical tensor-network methods
-suffice and where quantum processors retain a structural advantage.
-The demarcation is falsifiable on two distinct axes and the substrate
-is generic enough to apply beyond analog Hawking to any LDP-
-controlled-BP / Chebyshev-TN classification setting.
+biconditional demarcation between regimes where the formalized
+classical tensor-network substrate suffices and where the
+formalization identifies a structural simulation advantage for
+quantum processors. The demarcation is falsifiable on two distinct
+axes (tree-indicator threshold + Chern coefficient) and the substrate
+is generic enough at the type level to apply beyond analog Hawking
+to any factor-graph + Chebyshev-TN classification setting.
+
+We are explicit about the substrate's current scope: (i) the
+``loopCorrectionRate'' is a structural tree indicator, not a
+continuous LDP rate function --- the LDP-framing terminology
+motivates the predicate but is not encoded substantively in the
+present Lean substrate; an upgrade to a Cramér-type rate function
+on loop-correction terms is a separate ~200--400 LoC deliverable;
+(ii) the per-platform analog-Hawking bridges (BEC, polariton, graphene
+Dirac fluid) are at the cross-module substrate level via the
+\texttt{KibbleZurekUnruh.lean} foundation theorem but are NOT yet
+shipped as platform-specific instantiation lemmas attached to the
+demarcation predicate; (iii) the threshold check is information-
+theoretic rather than algorithmic (the tree-indicator predicate uses
+\texttt{Classical.byCases} on an undecidable graph property).
+Each scope-limitation point is a clean future-revision target.
 
 \begin{thebibliography}{99}
 

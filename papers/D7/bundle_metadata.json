@@ -5,18 +5,19 @@
   "target_journal": "PRX Quantum or Physical Review X",
   "phase7_subphase": "7w (Phase 6w D7 spin-out)",
   "stage9_status": "not_started",
-  "stage10_status": "skeleton",
-  "stage13_status": "not_started",
-  "stage13_redo_required": false,
+  "stage10_status": "in_progress",
+  "stage13_status": "blocked",
+  "stage13_redo_required": true,
   "freshness_stale": false,
   "source_manifest_last_regen": null,
   "last_lift": "2026-05-26T20:00:00Z",
   "last_stage9_review": null,
-  "last_stage10_review": null,
-  "last_stage13_review": null,
+  "last_stage10_review": "2026-05-26T21:12:00Z",
+  "last_stage13_review": "2026-05-26T21:12:00Z",
   "blockers_open": 0,
   "advisories_open": 0,
-  "stage13_review_doc": null,
+  "stage13_review_doc": "papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md",
+  "stage10_review_doc": "papers/D7/claims_review.json",
   "audit_log_path": "papers/D7/audit_log.jsonl",
   "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
   "created": "2026-05-26T20:00:00Z",
@@ -34,9 +35,34 @@
   "headline_theorems": [
     "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation",
     "SKEFTHawking.BPLDPSimulability.bp_convergence_iff_ldp_below_threshold",
-    "SKEFTHawking.ChernBridge.categorical_chern_eq_real_space_chern_crystalline",
-    "SKEFTHawking.ChernBridge.categorical_chern_eq_real_space_chern_quasicrystalline",
+    "SKEFTHawking.ChernBridge.crystalline_minus_quasicrystalline_eq_twice_c1",
     "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent"
   ],
-  "notes": "D7 bundle created 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass. Synthesizes the Phase 6w substrate into a unified classical-simulability ↔ quantum-advantage demarcation paper. Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation) + Antão-Sun-Fumega-Lado PRL 136, 156601 (2026) (Chebyshev-TN quasicrystal Chern markers). Stage 13 adversarial review pending."
+  "remediation_history": [
+    {
+      "date": "2026-05-26T21:30:00Z",
+      "trigger": "Stage-13 adversarial-reviewer + Stage-10 claims-reviewer fresh-context pass 2026-05-26T21:12:00Z",
+      "review_docs": [
+        "papers/AutomatedReviews/2026-05-26-2112-internal-adversarial/D7.md",
+        "papers/D7/claims_review.json"
+      ],
+      "findings_summary": "Adversarial: 4 BLOCKER + 5 REQUIRED + 4 RECOMMENDED + 1 QI candidate. Claims: 2 BLOCKER + 4 non-blocking. Substantive remediations applied:",
+      "substantive_fixes": [
+        "Deleted 3 P5 tautology theorems caught by adversarial reviewer that self-audit missed: analog_hawking_simulable_implies_both_conditions (identity-function on And), analog_hawking_simulable_of_both_conditions (trivial And-constructor), categoricalChernExpansion_uses_aperiodicLattice (LEM-vacuous first conjunct + already-proved second + decorative L parameter).",
+        "Dropped decorative _c0 parameter from IsAnalogHawkingClassicallySimulable predicate.",
+        "Added 3 missing bibkeys (YedidiaFreemanWeiss2003, Zurek1985, BiancoResta2011) to CITATION_REGISTRY with primary-source cache files at Lit-Search/Phase-6w/primary-sources/.",
+        "Down-toned D7 abstract LDP-framing overclaim: 'large-deviation rate function of the loop-correction terms' → 'structural tree indicator on the factor graph'; 'computable threshold' → 'fixed threshold' (also noted that the predicate uses Classical.byCases on an undecidable graph property, so the threshold check is information-theoretic, not algorithmic).",
+        "Down-toned D7 abstract platform-instantiation overclaim: 'We instantiate the demarcation on three analog-Hawking platforms' → 'analog-Hawking applications via the Kibble-Zurek-Unruh correspondence are sketched at the cross-module substrate level... with explicit per-platform (BEC, polariton, graphene Dirac fluid) instantiation bridges deferred to the D-bundle absorption pass'.",
+        "Updated theorem count: 67 → 65 substantive after the 3 deletions; first-claim disclaimer footnote added per finding 5.4.",
+        "Updated headline_theorems list (this metadata) to remove deleted theorems; collapsed crystalline + quasicrystalline pair into single difference-identity headline per finding 7.2."
+      ],
+      "remaining_action_items": [
+        "Re-invoke physics-qa:adversarial-reviewer in fresh context to verify zero open substantive findings.",
+        "Re-invoke physics-qa:claims-reviewer in fresh context to verify zero open BLOCKERs.",
+        "If GREEN on re-review: flip stage13_status to 'green' + clear stage13_redo_required.",
+        "File QI candidate qi-gate-5-self-audit-blind-spot to docs/QI_REGISTER.md."
+      ]
+    }
+  ],
+  "notes": "D7 bundle created 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass. Synthesizes the Phase 6w substrate into a unified classical-simulability ↔ quantum-advantage demarcation paper. Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation) + Antão-Sun-Fumega-Lado PRL 136, 156601 (2026) (Chebyshev-TN quasicrystal Chern markers). Stage 13 adversarial review surfaced 4 BLOCKERs + 5 REQUIREDs + 4 RECOMMENDEDs; remediation applied; re-review pending."
 }

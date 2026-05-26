@@ -65,14 +65,26 @@ open SKEFTHawking.ChernBridge
 /-! ## Combined simulability predicate -/
 
 /-- An analog Hawking system on factor graph `G` with factor weights
-    `factorWeight` and categorical-Chern data `(c_0, c_1)` is
+    `factorWeight` and categorical-Chern coefficient `c_1` is
     **classically simulable** iff (i) it admits BP convergence in the
     favorable structural regime (tree topology + non-negative factor
     weights) AND (ii) the categorical Chern coefficient `c_1` vanishes
-    (topologically trivial regime). -/
+    (topologically trivial regime).
+
+    The `c_0` parameter of the broader categorical-Chern data
+    `(c_0, c_1)` is NOT a parameter of this predicate: it appears in
+    the cross-bridge realSpaceChernAt equation as part of the
+    expansion (`evalChebyshev ⟨[c_0, c_1]⟩`), but it cancels at every
+    band edge under the bridge identity (`c_0 + c_1 = c_0 - c_1
+    ⇔ c_1 = 0`), and the simulability classification depends only
+    on `c_1`. The c_0 parameter therefore lives in the headline
+    biconditional's RHS expression, not in this predicate.
+    Adversarial-reviewer finding 6.2 (2026-05-26) flagged the prior
+    decorative `_c0` parameter on this predicate; it has been dropped
+    per the substantive remediation pass. -/
 def IsAnalogHawkingClassicallySimulable
     {ν α X : Type*} (G : FactorGraph ν α)
-    (factorWeight : α → (ν → X) → ℝ) (_c0 c1 : ℝ) : Prop :=
+    (factorWeight : α → (ν → X) → ℝ) (c1 : ℝ) : Prop :=
   IsBPConvergenceFavorable G factorWeight ∧ c1 = 0
 
 /-! ## HEADLINE theorem -/
@@ -101,7 +113,7 @@ def IsAnalogHawkingClassicallySimulable
 theorem analog_hawking_quantum_advantage_demarcation
     {ν α X : Type*} (G : FactorGraph ν α)
     (factorWeight : α → (ν → X) → ℝ) (c0 c1 : ℝ) :
-    IsAnalogHawkingClassicallySimulable G factorWeight c0 c1 ↔
+    IsAnalogHawkingClassicallySimulable G factorWeight c1 ↔
       (loopCorrectionRate G ≤ ldpSimulabilityThreshold ∧
         ∀ a y, 0 ≤ factorWeight a y) ∧
       realSpaceChernAt (categoricalChernExpansion c0 c1) 1
@@ -119,8 +131,8 @@ theorem analog_hawking_quantum_advantage_demarcation
     structural predicates. -/
 theorem analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero
     {ν α X : Type*} (G : FactorGraph ν α)
-    (factorWeight : α → (ν → X) → ℝ) (c0 c1 : ℝ) :
-    IsAnalogHawkingClassicallySimulable G factorWeight c0 c1 ↔
+    (factorWeight : α → (ν → X) → ℝ) (c1 : ℝ) :
+    IsAnalogHawkingClassicallySimulable G factorWeight c1 ↔
       IsTreeFactorGraph G ∧ (∀ a y, 0 ≤ factorWeight a y) ∧ c1 = 0 := by
   unfold IsAnalogHawkingClassicallySimulable IsBPConvergenceFavorable
   constructor
@@ -137,33 +149,20 @@ theorem analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero
     structural form of the Tindall-Sels-Aalto combined criterion. -/
 theorem loopy_or_nonzero_c1_implies_not_simulable
     {ν α X : Type*} (G : FactorGraph ν α)
-    (factorWeight : α → (ν → X) → ℝ) (c0 c1 : ℝ)
+    (factorWeight : α → (ν → X) → ℝ) (c1 : ℝ)
     (h : ¬ IsBPConvergenceFavorable G factorWeight ∨ c1 ≠ 0) :
-    ¬ IsAnalogHawkingClassicallySimulable G factorWeight c0 c1 := by
+    ¬ IsAnalogHawkingClassicallySimulable G factorWeight c1 := by
   intro ⟨h_bp, h_c1⟩
   cases h with
   | inl h_loopy => exact h_loopy h_bp
   | inr h_nonzero => exact h_nonzero h_c1
 
-/-- **Substantive Companion 3.** A simulable analog Hawking system
-    necessarily has BOTH a non-loopy factor graph (BP-LDP-favorable)
-    AND a trivial topological invariant (`c_1 = 0`). Forward
-    extraction lemma for downstream constructive applications. -/
-theorem analog_hawking_simulable_implies_both_conditions
-    {ν α X : Type*} (G : FactorGraph ν α)
-    (factorWeight : α → (ν → X) → ℝ) (c0 c1 : ℝ)
-    (h : IsAnalogHawkingClassicallySimulable G factorWeight c0 c1) :
-    IsBPConvergenceFavorable G factorWeight ∧ c1 = 0 := h
-
-/-- **Substantive Companion 4.** Reverse-direction constructor: from
-    BP-LDP simulability and `c_1 = 0`, construct the combined
-    classical-simulability witness. -/
-theorem analog_hawking_simulable_of_both_conditions
-    {ν α X : Type*} (G : FactorGraph ν α)
-    (factorWeight : α → (ν → X) → ℝ) (c0 c1 : ℝ)
-    (h_bp : IsBPConvergenceFavorable G factorWeight)
-    (h_c1 : c1 = 0) :
-    IsAnalogHawkingClassicallySimulable G factorWeight c0 c1 :=
-  ⟨h_bp, h_c1⟩
+-- T4 + T5 deleted 2026-05-26 PM post adversarial-reviewer Stage-13
+-- finding 3.1 + 3.2: `:= h` identity-function tautology and
+-- `⟨h_bp, h_c1⟩` trivial-constructor tautology on the same
+-- definitional unfolding of `IsAnalogHawkingClassicallySimulable`
+-- (which is itself defined as `IsBPConvergenceFavorable ∧ c1 = 0`).
+-- Downstream consumers project on the predicate directly via `.1` /
+-- `.2` without needing the named extraction/constructor wrappers.
 
 end SKEFTHawking.AnalogHawkingDemarcation
