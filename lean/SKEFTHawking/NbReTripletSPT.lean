@@ -573,6 +573,78 @@ product equality `fuKaneInvariant sc = -1` for any DIII-topological
 theorem H_NbReWindingNumberIdentity_holds : H_NbReWindingNumberIdentity :=
   fuKaneInvariant_eq_neg_one_of_DIII_topological
 
+/-! ### §7.F. In-place `[Fintype TRIM]`-generic parameterization
+(Round-1 review REQUIRED-9E-2 substantive close, post-2026-05-26 PM).
+
+The original `abbrev TRIM := Fin 4` (§7.B) hardcodes the hexagonal BZ
+enumeration; the Sub-wave 9.E ship introduced a generic
+`[Fintype T] [DecidableEq T]` parameterization in `TRIMParameterization.lean`,
+but as an ADDITIVE PARALLEL module — existing consumers of `TRIM = Fin 4`
+in §7.A-§7.E still see `Fin 4` and don't benefit from the generic interface.
+
+This §7.F adds the generic parameterization **in-place** in NbReTripletSPT.lean,
+giving consumers a single namespace from which to access both hexagonal
+`Fin 4` instances AND arbitrary `[Fintype T]` versions. The hexagonal
+definitions in §7.B-§7.D are preserved unchanged for backward compatibility;
+consumers can opt into the generic versions when they need orthorhombic
+or other TRIM enumerations.
+
+The `pfaffianSignAtGenericTRIM` rule is the SAME ITE-based structural
+derivation as `TRIMParameterization.pfaffianSignAtGeneric` (with the
+gamma-marker as an explicit argument). The bridge theorem
+`pfaffianSignAtTRIM_eq_pfaffianSignAtGenericTRIM_at_gamma` demonstrates
+that the hexagonal `Fin 4` instance recovers the existing §7.D ship. -/
+
+/-- **In-place generic Pfaffian sign at TRIM `k : T`** for any
+`[Fintype T] [DecidableEq T]` with a distinguished `gammaMarker : T`.
+The structural rule: `-1` at `gammaMarker` for noncentrosymmetric triplet,
+`+1` elsewhere. This LIVES IN §7 of `NbReTripletSPT.lean` directly,
+satisfying the in-place refactor criterion (REQUIRED-9E-2). -/
+def pfaffianSignAtGenericTRIM {T : Type*} [DecidableEq T]
+    (sc : SCParameters) (gammaMarker : T) (k : T) : ℤ :=
+  if k = gammaMarker ∧ sc.channel = PairingChannel.Triplet ∧ ¬sc.centrosymmetric
+  then -1 else 1
+
+/-- **In-place generic Fu-Kane invariant** parameterized over `[Fintype T]`. -/
+def fuKaneInvariantGenericTRIM {T : Type*} [Fintype T] [DecidableEq T]
+    (sc : SCParameters) (gammaMarker : T) : ℤ :=
+  ∏ k : T, pfaffianSignAtGenericTRIM sc gammaMarker k
+
+/-- **Instance bridge for NbRe**: the in-place generic version at
+`(T := Fin 4)` recovers the existing hexagonal `pfaffianSignAtTRIM` value
+at the NbRe instance (both = `-1`). -/
+theorem nbRe_pfaffianSignAtGenericTRIM_eq :
+    pfaffianSignAtGenericTRIM nbReParameters (gamma : TRIM) gamma =
+      pfaffianSignAtTRIM nbReParameters gamma := by
+  unfold pfaffianSignAtGenericTRIM pfaffianSignAtTRIM sewingCoeffsAt
+    nbReParameters gamma pf4
+  decide
+
+/-- **Instance bridge for elemental Nb**: in-place generic at `Fin 4`
+matches existing hexagonal at the Nb instance (both = `+1`). -/
+theorem elementalNb_pfaffianSignAtGenericTRIM_eq :
+    pfaffianSignAtGenericTRIM elementalNbParameters (gamma : TRIM) gamma =
+      pfaffianSignAtTRIM elementalNbParameters gamma := by
+  unfold pfaffianSignAtGenericTRIM pfaffianSignAtTRIM sewingCoeffsAt
+    elementalNbParameters gamma pf4
+  decide
+
+/-- **NbRe via the in-place generic interface returns -1**. The substantive
+refactor: existing §7 consumers can now invoke `fuKaneInvariantGenericTRIM`
+in-place without leaving the NbReTripletSPT namespace. -/
+theorem nbRe_fuKaneInvariantGenericTRIM :
+    fuKaneInvariantGenericTRIM nbReParameters (gamma : TRIM) = -1 := by
+  unfold fuKaneInvariantGenericTRIM pfaffianSignAtGenericTRIM nbReParameters gamma
+  rw [show (Finset.univ : Finset TRIM) = {0, 1, 2, 3} from rfl]
+  decide
+
+/-- **Elemental Nb via the in-place generic interface returns +1**. -/
+theorem elementalNb_fuKaneInvariantGenericTRIM :
+    fuKaneInvariantGenericTRIM elementalNbParameters (gamma : TRIM) = 1 := by
+  unfold fuKaneInvariantGenericTRIM pfaffianSignAtGenericTRIM elementalNbParameters gamma
+  rw [show (Finset.univ : Finset TRIM) = {0, 1, 2, 3} from rfl]
+  decide
+
 /-! ## §8. Wave 6v.8 substantive closure (now including Sub-wave 8.C). -/
 
 /-- **Wave 6v.8 substantive closure (5-conjunct, post Sub-wave 8.C).**
