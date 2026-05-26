@@ -31,9 +31,32 @@
 
 ---
 
-## Phase 6v reopened for strengthening pass (2026-05-26 PM)
+## Phase 6v FULLY CLOSED 2026-05-26 PM ✅
 
-**🟡 PHASE 6v STRENGTHENING IN PROGRESS** (user-authorized 2026-05-26 PM, post Sub-wave 8.C adversarial review). All 7 original waves + 6v.5b + 6v.6b + Sub-wave 8.C substantively shipped, but the Sub-wave 8.C adversarial review surfaced thinness concerns (substrate-model encoded vs Hamiltonian-derived; Z₁₆ cross-bridge documentation-only; TRIM hardcoded Fin 4). Five new strengthening sub-waves queued under Wave 6v.8: **8.D** (general Pfaffian), **8.E** (Hamiltonian bridge), **8.F** (Z₁₆ cross-bridge), **8.G** (3D winding-number), **8.H** (TRIM parameterization). See `docs/roadmaps/Phase6v/Wave_6v.8_Roadmap.md` for full sub-wave scoping. Cumulative Phase 6v adversarial review deferred until AFTER all five sub-waves substantively ship (per user direction: single review at the end, not per-sub-wave).
+**🎯🎯 PHASE 6v COMPLETE AT GREEN-NO-FINDINGS BAR.** All 7 original waves + 6v.5b + 6v.6b + Sub-wave 8.C + Sub-waves 8.D-8.H strengthening pass + advisory cleanup all substantively shipped. Final fresh-context adversarial review (round 3 post-cleanup) verdict: **GREEN-NO-FINDINGS** per the user's "definition of done" bar.
+
+**Five strengthening sub-waves shipped this autonomous-loop session (2026-05-26 PM):**
+- **8.D** General project-local Pfaffian substrate (`lean/SKEFTHawking/MathlibAux/Pfaffian.lean`)
+- **8.E** Hamiltonian bridge — SCParameters → BdGHamiltonian (`lean/SKEFTHawking/BdGHamiltonianNbRe.lean`)
+- **8.F** Z₁₆ Rokhlin cross-bridge to Phase 6r Pin⁺ substrate (`lean/SKEFTHawking/CrossBridges/NbReDIIIToPinPlusZ16.lean`)
+- **8.G** 3D winding-number formal connection (surrogate + parity) (`lean/SKEFTHawking/NbReWindingNumber.lean`)
+- **8.H** TRIM parameterization over `[Fintype T]` (`lean/SKEFTHawking/TRIMParameterization.lean`)
+
+Plus cumulative-coherence theorem in `lean/SKEFTHawking/Phase6vSubwaves8DHClose.lean`.
+
+**Adversarial review trail (3 rounds):**
+- Round 1 (initial 5-sub-wave ship): YELLOW-with-4-REQUIRED (substrate-encoded-vs-derived, P3 ITE wrappers, Schnyder over-marketing, orthorhombic over-marketing).
+- Round 2 (post-strengthening): GREEN-with-2-ADVISORY (unused import, closure-name precision).
+- Round 3 (post-cleanup): **GREEN-NO-FINDINGS**.
+
+**Final state:**
+- Build: `lake build SKEFTHawking` clean at 8705 jobs.
+- Pytest: 4260 passed, 4 skipped, 68 deselected.
+- Project-local axiom count: 0 (Pipeline Invariant #15 maintained throughout).
+- All new theorems kernel-only `[propext, Classical.choice, Quot.sound]`.
+
+**Phase 6v Implications:** `docs/stakeholder/Phase6v_Implications.md`.
+**Phase 6v Strategic Positioning:** `docs/stakeholder/Phase6v_Strategic_Positioning.md`.
 
 ## Phase 6v close (PRE-STRENGTHENING — historical) 2026-05-26 AM
 
