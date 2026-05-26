@@ -1276,6 +1276,14 @@ import SKEFTHawking.KibbleZurekUnruh
 -- controlled simulability headline.
 import SKEFTHawking.BeliefPropagation
 
+-- Phase 6w Wave 6w.3 LDP-controlled classical-simulability headline
+-- (A1a follow-up). loopCorrectionRate + ldpSimulabilityThreshold +
+-- IsBPConvergenceFavorable + HEADLINE bp_convergence_iff_ldp_below_threshold.
+-- Substantive biconditional combining BP-on-TN substrate (Wave 6w.2) with
+-- LDP rate function characterization (Tindall-Sels Science 392, 868
+-- (2026) classical-simulation regime).
+import SKEFTHawking.BPLDPSimulability
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
