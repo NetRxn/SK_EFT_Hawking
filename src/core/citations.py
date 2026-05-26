@@ -80,6 +80,12 @@ PAPER_TO_PHASE: dict[str, str] = {
     'paper43_einstein_cartan':               'Phase-6e',
     # Phase 6w (Classical simulability & quantum advantage — tensor networks)
     '_phase6w_W1_lean_only':                 'Phase-6w',
+    '_phase6w_W2_lean_only':                 'Phase-6w',
+    '_phase6w_W3_lean_only':                 'Phase-6w',
+    '_phase6w_W4_lean_only':                 'Phase-6w',
+    '_phase6w_W5_lean_only':                 'Phase-6w',
+    '_phase6w_W6_lean_only':                 'Phase-6w',
+    '_phase6w_W7_lean_only':                 'Phase-6w',
     # Phase 6m (dark-energy review paper — causal-set / entropic-gravity / Jacobson-thermo-GR)
     'paper45_phase6m_review':                'Phase-6m',
     # Note: publication bundles (F, D1–D5, L1–L3, I1–I3, E1, E2) are *not*
@@ -10233,6 +10239,24 @@ CITATION_REGISTRY = {
     # Lit-Search/Phase-6w/primary-sources/<bibkey>.pdf
     # ════════════════════════════════════════════════════════════════════
 
+    'AntaoSunFumegaLado2026PRL136': {
+        'authors': 'Antão, T. V. C., Sun, Y., Fumega, A. O., Lado, J. L.',
+        'title': 'Tensor Network Method for Real-Space Topology in Quasicrystal Chern Mosaics',
+        'journal': 'Physical Review Letters',
+        'volume': 136,
+        'page': '156601',
+        'year': 2026,
+        'doi': '10.1103/hhdf-xpwg',
+        'arxiv': '2506.05230',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6w/primary-sources/AntaoSunFumegaLado2026PRL136.pdf',
+        'used_in': ['papers/_phase6w_W4_lean_only/paper_draft.tex',
+                    'lean/SKEFTHawking/ChebyshevTN.lean',
+                    'lean/SKEFTHawking/AperiodicLattice.lean'],
+        'provides': ['Chebyshev tensor-network algorithm for computing local Chern markers on 2D quasicrystal Hamiltonians with hundreds of millions of sites (C_8 and C_10 rotational symmetries; absence of translational symmetry); validates aperiodic-Hamiltonian topological-invariant computation at scales several orders of magnitude beyond conventional methodologies'],
+        'notes': 'Phase 6w Wave 6w.4 (Chebyshev-TN + aperiodic-lattice substrate) primary reference. PRL Editor’s Suggestion April 13, 2026. Together with Tindall-Sels (Science 2026) the two papers bracket the full tensor-network landscape: Aalto (statics + aperiodicity) + Tindall-Sels (dynamics + disorder). Article 156601 in PRL 136 Issue 15.',
+    },
     'TindallMelloFishmanStoudenmireSels2026Science392': {
         'authors': 'Tindall, J., Mello, A. F., Fishman, M., Stoudenmire, E. M., Sels, D.',
         'title': 'Dynamics of disordered quantum systems with two- and three-dimensional tensor networks',

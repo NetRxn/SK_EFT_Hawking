@@ -1284,6 +1284,16 @@ import SKEFTHawking.BeliefPropagation
 -- (2026) classical-simulation regime).
 import SKEFTHawking.BPLDPSimulability
 
+-- Phase 6w Wave 6w.4 substrate (Antão-Sun-Fumega-Lado, PRL 136, 156601
+-- (2026); DOI 10.1103/hhdf-xpwg; arXiv:2506.05230). First-kind Chebyshev
+-- polynomials with canonical recurrence + truncated expansion + boundary-
+-- value identities (T_n(1)=1, T_n(-1)=(-1)^n, etc.); aperiodic-lattice
+-- predicate substrate (Lattice2D + IsPeriodic2D + IsAperiodic2D +
+-- IsTranslationInvariant + boundary cases). Consumed by Wave 6w.5
+-- categorical-Chern ↔ real-space-Chern bridge.
+import SKEFTHawking.ChebyshevTN
+import SKEFTHawking.AperiodicLattice
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
