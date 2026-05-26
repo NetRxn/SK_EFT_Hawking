@@ -471,7 +471,7 @@ CITATION_REGISTRY = {
         'arxiv': '2603.28846',
         'doi_verified': None,
         'inprep': False,
-        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/GoogleShorECC256_2026.pdf',
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BabbushGidneyEtAl2026ECC256Shor.pdf',
         'used_in': ['lean/SKEFTHawking/FaultTolerance/ShorTGateCount.lean',
                     'papers/D6/paper_draft.tex'],
         'provides': [
