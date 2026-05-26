@@ -129,4 +129,81 @@ theorem attenuation_exponent_nonneg (p : PolaritonParams) :
     0 ≤ p.Gamma_pol * p.L / p.v_g := by
   exact div_nonneg (mul_nonneg p.Gamma_pol_nonneg p.L_nonneg) (le_of_lt p.v_g_pos)
 
+/-!
+## Wave 6v.4: Penn TMD nanocavity polariton scope demarcation
+
+The UPenn nanocavity exciton-polariton platform of Wang, Kim, Zhen, He
+(PRL 136, 146901 (2026); arXiv:2411.16635) is a charge-tunable MoSe₂
+monolayer in a planar photonic-crystal nanocavity. The device's
+measured lower-polariton linewidth is γ_LP = 1.8 meV, corresponding to
+a polariton decoherence rate
+
+    Γ_LP = γ_LP / ℏ = (1.8 meV) / ℏ ≈ 2.7347 × 10¹² s⁻¹.
+
+The platform is NOT itself an analog-horizon device — it forms no
+sonic horizon. The theorem below establishes that even pairing this
+Γ_LP against the *most generous* analog-horizon surface gravity ever
+demonstrated in the polariton family (the Falque-LKB steep-horizon
+maximum κ = 1.1 × 10¹¹ s⁻¹, FALQUE_STEEP_HORIZON_KAPPA in
+src/core/constants.py), the validity ratio is
+
+    Γ_LP / κ_max ≈ 24.86
+
+which exceeds the SK-EFT Tier-1 perturbative-patch validity threshold
+0.1 by a factor of nearly 250. This is a positive scope demarcation
+for the E1 (Paris-LKB polariton) bundle: Tier 1 covers GaAs / Paris-
+LKB long-lifetime polariton fluids in the smooth-horizon regime; it
+does NOT cover ultrafast TMD-polariton nanocavities. No new axiom is
+introduced; the result follows from `validityRatio` and `norm_num`
+discharge of the numerical inequality.
+
+Numerical-encoding choice: the Lean parameters use exact rationals
+`Gamma_pol := 27347 * 10^8` and `kappa := 11 * 10^10`, equal to
+`2.7347 × 10¹² s⁻¹` and `1.1 × 10¹¹ s⁻¹` respectively. The Γ_LP
+rational uses 4-digit precision matching the Python provenance entry
+`Penn_TMD_MoSe2.Gamma_pol = 2.7347e12` in
+`src/core/provenance.py`.
+-/
+
+/-- The UPenn nanocavity TMD-polariton MoSe₂ platform parameters
+    (Wang, Kim, Zhen, He, PRL 136, 146901 (2026); arXiv:2411.16635),
+    paired with the Falque-LKB steep-horizon maximum κ as the
+    *most generous* analog-horizon surface gravity. The `v_g` and
+    `L` fields are not used by the `validityRatio` predicate. -/
+noncomputable def pennTmdPolaritonParams : PolaritonParams where
+  kappa     := 11 * 10^10        -- 1.1 × 10¹¹ s⁻¹ = FALQUE_STEEP_HORIZON_KAPPA
+  Gamma_pol := 27347 * 10^8      -- 2.7347 × 10¹² s⁻¹ = γ_LP / ℏ (γ_LP = 1.8 meV)
+  v_g       := 4 * 10^5          -- 4 × 10⁵ m/s (Falque c_s baseline; placeholder)
+  L         := 0                  -- not used in validityRatio
+  kappa_pos        := by norm_num
+  Gamma_pol_nonneg := by norm_num
+  v_g_pos          := by norm_num
+  L_nonneg         := by norm_num
+
+/-- Wave 6v.4 scope-demarcation theorem.
+
+    The UPenn nanocavity TMD-polariton platform's validity ratio
+    Γ_pol / κ is ≥ 1/10 = 0.1 even at the *most generous* polariton-
+    family surface gravity (Falque-LKB steep-horizon κ = 1.1×10¹¹ s⁻¹).
+    Consequently the Tier-1 perturbative-dissipation patch — defined
+    by the strict inequality `validityRatio < 0.1` — does NOT hold.
+
+    Quantitatively the ratio is ≈ 24.86, exceeding the threshold by
+    a factor of nearly 250. This is a positive scope demarcation for
+    the E1 bundle: Tier 1 covers GaAs / Paris-LKB long-lifetime
+    polariton fluids in the smooth-horizon regime, NOT ultrafast
+    TMD-polariton nanocavities. -/
+theorem polariton_tier1_fails_tmds :
+    (1 / 10 : ℝ) ≤ validityRatio pennTmdPolaritonParams := by
+  unfold validityRatio pennTmdPolaritonParams
+  norm_num
+
+/-- Companion: the Tier-1 perturbative-dissipation predicate
+    (`validityRatio p < 1/10`) does NOT hold on the UPenn nanocavity
+    TMD-polariton platform. Direct contrapositive of
+    `polariton_tier1_fails_tmds`. -/
+theorem polariton_tier1_predicate_fails_tmds :
+    ¬ (validityRatio pennTmdPolaritonParams < (1 / 10 : ℝ)) :=
+  not_lt.mpr polariton_tier1_fails_tmds
+
 end SKEFTHawking.PolaritonTier1

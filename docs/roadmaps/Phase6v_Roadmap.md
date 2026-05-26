@@ -41,7 +41,7 @@
 
 | Wave | Title | Status | Bundle absorption | LoE |
 |---|---|---|---|---|
-| **Wave 6v.4** | Penn TMD polariton regime demarcation (E1 lift) | ⏳ NOT STARTED | E1 | 0.5–1 sess |
+| **Wave 6v.4** | Penn TMD polariton regime demarcation (E1 lift) | ✅ SHIPPED 2026-05-26 | E1 §2 paragraph + Lean theorem | 0.5–1 sess |
 | **Wave 6v.3** | DKM F3 polariton occupancy bound (Phase 6q follow-on) | ⏳ NOT STARTED | D5 + E1 (Phase 6q absorption) | 1–2 sess |
 | **Wave 6v.1** | Williamson/Yoder gauging QEC formalization — **CREATES D6 BUNDLE** | ⏳ NOT STARTED | D6 §3 (new) + I1 cross-bridge | 1.5 sess |
 | **Wave 6v.2** | Google/Oratomic T-gate counts for Shor circuits | ⏳ NOT STARTED | D6 §5 + D4 cross-bridge | 2–3 sess |

@@ -134,6 +134,50 @@ Protocol; three independent measurements
 \cite{Estrecho2021,Stepanov2019,Claude2023} are weighted against
 one theoretical projection~\cite{Jacquet2022}.
 
+\paragraph{Scope demarcation — Tier 1 covers GaAs / Paris-LKB
+long-lifetime polaritons, NOT ultrafast TMD-polariton nanocavities.}
+%% Provenance: this paragraph is the Wave 6v.4 deliverable.
+%% Numerical anchors trace to
+%%   src/core/constants.py :: POLARITON_PLATFORMS['Penn_TMD_MoSe2']
+%%   src/core/provenance.py :: Penn_TMD_MoSe2.{g_meV, gamma_LP_meV,
+%%                                              Q_factor, switching_energy_fJ}
+%% Lean theorem: SKEFTHawking.PolaritonTier1.polariton_tier1_fails_tmds
+%%   (PolaritonTier1.lean, kernel-only).
+The recent UPenn nanocavity exciton-polariton platform of
+Wang~et~al.~\cite{WangKimBZHe2026PennTMDPolariton} demonstrates
+strongly nonlinear MoSe$_2$ monolayer polaritons in a planar
+photonic-crystal nanocavity, with vacuum coupling
+$g = \SI{16.8}{\milli\electronvolt}$ (Rabi splitting $2g \approx
+\SI{33.6}{\milli\electronvolt}$), $Q$-factor $\approx 914$, and an
+all-optical switching threshold of $\sim \SI{4}{\femto\joule}$ on
+picosecond timescales. The measured lower-polariton linewidth
+$\gamma_{\rm LP} = \SI{1.8}{\milli\electronvolt}$ corresponds to a
+polariton-decoherence rate
+\begin{equation}
+\Gamma_{\rm LP} = \gamma_{\rm LP} / \hbar
+              \approx \SI{2.735e12}{\per\second}.
+\label{eq:gamma_lp_penn}
+\end{equation}
+Even paired with the \emph{most generous} polariton-family surface
+gravity — the Falque steep-horizon maximum $\kappa_{\max} =
+\SI{1.1e11}{\per\second}$ adopted as upper reach in
+\S2 — the validity ratio
+$\Gamma_{\rm LP} / \kappa_{\max} \approx 24.86$ exceeds the Tier-1
+perturbative-dissipation threshold $\Gamma_{\rm pol}/\kappa < 0.1$
+by a factor of nearly 250. Consequently the SK-EFT Tier-1 patch
+\emph{does not} cover ultrafast TMD-polariton nanocavities of the
+Wang~et~al. class; the patch's scope is restricted to GaAs /
+Paris-LKB long-lifetime cavities in the smooth-horizon regime. The
+formal statement is kernel-verified as
+\texttt{polariton\_tier1\_fails\_tmds} in
+\texttt{PolaritonTier1.lean} (axiom closure
+$[\mathit{propext},\;\mathit{Classical.choice},\;\mathit{Quot.sound}]$;
+no new project-local axioms; no tracked Props). This is a positive
+demarcation, not a failure of the UPenn device — which performs
+admirably for its actual purpose of nonlinear cavity QED — but
+it pins which polariton physics the present paper can soundly
+claim to govern.
+
 %% ══════════════════════════════════════════════════════════════════
 \section{Hawking temperature and dispersive correction}
 
@@ -397,6 +441,11 @@ Phys.\ Rev.\ B \textbf{101}, 064505 (2020).
 \bibitem{Jacquet2023QNM}
 M.~Jacquet \emph{et al.},
 Phys.\ Rev.\ Lett.\ \textbf{130}, 111501 (2023).
+
+\bibitem{WangKimBZHe2026PennTMDPolariton}
+Z.~Wang, B.~Kim, B.~Zhen, and L.~He,
+Phys.\ Rev.\ Lett.\ \textbf{136}, 146901 (2026)
+[arXiv:2411.16635], doi:10.1103/gc15-qsvf.
 \end{thebibliography}
 
 

@@ -2,7 +2,7 @@
 
 **Bundle target:** E1 §2 (Paris-LKB polariton paper) — additive scope demarcation paragraph.
 
-**Status:** IN PROGRESS (Stage 1 substrate intake; subsequent stages tracked below).
+**Status:** ✅ SHIPPED 2026-05-26 (commits `9e99ab1` Stage 1; final commit Stage 3a/5/6/7/10/12).
 
 **Source paper (canonical, primary-source cached):**
 Z. Wang, B. Kim, B. Zhen, L. He, "Strongly nonlinear nanocavity exciton-polaritons in gate-tunable monolayer semiconductors," **Phys. Rev. Lett. 136, 146901 (2026)** — Editor's Suggestion + cover article. arXiv:2411.16635 (submitted 2024-11-25). DOI: `10.1103/gc15-qsvf`. Primary-source cache: `Lit-Search/Phase-6v/primary-sources/WangKimBZHe2026PennTMDPolariton.pdf`. Bibkey: `WangKimBZHe2026PennTMDPolariton`.
@@ -32,21 +32,21 @@ Z. Wang, B. Kim, B. Zhen, L. He, "Strongly nonlinear nanocavity exciton-polarito
 
 | Stage | Action | Status |
 |---:|---|:---:|
-| 1 | (a) Add `WangKimBZHe2026PennTMDPolariton` bibkey to `CITATION_REGISTRY`. (b) Add `Penn_TMD_MoSe2` to `POLARITON_PLATFORMS` in `src/core/constants.py`. (c) Add 7 provenance entries to `PARAMETER_PROVENANCE` (g, γ_LP, γ_UP, γ_cav, Q, switching_energy_fJ, derived Γ_LP). (d) Confirm primary-source cache file exists (DONE — 1.15 MB PDF). | IN PROGRESS |
-| 2 | Add a small `formulas.py` helper `polariton_tier1_validity_threshold` returning the 0.1 threshold constant (already implicit in `POLARITON_PLATFORMS` post-processing). Pure pass-through — no new physics. | PENDING |
-| 3a | Ship Lean theorem `polariton_tier1_fails_tmds` in `lean/SKEFTHawking/PolaritonTier1.lean`: for any `PolaritonParams p` with `0.1 ≤ validityRatio p`, the perturbative Tier 1 patch does NOT meet the `validityRatio < 0.1` predicate. Construct an explicit `pennTmdPolaritonParams_atFalqueKappa` record using Γ_pol = Γ_LP, κ = `FALQUE_STEEP_HORIZON_KAPPA / s` units, and prove `0.1 ≤ validityRatio` for that record. | PENDING |
-| 3b | If 3a closes via interactive MCP loop (expected): skip. Otherwise register sorry stub. | (likely skip) |
-| 4 | Aristotle — skip (interactive MCP expected to close). | SKIP |
-| 5 | `lake build SKEFTHawking.ExtractDeps` clean. | PENDING |
-| 6 | Add a `tests/test_polariton_tier1_tmds.py` regression: verify `Penn_TMD_MoSe2` is registered, its `tier1_valid` is `False`, and `tier1_regime == 'intractable'`. | PENDING |
-| 7 | `validate.py --check parameter_provenance` + `--check citation_primary_sources_present` for the new bibkey. | PENDING |
-| 8 | No new figures. | SKIP |
-| 9 | No new figures. | SKIP |
-| 10 | Add a "Scope demarcation" paragraph to `papers/E1/paper_draft.tex` §2 citing Wang et al. 2026 and pointing at `polariton_tier1_fails_tmds`. | PENDING |
-| 11 | No new notebooks. | SKIP |
-| 12 | (a) Update `Phase6v_Roadmap.md` wave status to ✅ SHIPPED. (b) Update this per-wave roadmap with final substrate listing. (c) Stakeholder docs: write `docs/stakeholder/Phase6v_Wave6v.4_Implications.md` + `Phase6v_Wave6v.4_Strategic_Positioning.md`. (d) Inventory_Index update — DEFERRED to end of Phase 6v per cross-agent coordination. | PENDING |
+| 1 | (a) Add `WangKimBZHe2026PennTMDPolariton` bibkey to `CITATION_REGISTRY`. (b) Add `Penn_TMD_MoSe2` to `POLARITON_PLATFORMS` in `src/core/constants.py`. (c) Add 8 provenance entries to `PARAMETER_PROVENANCE` (g_meV, γ_LP_meV, γ_UP_meV, γ_cav_meV, Q_factor, switching_energy_fJ, tau_cav, derived Γ_pol). (d) Confirm primary-source cache file exists. | ✅ SHIPPED |
+| 2 | (skipped) No new formula helper needed — `tier1_valid` post-processing already in `POLARITON_PLATFORMS` loop. | SKIP |
+| 3a | Ship Lean theorems `polariton_tier1_fails_tmds` + `polariton_tier1_predicate_fails_tmds` in `lean/SKEFTHawking/PolaritonTier1.lean`. Construct `pennTmdPolaritonParams` using exact rationals `Γ_pol = 27347 × 10⁸` and `κ = 11 × 10¹⁰` (Falque steep-horizon max as the most generous κ), prove `1/10 ≤ Γ_pol/κ` via `norm_num`. Kernel-only (no axioms, no tracked Props). MCP diagnostic clean; file-level `lake env lean` clean. | ✅ SHIPPED |
+| 3b | (not needed) — 3a closed via direct `norm_num` discharge; no sorry stub. | SKIP |
+| 4 | (not needed) — Aristotle fallback not invoked. | SKIP |
+| 5 | `lake env lean SKEFTHawking/PolaritonTier1.lean` clean (exit 0); full project `lake build` deferred to end-of-phase since module diff is local + MCP diagnostic returns zero errors. | ✅ SHIPPED (file-gate) |
+| 6 | Add `tests/test_polariton_tier1_tmds.py` regression (16 tests). All PASS: registration, source-of-truth params, derived Γ_pol matches ℏ-conversion, validity-ratio at steep + smooth κ, intractable tag, 8 provenance entries LLM-verified, bibkey present, primary source cache file present. | ✅ SHIPPED |
+| 7 | `validate.py --check parameter_provenance` PASS (205 params, all LLM-verified). `validate.py --check citation_primary_sources_present` PASS (416 bibkeys / 288 cached / 30 inprep-exempt / 98 textbook-exempt / 0 missing). `validate.py --check paper_provenance` PASS. `validate.py --check provenance_doi_in_registry` PASS. | ✅ SHIPPED |
+| 8 | (not needed) — No new figures. | SKIP |
+| 9 | (not needed) — No new figures. | SKIP |
+| 10 | E1 §2 "Scope demarcation" paragraph added to `papers/E1/paper_draft.tex` citing Wang et al. 2026 with Eq. \\eqref{eq:gamma_lp_penn} (Γ_LP ≈ 2.735×10¹² s⁻¹), the Γ_LP/κ_max ≈ 24.86 calculation, and a direct reference to the Lean theorem `polariton_tier1_fails_tmds`. New bibitem entry added to thebibliography. 2-pass `pdflatex` clean (4 pages, 415 KB PDF). | ✅ SHIPPED |
+| 11 | (not needed) — No new notebooks. | SKIP |
+| 12 | (a) `Phase6v_Roadmap.md` wave-status updated to ✅ SHIPPED. (b) This per-wave roadmap finalized. (c) Phase-level stakeholder docs (`Phase6v_Implications.md` + `Phase6v_Strategic_Positioning.md`) DEFERRED to Phase 6v close per project convention (per-phase not per-wave; see `Phase6q_Implications.md` precedent). (d) Inventory_Index update DEFERRED to Phase 6v close per cross-agent coordination boundary. | ✅ SHIPPED (per-wave portion) |
 | 13 | Stage 13 adversarial review — DEFERRED to end of Phase 6v per user directive (single Phase-6v-close adversarial pass). | DEFERRED |
-| 14 | QI — no systemic findings expected. | PENDING |
+| 14 | QI — no systemic findings identified in this wave. | ✅ NO-FINDINGS |
 
 ## Substrate touched (planned)
 
