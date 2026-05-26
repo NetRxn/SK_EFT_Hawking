@@ -38,6 +38,29 @@ F. Colangelo et al., "Unveiling Intrinsic Triplet Superconductivity in Noncentro
 - **8.C (Fu–Kane / Sato–Fujimoto Pfaffian Z₂ — Pathway A):** the canonical noncentrosymmetric-BCS Z₂ invariant via TRIM-product Pfaffian. ✅ **SHIPPED 2026-05-26 post-DR-return.** The original deferral plan called for a ~2000 LoC `MapDegree` upstream Mathlib contribution; the DR selected Pathway A at ~220 LoC project-local instead, using the 4×4 closed-form Pfaffian directly. `H_NbReWindingNumberIdentity` is **substantively discharged** kernel-only (NOT shipped as a tracked Prop). The general `Matrix.pfaffian` upstream Mathlib contribution remains a documented follow-up.
 - **8.D (D2 + D4 paper lifts):** D2 §"SPT material exhibits" + D4 §"topological-qubit substrate candidates" populated with Wave 6v.8 substantive content. ✅ SHIPPED.
 
+**Sub-waves 8.D–8.H — strengthening pass on Sub-wave 8.C discharge (queued post 2026-05-26 adversarial review):**
+
+The adversarial review of the initial Sub-wave 8.C ship surfaced thinness concerns: the substrate model is a 4-quadrant ITE on `(channel, centrosymmetric)`; the Lean theorem reads off the parameterized model rather than deriving from a microscopic Hamiltonian; the cross-bridge to Phase 6r Pin⁺/ℤ₁₆ substrate is documentation-only; TRIM is hardcoded `Fin 4` (hexagonal NbRe only). Per user direction (2026-05-26 PM), the following strengthening sub-waves are queued to push the Sub-wave 8.C discharge from "substrate-level type-correct encoding" to "physics-derived kernel-verified result connected to the broader topological substrate":
+
+- **8.D (general Matrix.pfaffian project-local substrate):** ⏳ NOT STARTED. Build `lean/SKEFTHawking/MathlibAux/Pfaffian.lean` (~80-150 LoC). Define `Matrix.pfaffian : Matrix (Fin (2*n)) (Fin (2*n)) R → R` over `[CommRing R]` as sum over perfect-matching permutations. Prove `(Pf A)² = det A` for skew-symmetric A. Following the `Matrix.det` template. **Upstreamable to Mathlib at later date per project posture (NOT submitting now)**. Prerequisite for Sub-wave 8.E's general form.
+
+- **8.E (Hamiltonian bridge — closes "encoded vs derived" gap):** ⏳ NOT STARTED. Define `H_BdG_NbRe : SCParameters → (k : ℝ³) → Matrix (Fin 4) (Fin 4) ℂ` consuming SC params (channel selects pairing structure, centrosymmetric selects ASOC presence, asoc_meV selects strength). Define TRS involution `Θ = iσ_y ⊗ σ_0`. Define `sewingMatrix sc k := Θ · H_BdG_NbRe sc k · Θ^†`. Prove `sewingMatrix_antisymmetric` FROM TRS properties (not by construction). Prove Hamiltonian-derived Pfaffian sign matches `sewingCoeffsAt`-derived one. ~300-500 LoC. **Highest strategic value:** elevates the ship from "we encoded the answer" to "the canonical noncentrosymmetric BdG Hamiltonian for NbRe satisfies δ = −1." Materially strengthens D2's "NbRe as SPT exhibit" claim.
+
+- **8.F (Z₁₆ Rokhlin cross-bridge to existing Phase 6r Pin⁺ substrate):** ⏳ NOT STARTED. Construct map `IsDIIITopologicalSuperconductor sc → ZMod 16` via η-invariant or chiral-central-charge route. Connect Pfaffian-Z₂ (Sub-wave 8.C) to mod-2 projection of ℤ₁₆ generator from existing `Z16Classification.lean` / `SymTFT/PinPlusBordism4.lean`. Lift to Lean theorem level (not docstring claim). ~500-1000 LoC. **Largest integrative payoff:** unifies NbRe Sub-wave 8.C with project's existing Phase 6r Pin⁺/ℤ₁₆ infrastructure (~9,910 LoC across SymTFT modules). D2 + D4 papers gain structural unification claim.
+
+- **8.G (3D winding-number formal connection):** ⏳ NOT STARTED. Define `windingNumber : SCParameters → ℤ` as the formal BZ integral. Prove `windingNumber sc % 2 = (1 - fuKaneInvariant sc) / 2` (or equivalent Pfaffian-vs-winding bridge). Requires `intervalIntegral` substrate over 3D BZ (existing in Mathlib via tripled `intervalIntegral`). ~400-800 LoC. Closes original Sub-wave 8.C spec gap (the wave was named "3D winding-number identity"; the Pfaffian-vs-winding equivalence is informally stated in Sato-Fujimoto PRB 79).
+
+- **8.H (TRIM parameterization over `[Fintype TRIM]`):** ⏳ NOT STARTED. Refactor `TRIM := Fin 4` → `variable (TRIM : Type*) [Fintype TRIM]`. Supply Fin-4 instance for hexagonal NbRe (P-62m), Fin-8 instance for orthorhombic NbRe (Ima2). ~30-50 LoC. Polish for future orthorhombic NbRe variants.
+
+**Sequencing for Sub-waves 8.D–8.H:** 8.D → 8.E (uses 8.D) → 8.F (independent, can ship anytime after 8.E) → 8.G (independent, can ship anytime after 8.E) → 8.H (independent polish; ship last).
+
+**Definition-of-done for Wave 6v.8 (per user direction 2026-05-26 PM):**
+- All 5 strengthening sub-waves (8.D, 8.E, 8.F, 8.G, 8.H) substantively shipped kernel-only.
+- Cumulative Phase 6v adversarial review (fresh-context Opus) returns zero BLOCKERs + zero REQUIREDs.
+- Build clean (`lake build SKEFTHawking`); pytest clean.
+- Roadmap continuously updated; commits per sub-wave per project git discipline.
+- No new project-local axioms (Pipeline Invariant #15 throughout).
+
 ## Key parameters
 
 | Symbol | Value | Source | Use |

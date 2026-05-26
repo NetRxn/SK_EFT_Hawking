@@ -31,9 +31,11 @@
 
 ---
 
-## Phase 6v close (2026-05-26)
+## Phase 6v reopened for strengthening pass (2026-05-26 PM)
 
-**✅ PHASE 6v FULLY COMPLETE 2026-05-26** (all 7 waves + all 3 follow-up sub-waves substantively shipped; **zero tracked Props remaining**).
+**🟡 PHASE 6v STRENGTHENING IN PROGRESS** (user-authorized 2026-05-26 PM, post Sub-wave 8.C adversarial review). All 7 original waves + 6v.5b + 6v.6b + Sub-wave 8.C substantively shipped, but the Sub-wave 8.C adversarial review surfaced thinness concerns (substrate-model encoded vs Hamiltonian-derived; Z₁₆ cross-bridge documentation-only; TRIM hardcoded Fin 4). Five new strengthening sub-waves queued under Wave 6v.8: **8.D** (general Pfaffian), **8.E** (Hamiltonian bridge), **8.F** (Z₁₆ cross-bridge), **8.G** (3D winding-number), **8.H** (TRIM parameterization). See `docs/roadmaps/Phase6v/Wave_6v.8_Roadmap.md` for full sub-wave scoping. Cumulative Phase 6v adversarial review deferred until AFTER all five sub-waves substantively ship (per user direction: single review at the end, not per-sub-wave).
+
+## Phase 6v close (PRE-STRENGTHENING — historical) 2026-05-26 AM
 
 All 7 waves SHIPPED, D6 bundle CREATED, phase-level stakeholder docs shipped, Stage-13 adversarial review verdict: **GREEN** (0 BLOCKERs, 0 REQUIREDs, 7 ADVISORIES — 1 actionable [Babbush PDF rename] FIXED inline; 2 ADVISORIES [Wave 6v.5 hashing-bound + Wave 6v.6 cyclotomic-QFT-basis substrate-discipline] queued as follow-up Waves 6v.5b + 6v.6b; remaining 4 are disclosure-honest or out-of-scope). Commits 9e99ab1 → close.
 
@@ -53,6 +55,20 @@ A scout sweep of the 3 deferred Mathlib substrates revealed that **2 of 3 deferr
 
 **Phase 6v Implications:** `docs/stakeholder/Phase6v_Implications.md`.
 **Phase 6v Strategic Positioning:** `docs/stakeholder/Phase6v_Strategic_Positioning.md`.
+
+## Sub-waves 8.D-8.H — strengthening pass on Sub-wave 8.C discharge (queued 2026-05-26 PM)
+
+The Sub-wave 8.C adversarial review identified the original ship as "GREEN per strengthening discipline" but flagged real thinness: substrate-level encoding rather than Hamiltonian-derived; Z₁₆ cross-bridge documentation-only; TRIM hardcoded Fin 4. Per user direction, five strengthening sub-waves are queued to push the discharge to higher quality:
+
+| Sub-wave | Title | Status | Strategic value |
+|---|---|---|---|
+| **8.D** | General project-local `Matrix.pfaffian` (upstreamable later) | ⏳ NOT STARTED | Foundation; community-contribution-shaped |
+| **8.E** | Hamiltonian bridge — SCParameters → BdGHamiltonian | ⏳ NOT STARTED | **Highest physics-substantive value:** elevates from "encoded" to "derived" |
+| **8.F** | Z₁₆ Rokhlin cross-bridge to Phase 6r Pin⁺ substrate | ⏳ NOT STARTED | **Largest integrative payoff:** unifies NbRe with ~9,910 LoC Phase 6r |
+| **8.G** | 3D winding-number formal connection (BZ integral) | ⏳ NOT STARTED | Closes original Sub-wave 8.C spec gap |
+| **8.H** | TRIM parameterization over `[Fintype TRIM]` | ⏳ NOT STARTED | Polish for orthorhombic NbRe variants |
+
+**Execution discipline:** autonomous `/goal`-mode loop, session-by-session through auto-compact. No LoC/LoE estimates per user direction. Adversarial review runs ONCE at end, not per-sub-wave.
 
 **Inventory_Index update DEFERRED per cross-agent coordination boundary.** The other agent's parallel 6r/6r' adversarial-review-pass finalization owns the Inventory_Index modification window; my Phase 6v section will be merged in via a follow-up sync once that agent's pass concludes.
 
