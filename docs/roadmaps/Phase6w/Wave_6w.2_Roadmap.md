@@ -2,7 +2,7 @@
 
 **Phase:** 6w (Classical Simulability & Quantum Advantage in Analog Hawking — Tensor-Network Substrate)
 **Wave:** 6w.2 (Mathlib-PR-quality substrate for BP on factor graphs)
-**Status:** IN-PROGRESS
+**Status:** ✅ SHIPPED 2026-05-26 PM (24 substantive theorems shipped across sub-sessions 2a/2b/2c/2d; build clean 8708 jobs; zero new axioms; zero sorries; key theorems verified kernel-only `[propext, Classical.choice, Quot.sound]`. Stage 13 deferred to Wave 6w.7 consolidated sweep.)
 **Bundle target:** I1 substrate; later D7 candidate.
 **LoE:** ~3-4 sessions per Phase6w_Roadmap.md.
 

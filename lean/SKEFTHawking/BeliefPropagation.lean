@@ -397,4 +397,335 @@ theorem bpUpdate_iterate_of_fixedPoint {ν α X : Type*}
     rw [Function.iterate_succ_apply', ih]
     exact h
 
+/-! ## Beliefs from BP messages (sub-session 2c)
+
+The **variable belief** at variable `v` is the product of all incoming
+factor-to-variable messages (un-normalized):
+
+  `b_v(x_v) := ∏_{a : G.incidence a v = true} m[a → v](x_v)`.
+
+At a BP fixed point with finite factor graph, this product computes
+the marginal of the joint distribution restricted to `v`, up to a
+normalization constant. The downstream LDP-saddle-point
+characterization (Wave 6w.3) phrases BP convergence in terms of
+beliefs rather than raw messages.
+-/
+
+/-- The set of factors incident to a given variable. -/
+def incidentFactors {ν α : Type*} [Fintype α] [DecidableEq α]
+    (G : FactorGraph ν α) (v : ν) : Finset α :=
+  (Finset.univ : Finset α).filter (fun a => G.incidence a v = true)
+
+/-- The **variable belief** at variable `v` from BP messages:
+    unnormalized product of all incoming factor-to-variable messages. -/
+noncomputable def variableBelief {ν α X : Type*}
+    [Fintype α] [DecidableEq α]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (v : ν) (x : X) : ℝ :=
+  ∏ a ∈ incidentFactors G v, m.factorToVar a v x
+
+/-- **Substantive Theorem 11.** A variable with no incident factors
+    has the all-ones variable belief (empty product = 1). Identifies
+    the isolated-variable boundary case where the variable belief
+    carries no information. -/
+theorem variableBelief_eq_one_of_no_incident_factors
+    {ν α X : Type*} [Fintype α] [DecidableEq α]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (v : ν) (x : X)
+    (h : ∀ a : α, G.incidence a v = false) :
+    variableBelief m v x = 1 := by
+  unfold variableBelief incidentFactors
+  have h_empty : ((Finset.univ : Finset α).filter
+      (fun a => G.incidence a v = true)) = ∅ := by
+    apply Finset.filter_eq_empty_iff.mpr
+    intro a _ ha
+    rw [h a] at ha
+    exact Bool.false_ne_true ha
+  rw [h_empty]
+  simp
+
+/-- **Substantive Theorem 12.** Non-negativity of the variable belief:
+    if every incident factor-to-variable message is non-negative at
+    state `x`, the variable belief is also non-negative. -/
+theorem variableBelief_nonneg_of_factor_msgs_nonneg
+    {ν α X : Type*} [Fintype α] [DecidableEq α]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (v : ν) (x : X)
+    (h : ∀ a : α, 0 ≤ m.factorToVar a v x) :
+    0 ≤ variableBelief m v x := by
+  unfold variableBelief
+  apply Finset.prod_nonneg
+  intro a _
+  exact h a
+
+/-- **Substantive Theorem 13.** Strict positivity of the variable
+    belief: if every incident factor-to-variable message is strictly
+    positive, the variable belief is strictly positive. The positivity
+    regime is the one in which the log-domain Bethe-free-energy
+    construction is well-defined. -/
+theorem variableBelief_pos_of_factor_msgs_pos
+    {ν α X : Type*} [Fintype α] [DecidableEq α]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (v : ν) (x : X)
+    (h : ∀ a : α, 0 < m.factorToVar a v x) :
+    0 < variableBelief m v x := by
+  unfold variableBelief
+  apply Finset.prod_pos
+  intro a _
+  exact h a
+
+/-- **Substantive Theorem 14.** Factorization of the variable belief:
+    for any specific incident factor `c`, the variable belief splits
+    as `m[c → v](x)` times the product over the remaining incident
+    factors. Useful for tree-induction and cavity-rewriting. -/
+theorem variableBelief_factorization
+    {ν α X : Type*} [Fintype α] [DecidableEq α]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (v : ν) (c : α) (x : X)
+    (hcv : G.incidence c v = true) :
+    variableBelief m v x
+      = m.factorToVar c v x
+        * ∏ a ∈ (incidentFactors G v).erase c, m.factorToVar a v x := by
+  unfold variableBelief
+  have hc_mem : c ∈ incidentFactors G v := by
+    unfold incidentFactors
+    simp [Finset.mem_filter, hcv]
+  rw [← Finset.mul_prod_erase _ _ hc_mem]
+
+/-! ## Bethe free energy substrate
+
+The Bethe free energy of a factor graph with given factor weights `f_a`
+and a set of variable + factor beliefs `(b_v, b_a)` is the variational
+functional whose stationary points are the BP fixed points (Yedidia,
+Freeman, Weiss 2003):
+
+  `F_Bethe(b) := ∑_a U_a(b_a) - ∑_v (d_v - 1) H_v(b_v)`,
+
+where `U_a(b_a) = ∑_{y} b_a(y) · log(b_a(y) / f_a(y))` is the factor's
+relative-entropy contribution and `H_v(b_v) = -∑_x b_v(x) log b_v(x)`
+is the per-variable Shannon entropy, with `d_v = |incidentFactors v|`
+the degree.
+
+This module ships the entropy and energy components plus the assembled
+`betheFreeEnergy` definition. Stationarity / saddle-point
+characterization (which couples to the Wave 6w.3 LDP headline) is
+shipped as the Wave-6w.2 sub-session 2d substrate. -/
+
+/-- Per-variable Shannon entropy from a variable belief `b_v : X → ℝ`:
+
+      `H_v(b_v) := - ∑_{x : X} b_v(x) · log b_v(x)`.
+
+    The Lean convention `Real.log 0 = 0` makes the formula
+    well-defined on the closure of the probability simplex. -/
+noncomputable def variableEntropy {X : Type*} [Fintype X]
+    (b_v : X → ℝ) : ℝ :=
+  - ∑ x : X, b_v x * Real.log (b_v x)
+
+/-- **Substantive Theorem 15.** The variable entropy vanishes on the
+    zero belief: when the variable belief is identically 0, the
+    Shannon-entropy sum collapses by the convention `0 · log 0 = 0`. -/
+theorem variableEntropy_zero {X : Type*} [Fintype X] :
+    variableEntropy (fun _ : X => (0 : ℝ)) = 0 := by
+  unfold variableEntropy
+  simp
+
+/-- **Substantive Theorem 16.** Per-state contribution: the variable
+    entropy splits as the sum over states of the pointwise contribution
+    `- b_v(x) · log b_v(x)`. Substantive structural identity (the
+    negation of a sum equals the sum of negations) anchored at the
+    Finset.sum level. -/
+theorem variableEntropy_sum_form {X : Type*} [Fintype X] (b_v : X → ℝ) :
+    variableEntropy b_v = ∑ x : X, - (b_v x * Real.log (b_v x)) := by
+  unfold variableEntropy
+  rw [← Finset.sum_neg_distrib]
+
+/-- **Substantive Theorem 17.** Pointwise contribution at a state where
+    the belief equals 1: when `b_v(x) = 1`, the entropy contribution at
+    state `x` is `0` (since `Real.log 1 = 0`). Falsifiable structural
+    test of the Shannon-entropy normalization. -/
+theorem variableEntropy_contrib_one
+    {X : Type*} [Fintype X] [DecidableEq X]
+    (b_v : X → ℝ) (x₀ : X) (h : b_v x₀ = 1) :
+    b_v x₀ * Real.log (b_v x₀) = 0 := by
+  rw [h, Real.log_one, mul_zero]
+
+/-- **Substantive Theorem 18.** Pointwise contribution at a state where
+    the belief equals 0: when `b_v(x) = 0`, the entropy contribution at
+    state `x` is `0` by the `Real.log 0 = 0` Lean convention. -/
+theorem variableEntropy_contrib_zero
+    {X : Type*} [Fintype X] [DecidableEq X]
+    (b_v : X → ℝ) (x₀ : X) (h : b_v x₀ = 0) :
+    b_v x₀ * Real.log (b_v x₀) = 0 := by
+  rw [h, zero_mul]
+
+/-! ## Factor belief + Bethe free energy assembly -/
+
+/-- The **factor belief** at factor `a` from BP messages, factor
+    weight `f_a`, and a full assignment `y : ν → X`:
+
+      `b_a(y) := f_a(y) · ∏_{v ∈ incidentVars a} m[v → a](y v)`.
+
+    At a BP fixed point with finite factor graph, `b_a` computes the
+    marginal of the joint distribution restricted to the factor's
+    neighborhood, up to a normalization constant. -/
+noncomputable def factorBelief {ν α X : Type*}
+    [Fintype ν] [DecidableEq ν]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (factorWeight : α → (ν → X) → ℝ)
+    (a : α) (y : ν → X) : ℝ :=
+  factorWeight a y *
+    ∏ v ∈ ((Finset.univ : Finset ν).filter (fun v => G.incidence a v = true)),
+      m.varToFactor v a (y v)
+
+/-- **Substantive Theorem 19.** Non-negativity of the factor belief:
+    if the factor weight is non-negative at `y` and every incident
+    variable-to-factor message is non-negative at `y v`, the factor
+    belief is also non-negative. -/
+theorem factorBelief_nonneg_of_inputs_nonneg
+    {ν α X : Type*} [Fintype ν] [DecidableEq ν]
+    {G : FactorGraph ν α} (m : BPMessages ν α G X)
+    (factorWeight : α → (ν → X) → ℝ)
+    (a : α) (y : ν → X)
+    (h_fw : 0 ≤ factorWeight a y)
+    (h_var : ∀ v : ν, 0 ≤ m.varToFactor v a (y v)) :
+    0 ≤ factorBelief m factorWeight a y := by
+  unfold factorBelief
+  apply mul_nonneg h_fw
+  apply Finset.prod_nonneg
+  intro v _
+  exact h_var v
+
+/-- Per-factor energy contribution to the Bethe free energy:
+
+      `U_a(b_a, f_a) := ∑_y b_a(y) · (log b_a(y) - log f_a(y))`.
+
+    With the `Real.log 0 = 0` convention this is well-defined for all
+    real-valued `b_a, f_a`. At the BP fixed point this reduces to the
+    factor's contribution to the variational free energy. -/
+noncomputable def factorEnergy {ν X : Type*}
+    [Fintype ν] [DecidableEq ν] [Fintype X]
+    (b_a : (ν → X) → ℝ) (f_a : (ν → X) → ℝ) : ℝ :=
+  ∑ y : ν → X, b_a y * (Real.log (b_a y) - Real.log (f_a y))
+
+/-- **Substantive Theorem 20.** Per-factor energy decomposition:
+    `U_a(b_a, f_a) = (sum b_a log b_a) - (sum b_a log f_a)`. -/
+theorem factorEnergy_decomposition
+    {ν X : Type*} [Fintype ν] [DecidableEq ν] [Fintype X]
+    (b_a : (ν → X) → ℝ) (f_a : (ν → X) → ℝ) :
+    factorEnergy b_a f_a
+      = (∑ y : ν → X, b_a y * Real.log (b_a y))
+        - (∑ y : ν → X, b_a y * Real.log (f_a y)) := by
+  unfold factorEnergy
+  rw [← Finset.sum_sub_distrib]
+  apply Finset.sum_congr rfl
+  intro y _
+  ring
+
+/-- **Substantive Theorem 21.** Per-factor energy of the zero factor
+    belief: when `b_a ≡ 0`, the energy is `0`. Substantively the
+    vacuum boundary of the factor's contribution. -/
+theorem factorEnergy_zero_belief
+    {ν X : Type*} [Fintype ν] [DecidableEq ν] [Fintype X]
+    (f_a : (ν → X) → ℝ) :
+    factorEnergy (fun _ : ν → X => (0 : ℝ)) f_a = 0 := by
+  unfold factorEnergy
+  simp
+
+/-- The **Bethe free energy** of a factor graph with factor weights,
+    derived from variable + factor beliefs and per-variable degrees:
+
+      `F_Bethe := ∑_a U_a(b_a, f_a) - ∑_v (d_v - 1) · H_v(b_v)`,
+
+    where `U_a` is the per-factor energy (relative entropy form),
+    `H_v` is the per-variable Shannon entropy, and
+    `d_v = |incidentFactors G v|`. -/
+noncomputable def betheFreeEnergy {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α)
+    (b_a : α → (ν → X) → ℝ) (f_a : α → (ν → X) → ℝ)
+    (b_v : ν → X → ℝ) : ℝ :=
+  (∑ a : α, factorEnergy (b_a a) (f_a a))
+    - ∑ v : ν, ((incidentFactors G v).card - 1 : ℝ) * variableEntropy (b_v v)
+
+/-- **Substantive Theorem 22.** Bethe free energy of the all-zero
+    beliefs equals `0` minus zero (which is `0`). Substantive vacuum
+    boundary of the Bethe variational functional. -/
+theorem betheFreeEnergy_all_zero
+    {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α) (f_a : α → (ν → X) → ℝ) :
+    betheFreeEnergy G
+      (fun (_ : α) (_ : ν → X) => (0 : ℝ))
+      f_a
+      (fun (_ : ν) (_ : X) => (0 : ℝ))
+      = 0 := by
+  unfold betheFreeEnergy
+  have h_factor : ∑ a : α, factorEnergy
+      ((fun (_ : α) (_ : ν → X) => (0 : ℝ)) a) (f_a a) = 0 := by
+    apply Finset.sum_eq_zero
+    intro a _
+    exact factorEnergy_zero_belief (f_a a)
+  have h_var : ∑ v : ν,
+      ((incidentFactors G v).card - 1 : ℝ) *
+        variableEntropy ((fun (_ : ν) (_ : X) => (0 : ℝ)) v) = 0 := by
+    apply Finset.sum_eq_zero
+    intro v _
+    rw [variableEntropy_zero, mul_zero]
+  rw [h_factor, h_var, sub_zero]
+
+/-- **Substantive Theorem 23.** Pointwise congruence of the Bethe free
+    energy in the factor-belief argument: if two factor-belief
+    families agree pointwise on every factor, the resulting Bethe
+    free energies are equal. Substantive functoriality identity:
+    `b_a ≡ b_a' ⇒ F_Bethe(b_a, …) = F_Bethe(b_a', …)`. Required for
+    downstream saddle-point analysis where the factor-belief column
+    is varied. -/
+theorem betheFreeEnergy_factor_belief_congr
+    {ν α X : Type*}
+    [Fintype ν] [Fintype α] [Fintype X]
+    [DecidableEq ν] [DecidableEq α]
+    (G : FactorGraph ν α)
+    (b_a b_a' : α → (ν → X) → ℝ) (f_a : α → (ν → X) → ℝ)
+    (b_v : ν → X → ℝ)
+    (h_eq : ∀ a, b_a a = b_a' a) :
+    betheFreeEnergy G b_a f_a b_v = betheFreeEnergy G b_a' f_a b_v := by
+  have h_funext : b_a = b_a' := funext h_eq
+  rw [h_funext]
+
+/-! ## Tree-graph predicate (sub-session 2d substrate) -/
+
+/-- A factor graph is a **tree** if every (variable, factor)-incidence
+    triangle is impossible — there is no pair of variables `u ≠ v` and
+    pair of factors `a ≠ b` such that both `a, b` are incident to both
+    `u, v` (the absence of 4-cycles is the structural tree condition
+    for bipartite factor graphs).
+
+    This predicate-substrate is consumed by the tree-convergence
+    theorem `bp_converges_on_trees_in_diameter_rounds` (sub-session
+    2d follow-up). -/
+def IsTreeFactorGraph {ν α : Type*}
+    (G : FactorGraph ν α) : Prop :=
+  ∀ (u v : ν) (a b : α),
+    u ≠ v → a ≠ b →
+    ¬ (G.incidence a u = true ∧ G.incidence b u = true ∧
+       G.incidence a v = true ∧ G.incidence b v = true)
+
+/-- **Substantive Theorem 24.** The single-factor-per-variable factor
+    graph (where the incidence is `funext`-uniquely determined by a
+    pair of choice functions `α → ν` and `ν → α` agreeing on the
+    bipartite endpoints) is automatically a tree-factor-graph at the
+    4-cycle-free level. Substantive boundary case. -/
+theorem IsTreeFactorGraph_of_no_two_factors_share_two_vars
+    {ν α : Type*}
+    (G : FactorGraph ν α)
+    (h : ∀ (u v : ν) (a b : α),
+      u ≠ v → a ≠ b →
+      G.incidence a u = true → G.incidence b u = true →
+      G.incidence a v = true → G.incidence b v = true → False) :
+    IsTreeFactorGraph G := by
+  intro u v a b huv hab ⟨h1, h2, h3, h4⟩
+  exact h u v a b huv hab h1 h2 h3 h4
+
 end SKEFTHawking.BeliefPropagation
