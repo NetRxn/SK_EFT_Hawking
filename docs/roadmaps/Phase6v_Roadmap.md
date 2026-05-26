@@ -33,7 +33,19 @@
 
 ## Phase 6v close (2026-05-26)
 
-**✅ PHASE 6v SUBSTANTIVELY COMPLETE 2026-05-26.** All 7 waves SHIPPED, D6 bundle CREATED, phase-level stakeholder docs shipped, Stage-13 adversarial review verdict: **GREEN** (0 BLOCKERs, 0 REQUIREDs, 7 ADVISORIES all disclosure-honest or out-of-scope; one actionable advisory addressed inline — Babbush PDF renamed to match bibkey). Commits 9e99ab1 → close.
+**✅ PHASE 6v SUBSTANTIVELY COMPLETE 2026-05-26** (with 2 follow-up sub-waves queued).
+
+All 7 waves SHIPPED, D6 bundle CREATED, phase-level stakeholder docs shipped, Stage-13 adversarial review verdict: **GREEN** (0 BLOCKERs, 0 REQUIREDs, 7 ADVISORIES — 1 actionable [Babbush PDF rename] FIXED inline; 2 ADVISORIES [Wave 6v.5 hashing-bound + Wave 6v.6 cyclotomic-QFT-basis substrate-discipline] queued as follow-up Waves 6v.5b + 6v.6b; remaining 4 are disclosure-honest or out-of-scope). Commits 9e99ab1 → close.
+
+### Post-close scout review (2026-05-26)
+
+A scout sweep of the 3 deferred Mathlib substrates revealed that **2 of 3 deferrals were premature scoping** — Mathlib v4.29.1 already contains the substrate I had labelled as "future Mathlib waves":
+
+- **Wave 6v.5 deferred Shannon-entropy:** Mathlib has `Real.binEntropy` + companions (`Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean`). **Discharge ≈ 30 LoC.**
+- **Wave 6v.6 deferred cyclotomic-QFT-basis predicate:** Mathlib has `CyclotomicField n ℚ` + `IsPrimitiveRoot` + `primitiveRoot_spec`. **Discharge ≈ 30 LoC.**
+- **Wave 6v.8 deferred 3D winding-number:** Mathlib genuinely lacks `MapDegree` / Brouwer-degree theory; LoE revised upward from "300-500 LoC" to "~2000 LoC of upstream Mathlib contribution". This deferral remains correct (though the original LoE was 6× too optimistic).
+
+**Follow-up Waves 6v.5b + 6v.6b queued** for the next session per `temporary/working-docs/phase6v_deferred_followup_plan.md`. The 6v.8 sub-wave-8.C deferral remains a genuine future-Mathlib-upstream deliverable.
 
 **Phase 6v Implications:** `docs/stakeholder/Phase6v_Implications.md`.
 **Phase 6v Strategic Positioning:** `docs/stakeholder/Phase6v_Strategic_Positioning.md`.

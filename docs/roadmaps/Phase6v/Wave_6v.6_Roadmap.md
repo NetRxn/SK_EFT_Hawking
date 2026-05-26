@@ -37,3 +37,23 @@ Substantive content: the W-state cyclic-shift eigenvalue spectrum has exactly n 
 ## No-axiom discipline
 
 Zero new project-local axioms. The exponential-vs-polynomial separation (`n < 2^n` for n ≥ 2) is discharged by `Nat.lt_two_pow_self`.
+
+## Wave 6v.6b follow-up (queued 2026-05-26, post-Phase-6v-close scout)
+
+**Scout finding:** my shipping of `IsCyclotomicQFTBasis (_n : ℕ) : Prop := True` was **premature scoping**. Mathlib v4.29.1 contains `CyclotomicField n ℚ` (in `Mathlib/NumberTheory/Cyclotomic/Basic.lean`) with the `IsCyclotomicExtension {n} ℚ (CyclotomicField n ℚ)` instance + `IsPrimitiveRoot` (in `Mathlib/RingTheory/RootsOfUnity/PrimitiveRoots.lean`) + the canonical `primitiveRoot_spec`. Substantive Tier-1 lift is ~4 LoC.
+
+**Wave 6v.6b action set** (executed in the next session, per `temporary/working-docs/phase6v_deferred_followup_plan.md`):
+
+1. Add imports `Mathlib.NumberTheory.Cyclotomic.Basic` + `Mathlib.RingTheory.RootsOfUnity.PrimitiveRoots` to `WStateQFT.lean`.
+2. Replace `def IsCyclotomicQFTBasis (_n : ℕ) : Prop := True` with `def IsCyclotomicQFTBasis (n : ℕ) : Prop := ∃ ζ : CyclotomicField n ℚ, IsPrimitiveRoot ζ n`.
+3. Discharge `wState_basis_isCyclotomic (n : ℕ) (hn : 1 ≤ n) : IsCyclotomicQFTBasis n` via Mathlib's `IsCyclotomicExtension.exists_prim_root` (or equivalent — exact API name to confirm via MCP).
+4. Update `wave_6v_6_substantive_closure` to use the new non-vacuous witness (add `(by decide : 1 ≤ 40)`).
+5. Add `wState_basis_isCyclotomic_at_QCyc_sizes` (substantive non-vacuity at n = 5, 40, 80 — the project's QCyc_n cyclotomic-substrate sizes).
+6. Update D6 §6 paragraph to cite the substantive `wState_basis_isCyclotomic` instead of the placeholder.
+
+**Tier 2 (Mathlib-PR-quality, NOT in 6v.6b scope):** bridge the project's existing QCyc_n custom-struct cyclotomic-substrate modules to Mathlib's `CyclotomicField n ℚ` via algebra isomorphisms. ~100 LoC. Deferred to a separate future wave; remains a genuine "future Mathlib substrate" deliverable.
+
+Estimated effort for Tier 1 (6v.6b): ~30 LoC + 1 commit. Scope: cheap follow-up, not a separate wave.
+
+**Scout report:** `temporary/working-docs/phase6v_scout_report_2026-05-26.md`.
+**Action plan:** `temporary/working-docs/phase6v_deferred_followup_plan.md`.

@@ -46,3 +46,21 @@ The substantive contrast: a code with rate `k/n ≤ 1/2` is in the "high-overhea
 ## No-axiom discipline
 
 Zero new project-local axioms. The rate-above-half claim is rational-arithmetic discharged by `decide` / `norm_num`. The hashing-bound predicate ships at substrate level (capacity-theoretic content deferred to a future Mathlib-Shannon-entropy-substrate wave; the predicate is non-vacuously witnessable by any code whose rate satisfies the threshold inequality).
+
+## Wave 6v.5b follow-up (queued 2026-05-26, post-Phase-6v-close scout)
+
+**Scout finding:** my deferral of the Shannon-entropy content was **premature**. Mathlib v4.29.1 contains `Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean` with `Real.binEntropy` + companions (positivity, continuity, symmetry, `negMulLog` auxiliaries). Substantive discharge is ~30 LoC, not a "future Mathlib substrate wave" as originally claimed.
+
+**Wave 6v.5b action set** (executed in the next session, per `temporary/working-docs/phase6v_deferred_followup_plan.md`):
+
+1. Add `import Mathlib.Analysis.SpecialFunctions.BinaryEntropy` to `APMLdpcHashingBound.lean`.
+2. Define `noncomputable def H_2 (p : ℝ) : ℝ := Real.binEntropy p / Real.log 2` (base-2 wrapper).
+3. Ship `H_2_zero`, `H_2_one`, `H_2_nonneg` helper lemmas.
+4. Add the substantive Komoto-Kasai-form predicate `IsHashingBoundAchievableAt c (p : ℝ) := c.rate ≤ 1 - H_2 p` (preserves the existing rational `IsHashingBoundAchievable` for backwards compatibility).
+5. Discharge `apmLdpc_quEraHarvard_achieves_hashing_at_p_one_tenth : IsHashingBoundAchievableAt quEraHarvardMITCode (1/10)` via rational-bracket bound on `H_2(0.1) < 469/1000` + `linarith`.
+6. Update D6 §4 paragraph to cite the substantive `_At`-form predicate.
+
+Estimated effort: ~30 LoC + 1 commit. Scope: cheap follow-up, not a separate wave.
+
+**Scout report:** `temporary/working-docs/phase6v_scout_report_2026-05-26.md`.
+**Action plan:** `temporary/working-docs/phase6v_deferred_followup_plan.md`.

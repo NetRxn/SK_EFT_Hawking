@@ -66,13 +66,22 @@ Phase 6v shifts the project's positioning in three concrete ways:
 
 ## What Phase 6v does NOT claim
 
-**Sub-wave 8.C — full 3D NbRe BdG SOTA — is honestly scoped as deferred.** The 3D winding-number identity Mathlib doesn't yet have ships as a TRACKED PROP (`H_NbReWindingNumberIdentity`), NOT a new project-local axiom. Discharge plan: future Mathlib-3D-winding-number-substrate wave (~300–500 LoC infrastructure; outside Phase 6v scope). The substrate-level encoding is substantive (NbRe in DIII class with falsifier-class contrast); the *full* 3D BdG analytic content is deferred.
+**Sub-wave 8.C — full 3D NbRe BdG SOTA — genuinely deferred (sharpened post-scout 2026-05-26).** The 3D winding-number identity ships as a TRACKED PROP (`H_NbReWindingNumberIdentity`), NOT a new project-local axiom. **Discharge requires upstream Mathlib `MapDegree` / Brouwer-degree machinery that does not exist in v4.29.1**: Mathlib has homotopy + singular-homology substrate but no exposed degree-of-a-continuous-map theory for spheres. Scout LoE estimate (revised from the wave-roadmap's initial 300-500 figure): **~2000 LoC** of upstream Mathlib contribution (`MapDegree` foundations + Pontryagin Z₂ projection). This is genuinely a future Mathlib-upstream wave, not a same-session lift. The current substrate-level encoding is substantive (NbRe in DIII class with falsifier-class contrast against elemental Nb); the *full* 3D BdG analytic content is deferred.
 
-**Full Shannon-entropy `H_2(p)` analytic content is deferred.** Wave 6v.5's hashing-bound predicate ships at the substrate-level parameterized form `IsHashingBoundAchievable c H_bound`, NOT at the Mathlib `Real.log`-based binary-entropy form. Discharge plan: future Mathlib-Shannon-entropy-substrate wave. The substrate-level encoding is non-vacuously witnessed at representative thresholds; the *full* H_2(p) continuity + monotonicity content is deferred.
+**~~Full Shannon-entropy `H_2(p)` analytic content is deferred.~~** **CORRECTION (post-scout 2026-05-26):** Wave 6v.5's hashing-bound deferral was *premature*. Mathlib v4.29.1 contains `Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean` with a complete `Real.binEntropy` library (continuity, positivity, symmetry, monotonicity), plus `Mathlib/Analysis/SpecialFunctions/Log/NegMulLog.lean`. The substantive Komoto-Kasai discharge — replacing `IsHashingBoundAchievable c H_bound` with the substantive `IsHashingBoundAchievableAt c (p : ℝ) := c.rate ≤ 1 - H_2 p` — is ~30 LoC. **Queued as Wave 6v.5b follow-up** (see `temporary/working-docs/phase6v_deferred_followup_plan.md`); will land in the next session.
 
-**The W-state QFT decomposition is at substrate level, not full RingOfIntegers.cyclotomic.** Wave 6v.6's `IsCyclotomicQFTBasis n` predicate ships as a substrate-level labelling; full Mathlib cyclotomic-field integration deferred. The exponential-vs-polynomial separation (`n < 2^n`) is substantive at the natural-number level.
+**~~The W-state QFT decomposition is at substrate level, not full RingOfIntegers.cyclotomic.~~** **CORRECTION (post-scout 2026-05-26):** Wave 6v.6's `IsCyclotomicQFTBasis n := True` was *premature scoping*. Mathlib v4.29.1 contains `CyclotomicField n ℚ` (in `Mathlib/NumberTheory/Cyclotomic/Basic.lean`) with the `IsCyclotomicExtension {n} ℚ (CyclotomicField n ℚ)` instance + `IsPrimitiveRoot` + `primitiveRoot_spec`. The Tier-1 substantive lift — replacing `True` with `∃ ζ : CyclotomicField n ℚ, IsPrimitiveRoot ζ n` — is ~4 LoC. **Queued as Wave 6v.6b follow-up.** A Tier-2 bridge linking the project's existing QCyc_n custom-struct substrate to Mathlib's `CyclotomicField` is a separate ~100 LoC follow-up that remains genuinely deferred (Mathlib-PR-quality work, not in the immediate follow-up scope).
 
-**Zero new project-local axioms across all 7 waves.** This is the Pipeline-Invariant-#15 quality bar; Phase 6v meets it without compromise.
+**Zero new project-local axioms across all 7 waves.** This is the Pipeline-Invariant-#15 quality bar; Phase 6v meets it without compromise. Carries through to the 6v.5b + 6v.6b follow-ups.
+
+### Honest accounting of the scoping mistakes
+
+The scout review revealed that two of the three deferrals were premature — I deferred Mathlib work that **already exists** in the pinned commit. Specifically:
+
+- Wave 6v.5 should have shipped `H_2(p) = binEntropy(p) / log(2)` instead of the rational `H_bound` placeholder.
+- Wave 6v.6 should have shipped `IsCyclotomicQFTBasis n := ∃ ζ : CyclotomicField n ℚ, IsPrimitiveRoot ζ n` instead of `:= True`.
+
+Both are queued for the next session as Wave 6v.5b and Wave 6v.6b follow-ups; the Phase 6v close framing therefore is "GREEN-with-1-genuine-deferral (3D NbRe winding) + 2-cheap-followups-queued (entropy + cyclotomic)" rather than the originally claimed "3-deferrals". The scout findings are archived to `temporary/working-docs/phase6v_scout_report_2026-05-26.md`; the action plan is `temporary/working-docs/phase6v_deferred_followup_plan.md`.
 
 ---
 
