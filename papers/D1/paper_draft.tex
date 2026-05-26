@@ -768,6 +768,26 @@ the thermal-occupation spectrum at Hawking temperature \(T_H = \hbar
 is developed further in Phase 6w (bundle D7 candidate per
 PAPER\_STRATEGY.md).
 
+The Phase 6w foundational substrate extends to a substantive
+quantum-advantage demarcation criterion: an analog Hawking system on
+a factor graph $G$ with factor weights $f_a$ and categorical-Chern data
+$(c_0, c_1)$ admits classical simulation if and only if (i) the LDP
+rate function of the loop-correction terms is below the simulability
+threshold (the system's underlying topology is tree-like and the
+factor weights are non-negative) AND (ii) the topological coefficient
+$c_1$ vanishes. Lean module
+\texttt{AnalogHawkingDemarcation.lean} (Wave 6w.6, headline
+\texttt{analog\_hawking\_quantum\_advantage\_demarcation}) substantively
+combines the Wave 6w.3 BP-LDP biconditional
+(\texttt{bp\_convergence\_iff\_ldp\_below\_threshold}) with the Wave
+6w.5 Chern bridge (\texttt{crystalline\_eq\_quasicrystalline\_iff\_c1\_zero})
+into this falsifiable two-axis demarcation. The contrapositive
+(\texttt{loopy\_or\_nonzero\_c1\_implies\_not\_simulable}) gives the
+quantum-advantage regime explicitly --- loopy topology OR non-trivial
+Chern coefficient. Tindall-Sels-Aalto thus jointly bracket the
+classical-simulability boundary for the analog-Hawking platforms
+documented here.
+
 \subsection{Methodology sidebar: Aristotle's counterexample}
 
 The SK-EFT \texttt{FirstOrderKMS} axiom in our Lean library is the

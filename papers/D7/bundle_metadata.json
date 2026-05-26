@@ -1,0 +1,42 @@
+{
+  "bundle_target": "D7",
+  "tier": 1,
+  "title": "Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation",
+  "target_journal": "PRX Quantum or Physical Review X",
+  "phase7_subphase": "7w (Phase 6w D7 spin-out)",
+  "stage9_status": "not_started",
+  "stage10_status": "skeleton",
+  "stage13_status": "not_started",
+  "stage13_redo_required": false,
+  "freshness_stale": false,
+  "source_manifest_last_regen": null,
+  "last_lift": "2026-05-26T20:00:00Z",
+  "last_stage9_review": null,
+  "last_stage10_review": null,
+  "last_stage13_review": null,
+  "blockers_open": 0,
+  "advisories_open": 0,
+  "stage13_review_doc": null,
+  "audit_log_path": "papers/D7/audit_log.jsonl",
+  "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
+  "created": "2026-05-26T20:00:00Z",
+  "creation_authorization": "Phase 6w strategy synthesis decision-rule conditional authorization; condition met by Wave 6w.6 substantive generality (predicate operates on arbitrary FactorGraph + factor weights + Chern data — nothing analog-Hawking-specific); user authorization confirmed 2026-05-26 PM.",
+  "phase6w_contributing_waves": ["6w.1", "6w.2", "6w.3", "6w.4", "6w.5", "6w.6"],
+  "lean_modules": [
+    "lean/SKEFTHawking/KibbleZurekUnruh.lean",
+    "lean/SKEFTHawking/BeliefPropagation.lean",
+    "lean/SKEFTHawking/BPLDPSimulability.lean",
+    "lean/SKEFTHawking/ChebyshevTN.lean",
+    "lean/SKEFTHawking/AperiodicLattice.lean",
+    "lean/SKEFTHawking/ChernBridge.lean",
+    "lean/SKEFTHawking/AnalogHawkingDemarcation.lean"
+  ],
+  "headline_theorems": [
+    "SKEFTHawking.AnalogHawkingDemarcation.analog_hawking_quantum_advantage_demarcation",
+    "SKEFTHawking.BPLDPSimulability.bp_convergence_iff_ldp_below_threshold",
+    "SKEFTHawking.ChernBridge.categorical_chern_eq_real_space_chern_crystalline",
+    "SKEFTHawking.ChernBridge.categorical_chern_eq_real_space_chern_quasicrystalline",
+    "SKEFTHawking.KibbleZurekUnruh.surface_gravity_bounds_kzm_exponent"
+  ],
+  "notes": "D7 bundle created 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass. Synthesizes the Phase 6w substrate into a unified classical-simulability ↔ quantum-advantage demarcation paper. Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation) + Antão-Sun-Fumega-Lado PRL 136, 156601 (2026) (Chebyshev-TN quasicrystal Chern markers). Stage 13 adversarial review pending."
+}

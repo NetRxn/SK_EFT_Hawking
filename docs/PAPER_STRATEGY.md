@@ -65,7 +65,7 @@ Outline (roughly 12 sections):
 
 This paper is *the* paper that says what the program is. Submitted last; built incrementally throughout the Tier 1 roll-out; final form benefits from ~12 months of accumulated cross-citation.
 
-### 2.2 Tier 1 — themed deep papers (5 papers)
+### 2.2 Tier 1 — themed deep papers (7 papers, D1-D7)
 
 Each is a PRD/JHEP-style article aimed at one subcommunity. Each is the canonical reference for its slice. Each is 20–60 pages with full Lean theorem cross-references.
 
@@ -130,6 +130,16 @@ Audience: fault-tolerant quantum computation, quantum error correction, gate com
 Content: The substrate-level kernel-verified content of the fault-tolerant-quantum-computation frontier as of 2025–2026. Four interlocking results: (i) the Williamson-Yoder gauging-of-logical-operators auxiliary-qubit overhead bound — linear in operator weight up to a polylogarithmic factor, with a falsifier proving the quadratic baseline is genuinely worse (Wave 6v.1, the bundle-creating wave); (ii) the Phase 6t quantitative Solovay-Kitaev tight-ε headline, retroactively absorbed as the canonical universal-compilation primitive consumed by the other sections; (iii) the affine-permutation-matrix LDPC code family over the project's cyclotomic substrate plus a Shannon-capacity hashing bound derived from the existing LDP / Cramér substrate (Wave 6v.5); (iv) the Kyoto-Hiroshima W-state single-shot projective-measurement decomposition in Q(ζ_N) cyclotomic coordinates (Wave 6v.6); plus (v) the Google/Caltech Shor T-gate counts for ECC-256 and RSA-2048, building on (ii) as the compiler primitive (Wave 6v.2). Together these form the first end-to-end kernel-verified substrate (code → measurement → compiler → universal logic) for the FT-QC frontier. Sibling relationship to D4 (TQC foundations): D4 retains its Fibonacci/topological-foundations focus; D6 covers the fault-tolerant-computation substrate.
 
 Sources: Wave 6v.1, Wave 6v.2, Wave 6v.5, Wave 6v.6 deliverables (Phase 6v); Phase 6t Solovay-Kitaev retroactive absorption; FaultTolerance/ module family; QCyc*.lean cyclotomic infrastructure.
+
+**Paper D7: Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation**
+
+Target: *PRX Quantum* or *Physical Review X*.
+
+Audience: tensor-network methodology, classical-quantum simulation boundary, fault-tolerant-QC roadmap planning, mathematical physics, formal verification, condensed-matter / analog-gravity downstream consumers.
+
+Content: A unified kernel-verified demarcation theorem characterizing when classical tensor-network simulation suffices vs when quantum processors retain a structural advantage on quantum many-body dynamics. Headline `analog_hawking_quantum_advantage_demarcation` (Lean module `AnalogHawkingDemarcation.lean`): a system on factor graph `G` with factor weights `f_a` and categorical-Chern data `(c_0, c_1)` is classically simulable iff (i) the LDP rate function of the loop-correction terms is below threshold (BP-LDP-favorable: tree-like topology + non-negative factor weights) AND (ii) the Chern coefficient `c_1` vanishes. Six contributing Lean modules: `KibbleZurekUnruh.lean` (analog-Hawking application via KZ-U correspondence), `BeliefPropagation.lean` (24-theorem Mathlib-PR-quality BP substrate per Yedidia-Freeman-Weiss 2003), `BPLDPSimulability.lean` (BP-LDP biconditional), `ChebyshevTN.lean` + `AperiodicLattice.lean` (Aalto-style Chebyshev-TN + Penrose-tiling-style aperiodic predicates), `ChernBridge.lean` (categorical ↔ real-space Chern bridge), `AnalogHawkingDemarcation.lean` (combined headline). 67 substantive theorems total; all kernel-only `[propext, Classical.choice, Quot.sound]`; zero new project-local axioms. The substrate is fully generic over the factor-graph type parameters and applies beyond analog Hawking to any LDP-controlled-BP / Chebyshev-TN classification setting (the basis for the spin-out authorization). Primary anchors: Tindall-Sels Science 392, 868 (2026) (BP-on-PEPS classical simulation matching D-Wave Advantage2 on 300+ qubits) + Antão-Sun-Fumega-Lado PRL 136, 156601 (2026), Editor's Suggestion (Chebyshev-TN quasicrystal Chern markers on hundreds of millions of sites). Analog Hawking instantiation worked out as the application section via the KZ-U correspondence (Wave 6w.1 substrate).
+
+Sources: Phase 6w Waves 6w.1 through 6w.6 deliverables (Lean-only / D.4 sourceless). Bundle creation triggered 2026-05-26 PM at Phase 6w Wave 6w.7 absorption pass per the Phase 6w strategy-synthesis decision-rule conditional authorization (generality criterion met).
 
 ### 2.3 Tier 2 — PRL-style headline letters (3 papers)
 
@@ -330,7 +340,7 @@ The critical path is L1 → voucher → everything else. The slowest path is Pha
 | 4 | E2 | Graphene Dirac-fluid letter | PRL/PRR | 2–3pp | Month 3–4 | D1 ready |
 | 0 | F | Flagship review | RMP/Phys Rep | 80–150pp | Month 8–12 | All above |
 
-Fifteen publication targets (1 flagship + 6 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure including I3 + 2 Tier 4 experimental). Approximate twelve-month roll-out from voucher. The flagship is the citation anchor. (The figure was previously stated as "thirteen" before I3 authorization in Phase 6n Session 4 under Pipeline Invariant #14, "fourteen" before D6 authorization in Phase 6v Wave 6v.1, and "eleven" in v1 of this table — all are superseded by the present fifteen-target architecture.)
+Sixteen publication targets (1 flagship + 7 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure including I3 + 2 Tier 4 experimental). Approximate twelve-month roll-out from voucher. The flagship is the citation anchor. (The figure was previously stated as "thirteen" before I3 authorization in Phase 6n Session 4 under Pipeline Invariant #14, "fourteen" before D6 authorization in Phase 6v Wave 6v.1, "fifteen" before D7 authorization in Phase 6w Wave 6w.6 — 2026-05-26 PM conditional-authorization trigger per generality-criterion satisfaction — and "eleven" in v1 of this table — all are superseded by the present sixteen-target architecture.)
 
 ---
 

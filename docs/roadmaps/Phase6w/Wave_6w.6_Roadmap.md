@@ -31,19 +31,39 @@ quantum-advantage demarcation criterion.
 
 ## D7 spin-out decision
 
-**Decision (default, no user authorization yet):** **DO NOT spin out
-D7 in Wave 6w.6.** The combined demarcation theorem is substantive but
-its applicability is captured in cross-bridges into existing bundles
-D1 (analog Hawking, simulability cross-check) and D4 (TQC foundations,
-Chern bridge as topological-marker substrate). Per the Phase 6w
-roadmap "Default posture if undecided: absorb into D1 + E1 + E2
-cross-bridges. Keep D7 as a Phase 7+ option." This default applies
-absent explicit user authorization.
+**Decision: YES, spin out D7** per user conditional-authorization
+triggered 2026-05-26 PM. The pre-set condition from the Phase 6w
+strategy synthesis ("if the combined demarcation theorem lands as a
+substantive headline result with broad applicability beyond analog
+Hawking, e.g., applicable to general LDP-controlled-BP classical-
+simulability classification, spin out D7") IS MET by the Wave 6w.6
+deliverable:
 
-If a future session presents user authorization to spin out D7, the
-absorption protocol of Wave 6w.7 covers the migration: `papers/D7/`
-directory creation + bundle_metadata initialization + 15→16 bundle
-update to PAPER_STRATEGY.md.
+- The `IsAnalogHawkingClassicallySimulable G factorWeight c0 c1`
+  predicate takes a *generic* `FactorGraph ν α` + factor weight
+  `α → (ν → X) → ℝ` + Chern data `(c0, c1)`. The factor-graph type
+  parameters are arbitrary — nothing analog-Hawking-specific in the
+  predicate or the theorem statement.
+- The Wave 6w.3 substrate (`BPLDPSimulability`) and Wave 6w.5 substrate
+  (`ChernBridge`) it consumes are likewise fully generic — they work
+  for any factor graph with any factor weights and any 2-coefficient
+  Chebyshev expansion.
+
+Therefore D7 is created with title **"Classical Simulability and
+Quantum Advantage via Tensor Networks: A Formally Verified
+Demarcation"** (broader than analog Hawking; analog Hawking is one
+application of the framework). Wave 6w.7 absorption pass migrates the
+Wave 6w.{1-6} content into the new bundle.
+
+**Wave 6w.7 deliverables (updated):**
+- Create `papers/D7/` skeleton + bundle_metadata.json
+- Update PAPER_STRATEGY.md (15 → 16 bundles, add D7 section)
+- Update PAPER_DRAFT_MAPPING.md (route `_phase6w_W*_lean_only`
+  handles to D7)
+- Add D7 anchor entry to claims-reviewer-bundle-prompts.md
+- Update BUNDLE_READINESS_HEATMAP.md (add D7 row)
+- Update Inventory_Index.md (bundle count 15 → 16)
+- Bundle paper_draft.tex substantive skeleton
 
 ## Acceptance criteria (Wave 6w.6)
 

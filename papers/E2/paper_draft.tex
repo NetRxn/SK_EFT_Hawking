@@ -384,6 +384,23 @@ extracted from independent classical simulation would constitute a
 falsification of the universal critical-scaling backbone shared by
 both formalisms.
 
+The Phase 6w combined demarcation theorem
+(\texttt{analog\_hawking\_quantum\_advantage\_demarcation}, Lean
+module \texttt{AnalogHawkingDemarcation.lean}) further localizes the
+classically-simulable regime for the bilayer-graphene Dirac fluid:
+the SK-EFT-predicted Hawking spectrum at the Dean nozzle's parameters
+admits BP-on-PEPS classical simulation iff (i) the Dirac-fluid factor
+graph is BP-LDP-favorable (tree-like topology + non-negative factor
+weights) AND (ii) the topological Chern coefficient $c_1$ of the
+graphene moir\'e band-structure vanishes. The Aalto Chebyshev-TN
+methodology~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
+applies to both crystalline and aperiodic-lattice configurations
+(formalized at the Lean level in
+\texttt{AperiodicLattice.lean} and \texttt{ChernBridge.lean}),
+extending the classical-simulability cross-check to moir\'e-graphene
+super-moir\'e systems that the Dean device can in principle access via
+controlled twist-angle tuning.
+
 %% ══════════════════════════════════════════════════════════════════
 \section{Request to the Dean-Kim-Lucas teams}
 

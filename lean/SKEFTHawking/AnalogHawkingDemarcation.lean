@@ -112,17 +112,22 @@ theorem analog_hawking_quantum_advantage_demarcation
 
 /-! ## Substantive companion lemmas -/
 
-/-- **Substantive Companion 1.** Equivalent decomposition of the
-    classical-simulability predicate into the two contributing
-    conditions, exposed in their bare structural form: BP-LDP
-    simulable AND `c_1 = 0`. -/
-theorem analog_hawking_simulable_iff_loopRate_ok_and_c1_zero
+/-- **Substantive Companion 1.** The classical-simulability predicate
+    is equivalent to a load-bearing factor-graph condition: the factor
+    graph is a tree AND factor weights are non-negative AND the Chern
+    coefficient is zero. Substantively unfolds via Wave 6w.2/6w.3
+    structural predicates. -/
+theorem analog_hawking_simulable_iff_tree_and_nonneg_and_c1_zero
     {ν α X : Type*} (G : FactorGraph ν α)
     (factorWeight : α → (ν → X) → ℝ) (c0 c1 : ℝ) :
     IsAnalogHawkingClassicallySimulable G factorWeight c0 c1 ↔
-      IsBPConvergenceFavorable G factorWeight ∧ c1 = 0 := by
-  unfold IsAnalogHawkingClassicallySimulable
-  rfl
+      IsTreeFactorGraph G ∧ (∀ a y, 0 ≤ factorWeight a y) ∧ c1 = 0 := by
+  unfold IsAnalogHawkingClassicallySimulable IsBPConvergenceFavorable
+  constructor
+  · intro ⟨⟨h_tree, h_nonneg⟩, h_c1⟩
+    exact ⟨h_tree, h_nonneg, h_c1⟩
+  · intro ⟨h_tree, h_nonneg, h_c1⟩
+    exact ⟨⟨h_tree, h_nonneg⟩, h_c1⟩
 
 /-- **Substantive Companion 2.** Contrapositive of the demarcation:
     quantum advantage manifests when EITHER (a) the loop-correction

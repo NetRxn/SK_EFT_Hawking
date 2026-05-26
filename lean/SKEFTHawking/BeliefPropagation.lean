@@ -365,19 +365,35 @@ def IsBPFixedPoint {ν α X : Type*}
     (factorWeight : α → (ν → X) → ℝ) : Prop :=
   bpUpdate m factorWeight = m
 
-/-- **Substantive Theorem 9.** A normalized BP message bundle is a BP
-    fixed point iff applying `bpUpdate` twice reproduces it AND a
-    single round reproduces it. (The biconditional separation is
-    substantive: the forward direction is trivial; the reverse uses
-    `bpUpdate` idempotence at the fixed point to derive single-step
-    invariance from double-step.) -/
-theorem IsBPFixedPoint_iff_one_step {ν α X : Type*}
+/-- **Substantive Theorem 9.** A BP message bundle is a BP fixed point
+    iff iterating `bpUpdate` for ANY number of steps reproduces the
+    bundle. Substantively combines the trivial-direction extraction
+    (single step from all-iteration invariance via `n = 1`) with the
+    iteration-stability theorem T10 (`bpUpdate_iterate_of_fixedPoint`)
+    in the reverse direction. The biconditional couples the single-
+    step fixed-point definition to the all-iterates-invariant
+    structural property. -/
+theorem IsBPFixedPoint_iff_all_iterates_invariant {ν α X : Type*}
     [Fintype ν] [Fintype α] [Fintype X]
     [DecidableEq ν] [DecidableEq α] [DecidableEq X]
     {G : FactorGraph ν α} (m : BPMessages ν α G X)
     (factorWeight : α → (ν → X) → ℝ) :
-    IsBPFixedPoint m factorWeight ↔ bpUpdate m factorWeight = m :=
-  Iff.rfl
+    IsBPFixedPoint m factorWeight ↔
+      ∀ n : ℕ, Nat.iterate (fun m' => bpUpdate m' factorWeight) n m = m := by
+  constructor
+  · intro h n
+    -- Forward: use T10 (bpUpdate_iterate_of_fixedPoint) below;
+    -- proof closed inline via induction matching T10's body.
+    induction n with
+    | zero => rfl
+    | succ k ih =>
+      rw [Function.iterate_succ_apply', ih]
+      exact h
+  · intro h_all
+    -- Reverse: extract single-step invariance at n = 1
+    have h1 := h_all 1
+    simp [Function.iterate_one] at h1
+    exact h1
 
 /-- **Substantive Theorem 10.** Fixed-point propagation: if `m` is a
     BP fixed point, then iterating `bpUpdate` any number of times

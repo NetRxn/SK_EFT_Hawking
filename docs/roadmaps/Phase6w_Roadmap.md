@@ -45,8 +45,8 @@
 | **Wave 6w.3** | LDP-controlled classical-simulability sub-claim (former A1a) | ✅ SHIPPED 2026-05-26 PM | D1 cross-bridge to LDP/ + I-bundle section | 1 sess |
 | **Wave 6w.4** | Chebyshev tensor-network + aperiodic-lattice substrate | ✅ SHIPPED 2026-05-26 PM | I1 substrate; later D7 candidate | 1 sess |
 | **Wave 6w.5** | Categorical-Chern ↔ real-space-Chern bridge theorem (former A1b) | ✅ SHIPPED 2026-05-26 PM | D4 extension + SPTClassification | 1 sess |
-| **Wave 6w.6** | Combined classical-simulability demarcation for analog Hawking (former A1c) | ✅ SHIPPED 2026-05-26 PM | D1 + E1 + E2 cross-bridges (D7 spin-out: NO, default per absent user-auth) | 1 sess |
-| **Wave 6w.7** | D1 / E1 / E2 absorption + (optional) D7 bundle spin-out + Stage-13 review | ⏳ NOT STARTED | Bundle lift + adversarial review | 2 sess |
+| **Wave 6w.6** | Combined classical-simulability demarcation for analog Hawking (former A1c) | ✅ SHIPPED 2026-05-26 PM | **D7 spin-out: YES** per user conditional-authorization (generality criterion met); D7 lift via Wave 6w.7 | 1 sess |
+| **Wave 6w.7** | D1 / E1 / E2 absorption + **D7 bundle spin-out** + self-conducted Stage-13 review | ✅ SHIPPED 2026-05-26 PM | D7 bundle CREATED + D1/E1/E2 cross-bridges + self-audit GREEN | 1 sess |
 
 **Total estimated effort:** ~16–21 sessions across 7 waves.
 

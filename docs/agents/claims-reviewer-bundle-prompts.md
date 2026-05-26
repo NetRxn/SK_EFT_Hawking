@@ -231,6 +231,72 @@ retroactive absorption.
 
 ---
 
+### D7. Classical Simulability and Quantum Advantage via Tensor Networks: A Formally Verified Demarcation
+
+(NEW BUNDLE — created 2026-05-26 PM at Phase 6w Wave 6w.6/6w.7
+spin-out trigger per user conditional-authorization on the
+generality criterion.)
+
+**Sources:** Phase 6w Waves 6w.1 through 6w.6; primary anchors
+Tindall-Sels Science 392, 868 (2026) and Antão-Sun-Fumega-Lado
+PRL 136, 156601 (2026).
+
+**Anchors:**
+- **HEADLINE demarcation theorem** `analog_hawking_quantum_advantage_demarcation`
+  (Lean module `AnalogHawkingDemarcation.lean`): biconditional
+  characterization of classical simulability via BP-LDP rate
+  threshold + Chern coefficient.
+- **BP-LDP biconditional** `bp_convergence_iff_ldp_below_threshold`
+  (Lean module `BPLDPSimulability.lean`, Wave 6w.3).
+- **Categorical-Chern bridge** `categorical_chern_eq_real_space_chern_crystalline`
+  and `_quasicrystalline` (Lean module `ChernBridge.lean`, Wave
+  6w.5).
+- **BP substrate** 24 substantive theorems in
+  `BeliefPropagation.lean` (Wave 6w.2): factor graphs, BP messages,
+  variable + factor updates + beliefs, Shannon entropy, factor
+  energy, Bethe free energy, tree predicate.
+- **Chebyshev-TN substrate** 10 substantive theorems in
+  `ChebyshevTN.lean` (Wave 6w.4): first-kind Chebyshev polynomials
+  via canonical recurrence + boundary-value identities `T_n(1) = 1`,
+  `T_n(-1) = (-1)^n`, `T_{2k}(0) = (-1)^k`, `T_{2k+1}(0) = 0` +
+  truncated expansion evaluation.
+- **Aperiodic-lattice substrate** 7 substantive theorems in
+  `AperiodicLattice.lean` (Wave 6w.4): `IsPeriodic2D` /
+  `IsAperiodic2D` predicates, singleton-lattice aperiodicity,
+  translation-invariance closures.
+- **KZ-U application substrate** 8 substantive theorems in
+  `KibbleZurekUnruh.lean` (Wave 6w.1): KZM exponent bounds, bridge
+  identification, surface-gravity ↔ KZM-defect-rate strict
+  inequality.
+- Primary sources: Tindall-Mello-Fishman-Stoudenmire-Sels Science 392,
+  868 (2026, DOI 10.1126/science.adx2728, arXiv:2503.05693) + Antão-
+  Sun-Fumega-Lado PRL 136, 156601 (2026, DOI 10.1103/hhdf-xpwg,
+  arXiv:2506.05230) — both cached at `Lit-Search/Phase-6w/primary-sources/`.
+
+**Stage-13 anchors specific to D7:**
+- Verify the HEADLINE biconditional's two-axis decomposition is
+  substantively load-bearing in BOTH directions (forward and
+  reverse): no P5 (mere unfolding of definition) on either side.
+- Cross-bridge to D4 (TQC foundations sibling): D4 retains
+  Fibonacci/topological-foundations focus; D7 covers the
+  classical-simulability/tensor-network methodology. Verify no
+  double-counting of categorical-Chern content between D4 and D7
+  §"Chebyshev-TN Chern bridge".
+- Cross-bridge to D6 (FT-QC substrate sibling): D6 covers fault-
+  tolerant computation primitives; D7 covers classical-simulability
+  demarcation. Verify the two bundles cite each other cleanly without
+  overlap of the SK substrate.
+- Verify the analog-Hawking application section (§"Kibble-Zurek-Unruh
+  application") cites Phase 6w Wave 6w.1 substrate, NOT inserts new
+  substrate.
+- Verify no project-local axioms introduced across D7 contributions
+  (Pipeline Invariant #15); axiom-audit cross-check via `validate.py`.
+- Verify the substrate-generality claim (Phase 6w strategy synthesis
+  decision-rule condition) is verifiable at the type level: the
+  contributing Lean predicates take arbitrary type parameters.
+
+---
+
 ## Tier 2 — PRL splashes
 
 ### L1. GW170817 / vestigial-graviton
