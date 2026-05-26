@@ -628,15 +628,30 @@ arXiv:2008.05499]).
 The Lean theorem
 \verb|fuKaneInvariant_eq_neg_one_of_DIII_topological| in
 \verb|NbReTripletSPT.lean| §7 quantifies universally over any DIII-topological
-capsule and evaluates to~$-1$ for NbRe (DIII-topological) and~$+1$ for
-elemental Nb (DIII-trivial), pinning the substantive distinction at
-the type level. The 4$\times$4 closed-form Pfaffian
+\verb|SCParameters| capsule and evaluates to~$-1$ for NbRe (DIII-topological)
+and~$+1$ for elemental Nb (DIII-trivial), pinning the substantive
+distinction at the type level. The 4$\times$4 closed-form Pfaffian
 $\mathrm{Pf} = a f - b e + c d$ is vendored inline as the only new
 substrate; a general \verb|Matrix.pfaffian| Mathlib upstream PR is a
 documented follow-up but not load-bearing for the NbRe discharge.
 Zero new project-local axioms; the original tracked Prop placeholder
 \verb|H_NbReWindingNumberIdentity| has been substantively discharged
 via \verb|H_NbReWindingNumberIdentity_holds|.
+\textit{Scope of the universal quantification.} The universality is
+over the parameterised \verb|SCParameters| capsule under the chosen
+substrate model — a 4-conjunct ITE on the sewing-matrix generators
+(\verb|sewingCoeffsAt|) that encodes the standard inversion-symmetry-
+sign + triplet-d-vector profile — rather than a derivation from a
+microscopic noncentrosymmetric BdG Hamiltonian. The substrate model
+ships the canonical Pfaffian-Z$_2$ sign-counting outcome on the two
+physically-relevant quadrants
+(NbRe-class: noncentrosymmetric + triplet $\Rightarrow \delta = -1$;
+Nb-class: centrosymmetric + singlet $\Rightarrow \delta = +1$);
+the remaining two quadrants of \verb|SCParameters| are disclosed
+substrate-level boundary conditions (one degenerate; one not
+physically relevant), pinned by the witness theorems
+\verb|fuKaneInvariant_zero_on_degenerate| and
+\verb|pfaffianSign_at_gamma_noncentrosymmetric_singlet|.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The chirality wall: a three-pillar synthesis}

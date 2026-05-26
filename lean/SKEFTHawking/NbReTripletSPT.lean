@@ -164,8 +164,17 @@ falls in the Kitaev DIII period-16 class if it is BOTH
 noncentrosymmetric AND triplet-paired. The "DIII" label refers to
 the Altland-Zirnbauer symmetry class with broken inversion +
 preserved time-reversal symmetry; the period-16 classification is
-Kitaev's periodic-table result, and connects to the project's
-existing Z₁₆ Rokhlin substrate via the spin-bordism map. -/
+Kitaev's periodic-table result.
+
+**Cross-bridge note (per P6 finding of the Sub-wave 8.C
+adversarial review, 2026-05-26):** The natural Rokhlin-period-16
+bridge to the project's existing `Z16Classification.lean` substrate
+is **not** constructed at the Lean theorem level in this module —
+this docstring is a forward pointer to a future cross-bridge wave
+(would require formalizing the spin-bordism map from BdG
+Hamiltonians to `Ω₄^{Pin⁺} ≅ ℤ₁₆`). The current substrate-level
+predicate is `IsNoncentrosymmetric sc ∧ IsTripletSuperconductor sc`
+and nothing more; the Z₁₆ connection is documentation-level only. -/
 def IsDIIITopologicalSuperconductor (sc : SCParameters) : Prop :=
   IsNoncentrosymmetric sc ∧ IsTripletSuperconductor sc
 
@@ -221,8 +230,20 @@ For a 4×4 antisymmetric matrix with six upper-triangular generators
 the closed-form Pfaffian is `Pf(w) = a·f − b·e + c·d` (Cayley 1849;
 modern reference Bressoud, Math. Mag. 73 (2000) 121). The BdG block
 in `BdGHamiltonian.lean` is 4×4, so this is sufficient for the NbRe
-sub-wave 8.C discharge; the general `Matrix.pfaffian` for arbitrary
-`2n` is a documented Mathlib-upstream-PR-quality follow-up. -/
+sub-wave 8.C discharge.
+
+**Upstream-Mathlib-PR follow-up (per ADV-4 of the Sub-wave 8.C
+adversarial review, 2026-05-26):** The 4×4 closed-form `pf4` is
+mathematically equivalent to the general
+`Pf(A) = Σ_{σ ∈ PerfectMatching} sign(σ) · ∏ᵢ A[σ(2i-1), σ(2i)]`
+formula evaluated at `n = 2`. We do not prove this equivalence
+here because Mathlib v4.29.1 does not yet have a general
+`Matrix.pfaffian` definition (DR-dossier confirmed gap; an upstream
+PR following the `Matrix.det` template at ~80–110 LoC is the
+natural follow-up). The 4×4 closed-form `pf4` we vendor below is
+sufficient for the NbRe BdG-block size; for larger BdG blocks
+(e.g., orbital-doubled 8×8 case) the general definition would be
+needed and is left as documented future work. -/
 
 /-- 4×4 antisymmetric integer matrix from its 6 upper-triangular
 generators. -/
@@ -256,10 +277,19 @@ theorem pf4_noncentrosymm_triplet_gamma : pf4 1 1 0 0 1 (-1) = -2 := by decide
 
 The NbRe P-62m hexagonal Brillouin zone has four time-reversal-
 invariant momenta (cf. Qi–Hughes–Raghu–Zhang 2010 §III); we
-enumerate them as `Fin 4`. The substantive sign-product structure
-carries through identically for orthorhombic BZs with 8 TRIMs. -/
+enumerate them as `Fin 4`. **Scope (per ADV-1 of the Sub-wave 8.C
+adversarial review, 2026-05-26):** the hardcoded `Fin 4` ships only
+the hexagonal NbRe case. An orthorhombic NbRe variant (e.g. Ima2
+space group) would have 8 TRIMs; the sign-product invariant
+structure is otherwise identical, but the extension would require
+swapping `Fin 4` → `Fin 8` and adding 4 more non-Γ summands. A
+generic `[Fintype TRIM]` parameterization is a documented but
+deferred follow-up — the hexagonal-only case suffices for NbRe per
+Colangelo et al. 2025. -/
 
-/-- The 4 TRIMs in the NbRe P-62m hexagonal BZ, enumerated as `Fin 4`. -/
+/-- The 4 TRIMs in the NbRe P-62m hexagonal BZ, enumerated as `Fin 4`.
+Hexagonal-only by design; see §7.B docstring for the orthorhombic
+extension note. -/
 abbrev TRIM := Fin 4
 
 /-- The Γ point (k = 0) — the inversion-distinguished TRIM at which
@@ -310,7 +340,35 @@ structure SewingCoeffs where
 /-- The sewing-matrix coefficient profile at TRIM `k` for material `sc`.
 At `k = Γ` the profile encodes both (A) the inversion-symmetry sign
 and (B) the triplet d-vector contribution; at non-Γ TRIMs the profile
-reduces to the canonical singlet baseline. -/
+reduces to the canonical singlet baseline.
+
+**Substrate-model degeneracy disclosure (per Sub-wave 8.C adversarial
+review REQ-1, 2026-05-26):** the four `(channel, centrosymmetric)`
+quadrants of `SCParameters` produce the following Γ-Pfaffian values
+under this minimal substrate model:
+
+  (Singlet,  true ): `pf4(1,0,0,0,0, 1) =  1` (DIII-trivial baseline)
+  (Triplet,  false): `pf4(1,1,0,0,1,-1) = -2` (DIII-topological; NbRe class)
+  (Singlet,  false): `pf4(1,0,0,0,0,-1) = -1` (noncentrosymmetric singlet)
+  (Triplet,  true ): `pf4(1,1,0,0,1, 1) =  0` (DEGENERATE; Pfaffian vanishes)
+
+The (Triplet, centrosymmetric) quadrant is a measure-zero fine-tuned
+point where the Pfaffian vanishes exactly, and `pfaffianSignAtTRIM`
+returns 0. This degenerate point is **not reachable inside**
+`IsDIIITopologicalSuperconductor` (which forces
+`centrosymmetric = false`), so it cannot trip up the substantive
+discharge of `H_NbReWindingNumberIdentity`. But `fuKaneInvariant
+: SCParameters → ℤ` is **non-total** over its input type in the
+sense that it returns 0 on the (Triplet, centrosymmetric) quadrant
+rather than ±1. The witness theorem
+`fuKaneInvariant_zero_on_degenerate` (§7.D) pins this disclosure at
+the type level; physically, real noncentrosymmetric triplet
+superconductors (NbRe-class) and centrosymmetric singlets
+(Nb-class) avoid this degenerate point. The substrate-level model is
+intentionally minimal — it is not a microscopic-Hamiltonian
+derivation but a parameterized profile reproducing the canonical
+Fu–Kane sign-counting outcome on the two physically-relevant
+quadrants. -/
 def sewingCoeffsAt (sc : SCParameters) (k : TRIM) : SewingCoeffs :=
   if k = gamma then
     { a := 1,
@@ -358,6 +416,50 @@ theorem pfaffianSign_at_nonGamma (sc : SCParameters) (k : TRIM) (hk : k ≠ gamm
   unfold pfaffianSignAtTRIM sewingCoeffsAt pf4
   rw [if_neg hk]
   decide
+
+/-- **Substrate-model degeneracy at the (Triplet, centrosymmetric)
+quadrant** (per REQ-1 of the Sub-wave 8.C adversarial review,
+2026-05-26). The Pfaffian at the Γ point vanishes exactly when
+both `sc.channel = Triplet` AND `sc.centrosymmetric = true`, giving
+`pf4 = 1·1 − 1·1 + 0·0 = 0` and hence `Int.sign 0 = 0`. This
+degenerate point is **not reachable** inside
+`IsDIIITopologicalSuperconductor` (which requires
+`IsNoncentrosymmetric`, i.e. `centrosymmetric = false`), so it does
+not affect the substantive discharge of
+`H_NbReWindingNumberIdentity`. -/
+theorem fuKaneInvariant_zero_on_degenerate (sc : SCParameters)
+    (h_trip : sc.channel = PairingChannel.Triplet)
+    (h_cent : sc.centrosymmetric = true) :
+    fuKaneInvariant sc = 0 := by
+  unfold fuKaneInvariant
+  rw [Fin.prod_univ_four]
+  -- Γ-point Pfaffian vanishes for (Triplet, centrosymmetric):
+  have h_gamma : pfaffianSignAtTRIM sc gamma = 0 := by
+    unfold pfaffianSignAtTRIM sewingCoeffsAt pf4
+    simp [gamma, h_trip, h_cent]
+  rw [show (0 : Fin 4) = gamma from rfl, h_gamma]
+  -- 0 * (anything) * (anything) * (anything) = 0
+  ring
+
+/-- **Substrate-model finding: the noncentrosymmetric flag alone
+flips the Γ-Pfaffian sign**, even for singlet pairing
+(`pf4(1, 0, 0, 0, 0, -1) = -1`). This sharpens the disclosure of
+where the load-bearing content of `sewingCoeffsAt` lives: it is the
+`f` coefficient (the inversion-symmetry sign) that carries the
+Γ-flip, while the `b, e` coefficients (the triplet d-vector
+contribution) contribute the additional `-b·e = -1` term. The
+substantive content of `H_NbReWindingNumberIdentity` rests on
+**both** flags being set, but the noncentrosymmetric flag alone
+is sufficient to produce a Pfaffian-sign flip in this substrate
+model. -/
+theorem pfaffianSign_at_gamma_noncentrosymmetric_singlet :
+    ∀ sc : SCParameters,
+      sc.channel = PairingChannel.Singlet →
+      sc.centrosymmetric = false →
+      pfaffianSignAtTRIM sc gamma = -1 := by
+  intro sc h_sing h_noncen
+  unfold pfaffianSignAtTRIM sewingCoeffsAt pf4
+  simp [gamma, h_sing, h_noncen]
 
 /-- **The substantive Γ-point lemma.** For any DIII-topological
 material (noncentrosymmetric AND triplet-paired), the Pfaffian
@@ -449,12 +551,11 @@ def H_NbReWindingNumberIdentity : Prop :=
 The substantively-strengthened body is proved kernel-only via the
 Fu–Kane / Sato–Fujimoto TRIM-product Pfaffian construction (§7.A–D).
 
-This **replaces** the original sub-wave-8.C tracked-Prop placeholder
-`H_NbReWindingNumberIdentity_trivially_witnessed` (which had body
-`fun _ _ => trivial` against the `True` placeholder). The new
-discharge is genuinely load-bearing: the body asserts a non-trivial
-integer-product equality, witnessed by a structural theorem about
-the noncentrosymmetric-BCS topological invariant. -/
+The original sub-wave-8.C tracked-Prop placeholder had body `True`
+(discharged trivially via `fun _ _ => trivial`); this discharge
+**replaces** that placeholder body with the non-trivial integer-
+product equality `fuKaneInvariant sc = -1` for any DIII-topological
+`sc`, witnessed by `fuKaneInvariant_eq_neg_one_of_DIII_topological`. -/
 theorem H_NbReWindingNumberIdentity_holds : H_NbReWindingNumberIdentity :=
   fuKaneInvariant_eq_neg_one_of_DIII_topological
 
