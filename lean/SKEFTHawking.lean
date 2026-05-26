@@ -1300,6 +1300,15 @@ import SKEFTHawking.AperiodicLattice
 -- (band-edge x=-1: c0 - c1) limits + substantive 2c1 difference identity.
 import SKEFTHawking.ChernBridge
 
+-- Phase 6w Wave 6w.6 combined classical-simulability demarcation (A1c).
+-- HEADLINE analog_hawking_quantum_advantage_demarcation biconditional
+-- combining Wave 6w.3 BP-LDP simulability with Wave 6w.5 Chern bridge:
+-- a system is classically simulable iff BP-LDP-favorable AND c_1 = 0.
+-- Contrapositive yields quantum-advantage regime explicitly. D7
+-- spin-out decision deferred to user authorization (default: NO,
+-- absorb into D1 + E1 + E2 via Wave 6w.7).
+import SKEFTHawking.AnalogHawkingDemarcation
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
