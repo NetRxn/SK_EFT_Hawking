@@ -152,6 +152,36 @@ POLARITON_PLATFORMS = {
         'Gamma_pol': 1.25e11,     # s⁻¹ (1/tau_cav for 8 ps)
         'gamma_phonon_dim': 1e-4,
     },
+    'Penn_TMD_MoSe2': {
+        # UPenn ZHEN-Lab nanocavity TMD-polariton platform (Wang, Kim, Zhen, He,
+        # PRL 136, 146901 (2026); arXiv:2411.16635). MoSe₂ monolayer in a planar
+        # photonic-crystal nanocavity. Ships with `c_s` / `xi` / `kappa` set to
+        # the smooth-horizon Falque baseline values because the device itself
+        # forms NO sonic horizon — the platform is included solely so the
+        # Tier-1 validity-ratio post-processing tags it as `intractable`,
+        # demonstrating that even using the most generous LKB-comparable
+        # κ baseline, the TMD-polariton platform sits OUTSIDE Tier 1
+        # perturbative-dissipation validity (Wave 6v.4 scope-demarcation
+        # claim for E1). DO NOT feed to the transonic_background solver.
+        'description': 'UPenn TMD MoSe2 nanocavity (Wang/Kim/Zhen/He PRL 2026) — '
+                       'Tier-1 SCOPE DEMARCATION exhibit (not an analog-horizon device)',
+        'c_s': 4.0e5,             # m/s (Falque smooth-horizon baseline; placeholder)
+        'xi': 3.4e-6,             # m (Falque smooth-horizon baseline; placeholder)
+        'kappa': 7.0e10,          # s⁻¹ (Falque smooth-horizon baseline as the generous κ)
+        # γ_LP = 1.8 meV → Γ_LP = γ_LP / ℏ. Computed below post-dict (avoids
+        # cross-import dependency on E_CHARGE/HBAR at dict-literal time).
+        'tau_cav': 3.48e-13,      # s (≈ 348 fs photon lifetime, ℏ/γ_cav for γ_cav=1.9 meV)
+        # Γ_pol set below post-dict from γ_LP_meV; cavity Γ_cav = 1/tau_cav also computed.
+        'gamma_phonon_dim': 1e-4, # subdominant (cavity decay dominates as in all polariton platforms)
+        'g_meV': 16.8,            # exciton-photon coupling (Wang et al. 2026 Eq. coupled-oscillator fit)
+        'gamma_LP_meV': 1.8,      # lower-polariton linewidth (Wang et al. 2026)
+        'gamma_UP_meV': 2.3,      # upper-polariton linewidth (Wang et al. 2026)
+        'gamma_cav_meV': 1.9,     # cavity linewidth (γ_rad ≈ 0.7 + γ_nonrad ≈ 1.2)
+        'Q_factor': 914,          # E_cav (1.736 eV) / γ_cav (1.9 meV)
+        'switching_energy_fJ': 4.0,  # all-optical switching threshold (Wang et al. 2026)
+        # Γ_pol computed from γ_LP_meV at post-dict step below (use canonical eV→s⁻¹
+        # conversion to keep the source-of-truth purely in g/γ_LP/γ_UP/γ_cav in meV).
+    },
 }
 
 # Falque steep-horizon reach — reported but not adopted as default.
@@ -159,6 +189,16 @@ POLARITON_PLATFORMS = {
 # corresponding to T_H ~ 134 mK, at the cost of D ≈ 0.93 (EFT becomes
 # non-perturbative). Quoted in Paper 12 body text.
 FALQUE_STEEP_HORIZON_KAPPA = 1.1e11  # s⁻¹ (0.11 ps⁻¹ maximum measured)
+
+# Penn TMD polariton: Γ_pol derived from the source-of-truth γ_LP in meV.
+# Γ_LP = γ_LP / ℏ. The elementary charge converts eV → J; division by HBAR
+# gives s⁻¹. (E_CHARGE itself is defined later in the graphene section, so
+# we inline the SI 2019 exact value here to avoid a forward reference.)
+_ELEMENTARY_CHARGE_J_PER_EV = 1.602176634e-19  # J/eV (exact SI 2019; cross-check: matches E_CHARGE)
+POLARITON_PLATFORMS['Penn_TMD_MoSe2']['Gamma_pol'] = (
+    POLARITON_PLATFORMS['Penn_TMD_MoSe2']['gamma_LP_meV'] * 1e-3
+    * _ELEMENTARY_CHARGE_J_PER_EV / HBAR
+)
 
 # Derived polariton parameters
 for _name, _plat in POLARITON_PLATFORMS.items():

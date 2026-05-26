@@ -605,6 +605,166 @@ PARAMETER_PROVENANCE = {
         'notes': None,
     },
 
+    # ── Penn TMD polariton (Wang et al. PRL 136, 146901, 2026) ─────
+    # Wave 6v.4 scope-demarcation parameters. The Penn TMD nanocavity
+    # is NOT itself an analog-horizon device — these parameters are
+    # registered as the basis of the Tier-1 invalidity argument in
+    # `polariton_tier1_fails_tmds` (PolaritonTier1.lean).
+
+    'Penn_TMD_MoSe2.g_meV': {
+        'value': 16.8,
+        'unit': 'meV',
+        'tier': 'MEASURED',
+        'source': 'Wang, Kim, Zhen, He, PRL 136, 146901 (2026)',
+        'detail': 'Exciton-photon vacuum coupling strength estimated from the '
+                  'coupled-oscillator fit to the measured anticrossing. Verbatim: '
+                  '"Based on the coupled oscillator model, we estimate the '
+                  'exciton-photon coupling strength in the charge-neutral regime '
+                  'is g=16.8 meV."',
+        'doi': '10.1103/gc15-qsvf',
+        'cited_bibkeys': ['WangKimBZHe2026PennTMDPolariton'],
+        'llm_verified_date': '2026-05-26',
+        'llm_verified_notes': 'LLM re-read arXiv:2411.16635v1 (full HTML body). '
+                              'g = 16.8 meV appears in the coupled-oscillator '
+                              'fit section. Sets the strong-coupling Rabi splitting '
+                              '2g ≈ 33.6 meV — far exceeding the polariton '
+                              'linewidths γ_LP=1.8 meV, γ_UP=2.3 meV, so the '
+                              'device is firmly in strong coupling.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Wave 6v.4 (Penn TMD scope demarcation). Source-of-truth '
+                 'parameter for the device characterization.',
+    },
+    'Penn_TMD_MoSe2.gamma_LP_meV': {
+        'value': 1.8,
+        'unit': 'meV',
+        'tier': 'MEASURED',
+        'source': 'Wang, Kim, Zhen, He, PRL 136, 146901 (2026)',
+        'detail': 'Lower-polariton (LP) linewidth (FWHM). Verbatim: '
+                  '"The measured linewidths are 2.3 meV for the UP state and '
+                  '1.8 meV for the LP state." Used in `polariton_tier1_fails_tmds` '
+                  'as the source-of-truth for the derived `Γ_pol = γ_LP/ℏ`.',
+        'doi': '10.1103/gc15-qsvf',
+        'cited_bibkeys': ['WangKimBZHe2026PennTMDPolariton'],
+        'llm_verified_date': '2026-05-26',
+        'llm_verified_notes': 'LLM re-read arXiv:2411.16635v1. γ_LP=1.8 meV '
+                              'verified in the polariton-spectroscopy section.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Load-bearing — `Γ_pol = γ_LP/ℏ = 2.735×10¹² s⁻¹` derives from this.',
+    },
+    'Penn_TMD_MoSe2.gamma_UP_meV': {
+        'value': 2.3,
+        'unit': 'meV',
+        'tier': 'MEASURED',
+        'source': 'Wang, Kim, Zhen, He, PRL 136, 146901 (2026)',
+        'detail': 'Upper-polariton (UP) linewidth (FWHM). Cross-check on '
+                  'the LP value; both extracted from the same spectroscopy '
+                  'measurement.',
+        'doi': '10.1103/gc15-qsvf',
+        'cited_bibkeys': ['WangKimBZHe2026PennTMDPolariton'],
+        'llm_verified_date': '2026-05-26',
+        'llm_verified_notes': 'LLM re-read arXiv:2411.16635v1.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Cross-check on LP linewidth.',
+    },
+    'Penn_TMD_MoSe2.gamma_cav_meV': {
+        'value': 1.9,
+        'unit': 'meV',
+        'tier': 'MEASURED',
+        'source': 'Wang, Kim, Zhen, He, PRL 136, 146901 (2026)',
+        'detail': 'Total cavity linewidth (FWHM). Verbatim decomposition: '
+                  '"the radiative coupling to the waveguides on both sides '
+                  '(γ_rad∼0.7 meV) and optical loss due to scattering from '
+                  'fabrication disorders and material absorption '
+                  '(γ_nonrad∼1.2 meV)" — sum 1.9 meV at the resonance energy '
+                  '1.736 eV.',
+        'doi': '10.1103/gc15-qsvf',
+        'cited_bibkeys': ['WangKimBZHe2026PennTMDPolariton'],
+        'llm_verified_date': '2026-05-26',
+        'llm_verified_notes': 'LLM re-read arXiv:2411.16635v1.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Q ≈ 1.736 eV / 1.9 meV ≈ 914.',
+    },
+    'Penn_TMD_MoSe2.Q_factor': {
+        'value': 914,
+        'unit': 'dimensionless',
+        'tier': 'DERIVED',
+        'source': 'Derived: resonance energy / cavity linewidth (Wang et al. 2026)',
+        'detail': 'Q = E_res / γ_cav = 1.736 eV / 1.9 meV ≈ 914.',
+        'doi': '10.1103/gc15-qsvf',
+        'cited_bibkeys': ['WangKimBZHe2026PennTMDPolariton'],
+        'llm_verified_date': '2026-05-26',
+        'llm_verified_notes': 'DERIVED — algebraic identity from γ_cav_meV and '
+                              'resonance energy.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': None,
+    },
+    'Penn_TMD_MoSe2.switching_energy_fJ': {
+        'value': 4.0,
+        'unit': 'fJ',
+        'tier': 'MEASURED',
+        'source': 'Wang, Kim, Zhen, He, PRL 136, 146901 (2026)',
+        'detail': 'All-optical switching threshold of the cavity spectrum. '
+                  'Verbatim: "Remarkably, we achieve all-optical switching of '
+                  'the cavity spectrum at an energy level as low as ∼4 fJ" — '
+                  'on picosecond timescales. This is the device\'s headline '
+                  'demonstration; not load-bearing for the Tier-1 demarcation '
+                  'argument but registered for downstream paper-cited use.',
+        'doi': '10.1103/gc15-qsvf',
+        'cited_bibkeys': ['WangKimBZHe2026PennTMDPolariton'],
+        'llm_verified_date': '2026-05-26',
+        'llm_verified_notes': 'LLM read arXiv:2411.16635 abstract + body.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': None,
+    },
+    'Penn_TMD_MoSe2.tau_cav': {
+        'value': 3.48e-13,
+        'unit': 's',
+        'tier': 'DERIVED',
+        'source': 'Derived: ℏ / γ_cav (Wang et al. 2026 γ_cav = 1.9 meV)',
+        'detail': 'Cavity photon lifetime τ_photon = ℏ / γ_cav '
+                  '≈ (1.054571817×10⁻³⁴ J·s) / (1.9×10⁻³ eV × 1.602176634×10⁻¹⁹ J/eV) '
+                  '≈ 3.466×10⁻¹³ s ≈ 347 fs. Rounded to 348 fs in '
+                  'POLARITON_PLATFORMS["Penn_TMD_MoSe2"]["tau_cav"]. This is '
+                  'NOT a polariton-decoherence timescale (that is γ_LP); it is '
+                  'the bare cavity-photon lifetime and is registered for '
+                  'completeness with the rest of the platform parameters.',
+        'doi': '10.1103/gc15-qsvf',
+        'cited_bibkeys': ['WangKimBZHe2026PennTMDPolariton'],
+        'llm_verified_date': '2026-05-26',
+        'llm_verified_notes': 'DERIVED — algebraic identity from γ_cav_meV.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Not load-bearing for the Tier-1 demarcation theorem; included '
+                 'for completeness alongside the other Penn TMD platform fields.',
+    },
+    'Penn_TMD_MoSe2.Gamma_pol': {
+        'value': 2.7347e12,
+        'unit': 's^-1',
+        'tier': 'DERIVED',
+        'source': 'Derived: γ_LP / ℏ',
+        'detail': 'Γ_pol = γ_LP / ℏ = 1.8 meV × (1.602176634×10⁻¹⁹ J/eV) × 10⁻³ '
+                  '÷ (1.054571817×10⁻³⁴ J·s) ≈ 2.7347×10¹² s⁻¹. This is the '
+                  'effective polariton-decoherence rate setting `Γ_pol/κ` in '
+                  'the Tier-1 validity-ratio. The value is computed at import '
+                  'time in `src/core/constants.py:POLARITON_PLATFORMS["Penn_TMD_MoSe2"]["Gamma_pol"]`.',
+        'doi': None,
+        'cited_bibkeys': ['WangKimBZHe2026PennTMDPolariton'],
+        'llm_verified_date': '2026-05-26',
+        'llm_verified_notes': 'DERIVED — algebraic identity from γ_LP_meV.',
+        'human_verified_date': None,
+        'human_verified_notes': None,
+        'notes': 'Load-bearing for `polariton_tier1_fails_tmds`. With κ = 7×10¹⁰ s⁻¹ '
+                 '(the most generous Falque smooth-horizon baseline) the ratio is '
+                 'Γ_pol/κ ≈ 39.1, > 0.1 by a factor of ~390 — firmly in the '
+                 '"intractable" Tier-1 regime.',
+    },
+
     # ── Graphene Dirac fluid parameters (Phase 5w) ─────────────────
 
     'V_FERMI_GRAPHENE': {

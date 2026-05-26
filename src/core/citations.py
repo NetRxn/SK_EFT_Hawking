@@ -363,6 +363,38 @@ CITATION_REGISTRY = {
         'provides': [],
         'notes': 'Polariton analog Hawking proposal.',
     },
+    'WangKimBZHe2026PennTMDPolariton': {
+        'authors': 'Wang, Z., Kim, B., Zhen, B., He, L.',
+        'title': 'Strongly nonlinear nanocavity exciton-polaritons in gate-tunable monolayer semiconductors',
+        'journal': 'PRL',
+        'volume': 136,
+        'page': '146901',
+        'year': 2026,
+        'doi': '10.1103/gc15-qsvf',
+        'arxiv': '2411.16635',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6v/primary-sources/WangKimBZHe2026PennTMDPolariton.pdf',
+        'used_in': ['src/core/constants.py', 'papers/E1/paper_draft.tex'],
+        'provides': [
+            'Penn_TMD_MoSe2.g_meV',
+            'Penn_TMD_MoSe2.gamma_LP_meV',
+            'Penn_TMD_MoSe2.gamma_UP_meV',
+            'Penn_TMD_MoSe2.gamma_cav_meV',
+            'Penn_TMD_MoSe2.Q_factor',
+            'Penn_TMD_MoSe2.switching_energy_fJ',
+        ],
+        'notes': 'UPenn ZHEN-Lab MoSe2 monolayer in photonic-crystal nanocavity. '
+                 'Editor\'s Suggestion + cover article. arXiv 2024-11-25; PRL 2026-04. '
+                 'Source of Penn_TMD_MoSe2 platform parameters used in Wave 6v.4 '
+                 'Tier-1 scope-demarcation theorem `polariton_tier1_fails_tmds` '
+                 '(PolaritonTier1.lean). LLM-re-verified against the arXiv full '
+                 'text 2026-05-26: g=16.8 meV (coupled-oscillator fit), '
+                 'γ_LP=1.8 meV / γ_UP=2.3 meV (measured polariton linewidths), '
+                 'γ_cav=γ_rad+γ_nonrad=0.7+1.2=1.9 meV (cavity linewidth at '
+                 'resonance E=1.736 eV → Q≈914), 4 fJ switching threshold on '
+                 'picosecond timescales (the headline experimental result).',
+    },
     'Nguyen2015': {
         'authors': 'Nguyen, H. S. et al.',
         'title': 'Acoustic black hole in a stationary hydrodynamic flow of microcavity polaritons',
