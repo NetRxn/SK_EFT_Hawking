@@ -56,19 +56,21 @@ A scout sweep of the 3 deferred Mathlib substrates revealed that **2 of 3 deferr
 **Phase 6v Implications:** `docs/stakeholder/Phase6v_Implications.md`.
 **Phase 6v Strategic Positioning:** `docs/stakeholder/Phase6v_Strategic_Positioning.md`.
 
-## Sub-waves 8.D-8.H — strengthening pass on Sub-wave 8.C discharge (queued 2026-05-26 PM)
+## Sub-waves 8.D-8.H — strengthening pass on Sub-wave 8.C discharge ✅ ALL SHIPPED 2026-05-26 PM
 
-The Sub-wave 8.C adversarial review identified the original ship as "GREEN per strengthening discipline" but flagged real thinness: substrate-level encoding rather than Hamiltonian-derived; Z₁₆ cross-bridge documentation-only; TRIM hardcoded Fin 4. Per user direction, five strengthening sub-waves are queued to push the discharge to higher quality:
+The Sub-wave 8.C adversarial review identified the original ship as "GREEN per strengthening discipline" but flagged real thinness: substrate-level encoding rather than Hamiltonian-derived; Z₁₆ cross-bridge documentation-only; TRIM hardcoded Fin 4. Per user direction, five strengthening sub-waves shipped in a single autonomous-loop session 2026-05-26 PM:
 
-| Sub-wave | Title | Status | Strategic value |
+| Sub-wave | Title | Status | Module |
 |---|---|---|---|
-| **8.D** | General project-local `Matrix.pfaffian` (upstreamable later) | ⏳ NOT STARTED | Foundation; community-contribution-shaped |
-| **8.E** | Hamiltonian bridge — SCParameters → BdGHamiltonian | ⏳ NOT STARTED | **Highest physics-substantive value:** elevates from "encoded" to "derived" |
-| **8.F** | Z₁₆ Rokhlin cross-bridge to Phase 6r Pin⁺ substrate | ⏳ NOT STARTED | **Largest integrative payoff:** unifies NbRe with ~9,910 LoC Phase 6r |
-| **8.G** | 3D winding-number formal connection (BZ integral) | ⏳ NOT STARTED | Closes original Sub-wave 8.C spec gap |
-| **8.H** | TRIM parameterization over `[Fintype TRIM]` | ⏳ NOT STARTED | Polish for orthorhombic NbRe variants |
+| **8.D** | General project-local `Matrix.pfaffian` substrate (upstreamable later) | ✅ SHIPPED | `lean/SKEFTHawking/MathlibAux/Pfaffian.lean` |
+| **8.E** | Hamiltonian bridge — SCParameters → BdGHamiltonian | ✅ SHIPPED | `lean/SKEFTHawking/BdGHamiltonianNbRe.lean` |
+| **8.F** | Z₁₆ Rokhlin cross-bridge to Phase 6r Pin⁺ substrate | ✅ SHIPPED | `lean/SKEFTHawking/CrossBridges/NbReDIIIToPinPlusZ16.lean` |
+| **8.G** | 3D winding-number formal connection | ✅ SHIPPED | `lean/SKEFTHawking/NbReWindingNumber.lean` |
+| **8.H** | TRIM parameterization over `[Fintype T]` | ✅ SHIPPED | `lean/SKEFTHawking/TRIMParameterization.lean` |
 
-**Execution discipline:** autonomous `/goal`-mode loop, session-by-session through auto-compact. No LoC/LoE estimates per user direction. Adversarial review runs ONCE at end, not per-sub-wave.
+All five sub-waves kernel-only `[propext, Classical.choice, Quot.sound]`. Project-local axiom count UNCHANGED at 0 (Pipeline Invariant #15). `lake build SKEFTHawking` clean at 8704 jobs.
+
+**Final adversarial review pending** (per user direction: single review at end of strengthening pass, not per-sub-wave).
 
 **Inventory_Index update DEFERRED per cross-agent coordination boundary.** The other agent's parallel 6r/6r' adversarial-review-pass finalization owns the Inventory_Index modification window; my Phase 6v section will be merged in via a follow-up sync once that agent's pass concludes.
 
