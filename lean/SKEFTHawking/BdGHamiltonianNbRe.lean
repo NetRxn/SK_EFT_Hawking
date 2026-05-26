@@ -573,9 +573,15 @@ theorem pfaffianFin4_theta_mul_H_kinetic_tau_z :
   simp [Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- **Companion: pfaffian of `Θ · H_kinetic_tau_neg_z`**, where the kinetic
-sign is flipped. Demonstrates that the universal-theorem output's Pfaffian
-DEPENDS NON-TRIVIALLY on the input H (not a constant), witnessing real
-sensitivity to the underlying Hamiltonian structure. -/
+sign is flipped (= −H_kinetic_tau_z).
+
+**Honest scope (post Round-3 ADVISORY-R3-1 fix)**: `pfaffianFin4` is a
+degree-2 quadratic form in the matrix entries, so `Pf(−M) = (−1)² · Pf(M)
+= Pf(M)`. This companion theorem thus witnesses **Pfaffian INVARIANCE
+under sign-flip of the input Hamiltonian** (Pf(Θ·(−H)) = Pf(−Θ·H) =
+Pf(Θ·H)), NOT sensitivity to it. The substantive content: the
+universal antisymmetry-FROM-TRS theorem APPLIES to both H and −H (both
+are TRS-invariant), and the resulting Pfaffian values are equal. -/
 def H_kinetic_tau_neg_z : Matrix (Fin 4) (Fin 4) ℂ :=
   !![(-1 : ℂ), 0, 0, 0;
      0, 1, 0, 0;

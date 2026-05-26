@@ -440,7 +440,12 @@ theorem nbReIma2_derived_eq_alias :
 replaced `nbReIma2Structure.has_polar_c_axis` with `false` (degenerating
 to higher symmetry), the Ima2-derived invariant would be trivial (+1).
 This witnesses that the `has_polar_c_axis` flag IS load-bearing in the
-derivation, not vacuously satisfied. -/
+derivation, not vacuously satisfied.
+
+**Post Round-3 ADVISORY-R3-2 fix**: lattice constants stored as ℕ
+(tenths of Å for decidable comparisons) per the
+`Ima2OrthorhombicStructure` field documentation; `50/52/54` correspond
+to `5.0/5.2/5.4` Å. -/
 def nbReIma2StructureCentrosymmetricFalsifier : Ima2OrthorhombicStructure where
   a_decim := 50
   b_decim := 52
