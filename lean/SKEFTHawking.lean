@@ -1239,6 +1239,17 @@ import SKEFTHawking.CrossBridges.NbReDIIIToPinPlusZ16
 -- correspondence `(1 - fuKane)/2 = winding mod 2` shipped at both
 -- material instances.
 import SKEFTHawking.NbReWindingNumber
+-- Phase 6v Sub-wave 8.H (2026-05-26 PM): TRIM parameterization polish.
+-- Closes ADV-1 hardcoded `Fin 4` scope-limitation from the Sub-wave
+-- 8.C adversarial review. Ships `genericFuKaneInvariant` over any
+-- `[Fintype T]` TRIM enumeration; hexagonal-Fin-4 case recovers the
+-- existing NbReTripletSPT.lean §7.D `fuKaneInvariant`; orthorhombic
+-- Fin-8 case ships substantive non-vacuity witnesses (topological → -1,
+-- trivial → +1). Demonstrates the substrate generalizes cleanly to
+-- orthorhombic NbReSi/Ima2 variants without structural redesign.
+-- Additive (non-breaking) ship — does not modify existing hexagonal
+-- substrate.
+import SKEFTHawking.TRIMParameterization
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
