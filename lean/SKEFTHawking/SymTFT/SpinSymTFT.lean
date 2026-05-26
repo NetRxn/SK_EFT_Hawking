@@ -58,27 +58,12 @@ open SKEFTHawking SKEFTHawking.Z16AnomalyForcesThetaBar
 
 universe v u
 
-/-! ## §1. Wave 2a.2: the `IsSpinSymTFT` predicate -/
+/-! ## §1. DELETED post-B5 audit-remediation (2026-05-25)
 
-/-- **`IsSpinSymTFT B C`** — the predicate extending `IsBulkBoundary B C`
-with spin-structure data. Per Wave 2a.1 §2.1, this is the typeclass-
-extension form that the boundary side of the spin-SymTFT framework
-takes.
-
-Predicate-substrate body: requires `IsBulkBoundary B C` (the bosonic
-backbone) plus the Anderson-dual Pin⁺ class data witnessing the
-fermionic extension.
-
-For the SK-EFT-Hawking substrate, the spin structure is supplied by
-the `SubstrateConfig`'s `z16_class`; consumers can take this as an
-explicit hypothesis. -/
-def IsSpinSymTFT
-    {C : Type*} [CategoryTheory.Category C] [CategoryTheory.MonoidalCategory C]
-    {D : Type*} [CategoryTheory.Category D] [CategoryTheory.MonoidalCategory D]
-    (_B : C) (_Z : D) (z : TP5PinPlus) : Prop :=
-  -- Backbone: B and Z are objects of monoidal categories.
-  -- Spin extension: the bulk carries an Anderson-dual Pin⁺ class.
-  IsAndersonDualSpinBulk z
+`IsSpinSymTFT B C` (3 unused params + bundle of KT ∧ AD) deleted as
+P5+P2 anti-pattern. No external consumers; if needed, consumers should
+use `IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus` directly with
+the bulk/boundary identifications attached as separate data parameters. -/
 
 /-! ## §2. The boundary-anomaly map (Witten-Yonekura inflow convention) -/
 
@@ -117,14 +102,23 @@ identifying spin-SymTFT framework consistency on a SubstrateConfig
 with `Z16AnomalyCancels`. -/
 
 /-- **`IsSpinSymTFTConsistent s`** — a substrate is *spin-SymTFT-
-consistent* iff its Anderson-dual Pin⁺ class is realizable as an
-`IsAndersonDualSpinBulk` witness AND the boundary anomaly (via inflow)
-vanishes.
+consistent* iff:
+- the Pin⁺ bordism iso `Ω_4^{Pin⁺} ≅ ZMod 16` holds (Kirby-Taylor 1990
+  tracked Prop),
+- the Anderson-dual `TP_5(Pin⁺) ≅ ZMod 16` holds (post-A1 substantive
+  via Pontryagin chain),
+- the boundary anomaly (via Witten-Yonekura inflow) vanishes
+  (`IsAnomalyFree s ↔ s.z16_class = 0`).
+
+**Post-A2 audit refactor (2026-05-25)**: the first two conjuncts were
+previously bundled as `IsAndersonDualSpinBulk (substrateConfigToPinPlusClass s)`,
+which was P5+P2 (unused-param bundle of two tracked Props). Now inlined
+to make the substantive content visible at the type-signature level.
 
 Per Wave 2a.1 §2.2, this is the predicate that brings the substrate
 into the spin-SymTFT framework. -/
 def IsSpinSymTFTConsistent (s : SubstrateConfig) : Prop :=
-  IsAndersonDualSpinBulk (substrateConfigToPinPlusClass s) ∧ IsAnomalyFree s
+  IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus ∧ IsAnomalyFree s
 
 /-- **Wave 2a.3 substantive instance theorem** — the biconditional
 identifying spin-SymTFT consistency with `Z16AnomalyCancels`.
@@ -141,11 +135,12 @@ theorem wave_2a_3_substantive_instance (s : SubstrateConfig) :
     IsSpinSymTFTConsistent s ↔ Z16AnomalyCancels s := by
   unfold IsSpinSymTFTConsistent
   constructor
-  · intro ⟨_, hAnomalyFree⟩
+  · intro ⟨_, _, hAnomalyFree⟩
     exact (isAnomalyFree_iff_z16AnomalyCancels s).mp hAnomalyFree
   · intro hCancels
-    refine ⟨?_, ?_⟩
-    · exact isAndersonDualSpinBulk_holds _
+    refine ⟨?_, ?_, ?_⟩
+    · exact isKirbyTaylorPinPlusBordism_holds
+    · exact isAndersonDualPinPlus_holds
     · exact (isAnomalyFree_iff_z16AnomalyCancels s).mpr hCancels
 
 /-! ## §5. Wave 2a.3 — Cross-bridge to APSEta -/

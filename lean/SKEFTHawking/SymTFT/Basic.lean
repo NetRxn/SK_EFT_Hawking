@@ -105,146 +105,78 @@ SymTFT framework). -/
 def Is3DTQFT (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
   Nonempty (BraidedCategory.{v, u} B)
 
-/-- **`IsBulkBoundary B C`** — predicate that `C` is a topological
-boundary condition for the `(d+1)=3` bulk `B`.
+/-! ## §1a. B1 audit-remediation (2026-05-25): `IsBulkBoundary` DELETED
 
-At the predicate-substrate level, `IsBulkBoundary` records that `B`
-satisfies `Is3DTQFT` and that the boundary `C` has fusion-category data.
-The substantive bulk-boundary correspondence — Drinfeld center
-`𝒵(C) ≃ B` — is stated separately in
-`SymTFT/BulkBoundaryCorrespondence.lean` (Wave 1d.1) as a tracked Prop.
-
-Anchor: FMT (arXiv:2209.07471) "axiomatic / functorial point of view:
-a 'topological symmetry' of a relative QFT is a `(d+1)`-dim TQFT
-together with a topological boundary condition." -/
-def IsBulkBoundary
-    (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B]
-    (C : Type u₂) [Category.{v₂} C] [MonoidalCategory C] : Prop :=
-  Is3DTQFT B
+**Phase 6r-prime audit B1 (2026-05-25)**: `IsBulkBoundary B C := Is3DTQFT B`
+was P5 alias (the `C` parameter was unused in the body). Per the >20k LoC
+operational bar, this is a tractable few-line refactor (NOT a multi-year
+gap). Consumers refactored to use `Is3DTQFT B` directly with the
+boundary `C` carrier kept as data (when needed) rather than baked into
+a Prop alias. -/
 
 /-- **`IsSymTFTSlab B C_sym C_phys`** — predicate that the slab
 construction `B` ⊃ `C_sym` × `C_phys` realizes a SymTFT presentation
-of a relative QFT.
+of a relative QFT. **Post-B1 audit-remediation**: body refactored to
+`Is3DTQFT B` (which was the substantive content of the prior 2-conjunct
+bundle of P5 aliases). The boundary carriers C_sym, C_phys remain in
+the signature as documentary data parameters.
 
 Anchor: Apruzzi-Bonetti-García-Etxebarria-Hosseini-Schäfer-Nameki
 arXiv:2112.02092 §2; Bhardwaj-Copetti-Pajer-Schäfer-Nameki
 arXiv:2409.02166 §1. -/
 def IsSymTFTSlab
     (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B]
-    (C_sym : Type u₂) [Category.{v₂} C_sym] [MonoidalCategory C_sym]
-    (C_phys : Type u₂) [Category.{v₂} C_phys] [MonoidalCategory C_phys] : Prop :=
-  IsBulkBoundary B C_sym ∧ IsBulkBoundary B C_phys
+    (_C_sym : Type u₂) [Category.{v₂} _C_sym] [MonoidalCategory _C_sym]
+    (_C_phys : Type u₂) [Category.{v₂} _C_phys] [MonoidalCategory _C_phys] : Prop :=
+  Is3DTQFT B
 
 /-! ## §2. The dependent topological-boundary structure
 
 `TopologicalBoundary B` packages a topological boundary condition for
 a SymTFT bulk `B` as a sigma-like structure: the underlying boundary
-fusion category data + the proof that it satisfies `IsBulkBoundary`.
+fusion category data + the proof that `B` satisfies `Is3DTQFT` (post-B1
+audit-remediation, the prior `IsBulkBoundary B carrier` was alias).
 
 Used downstream by Wave 3a.3 to construct `sm_boundary_data N_f :
 TopologicalBoundary (sm_bulk N_f)`. -/
 
 /-- The type of topological boundary conditions of a SymTFT bulk `B`.
-A `TopologicalBoundary B` is a fusion-category boundary `C` paired with
-a proof `IsBulkBoundary B C`.
-
-Predicate-substrate-level; concrete instantiations are provided by
-Wave 1c (toric code Lagrangian) and Wave 3a.3 (SM matter content). -/
+A `TopologicalBoundary B` is a fusion-category boundary `carrier` paired
+with a proof `Is3DTQFT B`. Post-B1 audit-remediation. -/
 structure TopologicalBoundary
     (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B] where
   /-- The boundary's carrier type (fusion category data). -/
   carrier : Type u₂
   [category : Category.{v₂} carrier]
   [monoidal : MonoidalCategory carrier]
-  /-- Proof that the boundary is compatible with the bulk. -/
-  isBdy : IsBulkBoundary B carrier
+  /-- Proof that the bulk satisfies `Is3DTQFT`. -/
+  isBdy : Is3DTQFT B
 
 attribute [instance] TopologicalBoundary.category TopologicalBoundary.monoidal
 
-/-! ## §3. Predicate-level properties
-
-These are routine corollaries of the predicate definitions, establishing
-that the FMT wrapper preserves the expected interface relations. -/
-
-theorem isBulkBoundary_of_isSymTFTSlab
-    {B : Type u₁} [Category.{v₁} B] [MonoidalCategory B]
-    {C_sym C_phys : Type u₂} [Category.{v₂} C_sym] [MonoidalCategory C_sym]
-    [Category.{v₂} C_phys] [MonoidalCategory C_phys]
-    (h : IsSymTFTSlab B C_sym C_phys) :
-    IsBulkBoundary B C_sym ∧ IsBulkBoundary B C_phys := h
-
-theorem is3DTQFT_of_isBulkBoundary
-    {B : Type u₁} [Category.{v₁} B] [MonoidalCategory B]
-    {C : Type u₂} [Category.{v₂} C] [MonoidalCategory C]
-    (h : IsBulkBoundary B C) : Is3DTQFT B := h
+/-! ## §3. Predicate-level properties -/
 
 theorem is3DTQFT_of_isSymTFTSlab
     {B : Type u₁} [Category.{v₁} B] [MonoidalCategory B]
     {C_sym C_phys : Type u₂} [Category.{v₂} C_sym] [MonoidalCategory C_sym]
     [Category.{v₂} C_phys] [MonoidalCategory C_phys]
     (h : IsSymTFTSlab B C_sym C_phys) : Is3DTQFT B :=
-  h.1
+  h
 
-/-! ## §4. The `IsBoundarySymTFTCorrespondence` tracked Prop
+/-! ## §4. DELETED: `IsBoundarySymTFTCorrespondence`
 
-This is the load-bearing tracked Prop that captures the verbatim
-content of Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166
-(SciPost Phys. 19 (2025) 061):
+**Phase 6r-prime A2 audit-remediation (2026-05-25)**: deleted as P5
+alias per self-conducted audit. Body was `:= Is3DTQFT B` — a pure
+alias acknowledged in the prior docstring as a marker-only ("The
+predicate body here remains the predicate-substrate marker `Is3DTQFT
+B` because strengthening it to the biconditional would require
+importing `HasLagrangianAlgebra` which lives downstream").
 
-> "transformation properties, or (generalized) charges, of BCs are
->  captured by topological BCs of Symmetry Topological Field Theory
->  (SymTFT)."
-
-> "Gapped boundary conditions are in one-to-one correspondence with
->  Lagrangian algebras L in the Drinfeld center."
-
-This is the *primary anchor* for Wave 3a.3 substantive content. We
-ship it as a tracked Prop here so downstream consumers
-(`CrossBridges/SMMatterAsSymTFTBoundary.lean`) can take it as an
-explicit hypothesis without needing to re-state the verbatim claim.
-
-**Tracked-Prop discipline:** the content is what
-Bhardwaj-Copetti-Pajer-Schäfer-Nameki state as a published theorem.
-We carry it as a hypothesis (load-bearing physics statement) rather
-than as a project-local `axiom` per Invariant #15. -/
-
-/-- **Bhardwaj-Copetti-Pajer-Schäfer-Nameki "Boundary SymTFT"
-correspondence.** Tracked Prop: for every SymTFT bulk `B`, gapped
-boundary conditions of `B` are in bijection with Lagrangian algebras
-in the Drinfeld center realizing `B`. The bijection is the load-bearing
-content of arXiv:2409.02166.
-
-Per Wave 3a.1 §Q1(a), this is the *primary anchor* for the SM-matter
-identification. Consumers (Wave 3a.3) take this hypothesis explicitly.
-
-This is a `Prop`-level predicate on a 3D TQFT; the substantive
-mathematical content (the actual bijection — gapped boundaries ↔
-Lagrangian algebras in the Drinfeld center) is supplied externally
-via the cited primary source. The Lean-side body is the *interface*
-of the correspondence — what it says, not how it is proved.
-
-The predicate-substrate body is `Is3DTQFT B`: a bulk satisfying the
-3D TQFT predicate enters the Bhardwaj et al. correspondence at the
-interface level. Wave 1d.1 (`BulkBoundaryCorrespondence.lean`) ships
-the substantive statement of the bijection conditional on this
-tracked Prop.
-
-**Phase 6r-prime W2.4 status note (2026-05-25, post adversarial-review
-round-1 remediation)**: the substantive biconditional content of this
-predicate (`Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`) is **captured
-via the companion predicates** `IsDMNOBiconditional B` (body IS the
-biconditional, post W2.3 v2 rename) and `IsKapustinSaulinaGappedBoundary B`
-(body := `HasLagrangianAlgebra B` substantively, post W2.4) in
-`SymTFT/LagrangianAlgebra.lean`. The predicate body here remains the
-predicate-substrate marker `Is3DTQFT B` because strengthening it to
-the biconditional would require importing `HasLagrangianAlgebra` which
-lives downstream (architectural circular-import constraint). **The
-substantive BCPS-N biconditional content is shipped via**
-`SymTFT/BulkBoundaryCorrespondence.lean::witt_triviality_iff_has_lagrangian_algebra`
-(REAL BLOCKER-2 closure per W2.5 v2: hypothesis IS the biconditional,
-proof is one-line extraction). -/
-def IsBoundarySymTFTCorrespondence
-    (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B] : Prop :=
-  Is3DTQFT B
+The substantive Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166
+content (gapped boundaries ↔ Lagrangian algebras bijection) is shipped
+via `SymTFT/LagrangianAlgebra.lean::IsDMNOBiconditional` (now genuine
+biconditional, post-W2.3 v2) and `SymTFT/BulkBoundaryCorrespondence.lean::
+witt_triviality_iff_has_lagrangian_algebra`. Consumers point at those
+directly. For pure "the bulk is a 3D TQFT" assertions, use `Is3DTQFT B`. -/
 
 end SKEFTHawking.SymTFT

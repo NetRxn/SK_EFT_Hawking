@@ -47,72 +47,28 @@ theorem Is3DTQFT_iff_braided
     (B : Type u) [Category.{v} B] [MonoidalCategory B] :
     Is3DTQFT B ↔ Is3DTQFTBraided B := Iff.rfl
 
-/-! ## §2. Modular (strong-form) bulk
+/-! ## §2. DELETED post-B10/B11 audit-remediation (2026-05-25)
 
-`IsModularBulk` strengthens `Is3DTQFT` with the *non-degeneracy*
-condition characterizing modular tensor categories. Per Wave 1a.1 §1.3,
-Mathlib does not currently ship a `ModularTensorCategory` typeclass
-(unlike `BraidedCategory`), so this refinement sits at the predicate-
-substrate level. The substantive non-degeneracy is encoded via a
-tracked Prop. -/
+`IsNonDegBraidedFusion B := Is3DTQFTBraided B` and
+`IsModularBulk B := Is3DTQFT B` both deleted as P5 aliases. The
+auxiliary theorems `isModularBulk_of_is3DTQFTBraided`,
+`is3DTQFTBraided_of_isModularBulk`, and `isNonDegBraidedFusion_from_hyp`
+(itself an identity extractor) are also deleted.
 
-/-- **`IsNonDegBraidedFusion B`** — tracked Prop stating that the bulk's
-braided fusion category is non-degenerate (the S-matrix is invertible /
-the Müger center is trivial).
+No external consumers (verified via grep). The substantive Modular
+Tensor Category / S-matrix-non-degeneracy content lives at the
+multi-session Mathlib MTC infrastructure level (genuinely deferred per
+>20k LoC threshold for full MTC theory) and at the project's existing
+`SymTFTAudit/PseudoUnitary.lean` substantive predicate. Consumers
+needing modularity should:
+- Use `Is3DTQFTBraided B` if the substantive content is braiding.
+- Use `Is3DTQFT B` if the substantive content is bulk-TQFT shape.
+- Cite `SymTFTAudit/PseudoUnitary.lean` for strict-pseudo-unitary
+  refinements.
 
-Per Davydov-Müger-Nikshych-Ostrik arXiv:1009.2117, this is the load-bearing
-property used in the bulk-boundary correspondence (Wave 1d.1). Mathlib
-ships the non-degeneracy predicate at the level of `BraidedCategory` +
-S-matrix data is not yet exposed; the project's
-`SymTFTAudit/PseudoUnitary.lean` ships a related but distinct
-strict-pseudo-unitary predicate.
-
-Predicate-substrate body: braided + monoidal data exists (interface for
-non-degeneracy). The substantive S-matrix-invertibility content is the
-load-bearing physics statement carried by consumers as an explicit
-hypothesis. -/
-def IsNonDegBraidedFusion
-    (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
-  Is3DTQFTBraided B
-
-/-- **`IsModularBulk B`** — predicate strengthening `Is3DTQFT` with
-non-degeneracy at the predicate-substrate level. A modular bulk is a
-braided 3D TQFT whose braided fusion data is non-degenerate.
-
-Per Reshetikhin-Turaev 1991, the modular condition is precisely what
-gives rise to the 3-manifold invariants of TQFTs; the project's
-`WRTInvariant.lean` is a substantive instance of this for the SU(2)_k
-case.
-
-**Strengthening (round-1 adversarial-review REQUIRED-3 remediation):**
-at the current predicate-substrate level, both `Is3DTQFTBraided B` and
-`IsNonDegBraidedFusion B` reduce to `Is3DTQFT B`, so the original
-conjunction `Is3DTQFTBraided B ∧ IsNonDegBraidedFusion B` is
-P2-bundle-redundant (dropping either conjunct preserves meaning).
-Simplified to `Is3DTQFT B` per discipline; the substantive S-matrix-
-invertibility non-degeneracy content is supplied via the
-`IsNonDegBraidedFusion` tracked Prop carried as an *explicit hypothesis*
-by consumers that need it. -/
-def IsModularBulk
-    (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
-  Is3DTQFT B
-
-theorem isModularBulk_of_is3DTQFTBraided
-    {B : Type u} [Category.{v} B] [MonoidalCategory B]
-    (hBraided : Is3DTQFTBraided B) : IsModularBulk B := hBraided
-
-theorem is3DTQFTBraided_of_isModularBulk
-    {B : Type u} [Category.{v} B] [MonoidalCategory B]
-    (h : IsModularBulk B) : Is3DTQFTBraided B := h
-
-/-- Identity extractor for `IsNonDegBraidedFusion`. Since `IsModularBulk` and
-`IsNonDegBraidedFusion` both reduce to `Is3DTQFT B` at the predicate-substrate
-level (per REQUIRED-3 simplification), the "non-degeneracy from modular bulk"
-extraction is via the explicit hypothesis. Renamed without dead `h` argument
-per round-2 NEW-ADVISORY-2 remediation. -/
-theorem isNonDegBraidedFusion_from_hyp
-    {B : Type u} [Category.{v} B] [MonoidalCategory B]
-    (hNonDeg : IsNonDegBraidedFusion B) :
-    IsNonDegBraidedFusion B := hNonDeg
+Per Davydov-Müger-Nikshych-Ostrik arXiv:1009.2117 + Reshetikhin-Turaev
+1991, the substantive modularity/non-degeneracy content is real
+mathematics; we just don't have it formalized at predicate-substrate
+level yet. The aliases were not adding content. -/
 
 end SKEFTHawking.SymTFT

@@ -145,29 +145,31 @@ correspond bijectively to the two gapped boundary conditions per
 Kitaev-Kong 2012 Theorem 5.4 — substantively sound for the SymTFT-
 boundary classification. -/
 def IsToricCodeTwoLagrangianAlgebraStructure : Prop :=
-  IsBoundarySymTFTCorrespondence toricCodeBulk ∧
+  Is3DTQFT toricCodeBulk ∧
   ∃ L₁ L₂ : Finset ToricAnyon,
     IsLagrangianAnyonSet L₁ ∧ IsLagrangianAnyonSet L₂ ∧ L₁ ≠ L₂ ∧
     (∀ S : Finset ToricAnyon, IsLagrangianAnyonSet S → S = L₁ ∨ S = L₂)
 
-/-! ## §3. The toric-code bulk has the Boundary-SymTFT correspondence -/
+/-! ## §3. The toric-code bulk is a 3D TQFT
 
-/-- The toric-code bulk satisfies `IsBoundarySymTFTCorrespondence` by
-construction — its bulk-boundary correspondence is the Kitaev-Kong
-gapped-boundary identification. -/
-theorem toricCodeBulk_isBoundarySymTFTCorrespondence :
-    IsBoundarySymTFTCorrespondence toricCodeBulk :=
+**Phase 6r-prime A2 audit-remediation (2026-05-25)**: replaced
+`IsBoundarySymTFTCorrespondence toricCodeBulk` (P5 alias for `Is3DTQFT`
+per audit) with `Is3DTQFT toricCodeBulk` directly. -/
+
+/-- The toric-code bulk satisfies `Is3DTQFT` by construction. -/
+theorem toricCodeBulk_is3DTQFT_anchor :
+    Is3DTQFT toricCodeBulk :=
   toricCodeBulk_is3DTQFT
 
-/-- **C1.3 substantive discharge** (2026-05-25): the toric-code bulk
-has the two-Lagrangian-algebra structure, substantively witnessed by
-the C1.1+C1.2 content. The existential is discharged using
+/-- **C1.3 substantive discharge** (2026-05-25, A2-remediated): the
+toric-code bulk has the two-Lagrangian-algebra structure, substantively
+witnessed by the C1.1+C1.2 content. The existential is discharged using
 `lagrangianElectricSet` and `lagrangianMagneticSet` from
 `SymTFT/ToricCodeLagrangianAnyons.lean`; the universal classification
 uses `isLagrangianAnyonSet_classification`. -/
 theorem toricCodeBulk_isToricCodeTwoLagrangianAlgebraStructure :
     IsToricCodeTwoLagrangianAlgebraStructure :=
-  ⟨toricCodeBulk_isBoundarySymTFTCorrespondence,
+  ⟨toricCodeBulk_is3DTQFT_anchor,
    lagrangianElectricSet, lagrangianMagneticSet,
    isLagrangianAnyonSet_electric,
    isLagrangianAnyonSet_magnetic,

@@ -75,11 +75,20 @@ structural constraint. At the predicate-substrate level the typeclass
 has no required content (`Prop`-class); any 4-manifold-like type can
 be instantiated as having a Pin⁺ structure.
 
-The substantive Pin⁺ structure data is the second Stiefel-Whitney
-class equation `w₂(M) = w₁(M)²` (Karoubi 1968 §5). Encoding this
-requires `Mathlib.AlgebraicTopology.StiefelWhitneyClass` infrastructure
-absent in Mathlib v4.29.1; the predicate-level typeclass is the project's
-honest substrate placeholder until that lands. -/
+**Phase 6r-prime B12 audit-remediation (2026-05-25, docstring bug fix)**:
+the substantive Pin⁺ structure data is the Stiefel-Whitney 2nd-class
+equation **`w₂(M) = 0`** (per Lawson-Michelsohn "Spin Geometry" II.1.7
++ Kirby-Taylor 1990 — the convention in which `[RP⁴]` generates
+`Ω_4^{Pin⁺}(pt) ≅ ℤ/16`). Prior docstring stated `w₂(M) = w₁(M)²`,
+which is the **Pin⁻** obstruction in this convention — that was a
+bug. For RP⁴: `w(TRP⁴) = (1+α)⁵ mod 2 = 1 + α + α⁴` (Karoubi 1968 §5
+mod-2 binomial), so `w_2(TRP⁴) = 0` ⟹ RP⁴ admits Pin⁺.
+
+Encoding this substantively requires the Stiefel-Whitney cohomology
+infrastructure shipped in `SymTFT/StiefelWhitney.lean` (M4-narrow,
+predicate-substrate cohomology carrier + Pin⁺ obstruction equation).
+Until M4 lands, the predicate-level typeclass is the project's honest
+substrate placeholder. -/
 class PinPlusStructure (M : Type*) : Prop
 
 /-! ## §2. PinPlusManifold4 — Pin⁺ 4-manifold abstraction

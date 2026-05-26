@@ -141,11 +141,34 @@ External writeups that consume these theorems propagate the dependency on `TPFCo
 
 ---
 
-## 5. Phase 6r SymTFT tracked Props (12 entries, added 2026-05-25)
+## 5. Phase 6r SymTFT tracked Props — POST-AUDIT (2026-05-25 Session 2 self-audit)
 
-The Phase 6r SymTFT formalization (substrate-to-bulk unification under the Kaidi–Ohmori–Zheng + Freed–Moore–Teleman + Bhardwaj-Copetti-Pajer-Schäfer-Nameki framework) shipped 18 Lean modules under `lean/SKEFTHawking/SymTFT/` + `lean/SKEFTHawking/CrossBridges/` + `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean` (~2,650 LoC) and introduced 12 tracked Props as load-bearing predicate-substrate scaffolding. **11 of the 12 are scheduled for substantive discharge in Phase 6r-prime** (per `docs/roadmaps/Phase6r_prime_Roadmap.md`); only #10 `IsSKEFTHawkingSymTFTBoundary` is a permanent KEEP (D-class program identity by design).
+The Phase 6r SymTFT formalization (substrate-to-bulk unification under the Kaidi–Ohmori–Zheng + Freed–Moore–Teleman + Bhardwaj-Copetti-Pajer-Schäfer-Nameki framework) shipped 18 Lean modules under `lean/SKEFTHawking/SymTFT/` + `lean/SKEFTHawking/CrossBridges/` + `lean/SKEFTHawking/APSEta/SubstrateBulkAsymmetry.lean` (~2,650 LoC). It originally introduced 12 tracked Props at predicate-substrate level.
 
-This section locks the **"before" state for Phase 6r-prime adversarial review**. Entries follow the §1–§4 format but compactly. The "Discharge status" field is **new for Phase 6r-prime tracking** (records which wave substantively discharges the Prop).
+**Phase 6r-prime Session 2 self-audit (2026-05-25, post-A1/A2/A3 audit remediation)** applied the user's 3-criterion bar — (a) well-established in literature, (b) ≥1 year to discharge from scratch, (c) we haven't already done the lift somewhere else — and found that the original 12-Prop count was inflated by P5 identity-wrapper + P2 bundle-redundancy anti-patterns. **Post-audit honest count: 2 legitimate tracked Props (#1 KT 1990, #6 DMNO 2010) + 1 substantive definition reclassified from tracked Prop (#10).** The remaining 9 were either P5/P2 anti-patterns (deleted in A2) or restructured to genuine substantive content (#2 via Pontryagin substrate per A1; #9 anyon-set-level via C1.1-1.3; #11 with hidden-sector witness conjunct per A3).
+
+### Final post-audit summary
+
+| Original # | Tracked Prop | Post-audit verdict | File:Line (post-audit) |
+|---|---|---|---|
+| 1 | `IsKirbyTaylorPinPlusBordism` | **KEEP** (literature: Kirby-Taylor 1990; full geometric discharge needs Stiefel-Whitney + Pin group reductions absent in Mathlib) | `lean/SKEFTHawking/SymTFT/PinBordism.lean` |
+| 2 | `IsAndersonDualPinPlus` | **A1 RESTRUCTURED to substantive Pontryagin discharge** (post-A1: `TP5PinPlus := AddChar (ZMod 16) Circle`; iso to ZMod 16 via `circleEquivComplex.trans zmodAddEquiv.symm`, substantive Mathlib character theory) | `lean/SKEFTHawking/SymTFT/PinBordism.lean` |
+| 3 | `IsAndersonDualPinPlusRelation` | **SUBSTANTIVELY DISCHARGED post-A1** (composes Pontryagin chain + W1.2 quotient iso, both substantive) | `lean/SKEFTHawking/SymTFT/PinBordism.lean` |
+| 4 | `IsWittenYonekuraInflow` | **A2 DELETED** (P5+P2: bundle of #1+#2 with unused `_s : SubstrateConfig` parameter) | (removed) |
+| 5 | `IsAndersonDualSpinBulk` | **A2 DELETED** (P5+P2: bundle with unused `_z : TP5PinPlus` parameter; inlined in `IsSpinSymTFTConsistent` body) | (removed) |
+| 6 | `IsDMNOBiconditional` | **KEEP** (literature: DMNO 2010 main theorem; forward direction Witt-trivial → has Lagrangian algebra requires MTC typeclass + Lagrangian-algebra construction infrastructure absent in Mathlib) | `lean/SKEFTHawking/SymTFT/LagrangianAlgebra.lean` |
+| 7 | `IsKapustinSaulinaGappedBoundary` | **A2 DELETED** (P5 alias for `HasLagrangianAlgebra`) | (removed) |
+| 8 | `IsBoundarySymTFTCorrespondence` | **A2 DELETED** (P5 alias for `Is3DTQFT`; substantive BCPS-N content via `IsDMNOBiconditional` + `witt_triviality_iff_has_lagrangian_algebra`) | (removed) |
+| 9 | `IsToricCodeTwoLagrangianAlgebraStructure` | **SUBSTANTIVELY DISCHARGED at anyon-set level via C1.1-1.3** (post-A2: replaced `IsBoundarySymTFTCorrespondence` first conjunct with `Is3DTQFT`). Object-level construction via M2 Drinfeld biproducts is the post-close upstream ship. | `lean/SKEFTHawking/SymTFT/ToricCodeLagrangian.lean` |
+| 10 | `IsSKEFTHawkingSymTFTBoundary` | **A4 RECLASSIFIED**: substantive definition (`wittenYonekuraToZ16 s = 0`) with substantive discharge. Not a tracked Prop in the load-bearing sense; remains as a D-class program-identity definition. | `lean/SKEFTHawking/SymTFT/SubstrateToBulkIdentification.lean` |
+| 11 | `IsDarkSectorTopologicalBoundary` | **A3 RESTRUCTURED with hidden-sector witness conjunct** (`∃ hidden_charge ≠ 0, s.z16_class = (-3) + hidden_charge`); substantively distinguishes dark-sector from SM substrates at predicate level. | `lean/SKEFTHawking/SymTFT/AlternativeBoundaries.lean` |
+| 12 | `IsSubstantivePinPlusSPTAsymmetry` | **A2 DELETED** (P5+P2: bundle of #1+#2 with docstring acknowledgment that body did not capture claimed substantive content; deferred to future Pin⁺ SPT classification infrastructure ship) | (removed) |
+
+**Honest tracked-Prop count after A1+A2+A3+A4 audit remediation: 2 (KT 1990 + DMNO 2010), down from 12 nominal.**
+
+### Detailed entries (legacy 5.1–5.12, frozen pre-audit state for audit trail)
+
+This section locks the **pre-audit state** as the audit trail; the post-audit verdicts are summarized in the table above. The detailed entries below describe the original Phase 6r predicate-substrate states + the prior Phase 6r-prime Session 1 discharges. **Read the table above for current post-audit state.**
 
 ### 5.1 `IsKirbyTaylorPinPlusBordism` — DISCHARGE_PHASE_6R_PRIME (W1 substrate + W3 KT proof)
 

@@ -61,18 +61,14 @@ Per FMT (arXiv:2209.07471), in the slab/sandwich construction the
 symmetry boundary recovers `C` as its boundary fusion category. The
 canonical bulk-boundary pair is `(Center C, C)`. -/
 
-/-- **`drinfeldCenter_isBulkBoundary`** — the canonical bulk-boundary
-pair `(Center C, C)` satisfies `IsBulkBoundary`. This is the FMT
-sandwich realization at the predicate-substrate level. -/
-theorem drinfeldCenter_isBulkBoundary :
-    IsBulkBoundary (Center C) C :=
-  drinfeldCenter_is3DTQFT C
-
 /-- The symmetry-physical-boundary slab is realized by taking both
-boundaries to be `C` itself. -/
+boundaries to be `C` itself. **Post-B1 audit-remediation**: previously
+this composed `drinfeldCenter_isBulkBoundary` (now deleted as P5 alias);
+refactored to use `drinfeldCenter_is3DTQFT` directly since IsSymTFTSlab
+post-B1 reduces to `Is3DTQFT B`. -/
 theorem drinfeldCenter_isSymTFTSlab :
     IsSymTFTSlab (Center C) C C :=
-  ⟨drinfeldCenter_isBulkBoundary C, drinfeldCenter_isBulkBoundary C⟩
+  drinfeldCenter_is3DTQFT C
 
 /-! ## §3. The canonical topological boundary -/
 
@@ -82,7 +78,7 @@ def drinfeldCenter_topologicalBoundary : TopologicalBoundary (Center C) where
   carrier := C
   category := inferInstance
   monoidal := inferInstance
-  isBdy := drinfeldCenter_isBulkBoundary C
+  isBdy := drinfeldCenter_is3DTQFT C
 
 /-! ## §4. Cross-bridge to SymTFTAudit/DrinfeldCenter.lean
 
@@ -93,11 +89,17 @@ equivalence-via-Drinfeld-center predicate. Wave 1b.2's
 downstream consumers (Wave 1d.1) compose the two to state the
 substantive bulk-boundary correspondence.
 
-The `BoundarySymTFTCorrespondence` tracked Prop for `Center C` is
-witnessed by the existence of `C` itself as a topological boundary. -/
+The Drinfeld center `Center C` is a 3D TQFT (in the predicate-substrate
+sense `Is3DTQFT`), and is the canonical SymTFT bulk for which `C` itself
+is the corresponding topological boundary.
 
-theorem drinfeldCenter_isBoundarySymTFTCorrespondence :
-    IsBoundarySymTFTCorrespondence (Center C) :=
+**Phase 6r-prime A2 audit-remediation (2026-05-25)**: removed the
+predicate `IsBoundarySymTFTCorrespondence` (P5 alias for `Is3DTQFT` per
+audit); this theorem now states the underlying substantive `Is3DTQFT`
+form directly. -/
+
+theorem drinfeldCenter_is3DTQFT_as_bulk :
+    Is3DTQFT (Center C) :=
   drinfeldCenter_is3DTQFT C
 
 end SKEFTHawking.SymTFT

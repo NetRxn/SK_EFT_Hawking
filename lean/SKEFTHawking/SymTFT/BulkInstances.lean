@@ -84,11 +84,12 @@ theorem dijkgraafWittenBulk_is3DTQFT (G : Type u) [Monoid G] :
     Is3DTQFT (dijkgraafWittenBulk G) :=
   drinfeldCenter_is3DTQFT (Discrete G)
 
-/-- The Dijkgraaf-Witten bulk + the discrete symmetry category give a
-canonical bulk-boundary pair. -/
-theorem dijkgraafWittenBulk_isBulkBoundary (G : Type u) [Monoid G] :
-    IsBulkBoundary (dijkgraafWittenBulk G) (Discrete G) :=
-  drinfeldCenter_isBulkBoundary (Discrete G)
+/-! ## DELETED (B1 audit-remediation): `dijkgraafWittenBulk_isBulkBoundary`
+
+**Phase 6r-prime audit B1 (2026-05-25)**: theorem deleted because the
+`IsBulkBoundary` predicate was a P5 alias for `Is3DTQFT` and is now
+removed. Consumers needing "the bulk is a 3D TQFT" use
+`dijkgraafWittenBulk_is3DTQFT` directly. -/
 
 /-! ## §2. The toric-code SymTFT bulk
 
@@ -106,37 +107,17 @@ abbrev toricCodeBulk : Type :=
 theorem toricCodeBulk_is3DTQFT : Is3DTQFT toricCodeBulk :=
   dijkgraafWittenBulk_is3DTQFT (ZMod 2)
 
-/-- The toric code bulk + Z₂ discrete symmetry give a canonical
-bulk-boundary pair. -/
-theorem toricCodeBulk_isBulkBoundary :
-    IsBulkBoundary toricCodeBulk (Discrete (ZMod 2)) :=
-  dijkgraafWittenBulk_isBulkBoundary (ZMod 2)
+-- DELETED post-B1 audit-remediation: `toricCodeBulk_isBulkBoundary` removed.
+-- Use `toricCodeBulk_is3DTQFT` directly.
 
-/-! ## §3. Cross-bridges to project's existing MTC substrate
+/-! ## §3. DELETED post-B2/B3 audit-remediation (2026-05-25)
 
-The project's `IsingBraiding.lean`, `FibonacciMTC.lean`, and related
-modules carry MTC content at the F-symbol / R-matrix / fusion-rule
-level without Mathlib4 `MonoidalCategory` typeclass instances. We
-ship predicate-level cross-bridges (`IsIsingSymTFTBulk`,
-`IsFibonacciSymTFTBulk`) that consume the existing project modules
-as type-level placeholders. -/
-
-/-- **`IsIsingSymTFTBulk B`** — tracked Prop: `B` is a SymTFT bulk
-realizing the Ising MTC (the SU(2)_2 fusion category). The substantive
-content (the Ising R-matrix and F-symbols) is in the project's
-existing `IsingBraiding.lean` and `IsingGates.lean` modules; this
-predicate is the cross-bridge marker that connects the SymTFT framework
-to that existing content. -/
-def IsIsingSymTFTBulk
-    (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
-  Is3DTQFT B
-
-/-- **`IsFibonacciSymTFTBulk B`** — tracked Prop: `B` is a SymTFT bulk
-realizing the Fibonacci MTC (the SU(2)_3 fusion category, restricted to
-the integer-spin sector). The substantive content is in the project's
-existing `FibonacciMTC.lean` and `FibonacciBraiding.lean`. -/
-def IsFibonacciSymTFTBulk
-    (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
-  Is3DTQFT B
+`IsIsingSymTFTBulk` and `IsFibonacciSymTFTBulk` deleted — both were
+P5 aliases for `Is3DTQFT B`. The substantive Ising / Fibonacci MTC
+content lives in the project's existing `IsingBraiding.lean`,
+`IsingGates.lean`, `FibonacciMTC.lean`, `FibonacciBraiding.lean`
+modules. Future substantive cross-bridges from those modules to the
+SymTFT framework should ship REAL predicates (e.g., requiring
+specific F-symbols / R-matrices), not aliases. -/
 
 end SKEFTHawking.SymTFT

@@ -72,6 +72,9 @@ import SKEFTHawking.APSEta.SymTFTBridge
 import SKEFTHawking.SymTFT.PinPlusBordism4
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.Group.TransferInstance
+import Mathlib.Algebra.Group.AddChar
+import Mathlib.Analysis.Complex.Circle
+import Mathlib.Analysis.Fourier.FiniteAbelian.PontryaginDuality
 
 namespace SKEFTHawking.SymTFT
 
@@ -118,22 +121,34 @@ def Omega4PinPlus : Type := Omega4PinPlusBordism
 instance : AddCommGroup Omega4PinPlus :=
   inferInstanceAs (AddCommGroup Omega4PinPlusBordism)
 
-/-- Placeholder type for the 5D Anderson-dual Pin⁺ SPT class group. By
-Freed-Hopkins 1604.06527 + Kirby-Taylor 1990, this is isomorphic to
-ℤ/16 (via the Anderson-dual computation `Ext(Ω_4^{Pin⁺}, ℤ) =
-Ext(ℤ/16, ℤ) = ℤ/16`). The substrate's `z16_class : ZMod 16` lives in
-this group; the substantive bordism content is carried as the tracked
-Prop `IsAndersonDualPinPlus`. -/
-def TP5PinPlus : Type := ZMod 16
+/-- **Substantive 5D Anderson-dual Pin⁺ SPT class type** — `TP_5(Pin⁺)`
+realized as the Pontryagin dual `AddChar (ZMod 16) Circle`, which by
+Freed-Hopkins arXiv:1604.06527 §6 IS the Anderson-dual `Hom(Ω_4^{Pin⁺},
+ℝ/ℤ)` (since the Ext term vanishes — `Ω_5^{Pin⁺}(pt) = 0` per Kirby-
+Taylor 1990).
 
-instance : AddCommGroup TP5PinPlus :=
-  inferInstanceAs (AddCommGroup (ZMod 16))
+**Phase 6r-prime A1 audit-remediation refactor (2026-05-25)**: replaces
+the prior placeholder `def TP5PinPlus : Type := ZMod 16` (which made
+`Nonempty (TP5PinPlus ≃+ ZMod 16)` trivially true via `AddEquiv.refl _`
+— P5 identity-wrapper anti-pattern) with the substantive Pontryagin-
+dual realization. The iso `TP5PinPlus ≃+ ZMod 16` now becomes the
+substantive `pontryaginDualZMod16CircleEquivZMod16` from
+`SymTFT/PontryaginDualPinPlus.lean` (Pontryagin-Pin⁺-2 sub-wave).
 
-instance : DecidableEq TP5PinPlus :=
-  inferInstanceAs (DecidableEq (ZMod 16))
+The Pontryagin dual `AddChar (ZMod 16) Circle` is genuinely distinct
+from `ZMod 16` as a type (one is a character group, the other is the
+underlying group); their isomorphism is the substantive Schur
+orthogonality result.
 
-instance : Fintype TP5PinPlus :=
-  inferInstanceAs (Fintype (ZMod 16))
+**Honest scope on Anderson-dual completeness**: per Freed-Hopkins §6,
+`TP_5(G) ≅ Hom(Ω_4^G, ℝ/ℤ) ⊕ Ext(Ω_5^G, ℤ)`. The Ext summand vanishes
+in our Pin⁺ case because `Ω_5^{Pin⁺}(pt) = 0` (Kirby-Taylor 1990). The
+Hom summand is `Hom(ZMod 16, ℝ/ℤ) ≅ AddChar (ZMod 16) Circle` (via
+`ℝ/ℤ ≃ Circle`). This module ships the Hom summand at the type level. -/
+def TP5PinPlus : Type := AddChar (ZMod 16) Circle
+
+noncomputable instance : AddCommGroup TP5PinPlus :=
+  inferInstanceAs (AddCommGroup (AddChar (ZMod 16) Circle))
 
 /-! ## §2. Tracked Props for the load-bearing bordism statements -/
 
@@ -163,13 +178,31 @@ theorem isKirbyTaylorPinPlusBordism_holds : IsKirbyTaylorPinPlusBordism :=
 The Anderson dual of Ω_4^{Pin⁺} ≅ ℤ/16 (with Ω_5^{Pin⁺} = 0) computes
 to ℤ/16 — this is the 5D Pin⁺ SPT classification.
 
-Predicate-substrate body: `TP5PinPlus` is constructed as `ZMod 16`,
-witnessing the isomorphism at the type level. -/
+**Phase 6r-prime A1 audit-remediation (2026-05-25, post-self-audit)**:
+the iso is now SUBSTANTIVE since `TP5PinPlus := AddChar (ZMod 16) Circle`
+(NOT definitionally `ZMod 16`). The discharge composes Mathlib's
+substantive Pontryagin-dual chain:
+`AddChar (ZMod 16) Circle ≃+ AddChar (ZMod 16) ℂ` (via
+`AddChar.circleEquivComplex` for finite groups) `≃+ ZMod 16` (via
+`AddChar.zmodAddEquiv.symm`). This is the same chain used in
+`SymTFT/PontryaginDualPinPlus.lean::pontryaginDualZMod16CircleEquivZMod16`
+(inlined here to avoid import cycle: PontryaginDualPinPlus already
+imports PinBordism). -/
 def IsAndersonDualPinPlus : Prop :=
   Nonempty (TP5PinPlus ≃+ ZMod 16)
 
+/-- **Substantive Pontryagin-dual chain** discharging `IsAndersonDualPinPlus`.
+Composes `AddChar (ZMod 16) Circle ≃+ AddChar (ZMod 16) ℂ` (via
+`circleEquivComplex` for the finite group ZMod 16) with
+`AddChar (ZMod 16) ℂ ≃+ ZMod 16` (via the symmetric form of
+Mathlib's `zmodAddEquiv`).
+
+Per audit (2026-05-25): replaces the prior `⟨AddEquiv.refl _⟩` P5
+identity-wrapper discharge with substantive composition through real
+Mathlib character theory. -/
 theorem isAndersonDualPinPlus_holds : IsAndersonDualPinPlus :=
-  ⟨AddEquiv.refl _⟩
+  ⟨(AddChar.circleEquivComplex (α := ZMod 16)).trans
+      (AddChar.zmodAddEquiv (n := 16)).symm⟩
 
 /-- **Anderson-dual relation**: `TP_5(Pin⁺) ≅ Hom(Ω_4^{Pin⁺}, ℝ/ℤ)`
 (Pontryagin / Anderson dual at degree 4 → 5).
@@ -179,13 +212,17 @@ content is the duality identification. -/
 def IsAndersonDualPinPlusRelation : Prop :=
   Nonempty (TP5PinPlus ≃+ Omega4PinPlus)
 
-/-- **W1.3 substantive discharge** (2026-05-25): the Anderson-dual
-relation `TP_5(Pin⁺) ≃+ Omega4PinPlus` is now witnessed by composition
-through the substantive `omega4PinPlusBordismEquivZMod16` iso (W1.2),
-not by `AddEquiv.refl`. The chain is `ZMod 16 ≃+ Omega4PinPlusBordism`
-via the symmetric iso. -/
+/-- **W1.3 + A1 audit-remediation substantive discharge** (2026-05-25):
+the Anderson-dual relation `TP_5(Pin⁺) ≃+ Omega4PinPlus` now composes
+the SUBSTANTIVE Pontryagin chain (post-A1 audit:
+`AddChar (ZMod 16) Circle ≃+ ZMod 16`) with the SUBSTANTIVE W1.2
+quotient iso (`ZMod 16 ≃+ Omega4PinPlusBordism = Omega4PinPlus`). Both
+isos are real Mathlib/project content — no `AddEquiv.refl` aliasing
+on either side. This is the fully-substantive form post-audit. -/
 theorem isAndersonDualPinPlusRelation_holds : IsAndersonDualPinPlusRelation :=
-  ⟨omega4PinPlusBordismEquivZMod16.symm⟩
+  ⟨((AddChar.circleEquivComplex (α := ZMod 16)).trans
+      (AddChar.zmodAddEquiv (n := 16)).symm).trans
+    omega4PinPlusBordismEquivZMod16.symm⟩
 
 /-! ## §3. The substrate-config Pin⁺ class
 
@@ -193,76 +230,39 @@ The existing `SubstrateConfig` (Phase 6l Wave 1) carries
 `z16_class : ZMod 16`. Per Wave 2a.1 §2.2, this is best interpreted
 as taking values in `TP_5(Pin⁺)` — the 5D bulk SPT class. -/
 
-/-- Coercion from the substrate's `z16_class` to a `TP_5(Pin⁺)` element.
-
-(Defined as a top-level function rather than via dot-notation since
-`SubstrateConfig` lives in `SKEFTHawking.Z16AnomalyForcesThetaBar`
-namespace and we want this function in the `SKEFTHawking.SymTFT`
-namespace for SymTFT-side consumers.) -/
-def substrateConfigToPinPlusClass (s : SubstrateConfig) : TP5PinPlus :=
-  s.z16_class
+/-- Coercion from the substrate's `z16_class` to a `TP_5(Pin⁺)` element
+via the inverse Pontryagin equivalence. **Phase 6r-prime A1 audit-
+remediation (2026-05-25)**: post-restructure `TP5PinPlus :=
+AddChar (ZMod 16) Circle`, so the coercion now uses the substantive
+inverse-Pontryagin map `ZMod 16 → AddChar (ZMod 16) Circle`. -/
+noncomputable def substrateConfigToPinPlusClass (s : SubstrateConfig) : TP5PinPlus :=
+  ((AddChar.circleEquivComplex (α := ZMod 16)).trans
+      (AddChar.zmodAddEquiv (n := 16)).symm).symm s.z16_class
 
 /-- The substrate's `z16_class` is recovered from its `TP_5(Pin⁺)`
-class via the placeholder isomorphism `TP5PinPlus ≅ ZMod 16`. -/
+class via the substantive Pontryagin equivalence round-trip. **Post-A1
+restructure**: this is no longer `rfl` but a genuine `AddEquiv` round-
+trip lemma (substantive content). -/
 theorem substrateConfigToPinPlusClass_eq_z16 (s : SubstrateConfig) :
-    substrateConfigToPinPlusClass s = s.z16_class := rfl
+    ((AddChar.circleEquivComplex (α := ZMod 16)).trans
+        (AddChar.zmodAddEquiv (n := 16)).symm)
+        (substrateConfigToPinPlusClass s) = s.z16_class :=
+  AddEquiv.apply_symm_apply _ s.z16_class
 
-/-! ## §4. The Witten-Yonekura inflow tracked Prop -/
+/-! ## §4-5. DELETED: `IsWittenYonekuraInflow` and `IsAndersonDualSpinBulk`
 
-/-- **Witten-Yonekura inflow tracked Prop**: the boundary anomaly of a
-4d fermionic theory equals the bulk Pin⁺ partition function (= η/16
-mod 1 evaluated on the 5D Pin⁺ manifold).
+**Phase 6r-prime A2 audit-remediation (2026-05-25)**: deleted as
+P5+P2 anti-patterns per self-conducted audit. Both were bundles of
+`IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus` with unused
+substrate parameter (`_s : SubstrateConfig` / `_z : TP5PinPlus`); the
+parameters carried no content. The substantive Witten-Yonekura inflow
+identity (boundary anomaly = bulk η/16 mod 1 on a closed Pin⁺ 5-manifold)
+requires actual η-invariant content from `SymTFT/EtaInvariant.lean` or
+elliptic-operator substrate Mathlib lacks; that is the future-W4 ship.
 
-Anchor: Witten-Yonekura arXiv:1909.08775, "Here we give a nonperturbative
-description of anomaly inflow, involving the η-invariant. … It leads to
-a general description of perturbative and nonperturbative fermion
-anomalies in d dimensions in terms of an η-invariant in D dimensions."
-
-**Strengthening** (Phase 6r round-1 adversarial review remediation): the
-substantive content of Witten-Yonekura inflow requires (i) the Pin⁺
-bordism group Ω₄^{Pin⁺}(pt) ≅ ℤ/16 (Kirby-Taylor), and (ii) the
-Anderson-dual TP_5(Pin⁺) ≅ ℤ/16 (Freed-Hopkins). Both are captured as
-tracked Props (`IsKirbyTaylorPinPlusBordism` and `IsAndersonDualPinPlus`);
-requiring both makes the Witten-Yonekura inflow predicate non-trivial.
-The substrate-specific `s : SubstrateConfig` attaches via
-`substrateConfigToPinPlusClass s` (the substrate's `z16_class` as a
-TP_5(Pin⁺) element).
-
-**Phase 6r-prime 2026-05-25 honest revert**: a prior W4.3 ship added a
-3rd conjunct `∀ M : Pin5Manifold, IsBordismInvariantModZ M` from a
-constructively-trivial η-invariant inductive (the `EtaInvariant.lean`
-module had only `empty5` + `dunion` constructors, making η identically
-zero by induction; the bordism-invariance-mod-ℤ axiom was trivially
-satisfied with no actual η-invariant content). Reverted to the
-Phase 6r honest 2-conjunct body. -/
-def IsWittenYonekuraInflow (_s : SubstrateConfig) : Prop :=
-  IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus
-
-theorem isWittenYonekuraInflow_holds (s : SubstrateConfig) :
-    IsWittenYonekuraInflow s :=
-  ⟨isKirbyTaylorPinPlusBordism_holds, isAndersonDualPinPlus_holds⟩
-
-/-! ## §5. The IsAndersonDualSpinBulk predicate -/
-
-/-- **`IsAndersonDualSpinBulk z`** — predicate on the bulk side of the
-spin-SymTFT extension, recording that `z : TP_5(Pin⁺)` parameterizes
-an Anderson-dual spin bulk in the Freed-Hopkins 1604.06527 sense.
-
-Per Freed-Hopkins + Yonekura 1803.10796, the bulk is the *invertible*
-TFT obtained as the Anderson dual of the Pin⁺ bordism group.
-
-**Strengthening**: the substantive content requires the
-Kirby-Taylor bordism iso + Anderson-dual relation; both are tracked
-Props (`IsKirbyTaylorPinPlusBordism` + `IsAndersonDualPinPlus`).
-Requiring both makes the predicate non-trivial. Pin⁺ class `z` is
-the parameter — every `z` in `TP5PinPlus` is admissible. -/
-def IsAndersonDualSpinBulk (_z : TP5PinPlus) : Prop :=
-  IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus
-
-/-- Every Pin⁺ class realizes an Anderson-dual spin bulk witness, given
-the Kirby-Taylor + Anderson-dual tracked Props. -/
-theorem isAndersonDualSpinBulk_holds (z : TP5PinPlus) :
-    IsAndersonDualSpinBulk z :=
-  ⟨isKirbyTaylorPinPlusBordism_holds, isAndersonDualPinPlus_holds⟩
+Audit verdict: subsumed by `IsKirbyTaylorPinPlusBordism` (post-A1
+substantive) + `IsAndersonDualPinPlus` (post-A1 substantive). Consumers
+refactored to use `(isKirbyTaylorPinPlusBordism_holds, isAndersonDualPinPlus_holds)`
+or just the relevant individual discharges as needed. -/
 
 end SKEFTHawking.SymTFT

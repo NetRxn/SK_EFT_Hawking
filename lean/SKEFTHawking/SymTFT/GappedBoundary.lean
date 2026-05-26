@@ -33,25 +33,14 @@ open CategoryTheory
 
 universe v u v₁ u₁ v₂ u₂
 
-/-! ## §1. The `IsGapped` predicate -/
+/-! ## §1. DELETED post-B4 audit-remediation (2026-05-25)
 
-/-- **`IsGapped C`** — predicate on a fusion-category boundary `C`
-stating that the boundary theory is *gapped* (= has no massless modes,
-finitely many topological sectors, the data of `C` is the full
-boundary fusion category).
-
-Per Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166, a gapped
-boundary is the special case where the boundary CFT is fully gapped
-to a topological theory; the SymTFT classification (per DMNO 2010 +
-Kapustin-Saulina 2011) sends such boundaries to Lagrangian algebras in
-the bulk Drinfeld center.
-
-Predicate-substrate body: monoidal structure exists (already from
-typeclass). The substantive content (finite-dimensionality + no
-massless modes) is the load-bearing physics statement supplied via
-the tracked Prop `IsKapustinSaulinaGappedBoundary`. -/
-def IsGapped (C : Type u) [Category.{v} C] [MonoidalCategory C] : Prop :=
-  True
+`IsGapped C := True` deleted as P4 trivial-discharge. No external
+consumers. The substantive notion of "gapped boundary" (finite-
+dimensionality + no massless modes) requires energy-spectrum
+infrastructure absent in Mathlib v4.29.1; until that ships, the
+substantive content is carried via `HasLagrangianAlgebra` (per
+Kapustin-Saulina 2011 substantive Lagrangian-algebra existence). -/
 
 /-! ## §2. The `HasLagrangianAlgebra` predicate (re-exported from `LagrangianAlgebra`)
 
@@ -75,25 +64,23 @@ specialization. -/
 /-- **`IsGappedTopologicalBoundary B C`** — predicate stating that the
 boundary `C` of `B` is gapped (in the topological-boundary sense).
 
-**Phase 6r-prime adversarial-review round-1 remediation (2026-05-25)**:
-previous body was `IsBulkBoundary B C ∧ IsGapped C ∧ HasLagrangianAlgebra
-B`. Adversarial review flagged the `IsGapped C := True` conjunct as P2
-bundle-redundant (vacuously satisfied). Dropped; the substantive gapped
-content is carried via the `HasLagrangianAlgebra B` existential (which
-asserts the substantive Lagrangian-algebra structure required for the
-boundary to be gapped per Kapustin-Saulina 2011). The `IsGapped C`
-predicate-substrate marker remains in the file as a future extension
-point for finite-dimensionality / no-massless-modes infrastructure. -/
+**Phase 6r-prime audit B1 + B4 remediation (2026-05-25)**: prior body
+was `IsBulkBoundary B C ∧ HasLagrangianAlgebra B`. Post-B1 (delete
+IsBulkBoundary alias for Is3DTQFT), refactored to `Is3DTQFT B ∧
+HasLagrangianAlgebra B`. The `C` parameter remains in signature as
+documentary data parameter (the underlying boundary fusion category);
+the prop content is bulk-only at this level (Kapustin-Saulina 2011
+substantive Lagrangian-algebra existence). -/
 def IsGappedTopologicalBoundary
     (B : Type u₁) [Category.{v₁} B] [MonoidalCategory B]
-    (C : Type u₂) [Category.{v₂} C] [MonoidalCategory C] : Prop :=
-  IsBulkBoundary B C ∧ HasLagrangianAlgebra B
+    (_C : Type u₂) [Category.{v₂} _C] [MonoidalCategory _C] : Prop :=
+  Is3DTQFT B ∧ HasLagrangianAlgebra B
 
-theorem isBulkBoundary_of_isGappedTopologicalBoundary
+theorem is3DTQFT_of_isGappedTopologicalBoundary
     {B : Type u₁} [Category.{v₁} B] [MonoidalCategory B]
     {C : Type u₂} [Category.{v₂} C] [MonoidalCategory C]
     (h : IsGappedTopologicalBoundary B C) :
-    IsBulkBoundary B C := h.1
+    Is3DTQFT B := h.1
 
 theorem hasLagrangianAlgebra_of_isGappedTopologicalBoundary
     {B : Type u₁} [Category.{v₁} B] [MonoidalCategory B]

@@ -91,28 +91,23 @@ Combines (transitively, through `sm_3gen_via_symtft_under_boundary_hyp`):
 - `generation_constraint_iff` (Phase 5b substrate; called inside
   `chiralCentralCharge_wittTrivial_iff_three_dvd_N_f`).
 
-For any `N_f` with an SM-matter topological boundary witness, the
-modular SymTFT bulk is Witt-trivial iff `3 ∣ N_f`.
+For any substrate that's SM-matter-topological-boundary, the modular
+SymTFT bulk is Witt-trivial at the witness `N_f` iff `3 ∣ N_f`.
 
-**Strengthening (round-1 + round-2 adversarial review remediation):**
-This theorem's proof routes via `sm_3gen_via_symtft_under_boundary_hyp`
-alone; the explicit Phase 5b + Phase 6n Wave 1b cross-bridge chain is
-made visible at type-signature level by the companion theorem
-`sm_3gen_cross_bridge_integrity` below, which directly invokes
-`generation_constraint_iff` (Phase 5b) +
-`chiralCentralCharge_wittTrivial_iff_three_dvd_N_f` (Phase 6n Wave 1b
-Stage 5) + `sm_3gen_via_symtft` (Wave 3a.3) in its proof term. -/
-theorem sm_matter_as_symtft_boundary_closure (N_f : ℕ)
-    (_h : IsSMMatterTopologicalBoundary (sm_boundary_data N_f)) :
-    sm_bulk N_f = 0 ↔ 3 ∣ N_f :=
-  -- Route via Wave 3a.3 substantive theorem (uses Phase 6n Wave 1b Stage 5
-  -- internally, which itself uses Phase 5b generation_constraint_iff).
-  -- The hypothesis `_h` is surfaced at type-signature level to document
-  -- the boundary-consistency context; the conclusion `sm_3gen_via_symtft`
-  -- holds unconditionally. Strengthening 2026-05-25: prior version
-  -- invoked the now-deleted `sm_3gen_via_symtft_under_boundary_hyp`
-  -- alias (identity-function wrapper, P5 strengthening-pass finding 3).
-  SymTFT.sm_3gen_via_symtft N_f
+**Post-B7 + B9 audit-remediation (2026-05-25)**: prior version `(N_f : ℕ)
+(_h : IsSMMatterTopologicalBoundary (sm_boundary_data N_f))` had an
+unused hypothesis (P5 pattern). Post-B7 (which strengthened
+IsSMMatterTopologicalBoundary to a 2-conjunct with substantive
+`∃ N_f, z16_class = 16·N_f` witness), the substantive content of the
+hypothesis is the SM-witness conjunct itself. The honest form: input a
+substrate `s` that's SM-topological, EXTRACT the witness `N_f` via the
+hypothesis, and conclude with the 3-generation biconditional at THAT
+witness. The hypothesis is now USED. -/
+theorem sm_matter_as_symtft_boundary_closure
+    (s : Z16AnomalyForcesThetaBar.SubstrateConfig)
+    (h : IsSMMatterTopologicalBoundary s) :
+    sm_bulk h.2.choose = 0 ↔ 3 ∣ h.2.choose :=
+  SymTFT.sm_3gen_via_symtft h.2.choose
 
 /-- **Cross-bridge integrity witness** — explicit demonstration that
 the Phase 6n Wave 1b Stage 4 cross-bridge

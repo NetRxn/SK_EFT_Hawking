@@ -550,3 +550,44 @@ These should be added to `docs/PERMANENT_TRACKED_HYPOTHESES.md` at the next cros
 ---
 
 *Status as of session 1 close (2026-05-25): Phase 6r SUBSTANTIVELY COMPLETE. All 8 Waves shipped; strengthening pass + 2-round adversarial review CLEAN (GREEN). Bundle absorption (Waves 2b.3 D2 reframing + 3b.2 flagship-F unification chapter + 3b.3 bundle-architecture-decision) HELD for unified user-authorized bundle-absorption pass.*
+
+---
+
+## Post-Phase-6r-prime sync (2026-05-25 PM)
+
+**Cross-reference**: Phase 6r-prime (`docs/roadmaps/Phase6r_prime_Roadmap.md`) is the **substantive-discharge follow-on phase** to Phase 6r. The 12 tracked Props introduced by Phase 6r close were the input to Phase 6r-prime's audit + remediation; after Phase 6r-prime Session 1 + 2 + 3 close, **10 of the 12 were substantively discharged or DELETED as anti-patterns**, leaving 2 honest tracked Props.
+
+### Updated tracked-Props status (post-Phase 6r-prime audit + remediation)
+
+| # | Tracked Prop | Phase 6r close status | Post Phase 6r-prime status |
+|---|---|---|---|
+| 1 | `IsKirbyTaylorPinPlusBordism` | TRACKED | **KEEP** — honest tracked Prop (KT 1990; substantively meaningful via W1.2 Quotient iso) |
+| 2 | `IsAndersonDualPinPlus` | TRACKED (P5 identity-wrapper) | **RESTRUCTURED** via Pontryagin substrate (A1) — substantive Pontryagin chain through `AddChar (ZMod 16) Circle` |
+| 3 | `IsAndersonDualPinPlusRelation` | TRACKED | **KEEP** — substantive after #2 restructure |
+| 4 | `IsWittenYonekuraInflow` | TRACKED (P5+P2 bundle) | **DELETED** (A2) — anti-pattern |
+| 5 | `IsAndersonDualSpinBulk` | TRACKED (P5+P2 bundle) | **DELETED** (A2) — anti-pattern |
+| 6 | `IsDMNOBiconditional` (renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in W2.3 v2) | TRACKED | **KEEP** — honest tracked Prop (DMNO 2010; substantive biconditional) |
+| 7 | `IsKapustinSaulinaGappedBoundary` | TRACKED (P5 alias) | **DELETED** (A2) — alias for `HasLagrangianAlgebra` |
+| 8 | `IsBoundarySymTFTCorrespondence` | TRACKED (P5 alias) | **DELETED** (A2) — alias for `Is3DTQFT` |
+| 9 | `IsToricCodeTwoLagrangianAlgebraStructure` | TRACKED | **UPGRADED** to anyon-set level (C1.1-1.3) — substantive `∃ L₁ L₂ : Finset ToricAnyon, ...` |
+| 10 | `IsSKEFTHawkingSymTFTBoundary` | TRACKED | **RECLASSIFIED** as substantive definition (A4) — `wittenYonekuraToZ16 s = 0` |
+| 11 | `IsDarkSectorTopologicalBoundary` | TRACKED (P5 alias) | **RESTRUCTURED** with hidden-sector witness conjunct (A3) — substantively distinct from SM predicate |
+| 12 | `IsSubstantivePinPlusSPTAsymmetry` | TRACKED (P5+P2 bundle) | **DELETED** (A2) — anti-pattern |
+
+**Honest tracked-Prop count after Phase 6r-prime**: 2 (KT 1990 + DMNO 2010), down from 12 nominal.
+
+### Phase 6r-prime additional ships
+
+The Phase 6r-prime substantive-discharge pass added 18+ new Lean modules under `SymTFT/` (`PinPlusManifold4.lean`, `PinPlusBordism4.lean`, `PontryaginDualPinPlus.lean`, `AndersonDualSubstrate.lean`, `AndersonDualFunctor.lean`, `FrobeniusPerronDim.lean`, `CenterBiproducts.lean`, `CenterBiproductsHalfBraiding.lean`, `CenterPreadditive.lean`, `VecGPreadditive.lean`, `A5VacuumMonObj.lean`, `A5LagrangianCenterUnit.lean`, `RP4.lean`, `RP4Smooth.lean`, `RP4LocalHomeomorph.lean`, `RP4ChartedSpace.lean`, `RP4IsManifold.lean`, `StiefelWhitney.lean`, `ToricCodeLagrangianAnyons.lean`, `Phase6rPrimeClose.lean`) for ~5,000 additional LoC. Joint Phase 6r + 6r-prime total: 35+ SymTFT modules, ~7,700 LoC, zero new project axioms, 44-conjunct consolidated closure bundle.
+
+### M-R dual-phase adversarial review
+
+The **M-R final pessimistic dual-phase adversarial review** is the closing step for Phase 6r + 6r-prime jointly. After M-R GREEN verdict, the joint substrate is ready for unified bundle absorption at Phase 7.
+
+### Bundle absorption posture
+
+UNCHANGED from Phase 6r close. The bundle absorption (D2 + D4 + D5 + L1 + flagship-F) is HELD for the unified user-authorized event after M-R closes. Joint Phase 6r + 6r-prime substrate will be absorbed additively.
+
+### Stakeholder docs
+
+`docs/stakeholder/Phase6r_Phase6rPrime_Implications.md` + `docs/stakeholder/Phase6r_Phase6rPrime_Strategic_Positioning.md` shipped 2026-05-25 PM. Two comprehensive docs covering the joint phase pair from the fully-strengthened-version perspective.

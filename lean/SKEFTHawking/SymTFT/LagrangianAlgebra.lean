@@ -215,28 +215,19 @@ def IsDMNOBiconditional
     (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
   Is3DTQFTBraided B ↔ HasLagrangianAlgebra B
 
-/-! ## §4. The Kapustin-Saulina gapped-boundary correspondence (tracked Prop) -/
+/-! ## §4. DELETED: `IsKapustinSaulinaGappedBoundary`
 
-/-- **`IsKapustinSaulinaGappedBoundary B`** — Kapustin-Saulina 2011
-(arXiv:1008.0654, Nucl. Phys. B 845 (2011) 393) tracked Prop encoding
-the load-bearing statement that gapped boundary conditions of a 3D TQFT
-are in bijection with Lagrangian algebras in its boundary fusion category.
+**Phase 6r-prime A2 audit-remediation (2026-05-25)**: deleted as P5 alias
+per self-conducted audit. Body was `:= HasLagrangianAlgebra B`, i.e.,
+a pure alias for the existing definition. The Kapustin-Saulina 2011
+(arXiv:1008.0654) substantive content (bijection between gapped
+boundaries and Lagrangian algebras) is NOT captured by an existence-of-
+Lagrangian-algebra predicate alone — the bijection statement requires
+additional structure (a bijection map type) not currently shipped.
 
-**Phase 6r-prime W2.4 substantive ship (2026-05-25)**: replaces the
-Phase 6r `:= Is3DTQFT B` predicate-substrate placeholder with the
-substantive `HasLagrangianAlgebra B` body. By the KS 2011 bulk-boundary
-bijection, "B has a gapped boundary" ⟺ "B admits a Lagrangian algebra"
-— the predicate body is now this substantive existence statement.
-
-Per Wave 3a.1 §Q2(c) Recommendation 3, refined by Fuchs-Schweigert-
-Valentino arXiv:1203.4568, Commun. Math. Phys. 321 (2013) 543 to the
-modular-tensor-category level.
-
-Verbatim from Kapustin-Saulina abstract: "boundary conditions correspond
-to Lagrangian subgroups in the finite abelian group classifying bulk
-line operators." -/
-def IsKapustinSaulinaGappedBoundary
-    (B : Type u) [Category.{v} B] [MonoidalCategory B] : Prop :=
-  HasLagrangianAlgebra B
+Consumers should use `HasLagrangianAlgebra B` directly, with the
+Kapustin-Saulina citation attached at the consumer's docstring level.
+Future substantive ship of the actual bijection would re-introduce a
+genuinely-distinct predicate. -/
 
 end SKEFTHawking.SymTFT

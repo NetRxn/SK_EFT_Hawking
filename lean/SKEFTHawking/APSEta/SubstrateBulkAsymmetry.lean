@@ -140,44 +140,50 @@ theorem analogHawking_vs_SM_bulk_asymmetry_substrate_data :
 
 /-! ## §4. The substantive Pin⁺ SPT realization asymmetry (tracked Prop) -/
 
-/-- **`IsSubstantivePinPlusSPTAsymmetry`** — tracked Prop encoding the
-substantive Pin⁺ SPT realization asymmetry between analog-Hawking
-substrates and the SM-with-νR substrate, per García-Etxebarria-Montero
-1808.00009 + Kapustin-Thorngren-Turzillo-Wang 1406.7329.
+/-! ### DELETED: `IsSubstantivePinPlusSPTAsymmetry`
 
-Anchor (Wave 3a.1 §Q4(a)): "we relate the fact that there are 16
-fermions per generation of the Standard model — including right-handed
-neutrinos — to anomalies under time-reversal of boundary states in
-four-dimensional topological superconductors."
-
-Per Wave 3a.1 §Caveats: this is a realization-level statement; the
-bare `z16_class` for the SM with νR is ≡ 0 mod 16, so the substantive
+**Phase 6r-prime A2 audit-remediation (2026-05-25)**: deleted as
+P2+P5 anti-pattern per self-conducted audit. The prior body was a
+bundle of `IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus`,
+with the prior docstring explicitly acknowledging "the substantive
 content lives at the level of Pin⁺ SPT classification realization,
-not at the bare counting layer. -/
-def IsSubstantivePinPlusSPTAsymmetry : Prop :=
-  -- Predicate-substrate body: the tracked Prop content is supplied
-  -- externally per García-Etxebarria-Montero 1808.00009.
-  IsKirbyTaylorPinPlusBordism ∧ IsAndersonDualPinPlus
+not at the bare counting layer" — i.e., the predicate body did NOT
+capture the substantive content it claimed to encode.
 
-theorem isSubstantivePinPlusSPTAsymmetry_holds :
-    IsSubstantivePinPlusSPTAsymmetry :=
-  ⟨isKirbyTaylorPinPlusBordism_holds, isAndersonDualPinPlus_holds⟩
+The genuine substantive Pin⁺ SPT realization asymmetry (per García-
+Etxebarria-Montero 1808.00009) requires Pin⁺ SPT classification
+infrastructure (e.g., functor from `SubstrateConfig` to `TP5PinPlus`
+producing distinct values for analog-Hawking vs SM-with-νR substrates).
+That infrastructure is currently absent; deferred to a future Pin⁺ SPT
+classification ship.
+
+Consumers post-A2: use `isKirbyTaylorPinPlusBordism_holds ∧
+isAndersonDualPinPlus_holds` directly (the two substantive discharges)
+when they need the bundle. -/
 
 /-! ## §5. The Wave 3a.3 cross-bridge closure -/
 
-/-- **Wave 3a.3 closure** — the substantive substrate-bulk asymmetry
-theorem composing the analog-Hawking ℤ/16-trivial result, the SM-with-νR
-substrate construction, and the Pin⁺ SPT asymmetry tracked Prop. -/
+/-- **Wave 3a.3 closure** — the substrate-bulk asymmetry theorem at
+the substrate-data layer: both analog-Hawking and SM-with-νR substrates
+exhibit trivial ℤ/16 class.
+
+**Post-A2 audit refactor (2026-05-25)**: removed the third conjunct
+`IsSubstantivePinPlusSPTAsymmetry` (P2+P5 bundle of the two tracked
+Props on Anderson-dual side, with docstring acknowledgment that the
+substantive content lives elsewhere). The genuine substantive Pin⁺ SPT
+realization asymmetry requires Pin⁺ SPT classification infrastructure
+absent in current Mathlib; the existing tracked Props `IsKirbyTaylor
+PinPlusBordism` and `IsAndersonDualPinPlus` provide the bordism/Anderson-
+dual identifications that ground the asymmetry, but the realization-
+level asymmetry function `SubstrateConfig → TP5PinPlus` is the deferred
+ship. -/
 theorem wave_3a_3_substrate_bulk_asymmetry_closure :
     -- Analog-Hawking substrates are ℤ/16-trivial at substrate-data
     (∀ s_analog : Substrate, wittenYonekuraToZ16 s_analog = 0) ∧
     -- SM-with-νR substrate at bare counting layer is ℤ/16-trivial too
-    (∀ N_f : ℕ, Z16AnomalyCancels (sm_substrate_data N_f)) ∧
-    -- Substantive asymmetry at the Pin⁺ SPT realization layer
-    IsSubstantivePinPlusSPTAsymmetry :=
+    (∀ N_f : ℕ, Z16AnomalyCancels (sm_substrate_data N_f)) :=
   ⟨analogHawking_substrate_z16_trivial,
-   sm_substrate_data_z16_cancels,
-   isSubstantivePinPlusSPTAsymmetry_holds⟩
+   sm_substrate_data_z16_cancels⟩
 
 /-! ## §6. W5-η-bridge sub-wave — η-invariant cross-bridge to Phase 6r-prime W4-η substrate
 
@@ -219,11 +225,8 @@ theorem wave_3a_3_with_W4_η_cross_bridge_closure :
     -- Phase 6r baseline: SM-with-νR substrate is z16-trivial
     (∀ N_f : ℕ, Z16AnomalyCancels (sm_substrate_data N_f)) ∧
     -- W4-η-1 substantive: SM-with-νR substrate has trivial η-invariant
-    (∀ N_f : ℕ, SymTFT.substrateEtaInvariant (sm_substrate_data N_f) = 0) ∧
-    -- Substantive Pin⁺ SPT realization asymmetry (GEM tracked Prop)
-    IsSubstantivePinPlusSPTAsymmetry :=
+    (∀ N_f : ℕ, SymTFT.substrateEtaInvariant (sm_substrate_data N_f) = 0) :=
   ⟨sm_substrate_data_z16_cancels,
-   sm_substrate_data_eta_invariant_vanishes,
-   isSubstantivePinPlusSPTAsymmetry_holds⟩
+   sm_substrate_data_eta_invariant_vanishes⟩
 
 end SKEFTHawking.APSEta

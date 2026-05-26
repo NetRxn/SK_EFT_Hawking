@@ -108,16 +108,19 @@ theorem SKEFTHawking_and_SM_share_z16_trivial_class :
 
 /-! ## §4. Wave 3b.1 closure -/
 
-/-- **Wave 3b.1 closure** — the unified substantive theorem combining:
+/-- **Wave 3b.1 closure** — the substrate-data layer theorem combining:
 1. Each analog-Hawking substrate admits a SymTFT-boundary reading.
 2. The SM-with-νR substrate shares the ℤ/16-trivial class at bare layer.
-3. The substantive Pin⁺ SPT realization asymmetry is well-defined. -/
+
+**Post-A2 audit refactor (2026-05-25)**: removed the prior third
+conjunct `IsSubstantivePinPlusSPTAsymmetry` (P2+P5 bundle deleted per
+audit). The genuine Pin⁺ SPT realization asymmetry requires Pin⁺ SPT
+classification infrastructure currently absent in Mathlib; the
+substrate-data layer content remains substantive. -/
 theorem wave_3b_1_closure :
     (∀ s : APSEta.Substrate, IsSKEFTHawkingSymTFTBoundary s) ∧
-    (∀ N_f : ℕ, Z16AnomalyCancels (sm_substrate_data N_f)) ∧
-    IsSubstantivePinPlusSPTAsymmetry :=
+    (∀ N_f : ℕ, Z16AnomalyCancels (sm_substrate_data N_f)) :=
   ⟨wave_3b_1_substrate_to_bulk_identification,
-   sm_substrate_data_z16_cancels,
-   isSubstantivePinPlusSPTAsymmetry_holds⟩
+   sm_substrate_data_z16_cancels⟩
 
 end SKEFTHawking.SymTFT

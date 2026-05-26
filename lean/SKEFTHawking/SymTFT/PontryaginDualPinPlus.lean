@@ -20,14 +20,19 @@ AddChar (ZMod n) ℂ`).
 
 ## Why this is substantive (not smoke)
 
-The Phase 6r `IsAndersonDualPinPlus : Prop := Nonempty (TP5PinPlus ≃+
-ZMod 16)` was honest as a tracked Prop with `AddEquiv.refl _` discharge,
-because `TP5PinPlus := ZMod 16` defeq. This module ships the
-**substantive Pontryagin-dual content** — the iso `AddChar (ZMod 16) ℂ
-≃+ ZMod 16` requires real Mathlib character theory (not reflexivity).
-Combined with the tracked Kirby-Taylor iso `Ω_4^{Pin⁺} ≃+ ZMod 16`,
-this gives a substantive computational realization of the Anderson-dual
-formula for the Pin⁺ case.
+**Phase 6r-prime A1 audit-remediation update (2026-05-25)**: post-A1
+restructure, `TP5PinPlus := AddChar (ZMod 16) Circle` (NOT `ZMod 16`)
+in `SymTFT/PinBordism.lean`. The `IsAndersonDualPinPlus` discharge is
+now SUBSTANTIVELY the Pontryagin chain inlined in PinBordism.lean
+(`(circleEquivComplex).trans zmodAddEquiv.symm`). This module's
+substantive content REMAINS valid and is now SHARED by both PinBordism
+and AndersonDualSubstrate. The named iso `pontryaginDualZMod16CircleEquivZMod16`
+below is the canonical exposed form of the chain inlined in PinBordism.
+
+Pre-A1 state (for audit trail): `IsAndersonDualPinPlus` was a tracked
+Prop with `AddEquiv.refl _` discharge (P5 identity-wrapper anti-pattern);
+this module's substantive Pontryagin work was the workaround. Post-A1,
+the workaround becomes the canonical substantive discharge.
 
 **Honest ℂ-vs-ℝ/ℤ scope note** (per CLAUDE.md preemptive-strengthening
 checklist): the Anderson-dual formula uses `Hom(_, ℝ/ℤ)`; Mathlib's
