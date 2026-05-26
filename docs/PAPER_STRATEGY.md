@@ -24,7 +24,7 @@ The paper strategy below is designed to fix all three.
 
 ## 2. Architecture — four-tier, falsifiability-led
 
-The new structure is **fourteen publication targets**, organized as one flagship + five themed deep papers + three PRL-style headline letters + three infrastructure papers + two experimental letters. This is roughly a 2.3:1 collapse from the thirty-two drafts. Every existing draft maps cleanly into one of the fourteen targets (see `PAPER_DRAFT_MAPPING.md`). (Bundle architecture went 13 → 14 in Phase 6n Session 4 with the I3 authorization for "Verified Stochastic Calculus for Mathlib4"; original v1 figure of "eleven" headline drift was a long-standing miscount that this revision corrects in the same pass.)
+The new structure is **fifteen publication targets**, organized as one flagship + six themed deep papers + three PRL-style headline letters + three infrastructure papers + two experimental letters. This is roughly a 2.1:1 collapse from the thirty-two drafts. Every existing draft maps cleanly into one of the fifteen targets (see `PAPER_DRAFT_MAPPING.md`). (Bundle architecture went 13 → 14 in Phase 6n Session 4 with the I3 authorization for "Verified Stochastic Calculus for Mathlib4"; 14 → 15 in Phase 6v Wave 6v.1 with the D6 authorization for "Formally Verified Fault-Tolerant Quantum Computation Substrate"; original v1 figure of "eleven" headline drift was a long-standing miscount that earlier revisions corrected.)
 
 Three principles drive the architecture:
 
@@ -120,6 +120,16 @@ Audience: cosmology, dark matter, dark energy, particle astrophysics.
 Content: The structural NO-GO architecture for the dark-energy sector under tested mechanisms — Gibbs-Duhem locking `w_vac ≡ −1` for any single-scalar self-tuning emergent-vacuum framework; the q-theory realization-independent NO-GO across all four KV constructions; the four-factor orthogonality decomposition (Gibbs-Duhem ∩ c_s² ≥ 0 ∩ natural T_c ∩ MICROSCOPE); the closed-form vestigial EOS `w_vest(τ) = (1−τ²)/(5τ²−1)` and its catastrophic-c_s² gradient instability on the natural branch; the Zhitnitsky topological-DE absorption (within ≤ 3 orders of observed Λ, no free parameters); the combined-mechanism falsifier (Zhitnitsky + KV q-theory both active gives ×240 the observed value, forcing single-DE-mechanism commitment); the Phase 5y Layer-3 scope recalibration; the Phase 6m Tracks A/B/C closure for causal-set, entropic-gravity, and Jacobson-thermodynamic-GR routes (when those waves return). Plus the dark-matter classification: SFDM cluster-merger forecast at 3.5–5.7σ (Bullet, El Gordo, Pandora, A520, MACS J0025; Rankine-Hugoniot density-jump closed form; first 3σ detectable around 2028 with Euclid × Roman); fracton DM viability in p-wave dipole superfluid phase at MeV–TeV; Z₁₆-classified hidden-sector T-0 TQFT (invisible to all planned direct detection); Fang-Gu torsion DM kinematic exclusion at CDM level.
 
 Sources: Papers 17, 32, plus the new Phase 6m verdict modules.
+
+**Paper D6: Formally Verified Fault-Tolerant Quantum Computation Substrate**
+
+Target: *PRD*, *PRX Quantum*, or *JHEP*.
+
+Audience: fault-tolerant quantum computation, quantum error correction, gate compilation, mathematical physics, formal verification.
+
+Content: The substrate-level kernel-verified content of the fault-tolerant-quantum-computation frontier as of 2025–2026. Four interlocking results: (i) the Williamson-Yoder gauging-of-logical-operators auxiliary-qubit overhead bound — linear in operator weight up to a polylogarithmic factor, with a falsifier proving the quadratic baseline is genuinely worse (Wave 6v.1, the bundle-creating wave); (ii) the Phase 6t quantitative Solovay-Kitaev tight-ε headline, retroactively absorbed as the canonical universal-compilation primitive consumed by the other sections; (iii) the affine-permutation-matrix LDPC code family over the project's cyclotomic substrate plus a Shannon-capacity hashing bound derived from the existing LDP / Cramér substrate (Wave 6v.5); (iv) the Kyoto-Hiroshima W-state single-shot projective-measurement decomposition in Q(ζ_N) cyclotomic coordinates (Wave 6v.6); plus (v) the Google/Caltech Shor T-gate counts for ECC-256 and RSA-2048, building on (ii) as the compiler primitive (Wave 6v.2). Together these form the first end-to-end kernel-verified substrate (code → measurement → compiler → universal logic) for the FT-QC frontier. Sibling relationship to D4 (TQC foundations): D4 retains its Fibonacci/topological-foundations focus; D6 covers the fault-tolerant-computation substrate.
+
+Sources: Wave 6v.1, Wave 6v.2, Wave 6v.5, Wave 6v.6 deliverables (Phase 6v); Phase 6t Solovay-Kitaev retroactive absorption; FaultTolerance/ module family; QCyc*.lean cyclotomic infrastructure.
 
 ### 2.3 Tier 2 — PRL-style headline letters (3 papers)
 
@@ -312,6 +322,7 @@ The critical path is L1 → voucher → everything else. The slowest path is Pha
 | 1 | D3 | Emergent gravity through BH thermo | PRD long | ~50pp | Month 1–2 | L1 voucher |
 | 1 | D4 | Topological QC foundations | PRD/PRX-Q | ~40pp | Month 4–5 | L1 voucher |
 | 1 | D5 | Dark sector under substrate constraints | PRD/Phys Rep | ~40pp | Month 5–8 | Phase 6m closure |
+| 1 | D6 | FT-QC substrate (gauging-QEC + SK + APM-LDPC + W-state) | PRD/PRX-Q/JHEP | ~40pp | Month 6–9 | Phase 6v Waves 6v.1, 6v.2, 6v.5, 6v.6 ship |
 | 3 | I1 | Methodology | CPC/Phys Rep | ~25pp | Month 4–6 | (none) |
 | 3 | I2 | Verified estimators + lean-tensor-categories | JOSS/CPC | ~15pp | Month 4–6 | Phase 5o W5 |
 | 3 | I3 | Verified stochastic calculus + LDP foundations for Mathlib4 | JOSS/CPC | ~15pp | Month 5–7 | Phase 6n W2c IsLDPRateFunction + Phase 6o W3b lift |
@@ -319,7 +330,7 @@ The critical path is L1 → voucher → everything else. The slowest path is Pha
 | 4 | E2 | Graphene Dirac-fluid letter | PRL/PRR | 2–3pp | Month 3–4 | D1 ready |
 | 0 | F | Flagship review | RMP/Phys Rep | 80–150pp | Month 8–12 | All above |
 
-Fourteen publication targets (1 flagship + 5 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure including I3 + 2 Tier 4 experimental). Approximate twelve-month roll-out from voucher. The flagship is the citation anchor. (The figure was previously stated as "thirteen" before I3 authorization in Phase 6n Session 4 under Pipeline Invariant #14, and as "eleven" in v1 of this table — both are superseded by the present fourteen-target architecture.)
+Fifteen publication targets (1 flagship + 6 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure including I3 + 2 Tier 4 experimental). Approximate twelve-month roll-out from voucher. The flagship is the citation anchor. (The figure was previously stated as "thirteen" before I3 authorization in Phase 6n Session 4 under Pipeline Invariant #14, "fourteen" before D6 authorization in Phase 6v Wave 6v.1, and "eleven" in v1 of this table — all are superseded by the present fifteen-target architecture.)
 
 ---
 

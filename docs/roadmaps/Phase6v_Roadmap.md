@@ -43,7 +43,7 @@
 |---|---|---|---|---|
 | **Wave 6v.4** | Penn TMD polariton regime demarcation (E1 lift) | ✅ SHIPPED 2026-05-26 | E1 §2 paragraph + Lean theorem | 0.5–1 sess |
 | **Wave 6v.3** | DKM F3 polariton occupancy bound (Phase 6q follow-on) | ✅ SHIPPED 2026-05-26 | D5 §13 + E1 §2 (Wave 6v.4 cite chain) | 1–2 sess |
-| **Wave 6v.1** | Williamson/Yoder gauging QEC formalization — **CREATES D6 BUNDLE** | ⏳ NOT STARTED | D6 §3 (new) + I1 cross-bridge | 1.5 sess |
+| **Wave 6v.1** | Williamson/Yoder gauging QEC formalization — **CREATES D6 BUNDLE** | ✅ SHIPPED 2026-05-26 | D6 §3 (CREATED) + I1 cross-bridge | 1.5 sess |
 | **Wave 6v.2** | Google/Oratomic T-gate counts for Shor circuits | ⏳ NOT STARTED | D6 §5 + D4 cross-bridge | 2–3 sess |
 | **Wave 6v.5** | APM-LDPC code substrate + hashing-bound LDP sub-wave | ⏳ NOT STARTED | D6 §4 + I1 | 4 sess |
 | **Wave 6v.6** | W-state QFT decomposition in Q(ζ_N) | ⏳ NOT STARTED | D6 §6 | 2 sess |

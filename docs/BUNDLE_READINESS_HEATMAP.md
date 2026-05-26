@@ -21,6 +21,7 @@
 | **D3** | 1 | 31 | 10 | 5 | 5 major, 5 minor | 🔴 RED |
 | **D4** | 1 | 12 | 4 | 1 | 1 major, 3 minor | 🔴 RED |
 | **D5** | 1 | 9 | 7 | 2 | 3 advisory, 2 critical, 2 minor | 🔴 RED |
+| **D6** | 1 | 1 | 0 | 0 | _(skeleton — bundle created 2026-05-26 by Phase 6v Wave 6v.1; Stage 13 deferred to Phase 6v close)_ | 🟢 GREEN (skeleton) |
 | **L1** | 2 | 2 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L2** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L3** | 2 | 4 | 0 | 0 | _(none)_ | 🟢 GREEN |
@@ -40,6 +41,7 @@
 | **D3** | 6 | 0 | 0 | 4 |
 | **D4** | 1 | 0 | 2 | 1 |
 | **D5** | 2 | 1 | 1 | 3 |
+| **D6** | 0 | 0 | 0 | 0 |
 | **L1** | 0 | 0 | 0 | 0 |
 | **L2** | 0 | 0 | 0 | 0 |
 | **L3** | 0 | 0 | 0 | 0 |

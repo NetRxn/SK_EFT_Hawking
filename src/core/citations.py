@@ -370,6 +370,41 @@ CITATION_REGISTRY = {
         'provides': [],
         'notes': 'Polariton analog Hawking proposal.',
     },
+    'WilliamsonYoder2026GaugingLogicalOperators': {
+        'authors': 'Williamson, D. J., Yoder, T. J.',
+        'title': 'Low-overhead fault-tolerant quantum computation by gauging logical operators',
+        'journal': 'Nat. Phys.',
+        'volume': 22,
+        'page': '598-603',
+        'year': 2026,
+        'doi': '10.1038/s41567-026-03220-8',
+        'arxiv': '2410.02213',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/WilliamsonYoder2026GaugingLogicalOperators.pdf',
+        'used_in': ['src/core/constants.py', 'papers/D6/paper_draft.tex'],
+        'provides': [
+            'GaugingQEC.williamsonYoderAuxQubits',
+            'gaugingQEC_auxQubit_overhead_le',
+            'naive_quadratic_baseline_overhead',
+        ],
+        'notes': 'Williamson & Yoder Nature Physics April 2 2026. Headline '
+                 'result: low-overhead fault-tolerant logical-measurement '
+                 'via gauging-of-symmetry construction, achieving '
+                 'auxiliary-qubit overhead linear in operator weight up to '
+                 'a polylogarithmic factor. arXiv 2024-10-03 v1; published '
+                 '2026-04-02. LLM-re-verified against arXiv:2410.02213 '
+                 'abstract + body 2026-05-26: "qubit overhead that is '
+                 'linear in the weight of the operator being measured up '
+                 'to a polylogarithmic factor". Lean substrate-level '
+                 'encoding: `williamsonYoderAuxQubits W := W * (Nat.log 2 W + 1)` '
+                 'satisfies `IsLinearPolylogOverhead` (with C = 1); the '
+                 'companion theorem `quadraticOverhead_not_linear` falsifies '
+                 'the naive quadratic baseline as the substantive contrast. '
+                 'FIRST kernel-verified declaration under the new D6 '
+                 'publication bundle ("Formally Verified Fault-Tolerant '
+                 'Quantum Computation Substrate", created by Wave 6v.1).',
+    },
     'WangKimBZHe2026PennTMDPolariton': {
         'authors': 'Wang, Z., Kim, B., Zhen, B., He, L.',
         'title': 'Strongly nonlinear nanocavity exciton-polaritons in gate-tunable monolayer semiconductors',

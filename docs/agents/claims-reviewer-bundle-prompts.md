@@ -188,6 +188,49 @@ secondary).
 
 ---
 
+### D6. Formally Verified Fault-Tolerant Quantum Computation Substrate
+
+(NEW BUNDLE — created 2026-05-26 at Phase 6v Wave 6v.1 ship.)
+
+**Sources:** Phase 6v Waves 6v.1, 6v.2, 6v.5, 6v.6; Phase 6t Solovay-Kitaev
+retroactive absorption.
+
+**Anchors:**
+- **§3 Williamson-Yoder gauging-QEC overhead bound** (Wave 6v.1, the
+  bundle-creating wave): auxiliary-qubit overhead linear in operator
+  weight W up to a polylogarithmic factor; substrate-level encoding
+  `williamsonYoderAuxQubits W := W * (Nat.log 2 W + 1)`; falsifier
+  `quadraticOverhead_not_linear` proves the polylog factor is unavoidable
+  for any scheme that includes the W² baseline. Lean substrate:
+  `lean/SKEFTHawking/FaultTolerance/GaugingQEC.lean`; PRL primary:
+  `WilliamsonYoder2026GaugingLogicalOperators` (arXiv:2410.02213,
+  Nat. Phys. 22, 598-603 (2026), DOI 10.1038/s41567-026-03220-8).
+- **§2 Phase 6t Solovay-Kitaev tight-ε retroactive absorption**:
+  `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight`
+  (FKLW/SolovayKitaevPathA.lean) as the canonical universal-compilation
+  primitive consumed by the remaining D6 sections.
+- **§4 APM-LDPC + hashing bound** (Wave 6v.5, pending): affine-permutation-
+  matrix LDPC code family over QCyc*.lean cyclotomic substrate +
+  Shannon-capacity hashing bound from LDP/Cramér.lean.
+- **§5 Shor T-gate counts** (Wave 6v.2, pending): T-gate compiler family
+  applied to ECDLP-secp256k1 + RSA-2048, building on §2.
+- **§6 W-state QFT decomposition in Q(ζ_N)** (Wave 6v.6, pending):
+  Kyoto-Hiroshima 2025-09 single-shot projective measurement.
+
+**Stage-13 anchors specific to D6:**
+- Cross-bridge to D4 (sibling — TQC foundations): D6 retains
+  fault-tolerant-computation focus; D4 retains Fibonacci/topological-
+  foundations. Verify no double-counting of Phase 6t SK content between
+  D4 §"Quantitative SK" appendix and D6 §2 (the retroactive absorption
+  must move, not duplicate, the SK headline).
+- Cross-bridge to I1 (verification methodology): the gauging-QEC
+  falsifier-pattern (`quadraticOverhead_not_linear` as a class-separation
+  witness) is methodology-class content that may sidebar into I1.
+- Verify no project-local axioms introduced across D6 contributions
+  (Pipeline Invariant #15); cross-check via `validate.py` axiom audit.
+
+---
+
 ## Tier 2 — PRL splashes
 
 ### L1. GW170817 / vestigial-graviton

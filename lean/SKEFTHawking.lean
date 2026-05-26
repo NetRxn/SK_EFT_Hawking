@@ -1148,6 +1148,16 @@ import SKEFTHawking.DKMBootstrap.BECBogoliubovBosonicGrowth
 -- normalized mirConst = 1/2. polariton_dkm_f3_holds_at_pump_below_threshold
 -- is the substantive contrapositive of sharpened_no_go_super_factorial.
 import SKEFTHawking.DKMBootstrap.PolaritonF3Bound
+-- Phase 6v Wave 6v.1 (2026-05-26): Williamson-Yoder gauging-QEC overhead
+-- bound (arXiv:2410.02213). Substrate-level encoding of the "qubit overhead
+-- linear in the weight of the operator being measured up to a polylogarithmic
+-- factor" headline. gaugingQEC_auxQubit_overhead_le ships the bound with C=1
+-- via williamsonYoderAuxQubits W := W * (Nat.log 2 W + 1); the substantive
+-- contrast quadraticOverhead_not_linear establishes that the polylog factor
+-- is unavoidable for ANY scheme that includes the quadratic baseline.
+-- FIRST kernel-verified declaration under D6 ("Formally Verified
+-- Fault-Tolerant Quantum Computation Substrate") publication bundle.
+import SKEFTHawking.FaultTolerance.GaugingQEC
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

@@ -133,6 +133,10 @@ Plus Phase 5x + Phase 5y + Phase 6b + Phase 6c + Phase 6e Wave 5 + Phase 6m mate
 
 **Open bundle-strategy decision (recorded for user authorization):** the two structural-caveat short-notes (Barrow + Sakharov) currently lift as embedded D5 subsections (§10.5, §11.5) per Invariant #14 default. If the user authorizes 14th+ bundle target(s), they could spin up as stand-alone CQG/JCAP Letter (Barrow) and CQG/PRD letter (Sakharov). Outlines exist at `temporary/working-docs/short_note_barrow_prescription_dependence_outline.md` (~18 KB / 24 refs) and `temporary/working-docs/short_note_sakharov_lambda_j_vs_lambda_hk_outline.md` (~20 KB / 32 refs). Per strategy doc §2.3 these would be Tier-2 letter-shaped but not 4-page-PRL-shaped (they are CQG/JCAP Letter-shaped at ~2,500–2,800 words), suggesting embedded D5 subsections as the cleanest fit absent user redirection.
 
+**D6. Formally Verified Fault-Tolerant Quantum Computation Substrate** (CREATED 2026-05-26 at Phase 6v Wave 6v.1 ship; sibling to D4)
+Sources: Phase 6v Wave 6v.1 deliverable `lean/SKEFTHawking/FaultTolerance/GaugingQEC.lean` (Williamson-Yoder gauging-QEC overhead bound — D6 §3); Phase 6t `lean/SKEFTHawking/FKLW/SolovayKitaevPathA.lean` quantitative SK retroactive absorption (currently bundle-orphan — D6 §2 absorption pending); pending Wave 6v.5 APM-LDPC + hashing-bound substrate (D6 §4); pending Wave 6v.2 Shor T-gate counts on the Phase 6t SK substrate (D6 §5); pending Wave 6v.6 W-state QFT in Q(ζ_N) (D6 §6).
+**Strategy origin:** Phase 6v / 6w strategy synthesis §3.5 authorized the 15th bundle target to absorb the FT-QC frontier (Williamson-Yoder + Google-Caltech Shor + QuEra/IBM/Tokyo APM-LDPC + Kyoto/Hiroshima W-state) under a single PRD/PRX-Q/JHEP deliverable rather than spreading across multiple Tier-2 letters. Sibling to D4: D4 retains Fibonacci/topological-foundations focus; D6 covers the fault-tolerant-computation substrate side. The Phase 6t SK headline retroactively absorbs into D6 §2 as the canonical universal-compilation primitive consumed by §3–§6.
+
 ### Tier 2 — PRL splashes
 
 **L1. GW170817 / vestigial-graviton**

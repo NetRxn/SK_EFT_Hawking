@@ -1,0 +1,23 @@
+{
+  "bundle_target": "D6",
+  "tier": 1,
+  "title": "Formally Verified Fault-Tolerant Quantum Computation Substrate",
+  "target_journal": "PRD or JHEP",
+  "phase7_subphase": "7c (TBD)",
+  "stage9_status": "not_started",
+  "stage10_status": "skeleton",
+  "stage13_status": "not_started",
+  "stage13_redo_required": false,
+  "freshness_stale": false,
+  "source_manifest_last_regen": null,
+  "last_lift": "2026-05-26T08:30:00Z",
+  "last_stage9_review": null,
+  "last_stage10_review": null,
+  "last_stage13_review": null,
+  "blockers_open": 0,
+  "advisories_open": 0,
+  "stage13_review_doc": null,
+  "audit_log_path": "papers/D6/audit_log.jsonl",
+  "supersession_ledger_anchor": "docs/review_finding_supersessions.json",
+  "notes": "D6 bundle CREATED 2026-05-26 by Phase 6v Wave 6v.1. Per Phase 6v strategy synthesis §3.5. D6 is the 15th publication target in the project's bundle architecture (sibling to D4 'TQC foundations'; D6 covers the fault-tolerant-computation substrate side). | Wave 6v.1 ships §3 Williamson-Yoder gauging-QEC overhead bound (FIRST kernel-verified declaration under D6). Subsequent waves contribute: §2 Phase 6t quantitative Solovay-Kitaev retroactive absorption (currently bundle-orphan); §4 APM-LDPC + hashing-bound (Wave 6v.5); §5 Google/Caltech Shor T-gate counts (Wave 6v.2); §6 W-state QFT in Q(ζ_N) (Wave 6v.6). | Stage-13 adversarial review DEFERRED to Phase 6v close per user directive (single Phase-6v-close adversarial pass after all 7 waves have shipped)."
+}
