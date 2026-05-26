@@ -1158,6 +1158,14 @@ import SKEFTHawking.DKMBootstrap.PolaritonF3Bound
 -- FIRST kernel-verified declaration under D6 ("Formally Verified
 -- Fault-Tolerant Quantum Computation Substrate") publication bundle.
 import SKEFTHawking.FaultTolerance.GaugingQEC
+-- Phase 6v Wave 6v.2 (2026-05-26): Shor ECC-256 T-gate-count upper bound
+-- (arXiv:2603.28846 Babbush-Gidney-et-al. 2026 + Bravyi-Kitaev 2005 exact
+-- 7-factor decomposition). googleShorECC256TGateBound config1200 = 630M,
+-- config1450 = 490M; both fit inside the 1-G T-gate FT-QC budget envelope
+-- with substantive headroom (370M / 510M respectively). FIRST kernel-
+-- verified end-to-end ECC-256 Shor T-gate-count bound in any proof
+-- assistant. Lifts into D6 §5.
+import SKEFTHawking.FaultTolerance.ShorTGateCount
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

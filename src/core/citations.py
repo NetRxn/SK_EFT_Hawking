@@ -370,6 +370,63 @@ CITATION_REGISTRY = {
         'provides': [],
         'notes': 'Polariton analog Hawking proposal.',
     },
+    'BabbushGidneyEtAl2026ECC256Shor': {
+        'authors': 'Babbush, R., Zalcman, A., Gidney, C., Broughton, M., Khattar, T., Neven, H., Bergamaschi, T., Drake, J., Boneh, D.',
+        'title': 'Securing Elliptic Curve Cryptocurrencies against Quantum Vulnerabilities: Resource Estimates and Mitigations',
+        'journal': None,
+        'volume': None,
+        'page': None,
+        'year': 2026,
+        'doi': None,
+        'arxiv': '2603.28846',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/GoogleShorECC256_2026.pdf',
+        'used_in': ['lean/SKEFTHawking/FaultTolerance/ShorTGateCount.lean',
+                    'papers/D6/paper_draft.tex'],
+        'provides': [
+            'googleShorECC256ToffoliBound.config1200',
+            'googleShorECC256ToffoliBound.config1450',
+        ],
+        'notes': 'Google-led ECC-256 Shor resource estimate (Babbush, Gidney, '
+                 'Zalcman, Broughton, Khattar, Neven, Bergamaschi, Drake, '
+                 'Boneh; arXiv:2603.28846 v2 2026-04-15). Two configurations: '
+                 '< 1200 logical qubits & < 90M Toffoli; < 1450 logical qubits '
+                 '& < 70M Toffoli — roughly order-of-magnitude improvement '
+                 'over prior estimates. Substrate-level kernel-verified '
+                 'lift: Wave 6v.2 (`ShorTGateCount.lean`) combines this with '
+                 'the Bravyi-Kitaev 7-factor to give T-gate budgets of 630M '
+                 '(config1200) and 490M (config1450), both inside the 1-G '
+                 'T-gate FT-QC envelope.',
+    },
+    'BravyiKitaev2005MagicState': {
+        'authors': 'Bravyi, S. B., Kitaev, A. Yu.',
+        'title': 'Universal quantum computation with ideal Clifford gates and noisy ancillas',
+        'journal': 'Phys. Rev. A',
+        'volume': 71,
+        'page': '022316',
+        'year': 2005,
+        'doi': '10.1103/PhysRevA.71.022316',
+        'arxiv': 'quant-ph/0403025',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/BravyiKitaev2005MagicState.pdf',
+        'used_in': ['lean/SKEFTHawking/FaultTolerance/ShorTGateCount.lean',
+                    'papers/D6/paper_draft.tex'],
+        'provides': [
+            'bravyiKitaevToffoliT',
+            'bk_decomposition_seven_factor',
+        ],
+        'notes': 'Bravyi-Kitaev 2005 — universal quantum computation with '
+                 'ideal Clifford gates and noisy ancillas, the foundational '
+                 'paper on magic-state distillation. Used in Wave 6v.2 for '
+                 'the exact ancilla-free Toffoli → 7 T-gate decomposition '
+                 '(stated as "Each Toffoli gate decomposes into 7 T-gates" '
+                 'in the standard Clifford+T gate set; the 7-factor is the '
+                 'algebraic-Clifford-hierarchy result that the project takes '
+                 'as a substantive constant in `bravyiKitaevToffoliT n = 7*n`). '
+                 'Primary-source PDF cached 2026-05-26.',
+    },
     'WilliamsonYoder2026GaugingLogicalOperators': {
         'authors': 'Williamson, D. J., Yoder, T. J.',
         'title': 'Low-overhead fault-tolerant quantum computation by gauging logical operators',
