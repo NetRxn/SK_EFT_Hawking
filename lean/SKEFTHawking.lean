@@ -1208,6 +1208,16 @@ import SKEFTHawking.NbReTripletSPT
 -- follow-up requiring the combinatorial perfect-matching
 -- infrastructure not currently in Mathlib.
 import SKEFTHawking.MathlibAux.Pfaffian
+-- Phase 6v Sub-wave 8.E (2026-05-26 PM): Hamiltonian bridge — closes
+-- the "encoded vs derived" gap from the Sub-wave 8.C adversarial
+-- review. Defines a concrete 4×4 BdG Hamiltonian `H_BdG_NbRe_at_gamma`
+-- consuming `SCParameters`, the TRS involution `Θ = iσ_y ⊗ σ_0` with
+-- algebraic properties (`Θᵀ = -Θ`, `Θ² = -I`), and the canonical
+-- TR-conjugated sewing matrix `Θ · H · Θ`. The (0,2) entry of the
+-- derived sewing matrix evaluates to `-1` for NbRe and `+1` for Nb,
+-- structurally consistent with the substrate-level `sewingCoeffsAt`
+-- `f`-coefficient sign. Zero new project-local axioms.
+import SKEFTHawking.BdGHamiltonianNbRe
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
