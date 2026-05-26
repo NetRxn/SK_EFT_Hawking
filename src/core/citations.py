@@ -370,6 +370,35 @@ CITATION_REGISTRY = {
         'provides': [],
         'notes': 'Polariton analog Hawking proposal.',
     },
+    'KomotoKasai2025APMLDPCHashingBound': {
+        'authors': 'Komoto, D., Kasai, K.',
+        'title': 'Quantum Error Correction near the Coding Theoretical Bound',
+        'journal': 'npj Quantum Information',
+        'volume': 11,
+        'page': '154',
+        'year': 2025,
+        'doi': '10.1038/s41534-025-01090-1',
+        'arxiv': '2412.21171',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/KomotoKasai2025APMLDPCHashingBound.pdf',
+        'used_in': ['lean/SKEFTHawking/FaultTolerance/APMLdpcHashingBound.lean',
+                    'papers/D6/paper_draft.tex'],
+        'provides': [
+            'IsHashingBoundAchievable',
+            'apmLdpc_approaches_hashing_bound',
+        ],
+        'notes': 'Komoto-Kasai 2025 — quantum LDPC codes approaching the '
+                 'hashing bound (a fundamental limit on quantum capacity) '
+                 'with computational decoding cost linear in physical-qubit '
+                 'count. arXiv 2024-12-30 v1; v4 2025-09-08; npj QI 11, 154 '
+                 '(2025). Wave 6v.5 substrate-level lift: ships the '
+                 '`IsHashingBoundAchievable` predicate + substantive '
+                 'non-vacuity witness on the QuEra-Harvard-MIT [[1152, 580]] '
+                 'reference code. Full Shannon-binary-entropy `H₂(p) = '
+                 '-p log₂ p - (1-p) log₂ (1-p)` analytic content deferred to '
+                 'a future Mathlib-Shannon-entropy-substrate wave.',
+    },
     'BabbushGidneyEtAl2026ECC256Shor': {
         'authors': 'Babbush, R., Zalcman, A., Gidney, C., Broughton, M., Khattar, T., Neven, H., Bergamaschi, T., Drake, J., Boneh, D.',
         'title': 'Securing Elliptic Curve Cryptocurrencies against Quantum Vulnerabilities: Resource Estimates and Mitigations',

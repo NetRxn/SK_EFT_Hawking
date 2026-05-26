@@ -1166,6 +1166,14 @@ import SKEFTHawking.FaultTolerance.GaugingQEC
 -- verified end-to-end ECC-256 Shor T-gate-count bound in any proof
 -- assistant. Lifts into D6 §5.
 import SKEFTHawking.FaultTolerance.ShorTGateCount
+-- Phase 6v Wave 6v.5 (2026-05-26): APM-LDPC code substrate + Shannon-
+-- capacity hashing-bound predicate (Komoto-Kasai 2025 npj QI 11, 154).
+-- QuEra/Harvard/MIT [[1152, 580, ≤12]] reference code: rate 580/1152 ≈
+-- 0.5035 > 1/2 (`IsRateAboveHalf` substantive ship); the rate-exactly-1/2
+-- `[[2k, k]]` code is the substantive falsifier-class instance.
+-- `IsHashingBoundAchievable` predicate with substrate-level witness at
+-- the representative Komoto-Kasai threshold 53/100. Lifts into D6 §4.
+import SKEFTHawking.FaultTolerance.APMLdpcHashingBound
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

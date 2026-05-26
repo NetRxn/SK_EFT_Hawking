@@ -45,7 +45,7 @@
 | **Wave 6v.3** | DKM F3 polariton occupancy bound (Phase 6q follow-on) | ✅ SHIPPED 2026-05-26 | D5 §13 + E1 §2 (Wave 6v.4 cite chain) | 1–2 sess |
 | **Wave 6v.1** | Williamson/Yoder gauging QEC formalization — **CREATES D6 BUNDLE** | ✅ SHIPPED 2026-05-26 | D6 §3 (CREATED) + I1 cross-bridge | 1.5 sess |
 | **Wave 6v.2** | Google ECC-256 T-gate count bound for Shor circuits | ✅ SHIPPED 2026-05-26 | D6 §5 (populated) + D4 + I1 cross-bridges | 2–3 sess |
-| **Wave 6v.5** | APM-LDPC code substrate + hashing-bound LDP sub-wave | ⏳ NOT STARTED | D6 §4 + I1 | 4 sess |
+| **Wave 6v.5** | APM-LDPC code substrate + hashing-bound LDP sub-wave | ✅ SHIPPED 2026-05-26 | D6 §4 (populated) + I1 | 4 sess |
 | **Wave 6v.6** | W-state QFT decomposition in Q(ζ_N) | ⏳ NOT STARTED | D6 §6 | 2 sess |
 | **Wave 6v.8** | NbRe triplet superconductor full SOTA BdG + SPT classification | ⏳ NOT STARTED | D2 + D4 | 3–5 sess (heaviest in 6v) |
 
