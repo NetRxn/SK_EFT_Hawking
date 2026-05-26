@@ -89,15 +89,36 @@ theorem phase6v_wave9_substantive_closure :
     (∀ sc : SCParameters, H_BdG_NbRe sc 0 0 0 = H_BdG_NbRe_at_gamma sc) ∧
     (∀ sc : SCParameters, H_BdG_NbRe_TRInvariant_at_TRIM sc) ∧
     Matrix.pfaffianFin4 (bdGSewingMatrix nbReParameters 0 0 0) = (-2 : ℂ) ∧
+    -- **Round-1 REQUIRED-9A-2 substantive close** (post-2026-05-26 PM):
+    -- universal antisymmetry-FROM-TRS theorem + concrete non-vacuity witness.
+    (∀ (H : Matrix (Fin 4) (Fin 4) ℂ),
+      H.transpose = H → IsBdGTRSInvariant H →
+        SKEFTHawking.MathlibAux.Matrix.IsSkewSymmetric (Theta * H)) ∧
+    SKEFTHawking.MathlibAux.Matrix.IsSkewSymmetric (Theta * H_kinetic_tau_z) ∧
+    -- **Round-1 REQUIRED-9A-1 substantive close**: 3-conjunct sign-bridge.
+    Int.sign (-2 : ℤ) = pfaffianSignAtTRIM nbReParameters gamma ∧
     -- (9.E) Material-derived TRIM parameterization
     fuKaneInvariantGeneric nbReParameters (gamma : TRIM) = -1 ∧
     IsDIIITopologicalSuperconductor orthorhombicNbReParameters ∧
     fuKaneInvariantGeneric orthorhombicNbReParameters (0 : Fin 8) = -1 ∧
+    -- **Round-1 REQUIRED-9E-1 substantive close**: Ima2-derived + falsifier.
+    ima2DerivedFuKaneInvariant nbReIma2Structure orthorhombicNbReParameters = -1 ∧
+    ima2DerivedFuKaneInvariant
+        nbReIma2StructureCentrosymmetricFalsifier orthorhombicNbReParameters = 1 ∧
+    -- **Round-1 REQUIRED-9E-2 substantive close**: in-place §7.F generic in
+    -- NbReTripletSPT.lean itself.
+    pfaffianSignAtGenericTRIM nbReParameters (gamma : TRIM) gamma =
+      pfaffianSignAtTRIM nbReParameters gamma ∧
+    fuKaneInvariantGenericTRIM nbReParameters (gamma : TRIM) = -1 ∧
     -- (9.C) η-invariant Z₁₆ derivation
     (∀ sc : SCParameters,
       nbReEtaInvariant sc = ZMod.toAddCircle (diiiBdGToZ16 sc)) ∧
     nbReEtaInvariant nbReParameters ≠ 0 ∧
     nbReEtaInvariant elementalNbParameters = 0 ∧
+    -- **Round-1 REQUIRED-9C-1 substantive close**: η-FIRST bordism-class
+    -- architecture via Phase 6r-prime W1.2 substantive iso.
+    (∀ sc : SCParameters, diiiBdGToZ16FromBordism sc = diiiBdGToZ16 sc) ∧
+    (∀ sc : SCParameters, nbReEtaInvariantFromBordism sc = nbReEtaInvariant sc) ∧
     -- (9.D) Winding-number universality
     IsSatoFujimotoIntegerWinding windingNumberSurrogate ∧
     (∀ (f : SCParameters → ℤ), IsSatoFujimotoIntegerWinding f →
@@ -109,12 +130,21 @@ theorem phase6v_wave9_substantive_closure :
    H_BdG_NbRe_at_gamma_eq,
    H_BdG_NbRe_TRInvariant_at_TRIM_holds,
    nbRe_bdGSewingMatrix_pfaffian_at_gamma,
+   theta_mul_H_isSkewSym_of_TRS,
+   theta_mul_H_kinetic_tau_z_isSkewSym,
+   nbRe_pfaffian_sign_consistent.2.2,
    fuKaneInvariantGeneric_hex_nbRe,
    orthorhombicNbRe_is_DIII_topological,
    orthorhombicNbRe_fuKaneInvariant_neg_one,
+   nbReIma2_fuKaneInvariant_derived_neg_one,
+   nbReIma2_falsifier_fuKaneInvariant_pos_one,
+   nbRe_pfaffianSignAtGenericTRIM_eq,
+   nbRe_fuKaneInvariantGenericTRIM,
    fun _ => rfl,
    nbRe_nbReEtaInvariant_ne_zero,
    elementalNb_nbReEtaInvariant_eq_zero,
+   diiiBdGToZ16FromBordism_eq_diiiBdGToZ16,
+   nbReEtaInvariantFromBordism_eq_nbReEtaInvariant,
    windingNumberSurrogate_isSatoFujimoto,
    windingNumber_uniqueness_mod_2⟩
 
