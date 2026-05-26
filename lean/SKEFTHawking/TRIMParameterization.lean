@@ -152,7 +152,7 @@ theorem orthorhombicFin8DemoSignTrivial_invariant :
 
 /-! ## §5. Sub-wave 8.H substantive closure. -/
 
-/-- **Sub-wave 8.H substantive closure** (post-strengthening
+/-- **Sub-wave 8.H TRIM-parameterization closure** (post-strengthening
 2026-05-26 PM). Three load-bearing conjuncts:
   1. Universal structural theorem: all-`+1` pattern gives
      invariant `+1` (genuine generic claim over `[Fintype T]`).
@@ -161,7 +161,7 @@ theorem orthorhombicFin8DemoSignTrivial_invariant :
   3. `Fin 8` demonstrator: generic interface accepts the
      orthorhombic enumeration (substrate-only demonstrator —
      physical orthorhombic NbRe model is future work). -/
-theorem subwave_8_H_substantive_closure :
+theorem subwave_8_H_TRIM_parameterization_closure :
     (∀ {T : Type*} [Fintype T] (pfSignAt : T → ℤ),
       (∀ k : T, pfSignAt k = 1) → genericFuKaneInvariant pfSignAt = 1) ∧
     (∀ sc : SCParameters,

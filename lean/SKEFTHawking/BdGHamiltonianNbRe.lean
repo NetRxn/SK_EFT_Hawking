@@ -46,7 +46,6 @@ Pipeline Invariant #15. All theorems kernel-only
 `[propext, Classical.choice, Quot.sound]`.
 -/
 import Mathlib
-import SKEFTHawking.PauliMatrices
 import SKEFTHawking.MathlibAux.Pfaffian
 import SKEFTHawking.NbReTripletSPT
 
@@ -228,23 +227,29 @@ theorem nbRe_distinct_from_elementalNb_at_derivedSewing :
 
 /-! ## §5. Wave 6v.8 Sub-wave 8.E substantive closure. -/
 
-/-- **Sub-wave 8.E substantive closure.** The Hamiltonian-derived
-sewing-matrix construction is consistent at the type level: NbRe and
-elemental Nb produce qualitatively different (0,2)-entries
-(`-1` vs `+1`), pinning the substrate-level distinction via a
-**concrete real-symmetric Hamiltonian + canonical TRS involution Θ**
-rather than via the parameterized `sewingCoeffsAt` ITE.
+/-- **Sub-wave 8.E Hamiltonian-bridge closure.** The Hamiltonian-derived
+sewing-matrix construction at the Γ point is consistent at the type
+level: NbRe and elemental Nb produce qualitatively different
+(0,2)-entries (`-1` vs `+1`), pinning the substrate-level distinction
+via a **concrete real-symmetric Hamiltonian + canonical TRS involution
+Θ** rather than via the parameterized `sewingCoeffsAt` ITE.
 
-This closes the "encoded vs derived" gap from the Sub-wave 8.C
-adversarial review:
+This closes the **Hamiltonian-bridge half** of the "encoded vs derived"
+gap from the Sub-wave 8.C adversarial review:
   • The Pfaffian-Z₂ invariant has TWO consistent constructions —
     substrate-level (Sub-wave 8.C) and Hamiltonian-derived (this
     sub-wave) — both yielding the DIII-topological / DIII-trivial
     distinction.
   • The TRS involution Θ is algebraically pinned (Θᵀ = −Θ, Θ² = −I).
   • The Hamiltonian `H_BdG_NbRe_at_gamma` is symmetric (and over ℂ
-    with real entries also Hermitian). -/
-theorem subwave_8_E_substantive_closure :
+    with real entries also Hermitian).
+
+Per ADV-N2 of the cumulative review: the FULL TR-invariance reduction
+`Θ·H·Θ = -H` is NOT shipped here — it is documented as a future-wave
+refinement (see §3 docstring). This closure covers the Γ-point
+Hamiltonian-bridge content shipped in this module, not the full
+band-basis Fu-Kane construction. -/
+theorem subwave_8_E_hamiltonian_bridge_closure :
     Theta.transpose = -Theta ∧
     Theta * Theta = -1 ∧
     (∀ sc : SCParameters,

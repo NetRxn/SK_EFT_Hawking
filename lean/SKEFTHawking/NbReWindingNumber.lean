@@ -158,13 +158,19 @@ theorem elementalNb_pfaffian_eq_winding_mod2_parity :
 
 /-! ## §3. Sub-wave 8.G substantive closure. -/
 
-/-- **Sub-wave 8.G substantive closure** (post-strengthening 2026-05-26 PM).
-Three-conjunct bundle of the load-bearing content:
+/-- **Sub-wave 8.G surrogate-winding parity-correspondence closure**
+(post-strengthening 2026-05-26 PM). Three-conjunct bundle of the
+load-bearing content:
   1. Structural identity: surrogate vanishes iff centrosymmetric.
   2. NbRe Pfaffian-Z₂ ↔ surrogate-winding mod-2 parity (the
      Sato-Fujimoto 2009 reduction at the NbRe instance).
-  3. Elemental Nb Pfaffian-Z₂ ↔ surrogate-winding mod-2 parity. -/
-theorem subwave_8_G_substantive_closure :
+  3. Elemental Nb Pfaffian-Z₂ ↔ surrogate-winding mod-2 parity.
+
+This closes the **parity-content half** of the original Sub-wave 8.C
+spec gap ("3D winding-number identity"). The full Schnyder-style
+integer-winding ship via BZ-integral is documented as future work
+in the module §1.5 docstring. -/
+theorem subwave_8_G_winding_parity_closure :
     (∀ sc : SCParameters,
       windingNumberSurrogate sc = 0 ↔ sc.centrosymmetric = true) ∧
     (1 - fuKaneInvariant nbReParameters) / 2 =

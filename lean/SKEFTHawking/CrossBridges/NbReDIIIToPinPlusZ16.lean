@@ -155,17 +155,15 @@ theorem nbRe_diiiBdGToOmega4PinPlus_ne_zero :
 
 /-! ## §4. Sub-wave 8.F substantive closure. -/
 
-/-- **Sub-wave 8.F substantive closure.** The NbRe Pfaffian-Z₂ invariant
-(Sub-wave 8.C / 8.E) now connects to the Phase 6r-prime Pin⁺/ℤ₁₆
-substrate via a Lean theorem-level map (not docstring-only). Five-conjunct
-bundle:
-  1. NbRe ↦ generator `1 ∈ ZMod 16` (non-trivial DIII class).
-  2. Elemental Nb ↦ identity `0 ∈ ZMod 16` (trivial DIII class).
-  3. The two materials are distinct in ℤ₁₆.
-  4. The mod-2 reductions recover the Pfaffian-Z₂ invariant.
-  5. NbRe maps to a non-trivial Ω₄^{Pin⁺} bordism class.
--/
-theorem subwave_8_F_substantive_closure :
+/-- **Sub-wave 8.F Pfaffian-Z₂-to-Pin⁺/ℤ₁₆ cross-bridge closure.**
+The NbRe Pfaffian-Z₂ invariant (Sub-wave 8.C / 8.E) connects to the
+Phase 6r-prime Pin⁺/ℤ₁₆ substrate via a Lean theorem-level map
+(not docstring-only). Three load-bearing conjuncts:
+  1. UNIVERSAL: any DIII-topological capsule maps to `1 ∈ ZMod 16`.
+  2. Elemental Nb (DIII-trivial) maps to `0 ∈ ZMod 16` falsifier.
+  3. NbRe lifts to a non-trivial Ω₄^{Pin⁺} bordism class via the
+     substantive `omega4PinPlusBordismEquivZMod16.symm`. -/
+theorem subwave_8_F_pfaffian_to_z16_bridge_closure :
     (∀ sc : SCParameters,
       IsDIIITopologicalSuperconductor sc → diiiBdGToZ16 sc = 1) ∧
     diiiBdGToZ16 elementalNbParameters = 0 ∧
