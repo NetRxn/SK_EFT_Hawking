@@ -1268,6 +1268,14 @@ import SKEFTHawking.Phase6vWave9Close
 -- surface_gravity_bounds_kzm_exponent.
 import SKEFTHawking.KibbleZurekUnruh
 
+-- Phase 6w Wave 6w.2 Mathlib-PR-quality substrate: belief propagation on
+-- factor graphs (Yedidia-Freeman-Weiss 2003). FactorGraph + BPMessages
+-- + bpVariableUpdate + bpFactorUpdate + bpUpdate + IsBPFixedPoint;
+-- substantive theorems for normalization, positivity propagation,
+-- factorization, fixed-point stability. Consumed by Wave 6w.3 LDP-
+-- controlled simulability headline.
+import SKEFTHawking.BeliefPropagation
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
