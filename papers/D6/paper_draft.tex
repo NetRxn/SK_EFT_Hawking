@@ -257,10 +257,9 @@ substrate ships:
   (rate-above-half + falsifier + hashing-bound witness).
 \end{itemize}
 The substantive Shannon-entropy analytic content
-(\verb|Real.log|-based $H_2(p)$ continuity and monotonicity) is
-deferred to a future Mathlib-Shannon-entropy-substrate wave; at
-present scope the predicate is non-vacuously witnessed at
-parameterized rational thresholds.
+(\verb|Real.log|-based $H_2(p)$ continuity and monotonicity) lifts
+in the Wave 6v.5b follow-up (post-scout 2026-05-26;
+see \S\ref{sec:apmldpc} addendum).
 
 \subsection{Sub-wave coda — substrate connection to existing
 project LDP}
@@ -403,10 +402,23 @@ The Lean substrate ships in
   \verb|wState_separation_at_5| (5 < 32),
   \verb|wState_separation_at_8| (8 < 256),
   \verb|wState_separation_at_40| ($40 < 1{,}099{,}511{,}627{,}776$).
-\item \verb|IsCyclotomicQFTBasis n| predicate (substrate-level
-  labelling of the Q($\zeta_n$) requirement; heavy
-  \verb|RingOfIntegers.cyclotomic| Mathlib integration deferred).
-\item \verb|wave_6v_6_substantive_closure| — 3-conjunct bundle.
+\item \texttt{IsCyclotomicQFTBasis n :=
+  $\exists\,\zeta : \mathtt{CyclotomicField}\,n\,\mathbb{Q},$
+  \texttt{IsPrimitiveRoot} $\zeta\, n$}
+  predicate (Wave 6v.6b substantive lift, post-scout 2026-05-26).
+  Substantively witnessed by Mathlib's canonical
+  \texttt{IsCyclotomicExtension.zeta}\,$n\,\mathbb{Q}\,$(\texttt{CyclotomicField}\,$n\,\mathbb{Q}$)
+  with the companion \texttt{zeta\_spec} proving primitivity.
+\item \texttt{wState\_basis\_isCyclotomic} witnesses the predicate at
+  every positive $n$, via
+  \texttt{CyclotomicField.isCyclotomicExtension} +
+  \texttt{Nat.cast\_ne\_zero} plumbing.
+\item \texttt{wState\_basis\_isCyclotomic\_at\_QCyc\_sizes} concrete
+  witness bundle at $n \in \{5, 8, 16, 40, 80\}$ — the project's
+  existing QCyc\_n cyclotomic-substrate sizes.
+\item \verb|wave_6v_6_substantive_closure| — 3-conjunct bundle (the
+  third conjunct is now genuinely non-vacuous: a primitive 40-th
+  root of unity in $\mathbb{Q}(\zeta_{40})$).
 \end{itemize}
 Kernel-only; zero new project-local axioms; zero tracked Props.
 

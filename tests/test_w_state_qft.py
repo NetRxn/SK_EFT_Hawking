@@ -80,6 +80,24 @@ def test_w_state_separation_at_40():
     assert n_qubit_w_state_basis_size(40) < full_hilbert_dim(40)
 
 
+def test_cyclotomic_qft_basis_at_qcyc_sizes():
+    """Wave 6v.6b: substantive cyclotomic-QFT-basis predicate is
+    non-vacuously witnessed at the project's existing QCyc_n
+    cyclotomic-substrate sizes via Mathlib's
+    `IsCyclotomicExtension.zeta n ℚ (CyclotomicField n ℚ)`. Python
+    mirror via cmath confirms there exists a complex n-th root of
+    unity ζ with ζ^n = 1 and ζ^k ≠ 1 for 0 < k < n (the IsPrimitiveRoot
+    structural property)."""
+    import cmath
+    for n in [5, 8, 16, 40, 80]:
+        ζ = cmath.exp(2j * cmath.pi / n)  # canonical n-th primitive root
+        # ζ^n = 1
+        assert abs(ζ ** n - 1) < 1e-10
+        # ζ^k ≠ 1 for 0 < k < n
+        for k in range(1, n):
+            assert abs(ζ ** k - 1) > 1e-12
+
+
 def test_separation_factor_grows_exponentially():
     """The ratio of full Hilbert dim to W-state QFT basis size grows
     exponentially in n (efficiency claim)."""
