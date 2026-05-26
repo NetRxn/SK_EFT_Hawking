@@ -1228,6 +1228,17 @@ import SKEFTHawking.BdGHamiltonianNbRe
 -- Pfaffian-Z₂ substrate (Sub-waves 8.C / 8.E) with the project's
 -- existing ~9,910 LoC Phase 6r Pin⁺/ℤ₁₆ infrastructure.
 import SKEFTHawking.CrossBridges.NbReDIIIToPinPlusZ16
+-- Phase 6v Sub-wave 8.G (2026-05-26 PM): 3D winding-number formal
+-- connection. Closes the original Sub-wave 8.C spec gap (the wave was
+-- named "3D winding-number identity"). Defines `windingNumber :
+-- SCParameters → ℤ` as the substrate-level integer 3D winding number
+-- (Schnyder-Ryu-Furusaki-Ludwig PRB 78, 195125 (2008)); ships the
+-- canonical Pfaffian-Z₂ ↔ integer-winding-mod-2 reduction theorem
+-- (Sato-Fujimoto PRB 79, 094504 (2009)). NbRe winding = -1
+-- (DIII-topological); Nb winding = 0 (DIII-trivial); parity
+-- correspondence `(1 - fuKane)/2 = winding mod 2` shipped at both
+-- material instances.
+import SKEFTHawking.NbReWindingNumber
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
