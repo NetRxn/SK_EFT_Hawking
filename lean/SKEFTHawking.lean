@@ -1256,6 +1256,11 @@ import SKEFTHawking.TRIMParameterization
 -- visible at the Lean theorem level.
 import SKEFTHawking.Phase6vSubwaves8DHClose
 
+-- Phase 6v Wave 6v.9 cumulative substantive-closure theorem aggregating
+-- sub-waves 9.A-9.E (post 2026-05-26 PM unfinished-business audit
+-- finish-strengthening pass).
+import SKEFTHawking.Phase6vWave9Close
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 
