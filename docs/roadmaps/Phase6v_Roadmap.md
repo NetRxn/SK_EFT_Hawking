@@ -31,9 +31,49 @@
 
 ---
 
-## Phase 6v FULLY CLOSED 2026-05-26 PM ✅
+## Phase 6v ACTUAL CLOSE PENDING — Wave 6v.9 finish-strengthening REQUIRED (post 2026-05-26 PM audit)
+
+**🚨 STATUS CORRECTION (2026-05-26 PM end-of-session audit):** The "GREEN-NO-FINDINGS" verdict below reflects adversarial review against *shipped* scope, NOT against original intent of Sub-waves 8.D-8.H (which mapped to Items A/B/C/D/E in the strengthening proposal). Per user audit, real substance is 30-90% short per item. LoE inflation 1.3-2× mid-session was the smoking gun for thread-loss.
+
+**Corrective wave 6v.9 required to finish the substantive delivery.** See `temporary/working-docs/phase6v_strengthening_unfinished_business.md` for per-item acceptance criteria, recipes, substrate-leverage table, and tactical gotchas. **Acceptance criteria are the bar; reviewer GREEN is NOT.**
+
+### Wave 6v.9 — Phase 6v finish-strengthening pass (sub-waves 9.A-9.E)
+
+Five sub-waves mapping 1:1 to Items A-E in the unfinished-business doc. Execution order: 9.B → 9.A → 9.E → 9.C → 9.D (B unblocks A; A unblocks C; E independent; D last).
+
+| Sub-wave | Item | Title | Target module(s) | Acceptance-criteria gate |
+|---|---|---|---|---|
+| **9.B** ✅ | B | General `Matrix.pfaffian` + `Pf² = det` (SHIPPED 2026-05-26 PM) | `MathlibAux/Pfaffian.lean` (extended ~220 LoC) | (1) ✅ general-n `pfaffian` via canonical-matching sum; (2) ✅ `pfaffian_fin_zero = 1`; (3) ✅ `pfaffian_antisymMatrix4 = a·f − b·e + c·d`; (4) ✅ `pfaffianFin4_sq_eq_det` + `pfaffian_sq_eq_det_fin_four` for skew + zero-diag 4×4 |
+| **9.A** | A | Full k-dependent Hamiltonian bridge + TRS-derived antisymmetry | `BdGHamiltonianNbRe.lean` (extend) | (1) `H_BdG_NbRe sc k1 k2 k3`; (2) `H_BdG_NbRe_TRInvariant`; (3) `sewingMatrixFromHamiltonian`; (4) antisymmetry FROM TRS; (5) Hamiltonian-derived Pfaffian at Γ; (6) `pfaffianSignAtTRIM = sign(pfaffian(sewingMatrixFromHamiltonian))` |
+| **9.E** | E | TRIM refactor + concrete orthorhombic NbRe model | `NbReTripletSPT.lean §7` (refactor) | (1) `[Fintype TRIM]` parameterization; (2) existing hexagonal theorems lift via `(TRIM := Fin 4)`; (3) `orthorhombicNbReParameters` capsule with Ima2 flags; (4) `orthorhombicNbRe_fuKaneInvariant = -1` derived (NOT hand-crafted) |
+| **9.C** | C | η-invariant / Z₁₆ derivation route | `NbReDIIIToPinPlusZ16.lean` (extend) | (1) `nbReEtaInvariant : SCParameters → UnitAddCircle` via `ZMod.toAddCircle`; (2) `nbReEtaInvariant_nbRe ≠ 0`; (3) `nbReEtaInvariant_elementalNb = 0`; (4) Z₁₆ map DERIVED from η, not separately defined |
+| **9.D** | D | 3D winding-number universality theorem | `NbReWindingNumber.lean` (extend) | Cheaper acceptable: `windingNumber_uniqueness_mod_2 : ∀ f, (SRFL-condition f) → f sc % 2 = windingNumberSurrogate sc % 2`. Full BZ integral via `MeasureTheory.integral` over T³ if scope allows |
+
+**Definition of done (Wave 6v.9 / Phase 6v.actual-close):**
+- All 23 acceptance-criteria checkboxes in `phase6v_strengthening_unfinished_business.md` checked off, each backed by a kernel-only Lean theorem.
+- Final fresh-context Opus adversarial review (ONE pass after ALL FIVE items done) GREEN against actual delivered substance — reviewer briefed that prior GREEN was on shipped-not-intended scope.
+- `lake build SKEFTHawking` clean at every sub-wave close commit. Project-local axiom count stays at 0 (Invariant #15).
+- Substantive theorem bodies (NOT ITE wrappers / hand-crafted demonstrators where criteria demand derivations).
+
+**Process discipline (the corrective from prior session):**
+1. Acceptance criteria upfront — paste sub-wave's checklist into working buffer BEFORE starting.
+2. No retreats from substance — `lean_multi_attempt` + `lean_goal` + LSP search BEFORE de-scoping. Retreat is a smell.
+3. Honest disclosure ≠ delivery — renaming surrogates doesn't ship the original.
+4. LoE inflation = thread-loss signal — re-read substrate-leverage table when estimates rise.
+5. Scout reports are executable to-do lists, not confirmatory background.
+6. Maintain unfinished-business doc as single source of truth — check boxes IN SAME COMMIT as theorem.
+
+**Substrate to leverage (do NOT reinvent):** `BdGHamiltonian.lean`, `PauliMatrices.lean`, `MajoranaKramers.lean`, `SymTFT/SubstrateEtaInvariant.lean`, `SymTFT/PinPlusBordism4.lean`, `MathlibAux/Pfaffian.lean`, `BdGHamiltonianNbRe.lean`. Mathlib verified-present at v4.29.1: `Matrix.det_apply'`, `Matrix.det_succ_row_zero`, `Equiv.Perm.sign_mul`, `Finset.sum_product`, `MeasureTheory.integral`, `Matrix.transpose_mul`, `ZMod.toAddCircle`.
+
+**Bundle absorption: HELD this phase.** No bundle lifts during Wave 6v.9.
+
+---
+
+## Phase 6v "GREEN-NO-FINDINGS" close 2026-05-26 PM — SUPERSEDED by Wave 6v.9 audit (see above)
 
 **🎯🎯 PHASE 6v COMPLETE AT GREEN-NO-FINDINGS BAR.** All 7 original waves + 6v.5b + 6v.6b + Sub-wave 8.C + Sub-waves 8.D-8.H strengthening pass + advisory cleanup all substantively shipped. Final fresh-context adversarial review (round 3 post-cleanup) verdict: **GREEN-NO-FINDINGS** per the user's "definition of done" bar.
+
+**⚠️ This close was at shipped-scope-level, not intended-scope-level. See Wave 6v.9 above for the corrective work.**
 
 **Five strengthening sub-waves shipped this autonomous-loop session (2026-05-26 PM):**
 - **8.D** General project-local Pfaffian substrate (`lean/SKEFTHawking/MathlibAux/Pfaffian.lean`)
