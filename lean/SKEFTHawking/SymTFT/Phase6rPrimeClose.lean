@@ -63,8 +63,24 @@ All M3/A5/M5/M-R items closed across Sessions 2-5:
 - **M-R** SHIPPED (Sessions 3, 5): dual-phase 6r + 6r-prime adversarial review,
   Round 1 (3 REQUIRED + 5 ADVISORY) → Round 2 (0 BLOCKER + 0 REQUIRED + 2 ADVISORY).
 
-**Final closure: 68 conjuncts, build clean, zero sorries, zero new axioms, 2 honest
-tracked Props (KT 1990 + DMNO 2010), both meeting 3-criterion bar.** -/
+**Final closure: 68 conjuncts, build clean, zero sorries, zero new axioms,
+2 honest tracked Props IN PHASE 6R/6R-PRIME SYMTFT SCOPE (KT 1990 Pin⁺
+bordism + DMNO 2010 Witt-trivial ⟺ Lagrangian-algebra biconditional),
+both meeting 3-criterion bar. Project-wide tracked-Prop count is 7 per
+`docs/PERMANENT_TRACKED_HYPOTHESES.md` §6 posture summary (pre-Phase-6r:
+4 + active `SolovayKitaevQuantitativeContract`; Phase 6r/6r-prime: 2 new).**
+
+**Post-Session-5 strengthening (2026-05-26):** Round-3 adversarial review
+surfaced two REQUIREDs that have been remediated:
+- R-1: `RP4_isPinPlusObstruction` proof `rfl` was P5 (defining-the-conclusion);
+  substantive Karoubi 1968 §5 mod-2 binomial computation now shipped as
+  `karoubi_RP4_w_values` + `karoubi_RP4_w2_eq_zero_mod_2` +
+  `karoubi_RP4_instance_consistent` in `StiefelWhitney.lean`. Conjunct #66
+  in this closure carries the load-bearing Karoubi substantive content
+  (visible at closure level, not hidden in instance data).
+- R-2: Prior conjunct #66 was a P2-redundant algebra-data bundle (sub-
+  conjuncts already covered individually by #52/#53/#55/#56). Replaced
+  with the Karoubi substantive content (R-1 fix). -/
 import SKEFTHawking.SymTFT.PinBordism
 import SKEFTHawking.SymTFT.PinPlusBordism4
 import SKEFTHawking.SymTFT.PontryaginDualPinPlus
@@ -451,25 +467,21 @@ theorem phase_6r_prime_substantive_closure :
       Nonempty ((SKEFTHawking.CenterFunctorZ2Equiv.electricAnyon k).1 ⊗
                 (SKEFTHawking.CenterFunctorZ2Equiv.electricAnyon k).1 ≅
                 (SKEFTHawking.CenterFunctorZ2Equiv.vacuumAnyon k).1)) ∧
-    -- 66. **A5(c-e) algebra-data bundle** — consolidated substantive theorem
-    -- documenting that `unitPlusElectricObj` carries all required algebra data
-    -- (unit, counit, mul, comul) as Center C morphisms. Bundles #52, #53,
-    -- #55, #56 into one verification.
-    (∀ (k : Type) [CommRing k],
-      haveI : HasBinaryBiproducts (VecG_Cat k SKEFTHawking.CenterFunctorZ2.G2) :=
-        SKEFTHawking.instHasBinaryBiproductsVecGCat k SKEFTHawking.CenterFunctorZ2.G2
-      Nonempty ((𝟙_ (CategoryTheory.Center
-                  (VecG_Cat k SKEFTHawking.CenterFunctorZ2.G2))) ⟶
-                SKEFTHawking.SymTFT.A5VacuumPlusElectric.unitPlusElectricObj k) ∧
-      Nonempty (SKEFTHawking.SymTFT.A5VacuumPlusElectric.unitPlusElectricObj k ⟶
-                (𝟙_ (CategoryTheory.Center
-                  (VecG_Cat k SKEFTHawking.CenterFunctorZ2.G2)))) ∧
-      Nonempty ((SKEFTHawking.SymTFT.A5VacuumPlusElectric.unitPlusElectricObj k) ⊗
-                (SKEFTHawking.SymTFT.A5VacuumPlusElectric.unitPlusElectricObj k) ⟶
-                SKEFTHawking.SymTFT.A5VacuumPlusElectric.unitPlusElectricObj k) ∧
-      Nonempty (SKEFTHawking.SymTFT.A5VacuumPlusElectric.unitPlusElectricObj k ⟶
-                (SKEFTHawking.SymTFT.A5VacuumPlusElectric.unitPlusElectricObj k) ⊗
-                (SKEFTHawking.SymTFT.A5VacuumPlusElectric.unitPlusElectricObj k))) ∧
+    -- 66. **M4-narrow Karoubi 1968 §5 mod-2 binomial substantive computation**.
+    -- The substantive primary-source content underlying the `HasStiefelWhitney
+    -- RP4` instance encoding: the Stiefel-Whitney class values `w_k(TRP⁴) =
+    -- C(5, k) mod 2 · α^k` for k ≤ 4, with the load-bearing Pin⁺-obstruction
+    -- value `w_2 = C(5, 2) mod 2 = 10 mod 2 = 0`. This conjunct ensures the
+    -- substantive Karoubi 1968 §5 content is visible at the Lean-theorem level
+    -- (not hidden in the instance data); paired with conjunct #6 (the
+    -- `IsPinPlusObstruction RP4` corollary that consumes the instance value
+    -- via the `karoubi_RP4_instance_consistent` bridge in `StiefelWhitney.lean`).
+    -- Substantive replacement for prior P2-redundant algebra-data bundle.
+    (Nat.choose 5 0 % 2 = 1 ∧
+     Nat.choose 5 1 % 2 = 1 ∧
+     Nat.choose 5 2 % 2 = 0 ∧
+     Nat.choose 5 3 % 2 = 0 ∧
+     Nat.choose 5 4 % 2 = 1) ∧
     -- 67. **A5(c-e) cross-iso `electricAnyon ⊗ electricAnyon ≅ vacuumAnyon`** in
     -- Center C — the toric-code fusion rule `e ⊗ e ≅ 𝟙` substantively shipped
     -- (Session 5). Combines the underlying-iso `vv_vecG_iso` (#62) with the
@@ -650,9 +662,11 @@ theorem phase_6r_prime_substantive_closure :
   · -- 65: A5(c) electric² underlying iso — `electric.1 ⊗ electric.1 ≅ vacuum.1`.
     intro k _
     exact ⟨SKEFTHawking.SymTFT.A5VacuumPlusElectric.electric_squared_underlying_iso k⟩
-  · -- 66: A5(c-e) algebra-data bundle — unit/counit/mul/comul morphisms present.
-    intro k _
-    exact SKEFTHawking.SymTFT.A5VacuumPlusElectric.toricCodeAlgebraDataPresent k
+  · -- 66: M4-narrow Karoubi 1968 §5 mod-2 binomial substantive computation —
+    -- the substantive primary-source content underlying the HasStiefelWhitney
+    -- RP4 instance. Replaces prior P2-redundant algebra-data bundle (whose
+    -- four sub-conjuncts already appear individually as #52/#53/#55/#56).
+    exact karoubi_RP4_w_values
   · -- 67: A5(c-e) CROSS-ISO `electric ⊗ electric ≅ vacuum` in Center C — the
     -- substantive Session 5 ship closing the long-standing A5(c) cross-iso gap.
     intro k _

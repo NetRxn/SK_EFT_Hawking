@@ -1,0 +1,10 @@
+SK-EFT Hawking Validation Report
+Generated: 20260526T124655Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] lean_build
+  + lake_bin — /Users/johnroehm/.elan/bin/lake
+  + lean_root — /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean
+  + lake_build — build succeeded (8693 jobs)
+
+Overall: 1/1 passed

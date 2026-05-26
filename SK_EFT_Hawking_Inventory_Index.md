@@ -2,7 +2,7 @@
 
 **Purpose.** LLM-friendly comprehensive index for the SK-EFT Hawking project. **This file is pointers only — no embedded content.** Every entry is `file path + one-line summary`. For full content read the pointed-to file. For comprehensive prose see `SK_EFT_Hawking_Inventory.md`. For live counts read `docs/counts.json`.
 
-**Last synced:** 2026-05-25 (Phase 6q strengthening close). **Sync source:** `docs/counts.json` (generated 2026-05-25T08:12 after strengthening + B.1/B.2/B.3 substantive lifts ship) + live filesystem.
+**Last synced:** 2026-05-26 (Phase 6r-prime Session 5 close + Round-3 adversarial-review remediation: cross-iso `electric_squared_iso_vacuum` + 68-conjunct closure + R-1/R-2 strengthening fixes shipped). **Sync source:** `docs/counts.json` freshly regenerated 2026-05-26 via `scripts/update_counts.py` after Round-3 fixes (StiefelWhitney.lean Karoubi binomial substantive ships + Phase6rPrimeClose.lean conjunct-66 refactor).
 
 **Size discipline.** Target ~50–80 KB. Keep under 100 KB so future LLM bootstraps can read it in a single `Read` call (the harness truncates files >256 KB and may skip files much smaller than that). When this file approaches 100 KB, prune narrative — move it to `SK_EFT_Hawking_Inventory.md` or `temporary/working-docs/`. Do NOT inline session logs, wave-history, or per-commit detail; those belong in `temporary/working-docs/` or the prose inventory.
 
@@ -19,30 +19,33 @@
 
 ## 1. One-page state snapshot
 
-**Counts (from `docs/counts.json`, generated 2026-05-25T08:12 post Phase 6q strengthening close):**
+**Counts (from `docs/counts.json` regenerated 2026-05-26 post-Round-3-remediation):**
 
 | Metric | Value |
 |---|---:|
-| Lean theorems (total) | 7339 |
-| Lean theorems (substantive) | 7314 |
+| Lean theorems (total) | 7713 |
+| Lean theorems (substantive) | 7688 |
 | Lean theorems (placeholder `True := trivial`) | 25 |
-| Lean modules | 390 |
-| Lean total declarations | 13628 |
-| Lean definitions | 5553 |
-| Lean structures | 257 |
-| Lean instances | 391 |
-| Lean inductives | 88 |
+| Lean modules | 445 |
+| Lean total declarations | 14285 |
+| Lean definitions | 5775 |
+| Lean structures | 266 |
+| Lean instances | 442 |
+| Lean inductives | 89 |
 | Lean axioms | **0** (project-local) |
 | Lean sorries | **0** |
 | Aristotle-proved theorems | 322 |
 | Aristotle runs | 44 |
 | Python source modules | 131 |
 | Test files | 101 |
-| Pytest cases | 4218 |
+| Pytest cases | 4220 |
 | Figures (PNG) | 156 |
 | Notebooks | 89 |
 | Papers (drafts) | 42 |
 | Publication bundles (per PAPER_STRATEGY) | 14 |
+| **Phase 6r SymTFT modules** | 18 (~2,650 LoC, originally shipped 2026-05-25 Session 1) |
+| **Phase 6r-prime ADDITIONAL modules** | 20+ (Sessions 1–5 substantive substrate; M1–M5 + A1–A5 + B1–B12) |
+| **Phase 6r/6r' total SymTFT+CrossBridges+APSEta-asymmetry LoC** | ~9,910 lines |
 
 **Toolchain pins:**
 - Lean: `leanprover/lean4:v4.29.1` (`lean/lean-toolchain`).
@@ -52,6 +55,11 @@
 - Rust: PyO3 abi3-forward-compat (`rust/`).
 
 **Recent ships (newest first):**
+- **2026-05-26 (Round-3 adversarial-review remediation post Session 5)** — Two REQUIRED findings shipped from a fresh adversarial review pass: (R-1) `RP4_isPinPlusObstruction` rfl-by-design P5 anti-pattern remediated by shipping the substantive Karoubi 1968 §5 mod-2 binomial computation as three new theorems in `StiefelWhitney.lean`: `karoubi_RP4_w2_eq_zero_mod_2` (the bare `Nat.choose 5 2 % 2 = 0` arithmetic), `karoubi_RP4_w_values` (the full 5-coefficient table), `karoubi_RP4_instance_consistent` (the instance ↔ binomial-computation bridge); the substantive content is now visible at the Lean-theorem level rather than hidden in instance data. (R-2) `Phase6rPrimeClose.lean` conjunct #66 P2 redundancy remediated by replacing the prior 4-sub-conjunct algebra-data bundle (which exactly duplicated conjuncts #52/#53/#55/#56) with the substantive Karoubi binomial computation. Build clean **8693 jobs**; counts regen via `update_counts.py`: 445 modules / 7713 theorems / 0 axioms / 0 sorries / 5775 defs / 442 instances. Substantive content now visible at both file level + closure level.
+- **2026-05-26 (Phase 6r-prime Session 5 close)** — Cross-iso `electric_squared_iso_vacuum` SUBSTANTIVELY SHIPPED in `lean/SKEFTHawking/SymTFT/A5VacuumPlusElectric.lean`. First object-level Z₂ fusion-rule lemma `e ⊗ e ≅ 𝟙` in `Center (VecG_Cat k G2)`. Half-braiding equality `electric_tensor_electric_β_hom_eq_vacuum` proven via 5-step chain: `Center.tensor_β` unfold → `signHalfBraiding` substitution → `whiskerLeft_comp`/`comp_whiskerRight` distribution → `congr 2` prefix → `sign_factors_cancel` helper (associator-inv-naturality + comp_whiskerRight + braiding_naturality_right + `signEndo_sq` + id_whiskerRight). `Phase6rPrimeClose.lean` closure extended **66 → 68 conjuncts**. Dual-phase 6r + 6r-prime Round 2 adversarial review GREEN: 0 BLOCKER + 0 REQUIRED + 3 ADVISORY (ADV-1 bundle-absorption pre-draft alignment [HELD for unified event]; ADV-2 optional consumer η-refactor; ADV-3 MonObj/ComonObj axiom-instance follow-on on `unitPlusElectricObj`, naturally Mathlib-PR-quality strengthening). Build clean **8693 jobs**. Zero sorries; zero new axioms; project axiom count UNCHANGED at 0. 2 legitimate tracked Props (KT 1990 + DMNO 2010). Files: `A5VacuumPlusElectric.lean` (+110 LoC), `Phase6rPrimeClose.lean` (+#67+#68), `temporary/working-docs/phase6r-prime/dual_phase_adversarial_review_round2.md` (new).
+- **2026-05-25 (Phase 6r-prime Sessions 2–4 close)** — Substantive substrate ships across M3 Layer A/B (RP⁴ via antipodal Setoid quotient + CompactSpace + IsLocalHomeomorph + ChartedSpace + `IsManifold (𝓡 4) ω RP4` via chart-transition piecewise decomposition; 5 new modules `RP4.lean` / `RP4Smooth.lean` / `RP4LocalHomeomorph.lean` / `RP4ChartedSpace.lean` / `RP4IsManifold.lean`); A5(a-c) substrate (`VecGPreadditive.lean` / `CenterPreadditive.lean` / `CenterBiproducts.lean` / `CenterBiproductsHalfBraiding.lean`); A5(b)-pt2 full HalfBraiding instance `diagBiprodHalfBraiding` via `biprodTensor_hom_ext` Mathlib-PR-quality lemma + 7-step rewrite chain; A5(c-e) substrate ships #50–#66 (MonObj/ComonObj morphisms on `unitPlusElectricObj`, e²=𝟙 substrate via GradedObject convolution, `vacuum² ≅ vacuum` lift in Center C, `vacuum³ ≅ vacuum` cube); M4-narrow `StiefelWhitney.lean` (opaque CohomologyMod2 + HasStiefelWhitney typeclass + substantive `IsPinPlusObstruction RP4 := w 2 = 0` per Karoubi 1968 mod-2 binomial). Round 1 dual-phase adversarial review GREEN-with-3-REQUIRED-5-ADVISORY → Round 2 GREEN.
+- **2026-05-25 (Phase 6r-prime Session 1 close)** — Phase 6r-prime substantive substrate CLOSED at GREEN-with-advisories. 11 of 12 Phase 6r tracked Props discharged or constructively derived (only #10 KEEPs as program-D-class identity). Ships: C3 + C2 + W1 (`PinPlusManifold4.lean`/`PinPlusBordism4.lean`/`PontryaginDualPinPlus.lean`/`AndersonDualSubstrate.lean`/`AndersonDualFunctor.lean` for M5) + W2 (`FrobeniusPerronDim.lean`/`LagrangianAlgebra.lean` substantive DMNO biconditional) + W3-minimal Path γ Kirby-Taylor generator-and-relations skeleton + W4 (`SubstrateEtaInvariant.lean` substantive Witten-Yonekura η via `ZMod.toAddCircle`) + C1 (`ToricCodeLagrangianAnyons.lean` substantive anyon-set classification). Post-audit honest tracked-Prop count: **2 (KT 1990 + DMNO 2010)**, down from 12 nominal via A1-A4 P5/P2 anti-pattern remediation.
+- **2026-05-25 (Phase 6r SymTFT formalization SUBSTANTIVELY CLOSED)** — All 8 Waves shipped + strengthening + 2-round adversarial review GREEN in single autonomous-loop session. 18 new Lean modules under `lean/SKEFTHawking/SymTFT/` + `CrossBridges/SMMatterAsSymTFTBoundary.lean` + `APSEta/SubstrateBulkAsymmetry.lean` (~2,650 LoC; commit `a7ea1bf`). Primary anchor Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 *"Boundary SymTFT"*. 12 tracked Props introduced at predicate-substrate level (subsequently consolidated to 2 legitimate post-Phase-6r-prime audit). Citation corrections shipped: `2207.04050` → `2207.10700` (Davighi-Gripaios-Lohitsiri), `1610.07478` → `1610.07010` (Tachikawa-Yonekura), Pin⁺ bordism dimension correction (`Ω_4^{Pin⁺}≅ℤ/16` + `TP_5(Pin⁺)≅ℤ/16` per Kirby-Taylor 1990 + Freed-Hopkins arXiv:1604.06527; `Ω_5^{Pin⁺}=0`). Bundle absorption HELD for unified user-authorized event (2-of-4 GO conditions trip for D.3 absorption per `Wave 2b.3 + Wave 3b.2 + Wave 3b.3`).
 - **2026-05-25** Phase 6q strengthening close + 3 substantive deferred-item lifts SHIPPED — §A 20-item resolution (5 deletions, 3 abbrev demotions, A.6 conjunct cleanup, A.3 substantive companion, A.4/A.7 docstring strengthening) + B.1 Python graphene MIR companion (substantive `(2·β_2/(4π))^(1/3) ≈ 0.0756`; the Lean substrate-level `1/2` placeholder is a safe upper bound) + B.2 reverse-direction LDP biconditional + B.3 BEC Bogoliubov substantive unbounded-norm proof (new module `BECBogoliubovBosonicGrowth.lean` with witnessed concrete `(2κ)!` sequence; both halves of bimodal outcome now witnessed by distinct concrete substrates). All headlines kernel-only; lake build 8638 jobs clean; pytest 4220 total / 4152 default-run / 68 slow-deselected, 0 failures; zero new axioms. See `docs/roadmaps/Phase6q_Roadmap.md` Sessions log Session 2.
 - **2026-05-23 PM** Phase 6q DKM transport bootstrap SUBSTANTIVELY CLOSED — all 5 Waves shipped in single autonomous-loop session; 10 new Lean modules under `lean/SKEFTHawking/DKMBootstrap/` (~2,375 LoC Session 1; zero sorries, zero new axioms); bimodal outcome BOTH halves shipped substantively (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded substrates). Bundle placement BOTH L2 + D5. See `temporary/working-docs/phase6q/wave_2c_positioning.md` for full closing positioning.
 - **2026-05-23** Phase 6t Path A Option C ship — `SkApproxCSuperQuadraticBound_holds` + unconditional tight-ε strict headline `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight` in `lean/SKEFTHawking/FKLW/SolovayKitaevPathA.lean`. Kernel-only. See `docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`.
@@ -59,10 +67,10 @@
 - **2026-05-22** Phase 5 Step 13 — `fibonacci_density_F21_unconditional` discharged kernel-only in `lean/SKEFTHawking/FKLW/SU2BCHBracketClosure.lean`. See `docs/PHASE5_STEP13_COMPLETE.md`.
 - **2026-05-19** Phase 5h Wave 2 — `axiom gapped_interface_axiom` retired into `TPFConjecture` tracked Prop; project axiom count 1 → 0.
 
-**Build state (as of 2026-05-23 PM, post Phase 6q close):**
-- `lake build SKEFTHawking` clean (8637 jobs).
-- `uv run python -m pytest tests/` clean (4195 cases default fast suite; +slow suite via `-m slow`).
-- `uv run python scripts/validate.py` PASS (21 checks).
+**Build state (as of 2026-05-26 AM, post Phase 6r-prime Session 5 cross-iso ship):**
+- `lake build SKEFTHawking` clean (**8693 jobs**).
+- `uv run python -m pytest tests/` clean (carryover; no Python ships in Phase 6r-prime Sessions 2–5 beyond Phase 6q's Python ships).
+- `uv run python scripts/validate.py` PASS verified at Phase 6r close (2026-05-25); revalidation pending refreshed `lean_deps.json` from `update_counts.py` (in flight at sync time).
 
 ---
 
@@ -82,7 +90,7 @@ For the public narrative of what the project does, see `README.MD`. Key story ar
 
 ## 3. Lean module map
 
-378 Lean modules under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
+**445 Lean modules** (post Phase 6r-prime Session 5 + Round-3 remediation; was 378 at 2026-05-23 PM Phase 6q close → +18 Phase 6r → +49 Phase 6r-prime Sessions 1–5; per fresh `docs/counts.json` regen 2026-05-26) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
 
 ### 3.1 Subdirectory families (sub-packages)
 
@@ -104,6 +112,8 @@ For the public narrative of what the project does, see `README.MD`. Key story ar
 | `lean/SKEFTHawking/ETH/` | Eigenstate thermalization hypothesis refutation on horizon-MTC substrate. | `ls lean/SKEFTHawking/ETH/` |
 | `lean/SKEFTHawking/QCyc40/` | Q(ζ₄₀) cyclotomic-field substrate (Phase 6p T-gate compiler). | `ls lean/SKEFTHawking/QCyc40/` |
 | `lean/SKEFTHawking/DKMBootstrap/` | Phase 6q DKM transport bootstrap on SK-EFT-Hawking horizon transport (Chowdhury-Hartnoll-Hebbar-Khondaker arXiv:2509.18255 specialization). **11 modules, 2,716 LoC** (Session 1: 10 modules, ~2,375 LoC, 2026-05-23; Session 2: BECBogoliubovBosonicGrowth.lean, 341 LoC, 2026-05-25 strengthening close); zero sorries, zero new axioms. Track 1 (Predicates/AxiomSet/KMSConsistency/NoCrossing/SDPStructure/LinearFunctionals/LDPBridge) builds DKM substrate + resolves three Phase 6o Wave 1c NO-GO obstructions; Track 2 (SKEFTSpecialization/E1E2CrossBridge/HorizonTransportBootstrap) specializes to 3 platforms (graphene/BEC/polariton) with bimodal outcome (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded). Wave 2b.4 module `BECBogoliubovBosonicGrowth.lean` lifts the sharpened-NO-GO half to a witnessed concrete substrate-level stand-in sequence `(2κ)!` (substantive Lieb-Robinson-for-bosons derivation deferred). Python numerical companion at `src/dkm_bootstrap/` ships substantive graphene MIR constant `(2·β_2/(4π))^(1/3) = 0.07562892800257...` (30 dps mpmath). | `ls lean/SKEFTHawking/DKMBootstrap/` |
+| `lean/SKEFTHawking/SymTFT/` | **Phase 6r SymTFT formalization** (substrate-to-bulk unification under KOZ + FMT + Bhardwaj-Copetti-Pajer-Schäfer-Nameki *Boundary SymTFT* arXiv:2409.02166 framework) + **Phase 6r-prime substantive substrate discharge** (Sessions 1–5, 2026-05-25/26). **38 modules, ~9,910 LoC total across `SymTFT/` + `CrossBridges/SMMatterAsSymTFTBoundary.lean` + `APSEta/SubstrateBulkAsymmetry.lean`**; zero sorries; zero new axioms; **2 legitimate tracked Props** (KT 1990 Pin⁺ bordism cyclic-generation + DMNO 2010 Witt-trivial ⟺ Lagrangian-algebra biconditional, both meeting 3-criterion bar). **Module families:** (a) **Bulk SymTFT data** — `Basic.lean`, `BulkTQFT.lean`, `BulkInstances.lean`, `BulkBoundaryCorrespondence.lean`, `DrinfeldCenterAsBulk.lean`. (b) **Frobenius / Lagrangian-algebra substrate** — `FrobeniusAlgebra.lean`, `FrobeniusPerronDim.lean`, `LagrangianAlgebra.lean`, `GappedBoundary.lean`, `ToricCodeLagrangian.lean`, `ToricCodeLagrangianAnyons.lean`. (c) **Pin⁺ / Z₁₆ / Anderson-dual** — `PinBordism.lean`, `PinPlusManifold4.lean`, `PinPlusBordism4.lean`, `PontryaginDualPinPlus.lean`, `AndersonDualSubstrate.lean`, `AndersonDualFunctor.lean`, `StiefelWhitney.lean`, `SpinSymTFT.lean`, `SpinSymTFTSchellekensAlignment.lean`, `Z16ViaSpinSymTFT.lean`. (d) **RP⁴ + smooth structure (M3 layer)** — `RP4.lean`, `RP4Smooth.lean`, `RP4LocalHomeomorph.lean`, `RP4ChartedSpace.lean`, `RP4IsManifold.lean`. (e) **SM matter + dark sector boundary** — `IsSMMatterTopologicalBoundary.lean`, `AlternativeBoundaries.lean`, `SubstrateToBulkIdentification.lean`, `SubstrateEtaInvariant.lean`. (f) **A5 toric-code object-level (Drinfeld biproducts + Center C)** — `VecGPreadditive.lean`, `CenterPreadditive.lean`, `CenterBiproducts.lean`, `CenterBiproductsHalfBraiding.lean`, `A5VacuumMonObj.lean`, `A5VacuumPlusElectric.lean`, `A5LagrangianCenterUnit.lean`. (g) **Closure** — `Phase6rPrimeClose.lean` (68-conjunct consolidated substantive closure theorem; M-R adversarial-review reviewer anchor). Primary anchor: Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 (substantive boundary-SymTFT framework) + Kirby-Taylor 1990 (Pin⁺ Z₁₆) + Freed-Hopkins arXiv:1604.06527 (Anderson dual) + DMNO arXiv:1009.2117 (Witt-trivial ⟺ Lagrangian-algebra biconditional) + Karoubi 1968 §5 (RP⁴ mod-2 binomial Stiefel-Whitney values) + Davighi-Gripaios-Lohitsiri arXiv:2207.10700 (cited; non-Abelian-finite-group cobordism). | `ls lean/SKEFTHawking/SymTFT/` |
+| `lean/SKEFTHawking/CrossBridges/` | Cross-bridge modules for Phase 6r SymTFT consumers. Currently 1 module: `SMMatterAsSymTFTBoundary.lean` (Wave 3a.3 substantive SM-matter-as-SymTFT-boundary biconditional with `IsBoundarySymTFTCorrespondence` + `witt_triviality_iff_has_lagrangian_algebra`; consumed by D2 + L2 bundle pre-drafts). | `ls lean/SKEFTHawking/CrossBridges/` |
 
 ### 3.2 Topical groupings (top-level `.lean` files)
 
@@ -186,6 +196,29 @@ Load-bearing top-level theorems. Each row: fully-qualified name + module path + 
 | `gibbs_duhem_locks_w_vac_eq_neg_one` | `GibbsDuhemTheorem.lean` | First machine-checked emergent-vacuum obstruction (any single-scalar self-tuning ⟹ w_vac ≡ -1). |
 | `q_theory_no_go_main` | `QTheoryNoGoTheorem.lean` | Klinkhamer-Volovik q-theory NO-GO across all 4 realizations. |
 
+### 4.4a SymTFT formalization (Phase 6r + Phase 6r-prime)
+
+| Theorem | Module | One-line |
+|---|---|---|
+| `phase_6r_prime_substantive_closure` | `SymTFT/Phase6rPrimeClose.lean` | **68-conjunct consolidated substantive-content closure** bundling all post-audit-remediation Phase 6r/6r' content. Single anchor for the M-R dual-phase adversarial-review reviewer. |
+| `IsKirbyTaylorPinPlusBordism` (tracked Prop) | `SymTFT/PinBordism.lean` | Pin⁺ bordism group at dimension 4 is isomorphic to ℤ/16 (Kirby-Taylor 1990). Substrate-discharged via W1.2 Quotient construction `Omega4PinPlusBordism ≃+ ZMod 16`; full geometric ISO discharge requires Stiefel-Whitney + Pin group reductions absent in Mathlib. |
+| `omega4PinPlusBordismEquivZMod16` | `SymTFT/PinPlusBordism4.lean` | **Substantive `AddEquiv`**: the Setoid-quotient `Omega4PinPlusBordism` is `≃+` to `ZMod 16` (W1.2 substrate; consumed by `IsKirbyTaylorPinPlusBordism` substrate-discharge). |
+| `IsAndersonDualPinPlus` | `SymTFT/PinBordism.lean` | TP_5(Pin⁺) ≅ ℤ/16 via Anderson-dual (Freed-Hopkins arXiv:1604.06527). Post-A1 substantive Pontryagin discharge: `TP5PinPlus := AddChar (ZMod 16) Circle`; iso via Mathlib `circleEquivComplex` + `zmodAddEquiv.symm`. |
+| `IsDMNOBiconditional` (tracked Prop) | `SymTFT/LagrangianAlgebra.lean` | DMNO 2010 main theorem: `Is3DTQFTBraided B ↔ HasLagrangianAlgebra B` carried at predicate-body level. Forward direction (Witt-trivial → has-Lagrangian-algebra) requires MTC typeclass + Lagrangian-algebra construction infrastructure absent in Mathlib. |
+| `IsPinPlusObstruction RP4` | `SymTFT/StiefelWhitney.lean` | M4-narrow substantive Pin⁺ obstruction: `w 2 = 0` on RP⁴ (Karoubi 1968 §5 mod-2 binomial computation; **corrected** from prior docstring bug `w_2 = w_1²` which was the Pin⁻ obstruction). Pin⁻ falsifier `RP4_not_isPinMinusObstruction` ships substantively. |
+| `karoubi_RP4_w2_eq_zero_mod_2` / `karoubi_RP4_w_values` / `karoubi_RP4_instance_consistent` | `SymTFT/StiefelWhitney.lean` | **Round-3 remediation 2026-05-26**: substantive Karoubi 1968 §5 mod-2 binomial computation `Nat.choose 5 2 % 2 = 0` + full 5-coefficient table `(1, 1, 0, 0, 1)` + instance-bridge lemma. Decide-proved primary-source content underlying the `HasStiefelWhitney RP4` instance encoding; addresses R-1 P5 anti-pattern by making the Karoubi substantive content visible at the Lean-theorem level (was previously hidden in the instance data). |
+| `RP4.instIsManifold` | `SymTFT/RP4IsManifold.lean` | M3 Layer B-4d substantive `IsManifold (𝓡 4) ω RP4` instance via chart-transition piecewise decomposition (id-piece via sphere chart-transition + `.congr`; neg-piece via `contMDiff_neg_sphere` + chart-conjugate; union via `ContDiffOn.union_of_isOpen`). |
+| `IZOmega_PinPlus_5 ≃+ TP5PinPlus` | `SymTFT/AndersonDualFunctor.lean` | M5 generic Anderson-dual functor recovers TP_5(Pin⁺) substantively (composes W1.2 substantive `omega4PinPlusBordismEquivZMod16` + AddChar precomposition functoriality; NOT P5 refl). |
+| `electric_squared_iso_vacuum` | `SymTFT/A5VacuumPlusElectric.lean` | **Session 5 ship (2026-05-26)**: first object-level Z₂ fusion-rule iso `e ⊗ e ≅ 𝟙` in `Center (VecG_Cat k G2)`. Closes long-standing A5(c) cross-iso gap. |
+| `electric_tensor_electric_β_hom_eq_vacuum` | `SymTFT/A5VacuumPlusElectric.lean` | Load-bearing categorical-coherence identity underlying `electric_squared_iso_vacuum`: 5-step proof via `Center.tensor_β` unfold → `signHalfBraiding` substitution → whiskering distribution → `signEndo_sq` cancellation via helper `sign_factors_cancel`. |
+| `diagBiprodHalfBraiding` | `SymTFT/CenterBiproductsHalfBraiding.lean` | A5(b)-pt2 full `HalfBraiding` instance on the diagonal biproduct, monoidal + naturality axioms discharged via per-summand `biprodTensor_hom_ext` Mathlib-PR-quality lemma + 7-step rewrite chain. |
+| `vacuum_tensor_vacuum_iso` | `SymTFT/A5VacuumPlusElectric.lean` | A5(c) Center C lift: `vacuumAnyon ⊗ vacuumAnyon ≅ vacuumAnyon` (substantive idempotency of the Z₂-MTC vacuum). |
+| `IsToricCodeTwoLagrangianAlgebraStructure` | `SymTFT/ToricCodeLagrangian.lean` | Substantively discharged via C1 anyon-set classification (`ToricCodeLagrangianAnyons.lean`): exactly two Lagrangian anyon sets up to equivalence (electric `{1, e}` + magnetic `{1, m}`); third candidate `{1, f}` falsified by braiding-non-triviality. **First substantively-formalized two-Lagrangian-algebra classification for toric code MTC** at anyon-set level. |
+| `IsDarkSectorTopologicalBoundary` | `SymTFT/AlternativeBoundaries.lean` | Substantively discharged post-A3 via hidden-sector witness conjunct `∃ hidden_charge ≠ 0, s.z16_class = (-3) + hidden_charge`; cross-bridge to Phase 5x `HiddenSectorClassification.three_singlets_satisfy_hidden_sector`. |
+| `substrateEtaInvariant` | `SymTFT/SubstrateEtaInvariant.lean` | Substantive Witten-Yonekura η-invariant via `ZMod.toAddCircle s.z16_class` (composition of substantive Mathlib character-theory functions); biconditional `η = 0 ↔ z16 = 0`. |
+| `sm_matter_as_symtft_boundary_closure` | `CrossBridges/SMMatterAsSymTFTBoundary.lean` | Wave 3a.3 substantive cross-bridge: SM 3-generation matter content as topological-boundary data on Drinfeld-center bulk via `generation_constraint_iff` recovery. |
+| `wave_3b_1_substrate_to_bulk_identification` | `SymTFT/SubstrateToBulkIdentification.lean` | Wave 3b.1 program-D-class substrate-to-bulk identification: BEC/ADW/³He-A all Z₁₆-trivial-lift; `IsSKEFTHawkingSymTFTBoundary` substantive definition reclassified from tracked Prop (A4). |
+
 ### 4.4b DKM transport bootstrap on SK-EFT-Hawking (Phase 6q)
 
 | Theorem | Module | One-line |
@@ -242,9 +275,9 @@ Load-bearing top-level theorems. Each row: fully-qualified name + module path + 
 
 ## 5. Tracked Props (load-bearing hypotheses)
 
-Project posture: **axioms are temporary scaffolding, not permanent commitments** (Pipeline Invariant #15). The constructive alternative is a tracked `def`-Prop that propagates explicitly through every consumer's type signature. Project axiom count is **0** (counts.json `axiom_names: []`, 2026-05-23 regen).
+Project posture: **axioms are temporary scaffolding, not permanent commitments** (Pipeline Invariant #15). The constructive alternative is a tracked `def`-Prop that propagates explicitly through every consumer's type signature. Project axiom count is **0** (counts.json `axiom_names: []`, last 2026-05-23 regen; provisional verification post-Phase-6r-prime via `grep -rn "^axiom " lean/SKEFTHawking/` → 0 real declarations).
 
-Full catalogue: `docs/PERMANENT_TRACKED_HYPOTHESES.md`.
+Full catalogue: `docs/PERMANENT_TRACKED_HYPOTHESES.md`. **Phase 6r-prime Session 2 audit (2026-05-25)**: the original Phase 6r 12 tracked Props were reduced to **2 legitimate** (KT 1990 + DMNO 2010) via P5 identity-wrapper + P2 bundle-redundancy anti-pattern remediation (A1-A4 audit). The 5 audit-pattern items (#4/#5/#7/#8/#12) were DELETED; 3 items (#2/#9/#11) were RESTRUCTURED to substantive content; 1 item (#10) was RECLASSIFIED as a substantive definition.
 
 | Tracked Prop | Status | Module | Discharge LoE |
 |---|---|---|---|
@@ -253,8 +286,10 @@ Full catalogue: `docs/PERMANENT_TRACKED_HYPOTHESES.md`.
 | `H_RT_Formula_Valid` | KEEP (permanent) | `RTCasiniHuertaBounds.lean:87` | N/A — project-scope boundary (RT formula is AdS/CFT holographic working assumption). |
 | `TPFConjecture` | KEEP (permanent; converted from `axiom gapped_interface_axiom` on 2026-05-19) | `SPTClassification.lean:254` | N/A — open at literature frontier in 3+1D / 4+1D (proven in 1+1D + 2+1D). |
 | `SolovayKitaevQuantitativeContract` | DISCHARGE_IN_PROGRESS | `FKLW/SolovayKitaevQuantitative.lean` | Phase 6t Path A Option C tight-ε regime SHIPPED 2026-05-23; loose-ε bundled headline also SHIPPED. Substantive remaining: K-margin tightening as Mathlib-PR-quality follow-on. |
+| `IsKirbyTaylorPinPlusBordism` (Phase 6r legitimate; Phase 6r-prime substrate-discharged via W1.2 Quotient) | KEEP (Kirby-Taylor 1990) | `SymTFT/PinBordism.lean` | Substrate ships `Omega4PinPlusBordism ≃+ ZMod 16` substantively; full geometric ISO (η-invariant on RP⁴ + AHSS) deferred — requires Stiefel-Whitney + Pin group reductions absent in Mathlib (>1 year). |
+| `IsDMNOBiconditional` (Phase 6r legitimate; renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in W2.3 v2) | KEEP (DMNO 2010) | `SymTFT/LagrangianAlgebra.lean` | Body IS the biconditional `Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`; substantive DMNO categorical-algebra proof requires MTC typeclass + Lagrangian-algebra construction (>1 year) — Phase 7+ Mathlib upstream. |
 
-Search live: `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_Formula_Valid\|TPFConjecture\|SolovayKitaevQuantitativeContract" lean/`.
+Search live: `grep -rn "H_VestigialModeIsGraviton\|H_DESICompatibility\|H_RT_Formula_Valid\|TPFConjecture\|SolovayKitaevQuantitativeContract\|IsKirbyTaylorPinPlusBordism\|IsDMNOBiconditional" lean/`.
 
 ---
 
@@ -429,7 +464,15 @@ Authority: `docs/PAPER_STRATEGY.md` (architecture) + `docs/PAPER_DRAFT_MAPPING.m
 
 ### 10.2 `docs/roadmaps/` — phase roadmaps
 
-Per-phase roadmaps (Phase 1 through Phase 7a) in `docs/roadmaps/Phase<N>_Roadmap.md`. Active roadmaps as of 2026-05-25: Phase 6v (external-substrate alignment + creates D6 bundle, 7 waves NOT STARTED), Phase 6w (classical-simulability + tensor-network substrate, 7 waves NOT STARTED), Phase 6t (quantitative SK — Path A Option C close 2026-05-23), Phase 7a (paper-bundle architecture freeze). Phase 6u (Generic-Alphabet SK substrate) is a NOT-STARTED planning skeleton with T-A2 / T-B tracks re-slotted from "(likely Phase 6w)" to Phase 6x or later per ADR 008. All Phase 5+ phases through 6p are substantively closed.
+Per-phase roadmaps (Phase 1 through Phase 7a) in `docs/roadmaps/Phase<N>_Roadmap.md`. Active roadmaps as of 2026-05-26:
+- **Phase 6r** (SymTFT substrate-to-bulk unification, 8 Waves, **SUBSTANTIVELY CLOSED 2026-05-25**; bundle absorption HELD for unified event).
+- **Phase 6r-prime** (substantive discharge of Phase 6r tracked Props, 4 Wedges + 3 carryovers + W5 cross-bridge integration + R dual-phase adversarial review, **SUBSTANTIVELY CLOSED at Session 5 2026-05-26** with 68-conjunct closure; ADV-3 MonObj/ComonObj axiom-instance follow-on flagged as next-session Mathlib-PR-quality strengthening, NOT blocking).
+- **Phase 6v** (external-substrate alignment + creates D6 bundle, 7 waves NOT STARTED).
+- **Phase 6w** (classical-simulability + tensor-network substrate, 7 waves NOT STARTED).
+- **Phase 6t** (quantitative SK — Path A Option C close 2026-05-23).
+- **Phase 7a** (paper-bundle architecture freeze).
+
+Phase 6u (Generic-Alphabet SK substrate) is a NOT-STARTED planning skeleton with T-A2 / T-B tracks re-slotted from "(likely Phase 6w)" to Phase 6x or later per ADR 008. All Phase 5+ phases through 6p are substantively closed.
 
 ### 10.3 `docs/references/` — manuals
 

@@ -401,7 +401,11 @@ This section locks the **pre-audit state** as the audit trail; the post-audit ve
 
 ---
 
-## 6. Posture summary
+## 6. Posture summary (post Phase 6r-prime Sessions 1-5 audit + remediation; **synced 2026-05-26**)
+
+**Honest legitimate tracked-Prop count after Phase 6r-prime: 7** (4 pre-Phase-6r + 3 from Phase 6r/6r' substantive ships). The original Phase 6r 12-Prop count was reduced via A1-A4 audit remediation (5 DELETED P5/P2 anti-patterns; 1 RECLASSIFIED to substantive definition; 3 RESTRUCTURED to substantive content via substantive substrate ships).
+
+### Pre-Phase-6r tracked Props (unchanged)
 
 | Prop | Status | Discharge LoE | Scheduled phase |
 |---|---|---|---|
@@ -409,26 +413,33 @@ This section locks the **pre-audit state** as the audit trail; the post-audit ve
 | `H_DESICompatibility` | DISCHARGE_FUTURE_PHASE | ~50 person-hours | Phase 6b.2 (not active) |
 | `H_RT_Formula_Valid` | KEEP_AS_TRACKED (permanent) | N/A — project-scope boundary | None |
 | `TPFConjecture` | KEEP_AS_TRACKED (permanent; converted from axiom on 2026-05-19) | N/A — open at literature frontier | None |
-| `IsKirbyTaylorPinPlusBordism` | DISCHARGE_PHASE_6R_PRIME | W1 substrate + W3 KT proof | Phase 6r-prime (active) |
-| `IsAndersonDualPinPlus` | DISCHARGE_PHASE_6R_PRIME | W1.4 (Anderson-dual functor) | Phase 6r-prime (active) |
-| `IsAndersonDualPinPlusRelation` | DISCHARGE_PHASE_6R_PRIME | W1 (transitive on #1 + #2) | Phase 6r-prime (active) |
-| `IsWittenYonekuraInflow` | DISCHARGE_PHASE_6R_PRIME | W4 (APS-η + Witten-Yonekura) | Phase 6r-prime (active) |
-| `IsAndersonDualSpinBulk` | DISCHARGE_PHASE_6R_PRIME | W1 (transitive on #1 + #2) | Phase 6r-prime (active) |
-| `IsDMNOBiconditional` (renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in W2.3 v2 adversarial-review remediation) | **SHIPPED_PHASE_6R_PRIME** (W2.3 v2) | W2.3 (body IS the biconditional `Is3DTQFTBraided ↔ HasLagrangianAlgebra`); substantive DMNO proof deferred to Phase 7+ | Phase 6r-prime (shipped) |
-| `IsKapustinSaulinaGappedBoundary` | **SHIPPED_PHASE_6R_PRIME** (W2.4) | W2.4 (body := HasLagrangianAlgebra B; substantive LA-existence) | Phase 6r-prime (shipped) |
-| `IsBoundarySymTFTCorrespondence` | DISCHARGE_PHASE_6R_PRIME | W2.4 (predicate-level discharge) | Phase 6r-prime (active) |
-| `IsToricCodeTwoLagrangianAlgebraStructure` | DISCHARGE_PHASE_6R_PRIME | C1 (after W2.3 ideal) | Phase 6r-prime (active) |
-| `IsSKEFTHawkingSymTFTBoundary` | KEEP_AS_TRACKED (permanent; D-class program identity) | N/A — program-original identification | None |
-| `IsDarkSectorTopologicalBoundary` | DISCHARGE_PHASE_6R_PRIME | C2 (paper-17 substantive) | Phase 6r-prime (active) |
-| `IsSubstantivePinPlusSPTAsymmetry` | DISCHARGE_PHASE_6R_PRIME | W1 (transitive substrate); full GEM-bridge deferred | Phase 6r-prime (active) + Phase 7+ |
+| `SolovayKitaevQuantitativeContract` (active discharge) | DISCHARGE_IN_PROGRESS | Phase 6t Path A Option C tight-ε SHIPPED 2026-05-23 | Phase 6t (shipped); K-margin tightening upstream Mathlib-PR-quality |
+
+### Phase 6r SymTFT tracked Props (post-audit final state)
+
+| Original # | Prop | Post-audit verdict | Discharge state |
+|---|---|---|---|
+| 1 | `IsKirbyTaylorPinPlusBordism` | **KEEP** (legitimate; Kirby-Taylor 1990) | Substrate-discharged via W1.2 `Omega4PinPlusBordism ≃+ ZMod 16` substantively; full geometric ISO → Phase 7+ Mathlib upstream (Stiefel-Whitney + Pin reductions absent). |
+| 2 | `IsAndersonDualPinPlus` | **RESTRUCTURED** to substantive Pontryagin discharge | Body now substantively iso via `TP5PinPlus := AddChar (ZMod 16) Circle` + `circleEquivComplex.trans zmodAddEquiv.symm`; no longer P5 identity wrapper. |
+| 3 | `IsAndersonDualPinPlusRelation` | **SUBSTANTIVELY DISCHARGED** post-A1 | Composition of Pontryagin chain + W1.2 quotient iso (both substantive). |
+| 4 | `IsWittenYonekuraInflow` | **A2 DELETED** (P5+P2 bundle of #1+#2 with unused `_s` param) | Removed; consumers point at substantive substrate directly. |
+| 5 | `IsAndersonDualSpinBulk` | **A2 DELETED** (P5+P2 bundle with unused `_z` param) | Removed; consumers point at substantive substrate. |
+| 6 | `IsDMNOBiconditional` (renamed from `IsDMNOWittTrivialIffLagrangianAlgebra` in W2.3 v2) | **KEEP** (legitimate; DMNO 2010) | Body IS the biconditional `Is3DTQFTBraided B ↔ HasLagrangianAlgebra B`; substantive DMNO categorical-algebra proof → Phase 7+ Mathlib upstream. |
+| 7 | `IsKapustinSaulinaGappedBoundary` | **A2 DELETED** (P5 alias) | Removed; consumers point at `HasLagrangianAlgebra` directly. |
+| 8 | `IsBoundarySymTFTCorrespondence` | **A2 DELETED** (P5 alias for `Is3DTQFT`) | Removed; substantive BCPS-N content via `IsDMNOBiconditional` + `witt_triviality_iff_has_lagrangian_algebra`. |
+| 9 | `IsToricCodeTwoLagrangianAlgebraStructure` | **SUBSTANTIVELY DISCHARGED at anyon-set level via C1.1-C1.3** | `ToricCodeLagrangianAnyons.lean` (`Lagrangian anyon-set` Kitaev-Kong criterion + 2-anyon-set existence + 3-step classification). Object-level via M2 → A5(c-e) substrate complete Session 5; full instance-axiom-discharge (MonObj/ComonObj associativity, Frobenius bridge) is ADV-3 (non-blocking strengthening for next session). |
+| 10 | `IsSKEFTHawkingSymTFTBoundary` | **A4 RECLASSIFIED** as substantive definition (D-class program identity) | `wittenYonekuraToZ16 s = 0` — not a load-bearing tracked Prop, just a definition. |
+| 11 | `IsDarkSectorTopologicalBoundary` | **A3 RESTRUCTURED** with hidden-sector witness conjunct | Body adds `∃ hidden_charge ≠ 0, s.z16_class = (-3) + hidden_charge`; substantively distinguishes dark-sector from SM. Cross-bridge to Phase 5x `HiddenSectorClassification.three_singlets_satisfy_hidden_sector`. |
+| 12 | `IsSubstantivePinPlusSPTAsymmetry` | **A2 DELETED** (P5+P2 bundle with docstring acknowledgment of non-substantive body) | Removed; substantive Pin⁺ SPT classification asymmetry tracked at primary-source level (García-Etxebarria-Montero arXiv:1808.00009 + Kapustin-Thorngren-Turzillo-Wang arXiv:1406.7329) for Phase 7+ MTC follow-up. |
 
 **Net axiom-and-tracked-Prop count rationale.** The project minimizes both `axiom` declarations (per Pipeline Invariant #15) AND tracked-Prop count by:
 
 1. Categorizing each tracked Prop as either KEEP or DISCHARGE (not leaving it ambiguous).
 2. For KEEP entries: documenting the project-scope-boundary rationale and the substrate that would be required to discharge.
 3. For DISCHARGE entries: scheduling a specific future phase + estimating LoE.
+4. **(Phase 6r-prime audit addition)** Applying the user's 3-criterion bar BEFORE counting as a legitimate tracked Prop: (a) well-established literature; (b) ≥1 year discharge cost OR >20k LoC bespoke substrate; (c) project does not already have the substrate elsewhere. Anti-patterns failing the bar (P5 identity wrappers, P2 bundle redundancy, P4 trivial discharges, P3 multiplication-only tautologies) are DELETED or RESTRUCTURED rather than counted.
 
-This catalogue is the source of truth for the project's load-bearing tracked-Prop surface area. New tracked Props (added in any future wave) should be recorded here with a status assignment + rationale BEFORE being consumed by load-bearing theorems.
+This catalogue is the source of truth for the project's load-bearing tracked-Prop surface area. New tracked Props (added in any future wave) should be recorded here with a status assignment + rationale + 3-criterion-bar check BEFORE being consumed by load-bearing theorems.
 
 ---
 
