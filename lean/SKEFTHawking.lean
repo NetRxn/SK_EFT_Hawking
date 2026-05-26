@@ -1198,6 +1198,16 @@ import SKEFTHawking.FaultTolerance.WStateQFT
 -- `H_NbReWindingNumberIdentity_holds` kernel-only. Project-local
 -- axiom count UNCHANGED at 0.
 import SKEFTHawking.NbReTripletSPT
+-- Phase 6v Sub-wave 8.D (2026-05-26 PM): general project-local Pfaffian
+-- substrate in Mathlib-style namespace. `Matrix.IsSkewSymmetric`
+-- predicate + `Matrix.pfaffianFin4` 4×4 closed form + algebraic
+-- properties. Upstreamable to Mathlib at a later date per project's
+-- typical vendoring-before-upstreaming posture. The 4×4 closed form
+-- is what the NbRe Sub-wave 8.C discharge uses; the general
+-- `Matrix.pfaffian` for arbitrary `Fin (2*n)` is documented as a
+-- follow-up requiring the combinatorial perfect-matching
+-- infrastructure not currently in Mathlib.
+import SKEFTHawking.MathlibAux.Pfaffian
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

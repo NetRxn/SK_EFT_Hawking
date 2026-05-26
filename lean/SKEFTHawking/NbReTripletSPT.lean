@@ -63,6 +63,7 @@ kernel-verified theorem in this module is
 -/
 import Mathlib
 import SKEFTHawking.Basic
+import SKEFTHawking.MathlibAux.Pfaffian
 
 namespace SKEFTHawking.NbReTripletSPT
 
@@ -272,6 +273,19 @@ noncentrosymmetric-triplet profile at the Γ point gives a negative
 Pfaffian — the substantive non-vacuity witness: both signs are
 realizable inside the `pf4` formula). -/
 theorem pf4_noncentrosymm_triplet_gamma : pf4 1 1 0 0 1 (-1) = -2 := by decide
+
+/-- **Bridge to `lean/SKEFTHawking/MathlibAux/Pfaffian.lean` (Sub-wave 8.D
+2026-05-26 PM).** The closed-form `pf4` here is the integer specialization
+of the Mathlib-style `Matrix.pfaffianFin4` built on the canonical 4×4
+antisymmetric matrix `Matrix.antisymMatrix4`. Over ℤ they coincide
+on the `Matrix.antisymMatrix4` builder evaluation. -/
+theorem pf4_eq_matrix_pfaffianFin4 (a b c d e f : ℤ) :
+    pf4 a b c d e f =
+      SKEFTHawking.MathlibAux.Matrix.pfaffianFin4
+        (SKEFTHawking.MathlibAux.Matrix.antisymMatrix4 a b c d e f) := by
+  rw [SKEFTHawking.MathlibAux.Matrix.pfaffianFin4_antisymMatrix4]
+  unfold pf4
+  ring
 
 /-! ### §7.B. TRIM enumeration for NbRe.
 
