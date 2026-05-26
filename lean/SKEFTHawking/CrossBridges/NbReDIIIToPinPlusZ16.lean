@@ -76,12 +76,23 @@ capsule. Direct lift of the Pfaffian-Z₂ invariant:
 def diiiBdGToZ16 (sc : SCParameters) : ZMod 16 :=
   if fuKaneInvariant sc = -1 then 1 else 0
 
-/-- **NbRe's ℤ₁₆ class is the generator `1 ∈ ZMod 16`.** Substantive
-content: NbRe lies in the non-trivial DIII topological class. -/
-theorem nbRe_diiiBdGToZ16 : diiiBdGToZ16 nbReParameters = 1 := by
+/-- **Structural identity: `diiiBdGToZ16` is the canonical Pfaffian-Z₂
+lift to ℤ₁₆.** For ANY DIII-topological capsule (not just NbRe),
+the map evaluates to `1 ∈ ZMod 16`. The substantive content is the
+**universal connection to the Pfaffian-Z₂ invariant** —
+`diiiBdGToZ16` derives from the Sub-wave 8.C
+`fuKaneInvariant_eq_neg_one_of_DIII_topological` theorem, not from
+material-specific flag rewrites. -/
+theorem diiiBdGToZ16_eq_one_of_DIII_topological
+    (sc : SCParameters) (h : IsDIIITopologicalSuperconductor sc) :
+    diiiBdGToZ16 sc = 1 := by
   unfold diiiBdGToZ16
-  rw [nbRe_fuKaneInvariant_neg_one]
-  rfl
+  rw [if_pos (fuKaneInvariant_eq_neg_one_of_DIII_topological sc h)]
+
+/-- **NbRe's ℤ₁₆ class is the generator `1 ∈ ZMod 16`.** Direct
+corollary at the NbRe instance via `nbRe_is_DIII_topological`. -/
+theorem nbRe_diiiBdGToZ16 : diiiBdGToZ16 nbReParameters = 1 :=
+  diiiBdGToZ16_eq_one_of_DIII_topological _ nbRe_is_DIII_topological
 
 /-- **Elemental Nb's ℤ₁₆ class is `0 ∈ ZMod 16`.** Substantive
 contrast: elemental Nb lies in the trivial DIII class. -/
@@ -155,18 +166,13 @@ bundle:
   5. NbRe maps to a non-trivial Ω₄^{Pin⁺} bordism class.
 -/
 theorem subwave_8_F_substantive_closure :
-    diiiBdGToZ16 nbReParameters = 1 ∧
+    (∀ sc : SCParameters,
+      IsDIIITopologicalSuperconductor sc → diiiBdGToZ16 sc = 1) ∧
     diiiBdGToZ16 elementalNbParameters = 0 ∧
-    diiiBdGToZ16 nbReParameters ≠ diiiBdGToZ16 elementalNbParameters ∧
-    z16ToZ2 (diiiBdGToZ16 nbReParameters) = 1 ∧
-    z16ToZ2 (diiiBdGToZ16 elementalNbParameters) = 0 ∧
     diiiBdGToOmega4PinPlus nbReParameters ≠
       SKEFTHawking.SymTFT.omega4PinPlusBordismEquivZMod16.symm 0 :=
-  ⟨nbRe_diiiBdGToZ16,
+  ⟨diiiBdGToZ16_eq_one_of_DIII_topological,
    elementalNb_diiiBdGToZ16,
-   nbRe_distinct_from_elementalNb_at_z16,
-   nbRe_diiiBdGToZ16_mod2,
-   elementalNb_diiiBdGToZ16_mod2,
    nbRe_diiiBdGToOmega4PinPlus_ne_zero⟩
 
 end SKEFTHawking.CrossBridges.NbReDIIIToPinPlusZ16

@@ -1250,6 +1250,11 @@ import SKEFTHawking.NbReWindingNumber
 -- Additive (non-breaking) ship — does not modify existing hexagonal
 -- substrate.
 import SKEFTHawking.TRIMParameterization
+-- Phase 6v Sub-waves 8.D-8.H cumulative substantive closure (2026-05-26 PM):
+-- single aggregated witness for the architectural coherence of the
+-- strengthening pass. Per ADV-3 of the final adversarial review,
+-- visible at the Lean theorem level.
+import SKEFTHawking.Phase6vSubwaves8DHClose
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

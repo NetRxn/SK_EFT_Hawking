@@ -139,22 +139,47 @@ theorem H_BdG_NbRe_at_gamma_isSymm (sc : SCParameters) :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [Matrix.transpose_apply]
 
-/-! ## §3. Hamiltonian-derived sewing matrix at Γ.
+/-! ## §3. Hamiltonian-derived TR-conjugation at Γ.
 
-The orbital-basis sewing matrix at the Γ TRIM is constructed via the
-canonical TR-conjugation:
+For the substrate-level Hamiltonian-bridge ship, we use the
+**double-Θ conjugation** `Θ · H · Θ` rather than the literature-
+standard Fu–Kane sewing matrix `Θ · H · Θᵀ`. Since `Θᵀ = −Θ` (per
+`Theta_transpose`), these differ by an overall sign:
+`Θ · H · Θᵀ = −Θ · H · Θ`. For sign-distinguishing claims on
+individual matrix entries (NbRe `(0,2) = -1` vs Nb `(0,2) = +1`),
+the overall-sign difference is immaterial — what matters is the
+**relative sign distinction between the two materials**, which is
+preserved under any uniform sign convention.
 
-  `S(sc, Γ) := Θ · H_BdG_NbRe(sc, Γ) · Θ`
+This module ships the double-Θ form as the load-bearing
+TR-conjugation; the literature-standard form follows from this
+by `Theta_transpose` if needed downstream. The general structural
+identity `Θ · H · Θ = -H` for TR-invariant `H` is a documented
+substrate-level claim (Fu-Kane PRB 76, 045302 (2007) Eq. 2.3
+informal convention; explicit reduction here would require
+formalizing TR-invariance as a Prop on `H` and is documented
+as a future-wave refinement). -/
 
-For TR-invariant `H`, this satisfies `Θ H Θ = -H` (since `Θ⁻¹ = -Θ`
-from `Θ² = -I`, and TR-invariance is `Θ H Θ⁻¹ = H`). The (0,2)
-entry of `S` carries the Pfaffian-sign-distinguishing content
-between noncentrosymmetric (NbRe) and centrosymmetric (Nb) materials. -/
-
-/-- The **Hamiltonian-derived orbital-basis sewing matrix at Γ**:
-`S := Θ · H · Θ` (the canonical TR-conjugation form). -/
+/-- The **Hamiltonian-derived TR-conjugation at Γ** (double-Θ form):
+`Θ · H · Θ`. NOT the literature-standard Fu–Kane sewing matrix
+(which uses `Θ · H · Θᵀ` and differs by an overall `-1` from this
+form, since `Θᵀ = -Θ`). The two forms carry the same
+sign-distinguishing content at individual matrix entries; this
+module ships the double-Θ form for cleaner kernel-only proofs. -/
 noncomputable def sewingMatrixDerivedAtGamma (sc : SCParameters) : Matrix (Fin 4) (Fin 4) ℂ :=
   Theta * H_BdG_NbRe_at_gamma sc * Theta
+
+/-- **Sign-correction equivalence to the literature-standard
+Fu–Kane sewing matrix form** `Θ · H · Θᵀ`. The module's
+`sewingMatrixDerivedAtGamma` and the standard form differ by an
+overall sign:
+`Θ · H · Θᵀ = -(Θ · H · Θ)`. -/
+theorem sewingMatrixDerivedAtGamma_eq_neg_literature_form
+    (sc : SCParameters) :
+    Theta * H_BdG_NbRe_at_gamma sc * Theta.transpose =
+      -(sewingMatrixDerivedAtGamma sc) := by
+  unfold sewingMatrixDerivedAtGamma
+  rw [Theta_transpose, Matrix.mul_neg]
 
 /-! ## §4. The substantive bridge — derived sewing matrix matches
 substrate-level encoding at Γ.
@@ -222,20 +247,14 @@ adversarial review:
 theorem subwave_8_E_substantive_closure :
     Theta.transpose = -Theta ∧
     Theta * Theta = -1 ∧
-    (H_BdG_NbRe_at_gamma nbReParameters).transpose =
-      H_BdG_NbRe_at_gamma nbReParameters ∧
-    (H_BdG_NbRe_at_gamma elementalNbParameters).transpose =
-      H_BdG_NbRe_at_gamma elementalNbParameters ∧
+    (∀ sc : SCParameters,
+      (H_BdG_NbRe_at_gamma sc).transpose = H_BdG_NbRe_at_gamma sc) ∧
     sewingMatrixDerivedAtGamma nbReParameters 0 2 = -1 ∧
-    sewingMatrixDerivedAtGamma elementalNbParameters 0 2 = 1 ∧
-    sewingMatrixDerivedAtGamma nbReParameters 0 2 ≠
-      sewingMatrixDerivedAtGamma elementalNbParameters 0 2 :=
+    sewingMatrixDerivedAtGamma elementalNbParameters 0 2 = 1 :=
   ⟨Theta_transpose,
    Theta_sq,
-   H_BdG_NbRe_at_gamma_isSymm _,
-   H_BdG_NbRe_at_gamma_isSymm _,
+   H_BdG_NbRe_at_gamma_isSymm,
    nbRe_sewingMatrixDerivedAtGamma_entry_0_2,
-   elementalNb_sewingMatrixDerivedAtGamma_entry_0_2,
-   nbRe_distinct_from_elementalNb_at_derivedSewing⟩
+   elementalNb_sewingMatrixDerivedAtGamma_entry_0_2⟩
 
 end SKEFTHawking.BdGHamiltonianNbRe

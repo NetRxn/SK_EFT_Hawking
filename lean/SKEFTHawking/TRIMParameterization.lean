@@ -89,80 +89,87 @@ theorem elementalNb_genericFuKaneInvariant :
   rw [genericFuKaneInvariant_hexagonal_eq]
   exact elementalNb_fuKaneInvariant_pos_one
 
-/-! ## §3. Orthorhombic `Fin 8` case — substantive non-vacuity.
+/-! ## §3. Generic structural theorems.
 
-For an orthorhombic NbRe variant (Ima2 space group; 8 TRIMs in BZ),
-the Pfaffian-sign-product formula generalizes by adding 4 more
-non-Γ TRIM contributions. The structural distinction between
-DIII-topological and DIII-trivial materials carries through
-identically — the Γ-point contribution carries the sign-flip, the
-remaining 7 TRIMs contribute +1 each.
+The generic invariant has universal structural properties that hold
+for ANY finite TRIM enumeration — these are the load-bearing
+content of the generalization beyond just specific Fin 4 / Fin 8
+instances. -/
 
-We model this by constructing an explicit `Fin 8 → ℤ`
-sign-pattern function for each material class, instantiating the
-generic invariant, and showing the same `-1` vs `+1` distinction
-emerges. -/
+/-- **Generic structural theorem**: if every TRIM contributes
+`+1` (the singlet-baseline pattern), the product is `+1`. This is
+the canonical "DIII-trivial" universal — any material whose
+Pfaffian-sign vanishes at every TRIM has trivial invariant.
+Genuine universal claim over arbitrary `[Fintype T]`. -/
+theorem genericFuKaneInvariant_trivial_of_all_pos
+    {T : Type*} [Fintype T] (pfSignAt : T → ℤ)
+    (h : ∀ k : T, pfSignAt k = 1) :
+    genericFuKaneInvariant pfSignAt = 1 := by
+  unfold genericFuKaneInvariant
+  rw [Finset.prod_eq_one]
+  intros k _
+  exact h k
 
-/-- **Orthorhombic Pfaffian-sign pattern at TRIM `k` for a
-DIII-topological material**: −1 at the Γ point (k = 0), +1 at the
-remaining 7 TRIMs. -/
-def orthorhombicTopologicalPfSign (k : Fin 8) : ℤ :=
+/-! ## §4. `Fin 8` substrate-demonstrator (NOT a physical model).
+
+The following ships a hand-crafted `Fin 8 → ℤ` sign pattern as a
+**substrate-level demonstrator** that the generic interface
+accepts arbitrary `[Fintype T]` TRIM types. This is **NOT** a
+physical model of an orthorhombic NbRe variant — there is no
+SCParameters analogue, no Ima2-space-group BdG block, no
+materially-derived sign function. The substantive content here
+is the **generic interface's acceptance of the 8-TRIM case**;
+the physical orthorhombic model is documented as a future-wave
+follow-up. -/
+
+/-- **Hand-crafted `Fin 8` sign-pattern demonstrator**: `-1` at
+position 0, `+1` elsewhere. NOT a derivation from physics; a
+syntactic witness that `genericFuKaneInvariant` accepts the
+`Fin 8` enumeration. -/
+def orthorhombicFin8DemoSignTopological (k : Fin 8) : ℤ :=
   if k = 0 then -1 else 1
 
-/-- **Orthorhombic Pfaffian-sign pattern at TRIM `k` for a
-DIII-trivial material**: +1 at all 8 TRIMs. -/
-def orthorhombicTrivialPfSign (_ : Fin 8) : ℤ := 1
+/-- **Hand-crafted `Fin 8` trivial-pattern demonstrator**: `+1` at
+every position. -/
+def orthorhombicFin8DemoSignTrivial (_ : Fin 8) : ℤ := 1
 
-/-- **Orthorhombic DIII-topological invariant = −1.** -/
-theorem orthorhombic_topological_invariant :
-    genericFuKaneInvariant orthorhombicTopologicalPfSign = -1 := by
-  unfold genericFuKaneInvariant orthorhombicTopologicalPfSign
+/-- **Demonstrator: `orthorhombicFin8DemoSignTopological` invariant = −1.**
+A hand-crafted instance demonstrating `genericFuKaneInvariant`
+accepts `Fin 8` — does NOT derive from a physical orthorhombic
+model. -/
+theorem orthorhombicFin8DemoSignTopological_invariant :
+    genericFuKaneInvariant orthorhombicFin8DemoSignTopological = -1 := by
+  unfold genericFuKaneInvariant orthorhombicFin8DemoSignTopological
   rw [show (Finset.univ : Finset (Fin 8)) = {0, 1, 2, 3, 4, 5, 6, 7} from rfl]
   decide
 
-/-- **Orthorhombic DIII-trivial invariant = +1.** -/
-theorem orthorhombic_trivial_invariant :
-    genericFuKaneInvariant orthorhombicTrivialPfSign = 1 := by
-  unfold genericFuKaneInvariant orthorhombicTrivialPfSign
-  simp
+/-- **Demonstrator: trivial all-`+1` pattern invariant = +1.** Direct
+corollary of the universal structural theorem
+`genericFuKaneInvariant_trivial_of_all_pos`. -/
+theorem orthorhombicFin8DemoSignTrivial_invariant :
+    genericFuKaneInvariant orthorhombicFin8DemoSignTrivial = 1 :=
+  genericFuKaneInvariant_trivial_of_all_pos _ (fun _ => rfl)
 
-/-- **Substantive non-vacuity at the orthorhombic level.** The
-generic interface distinguishes topological from trivial materials
-in the 8-TRIM case identically to the hexagonal 4-TRIM case. -/
-theorem orthorhombic_distinct :
-    genericFuKaneInvariant orthorhombicTopologicalPfSign ≠
-    genericFuKaneInvariant orthorhombicTrivialPfSign := by
-  rw [orthorhombic_topological_invariant, orthorhombic_trivial_invariant]
-  decide
+/-! ## §5. Sub-wave 8.H substantive closure. -/
 
-/-! ## §4. Sub-wave 8.H substantive closure. -/
-
-/-- **Sub-wave 8.H substantive closure.** The TRIM-parameterization
-polish ships:
-  1. Generic `genericFuKaneInvariant` over arbitrary `[Fintype T]`
-     TRIM enumerations.
+/-- **Sub-wave 8.H substantive closure** (post-strengthening
+2026-05-26 PM). Three load-bearing conjuncts:
+  1. Universal structural theorem: all-`+1` pattern gives
+     invariant `+1` (genuine generic claim over `[Fintype T]`).
   2. Hexagonal `Fin 4` case recovers the existing
-     `NbReTripletSPT.lean §7.D fuKaneInvariant`.
-  3. NbRe (hexagonal) → −1; Nb (hexagonal) → +1 via the generic.
-  4. Orthorhombic `Fin 8` case ships a substantive non-vacuity witness:
-     DIII-topological → −1; DIII-trivial → +1; distinct. -/
+     `NbReTripletSPT.lean §7.D fuKaneInvariant` (universally over sc).
+  3. `Fin 8` demonstrator: generic interface accepts the
+     orthorhombic enumeration (substrate-only demonstrator —
+     physical orthorhombic NbRe model is future work). -/
 theorem subwave_8_H_substantive_closure :
+    (∀ {T : Type*} [Fintype T] (pfSignAt : T → ℤ),
+      (∀ k : T, pfSignAt k = 1) → genericFuKaneInvariant pfSignAt = 1) ∧
     (∀ sc : SCParameters,
       genericFuKaneInvariant (fun k : TRIM => pfaffianSignAtTRIM sc k) =
         fuKaneInvariant sc) ∧
-    genericFuKaneInvariant
-      (fun k : TRIM => pfaffianSignAtTRIM nbReParameters k) = -1 ∧
-    genericFuKaneInvariant
-      (fun k : TRIM => pfaffianSignAtTRIM elementalNbParameters k) = 1 ∧
-    genericFuKaneInvariant orthorhombicTopologicalPfSign = -1 ∧
-    genericFuKaneInvariant orthorhombicTrivialPfSign = 1 ∧
-    genericFuKaneInvariant orthorhombicTopologicalPfSign ≠
-      genericFuKaneInvariant orthorhombicTrivialPfSign :=
-  ⟨genericFuKaneInvariant_hexagonal_eq,
-   nbRe_genericFuKaneInvariant,
-   elementalNb_genericFuKaneInvariant,
-   orthorhombic_topological_invariant,
-   orthorhombic_trivial_invariant,
-   orthorhombic_distinct⟩
+    genericFuKaneInvariant orthorhombicFin8DemoSignTopological = -1 :=
+  ⟨@genericFuKaneInvariant_trivial_of_all_pos,
+   genericFuKaneInvariant_hexagonal_eq,
+   orthorhombicFin8DemoSignTopological_invariant⟩
 
 end SKEFTHawking.TRIMParameterization

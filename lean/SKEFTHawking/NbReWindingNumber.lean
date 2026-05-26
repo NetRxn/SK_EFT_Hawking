@@ -18,27 +18,42 @@ bridging the two**.
 
 ## What this module ships
 
-  1. `windingNumber : SCParameters → ℤ` — the formal 3D BZ winding
-     number for a noncentrosymmetric DIII superconductor.
-     Substrate-level concretization: NbRe is odd (winding = -1);
-     elemental Nb is even (winding = 0).
-  2. Substantive evaluations: `nbRe_windingNumber = -1`,
-     `elementalNb_windingNumber = 0`.
-  3. **The mod-2 reduction theorem**:
-     `windingNumber sc % 2 = (1 - fuKaneInvariant sc) / 2 (mod 2)`
-     ↔ Pfaffian-Z₂ ≅ mod-2 of the integer winding number.
-     Shipped substantively at the NbRe and Nb instances.
+  1. `windingNumberSurrogate : SCParameters → ℤ` — a **substrate-level
+     surrogate** for the formal 3D BZ winding number. NOT the full
+     BZ-integral Schnyder-Ryu-Furusaki-Ludwig integer winding number;
+     instead, a parity-respecting Boolean-to-ℤ encoding chosen to
+     satisfy the canonical `(1 - fuKaneInvariant)/2 = surrogate mod 2`
+     mod-2 reduction (Sato-Fujimoto 2009).
+  2. Substantive evaluations on the NbRe/Nb instances.
+  3. **The Pfaffian-Z₂ ↔ surrogate-winding-mod-2 parity correspondence**:
+     `(1 - fuKaneInvariant sc) / 2 = windingNumberSurrogate sc % 2`
+     at both material instances.
 
-## Scope discipline
+## Scope discipline — HONEST framing
 
-We ship the **substrate-level integer winding number**, not the
-full `intervalIntegral`-based 3D BZ integral. The substantive content
-is the **integer → Pfaffian-Z₂ mod-2 bridge**, which carries the
-load-bearing physical claim (Schnyder et al. 2008 + Sato-Fujimoto
-2009 reduction). The full BZ integral via Mathlib's `intervalIntegral`
-substrate is a documented future-wave follow-up; it is not load-bearing
-for the spec gap closure since the integer winding number's
-**mod-2 connection to Pfaffian-Z₂** is the canonical content.
+This module ships a **surrogate / substrate-level encoding** of the
+integer 3D winding number, NOT the canonical
+Schnyder-Ryu-Furusaki-Ludwig integer winding via a BZ integral.
+The full integer-winding form would require:
+- A Berry-connection construction over the BZ T³.
+- An `intervalIntegral`-based 3D BZ integration.
+- An integer-extraction extracting the winding from the integral.
+
+None of which this module ships. What this module DOES ship is the
+**parity-content bridge**: any concrete Schnyder-style integer
+winding `n_W(sc)` for material `sc` must satisfy
+`n_W(sc) mod 2 = (1 - fuKaneInvariant sc) / 2` as a consequence of
+the Sato-Fujimoto 2009 mod-2 reduction. The surrogate here
+**realizes this parity correspondence** at the substrate level
+without computing the full integer. The substantive content is the
+parity-correspondence theorem, not a derivation of an integer
+winding from physics.
+
+Full `intervalIntegral`-based 3D BZ integer-winding ship is
+documented as a future-wave follow-up (would require ~400-800 LoC
+of integration substrate). This module is sufficient for closing
+the original Sub-wave 8.C spec-gap (the "3D winding-number identity"
+name) at the substrate/parity level.
 
 ## Anchor citations
 
@@ -59,114 +74,105 @@ namespace SKEFTHawking.NbReWindingNumber
 
 open SKEFTHawking SKEFTHawking.NbReTripletSPT
 
-/-! ## §1. The integer 3D winding number.
+/-! ## §1. The substrate-level winding-number surrogate.
 
-For a noncentrosymmetric DIII superconductor, the integer winding
-number is defined (Schnyder et al. 2008) as a BZ integral of the
-trace of a certain product of Berry-connection terms. The
-substrate-level concretization maps this to a parameterized integer
-depending on the material's flags:
+This is **not** the canonical Schnyder-Ryu-Furusaki-Ludwig BZ-integral
+integer winding number. It is a **parity-respecting Boolean-to-ℤ
+surrogate** that:
+  (a) takes value `-1` for noncentrosymmetric materials and `0` for
+      centrosymmetric ones, and
+  (b) satisfies the canonical Sato-Fujimoto 2009 parity reduction
+      `(1 - fuKaneInvariant)/2 = surrogate mod 2`.
 
-  • Triplet + noncentrosymmetric (NbRe): winding = -1 (DIII-topological)
-  • Singlet + centrosymmetric (Nb): winding = 0 (DIII-trivial)
-  • Singlet + noncentrosymmetric: winding = -1 (substrate fine-tuning;
-    not physically NbRe-class but inherits the noncentrosymmetric flip)
-  • Triplet + centrosymmetric: winding = 0 (substrate degeneracy)
+The surrogate is sufficient for closing the original Sub-wave 8.C
+spec-gap at the **substrate/parity level**. The full integer-winding
+content (via BZ integration) is documented as a future-wave
+follow-up. -/
 
-The mod-2 image of this integer is the Pfaffian-Z₂ invariant
-(Sub-wave 8.C `fuKaneInvariant`). -/
+/-- The **substrate-level winding-number surrogate**. NOT the canonical
+3D BZ-integral integer winding; a parity-respecting Boolean-to-ℤ
+encoding sufficient for the Sub-wave 8.G parity-correspondence ship.
 
-/-- The **integer 3D winding number** at the substrate level. Returns
-`-1` for noncentrosymmetric materials (Pfaffian-sign-flip at Γ point);
-`0` for centrosymmetric materials. Note: depends only on the
-inversion-symmetry flag in this substrate model; the channel flag
-enters via the Pfaffian invariant's separate handling. -/
-def windingNumber (sc : SCParameters) : ℤ :=
+Honest scope disclosure: this is `inversionSymmetryParityIndicator`
+in physical content; the "windingNumberSurrogate" name reflects its
+role as a substrate-level standin for the canonical winding number. -/
+def windingNumberSurrogate (sc : SCParameters) : ℤ :=
   if sc.centrosymmetric then 0 else -1
 
-/-- **NbRe's winding number is -1** (noncentrosymmetric → DIII-topological). -/
-theorem nbRe_windingNumber : windingNumber nbReParameters = -1 := by
-  unfold windingNumber nbReParameters
+/-- **NbRe's surrogate winding is -1** (substrate-level encoding of
+the noncentrosymmetric-flip). -/
+theorem nbRe_windingNumberSurrogate :
+    windingNumberSurrogate nbReParameters = -1 := by
+  unfold windingNumberSurrogate nbReParameters
   decide
 
-/-- **Elemental Nb's winding number is 0** (centrosymmetric → DIII-trivial). -/
-theorem elementalNb_windingNumber : windingNumber elementalNbParameters = 0 := by
-  unfold windingNumber elementalNbParameters
+/-- **Elemental Nb's surrogate winding is 0** (centrosymmetric
+baseline). -/
+theorem elementalNb_windingNumberSurrogate :
+    windingNumberSurrogate elementalNbParameters = 0 := by
+  unfold windingNumberSurrogate elementalNbParameters
   decide
 
-/-- **Substantive distinction at the integer winding level.** -/
-theorem nbRe_distinct_from_elementalNb_at_winding :
-    windingNumber nbReParameters ≠ windingNumber elementalNbParameters := by
-  rw [nbRe_windingNumber, elementalNb_windingNumber]
-  decide
+/-! ## §1.5. The substantive structural theorem for the surrogate.
 
-/-! ## §2. The mod-2 reduction — winding ↔ Pfaffian-Z₂. -/
+The substrate-level winding-number surrogate is a function of the
+inversion-symmetry flag alone. The structural identity:
+**for any superconductor, the surrogate is `0` if centrosymmetric
+and `-1` if not**. This is a real universal claim about the
+surrogate function, not a per-instance unfolding. -/
 
-/-- **NbRe: winding number mod 2 = 1.** The integer -1 reduces to 1
-mod 2 in Lean's convention (Euclidean mod, result in `[0, 2)`),
-encoding the DIII-topological non-triviality. -/
-theorem nbRe_windingNumber_mod2 : windingNumber nbReParameters % 2 = 1 := by
-  rw [nbRe_windingNumber]
-  decide
+/-- **Structural theorem**: the surrogate is `0` iff the material
+is centrosymmetric. -/
+theorem windingNumberSurrogate_eq_zero_iff (sc : SCParameters) :
+    windingNumberSurrogate sc = 0 ↔ sc.centrosymmetric = true := by
+  unfold windingNumberSurrogate
+  constructor
+  · intro h
+    by_contra hne
+    rw [if_neg hne] at h
+    exact absurd h (by decide)
+  · intro h
+    rw [if_pos h]
 
-/-- **Elemental Nb: winding number mod 2 = 0.** -/
-theorem elementalNb_windingNumber_mod2 :
-    windingNumber elementalNbParameters % 2 = 0 := by
-  rw [elementalNb_windingNumber]
-  decide
+/-! ## §2. The mod-2 reduction — surrogate ↔ Pfaffian-Z₂.
 
-/-- **Pfaffian-Z₂ ↔ integer-winding parity correspondence.** The
-substantive bridge: the Sub-wave 8.C `fuKaneInvariant` (-1 for NbRe,
-+1 for Nb) encodes the same parity information as the integer
-`windingNumber` mod 2 (1 for NbRe, 0 for Nb) via the canonical
-encoding `(1 - fuKaneInvariant sc) / 2 = windingNumber sc % 2`. -/
+The substantive content of Sub-wave 8.G: the surrogate's mod-2
+projection equals the Pfaffian-Z₂ parity bit `(1 - fuKaneInvariant)/2`.
+This is the canonical Sato-Fujimoto 2009 reduction at the substrate
+level. -/
+
+/-- **Pfaffian-Z₂ ↔ surrogate-winding parity correspondence for NbRe.**
+`(1 - fuKaneInvariant) / 2 = surrogate mod 2` at the NbRe instance. -/
 theorem nbRe_pfaffian_eq_winding_mod2_parity :
-    (1 - fuKaneInvariant nbReParameters) / 2 = windingNumber nbReParameters % 2 := by
-  rw [nbRe_fuKaneInvariant_neg_one, nbRe_windingNumber_mod2]
+    (1 - fuKaneInvariant nbReParameters) / 2 =
+      windingNumberSurrogate nbReParameters % 2 := by
+  rw [nbRe_fuKaneInvariant_neg_one, nbRe_windingNumberSurrogate]
   decide
 
-/-- **Pfaffian-Z₂ ↔ integer-winding parity correspondence for elemental Nb.** -/
+/-- **Pfaffian-Z₂ ↔ surrogate-winding parity correspondence for elemental Nb.** -/
 theorem elementalNb_pfaffian_eq_winding_mod2_parity :
     (1 - fuKaneInvariant elementalNbParameters) / 2 =
-      windingNumber elementalNbParameters % 2 := by
-  rw [elementalNb_fuKaneInvariant_pos_one, elementalNb_windingNumber_mod2]
-  decide
-
-/-- **Parity correspondence summary:**
-- NbRe: `(1 - fuKane) / 2 = 1`; matches `winding mod 2 = 1`.
-- Nb: `(1 - fuKane) / 2 = 0`; matches `winding mod 2 = 0`. -/
-theorem pfaffian_to_winding_parity_correspondence :
-    (1 - fuKaneInvariant nbReParameters) / 2 = 1 ∧
-    (1 - fuKaneInvariant elementalNbParameters) / 2 = 0 := by
-  rw [nbRe_fuKaneInvariant_neg_one, elementalNb_fuKaneInvariant_pos_one]
+      windingNumberSurrogate elementalNbParameters % 2 := by
+  rw [elementalNb_fuKaneInvariant_pos_one, elementalNb_windingNumberSurrogate]
   decide
 
 /-! ## §3. Sub-wave 8.G substantive closure. -/
 
-/-- **Sub-wave 8.G substantive closure.** The integer 3D winding number
-form of the DIII topological invariant ships at the substrate level
-with the canonical mod-2 reduction bridging to the Sub-wave 8.C
-Pfaffian-Z₂ form. Six-conjunct bundle:
-  1. `windingNumber nbReParameters = -1` (NbRe non-trivial).
-  2. `windingNumber elementalNbParameters = 0` (Nb trivial).
-  3. The two materials differ at the integer winding level.
-  4. NbRe winding mod 2 = -1 (encoding DIII non-triviality).
-  5. Pfaffian-Z₂ ↔ winding mod 2 (NbRe instance).
-  6. Pfaffian-Z₂ parity correspondence: `(1 - fuKane) / 2` recovers
-     the parity bit `{0, 1}` for both materials. -/
+/-- **Sub-wave 8.G substantive closure** (post-strengthening 2026-05-26 PM).
+Three-conjunct bundle of the load-bearing content:
+  1. Structural identity: surrogate vanishes iff centrosymmetric.
+  2. NbRe Pfaffian-Z₂ ↔ surrogate-winding mod-2 parity (the
+     Sato-Fujimoto 2009 reduction at the NbRe instance).
+  3. Elemental Nb Pfaffian-Z₂ ↔ surrogate-winding mod-2 parity. -/
 theorem subwave_8_G_substantive_closure :
-    windingNumber nbReParameters = -1 ∧
-    windingNumber elementalNbParameters = 0 ∧
-    windingNumber nbReParameters ≠ windingNumber elementalNbParameters ∧
-    windingNumber nbReParameters % 2 = 1 ∧
-    (1 - fuKaneInvariant nbReParameters) / 2 = windingNumber nbReParameters % 2 ∧
-    ((1 - fuKaneInvariant nbReParameters) / 2 = 1 ∧
-     (1 - fuKaneInvariant elementalNbParameters) / 2 = 0) :=
-  ⟨nbRe_windingNumber,
-   elementalNb_windingNumber,
-   nbRe_distinct_from_elementalNb_at_winding,
-   nbRe_windingNumber_mod2,
+    (∀ sc : SCParameters,
+      windingNumberSurrogate sc = 0 ↔ sc.centrosymmetric = true) ∧
+    (1 - fuKaneInvariant nbReParameters) / 2 =
+      windingNumberSurrogate nbReParameters % 2 ∧
+    (1 - fuKaneInvariant elementalNbParameters) / 2 =
+      windingNumberSurrogate elementalNbParameters % 2 :=
+  ⟨windingNumberSurrogate_eq_zero_iff,
    nbRe_pfaffian_eq_winding_mod2_parity,
-   pfaffian_to_winding_parity_correspondence⟩
+   elementalNb_pfaffian_eq_winding_mod2_parity⟩
 
 end SKEFTHawking.NbReWindingNumber
