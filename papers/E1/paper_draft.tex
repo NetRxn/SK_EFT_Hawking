@@ -381,6 +381,22 @@ universality is the structural payoff of the SK-EFT framework: the
 prediction here is not a phenomenological re-tuning of a BEC formula,
 but the same Lean-verified chain instantiated at LKB parameters.
 
+The same surface gravity $\kappa$ that fixes the Hawking temperature
+also fixes a Kibble-Zurek-Unruh quench rate $1/\tau_Q = \kappa$: a
+horizon-crossing polariton wavepacket experiences a finite-rate
+transition with rate $\kappa$, and the resulting thermal distribution
+is the KZM analog with universal scaling exponent $\mu = \nu z /
+(1+\nu z) \in (0,1)$ (Lean module \texttt{KibbleZurekUnruh.lean},
+foundation theorem \texttt{surface\_gravity\_bounds\_kzm\_exponent}).
+The Tindall--Mello--Fishman--Stoudenmire--Sels classical-simulation
+extraction of the KZM exponent on disordered TFIM
+spin-glasses~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
+matches the D-Wave Advantage2 quantum annealer on hundreds of qubits
+across 2D square, 3D cubic, and 3D diamond lattices, providing an
+independent validation of the universal critical-scaling physics that
+the polariton analog-Hawking measurement here probes at the very
+same exponent $\mu$.
+
 %% ══════════════════════════════════════════════════════════════════
 \section{Request to the LKB team}
 
@@ -425,6 +441,10 @@ commit \texttt{8850ed93}). Polariton-specific bounds in
 \end{acknowledgments}
 
 \begin{thebibliography}{99}
+\bibitem{TindallMelloFishmanStoudenmireSels2026Science392}
+J.~Tindall, A.~F.~Mello, M.~Fishman, E.~M.~Stoudenmire, D.~Sels,
+Science \textbf{392}, 868 (2026), DOI 10.1126/science.adx2728, arXiv:2503.05693.
+
 \bibitem{Steinhauer2016}
 J.~Steinhauer, Nat.\ Phys.\ \textbf{12}, 959 (2016).
 

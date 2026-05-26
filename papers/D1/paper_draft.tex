@@ -729,6 +729,45 @@ each platform delivering a distinct leading detection mode (BEC:
 spectral floor; polariton: stimulated gain; graphene: noise
 spectrum + Wiedemann-Franz cross-check).
 
+\subsection{Independent cross-check: Kibble-Zurek-Unruh universality}
+\label{sec:kzm-unruh-foundation}
+
+The universality claim of \S\ref{sec:hierarchy} (\(T_H =
+\hbar\kappa / 2\pi k_B\) controls the analog Hawking spectrum
+identically across BEC, polariton, and graphene Dirac fluids) admits
+an independent experimental cross-check via the Kibble-Zurek-Unruh
+correspondence. A horizon-crossing wavepacket experiences a finite-
+rate transition from subsonic to supersonic flow with rate set by the
+local velocity gradient \(\kappa\); the thermal distribution of
+produced quasiparticles is the Kibble-Zurek (KZM) analog at quench
+rate \(1/\tau_Q = \kappa\), with defect-density scaling \(n_{\rm def}
+\sim \tau_Q^{-\mu}\) and universal exponent \(\mu = \nu z / (1 +
+\nu z) \in (0,1)\). The Lean module
+\texttt{KibbleZurekUnruh.lean} (Wave 6w.1) formalizes this bridge
+and ships the foundation theorem
+\texttt{surface\_gravity\_bounds\_kzm\_exponent}: under the WKB
+low-dissipation regime, the KZM-corrected horizon-crossing rate
+\(\mu\,\kappa\,(1-\delta_k)\) is strictly less than the bare
+WKB-corrected rate \(\kappa\,(1-\delta_k)\), simultaneously consuming
+\(\mu < 1\) (universal KZM exponent bound), \(1-\delta_k > 0\) (WKB
+modified-unitarity spectral budget), and \(\kappa > 0\) (surface
+gravity positivity).
+
+The Tindall--Mello--Fishman--Stoudenmire--Sels classical-simulation
+extraction of the KZM exponent on disordered transverse-field Ising
+models (2D square, 3D cubic, and 3D diamond lattices, 300+ qubits;
+matching the D-Wave Advantage2 quantum annealer via belief-propagation
+contraction of lattice-specific tensor
+networks)~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
+thus provides an independent validation of the universal critical-
+scaling physics that underlies the analog-Hawking universality
+theorem \texttt{hawking\_universality\_main}: the same exponent \(\mu\)
+that controls KZM defect density at quench rate \(\kappa\) controls
+the thermal-occupation spectrum at Hawking temperature \(T_H = \hbar
+\kappa / 2\pi k_B\). The foundational character of this cross-check
+is developed further in Phase 6w (bundle D7 candidate per
+PAPER\_STRATEGY.md).
+
 \subsection{Methodology sidebar: Aristotle's counterexample}
 
 The SK-EFT \texttt{FirstOrderKMS} axiom in our Lean library is the
@@ -791,6 +830,13 @@ were substantive contributions, not merely closures of existing
 skeletons.
 
 \begin{thebibliography}{99}
+
+\bibitem{TindallMelloFishmanStoudenmireSels2026Science392}
+J.~Tindall, A.~F.~Mello, M.~Fishman, E.~M.~Stoudenmire, D.~Sels,
+\emph{Dynamics of disordered quantum systems with two- and
+three-dimensional tensor networks},
+Science \textbf{392}, 868 (2026),
+DOI 10.1126/science.adx2728, arXiv:2503.05693.
 
 \bibitem{Hawking1974}
 S.~W.~Hawking,

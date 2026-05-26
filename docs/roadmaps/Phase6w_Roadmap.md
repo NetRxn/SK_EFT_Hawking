@@ -40,7 +40,7 @@
 
 | Wave | Title | Status | Bundle absorption | LoE |
 |---|---|---|---|---|
-| **Wave 6w.1** | Kibble-Zurek-Unruh bridge (foundation; lifted from former Phase 6v.7) | ⏳ NOT STARTED | D1 + E1 + E2 reinforcement | 2–3 sess |
+| **Wave 6w.1** | Kibble-Zurek-Unruh bridge (foundation; lifted from former Phase 6v.7) | ✅ SHIPPED 2026-05-26 PM | D1 + E1 + E2 reinforcement | 1 sess |
 | **Wave 6w.2** | Belief propagation on tensor networks — Mathlib substrate | ⏳ NOT STARTED | I1 substrate; later D7 candidate | 3–4 sess |
 | **Wave 6w.3** | LDP-controlled classical-simulability sub-claim (former A1a) | ⏳ NOT STARTED | D1 cross-bridge to LDP/ + I-bundle section | 2 sess |
 | **Wave 6w.4** | Chebyshev tensor-network + aperiodic-lattice substrate | ⏳ NOT STARTED | I1 substrate; later D7 candidate | 3–4 sess |

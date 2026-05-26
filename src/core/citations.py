@@ -78,6 +78,8 @@ PAPER_TO_PHASE: dict[str, str] = {
     'paper42_nonlinear_efe':                 'Phase-6e',
     'paper42b_cc_emergent':                  'Phase-6e',
     'paper43_einstein_cartan':               'Phase-6e',
+    # Phase 6w (Classical simulability & quantum advantage — tensor networks)
+    '_phase6w_W1_lean_only':                 'Phase-6w',
     # Phase 6m (dark-energy review paper — causal-set / entropic-gravity / Jacobson-thermo-GR)
     'paper45_phase6m_review':                'Phase-6m',
     # Note: publication bundles (F, D1–D5, L1–L3, I1–I3, E1, E2) are *not*
@@ -10222,6 +10224,39 @@ CITATION_REGISTRY = {
                     'lean/SKEFTHawking/DKMBootstrap/NoCrossing.lean'],
         'provides': ['Universal operator-growth hypothesis: nested-commutator Lanczos coefficients grow linearly in κ for generic non-integrable Hamiltonians, yielding the κ! factorial-exponential bound CHHK F3 axiomatizes'],
         'notes': 'Phase 6q F3 axiom-family substrate reference. Together with Abanin-De Roeck-Huveneers, characterizes the fermionic / bounded-norm Hamiltonian regime where F3 holds; the BEC bosonic case (Yin-Lucas, Kuwahara-Saito) falls outside this regime.',
+    },
+
+    # ════════════════════════════════════════════════════════════════════
+    # Phase 6w — Classical Simulability & Quantum Advantage in Analog
+    # Hawking: Tensor-Network Substrate. Bibkeys added at each wave's
+    # Stage 1; primary-source PDFs cached at
+    # Lit-Search/Phase-6w/primary-sources/<bibkey>.pdf
+    # ════════════════════════════════════════════════════════════════════
+
+    'TindallMelloFishmanStoudenmireSels2026Science392': {
+        'authors': 'Tindall, J., Mello, A. F., Fishman, M., Stoudenmire, E. M., Sels, D.',
+        'title': 'Dynamics of disordered quantum systems with two- and three-dimensional tensor networks',
+        'journal': 'Science',
+        'volume': 392,
+        'page': '868-872',
+        'year': 2026,
+        'doi': '10.1126/science.adx2728',
+        'arxiv': '2503.05693',
+        'doi_verified': True,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-6w/primary-sources/TindallMelloFishmanStoudenmireSels2026Science392.pdf',
+        # Synthetic paper-path routes bibkey_phase() to Phase-6w; the
+        # _phase6w_W1_lean_only directory is the D.4 sourceless-lift handle
+        # per PAPER_DRAFT_MAPPING.md and is mapped to Phase-6w via
+        # PAPER_TO_PHASE. Subsequent entries reflect the actual bundle
+        # cross-bridge citations into D1 / E1 / E2 paper bodies.
+        'used_in': ['papers/_phase6w_W1_lean_only/paper_draft.tex',
+                    'lean/SKEFTHawking/KibbleZurekUnruh.lean',
+                    'papers/D1/paper_draft.tex',
+                    'papers/E1/paper_draft.tex',
+                    'papers/E2/paper_draft.tex'],
+        'provides': ['Independent classical-simulation validation of universal Kibble-Zurek physics on 300+ qubit disordered TFIMs (2D square, 3D cubic, 3D diamond lattices), matching D-Wave Advantage2 5000-qubit quantum annealer via belief-propagation contraction of lattice-specific PEPS/PEPO tensor networks'],
+        'notes': 'Phase 6w Wave 6w.1 foundation reference. The Kibble-Zurek scaling exponent extracted here (universal data of the continuous quantum phase transition) is the experimentally-cross-checked analog of the SK-EFT surface-gravity prediction via the Kibble-Zurek-Unruh correspondence (1/τ_Q ≡ κ). Also anchors Phase 6w Wave 6w.2/6w.3 (BP-on-TN Mathlib substrate + LDP-controlled simulability) as the foundational primary source.',
     },
 }
 

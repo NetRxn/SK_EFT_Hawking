@@ -363,6 +363,27 @@ coefficients. The Lean verification is platform-independent: the
 prediction can be inverted, and the Dean-Kim-Lucas teams' device
 parameters supply the quantitative anchor.
 
+An independent classical-simulation cross-check of the universal
+critical-scaling physics underlying this prediction is provided by
+the Kibble-Zurek-Unruh correspondence: the same surface gravity
+$\kappa$ that fixes $T_H = \hbar\kappa/(2\pi k_B)$ also fixes the
+KZM quench rate $1/\tau_Q = \kappa$ at the analog horizon (Lean
+module \texttt{KibbleZurekUnruh.lean}, foundation theorem
+\texttt{surface\_gravity\_bounds\_kzm\_exponent}). The
+Tindall--Mello--Fishman--Stoudenmire--Sels classical tensor-network
+simulation of disordered TFIM
+spin-glasses~\cite{TindallMelloFishmanStoudenmireSels2026Science392}
+extracts the universal KZM scaling exponent $\mu = \nu z / (1+\nu z)$
+on 2D square, 3D cubic, and 3D diamond lattices at 300+ qubits,
+matching the D-Wave Advantage2 quantum annealer via belief-propagation
+contraction. The same $\mu$ governs the analog-Hawking
+thermal-occupation spectrum that the bilayer-nozzle measurement
+proposed here probes; a measured $\Delta S_I(\omega)$ profile
+inconsistent with both the SK-EFT prediction and the KZM scaling
+extracted from independent classical simulation would constitute a
+falsification of the universal critical-scaling backbone shared by
+both formalisms.
+
 %% ══════════════════════════════════════════════════════════════════
 \section{Request to the Dean-Kim-Lucas teams}
 
@@ -414,6 +435,10 @@ commit \texttt{8850ed93}). Graphene Dirac-fluid bounds in
 \end{acknowledgments}
 
 \begin{thebibliography}{99}
+\bibitem{TindallMelloFishmanStoudenmireSels2026Science392}
+J.~Tindall, A.~F.~Mello, M.~Fishman, E.~M.~Stoudenmire, D.~Sels,
+Science \textbf{392}, 868 (2026), DOI 10.1126/science.adx2728, arXiv:2503.05693.
+
 \bibitem{Unruh1981}
 W.~G.~Unruh,
 Phys.\ Rev.\ Lett.\ \textbf{46}, 1351 (1981).
