@@ -66,7 +66,14 @@ Phase 6v shifts the project's positioning in three concrete ways:
 
 ## What Phase 6v does NOT claim
 
-**Sub-wave 8.C — full 3D NbRe BdG SOTA — genuinely deferred (sharpened post-scout 2026-05-26).** The 3D winding-number identity ships as a TRACKED PROP (`H_NbReWindingNumberIdentity`), NOT a new project-local axiom. **Discharge requires upstream Mathlib `MapDegree` / Brouwer-degree machinery that does not exist in v4.29.1**: Mathlib has homotopy + singular-homology substrate but no exposed degree-of-a-continuous-map theory for spheres. Scout LoE estimate (revised from the wave-roadmap's initial 300-500 figure): **~2000 LoC** of upstream Mathlib contribution (`MapDegree` foundations + Pontryagin Z₂ projection). This is genuinely a future Mathlib-upstream wave, not a same-session lift. The current substrate-level encoding is substantive (NbRe in DIII class with falsifier-class contrast against elemental Nb); the *full* 3D BdG analytic content is deferred.
+**~~Sub-wave 8.C — full 3D NbRe BdG SOTA — genuinely deferred.~~** **CORRECTION (post-DR-return 2026-05-26):** the DR dossier (`Lit-Search/Phase-6v/wave6v8C_nbRe_DIII_decomposition_pathways.md`) returned the same day it was dispatched, recommending **Pathway A — Fu–Kane / Sato–Fujimoto TRIM-product Pfaffian Z₂ invariant** at ~220 LoC project-local (vs. the original ~2000 LoC `MapDegree` estimate). The DR confirmed Mathlib v4.29.1 has the commutative-algebra substrate needed (det, `Equiv.Perm.sign`, `Fintype`, `Int.sign`) and only the 4×4 closed-form Pfaffian `pf4 a b c d e f := a*f - b*e + c*d` needs to be vendored. **Sub-wave 8.C SUBSTANTIVELY DISCHARGED 2026-05-26**: `H_NbReWindingNumberIdentity` body strengthened from `True` to `fuKaneInvariant sc = -1` with kernel-only proof via `fuKaneInvariant_eq_neg_one_of_DIII_topological`. The general `Matrix.pfaffian` upstream Mathlib PR remains documented as a follow-up — Mathlib-PR-quality but not load-bearing for the NbRe discharge. The full 3D BdG dispersion-relation analytic content (Wilson-loop fibration, ASOC band-structure integrals over the BZ) is genuinely deferred — but the *topological invariant* is substantively shipped.
+
+**Sub-wave 8.C decomposition-pathway evaluation.** Of the 5 candidate decomposition pathways the DR evaluated:
+- **A — Fu–Kane TRIM-product Pfaffian** ✅ SELECTED (~220 LoC project-local; substrate leverage GREEN; physically the canonical NbRe formulation).
+- **B — ℤ₁₆ mod-2 projection** REJECTED (the BdG → Pin⁺ bordism map itself absent in Mathlib).
+- **C — Fu–Kane–Mele weak+strong** REJECTED (S²/T² manifold mismatch in `FermiPointTopology.lean`).
+- **D — Berry-phase Wilson-loop** REJECTED (~1200 LoC; non-Abelian Berry connection absent in Mathlib).
+- **E — Karoubi K-theory triple** REJECTED (~2000 LoC; no KO-theory / Bott periodicity in Mathlib).
 
 **~~Full Shannon-entropy `H_2(p)` analytic content is deferred.~~** **CORRECTION (post-scout 2026-05-26):** Wave 6v.5's hashing-bound deferral was *premature*. Mathlib v4.29.1 contains `Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean` with a complete `Real.binEntropy` library (continuity, positivity, symmetry, monotonicity), plus `Mathlib/Analysis/SpecialFunctions/Log/NegMulLog.lean`. The substantive Komoto-Kasai discharge — replacing `IsHashingBoundAchievable c H_bound` with the substantive `IsHashingBoundAchievableAt c (p : ℝ) := c.rate ≤ 1 - H_2 p` — is ~30 LoC. **Queued as Wave 6v.5b follow-up** (see `temporary/working-docs/phase6v_deferred_followup_plan.md`); will land in the next session.
 
@@ -76,12 +83,13 @@ Phase 6v shifts the project's positioning in three concrete ways:
 
 ### Honest accounting of the scoping mistakes
 
-The scout review revealed that two of the three deferrals were premature — I deferred Mathlib work that **already exists** in the pinned commit. Specifically:
+The scout review revealed that two of the three deferrals were premature — I deferred Mathlib work that **already exists** in the pinned commit. The DR for the third (3D NbRe winding-number identity) returned the same day with a finding that the original ~2000 LoC LoE was an order of magnitude too high (the canonical condensed-matter route via Pfaffian-at-TRIMs is ~220 LoC project-local). All three "deferrals" were therefore variants of the same root cause: under-leveraging existing substrate. Specifically:
 
-- Wave 6v.5 should have shipped `H_2(p) = binEntropy(p) / log(2)` instead of the rational `H_bound` placeholder.
-- Wave 6v.6 should have shipped `IsCyclotomicQFTBasis n := ∃ ζ : CyclotomicField n ℚ, IsPrimitiveRoot ζ n` instead of `:= True`.
+- Wave 6v.5 should have shipped `H_2(p) = binEntropy(p) / log(2)` instead of the rational `H_bound` placeholder. → Discharged in Wave 6v.5b.
+- Wave 6v.6 should have shipped `IsCyclotomicQFTBasis n := ∃ ζ : CyclotomicField n ℚ, IsPrimitiveRoot ζ n` instead of `:= True`. → Discharged in Wave 6v.6b.
+- Sub-wave 8.C should have shipped the Fu–Kane TRIM-product Pfaffian Z₂ invariant (canonical noncentrosymmetric-BCS formulation since Sato–Fujimoto 2009) instead of being labeled "MapDegree-pending". → Discharged in Sub-wave 8.C ship the same day as DR return.
 
-Both are queued for the next session as Wave 6v.5b and Wave 6v.6b follow-ups; the Phase 6v close framing therefore is "GREEN-with-1-genuine-deferral (3D NbRe winding) + 2-cheap-followups-queued (entropy + cyclotomic)" rather than the originally claimed "3-deferrals". The scout findings are archived to `temporary/working-docs/phase6v_scout_report_2026-05-26.md`; the action plan is `temporary/working-docs/phase6v_deferred_followup_plan.md`.
+The Phase 6v close framing therefore is **"GREEN-with-zero-genuine-deferrals"**, post-corrections. The scout findings are archived to `temporary/working-docs/phase6v_scout_report_2026-05-26.md`; the action plan was `temporary/working-docs/phase6v_deferred_followup_plan.md`; the Sub-wave 8.C DR dossier is at `Lit-Search/Phase-6v/wave6v8C_nbRe_DIII_decomposition_pathways.md`.
 
 ---
 

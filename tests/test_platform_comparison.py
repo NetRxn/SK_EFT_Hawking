@@ -32,7 +32,8 @@ class TestBECPlatforms:
 
 class TestPolaritonPlatforms:
     def test_three_polariton_platforms(self):
-        assert len(polariton_platform_summaries()) == 3
+        # Wave 6v.4 (2026-05-26) added Penn_TMD_MoSe2 as the 4th platform.
+        assert len(polariton_platform_summaries()) == 4
 
     def test_polariton_1d(self):
         for s in polariton_platform_summaries():
@@ -60,7 +61,9 @@ class TestGraphenePlatforms:
 
 class TestUnifiedComparison:
     def test_total_nine_platforms(self):
-        assert len(all_platform_summaries()) == 9
+        # Was 9 (3 BEC + 3 polariton + 3 graphene) through Phase 6q;
+        # Wave 6v.4 added Penn_TMD_MoSe2 polariton → 10 total.
+        assert len(all_platform_summaries()) == 10
 
     def test_graphene_TH_much_larger_than_bec(self):
         summaries = all_platform_summaries()

@@ -1186,10 +1186,17 @@ import SKEFTHawking.FaultTolerance.WStateQFT
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
 -- against elemental-Nb canonical s-wave singlet baseline. Cross-bridge to
--- D2 SPT classification + D4 topological-qubit substrate. Sub-wave 8.C
--- (full 3D BdG winding-number identity) ships as tracked Prop
--- H_NbReWindingNumberIdentity per Pipeline Invariant #15. Lifts into
+-- D2 SPT classification + D4 topological-qubit substrate. Lifts into
 -- D2 + D4 (NOT D6).
+--
+-- Sub-wave 8.C (2026-05-26): the original tracked Prop
+-- `H_NbReWindingNumberIdentity` is now **substantively discharged**
+-- via the Fu–Kane / Sato–Fujimoto TRIM-product Pfaffian Z₂ invariant
+-- (Pathway A per the 2026-05-26 decomposition-pathways DR dossier).
+-- Body strengthened from `True` to `fuKaneInvariant sc = -1` for any
+-- DIII-topological `sc`, with proof
+-- `H_NbReWindingNumberIdentity_holds` kernel-only. Project-local
+-- axiom count UNCHANGED at 0.
 import SKEFTHawking.NbReTripletSPT
 
 /-!

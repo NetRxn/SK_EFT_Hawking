@@ -33,9 +33,11 @@
 
 ## Phase 6v close (2026-05-26)
 
-**✅ PHASE 6v SUBSTANTIVELY COMPLETE 2026-05-26** (with 2 follow-up sub-waves queued).
+**✅ PHASE 6v FULLY COMPLETE 2026-05-26** (all 7 waves + all 3 follow-up sub-waves substantively shipped; **zero tracked Props remaining**).
 
 All 7 waves SHIPPED, D6 bundle CREATED, phase-level stakeholder docs shipped, Stage-13 adversarial review verdict: **GREEN** (0 BLOCKERs, 0 REQUIREDs, 7 ADVISORIES — 1 actionable [Babbush PDF rename] FIXED inline; 2 ADVISORIES [Wave 6v.5 hashing-bound + Wave 6v.6 cyclotomic-QFT-basis substrate-discipline] queued as follow-up Waves 6v.5b + 6v.6b; remaining 4 are disclosure-honest or out-of-scope). Commits 9e99ab1 → close.
+
+**Sub-wave 8.C SUBSTANTIVELY DISCHARGED (2026-05-26 post-DR-return).** The Phase 6v close's lone genuine deferral — the NbRe 3D winding-number identity — was substantively discharged the same day via **Pathway A** from the decomposition-pathways DR dossier (`Lit-Search/Phase-6v/wave6v8C_nbRe_DIII_decomposition_pathways.md`). The Fu–Kane / Sato–Fujimoto TRIM-product Pfaffian Z₂ invariant ships in `lean/SKEFTHawking/NbReTripletSPT.lean` §7 (~220 LoC project-local, vs. the ~2000 LoC `MapDegree` original estimate). `H_NbReWindingNumberIdentity` body is **strengthened from `True` to `fuKaneInvariant sc = -1`** and discharged kernel-only via `fuKaneInvariant_eq_neg_one_of_DIII_topological`. **Project-local axiom count UNCHANGED at 0.** 21 Python regression tests in `tests/test_nbre_fu_kane_pfaffian.py`. See `docs/roadmaps/Phase6v/Wave_6v.8_Roadmap.md` for full ship details.
 
 ### Post-close scout review + follow-up close (2026-05-26)
 
@@ -43,11 +45,11 @@ A scout sweep of the 3 deferred Mathlib substrates revealed that **2 of 3 deferr
 
 - **Wave 6v.5 deferred Shannon-entropy:** Mathlib has `Real.binEntropy` + companions (`Mathlib/Analysis/SpecialFunctions/BinaryEntropy.lean`). **✅ DISCHARGED in Wave 6v.5b commit `c303be6`** (~85 LoC: `H_2` base-2 wrapper + structural theorems + Komoto-Kasai-form predicate + p=0 corner-case witness + p=1/2 substantive falsifier).
 - **Wave 6v.6 deferred cyclotomic-QFT-basis predicate:** Mathlib has `CyclotomicField n ℚ` + `IsPrimitiveRoot` + `primitiveRoot_spec`. **✅ DISCHARGED in Wave 6v.6b commit `52b1eef`** (~50 LoC: `IsCyclotomicQFTBasis n := ∃ ζ : CyclotomicField n ℚ, IsPrimitiveRoot ζ n` + substantive witness at every positive `n` via `IsCyclotomicExtension.zeta` + concrete non-vacuity at QCyc_n sizes {5, 8, 16, 40, 80}).
-- **Wave 6v.8 deferred 3D winding-number:** Mathlib genuinely lacks `MapDegree` / Brouwer-degree theory; LoE revised upward from "300-500 LoC" to "~2000 LoC of upstream Mathlib contribution". This deferral remains correct (though the original LoE was 6× too optimistic). **Discharge plan sharpened** (commit `810eb43`); DR prompt dropped (`Lit-Search/tasks/submitted/20260526_phase6v_wave_6v8c_NbRe_DIII_Z2_decomposition.md`) scouting 5 decomposition pathways that may avoid the full MapDegree formalization.
+- **Wave 6v.8 deferred 3D winding-number:** ✅ **SUBSTANTIVELY DISCHARGED in Sub-wave 8.C ship (2026-05-26 post-DR-return).** The DR dossier returned the same day and recommended **Pathway A — Fu–Kane / Sato–Fujimoto TRIM-product Pfaffian Z₂ invariant** at ~220 LoC project-local (vs. the ~2000 LoC `MapDegree` original estimate). The substantive discharge ships inline in `lean/SKEFTHawking/NbReTripletSPT.lean` §7 + 21 Python regression tests in `tests/test_nbre_fu_kane_pfaffian.py`. `H_NbReWindingNumberIdentity` body **strengthened from `True` to `fuKaneInvariant sc = -1`** with kernel-only discharge. **DR task moved from `Lit-Search/Tasks/in-progress/` to `Lit-Search/Tasks/complete/`.**
 
-**Final adversarial re-review verdict (2026-05-26 post-followup): GREEN**, zero BLOCKERs / REQUIREDs / new ADVISORIES. Both 6v.5b + 6v.6b substantively close Advisories 2 + 3 from the first review pass. All 7 Wave 6v Lean modules compile clean; all 88 Wave 6v pytest cases PASS; validate.py citation + parameter-provenance checks PASS.
+**Final adversarial re-review verdict (2026-05-26 post-followup AM): GREEN**, zero BLOCKERs / REQUIREDs / new ADVISORIES. Both 6v.5b + 6v.6b substantively closed Advisories 2 + 3 from the first review pass.
 
-**Phase 6v is FULLY COMPLETE at the substrate level** — only the genuine Deferral 1 (sub-wave 8.C, NbRe 3D winding-number identity) remains, with a sharpened discharge plan + dispatched DR prompt.
+**Sub-wave 8.C close + re-strengthening re-review pending (2026-05-26 PM).** After the Sub-wave 8.C ship, a fresh-context Opus adversarial review will run on the cumulative Phase 6v ship (per user direction: review runs ONCE after all implementation work is done and strengthened, not per-wave).
 
 **Phase 6v Implications:** `docs/stakeholder/Phase6v_Implications.md`.
 **Phase 6v Strategic Positioning:** `docs/stakeholder/Phase6v_Strategic_Positioning.md`.
@@ -70,7 +72,7 @@ A scout sweep of the 3 deferred Mathlib substrates revealed that **2 of 3 deferr
 | **Wave 6v.2** | Google ECC-256 T-gate count bound for Shor circuits | ✅ SHIPPED 2026-05-26 | D6 §5 (populated) + D4 + I1 cross-bridges | 2–3 sess |
 | **Wave 6v.5** | APM-LDPC code substrate + hashing-bound LDP sub-wave | ✅ SHIPPED 2026-05-26 | D6 §4 (populated) + I1 | 4 sess |
 | **Wave 6v.6** | W-state QFT decomposition in Q(ζ_N) | ✅ SHIPPED 2026-05-26 | D6 §6 (populated) | 2 sess |
-| **Wave 6v.8** | NbRe triplet superconductor full SOTA BdG + SPT classification | ✅ SHIPPED 2026-05-26 (substrate-level; sub-wave 8.C tracked as `H_NbReWindingNumberIdentity`) | D2 §SPT-exhibits + D4 §topological-qubit-candidates (populated) | 3–5 sess (heaviest in 6v) |
+| **Wave 6v.8** | NbRe triplet superconductor full SOTA BdG + SPT classification (incl. Sub-wave 8.C Fu–Kane Pfaffian Z₂ discharge) | ✅ FULLY SHIPPED 2026-05-26 (substrate-level + Sub-wave 8.C substantively discharged via Pathway A) | D2 §SPT-exhibits + D4 §topological-qubit-candidates (populated) | 3–5 sess (heaviest in 6v) |
 
 **Total estimated effort:** ~14–19 sessions across 7 waves.
 

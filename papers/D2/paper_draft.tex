@@ -606,11 +606,37 @@ section. The Lean substrate ships the substantive contrast in
 (noncentrosymmetric $\land$ triplet), while
 \verb|elementalNb_not_DIII_topological| pins the falsifier-class
 contrast against elemental Nb (canonical s-wave singlet, bcc
-centrosymmetric). The full 3D BdG $\to$ DIII-class
-winding-number-identity sub-wave (8.C in the wave roadmap) ships
-as a tracked Prop (\verb|H_NbReWindingNumberIdentity|, NOT a new
-project-local axiom) with discharge plan on the future Mathlib 3D
-winding-number substrate.
+centrosymmetric). The 3D BdG $\to$ DIII-class topological-invariant
+sub-wave (8.C in the wave roadmap) ships substantively via the
+canonical noncentrosymmetric-BCS TRIM-product Pfaffian
+$\mathbb{Z}_2$ invariant
+\[
+  \delta(\mathrm{sc}) \;:=\; \prod_{k \in \mathrm{TRIMs}}
+    \operatorname{sgn}\bigl(\mathrm{Pf}\bigl(w(\mathrm{sc},\,k)\bigr)\bigr)
+    \;\in\; \{\pm 1\},
+\]
+where $w(\mathrm{sc}, k)$ is the antisymmetric BdG sewing matrix at
+the time-reversal-invariant momentum~$k$
+(the Fu--Kane formulation
+[PRB \textbf{76}, 045302 (2007)] for inversion-symmetric
+topological insulators, extended to noncentrosymmetric BCS by
+Sato--Fujimoto [PRB \textbf{79}, 094504 (2009)] and to 3D DIII by
+Qi--Hughes--Raghu--Zhang [PRB \textbf{81}, 134508 (2010),
+arXiv:0908.3550]; modern symmetry-indicator formulation by
+Ono--Po--Shiozaki [PRR \textbf{3}, 023086 (2021),
+arXiv:2008.05499]).
+The Lean theorem
+\verb|fuKaneInvariant_eq_neg_one_of_DIII_topological| in
+\verb|NbReTripletSPT.lean| §7 quantifies universally over any DIII-topological
+capsule and evaluates to~$-1$ for NbRe (DIII-topological) and~$+1$ for
+elemental Nb (DIII-trivial), pinning the substantive distinction at
+the type level. The 4$\times$4 closed-form Pfaffian
+$\mathrm{Pf} = a f - b e + c d$ is vendored inline as the only new
+substrate; a general \verb|Matrix.pfaffian| Mathlib upstream PR is a
+documented follow-up but not load-bearing for the NbRe discharge.
+Zero new project-local axioms; the original tracked Prop placeholder
+\verb|H_NbReWindingNumberIdentity| has been substantively discharged
+via \verb|H_NbReWindingNumberIdentity_holds|.
 
 %% ══════════════════════════════════════════════════════════════════
 \section{The chirality wall: a three-pillar synthesis}

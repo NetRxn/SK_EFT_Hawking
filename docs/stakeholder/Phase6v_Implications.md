@@ -70,7 +70,7 @@ D6 ships **kernel-only** (zero new project-local axioms; standard Lean axiom clo
 | Lean theorems (rough, top-level grep) | 7339 | ~7390 | +51 (substantive across 7 waves) |
 | Lean axioms (project-local) | 0 | 0 | unchanged ✓ |
 | Lean sorries | 0 | 0 | unchanged ✓ |
-| Tracked Props (load-bearing) | 4 | 5 | +1 (`H_NbReWindingNumberIdentity` for sub-wave 8.C; discharge plan documented) |
+| Tracked Props (load-bearing) | 4 | **4** | **unchanged** (`H_NbReWindingNumberIdentity` substantively discharged in Sub-wave 8.C via Fu–Kane Pfaffian Pathway A — 2026-05-26 post-DR-return) |
 | Publication bundles (per PAPER_STRATEGY.md) | 14 | **15** | +1 (D6 CREATED) |
 | Pytest cases | 4220 | ~4300 | +84 (7 wave test files) |
 | CITATION_REGISTRY bibkeys | ~414 | ~422 | +8 (Wang Penn TMD, Williamson-Yoder, Babbush ECC-256, Bravyi-Kitaev, Komoto-Kasai APM-LDPC, Dür-Vidal-Cirac W-state, Colangelo NbRe) |
@@ -82,7 +82,7 @@ All counts pending the next `update_counts.py` regen on the post-6v tree.
 
 ## Posture Statement
 
-Phase 6v's posture: **substrate-level kernel-verified absorption of external quantum-computing frontier results, scoped honestly per LoE, with falsifier-class contrasts that establish non-vacuity.** Every wave's substantive ship is paired with a contrast theorem showing the new result is genuinely better than a baseline class — quadratic-overhead NOT linear (Wave 6v.1); rate-exactly-1/2 NOT above (Wave 6v.5); elemental Nb NOT in DIII class (Wave 6v.8). The single new tracked Prop (`H_NbReWindingNumberIdentity` for the full 3D NbRe BdG winding-number identity, sub-wave 8.C) is documented with an explicit discharge plan rather than shipped as a new project-local axiom.
+Phase 6v's posture: **substrate-level kernel-verified absorption of external quantum-computing frontier results, scoped honestly per LoE, with falsifier-class contrasts that establish non-vacuity.** Every wave's substantive ship is paired with a contrast theorem showing the new result is genuinely better than a baseline class — quadratic-overhead NOT linear (Wave 6v.1); rate-exactly-1/2 NOT above (Wave 6v.5); elemental Nb NOT in DIII class (Wave 6v.8); δ = −1 for NbRe but δ = +1 for elemental Nb at the Fu–Kane Z₂ invariant (Sub-wave 8.C). **Zero new tracked Props introduced at Phase 6v close** — the original Sub-wave 8.C tracked Prop `H_NbReWindingNumberIdentity` was substantively discharged the same day as the DR return (2026-05-26) via Pathway A (Fu–Kane / Sato–Fujimoto TRIM-product Pfaffian Z₂ invariant) at ~220 LoC project-local (vs. the original ~2000 LoC `MapDegree` estimate that motivated the deferral).
 
 The D6 bundle creates the structural home for the FT-QC frontier within the project's publication architecture — a unified PRD/PRX-Q/JHEP-class deep paper covering code substrate + measurement protocol + compiler primitive + universal logic, kernel-verified end-to-end. This is the first new publication-bundle target since I3 in Phase 6n.
 

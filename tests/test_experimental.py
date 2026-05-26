@@ -423,11 +423,16 @@ class TestPolaritonPredictions:
     """Tests for polariton Tier 1 predictions."""
 
     def test_all_platforms_compute(self):
-        """All polariton platforms should compute without error."""
+        """All polariton platforms should compute without error.
+
+        Platform count was 3 through Phase 6q; Wave 6v.4 (2026-05-26) added
+        Penn_TMD_MoSe2 as the 4th platform for the Tier-1 perturbative-
+        validity demarcation."""
         from src.experimental.polariton_predictions import compute_all_polariton_platforms
 
         platforms = compute_all_polariton_platforms()
-        assert len(platforms) == 3
+        assert len(platforms) == 4
+        assert "Penn_TMD_MoSe2" in platforms  # Wave 6v.4 addition
         for name, p in platforms.items():
             assert p.T_H > 0
             assert p.D > 0
@@ -494,11 +499,15 @@ class TestPolaritonPredictions:
         assert factor < 2.0  # Should be modest for short distances
 
     def test_regime_map(self):
-        """Regime map should have all platforms with valid data."""
+        """Regime map should have all platforms with valid data.
+
+        Platform count was 3 through Phase 6q; Wave 6v.4 (2026-05-26) added
+        Penn_TMD_MoSe2 as the 4th platform."""
         from src.experimental.polariton_predictions import polariton_regime_map
 
         regime_map = polariton_regime_map()
-        assert len(regime_map) == 3
+        assert len(regime_map) == 4
+        assert "Penn_TMD_MoSe2" in regime_map  # Wave 6v.4 addition
         for name, data in regime_map.items():
             assert 'Gamma_pol_over_kappa' in data
             assert 'tier1_regime' in data
