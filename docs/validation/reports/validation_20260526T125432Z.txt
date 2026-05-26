@@ -1,0 +1,9 @@
+SK-EFT Hawking Validation Report
+Generated: 20260526T125432Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] provenance_doi_in_registry
+  + summary — 119 provenance DOIs resolved / 0 missing / 86 entries without DOI (internal derivation); 16 cited_bibkeys resolved / 0 missing
+  + all_resolved — Every provenance DOI and cited_bibkey resolves to a CITATION_REGISTRY entry
+
+Overall: 1/1 passed
