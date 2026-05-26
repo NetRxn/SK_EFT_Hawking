@@ -356,9 +356,72 @@ on the W-state QFT in $\mathbb{Q}(\zeta_N)$), not here.
 (Wave 6v.6)}
 \label{sec:wstate}
 
-\textbf{Pending Wave 6v.6.} This section will be populated when
-Wave~6v.6 ships the W-state single-shot projective-measurement
-decomposition in the project's cyclotomic-substrate framework.
+\subsection{Setting}
+
+The $n$-qubit W-state~\cite{DurVidalCirac2000WState} is the
+canonical cyclic-shift-symmetric multipartite entangled state
+\begin{equation}
+  |W_n\rangle = \frac{1}{\sqrt{n}} \sum_{k=0}^{n-1}
+    Z_n^k\,|10\cdots 0\rangle
+  = \frac{|10\cdots 0\rangle + |010\cdots 0\rangle
+  + \cdots + |0\cdots 01\rangle}{\sqrt{n}},
+  \label{eq:wstate}
+\end{equation}
+where $Z_n$ is the cyclic-shift operator. The Z$_n$ symmetry means
+that single-shot projective measurement in the QFT$_n$ eigenbasis
+yields one of $n$ outcomes (the cyclic-shift label $k \in \{0, 1,
+\ldots, n-1\}$) with eigenvalues $\zeta_n^k$ — the $n$-th roots
+of unity. The natural number field for the QFT$_n$ measurement basis
+is therefore the $n$-th cyclotomic field $\mathbb{Q}(\zeta_n)$.
+
+This decomposition is the single-shot measurement primitive of the
+Kyoto-Hiroshima 2025-09 W-state single-shot projective-measurement
+work (per strategy synthesis F9 line). Substrate connection: for
+$n = 5$ the natural field is the project's existing
+\verb|QCyc5| substrate; for $n = 8$ it is contained in
+\verb|QCyc16|; for $n = 40$ it is exactly the
+\verb|QCyc40| FibonacciQutrit / T-gate-compiler natural number
+field — the same cyclotomic substrate \textsection~\ref{sec:sk}'s
+quantitative Solovay-Kitaev tight-$\varepsilon$ headline operates on.
+
+\subsection{Formal substrate}
+
+The Lean substrate ships in
+\verb|lean/SKEFTHawking/FaultTolerance/WStateQFT.lean|:
+\begin{itemize}
+\item \verb|WStateCyclicShiftDecomposition n| structure (Prop
+  $n \geq 2$).
+\item \verb|nQubitWStateBasisSize n := n| — the W-state QFT
+  basis size equals the qubit count $n$, NOT the full Hilbert
+  dimension $2^n$.
+\item \verb|fullHilbertDim n := 2^n| — for contrast.
+\item \verb|n_qubit_w_state_basis_strictly_smaller_than_full_hilbert|
+  — substantive exponential-vs-polynomial separation:
+  $n < 2^n$ for $n \geq 1$ (the QFT measurement basis is
+  \emph{exponentially smaller} than the full Hilbert basis).
+\item Concrete witnesses at project-substrate sizes:
+  \verb|wState_separation_at_5| (5 < 32),
+  \verb|wState_separation_at_8| (8 < 256),
+  \verb|wState_separation_at_40| ($40 < 1{,}099{,}511{,}627{,}776$).
+\item \verb|IsCyclotomicQFTBasis n| predicate (substrate-level
+  labelling of the Q($\zeta_n$) requirement; heavy
+  \verb|RingOfIntegers.cyclotomic| Mathlib integration deferred).
+\item \verb|wave_6v_6_substantive_closure| — 3-conjunct bundle.
+\end{itemize}
+Kernel-only; zero new project-local axioms; zero tracked Props.
+
+\subsection{Cross-bridge to D6 §\ref{sec:sk} (Solovay-Kitaev)}
+
+The W-state QFT decomposition is \emph{exact} at the cyclotomic
+level — no continuous-rotation approximation is needed when the
+gate set already contains the $n$-th roots of unity (e.g., the
+Q($\zeta_{40}$) Fibonacci-qutrit substrate). When the target gate
+set is finite (Clifford+T or Fibonacci), the Phase~6t quantitative
+Solovay-Kitaev tight-$\varepsilon$ headline of D6 §\ref{sec:sk}
+gives the compilation overhead per non-Clifford rotation. The
+substrate connection thus reads: D6 §\ref{sec:wstate} ships the
+exact decomposition primitive; D6 §\ref{sec:sk} ships the
+finite-gate-set approximation bound.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
@@ -388,6 +451,12 @@ H.~Neven, T.~Bergamaschi, J.~Drake, and D.~Boneh,
 ``Securing Elliptic Curve Cryptocurrencies against Quantum
 Vulnerabilities: Resource Estimates and Mitigations,''
 arXiv:2603.28846 v2 (April~2026).
+
+\bibitem{DurVidalCirac2000WState}
+W.~Dür, G.~Vidal, and J.~I.~Cirac,
+``Three qubits can be entangled in two inequivalent ways,''
+Phys.\ Rev.\ A \textbf{62}, 062314 (2000)
+[arXiv:quant-ph/0005115], doi:10.1103/PhysRevA.62.062314.
 
 \bibitem{KomotoKasai2025APMLDPCHashingBound}
 D.~Komoto and K.~Kasai,

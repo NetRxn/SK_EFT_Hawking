@@ -1174,6 +1174,14 @@ import SKEFTHawking.FaultTolerance.ShorTGateCount
 -- `IsHashingBoundAchievable` predicate with substrate-level witness at
 -- the representative Komoto-Kasai threshold 53/100. Lifts into D6 §4.
 import SKEFTHawking.FaultTolerance.APMLdpcHashingBound
+-- Phase 6v Wave 6v.6 (2026-05-26): W-state QFT decomposition in Q(ζ_N)
+-- substrate. Substrate-level encoding of the cyclic-shift QFT
+-- decomposition: n-qubit W-state has Z_n cyclic-shift symmetry, so
+-- single-shot projective measurement yields n outcomes (vs full 2^n
+-- Hilbert space). Concrete exponential-vs-polynomial separations at
+-- n = 5 (QCyc5), n = 8 (QCyc16), n = 40 (QCyc40) project-substrate
+-- sizes. Lifts into D6 §6.
+import SKEFTHawking.FaultTolerance.WStateQFT
 
 /-!
 # SK-EFT Hawking Paper: Lean Formalization

@@ -370,6 +370,34 @@ CITATION_REGISTRY = {
         'provides': [],
         'notes': 'Polariton analog Hawking proposal.',
     },
+    'DurVidalCirac2000WState': {
+        'authors': 'Dür, W., Vidal, G., Cirac, J. I.',
+        'title': 'Three qubits can be entangled in two inequivalent ways',
+        'journal': 'Phys. Rev. A',
+        'volume': 62,
+        'page': '062314',
+        'year': 2000,
+        'doi': '10.1103/PhysRevA.62.062314',
+        'arxiv': 'quant-ph/0005115',
+        'doi_verified': None,
+        'inprep': False,
+        'primary_source_path': 'Lit-Search/Phase-1-and-Background/primary-sources/DurVidalCirac2000WState.pdf',
+        'used_in': ['lean/SKEFTHawking/FaultTolerance/WStateQFT.lean',
+                    'papers/D6/paper_draft.tex'],
+        'provides': [
+            'WStateCyclicShiftDecomposition',
+            'nQubitWStateBasisSize',
+        ],
+        'notes': 'Foundational W-state paper introducing the multipartite '
+                 '|W_n⟩ = (|10..0⟩ + |010..0⟩ + ... + |0..01⟩) / √n state as '
+                 'the canonical tripartite (and n-partite) entangled state '
+                 'inequivalent to the GHZ state. Used in Wave 6v.6 as the '
+                 'substrate-level reference for the W-state cyclic-shift '
+                 'symmetry property exploited by the Kyoto-Hiroshima QFT '
+                 'single-shot projective measurement (per strategy synthesis '
+                 'F9; Kyoto press 2025-09-16 specific arXiv ID not yet '
+                 'well-indexed). Primary-source PDF cached 2026-05-26.',
+    },
     'KomotoKasai2025APMLDPCHashingBound': {
         'authors': 'Komoto, D., Kasai, K.',
         'title': 'Quantum Error Correction near the Coding Theoretical Bound',
