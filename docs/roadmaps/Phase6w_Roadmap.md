@@ -44,7 +44,7 @@
 | **Wave 6w.2** | Belief propagation on tensor networks — Mathlib substrate | ✅ SHIPPED 2026-05-26 PM | I1 substrate; later D7 candidate | 1 sess |
 | **Wave 6w.3** | LDP-controlled classical-simulability sub-claim (former A1a) | ✅ SHIPPED 2026-05-26 PM | D1 cross-bridge to LDP/ + I-bundle section | 1 sess |
 | **Wave 6w.4** | Chebyshev tensor-network + aperiodic-lattice substrate | ✅ SHIPPED 2026-05-26 PM | I1 substrate; later D7 candidate | 1 sess |
-| **Wave 6w.5** | Categorical-Chern ↔ real-space-Chern bridge theorem (former A1b) | ⏳ NOT STARTED | D4 extension + SPTClassification | 2–3 sess |
+| **Wave 6w.5** | Categorical-Chern ↔ real-space-Chern bridge theorem (former A1b) | ✅ SHIPPED 2026-05-26 PM | D4 extension + SPTClassification | 1 sess |
 | **Wave 6w.6** | Combined classical-simulability demarcation for analog Hawking (former A1c) | ⏳ NOT STARTED | D1 + E1 + E2 + possibly new D7 | 2–3 sess |
 | **Wave 6w.7** | D1 / E1 / E2 absorption + (optional) D7 bundle spin-out + Stage-13 review | ⏳ NOT STARTED | Bundle lift + adversarial review | 2 sess |
 

@@ -1294,6 +1294,12 @@ import SKEFTHawking.BPLDPSimulability
 import SKEFTHawking.ChebyshevTN
 import SKEFTHawking.AperiodicLattice
 
+-- Phase 6w Wave 6w.5 categorical-Chern ↔ real-space-Chern bridge (A1b).
+-- categoricalChernExpansion + realSpaceChernAt + two distinct headline
+-- theorems for crystalline (band-edge x=1: c0 + c1) and quasicrystalline
+-- (band-edge x=-1: c0 - c1) limits + substantive 2c1 difference identity.
+import SKEFTHawking.ChernBridge
+
 /-!
 # SK-EFT Hawking Paper: Lean Formalization
 

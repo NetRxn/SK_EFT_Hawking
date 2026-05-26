@@ -141,11 +141,10 @@ theorem chebyshevT_eval_zero_odd (k : ℕ) :
 structure ChebyshevExpansion where
   coeffs : List ℝ
 
-/-- Evaluate a truncated Chebyshev expansion at point `x`. -/
+/-- Evaluate a truncated Chebyshev expansion at point `x` via
+    `Finset.sum` (cleaner proof environment than `List.foldl`). -/
 noncomputable def evalChebyshev (e : ChebyshevExpansion) (x : ℝ) : ℝ :=
-  (List.range e.coeffs.length).foldl
-    (fun acc n => acc + e.coeffs.getD n 0 * chebyshevT n x)
-    0
+  ∑ n ∈ Finset.range e.coeffs.length, e.coeffs.getD n 0 * chebyshevT n x
 
 /-- **Substantive Theorem 8.** Evaluating the empty Chebyshev expansion
     at any point yields `0`. Substantive vacuum boundary. -/
@@ -160,5 +159,13 @@ theorem evalChebyshev_singleton (c : ℝ) (x : ℝ) :
     evalChebyshev ⟨[c]⟩ x = c := by
   unfold evalChebyshev
   simp [chebyshevT]
+
+/-- **Substantive Theorem 10.** Evaluating a 2-coefficient Chebyshev
+    expansion `[c_0, c_1]` at point `x` yields `c_0 + c_1 · x`. The
+    Wave 6w.5 ChernBridge consumer relies on this closed-form. -/
+theorem evalChebyshev_two_coeffs (c0 c1 x : ℝ) :
+    evalChebyshev ⟨[c0, c1]⟩ x = c0 + c1 * x := by
+  unfold evalChebyshev
+  simp [chebyshevT, Finset.sum_range_succ]
 
 end SKEFTHawking.ChebyshevTN
