@@ -1,6 +1,6 @@
 # Phase 6v: Strategic Positioning — External-Substrate Alignment + D6 Bundle Creation
 
-**Status:** Phase 6v SUBSTANTIVELY COMPLETE (2026-05-26). All 7 waves shipped + D6 bundle CREATED.
+**Status:** Phase 6v SUBSTANTIVELY COMPLETE post Wave 6v.9 finish-strengthening (2026-05-26 end-of-day). All 7 original waves + Sub-wave 8.D-8.H strengthening pass + Wave 6v.9 finish-strengthening pass (sub-waves 9.A–9.E + 3-round adversarial review with substantive REQUIRED + ADVISORY closes) all shipped. D6 bundle CREATED.
 **Audience:** stakeholders evaluating the project's external positioning vs the 2025–2026 quantum-computing frontier.
 
 ---
@@ -34,7 +34,7 @@ Plus three complementary results:
 
 **Wang Penn TMD polariton (Wave 6v.4).** Tier-1 perturbative-dissipation scope demarcation: Γ_LP/κ ≈ 39 ≫ 0.1 even at the most generous Falque steep-horizon κ. E1 §2 paragraph reframes the bundle as a *positive scope demarcation* (Tier-1 covers GaAs / Paris-LKB; NOT TMD ultrafast nanocavities).
 
-**Colangelo NbRe triplet SC (Wave 6v.8).** Substrate-level DIII-class topological-superconductor classifier; sub-wave 8.C (full 3D BdG) ships as TRACKED PROP, not a new axiom. D2 + D4 cross-references add NbRe as material exhibit + topological-qubit substrate candidate.
+**Colangelo NbRe triplet SC (Waves 6v.8 + 6v.9).** Substrate-level DIII-class topological-superconductor classifier; sub-wave 8.C ships the Fu–Kane / Sato–Fujimoto TRIM-product Pfaffian Z₂ invariant at ~220 LoC kernel-only (Pathway A from DR dossier). Wave 6v.9 finish-strengthening (sub-waves 9.A–9.E) extends with: general-n `Matrix.pfaffian` + Pf²=det at 4×4 (9.B); k-dependent k-momentum BdG + universal antisymmetry-FROM-TRS theorem (9.A); in-place §7 generic [Fintype TRIM] refactor + Ima2 orthorhombic structural derivation with load-bearing lattice constants (9.E); η-FIRST bordism-class derivation via Phase 6r-prime W1.2 substantive iso + AddGroup-substantive theorems (9.C); winding-number universality theorem (9.D). D2 + D4 cross-references add NbRe as material exhibit + topological-qubit substrate candidate. **Zero new project-local axioms across all 6v.9 sub-waves**.
 
 **Polariton DKM F3 follow-on (Wave 6v.3).** Closes Phase 6q open question on polariton bimodal-branch placement: polariton joins graphene on the positive-uniqueness branch under any device-operating pump constraint.
 
