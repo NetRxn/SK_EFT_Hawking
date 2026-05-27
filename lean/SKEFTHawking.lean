@@ -1106,14 +1106,19 @@ import SKEFTHawking.MatrixExpLocalHomeomorphMathlibPR
 -- the S.2-d-e-f Lie-theory substrate. Filename mirror
 -- Mathlib.Analysis.MatrixGroups.SpecialUnitary.Cartan.
 import SKEFTHawking.CartanFinalStepSUdGenericMathlibPR
--- Phase 6y Track S.2d-foundational (2026-05-27): foundational helpers for
--- the Jacobi formula `det(exp Y) = exp(tr Y)` at skew-Hermitian Y. Ships
--- `isHermitian_I_smul_of_isSkewHermitian` (iY Hermitian when Y skew-Herm),
--- `trace_I_smul` (trace ℂ-linearity), `exp_unitaryConj` (exp commutes
--- through conjugation by unitary U), `det_unitaryConj` (det invariant
--- under unitary conjugation). Composition into full Jacobi formula ships
--- in follow-on sub-waves.
+-- Phase 6y Track S.2d (2026-05-27): Jacobi formula `det(exp Y) = exp(tr Y)`
+-- for skew-Hermitian Y. Foundational helpers + full composition via
+-- spectral theorem on iY (Hermitian). Ships
+-- `det_exp_skewHermitian Y hY` (substantive, SU(d) Jacobi). Mathlib
+-- v4.29.1 has the general-A version as TODO; this skew-Hermitian
+-- specialization unblocks Phase 6y's S.2g discharge chain.
 import SKEFTHawking.FKLW.GenericSUdDetExpSkewHerm
+-- Phase 6y Track S.2e (2026-05-27): exp(tr Y) = 1 when Y = matrixLog d h
+-- for h ∈ SU(d) near 1. Composes S.2c (skew-Hermitian preservation) +
+-- S.2d (Jacobi). Ships `exp_trace_matrixLog_eq_one_on_nhd_one d`.
+-- Traceless conclusion `tr Y = 0` follows via small-norm exp-injectivity
+-- on ℂ near 0, shipped in S.2g discharge.
+import SKEFTHawking.FKLW.GenericSUdMatrixLogTraceless
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
