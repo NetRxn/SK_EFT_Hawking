@@ -1501,6 +1501,13 @@ import SKEFTHawking.FKLW.GenericSUdPermutationDiagonal
 -- Bridges the ℂ-valued partialSumCoeff (used by S24) to real partial sums
 -- (used by S25's decreasing-sort non-negativity).
 import SKEFTHawking.FKLW.GenericSUdPartialSumBridge
+-- Phase 6y Track S.3 substrate (Session 30, 2026-05-27): range/filter sum
+-- equivalence for partial sums. For real `a : Fin (n + 1) → ℝ` and `p : Fin n`:
+--   ∑ j ∈ range (p.val + 1), (if h : j < n + 1 then a ⟨j, h⟩ else 0)
+--   = ∑ j ∈ univ.filter (· ≤ p.castSucc), a j
+-- Bijection via Finset.sum_bij maps j ↦ ⟨j, _⟩ : Fin (n + 1). Last piece for
+-- combining S29 partial sum bridge with S25's filter-form non-negativity.
+import SKEFTHawking.FKLW.GenericSUdRangeFilterBridge
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
