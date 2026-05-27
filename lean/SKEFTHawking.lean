@@ -1144,6 +1144,12 @@ import SKEFTHawking.FKLW.CliffordCCZSU8Substrate
 -- intermediate ship toward T-A1′.1 proper (which adds MS(θ) at
 -- rational-π/N grid once MSGateMat SU(4) membership ships).
 import SKEFTHawking.FKLW.TrappedIonGeneratingSetSU4Partial
+-- Phase 6y Track T-A2′.1-partial (2026-05-27): Clifford-only 3-Hadamard
+-- GeneratingSet 8 instance using the 3 packaged SU(8) Hadamards
+-- {H_SU_on_qubit1, H_SU_on_qubit2, H_SU_on_qubit3}. Substantive
+-- intermediate toward T-A2′.1 proper (adds CCZ_SU once
+-- CCZ_SU_mem_specialUnitaryGroup ships).
+import SKEFTHawking.FKLW.CliffordCCZGeneratingSetSU8Partial
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
