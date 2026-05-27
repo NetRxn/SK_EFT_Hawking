@@ -221,3 +221,59 @@ identified in the Phase 6x retrospective.
 - **Mathlib4 v4.29.1 substrate**: `Mathlib.Analysis.NormedSpace.MatrixExponential`, `Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv`, `Mathlib.LinearAlgebra.UnitaryGroup` — the substrate Phase 6y composes on.
 - **Phase 6x M.1 PR** (`lean/SKEFTHawking/MatrixBCHCubicMathlibPR.lean`) — the BCH cubic estimate, already generic over d, ready for use in Phase 6y Track S.
 - **Phase 6x M.2 documentation** (`lean/SKEFTHawking/CartanFinalStepSUdMathlibPR.lean`) — the SU(d) extension plan documented in Phase 6x; Phase 6y Track S.2 ships the substantive proof.
+
+---
+
+## Wave 1 — Multi-session execution tracker (started 2026-05-27)
+
+Per [[feedback-multi-session-wave-pattern]] (`memory/feedback_multi_session_wave_pattern.md`): Phase 6y is genuinely multi-session work. Wave 1 is the keystone Track S substrate + downstream T-X′ instantiations. Sessions ship per-AC-item substantively, with each session producing build-clean Lean modules + per-session memory.
+
+### Wave 1 Status block
+
+Phase 6y Wave 1: **IN PROGRESS** (Session 1 of N shipped 2026-05-27).
+- **AC items substantively shipped**: S.1, S.2 (UNCONDITIONAL), S.4 (explicit K=2), S.5 (UNCONDITIONAL), T-X′.1, T-X′.3 (F#5 algorithmic ε-net), S.3 d≤2, T-A1′.4, S.6/T-X′.5 F#4-shape substrate + conditional discharges.
+- **AC items conditional/partial**: T-X′.2 (tracked-Prop framework + cascade UNCONDITIONAL from witness), M-S.1/2 (alias-only).
+- **AC items NOT YET shipped**: S.3 d≥3 substantive (Aharonov-Arad SU(d)), S.6 polylog UNCONDITIONAL, T-X′.5 polylog UNCONDITIONAL, T-X′.2 substantive density witnesses, M-S substantive Mathlib-PR extraction, T-A2′.4 calibration (trivial).
+
+### Wave 1 Plan (per-session)
+
+**Session 1 (SHIPPED 2026-05-27 — commits `c054842` → `de1c2c1`)**:
+- Substrate ships at 8790 jobs clean, 0 axioms, 0 sorries. See `memory/project_phase6y_session_2026_05_27_shipped.md`.
+
+**Session 2 (PENDING) — S.3 d≥3 Aharonov-Arad SU(d) balanced commutator**:
+- Target: `BalancedCommutator_SUd d` substantively discharged for d ≥ 3 via spectral decomposition + per-2-block SU(2) lift + cross-term counterterm argument.
+- LoE target per roadmap: ~200-400 LoC.
+- Substrate to compose: existing `BalancedCommutator_SUd_two`, `Matrix.IsHermitian.spectral_theorem'`, `embed2block`-style lemmas (block embedding).
+- Unblocks: S.6 polylog UNCONDITIONAL, T-A1′.5 / T-A2′.5 polylog UNCONDITIONAL.
+
+**Session 3 (PENDING) — T-X′.2 substantive density witnesses (per-alphabet)**:
+- Target: `trappedIonSU4_v4_witness_tracked` discharged via Brylinski-Brylinski entangler universality at SU(4); `cliffordCCZSU8_v4_witness_tracked` discharged via Aaronson-Gottesman at SU(8).
+- LoE target per roadmap: T-A1′.2 ~300-500 LoC; T-A2′.2 ~400-700 LoC.
+
+**Session 4 (PENDING) — M-S.1/2 substantive Mathlib-PR extraction**:
+- Target: de-privatize + Mathlib-namespace (`Matrix.SpecialUnitary.Cartan.finalStepVd` + `Matrix.expMap_isLocalHomeomorph_zero`) + generic-type (m : Type*) + docstrings + examples.
+- LoE per roadmap: M-S.1 ~200-400 LoC, M-S.2 ~150-300 LoC.
+
+**Session 5 (PENDING) — Wave 1 closure**:
+- Cascade compose: S.3 + T-X′.2 substantive → S.6 + T-X′.5 polylog UNCONDITIONAL discharges via existing `GenericSolovayKitaevRecursion` + `SKCompileWithBounds` substrate.
+- Ship T-A2′.4 calibration constants (trivial, parallel to T-A1′.4).
+- Dispatch ONE fresh-context Stage-13 adversarial reviewer covering all 4 tracks (per /goal CLOSURE). Reviewer must return 0 BLOCKER + 0 REQUIRED + 0 RECOMMENDED for Goal-achieved.
+
+### Wave 1 References
+
+- **Roadmap**: this file (Phase 6y) + Phase 6x retrospective (`docs/stakeholder/Phase6x_Implications.md`).
+- **SU(2) Phase 6u/6t substrate**: `lean/SKEFTHawking/FKLW/SU2BalancedCommutator.lean::balanced_commutator_general_axis_lie_traceless` (the d=2 model for S.3); `lean/SKEFTHawking/FKLW/CliffordTV4WitnessUnconditional.lean` (Phase 6u substantive density discharge model).
+- **Phase 6y substrate in flight**: `lean/SKEFTHawking/FKLW/Generic*.lean` (~25 files); `lean/SKEFTHawking/FKLW/TrappedIonSU4*.lean` (~6 files); `lean/SKEFTHawking/FKLW/CliffordCCZSU8*.lean` (~6 files).
+- **Spawn-task chips queued** (one-click resumption per session): S.3 d≥3 Aharonov-Arad; T-X′.2 substantive density; M-S Mathlib-PR extraction.
+
+### Wave 1 Session-handoff contract
+
+Per [[feedback-multi-session-wave-pattern]]: when picking up Wave 1, FIRST:
+1. Read this §"Wave 1" block end-to-end.
+2. Read the latest session memory (`project_phase6y_session_*.md` — most recent date).
+3. Verify the latest committed Lean module(s) compile (`lake build` from `lean/`).
+4. Proceed to next-session PENDING items (per §"Wave 1 Plan" above).
+5. Each session ships build-clean modules + per-session memory entry.
+
+The stop hook from the controlling `/goal` is the **session-end indicator**, NOT a "keep grinding" signal — when it fires, save per-session memory, commit, end the session cleanly. A new session in fresh context picks up the next Wave 1 item per the handoff contract.
+
