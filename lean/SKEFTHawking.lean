@@ -1406,6 +1406,13 @@ import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorConjugation
 -- conjugation invariance. Ships F·G − G·F = −iθ·H for H = U·σ_z(i,j)·U* under
 -- arbitrary U ∈ SU(d). Algebraic conjuncts only (norm-bridging caveat documented).
 import SKEFTHawking.FKLW.GenericSUdDiagonalTracelessDecomp
+-- Phase 6y Track S.3 substrate (Session 15, 2026-05-27): diagonal-traceless H
+-- decomposition into σ_z-pair basis. For diagonal H = diag(a) over Fin (n+2)
+-- with ∑ a = 0, ships H = ∑_{k : Fin (n+1)} b_k · σ_z(k.castSucc, k.succ)
+-- where b_k = ∑_{j ≤ k} a_j are the partial sums. Algebraic substrate for
+-- the Aharonov-Arad SU(d) construction (per-pair F, G + cross-term counterterms
+-- ship in follow-on substrate).
+import SKEFTHawking.FKLW.GenericSUdDiagonalDecomp
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
