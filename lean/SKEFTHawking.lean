@@ -1447,6 +1447,13 @@ import SKEFTHawking.FKLW.GenericSUdSymmetricCommReduction
 -- via the doubling trick (Fubini + diagonal cancellation + ℂ-module 2-invertibility).
 -- Substrate for the F·G − G·F = ∑_p γ_p² · [σ_y(p), σ_x(p)] reduction (S22+).
 import SKEFTHawking.FKLW.GenericSUdAntisymOffDiag
+-- Phase 6y Track S.3 substrate (Session 22, 2026-05-27): MAIN F·G − G·F reduction.
+-- For symmetric F = Σ γ_p · σ_y(p), G = Σ γ_p · σ_x(p):
+--   F·G − G·F = Σ_p (γ_p)² · [σ_y(p), σ_x(p)]
+-- Combines S20 (γ-weighted pair-swap) + S21 (antisym off-diag vanishing) +
+-- Finset.sum_mul_sum double-sum expansion + Fubini. Core algebraic theorem
+-- that powers the symmetric F=αG balanced commutator construction at SU(d).
+import SKEFTHawking.FKLW.GenericSUdSymmetricCommFGreduction
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
