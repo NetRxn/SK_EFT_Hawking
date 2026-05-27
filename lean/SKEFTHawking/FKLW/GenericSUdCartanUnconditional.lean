@@ -373,10 +373,10 @@ PartialHomeomorph machinery), the discharge proceeds:
 /-- **Consumer-facing helper structure** for the S.2g UNCONDITIONAL
 discharge.
 
-Documents the load-bearing partial-homeomorphism that's the remaining
-substrate piece. Consumers needing the unconditional CartanFinalStep
-discharge can plug in their own concrete instance of this structure;
-the substantive math is fully in place. -/
+Documents the load-bearing partial-homeomorphism (alternative interface
+to the direct `expAmbientLift_map_nhds_zero` approach below). Kept for
+downstream consumers needing a concrete `OpenPartialHomeomorph` value;
+the unconditional discharge below uses the direct filter approach. -/
 structure SubtypePartialHomeoExpAmbient (d : ℕ) where
   /-- The partial homeomorphism between ↥𝔰𝔲(d)-near-0 and ↥SU(d)-near-1. -/
   homeo : OpenPartialHomeomorph
@@ -395,5 +395,244 @@ structure SubtypePartialHomeoExpAmbient (d : ℕ) where
     ((homeo Y : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
       Matrix (Fin d) (Fin d) ℂ) =
     expAmbient d ((Y : Matrix (Fin d) (Fin d) ℂ))
+
+/-! ## 12. Exp lift `↥𝔰𝔲(d) → ↥SU(d)` (substrate for openness lift)
+
+The exp map restricted to the subtype `↥𝔰𝔲(d)`, co-restricted to
+`↥SU(d)` via `exp_of_su_d_mem_SUd`. This is the load-bearing subtype-
+level map for the S.2g unconditional discharge. -/
+
+/-- **Exp lift `↥𝔰𝔲(d) → ↥SU(d)`**: the matrix exp restricted to
+traceless skew-Hermitian inputs, co-restricted to its SU(d) image. -/
+noncomputable def expAmbientLift (d : ℕ) :
+    ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d)) →
+      ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) :=
+  fun Y => ⟨expAmbient d Y.val, exp_of_su_d_mem_SUd Y.2.1 Y.2.2⟩
+
+/-- **`expAmbientLift d 0 = 1`**. -/
+@[simp]
+theorem expAmbientLift_zero (d : ℕ) :
+    expAmbientLift d
+      (0 : ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d))) =
+        (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) := by
+  apply Subtype.ext
+  show expAmbient d (0 : Matrix (Fin d) (Fin d) ℂ) = (1 : Matrix _ _ ℂ)
+  exact expAmbient_zero d
+
+/-- **`expAmbientLift d` is continuous**. -/
+theorem expAmbientLift_continuous (d : ℕ) :
+    Continuous (expAmbientLift d) := by
+  rw [continuous_induced_rng]
+  show Continuous (fun Y :
+    ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d)) =>
+    expAmbient d Y.val)
+  exact NormedSpace.exp_continuous.comp continuous_subtype_val
+
+/-- **`expAmbientLift d` is open at `0 → 1`** in the filter sense
+(SUBSTANTIVE — the "Lie algebra → Lie group" local diffeomorphism at
+the identity).
+
+Composes:
+  * `expAmbientLift d` continuity (≤ direction);
+  * Continuous local inverse `tsProj_d ∘ matrixLog ∘ Subtype.val` defined
+    on the open set `V_log ∩ target ∩ SU(d)`, with `χ ∘ expAmbientLift = id`
+    on a nbhd of 0 (≥ direction).
+
+This is the d-generic counterpart of `SU2_nhd_one_covered_by_exp_ts`
+(Phase 6u SU(2)-specific local Lie group/algebra diffeo). -/
+theorem expAmbientLift_map_nhds_zero (d : ℕ) [Nonempty (Fin d)] (hd_pos : 0 < d) :
+    Filter.map (expAmbientLift d)
+      (nhds (0 : ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d)))) =
+      nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) := by
+  refine le_antisymm ?_ ?_
+  · -- ≤ direction: continuity of expAmbientLift d at 0.
+    have h_cont : Filter.map (expAmbientLift d)
+        (nhds (0 : ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d)))) ≤
+        nhds (expAmbientLift d
+          (0 : ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d)))) :=
+      (expAmbientLift_continuous d).continuousAt
+    rw [expAmbientLift_zero] at h_cont
+    exact h_cont
+  · -- ≥ direction: openness via continuous local inverse on V_log ∩ target.
+    intro S hS
+    -- hS : S ∈ Filter.map (expAmbientLift d) (𝓝 0).
+    -- Equivalently: (expAmbientLift d) ⁻¹' S ∈ 𝓝 0_↥𝔰𝔲(d).
+    rw [Filter.mem_map] at hS
+    -- Need: S ∈ 𝓝 1_↥SU(d).
+    obtain ⟨V, hV_subset, hV_open, hV_zero⟩ := mem_nhds_iff.mp hS
+    -- V is open in ↥𝔰𝔲(d), 0 ∈ V, expAmbientLift d '' V ⊂ ... wait, V ⊂ expAmbientLift⁻¹ S
+    -- So expAmbientLift d '' V ⊂ S (taking images, since V ⊂ f⁻¹ S ⟹ f V ⊂ S).
+    obtain ⟨V_log, hV_log_nhd, hV_log_in_sud⟩ := matrixLog_of_SUd_in_su_d d hd_pos
+    have h_target_nhd_one :
+        (expAmbientPartialHomeo d).target ∈ nhds (1 : Matrix (Fin d) (Fin d) ℂ) :=
+      expAmbientPartialHomeo_target_mem_nhds_one d
+    -- χ h := tsProj_d (matrixLog d h), continuous at 1, χ 1 = 0.
+    have h_χ_one :
+        tsProj_d d (matrixLog d (1 : Matrix (Fin d) (Fin d) ℂ)) = 0 := by
+      rw [matrixLog_one]; exact tsProj_d_zero d
+    have h_mlog_cont : ContinuousAt (matrixLog d) (1 : Matrix (Fin d) (Fin d) ℂ) := by
+      show ContinuousAt (expAmbientPartialHomeo d).symm 1
+      exact (expAmbientPartialHomeo d).continuousOn_symm.continuousAt h_target_nhd_one
+    have h_χ_cont_at_one :
+        ContinuousAt (fun h : Matrix (Fin d) (Fin d) ℂ =>
+          tsProj_d d (matrixLog d h)) (1 : Matrix _ _ ℂ) :=
+      (tsProj_d d).continuous.continuousAt.comp h_mlog_cont
+    -- χ⁻¹ V is a nbhd of 1 in Matrix.
+    have h_χ_pullback_V :
+        (fun h : Matrix (Fin d) (Fin d) ℂ => tsProj_d d (matrixLog d h)) ⁻¹' V ∈
+          nhds (1 : Matrix _ _ ℂ) := by
+      apply h_χ_cont_at_one.preimage_mem_nhds
+      rw [h_χ_one]
+      exact hV_open.mem_nhds hV_zero
+    -- U_matrix := χ⁻¹ V ∩ V_log ∩ target ∈ 𝓝 1_Matrix.
+    set U_matrix : Set (Matrix (Fin d) (Fin d) ℂ) :=
+      ((fun h => tsProj_d d (matrixLog d h)) ⁻¹' V) ∩ V_log ∩
+        (expAmbientPartialHomeo d).target with hU_matrix_def
+    have hU_matrix_nhd : U_matrix ∈ nhds (1 : Matrix _ _ ℂ) :=
+      Filter.inter_mem (Filter.inter_mem h_χ_pullback_V hV_log_nhd) h_target_nhd_one
+    -- Show: Subtype.val⁻¹ U_matrix ∈ 𝓝 1_↥SU(d) and ⊂ S.
+    apply Filter.mem_of_superset
+    · -- (Subtype.val⁻¹ U_matrix) ∈ 𝓝 (1 : ↥SU(d)).
+      apply continuous_subtype_val.continuousAt.preimage_mem_nhds
+      show U_matrix ∈ nhds
+        ((1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val)
+      have h_one_val : ((1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val :
+          Matrix (Fin d) (Fin d) ℂ) = (1 : Matrix _ _ ℂ) := rfl
+      rw [h_one_val]; exact hU_matrix_nhd
+    · -- Subset: ∀ g ∈ ↥SU(d), g.val ∈ U_matrix ⟹ g ∈ S.
+      intro g hg
+      -- hg : g.val ∈ U_matrix.
+      have hg_χV : tsProj_d d (matrixLog d g.val) ∈ V := hg.1.1
+      have hg_Vlog : g.val ∈ V_log := hg.1.2
+      have hg_target : g.val ∈ (expAmbientPartialHomeo d).target := hg.2
+      have hg_su : g.val ∈ Matrix.specialUnitaryGroup (Fin d) ℂ := g.property
+      -- Y := ⟨matrixLog d g.val, _⟩ ∈ ↥𝔰𝔲(d).
+      have h_log_in_sud := hV_log_in_sud g.val hg_Vlog hg_su hg_target
+      set Y : ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d)) :=
+        ⟨matrixLog d g.val, ⟨h_log_in_sud.1, h_log_in_sud.2⟩⟩ with hY_def
+      -- tsProj_d (matrixLog g.val) = Y (in 𝔰𝔲(d)).
+      have h_χ_eq_Y :
+          tsProj_d d (matrixLog d g.val) = Y :=
+        tsProj_d_apply_of_mem d ⟨h_log_in_sud.1, h_log_in_sud.2⟩
+      -- Y ∈ V.
+      have hY_V : Y ∈ V := h_χ_eq_Y ▸ hg_χV
+      -- expAmbientLift d Y = g (via round-trip).
+      have h_f_Y : expAmbientLift d Y = g := by
+        apply Subtype.ext
+        show expAmbient d (matrixLog d g.val) = g.val
+        exact expAmbient_matrixLog d hg_target
+      -- g ∈ expAmbientLift d '' V ⊂ S.
+      have h_g_in_image : g ∈ expAmbientLift d '' V := ⟨Y, hY_V, h_f_Y⟩
+      -- expAmbientLift d '' V ⊂ S.
+      rcases h_g_in_image with ⟨y, hy_V, hy_eq⟩
+      rw [← hy_eq]
+      exact hV_subset hy_V
+
+/-! ## 13. Lift-composite eventually-equal -/
+
+/-- **`multiDirExpProduct_SU = expAmbientLift ∘ composite` eventually near 0**
+(substantive lift of the Matrix-level eventually-equal to the subtype level). -/
+theorem multiDirExpProduct_SU_eq_lift_composite_eventually {d n : ℕ}
+    [Nonempty (Fin d)] (hd_pos : 0 < d)
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0) :
+    ∀ᶠ v in nhds (0 : Fin n → ℝ),
+      multiDirExpProduct_SU X hX_in_sud v =
+        expAmbientLift d (tsProj_d d (matrixLog d (multiDirExpProduct X v))) := by
+  have h_evt := multiDirExpProduct_eq_composite_eventually hd_pos X
+    (multiDirExpProduct_mem_SUd X hX_in_sud)
+  filter_upwards [h_evt] with v hv
+  apply Subtype.ext
+  show multiDirExpProduct X v =
+    expAmbient d (tsProj_d d (matrixLog d (multiDirExpProduct X v))).val
+  exact hv
+
+/-! ## 14. multiDirExpProduct_SU filter map at 0 = nhds 1 -/
+
+/-- **`multiDirExpProduct_SU` filter map at 0 equals nbhd of 1 in ↥SU(d)**
+(SUBSTANTIVE — composes filter equalities + lift abstraction). -/
+theorem multiDirExpProduct_SU_map_nhds_zero_eq_nhds_one {d n : ℕ}
+    [Nonempty (Fin d)] (hd_pos : 0 < d)
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0)
+    (hX_spans : ∀ Y : Matrix (Fin d) (Fin d) ℂ,
+      Y.IsSkewHermitian → Y.trace = 0 →
+      ∃ c : Fin n → ℝ, Y = ∑ i, ((c i : ℝ) : ℂ) • X i) :
+    Filter.map (multiDirExpProduct_SU X hX_in_sud) (nhds (0 : Fin n → ℝ)) =
+      nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) := by
+  have h_evt_lift := multiDirExpProduct_SU_eq_lift_composite_eventually hd_pos X hX_in_sud
+  have h_filter_comp := composite_map_nhds_zero_eq_nhds_zero X hX_in_sud hX_spans
+  -- Convert h_filter_comp to the inline form (`Function.comp_apply` reduction).
+  have h_filter_comp' :
+      Filter.map (fun v : Fin n → ℝ => tsProj_d d (matrixLog d (multiDirExpProduct X v)))
+        (nhds (0 : Fin n → ℝ)) =
+        nhds (0 : ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d))) :=
+    h_filter_comp
+  rw [Filter.map_congr h_evt_lift]
+  -- Goal: Filter.map (expAmbientLift d ∘ composite) (𝓝 0) = 𝓝 1.
+  rw [show
+      (fun v : Fin n → ℝ => expAmbientLift d
+        (tsProj_d d (matrixLog d (multiDirExpProduct X v)))) =
+      (expAmbientLift d) ∘
+        (fun v : Fin n → ℝ => tsProj_d d (matrixLog d (multiDirExpProduct X v)))
+      from rfl]
+  rw [← Filter.map_map]
+  -- Goal: Filter.map (expAmbientLift d) (Filter.map composite (𝓝 0)) = 𝓝 1.
+  rw [h_filter_comp']
+  -- Goal: Filter.map (expAmbientLift d) (𝓝 0) = 𝓝 1.
+  exact expAmbientLift_map_nhds_zero d hd_pos
+
+/-! ## 15. The UNCONDITIONAL S.2g discharge
+
+Composes:
+  * `multiDirExpProduct_SU_map_nhds_zero_eq_nhds_one` (filter equality);
+  * `multiDirExpProduct_SU_mem_H` (every image is in H);
+  * `CartanFinalStep_SUd_v4_holds_of_interior_witness` (conditional discharge).
+
+The witness from `CartanFinalStep_SUd_v4` provides the spanning set + flow lines.
+The filter equality + image-in-H gives that H is a nbhd of 1 in ↥SU(d), hence
+1 ∈ interior H, hence H = ⊤. -/
+
+/-- **`CartanFinalStep_SUd_v4_holds` UNCONDITIONAL** (load-bearing
+S.2g discharge).
+
+For arbitrary `d ≥ 1`, the d-generic Cartan v4 closer holds:
+any closed subgroup of SU(d) containing the 1-parameter flow lines
+of a traceless skew-Hermitian spanning set is `⊤`.
+
+Composes all of Phase 6y S.2 substrate:
+  * S.2b (matrix exp local diffeo);
+  * S.2c (skew-Hermitian preservation of matrixLog);
+  * S.2d (det-exp-skewHermitian Jacobi);
+  * S.2e (PROPER matrixLog traceless preservation);
+  * S.2f (n-parameter exp product);
+  * S.2g substrate (composite derivatives, filter equalities, lift). -/
+theorem CartanFinalStep_SUd_v4_holds (d : ℕ) [Nonempty (Fin d)] (hd_pos : 0 < d) :
+    CartanFinalStep_SUd_v4 d := by
+  apply CartanFinalStep_SUd_v4_holds_of_interior_witness
+  intro H hH_closed h_witness
+  obtain ⟨n, X, hX_in_sud, hX_spans, hX_flow⟩ := h_witness
+  -- Filter equality of mdep_SU at 0 → 1.
+  have h_filter_SU :=
+    multiDirExpProduct_SU_map_nhds_zero_eq_nhds_one hd_pos X hX_in_sud hX_spans
+  -- mdep_SU '' univ ⊂ H (per multiDirExpProduct_SU_mem_H).
+  -- So mdep_SU⁻¹ H = univ ∈ 𝓝 0.
+  have h_preimage_eq :
+      multiDirExpProduct_SU X hX_in_sud ⁻¹'
+        ((H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))) = Set.univ := by
+    ext v
+    simp only [Set.mem_preimage, Set.mem_univ, iff_true, SetLike.mem_coe]
+    exact multiDirExpProduct_SU_mem_H X hX_in_sud H hX_flow v
+  have h_preimage_nhd :
+      multiDirExpProduct_SU X hX_in_sud ⁻¹'
+        ((H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))) ∈ nhds (0 : Fin n → ℝ) := by
+    rw [h_preimage_eq]; exact Filter.univ_mem
+  -- 1 ∈ interior H (via Filter.map h_preimage_nhd + filter equality).
+  rw [mem_interior_iff_mem_nhds]
+  have h_H_in_map : (H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) ∈
+      Filter.map (multiDirExpProduct_SU X hX_in_sud) (nhds (0 : Fin n → ℝ)) :=
+    h_preimage_nhd
+  rw [h_filter_SU] at h_H_in_map
+  exact h_H_in_map
 
 end SKEFTHawking.FKLW.GenericSUd
