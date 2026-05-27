@@ -1523,6 +1523,13 @@ import SKEFTHawking.FKLW.GenericSUdSymmetricDiagonalDischargeFull
 -- (U, a) spectral data (Mathlib's IsHermitian.spectralTheorem provides this).
 -- Conjugates F_D, G_D for diag(a) by U via S26 → F, G for H.
 import SKEFTHawking.FKLW.GenericSUdSpectralLift
+-- Phase 6y Track S.3 d≥3 PROPER (Session 33, 2026-05-27): UNCONDITIONAL DISCHARGE.
+-- For ANY Hermitian-traceless H ∈ Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ:
+--   ∃ F G Hermitian-traceless, F · G − G · F = -((θ : ℂ) · Complex.I) • H
+-- Combines S32's spectral-lift form with Mathlib's `IsHermitian.spectral_theorem`
+-- (which extracts eigenvectorUnitary + eigenvalues from any Hermitian H).
+-- THE SUBSTANTIVE FULL S.3 d≥3 PROPER DISCHARGE.
+import SKEFTHawking.FKLW.GenericSUdHermitianDischargeFull
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
