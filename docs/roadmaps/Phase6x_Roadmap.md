@@ -326,3 +326,422 @@ Per `BUNDLE_LIFT_PROCEDURE.md` Stage 13 hard gate, each Phase 6x track gets its 
 - **Phase 6u Clifford+T instance**: `lean/SKEFTHawking/FKLW/CliffordT*.lean` (8 files) — the canonical 5-sub-wave template per Phase 6x track.
 - **Bundle Readiness Heatmap** (`docs/BUNDLE_READINESS_HEATMAP.md`) — for tracking D4 §9.8 absorption status as Phase 6x tracks ship.
 - **Phase 6u Roadmap** (`docs/roadmaps/Phase6u_Roadmap.md`) "Track T-A1/T-A2/T-B" rows — original re-slot decision documenting why these tracks did not fit Phase 6v / 6w scope (Phase 6v + 6w committed to other strategic content per the 2026-05-25 scope finalization).
+
+---
+
+## 2026-05-27 Audit Addendum — Orphan Work for Full Phase 6x Spec Closure
+
+**Trigger.** Post-Phase-6x-completion audit (2026-05-27, autonomous-loop agent) identified six items deferred by the Phase 6x completion ship that the Phase 6y roadmap does NOT pick up. Three are residuals from the PM-completion retrospective-addendum 5-failure-mode close (concrete-length conjuncts remained conditional for three of four FreeGroup alphabets despite the addendum's "all four" framing); three are deferred Mathlib follow-ons of varying urgency.
+
+**Independent deep research.** A Ross-Selinger Pre-Implementation Research Dossier (`Lit-Search/Phase-6x/Ross-Selinger Clifford+T Synthesis- A Pre-Implementation Research Dossier.md`, 2026-05-27) provides milestone decomposition and quantitative bounds for the largest deferred item (orphan #2). Key sequencing insight: **M4 (KMM exact synthesis) alone discharges the algorithmic core of `baseFinder` correctness; M3 (grid-problem solver) supplies the candidate `(u, t)` and can land later.** The deterministic Selinger-2012 branch (T-count `K + 4·log₂(1/ε)`, K ≈ 11) suffices for the `skLengthBaseCase = 100` budget when SK base-case precision `ε₀ = 2⁻⁴`, yielding worst-case word length L ≤ 90 with 10-gate margin. The factoring-oracle / number-theoretic-hypothesis branch is explicitly deferred.
+
+### The six orphans
+
+| # | Orphan | Phase 6y status | Verdict |
+|---|---|---|---|
+| 1 | M.1 m-generic upgrade (`Matrix m m ℂ` from Fin-d) | Not in Track M-S scope; predecessor-assumption only consumes Fin-d form | **Homeless** |
+| 2 | Ross-Selinger optimal ℤ[ω][1/√2] algorithmic synthesis | Lit-Search task drop only | **Homeless (DR-scoped)** |
+| 3 | Unconditional 3-conjunct concrete-length headlines for RR5/RR7 | Not in 6y scope | **Homeless (high-leverage)** |
+| 4 | T-A1 lift/shift unconditional headline upgrade to 3-conjunct | Implicit residual of retrospective failure mode #4 | **Homeless** |
+| 5 | Fibonacci constructive ε₀-net (Path-A per Phase 6t §13.2) | Not in 6y scope | **Homeless** |
+| 6 | SU(2) compactness as Mathlib-PR-quality lemma | Not in 6y Track M-S scope (M-S.1 Cartan + M-S.2 exp local homeo only) | **Homeless** |
+
+Items #3, #4 close the retrospective addendum's claim of failure-mode-#4 ("substrate vs headline") closure. Items #4 and #6 are tiny. Item #2 has DR-validated sequencing. Items #1, #5 are quality-of-life follow-ons.
+
+### Phase 6y coordination — DO NOT TOUCH list
+
+A parallel autonomous agent is actively executing Phase 6y (HEAD `66b227d` at addendum time; mid-loop on Track S.2g substrate, untracked `GenericSUdCartanUnconditional.lean` in flight per the 2026-05-27 Explore-agent audit). Phase 6y-owned file space — **DO NOT TOUCH** during any Tier 1 / Tier 2 ship:
+
+- `lean/SKEFTHawking/FKLW/GenericSUd*.lean` — Track S substrate (all files; agent active)
+- `lean/SKEFTHawking/FKLW/TrappedIonGeneratingSetSU4*.lean` + `TrappedIonSU4*.lean` — Track T-A1′
+- `lean/SKEFTHawking/FKLW/CliffordCCZGeneratingSetSU8*.lean` + `CliffordCCZSU8*.lean` — Track T-A2′
+- `lean/SKEFTHawking/CartanFinalStepSUdGenericMathlibPR.lean` — Track M-S.1 (shipped at commit `35a7716`)
+- `lean/SKEFTHawking/MatrixExpLocalHomeomorphMathlibPR.lean` — Track M-S.2 (shipped at `c7a4be5`)
+- `lean/SKEFTHawking/MatrixBCHCubicMathlibPR.lean` — **read-only** (Phase 6y consumes Fin-d form; Item J in this addendum modifies it but only after gate)
+
+Every orphan-ship goal below carves around this list. Orphan ships add new files or modify only files outside this list (sole exception: Item C's small update to `RossSelingerLightweight.lean` to use the new compactness instance, which Phase 6y doesn't touch).
+
+---
+
+### Tier 1 — Quick wins (single-session, fully isolated)
+
+Closes retrospective failure modes #4 and #5 + adds one new Mathlib-PR-quality file. Total ~500-700 LoC across four single-session items, all parallel-safe with active Phase 6y agent.
+
+#### Item A — T-A1 lift/shift unconditional 3-conjunct headline
+
+**GOAL:** Ship `solovayKitaev_dawson_nielsen_quantitative_trappedIon_strict_concrete_constructive_unconditional` — a 3-conjunct UNCONDITIONAL bundled-strict headline for T-A1 lift/shift, adding the concrete-word-length conjunct.
+
+**BOOTSTRAP:** read `CLAUDE.md` (workspace + project), this addendum, then:
+- `lean/SKEFTHawking/FKLW/TrappedIonGeneratingSet.lean` — current 2-conjunct headline + `perIonInject`
+- `lean/SKEFTHawking/FKLW/RossSelingerLightweight.lean` — `cliffordTBaseFinder_constructive` (UNCONDITIONAL) + length bound
+- `lean/SKEFTHawking/FKLW/PerAlphabetConcreteLengthHeadlines.lean` — current conditional `_strict_concrete` for T-A1
+
+**KEY INSIGHT:** T-A1 density factors through CT (`ρ_TI.comp (FreeGroup.map perIonInject) = ρ_CliffT`). The CT constructive base finder lifts directly via `FreeGroup.map perIonInject`, which preserves word length.
+
+**DELIVERABLES:**
+1. `trappedIonBaseFinder_constructive := FreeGroup.map perIonInject ∘ cliffordTBaseFinder_constructive` (in `TrappedIonGeneratingSet.lean` or new sibling `FKLW/TrappedIonBaseFinder.lean`).
+2. `trappedIonBaseFinder_constructive_approximates_within_two_ε₀` via the factorization equality.
+3. `trappedIonBaseFinder_constructive_length_bounded` via `FreeGroup.map` length preservation.
+4. The 3-conjunct UNCONDITIONAL headline.
+
+**ACs:**
+- Theorem UNCONDITIONAL; `#print axioms` = `{propext, Classical.choice, Quot.sound}`.
+- `cd lean && lake build` clean.
+- `uv run python scripts/validate.py` passes; `counts.json::lean.axioms` still 0.
+- Retrospective failure mode #4 closed for T-A1.
+
+**DO NOT TOUCH:** see Phase 6y coordination list above.
+
+**EXIT:** commit `feat(phase6x-residual-A): T-A1 3-conjunct unconditional via CT base finder composition`.
+
+#### Item B-RR5 — Read-Rezayi SU(2)_5 lightweight constructive base finder
+
+**GOAL:** Ship `solovayKitaev_dawson_nielsen_quantitative_readRezayiK5_strict_concrete_constructive_unconditional` — 3-conjunct UNCONDITIONAL bundled-strict headline for Read-Rezayi SU(2)_5, mirroring the Clifford+T T-S′ pattern.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- `lean/SKEFTHawking/FKLW/RossSelingerLightweight.lean` — canonical T-S′ pattern: ConstructiveEpsilonNet + density witness + Finset enumeration → UNCONDITIONAL constructive base finder. Mirror this exactly.
+- `lean/SKEFTHawking/FKLW/ReadRezayiK5ClosureDenseWitness.lean` — unconditional RR5 density (`rr5_density_unconditional`), via Chebyshev T_7 / `−1/4 ∈ ℤ̄`.
+- `lean/SKEFTHawking/FKLW/ReadRezayiK5Quantitative.lean` — current 2-conjunct unconditional headline.
+- `lean/SKEFTHawking/FKLW/GenericEpsilonNet.lean` — `finite_epsilon_net_of_compact_dense`.
+- `lean/SKEFTHawking/FKLW/PerAlphabetConcreteLengthHeadlines.lean` — existing conditional `_strict_concrete` for RR5.
+
+**DELIVERABLES (new file `lean/SKEFTHawking/FKLW/ReadRezayiK5BaseFinder.lean`):**
+1. `rr5FiniteCover` — finite Finset of ε₀-covering RR5 FreeGroup words via `finite_epsilon_net_of_compact_dense` + RR5 density + SU(2) compactness.
+2. `rr5BaseFinder_constructive` — `Finset.choose`-based UNCONDITIONAL constructive base finder.
+3. `rr5BaseFinder_constructive_approximates_within_two_ε₀` (UNCONDITIONAL).
+4. `rr5BaseFinder_constructive_length_bounded` (UNCONDITIONAL).
+5. Ship the 3-conjunct UNCONDITIONAL headline by composition with the generic strict bundled headline.
+
+**ACs:**
+- All four theorems UNCONDITIONAL; `#print axioms` = standard kernel.
+- `lake build` clean; `validate.py` passes; `counts.json::lean.axioms` still 0.
+- Retrospective failure mode #4 closed for RR5.
+
+**DO NOT TOUCH:** see Phase 6y coordination list.
+
+**EXIT:** commit `feat(phase6x-residual-B-RR5): RR5 constructive base finder + 3-conjunct unconditional headline`.
+
+#### Item B-RR7 — Read-Rezayi SU(2)_7 lightweight constructive base finder
+
+**GOAL:** Ship `solovayKitaev_dawson_nielsen_quantitative_readRezayiK7_strict_concrete_constructive_unconditional` — 3-conjunct UNCONDITIONAL bundled-strict headline for Read-Rezayi SU(2)_7.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- `lean/SKEFTHawking/FKLW/RossSelingerLightweight.lean` — T-S′ pattern to mirror.
+- `lean/SKEFTHawking/FKLW/ReadRezayiK7ClosureDenseWitness.lean` — unconditional RR7 density (`rr7_density_unconditional`), via triple-angle `4cos³(π/9) − 3cos(π/9) = 1/2` / `1/2 ∈ ℤ̄`.
+- `lean/SKEFTHawking/FKLW/ReadRezayiK7Quantitative.lean` — current 2-conjunct unconditional headline.
+- `lean/SKEFTHawking/FKLW/GenericEpsilonNet.lean` — `finite_epsilon_net_of_compact_dense`.
+- `lean/SKEFTHawking/FKLW/PerAlphabetConcreteLengthHeadlines.lean` — current conditional `_strict_concrete` for RR7.
+
+**REUSE:** Identical structure to B-RR5. If B-RR5 lands first, this is bulk-substitution; consider parameterizing a shared `…RRkBaseFinder` helper if mechanically obvious.
+
+**DELIVERABLES (new file `lean/SKEFTHawking/FKLW/ReadRezayiK7BaseFinder.lean`):**
+1. `rr7FiniteCover`.
+2. `rr7BaseFinder_constructive` UNCONDITIONAL.
+3. `rr7BaseFinder_constructive_approximates_within_two_ε₀` UNCONDITIONAL.
+4. `rr7BaseFinder_constructive_length_bounded` UNCONDITIONAL.
+5. The 3-conjunct UNCONDITIONAL headline.
+
+**ACs:**
+- All UNCONDITIONAL; kernel-only.
+- `lake build` clean; `validate.py` passes; `counts.json::lean.axioms` = 0.
+- Retrospective failure mode #4 closed for RR7.
+
+**DO NOT TOUCH:** see Phase 6y coordination list.
+
+**EXIT:** commit `feat(phase6x-residual-B-RR7): RR7 constructive base finder + 3-conjunct unconditional headline`.
+
+#### Item C — SU(2) compactness Mathlib-PR-quality lemma
+
+**GOAL:** Ship `Matrix.specialUnitaryGroup_compactSpace` as a Mathlib-PR-quality `[CompactSpace (specialUnitaryGroup (Fin n) ℂ)]` instance, removing the explicit `Matrix.specialUnitaryGroup_isCompact` hypothesis from the project's T-S′ chain.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- `lean/SKEFTHawking/FKLW/RossSelingerLightweight.lean` — current consumer of the explicit hypothesis
+- `lean/SKEFTHawking/FKLW/GenericEpsilonNet.lean` — uses `IsCompact`
+- `Mathlib.LinearAlgebra.UnitaryGroup` — Mathlib's `unitaryGroup` compactness; `specialUnitaryGroup` is the missing parallel
+
+**KEY INSIGHT:** `specialUnitaryGroup (Fin n) ℂ` is a closed subgroup of `unitaryGroup (Fin n) ℂ` via the continuous `det = 1` constraint. Closed-subspace-of-compact pattern. ~30-80 LoC.
+
+**DELIVERABLES (new file `lean/SKEFTHawking/SU2CompactnessMathlibPR.lean`):**
+1. `Matrix.specialUnitaryGroup_isClosed` — det-1 subset is closed.
+2. `Matrix.specialUnitaryGroup_compactSpace` instance + `_isCompact` lemma.
+3. Mathlib-PR-quality presentation: `Matrix` namespace, docstring with rationale, worked SU(2) and SU(3) examples.
+4. Update `RossSelingerLightweight.lean` to use the new instance instead of the explicit compactness hypothesis.
+
+**ACs:**
+- Instance is generic over `n` (Fin n with `[Fintype n] [DecidableEq n]` adequate).
+- `RossSelingerLightweight.lean` no longer requires explicit `IsCompact` hypothesis on the T-S′ chain.
+- `lake build` clean; `validate.py` passes.
+- File is upstream-ready (namespace, docstring, examples).
+
+**DO NOT TOUCH:** see Phase 6y coordination list.
+
+**EXIT:** commit `feat(phase6x-residual-C): Matrix.specialUnitaryGroup compactness + T-S′ hypothesis removal`.
+
+---
+
+### Tier 2 — Ross-Selinger arc (multi-session, new directory `lean/SKEFTHawking/FKLW/RossSelinger/`)
+
+DR-validated 5-milestone decomposition. Total ~2,500 LoC across the deterministic-branch arc (omits factoring branch per DR §R6). Parallel-safe with Phase 6y because all work lives in a new subfolder.
+
+**Sequencing** per DR §R5 + the project's incremental-headline preference:
+1. D (M1, ZOmega) — foundation.
+2. E (M2, ZOmegaSqrt2) — consumes D.
+3. F (M4, KMM) — consumes D + E.
+4. G (M5 stub, KMM base finder at ε₀=2⁻⁴) — consumes F; **closes orphan #2 at deterministic-branch level even without M3**.
+5. H (M3, grid synthesis) — quality-of-implementation upgrade after G.
+6. I (M5 full + pygridsynth cross-validation) — final composition.
+
+#### Item D (M1) — `ZOmega` ring of integers of ℚ(ζ₈)
+
+**GOAL:** Ship `ZOmega` — the ring of integers of ℚ(ζ₈), as a Lean 4 `structure` with four `ℤ` fields, computable arithmetic, `DecidableEq`, and a `RingHom` to `ℂ`. M1 of the Ross-Selinger arc per DR §1.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- `Lit-Search/Phase-6x/Ross-Selinger Clifford+T Synthesis- A Pre-Implementation Research Dossier.md` — §1.1 (multiplication table) + §1.4 (gaps table)
+- `Mathlib.NumberTheory.Zsqrtd.Basic` — canonical API shape (`re`/`im`, `Zsqrtd.lift`)
+- `Mathlib.NumberTheory.Zsqrtd.GaussianInt` — embedding-to-ℂ pattern
+- `Mathlib.RingTheory.Polynomial.Cyclotomic.Basic` — source of `Φ₈ = X⁴ + 1`
+
+**KEY CONSTRAINT (DR §1.1, HIGH confidence):** Do NOT instantiate `CyclotomicRing 8 ℤ ℚ(ζ₈)` — non-computable, blocks `native_decide`. Use a 4-tuple structure mirroring Selinger's Haskell `Omega Integer`.
+
+**DELIVERABLES (new dir `lean/SKEFTHawking/FKLW/RossSelinger/`, new file `ZOmega.lean`):**
+1. `structure ZOmega where a b c d : ℤ deriving DecidableEq, Repr` (a=ω³ coef, b=ω², c=ω, d=constant).
+2. `instance : CommRing ZOmega` with multiplication table from DR §1.1 (ω⁴ = −1).
+3. `ZOmega.norm : ZOmega → ℤ` (algebraic norm via Galois conjugates).
+4. `ZOmega.conj : ZOmega → ZOmega` (complex conjugation = ω → −ω³).
+5. `noncomputable def ZOmega.toComplex : ZOmega →+* ℂ` + injectivity via `Φ₈` irreducibility.
+6. `ZOmega.lift : { r : R // r^4 = -1 } ≃ (ZOmega →+* R)` — universal property mirroring `Zsqrtd.lift`.
+
+**ACs:**
+- Arithmetic computable; `native_decide` reduces `(⟨1,0,0,0⟩ * ⟨0,1,0,0⟩ : ZOmega)` to canonical form.
+- `lake build` clean; ~400 LoC (DR §1.4); `counts.json::lean.axioms` = 0.
+- File is Mathlib-upstream-ready (candidate namespace `Mathlib.NumberTheory.Cyclotomic.ZOmega`; docstrings; worked examples).
+
+**DO NOT TOUCH:** see Phase 6y coordination list.
+
+**EXIT:** commit `feat(phase6x-residual-D-M1): ZOmega ring of integers of ℚ(ζ₈) as computable 4-tuple`.
+
+#### Item E (M2) — `ZOmegaSqrt2 := ℤ[ω][1/√2]` dual representation
+
+**GOAL:** Ship `ZOmegaSqrt2 := ℤ[ω][1/√2]` per DR §1.7 with a dual representation: runtime 4-tuple-plus-exponent (for `native_decide`) plus theory-layer `Localization.Away (√2 : ZOmega)` with an equivalence proof. M2 of the Ross-Selinger arc.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- DR §1.7 (dual-representation design) + §1.2 (Mathlib survey)
+- D output (`RossSelinger/ZOmega.lean`) — prerequisite
+- `Mathlib.RingTheory.Localization.Away.Basic` and `Mathlib.RingTheory.Localization.Basic` — `Localization.Away`, `IsLocalization.lift`
+- `Mathlib.RingTheory.Localization.Defs` — universal property
+
+**KEY MATHEMATICAL FACT:** `√2 = ω + ω⁻¹ = ω − ω³ = (⟨−1, 0, 1, 0⟩ : ZOmega)`. So √2 is already in `ZOmega`; we localize at this element.
+
+**DELIVERABLES (new file `lean/SKEFTHawking/FKLW/RossSelinger/ZOmegaSqrt2.lean`):**
+1. `structure ZOmegaSqrt2Runtime where z : ZOmega; k : ℕ` representing `z / (√2)^k`, with equivalence `(z, k) ∼ (√2·z, k+1)`.
+2. `instance : CommRing ZOmegaSqrt2Runtime` via quotient.
+3. `def ZOmegaSqrt2 : Type := Localization.Away (sqrt2 : ZOmega)` — theory rep.
+4. `equivRuntimeLocalization : ZOmegaSqrt2Runtime ≃+* ZOmegaSqrt2` — bridge equivalence.
+5. `DecidableEq ZOmegaSqrt2Runtime` via canonical-form normalization.
+6. `noncomputable def ZOmegaSqrt2.toComplex : ZOmegaSqrt2 →+* ℂ` via universal property.
+7. Worked examples + Mathlib-PR-quality docstrings.
+
+**ACs:**
+- Runtime ops `native_decide`-able; theory ops Mathlib-conventional.
+- Equivalence proof: `equivRuntimeLocalization` is a ring isomorphism.
+- `lake build` clean; ~600 LoC (DR §1.4); kernel-only; axioms unchanged.
+
+**DO NOT TOUCH:** Phase 6y coordination list. Do NOT modify D outputs except via import.
+
+**EXIT:** commit `feat(phase6x-residual-E-M2): ZOmegaSqrt2 dual runtime+theory representation`.
+
+#### Item F (M4) — KMM exact synthesis
+
+**GOAL:** Ship `kmmReduce : Matrix (Fin 2) (Fin 2) ZOmegaSqrt2 → List CliffordTGate` with sde-decreasing termination, correctness `interp (kmmReduce U) = U`, and length bound `n_g ≤ N₃ + 4·sde(U)`. M4 per DR §3.3 + Selinger 2012 deterministic.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- DR §3 + §4
+- arXiv:1206.5236 (KMM 2013) — Algorithm 1, Theorem 1, Corollary 1
+- arXiv:1312.6584 (Giles-Selinger 2013) — Theorem 7.10 (MA T-count = sde)
+- D + E outputs (`RossSelinger/ZOmega.lean`, `ZOmegaSqrt2.lean`)
+- `lean/SKEFTHawking/FKLW/CliffordTGeneratingSet.lean` — project `CliffordTGate` reference
+
+**ALGORITHM (DR §3.3):** For `U` of sde ≥ 4, ∃ `j ∈ {0,1,2,3}` with `(HT^j)·U` sde-reduced by 1. Iterate until sde ≤ 3, then lookup-table the ≤192 single-qubit Cliffords. `chooseReduction` computes the `ZOmega/√2·ZOmega` residue (KMM Lemma 3).
+
+**DELIVERABLES (new `RossSelinger/CliffordTGate.lean`, `RossSelinger/KMM.lean`):**
+1. `CliffordTGate` ADT + `gateMatrix : CliffordTGate → Matrix (Fin 2) (Fin 2) ZOmegaSqrt2`.
+2. `sde : Matrix (Fin 2) (Fin 2) ZOmegaSqrt2 → ℕ` (least denominator exponent).
+3. `chooseReduction : … → Fin 4` (KMM Lemma 3).
+4. `cliffordLookup` for sde ≤ 3.
+5. `kmmReduce` with `termination_by sde U`.
+6. `kmmReduce_correct`, `kmmReduce_length_bound`.
+
+**ACs:**
+- All computable; `native_decide` reduces small examples.
+- `lake build` clean; ~800 LoC; axioms = 0.
+- `N₃` pinned with `#eval` evidence in docstring.
+- Length bound uses Giles-Selinger MA Theorem 7.10.
+- M4 alone is sufficient to define a real constructive Clifford+T base finder when paired with G (does not block on M3).
+
+**DO NOT TOUCH:** Phase 6y coordination list.
+
+**EXIT:** commit `feat(phase6x-residual-F-M4): KMM exact synthesis with sde-decreasing termination + length bound`.
+
+#### Item G (M5 stub) — KMM-derived base finder integration
+
+**GOAL:** Replace lightweight `cliffordTBaseFinder_constructive` (Finset-enum, exp-length) with `cliffordTBaseFinder_kmm` derived from F's KMM exact synthesis at SK base `ε₀ = 2⁻⁴`, discharging `BaseFinder_length_bounded` with worst-case L ≤ 90 < `skLengthBaseCase = 100` (DR §4.2).
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- DR §4 + §R3 + §R5
+- F output (`RossSelinger/KMM.lean`)
+- `lean/SKEFTHawking/FKLW/RossSelingerLightweight.lean` — supersede, don't delete
+- `lean/SKEFTHawking/FKLW/PerAlphabetConcreteLengthHeadlines.lean`
+- `lean/SKEFTHawking/FKLW/GenericConcreteWordLengthBound.lean` — `BaseFinder_length_bounded` definition
+
+**KEY INSIGHT (DR §4.2):** ε₀ = 2⁻⁴ ⟹ L ≤ 12·log₂(1/ε₀) + 42 = 90 (Selinger-2012 deterministic + MA tightening). 10-gate margin under `skLengthBaseCase = 100`. No probabilistic branch needed.
+
+**DELIVERABLES (new `RossSelinger/CliffordTBaseFinderKMM.lean`):**
+1. `cliffordTBaseFinder_kmm` via KMM applied to a Selinger-2012 hand-supplied `(u, t)`. (M3 stub: pick first ZOmegaSqrt2 candidate in a bounded grid; full M3 in I.)
+2. `…approximates_within_two_ε₀` UNCONDITIONAL.
+3. `…length_le_90` concrete bound via KMM + MA.
+4. `…BaseFinder_length_bounded` discharging tracked Prop at `skLengthBaseCase = 100`.
+5. Re-derive 3-conjunct UNCONDITIONAL CT headline using kmm base finder.
+
+**ACs:**
+- M3 stub clearly marked TODO with arXiv:1403.2975 §5 pointer.
+- All UNCONDITIONAL; kernel-only.
+- `lake build` clean; ~200 LoC; axioms = 0.
+- Orphan #2 closed at "real Ross-Selinger base finder" level (modulo M3 upgrade).
+
+**DO NOT TOUCH:** Phase 6y coordination list.
+
+**EXIT:** commit `feat(phase6x-residual-G-M5stub): KMM-derived CT base finder at ε₀=2⁻⁴ with L ≤ 90`.
+
+#### Item H (M3) — Ross-Selinger 2D grid-problem solver
+
+**GOAL:** Ship `gridSolutions : ConvexSet ℝ → ConvexSet ℝ → ℕ → List ZOmegaSqrt2` — the Ross-Selinger two-dimensional grid-problem solver per arXiv:1403.2975 §5 Theorem 2. M3 of the Ross-Selinger arc.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- DR §2.1 + §2.2 + §M3
+- arXiv:1403.2975 (Ross-Selinger 2014) §5 Theorem 2 + §7 algorithm
+- D + E + F outputs
+- `Mathlib.Analysis.Convex.Basic` — `ConvexSet`
+- `Mathlib.Topology.MetricSpace.Bounded` — upright-rectangle setup
+
+**ALGORITHM (DR §2.1):** Given two bounded convex `A, B ⊂ ℝ²` with non-empty interior, enumerate all `u ∈ ZOmegaSqrt2` with `u ∈ A` and Galois conjugate `u• ∈ B`. M-upright case: O(log(1/M)) ops + constant per solution.
+
+**DELIVERABLES (new file `lean/SKEFTHawking/FKLW/RossSelinger/GridSynth.lean`):**
+1. `epsilonRegion : ℝ → ℝ → ConvexSet ℝ²` per DR §2.1 (a).
+2. `gridSolutions` with the recursive algorithm (ellipse representations + scaling).
+3. `gridSolutions_correct` — every output element is in A; conjugate in B.
+4. `gridSolutions_complete` — every solution in `ZOmegaSqrt2 ∩ A` with conjugate in B appears.
+5. `gridSolutions_length_bound` — solution count and arithmetic-op count per Theorem 2.
+
+**ACs:**
+- All computable; `native_decide`-friendly.
+- `lake build` clean; ~700 LoC (DR §M3); axioms = 0.
+- Cross-validation against `pygridsynth` (MIT) test oracle for ε ∈ {0.1, 0.01, 0.001}, θ ∈ {π/4, π/8, π/16} per DR §R7.
+
+**DO NOT TOUCH:** Phase 6y coordination list. Read-only on D/E/F outputs.
+
+**EXIT:** commit `feat(phase6x-residual-H-M3): Ross-Selinger 2D grid-problem solver per arXiv:1403.2975 §5`.
+
+#### Item I (M5 full) — Full Ross-Selinger compose + cross-validation
+
+**GOAL:** Wire G + H into full Ross-Selinger `compile : SU(2) → ℝ⁺ → List CliffordTGate` with `‖interp (compile U ε) − U‖ ≤ ε` and `L ≤ 12·log₂(1/ε) + 42` (Selinger-2012 deterministic). M5 of the Ross-Selinger arc.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- DR §2 + §4
+- arXiv:1403.2975 §6-§7 (Diophantine + assemble)
+- G + H outputs
+
+**ALGORITHM (DR §2.1):** (a) ε-region; (b) grid-solutions (H); (c) Diophantine `t·t* = √2²ᵏ − u·u*`; (d) assemble `U' = [[u, −t*], [t, u*]]/√2ᵏ`; (e) KMM (F).
+
+**DELIVERABLES (new `RossSelinger/Compile.lean`):**
+1. `diophantineSolve` per arXiv:1403.2975 §6.
+2. `assembleUnitary`.
+3. `compile` composing (a)–(e).
+4. `compile_correct`.
+5. `compile_length_bound` ≤ `12·⌈log₂(1/ε)⌉ + 42`.
+6. Replace G's M3-stub with full `compile`-derived base finder.
+7. Cross-validate vs `pygridsynth` for ≥ 50 (θ, ε) test cases (DR §R7).
+
+**ACs:**
+- All UNCONDITIONAL; kernel-only.
+- `lake build` clean; ~300 LoC; axioms = 0.
+- pygridsynth-matched up to MA rewrite.
+- Phase 6x orphan #2 FULLY CLOSED at deterministic-branch level. Factoring branch + typical-case 3-constant remain optional follow-ons.
+
+**DO NOT TOUCH:** Phase 6y coordination list. Read-only on D/E/F/H outputs.
+
+**EXIT:** commit `feat(phase6x-residual-I-M5): Full Ross-Selinger compile + length bound + pygridsynth cross-validation`.
+
+---
+
+### Tier 3 — Deferred to post-Phase-6y
+
+Lower priority. Gated on Phase 6y closure to avoid stepping on the parallel agent.
+
+#### Item J — M.1 m-generic upgrade
+
+**GOAL:** Upgrade `Matrix.BCH.bchOrder2Cubic_Fin` (Fin d) to `Matrix m m ℂ`-generic for any `[Fintype m] [DecidableEq m] [Nonempty m]`. Ships the substrate-gap lemma blocking it.
+
+**TIER 3 GATE:** Only after Phase 6y Track S closes and parallel-agent consumption of `MatrixBCHCubicMathlibPR.lean` settles. Coordinate before starting.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- `lean/SKEFTHawking/MatrixBCHCubicMathlibPR.lean` — current Fin-d form + `Matrix.linftyOpNorm_reindex` aux (Phase 6x)
+- `lean/SKEFTHawking/SU2BCHBracketClosure.lean` — SU(2) original
+- `Mathlib.Analysis.NormedSpace.MatrixExponential`
+- `Mathlib.Data.Matrix.Reindex` — `Matrix.reindexAlgEquiv`
+
+**PREREQUISITE LEMMA:** `(reindexAlgEquiv R e) (NormedSpace.exp K A) = NormedSpace.exp K ((reindexAlgEquiv R e) A)` — reindex commutes with matrix exp. Absent from Mathlib4 v4.29.1; this is the substrate gap.
+
+**DELIVERABLES (modify `MatrixBCHCubicMathlibPR.lean`; new `MatrixReindexExpMathlibPR.lean`):**
+1. Reindex-commutes-with-exp lemma (its own Mathlib-PR-quality file).
+2. `Matrix.BCH.bchOrder2Cubic_m` via `reindexAlgEquiv` to `Fin (Fintype.card m)`.
+3. Bridge `bchOrder2Cubic_m_iff_fin`.
+4. Worked examples at `m := Fin 2`, `m := Bool`.
+5. Document gap to fully-generic-Lie-algebra (original M.1 spec) as follow-on.
+
+**ACs:**
+- Reindex+exp commutativity is a standalone Mathlib-PR-quality lemma.
+- `lake build` clean; ~200-300 LoC; axioms = 0.
+- Phase 6y consumers continue working (Fin-d form remains).
+
+**DO NOT TOUCH:** Phase 6y coordination list at execution time.
+
+**EXIT:** commit `feat(phase6x-residual-J): M.1 m-generic + reindexAlgEquiv⟷exp commutativity`.
+
+#### Item K — Fibonacci constructive ε₀-net
+
+**GOAL:** Ship a constructive ε₀-net for the Fibonacci alphabet per Phase 6t §13.2 Path-A enumeration, matching the T-S′ pattern that Phase 6x shipped for Clifford+T. Removes the existential `Classical.choose` dependence in `FibonacciEpsilonNet.lean`.
+
+**TIER 3 PRIORITY:** Lower than Tier 1/2 — Fibonacci's existential form has been adequate for two years. Ship after Tier 1/2 close.
+
+**BOOTSTRAP:** `CLAUDE.md`, this addendum, then:
+- `docs/roadmaps/Phase6t_Roadmap.md` §13.2 — Path-A enumeration spec
+- `lean/SKEFTHawking/FKLW/FibonacciEpsilonNet.lean` — current existential
+- `lean/SKEFTHawking/FKLW/FibonacciClosureDenseWitness.lean` — unconditional density
+- `lean/SKEFTHawking/FKLW/RossSelingerLightweight.lean` — T-S′ pattern to mirror
+- `lean/SKEFTHawking/FKLW/GenericEpsilonNet.lean` — `finite_epsilon_net_of_compact_dense`
+
+**DELIVERABLES (new file `lean/SKEFTHawking/FKLW/FibonacciBaseFinder.lean`):**
+1. `fibonacciFiniteCover` via `finite_epsilon_net_of_compact_dense` + Fibonacci density + SU(2) compactness (or Item C output if landed).
+2. `fibonacciBaseFinder_constructive` — `Finset.choose`-based UNCONDITIONAL.
+3. `fibonacciBaseFinder_constructive_approximates_within_two_ε₀`.
+4. `fibonacciBaseFinder_constructive_length_bounded`.
+5. If a 3-conjunct Fibonacci concrete-length headline doesn't yet exist, ship one via the same pattern as B-RR5/B-RR7.
+
+**ACs:**
+- All UNCONDITIONAL; kernel-only.
+- `lake build` clean; ~250 LoC; axioms = 0.
+- Phase 6x roadmap §"Constructive ε₀-net follow-on" Fibonacci entry closed.
+- Project Solovay-Kitaev story: ALL universal alphabets shipped with constructive base finders.
+
+**DO NOT TOUCH:** Phase 6y coordination list.
+
+**EXIT:** commit `feat(phase6x-residual-K): Fibonacci constructive ε₀-net + base finder mirroring T-S′ pattern`.
+
+---
+
+### Audit addendum metadata
+
+- **Authored:** 2026-05-27, autonomous-loop agent post-DR-receipt + post-Phase-6y-parallel-audit.
+- **Inputs:** Phase 6x roadmap (this file, pre-addendum); Phase 6x completion summary; Phase 6y roadmap; Phase 6y in-flight commit chain (HEAD `66b227d`); Ross-Selinger DR (`Lit-Search/Phase-6x/Ross-Selinger Clifford+T Synthesis- A Pre-Implementation Research Dossier.md`); Explore-agent substrate audit 2026-05-27.
+- **Closure metric:** Tier 1 completion closes retrospective-addendum failure modes #4 and #5 in full strength. Tier 2 completion through item G closes Phase 6x orphan #2 at deterministic-branch level. Tier 2 completion through item I closes #2 in full. Tier 3 completion closes items #1 and #5.
+- **No new axioms introduced by any goal prompt above.** All ACs preserve `counts.json::lean.axioms = 0`.
