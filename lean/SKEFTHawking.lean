@@ -1178,6 +1178,13 @@ import SKEFTHawking.FKLW.GenericSUdMatrixLogLipschitz
 -- concrete word-length conjunct `c · log(1/ε)^(log 5 / log 2)` per
 -- the M.4 inheritance discipline (F#4 guardrail).
 import SKEFTHawking.FKLW.GenericSUdHeadlineForm
+-- Phase 6y Track S.2g-conditional (2026-05-27): Cartan v4 conditional
+-- discharge at SU(d) — closed subgroup of SU(d) with `1 ∈ interior`
+-- ⟹ H = ⊤, via Mathlib's Subgroup.eq_top_of_isOpen_of_connected +
+-- project SU(d) connectedness instance. Ships
+-- `subgroup_SUd_eq_top_of_one_mem_interior` + the predicate-level
+-- conditional `CartanFinalStep_SUd_v4_holds_of_interior_witness`.
+import SKEFTHawking.FKLW.GenericSUdCartanConditional
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
