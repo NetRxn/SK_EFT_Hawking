@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-05-23
+**Auto-generated:** 2026-05-27
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable.
@@ -15,21 +15,20 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Verdict |
 |---|---:|---:|---:|---:|---|:---:|
-| **F** | 0 | 52 | 22 | 8 | 3 advisory, 2 critical, 6 major, 11 minor | 🔴 RED |
-| **D1** | 1 | 9 | 1 | 0 | 1 minor | 🟢 GREEN |
+| **F** | 0 | 53 | 22 | 8 | 3 advisory, 2 critical, 6 major, 11 minor | 🔴 RED |
+| **D1** | 1 | 12 | 1 | 0 | 1 minor | 🟢 GREEN |
 | **D2** | 1 | 6 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **D3** | 1 | 31 | 10 | 5 | 5 major, 5 minor | 🔴 RED |
-| **D4** | 1 | 12 | 4 | 1 | 1 major, 3 minor | 🔴 RED |
+| **D4** | 1 | 13 | 4 | 1 | 1 major, 3 minor | 🔴 RED |
 | **D5** | 1 | 9 | 7 | 2 | 3 advisory, 2 critical, 2 minor | 🔴 RED |
-| **D6** | 1 | 1 | 0 | 0 | _(skeleton — bundle created 2026-05-26 by Phase 6v Wave 6v.1; Stage 13 deferred to Phase 6v close)_ | 🟢 GREEN (skeleton) |
 | **L1** | 2 | 2 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L2** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L3** | 2 | 4 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **I1** | 3 | 6 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **I1** | 3 | 8 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **I2** | 3 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **I3** | 3 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **E1** | 4 | 3 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **E2** | 4 | 2 | 1 | 0 | 1 minor | 🟢 GREEN |
+| **E1** | 4 | 5 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **E2** | 4 | 4 | 1 | 0 | 1 minor | 🟢 GREEN |
 
 ## Gate × Bundle distribution (open findings)
 
@@ -41,7 +40,6 @@
 | **D3** | 6 | 0 | 0 | 4 |
 | **D4** | 1 | 0 | 2 | 1 |
 | **D5** | 2 | 1 | 1 | 3 |
-| **D6** | 0 | 0 | 0 | 0 |
 | **L1** | 0 | 0 | 0 | 0 |
 | **L2** | 0 | 0 | 0 | 0 |
 | **L3** | 0 | 0 | 0 | 0 |
