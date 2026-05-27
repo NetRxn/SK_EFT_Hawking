@@ -1348,6 +1348,27 @@ import SKEFTHawking.FKLW.TrappedIonSU4HeadlineDischarge
 -- `cliffordCCZSU8Headline` discharge given a SKCompileWithBounds data
 -- hypothesis for the Clifford+CCZ SU(8) alphabet.
 import SKEFTHawking.FKLW.CliffordCCZSU8HeadlineDischarge
+-- Phase 6y Track S.4 PROPER (2026-05-27): EXPLICIT d-generic Lipschitz constant
+-- K = 2 for matrixLog d near 1. Composes `matrixLog_hasStrictFDerivAt_one` with
+-- the strict-F-derivative ε-δ characterization, yielding the substantive
+-- explicit-constant form refining the existential `matrixLog_smallness_on_nhd_one`.
+-- The Phase 6u SU(2)-specific `Y_h_norm_le_four_norm_sub_one` (K=4) is now matched
+-- by the d-generic ship with the TIGHTER K=2 (via IFT derivative inverse).
+import SKEFTHawking.FKLW.GenericSUdMatrixLogLipschitzExplicit
+-- Phase 6y Track T-X′.3 (2026-05-27): d-generic constructive/algorithmic
+-- (finite-Finset) ε₀-net. Composes `IsDenseInSUd_gs` density witness +
+-- UNCONDITIONAL `Matrix.specialUnitaryGroup_isCompact` to produce the
+-- finite-Finset ε-cover of SU(d) + algorithmic per-`U` findNearestInCover.
+-- F#5-compliant ALGORITHMIC ε₀-net substrate at SU(d).
+import SKEFTHawking.FKLW.GenericSUdConstructiveEpsilonNet
+-- Phase 6y Track T-A1′.3 PROPER (2026-05-27): F#5-compliant ALGORITHMIC
+-- ε₀-net for trapped-ion SU(4). Composes `GenericSUdConstructiveEpsilonNet`
+-- with the tracked-Prop discharge to produce per-`U` algorithmic word
+-- extraction via finite-Finset minimization (NOT existential per query).
+import SKEFTHawking.FKLW.TrappedIonSU4ConstructiveEpsilonNet
+-- Phase 6y Track T-A2′.3 PROPER (2026-05-27): F#5-compliant ALGORITHMIC
+-- ε₀-net for Clifford+CCZ SU(8). Mirrors T-A1′.3 pattern at d=8.
+import SKEFTHawking.FKLW.CliffordCCZSU8ConstructiveEpsilonNet
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
