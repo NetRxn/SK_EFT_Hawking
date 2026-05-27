@@ -1138,6 +1138,12 @@ import SKEFTHawking.FKLW.TrappedIonSU4Substrate
 -- Combined with Phase 6x's CCZ_mat, forms the alphabet for
 -- cliffordCCZGeneratingSetSU8 full instance (T-A2′.1 proper).
 import SKEFTHawking.FKLW.CliffordCCZSU8Substrate
+-- Phase 6y Track T-A1′.1-partial (2026-05-27): trapped-ion 1Q-only
+-- GeneratingSet 4 instance using the 4 packaged SU(4) gates
+-- {H_SU_on_ion1, T_SU_on_ion1, H_SU_on_ion2, T_SU_on_ion2}. Substantive
+-- intermediate ship toward T-A1′.1 proper (which adds MS(θ) at
+-- rational-π/N grid once MSGateMat SU(4) membership ships).
+import SKEFTHawking.FKLW.TrappedIonGeneratingSetSU4Partial
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
