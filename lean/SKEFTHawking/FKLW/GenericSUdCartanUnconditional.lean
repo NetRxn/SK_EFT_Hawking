@@ -158,4 +158,63 @@ theorem composite_map_nhds_zero_eq_nhds_zero {d n : ℕ}
   exact map_nhds_eq_of_surj_with_cs
     (completeSpace_tracelessSkewHermitian d) h_deriv h_range
 
+/-! ## 5. Co-restricted `multiDirExpProduct` to ↥SU(d)
+
+Bundle `multiDirExpProduct X t ∈ SU(d)` as a subtype-valued function
+`multiDirExpProduct_SU X : (Fin n → ℝ) → ↥SU(d)`. This is the map we
+need to show maps `𝓝 0` to a nbhd of `1` in `↥SU(d)` for the final
+"1 ∈ interior H" derivation. -/
+
+/-- **Co-restricted multiDirExpProduct to ↥SU(d)**. -/
+noncomputable def multiDirExpProduct_SU {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0) :
+    (Fin n → ℝ) → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) := fun t =>
+  ⟨multiDirExpProduct X t, multiDirExpProduct_mem_SUd X hX_in_sud t⟩
+
+/-- **`multiDirExpProduct_SU X 0 = 1`**. -/
+@[simp]
+theorem multiDirExpProduct_SU_zero {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0) :
+    multiDirExpProduct_SU X hX_in_sud (0 : Fin n → ℝ) = 1 := by
+  apply Subtype.ext
+  show multiDirExpProduct X 0 = 1
+  show multiDirExpProduct X (fun _ : Fin n => (0 : ℝ)) = 1
+  exact multiDirExpProduct_zero X
+
+/-- **`multiDirExpProduct_SU` is continuous**. -/
+theorem multiDirExpProduct_SU_continuous {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0) :
+    Continuous (multiDirExpProduct_SU X hX_in_sud) := by
+  -- The subtype-valued function is continuous iff its Matrix-valued
+  -- coordinate is continuous.
+  rw [continuous_induced_rng]
+  -- Goal: Continuous ((↑) ∘ multiDirExpProduct_SU X hX_in_sud) =
+  --        Continuous (fun t => multiDirExpProduct X t)
+  exact multiDirExpProduct_continuous X
+
+/-- **`multiDirExpProduct_SU` image lies in `H`** (consumer form;
+substantive corollary).
+
+Given the witness from `CartanFinalStep_SUd_v4`, for every `t`, the
+SU(d) element `multiDirExpProduct_SU X hX_in_sud t` is in `H`. -/
+theorem multiDirExpProduct_SU_mem_H {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0)
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+    (hX_flow : ∀ i, ∀ t : ℝ,
+      ∃ M : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ),
+        M ∈ H ∧ M.val = NormedSpace.exp ((t : ℂ) • X i))
+    (t : Fin n → ℝ) :
+    multiDirExpProduct_SU X hX_in_sud t ∈ H := by
+  obtain ⟨M, hM_mem, hM_val⟩ := multiDirExpProduct_mem_H X H hX_flow t
+  -- M.val = multiDirExpProduct X t = (multiDirExpProduct_SU X hX_in_sud t).val.
+  have h_eq : M = multiDirExpProduct_SU X hX_in_sud t := by
+    apply Subtype.ext
+    show M.val = multiDirExpProduct X t
+    exact hM_val
+  rw [← h_eq]; exact hM_mem
+
 end SKEFTHawking.FKLW.GenericSUd
