@@ -1167,6 +1167,11 @@ import SKEFTHawking.FKLW.CliffordCCZGeneratingSetSU8Full
 -- dispatch into `H_of_G gs = ⊤` via S.2 CartanFinalStep_SUd_v4 predicate.
 -- Consumer-facing substrate for T-A1′.2 and T-A2′.2 closure-density.
 import SKEFTHawking.FKLW.GenericSUdClosureDenseWitness
+-- Phase 6y Track S.4 (2026-05-27): matrix log Lipschitz-style smallness
+-- bound on a nbhd of 1 in SU(d). For any ε > 0, ∃ δ > 0 such that
+-- ‖h - 1‖ < δ ∧ h ∈ target ⟹ ‖matrixLog d h‖ < ε. Continuity-derived
+-- form of the Y_h Lipschitz constant Phase 6u shipped for SU(2).
+import SKEFTHawking.FKLW.GenericSUdMatrixLogLipschitz
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
