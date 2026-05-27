@@ -1185,6 +1185,12 @@ import SKEFTHawking.FKLW.GenericSUdHeadlineForm
 -- `subgroup_SUd_eq_top_of_one_mem_interior` + the predicate-level
 -- conditional `CartanFinalStep_SUd_v4_holds_of_interior_witness`.
 import SKEFTHawking.FKLW.GenericSUdCartanConditional
+-- Phase 6y Track T-A2′.5 statement (2026-05-27): predicate-form of
+-- the Clifford+CCZ SU(8) Solovay-Kitaev bundled-strict headline.
+-- `cliffordCCZSU8Headline : Prop` captures BOTH error bound + concrete
+-- word-length conjunct (FreeGroup (Fin 4).toWord.length) per M.4
+-- inheritance discipline (F#4 guardrail).
+import SKEFTHawking.FKLW.CliffordCCZSU8HeadlineForm
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
