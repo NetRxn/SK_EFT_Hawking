@@ -1494,6 +1494,13 @@ import SKEFTHawking.FKLW.GenericSUdPermutationConjugation
 -- This is the key identity that combines with S25/S26/S27 to lift discharge
 -- for diag(a ∘ σ) (sorted) to discharge for diag(a) (arbitrary).
 import SKEFTHawking.FKLW.GenericSUdPermutationDiagonal
+-- Phase 6y Track S.3 substrate (Session 29, 2026-05-27): partial sum bridge
+-- lemmas for real-coerced sequences:
+--   (partialSumCoeff (a ·) p).im = 0
+--   (partialSumCoeff (a ·) p).re = ∑ j ∈ range (p.val + 1), if-then-else a ⟨j, _⟩
+-- Bridges the ℂ-valued partialSumCoeff (used by S24) to real partial sums
+-- (used by S25's decreasing-sort non-negativity).
+import SKEFTHawking.FKLW.GenericSUdPartialSumBridge
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
