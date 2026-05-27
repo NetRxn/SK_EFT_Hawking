@@ -1540,6 +1540,15 @@ import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorUnbounded
 -- Extends S34 to ALL `d : ℕ` (no `2 ≤ d` assumption). d ∈ {0, 1} via vacuous
 -- F = G = 0 (H = 0 in those dimensions). d ≥ 2 via S34. Clean unconditional form.
 import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorUnboundedAllD
+-- Phase 6y Track S.3 substrate (Session 36, 2026-05-27): NORM BRIDGE for unitary
+-- conjugation (loose d² bound). For U ∈ unitaryGroup (Fin n) ℂ and any A:
+--   ‖U · A · star U‖_linftyOp ≤ n² · ‖A‖_linftyOp
+-- Via `Matrix.linfty_opNorm_mul` (submultiplicativity) + entry_norm_bound_of_unitary
+-- (each entry of unitary has norm ≤ 1) → ‖U‖_linftyOp ≤ n. Combined with S26
+-- conjugation invariance, gives a quantitative bound on the linftyOp norm after
+-- spectral-then-conjugate. The tighter `n` bound (via Cauchy-Schwarz) ships in
+-- a follow-on commit.
+import SKEFTHawking.FKLW.GenericSUdNormBridgeUnitaryConjugation
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
