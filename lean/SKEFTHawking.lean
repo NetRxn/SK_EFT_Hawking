@@ -1270,8 +1270,16 @@ import SKEFTHawking.FKLW.GenericSUdTsProj
 -- `matrixLog ∘ multiDirExpProduct` strict derivative at 0, and the full
 -- `tsProj_d ∘ matrixLog ∘ multiDirExpProduct` composite landing in
 -- ↥(tracelessSkewHermitian (Fin d)). Load-bearing for the IFT-on-subspace
--- step of the S.2g UNCONDITIONAL discharge.
+-- step of the S.2g UNCONDITIONAL discharge. Also ships composite-derivative
+-- range-top-when-spans (input to Mathlib's map_nhds_eq_of_surj).
 import SKEFTHawking.FKLW.GenericSUdMultiParamCompositeDeriv
+-- Phase 6y Track S.2g-substrate (2026-05-27): substrate value lemma for the
+-- IFT-on-subspace step. `composite_map_value_zero`: the composite
+-- `tsProj_d ∘ matrixLog ∘ multiDirExpProduct X` evaluates to 0 at the
+-- zero parameter vector. The final map_nhds_eq_of_surj application
+-- (requiring CompleteSpace ↥(𝔰𝔲(d)) typeclass synthesis) ships in
+-- a follow-on commit.
+import SKEFTHawking.FKLW.GenericSUdCartanUnconditional
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
