@@ -1097,6 +1097,15 @@ import SKEFTHawking.FKLW.GenericSUdMatrixLogSkewHerm
 -- generic-typed, Mathlib-style docstrings + SU(2)/SU(4)/SU(8) examples.
 -- Filename mirror Mathlib.Analysis.Normed.Algebra.MatrixExponential.
 import SKEFTHawking.MatrixExpLocalHomeomorphMathlibPR
+-- Phase 6y Track M-S.1 (2026-05-27): Mathlib-PR-quality d-generic
+-- Cartan-final-step density-from-witness predicate at SU(d). Ships under
+-- the Matrix.SpecialUnitary.Cartan namespace: `finalStepVd (d : ℕ)`.
+-- ACTUAL extraction (de-namespaced, generic-typed). Bridges to project's
+-- `CartanFinalStep_SUd_v4` via `finalStepVd_iff_project` (= rfl).
+-- Discharge (the d-generic chain) ships in follow-on commits via
+-- the S.2-d-e-f Lie-theory substrate. Filename mirror
+-- Mathlib.Analysis.MatrixGroups.SpecialUnitary.Cartan.
+import SKEFTHawking.CartanFinalStepSUdGenericMathlibPR
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
