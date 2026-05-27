@@ -116,8 +116,7 @@ theorem MSGateMat_zero : MSGateMat 0 = 1 := by
   unfold MSGateMat
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Matrix.one_apply, Complex.ofReal_zero, Real.cos_zero, Real.sin_zero,
-          mul_zero, neg_zero] <;> rfl
+    simp [Complex.ofReal_zero, Real.cos_zero, Real.sin_zero, mul_zero]
 
 /-- The Mølmer-Sørensen gate matrix has `(0, 0)` entry `cos(θ/2)`. -/
 theorem MSGateMat_apply_0_0 (θ : ℝ) :
@@ -141,8 +140,12 @@ combined Finset is the canonical "trapped-ion discrete alphabet" at
 grid resolution `N`. -/
 
 /-- **Discrete MS(θ) grid at resolution `N`**: the finite Finset of
-`MS(k·π/N)` matrices for `k ∈ {0, …, 2N − 1}`. -/
-noncomputable def MSGridDiscrete (N : ℕ) (hN : 0 < N) :
+`MS(k·π/N)` matrices for `k ∈ {0, …, 2N − 1}`.
+
+The `0 < N` hypothesis is load-bearing for downstream membership theorems
+(e.g., `MSGridDiscrete_contains_identity` uses `0 ∈ Finset.range (2 * N)`,
+which requires `2 * N > 0`). -/
+noncomputable def MSGridDiscrete (N : ℕ) (_hN : 0 < N) :
     Finset (Matrix (Fin 4) (Fin 4) ℂ) :=
   (Finset.range (2 * N)).image (fun k : ℕ => MSGateMat ((k : ℝ) * Real.pi / (N : ℝ)))
 
