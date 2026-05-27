@@ -1082,6 +1082,13 @@ import SKEFTHawking.FKLW.GenericSUdCartanPredicate
 -- `expAmbientPartialHomeo d`, `matrixLog d`, round-trip identities, and
 -- local injectivity. d-generic lift of Phase 6u `SU2LocalDiffeo`.
 import SKEFTHawking.FKLW.GenericSUdMatrixExpDiffeo
+-- Phase 6y Track S.2c (2026-05-27): matrix log of unitary near 1 is
+-- skew-Hermitian. For h ∈ SU(d) close to 1, the local matrix log
+-- `matrixLog d h` satisfies `(matrixLog d h).IsSkewHermitian`. Composes
+-- `Matrix.exp_conjTranspose` + `Matrix.exp_neg` + S.2b's local exp
+-- injectivity + the symmetric-source-nbhd topological argument. Half
+-- of the substrate for S.2's discharge (traceless half ships separately).
+import SKEFTHawking.FKLW.GenericSUdMatrixLogSkewHerm
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
