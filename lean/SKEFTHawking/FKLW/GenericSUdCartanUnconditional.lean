@@ -261,4 +261,46 @@ matrixLog = id` on the target). The image of multiDirExpProduct near 0
 is thus the `expAmbient`-image of the composite-map's image, which is
 a nbhd of `1` in SU(d) via the local diffeo. -/
 
+/-! ## 8. multiDirExpProduct image is eventually in `target` (substrate) -/
+
+/-- **multiDirExpProduct lands in `target` eventually near 0** (substantive).
+
+Combines continuity of multiDirExpProduct at 0 + multiDirExpProduct 0 = 1
++ `target` is a nbhd of 1 (per S.2b `expAmbientPartialHomeo_target_mem_nhds_one`)
+to conclude: there's a nbhd V of 0 in ℝ^n such that for every t ∈ V,
+`multiDirExpProduct X t ∈ (expAmbientPartialHomeo d).target`. -/
+theorem multiDirExpProduct_eventually_in_target {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ) :
+    ∀ᶠ t in nhds (0 : Fin n → ℝ),
+      multiDirExpProduct X t ∈ (expAmbientPartialHomeo d).target := by
+  have h_cont := multiDirExpProduct_continuous X
+  have h_value : multiDirExpProduct X (0 : Fin n → ℝ) = 1 := by
+    show multiDirExpProduct X (fun _ : Fin n => (0 : ℝ)) = 1
+    exact multiDirExpProduct_zero X
+  have h_target_nhd_one : (expAmbientPartialHomeo d).target ∈ nhds
+      (1 : Matrix (Fin d) (Fin d) ℂ) :=
+    expAmbientPartialHomeo_target_mem_nhds_one d
+  -- continuity at 0 + multiDirExpProduct X 0 = 1 + target nbhd of 1
+  -- ⟹ preimage of target is nbhd of 0.
+  have h_continuousAt : ContinuousAt (multiDirExpProduct X) (0 : Fin n → ℝ) :=
+    h_cont.continuousAt
+  have h_target_nhd_value :
+      (expAmbientPartialHomeo d).target ∈ nhds (multiDirExpProduct X 0) := by
+    rw [h_value]; exact h_target_nhd_one
+  exact h_continuousAt.preimage_mem_nhds h_target_nhd_value
+
+/-! ## 9. multiDirExpProduct = expAmbient ∘ matrixLog ∘ multiDirExpProduct on target
+
+For inputs producing matrices in `target`, the round-trip `expAmbient ∘
+matrixLog = id` gives the identity factorization. -/
+
+/-- **multiDirExpProduct = expAmbient ∘ matrixLog ∘ multiDirExpProduct
+on target** (substantive substrate). -/
+theorem multiDirExpProduct_eq_expAmbient_matrixLog_self {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ) (t : Fin n → ℝ)
+    (h_in_target : multiDirExpProduct X t ∈ (expAmbientPartialHomeo d).target) :
+    multiDirExpProduct X t =
+      expAmbient d (matrixLog d (multiDirExpProduct X t)) :=
+  (expAmbient_matrixLog d h_in_target).symm
+
 end SKEFTHawking.FKLW.GenericSUd
