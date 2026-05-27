@@ -37,13 +37,20 @@ level-independent — it is the universal SU(2) rotation that mixes the
 two computational-basis components. Only `σ_5_2 := T_RR7` is freshly
 defined here, with the level-7-specific phase `π/18`.
 
-## Read–Rezayi reference
+## Read–Rezayi reference + BMPRV Niven template
 
 For the SU(2)_k universal-anyon model and its braid-group
 representation:
 
   N. Read and E. Rezayi, *Phys. Rev. B* **59** (1999), 8084;
   arXiv:cond-mat/9809384.
+
+The Niven-style algebraic-integer obstruction for the closure-density
+discharge follows the canonical Boykin–Mor–Pulver–Roychowdhury–Vatan
+template:
+
+  P. O. Boykin, T. Mor, M. Pulver, V. Roychowdhury, F. Vatan,
+  *Quantum Inf. Comput.* 6 (2006), 81–95; arXiv:quant-ph/9906054.
 
 The closure-density of `⟨H_SU, T_RR7⟩` in SU(2) is established in
 `ReadRezayiK7ClosureDenseWitness.lean` (Track T-B.5.2) following the
