@@ -1482,6 +1482,12 @@ import SKEFTHawking.FKLW.GenericSUdDecreasingSortPartialSums
 -- not the SU(d) determinant constraint. Enables permutation-matrix conjugation
 -- for the eigenvalue-sort lift of S24 to arbitrary diagonal H.
 import SKEFTHawking.FKLW.GenericSUdUnitaryConjugationInvariance
+-- Phase 6y Track S.3 substrate (Session 27, 2026-05-27): permutation matrices
+-- are unitary. For any σ : Equiv.Perm (Fin n), permMatrix ℂ σ ∈ unitaryGroup
+-- via Matrix.conjTranspose_permMatrix + permMatrix_mul + inverse cancellation.
+-- Ships permMatrixAsUnitary bundle + star_form. Substrate for eigenvalue-sort
+-- lift (combine with S25 + S24 + S26 in Session 28+).
+import SKEFTHawking.FKLW.GenericSUdPermutationConjugation
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
