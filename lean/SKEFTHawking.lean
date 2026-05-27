@@ -1061,6 +1061,15 @@ import SKEFTHawking.MatrixBCHCubicMathlibPR
 -- Filename mirror Mathlib.Analysis.MatrixGroups.SpecialUnitary.Cartan.
 -- SU(d) → Phase 6y Track S.
 import SKEFTHawking.CartanFinalStepSUdMathlibPR
+-- Phase 6y Track S.1 (2026-05-27): generic SU(d) generating-set framework.
+-- d-parametric lift of Phase 6u GenericSU2.GeneratingSet to arbitrary
+-- matrix dimension d (carrier ρ_hom : W →* specialUnitaryGroup (Fin d) ℂ).
+-- Substrate keystone for the Phase 6y SU(d) extension chain (S.2 Cartan
+-- v4 at SU(d), S.3 Dawson-Nielsen at 𝔰𝔲(d), S.4 d-dependent Lipschitz,
+-- S.5 generic discharge, S.6 generic bundled-strict headline). Bridge
+-- ofGenericSU2 : GenericSU2.GeneratingSet → GeneratingSet 2 preserves
+-- H_of_G definitionally.
+import SKEFTHawking.FKLW.GenericSUdGeneratingSet
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
