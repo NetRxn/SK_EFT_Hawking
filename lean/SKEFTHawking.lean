@@ -1383,6 +1383,11 @@ import SKEFTHawking.FKLW.TrappedIonSU4ConstructiveEpsilonNet
 -- Phase 6y Track T-A2′.3 PROPER (2026-05-27): F#5-compliant ALGORITHMIC
 -- ε₀-net for Clifford+CCZ SU(8). Mirrors T-A1′.3 pattern at d=8.
 import SKEFTHawking.FKLW.CliffordCCZSU8ConstructiveEpsilonNet
+-- Phase 6y Track S.3 (2026-05-27): d-generic balanced commutator predicate
+-- `BalancedCommutator_SUd d : Prop`. Substantively discharged at d ≤ 2 via
+-- direct mechanical lift of `balanced_commutator_general_axis_lie_traceless`
+-- (Phase 6t SU(2) Pauli decomposition with Bloch-sphere K = √(1/2)).
+import SKEFTHawking.FKLW.GenericSUdBalancedCommutator
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
