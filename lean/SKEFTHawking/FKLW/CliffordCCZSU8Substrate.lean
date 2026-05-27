@@ -99,4 +99,88 @@ noncomputable def H_SU_on_qubit2 : Matrix (Fin 8) (Fin 8) ℂ :=
 noncomputable def H_SU_on_qubit3 : Matrix (Fin 8) (Fin 8) ℂ :=
   kronSU4SU2 (1 : Matrix (Fin 4) (Fin 4) ℂ) SKEFTHawking.FKLW.GenericSU2.H_SU_mat
 
+/-! ## 3. Determinant and unitary lemmas for kronSU4SU2 / kronSU2SU4 -/
+
+/-- **det(kronSU4SU2 A B) = det(A)^2 * det(B)^4**. -/
+theorem det_kronSU4SU2 (A : Matrix (Fin 4) (Fin 4) ℂ)
+    (B : Matrix (Fin 2) (Fin 2) ℂ) :
+    (kronSU4SU2 A B).det = A.det ^ 2 * B.det ^ 4 := by
+  unfold kronSU4SU2
+  rw [Matrix.det_reindex_self]
+  show (Matrix.kroneckerMap (fun x1 x2 => x1 * x2) A B).det = A.det ^ 2 * B.det ^ 4
+  rw [Matrix.det_kronecker]
+  simp [Fintype.card_fin]
+
+/-- **det(kronSU2SU4 A B) = det(A)^4 * det(B)^2**. -/
+theorem det_kronSU2SU4 (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (B : Matrix (Fin 4) (Fin 4) ℂ) :
+    (kronSU2SU4 A B).det = A.det ^ 4 * B.det ^ 2 := by
+  unfold kronSU2SU4
+  rw [Matrix.det_reindex_self]
+  show (Matrix.kroneckerMap (fun x1 x2 => x1 * x2) A B).det = A.det ^ 4 * B.det ^ 2
+  rw [Matrix.det_kronecker]
+  simp [Fintype.card_fin]
+
+/-- **kronSU4SU2 of det-1 matrices has det 1**. -/
+theorem det_kronSU4SU2_eq_one {A : Matrix (Fin 4) (Fin 4) ℂ}
+    {B : Matrix (Fin 2) (Fin 2) ℂ}
+    (hA : A.det = 1) (hB : B.det = 1) :
+    (kronSU4SU2 A B).det = 1 := by
+  rw [det_kronSU4SU2, hA, hB]; ring
+
+/-- **kronSU2SU4 of det-1 matrices has det 1**. -/
+theorem det_kronSU2SU4_eq_one {A : Matrix (Fin 2) (Fin 2) ℂ}
+    {B : Matrix (Fin 4) (Fin 4) ℂ}
+    (hA : A.det = 1) (hB : B.det = 1) :
+    (kronSU2SU4 A B).det = 1 := by
+  rw [det_kronSU2SU4, hA, hB]; ring
+
+/-- **kronSU4SU2 of unitary matrices is unitary**. -/
+theorem kronSU4SU2_mem_unitaryGroup {A : Matrix (Fin 4) (Fin 4) ℂ}
+    {B : Matrix (Fin 2) (Fin 2) ℂ}
+    (hA : A ∈ Matrix.unitaryGroup (Fin 4) ℂ)
+    (hB : B ∈ Matrix.unitaryGroup (Fin 2) ℂ) :
+    kronSU4SU2 A B ∈ Matrix.unitaryGroup (Fin 8) ℂ := by
+  unfold kronSU4SU2
+  apply SKEFTHawking.FKLW.TrappedIonSU4.reindex_mem_unitaryGroup
+  show Matrix.kroneckerMap (fun x1 x2 => x1 * x2) A B ∈
+    Matrix.unitaryGroup (Fin 4 × Fin 2) ℂ
+  exact Matrix.kronecker_mem_unitary hA hB
+
+/-- **kronSU2SU4 of unitary matrices is unitary**. -/
+theorem kronSU2SU4_mem_unitaryGroup {A : Matrix (Fin 2) (Fin 2) ℂ}
+    {B : Matrix (Fin 4) (Fin 4) ℂ}
+    (hA : A ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    (hB : B ∈ Matrix.unitaryGroup (Fin 4) ℂ) :
+    kronSU2SU4 A B ∈ Matrix.unitaryGroup (Fin 8) ℂ := by
+  unfold kronSU2SU4
+  apply SKEFTHawking.FKLW.TrappedIonSU4.reindex_mem_unitaryGroup
+  show Matrix.kroneckerMap (fun x1 x2 => x1 * x2) A B ∈
+    Matrix.unitaryGroup (Fin 2 × Fin 4) ℂ
+  exact Matrix.kronecker_mem_unitary hA hB
+
+/-- **kronSU4SU2 of SU(4) and SU(2) is in SU(8)**. -/
+theorem kronSU4SU2_mem_specialUnitaryGroup {A : Matrix (Fin 4) (Fin 4) ℂ}
+    {B : Matrix (Fin 2) (Fin 2) ℂ}
+    (hA : A ∈ Matrix.specialUnitaryGroup (Fin 4) ℂ)
+    (hB : B ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    kronSU4SU2 A B ∈ Matrix.specialUnitaryGroup (Fin 8) ℂ := by
+  rw [Matrix.mem_specialUnitaryGroup_iff]
+  obtain ⟨hA_unit, hA_det⟩ := Matrix.mem_specialUnitaryGroup_iff.mp hA
+  obtain ⟨hB_unit, hB_det⟩ := Matrix.mem_specialUnitaryGroup_iff.mp hB
+  exact ⟨kronSU4SU2_mem_unitaryGroup hA_unit hB_unit,
+         det_kronSU4SU2_eq_one hA_det hB_det⟩
+
+/-- **kronSU2SU4 of SU(2) and SU(4) is in SU(8)**. -/
+theorem kronSU2SU4_mem_specialUnitaryGroup {A : Matrix (Fin 2) (Fin 2) ℂ}
+    {B : Matrix (Fin 4) (Fin 4) ℂ}
+    (hA : A ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (hB : B ∈ Matrix.specialUnitaryGroup (Fin 4) ℂ) :
+    kronSU2SU4 A B ∈ Matrix.specialUnitaryGroup (Fin 8) ℂ := by
+  rw [Matrix.mem_specialUnitaryGroup_iff]
+  obtain ⟨hA_unit, hA_det⟩ := Matrix.mem_specialUnitaryGroup_iff.mp hA
+  obtain ⟨hB_unit, hB_det⟩ := Matrix.mem_specialUnitaryGroup_iff.mp hB
+  exact ⟨kronSU2SU4_mem_unitaryGroup hA_unit hB_unit,
+         det_kronSU2SU4_eq_one hA_det hB_det⟩
+
 end SKEFTHawking.FKLW.CliffordCCZSU8
