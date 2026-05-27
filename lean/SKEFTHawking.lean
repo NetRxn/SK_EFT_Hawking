@@ -1517,6 +1517,12 @@ import SKEFTHawking.FKLW.GenericSUdRangeFilterBridge
 -- (Tuple.sort) + permutation matrix conjugation. The full diagonal case of
 -- S.3 d≥3 PROPER. Spectral theorem lift to arbitrary Hermitian H follows.
 import SKEFTHawking.FKLW.GenericSUdSymmetricDiagonalDischargeFull
+-- Phase 6y Track S.3 substrate (Session 32, 2026-05-27): SPECTRAL LIFT —
+-- discharge for ANY Hermitian-traceless H with spectral decomposition. Lifts
+-- S31's diagonal discharge to arbitrary Hermitian H via the user-supplied
+-- (U, a) spectral data (Mathlib's IsHermitian.spectralTheorem provides this).
+-- Conjugates F_D, G_D for diag(a) by U via S26 → F, G for H.
+import SKEFTHawking.FKLW.GenericSUdSpectralLift
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
