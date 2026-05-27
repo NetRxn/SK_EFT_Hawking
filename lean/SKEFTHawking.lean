@@ -1468,6 +1468,13 @@ import SKEFTHawking.FKLW.GenericSUdSymmetricFGEqIdentity
 -- σ-block sums. Discharge of symmetric balanced commutator for diagonal real-
 -- valued traceless a with non-negative partial sums.
 import SKEFTHawking.FKLW.GenericSUdSymmetricDischarge
+-- Phase 6y Track S.3 substrate (Session 25, 2026-05-27): partial sums non-negativity
+-- for decreasing-sorted traceless sequences. For `a : Fin (n + 1) → ℝ` that is
+-- non-increasing and traceless:
+--   ∀ k, 0 ≤ ∑_{j ≤ k} a j
+-- Eigenvalue-sort substrate: any traceless `a` sorted decreasingly satisfies the
+-- non-negativity hypothesis required by Session 24's symmetric discharge.
+import SKEFTHawking.FKLW.GenericSUdDecreasingSortPartialSums
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
