@@ -1106,6 +1106,14 @@ import SKEFTHawking.MatrixExpLocalHomeomorphMathlibPR
 -- the S.2-d-e-f Lie-theory substrate. Filename mirror
 -- Mathlib.Analysis.MatrixGroups.SpecialUnitary.Cartan.
 import SKEFTHawking.CartanFinalStepSUdGenericMathlibPR
+-- Phase 6y Track S.2d-foundational (2026-05-27): foundational helpers for
+-- the Jacobi formula `det(exp Y) = exp(tr Y)` at skew-Hermitian Y. Ships
+-- `isHermitian_I_smul_of_isSkewHermitian` (iY Hermitian when Y skew-Herm),
+-- `trace_I_smul` (trace ℂ-linearity), `exp_unitaryConj` (exp commutes
+-- through conjugation by unitary U), `det_unitaryConj` (det invariant
+-- under unitary conjugation). Composition into full Jacobi formula ships
+-- in follow-on sub-waves.
+import SKEFTHawking.FKLW.GenericSUdDetExpSkewHerm
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
