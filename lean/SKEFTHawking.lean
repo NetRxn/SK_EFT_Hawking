@@ -1155,6 +1155,12 @@ import SKEFTHawking.FKLW.CliffordCCZGeneratingSetSU8Partial
 -- ω^8 · det(CCZ_mat) = -1 · -1 = 1 (CCZ_SU ∈ SU(8)).
 -- `CCZ_SU_mem_specialUnitaryGroup` + `CCZ_SU_subtype` packaged.
 import SKEFTHawking.FKLW.CCZ_SU
+-- Phase 6y Track T-A2′.1 PROPER (2026-05-27): full
+-- `cliffordCCZGeneratingSetSU8 : GeneratingSet 8` instance for the
+-- 4-generator Clifford+CCZ alphabet {H_q1, H_q2, H_q3, CCZ_SU}.
+-- Substantively closes T-A2′.1 — all 4 generators packaged as SU(8)
+-- subtype elements; FreeGroup (Fin 4) word type.
+import SKEFTHawking.FKLW.CliffordCCZGeneratingSetSU8Full
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
