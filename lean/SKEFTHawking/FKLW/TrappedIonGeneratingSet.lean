@@ -91,6 +91,7 @@ T-A1 lift/shift ship. The full SU(4) compile is deferred to Phase 6y.
 import SKEFTHawking.FKLW.CliffordTGeneratingSet
 import SKEFTHawking.FKLW.CliffordTV4WitnessUnconditional
 import SKEFTHawking.FKLW.GenericSolovayKitaevRecursionDischarge
+import SKEFTHawking.FKLW.RossSelingerLightweight
 
 set_option autoImplicit false
 
@@ -406,5 +407,175 @@ theorem solovayKitaev_dawson_nielsen_quantitative_trappedIon_strict_constructive
     trappedIonGeneratingSet trappedIonBaseFinder
     trappedIonBaseFinder_approximates_within_two_ε₀
     U ε hε_pos hε_le
+
+/-! ## 8. Trapped-ion CONSTRUCTIVE base finder via Phase 6x T-S′ Clifford+T
+
+Composes the Phase 6x Track T-S′ Clifford+T constructive base finder
+(`cliffordTBaseFinder_constructive`, UNCONDITIONAL via finite-Finset
+ε₀-cover + SU(2) compactness in `RossSelingerLightweight.lean`) with the
+per-ion injection `FreeGroup.map perIonInject` to obtain a constructive
+trapped-ion base finder with a uniform length bound.
+
+The key analytic content (factorization through Clifford+T) is reused
+verbatim from §3-§5 above; the only new ingredient is the
+`FreeGroup.map` length-preservation auxiliary lemma. -/
+
+/-- **`FreeGroup.map` preserves `toWord` length (≤)** (auxiliary lemma).
+
+For any function `f : α → β` and any `w : FreeGroup α`,
+`(FreeGroup.map f w).toWord.length ≤ w.toWord.length`. The proof
+unfolds `FreeGroup.map` via `mk` of the list-map and applies
+`FreeGroup.norm_mk_le` (which says `(mk L).toWord.length ≤ L.length`),
+plus `List.length_map` which keeps the list length invariant under
+the per-token transformation `(a, b) ↦ (f a, b)`. -/
+private theorem FreeGroup_map_toWord_length_le {α β : Type} [DecidableEq α] [DecidableEq β]
+    (f : α → β) (w : FreeGroup α) :
+    (FreeGroup.map f w).toWord.length ≤ w.toWord.length := by
+  have h_eq : FreeGroup.map f w
+      = FreeGroup.mk (w.toWord.map fun x => (f x.1, x.2)) := by
+    conv_lhs => rw [← FreeGroup.mk_toWord (x := w)]
+    rw [FreeGroup.map.mk]
+  rw [h_eq]
+  calc (FreeGroup.mk (w.toWord.map fun x => (f x.1, x.2))).toWord.length
+      ≤ (w.toWord.map fun x => (f x.1, x.2)).length := FreeGroup.norm_mk_le
+    _ = w.toWord.length := List.length_map ..
+
+/-- **Trapped-ion CONSTRUCTIVE base finder** (UNCONDITIONAL).
+
+Composes the Phase 6x Track T-S′ Clifford+T constructive base finder
+(`cliffordTBaseFinder_constructive`, UNCONDITIONAL via finite-Finset
+ε₀-cover + SU(2) compactness) with the per-ion injection
+`FreeGroup.map perIonInject` to land in the trapped-ion alphabet
+`FreeGroup (Fin 3)`. Correctness via the factorization
+`ρ_TI ∘ (FreeGroup.map perIonInject) = ρ_CliffT`; length bound via
+`FreeGroup.map` length preservation chained with the Clifford+T
+finite-cover max length. -/
+noncomputable def trappedIonBaseFinder_constructive
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : FreeGroup (Fin 3) :=
+  (FreeGroup.map perIonInject) (cliffordTBaseFinder_constructive U)
+
+/-- **Correctness of `trappedIonBaseFinder_constructive`** (UNCONDITIONAL).
+
+The output ε₀-approximates `U`. Direct from the factorization composed
+with the Clifford+T constructive base finder's correctness. -/
+theorem trappedIonBaseFinder_constructive_approx_opNorm
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    ‖((trappedIonGeneratingSet.ρ_hom (trappedIonBaseFinder_constructive U) :
+        ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+          Matrix (Fin 2) (Fin 2) ℂ) -
+        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ < ε₀ := by
+  unfold trappedIonBaseFinder_constructive
+  show ‖((ρ_TI ((FreeGroup.map perIonInject)
+              (cliffordTBaseFinder_constructive U)) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+            Matrix (Fin 2) (Fin 2) ℂ) -
+          (U : Matrix (Fin 2) (Fin 2) ℂ)‖ < ε₀
+  rw [ρ_TI_map_perIonInject_apply]
+  exact cliffordTBaseFinder_constructive_approx_opNorm U
+
+/-- **Calibration**: the constructive trapped-ion base finder satisfies
+`BaseFinder_approximates_within trappedIonGeneratingSet
+   trappedIonBaseFinder_constructive (2 * ε₀)` (UNCONDITIONAL). -/
+theorem trappedIonBaseFinder_constructive_approximates_within_two_ε₀ :
+    BaseFinder_approximates_within trappedIonGeneratingSet
+      trappedIonBaseFinder_constructive (2 * ε₀) := by
+  intro U
+  have h1 := trappedIonBaseFinder_constructive_approx_opNorm U
+  have h2 : ε₀ < 2 * ε₀ := by have := ε₀_pos; linarith
+  linarith
+
+/-- **Length bound (UNCONDITIONAL)**: the constructive trapped-ion base
+finder output's word length is bounded by `cliffordTFiniteCover_maxLength`.
+
+The bound transfers from the Clifford+T constructive base finder via
+`FreeGroup.map` length preservation. -/
+theorem trappedIonBaseFinder_constructive_length_le_max
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    (trappedIonBaseFinder_constructive U).toWord.length
+      ≤ cliffordTFiniteCover_maxLength := by
+  unfold trappedIonBaseFinder_constructive
+  calc ((FreeGroup.map perIonInject)
+              (cliffordTBaseFinder_constructive U)).toWord.length
+      ≤ (cliffordTBaseFinder_constructive U).toWord.length :=
+            FreeGroup_map_toWord_length_le _ _
+    _ ≤ cliffordTFiniteCover_maxLength :=
+            cliffordTBaseFinder_constructive_length_le_max U
+
+/-- **Parametric length-bound predicate discharge** (UNCONDITIONAL):
+`trappedIonBaseFinder_constructive` satisfies `BaseFinder_length_bounded_by N₀`
+for `N₀ := cliffordTFiniteCover_maxLength`. -/
+theorem trappedIonBaseFinder_constructive_length_bounded_by :
+    BaseFinder_length_bounded_by
+      (cliffordTFiniteCover_maxLength : ℝ)
+      trappedIonBaseFinder_constructive := by
+  intro U
+  have h := trappedIonBaseFinder_constructive_length_le_max U
+  exact_mod_cast h
+
+/-! ## 9. T-A1 lift/shift 3-conjunct UNCONDITIONAL strict headline
+(Phase 6x Tier-1 residual A) -/
+
+/-- **Phase 6x Tier-1 residual A — T-A1 lift/shift UNCONDITIONAL
+3-conjunct strict headline**.
+
+For any target `U ∈ SU(2)` (single-ion target) and precision
+`ε ∈ (0, ε₀]`, the constructive Dawson-Nielsen Solovay-Kitaev compiler
+at the trapped-ion alphabet (using `trappedIonBaseFinder_constructive`
+derived from the Phase 6x T-S′ Clifford+T finite-Finset ε₀-cover via the
+factorization through Clifford+T) returns a `FreeGroup (Fin 3)`
+trapped-ion word with ALL THREE:
+
+  - **Error**: `‖ρ_TI (compile U ε) − U‖ ≤ ε`.
+  - **Abstract length**: `skLength (skLevel_polylog ε) ≤ skLengthConst · …`.
+  - **Concrete length**: `((compile U ε).toWord.length : ℝ) ≤
+    skLength_at_baseCase (cliffordTFiniteCover_maxLength) (skLevel_polylog ε)`.
+
+The third conjunct is parametric in `cliffordTFiniteCover_maxLength`
+(the actual maximum word length in the Phase 6x T-S′ ε₀-cover Finset).
+This matches the parametric form used by the Clifford+T UNCONDITIONAL
+3-conjunct headline in `RossSelingerLightweight.lean`, except here the
+base alphabet is `FreeGroup (Fin 3)` and density factors through
+Clifford+T per the lift/shift framing.
+
+UNCONDITIONAL — composes shipped unconditional substrate
+(`trappedIon_density_unconditional` via `ρ_TI_factorization` +
+`cliffordTBaseFinder_constructive` via SU(2) compactness +
+Phase 6x T-S′ finite-Finset ε-cover existence + Phase 6x M.4 parametric
+length bound at FreeGroup-α-generic). Standard kernel only
+`{propext, Classical.choice, Quot.sound}`.
+
+**Closes Phase 6x Tier-1 residual A** (2026-05-27 audit addendum) —
+retrospective failure mode #4 ("substrate vs headline") now closed at
+the UNCONDITIONAL 3-conjunct level for T-A1 lift/shift. The full SU(4)
+Clifford+MS compile is deferred to Phase 6y Track T-A1′. -/
+theorem solovayKitaev_dawson_nielsen_quantitative_trappedIon_strict_concrete_constructive_unconditional
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ)
+    (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) :
+    ‖((trappedIonGeneratingSet.ρ_hom
+            (solovayKitaev_compile_strict_constructive_generic
+              trappedIonGeneratingSet trappedIonBaseFinder_constructive U ε) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) -
+        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε ∧
+    skLength (skLevel_polylog ε) ≤
+      skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent ∧
+    ((solovayKitaev_compile_strict_constructive_generic
+        trappedIonGeneratingSet trappedIonBaseFinder_constructive U ε).toWord.length : ℝ)
+        ≤ skLength_at_baseCase (cliffordTFiniteCover_maxLength : ℝ)
+            (skLevel_polylog ε) := by
+  -- First two conjuncts via the existing 2-conjunct UNCONDITIONAL generic headline.
+  have h12 := solovayKitaev_dawson_nielsen_quantitative_generic_strict_constructive_tight_unconditional
+    trappedIonGeneratingSet trappedIonBaseFinder_constructive
+    trappedIonBaseFinder_constructive_approximates_within_two_ε₀
+    U ε hε_pos hε_le
+  -- Third conjunct via parametric closed-form length bound.
+  -- trappedIonGeneratingSet = mkFreeGroupGS ρ_TI trappedIonGens ... by rfl.
+  have h3 := skApproxC_generic_freeGroup_length_le_skLength_at_baseCase
+    ρ_TI trappedIonGens trappedIonGens_nonempty trappedIonGens_generate
+    trappedIonBaseFinder_constructive
+    (cliffordTFiniteCover_maxLength : ℝ)
+    trappedIonBaseFinder_constructive_length_bounded_by
+    (skLevel_polylog ε) U
+  exact ⟨h12.1, h12.2, h3⟩
 
 end SKEFTHawking.FKLW.GenericSU2
