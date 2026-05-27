@@ -1216,6 +1216,14 @@ import SKEFTHawking.FKLW.TrappedIonGeneratingSetSU4Full
 -- S.2e PROPER combined). Substrate consumed by S.2g unconditional + T-A1′.2 +
 -- T-A2′.2 + S.5 + S.6 UNCONDITIONAL.
 import SKEFTHawking.FKLW.GenericSUdLocalDiffeoRestriction
+-- Phase 6y Track S.2g-substrate (2026-05-27): n-parameter exp product
+-- structural foundation. Definition `multiDirExpProduct X t :=
+-- exp(t_0 • X_0) · … · exp(t_{n-1} • X_{n-1})` (via List.prod over
+-- List.finRange n; non-commutative-monoid-friendly). Ships base properties
+-- (zero ↦ 1, SU(d)-image preservation, H-image preservation given per-direction
+-- flow witnesses). Structural foundation for the multi-parameter IFT route
+-- to S.2g unconditional discharge.
+import SKEFTHawking.FKLW.GenericSUdMultiParamExpProduct
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
