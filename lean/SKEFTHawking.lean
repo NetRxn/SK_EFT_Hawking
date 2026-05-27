@@ -1395,6 +1395,12 @@ import SKEFTHawking.FKLW.GenericSUdBalancedCommutator
 -- sum). Ships Hermiticity + tracelessness lemmas; commutator + rank-2
 -- BalancedCommutator_SUd discharge in Session 4+.
 import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorTwoBlock
+-- Phase 6y Track S.3 substrate (Session 13, 2026-05-27): unitary conjugation
+-- invariance lemmas — commutator equivariance, Hermitian preservation, trace
+-- preservation, composite balanced-commutator-structure invariance. Substrate
+-- for the "spectral-pair + conjugate" approach to Aharonov-Arad d≥3. Norm-
+-- bridging (linftyOp vs spectral) deferred to follow-on commit.
+import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorConjugation
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
