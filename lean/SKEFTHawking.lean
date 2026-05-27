@@ -1413,6 +1413,12 @@ import SKEFTHawking.FKLW.GenericSUdDiagonalTracelessDecomp
 -- the Aharonov-Arad SU(d) construction (per-pair F, G + cross-term counterterms
 -- ship in follow-on substrate).
 import SKEFTHawking.FKLW.GenericSUdDiagonalDecomp
+-- Phase 6y Track S.3 substrate (Session 17, 2026-05-27): cross-term commutator
+-- for σ_y/σ_x adjacent-block pairs. Ships the keystone identity
+-- [σ_y(a, b), σ_x(b, c)] = -i · σ_x(a, c) for distinct a, b, c ∈ Fin d.
+-- This is the off-diagonal obstruction in the naive σ_y/σ_x sum construction;
+-- counterterm cancellation (Aharonov-Arad 2014) ships separately.
+import SKEFTHawking.FKLW.GenericSUdSigmaCrossTerm
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
