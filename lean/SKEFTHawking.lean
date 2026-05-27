@@ -1232,6 +1232,14 @@ import SKEFTHawking.FKLW.GenericSUdMultiParamExpProduct
 -- per M.4 inheritance (F#4 guardrail). Supersedes the 1Q-only partial
 -- `trappedIonSU4_1QHeadline`.
 import SKEFTHawking.FKLW.TrappedIonSU4FullHeadlineForm
+-- Phase 6y Track T-X′.3-substrate (2026-05-27): d-generic ε₀-net
+-- `epsilonNet_findNearest_SUd gs h_dense U ε₀` that takes an
+-- IsDenseInSUd_gs density witness and returns a word approximating any
+-- target U ∈ SU(d) to within ε₀. Mirrors Phase 6u's SU(2) version.
+-- Existential (Classical.choose); per-alphabet algorithmic forms ship
+-- in T-A1′.3 (Ross-Selinger-style for trapped-ion) and T-A2′.3
+-- (Aaronson-Gottesman-style for Clifford+CCZ).
+import SKEFTHawking.FKLW.GenericSUdEpsilonNet
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
