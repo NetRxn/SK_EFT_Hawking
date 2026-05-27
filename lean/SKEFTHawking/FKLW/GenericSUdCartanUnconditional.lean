@@ -101,33 +101,61 @@ theorem completeSpace_tracelessSkewHermitian (d : ℕ) :
       (Fin d)).closed_of_finiteDimensional
   exact completeSpace_coe_iff_isComplete.mpr h_closed.isComplete
 
-/-! ## 3. Status (substrate-fully-assembled)
+/-! ## 3. `map_nhds_eq_of_surj` wrapper — bypasses Lean elaborator quirk
 
-The substantive substrate for S.2g UNCONDITIONAL discharge:
-  * `multiDirExpProduct_hasStrictFDerivAt_zero` (✓)
-  * `matrixLog_hasStrictFDerivAt_one` (✓)
-  * `tsProj_matrixLog_multiDirExpProduct_hasStrictFDerivAt_zero` (✓)
-  * `tsProj_multiDirDerivCLM_range_top_of_spans` (✓)
-  * `composite_map_value_zero` (✓)
-  * `completeSpace_tracelessSkewHermitian` (✓, this section)
+A wrapper around `HasStrictFDerivAt.map_nhds_eq_of_surj` that takes
+`CompleteSpace F` as an EXPLICIT term hypothesis (not a class-bracketed
+instance), then `letI`-installs it locally before invoking the dot-form
+call. This bypasses a Lean elaborator quirk where class-bracketed
+local instances aren't picked up by the deeper synthesis pass for
+implicit args of `map_nhds_eq_of_surj`. -/
 
-The application of `HasStrictFDerivAt.map_nhds_eq_of_surj` to assemble
-these into the final `Filter.map (composite) (nhds 0) = nhds 0`
-encounters a Lean elaborator quirk: even when the
-`CompleteSpace ↥(tracelessSkewHermitian (Fin d))` instance is supplied
-locally (via `haveI` or as an explicit hypothesis), the synthesis
-through `map_nhds_eq_of_surj`'s implicit args fails to find it. This
-appears to be a Lean issue (not a missing math); investigation via
-`set_option trace.Meta.synthInstance true` would localize the exact
-unification failure.
+/-- **`map_nhds_eq_of_surj` wrapper with explicit CompleteSpace hypothesis**. -/
+theorem map_nhds_eq_of_surj_with_cs
+    {𝕜 : Type*} [NontriviallyNormedField 𝕜]
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E] [CompleteSpace E]
+    {F : Type*} [NormedAddCommGroup F] [NormedSpace 𝕜 F]
+    (h_cs : CompleteSpace F)
+    {f : E → F} {f' : E →L[𝕜] F} {a : E}
+    (hf : HasStrictFDerivAt f f' a)
+    (hsurj : (f' : E →ₗ[𝕜] F).range = ⊤) :
+    Filter.map f (nhds a) = nhds (f a) := by
+  letI := h_cs
+  exact hf.map_nhds_eq_of_surj hsurj
 
-WORKAROUND options for the eventual closure:
-  * Use `HasStrictFDerivAt.toOpenPartialHomeomorph` (requires the
-    derivative to be a `ContinuousLinearEquiv`, i.e., bijective).
-    This needs basis-extraction from the spanning witness to get
-    {X_i : Fin (d²-1) → 𝔰𝔲(d)} forming an ℝ-basis. Substantial
-    finite-dim linear algebra.
-  * Direct manual proof of "image of nbhd is nbhd" using the explicit
-    inverse construction (the IFT proof structure unrolled, ~200 LoC). -/
+/-! ## 4. The composite map at 0 is open at 0 (UNCONDITIONAL — substantive!) -/
+
+/-- **The composite map at 0 is open at 0** (UNCONDITIONAL substantive
+headline).
+
+For any spanning {X_i} witness, the composite
+`tsProj_d ∘ matrixLog ∘ multiDirExpProduct X` maps `𝓝 0` in `Fin n → ℝ`
+to `𝓝 0` in `↥(tracelessSkewHermitian (Fin d))`.
+
+Composes via:
+  * `tsProj_matrixLog_multiDirExpProduct_hasStrictFDerivAt_zero` for
+    the strict F-derivative.
+  * `tsProj_multiDirDerivCLM_range_top_of_spans` for surjectivity.
+  * `composite_map_value_zero` for the value-at-zero identification.
+  * `completeSpace_tracelessSkewHermitian` for the CompleteSpace instance.
+  * `map_nhds_eq_of_surj_with_cs` wrapper to invoke Mathlib's
+    `HasStrictFDerivAt.map_nhds_eq_of_surj` with explicit CompleteSpace. -/
+theorem composite_map_nhds_zero_eq_nhds_zero {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0)
+    (hX_spans : ∀ Y : Matrix (Fin d) (Fin d) ℂ,
+      Y.IsSkewHermitian → Y.trace = 0 →
+      ∃ c : Fin n → ℝ, Y = ∑ i, ((c i : ℝ) : ℂ) • X i) :
+    Filter.map
+      (fun t : Fin n → ℝ =>
+        tsProj_d d ((matrixLog d ∘ multiDirExpProduct X) t))
+      (nhds (0 : Fin n → ℝ)) =
+      nhds (0 : ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d))) := by
+  have h_deriv := tsProj_matrixLog_multiDirExpProduct_hasStrictFDerivAt_zero X
+  have h_range := tsProj_multiDirDerivCLM_range_top_of_spans X hX_in_sud hX_spans
+  have h_value := composite_map_value_zero d n X
+  rw [← h_value]
+  exact map_nhds_eq_of_surj_with_cs
+    (completeSpace_tracelessSkewHermitian d) h_deriv h_range
 
 end SKEFTHawking.FKLW.GenericSUd
