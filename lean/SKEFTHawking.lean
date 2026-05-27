@@ -1070,6 +1070,12 @@ import SKEFTHawking.CartanFinalStepSUdMathlibPR
 -- ofGenericSU2 : GenericSU2.GeneratingSet → GeneratingSet 2 preserves
 -- H_of_G definitionally.
 import SKEFTHawking.FKLW.GenericSUdGeneratingSet
+-- Phase 6y Track S.2a (2026-05-27): generic SU(d) Cartan-final-step v4
+-- predicate definition. CartanFinalStep_SUd_v4 (d : ℕ) — the Cartan
+-- closed-subgroup theorem specialized to SU(d): closed H ≤ SU(d) with
+-- flow lines of spanning traceless skew-Hermitian tangents ⟹ H = ⊤.
+-- Substantive discharge ships in GenericSUdCartanSubstrate (S.2b–d).
+import SKEFTHawking.FKLW.GenericSUdCartanPredicate
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
