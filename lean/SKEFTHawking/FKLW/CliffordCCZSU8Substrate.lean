@@ -183,4 +183,46 @@ theorem kronSU2SU4_mem_specialUnitaryGroup {A : Matrix (Fin 2) (Fin 2) ℂ}
   exact ⟨kronSU2SU4_mem_unitaryGroup hA_unit hB_unit,
          det_kronSU2SU4_eq_one hA_det hB_det⟩
 
+/-! ## 4. Packaged SU(8) Hadamard subtype elements -/
+
+/-- Identity in SU(2). -/
+private theorem one_mem_su2 :
+    (1 : Matrix (Fin 2) (Fin 2) ℂ) ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ := by
+  rw [Matrix.mem_specialUnitaryGroup_iff]
+  refine ⟨?_, Matrix.det_one⟩
+  rw [Matrix.mem_unitaryGroup_iff]; simp
+
+/-- Identity in SU(4). -/
+private theorem one_mem_su4 :
+    (1 : Matrix (Fin 4) (Fin 4) ℂ) ∈ Matrix.specialUnitaryGroup (Fin 4) ℂ := by
+  rw [Matrix.mem_specialUnitaryGroup_iff]
+  refine ⟨?_, Matrix.det_one⟩
+  rw [Matrix.mem_unitaryGroup_iff]; simp
+
+/-- H_SU is in SU(2). -/
+private theorem H_SU_mat_mem :
+    SKEFTHawking.FKLW.GenericSU2.H_SU_mat ∈
+      Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  SKEFTHawking.FKLW.GenericSU2.H_SU.property
+
+/-- **Hadamard on qubit 1 as SU(8) subtype element**. -/
+noncomputable def H_SU_on_qubit1_SU8 : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ) :=
+  ⟨H_SU_on_qubit1, kronSU2SU4_mem_specialUnitaryGroup H_SU_mat_mem one_mem_su4⟩
+
+/-- **Hadamard on qubit 2 as SU(8) subtype element**.
+
+Uses the 2-stage Kronecker: I ⊗ (kronSU4 H I). The inner kronSU4 H I
+is in SU(4) by Phase 6y T-A1′.1's `kronSU4_mem_specialUnitaryGroup`. -/
+noncomputable def H_SU_on_qubit2_SU8 : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ) :=
+  ⟨H_SU_on_qubit2,
+   kronSU2SU4_mem_specialUnitaryGroup one_mem_su2
+     (SKEFTHawking.FKLW.TrappedIonSU4.kronSU4_mem_specialUnitaryGroup
+       H_SU_mat_mem
+       (show (1 : Matrix (Fin 2) (Fin 2) ℂ) ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ
+         from one_mem_su2))⟩
+
+/-- **Hadamard on qubit 3 as SU(8) subtype element**. -/
+noncomputable def H_SU_on_qubit3_SU8 : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ) :=
+  ⟨H_SU_on_qubit3, kronSU4SU2_mem_specialUnitaryGroup one_mem_su4 H_SU_mat_mem⟩
+
 end SKEFTHawking.FKLW.CliffordCCZSU8
