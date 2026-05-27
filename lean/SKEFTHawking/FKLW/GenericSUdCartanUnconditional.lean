@@ -303,4 +303,47 @@ theorem multiDirExpProduct_eq_expAmbient_matrixLog_self {d n : ℕ}
       expAmbient d (matrixLog d (multiDirExpProduct X t)) :=
   (expAmbient_matrixLog d h_in_target).symm
 
+/-! ## 10. Eventually-equal identification (substantive)
+
+For inputs producing matrices in target ∩ SU(d), we have:
+`multiDirExpProduct X t = expAmbient (↑(composite_map t))`.
+
+This is the load-bearing substrate that connects the
+`composite_map_nhds_zero_eq_nhds_zero` filter equality (in `↥𝔰𝔲(d)`)
+to `multiDirExpProduct`'s filter equality (in Matrix). -/
+
+/-- **`multiDirExpProduct X t = expAmbient d (↑(composite_map t))` eventually**
+(substantive substrate connecting composite_map to multiDirExpProduct).
+
+Composes:
+  * `multiDirExpProduct_eventually_in_target` (eventually-in-target)
+  * `matrixLog_of_SUd_in_su_d` (matrixLog of SU(d) is in 𝔰𝔲(d))
+  * `tsProj_d_val_of_mem` (tsProj_d identity on 𝔰𝔲(d) members)
+  * `expAmbient_matrixLog` (expAmbient ∘ matrixLog = id on target). -/
+theorem multiDirExpProduct_eq_composite_eventually {d n : ℕ}
+    [Nonempty (Fin d)] (hd_pos : 0 < d)
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (hX_mem_SUd : ∀ t : Fin n → ℝ,
+      multiDirExpProduct X t ∈ Matrix.specialUnitaryGroup (Fin d) ℂ) :
+    ∀ᶠ t in nhds (0 : Fin n → ℝ),
+      multiDirExpProduct X t =
+        expAmbient d ((tsProj_d d (matrixLog d (multiDirExpProduct X t)) :
+          Matrix (Fin d) (Fin d) ℂ)) := by
+  have h_target := multiDirExpProduct_eventually_in_target X
+  obtain ⟨V_log, hV_log_nhd, hV_log_in_sud⟩ := matrixLog_of_SUd_in_su_d d hd_pos
+  have h_V_log_nhd_one : V_log ∈ nhds (multiDirExpProduct X (0 : Fin n → ℝ)) := by
+    have h_val : multiDirExpProduct X (0 : Fin n → ℝ) = 1 := by
+      show multiDirExpProduct X (fun _ : Fin n => (0 : ℝ)) = 1
+      exact multiDirExpProduct_zero X
+    rw [h_val]; exact hV_log_nhd
+  have h_continuousAt : ContinuousAt (multiDirExpProduct X) (0 : Fin n → ℝ) :=
+    (multiDirExpProduct_continuous X).continuousAt
+  have h_V_log_pre : multiDirExpProduct X ⁻¹' V_log ∈ nhds (0 : Fin n → ℝ) :=
+    h_continuousAt.preimage_mem_nhds h_V_log_nhd_one
+  filter_upwards [h_target, h_V_log_pre] with t ht_target ht_V_log
+  have ht_sud := hX_mem_SUd t
+  have h_mlog_in_sud := hV_log_in_sud (multiDirExpProduct X t) ht_V_log ht_sud ht_target
+  rw [tsProj_d_val_of_mem d ⟨h_mlog_in_sud.1, h_mlog_in_sud.2⟩]
+  exact (expAmbient_matrixLog d ht_target).symm
+
 end SKEFTHawking.FKLW.GenericSUd
