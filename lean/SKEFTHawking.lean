@@ -1549,6 +1549,13 @@ import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorUnboundedAllD
 -- spectral-then-conjugate. The tighter `n` bound (via Cauchy-Schwarz) ships in
 -- a follow-on commit.
 import SKEFTHawking.FKLW.GenericSUdNormBridgeUnitaryConjugation
+-- Phase 6y Track S.3 substrate (Session 37, 2026-05-27): BOUNDED-FORM Hermitian
+-- discharge. Composes S32 spectral-lift discharge with S36 norm bridge to give
+-- the discharge with EXPLICIT linftyOp bounds on F, G:
+--   ‖F‖_linftyOp ≤ (n+2)² · ‖F_inner‖_linftyOp
+-- where F_inner is the inner diagonal-case witness. Concrete bound for downstream
+-- consumers requiring explicit norm structure (e.g., SK recursion calibration).
+import SKEFTHawking.FKLW.GenericSUdHermitianDischargeBounded
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
