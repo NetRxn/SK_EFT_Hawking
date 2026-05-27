@@ -93,13 +93,88 @@ theorem H_of_G_eq_top_of_witness_conditional {d : ℕ} {gs : GeneratingSet d}
   apply h_cartan (H_of_G gs) (H_of_G_isClosed gs)
   exact ⟨w.n, w.X, w.hX_in_sud, w.hX_spans, w.hX_flow⟩
 
-/-! ## 3. Summary
+/-! ## 3. Density in SU(d)
 
-This module ships the `ClosureDenseWitness gs` structure + the
-conditional dispatch `H_of_G_eq_top_of_witness_conditional` that
-turns a witness into `H_of_G gs = ⊤` modulo the SU(d) Cartan v4
-predicate. The full unconditional density chain `gs admits witness
-⟹ ρ_hom.range is dense in SU(d)` ships in a follow-up once
-`CartanFinalStep_SUd_v4_holds` (S.2g) is composed in. -/
+`H_of_G gs = ⊤` immediately gives that every element of SU(d) is in the
+topological closure of the image of `ρ_hom`, hence approximable to
+arbitrary precision. Adapts Phase 6u's SU(2) `isDenseInSU2_gs_of_eq_top`
+to arbitrary d. -/
+
+/-- **Generic SU(d) density predicate** for a `GeneratingSet d`. -/
+def IsDenseInSUd_gs {d : ℕ} (gs : GeneratingSet d) : Prop :=
+  ∀ (U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) (ε : ℝ), 0 < ε →
+    ∃ w : gs.W, ‖((gs.ρ_hom w : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+        Matrix (Fin d) (Fin d) ℂ) -
+          (U : Matrix (Fin d) (Fin d) ℂ)‖ < ε
+
+/-- **`H_of_G gs = ⊤` ↔ `closure (range gs.ρ_hom) = univ`**. -/
+theorem H_of_G_eq_top_iff_closure_eq_univ {d : ℕ} (gs : GeneratingSet d) :
+    H_of_G gs = ⊤ ↔ closure (Set.range gs.ρ_hom) =
+      (Set.univ : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) := by
+  unfold H_of_G
+  rw [SetLike.ext'_iff]
+  rw [Subgroup.topologicalClosure_coe, gs.ρ_hom.coe_range, Subgroup.coe_top]
+
+/-- **From `H_of_G gs = ⊤` to generic density**. d-generic lift of
+Phase 6u's `isDenseInSU2_gs_of_eq_top`. -/
+theorem isDenseInSUd_gs_of_eq_top
+    {d : ℕ} (gs : GeneratingSet d) (h : H_of_G gs = ⊤) :
+    IsDenseInSUd_gs gs := by
+  intro U ε hε
+  have h_closure_univ :
+      closure (Set.range gs.ρ_hom) =
+        (Set.univ : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :=
+    (H_of_G_eq_top_iff_closure_eq_univ gs).mp h
+  have hU_in_subtype_closure :
+      (U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) ∈ closure (Set.range gs.ρ_hom) := by
+    rw [h_closure_univ]; trivial
+  have h_cont : Continuous
+      (fun x : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) =>
+        (x : Matrix (Fin d) (Fin d) ℂ)) := continuous_subtype_val
+  have h_image_subset :
+      (fun x : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) =>
+          (x : Matrix (Fin d) (Fin d) ℂ)) '' closure (Set.range gs.ρ_hom) ⊆
+        closure
+          ((fun x : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) =>
+              (x : Matrix (Fin d) (Fin d) ℂ)) '' (Set.range gs.ρ_hom)) :=
+    image_closure_subset_closure_image h_cont
+  have hU_val_in_image_closure :
+      (U : Matrix (Fin d) (Fin d) ℂ) ∈
+        closure
+          ((fun x : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) =>
+              (x : Matrix (Fin d) (Fin d) ℂ)) '' (Set.range gs.ρ_hom)) :=
+    h_image_subset ⟨U, hU_in_subtype_closure, rfl⟩
+  have h_image_eq :
+      (fun x : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) =>
+          (x : Matrix (Fin d) (Fin d) ℂ)) '' (Set.range gs.ρ_hom) =
+      Set.range (fun w : gs.W =>
+        ((gs.ρ_hom w : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+          Matrix (Fin d) (Fin d) ℂ)) := by
+    ext A
+    constructor
+    · rintro ⟨M, ⟨w, hw_eq⟩, hM_val⟩
+      refine ⟨w, ?_⟩
+      simp only at hM_val ⊢
+      rw [hw_eq]; exact hM_val
+    · rintro ⟨w, hw_eq⟩
+      exact ⟨gs.ρ_hom w, ⟨w, rfl⟩, hw_eq⟩
+  rw [h_image_eq] at hU_val_in_image_closure
+  rcases Metric.mem_closure_iff.mp hU_val_in_image_closure ε hε with ⟨A, hA_range, hA_close⟩
+  rcases hA_range with ⟨w, hw_eq⟩
+  refine ⟨w, ?_⟩
+  rw [dist_eq_norm] at hA_close
+  rw [show ((gs.ρ_hom w : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+        Matrix (Fin d) (Fin d) ℂ) = A from hw_eq]
+  rw [norm_sub_rev]
+  exact hA_close
+
+/-- **Density culmination** (conditional): a `GeneratingSet d` admitting
+a `ClosureDenseWitness` has its image dense in SU(d), conditional on
+`CartanFinalStep_SUd_v4 d`. -/
+theorem densityFromWitness_conditional
+    {d : ℕ} {gs : GeneratingSet d} (w : ClosureDenseWitness gs)
+    (h_cartan : CartanFinalStep_SUd_v4 d) :
+    IsDenseInSUd_gs gs :=
+  isDenseInSUd_gs_of_eq_top gs (H_of_G_eq_top_of_witness_conditional w h_cartan)
 
 end SKEFTHawking.FKLW.GenericSUd
