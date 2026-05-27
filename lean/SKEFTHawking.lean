@@ -1426,6 +1426,13 @@ import SKEFTHawking.FKLW.GenericSUdSigmaCrossTerm
 -- and Session 17 shared-middle), giving the complete cross-term substrate
 -- for Aharonov-Arad SU(d) counterterm construction.
 import SKEFTHawking.FKLW.GenericSUdSigmaClassification
+-- Phase 6y Track S.3 substrate (Session 19, 2026-05-27): cross-term pair-swap
+-- cancellation lemma. For p ≠ q ∈ Fin (n+1):
+--   [σ_y(p), σ_x(q)] + [σ_y(q), σ_x(p)] = 0
+-- This is the algebraic key to the cross-term-free symmetric construction:
+-- with F = Σ α_p σ_y(p), G = Σ α_p σ_x(p), the cross-terms pair up and cancel.
+-- No counterterms needed for the symmetric α-coefficient case.
+import SKEFTHawking.FKLW.GenericSUdSigmaPairSwap
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
