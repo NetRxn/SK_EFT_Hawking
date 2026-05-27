@@ -1224,6 +1224,14 @@ import SKEFTHawking.FKLW.GenericSUdLocalDiffeoRestriction
 -- flow witnesses). Structural foundation for the multi-parameter IFT route
 -- to S.2g unconditional discharge.
 import SKEFTHawking.FKLW.GenericSUdMultiParamExpProduct
+-- Phase 6y Track T-A1′.5 PROPER (2026-05-27): full-alphabet headline form
+-- at the trappedIonGeneratingSetSU4 N hN GeneratingSet (MS at rational-π/N
+-- grid + 1Q rotations, both compiled per the Phase 6y T-A1′ roadmap).
+-- Predicate `trappedIonSU4FullHeadline N hN : Prop` captures BOTH error
+-- bound AND concrete `FreeGroup (Fin (4 + 2*N)).toWord.length` conjunct
+-- per M.4 inheritance (F#4 guardrail). Supersedes the 1Q-only partial
+-- `trappedIonSU4_1QHeadline`.
+import SKEFTHawking.FKLW.TrappedIonSU4FullHeadlineForm
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
