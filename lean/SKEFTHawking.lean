@@ -1119,6 +1119,12 @@ import SKEFTHawking.FKLW.GenericSUdDetExpSkewHerm
 -- Traceless conclusion `tr Y = 0` follows via small-norm exp-injectivity
 -- on ℂ near 0, shipped in S.2g discharge.
 import SKEFTHawking.FKLW.GenericSUdMatrixLogTraceless
+-- Phase 6y Track S.2g-substrate (2026-05-27): trace norm bound
+-- `|tr Y| ≤ d * ‖Y‖` for Y : Matrix (Fin d) (Fin d) ℂ in linftyOp norm.
+-- Combined with S.2e exp(tr Y) = 1 and small-norm injectivity of
+-- Complex.exp on a disk around 0, gives tr Y = 0 for matrixLog of
+-- SU(d) elements near 1 (S.2g discharge).
+import SKEFTHawking.FKLW.GenericSUdTraceNorm
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
