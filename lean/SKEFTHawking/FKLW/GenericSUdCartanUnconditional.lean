@@ -77,21 +77,57 @@ theorem composite_map_value_zero (d n : ℕ)
   rw [h_mdep, matrixLog_one]
   exact tsProj_d_zero d
 
-/-! ## Status (substrate-level)
+/-! ## 2. CompleteSpace helper for the codomain Submodule
 
-The substantive substrate for S.2g UNCONDITIONAL discharge is fully
-assembled:
+The traceless skew-Hermitian Submodule of `Matrix (Fin d) (Fin d) ℂ`
+is finite-dimensional and hence has the CompleteSpace structure
+required by Mathlib's `HasStrictFDerivAt.map_nhds_eq_of_surj`. -/
+
+/-- **`CompleteSpace ↥(𝔰𝔲(d))`** (substantive helper).
+
+The traceless skew-Hermitian Submodule of `Matrix (Fin d) (Fin d) ℂ`
+is closed (as a finite-dim Submodule of a finite-dim ambient space),
+hence its subtype is a complete metric space. Composes
+`Submodule.closed_of_finiteDimensional` + `IsClosed.isComplete` +
+`completeSpace_coe_iff_isComplete`. -/
+theorem completeSpace_tracelessSkewHermitian (d : ℕ) :
+    CompleteSpace
+      ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d)) := by
+  letI : NormedAlgebra ℝ (Matrix (Fin d) (Fin d) ℂ) := NormedAlgebra.complexToReal
+  have h_closed : IsClosed
+      ((SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d)) :
+        Set (Matrix (Fin d) (Fin d) ℂ)) :=
+    (SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian
+      (Fin d)).closed_of_finiteDimensional
+  exact completeSpace_coe_iff_isComplete.mpr h_closed.isComplete
+
+/-! ## 3. Status (substrate-fully-assembled)
+
+The substantive substrate for S.2g UNCONDITIONAL discharge:
   * `multiDirExpProduct_hasStrictFDerivAt_zero` (✓)
   * `matrixLog_hasStrictFDerivAt_one` (✓)
   * `tsProj_matrixLog_multiDirExpProduct_hasStrictFDerivAt_zero` (✓)
-  * `tsProj_multiDirDerivCLM_range_top_of_spans` (✓, this file's input)
-  * `composite_map_value_zero` (✓, this file)
+  * `tsProj_multiDirDerivCLM_range_top_of_spans` (✓)
+  * `composite_map_value_zero` (✓)
+  * `completeSpace_tracelessSkewHermitian` (✓, this section)
 
-The final application of Mathlib's `HasStrictFDerivAt.map_nhds_eq_of_surj`
-requires supplying the `CompleteSpace ↥(tracelessSkewHermitian (Fin d))`
-instance at the use site. The needed substrate
-(`Submodule.complete_of_finiteDimensional` + `completeSpace_coe_iff_isComplete`)
-is in Mathlib but synthesis requires careful instance ordering. This
-finalization ships in a follow-on commit. -/
+The application of `HasStrictFDerivAt.map_nhds_eq_of_surj` to assemble
+these into the final `Filter.map (composite) (nhds 0) = nhds 0`
+encounters a Lean elaborator quirk: even when the
+`CompleteSpace ↥(tracelessSkewHermitian (Fin d))` instance is supplied
+locally (via `haveI` or as an explicit hypothesis), the synthesis
+through `map_nhds_eq_of_surj`'s implicit args fails to find it. This
+appears to be a Lean issue (not a missing math); investigation via
+`set_option trace.Meta.synthInstance true` would localize the exact
+unification failure.
+
+WORKAROUND options for the eventual closure:
+  * Use `HasStrictFDerivAt.toOpenPartialHomeomorph` (requires the
+    derivative to be a `ContinuousLinearEquiv`, i.e., bijective).
+    This needs basis-extraction from the spanning witness to get
+    {X_i : Fin (d²-1) → 𝔰𝔲(d)} forming an ℝ-basis. Substantial
+    finite-dim linear algebra.
+  * Direct manual proof of "image of nbhd is nbhd" using the explicit
+    inverse construction (the IFT proof structure unrolled, ~200 LoC). -/
 
 end SKEFTHawking.FKLW.GenericSUd
