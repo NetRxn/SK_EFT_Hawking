@@ -1150,6 +1150,11 @@ import SKEFTHawking.FKLW.TrappedIonGeneratingSetSU4Partial
 -- intermediate toward T-A2′.1 proper (adds CCZ_SU once
 -- CCZ_SU_mem_specialUnitaryGroup ships).
 import SKEFTHawking.FKLW.CliffordCCZGeneratingSetSU8Partial
+-- Phase 6y Track T-A2′.1-substrate (2026-05-27): phase-corrected CCZ
+-- for SU(8). Ships `CCZ_SU := ω • CCZ_mat` with ω = e^(iπ/8) so that
+-- ω^8 · det(CCZ_mat) = -1 · -1 = 1 (CCZ_SU ∈ SU(8)).
+-- `CCZ_SU_mem_specialUnitaryGroup` + `CCZ_SU_subtype` packaged.
+import SKEFTHawking.FKLW.CCZ_SU
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
