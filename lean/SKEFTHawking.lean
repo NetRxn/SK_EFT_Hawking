@@ -1131,6 +1131,13 @@ import SKEFTHawking.FKLW.GenericSUdTraceNorm
 -- (single-qubit-on-ion-i SU(4) gates). Substrate for trappedIonGenerating-
 -- SetSU4 full instance (T-A1′.1 proper).
 import SKEFTHawking.FKLW.TrappedIonSU4Substrate
+-- Phase 6y Track T-A2′.1-substrate (2026-05-27): SU(8) Clifford+CCZ
+-- Hadamard-on-qubit-i helpers via Kronecker products (Fin 4 × Fin 2 ≃ Fin 8
+-- and Fin 2 × Fin 4 ≃ Fin 8). Ships kronSU4SU2, kronSU2SU4, plus the
+-- three Hadamards H_SU_on_qubit{1,2,3} on the 3-qubit Hilbert space.
+-- Combined with Phase 6x's CCZ_mat, forms the alphabet for
+-- cliffordCCZGeneratingSetSU8 full instance (T-A2′.1 proper).
+import SKEFTHawking.FKLW.CliffordCCZSU8Substrate
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
