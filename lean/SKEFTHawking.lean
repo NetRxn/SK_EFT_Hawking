@@ -1556,6 +1556,14 @@ import SKEFTHawking.FKLW.GenericSUdNormBridgeUnitaryConjugation
 -- where F_inner is the inner diagonal-case witness. Concrete bound for downstream
 -- consumers requiring explicit norm structure (e.g., SK recursion calibration).
 import SKEFTHawking.FKLW.GenericSUdHermitianDischargeBounded
+-- Phase 6y Track S.3 substrate (Session 38, 2026-05-27): KEYSTONE INDEX —
+-- aliases for the three load-bearing S.3 d≥3 PROPER theorems:
+--   phase6y_S3_balancedCommutator_dischargeAlgebraic (direct)
+--   phase6y_S3_balancedCommutator_dischargePredicate (all-d)
+--   phase6y_S3_balancedCommutator_dischargeBounded (with linftyOp bound)
+-- Single import point for downstream consumers. Docstring summarizes the
+-- entire Sessions 14-37 substrate composition chain.
+import SKEFTHawking.FKLW.GenericSUdPhase6yKeystoneIndex
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
