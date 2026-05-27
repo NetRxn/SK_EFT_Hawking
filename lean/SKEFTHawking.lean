@@ -1065,6 +1065,20 @@ import SKEFTHawking.FKLW.RossSelinger.ZOmega
 -- ZOmegaSqrt2 inherits CommRing + Algebra ZOmega + IsLocalization from
 -- Mathlib. Substrate for KMM exact synthesis (Item F).
 import SKEFTHawking.FKLW.RossSelinger.ZOmegaSqrt2
+-- Phase 6x Tier-2 Item F (M4, 2026-05-27) — CliffordTGate ADT and matrix
+-- interpretation. Single-qubit Clifford+T gates {H, S, T, X, Y, Z, id,
+-- omega} → 2x2 ZOmegaSqrt2 matrices. interp foldr of a List CliffordTGate
+-- to its product matrix; interp_append distributes over multiplication.
+import SKEFTHawking.FKLW.RossSelinger.CliffordTGate
+-- Phase 6x Tier-2 Item F (M4, 2026-05-27) — KMM exact synthesis substrate
+-- + algorithm specification. Defines sde_le relation, IsCliffordTRealizable,
+-- KMMReduction structure (reduce + correct + length_bound fields per
+-- KMM Corollary 1: n_g ≤ N₃ + 4·sde), and the tracked-Prop
+-- KMMReductionExists (Nonempty KMMReduction). Concrete KMMReduction
+-- instance construction (192-Clifford lookup + sde-decreasing proof) is
+-- deferred multi-session work requiring the runtime ZOmegaSqrt2 (z, k)
+-- representation per DR §1.7 option (B).
+import SKEFTHawking.FKLW.RossSelinger.KMM
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style

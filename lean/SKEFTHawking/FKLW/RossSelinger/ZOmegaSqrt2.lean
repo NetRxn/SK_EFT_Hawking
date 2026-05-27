@@ -167,6 +167,19 @@ theorem sqrt2_isUnit : IsUnit (sqrt2 : ZOmegaSqrt2) := by
   exact @IsLocalization.map_units _ _ (Submonoid.powers ZOmega.sqrt2) _ _ _ _
     ⟨ZOmega.sqrt2, Submonoid.mem_powers _⟩
 
+/-- **The multiplicative inverse of `sqrt2`** in `ZOmegaSqrt2`. -/
+noncomputable def invSqrt2 : ZOmegaSqrt2 := Ring.inverse sqrt2
+
+/-- **Defining identity**: `invSqrt2 * sqrt2 = 1`. -/
+theorem invSqrt2_mul_sqrt2 : invSqrt2 * sqrt2 = 1 := by
+  unfold invSqrt2
+  exact Ring.inverse_mul_cancel _ sqrt2_isUnit
+
+/-- **Defining identity**: `sqrt2 * invSqrt2 = 1`. -/
+theorem sqrt2_mul_invSqrt2 : sqrt2 * invSqrt2 = 1 := by
+  unfold invSqrt2
+  exact Ring.mul_inverse_cancel _ sqrt2_isUnit
+
 end ZOmegaSqrt2
 
 end SKEFTHawking.RossSelinger
