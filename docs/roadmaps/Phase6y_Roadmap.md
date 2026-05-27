@@ -11,7 +11,7 @@
 **Predecessor work assumed clean:**
 - Phase 6x lift/shift closure (T-A1 1Q-compiled-with-MS-primitive + T-A2 CCZ-substrate-only) — ships first.
 - Phase 6u generic SU(2)-targeted substrate (Waves 1-6 + Wave 4b) — the SU(2) baseline being generalized.
-- M.1 (`Matrix.BCH.bchOrder2Cubic`) — already generic over matrix dimension d, fully shipped in Phase 6x.
+- M.1 (`SKEFTHawking.MatrixBCHCubic.bch_order_2_cubic_thm`) — the underlying lemma is already generic over `{d : ℕ}` matrix dimension (`Matrix (Fin d) (Fin d) ℂ`). Phase 6x completion ships the `Matrix m m ℂ` reindex generalization + de-privatization at `Matrix.BCH.bchOrder2Cubic`. Phase 6y Track S can begin against the `(Fin d)`-indexed lemma since the `m : Type*` generalization is mechanical reindexing; Phase 6y consumers should use whichever form (Fin-indexed or m-indexed) is available when Track S sub-waves ship.
 
 **Project rule applied:** No new project-local axioms (Pipeline Invariant #15 RESPECTED). No `maxHeartbeats` overrides in proof bodies (Invariant #10). The SU(d) extension work is multi-session and *substrate-heavy*; each track scopes the Mathlib-upstream option from Stage 1.
 
@@ -197,6 +197,18 @@ Per `BUNDLE_LIFT_PROCEDURE.md` Stage 13 hard gate, each Phase 6y track gets its 
 
 - **#10 (no `maxHeartbeats`)**: RESPECTED. Phase 6u W4b pattern applies — top-level numerical helpers, not heartbeat-budget overrides.
 - **#15 (no new axioms)**: RESPECTED. Phase 6y's substantive content does NOT require axioms; the SU(d) extension composes from Mathlib4 v4.29.1 primitives. The Phase 6x retrospective explicitly cautioned against conflating "substantial work" with "needs axiom"; Phase 6y consumers ship substantively across multiple sessions rather than yielding on "substantial work" grounds.
+
+### M.4 length-conjunct inheritance (Phase 6x → Phase 6y)
+
+The Phase 6x completion ship adds the concrete-word length-bound conjunct
+`(compile U ε).toWord.length ≤ <polylog bound>` to all bundled-strict
+headlines (CT, RR5, RR7, T-A1 lift/shift). **All Phase 6y bundled-strict
+headlines (Track S.6 generic SU(d), Track T-A1′.5 full SU(4), Track
+T-A2′.5 full SU(8)) inherit this conjunct shape** — i.e., each per-track
+T-X.5 headline statement includes both the error bound `‖compile U ε - U‖ ≤ ε`
+AND the concrete-word length conjunct. This is the explicit guardrail
+against anti-pattern #4 (substrate-only-shipped vs headline-integrated)
+identified in the Phase 6x retrospective.
 
 ---
 
