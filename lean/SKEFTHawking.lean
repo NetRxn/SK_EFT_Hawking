@@ -1475,6 +1475,13 @@ import SKEFTHawking.FKLW.GenericSUdSymmetricDischarge
 -- Eigenvalue-sort substrate: any traceless `a` sorted decreasingly satisfies the
 -- non-negativity hypothesis required by Session 24's symmetric discharge.
 import SKEFTHawking.FKLW.GenericSUdDecreasingSortPartialSums
+-- Phase 6y Track S.3 substrate (Session 26, 2026-05-27): U(d) (unitary-group)
+-- conjugation invariance lemmas. Generalizes Session 13's `specialUnitaryGroup`
+-- forms to broader `unitaryGroup` (allowing permutation matrices with det = ±1).
+-- Proofs are IDENTICAL — the conjugation invariance only uses star U · U = 1,
+-- not the SU(d) determinant constraint. Enables permutation-matrix conjugation
+-- for the eigenvalue-sort lift of S24 to arbitrary diagonal H.
+import SKEFTHawking.FKLW.GenericSUdUnitaryConjugationInvariance
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
