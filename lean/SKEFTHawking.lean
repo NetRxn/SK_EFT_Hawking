@@ -1388,6 +1388,9 @@ import SKEFTHawking.FKLW.CliffordCCZSU8ConstructiveEpsilonNet
 -- direct mechanical lift of `balanced_commutator_general_axis_lie_traceless`
 -- (Phase 6t SU(2) Pauli decomposition with Bloch-sphere K = √(1/2)).
 import SKEFTHawking.FKLW.GenericSUdBalancedCommutator
+-- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
+-- (mirror of TrappedIonSU4Calibration at d=8).
+import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
