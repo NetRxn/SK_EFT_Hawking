@@ -155,4 +155,30 @@ theorem matrixLog_trace_eq_zero_on_nhd_one (d : ℕ) [Nonempty (Fin d)]
   have h_n_zero : n = 0 := Int.abs_lt_one_iff.mp h_abs_int_lt
   rw [hn, h_n_zero]; push_cast; ring
 
+/-! ## 4. Combined: matrixLog ∈ 𝔰𝔲(d) on nbhd of 1
+
+Composes S.2c (skew-Hermitian preservation) + S.2e PROPER (traceless
+preservation) to give: for h ∈ SU(d) sufficiently close to 1, the
+local matrix log `matrixLog d h` is both skew-Hermitian AND traceless,
+i.e., it lies in the traceless skew-Hermitian Lie algebra `𝔰𝔲(d)`. -/
+
+/-- **Matrix log of unitary near 1 is in `𝔰𝔲(d)`** (combined headline).
+
+For `h ∈ SU(d)` in a sufficiently small neighborhood of `1`, the local
+matrix log `Y := matrixLog d h` satisfies BOTH `Y.IsSkewHermitian` AND
+`Y.trace = 0` — i.e., `Y ∈ 𝔰𝔲(d)`. This is the **substrate Phase 6y
+S.2g final discharge needs**: matrixLog of SU(d) elements gives back
+the Lie algebra. -/
+theorem matrixLog_in_su_d_on_nhd_one (d : ℕ) [Nonempty (Fin d)]
+    (hd_pos : 0 < d) :
+    ∃ V ∈ nhds (1 : Matrix (Fin d) (Fin d) ℂ),
+      ∀ h ∈ V, h ∈ Matrix.specialUnitaryGroup (Fin d) ℂ →
+        h ∈ (expAmbientPartialHomeo d).target →
+        (matrixLog d h).IsSkewHermitian ∧ (matrixLog d h).trace = 0 := by
+  obtain ⟨V_sh, hV_sh_nhd, hV_sh⟩ := matrixLog_isSkewHermitian_on_nhd_one d
+  obtain ⟨V_tr, hV_tr_nhd, hV_tr⟩ := matrixLog_trace_eq_zero_on_nhd_one d hd_pos
+  refine ⟨V_sh ∩ V_tr, Filter.inter_mem hV_sh_nhd hV_tr_nhd, ?_⟩
+  intro h hh_V hh_su hh_target
+  exact ⟨hV_sh h hh_V.1 hh_su hh_target, hV_tr h hh_V.2 hh_su hh_target⟩
+
 end SKEFTHawking.FKLW.GenericSUd
