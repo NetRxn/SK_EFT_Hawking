@@ -325,4 +325,55 @@ theorem sigmaYBlock_mul_sigmaXBlock_apply_diag_j {d : ℕ} {i j : Fin d}
     ring
   · intro h; exact absurd (Finset.mem_univ i) h
 
+/-- **Off-support zero entry**: `(σ_y · σ_x)[a][b] = 0` for `(a, b) ∉ {(i, i), (j, j)}`. -/
+theorem sigmaYBlock_mul_sigmaXBlock_apply_off {d : ℕ} {i j : Fin d}
+    (h_ne : i ≠ j) {a b : Fin d}
+    (h_not_ii : ¬ (a = i ∧ b = i)) (h_not_jj : ¬ (a = j ∧ b = j)) :
+    (sigmaYBlock i j * sigmaXBlock i j) a b = 0 := by
+  rw [Matrix.mul_apply]
+  apply Finset.sum_eq_zero
+  intro k _
+  rw [sigmaYBlock_apply, sigmaXBlock_apply]
+  grind
+
+/-! ## 6. Full product theorem: `σ_y · σ_x = single i i (-i) + single j j i` -/
+
+/-- **Full product identity**: `σ_y_block · σ_x_block = single i i (-i) + single j j i`
+for `i ≠ j`. Composes the diagonal-entry primitives + off-support zero entries
+via `Matrix.ext`. -/
+theorem sigmaYBlock_mul_sigmaXBlock {d : ℕ} {i j : Fin d} (h_ne : i ≠ j) :
+    sigmaYBlock i j * sigmaXBlock i j =
+      Matrix.single i i (-Complex.I) + Matrix.single j j Complex.I := by
+  ext a b
+  by_cases h_ai : a = i
+  · by_cases h_bi : b = i
+    · -- (a, b) = (i, i): LHS = -I, RHS = -I.
+      cases h_ai; cases h_bi
+      rw [sigmaYBlock_mul_sigmaXBlock_apply_diag_i h_ne]
+      rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+      simp [Ne.symm h_ne]
+    · -- a = i, b ≠ i: off-support; both LHS and RHS = 0.
+      have h_not_ii : ¬ (a = i ∧ b = i) := fun ⟨_, h⟩ => h_bi h
+      have h_not_jj : ¬ (a = j ∧ b = j) := fun ⟨h, _⟩ => by cases h_ai; exact h_ne h
+      rw [sigmaYBlock_mul_sigmaXBlock_apply_off h_ne h_not_ii h_not_jj]
+      rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+      grind
+  · by_cases h_aj : a = j
+    · by_cases h_bj : b = j
+      · cases h_aj; cases h_bj
+        rw [sigmaYBlock_mul_sigmaXBlock_apply_diag_j h_ne]
+        rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+        simp [h_ne, h_ne.symm]
+      · have h_not_ii : ¬ (a = i ∧ b = i) := fun ⟨h, _⟩ => h_ai h
+        have h_not_jj : ¬ (a = j ∧ b = j) := fun ⟨_, h⟩ => h_bj h
+        rw [sigmaYBlock_mul_sigmaXBlock_apply_off h_ne h_not_ii h_not_jj]
+        rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+        grind
+    · -- a ≠ i, a ≠ j: off-support, both sides 0.
+      have h_not_ii : ¬ (a = i ∧ b = i) := fun ⟨h, _⟩ => h_ai h
+      have h_not_jj : ¬ (a = j ∧ b = j) := fun ⟨h, _⟩ => h_aj h
+      rw [sigmaYBlock_mul_sigmaXBlock_apply_off h_ne h_not_ii h_not_jj]
+      rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+      grind
+
 end SKEFTHawking.FKLW.GenericSUd
