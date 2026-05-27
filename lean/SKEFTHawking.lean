@@ -1564,6 +1564,11 @@ import SKEFTHawking.FKLW.GenericSUdHermitianDischargeBounded
 -- Single import point for downstream consumers. Docstring summarizes the
 -- entire Sessions 14-37 substrate composition chain.
 import SKEFTHawking.FKLW.GenericSUdPhase6yKeystoneIndex
+-- Phase 6y Track S.3 substrate (Session 39, 2026-05-27): USAGE EXAMPLES at
+-- Phase 6y target d values. Worked examples at SU(4) (T-A1′ trapped-ion)
+-- and SU(8) (T-A2′ Clifford+CCZ) demonstrating downstream consumer pattern
+-- + consumer obtain-pattern idiom for SK recursion contexts.
+import SKEFTHawking.FKLW.GenericSUdPhase6yUsageExamples
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
