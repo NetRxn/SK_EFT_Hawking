@@ -1401,6 +1401,11 @@ import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorTwoBlock
 -- for the "spectral-pair + conjugate" approach to Aharonov-Arad d≥3. Norm-
 -- bridging (linftyOp vs spectral) deferred to follow-on commit.
 import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorConjugation
+-- Phase 6y Track S.3 substrate (Session 14, 2026-05-27): rank-2 unitary-image
+-- balanced commutator at SU(d) — composes Session 11 σ_z-pattern + Session 13
+-- conjugation invariance. Ships F·G − G·F = −iθ·H for H = U·σ_z(i,j)·U* under
+-- arbitrary U ∈ SU(d). Algebraic conjuncts only (norm-bridging caveat documented).
+import SKEFTHawking.FKLW.GenericSUdDiagonalTracelessDecomp
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
