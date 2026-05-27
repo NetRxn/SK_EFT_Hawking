@@ -1196,6 +1196,19 @@ import SKEFTHawking.FKLW.CliffordCCZSU8HeadlineForm
 -- `trappedIonSU4_1QHeadline : Prop` captures BOTH error bound +
 -- concrete word-length conjunct per M.4 inheritance.
 import SKEFTHawking.FKLW.TrappedIonSU4HeadlineForm
+-- Phase 6y Track T-A1′.1 (2026-05-27): MS gate via exp/Jacobi route.
+-- Closes long-standing MSGate SU(4) membership gap (multiple prior
+-- entry-wise verification attempts failed). Defines `MSGateExp θ :=
+-- exp(-iθ/2 • (X⊗X))` and proves SU(4) membership via skew-Hermitian
+-- exp is unitary + Phase 6y S.2d Jacobi formula det(exp Y) = exp(tr Y).
+-- Ships `MSGate_SU4 (θ : ℝ) : ↥(specialUnitaryGroup (Fin 4) ℂ)`.
+import SKEFTHawking.FKLW.MSGateExpForm
+-- Phase 6y Track T-A1′.1 PROPER (2026-05-27): full trapped-ion alphabet
+-- with MS at rational-π/N grid. N-parameterized `GeneratingSet 4`
+-- instance with 4 single-qubit gates + 2N MS gates (4 + 2N total
+-- generators, FreeGroup (Fin (4 + 2*N)) word type). Closure-density at
+-- SU(4) ships in T-A1′.2 via Phase 6y S.2g.
+import SKEFTHawking.FKLW.TrappedIonGeneratingSetSU4Full
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
