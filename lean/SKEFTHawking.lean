@@ -1191,6 +1191,11 @@ import SKEFTHawking.FKLW.GenericSUdCartanConditional
 -- word-length conjunct (FreeGroup (Fin 4).toWord.length) per M.4
 -- inheritance discipline (F#4 guardrail).
 import SKEFTHawking.FKLW.CliffordCCZSU8HeadlineForm
+-- Phase 6y Track T-A1′.5 statement (2026-05-27): predicate-form of
+-- the trapped-ion SU(4) 1Q sub-alphabet SK bundled-strict headline.
+-- `trappedIonSU4_1QHeadline : Prop` captures BOTH error bound +
+-- concrete word-length conjunct per M.4 inheritance.
+import SKEFTHawking.FKLW.TrappedIonSU4HeadlineForm
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
