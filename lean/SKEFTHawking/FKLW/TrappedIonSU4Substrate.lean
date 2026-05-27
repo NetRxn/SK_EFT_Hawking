@@ -92,4 +92,27 @@ noncomputable def T_SU_on_ion1 : Matrix (Fin 4) (Fin 4) ℂ :=
 noncomputable def T_SU_on_ion2 : Matrix (Fin 4) (Fin 4) ℂ :=
   kronSU4 (1 : Matrix (Fin 2) (Fin 2) ℂ) SKEFTHawking.FKLW.GenericSU2.T_SU_mat
 
+/-! ## 3. Determinant lemmas for kronSU4
+
+Substrate toward the SU(4) membership proofs (`kronSU4 A B ∈ specialUnitaryGroup`):
+the determinant of the reindexed Kronecker product. -/
+
+/-- **det(kronSU4 A B) = det(A)^2 * det(B)^2**. -/
+theorem det_kronSU4 (A B : Matrix (Fin 2) (Fin 2) ℂ) :
+    (kronSU4 A B).det = A.det ^ 2 * B.det ^ 2 := by
+  unfold kronSU4
+  rw [Matrix.det_reindex_self]
+  show (Matrix.kroneckerMap (fun x1 x2 => x1 * x2) A B).det = A.det ^ 2 * B.det ^ 2
+  rw [Matrix.det_kronecker]
+  simp [Fintype.card_fin]
+
+/-- **kronSU4 of SU(2)-det-1 matrices has det 1**.
+
+Given `A.det = 1` and `B.det = 1`, `(kronSU4 A B).det = 1`. -/
+theorem det_kronSU4_eq_one {A B : Matrix (Fin 2) (Fin 2) ℂ}
+    (hA : A.det = 1) (hB : B.det = 1) :
+    (kronSU4 A B).det = 1 := by
+  rw [det_kronSU4, hA, hB]
+  ring
+
 end SKEFTHawking.FKLW.TrappedIonSU4
