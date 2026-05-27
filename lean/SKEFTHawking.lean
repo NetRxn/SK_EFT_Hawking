@@ -1440,6 +1440,13 @@ import SKEFTHawking.FKLW.GenericSUdSigmaPairSwap
 -- + same-pair-at-target-coeff `(θ·b_p/2 · -2i) = -iθ·b_p`. Bridges Session 19
 -- to the full F·G − G·F discharge in Session 21+.
 import SKEFTHawking.FKLW.GenericSUdSymmetricCommReduction
+-- Phase 6y Track S.3 substrate (Session 21, 2026-05-27): antisymmetric off-diag
+-- sum vanishing. Generic Mathlib-PR-quality fact: for `f : Fin n → Fin n → M`
+-- (M a ℂ-module) with f p q + f q p = 0 for all p ≠ q, the off-diagonal sum
+--   ∑ p, ∑ q ∈ univ.erase p, f p q = 0
+-- via the doubling trick (Fubini + diagonal cancellation + ℂ-module 2-invertibility).
+-- Substrate for the F·G − G·F = ∑_p γ_p² · [σ_y(p), σ_x(p)] reduction (S22+).
+import SKEFTHawking.FKLW.GenericSUdAntisymOffDiag
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
