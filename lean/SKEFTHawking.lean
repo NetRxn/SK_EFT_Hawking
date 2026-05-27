@@ -1265,6 +1265,13 @@ import SKEFTHawking.FKLW.GenericSUdMultiParamExpProductDeriv
 -- lift of SU(2)-specific tsProj. Consumed by the IFT-on-subspace
 -- composition for S.2g UNCONDITIONAL discharge.
 import SKEFTHawking.FKLW.GenericSUdTsProj
+-- Phase 6y Track S.2g-substrate (2026-05-27): composite strict F-derivative
+-- substrate. Ships `matrixLog_hasStrictFDerivAt_one`, the composed
+-- `matrixLog ∘ multiDirExpProduct` strict derivative at 0, and the full
+-- `tsProj_d ∘ matrixLog ∘ multiDirExpProduct` composite landing in
+-- ↥(tracelessSkewHermitian (Fin d)). Load-bearing for the IFT-on-subspace
+-- step of the S.2g UNCONDITIONAL discharge.
+import SKEFTHawking.FKLW.GenericSUdMultiParamCompositeDeriv
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
