@@ -267,4 +267,62 @@ theorem sigmaZBlock_isHermitian {d : ℕ} (i j : Fin d) :
         · simp [if_neg (show ¬ (j = a ∧ j = b) from fun ⟨h, _⟩ => h_ja h),
                 if_neg (show ¬ (j = b ∧ j = a) from fun ⟨h, _⟩ => h_jb h)]
 
+/-! ## 5. Product entry — `(σ_y · σ_x)[i][i] = -i` (single-entry primitive)
+
+The simplest substantive entry of the σ_y · σ_x product: at coordinate
+`(i, i)`, the product equals `-i`. Computed via `Matrix.mul_apply`
++ `Finset.sum_eq_single j` (only `k = j` gives nonzero contribution). -/
+
+/-- **`(σ_y · σ_x)[i][i] = -i`** for `i ≠ j` (substantive single-entry
+primitive toward the full product identity). -/
+theorem sigmaYBlock_mul_sigmaXBlock_apply_diag_i {d : ℕ} {i j : Fin d}
+    (h_ne : i ≠ j) :
+    (sigmaYBlock i j * sigmaXBlock i j) i i = -Complex.I := by
+  rw [Matrix.mul_apply]
+  rw [Finset.sum_eq_single j]
+  · -- At k = j: σ_y[i][j] = -I, σ_x[j][i] = 1. Product = -I.
+    rw [sigmaYBlock_apply, sigmaXBlock_apply]
+    -- σ_y[i][j]: (if i=i∧j=j then -I) + (if j=i∧i=j then I) = -I + 0 = -I.
+    have h_yij1 : (i : Fin d) = i ∧ j = j := ⟨rfl, rfl⟩
+    have h_yij2 : ¬ ((j : Fin d) = i ∧ i = j) := fun ⟨h, _⟩ => h_ne h.symm
+    rw [if_pos h_yij1, if_neg h_yij2, add_zero]
+    -- σ_x[j][i]: (if i=j∧j=i then 1) + (if j=j∧i=i then 1) = 0 + 1 = 1.
+    have h_xji1 : ¬ ((i : Fin d) = j ∧ j = i) := fun ⟨h, _⟩ => h_ne h
+    have h_xji2 : (j : Fin d) = j ∧ i = i := ⟨rfl, rfl⟩
+    rw [if_neg h_xji1, if_pos h_xji2, zero_add]
+    ring
+  · intro k _ h_kj
+    -- σ_y[i][k] · σ_x[k][i] = 0 for k ≠ j.
+    rw [sigmaYBlock_apply, sigmaXBlock_apply]
+    have h_y1 : ¬ ((i : Fin d) = i ∧ j = k) := fun ⟨_, h⟩ => h_kj h.symm
+    have h_y2 : ¬ ((j : Fin d) = i ∧ i = k) := fun ⟨h, _⟩ => h_ne h.symm
+    rw [if_neg h_y1, if_neg h_y2]
+    ring
+  · intro h; exact absurd (Finset.mem_univ j) h
+
+/-- **`(σ_y · σ_x)[j][j] = +i`** for `i ≠ j` (mirror entry: at `(j, j)`
+the contribution is at `k = i`). -/
+theorem sigmaYBlock_mul_sigmaXBlock_apply_diag_j {d : ℕ} {i j : Fin d}
+    (h_ne : i ≠ j) :
+    (sigmaYBlock i j * sigmaXBlock i j) j j = Complex.I := by
+  rw [Matrix.mul_apply]
+  rw [Finset.sum_eq_single i]
+  · rw [sigmaYBlock_apply, sigmaXBlock_apply]
+    -- σ_y[j][i]: (if i=j∧j=i then -I) + (if j=j∧i=i then I) = 0 + I = I.
+    have h_yji1 : ¬ ((i : Fin d) = j ∧ j = i) := fun ⟨h, _⟩ => h_ne h
+    have h_yji2 : (j : Fin d) = j ∧ i = i := ⟨rfl, rfl⟩
+    rw [if_neg h_yji1, if_pos h_yji2, zero_add]
+    -- σ_x[i][j]: (if i=i∧j=j then 1) + (if j=i∧i=j then 1) = 1 + 0 = 1.
+    have h_xij1 : (i : Fin d) = i ∧ j = j := ⟨rfl, rfl⟩
+    have h_xij2 : ¬ ((j : Fin d) = i ∧ i = j) := fun ⟨h, _⟩ => h_ne h.symm
+    rw [if_pos h_xij1, if_neg h_xij2, add_zero]
+    ring
+  · intro k _ h_ki
+    rw [sigmaYBlock_apply, sigmaXBlock_apply]
+    have h_y1 : ¬ ((i : Fin d) = j ∧ j = k) := fun ⟨h, _⟩ => h_ne h
+    have h_y2 : ¬ ((j : Fin d) = j ∧ i = k) := fun ⟨_, h⟩ => h_ki h.symm
+    rw [if_neg h_y1, if_neg h_y2]
+    ring
+  · intro h; exact absurd (Finset.mem_univ i) h
+
 end SKEFTHawking.FKLW.GenericSUd
