@@ -376,4 +376,109 @@ theorem sigmaYBlock_mul_sigmaXBlock {d : ℕ} {i j : Fin d} (h_ne : i ≠ j) :
       rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
       grind
 
+/-! ## 7. Mirror: `σ_x · σ_y = single i i i + single j j (-i)` -/
+
+/-- **Off-support entry of σ_x · σ_y is zero**. Same proof structure as
+the σ_y · σ_x version. -/
+theorem sigmaXBlock_mul_sigmaYBlock_apply_off {d : ℕ} {i j : Fin d}
+    (h_ne : i ≠ j) {a b : Fin d}
+    (h_not_ii : ¬ (a = i ∧ b = i)) (h_not_jj : ¬ (a = j ∧ b = j)) :
+    (sigmaXBlock i j * sigmaYBlock i j) a b = 0 := by
+  rw [Matrix.mul_apply]
+  apply Finset.sum_eq_zero
+  intro k _
+  rw [sigmaXBlock_apply, sigmaYBlock_apply]
+  grind
+
+/-- **`(σ_x · σ_y)[i][i] = +i`** for `i ≠ j`. -/
+theorem sigmaXBlock_mul_sigmaYBlock_apply_diag_i {d : ℕ} {i j : Fin d}
+    (h_ne : i ≠ j) :
+    (sigmaXBlock i j * sigmaYBlock i j) i i = Complex.I := by
+  rw [Matrix.mul_apply]
+  rw [Finset.sum_eq_single j]
+  · rw [sigmaXBlock_apply, sigmaYBlock_apply]
+    have h_xij1 : (i : Fin d) = i ∧ j = j := ⟨rfl, rfl⟩
+    have h_xij2 : ¬ ((j : Fin d) = i ∧ i = j) := fun ⟨h, _⟩ => h_ne h.symm
+    rw [if_pos h_xij1, if_neg h_xij2, add_zero]
+    have h_yji1 : ¬ ((i : Fin d) = j ∧ j = i) := fun ⟨h, _⟩ => h_ne h
+    have h_yji2 : (j : Fin d) = j ∧ i = i := ⟨rfl, rfl⟩
+    rw [if_neg h_yji1, if_pos h_yji2, zero_add]
+    ring
+  · intro k _ h_kj
+    rw [sigmaXBlock_apply, sigmaYBlock_apply]
+    have h_x1 : ¬ ((i : Fin d) = i ∧ j = k) := fun ⟨_, h⟩ => h_kj h.symm
+    have h_x2 : ¬ ((j : Fin d) = i ∧ i = k) := fun ⟨h, _⟩ => h_ne h.symm
+    rw [if_neg h_x1, if_neg h_x2]
+    ring
+  · intro h; exact absurd (Finset.mem_univ j) h
+
+/-- **`(σ_x · σ_y)[j][j] = -i`** for `i ≠ j`. -/
+theorem sigmaXBlock_mul_sigmaYBlock_apply_diag_j {d : ℕ} {i j : Fin d}
+    (h_ne : i ≠ j) :
+    (sigmaXBlock i j * sigmaYBlock i j) j j = -Complex.I := by
+  rw [Matrix.mul_apply]
+  rw [Finset.sum_eq_single i]
+  · rw [sigmaXBlock_apply, sigmaYBlock_apply]
+    have h_xji1 : ¬ ((i : Fin d) = j ∧ j = i) := fun ⟨h, _⟩ => h_ne h
+    have h_xji2 : (j : Fin d) = j ∧ i = i := ⟨rfl, rfl⟩
+    rw [if_neg h_xji1, if_pos h_xji2, zero_add]
+    have h_yij1 : (i : Fin d) = i ∧ j = j := ⟨rfl, rfl⟩
+    have h_yij2 : ¬ ((j : Fin d) = i ∧ i = j) := fun ⟨h, _⟩ => h_ne h.symm
+    rw [if_pos h_yij1, if_neg h_yij2, add_zero]
+    ring
+  · intro k _ h_ki
+    rw [sigmaXBlock_apply, sigmaYBlock_apply]
+    have h_x1 : ¬ ((i : Fin d) = j ∧ j = k) := fun ⟨h, _⟩ => h_ne h
+    have h_x2 : ¬ ((j : Fin d) = j ∧ i = k) := fun ⟨_, h⟩ => h_ki h.symm
+    rw [if_neg h_x1, if_neg h_x2]
+    ring
+  · intro h; exact absurd (Finset.mem_univ i) h
+
+/-- **Full mirror product identity**: `σ_x_block · σ_y_block = single i i i + single j j (-i)`
+for `i ≠ j`. -/
+theorem sigmaXBlock_mul_sigmaYBlock {d : ℕ} {i j : Fin d} (h_ne : i ≠ j) :
+    sigmaXBlock i j * sigmaYBlock i j =
+      Matrix.single i i Complex.I + Matrix.single j j (-Complex.I) := by
+  ext a b
+  by_cases h_ai : a = i
+  · by_cases h_bi : b = i
+    · cases h_ai; cases h_bi
+      rw [sigmaXBlock_mul_sigmaYBlock_apply_diag_i h_ne]
+      rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+      simp [Ne.symm h_ne]
+    · have h_not_ii : ¬ (a = i ∧ b = i) := fun ⟨_, h⟩ => h_bi h
+      have h_not_jj : ¬ (a = j ∧ b = j) := fun ⟨h, _⟩ => by cases h_ai; exact h_ne h
+      rw [sigmaXBlock_mul_sigmaYBlock_apply_off h_ne h_not_ii h_not_jj]
+      rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+      grind
+  · by_cases h_aj : a = j
+    · by_cases h_bj : b = j
+      · cases h_aj; cases h_bj
+        rw [sigmaXBlock_mul_sigmaYBlock_apply_diag_j h_ne]
+        rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+        simp [h_ne]
+      · have h_not_ii : ¬ (a = i ∧ b = i) := fun ⟨h, _⟩ => h_ai h
+        have h_not_jj : ¬ (a = j ∧ b = j) := fun ⟨_, h⟩ => h_bj h
+        rw [sigmaXBlock_mul_sigmaYBlock_apply_off h_ne h_not_ii h_not_jj]
+        rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+        grind
+    · have h_not_ii : ¬ (a = i ∧ b = i) := fun ⟨h, _⟩ => h_ai h
+      have h_not_jj : ¬ (a = j ∧ b = j) := fun ⟨h, _⟩ => h_aj h
+      rw [sigmaXBlock_mul_sigmaYBlock_apply_off h_ne h_not_ii h_not_jj]
+      rw [Matrix.add_apply, Matrix.single_apply, Matrix.single_apply]
+      grind
+
+/-! ## 8. The commutator identity `[σ_y, σ_x] = -2i · σ_z` -/
+
+/-- **The d-generic 2-block Pauli commutator identity** at SU(d):
+`[σ_y_block, σ_x_block] = -2i · σ_z_block` for `i ≠ j`. -/
+theorem sigmaY_sigmaX_commutator {d : ℕ} {i j : Fin d} (h_ne : i ≠ j) :
+    sigmaYBlock i j * sigmaXBlock i j - sigmaXBlock i j * sigmaYBlock i j =
+      ((-2 : ℂ) * Complex.I) • sigmaZBlock i j := by
+  rw [sigmaYBlock_mul_sigmaXBlock h_ne, sigmaXBlock_mul_sigmaYBlock h_ne, sigmaZBlock]
+  ext a b
+  simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.single_apply,
+             smul_eq_mul]
+  grind
+
 end SKEFTHawking.FKLW.GenericSUd
