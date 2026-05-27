@@ -1433,6 +1433,13 @@ import SKEFTHawking.FKLW.GenericSUdSigmaClassification
 -- with F = Σ α_p σ_y(p), G = Σ α_p σ_x(p), the cross-terms pair up and cancel.
 -- No counterterms needed for the symmetric α-coefficient case.
 import SKEFTHawking.FKLW.GenericSUdSigmaPairSwap
+-- Phase 6y Track S.3 substrate (Session 20, 2026-05-27): γ-weighted cross-term
+-- pair-swap cancellation lemmas. Lifts Session 19's pair-swap to γ-weighted
+-- form `(γ_p γ_q) • [σ_y(p), σ_x(q)] + (γ_q γ_p) • [σ_y(q), σ_x(p)] = 0`
+-- + same-pair γ-weighted formula `(γ_p²) • [σ_y(p), σ_x(p)] = (γ_p²·-2i) • σ_z(p)`
+-- + same-pair-at-target-coeff `(θ·b_p/2 · -2i) = -iθ·b_p`. Bridges Session 19
+-- to the full F·G − G·F discharge in Session 21+.
+import SKEFTHawking.FKLW.GenericSUdSymmetricCommReduction
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
