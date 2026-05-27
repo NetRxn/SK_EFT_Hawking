@@ -173,4 +173,42 @@ theorem kronSU4_mem_specialUnitaryGroup {A B : Matrix (Fin 2) (Fin 2) ℂ}
   obtain ⟨hB_unit, hB_det⟩ := Matrix.mem_specialUnitaryGroup_iff.mp hB
   exact ⟨kronSU4_mem_unitaryGroup hA_unit hB_unit, det_kronSU4_eq_one hA_det hB_det⟩
 
+/-! ## 5. Packaged SU(4) subtype elements for the trapped-ion alphabet -/
+
+/-- Phase 6u substrate: `H_SU_mat ∈ specialUnitaryGroup (Fin 2) ℂ`. -/
+private theorem H_SU_mat_mem :
+    SKEFTHawking.FKLW.GenericSU2.H_SU_mat ∈
+      Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  SKEFTHawking.FKLW.GenericSU2.H_SU.property
+
+/-- Phase 6u substrate: `T_SU_mat ∈ specialUnitaryGroup (Fin 2) ℂ`. -/
+private theorem T_SU_mat_mem :
+    SKEFTHawking.FKLW.GenericSU2.T_SU_mat ∈
+      Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  SKEFTHawking.FKLW.GenericSU2.T_SU.property
+
+/-- Identity is in SU(2). -/
+private theorem one_mem_su2 :
+    (1 : Matrix (Fin 2) (Fin 2) ℂ) ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ := by
+  rw [Matrix.mem_specialUnitaryGroup_iff]
+  refine ⟨?_, Matrix.det_one⟩
+  rw [Matrix.mem_unitaryGroup_iff]
+  simp
+
+/-- **H_SU on ion 1 as SU(4) subtype element**. -/
+noncomputable def H_SU_on_ion1_SU4 : ↥(Matrix.specialUnitaryGroup (Fin 4) ℂ) :=
+  ⟨H_SU_on_ion1, kronSU4_mem_specialUnitaryGroup H_SU_mat_mem one_mem_su2⟩
+
+/-- **H_SU on ion 2 as SU(4) subtype element**. -/
+noncomputable def H_SU_on_ion2_SU4 : ↥(Matrix.specialUnitaryGroup (Fin 4) ℂ) :=
+  ⟨H_SU_on_ion2, kronSU4_mem_specialUnitaryGroup one_mem_su2 H_SU_mat_mem⟩
+
+/-- **T_SU on ion 1 as SU(4) subtype element**. -/
+noncomputable def T_SU_on_ion1_SU4 : ↥(Matrix.specialUnitaryGroup (Fin 4) ℂ) :=
+  ⟨T_SU_on_ion1, kronSU4_mem_specialUnitaryGroup T_SU_mat_mem one_mem_su2⟩
+
+/-- **T_SU on ion 2 as SU(4) subtype element**. -/
+noncomputable def T_SU_on_ion2_SU4 : ↥(Matrix.specialUnitaryGroup (Fin 4) ℂ) :=
+  ⟨T_SU_on_ion2, kronSU4_mem_specialUnitaryGroup one_mem_su2 T_SU_mat_mem⟩
+
 end SKEFTHawking.FKLW.TrappedIonSU4
