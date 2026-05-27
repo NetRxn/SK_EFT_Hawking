@@ -1161,6 +1161,12 @@ import SKEFTHawking.FKLW.CCZ_SU
 -- Substantively closes T-A2′.1 — all 4 generators packaged as SU(8)
 -- subtype elements; FreeGroup (Fin 4) word type.
 import SKEFTHawking.FKLW.CliffordCCZGeneratingSetSU8Full
+-- Phase 6y Track S.2-consumer (2026-05-27): generic SU(d) ClosureDenseWitness
+-- structure for `GeneratingSet d`. Bundles n traceless skew-Hermitian
+-- spanning tangents + flow-line containment in H_of_G gs. Conditional
+-- dispatch into `H_of_G gs = ⊤` via S.2 CartanFinalStep_SUd_v4 predicate.
+-- Consumer-facing substrate for T-A1′.2 and T-A2′.2 closure-density.
+import SKEFTHawking.FKLW.GenericSUdClosureDenseWitness
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
