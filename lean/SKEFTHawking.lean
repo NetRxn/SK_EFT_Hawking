@@ -1530,6 +1530,12 @@ import SKEFTHawking.FKLW.GenericSUdSpectralLift
 -- (which extracts eigenvectorUnitary + eigenvalues from any Hermitian H).
 -- THE SUBSTANTIVE FULL S.3 d≥3 PROPER DISCHARGE.
 import SKEFTHawking.FKLW.GenericSUdHermitianDischargeFull
+-- Phase 6y Track S.3 d≥3 PROPER (Session 34, 2026-05-27): predicate-form lift.
+-- For any d ≥ 2: `BalancedCommutator_SUd_unbounded d` (same as project's
+-- `BalancedCommutator_SUd` but without linftyOp norm bounds) is UNCONDITIONALLY
+-- discharged via S33. Worked examples at d ∈ {2, 3, 4, 8}. Predicate-form
+-- substrate for downstream SK recursion consumers.
+import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorUnbounded
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
