@@ -1,0 +1,211 @@
+# Phase 6y: SU(d > 2) Substrate Extension + Full Multi-Qubit Solovay-Kitaev (Academic Completeness)
+
+## Technical Roadmap — May 2026
+
+*Prepared 2026-05-26 PM, following the Phase 6x lift/shift retrospective audit.*
+
+**Trigger condition:** Phase 6x completes at the *lift/shift* interpretation level (per the updated Phase 6x Roadmap and the Phase 6x retrospective): T-A1 ships as "1Q-rotations-compiled-via-Phase-6u-Clifford+T + MS-as-primitive"; T-A2 ships at the CCZ-alphabet-substrate level only; the SU(d > 2) extension and the full multi-qubit Solovay-Kitaev compilation are *explicitly deferred* to Phase 6y. Phase 6y picks up the substantive SU(d) substrate work that the Phase 6x lift/shift framing deferred.
+
+**Headline goal:** Generalize the Phase 6u SU(2)-targeted quantitative Solovay-Kitaev substrate to arbitrary `d ≥ 2`, enabling **kernel-verified compilation of arbitrary unitaries in SU(d)** for d-dimensional gate sets. Validate at three instances: (1) trapped-ion native gates at SU(4) (Mølmer-Sørensen + 1Q with the full 2-qubit Hilbert-space target); (2) Clifford+CCZ at SU(8) (3-qubit full compilation, not just CCZ-as-primitive); (3) generic SU(d) instance for documentation purposes. Ship Mathlib-PR-quality SU(d) Cartan substrate as community-citizenship deliverable.
+
+**Predecessor work assumed clean:**
+- Phase 6x lift/shift closure (T-A1 1Q-compiled-with-MS-primitive + T-A2 CCZ-substrate-only) — ships first.
+- Phase 6u generic SU(2)-targeted substrate (Waves 1-6 + Wave 4b) — the SU(2) baseline being generalized.
+- M.1 (`Matrix.BCH.bchOrder2Cubic`) — already generic over matrix dimension d, fully shipped in Phase 6x.
+
+**Project rule applied:** No new project-local axioms (Pipeline Invariant #15 RESPECTED). No `maxHeartbeats` overrides in proof bodies (Invariant #10). The SU(d) extension work is multi-session and *substrate-heavy*; each track scopes the Mathlib-upstream option from Stage 1.
+
+---
+
+> **AGENT INSTRUCTIONS — READ BEFORE ANY PHASE 6y WAVE WORK:**
+>
+> 1. **Mandatory project bootstrap** per workspace `CLAUDE.md` Mandatory References list.
+> 2. **Read this roadmap + the Phase 6x retrospective** (`docs/stakeholder/Phase6x_Implications.md`, `docs/stakeholder/Phase6x_Strategic_Positioning.md`) to understand WHY Phase 6y exists as a separate phase rather than as Phase 6x completion. The TLDR: Phase 6x's lift/shift framing yielded substantial substrate work to Phase 6y; this roadmap picks up that work.
+> 3. **Read `Phase6u_Roadmap.md` end-to-end** — Phase 6y generalizes the Phase 6u SU(2)-targeted Generic substrate to SU(d). Familiarity with `GenericSU2GeneratingSet`, `GenericClosureDenseWitness`, `GenericSolovayKitaevRecursion`, `dnStepFG_su2`, `CartanFinalStep_SU2_v4` is mandatory.
+> 4. **Critical substrate — read source directly:**
+>    - **`SKEFTHawking.MatrixBCHCubic.bch_order_2_cubic_thm`** — already generic over `{d : ℕ}` matrix dimension; the load-bearing analytic substrate for SU(d) Cartan extension.
+>    - **`SKEFTHawking.FKLW.CartanSubstrate.CartanFinalStep_SU2_v4`** (SU(2) version) and the discharge in `SU2BCHBracketClosure.lean::CartanFinalStep_SU2_v4_holds` — the SU(2) template the SU(d) ship generalizes.
+>    - **`SKEFTHawking.FKLW.OneParameterSubgroupSU2.SU2_nhd_one_covered_by_exp_ts`** — the SU(2) local diffeomorphism that needs SU(d) generalization via IFT.
+>    - **Mathlib's `NormedSpace.exp`, `HasStrictFDerivAt.exp`, `IsCompact.elim_finite_subcover`** — the upstream substrate the SU(d) ship composes on.
+> 5. **Do not delegate substantive theorem proving to subagents** for the load-bearing SU(d) substrate extension sub-waves. MCP loop default; Aristotle is fallback. Background agents OK for Mathlib-API search + composition work.
+> 6. **No PM / time estimates anywhere** — by user direction.
+> 7. **Pivot rule re-clarified per the Phase 6x retrospective:** Invariant #15's "no project-local axioms" rule applies ONLY when an axiom is genuinely required (substrate missing from Mathlib4 AND no constructive path exists). It does NOT apply when work is substantial-but-doable. The Phase 6x retrospective explicitly catalogued this conflation as a failure mode; Phase 6y consumers should ship substantively across multiple sessions rather than yielding on "substantial work" grounds.
+
+---
+
+## Track catalog
+
+Four primary tracks, organized by substrate dependency (highest-substrate-first; each later track consumes the prior):
+
+  - **Track S** (SU(d > 2) substrate extension, lift Phase 6u to arbitrary dimension): **highest priority + load-bearing**. All downstream tracks depend on this.
+  - **Track M-S** (Mathlib upstream of SU(d) substrate): runs in parallel with Track S; community-citizenship for the substrate.
+  - **Track T-A1′** (full SU(4) trapped-ion compilation; "academic completeness" T-A1): consumes Track S, generalizes from the Phase 6x lift/shift T-A1.
+  - **Track T-A2′** (full SU(8) Clifford+CCZ compilation; "academic completeness" T-A2): consumes Track S, generalizes from the Phase 6x T-A2 CCZ-matrix substrate.
+
+**Status legend** (matches prior phases):
+- ✅ **SHIPPED** — Lean / numerical deliverables committed and kernel-verified.
+- 🟡 **IN-PROGRESS** — partial deliverables shipped.
+- 📝 **WORKING DOC** — Stage-1 substrate-analysis or audit draft only.
+- ⏳ **NOT STARTED**.
+
+| Track | Codename | Status | Bundle absorption |
+|---|---|---|---|
+| **Track S** | SU(d > 2) substrate extension (the Phase 6u Generic substrate generalized to arbitrary d). The largest single deliverable: generalize `GenericSU2GeneratingSet` (carrier ρ_hom into SU(2) → ρ_hom into SU(d)), `CartanFinalStep_SU2_v4` → `CartanFinalStep_SUd_v4`, `dnStepFG_su2` → `dnStepFG_sud`, `Y_h` Lipschitz d-dependent. | ⏳ NOT STARTED | I1 substrate + D4 §9.8 multi-alphabet showcase extension |
+| **Track M-S** | Mathlib upstream contributions extracting the SU(d) substrate from the project's Phase 6y ship to Mathlib4-PR-quality. Two anchors: (M-S.1) Generic Cartan v4 density-from-witness at SU(d); (M-S.2) `NormedSpace.exp` strict-F-derivative at zero for Lie subalgebras + the local diffeomorphism corollary. | ⏳ NOT STARTED | (Mathlib4 upstream; no project-bundle absorption) |
+| **Track T-A1′** | Full SU(4) trapped-ion compilation (academic completeness): compile arbitrary `U ∈ SU(4)` via the Phase 6y SU(d) extension; MS(θ) + 1Q rotations no longer treated as primitives but compiled into the discrete alphabet. Consumes Track S; supersedes the Phase 6x T-A1 lift/shift ship as the "full" T-A1. | ⏳ NOT STARTED | D4 §9.8 multi-alphabet showcase + E1 cross-bridge |
+| **Track T-A2′** | Full SU(8) Clifford+CCZ compilation (academic completeness): compile arbitrary `U ∈ SU(8)` via the Phase 6y SU(d) extension; CCZ no longer treated as primitive but compiled. Consumes Track S; supersedes the Phase 6x T-A2 CCZ-matrix-substrate ship. | ⏳ NOT STARTED | D4 §9.8 + fault-tolerant-architecture cross-bridge |
+
+**Track dependencies:**
+- Track S is the keystone; all others consume it.
+- Track M-S can begin in parallel with Track S (extracting Mathlib-PR-quality presentations as Track S sub-waves ship).
+- Track T-A1′ and Track T-A2′ are independent once Track S ships; can run in parallel.
+
+---
+
+## Track S detail — SU(d > 2) substrate extension
+
+### Goal
+
+Generalize the Phase 6u alphabet-agnostic quantitative Solovay-Kitaev substrate from SU(2)-targeted to SU(d)-targeted for arbitrary `d ≥ 2`. The shipped substrate enables **kernel-verified compilation of arbitrary unitaries in SU(d)** at any `d`, with error and length bounds at the same algorithmic compile level — the same shape as the Phase 6u SU(2) headline but at arbitrary dimension.
+
+### Sub-wave decomposition
+
+**S.1 — `GenericSUdGeneratingSet`** (~100-200 LoC). Generalize the `GeneratingSet` structure: replace `ρ_hom : W →* specialUnitaryGroup (Fin 2) ℂ` with `ρ_hom : W →* specialUnitaryGroup (Fin d) ℂ` for arbitrary d (parametrized at the structure level or via subtype). All downstream lemmas thread d through.
+
+**S.2 — `CartanFinalStep_SUd_v4`** (~400-700 LoC; the biggest single piece). Generalize Phase 6p's `CartanFinalStep_SU2_v4` to SU(d). Conceptually:
+  - Two ℝ-LI tangent flow lines in `𝔰𝔲(d)` (dimension `d² − 1`) ⟹ closed subgroup = ⊤.
+  - For d = 2 (3-dim algebra), 2 LI tangents + 1 bracket = 3 = dim 𝔰𝔲(2). For d ≥ 3, the spanning argument requires more tangents OR a Lie-closure argument (the iterated brackets of 2 generic LI tangents span 𝔰𝔲(d) for any compact simple Lie group).
+  - The local diffeomorphism `𝔰𝔲(d) → SU(d)` near identity via IFT on `expMap`. Mathlib4 v4.29.1 has the IFT (`HasStrictFDerivAt.toOpenPartialHomeomorph`) and the matrix `NormedSpace.exp` derivative at zero (`HasStrictFDerivAt.exp_zero`); composition gives the local diffeomorphism.
+  - The open-subgroup-containing-identity-interior → ⊤ argument generalizes directly.
+
+**S.3 — `dnStepFG_sud`** (~200-400 LoC). Generalize Phase 6t's Dawson-Nielsen balanced-commutator decomposition from SU(2) to SU(d). The SU(2) version uses Bloch-sphere parametrization; the SU(d) version uses the general `𝔰𝔲(d)` balanced-commutator existence theorem (which IS in the Aharonov-Arad lineage and SHOULD be generalizable).
+
+**S.4 — `Y_h` Lipschitz d-dependent** (~150-300 LoC). The matrix-log Lipschitz constant in Phase 6u is π/2 (SU(2)-Bloch-specific). For SU(d), the constant depends on d via the operator-norm bound of the matrix exponential's inverse near the identity. Generalize.
+
+**S.5 — Generic SU(d) discharge** (~300-500 LoC). The Phase 6u Wave 4b 800-LoC discharge generalized to SU(d) — uses S.1-S.4 above plus the existing `bch_order_2_cubic_thm` (already generic over d).
+
+**S.6 — `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight`** (~50-100 LoC). Wave 6's bundled-strict generic headline at SU(d).
+
+### Aggregate Track S effort
+
+~1,200-2,200 LoC across 5-8 sessions. The biggest single piece is S.2 (Cartan v4 at SU(d)); the others are mechanical generalizations.
+
+### Audience
+
+Mathlib4 working groups (Lie theory, matrix exponentials), formal-methods quantum-computing researchers (the SU(d) substrate is a one-time investment that unlocks all higher-dimensional gate-set Solovay-Kitaev ships).
+
+### Risk
+
+MEDIUM. The conceptual content is established (Phase 6u SU(2) version + the SU(d) generalization is standard Lie theory). The risk is in the LoE — the multi-session investment is real. No axioms required; no exotic substrate; just substantial composition.
+
+---
+
+## Track M-S detail — Mathlib upstream of SU(d) substrate
+
+### Goal
+
+Extract the Phase 6y Track S substrate as Mathlib-PR-quality contributions, generalizing the M.2 SU(2) presentation (Phase 6x) to the full SU(d) substrate.
+
+### Sub-wave decomposition
+
+**M-S.1 — Mathlib `Matrix.SpecialUnitary.Cartan.finalStepVd`** (~200-400 LoC). The SU(d) Cartan v4 density-from-witness as a Mathlib-conventional namespace entry. Builds on M.2 (which documented the SU(d) extension plan but shipped only SU(2)).
+
+**M-S.2 — Mathlib `Matrix.expMap_isLocalHomeomorph_zero`** (~150-300 LoC). The general local diffeomorphism property of the matrix exponential at zero (the load-bearing substrate for both the SU(d) Cartan classification and the Phase 6u SU(2) ship). Mathlib4 v4.29.1 has the pieces (IFT + matrix exp derivative); the assembled local-homeomorphism statement is missing.
+
+### Aggregate Track M-S effort
+
+~350-700 LoC. Submission-step work + Mathlib reviewer iteration.
+
+### Audience
+
+Mathlib4 community (Lie theory, matrix exponentials, topological groups).
+
+### Risk
+
+LOW. Both M-S.1 and M-S.2 are well-understood mathematically. Submission-step costs are standard.
+
+---
+
+## Track T-A1′ detail — Full SU(4) trapped-ion compilation
+
+### Goal
+
+Generalize the Phase 6x T-A1 lift/shift ship (1Q-compiled + MS-primitive) to the **full SU(4) compilation**: arbitrary `U ∈ SU(4)` compiled via the Phase 6y SU(d) substrate at d = 4. MS(θ) and 1Q rotations are both in the discrete alphabet; the compiler decomposes any 2-qubit unitary.
+
+### Sub-wave decomposition
+
+**T-A1′.1 — `trappedIonGeneratingSetSU4`** (~100-200 LoC). The SU(4)-targeted `GeneratingSet` instance consuming Track S's `GenericSUdGeneratingSet` at d = 4. Generators: MS(θ) at rational-π/N grid + 1Q rotations on each ion at rational-π/N grid.
+
+**T-A1′.2 — Closure-density witness at SU(4)** (~300-500 LoC). The MS(θ) + 1Q rotations alphabet generates a dense subset of SU(4); discharge via the Phase 6y SU(d) Cartan v4 substrate. (The mathematical content is well-known; the formalization is straightforward composition of Track S substrate.)
+
+**T-A1′.{3,4,5} — ε₀-net + calibration + bundled-strict headline** (~200-400 LoC). Standard alphabet instantiation per Phase 6u T-S template, now at SU(4).
+
+### Aggregate Track T-A1′ effort
+
+~600-1,100 LoC across 2-4 sessions (assuming Track S substrate ships first).
+
+### Audience
+
+Industry quantum-compiler teams (Quantinuum, IonQ, AQT), trapped-ion-architecture-research community.
+
+### Risk
+
+LOW after Track S ships. The conceptual content is standard.
+
+---
+
+## Track T-A2′ detail — Full SU(8) Clifford+CCZ compilation
+
+### Goal
+
+Generalize the Phase 6x T-A2 CCZ-matrix-substrate ship to the **full SU(8) compilation**: arbitrary `U ∈ SU(8)` compiled via the Phase 6y SU(d) substrate at d = 8. CCZ is in the discrete alphabet (not primitive); the compiler decomposes any 3-qubit unitary using Clifford + CCZ generators.
+
+### Sub-wave decomposition
+
+**T-A2′.1 — `cliffordCCZGeneratingSetSU8`** (~100-200 LoC). The SU(8)-targeted `GeneratingSet` instance. Generators: per-qubit Hadamard (3 generators), CCZ (1 generator). The discrete alphabet has 4 generators; the closure is dense in SU(8).
+
+**T-A2′.2 — Closure-density witness at SU(8)** (~400-700 LoC). Substantive — the Clifford+CCZ alphabet is known universal for SU(2^n) for any n, but the per-n density witness is non-trivial.
+
+**T-A2′.{3,4,5} — ε₀-net + calibration + bundled-strict headline** (~200-400 LoC).
+
+### Aggregate Track T-A2′ effort
+
+~700-1,300 LoC across 3-5 sessions.
+
+### Audience
+
+Fault-tolerant-architecture researchers (Litinski, O'Gorman, Babbush, Beverland), magic-state-distillation researchers.
+
+### Risk
+
+MEDIUM. The closure-density witness at SU(8) for the Clifford+CCZ alphabet is the trickiest piece; literature on this (Aaronson-Gottesman 2004 and follow-ons) is well-developed but the Lean formalization is new.
+
+---
+
+## Cross-cutting work
+
+### Adversarial-review checkpoints
+
+Per `BUNDLE_LIFT_PROCEDURE.md` Stage 13 hard gate, each Phase 6y track gets its own checkpoint:
+
+  - **CP-S** — after Track S (SU(d) substrate extension).
+  - **CP-M-S** — after Track M-S Mathlib upstream PRs file / in-project PR-quality ships.
+  - **CP-T-A1′** — after Track T-A1′ ships.
+  - **CP-T-A2′** — after Track T-A2′ ships.
+
+### Pipeline Invariants
+
+- **#10 (no `maxHeartbeats`)**: RESPECTED. Phase 6u W4b pattern applies — top-level numerical helpers, not heartbeat-budget overrides.
+- **#15 (no new axioms)**: RESPECTED. Phase 6y's substantive content does NOT require axioms; the SU(d) extension composes from Mathlib4 v4.29.1 primitives. The Phase 6x retrospective explicitly cautioned against conflating "substantial work" with "needs axiom"; Phase 6y consumers ship substantively across multiple sessions rather than yielding on "substantial work" grounds.
+
+---
+
+## Cross-references
+
+- **Phase 6x roadmap** (`docs/roadmaps/Phase6x_Roadmap.md`) — Phase 6x lift/shift completion ships first; Phase 6y picks up the deferred SU(d) extension work.
+- **Phase 6x Implications** (`docs/stakeholder/Phase6x_Implications.md`) + **Strategic Positioning** (`docs/stakeholder/Phase6x_Strategic_Positioning.md`) — Phase 6x retrospective explains WHY Phase 6y exists as a separate phase.
+- **Phase 6u roadmap** (`docs/roadmaps/Phase6u_Roadmap.md`) — the SU(2)-targeted Generic substrate being generalized.
+- **Phase 6u Generic substrate**: `lean/SKEFTHawking/FKLW/Generic*.lean` (7 files) — the alphabet-agnostic chain Phase 6y generalizes to SU(d).
+- **Mathlib4 v4.29.1 substrate**: `Mathlib.Analysis.NormedSpace.MatrixExponential`, `Mathlib.Analysis.Calculus.InverseFunctionTheorem.FDeriv`, `Mathlib.LinearAlgebra.UnitaryGroup` — the substrate Phase 6y composes on.
+- **Phase 6x M.1 PR** (`lean/SKEFTHawking/MatrixBCHCubicMathlibPR.lean`) — the BCH cubic estimate, already generic over d, ready for use in Phase 6y Track S.
+- **Phase 6x M.2 documentation** (`lean/SKEFTHawking/CartanFinalStepSUdMathlibPR.lean`) — the SU(d) extension plan documented in Phase 6x; Phase 6y Track S.2 ships the substantive proof.
