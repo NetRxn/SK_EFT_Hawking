@@ -54,6 +54,7 @@ Phase 6y Roadmap §"Track M-S detail" sub-wave M-S.1.
 
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdCartanPredicate
+import SKEFTHawking.FKLW.GenericSUdCartanUnconditional
 import SKEFTHawking.CartanFinalStepSUdMathlibPR
 
 set_option autoImplicit false
@@ -157,5 +158,40 @@ in follow-on commits. -/
 example (d : ℕ) (h : finalStepVd d) :
     SKEFTHawking.FKLW.GenericSUd.CartanFinalStep_SUd_v4 d :=
   (finalStepVd_iff_project d).mp h
+
+/-! ## 5. d-generic discharge `finalStepVd_holds` (substantive)
+
+The Mathlib-PR-quality d-generic discharge of `finalStepVd d` for any
+`d ≥ 1`. Composes the bridge `finalStepVd_iff_project` with Phase 6y
+Track S.2g's `CartanFinalStep_SUd_v4_holds` (UNCONDITIONAL).
+
+This is the **load-bearing substantive ship** of M-S.1: the SU(d)
+Cartan-final-step density-from-witness theorem proven d-generically
+(not just an alias to a project predicate). -/
+
+/-- **`finalStepVd_holds`** — the UNCONDITIONAL d-generic Cartan-final-step
+density-from-witness theorem at `SU(d)` for any `d ≥ 1`.
+
+Proven via the bridge `finalStepVd_iff_project` (`Iff.rfl`) and the Phase 6y
+Track S.2g UNCONDITIONAL discharge `CartanFinalStep_SUd_v4_holds`.
+
+Mathlib-namespaced; downstream Mathlib consumers can use this directly
+without project namespace prefixes. -/
+theorem finalStepVd_holds (d : ℕ) [Nonempty (Fin d)] (hd_pos : 0 < d) :
+    finalStepVd d :=
+  (finalStepVd_iff_project d).mpr
+    (SKEFTHawking.FKLW.GenericSUd.CartanFinalStep_SUd_v4_holds d hd_pos)
+
+/-! ### 5.a. Worked examples at d = 2, d = 4, d = 8 -/
+
+/-- **Example: `finalStepVd 2` holds** (single-qubit SU(2) Cartan-final-step).
+The d = 2 Phase 6u/6t baseline now also covered by the d-generic ship. -/
+example : finalStepVd 2 := finalStepVd_holds 2 (by norm_num)
+
+/-- **Example: `finalStepVd 4` holds** (two-qubit SU(4); Phase 6y T-A1′ target). -/
+example : finalStepVd 4 := finalStepVd_holds 4 (by norm_num)
+
+/-- **Example: `finalStepVd 8` holds** (three-qubit SU(8); Phase 6y T-A2′ target). -/
+example : finalStepVd 8 := finalStepVd_holds 8 (by norm_num)
 
 end Matrix.SpecialUnitary.Cartan
