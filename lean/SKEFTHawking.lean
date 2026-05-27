@@ -1251,16 +1251,20 @@ import SKEFTHawking.FKLW.TrappedIonSU4DensityConditional
 -- Ships `cliffordCCZGeneratingSetSU8_isDense_conditional w h_cartan` + consumer
 -- ε₀-net `cliffordCCZEpsilonNet_findNearest_conditional` + correctness.
 import SKEFTHawking.FKLW.CliffordCCZSU8DensityConditional
--- Phase 6y Track S.2g-substrate (2026-05-27): n-parameter exp product strict
--- F-derivative substrate. Ships d-generic helpers:
--- `expAmbient_smul_real_hasStrictDerivAt_zero` (single-direction derivative,
--- ports SU(2) Phase 6u/6p pattern d-generic),
--- `expAmbient_proj_hasStrictFDerivAt_zero` (per-direction projection via any
--- CLM proj : E →L[ℝ] ℝ, E-generic),
--- `multiDirDerivCLM` + `multiDirDerivCLM_apply` (linear combination CLM
--- candidate derivative). Full multiDirExpProduct derivative theorem ships
--- in follow-on via Mathlib's HasStrictFDerivAt.list_prod'.
+-- Phase 6y Track S.2g (2026-05-27): UNCONDITIONAL n-parameter exp product
+-- strict F-derivative at 0 (HasStrictFDerivAt multiDirExpProduct
+-- multiDirDerivCLM 0). Ports SU(2) Phase 6u/6p substrate to d-generic +
+-- composes via Mathlib's HasStrictFDerivAt.list_prod' (non-commutative
+-- product rule), with NormedAlgebra.complexToReal + IsScalarTower.left ℝ
+-- supplying the scalar-tower instances. Background-explore-agent-aided
+-- breakthrough on the multi-parameter IFT bottleneck.
 import SKEFTHawking.FKLW.GenericSUdMultiParamExpProductDeriv
+-- Phase 6y Track S.2g-substrate (2026-05-27): d-generic tsProj_d
+-- continuous linear projection `Matrix _ _ ℂ →L[ℝ] ↥(𝔰𝔲(d))` via
+-- `Submodule.exists_isCompl` complement + linearProjOfIsCompl. d-generic
+-- lift of SU(2)-specific tsProj. Consumed by the IFT-on-subspace
+-- composition for S.2g UNCONDITIONAL discharge.
+import SKEFTHawking.FKLW.GenericSUdTsProj
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
