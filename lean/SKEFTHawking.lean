@@ -1536,6 +1536,10 @@ import SKEFTHawking.FKLW.GenericSUdHermitianDischargeFull
 -- discharged via S33. Worked examples at d ∈ {2, 3, 4, 8}. Predicate-form
 -- substrate for downstream SK recursion consumers.
 import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorUnbounded
+-- Phase 6y Track S.3 d≥3 PROPER (Session 35, 2026-05-27): all-d discharge.
+-- Extends S34 to ALL `d : ℕ` (no `2 ≤ d` assumption). d ∈ {0, 1} via vacuous
+-- F = G = 0 (H = 0 in those dimensions). d ≥ 2 via S34. Clean unconditional form.
+import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorUnboundedAllD
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
