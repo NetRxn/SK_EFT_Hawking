@@ -184,4 +184,123 @@ example : ∃ (e : OpenPartialHomeomorph (Matrix (Fin 8) (Fin 8) ℂ)
    mem_source_expOpenPartialHomeomorphAt_zero 8,
    expOpenPartialHomeomorphAt_zero_zero 8⟩
 
+/-! ## 5. **m-generic form** (Mathlib-PR-quality)
+
+Per the Phase 6y M-S.2 roadmap's m-generic requirement (F#3 — alias-only
+NOT acceptance), the local homeomorphism statement at arbitrary index type
+`m : Type*` (matching Mathlib's `Matrix m m ℂ` convention).
+
+These forms use only Mathlib substrate
+(`hasStrictFDerivAt_exp_zero` + `HasStrictFDerivAt.toOpenPartialHomeomorph`)
+and do NOT route through the Fin-d-specific project module. -/
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
+/-- **m-generic IFT-derived open partial homeomorphism for `NormedSpace.exp`
+on `Matrix m m ℂ` at `0`** — Mathlib-PR-quality form with `m : Type*`
+(generic index type, not the Fin-d-specific form).
+
+Substantive content: matches `expOpenPartialHomeomorphAt_zero` but at
+generic `m : Type*`. The substrate (`hasStrictFDerivAt_exp_zero`,
+`HasStrictFDerivAt.toOpenPartialHomeomorph`) is m-generic in Mathlib;
+this is the corresponding m-generic extraction at the Mathlib namespace. -/
+noncomputable def expOpenPartialHomeomorphAt_zero_generic
+    {m : Type*} [Fintype m] [DecidableEq m] :
+    OpenPartialHomeomorph (Matrix m m ℂ) (Matrix m m ℂ) :=
+  HasStrictFDerivAt.toOpenPartialHomeomorph (NormedSpace.exp : Matrix m m ℂ → _)
+    (f' := ContinuousLinearEquiv.refl ℝ (Matrix m m ℂ))
+    (hasStrictFDerivAt_exp_zero (𝕂 := ℝ) (𝔸 := Matrix m m ℂ))
+
+/-- `0` is in the m-generic source. -/
+theorem mem_source_expOpenPartialHomeomorphAt_zero_generic
+    {m : Type*} [Fintype m] [DecidableEq m] :
+    (0 : Matrix m m ℂ) ∈ (expOpenPartialHomeomorphAt_zero_generic (m := m)).source :=
+  HasStrictFDerivAt.mem_toOpenPartialHomeomorph_source
+    (hasStrictFDerivAt_exp_zero (𝕂 := ℝ) (𝔸 := Matrix m m ℂ))
+
+/-- On its `source`, the m-generic homeomorphism coincides with `NormedSpace.exp`. -/
+theorem expOpenPartialHomeomorphAt_zero_generic_coe
+    {m : Type*} [Fintype m] [DecidableEq m] :
+    ((expOpenPartialHomeomorphAt_zero_generic (m := m)) :
+      Matrix m m ℂ → Matrix m m ℂ) = NormedSpace.exp :=
+  HasStrictFDerivAt.toOpenPartialHomeomorph_coe
+    (hasStrictFDerivAt_exp_zero (𝕂 := ℝ) (𝔸 := Matrix m m ℂ))
+
+/-- The m-generic homeomorphism sends `0` to `1`. -/
+theorem expOpenPartialHomeomorphAt_zero_generic_zero
+    {m : Type*} [Fintype m] [DecidableEq m] :
+    (expOpenPartialHomeomorphAt_zero_generic (m := m)) (0 : Matrix m m ℂ) = 1 := by
+  rw [expOpenPartialHomeomorphAt_zero_generic_coe]
+  exact NormedSpace.exp_zero
+
+/-- `1` is in the m-generic target. -/
+theorem mem_target_expOpenPartialHomeomorphAt_zero_generic
+    {m : Type*} [Fintype m] [DecidableEq m] :
+    (1 : Matrix m m ℂ) ∈ (expOpenPartialHomeomorphAt_zero_generic (m := m)).target := by
+  rw [← expOpenPartialHomeomorphAt_zero_generic_zero (m := m)]
+  exact (expOpenPartialHomeomorphAt_zero_generic (m := m)).map_source
+    mem_source_expOpenPartialHomeomorphAt_zero_generic
+
+/-- **Headline m-generic local-homeomorphism statement**: matrix exp on
+`Matrix m m ℂ` (arbitrary `m : Type*`) is a local homeomorphism at `0`. -/
+theorem exp_isLocalHomeomorph_zero_generic
+    {m : Type*} [Fintype m] [DecidableEq m] :
+    ∃ (e : OpenPartialHomeomorph (Matrix m m ℂ) (Matrix m m ℂ)),
+      (0 : Matrix m m ℂ) ∈ e.source ∧
+      (1 : Matrix m m ℂ) ∈ e.target ∧
+      ((e : Matrix m m ℂ → Matrix m m ℂ) = NormedSpace.exp) ∧
+      e 0 = 1 :=
+  ⟨expOpenPartialHomeomorphAt_zero_generic,
+   mem_source_expOpenPartialHomeomorphAt_zero_generic,
+   mem_target_expOpenPartialHomeomorphAt_zero_generic,
+   expOpenPartialHomeomorphAt_zero_generic_coe,
+   expOpenPartialHomeomorphAt_zero_generic_zero⟩
+
+/-- **m-generic filter form**: `NormedSpace.exp` maps `nhds 0` to `nhds 1`
+on `Matrix m m ℂ`. -/
+theorem map_nhds_zero_exp_generic
+    {m : Type*} [Fintype m] [DecidableEq m] :
+    Filter.map (NormedSpace.exp : Matrix m m ℂ → Matrix m m ℂ)
+      (nhds (0 : Matrix m m ℂ)) =
+      nhds (1 : Matrix m m ℂ) := by
+  have h_derivAt_equiv : HasStrictFDerivAt
+      (NormedSpace.exp : Matrix m m ℂ → Matrix m m ℂ)
+      ((ContinuousLinearEquiv.refl ℝ (Matrix m m ℂ)) :
+        Matrix m m ℂ →L[ℝ] Matrix m m ℂ) 0 :=
+    hasStrictFDerivAt_exp_zero (𝕂 := ℝ) (𝔸 := Matrix m m ℂ)
+  have h_map : Filter.map (NormedSpace.exp : Matrix m m ℂ → Matrix m m ℂ)
+      (nhds (0 : Matrix m m ℂ)) =
+      nhds ((NormedSpace.exp : Matrix m m ℂ → Matrix m m ℂ) 0) :=
+    h_derivAt_equiv.map_nhds_eq_of_equiv
+  rw [h_map, NormedSpace.exp_zero]
+
+/-! ### m-generic example instantiations -/
+
+/-- **Example**: m-generic form recovers d = 2 at `m = Fin 2`. -/
+example : ∃ (e : OpenPartialHomeomorph (Matrix (Fin 2) (Fin 2) ℂ)
+                                        (Matrix (Fin 2) (Fin 2) ℂ)),
+    (0 : Matrix (Fin 2) (Fin 2) ℂ) ∈ e.source ∧ e 0 = 1 :=
+  ⟨expOpenPartialHomeomorphAt_zero_generic (m := Fin 2),
+   mem_source_expOpenPartialHomeomorphAt_zero_generic,
+   expOpenPartialHomeomorphAt_zero_generic_zero⟩
+
+/-- **Example**: m-generic form recovers d = 4 at `m = Fin 4`. -/
+example : ∃ (e : OpenPartialHomeomorph (Matrix (Fin 4) (Fin 4) ℂ)
+                                        (Matrix (Fin 4) (Fin 4) ℂ)),
+    (0 : Matrix (Fin 4) (Fin 4) ℂ) ∈ e.source ∧ e 0 = 1 :=
+  ⟨expOpenPartialHomeomorphAt_zero_generic (m := Fin 4),
+   mem_source_expOpenPartialHomeomorphAt_zero_generic,
+   expOpenPartialHomeomorphAt_zero_generic_zero⟩
+
+/-- **Example**: m-generic form at non-Fin type (`Bool ⊕ Bool` ≃ Fin 4 but
+typed differently). Demonstrates true m-generality beyond Fin-d. -/
+example : ∃ (e : OpenPartialHomeomorph (Matrix (Bool ⊕ Bool) (Bool ⊕ Bool) ℂ)
+                                        (Matrix (Bool ⊕ Bool) (Bool ⊕ Bool) ℂ)),
+    (0 : Matrix (Bool ⊕ Bool) (Bool ⊕ Bool) ℂ) ∈ e.source ∧ e 0 = 1 :=
+  ⟨expOpenPartialHomeomorphAt_zero_generic (m := Bool ⊕ Bool),
+   mem_source_expOpenPartialHomeomorphAt_zero_generic,
+   expOpenPartialHomeomorphAt_zero_generic_zero⟩
+
 end Matrix
