@@ -1040,6 +1040,17 @@ import SKEFTHawking.FKLW.PerAlphabetConcreteLengthHeadlines
 -- Ross-Selinger ℤ[ω][1/√2] optimal-length refinement deferred per
 -- Lit-Search task drop ross_selinger_arxiv_1403_2975_zomega_invsqrt2_synthesis.md.
 import SKEFTHawking.FKLW.RossSelingerLightweight
+-- Phase 6x Tier-1 residual B-RR5 (2026-05-27): UNCONDITIONAL constructive
+-- base finder + 3-conjunct strict headline for Read-Rezayi `SU(2)_5`.
+-- Mirrors RossSelingerLightweight's T-S′ pattern (ConstructiveEpsilonNet
+-- + rr5_density_unconditional + SU(2) compactness → finite Finset cover).
+-- Closes retrospective failure mode #4 for RR5.
+import SKEFTHawking.FKLW.ReadRezayiK5BaseFinder
+-- Phase 6x Tier-1 residual B-RR7 (2026-05-27): UNCONDITIONAL constructive
+-- base finder + 3-conjunct strict headline for Read-Rezayi `SU(2)_7`.
+-- Mirrors RossSelingerLightweight + ReadRezayiK5BaseFinder. Closes
+-- retrospective failure mode #4 for RR7.
+import SKEFTHawking.FKLW.ReadRezayiK7BaseFinder
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
@@ -1061,6 +1072,13 @@ import SKEFTHawking.MatrixBCHCubicMathlibPR
 -- Filename mirror Mathlib.Analysis.MatrixGroups.SpecialUnitary.Cartan.
 -- SU(d) → Phase 6y Track S.
 import SKEFTHawking.CartanFinalStepSUdMathlibPR
+-- Phase 6x Tier-1 residual Item C (Mathlib-PR-quality re-presentation,
+-- 2026-05-27): SU(d) compactness substrate packaged for upstream
+-- submission. Re-exports Matrix.{unitaryGroup,specialUnitaryGroup}
+-- _{isClosed,isCompact} from Phase 6p Wave 2c.4a-substrate
+-- (FKLW.SpecialUnitaryTopology) with worked SU(2)/SU(3) examples.
+-- Closes orphan #6 from the 2026-05-27 audit addendum.
+import SKEFTHawking.SU2CompactnessMathlibPR
 -- Phase 6y Track S.1 (2026-05-27): generic SU(d) generating-set framework.
 -- d-parametric lift of Phase 6u GenericSU2.GeneratingSet to arbitrary
 -- matrix dimension d (carrier ρ_hom : W →* specialUnitaryGroup (Fin d) ℂ).
@@ -1280,6 +1298,18 @@ import SKEFTHawking.FKLW.GenericSUdMultiParamCompositeDeriv
 -- (requiring CompleteSpace ↥(𝔰𝔲(d)) typeclass synthesis) ships in
 -- a follow-on commit.
 import SKEFTHawking.FKLW.GenericSUdCartanUnconditional
+-- Phase 6y Track S.5 — UNCONDITIONAL generic SU(d) discharge.
+-- Composes the conditional `H_of_G_eq_top_of_witness_conditional` +
+-- `densityFromWitness_conditional` (from S.1+S.2 chain) with the
+-- UNCONDITIONAL `CartanFinalStep_SUd_v4_holds` (from S.2g) to ship
+-- the UNCONDITIONAL forms taking only a `ClosureDenseWitness gs`.
+import SKEFTHawking.FKLW.GenericSUdDischargeUnconditional
+-- Phase 6y Track T-A1′.2 + T-A2′.2 (cascade-closing): UNCONDITIONAL closure-density
+-- + ε₀-net findNearest at SU(4) trapped-ion and SU(8) Clifford+CCZ, taking ONLY a
+-- substantive `ClosureDenseWitness gs` (the prior `h_cartan : CartanFinalStep_SUd_v4 d`
+-- hypothesis is auto-discharged via S.2g UNCONDITIONAL).
+import SKEFTHawking.FKLW.TrappedIonSU4DensityFromWitness
+import SKEFTHawking.FKLW.CliffordCCZSU8DensityFromWitness
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
