@@ -176,4 +176,52 @@ theorem multiDirExpProduct_mem_H {d n : ℕ}
     -- ((·.val) ∘ M_i) i = (M_i i).val = exp((t i : ℂ) • X i)
     exact hM_i_val i
 
+/-! ## 4. Continuity of `multiDirExpProduct` at 0
+
+The n-parameter exp product is continuous (in fact `C∞`) in `t`, since
+each factor `exp((t i : ℂ) • X i)` is continuous in `t i` (via the
+continuity of `exp` + continuity of the smul + continuity of coord
+projection), and List.prod is continuous in each factor.
+
+This is a prerequisite for the IFT-based "image is open in SU(d)"
+chain underlying the full S.2g unconditional discharge. -/
+
+/-- **Each factor `t ↦ exp((t i : ℂ) • X i)` is continuous in `t i`**. -/
+private theorem factor_continuous {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ) (i : Fin n) :
+    Continuous (fun t : Fin n → ℝ =>
+      (NormedSpace.exp ((t i : ℂ) • X i) : Matrix (Fin d) (Fin d) ℂ)) := by
+  -- t ↦ t i is continuous (coord projection).
+  -- t i ↦ (t i : ℂ) is continuous (real-to-complex coercion).
+  -- z ↦ z • X i is continuous (scalar mul).
+  -- M ↦ exp M is continuous (analytic, continuous on its domain).
+  have h_coord : Continuous (fun t : Fin n → ℝ => t i) := continuous_apply i
+  have h_coe : Continuous (fun r : ℝ => (r : ℂ)) := Complex.continuous_ofReal
+  have h_smul : Continuous (fun z : ℂ => (z • X i : Matrix (Fin d) (Fin d) ℂ)) := by
+    -- continuous via continuous_smul + continuous_const
+    exact continuous_id.smul continuous_const
+  have h_exp : Continuous (NormedSpace.exp :
+      Matrix (Fin d) (Fin d) ℂ → Matrix (Fin d) (Fin d) ℂ) :=
+    NormedSpace.exp_continuous
+  exact h_exp.comp (h_smul.comp (h_coe.comp h_coord))
+
+/-- **`multiDirExpProduct X t` is continuous in `t`** (substantive).
+
+Each factor is continuous (per `factor_continuous`); `continuous_list_prod`
+provides the lift from per-element continuity to product continuity. -/
+theorem multiDirExpProduct_continuous {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ) :
+    Continuous (multiDirExpProduct X) := by
+  unfold multiDirExpProduct
+  -- Apply continuous_list_prod with f i := (fun t => exp((t i : ℂ) • X i)),
+  -- l := List.finRange n.
+  exact continuous_list_prod (List.finRange n)
+    (fun i _ => factor_continuous X i)
+
+/-- **`multiDirExpProduct X 1 = 1`** at the zero-vector argument. -/
+theorem multiDirExpProduct_continuousAt_zero {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ) :
+    ContinuousAt (multiDirExpProduct X) 0 :=
+  (multiDirExpProduct_continuous X).continuousAt
+
 end SKEFTHawking.FKLW.GenericSUd
