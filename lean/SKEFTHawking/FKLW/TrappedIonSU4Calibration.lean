@@ -64,7 +64,7 @@ theorem trappedIonSU4_skLength_exponent_pos : 0 < trappedIonSU4_skLength_exponen
   · exact Real.log_pos (by norm_num : (1 : ℝ) < 2)
 
 /-- **Trapped-ion SU(4) ε₀ maximum**. -/
-def trappedIonSU4_epsilonZero (_N : ℕ) (_hN : 0 < _N) : ℝ := 1 / 32
+noncomputable def trappedIonSU4_epsilonZero (_N : ℕ) (_hN : 0 < _N) : ℝ := 1 / 32
 
 theorem trappedIonSU4_epsilonZero_pos (N : ℕ) (hN : 0 < N) :
     0 < trappedIonSU4_epsilonZero N hN := by
