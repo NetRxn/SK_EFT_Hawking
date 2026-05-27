@@ -154,4 +154,52 @@ theorem tsProj_matrixLog_multiDirExpProduct_hasStrictFDerivAt_zero {d n : ℕ}
     (tsProj_d d).hasStrictFDerivAt
   exact h_outer.comp (0 : Fin n → ℝ) h_inner
 
+/-! ## 4. Surjectivity of the composite derivative when `{X_i}` spans
+
+When the tangents `{X_i}` span `𝔰𝔲(d)`, the composite derivative
+`tsProj_d ∘ multiDirDerivCLM X` is **surjective** onto `↥𝔰𝔲(d)`.
+
+This is the load-bearing input to Mathlib's `map_nhds_eq_of_surj`
+(`InverseFunctionTheorem/FDeriv.lean:84`), which converts surjectivity
+of the strict F-derivative into "image of nbhd of 0 is a nbhd of 0
+in `↥𝔰𝔲(d)`". -/
+
+/-- **Composite derivative range = `⊤` of `↥𝔰𝔲(d)` when `{X_i}` spans**
+(substantive).
+
+If every `Y ∈ 𝔰𝔲(d)` is an ℝ-linear combination of `{X_i}` (the
+Phase 6y S.2 spanning hypothesis), then the composite CLM
+`tsProj_d.comp (multiDirDerivCLM X)` has range equal to all of
+`↥𝔰𝔲(d)`. -/
+theorem tsProj_multiDirDerivCLM_range_top_of_spans {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (_hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0)
+    (hX_spans : ∀ Y : Matrix (Fin d) (Fin d) ℂ,
+      Y.IsSkewHermitian → Y.trace = 0 →
+      ∃ c : Fin n → ℝ, Y = ∑ i, ((c i : ℝ) : ℂ) • X i) :
+    ((tsProj_d d).comp (multiDirDerivCLM X)).range = ⊤ := by
+  rw [LinearMap.range_eq_top]
+  intro Y_sub
+  -- Y_sub : ↥(tracelessSkewHermitian (Fin d))
+  -- Use spanning to get coefficients, then build the preimage.
+  set Y_val := (Y_sub : Matrix (Fin d) (Fin d) ℂ) with hY_val_def
+  have h_Y_sh : Y_val.IsSkewHermitian := Y_sub.property.1
+  have h_Y_tr : Y_val.trace = 0 := Y_sub.property.2
+  obtain ⟨c, hc⟩ := hX_spans Y_val h_Y_sh h_Y_tr
+  refine ⟨c, ?_⟩
+  -- Goal: (tsProj_d.comp (multiDirDerivCLM X)) c = Y_sub.
+  -- LHS = tsProj_d (multiDirDerivCLM X c) = tsProj_d (∑ c i • X i) = tsProj_d Y_val.
+  show ((tsProj_d d).comp (multiDirDerivCLM X)) c = Y_sub
+  rw [ContinuousLinearMap.comp_apply, multiDirDerivCLM_apply]
+  -- Goal: tsProj_d (∑ i, c i • X i) = Y_sub.
+  have h_eq : (∑ i, (c i : ℝ) • X i : Matrix (Fin d) (Fin d) ℂ)
+              = ∑ i, ((c i : ℝ) : ℂ) • X i := by
+    apply Finset.sum_congr rfl
+    intro i _
+    exact (Complex.coe_smul (c i) (X i)).symm
+  rw [h_eq, ← hc]
+  -- Goal: tsProj_d Y_val = Y_sub.
+  -- Y_val ∈ tracelessSkewHermitian, so tsProj_d gives ⟨Y_val, _⟩ = Y_sub.
+  exact tsProj_d_apply_of_mem d Y_sub.property
+
 end SKEFTHawking.FKLW.GenericSUd
