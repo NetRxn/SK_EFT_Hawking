@@ -48,6 +48,10 @@ namespace SKEFTHawking.FKLW.GenericSUd
 
 open Matrix
 
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
+
 /-! ## 1. 2-block Pauli analogs at indices (i, j) -/
 
 /-- **2-block σ_y at indices (i, j)**: `-i` at `(i, j)`, `+i` at `(j, i)`,
@@ -480,5 +484,164 @@ theorem sigmaY_sigmaX_commutator {d : ℕ} {i j : Fin d} (h_ne : i ≠ j) :
   simp only [Matrix.sub_apply, Matrix.add_apply, Matrix.smul_apply, Matrix.single_apply,
              smul_eq_mul]
   grind
+
+/-! ## 9. linftyOp operator norm bounds: `‖σ_y_block‖, ‖σ_x_block‖, ‖σ_z_block‖ ≤ 1`
+
+These are the load-bearing norm bounds needed by the d-generic Aharonov-Arad
+`BalancedCommutator_SUd` discharge (rank-2 case): the F, G generators built
+from `√(θ/2)·σ_y_block` and `√(θ/2)·σ_x_block` then satisfy `‖F‖, ‖G‖ ≤ √(θ/2)`. -/
+
+/-- **`‖sigmaYBlock i j‖_linfty ≤ 1`** for `i ≠ j`.
+
+Each row has at most one nonzero entry of magnitude 1: row `i` has `‖-I‖ = 1`
+at column `j`, row `j` has `‖I‖ = 1` at column `i`, all other rows are zero.
+The `linfty` operator norm is the sup of row sums (in `NNNorm`), bounded by 1. -/
+theorem sigmaYBlock_linftyOpNorm_le_one {d : ℕ} {i j : Fin d} (h_ne : i ≠ j) :
+    ‖sigmaYBlock i j‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]
+  refine (NNReal.coe_le_coe.mpr ?_).trans_eq NNReal.coe_one
+  refine Finset.sup_le ?_
+  intro r _
+  -- Goal: ∑ c, ‖(sigmaYBlock i j) r c‖₊ ≤ 1
+  by_cases hr_i : r = i
+  · subst r
+    rw [Finset.sum_eq_single j]
+    · rw [sigmaYBlock_apply]
+      have h1 : (i : Fin d) = i ∧ j = j := ⟨rfl, rfl⟩
+      have h2 : ¬ ((j : Fin d) = i ∧ i = j) := fun ⟨h, _⟩ => h_ne h.symm
+      rw [if_pos h1, if_neg h2, add_zero]
+      simp
+    · intro c _ h_cj
+      rw [sigmaYBlock_apply]
+      have h1 : ¬ ((i : Fin d) = i ∧ j = c) := fun ⟨_, h⟩ => h_cj h.symm
+      have h2 : ¬ ((j : Fin d) = i ∧ i = c) := fun ⟨h, _⟩ => h_ne h.symm
+      rw [if_neg h1, if_neg h2, add_zero]
+      simp
+    · intro h; exact absurd (Finset.mem_univ j) h
+  · by_cases hr_j : r = j
+    · subst r
+      rw [Finset.sum_eq_single i]
+      · rw [sigmaYBlock_apply]
+        have h1 : ¬ ((i : Fin d) = j ∧ j = i) := fun ⟨h, _⟩ => h_ne h
+        have h2 : (j : Fin d) = j ∧ i = i := ⟨rfl, rfl⟩
+        rw [if_neg h1, if_pos h2, zero_add]
+        simp
+      · intro c _ h_ci
+        rw [sigmaYBlock_apply]
+        have h1 : ¬ ((i : Fin d) = j ∧ j = c) := fun ⟨h, _⟩ => h_ne h
+        have h2 : ¬ ((j : Fin d) = j ∧ i = c) := fun ⟨_, h⟩ => h_ci h.symm
+        rw [if_neg h1, if_neg h2, add_zero]
+        simp
+      · intro h; exact absurd (Finset.mem_univ i) h
+    · -- r ≠ i, r ≠ j: all entries 0.
+      apply le_trans _ zero_le_one
+      apply le_of_eq
+      apply Finset.sum_eq_zero
+      intro c _
+      rw [sigmaYBlock_apply]
+      have h1 : ¬ ((i : Fin d) = r ∧ j = c) := fun ⟨h, _⟩ => hr_i h.symm
+      have h2 : ¬ ((j : Fin d) = r ∧ i = c) := fun ⟨h, _⟩ => hr_j h.symm
+      rw [if_neg h1, if_neg h2, add_zero]
+      simp
+
+/-- **`‖sigmaXBlock i j‖_linfty ≤ 1`** for `i ≠ j`.
+
+Mirror of `sigmaYBlock_linftyOpNorm_le_one`: row `i` has `‖1‖ = 1` at column `j`,
+row `j` has `‖1‖ = 1` at column `i`, all other rows zero. -/
+theorem sigmaXBlock_linftyOpNorm_le_one {d : ℕ} {i j : Fin d} (h_ne : i ≠ j) :
+    ‖sigmaXBlock i j‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]
+  refine (NNReal.coe_le_coe.mpr ?_).trans_eq NNReal.coe_one
+  refine Finset.sup_le ?_
+  intro r _
+  by_cases hr_i : r = i
+  · subst r
+    rw [Finset.sum_eq_single j]
+    · rw [sigmaXBlock_apply]
+      have h1 : (i : Fin d) = i ∧ j = j := ⟨rfl, rfl⟩
+      have h2 : ¬ ((j : Fin d) = i ∧ i = j) := fun ⟨h, _⟩ => h_ne h.symm
+      rw [if_pos h1, if_neg h2, add_zero]
+      simp
+    · intro c _ h_cj
+      rw [sigmaXBlock_apply]
+      have h1 : ¬ ((i : Fin d) = i ∧ j = c) := fun ⟨_, h⟩ => h_cj h.symm
+      have h2 : ¬ ((j : Fin d) = i ∧ i = c) := fun ⟨h, _⟩ => h_ne h.symm
+      rw [if_neg h1, if_neg h2, add_zero]
+      simp
+    · intro h; exact absurd (Finset.mem_univ j) h
+  · by_cases hr_j : r = j
+    · subst r
+      rw [Finset.sum_eq_single i]
+      · rw [sigmaXBlock_apply]
+        have h1 : ¬ ((i : Fin d) = j ∧ j = i) := fun ⟨h, _⟩ => h_ne h
+        have h2 : (j : Fin d) = j ∧ i = i := ⟨rfl, rfl⟩
+        rw [if_neg h1, if_pos h2, zero_add]
+        simp
+      · intro c _ h_ci
+        rw [sigmaXBlock_apply]
+        have h1 : ¬ ((i : Fin d) = j ∧ j = c) := fun ⟨h, _⟩ => h_ne h
+        have h2 : ¬ ((j : Fin d) = j ∧ i = c) := fun ⟨_, h⟩ => h_ci h.symm
+        rw [if_neg h1, if_neg h2, add_zero]
+        simp
+      · intro h; exact absurd (Finset.mem_univ i) h
+    · apply le_trans _ zero_le_one
+      apply le_of_eq
+      apply Finset.sum_eq_zero
+      intro c _
+      rw [sigmaXBlock_apply]
+      have h1 : ¬ ((i : Fin d) = r ∧ j = c) := fun ⟨h, _⟩ => hr_i h.symm
+      have h2 : ¬ ((j : Fin d) = r ∧ i = c) := fun ⟨h, _⟩ => hr_j h.symm
+      rw [if_neg h1, if_neg h2, add_zero]
+      simp
+
+/-- **`‖sigmaZBlock i j‖_linfty ≤ 1`** for `i ≠ j`.
+
+Row `i` has `‖1‖ = 1` at column `i`, row `j` has `‖-1‖ = 1` at column `j`,
+all other rows zero. -/
+theorem sigmaZBlock_linftyOpNorm_le_one {d : ℕ} {i j : Fin d} (h_ne : i ≠ j) :
+    ‖sigmaZBlock i j‖ ≤ 1 := by
+  rw [Matrix.linfty_opNorm_def]
+  refine (NNReal.coe_le_coe.mpr ?_).trans_eq NNReal.coe_one
+  refine Finset.sup_le ?_
+  intro r _
+  by_cases hr_i : r = i
+  · subst r
+    rw [Finset.sum_eq_single i]
+    · rw [sigmaZBlock_apply]
+      have h1 : (i : Fin d) = i ∧ i = i := ⟨rfl, rfl⟩
+      have h2 : ¬ ((j : Fin d) = i ∧ j = i) := fun ⟨h, _⟩ => h_ne h.symm
+      rw [if_pos h1, if_neg h2, sub_zero]
+      simp
+    · intro c _ h_ci
+      rw [sigmaZBlock_apply]
+      have h1 : ¬ ((i : Fin d) = i ∧ i = c) := fun ⟨_, h⟩ => h_ci h.symm
+      have h2 : ¬ ((j : Fin d) = i ∧ j = c) := fun ⟨h, _⟩ => h_ne h.symm
+      rw [if_neg h1, if_neg h2, sub_zero]
+      simp
+    · intro h; exact absurd (Finset.mem_univ i) h
+  · by_cases hr_j : r = j
+    · subst r
+      rw [Finset.sum_eq_single j]
+      · rw [sigmaZBlock_apply]
+        have h1 : ¬ ((i : Fin d) = j ∧ i = j) := fun ⟨h, _⟩ => h_ne h
+        have h2 : (j : Fin d) = j ∧ j = j := ⟨rfl, rfl⟩
+        rw [if_neg h1, if_pos h2, zero_sub]
+        simp
+      · intro c _ h_cj
+        rw [sigmaZBlock_apply]
+        have h1 : ¬ ((i : Fin d) = j ∧ i = c) := fun ⟨h, _⟩ => h_ne h
+        have h2 : ¬ ((j : Fin d) = j ∧ j = c) := fun ⟨_, h⟩ => h_cj h.symm
+        rw [if_neg h1, if_neg h2, sub_zero]
+        simp
+      · intro h; exact absurd (Finset.mem_univ j) h
+    · apply le_trans _ zero_le_one
+      apply le_of_eq
+      apply Finset.sum_eq_zero
+      intro c _
+      rw [sigmaZBlock_apply]
+      have h1 : ¬ ((i : Fin d) = r ∧ i = c) := fun ⟨h, _⟩ => hr_i h.symm
+      have h2 : ¬ ((j : Fin d) = r ∧ j = c) := fun ⟨h, _⟩ => hr_j h.symm
+      rw [if_neg h1, if_neg h2, sub_zero]
+      simp
 
 end SKEFTHawking.FKLW.GenericSUd

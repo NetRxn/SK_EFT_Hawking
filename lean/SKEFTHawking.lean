@@ -1388,6 +1388,13 @@ import SKEFTHawking.FKLW.CliffordCCZSU8ConstructiveEpsilonNet
 -- direct mechanical lift of `balanced_commutator_general_axis_lie_traceless`
 -- (Phase 6t SU(2) Pauli decomposition with Bloch-sphere K = √(1/2)).
 import SKEFTHawking.FKLW.GenericSUdBalancedCommutator
+-- Phase 6y Track S.3 substrate (Session 3, 2026-05-27): d-generic 2-block
+-- Pauli analogs `sigmaYBlock`, `sigmaXBlock`, `sigmaZBlock` ∈ Matrix (Fin d) (Fin d) ℂ
+-- supported on the 2×2 block at distinct indices (i, j). Substantive primitive
+-- for the Aharonov-Arad SU(d) spectral construction (rank-2 case + spectral
+-- sum). Ships Hermiticity + tracelessness lemmas; commutator + rank-2
+-- BalancedCommutator_SUd discharge in Session 4+.
+import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorTwoBlock
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
