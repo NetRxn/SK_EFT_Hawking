@@ -1310,6 +1310,30 @@ import SKEFTHawking.FKLW.GenericSUdDischargeUnconditional
 -- hypothesis is auto-discharged via S.2g UNCONDITIONAL).
 import SKEFTHawking.FKLW.TrappedIonSU4DensityFromWitness
 import SKEFTHawking.FKLW.CliffordCCZSU8DensityFromWitness
+-- Phase 6y Tracks T-A1′.2 + T-A2′.2 tracked-Prop witness framework. Defines
+-- `trappedIonSU4_v4_witness_tracked` + `cliffordCCZSU8_v4_witness_tracked`
+-- (existential Lie-algebra spanning + flow-line predicates) + extraction to
+-- `ClosureDenseWitness` + UNCONDITIONAL density/ε₀-net from tracked Prop.
+-- Mirrors Phase 6u CliffordT pattern (`cliffordT_v4_witness_tracked`).
+import SKEFTHawking.FKLW.TrappedIonSU4WitnessTracked
+import SKEFTHawking.FKLW.CliffordCCZSU8WitnessTracked
+-- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
+-- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
+-- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
+-- predicate hypotheses, with generic discharges of
+-- `SolovayKitaevHeadline_FreeGroup_SUd` + `SolovayKitaevHeadline_SUd` predicates.
+-- This is the substrate hypothesis that Phase 6y headlines (T-A1′.5, T-A2′.5)
+-- discharge through, decoupling structural F#4-compliant headlines from the
+-- substantive SK-at-SU(d) implementation (the latter ships in Phase 6z+).
+import SKEFTHawking.FKLW.GenericSUdSKCompileBounds
+-- Phase 6y Track T-A1′.5 PROPER discharge (2026-05-27): F#4-compliant
+-- `trappedIonSU4FullHeadline N hN` discharge given a SKCompileWithBounds data
+-- hypothesis for the full trapped-ion SU(4) alphabet.
+import SKEFTHawking.FKLW.TrappedIonSU4HeadlineDischarge
+-- Phase 6y Track T-A2′.5 PROPER discharge (2026-05-27): F#4-compliant
+-- `cliffordCCZSU8Headline` discharge given a SKCompileWithBounds data
+-- hypothesis for the Clifford+CCZ SU(8) alphabet.
+import SKEFTHawking.FKLW.CliffordCCZSU8HeadlineDischarge
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
