@@ -1051,6 +1051,20 @@ import SKEFTHawking.FKLW.ReadRezayiK5BaseFinder
 -- Mirrors RossSelingerLightweight + ReadRezayiK5BaseFinder. Closes
 -- retrospective failure mode #4 for RR7.
 import SKEFTHawking.FKLW.ReadRezayiK7BaseFinder
+-- Phase 6x Tier-2 Item D (M1, 2026-05-27): ZOmega ring of integers of
+-- ℚ(ζ₈) = ℚ(e^(iπ/4)), structure with four ℤ fields, CommRing instance,
+-- Galois automorphisms (σ_3, σ_5, conj), algebraic field norm. Foundation
+-- for the Phase 6x Ross-Selinger arc per Pre-Implementation DR.
+-- native_decide-compatible runtime arithmetic. Clean-room rebuild from
+-- arXiv:1206.5236 + arXiv:1403.2975; no newsynth GPL code copied.
+import SKEFTHawking.FKLW.RossSelinger.ZOmega
+-- Phase 6x Tier-2 Item E (M2, 2026-05-27): ZOmegaSqrt2 := ℤ[ω][1/√2]
+-- via Localization.Away (sqrt2 : ZOmega). Theory-layer ship; runtime
+-- pair representation (z, k) for native_decide deferred per DR §1.7.
+-- Defines sqrt2 := ω − ω³ ∈ ZOmega, sqrt2_sq : sqrt2² = 2, and
+-- ZOmegaSqrt2 inherits CommRing + Algebra ZOmega + IsLocalization from
+-- Mathlib. Substrate for KMM exact synthesis (Item F).
+import SKEFTHawking.FKLW.RossSelinger.ZOmegaSqrt2
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
