@@ -115,4 +115,62 @@ theorem det_kronSU4_eq_one {A B : Matrix (Fin 2) (Fin 2) ℂ}
   rw [det_kronSU4, hA, hB]
   ring
 
+/-! ## 4. Unitary preservation for kronSU4
+
+Composes Mathlib's `Matrix.kronecker_mem_unitary` (kronecker product of
+unitaries is unitary) with the reindex preservation. -/
+
+/-- **Reindex (same equiv on rows and cols) preserves unitarity**.
+
+For `e : m ≃ n` and `M ∈ unitaryGroup (Matrix m m)`, we have
+`Matrix.reindex e e M ∈ unitaryGroup (Matrix n n)`. Uses
+`Matrix.submatrix_mul_equiv` + `Matrix.conjTranspose_reindex` +
+`Matrix.submatrix_one_equiv`. -/
+theorem reindex_mem_unitaryGroup {m n : Type*} [Fintype m] [Fintype n]
+    [DecidableEq m] [DecidableEq n] (e : m ≃ n)
+    {M : Matrix m m ℂ} (hM : M ∈ Matrix.unitaryGroup m ℂ) :
+    Matrix.reindex e e M ∈ Matrix.unitaryGroup n ℂ := by
+  -- Unfold mem_unitaryGroup: ↔ M * star M = 1.
+  rw [Matrix.mem_unitaryGroup_iff]
+  -- star (reindex e e M) = reindex e e (star M).
+  have h_star_reindex : star (Matrix.reindex e e M) = Matrix.reindex e e (star M) := by
+    show (Matrix.reindex e e M).conjTranspose = Matrix.reindex e e (Matrix.conjTranspose M)
+    rw [Matrix.conjTranspose_reindex]
+  rw [h_star_reindex]
+  -- reindex e e M * reindex e e (star M) = reindex e e (M * star M).
+  -- Use Matrix.submatrix_mul_equiv.
+  show Matrix.submatrix M e.symm e.symm * Matrix.submatrix (star M) e.symm e.symm = 1
+  rw [show (1 : Matrix n n ℂ) = Matrix.submatrix (1 : Matrix m m ℂ) e.symm e.symm from
+      (Matrix.submatrix_one_equiv e.symm).symm]
+  rw [show Matrix.submatrix M e.symm e.symm * Matrix.submatrix (star M) e.symm e.symm
+       = Matrix.submatrix (M * star M) e.symm e.symm from
+      Matrix.submatrix_mul_equiv M (star M) (⇑e.symm) e.symm (⇑e.symm)]
+  congr 1
+  exact Matrix.mem_unitaryGroup_iff.mp hM
+
+/-- **`kronSU4` of two unitary 2x2 matrices is a 4x4 unitary**. -/
+theorem kronSU4_mem_unitaryGroup {A B : Matrix (Fin 2) (Fin 2) ℂ}
+    (hA : A ∈ Matrix.unitaryGroup (Fin 2) ℂ)
+    (hB : B ∈ Matrix.unitaryGroup (Fin 2) ℂ) :
+    kronSU4 A B ∈ Matrix.unitaryGroup (Fin 4) ℂ := by
+  unfold kronSU4
+  apply reindex_mem_unitaryGroup
+  -- Matrix.kronecker A B = Matrix.kroneckerMap (· * ·) A B
+  show Matrix.kroneckerMap (fun x1 x2 => x1 * x2) A B ∈ Matrix.unitaryGroup (Fin 2 × Fin 2) ℂ
+  -- Map to Matrix.unitaryGroup via Mathlib.kronecker_mem_unitary.
+  exact Matrix.kronecker_mem_unitary hA hB
+
+/-- **`kronSU4` of two SU(2) matrices is in SU(4)** (substantive).
+
+Combines `kronSU4_mem_unitaryGroup` (unitarity) + `det_kronSU4_eq_one`
+(det = 1). -/
+theorem kronSU4_mem_specialUnitaryGroup {A B : Matrix (Fin 2) (Fin 2) ℂ}
+    (hA : A ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ)
+    (hB : B ∈ Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    kronSU4 A B ∈ Matrix.specialUnitaryGroup (Fin 4) ℂ := by
+  rw [Matrix.mem_specialUnitaryGroup_iff]
+  obtain ⟨hA_unit, hA_det⟩ := Matrix.mem_specialUnitaryGroup_iff.mp hA
+  obtain ⟨hB_unit, hB_det⟩ := Matrix.mem_specialUnitaryGroup_iff.mp hB
+  exact ⟨kronSU4_mem_unitaryGroup hA_unit hB_unit, det_kronSU4_eq_one hA_det hB_det⟩
+
 end SKEFTHawking.FKLW.TrappedIonSU4
