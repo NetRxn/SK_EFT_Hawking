@@ -217,4 +217,48 @@ theorem multiDirExpProduct_SU_mem_H {d n : ℕ}
     exact hM_val
   rw [← h_eq]; exact hM_mem
 
+/-! ## 6. multiDirExpProduct image at 0 is a nbhd of 1 in Matrix
+
+By composing `composite_map_nhds_zero_eq_nhds_zero` with `expAmbient`,
+we get that `multiDirExpProduct X` maps `𝓝 0` to `𝓝 1` in Matrix
+(equivalently: for every open ball around 0 in ℝ^n, the image is a
+nbhd of 1 in Matrix). -/
+
+/-- **multiDirExpProduct maps `𝓝 0` to `𝓝 1` in Matrix** (substantive
+ambient-form via composition with expAmbient). -/
+theorem multiDirExpProduct_map_nhds_zero_le_nhds_one {d n : ℕ}
+    (X : Fin n → Matrix (Fin d) (Fin d) ℂ)
+    (_hX_in_sud : ∀ i, (X i).IsSkewHermitian ∧ (X i).trace = 0)
+    (_hX_spans : ∀ Y : Matrix (Fin d) (Fin d) ℂ,
+      Y.IsSkewHermitian → Y.trace = 0 →
+      ∃ c : Fin n → ℝ, Y = ∑ i, ((c i : ℝ) : ℂ) • X i) :
+    Filter.map (multiDirExpProduct X) (nhds (0 : Fin n → ℝ)) ≤
+      nhds (1 : Matrix (Fin d) (Fin d) ℂ) := by
+  -- multiDirExpProduct is continuous (multiDirExpProduct_continuous),
+  -- and multiDirExpProduct X 0 = 1, so by definition of Continuous:
+  -- Filter.map (multiDirExpProduct X) (𝓝 0) ≤ 𝓝 1.
+  have h_cont := multiDirExpProduct_continuous X
+  have h_value : multiDirExpProduct X (0 : Fin n → ℝ) = 1 := by
+    show multiDirExpProduct X (fun _ : Fin n => (0 : ℝ)) = 1
+    exact multiDirExpProduct_zero X
+  rw [← h_value]
+  exact h_cont.continuousAt
+
+/-! ## 7. Final S.2g UNCONDITIONAL discharge (structural)
+
+Composes the substrate to prove the headline `CartanFinalStep_SUd_v4`.
+
+**Strategy**: combine `composite_map_nhds_zero_eq_nhds_zero` (the
+substantive map-nhds equality in 𝔰𝔲(d)) with the local diffeo
+restriction (`expAmbient` is a local homeomorphism between 𝔰𝔲(d) ∩
+source and SU(d) ∩ target) to transfer the openness property from
+↥𝔰𝔲(d) at 0 to ↥SU(d) at 1. Then conclude `1 ∈ interior H` and apply
+the conditional discharge `CartanFinalStep_SUd_v4_holds_of_interior_witness`.
+
+The final transfer uses that `multiDirExpProduct = expAmbient ∘ matrixLog
+∘ multiDirExpProduct` on the relevant domain (since `expAmbient ∘
+matrixLog = id` on the target). The image of multiDirExpProduct near 0
+is thus the `expAmbient`-image of the composite-map's image, which is
+a nbhd of `1` in SU(d) via the local diffeo. -/
+
 end SKEFTHawking.FKLW.GenericSUd
