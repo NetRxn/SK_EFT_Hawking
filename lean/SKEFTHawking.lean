@@ -1125,6 +1125,12 @@ import SKEFTHawking.FKLW.GenericSUdMatrixLogTraceless
 -- Complex.exp on a disk around 0, gives tr Y = 0 for matrixLog of
 -- SU(d) elements near 1 (S.2g discharge).
 import SKEFTHawking.FKLW.GenericSUdTraceNorm
+-- Phase 6y Track T-A1′.1-substrate (2026-05-27): SU(4) trapped-ion gate
+-- helpers via Kronecker product + reindex (Fin 2 × Fin 2 ≃ Fin 4).
+-- Ships kronSU4 + H_SU_on_ion1, H_SU_on_ion2, T_SU_on_ion1, T_SU_on_ion2
+-- (single-qubit-on-ion-i SU(4) gates). Substrate for trappedIonGenerating-
+-- SetSU4 full instance (T-A1′.1 proper).
+import SKEFTHawking.FKLW.TrappedIonSU4Substrate
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
