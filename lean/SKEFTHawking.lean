@@ -1240,6 +1240,17 @@ import SKEFTHawking.FKLW.TrappedIonSU4FullHeadlineForm
 -- in T-A1′.3 (Ross-Selinger-style for trapped-ion) and T-A2′.3
 -- (Aaronson-Gottesman-style for Clifford+CCZ).
 import SKEFTHawking.FKLW.GenericSUdEpsilonNet
+-- Phase 6y Track T-A1′.2-substrate (2026-05-27): conditional SU(4) density
+-- for full trapped-ion alphabet via Phase 6y S.2g + closure-density witness.
+-- Ships `trappedIonGeneratingSetSU4_isDense_conditional N hN w h_cartan`
+-- plus the consumer ε₀-net `trappedIonEpsilonNet_findNearest_conditional`
+-- with correctness lemma.
+import SKEFTHawking.FKLW.TrappedIonSU4DensityConditional
+-- Phase 6y Track T-A2′.2-substrate (2026-05-27): conditional SU(8) density
+-- for full Clifford+CCZ alphabet (parallel to T-A1′.2-substrate at d = 8).
+-- Ships `cliffordCCZGeneratingSetSU8_isDense_conditional w h_cartan` + consumer
+-- ε₀-net `cliffordCCZEpsilonNet_findNearest_conditional` + correctness.
+import SKEFTHawking.FKLW.CliffordCCZSU8DensityConditional
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
