@@ -1569,6 +1569,13 @@ import SKEFTHawking.FKLW.GenericSUdPhase6yKeystoneIndex
 -- and SU(8) (T-A2′ Clifford+CCZ) demonstrating downstream consumer pattern
 -- + consumer obtain-pattern idiom for SK recursion contexts.
 import SKEFTHawking.FKLW.GenericSUdPhase6yUsageExamples
+-- Phase 6y Track S.3 substrate (Session 40, 2026-05-27): LOOSE BOUNDED PREDICATE.
+-- Ships `BalancedCommutator_SUd_loose (d : ℕ) (K_d : ℝ) : Prop` — predicate
+-- with explicit norm bound `‖F‖, ‖G‖ ≤ K_d · √(θ/2)` parameterized by K_d.
+-- For S37+S36 composition: K_d = d² captures the spectral-then-conjugate
+-- looseness. Plus `BalancedCommutator_SUd_loose_extends_unbounded` showing the
+-- loose form implies the unbounded form (norm conjuncts droppable).
+import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorLoose
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
