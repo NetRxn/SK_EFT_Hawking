@@ -1508,6 +1508,15 @@ import SKEFTHawking.FKLW.GenericSUdPartialSumBridge
 -- Bijection via Finset.sum_bij maps j ↦ ⟨j, _⟩ : Fin (n + 1). Last piece for
 -- combining S29 partial sum bridge with S25's filter-form non-negativity.
 import SKEFTHawking.FKLW.GenericSUdRangeFilterBridge
+-- Phase 6y Track S.3 substrate (Session 31, 2026-05-27): FULL DIAGONAL DISCHARGE.
+-- For ARBITRARY traceless real `a : Fin (n + 2) → ℝ` (no partial-sums hypothesis):
+--   ∃ F G : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ,
+--     F.IsHermitian ∧ G.IsHermitian ∧ F.trace = 0 ∧ G.trace = 0 ∧
+--     F · G − G · F = -((θ : ℂ) · Complex.I) • Matrix.diagonal (a coerced to ℂ)
+-- Composes S24 + S25 + S26 + S27 + S28 + S29 + S30 via eigenvalue sort
+-- (Tuple.sort) + permutation matrix conjugation. The full diagonal case of
+-- S.3 d≥3 PROPER. Spectral theorem lift to arbitrary Hermitian H follows.
+import SKEFTHawking.FKLW.GenericSUdSymmetricDiagonalDischargeFull
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
