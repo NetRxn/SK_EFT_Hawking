@@ -1172,6 +1172,12 @@ import SKEFTHawking.FKLW.GenericSUdClosureDenseWitness
 -- ‖h - 1‖ < δ ∧ h ∈ target ⟹ ‖matrixLog d h‖ < ε. Continuity-derived
 -- form of the Y_h Lipschitz constant Phase 6u shipped for SU(2).
 import SKEFTHawking.FKLW.GenericSUdMatrixLogLipschitz
+-- Phase 6y Track S.6 statement (2026-05-27): predicate-form of the
+-- generic SU(d) Solovay-Kitaev quantitative bundled-strict headline.
+-- Captures BOTH the error bound `‖compile U ε - U‖ ≤ ε` AND the
+-- concrete word-length conjunct `c · log(1/ε)^(log 5 / log 2)` per
+-- the M.4 inheritance discipline (F#4 guardrail).
+import SKEFTHawking.FKLW.GenericSUdHeadlineForm
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
