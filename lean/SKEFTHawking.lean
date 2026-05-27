@@ -1454,6 +1454,14 @@ import SKEFTHawking.FKLW.GenericSUdAntisymOffDiag
 -- Finset.sum_mul_sum double-sum expansion + Fubini. Core algebraic theorem
 -- that powers the symmetric F=αG balanced commutator construction at SU(d).
 import SKEFTHawking.FKLW.GenericSUdSymmetricCommFGreduction
+-- Phase 6y Track S.3 substrate (Session 23, 2026-05-27): MAIN algebraic identity.
+-- For symmetric F = Σ_p γ_p · σ_y(p), G = Σ_p γ_p · σ_x(p) with γ_p² = θ·b_p/2
+-- and traceless `a`:
+--   F·G − G·F = -(θ·i) • Matrix.diagonal a
+-- Composes S22 (F·G − G·F same-pair reduction) + S11 ([σ_y,σ_x]=-2i·σ_z) +
+-- S15 (diagonal-traceless decomposition). The algebraic heart of the symmetric
+-- F=αG Aharonov-Arad balanced commutator construction at SU(d).
+import SKEFTHawking.FKLW.GenericSUdSymmetricFGEqIdentity
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
