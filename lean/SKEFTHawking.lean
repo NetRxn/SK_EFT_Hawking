@@ -1002,6 +1002,65 @@ import SKEFTHawking.FKLW.CliffordTV4WitnessDischarge
 -- This CLOSES Phase 6u Track T-S — the Clifford+T quantitative SK headline
 -- is now FULLY UNCONDITIONAL (kernel-only).
 import SKEFTHawking.FKLW.CliffordTV4WitnessUnconditional
+-- Phase 6x Track T-A1 (LIFT/SHIFT) completion (2026-05-26): trapped-ion
+-- per-ion 1Q bundled-strict Solovay-Kitaev headline UNCONDITIONAL via
+-- factorization through Phase 6u Clifford+T. Production-aligned reading:
+-- MS(θ) as primitive token (acts as identity on single-ion SU(2) target),
+-- per-ion {H, T} compiled via cliffordTGeneratingSet. Closes the gap from
+-- the Phase 6x first-session ship which yielded T-A1.{3,4,5} under a
+-- mis-application of Pivot Rule #15. Full SU(4) Clifford+MS compile
+-- deferred to Phase 6y Track T-A1′.
+import SKEFTHawking.FKLW.TrappedIonGeneratingSet
+-- Phase 6x Track M.4 (headline integration) — substrate (2026-05-26):
+-- arithmetic recurrence skLength_succ_eq + closed-form length bound
+-- skApproxC_generic_freeGroup_length_le_skLength (induction on level n)
+-- + BaseFinder_length_bounded predicate. The substrate that lets each
+-- alphabet's bundled-strict Solovay-Kitaev headline carry a THIRD
+-- conjunct binding the compiled output's concrete FreeGroup-word-length
+-- to the abstract skLength closed form.
+import SKEFTHawking.FKLW.GenericConcreteWordLengthBound
+-- Phase 6x Track M.4 (headline integration) — per-alphabet 3-conjunct
+-- bundled-strict headlines (2026-05-26): ships 3-conjunct strict
+-- headlines (error + abstract length + concrete length) at each of the
+-- four FreeGroup-based per-alphabet GS (Clifford+T, Read-Rezayi k=5,
+-- Read-Rezayi k=7, trapped-ion lift/shift). Closes substrate-vs-headline
+-- gap (Phase 6x retrospective addendum anti-pattern #4). Conditional
+-- on per-alphabet BaseFinder_length_bounded hypothesis; the substantive
+-- discharge ships per-alphabet (CT via Track T-S′ Ross-Selinger;
+-- RR5/RR7/T-A1 as Phase 6x follow-on / Phase 6y).
+import SKEFTHawking.FKLW.PerAlphabetConcreteLengthHeadlines
+-- Phase 6x Track T-S′ (lightweight algorithmic ship, 2026-05-26):
+-- constructive length-bounded Clifford+T base finder via finite-Finset
+-- enumeration, composing the SU(2) compactness substrate
+-- (Matrix.specialUnitaryGroup_isCompact, Phase 6p Wave 2c.4a) with the
+-- ConstructiveEpsilonNet finite-Finset ε-cover existence theorem
+-- (Phase 6x first session). Ships UNCONDITIONAL constructive base
+-- finder + length bound (parametric in cover Finset's max length) +
+-- fully UNCONDITIONAL 3-conjunct strict headline at Clifford+T. Full
+-- Ross-Selinger ℤ[ω][1/√2] optimal-length refinement deferred per
+-- Lit-Search task drop ross_selinger_arxiv_1403_2975_zomega_invsqrt2_synthesis.md.
+import SKEFTHawking.FKLW.RossSelingerLightweight
+-- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
+-- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
+-- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
+-- namespace Matrix.SolovayKitaev.LengthBound. Filename mirror
+-- Mathlib.Analysis.MatrixGroups.SolovayKitaev.LengthBound.
+import SKEFTHawking.SolovayKitaevLengthBoundMathlibPR
+-- Phase 6x Track M.1 actual extraction (Mathlib-PR-quality ship,
+-- 2026-05-26): order-2 Baker-Campbell-Hausdorff cubic estimate at
+-- Matrix (Fin d) (Fin d) ℂ under Matrix.BCH namespace. Substantive
+-- substrate: Matrix.linftyOpNorm_reindex (L∞ op norm invariant under
+-- reindex). Filename mirror Mathlib.Analysis.Calculus.BCH.OrderTwo.
+-- SU(2)/SU(4)/SU(8) examples shipped.
+import SKEFTHawking.MatrixBCHCubicMathlibPR
+-- Phase 6x Track M.2 actual extraction (Mathlib-PR-quality ship,
+-- 2026-05-26): Cartan-final-step density-from-witness at SU(2) under
+-- Matrix.SpecialUnitary.Cartan namespace, fully Mathlib-namespaced
+-- predicate (no project-namespace references in finalStepV2). Bridge
+-- to project's CartanFinalStep_SU2_v4 + UNCONDITIONAL discharge.
+-- Filename mirror Mathlib.Analysis.MatrixGroups.SpecialUnitary.Cartan.
+-- SU(d) → Phase 6y Track S.
+import SKEFTHawking.CartanFinalStepSUdMathlibPR
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound

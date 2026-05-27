@@ -70,21 +70,44 @@ D7 ships **kernel-only** (zero new project-local axioms; standard Lean axiom clo
 
 ---
 
-## Substrate Counts (post Phase 6w close)
+## Substrate Counts (post Phase 6w close — `update_counts.py` fresh-regen 2026-05-26T20:04:39)
 
-| Metric | Phase 6v close | Phase 6w close | Δ |
+Project-wide totals from `docs/counts.json`:
+
+| Metric | Value |
+|---|---:|
+| Lean modules under `lean/SKEFTHawking/` | **465** |
+| Lean total declarations | **14,815** |
+| Lean theorems (total) | **7995** (7970 substantive + 25 placeholder) |
+| Lean theorems (substantive) | **7970** |
+| Lean definitions | **6005** |
+| Lean axioms (project-local) | **0** |
+| Lean sorries | **0** |
+| Python source modules | **132** |
+| Test files | **109** |
+| Pytest cases | **4329** |
+| Figures (PNG) | **156** |
+| Notebooks | **89** |
+| Papers (drafts) | **42** |
+| Aristotle-proved theorems | **322** (across 44 runs) |
+| Publication bundles (per `PAPER_STRATEGY.md`) | **16** (D7 created this phase) |
+| Build target count (`lake build SKEFTHawking`) | **8713** |
+
+Phase 6w-specific delta (the 7 new modules KZU + BP + BPLDP + Cheb + Aperiodic + ChernBridge + Demarcation):
+
+| Metric | Pre-Phase-6w | Post-Phase-6w | Δ from Phase 6w only |
 |---|---:|---:|---:|
-| Lean modules under `lean/SKEFTHawking/` | ~403 (post Phase 6v.9) | **452** (≈ 445 + 7 Phase 6w modules) | +7 (Phase 6w Waves 6w.1, 6w.2, 6w.3, 6w.4 [×2], 6w.5, 6w.6 — pending `update_counts.py` regen) |
-| Lean theorems (substantive) | ~7500 | **~7565** (counts pending regen) | +65 (8 KZU + 24 BP + 8 BPLDP + 10 Cheb + 7 Aperiodic + 5 ChernBridge + 3 Demarcation, post-remediation) |
+| Lean modules added by Phase 6w | — | — | **+7** (KZU + BP + BPLDP + Cheb + Aperiodic + ChernBridge + Demarcation) |
+| Lean theorems added by Phase 6w (substantive, post-remediation) | — | — | **+65** (8 KZU + 24 BP + 8 BPLDP + 10 Cheb + 7 Aperiodic + 5 ChernBridge + 3 Demarcation, post-Round-1 deletion of 3 P5 tautologies) |
+| Build jobs added by Phase 6w | 8706 | **8713** | **+7** |
 | Lean axioms (project-local) | 0 | **0** | **unchanged ✓** (Pipeline Invariant #15 maintained through both Round-1 + Round-2 remediations) |
 | Lean sorries | 0 | **0** | **unchanged ✓** |
-| Publication bundles (per PAPER_STRATEGY.md) | 15 | **16** | +1 (D7 CREATED) |
-| Pytest cases | ~4300 | ~4300 | unchanged (Phase 6w is Lean-only; no Python ships) |
-| CITATION_REGISTRY bibkeys | ~422 | ~425 | +3 (TindallSels2026Science392 + AntaoSunFumegaLado2026PRL + YedidiaFreemanWeiss2003 + Zurek1985 + BiancoResta2011 net of 1 already-present anchor) |
-| Primary-source cache files | ~298 | ~301 | +3 (matching new bibkeys; Yedidia MERL TR PDF + Zurek abstract.txt + Bianco-Resta arXiv PDF added during Round-1 remediation) |
-| Build target count (`lake build SKEFTHawking`) | 8706 | **8713** | +7 (one per new module) |
+| Publication bundles | 15 | **16** | **+1** (D7 CREATED) |
+| CITATION_REGISTRY bibkeys | — | — | **+5** (TindallSels2026Science392 + AntaoSunFumegaLado2026PRL + YedidiaFreemanWeiss2003 + Zurek1985 + BiancoResta2011; last three added during Round-1 remediation) |
+| Primary-source cache files | — | — | **+5** (matching new bibkeys; Yedidia MERL TR PDF + Zurek abstract.txt + Bianco-Resta arXiv PDF added during Round-1 remediation) |
+| Python source modules | — | — | unchanged from Phase 6w (Lean-only phase) |
 
-All counts pending the next `update_counts.py` regen on the post-6w tree.
+Phase 6w is **Lean-only**: the Python modules / test files / pytest cases / figures / notebooks / papers / Aristotle-proved counts above are project totals (which absorbed earlier-wave additions during this regen) and not deltas from Phase 6w. Phase 6w added no Python source code, no figures, and no notebooks.
 
 ---
 

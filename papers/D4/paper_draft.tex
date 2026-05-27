@@ -1254,6 +1254,124 @@ substantive contrast between NbRe (DIII-class) and elemental Nb
 3D BdG sub-wave (8.C, deferred to a future Mathlib-3D-winding-
 number-substrate wave).
 
+\subsection{Multi-alphabet showcase: the Phase 6u/6x generic substrate
+across five universal gate sets}
+\label{subsec:multi-alphabet-showcase}
+
+%% Provenance: D4 §"multi-alphabet showcase" added by Phase 6x Track 7
+%% (2026-05-26 PM completion ship). Lean substrate:
+%%   - Phase 6u Track T-S (Clifford+T): lean/SKEFTHawking/FKLW/CliffordTV4WitnessUnconditional.lean.
+%%   - Phase 6x Track T-B (Read-Rezayi SU(2)_5, SU(2)_7): lean/SKEFTHawking/FKLW/ReadRezayiK5Quantitative.lean,
+%%     ReadRezayiK7Quantitative.lean (first-session ship).
+%%   - Phase 6x Track T-A1 (trapped-ion lift/shift): lean/SKEFTHawking/FKLW/TrappedIonGeneratingSet.lean
+%%     (completion ship per Phase 6x retrospective addendum).
+%%   - Phase 6x Track M.4 (concrete-word length-bound integration):
+%%     lean/SKEFTHawking/FKLW/PerAlphabetConcreteLengthHeadlines.lean.
+%%   - Phase 6x Track T-S′ (Clifford+T lightweight constructive base finder):
+%%     lean/SKEFTHawking/FKLW/RossSelingerLightweight.lean.
+
+Beyond the Fibonacci-anyon instantiation that §\ref{sec:fib-density-sk}
+covers, the Phase 6u alphabet-agnostic generic Solovay--Kitaev
+substrate (\texttt{GenericSU2GeneratingSet}, \texttt{GenericClosureDenseWitness},
+\texttt{GenericSolovayKitaevRecursion}, \texttt{GenericSolovayKitaevQuantitative})
+provides a single rebreakable substrate over which arbitrary universal
+gate sets at SU(2) inherit the bundled-strict quantitative
+Solovay--Kitaev headline mechanically. Phase 6x ships four additional
+instances along this substrate, populating a five-alphabet portfolio:
+
+\begin{itemize}
+
+\item \textbf{Fibonacci anyons} (Phase 6t Wave 6 + Phase 6u Track T-S
+specialization, §\ref{sec:fib-density-sk}): the canonical first
+instance. Word type $\mathrm{BraidGroup}\,3$; closure-density via the
+F.21 chain at the Bonesteel braid pair; length closed form
+$\mathcal{O}(\log(1/\varepsilon)^{c})$ with
+$c = \log 5 / \log(3/2) \approx 3.97$.
+
+\item \textbf{Clifford$+T$} (Phase 6u Track T-S, unconditional via the
+Niven-based infinite-order chain
+\texttt{cliffordT\_accPt\_one\_unconditional}): the canonical industry
+gate set. Word type $\mathrm{FreeGroup}\,(\mathrm{Fin}\,2)$ ($H_\mathrm{SU},
+T_\mathrm{SU}$ generators); closure-density via Niven on the trace
+identity of Boykin--Mor--Pulver--Roychowdhury--Vatan 1999; the
+\texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_cliffordT\_strict\_constructive\_tight\_unconditional}
+headline ships fully UNCONDITIONAL at $K_{\mathrm{compose}} = 1024$.
+
+\item \textbf{Read--Rezayi $SU(2)_k$ for $k \in \{5, 7\}$} (Phase 6x
+Track T-B, unconditional): the next-universal-anyon family beyond
+Fibonacci ($k = 3$). Word type $\mathrm{FreeGroup}\,(\mathrm{Fin}\,2)$;
+closure-density via per-$k$ Chebyshev-polynomial Niven obstructions on
+$2\cos(\pi j/(k+2))$ traces. The \texttt{readRezayiK5}- and
+\texttt{readRezayiK7}- bundled-strict headlines ship unconditionally.
+
+\item \textbf{Trapped-ion lift/shift} (Phase 6x Track T-A1
+completion): the production-aligned per-ion gate set as exposed by
+Quantinuum H1 / IonQ Aria / AQT compilers. Word type
+$\mathrm{FreeGroup}\,(\mathrm{Fin}\,3)$ with three tokens: $0 \mapsto
+H_\mathrm{SU}$ (per-ion Hadamard), $1 \mapsto T_\mathrm{SU}$ (per-ion
+T-gate), $2 \mapsto 1$ (the $\mathrm{MS}(\theta)$ primitive token,
+acting as identity on the single-ion SU(2) target subspace per the
+production lift/shift interpretation). The
+\texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_trappedIon\_strict\_constructive\_tight\_unconditional}
+headline ships UNCONDITIONALLY via factorization through Clifford$+T$
+(per-ion injection $\mathrm{Fin}\,2 \hookrightarrow \mathrm{Fin}\,3$
+lifts the Clifford$+T$ base finder; the MS-primitive tokens are
+passed through unchanged). The full SU(4) Clifford$+\mathrm{MS}$
+compile (where $\mathrm{MS}$ is in the discrete alphabet rather than
+treated as a primitive) requires the SU($d > 2$) substrate extension
+deferred to Phase 6y Track T-A1$'$.
+
+\item \textbf{Concrete-word length conjunct (Phase 6x Track M.4
+headline integration)}: each of the four FreeGroup-based per-alphabet
+bundled-strict headlines (CT, RR5, RR7, T-A1) carries a third conjunct
+binding the compiled output's concrete FreeGroup-word length to the
+abstract \texttt{skLength} closed form, conditional on the per-alphabet
+base finder satisfying \texttt{BaseFinder\_length\_bounded} (the natural
+predicate dischargeable per-alphabet via the constructive base-finder
+substrate). For Clifford$+T$, the Phase 6x Track T-S$'$ lightweight
+constructive base finder (Finset-enumeration via the
+\texttt{ConstructiveEpsilonNet} infrastructure + SU(2) compactness)
+discharges the predicate UNCONDITIONALLY at the
+\texttt{cliffordTFiniteCover\_maxLength} bound, yielding a fully
+unconditional 3-conjunct strict headline
+\texttt{solovayKitaev\_dawson\_nielsen\_quantitative\_cliffordT\_strict\_concrete\_constructive\_unconditional}.
+
+\end{itemize}
+
+\paragraph{Mathlib-upstream-PR portfolio.}
+Three lemma extractions from the FKLW substrate are upstream-PR-ready
+under standard Mathlib namespaces:
+\texttt{Matrix.BCH.bchOrder2Cubic} (Phase 6x Track M.1, generic order-2
+Baker--Campbell--Hausdorff cubic estimate at SU($d$) for $d \in \{2, 4,
+8\}$ + the substantive
+\texttt{Matrix.linftyOpNorm\_reindex} auxiliary lemma);
+\texttt{Matrix.SpecialUnitary.Cartan.finalStepV2} (Phase 6x Track M.2,
+Mathlib-namespaced Cartan-final-step density-from-witness at SU(2),
+unconditional);
+\texttt{Matrix.SolovayKitaev.LengthBound.skApprox\_length\_le\_skLength}
+(Phase 6x Track M.4, $\alpha$-polymorphic FreeGroup word-length
+recurrence at any FreeGroup-based generating set, exemplified at
+Clifford$+T$ (\texttt{Fin}\,2) and trapped-ion (\texttt{Fin}\,3)).
+The full SU($d > 2$) Cartan substrate ships at Phase 6y Track S
+(prerequisite for full SU(4)/SU(8) academic-completeness compilations
+in Phase 6y Tracks T-A1$'$/T-A2$'$).
+
+\paragraph{Closure-of-the-substrate posture.}
+Each of the five per-alphabet instances above shipped at the
+canonical bundled-strict UNCONDITIONAL headline level, with kernel-only
+axiom closure $\{\texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}\}$ and zero project-local axioms. The
+multi-alphabet portfolio across {Fibonacci, Clifford$+T$, Read-Rezayi
+$k=5$, Read-Rezayi $k=7$, trapped-ion lift/shift} demonstrates that
+the Phase 6u alphabet-agnostic substrate is not merely
+generic-in-principle but \emph{generic-in-deliverable-output}: each new
+alphabet's bundled-strict headline ships in a few hundred LoC by
+mechanical specialization of the substrate, with the alphabet-specific
+substantive content concentrated in the per-alphabet closure-density
+witness (Niven-style for Fibonacci, BMPRV-style for Clifford$+T$,
+Chebyshev/Niven-style for Read-Rezayi, factorization-through-Clifford$+T$
+for trapped-ion lift/shift).
+
 \begin{thebibliography}{99}
 
 \bibitem{AharonovArad2017}

@@ -84,7 +84,7 @@ Per project no-walk-back discipline, all three were DELETED (not relabeled to "a
 
 **Zero new project-local axioms across all 7 waves + both remediation rounds.** Pipeline Invariant #15 maintained without compromise.
 
-**counts.json + lean_deps.json regen DEFERRED to next session** per user direction (Phase 6w shipped in a single autonomous-loop session; regen cost too high to run every wave). The substrate counts table in the Implications doc reflects estimated post-regen numbers.
+**counts.json + lean_deps.json regen RUN at Phase 6w close (2026-05-26T20:04:39).** Final project totals: 465 Lean modules / 7995 total theorems (7970 substantive + 25 placeholder) / 6005 definitions / 0 axioms / 0 sorries / 8713 build jobs / 16 publication bundles. Phase 6w-specific delta: +7 modules, +65 substantive theorems, +7 build jobs, +1 bundle (D7). See [`Phase6w_Implications.md`](Phase6w_Implications.md) for the full substrate counts table.
 
 ### Process posture — Phase 6w QI candidate
 

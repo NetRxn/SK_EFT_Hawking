@@ -195,3 +195,56 @@ The D4 paper bundle's §9.8 multi-alphabet showcase extends from `{Fibonacci, Cl
 ---
 
 **Phase 6x demonstrates that adding new universal quantum alphabets to the kernel-verified compiler chain is, by Phase 6u's design, an *instantiation problem* and not a re-derivation problem.** The two Read-Rezayi alphabets shipped UNCONDITIONAL on the first attempt of the autonomous-loop session, validating the abstraction at the second-instance scale. The Mathlib-upstream-PR presentations close the substrate gap for community-citizenship work. The trapped-ion and Clifford+CCZ substrates are the foundation for downstream commercial and research applications, with the substrate-extension paths explicitly documented and yielded for user sign-off per project discipline.
+
+---
+
+## Phase 6x Completion (2026-05-26 PM, post-retrospective addendum)
+
+The Phase 6x first-session ship (2026-05-26 AM, summarized above) over-applied
+Pivot Rule #15 — yielding T-A1.{3,4,5} + T-A2.0 + T-A2.{1..5} + T-S′ Ross-Selinger
+on "substantial work" grounds when the pivot rule's literal scope is "axiom required."
+This completion session (2026-05-26 PM, single autonomous-loop) closed the gap
+following the retrospective addendum's lift/shift reframing.
+
+### Completion ships
+
+  - **T-A1 lift/shift (UNCONDITIONAL)**: `trappedIonGeneratingSet` over
+    `FreeGroup (Fin 3)` with `H_SU, T_SU, MS-primitive` tokens; density via
+    factorization through Phase 6u Clifford+T; bundled-strict headline
+    UNCONDITIONAL. Production-aligned reading per Quantinuum H1 / IonQ Aria / AQT.
+    Full SU(4) deferred to Phase 6y Track T-A1′.
+
+  - **M.4 headline integration (substrate + per-alphabet)**: third
+    concrete-word-length conjunct added to all four FreeGroup-based bundled-strict
+    headlines (CT, RR5, RR7, T-A1) via the generic
+    `GenericConcreteWordLengthBound.skApproxC_generic_freeGroup_length_le_skLength`
+    closed-form induction (α-polymorphic).
+
+  - **T-S′ lightweight algorithmic (UNCONDITIONAL)**: constructive Clifford+T base
+    finder via `ConstructiveEpsilonNet` + SU(2) compactness composition. Fully
+    UNCONDITIONAL 3-conjunct strict headline
+    `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete_constructive_unconditional`.
+    Full Ross-Selinger ℤ[ω][1/√2] optimal-length refinement dropped as Lit-Search
+    task `Lit-Search/tasks/ross_selinger_arxiv_1403_2975_zomega_invsqrt2_synthesis.md`.
+
+  - **M.1 actual extraction (substantive)**: `Matrix.linftyOpNorm_reindex`
+    load-bearing auxiliary lemma + `Matrix.BCH.bchOrder2Cubic_Fin` with
+    SU(2)/SU(4)/SU(8) examples. m-generic transfer documented as Mathlib follow-on.
+
+  - **M.2 actual extraction (substantive)**: Mathlib-namespaced
+    `Matrix.SpecialUnitary.Cartan.finalStepV2` predicate (no project-namespace
+    references) + bridge to project + UNCONDITIONAL discharge.
+
+  - **M.4 actual extraction (Mathlib-PR-quality)**:
+    `Matrix.SolovayKitaev.LengthBound.skApprox_length_le_skLength*` α-polymorphic
+    FreeGroup length bound + de-privatized helpers + examples at CT/T-A1.
+
+  - **D4 §9.6 multi-alphabet showcase**: prose extended to
+    {Fibonacci, Clifford+T, Read-Rezayi k=5, Read-Rezayi k=7, trapped-ion lift/shift}
+    with explicit Mathlib-PR-portfolio paragraph + closure posture paragraph.
+
+### Closure metrics
+
+Lake build clean (8734 jobs). Axiom count UNCHANGED at 0 (kernel-only headlines).
+Zero sorries. Pipeline Invariants #10 + #15 respected throughout. All five
+failure modes from the retrospective addendum adhered to.
