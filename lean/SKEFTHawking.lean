@@ -1076,6 +1076,12 @@ import SKEFTHawking.FKLW.GenericSUdGeneratingSet
 -- flow lines of spanning traceless skew-Hermitian tangents ⟹ H = ⊤.
 -- Substantive discharge ships in GenericSUdCartanSubstrate (S.2b–d).
 import SKEFTHawking.FKLW.GenericSUdCartanPredicate
+-- Phase 6y Track S.2b (2026-05-27): d-generic matrix-exp local diffeomorphism
+-- via Mathlib IFT (`HasStrictFDerivAt.toOpenPartialHomeomorph`). Ships
+-- `expAmbient d`, `expAmbient_hasStrictFDerivAt_zero_equiv d`,
+-- `expAmbientPartialHomeo d`, `matrixLog d`, round-trip identities, and
+-- local injectivity. d-generic lift of Phase 6u `SU2LocalDiffeo`.
+import SKEFTHawking.FKLW.GenericSUdMatrixExpDiffeo
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
