@@ -104,6 +104,35 @@ theorem sqrt2_sq : sqrt2 * sqrt2 = (2 : ZOmega) := by
 /-- **`sqrt2` is a non-zero element of `ZOmega`**. -/
 theorem sqrt2_ne_zero : sqrt2 ≠ 0 := by decide
 
+/-- **`sqrt2` multiplication table**: `sqrt2 * y` has explicit form
+`(b - d, a + c, b + d, c - a)` for `y = (a, b, c, d)`. -/
+theorem sqrt2_mul (y : ZOmega) :
+    sqrt2 * y = ⟨y.b - y.d, y.a + y.c, y.b + y.d, y.c - y.a⟩ := by
+  ext <;> simp <;> ring
+
+/-- **`sqrt2` is a non-zero-divisor in ZOmega**: `sqrt2 * y = 0 → y = 0`.
+
+Direct from the multiplication table: `sqrt2 * y = (b-d, a+c, b+d, c-a)`.
+Setting all four components to zero gives `b = d`, `c = -a`, `b = -d`,
+`a = c`, which forces `a = b = c = d = 0`. -/
+theorem sqrt2_mul_eq_zero {y : ZOmega} (h : sqrt2 * y = 0) : y = 0 := by
+  rw [sqrt2_mul] at h
+  -- h : ⟨y.b - y.d, y.a + y.c, y.b + y.d, y.c - y.a⟩ = 0
+  have h1 : y.b - y.d = 0 := congrArg ZOmega.a h
+  have h2 : y.a + y.c = 0 := congrArg ZOmega.b h
+  have h3 : y.b + y.d = 0 := congrArg ZOmega.c h
+  have h4 : y.c - y.a = 0 := congrArg ZOmega.d h
+  ext
+  · show y.a = 0; omega
+  · show y.b = 0; omega
+  · show y.c = 0; omega
+  · show y.d = 0; omega
+
+/-- **Mul-left by sqrt2 cancels**: `sqrt2 * x = sqrt2 * y → x = y`. -/
+theorem sqrt2_mul_cancel {x y : ZOmega} (h : sqrt2 * x = sqrt2 * y) : x = y := by
+  have h1 : sqrt2 * (x - y) = 0 := by rw [mul_sub, h, sub_self]
+  exact sub_eq_zero.mp (sqrt2_mul_eq_zero h1)
+
 /-- **Complex conjugation fixes `sqrt2`** (since `√2 = ω + ω⁻¹` is real).
 
 The Galois automorphism `σ_7 = conj` fixes the real subfield `ℚ(√2)`
