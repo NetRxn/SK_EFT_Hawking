@@ -1488,6 +1488,12 @@ import SKEFTHawking.FKLW.GenericSUdUnitaryConjugationInvariance
 -- Ships permMatrixAsUnitary bundle + star_form. Substrate for eigenvalue-sort
 -- lift (combine with S25 + S24 + S26 in Session 28+).
 import SKEFTHawking.FKLW.GenericSUdPermutationConjugation
+-- Phase 6y Track S.3 substrate (Session 28, 2026-05-27): diagonal conjugation
+-- by permutation matrix. For σ : Equiv.Perm (Fin n) and a : Fin n → ℂ:
+--   permMatrix σ · diagonal a · permMatrix σ⁻¹ = diagonal (a ∘ σ)
+-- This is the key identity that combines with S25/S26/S27 to lift discharge
+-- for diag(a ∘ σ) (sorted) to discharge for diag(a) (arbitrary).
+import SKEFTHawking.FKLW.GenericSUdPermutationDiagonal
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
