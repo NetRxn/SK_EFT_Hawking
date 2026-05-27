@@ -1209,6 +1209,13 @@ import SKEFTHawking.FKLW.MSGateExpForm
 -- generators, FreeGroup (Fin (4 + 2*N)) word type). Closure-density at
 -- SU(4) ships in T-A1′.2 via Phase 6y S.2g.
 import SKEFTHawking.FKLW.TrappedIonGeneratingSetSU4Full
+-- Phase 6y Track S.2g-substrate (2026-05-27): local diffeo restriction
+-- `𝔰𝔲(d) ↔ SU(d)` near (0, 1). Forward: exp of 𝔰𝔲(d) ∩ source ⊆ SU(d) ∩ target
+-- (via skew-Hermitian-exp-is-unitary + S.2d Jacobi det = exp(tr) = 1).
+-- Backward: matrixLog of SU(d) ∩ small_nbhd lands in 𝔰𝔲(d) (re-export of
+-- S.2e PROPER combined). Substrate consumed by S.2g unconditional + T-A1′.2 +
+-- T-A2′.2 + S.5 + S.6 UNCONDITIONAL.
+import SKEFTHawking.FKLW.GenericSUdLocalDiffeoRestriction
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
