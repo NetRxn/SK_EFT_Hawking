@@ -644,4 +644,90 @@ theorem sigmaZBlock_linftyOpNorm_le_one {d : ℕ} {i j : Fin d} (h_ne : i ≠ j)
       rw [if_neg h1, if_neg h2, sub_zero]
       simp
 
+/-! ## 10. Rank-2 σ_z-shape balanced commutator at SU(d)
+
+For the σ_z-shaped Hermitian-traceless `H := σ_z_block i j = single i i 1 - single j j 1`
+(satisfying `‖H‖_linfty = 1` for `i ≠ j`), the balanced commutator
+`F·G - G·F = -iθ · H` admits explicit `F = √(θ/2)·σ_y_block`, `G = √(θ/2)·σ_x_block`
+with `‖F‖, ‖G‖ ≤ √(θ/2)`. This is the substantive rank-2 case of the
+Aharonov-Arad SU(d) balanced commutator theorem (`BalancedCommutator_SUd d`). -/
+
+/-- **Balanced commutator construction for the σ_z-shape target at SU(d)**.
+
+For `d ≥ 2`, `i ≠ j`, and `θ ∈ [0, 1]`, the explicit generators
+`F := √(θ/2)·σ_y_block i j` and `G := √(θ/2)·σ_x_block i j` are traceless
+Hermitian with `‖F‖, ‖G‖ ≤ √(θ/2)` and
+`F·G - G·F = -iθ · σ_z_block i j`. -/
+theorem balanced_commutator_sigmaZ_pattern_SUd {d : ℕ} {i j : Fin d}
+    (h_ne : i ≠ j) (θ : ℝ) (hθ_nn : 0 ≤ θ) (_hθ_le_one : θ ≤ 1) :
+    let c : ℂ := (Real.sqrt (θ/2) : ℂ)
+    (c • sigmaYBlock i j).IsHermitian ∧
+    (c • sigmaXBlock i j).IsHermitian ∧
+    (c • sigmaYBlock i j).trace = 0 ∧
+    (c • sigmaXBlock i j).trace = 0 ∧
+    ‖c • sigmaYBlock i j‖ ≤ Real.sqrt (θ/2) ∧
+    ‖c • sigmaXBlock i j‖ ≤ Real.sqrt (θ/2) ∧
+    (c • sigmaYBlock i j) * (c • sigmaXBlock i j) -
+      (c • sigmaXBlock i j) * (c • sigmaYBlock i j) =
+        -((θ : ℂ) * Complex.I) • sigmaZBlock i j := by
+  intro c
+  have hθ2_nn : 0 ≤ θ/2 := by linarith
+  have hc_self : IsSelfAdjoint c := by
+    show star c = c
+    rw [Complex.star_def, Complex.conj_ofReal]
+  have hc_nn : 0 ≤ Real.sqrt (θ/2) := Real.sqrt_nonneg _
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · -- F.IsHermitian
+    exact (sigmaYBlock_isHermitian h_ne).smul hc_self
+  · -- G.IsHermitian
+    exact (sigmaXBlock_isHermitian h_ne).smul hc_self
+  · -- F.trace = 0
+    rw [Matrix.trace_smul, sigmaYBlock_trace h_ne, smul_zero]
+  · -- G.trace = 0
+    rw [Matrix.trace_smul, sigmaXBlock_trace h_ne, smul_zero]
+  · -- ‖F‖ ≤ √(θ/2)
+    show ‖c • sigmaYBlock i j‖ ≤ Real.sqrt (θ/2)
+    rw [norm_smul]
+    have hc_norm : ‖c‖ = Real.sqrt (θ/2) := by
+      show ‖(Real.sqrt (θ/2) : ℂ)‖ = Real.sqrt (θ/2)
+      rw [Complex.norm_real, Real.norm_of_nonneg hc_nn]
+    rw [hc_norm]
+    calc Real.sqrt (θ/2) * ‖sigmaYBlock i j‖
+        ≤ Real.sqrt (θ/2) * 1 := by
+          gcongr
+          exact sigmaYBlock_linftyOpNorm_le_one h_ne
+      _ = Real.sqrt (θ/2) := mul_one _
+  · -- ‖G‖ ≤ √(θ/2)
+    show ‖c • sigmaXBlock i j‖ ≤ Real.sqrt (θ/2)
+    rw [norm_smul]
+    have hc_norm : ‖c‖ = Real.sqrt (θ/2) := by
+      show ‖(Real.sqrt (θ/2) : ℂ)‖ = Real.sqrt (θ/2)
+      rw [Complex.norm_real, Real.norm_of_nonneg hc_nn]
+    rw [hc_norm]
+    calc Real.sqrt (θ/2) * ‖sigmaXBlock i j‖
+        ≤ Real.sqrt (θ/2) * 1 := by
+          gcongr
+          exact sigmaXBlock_linftyOpNorm_le_one h_ne
+      _ = Real.sqrt (θ/2) := mul_one _
+  · -- Commutator identity: F·G - G·F = -iθ · σ_z
+    -- (c•σ_y)·(c•σ_x) - (c•σ_x)·(c•σ_y) = c² · (σ_y·σ_x - σ_x·σ_y) = c² · (-2i)·σ_z
+    -- With c² = θ/2, this gives (θ/2)·(-2i)·σ_z = -iθ·σ_z.
+    have h_smul_mul_smul : ∀ (M N : Matrix (Fin d) (Fin d) ℂ),
+        (c • M) * (c • N) = (c * c) • (M * N) := by
+      intros M N
+      rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+    rw [h_smul_mul_smul, h_smul_mul_smul]
+    rw [← smul_sub, sigmaY_sigmaX_commutator h_ne]
+    -- Goal: (c * c) • ((-2 * Complex.I) • sigmaZBlock i j) = (-((θ : ℂ) * Complex.I)) • sigmaZBlock i j
+    rw [smul_smul]
+    congr 1
+    -- Need: c * c * (-2 * Complex.I) = -((θ : ℂ) * Complex.I)
+    -- c = √(θ/2) as ℂ. c² = θ/2 (as ℂ). So c² · (-2i) = -iθ.
+    have hc_sq : c * c = ((θ/2 : ℝ) : ℂ) := by
+      show (Real.sqrt (θ/2) : ℂ) * (Real.sqrt (θ/2) : ℂ) = ((θ/2 : ℝ) : ℂ)
+      rw [← Complex.ofReal_mul, Real.mul_self_sqrt hθ2_nn]
+    rw [hc_sq]
+    push_cast
+    ring
+
 end SKEFTHawking.FKLW.GenericSUd
