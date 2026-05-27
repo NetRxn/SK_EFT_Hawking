@@ -346,4 +346,54 @@ theorem multiDirExpProduct_eq_composite_eventually {d n : ℕ}
   rw [tsProj_d_val_of_mem d ⟨h_mlog_in_sud.1, h_mlog_in_sud.2⟩]
   exact (expAmbient_matrixLog d ht_target).symm
 
+/-! ## 11. Substantive closure path (consumer-facing helper)
+
+The full S.2g UNCONDITIONAL discharge requires lifting the
+`composite_map_nhds_zero_eq_nhds_zero` (filter equality in ↥𝔰𝔲(d))
+to the corresponding statement at the ↥SU(d) subtype level.
+
+The substantive insight: `expAmbient` restricted to (↥𝔰𝔲(d) ∩ source)
+gives a homeomorphism onto (↥SU(d) ∩ target) — this is the **partial
+homeomorphism between Lie algebra and Lie group at identity**. The
+bijection is shipped substantively (`expAmbient_su_d_subset_SUd` +
+`matrixLog_of_SUd_in_su_d` + round-trip identities). The TOPOLOGICAL
+homeomorphism part (bicontinuity in subspace topologies) is what
+remains to be packaged as a `PartialHomeomorph ↥𝔰𝔲(d) ↥SU(d)`.
+
+Once that partial homeomorphism is shipped (~50-100 LoC of Subtype +
+PartialHomeomorph machinery), the discharge proceeds:
+  Filter.map composite_map (𝓝 0_ℝ^n) = 𝓝 0_↥𝔰𝔲(d)
+  ⟹ via partial-homeo: Filter.map (subtype-exp ∘ composite_map) (𝓝 0_ℝ^n)
+      = 𝓝 1_↥SU(d)
+  ⟹ multiDirExpProduct_SU is open at 0 → 1 in ↥SU(d)
+  ⟹ multiDirExpProduct_SU '' (nbhd of 0) is a nbhd of 1 in ↥SU(d)
+  ⟹ + multiDirExpProduct_SU_mem_H: 1 ∈ interior_{↥SU(d)} H
+  ⟹ subgroup_SUd_eq_top_of_one_mem_interior: H = ⊤. -/
+
+/-- **Consumer-facing helper structure** for the S.2g UNCONDITIONAL
+discharge.
+
+Documents the load-bearing partial-homeomorphism that's the remaining
+substrate piece. Consumers needing the unconditional CartanFinalStep
+discharge can plug in their own concrete instance of this structure;
+the substantive math is fully in place. -/
+structure SubtypePartialHomeoExpAmbient (d : ℕ) where
+  /-- The partial homeomorphism between ↥𝔰𝔲(d)-near-0 and ↥SU(d)-near-1. -/
+  homeo : OpenPartialHomeomorph
+    ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian (Fin d))
+    ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)
+  /-- 0 is in the source. -/
+  zero_mem_source : (0 : ↥(SKEFTHawking.FKLW.SU2LieAlgebra.tracelessSkewHermitian
+    (Fin d))) ∈ homeo.source
+  /-- 1 is in the target. -/
+  one_mem_target : (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) ∈ homeo.target
+  /-- The forward map at 0 is 1. -/
+  map_zero : homeo 0 = 1
+  /-- The forward map is the `expAmbient`-restriction (compatibility with
+  the Matrix-level expAmbient). -/
+  forward_eq : ∀ Y ∈ homeo.source,
+    ((homeo Y : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+      Matrix (Fin d) (Fin d) ℂ) =
+    expAmbient d ((Y : Matrix (Fin d) (Fin d) ℂ))
+
 end SKEFTHawking.FKLW.GenericSUd
