@@ -1462,6 +1462,12 @@ import SKEFTHawking.FKLW.GenericSUdSymmetricCommFGreduction
 -- S15 (diagonal-traceless decomposition). The algebraic heart of the symmetric
 -- F=αG Aharonov-Arad balanced commutator construction at SU(d).
 import SKEFTHawking.FKLW.GenericSUdSymmetricFGEqIdentity
+-- Phase 6y Track S.3 substrate (Session 24, 2026-05-27): symmetric F=αG discharge
+-- with Hermitian + trace conjuncts packaged into ∃-existence theorem. Combines
+-- S23 algebraic identity with the Hermitian/traceless lemmas for real-coefficient
+-- σ-block sums. Discharge of symmetric balanced commutator for diagonal real-
+-- valued traceless a with non-negative partial sums.
+import SKEFTHawking.FKLW.GenericSUdSymmetricDischarge
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
