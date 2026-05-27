@@ -1419,6 +1419,13 @@ import SKEFTHawking.FKLW.GenericSUdDiagonalDecomp
 -- This is the off-diagonal obstruction in the naive σ_y/σ_x sum construction;
 -- counterterm cancellation (Aharonov-Arad 2014) ships separately.
 import SKEFTHawking.FKLW.GenericSUdSigmaCrossTerm
+-- Phase 6y Track S.3 substrate (Session 18, 2026-05-27): complete 2-block
+-- commutator classification — disjoint supports ⟹ commutator = 0; shared-first
+-- cross-term `[σ_y(a, b), σ_x(a, c)] = +i · σ_x(b, c)` for distinct a, b, c.
+-- Exhausts all 2-block commutator cases (together with Session 11 same-pair
+-- and Session 17 shared-middle), giving the complete cross-term substrate
+-- for Aharonov-Arad SU(d) counterterm construction.
+import SKEFTHawking.FKLW.GenericSUdSigmaClassification
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
