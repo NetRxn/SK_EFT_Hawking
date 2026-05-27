@@ -1089,6 +1089,14 @@ import SKEFTHawking.FKLW.GenericSUdMatrixExpDiffeo
 -- injectivity + the symmetric-source-nbhd topological argument. Half
 -- of the substrate for S.2's discharge (traceless half ships separately).
 import SKEFTHawking.FKLW.GenericSUdMatrixLogSkewHerm
+-- Phase 6y Track M-S.2 (2026-05-27): Mathlib-PR-quality presentation of
+-- the matrix exp local homeomorphism at 0. Ships under the Matrix
+-- namespace: `Matrix.expOpenPartialHomeomorphAt_zero d`,
+-- `Matrix.exp_isLocalHomeomorph_zero`, `Matrix.map_nhds_zero_exp`.
+-- ACTUAL extraction (per Phase 6x failure mode #3): de-namespaced,
+-- generic-typed, Mathlib-style docstrings + SU(2)/SU(4)/SU(8) examples.
+-- Filename mirror Mathlib.Analysis.Normed.Algebra.MatrixExponential.
+import SKEFTHawking.MatrixExpLocalHomeomorphMathlibPR
 -- Phase 6p Wave 2d.2-followup-R5.2.1 (2026-05-13): order-2 Taylor polynomial
 -- product algebraic infrastructure (BCH cubic-bound prep). Ships `T2pos`,
 -- `T2neg`, `bchPolyRem`, `bchPoly_decomp`. The cubic norm bound
