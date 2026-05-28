@@ -47,6 +47,7 @@ assembly (the (B) ingredient; base case).
 
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdSkApproxC
+import SKEFTHawking.FKLW.GenericSUdSkApproxCBound
 import SKEFTHawking.FKLW.GenericSUdDnStepFGNormBound
 import SKEFTHawking.FKLW.GenericSUdDnStepFGCubic
 import SKEFTHawking.FKLW.GenericSUdRhomAbstraction
@@ -754,5 +755,106 @@ lemma skApproxC_sud_succ_super_quad_valid {m : ℕ}
   have h_chain := super_quad_numeric_chain (m := m) ε δ_lie η hε_nn hδ_nn
     (le_of_eq hδ_def) hη_le hε_le
   exact le_trans h_combine h_chain
+
+/-! ## The super-quad bound discharge (Nat.rec wrap) — the (B) ingredient -/
+
+/-- **(m+2)^5·√ε ≤ 1 from the calibration** (ε ≤ 2·ε₀_sud(m+2)): since
+`√(2·ε₀_sud) = 1/(2·K_compose_sud) = 1/(2·1024·(m+2)^16)`, we get
+`(m+2)^5·√ε ≤ (m+2)^5/(2048·(m+2)^16) ≤ 1`. -/
+lemma delta_le_one_of_eps_le {m : ℕ} (ε : ℝ) (hε_nn : 0 ≤ ε)
+    (hε_le : ε ≤ 2 * ε₀_sud (m + 2)) :
+    ((m : ℝ) + 2) ^ 5 * Real.sqrt ε ≤ 1 := by
+  have hd_ge_one : (1 : ℝ) ≤ (m : ℝ) + 2 := by
+    have : (0 : ℝ) ≤ (m : ℝ) := Nat.cast_nonneg m; linarith
+  have hK := K_compose_sud_sqrt_two_ε₀_sud_eq_half (d := m + 2) (by omega)
+  have hKpos := K_compose_sud_pos (d := m + 2) (by omega)
+  have hKval : K_compose_sud (m + 2) = 1024 * ((m : ℝ) + 2) ^ 16 := by
+    unfold K_compose_sud; push_cast; ring
+  -- √ε ≤ √(2ε₀_sud) = 1/(2K)
+  have h_sqrt_le : Real.sqrt ε ≤ Real.sqrt (2 * ε₀_sud (m + 2)) := Real.sqrt_le_sqrt hε_le
+  have h_sqrt_eq : Real.sqrt (2 * ε₀_sud (m + 2)) = 1 / (2 * K_compose_sud (m + 2)) := by
+    have := hK
+    field_simp at this ⊢
+    linarith [this]
+  rw [h_sqrt_eq, hKval] at h_sqrt_le
+  -- (m+2)^5 · √ε ≤ (m+2)^5 · (1/(2·1024·(m+2)^16)) ≤ 1
+  have h_pow_pos : (0 : ℝ) < ((m : ℝ) + 2) ^ 16 := by positivity
+  calc ((m : ℝ) + 2) ^ 5 * Real.sqrt ε
+      ≤ ((m : ℝ) + 2) ^ 5 * (1 / (2 * (1024 * ((m : ℝ) + 2) ^ 16))) :=
+        mul_le_mul_of_nonneg_left h_sqrt_le (by positivity)
+    _ ≤ 1 := by
+        rw [mul_one_div, div_le_one (by positivity)]
+        nlinarith [pow_le_pow_right₀ hd_ge_one (show 5 ≤ 16 by norm_num), h_pow_pos]
+
+/-- **(B) SUPER-QUAD BOUND DISCHARGE** — the `SkApproxCSuperQuadraticBound_generic_sud`
+predicate holds at the calibration `(K_compose_sud(m+2), ε₀_sud(m+2))`, given the
+base-finder ε₀-net property and the **regime hypothesis** `h_regime` (for every
+residual `V⁻¹U` with `‖V−U‖ ≤ 2·ε₀_sud`, the valid-branch conditions hold: the
+θ-bound `‖H‖ ≤ 2(m+2)‖V−U‖`, `0 < ‖H‖ ≤ 1` with `H` Hermitian-traceless, and
+`Δ ∈ target`).
+
+By induction on the recursion depth: base case S89; inductive step applies the
+single-step valid-branch bound S101 after instantiating `h_regime` at the level-n
+approximant (whose residual is `≤ ε_n ≤ 2·ε₀_sud` by S65 monotonicity).
+
+The `h_regime` hypothesis is the honest carrier of the existential matrixLog
+Lipschitz/`𝔰𝔲(d)` regime (the SU(d) matrixLog is the IFT local inverse, valid on
+a neighborhood of 1); downstream per-alphabet headlines discharge it by choosing a
+fine-enough base-finder ε-net so `2·ε₀_sud` lands inside that neighborhood. -/
+theorem SkApproxCSuperQuadraticBound_generic_sud_holds {m : ℕ}
+    (gs : GeneratingSet (m + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (m + 2))
+    (h_baseFinder : BaseFinder_approximates_within_sud gs baseFinder (2 * ε₀_sud (m + 2)))
+    (h_regime : ∀ (V Uu : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)),
+        ‖(V : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+          (Uu : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 2 * ε₀_sud (m + 2) →
+        ‖((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
+            (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤
+          2 * ((m : ℝ) + 2) * ‖(V : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+            (Uu : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ∧
+        (0 < ‖((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
+            (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ∧
+          ‖((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
+            (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 1 ∧
+          (((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
+            (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)).IsHermitian ∧
+          (((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
+            (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)).trace = 0) ∧
+        (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val ∈
+          (expAmbientPartialHomeo (m + 2)).target) :
+    SkApproxCSuperQuadraticBound_generic_sud (K_compose_sud (m + 2)) (ε₀_sud (m + 2))
+      gs baseFinder h_det_pred := by
+  have hK_pos := K_compose_sud_pos (d := m + 2) (by omega)
+  have hε₀_pos := ε₀_sud_pos (d := m + 2) (by omega)
+  have h2ε₀_pos : 0 < 2 * ε₀_sud (m + 2) := by linarith
+  intro n
+  induction n with
+  | zero =>
+    intro U
+    exact skApproxC_generic_sud_zero_error_bound gs baseFinder h_det_pred
+      (K_compose_sud (m + 2)) (ε₀_sud (m + 2)) h_baseFinder U
+  | succ k ih =>
+    intro U
+    rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_succ]
+    set ε_k := SKEFTHawking.FKLW.EpsilonSeq.ε_seq (K_compose_sud (m + 2))
+      (2 * ε₀_sud (m + 2)) k with hε_k_def
+    have hε_k_nn : 0 ≤ ε_k :=
+      SKEFTHawking.FKLW.EpsilonSeq.ε_seq_nonneg _ _ hK_pos h2ε₀_pos k
+    have hε_k_le : ε_k ≤ 2 * ε₀_sud (m + 2) :=
+      ε_seq_K_compose_sud_two_ε₀_sud_le_two_ε₀_sud (d := m + 2) (by omega) k
+    have h_V_n_bound : ‖((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred k U) :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+          (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ ε_k := ih U
+    have h_res := h_regime (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred k U)) U
+      (le_trans h_V_n_bound hε_k_le)
+    have h_theta_le : ‖((-Complex.I) • matrixLog (m + 2)
+        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred k U))⁻¹ * U :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 2 * ((m : ℝ) + 2) * ε_k :=
+      le_trans h_res.1 (mul_le_mul_of_nonneg_left h_V_n_bound (by positivity))
+    exact skApproxC_sud_succ_super_quad_valid gs baseFinder h_det_pred k U ε_k hε_k_nn hε_k_le
+      (delta_le_one_of_eps_le ε_k hε_k_nn hε_k_le) h_theta_le h_res.2.1 h_res.2.2 ih
 
 end SKEFTHawking.FKLW.GenericSUd
