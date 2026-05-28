@@ -32,6 +32,7 @@ substrate lift (1st of ~10 substrate lemmas per Explore-agent intel).
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdNormBridgeUnitaryConjugation
 import SKEFTHawking.FKLW.GenericSUdMatrixLogLipschitzExplicit
+import SKEFTHawking.FKLW.GenericSUdSkLevelPolylogSpec
 
 set_option autoImplicit false
 
@@ -230,5 +231,19 @@ lemma K_compose_sud_ge_1024 {d : ℕ} (hd : 1 ≤ d) :
     have : (1 : ℝ)^4 ≤ (d : ℝ)^4 := pow_le_pow_left₀ (by norm_num) hd_ge_1 4
     simpa using this
   nlinarith
+
+/-! ## Calibrated polylog level spec at SU(d) -/
+
+/-- **Calibrated polylog level spec at SU(d)** — directly instantiates
+Session 48's `skLevel_polylog_sud_spec_holds` at the SU(d) calibration
+constants `(K_compose_sud d, ε₀_sud d)`.
+
+For d ≥ 1, the polylog level chooser `skLevel_polylog_sud (K_compose_sud d) ε`
+achieves `ε_seq (K_compose_sud d) (2·ε₀_sud d) ... ≤ ε` for ε in valid range. -/
+theorem skLevel_polylog_sud_spec_holds_calibrated {d : ℕ} (hd : 1 ≤ d) :
+    SkLevelPolylog_sud_spec (K_compose_sud d) (ε₀_sud d) :=
+  skLevel_polylog_sud_spec_holds (K_compose_sud d) (ε₀_sud d)
+    (K_compose_sud_pos hd) (ε₀_sud_pos hd)
+    (K_compose_sud_calibration_le hd)
 
 end SKEFTHawking.FKLW.GenericSUd
