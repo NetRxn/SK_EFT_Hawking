@@ -1600,6 +1600,12 @@ import SKEFTHawking.FKLW.GenericSUdExpIsuD
 -- Substrate for Sessions 44+ (super-quadratic bound + per-alphabet
 -- instantiations + headline cascade unblock).
 import SKEFTHawking.FKLW.GenericSUdSkApproxC
+-- Phase 6y Track S (Session 44, 2026-05-27): SU(d) super-quadratic bound
+-- predicate. SU(d) analog of `SkApproxCSuperQuadraticBound_generic` (Phase 6u
+-- Wave 4 SU(2)). Captures the shape `‖ρ_hom (skApproxC_generic_sud n U) - U‖
+-- ≤ ε_seq K (2·ε₀_sud) n`. Structural predicate; substantive discharge ships
+-- in Session 45+ (analog of Phase 6u Wave 4b ~981-LoC discharge).
+import SKEFTHawking.FKLW.GenericSUdSkApproxCBound
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
