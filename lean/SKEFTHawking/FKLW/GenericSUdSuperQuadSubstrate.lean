@@ -348,4 +348,32 @@ def DnStepFG_sud_G_norm_bound_predicate {n : ℕ} (K_G : ℝ) : Prop :=
     let θ : ℝ := ‖H‖
     0 < θ ∧ θ ≤ 1 → ‖(dnStepFG_sud V_n U).G‖ ≤ K_G * Real.sqrt (θ / 2)
 
+/-! ## SU(d) compile function unfolding lemmas -/
+
+/-- **Level-0 unfolding** of `solovayKitaev_compile_strict_constructive_generic_sud`:
+the compile function at level 0 (when skLevel_polylog_sud K ε = 0) reduces
+to the base finder applied to U. -/
+lemma solovayKitaev_compile_strict_constructive_generic_sud_eq_skApproxC
+    {n : ℕ} (gs : GeneratingSet (n + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (n + 2))
+    (K : ℝ) (U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) (ε : ℝ) :
+    solovayKitaev_compile_strict_constructive_generic_sud gs baseFinder h_det_pred
+        K U ε =
+      skApproxC_generic_sud gs baseFinder h_det_pred (skLevel_polylog_sud K ε) U :=
+  rfl
+
+/-- **Calibrated compile = unfolded form**: the calibrated version uses
+`K_compose_sud (n+2)`. -/
+lemma solovayKitaev_compile_strict_constructive_generic_sud_calibrated_eq
+    {n : ℕ} (gs : GeneratingSet (n + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (n + 2))
+    (U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) (ε : ℝ) :
+    solovayKitaev_compile_strict_constructive_generic_sud_calibrated gs baseFinder
+        h_det_pred U ε =
+      skApproxC_generic_sud gs baseFinder h_det_pred
+        (skLevel_polylog_sud (K_compose_sud (n + 2)) ε) U :=
+  rfl
+
 end SKEFTHawking.FKLW.GenericSUd
