@@ -1803,6 +1803,10 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGConcreteCubic
 -- Re-pointed skApproxC_generic_sud extracting each level's (F,G) via dnStepFG_sud_concrete (S130);
 -- foundation for the UNCONDITIONAL concrete (B) bound. + zero/succ unfolding lemmas.
 import SKEFTHawking.FKLW.GenericSUdSkApproxCConcrete
+-- Phase 6y Track S (Session 139, 2026-05-28): UNCONDITIONAL concrete (B) super-quad bound (re-point R4
+-- FINAL). SkApproxCSuperQuadraticBound_generic_sud_concrete_holds — NO h_regime hypothesis (per-level
+-- regime discharged internally via S120 θ-bound + calibration two_ε₀_sud_mul_le_half / sq_*_eighth).
+import SKEFTHawking.FKLW.GenericSUdSkApproxCBoundConcrete
 -- Phase 6y Track S (Session 134, 2026-05-28): concrete super-quad induction substrate (base case +
 -- polynomial F/G-norm bounds). skApproxC_generic_sud_concrete_zero_error_bound (base, log-agnostic) +
 -- dnStepFG_sud_concrete_{F,G}_norm_le_poly ((n+2)⁴·√(θ/2) form, composes S131 + S90).
