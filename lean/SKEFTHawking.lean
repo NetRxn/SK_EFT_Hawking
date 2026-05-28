@@ -1738,6 +1738,11 @@ import SKEFTHawking.FKLW.GenericSUdGammaSumDecomp
 -- |μ| ≤ row-k sum ≤ max row sum = ‖A‖_linftyOp. Last mathematical ingredient
 -- for the F_inner partial-sum bound B = d·‖H‖.
 import SKEFTHawking.FKLW.GenericSUdEigenvalueLinftyBound
+-- Phase 6y Track S (Session 77, 2026-05-27): bounded symmetric diagonal discharge.
+-- Strengthens Session 24 to ALSO return `‖F‖,‖G‖ ≤ ∑_p √(θ·(b_p).re/2)` — the
+-- explicit-witness norm bound via Session 70 applied to F = ∑γ·σ_y. The re-thread
+-- exposing the inner-witness norm bound for the super-quad F/G-norm ingredient.
+import SKEFTHawking.FKLW.GenericSUdSymmetricDischargeBounded
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
