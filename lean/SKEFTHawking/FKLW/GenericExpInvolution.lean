@@ -109,3 +109,27 @@ theorem exp_smul_involution [NormedAlgebra ℚ 𝔸] (J : 𝔸) (hJ : J * J = 1)
   congr 1
   · congr 1; rw [Complex.cosh, h2z, Complex.exp_neg]; field_simp; ring
   · congr 1; rw [Complex.sinh, h2z, Complex.exp_neg]; field_simp
+
+/-- **exp through an anticommuting element**: if `A * B = −(B * A)` then
+`exp A * B = B * exp(−A)`. (Each `A` moved past `B` flips its sign: `Aⁿ·B = B·(−A)ⁿ`.) -/
+theorem exp_mul_of_anticommute (A B : 𝔸) (hAB : A * B = -(B * A)) :
+    NormedSpace.exp A * B = B * NormedSpace.exp (-A) := by
+  have hpow : ∀ n : ℕ, A ^ n * B = B * (-A) ^ n := by
+    intro n
+    induction n with
+    | zero => simp
+    | succ k ih => rw [pow_succ', mul_assoc, ih, ← mul_assoc, hAB, pow_succ']; noncomm_ring
+  have hsumA : Summable (fun n : ℕ => ((n.factorial : ℂ)⁻¹) • A ^ n) :=
+    NormedSpace.expSeries_summable' (𝕂 := ℂ) A
+  have hsumnA : Summable (fun n : ℕ => ((n.factorial : ℂ)⁻¹) • (-A) ^ n) :=
+    NormedSpace.expSeries_summable' (𝕂 := ℂ) (-A)
+  have hA : NormedSpace.exp A = ∑' n : ℕ, ((n.factorial : ℂ)⁻¹) • A ^ n := by
+    rw [NormedSpace.exp_eq_tsum ℂ]
+  have hnA : NormedSpace.exp (-A) = ∑' n : ℕ, ((n.factorial : ℂ)⁻¹) • (-A) ^ n := by
+    rw [NormedSpace.exp_eq_tsum ℂ]
+  rw [hA, hnA, ← Summable.tsum_mul_right B hsumA, ← Summable.tsum_mul_left B hsumnA]
+  congr 1
+  funext n
+  rw [smul_mul_assoc, hpow, mul_smul_comm]
+
+end SKEFTHawking.FKLW
