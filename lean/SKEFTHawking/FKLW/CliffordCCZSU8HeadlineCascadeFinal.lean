@@ -87,7 +87,7 @@ theorem cliffordCCZSU8Headline_via_cascade_final
       SKEFTHawking.FKLW.GenericSUd.freeGroup_wordLength_su8) :
     cliffordCCZSU8Headline := by
   have h_headline := SKEFTHawking.FKLW.GenericSUd.skHeadline_FreeGroup_SUd_cascade_final
-    (n := 6) (α := Fin 4) K ε₀_sud c
+    (n := 6) (α := Fin 10) K ε₀_sud c
     hK_pos hK_ge_one hε₀_pos hc_pos h_cal
     cliffordCCZGeneratingSetSU8 cliffordCCZGeneratingSetSU8_W
     h_dense

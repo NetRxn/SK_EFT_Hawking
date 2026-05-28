@@ -1234,6 +1234,12 @@ import SKEFTHawking.FKLW.CliffordCCZSU8PerQubitFlow
 -- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): entangler-spread foundation — CNOT involutions
 -- + generic permMatrix conjugation = index relabel + validated base CNOT Pauli-conjugation.
 import SKEFTHawking.FKLW.CliffordCCZSU8EntanglerSpread
+-- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): factor-wise conjugation — qubit_iEmbed(C) rotates
+-- only tensor slot i (pure Kronecker mixed-product algebra + per-qubit inverse bridge).
+import SKEFTHawking.FKLW.CliffordCCZSU8FactorConj
+-- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): the 54 entangling tangent flow lines — CNOT base
+-- entanglers + per-qubit Clifford rotation spread (conjugation transport) → full suEightTangent_flow.
+import SKEFTHawking.FKLW.CliffordCCZSU8EntanglerFlow
 -- Phase 6y Track S.2-consumer (2026-05-27): generic SU(d) ClosureDenseWitness
 -- structure for `GeneratingSet d`. Bundles n traceless skew-Hermitian
 -- spanning tangents + flow-line containment in H_of_G gs. Conditional
@@ -1418,6 +1424,10 @@ import SKEFTHawking.FKLW.CliffordCCZSU8DensityFromWitness
 -- Mirrors Phase 6u CliffordT pattern (`cliffordT_v4_witness_tracked`).
 import SKEFTHawking.FKLW.TrappedIonSU4WitnessTracked
 import SKEFTHawking.FKLW.CliffordCCZSU8WitnessTracked
+-- Phase 6y Track T-A2′.2/.5 (D) witness (2026-05-28): UNCONDITIONAL SU(8) Clifford+CCZ(+T) closure-
+-- density witness assembly + UNCONDITIONAL SolovayKitaevHeadline_FreeGroup_SUd. Ships Clifford+T at
+-- SU(8) (CCZ over-complete); literal CCZ-essential is a tracked strengthening (DR seed spike).
+import SKEFTHawking.FKLW.CliffordCCZSU8WitnessFull
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
