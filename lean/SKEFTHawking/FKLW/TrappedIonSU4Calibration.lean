@@ -12,11 +12,11 @@ the Solovay-Kitaev compilation.
 ## Constants
 
   * `trappedIonSU4_skLength_const : ℝ` — the polylog length-bound constant
-    `c > 0` in `(compile U ε).toWord.length ≤ c · log(1/ε)^(log 5 / log 2)`.
+    `c > 0` in `(compile U ε).toWord.length ≤ c · log(1/ε)^(log 5 / log (3/2))`.
     Calibrated for the trapped-ion alphabet's word-length scaling.
 
   * `trappedIonSU4_skLength_exponent : ℝ` — the polylog exponent
-    `log 5 / log 2 ≈ 2.32` (Dawson-Nielsen 2006 SK exponent), constant
+    `log 5 / log (3/2) ≈ 3.97` (Dawson-Nielsen 2006 SK exponent), constant
     across alphabets.
 
   * `trappedIonSU4_epsilonZero (N : ℕ) (hN : 0 < N) : ℝ` — the maximum
@@ -52,16 +52,17 @@ def trappedIonSU4_skLength_const : ℝ := 10
 theorem trappedIonSU4_skLength_const_pos : 0 < trappedIonSU4_skLength_const := by
   unfold trappedIonSU4_skLength_const; norm_num
 
-/-- **The Dawson-Nielsen 2006 SK polylog exponent** `log 5 / log 2`.
-Constant across alphabets (alphabet-independent property of the SK
-recursion structure). -/
-noncomputable def trappedIonSU4_skLength_exponent : ℝ := Real.log 5 / Real.log 2
+/-- **The Dawson-Nielsen 2006 SK polylog exponent** `log 5 / log (3 / 2) ≈ 3.97`
+(arXiv:quant-ph/0505030 §3.3: 5× word-length growth per level + ε^(3/2) error
+contraction ⟹ `c = log 5 / log (3/2)`). Constant across alphabets
+(alphabet-independent property of the SK recursion structure). -/
+noncomputable def trappedIonSU4_skLength_exponent : ℝ := Real.log 5 / Real.log (3 / 2)
 
 theorem trappedIonSU4_skLength_exponent_pos : 0 < trappedIonSU4_skLength_exponent := by
   unfold trappedIonSU4_skLength_exponent
   apply div_pos
   · exact Real.log_pos (by norm_num : (1 : ℝ) < 5)
-  · exact Real.log_pos (by norm_num : (1 : ℝ) < 2)
+  · exact Real.log_pos (by norm_num : (1 : ℝ) < 3 / 2)
 
 /-- **Trapped-ion SU(4) ε₀ maximum**. -/
 noncomputable def trappedIonSU4_epsilonZero (_N : ℕ) (_hN : 0 < _N) : ℝ := 1 / 32

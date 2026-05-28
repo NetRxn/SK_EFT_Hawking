@@ -75,14 +75,19 @@ All other substantive content (det predicate, polylog level spec,
 length-bound recursion, baseFinder length-boundedness, polylog level
 chooser) is composed internally via Sessions 41-55 substrate.
 
-## Length-bound exponent caveat
+## Length-bound exponent
 
-The headline form's `Real.log 5 / Real.log 2 ≈ 2.32` exponent is the
-Dawson-Nielsen standard-literature presentation. The (3/2)-rate recursion's
-ACHIEVABLE exponent is `Real.log 5 / Real.log (3/2) ≈ 3.97`. The
-hypothesis `h_length_polylog` asserts the polylog bound at the headline's
-declared exponent; downstream consumers must verify this via the achievable
-exponent (sharper analysis OR exponent revision in the headline form). -/
+The headline form's length exponent is `Real.log 5 / Real.log (3 / 2) ≈ 3.97`,
+the canonical Dawson-Nielsen value (arXiv:quant-ph/0505030 §3.3): the SK
+recursion expands word length 5× per level while contracting error at the
+ε^(3/2) super-quadratic rate, giving `c = log 5 / log (3/2)`. This matches the
+project's SU(2) `SolovayKitaevLengthBound.skLengthExponent` and the level
+chooser `skLevel_polylog_sud` (which already uses `log (3/2)`). The hypothesis
+`h_length_polylog` asserts the polylog bound at this achievable exponent.
+
+(Corrected 2026-05-28 from a 2026-05-27 mis-transcription `log 5 / log 2 ≈ 2.32`,
+which was wrongly attributed to Dawson-Nielsen and is unachievable for the
+ε^(3/2) recursion — it would require quadratic ε² contraction.) -/
 theorem skHeadline_FreeGroup_SUd_cascade_final
     {n : ℕ} {α : Type} [DecidableEq α]
     (K ε₀_sud c : ℝ)
@@ -104,7 +109,7 @@ theorem skHeadline_FreeGroup_SUd_cascade_final
           (fun U => findNearestInCover_SUd gs h_dense ε₀_sud hε₀_pos U)
           (expIsud_det_eq_one_predicate_holds n)
           (skLevel_polylog_sud K ε) U : FreeGroup α).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)) :
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))) :
     SolovayKitaevHeadline_FreeGroup_SUd gs h_eq :=
   skHeadline_FreeGroup_SUd_cascade_2ingredient_with_calibration K ε₀_sud c
     hK_pos hε₀_pos hc_pos h_cal gs h_eq

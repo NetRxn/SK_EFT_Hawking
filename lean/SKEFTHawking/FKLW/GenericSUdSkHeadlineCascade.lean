@@ -136,7 +136,7 @@ theorem skHeadline_FreeGroup_SUd_cascade {m : ℕ}
       (ε : ℝ), 0 < ε → ε ≤ ε₀_sud →
       ((h_eq ▸ skApproxC_generic_sud gs baseFinder h_det_pred
           (levelChooser ε) U : FreeGroup α).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)) :
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))) :
     SolovayKitaevHeadline_FreeGroup_SUd gs h_eq := by
   refine ⟨ε₀_sud, c, fun U ε => skApproxC_generic_sud gs baseFinder
       h_det_pred (levelChooser ε) U, hε₀_pos, hc_pos, ?_⟩

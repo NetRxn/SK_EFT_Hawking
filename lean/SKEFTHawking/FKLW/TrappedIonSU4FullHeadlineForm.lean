@@ -23,7 +23,7 @@ There exist `ε₀, c > 0` and a compilation function
 `U ∈ SU(4)` and any `ε ∈ (0, ε₀]`:
 
   * Error: `‖(ρ_hom (compile U ε)).val - U.val‖ ≤ ε`
-  * Length: `(compile U ε).toWord.length ≤ c · log(1/ε)^(log 5 / log 2)`
+  * Length: `(compile U ε).toWord.length ≤ c · log(1/ε)^(log 5 / log (3/2))`
 
 Both conjuncts at the SAME algorithmic compile level (M.4 inheritance,
 satisfying F#4).
@@ -91,7 +91,7 @@ def trappedIonSU4FullHeadline (N : ℕ) (hN : 0 < N) : Prop :=
         (U : Matrix (Fin 4) (Fin 4) ℂ)‖ ≤ ε ∧
       -- Concrete word-length bound (M.4 inheritance, F#4 guardrail)
       ((compile U ε).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))
 
 /-! ## 2. Bridge: 1Q-only sub-alphabet is a special case at N = 0
 

@@ -53,7 +53,7 @@ substantive content items:
 
   4. **Polylog word-length bound**: a `wordLength : gs.W → ℕ` function +
      polylog bound on `wordLength (skApproxC_generic_sud ... (skLevel_polylog_sud
-     K ε) U) ≤ c · (log(1/ε))^(log 5 / log 2)`. Substantive content:
+     K ε) U) ≤ c · (log(1/ε))^(log 5 / log (3/2))`. Substantive content:
      recursive word-length tracking through the SK recursion.
 
 ## Per-alphabet instantiation (T-A1′.5 + T-A2′.5)
@@ -126,7 +126,7 @@ theorem phase6y_S6_skHeadline_cascade_alias {m : ℕ} {α : Type} [DecidableEq �
       (ε : ℝ), 0 < ε → ε ≤ ε₀_sud →
       ((h_eq ▸ skApproxC_generic_sud gs baseFinder h_det_pred
           (levelChooser ε) U : FreeGroup α).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)) :
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))) :
     SolovayKitaevHeadline_FreeGroup_SUd gs h_eq :=
   skHeadline_FreeGroup_SUd_cascade K ε₀_sud c hε₀_pos hc_pos gs h_eq
     baseFinder h_det_pred h_bound levelChooser h_level_spec h_length_bound

@@ -104,13 +104,13 @@ lemma skLength_sud_monotone (baseCase decompCost : ℝ)
 
 For polylog-level `levelChooser : ℝ → ℕ` (e.g., `skLevel_polylog_sud K`),
 asserts that the closed-form word length at level `levelChooser ε` is
-≤ `c · (log(1/ε))^(log 5 / log 2)` for ε in valid range.
+≤ `c · (log(1/ε))^(log 5 / log (3/2))` for ε in valid range.
 
 This is the substrate content for the SU(d) headline length bound. -/
 def SkLengthPolylogBound_sud
     (baseCase decompCost ε₀_sud c : ℝ) (levelChooser : ℝ → ℕ) : Prop :=
   ∀ (ε : ℝ), 0 < ε → ε ≤ ε₀_sud →
     skLength_sud baseCase decompCost (levelChooser ε) ≤
-      c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)
+      c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))
 
 end SKEFTHawking.FKLW.GenericSUd

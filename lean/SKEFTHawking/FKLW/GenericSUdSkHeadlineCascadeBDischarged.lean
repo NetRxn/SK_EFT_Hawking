@@ -86,7 +86,7 @@ theorem skHeadline_FreeGroup_SUd_cascade_B_discharged
             (ε₀_sud_pos (d := n + 2) (by omega)) U)
           (expIsud_det_eq_one_predicate_holds n)
           (skLevel_polylog_sud (K_compose_sud (n + 2)) ε) U : FreeGroup α).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)) :
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))) :
     SolovayKitaevHeadline_FreeGroup_SUd gs h_eq := by
   have hε₀_pos : 0 < ε₀_sud (n + 2) := ε₀_sud_pos (by omega)
   have h_baseFinder : BaseFinder_approximates_within_sud gs

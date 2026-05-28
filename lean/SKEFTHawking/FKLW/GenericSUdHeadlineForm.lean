@@ -51,8 +51,9 @@ Solovay-Kitaev compilation provides a quantitative density predicate:
       ‖(gs.ρ_hom word).val - U.val‖ ≤ ε ∧
       word.toWord.length ≤ polylog (1 / ε)`
 
-The "polylog" bound has the standard form `c · log_2 (1/ε) ^ (log_2 5)`
-(Dawson-Nielsen 2006 SK algorithm exponent).
+The "polylog" bound has the standard form
+`c · (log (1/ε)) ^ (log 5 / log (3/2))` with the canonical Dawson-Nielsen
+exponent `log 5 / log (3/2) ≈ 3.97` (arXiv:quant-ph/0505030 §3.3).
 
 This module ships the **predicate** `SolovayKitaevHeadline_SUd` capturing
 this shape; the substantive discharge ships via composition with S.2g
@@ -66,7 +67,7 @@ target `U ∈ SU(d)` and any precision `ε ∈ (0, ε₀]`:
   * error bound: `‖(gs.ρ_hom (compile U ε)).val - U.val‖ ≤ ε`
   * word-length bound: `(compile U ε).toWord.length ≤ polylog_bound ε`
 
-where `polylog_bound ε := c · (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)`
+where `polylog_bound ε := c · (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))`
 for some constant `c > 0` (Dawson-Nielsen 2006 exponent).
 
 For `gs.W = FreeGroup α`, `word.toWord.length` is the abstract free-group
@@ -88,7 +89,7 @@ def SolovayKitaevHeadline_FreeGroup_SUd {d : ℕ} {α : Type} [DecidableEq α]
       -- Word-length bound at compile level (polylog).
       -- Cast compile U ε from gs.W to FreeGroup α via h_eq, take toWord.length.
       ((h_eq ▸ compile U ε : FreeGroup α).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))
 
 /-! ## 2. Specialization for the Phase 6y target instances
 
@@ -115,6 +116,6 @@ def SolovayKitaevHeadline_SUd {d : ℕ}
           Matrix (Fin d) (Fin d) ℂ) -
         (U : Matrix (Fin d) (Fin d) ℂ)‖ ≤ ε ∧
       (wordLength (compile U ε) : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))
 
 end SKEFTHawking.FKLW.GenericSUd

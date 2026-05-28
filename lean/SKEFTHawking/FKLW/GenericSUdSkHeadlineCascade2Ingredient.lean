@@ -74,7 +74,7 @@ theorem skHeadline_FreeGroup_SUd_cascade_2ingredient_with_calibration
       ((h_eq ▸ skApproxC_generic_sud gs baseFinder
           (expIsud_det_eq_one_predicate_holds n)
           (skLevel_polylog_sud K ε) U : FreeGroup α).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)) :
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))) :
     SolovayKitaevHeadline_FreeGroup_SUd gs h_eq := by
   -- Discharge level spec via Session 48 (skLevel_polylog_sud_spec_holds).
   have h_level_spec : SkLevelPolylog_sud_spec K ε₀_sud :=
@@ -101,7 +101,7 @@ theorem skHeadline_FreeGroup_SUd_cascade_2ingredient
       ((h_eq ▸ skApproxC_generic_sud gs baseFinder
           (expIsud_det_eq_one_predicate_holds n)
           (skLevel_polylog_sud K ε) U : FreeGroup α).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)) :
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))) :
     SolovayKitaevHeadline_FreeGroup_SUd gs h_eq :=
   skHeadline_FreeGroup_SUd_cascade_2ingredient_with_calibration K ε₀_sud c
     hK_pos hε₀_pos hc_pos h_cal gs h_eq baseFinder h_bound h_length_bound

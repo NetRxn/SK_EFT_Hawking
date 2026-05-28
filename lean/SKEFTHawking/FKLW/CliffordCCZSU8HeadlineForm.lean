@@ -24,7 +24,7 @@ there exists `ε₀, c > 0` and a compilation function
 `U ∈ SU(8)` and any `ε ∈ (0, ε₀]`:
 
   * Error: `‖(ρ_hom (compile U ε)).val - U.val‖ ≤ ε`
-  * Length: `(compile U ε).toWord.length ≤ c · log(1/ε)^(log 5 / log 2)`
+  * Length: `(compile U ε).toWord.length ≤ c · log(1/ε)^(log 5 / log (3/2))`
 
 Both conjuncts at the SAME algorithmic compile level (M.4
 inheritance, satisfying F#4).
@@ -78,8 +78,8 @@ def cliffordCCZSU8Headline : Prop :=
             ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ)) :
           Matrix (Fin 8) (Fin 8) ℂ) -
         (U : Matrix (Fin 8) (Fin 8) ℂ)‖ ≤ ε ∧
-      -- Concrete word-length bound: |compile U ε| ≤ c · log(1/ε)^(log 5 / log 2)
+      -- Concrete word-length bound: |compile U ε| ≤ c · log(1/ε)^(log 5 / log (3/2))
       ((compile U ε).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))
 
 end SKEFTHawking.FKLW.CliffordCCZSU8

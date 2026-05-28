@@ -77,11 +77,14 @@ via `skHeadline_FreeGroup_SUd_cascade_final` (Session 56).
      Multi-session.
   3. **(D-SU8) Density witness for SU(8) Clifford+CCZ**: Aaronson-Gottesman 2004
      lineage. Substantive Clifford-stabilizer-theoretic content. Multi-session.
-  4. **Length-bound polylog asymptotic exponent caveat**: headline form's
-     `Real.log 5 / Real.log 2 ≈ 2.32` exponent is Dawson-Nielsen
-     standard-literature value; (3/2)-rate recursion's ACHIEVABLE exponent
-     is `Real.log 5 / Real.log (3/2) ≈ 3.97`. Resolution: either ship a
-     sharper recursion analysis OR revise the headline form's exponent.
+  4. **Length-bound polylog asymptotic discharge** (exponent caveat RESOLVED
+     2026-05-28): the headline form's length exponent is now the canonical
+     Dawson-Nielsen `Real.log 5 / Real.log (3 / 2) ≈ 3.97` (corrected from a
+     2026-05-27 mis-transcription `log 5 / log 2 ≈ 2.32` that was unachievable
+     for the project's ε^(3/2) recursion — it would require quadratic ε²
+     contraction). Remaining: discharge the polylog asymptotic
+     `SkLengthPolylogBound_sud` at this exponent by lifting the SU(2)
+     `skLength_at_skLevel_polylog_le` proof.
   5. **Stage-13 fresh-context adversarial review pass** (CLOSURE gate) —
      dispatched ONLY after all substantive items ship.
 

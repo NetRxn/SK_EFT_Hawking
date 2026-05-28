@@ -58,8 +58,8 @@ This is the **substrate hypothesis** for Phase 6y headlines: T-A1′.5
 (trapped-ion) and T-A2′.5 (Clifford+CCZ) discharge via providing a
 concrete instance of this structure.
 
-The Dawson-Nielsen 2006 SK polylog exponent `log_2(5) ≈ 2.32` appears via
-`Real.log 5 / Real.log 2`. -/
+The Dawson-Nielsen 2006 SK polylog exponent is `log 5 / log (3/2) ≈ 3.97`
+(arXiv:quant-ph/0505030 §3.3), written `Real.log 5 / Real.log (3 / 2)`. -/
 structure SKCompileWithBounds_FreeGroup
     {d : ℕ} {α : Type} [DecidableEq α]
     (gs : GeneratingSet d) (h_eq : gs.W = FreeGroup α) where
@@ -83,7 +83,7 @@ structure SKCompileWithBounds_FreeGroup
   length : ∀ (U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) (ε : ℝ),
     0 < ε → ε ≤ ε₀ →
     ((h_eq ▸ compile U ε : FreeGroup α).toWord.length : ℝ) ≤
-      c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)
+      c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))
 
 /-! ## 2. Discharge of `SolovayKitaevHeadline_FreeGroup_SUd` predicate -/
 
@@ -129,7 +129,7 @@ structure SKCompileWithBounds_SUd
   length : ∀ (U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) (ε : ℝ),
     0 < ε → ε ≤ ε₀ →
     (wordLength (compile U ε) : ℝ) ≤
-      c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)
+      c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))
 
 /-- **`SolovayKitaevHeadline_SUd` discharge** from abstract
 `SKCompileWithBounds_SUd` data. -/

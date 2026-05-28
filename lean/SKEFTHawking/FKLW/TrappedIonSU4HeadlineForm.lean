@@ -72,7 +72,7 @@ def trappedIonSU4_1QHeadline : Prop :=
         (U : Matrix (Fin 4) (Fin 4) ℂ)‖ ≤ ε ∧
       -- Concrete word-length bound (M.4 inheritance)
       ((compile U ε).toWord.length : ℝ) ≤
-        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log 2)
+        c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2))
 
 /-! ## 2. Future extension to full alphabet with MS
 
