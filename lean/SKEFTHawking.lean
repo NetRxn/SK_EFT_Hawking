@@ -1210,6 +1210,9 @@ import SKEFTHawking.FKLW.CliffordCCZGeneratingSetSU8Full
 -- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): the 63 tensor-Pauli tangents of 𝔰𝔲(8)
 -- (kronSU8 + hX_in_sud; alphabet-agnostic, shared by any universal SU(8) gate set).
 import SKEFTHawking.FKLW.CliffordCCZSU8Tangents
+-- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): the 63 tensor-Pauli tangents ℝ-span 𝔰𝔲(8)
+-- (hX_spans via Hilbert-Schmidt completeness; alphabet-agnostic).
+import SKEFTHawking.FKLW.CliffordCCZSU8TangentSpan
 -- Phase 6y Track S.2-consumer (2026-05-27): generic SU(d) ClosureDenseWitness
 -- structure for `GeneratingSet d`. Bundles n traceless skew-Hermitian
 -- spanning tangents + flow-line containment in H_of_G gs. Conditional
