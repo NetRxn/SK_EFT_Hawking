@@ -20,7 +20,7 @@ The full UNCONDITIONAL discharge composes Phase 6y:
 
 For the SU(8) Clifford+CCZ alphabet `cliffordCCZGeneratingSetSU8`,
 there exists `ε₀, c > 0` and a compilation function
-`compile : ↥SU(8) → ℝ → FreeGroup (Fin 4)` such that for any
+`compile : ↥SU(8) → ℝ → FreeGroup (Fin 10)` such that for any
 `U ∈ SU(8)` and any `ε ∈ (0, ε₀]`:
 
   * Error: `‖(ρ_hom (compile U ε)).val - U.val‖ ≤ ε`
@@ -68,12 +68,12 @@ alphabet, with FreeGroup-word length as the concrete length metric. -/
 def cliffordCCZSU8Headline : Prop :=
   ∃ (ε₀ : ℝ) (c : ℝ)
     (compile : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ) → ℝ →
-      FreeGroup (Fin 4)),
+      FreeGroup (Fin 10)),
     0 < ε₀ ∧ 0 < c ∧
     ∀ (U : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ))
       (ε : ℝ) (_hε_pos : 0 < ε) (_hε_le : ε ≤ ε₀),
       -- Error bound: ‖ρ_hom(compile U ε) - U‖ ≤ ε
-      -- Note: cliffordCCZGeneratingSetSU8.W = FreeGroup (Fin 4) by definition.
+      -- Note: cliffordCCZGeneratingSetSU8.W = FreeGroup (Fin 10) by definition.
       ‖((cliffordCCZGeneratingSetSU8.ρ_hom (compile U ε) :
             ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ)) :
           Matrix (Fin 8) (Fin 8) ℂ) -

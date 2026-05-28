@@ -73,11 +73,11 @@ theorem freeGroup_wordLength_su4_isFreeGroupLike (N : ℕ) (hN : 0 < N) :
 /-! ## 2. Clifford+CCZ SU(8) instantiation -/
 
 /-- **Word-length function for Clifford+CCZ SU(8)**: since
-`cliffordCCZGeneratingSetSU8.W = FreeGroup (Fin 4)` definitionally,
+`cliffordCCZGeneratingSetSU8.W = FreeGroup (Fin 10)` definitionally,
 this is just `toWord.length`. -/
 noncomputable def freeGroup_wordLength_su8 :
     (SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZGeneratingSetSU8).W → ℕ :=
-  fun w => (w : FreeGroup (Fin 4)).toWord.length
+  fun w => (w : FreeGroup (Fin 10)).toWord.length
 
 /-- **Submultiplicativity bundle for Clifford+CCZ SU(8) wordLength**. -/
 theorem freeGroup_wordLength_su8_isFreeGroupLike :

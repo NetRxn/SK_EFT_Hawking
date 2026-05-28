@@ -80,7 +80,7 @@ theorem cliffordCCZSU8Headline_via_cascade_final
               cliffordCCZGeneratingSetSU8 h_dense ε₀_sud hε₀_pos U)
             (SKEFTHawking.FKLW.GenericSUd.expIsud_det_eq_one_predicate_holds 6)
             (SKEFTHawking.FKLW.GenericSUd.skLevel_polylog_sud K ε) U
-          : FreeGroup (Fin 4)).toWord.length : ℝ) ≤
+          : FreeGroup (Fin 10)).toWord.length : ℝ) ≤
         c * (Real.log (1 / ε)) ^ (Real.log 5 / Real.log (3 / 2)))
     (h_wl : SKEFTHawking.FKLW.GenericSUd.WordLengthFreeGroupLike
       cliffordCCZGeneratingSetSU8

@@ -75,7 +75,7 @@ noncomputable def cliffordCCZEpsilonNet_findNearest_conditional
     (h_cartan : SKEFTHawking.FKLW.GenericSUd.CartanFinalStep_SUd_v4 8)
     (U : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ))
     (ε₀ : ℝ) (hε₀_pos : 0 < ε₀) :
-    FreeGroup (Fin 4) :=
+    FreeGroup (Fin 10) :=
   SKEFTHawking.FKLW.GenericSUd.epsilonNet_findNearest_SUd
     cliffordCCZGeneratingSetSU8
     (cliffordCCZGeneratingSetSU8_isDense_conditional w h_cartan)

@@ -35,9 +35,9 @@ attribute [local instance] Matrix.linftyOpNormedAddCommGroup
   Matrix.linftyOpNormedRing
   Matrix.linftyOpNormedAlgebra
 
-/-- `cliffordCCZGeneratingSetSU8.W = FreeGroup (Fin 4)` (by definition). -/
+/-- `cliffordCCZGeneratingSetSU8.W = FreeGroup (Fin 10)` (by definition). -/
 theorem cliffordCCZGeneratingSetSU8_W :
-    cliffordCCZGeneratingSetSU8.W = FreeGroup (Fin 4) := rfl
+    cliffordCCZGeneratingSetSU8.W = FreeGroup (Fin 10) := rfl
 
 /-! ## 1. T-A2′.5 PROPER F#4-compliant headline discharge -/
 
