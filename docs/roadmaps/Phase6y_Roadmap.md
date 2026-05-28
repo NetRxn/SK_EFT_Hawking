@@ -313,8 +313,26 @@ Phase 6y Wave 1: **IN PROGRESS** (Sessions 1-51 of N shipped 2026-05-27; **38 co
 
 **Updated cumulative tally (Sessions 14-59)**: **46 commits + 2 docs syncs, ~6000 LoC kernel-only**. Build clean 8838 jobs.
 
+**Sessions 70-82 (SHIPPED 2026-05-27 — F/G-norm bound chain for the (B) ingredient)**:
+The F-norm bound `‖F‖ ≤ K_F·√(θ/2)` (the hardest sub-piece of the (B) super-quad
+bound) is now FULLY discharged at the dnStep level via an explicit assembly chain:
+- **Session 69** (`0ba7310`): bounded-form (F,G) at dnStep level (`‖F‖ ≤ (n+2)²·‖F_inner‖`).
+- **Session 70** (`bc3fb0c`): σ_y/σ_x-block sum linftyOp norm bound (`‖∑γσ_y‖ ≤ ∑|γ|`).
+- **Session 71** (`1777fb5`): permutation-conjugation linftyOp norm preservation.
+- **Session 72** (`9253a01`): γ-sum algebraic decomposition (`∑√(θ·b/2) ≤ √(θ/2)·card·√B`).
+- **Session 73** (`7207cad`): Hermitian eigenvalue ≤ linftyOp norm (Gershgorin).
+- **Session 74** (`35dc0cc`): partial-sum arithmetic bound.
+- **Sessions 75-78** (`babff73`/`a8a3c31`/`44166ec`/`23c51c2`): composed F_inner norm bound,
+  γ-sum-of-abs capstone, bounded symmetric diagonal discharge, permMatrixAsUnitary conj bridge.
+- **Session 79** (`a93ba94`): bounded FULL diagonal discharge `symmetric_balanced_commutator_diagonal_real_full_bounded` (threads S77+S78 through eigenvalue-sort conjugation).
+- **Session 80** (`ef0e88e`): explicit-∑√ bounded Hermitian discharge `symmetric_balanced_commutator_hermitian_via_spectral_bounded_explicit` (re-threads S37 with S79 → `‖F‖ ≤ (n+2)²·∑√(θ·b'_p/2)`).
+- **Session 81** (`b468965`): CONCRETE `K_F·√(θ/2)` bounded keystone `symmetric_balanced_commutator_hermitian_unconditional_bounded` (composes S80 + Gershgorin + γ-sum → `‖F‖ ≤ (n+2)²·(n+1)·√(n+2)·√(θ/2)` for ‖H‖≤1).
+- **Session 82** (`60eb1fa`): RE-WIRED `dnStepFG_sud` to extract (F,G) from the bounded keystone (S81) + DISCHARGED `DnStepFG_sud_F/G_norm_bound_predicate` at `K_F = (n+2)²·(n+1)·√(n+2)`. Field projections preserved → all 8 downstream consumers unaffected (full build clean 8849 jobs).
+
+**Updated cumulative tally (Sessions 14-82)**: **~62 commits, ~6900 LoC kernel-only**. Build clean 8849 jobs.
+
 **Truly remaining substantive work (4 named items + 1 review)**:
-  1. **(B) Super-quad bound discharge at SU(d)** — mechanically liftable per Explore-agent intel (SU(2) structure is alphabet-agnostic via MonoidHom abstractions; ~1236 LoC analog).
+  1. **(B) Super-quad MAIN INDUCTION discharge at SU(d)** (`SkApproxCSuperQuadraticBound_generic_sud`) — the F/G-norm INGREDIENT is now discharged (Sessions 70-82); the remaining piece is the super-quad recursion induction itself (analog of SU(2) ~1236 LoC `SkApproxCSuperQuadraticBound_generic_holds`, alphabet-agnostic via MonoidHom abstractions per Explore intel). Composes the now-discharged F/G-norm bound + BCH cubic + ε_seq monotonicity.
   2. **(D-SU4) Density witness at SU(4) trapped-ion** — Brylinski-Brylinski 2002 entangler universality. Multi-session entangler-theoretic content.
   3. **(D-SU8) Density witness at SU(8) Clifford+CCZ** — Aaronson-Gottesman 2004 Clifford-stabilizer lineage. Multi-session.
   4. **Length-bound polylog exponent caveat** — headline form's `log 5 / log 2` exponent revision OR sharper recursion analysis.
