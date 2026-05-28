@@ -1799,6 +1799,10 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGFromLogNormBound
 -- dnStepFG_sud_concrete_gC_minus_Delta_norm_le_cubic — ‖gC(expIsud F,expIsud G)−Δ‖≤320·δ³ on the
 -- named ball (n+2)²·‖V_n−U‖≤1/8 (existential h_regime3 + Δ∈target ELIMINATED via S130 exp-delta).
 import SKEFTHawking.FKLW.GenericSUdDnStepFGConcreteCubic
+-- Phase 6y Track S (Session 133, 2026-05-28): concrete-radius SK recursion skApproxC_generic_sud_concrete.
+-- Re-pointed skApproxC_generic_sud extracting each level's (F,G) via dnStepFG_sud_concrete (S130);
+-- foundation for the UNCONDITIONAL concrete (B) bound. + zero/succ unfolding lemmas.
+import SKEFTHawking.FKLW.GenericSUdSkApproxCConcrete
 -- Phase 6y Track S (Session 87, 2026-05-27): SU(d) ρ_hom MonoidHom abstraction lemmas.
 -- ρ_hom_sud_mul_val / _inv_val / _groupCommutator_val (+ SUd_subtype_inv_val_eq_matrix_inv):
 -- push gs.ρ_hom : W →* SU(d) to the matrix level. Super-quad main-induction MonoidHom substrate.
