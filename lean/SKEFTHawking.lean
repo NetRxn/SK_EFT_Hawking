@@ -1768,6 +1768,10 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGNormBound
 -- Commutator identity (valid branch) `[F,G] = -matrixLog (n+2) Δ.val` + invalid-branch
 -- F=G=0, mirroring the SU(2) structural lemmas for the super-quad main induction.
 import SKEFTHawking.FKLW.GenericSUdDnStepFGCommutator
+-- Phase 6y Track S (Session 84, 2026-05-27): dnStepFG_sud exp(-[F,G]) = Δ identity.
+-- Composes Session 83's commutator identity with the matrix exp/log right-inverse
+-- expAmbient_matrixLog (valid regime Δ.val ∈ target). Super-quad induction substrate.
+import SKEFTHawking.FKLW.GenericSUdDnStepFGExpDelta
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
