@@ -493,33 +493,40 @@ of `K`/`ε₀` closes it; only a concrete construction does.
     - **✅ S141 (`cf4cc6b`, `GenericSUdSkApproxCConcreteLength.lean`)** concrete-recursion word-length
       *recurrence + closed-form* bound `skApproxC_generic_sud_concrete_length_{succ,le_skLength_sud}_param`
       (≤ `skLength_sud N₀ 0 n = N₀·5^n`). Word length is log-independent, so the IFT S53 transfers verbatim.
-    - **🚨 EXPONENT CAVEAT — SUBSTANTIVE BLOCKER FOR S.6/T-X′.5 word-length conjunct (S141 finding)**: the
-      headline form `SolovayKitaevHeadline_FreeGroup_SUd` (+ `SkLengthPolylogBound_sud`) hardcodes the
-      word-length exponent **`log 5 / log 2 ≈ 2.32`**, but the project's super-quad contraction is
-      **`ε^(3/2)`** with **5×** word expansion per level, whose HONEST Solovay-Kitaev length exponent is
-      **`log 5 / log(3/2) ≈ 3.97`** — exactly the SU(2) model's `skLengthExponent` (`SolovayKitaevLengthBound.lean`,
-      `:= Real.log 5 / Real.log (3/2)`, `< 4`). `log 5 / log 2` would require **quadratic (`ε²`)**
-      contraction, which the project does NOT prove. `SkLengthPolylogBound_sud` is only a PREDICATE (never
-      discharged) — the polylog asymptotic `skLength_sud (skLevel_polylog_sud K ε) ≤ c·(log(1/ε))^exp` is a
-      genuine gap, and it is **honestly dischargeable only at `exp = log 5 / log(3/2)`** (the level chooser
-      `skLevel_polylog_sud` already uses `log(3/2)`). **DECISION REQUIRED (surfaced to user):** revise the
-      SU(d) headline form's exponent to the honest `log 5 / log(3/2)` (matches SU(2) + achievable), vs.
-      pursue a sharper `ε²`-contraction recursion for the literal `log 5 / log 2`. Per quality standard, the
-      `log 5 / log 2` headline will NOT be discharged as-is (would mislabel the achieved complexity).
-    - **REMAINING for S.6 + per-alphabet T-X′.5** (after the exponent decision): (a) discharge the polylog
-      asymptotic `SkLengthPolylogBound_sud` at the agreed exponent (lift the SU(2)
-      `skLength_at_skLevel_polylog_le` proof — `5^level ≤ 5·M^exp`, `M ≤ log(1/ε)`), compose with S141 →
-      concrete `h_length_polylog`; (b) the **(D) density witness** (S.5 Cartan-v4 generic; Brylinski-
-      Brylinski SU(4) / Aaronson-Gottesman SU(8) per-alphabet); then the named headline theorems instantiate
-      `skHeadline_FreeGroup_SUd_cascade_B_discharged_concrete`.
+    - **✅✅✅ EXPONENT CAVEAT — RESOLVED 2026-05-28 (user-authorized correctness fix; 3 commits)**: the
+      S141-surfaced caveat was diagnosed (fresh literature search + 6 corroborating in-project sources) as a
+      **2026-05-27 dev-time mis-transcription** in commit `866396e`: the SU(d) headline forms hardcoded the
+      word-length exponent **`log 5 / log 2 ≈ 2.32`** and mis-attributed it to Dawson-Nielsen. The canonical
+      Dawson-Nielsen exponent is **`log 5 / log(3/2) ≈ 3.97`** (arXiv:quant-ph/0505030 §3.3: 5× word growth +
+      ε^(3/2) contraction), matching the SU(2) `skLengthExponent`, the level chooser `skLevel_polylog_sud`
+      (already `log(3/2)`), the Phase 6u roadmap, and the public README. `log 5 / log 2` would require
+      quadratic ε² contraction the project does not prove, so it was NEVER achievable — a wrong statement, not
+      a harder target. **Fix (3 commits):** (1) `b572711` corrected all 24 occurrences across 17 FKLW files
+      `log 5/log 2 → log 5/log(3/2)` + the two `*_skLength_exponent_pos` annotations + mis-attributing
+      docstrings; (2) `1b12e67` introduced canonical single-source `GenericSUd.skLengthExponent_sud` (new
+      Mathlib-only leaf `GenericSUdSkLengthExponent.lean`, with provenance) and wired
+      `SkLengthPolylogBound_sud` + the two former duplicate named defs to it (kills the drift root cause);
+      (3) `8093af1` UNCONDITIONALLY DISCHARGED `SkLengthPolylogBound_sud` at the canonical exponent
+      (`GenericSUdSkLengthPolylogDischarge.lean::skLengthPolylogBound_sud_holds`, kernel-only `{propext,
+      Classical.choice, Quot.sound}`), lifting the SU(2) `skLength_at_skLevel_polylog_le` proof parametrically.
+      Build clean 8870 jobs throughout; 0 axioms; 0 sorries.
+    - **REMAINING for S.6 + per-alphabet T-X′.5** (exponent now correct + asymptotic discharged): (a) compose
+      `skLengthPolylogBound_sud_holds` with S141 (`skApproxC_generic_sud_concrete_length_le_skLength_sud_param`)
+      → concrete `h_length_polylog` for `skHeadline_FreeGroup_SUd_cascade_B_discharged_concrete` (removes the
+      length conjunct from the cascade's hypotheses); (b) the **(D) density witness** (S.5 Cartan-v4 generic;
+      Brylinski-Brylinski SU(4) / Aaronson-Gottesman SU(8) per-alphabet — multi-session); then the named
+      headline theorems instantiate the cascade.
 
   **⚠️ Brick 2 (round-trip) — KEY OBSTRUCTION + EXECUTABLE PLAN (for the next dedicated session)**: Mathlib's clean exp-derivative `hasFDerivAt_exp` (`NormedSpace.exp x • 1` at `x`) requires **`NormedCommRing 𝔸`** — the matrix algebra `Matrix (Fin d) (Fin d) ℂ` is **non-commutative**, so it does NOT apply directly (the non-commutative `d/dt exp(A(t))` is the integral `∫₀¹ exp(sA)·A'·exp((1−s)A) ds`, simplifying to `exp(A)·A'` ONLY when `A,A'` commute — which is why S110's commutation was shipped first). **Recommended route**: the derivative argument `f(t) = exp(−matrixMercatorLog(t•X))·(1 + t•X)`, `f'(t)=0`, `f(0)=1` ⟹ `f(1)=1`, restricted to the **commutative closed subalgebra `A_X` generated by `X`** (where `matrixMercatorLog(t•X)`, its derivative `X·(1+t•X)⁻¹` via Neumann, and `1+t•X` all live and pairwise commute), so `hasFDerivAt_exp` applies inside `A_X`. **Enabling Mathlib lemmas identified**: `hasFDerivAt_exp` (commutative exp deriv — applies INSIDE `A_X` only), `mul_neg_geom_series (x) (‖x‖<1) : (1−x)·∑'xⁿ = 1` + `Summable.one_sub_mul_tsum_pow`/`.tsum_pow_mul_one_sub` (Neumann inverse — **already off-the-shelf for the matrix algebra, do NOT re-derive**; gives `(1+t•X)⁻¹ = ∑(−t•X)ⁿ` for the log-derivative), `NormedRing.inverse_one_sub` + `hasFPowerSeriesOnBall_inverse_one_sub`, `HasFPowerSeriesOnBall.hasFDerivAt` (term-by-term differentiation of `matrixMercatorLog(t•X)`). The two HARD crux steps with no off-the-shelf lemma: (iii) `HasDerivAt (fun t => matrixMercatorLog (t•X)) (X·(1+t•X)⁻¹) t` (term-by-term differentiation of the log power series), and (iv) `HasDerivAt (fun t => exp(A(t))) (exp(A(t))·A'(t)) t` for commuting `A,A'` (the commutative-subalgebra exp-path derivative — `hasFDerivAt_exp` needs `NormedCommRing`). Substantial multi-lemma analytic substrate — a dedicated session.
 
   **⚠️⚠️ Crux (iii) ROOT-CAUSE finding (Sessions 112-113 attempts — instance-pollution diamond)**: the per-term derivative `HasDerivAt (fun s : ℝ => c_n • ((↑s:ℂ)•X)^(n+1)) (((-1)^n·(↑s)^n) • X^(n+1)) s` is mathematically clean (coefficient `(n+1)·c_n = (-1)^n` collapses; assemble via `Complex.ofRealCLM.hasDerivAt` + `HasDerivAt.pow` + `HasDerivAt.smul_const`). **THE DEEP BLOCKER (diagnosed via `lean_run_code`)**: `Matrix.linftyOpNormedAddCommGroup` (a *local instance* the whole file needs for `‖·‖`) supplies its OWN `AddCommGroup` and hence its own ℝ-module path (`NormedSpace.complexToReal`-derived, `inst.toModule`), which is a **NON-DEFEQ diamond** with the standard `Matrix.addCommGroup`/Pi ℝ-module that the goal and the `Complex.ofRealCLM`/`smul_const` calculus machinery resolve to. Concretely: `smul_const`'s output `HasDerivAt` lands in `linftyOpNormedAddCommGroup.toAddCommGroup`+`inst2.toModule`, but the goal (post-`rw`) sits in `Matrix.addCommGroup`+default `module` — `exact` fails with a genuine type mismatch, and the surfaced "`IsScalarTower ℝ ℂ (Matrix ℂ)` not synthesized" is a *symptom* of `smul_const` searching the tower over the wrong module path. **This is instance pollution specific to doing CALCULUS (ℝ-module + norm together) on `Matrix ℂ` under the linftyOp norm** — bare `inferInstance` finds each instance, but `smul_const` mixes the two module diamonds. **✅ RESOLVED (Session 112, `ec55dbb`)**: option (c) — bundle the ℂ-smul into a continuous ℝ-linear map `g : ℂ →L[ℝ] Matrix ℂ`, `g z = z • X^(n+1)` (`(id ℂ).smulRight (X^(n+1)) |>.restrictScalars ℝ`), and differentiate via `g.hasFDerivAt.comp_hasDerivAt` — sidesteps `smul_const` and the module diamond entirely. `hasDerivAt_matrixMercatorLog_term` SHIPPED (per-term derivative `d/dt[c_n•((↑t)•X)^(n+1)] = ((-1)^n·(↑t)^n)•X^(n+1)`, kernel-only). **✅ CRUX (iii) COMPLETE (Sessions 113-114, `78f93bb`/`61a02bd`)**: `summable_matrixMercatorLog_deriv_series` + `tsum_matrixMercatorLog_deriv_eq` (`∑' ((-1)^n(↑t)^n)•X^(n+1) = (1+(↑t)•X)⁻¹·X` via `geom_series_eq_inverse`) + `hasDerivAt_matrixMercatorLog_path` (`d/dt[matrixMercatorLog((↑t)•X)] = (1+(↑t)•X)⁻¹·X` for `|t|·‖X‖<1`, assembled via `hasDerivAt_tsum_of_isPreconnected` on `ball 0 R`, `|t|<R<1/‖X‖`). **✅ CRUX (iv) COMPLETE (Session 115, `df209e7`)**: `hasDerivAt_exp_path` — `d/dt[exp(A t)] = exp(A t₀)·A'` for a commuting path (eventual-commute form, S116 `b842a73`). **✅✅ BRICK 2 COMPLETE — EXP/LOG ROUND-TRIP SHIPPED (Session 118, `6867dc8`)**: `exp_matrixMercatorLog : ‖X‖<1 → NormedSpace.exp (matrixMercatorLog X) = 1 + X`. Built across S116-S118: `hasDerivAt_exp_neg_matrixMercatorLog_path` (u'(t)) + `hasDerivAt_one_add_smul` (v'(t)=X) + `hasDerivAt_round_trip_factor` (f'≡0 via product rule + `(1+Y)⁻¹·X·(1+Y)=X` cancellation) + `Convex.is_const_of_fderivWithin_eq_zero` on `ball 0 (1/‖X‖)` + extraction via `exp_add_of_commute`. The Mercator log is now a CONCRETE-RADIUS right-inverse of exp (shifted by 1) on the NAMED ball `‖X‖<1` — the concrete-radius analog of the existential IFT `expAmbient_matrixLog`. **Remaining brick 3**: identify `matrixMercatorLog(Δ−1) = matrixLog d Δ` for `Δ` near `1` (via local injectivity of exp near 0 — both `mLog(Δ−1)` and `matrixLog d Δ` exponentiate to `Δ`, and exp is injective on a concrete ball — using `exp_matrixMercatorLog` + `expAmbient_matrixLog`) + a concrete ball ⊆ `target`, discharging the regime θ-bound (`norm_matrixMercatorLog_le_two_mul`, K=2) + `Δ∈target` on the concrete calibration ball. **Historical re-scope options (now moot for crux iii, but relevant if crux iv hits the same diamond — it won't, same CLM fix applies)**: (a) reconcile the diamond — prove `linftyOpNormedAddCommGroup.toAddCommGroup`'s ℝ-module is defeq/`Subsingleton`-equal to the standard one and force one path via `@`-explicit instances or `convert ... using 1` + `AddCommGroup`-congruence (painful but local); (b) **PIVOT to a non-derivative round-trip proof** (Cauchy product of the exp/log series, or the dense-diagonalizable + continuity route) that avoids ℝ-module calculus entirely — likely the cleaner path given the diamond; (c) prove the round-trip in a norm whose `NormedAddCommGroup` shares the standard Matrix `AddCommGroup` (e.g. a Pi/Frobenius norm) then transfer the equation (norm-independent) back. The mathematical skeleton (Neumann `(1+t•X)⁻¹` off-the-shelf; `hasDerivAt_tsum_of_isPreconnected` on `ball 0 (1/‖X‖)`) is unchanged once the module path is settled.
   2. **(D-SU4) Density witness at SU(4) trapped-ion** — Brylinski-Brylinski 2002 entangler universality. Multi-session entangler-theoretic content.
   3. **(D-SU8) Density witness at SU(8) Clifford+CCZ** — Aaronson-Gottesman 2004 Clifford-stabilizer lineage. Multi-session.
-  4. **Length-bound polylog exponent caveat** — headline form's `log 5 / log 2` exponent revision OR sharper recursion analysis.
-  5. **Stage-13 fresh-context adversarial review pass** — CLOSURE gate; dispatched ONLY after items 1-4 ship (i.e. once the UNCONDITIONAL S.6/T-X′.5 headlines exist).
+  4. **Length-bound polylog exponent caveat** — ✅ RESOLVED 2026-05-28 (commits `b572711`/`1b12e67`/`8093af1`):
+     corrected `log 5/log 2 → log 5/log(3/2)`, single-sourced via `skLengthExponent_sud`, and UNCONDITIONALLY
+     discharged `SkLengthPolylogBound_sud` at the canonical exponent. Remaining length work is just the
+     S141-composition (a) above, not an exponent decision.
+  5. **Stage-13 fresh-context adversarial review pass** — CLOSURE gate; dispatched ONLY after items 1-3 ship (i.e. once the UNCONDITIONAL S.6/T-X′.5 headlines exist).
 
 ### Wave 1 References
 
