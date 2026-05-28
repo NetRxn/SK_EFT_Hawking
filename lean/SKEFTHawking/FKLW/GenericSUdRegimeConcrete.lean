@@ -41,6 +41,7 @@ concrete-radius regime.
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdMatrixMercatorLog
 import SKEFTHawking.FKLW.GenericSUdSuperQuadSubstrate
+import SKEFTHawking.FKLW.GenericSUdMatrixLogTraceless
 
 set_option autoImplicit false
 
@@ -266,25 +267,18 @@ theorem matrixMercatorLog_inv_eq_neg {d : ℕ}
   rw [add_comm] at hS0
   exact eq_neg_of_add_eq_zero_left hS0
 
-/-- **Hermiticity of the concrete log-generator for a unitary** (re-point R2, full
-Hermitian conjunct): for a two-sided unitary `Δ` (`Δ·Δᴴ = 1` and `Δᴴ·Δ = 1`) with
-`‖Δ − 1‖ ≤ 1/8` and `‖Δᴴ − 1‖ ≤ 1/8`,
-
-  `((-i) • matrixMercatorLog (Δ − 1)).IsHermitian`.
-
-This is the re-pointed regime's **Hermitian** conjunct on the concrete calibration ball
-(replacing the existential IFT version). **Proof**: `matrixMercatorLog (Δ − 1)` is
-skew-Hermitian — by `matrixMercatorLog_conjTranspose` (R2a) its conjugate-transpose is
+/-- **Skew-Hermiticity of the concrete log for a unitary** (re-point R2, skew-Hermitian
+conjunct): for a two-sided unitary `Δ` (`Δ·Δᴴ = 1` and `Δᴴ·Δ = 1`) with
+`‖Δ − 1‖, ‖Δᴴ − 1‖ ≤ 1/8`, `(matrixMercatorLog (Δ − 1)).IsSkewHermitian`. **Proof**: by
+`matrixMercatorLog_conjTranspose` (R2a) the conjugate-transpose is
 `matrixMercatorLog ((Δ−1)ᴴ) = matrixMercatorLog (Δᴴ − 1)`, and since `Δᴴ = Δ⁻¹` (unitary)
-the R2b identity `matrixMercatorLog_inv_eq_neg` (with `A = Δ−1`, `B = Δᴴ−1`,
-`(1+A)(1+B) = Δ·Δᴴ = 1`) gives `matrixMercatorLog (Δᴴ − 1) = −matrixMercatorLog (Δ − 1)`.
-Scaling by `-i` (with `star(-i) = i`) turns skew-Hermiticity into Hermiticity:
-`((-i)•L)ᴴ = i•(−L) = −(i•L) = (-i)•L`. -/
-theorem isHermitian_neg_I_smul_matrixMercatorLog_of_unitary {d : ℕ}
+the R2b identity `matrixMercatorLog_inv_eq_neg` (`A = Δ−1`, `B = Δᴴ−1`,
+`(1+A)(1+B) = Δ·Δᴴ = 1`) gives `matrixMercatorLog (Δᴴ − 1) = −matrixMercatorLog (Δ − 1)`. -/
+theorem matrixMercatorLog_isSkewHermitian_of_unitary {d : ℕ}
     (Δ : Matrix (Fin d) (Fin d) ℂ)
     (hΔΔH : Δ * Δᴴ = 1) (hΔHΔ : Δᴴ * Δ = 1)
     (hΔ : ‖Δ - 1‖ ≤ 1 / 8) (hΔH : ‖Δᴴ - 1‖ ≤ 1 / 8) :
-    ((-Complex.I) • matrixMercatorLog (Δ - 1)).IsHermitian := by
+    (matrixMercatorLog (Δ - 1)).IsSkewHermitian := by
   have hcΔ : Commute Δ Δᴴ := by rw [Commute, SemiconjBy, hΔΔH, hΔHΔ]
   have hcomm : Commute (Δ - 1) (Δᴴ - 1) :=
     (hcΔ.sub_right (Commute.one_right Δ)).sub_left (Commute.one_left (Δᴴ - 1))
@@ -293,9 +287,28 @@ theorem isHermitian_neg_I_smul_matrixMercatorLog_of_unitary {d : ℕ}
     have e2 : (1 : Matrix (Fin d) (Fin d) ℂ) + (Δᴴ - 1) = Δᴴ := by abel
     rw [e1, e2]; exact hΔΔH
   have hR2b := matrixMercatorLog_inv_eq_neg (Δ - 1) (Δᴴ - 1) hcomm hmul hΔ hΔH
-  have hskew : (matrixMercatorLog (Δ - 1))ᴴ = -matrixMercatorLog (Δ - 1) := by
-    rw [matrixMercatorLog_conjTranspose, conjTranspose_sub, conjTranspose_one]
-    exact hR2b
+  show (matrixMercatorLog (Δ - 1))ᴴ = -matrixMercatorLog (Δ - 1)
+  rw [matrixMercatorLog_conjTranspose, conjTranspose_sub, conjTranspose_one]
+  exact hR2b
+
+/-- **Hermiticity of the concrete log-generator for a unitary** (re-point R2, full
+Hermitian conjunct): for a two-sided unitary `Δ` (`Δ·Δᴴ = 1` and `Δᴴ·Δ = 1`) with
+`‖Δ − 1‖ ≤ 1/8` and `‖Δᴴ − 1‖ ≤ 1/8`,
+
+  `((-i) • matrixMercatorLog (Δ − 1)).IsHermitian`.
+
+This is the re-pointed regime's **Hermitian** conjunct on the concrete calibration ball
+(replacing the existential IFT version). Scaling the skew-Hermitian
+`matrixMercatorLog (Δ − 1)` (`matrixMercatorLog_isSkewHermitian_of_unitary`) by `-i`
+(with `star(-i) = i`) turns skew-Hermiticity into Hermiticity:
+`((-i)•L)ᴴ = i•(−L) = −(i•L) = (-i)•L`. -/
+theorem isHermitian_neg_I_smul_matrixMercatorLog_of_unitary {d : ℕ}
+    (Δ : Matrix (Fin d) (Fin d) ℂ)
+    (hΔΔH : Δ * Δᴴ = 1) (hΔHΔ : Δᴴ * Δ = 1)
+    (hΔ : ‖Δ - 1‖ ≤ 1 / 8) (hΔH : ‖Δᴴ - 1‖ ≤ 1 / 8) :
+    ((-Complex.I) • matrixMercatorLog (Δ - 1)).IsHermitian := by
+  have hskew : (matrixMercatorLog (Δ - 1))ᴴ = -matrixMercatorLog (Δ - 1) :=
+    matrixMercatorLog_isSkewHermitian_of_unitary Δ hΔΔH hΔHΔ hΔ hΔH
   show ((-Complex.I) • matrixMercatorLog (Δ - 1))ᴴ = (-Complex.I) • matrixMercatorLog (Δ - 1)
   rw [conjTranspose_smul, hskew, show star (-Complex.I) = Complex.I from by simp,
     smul_neg, neg_smul]
@@ -361,5 +374,128 @@ theorem isHermitian_regime_concrete_sud {d : ℕ} [Nonempty (Fin d)]
           ring
       _ ≤ 1 / 8 := hVU
   exact isHermitian_neg_I_smul_matrixMercatorLog_of_unitary Δ hΔΔH hΔHΔ hΔ_le hΔH_le
+
+/-- **Tracelessness of the concrete log for a special-unitary** (re-point R1): for a
+two-sided unitary `Δ` with `det Δ = 1`, `‖Δ − 1‖, ‖Δᴴ − 1‖ ≤ 1/8`, and `d·‖Δ − 1‖ < π`,
+
+  `(matrixMercatorLog (Δ − 1)).trace = 0`.
+
+The concrete-radius analog of the existential `matrixLog_trace_eq_zero_on_nhd_one`, now on
+a **named** ball. **Proof**: `Y := matrixMercatorLog (Δ − 1)` is skew-Hermitian
+(`matrixMercatorLog_isSkewHermitian_of_unitary`), so the Jacobi formula
+`det_exp_skewHermitian` (Track S.2d) gives `det(exp Y) = exp(tr Y)`; the round-trip
+`exp_matrixMercatorLog` gives `exp Y = 1 + (Δ − 1) = Δ`, so `exp(tr Y) = det Δ = 1`, hence
+`tr Y ∈ 2πi·ℤ` (`Complex.exp_eq_one_iff`). The trace bound `‖tr Y‖ ≤ d·‖Y‖ ≤ d·2‖Δ − 1‖ < 2π`
+(`norm_trace_le_dim_mul_norm` + K=2 `norm_matrixMercatorLog_le_two_mul`) forces the integer
+multiple to be `0`. -/
+theorem matrixMercatorLog_trace_eq_zero_of_unitary {d : ℕ} [Nonempty (Fin d)]
+    (Δ : Matrix (Fin d) (Fin d) ℂ)
+    (hΔΔH : Δ * Δᴴ = 1) (hΔHΔ : Δᴴ * Δ = 1) (hdet : Δ.det = 1)
+    (hΔ : ‖Δ - 1‖ ≤ 1 / 8) (hΔH : ‖Δᴴ - 1‖ ≤ 1 / 8)
+    (hsmall : (d : ℝ) * ‖Δ - 1‖ < Real.pi) :
+    (matrixMercatorLog (Δ - 1)).trace = 0 := by
+  have hskew : (matrixMercatorLog (Δ - 1)).IsSkewHermitian :=
+    matrixMercatorLog_isSkewHermitian_of_unitary Δ hΔΔH hΔHΔ hΔ hΔH
+  have hΔ1 : ‖Δ - 1‖ < 1 := by linarith
+  have hexp : NormedSpace.exp (matrixMercatorLog (Δ - 1)) = Δ := by
+    rw [exp_matrixMercatorLog (Δ - 1) hΔ1]; abel
+  have hjac := det_exp_skewHermitian (matrixMercatorLog (Δ - 1)) hskew
+  rw [hexp, hdet] at hjac
+  have hexp1 : Complex.exp (matrixMercatorLog (Δ - 1)).trace = 1 := hjac.symm
+  obtain ⟨n, hn⟩ := Complex.exp_eq_one_iff.mp hexp1
+  have htr_bound : ‖(matrixMercatorLog (Δ - 1)).trace‖ < 2 * Real.pi := by
+    calc ‖(matrixMercatorLog (Δ - 1)).trace‖
+        ≤ (d : ℝ) * ‖matrixMercatorLog (Δ - 1)‖ := norm_trace_le_dim_mul_norm _
+      _ ≤ (d : ℝ) * (2 * ‖Δ - 1‖) :=
+          mul_le_mul_of_nonneg_left (norm_matrixMercatorLog_le_two_mul (Δ - 1) (by linarith))
+            (by positivity)
+      _ = 2 * ((d : ℝ) * ‖Δ - 1‖) := by ring
+      _ < 2 * Real.pi := by linarith
+  rw [hn, norm_int_mul_two_pi_I] at htr_bound
+  have h2pi : (0 : ℝ) < 2 * Real.pi := by positivity
+  have habs : (|n| : ℝ) < 1 := by
+    rcases lt_or_ge (|n| : ℝ) 1 with h | h
+    · exact h
+    · exfalso
+      have hge : (1 : ℝ) * (2 * Real.pi) ≤ (|n| : ℝ) * (2 * Real.pi) :=
+        mul_le_mul_of_nonneg_right h (le_of_lt h2pi)
+      linarith
+  have hint : (|n| : ℤ) < 1 := by exact_mod_cast habs
+  have hn0 : n = 0 := Int.abs_lt_one_iff.mp hint
+  rw [hn, hn0]; push_cast; ring
+
+/-- **SU(d) re-pointed regime Hermitian-AND-traceless conjunct** (re-point R1 + R2 at
+SU(d)): for `V, U ∈ SU(d)` with `d²·‖V − U‖ ≤ 1/8`, the concrete log-generator
+`H = (-i)·matrixMercatorLog ((V⁻¹U).val − 1)` is **both Hermitian and traceless**, i.e.
+`H ∈ 𝔰𝔲(d)`. This is the concrete-radius replacement for the existential IFT regime guard
+`negI_matrixLog_herm_traceless_on_residual_nhd` (S105) — the substrate the re-pointed
+super-quad regime needs. Hermitian half via `isHermitian_regime_concrete_sud` (S127);
+traceless half via `matrixMercatorLog_trace_eq_zero_of_unitary` (R1) — the SU(d) det `= 1`
+comes from `mem_specialUnitaryGroup_iff`, and `d·‖Δ − 1‖ ≤ d²·‖V − U‖ ≤ 1/8 < π` supplies
+the trace-smallness bound. `trace ((-i)•Y) = (-i)·trace Y = 0`. -/
+theorem regime_herm_traceless_concrete_sud {d : ℕ} [Nonempty (Fin d)]
+    (V U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+    (hVU : (d : ℝ) ^ 2 *
+        ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ ≤ 1 / 8) :
+    ((-Complex.I) • matrixMercatorLog
+        ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val - 1) :
+        Matrix (Fin d) (Fin d) ℂ).IsHermitian ∧
+    ((-Complex.I) • matrixMercatorLog
+        ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val - 1) :
+        Matrix (Fin d) (Fin d) ℂ).trace = 0 := by
+  refine ⟨isHermitian_regime_concrete_sud V U hVU, ?_⟩
+  set Δ : Matrix (Fin d) (Fin d) ℂ :=
+    (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val with hΔ
+  have hu : Δ ∈ Matrix.unitaryGroup (Fin d) ℂ :=
+    Matrix.specialUnitaryGroup_le_unitaryGroup (V⁻¹ * U).property
+  have hΔΔH : Δ * Δᴴ = 1 := by
+    simpa [Matrix.star_eq_conjTranspose] using (Matrix.mem_unitaryGroup_iff).mp hu
+  have hΔHΔ : Δᴴ * Δ = 1 := by
+    simpa [Matrix.star_eq_conjTranspose] using (Matrix.mem_unitaryGroup_iff').mp hu
+  have hdet : Δ.det = 1 := (Matrix.mem_specialUnitaryGroup_iff.mp (V⁻¹ * U).property).2
+  have hdpos : 0 < d := Fin.pos_iff_nonempty.mpr inferInstance
+  have hd1 : (1 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hdpos
+  have hnn : (0 : ℝ) ≤ ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ :=
+    norm_nonneg _
+  have hres : ‖Δ - 1‖ ≤ (d : ℝ) *
+      ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ := by
+    rw [hΔ]; exact residual_norm_le_d_mul V U
+  have hdd : (d : ℝ) ≤ (d : ℝ) ^ 2 := by nlinarith [hd1, sq_nonneg ((d : ℝ) - 1)]
+  have hΔ_le : ‖Δ - 1‖ ≤ 1 / 8 := by
+    calc ‖Δ - 1‖
+        ≤ (d : ℝ) * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ := hres
+      _ ≤ (d : ℝ) ^ 2 * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ :=
+          mul_le_mul_of_nonneg_right hdd hnn
+      _ ≤ 1 / 8 := hVU
+  have huH : Δᴴ ∈ Matrix.unitaryGroup (Fin d) ℂ := by
+    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, conjTranspose_conjTranspose]
+    exact hΔHΔ
+  have hΔH_norm : ‖Δᴴ‖ ≤ (d : ℝ) := linftyOpNorm_unitary_le ⟨Δᴴ, huH⟩
+  have hfactor : Δᴴ - 1 = -(Δᴴ * (Δ - 1)) := by
+    rw [Matrix.mul_sub, mul_one, hΔHΔ, neg_sub]
+  have hΔH_le : ‖Δᴴ - 1‖ ≤ 1 / 8 := by
+    rw [hfactor, norm_neg]
+    calc ‖Δᴴ * (Δ - 1)‖
+        ≤ ‖Δᴴ‖ * ‖Δ - 1‖ := norm_mul_le _ _
+      _ ≤ (d : ℝ) * ((d : ℝ) *
+            ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖) :=
+          mul_le_mul hΔH_norm hres (norm_nonneg _) (le_trans zero_le_one hd1)
+      _ = (d : ℝ) ^ 2 * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ := by
+          ring
+      _ ≤ 1 / 8 := hVU
+  have hsmall : (d : ℝ) * ‖Δ - 1‖ < Real.pi := by
+    have hpi : (1 : ℝ) / 8 < Real.pi := by
+      have := Real.pi_gt_three; linarith
+    calc (d : ℝ) * ‖Δ - 1‖
+        ≤ (d : ℝ) * ((d : ℝ) *
+            ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖) :=
+          mul_le_mul_of_nonneg_left hres (le_trans zero_le_one hd1)
+      _ = (d : ℝ) ^ 2 * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ := by
+          ring
+      _ ≤ 1 / 8 := hVU
+      _ < Real.pi := hpi
+  have hYtr : (matrixMercatorLog (Δ - 1)).trace = 0 :=
+    matrixMercatorLog_trace_eq_zero_of_unitary Δ hΔΔH hΔHΔ hdet hΔ_le hΔH_le hsmall
+  rw [Matrix.trace_smul, hYtr, smul_zero]
 
 end SKEFTHawking.FKLW.GenericSUd
