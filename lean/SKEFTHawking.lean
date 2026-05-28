@@ -1780,6 +1780,12 @@ import SKEFTHawking.FKLW.GenericSUdExpIsuDNormBound
 -- `‖gC(expIsud F, expIsud G) − Δ‖ ≤ 320·δ³` via the dimension-generic BCH cubic remainder
 -- + Session 84's exp(−[F,G]) = Δ. The recursion's super-quadratic error-contraction step.
 import SKEFTHawking.FKLW.GenericSUdDnStepFGCubic
+-- Phase 6y Track S (Session 129, 2026-05-28): log-agnostic Dawson-Nielsen step dnStepFG_fromLog
+-- (re-point R4 foundation). Factors dnStepFG_sud over its generator matrix M (dnStepFG_sud =
+-- dnStepFG_fromLog (matrixLog …) by rfl); ships [F,G]=-M + invalid-branch + round-trip-conditional
+-- exp(-[F,G])=Δ generic in M, so the concrete log matrixMercatorLog(Δ−1) (S118/S120-128) can be
+-- substituted without duplicating the super-quad chain.
+import SKEFTHawking.FKLW.GenericSUdDnStepFGFromLog
 -- Phase 6y Track S (Session 87, 2026-05-27): SU(d) ρ_hom MonoidHom abstraction lemmas.
 -- ρ_hom_sud_mul_val / _inv_val / _groupCommutator_val (+ SUd_subtype_inv_val_eq_matrix_inv):
 -- push gs.ρ_hom : W →* SU(d) to the matrix level. Super-quad main-induction MonoidHom substrate.
