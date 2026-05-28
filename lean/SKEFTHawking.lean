@@ -1285,6 +1285,8 @@ import SKEFTHawking.FKLW.TrappedIonSU4Tangents
 import SKEFTHawking.FKLW.TrappedIonSU4PerIonFlow
 -- Phase 6y (D) witness (2026-05-28): generic conjugation transports flow lines
 import SKEFTHawking.FKLW.GenericSUdFlowConj
+-- Phase 6y Track T-A1′.2 (D) witness (2026-05-28): MS gate = X₁₁ flow (grid points in H_of_G)
+import SKEFTHawking.FKLW.TrappedIonSU4MSFlowGrid
 -- Phase 6y Track S.2g-substrate (2026-05-27): local diffeo restriction
 -- `𝔰𝔲(d) ↔ SU(d)` near (0, 1). Forward: exp of 𝔰𝔲(d) ∩ source ⊆ SU(d) ∩ target
 -- (via skew-Hermitian-exp-is-unitary + S.2d Jacobi det = exp(tr) = 1).
