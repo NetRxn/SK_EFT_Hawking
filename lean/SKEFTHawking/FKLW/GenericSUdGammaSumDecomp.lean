@@ -79,4 +79,23 @@ lemma gamma_sum_bound {ι : Type*} (s : Finset ι) (θ : ℝ)
   apply mul_le_mul_of_nonneg_left _ (Real.sqrt_nonneg _)
   exact sum_sqrt_le_card_mul_sqrt s b B hb_nn hb_le
 
+/-! ## Partial-sum bound -/
+
+/-- **Partial-sum upper bound**: `∑ j ∈ s, a j ≤ (card s)·M` when `a j ≤ M`.
+
+For sorted eigenvalues with `|a j| ≤ M` (Session 73 Gershgorin bound),
+each partial sum `b_p = ∑_{j ≤ p} a j` satisfies `b_p ≤ (card)·M`. -/
+lemma partial_sum_le_card_mul {ι : Type*} (s : Finset ι) (a : ι → ℝ) (M : ℝ)
+    (h_le : ∀ j ∈ s, a j ≤ M) :
+    ∑ j ∈ s, a j ≤ (s.card : ℝ) * M := by
+  calc ∑ j ∈ s, a j ≤ ∑ _j ∈ s, M := Finset.sum_le_sum h_le
+    _ = (s.card : ℝ) * M := by rw [Finset.sum_const, nsmul_eq_mul]
+
+/-- **Partial-sum bound from an absolute-value bound**: `∑ j ∈ s, a j ≤ (card s)·M`
+when `|a j| ≤ M` (since `a j ≤ |a j| ≤ M`). -/
+lemma partial_sum_le_card_mul_of_abs {ι : Type*} (s : Finset ι) (a : ι → ℝ)
+    (M : ℝ) (h_abs : ∀ j ∈ s, |a j| ≤ M) :
+    ∑ j ∈ s, a j ≤ (s.card : ℝ) * M :=
+  partial_sum_le_card_mul s a M (fun j hj => le_trans (le_abs_self _) (h_abs j hj))
+
 end SKEFTHawking.FKLW.GenericSUd
