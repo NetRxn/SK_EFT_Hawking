@@ -1279,6 +1279,8 @@ import SKEFTHawking.FKLW.TrappedIonSU4PerIonContainment
 -- embedding (kronSU4 (exp X) 1 = exp (kronSU4 X 1)) via map_exp on the embedding RingHom —
 -- gives the per-ion 𝔰𝔲(2) tangent one-parameter subgroups as embedded SU(2) flow lines.
 import SKEFTHawking.FKLW.TrappedIonSU4ExpCommute
+-- Phase 6y Track T-A1′.2 (D) witness (2026-05-28): tensor-Pauli tangent set + hX_in_sud
+import SKEFTHawking.FKLW.TrappedIonSU4Tangents
 -- Phase 6y Track S.2g-substrate (2026-05-27): local diffeo restriction
 -- `𝔰𝔲(d) ↔ SU(d)` near (0, 1). Forward: exp of 𝔰𝔲(d) ∩ source ⊆ SU(d) ∩ target
 -- (via skew-Hermitian-exp-is-unitary + S.2d Jacobi det = exp(tr) = 1).
