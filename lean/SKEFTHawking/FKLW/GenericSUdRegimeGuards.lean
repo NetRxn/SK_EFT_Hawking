@@ -123,4 +123,50 @@ theorem negI_matrixLog_herm_traceless_on_residual_nhd (n : ℕ) :
   have h_Δ_in := hr_subset h_Δ_ball
   exact hW Δ.val h_Δ_in.1 Δ.property h_Δ_in.2
 
+/-- **Combined regime substrate (θ-bound + Hermitian + traceless) in residual form**:
+there is a radius `δ > 0` such that for all `V, U ∈ SU(n+2)` with `‖V − U‖ < δ`, the
+residual generator `H := (-i)·matrixLog (n+2) (V⁻¹·U)` satisfies
+
+  `‖H‖ ≤ 2·(n+2)·‖V − U‖`  ∧  `H.IsHermitian`  ∧  `H.trace = 0`.
+
+Combines the θ-bound (Session 60 `H_norm_bound_from_V_diff_sud`) with the
+Hermitian/traceless guards (Session 105) on the common (min) radius. This is the
+analytic core of the `h_regime` hypothesis; the remaining `0 < ‖H‖` (needs `Δ ≠ 1`,
+the θ ≠ 0 branch) and `‖H‖ ≤ 1` (from the calibration `2(n+2)·2ε₀_sud ≤ 1`) and the
+existential→concrete radius step complete the full per-alphabet discharge. -/
+theorem regime_thetabound_herm_traceless_on_residual_nhd (n : ℕ) :
+    ∃ δ > (0 : ℝ), ∀ (V U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)),
+      ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+        (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ < δ →
+      ‖((-Complex.I) : ℂ) • matrixLog (n + 2)
+          (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val‖ ≤
+        2 * ((n : ℝ) + 2) * ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+          (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ∧
+      (((-Complex.I) : ℂ) • matrixLog (n + 2)
+          (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val).IsHermitian ∧
+      (((-Complex.I) : ℂ) • matrixLog (n + 2)
+          (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val).trace = 0 := by
+  obtain ⟨δ₁, hδ₁_pos, hδ₁⟩ := H_norm_bound_from_V_diff_sud (d := n + 2)
+  obtain ⟨δ₂, hδ₂_pos, hδ₂⟩ := negI_matrixLog_herm_traceless_on_residual_nhd n
+  refine ⟨min (δ₁ / ((n : ℝ) + 2)) δ₂, lt_min (by positivity) hδ₂_pos, ?_⟩
+  intro V U h_lt
+  have h_lt₁ : ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+      (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ < δ₁ / ((n : ℝ) + 2) :=
+    lt_of_lt_of_le h_lt (min_le_left _ _)
+  have h_lt₂ : ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+      (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ < δ₂ :=
+    lt_of_lt_of_le h_lt (min_le_right _ _)
+  have h_cast : ((n + 2 : ℕ) : ℝ) = (n : ℝ) + 2 := by push_cast; ring
+  have h_d_lt : ((n + 2 : ℕ) : ℝ) * ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+      (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ < δ₁ := by
+    rw [h_cast]
+    calc ((n : ℝ) + 2) * ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+          (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖
+        < ((n : ℝ) + 2) * (δ₁ / ((n : ℝ) + 2)) :=
+          mul_lt_mul_of_pos_left h_lt₁ (by positivity)
+      _ = δ₁ := by field_simp
+  have h_θ := hδ₁ V U h_d_lt
+  rw [h_cast] at h_θ
+  exact ⟨h_θ, hδ₂ V U h_lt₂⟩
+
 end SKEFTHawking.FKLW.GenericSUd
