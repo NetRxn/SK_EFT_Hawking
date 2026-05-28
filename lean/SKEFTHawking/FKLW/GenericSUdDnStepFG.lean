@@ -97,6 +97,16 @@ lemma smul_trace_zero_sud {d : ℕ} {M : Matrix (Fin d) (Fin d) ℂ}
     (htr : M.trace = 0) (c : ℂ) : (c • M).trace = 0 := by
   rw [Matrix.trace_smul, htr, smul_zero]
 
+/-- **Normalizing a non-zero matrix by its norm gives a unit-norm matrix**:
+`‖(1/‖H‖)·H‖ ≤ 1` (indeed `= 1`) for `0 < ‖H‖`. Used to discharge the
+bounded keystone's `‖H_unit‖ ≤ 1` hypothesis in `dnStepFG_sud`. Extracted as
+a named lemma so the per-step norm/commutator extraction lemmas can
+reconstruct the keystone term syntactically. -/
+lemma normalize_smul_norm_le_one {d : ℕ} (H : Matrix (Fin d) (Fin d) ℂ)
+    (hpos : 0 < ‖H‖) : ‖((1 / ‖H‖ : ℝ) : ℂ) • H‖ ≤ 1 := by
+  rw [norm_smul, Complex.norm_of_nonneg (by positivity : (0:ℝ) ≤ 1 / ‖H‖), one_div]
+  exact le_of_eq (inv_mul_cancel₀ (ne_of_gt hpos))
+
 /-! ## 3. dnStepFG_sud — SU(d) Dawson-Nielsen step
 
 For `V_n U : ↥SU(n+2)`, extract (F, G) by:
@@ -135,15 +145,9 @@ noncomputable def dnStepFG_sud {n : ℕ}
       IsHermitian_real_smul_sud h.2.2.1 (1 / θ)
     have hH_unit_tr : H_unit.trace = 0 :=
       smul_trace_zero_sud h.2.2.2 _
-    have hθ_pos : 0 < θ := h.1
-    have hH_unit_norm : ‖H_unit‖ ≤ 1 := by
-      have h_eq : ‖H_unit‖ = 1 := by
-        show ‖((1 / θ : ℝ) : ℂ) • H‖ = 1
-        rw [norm_smul, Complex.norm_of_nonneg (by positivity : (0:ℝ) ≤ 1 / θ), one_div]
-        exact inv_mul_cancel₀ (ne_of_gt hθ_pos)
-      rw [h_eq]
     let ex := symmetric_balanced_commutator_hermitian_unconditional_bounded
-                H_unit hH_unit_herm hH_unit_tr hH_unit_norm θ h.1.le h.2.1
+                H_unit hH_unit_herm hH_unit_tr (normalize_smul_norm_le_one H h.1)
+                θ h.1.le h.2.1
     { F := ex.choose
       G := ex.choose_spec.choose
       hF_herm := ex.choose_spec.choose_spec.1

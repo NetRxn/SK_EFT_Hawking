@@ -1764,6 +1764,10 @@ import SKEFTHawking.FKLW.GenericSUdHermitianDischargeKeystoneBounded
 -- so the chosen witnesses carry the concrete bound; discharges
 -- DnStepFG_sud_F/G_norm_bound_predicate at K_F = (n+2)²·(n+1)·√(n+2).
 import SKEFTHawking.FKLW.GenericSUdDnStepFGNormBound
+-- Phase 6y Track S (Session 83, 2026-05-27): dnStepFG_sud structural extraction.
+-- Commutator identity (valid branch) `[F,G] = -matrixLog (n+2) Δ.val` + invalid-branch
+-- F=G=0, mirroring the SU(2) structural lemmas for the super-quad main induction.
+import SKEFTHawking.FKLW.GenericSUdDnStepFGCommutator
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
