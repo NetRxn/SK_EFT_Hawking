@@ -316,6 +316,42 @@ lemma stability_term_bound {d : ℕ} [Nonempty (Fin d)]
     h_A_G_near h_A_F_inv_near h_F_diff h_G_diff
     (h_det A_F) (h_det ρA_F) (h_det A_G) (h_det ρA_G)
 
+/-- **Stability term through V_n** (`Cstab = d·stability`): for `SU(d)` element
+`V_n`, `‖ρ(V_n)·gC(ρA_F,ρA_G) − ρ(V_n)·gC(A_F,A_G)‖ ≤ d·(2(d²+d⁴)·ε·η + (d⁴+d⁶)·ε²)`.
+Factors as `ρ(V_n)·(gC(ρA_F,ρA_G) − gC(A_F,A_G))`, then M-bound (S91) × `stability_term_bound`. -/
+lemma stability_term_through_Vn {d : ℕ} [Nonempty (Fin d)]
+    (V_n A_F A_G ρA_F ρA_G : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+    (η ε : ℝ) (hη_nn : 0 ≤ η) (hε_nn : 0 ≤ ε)
+    (h_A_G_near : ‖(A_G : Matrix (Fin d) (Fin d) ℂ) - 1‖ ≤ η)
+    (h_A_F_inv_near : ‖(A_F : Matrix (Fin d) (Fin d) ℂ)⁻¹ - 1‖ ≤ η)
+    (h_F_diff : ‖(ρA_F : Matrix (Fin d) (Fin d) ℂ) -
+        (A_F : Matrix (Fin d) (Fin d) ℂ)‖ ≤ ε)
+    (h_G_diff : ‖(ρA_G : Matrix (Fin d) (Fin d) ℂ) -
+        (A_G : Matrix (Fin d) (Fin d) ℂ)‖ ≤ ε) :
+    ‖(V_n : Matrix (Fin d) (Fin d) ℂ) *
+        groupCommutator (ρA_F : Matrix (Fin d) (Fin d) ℂ) (ρA_G : Matrix (Fin d) (Fin d) ℂ) -
+        (V_n : Matrix (Fin d) (Fin d) ℂ) *
+        groupCommutator (A_F : Matrix (Fin d) (Fin d) ℂ)
+          (A_G : Matrix (Fin d) (Fin d) ℂ)‖ ≤
+      (d : ℝ) * (2 * ((d : ℝ)^2 + (d : ℝ)^4) * ε * η + ((d : ℝ)^4 + (d : ℝ)^6) * ε^2) := by
+  rw [← Matrix.mul_sub]
+  have h_stab := stability_term_bound A_F A_G ρA_F ρA_G η ε hη_nn hε_nn
+    h_A_G_near h_A_F_inv_near h_F_diff h_G_diff
+  have h_stab_nn : (0 : ℝ) ≤ 2 * ((d : ℝ)^2 + (d : ℝ)^4) * ε * η +
+      ((d : ℝ)^4 + (d : ℝ)^6) * ε^2 := by positivity
+  calc ‖(V_n : Matrix (Fin d) (Fin d) ℂ) *
+        (groupCommutator (ρA_F : Matrix (Fin d) (Fin d) ℂ)
+            (ρA_G : Matrix (Fin d) (Fin d) ℂ) -
+          groupCommutator (A_F : Matrix (Fin d) (Fin d) ℂ)
+            (A_G : Matrix (Fin d) (Fin d) ℂ))‖
+      ≤ ‖(V_n : Matrix (Fin d) (Fin d) ℂ)‖ *
+          ‖groupCommutator (ρA_F : Matrix (Fin d) (Fin d) ℂ)
+              (ρA_G : Matrix (Fin d) (Fin d) ℂ) -
+            groupCommutator (A_F : Matrix (Fin d) (Fin d) ℂ)
+              (A_G : Matrix (Fin d) (Fin d) ℂ)‖ := Matrix.linfty_opNorm_mul _ _
+    _ ≤ (d : ℝ) * (2 * ((d : ℝ)^2 + (d : ℝ)^4) * ε * η + ((d : ℝ)^4 + (d : ℝ)^6) * ε^2) :=
+        mul_le_mul (SUd_val_linftyOpNorm_le V_n) h_stab (norm_nonneg _) (by positivity)
+
 /-! ## Combine: single-step error from the two telescoping terms -/
 
 /-- **Single-step error combine**: given the stability term bound `Cstab` on
