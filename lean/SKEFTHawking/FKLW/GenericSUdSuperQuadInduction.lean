@@ -387,6 +387,27 @@ lemma eps_eta_le_rpow {m : ℕ} (ε δ_lie η : ℝ) (hε_nn : 0 ≤ ε)
     _ = 3 * ((m : ℝ) + 2) ^ 5 * (Real.sqrt ε ^ 2 * Real.sqrt ε) := by rw [h_s_sq]; ring
     _ = 3 * ((m : ℝ) + 2) ^ 5 * (Real.sqrt ε) ^ 3 := by ring
 
+/-- **`ε²` term in ε^(3/2) form**: `ε² ≤ √(2·ε₀_sud(m+2)) · ε^(3/2)` from
+`ε ≤ 2·ε₀_sud(m+2)`. Since `√(2·ε₀_sud) = 1/(2·K_compose_sud)` is tiny, this
+makes the `ε²` (super-cubic) stability term negligible vs the `ε^(3/2)` budget. -/
+lemma eps_sq_le_rpow {m : ℕ} (ε : ℝ) (hε_nn : 0 ≤ ε)
+    (hε_le : ε ≤ 2 * ε₀_sud (m + 2)) :
+    ε ^ 2 ≤ Real.sqrt (2 * ε₀_sud (m + 2)) * ε ^ (3 / 2 : ℝ) := by
+  have h_s_sq : Real.sqrt ε ^ 2 = ε := Real.sq_sqrt hε_nn
+  have h_s_le : Real.sqrt ε ≤ Real.sqrt (2 * ε₀_sud (m + 2)) := Real.sqrt_le_sqrt hε_le
+  have h_s3_nn : (0 : ℝ) ≤ (Real.sqrt ε) ^ 3 := by positivity
+  rw [rpow_three_halves_eq_sqrt_cube ε hε_nn]
+  have h_eq : ε ^ 2 = (Real.sqrt ε) ^ 3 * Real.sqrt ε := by
+    have h4 : (Real.sqrt ε) ^ 4 = ε ^ 2 := by
+      rw [show (Real.sqrt ε) ^ 4 = ((Real.sqrt ε) ^ 2) ^ 2 from by ring, h_s_sq]
+    calc ε ^ 2 = (Real.sqrt ε) ^ 4 := h4.symm
+      _ = (Real.sqrt ε) ^ 3 * Real.sqrt ε := by ring
+  rw [h_eq]
+  calc (Real.sqrt ε) ^ 3 * Real.sqrt ε
+      ≤ (Real.sqrt ε) ^ 3 * Real.sqrt (2 * ε₀_sud (m + 2)) :=
+        mul_le_mul_of_nonneg_left h_s_le h_s3_nn
+    _ = Real.sqrt (2 * ε₀_sud (m + 2)) * (Real.sqrt ε) ^ 3 := by ring
+
 /-! ## Combine: single-step error from the two telescoping terms -/
 
 /-- **Single-step error combine**: given the stability term bound `Cstab` on
