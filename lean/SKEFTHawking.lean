@@ -1743,6 +1743,12 @@ import SKEFTHawking.FKLW.GenericSUdEigenvalueLinftyBound
 -- explicit-witness norm bound via Session 70 applied to F = ∑γ·σ_y. The re-thread
 -- exposing the inner-witness norm bound for the super-quad F/G-norm ingredient.
 import SKEFTHawking.FKLW.GenericSUdSymmetricDischargeBounded
+-- Phase 6y Track S (Session 79, 2026-05-27): bounded full diagonal discharge.
+-- Session 31's eigenvalue-sort full diagonal discharge for ANY traceless real H,
+-- strengthened to ALSO return `‖F‖, ‖G‖ ≤ ∑_p √(θ·(sorted partial sum).re/2)`.
+-- Threads Session 77 (bounded discharge) at the sorted diagonal + Session 78
+-- (permMatrixAsUnitary conjugation norm preservation) through the sort conjugation.
+import SKEFTHawking.FKLW.GenericSUdSymmetricDiagonalDischargeFullBounded
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
