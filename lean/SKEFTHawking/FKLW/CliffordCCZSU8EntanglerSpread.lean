@@ -88,4 +88,40 @@ theorem cnot12_conj_X1 :
       Matrix.kroneckerMap_apply, SKEFTHawking.σ_x, finProdFinEquiv, Equiv.swap_apply_def,
       Fin.divNat, Fin.modNat, Matrix.cons_val_zero, Matrix.cons_val_one, Fin.ext_iff]
 
+/-- **Base entangler on pair (1,3)**: `CNOT₁₃·(σ_x⊗I⊗I)·CNOT₁₃⁻¹ = σ_x⊗I⊗σ_x`. -/
+theorem cnot13_conj_X1 :
+    CNOT_13_mat * kronSU8 SKEFTHawking.σ_x 1 1 * (CNOT_13_mat)⁻¹
+      = kronSU8 SKEFTHawking.σ_x 1 SKEFTHawking.σ_x := by
+  rw [CNOT_13_mat, permMatrix_fin8_conj]
+  unfold kronSU8 kronSU2SU4 kronSU4 σ_cnot_13
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.submatrix_apply, Matrix.reindex_apply, Matrix.kronecker,
+      Matrix.kroneckerMap_apply, SKEFTHawking.σ_x, finProdFinEquiv, Equiv.swap_apply_def,
+      Fin.divNat, Fin.modNat, Matrix.cons_val_zero, Matrix.cons_val_one, Fin.ext_iff]
+
+/-- **Base entangler on pair (2,3)**: `CNOT₂₃·(I⊗σ_x⊗I)·CNOT₂₃⁻¹ = I⊗σ_x⊗σ_x`. -/
+theorem cnot23_conj_X2 :
+    CNOT_23_mat * kronSU8 1 SKEFTHawking.σ_x 1 * (CNOT_23_mat)⁻¹
+      = kronSU8 1 SKEFTHawking.σ_x SKEFTHawking.σ_x := by
+  rw [CNOT_23_mat, permMatrix_fin8_conj]
+  unfold kronSU8 kronSU2SU4 kronSU4 σ_cnot_23
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.submatrix_apply, Matrix.reindex_apply, Matrix.kronecker,
+      Matrix.kroneckerMap_apply, SKEFTHawking.σ_x, finProdFinEquiv, Equiv.swap_apply_def,
+      Fin.divNat, Fin.modNat, Matrix.cons_val_zero, Matrix.cons_val_one, Fin.ext_iff]
+
+/-- **Base 3-qubit entangler**: `CNOT₂₃·(σ_x⊗σ_x⊗I)·CNOT₂₃⁻¹ = σ_x⊗σ_x⊗σ_x`. -/
+theorem cnot23_conj_X1X2 :
+    CNOT_23_mat * kronSU8 SKEFTHawking.σ_x SKEFTHawking.σ_x 1 * (CNOT_23_mat)⁻¹
+      = kronSU8 SKEFTHawking.σ_x SKEFTHawking.σ_x SKEFTHawking.σ_x := by
+  rw [CNOT_23_mat, permMatrix_fin8_conj]
+  unfold kronSU8 kronSU2SU4 kronSU4 σ_cnot_23
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.submatrix_apply, Matrix.reindex_apply, Matrix.kronecker,
+      Matrix.kroneckerMap_apply, SKEFTHawking.σ_x, finProdFinEquiv, Equiv.swap_apply_def,
+      Fin.divNat, Fin.modNat, Matrix.cons_val_zero, Matrix.cons_val_one, Fin.ext_iff]
+
 end SKEFTHawking.FKLW.CliffordCCZSU8
