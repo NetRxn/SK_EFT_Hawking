@@ -48,6 +48,7 @@ assembly (the (B) ingredient; base case).
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdSkApproxC
 import SKEFTHawking.FKLW.GenericSUdDnStepFGNormBound
+import SKEFTHawking.FKLW.GenericSUdDnStepFGCubic
 import SKEFTHawking.FKLW.GenericSUdRhomAbstraction
 import SKEFTHawking.FKLW.GroupCommutator
 import SKEFTHawking.FKLW.EpsilonSeq
@@ -180,5 +181,89 @@ lemma skApproxC_generic_sud_succ_rho_val {m : ℕ}
   intro V_n_word data A_F A_G
   rw [skApproxC_generic_sud_succ]
   rw [ρ_hom_sud_mul_val, ρ_hom_sud_groupCommutator_val]
+
+/-! ## Telescoping term 2: cubic term through V_n -/
+
+/-- **`V_n · Δ = U` at the matrix level**: for `Δ := V_n⁻¹·U`, `V_n.val · Δ.val = U.val`. -/
+lemma Vn_mul_residual_eq_U {d : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+    (V_n : Matrix (Fin d) (Fin d) ℂ) *
+        ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+          Matrix (Fin d) (Fin d) ℂ) =
+      (U : Matrix (Fin d) (Fin d) ℂ) := by
+  have h_grp : V_n * (V_n⁻¹ * U) = U := by
+    rw [← mul_assoc, mul_inv_cancel, one_mul]
+  calc (V_n : Matrix (Fin d) (Fin d) ℂ) *
+        ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+          Matrix (Fin d) (Fin d) ℂ)
+      = ((V_n * (V_n⁻¹ * U) : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+          Matrix (Fin d) (Fin d) ℂ) := rfl
+    _ = (U : Matrix (Fin d) (Fin d) ℂ) := by rw [h_grp]
+
+/-- **Cubic term through V_n**: `‖ρ(V_n)·gC(A_F, A_G) − U‖ ≤ (n+2)·320·δ³`.
+
+The "term 2" of the inductive-step telescoping: since `ρ(V_n)·Δ = U`, we have
+`ρ(V_n)·gC(A_F,A_G) − U = ρ(V_n)·(gC(A_F,A_G) − Δ)`, bounded by `‖ρ(V_n)‖·320·δ³ ≤ (n+2)·320·δ³`
+(M-bound S91 + cubic remainder S86). Carries the valid-regime + target hypotheses. -/
+lemma cubic_term_through_Vn {n : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ))
+    (h_valid : 0 < ‖((-Complex.I) • matrixLog (n + 2)
+        (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ∧
+        ‖((-Complex.I) • matrixLog (n + 2)
+        (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 1 ∧
+        (((-Complex.I) • matrixLog (n + 2)
+        (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)).IsHermitian ∧
+        (((-Complex.I) • matrixLog (n + 2)
+        (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)).trace = 0)
+    (h_target : (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val ∈
+        (expAmbientPartialHomeo (n + 2)).target)
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (hF_norm : ‖(dnStepFG_sud V_n U).F‖ ≤ δ)
+    (hG_norm : ‖(dnStepFG_sud V_n U).G‖ ≤ δ) :
+    ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) *
+        groupCommutator
+          ((expIsud n (dnStepFG_sud V_n U).F (dnStepFG_sud V_n U).hF_herm
+              (dnStepFG_sud V_n U).hF_tr : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+              Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)
+          ((expIsud n (dnStepFG_sud V_n U).G (dnStepFG_sud V_n U).hG_herm
+              (dnStepFG_sud V_n U).hG_tr : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+              Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+        (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤
+      ((n : ℝ) + 2) * (320 * δ ^ 3) := by
+  have h_cubic := dnStepFG_sud_gC_minus_Delta_norm_le_cubic V_n U h_valid h_target
+    δ hδ_nn hδ_le_one hF_norm hG_norm
+  set gC := groupCommutator
+    ((expIsud n (dnStepFG_sud V_n U).F (dnStepFG_sud V_n U).hF_herm
+        (dnStepFG_sud V_n U).hF_tr : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)
+    ((expIsud n (dnStepFG_sud V_n U).G (dnStepFG_sud V_n U).hG_herm
+        (dnStepFG_sud V_n U).hG_tr : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) with hgC_def
+  -- Rewrite U = V_n · Δ, factor, submultiplicativity, M-bound × cubic.
+  rw [← Vn_mul_residual_eq_U V_n U, ← Matrix.mul_sub]
+  calc ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) *
+          (gC - ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+            Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ))‖
+      ≤ ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ *
+          ‖gC - ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+            Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ := Matrix.linfty_opNorm_mul _ _
+    _ ≤ ((n : ℝ) + 2) * (320 * δ ^ 3) := by
+        have h_M : ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ ((n : ℝ) + 2) := by
+          have := SUd_val_linftyOpNorm_le V_n
+          simpa using this
+        have h_cubic_nn : (0 : ℝ) ≤ 320 * δ ^ 3 := by positivity
+        have h_gC_nn : (0 : ℝ) ≤ ‖gC - ((V_n⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+            Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ := norm_nonneg _
+        have h_Mn : (0 : ℝ) ≤ ((n : ℝ) + 2) := by positivity
+        calc ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ *
+              ‖gC - ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+                Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖
+            ≤ ((n : ℝ) + 2) * (320 * δ ^ 3) :=
+              mul_le_mul h_M h_cubic h_gC_nn h_Mn
 
 end SKEFTHawking.FKLW.GenericSUd
