@@ -1428,6 +1428,11 @@ import SKEFTHawking.FKLW.CliffordCCZSU8WitnessTracked
 -- density witness assembly + UNCONDITIONAL SolovayKitaevHeadline_FreeGroup_SUd. Ships Clifford+T at
 -- SU(8) (CCZ over-complete); literal CCZ-essential is a tracked strengthening (DR seed spike).
 import SKEFTHawking.FKLW.CliffordCCZSU8WitnessFull
+-- Phase 6y literal Clifford+CCZ strengthening, Phase A.1 (2026-05-28): the irrational-angle seed
+-- g = CCZ·(H⊗H⊗H) with tr(g) = 1/√2 (the obstruction to finite order — Kronecker/algebraic-integer).
+-- Foundation for the faithful (CCZ-essential, no-T) literal headline; Phases B (irrationality) + C
+-- (closure→1-param-subgroup Kronecker-Weyl lift) pending.
+import SKEFTHawking.FKLW.CliffordCCZSU8LiteralSeed
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
