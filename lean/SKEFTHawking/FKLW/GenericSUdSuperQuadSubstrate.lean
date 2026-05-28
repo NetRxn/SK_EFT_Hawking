@@ -33,6 +33,7 @@ import Mathlib
 import SKEFTHawking.FKLW.GenericSUdNormBridgeUnitaryConjugation
 import SKEFTHawking.FKLW.GenericSUdMatrixLogLipschitzExplicit
 import SKEFTHawking.FKLW.GenericSUdSkLevelPolylogSpec
+import SKEFTHawking.FKLW.EpsilonSeq
 
 set_option autoImplicit false
 
@@ -245,5 +246,45 @@ theorem skLevel_polylog_sud_spec_holds_calibrated {d : ℕ} (hd : 1 ≤ d) :
   skLevel_polylog_sud_spec_holds (K_compose_sud d) (ε₀_sud d)
     (K_compose_sud_pos hd) (ε₀_sud_pos hd)
     (K_compose_sud_calibration_le hd)
+
+/-! ## ε_seq bound at SU(d) -/
+
+/-- **`K_compose_sud d · √(2·ε₀_sud d) = 1/2`** — exact equality from calibration. -/
+lemma K_compose_sud_sqrt_two_ε₀_sud_eq_half {d : ℕ} (hd : 1 ≤ d) :
+    K_compose_sud d * Real.sqrt (2 * ε₀_sud d) = 1 / 2 := by
+  -- 2·ε₀_sud = 1/(4·K²), so √(2·ε₀) = 1/(2·K), so K · √(2·ε₀) = 1/2.
+  have h_K_pos := K_compose_sud_pos hd
+  have h_K_sq_pos : 0 < K_compose_sud d ^ 2 := by positivity
+  have h_two_ε₀_eq : 2 * ε₀_sud d = 1 / (4 * K_compose_sud d ^ 2) := by
+    unfold ε₀_sud
+    field_simp
+    ring
+  rw [h_two_ε₀_eq]
+  have h_inv_pos : (0 : ℝ) < 1 / (4 * K_compose_sud d ^ 2) := by positivity
+  rw [show (1 / (4 * K_compose_sud d ^ 2) : ℝ) = (1 / (2 * K_compose_sud d))^2 by
+    rw [div_pow, one_pow, mul_pow]
+    ring]
+  rw [Real.sqrt_sq (by positivity)]
+  field_simp
+
+/-- **`K_compose_sud d · √(2·ε₀_sud d) ≤ 1`** — convergence condition for
+ε_seq monotonicity. Direct consequence of the exact identity `= 1/2`. -/
+lemma K_compose_sud_sqrt_two_ε₀_sud_le_one {d : ℕ} (hd : 1 ≤ d) :
+    K_compose_sud d * Real.sqrt (2 * ε₀_sud d) ≤ 1 := by
+  rw [K_compose_sud_sqrt_two_ε₀_sud_eq_half hd]; norm_num
+
+/-- **`ε_seq (K_compose_sud d) (2·ε₀_sud d) n ≤ 2·ε₀_sud d`** for all n —
+SU(d) analog of SU(2)'s `ε_seq_K_compose_two_ε₀_le_two_ε₀`. -/
+lemma ε_seq_K_compose_sud_two_ε₀_sud_le_two_ε₀_sud {d : ℕ} (hd : 1 ≤ d) (n : ℕ) :
+    SKEFTHawking.FKLW.EpsilonSeq.ε_seq (K_compose_sud d) (2 * ε₀_sud d) n ≤
+      2 * ε₀_sud d := by
+  apply SKEFTHawking.FKLW.EpsilonSeq.ε_seq_le_ε_zero
+  · exact K_compose_sud_pos hd
+  · -- 2·ε₀_sud > 0
+    have h_ε := ε₀_sud_pos hd
+    linarith
+  · -- K · (2·ε₀)^(1/2) ≤ 1
+    rw [← Real.sqrt_eq_rpow]
+    exact K_compose_sud_sqrt_two_ε₀_sud_le_one hd
 
 end SKEFTHawking.FKLW.GenericSUd
