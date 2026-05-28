@@ -313,4 +313,39 @@ noncomputable def solovayKitaev_compile_strict_constructive_generic_sud_calibrat
   solovayKitaev_compile_strict_constructive_generic_sud gs baseFinder h_det_pred
     (K_compose_sud (n + 2)) U ε
 
+/-! ## F-norm bound predicate at SU(d) -/
+
+/-- **F-norm bound predicate for `dnStepFG_sud`** — captures the substantive
+content "F-norm is bounded by K_F · √(θ/2)" as a predicate hypothesis,
+enabling downstream composition.
+
+For `V_n U : ↥SU(n+2)`, the F extracted by `dnStepFG_sud V_n U` satisfies
+`‖F‖_linftyOp ≤ K_F · √(θ/2)` where `θ := ‖(-i)·matrixLog (V_n⁻¹·U)‖`.
+
+SU(d) analog of SU(2)'s implicit `‖F‖ ≤ √(θ/2)` (from
+`balanced_commutator_general_axis_lie_traceless`). The SU(d) keystone
+(Session 33) uses `Classical.choose` to extract F, so the explicit
+norm bound is a separate predicate-form hypothesis. The substantive
+discharge requires composition with Session 37's bounded form
+`symmetric_balanced_commutator_hermitian_via_spectral_bounded` + an
+inner-witness norm bound analysis (`‖F_inner‖_linftyOp ≤ K_inner(n)·√(θ/2)`
+where K_inner depends on the spectral decomposition's max-partial-sum
+bound). -/
+def DnStepFG_sud_F_norm_bound_predicate {n : ℕ} (K_F : ℝ) : Prop :=
+  ∀ (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)),
+    let Δ := (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ))
+    let H : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ :=
+      ((-Complex.I) : ℂ) • matrixLog (n + 2) Δ.val
+    let θ : ℝ := ‖H‖
+    0 < θ ∧ θ ≤ 1 → ‖(dnStepFG_sud V_n U).F‖ ≤ K_F * Real.sqrt (θ / 2)
+
+/-- **G-norm bound predicate for `dnStepFG_sud`** (mirror of F-norm). -/
+def DnStepFG_sud_G_norm_bound_predicate {n : ℕ} (K_G : ℝ) : Prop :=
+  ∀ (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)),
+    let Δ := (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ))
+    let H : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ :=
+      ((-Complex.I) : ℂ) • matrixLog (n + 2) Δ.val
+    let θ : ℝ := ‖H‖
+    0 < θ ∧ θ ≤ 1 → ‖(dnStepFG_sud V_n U).G‖ ≤ K_G * Real.sqrt (θ / 2)
+
 end SKEFTHawking.FKLW.GenericSUd
