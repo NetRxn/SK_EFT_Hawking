@@ -352,6 +352,65 @@ lemma stability_term_through_Vn {d : ℕ} [Nonempty (Fin d)]
     _ ≤ (d : ℝ) * (2 * ((d : ℝ)^2 + (d : ℝ)^4) * ε * η + ((d : ℝ)^4 + (d : ℝ)^6) * ε^2) :=
         mul_le_mul (SUd_val_linftyOpNorm_le V_n) h_stab (norm_nonneg _) (by positivity)
 
+/-! ## Regime brick: δ_lie = ‖F‖ ≤ (m+2)^5·√ε from the θ-bound -/
+
+/-- **F-norm in √ε form**: given `θ = ‖(-i)·matrixLog Δ‖ ≤ 2·(n+2)·ε`,
+`‖(dnStepFG_sud V_n U).F‖ ≤ (n+2)^5·√ε`. Composes S91's `(n+2)^4·√(θ/2)`
+with `√(θ/2) ≤ √((n+2)ε) ≤ (n+2)·√ε` (the `√(n+2) ≤ n+2` step). This is the
+`hδ_le` input shape required by the super-quad numeric chain. -/
+lemma dnStepFG_sud_F_norm_le_sqrt_eps {n : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) (ε : ℝ)
+    (h_theta_le : ‖((-Complex.I) • matrixLog (n + 2)
+        (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 2 * ((n : ℝ) + 2) * ε) :
+    ‖(dnStepFG_sud V_n U).F‖ ≤ ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by
+  have hd_ge_one : (1 : ℝ) ≤ (n : ℝ) + 2 := by
+    have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg n; linarith
+  refine le_trans (dnStepFG_sud_F_norm_le_poly V_n U) ?_
+  set θ := ‖((-Complex.I) • matrixLog (n + 2)
+    (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
+    Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ with hθ_def
+  have h_sqrt_d_le : Real.sqrt ((n : ℝ) + 2) ≤ (n : ℝ) + 2 := by
+    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ (n : ℝ) + 2 by linarith),
+      Real.sqrt_nonneg ((n : ℝ) + 2), sq_nonneg (Real.sqrt ((n : ℝ) + 2) - 1)]
+  have h_sqrt_half : Real.sqrt (θ / 2) ≤ ((n : ℝ) + 2) * Real.sqrt ε := by
+    calc Real.sqrt (θ / 2)
+        ≤ Real.sqrt (((n : ℝ) + 2) * ε) := Real.sqrt_le_sqrt (by linarith [h_theta_le])
+      _ = Real.sqrt ((n : ℝ) + 2) * Real.sqrt ε := Real.sqrt_mul (by linarith) ε
+      _ ≤ ((n : ℝ) + 2) * Real.sqrt ε :=
+          mul_le_mul_of_nonneg_right h_sqrt_d_le (Real.sqrt_nonneg ε)
+  calc ((n : ℝ) + 2) ^ 4 * Real.sqrt (θ / 2)
+      ≤ ((n : ℝ) + 2) ^ 4 * (((n : ℝ) + 2) * Real.sqrt ε) :=
+        mul_le_mul_of_nonneg_left h_sqrt_half (by positivity)
+    _ = ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by ring
+
+/-- **G-norm in √ε form** (mirror of F). -/
+lemma dnStepFG_sud_G_norm_le_sqrt_eps {n : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) (ε : ℝ)
+    (h_theta_le : ‖((-Complex.I) • matrixLog (n + 2)
+        (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 2 * ((n : ℝ) + 2) * ε) :
+    ‖(dnStepFG_sud V_n U).G‖ ≤ ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by
+  have hd_ge_one : (1 : ℝ) ≤ (n : ℝ) + 2 := by
+    have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg n; linarith
+  refine le_trans (dnStepFG_sud_G_norm_le_poly V_n U) ?_
+  set θ := ‖((-Complex.I) • matrixLog (n + 2)
+    (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
+    Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ with hθ_def
+  have h_sqrt_d_le : Real.sqrt ((n : ℝ) + 2) ≤ (n : ℝ) + 2 := by
+    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ (n : ℝ) + 2 by linarith),
+      Real.sqrt_nonneg ((n : ℝ) + 2), sq_nonneg (Real.sqrt ((n : ℝ) + 2) - 1)]
+  have h_sqrt_half : Real.sqrt (θ / 2) ≤ ((n : ℝ) + 2) * Real.sqrt ε := by
+    calc Real.sqrt (θ / 2)
+        ≤ Real.sqrt (((n : ℝ) + 2) * ε) := Real.sqrt_le_sqrt (by linarith [h_theta_le])
+      _ = Real.sqrt ((n : ℝ) + 2) * Real.sqrt ε := Real.sqrt_mul (by linarith) ε
+      _ ≤ ((n : ℝ) + 2) * Real.sqrt ε :=
+          mul_le_mul_of_nonneg_right h_sqrt_d_le (Real.sqrt_nonneg ε)
+  calc ((n : ℝ) + 2) ^ 4 * Real.sqrt (θ / 2)
+      ≤ ((n : ℝ) + 2) ^ 4 * (((n : ℝ) + 2) * Real.sqrt ε) :=
+        mul_le_mul_of_nonneg_left h_sqrt_half (by positivity)
+    _ = ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by ring
+
 /-! ## Numeric chain prep: rpow ^(3/2) conversions -/
 
 /-- `ε^(3/2) = (√ε)³` for `ε ≥ 0`. The bridge from the recursion's `ε_seq`
