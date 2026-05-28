@@ -1629,6 +1629,14 @@ import SKEFTHawking.FKLW.GenericSUdSkCascadeIndex
 -- to K-parametric form. Discharges the 3rd of 4 substantive ingredients
 -- enumerated by Session 47's cascade index.
 import SKEFTHawking.FKLW.GenericSUdSkLevelPolylogSpec
+-- Phase 6y Track S (Session 49, 2026-05-27): SUBSTANTIVE discharge of
+-- `ExpIsud_det_eq_one_predicate` at SU(d) for d ≥ 2. For any Hermitian-traceless
+-- F : Matrix (Fin (n+2)) (Fin (n+2)) ℂ, proves det(exp(I·F)) = 1 via spectral
+-- decomposition + Matrix.exp_conj + Matrix.exp_diagonal + Matrix.det_diagonal +
+-- Pi.exp_def + Complex.exp_sum. Discharges the 1st of 4 substantive ingredients
+-- enumerated by Session 47's cascade index. Composes with Session 42's
+-- expIsud_of_det_predicate to give UNCONDITIONAL SU(d) exp coercion.
+import SKEFTHawking.FKLW.GenericSUdExpIsuDDetDischarge
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
