@@ -129,4 +129,51 @@ lemma H_norm_le_two_norm_sub_one_sud (d : ℕ) :
   rw [h_norm_neg_I, one_mul]
   exact h_lipschitz Δ h_small
 
+/-! ## Composite H-norm-from-V-diff bound at SU(d) -/
+
+/-- **Composite H-norm bound from V-diff at SU(d)**: combines
+`residual_norm_le_d_mul` (Session 60) with `H_norm_le_two_norm_sub_one_sud`
+(Session 61) into a single substrate lemma.
+
+For `V, U ∈ ↥SU(d)` with `d · ‖V - U‖ < δ` (the matrixLog Lipschitz
+neighborhood radius from Session 41), the matrix
+`H := (-i) • matrixLog d (V⁻¹·U)` has linftyOp norm at most
+`2·d · ‖V - U‖`.
+
+SU(d) analog of SU(2)'s `H_norm_bound_from_V_diff` (Phase 6t). Captures
+Steps 2-4 of the super-quad DN chain in a single substrate lemma. -/
+lemma H_norm_bound_from_V_diff_sud {d : ℕ} [Nonempty (Fin d)] :
+    ∃ δ > (0 : ℝ),
+    ∀ (V U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)),
+      (d : ℝ) * ‖(V : Matrix (Fin d) (Fin d) ℂ) -
+        (U : Matrix (Fin d) (Fin d) ℂ)‖ < δ →
+      ‖((-Complex.I) • matrixLog d
+          ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val) :
+          Matrix (Fin d) (Fin d) ℂ)‖ ≤
+        2 * (d : ℝ) *
+          ‖(V : Matrix (Fin d) (Fin d) ℂ) -
+            (U : Matrix (Fin d) (Fin d) ℂ)‖ := by
+  obtain ⟨δ, hδ_pos, h_H_bound⟩ := H_norm_le_two_norm_sub_one_sud d
+  refine ⟨δ, hδ_pos, ?_⟩
+  intro V U h_small
+  -- Apply Step 2 (residual_norm_le_d_mul)
+  have h_residual := residual_norm_le_d_mul V U
+  -- Δ residual ‖_ - 1‖ ≤ d · ‖V - U‖
+  set Δ := (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) with hΔ_def
+  have h_residual_lt :
+      ‖(Δ : Matrix (Fin d) (Fin d) ℂ) - (1 : Matrix (Fin d) (Fin d) ℂ)‖ < δ :=
+    lt_of_le_of_lt h_residual h_small
+  -- Apply Step 4 (H_norm_le_two_norm_sub_one_sud)
+  have h_H := h_H_bound Δ.val h_residual_lt
+  -- Chain: ‖H‖ ≤ 2·‖Δ - 1‖ ≤ 2·(d·‖V - U‖) = 2d·‖V - U‖
+  calc ‖((-Complex.I) • matrixLog d Δ.val : Matrix (Fin d) (Fin d) ℂ)‖
+      ≤ 2 * ‖(Δ : Matrix (Fin d) (Fin d) ℂ) -
+              (1 : Matrix (Fin d) (Fin d) ℂ)‖ := h_H
+    _ ≤ 2 * ((d : ℝ) *
+            ‖(V : Matrix (Fin d) (Fin d) ℂ) -
+              (U : Matrix (Fin d) (Fin d) ℂ)‖) := by gcongr
+    _ = 2 * (d : ℝ) *
+        ‖(V : Matrix (Fin d) (Fin d) ℂ) -
+          (U : Matrix (Fin d) (Fin d) ℂ)‖ := by ring
+
 end SKEFTHawking.FKLW.GenericSUd
