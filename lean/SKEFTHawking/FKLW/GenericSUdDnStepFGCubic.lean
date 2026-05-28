@@ -62,9 +62,7 @@ Mirrors SU(2)'s `dnStepFG_su2_gC_minus_Delta_norm_le_cubic`. Composes the
 dimension-generic BCH cubic remainder with Session 84's `exp(−[F,G]) = Δ`. -/
 lemma dnStepFG_sud_gC_minus_Delta_norm_le_cubic {n : ℕ}
     (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ))
-    (h_valid : 0 < ‖((-Complex.I) • matrixLog (n + 2)
-        (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
-        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ∧
+    (h_regime3 :
         ‖((-Complex.I) • matrixLog (n + 2)
         (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
         Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 1 ∧
@@ -90,7 +88,7 @@ lemma dnStepFG_sud_gC_minus_Delta_norm_le_cubic {n : ℕ}
   rw [expIsud_val, expIsud_val]
   have h_bch := groupCommutator_lie_bracket_cubic_remainder δ hδ_nn hδ_le_one
     (dnStepFG_sud V_n U).F (dnStepFG_sud V_n U).G hF_norm hG_norm
-  have h_exp_eq_Δ := dnStepFG_sud_exp_neg_comm_eq_Delta V_n U h_valid h_target
+  have h_exp_eq_Δ := dnStepFG_sud_exp_neg_comm_eq_Delta V_n U h_regime3 h_target
   rw [← h_exp_eq_Δ]
   exact h_bch
 

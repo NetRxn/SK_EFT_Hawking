@@ -71,9 +71,7 @@ theorem skHeadline_FreeGroup_SUd_cascade_B_discharged
             (Fin (n + 2)) ℂ)).val : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤
           2 * ((n : ℝ) + 2) * ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
             (Uu : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ∧
-        (0 < ‖((-Complex.I) • matrixLog (n + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
-            (Fin (n + 2)) ℂ)).val : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ∧
-          ‖((-Complex.I) • matrixLog (n + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
+        (‖((-Complex.I) • matrixLog (n + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
             (Fin (n + 2)) ℂ)).val : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 1 ∧
           (((-Complex.I) • matrixLog (n + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
             (Fin (n + 2)) ℂ)).val : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)).IsHermitian ∧

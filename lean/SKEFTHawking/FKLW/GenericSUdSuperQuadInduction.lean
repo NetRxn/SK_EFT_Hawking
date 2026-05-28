@@ -209,9 +209,7 @@ The "term 2" of the inductive-step telescoping: since `ρ(V_n)·Δ = U`, we have
 (M-bound S91 + cubic remainder S86). Carries the valid-regime + target hypotheses. -/
 lemma cubic_term_through_Vn {n : ℕ}
     (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ))
-    (h_valid : 0 < ‖((-Complex.I) • matrixLog (n + 2)
-        (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
-        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ∧
+    (h_regime3 :
         ‖((-Complex.I) • matrixLog (n + 2)
         (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val :
         Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 1 ∧
@@ -236,7 +234,7 @@ lemma cubic_term_through_Vn {n : ℕ}
               Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
         (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤
       ((n : ℝ) + 2) * (320 * δ ^ 3) := by
-  have h_cubic := dnStepFG_sud_gC_minus_Delta_norm_le_cubic V_n U h_valid h_target
+  have h_cubic := dnStepFG_sud_gC_minus_Delta_norm_le_cubic V_n U h_regime3 h_target
     δ hδ_nn hδ_le_one hF_norm hG_norm
   set gC := groupCommutator
     ((expIsud n (dnStepFG_sud V_n U).F (dnStepFG_sud V_n U).hF_herm
@@ -688,10 +686,7 @@ lemma skApproxC_sud_succ_super_quad_valid {m : ℕ}
         ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
           ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
         Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 2 * ((m : ℝ) + 2) * ε)
-    (h_valid : 0 < ‖((-Complex.I) • matrixLog (m + 2)
-        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
-          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
-        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ∧
+    (h_regime3 :
         ‖((-Complex.I) • matrixLog (m + 2)
         ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
           ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
@@ -747,7 +742,7 @@ lemma skApproxC_sud_succ_super_quad_valid {m : ℕ}
     (h_IH (expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr))
     (h_IH (expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr))
   rw [show ((m + 2 : ℕ) : ℝ) = (m : ℝ) + 2 from by push_cast; ring] at h_stab
-  have h_cubic := cubic_term_through_Vn V_n U h_valid h_target δ_lie hδ_nn h_delta_le_one
+  have h_cubic := cubic_term_through_Vn V_n U h_regime3 h_target δ_lie hδ_nn h_delta_le_one
     hF_norm hG_norm
   have h_combine := skApproxC_sud_succ_error_le_combine gs baseFinder h_det_pred n U
     _ _ h_stab h_cubic
@@ -761,7 +756,7 @@ lemma skApproxC_sud_succ_super_quad_valid {m : ℕ}
 /-- **(m+2)^5·√ε ≤ 1 from the calibration** (ε ≤ 2·ε₀_sud(m+2)): since
 `√(2·ε₀_sud) = 1/(2·K_compose_sud) = 1/(2·1024·(m+2)^16)`, we get
 `(m+2)^5·√ε ≤ (m+2)^5/(2048·(m+2)^16) ≤ 1`. -/
-lemma delta_le_one_of_eps_le {m : ℕ} (ε : ℝ) (hε_nn : 0 ≤ ε)
+lemma delta_le_one_of_eps_le {m : ℕ} (ε : ℝ) (_hε_nn : 0 ≤ ε)
     (hε_le : ε ≤ 2 * ε₀_sud (m + 2)) :
     ((m : ℝ) + 2) ^ 5 * Real.sqrt ε ≤ 1 := by
   have hd_ge_one : (1 : ℝ) ≤ (m : ℝ) + 2 := by
@@ -789,9 +784,12 @@ lemma delta_le_one_of_eps_le {m : ℕ} (ε : ℝ) (hε_nn : 0 ≤ ε)
 /-- **(B) SUPER-QUAD BOUND DISCHARGE** — the `SkApproxCSuperQuadraticBound_generic_sud`
 predicate holds at the calibration `(K_compose_sud(m+2), ε₀_sud(m+2))`, given the
 base-finder ε₀-net property and the **regime hypothesis** `h_regime` (for every
-residual `V⁻¹U` with `‖V−U‖ ≤ 2·ε₀_sud`, the valid-branch conditions hold: the
-θ-bound `‖H‖ ≤ 2(m+2)‖V−U‖`, `0 < ‖H‖ ≤ 1` with `H` Hermitian-traceless, and
-`Δ ∈ target`).
+residual `V⁻¹U` with `‖V−U‖ ≤ 2·ε₀_sud`, the regime conditions hold: the
+θ-bound `‖H‖ ≤ 2(m+2)‖V−U‖`, `‖H‖ ≤ 1` with `H` Hermitian-traceless, and
+`Δ ∈ target`). The `0 < ‖H‖` positivity conjunct is **no longer required** —
+the degenerate `V = U` case (`H = 0`) is handled internally by the
+`0 < ‖H‖`-unconditional substrate (S84/S86), so `h_regime` is now satisfiable
+universally on the calibration ball (it is no longer vacuously false at `V = U`).
 
 By induction on the recursion depth: base case S89; inductive step applies the
 single-step valid-branch bound S101 after instantiating `h_regime` at the level-n
@@ -813,9 +811,7 @@ theorem SkApproxCSuperQuadraticBound_generic_sud_holds {m : ℕ}
             (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤
           2 * ((m : ℝ) + 2) * ‖(V : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
             (Uu : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ∧
-        (0 < ‖((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
-            (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ∧
-          ‖((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
+        (‖((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
             (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 1 ∧
           (((-Complex.I) • matrixLog (m + 2) (V⁻¹ * Uu : ↥(Matrix.specialUnitaryGroup
             (Fin (m + 2)) ℂ)).val : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)).IsHermitian ∧
