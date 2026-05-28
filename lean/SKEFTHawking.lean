@@ -1289,6 +1289,8 @@ import SKEFTHawking.FKLW.GenericSUdFlowConj
 import SKEFTHawking.FKLW.TrappedIonSU4MSFlowGrid
 -- Phase 6y Track T-A1′.2 (D) witness (2026-05-28): 15 tensor-Pauli tangents span 𝔰𝔲(4) (hX_spans)
 import SKEFTHawking.FKLW.TrappedIonSU4TangentSpan
+-- Phase 6y (D) witness (2026-05-28): exp of idempotent/involution closed forms (Banach algebra)
+import SKEFTHawking.FKLW.GenericExpInvolution
 -- Phase 6y Track S.2g-substrate (2026-05-27): local diffeo restriction
 -- `𝔰𝔲(d) ↔ SU(d)` near (0, 1). Forward: exp of 𝔰𝔲(d) ∩ source ⊆ SU(d) ∩ target
 -- (via skew-Hermitian-exp-is-unitary + S.2d Jacobi det = exp(tr) = 1).
