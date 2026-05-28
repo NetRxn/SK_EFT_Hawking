@@ -92,4 +92,63 @@ lemma dnStepFG_sud_concrete_G_norm_le_poly {n : ℕ}
   refine le_trans (dnStepFG_sud_concrete_G_norm_le V_n U) ?_
   exact mul_le_mul_of_nonneg_right (dnStepFG_sud_K_F_le n) (Real.sqrt_nonneg _)
 
+/-- **Concrete F-norm in √ε form**: given the concrete θ-bound
+`‖(-i)·matrixMercatorLog(Δ−1)‖ ≤ 2(n+2)·ε`, `‖(dnStepFG_sud_concrete V_n U).F‖ ≤ (n+2)^5·√ε`.
+Concrete counterpart of `dnStepFG_sud_F_norm_le_sqrt_eps` (S100): composes the concrete poly
+norm `(n+2)^4·√(θ/2)` with `√(θ/2) ≤ (n+2)·√ε` (the `√(n+2) ≤ n+2` step). The `hδ_le` input
+shape required by the (concrete) super-quad numeric chain. The θ-bound hypothesis is itself
+dischargeable on the calibration ball from `regime_thetabound_concrete` (S120) + the IH. -/
+lemma dnStepFG_sud_concrete_F_norm_le_sqrt_eps {n : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) (ε : ℝ)
+    (h_theta_le : ‖((-Complex.I) • matrixMercatorLog
+        ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val - 1) :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 2 * ((n : ℝ) + 2) * ε) :
+    ‖(dnStepFG_sud_concrete V_n U).F‖ ≤ ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by
+  have hd_ge_one : (1 : ℝ) ≤ (n : ℝ) + 2 := by
+    have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg n; linarith
+  refine le_trans (dnStepFG_sud_concrete_F_norm_le_poly V_n U) ?_
+  set θ := ‖((-Complex.I) • matrixMercatorLog
+    ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val - 1) :
+    Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ with hθ_def
+  have h_sqrt_d_le : Real.sqrt ((n : ℝ) + 2) ≤ (n : ℝ) + 2 := by
+    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ (n : ℝ) + 2 by linarith),
+      Real.sqrt_nonneg ((n : ℝ) + 2), sq_nonneg (Real.sqrt ((n : ℝ) + 2) - 1)]
+  have h_sqrt_half : Real.sqrt (θ / 2) ≤ ((n : ℝ) + 2) * Real.sqrt ε := by
+    calc Real.sqrt (θ / 2)
+        ≤ Real.sqrt (((n : ℝ) + 2) * ε) := Real.sqrt_le_sqrt (by linarith [h_theta_le])
+      _ = Real.sqrt ((n : ℝ) + 2) * Real.sqrt ε := Real.sqrt_mul (by linarith) ε
+      _ ≤ ((n : ℝ) + 2) * Real.sqrt ε :=
+          mul_le_mul_of_nonneg_right h_sqrt_d_le (Real.sqrt_nonneg ε)
+  calc ((n : ℝ) + 2) ^ 4 * Real.sqrt (θ / 2)
+      ≤ ((n : ℝ) + 2) ^ 4 * (((n : ℝ) + 2) * Real.sqrt ε) :=
+        mul_le_mul_of_nonneg_left h_sqrt_half (by positivity)
+    _ = ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by ring
+
+/-- **Concrete G-norm in √ε form** (mirror of F). -/
+lemma dnStepFG_sud_concrete_G_norm_le_sqrt_eps {n : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) (ε : ℝ)
+    (h_theta_le : ‖((-Complex.I) • matrixMercatorLog
+        ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val - 1) :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 2 * ((n : ℝ) + 2) * ε) :
+    ‖(dnStepFG_sud_concrete V_n U).G‖ ≤ ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by
+  have hd_ge_one : (1 : ℝ) ≤ (n : ℝ) + 2 := by
+    have : (0 : ℝ) ≤ (n : ℝ) := Nat.cast_nonneg n; linarith
+  refine le_trans (dnStepFG_sud_concrete_G_norm_le_poly V_n U) ?_
+  set θ := ‖((-Complex.I) • matrixMercatorLog
+    ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val - 1) :
+    Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ with hθ_def
+  have h_sqrt_d_le : Real.sqrt ((n : ℝ) + 2) ≤ (n : ℝ) + 2 := by
+    nlinarith [Real.sq_sqrt (show (0 : ℝ) ≤ (n : ℝ) + 2 by linarith),
+      Real.sqrt_nonneg ((n : ℝ) + 2), sq_nonneg (Real.sqrt ((n : ℝ) + 2) - 1)]
+  have h_sqrt_half : Real.sqrt (θ / 2) ≤ ((n : ℝ) + 2) * Real.sqrt ε := by
+    calc Real.sqrt (θ / 2)
+        ≤ Real.sqrt (((n : ℝ) + 2) * ε) := Real.sqrt_le_sqrt (by linarith [h_theta_le])
+      _ = Real.sqrt ((n : ℝ) + 2) * Real.sqrt ε := Real.sqrt_mul (by linarith) ε
+      _ ≤ ((n : ℝ) + 2) * Real.sqrt ε :=
+          mul_le_mul_of_nonneg_right h_sqrt_d_le (Real.sqrt_nonneg ε)
+  calc ((n : ℝ) + 2) ^ 4 * Real.sqrt (θ / 2)
+      ≤ ((n : ℝ) + 2) ^ 4 * (((n : ℝ) + 2) * Real.sqrt ε) :=
+        mul_le_mul_of_nonneg_left h_sqrt_half (by positivity)
+    _ = ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by ring
+
 end SKEFTHawking.FKLW.GenericSUd
