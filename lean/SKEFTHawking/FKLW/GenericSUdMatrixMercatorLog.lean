@@ -232,4 +232,53 @@ theorem matrixMercatorLog_commute_mercatorLog {d : ℕ} (X Y : Matrix (Fin d) (F
   matrixMercatorLog_commute_of_commute X (matrixMercatorLog Y) hX
     (matrixMercatorLog_commute_of_commute Y X hY hXY.symm).symm
 
+/-! ## 6. Per-term derivative of the Mercator-log path (brick 2, crux iii input)
+
+The brick-2 round-trip `exp (matrixMercatorLog X) = 1 + X` differentiates the path
+`t ↦ matrixMercatorLog ((↑t)•X)` term by term (via `hasDerivAt_tsum_of_isPreconnected`
+on a ball `‖t‖ < 1/‖X‖`). This is the per-term input.
+
+**Instance-diamond note**: the naive `HasDerivAt.smul_const` route fails — it resolves
+the ℝ-module on `Matrix ℂ` through the local `Matrix.linftyOpNormedAddCommGroup` path,
+which is a non-defeq diamond with the standard `Matrix.addCommGroup`/Pi module the goal
+uses (surfaced misleadingly as an `IsScalarTower` synthesis failure). The fix used here
+**bundles the ℂ-smul into a continuous ℝ-linear map** `g : ℂ →L[ℝ] Matrix ℂ`,
+`g z = z • X^(n+1)` (`(id ℂ).smulRight (X^(n+1)) |>.restrictScalars ℝ`), and differentiates
+via `g.hasFDerivAt.comp_hasDerivAt` — sidestepping the module diamond entirely. -/
+
+/-- **Per-term derivative of the Mercator-log path**: for each `n`,
+`d/dt [c_n • ((↑t)•X)^(n+1)] = ((-1)^n · (↑t)^n) • X^(n+1)` (the coefficient
+`(n+1)·c_n = (-1)^n` collapse). Differentiated via a bundled ℝ-linear `g z = z • X^(n+1)`
+composed with the smooth scalar path `s ↦ c_n·(↑s)^(n+1)`, avoiding the
+`linftyOp`-vs-standard ℝ-module diamond that defeats `HasDerivAt.smul_const`. -/
+theorem hasDerivAt_matrixMercatorLog_term {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
+    (n : ℕ) (t : ℝ) :
+    HasDerivAt (fun s : ℝ => (((-1 : ℂ) ^ n / (n + 1 : ℂ))) • ((↑s : ℂ) • X) ^ (n + 1))
+      ((((-1 : ℂ) ^ n) * (↑t : ℂ) ^ n) • X ^ (n + 1)) t := by
+  set M : Matrix (Fin d) (Fin d) ℂ := X ^ (n + 1) with hM
+  set g : ℂ →L[ℝ] Matrix (Fin d) (Fin d) ℂ :=
+    (ContinuousLinearMap.id ℂ ℂ).smulRight M |>.restrictScalars ℝ with hg
+  have hpath : HasDerivAt (fun s : ℝ => ((-1 : ℂ) ^ n / (n + 1 : ℂ)) * (↑s : ℂ) ^ (n + 1))
+      (((-1 : ℂ) ^ n / (n + 1 : ℂ)) * (((n : ℂ) + 1) * (↑t : ℂ) ^ n)) t := by
+    have h_ofReal : HasDerivAt (fun s : ℝ => (↑s : ℂ)) 1 t := by
+      simpa using Complex.ofRealCLM.hasDerivAt (x := t)
+    have h_pow := h_ofReal.pow (n + 1)
+    simpa [Nat.cast_add, Nat.cast_one, mul_comm] using
+      h_pow.const_mul ((-1 : ℂ) ^ n / (n + 1 : ℂ))
+  have hcomp := g.hasFDerivAt.comp_hasDerivAt t hpath
+  have hg_apply : ∀ z : ℂ, g z = z • M := by
+    intro z
+    simp only [hg, ContinuousLinearMap.coe_restrictScalars', ContinuousLinearMap.smulRight_apply,
+      ContinuousLinearMap.coe_id', id_eq]
+  have hfun : (⇑g ∘ fun s : ℝ => ((-1 : ℂ) ^ n / (n + 1 : ℂ)) * (↑s : ℂ) ^ (n + 1))
+      = (fun s : ℝ => (((-1 : ℂ) ^ n / (n + 1 : ℂ))) • ((↑s : ℂ) • X) ^ (n + 1)) := by
+    funext s
+    rw [Function.comp_apply, hg_apply, hM, smul_pow, smul_smul]
+  rw [hfun] at hcomp
+  rw [hg_apply] at hcomp
+  convert hcomp using 1
+  have hn1 : ((n : ℂ) + 1) ≠ 0 := Nat.cast_add_one_ne_zero n
+  congr 1
+  field_simp
+
 end SKEFTHawking.FKLW.GenericSUd
