@@ -316,4 +316,100 @@ lemma stability_term_bound {d : ℕ} [Nonempty (Fin d)]
     h_A_G_near h_A_F_inv_near h_F_diff h_G_diff
     (h_det A_F) (h_det ρA_F) (h_det A_G) (h_det ρA_G)
 
+/-! ## Combine: single-step error from the two telescoping terms -/
+
+/-- **Single-step error combine**: given the stability term bound `Cstab` on
+`‖ρ(V_n)·gC(ρsk A_F, ρsk A_G) − ρ(V_n)·gC(A_F, A_G)‖` and the cubic term bound
+`Ccubic` on `‖ρ(V_n)·gC(A_F, A_G) − U‖`, the level-(n+1) error is `≤ Cstab + Ccubic`.
+
+Composes the composition identity (S92) with the triangle inequality
+`a − U = (a − b) + (b − U)`. This is the structural combine; the actual
+`Cstab = d·stability` (S91 M-bound + S94) and `Ccubic = d·320δ³` (S93) plug in,
+and the numeric chain then bounds `Cstab + Ccubic ≤ K_compose_sud·ε_n^{3/2}`. -/
+lemma skApproxC_sud_succ_error_le_combine {m : ℕ}
+    (gs : GeneratingSet (m + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (m + 2))
+    (n : ℕ) (U : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ))
+    (Cstab Ccubic : ℝ)
+    (h_stab_term :
+      let V_n_word := skApproxC_generic_sud gs baseFinder h_det_pred n U
+      let data := dnStepFG_sud (gs.ρ_hom V_n_word) U
+      let A_F := expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr
+      let A_G := expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr
+      ‖((gs.ρ_hom V_n_word : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+          groupCommutator
+            ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n A_F) :
+                ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+            ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n A_G) :
+                ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+        ((gs.ρ_hom V_n_word : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+          groupCommutator
+            ((A_F : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+            ((A_G : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ Cstab)
+    (h_cubic_term :
+      let V_n_word := skApproxC_generic_sud gs baseFinder h_det_pred n U
+      let data := dnStepFG_sud (gs.ρ_hom V_n_word) U
+      let A_F := expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr
+      let A_G := expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr
+      ‖((gs.ρ_hom V_n_word : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+          groupCommutator
+            ((A_F : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+            ((A_G : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+        (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ Ccubic) :
+    ‖((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred (n + 1) U) :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+        (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ Cstab + Ccubic := by
+  simp only at h_stab_term h_cubic_term
+  rw [skApproxC_generic_sud_succ_rho_val gs baseFinder h_det_pred n U]
+  set a := ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U) :
+      ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+      Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+    groupCommutator
+      ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n
+          (expIsud_of_det_predicate h_det_pred
+            (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).F
+            (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).hF_herm
+            (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).hF_tr)) :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+      ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n
+          (expIsud_of_det_predicate h_det_pred
+            (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).G
+            (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).hG_herm
+            (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).hG_tr)) :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) with ha_def
+  set b := ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U) :
+      ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+      Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+    groupCommutator
+      ((expIsud_of_det_predicate h_det_pred
+          (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).F
+          (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).hF_herm
+          (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).hF_tr :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+      ((expIsud_of_det_predicate h_det_pred
+          (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).G
+          (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).hG_herm
+          (dnStepFG_sud (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U)) U).hG_tr :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) with hb_def
+  calc ‖a - (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖
+      = ‖(a - b) + (b - (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ))‖ := by
+        rw [sub_add_sub_cancel]
+    _ ≤ ‖a - b‖ + ‖b - (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ := norm_add_le _ _
+    _ ≤ Cstab + Ccubic := add_le_add h_stab_term h_cubic_term
+
 end SKEFTHawking.FKLW.GenericSUd
