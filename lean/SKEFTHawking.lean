@@ -1679,6 +1679,11 @@ import SKEFTHawking.FKLW.GenericSUdLengthBoundPerAlphabet
 -- (Session 53 predicate). Substrate for T-A1′.5/T-A2′.5 cascade unblock via
 -- per-alphabet ε-net consumer.
 import SKEFTHawking.FKLW.GenericSUdBaseFinderLengthBound
+-- Phase 6y Track S (Session 56, 2026-05-27): END-TO-END SU(d) cascade reducing
+-- F#4-compliant SU(d) headline to JUST 2 substantive ingredients: (D) density
+-- witness + (B) super-quad bound discharge. Composes Sessions 41-55 substrate
+-- internally. Ships `skHeadline_FreeGroup_SUd_cascade_final`.
+import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade2IngredientFinal
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
