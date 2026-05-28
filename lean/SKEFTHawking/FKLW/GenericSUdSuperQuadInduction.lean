@@ -352,6 +352,41 @@ lemma stability_term_through_Vn {d : ℕ} [Nonempty (Fin d)]
     _ ≤ (d : ℝ) * (2 * ((d : ℝ)^2 + (d : ℝ)^4) * ε * η + ((d : ℝ)^4 + (d : ℝ)^6) * ε^2) :=
         mul_le_mul (SUd_val_linftyOpNorm_le V_n) h_stab (norm_nonneg _) (by positivity)
 
+/-! ## Numeric chain prep: rpow ^(3/2) conversions -/
+
+/-- `ε^(3/2) = (√ε)³` for `ε ≥ 0`. The bridge from the recursion's `ε_seq`
+super-quadratic `^(3/2 : ℝ)` rpow exponent to the nat-power arithmetic of the
+telescoping bounds (everything reduces to powers of `s = √ε`). -/
+lemma rpow_three_halves_eq_sqrt_cube (ε : ℝ) (hε_nn : 0 ≤ ε) :
+    ε ^ (3 / 2 : ℝ) = (Real.sqrt ε) ^ 3 := by
+  rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast (ε ^ (1 / 2 : ℝ)) 3, ← Real.rpow_mul hε_nn]
+  norm_num
+
+/-- **Cubic term in ε^(3/2) form**: `δ_lie³ ≤ (m+2)^15 · ε^(3/2)` from
+`δ_lie ≤ (m+2)^5·√ε`. (Then `(m+2)·320·δ_lie³ ≤ 320·(m+2)^16·ε^(3/2)`.) -/
+lemma cubic_le_rpow {m : ℕ} (ε δ_lie : ℝ) (hε_nn : 0 ≤ ε) (hδ_nn : 0 ≤ δ_lie)
+    (hδ_le : δ_lie ≤ ((m : ℝ) + 2) ^ 5 * Real.sqrt ε) :
+    δ_lie ^ 3 ≤ ((m : ℝ) + 2) ^ 15 * ε ^ (3 / 2 : ℝ) := by
+  rw [rpow_three_halves_eq_sqrt_cube ε hε_nn]
+  calc δ_lie ^ 3 ≤ (((m : ℝ) + 2) ^ 5 * Real.sqrt ε) ^ 3 := by gcongr
+    _ = ((m : ℝ) + 2) ^ 15 * (Real.sqrt ε) ^ 3 := by ring
+
+/-- **`ε·η` term in ε^(3/2) form**: `ε·η ≤ 3·(m+2)^5 · ε^(3/2)` from
+`η ≤ 3·δ_lie ≤ 3·(m+2)^5·√ε` and `ε = (√ε)²`. -/
+lemma eps_eta_le_rpow {m : ℕ} (ε δ_lie η : ℝ) (hε_nn : 0 ≤ ε)
+    (hδ_le : δ_lie ≤ ((m : ℝ) + 2) ^ 5 * Real.sqrt ε)
+    (hη_le : η ≤ 3 * δ_lie) :
+    ε * η ≤ 3 * ((m : ℝ) + 2) ^ 5 * ε ^ (3 / 2 : ℝ) := by
+  have h_s_nn : 0 ≤ Real.sqrt ε := Real.sqrt_nonneg ε
+  have h_s_sq : Real.sqrt ε ^ 2 = ε := Real.sq_sqrt hε_nn
+  have hη_le' : η ≤ 3 * (((m : ℝ) + 2) ^ 5 * Real.sqrt ε) := le_trans hη_le (by linarith)
+  rw [rpow_three_halves_eq_sqrt_cube ε hε_nn]
+  calc ε * η
+      ≤ ε * (3 * (((m : ℝ) + 2) ^ 5 * Real.sqrt ε)) :=
+        mul_le_mul_of_nonneg_left hη_le' hε_nn
+    _ = 3 * ((m : ℝ) + 2) ^ 5 * (Real.sqrt ε ^ 2 * Real.sqrt ε) := by rw [h_s_sq]; ring
+    _ = 3 * ((m : ℝ) + 2) ^ 5 * (Real.sqrt ε) ^ 3 := by ring
+
 /-! ## Combine: single-step error from the two telescoping terms -/
 
 /-- **Single-step error combine**: given the stability term bound `Cstab` on
