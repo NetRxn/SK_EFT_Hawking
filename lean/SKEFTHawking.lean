@@ -1225,6 +1225,9 @@ import SKEFTHawking.FKLW.CliffordCCZSU8UniversalGates
 -- Phase 6y Track T-A2′.1 (2026-05-28): CNOT₁₂/₁₃/₂₃ as SU(8) even-permutation matrices
 -- (permMatrix; det = sign = 1) — cross-qubit Clifford generators for the universal alphabet.
 import SKEFTHawking.FKLW.CliffordCCZSU8CNOT
+-- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): per-qubit containment
+-- qubit_iEmbed(SU(2)) ⊆ H_of_G(universal alphabet) via the Clifford+T density factorization.
+import SKEFTHawking.FKLW.CliffordCCZSU8PerQubitContainment
 -- Phase 6y Track S.2-consumer (2026-05-27): generic SU(d) ClosureDenseWitness
 -- structure for `GeneratingSet d`. Bundles n traceless skew-Hermitian
 -- spanning tangents + flow-line containment in H_of_G gs. Conditional
