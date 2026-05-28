@@ -389,26 +389,37 @@ of `K`/`ε₀` closes it; only a concrete construction does.
     `Matrix.det_exp`/`det(NormedSpace.exp _)` lemma). Must be proven (~100 LoC via diagonalization,
     cf. S49's forward `expIsud_det_eq_one_predicate_holds`), then `det Δ = exp(trace(mLog(Δ−1)))=1`
     + `Complex.exp_eq_one_iff` + `|trace A| ≤ d·‖A‖` smallness ⟹ trace = 0.
-  - **R2 SKEW-HERMITIAN** `(matrixMercatorLog (Δ−1))ᴴ = −matrixMercatorLog(Δ−1)` for unitary Δ.
-    Part (a): `mLog(Y)ᴴ = mLog(Yᴴ)` (star commutes with the tsum; c_n real) — ⚠️ **linftyOp
-    norm-fragility (S119): `‖Yᴴ‖ ≠ ‖Y‖` for linftyOp**, so needs BOTH `‖Y‖<1` and `‖Yᴴ‖<1`
-    hypotheses (for `Y=Δ−1` unitary, `‖(Δ−1)ᴴ‖=‖Δ⁻¹−1‖≤d‖Δ−1‖`, fine on a tiny ball). Part (b):
-    `mLog(Δ⁻¹−1) = −mLog(Δ−1)` (= `log(Δ⁻¹)=−log(Δ)`) — needs concrete exp-injectivity (R3).
-  - **R3 CONCRETE EXP-INJECTIVITY / reverse round-trip** `mLog(exp A − 1) = A` for `‖A‖<r₀`
-    (concrete). Via the contraction `A−B = φ(B)−φ(A)`, `φ:=exp−1−id`, `‖Dφ‖<1` on a small ball
-    (exp-remainder bound) ⟹ exp injective ⟹ reverse round-trip. ~80 LoC.
-    **⚠️ SIMPLER ROUTE for R2b specifically (S123 scouting)**: R2b (`mLog(Δ⁻¹−1)=−mLog(Δ−1)`)
-    does NOT need full two-point injectivity — only `exp S = 1 ∧ ‖S‖ small ⟹ S = 0` applied to
-    `S := mLog(Δ−1)+mLog(Δ⁻¹−1)` (which commute, both functions of Δ, so
-    `exp S = exp(mLog(Δ−1))·exp(mLog(Δ⁻¹−1)) = Δ·Δ⁻¹ = 1` via `exp_add_of_commute` + the two
-    round-trips). And `exp S = 1` gives `exp S − 1 − S = −S`, so the **ONE-POINT** remainder bound
-    `‖exp S − 1 − S‖ ≤ exp‖S‖ − 1 − ‖S‖` yields `‖S‖ ≤ exp‖S‖ − 1 − ‖S‖`; combined with the scalar
-    fact `exp t − 1 < 2t` for `0 < t < ~1.25` (so `exp t − 1 − t < t`) this forces `‖S‖ = 0`.
-    The one-point remainder bound (`‖exp A − 1 − A‖ ≤ exp‖A‖ − 1 − ‖A‖`, from the exp tsum split
-    via `sum_add_tsum_nat_add 2` + termwise `norm_pow_le'` + matching `Real.exp` tail) is ~40 LoC,
-    Mathlib-PR-worthy (no Banach exp-remainder lemma exists), and MUCH cleaner than the two-point
-    telescoping. This is the recommended R3/R2b path; ⚠️ `det(exp)=exp(tr)` (R1) still needs the
-    separate ~100-LoC diagonalization.
+  - **✅✅ R2 SKEW-HERMITIAN / HERMITIAN CONJUNCT — SHIPPED (S121 + S125-S127)** `(matrixMercatorLog (Δ−1))ᴴ
+    = −matrixMercatorLog(Δ−1)` for unitary Δ ⟹ `((-i)·matrixMercatorLog(Δ−1)).IsHermitian`.
+    Part (a) **SHIPPED S121** (`6815803` predecessor): `matrixMercatorLog_conjTranspose : mLog(Y)ᴴ
+    = mLog(Yᴴ)` UNCONDITIONALLY (star commutes with the tsum via `conjTranspose_tsum`; c_n real via
+    `star_div₀`/`star_pow` — no norm hypotheses needed since junk-`0` on both sides when the series
+    diverges). Part (b) **SHIPPED S125** (`6815803`): `matrixMercatorLog_inv_eq_neg` — for commuting
+    A,B with `(1+A)(1+B)=1` and `‖A‖,‖B‖≤1/8`, `mLog B = −mLog A` (= `log(Δ⁻¹)=−log(Δ)`) via the R3
+    exp-injectivity below. **Generic Hermitian SHIPPED S126** (`365fe2c`):
+    `isHermitian_neg_I_smul_matrixMercatorLog_of_unitary` — two-sided unitary Δ (`Δ·Δᴴ=1, Δᴴ·Δ=1`)
+    + `‖Δ−1‖,‖Δᴴ−1‖≤1/8` ⟹ `((-i)•mLog(Δ−1)).IsHermitian` (compose R2a+R2b; `star(-i)=i` turns
+    skew→Herm). **SU(d) wrapper SHIPPED S127** (`c1b0873`): `isHermitian_regime_concrete_sud` — for
+    `V,U∈SU(d)` with `d²·‖V−U‖≤1/8`, `((-i)•mLog((V⁻¹U).val−1)).IsHermitian` (unitary via
+    `specialUnitaryGroup_le_unitaryGroup`; `‖Δ−1‖,‖Δᴴ−1‖` via `residual_norm_le_d_mul` + `Δᴴ−1=−Δᴴ(Δ−1)`
+    + `‖Δᴴ‖≤d`). **The re-pointed regime's HERMITIAN conjunct is now CONCRETE-RADIUS UNCONDITIONAL.**
+  - **✅✅ R3 CONCRETE EXP-INJECTIVITY — SHIPPED (S123 + S124)** `eq_zero_of_exp_eq_one_of_norm_le :
+    NormedSpace.exp S = 1 ∧ ‖S‖≤1/2 ⟹ S = 0` (`d9f214a`). Took the **one-point** route (not full
+    two-point injectivity): `exp S = 1` gives `exp S − 1 − S = −S`; the **Banach exp-remainder bound**
+    `norm_exp_sub_one_sub_self_le : ‖exp A − 1 − A‖ ≤ ‖A‖²·Real.exp‖A‖` (S123, `~80` LoC, Mathlib-PR-worthy
+    — no Banach exp-remainder lemma exists; proved via the exp tsum split `Summable.sum_add_tsum_nat_add 2`
+    + termwise `((i+2)!)⁻¹≤(i!)⁻¹`, `norm_pow_le'` + matching `Real.exp` tail `Real.summable_pow_div_factorial`)
+    gives `‖S‖ ≤ ‖S‖²·exp‖S‖`, i.e. `1 ≤ ‖S‖·exp‖S‖`; but `‖S‖·exp‖S‖ ≤ (1/2)·exp(1/2) < (1/2)·2 = 1`
+    (via `exp(1/2)²=exp 1`, `Real.exp_one_lt_d9`), contradiction unless `‖S‖=0`. **This is the
+    concrete-radius substitute for the existential IFT local injectivity** — fed directly into R2b (S125).
+  - **R1 TRACELESS — REMAINING re-point conjunct** `det Δ = 1 → trace(matrixMercatorLog(Δ−1)) = 0`
+    (‖Δ−1‖ small so |trace|<2π). ⚠️ **Mathlib GAP RE-CONFIRMED (S127 leansearch): `det(exp A) = exp(trace A)`
+    is NOT in Mathlib** (no `Matrix.det_exp`/`det(NormedSpace.exp _)`). Two routes: (a) diagonalization/Schur
+    (~100 LoC, cf. S49's forward `expIsud_det_eq_one_predicate_holds`), then `det Δ = exp(trace(mLog(Δ−1)))=1`
+    + `Complex.exp_eq_one_iff` + `|trace A| ≤ d·‖A‖` smallness ⟹ trace = 0; or (b) a Jacobi-formula ODE
+    `d/dt det(exp(tA)) = det(exp(tA))·tr A` reusing the S112-S118 derivative machinery (needs the
+    determinant derivative). **This is the last regime conjunct before R4**; the θ-bound (S120), `‖H‖≤1`
+    (S122), and Hermitian (S121+S125-S127) conjuncts are all CONCRETE-RADIUS UNCONDITIONAL.
   - **R4 RE-POINT** dnStepFG_sud (S82) + the (B) discharge (S102) + h_regime from IFT `matrixLog`
     to `matrixLogConcrete`, with the regime now on the CONCRETE ball `‖Δ−1‖ ≤ d·2ε₀ < 1`. The
     large structural refactor; ε₀_sud (≈1/(8·1024·d^16)) is tiny enough for all smallness bounds.
