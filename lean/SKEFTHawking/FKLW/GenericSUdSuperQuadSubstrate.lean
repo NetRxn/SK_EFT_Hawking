@@ -187,10 +187,16 @@ analog of SU(2)'s `K_compose = 1024`.
 
 SU(2) K_compose aggregates cubic remainder + stability + margin. For
 SU(d), each component scales with d (polynomial growth from the loose
-norm bounds). Use `K_compose_sud d := 1024 * d^4` as a loose-but-explicit
-upper bound (the d^4 factor absorbs the (n+2)² norm-bridge constant
-squared, providing margin for the cubic+stability composition). -/
-noncomputable def K_compose_sud (d : ℕ) : ℝ := 1024 * (d : ℝ)^4
+linftyOp norm bounds, which are NOT unitarily invariant). The dominant
+contribution is the cubic remainder `320·δ³` with per-step
+`δ = K_F·√(θ/2)`, `K_F = (n+2)²·(n+1)·√(n+2) ≈ d^3.5` and `θ ≤ 2d·ε`, giving
+`δ ≈ d^4·√ε`, hence `320·δ³ ≈ 320·d^12·ε^1.5`; the outer telescoping factor
+`‖V_n‖ ≤ d` brings the per-step constant to `K_proof ≈ 320·d^13`. Use
+`K_compose_sud d := 1024 * d^16` — a loose-but-explicit upper bound with
+`≈ d^3` margin over `K_proof`, absorbing the cubic + stability + telescoping
++ exp(δ)·√2 constant composition for all `d ≥ 1`. (The headline word length
+is polylog in `1/ε` regardless of the d-dependent constant.) -/
+noncomputable def K_compose_sud (d : ℕ) : ℝ := 1024 * (d : ℝ)^16
 
 /-- `K_compose_sud d > 0` for d ≥ 1. -/
 lemma K_compose_sud_pos {d : ℕ} (hd : 1 ≤ d) : 0 < K_compose_sud d := by
@@ -230,8 +236,8 @@ lemma K_compose_sud_ge_1024 {d : ℕ} (hd : 1 ≤ d) :
     1024 ≤ K_compose_sud d := by
   unfold K_compose_sud
   have hd_ge_1 : (1 : ℝ) ≤ d := by exact_mod_cast hd
-  have h_pow : (1 : ℝ) ≤ (d : ℝ)^4 := by
-    have : (1 : ℝ)^4 ≤ (d : ℝ)^4 := pow_le_pow_left₀ (by norm_num) hd_ge_1 4
+  have h_pow : (1 : ℝ) ≤ (d : ℝ)^16 := by
+    have : (1 : ℝ)^16 ≤ (d : ℝ)^16 := pow_le_pow_left₀ (by norm_num) hd_ge_1 16
     simpa using this
   nlinarith
 
