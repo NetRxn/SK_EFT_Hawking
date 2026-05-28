@@ -1576,6 +1576,13 @@ import SKEFTHawking.FKLW.GenericSUdPhase6yUsageExamples
 -- looseness. Plus `BalancedCommutator_SUd_loose_extends_unbounded` showing the
 -- loose form implies the unbounded form (norm conjuncts droppable).
 import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorLoose
+-- Phase 6y Track S (Session 41, 2026-05-27): SU(d) Dawson-Nielsen step
+-- composing the keystone Session 33 `symmetric_balanced_commutator_hermitian_unconditional`
+-- with project's matrix log substrate. Ships `DNStepData_SUd (d : ℕ)` structure +
+-- `dnStepFG_sud {n : ℕ} (V_n U : ↥SU(n+2)) : DNStepData_SUd (n+2)` extracting
+-- (F, G) for one DN step at SU(d) via the keystone. Substrate for SU(d) SK
+-- recursion lift (Sessions 42+ — analog of Phase 6u Wave 4 `skApproxC_generic`).
+import SKEFTHawking.FKLW.GenericSUdDnStepFG
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
