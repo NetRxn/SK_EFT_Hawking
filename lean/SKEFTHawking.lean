@@ -1666,6 +1666,13 @@ import SKEFTHawking.FKLW.GenericSUdExpIsuDUnconditional
 -- bound. Composes with Session 51's closed-form skLength_sud for the
 -- length-bound substantive ingredient.
 import SKEFTHawking.FKLW.GenericSUdConcreteWordLengthBound
+-- Phase 6y Track S (Session 54, 2026-05-27): per-alphabet length-bound
+-- specializations at SU(4) trapped-ion + SU(8) Clifford+CCZ. Applies Session
+-- 53's parametric framework via FreeGroup.norm_mul_le + FreeGroup.norm_inv_eq.
+-- Ships `freeGroup_wordLength_su4`/`_su8` + their submultiplicativity bundles
+-- + per-alphabet wrapper theorems `trappedIonSU4_length_le_skLength_sud` +
+-- `cliffordCCZSU8_length_le_skLength_sud`.
+import SKEFTHawking.FKLW.GenericSUdLengthBoundPerAlphabet
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
