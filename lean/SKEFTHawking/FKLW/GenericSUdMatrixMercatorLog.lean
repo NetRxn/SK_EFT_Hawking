@@ -165,4 +165,38 @@ theorem norm_matrixMercatorLog_le_two_mul {d : ℕ} (X : Matrix (Fin d) (Fin d) 
         apply div_le_div_of_nonneg_left (norm_nonneg X) (by norm_num) h_half_le_denom
     _ = 2 * ‖X‖ := by ring
 
+/-! ## 5. Commutation (substrate for the exp/log round-trip, brick 2)
+
+The next brick (`exp (matrixMercatorLog X) = 1 + X`) is proved by a derivative
+argument `d/dt [exp(−matrixMercatorLog(t•X)) · (1 + t•X)] = 0`, which needs
+`matrixMercatorLog X` to commute with `X` (so that `d/dt exp(A(t)) =
+exp(A(t))·A'(t)` applies, both `A(t)` and `A'(t)` being power series in `X`).
+Since every Mercator term `c_n • X^(n+1)` commutes with `X` (powers of `X`
+commute with `X`), so does the series sum. -/
+
+/-- **`matrixMercatorLog X` commutes with `X`** (for `‖X‖ < 1`). The Mercator
+sum is a limit of polynomials in `X`, each commuting with `X`; the
+left/right-multiplication `HasSum` images coincide termwise
+(`X · X^(n+1) = X^(n+2) = X^(n+1) · X`), so the two sums are equal. -/
+theorem matrixMercatorLog_commute_self {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
+    (hX : ‖X‖ < 1) :
+    Commute X (matrixMercatorLog X) := by
+  have h_sum : HasSum (fun n : ℕ => (((-1 : ℂ) ^ n / (n + 1 : ℂ))) • X ^ (n + 1))
+      (matrixMercatorLog X) := (summable_matrixMercatorLog X hX).hasSum
+  have h_left := h_sum.mul_left X
+  have h_right := h_sum.mul_right X
+  have h_eq : (fun n : ℕ => X * ((((-1 : ℂ) ^ n / (n + 1 : ℂ))) • X ^ (n + 1))) =
+              (fun n : ℕ => ((((-1 : ℂ) ^ n / (n + 1 : ℂ))) • X ^ (n + 1)) * X) := by
+    funext n
+    rw [mul_smul_comm, smul_mul_assoc, ← pow_succ', ← pow_succ]
+  rw [h_eq] at h_left
+  exact h_left.unique h_right
+
+/-- **`matrixMercatorLog X` commutes with `1 + X`** (for `‖X‖ < 1`). Combines
+`matrixMercatorLog_commute_self` with the trivial commutation of `1`. -/
+theorem matrixMercatorLog_commute_one_add {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
+    (hX : ‖X‖ < 1) :
+    Commute (1 + X) (matrixMercatorLog X) :=
+  (Commute.one_left (matrixMercatorLog X)).add_left (matrixMercatorLog_commute_self X hX)
+
 end SKEFTHawking.FKLW.GenericSUd
