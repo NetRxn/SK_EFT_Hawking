@@ -1784,6 +1784,10 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGCubic
 -- ρ_hom_sud_mul_val / _inv_val / _groupCommutator_val (+ SUd_subtype_inv_val_eq_matrix_inv):
 -- push gs.ρ_hom : W →* SU(d) to the matrix level. Super-quad main-induction MonoidHom substrate.
 import SKEFTHawking.FKLW.GenericSUdRhomAbstraction
+-- Phase 6y Track S (Session 89, 2026-05-27): super-quad main-induction assembly (base case).
+-- skApproxC_generic_sud_zero_error_bound — level-0 error ≤ ε_seq K (2·ε₀) 0 = 2·ε₀.
+-- First component of the SkApproxCSuperQuadraticBound_generic_sud (B) discharge.
+import SKEFTHawking.FKLW.GenericSUdSuperQuadInduction
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
