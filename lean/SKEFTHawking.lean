@@ -1228,6 +1228,9 @@ import SKEFTHawking.FKLW.CliffordCCZSU8CNOT
 -- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): per-qubit containment
 -- qubit_iEmbed(SU(2)) ⊆ H_of_G(universal alphabet) via the Clifford+T density factorization.
 import SKEFTHawking.FKLW.CliffordCCZSU8PerQubitContainment
+-- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): the 9 per-qubit single-qubit tangent flow lines
+-- exp(t·X_{a00/0b0/00c}) ∈ H_of_G via Clifford+T density through the per-qubit embeddings.
+import SKEFTHawking.FKLW.CliffordCCZSU8PerQubitFlow
 -- Phase 6y Track S.2-consumer (2026-05-27): generic SU(d) ClosureDenseWitness
 -- structure for `GeneratingSet d`. Bundles n traceless skew-Hermitian
 -- spanning tangents + flow-line containment in H_of_G gs. Conditional
