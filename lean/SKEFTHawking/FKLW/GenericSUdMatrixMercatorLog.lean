@@ -396,27 +396,23 @@ theorem hasDerivAt_matrixMercatorLog_path {d : ℕ} (X : Matrix (Fin d) (Fin d) 
 /-! ## 8. The commuting-path exp derivative (brick 2, crux iv) -/
 
 /-- **Exp-path derivative for a commuting path** (crux iv): if `A : ℝ → Matrix ℂ`
-has derivative `A'` at `t₀` and every value `A t` commutes with `A t₀` (so
-`Commute (A t₀) (A t − A t₀)`), then
+has derivative `A'` at `t₀` and, *eventually near* `t₀`, each value `A t` commutes
+with `A t₀` (so `Commute (A t₀) (A t − A t₀)`), then
 
   `d/dt [exp (A t)] = exp (A t₀) · A'`  at `t₀`.
 
 Mathlib has the non-commutative exp Fréchet derivative only for `NormedCommRing`
 (`hasFDerivAt_exp`) or the linear path `u•x` (`hasDerivAt_exp_smul_const`); the
 general commuting-path version is built here. **Proof**: by `exp_add_of_commute`,
-`exp (A t) = exp (A t₀) · exp (A t − A t₀)` for all `t`; the factor
+`exp (A t) = exp (A t₀) · exp (A t − A t₀)` *eventually near* `t₀`; the factor
 `exp (A t − A t₀)` has derivative `A'` at `t₀` (since `A − A t₀` vanishes at `t₀`
 and `exp`'s Fréchet derivative at `0` is the identity, `hasStrictFDerivAt_exp_zero`);
-left-multiplying by the constant `exp (A t₀)` (a continuous linear map) gives the result.
-
-This is the last analytic core of the brick-2 round-trip
-`exp (matrixMercatorLog X) = 1 + X`: applied with `A t = −matrixMercatorLog((↑t)•X)`
-(whose values pairwise commute, all being power series in `X`), it differentiates the
-exp factor of `f(t) = exp(−mLog(t•X))·(1+t•X)`, which combines with the path derivative
-(`hasDerivAt_matrixMercatorLog_path`) to give `f' = 0`. -/
+left-multiplying by the constant `exp (A t₀)` (continuous-linear) + `congr_of_eventuallyEq`
+gives the result. The *eventual* (vs. global) commute hypothesis is essential: for
+`A t = −matrixMercatorLog((↑t)•X)` the commute only holds where `‖(↑t)•X‖ < 1`. -/
 theorem hasDerivAt_exp_path {d : ℕ} (A : ℝ → Matrix (Fin d) (Fin d) ℂ)
     (A' : Matrix (Fin d) (Fin d) ℂ) (t₀ : ℝ) (hA : HasDerivAt A A' t₀)
-    (hcomm : ∀ t : ℝ, Commute (A t₀) (A t - A t₀)) :
+    (hcomm : ∀ᶠ t in nhds t₀, Commute (A t₀) (A t - A t₀)) :
     HasDerivAt (fun t => NormedSpace.exp (A t)) (NormedSpace.exp (A t₀) * A') t₀ := by
   have hB : HasDerivAt (fun t => A t - A t₀) A' t₀ := hA.sub_const (A t₀)
   have hBzero : (fun t => A t - A t₀) t₀ = 0 := sub_self _
@@ -427,13 +423,44 @@ theorem hasDerivAt_exp_path {d : ℕ} (A : ℝ → Matrix (Fin d) (Fin d) ℂ)
       rw [hBzero]
       exact (hasStrictFDerivAt_exp_zero (𝕂 := ℝ)).hasFDerivAt
     simpa using hfd.comp_hasDerivAt t₀ hB
-  have hLHS := hexpB.const_mul (NormedSpace.exp (A t₀))
-  have hfun : (fun t => NormedSpace.exp (A t))
-      = (fun t => NormedSpace.exp (A t₀) * NormedSpace.exp (A t - A t₀)) := by
-    funext t
-    rw [← NormedSpace.exp_add_of_commute (hcomm t)]
-    congr 1
-    abel
-  rw [hfun]; exact hLHS
+  refine (hexpB.const_mul (NormedSpace.exp (A t₀))).congr_of_eventuallyEq ?_
+  filter_upwards [hcomm] with t ht
+  rw [← NormedSpace.exp_add_of_commute ht]
+  congr 1
+  abel
+
+/-- **Derivative of `exp(−matrixMercatorLog((↑t)•X))`** (the `u(t)` factor of the
+brick-2 round-trip `f(t) = exp(−mLog(t•X))·(1+t•X)`): for `|t₀|·‖X‖ < 1`,
+
+  `d/dt [exp(−matrixMercatorLog((↑t)•X))] = exp(−mLog((↑t₀)•X)) · (−(1+(↑t₀)•X)⁻¹·X)`.
+
+Composes the path derivative (crux iii, negated) with the commuting-path exp
+derivative (crux iv). The eventual-commute hypothesis is supplied from the
+continuity of `t ↦ |t|·‖X‖` (so `‖(↑t)•X‖ < 1` near `t₀`) + pairwise log
+commutation `matrixMercatorLog_commute_mercatorLog` (all values are power series
+in `X`). -/
+theorem hasDerivAt_exp_neg_matrixMercatorLog_path {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
+    (t₀ : ℝ) (ht₀ : |t₀| * ‖X‖ < 1) :
+    HasDerivAt (fun t : ℝ => NormedSpace.exp (-(matrixMercatorLog ((↑t : ℂ) • X))))
+      (NormedSpace.exp (-(matrixMercatorLog ((↑t₀ : ℂ) • X)))
+        * (-(Ring.inverse (1 + (↑t₀ : ℂ) • X) * X))) t₀ := by
+  have hpath : HasDerivAt (fun t : ℝ => -(matrixMercatorLog ((↑t : ℂ) • X)))
+      (-(Ring.inverse (1 + (↑t₀ : ℂ) • X) * X)) t₀ :=
+    (hasDerivAt_matrixMercatorLog_path X t₀ ht₀).neg
+  have hev : ∀ᶠ t in nhds t₀, |t| * ‖X‖ < 1 := by
+    have hcont : ContinuousAt (fun t : ℝ => |t| * ‖X‖) t₀ :=
+      (continuous_abs.continuousAt).mul continuousAt_const
+    exact hcont.eventually_lt continuousAt_const ht₀
+  refine hasDerivAt_exp_path _ _ t₀ hpath ?_
+  filter_upwards [hev] with t ht
+  have hXt₀ : ‖(↑t₀ : ℂ) • X‖ < 1 := by
+    rw [norm_smul, Complex.norm_real, Real.norm_eq_abs]; exact ht₀
+  have hXt : ‖(↑t : ℂ) • X‖ < 1 := by
+    rw [norm_smul, Complex.norm_real, Real.norm_eq_abs]; exact ht
+  have hcXX : Commute ((↑t₀ : ℂ) • X) ((↑t : ℂ) • X) :=
+    ((Commute.refl X).smul_left _).smul_right _
+  have hmm : Commute (matrixMercatorLog ((↑t₀ : ℂ) • X)) (matrixMercatorLog ((↑t : ℂ) • X)) :=
+    matrixMercatorLog_commute_mercatorLog _ _ hXt₀ hXt hcXX
+  exact (hmm.neg_left.neg_right).sub_right (Commute.refl _).neg_left.neg_right
 
 end SKEFTHawking.FKLW.GenericSUd
