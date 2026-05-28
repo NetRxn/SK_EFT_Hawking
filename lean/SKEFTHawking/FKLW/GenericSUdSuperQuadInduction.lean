@@ -105,4 +105,42 @@ lemma skApproxC_generic_sud_zero_error_bound {m : ℕ}
   rw [SKEFTHawking.FKLW.EpsilonSeq.ε_seq_zero, skApproxC_generic_sud_zero]
   exact (h_baseFinder U).le
 
+/-! ## Stability M-bound + polynomial F/G-norm bounds (inductive-step prep) -/
+
+/-- **The stability M-bound**: every `SU(d)` element has linftyOp norm `≤ d`.
+
+This is the uniform `M = d` bound the `groupCommutator_stability_nearIdentity`
+step needs on all eight operands `‖g'‖, ‖h'‖, ‖g⁻¹‖, ‖h⁻¹‖, ‖g'⁻¹‖, ‖h'⁻¹‖`
+(each a `ρ_hom`-image or its inverse, hence an `SU(d)` element). SU(d) analog
+of SU(2)'s `SU2_linftyOpNorm_le_sqrt_two` (which uses the tighter `√2`). -/
+lemma SUd_val_linftyOpNorm_le {d : ℕ} [Nonempty (Fin d)]
+    (x : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) :
+    ‖(x : Matrix (Fin d) (Fin d) ℂ)‖ ≤ (d : ℝ) :=
+  linftyOpNorm_unitary_le ⟨_, Matrix.specialUnitaryGroup_le_unitaryGroup x.property⟩
+
+/-- **Polynomial F-norm bound**: `‖(dnStepFG_sud V_n U).F‖ ≤ (n+2)⁴·√(θ/2)`
+(clean d-power form, composing S82's `K_F·√(θ/2)` with S90's `K_F ≤ (n+2)⁴`). -/
+lemma dnStepFG_sud_F_norm_le_poly {n : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+    let Δ := (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ))
+    let H : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ :=
+      ((-Complex.I) : ℂ) • matrixLog (n + 2) Δ.val
+    let θ : ℝ := ‖H‖
+    ‖(dnStepFG_sud V_n U).F‖ ≤ ((n : ℝ) + 2)^4 * Real.sqrt (θ / 2) := by
+  intro Δ H θ
+  refine le_trans (dnStepFG_sud_F_norm_le V_n U) ?_
+  exact mul_le_mul_of_nonneg_right (dnStepFG_sud_K_F_le n) (Real.sqrt_nonneg _)
+
+/-- **Polynomial G-norm bound** (mirror of F). -/
+lemma dnStepFG_sud_G_norm_le_poly {n : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+    let Δ := (V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ))
+    let H : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ :=
+      ((-Complex.I) : ℂ) • matrixLog (n + 2) Δ.val
+    let θ : ℝ := ‖H‖
+    ‖(dnStepFG_sud V_n U).G‖ ≤ ((n : ℝ) + 2)^4 * Real.sqrt (θ / 2) := by
+  intro Δ H θ
+  refine le_trans (dnStepFG_sud_G_norm_le V_n U) ?_
+  exact mul_le_mul_of_nonneg_right (dnStepFG_sud_K_F_le n) (Real.sqrt_nonneg _)
+
 end SKEFTHawking.FKLW.GenericSUd
