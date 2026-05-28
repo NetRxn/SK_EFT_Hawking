@@ -1219,6 +1219,9 @@ import SKEFTHawking.FKLW.CliffordCCZSU8QubitEmbed
 -- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): exp commutes with the per-qubit SU(2)→SU(8)
 -- embeddings (qubit{1,2,3}MatRingHom + NormedSpace.map_exp); alphabet-agnostic flow-line substrate.
 import SKEFTHawking.FKLW.CliffordCCZSU8ExpCommute
+-- Phase 6y Track T-A2′.1 (2026-05-28): universal Clifford+CCZ+T gate substrate — per-qubit
+-- T-gates T_SU_on_qubit{1,2,3}_SU8 := qubit_iEmbed T_SU + Hadamard-embedding bridges.
+import SKEFTHawking.FKLW.CliffordCCZSU8UniversalGates
 -- Phase 6y Track S.2-consumer (2026-05-27): generic SU(d) ClosureDenseWitness
 -- structure for `GeneratingSet d`. Bundles n traceless skew-Hermitian
 -- spanning tangents + flow-line containment in H_of_G gs. Conditional
