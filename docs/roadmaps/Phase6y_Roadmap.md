@@ -304,6 +304,22 @@ Phase 6y Wave 1: **IN PROGRESS** (Sessions 1-51 of N shipped 2026-05-27; **38 co
 
 **Cumulative tally (Sessions 14-54)**: **41 commits, ~5310 LoC kernel-only**. Build clean 8833 jobs.
 
+**Sessions 55-59 (SHIPPED 2026-05-27 — cascade closure substrate)**:
+- **Session 55** (`109d31e`): length-bounded baseFinder discharge from constructive ε-net.
+- **Session 56** (`6a9d011`): END-TO-END cascade `skHeadline_FreeGroup_SUd_cascade_final` reducing SU(d) headline to ONLY 2 substantive ingredients (D)+(B).
+- **Session 57** (`4fdf4ba`): per-alphabet T-A1′.5 cascade-final at SU(4) trapped-ion → reduces T-A1′.5 to (D)+(B) at SU(4).
+- **Session 58** (`7cf36fb`): per-alphabet T-A2′.5 cascade-final at SU(8) Clifford+CCZ → reduces T-A2′.5 to (D)+(B) at SU(8).
+- **Session 59** (`da76a9a`): Phase 6y CASCADE CLOSURE STATUS INDEX (documentation, downstream + Stage-13 prep).
+
+**Updated cumulative tally (Sessions 14-59)**: **46 commits + 2 docs syncs, ~6000 LoC kernel-only**. Build clean 8838 jobs.
+
+**Truly remaining substantive work (4 named items + 1 review)**:
+  1. **(B) Super-quad bound discharge at SU(d)** — mechanically liftable per Explore-agent intel (SU(2) structure is alphabet-agnostic via MonoidHom abstractions; ~1236 LoC analog).
+  2. **(D-SU4) Density witness at SU(4) trapped-ion** — Brylinski-Brylinski 2002 entangler universality. Multi-session entangler-theoretic content.
+  3. **(D-SU8) Density witness at SU(8) Clifford+CCZ** — Aaronson-Gottesman 2004 Clifford-stabilizer lineage. Multi-session.
+  4. **Length-bound polylog exponent caveat** — headline form's `log 5 / log 2` exponent revision OR sharper recursion analysis.
+  5. **Stage-13 fresh-context adversarial review pass** — CLOSURE gate; dispatched ONLY after items 1-4 ship.
+
 ### Wave 1 References
 
 - **Roadmap**: this file (Phase 6y) + Phase 6x retrospective (`docs/stakeholder/Phase6x_Implications.md`).
