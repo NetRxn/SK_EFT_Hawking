@@ -266,4 +266,38 @@ theorem matrixMercatorLog_inv_eq_neg {d : ℕ}
   rw [add_comm] at hS0
   exact eq_neg_of_add_eq_zero_left hS0
 
+/-- **Hermiticity of the concrete log-generator for a unitary** (re-point R2, full
+Hermitian conjunct): for a two-sided unitary `Δ` (`Δ·Δᴴ = 1` and `Δᴴ·Δ = 1`) with
+`‖Δ − 1‖ ≤ 1/8` and `‖Δᴴ − 1‖ ≤ 1/8`,
+
+  `((-i) • matrixMercatorLog (Δ − 1)).IsHermitian`.
+
+This is the re-pointed regime's **Hermitian** conjunct on the concrete calibration ball
+(replacing the existential IFT version). **Proof**: `matrixMercatorLog (Δ − 1)` is
+skew-Hermitian — by `matrixMercatorLog_conjTranspose` (R2a) its conjugate-transpose is
+`matrixMercatorLog ((Δ−1)ᴴ) = matrixMercatorLog (Δᴴ − 1)`, and since `Δᴴ = Δ⁻¹` (unitary)
+the R2b identity `matrixMercatorLog_inv_eq_neg` (with `A = Δ−1`, `B = Δᴴ−1`,
+`(1+A)(1+B) = Δ·Δᴴ = 1`) gives `matrixMercatorLog (Δᴴ − 1) = −matrixMercatorLog (Δ − 1)`.
+Scaling by `-i` (with `star(-i) = i`) turns skew-Hermiticity into Hermiticity:
+`((-i)•L)ᴴ = i•(−L) = −(i•L) = (-i)•L`. -/
+theorem isHermitian_neg_I_smul_matrixMercatorLog_of_unitary {d : ℕ}
+    (Δ : Matrix (Fin d) (Fin d) ℂ)
+    (hΔΔH : Δ * Δᴴ = 1) (hΔHΔ : Δᴴ * Δ = 1)
+    (hΔ : ‖Δ - 1‖ ≤ 1 / 8) (hΔH : ‖Δᴴ - 1‖ ≤ 1 / 8) :
+    ((-Complex.I) • matrixMercatorLog (Δ - 1)).IsHermitian := by
+  have hcΔ : Commute Δ Δᴴ := by rw [Commute, SemiconjBy, hΔΔH, hΔHΔ]
+  have hcomm : Commute (Δ - 1) (Δᴴ - 1) :=
+    (hcΔ.sub_right (Commute.one_right Δ)).sub_left (Commute.one_left (Δᴴ - 1))
+  have hmul : (1 + (Δ - 1)) * (1 + (Δᴴ - 1)) = 1 := by
+    have e1 : (1 : Matrix (Fin d) (Fin d) ℂ) + (Δ - 1) = Δ := by abel
+    have e2 : (1 : Matrix (Fin d) (Fin d) ℂ) + (Δᴴ - 1) = Δᴴ := by abel
+    rw [e1, e2]; exact hΔΔH
+  have hR2b := matrixMercatorLog_inv_eq_neg (Δ - 1) (Δᴴ - 1) hcomm hmul hΔ hΔH
+  have hskew : (matrixMercatorLog (Δ - 1))ᴴ = -matrixMercatorLog (Δ - 1) := by
+    rw [matrixMercatorLog_conjTranspose, conjTranspose_sub, conjTranspose_one]
+    exact hR2b
+  show ((-Complex.I) • matrixMercatorLog (Δ - 1))ᴴ = (-Complex.I) • matrixMercatorLog (Δ - 1)
+  rw [conjTranspose_smul, hskew, show star (-Complex.I) = Complex.I from by simp,
+    smul_neg, neg_smul]
+
 end SKEFTHawking.FKLW.GenericSUd
