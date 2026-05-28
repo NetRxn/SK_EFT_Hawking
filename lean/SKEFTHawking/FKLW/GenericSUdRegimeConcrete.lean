@@ -300,4 +300,66 @@ theorem isHermitian_neg_I_smul_matrixMercatorLog_of_unitary {d : ℕ}
   rw [conjTranspose_smul, hskew, show star (-Complex.I) = Complex.I from by simp,
     smul_neg, neg_smul]
 
+/-- **SU(d) re-pointed regime Hermitian conjunct** (re-point R2 at SU(d)): for
+`V, U ∈ SU(d)` with `d²·‖V − U‖ ≤ 1/8`, the concrete log-generator of the residual
+`Δ = V⁻¹U` is Hermitian:
+
+  `((-i) • matrixMercatorLog ((V⁻¹U).val − 1)).IsHermitian`.
+
+Instantiates the generic `isHermitian_neg_I_smul_matrixMercatorLog_of_unitary` at the
+SU(d) residual `Δ = (V⁻¹U).val`. The unitary relations `Δ·Δᴴ = 1`, `Δᴴ·Δ = 1` come from
+`specialUnitaryGroup_le_unitaryGroup`; the residual norm bound `‖Δ − 1‖ ≤ d·‖V − U‖`
+from `residual_norm_le_d_mul` (S60), and the inverse-residual bound `‖Δᴴ − 1‖ ≤ d·‖Δ − 1‖`
+from `Δᴴ − 1 = −Δᴴ·(Δ − 1)` (`Δᴴ·Δ = 1`) plus `‖Δᴴ‖ ≤ d` (`linftyOpNorm_unitary_le`, `Δᴴ`
+also unitary). The `d²` hypothesis (vs. `d` for the θ-bound) absorbs the extra `‖Δᴴ‖ ≤ d`
+factor on the inverse residual; on the tiny calibration ball `‖V − U‖ ≤ 2·ε₀_sud` it is
+automatic. This is the concrete-radius replacement for the existential IFT Hermitian
+guard `regime_thetabound_herm_traceless_on_residual_nhd` (S106). -/
+theorem isHermitian_regime_concrete_sud {d : ℕ} [Nonempty (Fin d)]
+    (V U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+    (hVU : (d : ℝ) ^ 2 *
+        ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ ≤ 1 / 8) :
+    ((-Complex.I) • matrixMercatorLog
+        ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val - 1) :
+        Matrix (Fin d) (Fin d) ℂ).IsHermitian := by
+  set Δ : Matrix (Fin d) (Fin d) ℂ :=
+    (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val with hΔ
+  have hu : Δ ∈ Matrix.unitaryGroup (Fin d) ℂ :=
+    Matrix.specialUnitaryGroup_le_unitaryGroup (V⁻¹ * U).property
+  have hΔΔH : Δ * Δᴴ = 1 := by
+    simpa [Matrix.star_eq_conjTranspose] using (Matrix.mem_unitaryGroup_iff).mp hu
+  have hΔHΔ : Δᴴ * Δ = 1 := by
+    simpa [Matrix.star_eq_conjTranspose] using (Matrix.mem_unitaryGroup_iff').mp hu
+  have hdpos : 0 < d := Fin.pos_iff_nonempty.mpr inferInstance
+  have hd1 : (1 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hdpos
+  have hnn : (0 : ℝ) ≤ ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ :=
+    norm_nonneg _
+  have hres : ‖Δ - 1‖ ≤ (d : ℝ) *
+      ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ := by
+    rw [hΔ]; exact residual_norm_le_d_mul V U
+  have hdd : (d : ℝ) ≤ (d : ℝ) ^ 2 := by nlinarith [hd1, sq_nonneg ((d : ℝ) - 1)]
+  have hΔ_le : ‖Δ - 1‖ ≤ 1 / 8 := by
+    calc ‖Δ - 1‖
+        ≤ (d : ℝ) * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ := hres
+      _ ≤ (d : ℝ) ^ 2 * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ :=
+          mul_le_mul_of_nonneg_right hdd hnn
+      _ ≤ 1 / 8 := hVU
+  have huH : Δᴴ ∈ Matrix.unitaryGroup (Fin d) ℂ := by
+    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose, conjTranspose_conjTranspose]
+    exact hΔHΔ
+  have hΔH_norm : ‖Δᴴ‖ ≤ (d : ℝ) := linftyOpNorm_unitary_le ⟨Δᴴ, huH⟩
+  have hfactor : Δᴴ - 1 = -(Δᴴ * (Δ - 1)) := by
+    rw [Matrix.mul_sub, mul_one, hΔHΔ, neg_sub]
+  have hΔH_le : ‖Δᴴ - 1‖ ≤ 1 / 8 := by
+    rw [hfactor, norm_neg]
+    calc ‖Δᴴ * (Δ - 1)‖
+        ≤ ‖Δᴴ‖ * ‖Δ - 1‖ := norm_mul_le _ _
+      _ ≤ (d : ℝ) * ((d : ℝ) *
+            ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖) :=
+          mul_le_mul hΔH_norm hres (norm_nonneg _) (le_trans zero_le_one hd1)
+      _ = (d : ℝ) ^ 2 * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ := by
+          ring
+      _ ≤ 1 / 8 := hVU
+  exact isHermitian_neg_I_smul_matrixMercatorLog_of_unitary Δ hΔΔH hΔHΔ hΔ_le hΔH_le
+
 end SKEFTHawking.FKLW.GenericSUd
