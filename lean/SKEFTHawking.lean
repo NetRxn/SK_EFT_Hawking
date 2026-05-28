@@ -1704,6 +1704,12 @@ import SKEFTHawking.FKLW.CliffordCCZSU8HeadlineCascadeFinal
 -- 2 remaining ingredients (D) + (B). Useful for downstream consumers +
 -- Stage-13 review prep.
 import SKEFTHawking.FKLW.Phase6yClosureStatusIndex
+-- Phase 6y Track S (Session 60, 2026-05-27): super-quad bound SUBSTRATE
+-- lift — first lemma of ~10 from SU(2). Ships `residual_norm_le_d_mul` at
+-- SU(d) (SU(d) analog of SU(2)'s `residual_norm_le_sqrt_two_mul` using
+-- `linftyOpNorm_unitary_le` Session 36 substrate). Substrate for full
+-- SU(d) super-quad bound discharge.
+import SKEFTHawking.FKLW.GenericSUdSuperQuadSubstrate
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
