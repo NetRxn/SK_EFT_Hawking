@@ -352,6 +352,16 @@ lemma stability_term_through_Vn {d : ℕ} [Nonempty (Fin d)]
     _ ≤ (d : ℝ) * (2 * ((d : ℝ)^2 + (d : ℝ)^4) * ε * η + ((d : ℝ)^4 + (d : ℝ)^6) * ε^2) :=
         mul_le_mul (SUd_val_linftyOpNorm_le V_n) h_stab (norm_nonneg _) (by positivity)
 
+/-- **η ≤ 3·δ_lie**: `δ_lie·exp δ_lie ≤ 3·δ_lie` for `0 ≤ δ_lie ≤ 1` (since
+`exp δ_lie ≤ exp 1 ≤ 3`). The `hη_le` input shape for the super-quad numeric chain
+(`η := δ_lie·exp δ_lie` is the near-identity radius of `A_F, A_G`). -/
+lemma eta_le_three_delta (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1) :
+    δ * Real.exp δ ≤ 3 * δ := by
+  have h_exp : Real.exp δ ≤ 3 :=
+    le_trans (Real.exp_le_exp.mpr hδ_le_one) (le_of_lt Real.exp_one_lt_three)
+  calc δ * Real.exp δ ≤ δ * 3 := mul_le_mul_of_nonneg_left h_exp hδ_nn
+    _ = 3 * δ := by ring
+
 /-! ## Regime brick: δ_lie = ‖F‖ ≤ (m+2)^5·√ε from the θ-bound -/
 
 /-- **F-norm in √ε form**: given `θ = ‖(-i)·matrixLog Δ‖ ≤ 2·(n+2)·ε`,
@@ -652,5 +662,97 @@ lemma skApproxC_sud_succ_error_le_combine {m : ℕ}
         rw [sub_add_sub_cancel]
     _ ≤ ‖a - b‖ + ‖b - (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ := norm_add_le _ _
     _ ≤ Cstab + Ccubic := add_le_add h_stab_term h_cubic_term
+
+/-! ## Single-step valid-branch super-quad bound -/
+
+/-- **Single-step super-quad bound (valid branch)**: given the level-n IH
+(`∀ U', ‖ρ(sk_n U') − U'‖ ≤ ε`), the valid-regime conditions on `V_n := ρ(sk_n U)`
+(θ-bound `‖H‖ ≤ 2(m+2)ε`, the 4-conjunct valid guard, `Δ ∈ target`, and
+`(m+2)^5·√ε ≤ 1`), and `ε ≤ 2·ε₀_sud(m+2)`, the level-(n+1) error contracts
+super-quadratically:
+
+  `‖ρ(sk_{n+1} U) − U‖ ≤ K_compose_sud(m+2) · ε^(3/2)`.
+
+Composes the regime brick S100 (δ_lie = ‖F‖ ≤ (m+2)^5√ε), S85 (η = δ_lie·exp δ_lie
+near-identity radius), S96 (stability term), S93 (cubic term), S95 (combine), and
+S99 (numeric chain). The capstone of the (B) inductive step's valid branch. -/
+lemma skApproxC_sud_succ_super_quad_valid {m : ℕ}
+    (gs : GeneratingSet (m + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (m + 2))
+    (n : ℕ) (U : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ))
+    (ε : ℝ) (hε_nn : 0 ≤ ε) (hε_le : ε ≤ 2 * ε₀_sud (m + 2))
+    (h_delta_le_one : ((m : ℝ) + 2) ^ 5 * Real.sqrt ε ≤ 1)
+    (h_theta_le : ‖((-Complex.I) • matrixLog (m + 2)
+        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 2 * ((m : ℝ) + 2) * ε)
+    (h_valid : 0 < ‖((-Complex.I) • matrixLog (m + 2)
+        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ∧
+        ‖((-Complex.I) • matrixLog (m + 2)
+        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 1 ∧
+        (((-Complex.I) • matrixLog (m + 2)
+        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)).IsHermitian ∧
+        (((-Complex.I) • matrixLog (m + 2)
+        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)).trace = 0)
+    (h_target : ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U))⁻¹ * U :
+        ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val ∈
+        (expAmbientPartialHomeo (m + 2)).target)
+    (h_IH : ∀ U' : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ),
+        ‖((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U') :
+            ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+          (U' : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ ε) :
+    ‖((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred (n + 1) U) :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+        (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤
+      K_compose_sud (m + 2) * ε ^ (3 / 2 : ℝ) := by
+  haveI : Nonempty (Fin (m + 2)) := ⟨0⟩
+  set V_n := gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n U) with hV_n_def
+  set data := dnStepFG_sud V_n U with hdata_def
+  set δ_lie := ((m : ℝ) + 2) ^ 5 * Real.sqrt ε with hδ_def
+  have hδ_nn : 0 ≤ δ_lie := by rw [hδ_def]; positivity
+  set η := δ_lie * Real.exp δ_lie with hη_def
+  have hη_nn : 0 ≤ η := by rw [hη_def]; positivity
+  have hF_norm : ‖data.F‖ ≤ δ_lie := dnStepFG_sud_F_norm_le_sqrt_eps V_n U ε h_theta_le
+  have hG_norm : ‖data.G‖ ≤ δ_lie := dnStepFG_sud_G_norm_le_sqrt_eps V_n U ε h_theta_le
+  have h_A_G_near :
+      ‖((expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) - 1‖ ≤ η :=
+    expIsud_norm_sub_one_le data.G data.hG_herm data.hG_tr δ_lie hδ_nn hG_norm
+  have h_A_F_inv_near :
+      ‖((expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)⁻¹ - 1‖ ≤ η :=
+    expIsud_inv_norm_sub_one_le data.F data.hF_herm data.hF_tr δ_lie hδ_nn hF_norm
+  have h_stab := stability_term_through_Vn V_n
+    (expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr)
+    (expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr)
+    (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n
+      (expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr)))
+    (gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n
+      (expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr)))
+    η ε hη_nn hε_nn h_A_G_near h_A_F_inv_near
+    (h_IH (expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr))
+    (h_IH (expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr))
+  rw [show ((m + 2 : ℕ) : ℝ) = (m : ℝ) + 2 from by push_cast; ring] at h_stab
+  have h_cubic := cubic_term_through_Vn V_n U h_valid h_target δ_lie hδ_nn h_delta_le_one
+    hF_norm hG_norm
+  have h_combine := skApproxC_sud_succ_error_le_combine gs baseFinder h_det_pred n U
+    _ _ h_stab h_cubic
+  have hη_le : η ≤ 3 * δ_lie := by rw [hη_def]; exact eta_le_three_delta δ_lie hδ_nn h_delta_le_one
+  have h_chain := super_quad_numeric_chain (m := m) ε δ_lie η hε_nn hδ_nn
+    (le_of_eq hδ_def) hη_le hε_le
+  exact le_trans h_combine h_chain
 
 end SKEFTHawking.FKLW.GenericSUd
