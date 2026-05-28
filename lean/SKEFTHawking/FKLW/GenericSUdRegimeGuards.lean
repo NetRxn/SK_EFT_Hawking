@@ -169,4 +169,73 @@ theorem regime_thetabound_herm_traceless_on_residual_nhd (n : ℕ) :
   rw [h_cast] at h_θ
   exact ⟨h_θ, hδ₂ V U h_lt₂⟩
 
+/-- **Regime predicate (5 of 6 conjuncts) on a residual nbhd**: there is a
+radius `δ > 0` such that for all `V, U ∈ SU(n+2)` with `‖V − U‖ < δ`, the residual
+generator `H := (-i)·matrixLog (n+2) (V⁻¹·U)` satisfies
+
+  `‖H‖ ≤ 2(n+2)‖V−U‖`  ∧  `‖H‖ ≤ 1`  ∧  `H.IsHermitian`  ∧  `H.trace = 0`  ∧  `Δ ∈ target`.
+
+Composes Session 106 (θ-bound + Hermitian + traceless) with `‖H‖ ≤ 1` (from the
+θ-bound when `‖V−U‖ < 1/(2(n+2))`) and `Δ ∈ target` (residual bridge + target
+nbhd of 1). The only `h_regime` conjunct not covered here is `0 < ‖H‖`, which
+holds in the `θ ≠ 0` (`Δ ≠ 1`) branch (the `θ = 0` branch gives zero error
+trivially). The radius `δ` is existential (IFT local inverse). -/
+theorem regime_predicate_on_residual_nhd (n : ℕ) :
+    ∃ δ > (0 : ℝ), ∀ (V U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)),
+      ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+        (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ < δ →
+      ‖((-Complex.I) : ℂ) • matrixLog (n + 2)
+          (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val‖ ≤
+        2 * ((n : ℝ) + 2) * ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+          (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ∧
+      ‖((-Complex.I) : ℂ) • matrixLog (n + 2)
+          (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val‖ ≤ 1 ∧
+      (((-Complex.I) : ℂ) • matrixLog (n + 2)
+          (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val).IsHermitian ∧
+      (((-Complex.I) : ℂ) • matrixLog (n + 2)
+          (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val).trace = 0 ∧
+      (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val ∈
+        (expAmbientPartialHomeo (n + 2)).target := by
+  obtain ⟨δ₀, hδ₀_pos, hδ₀⟩ := regime_thetabound_herm_traceless_on_residual_nhd n
+  -- target ball
+  obtain ⟨r, hr_pos, hr_subset⟩ :=
+    Metric.mem_nhds_iff.mp (expAmbientPartialHomeo_target_mem_nhds_one (n + 2))
+  refine ⟨min δ₀ (min (r / ((n : ℝ) + 2)) (1 / (2 * ((n : ℝ) + 2)))),
+    lt_min hδ₀_pos (lt_min (by positivity) (by positivity)), ?_⟩
+  intro V U h_lt
+  have h_lt0 : ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+      (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ < δ₀ := lt_of_lt_of_le h_lt (min_le_left _ _)
+  have h_ltr : ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+      (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ < r / ((n : ℝ) + 2) :=
+    lt_of_lt_of_le h_lt (le_trans (min_le_right _ _) (min_le_left _ _))
+  have h_lt1 : ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+      (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ < 1 / (2 * ((n : ℝ) + 2)) :=
+    lt_of_lt_of_le h_lt (le_trans (min_le_right _ _) (min_le_right _ _))
+  obtain ⟨h_θbound, h_herm, h_tr⟩ := hδ₀ V U h_lt0
+  -- ‖H‖ ≤ 1 from θ-bound + h_lt1
+  have h_H_le_one : ‖((-Complex.I) : ℂ) • matrixLog (n + 2)
+      (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val‖ ≤ 1 := by
+    refine le_trans h_θbound ?_
+    rw [show (1 : ℝ) = 2 * ((n : ℝ) + 2) * (1 / (2 * ((n : ℝ) + 2))) from by field_simp]
+    exact mul_le_mul_of_nonneg_left h_lt1.le (by positivity)
+  -- Δ ∈ target
+  have h_res : ‖((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+      Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) - 1‖ ≤
+      ((n : ℝ) + 2) * ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+        (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ := by
+    have h := residual_norm_le_d_mul V U
+    rwa [show ((n + 2 : ℕ) : ℝ) = (n : ℝ) + 2 from by push_cast; ring] at h
+  have h_Δ_target : (V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)).val ∈
+      (expAmbientPartialHomeo (n + 2)).target := by
+    apply hr_subset
+    rw [Metric.mem_ball, dist_eq_norm]
+    calc ‖((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+          Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) - 1‖
+        ≤ ((n : ℝ) + 2) * ‖(V : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+            (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ := h_res
+      _ < ((n : ℝ) + 2) * (r / ((n : ℝ) + 2)) :=
+          mul_lt_mul_of_pos_left h_ltr (by positivity)
+      _ = r := by field_simp
+  exact ⟨h_θbound, h_H_le_one, h_herm, h_tr, h_Δ_target⟩
+
 end SKEFTHawking.FKLW.GenericSUd
