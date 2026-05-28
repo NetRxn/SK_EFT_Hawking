@@ -1727,6 +1727,11 @@ import SKEFTHawking.FKLW.GenericSUdSigmaYSumNormBound
 -- Bridges the eigenvalue-sort permMatrix conjugation (Session 28/31) to the
 -- σ_y-sum norm bound (Session 70) for the F_inner norm bound.
 import SKEFTHawking.FKLW.GenericSUdPermConjNormPreserve
+-- Phase 6y Track S (Session 72, 2026-05-27): γ-sum algebraic decomposition.
+-- For γ_p = √(θ·b_p/2), ships `∑ √(θ·b_p/2) = √(θ/2)·∑√b_p` + `∑√b_p ≤ card·√B`
+-- + `gamma_sum_bound` giving `∑|γ_p| ≤ √(θ/2)·card·√B`. F_inner norm bound
+-- with K_inner = card·√B (B = max partial sum bound from Gershgorin).
+import SKEFTHawking.FKLW.GenericSUdGammaSumDecomp
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
