@@ -124,4 +124,67 @@ theorem regime_normH_le_one_concrete {d : ℕ} [Nonempty (Fin d)]
         regime_thetabound_concrete V U hVU
     _ ≤ 1 := by nlinarith [hVU]
 
+/-- **Banach exp remainder bound** (re-point R3 foundation): for any
+`A : Matrix (Fin d) (Fin d) ℂ`,
+
+  `‖NormedSpace.exp A − 1 − A‖ ≤ ‖A‖² · Real.exp ‖A‖`.
+
+Mathlib has this only for scalar `ℝ`/`ℂ` (`Real.norm_exp_sub_one_sub_id_le`,
+`Complex.exp_bound_sq`), not for a general Banach algebra. **Proof**: split the exp
+series off its first two terms (`exp A = 1 + A + ∑' i, ((i+2)!)⁻¹ • A^(i+2)` via
+`Summable.sum_add_tsum_nat_add 2`), bound the tail termwise (`((i+2)!)⁻¹ ≤ (i!)⁻¹`,
+`‖A^(i+2)‖ ≤ ‖A‖^(i+2)`), factor out `‖A‖²`, and match the real exp series
+(`Real.exp_eq_exp_ℝ` + `NormedSpace.exp_eq_tsum_div`).
+
+This is the key brick for R3/R2b: combined with `exp S = 1` (which makes
+`exp S − 1 − S = −S`), it gives `‖S‖ ≤ ‖S‖²·exp‖S‖`, forcing `S = 0` for `‖S‖`
+small (since `‖S‖·exp‖S‖ < 1` for `‖S‖ ≤ 1/2`) — the concrete exp-injectivity-at-0
+that discharges `matrixMercatorLog(Δ⁻¹−1) = −matrixMercatorLog(Δ−1)` (regime's
+skew-Hermitian conjunct, R2b). -/
+theorem norm_exp_sub_one_sub_self_le {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) :
+    ‖NormedSpace.exp A - 1 - A‖ ≤ ‖A‖ ^ 2 * Real.exp ‖A‖ := by
+  have hHasSum := NormedSpace.exp_series_hasSum_exp' (𝕂 := ℂ) A
+  have hsumm := hHasSum.summable
+  have hsplit := Summable.sum_add_tsum_nat_add 2 hsumm
+  have hrange : (∑ i ∈ Finset.range 2, ((i.factorial : ℂ)⁻¹ • A ^ i)) = 1 + A := by
+    simp [Finset.sum_range_succ]
+  rw [hrange, hHasSum.tsum_eq] at hsplit
+  have htail : NormedSpace.exp A - 1 - A
+      = ∑' i : ℕ, ((i + 2).factorial : ℂ)⁻¹ • A ^ (i + 2) := by
+    rw [← hsplit]; abel
+  rw [htail]
+  have hsumm_tail : Summable (fun i : ℕ => ((i + 2).factorial : ℂ)⁻¹ • A ^ (i + 2)) :=
+    (summable_nat_add_iff 2).mpr hsumm
+  have hbound : ∀ i : ℕ, ‖((i + 2).factorial : ℂ)⁻¹ • A ^ (i + 2)‖
+      ≤ ((i.factorial : ℝ))⁻¹ * ‖A‖ ^ (i + 2) := by
+    intro i
+    rw [norm_smul]
+    have h1 : ‖((i + 2).factorial : ℂ)⁻¹‖ = ((i + 2).factorial : ℝ)⁻¹ := by
+      rw [norm_inv]; congr 1; rw [Complex.norm_natCast]
+    have h2 : ‖A ^ (i + 2)‖ ≤ ‖A‖ ^ (i + 2) := norm_pow_le' A (by omega)
+    have h3 : ((i + 2).factorial : ℝ)⁻¹ ≤ ((i.factorial : ℝ))⁻¹ :=
+      inv_anti₀ (by positivity) (by exact_mod_cast Nat.factorial_le (by omega))
+    rw [h1]
+    calc ((i + 2).factorial : ℝ)⁻¹ * ‖A ^ (i + 2)‖
+        ≤ ((i + 2).factorial : ℝ)⁻¹ * ‖A‖ ^ (i + 2) :=
+          mul_le_mul_of_nonneg_left h2 (by positivity)
+      _ ≤ ((i.factorial : ℝ))⁻¹ * ‖A‖ ^ (i + 2) :=
+          mul_le_mul_of_nonneg_right h3 (by positivity)
+  have hsumm_rhs : Summable (fun i : ℕ => ((i.factorial : ℝ))⁻¹ * ‖A‖ ^ (i + 2)) := by
+    have hb : Summable (fun i : ℕ => ‖A‖ ^ i / (i.factorial : ℝ)) :=
+      Real.summable_pow_div_factorial ‖A‖
+    have heq : (fun i : ℕ => ((i.factorial : ℝ))⁻¹ * ‖A‖ ^ (i + 2))
+        = fun i => ‖A‖ ^ 2 * (‖A‖ ^ i / (i.factorial : ℝ)) := by
+      funext i; rw [pow_add]; ring
+    rw [heq]; exact hb.mul_left _
+  calc ‖∑' i : ℕ, ((i + 2).factorial : ℂ)⁻¹ • A ^ (i + 2)‖
+      ≤ ∑' i : ℕ, ‖((i + 2).factorial : ℂ)⁻¹ • A ^ (i + 2)‖ :=
+        norm_tsum_le_tsum_norm hsumm_tail.norm
+    _ ≤ ∑' i : ℕ, ((i.factorial : ℝ))⁻¹ * ‖A‖ ^ (i + 2) :=
+        Summable.tsum_le_tsum hbound hsumm_tail.norm hsumm_rhs
+    _ = ‖A‖ ^ 2 * Real.exp ‖A‖ := by
+        rw [Real.exp_eq_exp_ℝ, NormedSpace.exp_eq_tsum_div, ← tsum_mul_left]
+        refine tsum_congr (fun i => ?_)
+        rw [pow_add]; ring
+
 end SKEFTHawking.FKLW.GenericSUd
