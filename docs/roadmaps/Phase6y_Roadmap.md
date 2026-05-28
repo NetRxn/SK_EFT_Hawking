@@ -337,12 +337,47 @@ bound) is now FULLY discharged at the dnStep level via an explicit assembly chai
 
 **Updated cumulative tally (Sessions 14-103)**: **~90 commits, ~9300 LoC kernel-only**. Build clean 8345 jobs. 🎯 S102 (B) DISCHARGED + S103 fed (B) into S.6 cascade → headline now conditional on (D)+regime+length only. Remaining: (D-SU4)/(D-SU8) density witnesses + regime/length discharge + UNCONDITIONAL headlines + M-S extraction + Stage-13. 🎯 S102 = (B) SUPER-QUAD BOUND DISCHARGED (SkApproxCSuperQuadraticBound_generic_sud_holds). The hardest (B) ingredient DONE; remaining: feed (B) into S.6 cascade + (D-SU4)/(D-SU8) density witnesses + M-S extraction + Stage-13. 🎯 S101 SINGLE-STEP VALID-BRANCH BOUND (skApproxC_sud_succ_super_quad_valid) integrates ALL (B) substrate. ONLY the Nat.rec wrap (with per-level regime establishment) remains for (B). S96 stability-through-Vn + S97-S99 numeric chain (THE arithmetic core: 334d^16 ≤ 1024d^16) + S100 F/G-norm-in-√ε. Remaining (B): final valid-branch integration (regime establishment via existential δ_lipschitz + matrixLog-in-su-d guards) + Nat.rec wrap. S93 cubic-term-through-Vn + S94 stability-term wrapper + S95 combine assembly: inductive-step telescoping ASSEMBLED; only numeric chain + Nat.rec wrap remain for (B). S91 = stability M-bound + poly F/G-norms; S92 = composition identity (inductive-step structural core). Remaining (B): telescoping core + numeric chain + Nat.rec wrap (carrying regime hypothesis). S90 = K_F polynomial bound (numeric-chain prep). EXISTENTIAL-REGIME finding: main-induction discharge carries explicit `2d·(2ε₀_sud) < δ_lipschitz(d)` regime hypothesis (S60 H-norm is existential-δ; honest, discharged downstream by fine ε-net).
 
-**Truly remaining substantive work (3 named items + 1 review)**:
-  1. **(B) Super-quad MAIN INDUCTION discharge at SU(d)** (`SkApproxCSuperQuadraticBound_generic_sud`) — ALL per-step ingredients now shipped (Sessions 70-87: F/G-norm S82, commutator/invalid S83, exp=Δ S84, exp-norm S85, cubic S86, ρ_hom abstractions S87, stability already generic, ε_seq mono S65). Remaining = the recursion-induction assembly itself (analog of SU(2) `SkApproxCSuperQuadraticBound_generic_holds`, `GenericSolovayKitaevRecursionDischarge.lean` lines 468-1181). **⚠️ CALIBRATION: must first resolve the `K_compose_sud` d-power** — the per-step `δ = K_F·√(θ/2)` with `K_F = (n+2)²·(n+1)·√(n+2)` (loose `(n+2)²` from Session 36's non-unitarily-invariant linftyOp bridge) propagates as `K_F³ ≈ d^10.5` through `320·δ³`, exceeding the current `K_compose_sud = 1024·d⁴`. Fix: bump the d-power (e.g. `1024·d^16`; re-verify the K-parametric S48/S64/S65 lemmas lift) OR tighten K_F via the `n` Cauchy-Schwarz bridge. Then `valid_branch_K_chain_le_K_compose_sud_numeric` + the main induction.
+**Sessions 104-108 (SHIPPED 2026-05-27/28 — regime-discharge substrate chain)**: the
+**regime hypothesis** `h_regime` is the last conditional carried by the S.6 cascade
+(alongside (D) density + length-polylog). These sessions build it toward an
+unconditional discharge:
+- **S104** (`GenericSUdRegimeGuards.lean`): `negI_smul_isHermitian_of_isSkewHermitian`
+  + `negI_matrixLog_isHermitian_traceless_on_nhd_one` — `H = (-i)·log Δ` is
+  Hermitian-traceless on a nbhd of 1.
+- **S105**: `negI_matrixLog_herm_traceless_on_residual_nhd` — same on the residual
+  `V⁻¹U` form.
+- **S106**: `regime_thetabound_herm_traceless_on_residual_nhd` — adds the Lipschitz
+  θ-bound `‖H‖ ≤ 2(n+2)‖V−U‖`.
+- **S107** (`4c0ab56`): `regime_predicate_on_residual_nhd` — the **5-conjunct regime
+  predicate** (θ-bound ∧ ‖H‖≤1 ∧ Herm ∧ traceless ∧ Δ∈target) on a residual nbhd
+  `∃ δ>0, ∀ V U, ‖V−U‖<δ → …`, composing S106 + the ‖H‖≤1 derivation + target
+  membership via `residual_norm_le_d_mul` + `expAmbientPartialHomeo_target_mem_nhds_one`.
+- **S108** (`9a06ffa`): **DROPPED the `0 < ‖H‖` conjunct** from the super-quad chain
+  (S84/S86/cubic_term/S101/S102/S103). This fixes a real defect — `h_regime` was
+  UNIVERSALLY FALSE at `V = U` (where `H = 0`), so it could never be discharged
+  unconditionally on the calibration ball. S84 now case-splits internally: at `H=0`
+  the target round-trip forces `Δ=1`, the DN step gives `F=G=0`, and `exp(-[0,0])=1=Δ`.
+  The cascade's `h_regime` now matches the exact 5-conjunct shape S107 proves.
+
+**⚠️ Regime concrete-radius gap (the genuine remaining blocker)**: S107 gives the
+regime predicate on a residual neighborhood of **existential radius** (`matrixLog` is
+the IFT local inverse `(expAmbientPartialHomeo).symm`, whose `.target` is an
+existential open set from `HasStrictFDerivAt.toOpenPartialHomeomorph`). The cascade's
+`h_regime` needs it on the **calibration ball** `‖V−U‖ ≤ 2·ε₀_sud`. Bridging requires
+a **concrete-radius matrix logarithm** (the Mercator power series
+`log(1+X)=Σ(-1)^{k+1}X^k/k`, convergent for `‖X‖<1` with a *named* radius) replacing
+the IFT `matrixLog`, plus its Lipschitz tail bound — a genuine multi-session
+Mathlib-gap substrate (Mathlib has no Banach-algebra log with a known radius). The
+existential radius cannot be made quantitative (no nameable lower bound), so no choice
+of `K`/`ε₀` closes it; only a concrete construction does.
+
+**Truly remaining substantive work (post S108 — (B) is DISCHARGED; 4 named items + 1 review)**:
+  0. **(B) Super-quad MAIN INDUCTION discharge ✓ DONE** (S102 `SkApproxCSuperQuadraticBound_generic_sud_holds`, fed to the cascade by S103). Calibration resolved by S88 (`K_compose_sud = 1024·d^16`). No longer a blocker.
+  1. **Regime concrete-radius substrate** (the closest-to-done headline blocker) — replace the IFT `matrixLog` with a concrete-radius Mercator power-series matrix log to bridge S107's existential-radius regime predicate to the calibration ball `‖V−U‖ ≤ 2·ε₀_sud`. Needs: series convergence on `‖X‖<1`, `exp∘log = id` on the ball, and the Lipschitz tail bound `‖log Δ‖ ≤ 2(n+2)‖Δ−1‖`. Multi-session Mathlib-gap substrate. After this, `h_regime` discharges UNCONDITIONALLY and S.6/T-X′.5 reduce to (D)+length only.
   2. **(D-SU4) Density witness at SU(4) trapped-ion** — Brylinski-Brylinski 2002 entangler universality. Multi-session entangler-theoretic content.
   3. **(D-SU8) Density witness at SU(8) Clifford+CCZ** — Aaronson-Gottesman 2004 Clifford-stabilizer lineage. Multi-session.
   4. **Length-bound polylog exponent caveat** — headline form's `log 5 / log 2` exponent revision OR sharper recursion analysis.
-  5. **Stage-13 fresh-context adversarial review pass** — CLOSURE gate; dispatched ONLY after items 1-4 ship.
+  5. **Stage-13 fresh-context adversarial review pass** — CLOSURE gate; dispatched ONLY after items 1-4 ship (i.e. once the UNCONDITIONAL S.6/T-X′.5 headlines exist).
 
 ### Wave 1 References
 
