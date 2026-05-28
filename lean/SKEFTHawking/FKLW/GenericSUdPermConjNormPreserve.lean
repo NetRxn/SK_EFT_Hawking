@@ -39,6 +39,7 @@ norm preservation (F_inner norm bound bridge).
 
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdPermutationConjugation
+import SKEFTHawking.FKLW.GenericSUdSigmaYSumNormBound
 import SKEFTHawking.MatrixBCHCubicMathlibPR
 
 set_option autoImplicit false
@@ -74,5 +75,22 @@ theorem permMatrix_conj_linftyOpNorm_eq {n : ℕ} (σ : Equiv.Perm (Fin n))
     ‖(Equiv.Perm.permMatrix ℂ σ) * A * (Equiv.Perm.permMatrix ℂ σ⁻¹)‖ = ‖A‖ := by
   rw [permMatrix_conj_eq_reindex]
   exact Matrix.linftyOpNorm_reindex σ⁻¹ A
+
+/-- **F_inner-form norm bound**: a permMatrix-conjugated σ_y-block sum has
+linftyOp norm `≤ ∑ |γ_p|`.
+
+This is the composition of `permMatrix_conj_linftyOpNorm_eq` (Session 71)
+with `sigmaYBlock_sum_linftyOpNorm_le` (Session 70): for the inner
+diagonal-case witness `F_inner = permMatrix σ · (∑ γ_p σ_y) · permMatrix σ⁻¹`
+(eigenvalue-sort conjugation, Session 31), this directly gives
+`‖F_inner‖ ≤ ∑ |γ_p|`. -/
+theorem permMatrix_conj_sigmaYBlock_sum_norm_le {n : ℕ} {ι : Type*}
+    (σ : Equiv.Perm (Fin n)) (s : Finset ι) (γ : ι → ℝ) (a b : ι → Fin n)
+    (h_ne : ∀ p ∈ s, a p ≠ b p) :
+    ‖(Equiv.Perm.permMatrix ℂ σ) *
+        (∑ p ∈ s, ((γ p : ℂ)) • sigmaYBlock (a p) (b p)) *
+        (Equiv.Perm.permMatrix ℂ σ⁻¹)‖ ≤ ∑ p ∈ s, |γ p| := by
+  rw [permMatrix_conj_linftyOpNorm_eq]
+  exact sigmaYBlock_sum_linftyOpNorm_le s γ a b h_ne
 
 end SKEFTHawking.FKLW.GenericSUd
