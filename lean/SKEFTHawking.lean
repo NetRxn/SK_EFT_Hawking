@@ -1591,6 +1591,15 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFG
 -- `expIsud_of_det_predicate`, `ExpIsud_det_eq_one_predicate`. Substrate for
 -- Sessions 43+ SK recursion lift (skApproxC_generic_sud + bounds + discharge).
 import SKEFTHawking.FKLW.GenericSUdExpIsuD
+-- Phase 6y Track S (Session 43, 2026-05-27): SU(d) Solovay-Kitaev recursion
+-- engine. SU(d) analog of `skApproxC_generic` (Phase 6u Wave 4 SU(2)) composing
+-- `dnStepFG_sud` (Session 41) + `expIsud_of_det_predicate` (Session 42). Ships
+-- the structural recursion + level-0/(n+1) unfolding lemmas +
+-- `BaseFinder_approximates_within_sud` predicate. Takes the det-predicate
+-- hypothesis as a parameter (decouples from substantive det = 1 discharge).
+-- Substrate for Sessions 44+ (super-quadratic bound + per-alphabet
+-- instantiations + headline cascade unblock).
+import SKEFTHawking.FKLW.GenericSUdSkApproxC
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
