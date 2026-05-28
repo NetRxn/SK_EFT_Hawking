@@ -47,6 +47,7 @@ assembly (the (B) ingredient; base case).
 
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdSkApproxC
+import SKEFTHawking.FKLW.GenericSUdDnStepFGNormBound
 import SKEFTHawking.FKLW.EpsilonSeq
 
 set_option autoImplicit false
@@ -58,6 +59,31 @@ open Matrix
 attribute [local instance] Matrix.linftyOpNormedAddCommGroup
   Matrix.linftyOpNormedRing
   Matrix.linftyOpNormedAlgebra
+
+/-! ## Numeric-chain prep: polynomial bound on the F/G-norm constant K_F -/
+
+/-- `0 ≤ dnStepFG_sud_K_F n`. -/
+lemma dnStepFG_sud_K_F_nonneg (n : ℕ) : 0 ≤ dnStepFG_sud_K_F n := by
+  unfold dnStepFG_sud_K_F
+  positivity
+
+/-- **Polynomial bound on K_F**: `dnStepFG_sud_K_F n = (n+2)²·(n+1)·√(n+2) ≤ (n+2)⁴`.
+
+Tames the awkward `√(n+2)` factor to a clean polynomial d-power for the
+super-quad numeric chain: `(n+1)·√(n+2) ≤ (n+2)·(n+2) = (n+2)²` (since
+`n+1 ≤ n+2` and `√(n+2) ≤ n+2`), so `K_F ≤ (n+2)²·(n+2)² = (n+2)⁴`. -/
+lemma dnStepFG_sud_K_F_le (n : ℕ) : dnStepFG_sud_K_F n ≤ ((n : ℝ) + 2)^4 := by
+  unfold dnStepFG_sud_K_F
+  have h_cast : ((n + 2 : ℕ) : ℝ) = (n : ℝ) + 2 := by push_cast; ring
+  rw [h_cast]
+  have h_sqrt_le : Real.sqrt ((n : ℝ) + 2) ≤ (n : ℝ) + 2 := by
+    have hs := Real.sq_sqrt (show (0:ℝ) ≤ (n:ℝ) + 2 by positivity)
+    have hs_nn := Real.sqrt_nonneg ((n:ℝ) + 2)
+    nlinarith [hs, hs_nn, sq_nonneg (Real.sqrt ((n:ℝ) + 2) - 1),
+      (by positivity : (0:ℝ) ≤ (n:ℝ))]
+  rw [show ((n:ℝ) + 2)^4 = ((n:ℝ) + 2)^2 * (((n:ℝ) + 2) * ((n:ℝ) + 2)) from by ring]
+  gcongr
+  norm_num
 
 /-- **Base case of the super-quad induction**: the level-0 approximation
 `skApproxC_generic_sud … 0 U = baseFinder U` is within
