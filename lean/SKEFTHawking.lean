@@ -1754,6 +1754,11 @@ import SKEFTHawking.FKLW.GenericSUdSymmetricDiagonalDischargeFullBounded
 -- witness norm is replaced by the explicit spectral partial-sum bound
 -- `‖F‖ ≤ (n+2)²·∑_p √(θ·(sorted partial sum of eigenvalues).re/2)`.
 import SKEFTHawking.FKLW.GenericSUdHermitianDischargeBoundedExplicit
+-- Phase 6y Track S (Session 81, 2026-05-27): concrete K_F·√(θ/2) bounded keystone.
+-- Composes Session 80 with the spectral partial-sum analysis (Gershgorin
+-- eigenvalue bound + partial-sum bound + γ-sum decomposition) to give the
+-- concrete `‖F‖ ≤ (n+2)²·(n+1)·√(n+2)·√(θ/2)` form needed by the F-norm predicate.
+import SKEFTHawking.FKLW.GenericSUdHermitianDischargeKeystoneBounded
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
