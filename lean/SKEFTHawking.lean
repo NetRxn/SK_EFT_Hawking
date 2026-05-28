@@ -1216,6 +1216,9 @@ import SKEFTHawking.FKLW.CliffordCCZSU8TangentSpan
 -- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): per-qubit SU(2)→SU(8) embedding monoid homs
 -- (qubit{1,2,3}Embed) + continuity; alphabet-agnostic substrate for the per-qubit flow lines.
 import SKEFTHawking.FKLW.CliffordCCZSU8QubitEmbed
+-- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): exp commutes with the per-qubit SU(2)→SU(8)
+-- embeddings (qubit{1,2,3}MatRingHom + NormedSpace.map_exp); alphabet-agnostic flow-line substrate.
+import SKEFTHawking.FKLW.CliffordCCZSU8ExpCommute
 -- Phase 6y Track S.2-consumer (2026-05-27): generic SU(d) ClosureDenseWitness
 -- structure for `GeneratingSet d`. Bundles n traceless skew-Hermitian
 -- spanning tangents + flow-line containment in H_of_G gs. Conditional
