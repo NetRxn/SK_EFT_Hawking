@@ -1637,6 +1637,12 @@ import SKEFTHawking.FKLW.GenericSUdSkLevelPolylogSpec
 -- enumerated by Session 47's cascade index. Composes with Session 42's
 -- expIsud_of_det_predicate to give UNCONDITIONAL SU(d) exp coercion.
 import SKEFTHawking.FKLW.GenericSUdExpIsuDDetDischarge
+-- Phase 6y Track S (Session 50, 2026-05-27): REFINED 2-INGREDIENT cascade.
+-- Composes Session 45's full cascade with Sessions 48 + 49 substantive discharges
+-- (polylog level spec + det predicate) to reduce SU(d) SK headline cascade to
+-- only 2 remaining ingredients: super-quad bound + length bound. Ships
+-- `skHeadline_FreeGroup_SUd_cascade_2ingredient` + `_with_calibration`.
+import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade2Ingredient
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
