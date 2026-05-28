@@ -84,4 +84,25 @@ theorem regime_thetabound_concrete {d : ℕ} [Nonempty (Fin d)]
         linarith [hres]
     _ = 2 * (d : ℝ) * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ := by ring
 
+/-- **Conjugate-transpose commutes with the Mercator log** (re-point R2 part a):
+`(matrixMercatorLog Y)ᴴ = matrixMercatorLog Yᴴ`, unconditionally. Conjugate-transpose
+is a continuous additive map (so it commutes with the tsum, `conjTranspose_tsum`), is
+multiplicative on powers of a single element (`conjTranspose_pow`), and fixes the real
+coefficients `c_n = (-1)^n/(n+1)` (`star` on ℝ-valued `ℂ`). Holds for all `Y` (when the
+series diverges both sides are the junk `0`, since `conjTranspose` is a homeomorphism).
+
+Toward the re-pointed regime's **Hermitian** conjunct: for unitary `Δ` (so `Δᴴ = Δ⁻¹`),
+this gives `(matrixMercatorLog (Δ−1))ᴴ = matrixMercatorLog (Δᴴ − 1) = matrixMercatorLog
+(Δ⁻¹ − 1)`; combined with `matrixMercatorLog (Δ⁻¹−1) = −matrixMercatorLog (Δ−1)` (R2 part b,
+`log(Δ⁻¹)=−log(Δ)`, pending R3 concrete exp-injectivity) this yields skew-Hermiticity of
+`matrixMercatorLog (Δ−1)`, hence Hermiticity of `(-i)·matrixMercatorLog (Δ−1)`. -/
+theorem matrixMercatorLog_conjTranspose {d : ℕ} (Y : Matrix (Fin d) (Fin d) ℂ) :
+    (matrixMercatorLog Y)ᴴ = matrixMercatorLog Yᴴ := by
+  unfold matrixMercatorLog
+  rw [conjTranspose_tsum]
+  refine tsum_congr (fun n => ?_)
+  rw [conjTranspose_smul, conjTranspose_pow]
+  congr 1
+  simp [star_div₀, star_pow]
+
 end SKEFTHawking.FKLW.GenericSUd
