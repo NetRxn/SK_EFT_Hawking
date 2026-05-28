@@ -408,6 +408,96 @@ lemma eps_sq_le_rpow {m : ℕ} (ε : ℝ) (hε_nn : 0 ≤ ε)
         mul_le_mul_of_nonneg_left h_s_le h_s3_nn
     _ = Real.sqrt (2 * ε₀_sud (m + 2)) * (Real.sqrt ε) ^ 3 := by ring
 
+/-- **Super-quad numeric chain**: the assembled per-step constant is `≤ K_compose_sud·ε^(3/2)`.
+
+`(m+2)·[2((m+2)²+(m+2)⁴)·ε·η + ((m+2)⁴+(m+2)⁶)·ε²] + (m+2)·320·δ_lie³ ≤ K_compose_sud(m+2)·ε^(3/2)`
+given `δ_lie ≤ (m+2)^5·√ε`, `η ≤ 3·δ_lie`, `ε ≤ 2·ε₀_sud(m+2)`. Each term reduces to
+a `d^k·ε^(3/2)` multiple (S97/S98), summing to `≤ (12+2+320)·d^16·ε^(3/2) = 334·d^16·ε^(3/2)
+≤ 1024·d^16·ε^(3/2) = K_compose_sud·ε^(3/2)`. -/
+lemma super_quad_numeric_chain {m : ℕ} (ε δ_lie η : ℝ)
+    (hε_nn : 0 ≤ ε) (hδ_nn : 0 ≤ δ_lie)
+    (hδ_le : δ_lie ≤ ((m : ℝ) + 2) ^ 5 * Real.sqrt ε)
+    (hη_le : η ≤ 3 * δ_lie)
+    (hε_le : ε ≤ 2 * ε₀_sud (m + 2)) :
+    ((m : ℝ) + 2) * (2 * (((m : ℝ) + 2) ^ 2 + ((m : ℝ) + 2) ^ 4) * ε * η +
+        (((m : ℝ) + 2) ^ 4 + ((m : ℝ) + 2) ^ 6) * ε ^ 2) +
+        ((m : ℝ) + 2) * (320 * δ_lie ^ 3) ≤
+      K_compose_sud (m + 2) * ε ^ (3 / 2 : ℝ) := by
+  have hd_ge_one : (1 : ℝ) ≤ (m : ℝ) + 2 := by
+    have : (0 : ℝ) ≤ (m : ℝ) := Nat.cast_nonneg m; linarith
+  have hd_nn : (0 : ℝ) ≤ (m : ℝ) + 2 := by linarith
+  set P := ε ^ (3 / 2 : ℝ) with hP_def
+  have hP_nn : 0 ≤ P := Real.rpow_nonneg hε_nn _
+  have h_cubic := cubic_le_rpow ε δ_lie hε_nn hδ_nn hδ_le
+  have h_eta := eps_eta_le_rpow ε δ_lie η hε_nn hδ_le hη_le
+  have h_sq0 := eps_sq_le_rpow ε hε_nn hε_le
+  -- √(2·ε₀_sud) ≤ 1
+  have h_two_ε₀_le_one : 2 * ε₀_sud (m + 2) ≤ 1 := by
+    have h_cal := K_compose_sud_sq_times_two_ε₀_sud (d := m + 2) (by omega)
+    have hK := K_compose_sud_ge_1024 (d := m + 2) (by omega)
+    nlinarith [h_cal, hK, ε₀_sud_pos (d := m + 2) (by omega),
+      K_compose_sud_pos (d := m + 2) (by omega)]
+  have h_sqrt_le_one : Real.sqrt (2 * ε₀_sud (m + 2)) ≤ 1 := by
+    rw [show (1 : ℝ) = Real.sqrt 1 from Real.sqrt_one.symm]
+    exact Real.sqrt_le_sqrt h_two_ε₀_le_one
+  have h_sq : ε ^ 2 ≤ P := by
+    refine le_trans h_sq0 ?_
+    have := mul_le_mul_of_nonneg_right h_sqrt_le_one hP_nn
+    simpa using this
+  -- power monotonicity
+  have hp8 : ((m : ℝ) + 2) ^ 8 ≤ ((m : ℝ) + 2) ^ 16 := pow_le_pow_right₀ hd_ge_one (by norm_num)
+  have hp10 : ((m : ℝ) + 2) ^ 10 ≤ ((m : ℝ) + 2) ^ 16 := pow_le_pow_right₀ hd_ge_one (by norm_num)
+  have hp5 : ((m : ℝ) + 2) ^ 5 ≤ ((m : ℝ) + 2) ^ 16 := pow_le_pow_right₀ hd_ge_one (by norm_num)
+  have hp7 : ((m : ℝ) + 2) ^ 7 ≤ ((m : ℝ) + 2) ^ 16 := pow_le_pow_right₀ hd_ge_one (by norm_num)
+  -- term 1: d·(2(d²+d⁴)·ε·η) ≤ 12·d^16·P
+  have hT1 : ((m : ℝ) + 2) * (2 * (((m : ℝ) + 2) ^ 2 + ((m : ℝ) + 2) ^ 4) * ε * η) ≤
+      12 * ((m : ℝ) + 2) ^ 16 * P := by
+    have hcoef_nn : (0 : ℝ) ≤ 2 * (((m : ℝ) + 2) ^ 2 + ((m : ℝ) + 2) ^ 4) * ((m : ℝ) + 2) := by
+      positivity
+    calc ((m : ℝ) + 2) * (2 * (((m : ℝ) + 2) ^ 2 + ((m : ℝ) + 2) ^ 4) * ε * η)
+        = (2 * (((m : ℝ) + 2) ^ 2 + ((m : ℝ) + 2) ^ 4) * ((m : ℝ) + 2)) * (ε * η) := by ring
+      _ ≤ (2 * (((m : ℝ) + 2) ^ 2 + ((m : ℝ) + 2) ^ 4) * ((m : ℝ) + 2)) *
+            (3 * ((m : ℝ) + 2) ^ 5 * P) := mul_le_mul_of_nonneg_left h_eta hcoef_nn
+      _ = (6 * ((m : ℝ) + 2) ^ 8 + 6 * ((m : ℝ) + 2) ^ 10) * P := by ring
+      _ ≤ 12 * ((m : ℝ) + 2) ^ 16 * P := by
+          nlinarith [mul_le_mul_of_nonneg_right hp8 hP_nn,
+            mul_le_mul_of_nonneg_right hp10 hP_nn]
+  -- term 2: d·((d⁴+d⁶)·ε²) ≤ 2·d^16·P
+  have hT2 : ((m : ℝ) + 2) * ((((m : ℝ) + 2) ^ 4 + ((m : ℝ) + 2) ^ 6) * ε ^ 2) ≤
+      2 * ((m : ℝ) + 2) ^ 16 * P := by
+    have hcoef_nn : (0 : ℝ) ≤ (((m : ℝ) + 2) ^ 4 + ((m : ℝ) + 2) ^ 6) * ((m : ℝ) + 2) := by
+      positivity
+    calc ((m : ℝ) + 2) * ((((m : ℝ) + 2) ^ 4 + ((m : ℝ) + 2) ^ 6) * ε ^ 2)
+        = ((((m : ℝ) + 2) ^ 4 + ((m : ℝ) + 2) ^ 6) * ((m : ℝ) + 2)) * ε ^ 2 := by ring
+      _ ≤ ((((m : ℝ) + 2) ^ 4 + ((m : ℝ) + 2) ^ 6) * ((m : ℝ) + 2)) * P :=
+          mul_le_mul_of_nonneg_left h_sq hcoef_nn
+      _ = (((m : ℝ) + 2) ^ 5 + ((m : ℝ) + 2) ^ 7) * P := by ring
+      _ ≤ 2 * ((m : ℝ) + 2) ^ 16 * P := by
+          nlinarith [mul_le_mul_of_nonneg_right hp5 hP_nn,
+            mul_le_mul_of_nonneg_right hp7 hP_nn]
+  -- term 3: d·(320·δ³) ≤ 320·d^16·P
+  have hT3 : ((m : ℝ) + 2) * (320 * δ_lie ^ 3) ≤ 320 * ((m : ℝ) + 2) ^ 16 * P := by
+    calc ((m : ℝ) + 2) * (320 * δ_lie ^ 3)
+        = 320 * ((m : ℝ) + 2) * δ_lie ^ 3 := by ring
+      _ ≤ 320 * ((m : ℝ) + 2) * (((m : ℝ) + 2) ^ 15 * P) := by
+          have hc : (0 : ℝ) ≤ 320 * ((m : ℝ) + 2) := by positivity
+          exact mul_le_mul_of_nonneg_left h_cubic hc
+      _ = 320 * ((m : ℝ) + 2) ^ 16 * P := by ring
+  -- assemble
+  rw [show K_compose_sud (m + 2) = 1024 * ((m : ℝ) + 2) ^ 16 from by
+    unfold K_compose_sud; push_cast; ring]
+  have h_dP_nn : (0 : ℝ) ≤ ((m : ℝ) + 2) ^ 16 * P := by positivity
+  calc ((m : ℝ) + 2) * (2 * (((m : ℝ) + 2) ^ 2 + ((m : ℝ) + 2) ^ 4) * ε * η +
+          (((m : ℝ) + 2) ^ 4 + ((m : ℝ) + 2) ^ 6) * ε ^ 2) +
+          ((m : ℝ) + 2) * (320 * δ_lie ^ 3)
+      = ((m : ℝ) + 2) * (2 * (((m : ℝ) + 2) ^ 2 + ((m : ℝ) + 2) ^ 4) * ε * η) +
+          ((m : ℝ) + 2) * ((((m : ℝ) + 2) ^ 4 + ((m : ℝ) + 2) ^ 6) * ε ^ 2) +
+          ((m : ℝ) + 2) * (320 * δ_lie ^ 3) := by ring
+    _ ≤ 12 * ((m : ℝ) + 2) ^ 16 * P + 2 * ((m : ℝ) + 2) ^ 16 * P +
+          320 * ((m : ℝ) + 2) ^ 16 * P := by linarith [hT1, hT2, hT3]
+    _ = 334 * ((m : ℝ) + 2) ^ 16 * P := by ring
+    _ ≤ 1024 * ((m : ℝ) + 2) ^ 16 * P := by nlinarith [h_dP_nn]
+
 /-! ## Combine: single-step error from the two telescoping terms -/
 
 /-- **Single-step error combine**: given the stability term bound `Cstab` on
