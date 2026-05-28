@@ -1721,6 +1721,12 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGBounded
 -- `‖∑ p ∈ s, γ p • σ_y(a p)(b p)‖ ≤ ∑ p ∈ s, |γ p|`. F_inner norm bound
 -- substrate for the super-quad bound F/G-norm ingredient.
 import SKEFTHawking.FKLW.GenericSUdSigmaYSumNormBound
+-- Phase 6y Track S (Session 71, 2026-05-27): permutation-conjugation preserves
+-- linftyOp norm. `‖permMatrix σ · A · permMatrix σ⁻¹‖ = ‖A‖` via the entry-wise
+-- identity `= Matrix.reindex σ⁻¹ σ⁻¹ A` + Phase 6x M.1 `Matrix.linftyOpNorm_reindex`.
+-- Bridges the eigenvalue-sort permMatrix conjugation (Session 28/31) to the
+-- σ_y-sum norm bound (Session 70) for the F_inner norm bound.
+import SKEFTHawking.FKLW.GenericSUdPermConjNormPreserve
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
