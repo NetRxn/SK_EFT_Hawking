@@ -26,6 +26,7 @@ Phase 6y Roadmap §"Track T-A2′ detail" sub-wave T-A2′.4 (calibration).
 -/
 
 import Mathlib
+import SKEFTHawking.FKLW.GenericSUdSkLengthExponent
 
 set_option autoImplicit false
 
@@ -39,16 +40,15 @@ def cliffordCCZSU8_skLength_const : ℝ := 20
 theorem cliffordCCZSU8_skLength_const_pos : 0 < cliffordCCZSU8_skLength_const := by
   unfold cliffordCCZSU8_skLength_const; norm_num
 
-/-- **The Dawson-Nielsen 2006 SK polylog exponent** `log 5 / log (3 / 2) ≈ 3.97`
-(arXiv:quant-ph/0505030 §3.3: 5× word-length growth per level + ε^(3/2) error
-contraction ⟹ `c = log 5 / log (3/2)`). -/
-noncomputable def cliffordCCZSU8_skLength_exponent : ℝ := Real.log 5 / Real.log (3 / 2)
+/-- **The SU(8) Clifford+CCZ SK polylog exponent** — an alias of the canonical
+`skLengthExponent_sud = log 5 / log (3 / 2) ≈ 3.97` (Dawson-Nielsen 2006,
+arXiv:quant-ph/0505030 §3.3). Single source of truth lives at
+`SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud`. -/
+noncomputable def cliffordCCZSU8_skLength_exponent : ℝ :=
+  SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud
 
-theorem cliffordCCZSU8_skLength_exponent_pos : 0 < cliffordCCZSU8_skLength_exponent := by
-  unfold cliffordCCZSU8_skLength_exponent
-  apply div_pos
-  · exact Real.log_pos (by norm_num : (1 : ℝ) < 5)
-  · exact Real.log_pos (by norm_num : (1 : ℝ) < 3 / 2)
+theorem cliffordCCZSU8_skLength_exponent_pos : 0 < cliffordCCZSU8_skLength_exponent :=
+  SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud_pos
 
 /-- **Clifford+CCZ SU(8) ε₀ maximum**. -/
 noncomputable def cliffordCCZSU8_epsilonZero : ℝ := 1 / 64

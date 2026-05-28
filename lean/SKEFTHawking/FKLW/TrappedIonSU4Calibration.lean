@@ -35,6 +35,7 @@ calibration).
 -/
 
 import Mathlib
+import SKEFTHawking.FKLW.GenericSUdSkLengthExponent
 
 set_option autoImplicit false
 
@@ -52,17 +53,16 @@ def trappedIonSU4_skLength_const : ℝ := 10
 theorem trappedIonSU4_skLength_const_pos : 0 < trappedIonSU4_skLength_const := by
   unfold trappedIonSU4_skLength_const; norm_num
 
-/-- **The Dawson-Nielsen 2006 SK polylog exponent** `log 5 / log (3 / 2) ≈ 3.97`
-(arXiv:quant-ph/0505030 §3.3: 5× word-length growth per level + ε^(3/2) error
-contraction ⟹ `c = log 5 / log (3/2)`). Constant across alphabets
-(alphabet-independent property of the SK recursion structure). -/
-noncomputable def trappedIonSU4_skLength_exponent : ℝ := Real.log 5 / Real.log (3 / 2)
+/-- **The SU(4) trapped-ion SK polylog exponent** — an alias of the canonical
+`skLengthExponent_sud = log 5 / log (3 / 2) ≈ 3.97` (Dawson-Nielsen 2006,
+arXiv:quant-ph/0505030 §3.3: 5× word-length growth per level + ε^(3/2) error
+contraction). Alphabet-independent; single source of truth lives at
+`SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud`. -/
+noncomputable def trappedIonSU4_skLength_exponent : ℝ :=
+  SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud
 
-theorem trappedIonSU4_skLength_exponent_pos : 0 < trappedIonSU4_skLength_exponent := by
-  unfold trappedIonSU4_skLength_exponent
-  apply div_pos
-  · exact Real.log_pos (by norm_num : (1 : ℝ) < 5)
-  · exact Real.log_pos (by norm_num : (1 : ℝ) < 3 / 2)
+theorem trappedIonSU4_skLength_exponent_pos : 0 < trappedIonSU4_skLength_exponent :=
+  SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud_pos
 
 /-- **Trapped-ion SU(4) ε₀ maximum**. -/
 noncomputable def trappedIonSU4_epsilonZero (_N : ℕ) (_hN : 0 < _N) : ℝ := 1 / 32

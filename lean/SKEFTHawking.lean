@@ -1651,6 +1651,10 @@ import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade2Ingredient
 -- 5-fold branching closed-form. Substrate for the length-bound ingredient
 -- (4th of 4 enumerated by Session 47 cascade index).
 import SKEFTHawking.FKLW.GenericSUdSkLength
+-- Phase 6y Track S (2026-05-28): canonical single-source SK length exponent
+-- `skLengthExponent_sud := log 5 / log (3/2)` (Dawson-Nielsen). De-duplicates the
+-- exponent across all SU(d) headline/cascade/calibration modules.
+import SKEFTHawking.FKLW.GenericSUdSkLengthExponent
 -- Phase 6y Track S (Session 52, 2026-05-27): UNCONDITIONAL `expIsud` at SU(d≥2).
 -- Composes Session 42's `expIsud_of_det_predicate` with Session 49's substantive
 -- `expIsud_det_eq_one_predicate_holds` — removes the det-hypothesis from
