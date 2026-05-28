@@ -323,4 +323,74 @@ theorem tsum_matrixMercatorLog_deriv_eq {d : ℕ} (X : Matrix (Fin d) (Fin d) �
     summable_geometric_of_norm_lt_one hY
   rw [(hsummY.hasSum.mul_right X).tsum_eq, geom_series_eq_inverse _ hY, sub_neg_eq_add]
 
+/-! ## 7. The path derivative (brick 2, crux iii COMPLETE) -/
+
+/-- **Path derivative of the Mercator log** (crux iii): for `|t|·‖X‖ < 1`,
+
+  `d/dt [matrixMercatorLog ((↑t)•X)] = (1 + (↑t)•X)⁻¹ · X`.
+
+This is the matrix analog of `d/dt log(1 + tX) = X(1+tX)⁻¹`. Assembled by
+term-by-term differentiation: `hasDerivAt_tsum_of_isPreconnected` on the ball
+`‖s‖ < R` (`|t| < R < 1/‖X‖`), with per-term derivatives from
+`hasDerivAt_matrixMercatorLog_term`, the uniform geometric bound
+`‖g' n s‖ ≤ R^n‖X‖^(n+1)` (summable since `R‖X‖ < 1`), and the derivative-series
+sum identified via `tsum_matrixMercatorLog_deriv_eq` with the resolvent
+`(1+(↑t)•X)⁻¹·X`. The `X = 0` case is handled separately (both sides `0`).
+
+This is the analytic core of the brick-2 exp/log round-trip
+`exp (matrixMercatorLog X) = 1 + X`: the round-trip is proved by showing
+`f(t) = exp(−matrixMercatorLog(t•X))·(1+t•X)` has `f'(t) = 0` (using this path
+derivative + the exp-path derivative, crux iv) and `f(0) = 1`. -/
+theorem hasDerivAt_matrixMercatorLog_path {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
+    (t : ℝ) (ht : |t| * ‖X‖ < 1) :
+    HasDerivAt (fun s : ℝ => matrixMercatorLog ((↑s : ℂ) • X))
+      (Ring.inverse (1 + (↑t : ℂ) • X) * X) t := by
+  by_cases hX0 : X = 0
+  · subst hX0
+    have hf : (fun s : ℝ => matrixMercatorLog ((↑s : ℂ) • (0 : Matrix (Fin d) (Fin d) ℂ)))
+        = fun _ : ℝ => (0 : Matrix (Fin d) (Fin d) ℂ) := by
+      funext s; rw [smul_zero]
+      show matrixMercatorLog 0 = 0
+      unfold matrixMercatorLog; simp [zero_pow]
+    rw [hf, mul_zero]
+    exact hasDerivAt_const t 0
+  · have hXpos : (0 : ℝ) < ‖X‖ := norm_pos_iff.mpr hX0
+    have htX : |t| < 1 / ‖X‖ := (lt_div_iff₀ hXpos).mpr ht
+    set R : ℝ := (|t| + 1 / ‖X‖) / 2 with hRdef
+    have htR : |t| < R := by rw [hRdef]; linarith
+    have hRlt : R < 1 / ‖X‖ := by rw [hRdef]; linarith
+    have hRX : R * ‖X‖ < 1 := (lt_div_iff₀ hXpos).mp hRlt
+    have hu : Summable (fun n : ℕ => R ^ n * ‖X‖ ^ (n + 1)) := by
+      have heq : (fun n : ℕ => R ^ n * ‖X‖ ^ (n + 1)) = fun n => ‖X‖ * (R * ‖X‖) ^ n := by
+        funext n; rw [mul_pow, pow_succ]; ring
+      rw [heq]
+      exact (summable_geometric_of_lt_one (by positivity) hRX).mul_left ‖X‖
+    have hbound : ∀ (n : ℕ), ∀ s ∈ Metric.ball (0 : ℝ) R,
+        ‖(((-1 : ℂ) ^ n * (↑s : ℂ) ^ n)) • X ^ (n + 1)‖ ≤ R ^ n * ‖X‖ ^ (n + 1) := by
+      intro n s hs
+      rw [Metric.mem_ball, Real.dist_eq, sub_zero] at hs
+      rw [norm_smul]
+      have hsc : ‖((-1 : ℂ) ^ n * (↑s : ℂ) ^ n)‖ = |s| ^ n := by
+        rw [norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul, norm_pow,
+          Complex.norm_real, Real.norm_eq_abs]
+      rw [hsc]
+      exact mul_le_mul (pow_le_pow_left₀ (abs_nonneg s) hs.le n)
+        (norm_pow_le' X (Nat.succ_pos n)) (norm_nonneg _) (by positivity)
+    have h0mem : (0 : ℝ) ∈ Metric.ball (0 : ℝ) R := by
+      rw [Metric.mem_ball, Real.dist_eq, sub_zero, abs_zero]
+      exact lt_of_le_of_lt (abs_nonneg t) htR
+    have hgsum : Summable
+        (fun n : ℕ => (((-1 : ℂ) ^ n / (n + 1 : ℂ))) • ((↑(0 : ℝ) : ℂ) • X) ^ (n + 1)) := by
+      have hz : (fun n : ℕ => (((-1 : ℂ) ^ n / (n + 1 : ℂ))) • ((↑(0 : ℝ) : ℂ) • X) ^ (n + 1))
+          = fun _ : ℕ => (0 : Matrix (Fin d) (Fin d) ℂ) := by
+        funext n; simp [zero_pow]
+      rw [hz]; exact summable_zero
+    have htmem : t ∈ Metric.ball (0 : ℝ) R := by
+      rw [Metric.mem_ball, Real.dist_eq, sub_zero]; exact htR
+    have hmain := hasDerivAt_tsum_of_isPreconnected hu Metric.isOpen_ball
+      (convex_ball (0 : ℝ) R).isPreconnected
+      (fun n s _ => hasDerivAt_matrixMercatorLog_term X n s) hbound h0mem hgsum htmem
+    rw [tsum_matrixMercatorLog_deriv_eq X t ht] at hmain
+    exact hmain
+
 end SKEFTHawking.FKLW.GenericSUd
