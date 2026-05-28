@@ -1613,6 +1613,12 @@ import SKEFTHawking.FKLW.GenericSUdSkApproxCBound
 -- (1) det predicate, (2) bound discharge, (3) level chooser, (4) length-polylog
 -- bound. Ships `skApproxC_generic_sud_error_cascade` + `skHeadline_FreeGroup_SUd_cascade`.
 import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade
+-- Phase 6y Track S (Session 46, 2026-05-27): SU(d) generic polylog-level
+-- chooser. SU(d) analog of `skLevel_polylog` (Phase 6u SU(2)). Ships definition
+-- `skLevel_polylog_sud K ε := ⌈log(log(1/(K²·ε))/log 4)/log(3/2)⌉₊` + spec
+-- predicate `SkLevelPolylog_sud_spec K ε₀_sud`. Substantive discharge ships
+-- in Session 47+ (analog of ~110-LoC SU(2) spec proof).
+import SKEFTHawking.FKLW.GenericSUdSkLevelPolylog
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
