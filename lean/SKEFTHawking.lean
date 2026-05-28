@@ -1684,6 +1684,12 @@ import SKEFTHawking.FKLW.GenericSUdBaseFinderLengthBound
 -- witness + (B) super-quad bound discharge. Composes Sessions 41-55 substrate
 -- internally. Ships `skHeadline_FreeGroup_SUd_cascade_final`.
 import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade2IngredientFinal
+-- Phase 6y Track T-A1′.5 (Session 57, 2026-05-27): per-alphabet cascade-final
+-- discharge of `trappedIonSU4FullHeadline` (T-A1′.5 F#4-compliant headline).
+-- Instantiates Session 56's end-to-end cascade at SU(4) trapped-ion. Reduces
+-- T-A1′.5 to ONLY 2 remaining substantive ingredients: (D) density witness
+-- at SU(4) + (B) super-quad bound at SU(4).
+import SKEFTHawking.FKLW.TrappedIonSU4HeadlineCascadeFinal
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
