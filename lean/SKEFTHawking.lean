@@ -1791,6 +1791,10 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGFromLog
 -- UNCONDITIONALLY on the named ball (n+2)²·‖V_n−U‖≤1/8 (existential Δ∈target eliminated) via
 -- exp_matrixMercatorLog + concrete regime conjuncts S122/S127/S128.
 import SKEFTHawking.FKLW.GenericSUdDnStepFGConcrete
+-- Phase 6y Track S (Session 131, 2026-05-28): log-agnostic + concrete DN step F/G-norm bound.
+-- dnStepFG_fromLog_{F,G}_norm_le (‖F‖,‖G‖ ≤ K_F·√(θ/2), θ=‖(-i)•M‖, generic in M) +
+-- dnStepFG_sud_concrete_{F,G}_norm_le (re-pointed at matrixMercatorLog). Re-point R4 norm ingredient.
+import SKEFTHawking.FKLW.GenericSUdDnStepFGFromLogNormBound
 -- Phase 6y Track S (Session 87, 2026-05-27): SU(d) ρ_hom MonoidHom abstraction lemmas.
 -- ρ_hom_sud_mul_val / _inv_val / _groupCommutator_val (+ SUd_subtype_inv_val_eq_matrix_inv):
 -- push gs.ρ_hom : W →* SU(d) to the matrix level. Super-quad main-induction MonoidHom substrate.
