@@ -1623,6 +1623,12 @@ import SKEFTHawking.FKLW.GenericSUdSkLevelPolylog
 -- documenting Sessions 41-46 substrate chain. Provides documented aliases for
 -- the cascade entry points + summarizes the 4 substantive ingredients reduction.
 import SKEFTHawking.FKLW.GenericSUdSkCascadeIndex
+-- Phase 6y Track S (Session 48, 2026-05-27): SUBSTANTIVE DISCHARGE of
+-- SkLevelPolylog_sud_spec at SU(d). Generic in K with calibration condition
+-- K² · 2·ε₀_sud ≤ 1/4. Lifts the SU(2) ~110-LoC `skLevel_polylog_spec` proof
+-- to K-parametric form. Discharges the 3rd of 4 substantive ingredients
+-- enumerated by Session 47's cascade index.
+import SKEFTHawking.FKLW.GenericSUdSkLevelPolylogSpec
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
