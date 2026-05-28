@@ -1716,6 +1716,11 @@ import SKEFTHawking.FKLW.GenericSUdSuperQuadSubstrate
 -- existence of F,G,F_inner,G_inner with `‖F‖ ≤ (n+2)²·‖F_inner‖` + commutator
 -- identity. Super-quad bound F/G-norm substrate (remaining gap: ‖F_inner‖ bound).
 import SKEFTHawking.FKLW.GenericSUdDnStepFGBounded
+-- Phase 6y Track S (Session 70, 2026-05-27): σ_y/σ_x-block sum linftyOp norm
+-- bound. Triangle inequality + per-block norm ≤ 1 (Session 10) gives
+-- `‖∑ p ∈ s, γ p • σ_y(a p)(b p)‖ ≤ ∑ p ∈ s, |γ p|`. F_inner norm bound
+-- substrate for the super-quad bound F/G-norm ingredient.
+import SKEFTHawking.FKLW.GenericSUdSigmaYSumNormBound
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
