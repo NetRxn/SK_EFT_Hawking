@@ -281,4 +281,46 @@ theorem hasDerivAt_matrixMercatorLog_term {d : ℕ} (X : Matrix (Fin d) (Fin d) 
   congr 1
   field_simp
 
+/-- **Summability of the Mercator-log derivative series** `∑ ((-1)^n (↑t)^n) • X^(n+1)`
+for `|t|·‖X‖ < 1`. Comparison with the geometric series `∑ (|t|‖X‖)^n · ‖X‖`. -/
+theorem summable_matrixMercatorLog_deriv_series {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
+    (t : ℝ) (ht : |t| * ‖X‖ < 1) :
+    Summable (fun n : ℕ => (((-1 : ℂ) ^ n * (↑t : ℂ) ^ n)) • X ^ (n + 1)) := by
+  apply Summable.of_norm_bounded (g := fun n : ℕ => (|t| * ‖X‖) ^ n * ‖X‖)
+  · exact (summable_geometric_of_lt_one (by positivity) ht).mul_right ‖X‖
+  · intro n
+    rw [norm_smul]
+    have hsc : ‖((-1 : ℂ) ^ n * (↑t : ℂ) ^ n)‖ = |t| ^ n := by
+      rw [norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul, norm_pow,
+        Complex.norm_real, Real.norm_eq_abs]
+    have hpow : ‖X ^ (n + 1)‖ ≤ ‖X‖ ^ (n + 1) := norm_pow_le' X (Nat.succ_pos n)
+    rw [hsc]
+    calc |t| ^ n * ‖X ^ (n + 1)‖ ≤ |t| ^ n * ‖X‖ ^ (n + 1) :=
+          mul_le_mul_of_nonneg_left hpow (by positivity)
+      _ = (|t| * ‖X‖) ^ n * ‖X‖ := by rw [mul_pow, pow_succ]; ring
+
+/-- **Derivative series = resolvent form**: `∑ ((-1)^n (↑t)^n) • X^(n+1) =
+(1 + (↑t)•X)⁻¹ · X` for `|t|·‖X‖ < 1`. This identifies the term-by-term derivative
+of `matrixMercatorLog((↑t)•X)` (the sum of `hasDerivAt_matrixMercatorLog_term` values)
+with the **resolvent** `(1+(↑t)•X)⁻¹·X` — exactly the form `d/dt log(1+tX) = X(1+tX)⁻¹`
+needed for the brick-2 round-trip `f(t)=exp(−mLog(t•X))·(1+t•X)`, `f'=0`. Via the
+termwise factoring `((-1)^n(↑t)^n)•X^(n+1) = (-(↑t)•X)^n·X`, `HasSum.mul_right`, and
+the Neumann series `geom_series_eq_inverse`. -/
+theorem tsum_matrixMercatorLog_deriv_eq {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ) (t : ℝ)
+    (ht : |t| * ‖X‖ < 1) :
+    (∑' n : ℕ, (((-1 : ℂ) ^ n * (↑t : ℂ) ^ n)) • X ^ (n + 1))
+      = Ring.inverse (1 + (↑t : ℂ) • X) * X := by
+  have hY : ‖(-((↑t : ℂ) • X))‖ < 1 := by
+    rw [norm_neg, norm_smul, Complex.norm_real, Real.norm_eq_abs]; exact ht
+  have hterm : ∀ n : ℕ, (((-1 : ℂ) ^ n * (↑t : ℂ) ^ n)) • X ^ (n + 1)
+      = (-((↑t : ℂ) • X)) ^ n * X := by
+    intro n
+    rw [← neg_smul, smul_pow, smul_mul_assoc, ← pow_succ]
+    congr 1
+    conv_rhs => rw [neg_pow]
+  rw [tsum_congr hterm]
+  have hsummY : Summable (fun n : ℕ => (-((↑t : ℂ) • X)) ^ n) :=
+    summable_geometric_of_norm_lt_one hY
+  rw [(hsummY.hasSum.mul_right X).tsum_eq, geom_series_eq_inverse _ hY, sub_neg_eq_add]
+
 end SKEFTHawking.FKLW.GenericSUd
