@@ -1657,6 +1657,15 @@ import SKEFTHawking.FKLW.GenericSUdSkLength
 -- downstream consumers. SU(d) analog of Phase 6t SU(2)'s `expIsu2`. Ships
 -- `expIsud` + value extraction + worked examples at SU(2)/SU(4)/SU(8).
 import SKEFTHawking.FKLW.GenericSUdExpIsuDUnconditional
+-- Phase 6y Track S (Session 53, 2026-05-27): SUBSTANTIVE length-bound recursion
+-- discharge at SU(d) (parametric in wordLength function). Lifts Phase 6x
+-- `skApproxC_generic_freeGroup_length_le_skLength` from SU(2) to SU(d).
+-- Ships `BaseFinder_length_bounded_sud_param`, `WordLengthFreeGroupLike`
+-- bundle, `skApproxC_generic_sud_length_succ_param` per-step recurrence,
+-- and `skApproxC_generic_sud_length_le_skLength_sud_param` strong induction
+-- bound. Composes with Session 51's closed-form skLength_sud for the
+-- length-bound substantive ingredient.
+import SKEFTHawking.FKLW.GenericSUdConcreteWordLengthBound
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
