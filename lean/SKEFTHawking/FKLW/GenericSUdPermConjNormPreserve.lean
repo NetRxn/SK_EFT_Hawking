@@ -93,4 +93,18 @@ theorem permMatrix_conj_sigmaYBlock_sum_norm_le {n : ℕ} {ι : Type*}
   rw [permMatrix_conj_linftyOpNorm_eq]
   exact sigmaYBlock_sum_linftyOpNorm_le s γ a b h_ne
 
+/-- **`permMatrixAsUnitary` conjugation preserves linftyOp norm** — the exact
+form used by Session 31's `symmetric_balanced_commutator_diagonal_real_full`
+(`F = P.val · F' · star P.val` with `P = permMatrixAsUnitary σ`).
+
+`‖(permMatrixAsUnitary σ).val · A · star (permMatrixAsUnitary σ).val‖ = ‖A‖`.
+
+Composes `permMatrixAsUnitary_val` + `permMatrixAsUnitary_star` (Session 27)
+with `permMatrix_conj_linftyOpNorm_eq` (Session 71). -/
+theorem permMatrixAsUnitary_conj_linftyOpNorm_eq {n : ℕ} (σ : Equiv.Perm (Fin n))
+    (A : Matrix (Fin n) (Fin n) ℂ) :
+    ‖(permMatrixAsUnitary σ).val * A * star (permMatrixAsUnitary σ).val‖ = ‖A‖ := by
+  rw [permMatrixAsUnitary_val, star_eq_conjTranspose, Matrix.conjTranspose_permMatrix]
+  exact permMatrix_conj_linftyOpNorm_eq σ A
+
 end SKEFTHawking.FKLW.GenericSUd
