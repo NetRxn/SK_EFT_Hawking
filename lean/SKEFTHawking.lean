@@ -1795,6 +1795,10 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGConcrete
 -- dnStepFG_fromLog_{F,G}_norm_le (‖F‖,‖G‖ ≤ K_F·√(θ/2), θ=‖(-i)•M‖, generic in M) +
 -- dnStepFG_sud_concrete_{F,G}_norm_le (re-pointed at matrixMercatorLog). Re-point R4 norm ingredient.
 import SKEFTHawking.FKLW.GenericSUdDnStepFGFromLogNormBound
+-- Phase 6y Track S (Session 132, 2026-05-28): concrete dnStep group-commutator cubic remainder.
+-- dnStepFG_sud_concrete_gC_minus_Delta_norm_le_cubic — ‖gC(expIsud F,expIsud G)−Δ‖≤320·δ³ on the
+-- named ball (n+2)²·‖V_n−U‖≤1/8 (existential h_regime3 + Δ∈target ELIMINATED via S130 exp-delta).
+import SKEFTHawking.FKLW.GenericSUdDnStepFGConcreteCubic
 -- Phase 6y Track S (Session 87, 2026-05-27): SU(d) ρ_hom MonoidHom abstraction lemmas.
 -- ρ_hom_sud_mul_val / _inv_val / _groupCommutator_val (+ SUd_subtype_inv_val_eq_matrix_inv):
 -- push gs.ρ_hom : W →* SU(d) to the matrix level. Super-quad main-induction MonoidHom substrate.
