@@ -1712,6 +1712,9 @@ import SKEFTHawking.FKLW.GenericSUdConcreteLengthPolylog
 -- ClosureDenseWitness ALONE (composes from_density + densityFromWitness). Sole remaining
 -- substantive ingredient is the witness (Brylinski-Brylinski SU(4) / Aaronson-Gottesman SU(8)).
 import SKEFTHawking.FKLW.GenericSUdPerAlphabetHeadlineFromWitness
+-- Phase 6y Track S.6 (2026-05-28): canonical-named generic SU(d) bundled-strict headline
+-- `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight`.
+import SKEFTHawking.FKLW.GenericSUdQuantitative
 -- Phase 6y Track S (Session 52, 2026-05-27): UNCONDITIONAL `expIsud` at SU(d≥2).
 -- Composes Session 42's `expIsud_of_det_predicate` with Session 49's substantive
 -- `expIsud_det_eq_one_predicate_holds` — removes the det-hypothesis from
