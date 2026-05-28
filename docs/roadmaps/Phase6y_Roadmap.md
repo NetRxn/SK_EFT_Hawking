@@ -397,6 +397,18 @@ of `K`/`ε₀` closes it; only a concrete construction does.
   - **R3 CONCRETE EXP-INJECTIVITY / reverse round-trip** `mLog(exp A − 1) = A` for `‖A‖<r₀`
     (concrete). Via the contraction `A−B = φ(B)−φ(A)`, `φ:=exp−1−id`, `‖Dφ‖<1` on a small ball
     (exp-remainder bound) ⟹ exp injective ⟹ reverse round-trip. ~80 LoC.
+    **⚠️ SIMPLER ROUTE for R2b specifically (S123 scouting)**: R2b (`mLog(Δ⁻¹−1)=−mLog(Δ−1)`)
+    does NOT need full two-point injectivity — only `exp S = 1 ∧ ‖S‖ small ⟹ S = 0` applied to
+    `S := mLog(Δ−1)+mLog(Δ⁻¹−1)` (which commute, both functions of Δ, so
+    `exp S = exp(mLog(Δ−1))·exp(mLog(Δ⁻¹−1)) = Δ·Δ⁻¹ = 1` via `exp_add_of_commute` + the two
+    round-trips). And `exp S = 1` gives `exp S − 1 − S = −S`, so the **ONE-POINT** remainder bound
+    `‖exp S − 1 − S‖ ≤ exp‖S‖ − 1 − ‖S‖` yields `‖S‖ ≤ exp‖S‖ − 1 − ‖S‖`; combined with the scalar
+    fact `exp t − 1 < 2t` for `0 < t < ~1.25` (so `exp t − 1 − t < t`) this forces `‖S‖ = 0`.
+    The one-point remainder bound (`‖exp A − 1 − A‖ ≤ exp‖A‖ − 1 − ‖A‖`, from the exp tsum split
+    via `sum_add_tsum_nat_add 2` + termwise `norm_pow_le'` + matching `Real.exp` tail) is ~40 LoC,
+    Mathlib-PR-worthy (no Banach exp-remainder lemma exists), and MUCH cleaner than the two-point
+    telescoping. This is the recommended R3/R2b path; ⚠️ `det(exp)=exp(tr)` (R1) still needs the
+    separate ~100-LoC diagonalization.
   - **R4 RE-POINT** dnStepFG_sud (S82) + the (B) discharge (S102) + h_regime from IFT `matrixLog`
     to `matrixLogConcrete`, with the regime now on the CONCRETE ball `‖Δ−1‖ ≤ d·2ε₀ < 1`. The
     large structural refactor; ε₀_sud (≈1/(8·1024·d^16)) is tiny enough for all smallness bounds.
