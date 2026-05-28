@@ -393,4 +393,47 @@ theorem hasDerivAt_matrixMercatorLog_path {d : ℕ} (X : Matrix (Fin d) (Fin d) 
     rw [tsum_matrixMercatorLog_deriv_eq X t ht] at hmain
     exact hmain
 
+/-! ## 8. The commuting-path exp derivative (brick 2, crux iv) -/
+
+/-- **Exp-path derivative for a commuting path** (crux iv): if `A : ℝ → Matrix ℂ`
+has derivative `A'` at `t₀` and every value `A t` commutes with `A t₀` (so
+`Commute (A t₀) (A t − A t₀)`), then
+
+  `d/dt [exp (A t)] = exp (A t₀) · A'`  at `t₀`.
+
+Mathlib has the non-commutative exp Fréchet derivative only for `NormedCommRing`
+(`hasFDerivAt_exp`) or the linear path `u•x` (`hasDerivAt_exp_smul_const`); the
+general commuting-path version is built here. **Proof**: by `exp_add_of_commute`,
+`exp (A t) = exp (A t₀) · exp (A t − A t₀)` for all `t`; the factor
+`exp (A t − A t₀)` has derivative `A'` at `t₀` (since `A − A t₀` vanishes at `t₀`
+and `exp`'s Fréchet derivative at `0` is the identity, `hasStrictFDerivAt_exp_zero`);
+left-multiplying by the constant `exp (A t₀)` (a continuous linear map) gives the result.
+
+This is the last analytic core of the brick-2 round-trip
+`exp (matrixMercatorLog X) = 1 + X`: applied with `A t = −matrixMercatorLog((↑t)•X)`
+(whose values pairwise commute, all being power series in `X`), it differentiates the
+exp factor of `f(t) = exp(−mLog(t•X))·(1+t•X)`, which combines with the path derivative
+(`hasDerivAt_matrixMercatorLog_path`) to give `f' = 0`. -/
+theorem hasDerivAt_exp_path {d : ℕ} (A : ℝ → Matrix (Fin d) (Fin d) ℂ)
+    (A' : Matrix (Fin d) (Fin d) ℂ) (t₀ : ℝ) (hA : HasDerivAt A A' t₀)
+    (hcomm : ∀ t : ℝ, Commute (A t₀) (A t - A t₀)) :
+    HasDerivAt (fun t => NormedSpace.exp (A t)) (NormedSpace.exp (A t₀) * A') t₀ := by
+  have hB : HasDerivAt (fun t => A t - A t₀) A' t₀ := hA.sub_const (A t₀)
+  have hBzero : (fun t => A t - A t₀) t₀ = 0 := sub_self _
+  have hexpB : HasDerivAt (fun t => NormedSpace.exp (A t - A t₀)) A' t₀ := by
+    have hfd : HasFDerivAt (NormedSpace.exp : Matrix (Fin d) (Fin d) ℂ → _)
+        (1 : Matrix (Fin d) (Fin d) ℂ →L[ℝ] Matrix (Fin d) (Fin d) ℂ)
+        ((fun t => A t - A t₀) t₀) := by
+      rw [hBzero]
+      exact (hasStrictFDerivAt_exp_zero (𝕂 := ℝ)).hasFDerivAt
+    simpa using hfd.comp_hasDerivAt t₀ hB
+  have hLHS := hexpB.const_mul (NormedSpace.exp (A t₀))
+  have hfun : (fun t => NormedSpace.exp (A t))
+      = (fun t => NormedSpace.exp (A t₀) * NormedSpace.exp (A t - A t₀)) := by
+    funext t
+    rw [← NormedSpace.exp_add_of_commute (hcomm t)]
+    congr 1
+    abel
+  rw [hfun]; exact hLHS
+
 end SKEFTHawking.FKLW.GenericSUd
