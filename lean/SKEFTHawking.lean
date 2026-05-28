@@ -1696,6 +1696,14 @@ import SKEFTHawking.FKLW.TrappedIonSU4HeadlineCascadeFinal
 -- remaining substantive ingredients: (D) density witness at SU(8) + (B)
 -- super-quad bound at SU(8).
 import SKEFTHawking.FKLW.CliffordCCZSU8HeadlineCascadeFinal
+-- Phase 6y (Session 59, 2026-05-27): Phase 6y CASCADE CLOSURE STATUS INDEX.
+-- Documentation module crystallizing the cascade state. Documents:
+-- (1) Tracks S.1-S.5 UNCONDITIONAL; (2) Track S.6 cascade substrate + 3 of 4
+-- substantive ingredients discharged; (3) Tracks M-S/T-A1′/T-A2′ shipped;
+-- (4) Sessions 56-58 cascade-final compositions reducing headlines to
+-- 2 remaining ingredients (D) + (B). Useful for downstream consumers +
+-- Stage-13 review prep.
+import SKEFTHawking.FKLW.Phase6yClosureStatusIndex
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
