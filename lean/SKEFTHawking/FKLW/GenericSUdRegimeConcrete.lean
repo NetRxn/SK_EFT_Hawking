@@ -105,4 +105,23 @@ theorem matrixMercatorLog_conjTranspose {d : ℕ} (Y : Matrix (Fin d) (Fin d) �
   congr 1
   simp [star_div₀, star_pow]
 
+/-- **Concrete-radius regime `‖H‖ ≤ 1` conjunct**: for `V, U ∈ SU(d)` with
+`d·‖V − U‖ ≤ 1/2`, the concrete log-derived `H = (-i)·matrixMercatorLog((V⁻¹U).val − 1)`
+satisfies `‖H‖ ≤ 1`. Immediate from the θ-bound `regime_thetabound_concrete`
+(`‖H‖ ≤ 2·d·‖V − U‖`) since `2·d·‖V − U‖ ≤ 1`. The second concrete regime conjunct
+(after the θ-bound), holding on the named ball — automatic on the calibration ball
+`‖V − U‖ ≤ 2·ε₀_sud`. -/
+theorem regime_normH_le_one_concrete {d : ℕ} [Nonempty (Fin d)]
+    (V U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+    (hVU : (d : ℝ) * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ ≤ 1 / 2) :
+    ‖((-Complex.I) • matrixMercatorLog
+        ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val - 1) :
+        Matrix (Fin d) (Fin d) ℂ)‖ ≤ 1 := by
+  calc ‖((-Complex.I) • matrixMercatorLog
+          ((V⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)).val - 1) :
+          Matrix (Fin d) (Fin d) ℂ)‖
+      ≤ 2 * (d : ℝ) * ‖(V : Matrix (Fin d) (Fin d) ℂ) - (U : Matrix (Fin d) (Fin d) ℂ)‖ :=
+        regime_thetabound_concrete V U hVU
+    _ ≤ 1 := by nlinarith [hVU]
+
 end SKEFTHawking.FKLW.GenericSUd
