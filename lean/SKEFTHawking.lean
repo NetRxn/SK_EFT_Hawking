@@ -1606,6 +1606,13 @@ import SKEFTHawking.FKLW.GenericSUdSkApproxC
 -- ≤ ε_seq K (2·ε₀_sud) n`. Structural predicate; substantive discharge ships
 -- in Session 45+ (analog of Phase 6u Wave 4b ~981-LoC discharge).
 import SKEFTHawking.FKLW.GenericSUdSkApproxCBound
+-- Phase 6y Track S (Session 45, 2026-05-27): SU(d) SK headline CASCADE
+-- composition. Composes Sessions 41-44 substrate (dnStepFG_sud, expIsud_conditional,
+-- skApproxC_generic_sud, super-quadratic bound predicate) into the F#4-compliant
+-- SU(d) headline shape. Takes the 4 substantive ingredients as named hypotheses:
+-- (1) det predicate, (2) bound discharge, (3) level chooser, (4) length-polylog
+-- bound. Ships `skApproxC_generic_sud_error_cascade` + `skHeadline_FreeGroup_SUd_cascade`.
+import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
