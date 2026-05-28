@@ -1690,6 +1690,12 @@ import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade2IngredientFinal
 -- T-A1′.5 to ONLY 2 remaining substantive ingredients: (D) density witness
 -- at SU(4) + (B) super-quad bound at SU(4).
 import SKEFTHawking.FKLW.TrappedIonSU4HeadlineCascadeFinal
+-- Phase 6y Track T-A2′.5 (Session 58, 2026-05-27): per-alphabet cascade-final
+-- discharge of `cliffordCCZSU8Headline` (T-A2′.5 F#4-compliant headline).
+-- Mirror of Session 57 at SU(8) Clifford+CCZ. Reduces T-A2′.5 to ONLY 2
+-- remaining substantive ingredients: (D) density witness at SU(8) + (B)
+-- super-quad bound at SU(8).
+import SKEFTHawking.FKLW.CliffordCCZSU8HeadlineCascadeFinal
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
