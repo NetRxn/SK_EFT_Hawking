@@ -1812,6 +1812,10 @@ import SKEFTHawking.FKLW.GenericSUdSkApproxCBoundConcrete
 -- SolovayKitaevHeadline_FreeGroup_SUd from (D) density + length-polylog with NO h_regime hypothesis
 -- (compile witness = skApproxC_generic_sud_concrete; error from S139 unconditional (B) bound).
 import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascadeConcrete
+-- Phase 6y Track S (Session 141, 2026-05-28): concrete-recursion word-length bound (R4 length ingredient).
+-- skApproxC_generic_sud_concrete_length_{succ,le_skLength_sud}_param — word length is log-independent
+-- (identical group-word shape), so the IFT S53 per-step + closed-form skLength_sud bounds transfer.
+import SKEFTHawking.FKLW.GenericSUdSkApproxCConcreteLength
 -- Phase 6y Track S (Session 134, 2026-05-28): concrete super-quad induction substrate (base case +
 -- polynomial F/G-norm bounds). skApproxC_generic_sud_concrete_zero_error_bound (base, log-agnostic) +
 -- dnStepFG_sud_concrete_{F,G}_norm_le_poly ((n+2)⁴·√(θ/2) form, composes S131 + S90).
