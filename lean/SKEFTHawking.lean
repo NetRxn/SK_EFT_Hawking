@@ -1749,6 +1749,11 @@ import SKEFTHawking.FKLW.GenericSUdSymmetricDischargeBounded
 -- Threads Session 77 (bounded discharge) at the sorted diagonal + Session 78
 -- (permMatrixAsUnitary conjugation norm preservation) through the sort conjugation.
 import SKEFTHawking.FKLW.GenericSUdSymmetricDiagonalDischargeFullBounded
+-- Phase 6y Track S (Session 80, 2026-05-27): explicit-∑√ bounded Hermitian discharge.
+-- Re-threads Session 37 with Session 79's bounded diagonal discharge so the inner
+-- witness norm is replaced by the explicit spectral partial-sum bound
+-- `‖F‖ ≤ (n+2)²·∑_p √(θ·(sorted partial sum of eigenvalues).re/2)`.
+import SKEFTHawking.FKLW.GenericSUdHermitianDischargeBoundedExplicit
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
