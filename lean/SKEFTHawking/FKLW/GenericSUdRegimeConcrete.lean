@@ -187,4 +187,38 @@ theorem norm_exp_sub_one_sub_self_le {d : ℕ} (A : Matrix (Fin d) (Fin d) ℂ) 
         refine tsum_congr (fun i => ?_)
         rw [pow_add]; ring
 
+/-- **Concrete exp-injectivity at 0** (re-point R3): if `NormedSpace.exp S = 1` and
+`‖S‖ ≤ 1/2`, then `S = 0`. From `exp S = 1` we get `exp S − 1 − S = −S`, so the Banach
+exp-remainder bound (`norm_exp_sub_one_sub_self_le`) gives `‖S‖ ≤ ‖S‖²·exp‖S‖`, i.e.
+`1 ≤ ‖S‖·exp‖S‖`; but `‖S‖·exp‖S‖ ≤ (1/2)·exp(1/2) < (1/2)·2 = 1` (using `exp(1/2)² = exp 1
+< 2.72 < 4`), a contradiction unless `‖S‖ = 0`. This is the concrete-radius substitute for
+the existential IFT local injectivity — the key to R2b. -/
+theorem eq_zero_of_exp_eq_one_of_norm_le {d : ℕ} (S : Matrix (Fin d) (Fin d) ℂ)
+    (hexp : NormedSpace.exp S = 1) (hS : ‖S‖ ≤ 1 / 2) : S = 0 := by
+  have hrem := norm_exp_sub_one_sub_self_le S
+  have hes : NormedSpace.exp S - 1 - S = -S := by rw [hexp]; abel
+  rw [hes, norm_neg] at hrem
+  rw [← norm_eq_zero]
+  by_contra hne
+  have hpos : 0 < ‖S‖ := lt_of_le_of_ne (norm_nonneg S) (Ne.symm hne)
+  have hexpS_pos := Real.exp_pos ‖S‖
+  have hexp_half : Real.exp (1 / 2 : ℝ) < 2 := by
+    have hsq : Real.exp (1 / 2 : ℝ) ^ 2 = Real.exp 1 := by
+      rw [sq, ← Real.exp_add]; norm_num
+    nlinarith [Real.exp_one_lt_d9, Real.exp_pos (1 / 2 : ℝ), hsq]
+  have heS : Real.exp ‖S‖ ≤ Real.exp (1 / 2 : ℝ) := Real.exp_le_exp.mpr hS
+  have h_ge1 : 1 ≤ ‖S‖ * Real.exp ‖S‖ := by
+    have hh : ‖S‖ * 1 ≤ ‖S‖ * (‖S‖ * Real.exp ‖S‖) := by
+      calc ‖S‖ * 1 = ‖S‖ := mul_one _
+        _ ≤ ‖S‖ ^ 2 * Real.exp ‖S‖ := hrem
+        _ = ‖S‖ * (‖S‖ * Real.exp ‖S‖) := by ring
+    exact le_of_mul_le_mul_left hh hpos
+  have h_lt1 : ‖S‖ * Real.exp ‖S‖ < 1 := by
+    calc ‖S‖ * Real.exp ‖S‖
+        ≤ (1 / 2) * Real.exp (1 / 2 : ℝ) :=
+          mul_le_mul hS heS (le_of_lt hexpS_pos) (by norm_num)
+      _ < (1 / 2) * 2 := mul_lt_mul_of_pos_left hexp_half (by norm_num)
+      _ = 1 := by norm_num
+  linarith
+
 end SKEFTHawking.FKLW.GenericSUd
