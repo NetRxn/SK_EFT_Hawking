@@ -1807,6 +1807,11 @@ import SKEFTHawking.FKLW.GenericSUdSkApproxCConcrete
 -- FINAL). SkApproxCSuperQuadraticBound_generic_sud_concrete_holds — NO h_regime hypothesis (per-level
 -- regime discharged internally via S120 θ-bound + calibration two_ε₀_sud_mul_le_half / sq_*_eighth).
 import SKEFTHawking.FKLW.GenericSUdSkApproxCBoundConcrete
+-- Phase 6y Track S (Session 140, 2026-05-28): UNCONDITIONAL SU(d) SK headline via the concrete
+-- re-point (R4 capstone). skHeadline_FreeGroup_SUd_cascade_B_discharged_concrete — produces
+-- SolovayKitaevHeadline_FreeGroup_SUd from (D) density + length-polylog with NO h_regime hypothesis
+-- (compile witness = skApproxC_generic_sud_concrete; error from S139 unconditional (B) bound).
+import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascadeConcrete
 -- Phase 6y Track S (Session 134, 2026-05-28): concrete super-quad induction substrate (base case +
 -- polynomial F/G-norm bounds). skApproxC_generic_sud_concrete_zero_error_bound (base, log-agnostic) +
 -- dnStepFG_sud_concrete_{F,G}_norm_le_poly ((n+2)⁴·√(θ/2) form, composes S131 + S90).
