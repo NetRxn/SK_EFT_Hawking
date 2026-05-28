@@ -1710,6 +1710,12 @@ import SKEFTHawking.FKLW.Phase6yClosureStatusIndex
 -- `linftyOpNorm_unitary_le` Session 36 substrate). Substrate for full
 -- SU(d) super-quad bound discharge.
 import SKEFTHawking.FKLW.GenericSUdSuperQuadSubstrate
+-- Phase 6y Track S (Session 69, 2026-05-27): bounded-form (F,G) existence at
+-- dnStep level. Composes Session 33 spectral extraction + Session 37 bounded
+-- form to give `balanced_commutator_bounded_of_hermitian` — UNCONDITIONAL-in-H
+-- existence of F,G,F_inner,G_inner with `‖F‖ ≤ (n+2)²·‖F_inner‖` + commutator
+-- identity. Super-quad bound F/G-norm substrate (remaining gap: ‖F_inner‖ bound).
+import SKEFTHawking.FKLW.GenericSUdDnStepFGBounded
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
