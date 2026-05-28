@@ -51,6 +51,7 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGNormBound
 import SKEFTHawking.FKLW.GenericSUdDnStepFGCubic
 import SKEFTHawking.FKLW.GenericSUdRhomAbstraction
 import SKEFTHawking.FKLW.GroupCommutator
+import SKEFTHawking.FKLW.GroupCommutatorNearIdentity
 import SKEFTHawking.FKLW.EpsilonSeq
 
 set_option autoImplicit false
@@ -265,5 +266,54 @@ lemma cubic_term_through_Vn {n : ℕ}
                 Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖
             ≤ ((n : ℝ) + 2) * (320 * δ ^ 3) :=
               mul_le_mul h_M h_cubic h_gC_nn h_Mn
+
+/-! ## Telescoping term 1: stability term -/
+
+/-- **SU(d) stability-term wrapper**: instantiates the dimension-generic
+`groupCommutator_stability_nearIdentity` at `M = d`, supplying the SU(d)
+M-bounds (`SUd_val_linftyOpNorm_le` + inverse via `SUd_subtype_inv_val_eq_matrix_inv`)
+and the det-unit hypotheses (`det = 1` for `SU(d)` elements) internally.
+
+For `SU(d)` elements `A_F, A_G` (base points) and `ρA_F, ρA_G` (their
+ε-perturbations) with near-identity radius `η` (on `‖A_G − 1‖, ‖A_F⁻¹ − 1‖`)
+and perturbation `ε` (on `‖ρA_F − A_F‖, ‖ρA_G − A_G‖`),
+
+  `‖gC(ρA_F, ρA_G) − gC(A_F, A_G)‖ ≤ 2·(d² + d⁴)·ε·η + (d⁴ + d⁶)·ε²`.
+
+In the SK recursion `η = O(δ_lie)` and `ε = ε_n`, giving the `O(ε_n^{3/2})`
+super-quadratic stability shrinkage. -/
+lemma stability_term_bound {d : ℕ} [Nonempty (Fin d)]
+    (A_F A_G ρA_F ρA_G : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+    (η ε : ℝ) (hη_nn : 0 ≤ η) (hε_nn : 0 ≤ ε)
+    (h_A_G_near : ‖(A_G : Matrix (Fin d) (Fin d) ℂ) - 1‖ ≤ η)
+    (h_A_F_inv_near : ‖(A_F : Matrix (Fin d) (Fin d) ℂ)⁻¹ - 1‖ ≤ η)
+    (h_F_diff : ‖(ρA_F : Matrix (Fin d) (Fin d) ℂ) -
+        (A_F : Matrix (Fin d) (Fin d) ℂ)‖ ≤ ε)
+    (h_G_diff : ‖(ρA_G : Matrix (Fin d) (Fin d) ℂ) -
+        (A_G : Matrix (Fin d) (Fin d) ℂ)‖ ≤ ε) :
+    ‖groupCommutator (ρA_F : Matrix (Fin d) (Fin d) ℂ) (ρA_G : Matrix (Fin d) (Fin d) ℂ) -
+        groupCommutator (A_F : Matrix (Fin d) (Fin d) ℂ)
+          (A_G : Matrix (Fin d) (Fin d) ℂ)‖ ≤
+      2 * ((d : ℝ)^2 + (d : ℝ)^4) * ε * η + ((d : ℝ)^4 + (d : ℝ)^6) * ε^2 := by
+  have h_det : ∀ x : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ),
+      IsUnit (x : Matrix (Fin d) (Fin d) ℂ).det := by
+    intro x
+    have h_mem := x.property
+    rw [Matrix.mem_specialUnitaryGroup_iff] at h_mem
+    rw [h_mem.2]
+    exact isUnit_one
+  have h_inv_M : ∀ x : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ),
+      ‖(x : Matrix (Fin d) (Fin d) ℂ)⁻¹‖ ≤ (d : ℝ) := by
+    intro x
+    rw [← SUd_subtype_inv_val_eq_matrix_inv x]
+    exact SUd_val_linftyOpNorm_le x⁻¹
+  exact GroupCommutatorNearIdentity.groupCommutator_stability_nearIdentity
+    (A_F : Matrix (Fin d) (Fin d) ℂ) (A_G : Matrix (Fin d) (Fin d) ℂ)
+    (ρA_F : Matrix (Fin d) (Fin d) ℂ) (ρA_G : Matrix (Fin d) (Fin d) ℂ)
+    η ε (d : ℝ) hη_nn hε_nn (by positivity)
+    (SUd_val_linftyOpNorm_le ρA_F) (SUd_val_linftyOpNorm_le ρA_G)
+    (h_inv_M A_F) (h_inv_M A_G) (h_inv_M ρA_F) (h_inv_M ρA_G)
+    h_A_G_near h_A_F_inv_near h_F_diff h_G_diff
+    (h_det A_F) (h_det ρA_F) (h_det A_G) (h_det ρA_G)
 
 end SKEFTHawking.FKLW.GenericSUd
