@@ -230,34 +230,73 @@ Per [[feedback-multi-session-wave-pattern]] (`memory/feedback_multi_session_wave
 
 ### Wave 1 Status block
 
-Phase 6y Wave 1: **IN PROGRESS** (Session 1 of N shipped 2026-05-27).
-- **AC items substantively shipped**: S.1, S.2 (UNCONDITIONAL), S.4 (explicit K=2), S.5 (UNCONDITIONAL), T-X′.1, T-X′.3 (F#5 algorithmic ε-net), S.3 d≤2, T-A1′.4, S.6/T-X′.5 F#4-shape substrate + conditional discharges.
-- **AC items conditional/partial**: T-X′.2 (tracked-Prop framework + cascade UNCONDITIONAL from witness), M-S.1/2 (alias-only).
-- **AC items NOT YET shipped**: S.3 d≥3 substantive (Aharonov-Arad SU(d)), S.6 polylog UNCONDITIONAL, T-X′.5 polylog UNCONDITIONAL, T-X′.2 substantive density witnesses, M-S substantive Mathlib-PR extraction, T-A2′.4 calibration (trivial).
+Phase 6y Wave 1: **IN PROGRESS** (Sessions 1-51 of N shipped 2026-05-27; **38 commits, ~4925 LoC kernel-only**; build clean 8830 jobs throughout).
+
+- **AC items substantively shipped (UNCONDITIONAL)**: S.1, S.2 (S.2g UNCONDITIONAL), **S.3 d≥3 PROPER (Sessions 14-39, keystone `symmetric_balanced_commutator_hermitian_unconditional` Session 33)**, S.4 (explicit K=2), S.5 (UNCONDITIONAL), T-X′.1, T-X′.3 (F#5 algorithmic ε-net), T-A1′.4, T-A2′.4 calibration.
+- **AC items partially shipped (substrate + 2 of 4 substantive ingredient discharges)**: S.6 cascade substrate + 2 of 4 substantive ingredients discharged:
+  - **(1) `ExpIsud_det_eq_one_predicate` discharge ✓** (Session 49, spectral decomposition path; SU(d) analog of SU(2) `DetExpZeroOnSu2_SU2_discharged` ~2300 LoC)
+  - **(2) `SkLevelPolylog_sud_spec` discharge ✓** (Session 48, K-parametric lift of SU(2) ~110 LoC `skLevel_polylog_spec`)
+  - **(3) `skLength_sud` closed-form substrate ✓** (Session 51; substantive recursion-discharge + polylog asymptotic discharge remain)
+  - **(4) `SkApproxCSuperQuadraticBound_generic_sud` discharge ✗** (analog of SU(2) ~981 LoC `SkApproxCSuperQuadraticBound_generic_holds`, multi-session)
+- **AC items conditional/partial**: T-X′.2 (tracked-Prop framework + cascade UNCONDITIONAL from witness), M-S.1/2 (alias-only — per F#3, ALIAS-ONLY NOT ACCEPTANCE; substantive Mathlib-PR extraction pending).
+- **AC items NOT YET shipped**: S.6/T-X′.5 polylog UNCONDITIONAL bundled-strict headlines (cascade-ready via Session 50's `skHeadline_FreeGroup_SUd_cascade_2ingredient`; require remaining 2 ingredient discharges + per-alphabet baseFinder), T-X′.2 substantive density witnesses (Brylinski-Brylinski SU(4) + Aaronson-Gottesman SU(8) — multi-session each), M-S substantive Mathlib-PR extraction, Stage-13 fresh-context adversarial review.
+
+### Sessions 14-51 inventory (per-session map)
+
+  - **Sessions 14-39** (Track S.3 keystone substrate chain): 27 modules in `lean/SKEFTHawking/FKLW/GenericSUd*.lean` building up to the keystone `symmetric_balanced_commutator_hermitian_unconditional` (Session 33) + predicate-form lifts + norm bridge + bounded form + index + usage examples + loose predicate.
+  - **Session 41** (`GenericSUdDnStepFG.lean`): SU(d) Dawson-Nielsen step composing keystone.
+  - **Session 42** (`GenericSUdExpIsuD.lean`): SU(d) exp coercion (det-conditional) + `ExpIsud_det_eq_one_predicate`.
+  - **Session 43** (`GenericSUdSkApproxC.lean`): SU(d) SK recursion engine.
+  - **Session 44** (`GenericSUdSkApproxCBound.lean`): super-quad bound predicate.
+  - **Session 45** (`GenericSUdSkHeadlineCascade.lean`): F#4-compliant cascade composition.
+  - **Session 46** (`GenericSUdSkLevelPolylog.lean`): polylog level chooser + spec predicate.
+  - **Session 47** (`GenericSUdSkCascadeIndex.lean`): cascade INDEX documenting 4 substantive ingredients.
+  - **Session 48** (`GenericSUdSkLevelPolylogSpec.lean`): **SUBSTANTIVE polylog level spec discharge** (ingredient 2).
+  - **Session 49** (`GenericSUdExpIsuDDetDischarge.lean`): **SUBSTANTIVE det predicate discharge** (ingredient 1).
+  - **Session 50** (`GenericSUdSkHeadlineCascade2Ingredient.lean`): refined 2-ingredient cascade leveraging Sessions 48 + 49.
+  - **Session 51** (`GenericSUdSkLength.lean`): word-length closed-form substrate (ingredient 4 foundation).
+
+### Remaining substantive work (post Session 51)
+
+  1. **Super-quad bound discharge** (`SkApproxCSuperQuadraticBound_generic_sud K ε₀_sud gs baseFinder h_det_pred`) — analog of SU(2) Phase 6u Wave 4b ~981 LoC `SkApproxCSuperQuadraticBound_generic_holds`. Multi-session.
+  2. **Length-bound recursion discharge** — proves `wordLength (skApproxC_generic_sud ... n U) ≤ skLength_sud baseCase decompCost n` (relating actual recursion word length to Session 51's closed-form).
+  3. **`SkLengthPolylogBound_sud` substantive discharge** — asymptotic analysis of `skLength_sud (skLevel_polylog_sud K ε) ≤ c · (log(1/ε))^polylogExponent` (similar to SU(2) `skLength_at_skLevel_polylog_le` proof).
+  4. **Per-alphabet baseFinder + ε-net** at SU(4)/SU(8) for T-A1′.5 / T-A2′.5 headlines.
+  5. **T-X′.2 substantive density witnesses**: Brylinski-Brylinski 2002 (SU(4) trapped-ion entangler universality) + Aaronson-Gottesman 2004 (Clifford+CCZ at SU(8)). Multi-session each.
+  6. **M-S.1/M-S.2 substantive Mathlib-PR extraction** (de-privatize + Mathlib-namespace + generic-type + docstrings + examples; per F#3 alias-only NOT acceptance).
+  7. **Stage-13 fresh-context adversarial review pass** — CLOSURE gate; dispatched ONLY after ALL items above ship.
 
 ### Wave 1 Plan (per-session)
 
 **Session 1 (SHIPPED 2026-05-27 — commits `c054842` → `de1c2c1`)**:
 - Substrate ships at 8790 jobs clean, 0 axioms, 0 sorries. See `memory/project_phase6y_session_2026_05_27_shipped.md`.
 
-**Session 2 (PENDING) — S.3 d≥3 Aharonov-Arad SU(d) balanced commutator**:
-- Target: `BalancedCommutator_SUd d` substantively discharged for d ≥ 3 via spectral decomposition + per-2-block SU(2) lift + cross-term counterterm argument.
-- LoE target per roadmap: ~200-400 LoC.
-- Substrate to compose: existing `BalancedCommutator_SUd_two`, `Matrix.IsHermitian.spectral_theorem'`, `embed2block`-style lemmas (block embedding).
-- Unblocks: S.6 polylog UNCONDITIONAL, T-A1′.5 / T-A2′.5 polylog UNCONDITIONAL.
+**Sessions 2-13 (SHIPPED 2026-05-27)** — early S.3 d≥3 substrate buildup (σ-block primitives, conjugation invariance, partial discharges); see session memory.
 
-**Session 3 (PENDING) — T-X′.2 substantive density witnesses (per-alphabet)**:
-- Target: `trappedIonSU4_v4_witness_tracked` discharged via Brylinski-Brylinski entangler universality at SU(4); `cliffordCCZSU8_v4_witness_tracked` discharged via Aaronson-Gottesman at SU(8).
-- LoE target per roadmap: T-A1′.2 ~300-500 LoC; T-A2′.2 ~400-700 LoC.
+**Sessions 14-39 (SHIPPED 2026-05-27 — Track S.3 d≥3 PROPER keystone chain)** — 27 modules building up to the keystone `symmetric_balanced_commutator_hermitian_unconditional` (Session 33) for ANY Hermitian-traceless H at SU(d) via spectral decomposition + symmetric F=αG construction with cross-term pair-swap cancellation. Plus predicate-form lifts (Sessions 34-35) + norm bridge (Session 36) + bounded form (Session 37) + index (Session 38) + usage examples (Session 39) + loose predicate (Session 40).
 
-**Session 4 (PENDING) — M-S.1/2 substantive Mathlib-PR extraction**:
-- Target: de-privatize + Mathlib-namespace (`Matrix.SpecialUnitary.Cartan.finalStepVd` + `Matrix.expMap_isLocalHomeomorph_zero`) + generic-type (m : Type*) + docstrings + examples.
-- LoE per roadmap: M-S.1 ~200-400 LoC, M-S.2 ~150-300 LoC.
+**Sessions 41-47 (SHIPPED 2026-05-27 — Track S.6 cascade substrate chain)**:
+- Session 41: `dnStepFG_sud` (SU(d) DN step composing keystone)
+- Session 42: `expIsud_conditional` (SU(d) exp coercion, det-conditional)
+- Session 43: `skApproxC_generic_sud` (SU(d) SK recursion engine)
+- Session 44: `SkApproxCSuperQuadraticBound_generic_sud` predicate
+- Session 45: `skHeadline_FreeGroup_SUd_cascade` (F#4-compliant cascade composition)
+- Session 46: `skLevel_polylog_sud` + spec predicate
+- Session 47: Cascade INDEX (`GenericSUdSkCascadeIndex.lean`) documenting 4 substantive ingredients
 
-**Session 5 (PENDING) — Wave 1 closure**:
-- Cascade compose: S.3 + T-X′.2 substantive → S.6 + T-X′.5 polylog UNCONDITIONAL discharges via existing `GenericSolovayKitaevRecursion` + `SKCompileWithBounds` substrate.
-- Ship T-A2′.4 calibration constants (trivial, parallel to T-A1′.4).
-- Dispatch ONE fresh-context Stage-13 adversarial reviewer covering all 4 tracks (per /goal CLOSURE). Reviewer must return 0 BLOCKER + 0 REQUIRED + 0 RECOMMENDED for Goal-achieved.
+**Sessions 48-51 (SHIPPED 2026-05-27 — Track S.6 substantive ingredient discharges, 2 of 4)**:
+- **Session 48** (`09a939a`): **SUBSTANTIVE polylog level spec discharge** — `skLevel_polylog_sud_spec_holds` given calibration `K² · 2·ε₀_sud ≤ 1/4`.
+- **Session 49** (`64c7e64`): **SUBSTANTIVE det predicate discharge** — `expIsud_det_eq_one_predicate_holds` via spectral decomposition + Matrix.exp_conj + Matrix.exp_diagonal + Matrix.det_diagonal + Pi.exp_def + Complex.exp_sum.
+- **Session 50** (`4c3c4b7`): refined 2-ingredient cascade leveraging Sessions 48 + 49.
+- **Session 51** (`a0594ef`): `skLength_sud` closed-form word-length substrate.
+
+**Session 52+ (PENDING) — remaining substantive ingredients**:
+- Super-quad bound discharge (`SkApproxCSuperQuadraticBound_generic_sud`) — analog of SU(2) ~981 LoC, multi-session.
+- Length-bound recursion discharge + `SkLengthPolylogBound_sud` discharge.
+- Per-alphabet baseFinder + ε-net at SU(4)/SU(8) — T-A1′.5 / T-A2′.5 cascade unblocks.
+- T-X′.2 substantive density witnesses: Brylinski-Brylinski 2002 (SU(4)) + Aaronson-Gottesman 2004 (SU(8)). Each multi-session.
+- M-S.1/M-S.2 substantive Mathlib-PR extraction (de-privatize + namespace + generic-type + docstrings + examples; F#3 alias-only NOT acceptance).
+- Stage-13 fresh-context adversarial review (CLOSURE gate) — dispatched ONLY after all substantive items ship.
 
 ### Wave 1 References
 
