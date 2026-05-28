@@ -294,4 +294,84 @@ lemma skApproxC_sud_succ_error_le_combine_concrete {m : ℕ}
   rw [skApproxC_generic_sud_concrete_succ_rho_val gs baseFinder h_det_pred n U]
   exact htri _ _ _ _ _ h_stab_term h_cubic_term
 
+/-! ## Concrete single-step valid-branch super-quad bound (S101 analog) -/
+
+/-- **Concrete single-step super-quad bound (valid branch)**: given the level-n IH
+(`∀ U', ‖ρ(sk_n^concrete U') − U'‖ ≤ ε`), the concrete θ-bound on the residual, the named
+calibration bound `(m+2)²·‖V_n − U‖ ≤ 1/8`, and `(m+2)^5·√ε ≤ 1`, `ε ≤ 2·ε₀_sud`, the
+level-(n+1) error contracts super-quadratically:
+
+  `‖ρ(sk_{n+1}^concrete U) − U‖ ≤ K_compose_sud(m+2) · ε^(3/2)`.
+
+Concrete counterpart of `skApproxC_sud_succ_super_quad_valid` (S101), with the existential
+`h_regime3` + `Δ ∈ target` hypotheses ELIMINATED — the cubic term uses the concrete
+`cubic_term_through_Vn_concrete` (S136) under the named calibration bound. Composes the
+concrete √ε-norm (S135), the concrete cubic term (S136), the concrete error-combine (S137),
+and the **log-agnostic** stability term (S96) + numeric chain (S99) + near-identity bounds
+(S85), all reused as-is. -/
+lemma skApproxC_sud_succ_super_quad_valid_concrete {m : ℕ}
+    (gs : GeneratingSet (m + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (m + 2))
+    (n : ℕ) (U : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ))
+    (ε : ℝ) (hε_nn : 0 ≤ ε) (hε_le : ε ≤ 2 * ε₀_sud (m + 2))
+    (h_delta_le_one : ((m : ℝ) + 2) ^ 5 * Real.sqrt ε ≤ 1)
+    (h_theta_le : ‖((-Complex.I) • matrixMercatorLog
+        (((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n U))⁻¹ * U :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)).val - 1) :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 2 * ((m : ℝ) + 2) * ε)
+    (hVU : ((m : ℝ) + 2) ^ 2 *
+        ‖((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n U) :
+            ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+          (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ 1 / 8)
+    (h_IH : ∀ U' : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ),
+        ‖((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n U') :
+            ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+          (U' : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ ε) :
+    ‖((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred (n + 1) U) :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+        (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤
+      K_compose_sud (m + 2) * ε ^ (3 / 2 : ℝ) := by
+  haveI : Nonempty (Fin (m + 2)) := ⟨0⟩
+  set V_n := gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n U) with hV_n_def
+  set data := dnStepFG_sud_concrete V_n U with hdata_def
+  set δ_lie := ((m : ℝ) + 2) ^ 5 * Real.sqrt ε with hδ_def
+  have hδ_nn : 0 ≤ δ_lie := by rw [hδ_def]; positivity
+  set η := δ_lie * Real.exp δ_lie with hη_def
+  have hη_nn : 0 ≤ η := by rw [hη_def]; positivity
+  have hF_norm : ‖data.F‖ ≤ δ_lie := dnStepFG_sud_concrete_F_norm_le_sqrt_eps V_n U ε h_theta_le
+  have hG_norm : ‖data.G‖ ≤ δ_lie := dnStepFG_sud_concrete_G_norm_le_sqrt_eps V_n U ε h_theta_le
+  have h_A_G_near :
+      ‖((expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) - 1‖ ≤ η :=
+    expIsud_norm_sub_one_le data.G data.hG_herm data.hG_tr δ_lie hδ_nn hG_norm
+  have h_A_F_inv_near :
+      ‖((expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)⁻¹ - 1‖ ≤ η :=
+    expIsud_inv_norm_sub_one_le data.F data.hF_herm data.hF_tr δ_lie hδ_nn hF_norm
+  have h_stab := stability_term_through_Vn V_n
+    (expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr)
+    (expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr)
+    (gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n
+      (expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr)))
+    (gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n
+      (expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr)))
+    η ε hη_nn hε_nn h_A_G_near h_A_F_inv_near
+    (h_IH (expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr))
+    (h_IH (expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr))
+  rw [show ((m + 2 : ℕ) : ℝ) = (m : ℝ) + 2 from by push_cast; ring] at h_stab
+  have h_cubic := cubic_term_through_Vn_concrete V_n U hVU δ_lie hδ_nn h_delta_le_one
+    hF_norm hG_norm
+  have h_combine := skApproxC_sud_succ_error_le_combine_concrete gs baseFinder h_det_pred n U
+    _ _ h_stab h_cubic
+  have hη_le : η ≤ 3 * δ_lie := by rw [hη_def]; exact eta_le_three_delta δ_lie hδ_nn h_delta_le_one
+  have h_chain := super_quad_numeric_chain (m := m) ε δ_lie η hε_nn hδ_nn
+    (le_of_eq hδ_def) hη_le hε_le
+  exact le_trans h_combine h_chain
+
 end SKEFTHawking.FKLW.GenericSUd
