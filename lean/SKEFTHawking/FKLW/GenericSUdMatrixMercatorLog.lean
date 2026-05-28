@@ -463,4 +463,51 @@ theorem hasDerivAt_exp_neg_matrixMercatorLog_path {d : ℕ} (X : Matrix (Fin d) 
     matrixMercatorLog_commute_mercatorLog _ _ hXt₀ hXt hcXX
   exact (hmm.neg_left.neg_right).sub_right (Commute.refl _).neg_left.neg_right
 
+/-! ## 9. The round-trip factor derivative (brick 2, toward `exp∘mLog = id`) -/
+
+/-- **Derivative of `t ↦ 1 + (↑t)•X`** (the `v(t)` factor of the round-trip):
+`d/dt [1 + (↑t)•X] = X`. The `(↑t)•X` smul is differentiated via the bundled
+ℝ-linear map `z ↦ z • X` composed with `Complex.ofReal` (deriv 1), avoiding the
+`linftyOp` module diamond (same technique as `hasDerivAt_matrixMercatorLog_term`). -/
+theorem hasDerivAt_one_add_smul {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ) (t : ℝ) :
+    HasDerivAt (fun s : ℝ => (1 : Matrix (Fin d) (Fin d) ℂ) + (↑s : ℂ) • X) X t := by
+  have hofR : HasDerivAt (fun s : ℝ => (↑s : ℂ)) 1 t := by
+    simpa using Complex.ofRealCLM.hasDerivAt (x := t)
+  have hg : HasDerivAt (fun s : ℝ => (↑s : ℂ) • X) X t := by
+    have := (((ContinuousLinearMap.id ℂ ℂ).smulRight X).restrictScalars ℝ).hasFDerivAt.comp_hasDerivAt
+      t hofR
+    simpa using this
+  simpa using hg.const_add (1 : Matrix (Fin d) (Fin d) ℂ)
+
+/-- **The round-trip factor has zero derivative**: for `|t|·‖X‖ < 1`,
+
+  `d/dt [exp(−matrixMercatorLog((↑t)•X)) · (1 + (↑t)•X)] = 0`.
+
+This is the heart of the brick-2 round-trip `exp(matrixMercatorLog X) = 1 + X`:
+by the product rule (`u'` from `hasDerivAt_exp_neg_matrixMercatorLog_path`, `v' = X`
+from `hasDerivAt_one_add_smul`), the derivative is
+`exp(−mLog)·(−(1+Y)⁻¹·X)·(1+Y) + exp(−mLog)·X` with `Y = (↑t)•X`; since `X` commutes
+with `1+Y` (both functions of `X`) and `1+Y` is a unit (Neumann, `‖Y‖<1`),
+`(1+Y)⁻¹·X·(1+Y) = X`, so the two terms cancel. Combined with `f(0) = exp(0)·1 = 1`
+and a constancy argument on the ball `|t| < 1/‖X‖`, this yields the round-trip. -/
+theorem hasDerivAt_round_trip_factor {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
+    (t : ℝ) (ht : |t| * ‖X‖ < 1) :
+    HasDerivAt (fun s : ℝ => NormedSpace.exp (-(matrixMercatorLog ((↑s : ℂ) • X)))
+        * (1 + (↑s : ℂ) • X)) 0 t := by
+  have hf := (hasDerivAt_exp_neg_matrixMercatorLog_path X t ht).mul (hasDerivAt_one_add_smul X t)
+  have hunit : IsUnit (1 + (↑t : ℂ) • X) := by
+    have h : ‖(-((↑t : ℂ) • X))‖ < 1 := by
+      rw [norm_neg, norm_smul, Complex.norm_real, Real.norm_eq_abs]; exact ht
+    simpa [sub_neg_eq_add] using (Units.oneSub (-((↑t : ℂ) • X)) h).isUnit
+  have hX1Y : Commute X (1 + (↑t : ℂ) • X) :=
+    (Commute.one_right X).add_right ((Commute.refl X).smul_right _)
+  have hkey : Ring.inverse (1 + (↑t : ℂ) • X) * X * (1 + (↑t : ℂ) • X) = X := by
+    rw [mul_assoc, hX1Y.eq, ← mul_assoc, Ring.inverse_mul_cancel _ hunit, one_mul]
+  convert hf using 1
+  symm
+  rw [mul_neg, neg_mul,
+    mul_assoc (NormedSpace.exp (-(matrixMercatorLog ((↑t : ℂ) • X))))
+      (Ring.inverse (1 + (↑t : ℂ) • X) * X) (1 + (↑t : ℂ) • X),
+    hkey, neg_add_cancel]
+
 end SKEFTHawking.FKLW.GenericSUd
