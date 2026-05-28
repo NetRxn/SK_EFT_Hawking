@@ -48,6 +48,8 @@ assembly (the (B) ingredient; base case).
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdSkApproxC
 import SKEFTHawking.FKLW.GenericSUdDnStepFGNormBound
+import SKEFTHawking.FKLW.GenericSUdRhomAbstraction
+import SKEFTHawking.FKLW.GroupCommutator
 import SKEFTHawking.FKLW.EpsilonSeq
 
 set_option autoImplicit false
@@ -55,6 +57,7 @@ set_option autoImplicit false
 namespace SKEFTHawking.FKLW.GenericSUd
 
 open Matrix
+open SKEFTHawking.FKLW.GroupCommutator
 
 attribute [local instance] Matrix.linftyOpNormedAddCommGroup
   Matrix.linftyOpNormedRing
@@ -142,5 +145,40 @@ lemma dnStepFG_sud_G_norm_le_poly {n : ℕ}
   intro Δ H θ
   refine le_trans (dnStepFG_sud_G_norm_le V_n U) ?_
   exact mul_le_mul_of_nonneg_right (dnStepFG_sud_K_F_le n) (Real.sqrt_nonneg _)
+
+/-! ## Composition identity (inductive-step structural core) -/
+
+/-- **Composition identity**: the level-(n+1) recursion output, mapped through
+`ρ_hom` to the matrix level, equals `ρ(V_n) · groupCommutator(ρ(sk_n A_F), ρ(sk_n A_G))`.
+
+This is the structural heart of the inductive step: it exposes the recursion's
+`V_{n+1} = V_n · gC(...)` shape so the telescoping `‖V_{n+1} − U‖ = ‖V_n·(gC − Δ)‖`
+can proceed. SU(d) analog of the SU(2) `h_skApproxC_succ_val`; composes
+`skApproxC_generic_sud_succ` with the S87 ρ_hom MonoidHom abstractions
+`ρ_hom_sud_mul_val` + `ρ_hom_sud_groupCommutator_val`. -/
+lemma skApproxC_generic_sud_succ_rho_val {m : ℕ}
+    (gs : GeneratingSet (m + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (m + 2))
+    (n : ℕ) (U : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+    let V_n_word := skApproxC_generic_sud gs baseFinder h_det_pred n U
+    let data := dnStepFG_sud (gs.ρ_hom V_n_word) U
+    let A_F := expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr
+    let A_G := expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr
+    ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred (n + 1) U) :
+        ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) =
+      ((gs.ρ_hom V_n_word : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+      groupCommutator
+        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n A_F) :
+            ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+        ((gs.ρ_hom (skApproxC_generic_sud gs baseFinder h_det_pred n A_G) :
+            ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) := by
+  intro V_n_word data A_F A_G
+  rw [skApproxC_generic_sud_succ]
+  rw [ρ_hom_sud_mul_val, ρ_hom_sud_groupCommutator_val]
 
 end SKEFTHawking.FKLW.GenericSUd
