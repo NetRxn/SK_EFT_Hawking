@@ -39,6 +39,7 @@ induction substrate (base case + polynomial norm bounds).
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdSkApproxCConcrete
 import SKEFTHawking.FKLW.GenericSUdDnStepFGFromLogNormBound
+import SKEFTHawking.FKLW.GenericSUdDnStepFGConcreteCubic
 import SKEFTHawking.FKLW.GenericSUdSuperQuadInduction
 
 set_option autoImplicit false
@@ -46,6 +47,7 @@ set_option autoImplicit false
 namespace SKEFTHawking.FKLW.GenericSUd
 
 open Matrix
+open SKEFTHawking.FKLW.GroupCommutator
 
 attribute [local instance] Matrix.linftyOpNormedAddCommGroup
   Matrix.linftyOpNormedRing
@@ -150,5 +152,56 @@ lemma dnStepFG_sud_concrete_G_norm_le_sqrt_eps {n : ℕ}
       ≤ ((n : ℝ) + 2) ^ 4 * (((n : ℝ) + 2) * Real.sqrt ε) :=
         mul_le_mul_of_nonneg_left h_sqrt_half (by positivity)
     _ = ((n : ℝ) + 2) ^ 5 * Real.sqrt ε := by ring
+
+/-- **Concrete cubic term through V_n**: `‖ρ(V_n)·gC(A_F, A_G) − U‖ ≤ (n+2)·320·δ³` for the
+concrete DN step, on the named calibration ball `(n+2)²·‖V_n − U‖ ≤ 1/8`. Concrete counterpart
+of `cubic_term_through_Vn` (S93), with the existential `h_regime3` + `Δ ∈ target` hypotheses
+ELIMINATED. Since `ρ(V_n)·Δ = U` (`Vn_mul_residual_eq_U`), `ρ(V_n)·gC − U = ρ(V_n)·(gC − Δ)`,
+bounded by `‖ρ(V_n)‖·320·δ³ ≤ (n+2)·320·δ³` (M-bound `SUd_val_linftyOpNorm_le` + the concrete
+cubic remainder S132). The "term 2" of the concrete inductive-step telescoping. -/
+lemma cubic_term_through_Vn_concrete {n : ℕ}
+    (V_n U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ))
+    (hVU : ((n : ℝ) + 2) ^ 2 *
+        ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+          (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ 1 / 8)
+    (δ : ℝ) (hδ_nn : 0 ≤ δ) (hδ_le_one : δ ≤ 1)
+    (hF_norm : ‖(dnStepFG_sud_concrete V_n U).F‖ ≤ δ)
+    (hG_norm : ‖(dnStepFG_sud_concrete V_n U).G‖ ≤ δ) :
+    ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) *
+        groupCommutator
+          ((expIsud n (dnStepFG_sud_concrete V_n U).F (dnStepFG_sud_concrete V_n U).hF_herm
+              (dnStepFG_sud_concrete V_n U).hF_tr :
+              ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+              Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)
+          ((expIsud n (dnStepFG_sud_concrete V_n U).G (dnStepFG_sud_concrete V_n U).hG_herm
+              (dnStepFG_sud_concrete V_n U).hG_tr :
+              ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+              Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) -
+        (U : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤
+      ((n : ℝ) + 2) * (320 * δ ^ 3) := by
+  have h_cubic := dnStepFG_sud_concrete_gC_minus_Delta_norm_le_cubic V_n U hVU
+    δ hδ_nn hδ_le_one hF_norm hG_norm
+  set gC := groupCommutator
+    ((expIsud n (dnStepFG_sud_concrete V_n U).F (dnStepFG_sud_concrete V_n U).hF_herm
+        (dnStepFG_sud_concrete V_n U).hF_tr : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)
+    ((expIsud n (dnStepFG_sud_concrete V_n U).G (dnStepFG_sud_concrete V_n U).hG_herm
+        (dnStepFG_sud_concrete V_n U).hG_tr : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+        Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) with hgC_def
+  rw [← Vn_mul_residual_eq_U V_n U, ← Matrix.mul_sub]
+  calc ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ) *
+          (gC - ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+            Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ))‖
+      ≤ ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ *
+          ‖gC - ((V_n⁻¹ * U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+            Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ := Matrix.linfty_opNorm_mul _ _
+    _ ≤ ((n : ℝ) + 2) * (320 * δ ^ 3) := by
+        have h_M : ‖(V_n : Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ ≤ ((n : ℝ) + 2) := by
+          have := SUd_val_linftyOpNorm_le V_n
+          simpa using this
+        have h_gC_nn : (0 : ℝ) ≤ ‖gC - ((V_n⁻¹ * U :
+            ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) :
+            Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ := norm_nonneg _
+        exact mul_le_mul h_M h_cubic h_gC_nn (by positivity)
 
 end SKEFTHawking.FKLW.GenericSUd
