@@ -1673,6 +1673,12 @@ import SKEFTHawking.FKLW.GenericSUdConcreteWordLengthBound
 -- + per-alphabet wrapper theorems `trappedIonSU4_length_le_skLength_sud` +
 -- `cliffordCCZSU8_length_le_skLength_sud`.
 import SKEFTHawking.FKLW.GenericSUdLengthBoundPerAlphabet
+-- Phase 6y Track S (Session 55, 2026-05-27): length-bounded baseFinder discharge
+-- from constructive ε-net. Shows `findNearestInCover_SUd` output length ≤
+-- max word length over cover Finset, discharging `BaseFinder_length_bounded_sud_param`
+-- (Session 53 predicate). Substrate for T-A1′.5/T-A2′.5 cascade unblock via
+-- per-alphabet ε-net consumer.
+import SKEFTHawking.FKLW.GenericSUdBaseFinderLengthBound
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
