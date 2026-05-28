@@ -1259,6 +1259,10 @@ import SKEFTHawking.FKLW.TrappedIonGeneratingSetSU4Full
 -- (kronSU4_mul / kronSU4_one + per-ion specializations) — foundation for the per-ion
 -- SU(2)→SU(4) embedding monoid homs in the Brylinski-Brylinski ClosureDenseWitness.
 import SKEFTHawking.FKLW.TrappedIonSU4KronHom
+-- Phase 6y Track T-A1′.2 (D)-witness substrate (2026-05-28): per-ion SU(2)→SU(4)
+-- embeddings as continuous monoid homs (ion1Embed/ion2Embed) — the maps through which
+-- SU(2) Clifford+T density lifts to per-ion flow-line containment in H_of_G.
+import SKEFTHawking.FKLW.TrappedIonSU4IonEmbed
 -- Phase 6y Track S.2g-substrate (2026-05-27): local diffeo restriction
 -- `𝔰𝔲(d) ↔ SU(d)` near (0, 1). Forward: exp of 𝔰𝔲(d) ∩ source ⊆ SU(d) ∩ target
 -- (via skew-Hermitian-exp-is-unitary + S.2d Jacobi det = exp(tr) = 1).
