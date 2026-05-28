@@ -12,7 +12,8 @@ Discharges `cliffordCCZSU8Headline` (the F#4-compliant T-A2′.5 headline)
 given ONLY 2 substantive ingredients + calibration:
 
   * **(D)** `h_dense : IsDenseInSUd_gs cliffordCCZGeneratingSetSU8`
-    (T-X′.2 PROPER — Aaronson-Gottesman 2004 lineage)
+    (T-A2′.2 PROPER — universal Clifford+CCZ+T, density from the Clifford+T sub-alphabet,
+    Boykin et al 1999; shipped in `CliffordCCZSU8WitnessFull`)
   * **(B)** `h_bound` — super-quad bound discharge at SU(8)
 
 All other substantive content composed internally via Sessions 41-56.
@@ -56,8 +57,9 @@ Solovay-Kitaev headline) given ONLY:
   * (B) Super-quad bound discharge at SU(8)
   * Calibration constants + boundedness
 
-For (D), Phase 6y T-X′.2 PROPER substantive ship needed (Aaronson-Gottesman
-2004 lineage). For (B), SU(d) super-quad bound discharge analog needed. -/
+For (D), the witness ships in `CliffordCCZSU8WitnessFull` (universal Clifford+CCZ+T; density from the
+Clifford+T sub-alphabet, Boykin et al 1999 — A-G 2004 is simulability, not universality). For (B),
+SU(d) super-quad bound discharge analog needed. -/
 theorem cliffordCCZSU8Headline_via_cascade_final
     (K ε₀_sud c : ℝ)
     (hK_pos : 0 < K) (hK_ge_one : 1 ≤ K)

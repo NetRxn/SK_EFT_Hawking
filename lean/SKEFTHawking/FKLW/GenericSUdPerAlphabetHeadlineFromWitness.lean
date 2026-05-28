@@ -19,7 +19,9 @@ internally.
 After this, the *only* thing standing between the project and the named UNCONDITIONAL headlines
 `solovayKitaev_dawson_nielsen_quantitative_su{4,8}_..._tight` is the unconditional discharge of the
 per-alphabet `ClosureDenseWitness` (Brylinski-Brylinski 2002 SU(4) entangler universality /
-Aaronson-Gottesman 2004 SU(8) Clifford+CCZ universality) — currently carried as the tracked Props
+Clifford+T-at-SU(8) universality, Boykin et al 1999 — the SU(8) witness is the universal
+Clifford+CCZ+T alphabet with density from its Clifford+T sub-alphabet; A-G 2004 is stabilizer
+simulability, NOT a universality cite) — currently carried as the tracked Props
 `trappedIonSU4_v4_witness_tracked` / `cliffordCCZSU8_v4_witness_tracked`.
 
 ## Substantive content shipped
@@ -90,7 +92,9 @@ theorem trappedIonSU4_headline_of_witness (N : ℕ) (hN : 0 < N)
 /-- **SU(8) Clifford+CCZ headline from a `ClosureDenseWitness` ALONE.**
 
 As `trappedIonSU4_headline_of_witness`, at SU(8): the UNCONDITIONAL headline follows from a single
-closure-density witness for the Clifford+CCZ alphabet (Aaronson-Gottesman 2004 universality). -/
+closure-density witness for the universal Clifford+CCZ+T alphabet (density from its Clifford+T
+sub-alphabet; CCZ universality is Boykin et al 1999 / Brylinski-Brylinski 2001, but the shipped
+witness uses Clifford+T — A-G 2004 is simulability, not universality). -/
 theorem cliffordCCZSU8_headline_of_witness
     (w : ClosureDenseWitness SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZGeneratingSetSU8) :
     SolovayKitaevHeadline_FreeGroup_SUd

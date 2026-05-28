@@ -13,9 +13,9 @@ Parallel to `TrappedIonSU4DensityConditional` but at d = 8 for the
 Clifford+CCZ alphabet.
 
 The unconditional discharge composes:
-  * The substantive witness construction (Aaronson-Gottesman 2004
-    lineage for Clifford+CCZ universality at SU(2^n); ships in T-A2′.2
-    PROPER).
+  * The substantive witness construction (universal Clifford+CCZ+T alphabet; density from the
+    Clifford+T sub-alphabet — Boykin et al 1999. Ships in `CliffordCCZSU8WitnessFull`. NB: A-G 2004
+    is stabilizer simulability, not universality.).
   * Phase 6y S.2g unconditional (`CartanFinalStep_SUd_v4_holds` at
     d = 8; ships in S.2g PROPER via the multi-parameter IFT route).
 
@@ -48,14 +48,15 @@ attribute [local instance] Matrix.linftyOpNormedAddCommGroup
 
 /-! ## 1. Conditional density of the full Clifford+CCZ GeneratingSet -/
 
-/-- **Conditional T-A2′.2 density**: the full Clifford+CCZ alphabet
-`{H_q1, H_q2, H_q3, CCZ_SU}` is dense in SU(8), conditional on a
+/-- **Conditional T-A2′.2 density**: the universal Clifford+CCZ+T alphabet
+`cliffordCCZGeneratingSetSU8 = {H_qi, T_qi, CNOT_ij, CCZ_SU}` is dense in SU(8), conditional on a
 closure-density witness AND Phase 6y S.2g (Cartan v4 at d = 8).
 
-For the unconditional version, both prerequisites need to ship:
-  * **Witness**: explicit Aaronson-Gottesman 2004 lineage tangents from
-    the alphabet (3 single-qubit Hadamards + CCZ) spanning 𝔰𝔲(8)
-    (63-dim).
+Both prerequisites have since SHIPPED unconditionally:
+  * **Witness**: the 63 tensor-Pauli tangents spanning 𝔰𝔲(8), with flow lines by conjugation
+    transport from the Phase 6u Clifford+T per-qubit density (the `T` gate; Boykin et al 1999).
+    Ships in `CliffordCCZSU8WitnessFull` (`cliffordCCZSU8_v4_witness_tracked_holds`). Density rests
+    on the `{H,T,CNOT}` sub-alphabet; CCZ is over-complete. (A-G 2004 = simulability, not universality.)
   * **Cartan v4**: Phase 6y S.2g full discharge at d = 8. -/
 theorem cliffordCCZGeneratingSetSU8_isDense_conditional
     (w : SKEFTHawking.FKLW.GenericSUd.ClosureDenseWitness

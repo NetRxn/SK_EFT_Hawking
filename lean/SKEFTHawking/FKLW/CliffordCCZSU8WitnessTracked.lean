@@ -10,14 +10,16 @@ containment witness needed to discharge `H_of_G cliffordCCZGeneratingSetSU8
 = ⊤`. Follows the Phase 6u CliffordT pattern + the Phase 6y T-A1′.2
 trapped-ion pattern.
 
-## Substantive discharge plan (multi-session work)
+## Substantive discharge (SHIPPED — `CliffordCCZSU8WitnessFull`)
 
-Universality of Clifford+CCZ for SU(2^n) is the Aaronson-Gottesman 2004
-result; at n = 3 it gives universality for SU(8) = 63-dim. The substantive
-discharge requires constructing the 63 Lie algebra tangents via iterated
-brackets of the alphabet's per-qubit Hadamards + the CCZ tangent
-`-i CCZ_Hamiltonian`, and verifying the spanning hypothesis via standard
-linear algebra at SU(2^3) = 63-dim.
+The discharge ships on the **universal Clifford+CCZ+T** alphabet: the 63 tensor-Pauli tangents
+span `𝔰𝔲(8)` (standard Hilbert-Schmidt linear algebra), and their flow lines are obtained NOT by
+bracket-generation but by **conjugation transport** — the 9 per-qubit flows come from the Phase 6u
+Clifford+T SU(2) density (the `T` gate; Boykin et al 1999 Clifford+T universality), and the 54
+entangling flows are explicit `CNOT`/Clifford conjugates of them. Density rests on the `{H,T,CNOT}`
+sub-alphabet; **CCZ is over-complete and unused** in the witness. (Aaronson-Gottesman 2004 is
+stabilizer *simulability* / Clifford group structure, NOT a universality result — do not cite it as
+such. The CCZ-essential literal-Clifford+CCZ statement is a tracked strengthening follow-on.)
 
 ## Pipeline invariants
 

@@ -16,10 +16,12 @@ word is a global phase times a real orthogonal matrix, so the generated group is
 genuine universal Clifford+CCZ set augmented with `T`: `T` is the single-qubit infinite-order gate
 ({H,S} alone is the *finite* Clifford group → no continuous per-qubit flow lines), which lets the
 per-qubit `𝔰𝔲(2)` flow lines reuse the Phase 6u Clifford+T SU(2) density
-(`cliffordT_H_of_G_eq_top_unconditional`) pushed through `qubit{1,2,3}Embed`; the CNOTs supply the
-cross-qubit Clifford transitivity (`Sp(6,𝔽₂)` on the 63 Paulis) for the entangling-tangent spread.
-CCZ is retained so the alphabet literally contains Clifford+CCZ. (Note `{H,T,CNOT}` is already
-Clifford+T = universal; CCZ is over-complete, which only enlarges `H_of_G`.)
+(`cliffordT_H_of_G_eq_top_unconditional`) pushed through `qubit{1,2,3}Embed`; the entangling-tangent
+spread is then explicit conjugation transport — `CNOT`-conjugation produces the base entanglers
+(`σ_x⊗σ_x` etc.) and per-qubit Clifford conjugation rotates each factor to reach all 63 Paulis (NOT
+an abstract `Sp(6,𝔽₂)` orbit argument). CCZ is retained so the alphabet literally contains
+Clifford+CCZ. (Note `{H,T,CNOT}` is already Clifford+T = universal; CCZ is over-complete and is
+unused in the witness construction — this ships Clifford+T at SU(8), not the CCZ-essential headline.)
 
 Per-qubit generators are the embedded images of the Clifford+T generators
 (`H_SU_on_qubit_i_SU8 = qubit_iEmbed H_SU`, `T_SU_on_qubit_i_SU8 = qubit_iEmbed T_SU`); this is the
@@ -112,8 +114,8 @@ Alphabet (10 generators):
 
 Word type `FreeGroup (Fin 10)`. The closure-density at SU(8) is the T-A2′.2 ship: per-qubit flows
 from the Phase 6u Clifford+T SU(2) density (via the embeddings), spread to the 63 entangling tangents
-by Clifford conjugation (`Sp(6,𝔽₂)` transitivity). ε₀-net + calibration + bundled-strict headline
-are T-A2′.{3,4,5}. -/
+by explicit Clifford/CNOT conjugation transport. ε₀-net + calibration + bundled-strict headline
+are T-A2′.{3,4,5}. (Density rests on the `{H,T,CNOT}` sub-alphabet; CCZ is over-complete.) -/
 noncomputable def cliffordCCZGeneratingSetSU8 :
     SKEFTHawking.FKLW.GenericSUd.GeneratingSet 8 where
   W := FreeGroup (Fin 10)
