@@ -1643,6 +1643,14 @@ import SKEFTHawking.FKLW.GenericSUdExpIsuDDetDischarge
 -- only 2 remaining ingredients: super-quad bound + length bound. Ships
 -- `skHeadline_FreeGroup_SUd_cascade_2ingredient` + `_with_calibration`.
 import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade2Ingredient
+-- Phase 6y Track S (Session 51, 2026-05-27): SU(d) word-length closed-form
+-- upper bound. SU(d) analog of Phase 6u SU(2) `skLength`. Ships
+-- `skLength_sud baseCase decompCost n := baseCase·5^n + decompCost·(5^n-1)/4`
+-- (parametric in per-alphabet constants) + nonneg/monotone helpers +
+-- recursive form + `SkLengthPolylogBound_sud` predicate. Alphabet-agnostic
+-- 5-fold branching closed-form. Substrate for the length-bound ingredient
+-- (4th of 4 enumerated by Session 47 cascade index).
+import SKEFTHawking.FKLW.GenericSUdSkLength
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
