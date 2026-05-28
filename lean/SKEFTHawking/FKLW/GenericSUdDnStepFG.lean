@@ -53,6 +53,7 @@ substrate for S.6 polylog UNCONDITIONAL via lifted Generic SK recursion).
 
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdHermitianDischargeFull
+import SKEFTHawking.FKLW.GenericSUdHermitianDischargeKeystoneBounded
 import SKEFTHawking.FKLW.GenericSUdMatrixExpDiffeo
 
 set_option autoImplicit false
@@ -134,8 +135,15 @@ noncomputable def dnStepFG_sud {n : ℕ}
       IsHermitian_real_smul_sud h.2.2.1 (1 / θ)
     have hH_unit_tr : H_unit.trace = 0 :=
       smul_trace_zero_sud h.2.2.2 _
-    let ex := symmetric_balanced_commutator_hermitian_unconditional
-                H_unit hH_unit_herm hH_unit_tr θ h.1.le h.2.1
+    have hθ_pos : 0 < θ := h.1
+    have hH_unit_norm : ‖H_unit‖ ≤ 1 := by
+      have h_eq : ‖H_unit‖ = 1 := by
+        show ‖((1 / θ : ℝ) : ℂ) • H‖ = 1
+        rw [norm_smul, Complex.norm_of_nonneg (by positivity : (0:ℝ) ≤ 1 / θ), one_div]
+        exact inv_mul_cancel₀ (ne_of_gt hθ_pos)
+      rw [h_eq]
+    let ex := symmetric_balanced_commutator_hermitian_unconditional_bounded
+                H_unit hH_unit_herm hH_unit_tr hH_unit_norm θ h.1.le h.2.1
     { F := ex.choose
       G := ex.choose_spec.choose
       hF_herm := ex.choose_spec.choose_spec.1

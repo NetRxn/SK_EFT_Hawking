@@ -1759,6 +1759,11 @@ import SKEFTHawking.FKLW.GenericSUdHermitianDischargeBoundedExplicit
 -- eigenvalue bound + partial-sum bound + γ-sum decomposition) to give the
 -- concrete `‖F‖ ≤ (n+2)²·(n+1)·√(n+2)·√(θ/2)` form needed by the F-norm predicate.
 import SKEFTHawking.FKLW.GenericSUdHermitianDischargeKeystoneBounded
+-- Phase 6y Track S (Session 82, 2026-05-27): dnStepFG_sud F/G-norm bound discharge.
+-- dnStepFG_sud re-wired to extract (F,G) from the bounded keystone (Session 81),
+-- so the chosen witnesses carry the concrete bound; discharges
+-- DnStepFG_sud_F/G_norm_bound_predicate at K_F = (n+2)²·(n+1)·√(n+2).
+import SKEFTHawking.FKLW.GenericSUdDnStepFGNormBound
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
