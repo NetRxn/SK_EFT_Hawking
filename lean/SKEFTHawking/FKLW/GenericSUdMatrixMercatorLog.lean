@@ -199,4 +199,37 @@ theorem matrixMercatorLog_commute_one_add {d : ℕ} (X : Matrix (Fin d) (Fin d) 
     Commute (1 + X) (matrixMercatorLog X) :=
   (Commute.one_left (matrixMercatorLog X)).add_left (matrixMercatorLog_commute_self X hX)
 
+/-- **`matrixMercatorLog X` commutes with any `Y` that commutes with `X`**
+(for `‖X‖ < 1`). The general commutation workhorse for the brick-2 round-trip:
+the exp-path derivative `d/dt exp(A(t)) = exp(A(t))·A'(t)` needs `A(t) =
+matrixMercatorLog(t•X)` to commute with `A'(t) = X·(1+t•X)⁻¹` and with the other
+`matrixMercatorLog(s•X)` — all of which commute with `X`. Each Mercator term
+`c_n • X^(n+1)` commutes with `Y` (since `X` does), so the series sum does. -/
+theorem matrixMercatorLog_commute_of_commute {d : ℕ} (X Y : Matrix (Fin d) (Fin d) ℂ)
+    (hX : ‖X‖ < 1) (hXY : Commute X Y) :
+    Commute (matrixMercatorLog X) Y := by
+  have h_sum : HasSum (fun n : ℕ => (((-1 : ℂ) ^ n / (n + 1 : ℂ))) • X ^ (n + 1))
+      (matrixMercatorLog X) := (summable_matrixMercatorLog X hX).hasSum
+  have h_right := h_sum.mul_right Y
+  have h_left := h_sum.mul_left Y
+  have h_eq : (fun n : ℕ => ((((-1 : ℂ) ^ n / (n + 1 : ℂ))) • X ^ (n + 1)) * Y) =
+              (fun n : ℕ => Y * ((((-1 : ℂ) ^ n / (n + 1 : ℂ))) • X ^ (n + 1))) := by
+    funext n
+    rw [smul_mul_assoc, mul_smul_comm]
+    congr 1
+    exact hXY.pow_left (n + 1)
+  rw [h_eq] at h_right
+  exact (h_left.unique h_right).symm
+
+/-- **`matrixMercatorLog X` commutes with `matrixMercatorLog Y`** when `X, Y`
+commute (and `‖X‖, ‖Y‖ < 1`). Pairwise commutation of the Mercator-log path —
+used in the brick-2 round-trip to commute `matrixMercatorLog(s•X)` with
+`matrixMercatorLog(t•X)`. Two applications of
+`matrixMercatorLog_commute_of_commute`. -/
+theorem matrixMercatorLog_commute_mercatorLog {d : ℕ} (X Y : Matrix (Fin d) (Fin d) ℂ)
+    (hX : ‖X‖ < 1) (hY : ‖Y‖ < 1) (hXY : Commute X Y) :
+    Commute (matrixMercatorLog X) (matrixMercatorLog Y) :=
+  matrixMercatorLog_commute_of_commute X (matrixMercatorLog Y) hX
+    (matrixMercatorLog_commute_of_commute Y X hY hXY.symm).symm
+
 end SKEFTHawking.FKLW.GenericSUd
