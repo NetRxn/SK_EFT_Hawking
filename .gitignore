@@ -66,6 +66,8 @@ outputs/
 pytest-cache-files-1k3by_ri
 rust/target/*
 .superpowers/*
+# validate.py CHECK 11 notebook-exec skip-cache (local, env-dependent vetted state)
+notebooks/.notebook_exec_cache.json
 
 # LaTeX build artifacts
 *.aux

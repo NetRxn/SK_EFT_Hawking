@@ -57,6 +57,7 @@ Design Decisions
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -76,6 +77,10 @@ PROJECT_ROOT = SCRIPT_DIR.parent
 SRC_DIR = PROJECT_ROOT / "src"
 LEAN_DIR = PROJECT_ROOT / "lean" / "SKEFTHawking"
 NOTEBOOKS_DIR = PROJECT_ROOT / "notebooks"
+# Local (git-ignored) skip-cache for CHECK 11 notebook execution: maps each
+# vetted notebook to a content hash so unchanged, previously-passed notebooks
+# are not re-executed. Mirrors the Lean `extract_lean_deps.py` hash-skip.
+NOTEBOOK_EXEC_CACHE = NOTEBOOKS_DIR / ".notebook_exec_cache.json"
 PAPERS_DIR = PROJECT_ROOT / "papers"
 REPORTS_DIR = PROJECT_ROOT / "docs" / "validation" / "reports"
 
@@ -119,6 +124,12 @@ _CHECKS: List[CheckSpec] = []
 # failures for paper-submission gating (currently used by parameter_provenance
 # and provenance_doi_in_registry).
 STRICT_MODE: bool = False
+
+# Force flag — set by CLI --force-notebooks. Bypasses the CHECK 11 notebook
+# skip-cache and re-executes every notebook (use after a kernel / dependency
+# upgrade that could change execution outcomes without changing notebook
+# content). Default False: unchanged, previously-vetted notebooks are skipped.
+FORCE_NOTEBOOK_REEXEC: bool = False
 
 
 def register_check(name: str, description: str):
@@ -710,18 +721,49 @@ def check_viz_consistency() -> CheckResult:
 # CHECK 11: Notebook execution (all notebooks must run without errors)
 # ═══════════════════════════════════════════════════════════════════════
 
+def _src_core_fingerprint() -> str:
+    """SHA-256 (16 hex) of all ``src/core/*.py`` — the physics the notebooks
+    import. Any change invalidates the whole CHECK 11 skip-cache, forcing a
+    full re-vet (a formulas/constants edit can change notebook outcomes without
+    changing notebook content)."""
+    hasher = hashlib.sha256()
+    src_core = SRC_DIR / "core"
+    if src_core.is_dir():
+        for fp in sorted(src_core.glob("*.py")):
+            hasher.update(fp.read_bytes())
+    return hasher.hexdigest()[:16]
+
+
+def _notebook_code_hash(nb) -> str:
+    """SHA-256 (16 hex) of a notebook's code-cell sources. Ignores outputs and
+    execution_count (which change on every run) so the hash is stable for an
+    otherwise-unchanged notebook."""
+    hasher = hashlib.sha256()
+    for cell in nb.cells:
+        if cell.cell_type == "code":
+            hasher.update(cell.source.encode("utf-8"))
+    return hasher.hexdigest()[:16]
+
+
 @register_check("notebook_exec", "All notebooks execute without errors")
 def check_notebook_execution() -> CheckResult:
     """Execute each notebook top-to-bottom and verify zero errors.
 
-    Uses nbconvert's execute preprocessor with a timeout per cell.
-    This catches import errors, missing variables, broken physics code,
-    and any runtime failures that static checks miss.
+    Uses nbclient's execute engine with a per-cell timeout. Catches import
+    errors, missing variables, broken physics code, and runtime failures that
+    static checks miss.
+
+    **Skip-cache (2026-05-28):** unchanged, previously-passed notebooks are
+    skipped via a content hash recorded in ``NOTEBOOK_EXEC_CACHE`` (keyed on a
+    ``src/core`` fingerprint), mirroring the Lean ``extract_lean_deps.py``
+    hash-skip. Without it this check re-executes all ~89 notebooks every run
+    (~25 min) — the dominant ``validate.py`` slowness. Pass ``--force-notebooks``
+    to bypass the cache and re-execute everything (e.g. after a kernel /
+    dependency upgrade that changes outcomes without changing content).
     """
     import nbformat
-    from nbformat.v4 import new_notebook
 
-    details = []
+    details: List[Detail] = []
     all_pass = True
 
     # Try importing the execution engine
@@ -735,11 +777,41 @@ def check_notebook_execution() -> CheckResult:
                             "Install with: pip install nbclient")],
         )
 
+    # Load the skip-cache. A src/core fingerprint mismatch discards it (re-vet
+    # all); --force-notebooks ignores it entirely.
+    src_fp = _src_core_fingerprint()
+    prev_passed: Dict[str, str] = {}
+    if NOTEBOOK_EXEC_CACHE.is_file() and not FORCE_NOTEBOOK_REEXEC:
+        try:
+            loaded = json.loads(NOTEBOOK_EXEC_CACHE.read_text())
+            if isinstance(loaded, dict) and loaded.get("src_fingerprint") == src_fp:
+                prev_passed = loaded.get("passed", {}) or {}
+        except (json.JSONDecodeError, OSError):
+            prev_passed = {}
+
+    new_passed: Dict[str, str] = {}
+    n_skipped = 0
+
     for nb_path in sorted(NOTEBOOKS_DIR.glob("*.ipynb")):
         try:
             with open(nb_path) as f:
                 nb = nbformat.read(f, as_version=4)
+        except Exception as e:
+            all_pass = False
+            details.append(Detail(nb_path.name, False, f"unreadable: {e}"))
+            continue
 
+        code_hash = _notebook_code_hash(nb)
+
+        # Skip unchanged, previously-vetted notebooks.
+        if not FORCE_NOTEBOOK_REEXEC and prev_passed.get(nb_path.name) == code_hash:
+            n_skipped += 1
+            new_passed[nb_path.name] = code_hash
+            details.append(Detail(nb_path.name, True,
+                                  "SKIPPED — unchanged, previously vetted"))
+            continue
+
+        try:
             client = NotebookClient(
                 nb,
                 timeout=120,          # per-cell timeout
@@ -753,6 +825,7 @@ def check_notebook_execution() -> CheckResult:
             details.append(Detail(
                 nb_path.name, True,
                 f"{code_cells} code cells executed successfully"))
+            new_passed[nb_path.name] = code_hash  # record vetted state
 
         except Exception as e:
             all_pass = False
@@ -767,6 +840,21 @@ def check_notebook_execution() -> CheckResult:
             if len(err_msg) > 200:
                 err_msg = err_msg[:200] + "..."
             details.append(Detail(nb_path.name, False, err_msg))
+            # Do NOT record — a failed notebook re-runs next time.
+
+    # Persist the updated cache (only currently-existing, vetted notebooks).
+    try:
+        NOTEBOOK_EXEC_CACHE.write_text(json.dumps(
+            {"src_fingerprint": src_fp, "passed": new_passed},
+            indent=2, sort_keys=True))
+    except OSError:
+        pass
+
+    if n_skipped:
+        details.insert(0, Detail(
+            "skip_cache", True,
+            f"{n_skipped} notebook(s) skipped (unchanged, previously vetted); "
+            f"--force-notebooks re-runs all"))
 
     return CheckResult(passed=all_pass, details=details)
 
@@ -2737,10 +2825,17 @@ Examples:
               "(parameter_provenance, provenance_doi_in_registry). Used at the "
               "paper-submission gate, not at Stage-1 development.")
     )
+    parser.add_argument(
+        "--force-notebooks", action="store_true",
+        help=("Bypass the CHECK 11 notebook-exec skip-cache and re-execute every "
+              "notebook (default skips unchanged, previously-vetted notebooks). "
+              "Use after a kernel / dependency upgrade.")
+    )
     args = parser.parse_args()
 
-    global STRICT_MODE
+    global STRICT_MODE, FORCE_NOTEBOOK_REEXEC
     STRICT_MODE = args.strict
+    FORCE_NOTEBOOK_REEXEC = args.force_notebooks
 
     if args.list:
         print("Available checks:")
