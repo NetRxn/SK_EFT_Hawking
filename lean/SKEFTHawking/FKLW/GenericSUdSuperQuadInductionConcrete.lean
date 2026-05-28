@@ -204,4 +204,94 @@ lemma cubic_term_through_Vn_concrete {n : ℕ}
             Matrix (Fin (n + 2)) (Fin (n + 2)) ℂ)‖ := norm_nonneg _
         exact mul_le_mul h_M h_cubic h_gC_nn (by positivity)
 
+/-! ## Concrete inductive-step telescoping (S92 + S95 analogs) -/
+
+/-- **Concrete recursion ρ_hom-unfolding**: `ρ(sk_{n+1}^concrete U) = ρ(V_n)·gC(ρ(sk_n A_F),
+ρ(sk_n A_G))` at the matrix level. Log-agnostic structural lemma (S92 analog): unfolds the
+concrete recursion's `succ` shape via the S87 ρ_hom MonoidHom abstractions. -/
+lemma skApproxC_generic_sud_concrete_succ_rho_val {m : ℕ}
+    (gs : GeneratingSet (m + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (m + 2))
+    (n : ℕ) (U : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+    let V_n_word := skApproxC_generic_sud_concrete gs baseFinder h_det_pred n U
+    let data := dnStepFG_sud_concrete (gs.ρ_hom V_n_word) U
+    let A_F := expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr
+    let A_G := expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr
+    ((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred (n + 1) U) :
+        ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) =
+      ((gs.ρ_hom V_n_word : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+      groupCommutator
+        ((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n A_F) :
+            ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+        ((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n A_G) :
+            ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) := by
+  intro V_n_word data A_F A_G
+  rw [skApproxC_generic_sud_concrete_succ]
+  rw [ρ_hom_sud_mul_val, ρ_hom_sud_groupCommutator_val]
+
+/-- **Concrete single-step error combine (telescoping assembly)**: `‖ρ(sk_{n+1}^concrete U) − U‖
+≤ Cstab + Ccubic`, given the stability term (`‖ρ(V_n)·gC(ρ(sk A_F),ρ(sk A_G)) − ρ(V_n)·gC(A_F,A_G)‖
+≤ Cstab`) and the cubic term (`‖ρ(V_n)·gC(A_F,A_G) − U‖ ≤ Ccubic`). Concrete counterpart of
+`skApproxC_sud_succ_error_le_combine` (S95): unfolds the recursion via the concrete
+`succ_rho_val` and applies the triangle inequality through the common midpoint
+`ρ(V_n)·gC(A_F,A_G)`. -/
+lemma skApproxC_sud_succ_error_le_combine_concrete {m : ℕ}
+    (gs : GeneratingSet (m + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (m + 2))
+    (n : ℕ) (U : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ))
+    (Cstab Ccubic : ℝ)
+    (h_stab_term :
+      let V_n_word := skApproxC_generic_sud_concrete gs baseFinder h_det_pred n U
+      let data := dnStepFG_sud_concrete (gs.ρ_hom V_n_word) U
+      let A_F := expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr
+      let A_G := expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr
+      ‖((gs.ρ_hom V_n_word : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+          groupCommutator
+            ((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n A_F) :
+                ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+            ((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred n A_G) :
+                ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+        ((gs.ρ_hom V_n_word : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+            Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+          groupCommutator
+            ((A_F : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+            ((A_G : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ Cstab)
+    (h_cubic_term :
+      let V_n_word := skApproxC_generic_sud_concrete gs baseFinder h_det_pred n U
+      let data := dnStepFG_sud_concrete (gs.ρ_hom V_n_word) U
+      let A_F := expIsud_of_det_predicate h_det_pred data.F data.hF_herm data.hF_tr
+      let A_G := expIsud_of_det_predicate h_det_pred data.G data.hG_herm data.hG_tr
+      ‖((gs.ρ_hom V_n_word : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+          Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) *
+          groupCommutator
+            ((A_F : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)
+            ((A_G : ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+                Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+        (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ Ccubic) :
+    ‖((gs.ρ_hom (skApproxC_generic_sud_concrete gs baseFinder h_det_pred (n + 1) U) :
+          ↥(Matrix.specialUnitaryGroup (Fin (m + 2)) ℂ)) :
+        Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) -
+        (U : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ)‖ ≤ Cstab + Ccubic := by
+  simp only at h_stab_term h_cubic_term
+  have htri : ∀ (a b c : Matrix (Fin (m + 2)) (Fin (m + 2)) ℂ) (X Y : ℝ),
+      ‖a - b‖ ≤ X → ‖b - c‖ ≤ Y → ‖a - c‖ ≤ X + Y := by
+    intro a b c X Y hab hbc
+    calc ‖a - c‖ = ‖(a - b) + (b - c)‖ := by rw [sub_add_sub_cancel]
+      _ ≤ ‖a - b‖ + ‖b - c‖ := norm_add_le _ _
+      _ ≤ X + Y := add_le_add hab hbc
+  rw [skApproxC_generic_sud_concrete_succ_rho_val gs baseFinder h_det_pred n U]
+  exact htri _ _ _ _ _ h_stab_term h_cubic_term
+
 end SKEFTHawking.FKLW.GenericSUd
