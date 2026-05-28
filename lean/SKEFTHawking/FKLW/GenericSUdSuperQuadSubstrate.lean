@@ -31,6 +31,7 @@ substrate lift (1st of ~10 substrate lemmas per Explore-agent intel).
 
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdNormBridgeUnitaryConjugation
+import SKEFTHawking.FKLW.GenericSUdMatrixLogLipschitzExplicit
 
 set_option autoImplicit false
 
@@ -100,5 +101,32 @@ lemma residual_norm_le_d_mul {d : ℕ} [Nonempty (Fin d)]
     _ ≤ (d : ℝ) * ‖U.val - V.val‖ := by
         gcongr
     _ = (d : ℝ) * ‖V.val - U.val‖ := by rw [h_norm_sub_sym]
+
+/-! ## H norm bound at SU(d) (using matrixLog Lipschitz K=2) -/
+
+/-- **H norm bound at SU(d)** via matrixLog Lipschitz K=2.
+
+For `Δ : Matrix (Fin d) (Fin d) ℂ` in the matrixLog-Lipschitz neighborhood
+of 1 (radius δ from Session 41's `matrixLog_lipschitz_K_two_near_one`),
+the matrix `H := (-Complex.I) • matrixLog d Δ` has linftyOp norm at most
+`2 · ‖Δ - 1‖`.
+
+SU(d) analog of SU(2)'s `H_norm_le_four_norm_sub_one` (Phase 6t
+SolovayKitaevPathA). The SU(d) constant is K=2 (Session 41) vs SU(2)'s
+K=4 (loose) or K=π (tight); the analog uses `matrixLog_lipschitz_K_two_near_one`. -/
+lemma H_norm_le_two_norm_sub_one_sud (d : ℕ) :
+    ∃ δ > (0 : ℝ), ∀ Δ : Matrix (Fin d) (Fin d) ℂ,
+      ‖Δ - 1‖ < δ →
+      ‖((-Complex.I) • matrixLog d Δ : Matrix (Fin d) (Fin d) ℂ)‖ ≤
+        2 * ‖Δ - 1‖ := by
+  obtain ⟨δ, hδ_pos, h_lipschitz⟩ := matrixLog_lipschitz_K_two_near_one d
+  refine ⟨δ, hδ_pos, ?_⟩
+  intro Δ h_small
+  -- ‖(-i) • matrixLog Δ‖ = ‖-i‖ · ‖matrixLog Δ‖ = 1 · ‖matrixLog Δ‖
+  rw [norm_smul]
+  have h_norm_neg_I : ‖(-Complex.I)‖ = 1 := by
+    rw [norm_neg, Complex.norm_I]
+  rw [h_norm_neg_I, one_mul]
+  exact h_lipschitz Δ h_small
 
 end SKEFTHawking.FKLW.GenericSUd
