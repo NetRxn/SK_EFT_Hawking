@@ -1792,6 +1792,10 @@ import SKEFTHawking.FKLW.GenericSUdSuperQuadInduction
 -- Feeds Session 102's (B) super-quad discharge into the Session 56 cascade, reducing
 -- the SU(d) headline to (D) density witness + regime hypothesis + length-polylog.
 import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascadeBDischarged
+-- Phase 6y Track S (Session 104, 2026-05-28): regime guards. H = (-i)·matrixLog Δ is
+-- Hermitian + traceless on a nbhd of 1 (from matrixLog-in-su-d substrate); the
+-- Hermitian/traceless component of the h_regime hypothesis discharge.
+import SKEFTHawking.FKLW.GenericSUdRegimeGuards
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
