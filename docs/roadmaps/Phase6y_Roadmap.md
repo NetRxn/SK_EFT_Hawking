@@ -538,8 +538,9 @@ of `K`/`ε₀` closes it; only a concrete construction does.
     - **🎯 T-A2′ SU(8) RESOLUTION (2026-05-28, user-authorized) — ship A′ now + DR-spike literal.** The
       literal roadmap alphabet for instance (2) was `{H_q1,H_q2,H_q3, CCZ}`, which is **non-universal** (OF-1:
       every word ∈ μ₁₆·O(8), dense only in SO(8) — its witness is mathematically FALSE). The **faithful**
-      literal set is `{H,S,CNOT,CCZ}` (full Clifford+CCZ, universal by Boykin et al 1999 / Shi 2002 /
-      Brylinski-Brylinski 2001). Decision (user, 2026-05-28): **(a) ship the SU(8) instance NOW on the
+      literal set is `{H,S,CNOT,CCZ}` (full Clifford+CCZ, universal by **Shi 2002 / Aharonov 2003**;
+      Brylinski-Brylinski 2001 give the entangling-gate criterion. NB: Boykin et al 1999 is the
+      Clifford+**T** basis, NOT Clifford+CCZ — cite it only for the A′ Clifford+T density, not here). Decision (user, 2026-05-28): **(a) ship the SU(8) instance NOW on the
       universal alphabet A′ `{H_qi, T_qi, CNOT_ij, CCZ}` (Clifford+CCZ+T)**, which has per-qubit Clifford+T
       density (Phase 6u, shipped) ⟹ continuous per-qubit flows for free ⟹ `ClosureDenseWitness` UNCONDITIONAL,
       kernel-only, via conjugation spread (NO Trotter needed); **AND (b) commission a DR spike for the faithful

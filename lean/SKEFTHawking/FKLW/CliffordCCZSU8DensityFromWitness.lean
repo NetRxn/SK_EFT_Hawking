@@ -9,11 +9,12 @@ The cascade-closing module for Clifford+CCZ at SU(8): given a closure-density
 witness for `cliffordCCZGeneratingSetSU8`, produces UNCONDITIONAL SU(8)
 density + ε₀-net via the Phase 6y S.5 unconditional discharge chain.
 
-Clifford+CCZ is universal for SU(2^n) (Boykin-Mor-Pulver-Roychowdhury-Vatan 1999 /
-Brylinski-Brylinski 2001). NB: the shipped witness uses the universal Clifford+CCZ+**T** alphabet and
-its density rests on the `{H,T,CNOT}` (Clifford+T) sub-alphabet — CCZ is over-complete and unused.
-(Aaronson-Gottesman 2004 is stabilizer *simulability* / Clifford group structure, NOT a universality
-result — do not cite it as such.)
+Clifford+CCZ is universal for SU(2^n) (Shi 2002 / Aharonov 2003; Brylinski-Brylinski 2001 give the
+entangling-gate criterion — CCZ is non-primitive). NB: Boykin-Mor-Pulver-Roychowdhury-Vatan 1999 is
+the Clifford+**T** basis ({H, σ_z^{1/4}, CNOT}) — i.e. exactly the sub-alphabet the shipped witness
+actually uses: its density rests on `{H,T,CNOT}` (Clifford+T, BMPRV 1999), CCZ is over-complete and
+unused. (Aaronson-Gottesman 2004 is stabilizer *simulability*, NOT universality — do not cite it as
+such.)
 
 ## Pipeline invariants
 

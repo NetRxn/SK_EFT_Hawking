@@ -93,8 +93,9 @@ theorem trappedIonSU4_headline_of_witness (N : ℕ) (hN : 0 < N)
 
 As `trappedIonSU4_headline_of_witness`, at SU(8): the UNCONDITIONAL headline follows from a single
 closure-density witness for the universal Clifford+CCZ+T alphabet (density from its Clifford+T
-sub-alphabet; CCZ universality is Boykin et al 1999 / Brylinski-Brylinski 2001, but the shipped
-witness uses Clifford+T — A-G 2004 is simulability, not universality). -/
+sub-alphabet — Clifford+T universality is BMPRV 1999; CCZ universality is Shi 2002 / Aharonov 2003,
+with the Brylinski-Brylinski 2001 entangling-gate criterion; the shipped witness uses Clifford+T —
+A-G 2004 is simulability, not universality). -/
 theorem cliffordCCZSU8_headline_of_witness
     (w : ClosureDenseWitness SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZGeneratingSetSU8) :
     SolovayKitaevHeadline_FreeGroup_SUd
