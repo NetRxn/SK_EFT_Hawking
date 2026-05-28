@@ -1796,6 +1796,11 @@ import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascadeBDischarged
 -- Hermitian + traceless on a nbhd of 1 (from matrixLog-in-su-d substrate); the
 -- Hermitian/traceless component of the h_regime hypothesis discharge.
 import SKEFTHawking.FKLW.GenericSUdRegimeGuards
+-- Phase 6y Track S (Session 109, 2026-05-28): concrete-radius Mercator power-series
+-- matrix log (brick 1). matrixMercatorLog converges on the NAMED ball ‖X‖<1 with
+-- ‖·‖ ≤ ‖X‖/(1−‖X‖) (≤ 2‖X‖ for ‖X‖≤1/2), the concrete-radius replacement for the
+-- existential IFT matrixLog — toward the unconditional regime discharge.
+import SKEFTHawking.FKLW.GenericSUdMatrixMercatorLog
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
