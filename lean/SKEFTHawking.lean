@@ -1732,6 +1732,12 @@ import SKEFTHawking.FKLW.GenericSUdPermConjNormPreserve
 -- + `gamma_sum_bound` giving `∑|γ_p| ≤ √(θ/2)·card·√B`. F_inner norm bound
 -- with K_inner = card·√B (B = max partial sum bound from Gershgorin).
 import SKEFTHawking.FKLW.GenericSUdGammaSumDecomp
+-- Phase 6y Track S (Session 73, 2026-05-27): Hermitian eigenvalue bounded by
+-- linftyOp norm (Gershgorin). `|hA.eigenvalues i| ≤ ‖A‖` via charpoly root →
+-- HasEigenvalue (toLin' A) → `eigenvalue_mem_ball` (Mathlib Gershgorin) →
+-- |μ| ≤ row-k sum ≤ max row sum = ‖A‖_linftyOp. Last mathematical ingredient
+-- for the F_inner partial-sum bound B = d·‖H‖.
+import SKEFTHawking.FKLW.GenericSUdEigenvalueLinftyBound
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
