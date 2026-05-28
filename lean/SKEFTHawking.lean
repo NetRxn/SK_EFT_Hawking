@@ -1788,6 +1788,10 @@ import SKEFTHawking.FKLW.GenericSUdRhomAbstraction
 -- skApproxC_generic_sud_zero_error_bound — level-0 error ≤ ε_seq K (2·ε₀) 0 = 2·ε₀.
 -- First component of the SkApproxCSuperQuadraticBound_generic_sud (B) discharge.
 import SKEFTHawking.FKLW.GenericSUdSuperQuadInduction
+-- Phase 6y Track S.6 (Session 103, 2026-05-28): headline cascade with (B) discharged.
+-- Feeds Session 102's (B) super-quad discharge into the Session 56 cascade, reducing
+-- the SU(d) headline to (D) density witness + regime hypothesis + length-polylog.
+import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascadeBDischarged
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
