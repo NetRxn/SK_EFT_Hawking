@@ -232,6 +232,27 @@ Per [[feedback-multi-session-wave-pattern]] (`memory/feedback_multi_session_wave
 
 Phase 6y Wave 1: **IN PROGRESS** (Sessions 1-51 of N shipped 2026-05-27; **38 commits, ~4925 LoC kernel-only**; build clean 8830 jobs throughout).
 
+> **2026-05-28 close update.** All three Phase 6y instances now ship UNCONDITIONAL + kernel-only:
+> Track S SU(d) substrate (cascade unconditional, regime existential eliminated), **T-A1′ SU(4)**,
+> and **T-A2′ SU(8)** (the (D) witness `cliffordCCZSU8_solovayKitaev_headline_unconditional`,
+> commit `3e3d2f4`). A **whole-phase fresh-context adversarial sweep** (6u/6x/6y, 4 parallel reviewers)
+> returned **GREEN / GREEN-WITH-RECOMMENDED with ZERO BLOCKER and ZERO REQUIRED**; all RECOMMENDED
+> doc/citation items remediated (`bb1dacb`/`cf786d8`/`ec12f58`).
+> **Honest scope:** T-A2′ ships *Clifford+T at SU(8)* (universal Clifford+CCZ+T alphabet; density from
+> the `{H,T,CNOT}` sub-alphabet, CCZ over-complete/unused). The faithful *CCZ-essential* literal
+> headline is a tracked strengthening: **Phase A.1 shipped** (`70e17b9`, `CliffordCCZSU8LiteralSeed`:
+> seed `g=CCZ·(H⊗H⊗H)`, `tr(g)=1/√2`); Phase B (irrationality) + Phase C (Kronecker–Weyl
+> closure→1-param-subgroup lift, needs a proof-sketch sub-spike) pending. DR seed spike in
+> `Lit-Search/Phase-6y/`.
+> **Track-S labeling nuance (sweep RECOMMENDED):** the *generic* SU(d) headline is unconditional
+> *modulo the (D) `IsDenseInSUd_gs` witness*; the *per-alphabet* SU(4)/SU(8) headlines are FULLY
+> unconditional (witnesses discharged).
+> **Remaining follow-ons (non-close-blockers):** M-S substantive Mathlib-PR extraction (PR files
+> currently alias-only); D4 §9.8 bundle absorption (held for a separate user-authorized event);
+> exact counts/Inventory refresh — **blocked by `ExtractDeps.lean` extraction exceeding its 1800s
+> timeout** (per-declaration axiom-closure walk over the grown Phase-6y substrate; needs a perf fix —
+> likely memoizing `collectAxioms` — or a longer offline run).
+
 - **AC items substantively shipped (UNCONDITIONAL)**: S.1, S.2 (S.2g UNCONDITIONAL), **S.3 d≥3 PROPER (Sessions 14-39, keystone `symmetric_balanced_commutator_hermitian_unconditional` Session 33)**, S.4 (explicit K=2), S.5 (UNCONDITIONAL), T-X′.1, T-X′.3 (F#5 algorithmic ε-net), T-A1′.4, T-A2′.4 calibration.
 - **AC items partially shipped (substrate + 2 of 4 substantive ingredient discharges)**: S.6 cascade substrate + 2 of 4 substantive ingredients discharged:
   - **(1) `ExpIsud_det_eq_one_predicate` discharge ✓** (Session 49, spectral decomposition path; SU(d) analog of SU(2) `DetExpZeroOnSu2_SU2_discharged` ~2300 LoC)
