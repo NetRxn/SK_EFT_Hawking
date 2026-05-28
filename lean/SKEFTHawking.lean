@@ -1651,6 +1651,12 @@ import SKEFTHawking.FKLW.GenericSUdSkHeadlineCascade2Ingredient
 -- 5-fold branching closed-form. Substrate for the length-bound ingredient
 -- (4th of 4 enumerated by Session 47 cascade index).
 import SKEFTHawking.FKLW.GenericSUdSkLength
+-- Phase 6y Track S (Session 52, 2026-05-27): UNCONDITIONAL `expIsud` at SU(d≥2).
+-- Composes Session 42's `expIsud_of_det_predicate` with Session 49's substantive
+-- `expIsud_det_eq_one_predicate_holds` — removes the det-hypothesis from
+-- downstream consumers. SU(d) analog of Phase 6t SU(2)'s `expIsu2`. Ships
+-- `expIsud` + value extraction + worked examples at SU(2)/SU(4)/SU(8).
+import SKEFTHawking.FKLW.GenericSUdExpIsuDUnconditional
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
