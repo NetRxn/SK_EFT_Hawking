@@ -510,4 +510,72 @@ theorem hasDerivAt_round_trip_factor {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ)
       (Ring.inverse (1 + (↑t : ℂ) • X) * X) (1 + (↑t : ℂ) • X),
     hkey, neg_add_cancel]
 
+/-! ## 10. The exp/log round-trip (brick 2 COMPLETE) -/
+
+/-- `matrixMercatorLog 0 = 0` (the series has all terms `c_n • 0^(n+1) = 0`). -/
+@[simp]
+theorem matrixMercatorLog_zero {d : ℕ} :
+    matrixMercatorLog (0 : Matrix (Fin d) (Fin d) ℂ) = 0 := by
+  unfold matrixMercatorLog; simp [zero_pow]
+
+/-- **EXP/LOG ROUND-TRIP (brick 2 COMPLETE)**: for `‖X‖ < 1`,
+
+  `NormedSpace.exp (matrixMercatorLog X) = 1 + X`.
+
+The Mercator-series matrix logarithm is a genuine right-inverse of `exp` (shifted by
+`1`) on the **named** ball `‖X‖ < 1` — the concrete-radius analog of the IFT round-trip
+`expAmbient_matrixLog` (which holds only on the existential `target`). **Proof**: the
+factor `f(t) = exp(−mLog((↑t)•X))·(1+(↑t)•X)` has `f'(t) = 0` on the ball `|t| < 1/‖X‖`
+(`hasDerivAt_round_trip_factor`), hence is constant there
+(`Convex.is_const_of_fderivWithin_eq_zero`); with `f(0) = exp(0)·1 = 1` this gives
+`f(1) = exp(−mLog X)·(1+X) = 1`, and left-multiplying by `exp(mLog X)` (the inverse of
+`exp(−mLog X)`, via `exp_add_of_commute`) yields `1 + X = exp(mLog X)`. The `X = 0` case
+is immediate (`exp(mLog 0) = exp 0 = 1 = 1 + 0`).
+
+This is the analytic culmination of the concrete-radius substrate. The remaining brick 3
+identifies `matrixMercatorLog (Δ − 1)` with the IFT `matrixLog d Δ` for `Δ` near `1` (via
+local injectivity of `exp` + this round-trip), discharging the regime θ-bound + `Δ∈target`
+on the concrete calibration ball. -/
+theorem exp_matrixMercatorLog {d : ℕ} (X : Matrix (Fin d) (Fin d) ℂ) (hX : ‖X‖ < 1) :
+    NormedSpace.exp (matrixMercatorLog X) = 1 + X := by
+  rcases eq_or_ne X 0 with hX0 | hXne
+  · subst hX0; rw [matrixMercatorLog_zero, NormedSpace.exp_zero, add_zero]
+  have hXpos : (0 : ℝ) < ‖X‖ := norm_pos_iff.mpr hXne
+  set f : ℝ → Matrix (Fin d) (Fin d) ℂ :=
+    fun s => NormedSpace.exp (-(matrixMercatorLog ((↑s : ℂ) • X))) * (1 + (↑s : ℂ) • X) with hf_def
+  have hmem : ∀ t ∈ Metric.ball (0 : ℝ) (1 / ‖X‖), |t| * ‖X‖ < 1 := by
+    intro t ht
+    rw [Metric.mem_ball, Real.dist_eq, sub_zero] at ht
+    rw [← lt_div_iff₀ hXpos]; exact ht
+  have hderiv : ∀ t ∈ Metric.ball (0 : ℝ) (1 / ‖X‖), HasDerivAt f 0 t :=
+    fun t ht => hasDerivAt_round_trip_factor X t (hmem t ht)
+  have h0s : (0 : ℝ) ∈ Metric.ball (0 : ℝ) (1 / ‖X‖) := by
+    rw [Metric.mem_ball, Real.dist_eq, sub_zero, abs_zero]; positivity
+  have h1s : (1 : ℝ) ∈ Metric.ball (0 : ℝ) (1 / ‖X‖) := by
+    rw [Metric.mem_ball, Real.dist_eq, sub_zero, abs_one, lt_div_iff₀ hXpos, one_mul]; exact hX
+  have hconst : f 1 = f 0 :=
+    Convex.is_const_of_fderivWithin_eq_zero (convex_ball _ _)
+      (fun t ht => (hderiv t ht).differentiableAt.differentiableWithinAt)
+      (fun t ht => by
+        rw [fderivWithin_of_isOpen Metric.isOpen_ball ht, (hderiv t ht).hasFDerivAt.fderiv]
+        simp) h1s h0s
+  have hf0 : f 0 = 1 := by
+    simp only [hf_def, Complex.ofReal_zero, zero_smul, matrixMercatorLog_zero, neg_zero,
+      NormedSpace.exp_zero, add_zero, one_mul]
+  have hf1 : NormedSpace.exp (-(matrixMercatorLog X)) * (1 + X) = 1 := by
+    have := hconst
+    rw [hf0] at this
+    simpa only [hf_def, Complex.ofReal_one, one_smul] using this
+  have hcomm_exp : NormedSpace.exp (matrixMercatorLog X) *
+      NormedSpace.exp (-(matrixMercatorLog X)) = 1 := by
+    rw [← NormedSpace.exp_add_of_commute (Commute.refl _).neg_right, add_neg_cancel,
+      NormedSpace.exp_zero]
+  calc NormedSpace.exp (matrixMercatorLog X)
+      = NormedSpace.exp (matrixMercatorLog X) * 1 := (mul_one _).symm
+    _ = NormedSpace.exp (matrixMercatorLog X) *
+          (NormedSpace.exp (-(matrixMercatorLog X)) * (1 + X)) := by rw [hf1]
+    _ = (NormedSpace.exp (matrixMercatorLog X) *
+          NormedSpace.exp (-(matrixMercatorLog X))) * (1 + X) := by rw [mul_assoc]
+    _ = 1 + X := by rw [hcomm_exp, one_mul]
+
 end SKEFTHawking.FKLW.GenericSUd
