@@ -1213,6 +1213,9 @@ import SKEFTHawking.FKLW.CliffordCCZSU8Tangents
 -- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): the 63 tensor-Pauli tangents ℝ-span 𝔰𝔲(8)
 -- (hX_spans via Hilbert-Schmidt completeness; alphabet-agnostic).
 import SKEFTHawking.FKLW.CliffordCCZSU8TangentSpan
+-- Phase 6y Track T-A2′.2 (D) witness (2026-05-28): per-qubit SU(2)→SU(8) embedding monoid homs
+-- (qubit{1,2,3}Embed) + continuity; alphabet-agnostic substrate for the per-qubit flow lines.
+import SKEFTHawking.FKLW.CliffordCCZSU8QubitEmbed
 -- Phase 6y Track S.2-consumer (2026-05-27): generic SU(d) ClosureDenseWitness
 -- structure for `GeneratingSet d`. Bundles n traceless skew-Hermitian
 -- spanning tangents + flow-line containment in H_of_G gs. Conditional
