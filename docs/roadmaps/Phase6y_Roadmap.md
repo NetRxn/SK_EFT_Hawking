@@ -290,13 +290,19 @@ Phase 6y Wave 1: **IN PROGRESS** (Sessions 1-51 of N shipped 2026-05-27; **38 co
 - **Session 50** (`4c3c4b7`): refined 2-ingredient cascade leveraging Sessions 48 + 49.
 - **Session 51** (`a0594ef`): `skLength_sud` closed-form word-length substrate.
 
-**Session 52+ (PENDING) — remaining substantive ingredients**:
-- Super-quad bound discharge (`SkApproxCSuperQuadraticBound_generic_sud`) — analog of SU(2) ~981 LoC, multi-session.
-- Length-bound recursion discharge + `SkLengthPolylogBound_sud` discharge.
-- Per-alphabet baseFinder + ε-net at SU(4)/SU(8) — T-A1′.5 / T-A2′.5 cascade unblocks.
+**Sessions 52-54 (SHIPPED 2026-05-27 — additional Track S.6 + per-alphabet substrate)**:
+- **Session 52** (`27bd7f7`): UNCONDITIONAL `expIsud` at SU(d≥2) composing Sessions 42 + 49 (removes det-hypothesis).
+- **Session 53** (`68934bc`): **SUBSTANTIVE length-bound recursion discharge** at SU(d), parametric wordLength. Lifts Phase 6x SU(2) proof mechanically.
+- **Session 54** (`9389f38`): per-alphabet length-bound specializations at SU(4) trapped-ion + SU(8) Clifford+CCZ via `FreeGroup.norm_mul_le` + `FreeGroup.norm_inv_eq`.
+
+**Sessions 55+ (PENDING) — remaining substantive ingredients**:
+- Super-quad bound discharge (`SkApproxCSuperQuadraticBound_generic_sud`) — analog of SU(2) ~1236 LoC structure per Explore-agent intel; mechanically liftable (alphabet-agnostic via MonoidHom abstractions). Multi-session.
+- Polylog asymptotic for length bound (`SkLengthPolylogBound_sud` discharge) — exponent mismatch with headline form's `log 5 / log 2`; needs sharper recursion analysis OR exponent revision.
+- Per-alphabet length-bounded baseFinder construction at SU(4)/SU(8) — uses constructive ε-net substrate already shipped (`GenericSUdConstructiveEpsilonNet.lean`).
 - T-X′.2 substantive density witnesses: Brylinski-Brylinski 2002 (SU(4)) + Aaronson-Gottesman 2004 (SU(8)). Each multi-session.
-- M-S.1/M-S.2 substantive Mathlib-PR extraction (de-privatize + namespace + generic-type + docstrings + examples; F#3 alias-only NOT acceptance).
 - Stage-13 fresh-context adversarial review (CLOSURE gate) — dispatched ONLY after all substantive items ship.
+
+**Cumulative tally (Sessions 14-54)**: **41 commits, ~5310 LoC kernel-only**. Build clean 8833 jobs.
 
 ### Wave 1 References
 
