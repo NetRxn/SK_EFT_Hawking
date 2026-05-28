@@ -1583,6 +1583,14 @@ import SKEFTHawking.FKLW.GenericSUdBalancedCommutatorLoose
 -- (F, G) for one DN step at SU(d) via the keystone. Substrate for SU(d) SK
 -- recursion lift (Sessions 42+ — analog of Phase 6u Wave 4 `skApproxC_generic`).
 import SKEFTHawking.FKLW.GenericSUdDnStepFG
+-- Phase 6y Track S (Session 42, 2026-05-27): SU(d) matrix exponential coercion
+-- to specialUnitaryGroup. SU(d) analog of `expIsu2` (Phase 6t Path A) conditional
+-- on a det = 1 hypothesis (decouples from SU(2)-specific `DetExpZeroOnSu2_SU2`
+-- ~2300 LoC substrate). Ships `I_smul_isHermitian_mem_skewAdjoint`,
+-- `expAmbient_I_smul_mem_unitaryGroup`, `expIsud_conditional`,
+-- `expIsud_of_det_predicate`, `ExpIsud_det_eq_one_predicate`. Substrate for
+-- Sessions 43+ SK recursion lift (skApproxC_generic_sud + bounds + discharge).
+import SKEFTHawking.FKLW.GenericSUdExpIsuD
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
