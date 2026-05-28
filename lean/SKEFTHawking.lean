@@ -1271,6 +1271,10 @@ import SKEFTHawking.FKLW.TrappedIonSU4PerIonBridge
 -- factorization (trappedIonRho_full ∘ FreeGroup.map incl{1,2} = ion{1,2}Embed ∘ ρ_CliffT) —
 -- puts the embedded Clifford+T range inside the trapped-ion range (density-transfer core).
 import SKEFTHawking.FKLW.TrappedIonSU4PerIonFactorization
+-- Phase 6y Track T-A1′.2 (D)-witness substrate (2026-05-28): per-ion containment
+-- ion{1,2}Embed(SU(2)) ⊆ H_of_G(trappedIon) — density transfer culmination carrying SU(2)
+-- Clifford+T density into the trapped-ion closed subgroup (per-ion half of the (D) witness).
+import SKEFTHawking.FKLW.TrappedIonSU4PerIonContainment
 -- Phase 6y Track S.2g-substrate (2026-05-27): local diffeo restriction
 -- `𝔰𝔲(d) ↔ SU(d)` near (0, 1). Forward: exp of 𝔰𝔲(d) ∩ source ⊆ SU(d) ∩ target
 -- (via skew-Hermitian-exp-is-unitary + S.2d Jacobi det = exp(tr) = 1).
