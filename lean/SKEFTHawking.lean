@@ -1655,6 +1655,9 @@ import SKEFTHawking.FKLW.GenericSUdSkLength
 -- `skLengthExponent_sud := log 5 / log (3/2)` (Dawson-Nielsen). De-duplicates the
 -- exponent across all SU(d) headline/cascade/calibration modules.
 import SKEFTHawking.FKLW.GenericSUdSkLengthExponent
+-- Phase 6y Track S (2026-05-28): UNCONDITIONAL discharge of SkLengthPolylogBound_sud
+-- at the canonical exponent log 5/log(3/2) (lifts the SU(2) skLength_at_skLevel_polylog_le).
+import SKEFTHawking.FKLW.GenericSUdSkLengthPolylogDischarge
 -- Phase 6y Track S (Session 52, 2026-05-27): UNCONDITIONAL `expIsud` at SU(d≥2).
 -- Composes Session 42's `expIsud_of_det_predicate` with Session 49's substantive
 -- `expIsud_det_eq_one_predicate_holds` — removes the det-hypothesis from
