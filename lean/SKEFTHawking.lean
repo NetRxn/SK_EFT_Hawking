@@ -1803,6 +1803,10 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGConcreteCubic
 -- Re-pointed skApproxC_generic_sud extracting each level's (F,G) via dnStepFG_sud_concrete (S130);
 -- foundation for the UNCONDITIONAL concrete (B) bound. + zero/succ unfolding lemmas.
 import SKEFTHawking.FKLW.GenericSUdSkApproxCConcrete
+-- Phase 6y Track S (Session 134, 2026-05-28): concrete super-quad induction substrate (base case +
+-- polynomial F/G-norm bounds). skApproxC_generic_sud_concrete_zero_error_bound (base, log-agnostic) +
+-- dnStepFG_sud_concrete_{F,G}_norm_le_poly ((n+2)⁴·√(θ/2) form, composes S131 + S90).
+import SKEFTHawking.FKLW.GenericSUdSuperQuadInductionConcrete
 -- Phase 6y Track S (Session 87, 2026-05-27): SU(d) ρ_hom MonoidHom abstraction lemmas.
 -- ρ_hom_sud_mul_val / _inv_val / _groupCommutator_val (+ SUd_subtype_inv_val_eq_matrix_inv):
 -- push gs.ρ_hom : W →* SU(d) to the matrix level. Super-quad main-induction MonoidHom substrate.
