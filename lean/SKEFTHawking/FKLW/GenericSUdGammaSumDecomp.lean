@@ -98,4 +98,22 @@ lemma partial_sum_le_card_mul_of_abs {ι : Type*} (s : Finset ι) (a : ι → �
     ∑ j ∈ s, a j ≤ (s.card : ℝ) * M :=
   partial_sum_le_card_mul s a M (fun j hj => le_trans (le_abs_self _) (h_abs j hj))
 
+/-- **γ-sum-of-abs capstone**: `∑_p |√(θ·b_p/2)| ≤ √(θ/2)·(card s)·√B`.
+
+Since `√(θ·b_p/2) ≥ 0`, `|√(θ·b_p/2)| = √(θ·b_p/2)`, so this equals
+`gamma_sum_bound`. This is the form needed to bound `∑|γ_p|` for the
+F_inner norm bound (where `γ_p = √(θ·b_p/2)`). -/
+lemma gamma_abs_sum_bound {ι : Type*} (s : Finset ι) (θ : ℝ)
+    (b : ι → ℝ) (B : ℝ) (hθ : 0 ≤ θ)
+    (hb_nn : ∀ p ∈ s, 0 ≤ b p) (hb_le : ∀ p ∈ s, b p ≤ B) :
+    ∑ p ∈ s, |Real.sqrt (θ * b p / 2)| ≤
+      Real.sqrt (θ / 2) * ((s.card : ℝ) * Real.sqrt B) := by
+  have h_eq : ∑ p ∈ s, |Real.sqrt (θ * b p / 2)| =
+      ∑ p ∈ s, Real.sqrt (θ * b p / 2) := by
+    apply Finset.sum_congr rfl
+    intro p _
+    exact abs_of_nonneg (Real.sqrt_nonneg _)
+  rw [h_eq]
+  exact gamma_sum_bound s θ b B hθ hb_nn hb_le
+
 end SKEFTHawking.FKLW.GenericSUd
