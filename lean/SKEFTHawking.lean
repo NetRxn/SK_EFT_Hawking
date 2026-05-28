@@ -1801,6 +1801,11 @@ import SKEFTHawking.FKLW.GenericSUdRegimeGuards
 -- ‖·‖ ≤ ‖X‖/(1−‖X‖) (≤ 2‖X‖ for ‖X‖≤1/2), the concrete-radius replacement for the
 -- existential IFT matrixLog — toward the unconditional regime discharge.
 import SKEFTHawking.FKLW.GenericSUdMatrixMercatorLog
+-- Phase 6y Track S (Session 120, 2026-05-28): concrete-radius regime substrate (re-point
+-- R0/R1). regime_thetabound_concrete — the θ-bound conjunct on a NAMED ball, composing the
+-- K=2 Mercator bound (S109) + SU(d) residual bound (S60). First brick of re-pointing the
+-- regime from the existential IFT matrixLog to matrixLogConcrete := matrixMercatorLog(·−1).
+import SKEFTHawking.FKLW.GenericSUdRegimeConcrete
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
