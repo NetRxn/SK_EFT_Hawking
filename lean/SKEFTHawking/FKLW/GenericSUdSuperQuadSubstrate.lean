@@ -176,4 +176,59 @@ lemma H_norm_bound_from_V_diff_sud {d : ℕ} [Nonempty (Fin d)] :
         ‖(V : Matrix (Fin d) (Fin d) ℂ) -
           (U : Matrix (Fin d) (Fin d) ℂ)‖ := by ring
 
+/-! ## SU(d) calibration constants (K_compose_sud + ε₀_sud) -/
+
+/-- **The SU(d) full SK per-step composition constant** — d-dependent
+analog of SU(2)'s `K_compose = 1024`.
+
+SU(2) K_compose aggregates cubic remainder + stability + margin. For
+SU(d), each component scales with d (polynomial growth from the loose
+norm bounds). Use `K_compose_sud d := 1024 * d^4` as a loose-but-explicit
+upper bound (the d^4 factor absorbs the (n+2)² norm-bridge constant
+squared, providing margin for the cubic+stability composition). -/
+noncomputable def K_compose_sud (d : ℕ) : ℝ := 1024 * (d : ℝ)^4
+
+/-- `K_compose_sud d > 0` for d ≥ 1. -/
+lemma K_compose_sud_pos {d : ℕ} (hd : 1 ≤ d) : 0 < K_compose_sud d := by
+  unfold K_compose_sud
+  have hd_pos : (0 : ℝ) < d := by exact_mod_cast hd
+  positivity
+
+/-- **The SU(d) SK base-case threshold** — d-dependent analog of SU(2)'s
+`ε₀ = 1/(8 · K_compose²)`. Chosen so `K_compose_sud(d)² · 2·ε₀_sud(d) = 1/4`,
+the Dawson-Nielsen super-quadratic convergence condition at SU(d). -/
+noncomputable def ε₀_sud (d : ℕ) : ℝ := 1 / (8 * K_compose_sud d ^ 2)
+
+/-- `ε₀_sud d > 0` for d ≥ 1. -/
+lemma ε₀_sud_pos {d : ℕ} (hd : 1 ≤ d) : 0 < ε₀_sud d := by
+  unfold ε₀_sud
+  have h_K_pos := K_compose_sud_pos hd
+  positivity
+
+/-- **Calibration identity at SU(d)**: `K_compose_sud(d)² · 2·ε₀_sud(d) = 1/4`. -/
+lemma K_compose_sud_sq_times_two_ε₀_sud {d : ℕ} (hd : 1 ≤ d) :
+    K_compose_sud d ^ 2 * (2 * ε₀_sud d) = 1 / 4 := by
+  unfold ε₀_sud
+  have h_K_pos := K_compose_sud_pos hd
+  have h_K_sq_pos : 0 < K_compose_sud d ^ 2 := by positivity
+  have h_K_sq_ne : K_compose_sud d ^ 2 ≠ 0 := ne_of_gt h_K_sq_pos
+  field_simp
+  ring
+
+/-- **Calibration inequality at SU(d)**: `K_compose_sud(d)² · 2·ε₀_sud(d) ≤ 1/4`
+(used by Session 48's `skLevel_polylog_sud_spec_holds` calibration hypothesis). -/
+lemma K_compose_sud_calibration_le {d : ℕ} (hd : 1 ≤ d) :
+    K_compose_sud d ^ 2 * (2 * ε₀_sud d) ≤ 1 / 4 := by
+  rw [K_compose_sud_sq_times_two_ε₀_sud hd]
+
+/-- **K_compose_sud d ≥ 1024** (for d ≥ 1). -/
+lemma K_compose_sud_ge_1024 {d : ℕ} (hd : 1 ≤ d) :
+    1024 ≤ K_compose_sud d := by
+  unfold K_compose_sud
+  have hd_ge_1 : (1 : ℝ) ≤ d := by exact_mod_cast hd
+  have h_pow : (1 : ℝ) ≤ (d : ℝ)^4 := by
+    have : (1 : ℝ)^4 ≤ (d : ℝ)^4 := pow_le_pow_left₀ (by norm_num) hd_ge_1 4
+    simpa using this
+  nlinarith
+
 end SKEFTHawking.FKLW.GenericSUd
