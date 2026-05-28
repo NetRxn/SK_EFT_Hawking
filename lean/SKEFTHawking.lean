@@ -1772,6 +1772,10 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGCommutator
 -- Composes Session 83's commutator identity with the matrix exp/log right-inverse
 -- expAmbient_matrixLog (valid regime Δ.val ∈ target). Super-quad induction substrate.
 import SKEFTHawking.FKLW.GenericSUdDnStepFGExpDelta
+-- Phase 6y Track S (Session 85, 2026-05-27): expIsud near-identity norm bounds.
+-- `‖(expIsud n F).val − 1‖ ≤ δ·exp δ` (forward + matrix-inverse), via the
+-- dimension-generic MatrixBCH.norm_exp_pm_I_smul_sub_one_le_delta. Super-quad substrate.
+import SKEFTHawking.FKLW.GenericSUdExpIsuDNormBound
 -- Phase 6y Track T-A2′.4 (2026-05-27): Clifford+CCZ SU(8) calibration constants
 -- (mirror of TrappedIonSU4Calibration at d=8).
 import SKEFTHawking.FKLW.CliffordCCZSU8Calibration
