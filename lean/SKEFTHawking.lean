@@ -1786,6 +1786,11 @@ import SKEFTHawking.FKLW.GenericSUdDnStepFGCubic
 -- exp(-[F,G])=Δ generic in M, so the concrete log matrixMercatorLog(Δ−1) (S118/S120-128) can be
 -- substituted without duplicating the super-quad chain.
 import SKEFTHawking.FKLW.GenericSUdDnStepFGFromLog
+-- Phase 6y Track S (Session 130, 2026-05-28): concrete-radius DN step dnStepFG_sud_concrete
+-- (re-point R4). Instantiates dnStepFG_fromLog at matrixMercatorLog(Δ−1); ships exp(-[F,G])=Δ
+-- UNCONDITIONALLY on the named ball (n+2)²·‖V_n−U‖≤1/8 (existential Δ∈target eliminated) via
+-- exp_matrixMercatorLog + concrete regime conjuncts S122/S127/S128.
+import SKEFTHawking.FKLW.GenericSUdDnStepFGConcrete
 -- Phase 6y Track S (Session 87, 2026-05-27): SU(d) ρ_hom MonoidHom abstraction lemmas.
 -- ρ_hom_sud_mul_val / _inv_val / _groupCommutator_val (+ SUd_subtype_inv_val_eq_matrix_inv):
 -- push gs.ρ_hom : W →* SU(d) to the matrix level. Super-quad main-induction MonoidHom substrate.
