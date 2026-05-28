@@ -33,6 +33,8 @@ import Mathlib
 import SKEFTHawking.FKLW.GenericSUdNormBridgeUnitaryConjugation
 import SKEFTHawking.FKLW.GenericSUdMatrixLogLipschitzExplicit
 import SKEFTHawking.FKLW.GenericSUdSkLevelPolylogSpec
+import SKEFTHawking.FKLW.GenericSUdSkApproxC
+import SKEFTHawking.FKLW.GenericSUdExpIsuD
 import SKEFTHawking.FKLW.EpsilonSeq
 
 set_option autoImplicit false
@@ -286,5 +288,29 @@ lemma ε_seq_K_compose_sud_two_ε₀_sud_le_two_ε₀_sud {d : ℕ} (hd : 1 ≤ 
   · -- K · (2·ε₀)^(1/2) ≤ 1
     rw [← Real.sqrt_eq_rpow]
     exact K_compose_sud_sqrt_two_ε₀_sud_le_one hd
+
+/-! ## SU(d) compile function (analog of solovayKitaev_compile_strict_constructive_generic) -/
+
+/-- **The Generic Path A constructive compiler at SU(d)** — returns a
+word in `gs.W` whose underlying structure is a level-
+`skLevel_polylog_sud K ε` Dawson-Nielsen composition. SU(d) analog of
+SU(2)'s `solovayKitaev_compile_strict_constructive_generic` (Phase 6u). -/
+noncomputable def solovayKitaev_compile_strict_constructive_generic_sud
+    {n : ℕ} (gs : GeneratingSet (n + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (n + 2))
+    (K : ℝ)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) (ε : ℝ) : gs.W :=
+  skApproxC_generic_sud gs baseFinder h_det_pred (skLevel_polylog_sud K ε) U
+
+/-- **Calibrated SU(d) compile function** — directly instantiated at the
+calibration `(K_compose_sud d, ε₀_sud d)`. -/
+noncomputable def solovayKitaev_compile_strict_constructive_generic_sud_calibrated
+    {n : ℕ} (gs : GeneratingSet (n + 2))
+    (baseFinder : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ) → gs.W)
+    (h_det_pred : ExpIsud_det_eq_one_predicate (n + 2))
+    (U : ↥(Matrix.specialUnitaryGroup (Fin (n + 2)) ℂ)) (ε : ℝ) : gs.W :=
+  solovayKitaev_compile_strict_constructive_generic_sud gs baseFinder h_det_pred
+    (K_compose_sud (n + 2)) U ε
 
 end SKEFTHawking.FKLW.GenericSUd
