@@ -96,8 +96,8 @@ def SolovayKitaevHeadline_FreeGroup_SUd {d : ℕ} {α : Type} [DecidableEq α]
 The Phase 6y T-A1′.5 and T-A2′.5 headlines specialize to this form at:
   * **T-A1′.5**: `gs = trappedIonGeneratingSetSU4`, `α = Fin (4 + 2*N)` for
     discrete grid resolution N (4 single-qubit tokens + 2N MS grid tokens).
-  * **T-A2′.5**: `gs = cliffordCCZGeneratingSetSU8`, `α = Fin 4` (H_q1, H_q2,
-    H_q3, CCZ_SU).
+  * **T-A2′.5**: `gs = cliffordCCZGeneratingSetSU8`, `α = Fin 10` (universal Clifford+CCZ+T:
+    H_q{1,2,3}, T_q{1,2,3}, CNOT_{12,13,23}, CCZ_SU).
   * **S.6 (this module)**: generic `gs : GeneratingSet d` form. -/
 
 /-- **The d-generic headline predicate** (without `FreeGroup α` specialization).

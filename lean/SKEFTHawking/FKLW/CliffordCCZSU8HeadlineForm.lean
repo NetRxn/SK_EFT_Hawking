@@ -9,12 +9,15 @@ The Phase 6y T-A2′.5 final bundled-strict Solovay-Kitaev headline
 for the SU(8) Clifford+CCZ alphabet. Predicate-level statement form
 matching the M.4-inheritance discipline (F#4 guardrail).
 
-The full UNCONDITIONAL discharge composes Phase 6y:
-  * T-A2′.1 PROPER (cliffordCCZGeneratingSetSU8 instance, shipped ✓)
-  * S.2g final discharge (CartanFinalStep_SUd_v4_holds at d=8, pending)
-  * T-A2′.2 closure-density witness (Aaronson-Gottesman 2004, pending)
-  * S.5 generic SU(d) discharge (composed for d=8, pending)
-  * T-A2′.4 calibration (Wave 4b at d=8 substrate, pending)
+The full UNCONDITIONAL discharge composes Phase 6y (ALL shipped ✓ — see
+`CliffordCCZSU8WitnessFull.cliffordCCZSU8_solovayKitaev_headline_unconditional`):
+  * T-A2′.1 PROPER (cliffordCCZGeneratingSetSU8 instance — universal Clifford+CCZ+T, shipped ✓)
+  * S.2g final discharge (CartanFinalStep_SUd_v4_holds at d=8, shipped ✓)
+  * T-A2′.2 closure-density witness (CliffordCCZSU8WitnessFull — density from the Clifford+T
+    sub-alphabet, Boykin et al 1999; CCZ over-complete/unused. A-G 2004 is simulability, not
+    universality. shipped ✓)
+  * S.5 generic SU(d) discharge (composed for d=8, shipped ✓)
+  * T-A2′.4 calibration (Wave 4b at d=8 substrate, shipped ✓)
 
 ## Headline shape (M.4 inheritance — F#4 guardrail compliant)
 
