@@ -87,4 +87,54 @@ theorem X30_mul_I_xKronX :
   congr 1
   rw [mul_assoc, Complex.I_mul_I]; ring
 
+/-! ## 4. The conjugation identity `MS(π/2) · X₃₀ · MS(π/2)⁻¹ = −X₂₁` -/
+
+/-- `kronSU4 (−A) B = −(kronSU4 A B)`. -/
+theorem kronSU4_neg_left (A B : Matrix (Fin 2) (Fin 2) ℂ) :
+    kronSU4 (-A) B = -(kronSU4 A B) := by
+  rw [← neg_one_smul ℂ A, kronSU4_smul_left, neg_one_smul]
+
+/-- `xKronX` anticommutes with `X₃₀`. -/
+theorem xKronX_anticomm_X30 :
+    xKronX * suFourTangentAux 3 0 = -(suFourTangentAux 3 0 * xKronX) := by
+  unfold suFourTangentAux xKronX
+  rw [show pauli4 3 = SKEFTHawking.σ_z from rfl,
+    show pauli4 0 = (1 : Matrix (Fin 2) (Fin 2) ℂ) from rfl,
+    mul_smul_comm, smul_mul_assoc, ← kronSU4_mul, ← kronSU4_mul, mul_one, one_mul,
+    sigmaX_mul_sigmaZ_anti, kronSU4_neg_left, smul_neg]
+
+/-- `msGenerator(π/2)` anticommutes with `X₃₀`. -/
+theorem msGen_anticomm_X30 :
+    msGenerator (Real.pi / 2) * suFourTangentAux 3 0
+      = -(suFourTangentAux 3 0 * msGenerator (Real.pi / 2)) := by
+  unfold msGenerator
+  rw [smul_mul_assoc, xKronX_anticomm_X30, mul_smul_comm, smul_neg]
+
+/-- `(MSGate_SU4 (π/2)).val⁻¹ = exp(−msGenerator(π/2))`. -/
+theorem MS_halfPi_inv :
+    ((MSGate_SU4 (Real.pi / 2) : Matrix (Fin 4) (Fin 4) ℂ))⁻¹
+      = NormedSpace.exp (-msGenerator (Real.pi / 2)) := by
+  have hmul : (MSGate_SU4 (Real.pi / 2) : Matrix (Fin 4) (Fin 4) ℂ) *
+      NormedSpace.exp (-msGenerator (Real.pi / 2)) = 1 := by
+    show NormedSpace.exp (msGenerator (Real.pi / 2)) *
+      NormedSpace.exp (-msGenerator (Real.pi / 2)) = 1
+    rw [← NormedSpace.exp_add_of_commute (Commute.neg_right (Commute.refl _)),
+      add_neg_cancel, NormedSpace.exp_zero]
+  exact Matrix.inv_eq_right_inv hmul
+
+/-- **The entangler conjugation identity**: `MS(π/2) · X₃₀ · MS(π/2)⁻¹ = −X₂₁`. -/
+theorem MS_conj_X30 :
+    (MSGate_SU4 (Real.pi / 2) : Matrix (Fin 4) (Fin 4) ℂ) * suFourTangentAux 3 0 *
+        ((MSGate_SU4 (Real.pi / 2) : Matrix (Fin 4) (Fin 4) ℂ))⁻¹
+      = -suFourTangentAux 2 1 := by
+  rw [MS_halfPi_inv]
+  show NormedSpace.exp (msGenerator (Real.pi / 2)) * suFourTangentAux 3 0 *
+      NormedSpace.exp (-msGenerator (Real.pi / 2)) = _
+  rw [SKEFTHawking.FKLW.exp_mul_of_anticommute _ _ msGen_anticomm_X30, mul_assoc,
+    ← NormedSpace.exp_add_of_commute (Commute.refl (-msGenerator (Real.pi / 2)))]
+  rw [show -msGenerator (Real.pi / 2) + -msGenerator (Real.pi / 2)
+        = (Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) • xKronX by
+      unfold msGenerator; rw [← neg_add, ← add_smul, ← neg_smul]; congr 1; push_cast; ring]
+  rw [exp_iHalfPi_xKronX, X30_mul_I_xKronX]
+
 end SKEFTHawking.FKLW.TrappedIonSU4
