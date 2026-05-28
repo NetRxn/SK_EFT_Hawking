@@ -110,6 +110,19 @@ theorem exp_smul_involution [NormedAlgebra ℚ 𝔸] (J : 𝔸) (hJ : J * J = 1)
   · congr 1; rw [Complex.cosh, h2z, Complex.exp_neg]; field_simp; ring
   · congr 1; rw [Complex.sinh, h2z, Complex.exp_neg]; field_simp
 
+/-- **exp at the quarter-turn of an involution**: `exp((i·π/2) • J) = i • J` for `J² = 1`.
+
+Generic form of the `xKronX` quarter-turn (`exp_iHalfPi_xKronX`); the single-qubit Clifford
+conjugations `exp(−iπ/4·σ_c)·σ_a·exp(iπ/4·σ_c)` factor through this. -/
+theorem exp_iHalfPi_involution [NormedAlgebra ℚ 𝔸] (J : 𝔸) (hJ : J * J = 1) :
+    NormedSpace.exp ((Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) • J) = Complex.I • J := by
+  rw [exp_smul_involution J hJ]
+  rw [show Complex.cosh (Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) = 0 by
+        rw [mul_comm, Complex.cosh_mul_I]; simp [Complex.cos_pi_div_two]]
+  rw [show Complex.sinh (Complex.I * ((Real.pi / 2 : ℝ) : ℂ)) = Complex.I by
+        rw [mul_comm, Complex.sinh_mul_I]; simp [Complex.sin_pi_div_two]]
+  rw [zero_smul, zero_add]
+
 /-- **exp through an anticommuting element**: if `A * B = −(B * A)` then
 `exp A * B = B * exp(−A)`. (Each `A` moved past `B` flips its sign: `Aⁿ·B = B·(−A)ⁿ`.) -/
 theorem exp_mul_of_anticommute (A B : 𝔸) (hAB : A * B = -(B * A)) :

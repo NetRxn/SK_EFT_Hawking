@@ -1297,6 +1297,10 @@ import SKEFTHawking.FKLW.TrappedIonSU4EntanglerConj
 import SKEFTHawking.FKLW.TrappedIonSU4EntanglerFlow
 -- Phase 6y Track T-A1′.2 (D) witness (2026-05-28): per-ion conjugation spreads entangling flow
 import SKEFTHawking.FKLW.TrappedIonSU4PerIonConjFlow
+-- Phase 6y Track T-A1′.2 (D) witness (2026-05-28): single-qubit Cliffords spread X₂₁ to all 9 entanglers
+import SKEFTHawking.FKLW.TrappedIonSU4EntanglerSpread
+-- Phase 6y Track T-A1′.2/.5 (D) witness (2026-05-28): SU(4) ClosureDenseWitness + UNCONDITIONAL headline
+import SKEFTHawking.FKLW.TrappedIonSU4WitnessFull
 -- Phase 6y Track S.2g-substrate (2026-05-27): local diffeo restriction
 -- `𝔰𝔲(d) ↔ SU(d)` near (0, 1). Forward: exp of 𝔰𝔲(d) ∩ source ⊆ SU(d) ∩ target
 -- (via skew-Hermitian-exp-is-unitary + S.2d Jacobi det = exp(tr) = 1).
