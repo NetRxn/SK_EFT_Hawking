@@ -1135,6 +1135,13 @@ import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
 -- gdePeel_mono_fuel. The gde VALUES KMM Lemma 5's ⌊(gde+gde)/2⌋ arithmetic
 -- and Lemma 3's gde-difference case analysis reason over.
 import SKEFTHawking.FKLW.RossSelinger.GdeValue
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — squared modulus on ZOmega + its gde
+-- (KMM Lemma 5 substrate). ZOmega.normSq x := x·conj x (real ℤ[√2] element),
+-- isReal_normSq, normSq_mul/add (cross-term)/pow, normSq_omega_pow_mul
+-- (|ωᵏ·y|²=|y|²), and gdeNormSq x := gdePeel (normSq x) + the |x|² predicate↔
+-- value bridge + gde modulus-invariance. The squared-modulus gde KMM Lemma 3/5
+-- track (validated by scripts/kmm_zomega_reference_oracle.py: no mod-√2 shortcut).
+import SKEFTHawking.FKLW.RossSelinger.NormSqGde
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
