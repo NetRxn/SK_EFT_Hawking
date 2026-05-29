@@ -1224,6 +1224,12 @@ import SKEFTHawking.FKLW.RossSelinger.ClearingConnection
 -- parity decide: 2|P ∧ 2|Q ⟹ √2∣x). The j∈{0,1} hypothesis of kmm_lemma3_column
 -- for cleared column numerators; the equal-sde half is denExp_normSq_col0_eq.
 import SKEFTHawking.FKLW.RossSelinger.Lemma4Value
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — unit-column congruences (for
+-- kmm_lemma3_column). sqrt2_pow_two_mul_coords (√2^(2s)=2^s: .c=0,.d=2^s);
+-- clearedCol_normSq_sum (unit col |z|²+|w|²=1 cleared at common s ⟹ |x|²+|y|²=
+-- √2^(2s)); unit_col_congruences (s≥3 ⟹ (|x|²+|y|²).d ≡ (|x|²+|y|²).c ≡ 0 mod 8) —
+-- exactly the Pform-sum/Qform-sum hypotheses of kmm_lemma3_column.
+import SKEFTHawking.FKLW.RossSelinger.UnitColumnCongruence
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
