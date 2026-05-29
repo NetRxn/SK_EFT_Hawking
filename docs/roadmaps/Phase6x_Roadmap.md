@@ -651,16 +651,15 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
    `RealSubring` coords + the peel recursion. (Edge cases A=0 or B=0: v₂=∞;
    handle separately — oracle's closed-form check skips zero-coord, but the
    parity check covers them.)
-2. **Lemma 4** value form (`gde(|x|²)=gde(|y|²)≤1`) — core SHIPPED as
-   `denExp_normSq_col0_eq`; lift to `gde` value (oracle confirms `gde(|x|²)∈{0,1}`).
-3. **Lemma 5** — MECHANISM VALIDATED (oracle, 0 violations / 18368 pairs):
-   `|x+y|² = 2^a + c` with `c = x·conj y + y·conj x` (real, `normSq_add`), and
-   the "+1" comes from **`gde(c,√2) ≥ 1 + ⌊(g₁+g₂)/2⌋`** (g_i = `gde|x|²`,
-   `gde|y|²`). Then `gde(|x+y|²) ≥ min(2a, gde c) ≥ min(2a, 1+⌊(g₁+g₂)/2⌋)` via
-   non-archimedean `gde(p+q) ≥ min(gde p, gde q)` (= `dvdSqrt2Pow` closed under
-   `+`). The cross-term bound is the substantive piece — prove via Prop 1
-   closed form on `c`'s ℤ[√2] coords. NO reconstruction guesswork left: the
-   exact true inequalities are oracle-confirmed.
+2. ✅ **Lemma 4** core SHIPPED (`denExp_normSq_col0_eq`); `gde(|x|²)∈{0,1}`
+   oracle-confirmed. (Value-form lift folds into Lemma 3's case analysis.)
+3. ✅ **Lemma 5** SHIPPED (`CrossTermGde.lean`, `dbe079b`) — `dvdSqrt2Pow_normSq_add`:
+   `√2^g₁∣|x|², √2^g₂∣|y|², |x|²+|y|²=√2^M ⟹ √2^(min M ((g₁+g₂)/2+1))∣|x+y|²`.
+   VALUATION-FREE route (no Prop 1 v₂ closed form): the "+1" came from
+   `dvdSqrt2Pow_add_conj` (`√2∣(w+conj w)` always ⟹ `√2^m∣u ⟹ √2^(m+1)∣(u+conj u)`)
+   + the halving `dvdSqrt2Pow_normSq_half` (`√2^(2m)∣|u|²⟹√2^m∣u`, base case a
+   ZMod-2 `decide`) + `|u|²=|x|²|y|²` + the `GdeArith` non-archimedean toolkit.
+   All pieces oracle-validated (0 violations).
 4. **Lemma 3** — CORRECTED CONDITION (numerically validated 2026-05-29 via
    `scripts/kmm_zomega_reference_oracle.py`; my earlier `2∣(x+ωᵏy)` note was a
    `gde(element)`-vs-`gde(|element|²)` conflation, FALSE for realizable pairs —
