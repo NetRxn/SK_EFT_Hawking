@@ -1440,6 +1440,10 @@ import SKEFTHawking.FKLW.CliffordCCZSU8Irrationality
 -- Phase 6z Wave 1 (2026-05-28): the literal Clifford+CCZ (no-T) generating set
 -- ⟨H,S,CNOT,CCZ⟩ on SU(8) — GeneratingSet 8 instance + the genuinely T-free Clifford S-gate.
 import SKEFTHawking.FKLW.CliffordCCZSU8LiteralGeneratingSet
+-- Phase 6z Wave 1 (2026-05-28): the seed group element CCZ·H_q1·H_q2·H_q3 ∈ ⟨H,S,CNOT,CCZ⟩ has
+-- INFINITE order (matrix bridge to litSeed + tr = u·(1/√2) not an algebraic integer + the spectral
+-- meta-lemma). The Kronecker seed for the Wave-2 first flow.
+import SKEFTHawking.FKLW.CliffordCCZSU8SeedNotFiniteOrder
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
