@@ -32,6 +32,7 @@ Phase 6z Wave 2b (SU(d) von-Neumann 1-parameter subgroup). 2026-05-28.
 
 import Mathlib
 import SKEFTHawking.FKLW.GenericSUdMatrixLogSkewHerm
+import SKEFTHawking.FKLW.GenericSUdMatrixLogTraceless
 
 set_option autoImplicit false
 
@@ -224,6 +225,70 @@ theorem vonNeumann_BW_limit_norm_eq_one {d : ℕ}
     filter_upwards [h_subseq_norm_one] with k hk
     rw [hk]
   exact tendsto_nhds_unique h_norm_tendsto h_const_tendsto
+
+/-! ## Increment 3b — the BW limit lies in `𝔰𝔲(d)`
+
+The traceless-skew-Hermitian submodule `𝔰𝔲(d)` is closed (finite-dim ℝ-submodule). Each
+`vonNeumannUnitMatrixSeq seq n` is eventually in `𝔰𝔲(d)` (the matrix log lands in `𝔰𝔲(d)` near `1`
+via `matrixLog_in_su_d_on_nhd_one`, and real-scalar normalization preserves the submodule). Hence the
+BW limit `X` is traceless skew-Hermitian. Mirror of `OneParameterSubgroupSU2.lean` §4.i.5a + §9.12. -/
+
+/-- **`𝔰𝔲(d)` is closed** in `Matrix (Fin d) (Fin d) ℂ` (finite-dim ℝ-submodule). d-generic lift of
+the SU(2) `tracelessSkewHermitian_isClosed`. -/
+theorem tracelessSkewHermitian_isClosed {d : ℕ} :
+    IsClosed (SU2LieAlgebra.tracelessSkewHermitian (Fin d) :
+      Set (Matrix (Fin d) (Fin d) ℂ)) :=
+  (SU2LieAlgebra.tracelessSkewHermitian (Fin d)).closed_of_finiteDimensional
+
+/-- **The unit-sphere matrix sequence is eventually in `𝔰𝔲(d)`.** For `seq → 1`, the matrix log of
+`(seq n).val` is eventually traceless skew-Hermitian (`matrixLog_in_su_d_on_nhd_one`); the real-scalar
+normalization stays in the submodule. Mirror of the SU(2) `*_eventually_uncond`. -/
+theorem vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually {d : ℕ} [Nonempty (Fin d)]
+    (hd_pos : 0 < d)
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)))) :
+    ∀ᶠ n in Filter.atTop,
+      vonNeumannUnitMatrixSeq seq n ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin d) := by
+  obtain ⟨V, hV, hV_discharge⟩ := matrixLog_in_su_d_on_nhd_one d hd_pos
+  have h_val : Filter.Tendsto (fun n => ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (1 : Matrix (Fin d) (Fin d) ℂ)) := by
+    have h := (continuous_subtype_val (p :=
+      fun M => M ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)).continuousAt.tendsto.comp h_seq
+    simpa using h
+  filter_upwards [eventually_val_mem_target h_seq, h_val.eventually hV] with n hn_target hn_V
+  unfold vonNeumannUnitMatrixSeq
+  by_cases h_zero : matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) = 0
+  · simp only [h_zero, dif_pos]
+    exact (SU2LieAlgebra.tracelessSkewHermitian (Fin d)).zero_mem
+  · simp only [dif_neg h_zero]
+    rw [show ((‖matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ)‖⁻¹ : ℂ) •
+            matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ)) =
+            ((‖matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ)‖⁻¹ : ℝ) •
+            matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ)) by
+      ext i j
+      simp [Matrix.smul_apply, Complex.real_smul]]
+    have h_Y_su : matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ∈
+        SU2LieAlgebra.tracelessSkewHermitian (Fin d) :=
+      (SU2LieAlgebra.tracelessSkewHermitian_mem_iff _).mpr
+        (hV_discharge _ hn_V (seq n).property hn_target)
+    exact (SU2LieAlgebra.tracelessSkewHermitian (Fin d)).smul_mem _ h_Y_su
+
+/-- **BW limit is in `𝔰𝔲(d)`**: the BW-extracted limit `X` is traceless skew-Hermitian (closedness of
+`𝔰𝔲(d)` + the eventually-in-`𝔰𝔲(d)` subsequence). -/
+theorem vonNeumann_BW_limit_mem_tracelessSkewHermitian {d : ℕ} [Nonempty (Fin d)]
+    (hd_pos : 0 < d)
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))))
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    {X : Matrix (Fin d) (Fin d) ℂ}
+    (h_unit_tendsto : Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X)) :
+    X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin d) := by
+  apply tracelessSkewHermitian_isClosed.mem_of_tendsto h_unit_tendsto
+  exact hφ.tendsto_atTop.eventually
+    (vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually hd_pos h_seq)
 
 /-! ## Remaining increments (the von-Neumann analytic core — next builds)
 
