@@ -122,6 +122,24 @@ def normSq (z : ZOmegaSqrt2) : ZOmegaSqrt2 := z * conj z
 theorem conj_normSq (z : ZOmegaSqrt2) : conj (normSq z) = normSq z := by
   rw [normSq, conj_mul, conj_conj, mul_comm, ← normSq]
 
+/-- **`normSq` is multiplicative**: `|x·y|² = |x|²·|y|²`. -/
+theorem normSq_mul (x y : ZOmegaSqrt2) : normSq (x * y) = normSq x * normSq y := by
+  rw [normSq, conj_mul, normSq, normSq]; ring
+
+/-- **`normSq` is conjugation-invariant**: `|conj z|² = |z|²`. -/
+theorem normSq_conj (z : ZOmegaSqrt2) : normSq (conj z) = normSq z := by
+  rw [normSq, conj_conj, mul_comm, ← normSq]
+
+/-- **`|ω|² = 1`** (`ω` is a unit of modulus one). -/
+@[simp] theorem normSq_omega : normSq (of ZOmega.ω) = 1 := by
+  rw [normSq, conj_of, ← of_mul]
+  have h : ZOmega.ω * ZOmega.conj ZOmega.ω = 1 := by decide
+  rw [h, of_one]
+
+/-- **`|1/√2|² = 1/2`** (`= mk 1 2`). -/
+theorem normSq_invSqrt2 : normSq invSqrt2 = mk 1 2 := by
+  rw [normSq, invSqrt2_def, conj_mk, ZOmega.conj_one, mk_mul, mul_one]
+
 end ZOmegaSqrt2
 
 end SKEFTHawking.RossSelinger
