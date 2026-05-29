@@ -30,12 +30,17 @@ Phase 6z Wave 2a (accumulation-point witness for the seed flow). 2026-05-28.
 import Mathlib
 import SKEFTHawking.FKLW.CliffordCCZSU8SeedNotFiniteOrder
 import SKEFTHawking.FKLW.CliffordCCZSU8LiteralGeneratingSet
+import SKEFTHawking.FKLW.GenericSUdOneParameterSubgroup
 
 set_option autoImplicit false
 
 namespace SKEFTHawking.FKLW.CliffordCCZSU8
 
 open Matrix SKEFTHawking.FKLW.GenericSUd
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
 
 /-- The literal closure subgroup is infinite: it contains the distinct powers of the infinite-order
 seed `seedSU8`. -/
@@ -83,5 +88,14 @@ theorem seedSU8_accPt_one :
       exact ⟨x * z, (H_of_G cliffordCCZLiteralGeneratingSetSU8).mul_mem hxmem hz, by
         show x⁻¹ * (x * z) = z; group⟩
   simpa [Homeomorph.coe_mulLeft, Filter.map_principal, hcoset] using hmap
+
+/-- **The seed's von-Neumann sequence**: a sequence in `H_of_G \ {1}` converging to `1`, extracted from
+`seedSU8_accPt_one`. The seed of the BW-on-the-𝔰𝔲(8)-sphere step of the SU(d) von-Neumann construction. -/
+theorem seedSU8_vonNeumann_sequence :
+    ∃ seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ),
+      (∀ n, seq n ∈ H_of_G cliffordCCZLiteralGeneratingSetSU8) ∧ (∀ n, seq n ≠ 1) ∧
+      Filter.Tendsto seq Filter.atTop
+        (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ))) :=
+  GenericSUd.vonNeumann_extract_sequence _ seedSU8_accPt_one
 
 end SKEFTHawking.FKLW.CliffordCCZSU8
