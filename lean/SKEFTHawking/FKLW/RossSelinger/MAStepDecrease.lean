@@ -58,6 +58,37 @@ theorem sylBlochNum_clearing (s : Syllable) :
         = sqrt2 * blochEntry (ZOmegaSqrt2.adjoint (sylMat s)) i k := by
   cases s <;> decide
 
+/-! ## The cleared Bloch numerators `b = √2^kSO3 · R(M)` -/
+
+/-- **Each Bloch entry's denominator exponent is ≤ `kSO3`** (`kSO3` is their `sup`).
+Proved via `Finset.le_sup` on the `∀ p` (variable-index) form — instantiating at the
+literal `(i,j)` last keeps the unifier from `whnf`-reducing the heavy `blochEntry`. -/
+theorem denExp_blochEntry_le_kSO3 (M : Mat2) (i j : Fin 3) :
+    ZOmegaSqrt2.denExp (blochEntry M i j) ≤ kSO3 M := by
+  have key : ∀ p : Fin 3 × Fin 3,
+      ZOmegaSqrt2.denExp (blochEntry M p.1 p.2) ≤ kSO3 M := by
+    intro p
+    rw [show kSO3 M
+        = Finset.univ.sup (fun q : Fin 3 × Fin 3 => ZOmegaSqrt2.denExp (blochEntry M q.1 q.2))
+        from rfl]
+    exact Finset.le_sup
+      (f := fun q : Fin 3 × Fin 3 => ZOmegaSqrt2.denExp (blochEntry M q.1 q.2))
+      (Finset.mem_univ p)
+  exact key (i, j)
+
+/-- **The cleared Bloch numerator** `b_ij := √2^kSO3 · R(M)ᵢⱼ` as a `ZOmega`
+element. Since `denExp R(M)ᵢⱼ ≤ kSO3 M`, multiplying by `√2^kSO3` clears the
+denominator (`blochNum_spec`). Noncomputable (`Classical.choose`); used only in the
+existence proof of `ma_step`. The mod-2 condition for the `kSO3`-decrease is on these
+`b_ij` (the 15-class Bloch parity residue). -/
+noncomputable def blochNum (M : Mat2) (i j : Fin 3) : ZOmega :=
+  Classical.choose (ZOmegaSqrt2.denExp_le_iff.mp (denExp_blochEntry_le_kSO3 M i j))
+
+/-- **Clearing spec for `blochNum`**: `√2^kSO3 · R(M)ᵢⱼ = of (b_ij)`. -/
+theorem blochNum_spec (M : Mat2) (i j : Fin 3) :
+    (sqrt2) ^ (kSO3 M) * blochEntry M i j = ZOmegaSqrt2.of (blochNum M i j) :=
+  Classical.choose_spec (ZOmegaSqrt2.denExp_le_iff.mp (denExp_blochEntry_le_kSO3 M i j))
+
 end KMM
 
 end SKEFTHawking.RossSelinger
