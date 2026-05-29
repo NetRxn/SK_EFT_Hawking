@@ -1,0 +1,95 @@
+/-
+Copyright (c) 2026 John Roehm. All rights reserved.
+
+# Phase 6x Tier-2 Item F — the Matsumoto-Amano coverage recursion
+
+With `ma_step_exists` (`MAStepExists.lean`) supplying the reducing syllable for
+`1 ≤ kSO3 M ≤ 3`, the MA coverage is a structural recursion on `kSO3`:
+
+  * **base** `kSO3 M = 0` (⟺ `M` is a Clifford): `cliffordBase` supplies a `≤ 6`-gate word;
+  * **step** `kSO3 M ≥ 1`: strip the `ma_step` syllable `s` (`kSO3` drops by ≥ 1),
+    recurse on `stripMat s M`, and prepend `sylWord s` (`interp_sylWord_stripMat`
+    reconstructs `M`; `sylWord s` adds `≤ 3` gates).
+
+This yields `maCoverage : realizable M → kSO3 M ≤ 3 → ∃ gs, interp gs = M ∧
+gs.length ≤ 3·kSO3 M + 6` (`≤ 15`). The Clifford base (`kSO3 = 0 ⟹ Clifford ≤ 6`)
+and the bridge (`μ ≤ 3 ⟹ kSO3 ≤ 3`) are kept as hypotheses here, discharged
+separately; the recursion is unconditional.
+
+## References
+
+  * Giles-Selinger 2013 (arXiv:1312.6584) — MA normal form (Thm 2.3/4.1),
+    T-count = `kSO3` (Lemma 4.10); length `≤ 3·kSO3 + (Clifford tail)`.
+
+## Pipeline invariants
+
+- **#10** (no `maxHeartbeats`): respected.
+- **#15** (no new project-local axioms): respected (`cliffordBase` is a hypothesis).
+
+-/
+
+import SKEFTHawking.FKLW.RossSelinger.MAStepExists
+import SKEFTHawking.FKLW.RossSelinger.MuDecrease
+
+set_option autoImplicit false
+
+namespace SKEFTHawking.RossSelinger
+
+namespace KMM
+
+open CliffordTGate ZOmegaSqrt2
+
+/-- **The MA coverage recursion** (fuel = `kSO3 M`): given the Clifford base case,
+every realizable `M` with `kSO3 M ≤ 3` has a word of length `≤ 3·kSO3 M + 6`. Strong
+induction on `n = kSO3 M`; the step strips an `ma_step` syllable (drops `kSO3`) and
+prepends `sylWord s`. -/
+theorem maCoverage_aux
+    (cliffordBase : ∀ M, IsCliffordTRealizable M → kSO3 M = 0 →
+      ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 6) :
+    ∀ (n : ℕ) (M : Mat2), IsCliffordTRealizable M → kSO3 M = n → n ≤ 3 →
+      ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 3 * n + 6 := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro M hM hkn hn3
+    rcases Nat.eq_zero_or_pos n with hn0 | hnpos
+    · subst hn0
+      obtain ⟨gs, hgs, hlen⟩ := cliffordBase M hM hkn
+      exact ⟨gs, hgs, by omega⟩
+    · have hk1 : 1 ≤ kSO3 M := by omega
+      have hk3 : kSO3 M ≤ 3 := by omega
+      obtain ⟨s, hlt⟩ := ma_step_exists hM hk1 hk3
+      have hmn : kSO3 (stripMat s M) < n := by rw [← hkn]; exact hlt
+      obtain ⟨gs', hgs', hlen'⟩ :=
+        ih (kSO3 (stripMat s M)) hmn (stripMat s M) (stripMat_realizable s hM) rfl (by omega)
+      refine ⟨sylWord s ++ gs', ?_, ?_⟩
+      · rw [interp_append, hgs', interp_sylWord_stripMat]
+      · rw [List.length_append]
+        have h3 := sylWord_length_le s
+        omega
+
+/-- **MA coverage**: a realizable `M` with `kSO3 M ≤ 3` has a word of length
+`≤ 3·kSO3 M + 6` (given the Clifford base). -/
+theorem maCoverage
+    (cliffordBase : ∀ M, IsCliffordTRealizable M → kSO3 M = 0 →
+      ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 6)
+    {M : Mat2} (hM : IsCliffordTRealizable M) (hk3 : kSO3 M ≤ 3) :
+    ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 3 * kSO3 M + 6 :=
+  maCoverage_aux cliffordBase (kSO3 M) M hM rfl hk3
+
+/-- **Coverage with the relaxed `N₃ = 15` bound** (the MA-deterministic value;
+DR-confirmed to fit Item G's `L ≤ 90 < 100`): given the Clifford base and the
+`μ → kSO3` bridge, every realizable `μ ≤ 3` matrix has a `≤ 15`-gate word. -/
+theorem coverage_fifteen
+    (cliffordBase : ∀ M, IsCliffordTRealizable M → kSO3 M = 0 →
+      ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 6)
+    (bridge : ∀ M, IsCliffordTRealizable M → muMeasure M ≤ 3 → kSO3 M ≤ 3)
+    (M : Mat2) (hM : IsCliffordTRealizable M) (hμ : muMeasure M ≤ 3) :
+    ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 15 := by
+  have hk3 := bridge M hM hμ
+  obtain ⟨gs, hgs, hlen⟩ := maCoverage cliffordBase hM hk3
+  exact ⟨gs, hgs, by omega⟩
+
+end KMM
+
+end SKEFTHawking.RossSelinger

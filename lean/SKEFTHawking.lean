@@ -1321,6 +1321,13 @@ import SKEFTHawking.FKLW.RossSelinger.BlochOrthogonal
 -- B i j ∈ ⟨a,0,-a,d⟩ and ∑ᵢ normSq(Bᵢⱼ)=2^kSO3 bounds coords (the EXACT-orthogonality route to
 -- ma_step ∃-s, replacing the non-viable mod-2 Bloch-residue route).
 import SKEFTHawking.FKLW.RossSelinger.MAStepExists
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Matsumoto-Amano coverage recursion.
+-- maCoverage (realizable M, kSO3 M≤3 ⟹ ∃ word ≤ 3·kSO3 M+6 ≤ 15) by strong induction on kSO3:
+-- base = Clifford (cliffordBase hypothesis ≤6); step = strip ma_step syllable (kSO3 drops) +
+-- prepend sylWord (interp_sylWord_stripMat reconstructs). coverage_fifteen adds bridge μ≤3⟹kSO3≤3
+-- ⟹ the relaxed N₃=15 base coverage (DR: fits Item G L≤90<100). cliffordBase + bridge are
+-- hypotheses, discharged separately; the recursion itself is unconditional.
+import SKEFTHawking.FKLW.RossSelinger.MACoverage
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
