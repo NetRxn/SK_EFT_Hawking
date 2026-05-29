@@ -1168,6 +1168,14 @@ import SKEFTHawking.FKLW.RossSelinger.KMMCompute
 -- step left-inversion + base-finder correctness, NOT sde decrease). Remaining for
 -- discharge (DR-gated): Lemma 3 (termination+length) + cliffordLookup/N₃ base.
 import SKEFTHawking.FKLW.RossSelinger.KMMReduceFuel
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — KMM Lemma 3 via Algorithm 2.
+-- kmm_lemma3_alg2: the sde-reduction existence lemma proved by native_decide
+-- over ℤ[ω]/(2³)=(ZMod 8)⁴ residues (Coord4) — KMM's actual proof (Algorithm 2,
+-- "we implemented it and the result is true"), NOT a 𝔭-adic case split (none is
+-- published). P/Q/gde/mulOmega oracle-validated in the ⟨a,b,c,d⟩ convention
+-- (0 mismatches; Alg2 FAILS=0 over 393216 pairs). Carries Lean.ofReduceBool
+-- (native_decide), the trust of running KMM's published C++ Algorithm 2.
+import SKEFTHawking.FKLW.RossSelinger.KMMLemma3
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
