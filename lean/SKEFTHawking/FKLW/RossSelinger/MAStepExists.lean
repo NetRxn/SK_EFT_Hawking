@@ -190,6 +190,74 @@ theorem blochNum_normSq_d_le {M : Mat2} (h : IsCliffordTRealizable M) (hk : kSO3
       _ = 8 := by norm_num
   omega
 
+/-! ## The `ma_step` existence `native_decide` core (column-decomposed) -/
+
+/-- A cleared Bloch column as a `ZOmega` triple (entries at rows `0,1,2`). -/
+abbrev Col : Type := ZOmega × ZOmega × ZOmega
+
+/-- Self dot-product `∑ᵢ cᵢ²` (the cleared column's squared modulus, `= 2^kSO3`). -/
+def Col.selfDot (c : Col) : ZOmega := c.1 * c.1 + c.2.1 * c.2.1 + c.2.2 * c.2.2
+
+/-- Dot-product `∑ᵢ bᵢ cᵢ` (`= 0` for distinct cleared Bloch columns). -/
+def Col.dot (b c : Col) : ZOmega := b.1 * c.1 + b.2.1 * c.2.1 + b.2.2 * c.2.2
+
+/-- `(2 : ZOmega) ∣ x`, decided componentwise. -/
+def dvdTwo (x : ZOmega) : Bool :=
+  (x.a % 2 == 0) && (x.b % 2 == 0) && (x.c % 2 == 0) && (x.d % 2 == 0)
+
+/-- `dvdTwo x = true → (2 : ZOmega) ∣ x` — the bridge to the `kSO3_stripMat_lt` hypothesis. -/
+theorem dvd_two_of_dvdTwo {x : ZOmega} (h : dvdTwo x = true) : (2 : ZOmega) ∣ x := by
+  simp only [dvdTwo, Bool.and_eq_true, beq_iff_eq] at h
+  obtain ⟨⟨⟨ha, hb⟩, hc⟩, hd⟩ := h
+  refine ⟨⟨x.a / 2, x.b / 2, x.c / 2, x.d / 2⟩, ?_⟩
+  have e2 : (2 : ZOmega) = ZOmega.ofInt 2 := rfl
+  ext <;> simp only [e2, ZOmega.mul_a, ZOmega.mul_b, ZOmega.mul_c, ZOmega.mul_d,
+    ZOmega.ofInt_a, ZOmega.ofInt_b, ZOmega.ofInt_c, ZOmega.ofInt_d] <;> ring_nf <;> omega
+
+/-- The `i`-th stripped numerator `(c^s · column)ᵢ = ∑ₖ sylBlochNum s i k · cₖ`. -/
+def stripRow (s : Syllable) (i : Fin 3) (c : Col) : ZOmega :=
+  sylBlochNum s i 0 * c.1 + sylBlochNum s i 1 * c.2.1 + sylBlochNum s i 2 * c.2.2
+
+/-- Syllable `s` "kills" column `c`: `2 ∣ (c^s·c)ᵢ` for every row `i`. -/
+def colKills (s : Syllable) (c : Col) : Bool :=
+  dvdTwo (stripRow s 0 c) && dvdTwo (stripRow s 1 c) && dvdTwo (stripRow s 2 c)
+
+/-- Some syllable kills all three columns. -/
+def someKills (A B C : Col) : Bool :=
+  [Syllable.T, Syllable.HT, Syllable.SHT].any
+    (fun s => colKills s A && colKills s B && colKills s C)
+
+/-- `√2 ∤` the column triple: some entry has odd rational part `.d` (the `kSO3`-exact
+clearing condition; `√2 ∣ ⟨a,0,-a,d⟩ ⟺ d` even). -/
+def notSqrt2Div (A B C : Col) : Bool :=
+  [A.1, A.2.1, A.2.2, B.1, B.2.1, B.2.2, C.1, C.2.1, C.2.2].any (fun x => x.d % 2 == 1)
+
+/-- The 25 real bounded `ZOmega` elements `⟨a,0,-a,d⟩`, `|a|,|d| ≤ 2`. -/
+def realBoxList : List ZOmega :=
+  (List.range 5).flatMap (fun ai => (List.range 5).map (fun di =>
+    (⟨(ai : ℤ) - 2, 0, -((ai : ℤ) - 2), (di : ℤ) - 2⟩ : ZOmega)))
+
+/-- Columns from `realBoxList` with `selfDot = ⟨0,0,0,t⟩` (`= 2^k`). -/
+def validCol (t : ℤ) : List Col :=
+  (realBoxList.flatMap (fun x => realBoxList.flatMap (fun y =>
+    realBoxList.map (fun z => ((x, y, z) : Col))))).filter
+      (fun c => decide (Col.selfDot c = (⟨0, 0, 0, t⟩ : ZOmega)))
+
+set_option maxRecDepth 10000 in
+/-- **The `ma_step` existence core** (`native_decide`): for every `t ∈ {2,4,8}` and every
+triple of `selfDot = t` columns that are pairwise orthogonal and `√2`-indivisible, some
+syllable kills all three (i.e. lowers `kSO3` by ≥ 1 on the corresponding strip). The exact
+orthogonality `BᵀB = 2^k I` (a superset of the achievable Bloch images, NO closure lemma
+needed) suffices. Validated in `scripts/kmm_ma_step_residue.py` / `/tmp/btb_columns.py`
+(0 failures over `k = 1,2,3`). -/
+theorem maStep_exists_core :
+    ([2, 4, 8] : List ℤ).all (fun t =>
+      (validCol t).all (fun A => (validCol t).all (fun B => (validCol t).all (fun C =>
+        !(decide (Col.dot A B = 0) && decide (Col.dot A C = 0) && decide (Col.dot B C = 0)
+            && notSqrt2Div A B C)
+          || someKills A B C)))) = true := by
+  native_decide
+
 end KMM
 
 end SKEFTHawking.RossSelinger
