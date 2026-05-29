@@ -1264,6 +1264,14 @@ import SKEFTHawking.FKLW.RossSelinger.UnitaryClosure
 -- length_kmmReduceMu (≤ N₃+4·n = honest KMM Cor 1 with n=μ(M)). Assembles toward
 -- the Nonempty KMMReduction discharge (needs only cliffordLookup over 𝕊₃, N₃=9).
 import SKEFTHawking.FKLW.RossSelinger.KMMReduceMu
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — Nonempty KMMReduction from the 𝕊₃ base
+-- coverage. baseFinder9 (≤9-gate base word via Classical.choose; len≤9 always,
+-- correct on μ≤3 given coverage) + kmmReduction_of_coverage: coverage ⟹ Nonempty
+-- KMMReduction (concrete: reduce M = kmmReduceMu baseFinder9 (μ(M)) M; correct via
+-- interp_kmmReduceMu; length_bound = N₃+4·sde(|z₀₀|²) KMM Cor 1). Reduces orphan #2
+-- to the SOLE remaining fact: 𝕊₃ coverage (∀ realizable μ≤3 M, ∃ ≤9-word). NO axiom
+-- (coverage is a hypothesis, Inv #15) — discharging it makes Nonempty unconditional.
+import SKEFTHawking.FKLW.RossSelinger.KMMReductionDischarge
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
