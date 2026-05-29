@@ -1453,6 +1453,7 @@ import SKEFTHawking.FKLW.GenericSUdOneParameterSubgroup
 import SKEFTHawking.FKLW.CliffordCCZSU8SeedFlow
 import SKEFTHawking.FKLW.CliffordCCZSU8OrbitSpan
 import SKEFTHawking.FKLW.CliffordCCZSU8PauliConj
+import SKEFTHawking.FKLW.CliffordCCZSU8PauliConjTensor
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
