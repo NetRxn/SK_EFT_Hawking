@@ -149,6 +149,44 @@ theorem dvdSqrt2Pow_normSq_half : ∀ (m : ℕ) (u : ZOmega),
     rw [dvdSqrt2Pow_sqrt2_mul, dvdSqrt2Pow_sqrt2_mul] at h
     exact h
 
+/-! ## The cross-term bound + KMM Lemma 5 -/
+
+/-- **KMM Lemma 5 cross-term bound**: the real cross-term
+`c = x·conj y + y·conj x` satisfies `gde(c, √2) ≥ 1 + ⌊(gde|x|² + gde|y|²)/2⌋`.
+
+Writing `c = u + conj u` with `u = x·conj y` (so `|u|² = |x|²·|y|²`): the product
+bound gives `gde|u|² ≥ g₁ + g₂`, the halving gives `gde(u) ≥ ⌊(g₁+g₂)/2⌋`, and
+the trace "+1" (`dvdSqrt2Pow_add_conj`) supplies the final `+1`. -/
+theorem dvdSqrt2Pow_crossTerm {x y : ZOmega} {g₁ g₂ : ℕ}
+    (hx : dvdSqrt2Pow (normSq x) g₁) (hy : dvdSqrt2Pow (normSq y) g₂) :
+    dvdSqrt2Pow (x * conj y + y * conj x) ((g₁ + g₂) / 2 + 1) := by
+  have hu : x * conj y + y * conj x = (x * conj y) + conj (x * conj y) := by
+    rw [conj_mul, conj_conj]; ring
+  rw [hu]
+  apply dvdSqrt2Pow_add_conj
+  apply dvdSqrt2Pow_normSq_half ((g₁ + g₂) / 2) (x * conj y)
+  have hnu : normSq (x * conj y) = normSq x * normSq y := by
+    have hc : normSq (conj y) = normSq y := by rw [normSq, conj_conj, mul_comm, ← normSq]
+    rw [normSq_mul, hc]
+  rw [hnu]
+  exact dvdSqrt2Pow_antitone (by omega) (dvdSqrt2Pow_mul_of hx hy)
+
+/-- **KMM Lemma 5**: for `x, y ∈ ℤ[ω]` with `|x|² + |y|² = √2^M`,
+
+  `gde(|x+y|², √2) ≥ min(M, 1 + ⌊(gde|x|² + gde|y|²)/2⌋)`.
+
+Predicate form: from `√2^g₁ ∣ |x|²`, `√2^g₂ ∣ |y|²`, and `|x|²+|y|² = √2^M`,
+`√2^(min M ((g₁+g₂)/2+1)) ∣ |x+y|²`. The expansion `|x+y|² = √2^M + c`
+(`normSq_add`, cross-term `c`) plus the non-archimedean `min` law
+(`dvdSqrt2Pow_min`) and the cross-term bound give the result. Numerically
+validated by `scripts/kmm_zomega_reference_oracle.py`. -/
+theorem dvdSqrt2Pow_normSq_add {x y : ZOmega} {g₁ g₂ M : ℕ}
+    (hx : dvdSqrt2Pow (normSq x) g₁) (hy : dvdSqrt2Pow (normSq y) g₂)
+    (hsum : normSq x + normSq y = sqrt2 ^ M) :
+    dvdSqrt2Pow (normSq (x + y)) (min M ((g₁ + g₂) / 2 + 1)) := by
+  rw [normSq_add, hsum]
+  exact dvdSqrt2Pow_min (dvdSqrt2Pow_sqrt2_pow_self M) (dvdSqrt2Pow_crossTerm hx hy)
+
 end ZOmega
 
 end SKEFTHawking.RossSelinger
