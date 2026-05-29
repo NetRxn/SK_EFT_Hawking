@@ -64,24 +64,25 @@ Two genuinely different density mechanisms for the same target (SU(8)); 6z is th
 
 ## Track / Wave catalog
 
-Phase 6z is **scope-gated by Wave 0**. The CAS orbit-dimension check decides BEST (~400)/TYPICAL
-(~900)/WORST (~1800) raw LoC for the spread (Wave 4). DR2 total estimate ≈ **2,360 raw / ~340
-deflated** (typical), incl. one deferred sub-piece.
+Phase 6z **was scope-gated by Wave 0**. ✅ **Both CAS gates now PASS (2026-05-28) and the
+orbit-dimension check returned spanned dim = 63 ⟹ BEST case** — so the budget is locked at the BEST
+column: Wave 4 ~400 raw LoC, **Wave 3 (SU(d) Trotter) DROPPED** (no BCH/Trotter closure needed). The
+single largest scope risk is eliminated.
 
-| Wave | Content | Gate / dependency | Raw LoC (DR2) |
+| Wave | Content | Gate / dependency | Raw LoC |
 |---|---|---|---|
-| **6z.0** | **Pre-Lean CAS gates**: `verify_seed.py` (confirm `g₀` spectrum + `det=1`) + Clifford-orbit-dimension check (`dim span{Ad_U(X)}`). | **HARD GATE** — precedes all Lean. | (computation, no Lean) |
+| **6z.0** | **Pre-Lean CAS gates**: `verify_seed.py` (confirm `g₀` spectrum + `det=1`) + Clifford-orbit-dimension check (`dim span{Ad_U(X)}`). | **HARD GATE** — precedes all Lean. | ✅ DONE (PASS/PASS, BEST) |
 | **6z.1** | Seed element + **algebraic-integer irrationality** (`g₀∈SO(8)`, char-poly `(λ−1)⁶(λ²+(3/2)λ+1)`, `λ_±=(−3±i√7)/4`, minpoly `2λ²+3λ+2`, `not_rootOfUnity_of_minpoly_not_int`). | 6z.0 seed confirmed (✅ Gate-1 PASS). | ~860 |
 | **6z.2** | **First flow**: 1-D circle density (`irrational_dense_on_circle` via `AddSubgroup.dense_or_cyclic`) + unitary spectral log (`X = i·log g₀ ∈ 𝔰𝔲(8)`) ⟹ `exp(tX) ∈ closure⟨…⟩`. | 6z.1. | ~375 (incl. in 860/glue) |
-| **6z.3** | **SU(d) Trotter generalization** of `trotter_sequence_tendsto` (SU(2)→SU(8)). | Needed iff 6z.0 says BCH closure required. | ~250 |
-| **6z.4** | **Conjugation + BCH spread to `𝔰𝔲(8)`** (Clifford-orbit of `X` + bracket closure spans 63-dim) ⟹ `ClosureDenseWitness` for `⟨H,S,CNOT,CCZ⟩`. | 6z.2 (+ 6z.3 if WORST). Scope per 6z.0. | 400 / 900 / 1800 |
+| ~~**6z.3**~~ | ~~**SU(d) Trotter generalization** of `trotter_sequence_tendsto` (SU(2)→SU(8)).~~ | **DROPPED — Gate 2 = BEST (no BCH/Trotter closure needed).** | ~~250~~ → 0 |
+| **6z.4** | **Pure-conjugation spread to `𝔰𝔲(8)`** (Clifford-orbit of `X` spans 63-dim **by itself** — Gate-2 confirmed; reuse `suEightTangent_spans` + `flow_conj_mem`/`qubit_iEmbed_conj`, **no bracket closure**) ⟹ `ClosureDenseWitness` for `⟨H,S,CNOT,CCZ⟩`. | 6z.2. **BEST scope (Gate 2).** | **~400** |
 | **6z.5** | **Headline + Stage-13**: instantiate `SolovayKitaevHeadline_FreeGroup_SUd` for the literal alphabet via the shipped `…_headline_of_witness` chain; whole-phase fresh-context adversarial review (CP-6z). | 6z.4. | ~150 + review |
 | **6z.D** | *Deferred*: multi-dimensional Kronecker–Weyl on `𝕋^d` (only if simultaneous-flow recovery is later needed; **not** needed for the first flow). | re-evaluate post-6z.5. | ~600 |
 
-**Load-bearing risk (the single most consequential unknown):** whether Clifford conjugation of
-`X = i·log g₀` **alone spans `𝔰𝔲(8)`** (BEST), needs one BCH layer (TYPICAL), or multi-layer closure
-(WORST). DR2 flags this is *unverified* and the "Clifford-orbit-spans" claim is **mis-attributed to
-Aaronson–Gottesman** — settle it in Wave 0 by computer algebra, not citation.
+**Load-bearing risk — ✅ RESOLVED (Gate 2, 2026-05-28):** whether Clifford conjugation of
+`X = i·log g₀` **alone spans `𝔰𝔲(8)`** is now settled — **it does** (spanned dim = 63, BEST). No BCH
+layer, no multi-layer closure. DR2's "Clifford-orbit-spans" claim is confirmed *by computation*
+(`Lit-Search/Phase-6z/orbit_dimension.py`), not by the mis-attributed Aaronson–Gottesman citation.
 
 ---
 
@@ -111,7 +112,8 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
 - `irrational_dense_on_circle` (1-D Kronecker; ~25 LoC over `AddSubgroup.dense_or_cyclic`).
 - Unitary spectral-log wrapper (`g₀ = U·diag(e^{iθ})·U†` → `X = U·diag(θ)·U†`; ~150 LoC — Mathlib's
   spectral theorem is **Hermitian-only**).
-- SU(d) `trotter_sequence_tendsto` (mechanical SU(2)→SU(d) port; ~250 LoC) — *iff* WORST/TYPICAL.
+- ~~SU(d) `trotter_sequence_tendsto` (mechanical SU(2)→SU(d) port; ~250 LoC)~~ — **NOT needed** (Gate 2
+  = BEST: pure Clifford conjugation spans `𝔰𝔲(8)`, no BCH/Trotter closure).
 - *(Deferred)* multi-D Kronecker–Weyl on `𝕋^d`.
 
 ---
@@ -143,7 +145,10 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
 
 | Wave | Status |
 |---|---|
-| 6z.0 CAS gates | 🟡 IN-PROGRESS — Gate 1 (`verify_seed.py`) ✅ PASS (corrected spectrum); Gate 2 (orbit dim) ⏳ |
-| 6z.1 seed + irrationality | ⏳ (foundation: Phase A.1 ✅ shipped under 6y) |
-| 6z.2–6z.5 | ⏳ NOT STARTED |
+| 6z.0 CAS gates | ✅ DONE — Gate 1 ✅ PASS (corrected spectrum); Gate 2 ✅ PASS = **BEST** (spanned dim 63). HARD GATE cleared. |
+| 6z.1 seed + irrationality | ⏳ READY (foundation: Phase A.1 ✅ shipped under 6y) |
+| 6z.2 first flow | ⏳ NOT STARTED |
+| ~~6z.3 SU(d) Trotter~~ | ❌ DROPPED (Gate 2 = BEST) |
+| 6z.4 pure-conjugation spread | ⏳ NOT STARTED (~400 LoC, BEST scope) |
+| 6z.5 headline + Stage-13 | ⏳ NOT STARTED |
 | 6z.D Kronecker–Weyl | ⏳ DEFERRED |

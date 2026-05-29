@@ -53,6 +53,18 @@ obtained within search budget — hence this gate is the authoritative settle-th
 
 ## Gate 2 — Clifford-orbit dimension (sets the phase budget) — THE load-bearing check
 
+> **✅ GATE 2 RESULT (2026-05-28): PASS — BEST case (spanned dim = 63).** Ran
+> `Lit-Search/Phase-6z/orbit_dimension.py` (numpy + scipy). The Clifford-group conjugation orbit of the
+> seed generator `X = log g₀ ∈ 𝔰𝔲(8)` **spans all of `𝔰𝔲(8)` (63-dim) by itself** — **no BCH/Trotter
+> bracket closure is needed.** Orbit-closure saturated monotonically `1→16→51→62→63` and is robust to
+> tolerance (basis size exactly 63; smallest relative singular value ≈6.2e-3, ~6 orders above the 1e-9
+> threshold; rank 63 at every tol from 1e-3 to 1e-9; no 64th direction). **This is the BEST of the three
+> outcomes** ⟹ **Wave 4 ~400 raw LoC; Wave 3 (SU(d) Trotter) is DROPPED.** Matches rep-theory: the
+> Clifford adjoint action on the 63-dim Pauli space `𝔰𝔲(8)` is irreducible, so any nonzero `X` generates
+> the whole algebra under conjugation alone. Full writeup: `Lit-Search/Phase-6z/orbit_dimension.md`.
+> **(This settles the single most consequential unverified claim in the phase — by computation, not the
+> mis-attributed Aaronson–Gottesman citation.)**
+
 **The single most consequential unverified claim:** does `Ad_{C₃}(X)` — the Clifford-group (`C₃ =
 ⟨H,S,CNOT⟩`, order 92,897,280) conjugation orbit of `X = i·log g₀` — **span `𝔰𝔲(8)` (63-dim)** by
 itself, or is BCH/Trotter bracket closure also needed? DR2 flags the "Clifford-orbit spans" claim is
@@ -74,9 +86,12 @@ directory). This number is referenced by the Phase 6z roadmap's Wave table.
 
 ---
 
-## Outputs of Wave 0 (gate to Lean work)
-1. `Lit-Search/Phase-6y/verify_seed.py` + confirmed char-poly/det output (Gate 1).
-2. `Lit-Search/Phase-6z/orbit_dimension.{py,md}` + the spanned-dim result + chosen case (Gate 2).
-3. Roadmap Wave-4 LoC + Wave-3 inclusion updated to the confirmed case.
-**Only then** begin Wave 1 (`not_rootOfUnity_of_minpoly_not_int` is the recommended first Lean artifact —
-highest leverage, independently reusable).
+## Outputs of Wave 0 (gate to Lean work) — ✅ BOTH GATES PASS (2026-05-28)
+1. ✅ `Lit-Search/Phase-6z/verify_seed.py` + confirmed char-poly/det output (Gate 1 — PASS, corrected
+   spectrum `(−3±i√7)/4`, minpoly `2x²+3x+2`).
+2. ✅ `Lit-Search/Phase-6z/orbit_dimension.{py,md}` + spanned-dim result (Gate 2 — PASS, **BEST**,
+   spanned dim 63).
+3. ✅ Roadmap Wave-4 LoC + Wave-3 inclusion updated to the **BEST** case (Wave 4 ~400; Wave 3 dropped).
+
+**HARD GATE CLEARED — Wave 1 may begin.** Recommended first Lean artifact:
+`not_rootOfUnity_of_minpoly_not_int` (highest leverage, independently reusable).
