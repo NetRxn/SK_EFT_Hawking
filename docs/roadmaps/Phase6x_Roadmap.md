@@ -644,12 +644,23 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
 
 **REMAINING build order (each MCP-verified, kernel-pure):**
 1. ✅ `gdePeel` ℕ-valued gde + predicate↔value bridge — SHIPPED (`b5771b9`).
-   Still TODO: Prop 1 parity (`v₂` via `padicValInt 2` of `RealSubring` coords
-   a=z.d, b=z.c) for exact gde values.
+   ✅ `NormSqGde.lean` — `normSq`/`gdeNormSq` foundation — SHIPPED (`f36f5a0`).
+   TODO **Prop 1** in Lean — VALIDATED closed form (oracle, 2026-05-29): for a
+   real `z = A+√2B` (A=z.d, B=z.c), `gde(z,√2) = 2·min(v₂A,v₂B) + [v₂A>v₂B]`,
+   so parity even ⟺ `v₂(B)≥v₂(A)`. Build via `padicValInt 2` of the
+   `RealSubring` coords + the peel recursion. (Edge cases A=0 or B=0: v₂=∞;
+   handle separately — oracle's closed-form check skips zero-coord, but the
+   parity check covers them.)
 2. **Lemma 4** value form (`gde(|x|²)=gde(|y|²)≤1`) — core SHIPPED as
-   `denExp_normSq_col0_eq`; lift to `gde` value.
-3. **Lemma 5** (`gdePeel(|x+y|²) ≥ min(m, 1+⌊(g₁+g₂)/2⌋)`) via `normSq_add`
-   cross-term + `gdePeel` arithmetic.
+   `denExp_normSq_col0_eq`; lift to `gde` value (oracle confirms `gde(|x|²)∈{0,1}`).
+3. **Lemma 5** — MECHANISM VALIDATED (oracle, 0 violations / 18368 pairs):
+   `|x+y|² = 2^a + c` with `c = x·conj y + y·conj x` (real, `normSq_add`), and
+   the "+1" comes from **`gde(c,√2) ≥ 1 + ⌊(g₁+g₂)/2⌋`** (g_i = `gde|x|²`,
+   `gde|y|²`). Then `gde(|x+y|²) ≥ min(2a, gde c) ≥ min(2a, 1+⌊(g₁+g₂)/2⌋)` via
+   non-archimedean `gde(p+q) ≥ min(gde p, gde q)` (= `dvdSqrt2Pow` closed under
+   `+`). The cross-term bound is the substantive piece — prove via Prop 1
+   closed form on `c`'s ℤ[√2] coords. NO reconstruction guesswork left: the
+   exact true inequalities are oracle-confirmed.
 4. **Lemma 3** — CORRECTED CONDITION (numerically validated 2026-05-29 via
    `scripts/kmm_zomega_reference_oracle.py`; my earlier `2∣(x+ωᵏy)` note was a
    `gde(element)`-vs-`gde(|element|²)` conflation, FALSE for realizable pairs —

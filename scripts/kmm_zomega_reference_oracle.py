@@ -92,6 +92,23 @@ def gde_sqrt2(z: Z, fuel: int = 80) -> int:
     return g
 
 
+def v2(n: int) -> int:
+    """2-adic valuation of an integer; v₂(0) = +∞ (returned as a large sentinel)."""
+    if n == 0:
+        return 1 << 30
+    k = 0
+    while n % 2 == 0:
+        n //= 2
+        k += 1
+    return k
+
+
+def is_real(z: Z) -> bool:
+    """conj z = z  ⟺  z.a = −z.c ∧ z.b = 0  (real element A + √2·B, A = z.d, B = z.c)."""
+    a, b, c, d = z
+    return a == -c and b == 0
+
+
 def is_pow2_int(r: Z) -> int | None:
     """If r = 2^k as a pure integer ⟨0,0,0,2^k⟩ (k ≥ 0) return k, else None."""
     a, b, c, d = r
@@ -142,7 +159,54 @@ def _validate(coord_range: int = 3) -> None:
     assert gde_vals <= {0, 1}, "Lemma 4 violated"
     assert lemma3_ok == total, "Lemma 3 (s=−1) violated"
     assert full_ok == total, "Lemma 3 (full {1,2,3}) violated"
-    print("ALL KMM Lemma 3/4 numerical checks PASS.")
+
+    # Prop 1: for a real element z = A + √2·B (A = z.d, B = z.c),
+    #   gde(z, √2) is even  ⟺  v₂(B) ≥ v₂(A);  closed form
+    #   gde(z, √2) = 2·min(v₂A, v₂B) + (1 if v₂A > v₂B else 0).
+    p1_bad = cf_bad = p1_tot = 0
+    for A in rng:
+        for B in rng:
+            z = (-B, 0, B, A)            # real element A + √2·B
+            if z == (0, 0, 0, 0):
+                continue
+            p1_tot += 1
+            g = gde_sqrt2(z)
+            va, vb = v2(A), v2(B)
+            if (g % 2 == 0) != (vb >= va):
+                p1_bad += 1
+            if va < (1 << 30) and vb < (1 << 30):    # closed form away from zero coords
+                if g != 2 * min(va, vb) + (1 if va > vb else 0):
+                    cf_bad += 1
+    print(f"  Prop 1   parity even⟺v₂(B)≥v₂(A): {p1_tot - p1_bad}/{p1_tot}")
+    print(f"  Prop 1   closed-form gde value:   mismatches={cf_bad}")
+    assert p1_bad == 0, "Prop 1 parity violated"
+    assert cf_bad == 0, "Prop 1 closed form violated"
+
+    # Lemma 5 cross-term: c = x·conj y + y·conj x is real, and
+    #   gde(c, √2) ≥ 1 + ⌊(gde|x|² + gde|y|²)/2⌋  (the "+1" source);
+    # with |x+y|² = 2^a + c and non-archimedean gde this gives Lemma 5.
+    l5_bad = l5_tot = 0
+    for x in pts:
+        if divides_sqrt2(x):
+            continue
+        nx = norm_sq(x)
+        g1 = gde_sqrt2(nx)
+        for y in pts:
+            if divides_sqrt2(y):
+                continue
+            if is_pow2_int(add(nx, norm_sq(y))) is None:
+                continue
+            g2 = gde_sqrt2(norm_sq(y))
+            c = add(mul(x, conj(y)), mul(y, conj(x)))
+            assert is_real(c), "cross-term not real"
+            gc = gde_sqrt2(c) if c != (0, 0, 0, 0) else (1 << 30)
+            l5_tot += 1
+            if gc < 1 + (g1 + g2) // 2:
+                l5_bad += 1
+    print(f"  Lemma 5  gde(c) ≥ 1+⌊(g₁+g₂)/2⌋:  {l5_tot - l5_bad}/{l5_tot}")
+    assert l5_bad == 0, "Lemma 5 cross-term bound violated"
+
+    print("ALL KMM Lemma 3/4/5 + Prop 1 numerical checks PASS.")
 
 
 if __name__ == "__main__":
