@@ -44,6 +44,7 @@ import SKEFTHawking.FKLW.RossSelinger.MAStepDecrease
 import SKEFTHawking.FKLW.RossSelinger.BlochOrthogonal
 import SKEFTHawking.FKLW.RossSelinger.UnitaryClosure
 import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Bridge
+import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
 
 set_option autoImplicit false
 
@@ -232,10 +233,12 @@ clearing condition; `√2 ∣ ⟨a,0,-a,d⟩ ⟺ d` even). -/
 def notSqrt2Div (A B C : Col) : Bool :=
   [A.1, A.2.1, A.2.2, B.1, B.2.1, B.2.2, C.1, C.2.1, C.2.2].any (fun x => x.d % 2 == 1)
 
-/-- The 25 real bounded `ZOmega` elements `⟨a,0,-a,d⟩`, `|a|,|d| ≤ 2`. -/
+/-- The bounded integer coordinate range `[-2, 2]`. -/
+def intBox : List ℤ := [-2, -1, 0, 1, 2]
+
+/-- The 25 real bounded `ZOmega` elements `⟨a,0,-a,d⟩`, `a,d ∈ [-2,2]`. -/
 def realBoxList : List ZOmega :=
-  (List.range 5).flatMap (fun ai => (List.range 5).map (fun di =>
-    (⟨(ai : ℤ) - 2, 0, -((ai : ℤ) - 2), (di : ℤ) - 2⟩ : ZOmega)))
+  intBox.flatMap (fun a => intBox.map (fun d => (⟨a, 0, -a, d⟩ : ZOmega)))
 
 /-- Columns from `realBoxList` with `selfDot = ⟨0,0,0,t⟩` (`= 2^k`). -/
 def validCol (t : ℤ) : List Col :=
@@ -257,6 +260,171 @@ theorem maStep_exists_core :
             && notSqrt2Div A B C)
           || someKills A B C)))) = true := by
   native_decide
+
+/-! ## Connecting `blochNum M` to the `native_decide` core -/
+
+/-- A real, bounded `ZOmega` element is in `realBoxList`. -/
+theorem mem_realBoxList {x : ZOmega} (hb : x.b = 0) (hc : x.c = -x.a)
+    (ha1 : -2 ≤ x.a) (ha2 : x.a ≤ 2) (hd1 : -2 ≤ x.d) (hd2 : x.d ≤ 2) :
+    x ∈ realBoxList := by
+  simp only [realBoxList, List.mem_flatMap, List.mem_map, intBox, List.mem_cons,
+    List.not_mem_nil, or_false]
+  refine ⟨x.a, by omega, x.d, by omega, ?_⟩
+  ext <;> simp [hb, hc]
+
+/-- `(2 : ZOmega)^k = ⟨0,0,0,2^k⟩`. -/
+theorem two_pow_eq (k : ℕ) : (2 : ZOmega) ^ k = (⟨0, 0, 0, 2 ^ k⟩ : ZOmega) := by
+  induction k with
+  | zero => rfl
+  | succ n ih =>
+      rw [pow_succ, ih, show (2 : ZOmega) = ZOmega.ofInt 2 from rfl]
+      ext <;>
+        simp only [ZOmega.mul_a, ZOmega.mul_b, ZOmega.mul_c, ZOmega.mul_d,
+          ZOmega.ofInt_a, ZOmega.ofInt_b, ZOmega.ofInt_c, ZOmega.ofInt_d, pow_succ] <;> ring
+
+/-- **`√2 ∤ B` from `kSO3`-exactness**: a realizable `M` with `kSO3 M ≥ 1` has some Bloch
+numerator with odd rational part `.d` (i.e. `√2 ∤ Bᵢⱼ`). The `kSO3`-sup is attained at
+some `(i,j)`; there `denExp (blochEntry) = kSO3 M`, so the cleared numerator is NOT
+`√2`-divisible (else `√2^(kSO3-1)` would clear it, lowering `denExp`); and for a real
+numerator `√2 ∤ ⟺ d` odd. -/
+theorem blochNum_exists_odd_d {M : Mat2} (h : IsCliffordTRealizable M) (hk1 : 1 ≤ kSO3 M) :
+    ∃ i j : Fin 3, (blochNum M i j).d % 2 = 1 := by
+  obtain ⟨p, -, hp⟩ := Finset.exists_mem_eq_sup (Finset.univ : Finset (Fin 3 × Fin 3))
+    Finset.univ_nonempty (fun p => denExp (blochEntry M p.1 p.2))
+  have hp' : kSO3 M = denExp (blochEntry M p.1 p.2) := hp
+  refine ⟨p.1, p.2, ?_⟩
+  by_contra hcon
+  have hdeven : (blochNum M p.1 p.2).d % 2 = 0 := by omega
+  have hdiv : ZOmega.dividesSqrt2 (blochNum M p.1 p.2) :=
+    ⟨by rw [blochNum_c_eq h]; omega, by rw [blochNum_b_zero h]; omega⟩
+  rw [ZOmega.dividesSqrt2_iff_dvd] at hdiv
+  obtain ⟨w, hw⟩ := hdiv
+  have hspec := blochNum_spec M p.1 p.2
+  rw [hw, ZOmegaSqrt2.of_mul, show ZOmegaSqrt2.of ZOmega.sqrt2 = ZOmegaSqrt2.sqrt2 from rfl] at hspec
+  -- hspec : sqrt2 ^ kSO3 M * blochEntry = sqrt2 * of w
+  have hcancel : sqrt2 ^ (kSO3 M - 1) * blochEntry M p.1 p.2 = ZOmegaSqrt2.of w := by
+    have key : ZOmegaSqrt2.sqrt2 * (sqrt2 ^ (kSO3 M - 1) * blochEntry M p.1 p.2)
+        = ZOmegaSqrt2.sqrt2 * ZOmegaSqrt2.of w := by
+      rw [← mul_assoc, ← pow_succ', show kSO3 M - 1 + 1 = kSO3 M from by omega]; exact hspec
+    calc sqrt2 ^ (kSO3 M - 1) * blochEntry M p.1 p.2
+        = invSqrt2 * (ZOmegaSqrt2.sqrt2 * (sqrt2 ^ (kSO3 M - 1) * blochEntry M p.1 p.2)) := by
+          rw [← mul_assoc, ZOmegaSqrt2.invSqrt2_mul_sqrt2, one_mul]
+      _ = invSqrt2 * (ZOmegaSqrt2.sqrt2 * ZOmegaSqrt2.of w) := by rw [key]
+      _ = ZOmegaSqrt2.of w := by rw [← mul_assoc, ZOmegaSqrt2.invSqrt2_mul_sqrt2, one_mul]
+  have hle : denExp (blochEntry M p.1 p.2) ≤ kSO3 M - 1 := denExp_le_iff.mpr ⟨w, hcancel⟩
+  omega
+
+/-- Each cleared Bloch numerator of a `μ ≤ 3` (`kSO3 ≤ 3`) realizable matrix lies in
+`realBoxList` (real form + coordinate bound). -/
+theorem blochNum_mem_realBoxList {M : Mat2} (h : IsCliffordTRealizable M) (hk3 : kSO3 M ≤ 3)
+    (i j : Fin 3) : blochNum M i j ∈ realBoxList := by
+  have hb := blochNum_b_zero h i j
+  have hc := blochNum_c_eq h i j
+  have hnd := blochNum_normSq_d_le h hk3 i j
+  rw [ZOmega.normSq_d, hb, hc] at hnd
+  apply mem_realBoxList hb hc <;>
+    nlinarith [sq_nonneg (blochNum M i j).a, sq_nonneg (blochNum M i j).d,
+      sq_nonneg ((blochNum M i j).a - 2), sq_nonneg ((blochNum M i j).a + 2),
+      sq_nonneg ((blochNum M i j).d - 2), sq_nonneg ((blochNum M i j).d + 2)]
+
+/-- The `j`-th cleared Bloch column lies in `validCol (2^kSO3 M)`. -/
+theorem col_mem_validCol {M : Mat2} (h : IsCliffordTRealizable M) (hk3 : kSO3 M ≤ 3) (j : Fin 3) :
+    ((blochNum M 0 j, blochNum M 1 j, blochNum M 2 j) : Col) ∈ validCol (2 ^ kSO3 M) := by
+  rw [validCol, List.mem_filter]
+  refine ⟨?_, ?_⟩
+  · rw [List.mem_flatMap]
+    exact ⟨blochNum M 0 j, blochNum_mem_realBoxList h hk3 0 j, by
+      rw [List.mem_flatMap]
+      exact ⟨blochNum M 1 j, blochNum_mem_realBoxList h hk3 1 j, by
+        rw [List.mem_map]
+        exact ⟨blochNum M 2 j, blochNum_mem_realBoxList h hk3 2 j, rfl⟩⟩⟩
+  · rw [decide_eq_true_eq]
+    have hortho := blochNum_orthogonal (isUnitaryT_of_isCliffordTRealizable h) j j
+    rw [if_pos rfl, Fin.sum_univ_three] at hortho
+    show blochNum M 0 j * blochNum M 0 j + blochNum M 1 j * blochNum M 1 j
+        + blochNum M 2 j * blochNum M 2 j = _
+    rw [hortho, two_pow_eq]
+
+/-- The stripped numerator of a Bloch column equals `blochStripNum`. -/
+theorem stripRow_eq_blochStripNum (s : Syllable) (M : Mat2) (i j : Fin 3) :
+    stripRow s i (blochNum M 0 j, blochNum M 1 j, blochNum M 2 j) = blochStripNum s M i j := by
+  simp only [stripRow, blochStripNum, Fin.sum_univ_three]
+
+/-- Pairwise orthogonality of the cleared Bloch columns (`j ≠ l`). -/
+theorem col_dot_eq_zero {M : Mat2} (hu : ZOmegaSqrt2.IsUnitaryT M) {j l : Fin 3} (hjl : j ≠ l) :
+    Col.dot (blochNum M 0 j, blochNum M 1 j, blochNum M 2 j)
+      (blochNum M 0 l, blochNum M 1 l, blochNum M 2 l) = 0 := by
+  have hb := blochNum_orthogonal hu j l
+  rw [if_neg hjl, Fin.sum_univ_three] at hb
+  show blochNum M 0 j * blochNum M 0 l + blochNum M 1 j * blochNum M 1 l
+      + blochNum M 2 j * blochNum M 2 l = 0
+  exact hb
+
+/-- `√2 ∤ B`: the column triple of a realizable `kSO3 ≥ 1` matrix has some odd `.d` entry. -/
+theorem col_notSqrt2Div {M : Mat2} (h : IsCliffordTRealizable M) (hk1 : 1 ≤ kSO3 M) :
+    notSqrt2Div (blochNum M 0 0, blochNum M 1 0, blochNum M 2 0)
+      (blochNum M 0 1, blochNum M 1 1, blochNum M 2 1)
+      (blochNum M 0 2, blochNum M 1 2, blochNum M 2 2) = true := by
+  obtain ⟨i, j, hij⟩ := blochNum_exists_odd_d h hk1
+  rw [notSqrt2Div, List.any_eq_true]
+  exact ⟨blochNum M i j, by fin_cases i <;> fin_cases j <;> simp,
+    by rw [beq_iff_eq]; exact hij⟩
+
+/-- From `colKills s (col j) = true`, the mod-2 condition `2 ∣ blochStripNum s M i j` for
+every row `i` (`j` stays free — avoids `blochNum` whnf blow-up). -/
+theorem colKills_blochStripNum_dvd (s : Syllable) (M : Mat2) (j : Fin 3)
+    (hkj : colKills s (blochNum M 0 j, blochNum M 1 j, blochNum M 2 j) = true) (i : Fin 3) :
+    (2 : ZOmega) ∣ blochStripNum s M i j := by
+  rw [colKills, Bool.and_eq_true, Bool.and_eq_true] at hkj
+  obtain ⟨⟨d0, d1⟩, d2⟩ := hkj
+  have hdvd : (2 : ZOmega) ∣ stripRow s i (blochNum M 0 j, blochNum M 1 j, blochNum M 2 j) := by
+    fin_cases i
+    · exact dvd_two_of_dvdTwo d0
+    · exact dvd_two_of_dvdTwo d1
+    · exact dvd_two_of_dvdTwo d2
+  rwa [stripRow_eq_blochStripNum] at hdvd
+
+/-! ## `ma_step` existence -/
+
+/-- **`ma_step` existence** (the MA recursion's reducing step): a realizable `M` with
+`1 ≤ kSO3 M ≤ 3` admits a syllable strip lowering `kSO3` by ≥ 1. Assembles the cleared-
+Bloch-numerator orthogonality (`col_mem_validCol`), reality bound, `kSO3`-exactness
+(`col_notSqrt2Div`), and the `native_decide` core (`maStep_exists_core`), then feeds the
+resulting mod-2 condition to `kSO3_stripMat_lt`. -/
+theorem ma_step_exists {M : Mat2} (h : IsCliffordTRealizable M)
+    (hk1 : 1 ≤ kSO3 M) (hk3 : kSO3 M ≤ 3) :
+    ∃ s : Syllable, kSO3 (stripMat s M) < kSO3 M := by
+  have hu := isUnitaryT_of_isCliffordTRealizable h
+  have htmem : (2 : ℤ) ^ kSO3 M ∈ ([2, 4, 8] : List ℤ) := by
+    rcases (by omega : kSO3 M = 1 ∨ kSO3 M = 2 ∨ kSO3 M = 3) with hh | hh | hh <;> rw [hh] <;> decide
+  -- extract `someKills` from the native_decide core
+  have e4 := List.all_eq_true.mp (List.all_eq_true.mp (List.all_eq_true.mp
+    (List.all_eq_true.mp maStep_exists_core _ htmem) _ (col_mem_validCol h hk3 0))
+    _ (col_mem_validCol h hk3 1)) _ (col_mem_validCol h hk3 2)
+  have hbracket :
+      (decide (Col.dot (blochNum M 0 0, blochNum M 1 0, blochNum M 2 0)
+            (blochNum M 0 1, blochNum M 1 1, blochNum M 2 1) = 0)
+        && decide (Col.dot (blochNum M 0 0, blochNum M 1 0, blochNum M 2 0)
+            (blochNum M 0 2, blochNum M 1 2, blochNum M 2 2) = 0)
+        && decide (Col.dot (blochNum M 0 1, blochNum M 1 1, blochNum M 2 1)
+            (blochNum M 0 2, blochNum M 1 2, blochNum M 2 2) = 0)
+        && notSqrt2Div (blochNum M 0 0, blochNum M 1 0, blochNum M 2 0)
+            (blochNum M 0 1, blochNum M 1 1, blochNum M 2 1)
+            (blochNum M 0 2, blochNum M 1 2, blochNum M 2 2)) = true := by
+    rw [Bool.and_eq_true, Bool.and_eq_true, Bool.and_eq_true, decide_eq_true_eq,
+        decide_eq_true_eq, decide_eq_true_eq]
+    exact ⟨⟨⟨col_dot_eq_zero hu (by decide), col_dot_eq_zero hu (by decide)⟩,
+      col_dot_eq_zero hu (by decide)⟩, col_notSqrt2Div h hk1⟩
+  rw [hbracket, Bool.not_true, Bool.false_or] at e4
+  rw [someKills, List.any_eq_true] at e4
+  obtain ⟨s, -, hs⟩ := e4
+  rw [Bool.and_eq_true, Bool.and_eq_true] at hs
+  obtain ⟨⟨hk0, hk1c⟩, hk2c⟩ := hs
+  refine ⟨s, kSO3_stripMat_lt hu s hk1 (fun i j => ?_)⟩
+  fin_cases j
+  · exact colKills_blochStripNum_dvd s M 0 hk0 i
+  · exact colKills_blochStripNum_dvd s M 1 hk1c i
+  · exact colKills_blochStripNum_dvd s M 2 hk2c i
 
 end KMM
 
