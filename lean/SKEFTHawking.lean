@@ -1197,6 +1197,13 @@ import SKEFTHawking.FKLW.RossSelinger.PropOne
 -- gdeFromPQ of residues, and Pform/Qform_coordOf identify those residues. The
 -- connector applying kmm_lemma3_alg2 (over Coord4.gde) to actual ZOmega columns.
 import SKEFTHawking.FKLW.RossSelinger.PropOneBridge
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — KMM Lemma 3 lifted to ZOmega columns.
+-- coordOf_add / coordOf_omega_pow_mul (coordOf homomorphism), and
+-- kmm_lemma3_column: for x,y with gde(|x|²)=gde(|y|²)=j∈{0,1} and unit-column
+-- congruences (|x|²+|y|²).d ≡ (|x|²+|y|²).c ≡ 0 (mod 8), ∀ s+1∈{1,2,3} ∃k∈{0..3}:
+-- gde(|x+ωᵏy|²)=(s+1)+j. The faithful ZOmega-image of kmm_lemma3_alg2 (via the
+-- gde-value bridge); the s=2 case is the sde-reducing step. Fuel-sufficiency input.
+import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Column
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
