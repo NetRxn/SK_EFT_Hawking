@@ -153,9 +153,19 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
 | 6z.5 headline + Stage-13 | ⏳ NOT STARTED (gated on 6z.2 + 6z.4; then `cliffordCCZSU8_headline_of_witness`-style chain for the literal `GeneratingSet`) |
 | 6z.D Kronecker–Weyl | ⏳ DEFERRED |
 
-> **Frontier note (2026-05-28):** Wave 1 establishes the irrational-angle seed end-to-end (the alphabet
-> contains an infinite-order element — a complete, novel result). The density headline (Waves 2+4+5)
-> requires two pieces of **new research-grade Mathlib infrastructure** — a unitary spectral theorem and
-> Clifford-adjoint-irreducibility — neither completable as a clean (no-`sorry`, no-axiom, no-heartbeat)
-> increment in a single pass. These are the genuine next focused efforts; shipping sorried scaffolding
-> would violate Invariants #10/#15 and the correctness-over-expediency standard.
+> **Build note (2026-05-28, de-risked):** Wave 1 establishes the irrational-angle seed end-to-end (the
+> alphabet contains an infinite-order element — a complete, novel result). The density headline (Waves
+> 2+4+5) needs two pieces of **upstream-Mathlib-in-repo infrastructure** (the project's normal mode —
+> NOT blockers):
+> - **Wave 2 — unitary/normal spectral theorem.** Mathlib has only the Hermitian version, BUT it has the
+>   foundation: `Mathlib.Analysis.InnerProductSpace.JointEigenspace ::
+>   LinearMap.IsSymmetric.iSup_iInf_eq_top_of_commute` (joint eigenspaces for pairwise-commuting
+>   self-adjoints). Concrete path: `U` unitary ⟹ `A=(U+U†)/2`, `B=(U−U†)/2i` are commuting self-adjoints
+>   with `A+iB=U` ⟹ joint eigenbasis ⟹ `U = V·diag(e^{iθⱼ})·V†` ⟹ `log U = V·diag(iθⱼ)·V†`, `X₀=i·log U
+>   ∈ 𝔰𝔲(8)`, `exp(t·X₀)` accumulation via 1-D Kronecker (`AddSubgroup.dense_or_cyclic`, cyclic branch
+>   killed by `not_rootOfUnity_seedEigenvalue`). A reusable Mathlib-PR-quality `IsStarNormal`/unitary
+>   matrix spectral theorem. This is the next build.
+> - **Wave 4 — Clifford-adjoint irreducibility** for the 63-dim orbit span (Gate 2 = BEST numerically).
+>   Larger; needs its own foundation search (Clifford-group rep theory on the n-qubit Pauli space).
+> Shipping sorried scaffolding is still off-limits (Invariants #10/#15), but these are buildable, not
+> blocked — the prior "research-grade frontier" framing was a mis-scope.
