@@ -694,13 +694,24 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
    the {0,1} case analysis. Validate every Lean gde step against the oracle.
 5. ✅ S/Z-compressed reconstruction syllable `reconWordC` (≤4 gates/step,
    `interp_reconWordC_mul`/`_eq`) — SHIPPED (`360023c`). Enables the `4·k` step.
-6. `chooseReduction` (computable `Fin 4` search) over `sde(|z₀₀|²)` via
-   `ResidueSqrt2` residue selection (dossier §3.3).
+6. ✅ `chooseReductionComp` SHIPPED (`KMMCompute.lean`, `ca1ad83`) — computable
+   `Fin 4` search over `sdeC`; `chooseReductionComp_reduces` (by-construction sde
+   decrease) + `interp_reconWordC_reduceStep` (step correctness). Runtime ring
+   computes (`native_decide`/`decide` examples pass). Its EXISTENCE-success when
+   `sdeC≥4` is Lemma 3 (DR-gated). [Selection rule is `sdeC`-comparison, not the
+   imprecise dossier "residue mod √2".]
 7. `cliffordLookup` / 𝕊₃ coverage (`sde(|z₀₀|²)≤3` realizable → word ≤ N₃) —
-   the other genuinely hard piece (finite orbit enumeration; pin `N₃` by BFS).
-8. `kmmReduce` fuel-recursion assembly (`interp_reconWordC_mul` correctness +
-   `reconWordC_length_le_four` length accounting) + discharge `Nonempty
-   KMMReduction`.
+   DR-gated (Q2: 𝕊₃ structure + the `N₃` numeral, dossier flags UNKNOWN).
+8. `kmmReduce` fuel-recursion assembly (`interp_reconWordC_reduceStep` correctness
+   + `reconWordC_length_le_four` length accounting) + discharge `Nonempty
+   KMMReduction` — gated on items 4 (Lemma 3) + 7 (𝕊₃/N₃).
+
+**DR-GATED BOUNDARY REACHED (2026-05-29):** all Lemma-3-independent substrate is
+shipped (gde foundations, Lemma 4-core, Lemma 5, `reconWordC`, computable
+`reduceStep`/`chooseReductionComp`). The remaining critical path — Lemma 3 (item
+4), 𝕊₃/`N₃` (item 7), then assembly+discharge (item 8) → Item G (orphan #2) — is
+gated on the DR (`Lit-Search/Tasks/submitted/20260529_phase6x_kmm_lemma3_proof_mechanisms.md`,
+Q1+Q2). Items H/I gated on Q3.
 
 #### Item G (M5 stub) — KMM-derived base finder integration
 
