@@ -1113,6 +1113,12 @@ import SKEFTHawking.FKLW.RossSelinger.ResidueSqrt2
 -- normSq z := z * conj z (= |z|²) with conj_normSq (realness). KMM tracks
 -- sde(|z|²) of the matrix entries (Lemmas 3 & 4).
 import SKEFTHawking.FKLW.RossSelinger.Conj
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — greatest-dividing-exponent
+-- substrate. ZOmega.dividesSqrt2_iff_dvd (dividesSqrt2 z ↔ √2 ∣ z),
+-- dvdSqrt2Pow z m (decidable peel-based √2^m ∣ z predicate) +
+-- dvdSqrt2Pow_iff (↔ √2^m ∣ z). The decidable gde machinery KMM Lemma 3 /
+-- Prop 1 reason over.
+import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
