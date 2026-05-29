@@ -1293,6 +1293,14 @@ import SKEFTHawking.FKLW.RossSelinger.BlochMap
 -- for unitary B, term-mode calc via the HMul defeq bridge). The two ingredients of
 -- R(A·B)=R(A)·R(B).
 import SKEFTHawking.FKLW.RossSelinger.BlochHomomorphism
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — Matsumoto-Amano syllable
+-- strip (the recursion step, algebraic half). IsCliffordTRealizable.adjoint
+-- (realizability closed under Hermitian adjoint; per-gate short adjoint words
+-- T†=Z·S·T etc.), Syllable {T,HT,SHT} + sylWord/sylMat, stripMat s M = (sylMat s)†·M,
+-- interp_sylWord_stripMat (strip exactly invertible), stripMat_realizable, and the
+-- computable kSO3-reducing selectSyllable (U(2)-residue-mod-2-determined per
+-- kmm_ma_step_residue.py). The kSO3-decrease EXISTENCE (residue crux) ships next.
+import SKEFTHawking.FKLW.RossSelinger.MAStep
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
