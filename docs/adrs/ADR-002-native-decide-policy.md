@@ -1,6 +1,11 @@
 # ADR-002 — `native_decide` policy (compiler-trust axiom in the anyon/TQFT computation layer)
 
-- **Status:** Accepted (2026-05-28)
+- **Status:** **DRAFT — re-opened for vetting (2026-05-29).** Was "Accepted (2026-05-28)"; the policy
+  (document `native_decide`; convert B; harden publication-critical A) still stands, but the *execution
+  plan* is being vetted before commitment. Open items being resolved: base-type readiness (only
+  `QCyc5`/`QCyc5Ext` equipped — see `docs/native_decide_cleanup_checklist.md` §2b), and the **Route 1
+  (per-type powerTable) vs Route 2 (kernel-reducible `PolyQuotQ.mulReduce`)** fork for high-degree types.
+  Do not treat as final until re-marked Accepted.
 - **Deciders:** John Roehm (project owner); investigation + draft by Claude.
 - **Context source:** P4 `axiom_closure_allowlist` gate (`docs/AI-Defect-Defense-Layer.md`, commit `1798633`) +
   triage report (`docs/native_decide_triage.md`, commit `e021fe0`) + this investigation.
@@ -114,5 +119,51 @@ the simp set), so we convert only where it earns its keep.
 
 **Follow-ups (not blocking).** (a) Category-B sweep to `decide`; (b) per-bundle cross-reference
 (`docs/agents/claims-reviewer-bundle-prompts.md`) of which paper-anchor theorems hit Category-A
-`native_decide`, to scope the targeted hardening; (c) optional `QCyc*` reducible-instance refactor.
+`native_decide`, to scope the targeted hardening; (c) ~~optional `QCyc*` reducible-instance refactor~~ →
+see the 2026-05-29 addendum: the `decide`-reducible refactor is a dead end over `ℚ`; the real enabler is
+the Route-1′ metaprogram.
+
+---
+
+## 2026-05-29 vetting addendum (status → DRAFT)
+
+Scouting the execution plan (companion: `docs/native_decide_cleanup_checklist.md`) produced two findings
+that revise the path, so the ADR is back to DRAFT until re-vetted:
+
+1. **Base-type readiness (decisive).** Of the `QCyc*`/`QSqrt*` family, **only `QCyc5`/`QCyc5Ext` have the
+   ADR-001 kernel-pure machinery** (`CommRing` + `mul_cᵢ` + `powerTable_m_k`). Every other base type
+   (`QCyc3/15/16/40/80`, `QSqrt2/3/5`, `QLevel3`, extensions) delegates `*` to `PolyQuotQ.mulReduce` (the
+   simp-opaque `Array.ofFn`/bang-indexed rep) with **no** `CommRing` instance and **none** of the lemma
+   set. So Category-A hardening (Decision #5) is gated on building that machinery per type, and the cost
+   scales `O(deg²)`: ~6 lemmas at deg 2, ~28 at deg 4 (QCyc5, shipped), ~120 at deg 8 (`QCyc16`, Ising),
+   ~480 at deg 16 (`QCyc40`, D6 T-gate), ~2000 at deg 32 (`QCyc80`).
+
+2. **`decide`-reducibility is a dead end over `ℚ` (empirically confirmed).** Kernel `decide` fails on `ℚ`
+   arithmetic *itself* — `(3 : ℚ) * 2 = 6 := by decide` gets stuck at `(Rat.mul 3 2).num` because
+   `Rat.mul`/`Rat.add` are irreducible-by-design (`Rat.normalize`/`Nat.gcd` don't whnf-reduce). No
+   `Array→List` / `Finset→Nat.fold` refactor of `mulReduce` changes this; the coefficient comparison is a
+   `ℚ` equality. This is *why* ADR-001 used `ext`+`simp[powerTable]`+`ring`/`norm_num` (symbolic, no
+   `decide`). Q4's earlier characterization of a "reducible-instance refactor" as a possible win is
+   **retracted** for the `decide` reading.
+
+**Revised path (supersedes the loose "type refactor" suggestion):**
+- **Route 1** (powerTable + `ext`/`ring`, per type) is the only proven kernel-pure method; works at any
+  degree, but `O(deg²)` lemmas by hand.
+- **Route 1′** (the recommended substrate investment): a `simproc` / `norm_num` extension (~200–500 LoC)
+  that reduces `(mulReduce n r x y).coeffs k` symbolically (or auto-generates the per-type `powerTable`
+  simp set), making Route 1 degree-scalable. Prototype on `QCyc16` (deg 8) before committing. This is the
+  enabler for any high-degree (D6/Ising) hardening.
+- **Route 2** (coefficient-rep change away from `ℚ` to recover genuine `decide`): cross-cutting rewrite,
+  marginal payoff over Route 1′, `ℚ` genuinely needed for F-symbol denominators — **not recommended.**
+
+**Mathlib check (does a built-in already do this?):** No. `AdjoinRoot` / `CyclotomicField` / `Polynomial`
+are all `Finsupp`+`Classical.decEq` → noncomputable for `decide` (this is exactly what `PolyQuotQ` was built
+to bypass; see its module docstring). There is no kernel-`decide`-able number field in Mathlib, and there
+fundamentally can't be one over `ℚ` given `Rat`'s irreducible arithmetic. The correct Mathlib tools for this
+job are the *symbolic* ones (`ring`, `norm_num`, `Fin.sum_univ_*`), which ADR-001 already uses — we are not
+missing a built-in. A reusable Route-1′ `simproc` would itself be a plausible Mathlib-PR-quality contribution.
+
+**Decision items still open before re-marking Accepted:** (i) commit to Route 1′ (build the metaprogram)
+vs. stay Route-1-manual + accept that high-degree A modules keep `native_decide`; (ii) confirm the
+quantified-`decide` wall-clock for the large Category-B `+revert` enumerations.
 ```
