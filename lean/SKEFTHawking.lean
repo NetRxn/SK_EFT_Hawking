@@ -1101,11 +1101,20 @@ import SKEFTHawking.FKLW.RossSelinger.SdeMatrix
 -- kmmReduce_correct; the residue Lemma-3 (sde decrease) + sde≤3 coverage
 -- remain for the full discharge.
 import SKEFTHawking.FKLW.RossSelinger.KMMReduce
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — S/Z-compressed KMM reconstruction
+-- syllable (the N₃+4·k length-bound fix). reconWordC k spells T^(8-k)·H with
+-- the Clifford gates S=T², Z=T⁴ (T⁸=I↦[H], T⁷=Z·S·T, T⁶=Z·S, T⁵=Z·T) so the
+-- syllable is ≤4 gates (reconWordC_length_le_four) vs reconWord's up-to-9;
+-- interp_reconWordC_eq proves it interprets identically (=T^(8-k)·H), so
+-- interp_reconWordC_mul inherits reconWord's reduction-step correctness. This
+-- is the per-step gate budget behind the N₃+4·sde KMM Corollary-1 bound.
+import SKEFTHawking.FKLW.RossSelinger.ReconWordCompressed
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — √2-residue map (KMM Lemma 3
 -- substrate). ZOmega.resSqrt2 : ℤ[ω] → ZMod 2 × ZMod 2 coordinatizing
--- ℤ[ω]/(√2) ≅ 𝔽₄; resSqrt2_eq_zero_iff_dividesSqrt2, additive structure
--- (resSqrt2_add/zero/neg), and key residues (sqrt2/2 ↦ 0, 1 ↦ (0,1),
--- ω ↦ (1,0)). The coset layer KMM Lemma 3 reasons over.
+-- ℤ[ω]/(√2) ≅ 𝔽₂[ε]/(ε²) (local nilpotent; NOT 𝔽₄ — √2=𝔭² is not prime);
+-- resSqrt2_eq_zero_iff_dividesSqrt2, additive structure (resSqrt2_add/zero/neg),
+-- the multiplicative layer (resMul + resSqrt2_mul), and key residues
+-- (sqrt2/2 ↦ 0, 1 ↦ (0,1), ω ↦ (1,0)). The coset layer KMM Lemma 3 reasons over.
 import SKEFTHawking.FKLW.RossSelinger.ResidueSqrt2
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — conjugation + squared modulus
 -- on ZOmegaSqrt2. ZOmegaSqrt2.conj (lifts ZOmega.conj through the quotient;
