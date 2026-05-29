@@ -162,6 +162,45 @@ theorem reduceFrac_snd (z : ZOmega) (k : ℕ) :
     · exact ih (divSqrt2 z)
     · rfl
 
+/-- **Minimality engine**: if `√2^k · z = w · √2^d` in `ZOmega`, the
+lowest-terms denominator exponent of `z / √2^d` is at most `k`. (You
+cannot clear the `d` denominators with fewer than `lowestDenExp z d`
+powers of `√2`.) Induction on `d`: the divisible case peels one `√2`
+(cancellation); the non-divisible case shows `k ≤ e` would force `√2 ∣ z`,
+contradiction. -/
+theorem lowestDenExp_le_of : ∀ (d k : ℕ) (z w : ZOmega),
+    sqrt2 ^ k * z = w * sqrt2 ^ d → lowestDenExp z d ≤ k := by
+  intro d
+  induction d with
+  | zero => intro k z w _; exact Nat.zero_le k
+  | succ e ih =>
+    intro k z w h
+    rw [lowestDenExp_succ]
+    by_cases hdiv : dividesSqrt2 z
+    · rw [if_pos hdiv]
+      refine ih k (divSqrt2 z) w ?_
+      apply sqrt2_mul_cancel
+      calc sqrt2 * (sqrt2 ^ k * divSqrt2 z)
+          = sqrt2 ^ k * (sqrt2 * divSqrt2 z) := by ring
+        _ = sqrt2 ^ k * z := by rw [divSqrt2_spec hdiv]
+        _ = w * sqrt2 ^ (e + 1) := h
+        _ = sqrt2 * (w * sqrt2 ^ e) := by ring
+    · rw [if_neg hdiv]
+      by_contra hcon
+      have hk : k ≤ e := by omega
+      have hpow : sqrt2 ^ (e + 1) = sqrt2 ^ k * sqrt2 ^ (e + 1 - k) := by
+        rw [← pow_add]; congr 1; omega
+      rw [hpow] at h
+      have hz : z = w * sqrt2 ^ (e + 1 - k) := by
+        apply sqrt2_pow_mul_cancel k
+        calc sqrt2 ^ k * z = w * (sqrt2 ^ k * sqrt2 ^ (e + 1 - k)) := h
+          _ = sqrt2 ^ k * (w * sqrt2 ^ (e + 1 - k)) := by ring
+      have he1k : e + 1 - k = (e - k) + 1 := by omega
+      rw [he1k, pow_succ] at hz
+      have hzfac : z = sqrt2 * (w * sqrt2 ^ (e - k)) := by rw [hz]; ring
+      rw [hzfac] at hdiv
+      exact hdiv (dividesSqrt2_sqrt2_mul _)
+
 end ZOmega
 
 namespace ZOmegaSqrt2
@@ -245,6 +284,38 @@ theorem exists_of_sqrt2_pow_smul (x : ZOmegaSqrt2) :
     rw [denExp_mk, mk_reduceFrac z d, ZOmega.reduceFrac_snd, sqrt2_pow_eq, mk_mul, Nat.zero_add,
         of_def, mk_eq_mk_iff]
     ring
+
+/-- **Minimality**: if `sqrt2^k · x` is `ZOmega`-valued, then `denExp x ≤ k`
+— `denExp x` is the *least* denominator-clearing exponent. (Lifts
+`ZOmega.lowestDenExp_le_of` through the quotient.) -/
+theorem denExp_le_of_smul_eq_of {x : ZOmegaSqrt2} {k : ℕ} {w : ZOmega}
+    (h : (sqrt2 : ZOmegaSqrt2) ^ k * x = of w) : denExp x ≤ k := by
+  induction x using Quotient.inductionOn with
+  | _ f =>
+    obtain ⟨z, d⟩ := f
+    show denExp (mk z d) ≤ k
+    rw [denExp_mk]
+    refine ZOmega.lowestDenExp_le_of d k z w ?_
+    have h' : (sqrt2 : ZOmegaSqrt2) ^ k * mk z d = of w := h
+    rw [sqrt2_pow_eq, mk_mul, Nat.zero_add, of_def, mk_eq_mk_iff, pow_zero, mul_one] at h'
+    exact h'
+
+/-- **The `denExp` clearing characterization**: `denExp x ≤ k` iff
+`sqrt2^k · x` is `ZOmega`-valued. The two halves are
+`exists_of_sqrt2_pow_smul` (achievability) and `denExp_le_of_smul_eq_of`
+(minimality). -/
+theorem denExp_le_iff {x : ZOmegaSqrt2} {k : ℕ} :
+    denExp x ≤ k ↔ ∃ w : ZOmega, (sqrt2 : ZOmegaSqrt2) ^ k * x = of w := by
+  constructor
+  · intro hk
+    obtain ⟨w₀, hw₀⟩ := exists_of_sqrt2_pow_smul x
+    refine ⟨ZOmega.sqrt2 ^ (k - denExp x) * w₀, ?_⟩
+    have hsplit : (sqrt2 : ZOmegaSqrt2) ^ k
+                = sqrt2 ^ (k - denExp x) * sqrt2 ^ denExp x := by
+      rw [← pow_add]; congr 1; omega
+    rw [hsplit, mul_assoc, hw₀, sqrt2_pow_eq, of_def, of_def, mk_mul, Nat.add_zero]
+  · rintro ⟨w, hw⟩
+    exact denExp_le_of_smul_eq_of hw
 
 end ZOmegaSqrt2
 
