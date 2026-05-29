@@ -1161,6 +1161,13 @@ import SKEFTHawking.FKLW.RossSelinger.CrossTermGde
 -- Lemma-3-independent runtime KMM-reduction core (Lemma 3 = existence of such
 -- a k when sdeC≥4, the one outstanding analytic input; DR-dispatched).
 import SKEFTHawking.FKLW.RossSelinger.KMMCompute
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — kmmReduce fuel recursion + correctness.
+-- kmmReduceFuel base n M (peel H·Tᵏ via chooseReductionComp up to n times,
+-- prepend reconWordC k, emit base M at leaves) + interp_kmmReduceFuel: the
+-- `correct` field of KMMReduction discharged NOW, Lemma-3-INDEPENDENT (needs only
+-- step left-inversion + base-finder correctness, NOT sde decrease). Remaining for
+-- discharge (DR-gated): Lemma 3 (termination+length) + cliffordLookup/N₃ base.
+import SKEFTHawking.FKLW.RossSelinger.KMMReduceFuel
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
