@@ -1153,6 +1153,14 @@ import SKEFTHawking.FKLW.RossSelinger.GdeArith
 -- normSq_sqrt2 (|√2|²=2), dvdSqrt2Pow_add_conj (√2^m∣u ⟹ √2^(m+1)∣(u+conj u) —
 -- the "+1" source, valuation-free). Validated by the ZOmega oracle.
 import SKEFTHawking.FKLW.RossSelinger.CrossTermGde
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — computable reduction step +
+-- chooseReduction search (re-point onto the runtime ring; native_decide-able).
+-- reduceStep M k := H·Tᵏ·M, chooseReductionComp (first k∈{0,1,2,3} lowering
+-- the computable sdeC), chooseReductionComp_reduces (by-construction sde
+-- decrease), interp_reconWordC_reduceStep (step correctness via reconWordC).
+-- Lemma-3-independent runtime KMM-reduction core (Lemma 3 = existence of such
+-- a k when sdeC≥4, the one outstanding analytic input; DR-dispatched).
+import SKEFTHawking.FKLW.RossSelinger.KMMCompute
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
