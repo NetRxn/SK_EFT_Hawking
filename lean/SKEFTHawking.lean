@@ -1211,6 +1211,13 @@ import SKEFTHawking.FKLW.RossSelinger.PropOneBridge
 -- gde(|x+ωᵏy|²)=(s+1)+j. The faithful ZOmega-image of kmm_lemma3_alg2 (via the
 -- gde-value bridge); the s=2 case is the sde-reducing step. Fuel-sufficiency input.
 import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Column
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — clearing connection (ZOmegaSqrt2 sde ↔
+-- ZOmega gde). lowestDenExp_add_gdePeel (lowestDenExp + gdePeel = fuel: residual +
+-- peel-count = fuel); sqrt2_pow_normSq_clearing (√2^(2s)·|z|² = of |x|² for cleared
+-- numerator x); denExp_normSq_clearing: ∃x, √2^(denExp z)·z = of x ∧ denExp(|z|²) =
+-- 2·denExp z − gde(|x|²). The linchpin of plan B: bridges matrix-entry sde(|z|²) to
+-- the ℤ[ω]-gde of the cleared numerator that kmm_lemma3_column controls.
+import SKEFTHawking.FKLW.RossSelinger.ClearingConnection
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
