@@ -1307,6 +1307,13 @@ import SKEFTHawking.FKLW.RossSelinger.MAStep
 -- With bloch_stripMat: √2^(n-1)·R(stripMat s M)ᵢⱼ = (∑ₖ c^s_ik·b_kj)/2, so the kSO3
 -- decrease ⟺ ∀ i,j: ∑ₖ c^s_ik·b_kj ≡ 0 (mod 2) — the 15-class Bloch parity native_decide.
 import SKEFTHawking.FKLW.RossSelinger.MAStepDecrease
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Bloch image is orthogonal
+-- (R(M)∈O(3), the ma_step achievability foundation). blochMat (R(M) as a 3×3 matrix),
+-- blochMat_mul (R(A·B)=R(A)·R(B), bloch_hom lifted), blochMat_one (R(I)=I),
+-- blochMat_transpose (R(M)ᵀ=R(M†), trace cyclicity), blochMat_transpose_mul
+-- (R(M)ᵀ·R(M)=1 for unitary M). Forces bᵀ·b = 2^kSO3·I ⟹ bᵀ·b ≡ 0 (mod 2) — the
+-- constraint cutting the Bloch parity residue to the 15 classes for ma_step ∃-s.
+import SKEFTHawking.FKLW.RossSelinger.BlochOrthogonal
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
