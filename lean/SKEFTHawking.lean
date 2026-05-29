@@ -1126,6 +1126,13 @@ import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
 -- (IsUnitaryT M ⟹ normSq(M i 0)+normSq(M i 1) = 1) — the orthonormal-column
 -- identity Lemma 4 uses to force equal sde on both entries.
 import SKEFTHawking.FKLW.RossSelinger.UnitaryT
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
+-- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
+-- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
+-- denExp_normSq_col0_eq (unitary M ⟹ denExp|M₀₀|² = denExp|M₁₀|²) — the
+-- equal-column-sde fact KMM Lemma 4 supplies, proved from the |z|²+|w|²=1
+-- column identity + non-archimedean valuation.
+import SKEFTHawking.FKLW.RossSelinger.DenExpValuation
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
