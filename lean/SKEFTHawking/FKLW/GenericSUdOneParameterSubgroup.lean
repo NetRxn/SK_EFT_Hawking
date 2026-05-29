@@ -31,12 +31,17 @@ Phase 6z Wave 2b (SU(d) von-Neumann 1-parameter subgroup). 2026-05-28.
 -/
 
 import Mathlib
+import SKEFTHawking.FKLW.GenericSUdMatrixLogSkewHerm
 
 set_option autoImplicit false
 
 namespace SKEFTHawking.FKLW.GenericSUd
 
 open Matrix
+
+attribute [local instance] Matrix.linftyOpNormedAddCommGroup
+  Matrix.linftyOpNormedRing
+  Matrix.linftyOpNormedAlgebra
 
 /-- A point that is an accumulation point of `s` lies in the closure of `s \ {x}`. (Generic topology.) -/
 theorem mem_closure_diff_singleton_of_accPt {X : Type*} [TopologicalSpace X] {s : Set X} {x : X}
@@ -65,6 +70,24 @@ theorem vonNeumann_extract_sequence {d : ℕ}
   refine ⟨seq, fun n => (h_in n).1, ?_, h_tendsto⟩
   intro n hne
   exact (h_in n).2 (by rw [Set.mem_singleton_iff]; exact hne)
+
+/-- **Increment 2 — `matrixLog (seq n) → 0`.** The matrix logs of a sequence converging to `1` tend to
+`0` (continuity of `matrixLog` at `1` + `matrixLog 1 = 0`). Port of the SU(2) `su2Log_seq_tendsto_zero`
+onto the `GenericSUd` `matrixLog`. -/
+theorem matrixLog_seq_tendsto_zero {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)))) :
+    Filter.Tendsto (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)) := by
+  have h_val : Filter.Tendsto (fun n => ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (1 : Matrix (Fin d) (Fin d) ℂ)) := by
+    have h := (continuous_subtype_val (p :=
+      fun M => M ∈ Matrix.specialUnitaryGroup (Fin d) ℂ)).continuousAt.tendsto.comp h_seq
+    simpa using h
+  have h_cont := matrixLog_continuousAt_one d
+  have h := h_cont.tendsto.comp h_val
+  rwa [matrixLog_one] at h
 
 /-! ## Remaining increments (the von-Neumann analytic core — next builds)
 
