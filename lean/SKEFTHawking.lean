@@ -1189,6 +1189,14 @@ import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Bridge
 -- fuel). The integer shadow of gdePeel on the real subring; the closed form
 -- (peelN = 2·min(v₂A,v₂B)+[v₂A>v₂B]) + mod-8 reduction to Coord4.gde build on it.
 import SKEFTHawking.FKLW.RossSelinger.PropOne
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — the gde-value bridge (KMM Prop 1,
+-- mod-8 form). coord4_gde_coordOf: KMM.Coord4.gde (coordOf x) = gdePeel (normSq x)
+-- 4 — the residue-level gde of x's coordinates equals the genuine √2-gde of |x|²
+-- (capped at 4). Proof: gdePeel of real |x|² = integer peelN of its ℤ[√2]-coords
+-- (PropOne), peelN _ _ 4 periodic mod 8 + 64-representative kernel `decide` =
+-- gdeFromPQ of residues, and Pform/Qform_coordOf identify those residues. The
+-- connector applying kmm_lemma3_alg2 (over Coord4.gde) to actual ZOmega columns.
+import SKEFTHawking.FKLW.RossSelinger.PropOneBridge
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
