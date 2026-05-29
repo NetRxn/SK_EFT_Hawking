@@ -1885,6 +1885,10 @@ import SKEFTHawking.FKLW.GenericSUdConcreteLengthPolylog
 -- ClosureDenseWitness ALONE (composes from_density + densityFromWitness). Sole remaining
 -- substantive ingredient is the witness (Brylinski-Brylinski SU(4) / Aaronson-Gottesman SU(8)).
 import SKEFTHawking.FKLW.GenericSUdPerAlphabetHeadlineFromWitness
+-- Phase 6z.5 closeout (2026-05-29): literal no-`T` Clifford+CCZ SU(8) Solovay–Kitaev headline
+-- `cliffordCCZLiteral_solovayKitaev_headline_unconditional` — wraps the shipped
+-- `cliffordCCZLiteral_dense` (CCZ-essential, T-free) into the named compilation headline.
+import SKEFTHawking.FKLW.CliffordCCZSU8LiteralHeadline
 -- Phase 6y Track S.6 (2026-05-28): canonical-named generic SU(d) bundled-strict headline
 -- `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight`.
 import SKEFTHawking.FKLW.GenericSUdQuantitative
