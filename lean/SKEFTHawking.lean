@@ -1119,6 +1119,13 @@ import SKEFTHawking.FKLW.RossSelinger.Conj
 -- dvdSqrt2Pow_iff (↔ √2^m ∣ z). The decidable gde machinery KMM Lemma 3 /
 -- Prop 1 reason over.
 import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
+-- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
+-- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
+-- z.d even), divSqrt2_of_isReal (the √2-peel swap (a,b)↦(b,a/2) for even
+-- z.d), isReal_divSqrt2 (peel stays in ℤ[√2]). The Euclidean-style peel
+-- recursion underlying gde + Prop 1.
+import SKEFTHawking.FKLW.RossSelinger.RealSubring
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — unitarity over ZOmegaSqrt2
 -- (KMM Lemma 4 substrate). ZOmegaSqrt2.adjoint (conjugate transpose),
 -- IsUnitaryT M := adjoint M * M = 1, and the column squared-norm
