@@ -1328,6 +1328,11 @@ import SKEFTHawking.FKLW.RossSelinger.MAStepExists
 -- ⟹ the relaxed N₃=15 base coverage (DR: fits Item G L≤90<100). cliffordBase + bridge are
 -- hypotheses, discharged separately; the recursion itself is unconditional.
 import SKEFTHawking.FKLW.RossSelinger.MACoverage
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — determinant of a realizable matrix
+-- (KMM Theorem 1 forward half). det_gateMatrix_eq_omega_pow (per-gate det = ωS^k, decide) +
+-- det_realizable_eq_omega_pow (det multiplicative over the word ⟹ det M = ωS^k). Foundation
+-- for the M-structure form M=[[x,-ωᵏȳ],[y,ωᵏx̄]]/√2^m feeding the μ≤3⟹kSO3≤3 bridge + Clifford base.
+import SKEFTHawking.FKLW.RossSelinger.KMMDet
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
