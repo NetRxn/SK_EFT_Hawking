@@ -98,4 +98,26 @@ theorem seedSU8_vonNeumann_sequence :
         (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ))) :=
   GenericSUd.vonNeumann_extract_sequence _ seedSU8_accPt_one
 
+/-- **Wave 2 — the seed's first continuous flow.** Instantiating the SU(d) von-Neumann
+1-parameter-subgroup engine (`GenericSUd.vonNeumann_assemble_explicit_X_SUd`) at `d = 8` and
+`H = H_of_G cliffordCCZLiteralGeneratingSetSU8` (closed by `H_of_G_isClosed`, with `1` an accumulation
+point by Wave 2a `seedSU8_accPt_one`) yields the **first continuous one-parameter flow** inside the
+literal Clifford+CCZ closure subgroup: a nonzero traceless skew-Hermitian `X₀ ∈ 𝔰𝔲(8)` whose entire flow
+line `t ↦ exp((t:ℂ)•X₀)` lands in `H_of_G`.
+
+This is the Wave-2 deliverable: the seed's infinite order (Wave 1) ⟹ accumulation point (Wave 2a) ⟹
+*continuous* flow (here). The flow is spread to a `𝔰𝔲(8)`-spanning collection by Clifford conjugation
+(Wave 4) and fed to `CartanFinalStep_SUd_v4` via a `ClosureDenseWitness` (Wave 5). The conclusion is in
+the exact `ClosureDenseWitness.hX_flow` shape (`NormedSpace.exp (((t:ℝ):ℂ) • X₀)`). -/
+theorem seedSU8_first_flow :
+    ∃ X : Matrix (Fin 8) (Fin 8) ℂ,
+      X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin 8) ∧ X ≠ 0 ∧
+      ∀ t : ℝ, ∃ M : ↥(Matrix.specialUnitaryGroup (Fin 8) ℂ),
+        M ∈ H_of_G cliffordCCZLiteralGeneratingSetSU8 ∧
+        (M.val : Matrix (Fin 8) (Fin 8) ℂ) = NormedSpace.exp (((t : ℝ) : ℂ) • X) :=
+  GenericSUd.vonNeumann_assemble_explicit_X_SUd (d := 8) (by norm_num)
+    (H_of_G cliffordCCZLiteralGeneratingSetSU8)
+    (H_of_G_isClosed cliffordCCZLiteralGeneratingSetSU8)
+    seedSU8_accPt_one
+
 end SKEFTHawking.FKLW.CliffordCCZSU8
