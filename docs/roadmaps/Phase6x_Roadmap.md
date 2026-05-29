@@ -1027,6 +1027,60 @@ Lower priority. Gated on Phase 6y closure to avoid stepping on the parallel agen
 
 ---
 
+## 2026-05-29 Forward target — Item L: kernel-verified EXACT Clifford+CCZ synthesis (Mukhopadhyay)
+
+**Status:** ⏳ QUEUED — decision-ready, **NOT started**, sequenced **AFTER the residual-F
+exact-synthesis arc + Item G close**. Recorded on the public roadmap (the exact-synthesis
+lineage's home) per a 2026-05-29 deep-research target brief. *Not on the current `/goal`
+critical path.*
+
+**Naming note.** A companion brief proposed "residual-G", but **Item G is already taken**
+(Tier 2 `cliffordTBaseFinder_kmm`, the Clifford+T base finder). Using the next free letter,
+**Item L**, to avoid a commit-prefix collision (`phase6x-residual-G` ≠ Tier-2 G).
+
+**Target.** Mukhopadhyay 2024 (arXiv:2401.08950) — Toffoli/CCZ-count-optimal **exact**
+synthesis for `{H, S, CNOT, CCZ}` on SU(8). Public deliverable = the **kernel-verified math
+layer** (`SKEFTHawking.FKLW.*`): channel-representation algebra, the exact-correctness
+theorem, and (stretch) the CCZ-count-minimality theorem. Mirrors residual-F's exact-synthesis
+genre, one dimension up (SU(2) Clifford+T → SU(8) Clifford+CCZ).
+
+**Why it belongs in the 6x exact-synthesis lineage (not 6z/6z′/6y).**
+- Same thesis as residual-F: constructive, minimal-resource **exact** synthesis — NOT a
+  density result (density = 6z `{H,S,CNOT,CCZ}` dense in SU(8); academic-completeness = 6y).
+  It shares only the *alphabet* with 6z, which it **imports** (6z = dependency, not parent).
+- Reuses residual-F's exact-synthesis **methodology** (meet-in-the-middle / terminating
+  fuel-bounded reduction, `exactly-representable ⟹ word` lemmas, the
+  realizable/clearing/`native_decide` discipline).
+- ⚠️ **Honest head-start caveat (public-side assessment):** the reuse is *methodological*,
+  not a drop-in. residual-F's concrete machinery — `ZOmegaSqrt2`, `kSO3`/Bloch homomorphism,
+  the MA syllable strip — is SU(2)-specific. Item L needs a **new** channel representation
+  (the SU(8) ring + number theory) and a new reduction. "Effort comparable to Ross–Selinger
+  SU(2)" is plausible *given* the methodology transfer, but the bulk is new substrate.
+
+**MVP / stretch.**
+- **MVP (safe):** kernel-verified **exact + correct** — `synth_CCZ_correct : interp (synth U) = U`
+  for exactly-`{Clifford,CCZ}`-representable `U`. Reduces to matrix equality (kernel-routine).
+- **Stretch (genuinely risky):** the **provably-minimal CCZ-count** theorem (no circuit uses
+  fewer CCZs). If intractable in Lean, ship MVP only (still the first kernel-verified exact
+  Clifford+CCZ synthesizer).
+
+**How it complements the shipped tiers.** Density (6u–6z) + the residual-F Clifford+T arc
+compile *any* target approximately; Item L compiles the *exactly-`{Clifford,CCZ}`-representable
+subset* with **zero error** and minimal CCZ count. A full compiler routes each block to
+whichever path wins.
+
+**Scope caveats.** Only exactly-`{Clifford,CCZ}`-representable operations (strict subset;
+else fall back to the approximate path). Meet-in-the-middle search is exponential in block
+size — applied to small blocks, not whole circuits.
+
+**Sequencing.** Start ONLY after residual-F + Item G close (extend mature machinery, not a
+moving foundation). DR verdict: original native-CCZ-*approximation* angles KILLED
+(decompose-then-synthesize is SOTA); re-aimed at this **exact** target.
+
+**DO NOT TOUCH:** Phase 6y coordination list.
+
+---
+
 ### Audit addendum metadata
 
 - **Authored:** 2026-05-27, autonomous-loop agent post-DR-receipt + post-Phase-6y-parallel-audit.
