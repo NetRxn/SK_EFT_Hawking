@@ -1444,6 +1444,10 @@ import SKEFTHawking.FKLW.CliffordCCZSU8LiteralGeneratingSet
 -- INFINITE order (matrix bridge to litSeed + tr = u·(1/√2) not an algebraic integer + the spectral
 -- meta-lemma). The Kronecker seed for the Wave-2 first flow.
 import SKEFTHawking.FKLW.CliffordCCZSU8SeedNotFiniteOrder
+-- Phase 6z Wave 2a (2026-05-28): the infinite-order seed gives 1 as an accumulation point of H_of_G
+-- (infinite closed subgroup of compact SU(8)) — the precondition for the SU(d) von-Neumann
+-- 1-parameter-subgroup theorem (Wave 2b → the first seed flow).
+import SKEFTHawking.FKLW.CliffordCCZSU8SeedFlow
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
