@@ -648,22 +648,48 @@ theorem vonNeumann_expAmbient_mem_H_mat {d : ℕ}
   filter_upwards with k
   exact vonNeumann_mat_pow_mem_H_mat h_mem φ t k
 
-/-! ## Remaining increments (the von-Neumann analytic core — next builds)
+/-! ## Increment 5 — the von-Neumann headline (SU(d))
 
-Built on the existing `GenericSUd` matrix-log local diffeo
-(`GenericSUdLocalDiffeoRestriction.matrixLog_expAmbient_on_su_d` /
-`expAmbient_matrixLog_on_SUd`, `GenericSUdMatrixLogTraceless.matrixLog_in_su_d_on_nhd_one`):
+The capstone: a closed subgroup `H ≤ SU(d)` with `1` as an accumulation point contains a continuous
+nontrivial 1-parameter subgroup. In explicit-`X` form — `∃ X ∈ 𝔰𝔲(d), X ≠ 0 ∧ ∀ t, ∃ M ∈ H,
+M.val = exp((t:ℂ)•X)` — which is exactly the shape consumed by `ClosureDenseWitness.hX_flow`. Mirror of
+`OneParameterSubgroupSU2.vonNeumann_assemble_explicit_X_unconditional`.
 
-  * **inc 3b — BW limit in 𝔰𝔲(d):** the limit `X` from `vonNeumann_BW_extract` is traceless
-    skew-Hermitian (each `vonNeumannUnitMatrixSeq seq n` is eventually in `𝔰𝔲(d)` via
-    `matrixLog_isSkewHermitian_on_nhd_one` + the traceless analogue scaled by a real scalar; `𝔰𝔲(d)`
-    is closed, so the limit is in it). Mirror SU(2) §9.12.
-  * **inc 4 — integer-rounding convergence:** for each `t`, with `m k := ⌊t / ‖matrixLog (seq (φ k))‖⌋`,
-    `(seq (φ k)) ^ (m k) = exp (m k • matrixLog (seq (φ k))) → exp (t • X)`; since each is in `H`
-    (subgroup) and `H` is closed, `exp (t • X) ∈ H`. (Mirror SU(2) §4.e–§4.f.)
-  * **inc 5 — main theorem:** assemble `1 ∈ AccPt H → ∃ X ∈ 𝔰𝔲(d), X ≠ 0 ∧ ∀ t, exp (t • X) ∈ H`.
+The `[FrechetUrysohnSpace ↥(SU(d))]` instance binder is carried (sequential characterization of closure,
+inc 1); it resolves automatically at concrete `d` under the linftyOp metric instances. -/
 
-Each is a port of the corresponding SU(2) lemma in `OneParameterSubgroupSU2.lean` with `su2Log` replaced
-by the `GenericSUd` `matrixLog`. This is the genuine analytic core (multi-session). -/
+/-- **Von-Neumann 1-parameter-subgroup theorem (SU(d), explicit-X form).**
+
+A closed subgroup `H ≤ SU(d)` with `1 ∈ AccPt H` contains a continuous nontrivial 1-parameter subgroup:
+there is a nonzero traceless skew-Hermitian `X ∈ 𝔰𝔲(d)` whose entire flow line `t ↦ exp((t:ℂ)•X)` lands
+in `H`. This is the engine turning the Phase-6z seed's accumulation-point witness
+(`CliffordCCZSU8.seedSU8_accPt_one`) into the first continuous flow `exp(t•X₀) ∈ H_of_G` (Wave 2). -/
+theorem vonNeumann_assemble_explicit_X_SUd {d : ℕ} [Nonempty (Fin d)]
+    [FrechetUrysohnSpace ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)]
+    (hd_pos : 0 < d)
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)))
+    (hH_accPt : AccPt (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+      (Filter.principal (H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)))) :
+    ∃ X : Matrix (Fin d) (Fin d) ℂ,
+      X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin d) ∧ X ≠ 0 ∧
+      ∀ t : ℝ, ∃ M : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ),
+        M ∈ H ∧ (M.val : Matrix (Fin d) (Fin d) ℂ) = expAmbient d (((t : ℝ) : ℂ) • X) := by
+  obtain ⟨seq, h_mem, h_ne, h_seq⟩ := vonNeumann_extract_sequence H hH_accPt
+  have h_ev_ne := eventually_matrixLog_seq_ne_zero h_ne h_seq
+  have h_log_tendsto := matrixLog_seq_tendsto_zero h_seq
+  obtain ⟨X, _hX_ball, φ, hφ, h_unit_tendsto⟩ := vonNeumann_BW_extract seq
+  have h_norm_one : ‖X‖ = 1 :=
+    vonNeumann_BW_limit_norm_eq_one seq h_ev_ne hφ h_unit_tendsto
+  have hX_ne : X ≠ 0 := fun h => by rw [h, norm_zero] at h_norm_one; norm_num at h_norm_one
+  have hX_su : X ∈ SU2LieAlgebra.tracelessSkewHermitian (Fin d) :=
+    vonNeumann_BW_limit_mem_tracelessSkewHermitian hd_pos h_seq hφ h_unit_tendsto
+  refine ⟨X, hX_su, hX_ne, ?_⟩
+  intro t
+  obtain ⟨M, hM_mem, hM_val⟩ :=
+    vonNeumann_expAmbient_mem_H_mat hH_closed h_mem hφ h_seq h_ev_ne h_log_tendsto h_unit_tendsto t
+  refine ⟨M, hM_mem, ?_⟩
+  rw [← real_smul_matrixdC_eq_complex_smul t X]
+  exact hM_val
 
 end SKEFTHawking.FKLW.GenericSUd
