@@ -764,16 +764,24 @@ Q1+Q2). Items H/I gated on Q3.
   `reduceStep_one_zero`. The new top-left `z'=(z+ωᵏw)/√2` is KMM's s=−1 update;
   `|z'|²=|z+ωᵏw|²/2` is what `kmm_lemma3_column` controls. Kernel-pure.
 
-**NEXT UNIT — the clearing connection (linchpin of B).** Relate the ZOmegaSqrt2
-matrix-entry sde to the ZOmega gde that `kmm_lemma3_column` governs:
-`denExp (normSq z) = 2·denExp z − min(2·denExp z, gde(|cleared-num z|²))` for
-`z : ZOmegaSqrt2` (with cleared numerator `x` via `exists_of_sqrt2_pow_smul`,
-`√2^(2·denExp z)·normSq z = of (ZOmega.normSq x)`). Sub-pieces: (i) `normSq` on
-ZOmegaSqrt2 ↔ `ZOmega.normSq` of cleared numerator under clearing (uses
-`conj`/`denExp_conj`); (ii) `lowestDenExp z k = k − min(k, gde)` (gde↔lowestDenExp,
-from existing `Sde.lean` machinery + `gdePeel`); (iii) combine. THEN: reduceStep
-`|z'|²=|z+ωᵏw|²/2` ⟹ `sde(|z'|²)=sde(|z|²)+2−Δgde`; Δgde=3 (s=2 case of
-`kmm_lemma3_column`) ⟹ `sde(|z₀₀|²)` decreases by 1 ⟹ fuel-sufficiency (B).
+- ✅ **clearing connection SHIPPED** (`ClearingConnection.lean`, `17f3cb1`) —
+  `denExp_normSq_clearing : ∃ x:ZOmega, √2^(denExp z)·z = of x ∧ denExp(|z|²) =
+  2·denExp z − gde(|x|²)` (with `lowestDenExp_add_gdePeel : lowestDenExp+gdePeel=
+  fuel`, `sqrt2_pow_normSq_clearing : √2^(2s)·|z|²=of|x|²`, `normSq_of`). Bridges
+  matrix-entry sde to the ℤ[ω]-gde of the cleared numerator. Kernel-pure.
+
+**NEXT UNIT — fuel-sufficiency assembly (B), now all bridges in hand.** Combine:
+(i) **Lemma 4 value-form** `gde(|x|²)=gde(|y|²)=j∈{0,1}` for the cleared column
+numerators x=√2^s·M₀₀, y=√2^s·M₁₀ (from `denExp_normSq_col0_eq` core + the
+lowest-terms property √2∤x — i.e. gde ≤ 1 — needs a short ℤ[ω] argument that
+`√2∤x ⟹ gde(|x|²)≤1`, oracle-confirmed); (ii) **unit-column congruences**
+`(|x|²+|y|²).d ≡ (|x|²+|y|²).c ≡ 0 (mod 8)` from `|x|²+|y|²=2^m`, m≥3 (clear
+`unitary_col0_normSq` by √2^(2s)); (iii) feed (i)+(ii) into `kmm_lemma3_column`
+(s=2 case) ⟹ ∃k: gde(|x+ωᵏy|²)=j+3; (iv) translate via `reduceStep_zero_zero`
+(`|z'|²=|z+ωᵏw|²/2`, so `√2^(s+1)·z'=(x+ωᵏy)`) + `denExp_normSq_clearing` ⟹
+`denExp(normSq((reduceStep M k) 0 0)) = denExp(normSq(M₀₀)) − 1` ⟹ re-point
+`chooseReductionComp` to track `μ(M):=denExp(normSq(M 0 0))` (plan A.b) ⟹
+fuel-sufficiency. THEN (C) cliffordLookup + (D) discharge.
 
 The robust shipped pieces make the discharge a short assembly. Concretely:
 
