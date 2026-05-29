@@ -1092,6 +1092,15 @@ import SKEFTHawking.FKLW.RossSelinger.KMM
 -- noncomputable Nat.find spec coincides with the computable sdeC). This
 -- is the least-clearing-exponent fact kmmReduce recurses on.
 import SKEFTHawking.FKLW.RossSelinger.SdeMatrix
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — KMM reduction-step algebraic
+-- spine. gateMatrix_T_pow_eight (T^8=I via T^2=S/S^2=Z/Z^2=I), reconWord
+-- (T^(8-j)++[H]) + interp_reconWord, reconWord_inv (left-inverts H·T^j),
+-- interp_reconWord_mul (the reduction-step correctness identity
+-- interp(reconWord j)·(H·T^j·M)=M, purely algebraic via H²=I/T⁸=I), and
+-- realizability-preservation under the peel. The algebraic half of
+-- kmmReduce_correct; the residue Lemma-3 (sde decrease) + sde≤3 coverage
+-- remain for the full discharge.
+import SKEFTHawking.FKLW.RossSelinger.KMMReduce
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
