@@ -1333,6 +1333,13 @@ import SKEFTHawking.FKLW.RossSelinger.MACoverage
 -- det_realizable_eq_omega_pow (det multiplicative over the word ⟹ det M = ωS^k). Foundation
 -- for the M-structure form M=[[x,-ωᵏȳ],[y,ωᵏx̄]]/√2^m feeding the μ≤3⟹kSO3≤3 bridge + Clifford base.
 import SKEFTHawking.FKLW.RossSelinger.KMMDet
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — KMM Theorem 1 column structure.
+-- realizable_col1: a Clifford+T-realizable M has column 1 determined by column 0 and the
+-- determinant ωᵏ — M 1 1 = ωᵏ·conj(M 0 0), M 0 1 = -(ωᵏ·conj(M 1 0)) — via the uniform
+-- det•M† = adjugate M identity (no case split on M 0 0 = 0). The foundation that turns the
+-- ∀-over-realizable-M discharges (μ≤3⟹kSO3≤3 bridge, kSO3=0⟹Clifford base) into bounded
+-- native_decide enumerations over a (x,y,k,m) integer tuple.
+import SKEFTHawking.FKLW.RossSelinger.KMMForm
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
