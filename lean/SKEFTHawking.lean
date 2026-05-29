@@ -1119,6 +1119,13 @@ import SKEFTHawking.FKLW.RossSelinger.Conj
 -- dvdSqrt2Pow_iff (↔ √2^m ∣ z). The decidable gde machinery KMM Lemma 3 /
 -- Prop 1 reason over.
 import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — unitarity over ZOmegaSqrt2
+-- (KMM Lemma 4 substrate). ZOmegaSqrt2.adjoint (conjugate transpose),
+-- IsUnitaryT M := adjoint M * M = 1, and the column squared-norm
+-- extraction unitary_col0_normSq / unitary_col1_normSq
+-- (IsUnitaryT M ⟹ normSq(M i 0)+normSq(M i 1) = 1) — the orthonormal-column
+-- identity Lemma 4 uses to force equal sde on both entries.
+import SKEFTHawking.FKLW.RossSelinger.UnitaryT
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
