@@ -1218,6 +1218,12 @@ import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Column
 -- 2·denExp z − gde(|x|²). The linchpin of plan B: bridges matrix-entry sde(|z|²) to
 -- the ℤ[ω]-gde of the cleared numerator that kmm_lemma3_column controls.
 import SKEFTHawking.FKLW.RossSelinger.ClearingConnection
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — KMM Lemma 4 value-form (gde(|x|²)≤1).
+-- gdePeel_normSq_le_one_of_not_dividesSqrt2: a lowest-terms numerator (√2∤x) has
+-- gde(|x|²)≤1 — contrapositive of dividesSqrt2_of_dvdSqrt2Pow_normSq_two (ZMod-2
+-- parity decide: 2|P ∧ 2|Q ⟹ √2∣x). The j∈{0,1} hypothesis of kmm_lemma3_column
+-- for cleared column numerators; the equal-sde half is denExp_normSq_col0_eq.
+import SKEFTHawking.FKLW.RossSelinger.Lemma4Value
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
