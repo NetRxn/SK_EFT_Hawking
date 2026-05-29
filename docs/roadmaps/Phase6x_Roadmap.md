@@ -650,10 +650,20 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
    `denExp_normSq_col0_eq`; lift to `gde` value.
 3. **Lemma 5** (`gdePeel(|x+y|²) ≥ min(m, 1+⌊(g₁+g₂)/2⌋)`) via `normSq_add`
    cross-term + `gdePeel` arithmetic.
-4. **Lemma 3** (∃k∈{0,1,2,3}: `gde(|x+ωᵏy|²)−gde(|x|²) = 1` ⟹ sde reduces by 1)
-   = Lemma5 + Lemma4 `{0,1}` case analysis. Direct residue form: need
-   `2 ∣ (x+ωᵏy)` for the cleared column numerators — a finite `decide`/residue
-   computation over `ResidueSqrt2` once unitarity pins the residues.
+4. **Lemma 3** — CORRECTED CONDITION (numerically validated 2026-05-29 via
+   `scripts/kmm_zomega_reference_oracle.py`; my earlier `2∣(x+ωᵏy)` note was a
+   `gde(element)`-vs-`gde(|element|²)` conflation, FALSE for realizable pairs —
+   12032/18304 fail it). The algorithm tracks `sde(|z|²)`, and the s=−1 step
+   sends `z' = (z+ωᵏw)/√2`, with `sde(|z'|²) − sde(|z|²) = 2 − Δgde` where
+   `Δgde := gde(|x+ωᵏy|²) − gde(|x|²)`. So the reduction needs **∃k∈{0,1,2,3}:
+   `gde(|x+ωᵏy|²) = gde(|x|²) + 3`** (Δgde=3 ⟹ s=−1). Oracle confirms: for ALL
+   18304 realizable columns (`|x|²+|y|²=2^a`, a≥2, √2∤x,y), the achievable set
+   `{Δgde : k∈0..3} = {1,2,3}` EXACTLY (so all of s∈{−1,0,1} via Δgde∈{3,2,1};
+   matches KMM verbatim). **NO mod-2 `decide` shortcut exists** — the gde-of-
+   squared-norm arithmetic (Lemma 5 + Prop 1 + the `gde(|x|²)∈{0,1}` case split)
+   is irreducibly required. Build path: gde-of-`normSq` (via `gdePeel` on the
+   real `normSq` element) → Prop 1 parity → Lemma 5 (`normSq_add` cross-term) →
+   the {0,1} case analysis. Validate every Lean gde step against the oracle.
 5. ✅ S/Z-compressed reconstruction syllable `reconWordC` (≤4 gates/step,
    `interp_reconWordC_mul`/`_eq`) — SHIPPED (`360023c`). Enables the `4·k` step.
 6. `chooseReduction` (computable `Fin 4` search) over `sde(|z₀₀|²)` via
