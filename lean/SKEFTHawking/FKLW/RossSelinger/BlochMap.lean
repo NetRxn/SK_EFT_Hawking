@@ -47,6 +47,7 @@ Over the entire `𝕊₃` orbit (μ = `sde(|z₀₀|²)` ≤ 3, the 1664 matrice
 -/
 
 import SKEFTHawking.FKLW.RossSelinger.KMM
+import SKEFTHawking.FKLW.RossSelinger.UnitaryT
 import Mathlib.LinearAlgebra.Matrix.Trace
 
 set_option autoImplicit false
@@ -56,11 +57,6 @@ namespace SKEFTHawking.RossSelinger
 namespace KMM
 
 open CliffordTGate ZOmegaSqrt2
-
-/-- **Hermitian adjoint** (conjugate-transpose) of a `2×2` matrix over
-`ZOmegaSqrt2`: `(madjoint M) i j = conj (M j i)`. For a Clifford+T-realizable
-(hence unitary) `M`, `M * madjoint M = 1`. -/
-def madjoint (M : Mat2) : Mat2 := fun i j => ZOmegaSqrt2.conj (M j i)
 
 /-- **The three Pauli matrices** `σ₁ = X`, `σ₂ = Y`, `σ₃ = Z`, reusing the
 Clifford+T gate matrices. -/
@@ -77,7 +73,7 @@ def half : ZOmegaSqrt2 := mk 1 2
 For a unitary `M`, `R(M) ∈ SO(3)` has real entries in `ℤ[1/√2]`. The map
 `M ↦ R(M)` is the (2-to-1) covering homomorphism `SU(2) → SO(3)`. -/
 def blochEntry (M : Mat2) (i j : Fin 3) : ZOmegaSqrt2 :=
-  half * Matrix.trace (pauliMat i * M * pauliMat j * madjoint M)
+  half * Matrix.trace (pauliMat i * M * pauliMat j * ZOmegaSqrt2.adjoint M)
 
 /-- **The Matsumoto-Amano T-count measure** `k_SO3` = the least-denominator
 exponent of the SO(3) Bloch image (`= max_{i,j} denExp R(M)_{ij}`).

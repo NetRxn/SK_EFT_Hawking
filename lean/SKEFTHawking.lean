@@ -1286,6 +1286,13 @@ import SKEFTHawking.FKLW.RossSelinger.KMMBaseCoverage
 -- kSO3 T=1, kSO3 THT=2). The DR-validated recursion MEASURE for the MA
 -- base-coverage route (replaces the dominated BFS-connectivity route).
 import SKEFTHawking.FKLW.RossSelinger.BlochMap
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Bloch covering map is a
+-- ring homomorphism SU(2)→SO(3) (substrate for relating kSO3 of a syllable strip
+-- to kSO3 M). pauli_completeness (2•Y = Tr(Y)•I + Σₖ Tr(σₖY)•σₖ, the Pauli-basis
+-- resolution; iS²=-1 per off-diagonal entry) + trace_conj_unitary (Tr(B·X·B†)=Tr X
+-- for unitary B, term-mode calc via the HMul defeq bridge). The two ingredients of
+-- R(A·B)=R(A)·R(B).
+import SKEFTHawking.FKLW.RossSelinger.BlochHomomorphism
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
