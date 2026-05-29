@@ -3,9 +3,14 @@ Copyright (c) 2026 John Roehm. All rights reserved.
 
 # Phase 6x Tier-2 Item F (M4) — the `√2`-residue map (KMM Lemma 3 substrate)
 
-Builds the residue map of `ZOmega = ℤ[ω]` modulo the prime `√2`. Since
-`√2` is the (totally ramified) prime above `2` with `N(√2) = 4`, the
-quotient `ℤ[ω]/(√2)` has four elements (residue field `𝔽₄`).
+Builds the residue map of `ZOmega = ℤ[ω]` modulo `√2`. The quotient
+`ℤ[ω]/(√2)` has four elements (`N(√2) = 4`), but it is **NOT the field
+`𝔽₄`**: `2` is totally ramified in `ℚ(ζ₈)` (`(2) = 𝔭⁴`), so `√2 = 𝔭²`
+is **not prime**, and the quotient is the local ring `𝔽₂[ε]/(ε²)` (with
+a nilpotent `ε`). Concretely `ω² ≡ 1 (mod √2)` — i.e. `i ≡ 1`, since
+`i − 1 = ⟨0,1,0,−1⟩` is `√2`-divisible — so `ρ(ω)` is the order-2 unit
+`1 + ε`, impossible in `𝔽₄*` (order 3). KMM's residue argument uses this
+nilpotent structure, not a field.
 
 From the `√2`-divisibility criterion (`Sde.lean`):
 
@@ -15,10 +20,9 @@ so a residue is faithfully coordinatized by the pair
 
   `resSqrt2 z = ((z.a − z.c : ZMod 2), (z.b − z.d : ZMod 2)) ∈ ZMod 2 × ZMod 2`.
 
-This is the additive/coset layer of `ℤ[ω]/(√2)` — the structure KMM
-Lemma 3 reasons over (the residues of the matrix column entries). The
-full `𝔽₄` multiplicative structure (`resSqrt2` as a ring hom) is the
-next layer.
+The additive/coset layer is `resSqrt2_add`; the (`𝔽₂[ε]/(ε²)`)
+multiplicative layer is `resMul` + `resSqrt2_mul` below — the structure
+KMM Lemma 3 reasons over (the residues of the matrix column entries).
 
 ## Headline results
 
@@ -109,6 +113,29 @@ theorem resSqrt2_one : resSqrt2 1 = (0, 1) := by
 `b − d = 0`). A nonzero residue — `ω` is a unit, not a multiple of `√2`. -/
 theorem resSqrt2_omega : resSqrt2 ω = (1, 0) := by
   simp only [resSqrt2, ω_a, ω_b, ω_c, ω_d]
+  decide
+
+/-! ## Multiplicative structure (`𝔽₂[ε]/(ε²)`) -/
+
+/-- **Multiplication on the residue ring** `ℤ[ω]/(√2) ≅ 𝔽₂[ε]/(ε²)`, in
+the `(z.a − z.c, z.b − z.d)` coordinatization. Identity is `(0, 1) = ρ(1)`;
+`(1,0) = ρ(ω) = 1 + ε` is the order-2 nilpotent-shifted unit
+(`resMul (1,0) (1,0) = (0,1)`). -/
+def resMul (p q : ZMod 2 × ZMod 2) : ZMod 2 × ZMod 2 :=
+  (p.1 * q.2 + p.2 * q.1, p.1 * q.1 + p.2 * q.2)
+
+/-- **`resSqrt2` is multiplicative**: `ρ(z·w) = ρ(z) · ρ(w)` in the
+residue ring. Verified by `decide` over the `2⁸` residue coordinates
+(the `ZMod 2` identity holds because the `ℤ`-level discrepancy is even). -/
+theorem resSqrt2_mul (z w : ZOmega) :
+    resSqrt2 (z * w) = resMul (resSqrt2 z) (resSqrt2 w) := by
+  simp only [resSqrt2, resMul, mul_a, mul_b, mul_c, mul_d]
+  push_cast
+  generalize (z.a : ZMod 2) = za; generalize (z.b : ZMod 2) = zb
+  generalize (z.c : ZMod 2) = zc; generalize (z.d : ZMod 2) = zd
+  generalize (w.a : ZMod 2) = wa; generalize (w.b : ZMod 2) = wb
+  generalize (w.c : ZMod 2) = wc; generalize (w.d : ZMod 2) = wd
+  revert za zb zc zd wa wb wc wd
   decide
 
 end ZOmega
