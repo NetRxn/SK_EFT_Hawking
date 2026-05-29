@@ -715,10 +715,51 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
 
 **DR-GATED BOUNDARY REACHED (2026-05-29):** all Lemma-3-independent substrate is
 shipped (gde foundations, Lemma 4-core, Lemma 5, `reconWordC`, computable
-`reduceStep`/`chooseReductionComp`). The remaining critical path — Lemma 3 (item
-4), 𝕊₃/`N₃` (item 7), then assembly+discharge (item 8) → Item G (orphan #2) — is
-gated on the DR (`Lit-Search/Tasks/submitted/20260529_phase6x_kmm_lemma3_proof_mechanisms.md`,
+`reduceStep`/`chooseReductionComp`, **`kmmReduceFuel` + correctness
+`interp_kmmReduceFuel` + fuel-form length `length_kmmReduceFuel_le`**, and
+**`N₃ = 9` computed**). The remaining critical path — Lemma 3 (item 4), the
+`cliffordLookup` table (item 7), then assembly+discharge (item 8) → Item G
+(orphan #2) — is gated on the DR
+(`Lit-Search/Tasks/submitted/20260529_phase6x_kmm_lemma3_proof_mechanisms.md`,
 Q1+Q2). Items H/I gated on Q3.
+
+#### POST-DR INTEGRATION PLAN (mechanical once Q1+Q2 land)
+
+The robust shipped pieces make the discharge a short assembly. Concretely:
+
+**(A) Reconcile the reduction measure.** `chooseReductionComp` currently lowers
+the *matrix* sde `sdeC`; KMM Lemma 3 is stated for `sde(|z₀₀|²)`. `kmmReduceFuel`
++ its correctness + its fuel-length bound are **measure-AGNOSTIC** (they hold for
+any selector/fuel), so NO rework there. Decide from Q1 whether to (a) keep `sdeC`
+and connect Lemma 3's `sde(|z₀₀|²)` decrease to an `sdeC` decrease, or (b)
+re-point `chooseReductionComp` to track `sde(|z₀₀|²)` (a one-line measure swap).
+[`sde(|z₀₀|²)` takes values {0,2,3,4,…}; the BFS shows `sde(|z₀₀|²)=2a−gde` with
+`gde∈{0,1}`, so matrix `sdeC ≈ sde(|z₀₀|²)`-driven.]
+
+**(B) Lemma 3 → fuel-sufficiency.** Formalize Q1's `∃k:Δgde=3` (via the
+`𝔭=(1−ζ₈)`-adic argument the DR supplies) as: `M` realizable, `sde≥4 ⟹
+∃k, chooseReductionComp M = some k` (the search succeeds). With
+`chooseReductionComp_reduces` (already shipped) this gives strict decrease;
+strong-induction on `sde` ⟹ `kmmReduceFuel base (sde M) M` reaches the base only
+at `sde ≤ 3`.
+
+**(C) `cliffordLookup` (Q2).** Build the base finder over the **1664-element
+`𝕊₃`** orbit (computed) with `N₃ = 9`: `hbase_correct : ∀ M, realizable →
+sde(|z₀₀|²)≤3 → interp (cliffordLookup M) = M` and `hbase_len : ∀ M,
+(cliffordLookup M).length ≤ 9`. Q2's structural detail guides the cleanest Lean
+form (explicit table vs. decidable characterization).
+
+**(D) Discharge.** Assemble `KMMReduction`:
+`reduce M := kmmReduceFuel cliffordLookup (sde M) M`; `correct` from
+`interp_kmmReduceFuel` + (B)+(C); `N₃ := 9`; `length_bound` from
+`length_kmmReduceFuel_le` (`≤ 9 + 4·sde M`) + `sdeC_le_of_sde_le`. ⟹
+`Nonempty KMMReduction` discharged, no axiom. Replace the `[Nonempty KMMReduction]`
+gating with the concrete instance.
+
+**(E) Item G.** `cliffordTBaseFinder_kmm` at `ε₀=2⁻⁴` via the discharged
+`kmmReduce` on a Selinger-2012 hand-supplied `(u,t)`; `L ≤ 90 < 100`
+(`N₃=9` benign); re-derive the 3-conjunct unconditional Clifford+T headline.
+**Closes orphan #2.**
 
 #### Item G (M5 stub) — KMM-derived base finder integration
 
