@@ -86,6 +86,34 @@ theorem interp_kmmReduceFuel (base : Mat2 → List CliffordTGate)
       rw [he, interp_append, ih (reduceStep M k) hstep]
       exact interp_reconWordC_reduceStep M k
 
+/-- **Fuel length bound** (Lemma-3-independent): if the base finder emits words of
+length `≤ N₃`, then `(kmmReduceFuel base n M).length ≤ N₃ + 4·n`. Each peel adds
+the `≤ 4`-gate syllable `reconWordC k` (`reconWordC_length_le_four`); there are at
+most `n` peels. This is the per-step half of the KMM Corollary-1 length bound
+`≤ N₃ + 4·sde` — the remaining gap (fuel `n = sde` suffices, i.e. at most `sde`
+peels reach the base) is exactly KMM Lemma 3 (DR-gated). -/
+theorem length_kmmReduceFuel_le (base : Mat2 → List CliffordTGate) (N₃ : ℕ)
+    (hbase : ∀ M, (base M).length ≤ N₃) :
+    ∀ (n : ℕ) (M : Mat2), (kmmReduceFuel base n M).length ≤ N₃ + 4 * n := by
+  intro n
+  induction n with
+  | zero => intro M; rw [kmmReduceFuel_zero]; simpa using hbase M
+  | succ n ih =>
+    intro M
+    cases hc : chooseReductionComp M with
+    | none =>
+      have he : kmmReduceFuel base (n + 1) M = base M := by simp only [kmmReduceFuel, hc]
+      rw [he]; exact le_trans (hbase M) (by omega)
+    | some k =>
+      have he : kmmReduceFuel base (n + 1) M
+              = reconWordC (k : ℕ) ++ kmmReduceFuel base n (reduceStep M k) := by
+        simp only [kmmReduceFuel, hc]
+      have h1 : (reconWordC (k : ℕ)).length ≤ 4 :=
+        reconWordC_length_le_four (k : ℕ) (by have := k.isLt; omega)
+      have h2 := ih (reduceStep M k)
+      rw [he, List.length_append]
+      omega
+
 end KMM
 
 end SKEFTHawking.RossSelinger
