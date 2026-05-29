@@ -10,6 +10,9 @@ import Lean.PrettyPrinter
 -- This ensures ExtractDeps always sees every declaration without maintaining
 -- a separate import list that drifts out of sync.
 import SKEFTHawking
+-- Memoized transitive axiom-closure (set-identical to per-decl `collectAxioms`, parity-validated,
+-- ~40× faster) — replaces the per-decl `collectAxioms` re-walk that timed out at 1800s.
+import SKEFTHawking.AxiomClosure
 
 /-!
 # ExtractDeps — Lean 4 meta-programming script for dependency extraction
@@ -204,14 +207,16 @@ entirely; output includes an empty `name_deps_project` with
 `name_deps_extracted=false` so consumers can distinguish from "we
 extracted and found nothing". -/
 private def processDecl (env : Environment) (name : Name) (ci : ConstantInfo)
-    (nameDepsEnabled : Bool)
+    (nameDepsEnabled : Bool) (closures : Std.HashMap Name (Array Name))
     : MetaM (Json × Bool) := do
   let kind ← classifyDecl env name ci
   let moduleName := getModuleName env name
   let typeStr ← ppExprStr ci.type
 
-  -- Collect transitive axiom dependencies (project = our package's modules)
-  let axioms ← collectAxioms name
+  -- Transitive axiom dependencies via the batched memoized closure (`AxiomClosure.axiomClosures`,
+  -- computed once in `extractAll`): set-identical to per-decl `collectAxioms` (parity-validated)
+  -- but ~40× faster. Arrays are canonically sorted by the utility.
+  let axioms := (closures[name]?).getD #[]
   let projectAxioms := axioms.filter (fun a => inSKPackage env a)
   let coreAxioms := axioms.filter (fun a => !inSKPackage env a)
 
@@ -266,16 +271,19 @@ private def extractAll (env : Environment)
   -- Collect all declaration names from modules in the SKEFTHawking package
   let declNames : Array (Name × ConstantInfo) :=
     env.constants.fold (init := #[]) fun acc name ci =>
-      if inSKPackage env name && !shouldSkip ci && !isAuxName name then
+      if inSKPackage env name && !shouldSkip ci && !isAuxName name
+          && !(`SKEFTHawking.AxiomClosure).isPrefixOf name then
         acc.push (name, ci)
       else
         acc
   -- Sort by name for deterministic output
   let declNames := declNames.qsort (fun a b => toString a.1 < toString b.1)
+  -- Batched memoized axiom closures (one Tarjan pass; replaces per-decl collectAxioms).
+  let closures ← SKEFTHawking.AxiomClosure.axiomClosures (declNames.map (·.1))
   let mut results : Array Json := #[]
   let mut slowDecls : Array Name := #[]
   for (name, ci) in declNames do
-    let (json, timedOut) ← processDecl env name ci nameDepsEnabled
+    let (json, timedOut) ← processDecl env name ci nameDepsEnabled closures
     results := results.push json
     if timedOut then
       slowDecls := slowDecls.push name
