@@ -1058,13 +1058,20 @@ import SKEFTHawking.FKLW.ReadRezayiK7BaseFinder
 -- native_decide-compatible runtime arithmetic. Clean-room rebuild from
 -- arXiv:1206.5236 + arXiv:1403.2975; no newsynth GPL code copied.
 import SKEFTHawking.FKLW.RossSelinger.ZOmega
--- Phase 6x Tier-2 Item E (M2, 2026-05-27): ZOmegaSqrt2 := ℤ[ω][1/√2]
--- via Localization.Away (sqrt2 : ZOmega). Theory-layer ship; runtime
--- pair representation (z, k) for native_decide deferred per DR §1.7.
--- Defines sqrt2 := ω − ω³ ∈ ZOmega, sqrt2_sq : sqrt2² = 2, and
--- ZOmegaSqrt2 inherits CommRing + Algebra ZOmega + IsLocalization from
--- Mathlib. Substrate for KMM exact synthesis (Item F).
+-- Phase 6x Tier-2 Item E (M2; runtime upgrade 2026-05-29): ZOmegaSqrt2 :=
+-- ℤ[ω][1/√2] as the COMPUTABLE runtime quotient Quotient Frac.setoid
+-- (DR §1.7 rep B), replacing the noncomputable Localization.Away. Frac =
+-- (num : ZOmega, den : ℕ) ~ num/√2^den; full CommRing + DecidableEq +
+-- sqrt2/invSqrt2/units + Algebra ZOmega embedding (of/ofRingHom). The
+-- native_decide-able substrate for KMM exact synthesis (Item F).
 import SKEFTHawking.FKLW.RossSelinger.ZOmegaSqrt2
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — computable √2-adic valuation
+-- + denominator-exponent substrate for sde. ZOmega.dividesSqrt2 (decidable
+-- √2 ∣ z via parity), divSqrt2 (z/√2), lowestDenExp (structural-recursion
+-- lowest-terms denominator exponent), and ZOmegaSqrt2.denExp (Quotient.lift,
+-- well-defined via lowestDenExp_sqrt2_pow_mul). Feeds the matrix sde that
+-- makes kmmReduce terminate.
+import SKEFTHawking.FKLW.RossSelinger.Sde
 -- Phase 6x Tier-2 Item F (M4, 2026-05-27) — CliffordTGate ADT and matrix
 -- interpretation. Single-qubit Clifford+T gates {H, S, T, X, Y, Z, id,
 -- omega} → 2x2 ZOmegaSqrt2 matrices. interp foldr of a List CliffordTGate
