@@ -23,19 +23,16 @@ Clifford+T group, with the canonical relations `T⁸ = 1`, `T·T = S`,
   * `CliffordTGate.interp` — interpretation of a `List CliffordTGate`
     as a matrix product.
 
-## Computability note (Phase 6x F substrate ship)
+## Computability note (Phase 6x F runtime ship)
 
-The gate matrices use `noncomputable` arithmetic over `ZOmegaSqrt2`
-(`Localization.Away` from Item E's theory-layer ship). Per
-Pre-Implementation DR §1.7, a parallel runtime pair-representation
-of `ZOmegaSqrt2` (z, k) for `native_decide`-driven test queries is
-**deferred** as a follow-on (substantial multi-session work; ~300+ LoC
-extension of Item E's ship).
-
-The substantive content shipped here — the gate ADT + matrix
-interpretation + the `interp_append` algebraic identity — does not
-depend on the runtime representation. Concrete `#eval` testing of small
-examples (e.g., `H·H = I`) requires the deferred runtime layer.
+The gate matrices are **computable** arithmetic over the runtime
+quotient `ZOmegaSqrt2` (DR §1.7 representation B). `ωS := of ω` uses the
+computable embedding, so `gateMatrix` and `interp` are plain (not
+`noncomputable`) `def`s. This enables `#eval` / `decide` on small
+examples — the canonical Clifford relations (`H·H = I`, `X·X = I`,
+`T·T = S`, `S·S = Z`, `Z·X·Z = -X`) are kernel-checked below via
+`decide` on the runtime ring, confirming the gate matrices carry the
+correct arithmetic.
 
 ## References
 
@@ -83,12 +80,13 @@ inductive CliffordTGate : Type
 
 namespace CliffordTGate
 
-/-- `ω = ζ_8` as a `ZOmegaSqrt2` element via the canonical algebra map. -/
-noncomputable def ωS : ZOmegaSqrt2 :=
-  algebraMap ZOmega ZOmegaSqrt2 ZOmega.ω
+/-- `ω = ζ_8` as a `ZOmegaSqrt2` element via the computable embedding
+`ZOmegaSqrt2.of` (definitionally equal to `algebraMap ZOmega ZOmegaSqrt2 ω`
+by `algebraMap_eq_of`). -/
+def ωS : ZOmegaSqrt2 := ZOmegaSqrt2.of ZOmega.ω
 
 /-- `i = ω²` as a `ZOmegaSqrt2` element. -/
-noncomputable def iS : ZOmegaSqrt2 := ωS * ωS
+def iS : ZOmegaSqrt2 := ωS * ωS
 
 /-- **Matrix interpretation of a Clifford+T gate**.
 
@@ -105,7 +103,7 @@ Each gate maps to its standard `2×2` unitary over `ZOmegaSqrt2`:
 
 Per KMM Theorem 1, every `2×2` unitary over `ZOmegaSqrt2` is implementable
 as a product of these gates. -/
-noncomputable def gateMatrix : CliffordTGate → Matrix (Fin 2) (Fin 2) ZOmegaSqrt2
+def gateMatrix : CliffordTGate → Matrix (Fin 2) (Fin 2) ZOmegaSqrt2
   | .H => !![ZOmegaSqrt2.invSqrt2, ZOmegaSqrt2.invSqrt2;
               ZOmegaSqrt2.invSqrt2, -ZOmegaSqrt2.invSqrt2]
   | .S => !![1, 0; 0, iS]
@@ -124,7 +122,7 @@ This is the left-to-right reading: the first gate in the list is the
 leftmost (most-significant) factor. Composition follows the matrix-
 multiplication convention `gateMatrix g₁ · gateMatrix g₂` meaning "apply
 g₂ first, then g₁". -/
-noncomputable def interp : List CliffordTGate → Matrix (Fin 2) (Fin 2) ZOmegaSqrt2
+def interp : List CliffordTGate → Matrix (Fin 2) (Fin 2) ZOmegaSqrt2
   | [] => 1
   | g :: gs => gateMatrix g * interp gs
 
@@ -151,6 +149,29 @@ theorem interp_append (gs hs : List CliffordTGate) :
     show gateMatrix g * interp (gs ++ hs) = (gateMatrix g * interp gs) * interp hs
     rw [ih]
     exact (Matrix.mul_assoc _ _ _).symm
+
+/-! ## Canonical Clifford relations (kernel-checked on the runtime ring)
+
+The runtime `ZOmegaSqrt2` makes gate arithmetic `decide`-checkable in
+the **kernel** — no `native_decide`, so the standard three axioms only.
+These verify the gate matrices carry the correct arithmetic (not merely
+that they are computable). -/
+
+/-- `H · H = I` (Hadamard is an involution; exercises `invSqrt2` and the
+`√2^2 = 2` reduction in the quotient). -/
+theorem H_mul_H : gateMatrix .H * gateMatrix .H = 1 := by decide
+
+/-- `X · X = I`. -/
+theorem X_mul_X : gateMatrix .X * gateMatrix .X = 1 := by decide
+
+/-- `Z · Z = I`. -/
+theorem Z_mul_Z : gateMatrix .Z * gateMatrix .Z = 1 := by decide
+
+/-- `T · T = S` (the π/8 gate squares to the phase gate; `ω² = i`). -/
+theorem T_mul_T_eq_S : gateMatrix .T * gateMatrix .T = gateMatrix .S := by decide
+
+/-- `S · S = Z` (the phase gate squares to Pauli-`Z`; `i² = -1`). -/
+theorem S_mul_S_eq_Z : gateMatrix .S * gateMatrix .S = gateMatrix .Z := by decide
 
 end CliffordTGate
 end SKEFTHawking.RossSelinger
