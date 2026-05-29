@@ -1314,6 +1314,13 @@ import SKEFTHawking.FKLW.RossSelinger.MAStepDecrease
 -- (R(M)ᵀ·R(M)=1 for unitary M). Forces bᵀ·b = 2^kSO3·I ⟹ bᵀ·b ≡ 0 (mod 2) — the
 -- constraint cutting the Bloch parity residue to the 15 classes for ma_step ∃-s.
 import SKEFTHawking.FKLW.RossSelinger.BlochOrthogonal
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — REALITY of the Bloch image of any
+-- realizable matrix (conj(R(M)ᵢⱼ)=R(M)ᵢⱼ), the linchpin bounding the ma_step native_decide
+-- domain. blochEntry_gate_real (per-gate, decide) + blochEntry_interp_real (multiplicative via
+-- bloch_hom + conj ring-hom, induction on the word) + blochEntry_realizable_real. Reality forces
+-- B i j ∈ ⟨a,0,-a,d⟩ and ∑ᵢ normSq(Bᵢⱼ)=2^kSO3 bounds coords (the EXACT-orthogonality route to
+-- ma_step ∃-s, replacing the non-viable mod-2 Bloch-residue route).
+import SKEFTHawking.FKLW.RossSelinger.MAStepExists
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
