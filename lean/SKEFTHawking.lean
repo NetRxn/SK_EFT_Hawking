@@ -1301,6 +1301,12 @@ import SKEFTHawking.FKLW.RossSelinger.BlochHomomorphism
 -- computable kSO3-reducing selectSyllable (U(2)-residue-mod-2-determined per
 -- kmm_ma_step_residue.py). The kSO3-decrease EXISTENCE (residue crux) ships next.
 import SKEFTHawking.FKLW.RossSelinger.MAStep
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the kSO3-decrease of a syllable
+-- strip, mod-2 condition foundation. sylBlochNum (c^s := √2·R((sylMat s)†), concrete
+-- cleared ZOmega 3×3) + sylBlochNum_clearing (of(c^s_ik) = √2·R((sylMat s)†)ᵢₖ, decide).
+-- With bloch_stripMat: √2^(n-1)·R(stripMat s M)ᵢⱼ = (∑ₖ c^s_ik·b_kj)/2, so the kSO3
+-- decrease ⟺ ∀ i,j: ∑ₖ c^s_ik·b_kj ≡ 0 (mod 2) — the 15-class Bloch parity native_decide.
+import SKEFTHawking.FKLW.RossSelinger.MAStepDecrease
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
