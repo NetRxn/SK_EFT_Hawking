@@ -678,7 +678,30 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
    (inconsistent) — so the dossier's "residue mod √2" `chooseReduction` sketch
    is imprecise; the real selection needs ≥ mod-2 data.
 
-4. **Lemma 3** — CORRECTED CONDITION (numerically validated 2026-05-29 via
+4. ✅✅ **Lemma 3 SHIPPED** (`KMMLemma3.lean`, `69a7842`) — DEEP-RESEARCH UNBLOCKED
+   (`Lit-Search/Phase-6x/6x — KMM + Ross-Selinger PROOF MECHANISMS…md`). The
+   key reframing: KMM's proof is **NOT** a 𝔭-adic case split (none is published)
+   — it is **Algorithm 2**, an exhaustive computer check over `ℤ[ω]/(2³) =
+   (ZMod 8)⁴`. `kmm_lemma3_alg2` reproduces it as `native_decide`:
+   `∀ x y : Coord4, ∀ j:Fin 2, gde x=j → gde y=j → Pform x+Pform y=0 →
+   Qform x+Qform y=0 → ∀ s:Fin 3, ∃ k:Fin 4, gde(add x (mulOmegaPow k y))=(s+1)+j`.
+   `P=a²+b²+c²+d²`, `Q=ab+bc+cd−ad`, `mulOmega=⟨a,b,c,d⟩↦⟨b,c,d,−a⟩`,
+   `gde=min(4,2·min(v₂P,v₂Q)+[v₂P>v₂Q])` — ALL oracle-validated in our convention
+   (0 mismatch over 65535 residues; Alg2 FAILS=0 over 393216 pairs; caught+fixed
+   the DR's loose `mulOmega` labeling). `native_decide` ~497s, carries
+   `Lean.ofReduceBool` (KMM's own proof is computational — "we implemented
+   Algorithm 2, result is true"). **Bridge ring identities SHIPPED**
+   (`KMMLemma3Bridge.lean`, `4a6e8ed`): `coordOf`, `normSq_d/_c`,
+   `Pform_coordOf`/`Qform_coordOf` (residue forms = `normSq` coords mod 8),
+   `coordOf_omega_mul`. **NEXT (bridge cont'd):** the gde-value bridge
+   `Coord4.gde (coordOf x) = min 4 (gdePeel (normSq x) fuel)` — formalize KMM
+   Prop 1 (the `v₂` closed form + mod-8 determination; validated, gdeMod8==peel
+   0 mismatch). Then: Lemma 3 (residue) ⟹ actual `gde(|x+ωᵏy|²)=gde(|x|²)+3`
+   for the reducing k ⟹ `sde` strictly decreases ⟹ `chooseReductionComp`
+   succeeds (fuel-sufficiency, integration plan B) ⟹ discharge (D) ⟹ Item G.
+
+   --- (historical, superseded by the above) ---
+   **Lemma 3** — CORRECTED CONDITION (numerically validated 2026-05-29 via
    `scripts/kmm_zomega_reference_oracle.py`; my earlier `2∣(x+ωᵏy)` note was a
    `gde(element)`-vs-`gde(|element|²)` conflation, FALSE for realizable pairs —
    12032/18304 fail it). The algorithm tracks `sde(|z|²)`, and the s=−1 step
