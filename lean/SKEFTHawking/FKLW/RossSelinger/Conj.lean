@@ -140,6 +140,22 @@ theorem normSq_conj (z : ZOmegaSqrt2) : normSq (conj z) = normSq z := by
 theorem normSq_invSqrt2 : normSq invSqrt2 = mk 1 2 := by
   rw [normSq, invSqrt2_def, conj_mk, ZOmega.conj_one, mk_mul, mul_one]
 
+/-- **Squared modulus of a sum** (the cross-term expansion KMM Lemma 3
+analyzes): `|x+y|² = |x|² + |y|² + (x·ȳ + y·x̄)`. -/
+theorem normSq_add (x y : ZOmegaSqrt2) :
+    normSq (x + y) = normSq x + normSq y + (x * conj y + y * conj x) := by
+  rw [normSq, conj_add, normSq, normSq]; ring
+
+/-- **`normSq` of a power**: `|x^k|² = |x|²^k`. -/
+theorem normSq_pow (x : ZOmegaSqrt2) (k : ℕ) : normSq (x ^ k) = normSq x ^ k := by
+  induction k with
+  | zero => simp only [pow_zero, normSq_one]
+  | succ n ih => rw [pow_succ, normSq_mul, ih, pow_succ]
+
+/-- **`|ω^k|² = 1`** (every power of `ω` is a unit of modulus one). -/
+@[simp] theorem normSq_omega_pow (k : ℕ) : normSq ((of ZOmega.ω) ^ k) = 1 := by
+  rw [normSq_pow, normSq_omega, one_pow]
+
 end ZOmegaSqrt2
 
 end SKEFTHawking.RossSelinger
