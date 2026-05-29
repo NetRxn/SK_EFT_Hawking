@@ -1272,6 +1272,12 @@ import SKEFTHawking.FKLW.RossSelinger.KMMReduceMu
 -- to the SOLE remaining fact: 𝕊₃ coverage (∀ realizable μ≤3 M, ∃ ≤9-word). NO axiom
 -- (coverage is a hypothesis, Inv #15) — discharging it makes Nonempty unconditional.
 import SKEFTHawking.FKLW.RossSelinger.KMMReductionDischarge
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — 𝕊₃ base-case coverage (toward unconditional
+-- discharge). denExp_le_two_of_denExp_normSq_le_three (any entry; denExp(|z|²)≤3 ⟹ denExp z≤2)
+-- + column0_cleared_bounded (μ≤3 unitary ⟹ cleared col-0 numerators x,y have (|x|²).d,(|y|²).d
+-- ≤4 — finiteness seed: P=a²+b²+c²+d² sum-of-squares + P_x+P_y=2^s≤4 ⟹ coords bounded by 2,
+-- NO real-order needed). Builds toward the coverage that makes Nonempty KMMReduction uncond.
+import SKEFTHawking.FKLW.RossSelinger.KMMBaseCoverage
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
