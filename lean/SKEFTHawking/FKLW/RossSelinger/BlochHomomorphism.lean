@@ -30,6 +30,7 @@ This file ships the two algebraic ingredients and (the goal) the homomorphism:
 -/
 
 import SKEFTHawking.FKLW.RossSelinger.BlochMap
+import SKEFTHawking.FKLW.RossSelinger.UnitaryClosure
 
 set_option autoImplicit false
 
@@ -81,6 +82,68 @@ theorem trace_conj_unitary {B : Mat2} (X : Mat2) (hB : ZOmegaSqrt2.IsUnitaryT B)
     _ = Matrix.trace ((1 : Mat2) * X) :=
           congrArg (fun M => Matrix.trace (M * X)) hB'
     _ = Matrix.trace X := congrArg Matrix.trace (Matrix.one_mul X)
+
+set_option maxRecDepth 8000 in
+/-- **Bloch completeness on a unitary**: for unitary `B`,
+
+  `B · σⱼ · B† = ∑ₖ blochEntry B k j • σₖ`.
+
+The Pauli-basis expansion of the adjoint action `σⱼ ↦ B σⱼ B†`. Proof:
+`Y := B σⱼ B†` is traceless (`trace_conj_unitary` + `Tr σⱼ = 0`), so
+`pauli_completeness` collapses to `2•Y = ∑ₖ Tr(σₖ Y)•σₖ`; matching `2·blochEntry`
+coefficients (`2·half = 1`) and cancelling the `2•` (via `half•`) gives the claim.
+This is the engine of the Bloch homomorphism. -/
+theorem bloch_completeness_unitary {B : Mat2} (hB : ZOmegaSqrt2.IsUnitaryT B) (j : Fin 3) :
+    B * pauliMat j * ZOmegaSqrt2.adjoint B = ∑ k : Fin 3, blochEntry B k j • pauliMat k := by
+  set Y := B * pauliMat j * ZOmegaSqrt2.adjoint B with hYdef
+  have hY0 : Matrix.trace Y = 0 := by
+    rw [hYdef, trace_conj_unitary (pauliMat j) hB]; fin_cases j <;> decide
+  have hbe : ∀ k : Fin 3, blochEntry B k j = half * Matrix.trace (pauliMat k * Y) := by
+    intro k
+    have harg : pauliMat k * B * pauliMat j * ZOmegaSqrt2.adjoint B = pauliMat k * Y := by
+      rw [hYdef]; ext x y; simp only [Matrix.mul_apply, Fin.sum_univ_two]; ring
+    rw [blochEntry, harg]
+  have hc := pauli_completeness Y
+  rw [hY0, zero_smul, zero_add] at hc
+  have h2half : (2 : ZOmegaSqrt2) * half = 1 := by decide
+  have cancel : ∀ Z : Mat2, half • ((2 : ZOmegaSqrt2) • Z) = Z := by
+    intro Z; rw [smul_smul, mul_comm, h2half, one_smul]
+  have key : (2 : ZOmegaSqrt2) • Y
+      = (2 : ZOmegaSqrt2) • (∑ k : Fin 3, blochEntry B k j • pauliMat k) := by
+    rw [hc, Finset.smul_sum, Fin.sum_univ_three]
+    simp only [hbe, smul_smul, ← mul_assoc, h2half, one_mul, pauliMat]
+  calc Y = half • ((2 : ZOmegaSqrt2) • Y) := (cancel Y).symm
+    _ = half • ((2 : ZOmegaSqrt2) • (∑ k : Fin 3, blochEntry B k j • pauliMat k)) := by rw [key]
+    _ = ∑ k : Fin 3, blochEntry B k j • pauliMat k := cancel _
+
+set_option maxRecDepth 8000 in
+/-- **The Bloch map is a homomorphism** `SU(2) → SO(3)` (for unitary right factor):
+
+  `blochEntry (A · B) i j = ∑ₖ blochEntry A i k · blochEntry B k j`,
+
+i.e. `R(A·B) = R(A)·R(B)`. Proof: reassociate `σᵢ(AB)σⱼ(AB)† = σᵢ A (Bσⱼ B†) A†`
+(via `adjoint_mul`), expand `Bσⱼ B†` by `bloch_completeness_unitary`, distribute the
+sum/scalars through the product and trace, and recognize `blochEntry A i k`.
+
+This is the structural fact that lets the Matsumoto-Amano recursion relate
+`kSO3 (s⁻¹·M) = kSO3 (adjoint(syl s) · M)` to `kSO3 M`. -/
+theorem bloch_hom {A B : Mat2} (hB : ZOmegaSqrt2.IsUnitaryT B) (i j : Fin 3) :
+    blochEntry (A * B) i j = ∑ k : Fin 3, blochEntry A i k * blochEntry B k j := by
+  have harg2 : pauliMat i * (A * B) * pauliMat j * ZOmegaSqrt2.adjoint (A * B)
+      = pauliMat i * A * (B * pauliMat j * ZOmegaSqrt2.adjoint B) * ZOmegaSqrt2.adjoint A := by
+    rw [ZOmegaSqrt2.adjoint_mul]; ext x y; simp only [Matrix.mul_apply, Fin.sum_univ_two]; ring
+  have hdist : pauliMat i * A * (∑ k : Fin 3, blochEntry B k j • pauliMat k) * ZOmegaSqrt2.adjoint A
+      = ∑ k : Fin 3, blochEntry B k j • (pauliMat i * A * pauliMat k * ZOmegaSqrt2.adjoint A) := by
+    ext x y
+    simp only [Matrix.mul_apply, Matrix.sum_apply, Matrix.smul_apply, Matrix.add_apply,
+      Fin.sum_univ_two, Fin.sum_univ_three, smul_eq_mul]
+    ring
+  rw [blochEntry, harg2, bloch_completeness_unitary hB j, hdist, Matrix.trace_sum, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro k _
+  rw [Matrix.trace_smul, smul_eq_mul]
+  conv_rhs => rw [blochEntry]
+  ring
 
 end KMM
 
