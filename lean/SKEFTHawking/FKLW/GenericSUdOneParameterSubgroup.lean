@@ -290,6 +290,364 @@ theorem vonNeumann_BW_limit_mem_tracelessSkewHermitian {d : ℕ} [Nonempty (Fin 
   exact hφ.tendsto_atTop.eventually
     (vonNeumannUnitMatrixSeq_mem_tracelessSkewHermitian_eventually hd_pos h_seq)
 
+/-! ## Increment 4 — integer-rounding convergence and `exp(t•X) ∈ H_mat`
+
+Port of `OneParameterSubgroupSU2.lean` §4.e–§4.i onto `GenericSUd.matrixLog` / `expAmbient d`. For each
+`t : ℝ` and `m k := ⌊t / ‖matrixLog (seq (φ k))‖⌋ : ℤ`, the integer powers `(seq (φ k))^(m k)` converge
+to `expAmbient d (t • X)`; since each lies in `H` and the image of `H` in matrices is closed,
+`expAmbient d (t • X)` lies in that image. -/
+
+/-- Entry-wise: real-scalar smul on a complex matrix equals coerced complex-scalar smul. d-generic lift
+of the SU(2) `real_smul_matrix2C_eq_complex_smul`. -/
+lemma real_smul_matrixdC_eq_complex_smul {d : ℕ}
+    (r : ℝ) (M : Matrix (Fin d) (Fin d) ℂ) :
+    (r : ℝ) • M = ((r : ℂ) • M) := by
+  ext i j
+  simp [Matrix.smul_apply, Complex.real_smul]
+
+/-- **Explicit `ContinuousSMul ℝ` instance on `Matrix (Fin d) (Fin d) ℂ`** (linftyOp topology), via the
+entry-wise identity `(r : ℝ) • M = (r : ℂ) • M` + continuity of `Complex.ofReal` and ℂ-smul. d-generic
+lift of the SU(2) `continuousSMul_real_Matrix2C`. -/
+noncomputable instance continuousSMul_real_MatrixdC {d : ℕ} :
+    ContinuousSMul ℝ (Matrix (Fin d) (Fin d) ℂ) := by
+  constructor
+  have h_eq : (fun p : ℝ × Matrix (Fin d) (Fin d) ℂ => p.1 • p.2) =
+              (fun p : ℝ × Matrix (Fin d) (Fin d) ℂ => (p.1 : ℂ) • p.2) := by
+    funext p
+    exact real_smul_matrixdC_eq_complex_smul p.1 p.2
+  rw [h_eq]
+  exact continuous_smul.comp
+    ((Complex.continuous_ofReal.comp continuous_fst).prodMk continuous_snd)
+
+/-- **Floor-times-scale converges**: for `r_k → 0` with `r_k > 0` eventually, `(⌊t / r_k⌋ : ℝ) · r_k → t`.
+Generic reals (no matrices); port of the SU(2) lemma of the same name. -/
+theorem floor_times_scale_tendsto
+    {r : ℕ → ℝ} (h_pos : ∀ᶠ k in Filter.atTop, 0 < r k)
+    (h_tendsto : Filter.Tendsto r Filter.atTop (nhds 0))
+    (t : ℝ) :
+    Filter.Tendsto (fun k => ((⌊t / r k⌋ : ℤ) : ℝ) * r k)
+      Filter.atTop (nhds t) := by
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  have h_lt : ∀ᶠ k in Filter.atTop, |r k| < ε := by
+    rw [Metric.tendsto_nhds] at h_tendsto
+    have := h_tendsto ε hε
+    filter_upwards [this] with k hk
+    rwa [Real.dist_eq, sub_zero] at hk
+  filter_upwards [h_lt, h_pos] with k hk_lt hk_pos
+  rw [Real.dist_eq]
+  have h_floor_bound : |((⌊t / r k⌋ : ℤ) : ℝ) - t / r k| < 1 := by
+    have h1 := Int.floor_le (t / r k)
+    have h2 := Int.lt_floor_add_one (t / r k)
+    rw [abs_lt]
+    constructor
+    · linarith
+    · linarith
+  have h_rk_ne : r k ≠ 0 := ne_of_gt hk_pos
+  calc |((⌊t / r k⌋ : ℤ) : ℝ) * r k - t|
+      = |(((⌊t / r k⌋ : ℤ) : ℝ) - t / r k) * r k| := by
+        congr 1
+        field_simp
+    _ = |((⌊t / r k⌋ : ℤ) : ℝ) - t / r k| * |r k| := abs_mul _ _
+    _ ≤ 1 * |r k| := by
+        apply mul_le_mul_of_nonneg_right _ (abs_nonneg _)
+        exact le_of_lt h_floor_bound
+    _ = |r k| := one_mul _
+    _ < ε := hk_lt
+
+/-- **Approximation lemma**: for the BW subsequence, `(m_k : ℝ) · ‖Y_k‖ → t` where
+`m_k := ⌊t / ‖Y_k‖⌋`. -/
+theorem vonNeumann_floor_scale_tendsto {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k => ((⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋ : ℤ) : ℝ) *
+                ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖)
+      Filter.atTop (nhds t) := by
+  apply floor_times_scale_tendsto
+  · have h_subseq_ne := hφ.tendsto_atTop.eventually h_ev_ne
+    filter_upwards [h_subseq_ne] with k hk
+    exact norm_pos_iff.mpr hk
+  · have h_subseq_tendsto := h_log_tendsto.comp hφ.tendsto_atTop
+    have := (continuous_norm.tendsto (0 : Matrix (Fin d) (Fin d) ℂ)).comp h_subseq_tendsto
+    simp [norm_zero] at this
+    exact this
+
+/-- **Scalar-vector convergence (ℝ-smul form)**: `(m_k · ‖Y_{φk}‖) • X_{φk} → t • X`. -/
+theorem vonNeumann_scaled_unit_tendsto_real {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)))
+    {X : Matrix (Fin d) (Fin d) ℂ}
+    (h_unit_tendsto : Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        (((⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋ : ℤ) : ℝ) *
+          ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖) •
+          vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds (t • X)) :=
+  (vonNeumann_floor_scale_tendsto hφ h_ev_ne h_log_tendsto t).smul h_unit_tendsto
+
+/-- **Algebraic identity (real-scalar form)**: for `Y ≠ 0` and `c : ℝ`,
+`(c * ‖Y‖) • ((‖Y‖⁻¹ : ℂ) • Y) = c • Y`. -/
+lemma scaled_unit_eq_real_smul {d : ℕ}
+    {Y : Matrix (Fin d) (Fin d) ℂ} (hY : Y ≠ 0) (c : ℝ) :
+    (c * ‖Y‖) • ((‖Y‖⁻¹ : ℂ) • Y) = c • Y := by
+  have h_norm_ne : (‖Y‖ : ℝ) ≠ 0 := by
+    rw [Ne, norm_eq_zero]; exact hY
+  have h_inner : ((‖Y‖⁻¹ : ℂ) • Y) = ((‖Y‖⁻¹ : ℝ) • Y) := by
+    ext i j
+    simp [Matrix.smul_apply, Complex.real_smul]
+  rw [h_inner, smul_smul]
+  congr 1
+  field_simp
+
+/-- **Real-scalar smul convergence**: `(m_k_real : ℝ) • Y_{φk} → t • X`. -/
+theorem vonNeumann_intReal_smul_tendsto {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)))
+    {X : Matrix (Fin d) (Fin d) ℂ}
+    (h_unit_tendsto : Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        ((⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋ : ℤ) : ℝ) •
+          matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (t • X)) := by
+  have h_f := vonNeumann_scaled_unit_tendsto_real hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  have h_ev_ne_sub : ∀ᶠ k in Filter.atTop,
+      matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0 :=
+    hφ.tendsto_atTop.eventually h_ev_ne
+  refine Filter.Tendsto.congr' ?_ h_f
+  filter_upwards [h_ev_ne_sub] with k hk
+  unfold vonNeumannUnitMatrixSeq
+  simp only [dif_neg hk]
+  exact scaled_unit_eq_real_smul hk _
+
+/-- **ℤ-smul convergence**: cast from the real-scalar form via `Int.cast_smul_eq_zsmul`. -/
+theorem vonNeumann_zsmul_seq_tendsto {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)))
+    {X : Matrix (Fin d) (Fin d) ℂ}
+    (h_unit_tendsto : Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        (⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋ : ℤ) •
+          matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (t • X)) := by
+  have h_real := vonNeumann_intReal_smul_tendsto hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  refine Filter.Tendsto.congr ?_ h_real
+  intro k
+  exact Int.cast_smul_eq_zsmul ℝ _ _
+
+/-- **`expAmbient` convergence**: apply `expAmbient d` continuity to the ℤ-smul tendsto. -/
+theorem vonNeumann_exp_zsmul_seq_tendsto {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)))
+    {X : Matrix (Fin d) (Fin d) ℂ}
+    (h_unit_tendsto : Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        expAmbient d
+          ((⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋ : ℤ) •
+            matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)))
+      Filter.atTop (nhds (expAmbient d (t • X))) := by
+  have h_zsmul := vonNeumann_zsmul_seq_tendsto hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  have h_cont : Filter.Tendsto (fun M : Matrix (Fin d) (Fin d) ℂ => expAmbient d M)
+      (nhds (t • X)) (nhds (expAmbient d (t • X))) := by
+    have : Continuous (expAmbient d : Matrix (Fin d) (Fin d) ℂ → Matrix (Fin d) (Fin d) ℂ) := by
+      unfold expAmbient
+      exact NormedSpace.exp_continuous
+    exact this.tendsto _
+  exact h_cont.comp h_zsmul
+
+/-- **Integer-power form**: rewrite via `Matrix.exp_zsmul` as `(expAmbient Y_{φk}) ^ m_k`. -/
+theorem vonNeumann_exp_pow_seq_tendsto {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)))
+    {X : Matrix (Fin d) (Fin d) ℂ}
+    (h_unit_tendsto : Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        expAmbient d (matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)) ^
+          (⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋ : ℤ))
+      Filter.atTop (nhds (expAmbient d (t • X))) := by
+  have h_exp := vonNeumann_exp_zsmul_seq_tendsto hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  refine Filter.Tendsto.congr ?_ h_exp
+  intro k
+  unfold expAmbient
+  exact Matrix.exp_zsmul _ _
+
+/-- **Matrix-level rewrite (eventually)**: under `seq → 1`, eventually
+`expAmbient d (matrixLog d (seq n).val) = (seq n).val`. -/
+theorem expAmbient_matrixLog_seq_eventually {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)))) :
+    ∀ᶠ n in Filter.atTop,
+      expAmbient d (matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+        = ((seq n).val : Matrix (Fin d) (Fin d) ℂ) := by
+  filter_upwards [eventually_val_mem_target h_seq] with n hn
+  exact expAmbient_matrixLog d hn
+
+/-- **SU(d)-matrix-level convergence**: `(seq (φ k)).val ^ m_k → expAmbient d (t • X)`. -/
+theorem vonNeumann_suMat_pow_seq_tendsto {d : ℕ}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))))
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)))
+    {X : Matrix (Fin d) (Fin d) ℂ}
+    (h_unit_tendsto : Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    Filter.Tendsto
+      (fun k =>
+        ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ) ^
+          (⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋ : ℤ))
+      Filter.atTop (nhds (expAmbient d (t • X))) := by
+  have h_g4 := vonNeumann_exp_pow_seq_tendsto hφ h_ev_ne h_log_tendsto h_unit_tendsto t
+  have h_ev_subseq := hφ.tendsto_atTop.eventually (expAmbient_matrixLog_seq_eventually h_seq)
+  refine Filter.Tendsto.congr' ?_ h_g4
+  filter_upwards [h_ev_subseq] with k hk
+  rw [hk]
+
+/-- **SU(d)-subtype zpow lifts to matrix-zpow**: `((g ^ m).val : Matrix _ _ ℂ) = (g.val) ^ m`.
+d-generic lift of the SU(2) `specialUnitaryGroup_coe_zpow`. -/
+theorem specialUnitaryGroup_coe_zpow {d : ℕ}
+    (g : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) (m : ℤ) :
+    ((g ^ m).val : Matrix (Fin d) (Fin d) ℂ) =
+      (g.val : Matrix (Fin d) (Fin d) ℂ) ^ m := by
+  cases m with
+  | ofNat k =>
+    show ((g ^ (k : ℤ)).val : Matrix (Fin d) (Fin d) ℂ) = g.val ^ (k : ℤ)
+    rw [zpow_natCast, zpow_natCast]
+    exact SubmonoidClass.coe_pow _ _
+  | negSucc k =>
+    show ((g ^ (Int.negSucc k)).val : Matrix (Fin d) (Fin d) ℂ) =
+         g.val ^ (Int.negSucc k)
+    rw [zpow_negSucc, zpow_negSucc]
+    have h_inv_eq_star :
+        ((g ^ (k+1))⁻¹).val = star ((g ^ (k+1)).val) := rfl
+    rw [h_inv_eq_star]
+    rw [SubmonoidClass.coe_pow]
+    have h_pow_unitary : (g ^ (k+1)).val ∈ Matrix.unitaryGroup (Fin d) ℂ :=
+      (Matrix.mem_specialUnitaryGroup_iff.mp (g ^ (k+1)).property).1
+    have h_pow_val_eq : (g ^ (k+1)).val = g.val ^ (k+1) :=
+      SubmonoidClass.coe_pow _ _
+    have h_mul_star : ((g.val ^ (k+1)) * star (g.val ^ (k+1)) :
+        Matrix (Fin d) (Fin d) ℂ) = 1 := by
+      rw [← h_pow_val_eq]
+      exact Matrix.mem_unitaryGroup_iff.mp h_pow_unitary
+    exact (Matrix.inv_eq_right_inv h_mul_star).symm
+
+/-- **`Matrix.specialUnitaryGroup (Fin d) ℂ` is closed** in `Matrix (Fin d) (Fin d) ℂ`. -/
+theorem specialUnitaryGroup_isClosed {d : ℕ} :
+    IsClosed ((Matrix.specialUnitaryGroup (Fin d) ℂ :
+        Set (Matrix (Fin d) (Fin d) ℂ))) := by
+  rw [show ((Matrix.specialUnitaryGroup (Fin d) ℂ :
+        Set (Matrix (Fin d) (Fin d) ℂ))) =
+      (Matrix.unitaryGroup (Fin d) ℂ : Set (Matrix (Fin d) (Fin d) ℂ)) ∩
+        {M | M.det = 1} from ?_]
+  · exact IsClosed.inter isClosed_unitary
+      (isClosed_eq (Continuous.matrix_det continuous_id) continuous_const)
+  · ext M
+    simp [Matrix.mem_specialUnitaryGroup_iff]
+
+/-- **H_mat (image of `H` in `Matrix _ _ ℂ`) is closed** when `H` is closed in the SU(d) subtype. -/
+theorem H_mat_isClosed {d : ℕ}
+    (H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))) :
+    IsClosed ((fun h : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) => h.val) ''
+              (H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))) :=
+  (specialUnitaryGroup_isClosed.isClosedEmbedding_subtypeVal.isClosed_iff_image_isClosed).mp hH_closed
+
+/-- **Matrix-pow seq is in H_mat** (for all `k`). -/
+theorem vonNeumann_mat_pow_mem_H_mat {d : ℕ}
+    {H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    (h_mem : ∀ n, seq n ∈ H)
+    (φ : ℕ → ℕ) (t : ℝ) (k : ℕ) :
+    ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ) ^
+        (⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋ : ℤ) ∈
+      (fun h : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) => h.val) ''
+        (H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) := by
+  set m : ℤ := ⌊t / ‖matrixLog d ((seq (φ k)).val : Matrix (Fin d) (Fin d) ℂ)‖⌋
+  refine ⟨(seq (φ k)) ^ m, ?_, ?_⟩
+  · exact H.zpow_mem (h_mem (φ k)) m
+  · exact specialUnitaryGroup_coe_zpow _ _
+
+/-- **`expAmbient d (t • X)` is in H_mat**: the limit of the matrix-pow sequence is in the image of `H`
+in `Matrix _ _ ℂ`. -/
+theorem vonNeumann_expAmbient_mem_H_mat {d : ℕ}
+    {H : Subgroup ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    (hH_closed : IsClosed (H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)))
+    {seq : ℕ → ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)}
+    (h_mem : ∀ n, seq n ∈ H)
+    {φ : ℕ → ℕ} (hφ : StrictMono φ)
+    (h_seq : Filter.Tendsto seq Filter.atTop
+      (nhds (1 : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ))))
+    (h_ev_ne : ∀ᶠ n in Filter.atTop,
+      matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ) ≠ 0)
+    (h_log_tendsto : Filter.Tendsto
+      (fun n => matrixLog d ((seq n).val : Matrix (Fin d) (Fin d) ℂ))
+      Filter.atTop (nhds (0 : Matrix (Fin d) (Fin d) ℂ)))
+    {X : Matrix (Fin d) (Fin d) ℂ}
+    (h_unit_tendsto : Filter.Tendsto (fun k => vonNeumannUnitMatrixSeq seq (φ k))
+      Filter.atTop (nhds X))
+    (t : ℝ) :
+    expAmbient d (t • X) ∈
+      (fun h : ↥(Matrix.specialUnitaryGroup (Fin d) ℂ) => h.val) ''
+        (H : Set ↥(Matrix.specialUnitaryGroup (Fin d) ℂ)) := by
+  have h_pow_tendsto := vonNeumann_suMat_pow_seq_tendsto
+    hφ h_seq h_ev_ne h_log_tendsto h_unit_tendsto t
+  apply (H_mat_isClosed H hH_closed).mem_of_tendsto h_pow_tendsto
+  filter_upwards with k
+  exact vonNeumann_mat_pow_mem_H_mat h_mem φ t k
+
 /-! ## Remaining increments (the von-Neumann analytic core — next builds)
 
 Built on the existing `GenericSUd` matrix-log local diffeo
