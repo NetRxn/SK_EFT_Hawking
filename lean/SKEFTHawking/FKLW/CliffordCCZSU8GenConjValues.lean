@@ -29,6 +29,7 @@ import Mathlib
 import SKEFTHawking.FKLW.CliffordCCZSU8LiteralSeed
 import SKEFTHawking.FKLW.CliffordCCZSU8LiteralGeneratingSet
 import SKEFTHawking.FKLW.CliffordCCZSU8LabelTransitivity
+import SKEFTHawking.FKLW.CliffordCCZSU8SeedNotFiniteOrder
 
 set_option autoImplicit false
 
@@ -111,5 +112,46 @@ theorem S_SU_mat_conj_pauli4 (a : Fin 4) :
         simp [pauli4, SKEFTHawking.σ_x, SKEFTHawking.σ_y, SKEFTHawking.σ_z, Matrix.mul_apply,
           Fin.sum_univ_two, Matrix.smul_apply] <;>
         (ring_nf; simp [hαα, hββ, hαβ, hβα])
+
+/-! ## 3. Single-qubit conjugation in the `SU(2)`-subtype inverse form
+
+The factor-conjugation lemmas `qubit{1,2,3}Embed_conj` rotate the qubit-`i` factor by `C.val · A ·
+C.val⁻¹` (matrix inverse). This section re-expresses the H/S conjugation values in that `(·)⁻¹` form so the
+3-qubit generator lifts compose directly. For unitary `C ∈ SU(2)`, `C.val⁻¹` is `star C.val`. -/
+
+/-- `litHadamard` is an involution: `litHadamard · litHadamard = 1`. -/
+theorem litHadamard_sq : litHadamard * litHadamard = 1 := by
+  have hhalf : (1 / Real.sqrt 2 : ℂ) * (1 / Real.sqrt 2 : ℂ) = 1 / 2 := by
+    rw [div_mul_div_comm, one_mul, ← Complex.ofReal_mul, Real.mul_self_sqrt (by norm_num)]; norm_num
+  unfold litHadamard
+  rw [Matrix.smul_mul, Matrix.mul_smul, smul_smul, hhalf]
+  ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.smul_apply] <;> ring
+
+/-- The matrix inverse of the SU(2) Hadamard: `(H_SU.val)⁻¹ = (−i)·litHadamard`. -/
+theorem H_SU_val_inv : (SKEFTHawking.FKLW.GenericSU2.H_SU.val)⁻¹ = (-Complex.I) • litHadamard := by
+  apply Matrix.inv_eq_right_inv
+  rw [H_SU_val_eq_smul_litHadamard, Matrix.smul_mul, Matrix.mul_smul,
+    smul_smul, litHadamard_sq,
+    show Complex.I * (-Complex.I) = 1 by rw [mul_neg, Complex.I_mul_I, neg_neg], one_smul]
+
+/-- **Hadamard conjugation (subtype-inverse form)**: `H_SU.val · σ_a · (H_SU.val)⁻¹ = hSign a · σ_{hLabel a}`. -/
+theorem H_SU_conj_pauli4 (a : Fin 4) :
+    SKEFTHawking.FKLW.GenericSU2.H_SU.val * pauli4 a * (SKEFTHawking.FKLW.GenericSU2.H_SU.val)⁻¹
+      = hSign a • pauli4 (hLabel a) := by
+  rw [H_SU_val_inv, H_SU_val_eq_smul_litHadamard, Matrix.smul_mul,
+    Matrix.smul_mul, Matrix.mul_smul, smul_smul, litHadamard_conj_pauli4, smul_smul]
+  congr 1
+  simp [Complex.I_mul_I, mul_neg]
+
+/-- **S-gate conjugation (subtype-inverse form)**: `S_SU.val · σ_a · (S_SU.val)⁻¹ = sSign a · σ_{sLabel a}`. -/
+theorem S_SU_conj_pauli4 (a : Fin 4) :
+    S_SU.val * pauli4 a * (S_SU.val)⁻¹ = sSign a • pauli4 (sLabel a) := by
+  have hinv : (S_SU.val)⁻¹ = star S_SU.val := by
+    apply Matrix.inv_eq_right_inv
+    rw [Matrix.star_eq_conjTranspose]
+    exact (Matrix.mem_unitaryGroup_iff.mp (Matrix.mem_specialUnitaryGroup_iff.mp S_SU.2).1)
+  rw [hinv]
+  show S_SU_mat * pauli4 a * star S_SU_mat = _
+  exact S_SU_mat_conj_pauli4 a
 
 end SKEFTHawking.FKLW.CliffordCCZSU8
