@@ -1257,6 +1257,13 @@ import SKEFTHawking.FKLW.RossSelinger.UnitaryT
 -- kmmReduce recursion (reduceStep preserves realizability ⟹ unitarity ⟹ mu_decrease
 -- applies). Note: Mat2 `*` is heterogeneous HMul; IsUnitaryT.mul is term-mode.
 import SKEFTHawking.FKLW.RossSelinger.UnitaryClosure
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — μ-tracking KMM recursion. kmmReduceMu
+-- (peel H·Tᵏ via chooseReductionMu, prepend reconWordC, base at leaves) +
+-- interp_kmmReduceMu (correctness WITH termination: μ(M)≤n + base correct on μ≤3 ⟹
+-- interp = M; recursion bottoms at μ≤3 via chooseReductionMu_succeeds) +
+-- length_kmmReduceMu (≤ N₃+4·n = honest KMM Cor 1 with n=μ(M)). Assembles toward
+-- the Nonempty KMMReduction discharge (needs only cliffordLookup over 𝕊₃, N₃=9).
+import SKEFTHawking.FKLW.RossSelinger.KMMReduceMu
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
