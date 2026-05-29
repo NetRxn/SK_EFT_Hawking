@@ -1183,6 +1183,12 @@ import SKEFTHawking.FKLW.RossSelinger.KMMLemma3
 -- foundational ring identities connecting kmm_lemma3_alg2 to actual elements;
 -- the gde-value bridge (Prop 1) builds on top.
 import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Bridge
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — KMM Prop 1 step 1: gde of a real
+-- element via the integer peel. peelN A B (peel √2 while A even, swap (A,B)↦
+-- (B,A/2)) + gdePeel_real_eq_peelN (conj z=z ⟹ gdePeel z fuel = peelN z.d z.c
+-- fuel). The integer shadow of gdePeel on the real subring; the closed form
+-- (peelN = 2·min(v₂A,v₂B)+[v₂A>v₂B]) + mod-8 reduction to Coord4.gde build on it.
+import SKEFTHawking.FKLW.RossSelinger.PropOne
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
