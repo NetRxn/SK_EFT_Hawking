@@ -12,9 +12,18 @@ both as unverified.
 
 ## Gate 1 — Confirm the seed spectrum (`verify_seed.py`)
 
-**Commit output to `Lit-Search/Phase-6y/verify_seed.py` + its printed result.** Confirms the operative
-seed `g₀ = (H⊗H⊗H · CCX)²` has char poly `(x−1)⁶·(x²−(3/2)x+1)`, eigenvalues `(3±i√7)/4`, and `det=1`
-(so `g₀ ∈ SO(8) ⊂ SU(8)`, no phase correction).
+> **✅ GATE 1 RESULT (2026-05-28): PASS — with a correction to DR2's stated spectrum.** Ran
+> `Lit-Search/Phase-6z/verify_seed.py` (numpy + sympy). Confirmed `det(g₀)=1` (`g₀∈SO(8)⊂SU(8)`, no
+> phase correction) and 6 unit eigenvalues + a 2-D unit-circle block. **The symbolic char poly is
+> `(λ−1)⁶·(λ²+(3/2)λ+1)`** (sympy: `(λ-1)^6·(2λ²+3λ+2)/2`), i.e. eigenvalues **`(−3±i√7)/4`** — DR2 had
+> the middle-term / `Re λ` sign flipped (claimed `(3±i√7)/4`). **Irrationality is UNAFFECTED:** the
+> minimal polynomial is `2x²+3x+2` (non-monic over ℤ ⟹ not an algebraic integer ⟹ not a root of unity),
+> `|λ|=1`. So the seed STANDS; downstream Lean must use char poly `(λ−1)⁶(λ²+(3/2)λ+1)`, eigenvalue
+> `(−3±i√7)/4`, minpoly `2x²+3x+2`. **(This is exactly why the gate exists — it caught the DR sign error
+> before any Lean.)**
+
+**The check** (script committed at `Lit-Search/Phase-6z/verify_seed.py`). Confirms the operative seed
+`g₀ = (H⊗H⊗H · CCX)²` has char poly `(x−1)⁶·(x²+(3/2)x+1)`, eigenvalues `(−3±i√7)/4`, and `det=1`.
 
 ```python
 import sympy as sp

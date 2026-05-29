@@ -79,8 +79,9 @@ first-flow lift.** This doc catalogs (A) what to reuse verbatim, and (B) what mu
 ### A8. Phase A.1 foundation (shipped under 6y, commit `70e17b9`)
 - `FKLW/CliffordCCZSU8LiteralSeed.lean :: litHadamard`, `litSeed (= CCZ_mat·(H⊗H⊗H))`,
   `litSeed_trace (= 1/√2)`, `trace_CCZ_mul`, `kron_litHadamard_apply_7_7`. Kernel-only.
-  **NB:** the operative seed switches to DR2's `g₀=(H₃·CCX)²` (explicit `(3±i√7)/4` eigenblock); A.1's
-  trace lemma is a standalone result, its machinery is reused.
+  **NB:** the operative seed switches to DR2's `g₀=(H₃·CCX)²` (explicit `(−3±i√7)/4` eigenblock —
+  Gate-1 corrected from DR2's `(3±i√7)/4`); A.1's trace lemma is a standalone result, its machinery
+  is reused.
 
 ---
 
@@ -95,7 +96,8 @@ first-flow lift.** This doc catalogs (A) what to reuse verbatim, and (B) what mu
   It is from the seed (B2).
 
 ### B2. Seed element + irrationality — Wave 1 (~860 raw LoC; see `PreLean_CAS_Gates.md` first)
-- `g₀ = (H⊗H⊗H · CCX)² ∈ SO(8)`, char poly `(x−1)⁶(x²−(3/2)x+1)`, `λ_±=(3±i√7)/4` (DR2).
+- `g₀ = (H⊗H⊗H · CCX)² ∈ SO(8)`, char poly `(x−1)⁶(x²+(3/2)x+1)`, `λ_±=(−3±i√7)/4`, minpoly
+  `2x²+3x+2` (Gate-1 corrected; DR2 had the middle-term/Re λ sign flipped — caught by `verify_seed.py`).
 - `not_rootOfUnity_of_minpoly_not_int` (algebraic-integer obstruction; ~70 LoC) — the highest-leverage
   new lemma, independently reusable.
 - Membership: `g₀ ∈ H_of_G cliffordCCZLiteralGeneratingSetSU8` (a product of literal generators —

@@ -44,8 +44,9 @@ Two genuinely different density mechanisms for the same target (SU(8)); 6z is th
 >    - `Lit-Search/Phase-6y/Phase 6y · T-A2′ — Clifford+CCZ Seed Element.md` (DR1: seed
 >      `CCZ·(H⊗H⊗H)`, `tr=1/√2`; frames the seed as the easy part, Phase-C lift as the cost).
 >    - `Lit-Search/Phase-6y/Phase 6y : SK_EFT_Hawking Irrational-Angle Seed for Density of ⟨H, S, CNOT, CCZ⟩ in SU(8).md`
->      (DR2: the **operative** seed `g₀ = (H⊗H⊗H·CCX)²`, eigenvalues `(3±i√7)/4`, `det=1∈SO(8)`,
->      algebraic-integer irrationality, full Mathlib-decl table + gotchas, BEST/TYPICAL/WORST scope).
+>      (DR2: the **operative** seed `g₀ = (H⊗H⊗H·CCX)²`, eigenvalues **`(−3±i√7)/4`** [Gate-1 corrected;
+>      DR2's stated `(3±i√7)/4` had the Re λ sign flipped], `det=1∈SO(8)`, algebraic-integer
+>      irrationality, full Mathlib-decl table + gotchas, BEST/TYPICAL/WORST scope).
 >      **DR2 supersedes DR1's seed** (explicit 2-D eigenblock for the flow); both irrationality
 >      skeletons are valid.
 > 3. **Read this roadmap + the four `docs/roadmaps/Phase6z/` detail docs** (progressive disclosure):
@@ -70,7 +71,7 @@ deflated** (typical), incl. one deferred sub-piece.
 | Wave | Content | Gate / dependency | Raw LoC (DR2) |
 |---|---|---|---|
 | **6z.0** | **Pre-Lean CAS gates**: `verify_seed.py` (confirm `g₀` spectrum + `det=1`) + Clifford-orbit-dimension check (`dim span{Ad_U(X)}`). | **HARD GATE** — precedes all Lean. | (computation, no Lean) |
-| **6z.1** | Seed element + **algebraic-integer irrationality** (`g₀∈SO(8)`, char-poly, `λ_±=(3±i√7)/4`, `not_rootOfUnity_of_minpoly_not_int`). | 6z.0 seed confirmed. | ~860 |
+| **6z.1** | Seed element + **algebraic-integer irrationality** (`g₀∈SO(8)`, char-poly `(λ−1)⁶(λ²+(3/2)λ+1)`, `λ_±=(−3±i√7)/4`, minpoly `2λ²+3λ+2`, `not_rootOfUnity_of_minpoly_not_int`). | 6z.0 seed confirmed (✅ Gate-1 PASS). | ~860 |
 | **6z.2** | **First flow**: 1-D circle density (`irrational_dense_on_circle` via `AddSubgroup.dense_or_cyclic`) + unitary spectral log (`X = i·log g₀ ∈ 𝔰𝔲(8)`) ⟹ `exp(tX) ∈ closure⟨…⟩`. | 6z.1. | ~375 (incl. in 860/glue) |
 | **6z.3** | **SU(d) Trotter generalization** of `trotter_sequence_tendsto` (SU(2)→SU(8)). | Needed iff 6z.0 says BCH closure required. | ~250 |
 | **6z.4** | **Conjugation + BCH spread to `𝔰𝔲(8)`** (Clifford-orbit of `X` + bracket closure spans 63-dim) ⟹ `ClosureDenseWitness` for `⟨H,S,CNOT,CCZ⟩`. | 6z.2 (+ 6z.3 if WORST). Scope per 6z.0. | 400 / 900 / 1800 |
@@ -101,8 +102,9 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
   emits the headline) — 6z.5 feeds the literal-alphabet witness into the SAME chain.
 - **Phase A.1 foundation (already shipped under 6y):** `lean/SKEFTHawking/FKLW/CliffordCCZSU8LiteralSeed.lean`
   (`litSeed = CCZ·(H⊗H⊗H)`, `litSeed_trace = 1/√2`, `trace_CCZ_mul`). Kernel-only. **NB: the operative
-  seed will switch to DR2's `g₀=(H₃·CCX)²`** (explicit `(3±i√7)/4` eigenblock for the flow); A.1's
-  trace lemma stands alone and its machinery (`kronSU8`, `CCZ_mat`, trace helpers) is reused.
+  seed will switch to DR2's `g₀=(H₃·CCX)²`** (explicit `(−3±i√7)/4` eigenblock for the flow — Gate-1
+  corrected from DR2's `(3±i√7)/4`); A.1's trace lemma stands alone and its machinery (`kronSU8`,
+  `CCZ_mat`, trace helpers) is reused.
 
 ## New substrate to build (none in Mathlib — see `Phase6z/Mathlib_Decls.md`)
 - `not_rootOfUnity_of_minpoly_not_int` (algebraic-integer obstruction; ~70 LoC).
@@ -141,7 +143,7 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
 
 | Wave | Status |
 |---|---|
-| 6z.0 CAS gates | ⏳ NOT STARTED (hard gate) |
+| 6z.0 CAS gates | 🟡 IN-PROGRESS — Gate 1 (`verify_seed.py`) ✅ PASS (corrected spectrum); Gate 2 (orbit dim) ⏳ |
 | 6z.1 seed + irrationality | ⏳ (foundation: Phase A.1 ✅ shipped under 6y) |
 | 6z.2–6z.5 | ⏳ NOT STARTED |
 | 6z.D Kronecker–Weyl | ⏳ DEFERRED |
