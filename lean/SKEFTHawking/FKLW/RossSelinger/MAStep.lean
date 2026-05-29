@@ -148,6 +148,20 @@ theorem selectSyllable_lt {M : Mat2} {s : Syllable} (h : selectSyllable M = some
   have := List.find?_some h
   simpa using this
 
+/-- **The strip's Bloch image is the syllable rotation applied to `R(M)`**:
+`R(stripMat s M) = R((sylMat s)†)·R(M)` (entry-wise), for unitary `M`. Immediate
+from the Bloch homomorphism `bloch_hom` since `stripMat s M = (sylMat s)†·M`.
+
+This is the entry point to the `kSO3`-decrease analysis: the strip's Bloch matrix
+is a CONCRETE (syllable-dependent) linear image of `R(M)`, so its
+least-denominator exponent — and hence the decrease — is governed by the (15-class)
+Bloch parity residue of `M` (`scripts/kmm_ma_step_residue.py`). -/
+theorem bloch_stripMat {M : Mat2} (hM : ZOmegaSqrt2.IsUnitaryT M) (s : Syllable)
+    (i j : Fin 3) :
+    blochEntry (stripMat s M) i j
+      = ∑ k : Fin 3, blochEntry (ZOmegaSqrt2.adjoint (sylMat s)) i k * blochEntry M k j :=
+  bloch_hom hM i j
+
 end KMM
 
 end SKEFTHawking.RossSelinger
