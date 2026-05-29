@@ -23,7 +23,7 @@ Phase 6u parametrizes the substrate over the generating alphabet so that additio
 > 3. **Read this roadmap end-to-end** before any wave-level claim.
 > 4. **Critical substrate — read source directly:**
 >    - **Dawson–Nielsen 2006** (`arXiv:quant-ph/0505030`) — exponent `c = log 5 / log(3/2) ≈ 3.9694` and the super-quadratic recursion.
->    - **Kliuchnikov–Maslov–Mosca 2013** (`arXiv:1206.5236`) — exact synthesis over Clifford+T (the substrate that gridcert's Ross-Selinger compilation builds on; relevant for Phase 6u Wave 2's closure-density witness).
+>    - **Kliuchnikov–Maslov–Mosca 2013** (`arXiv:1206.5236`) — exact synthesis over Clifford+T (the substrate that downstream Ross-Selinger compilation builds on; relevant for Phase 6u Wave 2's closure-density witness).
 >    - **Boykin–Mor–Pulver–Roychowdhury–Vatan 1999** (`arXiv:quant-ph/9906054`) — the canonical proof that ⟨H, T⟩ closure is dense in SU(2) modulo global phase.
 >    - **Phase 6t landscape scan** at `Lit-Search/Phase-6t/Phase 6t Solovay-Kitaev Formal-Verification Landscape Scan.md` — confirms no prior kernel-verified quantitative SK formalization across Lean/Coq/Agda/Isabelle/HOL4/Metamath/Rocq.
 > 5. **Do not delegate Lean theorem proving to subagents.** MCP loop default; Aristotle is fallback.

@@ -836,8 +836,8 @@ squared-modulus sde). This is NOT a free choice — it is forced by:
       sde(|z₀₀|²)`, Cor 1 `n_g ≤ N₃ + 4·sde(|z₀₀|²)`; `sde(|H₀₀|²)=2` but matrix
       `sde(H)=1`, so they differ ~2× and the matrix form is unsatisfiable;
   (2) this roadmap's own KEY CORRECTION above ("must phrase over sde(|z₀₀|²)");
-  (3) NO conflicting private constraint: the vcc/gridcert cert engine's
-      length-bound certs reference the Solovay-Kitaev headline FQNs
+  (3) NO conflicting downstream constraint: downstream length-bound consumers
+      reference the Solovay-Kitaev headline FQNs
       (`solovayKitaev_dawson_nielsen_…`, exponent log5/log(3/2)), NOT the KMM
       `N₃+4·sde` formula — the KMM bound is internal to the base finder (F/G).
 **Consequence:** the `KMMReduction.length_bound` field (matrix `sde_le M k`,
