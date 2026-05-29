@@ -1101,6 +1101,12 @@ import SKEFTHawking.FKLW.RossSelinger.SdeMatrix
 -- kmmReduce_correct; the residue Lemma-3 (sde decrease) + sde≤3 coverage
 -- remain for the full discharge.
 import SKEFTHawking.FKLW.RossSelinger.KMMReduce
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — √2-residue map (KMM Lemma 3
+-- substrate). ZOmega.resSqrt2 : ℤ[ω] → ZMod 2 × ZMod 2 coordinatizing
+-- ℤ[ω]/(√2) ≅ 𝔽₄; resSqrt2_eq_zero_iff_dividesSqrt2, additive structure
+-- (resSqrt2_add/zero/neg), and key residues (sqrt2/2 ↦ 0, 1 ↦ (0,1),
+-- ω ↦ (1,0)). The coset layer KMM Lemma 3 reasons over.
+import SKEFTHawking.FKLW.RossSelinger.ResidueSqrt2
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
