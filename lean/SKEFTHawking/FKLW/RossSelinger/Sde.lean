@@ -140,9 +140,53 @@ theorem lowestDenExp_sqrt2_pow_mul (w : ZOmega) (n k : ℕ) :
     have hnat : k + (m + 1) = (k + m) + 1 := by omega
     rw [hpow, hnat, lowestDenExp_sqrt2_mul, ih]
 
+/-! ## 3a. Lowest-terms reduction (numerator + exponent) -/
+
+/-- **Lowest-terms reduction** of the fraction `z / √2^k`: returns the
+reduced `(numerator, exponent)` pair. Same recursion as `lowestDenExp`
+but carrying the numerator, so that the achievability bridge can name
+the resulting `ZOmega`-valued numerator. -/
+def reduceFrac (z : ZOmega) : ℕ → ZOmega × ℕ
+  | 0 => (z, 0)
+  | k + 1 => if dividesSqrt2 z then reduceFrac (divSqrt2 z) k else (z, k + 1)
+
+/-- **The reduced exponent equals `lowestDenExp`**. -/
+theorem reduceFrac_snd (z : ZOmega) (k : ℕ) :
+    (reduceFrac z k).2 = lowestDenExp z k := by
+  induction k generalizing z with
+  | zero => rfl
+  | succ n ih =>
+    show (if dividesSqrt2 z then reduceFrac (divSqrt2 z) n else (z, n + 1)).2
+       = if dividesSqrt2 z then lowestDenExp (divSqrt2 z) n else n + 1
+    split
+    · exact ih (divSqrt2 z)
+    · rfl
+
 end ZOmega
 
 namespace ZOmegaSqrt2
+
+/-- **Reduction preserves the fraction**: `mk z k = mk z' e` where
+`(z', e) = reduceFrac z k`. Each peel multiplies numerator and
+denominator by `√2`, which the `Frac` equivalence absorbs. -/
+theorem mk_reduceFrac (z : ZOmega) (k : ℕ) :
+    mk z k = mk (ZOmega.reduceFrac z k).1 (ZOmega.reduceFrac z k).2 := by
+  induction k generalizing z with
+  | zero => rfl
+  | succ n ih =>
+    show mk z (n + 1)
+       = mk (if ZOmega.dividesSqrt2 z then ZOmega.reduceFrac (ZOmega.divSqrt2 z) n
+              else (z, n + 1)).1
+            (if ZOmega.dividesSqrt2 z then ZOmega.reduceFrac (ZOmega.divSqrt2 z) n
+              else (z, n + 1)).2
+    split
+    · next h =>
+      rw [← ih (ZOmega.divSqrt2 z), mk_eq_mk_iff]
+      have hs := ZOmega.divSqrt2_spec h
+      calc z * ZOmega.sqrt2 ^ n
+          = (ZOmega.sqrt2 * ZOmega.divSqrt2 z) * ZOmega.sqrt2 ^ n := by rw [hs]
+        _ = ZOmega.divSqrt2 z * ZOmega.sqrt2 ^ (n + 1) := by ring
+    · rfl
 
 /-! ## 3. The per-element denominator exponent on the quotient ring
 
@@ -178,6 +222,29 @@ def denExp : ZOmegaSqrt2 → ℕ :=
 
 @[simp] theorem denExp_one : denExp (1 : ZOmegaSqrt2) = 0 := by
   rw [one_def, denExp_mk]; rfl
+
+/-! ## 4. Achievability: clearing the denominator -/
+
+/-- **`sqrt2^e` in `ZOmegaSqrt2` is `ZOmega.sqrt2^e` over denominator 0**. -/
+theorem sqrt2_pow_eq (e : ℕ) : (sqrt2 : ZOmegaSqrt2) ^ e = mk (ZOmega.sqrt2 ^ e) 0 := by
+  induction e with
+  | zero => rw [pow_zero, pow_zero, one_def]
+  | succ n ih => rw [pow_succ, ih, sqrt2_def, mk_mul, Nat.add_zero, pow_succ]
+
+/-- **Achievability (denominator clearing)**: multiplying `x` by
+`sqrt2^(denExp x)` lands in the image of `ZOmega` (i.e. clears the
+denominator to lowest terms). This is the achievability half of the
+`sde ↔ sde_le` bridge: `denExp x` denominators suffice. -/
+theorem exists_of_sqrt2_pow_smul (x : ZOmegaSqrt2) :
+    ∃ w : ZOmega, (sqrt2 : ZOmegaSqrt2) ^ denExp x * x = of w := by
+  induction x using Quotient.inductionOn with
+  | _ f =>
+    obtain ⟨z, d⟩ := f
+    refine ⟨(ZOmega.reduceFrac z d).1, ?_⟩
+    show (sqrt2 : ZOmegaSqrt2) ^ denExp (mk z d) * mk z d = of (ZOmega.reduceFrac z d).1
+    rw [denExp_mk, mk_reduceFrac z d, ZOmega.reduceFrac_snd, sqrt2_pow_eq, mk_mul, Nat.zero_add,
+        of_def, mk_eq_mk_iff]
+    ring
 
 end ZOmegaSqrt2
 
