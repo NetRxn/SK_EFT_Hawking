@@ -1230,6 +1230,12 @@ import SKEFTHawking.FKLW.RossSelinger.Lemma4Value
 -- √2^(2s)); unit_col_congruences (s≥3 ⟹ (|x|²+|y|²).d ≡ (|x|²+|y|²).c ≡ 0 mod 8) —
 -- exactly the Pform-sum/Qform-sum hypotheses of kmm_lemma3_column.
 import SKEFTHawking.FKLW.RossSelinger.UnitColumnCongruence
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — μ-decrease engine (per-entry cleared-form
+-- layer). μ(M):=denExp(normSq(M₀₀))=sde(|z₀₀|²). of_sqrt2_eq; not_dividesSqrt2_clearedNum
+-- (cleared num at denExp is √2∤, from denExp minimality); gdePeel_stabilizes (fuel
+-- reconciliation 4↔2s); denExp_normSq_le (≤2·denExp z); entry_cleared_form (denExp z≥2 ⟹
+-- gde(|x|²)≤1 ∧ denExp(|z|²)=2·denExp z−gde(|x|²)). Builds toward μ(reduceStep M k)<μ(M).
+import SKEFTHawking.FKLW.RossSelinger.MuDecrease
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
