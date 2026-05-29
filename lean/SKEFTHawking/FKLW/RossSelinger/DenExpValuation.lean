@@ -106,6 +106,25 @@ theorem denExp_mul_le (x y : ZOmegaSqrt2) :
 @[simp] theorem denExp_invSqrt2 : denExp invSqrt2 = 1 := by
   rw [invSqrt2_def, denExp_mk]; decide
 
+/-- **`denExp` is conjugation-invariant**: `denExp (conj x) = denExp x`
+(`conj` fixes `√2`-powers, so it preserves the denominator exponent). -/
+theorem denExp_conj (x : ZOmegaSqrt2) : denExp (conj x) = denExp x := by
+  apply le_antisymm
+  · rw [denExp_le_iff]
+    obtain ⟨w, hw⟩ := denExp_le_iff.mp (le_refl (denExp x))
+    refine ⟨ZOmega.conj w, ?_⟩
+    have hc : conj ((sqrt2 : ZOmegaSqrt2) ^ denExp x * x)
+            = (sqrt2 : ZOmegaSqrt2) ^ denExp x * conj x := by
+      rw [conj_mul, conj_sqrt2_pow]
+    rw [← hc, hw, conj_of]
+  · rw [denExp_le_iff]
+    obtain ⟨w, hw⟩ := denExp_le_iff.mp (le_refl (denExp (conj x)))
+    refine ⟨ZOmega.conj w, ?_⟩
+    have hc : conj ((sqrt2 : ZOmegaSqrt2) ^ denExp (conj x) * conj x)
+            = (sqrt2 : ZOmegaSqrt2) ^ denExp (conj x) * x := by
+      rw [conj_mul, conj_sqrt2_pow, conj_conj]
+    rw [← hc, hw, conj_of]
+
 /-- **KMM Lemma 4 (core)**: for a unitary `M`, the two column-0 entries
 have equal squared-modulus `sde`: `denExp (|M₀₀|²) = denExp (|M₁₀|²)`.
 

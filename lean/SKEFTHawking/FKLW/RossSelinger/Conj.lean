@@ -110,6 +110,17 @@ theorem conj_mul (x y : ZOmegaSqrt2) : conj (x * y) = conj x * conj y := by
     show conj (conj (mk z k)) = mk z k
     rw [conj_mk, conj_mk, ZOmega.conj_conj]
 
+/-- **`conj` fixes `√2`** (lifted): `conj (sqrt2 : ZOmegaSqrt2) = sqrt2`. -/
+@[simp] theorem conj_sqrt2 : conj (sqrt2 : ZOmegaSqrt2) = sqrt2 := by
+  rw [sqrt2_def, conj_mk, ZOmega.conj_sqrt2]
+
+/-- **`conj` fixes powers of `√2`**: `conj (sqrt2^k) = sqrt2^k`. -/
+theorem conj_sqrt2_pow (k : ℕ) :
+    conj ((sqrt2 : ZOmegaSqrt2) ^ k) = (sqrt2 : ZOmegaSqrt2) ^ k := by
+  induction k with
+  | zero => simp only [pow_zero, conj_one]
+  | succ n ih => rw [pow_succ, conj_mul, ih, conj_sqrt2]
+
 /-- **The squared modulus** `|z|² = z · conj z`. KMM tracks `sde(|z|²)`
 of the matrix entries. -/
 def normSq (z : ZOmegaSqrt2) : ZOmegaSqrt2 := z * conj z
