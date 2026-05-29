@@ -91,4 +91,34 @@ the seed for Kronecker accumulation (Wave 2). -/
 theorem not_rootOfUnity_seedEigenvalue (n : ℕ) (hn : 0 < n) : seedEigenvalue ^ n ≠ 1 :=
   not_rootOfUnity_of_not_isIntegral not_isIntegral_seedEigenvalue n hn
 
+/-- **Root-of-unity phase preserves non-integrality.** If `α` is not an algebraic integer and `u` is a
+unit whose inverse *is* an algebraic integer (e.g. any root of unity), then `u · α` is not an algebraic
+integer. This is the algebraic core of DR2's "phase preservation": the seed's genuine group element
+`g_grp = ω⁻¹ · g₀` differs from `g₀` by a central root-of-unity phase, and that phase cannot turn the
+non-algebraic-integer eigenvalue into an algebraic integer. -/
+theorem not_isIntegral_mul_left {u α : ℂ} (hu : IsIntegral ℤ u⁻¹) (hu0 : u ≠ 0)
+    (hα : ¬ IsIntegral ℤ α) : ¬ IsIntegral ℤ (u * α) := by
+  intro h
+  refine hα ?_
+  have hmul := hu.mul h
+  rwa [← mul_assoc, inv_mul_cancel₀ hu0, one_mul] at hmul
+
+/-- `λ · λ̄ = 1`, i.e. `|λ| = 1`: the seed eigenvalue lies on the unit circle (`9 + 7 = 16`). The
+companion to `seedEigenvalue_add_conj`; together they are Vieta's relations for `2x² + 3x + 2`. -/
+lemma seedEigenvalue_mul_conj :
+    seedEigenvalue * (starRingEnd ℂ) seedEigenvalue = 1 := by
+  have hs : ((Real.sqrt 7 : ℝ) : ℂ) ^ 2 = 7 := by
+    rw [← Complex.ofReal_pow, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 7)]; norm_num
+  simp only [seedEigenvalue, map_div₀, map_add, map_mul, map_neg, map_ofNat,
+    Complex.conj_I, Complex.conj_ofReal]
+  field_simp
+  linear_combination (-(Complex.I ^ 2)) * hs + (-7 : ℂ) * Complex.I_sq
+
+/-- `‖λ‖ = 1`: the seed eigenvalue is on the unit circle. -/
+lemma norm_seedEigenvalue : ‖seedEigenvalue‖ = 1 := by
+  have h := seedEigenvalue_mul_conj
+  rw [Complex.mul_conj] at h
+  have hns : Complex.normSq seedEigenvalue = 1 := by exact_mod_cast h
+  rw [Complex.norm_def, hns, Real.sqrt_one]
+
 end SKEFTHawking.FKLW.CliffordCCZSU8
