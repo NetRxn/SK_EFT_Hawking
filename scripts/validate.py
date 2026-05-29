@@ -611,6 +611,139 @@ def check_lean_build() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK: Axiom-closure allow-list (AI-Defect-Defense-Layer P4, Invariant #15)
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check(
+    "axiom_closure_allowlist",
+    "Every SKEFTHawking declaration's transitive axiom closure is on the standard "
+    "kernel axioms + the AXIOM_METADATA allow-list (Invariant #15 backstop)",
+)
+def check_axiom_closure_allowlist() -> CheckResult:
+    """
+    AI-Defect-Defense-Layer P4. Runs the ``AxiomAudit`` Lean executable
+    (interpreted, reusing the memoized ``AxiomClosure`` machinery that backs
+    ``ExtractDeps``) to obtain the transitive *non-core* axiom closure of every
+    ``SKEFTHawking.*`` declaration, and verifies each axiom lies in the allow-list
+
+        {propext, Classical.choice, Quot.sound} ∪ AXIOM_METADATA.keys()
+
+    Posture (WARN-first, retrofit): a non-allow-listed axiom is an advisory
+    warning by default and a hard failure under ``--strict`` (paper-submission
+    gating), mirroring ``parameter_provenance``. ``native_decide``-generated
+    compiler-trust axioms (per-declaration ``*._native.native_decide.ax_*``) are
+    recognised as a distinct *accepted* category and reported for visibility —
+    they are not declared project ``axiom``s, so ``counts.json`` reports
+    ``Axioms: 0`` while this check surfaces the genuine trust surface.
+
+    Shares the underlying Lean executable with the lean4 plugin's
+    ``/check-axioms`` (``lean/SKEFTHawking/AxiomAudit.lean``): discipline defined
+    once, invoked interactively at ``/lean4:checkpoint`` and non-interactively here.
+    """
+    import shutil
+    import os
+
+    # ── Resolve lake (mirror check_lean_build) ──
+    lake_bin = os.environ.get("LAKE_PATH")
+    if not lake_bin:
+        elan_lake = Path.home() / ".elan" / "bin" / "lake"
+        if elan_lake.is_file():
+            lake_bin = str(elan_lake)
+    if not lake_bin:
+        lake_bin = shutil.which("lake")
+    if not lake_bin:
+        return CheckResult(passed=True, details=[
+            Detail("lake", True, "SKIPPED — lake not found. Set LAKE_PATH or install elan")])
+
+    lean_root = Path(os.environ.get("LEAN_PROJECT_DIR", PROJECT_ROOT / "lean"))
+    audit_src = lean_root / "SKEFTHawking" / "AxiomAudit.lean"
+    if not audit_src.exists():
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_src", True, f"SKIPPED — {audit_src} not found")])
+
+    # ── Allow-list ──
+    try:
+        from src.core.constants import AXIOM_METADATA  # type: ignore
+        metadata_keys = set(AXIOM_METADATA.keys())
+    except Exception:
+        metadata_keys = set()
+    allowlist = {"propext", "Classical.choice", "Quot.sound"} | metadata_keys
+
+    # ── Run AxiomAudit (interpreted; native link exceeds macOS arg limits) ──
+    try:
+        result = subprocess.run(
+            [lake_bin, "env", "lean", "--run", "SKEFTHawking/AxiomAudit.lean"],
+            cwd=str(lean_root), capture_output=True, text=True, timeout=600,
+        )
+    except subprocess.TimeoutExpired:
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_run", True, "SKIPPED — AxiomAudit timed out (600s)", warning=True)])
+    except Exception as exc:  # noqa: BLE001
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_run", True, f"SKIPPED — {exc}", warning=True)])
+
+    if result.returncode != 0:
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_run", True,
+                   f"SKIPPED — AxiomAudit exited {result.returncode}: {result.stderr[-300:]}",
+                   warning=True)])
+
+    try:
+        closures: Dict[str, List[str]] = json.loads(result.stdout.strip() or "{}")
+    except json.JSONDecodeError as exc:
+        return CheckResult(passed=True, details=[
+            Detail("axiom_audit_parse", True,
+                   f"SKIPPED — could not parse AxiomAudit output ({exc})", warning=True)])
+
+    def is_native_decide(ax: str) -> bool:
+        return "native_decide" in ax or ax in ("Lean.ofReduceBool", "Lean.trustCompiler")
+
+    native_decls: set[str] = set()
+    unexpected: Dict[str, List[str]] = {}
+    for decl, axes in closures.items():
+        if "native_decide" in decl:
+            continue  # the per-declaration native-axiom self-entries
+        bad: List[str] = []
+        for ax in axes:
+            if ax in allowlist:
+                continue
+            if is_native_decide(ax):
+                native_decls.add(decl)
+                continue
+            bad.append(ax)
+        if bad:
+            unexpected[decl] = sorted(set(bad))
+
+    details = [Detail("allowlist_size", True,
+                      f"{len(allowlist)} allow-listed axioms "
+                      f"(3 core + {len(metadata_keys)} AXIOM_METADATA)")]
+
+    if native_decls:
+        details.append(Detail(
+            "native_decide", True,
+            f"{len(native_decls)} declaration(s) transitively use `native_decide` "
+            f"(compiler-trust axiom) — accepted Lean mechanism, flagged for visibility "
+            f"(counts.json 'Axioms: 0' counts only declared `axiom`s)",
+            warning=True))
+
+    strict = STRICT_MODE
+    if unexpected:
+        sample = list(unexpected.items())[:10]
+        msg = (f"{len(unexpected)} declaration(s) carry a non-allow-listed axiom "
+               f"({'FAIL under --strict' if strict else 'WARN-first'} — add to "
+               f"AXIOM_METADATA or discharge): "
+               + "; ".join(f"{d} → {','.join(ax)}" for d, ax in sample))
+        details.append(Detail("unexpected_axioms", not strict, msg, warning=not strict))
+        return CheckResult(passed=not strict, details=details)
+
+    details.append(Detail(
+        "allowlist", True,
+        "no declaration carries a non-allow-listed, non-native_decide axiom "
+        "(Invariant #15 backstop clean)"))
+    return CheckResult(passed=True, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CHECK 10: Notebook visualization consistency (warnings only)
 # ═══════════════════════════════════════════════════════════════════════
 

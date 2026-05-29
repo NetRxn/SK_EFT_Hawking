@@ -44,3 +44,10 @@ name = "extractDeps"
 root = "SKEFTHawking.ExtractDeps"
 # NOTE: Native linking may exceed macOS argument-length limits with Mathlib.
 # Use interpreted mode instead: `lake env lean --run SKEFTHawking/ExtractDeps.lean`
+
+[[lean_exe]]
+name = "axiomAudit"
+root = "SKEFTHawking.AxiomAudit"
+# AI-Defect-Defense-Layer P4 axiom_closure_allowlist gate (Invariant #15 backstop).
+# Run interpreted (same macOS native-link caveat as extractDeps):
+#   lake env lean --run SKEFTHawking/AxiomAudit.lean
