@@ -66,4 +66,23 @@ theorem vonNeumann_extract_sequence {d : ℕ}
   intro n hne
   exact (h_in n).2 (by rw [Set.mem_singleton_iff]; exact hne)
 
+/-! ## Remaining increments (the von-Neumann analytic core — next builds)
+
+Built on the existing `GenericSUd` matrix-log local diffeo
+(`GenericSUdLocalDiffeoRestriction.matrixLog_expAmbient_on_su_d` /
+`expAmbient_matrixLog_on_SUd`, `GenericSUdMatrixLogTraceless.matrixLog_in_su_d_on_nhd_one`):
+
+  * **inc 2 — `matrixLog (seq n) → 0`:** the extracted sequence's matrix logs tend to `0`
+    (continuity of `matrixLog` at `1` + `seq.val → 1`; mirror SU(2) `su2Log_seq_tendsto_zero`).
+  * **inc 3 — BW on the 𝔰𝔲(d) unit sphere:** `X n := matrixLog (seq n) / ‖matrixLog (seq n)‖` lies on
+    the compact unit sphere of the finite-dim `𝔰𝔲(d)`; extract a convergent subsequence `X (φ k) → X`,
+    `‖X‖ = 1`, `X ∈ 𝔰𝔲(d)`.
+  * **inc 4 — integer-rounding convergence:** for each `t`, with `m k := ⌊t / ‖matrixLog (seq (φ k))‖⌋`,
+    `(seq (φ k)) ^ (m k) = exp (m k • matrixLog (seq (φ k))) → exp (t • X)`; since each is in `H`
+    (subgroup) and `H` is closed, `exp (t • X) ∈ H`. (Mirror SU(2) §3.)
+  * **inc 5 — main theorem:** assemble `1 ∈ AccPt H → ∃ X ∈ 𝔰𝔲(d), X ≠ 0 ∧ ∀ t, exp (t • X) ∈ H`.
+
+Each is a port of the corresponding SU(2) lemma in `OneParameterSubgroupSU2.lean` with `su2Log` replaced
+by the `GenericSUd` `matrixLog`. This is the genuine analytic core (multi-session). -/
+
 end SKEFTHawking.FKLW.GenericSUd
