@@ -146,7 +146,7 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
 | Wave | Status |
 |---|---|
 | 6z.0 CAS gates | ✅ DONE — Gate 1 ✅ PASS (corrected spectrum); Gate 2 ✅ PASS = **BEST** (spanned dim 63). HARD GATE cleared. |
-| 6z.1 seed + irrationality | 🟡 IN-PROGRESS — irrationality obstruction ✅ SHIPPED (`CliffordCCZSU8Irrationality.lean`, kernel-only): `not_rootOfUnity_of_not_isIntegral` (reusable) + `seedEigenvalue λ=(−3+i√7)/4` not an algebraic integer (`λ+λ̄=−3/2∉ℤ`) ⟹ not a root of unity. REMAINING: seed `g₀` membership in `⟨H,S,CNOT,CCZ⟩` + char-poly/`|λ|=1`. |
+| 6z.1 seed + irrationality | 🟡 IN-PROGRESS — ✅ irrationality obstruction (`CliffordCCZSU8Irrationality.lean`, `4d3577a`) + ✅ literal no-T generating set (`CliffordCCZSU8LiteralGeneratingSet.lean`, `418a090`). REMAINING CORE = **"seed not finite order"**: the normalized generators carry phases (`H_SU=i·H_raw`, `CCZ_SU=e^{iπ/8}·CCZ_mat`) so the group element is `g_grp=ω⁻¹·g₀` (central root-of-unity `ω`; DR2 line 79: phase preserves non-root-of-unity). **Route B (recommended, reuses 6y `litSeed_trace=1/√2`)**: `tr(g_lit)=ω₀⁻¹·(1/√2)` not an algebraic integer ⟹ not finite order; needs `1/√2∉𝒪`, `not_isIntegral_mul_left`, `finite-order⟹trace alg-int`, matrix bridge `litSeed=ω₀·g_lit`. (Route A: explicit eigenvector for `λ_+`.) |
 | 6z.2 first flow | ⏳ NOT STARTED |
 | ~~6z.3 SU(d) Trotter~~ | ❌ DROPPED (Gate 2 = BEST) |
 | 6z.4 pure-conjugation spread | ⏳ NOT STARTED (~400 LoC, BEST scope) |
