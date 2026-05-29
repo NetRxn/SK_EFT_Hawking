@@ -802,17 +802,29 @@ bounded-BFS function + reachability. Once proven: `kmmReduction_of_coverage cove
 makes `Nonempty KMMReduction` UNCONDITIONAL ⟹ discharges the `[Nonempty KMMReduction]`
 gating ⟹ Item G (closes orphan #2) ⟹ H/I ⟹ Stage 9/10/13.
 
-**⏳ DR DISPATCHED 2026-05-29** (`Lit-Search/tasks/submitted/20260529_phase6x_s3_base_coverage_formalization.md`).
-The crux is the **completeness/connectivity**: is the `μ≤3` region connected-to-1 within
-itself, so the BFS-from-1 closure = all `μ≤3` realizable unitaries? KMM *assert* but do
-NOT prove this (Cor 1 p.7); brute-force enumeration is infeasible (~`10²⁶` candidates).
-DR Q's: Q1 the completeness proof; **Q2 the likely-cleaner Matsumoto–Amano normal-form
-route** (unique canonical word, `T-count = sde`, ⟹ `sde≤3` ⟹ canonical length `≤ N₃` by
-construction — sidesteps the BFS connectivity); Q3 tractable Lean representation; Q4 the
-`N₃` numeral (our BFS=9 vs folklore 15). **Resume on DR return.** Finiteness substrate
-shipped (`column0_cleared_bounded`, `denExp_le_two_of_denExp_normSq_le_three`); the
-row-norm/all-entry bound (left-inv⟹right-inv needs `IsStablyFiniteRing ZOmegaSqrt2` or
-the 2×2 det route) is the next prerequisite if the BFS route (Q3a) is chosen.
+**✅ DR RETURNED 2026-05-29 → MATSUMOTO–AMANO ROUTE LOCKED (building).**
+(`Lit-Search/Phase-6x/"Phase 6x Tier-2 Item F — DR- formalizing the 𝕊₃ base-case
+COVERAGE in Lean 4.md"`.) **Verdict: take the MA normal-form route, NOT BFS** — BFS is
+*strictly dominated* (closing the connectivity gap KMM never prove ≈ proving MA existence
+anyway). MA (Giles-Selinger arXiv:1312.6584): unique normal form, T-count = SO(3) lde
+`k_SO3` (Lemma 4.10), bridge Cor 7.11 ⟹ `μ≤3 ⟹ k_SO3≤3` ⟹ canonical word, NO
+connectivity. Coverage length bound RELAXES ≤9 → ≤22 (MA-deterministic; our recursion
+gives ≤15); N₃≤22 still fits Item G's L≤90<100.
+
+**Architecture (Python-VALIDATED, `scripts/kmm_ma_coverage_validation.py`, over the full
+1664-matrix 𝕊₃ orbit):** recurse on **`kSO3`** (Bloch SO(3) sde = T-count, computable);
+base `kSO3=0 ⟺ Clifford` (192, tail ≤6); unique syllable `{T,HT,SHT}` lowers `kSO3` by
+exactly 1; `μ≤3 ⟹ kSO3≤3`; length `≤ 3·kSO3+6` (coverage ≤15). `μ` and matrix-sde FAIL as
+the measure (832 matrices) — only `kSO3` works. Finite-enumeration REJECTED (~`10¹¹`
+4-entry box, infeasible for native_decide; MA recursion processes one matrix at a time).
+
+**Shipped (kernel-pure):** `BlochMap.lean` (`2e73f70`, `kSO3` + sanity decides) +
+`BlochHomomorphism.lean` (`082ee14`, `pauli_completeness` + `trace_conj_unitary`).
+**Remaining:** homomorphism assembly `R(A·B)=R(A)·R(B)` → ma_step (`kSO3` decrease, the
+crux, residue native_decide) → Clifford base (`kSO3=0⟺Clifford`) → bridge (`μ≤3⟹kSO3≤3`)
+→ `maCoverage` → relax discharge 9→15 → UNCONDITIONAL `Nonempty KMMReduction` → Item G.
+Full plan + technical notes (HMul friction, iS²=-1) in memory note
+`project-phase6x-ma-coverage`.
 
 The robust shipped pieces make the discharge a short assembly. Concretely:
 
