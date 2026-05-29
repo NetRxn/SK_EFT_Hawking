@@ -700,8 +700,15 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
    computes (`native_decide`/`decide` examples pass). Its EXISTENCE-success when
    `sdeC≥4` is Lemma 3 (DR-gated). [Selection rule is `sdeC`-comparison, not the
    imprecise dossier "residue mod √2".]
-7. `cliffordLookup` / 𝕊₃ coverage (`sde(|z₀₀|²)≤3` realizable → word ≤ N₃) —
-   DR-gated (Q2: 𝕊₃ structure + the `N₃` numeral, dossier flags UNKNOWN).
+7. `cliffordLookup` / 𝕊₃ coverage (`sde(|z₀₀|²)≤3` realizable → word ≤ N₃).
+   **N₃ COMPUTED = 9** (2026-05-29, `scripts/kmm_n3_bfs.py` BFS over the
+   Clifford+T group, generating set {H,S,T,X,Y,Z,ω}; `sde(|z₀₀|²)≤3` orbit =
+   **1664 matrices**, saturating at word-length 9 ≪ depth-14 exploration ⟹
+   converged). Matches the dossier's "Clifford suffix ≤ 9 gates". NB
+   `sde(|z₀₀|²)` takes values {0,2,3,4,…} (never 1) — consistent with `gde≤1`.
+   This cross-checks DR Q2; the 1664-entry table is the concrete `cliffordLookup`.
+   Still needs the Lean table + its coverage/length proof (a finite — if large —
+   `decide`/enumeration; DR Q2's structural detail will guide the cleanest form).
 8. `kmmReduce` fuel-recursion assembly (`interp_reconWordC_reduceStep` correctness
    + `reconWordC_length_le_four` length accounting) + discharge `Nonempty
    KMMReduction` — gated on items 4 (Lemma 3) + 7 (𝕊₃/N₃).
