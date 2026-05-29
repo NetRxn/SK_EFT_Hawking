@@ -27,6 +27,7 @@ Phase 6z Wave 4 increment 4f.2b part 1 (permMatrix conjugation reindex). 2026-05
 import Mathlib
 import SKEFTHawking.FKLW.CliffordCCZSU8TangentSpan
 import SKEFTHawking.FKLW.CliffordCCZSU8CNOT
+import SKEFTHawking.FKLW.CliffordCCZSU8LabelTransitivity
 
 set_option autoImplicit false
 
@@ -86,5 +87,49 @@ theorem cnot13_bitIso8 (b : Fin 2 × Fin 2 × Fin 2) :
 theorem cnot23_bitIso8 (b : Fin 2 × Fin 2 × Fin 2) :
     σ_cnot_23 (bitIso8 b) = bitIso8 (b.1, b.2.1, b.2.1 + b.2.2) := by
   obtain ⟨b1, b2, b3⟩ := b; fin_cases b1 <;> fin_cases b2 <;> fin_cases b3 <;> decide
+
+/-! ## 3. The 2-qubit CNOT Pauli tableau (entrywise, with sign)
+
+The single entrywise identity behind every CNOT tableau lift: conjugating the control-target Pauli pair
+by a CNOT (whose bit-action flips the target bit by the control bit, `(i₁,i₂) ↦ (i₁, i₁+i₂)`) gives, up to
+a sign `cnotSign ∈ {±1}`, the symplectically-transformed Pauli pair `cnotLabelPair`. The sign is `−1`
+exactly on `(X,Z)` and `(Y,Y)` (where the conjugation picks up `i² = −1` via `Y = iXZ`), `+1` otherwise.
+The same 2-qubit identity serves all three `CNOT_{12,13,23}` lifts (applied to the relevant qubit pair,
+the third a spectator). -/
+
+/-- The CNOT-conjugation sign on a control-target Pauli pair: `−1` exactly on `(X,Z)` and `(Y,Y)`. -/
+noncomputable def cnotSign (v1 v2 : Fin 4) : ℂ :=
+  if (v1 = 1 ∧ v2 = 3) ∨ (v1 = 2 ∧ v2 = 2) then -1 else 1
+
+/-- **2-qubit CNOT Pauli tableau (entrywise)**: `(σ_{v₁})_{i₁j₁} (σ_{v₂})_{(i₁+i₂)(j₁+j₂)}
+= cnotSign v₁ v₂ · (σ_{v₁'})_{i₁j₁} (σ_{v₂'})_{i₂j₂}` where `(v₁',v₂') = cnotLabelPair v₁ v₂`.
+
+Proved by the 16-case Pauli table (`fin_cases v₁ v₂`), reducing `cnotLabelPair v₁ v₂` to its concrete
+value once per case (via `decide`, selected by `first` over the 16 targets) so the bit-leaves are cheap
+entrywise computations — kernel-pure, within default heartbeats (no `maxHeartbeats`). -/
+theorem cnot_tableau (v1 v2 : Fin 4) : ∀ i1 i2 j1 j2 : Fin 2,
+    pauli4 v1 i1 j1 * pauli4 v2 (i1 + i2) (j1 + j2)
+      = cnotSign v1 v2 * (pauli4 (cnotLabelPair v1 v2).1 i1 j1 * pauli4 (cnotLabelPair v1 v2).2 i2 j2) := by
+  fin_cases v1 <;> fin_cases v2 <;>
+    (first
+      | rw [show cnotLabelPair _ _ = ((0:Fin 4), (0:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((0:Fin 4), (1:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((3:Fin 4), (2:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((3:Fin 4), (3:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((1:Fin 4), (1:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((1:Fin 4), (0:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((2:Fin 4), (3:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((2:Fin 4), (2:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((2:Fin 4), (1:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((2:Fin 4), (0:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((1:Fin 4), (3:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((1:Fin 4), (2:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((3:Fin 4), (0:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((3:Fin 4), (1:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((0:Fin 4), (2:Fin 4)) from by decide]
+      | rw [show cnotLabelPair _ _ = ((0:Fin 4), (3:Fin 4)) from by decide]) <;>
+    (simp only [cnotSign] ; intro i1 i2 j1 j2 ;
+     fin_cases i1 <;> fin_cases i2 <;> fin_cases j1 <;> fin_cases j2 <;>
+       simp [pauli4, SKEFTHawking.σ_x, SKEFTHawking.σ_y, SKEFTHawking.σ_z, Matrix.one_apply])
 
 end SKEFTHawking.FKLW.CliffordCCZSU8
