@@ -770,18 +770,37 @@ Q1+Q2). Items H/I gated on Q3.
   fuel`, `sqrt2_pow_normSq_clearing : √2^(2s)·|z|²=of|x|²`, `normSq_of`). Bridges
   matrix-entry sde to the ℤ[ω]-gde of the cleared numerator. Kernel-pure.
 
-**NEXT UNIT — fuel-sufficiency assembly (B), now all bridges in hand.** Combine:
-(i) **Lemma 4 value-form** `gde(|x|²)=gde(|y|²)=j∈{0,1}` for the cleared column
-numerators x=√2^s·M₀₀, y=√2^s·M₁₀ (from `denExp_normSq_col0_eq` core + the
-lowest-terms property √2∤x — i.e. gde ≤ 1 — needs a short ℤ[ω] argument that
-`√2∤x ⟹ gde(|x|²)≤1`, oracle-confirmed); (ii) **unit-column congruences**
-`(|x|²+|y|²).d ≡ (|x|²+|y|²).c ≡ 0 (mod 8)` from `|x|²+|y|²=2^m`, m≥3 (clear
-`unitary_col0_normSq` by √2^(2s)); (iii) feed (i)+(ii) into `kmm_lemma3_column`
-(s=2 case) ⟹ ∃k: gde(|x+ωᵏy|²)=j+3; (iv) translate via `reduceStep_zero_zero`
-(`|z'|²=|z+ωᵏw|²/2`, so `√2^(s+1)·z'=(x+ωᵏy)`) + `denExp_normSq_clearing` ⟹
-`denExp(normSq((reduceStep M k) 0 0)) = denExp(normSq(M₀₀)) − 1` ⟹ re-point
-`chooseReductionComp` to track `μ(M):=denExp(normSq(M 0 0))` (plan A.b) ⟹
-fuel-sufficiency. THEN (C) cliffordLookup + (D) discharge.
+**✅ FUEL-SUFFICIENCY ASSEMBLY (B) + RECURSION + CONDITIONAL DISCHARGE — SHIPPED 2026-05-29
+(15 commits this session). ENTIRE REDUCTION ALGORITHM ASSEMBLED.**
+- Bridges (B): Lemma-4-value `gdePeel_normSq_le_one_of_not_dividesSqrt2` (`0842c54`),
+  unit-col congruences (`012af75`), clearing connection (`17f3cb1`), reduceStep col-0
+  (`72d662f`), gde-value bridge (`29345fb`), ZOmega-column Lemma 3 (`4243201`).
+- **μ-decrease engine** (`MuDecrease.lean`, `96309bb`/`5ed1a99`/`99ea92d`): per-entry
+  cleared-form (lowest-terms keystone + gdePeel_stabilizes + entry_cleared_form),
+  `column_cleared` (denExp M₀₀=denExp M₁₀ for unitary ⟹ ONE common s, no case-split),
+  **`mu_decrease`** (M unitary, μ(M)≥4 ⟹ ∃k μ(reduceStep M k)<μ(M); STRICT), μ-selector
+  `chooseReductionMu` + **`chooseReductionMu_succeeds`** (fuel-sufficiency proper).
+- **realizable⟹unitary** (`UnitaryClosure.lean`, `4cca327`): the recursion's unitarity
+  precondition (adjoint anti-hom + gate unitarity decide; term-mode `IsUnitaryT.mul`
+  because Mat2 `*` is the heterogeneous Matrix `HMul`, not `Monoid.mul`).
+- **μ-recursion** (`KMMReduceMu.lean`, `6f1123d`): `kmmReduceMu` + `interp_kmmReduceMu`
+  (correct WITH termination — bottoms at μ≤3 via fuel-sufficiency, base needs only μ≤3)
+  + `length_kmmReduceMu` (≤ N₃+4·μ(M) = honest KMM Cor 1).
+- **CONDITIONAL DISCHARGE** (`KMMReductionDischarge.lean`, `c487179`): `baseFinder9` +
+  **`kmmReduction_of_coverage : coverage ⟹ Nonempty KMMReduction`** (concrete instance,
+  all fields proven, NO axiom — Inv #15). The reduction measure decision is plan A.b
+  (`μ = denExp(normSq(M₀₀))`); the length_bound field was refactored to the honest
+  `N₃+4·sde(|z₀₀|²)` (`af4032d`).
+
+**⟹ ORPHAN #2 REDUCED TO THE SINGLE 𝕊₃-COVERAGE FACT** (the only remaining input):
+`coverage : ∀ M, IsCliffordTRealizable M → μ(M) ≤ 3 → ∃ gs, interp gs = M ∧ gs.length ≤ 9`
+— every realizable `μ≤3` matrix has a `≤9`-gate word (the finite `1664`-matrix `N₃=9`
+`𝕊₃` orbit, `scripts/kmm_n3_bfs.py`). HARD: formalize the BFS-reachability of the `μ≤3`
+orbit over the `ZOmegaSqrt2` quotient matrix ring (not directly `decide`-able). Options:
+(a) explicit 1664-entry table + per-entry check; (b) `Finset`-orbit + closure; (c)
+bounded-BFS function + reachability. Once proven: `kmmReduction_of_coverage coverage`
+makes `Nonempty KMMReduction` UNCONDITIONAL ⟹ discharges the `[Nonempty KMMReduction]`
+gating ⟹ Item G (closes orphan #2) ⟹ H/I ⟹ Stage 9/10/13.
 
 The robust shipped pieces make the discharge a short assembly. Concretely:
 
