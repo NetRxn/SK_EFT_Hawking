@@ -121,4 +121,25 @@ lemma norm_seedEigenvalue : ‖seedEigenvalue‖ = 1 := by
   have hns : Complex.normSq seedEigenvalue = 1 := by exact_mod_cast h
   rw [Complex.norm_def, hns, Real.sqrt_one]
 
+/-- **`1/√2` is not an algebraic integer** (matches the shipped `litSeed_trace = 1/√2`): if it were,
+its square `1/2` would be a rational algebraic integer, hence an integer — but `1/2 ∉ ℤ`. Combined with
+`not_isIntegral_mul_left`, this shows the seed's trace `ω₀⁻¹·(1/√2)` is not an algebraic integer, the
+Route-B route to "seed not finite order". -/
+theorem not_isIntegral_inv_sqrt_two : ¬ IsIntegral ℤ (1 / (Real.sqrt 2 : ℂ)) := by
+  intro h
+  have hsqrt : ((Real.sqrt 2 : ℝ) : ℂ) ^ 2 = 2 := by
+    rw [← Complex.ofReal_pow, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 2)]; norm_num
+  have hsq : IsIntegral ℤ ((1 / (Real.sqrt 2 : ℂ)) ^ 2) := h.pow 2
+  have he : (1 / (Real.sqrt 2 : ℂ)) ^ 2 = algebraMap ℚ ℂ (1 / 2) := by
+    rw [div_pow, one_pow, hsqrt]
+    simp only [map_div₀, map_one, map_ofNat]
+  rw [he, isIntegral_algebraMap_iff (algebraMap ℚ ℂ).injective,
+    IsIntegrallyClosed.isIntegral_iff] at hsq
+  obtain ⟨y, hy⟩ := hsq
+  have hy' : (y : ℚ) = 1 / 2 := hy
+  have h2 : (2 * y : ℤ) = 1 := by
+    have hq : (2 * (y : ℚ)) = 1 := by rw [hy']; norm_num
+    exact_mod_cast hq
+  omega
+
 end SKEFTHawking.FKLW.CliffordCCZSU8
