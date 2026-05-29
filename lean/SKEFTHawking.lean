@@ -1107,6 +1107,12 @@ import SKEFTHawking.FKLW.RossSelinger.KMMReduce
 -- (resSqrt2_add/zero/neg), and key residues (sqrt2/2 ↦ 0, 1 ↦ (0,1),
 -- ω ↦ (1,0)). The coset layer KMM Lemma 3 reasons over.
 import SKEFTHawking.FKLW.RossSelinger.ResidueSqrt2
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — conjugation + squared modulus
+-- on ZOmegaSqrt2. ZOmegaSqrt2.conj (lifts ZOmega.conj through the quotient;
+-- fixes √2 so descends to the localization) as a ring hom + involution;
+-- normSq z := z * conj z (= |z|²) with conj_normSq (realness). KMM tracks
+-- sde(|z|²) of the matrix entries (Lemmas 3 & 4).
+import SKEFTHawking.FKLW.RossSelinger.Conj
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
