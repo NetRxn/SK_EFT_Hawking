@@ -1433,6 +1433,10 @@ import SKEFTHawking.FKLW.CliffordCCZSU8WitnessFull
 -- Foundation for the faithful (CCZ-essential, no-T) literal headline; Phases B (irrationality) + C
 -- (closure→1-param-subgroup Kronecker-Weyl lift) pending.
 import SKEFTHawking.FKLW.CliffordCCZSU8LiteralSeed
+-- Phase 6z Wave 1 (2026-05-28): the algebraic-integer / root-of-unity obstruction.
+-- `not_rootOfUnity_of_not_isIntegral` (reusable) + the Gate-1-corrected seed eigenvalue
+-- λ=(−3+i√7)/4 is not an algebraic integer (λ+λ̄=−3/2∉ℤ) ⟹ not a root of unity.
+import SKEFTHawking.FKLW.CliffordCCZSU8Irrationality
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)

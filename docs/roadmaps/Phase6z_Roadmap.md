@@ -146,7 +146,7 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
 | Wave | Status |
 |---|---|
 | 6z.0 CAS gates | ✅ DONE — Gate 1 ✅ PASS (corrected spectrum); Gate 2 ✅ PASS = **BEST** (spanned dim 63). HARD GATE cleared. |
-| 6z.1 seed + irrationality | ⏳ READY (foundation: Phase A.1 ✅ shipped under 6y) |
+| 6z.1 seed + irrationality | 🟡 IN-PROGRESS — irrationality obstruction ✅ SHIPPED (`CliffordCCZSU8Irrationality.lean`, kernel-only): `not_rootOfUnity_of_not_isIntegral` (reusable) + `seedEigenvalue λ=(−3+i√7)/4` not an algebraic integer (`λ+λ̄=−3/2∉ℤ`) ⟹ not a root of unity. REMAINING: seed `g₀` membership in `⟨H,S,CNOT,CCZ⟩` + char-poly/`|λ|=1`. |
 | 6z.2 first flow | ⏳ NOT STARTED |
 | ~~6z.3 SU(d) Trotter~~ | ❌ DROPPED (Gate 2 = BEST) |
 | 6z.4 pure-conjugation spread | ⏳ NOT STARTED (~400 LoC, BEST scope) |
