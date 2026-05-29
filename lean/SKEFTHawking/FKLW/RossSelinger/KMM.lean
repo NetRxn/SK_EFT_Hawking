@@ -141,10 +141,10 @@ theorem sde_le_succ {M : Mat2} {k : ℕ} (h : sde_le M k) :
 itself with no denominators. -/
 theorem sde_le_one_zero : sde_le (1 : Mat2) 0 := by
   refine ⟨(1 : Matrix (Fin 2) (Fin 2) ZOmega), ?_⟩
+  rw [pow_zero, one_smul]
   ext i j
-  show (sqrt2 ^ 0 • (1 : Mat2)) i j = (liftZOmegaMatrix 1) i j
-  simp [liftZOmegaMatrix, Matrix.one_apply, Matrix.map_apply,
-        apply_ite (algebraMap ZOmega ZOmegaSqrt2)]
+  simp only [liftZOmegaMatrix, Matrix.map_apply, Matrix.one_apply,
+             apply_ite (algebraMap ZOmega ZOmegaSqrt2), map_one, map_zero]
 
 /-- **Clifford+T realizability**: `M` is in the image of `interp` from
 some gate sequence. KMM Theorem 1 characterizes this set as exactly the

@@ -136,17 +136,21 @@ theorem interp_cons (g : CliffordTGate) (gs : List CliffordTGate) :
 @[simp] theorem interp_singleton (g : CliffordTGate) :
     interp [g] = gateMatrix g := by
   show gateMatrix g * interp [] = gateMatrix g
-  simp
+  rw [interp_nil]
+  exact Matrix.mul_one _
 
 /-- **Concatenation of gate sequences is matrix product**:
 `interp (gs ++ hs) = interp gs * interp hs`. -/
 theorem interp_append (gs hs : List CliffordTGate) :
     interp (gs ++ hs) = interp gs * interp hs := by
   induction gs with
-  | nil => simp
+  | nil =>
+    show interp hs = 1 * interp hs
+    exact (one_mul _).symm
   | cons g gs ih =>
     show gateMatrix g * interp (gs ++ hs) = (gateMatrix g * interp gs) * interp hs
-    rw [ih, mul_assoc]
+    rw [ih]
+    exact (Matrix.mul_assoc _ _ _).symm
 
 end CliffordTGate
 end SKEFTHawking.RossSelinger
