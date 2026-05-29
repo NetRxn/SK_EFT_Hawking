@@ -1278,6 +1278,14 @@ import SKEFTHawking.FKLW.RossSelinger.KMMReductionDischarge
 -- ≤4 — finiteness seed: P=a²+b²+c²+d² sum-of-squares + P_x+P_y=2^s≤4 ⟹ coords bounded by 2,
 -- NO real-order needed). Builds toward the coverage that makes Nonempty KMMReduction uncond.
 import SKEFTHawking.FKLW.RossSelinger.KMMBaseCoverage
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Bloch / SO(3) map +
+-- Matsumoto-Amano T-count measure kSO3. madjoint (Hermitian adjoint), pauliMat
+-- (σ₁=X,σ₂=Y,σ₃=Z), blochEntry M i j = ½·Tr(σ_i M σ_j M†), and kSO3 M =
+-- sup_{i,j} denExp(blochEntry M i j) — the SO(3) least-denominator exponent =
+-- Giles-Selinger Lemma 4.10 T-count (validated kernel-pure: kSO3 I/H/S/X=0,
+-- kSO3 T=1, kSO3 THT=2). The DR-validated recursion MEASURE for the MA
+-- base-coverage route (replaces the dominated BFS-connectivity route).
+import SKEFTHawking.FKLW.RossSelinger.BlochMap
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
