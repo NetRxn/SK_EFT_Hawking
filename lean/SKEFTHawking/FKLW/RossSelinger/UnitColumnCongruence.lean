@@ -76,18 +76,18 @@ theorem clearedCol_normSq_sum {z w : ZOmegaSqrt2} {s : ℕ} {x y : ZOmega}
   simpa using key
 
 /-- **Unit-column congruences (for `kmm_lemma3_column`)**: for a unit column cleared
-at a common exponent `s ≥ 3`, the cleared squared-modulus sum has both `ℤ[ω]`
-coordinates `≡ 0 (mod 8)`:
+at a common exponent `s ≥ 2`, the cleared squared-modulus sum satisfies
 
-  `(|x|² + |y|²).d ≡ 0`  and  `(|x|² + |y|²).c ≡ 0  (mod 8)`.
+  `2·(|x|² + |y|²).d ≡ 0`  (i.e. `(|x|² + |y|²).d ∈ {0,4}`)  and  `(|x|² + |y|²).c ≡ 0  (mod 8)`.
 
-`|x|²+|y|² = √2^(2s)` has `.d = 2^s` (`≡ 0` since `8 ∣ 2^s` for `s ≥ 3`) and
-`.c = 0`. These are exactly the `Pform`-sum/`Qform`-sum hypotheses of
-`kmm_lemma3_column`. -/
+`|x|²+|y|² = √2^(2s)` has `.d = 2^s` (`≡ 0` for `s ≥ 3`, `≡ 4` for `s = 2`) and
+`.c = 0`; in both cases `2·2^s = 2^(s+1) ≡ 0` for `s ≥ 2`. The `≡ 4` case is exactly
+the `m = 2` / `sde(|z|²) = 4` boundary the reduction passes through. These are
+exactly the `Pform`-sum/`Qform`-sum hypotheses of `kmm_lemma3_column`. -/
 theorem unit_col_congruences {z w : ZOmegaSqrt2} {s : ℕ} {x y : ZOmega}
     (hz : (sqrt2 : ZOmegaSqrt2) ^ s * z = of x) (hw : (sqrt2 : ZOmegaSqrt2) ^ s * w = of y)
-    (h1 : normSq z + normSq w = 1) (hs : 3 ≤ s) :
-    ((ZOmega.normSq x + ZOmega.normSq y).d : ZMod 8) = 0 ∧
+    (h1 : normSq z + normSq w = 1) (hs : 2 ≤ s) :
+    2 * ((ZOmega.normSq x + ZOmega.normSq y).d : ZMod 8) = 0 ∧
       ((ZOmega.normSq x + ZOmega.normSq y).c : ZMod 8) = 0 := by
   have hsum := clearedCol_normSq_sum hz hw h1
   obtain ⟨hc, hd⟩ := ZOmega.sqrt2_pow_two_mul_coords s
@@ -96,7 +96,8 @@ theorem unit_col_congruences {z w : ZOmegaSqrt2} {s : ℕ} {x y : ZOmega}
   · rw [hd]
     obtain ⟨t, rfl⟩ := Nat.exists_eq_add_of_le hs
     push_cast
-    rw [pow_add, show (2 : ZMod 8) ^ 3 = 0 from by decide, zero_mul]
+    have h0 : (2 : ZMod 8) * 2 ^ 2 = 0 := by decide
+    rw [pow_add, ← mul_assoc, h0, zero_mul]
   · rw [hc]; simp
 
 end ZOmegaSqrt2

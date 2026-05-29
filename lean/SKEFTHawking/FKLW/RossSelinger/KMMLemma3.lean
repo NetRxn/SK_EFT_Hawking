@@ -21,9 +21,19 @@ coordinates `mod 8` (verified — only the zero residue is ambiguous, and it has
 `gde > 1` so is excluded from the `j∈{0,1}` base), and the squared modulus is
 `|x|² = P(x) + √2·Q(x)` with `P, Q` the two quadratic forms below; `gde(|·|²)` is
 then read off `(v₂(P), v₂(Q))` via KMM Prop 1. Running Algorithm 2 over all
-residue pairs satisfying the necessary congruences `P(x)+P(y) ≡ Q(x)+Q(y) ≡ 0
-(mod 8)` and `gde = gde = j` returns **true** — this file reproduces that as a
-`native_decide` (`kmm_lemma3_alg2`), the faithful Lean form of KMM's proof.
+residue pairs satisfying the necessary congruences `P(x)+P(y) ≡ 0 ∨ 4` and
+`Q(x)+Q(y) ≡ 0 (mod 8)` and `gde = gde = j` returns **true** — this file
+reproduces that as a `native_decide` (`kmm_lemma3_alg2`), the faithful Lean form
+of KMM's proof.
+
+**The `P+P ∈ {0,4}` disjunction covers the whole reduction regime `sde(|z|²) ≥ 4`.**
+The cleared column satisfies `|x|²+|y|² = 2^m` with `m = s_c` the column clearing
+exponent, and `sde(|z|²) = 2·s_c − gde(|x|²) = 2·m − j`. Thus `sde ≥ 4` splits as:
+`m ≥ 3` (sde ≥ 5; `2^m ≡ 0`) and `m = 2` (sde = 4, `j = 0`; `2^m = 4`). Both the
+`P+P ≡ 0` and `P+P ≡ 4` residue classes are required, and both are computer-checked
+true here (786432 pairs, 0 fails — `scripts/kmm_zomega_reference_oracle.py` residue
+mode). An earlier `P+P ≡ 0`-only statement silently dropped the `sde = 4` boundary
+case the algorithm passes through on every descent `… → 5 → 4 → 3`.
 
 All formulas were cross-validated against `scripts/kmm_zomega_reference_oracle.py`
 in the project's `ZOmega ⟨a,b,c,d⟩ = a·ω³+b·ω²+c·ω+d` convention (0 mismatches
@@ -93,14 +103,17 @@ open Coord4
 
 /-- **KMM Lemma 3 (Algorithm 2, computer-checked).** For each base level
 `j ∈ {0,1}`, each residue pair `(x,y)` with `gde x = gde y = j` satisfying the
-necessary congruences `P(x)+P(y) = 0` and `Q(x)+Q(y) = 0` in `ℤ[ω]/(2³)`, and
-each target `d = s+1 ∈ {1,2,3}`, there is `k ∈ {0,1,2,3}` with
-`gde(x + ωᵏ·y) = d + j`. This is KMM Algorithm 2 verbatim; the maximiser at
-`d = 3` (resp. `d+j = 4` when `j=1`) is the sde-reducing `k`. -/
+necessary congruences `2·(P(x)+P(y)) = 0` (i.e. `P(x)+P(y) ∈ {0, 4}`) and
+`Q(x)+Q(y) = 0` in `ℤ[ω]/(2³)`, and each target `d = s+1 ∈ {1,2,3}`, there is
+`k ∈ {0,1,2,3}` with `gde(x + ωᵏ·y) = d + j`. This is KMM Algorithm 2 verbatim;
+the maximiser at `d = 3` (resp. `d+j = 4` when `j=1`) is the sde-reducing `k`.
+The `P+P ∈ {0,4}` condition (phrased as `2·(P+P) = 0` for clean `Decidable`
+synthesis) covers the entire `sde(|z|²) ≥ 4` regime: `P+P ≡ 0` is `m ≥ 3`
+(sde ≥ 5) and `P+P ≡ 4` is `m = 2` (sde = 4, `j = 0`), where `|x|²+|y|² = 2^m`. -/
 theorem kmm_lemma3_alg2 :
     ∀ (x y : Coord4) (j : Fin 2),
       gde x = j.val → gde y = j.val →
-      Pform x + Pform y = 0 → Qform x + Qform y = 0 →
+      2 * (Pform x + Pform y) = 0 → Qform x + Qform y = 0 →
       ∀ s : Fin 3, ∃ k : Fin 4, gde (add x (mulOmegaPow k.val y)) = (s.val + 1) + j.val := by
   native_decide
 
