@@ -1148,6 +1148,11 @@ import SKEFTHawking.FKLW.RossSelinger.NormSqGde
 -- _zero_elt/_sqrt2_pow_self, + gde-value consequences gdePeel_add_ge/_mul_ge.
 -- The non-archimedean toolkit assembling Lemma 5 from the cross-term estimate.
 import SKEFTHawking.FKLW.RossSelinger.GdeArith
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — KMM Lemma 5 cross-term "+1" mechanism.
+-- dividesSqrt2_add_conj (√2 ∣ (w+conj w) — the trace is always √2-divisible),
+-- normSq_sqrt2 (|√2|²=2), dvdSqrt2Pow_add_conj (√2^m∣u ⟹ √2^(m+1)∣(u+conj u) —
+-- the "+1" source, valuation-free). Validated by the ZOmega oracle.
+import SKEFTHawking.FKLW.RossSelinger.CrossTermGde
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
