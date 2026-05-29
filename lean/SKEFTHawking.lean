@@ -1461,6 +1461,7 @@ import SKEFTHawking.FKLW.CliffordCCZSU8GenConjValues
 import SKEFTHawking.FKLW.CliffordCCZSU8GenLift
 import SKEFTHawking.FKLW.CliffordCCZSU8CNOTConj
 import SKEFTHawking.FKLW.CliffordCCZSU8LineTransport
+import SKEFTHawking.FKLW.CliffordCCZSU8Transport
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
