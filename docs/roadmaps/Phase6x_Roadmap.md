@@ -645,12 +645,14 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
 **REMAINING build order (each MCP-verified, kernel-pure):**
 1. ✅ `gdePeel` ℕ-valued gde + predicate↔value bridge — SHIPPED (`b5771b9`).
    ✅ `NormSqGde.lean` — `normSq`/`gdeNormSq` foundation — SHIPPED (`f36f5a0`).
-   TODO **Prop 1** in Lean — VALIDATED closed form (oracle, 2026-05-29): for a
-   real `z = A+√2B` (A=z.d, B=z.c), `gde(z,√2) = 2·min(v₂A,v₂B) + [v₂A>v₂B]`,
-   so parity even ⟺ `v₂(B)≥v₂(A)`. Build via `padicValInt 2` of the
-   `RealSubring` coords + the peel recursion. (Edge cases A=0 or B=0: v₂=∞;
-   handle separately — oracle's closed-form check skips zero-coord, but the
-   parity check covers them.)
+   ✅ **Prop 1 (mod-8 form) SHIPPED** (`PropOneBridge.lean`, `29345fb`) —
+   `coord4_gde_coordOf : KMM.Coord4.gde (coordOf x) = gdePeel (normSq x) 4` (the
+   gde-value bridge). The valuation closed form was NOT needed: instead
+   `gdePeel (normSq x) 4 = peelN (normSq x).d (normSq x).c 4` (real-subring peel,
+   `PropOne.lean`), `peelN _ _ 4` is periodic mod 8 (reads A,B mod 4), and on the
+   64 integer representatives `peelN a b 4 = gdeFromPQ (a,b mod 8)` by kernel
+   `decide`. `Pform/Qform_coordOf` identify the residues. Kernel-pure (no
+   native_decide). Oracle-validated 0-mismatch (gdeMod8 == peel-gde).
 2. ✅ **Lemma 4** core SHIPPED (`denExp_normSq_col0_eq`); `gde(|x|²)∈{0,1}`
    oracle-confirmed. (Value-form lift folds into Lemma 3's case analysis.)
 3. ✅ **Lemma 5** SHIPPED (`CrossTermGde.lean`, `dbe079b`) — `dvdSqrt2Pow_normSq_add`:
@@ -747,6 +749,31 @@ shipped (gde foundations, Lemma 4-core, Lemma 5, `reconWordC`, computable
 Q1+Q2). Items H/I gated on Q3.
 
 #### POST-DR INTEGRATION PLAN (mechanical once Q1+Q2 land)
+
+**PROGRESS 2026-05-29 (post-Lemma-3 session — 3 new ships, all build-clean):**
+- ✅ **gde-value bridge** `coord4_gde_coordOf` (`PropOneBridge.lean`, `29345fb`) —
+  see item 1 above. Kernel-pure.
+- ✅ **ZOmega-column Lemma 3** `kmm_lemma3_column` (`KMMLemma3Column.lean`,
+  `4243201`+`1f3c089`) — the faithful ZOmega-image of `kmm_lemma3_alg2`: for
+  `x,y : ZOmega` with `gde(|x|²)=gde(|y|²)=j∈{0,1}` and unit-column congruences
+  `(|x|²+|y|²).d ≡ (|x|²+|y|²).c ≡ 0 (mod 8)`, ∀ `s+1∈{1,2,3}` ∃ `k∈{0..3}`:
+  `gde(|x+ωᵏy|²)=(s+1)+j`. Inherits the tracked native_decide from Lemma 3.
+  Supporting `coordOf_add` / `coordOf_omega_pow_mul` (kernel-pure).
+- ✅ **reduceStep column-0 transformation** (`ReduceStepColumn.lean`, `72d662f`) —
+  `T_pow_diag` + `reduceStep_zero_zero : (H·Tᵏ·M) 0 0 = invSqrt2·(M₀₀+ωᵏ·M₁₀)` +
+  `reduceStep_one_zero`. The new top-left `z'=(z+ωᵏw)/√2` is KMM's s=−1 update;
+  `|z'|²=|z+ωᵏw|²/2` is what `kmm_lemma3_column` controls. Kernel-pure.
+
+**NEXT UNIT — the clearing connection (linchpin of B).** Relate the ZOmegaSqrt2
+matrix-entry sde to the ZOmega gde that `kmm_lemma3_column` governs:
+`denExp (normSq z) = 2·denExp z − min(2·denExp z, gde(|cleared-num z|²))` for
+`z : ZOmegaSqrt2` (with cleared numerator `x` via `exists_of_sqrt2_pow_smul`,
+`√2^(2·denExp z)·normSq z = of (ZOmega.normSq x)`). Sub-pieces: (i) `normSq` on
+ZOmegaSqrt2 ↔ `ZOmega.normSq` of cleared numerator under clearing (uses
+`conj`/`denExp_conj`); (ii) `lowestDenExp z k = k − min(k, gde)` (gde↔lowestDenExp,
+from existing `Sde.lean` machinery + `gdePeel`); (iii) combine. THEN: reduceStep
+`|z'|²=|z+ωᵏw|²/2` ⟹ `sde(|z'|²)=sde(|z|²)+2−Δgde`; Δgde=3 (s=2 case of
+`kmm_lemma3_column`) ⟹ `sde(|z₀₀|²)` decreases by 1 ⟹ fuel-sufficiency (B).
 
 The robust shipped pieces make the discharge a short assembly. Concretely:
 
