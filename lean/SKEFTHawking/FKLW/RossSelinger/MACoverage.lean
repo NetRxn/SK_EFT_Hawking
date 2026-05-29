@@ -30,6 +30,7 @@ separately; the recursion is unconditional.
 
 import SKEFTHawking.FKLW.RossSelinger.MAStepExists
 import SKEFTHawking.FKLW.RossSelinger.MuDecrease
+import SKEFTHawking.FKLW.RossSelinger.KMMReduceMu
 
 set_option autoImplicit false
 
@@ -89,6 +90,47 @@ theorem coverage_fifteen
   have hk3 := bridge M hM hμ
   obtain ⟨gs, hgs, hlen⟩ := maCoverage cliffordBase hM hk3
   exact ⟨gs, hgs, by omega⟩
+
+/-! ## Discharge of `Nonempty KMMReduction` at the relaxed `N₃ = 15` -/
+
+open scoped Classical in
+/-- The relaxed base finder: a `≤ 15`-gate word for `M` when one exists, else `[]`. -/
+noncomputable def baseFinder15 (M : Mat2) : List CliffordTGate :=
+  if h : ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 15 then Classical.choose h else []
+
+theorem baseFinder15_length (M : Mat2) : (baseFinder15 M).length ≤ 15 := by
+  unfold baseFinder15
+  split
+  · next h => exact (Classical.choose_spec h).2
+  · simp
+
+theorem baseFinder15_correct
+    (coverage : ∀ M, IsCliffordTRealizable M → muMeasure M ≤ 3 →
+      ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 15)
+    (M : Mat2) (hM : IsCliffordTRealizable M) (hμ : muMeasure M ≤ 3) :
+    interp (baseFinder15 M) = M := by
+  have h := coverage M hM hμ
+  unfold baseFinder15
+  rw [dif_pos h]
+  exact (Classical.choose_spec h).1
+
+/-- **`Nonempty KMMReduction` from the Clifford base + the `μ → kSO3` bridge**: composing
+the MA `coverage_fifteen` (`N₃ = 15`) with the `μ`-tracking recursion. The two hypotheses
+(`cliffordBase`, `bridge`) are the sole remaining inputs — discharging them makes the KMM
+exact-synthesis algorithm unconditional (orphan #2 substrate). No axiom (Inv #15). -/
+theorem nonempty_kmmReduction_of_clifford_bridge
+    (cliffordBase : ∀ M, IsCliffordTRealizable M → kSO3 M = 0 →
+      ∃ gs : List CliffordTGate, interp gs = M ∧ gs.length ≤ 6)
+    (bridge : ∀ M, IsCliffordTRealizable M → muMeasure M ≤ 3 → kSO3 M ≤ 3) :
+    Nonempty KMMReduction :=
+  ⟨{ reduce := fun M => kmmReduceMu baseFinder15 (muMeasure M) M
+     N₃ := 15
+     correct := fun M hM => interp_kmmReduceMu baseFinder15
+       (fun M' hM' hμ' => baseFinder15_correct
+         (fun M'' hM'' hμ'' => coverage_fifteen cliffordBase bridge M'' hM'' hμ'') M' hM' hμ')
+       (muMeasure M) M hM (le_refl _)
+     length_bound := fun M _ =>
+       length_kmmReduceMu baseFinder15 15 baseFinder15_length (muMeasure M) M }⟩
 
 end KMM
 
