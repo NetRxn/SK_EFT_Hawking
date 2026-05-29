@@ -1086,6 +1086,12 @@ import SKEFTHawking.FKLW.RossSelinger.CliffordTGate
 -- deferred multi-session work requiring the runtime ZOmegaSqrt2 (z, k)
 -- representation per DR §1.7 option (B).
 import SKEFTHawking.FKLW.RossSelinger.KMM
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — computable matrix sde + spec
+-- bridge. KMM.sdeC (Finset.sup of per-entry denExp) + sde_le_sdeC
+-- (achievability), sdeC_le_of_sde_le (minimality), sde_eq_sdeC (the
+-- noncomputable Nat.find spec coincides with the computable sdeC). This
+-- is the least-clearing-exponent fact kmmReduce recurses on.
+import SKEFTHawking.FKLW.RossSelinger.SdeMatrix
 -- Phase 6x Track M.4 actual extraction (Mathlib-PR-quality ship,
 -- 2026-05-26): re-exports the α-polymorphic FreeGroup length bound
 -- (Track 2's GenericConcreteWordLengthBound) under the Mathlib-style
