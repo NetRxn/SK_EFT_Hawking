@@ -1119,6 +1119,13 @@ import SKEFTHawking.FKLW.RossSelinger.Conj
 -- dvdSqrt2Pow_iff (↔ √2^m ∣ z). The decidable gde machinery KMM Lemma 3 /
 -- Prop 1 reason over.
 import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — ℕ-valued gde(z,√2). gdePeel
+-- (fuel-bounded √2-peel count), gdePeel_le_fuel, dvdSqrt2Pow_antitone,
+-- dvdSqrt2Pow_gdePeel (√2^(gdePeel) ∣ z), and the predicate↔value bridge
+-- dvdSqrt2Pow_iff_le_gdePeel (m ≤ fuel → (√2^m∣z ↔ m ≤ gdePeel z fuel)) +
+-- gdePeel_mono_fuel. The gde VALUES KMM Lemma 5's ⌊(gde+gde)/2⌋ arithmetic
+-- and Lemma 3's gde-difference case analysis reason over.
+import SKEFTHawking.FKLW.RossSelinger.GdeValue
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
