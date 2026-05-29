@@ -1168,6 +1168,13 @@ import SKEFTHawking.FKLW.RossSelinger.KMMCompute
 -- step left-inversion + base-finder correctness, NOT sde decrease). Remaining for
 -- discharge (DR-gated): Lemma 3 (termination+length) + cliffordLookup/N₃ base.
 import SKEFTHawking.FKLW.RossSelinger.KMMReduceFuel
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — reduceStep column-0 transformation.
+-- T_pow_diag (gateMatrix .T ^ k = diagonal ![1, ωᵏ]); reduceStep_zero_zero
+-- ((H·Tᵏ·M) 0 0 = invSqrt2·(M₀₀ + ωᵏ·M₁₀)) + reduceStep_one_zero
+-- ((H·Tᵏ·M) 1 0 = invSqrt2·(M₀₀ − ωᵏ·M₁₀)). The new top-left z'=(z+ωᵏw)/√2 is
+-- KMM's s=−1 update; |z'|²=|z+ωᵏw|²/2 is the quantity kmm_lemma3_column controls.
+-- Algebraic bridge from residue reduction-existence to matrix-sde decrease.
+import SKEFTHawking.FKLW.RossSelinger.ReduceStepColumn
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — KMM Lemma 3 via Algorithm 2.
 -- kmm_lemma3_alg2: the sde-reduction existence lemma proved by native_decide
 -- over ℤ[ω]/(2³)=(ZMod 8)⁴ residues (Coord4) — KMM's actual proof (Algorithm 2,
