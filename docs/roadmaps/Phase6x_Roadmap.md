@@ -660,6 +660,24 @@ LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_m
    + the halving `dvdSqrt2Pow_normSq_half` (`√2^(2m)∣|u|²⟹√2^m∣u`, base case a
    ZMod-2 `decide`) + `|u|²=|x|²|y|²` + the `GdeArith` non-archimedean toolkit.
    All pieces oracle-validated (0 violations).
+3b. **DEEP RESEARCH DISPATCHED (2026-05-29)** —
+   `Lit-Search/Tasks/submitted/20260529_phase6x_kmm_lemma3_proof_mechanisms.md`.
+   Targets the proof-mechanism gaps (NOT Mathlib, NOT statements — which we have):
+   Q1 KMM Lemma 3 COMPLETE proof + `chooseReduction` selection rule + the `𝔭`-adic
+   `∃k: v_𝔭(x'+ωᵏy')=3` argument; Q2 the 𝕊₃ base case + the numeral `N₃`
+   (dossier flags it UNKNOWN); Q3 Ross-Selinger §5/§6 deterministic proofs for
+   Items H/I. Rationale: reconstructing Lemma 3 solo is the highest-risk step
+   (4 would-be errors already caught by the oracle); per the quality standard,
+   fill the proof gap via the primary source rather than risk a flawed
+   reconstruction. Meanwhile build the **Lemma-3-independent scaffolding**:
+   computable `chooseReduction` (exhaustive `Fin 4` search), `cliffordLookup`/
+   assembly skeleton, the `reconWordC` recursion — all parameterizable on
+   Lemma 3 as the one remaining input. WINNING-`k` finding (oracle): the
+   reducing-`k` SET is determined by `(x mod 2, y mod 2)` GIVEN realizability
+   (0 inconsistent / 16×16 buckets), but `resSqrt2` (mod √2, 4×4) is too coarse
+   (inconsistent) — so the dossier's "residue mod √2" `chooseReduction` sketch
+   is imprecise; the real selection needs ≥ mod-2 data.
+
 4. **Lemma 3** — CORRECTED CONDITION (numerically validated 2026-05-29 via
    `scripts/kmm_zomega_reference_oracle.py`; my earlier `2∣(x+ωᵏy)` note was a
    `gde(element)`-vs-`gde(|element|²)` conflation, FALSE for realizable pairs —
