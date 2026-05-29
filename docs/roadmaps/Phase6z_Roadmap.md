@@ -153,19 +153,27 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
 | 6z.5 headline + Stage-13 | ⏳ NOT STARTED (gated on 6z.2 + 6z.4; then `cliffordCCZSU8_headline_of_witness`-style chain for the literal `GeneratingSet`) |
 | 6z.D Kronecker–Weyl | ⏳ DEFERRED |
 
-> **Build note (2026-05-28, de-risked):** Wave 1 establishes the irrational-angle seed end-to-end (the
-> alphabet contains an infinite-order element — a complete, novel result). The density headline (Waves
-> 2+4+5) needs two pieces of **upstream-Mathlib-in-repo infrastructure** (the project's normal mode —
-> NOT blockers):
-> - **Wave 2 — unitary/normal spectral theorem.** Mathlib has only the Hermitian version, BUT it has the
->   foundation: `Mathlib.Analysis.InnerProductSpace.JointEigenspace ::
->   LinearMap.IsSymmetric.iSup_iInf_eq_top_of_commute` (joint eigenspaces for pairwise-commuting
->   self-adjoints). Concrete path: `U` unitary ⟹ `A=(U+U†)/2`, `B=(U−U†)/2i` are commuting self-adjoints
->   with `A+iB=U` ⟹ joint eigenbasis ⟹ `U = V·diag(e^{iθⱼ})·V†` ⟹ `log U = V·diag(iθⱼ)·V†`, `X₀=i·log U
->   ∈ 𝔰𝔲(8)`, `exp(t·X₀)` accumulation via 1-D Kronecker (`AddSubgroup.dense_or_cyclic`, cyclic branch
->   killed by `not_rootOfUnity_seedEigenvalue`). A reusable Mathlib-PR-quality `IsStarNormal`/unitary
->   matrix spectral theorem. This is the next build.
-> - **Wave 4 — Clifford-adjoint irreducibility** for the 63-dim orbit span (Gate 2 = BEST numerically).
->   Larger; needs its own foundation search (Clifford-group rep theory on the n-qubit Pauli space).
-> Shipping sorried scaffolding is still off-limits (Invariants #10/#15), but these are buildable, not
-> blocked — the prior "research-grade frontier" framing was a mis-scope.
+> **Execution plan (2026-05-28, /goal session — fully scoped against the existing code).** Wave 1 is
+> complete (infinite-order seed `seedSU8 ∈ H_of_G`). `CartanFinalStep_SUd_v4`
+> (`GenericSUdCartanPredicate.lean`) — which a `ClosureDenseWitness` discharges to `H_of_G=⊤` — requires
+> explicit **spanning flows** `∀ i t, exp(t•Xᵢ)∈H`. So the von-Neumann route is: seed → ONE flow, then
+> Clifford-conjugate spread to spanning. Concrete increments (multi-session):
+> - **Wave 2a — accumulation-point witness:** `seedSU8` infinite-order + SU(8) compact ⟹ `H_of_G` is
+>   infinite ⟹ `1 ∈ AccPt (principal H_of_G)`. Mirror the SU(2) `CartanSubstrate.H_Fib_accPt_one_unconditional`
+>   (closed-in-compact + infinite ⟹ not discrete ⟹ AccPt). Moderate (~50–150 LoC). **Next brick.**
+> - **Wave 2b — SU(d) von-Neumann 1-param-subgroup theorem:** generalize `FKLW/OneParameterSubgroupSU2.lean`
+>   (`su2Log`/`expAmbient`/partial-homeo + BW-on-unit-sphere-of-𝔰𝔲(d) + integer-rounding) from SU(2) to
+>   SU(d), reusing the `GenericSUd` matrix-log infra (`GenericSUdMatrixLogTraceless`, `matrixMercatorLog`,
+>   `GenericSUdLocalDiffeoRestriction`). Yields `1∈AccPt H ⟹ ∃ X₀≠0 ∈ 𝔰𝔲(d), ∀t exp(t•X₀)∈H`. **LARGE,
+>   multi-session** (the SU(2) version alone was ~300–500 LoC; cf. CartanSubstrate gap-#1/#2 notes).
+>   Mathlib-PR-quality.
+> - **Wave 4 — spread to spanning:** witness `X = {Cⱼ X₀ Cⱼ⁻¹}`, flows free via `GenericSUd.flow_conj_mem`;
+>   the wall is proving the Clifford orbit of `X₀` **spans 𝔰𝔲(8)** in Lean (Gate 2 = 63 numerically; direct
+>   rank/Gram infeasible since `X₀` is a log) — needs the abstract **Clifford-adjoint irreducibility** on
+>   the 63-dim Pauli space. LARGE; own foundation search.
+> - **Wave 5 — assemble** `ClosureDenseWitness cliffordCCZLiteralGeneratingSetSU8` → `H_of_G=⊤` (via
+>   `H_of_G_eq_top_of_witness_conditional` + `CartanFinalStep_SUd_v4_holds`) → headline. Moderate (reuse chain).
+> Reuse anchors (same infinite-order→flow→density pattern, SU(2)): `OneParameterSubgroupSU2`,
+> `CliffordTInfiniteOrder`, `FibSU2Density`/`FibRepInfiniteOrder`, `ReadRezayiK{5,7}InfiniteOrder`,
+> `StandardTorusSU2`; + Mathlib `AddCircle.denseRange_zsmul_iff`. Shipping sorried scaffolding stays
+> off-limits (Inv #10/#15); these are buildable in-repo (upstream-PR-quality), not blocked.
