@@ -1142,6 +1142,12 @@ import SKEFTHawking.FKLW.RossSelinger.GdeValue
 -- value bridge + gde modulus-invariance. The squared-modulus gde KMM Lemma 3/5
 -- track (validated by scripts/kmm_zomega_reference_oracle.py: no mod-√2 shortcut).
 import SKEFTHawking.FKLW.RossSelinger.NormSqGde
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — non-archimedean gde arithmetic
+-- (KMM Lemma 5 toolkit). dvdSqrt2Pow_add (closed under +), dvdSqrt2Pow_min
+-- (gde(p+q)≥min), dvdSqrt2Pow_mul_of (gde(zw)≥gde z+gde w), dvdSqrt2Pow_neg/
+-- _zero_elt/_sqrt2_pow_self, + gde-value consequences gdePeel_add_ge/_mul_ge.
+-- The non-archimedean toolkit assembling Lemma 5 from the cross-term estimate.
+import SKEFTHawking.FKLW.RossSelinger.GdeArith
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
