@@ -1176,6 +1176,13 @@ import SKEFTHawking.FKLW.RossSelinger.KMMReduceFuel
 -- (0 mismatches; Alg2 FAILS=0 over 393216 pairs). Carries Lean.ofReduceBool
 -- (native_decide), the trust of running KMM's published C++ Algorithm 2.
 import SKEFTHawking.FKLW.RossSelinger.KMMLemma3
+-- Phase 6x Tier-2 Item F (M4; 2026-05-29) — bridge: KMM Algorithm 2 (residues)
+-- ↔ ZOmega. coordOf (the mod-8 residue), normSq_d/normSq_c (|x|² coords =
+-- P/Q polynomials), Pform_coordOf/Qform_coordOf (residue forms = normSq coords
+-- mod 8), coordOf_omega_mul (residue ω-action = mod-8 of ZOmega ω-mult). The
+-- foundational ring identities connecting kmm_lemma3_alg2 to actual elements;
+-- the gde-value bridge (Prop 1) builds on top.
+import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Bridge
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — real subring ℤ[√2] ⊂ ℤ[ω]
 -- (KMM Prop 1 substrate). isReal_iff (conj z = z ↔ z.a=-z.c ∧ z.b=0;
 -- real = a+√2 b with a=z.d, b=z.c), dividesSqrt2_of_isReal (√2∣real ↔
