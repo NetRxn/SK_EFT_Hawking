@@ -89,6 +89,41 @@ theorem blochEntry_realizable_real {M : Mat2} (h : IsCliffordTRealizable M) (i j
   obtain ⟨gs, rfl⟩ := h
   exact blochEntry_interp_real gs i j
 
+/-! ## Orthogonality of the cleared Bloch numerators -/
+
+/-- **`of` is injective** (`ZOmega ↪ ZOmegaSqrt2`). -/
+theorem of_injective : Function.Injective (ZOmegaSqrt2.of) := by
+  intro z w h
+  have := ZOmegaSqrt2.mk_eq_mk_iff.mp h
+  simpa using this
+
+/-- **Orthogonality of the cleared Bloch numerators**: `∑ᵢ Bᵢⱼ · Bᵢₗ = 2^kSO3 · δⱼₗ`
+in `ZOmega` (the non-conjugated `RᵀR = I` of `blochMat_transpose_mul`, cleared by
+`√2^(2·kSO3)` via `blochNum_spec`). Gives the per-column norm (`j = l`) and the
+pairwise orthogonality (`j ≠ l`) the `ma_step` `native_decide` consumes. -/
+theorem blochNum_orthogonal {M : Mat2} (hu : ZOmegaSqrt2.IsUnitaryT M) (j l : Fin 3) :
+    ∑ i, blochNum M i j * blochNum M i l
+      = if j = l then ((2 : ZOmega) ^ kSO3 M) else 0 := by
+  apply of_injective
+  have hδ : ∑ i, blochEntry M i j * blochEntry M i l = if j = l then (1 : ZOmegaSqrt2) else 0 := by
+    have h := blochMat_transpose_mul hu
+    have := congrFun (congrFun h j) l
+    simpa [blochMat, Matrix.mul_apply, Matrix.transpose_apply, Matrix.of_apply,
+      Matrix.one_apply] using this
+  have hsq : (sqrt2 : ZOmegaSqrt2) ^ kSO3 M * sqrt2 ^ kSO3 M = ZOmegaSqrt2.of ((2 : ZOmega) ^ kSO3 M) := by
+    rw [← pow_add, ← two_mul, pow_mul,
+      show (sqrt2 : ZOmegaSqrt2) ^ 2 = ZOmegaSqrt2.of (2 : ZOmega) from by decide,
+      ← ZOmegaSqrt2.ofRingHom_apply, ← map_pow]; rfl
+  conv_lhs => rw [← ZOmegaSqrt2.ofRingHom_apply, map_sum]
+  simp only [ZOmegaSqrt2.ofRingHom_apply, ZOmegaSqrt2.of_mul, ← blochNum_spec]
+  rw [show (∑ i, sqrt2 ^ kSO3 M * blochEntry M i j * (sqrt2 ^ kSO3 M * blochEntry M i l))
+      = sqrt2 ^ kSO3 M * sqrt2 ^ kSO3 M * ∑ i, blochEntry M i j * blochEntry M i l from by
+        rw [Finset.mul_sum]; apply Finset.sum_congr rfl; intro i _; ring,
+    hδ, hsq]
+  by_cases hjl : j = l
+  · rw [if_pos hjl, if_pos hjl, mul_one]
+  · rw [if_neg hjl, if_neg hjl, mul_zero, ZOmegaSqrt2.of_zero]
+
 end KMM
 
 end SKEFTHawking.RossSelinger
