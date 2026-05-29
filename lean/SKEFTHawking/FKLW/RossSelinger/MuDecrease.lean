@@ -223,6 +223,19 @@ theorem chooseReductionMu_succeeds {M : Mat2} (hu : IsUnitaryT M) (h4 : 4 ≤ mu
   obtain ⟨k', hk'⟩ := Option.isSome_iff_exists.mp hsome
   exact ⟨k', hk'⟩
 
+/-- **Finiteness substrate for the `𝕊₃` base case**: `μ(M) ≤ 3` bounds the top-left
+entry's `√2`-denominator exponent, `denExp(M₀₀) ≤ 2`. (`μ = 2·denExp(M₀₀) − gde(|x|²)`
+with `gde ≤ 1`, so `2·denExp(M₀₀) ≤ μ + 1 ≤ 4`.) Together with unitarity (`|M₀₀| ≤ 1`)
+this makes the `μ ≤ 3` orbit finite — the precondition for the base-case coverage. -/
+theorem denExp_le_two_of_muMeasure_le_three {M : Mat2} (h : muMeasure M ≤ 3) :
+    denExp (M 0 0) ≤ 2 := by
+  by_cases hd : denExp (M 0 0) ≤ 1
+  · omega
+  · have hd2 : 2 ≤ denExp (M 0 0) := by omega
+    obtain ⟨x, hx, hg, hμ⟩ := entry_cleared_form hd2
+    unfold muMeasure at h
+    omega
+
 end KMM
 
 end SKEFTHawking.RossSelinger
