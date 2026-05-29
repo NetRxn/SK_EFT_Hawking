@@ -1467,6 +1467,7 @@ import SKEFTHawking.FKLW.CliffordCCZSU8PauliWords
 import SKEFTHawking.FKLW.CliffordCCZSU8KronK8Closure
 import SKEFTHawking.FKLW.CliffordCCZSU8Irreducible
 import SKEFTHawking.FKLW.CliffordCCZSU8OrbitWitness
+import SKEFTHawking.FKLW.CliffordCCZSU8OrbitProps
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
