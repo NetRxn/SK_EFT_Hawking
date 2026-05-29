@@ -582,6 +582,71 @@ DR-validated 5-milestone decomposition. Total ~2,500 LoC across the deterministi
 
 **EXIT:** commit `feat(phase6x-residual-F-M4): KMM exact synthesis with sde-decreasing termination + length bound`.
 
+##### Finish-F PROGRESS LEDGER + source-grounded build plan (2026-05-29 session)
+
+**Substrate SHIPPED (19 kernel-pure commits, runtime ring `ZOmegaSqrt2`):**
+`ZOmegaSqrt2` runtime `CommRing` (Quotient of `Frac`) + computable `CliffordTGate`
+`gateMatrix`/`interp` + `Sde.lean` (`dividesSqrt2`/`divSqrt2`/`lowestDenExp` +
+`denExp` quotient lift + `denExp_le_iff` clearing char) + `SdeMatrix.lean`
+(`sdeC`) + `KMMReduce.lean` (`T⁸=I`, `reconWord`, `interp_reconWord_mul`) +
+`Conj.lean` (`conj`/`normSq` algebra) + `ResidueSqrt2.lean` (the
+`𝔽₂[ε]/(ε²)` residue ring, NOT 𝔽₄ — √2=𝔭² not prime) + `GdeSqrt2.lean`
+(`dvdSqrt2Pow` decidable predicate) + `UnitaryT.lean` (`IsUnitaryT` + column
+normSq) + `DenExpValuation.lean` (non-archimedean `denExp` + **Lemma 4 core**
+`denExp_normSq_col0_eq`) + `RealSubring.lean` (ℤ[√2] peel swap `(a,b)↦(b,a/2)`,
+Prop 1 substrate) + `GdeValue.lean` (**ℕ-valued `gdePeel` + predicate↔value
+bridge `dvdSqrt2Pow_iff_le_gdePeel`**).
+
+**SOURCE-GROUNDED Lemma statements (verbatim from arXiv:1206.5236, this session):**
+- **Lemma 3:** for `(z w)ᵀ` over `ℤ[1/√2,i]` with `sde(|z|²) ≥ 4`, for each
+  `s∈{−1,0,1}` ∃ `k∈{0,1,2,3}` with `sde(|z+wωᵏ/√2|²) − sde(|z|²) = s`.
+  (Synthesis uses `s=−1`.) Proof = `gde(|x+ωᵏy|²) − gde(|x|²)` achieves all of
+  `{1,2,3}`, case split `gde(|x|²)∈{0,1}`.
+- **Lemma 4:** `|z|²+|w|²=1`, `sde(z)≥1 ∨ sde(w)≥1` ⟹ `sde(z)=sde(w)` and
+  `gde(|x|²)=gde(|y|²)≤1` (`x=z√2^sde(z)`, `y=w√2^sde(w)`).
+- **Lemma 5:** `|x|²+|y|²=√2^m` ⟹ `gde(|x+y|²) ≥ min(m, 1+⌊(gde|x|²+gde|y|²)/2⌋)`.
+- **Prop 1:** `gde(a+√2b)` even ⟺ `v₂(b) ≥ v₂(a)` (matches `RealSubring` peel).
+- **Algorithm 1:** tracks `s = sde(|z₀₀|²)`; loop while `s>3`; base case `s≤3`
+  (table 𝕊₃ of all `sde≤3` unitaries); each step emits syllable `TᵏH`, `k≤3`.
+
+**KEY CORRECTION — the algorithm tracks `sde(|z₀₀|²)` (squared modulus), base
+case `sde(|z₀₀|²) ≤ 3`** (not `sde(M) ≤ 3` of the raw matrix). The `chooseReduction`
+/ `kmmReduce` specs in `KMM.lean` currently phrase reduction over `sde M`; the
+concrete instance must phrase it over `sde(|z₀₀|²)` per the source.
+
+**⚠ SCAFFOLD DEFECT (must fix at assembly):** `KMMReduce.reconWord j :=
+replicate (8−j) .T ++ [.H]` uses up to **8 raw T gates/step**, achieving only
+`N₃ + 9·k`. Algorithm 1 emits `TᵏH` (k≤3, ≤4 gates/step) → the `N₃ + 4·k`
+bound the `KMMReduction.length_bound` field hardcodes. **Fix:** emit the
+reconstruction syllable `T^(8−k)·H` S/Z-compressed (`T⁷=Z·S·T`, `T⁶=Z·S`,
+`T⁵=Z·T`; S,Z ∈ CliffordTGate) → ≤4 gates/step. The `interp_reconWord_mul`
+correctness identity stays valid (same operator, fewer gates). Without this the
+honest bound is `N₃+9·k`, which would force re-stating Item G's `L≤90<100`
+arithmetic.
+
+**DISCHARGE NOTE:** `Nonempty KMMReduction` CANNOT be discharged by
+`Classical.choose` of `IsCliffordTRealizable` — that gives `correct` for free
+but provides NO `length_bound` (a random gate sequence). The `length_bound`
+field IS KMM Corollary 1, so the discharge requires the actual algorithm +
+length analysis. No shortcut.
+
+**REMAINING build order (each MCP-verified, kernel-pure):**
+1. `gde(|·|²)` on the real subring + Prop 1 (parity via `v₂`, i.e. `padicValInt 2`
+   of `RealSubring` coords a=z.d, b=z.c) — `gdePeel` value layer SHIPPED.
+2. **Lemma 4** value form (`gde(|x|²)=gde(|y|²)≤1`) — core SHIPPED as
+   `denExp_normSq_col0_eq`; lift to `gde` value.
+3. **Lemma 5** (`gdePeel(|x+y|²) ≥ min(m, 1+⌊(g₁+g₂)/2⌋)`) via `normSq_add`
+   cross-term + `gdePeel` arithmetic.
+4. **Lemma 3** (∃k∈{0,1,2,3}: `gde(|x+ωᵏy|²)−gde(|x|²) = 1` ⟹ sde reduces by 1)
+   = Lemma5 + Lemma4 `{0,1}` case analysis (likely finite `decide` over the
+   residue ring once gde≤1 pins residues).
+5. Fix `reconWord` → S/Z-compressed (the defect above).
+6. `chooseReduction` (computable `Fin 4` search) over `sde(|z₀₀|²)`.
+7. `cliffordLookup` / 𝕊₃ coverage (`sde(|z₀₀|²)≤3` realizable → word ≤ N₃) —
+   the other genuinely hard piece (finite orbit enumeration).
+8. `kmmReduce` strong-induction assembly (`interp_reconWord_mul` correctness +
+   length accounting) + discharge `Nonempty KMMReduction`.
+
 #### Item G (M5 stub) — KMM-derived base finder integration
 
 **GOAL:** Replace lightweight `cliffordTBaseFinder_constructive` (Finset-enum, exp-length) with `cliffordTBaseFinder_kmm` derived from F's KMM exact synthesis at SK base `ε₀ = 2⁻⁴`, discharging `BaseFinder_length_bounded` with worst-case L ≤ 90 < `skLengthBaseCase = 100` (DR §4.2).
