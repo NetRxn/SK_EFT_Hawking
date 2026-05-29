@@ -802,6 +802,18 @@ bounded-BFS function + reachability. Once proven: `kmmReduction_of_coverage cove
 makes `Nonempty KMMReduction` UNCONDITIONAL ⟹ discharges the `[Nonempty KMMReduction]`
 gating ⟹ Item G (closes orphan #2) ⟹ H/I ⟹ Stage 9/10/13.
 
+**⏳ DR DISPATCHED 2026-05-29** (`Lit-Search/tasks/submitted/20260529_phase6x_s3_base_coverage_formalization.md`).
+The crux is the **completeness/connectivity**: is the `μ≤3` region connected-to-1 within
+itself, so the BFS-from-1 closure = all `μ≤3` realizable unitaries? KMM *assert* but do
+NOT prove this (Cor 1 p.7); brute-force enumeration is infeasible (~`10²⁶` candidates).
+DR Q's: Q1 the completeness proof; **Q2 the likely-cleaner Matsumoto–Amano normal-form
+route** (unique canonical word, `T-count = sde`, ⟹ `sde≤3` ⟹ canonical length `≤ N₃` by
+construction — sidesteps the BFS connectivity); Q3 tractable Lean representation; Q4 the
+`N₃` numeral (our BFS=9 vs folklore 15). **Resume on DR return.** Finiteness substrate
+shipped (`column0_cleared_bounded`, `denExp_le_two_of_denExp_normSq_le_three`); the
+row-norm/all-entry bound (left-inv⟹right-inv needs `IsStablyFiniteRing ZOmegaSqrt2` or
+the 2×2 det route) is the next prerequisite if the BFS route (Q3a) is chosen.
+
 The robust shipped pieces make the discharge a short assembly. Concretely:
 
 **(A) Reconcile the reduction measure. ✅ DECISION LOCKED 2026-05-29 (option b).**
