@@ -189,4 +189,40 @@ theorem mu_decrease {M : Mat2} (hu : IsUnitaryT M) (h4 : 4 ≤ denExp (normSq (M
 
 end ZOmegaSqrt2
 
+namespace KMM
+
+open ZOmegaSqrt2
+
+/-- **The KMM reduction measure** `μ(M) = sde(|z₀₀|²) = denExp(|M₀₀|²)` — the quantity
+KMM Algorithm 1 decrements. (`chooseReductionComp` in `KMMCompute.lean` tracks the
+*matrix* sde `sdeC`; this `μ` is the squared-modulus sde KMM actually uses.) -/
+def muMeasure (M : Mat2) : ℕ := denExp (normSq (M 0 0))
+
+/-- **The `μ`-tracking reduction selector**: the first `k ∈ {0,1,2,3}` whose
+reduction step strictly lowers `μ`, or `none`. The KMM-faithful selector. -/
+def chooseReductionMu (M : Mat2) : Option (Fin 4) :=
+  (List.finRange 4).find? (fun k => decide (muMeasure (reduceStep M k) < muMeasure M))
+
+/-- **By construction the selected `k` strictly reduces `μ`**. -/
+theorem chooseReductionMu_reduces {M : Mat2} {k : Fin 4} (h : chooseReductionMu M = some k) :
+    muMeasure (reduceStep M k) < muMeasure M := by
+  rw [chooseReductionMu] at h
+  have hp := List.find?_some h
+  simpa using hp
+
+/-- **Fuel-sufficiency**: for a unitary `M` with `μ(M) ≥ 4`, the selector succeeds.
+This is the KMM Lemma 3 existence (via `ZOmegaSqrt2.mu_decrease`) packaged as the
+`chooseReductionMu` success the recursion needs to keep descending. -/
+theorem chooseReductionMu_succeeds {M : Mat2} (hu : IsUnitaryT M) (h4 : 4 ≤ muMeasure M) :
+    ∃ k : Fin 4, chooseReductionMu M = some k := by
+  obtain ⟨k, hk⟩ := mu_decrease hu h4
+  have hsome : ((List.finRange 4).find?
+      (fun j => decide (muMeasure (reduceStep M j) < muMeasure M))).isSome := by
+    rw [List.find?_isSome]
+    exact ⟨k, List.mem_finRange k, by simpa using hk⟩
+  obtain ⟨k', hk'⟩ := Option.isSome_iff_exists.mp hsome
+  exact ⟨k', hk'⟩
+
+end KMM
+
 end SKEFTHawking.RossSelinger
