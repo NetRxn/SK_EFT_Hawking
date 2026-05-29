@@ -132,4 +132,60 @@ theorem cnot_tableau (v1 v2 : Fin 4) : ∀ i1 i2 j1 j2 : Fin 2,
      fin_cases i1 <;> fin_cases i2 <;> fin_cases j1 <;> fin_cases j2 <;>
        simp [pauli4, SKEFTHawking.σ_x, SKEFTHawking.σ_y, SKEFTHawking.σ_z, Matrix.one_apply])
 
+/-! ## 4. The three CNOT tableau lifts (matrix conjugation = sign • transformed tensor-Pauli)
+
+Assembling §1–§3: `permMatrix σ_cnot · kronK8 v · permMatrix σ_cnot⁻¹ = cnotSign • kronK8 (cnotLabel v)`.
+The proof reindexes (§1), evaluates at the bit-iso (`bitIso8.surjective`), applies the CNOT bit-action
+(§2) and the `kronK8` bit-entry (§2), and closes with the 2-qubit tableau (§3) — the spectator qubit's
+Pauli factor cancels (handled by `linear_combination` weighting / `ring`). Each `CNOT_{ct}` acts on its
+control-target qubit pair; the third qubit is the spectator. -/
+
+/-- **CNOT₁₂ tableau lift**: `permMatrix σ_cnot_12 · kronK8 v · permMatrix σ_cnot_12⁻¹
+= cnotSign v.1 v.2.1 • kronK8 (cnotLabel 0 1 v)`. -/
+theorem cnot12_kronK8_conj (v : Fin 4 × Fin 4 × Fin 4) :
+    Equiv.Perm.permMatrix ℂ σ_cnot_12 * kronK8 v * Equiv.Perm.permMatrix ℂ σ_cnot_12⁻¹
+      = cnotSign v.1 v.2.1 • kronK8 (cnotLabel 0 1 v) := by
+  rw [permMatrix_conj_eq_submatrix]
+  ext a b
+  obtain ⟨i, rfl⟩ := bitIso8.surjective a
+  obtain ⟨j, rfl⟩ := bitIso8.surjective b
+  obtain ⟨v1, v2, v3⟩ := v
+  rw [Matrix.submatrix_apply, cnot12_bitIso8, cnot12_bitIso8, kronK8_bitIso8_apply,
+      Matrix.smul_apply, smul_eq_mul,
+      show cnotLabel 0 1 (v1, v2, v3) = ((cnotLabelPair v1 v2).1, (cnotLabelPair v1 v2).2, v3) from rfl,
+      kronK8_bitIso8_apply]
+  linear_combination (pauli4 v3 i.2.2 j.2.2) * cnot_tableau v1 v2 i.1 i.2.1 j.1 j.2.1
+
+/-- **CNOT₁₃ tableau lift**: `permMatrix σ_cnot_13 · kronK8 v · permMatrix σ_cnot_13⁻¹
+= cnotSign v.1 v.2.2 • kronK8 (cnotLabel 0 2 v)`. -/
+theorem cnot13_kronK8_conj (v : Fin 4 × Fin 4 × Fin 4) :
+    Equiv.Perm.permMatrix ℂ σ_cnot_13 * kronK8 v * Equiv.Perm.permMatrix ℂ σ_cnot_13⁻¹
+      = cnotSign v.1 v.2.2 • kronK8 (cnotLabel 0 2 v) := by
+  rw [permMatrix_conj_eq_submatrix]
+  ext a b
+  obtain ⟨i, rfl⟩ := bitIso8.surjective a
+  obtain ⟨j, rfl⟩ := bitIso8.surjective b
+  obtain ⟨v1, v2, v3⟩ := v
+  rw [Matrix.submatrix_apply, cnot13_bitIso8, cnot13_bitIso8, kronK8_bitIso8_apply,
+      Matrix.smul_apply, smul_eq_mul,
+      show cnotLabel 0 2 (v1, v2, v3) = ((cnotLabelPair v1 v3).1, v2, (cnotLabelPair v1 v3).2) from rfl,
+      kronK8_bitIso8_apply]
+  linear_combination (pauli4 v2 i.2.1 j.2.1) * cnot_tableau v1 v3 i.1 i.2.2 j.1 j.2.2
+
+/-- **CNOT₂₃ tableau lift**: `permMatrix σ_cnot_23 · kronK8 v · permMatrix σ_cnot_23⁻¹
+= cnotSign v.2.1 v.2.2 • kronK8 (cnotLabel 1 2 v)`. -/
+theorem cnot23_kronK8_conj (v : Fin 4 × Fin 4 × Fin 4) :
+    Equiv.Perm.permMatrix ℂ σ_cnot_23 * kronK8 v * Equiv.Perm.permMatrix ℂ σ_cnot_23⁻¹
+      = cnotSign v.2.1 v.2.2 • kronK8 (cnotLabel 1 2 v) := by
+  rw [permMatrix_conj_eq_submatrix]
+  ext a b
+  obtain ⟨i, rfl⟩ := bitIso8.surjective a
+  obtain ⟨j, rfl⟩ := bitIso8.surjective b
+  obtain ⟨v1, v2, v3⟩ := v
+  rw [Matrix.submatrix_apply, cnot23_bitIso8, cnot23_bitIso8, kronK8_bitIso8_apply,
+      Matrix.smul_apply, smul_eq_mul,
+      show cnotLabel 1 2 (v1, v2, v3) = (v1, (cnotLabelPair v2 v3).1, (cnotLabelPair v2 v3).2) from rfl,
+      kronK8_bitIso8_apply]
+  linear_combination (pauli4 v1 i.1 j.1) * cnot_tableau v2 v3 i.2.1 i.2.2 j.2.1 j.2.2
+
 end SKEFTHawking.FKLW.CliffordCCZSU8
