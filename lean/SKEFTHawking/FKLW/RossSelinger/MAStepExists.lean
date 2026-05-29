@@ -43,6 +43,7 @@ so it reduces to the per-gate base case (`decide`).
 import SKEFTHawking.FKLW.RossSelinger.MAStepDecrease
 import SKEFTHawking.FKLW.RossSelinger.BlochOrthogonal
 import SKEFTHawking.FKLW.RossSelinger.UnitaryClosure
+import SKEFTHawking.FKLW.RossSelinger.KMMLemma3Bridge
 
 set_option autoImplicit false
 
@@ -123,6 +124,71 @@ theorem blochNum_orthogonal {M : Mat2} (hu : ZOmegaSqrt2.IsUnitaryT M) (j l : Fi
   by_cases hjl : j = l
   · rw [if_pos hjl, if_pos hjl, mul_one]
   · rw [if_neg hjl, if_neg hjl, mul_zero, ZOmegaSqrt2.of_zero]
+
+/-! ## Reality of the cleared Bloch numerators + the coordinate bound -/
+
+/-- **Reality of the cleared Bloch numerator** (in `ZOmega`): `conj (B i j) = B i j`.
+Lifts `blochEntry_realizable_real` through the clearing (`of` injective + `conj_of`
++ `conj_sqrt2_pow`). -/
+theorem blochNum_real {M : Mat2} (h : IsCliffordTRealizable M) (i j : Fin 3) :
+    ZOmega.conj (blochNum M i j) = blochNum M i j := by
+  apply of_injective
+  rw [← ZOmegaSqrt2.conj_of, ← blochNum_spec, ZOmegaSqrt2.conj_mul,
+      ZOmegaSqrt2.conj_sqrt2_pow, blochEntry_realizable_real h]
+
+/-- Reality forces the `ω²`-coordinate to vanish. -/
+theorem blochNum_b_zero {M : Mat2} (h : IsCliffordTRealizable M) (i j : Fin 3) :
+    (blochNum M i j).b = 0 := by
+  have hb := congrArg ZOmega.b (blochNum_real h i j)
+  simp only [ZOmega.conj_b] at hb; omega
+
+/-- Reality forces the `ω³`-coordinate to be `−a`. -/
+theorem blochNum_c_eq {M : Mat2} (h : IsCliffordTRealizable M) (i j : Fin 3) :
+    (blochNum M i j).c = -(blochNum M i j).a := by
+  have hc := congrArg ZOmega.c (blochNum_real h i j)
+  simp only [ZOmega.conj_c] at hc; omega
+
+/-- **Per-column squared-modulus sum** `∑ᵢ |Bᵢⱼ|² = 2^kSO3` in `ZOmega`: by reality
+`|Bᵢⱼ|² = Bᵢⱼ · conj Bᵢⱼ = Bᵢⱼ²`, so this is the `j = j` case of `blochNum_orthogonal`. -/
+theorem blochNum_normSq_sum {M : Mat2} (h : IsCliffordTRealizable M) (j : Fin 3) :
+    ∑ i, ZOmega.normSq (blochNum M i j) = (2 : ZOmega) ^ kSO3 M := by
+  have hortho := blochNum_orthogonal (isUnitaryT_of_isCliffordTRealizable h) j j
+  rw [if_pos rfl] at hortho
+  rw [← hortho]
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [ZOmega.normSq, blochNum_real h i j]
+
+/-- **`(2 : ZOmega)^k` has rational part `2^k`.** -/
+theorem two_pow_d (k : ℕ) : ((2 : ZOmega) ^ k).d = 2 ^ k := by
+  induction k with
+  | zero => rfl
+  | succ n ih =>
+      rw [pow_succ, pow_succ]
+      rw [show (2 : ZOmega) = ZOmega.ofInt 2 from rfl] at *
+      simp only [ZOmega.mul_d, ZOmega.ofInt_a, ZOmega.ofInt_b, ZOmega.ofInt_c, ZOmega.ofInt_d] at *
+      ring_nf
+      ring_nf at ih
+      omega
+
+/-- **Coordinate bound** from `kSO3 ≤ 3`: each cleared Bloch numerator's
+squared-modulus rational part `(|Bᵢⱼ|²).d = a²+b²+c²+d² ≤ 2^kSO3 ≤ 8` (since the
+three sum to `2^kSO3` and each is a sum of squares `≥ 0`). -/
+theorem blochNum_normSq_d_le {M : Mat2} (h : IsCliffordTRealizable M) (hk : kSO3 M ≤ 3)
+    (i j : Fin 3) : (ZOmega.normSq (blochNum M i j)).d ≤ 8 := by
+  have hsum := congrArg ZOmega.d (blochNum_normSq_sum h j)
+  rw [two_pow_d] at hsum
+  have hsumd : ∑ i', (ZOmega.normSq (blochNum M i' j)).d = 2 ^ kSO3 M := by
+    rw [← hsum]; simp [Fin.sum_univ_three, ZOmega.add_d]
+  have hle : (ZOmega.normSq (blochNum M i j)).d ≤ 2 ^ kSO3 M := by
+    rw [← hsumd]
+    have hnn : ∀ i', 0 ≤ (ZOmega.normSq (blochNum M i' j)).d := by
+      intro i'; rw [ZOmega.normSq_d]; positivity
+    fin_cases i <;> simp_all [Fin.sum_univ_three] <;> nlinarith [hnn 0, hnn 1, hnn 2]
+  have : (2 : ℤ) ^ kSO3 M ≤ 8 := by
+    calc (2:ℤ)^kSO3 M ≤ 2^3 := pow_le_pow_right₀ (by norm_num) hk
+      _ = 8 := by norm_num
+  omega
 
 end KMM
 
