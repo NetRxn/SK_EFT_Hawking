@@ -88,6 +88,24 @@ theorem denExp_add_eq_max_of_ne {a b : ZOmegaSqrt2} (h : denExp a ≠ denExp b) 
     rwa [he] at this
   omega
 
+/-- **`denExp` is sub-multiplicative**: `denExp (x·y) ≤ denExp x + denExp y`
+(the valuation property `v(xy) = v(x)+v(y)` as an inequality on the
+denominator exponent). The `/2 = ·invSqrt2²` step in KMM Lemma 3 uses this. -/
+theorem denExp_mul_le (x y : ZOmegaSqrt2) :
+    denExp (x * y) ≤ denExp x + denExp y := by
+  rw [denExp_le_iff]
+  obtain ⟨wx, hwx⟩ := denExp_le_iff.mp (le_refl (denExp x))
+  obtain ⟨wy, hwy⟩ := denExp_le_iff.mp (le_refl (denExp y))
+  refine ⟨wx * wy, ?_⟩
+  have hd : (sqrt2 : ZOmegaSqrt2) ^ (denExp x + denExp y) * (x * y)
+          = ((sqrt2 : ZOmegaSqrt2) ^ denExp x * x) * ((sqrt2 : ZOmegaSqrt2) ^ denExp y * y) := by
+    rw [pow_add]; ring
+  rw [hd, hwx, hwy, ← of_mul]
+
+/-- **`denExp invSqrt2 = 1`** (`1/√2` has denominator exponent one). -/
+@[simp] theorem denExp_invSqrt2 : denExp invSqrt2 = 1 := by
+  rw [invSqrt2_def, denExp_mk]; decide
+
 /-- **KMM Lemma 4 (core)**: for a unitary `M`, the two column-0 entries
 have equal squared-modulus `sde`: `denExp (|M₀₀|²) = denExp (|M₁₀|²)`.
 
