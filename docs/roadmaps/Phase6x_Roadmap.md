@@ -630,22 +630,39 @@ but provides NO `length_bound` (a random gate sequence). The `length_bound`
 field IS KMM Corollary 1, so the discharge requires the actual algorithm +
 length analysis. No shortcut.
 
+**DOSSIER READ DIRECTLY (2026-05-29, per CLAUDE.md no-delegation rule)** —
+`Lit-Search/Phase-6x/Ross-Selinger Clifford+T Synthesis- A Pre-Implementation
+Research Dossier.md`. Canonical reference. Confirms: (i) bound
+`n_g(U) ≤ N₃ + 4·sde_{|·|²}(U)` (Cor 1, p.7–8) + reverse
+`sde ≤ N_{H,3}+3+⌊(n_g−N₃)/2⌋`; (ii) §3.3 `chooseReduction` = residue of `U`'s
+entries in `ZOmega/√2 ≃ ZMod 2[i]` (= our `ResidueSqrt2` ring `𝔽₂[ε]/(ε²)`,
+since `𝔽₂[i]=𝔽₂[x]/((x+1)²)`) selecting the unique `j`; (iii) `kmmReduce` uses
+a FUEL `n` (init = sde), base `cliffordLookup U` at `n=0`; (iv) `N₃` value is
+UNKNOWN to the dossier — compute by `#eval`/BFS over the `sde≤3` orbit and pin
+as a `def`. NB the dossier's `kmmReduce` sketch emits `T^j::H::gates`, which is
+LOOSE — the rigorous reconstruction is `T^(8−j)·H` (our `interp_reconWord_mul`).
+
 **REMAINING build order (each MCP-verified, kernel-pure):**
-1. `gde(|·|²)` on the real subring + Prop 1 (parity via `v₂`, i.e. `padicValInt 2`
-   of `RealSubring` coords a=z.d, b=z.c) — `gdePeel` value layer SHIPPED.
+1. ✅ `gdePeel` ℕ-valued gde + predicate↔value bridge — SHIPPED (`b5771b9`).
+   Still TODO: Prop 1 parity (`v₂` via `padicValInt 2` of `RealSubring` coords
+   a=z.d, b=z.c) for exact gde values.
 2. **Lemma 4** value form (`gde(|x|²)=gde(|y|²)≤1`) — core SHIPPED as
    `denExp_normSq_col0_eq`; lift to `gde` value.
 3. **Lemma 5** (`gdePeel(|x+y|²) ≥ min(m, 1+⌊(g₁+g₂)/2⌋)`) via `normSq_add`
    cross-term + `gdePeel` arithmetic.
 4. **Lemma 3** (∃k∈{0,1,2,3}: `gde(|x+ωᵏy|²)−gde(|x|²) = 1` ⟹ sde reduces by 1)
-   = Lemma5 + Lemma4 `{0,1}` case analysis (likely finite `decide` over the
-   residue ring once gde≤1 pins residues).
-5. Fix `reconWord` → S/Z-compressed (the defect above).
-6. `chooseReduction` (computable `Fin 4` search) over `sde(|z₀₀|²)`.
+   = Lemma5 + Lemma4 `{0,1}` case analysis. Direct residue form: need
+   `2 ∣ (x+ωᵏy)` for the cleared column numerators — a finite `decide`/residue
+   computation over `ResidueSqrt2` once unitarity pins the residues.
+5. ✅ S/Z-compressed reconstruction syllable `reconWordC` (≤4 gates/step,
+   `interp_reconWordC_mul`/`_eq`) — SHIPPED (`360023c`). Enables the `4·k` step.
+6. `chooseReduction` (computable `Fin 4` search) over `sde(|z₀₀|²)` via
+   `ResidueSqrt2` residue selection (dossier §3.3).
 7. `cliffordLookup` / 𝕊₃ coverage (`sde(|z₀₀|²)≤3` realizable → word ≤ N₃) —
-   the other genuinely hard piece (finite orbit enumeration).
-8. `kmmReduce` strong-induction assembly (`interp_reconWord_mul` correctness +
-   length accounting) + discharge `Nonempty KMMReduction`.
+   the other genuinely hard piece (finite orbit enumeration; pin `N₃` by BFS).
+8. `kmmReduce` fuel-recursion assembly (`interp_reconWordC_mul` correctness +
+   `reconWordC_length_le_four` length accounting) + discharge `Nonempty
+   KMMReduction`.
 
 #### Item G (M5 stub) — KMM-derived base finder integration
 
