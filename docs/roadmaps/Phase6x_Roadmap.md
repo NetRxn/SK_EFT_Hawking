@@ -785,14 +785,22 @@ fuel-sufficiency. THEN (C) cliffordLookup + (D) discharge.
 
 The robust shipped pieces make the discharge a short assembly. Concretely:
 
-**(A) Reconcile the reduction measure.** `chooseReductionComp` currently lowers
-the *matrix* sde `sdeC`; KMM Lemma 3 is stated for `sde(|z₀₀|²)`. `kmmReduceFuel`
-+ its correctness + its fuel-length bound are **measure-AGNOSTIC** (they hold for
-any selector/fuel), so NO rework there. Decide from Q1 whether to (a) keep `sdeC`
-and connect Lemma 3's `sde(|z₀₀|²)` decrease to an `sdeC` decrease, or (b)
-re-point `chooseReductionComp` to track `sde(|z₀₀|²)` (a one-line measure swap).
-[`sde(|z₀₀|²)` takes values {0,2,3,4,…}; the BFS shows `sde(|z₀₀|²)=2a−gde` with
-`gde∈{0,1}`, so matrix `sdeC ≈ sde(|z₀₀|²)`-driven.]
+**(A) Reconcile the reduction measure. ✅ DECISION LOCKED 2026-05-29 (option b).**
+`chooseReductionComp` currently lowers the *matrix* sde `sdeC`; KMM Lemma 3 is for
+`sde(|z₀₀|²)`. **Re-point to `μ(M) := denExp(normSq(M 0 0)) = sde(|z₀₀|²)`** (the
+squared-modulus sde). This is NOT a free choice — it is forced by:
+  (1) the KMM paper (arXiv:1206.5236, confirmed via ar5iv): `sde^|·|²(U) =
+      sde(|z₀₀|²)`, Cor 1 `n_g ≤ N₃ + 4·sde(|z₀₀|²)`; `sde(|H₀₀|²)=2` but matrix
+      `sde(H)=1`, so they differ ~2× and the matrix form is unsatisfiable;
+  (2) this roadmap's own KEY CORRECTION above ("must phrase over sde(|z₀₀|²)");
+  (3) NO conflicting private constraint: the vcc/gridcert cert engine's
+      length-bound certs reference the Solovay-Kitaev headline FQNs
+      (`solovayKitaev_dawson_nielsen_…`, exponent log5/log(3/2)), NOT the KMM
+      `N₃+4·sde` formula — the KMM bound is internal to the base finder (F/G).
+**Consequence:** the `KMMReduction.length_bound` field (matrix `sde_le M k`,
+`≤ N₃+4·k`) is REFACTORED to `≤ N₃ + 4·denExp(normSq(M 0 0))`. `kmmReduceFuel`
+correctness + fuel-length are measure-agnostic (no rework); use a `μ`-tracking
+selector. [`sde(|z₀₀|²)` ∈ {0,2,3,4,…}; `=2a−gde`, gde∈{0,1}.]
 
 **(B) Lemma 3 → fuel-sufficiency.** Formalize Q1's `∃k:Δgde=3` (via the
 `𝔭=(1−ζ₈)`-adic argument the DR supplies) as: `M` realizable, `sde≥4 ⟹

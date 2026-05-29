@@ -75,6 +75,8 @@ substrate spec; future ships construct concrete instances satisfying it.
 -/
 
 import SKEFTHawking.FKLW.RossSelinger.CliffordTGate
+import SKEFTHawking.FKLW.RossSelinger.Conj
+import SKEFTHawking.FKLW.RossSelinger.Sde
 
 set_option autoImplicit false
 
@@ -199,9 +201,14 @@ structure KMMReduction where
               CliffordTGate.interp (reduce M) = M
   /-- **The KMM constant `N₃`** (max gate count among `sde ≤ 3` orbit). -/
   N₃ : ℕ
-  /-- **Length bound (KMM Corollary 1)**: `n_g ≤ N₃ + 4·sde`. -/
-  length_bound : ∀ M : Mat2, ∀ k : ℕ, IsCliffordTRealizable M →
-                   sde_le M k → (reduce M).length ≤ N₃ + 4 * k
+  /-- **Length bound (KMM Corollary 1)**: `n_g(U) ≤ N₃ + 4·sde^|·|²(U)`, where
+  `sde^|·|²(U) = sde(|z₀₀|²) = denExp(|M₀₀|²)` is the **squared-modulus** smallest
+  denominator exponent of the top-left entry (arXiv:1206.5236 Cor 1, p.7–8). This
+  is the quantity KMM Algorithm 1 decrements per step (`while sde(|z₀₀|²) > 3`),
+  NOT the matrix clearing exponent `sde_le` (which differs by ~2×: e.g.
+  `sde(|H₀₀|²)=2` vs matrix `sde(H)=1`). -/
+  length_bound : ∀ M : Mat2, IsCliffordTRealizable M →
+                   (reduce M).length ≤ N₃ + 4 * ZOmegaSqrt2.denExp (ZOmegaSqrt2.normSq (M 0 0))
 
 /-- **The substrate Prop**: a `KMMReduction` instance exists.
 
@@ -353,33 +360,23 @@ requires the deferred runtime `ZOmegaSqrt2` (z, k) representation. -/
 noncomputable def N₃ [h : Nonempty KMMReduction] : ℕ :=
   (Classical.choice h).N₃
 
-/-- **Length bound of `kmmReduce`** (KMM Corollary 1 / Giles-Selinger
-2013 Theorem 7.10).
+/-- **Length bound of `kmmReduce`** (KMM Corollary 1).
 
-For any Clifford+T-realizable matrix `M` with `sde_le M k`, the
-synthesized gate sequence has length `≤ N₃ + 4·k`. Combined with
-`sde_spec`, this gives the headline `n_g(U) ≤ N₃ + 4·sde(U)`.
+For any Clifford+T-realizable matrix `M`, the synthesized gate sequence has length
+`≤ N₃ + 4·sde(|z₀₀|²)`, where `sde(|z₀₀|²) = denExp(|M₀₀|²)` is the squared-modulus
+smallest denominator exponent of the top-left entry — the quantity KMM Algorithm 1
+decrements per step. This is the load-bearing **length-bound result** of M4,
+proven from the `length_bound` field of the (classically-chosen) `KMMReduction`
+instance. It is the honest KMM Cor 1 form (`sde^|·|²(U) = sde(|z₀₀|²)`), not the
+~2×-tighter matrix-sde form.
 
-This is the load-bearing **length-bound result** of M4. Proven from the
-`length_bound` field of the (classically-chosen) `KMMReduction`
-instance.
-
-The bound's leading-constant matches Selinger 2012 (arXiv:1212.6253)
+The bound's leading constant matches Selinger 2012 (arXiv:1212.6253)
 deterministic-branch T-count `K + 4·log₂(1/ε)` with `K ≈ 11`. -/
 theorem kmmReduce_length_bound [h : Nonempty KMMReduction] (M : Mat2)
-    (k : ℕ) (hM : IsCliffordTRealizable M) (hsde : sde_le M k) :
-    (kmmReduce M).length ≤ N₃ + 4 * k := by
+    (hM : IsCliffordTRealizable M) :
+    (kmmReduce M).length ≤ N₃ + 4 * ZOmegaSqrt2.denExp (ZOmegaSqrt2.normSq (M 0 0)) := by
   unfold kmmReduce N₃
-  exact (Classical.choice h).length_bound M k hM hsde
-
-/-- **Headline length bound**: for realizable `M` with finite sde,
-`(kmmReduce M).length ≤ N₃ + 4 · sde M`.
-
-Composes `kmmReduce_length_bound` with `sde_spec`. -/
-theorem kmmReduce_length_le_N₃_plus_four_sde [h : Nonempty KMMReduction]
-    (M : Mat2) (hM : IsCliffordTRealizable M) (hf : hasFiniteSde M) :
-    (kmmReduce M).length ≤ N₃ + 4 * sde M :=
-  kmmReduce_length_bound M (sde M) hM (sde_spec hf)
+  exact (Classical.choice h).length_bound M hM
 
 end KMM
 end SKEFTHawking.RossSelinger
