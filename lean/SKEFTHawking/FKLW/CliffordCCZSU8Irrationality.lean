@@ -142,4 +142,24 @@ theorem not_isIntegral_inv_sqrt_two : ¬ IsIntegral ℤ (1 / (Real.sqrt 2 : ℂ)
     exact_mod_cast hq
   omega
 
+/-! ## The spectral meta-lemma: a finite-order matrix has an algebraic-integer trace -/
+
+/-- **A finite-order complex matrix has an algebraic-integer trace.** If `Mⁿ = 1` with `0 < n`, then
+each root of the characteristic polynomial is an `n`-th root of unity (hence an algebraic integer, by
+`isIntegral_of_pow_eq_one`), and `tr M` is the sum of those roots. General + reusable; the spectral
+core of "the seed is not finite order" (contrapositive: a matrix whose trace is *not* an algebraic
+integer cannot be of finite order). -/
+theorem trace_isIntegral_of_pow_eq_one {k : ℕ} [NeZero k] (M : Matrix (Fin k) (Fin k) ℂ)
+    {n : ℕ} (hn : 0 < n) (hM : M ^ n = 1) : IsIntegral ℤ M.trace := by
+  rw [Matrix.trace_eq_sum_roots_charpoly]
+  refine IsIntegral.multiset_sum (fun r hr => ?_)
+  refine isIntegral_of_pow_eq_one hn ?_
+  have hspec : r ∈ spectrum ℂ M :=
+    Matrix.mem_spectrum_iff_isRoot_charpoly.mpr (Polynomial.isRoot_of_mem_roots hr)
+  have key : r ^ n ∈ spectrum ℂ (Polynomial.aeval M (Polynomial.X ^ n)) :=
+    spectrum.subset_polynomial_aeval M (Polynomial.X ^ n)
+      ⟨r, hspec, by simp [Polynomial.eval_pow]⟩
+  rw [Polynomial.aeval_X_pow, hM, spectrum.one_eq] at key
+  simpa using key
+
 end SKEFTHawking.FKLW.CliffordCCZSU8
