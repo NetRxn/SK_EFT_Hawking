@@ -1,16 +1,16 @@
 {
-  "generated": "2026-05-28T19:32:27.115334",
+  "generated": "2026-05-28T20:36:00.192385",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 16359,
-    "theorems_total": 9073,
-    "theorems_substantive": 9048,
+    "total_declarations": 16398,
+    "theorems_total": 9100,
+    "theorems_substantive": 9075,
     "theorems_placeholder": 25,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 656,
+    "modules": 658,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -150,10 +150,12 @@
       "SKEFTHawking.FKLW.CliffordCCZSU8HeadlineDischarge",
       "SKEFTHawking.FKLW.CliffordCCZSU8HeadlineForm",
       "SKEFTHawking.FKLW.CliffordCCZSU8Irrationality",
+      "SKEFTHawking.FKLW.CliffordCCZSU8LiteralGeneratingSet",
       "SKEFTHawking.FKLW.CliffordCCZSU8LiteralSeed",
       "SKEFTHawking.FKLW.CliffordCCZSU8PerQubitContainment",
       "SKEFTHawking.FKLW.CliffordCCZSU8PerQubitFlow",
       "SKEFTHawking.FKLW.CliffordCCZSU8QubitEmbed",
+      "SKEFTHawking.FKLW.CliffordCCZSU8SeedNotFiniteOrder",
       "SKEFTHawking.FKLW.CliffordCCZSU8Substrate",
       "SKEFTHawking.FKLW.CliffordCCZSU8TangentSpan",
       "SKEFTHawking.FKLW.CliffordCCZSU8Tangents",
@@ -669,7 +671,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6447,
+    "definitions": 6459,
     "structures": 285,
     "instances": 462,
     "inductives": 92

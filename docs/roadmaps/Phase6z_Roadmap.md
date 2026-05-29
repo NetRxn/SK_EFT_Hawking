@@ -146,9 +146,16 @@ largely done; the *new* work is the seed → first-flow lift. Highlights (full i
 | Wave | Status |
 |---|---|
 | 6z.0 CAS gates | ✅ DONE — Gate 1 ✅ PASS (corrected spectrum); Gate 2 ✅ PASS = **BEST** (spanned dim 63). HARD GATE cleared. |
-| 6z.1 seed + irrationality | 🟡 IN-PROGRESS — ✅ irrationality obstruction (`CliffordCCZSU8Irrationality.lean`, `4d3577a`) + ✅ literal no-T generating set (`CliffordCCZSU8LiteralGeneratingSet.lean`, `418a090`). REMAINING CORE = **"seed not finite order"**: the normalized generators carry phases (`H_SU=i·H_raw`, `CCZ_SU=e^{iπ/8}·CCZ_mat`) so the group element is `g_grp=ω⁻¹·g₀` (central root-of-unity `ω`; DR2 line 79: phase preserves non-root-of-unity). **Route B (recommended, reuses 6y `litSeed_trace=1/√2`)**: `tr(g_lit)=ω₀⁻¹·(1/√2)` not an algebraic integer ⟹ not finite order; needs `1/√2∉𝒪`, `not_isIntegral_mul_left`, `finite-order⟹trace alg-int`, matrix bridge `litSeed=ω₀·g_lit`. (Route A: explicit eigenvector for `λ_+`.) |
-| 6z.2 first flow | ⏳ NOT STARTED |
+| 6z.1 seed + irrationality | ✅ **COMPLETE** — irrationality obstruction (`CliffordCCZSU8Irrationality.lean`, `4d3577a`) + literal no-T generating set (`CliffordCCZSU8LiteralGeneratingSet.lean`, `418a090`) + number-theory toolkit (`d5285a4`/`83dd66f`: `not_isIntegral_mul_left`, `\|λ\|=1`, `1/√2∉𝒪`) + spectral meta-lemma (`6c3f973`: `Mⁿ=1⟹tr alg-int`) + **seed core** (`CliffordCCZSU8SeedNotFiniteOrder.lean`, `5db3d4a`): `seedSU8 = CCZ·H_q1·H_q2·H_q3 ∈ H_of_G` is of **INFINITE order** (matrix bridge `g_lit.val=u•litSeed` + `tr=u·(1/√2)` not alg-int). All kernel-only. |
+| 6z.2 first flow | ⏳ **FRONTIER (research-grade)** — `exp(t·X₀) ∈ H_of_G` from the seed via von-Neumann/Kronecker accumulation. **Blocked on**: Mathlib spectral theorem is `IsHermitian`-only — need a **unitary/normal spectral theorem** to define `X₀ = i·log g_lit` and its 1-param flow (DR2 gotcha #3; ~150 LoC, itself may need "commuting Hermitians simultaneously diagonalizable"). Tractable sub-piece: `irrational_dense_on_circle` (1-D Kronecker via `AddSubgroup.dense_or_cyclic`). |
 | ~~6z.3 SU(d) Trotter~~ | ❌ DROPPED (Gate 2 = BEST) |
-| 6z.4 pure-conjugation spread | ⏳ NOT STARTED (~400 LoC, BEST scope) |
-| 6z.5 headline + Stage-13 | ⏳ NOT STARTED |
+| 6z.4 conjugation spread | ⏳ **FRONTIER (research-grade)** — witness `X = {Cⱼ X₀ Cⱼ⁻¹}` (flows free via `flow_conj_mem`), but **hX_spans needs the Clifford orbit of `X₀` to span 𝔰𝔲(8) in Lean**. Numerically true (Gate 2 = 63), but a direct 63×63 rank/Gram computation is infeasible (`X₀` is a matrix *log*, no closed form). Needs the **abstract Clifford-adjoint-irreducibility** argument (Clifford rep on the 63-dim Pauli space is irreducible ⟹ any nonzero orbit spans) — not in Mathlib. |
+| 6z.5 headline + Stage-13 | ⏳ NOT STARTED (gated on 6z.2 + 6z.4; then `cliffordCCZSU8_headline_of_witness`-style chain for the literal `GeneratingSet`) |
 | 6z.D Kronecker–Weyl | ⏳ DEFERRED |
+
+> **Frontier note (2026-05-28):** Wave 1 establishes the irrational-angle seed end-to-end (the alphabet
+> contains an infinite-order element — a complete, novel result). The density headline (Waves 2+4+5)
+> requires two pieces of **new research-grade Mathlib infrastructure** — a unitary spectral theorem and
+> Clifford-adjoint-irreducibility — neither completable as a clean (no-`sorry`, no-axiom, no-heartbeat)
+> increment in a single pass. These are the genuine next focused efforts; shipping sorried scaffolding
+> would violate Invariants #10/#15 and the correctness-over-expediency standard.
