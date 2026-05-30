@@ -111,4 +111,34 @@ theorem channelRep_mul (U W : Matrix (Fin 8) (Fin 8) ℂ) :
     rw [Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul, channelRep_eq_trace U r t]
     ring
 
+/-! ## Channel rep of a unitary is orthogonal; the gate-word bridge (increment L.A.2a) -/
+
+/-- **`Û · (Uᴴ)̂ = 1` for unitary `U`** (`U·Uᴴ = 1`): immediate from the homomorphism law
+(`channelRep_mul`) and `channelRep_one`. Together with `channelRep_conjTranspose_mul` this says the
+channel rep of a unitary is invertible with inverse `(Uᴴ)̂` — the matrix form of "`Û` is real
+orthogonal" (arXiv:2401.08950 §3.3, "(U†)̂ = (Û)†, Û unitary"). -/
+theorem channelRep_mul_conjTranspose (U : Matrix (Fin 8) (Fin 8) ℂ) (hU : U * Uᴴ = 1) :
+    channelRep U * channelRep Uᴴ = 1 := by
+  rw [← channelRep_mul, hU, channelRep_one]
+
+/-- **`(Uᴴ)̂ · Û = 1` for unitary `U`** (`Uᴴ·U = 1`): the other inverse identity. -/
+theorem channelRep_conjTranspose_mul (U : Matrix (Fin 8) (Fin 8) ℂ) (hU : Uᴴ * U = 1) :
+    channelRep Uᴴ * channelRep U = 1 := by
+  rw [← channelRep_mul, hU, channelRep_one]
+
+/-- **The channel rep of a unitary is a unit** (invertible `64×64` matrix), with inverse `(Uᴴ)̂` —
+the matrix form of "the channel representation `Û` is orthogonal" (arXiv:2401.08950 §3.3). -/
+theorem channelRep_isUnit (U : Matrix (Fin 8) (Fin 8) ℂ) (hU1 : U * Uᴴ = 1) (hU2 : Uᴴ * U = 1) :
+    IsUnit (channelRep U) :=
+  ⟨⟨channelRep U, channelRep Uᴴ, channelRep_mul_conjTranspose U hU1,
+      channelRep_conjTranspose_mul U hU2⟩, rfl⟩
+
+/-- **The channel rep is multiplicative over gate-word concatenation**: `(interp (gs ++ hs))̂ =
+(interp gs)̂ · (interp hs)̂`. The bridge from the Clifford+CCZ gate alphabet (`interp`,
+`interp_append`) into channel-rep land — used to push the dyadic-entry (Lemma 3.10) and Fact-3.9
+structure through a synthesized gate word by induction. -/
+theorem channelRep_interp_append (gs hs : List CliffordCCZGate) :
+    channelRep (interp (gs ++ hs)) = channelRep (interp gs) * channelRep (interp hs) := by
+  rw [interp_append, channelRep_mul]
+
 end SKEFTHawking.FKLW.MukhopadhyayCCZ
