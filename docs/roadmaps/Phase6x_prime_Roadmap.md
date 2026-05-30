@@ -1,4 +1,9 @@
-# Scope — the Clifford/CCZ channel-rep (Fact 3.9 / Theorem 3.8) unlock
+# Phase 6x′ — Clifford/CCZ channel-representation characterization (Fact 3.9 / Theorem 3.8)
+
+*A `prime` continuation of Phase 6x: the deep deferred layer of the Tier-2 Item-L exact-synthesis arc
+(Mukhopadhyay arXiv:2401.08950 — the channel rep, Fact 3.9, Lemma 3.10, Theorem 3.8 that the Item-L
+continuation explicitly documented as residual). Builds on the 6z Pauli substrate; discharges residuals
+consumed in 6x (Lemma 3.10, the Item-L `T^of ≥ sde₂` bound) and 6z (CCZ-essentiality converse).*
 
 **Status:** SCOPED 2026-05-30 (not started). The single highest-leverage remaining formalization: prove
 each generator's conjugation action on the 64 three-qubit Paulis, kernel-pure, to retire **three**

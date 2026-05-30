@@ -1238,3 +1238,9 @@ characterization + structural re-base (L.A); dyadic `sde₂` + Lemma 3.16 core (
 lower bound (L.C). The per-generator channel-rep entry analyses (Lemma 3.10 / Theorem 3.8 / Fact 3.9
 converse) and full MITM minimality (Conjecture 4.8) are documented optional follow-ons, not required
 for Exit. The runnable/commercial compiler remains the private side (out of scope).
+
+> **Follow-on (scoped 2026-05-30): the per-generator channel-rep analyses are now a staged blueprint —
+> Phase 6x′** (`docs/roadmaps/Phase6x_prime_Roadmap.md`). It discharges Lemma 3.10 (dyadic entries),
+> Fact 3.9 (⟹), and the `hC`/`hCCZ` bridges that make the L.C `T^of(U) ≥ sde₂(Û)` bound unconditional
+> (Phase 2), and as a cross-phase bonus closes the 6z CCZ-essentiality converse (Phase 1). Full MITM
+> minimality (Conjecture 4.8) remains out of scope.

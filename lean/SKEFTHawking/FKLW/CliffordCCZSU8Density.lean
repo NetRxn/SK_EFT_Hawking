@@ -120,8 +120,9 @@ theorem cliffordCCZLiteral_H_of_G_eq_top :
 SU(8) — every `U ∈ SU(8)` is approximated to arbitrary precision by a word in `{H_qi, S_qi, CNOT_ij, CCZ}`.
 `CCZ` is the non-Clifford resource driving density: it is what makes the seed's trace `1/√2` (not an
 algebraic integer), hence necessary for the infinite-order seed (formalized). The converse claim that
-`⟨H, S, CNOT⟩` alone is finite/non-dense is the standard fact, not formalized here. Density arises from
-the global irrational-angle seed, with no per-qubit dense subgroup. -/
+`⟨H, S, CNOT⟩` alone is finite/non-dense is the standard fact, not formalized here (scoped as Phase 6x′,
+`docs/roadmaps/Phase6x_prime_Roadmap.md`, Phase 1 — via the finite signed-permutation channel-rep image).
+Density arises from the global irrational-angle seed, with no per-qubit dense subgroup. -/
 theorem cliffordCCZLiteral_dense : IsDenseInSUd_gs cliffordCCZLiteralGeneratingSetSU8 := by
   obtain ⟨w⟩ := witness_nonempty
   exact densityFromWitness (by norm_num) w

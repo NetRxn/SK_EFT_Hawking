@@ -127,3 +127,9 @@ length-bounded ∀-coverage Clifford+T base finder (constructive finite ε₀-ne
 `BaseFinder_length_bounded` unconditionally; (ii) a formalized 3-qubit Clifford-group finiteness theorem to
 prove the CCZ-essentiality converse. Both are tracked as optional, the same class as the existing Item-I
 grid-completeness and 6x per-generator channel-rep residuals.
+
+**Scoped 2026-05-30 — Phase 6x′** (`docs/roadmaps/Phase6x_prime_Roadmap.md`) is the staged blueprint for
+the per-generator Clifford/CCZ channel-rep analyses, which retire follow-on (ii) [the 6z CCZ-essentiality
+converse, via the finite signed-permutation image — Phase 1] plus the 6x Lemma 3.10 + the unconditional
+Item-L `T^of ≥ sde₂` bound [Phase 2]. Follow-on (i) (the 6u ∀-coverage finder) and full MITM minimality
+remain separately out of scope.
