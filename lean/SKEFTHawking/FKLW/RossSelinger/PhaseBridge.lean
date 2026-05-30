@@ -227,4 +227,55 @@ theorem toComplexMat_gateMatrix_eq_Z :
   congr 1 <;> simp only [Matrix.smul_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
     Matrix.of_apply, smul_eq_mul, mul_zero, h0, h1]
 
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- `T_SU_mat⁴ = diag(-i, i)` (= `diag(e^{-iπ/2}, e^{iπ/2})`). -/
+theorem T_SU_mat_pow_four : T_SU_mat ^ 4 = !![-Complex.I, 0; 0, Complex.I] := by
+  have e1 : T_SU_mat ^ 4 = !![Complex.exp (-(Complex.I * ↑Real.pi / 2)), 0;
+      0, Complex.exp (Complex.I * ↑Real.pi / 2)] := by
+    have e2 : T_SU_mat ^ 2 = !![Complex.exp (-(Complex.I * ↑Real.pi / 4)), 0;
+        0, Complex.exp (Complex.I * ↑Real.pi / 4)] := by
+      rw [sq, T_SU_mat, Matrix.eta_fin_two (_ * _)]
+      congr 1 <;> simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero,
+        Matrix.cons_val_one, Matrix.of_apply, mul_zero, zero_mul, add_zero, zero_add,
+        ← Complex.exp_add] <;> congr 1 <;> ring
+    rw [show (4:ℕ) = 2 + 2 from rfl, pow_add, e2, Matrix.eta_fin_two (_ * _)]
+    congr 1 <;> simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.of_apply, mul_zero, zero_mul, add_zero, zero_add,
+      ← Complex.exp_add] <;> congr 1 <;> ring
+  rw [e1,
+    show Complex.exp (-(Complex.I * ↑Real.pi / 2)) = -Complex.I from by
+      rw [show -(Complex.I * ↑Real.pi / 2) = (↑(-(Real.pi/2)) * Complex.I) from by push_cast; ring,
+        Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin, Real.cos_neg, Real.sin_neg,
+        Real.cos_pi_div_two, Real.sin_pi_div_two]; push_cast; ring,
+    show Complex.exp (Complex.I * ↑Real.pi / 2) = Complex.I from by
+      rw [show (Complex.I * ↑Real.pi / 2) = (↑(Real.pi/2) * Complex.I) from by push_cast; ring,
+        Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin, Real.cos_pi_div_two,
+        Real.sin_pi_div_two]; push_cast; ring]
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **X phase-bridge identity**: `toComplexMat (gateMatrix X) = (-i) • ρ_CliffT (of0·of1⁴·of0)`
+(the off-diagonal product `H_SU·T_SU⁴·H_SU = !![0,i;i,0]`). -/
+theorem toComplexMat_gateMatrix_eq_X :
+    toComplexMat (gateMatrix CliffordTGate.X)
+      = gatePhase CliffordTGate.X • ((ρ_CliffT (gateWord CliffordTGate.X) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have hsqrt : ((↑(Real.sqrt 2) : ℂ))⁻¹ ^ 2 * 2 = 1 := by
+    rw [inv_pow, show (↑(Real.sqrt 2):ℂ)^2 = 2 from by
+      rw [← Complex.ofReal_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2)]; norm_num]; norm_num
+  have hcoe : ((ρ_CliffT (gateWord CliffordTGate.X) :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ)
+      = H_SU_mat * T_SU_mat ^ 4 * H_SU_mat := by
+    rw [show gateWord CliffordTGate.X = fgH * fgT ^ 4 * fgH from rfl,
+      map_mul, map_mul, Submonoid.coe_mul, Submonoid.coe_mul, ρ_CliffT_of_0, ρ_CliffT_fgT_pow]
+    rfl
+  rw [show gatePhase CliffordTGate.X = -Complex.I from rfl, hcoe, T_SU_mat_pow_four, H_SU_mat,
+      toComplexMat_gateMatrix_X, Matrix.eta_fin_two ((-Complex.I) • _)]
+  congr 1 <;>
+    (simp only [Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.of_apply, smul_eq_mul] <;> ring_nf <;>
+     rw [show Complex.I ^ 4 = 1 from by rw [show (4:ℕ)=2+2 from rfl, pow_add, Complex.I_sq]; ring] <;>
+     simp only [one_mul, hsqrt])
+
 end SKEFTHawking.RossSelinger
