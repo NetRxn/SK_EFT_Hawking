@@ -1882,6 +1882,10 @@ import SKEFTHawking.FKLW.MukhopadhyayChannelRepClifford
 -- channel-rep homomorphism carries the Clifford-only group ⟨H,S,CNOT⟩ (Fact 3.9), the combinatorial
 -- input to the 6z CCZ-essentiality converse (cliffordOnly_not_dense).
 import SKEFTHawking.FKLW.MukhopadhyaySignedPerm
+-- Phase 6x′ capstone inc 2 (2026-05-30): the Clifford-only generating set ⟨H,S,CNOT⟩ (no CCZ) +
+-- Fact 3.9 (⟹) lifted across the free group — every word in ⟨H,S,CNOT⟩ has a signed-permutation
+-- channel rep (cliffordWord_channelRep_signedPerm). The "lands in a finite set" half of the converse.
+import SKEFTHawking.FKLW.MukhopadhyayCliffordConverse
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
