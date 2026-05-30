@@ -58,4 +58,25 @@ theorem toComplexMat_interp (gs : List CliffordTGate) :
   | nil => rw [interp_nil, List.map_nil, List.prod_nil, map_one]
   | cons g gs ih => rw [interp_cons, map_mul, List.map_cons, List.prod_cons, ih]
 
+/-! ## Per-gate-entry complex values
+
+The complex images of the three non-trivial `ZOmegaSqrt2` constants appearing in the
+KMM `gateMatrix`es (`ωS = ω`, `iS = ω² = i`, `invSqrt2 = 1/√2`). These are the
+building blocks for the per-gate matrix values and the `gateMatrix ↔ ρ_CliffT`
+phase bridge (the next Item-G sub-step). -/
+
+/-- `toComplex ωS = e^{iπ/4}` (the `T`-gate phase). -/
+theorem toComplex_omegaS : ZOmegaSqrt2.toComplex ωS = ZOmega.omegaC := by
+  rw [ωS, ZOmegaSqrt2.of, ZOmegaSqrt2.toComplex_mk, pow_zero, div_one, ZOmega.toComplex_apply]
+  simp [ZOmega.ω, ZOmega.omegaC]
+
+/-- `toComplex iS = i` (the `S`-gate / `Y`-gate phase, `ω² = i`). -/
+theorem toComplex_iS : ZOmegaSqrt2.toComplex iS = Complex.I := by
+  rw [iS, map_mul, toComplex_omegaS, ← sq, ZOmega.omegaC_sq]
+
+/-- `toComplex invSqrt2 = (√2)⁻¹` (the `H`-gate entry). -/
+theorem toComplex_invSqrt2 :
+    ZOmegaSqrt2.toComplex ZOmegaSqrt2.invSqrt2 = ((Real.sqrt 2)⁻¹ : ℂ) := by
+  rw [ZOmegaSqrt2.invSqrt2, ZOmegaSqrt2.toComplex_mk, map_one, pow_one, ZOmegaSqrt2.s2C_eq, one_div]
+
 end SKEFTHawking.RossSelinger
