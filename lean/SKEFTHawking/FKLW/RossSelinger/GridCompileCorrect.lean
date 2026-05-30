@@ -159,4 +159,59 @@ theorem toComplex_mk_gridNumerator (pm pn qm qn : ℤ) (k : ℕ) :
           / (Real.sqrt 2 : ℂ) ^ k := by
   rw [ZOmegaSqrt2.toComplex_mk, toComplex_gridNumerator, ZOmegaSqrt2.s2C_eq]
 
+/-- **Column ε-approximation from the grid solver's real-interval bounds.** If the cleared real
+and imaginary parts `(pm+pn√2)/√2^k` and `(qm+qn√2)/√2^k` are each within `ε` of the target
+column entry `U₀₀`'s real/imaginary parts, then the `ℤ[ω]` column value is within `2ε` of `U₀₀`
+in `ℂ` (`‖z‖ ≤ |z.re| + |z.im|`). This is the first-column hypothesis `h00` of
+`compile_correct_core`, supplied by `twoDimGridSolution_spec`. -/
+theorem gridNumerator_approx (pm pn qm qn : ℤ) (k : ℕ) (U₀₀ : ℂ) {ε : ℝ}
+    (hre : |((pm : ℝ) + (pn : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k - U₀₀.re| ≤ ε)
+    (him : |((qm : ℝ) + (qn : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k - U₀₀.im| ≤ ε) :
+    ‖ZOmegaSqrt2.toComplex (ZOmegaSqrt2.mk (gridNumerator pm pn qm qn) k) - U₀₀‖ ≤ 2 * ε := by
+  rw [toComplex_mk_gridNumerator,
+      show (Real.sqrt 2 : ℂ) ^ k = ((Real.sqrt 2 ^ k : ℝ) : ℂ) from by push_cast; ring]
+  set z : ℂ := ((pm : ℂ) + (pn : ℂ) * Real.sqrt 2) + ((qm : ℂ) + (qn : ℂ) * Real.sqrt 2) * Complex.I
+    with hz
+  have hzre : z.re = (pm : ℝ) + (pn : ℝ) * Real.sqrt 2 := by rw [hz]; simp
+  have hzim : z.im = (qm : ℝ) + (qn : ℝ) * Real.sqrt 2 := by rw [hz]; simp
+  have hdre : (z / ((Real.sqrt 2 ^ k : ℝ) : ℂ) - U₀₀).re
+      = ((pm : ℝ) + (pn : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k - U₀₀.re := by
+    rw [Complex.sub_re, Complex.div_ofReal_re, hzre]
+  have hdim : (z / ((Real.sqrt 2 ^ k : ℝ) : ℂ) - U₀₀).im
+      = ((qm : ℝ) + (qn : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k - U₀₀.im := by
+    rw [Complex.sub_im, Complex.div_ofReal_im, hzim]
+  calc ‖z / ((Real.sqrt 2 ^ k : ℝ) : ℂ) - U₀₀‖
+      ≤ |(z / ((Real.sqrt 2 ^ k : ℝ) : ℂ) - U₀₀).re|
+        + |(z / ((Real.sqrt 2 ^ k : ℝ) : ℂ) - U₀₀).im| := Complex.norm_le_abs_re_add_abs_im _
+    _ ≤ ε + ε := by rw [hdre, hdim]; exact add_le_add hre him
+    _ = 2 * ε := by ring
+
+/-- **Ross-Selinger compile soundness from grid-solver bounds (assembled).** When two grid
+numerators `u = gridNumerator pm pn qm qn`, `t = gridNumerator rm rn sm sn` satisfy the det-1
+constraint and their cleared real/imaginary parts are each within `δ` of the target columns'
+parts (`U₀₀` for `u`, `U₁₀` for `t`), the KMM-synthesized word interprets to within `4δ` of `U`.
+Composes `gridNumerator_approx` (column-bounds → `2δ` per column) with `compile_correct_core`
+(`2·(2δ) = 4δ`). The four `δ`-bounds are exactly what `twoDimGridSolution_spec` supplies (at the
+chosen scale `k`); the det-1 constraint is the residual-`t` Diophantine. -/
+theorem compile_correct_grid (pm pn qm qn rm rn sm sn : ℤ) (k : ℕ)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) {δ : ℝ} (hδ : 0 ≤ δ)
+    (hreal : ZOmega.normSq (gridNumerator pm pn qm qn) + ZOmega.normSq (gridNumerator rm rn sm sn)
+      = (⟨0, 0, 0, 2 ^ k⟩ : ZOmega))
+    (hu_re : |((pm : ℝ) + (pn : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k
+                - ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).re| ≤ δ)
+    (hu_im : |((qm : ℝ) + (qn : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k
+                - ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).im| ≤ δ)
+    (ht_re : |((rm : ℝ) + (rn : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k
+                - ((U : Matrix (Fin 2) (Fin 2) ℂ) 1 0).re| ≤ δ)
+    (ht_im : |((sm : ℝ) + (sn : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k
+                - ((U : Matrix (Fin 2) (Fin 2) ℂ) 1 0).im| ≤ δ) :
+    ‖toComplexMat (CliffordTGate.interp (KMM.kmmReduce
+          (KMM.assembleUnitary (gridNumerator pm pn qm qn) (gridNumerator rm rn sm sn) k)))
+        - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 4 * δ := by
+  have h00 := gridNumerator_approx pm pn qm qn k ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) hu_re hu_im
+  have h10 := gridNumerator_approx rm rn sm sn k ((U : Matrix (Fin 2) (Fin 2) ℂ) 1 0) ht_re ht_im
+  have hmain := compile_correct_core (gridNumerator pm pn qm qn) (gridNumerator rm rn sm sn) k U
+    (by linarith : (0 : ℝ) ≤ 2 * δ) hreal h00 h10
+  linarith [hmain]
+
 end SKEFTHawking.RossSelinger
