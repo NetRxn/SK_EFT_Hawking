@@ -1873,6 +1873,10 @@ import SKEFTHawking.FKLW.MukhopadhyaySde2
 -- telescoping mechanism toffoliCount_ge_measure / toffoliCost_ge_measure giving T^of(U) ≥ sde₂(Û)
 -- (reading μ = sde₂∘channelRep). Not proved tight (full minimality = MITM/Conjecture 4.8, residual).
 import SKEFTHawking.FKLW.MukhopadhyayToffoliBound
+-- Phase 6x′ B (2026-05-30): Fact 3.9 (⟹) — channelRep of each literal Clifford generator
+-- (H_qi/S_qi/CNOT_ij) is a signed permutation, via the shipped 6z conjugation tables + the L.A
+-- channel rep. The substrate for the hC bridge + the 6z CCZ-essentiality converse.
+import SKEFTHawking.FKLW.MukhopadhyayChannelRepClifford
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
