@@ -5,12 +5,19 @@
 continuation explicitly documented as residual). Builds on the 6z Pauli substrate; discharges residuals
 consumed in 6x (Lemma 3.10, the Item-L `T^of ≥ sde₂` bound) and 6z (CCZ-essentiality converse).*
 
-**Status:** IN PROGRESS — **Phase 1 increments A + B SHIPPED 2026-05-30** (Fact 3.9 ⟹: each Clifford
-generator's channel rep is a signed permutation). Commits `497584e` (B) + `b7fc21c` (Stage 9/10 sync);
-`MukhopadhyayChannelRepClifford.lean`; kernel-pure, 0 native_decide, build clean (9850 thm / 0 axiom).
-**Remaining: the Phase-1 capstone (6z CCZ-essentiality converse) + Phase 2 (CCZ conjugation).** The
-single highest-leverage formalization: prove each generator's conjugation action on the 64 three-qubit
-Paulis, kernel-pure, to retire **three** deferred residuals at once. Cross-phase (6x / 6z / Item-L).
+**Status:** ✅ **PHASE 1 COMPLETE (capstone shipped, Stage-13 GREEN, 2026-05-30); Phase 2 off-ramped to
+C.1 + documented residual.** Phase 1 A + B + capstone all shipped kernel-pure, build clean
+(9875 thm / 0 axiom / 0 sorry / 746 mod), 0 new native_decide. Phase-1 capstone = `cliffordOnly_not_dense`
+(`MukhopadhyayCliffordNotDense.lean`, commit `838d96ff`): **⟨H,S,CNOT⟩ (no CCZ) is NOT dense in SU(8)** —
+the genuine 6z CCZ-essentiality converse, fresh-context Opus Stage-13 review GREEN (no findings). Phase 2
+C.1 (`MukhopadhyayCCZConjugation.lean`) = the CCZ diagonal-conjugation identity
+`(CCZ·M·CCZ)_ij = ccz_i·ccz_j·M_ij` + CCZ-commutes-with-diagonals. **Per the off-ramp (below), the full
+off-diagonal Theorem-3.8 structure + hCCZ + Lemma 3.10 + unconditional `T^of` are a DOCUMENTED RESIDUAL**
+(deferred, not ground out): a marginal `PARAMETRIC → unconditional` upgrade on a non-tight bound (full
+minimality is out of scope per the dossier regardless), gated on a delicate `sde₂`-on-ℂ matrix measure +
+the 64-Pauli entry table. Net: of the three residuals, **(3) the 6z converse is CLOSED**; (1) Lemma 3.10
+and (2) unconditional `T^of` remain documented (now with their C.1 substrate + `hC` substantiation in
+place).
 
 ### Increment ledger status (2026-05-30)
 - **A** (per-qubit 3-qubit H/S conj lifts) — ✅ already in-tree from Phase 6z (`hsu/ssu_q{1,2,3}_kronK8_conj`
@@ -18,10 +25,18 @@ Paulis, kernel-pure, to retire **three** deferred residuals at once. Cross-phase
 - **B** (channelRep of each Clifford gen is a signed monomial — Fact 3.9 ⟹) — ✅ SHIPPED (`497584e`):
   `channelRep_eq_signedMonomial` + `channelRep_{hsu,ssu}_q{1,2,3}` + `channelRep_cnot{12,13,23}` +
   the `su8val_conjTranspose_eq_inv` / `permMatrix_fin8_conjTranspose` bridges.
-- **Capstone (6z converse)** — ⏳ NEXT. `IsSignedPerm` as a finite submonoid (one_mem, mul_mem,
-  finiteness via `Equiv.Perm (Fin 64) × (Fin 64 → {±1})`) + channelRep continuity + density→finite-image
-  contradiction (channelRep(SU(8)) infinite). A topological/finite-group argument, ~2–4 increments.
-- **Phase 2 (C.1/C.2 + final)** — ⏳ the CCZ conjugation crux + Lemma 3.10 + unconditional `T^of ≥ sde₂`.
+- **Capstone (6z converse)** — ✅ SHIPPED 2026-05-30 (`838d96ff`), Stage-13 GREEN. Three increments:
+  inc1 `MukhopadhyaySignedPerm.lean` (`161e359b`, `IsSignedPerm` one/mul/inverse closure + finiteness via
+  `Equiv.Perm L × (L → Bool)`); inc2 `MukhopadhyayCliffordConverse.lean` (`87f6302a`,
+  `cliffordOnlyGeneratingSetSU8` + `cliffordWord_channelRep_signedPerm` via `FreeGroup.induction_on`);
+  inc3+4 `MukhopadhyayCliffordNotDense.lean` (`838d96ff`, `continuous_channelRep` +
+  `channelRep_eq_one_imp_scalar` faithfulness via `Matrix.center_eq_range` + `channelRep_seedSU8_pow_ne_one`
+  infinite order via det ⟹ `cliffordOnly_not_dense`). Flipped the 6z `CliffordCCZSU8Density` docstrings.
+- **Phase 2 (C.1)** — ✅ SHIPPED 2026-05-30 (`MukhopadhyayCCZConjugation.lean`): `CCZ_mat_conj_apply`
+  (`(CCZ·M·CCZ)_ij = ccz_i·ccz_j·M_ij`) + `CCZ_conj_diagonal` (CCZ commutes with diagonal operators →
+  the single-`+1` Theorem-3.8 rows). **C.2 / hCCZ / Lemma 3.10 / unconditional `T^of` = documented
+  residual** (off-ramp; see "Highest-risk step"). The `hC` half is substantiated by inc2's
+  `channelRep_cliffordOnlyGen_isSignedPerm` (signed perms preserve dyadic denominators).
 
 ## What it unlocks (the three residuals)
 

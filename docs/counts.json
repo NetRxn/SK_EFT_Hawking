@@ -1,16 +1,16 @@
 {
-  "generated": "2026-05-30T18:23:47.251321",
+  "generated": "2026-05-30T18:35:54.735115",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 17436,
-    "theorems_total": 9875,
-    "theorems_substantive": 9850,
+    "total_declarations": 17441,
+    "theorems_total": 9879,
+    "theorems_substantive": 9854,
     "theorems_placeholder": 25,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 746,
+    "modules": 747,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -317,6 +317,7 @@
       "SKEFTHawking.FKLW.GroupCommutatorNearIdentity",
       "SKEFTHawking.FKLW.MSGateExpForm",
       "SKEFTHawking.FKLW.MukhopadhyayCCZ",
+      "SKEFTHawking.FKLW.MukhopadhyayCCZConjugation",
       "SKEFTHawking.FKLW.MukhopadhyayChannelRep",
       "SKEFTHawking.FKLW.MukhopadhyayChannelRepClifford",
       "SKEFTHawking.FKLW.MukhopadhyayCliffordConverse",
@@ -759,7 +760,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6691,
+    "definitions": 6692,
     "structures": 287,
     "instances": 489,
     "inductives": 94

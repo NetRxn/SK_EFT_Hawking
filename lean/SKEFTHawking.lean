@@ -1891,6 +1891,11 @@ import SKEFTHawking.FKLW.MukhopadhyayCliffordConverse
 -- monoid hom carrying ⟨H,S,CNOT⟩ into the finite signed-permutation set, while the infinite-order seed
 -- forces channelRep(SU(8)) infinite — so the Clifford-only set cannot be dense. CCZ is essential.
 import SKEFTHawking.FKLW.MukhopadhyayCliffordNotDense
+-- Phase 6x′ Phase 2 (C.1) (2026-05-30): the CCZ diagonal-conjugation identity
+-- (CCZ·M·CCZ)_ij = ccz_i·ccz_j·M_ij + CCZ commutes with diagonal operators — the structural engine
+-- behind Theorem 3.8. Off-ramp ship: the full off-diagonal Theorem-3.8 structure + hCCZ + Lemma 3.10 +
+-- unconditional T^of remain documented residuals (see file docstring + Phase6x_prime_Roadmap).
+import SKEFTHawking.FKLW.MukhopadhyayCCZConjugation
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)

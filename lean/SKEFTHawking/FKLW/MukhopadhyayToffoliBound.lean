@@ -33,6 +33,19 @@ Full Toffoli-count minimality (no shorter circuit) requires the exhaustive neste
 search (Lemma 4.5 / §4.2.1) whose heuristic optimality rests on the unproved Conjecture 4.8; that is
 not Lean-tractable and is the documented residual (L.C).
 
+**Phase 6x′ status (2026-05-30):** the `hC` direction (Cliffords leave `sde₂` unchanged, Fact 3.9) is
+substantiated by Phase 6x′ — every Clifford generator's channel rep is a signed permutation
+(`MukhopadhyayCliffordConverse.channelRep_cliffordOnlyGen_isSignedPerm`), which permutes/sign-flips
+entries and so preserves their dyadic denominators. The `hCCZ` direction needs the full Theorem 3.8
+off-diagonal channel-rep structure of `CCZ` (`Ĉ_{CCZ}` rows of four `±1/2`); its structural engine — the
+CCZ diagonal-conjugation identity `(CCZ·M·CCZ)_{ij} = ccz_i·ccz_j·M_{ij}` — is shipped as
+`MukhopadhyayCCZConjugation.CCZ_mat_conj_apply` (Phase 6x′ Phase 2, C.1). **Making `toffoliCost_ge_measure`
+unconditional** (instantiating `μ = sde₂ ∘ channelRep` and discharging both `hC` and `hCCZ`) additionally
+requires a total `sde₂`-valued measure on `ℂ`-matrices (dyadic-exponent extraction) plus the 64-Pauli
+Theorem-3.8 entry table; per the Phase 6x′ off-ramp it is a **documented residual**, deferred (not ground
+out) as a marginal `PARAMETRIC → unconditional` upgrade on this non-tight bound. See
+`docs/roadmaps/Phase6x_prime_Roadmap.md`.
+
 PUBLIC math layer only (per the Item-L brief): no private-repo content.
 
 ## Pipeline invariants
