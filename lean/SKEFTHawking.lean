@@ -1418,6 +1418,10 @@ import SKEFTHawking.FKLW.RossSelinger.Zsqrt2EuclideanDomain
 -- (structure GaussInt2 + CommRing + multiplicative relative norm re²+im²). The degree-2
 -- extension whose splitting gives two-squares-over-ℤ[√2] (Prop 3.2.7) → Item I residual-t.
 import SKEFTHawking.FKLW.RossSelinger.Zsqrt2GaussianInt
+-- Phase 6x Tier-2 Item I (2026-05-30) — compile_correct approximation helpers:
+-- linftyOpNorm_fin_two_le (entrywise ≤δ ⟹ ℓ∞-operator-norm ≤ 2δ for 2×2) + su2_entry_structure
+-- (U∈SU(2) ⟹ U=[[a,−b̄],[b,ā]]). Propagate the grid first-column approximation to ‖·‖≤ε.
+import SKEFTHawking.FKLW.RossSelinger.CompileApprox
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
