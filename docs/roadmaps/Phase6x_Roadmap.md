@@ -1114,17 +1114,26 @@ Item I's `compile_correct` = proven SOUNDNESS (Lean) + empirical completeness (p
   fully-unconditional 3-conjunct CT headline already ships via the lightweight density finder;
   the KMM-finder's unconditional-over-all-`U` approximation is gated on the parked grid-completeness
   `t`-coupling.
-- **Item L — 🟡 MVP FOUNDATION SHIPPED (increments 1–2).** `MukhopadhyayCCZ.lean` (`5072aef`):
-  the generating-element grounding `mukGen_Z = CCZ` (Mukhopadhyay Eq.12 `G_{Z₁,Z₂,Z₃}` = project's
-  `CCZ_mat`), the `CliffordCCZGate` ADT + `interp` (over the shipped SU(8) literal generators +
-  `CCZ_mat`) + composition soundness `interp_append`, and the `synth_CCZ_correct` MVP at the
-  canonical generator (`mukGen_Z` exactly representable by `[CCZ]`). Kernel-pure, 0 new axioms.
-  REMAINING: general `G_{P,Q,R}` via Clifford conjugation, channel-rep test (Fact 3.9), full
-  `synth_CCZ_correct` (Thm 3.2 + meet-in-the-middle) — fresh multi-session.
-- **Item H — pending.** Ross-Selinger §5 `gridSolutions` enumeration + completeness + count bound.
-  The 1-D/2-D solvers (`GridSolutions.lean`) + grid→ℂ bridge already shipped; the genuine delta is
-  the hard convex-geometry completeness (every region solution appears). Cross-validation oracle now
-  available (pygridsynth installed).
+- **Item H — ✅ CLOSED.** `GridEnum.lean` (`01e0653`) + Stage-13 GREEN (`docs/validation/phase6x_item_H_grid_enumeration_stage13_review.md`):
+  the Ross-Selinger §5 Thm-2 upright grid ENUMERATION `gridSolutions1D`/`gridSolutions2D` + `_mem_iff`
+  (correctness + completeness: membership ⇔ the four real bounds, both directions) + count bounds.
+  Cross-validated vs `pygridsynth.odgp.solve_ODGP` (`scripts/grid_enum_pygridsynth_xval.py`): exact
+  solution-set match on 180/180 upright boxes (4851 solutions), with a reviewer mutation test
+  confirming the assertion discriminates. The Step-operator efficiency layer + general-convex regions
+  are documented deferrals (the runnable optimal-length compile ships via the single witness, Item I).
+- **Item L — 🟡 MVP + GENERAL GENERATING-ELEMENT STRUCTURE SHIPPED (increments 1–3).**
+  `MukhopadhyayCCZ.lean` (`5072aef` + `d2693bf`): (1) grounding `mukGen_Z = CCZ` (Eq.12 `G_{Z₁,Z₂,Z₃}`
+  = project's `CCZ_mat`); (2) `CliffordCCZGate` ADT + `interp` (over the shipped SU(8) literal
+  generators + `CCZ_mat`) + composition `interp_append` + `synth_CCZ_correct` MVP at the canonical
+  generator; (3) the GENERAL generating element `mukGen p q r` (Eq.12) + the reflection structure
+  `mukGen_sq` (`G²=I` for any pairwise-commuting involutions — Mukhopadhyay's defining property),
+  instantiated as `mukGen_Z_sq` (`CCZ²=I` via the generating-element structure). Kernel-pure, 0 new
+  axioms; Stage-13 GREEN (inc 1–2; inc 3 review in flight). REMAINING (deep continuation): the general
+  `G_{P,Q,R}` realized as a Clifford conjugate of CCZ (gate word), the channel-rep test (Fact 3.9),
+  and the full `synth_CCZ_correct` for arbitrary exactly-representable `U` (Thm 3.2 + meet-in-the-
+  middle) — fresh multi-session.
 
-Counts at this pass: 9787 theorems / 0 axioms / 0 sorry / 738 modules; build clean (8987 jobs);
-`axiom_closure_allowlist` + `counts_fresh` + `graph_integrity` PASS.
+Counts at this pass: 9803 theorems / 0 axioms / 0 sorry / 739 modules; build clean (8988 jobs);
+`axiom_closure_allowlist` + `counts_fresh` + `graph_integrity` PASS. (Item I + G + H CLOSED; Item L
+MVP + general generating-element structure shipped — only the deep meet-in-the-middle full synth
+remains, the roadmap's documented multi-session continuation.)
