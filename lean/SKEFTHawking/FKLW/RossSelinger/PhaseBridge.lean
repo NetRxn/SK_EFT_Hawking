@@ -132,4 +132,64 @@ theorem toComplexMat_gateMatrix_eq_T :
     simp only [Matrix.smul_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.of_apply,
       smul_eq_mul, mul_zero, h00, h11]
 
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- `ρ_CliffT (fgT^k)` embeds to `T_SU_mat^k` (`ρ_CliffT (of 1) = T_SU`, coe is a monoid hom). -/
+theorem ρ_CliffT_fgT_pow (k : ℕ) :
+    ((ρ_CliffT (fgT ^ k) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+      Matrix (Fin 2) (Fin 2) ℂ) = T_SU_mat ^ k := by
+  rw [map_pow, ρ_CliffT_of_1, SubmonoidClass.coe_pow]; rfl
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **id phase-bridge identity**: `toComplexMat (gateMatrix id) = 1 • ρ_CliffT 1`. -/
+theorem toComplexMat_gateMatrix_eq_id :
+    toComplexMat (gateMatrix CliffordTGate.id)
+      = gatePhase CliffordTGate.id • ((ρ_CliffT (gateWord CliffordTGate.id) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [show gatePhase CliffordTGate.id = 1 from rfl, show gateWord CliffordTGate.id = 1 from rfl,
+      map_one, OneMemClass.coe_one, one_smul, toComplexMat_gateMatrix_id, Matrix.one_fin_two]
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **ω phase-bridge identity**: `toComplexMat (gateMatrix ω) = e^{iπ/4} • ρ_CliffT 1`. -/
+theorem toComplexMat_gateMatrix_eq_omega :
+    toComplexMat (gateMatrix CliffordTGate.omega)
+      = gatePhase CliffordTGate.omega • ((ρ_CliffT (gateWord CliffordTGate.omega) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [show gatePhase CliffordTGate.omega = ZOmega.omegaC from rfl,
+      show gateWord CliffordTGate.omega = 1 from rfl, map_one, OneMemClass.coe_one,
+      toComplexMat_gateMatrix_omega,
+      Matrix.eta_fin_two (ZOmega.omegaC • (1 : Matrix (Fin 2) (Fin 2) ℂ))]
+  congr 1 <;> simp [Matrix.smul_apply, Matrix.one_apply]
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **S phase-bridge identity**: `toComplexMat (gateMatrix S) = e^{iπ/4} • ρ_CliffT (of 1)²`. -/
+theorem toComplexMat_gateMatrix_eq_S :
+    toComplexMat (gateMatrix CliffordTGate.S)
+      = gatePhase CliffordTGate.S • ((ρ_CliffT (gateWord CliffordTGate.S) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have e1 : T_SU_mat ^ 2 = !![Complex.exp (-(Complex.I * ↑Real.pi / 4)), 0;
+      0, Complex.exp (Complex.I * ↑Real.pi / 4)] := by
+    rw [sq, T_SU_mat, Matrix.eta_fin_two (_ * _)]
+    congr 1 <;>
+      simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.of_apply, mul_zero, zero_mul, add_zero, zero_add, ← Complex.exp_add] <;>
+      congr 1 <;> ring
+  have h0 : ZOmega.omegaC * Complex.exp (-(Complex.I * ↑Real.pi / 4)) = 1 := by
+    rw [ZOmega.omegaC, ← Complex.exp_add,
+      show (↑Real.pi / 4 * Complex.I + -(Complex.I * ↑Real.pi / 4)) = 0 from by ring, Complex.exp_zero]
+  have h1 : ZOmega.omegaC * Complex.exp (Complex.I * ↑Real.pi / 4) = Complex.I := by
+    rw [ZOmega.omegaC, ← Complex.exp_add,
+      show (↑Real.pi / 4 * Complex.I + Complex.I * ↑Real.pi / 4) = ↑(Real.pi / 2) * Complex.I from by
+        push_cast; ring,
+      Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin, Real.cos_pi_div_two,
+      Real.sin_pi_div_two]; push_cast; ring
+  rw [show gatePhase CliffordTGate.S = ZOmega.omegaC from rfl,
+      show gateWord CliffordTGate.S = fgT ^ 2 from rfl, ρ_CliffT_fgT_pow,
+      toComplexMat_gateMatrix_S, e1, Matrix.eta_fin_two (ZOmega.omegaC • _)]
+  congr 1 <;> simp only [Matrix.smul_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.of_apply, smul_eq_mul, mul_zero, h0, h1]
+
 end SKEFTHawking.RossSelinger
