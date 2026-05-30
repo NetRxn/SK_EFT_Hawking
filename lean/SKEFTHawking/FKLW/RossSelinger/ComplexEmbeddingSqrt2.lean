@@ -29,10 +29,31 @@ states its `SU(2, ℂ)` operator-norm approximation.
 
 import SKEFTHawking.FKLW.RossSelinger.ComplexEmbedding
 import SKEFTHawking.FKLW.RossSelinger.ZOmegaSqrt2
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 
 set_option autoImplicit false
 
 namespace SKEFTHawking.RossSelinger
+
+namespace ZOmega
+
+/-- `ω = e^{iπ/4} = (√2/2)(1 + i)` in `ℂ`. -/
+theorem omegaC_eq : omegaC = (Real.sqrt 2 / 2 : ℂ) * (1 + Complex.I) := by
+  rw [omegaC, Complex.exp_mul_I,
+    show ((Real.pi : ℂ) / 4) = ((Real.pi / 4 : ℝ) : ℂ) by push_cast; ring,
+    ← Complex.ofReal_cos, ← Complex.ofReal_sin, Real.cos_pi_div_four, Real.sin_pi_div_four]
+  push_cast; ring
+
+/-- `ω² = i` (`e^{iπ/4}² = e^{iπ/2} = i`). -/
+theorem omegaC_sq : omegaC ^ 2 = Complex.I := by
+  rw [omegaC, ← Complex.exp_nat_mul,
+    show ((2:ℕ):ℂ) * (↑Real.pi / 4 * Complex.I) = ((Real.pi / 2 : ℝ):ℂ) * Complex.I by
+      push_cast; ring,
+    Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin,
+    Real.cos_pi_div_two, Real.sin_pi_div_two]
+  push_cast; ring
+
+end ZOmega
 
 namespace ZOmegaSqrt2
 
@@ -46,6 +67,14 @@ theorem s2C_sq : s2C ^ 2 = 2 := by rw [s2C, ← map_pow, sq, ZOmega.sqrt2_sq, ma
 
 theorem s2C_ne_zero : s2C ≠ 0 := by
   intro h; have := s2C_sq; rw [h] at this; norm_num at this
+
+/-- **`s2C` is the real `√2`**: `ZOmega.toComplex √2 = (√2 : ℝ)`. The exact analytic
+identification (`√2 = ω(1 − i)` via `ω = (√2/2)(1+i)`, `ω² = i`). -/
+theorem s2C_eq : s2C = (Real.sqrt 2 : ℂ) := by
+  have hs : s2C = ZOmega.omegaC - ZOmega.omegaC ^ 2 * ZOmega.omegaC := by
+    rw [s2C, ZOmega.sqrt2, ZOmega.toComplex_apply]; push_cast; ring
+  rw [hs, ZOmega.omegaC_sq, ZOmega.omegaC_eq]
+  linear_combination (-(Real.sqrt 2 : ℂ) / 2) * Complex.I_sq
 
 /-- The underlying function of the embedding (the `Frac`-quotient lift). -/
 noncomputable def toComplexFun : ZOmegaSqrt2 → ℂ :=
