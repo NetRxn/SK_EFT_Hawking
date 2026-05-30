@@ -346,4 +346,56 @@ theorem toComplexMat_interp_eq (gs : List CliffordTGate) :
           simp only [toComplexMat, map_mul], toComplexMat_gateMatrix_eq, ih, map_mul,
         Submonoid.coe_mul, smul_mul_smul_comm]
 
+/-! ## The ±1 global-phase lift for det-1 words
+
+For a `det`-1 (`SU(2)`) KMM gate word, the word-level bridge's global phase
+`phaseProd gs` is exactly `±1` — proven here (previously only validated via
+`scripts/phase_bridge_validation.py`). The argument: `det` commutes with the entrywise
+ring-hom `toComplexMat`, and the bridge `toComplexMat (interp gs) = phaseProd gs •
+ρ_CliffT (freeword gs)` puts the `SU(2)` factor (det 1) under `Matrix.det_smul`
+(card `Fin 2 = 2`), so `(phaseProd gs)² = toComplex (det (interp gs))`; at `det = 1`
+this is `(phaseProd gs)² = 1`, hence `phaseProd gs = ±1`. The corollary
+`ρ_CliffT_freeword_eq` then aligns the `SU(2)` image to `±toComplexMat (interp gs)` —
+the approximation hook `cliffordTBaseFinder_kmm` uses. -/
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **Squared global phase = ℂ-image of the abstract determinant.** `(phaseProd gs)² =
+toComplex (det (interp gs))`: `det` commutes with the ring-hom `toComplexMat`, and the
+word-level bridge puts the `SU(2)` (det 1) factor under `Matrix.det_smul` (card 2). -/
+theorem phaseProd_sq_eq_toComplex_det (gs : List CliffordTGate) :
+    (phaseProd gs) ^ 2 = ZOmegaSqrt2.toComplex (interp gs).det := by
+  have hbridge := toComplexMat_interp_eq gs
+  have hmap : (toComplexMat (interp gs)).det = ZOmegaSqrt2.toComplex (interp gs).det := by
+    simp only [toComplexMat, ← RingHom.map_det]
+  have hsu : ((ρ_CliffT (freeword gs) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+      Matrix (Fin 2) (Fin 2) ℂ).det = 1 :=
+    (Matrix.mem_specialUnitaryGroup_iff.mp (ρ_CliffT (freeword gs)).2).2
+  rw [hbridge, Matrix.det_smul, Fintype.card_fin, hsu, mul_one] at hmap
+  exact hmap
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **The ±1 global-phase lift.** For a `det`-1 KMM gate word, `phaseProd gs = ±1`. -/
+theorem phaseProd_eq_one_or_neg_one (gs : List CliffordTGate)
+    (hdet : (interp gs).det = 1) : phaseProd gs = 1 ∨ phaseProd gs = -1 := by
+  have h := phaseProd_sq_eq_toComplex_det gs
+  rw [hdet, map_one] at h
+  rw [sq] at h
+  exact mul_self_eq_one_iff.mp h
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **SU(2) image of a det-1 KMM word = `±toComplexMat (interp gs)`.** Multiplying the
+word-level bridge by `phaseProd gs` and using `(phaseProd gs)² = 1` (`det = 1`). -/
+theorem ρ_CliffT_freeword_eq (gs : List CliffordTGate) (hdet : (interp gs).det = 1) :
+    ((ρ_CliffT (freeword gs) : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ)
+      = phaseProd gs • toComplexMat (interp gs) := by
+  have hbridge := toComplexMat_interp_eq gs
+  have hsq : phaseProd gs * phaseProd gs = 1 := by
+    have h := phaseProd_sq_eq_toComplex_det gs
+    rw [hdet, map_one, sq] at h; exact h
+  rw [hbridge, smul_smul, hsq, one_smul]
+
 end SKEFTHawking.RossSelinger
