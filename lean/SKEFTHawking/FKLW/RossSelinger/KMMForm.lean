@@ -62,16 +62,18 @@ namespace KMM
 open CliffordTGate ZOmegaSqrt2
 open scoped Matrix
 
-/-- **KMM Theorem 1 column structure** (forward half): for a Clifford+T-realizable
-`M`, column 1 is determined by column 0 and the determinant `ωᵏ`:
-`M 1 1 = ωᵏ · conj (M 0 0)` and `M 0 1 = −(ωᵏ · conj (M 1 0))`, with the same `k`
-as `det M = ωᵏ`. Proved via the uniform `det • M† = adjugate M` identity (no
-case split on `M 0 0 = 0`); each entry is a `linear_combination` of the column-0
-unitarity equations and the determinant equation. -/
-theorem realizable_col1 {M : Mat2} (h : IsCliffordTRealizable M) :
-    ∃ k : ℕ, M 0 1 = -(ωS ^ k * conj (M 1 0)) ∧ M 1 1 = ωS ^ k * conj (M 0 0) := by
-  obtain ⟨k, hdet⟩ := det_realizable_eq_omega_pow h
-  have hu : IsUnitaryT M := by obtain ⟨gs, rfl⟩ := h; exact interp_isUnitaryT gs
+/-- **KMM Theorem 1 column structure** (forward half, unitarity form): for ANY
+`2×2` `M` that is unitary over `ZOmegaSqrt2` with `det M = ωᵏ`, column 1 is
+determined by column 0 and the determinant:
+`M 1 1 = ωᵏ · conj (M 0 0)` and `M 0 1 = −(ωᵏ · conj (M 1 0))`. Proved via the
+uniform `det • M† = adjugate M` identity (no case split on `M 0 0 = 0`); each entry
+is a manual factor-vanishing combination of the column-0 unitarity equations and the
+determinant equation. **This is the realizability-free core** — `realizable_col1`
+specialises it, but it is also the entry point for the KMM Theorem 1 *converse*
+(unitary + det ωᵏ ⟹ Clifford+T-realizable): the col-1 structure no longer requires
+already knowing `M` is in the `interp` image. -/
+theorem unitary_col1 {M : Mat2} {k : ℕ} (hu : IsUnitaryT M) (hdet : Matrix.det M = ωS ^ k) :
+    M 0 1 = -(ωS ^ k * conj (M 1 0)) ∧ M 1 1 = ωS ^ k * conj (M 0 0) := by
   have hdet2 : M 0 0 * M 1 1 - M 0 1 * M 1 0 = ωS ^ k := by
     rw [← Matrix.det_fin_two]; exact hdet
   have h00 : conj (M 0 0) * M 0 0 + conj (M 1 0) * M 1 0 = 1 := by
@@ -88,7 +90,7 @@ theorem realizable_col1 {M : Mat2} (h : IsCliffordTRealizable M) :
   -- hypothesis-factor is rewritten to `0`).
   have e1 : M 0 0 * M 1 1 - M 0 1 * M 1 0 - ωS ^ k = 0 := by rw [hdet2]; ring
   have e3 : conj (M 0 0) * M 0 0 + conj (M 1 0) * M 1 0 - 1 = 0 := by rw [h00]; ring
-  refine ⟨k, ?_, ?_⟩
+  refine ⟨?_, ?_⟩
   · refine sub_eq_zero.mp ?_
     have key : M 0 1 - (-(ωS ^ k * conj (M 1 0)))
         = (-(conj (M 1 0))) * (M 0 0 * M 1 1 - M 0 1 * M 1 0 - ωS ^ k)
@@ -101,6 +103,16 @@ theorem realizable_col1 {M : Mat2} (h : IsCliffordTRealizable M) :
           - (M 1 1) * (conj (M 0 0) * M 0 0 + conj (M 1 0) * M 1 0 - 1)
           + (M 1 0) * (conj (M 0 0) * M 0 1 + conj (M 1 0) * M 1 1) := by ring
     rw [key, e1, e3, h01]; ring
+
+/-- **KMM Theorem 1 column structure** (forward half): for a Clifford+T-realizable
+`M`, column 1 is determined by column 0 and the determinant `ωᵏ`:
+`M 1 1 = ωᵏ · conj (M 0 0)` and `M 0 1 = −(ωᵏ · conj (M 1 0))`, with the same `k`
+as `det M = ωᵏ`. A thin corollary of `unitary_col1` (realizability ⟹ unitary + det ωᵏ). -/
+theorem realizable_col1 {M : Mat2} (h : IsCliffordTRealizable M) :
+    ∃ k : ℕ, M 0 1 = -(ωS ^ k * conj (M 1 0)) ∧ M 1 1 = ωS ^ k * conj (M 0 0) := by
+  obtain ⟨k, hdet⟩ := det_realizable_eq_omega_pow h
+  have hu : IsUnitaryT M := by obtain ⟨gs, rfl⟩ := h; exact interp_isUnitaryT gs
+  exact ⟨k, unitary_col1 hu hdet⟩
 
 end KMM
 
