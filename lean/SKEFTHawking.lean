@@ -1372,6 +1372,12 @@ import SKEFTHawking.FKLW.RossSelinger.ComplexEmbeddingSqrt2
 -- ZOmegaSqrt2) → Matrix (Fin 2) ℂ. Docstring records the U(2)↔SU(2) global-phase caveat
 -- (toComplexMat(gateMatrix T) = e^{iπ/8}·T_SU, phase ∉ ring) handled downstream in the finder.
 import SKEFTHawking.FKLW.RossSelinger.ComplexEmbeddingMatrix
+-- Phase 6x Tier-2 Item G (2026-05-29) — the KMM-gate → FreeGroup map (phase-bridge defs).
+-- gateWord : CliffordTGate → FreeGroup (Fin 2) (H↦of0, T↦of1, S↦T², Z↦T⁴, X↦H·T⁴·H, Y↦X·Z-word,
+-- id/ω↦1) + freeword (list lift, the map cliffordTBaseFinder_kmm uses) + gatePhase/phaseProd (the
+-- per-gate global phase e^{iπk/8} relating U(2) gateMatrix to SU(2) ρ_CliffT; ∏=±1 for det-1 words).
+-- Validated 0/2000 (scripts/phase_bridge_validation.py). Per-gate ρ_CliffT identities = next increment.
+import SKEFTHawking.FKLW.RossSelinger.PhaseBridge
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
