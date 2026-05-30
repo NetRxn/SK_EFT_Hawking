@@ -19,7 +19,7 @@ drift / labeling nuance), not substance.
 | 6u | GREEN-WITH-RECOMMENDED | pure; 0 native_decide | SK length conjunct decoupled from the actual compiled word (documented as CP2 R2) |
 | 6x | GREEN-WITH-RECOMMENDED | pure + 4 allowlisted KMM native_decide cores; Item-L files 0 native_decide | roadmap L.C prose stronger than the parametric Lean reality (FIXED) |
 | 6y | GREEN-WITH-RECOMMENDED | pure; 0 native_decide (1 kernel-`decide` w/ maxRecDepth) | roadmap STALE (density witnesses shipped but roadmap says "pending") |
-| 6z | GREEN | pure; **0 native_decide anywhere in 6z** | CCZ-essentiality converse not formalized (docstring leans on textbook fact); dead seed scaffolding |
+| 6z | GREEN | pure; **0 native_decide anywhere in 6z** | CCZ-essentiality converse ~~not formalized~~ **now FORMALIZED (Phase 6x′ `cliffordOnly_not_dense`, Stage-13 GREEN, 2026-05-30)**; dead seed scaffolding pruned |
 
 ## Phase 6u (Clifford+T SU(2) density + generic SK substrate) — GREEN-WITH-RECOMMENDED
 
@@ -133,3 +133,18 @@ the per-generator Clifford/CCZ channel-rep analyses, which retire follow-on (ii)
 converse, via the finite signed-permutation image — Phase 1] plus the 6x Lemma 3.10 + the unconditional
 Item-L `T^of ≥ sde₂` bound [Phase 2]. Follow-on (i) (the 6u ∀-coverage finder) and full MITM minimality
 remain separately out of scope.
+
+**UPDATE 2026-05-30 — Phase 6x′ Phase 1 SHIPPED, Stage-13 GREEN; Phase 2 off-ramped.** Follow-on (ii) is
+**CLOSED**: `SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense` (`MukhopadhyayCliffordNotDense.lean`,
+commit `838d96ff`) proves `¬ IsDenseInSUd_gs cliffordOnlyGeneratingSetSU8` — `⟨H,S,CNOT⟩` (no CCZ) is not
+dense in SU(8), the genuine CCZ-essentiality converse, via the finite signed-permutation channel-rep image
+(Fact 3.9) + channelRep continuity + the infinite-order seed. A fresh-context Opus adversarial Stage-13
+review returned **GREEN (no findings at any severity)**: faithful, non-vacuous, CCZ-free, non-circular,
+kernel-pure `{propext, Classical.choice, Quot.sound}`, zero new `native_decide`. The 6z `CliffordCCZSU8Density`
+docstrings were flipped from "standard fact, not formalized" to cite the theorem (so the `NOT formalized`
+note in the 6z row above is now superseded). Phase 2 shipped C.1 (the CCZ diagonal-conjugation identity,
+`MukhopadhyayCCZConjugation.lean`, commit `2db6f6c3`) and, per the roadmap off-ramp, kept the 6x Lemma 3.10
++ unconditional Item-L `T^of` as a documented residual (the `hC` half substantiated; `hCCZ` gated on the
+64-Pauli Theorem-3.8 entry table + an `sde₂`-on-ℂ matrix measure — disproportionate for a non-tight bound).
+Counts after Phase 6x′: 9879 theorems / 0 axiom / 0 sorry / 747 modules; counts_fresh +
+axiom_closure_allowlist GREEN.
