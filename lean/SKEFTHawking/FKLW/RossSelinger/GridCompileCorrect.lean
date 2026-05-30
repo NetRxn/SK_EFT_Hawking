@@ -149,4 +149,14 @@ theorem toComplex_gridNumerator (pm pn qm qn : ℤ) :
     rw [map_pow, htw, ZOmega.omegaC_sq]
   simp only [gridNumerator, map_add, map_mul, map_intCast, hs, hi]
 
+/-- **Cleared-scale complex value of the grid numerator**: `toComplex (mk (gridNumerator …) k) =
+((pm+pn√2) + (qm+qn√2)·i) / √2^k` — the column value `u/√2^k` whose real and imaginary parts the
+grid solver's interval bounds (`twoDimGridSolution_spec`) control to within `ε` of the target
+column `U₀₀ = tr + ti·i`. Feeds `compile_correct_core`'s first-column hypothesis. -/
+theorem toComplex_mk_gridNumerator (pm pn qm qn : ℤ) (k : ℕ) :
+    ZOmegaSqrt2.toComplex (ZOmegaSqrt2.mk (gridNumerator pm pn qm qn) k)
+      = (((pm : ℂ) + (pn : ℂ) * Real.sqrt 2) + ((qm : ℂ) + (qn : ℂ) * Real.sqrt 2) * Complex.I)
+          / (Real.sqrt 2 : ℂ) ^ k := by
+  rw [ZOmegaSqrt2.toComplex_mk, toComplex_gridNumerator, ZOmegaSqrt2.s2C_eq]
+
 end SKEFTHawking.RossSelinger
