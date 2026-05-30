@@ -155,4 +155,18 @@ theorem normSq_real_sumSq {p q : ZOmega}
       show ZOmega.ω ^ 4 = -1 from by decide]
   ring
 
+/-- **Prop 3.2.7 last mile — two-squares-over-the-real-subring ⟹ relative-norm solution.**
+If a residual `β ∈ ℤ[ω]` can be written `β = p² + q²` with **real** (i.e. `conj`-fixed)
+`p, q ∈ ℤ[ω]` (necessarily in the real subring `ℤ[√2]`), then the relative-norm equation
+`t†t = β` (Problem 3.2.4) is solvable, with the explicit witness `t = p + q·ω² ∈ ℤ[√2][i] ⊆ ℤ[ω]`
+(via `normSq_real_sumSq`). This is the index-2-safe reduction of Prop 3.2.7 to a two-squares
+theorem over `ℤ[√2]`: the remaining (analytic-NT) input is that a totally-positive `β` with
+`N_{ℤ[ω]}(β) = β•β` prime `≡ 1 (mod 8)` is such a sum of two squares (via the `ℤ[√2][i]=ℤ[ζ₈]`-order
+splitting on top of `EuclideanDomain (ℤ[√2])`). -/
+theorem exists_relativeNorm_of_real_sumSq {β : ZOmega}
+    (h : ∃ p q : ZOmega, ZOmega.conj p = p ∧ ZOmega.conj q = q ∧ p ^ 2 + q ^ 2 = β) :
+    ∃ t : ZOmega, ZOmega.normSq t = β := by
+  obtain ⟨p, q, hp, hq, hpq⟩ := h
+  exact ⟨p + q * ZOmega.ω ^ 2, by rw [normSq_real_sumSq hp hq, hpq]⟩
+
 end SKEFTHawking.RossSelinger

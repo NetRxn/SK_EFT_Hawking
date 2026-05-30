@@ -1409,6 +1409,11 @@ import SKEFTHawking.FKLW.RossSelinger.RelativeNorm
 -- (Prop 3.2.7): two_ne_sq + IsDomain (via Mathlib Zsqrtd.toReal_injective). First ring-theoretic
 -- brick toward two-squares-over-ℤ[√2] (GaussianInt template) → Prop 3.2.7 → unconditional Item G.
 import SKEFTHawking.FKLW.RossSelinger.Zsqrt2
+-- Phase 6x Tier-2 (2026-05-30) — EuclideanDomain (ℤ[√2]=Zsqrtd 2) via nearest-ℚ(√2)-rounding
+-- division with the indefinite-norm Euclidean measure (norm·).natAbs and the rounding-error
+-- descent zsqrt2_round_norm_lt. ⟹ ℤ[√2] is a PID/UFD — the two-squares-over-ℤ[√2] (Prop 3.2.7)
+-- substrate feeding Item I's residual-t existence (unconditional compile_correct).
+import SKEFTHawking.FKLW.RossSelinger.Zsqrt2EuclideanDomain
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
