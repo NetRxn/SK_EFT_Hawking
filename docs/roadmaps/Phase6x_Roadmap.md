@@ -1216,7 +1216,10 @@ clean (8991 jobs); `counts_fresh` + `axiom_closure_allowlist` + `graph_integrity
 - `toffoliCount gs` (CCZ-count of a word) + `toffoliCost U` (min over all exact words = `T^of(U)`) +
   the telescoping mechanism `toffoliCount_ge_measure` / **`toffoliCost_ge_measure`**: for any measure
   `μ` with `μ(1)=0`, non-increasing under Cliffords and `+1` under `CCZ`, `μ(U) ≤ T^of(U)`. Reading
-  `μ = sde₂∘channelRep` this is the genuine **`T^of(U) ≥ sde₂(Û)`** Toffoli lower bound.
+  `μ = sde₂∘channelRep` this is the telescoping **skeleton** from which **`T^of(U) ≥ sde₂(Û)`**
+  follows once the per-generator channel-rep bridges (`hC`/`hCCZ`) are discharged — the theorem is
+  PARAMETRIC over `μ` (a trivial `μ ≡ 0` also satisfies the hypotheses; the substantive instantiation
+  is the documented follow-on, NOT discharged here).
 - **Mechanism-check correction of the DR:** the dossier (Q2.3) claimed no `T^of ≥ sde₂` bound follows;
   a direct check shows it DOES, by telescoping Lemma 3.16 from a Clifford base (`sde₂=0`). (Per the
   Item-L guardrail — secondary sources can err; the proof mechanisms are load-bearing.)
