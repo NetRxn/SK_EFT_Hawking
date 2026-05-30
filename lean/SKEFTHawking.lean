@@ -1431,6 +1431,11 @@ import SKEFTHawking.FKLW.RossSelinger.GridCompileCorrect
 -- exposed as runnable functions) + correctness. Upright-case §5 grid solutions; composes with
 -- gridFindT + assembleUnitary + kmmReduce (compile_correct_core) for the target-level compile.
 import SKEFTHawking.FKLW.RossSelinger.GridSolutions
+-- Phase 6x Tier-2 Item I (2026-05-30) — the runnable Ross-Selinger compile : SU(2)→(k,b)→
+-- Option(Clifford+T word) (round first column via twoDimGridSolution → gridFindT residual →
+-- gridCompile=kmmReduce∘assembleUnitary) + compile_correct SOUNDNESS (finder returns + columns
+-- within ε ⟹ ‖toComplexMat(interp word)−U‖≤2ε), composing gridCompile_correct + approx_assembleUnitary.
+import SKEFTHawking.FKLW.RossSelinger.Compile
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
