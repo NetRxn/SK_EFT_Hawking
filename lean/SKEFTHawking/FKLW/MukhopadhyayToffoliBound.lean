@@ -71,7 +71,13 @@ with `μ(1) = 0`, non-increasing under each Clifford gate, and rising by at most
 Clifford+CCZ gate word `gs` satisfies `μ(interp gs) ≤ toffoliCount gs`. Reading `μ = sde₂ ∘ channelRep`
 this is the Toffoli lower bound `T^of(U) ≥ sde₂(Û)` (the hypotheses are then the per-generator
 channel-rep facts: Fact 3.9 for Cliffords, Fact 3.14 / Theorem 3.8.3 for `CCZ`). The telescoping logic
-is unconditional. -/
+is unconditional.
+
+**PARAMETRIC**: this is the telescoping skeleton. The physical Toffoli content (the actual
+`T^of ≥ sde₂` bound) lives entirely in the *intended* instantiation `μ = sde₂ ∘ channelRep` together
+with its per-generator bridge hypotheses `hC` / `hCCZ` — both the documented follow-on (the per-generator
+channel-rep entry analyses), NOT discharged here. A trivial `μ ≡ 0` also satisfies the hypotheses (giving
+the vacuous `0 ≤ toffoliCount gs`); the non-vacuous value is realized only by the un-shipped instantiation. -/
 theorem toffoliCount_ge_measure (μ : Matrix (Fin 8) (Fin 8) ℂ → ℕ) (h1 : μ 1 = 0)
     (hC : ∀ (c : Fin 9) (M : Matrix (Fin 8) (Fin 8) ℂ),
       μ (gateMatrix (CliffordCCZGate.clifford c) * M) ≤ μ M)
@@ -100,7 +106,11 @@ telescoping measure `μ` (`μ(1) = 0`, non-increasing under each Clifford gate, 
 Reading `μ = sde₂ ∘ channelRep` this is the genuine `sde₂` Toffoli lower bound `T^of(U) ≥ sde₂(Û)`
 (every exact Clifford+CCZ circuit for `U` uses at least `sde₂(Û)` Toffolis). NOT proved tight — full
 minimality needs the intractable meet-in-the-middle search (Lemma 4.5 / Conjecture 4.8), the
-documented residual; see the module docstring. -/
+documented residual; see the module docstring.
+
+**PARAMETRIC** (as for `toffoliCount_ge_measure`): the substantive `μ = sde₂ ∘ channelRep`
+instantiation + its per-generator bridges are the un-shipped follow-on; this theorem is the
+telescoping-to-`sInf` packaging, not the discharged Toffoli bound. -/
 theorem toffoliCost_ge_measure (μ : Matrix (Fin 8) (Fin 8) ℂ → ℕ) (h1 : μ 1 = 0)
     (hC : ∀ (c : Fin 9) (M : Matrix (Fin 8) (Fin 8) ℂ),
       μ (gateMatrix (CliffordCCZGate.clifford c) * M) ≤ μ M)

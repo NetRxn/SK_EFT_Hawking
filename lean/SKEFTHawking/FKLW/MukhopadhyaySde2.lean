@@ -40,7 +40,12 @@ namespace SKEFTHawking.FKLW.MukhopadhyayCCZ
 
 /-- **Mukhopadhyay's dyadic smallest-denominator exponent `sde₂`** (arXiv:2401.08950 Definition
 3.13): for `q ∈ ℤ[1/2] ⊂ ℚ`, the least `k` with `q = a/2^k` (`a` odd); `sde₂(0) = 0`. Realized as the
-negated `2`-adic valuation clamped at `0`. -/
+negated `2`-adic valuation clamped at `0`.
+
+Stated over ALL of `ℚ` (strictly more general than `ℤ[1/2]`, and the lemmas below hold on all `ℚ`);
+the eventual `sde₂(channelRep …)` reading additionally needs the channel-rep entries to be genuinely
+dyadic (Lemma 3.10) for `sde₂` to carry its intended "smallest 2-denominator exponent" meaning — a
+fact these `ℚ`-level lemmas do not (and need not) establish. -/
 noncomputable def sde2 (q : ℚ) : ℕ := (-(padicValRat 2 q)).toNat
 
 @[simp] theorem sde2_zero : sde2 0 = 0 := by
