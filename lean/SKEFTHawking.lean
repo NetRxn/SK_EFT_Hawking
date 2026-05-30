@@ -1361,6 +1361,11 @@ import SKEFTHawking.FKLW.RossSelinger.CliffordBase
 -- ω⁴=-1 reduction (omegaC_pow_four) of the convolution product. Foundation for ZOmegaSqrt2 → ℂ and
 -- the KMM(ZOmegaSqrt2)→SU(2,ℂ) operator-norm approximation bridge of Item G.
 import SKEFTHawking.FKLW.RossSelinger.ComplexEmbedding
+-- Phase 6x Tier-2 Item G (2026-05-29) — the ℤ[ω][1/√2] → ℂ ring embedding. ZOmegaSqrt2.toComplex :
+-- ZOmegaSqrt2 →+* ℂ, mk z k ↦ ZOmega.toComplex z / s2C^k (s2C = toComplex √2, s2C²=2≠0), via the
+-- Frac-quotient lift. The abstract↔analytic bridge: KMM exact synthesis (Mat2 over ZOmegaSqrt2) →
+-- ℂ where Item G's cliffordTBaseFinder_kmm states its SU(2,ℂ) operator-norm approximation.
+import SKEFTHawking.FKLW.RossSelinger.ComplexEmbeddingSqrt2
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
