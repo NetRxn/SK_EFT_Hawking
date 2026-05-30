@@ -26,6 +26,15 @@ These were authored under the in-tree-build authorization of Phase 6p
 already follow Mathlib's `Matrix.*` snake_case / `inst*` typeclass
 patterns; this file is the explicit upstream-ready packaging.
 
+**HONEST SCOPE (M-track, per 2026-05-30 adversarial review).** This file is an **alias /
+re-presentation** layer: the canonical-named declarations below are thin wrappers around the
+*already-proved* `SpecialUnitaryTopology` substrate (no new mathematical content is created here —
+the value is the Mathlib-name packaging + worked examples for upstream submission). Contrast with
+M.1 (`MatrixBCHCubicMathlibPR`, `bchOrder2Cubic_Fin`), which is a genuine **new Fin-`d` generalization**
+(substantive extraction, not an alias). When citing the M-track as "Mathlib-PR-ready," distinguish the
+genuine-extraction PRs (M.1) from the alias/packaging PRs (this file): both are submission-shaped, but
+only the former adds a theorem not already in-tree.
+
 ## Mathlib4 target
 
 Recommended target file under Mathlib4:
