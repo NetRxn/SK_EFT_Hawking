@@ -1405,6 +1405,10 @@ import SKEFTHawking.FKLW.RossSelinger.GridProblem
 -- necessary condition (thesis p.26). The §6 deterministic ∀-target existence (prime-density NT;
 -- Selinger 1212.6253 randomized + prime-distribution hypothesis) is the remaining concrete-L≤90 gate.
 import SKEFTHawking.FKLW.RossSelinger.RelativeNorm
+-- Phase 6x Tier-2 Item G (2026-05-30) — ℤ[√2]=Zsqrtd 2 ring structure for the two-squares sub-arc
+-- (Prop 3.2.7): two_ne_sq + IsDomain (via Mathlib Zsqrtd.toReal_injective). First ring-theoretic
+-- brick toward two-squares-over-ℤ[√2] (GaussianInt template) → Prop 3.2.7 → unconditional Item G.
+import SKEFTHawking.FKLW.RossSelinger.Zsqrt2
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
