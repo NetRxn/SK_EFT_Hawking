@@ -37,6 +37,7 @@ import SKEFTHawking.FKLW.RossSelinger.KMMForm
 import SKEFTHawking.FKLW.RossSelinger.KMMDet
 import SKEFTHawking.FKLW.RossSelinger.UnitaryClosure
 import SKEFTHawking.FKLW.RossSelinger.MuDecrease
+import SKEFTHawking.FKLW.RossSelinger.GridSynth
 
 set_option autoImplicit false
 
@@ -296,6 +297,167 @@ theorem reconstruct_box_data_unitary {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ}
       simp only [sqrt2_def, of_def]
     exact (ZOmega.dividesSqrt2_iff_dvd _).mpr ⟨w, hns⟩
   exact ⟨x, y, kd, hMrec, hsum, hdvd, hxd, hyd⟩
+
+/-! ## `stripMat` / `reduceStep` preservation + the base case + the KMM Theorem-1 converse -/
+
+/-- `stripMat` preserves unitarity (`adjoint (sylMat s)` is realizable hence unitary). -/
+theorem isUnitaryT_stripMat {M : Mat2} (hu : IsUnitaryT M) (s : Syllable) :
+    IsUnitaryT (stripMat s M) := by
+  rw [stripMat]
+  exact (isUnitaryT_of_isCliffordTRealizable (IsCliffordTRealizable.adjoint ⟨sylWord s, rfl⟩)).mul hu
+
+/-- **Determinant of the adjoint** `det (M†) = conj (det M)` (`2×2`). -/
+theorem det_adjoint (M : Mat2) : Matrix.det (ZOmegaSqrt2.adjoint M) = conj (Matrix.det M) := by
+  have hcn : ∀ x : ZOmegaSqrt2, conj (-x) = -conj x :=
+    fun x => eq_neg_of_add_eq_zero_left (by rw [← conj_add, neg_add_cancel, conj_zero])
+  rw [Matrix.det_fin_two, Matrix.det_fin_two, adjoint_apply, adjoint_apply, adjoint_apply,
+      adjoint_apply,
+      show M 0 0 * M 1 1 - M 0 1 * M 1 0 = M 0 0 * M 1 1 + -(M 0 1 * M 1 0) from by ring,
+      conj_add, hcn, ZOmegaSqrt2.conj_mul, ZOmegaSqrt2.conj_mul]
+  ring
+
+/-- `conj (ωS^k) = ωS^{7k}` (`conj ωS = ωS⁷`, the `*`-involution on the `8`th root). -/
+theorem conj_omegaS_pow (k : ℕ) : conj (ωS ^ k) = ωS ^ (7 * k) := by
+  induction k with
+  | zero => simp only [Nat.mul_zero, pow_zero]; decide
+  | succ n ih =>
+    rw [pow_succ, ZOmegaSqrt2.conj_mul, ih, show conj ωS = ωS ^ 7 from by decide,
+        ← pow_add, show 7 * (n + 1) = 7 * n + 7 from by ring]
+
+/-- `stripMat` preserves the `det = ωᵏ` class (`det_mul` + `det_adjoint` + `conj_omegaS_pow`). -/
+theorem det_stripMat' {M : Mat2} (hdet : ∃ k, Matrix.det M = ωS ^ k) (s : Syllable) :
+    ∃ k', Matrix.det (stripMat s M) = ωS ^ k' := by
+  obtain ⟨k, hdet⟩ := hdet
+  obtain ⟨ks, hks⟩ :=
+    det_realizable_eq_omega_pow (⟨sylWord s, rfl⟩ : IsCliffordTRealizable (sylMat s))
+  exact ⟨7 * ks + k, by rw [stripMat, show (ZOmegaSqrt2.adjoint (sylMat s) * M).det
+      = (ZOmegaSqrt2.adjoint (sylMat s)).det * M.det from Matrix.det_mul _ _,
+      det_adjoint, hks, conj_omegaS_pow, hdet, ← pow_add]⟩
+
+/-- **`μ ≤ kSO3 + 2`, realizability-free** (was `muMeasure_le_kSO3_add_two`): the `(z,z)` Bloch
+entry collapses via `unitary_col1` (instead of `realizable_col1`) to `R(M)₂₂ = 2|M₀₀|²−1`. -/
+theorem muMeasure_le_kSO3_add_two_u {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ}
+    (hdet : Matrix.det M = ωS ^ kd) : muMeasure M ≤ kSO3 M + 2 := by
+  have hbloch : blochEntry M 2 2 = half * (normSq (M 0 0) - normSq (M 0 1)
+      - normSq (M 1 0) + normSq (M 1 1)) := by
+    simp only [blochEntry, pauliMat, gateMatrix, Matrix.trace_fin_two, Matrix.mul_apply,
+      Fin.sum_univ_two, adjoint_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.of_apply, Matrix.cons_val', Matrix.empty_val', Matrix.cons_val_fin_one, normSq]
+    ring
+  have hc0 := unitary_col0_normSq hu
+  obtain ⟨h01, h11⟩ := unitary_col1 hu hdet
+  have hr11 : normSq (M 1 1) = normSq (M 0 0) := by
+    rw [h11, normSq_mul, show ωS = of ZOmega.ω from rfl, normSq_omega_pow, one_mul, normSq_conj']
+  have hr01 : normSq (M 0 1) = normSq (M 1 0) := by
+    rw [h01, normSq_neg', normSq_mul, show ωS = of ZOmega.ω from rfl, normSq_omega_pow, one_mul,
+      normSq_conj']
+  have hhalf : half + half = 1 := by rw [half, mk_add, one_def, mk_eq_mk_iff]; decide
+  have hc' : normSq (M 1 0) = 1 - normSq (M 0 0) := by linear_combination hc0
+  have hid : normSq (M 0 0) = (blochEntry M 2 2 + 1) * half := by
+    rw [hbloch, hr11, hr01, hc']
+    linear_combination (half - normSq (M 0 0) - 2 * normSq (M 0 0) * half) * hhalf
+  unfold muMeasure
+  rw [hid]
+  have h2 : denExp half = 2 := by rw [half, denExp_mk]; decide
+  calc denExp ((blochEntry M 2 2 + 1) * half)
+      ≤ denExp (blochEntry M 2 2 + 1) + denExp half := denExp_mul_le _ _
+    _ ≤ denExp (blochEntry M 2 2) + 2 := by
+        have := denExp_add_le (blochEntry M 2 2) 1; rw [denExp_one] at this; rw [h2]; omega
+    _ ≤ kSO3 M + 2 := by have := denExp_blochEntry_le_kSO3 M 2 2; omega
+
+/-- **The `μ → kSO3` bridge, realizability-free** (was `bridge`): `μ ≤ 3 ⟹ kSO3 ≤ 3` from
+`IsUnitaryT` + `det = ωᵏ`, via `reconstruct_box_data_unitary` + `bridge_box_core`. -/
+theorem bridge_u {M : Mat2} (hu : IsUnitaryT M) {kd : ℕ} (hdet : Matrix.det M = ωS ^ kd)
+    (hμ : muMeasure M ≤ 3) : kSO3 M ≤ 3 := by
+  obtain ⟨x, y, k, hMrec, hsum, hdvd, hxd, hyd⟩ := reconstruct_box_data_unitary hu hdet hμ
+  have hk8 : k % 8 < 8 := Nat.mod_lt _ (by norm_num)
+  have hbox : kSO3 (reconstruct x y (k % 8)) ≤ 3 := by
+    have h1 := List.all_eq_true.mp bridge_box_core x (mem_zomBox hxd)
+    have h2 := List.all_eq_true.mp h1 y (mem_zomBox hyd)
+    rw [if_pos ⟨hsum, hdvd⟩] at h2
+    exact of_decide_eq_true (List.all_eq_true.mp h2 (k % 8) (List.mem_range.mpr hk8))
+  rw [hMrec, reconstruct_mod]; exact hbox
+
+/-- **The Clifford base, realizability-free** (was `cliffordBase`): a unitary `M` with
+`det = ωᵏ` and `kSO3 M = 0` is realizable, via `reconstruct_box_data_unitary` +
+`cliffordBase_box_core`. -/
+theorem cliffordBase_u {M : Mat2} (hu : IsUnitaryT M) (hdet : ∃ k, Matrix.det M = ωS ^ k)
+    (hk0 : kSO3 M = 0) : ∃ gs : List CliffordTGate, interp gs = M := by
+  obtain ⟨kd, hkd⟩ := hdet
+  have hμ : muMeasure M ≤ 3 := by have := muMeasure_le_kSO3_add_two_u hu hkd; omega
+  obtain ⟨x, y, k, hMrec, hsum, hdvd, hxd, hyd⟩ := reconstruct_box_data_unitary hu hkd hμ
+  have hk0' : kSO3 (reconstruct x y (k % 8)) = 0 := by rw [← reconstruct_mod, ← hMrec]; exact hk0
+  have hk8 : k % 8 < 8 := Nat.mod_lt _ (by norm_num)
+  have h2 := List.all_eq_true.mp (List.all_eq_true.mp cliffordBase_box_core x (mem_zomBox hxd))
+    y (mem_zomBox hyd)
+  rw [if_pos ⟨hsum, hdvd⟩] at h2
+  have h3 := List.all_eq_true.mp h2 (k % 8) (List.mem_range.mpr hk8)
+  rw [decide_eq_true_eq.mpr hk0', Bool.not_true, Bool.false_or, Bool.and_eq_true] at h3
+  exact ⟨cliffordWordOf x y (k % 8), by
+    rw [of_decide_eq_true h3.1, hMrec]; exact (reconstruct_mod x y k).symm⟩
+
+/-- **MA base coverage, realizability-free**: every unitary `M` with `det = ωᵏ` and
+`kSO3 M = n ≤ 3` is realizable. Strong induction on `n`; base `cliffordBase_u`, step strips an
+`ma_step_exists_u` syllable (drops `kSO3`, preserves unitarity+det). -/
+theorem maCoverage_aux_u :
+    ∀ (n : ℕ) (M : Mat2), IsUnitaryT M → (∃ k, Matrix.det M = ωS ^ k) → kSO3 M = n → n ≤ 3 →
+      ∃ gs : List CliffordTGate, interp gs = M := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | _ n ih =>
+    intro M hu hdet hkn hn3
+    rcases Nat.eq_zero_or_pos n with hn0 | hnpos
+    · subst hn0; exact cliffordBase_u hu hdet hkn
+    · obtain ⟨s, hlt⟩ := ma_step_exists_u hu (by omega) (by omega)
+      have hmn : kSO3 (stripMat s M) < n := by rw [← hkn]; exact hlt
+      obtain ⟨gs', hgs'⟩ := ih (kSO3 (stripMat s M)) hmn (stripMat s M)
+        (isUnitaryT_stripMat hu s) (det_stripMat' hdet s) rfl (by omega)
+      exact ⟨sylWord s ++ gs', by rw [interp_append, hgs', interp_sylWord_stripMat]⟩
+
+/-- **KMM Theorem 1 converse (auxiliary, strong induction on `μ`).** -/
+theorem kmm_completeness_aux :
+    ∀ (μ : ℕ) (M : Mat2), IsUnitaryT M → (∃ k, Matrix.det M = ωS ^ k) → muMeasure M = μ →
+      IsCliffordTRealizable M := by
+  intro μ
+  induction μ using Nat.strong_induction_on with
+  | _ μ ih =>
+    intro M hu hdet hμeq
+    by_cases h3 : muMeasure M ≤ 3
+    · obtain ⟨kd, hkd⟩ := hdet
+      exact maCoverage_aux_u (kSO3 M) M hu ⟨kd, hkd⟩ rfl (bridge_u hu hkd h3)
+    · have h4 : 4 ≤ denExp (normSq (M 0 0)) := by unfold muMeasure at h3; omega
+      obtain ⟨k, hk⟩ := mu_decrease hu h4
+      have hlt : muMeasure (reduceStep M k) < μ := by rw [← hμeq]; exact hk
+      obtain ⟨kd, hkd⟩ := hdet
+      have hIH := ih (muMeasure (reduceStep M k)) hlt (reduceStep M k)
+        (isUnitaryT_reduceStep hu k) (det_reduceStep hkd k) rfl
+      rw [← interp_reconWordC_reduceStep M k]
+      exact IsCliffordTRealizable.mul
+        (⟨reconWordC (k : ℕ), rfl⟩ : IsCliffordTRealizable (interp (reconWordC (k : ℕ)))) hIH
+
+/-- **KMM Theorem 1 converse (completeness)** — the deep direction: every `2×2` matrix that is
+unitary over `ZOmegaSqrt2` with determinant `ωᵏ` is Clifford+T-realizable. Strong induction on
+`μ(M) = denExp(|M₀₀|²)`: the base (`μ ≤ 3`) is the realizability-free MA coverage
+(`maCoverage_aux_u`, resting on the keystone `blochEntry_real`); the step (`μ ≥ 4`) descends via
+`reduceStep = H·Tᵏ·M` (`mu_decrease` lowers `μ`; `reduceStep` preserves unitarity+det) and
+reconstructs `M = interp (reconWordC k) · reduceStep M k`.
+
+Together with `det_realizable_eq_omega_pow` (the easy direction) this is the full KMM Theorem 1
+characterisation: **`IsCliffordTRealizable M ↔ IsUnitaryT M ∧ ∃ k, det M = ωS^k`**. In
+particular it makes *any* constructed `SU(2)`-over-`ℤ[ω][1/√2]` unitary — e.g.
+`GridSynth.assembleUnitary` (just certified `IsUnitaryT` + `det = 1`) — exactly synthesizable
+by `kmmReduce`, closing the realizability gap in the Ross-Selinger grid-synthesis compiler. -/
+theorem kmm_completeness {M : Mat2} (hu : IsUnitaryT M) (hdet : ∃ k, Matrix.det M = ωS ^ k) :
+    IsCliffordTRealizable M :=
+  kmm_completeness_aux (muMeasure M) M hu hdet rfl
+
+/-- **`assembleUnitary` output is Clifford+T-realizable**: the immediate corollary tying the
+grid-synthesis step (d) to the synthesizer — a solved `(u, t)` pair satisfying the Diophantine
+constraint yields a matrix in the `interp` image (so `kmmReduce` synthesizes it exactly). -/
+theorem isCliffordTRealizable_assembleUnitary (u t : ZOmega) (k : ℕ)
+    (h : ZOmega.normSq u + ZOmega.normSq t = (⟨0, 0, 0, 2 ^ k⟩ : ZOmega)) :
+    IsCliffordTRealizable (assembleUnitary u t k) :=
+  kmm_completeness (isUnitaryT_assembleUnitary u t k h) ⟨0, by rw [det_assembleUnitary u t k h, pow_zero]⟩
 
 end KMM
 
