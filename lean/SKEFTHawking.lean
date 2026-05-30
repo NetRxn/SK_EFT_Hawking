@@ -1395,6 +1395,11 @@ import SKEFTHawking.FKLW.RossSelinger.KMMCompleteness
 -- gridSynthWord (kmmReduce) with gridSynthWord_correct (interp = assembleUnitary) + length bound.
 -- Runnable end-to-end; the ε-region FINDER completeness (RS §5) is the remaining analytic core.
 import SKEFTHawking.FKLW.RossSelinger.GridSolver
+-- Phase 6x Tier-2 Item H (2026-05-30) — Ross-Selinger grid FINDER completeness, existence core
+-- (DR-grounded, thesis arXiv:1510.02198 Ch.5): oneDim_grid_exists (1-D balanced center-rounding,
+-- Lemma 5.2.7) + twoDim_grid_exists (ℤ[ω]=ℤ[√2][i] split, Prop 5.2.9). The existence keystone
+-- the FINDER needs (no Step-operator/uprightness machinery — that's for efficient enumeration only).
+import SKEFTHawking.FKLW.RossSelinger.GridProblem
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
