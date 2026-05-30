@@ -1082,6 +1082,36 @@ moving foundation). DR verdict: original native-CCZ-*approximation* angles KILLE
 
 **DO NOT TOUCH:** Phase 6y coordination list.
 
+#### Item L continuation (post-MVP): channel rep → reduction → minimality (L.A / L.B / L.C)
+
+The Item-L **MVP shipped 2026-05-30** (status block above). The fuller public math layer (§"Public
+deliverable": channel-representation algebra + the exact-correctness theorem + the stretch
+minimality) has three remaining increments, gated on a deep-research dossier (DR task SUBMITTED
+2026-05-30: `Lit-Search/Tasks/submitted/20260530_phase6x_itemL_mukhopadhyay_channelrep_minimality.md`
+— the existing material (abstract + this brief) is insufficient for the channel-rep + reduction +
+lower-bound *proof mechanisms*, exactly as the Ross-Selinger dossier was needed for Items F/G/I).
+
+- **L.A — Channel representation + Fact 3.9.** Define the channel (Pauli-conjugation) representation
+  and prove the exact-implementability characterization (the one-`±1`-per-row/col Clifford criterion +
+  its Clifford+CCZ analog). **Re-base `IsExactlyCliffordCCZ` / `synth` on it** (a decidable/structural
+  membership, replacing the trivial `∃-gate-word` + `Classical.choose` of the MVP). *This closes the
+  honest public-scope gap: the MVP proves correctness without the representability characterization.*
+- **L.B — Reduction / decomposition (Thm 3.2).** A terminating reduction (the `kmmReduce` analog,
+  termination by the dyadic `sde₂`) synthesizing any exactly-representable `U` into a `{H,S,CNOT,CCZ}`
+  word + the **achievability** Toffoli-count upper bound (the analog of KMM `N₃ + 4·sde`).
+- **L.C — Toffoli-count MINIMALITY (the stretch).** The `sde₂`-based lower bound. Likely-tractable
+  target = achievability + the invariant lower bound (if optimality rests on a monotone `sde₂` like our
+  T-count `sde`); full MITM-exhaustiveness optimality is the deepest, possibly-partial piece. The DR's
+  Q5 verdict decides scope.
+
+**Substrate reuse (expected, DR to confirm):** the exactly-implementable SU(8) *matrices* live over
+`ZOmegaSqrt2 = ℤ[ω][1/√2]` (already shipped); the *channel* rep over `ℤ[1/2]` (dyadic), where `sde₂` is
+the `√2`→`2` analog of our shipped T-count `sde` — so the deeper arc is closer to a **port of the
+Clifford+T exact-synthesis machinery** than a from-scratch build. Deterministic branch only.
+
+**Execution:** a fresh `/goal` scoped L.A → L.B → L.C, opened after the DR lands + a direct primary-
+source read of arXiv:2401.08950. Genuinely multi-session (comparable to the Clifford+T F/G/I arc).
+
 ---
 
 ### Audit addendum metadata
