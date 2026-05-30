@@ -1431,6 +1431,13 @@ import SKEFTHawking.FKLW.RossSelinger.GridCompileCorrect
 -- exposed as runnable functions) + correctness. Upright-case §5 grid solutions; composes with
 -- gridFindT + assembleUnitary + kmmReduce (compile_correct_core) for the target-level compile.
 import SKEFTHawking.FKLW.RossSelinger.GridSolutions
+-- Phase 6x Tier-2 Item H (2026-05-30) — the Ross-Selinger §5 Thm-2 upright grid ENUMERATION:
+-- gridSolutions1D lo hi lo' hi' = the finite set of all (m,n)∈ℤ² with m+n√2 ∈ [lo,hi] and its Galois
+-- conjugate m−n√2 ∈ [lo',hi'] (m-scan ⌈(lo+lo')/2⌉..⌊(hi+hi')/2⌋, per-m n-scan), with
+-- gridSolutions1D_mem_iff (correctness + completeness: membership ⇔ the four real bounds) +
+-- gridSolutions1D_card_le (count bound). Cross-validated vs pygridsynth.odgp.solve_ODGP (180/180
+-- boxes, 4851 solutions, exact set match) in scripts/grid_enum_pygridsynth_xval.py.
+import SKEFTHawking.FKLW.RossSelinger.GridEnum
 -- Phase 6x Tier-2 Item I (2026-05-30) — the runnable Ross-Selinger compile : SU(2)→(k,b)→
 -- Option(Clifford+T word) (round first column via twoDimGridSolution → gridFindT residual →
 -- gridCompile=kmmReduce∘assembleUnitary) + compile_correct SOUNDNESS (finder returns + columns

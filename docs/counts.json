@@ -1,16 +1,16 @@
 {
-  "generated": "2026-05-30T12:19:10.769504",
+  "generated": "2026-05-30T12:39:44.730763",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 17325,
-    "theorems_total": 9787,
-    "theorems_substantive": 9762,
+    "total_declarations": 17341,
+    "theorems_total": 9797,
+    "theorems_substantive": 9772,
     "theorems_placeholder": 25,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 738,
+    "modules": 739,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -356,6 +356,7 @@
       "SKEFTHawking.FKLW.RossSelinger.GdeSqrt2",
       "SKEFTHawking.FKLW.RossSelinger.GdeValue",
       "SKEFTHawking.FKLW.RossSelinger.GridCompileCorrect",
+      "SKEFTHawking.FKLW.RossSelinger.GridEnum",
       "SKEFTHawking.FKLW.RossSelinger.GridProblem",
       "SKEFTHawking.FKLW.RossSelinger.GridSolutions",
       "SKEFTHawking.FKLW.RossSelinger.GridSolver",
@@ -751,7 +752,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6668,
+    "definitions": 6674,
     "structures": 287,
     "instances": 489,
     "inductives": 94
