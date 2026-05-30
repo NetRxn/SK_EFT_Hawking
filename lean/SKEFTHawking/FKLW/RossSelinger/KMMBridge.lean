@@ -63,10 +63,35 @@ import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
 import SKEFTHawking.FKLW.RossSelinger.KMMBaseCoverage
 import SKEFTHawking.FKLW.RossSelinger.ClearingConnection
 import SKEFTHawking.FKLW.RossSelinger.UnitColumnCongruence
+import SKEFTHawking.FKLW.RossSelinger.MAStepDecrease
+import SKEFTHawking.FKLW.RossSelinger.MuDecrease
 
 set_option autoImplicit false
 
 namespace SKEFTHawking.RossSelinger
+
+/-- **`ZOmegaSqrt2` is right-cancellative for `+`** (it is an `AddGroup`, but the
+hand-rolled quotient `CommRing` instance does not expose the `IsRightCancelAdd`
+mixin to `linear_combination`'s `ring1` closer — providing it explicitly unblocks
+`linear_combination` over this ring). -/
+instance : IsRightCancelAdd ZOmegaSqrt2 where
+  add_right_cancel a b c h := by
+    have h2 := congrArg (· + (-a)) h
+    simpa only [add_neg_cancel_right] using h2
+
+namespace ZOmegaSqrt2
+
+/-- `normSq` is conjugation-invariant: `normSq (conj x) = normSq x`. -/
+theorem normSq_conj' (x : ZOmegaSqrt2) : normSq (conj x) = normSq x := by
+  rw [normSq, conj_conj, mul_comm, ← normSq]
+
+/-- `normSq` is negation-invariant: `normSq (-x) = normSq x`. -/
+theorem normSq_neg' (x : ZOmegaSqrt2) : normSq (-x) = normSq x := by
+  have cn : conj (-x) = -conj x := by
+    have h := conj_add x (-x); rw [add_neg_cancel, conj_zero] at h; linear_combination -h
+  rw [normSq, normSq, cn]; ring
+
+end ZOmegaSqrt2
 
 namespace KMM
 
@@ -194,6 +219,45 @@ theorem bridge (M : Mat2) (hM : IsCliffordTRealizable M) (hμ : muMeasure M ≤ 
     exact of_decide_eq_true (List.all_eq_true.mp h2 (k % 8) (List.mem_range.mpr hk8))
   rw [hMrec, reconstruct_mod]
   exact hbox
+
+/-! ## The reverse bound `μ ≤ kSO3 + 2` (for the Clifford base) -/
+
+/-- **`muMeasure M ≤ kSO3 M + 2`** for a realizable `M` (a clean, `native_decide`-free
+structural bound). The `(z,z)` Bloch entry is `R(M)₂₂ = 2·|M₀₀|² − 1` for a unitary
+(`realizable_col1` gives `|M₁₁|²=|M₀₀|²`, `|M₀₁|²=|M₁₀|²`, so the trace collapses), hence
+`normSq M₀₀ = (R(M)₂₂ + 1)·½`. `denExp` is sub-multiplicative and `denExp ½ = 2`, so
+`μ(M) = denExp(normSq M₀₀) ≤ denExp(R(M)₂₂) + 2 ≤ kSO3 M + 2`. In particular
+`kSO3 M = 0 ⟹ μ(M) ≤ 2 ≤ 3`, which lets the Clifford base reuse `column0_cleared_bounded`. -/
+theorem muMeasure_le_kSO3_add_two {M : Mat2} (hM : IsCliffordTRealizable M) :
+    muMeasure M ≤ kSO3 M + 2 := by
+  have hu : IsUnitaryT M := by obtain ⟨gs, rfl⟩ := hM; exact interp_isUnitaryT gs
+  have hbloch : blochEntry M 2 2 = half * (normSq (M 0 0) - normSq (M 0 1)
+      - normSq (M 1 0) + normSq (M 1 1)) := by
+    simp only [blochEntry, pauliMat, gateMatrix, Matrix.trace_fin_two, Matrix.mul_apply,
+      Fin.sum_univ_two, adjoint_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.of_apply, Matrix.cons_val', Matrix.empty_val', Matrix.cons_val_fin_one, normSq]
+    ring
+  have hc0 := unitary_col0_normSq hu
+  obtain ⟨k, h01, h11⟩ := realizable_col1 hM
+  have hr11 : normSq (M 1 1) = normSq (M 0 0) := by
+    rw [h11, normSq_mul, show ωS = of ZOmega.ω from rfl, normSq_omega_pow, one_mul, normSq_conj']
+  have hr01 : normSq (M 0 1) = normSq (M 1 0) := by
+    rw [h01, normSq_neg', normSq_mul, show ωS = of ZOmega.ω from rfl, normSq_omega_pow, one_mul,
+      normSq_conj']
+  have hhalf : half + half = 1 := by rw [half, mk_add, one_def, mk_eq_mk_iff]; decide
+  have hc' : normSq (M 1 0) = 1 - normSq (M 0 0) := by linear_combination hc0
+  have hid : normSq (M 0 0) = (blochEntry M 2 2 + 1) * half := by
+    rw [hbloch, hr11, hr01, hc']
+    linear_combination (half - normSq (M 0 0) - 2 * normSq (M 0 0) * half) * hhalf
+  unfold muMeasure
+  rw [hid]
+  have h2 : denExp half = 2 := by rw [half, denExp_mk]; decide
+  calc denExp ((blochEntry M 2 2 + 1) * half)
+      ≤ denExp (blochEntry M 2 2 + 1) + denExp half := denExp_mul_le _ _
+    _ ≤ denExp (blochEntry M 2 2) + 2 := by
+        have := denExp_add_le (blochEntry M 2 2) 1
+        rw [denExp_one] at this; rw [h2]; omega
+    _ ≤ kSO3 M + 2 := by have := denExp_blochEntry_le_kSO3 M 2 2; omega
 
 end KMM
 
