@@ -144,9 +144,18 @@ constructive Dawson-Nielsen Solovay-Kitaev compiler returns a
 `FreeGroup (Fin 2)` word over `{of 0 ↦ H_SU, of 1 ↦ T_SU}` with BOTH:
 
   - **Error**: `‖ρ_CliffT (compile U ε) - U‖ ≤ ε`
-  - **Length**: polylog `O(log(1/ε)^skLengthExponent)` word length
+  - **Recursion-level length**: `skLength (skLevel_polylog ε) ≤ skLengthConst ·
+    (log(1/ε))^skLengthExponent` — the SK recursion-LEVEL word-length COUNT grows polylog.
 
 Both bounds at the SAME algorithmic compile level `skLevel_polylog ε`.
+
+NOTE (output-word-length coupling): the length conjunct bounds the closed-form `skLength` at
+the chosen recursion level, NOT the returned word's length. The genuine output-word-length
+bound `((compile U ε).toWord.length : ℝ) ≤ skLength (skLevel_polylog ε)` is the separate
+3-conjunct headline `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete_at_basefinder`,
+conditional on a length-bounded base finder (`BaseFinder_length_bounded`) — the documented Track-T-S′
+/ Ross-Selinger-grid-∀-coverage residual (the existential ε₀-net `cliffordTBaseFinder` carries no
+length control).
 
 This is the canonical Clifford+T Solovay-Kitaev statement, matching the
 Dawson-Nielsen 2006 form, instantiated via the Phase 6u generic

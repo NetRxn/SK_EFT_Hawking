@@ -195,6 +195,48 @@ theorem solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete
     baseFinder h_bf_length (skLevel_polylog ε) U
   exact ⟨h12.1, h12.2, h3⟩
 
+/-- **Clifford+T 3-conjunct headline AT THE ACTUAL Dawson–Nielsen compiler** (the honest
+output-word-length form).
+
+Instantiates the generic 3-conjunct headline at the project's actual unconditional Clifford+T base
+finder `cliffordTBaseFinder cliffordT_v4_witness_discharged`. The **error** and **abstract-length**
+conjuncts are UNCONDITIONAL (the base-finder approximation is discharged via
+`cliffordTBaseFinder_approximates_within_two_ε₀`); the **concrete output-word-length** conjunct
+`((compile U ε).toWord.length : ℝ) ≤ skLength (skLevel_polylog ε)` is conditional on the SINGLE
+explicit hypothesis `h_bf_length : BaseFinder_length_bounded (cliffordTBaseFinder …)`.
+
+This makes the output-word-length coupling explicit and honest. The shipped `cliffordTBaseFinder` is
+the existential ε₀-net finder (`epsilonNet_findNearest_of_witness`, a `Classical.choose` extraction),
+which carries NO length control, so `h_bf_length` is genuinely undischarged here (and unprovable for
+that finder). Discharging it requires a length-bounded base finder — a constructive finite ε₀-net or
+the Ross-Selinger grid-synth finder (Phase 6x Item I / Track T-S′) with ∀-`U` coverage — the same
+documented grid-completeness residual that gates Item I's ∀-target completeness. By contrast the
+`*_strict_constructive_tight*` headlines bound only `skLength (skLevel_polylog ε)` (the SK
+recursion-LEVEL count, which grows polylog), NOT the returned word's length; this theorem supplies the
+genuine output-word-length coupling with that single residual hypothesis named. -/
+theorem solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete_at_basefinder
+    (h_bf_length : BaseFinder_length_bounded
+      (cliffordTBaseFinder cliffordT_v4_witness_discharged))
+    (U : ↥(specialUnitaryGroup (Fin 2) ℂ)) (ε : ℝ)
+    (hε_pos : 0 < ε) (hε_le : ε ≤ ε₀) :
+    ‖((cliffordTGeneratingSet.ρ_hom
+            (solovayKitaev_compile_strict_constructive_generic
+              cliffordTGeneratingSet
+              (cliffordTBaseFinder cliffordT_v4_witness_discharged) U ε) :
+          ↥(specialUnitaryGroup (Fin 2) ℂ)) :
+        Matrix (Fin 2) (Fin 2) ℂ) -
+        (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ ε ∧
+    skLength (skLevel_polylog ε) ≤
+      skLengthConst * (Real.log (1 / ε)) ^ skLengthExponent ∧
+    ((solovayKitaev_compile_strict_constructive_generic
+        cliffordTGeneratingSet
+        (cliffordTBaseFinder cliffordT_v4_witness_discharged) U ε).toWord.length : ℝ)
+        ≤ skLength (skLevel_polylog ε) :=
+  solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete
+    (cliffordTBaseFinder cliffordT_v4_witness_discharged)
+    (cliffordTBaseFinder_approximates_within_two_ε₀ cliffordT_v4_witness_discharged)
+    h_bf_length U ε hε_pos hε_le
+
 /-- **Phase 6x Track M.4 — Read-Rezayi `SU(2)_5` 3-conjunct headline**. -/
 theorem solovayKitaev_dawson_nielsen_quantitative_readRezayiK5_strict_concrete
     (baseFinder : ↥(specialUnitaryGroup (Fin 2) ℂ) → FreeGroup (Fin 2))

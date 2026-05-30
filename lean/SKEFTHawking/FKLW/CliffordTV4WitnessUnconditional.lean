@@ -31,7 +31,10 @@ becomes FULLY UNCONDITIONAL.
     — the Phase 6u Track T-S.5 UNCONDITIONAL bundled-strict Clifford+T
     headline. Conjoins:
       - Error: `‖ρ_CliffT (compile U ε) - U‖ ≤ ε`
-      - Length: polylog `O(log(1/ε)^skLengthExponent)` word length
+      - Recursion-level length: `skLength (skLevel_polylog ε) ≤ polylog(1/ε)` — the SK
+        recursion-LEVEL word-length COUNT (polylog growth), NOT a bound on the returned
+        word's length. The genuine output-word-length coupling is the separate
+        `…_strict_concrete_at_basefinder` (conditional on a length-bounded base finder).
     at the SAME compile level `skLevel_polylog ε`. The canonical
     Dawson-Nielsen form for Clifford+T, kernel-only.
 
@@ -93,9 +96,18 @@ constructive Dawson-Nielsen Solovay-Kitaev compiler returns a
 `FreeGroup (Fin 2)` word over `{of 0 ↦ H_SU, of 1 ↦ T_SU}` with BOTH:
 
   - **Error**: `‖ρ_CliffT (compile U ε) - U‖ ≤ ε`
-  - **Length**: polylog `O(log(1/ε)^skLengthExponent)` word length
+  - **Recursion-level length**: `skLength (skLevel_polylog ε) ≤ skLengthConst ·
+    (log(1/ε))^skLengthExponent` — the SK recursion-LEVEL word-length COUNT grows polylog.
 
 Both bounds at the SAME algorithmic compile level `skLevel_polylog ε`.
+
+NOTE (output-word-length coupling): the length conjunct bounds the closed-form `skLength` at the
+chosen recursion level, NOT the returned word's length. The genuine output-word-length bound
+`((compile U ε).toWord.length : ℝ) ≤ skLength (skLevel_polylog ε)` is the separate 3-conjunct
+headline `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete_at_basefinder`,
+conditional on a length-bounded base finder (`BaseFinder_length_bounded`) — the documented Track-T-S′
+/ Ross-Selinger-grid-∀-coverage residual (the existential ε₀-net `cliffordTBaseFinder` carries no
+length control, so that hypothesis is undischarged for it).
 
 This is the canonical Clifford+T Dawson-Nielsen 2006 quantitative
 statement, instantiated via the Phase 6u generic substrate (Waves 1-6 +
