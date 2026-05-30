@@ -92,3 +92,38 @@ All four phases pass adversarial review. The cross-phase RECOMMENDED items (6u l
 6y roadmap staleness; 6z CCZ-converse + dead scaffolding; 6x M-track aliases) are documentation/labeling
 follow-ons in already-closed phases — none blocks. The 6x roadmap-prose item (the only finding originating
 in the 2026-05-30 session) was fixed.
+
+## Remediation (2026-05-30, all findings — green-lit by the principal, substance-preferred)
+
+All five advisories addressed. Feasibility note: the *big* substantive fixes (a length-bounded ∀-coverage
+base finder for 6u; a formalized 3-qubit Clifford-finiteness theorem for 6z) are NOT cheaply feasible —
+each is a genuine multi-increment project gated on the same deep deferred residuals (the grid-completeness
+∀-coverage that also gates Item I; the per-generator channel-rep / Pauli-normalization analysis that is
+the 6x Fact-3.9 residual). Where substance was feasible it was shipped; otherwise the honest re-framing
+(claim only what is proved, name the residual) was applied. Counts after remediation: 9837 theorems / 0
+axioms / 0 sorry / 742 modules; build clean; counts_fresh + axiom_closure_allowlist PASS.
+
+- **6u (`f5f664c`) — SUBSTANCE.** Added `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_concrete_at_basefinder`:
+  the generic word-coupled 3-conjunct headline instantiated at the ACTUAL Clifford+T compiler — error +
+  abstract-length UNCONDITIONAL, the CONCRETE output-word-length conjunct conditional on the single explicit
+  `BaseFinder_length_bounded` hypothesis (the one irreducible residual; the existential ε₀-net finder provably
+  carries no length control). Corrected both decoupled-headline docstrings to label the length conjunct as the
+  SK recursion-LEVEL count and cross-reference the new theorem + residual.
+- **6z (`fe79c09`) — SUBSTANCE (doc-correctness) + honest re-framing.** Corrected the false "operative seed"
+  claim (module docstring + roadmap): the shipped proof uses the DR1 trace-route seed `CCZ·H₁H₂H₃`
+  (`tr=u·(1/√2)∉𝒪`), not the DR2 eigenvalue seed — which is a correct, RETAINED alternative obstruction off
+  the critical path (kept, not deleted; it is a valid completed Wave-1 deliverable). Softened the
+  CCZ-essentiality docstrings to the proved positive direction (CCZ supplies the trace-irrationality),
+  attributing the unproved Clifford-only-finiteness converse to the standard fact.
+- **6y (`841187c`) — doc refresh (substance already shipped).** Replaced the stale "SOLE frontier / tracked /
+  multi-session" block with an AS-SHIPPED UPDATE naming the actually-shipped unconditional witnesses/headlines
+  (the stale `*_tight` names don't exist); carried the SU(8)=Clifford+T (CCZ present-but-unused) scope note.
+- **6x (`426831b` roadmap prose; `841187c` M-track).** Roadmap L.C prose tightened to PARAMETRIC framing
+  (done in the review commit). Added an HONEST SCOPE note to `SU2CompactnessMathlibPR.lean` distinguishing the
+  alias/packaging layer from genuine-extraction PRs (M.1).
+
+**Documented substantive follow-ons (NOT done — disproportionate, gated on deep residuals):** (i) a
+length-bounded ∀-coverage Clifford+T base finder (constructive finite ε₀-net / Ross-Selinger) to discharge
+`BaseFinder_length_bounded` unconditionally; (ii) a formalized 3-qubit Clifford-group finiteness theorem to
+prove the CCZ-essentiality converse. Both are tracked as optional, the same class as the existing Item-I
+grid-completeness and 6x per-generator channel-rep residuals.
