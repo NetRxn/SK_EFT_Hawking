@@ -1384,6 +1384,12 @@ import SKEFTHawking.FKLW.RossSelinger.PhaseBridge
 -- (c) ℤ[ω] Diophantine (the convex-geometry/number-theory analytic core) are the next
 -- increment. (c)+(d) validated end-to-end in scripts/grid_stub_validation.py (exact det-1 SU(2)).
 import SKEFTHawking.FKLW.RossSelinger.GridSynth
+-- Phase 6x Tier-2 Item G (2026-05-29) — KMM Theorem 1 *converse* (completeness) descent
+-- ingredients: reduceStep preserves unitarity + det=ωᵏ (isUnitaryT_reduceStep, det_reduceStep)
+-- and reconstruct_box_data_unitary (box-data extraction realizability-free, via unitary_col1).
+-- Toward `IsUnitaryT M → (∃k, det M = ωS^k) → IsCliffordTRealizable M`, the direction that makes
+-- any constructed SU(2)-over-ℤ[ω][1/√2] unitary (GridSynth.assembleUnitary) synthesizable.
+import SKEFTHawking.FKLW.RossSelinger.KMMCompleteness
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
