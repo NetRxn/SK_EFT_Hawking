@@ -1877,6 +1877,11 @@ import SKEFTHawking.FKLW.MukhopadhyayToffoliBound
 -- (H_qi/S_qi/CNOT_ij) is a signed permutation, via the shipped 6z conjugation tables + the L.A
 -- channel rep. The substrate for the hC bridge + the 6z CCZ-essentiality converse.
 import SKEFTHawking.FKLW.MukhopadhyayChannelRepClifford
+-- Phase 6x′ capstone inc 1 (2026-05-30): the abstract algebra of signed permutation matrices —
+-- IsSignedPerm closed under one/mul/inverse and a finite set. The finite target into which the
+-- channel-rep homomorphism carries the Clifford-only group ⟨H,S,CNOT⟩ (Fact 3.9), the combinatorial
+-- input to the 6z CCZ-essentiality converse (cliffordOnly_not_dense).
+import SKEFTHawking.FKLW.MukhopadhyaySignedPerm
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
