@@ -79,4 +79,46 @@ theorem toComplex_invSqrt2 :
     ZOmegaSqrt2.toComplex ZOmegaSqrt2.invSqrt2 = ((Real.sqrt 2)⁻¹ : ℂ) := by
   rw [ZOmegaSqrt2.invSqrt2, ZOmegaSqrt2.toComplex_mk, map_one, pow_one, ZOmegaSqrt2.s2C_eq, one_div]
 
+/-! ## Per-gate complex matrix values
+
+The explicit `Matrix (Fin 2) (Fin 2) ℂ` value of each KMM `gateMatrix` under
+`toComplexMat`. These are the U(2) targets the `gateMatrix ↔ ρ_CliffT` phase bridge
+matches against (next Item-G sub-step). `eta_fin_two` + `congr 1` resolves the matrix
+indexing; the entries reduce by the per-gate-entry lemmas above. -/
+
+/-- Shared entry-reduction tactic for the per-gate matrix values. -/
+local macro "gateval" : tactic =>
+  `(tactic| (congr 1 <;>
+    simp only [toComplexMat, gateMatrix, RingHom.mapMatrix_apply, Matrix.map_apply,
+      Matrix.one_fin_two, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+      Matrix.of_apply, Matrix.smul_apply, Matrix.smul_cons, Matrix.smul_empty, smul_eq_mul,
+      map_one, map_zero, map_neg, mul_one, mul_zero,
+      toComplex_omegaS, toComplex_iS, toComplex_invSqrt2, Complex.ofReal_inv]))
+
+theorem toComplexMat_gateMatrix_H : toComplexMat (gateMatrix CliffordTGate.H)
+    = !![((Real.sqrt 2)⁻¹ : ℂ), (Real.sqrt 2)⁻¹; (Real.sqrt 2)⁻¹, -(Real.sqrt 2)⁻¹] := by
+  rw [Matrix.eta_fin_two (toComplexMat _)]; gateval
+
+theorem toComplexMat_gateMatrix_S : toComplexMat (gateMatrix CliffordTGate.S) = !![1, 0; 0, Complex.I] := by
+  rw [Matrix.eta_fin_two (toComplexMat _)]; gateval
+
+theorem toComplexMat_gateMatrix_T : toComplexMat (gateMatrix CliffordTGate.T) = !![1, 0; 0, ZOmega.omegaC] := by
+  rw [Matrix.eta_fin_two (toComplexMat _)]; gateval
+
+theorem toComplexMat_gateMatrix_X : toComplexMat (gateMatrix CliffordTGate.X) = !![0, 1; 1, 0] := by
+  rw [Matrix.eta_fin_two (toComplexMat _)]; gateval
+
+theorem toComplexMat_gateMatrix_Y : toComplexMat (gateMatrix CliffordTGate.Y) = !![0, -Complex.I; Complex.I, 0] := by
+  rw [Matrix.eta_fin_two (toComplexMat _)]; gateval
+
+theorem toComplexMat_gateMatrix_Z : toComplexMat (gateMatrix CliffordTGate.Z) = !![1, 0; 0, -1] := by
+  rw [Matrix.eta_fin_two (toComplexMat _)]; gateval
+
+theorem toComplexMat_gateMatrix_id : toComplexMat (gateMatrix CliffordTGate.id) = !![1, 0; 0, 1] := by
+  rw [Matrix.eta_fin_two (toComplexMat _)]; gateval
+
+theorem toComplexMat_gateMatrix_omega :
+    toComplexMat (gateMatrix CliffordTGate.omega) = !![ZOmega.omegaC, 0; 0, ZOmega.omegaC] := by
+  rw [Matrix.eta_fin_two (toComplexMat _)]; gateval
+
 end SKEFTHawking.RossSelinger
