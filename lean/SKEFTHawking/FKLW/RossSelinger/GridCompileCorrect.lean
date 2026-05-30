@@ -21,6 +21,7 @@ import SKEFTHawking.FKLW.RossSelinger.RelativeNorm
 import SKEFTHawking.FKLW.RossSelinger.GridSynth
 import SKEFTHawking.FKLW.RossSelinger.CompileApprox
 import SKEFTHawking.FKLW.RossSelinger.ComplexEmbeddingMatrix
+import SKEFTHawking.FKLW.RossSelinger.GridSolver
 
 set_option autoImplicit false
 
@@ -104,5 +105,26 @@ theorem approx_assembleUnitary (u t : ZOmega) (k : ℕ)
   · rw [e11, e00]
   · rw [e00]; exact h00
   · rw [e10]; exact h10
+
+attribute [local instance] KMM.nonempty_kmmReduction
+
+/-- **Ross-Selinger compile soundness (core).** When the grid pair `(u, t)` satisfies the
+det-1 Diophantine constraint `|u|² + |t|² = √2^{2k}` (so `assembleUnitary u t k` is
+Clifford+T-realizable) and approximates the target `U ∈ SU(2)`'s first column to within `ε`,
+the KMM-synthesized Clifford+T word `kmmReduce (assembleUnitary u t k)` interprets to a unitary
+within `2ε` of `U` in operator norm. Composes `kmmReduce_correct`
+(`interp (kmmReduce M) = M`, via `isCliffordTRealizable_assembleUnitary`) with
+`approx_assembleUnitary`. This is the soundness half of `compile`; the finder producing such a
+`(u, t)` (Item H grid solver) + the ≥50-case pygridsynth cross-validation supply completeness. -/
+theorem compile_correct_core (u t : ZOmega) (k : ℕ)
+    (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) {ε : ℝ} (hε : 0 ≤ ε)
+    (hreal : ZOmega.normSq u + ZOmega.normSq t = (⟨0, 0, 0, 2 ^ k⟩ : ZOmega))
+    (h00 : ‖ZOmegaSqrt2.toComplex (ZOmegaSqrt2.mk u k) - (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0‖ ≤ ε)
+    (h10 : ‖ZOmegaSqrt2.toComplex (ZOmegaSqrt2.mk t k) - (U : Matrix (Fin 2) (Fin 2) ℂ) 1 0‖ ≤ ε) :
+    ‖toComplexMat (CliffordTGate.interp (KMM.kmmReduce (KMM.assembleUnitary u t k)))
+        - (U : Matrix (Fin 2) (Fin 2) ℂ)‖ ≤ 2 * ε := by
+  rw [KMM.kmmReduce_correct (KMM.assembleUnitary u t k)
+        (KMM.isCliffordTRealizable_assembleUnitary u t k hreal)]
+  exact approx_assembleUnitary u t k U hε h00 h10
 
 end SKEFTHawking.RossSelinger
