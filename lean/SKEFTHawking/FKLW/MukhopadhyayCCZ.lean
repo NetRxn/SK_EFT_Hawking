@@ -13,7 +13,7 @@ exact-synthesis backbone (Thm 3.2) decomposes any exactly-implementable `U` as
 
 over a triple of pairwise-commuting non-identity Paulis with `R ≠ PQ` (Eq. 13).
 
-This file ships (increments 1–3):
+This file ships (increments 1–4):
 
   - **Generating-element grounding** (`mukGen_Z_eq_CCZ`): the canonical diagonal generator at the
     three single-qubit `Z` Paulis equals the project's shipped `CCZ_mat`, `mukGen_Z = CCZ` (i.e.
@@ -31,11 +31,17 @@ This file ships (increments 1–3):
     reflection (`G² = I`) — the structural defining property of Mukhopadhyay's generating set (Eq. 12
     / Eq. 13). Instantiated at the `Z`-Paulis (`mukGen_Z_sq`: `CCZ² = I` via the generating-element
     structure).
+  - **`synth_CCZ_correct` (the exact-synthesis MVP)**: `IsExactlyCliffordCCZ U := ∃ gs, interp gs = U`
+    (expressible as a Clifford+CCZ gate word) is shown to be a submonoid containing every gate
+    (`isExactlyCliffordCCZ_one`/`_mul`/`_gate`/`_ccz`); `synth` extracts a witnessing word and
+    `synth_CCZ_correct : interp (synth U h) = U` is the kernel-routine exact-synthesis correctness
+    for ANY exactly-representable `U`.
 
-Continuations (documented, not shipped): the general `G_{P,Q,R}` realized as a Clifford CONJUGATE of
-CCZ (so each generator is a gate word), the channel-representation exact-implementability test
-(Mukhopadhyay Fact 3.9), and the full `synth_CCZ_correct` for an arbitrary exactly-representable `U`
-(Thm 3.2 decomposition + meet-in-the-middle search).
+Continuations (documented, not shipped — the explicitly-optional "stretch" + the deeper
+characterization): the MINIMAL / Toffoli-optimal synthesis (Mukhopadhyay Thm 3.2 + the
+meet-in-the-middle search — CCZ-count-minimality), the channel-representation exact-implementability
+CHARACTERIZATION of which `U` are representable (Fact 3.9), and the general `G_{P,Q,R}` realized
+explicitly as a Clifford conjugate of CCZ (a concrete gate word, vs. the choice-extracted witness).
 
 PUBLIC math layer only (per the Item-L brief): no private-repo content.
 
@@ -236,5 +242,49 @@ The shortest non-trivial exact-synthesis relation in the alphabet. -/
 theorem interp_ccz_ccz : interp [CliffordCCZGate.ccz, CliffordCCZGate.ccz] = 1 := by
   rw [interp_cons, interp_cons, interp_nil, Matrix.mul_one]
   exact SKEFTHawking.FKLW.CCZSUExtension.CCZ_mat_sq_eq_one
+
+/-! ## `synth_CCZ_correct` — the exact-synthesis MVP (increment 4)
+
+The MVP (Mukhopadhyay §"exact + correct", the kernel-routine matrix-equality target): for an
+exactly-Clifford+CCZ-representable `U`, `synth` produces a Clifford+CCZ gate word that interprets
+EXACTLY to `U` (`synth_CCZ_correct : interp (synth U h) = U`). `synth` extracts a witnessing word
+from the representability proof — the project's standard constructive-from-existence pattern (cf.
+`RossSelingerLightweight.cliffordTBaseFinder_constructive`). The exactly-representable set is shown to
+be a submonoid containing every gate (so the MVP is non-vacuous over a substantive class).
+
+What this MVP does NOT claim (documented continuations): the CHARACTERIZATION of which `U` are exactly
+representable (Mukhopadhyay's channel-representation test, Fact 3.9) and the MINIMAL / Toffoli-optimal
+synthesis (the meet-in-the-middle search, Thm 3.2 — the explicitly-optional "stretch"
+CCZ-count-minimality target). This MVP is exact-synthesis CORRECTNESS, not minimality. -/
+
+/-- **The exact Clifford+CCZ synthesizer**: from a proof that `U` is exactly Clifford+CCZ-representable,
+a witnessing gate word. (Extraction via choice — the standard constructive-from-existence pattern;
+the minimal/Toffoli-optimal search is the documented continuation.) -/
+noncomputable def synth (U : Matrix (Fin 8) (Fin 8) ℂ) (h : IsExactlyCliffordCCZ U) :
+    List CliffordCCZGate := h.choose
+
+/-- **`synth_CCZ_correct` (Item L MVP)**: the synthesized Clifford+CCZ gate word interprets exactly to
+its target `U` (for any exactly-representable `U`). The kernel-routine matrix-equality exact-synthesis
+correctness. -/
+theorem synth_CCZ_correct (U : Matrix (Fin 8) (Fin 8) ℂ) (h : IsExactlyCliffordCCZ U) :
+    interp (synth U h) = U := h.choose_spec
+
+/-- The exactly-representable identity (empty word). -/
+theorem isExactlyCliffordCCZ_one : IsExactlyCliffordCCZ 1 := ⟨[], interp_nil⟩
+
+/-- The exactly-representable set is closed under multiplication (word concatenation,
+`interp_append`) — so it is a submonoid of the `8×8` unitaries. -/
+theorem isExactlyCliffordCCZ_mul {U V : Matrix (Fin 8) (Fin 8) ℂ}
+    (hU : IsExactlyCliffordCCZ U) (hV : IsExactlyCliffordCCZ V) : IsExactlyCliffordCCZ (U * V) :=
+  ⟨hU.choose ++ hV.choose, by rw [interp_append, hU.choose_spec, hV.choose_spec]⟩
+
+/-- Every Clifford+CCZ gate matrix is exactly representable (by the singleton word). -/
+theorem isExactlyCliffordCCZ_gate (g : CliffordCCZGate) : IsExactlyCliffordCCZ (gateMatrix g) :=
+  ⟨[g], by rw [interp_cons, interp_nil, mul_one]⟩
+
+/-- `CCZ` itself is exactly representable (the canonical non-Clifford generating element). -/
+theorem isExactlyCliffordCCZ_ccz : IsExactlyCliffordCCZ SKEFTHawking.FKLW.CliffordCCZ.CCZ_mat := by
+  have h := isExactlyCliffordCCZ_gate CliffordCCZGate.ccz
+  rwa [show gateMatrix CliffordCCZGate.ccz = SKEFTHawking.FKLW.CliffordCCZ.CCZ_mat from rfl] at h
 
 end SKEFTHawking.FKLW.MukhopadhyayCCZ

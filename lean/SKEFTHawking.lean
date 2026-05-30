@@ -1847,7 +1847,11 @@ import SKEFTHawking.FKLW.CliffordCCZSU8Irreducible
 import SKEFTHawking.FKLW.CliffordCCZSU8OrbitWitness
 import SKEFTHawking.FKLW.CliffordCCZSU8OrbitProps
 import SKEFTHawking.FKLW.CliffordCCZSU8Density
--- Phase 6x Item L increments 1–3 (2026-05-30): Mukhopadhyay exact Clifford+CCZ synthesis (public
+-- (4) synth_CCZ_correct MVP: IsExactlyCliffordCCZ U := ∃gs, interp gs = U is a submonoid containing
+-- every gate (isExactlyCliffordCCZ_one/_mul/_gate/_ccz); synth extracts a witnessing word and
+-- synth_CCZ_correct : interp (synth U h) = U is the kernel-routine exact-synthesis correctness for any
+-- exactly-representable U (the minimal/Toffoli-optimal meet-in-the-middle search is the optional stretch).
+-- Phase 6x Item L increments 1–4 (2026-05-30): Mukhopadhyay exact Clifford+CCZ synthesis (public
 -- math layer). (1) Generating-element grounding mukGen_Z = CCZ — the canonical Mukhopadhyay Eq.12
 -- generator G_{Z₁,Z₂,Z₃} = (3/4)I+(1/4)(Z₁+Z₂+Z₃−Z₁Z₂−Z₂Z₃−Z₃Z₁+Z₁Z₂Z₃) equals the project's
 -- CCZ_mat. (2) CliffordCCZGate ADT + interp (over the shipped SU(8) literal generators + CCZ_mat) +

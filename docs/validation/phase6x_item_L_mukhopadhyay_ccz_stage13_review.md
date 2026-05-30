@@ -49,3 +49,26 @@ kernel-pure, and honestly scoped. Build clean (8987 jobs); counts 9787 theorems 
 via Clifford conjugation; the channel-representation exact-implementability test; full
 `synth_CCZ_correct` for an arbitrary exactly-representable `U` (Thm 3.2 decomposition + the
 meet-in-the-middle search). These are a fresh multi-session construction.
+
+---
+
+## Addendum (2026-05-30): increment 3 (general generating element + reflection) — Stage 13 GREEN
+
+**Verdict:** ✅ **GREEN** (0 findings). Fresh-context adversarial review of the inc-3 additions
+(`mukGen`, `mukGen_sq`, `pauliZ_mul_self`, `pauliZ_comm`, `mukGen_Z_eq_mukGen`, `mukGen_Z_sq`;
+commit `d2693bf`).
+
+- **`mukGen_sq` (`G² = I`) is mathematically TRUE and the proof sound** — independently verified two
+  ways: (a) eigenvalue argument (pairwise-commuting involutions are simultaneously diagonalizable
+  with `±1` eigenvalues; `G ∈ {±1}` on every joint eigenstate, confirmed numerically across all 8
+  sign-triples); (b) the file's purely-algebraic route (`(1−x)²=2(1−x)`, commuting, `Y²=8Y`,
+  `G = 1 − (1/4)Y`) reproduced by hand. All six hypotheses are load-bearing and mutually consistent
+  (satisfied by the non-trivial Z-Pauli model where `mukGen_Z = CCZ ≠ I` yet `G²=I`), so it is a
+  genuine reflection theorem, not the trivial `G = I` case.
+- `pauliZ_mul_self`/`pauliZ_comm` sound + non-vacuous; `mukGen_Z_eq_mukGen` (`rfl`) type-checks;
+  `mukGen_Z_sq` is a genuine instance of `mukGen_sq`, NOT circular with the pre-existing
+  `CCZ_mat_sq_eq_one`.
+- Axiom-pure `{propext, Classical.choice, Quot.sound}` (no native_decide/sorryAx/new axiom); no
+  `sorry`/`maxHeartbeats`/`axiom`; clean compile; no private leaks.
+- Honest scope: `mukGen_sq` proves the reflection structure `G²=I`, NOT gate-word synthesizability;
+  the full general synth is correctly marked a documented continuation.
