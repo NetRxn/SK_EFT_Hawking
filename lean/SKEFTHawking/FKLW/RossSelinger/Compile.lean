@@ -65,4 +65,40 @@ theorem compile_correct (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (k b :
   rw [(KMM.gridCompile_correct ht).2]
   exact approx_assembleUnitary (compileColumn U k) t k U hε h00 h10
 
+/-- **Scale-k discharge of the first-column hypothesis.** For `k` large enough that the scaled
+value half-width clears `1+√2` (`1+√2 ≤ 2ε·√2^k`), the rounded first-column numerator
+`compileColumn U k` approximates `U₀₀` within `2ε` — `compile_correct`'s `h00`, now discharged
+(no longer a hypothesis) from `twoDimGridSolution_spec` + `gridNumerator_approx`. (The residual
+`t`-bound `h10` stays empirical — the grid-solver `t`-coupling / pygridsynth completeness.) -/
+theorem compileColumn_approx (U : ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) (k : ℕ) {ε : ℝ}
+    (hk : 1 + Real.sqrt 2 ≤ 2 * ε * Real.sqrt 2 ^ k) :
+    ‖ZOmegaSqrt2.toComplex (ZOmegaSqrt2.mk (compileColumn U k) k)
+        - (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0‖ ≤ 2 * ε := by
+  have hspos : (0 : ℝ) < Real.sqrt 2 ^ k := by positivity
+  have hcne : (Real.sqrt 2 ^ k : ℝ) ≠ 0 := hspos.ne'
+  simp only [compileColumn]
+  set s := GridProblem.twoDimGridSolution
+    (Real.sqrt 2 ^ k * ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).re)
+    (Real.sqrt 2 ^ k * ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).im) 0 0 with hs
+  obtain ⟨hvr, _, hvi, _⟩ := GridProblem.twoDimGridSolution_spec
+    (Real.sqrt 2 ^ k * ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).re)
+    (Real.sqrt 2 ^ k * ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).im) 0 0
+    (2 * ε * Real.sqrt 2 ^ k) (2 * ε * Real.sqrt 2 ^ k)
+    (1 + Real.sqrt 2) (1 + Real.sqrt 2) hk hk le_rfl le_rfl
+  rw [← hs] at hvr hvi
+  rw [show (2 * ε * Real.sqrt 2 ^ k / 2 : ℝ) = ε * Real.sqrt 2 ^ k from by ring] at hvr hvi
+  apply gridNumerator_approx _ _ _ _ k _ ?_ ?_
+  · rw [show ((s.1 : ℝ) + (s.2.1 : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k
+            - ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).re
+          = ((s.1 : ℝ) + (s.2.1 : ℝ) * Real.sqrt 2
+              - Real.sqrt 2 ^ k * ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).re) / Real.sqrt 2 ^ k
+          from by field_simp, abs_div, abs_of_pos hspos, div_le_iff₀ hspos]
+    exact hvr
+  · rw [show ((s.2.2.1 : ℝ) + (s.2.2.2 : ℝ) * Real.sqrt 2) / Real.sqrt 2 ^ k
+            - ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).im
+          = ((s.2.2.1 : ℝ) + (s.2.2.2 : ℝ) * Real.sqrt 2
+              - Real.sqrt 2 ^ k * ((U : Matrix (Fin 2) (Fin 2) ℂ) 0 0).im) / Real.sqrt 2 ^ k
+          from by field_simp, abs_div, abs_of_pos hspos, div_le_iff₀ hspos]
+    exact hvi
+
 end SKEFTHawking.RossSelinger
