@@ -1400,6 +1400,11 @@ import SKEFTHawking.FKLW.RossSelinger.GridSolver
 -- Lemma 5.2.7) + twoDim_grid_exists (ℤ[ω]=ℤ[√2][i] split, Prop 5.2.9). The existence keystone
 -- the FINDER needs (no Step-operator/uprightness machinery — that's for efficient enumeration only).
 import SKEFTHawking.FKLW.RossSelinger.GridProblem
+-- Phase 6x Tier-2 Item H/I (2026-05-30) — §6 relative-norm foundation (Ross thesis §3.2.2,
+-- primary-verified): toComplex_conj (toComplex is a *-hom) + star_omegaC + the total-positivity
+-- necessary condition (thesis p.26). The §6 deterministic ∀-target existence (prime-density NT;
+-- Selinger 1212.6253 randomized + prime-distribution hypothesis) is the remaining concrete-L≤90 gate.
+import SKEFTHawking.FKLW.RossSelinger.RelativeNorm
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
