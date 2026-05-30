@@ -1,0 +1,92 @@
+/-
+Copyright (c) 2026 John Roehm. All rights reserved.
+
+# Phase 6x Item L.C — Mukhopadhyay Toffoli-count lower bound: the telescoping mechanism (L.B.2b)
+
+The dossier (Q2.3) reports that arXiv:2401.08950 does not *state* an algebraic `T^of(U) ≥ sde₂(Û)`
+lower bound, and concludes none follows. Checking the mechanism directly (per the Item-L guardrail —
+secondary sources can err): the bound **does** follow from Lemma 3.16's per-step bound. Each
+generator multiplication changes `sde₂` by at most one (the `+1` direction is Fact 3.14,
+`sde2_half_sum_le`; Cliffords — signed permutations, Fact 3.9 — leave `sde₂` unchanged), and a
+Clifford base has `sde₂ = 0`, so along any decomposition `Û = Ĝ_m ··· Ĝ_1 · Ĉ` the value telescopes:
+`sde₂(Û) ≤ 0 + m`. Hence the Toffoli count `m ≥ sde₂(Û)`.
+
+This increment ships the **telescoping mechanism**, abstracted over the measure `μ` but anchored to
+the concrete Clifford+CCZ gate alphabet (`interp`, `gateMatrix`):
+
+  - `toffoliCount gs` — the number of `CCZ` (Toffoli) gates in a gate word (Cliffords are free).
+  - **`toffoliCount_ge_measure`** — for any `μ` with `μ(1) = 0`, `μ` non-increasing under each
+    Clifford gate, and `μ` rising by at most one under `CCZ`, every gate word satisfies
+    `μ(interp gs) ≤ toffoliCount gs`.
+
+Instantiating `μ = sde₂ ∘ channelRep` (matrix `sde₂` of the channel rep) yields the genuine Toffoli
+lower bound `T^of(U) ≥ sde₂(Û)`. The instantiation's hypotheses are the per-generator channel-rep
+facts — `sde₂(Ĉ·M) ≤ sde₂(M)` (Cliffords are signed permutations, Fact 3.9) and
+`sde₂(ĈCZ·M) ≤ sde₂(M) + 1` (the row-addition `+1`, Theorem 3.8.3 / Fact 3.14), with `sde₂(channel
+rep)` well-defined over `ℤ[1/2]` (Lemma 3.10). Those per-generator entry analyses are the deeper
+number-theoretic layer flagged in the dossier (Q5); they are stated as the explicit bridge hypotheses
+here and itemized as documented follow-ons. The telescoping logic itself — the lower-bound mechanism —
+is fully proved and unconditional.
+
+**Honest scope on minimality:** `T^of(U) ≥ sde₂(Û)` is a valid lower bound but is NOT proved tight.
+Full Toffoli-count minimality (no shorter circuit) requires the exhaustive nested meet-in-the-middle
+search (Lemma 4.5 / §4.2.1) whose heuristic optimality rests on the unproved Conjecture 4.8; that is
+not Lean-tractable and is the documented residual (L.C).
+
+PUBLIC math layer only (per the Item-L brief): no private-repo content.
+
+## Pipeline invariants
+- **#10** (no `maxHeartbeats`): respected. **#15** (no new project-local axioms): respected.
+
+-/
+
+import SKEFTHawking.FKLW.MukhopadhyayCCZ
+import SKEFTHawking.FKLW.MukhopadhyaySde2
+
+set_option autoImplicit false
+
+namespace SKEFTHawking.FKLW.MukhopadhyayCCZ
+
+/-- Boolean test for the `CCZ` (Toffoli) generator. -/
+def isCCZ : CliffordCCZGate → Bool
+  | .ccz => true
+  | .clifford _ => false
+
+/-- **Toffoli (CCZ) count of a Clifford+CCZ gate word**: the number of `CCZ` generators (each
+Mukhopadhyay generating element `G_{P,Q,R}` is one Toffoli; the literal Cliffords are free). -/
+def toffoliCount (gs : List CliffordCCZGate) : ℕ := gs.countP isCCZ
+
+@[simp] theorem toffoliCount_nil : toffoliCount [] = 0 := rfl
+
+@[simp] theorem toffoliCount_clifford (c : Fin 9) (gs : List CliffordCCZGate) :
+    toffoliCount (CliffordCCZGate.clifford c :: gs) = toffoliCount gs := by
+  simp [toffoliCount, isCCZ]
+
+@[simp] theorem toffoliCount_ccz (gs : List CliffordCCZGate) :
+    toffoliCount (CliffordCCZGate.ccz :: gs) = toffoliCount gs + 1 := by
+  simp [toffoliCount, isCCZ]
+
+/-- **The sde₂ Toffoli lower bound — telescoping mechanism.** For any measure `μ` on `8×8` unitaries
+with `μ(1) = 0`, non-increasing under each Clifford gate, and rising by at most one under `CCZ`, every
+Clifford+CCZ gate word `gs` satisfies `μ(interp gs) ≤ toffoliCount gs`. Reading `μ = sde₂ ∘ channelRep`
+this is the Toffoli lower bound `T^of(U) ≥ sde₂(Û)` (the hypotheses are then the per-generator
+channel-rep facts: Fact 3.9 for Cliffords, Fact 3.14 / Theorem 3.8.3 for `CCZ`). The telescoping logic
+is unconditional. -/
+theorem toffoliCount_ge_measure (μ : Matrix (Fin 8) (Fin 8) ℂ → ℕ) (h1 : μ 1 = 0)
+    (hC : ∀ (c : Fin 9) (M : Matrix (Fin 8) (Fin 8) ℂ),
+      μ (gateMatrix (CliffordCCZGate.clifford c) * M) ≤ μ M)
+    (hCCZ : ∀ M : Matrix (Fin 8) (Fin 8) ℂ, μ (gateMatrix CliffordCCZGate.ccz * M) ≤ μ M + 1)
+    (gs : List CliffordCCZGate) : μ (interp gs) ≤ toffoliCount gs := by
+  induction gs with
+  | nil => rw [interp_nil, h1]; exact Nat.zero_le _
+  | cons g gs ih =>
+    rw [interp_cons]
+    cases g with
+    | clifford c =>
+      rw [toffoliCount_clifford]
+      exact le_trans (hC c (interp gs)) ih
+    | ccz =>
+      rw [toffoliCount_ccz]
+      exact le_trans (hCCZ (interp gs)) (Nat.add_le_add_right ih 1)
+
+end SKEFTHawking.FKLW.MukhopadhyayCCZ
