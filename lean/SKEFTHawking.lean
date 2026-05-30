@@ -1378,6 +1378,12 @@ import SKEFTHawking.FKLW.RossSelinger.ComplexEmbeddingMatrix
 -- per-gate global phase e^{iπk/8} relating U(2) gateMatrix to SU(2) ρ_CliffT; ∏=±1 for det-1 words).
 -- Validated 0/2000 (scripts/phase_bridge_validation.py). Per-gate ρ_CliffT identities = next increment.
 import SKEFTHawking.FKLW.RossSelinger.PhaseBridge
+-- Phase 6x Tier-2 Items G/H (2026-05-29) — Ross-Selinger grid-problem solver foundation.
+-- normSq_mk (normSq(mk z k) = mk (ZOmega.normSq z) (2k)) + assembleUnitary (step (d):
+-- M=[[u,-t*],[t,u*]]/√2^k from a solved (u,t) pair). The (a) ε-region + (b) gridSolutions +
+-- (c) ℤ[ω] Diophantine (the convex-geometry/number-theory analytic core) are the next
+-- increment. (c)+(d) validated end-to-end in scripts/grid_stub_validation.py (exact det-1 SU(2)).
+import SKEFTHawking.FKLW.RossSelinger.GridSynth
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
