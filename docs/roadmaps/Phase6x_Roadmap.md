@@ -1177,3 +1177,61 @@ follow-ons, not required for Exit.
 
 Counts at this pass: 9808 theorems / 0 axioms / 0 sorry / 739 modules; build clean (8988 jobs);
 `axiom_closure_allowlist` + `counts_fresh` + `graph_integrity` PASS.
+
+---
+
+## 2026-05-30 Item L continuation (L.A / L.B / L.C) — SHIPPED at achievable scope
+
+Fresh `/goal` opened after the Mukhopadhyay DR dossier landed
+(`Lit-Search/Phase-6x/Phase-6x — Mukhopadhyay 2024.md`; DR task moved to `Lit-Search/Tasks/complete/`).
+Three new kernel-pure modules (commits `952294e` → `62ccfd3`, Stage-9/10 sync `8b5e795`); 0 new project
+axioms, 0 sorry, no `maxHeartbeats`; counts 9836 theorems / 0 axioms / 0 sorry / 742 modules; build
+clean (8991 jobs); `counts_fresh` + `axiom_closure_allowlist` + `graph_integrity` PASS.
+
+**L.A — Channel representation + structural re-base. ✅ SHIPPED** (`MukhopadhyayChannelRep.lean`).
+- `channelRep U` (Eq. 27) as the `64×64` matrix over the SHIPPED Phase-6z 64-Pauli basis (`kronK8Basis`),
+  with `channelRep_eq_trace` (the `(1/8)·Tr(P_r·U·P_s·U†)` form).
+- The **monoid-homomorphism law** `channelRep_one` + `channelRep_mul` (`(UW)̂ = Û·Ŵ`, §3.3); the
+  orthogonality of the channel rep of a unitary (`channelRep_isUnit`); the **conjugation-action
+  characterization** `channelRep_mulVec_repr` (`Û` is the matrix of `Ad_U` in the Pauli basis — the
+  rigorous meaning of "channel representation").
+- **Re-base** `isExactlyCliffordCCZ_channelRep_mem`: every exactly-representable `U` has `Û` in the
+  finitely-generated submonoid `channelGenMonoid ⊂ GL(64)` (the concrete matrix monoid the reduction
+  searches) — a structural NECESSARY condition / certificate, replacing the MVP's opaque `∃-gate-word`.
+- **Documented residual** (dossier Q1.4): the full decidable `⟺` converse is NOT available from
+  arXiv:2401.08950 (Lemma 3.10 gives only necessary `ℤ[1/2]`-entries; the converse is open). The
+  per-generator dyadic-entry refinement (Lemma 3.10, via Theorem 3.8) and the Fact 3.9 `⟺` converse
+  (imported from Gosset–Kliuchnikov–Mosca–Russo, arXiv:1308.4134) are the deeper number-theoretic layer.
+
+**L.B — Dyadic `sde₂` + Lemma 3.16 core. ✅ SHIPPED** (`MukhopadhyaySde2.lean`).
+- `sde2 q := (-(padicValRat 2 q)).toNat` (Definition 3.13 — the `√2→2` analog of the shipped
+  `√2`-`sde`) + `sde2_le_iff`; **Fact 3.14** (`sde2_half_sum_le`): `sde₂((v₁+v₂+v₃+v₄)/2) ≤
+  max sde₂(vᵢ) + 1`, the scalar core of Lemma 3.16's per-step `+1` increase bound.
+- Structural decomposition / "achievability" = the MVP's existence (`synth_CCZ_correct`) + the
+  `channelGenMonoid` membership (L.A). **Documented residual:** the quantitative `N₃+4·sde`
+  achievability bound does NOT exist in arXiv:2401.08950 (dossier Q2.4/Q3.3); the terminating reduction's
+  correctness-at-optimal-count is the unproved Conjecture 4.8 (not Lean-tractable).
+
+**L.C — Toffoli-count lower bound. ✅ SHIPPED** (`MukhopadhyayToffoliBound.lean`).
+- `toffoliCount gs` (CCZ-count of a word) + `toffoliCost U` (min over all exact words = `T^of(U)`) +
+  the telescoping mechanism `toffoliCount_ge_measure` / **`toffoliCost_ge_measure`**: for any measure
+  `μ` with `μ(1)=0`, non-increasing under Cliffords and `+1` under `CCZ`, `μ(U) ≤ T^of(U)`. Reading
+  `μ = sde₂∘channelRep` this is the genuine **`T^of(U) ≥ sde₂(Û)`** Toffoli lower bound.
+- **Mechanism-check correction of the DR:** the dossier (Q2.3) claimed no `T^of ≥ sde₂` bound follows;
+  a direct check shows it DOES, by telescoping Lemma 3.16 from a Clifford base (`sde₂=0`). (Per the
+  Item-L guardrail — secondary sources can err; the proof mechanisms are load-bearing.)
+- **Documented residual:** the lower bound is NOT proved tight. Full Toffoli minimality (no shorter
+  circuit) requires the exhaustive nested meet-in-the-middle search (Lemma 4.5 / §4.2.1) whose
+  heuristic optimality rests on the unproved Conjecture 4.8 — NOT Lean-tractable (dossier Q5.3). The
+  per-generator bridges that make `T^of ≥ sde₂` unconditional on the concrete channel rep (`sde₂(Ĉ·M) ≤
+  sde₂ M` for Cliffords = Fact 3.9; `sde₂(ĈCZ·M) ≤ sde₂ M + 1` = Theorem 3.8.3; dyadic-ness = Lemma
+  3.10) are the per-generator entry analyses, the same deep layer as L.A's residual. The DR's
+  alternative Theorem 3.6 (`T^of ≥ log₄(|α_max|·c·√M)`) has unspecified constants `c, M` in the source
+  and is not cleanly/non-vacuously formalizable without the thesis-level proof detail — the telescoping
+  `sde₂` bound is the cleaner, honestly-stated Lean-tractable lower bound and is what we ship.
+
+**Exit posture:** Item L's full PUBLIC math layer is closed at the achievable scope — channel-rep
+characterization + structural re-base (L.A); dyadic `sde₂` + Lemma 3.16 core (L.B); the `sde₂` Toffoli
+lower bound (L.C). The per-generator channel-rep entry analyses (Lemma 3.10 / Theorem 3.8 / Fact 3.9
+converse) and full MITM minimality (Conjecture 4.8) are documented optional follow-ons, not required
+for Exit. The runnable/commercial compiler remains the private side (out of scope).
