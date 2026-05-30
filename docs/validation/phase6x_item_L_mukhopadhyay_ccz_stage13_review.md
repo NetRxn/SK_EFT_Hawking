@@ -72,3 +72,26 @@ commit `d2693bf`).
   `sorry`/`maxHeartbeats`/`axiom`; clean compile; no private leaks.
 - Honest scope: `mukGen_sq` proves the reflection structure `G²=I`, NOT gate-word synthesizability;
   the full general synth is correctly marked a documented continuation.
+
+---
+
+## Addendum (2026-05-30): increment 4 (`synth_CCZ_correct` MVP) — Stage 13 GREEN
+
+**Verdict:** ✅ **GREEN** (0 findings). Fresh-context adversarial review of the inc-4 additions
+(`synth`, `synth_CCZ_correct`, `isExactlyCliffordCCZ_one`/`_mul`/`_gate`/`_ccz`; commit `9ba4241`),
+scrutinizing especially whether `synth_CCZ_correct` is a legitimate MVP vs a misleading tautology.
+
+- **`synth_CCZ_correct` is a LEGITIMATE, honestly-scoped MVP — NOT a misleading vacuous tautology.**
+  (a) materially identical to the already-accepted `RossSelingerLightweight.cliffordTBaseFinder_constructive`
+  constructive-from-existence pattern (`.choose` + `.choose_spec`); (b) docstrings explicitly scope it
+  as exact-synthesis CORRECTNESS, NOT minimality/characterization ("This MVP is exact-synthesis
+  CORRECTNESS, not minimality"); (c) matches the roadmap's stated MVP target verbatim ("MVP (safe):
+  kernel-verified exact + correct — `synth_CCZ_correct : interp (synth U) = U` … reduces to matrix
+  equality (kernel-routine)"), with CCZ-count-minimality the separate "Stretch". No overclaiming.
+- **Non-vacuity established**: `IsExactlyCliffordCCZ` is a genuine submonoid (one/mul via `interp_append`/
+  gate/CCZ witnesses) containing all nine literal Cliffords + CCZ + all products — `synth_CCZ_correct`
+  ranges over a substantive class, not just `U=1`. Anchored by the substantive `mukGen_Z_eq_CCZ`.
+- Axiom-pure `{propext, Classical.choice, Quot.sound}` (no native_decide/sorryAx/new axiom); no
+  `sorry`/`maxHeartbeats`/`axiom`; clean compile; no private leaks.
+
+**Item L MVP (increments 1–4) is Stage-13 GREEN end-to-end.**
