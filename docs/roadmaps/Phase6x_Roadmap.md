@@ -1087,3 +1087,44 @@ moving foundation). DR verdict: original native-CCZ-*approximation* angles KILLE
 - **Inputs:** Phase 6x roadmap (this file, pre-addendum); Phase 6x completion summary; Phase 6y roadmap; Phase 6y in-flight commit chain (HEAD `66b227d`); Ross-Selinger DR (`Lit-Search/Phase-6x/Ross-Selinger Clifford+T Synthesis- A Pre-Implementation Research Dossier.md`); Explore-agent substrate audit 2026-05-27.
 - **Closure metric:** Tier 1 completion closes retrospective-addendum failure modes #4 and #5 in full strength. Tier 2 completion through item G closes Phase 6x orphan #2 at deterministic-branch level. Tier 2 completion through item I closes #2 in full. Tier 3 completion closes items #1 and #5.
 - **No new axioms introduced by any goal prompt above.** All ACs preserve `counts.json::lean.axioms = 0`.
+
+---
+
+## 2026-05-30 Tier-2 progress (scope-corrected closure pass)
+
+Per the scope correction (3-agent sweep 2026-05-30; memory `next_session_phase6x_itemG_architecture.md`):
+"unconditional" = density + Dawson-Nielsen SK recursion, NOT constructive number theory; the NT arc
+(`ℤ[√2]`/`ℤ[√2][i]` substrate `e3cbb03`/`d422153`) is the EXPLICITLY-DEFERRED optional follow-on.
+Item I's `compile_correct` = proven SOUNDNESS (Lean) + empirical completeness (pygridsynth).
+
+- **Item I — ✅ CLOSED (orphan #2, deterministic-branch level).** Lean soundness chain shipped +
+  Stage-13 GREEN (`79cb10c`): runnable `compile : SU(2)→(k,b)→Option (List CliffordTGate)` +
+  `compile_correct`/`compile_correct_grid`/`compileColumn_approx` (RossSelinger/Compile.lean,
+  GridCompileCorrect.lean). Empirical completeness: **pygridsynth ≥50-case cross-val** (`4d7f518`,
+  `scripts/grid_compile_pygridsynth_xval.py`) — 76/76 (θ,ε) cases ε-approximate AND satisfy the
+  EXACT ℤ[ω] det-1 constraint our `assembleUnitary` formalizes (bit-identical convention); head-to-
+  head vs project grid_stub 5/5. Addendum in `docs/validation/phase6x_item_I_compile_soundness_stage13_review.md`.
+- **Item G — ✅ CLOSED.** `cliffordTBaseFinder_kmm` (RossSelinger/CliffordTBaseFinderKMM.lean,
+  `30ea3d9`) lifts Item I into the SK headline's `ρ_CliffT`/FreeGroup picture via the phase bridge,
+  killing the U(2)↔SU(2) ±1 sign with an `H·H` correction (`signCorrect`, keystone
+  `coe_ρ_CliffT_signCorrect`). UNCONDITIONAL re-synthesis at honest KMM `N₃+4·sde` length
+  (`signCorrect_kmmReduce_resynth`) + the soundness lift `_approx`/`_headline`. Length is the HONEST
+  KMM bound, NOT the unsound `L≤90` (DR §4.2 fallback). Stage-13 GREEN
+  (`docs/validation/phase6x_item_G_kmm_basefinder_stage13_review.md`, `f93f10b`). HONEST SCOPE: the
+  fully-unconditional 3-conjunct CT headline already ships via the lightweight density finder;
+  the KMM-finder's unconditional-over-all-`U` approximation is gated on the parked grid-completeness
+  `t`-coupling.
+- **Item L — 🟡 MVP FOUNDATION SHIPPED (increments 1–2).** `MukhopadhyayCCZ.lean` (`5072aef`):
+  the generating-element grounding `mukGen_Z = CCZ` (Mukhopadhyay Eq.12 `G_{Z₁,Z₂,Z₃}` = project's
+  `CCZ_mat`), the `CliffordCCZGate` ADT + `interp` (over the shipped SU(8) literal generators +
+  `CCZ_mat`) + composition soundness `interp_append`, and the `synth_CCZ_correct` MVP at the
+  canonical generator (`mukGen_Z` exactly representable by `[CCZ]`). Kernel-pure, 0 new axioms.
+  REMAINING: general `G_{P,Q,R}` via Clifford conjugation, channel-rep test (Fact 3.9), full
+  `synth_CCZ_correct` (Thm 3.2 + meet-in-the-middle) — fresh multi-session.
+- **Item H — pending.** Ross-Selinger §5 `gridSolutions` enumeration + completeness + count bound.
+  The 1-D/2-D solvers (`GridSolutions.lean`) + grid→ℂ bridge already shipped; the genuine delta is
+  the hard convex-geometry completeness (every region solution appears). Cross-validation oracle now
+  available (pygridsynth installed).
+
+Counts at this pass: 9787 theorems / 0 axioms / 0 sorry / 738 modules; build clean (8987 jobs);
+`axiom_closure_allowlist` + `counts_fresh` + `graph_integrity` PASS.
