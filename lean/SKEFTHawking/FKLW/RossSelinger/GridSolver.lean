@@ -111,6 +111,21 @@ theorem gridSynthWord_length {u : ZOmega} {k b : ℕ} {t : ZOmega} (h : gridFind
       ≤ N₃ + 4 * ZOmegaSqrt2.denExp (ZOmegaSqrt2.normSq (assembleUnitary u t k 0 0)) :=
   kmmReduce_length_bound _ (gridFindT_realizable h)
 
+/-- **Deterministic grid-synthesis compiler** (numerator form): given the solved column numerator
+`u`, denominator exponent `k`, and search bound `b`, produce a Clifford+T word for the assembled
+unitary, or `none` if no residual `t` is found within the bound. The complex-target → `(u, k)`
+rounding (the FINDER front-end) is the RS §5 ε-region step still gated on the grid-completeness
+DR; this is the verified synthesis back-end it feeds. -/
+noncomputable def gridCompile (u : ZOmega) (k b : ℕ) : Option (List CliffordTGate) :=
+  (gridFindT u k b).map (fun t => gridSynthWord u t k)
+
+/-- **Compile correctness**: when the grid step finds `t`, `gridCompile` returns the synthesized
+word and it interprets back to the assembled unitary `[[u,−t*],[t,u*]]/√2^k` exactly. -/
+theorem gridCompile_correct {u : ZOmega} {k b : ℕ} {t : ZOmega} (h : gridFindT u k b = some t) :
+    gridCompile u k b = some (gridSynthWord u t k) ∧
+      CliffordTGate.interp (gridSynthWord u t k) = assembleUnitary u t k :=
+  ⟨by rw [gridCompile, h]; rfl, gridSynthWord_correct h⟩
+
 end KMM
 
 end SKEFTHawking.RossSelinger
