@@ -83,6 +83,36 @@ theorem det_reduceStep {M : Mat2} {k : ℕ} (hdet : Matrix.det M = ωS ^ k) (j :
         = (gateMatrix .H).det * (gateMatrix .T ^ (j : ℕ)).det from Matrix.det_mul _ _,
       Matrix.det_pow, hH, hT, hdet, ← pow_mul, ← pow_add, ← pow_add]
 
+/-! ## The reality keystone (realizability-free) -/
+
+/-- **Reality of the Bloch image, UNCONDITIONAL** — the keystone that frees the MA-coverage
+base case from realizability. For *any* `M : Mat2`, `R(M)_{ij} = ½·Tr(σ_i·M·σ_j·M†)` is
+conjugation-fixed (real). This needs **no** unitarity and **no** realizability: it is the
+symmetry `conj(Tr(σ_i M σ_j M†)) = Tr(σ_i M σ_j M†)`, which holds because each Pauli satisfies
+`σ̄ᵀ = σ` (`X̄ᵀ=X`, `Ȳᵀ=Y`, `Z̄ᵀ=Z`) and the trace is transpose- and cyclic-invariant —
+i.e. `Tr(conjE σ_i · conjE M · conjE σ_j · conjE M†) = Tr(M σ_j M† σ_i) = Tr(σ_i M σ_j M†)`.
+Proved by expanding the `2×2` trace and closing each of the 9 entries by `ring`
+(`conj iS = -iS`; gate zeros via `conj_zero`).
+
+The existing `blochEntry_realizable_real` (MAStepExists) proves the same fact by gate-word
+induction (needs the realizable witness); this is the realizability-free generalisation that
+lets `blochNum_real`/`b_zero`/`c_eq`/`normSq_sum`/… (and hence the whole MA base coverage)
+re-point off realizability onto bare unitarity (`blochNum_orthogonal` already takes `IsUnitaryT`). -/
+theorem blochEntry_real (M : Mat2) (i j : Fin 3) :
+    conj (blochEntry M i j) = blochEntry M i j := by
+  have hc1 : conj (1 : ZOmegaSqrt2) = 1 := by decide
+  have hcn : ∀ x : ZOmegaSqrt2, conj (-x) = -conj x :=
+    fun x => eq_neg_of_add_eq_zero_left (by rw [← conj_add, neg_add_cancel, conj_zero])
+  have hci : conj iS = -iS := by decide
+  rw [blochEntry, ZOmegaSqrt2.conj_mul, show conj half = half from by rw [half, conj_mk]; congr 1]
+  congr 1
+  fin_cases i <;> fin_cases j <;>
+    simp only [pauliMat, Matrix.trace_fin_two, Matrix.mul_apply, Fin.sum_univ_two, adjoint_apply,
+      gateMatrix, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.of_apply, Matrix.cons_val',
+      Matrix.empty_val', Matrix.cons_val_fin_one, ZOmegaSqrt2.conj_add, ZOmegaSqrt2.conj_mul,
+      ZOmegaSqrt2.conj_conj, ZOmegaSqrt2.conj_zero, hcn, hci, hc1] <;>
+    ring
+
 /-! ## Box-data extraction, realizability-free (base-case re-point, first link) -/
 
 /-- **Box data of a `μ ≤ 3` unitary** (realizability-free form of `reconstruct_box_data`):
