@@ -141,6 +141,30 @@ theorem channelRep_interp_append (gs hs : List CliffordCCZGate) :
     channelRep (interp (gs ++ hs)) = channelRep (interp gs) * channelRep (interp hs) := by
   rw [interp_append, channelRep_mul]
 
+/-! ## The conjugation-action characterization (increment L.A.2c)
+
+The rigorous content of "channel representation": `channelRep U` is exactly the matrix of the
+conjugation (Heisenberg) map `Ad_U : M ↦ U·M·U†` expressed in the Pauli basis. Acting on the
+Pauli-coordinate vector of any `8×8` matrix `M`, the `64×64` matrix `Û` returns the Pauli-coordinate
+vector of `U·M·U†`. The `M = P_s` special case is `channelRep_conjAction_eq`; this is the statement
+for arbitrary `M`, and it is what makes `Û` a faithful (up to global phase) invariant of `U`. -/
+
+/-- **`Û` is the matrix of `Ad_U` in the Pauli basis** (arXiv:2401.08950 §3.3): for every `M`,
+`Û ·ᵥ (Pauli-coords of M) = Pauli-coords of (U·M·U†)`. The conjugation-action characterization — the
+rigorous meaning of the channel representation. -/
+theorem channelRep_mulVec_repr (U M : Matrix (Fin 8) (Fin 8) ℂ) (r : Fin 4 × Fin 4 × Fin 4) :
+    (channelRep U *ᵥ fun s => kronK8Basis.repr M s) r = kronK8Basis.repr (U * M * Uᴴ) r := by
+  show ∑ s, channelRep U r s * kronK8Basis.repr M s = kronK8Basis.repr (U * M * Uᴴ) r
+  rw [kronK8Basis_repr_eq]
+  have hM : U * M * Uᴴ = ∑ s, kronK8Basis.repr M s • (U * kronK8 s * Uᴴ) := by
+    conv_lhs => rw [← kronK8Basis_sum_repr M]
+    rw [Finset.mul_sum, Finset.sum_mul]
+    exact Finset.sum_congr rfl fun s _ => by rw [Matrix.mul_smul, Matrix.smul_mul]
+  rw [hM, Finset.mul_sum, Matrix.trace_sum, Finset.mul_sum]
+  refine Finset.sum_congr rfl fun s _ => ?_
+  rw [channelRep_eq_trace U r s, Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul]
+  ring
+
 /-! ## Structural re-base of `IsExactlyCliffordCCZ` onto the channel rep (increment L.A.2b)
 
 The Item-L MVP's representability predicate is the trivial `IsExactlyCliffordCCZ U := ∃ gs, interp gs
