@@ -105,4 +105,31 @@ theorem normSq_d_eq_sumSq (a b c d : ℤ) :
 theorem normSq_sqrt2part (a b c d : ℤ) :
     (ZOmega.normSq ⟨a, b, c, d⟩).c = a*b - a*d + c*b + c*d := by rw [normSq_coords]
 
+/-! ## Norm factorization (toward Prop 3.2.7) — the absolute norm factors through the relative
+
+The Prop 3.2.7 sufficiency proof rests on the absolute field norm `N_{ℤ[ω]}` factoring through the
+relative norm `α†α = normSq α` as `N_{ℤ[ω]}(α) = N_{ℤ[√2]}(normSq α) = β•β = n` — so a candidate
+residual `β = normSq α` has absolute norm `n = β•β`, and `n` prime ≡1 mod 8 is the splitting
+condition that makes `β` a relative norm. These two lemmas establish that factorization. -/
+
+/-- **Absolute field norm formula** (Ross thesis Def 3.1.4): `N_{ℤ[ω]}(⟨a,b,c,d⟩) =
+(a²+b²+c²+d²)² − 2·(ab − ad + cb + cd)²`. -/
+theorem norm_eq (a b c d : ℤ) :
+    ZOmega.norm ⟨a, b, c, d⟩
+      = (a^2 + b^2 + c^2 + d^2)^2 - 2*(a*b - a*d + c*b + c*d)^2 := by
+  simp only [ZOmega.norm, ZOmega.σ3, ZOmega.σ5, ZOmega.conj,
+    ZOmega.mul_a, ZOmega.mul_b, ZOmega.mul_c, ZOmega.mul_d]
+  ring
+
+/-- **The absolute norm factors through the relative norm**: `N_{ℤ[ω]}(α) = (normSq α).d² −
+2·(normSq α).c²`, i.e. `= N_{ℤ[√2]}(α†α) = β•β`. (Combine `norm_eq` with `normSq_coords`.) For a
+candidate residual `β = normSq α`, this is the integer `n = β•β` whose primality (≡1 mod 8)
+governs whether `β` is itself a relative norm (Prop 3.2.7). -/
+theorem norm_eq_relNorm (α : ZOmega) :
+    ZOmega.norm α = (ZOmega.normSq α).d ^ 2 - 2 * (ZOmega.normSq α).c ^ 2 := by
+  obtain ⟨a, b, c, d⟩ := α
+  rw [norm_eq]
+  simp only [ZOmega.normSq, ZOmega.conj, ZOmega.mul_c, ZOmega.mul_d]
+  ring
+
 end SKEFTHawking.RossSelinger
