@@ -106,12 +106,12 @@ def reconstruct (x y : ZOmega) (k : ℕ) : Mat2 :=
 
 /-- The explicit coordinate range `[-2, 2]` for each `ℤ[ω]` component (the
 `(|x|²).d ≤ 4` sum-of-squares bound forces `|coord| ≤ 2`). -/
-def intBox : List ℤ := [-2, -1, 0, 1, 2]
+def coordBox : List ℤ := [-2, -1, 0, 1, 2]
 
 /-- The explicit `5⁴ = 625`-element `ℤ[ω]` box `[-2, 2]⁴`. -/
 def zomBox : List ZOmega :=
-  intBox.flatMap (fun a => intBox.flatMap (fun b =>
-    intBox.flatMap (fun c => intBox.map (fun d => ⟨a, b, c, d⟩))))
+  coordBox.flatMap (fun a => coordBox.flatMap (fun b =>
+    coordBox.flatMap (fun c => coordBox.map (fun d => ⟨a, b, c, d⟩))))
 
 /-- **The finite bridge check**: over the `ℤ[ω]` box, for every `(x, y)` meeting
 the unitarity necessary condition `|x|² + |y|² = ⟨0,0,0,4⟩` and the `μ ≤ 3`
@@ -165,16 +165,16 @@ theorem reconstruct_mod (x y : ZOmega) (k : ℕ) :
 `ℤ[ω]` coordinate into `[-2,2]`, hence `x ∈ zomBox`. -/
 theorem mem_zomBox {x : ZOmega} (h : (ZOmega.normSq x).d ≤ 4) : x ∈ zomBox := by
   rw [ZOmega.normSq_d] at h
-  have hmem : ∀ t : ℤ, t ^ 2 ≤ 4 → t ∈ intBox := by
+  have hmem : ∀ t : ℤ, t ^ 2 ≤ 4 → t ∈ coordBox := by
     intro t ht
-    simp only [intBox, List.mem_cons, List.not_mem_nil, or_false]
+    simp only [coordBox, List.mem_cons, List.not_mem_nil, or_false]
     have h1 : -2 ≤ t := by nlinarith [sq_nonneg (t + 2)]
     have h2 : t ≤ 2 := by nlinarith [sq_nonneg (t - 2)]
     omega
-  have ha : x.a ∈ intBox := hmem x.a (by nlinarith [sq_nonneg x.b, sq_nonneg x.c, sq_nonneg x.d])
-  have hb : x.b ∈ intBox := hmem x.b (by nlinarith [sq_nonneg x.a, sq_nonneg x.c, sq_nonneg x.d])
-  have hc : x.c ∈ intBox := hmem x.c (by nlinarith [sq_nonneg x.a, sq_nonneg x.b, sq_nonneg x.d])
-  have hd : x.d ∈ intBox := hmem x.d (by nlinarith [sq_nonneg x.a, sq_nonneg x.b, sq_nonneg x.c])
+  have ha : x.a ∈ coordBox := hmem x.a (by nlinarith [sq_nonneg x.b, sq_nonneg x.c, sq_nonneg x.d])
+  have hb : x.b ∈ coordBox := hmem x.b (by nlinarith [sq_nonneg x.a, sq_nonneg x.c, sq_nonneg x.d])
+  have hc : x.c ∈ coordBox := hmem x.c (by nlinarith [sq_nonneg x.a, sq_nonneg x.b, sq_nonneg x.d])
+  have hd : x.d ∈ coordBox := hmem x.d (by nlinarith [sq_nonneg x.a, sq_nonneg x.b, sq_nonneg x.c])
   simp only [zomBox, List.mem_flatMap, List.mem_map]
   exact ⟨x.a, ha, x.b, hb, x.c, hc, x.d, hd, rfl⟩
 
