@@ -25,13 +25,16 @@ Headlines:
   * `cliffordCCZLiteral_dense` — `IsDenseInSUd_gs cliffordCCZLiteralGeneratingSetSU8`: every `U ∈ SU(8)`
     is approximated to arbitrary precision by a word in `{H_qi, S_qi, CNOT_ij, CCZ}`.
 
-`CCZ` is the non-Clifford resource that drives the density. What is FORMALIZED here is the *positive*
-direction: `CCZ` mechanistically supplies the irrationality — the seed `H₁H₂H₃·CCZ` has trace
-`u·(1/√2)` (not an algebraic integer), and `CCZ` is precisely the factor that turns the all-`H` trace
-`0` into `1/√2` (`CliffordCCZSU8LiteralSeed.trace_CCZ_mul`), so it is necessary for the seed's infinite
-order. The *converse* — that `⟨H, S, CNOT⟩` alone is the (finite) 3-qubit Clifford group, hence not
-dense — is the standard textbook fact and is NOT formalized here (it would require formalizing
-finiteness of the 3-qubit Clifford group, a separate substantive target). Density comes from the global
+`CCZ` is the non-Clifford resource that drives the density. The *positive* direction is here: `CCZ`
+mechanistically supplies the irrationality — the seed `H₁H₂H₃·CCZ` has trace `u·(1/√2)` (not an
+algebraic integer), and `CCZ` is precisely the factor that turns the all-`H` trace `0` into `1/√2`
+(`CliffordCCZSU8LiteralSeed.trace_CCZ_mul`), so it is necessary for the seed's infinite order. The
+*converse* — that `⟨H, S, CNOT⟩` alone is **not** dense — is now **formalized** (Phase 6x′):
+`SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense`
+(`MukhopadhyayCliffordNotDense.lean`). The proof is Mukhopadhyay's Fact 3.9: the channel rep is a
+continuous monoid homomorphism carrying every Clifford-only word to one of the *finitely many* signed
+permutation matrices, while the channel rep of the infinite-order seed has infinite order — so
+`⟨H,S,CNOT⟩` cannot be dense, establishing that `CCZ` is essential. Density comes from the global
 irrational-angle seed, not from any per-qubit dense subgroup (contrast Phase 6y's universal
 Clifford+`T`).
 
@@ -119,10 +122,11 @@ theorem cliffordCCZLiteral_H_of_G_eq_top :
 /-- **Phase 6z headline (density form)**: the literal Clifford+CCZ (no-`T`) generating set is dense in
 SU(8) — every `U ∈ SU(8)` is approximated to arbitrary precision by a word in `{H_qi, S_qi, CNOT_ij, CCZ}`.
 `CCZ` is the non-Clifford resource driving density: it is what makes the seed's trace `1/√2` (not an
-algebraic integer), hence necessary for the infinite-order seed (formalized). The converse claim that
-`⟨H, S, CNOT⟩` alone is finite/non-dense is the standard fact, not formalized here (scoped as Phase 6x′,
-`docs/roadmaps/Phase6x_prime_Roadmap.md`, Phase 1 — via the finite signed-permutation channel-rep image).
-Density arises from the global irrational-angle seed, with no per-qubit dense subgroup. -/
+algebraic integer), hence necessary for the infinite-order seed (formalized). The converse — that
+`⟨H, S, CNOT⟩` alone is non-dense — is **formalized** (Phase 6x′) as
+`SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense`, via the finite signed-permutation
+channel-rep image (Mukhopadhyay Fact 3.9). Density arises from the global irrational-angle seed, with no
+per-qubit dense subgroup. -/
 theorem cliffordCCZLiteral_dense : IsDenseInSUd_gs cliffordCCZLiteralGeneratingSetSU8 := by
   obtain ⟨w⟩ := witness_nonempty
   exact densityFromWitness (by norm_num) w

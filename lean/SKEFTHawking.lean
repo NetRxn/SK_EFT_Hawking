@@ -1886,6 +1886,11 @@ import SKEFTHawking.FKLW.MukhopadhyaySignedPerm
 -- Fact 3.9 (⟹) lifted across the free group — every word in ⟨H,S,CNOT⟩ has a signed-permutation
 -- channel rep (cliffordWord_channelRep_signedPerm). The "lands in a finite set" half of the converse.
 import SKEFTHawking.FKLW.MukhopadhyayCliffordConverse
+-- Phase 6x′ capstone inc 3+4 (2026-05-30): the 6z CCZ-essentiality converse —
+-- `cliffordOnly_not_dense`: ⟨H,S,CNOT⟩ (no CCZ) is NOT dense in SU(8). channelRep is a continuous
+-- monoid hom carrying ⟨H,S,CNOT⟩ into the finite signed-permutation set, while the infinite-order seed
+-- forces channelRep(SU(8)) infinite — so the Clifford-only set cannot be dense. CCZ is essential.
+import SKEFTHawking.FKLW.MukhopadhyayCliffordNotDense
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
