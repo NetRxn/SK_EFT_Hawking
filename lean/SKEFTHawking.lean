@@ -1356,6 +1356,11 @@ import SKEFTHawking.FKLW.RossSelinger.KMMBridge
 -- discharged ⟹ nonempty_kmmReduction : Nonempty KMMReduction UNCONDITIONAL (no axiom; Inv #15) —
 -- the exact-synthesis substrate closing Phase 6x orphan #2 at the deterministic-branch level.
 import SKEFTHawking.FKLW.RossSelinger.CliffordBase
+-- Phase 6x Tier-2 Item G (2026-05-29) — the ℤ[ω] → ℂ ring embedding. ZOmega.toComplex : ZOmega →+* ℂ
+-- (evaluation at ω = e^{iπ/4} = Complex.exp(π/4·I)), ⟨a,b,c,d⟩ ↦ a·ω³+b·ω²+c·ω+d; map_mul via the
+-- ω⁴=-1 reduction (omegaC_pow_four) of the convolution product. Foundation for ZOmegaSqrt2 → ℂ and
+-- the KMM(ZOmegaSqrt2)→SU(2,ℂ) operator-norm approximation bridge of Item G.
+import SKEFTHawking.FKLW.RossSelinger.ComplexEmbedding
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
