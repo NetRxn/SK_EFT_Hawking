@@ -72,6 +72,17 @@ theorem diophantineSearch_sound {N : ZOmega} {b : ℕ} {t : ZOmega}
   rw [diophantineSearch] at h
   simpa using List.find?_some h
 
+/-- **Completeness of the bounded Diophantine search**: if a solution `t` to `|t|² = N` exists
+within the coordinate bound, the search returns one. (`List.isSome_find?` + `List.any_eq_true`.)
+This connects the §6 *existence* of a relative-norm solution (Ross thesis Prop 3.2.7 sufficient
+case `n = β•β` prime ≡1 mod 8, made unconditional over the grid by Dirichlet's theorem on primes
+in arithmetic progressions) to the computable solver: once existence is supplied, the search
+finds the witness. -/
+theorem diophantineSearch_complete {N : ZOmega} {b : ℕ} {t : ZOmega}
+    (ht : t ∈ boundedZOmega b) (he : ZOmega.normSq t = N) : (diophantineSearch N b).isSome := by
+  rw [diophantineSearch, List.isSome_find?, List.any_eq_true]
+  exact ⟨t, ht, by simp [he]⟩
+
 end ZOmega
 
 namespace KMM
