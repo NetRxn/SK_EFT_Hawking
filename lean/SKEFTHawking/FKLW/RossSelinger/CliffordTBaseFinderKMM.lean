@@ -154,12 +154,15 @@ theorem cliffordTBaseFinder_kmm_approx (U : ↥(Matrix.specialUnitaryGroup (Fin 
 
 /-- **The KMM-derived Clifford+T base-finder headline** (`ρ_CliffT` picture): error + honest KMM
 length. Under the same grid-finder-success + first-column-approximation hypotheses as
-`compile_correct`, the KMM-derived word `w = cliffordTBaseFinder_kmm U k b` satisfies BOTH
-Solovay-Kitaev headline conjuncts in the strict `linftyOpNorm` of the SK headline:
+`compile_correct`, the two Solovay-Kitaev headline conjuncts hold, each on its own object (in the
+strict `linftyOpNorm` of the SK headline for the error conjunct):
 
-  - **Error**: `‖(ρ_CliffT w : ℂ-mat) − U‖ ≤ 2ε` (the `ρ_CliffT`-picture lift of `compile_correct`).
-  - **Honest KMM length**: the underlying KMM gate word has length `≤ N₃ + 4·sde(|M₀₀|²)` — the KMM
-    Corollary-1 bound (NOT the unsound `L ≤ 90`, which is incompatible with the proven SK `ε₀`).
+  - **Error** (on the returned `FreeGroup (Fin 2)` word `w = cliffordTBaseFinder_kmm U k b`):
+    `‖(ρ_CliffT w : ℂ-mat) − U‖ ≤ 2ε` (the `ρ_CliffT`-picture lift of `compile_correct`).
+  - **Honest KMM length** (on the underlying KMM `List CliffordTGate` gate word
+    `gridSynthWord (compileColumn U k) t k`, which `signCorrect`-maps to `w`): its gate count is
+    `≤ N₃ + 4·sde(|M₀₀|²)` — the KMM Corollary-1 bound (NOT the unsound `L ≤ 90`, which is
+    incompatible with the proven SK `ε₀`).
 
 This re-derives the headline on the KMM-algorithmic base finder. Its UNCONDITIONALITY (over all `U`)
 is gated on the grid-completeness `t`-coupling (the documented parked optional follow-on); the fully
