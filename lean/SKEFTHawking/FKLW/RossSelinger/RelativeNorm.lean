@@ -84,4 +84,25 @@ theorem normSq_toComplex_re_nonneg (α : ZOmega) :
   rw [h, Complex.star_def, Complex.mul_re, Complex.conj_re, Complex.conj_im]
   nlinarith [sq_nonneg (ZOmega.toComplex α).re, sq_nonneg (ZOmega.toComplex α).im]
 
+/-- **Problem 3.2.4 Diophantine system** (Ross thesis §3.2.2, verbatim): the relative norm
+`normSq ⟨a,b,c,d⟩ = α†α` has the explicit `ℤ[√2]` coordinates `⟨−b', 0, b', a'⟩` where
+`a' = a²+b²+c²+d²` (the rational part, = sum of squares) and `b' = ab − ad + cb + cd` (the
+`√2`-part). So solving `t†t = β` for `β = a' + b'√2` is exactly the integer system
+`a²+b²+c²+d² = a'`, `ab − ad + cb + cd = b'` (thesis eqns). -/
+theorem normSq_coords (a b c d : ℤ) :
+    ZOmega.normSq ⟨a, b, c, d⟩
+      = ⟨-(a*b - a*d + c*b + c*d), 0, a*b - a*d + c*b + c*d, a^2 + b^2 + c^2 + d^2⟩ := by
+  ext <;>
+    simp only [ZOmega.normSq, ZOmega.conj, ZOmega.mul_a, ZOmega.mul_b, ZOmega.mul_c,
+      ZOmega.mul_d] <;>
+    ring
+
+/-- The rational part of the relative norm is the **sum of squares** (thesis `a'`). -/
+theorem normSq_d_eq_sumSq (a b c d : ℤ) :
+    (ZOmega.normSq ⟨a, b, c, d⟩).d = a^2 + b^2 + c^2 + d^2 := by rw [normSq_coords]
+
+/-- The `√2`-part of the relative norm is the thesis `b' = ab − ad + cb + cd`. -/
+theorem normSq_sqrt2part (a b c d : ℤ) :
+    (ZOmega.normSq ⟨a, b, c, d⟩).c = a*b - a*d + c*b + c*d := by rw [normSq_coords]
+
 end SKEFTHawking.RossSelinger
