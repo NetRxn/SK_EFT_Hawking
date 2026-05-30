@@ -192,4 +192,39 @@ theorem toComplexMat_gateMatrix_eq_S :
   congr 1 <;> simp only [Matrix.smul_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
     Matrix.of_apply, smul_eq_mul, mul_zero, h0, h1]
 
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **Z phase-bridge identity**: `toComplexMat (gateMatrix Z) = i • ρ_CliffT (of 1)⁴`. -/
+theorem toComplexMat_gateMatrix_eq_Z :
+    toComplexMat (gateMatrix CliffordTGate.Z)
+      = gatePhase CliffordTGate.Z • ((ρ_CliffT (gateWord CliffordTGate.Z) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have e2 : T_SU_mat ^ 2 = !![Complex.exp (-(Complex.I * ↑Real.pi / 4)), 0;
+      0, Complex.exp (Complex.I * ↑Real.pi / 4)] := by
+    rw [sq, T_SU_mat, Matrix.eta_fin_two (_ * _)]
+    congr 1 <;>
+      simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.of_apply, mul_zero, zero_mul, add_zero, zero_add, ← Complex.exp_add] <;>
+      congr 1 <;> ring
+  have e1 : T_SU_mat ^ 4 = !![Complex.exp (-(Complex.I * ↑Real.pi / 2)), 0;
+      0, Complex.exp (Complex.I * ↑Real.pi / 2)] := by
+    rw [show (4:ℕ) = 2 + 2 from rfl, pow_add, e2, Matrix.eta_fin_two (_ * _)]
+    congr 1 <;>
+      simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.of_apply, mul_zero, zero_mul, add_zero, zero_add, ← Complex.exp_add] <;>
+      congr 1 <;> ring
+  have h0 : Complex.I * Complex.exp (-(Complex.I * ↑Real.pi / 2)) = 1 := by
+    rw [show -(Complex.I * ↑Real.pi / 2) = (↑(-(Real.pi / 2)) * Complex.I) from by push_cast; ring,
+      Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin, Real.cos_neg, Real.sin_neg,
+      Real.cos_pi_div_two, Real.sin_pi_div_two]; push_cast; linear_combination -Complex.I_mul_I
+  have h1 : Complex.I * Complex.exp (Complex.I * ↑Real.pi / 2) = -1 := by
+    rw [show (Complex.I * ↑Real.pi / 2) = (↑(Real.pi / 2) * Complex.I) from by push_cast; ring,
+      Complex.exp_mul_I, ← Complex.ofReal_cos, ← Complex.ofReal_sin, Real.cos_pi_div_two,
+      Real.sin_pi_div_two]; push_cast; linear_combination Complex.I_mul_I
+  rw [show gatePhase CliffordTGate.Z = Complex.I from rfl,
+      show gateWord CliffordTGate.Z = fgT ^ 4 from rfl, ρ_CliffT_fgT_pow,
+      toComplexMat_gateMatrix_Z, e1, Matrix.eta_fin_two (Complex.I • _)]
+  congr 1 <;> simp only [Matrix.smul_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.of_apply, smul_eq_mul, mul_zero, h0, h1]
+
 end SKEFTHawking.RossSelinger
