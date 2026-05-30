@@ -20,6 +20,7 @@ from the injective embedding `Zsqrtd.toReal : ℤ√2 →+* ℝ` (`a + b√2 ↦
 -/
 
 import Mathlib.NumberTheory.Zsqrtd.ToReal
+import Mathlib.Algebra.Order.Round
 
 set_option autoImplicit false
 
@@ -42,5 +43,23 @@ theorem two_ne_sq (n : ℤ) : (2 : ℤ) ≠ n * n := by
 brick of the two-squares-over-`ℤ[√2]` sub-arc (toward Prop 3.2.7 / Item G). -/
 noncomputable instance : IsDomain (Zsqrtd 2) :=
   (Zsqrtd.toReal_injective (by norm_num) two_ne_sq).isDomain _
+
+/-- **The norm-Euclidean rounding bound for `ℤ[√2]`** — the crux of `EuclideanDomain (ℤ[√2])`.
+`ℤ[√2]`'s norm `N(a+b√2) = a² − 2b²` is *indefinite*, so the division-with-remainder argument
+hinges on this absolute bound on the norm of a nearest-integer rounding error: for any rational
+`u, v`, the error `(u − ⌊u⌉) + (v − ⌊v⌉)√2` has `|N| = |(u−⌊u⌉)² − 2(v−⌊v⌉)²| < 1`. (Each
+coordinate error is `≤ 1/2`, so `(u−⌊u⌉)² ≤ 1/4` and `2(v−⌊v⌉)² ≤ 1/2`, giving the value in
+`[−1/2, 1/4] ⊂ (−1,1)`.) Quotient `q := ⌊a/b⌉` over `ℚ(√2)` then yields `|N(a − bq)| =
+|N(b)|·|N(error)| < |N(b)|`, the Euclidean descent. -/
+theorem zsqrt2_round_norm_lt (u v : ℚ) :
+    |(u - round u) ^ 2 - 2 * (v - round v) ^ 2| < 1 := by
+  have he : |u - (round u : ℚ)| ≤ 1 / 2 := abs_sub_round u
+  have hf : |v - (round v : ℚ)| ≤ 1 / 2 := abs_sub_round v
+  have he2 : (u - round u) ^ 2 ≤ 1 / 4 := by
+    nlinarith [sq_abs (u - (round u : ℚ)), he, abs_nonneg (u - (round u : ℚ))]
+  have hf2 : (v - round v) ^ 2 ≤ 1 / 4 := by
+    nlinarith [sq_abs (v - (round v : ℚ)), hf, abs_nonneg (v - (round v : ℚ))]
+  rw [abs_lt]
+  constructor <;> nlinarith [sq_nonneg (u - (round u : ℚ)), sq_nonneg (v - (round v : ℚ)), he2, hf2]
 
 end SKEFTHawking.RossSelinger
