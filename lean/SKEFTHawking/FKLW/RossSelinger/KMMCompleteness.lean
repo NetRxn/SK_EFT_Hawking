@@ -113,6 +113,23 @@ theorem blochEntry_real (M : Mat2) (i j : Fin 3) :
       ZOmegaSqrt2.conj_conj, ZOmegaSqrt2.conj_zero, hcn, hci, hc1] <;>
     ring
 
+/-- **Reality of the cleared Bloch numerator, realizability-free** (was `blochNum_real`, which
+needed the realizable witness): `conj (B i j) = B i j` in `ℤ[ω]`, lifting `blochEntry_real`
+through the clearing (`of` injective + `conj_of` + `conj_sqrt2_pow`). -/
+theorem blochNum_real_u (M : Mat2) (i j : Fin 3) :
+    ZOmega.conj (blochNum M i j) = blochNum M i j := by
+  apply of_injective
+  rw [← ZOmegaSqrt2.conj_of, ← blochNum_spec, ZOmegaSqrt2.conj_mul,
+      ZOmegaSqrt2.conj_sqrt2_pow, blochEntry_real]
+
+/-- Reality forces the `ω²`-coordinate to vanish (realizability-free). -/
+theorem blochNum_b_zero_u (M : Mat2) (i j : Fin 3) : (blochNum M i j).b = 0 := by
+  have hb := congrArg ZOmega.b (blochNum_real_u M i j); simp only [ZOmega.conj_b] at hb; omega
+
+/-- Reality forces the `ω³`-coordinate to be `−a` (realizability-free). -/
+theorem blochNum_c_eq_u (M : Mat2) (i j : Fin 3) : (blochNum M i j).c = -(blochNum M i j).a := by
+  have hc := congrArg ZOmega.c (blochNum_real_u M i j); simp only [ZOmega.conj_c] at hc; omega
+
 /-! ## Box-data extraction, realizability-free (base-case re-point, first link) -/
 
 /-- **Box data of a `μ ≤ 3` unitary** (realizability-free form of `reconstruct_box_data`):
