@@ -1847,12 +1847,15 @@ import SKEFTHawking.FKLW.CliffordCCZSU8Irreducible
 import SKEFTHawking.FKLW.CliffordCCZSU8OrbitWitness
 import SKEFTHawking.FKLW.CliffordCCZSU8OrbitProps
 import SKEFTHawking.FKLW.CliffordCCZSU8Density
--- Phase 6x Item L increments 1–2 (2026-05-30): Mukhopadhyay exact Clifford+CCZ synthesis (public
+-- Phase 6x Item L increments 1–3 (2026-05-30): Mukhopadhyay exact Clifford+CCZ synthesis (public
 -- math layer). (1) Generating-element grounding mukGen_Z = CCZ — the canonical Mukhopadhyay Eq.12
 -- generator G_{Z₁,Z₂,Z₃} = (3/4)I+(1/4)(Z₁+Z₂+Z₃−Z₁Z₂−Z₂Z₃−Z₃Z₁+Z₁Z₂Z₃) equals the project's
 -- CCZ_mat. (2) CliffordCCZGate ADT + interp (over the shipped SU(8) literal generators + CCZ_mat) +
 -- composition soundness interp_append + the synth_CCZ_correct MVP at the canonical generator
 -- (mukGen_Z exactly representable by the single-CCZ word) + the order-2 relation interp[CCZ,CCZ]=I.
+-- (3) The GENERAL generating element mukGen p q r + the reflection structure mukGen_sq (G²=I for any
+-- pairwise-commuting involutions — Mukhopadhyay's defining property), instantiated as mukGen_Z_sq
+-- (CCZ²=I via the generating-element structure; pauliZ_mul_self/pauliZ_comm).
 import SKEFTHawking.FKLW.MukhopadhyayCCZ
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
