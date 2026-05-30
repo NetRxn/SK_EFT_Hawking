@@ -132,4 +132,27 @@ theorem norm_eq_relNorm (α : ZOmega) :
   simp only [ZOmega.normSq, ZOmega.conj, ZOmega.mul_c, ZOmega.mul_d]
   ring
 
+/-- **Prop 3.2.7 reduction — relative norm of `p + qi` is `p² + q²`** (the index-2 subring
+`ℤ[√2][i] ⊂ ℤ[ω]`). For **real** `p, q ∈ ℤ[√2]` (i.e. `conj`-fixed), the element `α = p + q·ω²`
+(`ω² = i`) has relative norm `α†α = p² + q²`. (`conj(p+qi) = p − qi` since `conj` fixes real
+elements and `conj i = −i`; then `(p+qi)(p−qi) = p² − q²·ω⁴ = p² + q²` as `ω⁴ = −1`.)
+
+**This reduces Prop 3.2.7 to a two-squares theorem over `ℤ[√2]`**: to solve `t†t = β` it suffices
+to write `β = p² + q²` with real `p, q ∈ ℤ[√2]`, then `t = p + q·ω² ∈ ℤ[ω]`. The index-2 obstruction
+`ℤ[ω] ⊋ ℤ[√2][i]` does NOT block this direction — the constructed `t` lands in the smaller ring
+`ℤ[√2][i]`, which is still `⊆ ℤ[ω]`. (The remaining NT step is the two-squares representability of a
+prime-norm totally-positive `β`, via Fermat `Nat.Prime.sq_add_sq` lifted over `ℤ[√2]` + Dirichlet
+to supply such a `β` over the grid.) -/
+theorem normSq_real_sumSq {p q : ZOmega}
+    (hp : ZOmega.conj p = p) (hq : ZOmega.conj q = q) :
+    ZOmega.normSq (p + q * ZOmega.ω ^ 2) = p ^ 2 + q ^ 2 := by
+  have hc : ZOmega.conj (p + q * ZOmega.ω ^ 2) = p - q * ZOmega.ω ^ 2 := by
+    rw [ZOmega.conj_add, ZOmega.conj_mul, hp, hq,
+        show ZOmega.conj (ZOmega.ω ^ 2) = -(ZOmega.ω ^ 2) from by decide]
+    ring
+  rw [ZOmega.normSq, hc,
+      show (p + q * ZOmega.ω ^ 2) * (p - q * ZOmega.ω ^ 2) = p ^ 2 - q ^ 2 * ZOmega.ω ^ 4 from by ring,
+      show ZOmega.ω ^ 4 = -1 from by decide]
+  ring
+
 end SKEFTHawking.RossSelinger
