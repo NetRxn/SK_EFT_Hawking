@@ -1390,6 +1390,11 @@ import SKEFTHawking.FKLW.RossSelinger.GridSynth
 -- Toward `IsUnitaryT M → (∃k, det M = ωS^k) → IsCliffordTRealizable M`, the direction that makes
 -- any constructed SU(2)-over-ℤ[ω][1/√2] unitary (GridSynth.assembleUnitary) synthesizable.
 import SKEFTHawking.FKLW.RossSelinger.KMMCompleteness
+-- Phase 6x Tier-2 Items H/I (2026-05-29) — deterministic grid-synthesis compiler (sound core):
+-- diophantineSearch (bounded ℤ[ω], sound) + gridFindT (+realizable via completeness) +
+-- gridSynthWord (kmmReduce) with gridSynthWord_correct (interp = assembleUnitary) + length bound.
+-- Runnable end-to-end; the ε-region FINDER completeness (RS §5) is the remaining analytic core.
+import SKEFTHawking.FKLW.RossSelinger.GridSolver
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
