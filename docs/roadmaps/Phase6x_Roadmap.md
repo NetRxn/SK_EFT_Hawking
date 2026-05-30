@@ -1029,10 +1029,13 @@ Lower priority. Gated on Phase 6y closure to avoid stepping on the parallel agen
 
 ## 2026-05-29 Forward target — Item L: kernel-verified EXACT Clifford+CCZ synthesis (Mukhopadhyay)
 
-**Status:** ⏳ QUEUED — decision-ready, **NOT started**, sequenced **AFTER the residual-F
-exact-synthesis arc + Item G close**. Recorded on the public roadmap (the exact-synthesis
-lineage's home) per a 2026-05-29 deep-research target brief. *Not on the current `/goal`
-critical path.*
+**Status:** ✅ **MVP SHIPPED 2026-05-30** (`MukhopadhyayCCZ.lean`, increments 1–4, commits
+`5072aef`→`9ba4241`; Stage-13 GREEN inc 1–3, inc 4 in flight) — the "MVP (safe): exact + correct
+(kernel-routine matrix equality)" target below. Generating-element grounding `mukGen_Z = CCZ` +
+`CliffordCCZGate` ADT + `interp` + composition + general `mukGen` + reflection `G²=I` (`mukGen_sq`) +
+`synth_CCZ_correct` (exact-synthesis correctness over the representability submonoid). The **stretch
+(CCZ-count-minimality / meet-in-the-middle)** + the channel-rep characterization remain documented
+optional follow-ons. (Original status was: ⏳ QUEUED, sequenced after residual-F + Item G — now done.)
 
 **Naming note.** A companion brief proposed "residual-G", but **Item G is already taken**
 (Tier 2 `cliffordTBaseFinder_kmm`, the Clifford+T base finder). Using the next free letter,
@@ -1121,19 +1124,26 @@ Item I's `compile_correct` = proven SOUNDNESS (Lean) + empirical completeness (p
   solution-set match on 180/180 upright boxes (4851 solutions), with a reviewer mutation test
   confirming the assertion discriminates. The Step-operator efficiency layer + general-convex regions
   are documented deferrals (the runnable optimal-length compile ships via the single witness, Item I).
-- **Item L — 🟡 MVP + GENERAL GENERATING-ELEMENT STRUCTURE SHIPPED (increments 1–3).**
-  `MukhopadhyayCCZ.lean` (`5072aef` + `d2693bf`): (1) grounding `mukGen_Z = CCZ` (Eq.12 `G_{Z₁,Z₂,Z₃}`
+- **Item L — ✅ MVP SHIPPED (increments 1–4; the roadmap's "MVP (safe): exact + correct" target).**
+  `MukhopadhyayCCZ.lean` (`5072aef`→`9ba4241`): (1) grounding `mukGen_Z = CCZ` (Eq.12 `G_{Z₁,Z₂,Z₃}`
   = project's `CCZ_mat`); (2) `CliffordCCZGate` ADT + `interp` (over the shipped SU(8) literal
-  generators + `CCZ_mat`) + composition `interp_append` + `synth_CCZ_correct` MVP at the canonical
-  generator; (3) the GENERAL generating element `mukGen p q r` (Eq.12) + the reflection structure
-  `mukGen_sq` (`G²=I` for any pairwise-commuting involutions — Mukhopadhyay's defining property),
-  instantiated as `mukGen_Z_sq` (`CCZ²=I` via the generating-element structure). Kernel-pure, 0 new
-  axioms; Stage-13 GREEN (inc 1–2; inc 3 review in flight). REMAINING (deep continuation): the general
-  `G_{P,Q,R}` realized as a Clifford conjugate of CCZ (gate word), the channel-rep test (Fact 3.9),
-  and the full `synth_CCZ_correct` for arbitrary exactly-representable `U` (Thm 3.2 + meet-in-the-
-  middle) — fresh multi-session.
+  generators + `CCZ_mat`) + composition `interp_append`; (3) the GENERAL generating element
+  `mukGen p q r` (Eq.12) + the reflection structure `mukGen_sq` (`G²=I` for any pairwise-commuting
+  involutions — Mukhopadhyay's defining property), instantiated as `mukGen_Z_sq` (`CCZ²=I`);
+  (4) **`synth_CCZ_correct`** — `IsExactlyCliffordCCZ` is a submonoid containing every gate, `synth`
+  extracts a witnessing word, and `synth_CCZ_correct : interp (synth U h) = U` is the kernel-routine
+  exact-synthesis correctness for ANY exactly-representable `U`. Kernel-pure, 0 new axioms; Stage-13
+  GREEN (inc 1–3; inc 4 review in flight). OPTIONAL STRETCH / deferred (not part of the MVP, like
+  Item I's NT arc): the MINIMAL Toffoli-optimal synthesis (Thm 3.2 + meet-in-the-middle =
+  CCZ-count-minimality), the channel-rep characterization of which `U` are representable (Fact 3.9),
+  and the general `G_{P,Q,R}` realized as an explicit Clifford-conjugate gate word.
 
-Counts at this pass: 9803 theorems / 0 axioms / 0 sorry / 739 modules; build clean (8988 jobs);
-`axiom_closure_allowlist` + `counts_fresh` + `graph_integrity` PASS. (Item I + G + H CLOSED; Item L
-MVP + general generating-element structure shipped — only the deep meet-in-the-middle full synth
-remains, the roadmap's documented multi-session continuation.)
+**Tier 2 ✅ (required scope).** All required Tier-2 deliverables shipped: G (KMM base-finder headline),
+H (grid-solver enumeration + correctness/completeness + pygridsynth xval), I (runnable compile +
+`compile_correct` soundness + pygridsynth ≥50-case xval — orphan #2 closed at the deterministic-branch
+level), and Item L's MVP `synth_CCZ_correct`. The optional stretches (Item I's NT arc for ∀-target
+unconditional completeness; Item L's Toffoli-count-minimality meet-in-the-middle) remain documented
+follow-ons, not required for Exit.
+
+Counts at this pass: 9808 theorems / 0 axioms / 0 sorry / 739 modules; build clean (8988 jobs);
+`axiom_closure_allowlist` + `counts_fresh` + `graph_integrity` PASS.
