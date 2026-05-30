@@ -1861,6 +1861,18 @@ import SKEFTHawking.FKLW.CliffordCCZSU8Density
 -- pairwise-commuting involutions — Mukhopadhyay's defining property), instantiated as mukGen_Z_sq
 -- (CCZ²=I via the generating-element structure; pauliZ_mul_self/pauliZ_comm).
 import SKEFTHawking.FKLW.MukhopadhyayCCZ
+-- Phase 6x Item L.A continuation (2026-05-30): Mukhopadhyay channel (Heisenberg/Pauli-conjugation)
+-- representation Û (Eq.27) over the shipped 64-Pauli basis — monoid homomorphism (channelRep_mul),
+-- orthogonality of the channel rep of a unitary, the conjugation-action characterization
+-- (channelRep_mulVec_repr), and the structural re-base of IsExactlyCliffordCCZ onto channelGenMonoid.
+import SKEFTHawking.FKLW.MukhopadhyayChannelRep
+-- Phase 6x Item L.B (2026-05-30): the dyadic sde₂ invariant (Definition 3.13, the √2→2 analog of the
+-- shipped √2-sde T-count) + Fact 3.14 half-sum monotonicity (the +1 core of Lemma 3.16).
+import SKEFTHawking.FKLW.MukhopadhyaySde2
+-- Phase 6x Item L.C (2026-05-30): the Toffoli-count lower bound — toffoliCount/toffoliCost + the
+-- telescoping mechanism toffoliCount_ge_measure / toffoliCost_ge_measure giving T^of(U) ≥ sde₂(Û)
+-- (reading μ = sde₂∘channelRep). Not proved tight (full minimality = MITM/Conjecture 4.8, residual).
+import SKEFTHawking.FKLW.MukhopadhyayToffoliBound
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
