@@ -306,4 +306,44 @@ theorem toComplexMat_gateMatrix_eq_Y :
     (simp only [Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero,
       Matrix.cons_val_one, Matrix.of_apply, smul_eq_mul] <;> ring_nf <;> simp only [hI5])
 
+/-! ## The word-level phase bridge -/
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **Per-gate phase bridge** (all 8 gates combined): `toComplexMat (gateMatrix g) =
+gatePhase g • ρ_CliffT (gateWord g)`. -/
+theorem toComplexMat_gateMatrix_eq (g : CliffordTGate) :
+    toComplexMat (gateMatrix g) = gatePhase g • ((ρ_CliffT (gateWord g) :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ) := by
+  cases g
+  · exact toComplexMat_gateMatrix_eq_H
+  · exact toComplexMat_gateMatrix_eq_S
+  · exact toComplexMat_gateMatrix_eq_T
+  · exact toComplexMat_gateMatrix_eq_X
+  · exact toComplexMat_gateMatrix_eq_Y
+  · exact toComplexMat_gateMatrix_eq_Z
+  · exact toComplexMat_gateMatrix_eq_id
+  · exact toComplexMat_gateMatrix_eq_omega
+
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **The word-level U(2)↔SU(2) phase bridge**: a KMM gate word's complex matrix equals its
+SU(2) `ρ_CliffT` image up to the accumulated global phase —
+`toComplexMat (interp gs) = phaseProd gs • ρ_CliffT (freeword gs)`. (Induction over `gs`;
+`toComplexMat`/`ρ_CliffT` are monoid homs, the per-gate phases factor as central scalars.)
+For a `det`-1 (`SU(2)`) word `phaseProd gs = ±1` (`scripts/phase_bridge_validation.py`),
+so `ρ_CliffT (freeword gs) = ±toComplexMat (interp gs)` — the finder's approximation hook. -/
+theorem toComplexMat_interp_eq (gs : List CliffordTGate) :
+    toComplexMat (interp gs) = phaseProd gs • ((ρ_CliffT (freeword gs) :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ) := by
+  induction gs with
+  | nil => simp [toComplexMat, interp_nil, phaseProd_nil, freeword_nil, map_one]
+  | cons g gs ih =>
+      rw [interp_cons, freeword_cons, phaseProd_cons]
+      show toComplexMat (gateMatrix g * interp gs) = _
+      rw [show toComplexMat (gateMatrix g * interp gs)
+            = toComplexMat (gateMatrix g) * toComplexMat (interp gs) from by
+          simp only [toComplexMat, map_mul], toComplexMat_gateMatrix_eq, ih, map_mul,
+        Submonoid.coe_mul, smul_mul_smul_comm]
+
 end SKEFTHawking.RossSelinger
