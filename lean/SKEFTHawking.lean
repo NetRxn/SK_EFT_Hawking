@@ -1426,6 +1426,11 @@ import SKEFTHawking.FKLW.RossSelinger.CompileApprox
 -- (toComplex is a *-hom) + linftyOpNorm_sub_le_of_su2_col (two SU(2)-form matrices agreeing on
 -- the first column within ε ⟹ ‖·‖ ≤ 2ε). The soundness backbone of the Ross-Selinger compile.
 import SKEFTHawking.FKLW.RossSelinger.GridCompileCorrect
+-- Phase 6x Tier-2 Item H (2026-05-30) — the constructive Ross-Selinger grid SOLVER:
+-- oneDimGridSolution / twoDimGridSolution (center-rounding witnesses of GridProblem's existence,
+-- exposed as runnable functions) + correctness. Upright-case §5 grid solutions; composes with
+-- gridFindT + assembleUnitary + kmmReduce (compile_correct_core) for the target-level compile.
+import SKEFTHawking.FKLW.RossSelinger.GridSolutions
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
