@@ -1349,6 +1349,13 @@ import SKEFTHawking.FKLW.RossSelinger.KMMForm
 -- ωS^8=1 periodicity) ⟹ bridge : realizable M → μ(M)≤3 → kSO3 M ≤ 3. Python-validated
 -- (scripts/bridge_superset_validation.py): the √2∣|x|² filter is the exact μ≤3 condition.
 import SKEFTHawking.FKLW.RossSelinger.KMMBridge
+-- Phase 6x Tier-2 Item F (𝕊₃ coverage; 2026-05-29) — the Clifford base + CAPSTONE. cliffordBase:
+-- realizable M, kSO3 M = 0 (Clifford up to phase) ⟹ ∃ ≤6-gate Clifford word, via the μ≤kSO3+2
+-- reverse bound (kSO3=0⟹μ≤2≤3, KMMBridge) + 192-entry (x,y,k)→word lookup (cliffordTable) +
+-- cliffordBase_box_core native_decide re-verification. The SECOND of MACoverage's two hypotheses
+-- discharged ⟹ nonempty_kmmReduction : Nonempty KMMReduction UNCONDITIONAL (no axiom; Inv #15) —
+-- the exact-synthesis substrate closing Phase 6x orphan #2 at the deterministic-branch level.
+import SKEFTHawking.FKLW.RossSelinger.CliffordBase
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
