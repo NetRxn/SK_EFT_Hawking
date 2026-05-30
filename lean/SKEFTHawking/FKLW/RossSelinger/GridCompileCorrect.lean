@@ -127,4 +127,26 @@ theorem compile_correct_core (u t : ZOmega) (k : ℕ)
         (KMM.isCliffordTRealizable_assembleUnitary u t k hreal)]
   exact approx_assembleUnitary u t k U hε h00 h10
 
+/-- **The `ℤ[ω]` column numerator from grid-solver integer outputs.** The grid solver
+(`twoDimGridSolution`) returns `(pm, pn, qm, qn)` — the real `ℤ[√2]` component `pm + pn√2` and
+imaginary `qm + qn√2` of the column value `u = (pm+pn√2) + (qm+qn√2)·i`. This assembles them into
+`ℤ[ω]` (`i = ω²`): `gridNumerator pm pn qm qn = (pm + pn·√2) + (qm + qn·√2)·ω²`. -/
+noncomputable def gridNumerator (pm pn qm qn : ℤ) : ZOmega :=
+  ((pm : ZOmega) + (pn : ZOmega) * ZOmega.sqrt2)
+    + ((qm : ZOmega) + (qn : ZOmega) * ZOmega.sqrt2) * ZOmega.ω ^ 2
+
+/-- **Complex value of the grid numerator**: `toComplex (gridNumerator pm pn qm qn) =
+(pm + pn√2) + (qm + qn√2)·i`. (Ring hom + `toComplex √2 = √2`, `toComplex ω² = i`.) This is the
+bridge from the grid solver's real-interval bounds to `approx_assembleUnitary`'s column hypotheses. -/
+theorem toComplex_gridNumerator (pm pn qm qn : ℤ) :
+    ZOmega.toComplex (gridNumerator pm pn qm qn)
+      = ((pm : ℂ) + (pn : ℂ) * Real.sqrt 2) + ((qm : ℂ) + (qn : ℂ) * Real.sqrt 2) * Complex.I := by
+  have hs : ZOmega.toComplex ZOmega.sqrt2 = (Real.sqrt 2 : ℂ) := by
+    rw [← ZOmegaSqrt2.s2C_def]; exact ZOmegaSqrt2.s2C_eq
+  have htw : ZOmega.toComplex ZOmega.ω = ZOmega.omegaC := by
+    rw [show ZOmega.ω = (⟨0, 0, 1, 0⟩ : ZOmega) from rfl, ZOmega.toComplex_apply]; push_cast; ring
+  have hi : ZOmega.toComplex (ZOmega.ω ^ 2) = Complex.I := by
+    rw [map_pow, htw, ZOmega.omegaC_sq]
+  simp only [gridNumerator, map_add, map_mul, map_intCast, hs, hi]
+
 end SKEFTHawking.RossSelinger
