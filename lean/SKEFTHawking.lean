@@ -1436,6 +1436,13 @@ import SKEFTHawking.FKLW.RossSelinger.GridSolutions
 -- gridCompile=kmmReduce∘assembleUnitary) + compile_correct SOUNDNESS (finder returns + columns
 -- within ε ⟹ ‖toComplexMat(interp word)−U‖≤2ε), composing gridCompile_correct + approx_assembleUnitary.
 import SKEFTHawking.FKLW.RossSelinger.Compile
+-- Phase 6x Tier-2 Item G (2026-05-30) — the KMM-derived Clifford+T base finder in the ρ_CliffT/
+-- FreeGroup headline picture: signCorrect (±1-sign-corrected freeword, killing the U(2)↔SU(2)
+-- residual phase via H·H), the keystone coe_ρ_CliffT_signCorrect (det-1 word ⟹ ρ_CliffT image =
+-- toComplexMat interp, UNCONDITIONAL), signCorrect_kmmReduce_resynth (KMM re-synthesis at honest
+-- N₃+4·sde length, UNCONDITIONAL), and cliffordTBaseFinder_kmm + _approx/_headline (the ρ_CliffT-
+-- picture SOUNDNESS lift of compile_correct). Composes nonempty_kmmReduction + the phase bridge.
+import SKEFTHawking.FKLW.RossSelinger.CliffordTBaseFinderKMM
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
