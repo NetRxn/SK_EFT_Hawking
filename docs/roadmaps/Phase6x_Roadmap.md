@@ -1084,6 +1084,18 @@ moving foundation). DR verdict: original native-CCZ-*approximation* angles KILLE
 
 #### Item L continuation (post-MVP): channel rep → reduction → minimality (L.A / L.B / L.C)
 
+> **Status update 2026-05-30 — L.A/L.B/L.C continuation SHIPPED + Phase 6x′ deep layer.** The Item-L
+> continuation closed (channel rep `channelRep` + homomorphism, `sde2` + Fact 3.14, `toffoliCost_ge_measure`
+> PARAMETRIC; memory `project_phase6x_itemL_continuation_complete_2026_05_30`). The deep deferred layer was
+> then scoped + executed as **Phase 6x′** (`docs/roadmaps/Phase6x_prime_Roadmap.md`): **Fact 3.9 ⟹** (each
+> Clifford gen's channel rep is a signed permutation) and the **6z CCZ-essentiality converse**
+> (`cliffordOnly_not_dense`, Stage-13 GREEN) are SHIPPED; the CCZ diagonal-conjugation identity (C.1) is
+> shipped; **Lemma 3.10 + the unconditional `T^of ≥ sde₂`** (discharging `toffoliCost_ge_measure`'s
+> PARAMETRIC `hC`/`hCCZ`) remain a documented residual per the 6x′ off-ramp (the `hC` half is
+> substantiated; `hCCZ` is gated on the 64-Pauli Theorem-3.8 entry table + an `sde₂`-on-ℂ matrix measure).
+> Full MITM minimality (Conjecture 4.8) stays out of scope. The L.A/L.B/L.C plan below is retained for
+> provenance.
+
 The Item-L **MVP shipped 2026-05-30** (status block above). The fuller public math layer (§"Public
 deliverable": channel-representation algebra + the exact-correctness theorem + the stretch
 minimality) has three remaining increments, gated on a deep-research dossier (DR task SUBMITTED
