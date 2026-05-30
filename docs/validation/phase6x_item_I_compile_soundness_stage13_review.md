@@ -53,3 +53,39 @@ proof, correctly disclosed.
 The Item-I `compile_correct` soundness chain passes Stage 13. Remaining for Item I EXIT (out of
 this review's scope): pygridsynth ≥50-case cross-val (empirical completeness), Item G headline,
 Item L (SU(8)).
+
+---
+
+## Addendum (2026-05-30): pygridsynth ≥50-case cross-validation — COMPLETE
+
+**Verdict:** ✅ the empirical-completeness half of Item I is done. `pygridsynth` (the MIT reference
+implementation of the same Ross-Selinger Clifford+T exact-synthesis algorithm the Lean chain
+formalizes) is now installed (`pyproject.toml` + `uv.lock`), and the cross-validation harness
+`scripts/grid_compile_pygridsynth_xval.py` passes.
+
+**What is cross-validated (roadmap Item-I deliverable #7).** `pygridsynth.gridsynth(θ, ε)` returns a
+`DOmegaUnitary(z, w, n, k)` whose matrix is `[[z, −w*·ωⁿ],[w, z*·ωⁿ]]/√2^k` over `ℤ[ω][1/√2]` —
+exactly the class our Lean `assembleUnitary u t k = [[u, −t*],[t, u*]]/√2^k` formalizes (`z=u`,
+`w=t`). The harness first asserts pygridsynth's `ZOmega(a,b,c,d)` convention is **bit-identical** to
+ours (`to_complex = a·ω³+b·ω²+c·ω+d`; `conj⟨a,b,c,d⟩ = ⟨−c,−b,−a,d⟩`), then over **76 (θ, ε) cases**
+(18 angles evenly across `[0,2π)` × `ε ∈ {1e-1,1e-2,1e-3,1e-4}` + 4 fine angles @ `1e-5`) verifies:
+
+- **(a) ε-approximation** (the `compile_correct` conclusion): `‖DOmegaUnitary − Rz(θ)‖₂ < ε` — **76/76**.
+- **(b) exact ℤ[ω] det-1 constraint** (the `compile_correct_core` hypothesis `hreal` = our
+  `assembleUnitary`'s SU(2) constraint), computed *symbolically* in pygridsynth's (= our) `ℤ[ω]`
+  ring: `numᶻ·conj(numᶻ) + numʷ·conj(numʷ) = ⟨0,0,0,2^k⟩` — **76/76**.
+
+Both pass for all 76 cases (≥50 required). The optimal T-count scales as ≈ `2.89·log₂(1/ε)`
+(Ross-Selinger typical-case slope ≈ 3), confirming polylog length. A head-to-head against the
+project's own brute-force prototype (`grid_stub_validation.grid_stub`, which the Lean `compile`
+mirrors) agrees **5/5** at the prototype-reachable `ε = 0.3` (both ε-approximate; `grid_stub`'s
+output is exactly realizable, `u·u*+t·t* = ⟨0,0,0,2^k⟩`).
+
+This empirically confirms the formalized algorithm's soundness hypotheses are realized by the
+canonical reference across a broad suite, with a bit-identical exact-arithmetic representation —
+closing the empirical-completeness half of Item I (the deterministic-branch soundness is the Lean
+half, reviewed above). The project's own brute-force prototype lives in
+`scripts/grid_stub_validation.py` (exercised by the head-to-head above).
+
+**No Lean change** — `counts.json` axioms/sorries unaffected. The cross-val is Python-side
+empirical validation of the algorithm the noncomputable Lean `compile` formalizes.

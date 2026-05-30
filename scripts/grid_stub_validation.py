@@ -31,9 +31,10 @@ def diophantine_brute(N, bound=4):
             return t
     return None
 
-def grid_stub(U, k, ubound=None, dioph_bound=4):
+def grid_stub(U, k, ubound=None, dioph_bound=4, eps=None):
     """U: 2x2 numpy-free SU(2) as ((u00,u01),(u10,u11)); k: denominator exponent.
-    Round √2^k·U00 to a nearby ℤ[ω] u, solve the Diophantine for t, assemble M."""
+    Round √2^k·U00 to a nearby ℤ[ω] u, solve the Diophantine for t, assemble M.
+    If `eps` is given, returns as soon as a candidate with ‖M−U‖ < eps is found (early exit)."""
     s2k = math.sqrt(2) ** k
     target = s2k * U[0][0]                 # want ztoc(u) ≈ target
     x, y = target.real, target.imag
@@ -68,6 +69,8 @@ def grid_stub(U, k, ubound=None, dioph_bound=4):
                             det = M[0][0]*M[1][1] - M[0][1]*M[1][0]
                             if best is None or err < best[0]:
                                 best = (err, u, t, k, abs(det - 1))
+                            if eps is not None and err < eps:
+                                return best
     return best
 
 # ── test on sample SU(2) targets ──────────────────────────────────────────────
@@ -85,10 +88,11 @@ def rand_su2():
     a = math.cos(th)*cm.exp(1j*ph1); b = math.sin(th)*cm.exp(1j*ph2)
     return ((a, -b.conjugate()), (b, a.conjugate()))
 
-print("target            k   best ‖M−U‖     det-1     realizable(uu*+tt*=2^k)")
-tests = [("Rz(π/8)", rot(math.pi/8)), ("Rz(π/16)", rot(math.pi/16)),
+def _demo():
+  print("target            k   best ‖M−U‖     det-1     realizable(uu*+tt*=2^k)")
+  tests = [("Rz(π/8)", rot(math.pi/8)), ("Rz(π/16)", rot(math.pi/16)),
          ("H_SU", hgate())] + [(f"rand{i}", rand_su2()) for i in range(5)]
-for name, U in tests:
+  for name, U in tests:
     res = None
     for k in range(2, 9):
         r = grid_stub(U, k)
@@ -105,7 +109,10 @@ for name, U in tests:
         print(f"{name:14s}  k={k}  err={err:.4f}    {dete:.1e}    {okreal}")
     else:
         print(f"{name:14s}  NO SOLUTION FOUND")
-print("\nVERDICT: the (c)Diophantine + (d)assemble core is CORRECT — every target yields an"
+  print("\nVERDICT: the (c)Diophantine + (d)assemble core is CORRECT — every target yields an"
       " exactly realizable det-1 SU(2) M (det err ~1e-16, uu*+tt*=2^k holds). The brute-force"
       " Diophantine (|coords(t)|≤bound) caps usable precision; reaching small ε (Item G's 2ε₀)"
       " needs the real Ross-Selinger §5 ε-region grid + ℤ[ω] prime-factor Diophantine (Item H).")
+
+if __name__ == "__main__":
+  _demo()
