@@ -1,16 +1,16 @@
 {
-  "generated": "2026-05-30T10:12:38.916891",
+  "generated": "2026-05-30T10:48:08.331611",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 17260,
-    "theorems_total": 9753,
-    "theorems_substantive": 9728,
+    "total_declarations": 17276,
+    "theorems_total": 9764,
+    "theorems_substantive": 9739,
     "theorems_placeholder": 25,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 734,
+    "modules": 736,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -342,6 +342,7 @@
       "SKEFTHawking.FKLW.RossSelinger.ClearingConnection",
       "SKEFTHawking.FKLW.RossSelinger.CliffordBase",
       "SKEFTHawking.FKLW.RossSelinger.CliffordTGate",
+      "SKEFTHawking.FKLW.RossSelinger.Compile",
       "SKEFTHawking.FKLW.RossSelinger.CompileApprox",
       "SKEFTHawking.FKLW.RossSelinger.ComplexEmbedding",
       "SKEFTHawking.FKLW.RossSelinger.ComplexEmbeddingMatrix",
@@ -354,6 +355,7 @@
       "SKEFTHawking.FKLW.RossSelinger.GdeValue",
       "SKEFTHawking.FKLW.RossSelinger.GridCompileCorrect",
       "SKEFTHawking.FKLW.RossSelinger.GridProblem",
+      "SKEFTHawking.FKLW.RossSelinger.GridSolutions",
       "SKEFTHawking.FKLW.RossSelinger.GridSolver",
       "SKEFTHawking.FKLW.RossSelinger.GridSynth",
       "SKEFTHawking.FKLW.RossSelinger.KMM",
@@ -747,7 +749,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6640,
+    "definitions": 6645,
     "structures": 287,
     "instances": 487,
     "inductives": 93
