@@ -60,6 +60,9 @@ import SKEFTHawking.FKLW.RossSelinger.BlochMap
 import SKEFTHawking.FKLW.RossSelinger.KMMForm
 import SKEFTHawking.FKLW.RossSelinger.NormSqGde
 import SKEFTHawking.FKLW.RossSelinger.GdeSqrt2
+import SKEFTHawking.FKLW.RossSelinger.KMMBaseCoverage
+import SKEFTHawking.FKLW.RossSelinger.ClearingConnection
+import SKEFTHawking.FKLW.RossSelinger.UnitColumnCongruence
 
 set_option autoImplicit false
 
@@ -102,6 +105,95 @@ set_option maxRecDepth 8000 in
 `μ ≤ 3` realizable matrices). Validated `0`-failure in
 `scripts/bridge_superset_validation.py`. -/
 theorem bridge_box_core : bridgeBoxOk = true := by native_decide
+
+/-! ## Connecting lemmas: from the abstract `M` to the box -/
+
+/-- **`√2` is a unit, so column clearing inverts**: `√2^k · z = of w ⟹ z = mk w k`. -/
+theorem eq_mk_of_sqrt2_pow_mul {z : ZOmegaSqrt2} {w : ZOmega} {k : ℕ}
+    (h : (sqrt2 : ZOmegaSqrt2) ^ k * z = of w) : z = mk w k := by
+  have hunit : mk (1 : ZOmega) k * (sqrt2 : ZOmegaSqrt2) ^ k = 1 := by
+    rw [sqrt2_pow_eq, mk_mul, one_def, mk_eq_mk_iff]; ring
+  calc z = mk (1 : ZOmega) k * ((sqrt2 : ZOmegaSqrt2) ^ k * z) := by
+            rw [← mul_assoc, hunit, one_mul]
+    _ = mk (1 : ZOmega) k * of w := by rw [h]
+    _ = mk w k := by rw [of_def, mk_mul, one_mul, Nat.add_zero]
+
+/-- `of` is injective (`√2` non-zero-divisor at exponent 0). -/
+theorem of_inj : Function.Injective ZOmegaSqrt2.of := fun _ _ h => by
+  rwa [of_def, of_def, mk_eq_mk_iff, pow_zero, mul_one, mul_one] at h
+
+/-- `ωS^8 = 1` (`ω^8 = 1` in `ℤ[ω]`, `decide`; `of` is a ring hom). -/
+theorem omegaS_pow_eight : ωS ^ 8 = 1 := by
+  show (of ZOmega.ω) ^ 8 = 1
+  rw [← ofRingHom_apply, ← map_pow, show ZOmega.ω ^ 8 = 1 from by decide, map_one]
+
+/-- `ωS^k = ωS^(k % 8)` (phase periodicity). -/
+theorem omegaS_pow_mod (k : ℕ) : ωS ^ k = ωS ^ (k % 8) := by
+  conv_lhs => rw [← Nat.div_add_mod k 8, pow_add, pow_mul, omegaS_pow_eight, one_pow, one_mul]
+
+/-- `reconstruct x y k = reconstruct x y (k % 8)` (phase periodicity). -/
+theorem reconstruct_mod (x y : ZOmega) (k : ℕ) :
+    reconstruct x y k = reconstruct x y (k % 8) := by
+  unfold reconstruct; rw [omegaS_pow_mod k]
+
+/-- **Coordinate bound ⟹ box membership**: `(|x|²).d = a²+b²+c²+d² ≤ 4` forces every
+`ℤ[ω]` coordinate into `[-2,2]`, hence `x ∈ zomBox`. -/
+theorem mem_zomBox {x : ZOmega} (h : (ZOmega.normSq x).d ≤ 4) : x ∈ zomBox := by
+  rw [ZOmega.normSq_d] at h
+  have hmem : ∀ t : ℤ, t ^ 2 ≤ 4 → t ∈ intBox := by
+    intro t ht
+    simp only [intBox, List.mem_cons, List.not_mem_nil, or_false]
+    have h1 : -2 ≤ t := by nlinarith [sq_nonneg (t + 2)]
+    have h2 : t ≤ 2 := by nlinarith [sq_nonneg (t - 2)]
+    omega
+  have ha : x.a ∈ intBox := hmem x.a (by nlinarith [sq_nonneg x.b, sq_nonneg x.c, sq_nonneg x.d])
+  have hb : x.b ∈ intBox := hmem x.b (by nlinarith [sq_nonneg x.a, sq_nonneg x.c, sq_nonneg x.d])
+  have hc : x.c ∈ intBox := hmem x.c (by nlinarith [sq_nonneg x.a, sq_nonneg x.b, sq_nonneg x.d])
+  have hd : x.d ∈ intBox := hmem x.d (by nlinarith [sq_nonneg x.a, sq_nonneg x.b, sq_nonneg x.c])
+  simp only [zomBox, List.mem_flatMap, List.mem_map]
+  exact ⟨x.a, ha, x.b, hb, x.c, hc, x.d, hd, rfl⟩
+
+/-! ## The bridge -/
+
+/-- **The `μ ≤ 3 ⟹ kSO3 ≤ 3` bridge** (Giles-Selinger Cor 7.11): every realizable
+matrix with squared-modulus sde `μ(M) ≤ 3` has SO(3) Bloch least-denominator
+exponent (= Matsumoto-Amano T-count) `kSO3 M ≤ 3`. The proof rewrites `M` as
+`reconstruct x y k` (column 0 cleared at exponent 2; column 1 `realizable_col1`-
+determined), shows the bounded integer data `(x, y)` lies in the filtered box, and
+applies the `bridge_box_core` `native_decide`. This discharges one of the two
+remaining `MACoverage` hypotheses (the other is the Clifford base). -/
+theorem bridge (M : Mat2) (hM : IsCliffordTRealizable M) (hμ : muMeasure M ≤ 3) :
+    kSO3 M ≤ 3 := by
+  have hu : IsUnitaryT M := by obtain ⟨gs, rfl⟩ := hM; exact interp_isUnitaryT gs
+  obtain ⟨x, y, hx, hy, hxd, hyd⟩ := column0_cleared_bounded hu hμ
+  obtain ⟨k, hcol01, hcol11⟩ := realizable_col1 hM
+  have h00 : M 0 0 = mk x 2 := eq_mk_of_sqrt2_pow_mul hx
+  have h10 : M 1 0 = mk y 2 := eq_mk_of_sqrt2_pow_mul hy
+  -- M = reconstruct x y k
+  have hMrec : M = reconstruct x y k := by
+    rw [Matrix.eta_fin_two M, hcol01, hcol11, h00, h10]; rfl
+  -- filter fact 1: |x|² + |y|² = ⟨0,0,0,4⟩  (cleared unit-column norm at s = 2)
+  have hsum : ZOmega.normSq x + ZOmega.normSq y = (⟨0, 0, 0, 4⟩ : ZOmega) := by
+    have := clearedCol_normSq_sum hx hy (unitary_col0_normSq hu)
+    rwa [show ZOmega.sqrt2 ^ (2 * 2) = (⟨0, 0, 0, 4⟩ : ZOmega) from by decide] at this
+  -- filter fact 2: √2 ∣ |x|²  (= the μ ≤ 3 condition)
+  have hdvd : ZOmega.dividesSqrt2 (ZOmega.normSq x) := by
+    obtain ⟨w, hw⟩ := denExp_le_iff.mp (show denExp (normSq (M 0 0)) ≤ 3 from hμ)
+    have hns : ZOmega.normSq x = ZOmega.sqrt2 * w := by
+      apply of_inj
+      rw [of_mul, ← (sqrt2_pow_normSq_clearing hx), show 2 * 2 = 1 + 3 from rfl,
+        pow_add, mul_assoc, hw, pow_one]
+      simp only [sqrt2_def, of_def]
+    exact (ZOmega.dividesSqrt2_iff_dvd _).mpr ⟨w, hns⟩
+  -- extract from the native_decide core
+  have hk8 : k % 8 < 8 := Nat.mod_lt _ (by norm_num)
+  have hbox : kSO3 (reconstruct x y (k % 8)) ≤ 3 := by
+    have h1 := List.all_eq_true.mp bridge_box_core x (mem_zomBox hxd)
+    have h2 := List.all_eq_true.mp h1 y (mem_zomBox hyd)
+    rw [if_pos ⟨hsum, hdvd⟩] at h2
+    exact of_decide_eq_true (List.all_eq_true.mp h2 (k % 8) (List.mem_range.mpr hk8))
+  rw [hMrec, reconstruct_mod]
+  exact hbox
 
 end KMM
 
