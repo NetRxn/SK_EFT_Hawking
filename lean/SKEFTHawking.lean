@@ -1366,6 +1366,12 @@ import SKEFTHawking.FKLW.RossSelinger.ComplexEmbedding
 -- Frac-quotient lift. The abstract↔analytic bridge: KMM exact synthesis (Mat2 over ZOmegaSqrt2) →
 -- ℂ where Item G's cliffordTBaseFinder_kmm states its SU(2,ℂ) operator-norm approximation.
 import SKEFTHawking.FKLW.RossSelinger.ComplexEmbeddingSqrt2
+-- Phase 6x Tier-2 Item G (2026-05-29) — matrix-level ℤ[ω][1/√2] → ℂ embedding. toComplexMat :=
+-- ZOmegaSqrt2.toComplex.mapMatrix + toComplexMat_interp (carries the KMM gate word interp gs to
+-- ∏ toComplexMat(gateMatrix g)). The matrix abstract↔analytic bridge: KMM output (Mat2 over
+-- ZOmegaSqrt2) → Matrix (Fin 2) ℂ. Docstring records the U(2)↔SU(2) global-phase caveat
+-- (toComplexMat(gateMatrix T) = e^{iπ/8}·T_SU, phase ∉ ring) handled downstream in the finder.
+import SKEFTHawking.FKLW.RossSelinger.ComplexEmbeddingMatrix
 -- Phase 6x Tier-2 Item F (M4; 2026-05-29) — denExp is non-archimedean +
 -- KMM Lemma 4 core. denExp_neg, denExp_add_le (sub-additive),
 -- denExp_add_eq_max_of_ne (valuation equality on distinct exponents), and
