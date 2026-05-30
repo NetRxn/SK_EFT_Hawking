@@ -89,4 +89,28 @@ theorem toffoliCount_ge_measure (μ : Matrix (Fin 8) (Fin 8) ℂ → ℕ) (h1 : 
       rw [toffoliCount_ccz]
       exact le_trans (hCCZ (interp gs)) (Nat.add_le_add_right ih 1)
 
+/-- **The Toffoli cost `T^of(U)`**: the minimum number of `CCZ` (Toffoli) gates over all exact
+Clifford+CCZ gate words for `U` — `sInf` of the achievable Toffoli counts (`0` if `U` is not exactly
+Clifford+CCZ-representable). This is the Toffoli count of arXiv:2401.08950. -/
+noncomputable def toffoliCost (U : Matrix (Fin 8) (Fin 8) ℂ) : ℕ :=
+  sInf {n | ∃ gs : List CliffordCCZGate, interp gs = U ∧ toffoliCount gs = n}
+
+/-- **The Toffoli-count lower bound `T^of(U) ≥ μ(U)`**, for the actual minimum Toffoli cost and any
+telescoping measure `μ` (`μ(1) = 0`, non-increasing under each Clifford gate, `+1` under `CCZ`).
+Reading `μ = sde₂ ∘ channelRep` this is the genuine `sde₂` Toffoli lower bound `T^of(U) ≥ sde₂(Û)`
+(every exact Clifford+CCZ circuit for `U` uses at least `sde₂(Û)` Toffolis). NOT proved tight — full
+minimality needs the intractable meet-in-the-middle search (Lemma 4.5 / Conjecture 4.8), the
+documented residual; see the module docstring. -/
+theorem toffoliCost_ge_measure (μ : Matrix (Fin 8) (Fin 8) ℂ → ℕ) (h1 : μ 1 = 0)
+    (hC : ∀ (c : Fin 9) (M : Matrix (Fin 8) (Fin 8) ℂ),
+      μ (gateMatrix (CliffordCCZGate.clifford c) * M) ≤ μ M)
+    (hCCZ : ∀ M : Matrix (Fin 8) (Fin 8) ℂ, μ (gateMatrix CliffordCCZGate.ccz * M) ≤ μ M + 1)
+    {U : Matrix (Fin 8) (Fin 8) ℂ} (hU : IsExactlyCliffordCCZ U) :
+    μ U ≤ toffoliCost U := by
+  apply le_csInf
+  · obtain ⟨gs, hgs⟩ := hU; exact ⟨toffoliCount gs, gs, hgs, rfl⟩
+  · rintro b ⟨gs, hgs, rfl⟩
+    rw [← hgs]
+    exact toffoliCount_ge_measure μ h1 hC hCCZ gs
+
 end SKEFTHawking.FKLW.MukhopadhyayCCZ
