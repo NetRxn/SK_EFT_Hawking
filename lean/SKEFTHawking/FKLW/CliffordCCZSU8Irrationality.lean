@@ -7,21 +7,31 @@ Authors: John Roehm
 
 The faithful literal Clifford+CCZ headline (`⟨H,S,CNOT,CCZ⟩` dense in SU(8), CCZ essential, no `T`)
 needs a continuous one-parameter subgroup in the closure of the discrete group. Since every literal
-generator is finite-order, the first such flow is seeded by an **infinite-order** element with an
-**irrational eigen-angle**. The operative seed (Phase-6z Gate 1, `verify_seed.py`) is
-`g₀ = (H⊗H⊗H · CCX)² ∈ SO(8)`, whose non-trivial eigenvalues are `λ_± = (−3 ± i√7)/4` with minimal
-polynomial `2x² + 3x + 2` over `ℤ` (monic minpoly over `ℚ` is `x² + (3/2)x + 1`).
+generator is finite-order, the first such flow is seeded by an **infinite-order** element.
 
-The mechanism: a finite-order unitary has all eigenvalues roots of unity, and a root of unity is an
-**algebraic integer**. `λ_±` is **not** an algebraic integer (its monic `ℚ`-minimal polynomial has a
-non-integer coefficient `3/2`; equivalently `λ + λ̄ = −3/2 ∉ ℤ`). Hence `λ_±` is not a root of unity,
-so its argument is an irrational multiple of `π` — the seed for Kronecker accumulation.
+**The OPERATIVE seed** (the one used by the shipped `CliffordCCZSU8SeedNotFiniteOrder`) is the literal
+word `g_lit = CCZ · H_q1 · H_q2 · H_q3` (the SU(8)-normalized `litSeed = CCZ_mat · (H⊗H⊗H)`). Its
+infinite order is proved via the **trace route**: `tr(g_lit) = u · (1/√2)` (with `u` a root-of-unity
+phase), which is **not** an algebraic integer (`not_isIntegral_mul_left` + `not_isIntegral_inv_sqrt_two`
+below); since a finite-order matrix has an algebraic-integer trace (`trace_isIntegral_of_pow_eq_one`),
+`g_lit` has infinite order. This is the route on the critical path.
 
-This module ships the **general, reusable obstruction** (the highest-leverage Wave-1 artifact):
+This module ships the **general, reusable obstructions** behind that route:
 
   `not_rootOfUnity_of_not_isIntegral : ¬ IsIntegral ℤ α → ∀ n, 0 < n → α ^ n ≠ 1`
+  `not_isIntegral_inv_sqrt_two`, `not_isIntegral_mul_left`, `trace_isIntegral_of_pow_eq_one`
 
-via the monic integer polynomial `Xⁿ − 1` (a root of unity is integral). Independently reusable.
+via the monic integer polynomial `Xⁿ − 1` (a root of unity is integral) and `ℤ`'s integral closure in
+`ℚ`. Independently reusable.
+
+**RETAINED ALTERNATIVE — the eigenvalue route (`seedEigenvalue`, below).** An earlier candidate seed
+(DR2 / Phase-6z Gate-1 `verify_seed.py`), `g₀ = (H⊗H⊗H · CCX)² ∈ SO(8)`, has non-trivial eigenvalues
+`λ_± = (−3 ± i√7)/4` (minpoly `2x² + 3x + 2` over `ℤ`; `λ + λ̄ = −3/2 ∉ ℤ`), so `λ_±` is not an algebraic
+integer, hence not a root of unity — an *independent* infinite-order obstruction. The shipped headline
+uses the trace route above instead (it composes more cleanly with the literal-seed trace identity), so
+`seedEigenvalue` and its companions (`not_isIntegral_seedEigenvalue`, `not_rootOfUnity_seedEigenvalue`,
+`seedEigenvalue_{add,mul}_conj`, `norm_seedEigenvalue`) are **retained but off the critical path** — the
+correct, self-contained eigenvalue-route obstruction, kept for reference and reuse, NOT operative.
 
 ## Pipeline invariants
 

@@ -49,6 +49,17 @@ Two genuinely different density mechanisms for the same target (SU(8)); 6z is th
 >      irrationality, full Mathlib-decl table + gotchas, BEST/TYPICAL/WORST scope).
 >      **DR2 supersedes DR1's seed** (explicit 2-D eigenblock for the flow); both irrationality
 >      skeletons are valid.
+>
+> **⚠️ AS-SHIPPED CORRECTION (2026-05-30, post adversarial review).** The text above is the
+> *pre-implementation plan*. The **shipped proof used the DR1 seed**, not DR2: the operative seed is
+> `g_lit = CCZ·H_q1·H_q2·H_q3` (SU(8)-normalized `litSeed = CCZ_mat·(H⊗H⊗H)`), with infinite order via
+> the **trace route** `tr(g_lit) = u·(1/√2) ∉ 𝒪` (`CliffordCCZSU8SeedNotFiniteOrder`, using
+> `not_isIntegral_inv_sqrt_two` + `not_isIntegral_mul_left` + `trace_isIntegral_of_pow_eq_one`) — it
+> composes more cleanly with the literal-seed trace identity than DR2's 2-D eigenblock. The DR2
+> eigenvalue route (`seedEigenvalue = (−3±i√7)/4` + companions in `CliffordCCZSU8Irrationality`) is a
+> **correct, retained ALTERNATIVE obstruction, off the critical path** — not operative. (So Wave-6z.1's
+> table row below describing `g₀=(H⊗H⊗H·CCX)²`/`λ_±=(−3±i√7)/4` is the *alternative* skeleton; the
+> as-shipped Wave-1 core is the trace route.)
 > 3. **Read this roadmap + the four `docs/roadmaps/Phase6z/` detail docs** (progressive disclosure):
 >    `Substrate_Inventory.md`, `Mathlib_Decls.md`, `PreLean_CAS_Gates.md`, `Citations.md`.
 > 4. **Read the Phase 6y roadmap** (`docs/roadmaps/Phase6y_Roadmap.md`) — esp. the Wave-1 close block
