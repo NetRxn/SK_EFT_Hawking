@@ -102,4 +102,50 @@ theorem twoDim_grid_exists (cAr cAi cBr cBi δr δi Δr Δi : ℝ)
   obtain ⟨qm, qn, hq1, hq2⟩ := oneDim_grid_exists cAi cBi δi Δi hδi hΔi
   exact ⟨pm, pn, qm, qn, hp1, hp2, hq1, hq2⟩
 
+/-- **Scaled column existence** (the FINDER existence at the value level; thesis Lemma 5.2.38
+applied to the ε-region × disk). For ANY complex target column `(tr, ti)` and precision `ε > 0`,
+at some denominator exponent `k = Θ(log(1/ε))` there is a `ℤ[ω]` column numerator `u = p + qi`
+(real component `p = pm + pn√2`, imaginary `q = qm + qn√2`) whose cleared value `u/√2^k` is within
+`ε` of the target, AND whose Galois conjugate `u•/√2^k` lies in the unit box `[−1,1]²` (⊂ the unit
+disk, so `|u•| ≤ √2·√2^k` — the §6 total-positivity / disk membership that makes the residual `t`
+admissible). Proof: choose `k` with `√2^k ≥ max((1+√2)/ε, 1+√2)` so both the (scaled) ε-region
+half-width `ε√2^k` and the disk half-width `√2^k` clear `1+√2`, then apply `twoDim_grid_exists`.
+The Step-operator/uprightness machinery is NOT needed for this existence — scaling suffices. -/
+theorem scaledColumn_exists (tr ti ε : ℝ) (hε : 0 < ε) :
+    ∃ (k : ℕ) (pm pn qm qn : ℤ),
+      |((pm : ℝ) + pn * Real.sqrt 2) / Real.sqrt 2 ^ k - tr| ≤ ε ∧
+      |((qm : ℝ) + qn * Real.sqrt 2) / Real.sqrt 2 ^ k - ti| ≤ ε ∧
+      |((pm : ℝ) - pn * Real.sqrt 2) / Real.sqrt 2 ^ k| ≤ 1 ∧
+      |((qm : ℝ) - qn * Real.sqrt 2) / Real.sqrt 2 ^ k| ≤ 1 := by
+  have h1lt : (1 : ℝ) < Real.sqrt 2 := by
+    rw [show (1 : ℝ) = Real.sqrt 1 from (Real.sqrt_one).symm]
+    exact Real.sqrt_lt_sqrt (by norm_num) (by norm_num)
+  set C := max ((1 + Real.sqrt 2) / ε) (1 + Real.sqrt 2) with hC
+  obtain ⟨k, hk⟩ := pow_unbounded_of_one_lt C h1lt
+  set s := Real.sqrt 2 ^ k with hs
+  have hspos : 0 < s := by positivity
+  have hsC : C ≤ s := le_of_lt hk
+  have hsge : 1 + Real.sqrt 2 ≤ s := le_trans (le_max_right _ _) hsC
+  have hεs : 1 + Real.sqrt 2 ≤ ε * s := by
+    have h := le_trans (le_max_left _ _) hsC
+    rw [div_le_iff₀ hε] at h; linarith
+  have hes_nn : (0 : ℝ) ≤ ε * s := by positivity
+  obtain ⟨pm, pn, qm, qn, hp1, hp2, hq1, hq2⟩ :=
+    twoDim_grid_exists (s * tr) (s * ti) 0 0 (ε * s) (ε * s) s s hεs hεs hsge hsge
+  refine ⟨k, pm, pn, qm, qn, ?_, ?_, ?_, ?_⟩
+  · rw [show ((pm : ℝ) + pn * Real.sqrt 2) / s - tr
+          = ((pm + pn * Real.sqrt 2) - tr * s) / s from by field_simp,
+        abs_div, abs_of_pos hspos, div_le_iff₀ hspos, mul_comm tr s]
+    calc |(pm : ℝ) + pn * Real.sqrt 2 - s * tr| ≤ ε * s / 2 := hp1
+      _ ≤ ε * s := by linarith
+  · rw [show ((qm : ℝ) + qn * Real.sqrt 2) / s - ti
+          = ((qm + qn * Real.sqrt 2) - ti * s) / s from by field_simp,
+        abs_div, abs_of_pos hspos, div_le_iff₀ hspos, mul_comm ti s]
+    calc |(qm : ℝ) + qn * Real.sqrt 2 - s * ti| ≤ ε * s / 2 := hq1
+      _ ≤ ε * s := by linarith
+  · rw [abs_div, abs_of_pos hspos, div_le_iff₀ hspos, one_mul]
+    have := hp2; rw [sub_zero] at this; linarith
+  · rw [abs_div, abs_of_pos hspos, div_le_iff₀ hspos, one_mul]
+    have := hq2; rw [sub_zero] at this; linarith
+
 end SKEFTHawking.RossSelinger.GridProblem
