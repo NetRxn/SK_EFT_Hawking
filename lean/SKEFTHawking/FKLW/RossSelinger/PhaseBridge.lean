@@ -278,4 +278,32 @@ theorem toComplexMat_gateMatrix_eq_X :
      rw [show Complex.I ^ 4 = 1 from by rw [show (4:ℕ)=2+2 from rfl, pow_add, Complex.I_sq]; ring] <;>
      simp only [one_mul, hsqrt])
 
+open scoped Matrix in
+open SKEFTHawking.FKLW.GenericSU2 in
+/-- **Y phase-bridge identity**: `toComplexMat (gateMatrix Y) = i • ρ_CliffT (of0·of1⁴·of0·of1⁴)`
+(the 4-matrix product `H_SU·T_SU⁴·H_SU·T_SU⁴ = !![0,-1;1,0]`). -/
+theorem toComplexMat_gateMatrix_eq_Y :
+    toComplexMat (gateMatrix CliffordTGate.Y)
+      = gatePhase CliffordTGate.Y • ((ρ_CliffT (gateWord CliffordTGate.Y) :
+          ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have hI5 : Complex.I ^ 5 * (↑(Real.sqrt 2) : ℂ)⁻¹ ^ 2 * 2 = Complex.I := by
+    rw [show Complex.I ^ 5 = Complex.I from by
+        rw [show (5:ℕ) = 2 + 2 + 1 from rfl, pow_add, pow_add, Complex.I_sq]; ring,
+      mul_assoc, show ((↑(Real.sqrt 2) : ℂ)⁻¹ ^ 2 * 2) = 1 from by
+        rw [inv_pow, show (↑(Real.sqrt 2):ℂ)^2 = 2 from by
+          rw [← Complex.ofReal_pow, Real.sq_sqrt (by norm_num : (0:ℝ) ≤ 2)]; norm_num]; norm_num,
+      mul_one]
+  have hcoe : ((ρ_CliffT (gateWord CliffordTGate.Y) :
+      ↥(Matrix.specialUnitaryGroup (Fin 2) ℂ)) : Matrix (Fin 2) (Fin 2) ℂ)
+      = H_SU_mat * T_SU_mat ^ 4 * H_SU_mat * T_SU_mat ^ 4 := by
+    rw [show gateWord CliffordTGate.Y = fgH * fgT ^ 4 * fgH * fgT ^ 4 from rfl,
+      map_mul, map_mul, map_mul, Submonoid.coe_mul, Submonoid.coe_mul, Submonoid.coe_mul,
+      ρ_CliffT_of_0, ρ_CliffT_fgT_pow]
+    rfl
+  rw [show gatePhase CliffordTGate.Y = Complex.I from rfl, hcoe, T_SU_mat_pow_four, H_SU_mat,
+      toComplexMat_gateMatrix_Y, Matrix.eta_fin_two (Complex.I • _)]
+  congr 1 <;>
+    (simp only [Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero,
+      Matrix.cons_val_one, Matrix.of_apply, smul_eq_mul] <;> ring_nf <;> simp only [hI5])
+
 end SKEFTHawking.RossSelinger
