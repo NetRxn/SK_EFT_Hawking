@@ -19,7 +19,13 @@ Braiding generators:
 The asymmetry σ₂ ≠ σ₃ (different states in the 2×2 block)
 is what makes the representation genuinely 3-dimensional.
 
-All arithmetic over K = Q(ζ₅, √φ). Zero sorry.
+All arithmetic over K = Q(ζ₅, √φ), on 3×3 `Mat3K` matrices. Zero sorry. These
+identities are kernel-checked modulo `native_decide` (ADR-002 #2): 3×3 matrix
+products over the degree-8 two-level tower far exceed the `ext`/`powerTable`
+heartbeat budget (Pipeline Invariant #10 forbids raising `maxHeartbeats`), so the
+ADR-001 §3-A symbolic template is not viable here. The SU(3)-density result is
+established literature (FLW 2002); the formalization, not the fact, is the
+contribution (ADR-002 Q3).
 
 References:
   Freedman, Larsen, Wang, Comm. Math. Phys. 227/228 (2002)
