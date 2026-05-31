@@ -39,7 +39,7 @@ def fibFusion (a b c : Fin 2) : ℕ :=
   if a = 0 ∨ b = 0 then (if a + b = c then 1 else 0)
   else if c = 0 ∨ c = 1 then 1 else 0
 
-theorem fib_tau_sq : fibFusion 1 1 0 = 1 ∧ fibFusion 1 1 1 = 1 := by native_decide
+theorem fib_tau_sq : fibFusion 1 1 0 = 1 ∧ fibFusion 1 1 1 = 1 := by decide
 
 /-- Fibonacci quantum dimensions: d_1 = 1, d_τ = φ. -/
 def fibDim : Fin 2 → QSqrt5
