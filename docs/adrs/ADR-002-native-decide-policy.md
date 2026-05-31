@@ -364,3 +364,34 @@ closed-form `buildPowerTable`-entry characterisation lemma (proved once by induc
 lemma-proving, the generalization of ADR-001 Unit 1b) **or (iii)** the Route 1′-a coeff-simproc. Both are
 genuine engineering, not a quick experiment — which confirms the deferral rather than reversing it. (Scratch
 deleted; no source/build/count changes.)
+
+### Path (ii) bounded crack 2026-05-31 — 🟢 GREEN (recurrence works at degree 8)
+
+Path (ii) was prototyped and **succeeds**. The recon for this had surfaced that ADR-001 Unit 1b already
+shipped the *generic* (any-`n`) machinery in `PolyQuotQCharacterisation.lean`:
+`buildPowerTable_getElem!_lt` (base rows `m < n` = unit vectors) and **`buildPowerTable_getElem!_step`**
+(`[n+j+1]! = shiftByXArr r [n+j]!`, the recurrence) — both kernel-pure, proved by a from-scratch induction
+over `Nat.fold` via the local `Nat.fold_push_preserve` invariant. **My RED gate failed for the wrong reason:**
+it proved each entry by `show <k-deep nested shiftByXArr>`, forcing the kernel to discharge a depth-7 `isDefEq`
+unfold of `Nat.fold`. The shipped recurrence instead rewrites *propositionally* (`rw`) — it never unfolds the
+fold — a fundamentally cheaper mechanism I had not tried.
+
+In a throwaway scratch (deleted) I added the one missing companion — the **boundary** row `n` (= first fold
+output, covered by neither base nor step), `buildPowerTable_getElem!_boundary : [n]! = shiftByXArr r [n-1]!`,
+whose only `show`-defeq is **depth 1** — and reproved the *exact* entry the gate died on:
+`(buildPowerTable QCyc16.reduction)[8]![0]! = -1`. Authoritative `lake build` green (8252 jobs);
+**`#print axioms` on both the boundary lemma and the entry = `[propext, Classical.choice, Quot.sound]`** — no
+`Lean.ofReduceBool`, no `native_decide`, no `maxHeartbeats`, no `sorry`. The chained-recurrence stress test
+(`rw`-ing rows 14→8 down to a 7-deep `shiftByXArr` stack) also peeled cleanly with **zero heartbeat timeout**
+at every step — exactly where the defeq `show` blew up.
+
+**Conclusion: candidate (ii) is the path, and Route 1′-a (the simproc) is NOT needed for single-level
+high-degree fields.** A real degree-n hardening needs only: (1) ship the boundary lemma generically into
+`PolyQuotQCharacterisation.lean` (drop the n=8 specialization; it mirrors the existing `_step` proof), (2) a
+small `simp`-set / `macro` wrapper that, for a target type, chains `_step` down through `_boundary` to `_lt`
+and evaluates the `shiftByXArr` stack — i.e. **Route 1′-b is now de-risked and viable.** The earlier
+"candidate (i) eliminated / both paths are real engineering" framing stands, but (ii)'s engineering is now
+*scoped and proven feasible*, not speculative. Route-1′ stays **deferred** (the trigger conditions are
+unchanged — these modules verify established literature), but if a trigger fires, the build is (ii)/1′-b, and
+this prototype is the starting point. Path (iii)/the simproc and its deep-research question are **not needed**.
+(Scratch deleted; no source/build/count changes to the committed tree.)
