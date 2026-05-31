@@ -1901,6 +1901,10 @@ import SKEFTHawking.FKLW.MukhopadhyayCCZConjugation
 -- channelRep + channelSde2 1 = 0. The rationality-conditional Fact-3.14 lift (sde2ℂ_half_sum_le) is the
 -- crux infra for the unconditional T^of bound. Non-vacuous (sde2ℂ (1/2) = 1).
 import SKEFTHawking.FKLW.MukhopadhyayMatrixSde2
+-- Phase 6x′ Phase 2 (B) (2026-05-30): the hC bridge — Cliffords leave the channelSde2 measure unchanged
+-- (channelSde2_clifford_le), via matrixSde2_signedPerm_mul_le (left-mult by a signed perm permutes/
+-- sign-flips entries) + the gateMatrix↔cliffordOnlyGenMap bridge. Toward the unconditional T^of bound.
+import SKEFTHawking.FKLW.MukhopadhyayToffoliUnconditional
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
