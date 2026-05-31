@@ -1,8 +1,26 @@
-# `native_decide` cleanup — execution checklist (prep)
+# `native_decide` cleanup — execution checklist
 
-*Scouting + groundwork produced 2026-05-29. **Execution gated:** do NOT start conversions until the
-parallel Phase 6x closeout lands (avoids Lean-file collisions). This document is read-only prep — no
-source was modified to produce it.*
+*Scouting 2026-05-29; **EXECUTED 2026-05-30** (ADR-002 → ACCEPTED).*
+
+## ✅ Outcome (2026-05-30)
+
+**decl-closure 852 → 629 (−223 kernel-pure); call sites 1036 → 697 (−339); files 115 → 53 (−62).**
+P4 gate PASS; Invariant #15 clean; full `lake build SKEFTHawking` green throughout (~13 commits,
+`e874d017` re-baseline → ADR/validation finalization). **Bucket B:** 63 modules → kernel `decide` (incl the
+A(1)-Ext/Steenrod F2-matrix publication D2/L2 stack as a free win — probe-first §0 caught it was kernel-
+decidable despite the cyclotomic-looking name; and the GenerationConstraint L2 headline). **Category A
+hardening:** the D4 flagship **FibonacciBraiding** = 20/30 QCyc5 theorems kernel-pure via the §3-A
+ext/powerTable file-local simp set (+ `FibonacciMTC.fib_tau_sq` → decide). **Documented native_decide**
+(ADR-002 #2): the QCyc5Ext two-level-tower modules (FibonacciUniversality, FibonacciQutrit), QSqrt5
+(FibonacciMTC F-symbols), the heartbeat-bound FibonacciBraiding braid/σ₂/s1s2_cu identities, and the
+Route-1′-gated high-degree QCyc16/QCyc40 (Ising/D6) modules. **Key finding:** the ext/powerTable template is
+viable for base powerTable-equipped fields (QCyc5) but NOT the higher towers (QCyc5Ext/QSqrt5/QCyc16/40 or
+matrices over them) without the deferred Route-1′ metaprogram. Full record: ADR-002 "2026-05-30 execution
+outcome".
+
+---
+
+*Original prep below (historical).*
 
 **Reads with:** [ADR-002](adrs/ADR-002-native-decide-policy.md) (the policy), [ADR-001](adrs/ADR-001-commring-qcyc5ext-roadmap.md)
 (the kernel-pure QCyc machinery that makes Category-A tractable), [`native_decide_triage.md`](native_decide_triage.md)
