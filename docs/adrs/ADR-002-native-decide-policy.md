@@ -179,10 +179,10 @@ The cleanup was executed in an isolated `/goal` session against the post-Phase-6
 (115 files / 1036 `native_decide` call sites / **852** declarations carrying the `native_decide`
 compiler-trust axiom in their transitive closure).
 
-**Result: decl-closure 852 → 640 (−212 declarations now kernel-pure); call sites 1036 → 712; files
+**Result: decl-closure 852 → 587 (−265 declarations now kernel-pure); call sites 1036 → 712; files
 115 → 53.** (The raw call-site count fell less than the decl count because the cleanup *added* documenting
-comments that themselves contain the literal word `native_decide`; the **decl-closure 640** is the
-authoritative trust-surface metric — 212 declarations no longer reach a `native_decide` compiler-trust
+comments that themselves contain the literal word `native_decide`; the **decl-closure 587** is the
+authoritative trust-surface metric — 265 declarations no longer reach a `native_decide` compiler-trust
 axiom.) P4 gate PASS; Invariant #15 clean; full `lake build SKEFTHawking` green throughout; Stage-13
 adversarial review GREEN-WITH-RECOMMENDED.
 

@@ -4,7 +4,7 @@
 
 ## ✅ Outcome (2026-05-30)
 
-**decl-closure 852 → 640 (−212 kernel-pure); call sites 1036 → 712; files 115 → 53 (−62).**
+**decl-closure 852 → 587 (−265 kernel-pure); call sites 1036 → 712; files 115 → 53 (−62).**
 P4 gate PASS; Invariant #15 clean; full `lake build SKEFTHawking` green throughout (~13 commits,
 `e874d017` re-baseline → ADR/validation finalization). **Bucket B:** 63 modules → kernel `decide` (incl the
 A(1)-Ext/Steenrod F2-matrix publication D2/L2 stack as a free win — probe-first §0 caught it was kernel-
