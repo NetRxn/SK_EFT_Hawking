@@ -1905,6 +1905,11 @@ import SKEFTHawking.FKLW.MukhopadhyayMatrixSde2
 -- (channelSde2_clifford_le), via matrixSde2_signedPerm_mul_le (left-mult by a signed perm permutes/
 -- sign-flips entries) + the gateMatrix↔cliffordOnlyGenMap bridge. Toward the unconditional T^of bound.
 import SKEFTHawking.FKLW.MukhopadhyayToffoliUnconditional
+-- Phase 6x′ Phase 2 (C foundation) (2026-05-30): the entry-factorization substrate for the channelRep CCZ
+-- structure (Theorem 3.8) — kronSU8_bitIso8_apply (general), index 7 = bitIso8(1,1,1), the per-qubit
+-- factorizations (kronK8 v)₇₇ = ∏(σ_vᵢ)₁₁ and (P_r P_s)₇₇ = ∏(σ_rᵢ σ_sᵢ)₁₁, and the Hermitian
+-- conjugate-swap (σ_b σ_a)₁₁ = conj((σ_a σ_b)₁₁). The half-integer headline follows.
+import SKEFTHawking.FKLW.MukhopadhyayCCZChannelRep
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
