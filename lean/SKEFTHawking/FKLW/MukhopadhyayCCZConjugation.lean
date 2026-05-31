@@ -18,18 +18,16 @@ rep of `CCZ`. Two immediate consequences shipped here:
     tensor) Pauli under conjugation — these are the `2^{2n−3} = 8` rows of `Ĉ_{CCZ}` that are a single
     `+1` (Theorem 3.8.4).
 
-## Scope (off-ramp, Phase 6x′ roadmap "Highest-risk step")
+## Scope — C.1 substrate (the downstream chain is now SHIPPED)
 
-This file ships the C.1 substrate. The **full** Theorem 3.8 row structure for the *off-diagonal*
-(`X`/`Y`-containing) Paulis — `Ĉ_{CCZ}` rows of four `±1/2` entries — and the downstream `hCCZ`
-(`sde₂(Ĉ_{CCZ}·M) ≤ sde₂(M) + 1`), Lemma 3.10 (`ℤ[1/2]` entries), and the consequent *unconditional*
-`T^of(U) ≥ sde₂(Û)` (discharging the `PARAMETRIC` hypotheses of `toffoliCost_ge_measure`) remain a
-**documented residual**: they require both the 64-Pauli entry-table computation (Theorem 3.8, DR-rated
-"Medium", with delicate complex-entry bookkeeping) and a total `sde₂`-valued measure on `ℂ`-matrices
-(extracting dyadic exponents from arbitrary `ℂ` entries). The Phase-6x′ capstone (`cliffordOnly_not_dense`,
-the 6z CCZ-essentiality converse) is the shipped headline; the unconditional `T^of` bound is a marginal
-`PARAMETRIC → unconditional` upgrade on a non-tight lower bound (full minimality is out of scope per the
-Mukhopadhyay dossier regardless), so it is deferred rather than ground out.
+This file ships the C.1 entrywise diagonal-conjugation substrate. The downstream chain it feeds is
+**complete** (Phase 6x′ Phase 2, 2026-05-30): Theorem 3.8 as the half-integer statement
+`channelRep_CCZ_isHalfInt` (`MukhopadhyayCCZChannelRep`, via the `CCZ = 1 − 2|111⟩⟨111|` trace
+decomposition rather than the literal four-`±1/2` row count), `hCCZ` = `channelSde2_ccz_le`
+(`MukhopadhyayHCCZ`), Lemma 3.10 = `channelRep_interp_isRat` (`ℤ[1/2]` entries), and the **unconditional**
+`T^of(U) ≥ sde₂(Û)` = `channelSde2_le_toffoliCost` (`MukhopadhyayToffoliUnconditional`, discharging the
+`PARAMETRIC` hypotheses of `toffoliCost_ge_measure` at `μ = matrixSde2 ∘ channelRep`). Full Toffoli
+MINIMALITY (no shorter circuit; MITM / Conjecture 4.8) remains permanently out of scope.
 
 PUBLIC math layer only.
 
