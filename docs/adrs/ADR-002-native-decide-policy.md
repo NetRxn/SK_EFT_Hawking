@@ -349,3 +349,18 @@ unfolding; or (iii) Route 1′-a's coeff-level simproc, which never materializes
 its job: it converted a multi-session metaprogram gamble into a known, bounded sub-problem (kill the
 table-entry defeq blowup first), for ~1 session of work — and corrected a wrong assumption before any code
 was committed. A re-prototype on the table-entry lemma is the next concrete step if/when a trigger fires.
+
+### Follow-up probe 2026-05-31 — candidate (i) ELIMINATED
+
+A second scratch probe tried the three "cheap" tactics directly on a single deg-8 entry
+(`(buildPowerTable QCyc16.reduction)[8]![0]! = -1`): `decide`, `norm_num [buildPowerTable, shiftByXArr,
+reduction]`, and `simp [buildPowerTable, shiftByXArr, reduction]`. **All three failed.** `decide` got stuck
+on `buildPowerTable`'s `Nat.fold`/`Array.push`/`Array.ofFn` machinery ("did not reduce to isTrue/isFalse" —
+the ℚ-wall plus array-bang-index non-reduction); `norm_num` and `simp` both unfold the table but leave an
+unsimplified materialized-array goal (`Nat.fold` is opaque to them). So **candidate (i) is dead**: there is
+no one-liner for the table entry — the QCyc5 template only worked because its `show <nested shiftByXArr>`
+spelled out the fold by hand, which is exactly the deg-8 defeq blowup. The viable paths narrow to **(ii)** a
+closed-form `buildPowerTable`-entry characterisation lemma (proved once by induction on the fold — real
+lemma-proving, the generalization of ADR-001 Unit 1b) **or (iii)** the Route 1′-a coeff-simproc. Both are
+genuine engineering, not a quick experiment — which confirms the deferral rather than reversing it. (Scratch
+deleted; no source/build/count changes.)
