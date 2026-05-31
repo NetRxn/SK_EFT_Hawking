@@ -28,6 +28,7 @@ import SKEFTHawking.FKLW.CliffordCCZSU8CNOTConj
 
 set_option autoImplicit false
 set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
 
 namespace SKEFTHawking.FKLW.MukhopadhyayCCZ
 
@@ -70,5 +71,87 @@ theorem pauliProd11_conj_swap (a b : Fin 4) :
   have h : pauli4 b * pauli4 a = (pauli4 a * pauli4 b)ᴴ := by
     rw [Matrix.conjTranspose_mul, pauli4_hermitian, pauli4_hermitian]
   rw [h, Matrix.conjTranspose_apply, starRingEnd_apply]
+
+/-! ## C.3 — Gaussian-integer structure of the per-qubit entries -/
+
+/-- A complex number is a **Gaussian integer** if it is `m + n·i` with `m, n ∈ ℤ`. -/
+def IsGaussianInt (z : ℂ) : Prop := ∃ m n : ℤ, z = (m : ℂ) + (n : ℂ) * Complex.I
+
+theorem isGaussianInt_zero : IsGaussianInt 0 := ⟨0, 0, by simp⟩
+theorem isGaussianInt_one : IsGaussianInt 1 := ⟨1, 0, by simp⟩
+theorem isGaussianInt_neg_one : IsGaussianInt (-1) := ⟨-1, 0, by push_cast; ring⟩
+theorem isGaussianInt_I : IsGaussianInt Complex.I := ⟨0, 1, by simp⟩
+theorem isGaussianInt_neg_I : IsGaussianInt (-Complex.I) := ⟨0, -1, by push_cast; ring⟩
+
+theorem isGaussianInt_add {z w : ℂ} (hz : IsGaussianInt z) (hw : IsGaussianInt w) :
+    IsGaussianInt (z + w) := by
+  obtain ⟨a, b, rfl⟩ := hz
+  obtain ⟨c, d, rfl⟩ := hw
+  exact ⟨a + c, b + d, by push_cast; ring⟩
+
+theorem isGaussianInt_mul {z w : ℂ} (hz : IsGaussianInt z) (hw : IsGaussianInt w) :
+    IsGaussianInt (z * w) := by
+  obtain ⟨a, b, rfl⟩ := hz
+  obtain ⟨c, d, rfl⟩ := hw
+  refine ⟨a * c - b * d, a * d + b * c, ?_⟩
+  push_cast
+  rw [Complex.ext_iff]
+  refine ⟨?_, ?_⟩ <;>
+    simp [Complex.add_re, Complex.add_im, Complex.mul_re, Complex.mul_im, Complex.I_re,
+      Complex.I_im]
+
+/-- The real part of a Gaussian integer is an integer. -/
+theorem isGaussianInt_re_int {z : ℂ} (h : IsGaussianInt z) : ∃ k : ℤ, z.re = (k : ℝ) := by
+  obtain ⟨m, n, rfl⟩ := h
+  exact ⟨m, by simp [Complex.add_re, Complex.mul_re, Complex.I_re, Complex.I_im]⟩
+
+/-- Each single-qubit Pauli matrix entry is a Gaussian integer (`∈ {0, ±1, ±i}`). -/
+theorem pauli4_entry_isGaussianInt (a : Fin 4) (i j : Fin 2) : IsGaussianInt (pauli4 a i j) := by
+  fin_cases a <;> fin_cases i <;> fin_cases j <;>
+    simp only [pauli4, SKEFTHawking.σ_x, SKEFTHawking.σ_y, SKEFTHawking.σ_z, Matrix.cons_val',
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons, Matrix.head_fin_const,
+      Matrix.cons_val_fin_one, Matrix.empty_val', Matrix.of_apply, Matrix.one_apply_eq,
+      Matrix.one_apply_ne, Ne, Matrix.one_apply] <;>
+    first
+      | exact isGaussianInt_zero
+      | exact isGaussianInt_one
+      | exact isGaussianInt_neg_one
+      | exact isGaussianInt_I
+      | exact isGaussianInt_neg_I
+
+/-- The single-qubit product entry `(σ_a σ_b)₁₁` is a Gaussian integer. -/
+theorem pauliProd11_isGaussianInt (a b : Fin 4) : IsGaussianInt ((pauli4 a * pauli4 b) 1 1) := by
+  rw [Matrix.mul_apply, Fin.sum_univ_two]
+  exact isGaussianInt_add
+    (isGaussianInt_mul (pauli4_entry_isGaussianInt a 1 0) (pauli4_entry_isGaussianInt b 0 1))
+    (isGaussianInt_mul (pauli4_entry_isGaussianInt a 1 1) (pauli4_entry_isGaussianInt b 1 1))
+
+/-- **`(P_r · P_s)₇₇` is a Gaussian integer** (product of three per-qubit Gaussian entries). -/
+theorem kronK8_mul_77_isGaussianInt (r s : Fin 4 × Fin 4 × Fin 4) :
+    IsGaussianInt ((kronK8 r * kronK8 s) 7 7) := by
+  rw [kronK8_mul_apply_77]
+  exact isGaussianInt_mul
+    (isGaussianInt_mul (pauliProd11_isGaussianInt r.1 s.1) (pauliProd11_isGaussianInt r.2.1 s.2.1))
+    (pauliProd11_isGaussianInt r.2.2 s.2.2)
+
+/-! ## C.4 — `(P_v)₇₇` is an integer -/
+
+/-- Each single-qubit Pauli `(1,1)` entry is an integer (`∈ {1, 0, -1}`). -/
+theorem pauli4_11_int (a : Fin 4) : ∃ k : ℤ, pauli4 a 1 1 = (k : ℂ) := by
+  fin_cases a <;>
+    simp only [pauli4, SKEFTHawking.σ_x, SKEFTHawking.σ_y, SKEFTHawking.σ_z, Matrix.cons_val',
+      Matrix.cons_val_one, Matrix.head_cons, Matrix.head_fin_const, Matrix.cons_val_fin_one,
+      Matrix.empty_val', Matrix.of_apply, Matrix.one_apply_eq]
+  · exact ⟨1, by simp⟩
+  · exact ⟨0, by simp⟩
+  · exact ⟨0, by simp⟩
+  · exact ⟨-1, by push_cast; ring⟩
+
+/-- **`(P_v)₇₇` is an integer** (product of three integer single-qubit `(1,1)` entries). -/
+theorem kronK8_77_int (v : Fin 4 × Fin 4 × Fin 4) : ∃ k : ℤ, kronK8 v 7 7 = (k : ℂ) := by
+  obtain ⟨k1, h1⟩ := pauli4_11_int v.1
+  obtain ⟨k2, h2⟩ := pauli4_11_int v.2.1
+  obtain ⟨k3, h3⟩ := pauli4_11_int v.2.2
+  exact ⟨k1 * k2 * k3, by rw [kronK8_apply_77, h1, h2, h3]; push_cast; ring⟩
 
 end SKEFTHawking.FKLW.MukhopadhyayCCZ
