@@ -18,7 +18,7 @@ blocked Path B of `docs/adrs/ADR-001-commring-qcyc5ext-roadmap.md`.
 ## Why this exists
 
 `PolyQuotQ.buildPowerTable` is implemented via `Nat.fold` + `Array.push` +
-`Array.ofFn` for `native_decide`-evaluation performance. Each of those
+`Array.ofFn` for `decide`-evaluation performance. Each of those
 constructs is simp-opaque for symbolic indices:
 
 - `(Array.ofFn f)[k.val]!` — outer layer; resolved by `Array.getElem!_ofFn`
@@ -61,7 +61,7 @@ now structurally unblocked.
 | 5 | optional | Higher-degree generalisations (QCyc40Ext, QCyc80Ext, etc.) |
 
 The downstream `Mat5K.mul_assoc` (currently blocked, forcing
-downstream consumers to use chunked-`native_decide` bypass) becomes
+downstream consumers to use chunked-`decide` bypass) becomes
 reachable after Unit 4.
 -/
 
@@ -235,7 +235,7 @@ combines with `Array.getElem!_ofFn` (Unit 1a) to discharge the outer Array.ofFn
 of the materialised `outArr`. Together with the inner-layer
 `buildPowerTable_getElem!_lt` / `_step` lemmas (above), this enables
 abstract-algebra reasoning over `PolyQuotQ`-based number fields without
-`native_decide`.
+`decide`.
 
 This is the Unit 1c piece called for in
 `docs/adrs/ADR-001-commring-qcyc5ext-roadmap.md` §Unit 1 option (1a):

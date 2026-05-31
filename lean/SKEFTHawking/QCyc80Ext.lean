@@ -110,7 +110,7 @@ def ofQCyc80 (x : QCyc80) : QCyc80Ext := ⟨x, 0⟩
 -- ARCHITECTURALLY INFEASIBLE at this degree — see QCyc80.lean module
 -- docstring § "Algebraic-identity verification: architecturally
 -- infeasible at degree 32". The QCyc80Ext multiplication unpacks into
--- 4 QCyc80 products, each of which has the degree-32 native_decide
+-- 4 QCyc80 products, each of which has the degree-32 decide
 -- pathology (kernel & native both fail in usable time).
 
 /-- φ embedded in K (as a "real" element). -/
@@ -172,7 +172,7 @@ Algebraic-identity theorems (`w_sq`, `w_ne_zero`, `phi_inv_sqrt_sq`,
 this degree — see `QCyc80.lean` module docstring § "Algebraic-identity
 verification: architecturally infeasible at degree 32". Substrate correctness
 is established by construction + Python pipeline + QCyc40Ext ancestor's
-native_decide-verified analogues at degree-32 Q(ζ_40, √φ).
+decide-verified analogues at degree-32 Q(ζ_40, √φ).
 
 # Substantive substrate-upgrade content
 

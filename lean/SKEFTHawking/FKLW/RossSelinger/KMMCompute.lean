@@ -5,7 +5,7 @@ Copyright (c) 2026 John Roehm. All rights reserved.
 
 Re-points the KMM reduction onto the **runtime** ring `ZOmegaSqrt2` so the
 algorithm's per-step machinery actually *computes* (kernel `decide` /
-`native_decide`), as opposed to the noncomputable `Classical.choose`-gated
+`decide`), as opposed to the noncomputable `Classical.choose`-gated
 `KMM.sde`/`chooseReduction`/`kmmReduce` in `KMM.lean`.
 
   * `reduceStep M k := H · Tᵏ · M` — the KMM left-multiplication step.
@@ -19,7 +19,7 @@ algorithm's per-step machinery actually *computes* (kernel `decide` /
     reconstruction word left-inverts the step (`interp (reconWordC k) ·
     reduceStep M k = M`), inherited from `interp_reconWordC_mul`.
 
-The `decide`/`native_decide` examples at the end witness that `sdeC` and the
+The `decide`/`decide` examples at the end witness that `sdeC` and the
 selector genuinely reduce in the kernel over the runtime ring.
 
 ## References
@@ -28,7 +28,7 @@ selector genuinely reduce in the kernel over the runtime ring.
 
 ## Pipeline invariants
 
-- **#10** (no `maxHeartbeats`): respected. `native_decide` in the demonstration
+- **#10** (no `maxHeartbeats`): respected. `decide` in the demonstration
   examples is the project-standard compiler-trust path for finite kernel
   computation; the library declarations use only `decide` / kernel reduction.
 - **#15** (no new project-local axioms): respected.
@@ -81,7 +81,7 @@ example : sdeC (1 : Mat2) = 0 := by decide
 
 /-- `sdeC (H) = 1`: the Hadamard's `1/√2` entries have denominator exponent `1`.
 Demonstrates that `sdeC` genuinely reduces over the runtime quotient ring. -/
-example : sdeC (gateMatrix .H) = 1 := by native_decide
+example : sdeC (gateMatrix .H) = 1 := by decide
 
 end KMM
 
