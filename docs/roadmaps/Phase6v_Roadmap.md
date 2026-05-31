@@ -270,4 +270,4 @@ Phase 6v wave order (per strategy synthesis §6):
 - **Bundle Readiness Heatmap:** `docs/BUNDLE_READINESS_HEATMAP.md`
 - **Phase 6w sibling roadmap:** `docs/roadmaps/Phase6w_Roadmap.md`
 - **Predecessor Phase 6q close:** memory entry `project_phase6q_complete_2026_05_23`
-- **Predecessor Phase 6t close:** `docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`
+- **Predecessor Phase 6t close:** `temporary/working-docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`

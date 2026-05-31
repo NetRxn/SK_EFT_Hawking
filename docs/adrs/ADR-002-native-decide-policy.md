@@ -11,7 +11,7 @@
   - *History:* Accepted 2026-05-28 → DRAFT 2026-05-29 (vetting) → ACCEPTED 2026-05-30 (executed).
 - **Deciders:** John Roehm (project owner); investigation + draft by Claude.
 - **Context source:** P4 `axiom_closure_allowlist` gate (`docs/AI-Defect-Defense-Layer.md`, commit `1798633`) +
-  triage report (`docs/native_decide_triage.md`, commit `e021fe0`) + this investigation.
+  triage report (`temporary/working-docs/native_decide_triage.md`, commit `e021fe0`) + this investigation.
 - **Related:** [ADR-001](ADR-001-commring-qcyc5ext-roadmap.md) (QCyc5 CommRing / ext roadmap — supplies the
   kernel-pure machinery used below); Pipeline Invariant #15 (no undocumented project axioms).
 
@@ -130,7 +130,7 @@ the Route-1′ metaprogram.
 
 ## 2026-05-29 vetting addendum (status → DRAFT)
 
-Scouting the execution plan (companion: `docs/native_decide_cleanup_checklist.md`) produced two findings
+Scouting the execution plan (companion: `temporary/working-docs/native_decide_cleanup_checklist.md`) produced two findings
 that revise the path, so the ADR is back to DRAFT until re-vetted:
 
 1. **Base-type readiness (decisive).** Of the `QCyc*`/`QSqrt*` family, **only `QCyc5`/`QCyc5Ext` have the

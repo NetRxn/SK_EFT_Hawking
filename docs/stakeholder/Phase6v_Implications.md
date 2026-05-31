@@ -5,7 +5,7 @@
 **Status:** Phase 6v SUBSTANTIVELY COMPLETE post Wave 6v.9 finish-strengthening pass — All 7 original waves + Sub-wave 8.C-8.H strengthening pass + Wave 6v.9 finish-strengthening pass (sub-waves 9.A–9.E + 3-round adversarial review with substantive closes for all REQUIREDs + 3 advisories) all shipped at GREEN-WITH-ADVISORIES bar. D6 ("Formally Verified Fault-Tolerant Quantum Computation Substrate") bundle CREATED as the 15th publication target.
 **Date:** 2026-05-26 (Phase 6v.9 close)
 **Classification:** Research Overview — For Technical and Non-Technical Stakeholders
-**Prerequisite:** Phase 6q DKM transport bootstrap close (memory entry `project_phase6q_complete_2026_05_23`) + Phase 6t quantitative Solovay-Kitaev close (`docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`); the Wave Execution Pipeline; the Phase 6v/6w strategy synthesis §3.5 (15th-bundle authorization).
+**Prerequisite:** Phase 6q DKM transport bootstrap close (memory entry `project_phase6q_complete_2026_05_23`) + Phase 6t quantitative Solovay-Kitaev close (`temporary/working-docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`); the Wave Execution Pipeline; the Phase 6v/6w strategy synthesis §3.5 (15th-bundle authorization).
 
 ---
 
@@ -116,4 +116,4 @@ The D6 bundle creates the structural home for the FT-QC frontier within the proj
 - **Paper-draft mapping:** [`docs/PAPER_DRAFT_MAPPING.md`](../PAPER_DRAFT_MAPPING.md) (D6 entry added)
 - **Bundle readiness heatmap:** [`docs/BUNDLE_READINESS_HEATMAP.md`](../BUNDLE_READINESS_HEATMAP.md) (D6 row added)
 - **Phase 6q closure (predecessor):** memory entry `project_phase6q_complete_2026_05_23` + `docs/stakeholder/Phase6q_Implications.md`.
-- **Phase 6t closure (predecessor):** [`docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`](../PHASE6T_QUANTITATIVE_SK_COMPLETE.md).
+- **Phase 6t closure (predecessor):** [`temporary/working-docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`](../../temporary/working-docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md).
