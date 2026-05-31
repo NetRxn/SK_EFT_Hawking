@@ -13,7 +13,7 @@ The fusion rule is a single computable formula:
   N_{ij}^m = 1 iff |i-j| <= m <= min(i+j, 2k-i-j) AND i+j+m even
 
 All theorems are decidable for fixed k, making them ideal for
-`native_decide` / `decide`.
+`decide` / `decide`.
 
 References:
   Verlinde, Nucl. Phys. B 300, 360 (1988)
@@ -50,26 +50,26 @@ theorem su2k1_object_count : Fintype.card (Fin 2) = 2 := by decide
 /-- V_0 is the identity: V_0 tensor V_j = V_j. -/
 theorem su2k1_unit_fusion (j m : Fin 2) :
     su2kFusion 1 0 j m = if j = m then 1 else 0 := by
-  native_decide +revert
+  decide +revert
 
 /-- V_1 tensor V_1 = V_0 (Z/2 fusion). -/
 theorem su2k1_v1_squared :
-    su2kFusion 1 1 1 0 = 1 := by native_decide
+    su2kFusion 1 1 1 0 = 1 := by decide
 
 /-- V_1 tensor V_1 has no V_1 component. -/
 theorem su2k1_v1_squared_no_v1 :
-    su2kFusion 1 1 1 1 = 0 := by native_decide
+    su2kFusion 1 1 1 1 = 0 := by decide
 
 /-- Fusion is commutative: N_{ij}^m = N_{ji}^m. -/
 theorem su2k1_fusion_comm (i j m : Fin 2) :
     su2kFusion 1 i j m = su2kFusion 1 j i m := by
-  native_decide +revert
+  decide +revert
 
 /-- Fusion is associative: sum_m N_{ij}^m N_{mk}^n = sum_m N_{jk}^m N_{im}^n. -/
 theorem su2k1_fusion_assoc (i j k n : Fin 2) :
     ∑ m : Fin 2, su2kFusion 1 i j m * su2kFusion 1 m k n =
     ∑ m : Fin 2, su2kFusion 1 j k m * su2kFusion 1 i m n := by
-  native_decide +revert
+  decide +revert
 
 end Level1
 
@@ -83,34 +83,34 @@ theorem su2k2_object_count : Fintype.card (Fin 3) = 3 := by decide
 /-- The defining Ising relation: sigma tensor sigma = 1 + psi.
     N_{11}^0 = 1 (contains vacuum). -/
 theorem su2k2_sigma_squared_has_vacuum :
-    su2kFusion 2 1 1 0 = 1 := by native_decide
+    su2kFusion 2 1 1 0 = 1 := by decide
 
 /-- sigma tensor sigma = 1 + psi: N_{11}^2 = 1 (contains psi). -/
 theorem su2k2_sigma_squared_has_psi :
-    su2kFusion 2 1 1 2 = 1 := by native_decide
+    su2kFusion 2 1 1 2 = 1 := by decide
 
 /-- sigma tensor sigma: N_{11}^1 = 0 (no sigma in sigma^2). -/
 theorem su2k2_sigma_squared_no_sigma :
-    su2kFusion 2 1 1 1 = 0 := by native_decide
+    su2kFusion 2 1 1 1 = 0 := by decide
 
 /-- psi tensor psi = 1. -/
 theorem su2k2_psi_squared :
-    su2kFusion 2 2 2 0 = 1 := by native_decide
+    su2kFusion 2 2 2 0 = 1 := by decide
 
 /-- sigma tensor psi = sigma. -/
 theorem su2k2_sigma_psi :
-    su2kFusion 2 1 2 1 = 1 := by native_decide
+    su2kFusion 2 1 2 1 = 1 := by decide
 
 /-- Ising fusion is commutative. -/
 theorem su2k2_fusion_comm (i j m : Fin 3) :
     su2kFusion 2 i j m = su2kFusion 2 j i m := by
-  native_decide +revert
+  decide +revert
 
 /-- Ising fusion is associative. -/
 theorem su2k2_fusion_assoc (i j k n : Fin 3) :
     ∑ m : Fin 3, su2kFusion 2 i j m * su2kFusion 2 m k n =
     ∑ m : Fin 3, su2kFusion 2 j k m * su2kFusion 2 i m n := by
-  native_decide +revert
+  decide +revert
 
 /--
 Quantum dimension check: d_1^2 = d_0 + d_2 (sigma^2 = 1 + psi).
@@ -118,12 +118,12 @@ Since d_0 = d_2 = 1 and d_1 = sqrt(2), this is 2 = 1 + 1.
 We verify the INTEGER version: sum of N_{11}^m * 1 = 2.
 -/
 theorem su2k2_dim_check_sigma :
-    ∑ m : Fin 3, su2kFusion 2 1 1 m = 2 := by native_decide
+    ∑ m : Fin 3, su2kFusion 2 1 1 m = 2 := by decide
 
 /-- Global dimension integer part: sum of d_j^2 as integers
     gives d_0^2 + d_2^2 = 1 + 1 = 2 (for the integer-dim objects). -/
 theorem su2k2_integer_dim_sum :
-    su2kFusion 2 0 0 0 + su2kFusion 2 2 2 0 = 2 := by native_decide
+    su2kFusion 2 0 0 0 + su2kFusion 2 2 2 0 = 2 := by decide
 
 end Level2
 
@@ -136,41 +136,41 @@ theorem su2k3_object_count : Fintype.card (Fin 4) = 4 := by decide
 
 /-- The Fibonacci relation: V_2 tensor V_2 = V_0 + V_2 (tau^2 = 1 + tau). -/
 theorem su2k3_fibonacci_has_vacuum :
-    su2kFusion 3 2 2 0 = 1 := by native_decide
+    su2kFusion 3 2 2 0 = 1 := by decide
 
 theorem su2k3_fibonacci_has_tau :
-    su2kFusion 3 2 2 2 = 1 := by native_decide
+    su2kFusion 3 2 2 2 = 1 := by decide
 
 theorem su2k3_fibonacci_no_v1 :
-    su2kFusion 3 2 2 1 = 0 := by native_decide
+    su2kFusion 3 2 2 1 = 0 := by decide
 
 theorem su2k3_fibonacci_no_v3 :
-    su2kFusion 3 2 2 3 = 0 := by native_decide
+    su2kFusion 3 2 2 3 = 0 := by decide
 
 /-- V_1 tensor V_1 = V_0 + V_2. -/
 theorem su2k3_v1_squared :
     su2kFusion 3 1 1 0 = 1 ∧ su2kFusion 3 1 1 2 = 1 ∧
-    su2kFusion 3 1 1 1 = 0 ∧ su2kFusion 3 1 1 3 = 0 := by native_decide
+    su2kFusion 3 1 1 1 = 0 ∧ su2kFusion 3 1 1 3 = 0 := by decide
 
 /-- V_3 is the charge conjugation object: V_3 tensor V_j = V_{3-j}. -/
 theorem su2k3_charge_conjugation :
     su2kFusion 3 3 0 3 = 1 ∧ su2kFusion 3 3 1 2 = 1 ∧
-    su2kFusion 3 3 2 1 = 1 ∧ su2kFusion 3 3 3 0 = 1 := by native_decide
+    su2kFusion 3 3 2 1 = 1 ∧ su2kFusion 3 3 3 0 = 1 := by decide
 
 /-- V_3 tensor V_3 = V_0 (self-inverse). -/
 theorem su2k3_v3_squared :
-    su2kFusion 3 3 3 0 = 1 := by native_decide
+    su2kFusion 3 3 3 0 = 1 := by decide
 
 /-- Level 3 fusion is commutative. -/
 theorem su2k3_fusion_comm (i j m : Fin 4) :
     su2kFusion 3 i j m = su2kFusion 3 j i m := by
-  native_decide +revert
+  decide +revert
 
 /-- Level 3 fusion is associative. -/
 theorem su2k3_fusion_assoc (i j k n : Fin 4) :
     ∑ m : Fin 4, su2kFusion 3 i j m * su2kFusion 3 m k n =
     ∑ m : Fin 4, su2kFusion 3 j k m * su2kFusion 3 i m n := by
-  native_decide +revert
+  decide +revert
 
 /--
 Fibonacci dimension check: d_2^2 = d_0 + d_2.
@@ -178,7 +178,7 @@ For phi = (1+sqrt(5))/2: phi^2 = phi + 1.
 Integer coefficient check: number of fusion channels of V_2 tensor V_2 = 2.
 -/
 theorem su2k3_fibonacci_channel_count :
-    ∑ m : Fin 4, su2kFusion 3 2 2 m = 2 := by native_decide
+    ∑ m : Fin 4, su2kFusion 3 2 2 m = 2 := by decide
 
 /--
 The Fibonacci subcategory {V_0, V_2} is closed under fusion.
@@ -189,7 +189,7 @@ theorem su2k3_fibonacci_closed :
     (su2kFusion 3 0 0 1 = 0 ∧ su2kFusion 3 0 0 3 = 0) ∧
     (su2kFusion 3 0 2 1 = 0 ∧ su2kFusion 3 0 2 3 = 0) ∧
     (su2kFusion 3 2 0 1 = 0 ∧ su2kFusion 3 2 0 3 = 0) ∧
-    (su2kFusion 3 2 2 1 = 0 ∧ su2kFusion 3 2 2 3 = 0) := by native_decide
+    (su2kFusion 3 2 2 1 = 0 ∧ su2kFusion 3 2 2 3 = 0) := by decide
 
 end Level3
 
@@ -203,46 +203,46 @@ theorem su2k4_object_count : Fintype.card (Fin 5) = 5 := by decide
 /-- V_0 is the unit: V_0 ⊗ V_j = V_j. -/
 theorem su2k4_unit_fusion (j m : Fin 5) :
     su2kFusion 4 0 j m = if j = m then 1 else 0 := by
-  native_decide +revert
+  decide +revert
 
 /-- V_1 ⊗ V_1 = V_0 + V_2 (standard CG). -/
 theorem su2k4_v1_squared :
     su2kFusion 4 1 1 0 = 1 ∧ su2kFusion 4 1 1 2 = 1 ∧
     su2kFusion 4 1 1 1 = 0 ∧ su2kFusion 4 1 1 3 = 0 ∧
-    su2kFusion 4 1 1 4 = 0 := by native_decide
+    su2kFusion 4 1 1 4 = 0 := by decide
 
 /-- V_2 ⊗ V_2 = V_0 + V_2 + V_4 (truncated at k=4). -/
 theorem su2k4_v2_squared :
     su2kFusion 4 2 2 0 = 1 ∧ su2kFusion 4 2 2 2 = 1 ∧
     su2kFusion 4 2 2 4 = 1 ∧ su2kFusion 4 2 2 1 = 0 ∧
-    su2kFusion 4 2 2 3 = 0 := by native_decide
+    su2kFusion 4 2 2 3 = 0 := by decide
 
 /-- V_4 is the charge conjugation object: V_4 ⊗ V_j = V_{4-j}. -/
 theorem su2k4_charge_conjugation :
     su2kFusion 4 4 0 4 = 1 ∧ su2kFusion 4 4 1 3 = 1 ∧
     su2kFusion 4 4 2 2 = 1 ∧ su2kFusion 4 4 3 1 = 1 ∧
-    su2kFusion 4 4 4 0 = 1 := by native_decide
+    su2kFusion 4 4 4 0 = 1 := by decide
 
 /-- V_4 ⊗ V_4 = V_0 (self-inverse). -/
 theorem su2k4_v4_squared :
-    su2kFusion 4 4 4 0 = 1 := by native_decide
+    su2kFusion 4 4 4 0 = 1 := by decide
 
 /-- Level 4 fusion is commutative. -/
 theorem su2k4_fusion_comm (i j m : Fin 5) :
     su2kFusion 4 i j m = su2kFusion 4 j i m := by
-  native_decide +revert
+  decide +revert
 
 /-- Level 4 fusion is associative. -/
 theorem su2k4_fusion_assoc (i j k n : Fin 5) :
     ∑ m : Fin 5, su2kFusion 4 i j m * su2kFusion 4 m k n =
     ∑ m : Fin 5, su2kFusion 4 j k m * su2kFusion 4 i m n := by
-  native_decide +revert
+  decide +revert
 
 /-- Quantum dimensions: d_j = sin(π(j+1)/(k+2)) / sin(π/(k+2)).
     For k=4: d_0=1, d_1=√3, d_2=2, d_3=√3, d_4=1.
     Global dimension: D² = 1+3+4+3+1 = 12. -/
 theorem su2k4_total_channels :
-    ∑ m : Fin 5, su2kFusion 4 2 2 m = 3 := by native_decide
+    ∑ m : Fin 5, su2kFusion 4 2 2 m = 3 := by decide
 
 end Level4
 
@@ -256,46 +256,46 @@ theorem su2k5_object_count : Fintype.card (Fin 6) = 6 := by decide
 /-- V_0 is the unit: V_0 ⊗ V_j = V_j. -/
 theorem su2k5_unit_fusion (j m : Fin 6) :
     su2kFusion 5 0 j m = if j = m then 1 else 0 := by
-  native_decide +revert
+  decide +revert
 
 /-- V_1 ⊗ V_1 = V_0 + V_2. -/
 theorem su2k5_v1_squared :
     su2kFusion 5 1 1 0 = 1 ∧ su2kFusion 5 1 1 2 = 1 ∧
     su2kFusion 5 1 1 1 = 0 ∧ su2kFusion 5 1 1 3 = 0 ∧
-    su2kFusion 5 1 1 4 = 0 ∧ su2kFusion 5 1 1 5 = 0 := by native_decide
+    su2kFusion 5 1 1 4 = 0 ∧ su2kFusion 5 1 1 5 = 0 := by decide
 
 /-- V_2 ⊗ V_2 = V_0 + V_2 + V_4. -/
 theorem su2k5_v2_squared :
     su2kFusion 5 2 2 0 = 1 ∧ su2kFusion 5 2 2 2 = 1 ∧
     su2kFusion 5 2 2 4 = 1 ∧ su2kFusion 5 2 2 1 = 0 ∧
-    su2kFusion 5 2 2 3 = 0 ∧ su2kFusion 5 2 2 5 = 0 := by native_decide
+    su2kFusion 5 2 2 3 = 0 ∧ su2kFusion 5 2 2 5 = 0 := by decide
 
 /-- V_2 ⊗ V_3 = V_1 + V_3 + V_5 (3 summands — widest at k=5). -/
 theorem su2k5_v2_v3 :
     su2kFusion 5 2 3 1 = 1 ∧ su2kFusion 5 2 3 3 = 1 ∧
     su2kFusion 5 2 3 5 = 1 ∧ su2kFusion 5 2 3 0 = 0 ∧
-    su2kFusion 5 2 3 2 = 0 ∧ su2kFusion 5 2 3 4 = 0 := by native_decide
+    su2kFusion 5 2 3 2 = 0 ∧ su2kFusion 5 2 3 4 = 0 := by decide
 
 /-- V_5 is the charge conjugation object: V_5 ⊗ V_j = V_{5-j}. -/
 theorem su2k5_charge_conjugation :
     su2kFusion 5 5 0 5 = 1 ∧ su2kFusion 5 5 1 4 = 1 ∧
     su2kFusion 5 5 2 3 = 1 ∧ su2kFusion 5 5 3 2 = 1 ∧
-    su2kFusion 5 5 4 1 = 1 ∧ su2kFusion 5 5 5 0 = 1 := by native_decide
+    su2kFusion 5 5 4 1 = 1 ∧ su2kFusion 5 5 5 0 = 1 := by decide
 
 /-- V_5 ⊗ V_5 = V_0 (self-inverse). -/
 theorem su2k5_v5_squared :
-    su2kFusion 5 5 5 0 = 1 := by native_decide
+    su2kFusion 5 5 5 0 = 1 := by decide
 
 /-- Level 5 fusion is commutative. -/
 theorem su2k5_fusion_comm (i j m : Fin 6) :
     su2kFusion 5 i j m = su2kFusion 5 j i m := by
-  native_decide +revert
+  decide +revert
 
 /-- Level 5 fusion is associative. -/
 theorem su2k5_fusion_assoc (i j k n : Fin 6) :
     ∑ m : Fin 6, su2kFusion 5 i j m * su2kFusion 5 m k n =
     ∑ m : Fin 6, su2kFusion 5 j k m * su2kFusion 5 i m n := by
-  native_decide +revert
+  decide +revert
 
 end Level5
 
@@ -311,7 +311,7 @@ SU2kFusion module: SU(2)_k fusion rules at levels k=1,2,3,4,5.
   - k=4: 5 objects, Z₂ symmetry, charge conjugation
   - k=5: 6 objects, widest fusion 2⊗3 = 1+3+5, charge conjugation (Phase 5s)
   - Commutativity and associativity proved for ALL k=1,...,5
-  - All proofs by native_decide (concrete finite computation)
+  - All proofs by decide (concrete finite computation)
   - First SU(2)_k fusion verification through k=5 in any proof assistant
 -/
 end SKEFTHawking

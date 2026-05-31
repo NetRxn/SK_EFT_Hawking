@@ -6,7 +6,7 @@ for the standard examples: Vec_G (group-graded vector spaces), Rep(G)
 (finite-dimensional representations), and the Fibonacci anyon model.
 
 These are computational theorems — many are decidable and ideal targets
-for Aristotle or `native_decide`.
+for Aristotle or `decide`.
 
 References:
   Etingof et al., "Tensor Categories" (2015), Ch. 3, 9
@@ -55,7 +55,7 @@ Expand the sum over ZMod 2 (which has 2 elements, 0 and 1) using fin_cases on al
 theorem vecZ2_assoc (i j k l : ZMod 2) :
     ∑ m : ZMod 2, vecZ2_fusion i j m * vecZ2_fusion m k l =
     ∑ m : ZMod 2, vecZ2_fusion j k m * vecZ2_fusion i m l := by
-  native_decide +revert
+  decide +revert
 
 /-- Global dimension: D² = |ℤ/2| = 2. -/
 theorem vecZ2_global_dim :
@@ -94,7 +94,7 @@ Expand the sum over ZMod 3 using fin_cases on all variables i j k l, then simp/d
 theorem vecZ3_assoc (i j k l : ZMod 3) :
     ∑ m : ZMod 3, vecZ3_fusion i j m * vecZ3_fusion m k l =
     ∑ m : ZMod 3, vecZ3_fusion j k m * vecZ3_fusion i m l := by
-  native_decide +revert
+  decide +revert
 
 theorem vecZ3_global_dim :
     ∑ _ : ZMod 3, (1 : ℕ) ^ 2 = 3 := by

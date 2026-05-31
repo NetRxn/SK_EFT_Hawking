@@ -36,7 +36,7 @@ inductive SU3k1Obj : Type
 open SU3k1Obj
 
 /-- SU(3)_1 has exactly 3 simple objects: (k+1)(k+2)/2 = 2·3/2 = 3. -/
-theorem su3k1_object_count : Fintype.card SU3k1Obj = 3 := by native_decide
+theorem su3k1_object_count : Fintype.card SU3k1Obj = 3 := by decide
 
 /--
 Fusion rules for SU(3)_1. Isomorphic to Z₃ addition:
@@ -81,13 +81,13 @@ theorem su3k1_conj_squared : su3k1Fusion conj conj fund = 1 := rfl
 /-- Fusion is commutative. -/
 theorem su3k1_fusion_comm (i j m : SU3k1Obj) :
     su3k1Fusion i j m = su3k1Fusion j i m := by
-  native_decide +revert
+  decide +revert
 
 /-- Fusion is associative. -/
 theorem su3k1_fusion_assoc (i j k n : SU3k1Obj) :
     ∑ m : SU3k1Obj, su3k1Fusion i j m * su3k1Fusion m k n =
     ∑ m : SU3k1Obj, su3k1Fusion j k m * su3k1Fusion i m n := by
-  native_decide +revert
+  decide +revert
 
 /-- All quantum dimensions are 1 (invertible objects). -/
 def su3k1Dim : SU3k1Obj → Nat
@@ -96,7 +96,7 @@ def su3k1Dim : SU3k1Obj → Nat
   | conj => 1
 
 /-- Global dimension: D² = Σ d_a² = 1+1+1 = 3. -/
-theorem su3k1_global_dim : ∑ a : SU3k1Obj, su3k1Dim a ^ 2 = 3 := by native_decide
+theorem su3k1_global_dim : ∑ a : SU3k1Obj, su3k1Dim a ^ 2 = 3 := by decide
 
 /-- Charge conjugation: f* = f̄, f̄* = f, vac* = vac. -/
 def su3k1Conj : SU3k1Obj → SU3k1Obj
@@ -106,11 +106,11 @@ def su3k1Conj : SU3k1Obj → SU3k1Obj
 
 /-- Charge conjugation is an involution. -/
 theorem su3k1_conj_involution (a : SU3k1Obj) :
-    su3k1Conj (su3k1Conj a) = a := by native_decide +revert
+    su3k1Conj (su3k1Conj a) = a := by decide +revert
 
 /-- Fusion with conjugate gives vacuum component. -/
 theorem su3k1_conj_gives_vac (a : SU3k1Obj) :
-    su3k1Fusion a (su3k1Conj a) vac = 1 := by native_decide +revert
+    su3k1Fusion a (su3k1Conj a) vac = 1 := by decide +revert
 
 end Level1
 
@@ -140,7 +140,7 @@ inductive SU3k2Obj : Type
 open SU3k2Obj
 
 /-- SU(3)_2 has exactly 6 simple objects. -/
-theorem su3k2_object_count : Fintype.card SU3k2Obj = 6 := by native_decide
+theorem su3k2_object_count : Fintype.card SU3k2Obj = 6 := by decide
 
 /--
 Complete fusion table for SU(3)_2, from deep research.
@@ -247,7 +247,7 @@ def su3k2Fusion : SU3k2Obj → SU3k2Obj → SU3k2Obj → Nat
 /-- Fusion is commutative. -/
 theorem su3k2_fusion_comm (i j m : SU3k2Obj) :
     su3k2Fusion i j m = su3k2Fusion j i m := by
-  native_decide +revert
+  decide +revert
 
 /-- τ ⊗ τ = 1 + τ: THE Fibonacci fusion rule. -/
 theorem su3k2_fibonacci_fusion_vac : su3k2Fusion adj adj vac = 1 := rfl
@@ -265,7 +265,7 @@ theorem su3k2_z3_sbar_squared : su3k2Fusion symbar symbar sym = 1 := rfl
 theorem su3k2_fusion_assoc (i j k n : SU3k2Obj) :
     ∑ m : SU3k2Obj, su3k2Fusion i j m * su3k2Fusion m k n =
     ∑ m : SU3k2Obj, su3k2Fusion j k m * su3k2Fusion i m n := by
-  native_decide +revert
+  decide +revert
 
 /-- Charge conjugation for SU(3)_2. -/
 def su3k2Conj : SU3k2Obj → SU3k2Obj
@@ -278,11 +278,11 @@ def su3k2Conj : SU3k2Obj → SU3k2Obj
 
 /-- Charge conjugation is an involution. -/
 theorem su3k2_conj_involution (a : SU3k2Obj) :
-    su3k2Conj (su3k2Conj a) = a := by native_decide +revert
+    su3k2Conj (su3k2Conj a) = a := by decide +revert
 
 /-- Fusion with conjugate gives vacuum component. -/
 theorem su3k2_conj_gives_vac (a : SU3k2Obj) :
-    su3k2Fusion a (su3k2Conj a) vac = 1 := by native_decide +revert
+    su3k2Fusion a (su3k2Conj a) vac = 1 := by decide +revert
 
 end Level2
 
@@ -293,7 +293,7 @@ end Level2
 SU3kFusion module: fusion rules for SU(3) Chern-Simons theory.
   - SU(3)_1: Z₃ fusion ring, 3 objects, all dimensions 1 (invertible)
   - SU(3)_2: 6 anyons with Fibonacci subcategory (τ⊗τ = 1+τ)
-  - Commutativity, associativity PROVED by native_decide for both levels
+  - Commutativity, associativity PROVED by decide for both levels
   - Charge conjugation involution PROVED
   - First SU(3)_k fusion in any proof assistant
   - Zero sorry, zero axioms

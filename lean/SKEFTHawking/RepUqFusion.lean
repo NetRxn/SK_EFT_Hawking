@@ -40,13 +40,13 @@ namespace SKEFTHawking.RepUqFusion
 def restricted_uq_dim (k : ℕ) : ℕ := (k + 2) ^ 3
 
 /-- dim(u_q) for k=1: ℓ=3, dim = 27. -/
-theorem dim_uq_k1 : restricted_uq_dim 1 = 27 := by native_decide
+theorem dim_uq_k1 : restricted_uq_dim 1 = 27 := by decide
 
 /-- dim(u_q) for k=2 (Ising): ℓ=4, dim = 64. -/
-theorem dim_uq_k2 : restricted_uq_dim 2 = 64 := by native_decide
+theorem dim_uq_k2 : restricted_uq_dim 2 = 64 := by decide
 
 /-- dim(u_q) for k=3 (Fibonacci level): ℓ=5, dim = 125. -/
-theorem dim_uq_k3 : restricted_uq_dim 3 = 125 := by native_decide
+theorem dim_uq_k3 : restricted_uq_dim 3 = 125 := by decide
 
 /-! ## 2. Number of simple modules -/
 
@@ -56,14 +56,14 @@ theorem dim_uq_k3 : restricted_uq_dim 3 = 125 := by native_decide
 def n_simples (k : ℕ) : ℕ := k + 1
 
 /-- SU(2)_1 has 2 simple modules. -/
-theorem n_simples_k1 : n_simples 1 = 2 := by native_decide
+theorem n_simples_k1 : n_simples 1 = 2 := by decide
 
 /-- SU(2)_2 (Ising) has 3 simple modules: {1, σ, ψ}. -/
-theorem n_simples_k2 : n_simples 2 = 3 := by native_decide
+theorem n_simples_k2 : n_simples 2 = 3 := by decide
 
 /-- SU(2)_3 has 4 simple modules. The even-spin subcategory
     {V_0, V_2} ≅ Fibonacci. -/
-theorem n_simples_k3 : n_simples 3 = 4 := by native_decide
+theorem n_simples_k3 : n_simples 3 = 4 := by decide
 
 /-! ## 3. Fusion rule correspondence -/
 
