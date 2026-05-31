@@ -18,6 +18,13 @@ in any proof assistant.
 
 Cross-validated: scripts/generate_a1_resolution.py (all checks pass)
 Deep research: Lit-Search/Phase-5q/The minimal free resolution...
+
+Proof method: the d∘d=0 / RREF / invertibility identities are kernel-checked
+modulo `native_decide` (ADR-002 #2). Although these are over `Matrix _ _ F2`
+(which IS kernel-`decide`-able in principle — cf. the sibling A1Ring/A1Ext which
+were converted), kernel `decide` on the 8×8-expanded matrix products here is
+impractically slow, so they retain the compiled evaluator. Pipeline Invariant
+#10 forbids raising `maxHeartbeats`.
 -/
 
 import Mathlib.Data.ZMod.Basic
