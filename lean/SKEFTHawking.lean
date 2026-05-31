@@ -1896,6 +1896,11 @@ import SKEFTHawking.FKLW.MukhopadhyayCliffordNotDense
 -- behind Theorem 3.8. Off-ramp ship: the full off-diagonal Theorem-3.8 structure + hCCZ + Lemma 3.10 +
 -- unconditional T^of remain documented residuals (see file docstring + Phase6x_prime_Roadmap).
 import SKEFTHawking.FKLW.MukhopadhyayCCZConjugation
+-- Phase 6x′ Phase 2 (A) (2026-05-30): the sde₂-valued measure on ℂ-matrices — sde2ℂ (dyadic exponent
+-- via the rational value) + matrixSde2 (max over entries, porting KMM.sdeC) + channelSde2 = matrixSde2 ∘
+-- channelRep + channelSde2 1 = 0. The rationality-conditional Fact-3.14 lift (sde2ℂ_half_sum_le) is the
+-- crux infra for the unconditional T^of bound. Non-vacuous (sde2ℂ (1/2) = 1).
+import SKEFTHawking.FKLW.MukhopadhyayMatrixSde2
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
