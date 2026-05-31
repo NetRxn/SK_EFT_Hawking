@@ -5,9 +5,17 @@
 continuation explicitly documented as residual). Builds on the 6z Pauli substrate; discharges residuals
 consumed in 6x (Lemma 3.10, the Item-L `T^of ≥ sde₂` bound) and 6z (CCZ-essentiality converse).*
 
-**Status:** ✅ **PHASE 1 COMPLETE (capstone shipped, Stage-13 GREEN, 2026-05-30); Phase 2 off-ramped to
-C.1 + documented residual.** Phase 1 A + B + capstone all shipped kernel-pure, build clean
-(9875 thm / 0 axiom / 0 sorry / 746 mod), 0 new native_decide. Phase-1 capstone = `cliffordOnly_not_dense`
+**Status:** ✅✅ **PHASE 6x′ COMPLETE — both phases shipped, kernel-pure, 2026-05-30.** Phase 1 capstone
+(`cliffordOnly_not_dense`, Stage-13 GREEN) + Phase 2 full discharge (UNCONDITIONAL `T^of(U) ≥ sde₂(Û)`)
+both done. Build clean (9944 thm / 0 axiom / 0 sorry / 751 mod), 0 new native_decide, no maxHeartbeats.
+**All three residuals CLOSED**: (1) Lemma 3.10 (`channelRep_interp_isRat`, rational/ℤ[1/2] entries),
+(2) unconditional `T^of ≥ sde₂` (`channelSde2_le_toffoliCost`), (3) the 6z converse
+(`cliffordOnly_not_dense`). Phase-2 chain (A–F): `MukhopadhyayMatrixSde2` (measure) → `…ToffoliUnconditional`
+hC → `…CCZChannelRep` Theorem 3.8 half-integer (`channelRep_CCZ_isHalfInt`) → `…HCCZ` hCCZ
+(`channelSde2_ccz_le`) → Lemma 3.10 + headline. L.C PARAMETRIC docstrings flipped to discharged. Full
+Toffoli MINIMALITY (MITM / Conjecture 4.8) remains permanently out of scope. (Historical status below.)
+
+**Status (Phase 1, historical):** ✅ Phase 1 COMPLETE (capstone shipped, Stage-13 GREEN). Phase-1 capstone = `cliffordOnly_not_dense`
 (`MukhopadhyayCliffordNotDense.lean`, commit `838d96ff`): **⟨H,S,CNOT⟩ (no CCZ) is NOT dense in SU(8)** —
 the genuine 6z CCZ-essentiality converse, fresh-context Opus Stage-13 review GREEN (no findings). Phase 2
 C.1 (`MukhopadhyayCCZConjugation.lean`) = the CCZ diagonal-conjugation identity

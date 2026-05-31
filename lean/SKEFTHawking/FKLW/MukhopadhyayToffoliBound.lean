@@ -33,18 +33,16 @@ Full Toffoli-count minimality (no shorter circuit) requires the exhaustive neste
 search (Lemma 4.5 / §4.2.1) whose heuristic optimality rests on the unproved Conjecture 4.8; that is
 not Lean-tractable and is the documented residual (L.C).
 
-**Phase 6x′ status (2026-05-30):** the `hC` direction (Cliffords leave `sde₂` unchanged, Fact 3.9) is
-substantiated by Phase 6x′ — every Clifford generator's channel rep is a signed permutation
-(`MukhopadhyayCliffordConverse.channelRep_cliffordOnlyGen_isSignedPerm`), which permutes/sign-flips
-entries and so preserves their dyadic denominators. The `hCCZ` direction needs the full Theorem 3.8
-off-diagonal channel-rep structure of `CCZ` (`Ĉ_{CCZ}` rows of four `±1/2`); its structural engine — the
-CCZ diagonal-conjugation identity `(CCZ·M·CCZ)_{ij} = ccz_i·ccz_j·M_{ij}` — is shipped as
-`MukhopadhyayCCZConjugation.CCZ_mat_conj_apply` (Phase 6x′ Phase 2, C.1). **Making `toffoliCost_ge_measure`
-unconditional** (instantiating `μ = sde₂ ∘ channelRep` and discharging both `hC` and `hCCZ`) additionally
-requires a total `sde₂`-valued measure on `ℂ`-matrices (dyadic-exponent extraction) plus the 64-Pauli
-Theorem-3.8 entry table; per the Phase 6x′ off-ramp it is a **documented residual**, deferred (not ground
-out) as a marginal `PARAMETRIC → unconditional` upgrade on this non-tight bound. See
-`docs/roadmaps/Phase6x_prime_Roadmap.md`.
+**Phase 6x′ status — DISCHARGED (2026-05-30):** the parametric `μ = sde₂ ∘ channelRep` instantiation is
+now **shipped unconditionally** as `MukhopadhyayToffoliUnconditional.channelSde2_le_toffoliCost`
+(`sde₂(Û) ≤ T^of(U)` for exactly-Clifford+CCZ `U`). Both bridges are proved: `hC`
+(`channelSde2_clifford_le` — each Clifford gen's channel rep is a signed permutation, preserving dyadic
+denominators) and `hCCZ` (`channelSde2_ccz_le` — via Theorem 3.8's half-integer channel-rep entries,
+`MukhopadhyayCCZChannelRep.channelRep_CCZ_isHalfInt`, threaded with Lemma 3.10's rational entries,
+`channelRep_interp_isRat`). The measure `μ = channelSde2 = matrixSde2 ∘ channelRep`
+(`MukhopadhyayMatrixSde2`) is total on `ℂ`-matrices and non-vacuous (`sde2ℂ (1/2) = 1`). The two
+parametric theorems below remain the general telescoping skeleton; the unconditional bound is their
+discharged instantiation. (Full Toffoli MINIMALITY — Conjecture 4.8 — remains out of scope, see above.)
 
 PUBLIC math layer only (per the Item-L brief): no private-repo content.
 
@@ -90,7 +88,8 @@ is unconditional.
 `T^of ≥ sde₂` bound) lives entirely in the *intended* instantiation `μ = sde₂ ∘ channelRep` together
 with its per-generator bridge hypotheses `hC` / `hCCZ` — both the documented follow-on (the per-generator
 channel-rep entry analyses), NOT discharged here. A trivial `μ ≡ 0` also satisfies the hypotheses (giving
-the vacuous `0 ≤ toffoliCount gs`); the non-vacuous value is realized only by the un-shipped instantiation. -/
+the vacuous `0 ≤ toffoliCount gs`); the non-vacuous value is realized by the **shipped** instantiation
+`MukhopadhyayToffoliUnconditional.toffoliCount_ge_channelSde2` (`μ = channelSde2`). -/
 theorem toffoliCount_ge_measure (μ : Matrix (Fin 8) (Fin 8) ℂ → ℕ) (h1 : μ 1 = 0)
     (hC : ∀ (c : Fin 9) (M : Matrix (Fin 8) (Fin 8) ℂ),
       μ (gateMatrix (CliffordCCZGate.clifford c) * M) ≤ μ M)
@@ -122,8 +121,9 @@ minimality needs the intractable meet-in-the-middle search (Lemma 4.5 / Conjectu
 documented residual; see the module docstring.
 
 **PARAMETRIC** (as for `toffoliCount_ge_measure`): the substantive `μ = sde₂ ∘ channelRep`
-instantiation + its per-generator bridges are the un-shipped follow-on; this theorem is the
-telescoping-to-`sInf` packaging, not the discharged Toffoli bound. -/
+instantiation + its per-generator bridges are now **shipped** as
+`MukhopadhyayToffoliUnconditional.channelSde2_le_toffoliCost` (the discharged, unconditional
+`sde₂(Û) ≤ T^of(U)`); this parametric theorem is the telescoping-to-`sInf` skeleton it instantiates. -/
 theorem toffoliCost_ge_measure (μ : Matrix (Fin 8) (Fin 8) ℂ → ℕ) (h1 : μ 1 = 0)
     (hC : ∀ (c : Fin 9) (M : Matrix (Fin 8) (Fin 8) ℂ),
       μ (gateMatrix (CliffordCCZGate.clifford c) * M) ≤ μ M)
