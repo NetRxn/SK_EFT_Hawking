@@ -166,7 +166,70 @@ fundamentally can't be one over `ℚ` given `Rat`'s irreducible arithmetic. The 
 job are the *symbolic* ones (`ring`, `norm_num`, `Fin.sum_univ_*`), which ADR-001 already uses — we are not
 missing a built-in. A reusable Route-1′ `simproc` would itself be a plausible Mathlib-PR-quality contribution.
 
-**Decision items still open before re-marking Accepted:** (i) commit to Route 1′ (build the metaprogram)
-vs. stay Route-1-manual + accept that high-degree A modules keep `native_decide`; (ii) confirm the
-quantified-`decide` wall-clock for the large Category-B `+revert` enumerations.
-```
+**Decision items (resolved by the 2026-05-30 execution — see next section):** (i) **defer Route 1′** — the
+high-degree/tower modules stay documented `native_decide`; (ii) quantified-`decide` is fine for small
+`+revert` enumerations (`SU2kFusion`) but too slow for the large ones (`KacWaltonFusion` alcove → stays
+`native_decide`).
+
+---
+
+## 2026-05-30 execution outcome (status → ACCEPTED)
+
+The cleanup was executed in an isolated `/goal` session against the post-Phase-6x baseline
+(115 files / 1036 `native_decide` call sites / **852** declarations carrying the `native_decide`
+compiler-trust axiom in their transitive closure).
+
+**Result: decl-closure 852 → 640 (−212 declarations now kernel-pure); call sites 1036 → 712; files
+115 → 53.** (The raw call-site count fell less than the decl count because the cleanup *added* documenting
+comments that themselves contain the literal word `native_decide`; the **decl-closure 640** is the
+authoritative trust-surface metric — 212 declarations no longer reach a `native_decide` compiler-trust
+axiom.) P4 gate PASS; Invariant #15 clean; full `lake build SKEFTHawking` green throughout; Stage-13
+adversarial review GREEN-WITH-RECOMMENDED.
+
+### Bucket B — converted (Decision #4): 63 modules
+Probe-first (whole-file `native_decide`→`decide` build, reverted on failure) sorted A from B definitively —
+the reliable signal is the **value type of the `decide`'d equality**, not the module/index name. All
+axiom-verified kernel-pure via `#print axioms`:
+- **Fusion/MTC:** SU2kFusion (incl quantified `decide +revert`), SU3kFusion, SU2kMTC, RepUqFusion,
+  KacWaltonFusion (hDual/alcove `Nat` facts), FusionExamples.
+- **A(1)-Ext / Steenrod (publication D2/L2):** A1Ring, A1Ext, SteenrodA1 — `Matrix _ _ F2` value types that
+  DO kernel-reduce, so a *free kernel-pure upgrade of a publication anchor* (probe-first §0 paid off: they
+  were mis-classifiable as Category-A on name alone).
+- **Constraint-counting / SK / physics (12):** incl the L2/D2 headline `three_gen_with_nu_R_anomaly_free`.
+- **Fracton / topology / physics-model (16); FKLW/Ross–Selinger + FaultTolerance/ETH (24); list/struct (4).**
+
+### Category A — publication-critical hardening (Decision #5)
+The ADR-001 §3-A `ext`/`powerTable` template, registered as a **file-local simp set** (the 28
+`powerTable_m_k` rfl-lemmas + `mul_cᵢ` + `mulReduce_coeffs` + `toPoly`; `QCyc5.reduction` excluded per the
+gotcha):
+- **FibonacciBraiding** (D4 "FIRST verified universal quantum gates"): **20 of 30** theorems kernel-pure —
+  F²=I involution (F_sq_00/01/10/11), F11_eq, det F, σ₁ det/trace/non-triviality, σ₂ trace, the σ₁σ₂
+  off-diagonal non-scalar facts, `R1_order_5`, `Rtau_order_divides_10`, `R1_not_one`. Equalities use
+  `ext <;> simp [<defs>]`; inequalities `intro h; rw [QCyc5.ext_iff] at h; simp [<defs>] at h`. The **10
+  retained** (`sigma2_det`, the 4 Yang-Baxter `braid_*`, the 5 (σ₁σ₂)³ `s1s2_cu_*` center/scalar facts, the
+  intermediate R-power inequalities) hit the heartbeat budget under full symbolic expansion (σ₂ = F·R·F, then
+  cubed); per Invariant #10 we do **not** raise `maxHeartbeats`, so they stay documented `native_decide`.
+- **FibonacciMTC**: `fib_tau_sq` (Fin/Nat) → kernel `decide`.
+
+### Documented native_decide (Decision #2, "kernel-checked modulo native_decide", with module comments)
+FibonacciUniversality + FibonacciQutrit (the QCyc5Ext two-level tower Q(ζ₅,√φ) / 3×3 `Mat3K`), QSqrt5
+(FibonacciMTC F-symbols), the heartbeat-bound FibonacciBraiding braid/σ₂/`s1s2_cu` identities, A1Resolution
+(8×8-expanded F2-matrix products, kernel-`decide`-able in principle but impractically slow), KacWaltonFusion
+(alcove enumerations), SU2kMTC (Q(√2)), and the Route-1′-gated high-degree QCyc16 (Ising) / QCyc40 (D6)
+modules.
+
+### Key finding (the technical lesson)
+The `ext`/`powerTable` template is viable for a **base powerTable-equipped field** (`QCyc5`) but **NOT for the
+higher towers** (`QCyc5Ext` = Q(ζ₅,√φ), `QSqrt5`, `QCyc16/40`, or matrices over them): the nested
+base-`powerTable`-inside-`mulReduce2` (and 3×3-matrix) expansion exceeds the heartbeat budget on every
+theorem. This confirms Decision (i): **defer Route 1′** (the ~200–500 LoC simproc/`norm_num` metaprogram) to a
+separate substrate project; high-degree/tower modules stay documented `native_decide`. (Likewise QSqrt5 would
+need a degree-2 CommRing substrate.) The headline D4 universal-gate result is hardened kernel-pure where it
+counts — the base-field `QCyc5` facts in FibonacciBraiding — and the tower layers verify established literature
+(FLW 2002; Q3): the formalization, not the fact, is the contribution.
+
+### Process notes (for the next cleanup)
+- macOS/BSD `sed` lacks `\b`; use `perl -i -pe 's/\bnative_decide\b/decide/g'`. Guard a probe driver with
+  `diff -q` (a no-op replace must not report "CONVERTED") + a tactic-position grep.
+- Verify every conversion with `#print axioms` (no `*._native.native_decide.ax_*`), never on build-success
+  alone — a no-op edit also builds green; and never commit before a full `lake build SKEFTHawking` is green.
