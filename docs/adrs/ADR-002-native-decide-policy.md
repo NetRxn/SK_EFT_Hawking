@@ -1,11 +1,14 @@
 # ADR-002 — `native_decide` policy (compiler-trust axiom in the anyon/TQFT computation layer)
 
-- **Status:** **DRAFT — re-opened for vetting (2026-05-29).** Was "Accepted (2026-05-28)"; the policy
-  (document `native_decide`; convert B; harden publication-critical A) still stands, but the *execution
-  plan* is being vetted before commitment. Open items being resolved: base-type readiness (only
-  `QCyc5`/`QCyc5Ext` equipped — see `docs/native_decide_cleanup_checklist.md` §2b), and the **Route 1
-  (per-type powerTable) vs Route 2 (kernel-reducible `PolyQuotQ.mulReduce`)** fork for high-degree types.
-  Do not treat as final until re-marked Accepted.
+- **Status:** **ACCEPTED (2026-05-30).** Policy + execution plan vetted and executed: the Bucket-B sweep
+  is complete (63 modules → kernel `decide`) and the publication-critical Category-A flagships are hardened
+  (the two D4 Fibonacci QCyc5 modules). Both open items from the 2026-05-29 vetting addendum are resolved
+  (see "2026-05-30 execution outcome" below): (i) **Route 1′ is DEFERRED** — the high-degree types
+  (`QCyc16` Ising / `QCyc40` D6 / `QCyc5Ext` matrix reps) stay documented `native_decide`, gated on a
+  future Route-1′ metaprogram as a separate substrate project; (ii) the **quantified-`decide` wall-clock**
+  is resolved empirically (small `+revert` enumerations like `SU2kFusion` convert fine; large ones like
+  `KacWaltonFusion`'s alcove enumeration are too slow and stay `native_decide`).
+  - *History:* Accepted 2026-05-28 → DRAFT 2026-05-29 (vetting) → ACCEPTED 2026-05-30 (executed).
 - **Deciders:** John Roehm (project owner); investigation + draft by Claude.
 - **Context source:** P4 `axiom_closure_allowlist` gate (`docs/AI-Defect-Defense-Layer.md`, commit `1798633`) +
   triage report (`docs/native_decide_triage.md`, commit `e021fe0`) + this investigation.
