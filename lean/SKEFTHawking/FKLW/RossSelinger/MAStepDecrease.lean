@@ -17,7 +17,7 @@ so the decrease is governed by the clean **mod-2 condition**
 
 This file ships the concrete `c^s` constants (`sylBlochNum`) and the clearing
 identity `of (c^s_ik) = √2 · R((sylMat s)†)ᵢₖ` — the foundation of the decrease.
-The full decrease lemma + the 15-class `native_decide` build on top.
+The full decrease lemma + the 15-class `decide` build on top.
 
 ## References
 

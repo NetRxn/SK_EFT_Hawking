@@ -11,7 +11,7 @@ gate's determinant is a power of `ωS = of ω` (`decide`); `det` is multiplicati
 
 This is the foundation for the M-structure form `M = [[x, −ωᵏȳ],[y, ωᵏx̄]]/√2^m`
 (`col1` determined by `col0` + the `ω^k` determinant), feeding the `μ ≤ 3 ⟹ kSO3 ≤ 3`
-bridge and the Clifford base via a bounded `native_decide`.
+bridge and the Clifford base via a bounded `decide`.
 
 ## Pipeline invariants
 

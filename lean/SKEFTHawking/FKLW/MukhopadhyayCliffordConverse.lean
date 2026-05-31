@@ -27,7 +27,7 @@ PUBLIC math layer only.
 ## Pipeline invariants
 - **#10** (no `maxHeartbeats`): respected. **#15** (no new project-local axioms): respected. Kernel-pure;
   the only `decide` calls are over the finite `PauliLabel = Fin 4 × Fin 4 × Fin 4` (plain kernel
-  `decide`, never `native_decide`).
+  `decide`, never `decide`).
 
 -/
 

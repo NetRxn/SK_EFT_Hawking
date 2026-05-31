@@ -73,7 +73,7 @@ entries.
 `S = identity` — trivial entropy function (placeholder).
 
 The 4-dim substrate is the Aristotle target for the Wave 3a.4 batch:
-small enough for `decide`/`native_decide` to be tractable; large enough
+small enough for `decide`/`decide` to be tractable; large enough
 to make non-trivial structural distinctions between A1, A2, A3, A5. -/
 def fourDimIsing : MatrixSubstrate 4 :=
   ⟨by norm_num,

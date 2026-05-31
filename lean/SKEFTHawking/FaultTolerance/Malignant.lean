@@ -119,7 +119,7 @@ Malignant.lean: malignant-pair attestation manufacture from MalignancyCounts.
   - `cnotRecursionContribution`, `cnotRecursionContribution_nonneg`.
 
 Consumed by Wave 1b.2 Counting (provides the concrete A_CNOT/etc. via
-native_decide for Steane [[7,1,3]]) and Wave 1b.3 AGP/Threshold.
+decide for Steane [[7,1,3]]) and Wave 1b.3 AGP/Threshold.
 
 Zero sorry. Zero axioms.
 -/

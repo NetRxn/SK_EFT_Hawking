@@ -153,7 +153,7 @@ theorem interp_append (gs hs : List CliffordTGate) :
 /-! ## Canonical Clifford relations (kernel-checked on the runtime ring)
 
 The runtime `ZOmegaSqrt2` makes gate arithmetic `decide`-checkable in
-the **kernel** — no `native_decide`, so the standard three axioms only.
+the **kernel** — no `decide`, so the standard three axioms only.
 These verify the gate matrices carry the correct arithmetic (not merely
 that they are computable). -/
 

@@ -13,14 +13,14 @@ representations:
   **(A) Localization.Away (clean theory):**
        `def ZOmegaSqrt2 := Localization.Away (sqrt2 : ZOmega)`
        Inherits `CommRing` from Mathlib automatically, but is
-       **noncomputable** — blocks `native_decide` on gate arithmetic.
+       **noncomputable** — blocks `decide` on gate arithmetic.
 
   **(B) Runtime quotient representation (SHIPPED HERE):**
        `def ZOmegaSqrt2 := Quotient ZOmegaSqrt2.Frac.setoid`, where
        `Frac` is a pair `(num : ZOmega, den : ℕ)` representing
        `num / √2^den`, modulo the equivalence
        `(z₁, k₁) ~ (z₂, k₂) iff z₁·√2^k₂ = z₂·√2^k₁`. **Computable** +
-       `DecidableEq`, supporting `native_decide` on Clifford+T matrix
+       `DecidableEq`, supporting `decide` on Clifford+T matrix
        arithmetic. The full `CommRing` instance is discharged by
        reducing each axiom to a representative-level `ZOmega` identity
        (via `mk_add`/`mk_mul`/`mk_eq_mk_iff`, closed by `ring`).
@@ -193,7 +193,7 @@ equivalence reflexive, symmetric, and transitive (the latter requiring
 `sqrt2_pow_mul_cancel`). `DecidableEq` follows from `ZOmega`'s
 `DecidableEq` since the equivalence is decidable in this form.
 
-The runtime representation enables `native_decide`-driven test queries
+The runtime representation enables `decide`-driven test queries
 on Clifford+T matrix arithmetic (for the M4 KMM exact synthesis). The
 theory-layer equivalence to the Mathlib `Localization.Away (sqrt2)` is
 NOT shipped (deferred follow-on); downstream consumers (KMM, base
@@ -258,7 +258,7 @@ end ZOmegaSqrt2
 /-- **The ring `ℤ[ω][1/√2]`** as the quotient of `ZOmegaSqrt2.Frac` by
 the equivalence relation `(z₁, k₁) ~ (z₂, k₂) iff z₁ · √2^k₂ = z₂ · √2^k₁`.
 
-Computable + `DecidableEq`-enabled, supporting `native_decide` on
+Computable + `DecidableEq`-enabled, supporting `decide` on
 small examples. Provides the runtime substrate for KMM exact synthesis
 (`RossSelinger/KMM.lean`). -/
 def ZOmegaSqrt2 : Type := Quotient ZOmegaSqrt2.Frac.setoid

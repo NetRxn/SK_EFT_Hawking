@@ -229,7 +229,7 @@ correctness + length-bound theorems required by the Item F deliverables.
 
 The functions are **noncomputable** (since `ZOmegaSqrt2 = Localization.Away`
 is the theory-layer representation from Item E; per DR §1.7 the runtime
-`(z, k)` pair representation that would make these `native_decide`-
+`(z, k)` pair representation that would make these `decide`-
 testable is deferred). The substantive algorithmic content — the KMM
 algorithm's 192-Clifford lookup + sde-decreasing termination — is
 encapsulated in the `[Nonempty KMMReduction]` typeclass parameter

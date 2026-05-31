@@ -3,7 +3,7 @@ Copyright (c) 2026 John Roehm. All rights reserved.
 
 # Phase 6x Tier-2 Item D (M1) — `ZOmega` ring of integers of ℚ(ζ₈)
 
-Ships the **runtime, native_decide-compatible** ring of integers of
+Ships the **runtime, decide-compatible** ring of integers of
 ℚ(ζ₈) = ℚ(e^(iπ/4)) as a Lean 4 `structure` with four `ℤ` fields,
 mirroring Selinger's Haskell `Omega Integer` design from `newsynth`
 (reference only — GPL-3 source not copied; clean-room rebuild per the

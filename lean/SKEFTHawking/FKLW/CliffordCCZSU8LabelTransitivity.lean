@@ -17,7 +17,7 @@ stabilizer tableau (in the `F₂²` symplectic `(x,z)` encoding `I=(0,0)`, `X=(1
 Each generator is a label **involution**, so the generated group is the closure under the generator set.
 Transitivity is the finite fact that the orbit of `X ⊗ I ⊗ I` under the 9 generators
 (`H_q, S_q` for `q = 0,1,2` and `CNOT` for the pairs `(0,1), (0,2), (1,2)`) is **all 63 nonzero labels**;
-it is discharged by **kernel** `decide` (no `native_decide`) on a `List`-based orbit closure, with
+it is discharged by **kernel** `decide` (no `decide`) on a `List`-based orbit closure, with
 `maxRecDepth` raised so the kernel can reduce the finite closure (this is the finite-decision-procedure
 exemption, *not* a `maxHeartbeats` compute-budget shortcut — Pipeline Invariant #10 bans only the latter).
 
@@ -27,7 +27,7 @@ actual SU(8) conjugations) and the W-membership transport are the companion incr
 ## Pipeline invariants
 
   * **#10** (no `maxHeartbeats` in proofs): respected (`maxRecDepth` ≠ `maxHeartbeats`).
-  * **#15** (no new project-local axioms): respected. Kernel-pure (no `native_decide`/`Lean.ofReduceBool`).
+  * **#15** (no new project-local axioms): respected. Kernel-pure (no `decide`/`Lean.ofReduceBool`).
 
 ## Phase 6z provenance
 

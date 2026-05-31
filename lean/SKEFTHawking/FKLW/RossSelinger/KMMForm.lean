@@ -35,7 +35,7 @@ and with `hdet : M₀₀·M₁₁ − M₀₁·M₁₀ = ωᵏ` the two target e
 This is the foundation for the `μ ≤ 3 ⟹ kSO3 ≤ 3` bridge and the Clifford
 base (`kSO3 = 0 ⟹ Clifford ≤ 6`): with column 1 determined by column 0, the
 whole matrix is fixed by a bounded `(x, y, k, m)` integer tuple, turning the
-`∀`-over-realizable-`M` discharges into bounded `native_decide` enumerations.
+`∀`-over-realizable-`M` discharges into bounded `decide` enumerations.
 
 ## References
 

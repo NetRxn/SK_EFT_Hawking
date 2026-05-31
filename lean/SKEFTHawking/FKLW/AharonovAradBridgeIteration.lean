@@ -723,7 +723,7 @@ The full Fibonacci witness `fibRep3_image_infinite` (combining `h_inf`
 with `LieSpanProp` for the actual paper14 R-matrices) is **R4.2+**:
 it requires the `Mat3K → Matrix _ _ ℂ` ring-hom embedding (Q(ζ₅, √φ) ↪ ℂ),
 det-normalization, and braid-relation transport from
-`FibonacciQutrit.lean`'s `native_decide` proofs.
+`FibonacciQutrit.lean`'s `decide` proofs.
 
 Project status post-R1–R4.1 ship: axiom is sound; downstream callers
 forward the `h_inf` requirement; the `h_inf` discharge path is

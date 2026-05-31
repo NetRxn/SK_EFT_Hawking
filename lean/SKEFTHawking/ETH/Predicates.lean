@@ -235,7 +235,7 @@ theorem IsEigenstateTypicalityPrincipleAnsatz_fails_small_n
    n < 16 — concrete dimensional-dependence refutation).
 
 Continuation: Wave 3a.3 (concrete witness substrates — 4-site Ising
-chain matrix elements via cyclotomic / native_decide), Wave 3a.4
+chain matrix elements via cyclotomic / decide), Wave 3a.4
 (Aristotle submission user-auth pre-draft + batch). -/
 theorem wave_3a_2_eth_predicates_closure :
     -- A5 strict-stronger than A1

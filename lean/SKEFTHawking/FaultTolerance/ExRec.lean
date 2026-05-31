@@ -143,7 +143,7 @@ ExRec.lean: extended rectangle substrate + malignant-pair attestations.
   - `exRecFailureBound A ε := A · ε²` — the AGP recursion-step bound.
   - `exRecFailureBound_nonneg`, `exRecFailureBound_mono_A`, `exRecFailureBound_mono_ε`.
 
-Consumed by Wave 1b.2 Counting (pins Steane CNOT A_CNOT via native_decide)
+Consumed by Wave 1b.2 Counting (pins Steane CNOT A_CNOT via decide)
 and Wave 1b.3 AGP/Threshold (the main recursion).
 
 Zero sorry. Zero axioms.

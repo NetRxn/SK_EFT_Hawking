@@ -147,9 +147,9 @@ two slightly different forms). The DR-locked-in commitment for Wave 1b is:
 
     ε₀ > 2.73 × 10⁻⁵    ⇔    A_CNOT < 1 / 2.73e-5 ≈ 36,632
 
-Wave 1b.2 (Counting.lean) pins the exact rational `A_CNOT` value via `native_decide`
+Wave 1b.2 (Counting.lean) pins the exact rational `A_CNOT` value via `decide`
 on Steane CNOT ex-Rec location-pair enumeration (or, per DR R1, supplies a smaller
-`decide`-checkable witness if `native_decide` exceeds the 30s budget).
+`decide`-checkable witness if `decide` exceeds the 30s budget).
 
 For Wave 1b.1 substrate purposes, we provide a *conservative* upper-bound
 placeholder so the downstream AGP/Threshold proof is type-correct; Wave 1b.2
@@ -188,7 +188,7 @@ SteaneCode.lean: concrete Steane [[7,1,3]] StabilizerCode instance.
     yields `ε₀ > 2.73e-5` (DR-locked-in threshold).
 
 Consumed by Wave 1b.2 Counting (replaces placeholder with AGP-rigorous A_CNOT
-via `native_decide`) and Wave 1b.3 AGP/Threshold (the main theorem).
+via `decide`) and Wave 1b.3 AGP/Threshold (the main theorem).
 
 Zero sorry. Zero axioms.
 -/

@@ -9,7 +9,7 @@ hypothesis from the R2 soundness audit refactor (commit `f44c60d`,
 
   - R4.2.b: Yang-Baxter `σ_Fib_1 * σ_Fib_2 * σ_Fib_1 = σ_Fib_2 * σ_Fib_1 * σ_Fib_2`
     proven over ℂ (either by direct algebraic manipulation in ℂ, or by
-    a ring-hom transport from the QCyc40Ext-side native_decide proof in
+    a ring-hom transport from the QCyc40Ext-side decide proof in
     `RouabahExplicit.lean`).
   - R4.2.c: `ρ_Fib_SU2 : BraidGroup 3 →* SU(2)` MonoidHom construction
     via `braidGroup3HomFromPair` (R4.1).
@@ -724,7 +724,7 @@ theorem σ_Fib_yb_entry_11 :
 
 Assembled from the 4 entry-level theorems via `Matrix.ext` + `Fin.cases`.
 This is the load-bearing braid relation for the Fibonacci 2-anyon-strand
-representation, lifting `RouabahExplicit.lean`'s native_decide-on-QCyc20 proof
+representation, lifting `RouabahExplicit.lean`'s decide-on-QCyc20 proof
 to the analytic complex-number version where R4.2 continuation (det normalization +
 substantive density) takes over. -/
 theorem σ_Fib_yang_baxter :
