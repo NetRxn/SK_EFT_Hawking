@@ -204,11 +204,17 @@ lemma names — confirm they exist first, §2b.)
 
 ---
 
-## 4. Footprint (ground truth, 2026-05-29)
+## 4. Footprint (ground truth, 2026-05-30 post-6x re-scan)
 
-**100 files · 996 `native_decide` call sites.** (Was 98/1005 at 2026-05-28 triage; Phase 6z added modules.)
+**115 files · 1036 `native_decide` call sites · 852 declarations in transitive closure.**
+(Was 100/996/811 at 2026-05-29; 98/1005/— at 2026-05-28 triage. The 6x closeout + parallel roadmap work added
+~15 files / ~40 sites / ~41 decls of stragglers.) P4 gate `validate.py --check axiom_closure_allowlist` =
+PASS (Invariant #15 clean, 0 non-allow-listed axioms) with the native_decide visibility warning. Build current.
 Per-module counts: see `grep -rc native_decide lean/SKEFTHawking/ | grep -v ':0$' | sort -t: -k2 -rn`.
-Per-decl transitive closure (811→ now re-run): `cd lean && lake env lean --run SKEFTHawking/AxiomAudit.lean`.
+Per-decl transitive closure re-run: `cd lean && lake env lean --run SKEFTHawking/AxiomAudit.lean` (or the
+memoized `validate.py --check axiom_closure_allowlist`, ~56s). Top-density files: KacWaltonFusion(58),
+FibonacciSextetTrueRep(47), SU2kFusion(43), FibonacciBraiding(32), FibonacciQuintetTrueRep(30),
+IsingBraiding(25), FPDimension(23), WRTComputation(22), QCyc5(22), RouabahExplicit/QCyc5Ext/QCyc40(21).
 
 Rough bucket split (static draft — **probe is authoritative**):
 - **B (drop-in `decide`)**: ~10 confirmed + ~30 "probe-then-likely-B" physics modules.
