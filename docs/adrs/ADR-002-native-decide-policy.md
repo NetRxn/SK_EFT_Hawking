@@ -229,8 +229,23 @@ counts — the base-field `QCyc5` facts in FibonacciBraiding — and the tower l
 (FLW 2002; Q3): the formalization, not the fact, is the contribution.
 
 ### Process notes (for the next cleanup)
-- macOS/BSD `sed` lacks `\b`; use `perl -i -pe 's/\bnative_decide\b/decide/g'`. Guard a probe driver with
-  `diff -q` (a no-op replace must not report "CONVERTED") + a tactic-position grep.
+- **Restrict the substitution to TACTIC positions — do NOT blind-replace the word.** A file-wide
+  `perl -i -pe 's/\bnative_decide\b/decide/g'` also rewrites `native_decide` *inside comments and
+  docstrings* of files whose proofs are not converted, producing false provenance (e.g. "kernel-pure, no
+  `decide`", "`decide` / `decide`", or a perf claim that `decide` is tractable on a deg-16 cyclotomic
+  matrix). This happened on 2026-05-30 and was repaired on 2026-05-31. Match only tactic occurrences —
+  `:= by native_decide`, a line-final `by native_decide`, `<;> native_decide`, `by native_decide⟩` — not
+  the bare word. macOS/BSD `sed` lacks `\b`; use `perl`. Guard a probe driver with `diff -q` (a no-op
+  replace must not report "CONVERTED") + a tactic-position grep.
+- **If a file-wide replace is used anyway, two extra gates are MANDATORY before commit:**
+  (i) **read the FULL diff of every changed file — not a spot-check.** The comment damage concentrates in
+  files whose *proofs* never changed, so reviewing only the converted theorems misses it entirely.
+  (ii) run `uv run python scripts/lint_native_decide_comments.py` (ERROR-tier must be clean) and
+  `--strict` to review the WARN-tier contrastive-phrase hits. The linter catches the duplication and
+  "no/never/not/tracked `decide`" artifacts but **not** high-degree perf-claim mangles (the Rouabah class:
+  "30-deep `decide`" on QCyc40Ext) — those are textually identical to legitimate finite `decide` and are
+  caught only by the full-diff read plus the fact that a genuinely-converted high-degree `decide` fails to
+  build or retains the native axiom.
 - Verify every conversion with `#print axioms` (no `*._native.native_decide.ax_*`), never on build-success
   alone — a no-op edit also builds green; and never commit before a full `lake build SKEFTHawking` is green.
 

@@ -47,6 +47,13 @@ lake build SKEFTHawking.<Module>     # then `git checkout` to revert
 #   "failed to synthesize Decidable"   → quantified; try `decide +revert` / `intro; decide` first
 ```
 
+> **Caution (provenance safety):** restrict the actual conversion to **tactic positions**
+> (`:= by native_decide`, line-final `by native_decide`, `<;> native_decide`), NOT a blind
+> `s/\bnative_decide\b/decide/g` — a file-wide replace rewrites `native_decide` inside comments/docstrings
+> of non-converted files and produces false provenance (repaired 2026-05-31). After any conversion run
+> `uv run python scripts/lint_native_decide_comments.py` and read the **full** diff of every touched file.
+> See ADR-002 §"Process notes (for the next cleanup)".
+
 The categorization table in §4 is a best-effort static draft (value-type signal) to *order* the work;
 the probe is authoritative. Do not trust a label over a failed build.
 
