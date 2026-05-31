@@ -19,7 +19,7 @@ algorithm's per-step machinery actually *computes* (kernel `decide` /
     reconstruction word left-inverts the step (`interp (reconWordC k) ·
     reduceStep M k = M`), inherited from `interp_reconWordC_mul`.
 
-The `decide`/`decide` examples at the end witness that `sdeC` and the
+The `decide` examples at the end witness that `sdeC` and the
 selector genuinely reduce in the kernel over the runtime ring.
 
 ## References

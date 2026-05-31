@@ -7,7 +7,7 @@ For a unitary `M`, the SO(3) Bloch image `R(M)` is orthogonal: `R(M)ᵀ · R(M) 
 This is the **achievability** foundation for the `ma_step` existence proof: it forces
 the cleared Bloch numerators `b = √2^kSO3 · R(M)` to satisfy `bᵀ·b = 2^kSO3 · I`,
 hence `bᵀ·b ≡ 0 (mod 2)` (for `kSO3 ≥ 1`) — the constraint that cuts the Bloch parity
-residue down to the 15 classes over which `∃` reducing syllable is `decide`-able.
+residue down to the 15 classes over which `∃` reducing syllable is `native_decide`-able.
 
 ## Headline results
 

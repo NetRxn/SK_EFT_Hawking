@@ -236,7 +236,7 @@ The GS theorem requires ALL conditions to hold. Evading any one is sufficient
     Strengthened from vacuous `true` conclusion (quality audit 2026-03-26).
 
 PROVIDED SOLUTION
-Both conjuncts are decidable computations on concrete lists. Use `decide` or `decide`.
+Both conjuncts are decidable computations on concrete lists. Use `decide`.
 -/
 theorem gs_nogo_requires_all :
     applicable_count gs_conditions_core4 = 2 ∧ applicable_count gs_conditions_core4 < gs_conditions_core4.length := by

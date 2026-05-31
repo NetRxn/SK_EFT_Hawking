@@ -23,7 +23,7 @@ instances). `IsUnitaryT.mul` is therefore proved term-mode (`calc` + `congrArg`)
 
 - **#10** (no `maxHeartbeats`): respected.
 - **#15** (no new project-local axioms): respected (kernel-pure; the gate-unitarity
-  `decide` is kernel, not `decide`).
+  `decide` is kernel, not `native_decide`).
 
 -/
 

@@ -91,7 +91,7 @@ def kSO3 (M : Mat2) : ℕ :=
 These confirm the `kSO3` definition agrees with the validated Python oracle
 (`scripts/kmm_ma_coverage_validation.py`): `kSO3` equals the Matsumoto-Amano
 T-count. All `decide` — kernel-pure (standard three axioms only), no
-`decide`. -/
+`native_decide`. -/
 
 /-- `kSO3 I = 0` (identity is a Clifford). -/
 theorem kSO3_one : kSO3 (1 : Mat2) = 0 := by decide

@@ -13,7 +13,7 @@ The fusion rule is a single computable formula:
   N_{ij}^m = 1 iff |i-j| <= m <= min(i+j, 2k-i-j) AND i+j+m even
 
 All theorems are decidable for fixed k, making them ideal for
-`decide` / `decide`.
+`decide`.
 
 References:
   Verlinde, Nucl. Phys. B 300, 360 (1988)

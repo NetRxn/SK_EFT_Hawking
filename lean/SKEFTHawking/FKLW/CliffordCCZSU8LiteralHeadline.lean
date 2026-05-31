@@ -39,7 +39,7 @@ for membership). Here `CCZ` is load-bearing for universality.
 
   * **#10** (no `maxHeartbeats`): respected.
   * **#15** (no new project-local axioms): respected. `#print axioms` on the headline
-    is kernel-pure `[propext, Classical.choice, Quot.sound]` — no `decide` /
+    is kernel-pure `[propext, Classical.choice, Quot.sound]` — no `native_decide` /
     `Lean.ofReduceBool` on the dependency path (verified 2026-05-29).
 -/
 

@@ -254,7 +254,7 @@ theorem transport_coefficient_count (N : ℕ) :
     PROVIDED SOLUTION
     This is a concrete finite computation. The set Finset.Icc (0,0) (2,2) has 9
     elements; filtering by sum=2 and even first component leaves {(0,2),(2,0)}.
-    Use decide or decide. -/
+    Use decide. -/
 theorem firstOrder_count :
     Finset.card (Finset.filter (fun p : ℕ × ℕ => p.1 + p.2 = 2 ∧ p.1 % 2 = 0)
       (Finset.Icc (0, 0) (2, 2))) = 2 := by decide
@@ -266,7 +266,7 @@ theorem firstOrder_count :
     PROVIDED SOLUTION
     Concrete finite computation. Finset.Icc (0,0) (3,3) has 16 elements;
     filtering by sum=3 and even first component leaves {(0,3),(2,1)}.
-    Use decide or decide. -/
+    Use decide. -/
 theorem secondOrder_count :
     Finset.card (Finset.filter (fun p : ℕ × ℕ => p.1 + p.2 = 3 ∧ p.1 % 2 = 0)
       (Finset.Icc (0, 0) (3, 3))) = 2 := by decide
@@ -278,7 +278,7 @@ theorem secondOrder_count :
 
     PROVIDED SOLUTION
     Concrete finite computation. No pair (m,n) with m+n=3 can have both m and n
-    even (since 3 is odd). The filter is empty. Use decide or decide. -/
+    even (since 3 is odd). The filter is empty. Use decide. -/
 theorem secondOrder_count_with_parity :
     Finset.card (Finset.filter (fun p : ℕ × ℕ =>
       p.1 + p.2 = 3 ∧ p.1 % 2 = 0 ∧ p.2 % 2 = 0)

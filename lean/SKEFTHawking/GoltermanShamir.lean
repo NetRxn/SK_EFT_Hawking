@@ -163,7 +163,7 @@ Alternatively, much simpler: use that ιMulti_span gives top, and filter the sig
 to only (n, f) where n ≤ k (the rest map to zero), giving a Finset spanning set.
 
 Simplest approach: try `exact Module.Finite.of_surjective` with the decomposition map,
-or construct the finite spanning set directly. If stuck, try `decide` or `decide`
+or construct the finite spanning set directly. If stuck, try `decide`
 for small k, or use `Algebra.FiniteType.isNoetherian` path.
 
 The ExteriorAlgebra ℂ (Fin k → ℂ) is Module.Finite because:

@@ -37,7 +37,7 @@ discharge.
 
 - **#10** (no `maxHeartbeats`): respected.
 - **#15** (no new project-local axioms): respected. `decide` (kernel) over the
-  `64` representatives; no `decide` here.
+  `64` representatives; no `native_decide` here.
 
 -/
 

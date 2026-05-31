@@ -11,7 +11,7 @@ Prop 1 reason over `√2`-divisibility of `|x + ω^k y|²`.
 This file ships the **decidable divisibility predicate** `dvdSqrt2Pow z m`
 (`√2^m ∣ z`, computed by peeling `√2` factors `m` times via `divSqrt2`)
 and proves it characterizes genuine divisibility `√2^m ∣ z`. The peel
-form is `decide`/`decide`-friendly (finite, structural on `m`),
+form is `decide`-friendly (finite, structural on `m`),
 which is what the KMM residue/parity case-analysis needs.
 
 ## Headline results

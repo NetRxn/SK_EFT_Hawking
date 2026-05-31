@@ -233,3 +233,69 @@ counts — the base-field `QCyc5` facts in FibonacciBraiding — and the tower l
   `diff -q` (a no-op replace must not report "CONVERTED") + a tactic-position grep.
 - Verify every conversion with `#print axioms` (no `*._native.native_decide.ax_*`), never on build-success
   alone — a no-op edit also builds green; and never commit before a full `lake build SKEFTHawking` is green.
+
+---
+
+## 2026-05-31 Route-1′ scope (deferred substrate project)
+
+The 2026-05-30 execution deferred Route-1′ (Decision i). This section scopes it concretely so the decision to
+build it later is a costed one rather than a deferred unknown. **Status: deferred, not scheduled.** Nothing
+below is committed work; it is the design a future substrate wave would execute if the trigger (bottom) fires.
+
+### Goal
+Make the kernel-pure `ext`/`powerTable` template (the method that hardened the `QCyc5` base-field facts in
+`FibonacciBraiding`, 20/30) **degree-scalable**, so the higher cyclotomic types can be hardened without
+hand-authoring O(deg²) `powerTable_m_k` rfl-lemmas: `QCyc16` (deg 8, ~120 lemmas), `QCyc40` (deg 16, ~480),
+`QCyc80` (deg 32, ~2000), plus the two-level towers (`QCyc5Ext`, `QSqrt5`) and matrices over them.
+
+### Obstruction (two compounding walls)
+1. **Lemma blow-up.** A degree-d field needs ≈(2d−1)·d `powerTable_m_k` lemmas for `simp` to fold ζ-power
+   products. 28 by hand at deg 4 (`QCyc5`, shipped) is fine; 120/480/2000 is not.
+2. **Tower nesting.** `QCyc5Ext = QCyc5[√φ]` delegates `*` to `mulReduce2`, which nests the *base* `QCyc5`
+   `powerTable` reduction inside the degree-2 extension. Even with a base powerTable the fully-symbolic
+   expansion blows the heartbeat budget — this is why the hand-template tops out at base `QCyc5` (confirmed
+   empirically 2026-05-30; see "Key finding" above).
+
+### Hard design constraint (the ℚ-wall)
+The metaprogram **must be symbolic** — emit ℚ-equalities closed by `norm_num`/`ring` — **not** an attempt to
+make `decide` reduce. Kernel `decide` is dead over ℚ (`Rat.mul`/`Rat.add` irreducible by design; addendum
+finding 2). The output tactic stays `simp [<simproc>] <;> norm_num`, kernel-pure
+`{propext, Classical.choice, Quot.sound}`. No Mathlib built-in does this (`AdjoinRoot`/`CyclotomicField` are
+`Finsupp + Classical.decEq` → noncomputable; addendum Mathlib check).
+
+### Two implementation routes
+- **Route 1′-a — coeff-level simproc (RECOMMENDED).** A `simproc` on the pattern
+  `(PolyQuotQ.mulReduce _ r _ _).coeffs _` that (i) evaluates the coefficient convolution symbolically over
+  ℚ, (ii) folds degrees ≥ d back via the reduction vector `r`, (iii) emits a `norm_num`-closable ℚ equality.
+  Degree-agnostic, and the **only** route that also handles *towers* (recurse into coeffs that are themselves
+  base-field elements) and *matrices* (`Mat3K`). The Mathlib-PR-grade artifact: a kernel-decidable
+  cyclotomic-arithmetic simproc over ℚ is genuinely novel.
+- **Route 1′-b — auto-generate the per-type `powerTable` simp set** via a macro from the reduction vector.
+  Simpler, but unlocks only *single-level* high-degree fields (`QCyc16`/`QCyc40`); it does **not** solve the
+  tower nesting (`QCyc5Ext`).
+
+### Effort: ~200–500 LoC Lean metaprogramming
+- simproc skeleton + coeff-projection pattern match: ~80–120
+- ℚ convolution + reduction-fold over `Fin`/array: ~80–150
+- tower recursion (base-field coeff descent): ~40–100
+- per-type glue (`QCyc16`/`QCyc40`, `QCyc5Ext`) + tests: ~50–100
+
+Main risk = simproc **performance**: it must stay under the heartbeat budget at the target degree (Invariant
+#10 forbids raising `maxHeartbeats`). It does **not** need to beat `native_decide`'s compiled speed.
+
+### De-risked prototype plan (go/no-go before the full build)
+1. Build Route 1′-a for the single-level case; target **`QCyc16` (deg 8)** — the smallest tower the
+   hand-template cannot reach.
+2. Convert **one** `IsingBraiding` R-matrix entry over Q(ζ₁₆); confirm kernel-pure (`#print axioms` shows no
+   `Lean.ofReduceBool`) **and** under the heartbeat budget. ← **decision gate.**
+3. If green: add tower recursion → `QCyc5Ext` (unlocks `FibonacciUniversality`/`FibonacciQutrit`); add matrix
+   support → `Mat3K`.
+4. Sweep `QCyc40` (D6) + the 10 retained heartbeat-bound `FibonacciBraiding` identities (`sigma2_det`, the 4
+   `braid_*`, the 2 `s1s2_cu_*`, the R-power inequalities). The direct coeff reduction sidesteps the nesting
+   blow-up that timed out the simp-set template, so this would also take **`FibonacciBraiding` to 30/30**.
+
+### Trigger to actually build it
+Per Q3, the modules Route-1′ unlocks verify *established literature* (Ising/D6/SU(3) density, FLW 2002) — the
+payoff is formalization completeness, not new-claim trust. Build it only if **either** (a) a publication
+arises where a fully-kernel-pure Ising/D6/SU(3) result earns its keep, **or** (b) the simproc is pursued as a
+standalone Mathlib contribution. Routine trust-surface cleanup does not clear the bar.

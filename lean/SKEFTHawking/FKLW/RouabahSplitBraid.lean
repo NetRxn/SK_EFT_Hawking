@@ -2,7 +2,7 @@
 Phase 6p Wave 3a.2.2c-followup: Split-braid Frobenius bound for the Rouabah
 30-crossing Hadamard.
 
-The direct attempt at the 30-deep `decide`
+The direct attempt at the 30-deep `native_decide`
 
   `frobNormSq_ext (fibRep3Qubit rouabah_hadamard) hadamardTarget_ext = <literal>`
 
@@ -20,8 +20,8 @@ Mat2K_40_Ext monoid laws**:
      = w2.foldl (fun acc l => acc * fibRep3Qubit_letter l) (fibRep3Qubit w1)`
 
 The split form has a 15-deep prefix computation (`fibRep3Qubit w1`) followed
-by a 15-deep `foldl` from that prefix — `decide`-tractable in both
-substeps (verified experimentally; 15-deep decide on QCyc40Ext matrix
+by a 15-deep `foldl` from that prefix — `native_decide`-tractable in both
+substeps (verified experimentally; 15-deep native_decide on QCyc40Ext matrix
 products completes in seconds).
 
 **This module ships:**
@@ -87,13 +87,13 @@ This is the **load-bearing structural lemma** that avoids the need for
 `Mat2K_40_Ext` monoid laws.  By `List.foldl_append`, the full 30-deep
 `fibRep3Qubit` decomposes into:
 
-  - The 15-deep prefix `fibRep3Qubit rouabah_first15` (tractable decide).
+  - The 15-deep prefix `fibRep3Qubit rouabah_first15` (tractable native_decide).
   - A 15-deep `foldl` continuation starting from that prefix.
 
-Both parts are individually tractable for `decide`.
+Both parts are individually tractable for `native_decide`.
 
 **Note:** the post-pullout combined computation (15-deep prefix + 15-deep
-foldl-from-prefix + Frobenius norm) takes longer than naive 30-deep decide
+foldl-from-prefix + Frobenius norm) takes longer than naive 30-deep native_decide
 in some cases (intermediate coefficient growth dominates).  The structural
 infrastructure shipped here is genuinely useful for the **algebraic** discharge
 path: once a concrete QCyc40Ext literal `frob_value` is known, the discharge
@@ -119,7 +119,7 @@ can be quantified over once the explicit QCyc40Ext literal value is plugged.
 
 /-- Predicate: the squared Frobenius norm of the difference equals a
 specific QCyc40Ext literal value.  Discharged by the split-form
-`decide` plus the split equality (this module).
+`native_decide` plus the split equality (this module).
 
 **Status:** structural infrastructure shipped.  The explicit QCyc40Ext
 literal `frob_value` is Python-precomputable (~30-50 LoC of literal
@@ -163,7 +163,7 @@ Hadamard Frobenius bound.
     biconditional reducing the full-form discharge to the split-form discharge.
 
 **Substantive content:**
-  (a) The Rouabah word's 30-deep `decide` timeout is structurally
+  (a) The Rouabah word's 30-deep `native_decide` timeout is structurally
       reduced to two 15-deep computations via algebraic factoring
       (`List.foldl_append`).
   (b) The reduction requires NO `Mat2K_40_Ext` monoid laws — it works
@@ -175,8 +175,8 @@ Hadamard Frobenius bound.
   - Plug in the explicit QCyc40Ext literal `frob_value` for the Rouabah
     Hadamard (~30-50 LoC, Python-precomputable as 32 rationals).
   - Discharge `RouabahHadamardFrobValue frob_value` via
-    `rouabahHadamardFrobValue_split_form` + `decide` (single
-    decide call on the SPLIT-FORM equality; this is empirically
+    `rouabahHadamardFrobValue_split_form` + `native_decide` (single
+    native_decide call on the SPLIT-FORM equality; this is empirically
     feasible per the 15-deep tractability we verified, but the combined
     15-deep prefix + 15-deep foldl-from-prefix may need additional
     optimization due to intermediate coefficient growth in QCyc40Ext).
