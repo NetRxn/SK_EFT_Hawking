@@ -314,3 +314,38 @@ Per Q3, the modules Route-1′ unlocks verify *established literature* (Ising/D6
 payoff is formalization completeness, not new-claim trust. Build it only if **either** (a) a publication
 arises where a fully-kernel-pure Ising/D6/SU(3) result earns its keep, **or** (b) the simproc is pursued as a
 standalone Mathlib contribution. Routine trust-surface cleanup does not clear the bar.
+
+### Gate outcome — RAN 2026-05-31: 🔴 RED (naive template port does NOT survive degree 8)
+
+The decision gate (step 2 above) was executed in a throwaway scratch module (`QCyc16Route1Gate.lean`,
+deleted). QCyc16 (deg 8, `x⁸ = −1`) was hand-equipped with the QCyc5 `ext`/`powerTable` template
+mechanically generalized to degree 8: 8 `mul_cᵢ` rfl-lemmas + **120** `powerTable_m_k` lemmas (rows 0–7 by
+`rfl`; rows 8–14 each via `show <k nested shiftByXArr>; simp [shiftByXArr, reduction]`, k up to 7), then the
+`IsingBraiding.R_product` theorem (`ζ⁻¹·ζ³ = ζ²`) reproved by `ext <;> (simp only [mul_cᵢ]; rw
+[mulReduce_coeffs]; simp [toPoly, Fin.sum_univ_eight]; ring)`.
+
+**Result: FAILED.** `lake env lean` (authoritative per-file check) reported **16 `timeout at isDefEq`
+(200000 heartbeats)** plus `maximum recursion depth` errors — all on the **row-8–14 powerTable step-lemmas**,
+not on the final `R_product` ring-step — and `#print axioms g_R_product` = `[propext, sorryAx,
+Classical.choice, Quot.sound]` (the `sorryAx` confirms the proof did not close). *(A concurrent `lake build`
+emitted a spurious "exit 0"; its own log shows `build failed` with the same errors — the per-file run is
+authoritative.)*
+
+**Diagnosis — and a correction to the optimistic scoping above.** The earlier note "QCyc16 is easy because
+every powerTable entry is a single ±1/0" was half right and misleading: the entry *values* are trivial, but
+*proving* each entry forces Lean to unfold `(buildPowerTable reduction)[m]!` by definitional reduction
+through `m−7` nested `shiftByXArr` applications over a length-8 array (vs. ≤3 over length-4 for QCyc5), and
+that `show`-driven `isDefEq` unfolding is what blows the heartbeat/recursion budget. The bottleneck is the
+**table-entry proofs**, not the final ring arithmetic — so the cost is in the *machinery port*, exactly where
+Route 1′-b (a macro emitting these same `show`+`simp` lemmas) would land. **Route 1′-b is therefore NOT
+validated at degree 8 as a naive port** — contrary to the first-pass hope, the cheap path does not "just
+work."
+
+**Revised recommendation.** Route-1′ remains deferred (triggers unchanged), but the gate downgrades the plan:
+a degree-8 hardening needs a *better table-entry strategy* before any macro is worth writing — candidates:
+(i) prove `powerTable_m_k` by `decide`/`norm_num` on the array lookup instead of deep `show`-defeq; (ii) a
+closed-form characterisation lemma for `buildPowerTable` entries that sidesteps iterated `shiftByXArr`
+unfolding; or (iii) Route 1′-a's coeff-level simproc, which never materializes the table at all. The gate did
+its job: it converted a multi-session metaprogram gamble into a known, bounded sub-problem (kill the
+table-entry defeq blowup first), for ~1 session of work — and corrected a wrong assumption before any code
+was committed. A re-prototype on the table-entry lemma is the next concrete step if/when a trigger fires.
