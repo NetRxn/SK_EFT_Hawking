@@ -2,6 +2,16 @@
 
 _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_manifest.py`. Append history accumulates as `scripts/bundle_append.py` invocations land._
 
+## 2026-05-31 — Stage-13 finding remediation: 🔴 RED → 🟢 GREEN
+
+Closed the 5 pre-existing blocker-class findings holding D3 at RED (CitationIntegrity / NarrativeGrounding on source papers paper22, paper36; never recorded in the supersession ledger):
+
+- **`…paper22_ew_phase_transition:1.2` (×3 review rounds, CitationIntegrity major):** FIXED — `doi_verified` flipped None→True for CsikorFodorHeitger1999, KLRS1996, ButtazzoEtAl2013, ShaposhnikovWetterich2010 after **Crossref API** verification (title+author+year match).
+- **`…paper36_center_symmetry:1.4` (CitationIntegrity major):** FIXED — `doi_verified` flipped for Polyakov1978, SvetitskyYaffe1982, PelissettoVicari2002, KovtunSonStarinets2005, KitaevAnyons2003 (Crossref-verified); KosPolandSimmonsDuffin2016 + HofmanIqbal2018 already verified.
+- **`…paper36_center_symmetry:4.1` (NarrativeGrounding major):** FIXED — QGP η/s ≈ 0.10–0.20 value grounded by registering Crossref-verified primary source `HeinzSnellings2013` (Annu. Rev. Nucl. Part. Sci. 63, 123 (2013)); the notebook already attributes it.
+
+All recorded in `docs/review_finding_supersessions.json`. Post-remediation: D3 open=5 (all minor), blockers=0 → 🟢 GREEN.
+
 ## 2026-05-04 — Lift-letter from `paper25_gravitational_waves` (§6)
 
 - Source title: GW170817 vs vestigial graviton
@@ -241,3 +251,11 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-05-12 first-claim-removal: paper5_adw_gap conclusion ('first such derivation in the published literature' removed), paper20_scalar_rung abstract + conclusion rewritten to descriptive + prior-art paragraph reframed as 'Relation to existing libraries' (kept the survey content, dropped 'no prior formalization' framing), paper44_riemannian_connection signature-falsifier wording softened.
+
+## 2026-05-31 — Freshness-bookkeeping (bookkeeping)
+
+- Source: (none — bookkeeping event)
+- Lift action: Freshness-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL §3d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN).

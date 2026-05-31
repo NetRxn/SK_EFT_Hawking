@@ -26,3 +26,11 @@ Post-Wave-1-7 absorption: F bundle synced with sibling Tier-1 fix-pass correctio
 - Insertion point: (n/a)
 - Stage-13 redo required: no
 - Notes: 2026-05-12 project-wide first-claim-removal pass: 15 source paper drafts (paper1, paper2, paper5, paper7, paper8, paper9, paper10, paper11, paper14, paper16_graphene_sk_eft, paper16_wrt_tqft, paper17_dark_sector, paper18, paper20, paper44) had primacy-framing prose ('We present the first ...', 'the first machine-checked', 'the first such', 'first formalization') rewritten to descriptive content-first prose. paper14 + paper16_wrt_tqft titles changed (dropped leading 'First'). No claims added; no numerical results changed; bibliographies + citations preserved. F bundle prose was not directly edited but inherits the per-source revisions via the flagship-bundle aggregation; the next F lift cycle will fold the new descriptive prose into bundle text.
+
+## 2026-05-31 — Freshness-bookkeeping (bookkeeping)
+
+- Source: (none — bookkeeping event)
+- Lift action: Freshness-bookkeeping
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL §3d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN).

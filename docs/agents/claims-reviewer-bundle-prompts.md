@@ -18,8 +18,8 @@ table).
 
 ## How agents consume this document
 
-The reviewer agents accept a `bundle_target` argument (one of the 13
-bundle codes: `F`, `D1`–`D5`, `L1`–`L3`, `I1`, `I2`, `E1`, `E2`). Given
+The reviewer agents accept a `bundle_target` argument (one of the 17
+bundle codes: `F`, `D1`–`D8`, `L1`–`L3`, `I1`–`I3`, `E1`, `E2`). Given
 a bundle target, the agent:
 
 1. Resolves the bundle's lifted source material via
@@ -294,6 +294,97 @@ PRL 136, 156601 (2026).
 - Verify the substrate-generality claim (Phase 6w strategy synthesis
   decision-rule condition) is verifiable at the type level: the
   contributing Lean predicates take arbitrary type parameters.
+
+---
+
+### D8. Kernel-Verified Universal Quantum Gate Compilation — Alphabet-Agnostic Solovay-Kitaev across Dimensions
+
+(NEW BUNDLE — authorized 2026-05-31 per Pipeline Invariant #14;
+consolidates the verified-quantum-compilation corpus that had
+outgrown the D4 §9.x showcase container.)
+
+**Sources:** Phase 6p (Fibonacci density), 6t (quantitative SK +
+reference-compiler skeleton), 6u (alphabet-agnostic substrate +
+Clifford+T), 6x (Read-Rezayi k5/k7 + alphabet substrates + Mathlib
+tracks), 6x′ (Mukhopadhyay channel-rep + Toffoli bounds), 6y (SU(d)
+lift + SU(4)/SU(8) instances), 6z (T-free CCZ-essential SU(8)
+density). All Lean-only / D.4-sourceless.
+
+**Anchors:**
+- **Alphabet-agnostic substrate** — generic `GeneratingSet`-parametrized
+  quantitative Solovay-Kitaev (`GenericSolovayKitaevQuantitative.lean`);
+  Clifford+T instance `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional`
+  (`CliffordTQuantitative.lean`) + `cliffordT_density_unconditional`
+  via Niven obstruction (`CliffordTInfiniteOrder.lean`).
+- **SU(d) lift (HEADLINE)** `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight`
+  (`GenericSUdQuantitative.lean` / `GenericSUdSkHeadlineCascadeConcrete.lean`) —
+  first kernel-verified quantitative SK at arbitrary dimension.
+- **Concrete-radius matrix logarithm** `matrixMercatorLog` /
+  `exp_matrixMercatorLog` (`GenericSUdMatrixMercatorLog.lean`) — the
+  construction that eliminated the existential-radius regime blocker;
+  Mathlib-PR-eligible.
+- **Five-alphabet survey** — Fibonacci (`FibSU2Density.lean`,
+  `SolovayKitaevQuantitative.lean`), Clifford+T, Read-Rezayi
+  `SU(2)_5`/`SU(2)_7` (`ReadRezayiK5Quantitative.lean` /
+  `ReadRezayiK7Quantitative.lean`), trapped-ion SU(4)
+  `trappedIonSU4_solovayKitaev_headline_unconditional`
+  (`TrappedIonSU4WitnessFull.lean`), Clifford+T SU(8)
+  `cliffordCCZSU8_solovayKitaev_headline_unconditional`.
+- **T-free CCZ-essential SU(8) density** `cliffordCCZLiteral_dense` +
+  `cliffordCCZLiteral_solovayKitaev_headline_unconditional`
+  (`CliffordCCZSU8LiteralHeadline.lean` /
+  `CliffordCCZSU8LiteralGeneratingSet.lean` /
+  `CliffordCCZSU8LiteralSeed.lean`).
+- **Mukhopadhyay resource theory** — unconditional Toffoli lower
+  bound `channelSde2_le_toffoliCost`
+  (`MukhopadhyayToffoliUnconditional.lean` /
+  `MukhopadhyayToffoliBound.lean`); dyadic-entry Lemma 3.10
+  `channelRep_interp_isRat` (`MukhopadhyayChannelRep.lean` /
+  `MukhopadhyayMatrixSde2.lean`); converse `cliffordOnly_not_dense`
+  (`MukhopadhyayCliffordNotDense.lean`).
+- Primary sources: Solovay-Kitaev; Dawson-Nielsen (arXiv:quant-ph/0505030);
+  Kuperberg 2009; Boykin-Mor-Pulver-Roychowdhury-Vatan
+  (arXiv:quant-ph/9906054); Read-Rezayi (arXiv:cond-mat/9809384);
+  Brylinski-Brylinski (arXiv:quant-ph/0108062); Aaronson-Gottesman
+  (arXiv:quant-ph/0403025); Mukhopadhyay (arXiv:2401.08950);
+  Kliuchnikov-Maslov-Mosca (arXiv:1206.5236); Ross-Selinger
+  (arXiv:1403.2975). Each must resolve to a primary-source cache file.
+
+**Stage-13 anchors specific to D8:**
+- **Honest scope — SU(8) duality (load-bearing).** The Phase 6y SU(8)
+  instance achieves density from the `{H,T,CNOT}` sub-alphabet with CCZ
+  **present-but-over-complete**; the Phase 6z literal instance is
+  **T-free and CCZ-essential**. Verify the draft never conflates the
+  two: CCZ-essentiality is a claim about the 6z literal route ONLY
+  (backed by `cliffordOnly_not_dense`), not the 6y over-complete route.
+- **Unconditional vs parametric Toffoli bound.** Verify the Toffoli
+  lower bound is stated as **unconditional** (`channelSde2_le_toffoliCost`,
+  with the `hC`/`hCCZ` hypotheses discharged in Phase 6x′), NOT the
+  older parametric form. Full Toffoli minimality (Mukhopadhyay
+  Conjecture 4.8) is explicitly OUT of scope — verify no overclaim.
+- **Length exponent honesty.** Verify the word-length exponent is the
+  honest `log 5 / log(3/2) ≈ 3.97`, NOT `log 5 / log 2 ≈ 2.32`
+  (the latter would require an unproven quadratic contraction). Anchor:
+  `skLengthExponent_sud` (`GenericSUdSkLengthExponent.lean`).
+- **Cross-bridge to D4 (Fibonacci/topological anchor).** D4 retains
+  the Fibonacci-universality + categorical-foundations focus; D8 cites
+  D4 for the Fibonacci anchor and generalizes the universality
+  machinery. Verify no double-counting of the Fibonacci density /
+  quantitative-SK content between D4 §9.x and D8 §1–§2.
+- **Cross-bridge to D6 (FT-QC substrate).** D6 *consumes* D8's
+  quantitative SK as its universal-compilation primitive. Verify the
+  two cite each other cleanly without duplicating the SK substrate
+  content; the relationship D6 previously assigned to the Phase 6t
+  Fibonacci headline is now served, more generally, by D8.
+- **Public/private seam.** Verify the draft's scope statement keeps
+  runtime-compiler implementation, vendor-specific tuning, certificate
+  formats, and length-optimality engineering explicitly OUT of scope
+  (D8 is the verified-existence / universality / lower-bound theory).
+  The draft must not reference any private repository or commercial
+  product.
+- **No project-local axioms** across D8 contributions (Pipeline
+  Invariant #15); axiom-audit cross-check via `validate.py`. All
+  headlines kernel-pure `{propext, Classical.choice, Quot.sound}`.
 
 ---
 

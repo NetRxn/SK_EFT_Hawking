@@ -1,6 +1,6 @@
 # Bundle Readiness Heatmap
 
-**Auto-generated:** 2026-05-27
+**Auto-generated:** 2026-05-31
 **Tool:** `scripts/bundle_readiness.py --heatmap`
 
 **Companion to:** `docs/READINESS_GATES.md` (per-paper) — the per-bundle analog. Phase 6i Wave 7.4 deliverable.
@@ -15,12 +15,15 @@
 
 | Bundle | Tier | Sources | Open | Blockers | Severity mix | Verdict |
 |---|---:|---:|---:|---:|---|:---:|
-| **F** | 0 | 53 | 22 | 8 | 3 advisory, 2 critical, 6 major, 11 minor | 🔴 RED |
-| **D1** | 1 | 12 | 1 | 0 | 1 minor | 🟢 GREEN |
+| **F** | 0 | 59 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D1** | 1 | 12 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **D2** | 1 | 6 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **D3** | 1 | 31 | 10 | 5 | 5 major, 5 minor | 🔴 RED |
-| **D4** | 1 | 13 | 4 | 1 | 1 major, 3 minor | 🔴 RED |
-| **D5** | 1 | 9 | 7 | 2 | 3 advisory, 2 critical, 2 minor | 🔴 RED |
+| **D3** | 1 | 31 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D4** | 1 | 12 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D5** | 1 | 9 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D6** | 1 | 3 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D7** | 1 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
+| **D8** | 1 | 9 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L1** | 2 | 2 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L2** | 2 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **L3** | 2 | 4 | 0 | 0 | _(none)_ | 🟢 GREEN |
@@ -28,26 +31,29 @@
 | **I2** | 3 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **I3** | 3 | 1 | 0 | 0 | _(none)_ | 🟢 GREEN |
 | **E1** | 4 | 5 | 0 | 0 | _(none)_ | 🟢 GREEN |
-| **E2** | 4 | 4 | 1 | 0 | 1 minor | 🟢 GREEN |
+| **E2** | 4 | 4 | 0 | 0 | _(none)_ | 🟢 GREEN |
 
 ## Gate × Bundle distribution (open findings)
 
-| Bundle | CitationIntegrity | CountFreshness | ParameterProvenanc | unclassified |
-|---|---:|---:|---:|---:|
-| **F** | 9 | 1 | 3 | 9 |
-| **D1** | 0 | 0 | 0 | 1 |
-| **D2** | 0 | 0 | 0 | 0 |
-| **D3** | 6 | 0 | 0 | 4 |
-| **D4** | 1 | 0 | 2 | 1 |
-| **D5** | 2 | 1 | 1 | 3 |
-| **L1** | 0 | 0 | 0 | 0 |
-| **L2** | 0 | 0 | 0 | 0 |
-| **L3** | 0 | 0 | 0 | 0 |
-| **I1** | 0 | 0 | 0 | 0 |
-| **I2** | 0 | 0 | 0 | 0 |
-| **I3** | 0 | 0 | 0 | 0 |
-| **E1** | 0 | 0 | 0 | 0 |
-| **E2** | 0 | 0 | 0 | 1 |
+| Bundle |  |
+|---||
+| **F** |  |
+| **D1** |  |
+| **D2** |  |
+| **D3** |  |
+| **D4** |  |
+| **D5** |  |
+| **D6** |  |
+| **D7** |  |
+| **D8** |  |
+| **L1** |  |
+| **L2** |  |
+| **L3** |  |
+| **I1** |  |
+| **I2** |  |
+| **I3** |  |
+| **E1** |  |
+| **E2** |  |
 
 ## Notes
 

@@ -4,7 +4,7 @@
 
 This project asks a deep question: can the mathematics of exotic states of matter — superfluids, topological insulators, quantum spin liquids — also describe the fundamental forces and particles of the universe, and where exactly does that idea break down? We investigate this with a combination of numerical computation, formal mathematical proof-checking in Lean 4, and automated theorem proving, producing experimentally testable predictions along the way.
 
-Everything is machine-checked in the Lean 4 proof assistant. The library currently contains **5,855 theorems across 322 modules with zero sorry project-wide** and only **one remaining axiom** (the 4+1D gapped-interface conjecture — a standard open question in lattice QFT, not a project-originated assumption).
+Everything is machine-checked in the Lean 4 proof assistant. The library currently contains **9,944 theorems across 751 modules with zero sorry project-wide and zero project-local axioms** (`docs/counts.json`, 2026-05-30). (The 4+1D gapped-interface conjecture that was formerly the project's single axiom has since been eliminated; the axiom count is now 0.)
 
 ---
 
@@ -75,6 +75,10 @@ A parallel strand uses the same formalization rigour on a finite-dimensional qua
 
 The dissipative-Hawking chain was extended to a 2+1D relativistic Dirac fluid. Modules `DiracFluidMetric.lean`, `GrapheneHawking.lean`, `DiracFluidSK.lean`, `GrapheneNoiseFormula.lean`, and `QuasiOneDReduction.lean` form the graphene track. The 3×3 acoustic metric block-diagonalizes for quasi-1D flow, letting the existing 1+1D WKB machinery apply directly (≈92% Lean theorem reuse). Predicted T_H ≈ 2.4 K for the Dean bilayer nozzle (9 orders above BEC), dissipative correction δ_diss negligible relative to dispersive δ_disp (~−3%), noise formula `ΔS_I(ω) = 2ℏω σ_Q Γ(ω) n_H(ω)` derived from first principles (Keldysh FDT + Landauer–Büttiker). Paper 16a documents the platform end to end; collaboration outreach to Lucas/Dean (Columbia) and Kim (Harvard) is unblocked.
 
+### 10. A machine-checked theory of universal quantum compilation
+
+A quantum computer with a small fixed set of gates ("an alphabet") needs a *compiler* to approximate any desired operation. The Solovay-Kitaev theorem says this is possible with provably-bounded error and circuit length — and the project now holds the **first machine-checked version of that theory at full generality**. The compiler machinery is packaged alphabet-agnostically (give it any rich-enough gate set and the verified compiler ships automatically), lifted to arbitrary dimension SU(d) (not just single-qubit), and instantiated on five alphabets: Fibonacci anyons, Clifford+T, Read-Rezayi anyons at levels 5 and 7, trapped-ion Mølmer-Sørensen gates (SU(4)), and Clifford+CCZ (SU(8)). Two genuinely different proofs establish density in SU(8): one using the T gate, one using CCZ with **no** T gate at all (`cliffordCCZLiteral_dense`) — and a companion result proves CCZ is *essential* (Clifford gates alone generate only a finite group, `cliffordOnly_not_dense`). On the resource side, an *unconditional* lower bound on the number of Toffoli gates needed for any operation (`channelSde2_le_toffoliCost`) is machine-checked, following Mukhopadhyay 2024. The lone existential obstruction that had blocked the SU(d) generalization was removed by constructing a **concrete-radius matrix logarithm** — a contribution Mathlib itself lacks. This corpus (Phases 6u–6z) is the project's largest single body of verified mathematics and is published as its own deep paper (bundle D8).
+
 ---
 
 ## How It Works
@@ -97,9 +101,19 @@ Every paper is run through an adversarial-reviewer agent (Opus, fresh context) b
 
 ---
 
-## What's New Since You Last Looked (2026-04-24 → 2026-05-07 snapshot)
+## What's New Since You Last Looked (2026-04-24 → 2026-05-31 snapshot)
 
-Since the 2026-04-24 snapshot, the program has shipped Phase 6 e/f/g/m/n/o substantive content + Phase 7a paper-bundle architecture freeze + Phase 7 absorption Sessions 1–5 closing all 14 bundle stages 9/10/13 to GREEN. Notable additions:
+Since the 2026-04-24 snapshot, the program has shipped Phase 6 e/f/g/m/n/o substantive content + Phase 7a paper-bundle architecture freeze + Phase 7 absorption Sessions 1–5 + the **verified-quantum-compilation arc (Phases 6u→6x→6x′→6y→6z)** that grew the library from ~5,900 to **9,944 theorems** and prompted a new Tier-1 publication bundle (D8). Notable additions:
+
+**The verified-quantum-compilation arc (Phases 6u–6z, the headline of this snapshot):**
+
+- **First kernel-verified Solovay-Kitaev at arbitrary dimension SU(d)** (Phase 6y) — `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight`. The existential-radius blocker was removed via a novel **concrete-radius matrix logarithm** (`matrixMercatorLog`, Mathlib-PR-eligible); the word-length exponent was corrected to the honest `log 5/log(3/2) ≈ 3.97` and discharged. Multi-qubit instances: trapped-ion SU(4) (Mølmer-Sørensen) + Clifford+T SU(8), both unconditional.
+- **First T-free, CCZ-essential density in SU(8)** (Phase 6z) — literal ⟨H,S,CNOT,CCZ⟩ (no T-gate) dense (`cliffordCCZLiteral_dense`), via an infinite-order CCZ·(H⊗H⊗H) seed + Clifford-conjugation irreducibility. A complementary, fundamentally distinct mechanism to 6y's per-qubit-T route.
+- **First unconditional machine-checked Toffoli lower bound** (Phase 6x′, Mukhopadhyay 2401.08950) — `channelSde2_le_toffoliCost` (`T^of(U) ≥ sde₂(Û)`), with the converse `cliffordOnly_not_dense` proving Clifford-alone is finite and CCZ is genuinely essential.
+- **Read-Rezayi `SU(2)_5` / `SU(2)_7` unconditional headlines** (Phase 6x) via Chebyshev-`T₇` + triple-angle Niven obstructions; plus trapped-ion/CCZ matrix substrates and Mathlib-PR presentations (generic BCH cubic, Cartan density-from-witness, concrete word-length).
+- The corpus is consolidated into new Tier-1 bundle **D8** ("Kernel-Verified Universal Quantum Gate Compilation"), authorized 2026-05-31. See `docs/stakeholder/Phase6x-6z_VerifiedQuantumCompilation_{Implications,Strategic_Positioning}.md`.
+
+**Earlier in the snapshot window:**
 
 - **Classical-GR algebraic backbone in Lean** — first in any proof assistant. Phase 6f shipped Riemann, Einstein tensor, energy conditions with explicit counterexample witnesses, exact-solutions catalog, ADM 3+1, tetrad formalism, Lorentzian metric typeclass, and bundle-level Levi-Civita uniqueness via the substantive Koszul-bilinear-form argument from Wald §3.1.
 - **Heat-kernel chain through $a_4$ + Stelle higher-curvature + Einstein–Cartan torsion bound passage** — Phase 6e closes the "GR from condensate" derivation chain. Four Decision Gates passed. Cosmological-constant prediction overshoots observation by ~$10^{122}$ at Planck-natural cutoff (CC problem reproduced, not solved — the honest verdict).
@@ -112,33 +126,34 @@ Since the 2026-04-24 snapshot, the program has shipped Phase 6 e/f/g/m/n/o subst
 - **First alphabet-independent kernel-verified quantitative Solovay-Kitaev substrate** (Phase 6u Waves 1–6 + Wave 4b). The Lie-algebraic core of Solovay-Kitaev (Dawson-Nielsen recursion, Cartan v4 classification, BCH bracket-closure, ε₀-net) packaged behind a generic `GeneratingSet` abstraction. Future quantum-gate-set formalizations now instantiate rather than re-derive.
 - **First kernel-verified UNCONDITIONAL Clifford+T quantitative Solovay-Kitaev compiler** (Phase 6u Track T-S.5). The bundled-strict headline `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional` conjoins error bound `≤ ε` and polylog length bound at the same compile level. Clifford+T is the canonical fault-tolerant gate set; this is the verified specification.
 - **First kernel-verified ⟨H, T⟩ density in SU(2)** (Phase 6u T-S.2) via Niven-based algebraic-integer obstruction on `√2·sin(π/8)` (the trace of `H_SU·T_SU`). The 1999 BMPRV folklore result, now machine-verified. The methodology generalizes to future alphabet density proofs (Read-Rezayi, etc.).
-- **Paper-bundle architecture frozen** (Phase 7a). 14 publication targets: 1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure (I3 added Phase 6n Session 4 under Pipeline Invariant #14) + 2 Tier-4 experimental. 14-step BUNDLE_LIFT_PROCEDURE + LATE_PHASE6_ABSORPTION_PROTOCOL frozen.
-- **All 14 bundles 🟢 GREEN** at Phase 7 absorption Session-5 close. The L1 → arXiv-voucher gate is the only remaining program-level blocker for the first three Tier-2 PRL splashes.
+- **Paper-bundle architecture frozen** (Phase 7a), now **17 publication targets**: 1 flagship + 8 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure + 2 Tier-4 experimental. Grown from the original 14 by D6 (FT-QC substrate, Phase 6v), D7 (tensor-network demarcation, Phase 6w), and D8 (universal quantum compilation, 2026-05-31). 14-step BUNDLE_LIFT_PROCEDURE + LATE_PHASE6_ABSORPTION_PROTOCOL frozen.
+- **The original 14 bundles cleared their reviewer triples 🟢 GREEN** at Phase 7 absorption Session-5 close. D6/D7/D8 are post-freeze additions; D8's Stage-1 creation + Stage-9/10/13 triple is the next operational step. The L1 → arXiv-voucher gate remains the program-level blocker for the first three Tier-2 PRL splashes.
 - **Standing primary-source WebFetch + verify policy** adopted at Session 5 ("do that kind of thing from now on"). Caught Luciano AIC vs Bayes methodology mismatch + BelgiornoCacciatori2024 fabricated-bibitem entry. 51 PDF caches → 0 missing.
 
 The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, awaiting submission gates per the dependency graph."
 
 ---
 
-## By the Numbers (2026-05-06 snapshot)
+## By the Numbers (2026-05-30 snapshot)
 
 | Metric | Count |
 |--------|-------|
-| Lean theorems | 5,855 (5,830 substantive + 25 placeholder) |
-| Lean modules | 322 |
-| Axioms | 1 (4+1D gapped-interface conjecture) |
+| Lean theorems | 9,944 (9,919 substantive + 25 placeholder) |
+| Lean modules | 751 |
+| Lean total declarations | 17,511 (6,697 definitions, 287 structures, 489 instances, 94 inductives) |
+| Axioms | 0 project-local |
 | Sorry gaps | 0 project-wide |
-| Python test files | 99 (4,179 pytest cases) |
-| Python source modules | 130 across 18+ sub-packages including `dark_sector/`, `fermi_hubbard/`, `graphene/` (all new since Phase 5s) |
-| Publication-quality figures | 154 |
+| Python test files | 109 (4,475 pytest cases) |
+| Python source modules | 132 across 18+ sub-packages including `dark_sector/`, `fermi_hubbard/`, `graphene/` |
+| Publication-quality figures | 156 |
 | Paper drafts | 42 |
-| Computational notebooks | 87 (technical + stakeholder pairs) |
+| Computational notebooks | 89 (technical + stakeholder pairs) |
 | Aristotle prover runs | 44 (322 theorems proved) |
-| Publication-bundle targets | 14 (1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure + 2 Tier-4 experimental) |
-| Deep research files | Phase-1 through Phase-6o under `Lit-Search/` |
-| Stakeholder docs | 29+ under `docs/stakeholder/` |
+| Publication-bundle targets | 17 (1 flagship + 8 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure + 2 Tier-4 experimental) |
+| Deep research files | Phase-1 through Phase-6z under `Lit-Search/` |
+| Stakeholder docs | 35+ under `docs/stakeholder/` |
 
-*Synced 2026-05-07 — counts refreshed from `docs/counts.json` (2026-05-06).*
+*Synced 2026-05-31 — counts from `docs/counts.json` (regenerated 2026-05-30, post-Phase-6x′).*
 
 ### Formal Verification Firsts
 
@@ -165,6 +180,12 @@ The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, 
 - First verified jackknife and autocorrelation estimators for lattice Monte Carlo
 - First formal analysis of the chirality wall (GS no-go ↔ TPF evasion, master synthesis)
 - First Volovik–Zubkov Fermi-point topological-charge → emergent-gauge-group formalization
+- First kernel-verified quantitative Solovay-Kitaev compiler (Fibonacci, Phase 6t) and first **alphabet-agnostic** SK substrate (Phase 6u)
+- First kernel-verified quantitative Solovay-Kitaev at **arbitrary dimension SU(d)** (Phase 6y)
+- First **concrete-radius matrix logarithm** (`matrixMercatorLog`) — a Banach-algebra logarithm with a named convergence radius, absent from Mathlib (Phase 6y)
+- First kernel-verified ⟨H,T⟩ density in SU(2) via Niven obstruction (Phase 6u); first Read-Rezayi `SU(2)_5`/`SU(2)_7` SK headlines (Phase 6x)
+- First kernel-verified **T-free, CCZ-essential** density in SU(8) (`cliffordCCZLiteral_dense`, Phase 6z)
+- First **unconditional machine-checked Toffoli-count lower bound** `T^of(U) ≥ sde₂(Û)` (Mukhopadhyay, Phase 6x′)
 
 ---
 
@@ -185,6 +206,7 @@ The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, 
 | Phase 6n (math-substrate compression) | [`Phase6n_Implications.md`](Phase6n_Implications.md) + [`Phase6n_Strategic_Positioning.md`](Phase6n_Strategic_Positioning.md) |
 | Phase 6o (substrate-findings + first-mover discoveries) | [`Phase6o_Implications.md`](Phase6o_Implications.md) + [`Phase6o_Strategic_Positioning.md`](Phase6o_Strategic_Positioning.md) |
 | Phase 6u (alphabet-independent quantum-compiler substrate + Clifford+T) | [`Phase6u_Implications.md`](Phase6u_Implications.md) + [`Phase6u_Strategic_Positioning.md`](Phase6u_Strategic_Positioning.md) |
+| **Phase 6x–6z (verified universal quantum compilation arc: SU(d) SK + T-free CCZ density + Toffoli bounds → bundle D8)** | [`Phase6x-6z_VerifiedQuantumCompilation_Implications.md`](Phase6x-6z_VerifiedQuantumCompilation_Implications.md) + [`Phase6x-6z_VerifiedQuantumCompilation_Strategic_Positioning.md`](Phase6x-6z_VerifiedQuantumCompilation_Strategic_Positioning.md) |
 | Phase 7 (paper-bundle architecture + absorption Sessions 1–5) | [`Phase7_Implications.md`](Phase7_Implications.md) + [`Phase7_Strategic_Positioning.md`](Phase7_Strategic_Positioning.md) |
 | Predictive-scope boundary | [`docs/ARCHITECTURE_SCOPE.md`](../ARCHITECTURE_SCOPE.md) — Layer 3 scope: SM+GR in, dark sector out under all tested mechanisms |
 | Bundle readiness heatmap | [`docs/BUNDLE_READINESS_HEATMAP.md`](../BUNDLE_READINESS_HEATMAP.md) — auto-regenerated per-bundle Stage-9/10/13 status |
@@ -196,4 +218,4 @@ The shipping-ready state is "all 14 bundles cleared per-bundle reviewer triple, 
 
 ---
 
-*Last updated: 2026-05-25 (Phase 6u closure).*
+*Last updated: 2026-05-31 (verified-quantum-compilation arc 6u→6z; D8 bundle authorized).*

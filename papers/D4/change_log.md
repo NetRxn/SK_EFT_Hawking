@@ -2,6 +2,17 @@
 
 _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_manifest.py`. Append history accumulates as `scripts/bundle_append.py` invocations land._
 
+## 2026-05-31 — Stage-13 finding remediation: RED → 🟢 GREEN
+
+Closed the 4 pre-existing open findings that held D4 at 🔴 RED in the readiness heatmap (the bundle aggregates findings from its source papers; these had never been recorded in the supersession ledger even though `bundle_metadata.json` read green):
+
+- **MAJOR (blocker) — `review:2026-05-11-1251-bundle-stage13:L2:1.3` (CitationIntegrity):** FIXED. `Kitaev2009` registry `used_in` was `[paper18, L2]`; completed to all four actual consumers (D2, L2, paper10_modular_generation, paper18_doublon_gate), verified by `grep -rlE 'cite\{[^}]*Kitaev2009'`. (`src/core/citations.py`.) Also clears the same finding for D2 and L2.
+- **minor — `…I2:4.1` (CrossPaperConsistency):** ACCEPTED — identical Turaev book, cosmetic bibitem variance; full unification is a flagship-bibliography task.
+- **minor — `…paper18_doublon_gate:5.2` (LeanProofSubstance):** ACCEPTED — `geometric_phase_minus_one_on_pi_loop` name is defensible (the conjunction establishes the −1 geometric phase).
+- **minor — `…paper18_doublon_gate:2.1` (ParameterProvenance):** ACCEPTED — symbolic-parameter paper; provenance genuinely N/A.
+
+All four recorded in `docs/review_finding_supersessions.json`. Post-remediation: D4 open=0, blockers=0 → 🟢 GREEN. (Side effect: D2, L2, I2 also cleared their shared findings.) Pre-existing source-paper freshness (paper11 modified 2026-05-29) is a separate D.2/D.3 content-absorption matter, not a review-finding blocker.
+
 ## 2026-05-06 — Lift-section from `_phase6n_W1b_lean_only` (§3)
 
 - Source title: SymTFT audit substrate
@@ -80,3 +91,11 @@ _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_mani
   - **Effort:** ~1 day (post-Phase-6t-Path-A-discharge ship). Phase 7f.
   - **QI candidate emitted:** validate.py --check bundle_reciprocity to auto-track cross-bundle one-sidedness across revisions in BUNDLE_READINESS_HEATMAP.md (the 3 residual advisories are all of this class).
   - **Review docs:** papers/D4/figures/figure_review_report.json + papers/D4/claims_review.json (round 4) + papers/AutomatedReviews/2026-05-23-bundle-stage13/D4.md.
+
+## 2026-05-31 — Inline-absorption-record (bookkeeping)
+
+- Source: (none — bookkeeping event)
+- Lift action: Inline-absorption-record
+- Insertion point: (n/a)
+- Stage-13 redo required: no
+- Notes: D8 cross-bridge absorption 2026-05-31: D4 paper_draft.tex edited to re-point/cross-reference the new D8 bundle (verified-quantum-compilation corpus). D4 retains Fibonacci/topological anchor; D6 consumes D8's SK primitive. Scoped adversarial re-check of the new cross-bridge paragraph only (additive cross-ref to already-GREEN D8).

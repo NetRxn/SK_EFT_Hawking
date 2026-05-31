@@ -1,0 +1,2615 @@
+{
+  "paper": "D8",
+  "review_date": "2026-05-31T00:00:00Z",
+  "reviewer_version": "claims-reviewer-v2",
+  "reviewer_model": "claude-opus-4-8",
+  "reviewer_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+  "bundle_target": "D8",
+  "sentences": [
+    {
+      "id": "sentence:D8:abstract:15381e88",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "abstract",
+        "quote_hash": "15381e88",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 27,
+      "tex_line_end": 36,
+      "quote": "We report the first machine-checked development of universal quantum gate compilation as a theory rather than a single algorithm: an alphabet-agnostic, dimension-agnostic quantitative Solovay--Kitaev substrate, formally verified in the Lean~4 proof assistant, together with its instantiation across five gate alphabets and a verified resource lower bound.",
+      "quote_normalized": "we report the first machine-checked development of universal quantum gate compilation as a theory rather than a single algorithm: an alphabet-agnostic, dimension-agnostic quantitative solovay--kitaev substrate, formally verified in the lean~4 proof assistant, together with its instantiation across five gate alphabets and a verified resource lower bound.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Self-referential framing claim ('first machine-checked development ... as a theory'). Substantiated downstream by the resolved substrate + SU(d) lift theorems; treated as metaclaim, declines hard verdict.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:abstract:e8f68fe8",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "abstract",
+        "quote_hash": "e8f68fe8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 36,
+      "tex_line_end": 41,
+      "quote": "The substrate packages the Dawson--Nielsen super-quadratic recursion, Cartan-type density-from-witness, Baker--Campbell--Hausdorff bracket closure, and the $\\varepsilon_0$-net behind a generic generating-set abstraction, so that a new universal alphabet ships its verified quantitative compiler by instantiation rather than re-derivation.",
+      "quote_normalized": "the substrate packages the dawson--nielsen super-quadratic recursion, cartan-type density-from-witness, baker--campbell--hausdorff bracket closure, and the $\\varepsilon_0$-net behind a generic generating-set abstraction, so that a new universal alphabet ships its verified quantitative compiler by instantiation rather than re-derivation.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Substrate decomposition into 4 reusable ingredients; matches GenericSolovayKitaevQuantitative module family and the substrate section. Design claim resolved by existence of generic generating-set abstraction.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:D8:abstract:08731f6f",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "abstract",
+        "quote_hash": "08731f6f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 41,
+      "tex_line_end": 47,
+      "quote": "We lift the substrate to the special unitary group $\\su{d}$ of arbitrary dimension---to our knowledge the first kernel-verified quantitative Solovay--Kitaev theorem at general dimension in any proof assistant---by constructing a Banach-algebra matrix logarithm with a named convergence radius, which removes an existential obstruction that otherwise blocks the generalization.",
+      "quote_normalized": "we lift the substrate to the special unitary group $\\su{d}$ of arbitrary dimension---to our knowledge the first kernel-verified quantitative solovay--kitaev theorem at general dimension in any proof assistant---by constructing a banach-algebra matrix logarithm with a named convergence radius, which removes an existential obstruction that otherwise blocks the generalization.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "SU(d) lift + matrixMercatorLog. Both resolve. 'first kernel-verified ... in any proof assistant' is a priority metaclaim; the structural part (lift theorem + named-radius log) verifies.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.exp_matrixMercatorLog"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:abstract:b196f905",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "abstract",
+        "quote_hash": "b196f905",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 47,
+      "tex_line_end": 49,
+      "quote": "We instantiate the machinery on Fibonacci anyons, Clifford$+T$, Read--Rezayi anyons at levels $5$ and $7$, the trapped-ion M\\o lmer--S\\o rensen gate set at $\\su{4}$, and Clifford$+$CCZ at $\\su{8}$.",
+      "quote_normalized": "we instantiate the machinery on fibonacci anyons, clifford$+t$, read--rezayi anyons at levels $5$ and $7$, the trapped-ion m\\o lmer--s\\o rensen gate set at $\\su{4}$, and clifford$+$ccz at $\\su{8}$.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "SD"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "SD-check: prose 'five gate alphabets' enumerated here (Fibonacci, Clifford+T, RR k5+k7 [one family], MS SU(4), Clifford+CCZ SU(8)). Counting RR k5/k7 as the named items: Fibonacci, Clifford+T, RR(2 levels), MS, Clifford+CCZ = five alphabet entries matching the five-alphabet survey itemize (5 \\item). Consistent; PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.TrappedIonSU4.trappedIonSU4_solovayKitaev_headline_unconditional"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZSU8_solovayKitaev_headline_unconditional"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:abstract:8e154239",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "abstract",
+        "quote_hash": "8e154239",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 49,
+      "tex_line_end": 51,
+      "quote": "For the three-qubit target $\\su{8}$ we give two fundamentally distinct, formally verified density mechanisms: one using the $T$ gate, and one using no $T$ gate at all, in which the doubly controlled-$Z$ (CCZ) gate is essential---accompanied by a converse proving that the Clifford group alone generates only a finite subgroup of $\\su{8}$ and hence is not dense.",
+      "quote_normalized": "for the three-qubit target $\\su{8}$ we give two fundamentally distinct, formally verified density mechanisms: one using the $t$ gate, and one using no $t$ gate at all, in which the doubly controlled-$z$ (ccz) gate is essential---accompanied by a converse proving that the clifford group alone generates only a finite subgroup of $\\su{8}$ and hence is not dense.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor (SU(8) duality): CCZ-essential is correctly attributed to the T-free route ONLY; converse cliffordOnly_not_dense backs finiteness. Route-A/Route-B not conflated here. Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZLiteral_dense"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:abstract:2fc3ea21",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "abstract",
+        "quote_hash": "2fc3ea21",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 51,
+      "tex_line_end": 53,
+      "quote": "Finally we machine-check, unconditionally, a lower bound on the number of Toffoli gates required to implement a unitary, expressed through a signed-parity-invariant measure on the gate's channel representation.",
+      "quote_normalized": "finally we machine-check, unconditionally, a lower bound on the number of toffoli gates required to implement a unitary, expressed through a signed-parity-invariant measure on the gate's channel representation.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor (unconditional Toffoli bound): channelSde2_le_toffoliCost takes only hU:IsExactlyCliffordCCZ U (no hC/hCCZ parametric hyps); verified unconditional. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.channelSde2_le_toffoliCost"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:abstract:22cecca2",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "abstract",
+        "quote_hash": "22cecca2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 53,
+      "tex_line_end": 53,
+      "quote": "Every headline theorem is verified to the Lean kernel with no project-local axioms.",
+      "quote_normalized": "every headline theorem is verified to the lean kernel with no project-local axioms.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Verified: lean_deps shows 0 declared axioms (kind=axiom); headline axiom closures = {propext, Classical.choice, Quot.sound}, project axioms []. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "propext"
+          },
+          {
+            "kind": "axiom",
+            "target": "Classical.choice"
+          },
+          {
+            "kind": "axiom",
+            "target": "Quot.sound"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:abstract:9c45f854",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "abstract",
+        "quote_hash": "9c45f854",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "abstract",
+      "section_ordinal": 1,
+      "tex_line_start": 53,
+      "tex_line_end": 57,
+      "quote": "We delimit the scope explicitly: this is the verified existence, universality, and lower-bound theory; runtime-compiler implementation, hardware-specific tuning, and length-optimality engineering are a separate deliverable.",
+      "quote_normalized": "we delimit the scope explicitly: this is the verified existence, universality, and lower-bound theory; runtime-compiler implementation, hardware-specific tuning, and length-optimality engineering are a separate deliverable.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Scope-delimitation metaclaim; keeps runtime/tuning/length-optimality OUT (public/private seam clean). No private-repo reference. Auto-passes.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:15caec20",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "15caec20",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 66,
+      "tex_line_end": 72,
+      "quote": "A quantum processor exposes a fixed, finite set of physical gates---an alphabet---yet must approximate an essentially continuous family of target unitaries.",
+      "quote_normalized": "a quantum processor exposes a fixed, finite set of physical gates---an alphabet---yet must approximate an essentially continuous family of target unitaries.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Background framing; interpretive, no extractable structural claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:e1f18802",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "e1f18802",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 68,
+      "tex_line_end": 72,
+      "quote": "The Solovay--Kitaev theorem guarantees that any sufficiently rich alphabet can approximate any target to precision $\\varepsilon$ using a circuit whose length grows only poly-logarithmically in $1/\\varepsilon$.",
+      "quote_normalized": "the solovay--kitaev theorem guarantees that any sufficiently rich alphabet can approximate any target to precision $\\varepsilon$ using a circuit whose length grows only poly-logarithmically in $1/\\varepsilon$.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Standard SK statement; cites KitaevShenVyalyi2002, DawsonNielsen2006, AharonovArad2017 \u2014 all in CITATION_REGISTRY.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KitaevShenVyalyi2002"
+          },
+          {
+            "kind": "citation",
+            "target": "DawsonNielsen2006"
+          },
+          {
+            "kind": "citation",
+            "target": "AharonovArad2017"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:introduction:bacb2e1f",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "bacb2e1f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 72,
+      "tex_line_end": 73,
+      "quote": "It is the foundational existence result behind every fault-tolerant compilation pipeline.",
+      "quote_normalized": "it is the foundational existence result behind every fault-tolerant compilation pipeline.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive judgment; no structural claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:0f785336",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "0f785336",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 73,
+      "tex_line_end": 79,
+      "quote": "Its proof, however, is a delicate interplay of Lie theory (the generating set must densely fill the group), differential geometry (the balanced-commutator recursion lives on the group manifold near the identity), and number theory (density of a discrete alphabet typically rests on an irrationality or algebraic-integer obstruction).",
+      "quote_normalized": "its proof, however, is a delicate interplay of lie theory (the generating set must densely fill the group), differential geometry (the balanced-commutator recursion lives on the group manifold near the identity), and number theory (density of a discrete alphabet typically rests on an irrationality or algebraic-integer obstruction).",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Methodological exposition of SK proof structure; interpretive.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:8863b914",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "8863b914",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 77,
+      "tex_line_end": 79,
+      "quote": "This combination has made the theorem a recurring source of subtle hypotheses in the literature, and an attractive but difficult target for formal verification.",
+      "quote_normalized": "this combination has made the theorem a recurring source of subtle hypotheses in the literature, and an attractive but difficult target for formal verification.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive motivation.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:7dcacc5c",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "7dcacc5c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 81,
+      "tex_line_end": 83,
+      "quote": "This paper reports a machine-checked development, in the Lean~4 proof assistant, that treats universal compilation not as one algorithm for one alphabet but as a reusable theory.",
+      "quote_normalized": "this paper reports a machine-checked development, in the lean~4 proof assistant, that treats universal compilation not as one algorithm for one alphabet but as a reusable theory.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Paper-scope metaclaim. Auto-passes.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:8bf347d3",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "8bf347d3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 83,
+      "tex_line_end": 84,
+      "quote": "Our contributions are:",
+      "quote_normalized": "our contributions are:",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "List-introducing transition.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:645abfda",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "645abfda",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 86,
+      "tex_line_end": 89,
+      "quote": "An alphabet-agnostic quantitative Solovay--Kitaev substrate (Sec.~\\ref{sec:substrate}): the Lie-algebraic core is parametrized over an abstract generating set, so a new universal gate set inherits the full verified quantitative compiler by discharging a single density witness.",
+      "quote_normalized": "an alphabet-agnostic quantitative solovay--kitaev substrate (sec.~): the lie-algebraic core is parametrized over an abstract generating set, so a new universal gate set inherits the full verified quantitative compiler by discharging a single density witness.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Contribution 1 = substrate; resolves to GenericSolovayKitaevQuantitative family.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:213b5b0d",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "213b5b0d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 91,
+      "tex_line_end": 94,
+      "quote": "The lift to arbitrary dimension $\\su{d}$ (Sec.~\\ref{sec:sud}): the first kernel-verified quantitative Solovay--Kitaev at general $d$, enabled by a concrete-radius matrix logarithm that is a contribution to the underlying mathematical library in its own right.",
+      "quote_normalized": "the lift to arbitrary dimension $\\su{d}$ (sec.~): the first kernel-verified quantitative solovay--kitaev at general $d$, enabled by a concrete-radius matrix logarithm that is a contribution to the underlying mathematical library in its own right.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Contribution 2 = SU(d) lift; resolves (sud headline + matrixMercatorLog).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:introduction:98ef3f29",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "98ef3f29",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 96,
+      "tex_line_end": 98,
+      "quote": "A five-alphabet instantiation survey (Sec.~\\ref{sec:alphabets}): Fibonacci, Clifford$+T$, Read--Rezayi $\\su 2_5$ and $\\su 2_7$, trapped-ion M\\o lmer--S\\o rensen at $\\su 4$, and Clifford$+$CCZ at $\\su 8$.",
+      "quote_normalized": "a five-alphabet instantiation survey (sec.~): fibonacci, clifford$+t$, read--rezayi $\\su 2_5$ and $\\su 2_7$, trapped-ion m\\o lmer--s\\o rensen at $\\su 4$, and clifford$+$ccz at $\\su 8$.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "SD"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "SD: 'five-alphabet' matches the 5-item alphabet survey (RR k5/k7 = one Read-Rezayi family entry). Consistent with abstract enumeration.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:D8:introduction:91cb56dc",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "91cb56dc",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 100,
+      "tex_line_end": 103,
+      "quote": "Two complementary density mechanisms for $\\su 8$ (Sec.~\\ref{sec:su8}): a $T$-based route and a $T$-free, CCZ-essential route, with a converse establishing that the Clifford group alone is finite in $\\su 8$.",
+      "quote_normalized": "two complementary density mechanisms for $\\su 8$ (sec.~): a $t$-based route and a $t$-free, ccz-essential route, with a converse establishing that the clifford group alone is finite in $\\su 8$.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Contribution 4; CCZ-essential correctly tied to T-free route. Resolves.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:introduction:027b09b2",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "027b09b2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 105,
+      "tex_line_end": 108,
+      "quote": "A verified resource lower bound (Sec.~\\ref{sec:resource}): an unconditional machine-checked lower bound on Toffoli count via a signed-parity-invariant measure on the channel representation, following Mukhopadhyay~\\cite{Mukhopadhyay2024}.",
+      "quote_normalized": "a verified resource lower bound (sec.~): an unconditional machine-checked lower bound on toffoli count via a signed-parity-invariant measure on the channel representation, following mukhopadhyay~.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Contribution 5; 'unconditional' verified; Mukhopadhyay2024 in registry.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.channelSde2_le_toffoliCost"
+          },
+          {
+            "kind": "citation",
+            "target": "Mukhopadhyay2024"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:introduction:1d2aa2e3",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "1d2aa2e3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 110,
+      "tex_line_end": 111,
+      "quote": "A Mathlib-upstream contribution portfolio (Sec.~\\ref{sec:mathlib}).",
+      "quote_normalized": "a mathlib-upstream contribution portfolio (sec.~).",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Contribution 6 = portfolio pointer. Auto-passes.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:5879eac5",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "5879eac5",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 114,
+      "tex_line_end": 120,
+      "quote": "All headline theorems are verified to the Lean kernel with axiom set $\\{\\texttt{propext},\\,\\texttt{Classical.choice},\\,\\texttt{Quot.sound}\\}$ (the standard Lean kernel) and no project-local axioms.",
+      "quote_normalized": "all headline theorems are verified to the lean kernel with axiom set $\\{propext,\\,classical.choice,\\,quot.sound\\}$ (the standard lean kernel) and no project-local axioms.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Verified against lean_deps axiom closures for every D8 headline (all = exactly these 3 core axioms; project axioms empty). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "propext"
+          },
+          {
+            "kind": "axiom",
+            "target": "Classical.choice"
+          },
+          {
+            "kind": "axiom",
+            "target": "Quot.sound"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:introduction:008f0608",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "008f0608",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 116,
+      "tex_line_end": 120,
+      "quote": "We state the boundary of the work plainly in Sec.~\\ref{sec:scope}: we verify that a compilation exists with provable error and length bounds; the engineering of a runnable, hardware-tuned, length-optimal compiler is deliberately out of scope.",
+      "quote_normalized": "we state the boundary of the work plainly in sec.~: we verify that a compilation exists with provable error and length bounds; the engineering of a runnable, hardware-tuned, length-optimal compiler is deliberately out of scope.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Scope metaclaim; public/private seam clean. Auto-passes.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:introduction:fd108877",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "introduction",
+        "quote_hash": "fd108877",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Introduction",
+      "section_ordinal": 2,
+      "tex_line_start": 125,
+      "tex_line_end": 130,
+      "quote": "Coverage of the kernel-verified compilation corpus: five gate alphabets across target dimensions $\\su 2$, $\\su 4$, $\\su 8$. Blue entries derive density from a sub-alphabet or per-qubit route; the amber entry (Phase 6z) is $T$-free with CCZ load-bearing. Every entry is verified to the Lean kernel with no project-local axioms.",
+      "quote_normalized": "coverage of the kernel-verified compilation corpus: five gate alphabets across target dimensions $\\su 2$, $\\su 4$, $\\su 8$. blue entries derive density from a sub-alphabet or per-qubit route; the amber entry (phase 6z) is $t$-free with ccz load-bearing. every entry is verified to the lean kernel with no project-local axioms.",
+      "type": "qualitative",
+      "finding_classes": [
+        "SD"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "Figure 1 caption. SD: 'five gate alphabets across SU(2),SU(4),SU(8)' consistent. Amber=Phase6z T-free CCZ-load-bearing correctly distinguished from blue sub-alphabet routes. No conflation.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:D8:the-alphabet-agnostic-substrate:9ff8c6cd",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-alphabet-agnostic-substrate",
+        "quote_hash": "9ff8c6cd",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The alphabet-agnostic substrate",
+      "section_ordinal": 3,
+      "tex_line_start": 136,
+      "tex_line_end": 144,
+      "quote": "The quantitative Solovay--Kitaev argument has four reusable ingredients that do not depend on the specific alphabet: (i) a density statement, that the group generated by the alphabet is dense in the target group; (ii) an $\\varepsilon_0$-net, a finite set of words approximating every target to a base precision $\\varepsilon_0$; (iii) the Dawson--Nielsen recursion, which uses a balanced group commutator to convert a precision-$\\varepsilon$ approximation into a precision-$O(\\varepsilon^{3/2})$ one at controlled length cost; and (iv) a Baker--Campbell--Hausdorff (BCH) estimate controlling the commutator's deviation from the corresponding Lie-bracket flow.",
+      "quote_normalized": "the quantitative solovay--kitaev argument has four reusable ingredients that do not depend on the specific alphabet: (i) a density statement, that the group generated by the alphabet is dense in the target group; (ii) an $\\varepsilon_0$-net, a finite set of words approximating every target to a base precision $\\varepsilon_0$; (iii) the dawson--nielsen recursion, which uses a balanced group commutator to convert a precision-$\\varepsilon$ approximation into a precision-$o(\\varepsilon^{3/2})$ one at controlled length cost; and (iv) a baker--campbell--hausdorff (bch) estimate controlling the commutator's deviation from the corresponding lie-bracket flow.",
+      "type": "formal-claim",
+      "finding_classes": [
+        "SD"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "SD: 'four reusable ingredients' enumerated as (i)-(iv); matches abstract's 4-ingredient packaging. The O(eps^{3/2}) super-quadratic contraction is consistent with the honest exponent (Fig 3). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:D8:the-alphabet-agnostic-substrate:230cfb47",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-alphabet-agnostic-substrate",
+        "quote_hash": "230cfb47",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The alphabet-agnostic substrate",
+      "section_ordinal": 3,
+      "tex_line_start": 146,
+      "tex_line_end": 148,
+      "quote": "We factor these into a substrate parametrized over an abstract generating set, realized in the \\lean{GenericSU2GeneratingSet} and \\lean{GenericSolovayKitaevQuantitative} module families.",
+      "quote_normalized": "we factor these into a substrate parametrized over an abstract generating set, realized in the \\lean{genericsu2generatingset} and \\lean{genericsolovaykitaevquantitative} module families.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Module-family references: GenericSU2GeneratingSet.lean and GenericSolovayKitaevQuantitative.lean both exist under lean/SKEFTHawking/FKLW/. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:D8:the-alphabet-agnostic-substrate:ce898aa8",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-alphabet-agnostic-substrate",
+        "quote_hash": "ce898aa8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The alphabet-agnostic substrate",
+      "section_ordinal": 3,
+      "tex_line_start": 148,
+      "tex_line_end": 154,
+      "quote": "The headline of the substrate is a bundled-strict theorem asserting, for any generating set satisfying the density and net hypotheses, the simultaneous error bound $\\lVert \\mathrm{compile}(U,\\varepsilon) - U\\rVert \\le \\varepsilon$ and a poly-logarithmic word-length bound, at the same algorithmic compile level.",
+      "quote_normalized": "the headline of the substrate is a bundled-strict theorem asserting, for any generating set satisfying the density and net hypotheses, the simultaneous error bound $\\lvert compile(u,\\varepsilon) - u\\rvert \\le \\varepsilon$ and a poly-logarithmic word-length bound, at the same algorithmic compile level.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Bundled-strict substrate headline; simultaneous error+length at same compile level. Resolves to the strict_constructive_tight bundled headline.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-alphabet-agnostic-substrate:cb3d78ac",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-alphabet-agnostic-substrate",
+        "quote_hash": "cb3d78ac",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The alphabet-agnostic substrate",
+      "section_ordinal": 3,
+      "tex_line_start": 152,
+      "tex_line_end": 154,
+      "quote": "The design claim is that adding a new universal alphabet to the verified chain is an instantiation problem, not a re-derivation problem.",
+      "quote_normalized": "the design claim is that adding a new universal alphabet to the verified chain is an instantiation problem, not a re-derivation problem.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive design claim; soft, declines hard verdict.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-alphabet-agnostic-substrate:1fe1b709",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-alphabet-agnostic-substrate",
+        "quote_hash": "1fe1b709",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The alphabet-agnostic substrate",
+      "section_ordinal": 3,
+      "tex_line_start": 156,
+      "tex_line_end": 158,
+      "quote": "We validate the abstraction on the canonical fault-tolerant alphabet Clifford$+T$.",
+      "quote_normalized": "we validate the abstraction on the canonical fault-tolerant alphabet clifford$+t$.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Transition into Clifford+T instance.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-alphabet-agnostic-substrate:caaecdb7",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-alphabet-agnostic-substrate",
+        "quote_hash": "caaecdb7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The alphabet-agnostic substrate",
+      "section_ordinal": 3,
+      "tex_line_start": 158,
+      "tex_line_end": 168,
+      "quote": "The density witness---that $\\langle H, T\\rangle$ is dense in $\\su 2$---is discharged through a Niven-style algebraic-integer obstruction on the trace $\\sqrt 2\\,\\sin(\\pi/8)$ of $H_{\\mathrm{SU}}\\,T_{\\mathrm{SU}}$ (\\lean{CliffordTInfiniteOrder.lean}, theorem \\lean{cliffordT\\_accPt\\_one\\_unconditional}); this is the 1999 Boykin--Mor--Pulver--Roychowdhury--Vatan folklore result~\\cite{BMPRV1999}, now machine-verified.",
+      "quote_normalized": "the density witness---that $\\langle h, t\\rangle$ is dense in $\\su 2$---is discharged through a niven-style algebraic-integer obstruction on the trace $\\sqrt 2\\,\\sin(\\pi/8)$ of $h_{su}\\,t_{su}$ (\\lean{cliffordtinfiniteorder.lean}, theorem \\lean{cliffordt\\_accpt\\_one\\_unconditional}); this is the 1999 boykin--mor--pulver--roychowdhury--vatan folklore result~, now machine-verified.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: cliffordT_accPt_one_unconditional resolves (module CliffordTInfiniteOrder, which exists). BMPRV1999 in registry. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSU2.cliffordT_accPt_one_unconditional"
+          },
+          {
+            "kind": "citation",
+            "target": "BMPRV1999"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:the-alphabet-agnostic-substrate:a493368c",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-alphabet-agnostic-substrate",
+        "quote_hash": "a493368c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The alphabet-agnostic substrate",
+      "section_ordinal": 3,
+      "tex_line_start": 163,
+      "tex_line_end": 165,
+      "quote": "The result is the unconditional bundled-strict headline \\lean{solovayKitaev\\_dawson\\_nielsen\\_quantitative\\_cliffordT\\_strict\\_constructive\\_tight\\_unconditional}.",
+      "quote_normalized": "the result is the unconditional bundled-strict headline \\lean{solovaykitaev\\_dawson\\_nielsen\\_quantitative\\_cliffordt\\_strict\\_constructive\\_tight\\_unconditional}.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: resolves to SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional (module CliffordTV4WitnessUnconditional). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSU2.solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:the-alphabet-agnostic-substrate:e22456d9",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-alphabet-agnostic-substrate",
+        "quote_hash": "e22456d9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The alphabet-agnostic substrate",
+      "section_ordinal": 3,
+      "tex_line_start": 166,
+      "tex_line_end": 168,
+      "quote": "The algebraic-integer obstruction, rather than a cyclotomic computation, is the load-bearing novelty: it is the generic technique the remaining alphabets reuse.",
+      "quote_normalized": "the algebraic-integer obstruction, rather than a cyclotomic computation, is the load-bearing novelty: it is the generic technique the remaining alphabets reuse.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive methodological claim.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-lift-to-arbitrary-dimension:5a020f81",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-lift-to-arbitrary-dimension",
+        "quote_hash": "5a020f81",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The lift to arbitrary dimension",
+      "section_ordinal": 4,
+      "tex_line_start": 173,
+      "tex_line_end": 175,
+      "quote": "The substrate of Sec.~\\ref{sec:substrate} targets single-qubit unitaries ($\\su 2$).",
+      "quote_normalized": "the substrate of sec.~ targets single-qubit unitaries ($\\su 2$).",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Transition.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-lift-to-arbitrary-dimension:cf6a76c9",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-lift-to-arbitrary-dimension",
+        "quote_hash": "cf6a76c9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The lift to arbitrary dimension",
+      "section_ordinal": 4,
+      "tex_line_start": 174,
+      "tex_line_end": 175,
+      "quote": "Multi-qubit compilation requires the same machinery at $\\su d$ for $d = 2^n$.",
+      "quote_normalized": "multi-qubit compilation requires the same machinery at $\\su d$ for $d = 2^n$.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Motivating statement; interpretive.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-lift-to-arbitrary-dimension:435f3808",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-lift-to-arbitrary-dimension",
+        "quote_hash": "435f3808",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The lift to arbitrary dimension",
+      "section_ordinal": 4,
+      "tex_line_start": 175,
+      "tex_line_end": 181,
+      "quote": "We lift all four ingredients to general $d$, yielding the headline \\lean{solovayKitaev\\_dawson\\_nielsen\\_quantitative\\_generic\\_sud\\_strict\\_constructive\\_tight} (\\lean{GenericSUdQuantitative.lean}): for every $d \\ge 2$, every $U \\in \\su d$, and every $\\varepsilon > 0$, a compilation exists with error $\\le \\varepsilon$ and poly-logarithmic length.",
+      "quote_normalized": "we lift all four ingredients to general $d$, yielding the headline \\lean{solovaykitaev\\_dawson\\_nielsen\\_quantitative\\_generic\\_sud\\_strict\\_constructive\\_tight} (\\lean{genericsudquantitative.lean}): for every $d \\ge 2$, every $u \\in \\su d$, and every $\\varepsilon > 0$, a compilation exists with error $\\le \\varepsilon$ and poly-logarithmic length.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: sud headline resolves (module GenericSUdQuantitative, exists). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:the-lift-to-arbitrary-dimension:0def56f9",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-lift-to-arbitrary-dimension",
+        "quote_hash": "0def56f9",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The lift to arbitrary dimension",
+      "section_ordinal": 4,
+      "tex_line_start": 179,
+      "tex_line_end": 181,
+      "quote": "To our knowledge this is the first kernel-verified quantitative Solovay--Kitaev at arbitrary dimension in any proof assistant.",
+      "quote_normalized": "to our knowledge this is the first kernel-verified quantitative solovay--kitaev at arbitrary dimension in any proof assistant.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Priority/first-of-kind metaclaim; not structurally falsifiable here, declines hard verdict.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-concrete-radius-matrix-logarithm:290fbefb",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-concrete-radius-matrix-logarithm",
+        "quote_hash": "290fbefb",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The concrete-radius matrix logarithm",
+      "section_ordinal": 5,
+      "tex_line_start": 185,
+      "tex_line_end": 190,
+      "quote": "The single obstruction to the lift was the regime step: the balanced commutator construction requires writing a near-identity unitary $\\Delta$ as $\\exp(H)$ for a Hermitian-traceless $H$ of controlled norm, and reasoning about the round trip.",
+      "quote_normalized": "the single obstruction to the lift was the regime step: the balanced commutator construction requires writing a near-identity unitary $\\delta$ as $\\exp(h)$ for a hermitian-traceless $h$ of controlled norm, and reasoning about the round trip.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Methodology exposition of the regime obstruction.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-concrete-radius-matrix-logarithm:d7d9a1be",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-concrete-radius-matrix-logarithm",
+        "quote_hash": "d7d9a1be",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The concrete-radius matrix logarithm",
+      "section_ordinal": 5,
+      "tex_line_start": 188,
+      "tex_line_end": 190,
+      "quote": "The natural tool, an inverse-function-theorem matrix logarithm, provides only an existential convergence radius, which propagates a circular dependency through the recursion.",
+      "quote_normalized": "the natural tool, an inverse-function-theorem matrix logarithm, provides only an existential convergence radius, which propagates a circular dependency through the recursion.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Methodology; explains existential-radius problem.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-concrete-radius-matrix-logarithm:ecb20e9d",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-concrete-radius-matrix-logarithm",
+        "quote_hash": "ecb20e9d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The concrete-radius matrix logarithm",
+      "section_ordinal": 5,
+      "tex_line_start": 190,
+      "tex_line_end": 198,
+      "quote": "We instead construct an explicit Banach-algebra logarithm with a named convergence radius, $\\lean{matrixMercatorLog}\\,X = \\sum_{n\\ge 0} \\frac{(-1)^n}{n+1}\\,X^{n+1}$, $\\lVert X\\rVert < 1$, and prove the round trip $\\exp(\\lean{matrixMercatorLog}\\,X) = \\mathbf 1 + X$ (\\lean{GenericSUdMatrixMercatorLog.lean}, theorem \\lean{exp\\_matrixMercatorLog}).",
+      "quote_normalized": "we instead construct an explicit banach-algebra logarithm with a named convergence radius, $\\lean{matrixmercatorlog}\\,x = \\sum_{n\\ge 0} \\frac{(-1)^n}{n+1}\\,x^{n+1}$, $\\lvert x\\rvert < 1$, and prove the round trip $\\exp(\\lean{matrixmercatorlog}\\,x) = \\mathbf 1 + x$ (\\lean{genericsudmatrixmercatorlog.lean}, theorem \\lean{exp\\_matrixmercatorlog}).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: matrixMercatorLog + exp_matrixMercatorLog both resolve (module GenericSUdMatrixMercatorLog, exists). Series def matches source. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.matrixMercatorLog"
+          },
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.exp_matrixMercatorLog"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:the-concrete-radius-matrix-logarithm:f1055604",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-concrete-radius-matrix-logarithm",
+        "quote_hash": "f1055604",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The concrete-radius matrix logarithm",
+      "section_ordinal": 5,
+      "tex_line_start": 198,
+      "tex_line_end": 202,
+      "quote": "With a concrete radius in hand, the regime conjuncts---Hermiticity, tracelessness, and the exp round trip---are all discharged unconditionally on a named ball, and the headline cascade (\\lean{GenericSUdSkHeadlineCascadeConcrete.lean}) reduces to the density witness and the length bound alone.",
+      "quote_normalized": "with a concrete radius in hand, the regime conjuncts---hermiticity, tracelessness, and the exp round trip---are all discharged unconditionally on a named ball, and the headline cascade (\\lean{genericsudskheadlinecascadeconcrete.lean}) reduces to the density witness and the length bound alone.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: module GenericSUdSkHeadlineCascadeConcrete.lean exists. 'discharged unconditionally' consistent with concrete-radius cascade. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-concrete-radius-matrix-logarithm:7280844d",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-concrete-radius-matrix-logarithm",
+        "quote_hash": "7280844d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The concrete-radius matrix logarithm",
+      "section_ordinal": 5,
+      "tex_line_start": 202,
+      "tex_line_end": 204,
+      "quote": "The matrix logarithm fills a genuine gap in the underlying library, which lacks a Banach-algebra logarithm with a named radius; we return to it in Sec.~\\ref{sec:mathlib}.",
+      "quote_normalized": "the matrix logarithm fills a genuine gap in the underlying library, which lacks a banach-algebra logarithm with a named radius; we return to it in sec.~.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive library-gap claim; cross-ref to Mathlib section.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:the-concrete-radius-matrix-logarithm:18faf07f",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-concrete-radius-matrix-logarithm",
+        "quote_hash": "18faf07f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The concrete-radius matrix logarithm",
+      "section_ordinal": 5,
+      "tex_line_start": 209,
+      "tex_line_end": 213,
+      "quote": "The Dawson--Nielsen recursion underlying the substrate: per level the error contracts super-quadratically as $\\varepsilon_0^{(3/2)^n}$ while the word length grows fivefold as $N_0\\,5^n$, giving the honest length exponent $\\log 5/\\log(3/2) \\approx 3.97$.",
+      "quote_normalized": "the dawson--nielsen recursion underlying the substrate: per level the error contracts super-quadratically as $\\varepsilon_0^{(3/2)^n}$ while the word length grows fivefold as $n_0\\,5^n$, giving the honest length exponent $\\log 5/\\log(3/2) \\approx 3.97$.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "Fig 3 caption. IA-check: log5/log(3/2)=3.9694 -> 3.97 (delta 0.02%). Internally consistent with body Sec length-exponent. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:the-length-exponent:92806644",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-length-exponent",
+        "quote_hash": "92806644",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The length exponent",
+      "section_ordinal": 6,
+      "tex_line_start": 218,
+      "tex_line_end": 221,
+      "quote": "The Dawson--Nielsen recursion contracts error as $\\varepsilon \\mapsto O(\\varepsilon^{3/2})$ with a fivefold word-expansion per level, giving a word-length that grows as $O\\!\\big((\\log 1/\\varepsilon)^{\\gamma}\\big)$ with exponent $\\gamma = \\log 5/\\log(3/2) \\approx 3.97$ (Fig.~\\ref{fig:recursion}).",
+      "quote_normalized": "the dawson--nielsen recursion contracts error as $\\varepsilon \\mapsto o(\\varepsilon^{3/2})$ with a fivefold word-expansion per level, giving a word-length that grows as $o\\!\\big((\\log 1/\\varepsilon)^{\\gamma}\\big)$ with exponent $\\gamma = \\log 5/\\log(3/2) \\approx 3.97$ (fig.~).",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor (length exponent). Recomputed log5/log(3/2)=3.96936 ~ 3.97 (delta 0.02%). skLengthExponent_sud := Real.log 5 / Real.log (3/2). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:the-length-exponent:2b12d6e7",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-length-exponent",
+        "quote_hash": "2b12d6e7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The length exponent",
+      "section_ordinal": 6,
+      "tex_line_start": 222,
+      "tex_line_end": 224,
+      "quote": "We single-source this value as \\lean{skLengthExponent\\_sud} (\\lean{GenericSUdSkLengthExponent.lean}) and discharge the poly-logarithmic length bound unconditionally.",
+      "quote_normalized": "we single-source this value as \\lean{sklengthexponent\\_sud} (\\lean{genericsudsklengthexponent.lean}) and discharge the poly-logarithmic length bound unconditionally.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: skLengthExponent_sud resolves (module GenericSUdSkLengthExponent, exists). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:the-length-exponent:9b244db2",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "the-length-exponent",
+        "quote_hash": "9b244db2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "The length exponent",
+      "section_ordinal": 6,
+      "tex_line_start": 224,
+      "tex_line_end": 227,
+      "quote": "We emphasize that the often-quoted exponent $\\log 5/\\log 2 \\approx 2.32$ would require a quadratic ($\\varepsilon \\mapsto O(\\varepsilon^2)$) contraction, which our construction does not establish; we report the honest $3.97$.",
+      "quote_normalized": "we emphasize that the often-quoted exponent $\\log 5/\\log 2 \\approx 2.32$ would require a quadratic ($\\varepsilon \\mapsto o(\\varepsilon^2)$) contraction, which our construction does not establish; we report the honest $3.97$.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor: explicitly rejects log5/log2=2.32 (recomputed 2.3219) as requiring unproven quadratic contraction; reports honest 3.97. Exactly the required honesty posture. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.skLengthExponent_sud"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:five-alphabets:6979b7f3",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "6979b7f3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 232,
+      "tex_line_end": 235,
+      "quote": "Each alphabet below ships its quantitative compiler by instantiating the substrate: the only alphabet-specific work is the density witness.",
+      "quote_normalized": "each alphabet below ships its quantitative compiler by instantiating the substrate: the only alphabet-specific work is the density witness.",
+      "type": "methodology",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Methodology framing.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:five-alphabets:fa6fce43",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "fa6fce43",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 234,
+      "tex_line_end": 235,
+      "quote": "Figure~\\ref{fig:coverage} summarizes the coverage across alphabets and dimensions.",
+      "quote_normalized": "figure~ summarizes the coverage across alphabets and dimensions.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Figure pointer.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:five-alphabets:0497c4f4",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "0497c4f4",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 238,
+      "tex_line_end": 243,
+      "quote": "Fibonacci anyons ($\\su 2$): density via the golden-ratio trace structure; quantitative headline in \\lean{SolovayKitaevQuantitative.lean} building on the Fibonacci density program (\\lean{FibSU2Density.lean})~\\cite{ReadRezayi1999}.",
+      "quote_normalized": "fibonacci anyons ($\\su 2$): density via the golden-ratio trace structure; quantitative headline in \\lean{solovaykitaevquantitative.lean} building on the fibonacci density program (\\lean{fibsu2density.lean})~.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: SolovayKitaevQuantitative.lean + FibSU2Density.lean both exist. ReadRezayi1999 in registry. Cross-bridge to D4: Fibonacci anchor cited+generalized, not double-counted (companion bundle reference at line 242-243).",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "ReadRezayi1999"
+          }
+        ],
+        "completeness": "partial"
+      }
+    },
+    {
+      "id": "sentence:D8:five-alphabets:e24cf8d3",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "e24cf8d3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 242,
+      "tex_line_end": 243,
+      "quote": "Fibonacci is the topological anchor and the origin point of the substrate; its universality is the subject of a companion bundle and is cross-referenced here.",
+      "quote_normalized": "fibonacci is the topological anchor and the origin point of the substrate; its universality is the subject of a companion bundle and is cross-referenced here.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Cross-bridge to D4 honesty anchor: Fibonacci universality deferred to companion (D4) bundle, cross-referenced not duplicated. Clean seam. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:five-alphabets:71a92ef2",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "71a92ef2",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 245,
+      "tex_line_end": 245,
+      "quote": "Clifford$+T$ ($\\su 2$): as in Sec.~\\ref{sec:substrate}.",
+      "quote_normalized": "clifford$+t$ ($\\su 2$): as in sec.~.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Back-reference to substrate section.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:five-alphabets:c2fbc737",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "c2fbc737",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 247,
+      "tex_line_end": 256,
+      "quote": "Read--Rezayi $\\su 2_5$ and $\\su 2_7$: the next universal-anyon family beyond Fibonacci, physically relevant to non-Abelian fractional quantum-Hall states at filling $\\nu = k/(k+2)$~\\cite{ReadRezayi1999}.",
+      "quote_normalized": "read--rezayi $\\su 2_5$ and $\\su 2_7$: the next universal-anyon family beyond fibonacci, physically relevant to non-abelian fractional quantum-hall states at filling $\\nu = k/(k+2)$~.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "RR family motivation; filling nu=k/(k+2) standard RR. ReadRezayi1999 in registry.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "ReadRezayi1999"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:five-alphabets:76bfccc7",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "76bfccc7",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 249,
+      "tex_line_end": 256,
+      "quote": "The density witnesses require new number theory: the $k=5$ obstruction is discharged via the Chebyshev factorization $T_7(x) + 1 = (x+1)(8x^3 - 4x^2 - 4x + 1)^2$ (forcing the level-5 cubic at $\\cos(\\pi/7)$), and the $k=7$ obstruction via the triple-angle identity $\\cos(3\\cdot\\pi/9) = \\cos(\\pi/3) = 1/2$.",
+      "quote_normalized": "the density witnesses require new number theory: the $k=5$ obstruction is discharged via the chebyshev factorization $t_7(x) + 1 = (x+1)(8x^3 - 4x^2 - 4x + 1)^2$ (forcing the level-5 cubic at $\\cos(\\pi/7)$), and the $k=7$ obstruction via the triple-angle identity $\\cos(3\\cdot\\pi/9) = \\cos(\\pi/3) = 1/2$.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "IA: Chebyshev identity T_7(x)+1=(x+1)(8x^3-4x^2-4x+1)^2 verified exactly by polynomial recomputation (residual=0). cos(3*pi/9)=cos(pi/3)=0.5 verified. Both arithmetic identities correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:D8:five-alphabets:3c337645",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "3c337645",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 254,
+      "tex_line_end": 256,
+      "quote": "Both ship unconditional bundled-strict headlines (\\lean{ReadRezayiK5Quantitative.lean}, \\lean{ReadRezayiK7Quantitative.lean}).",
+      "quote_normalized": "both ship unconditional bundled-strict headlines (\\lean{readrezayik5quantitative.lean}, \\lean{readrezayik7quantitative.lean}).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: ReadRezayiK5Quantitative.lean + ReadRezayiK7Quantitative.lean both exist as modules. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:five-alphabets:4dc4394c",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "4dc4394c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 258,
+      "tex_line_end": 263,
+      "quote": "Trapped-ion M\\o lmer--S\\o rensen ($\\su 4$): the two-qubit entangling gate set realized on production trapped-ion hardware. Density via the Brylinski--Brylinski entangling-gate criterion~\\cite{Brylinski2002}, giving the unconditional headline \\lean{trappedIonSU4\\_solovayKitaev\\_headline\\_unconditional} (\\lean{TrappedIonSU4WitnessFull.lean}).",
+      "quote_normalized": "trapped-ion m\\o lmer--s\\o rensen ($\\su 4$): the two-qubit entangling gate set realized on production trapped-ion hardware. density via the brylinski--brylinski entangling-gate criterion~, giving the unconditional headline \\lean{trappedionsu4\\_solovaykitaev\\_headline\\_unconditional} (\\lean{trappedionsu4witnessfull.lean}).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: trappedIonSU4_solovayKitaev_headline_unconditional resolves (module TrappedIonSU4WitnessFull, exists). Brylinski2002 in registry. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity",
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.TrappedIonSU4.trappedIonSU4_solovayKitaev_headline_unconditional"
+          },
+          {
+            "kind": "citation",
+            "target": "Brylinski2002"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:five-alphabets:f88ae519",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "five-alphabets",
+        "quote_hash": "f88ae519",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Five alphabets",
+      "section_ordinal": 7,
+      "tex_line_start": 265,
+      "tex_line_end": 267,
+      "quote": "Clifford$+$CCZ ($\\su 8$): two distinct routes, treated in Sec.~\\ref{sec:su8}.",
+      "quote_normalized": "clifford$+$ccz ($\\su 8$): two distinct routes, treated in sec.~.",
+      "type": "transition",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Pointer to SU(8) section.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:b21fa24c",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "b21fa24c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 272,
+      "tex_line_end": 274,
+      "quote": "The three-qubit target $\\su 8$ admits two formally verified density mechanisms that are fundamentally different, and we present both because their contrast is itself the result (Fig.~\\ref{fig:su8duality}).",
+      "quote_normalized": "the three-qubit target $\\su 8$ admits two formally verified density mechanisms that are fundamentally different, and we present both because their contrast is itself the result (fig.~).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Frames the two-route duality. Backed downstream. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:aec8a568",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "aec8a568",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 276,
+      "tex_line_end": 282,
+      "quote": "Route A: $T$-based, CCZ over-complete. Using the universal alphabet $\\{H, T, \\mathrm{CNOT}, \\mathrm{CCZ}\\}$, density follows entirely from the $\\{H, T, \\mathrm{CNOT}\\}$ sub-alphabet, in the manner of Aaronson--Gottesman~\\cite{AaronsonGottesman2004}; CCZ is present but over-complete (unused in the witness).",
+      "quote_normalized": "route a: $t$-based, ccz over-complete. using the universal alphabet $\\{h, t, cnot, ccz\\}$, density follows entirely from the $\\{h, t, cnot\\}$ sub-alphabet, in the manner of aaronson--gottesman~; ccz is present but over-complete (unused in the witness).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor: Route A correctly states CCZ over-complete / not load-bearing; density from {H,T,CNOT} sub-alphabet (Aaronson-Gottesman). AaronsonGottesman2004 in registry. No conflation with Route B. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "AaronsonGottesman2004"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:16ddf92d",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "16ddf92d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 280,
+      "tex_line_end": 282,
+      "quote": "This yields the headline \\lean{cliffordCCZSU8\\_solovayKitaev\\_headline\\_unconditional}.",
+      "quote_normalized": "this yields the headline \\lean{cliffordcczsu8\\_solovaykitaev\\_headline\\_unconditional}.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: cliffordCCZSU8_solovayKitaev_headline_unconditional resolves (module CliffordCCZSU8WitnessFull). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZSU8_solovayKitaev_headline_unconditional"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:65a00779",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "65a00779",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 282,
+      "tex_line_end": 282,
+      "quote": "We flag the scope honestly: in Route~A, CCZ is not load-bearing.",
+      "quote_normalized": "we flag the scope honestly: in route~a, ccz is not load-bearing.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor reinforced: explicit that Route A CCZ is not load-bearing. Correct posture. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:e131a84d",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "e131a84d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 284,
+      "tex_line_end": 287,
+      "quote": "Route B: $T$-free, CCZ-essential. Using the literal alphabet $\\langle H, S, \\mathrm{CNOT}, \\mathrm{CCZ}\\rangle$ with no $T$ gate, we prove density directly: \\lean{cliffordCCZLiteral\\_dense} (\\lean{CliffordCCZSU8LiteralHeadline.lean}).",
+      "quote_normalized": "route b: $t$-free, ccz-essential. using the literal alphabet $\\langle h, s, cnot, ccz\\rangle$ with no $t$ gate, we prove density directly: \\lean{cliffordcczliteral\\_dense} (\\lean{cliffordcczsu8literalheadline.lean}).",
+      "type": "theorem-ref",
+      "finding_classes": [
+        "TN"
+      ],
+      "agent_verdict": "WARN",
+      "agent_notes": "TN: cliffordCCZLiteral_dense RESOLVES (exists, SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZLiteral_dense). But the parenthetical module attribution is imprecise: the theorem is DECLARED in CliffordCCZSU8Density.lean, not CliffordCCZSU8LiteralHeadline.lean (where it is consumed/re-stated). Symbol resolves so not a hard TN FAIL; flagged WARN for module-attribution drift. Route-B CCZ-essential claim itself is correct.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance",
+        "Gate9_NumericalFreshness"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.CliffordCCZSU8.cliffordCCZLiteral_dense"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:211d547a",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "211d547a",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 287,
+      "tex_line_end": 292,
+      "quote": "The mechanism is distinct from Route~A. Density does not come from a per-qubit infinite-order element; it comes from the seed $\\mathrm{CCZ}\\cdot(H\\otimes H\\otimes H)$, whose trace $1/\\sqrt 2 \\notin \\mathcal O$ (an algebraic-integer obstruction) forces infinite order (\\lean{CliffordCCZSU8LiteralSeed.lean}).",
+      "quote_normalized": "the mechanism is distinct from route~a. density does not come from a per-qubit infinite-order element; it comes from the seed $ccz\\cdot(h\\otimes h\\otimes h)$, whose trace $1/\\sqrt 2 \\notin \\mathcal o$ (an algebraic-integer obstruction) forces infinite order (\\lean{cliffordcczsu8literalseed.lean}).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: module CliffordCCZSU8LiteralSeed.lean exists. Seed trace 1/sqrt2 not an algebraic integer -> infinite order; mechanism distinct from Route A. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:723a813c",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "723a813c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 291,
+      "tex_line_end": 296,
+      "quote": "A one-parameter flow accumulated from the seed is then spread across the full Lie algebra $\\mathfrak{su}(8)$ by Clifford-conjugation irreducibility, the Clifford group acting transitively on the $63$ non-identity Pauli lines.",
+      "quote_normalized": "a one-parameter flow accumulated from the seed is then spread across the full lie algebra $\\mathfrak{su}(8)$ by clifford-conjugation irreducibility, the clifford group acting transitively on the $63$ non-identity pauli lines.",
+      "type": "numeric",
+      "finding_classes": [
+        "IA"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "IA: '63 non-identity Pauli lines' for 3 qubits = 4^3 - 1 = 63. Correct. Density-spreading mechanism narrative.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:73ae47e8",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "73ae47e8",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 294,
+      "tex_line_end": 296,
+      "quote": "The bundled-strict headline is \\lean{cliffordCCZLiteral\\_solovayKitaev\\_headline\\_unconditional}.",
+      "quote_normalized": "the bundled-strict headline is \\lean{cliffordcczliteral\\_solovaykitaev\\_headline\\_unconditional}.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: cliffordCCZLiteral_solovayKitaev_headline_unconditional resolves (module CliffordCCZSU8LiteralHeadline). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.GenericSUd.cliffordCCZLiteral_solovayKitaev_headline_unconditional"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:5929dd33",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "5929dd33",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 298,
+      "tex_line_end": 302,
+      "quote": "CCZ is essential. Route~B is complemented by a converse (Sec.~\\ref{sec:resource}): the Clifford group alone, $\\langle H, S, \\mathrm{CNOT}\\rangle$, generates a finite subgroup of $\\su 8$ and is therefore not dense.",
+      "quote_normalized": "ccz is essential. route~b is complemented by a converse (sec.~): the clifford group alone, $\\langle h, s, cnot\\rangle$, generates a finite subgroup of $\\su 8$ and is therefore not dense.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor: CCZ-essentiality backed by cliffordOnly_not_dense converse. Correctly scoped to Route B. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:f3c403af",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "f3c403af",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 302,
+      "tex_line_end": 305,
+      "quote": "CCZ is the unique resource whose addition makes the difference. The pairing of Routes~A and~B settles the question of why two $\\su 8$ density proofs coexist: they rest on genuinely distinct mechanisms (a per-qubit $T$ route and a global CCZ-seed route), not on redundancy or over-generality.",
+      "quote_normalized": "ccz is the unique resource whose addition makes the difference. the pairing of routes~a and~b settles the question of why two $\\su 8$ density proofs coexist: they rest on genuinely distinct mechanisms (a per-qubit $t$ route and a global ccz-seed route), not on redundancy or over-generality.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive synthesis of the two-route duality; soft claim, structurally backed by the two headlines + converse.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:two-density-mechanisms-for-su8:556985f3",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "two-density-mechanisms-for-su8",
+        "quote_hash": "556985f3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Two density mechanisms for SU(8)",
+      "section_ordinal": 8,
+      "tex_line_start": 310,
+      "tex_line_end": 315,
+      "quote": "Two complementary, formally verified density mechanisms for the same target $\\su 8$. Route~A (Phase 6y) is $T$-based with CCZ over-complete; Route~B (Phase 6z) is $T$-free with CCZ essential. The converse (Phase 6x$'$, $\\lean{cliffordOnly\\_not\\_dense}$) establishes that the Clifford group alone is finite, so CCZ is the unique resource that makes the difference.",
+      "quote_normalized": "two complementary, formally verified density mechanisms for the same target $\\su 8$. route~a (phase 6y) is $t$-based with ccz over-complete; route~b (phase 6z) is $t$-free with ccz essential. the converse (phase 6x$'$, $\\lean{cliffordonly\\_not\\_dense}$) establishes that the clifford group alone is finite, so ccz is the unique resource that makes the difference.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Fig 2 caption. D8 honesty anchor: Route A 6y over-complete vs Route B 6z essential correctly distinguished; converse cliffordOnly_not_dense resolves. No conflation. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:a-verified-resource-lower-bound:e7a8f70c",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "a-verified-resource-lower-bound",
+        "quote_hash": "e7a8f70c",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "A verified resource lower bound",
+      "section_ordinal": 9,
+      "tex_line_start": 321,
+      "tex_line_end": 324,
+      "quote": "Compilation existence has a dual: how cheaply can a target be built? We formalize the channel-representation resource theory of Mukhopadhyay~\\cite{Mukhopadhyay2024} for Clifford$+$CCZ in $\\su 8$ and machine-check, unconditionally, a Toffoli-count lower bound.",
+      "quote_normalized": "compilation existence has a dual: how cheaply can a target be built? we formalize the channel-representation resource theory of mukhopadhyay~ for clifford$+$ccz in $\\su 8$ and machine-check, unconditionally, a toffoli-count lower bound.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Mukhopadhyay2024 in registry. 'unconditionally' verified. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "Mukhopadhyay2024"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:a-verified-resource-lower-bound:9b699601",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "a-verified-resource-lower-bound",
+        "quote_hash": "9b699601",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "A verified resource lower bound",
+      "section_ordinal": 9,
+      "tex_line_start": 326,
+      "tex_line_end": 332,
+      "quote": "The central object is a signed-parity-invariant measure $\\mathrm{sde}_2$ on the channel representation $\\widehat U$ of a unitary $U$. We prove that this measure is non-increasing under Clifford multiplication and increases by at most one under a CCZ (equivalently Toffoli) gate; the channel-representation entries of any Clifford$+$CCZ word are dyadic, lying in $\\mathbb Z[1/2]$ (Lemma~3.10, \\lean{channelRep\\_interp\\_isRat}).",
+      "quote_normalized": "the central object is a signed-parity-invariant measure $sde_2$ on the channel representation $\\widehat u$ of a unitary $u$. we prove that this measure is non-increasing under clifford multiplication and increases by at most one under a ccz (equivalently toffoli) gate; the channel-representation entries of any clifford$+$ccz word are dyadic, lying in $\\mathbb z[1/2]$ (lemma~3.10, \\lean{channelrep\\_interp\\_israt}).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: channelRep_interp_isRat resolves (SKEFTHawking.FKLW.MukhopadhyayCCZ.channelRep_interp_isRat, module MukhopadhyayToffoliUnconditional). Dyadic Z[1/2] / Lemma 3.10 narrative matches. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.channelRep_interp_isRat"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:a-verified-resource-lower-bound:fe76f50f",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "a-verified-resource-lower-bound",
+        "quote_hash": "fe76f50f",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "A verified resource lower bound",
+      "section_ordinal": 9,
+      "tex_line_start": 332,
+      "tex_line_end": 337,
+      "quote": "Telescoping these facts gives the lower bound $T^{\\mathrm{of}}(U) \\;\\ge\\; \\mathrm{sde}_2(\\widehat U)$, formalized as \\lean{channelSde2\\_le\\_toffoliCost} (\\lean{MukhopadhyayToffoliUnconditional.lean}).",
+      "quote_normalized": "telescoping these facts gives the lower bound $t^{of}(u) \\;\\ge\\; sde_2(\\widehat u)$, formalized as \\lean{channelsde2\\_le\\_toffolicost} (\\lean{mukhopadhyaytoffoliunconditional.lean}).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor: channelSde2_le_toffoliCost resolves (module MukhopadhyayToffoliUnconditional, exists). Statement T^of(U) >= sde2(U-hat) matches source (channelSde2 U <= toffoliCost U). PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.channelSde2_le_toffoliCost"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:a-verified-resource-lower-bound:cf623480",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "a-verified-resource-lower-bound",
+        "quote_hash": "cf623480",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "A verified resource lower bound",
+      "section_ordinal": 9,
+      "tex_line_start": 337,
+      "tex_line_end": 340,
+      "quote": "The earlier form of this bound was parametric (conditional on the Clifford-preservation and CCZ-increment hypotheses); we discharge those hypotheses and obtain the unconditional statement.",
+      "quote_normalized": "the earlier form of this bound was parametric (conditional on the clifford-preservation and ccz-increment hypotheses); we discharge those hypotheses and obtain the unconditional statement.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor (unconditional vs parametric): confirmed against source \u2014 channelSde2_le_toffoliCost takes only hU:IsExactlyCliffordCCZ U; hC/hCCZ discharged. Statement of provenance is accurate. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.channelSde2_le_toffoliCost"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:a-verified-resource-lower-bound:43061d9d",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "a-verified-resource-lower-bound",
+        "quote_hash": "43061d9d",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "A verified resource lower bound",
+      "section_ordinal": 9,
+      "tex_line_start": 340,
+      "tex_line_end": 342,
+      "quote": "A fully machine-checked unconditional resource lower bound for a fault-tolerant gate is, to our knowledge, the first of its kind and is directly usable in magic-state-distillation resource accounting.",
+      "quote_normalized": "a fully machine-checked unconditional resource lower bound for a fault-tolerant gate is, to our knowledge, the first of its kind and is directly usable in magic-state-distillation resource accounting.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "First-of-kind priority metaclaim; usability assertion interpretive. Declines hard verdict.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:a-verified-resource-lower-bound:a9ef47c1",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "a-verified-resource-lower-bound",
+        "quote_hash": "a9ef47c1",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "A verified resource lower bound",
+      "section_ordinal": 9,
+      "tex_line_start": 344,
+      "tex_line_end": 347,
+      "quote": "The converse of Sec.~\\ref{sec:su8} is the same machinery read in the density direction: the channel representation maps the Clifford group into signed-permutation matrices, a finite group, giving \\lean{cliffordOnly\\_not\\_dense} (\\lean{MukhopadhyayCliffordNotDense.lean}).",
+      "quote_normalized": "the converse of sec.~ is the same machinery read in the density direction: the channel representation maps the clifford group into signed-permutation matrices, a finite group, giving \\lean{cliffordonly\\_not\\_dense} (\\lean{mukhopadhyaycliffordnotdense.lean}).",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "TN: cliffordOnly_not_dense resolves (module MukhopadhyayCliffordNotDense, exists). Signed-permutation finite-group mechanism matches. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate5_LeanProofSubstance"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "theorem",
+            "target": "SKEFTHawking.FKLW.MukhopadhyayCCZ.cliffordOnly_not_dense"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:a-verified-resource-lower-bound:11e74311",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "a-verified-resource-lower-bound",
+        "quote_hash": "11e74311",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "A verified resource lower bound",
+      "section_ordinal": 9,
+      "tex_line_start": 347,
+      "tex_line_end": 350,
+      "quote": "We note the scope: the matching Toffoli-count upper bound (minimality; Mukhopadhyay's Conjecture~4.8) is not addressed here; the lower bound stands unconditionally on its own.",
+      "quote_normalized": "we note the scope: the matching toffoli-count upper bound (minimality; mukhopadhyay's conjecture~4.8) is not addressed here; the lower bound stands unconditionally on its own.",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 honesty anchor: minimality (Conjecture 4.8) explicitly OUT of scope \u2014 matches source comment ('full Toffoli minimality ... Conjecture 4.8, the documented residual'). No overclaim. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:mathlib-upstream-contribution-portfolio:ac501257",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "mathlib-upstream-contribution-portfolio",
+        "quote_hash": "ac501257",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Mathlib-upstream contribution portfolio",
+      "section_ordinal": 10,
+      "tex_line_start": 355,
+      "tex_line_end": 363,
+      "quote": "Several components of this development are general-purpose and are candidates for upstream contribution to the underlying mathematical library: the concrete-radius matrix logarithm of Sec.~\\ref{sec:sud} (the strongest standalone candidate, as the library lacks a Banach-algebra logarithm with a named convergence radius); a dimension-generic BCH order-two cubic estimate; the $\\su d$ Cartan density-from-witness lemma; and the matrix-exponential local-homeomorphism at the identity.",
+      "quote_normalized": "several components of this development are general-purpose and are candidates for upstream contribution to the underlying mathematical library: the concrete-radius matrix logarithm of sec.~ (the strongest standalone candidate, as the library lacks a banach-algebra logarithm with a named convergence radius); a dimension-generic bch order-two cubic estimate; the $\\su d$ cartan density-from-witness lemma; and the matrix-exponential local-homeomorphism at the identity.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Mathlib-upstream candidate portfolio; aspirational, interpretive. No hard verdict.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:mathlib-upstream-contribution-portfolio:d1d0ef16",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "mathlib-upstream-contribution-portfolio",
+        "quote_hash": "d1d0ef16",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Mathlib-upstream contribution portfolio",
+      "section_ordinal": 10,
+      "tex_line_start": 361,
+      "tex_line_end": 363,
+      "quote": "Filing these reduces the maintenance surface of the present development and subjects the substrate to independent review.",
+      "quote_normalized": "filing these reduces the maintenance surface of the present development and subjects the substrate to independent review.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive rationale.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:scope-and-discussion:c8c42d52",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "scope-and-discussion",
+        "quote_hash": "c8c42d52",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Scope and discussion",
+      "section_ordinal": 11,
+      "tex_line_start": 368,
+      "tex_line_end": 370,
+      "quote": "We state the boundary of this work explicitly, both to forestall over-reading and because the boundary is itself a deliberate design choice.",
+      "quote_normalized": "we state the boundary of this work explicitly, both to forestall over-reading and because the boundary is itself a deliberate design choice.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Scope metaclaim.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:scope-and-discussion:8a43353b",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "scope-and-discussion",
+        "quote_hash": "8a43353b",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Scope and discussion",
+      "section_ordinal": 11,
+      "tex_line_start": 370,
+      "tex_line_end": 375,
+      "quote": "This paper establishes the verified existence, universality, and lower-bound theory of universal quantum gate compilation: that a compilation exists, with provable error and word-length bounds, at arbitrary dimension, for the alphabets treated here, and that the associated resource costs obey machine-checked bounds.",
+      "quote_normalized": "this paper establishes the verified existence, universality, and lower-bound theory of universal quantum gate compilation: that a compilation exists, with provable error and word-length bounds, at arbitrary dimension, for the alphabets treated here, and that the associated resource costs obey machine-checked bounds.",
+      "type": "metaclaim",
+      "finding_classes": [],
+      "agent_verdict": "TRANSITION",
+      "agent_notes": "Scope summary metaclaim; backed by headlines. Auto-passes.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:scope-and-discussion:919e5e96",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "scope-and-discussion",
+        "quote_hash": "919e5e96",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Scope and discussion",
+      "section_ordinal": 11,
+      "tex_line_start": 375,
+      "tex_line_end": 383,
+      "quote": "What is not in scope is the engineering of a runnable compiler: the runtime gate-word-emitting implementation, hardware-specific tuning for particular devices, certificate formats, and length-optimality (the gap between our poly-logarithmic guarantee and the optimal Ross--Selinger-style synthesis~\\cite{RossSelinger2016}) are a separate engineering deliverable.",
+      "quote_normalized": "what is not in scope is the engineering of a runnable compiler: the runtime gate-word-emitting implementation, hardware-specific tuning for particular devices, certificate formats, and length-optimality (the gap between our poly-logarithmic guarantee and the optimal ross--selinger-style synthesis~) are a separate engineering deliverable.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "D8 public/private seam honesty anchor: runtime impl, vendor tuning, cert formats, length-optimality all explicitly OUT. No private-repo reference. RossSelinger2016 in registry. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "RossSelinger2016"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:scope-and-discussion:a3d0e572",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "scope-and-discussion",
+        "quote_hash": "a3d0e572",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Scope and discussion",
+      "section_ordinal": 11,
+      "tex_line_start": 379,
+      "tex_line_end": 383,
+      "quote": "The existential $\\varepsilon_0$-net used here can in principle be replaced by a genuinely runnable algorithmic synthesis following Kliuchnikov--Maslov--Mosca~\\cite{KMM2013} and Ross--Selinger~\\cite{RossSelinger2016} over the ring $\\mathbb Z[\\omega][1/\\sqrt 2]$; that refinement is recorded as future work.",
+      "quote_normalized": "the existential $\\varepsilon_0$-net used here can in principle be replaced by a genuinely runnable algorithmic synthesis following kliuchnikov--maslov--mosca~ and ross--selinger~ over the ring $\\mathbb z[\\omega][1/\\sqrt 2]$; that refinement is recorded as future work.",
+      "type": "citation",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Future-work pointer; KMM2013 + RossSelinger2016 both in registry. Z[omega][1/sqrt2] is the standard KMM ring. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate1_CitationIntegrity"
+      ],
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "citation",
+            "target": "KMM2013"
+          },
+          {
+            "kind": "citation",
+            "target": "RossSelinger2016"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:scope-and-discussion:a701f373",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "scope-and-discussion",
+        "quote_hash": "a701f373",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Scope and discussion",
+      "section_ordinal": 11,
+      "tex_line_start": 385,
+      "tex_line_end": 389,
+      "quote": "The development demonstrates a methodology as much as a result: by factoring the alphabet-specific from the alphabet-agnostic and lifting the latter to arbitrary dimension, the cost of verifying a new universal gate set is reduced to discharging a single density witness, and the verified theory now spans dimensions $2$, $4$, and $8$ and five physically distinct alphabets.",
+      "quote_normalized": "the development demonstrates a methodology as much as a result: by factoring the alphabet-specific from the alphabet-agnostic and lifting the latter to arbitrary dimension, the cost of verifying a new universal gate set is reduced to discharging a single density witness, and the verified theory now spans dimensions $2$, $4$, and $8$ and five physically distinct alphabets.",
+      "type": "qualitative",
+      "finding_classes": [
+        "SD"
+      ],
+      "agent_verdict": "PASS",
+      "agent_notes": "SD: 'dimensions 2,4,8' + 'five physically distinct alphabets' consistent with the survey. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "gates_invoked": [
+        "Gate9_NumericalFreshness"
+      ]
+    },
+    {
+      "id": "sentence:D8:scope-and-discussion:5095d7d3",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "scope-and-discussion",
+        "quote_hash": "5095d7d3",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Scope and discussion",
+      "section_ordinal": 11,
+      "tex_line_start": 389,
+      "tex_line_end": 394,
+      "quote": "The two-mechanism $\\su 8$ result and the unconditional Toffoli bound suggest that formal verification is reaching the point where it can serve not only as a correctness check on known compilation results but as a tool for settling structural questions---such as the essentiality of a gate---that are easy to state and surprisingly delicate to prove.",
+      "quote_normalized": "the two-mechanism $\\su 8$ result and the unconditional toffoli bound suggest that formal verification is reaching the point where it can serve not only as a correctness check on known compilation results but as a tool for settling structural questions---such as the essentiality of a gate---that are easy to state and surprisingly delicate to prove.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "INFO",
+      "agent_notes": "Interpretive closing reflection.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:scope-and-discussion:d5e3443e",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "scope-and-discussion",
+        "quote_hash": "d5e3443e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Scope and discussion",
+      "section_ordinal": 11,
+      "tex_line_start": 396,
+      "tex_line_end": 401,
+      "quote": "Relationship to companion work. The Fibonacci-universality and topological/categorical foundations are developed in a companion bundle, which this paper cites for the Fibonacci anchor and generalizes; the fault-tolerant-computation substrate (codes, measurement, gauging) is developed in a sibling bundle that consumes the quantitative Solovay--Kitaev developed here as its universal-compilation primitive.",
+      "quote_normalized": "relationship to companion work. the fibonacci-universality and topological/categorical foundations are developed in a companion bundle, which this paper cites for the fibonacci anchor and generalizes; the fault-tolerant-computation substrate (codes, measurement, gauging) is developed in a sibling bundle that consumes the quantitative solovay--kitaev developed here as its universal-compilation primitive.",
+      "type": "qualitative",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Cross-bridge to D4 (companion: Fibonacci/categorical) + D6 (sibling FT-QC consumer). Clean cite-each-other relationship, no SK-substrate duplication. Matches D8 cross-bridge anchors. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    },
+    {
+      "id": "sentence:D8:verification-status:00b1ee7e",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "verification-status",
+        "quote_hash": "00b1ee7e",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Verification status",
+      "section_ordinal": 12,
+      "tex_line_start": 407,
+      "tex_line_end": 410,
+      "quote": "Every headline theorem named in this paper is verified to the Lean~4 kernel with axiom set $\\{\\texttt{propext},\\,\\texttt{Classical.choice},\\,\\texttt{Quot.sound}\\}$ and no project-local axioms (Pipeline Invariant~\\#15).",
+      "quote_normalized": "every headline theorem named in this paper is verified to the lean~4 kernel with axiom set $\\{propext,\\,classical.choice,\\,quot.sound\\}$ and no project-local axioms (pipeline invariant~\\#15).",
+      "type": "formal-claim",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Verified: 0 declared axioms; every D8 headline axiom_deps_project=[], axiom_deps_core={propext,Classical.choice,Quot.sound}. Inv #15 clean. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null,
+      "chain_proposed": {
+        "links": [
+          {
+            "kind": "axiom",
+            "target": "propext"
+          },
+          {
+            "kind": "axiom",
+            "target": "Classical.choice"
+          },
+          {
+            "kind": "axiom",
+            "target": "Quot.sound"
+          }
+        ],
+        "completeness": "full"
+      }
+    },
+    {
+      "id": "sentence:D8:verification-status:92983c61",
+      "raw_id_parts": {
+        "paper": "D8",
+        "section_slug": "verification-status",
+        "quote_hash": "92983c61",
+        "hash_algorithm": "sha256_first_8"
+      },
+      "section": "Verification status",
+      "section_ordinal": 12,
+      "tex_line_start": 410,
+      "tex_line_end": 413,
+      "quote": "The contributing Lean module families are \\lean{FKLW/GenericSUd*}, \\lean{FKLW/CliffordCCZSU8*}, \\lean{FKLW/TrappedIonSU4*}, \\lean{FKLW/ReadRezayi*}, \\lean{FKLW/Mukhopadhyay*}, \\lean{FKLW/CliffordT*}, and the \\lean{SolovayKitaev*} top-level modules.",
+      "quote_normalized": "the contributing lean module families are \\lean{fklw/genericsud*}, \\lean{fklw/cliffordcczsu8*}, \\lean{fklw/trappedionsu4*}, \\lean{fklw/readrezayi*}, \\lean{fklw/mukhopadhyay*}, \\lean{fklw/cliffordt*}, and the \\lean{solovaykitaev*} top-level modules.",
+      "type": "theorem-ref",
+      "finding_classes": [],
+      "agent_verdict": "PASS",
+      "agent_notes": "Module-family globs; representative members verified to exist under lean/SKEFTHawking/FKLW/ (GenericSUd*, CliffordCCZSU8*, TrappedIonSU4*, ReadRezayi*, Mukhopadhyay*, CliffordT*) and SolovayKitaev* top-level. PASS.",
+      "agent_run_id": "claims-reviewer-v2:2026-05-31T00:00:00Z",
+      "bundle_destination": "D8",
+      "lift_action": "Lift-section",
+      "tombstone": false,
+      "rewrite_of": null
+    }
+  ],
+  "non_reproducing_prior_findings": [],
+  "summary": {
+    "total_sentences": 84,
+    "by_type": {
+      "metaclaim": 9,
+      "formal-claim": 20,
+      "qualitative": 16,
+      "citation": 4,
+      "transition": 6,
+      "theorem-ref": 21,
+      "methodology": 3,
+      "numeric": 5
+    },
+    "by_verdict": {
+      "INFO": 15,
+      "PASS": 53,
+      "TRANSITION": 15,
+      "WARN": 1
+    },
+    "by_finding_class": {
+      "IA": 5,
+      "TP": 0,
+      "SD": 5,
+      "TN": 1,
+      "HD": 0
+    },
+    "non_reproducing_count": 0,
+    "non_reproducing_auto_closed": 0,
+    "non_reproducing_candidates": 0,
+    "agent_text": "84 sentences | 53 PASS | 15 TRANSITION | 15 INFO | 1 WARN | 0 FAIL | 0 UNGROUNDED | no prior review (first D8 claims pass)"
+  },
+  "blocking_issues": [],
+  "non_blocking_followups": [
+    {
+      "id": "followup:1",
+      "summary": "Module-attribution drift: draft Sec.~\\ref{sec:su8} Route B attributes cliffordCCZLiteral_dense to CliffordCCZSU8LiteralHeadline.lean, but the theorem is DECLARED in CliffordCCZSU8Density.lean (only consumed/re-stated in LiteralHeadline). Symbol resolves; cosmetic provenance note. WARN, non-blocking.",
+      "sentences": [
+        "sentence:D8:two-density-mechanisms-for-su8:e131a84d"
+      ],
+      "finding_class": "TN"
+    }
+  ]
+}

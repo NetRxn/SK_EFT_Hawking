@@ -1,6 +1,6 @@
 # Bundle D4 — Source Manifest
 
-**Auto-generated:** 2026-05-23
+**Auto-generated:** 2026-05-31
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D4`
@@ -14,9 +14,9 @@
 | `_phase6o_W1a_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W3a_lean_only` | §8 | (unspecified) | (see mapping) | (missing) |
 | `_phase6p_W2cd_lean_only` | §9.1-9.2 | (unspecified) | (see mapping) | (missing) |
-| `_phase6t_lean_only` | §9.3-9.5 | (unspecified) | (see mapping) | (missing) |
+| `_phase6w_W5_lean_only` | §"Categorical-Chern ↔ real-space-Chern bridge" | (unspecified) | (see mapping) | (missing) |
 | `note_rt_ch_bounds` | §8 | Lift-section | (see mapping) | 2026-04-27T18:45:54Z |
-| `paper11_quantum_group` | §2 | Lift-section | (see mapping) | 2026-05-22T17:20:31Z |
+| `paper11_quantum_group` | §2 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
 | `paper14_braided_mtc` | §3 | Lift-section | (see mapping) | 2026-05-12T12:44:21Z |
 | `paper16_wrt_tqft` | §5 | Lift-section | (see mapping) | 2026-05-12T12:44:55Z |
 | `paper18_doublon_gate` | §6 | Lift-section | (see mapping) | 2026-05-12T12:42:09Z |

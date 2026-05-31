@@ -1,0 +1,43 @@
+{
+  "bundle_target": "D8",
+  "events": [
+    {
+      "date": "2026-05-31T14:07:52Z",
+      "source_paper": "D8_initial_draft",
+      "lift_action": "Lift-section",
+      "bundle_section_inserted": "\u00a71",
+      "lean_modules_referenced": [
+        "GenericSU2GeneratingSet",
+        "GenericSolovayKitaevQuantitative",
+        "CliffordTGeneratingSet",
+        "CliffordTInfiniteOrder",
+        "CliffordTQuantitative",
+        "GenericSUdQuantitative",
+        "GenericSUdMatrixMercatorLog",
+        "GenericSUdSkHeadlineCascadeConcrete",
+        "GenericSUdSkLengthExponent",
+        "TrappedIonSU4WitnessFull",
+        "TrappedIonSU4HeadlineCascadeFinal",
+        "CliffordCCZSU8Density",
+        "CliffordCCZSU8HeadlineCascadeFinal",
+        "CliffordCCZSU8LiteralHeadline",
+        "CliffordCCZSU8LiteralGeneratingSet",
+        "CliffordCCZSU8LiteralSeed",
+        "ReadRezayiK5Quantitative",
+        "ReadRezayiK7Quantitative",
+        "SolovayKitaevQuantitative",
+        "SolovayKitaevLengthBound",
+        "FibSU2Density",
+        "MukhopadhyayToffoliUnconditional",
+        "MukhopadhyayToffoliBound",
+        "MukhopadhyayCliffordNotDense",
+        "MukhopadhyayChannelRep",
+        "MukhopadhyayMatrixSde2"
+      ],
+      "citation_count_added": 0,
+      "stage13_redo_required": true,
+      "agent_run_id": "bundle_append-2026-05-31T14:07:52Z",
+      "notes": "Sourceless synthesis (D.4): Phase 6p/6t/6u/6x/6x-prime/6y/6z verified-quantum-compilation corpus. Authorized 2026-05-31 per Pipeline Invariant #14."
+    }
+  ]
+}

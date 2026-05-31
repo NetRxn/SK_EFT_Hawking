@@ -1,0 +1,439 @@
+\documentclass[aps,pra,reprint,nofootinbib,superscriptaddress]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+
+%% Bundle target: D8 (tier 1, journal PRX Quantum | Quantum)
+%% Schema: docs/BUNDLE_DIRECTORY_SCHEMA.md
+%% Source manifest: papers/D8/source_manifest.md
+%% Append log: papers/D8/append_log.json
+%% Sourceless (D.4) synthesis: Phase 6p/6t/6u/6x/6x'/6y/6z verified-compilation corpus.
+%% All headline theorems kernel-pure {propext, Classical.choice, Quot.sound}; 0 project-local axioms.
+
+\newcommand{\lean}[1]{\texttt{#1}}
+\newcommand{\su}[1]{\mathrm{SU}(#1)}
+\newcommand{\sudd}{\mathfrak{su}(d)}
+
+\begin{document}
+
+\title{Kernel-Verified Universal Quantum Gate Compilation:\\
+Alphabet-Agnostic Solovay--Kitaev across Dimensions}
+
+\author{John Roehm}
+
+\begin{abstract}
+We report what is, to our knowledge, the first machine-checked development of
+universal quantum gate compilation as a \emph{theory} rather than a single
+algorithm: an
+alphabet-agnostic, dimension-agnostic quantitative Solovay--Kitaev substrate,
+formally verified in the Lean~4 proof assistant, together with its
+instantiation across five gate alphabets and a verified resource lower bound.
+The substrate packages the Dawson--Nielsen super-quadratic recursion,
+Cartan-type density-from-witness, Baker--Campbell--Hausdorff bracket closure,
+and the $\varepsilon_0$-net behind a generic generating-set abstraction, so that
+a new universal alphabet ships its verified quantitative compiler by
+\emph{instantiation} rather than re-derivation. We lift the substrate to the
+special unitary group $\su{d}$ of arbitrary dimension---to our knowledge the
+first kernel-verified quantitative Solovay--Kitaev theorem at general
+dimension in any proof assistant---by constructing a Banach-algebra matrix
+logarithm with a named convergence radius, which removes an existential
+obstruction that otherwise blocks the generalization. We instantiate the
+machinery on Fibonacci anyons, Clifford$+T$, Read--Rezayi anyons at levels
+$5$ and $7$, the trapped-ion M\o lmer--S\o rensen gate set at $\su{4}$, and
+Clifford$+$CCZ at $\su{8}$. For the three-qubit target $\su{8}$ we give two
+fundamentally distinct, formally verified density mechanisms: one using the
+$T$ gate, and one using \emph{no} $T$ gate at all, in which the doubly
+controlled-$Z$ (CCZ) gate is essential---accompanied by a converse proving
+that the Clifford group alone generates only a finite subgroup of $\su{8}$ and
+hence is not dense. Finally we machine-check, unconditionally, a lower bound on
+the number of Toffoli gates required to implement a unitary, expressed through
+a signed-parity-invariant measure on the gate's channel representation. Every
+headline theorem is verified to the Lean kernel with no project-local axioms.
+We delimit the scope explicitly: this is the verified \emph{existence},
+universality, and lower-bound theory; runtime-compiler implementation,
+hardware-specific tuning, and length-optimality engineering are a separate
+deliverable.
+\end{abstract}
+
+\maketitle
+
+%% ─────────────────────────────────────────────────────────────────────
+
+\section{Introduction}
+\label{sec:intro}
+
+A quantum processor exposes a fixed, finite set of physical gates---an
+\emph{alphabet}---yet must approximate an essentially continuous family of
+target unitaries. The Solovay--Kitaev theorem guarantees that any
+sufficiently rich alphabet can approximate any target to precision
+$\varepsilon$ using a circuit whose length grows only poly-logarithmically in
+$1/\varepsilon$~\cite{KitaevShenVyalyi2002,DawsonNielsen2006,AharonovArad2017}. It is the
+foundational existence result behind every fault-tolerant compilation
+pipeline. Its proof, however, is a delicate interplay of Lie theory (the
+generating set must densely fill the group), differential geometry (the
+balanced-commutator recursion lives on the group manifold near the identity),
+and number theory (density of a discrete alphabet typically rests on an
+irrationality or algebraic-integer obstruction). This combination has made the
+theorem a recurring source of subtle hypotheses in the literature, and an
+attractive but difficult target for formal verification.
+
+Prior formal-verification efforts in quantum computation have largely targeted
+\emph{exact} circuit semantics and optimization: VOQC/SQIR in
+Coq~\cite{Hietala2020VOQC} verifies equivalence-preserving circuit
+optimizations, and the broader verified-quantum-programs landscape (Why3/Qbricks,
+Isabelle, and others) is surveyed in~\cite{Lewis2021VerifQC}. These establish
+that a circuit computes what it should; none develops the \emph{quantitative
+approximation} theory---density of a discrete alphabet, error-vs-length
+trade-off, resource lower bounds---that is the subject of this work. The
+distinction is approximation versus exact optimization: D8 verifies that a
+target unitary can be \emph{approached} to arbitrary precision with bounded
+circuit length, which is a different question from verifying that a given exact
+circuit is correctly optimized.
+
+This paper reports a machine-checked development, in the Lean~4 proof
+assistant, that treats universal compilation not as one algorithm for one
+alphabet but as a reusable \emph{theory}. Our contributions are:
+
+\begin{enumerate}
+\item An \emph{alphabet-agnostic} quantitative Solovay--Kitaev substrate
+(Sec.~\ref{sec:substrate}): the Lie-algebraic core is parametrized over an
+abstract generating set, so a new universal gate set inherits the full
+verified quantitative compiler by discharging a single density witness.
+
+\item The \emph{lift to arbitrary dimension} $\su{d}$
+(Sec.~\ref{sec:sud}): the first kernel-verified quantitative
+Solovay--Kitaev at general $d$, enabled by a concrete-radius matrix logarithm
+that is a contribution to the underlying mathematical library in its own right.
+
+\item A \emph{five-alphabet instantiation survey} (Sec.~\ref{sec:alphabets}):
+Fibonacci, Clifford$+T$, Read--Rezayi $\su 2_5$ and $\su 2_7$, trapped-ion
+M\o lmer--S\o rensen at $\su 4$, and Clifford$+$CCZ at $\su 8$.
+
+\item \emph{Two complementary density mechanisms for $\su 8$}
+(Sec.~\ref{sec:su8}): a $T$-based route and a $T$-free, CCZ-essential route,
+with a converse establishing that the Clifford group alone is finite in
+$\su 8$.
+
+\item A \emph{verified resource lower bound} (Sec.~\ref{sec:resource}): an
+unconditional machine-checked lower bound on Toffoli count via a
+signed-parity-invariant measure on the channel representation, following
+Mukhopadhyay~\cite{Mukhopadhyay2024}.
+
+\item A \emph{Mathlib-upstream contribution portfolio}
+(Sec.~\ref{sec:mathlib}).
+\end{enumerate}
+
+All headline theorems are verified to the Lean kernel with axiom set
+$\{\texttt{propext},\,\texttt{Classical.choice},\,\texttt{Quot.sound}\}$ (the
+standard Lean kernel) and no project-local axioms. We state the boundary of
+the work plainly in Sec.~\ref{sec:scope}: we verify that a compilation
+\emph{exists} with provable error and length bounds; the engineering of a
+runnable, hardware-tuned, length-optimal compiler is deliberately out of
+scope.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.92\textwidth]{figures/d8_fig1_alphabet_dimension_map.png}
+\caption{Coverage of the kernel-verified compilation corpus: five gate
+alphabets across target dimensions $\su 2$, $\su 4$, $\su 8$. Blue entries
+derive density from a sub-alphabet or per-qubit route; the amber entry
+(Phase 6z) is $T$-free with CCZ load-bearing. Every entry is verified to the
+Lean kernel with no project-local axioms.}
+\label{fig:coverage}
+\end{figure*}
+
+\section{The alphabet-agnostic substrate}
+\label{sec:substrate}
+
+The quantitative Solovay--Kitaev argument has four reusable ingredients that
+do not depend on the specific alphabet: (i) a density statement, that the group
+generated by the alphabet is dense in the target group; (ii) an
+$\varepsilon_0$-net, a finite set of words approximating every target to a base
+precision $\varepsilon_0$; (iii) the Dawson--Nielsen recursion, which uses a
+balanced group commutator to convert a precision-$\varepsilon$ approximation
+into a precision-$O(\varepsilon^{3/2})$ one at controlled length cost; and
+(iv) a Baker--Campbell--Hausdorff (BCH) estimate controlling the commutator's
+deviation from the corresponding Lie-bracket flow.
+
+We factor these into a substrate parametrized over an abstract generating set,
+realized in the \lean{GenericSU2GeneratingSet} and
+\lean{GenericSolovayKitaevQuantitative} module families. The headline of the
+substrate is a bundled-strict theorem asserting, for any generating set
+satisfying the density and net hypotheses, the simultaneous error bound
+$\lVert \mathrm{compile}(U,\varepsilon) - U\rVert \le \varepsilon$ and a
+poly-logarithmic word-length bound, at the \emph{same} algorithmic compile
+level. The design claim is that adding a new universal alphabet to the verified
+chain is an \emph{instantiation} problem, not a re-derivation problem.
+
+We validate the abstraction on the canonical fault-tolerant alphabet
+Clifford$+T$. The density witness---that $\langle H, T\rangle$ is dense in
+$\su 2$---is discharged through a Niven-style algebraic-integer obstruction on
+the trace $\sqrt 2\,\sin(\pi/8)$ of $H_{\mathrm{SU}}\,T_{\mathrm{SU}}$
+(\lean{CliffordTInfiniteOrder.lean}, theorem
+\lean{cliffordT\_accPt\_one\_unconditional}); this is the 1999
+Boykin--Mor--Pulver--Roychowdhury--Vatan folklore
+result~\cite{BMPRV1999}, now machine-verified. The result is the
+unconditional bundled-strict headline
+\lean{solovayKitaev\_dawson\_nielsen\_quantitative\_cliffordT\_strict\_constructive\_tight\_unconditional}.
+The algebraic-integer obstruction, rather than a cyclotomic computation, is the
+load-bearing novelty: it is the generic technique the remaining alphabets
+reuse.
+
+\section{The lift to arbitrary dimension}
+\label{sec:sud}
+
+The substrate of Sec.~\ref{sec:substrate} targets single-qubit unitaries
+($\su 2$). Multi-qubit compilation requires the same machinery at $\su d$ for
+$d = 2^n$. We lift all four ingredients to general $d$, yielding the headline
+\lean{solovayKitaev\_dawson\_nielsen\_quantitative\_generic\_sud\_strict\_constructive\_tight}
+(\lean{GenericSUdQuantitative.lean}): for every $d \ge 2$, every
+$U \in \su d$, and every $\varepsilon > 0$, a compilation exists with error
+$\le \varepsilon$ and poly-logarithmic length. To our knowledge this is the
+first kernel-verified quantitative Solovay--Kitaev at arbitrary dimension in
+any proof assistant. The generic statement is parametrized over the alphabet's
+density witness and a word-length hypothesis; the per-alphabet instantiations of
+Sec.~\ref{sec:alphabets} discharge these, and their headlines are
+unconditional.
+
+\subsection{The concrete-radius matrix logarithm}
+
+The single obstruction to the lift was the \emph{regime} step: the balanced
+commutator construction requires writing a near-identity unitary $\Delta$ as
+$\exp(H)$ for a Hermitian-traceless $H$ of controlled norm, and reasoning about
+the round trip. The natural tool, an inverse-function-theorem matrix logarithm,
+provides only an \emph{existential} convergence radius, which propagates a
+circular dependency through the recursion. We instead construct an explicit
+Banach-algebra logarithm with a \emph{named} convergence radius,
+\[
+  \lean{matrixMercatorLog}\,X \;=\; \sum_{n\ge 0}
+  \frac{(-1)^n}{n+1}\,X^{n+1},\qquad \lVert X\rVert < 1,
+\]
+and prove the round trip $\exp(\lean{matrixMercatorLog}\,X) = \mathbf 1 + X$
+(\lean{GenericSUdMatrixMercatorLog.lean}, theorem
+\lean{exp\_matrixMercatorLog}). With a concrete radius in hand, the regime
+conjuncts---Hermiticity, tracelessness, and the exp round trip---are all
+discharged unconditionally on a named ball, and the headline cascade
+(\lean{GenericSUdSkHeadlineCascadeConcrete.lean}) reduces to the density
+witness and the length bound alone. The matrix logarithm fills a genuine gap
+in the underlying library, which lacks a Banach-algebra logarithm with a named
+radius; we return to it in Sec.~\ref{sec:mathlib}.
+
+\begin{figure}
+\centering
+\includegraphics[width=\columnwidth]{figures/d8_fig3_sk_recursion.png}
+\caption{The Dawson--Nielsen recursion underlying the substrate: per level
+the error contracts super-quadratically as $\varepsilon_0^{(3/2)^n}$ while the
+word length grows fivefold as $N_0\,5^n$, giving the honest length exponent
+$\log 5/\log(3/2) \approx 3.97$.}
+\label{fig:recursion}
+\end{figure}
+
+\subsection{The length exponent}
+
+The Dawson--Nielsen recursion contracts error as $\varepsilon \mapsto
+O(\varepsilon^{3/2})$ with a fivefold word-expansion per level, giving a
+word-length that grows as $O\!\big((\log 1/\varepsilon)^{\gamma}\big)$ with
+exponent $\gamma = \log 5/\log(3/2) \approx 3.97$ (Fig.~\ref{fig:recursion}).
+We single-source this value
+as \lean{skLengthExponent\_sud} (\lean{GenericSUdSkLengthExponent.lean}) and
+discharge the poly-logarithmic length bound unconditionally. We emphasize that
+the often-quoted exponent $\log 5/\log 2 \approx 2.32$ would require a
+quadratic ($\varepsilon \mapsto O(\varepsilon^2)$) contraction, which our
+construction does not establish; we report the honest $3.97$.
+
+\section{Five alphabets}
+\label{sec:alphabets}
+
+Each alphabet below ships its quantitative compiler by instantiating the
+substrate: the only alphabet-specific work is the density witness.
+Figure~\ref{fig:coverage} summarizes the coverage across alphabets and
+dimensions.
+
+\begin{itemize}
+\item \textbf{Fibonacci anyons} ($\su 2$): density via the
+golden-ratio trace structure; quantitative headline in
+\lean{SolovayKitaevQuantitative.lean} building on the Fibonacci density program
+(\lean{FibSU2Density.lean})~\cite{ReadRezayi1999}. Fibonacci is the topological
+anchor and the origin point of the substrate; its universality is the subject
+of a companion bundle and is cross-referenced here.
+
+\item \textbf{Clifford$+T$} ($\su 2$): as in Sec.~\ref{sec:substrate}.
+
+\item \textbf{Read--Rezayi $\su 2_5$ and $\su 2_7$}: the next universal-anyon
+family beyond Fibonacci, physically relevant to non-Abelian fractional
+quantum-Hall states at filling $\nu = k/(k+2)$~\cite{ReadRezayi1999}. The
+density witnesses require new number theory: the $k=5$ obstruction is
+discharged via the Chebyshev factorization
+$T_7(x) + 1 = (x+1)(8x^3 - 4x^2 - 4x + 1)^2$ (forcing the level-5 cubic at
+$\cos(\pi/7)$), and the $k=7$ obstruction via the triple-angle identity
+$\cos(3\cdot\pi/9) = \cos(\pi/3) = 1/2$. Both ship unconditional bundled-strict
+headlines (\lean{ReadRezayiK5Quantitative.lean},
+\lean{ReadRezayiK7Quantitative.lean}).
+
+\item \textbf{Trapped-ion M\o lmer--S\o rensen} ($\su 4$): the two-qubit
+entangling gate set realized on production trapped-ion hardware. Density via
+the Brylinski--Brylinski entangling-gate criterion~\cite{Brylinski2002}, giving
+the unconditional headline
+\lean{trappedIonSU4\_solovayKitaev\_headline\_unconditional}
+(\lean{TrappedIonSU4WitnessFull.lean}).
+
+\item \textbf{Clifford$+$CCZ} ($\su 8$): two distinct routes, treated in
+Sec.~\ref{sec:su8}.
+\end{itemize}
+
+\section{Two density mechanisms for \texorpdfstring{$\su 8$}{SU(8)}}
+\label{sec:su8}
+
+The three-qubit target $\su 8$ admits two formally verified density
+mechanisms that are fundamentally different, and we present both because their
+contrast is itself the result (Fig.~\ref{fig:su8duality}).
+
+\paragraph{Route A: \texorpdfstring{$T$}{T}-based, CCZ over-complete.} Using
+the universal alphabet $\{H, T, \mathrm{CNOT}, \mathrm{CCZ}\}$, density follows
+entirely from the $\{H, T, \mathrm{CNOT}\}$ sub-alphabet, in the manner of
+Aaronson--Gottesman~\cite{AaronsonGottesman2004}; CCZ is present but
+over-complete (unused in the witness). This yields the headline
+\lean{cliffordCCZSU8\_solovayKitaev\_headline\_unconditional}. We flag the
+scope honestly: in Route~A, CCZ is \emph{not} load-bearing.
+
+\paragraph{Route B: \texorpdfstring{$T$}{T}-free, CCZ-essential.} Using the
+literal alphabet $\langle H, S, \mathrm{CNOT}, \mathrm{CCZ}\rangle$ with
+\emph{no} $T$ gate, we prove density directly:
+\lean{cliffordCCZLiteral\_dense} (\lean{CliffordCCZSU8Density.lean}; the
+bundled-strict headline \lean{cliffordCCZLiteral\_solovayKitaev\_headline\_unconditional}
+is in \lean{CliffordCCZSU8LiteralHeadline.lean}).
+The mechanism is distinct from Route~A. Density does not come from a per-qubit
+infinite-order element; it comes from the seed $\mathrm{CCZ}\cdot(H\otimes
+H\otimes H)$, whose trace $1/\sqrt 2 \notin \mathcal O$ (an algebraic-integer
+obstruction) forces infinite order (\lean{CliffordCCZSU8LiteralSeed.lean}). A
+one-parameter flow accumulated from the seed is then spread across the full Lie
+algebra $\mathfrak{su}(8)$ by Clifford-conjugation irreducibility, the Clifford
+group acting transitively on the $63$ non-identity Pauli lines. The
+bundled-strict headline is
+\lean{cliffordCCZLiteral\_solovayKitaev\_headline\_unconditional}.
+
+\paragraph{CCZ is essential.} Route~B is complemented by a converse
+(Sec.~\ref{sec:resource}): the Clifford group alone, $\langle H, S,
+\mathrm{CNOT}\rangle$, generates a \emph{finite} subgroup of $\su 8$ and is
+therefore not dense. CCZ is the unique resource whose addition makes the
+difference. The pairing of Routes~A and~B settles the question of why two
+$\su 8$ density proofs coexist: they rest on genuinely distinct mechanisms (a
+per-qubit $T$ route and a global CCZ-seed route), not on redundancy or
+over-generality.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.86\textwidth]{figures/d8_fig2_su8_density_duality.png}
+\caption{Two complementary, formally verified density mechanisms for the same
+target $\su 8$. Route~A (Phase 6y) is $T$-based with CCZ over-complete;
+Route~B (Phase 6z) is $T$-free with CCZ essential. The converse (Phase 6x$'$,
+$\lean{cliffordOnly\_not\_dense}$) establishes that the Clifford group alone is
+finite, so CCZ is the unique resource that makes the difference.}
+\label{fig:su8duality}
+\end{figure*}
+
+\section{A verified resource lower bound}
+\label{sec:resource}
+
+Compilation existence has a dual: how \emph{cheaply} can a target be built? We
+formalize the channel-representation resource theory of
+Mukhopadhyay~\cite{Mukhopadhyay2024} for Clifford$+$CCZ in $\su 8$ and
+machine-check, \emph{unconditionally}, a Toffoli-count lower bound.
+
+The central object is a signed-parity-invariant measure $\mathrm{sde}_2$ on
+the channel representation $\widehat U$ of a unitary $U$. We prove that this
+measure is non-increasing under Clifford multiplication and increases by at most
+one under a CCZ (equivalently Toffoli) gate; the channel-representation entries
+of any Clifford$+$CCZ word are rational (Lemma~3.10,
+\lean{channelRep\_interp\_isRat}, which kernel-verifies rationality of the
+entries; the stronger dyadic $\mathbb Z[1/2]$ form of Mukhopadhyay's Lemma~3.10
+follows from the half-integer CCZ row structure of Theorem~3.8). Telescoping
+these facts gives the lower bound
+\[
+  T^{\mathrm{of}}(U) \;\ge\; \mathrm{sde}_2(\widehat U),
+\]
+formalized as \lean{channelSde2\_le\_toffoliCost}
+(\lean{MukhopadhyayToffoliUnconditional.lean}). The earlier form of this bound
+was \emph{parametric} (conditional on the Clifford-preservation and
+CCZ-increment hypotheses); we discharge those hypotheses and obtain the
+unconditional statement. A fully machine-checked unconditional resource lower
+bound for a fault-tolerant gate is, to our knowledge, the first of its kind and
+is directly usable in magic-state-distillation resource accounting.
+
+The converse of Sec.~\ref{sec:su8} is the same machinery read in the
+density direction: the channel representation maps the Clifford group into
+signed-permutation matrices, a finite group, giving
+\lean{cliffordOnly\_not\_dense} (\lean{MukhopadhyayCliffordNotDense.lean}). We
+note the scope: the matching Toffoli-count \emph{upper} bound (minimality;
+Mukhopadhyay's Conjecture~4.8) is not addressed here; the lower bound stands
+unconditionally on its own.
+
+\section{Mathlib-upstream contribution portfolio}
+\label{sec:mathlib}
+
+Several components of this development are general-purpose and are candidates
+for upstream contribution to the underlying mathematical library: the
+concrete-radius matrix logarithm of Sec.~\ref{sec:sud} (the strongest
+standalone candidate, as the library lacks a Banach-algebra logarithm with a
+named convergence radius); a dimension-generic BCH order-two cubic estimate;
+the $\su d$ Cartan density-from-witness lemma; and the matrix-exponential
+local-homeomorphism at the identity. Filing these reduces the maintenance
+surface of the present development and subjects the substrate to independent
+review.
+
+\section{Scope and discussion}
+\label{sec:scope}
+
+We state the boundary of this work explicitly, both to forestall over-reading
+and because the boundary is itself a deliberate design choice. This paper
+establishes the verified \emph{existence}, \emph{universality}, and
+\emph{lower-bound} theory of universal quantum gate compilation: that a
+compilation exists, with provable error and word-length bounds, at arbitrary
+dimension, for the alphabets treated here, and that the associated resource
+costs obey machine-checked bounds. What is \emph{not} in scope is the
+engineering of a runnable compiler: the runtime gate-word-emitting
+implementation, hardware-specific tuning for particular devices, certificate
+formats, and length-optimality (the gap between our poly-logarithmic guarantee
+and the optimal Ross--Selinger-style synthesis~\cite{RossSelinger2016}) are a
+separate engineering deliverable. The existential $\varepsilon_0$-net used here
+can in principle be replaced by a genuinely runnable algorithmic synthesis
+following Kliuchnikov--Maslov--Mosca~\cite{KMM2013} and
+Ross--Selinger~\cite{RossSelinger2016} over the ring
+$\mathbb Z[\omega][1/\sqrt 2]$; that refinement is recorded as future work.
+
+The development demonstrates a methodology as much as a result: by factoring
+the alphabet-specific from the alphabet-agnostic and lifting the latter to
+arbitrary dimension, the cost of verifying a new universal gate set is reduced
+to discharging a single density witness, and the verified theory now spans
+dimensions $2$, $4$, and $8$ and five physically distinct alphabets. The
+two-mechanism $\su 8$ result and the unconditional Toffoli bound suggest that
+formal verification is reaching the point where it can serve not only as a
+correctness check on known compilation results but as a tool for settling
+structural questions---such as the essentiality of a gate---that are easy to
+state and surprisingly delicate to prove.
+
+\paragraph{Relationship to companion work.} The Fibonacci-universality and
+topological/categorical foundations are developed in a companion bundle, which
+this paper cites for the Fibonacci anchor and generalizes; the
+fault-tolerant-computation substrate (codes, measurement, gauging) is developed
+in a sibling bundle that consumes the quantitative Solovay--Kitaev developed
+here as its universal-compilation primitive.
+
+\appendix
+
+\section{Verification status}
+
+Every headline theorem named in this paper is verified to the Lean~4 kernel
+with axiom set $\{\texttt{propext},\,\texttt{Classical.choice},\,
+\texttt{Quot.sound}\}$ and no project-local axioms (Pipeline Invariant~\#15).
+The contributing Lean module families are \lean{FKLW/GenericSUd*},
+\lean{FKLW/CliffordCCZSU8*}, \lean{FKLW/TrappedIonSU4*}, \lean{FKLW/ReadRezayi*},
+\lean{FKLW/Mukhopadhyay*}, \lean{FKLW/CliffordT*}, and the
+\lean{SolovayKitaev*} top-level modules.
+
+\bibliography{bibliography}
+\bibliographystyle{apsrev4-2}
+
+\end{document}

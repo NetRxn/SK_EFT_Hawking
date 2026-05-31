@@ -1,0 +1,65 @@
+{
+  "review_date": "2026-05-31T00:00:00Z",
+  "bundle_target": "D8",
+  "figures_reviewed": 3,
+  "overall_status": "pass",
+  "rereview_note": "Stage-9 re-run in fresh context after fixes. The prior pass flagged two cosmetic defects on Fig 1 only (truncated 'T-free; CCZ ESSENTIA' missing the final 'L'; dangling trailing semicolon on 'Aaronson–Gottesman;'). The figure function was fixed (cliponaxis disabled, right margin widened to 300px, x-range tightened, note strings reworded) and all three figures re-rendered. This re-review visually confirms BOTH defects are RESOLVED and no new issues were introduced.",
+  "figures": [
+    {
+      "name": "d8_fig1_alphabet_dimension_map",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "RE-REVIEW VERDICT: both prior cosmetic defects RESOLVED. (1) The amber Clifford+CCZ (literal) / SU(8) bottom row now reads the COMPLETE phrase 'T-free — CCZ essential' — the full word 'essential' renders with no truncation, and the wording was reworded with an em-dash separator (previously the truncated 'T-free; CCZ ESSENTIA'). (2) The Clifford+T (3-qubit) / SU(8) row now reads 'Aaronson–Gottesman (CCZ over-complete)' with NO dangling trailing semicolon and no truncation. All 7 alphabet rows are present and their right-hand notes render FULLY within the image with clear white margin to the right of every note (no right-edge clipping): Fibonacci anyons → 'golden-ratio trace'; Clifford+T → 'Niven: √2·sin(n/8)'; Read-Rezayi SU(2)_5 → 'Chebyshev T_7'; Read-Rezayi SU(2)_7 → 'triple-angle'; Trapped-ion (MS) → 'Brylinski–Brylinski'; Clifford+T (3-qubit) → 'Aaronson–Gottesman (CCZ over-complete)'; Clifford+CCZ (literal) → 'T-free — CCZ essential'. The longest note (the 3-qubit row, which extends furthest right) is fully contained with margin to spare, confirming the widened 300px right margin + tightened x-range + disabled cliponaxis fix worked. The 2-entry legend ('density from sub-alphabet / per-qubit route' = blue; 'non-Clifford resource essential (T-free CCZ)' = amber) is present and legible. SU(2)/SU(4)/SU(8) x-axis correct; markers sit at the right dimension column (Fibonacci/Clifford+T/Read-Rezayi at SU(2); Trapped-ion at SU(4); 3-qubit Clifford+T and literal Clifford+CCZ at SU(8)). Amber T-free CCZ-essential row visually distinct from the blue rows; colorblind blue/amber palette honored; honest-scope SU(8)-duality respected (only the literal Clifford+CCZ row is amber/essential). All five manifest expected_properties present (SU(2), SU(4), SU(8), Clifford+CCZ (literal), Fibonacci)."
+    },
+    {
+      "name": "d8_fig2_su8_density_duality",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "RE-CONFIRMED CLEAN (unchanged from prior pass). Both Route A (blue, Phase 6y) and Route B (amber, Phase 6z) boxes are legible and non-overlapping. The 'CCZ over-complete (unused)' vs 'CCZ essential (load-bearing)' distinction is explicit and clear, correctly honoring the D8 honest-scope anchor (CCZ-essentiality attributed to the 6z literal route only). The converse banner 'Converse (Phase 6x′): ⟨H,S,CNOT⟩ alone is finite ⇒ not dense — cliffordOnly_not_dense' renders fully at the top and is NOT clipped. Arrows from both boxes converge on the 'both dense in SU(8)' box. Unicode glyphs (⇒, ∉, ⟨⟩, √) render correctly — no HTML-entity literals. All five manifest expected_properties present (Route A, Route B, dense in SU(8), CCZ essential, cliffordOnly_not_dense). Route A's Lean anchor is shown abbreviated as 'cliffordCCZSU8_…_unconditional' with an ellipsis — acceptable for a figure (full FQN is cliffordCCZSU8_solovayKitaev_headline_unconditional)."
+    },
+    {
+      "name": "d8_fig3_sk_recursion",
+      "status": "pass",
+      "rendering": {
+        "status": "pass",
+        "issues": []
+      },
+      "physics": {
+        "status": "pass",
+        "issues": []
+      },
+      "style": {
+        "status": "pass",
+        "issues": []
+      },
+      "caption_match": true,
+      "notes": "RE-CONFIRMED CLEAN (unchanged from prior pass). Both curves present on a dual log y-axis: approximation error (blue, solid, left axis) decreases monotonically as eps0^{(3/2)^n}; word length (amber, dotted, right axis) increases monotonically as N0*5^n. Both y-axis labels ('error (log scale)' left, 'word length (log scale)' right) are readable and color-matched to their curves. X-axis ('recursion level n', 0–5) correct. The exponent annotation 'length exponent log 5 / log(3/2) ≈ 3.97 (honest; not log 5/log 2)' is legible, centered low in the plot, and does not overlap the axes or curves — it explicitly disclaims the wrong 2.32 exponent, satisfying the D8 length-exponent-honesty anchor. Superscript/subscript formatting in the legend renders correctly. Colorblind blue/amber palette honored. All four manifest expected_properties present (recursion level, word length, error, 3.97)."
+    }
+  ],
+  "summary": "Stage-9 RE-RUN: overall_status now PASS. The two prior cosmetic Fig-1 defects are RESOLVED — the amber bottom row now reads the complete phrase 'T-free — CCZ essential' (full word 'essential', no truncation), and the Clifford+T (3-qubit) row reads 'Aaronson–Gottesman (CCZ over-complete)' with no dangling semicolon and no truncation. All 7 rows' notes render fully within the image with no right-edge clipping (the fix — disabled cliponaxis, 300px right margin, tightened x-range, reworded note strings — is effective). Figs 2 and 3 remain clean and unchanged: Fig 2 correctly encodes the honest SU(8) duality (CCZ over-complete vs CCZ essential) with a readable non-clipped converse banner; Fig 3 correctly encodes the honest log5/log(3/2)≈3.97 length exponent and explicitly disclaims the wrong 2.32. No physics errors, no palette violations, no clipping, and no HTML-entity literals anywhere. All three figures match their paper_draft.tex captions and manifest expected_properties. No new issues introduced.",
+  "recommendations": []
+}

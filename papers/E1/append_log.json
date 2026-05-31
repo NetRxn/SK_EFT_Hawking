@@ -54,6 +54,17 @@
       "stage13_redo_required": false,
       "agent_run_id": "freshness-bookkeeping-2026-05-11T19:50:00Z",
       "notes": "2026-05-11 Stage-13-sweep freshness cleanup: paper12_polariton tables (3 tables) regenerated at 12:56. E1 bundle paper_draft.tex does NOT \\input source paper tables; bundle compile path unaffected. No bundle content change required; last_lift bumped."
+    },
+    {
+      "date": "2026-05-31T17:24:48Z",
+      "source_paper": "(none \u2014 bookkeeping)",
+      "lift_action": "Freshness-bookkeeping",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-bookkeeping-2026-05-31T17:24:48Z",
+      "notes": "Freshness-bookkeeping (LATE_PHASE6_ABSORPTION_PROTOCOL \u00a73d case 1): source-paper mtime drift is ENTIRELY from auto-regenerated tables/*.tex artifacts (verified: the only files newer than last_lift in each stale source are tables/*.tex; every source paper_draft.tex mtime is OLD <= last_lift; git status clean so regenerated tables match committed content byte-for-byte = zero content change). Bundle compile path is decoupled: this bundle \\input's only ../../docs/counts.tex, never any source-paper tables/ dir. No content lift warranted; no Stage-13 redo; reviewer triple remains valid (bundle stays GREEN)."
     }
   ]
 }

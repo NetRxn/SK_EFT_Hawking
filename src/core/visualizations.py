@@ -14394,5 +14394,149 @@ def fig_fibonacci_braid_word_t_gate_example() -> "go.Figure":
     return fig
 
 
+def fig_d8_alphabet_dimension_map() -> go.Figure:
+    """D8 Fig. 1 — coverage map of the verified-compilation corpus.
+
+    Schematic: which gate alphabets are kernel-verified at which dimension
+    SU(d), color-coded by the mechanism that supplies density. Blue =
+    sub-alphabet / per-qubit route; amber = essential non-Clifford resource
+    (the Phase 6z T-free CCZ-essential route). All entries kernel-pure.
+    """
+    blue = COLORS["steel_blue"]
+    amber = COLORS["amber"]
+    # (alphabet label, dimension d, mechanism color, note)
+    rows = [
+        ("Fibonacci anyons",          2, blue,  "golden-ratio trace"),
+        ("Clifford+T",                2, blue,  "Niven: √2·sin(π/8)"),
+        ("Read–Rezayi SU(2)₅",        2, blue,  "Chebyshev T₇"),
+        ("Read–Rezayi SU(2)₇",        2, blue,  "triple-angle"),
+        ("Trapped-ion (MS)",          4, blue,  "Brylinski–Brylinski"),
+        ("Clifford+T (3-qubit)",      8, blue,  "Aaronson–Gottesman (CCZ over-complete)"),
+        ("Clifford+CCZ (literal)",    8, amber, "T-free — CCZ essential"),
+    ]
+    dims = [2, 4, 8]
+    dim_x = {2: 0, 4: 1, 8: 2}
+    fig = go.Figure()
+    for i, (label, d, color, note) in enumerate(rows):
+        y = len(rows) - 1 - i
+        fig.add_trace(go.Scatter(
+            x=[dim_x[d]], y=[y], mode="markers+text",
+            marker=dict(size=26, color=color, line=dict(width=1.5, color="#333")),
+            text=[f"  {note}"], textposition="middle right",
+            textfont=dict(size=11, color="#333"),
+            cliponaxis=False,  # let row notes extend into the right margin without truncation
+            hovertext=[f"{label} — SU({d}) — {note}"], hoverinfo="text",
+            showlegend=False,
+        ))
+        fig.add_annotation(x=-0.55, y=y, text=label, showarrow=False,
+                           xanchor="right", font=dict(size=12, color="#222"))
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode="markers",
+        marker=dict(size=14, color=blue), name="density from sub-alphabet / per-qubit route"))
+    fig.add_trace(go.Scatter(x=[None], y=[None], mode="markers",
+        marker=dict(size=14, color=amber), name="non-Clifford resource essential (T-free CCZ)"))
+    fig.update_xaxes(tickvals=[0, 1, 2], ticktext=["SU(2)", "SU(4)", "SU(8)"],
+                     range=[-2.4, 2.7], title="target group dimension",
+                     showgrid=True, gridcolor="#eee", zeroline=False)
+    fig.update_yaxes(range=[-0.7, len(rows) - 0.3], showticklabels=False,
+                     showgrid=False, zeroline=False)
+    fig.update_layout(
+        title="D8 Fig. 1 — Kernel-verified universal compilation: alphabet × dimension coverage",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        height=520, width=1060, margin=dict(l=210, r=300, t=110, b=60),
+        plot_bgcolor="white",
+    )
+    return fig
+
+
+def fig_d8_su8_density_duality() -> go.Figure:
+    """D8 Fig. 2 — the two complementary SU(8) density mechanisms.
+
+    Schematic comparison: Route A (T-based, CCZ over-complete; Phase 6y) vs
+    Route B (T-free, CCZ-essential; Phase 6z), plus the converse that
+    Clifford-alone is finite (Phase 6x′). Highlights that the two routes
+    are distinct mechanisms for the same target, not a redundancy.
+    """
+    blue = COLORS["steel_blue"]
+    amber = COLORS["amber"]
+    grey = COLORS["cross"]
+    fig = go.Figure()
+
+    def box(x0, x1, y0, y1, color, fill):
+        fig.add_shape(type="rect", x0=x0, x1=x1, y0=y0, y1=y1,
+                      line=dict(color=color, width=2), fillcolor=fill, layer="below")
+
+    # Route A box (left)
+    box(0.03, 0.47, 0.30, 0.92, blue, "#EAF1F8")
+    fig.add_annotation(x=0.25, y=0.86, text="<b>Route A — Phase 6y</b>", showarrow=False, font=dict(size=14, color=blue))
+    fig.add_annotation(x=0.25, y=0.62, xanchor="center", showarrow=False, font=dict(size=11, color="#222"),
+        text=("⟨H, T, CNOT, CCZ⟩<br>density from {H,T,CNOT}<br><b>CCZ over-complete</b> (unused)<br>"
+              "<i>cliffordCCZSU8_…_unconditional</i>"))
+    # Route B box (right)
+    box(0.53, 0.97, 0.30, 0.92, amber, "#FBF1DC")
+    fig.add_annotation(x=0.75, y=0.86, text="<b>Route B — Phase 6z</b>", showarrow=False, font=dict(size=14, color="#9a6b00"))
+    fig.add_annotation(x=0.75, y=0.62, xanchor="center", showarrow=False, font=dict(size=11, color="#222"),
+        text=("⟨H, S, CNOT, CCZ⟩, <b>no T</b><br>seed CCZ·(H⊗H⊗H), tr = 1/√2 ∉ 𝒪<br>"
+              "<b>CCZ essential</b> (load-bearing)<br><i>cliffordCCZLiteral_dense</i>"))
+    # shared target
+    box(0.30, 0.70, 0.03, 0.20, grey, "#F2F3F5")
+    fig.add_annotation(x=0.5, y=0.115, xanchor="center", showarrow=False, font=dict(size=12, color="#222"),
+        text="<b>both dense in SU(8)</b>")
+    fig.add_annotation(x=0.25, y=0.255, ax=0.4, ay=0.30, xref="x", yref="y", axref="x", ayref="y",
+        showarrow=True, arrowhead=2, arrowcolor=blue, text="")
+    fig.add_annotation(x=0.75, y=0.255, ax=0.6, ay=0.30, xref="x", yref="y", axref="x", ayref="y",
+        showarrow=True, arrowhead=2, arrowcolor=amber, text="")
+    # converse banner
+    fig.add_annotation(x=0.5, y=0.97, xanchor="center", showarrow=False, font=dict(size=11, color="#9a6b00"),
+        text="Converse (Phase 6x′): ⟨H,S,CNOT⟩ alone is <b>finite</b> ⇒ not dense — <i>cliffordOnly_not_dense</i>")
+    fig.update_xaxes(range=[0, 1], visible=False)
+    fig.update_yaxes(range=[0, 1.04], visible=False)
+    fig.update_layout(
+        title="D8 Fig. 2 — Two complementary density mechanisms for SU(8)",
+        height=500, width=900, margin=dict(l=30, r=30, t=90, b=30),
+        plot_bgcolor="white", showlegend=False,
+    )
+    return fig
+
+
+def fig_d8_sk_recursion() -> go.Figure:
+    """D8 Fig. 3 — Dawson–Nielsen recursion: error contraction vs length growth.
+
+    Schematic of the quantitative Solovay–Kitaev recursion used by the
+    substrate: per level n the approximation error contracts super-quadratically
+    (ε₀^{(3/2)ⁿ}) while the word length grows fivefold (N₀·5ⁿ), giving the
+    honest length exponent log 5 / log(3/2) ≈ 3.97.
+    """
+    blue = COLORS["steel_blue"]
+    amber = COLORS["amber"]
+    levels = list(range(0, 6))
+    eps0 = 0.125  # ε₀ = 1/8 base-net precision
+    N0 = 1.0
+    err = [eps0 ** (1.5 ** n) for n in levels]
+    length = [N0 * 5 ** n for n in levels]
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig.add_trace(go.Scatter(
+        x=levels, y=err, mode="lines+markers", name="approximation error  ε₀^{(3/2)ⁿ}",
+        line=dict(color=blue, width=3), marker=dict(size=8, color=blue)),
+        secondary_y=False)
+    fig.add_trace(go.Scatter(
+        x=levels, y=length, mode="lines+markers", name="word length  N₀·5ⁿ",
+        line=dict(color=amber, width=3, dash="dot"), marker=dict(size=8, color=amber, symbol="square")),
+        secondary_y=True)
+    fig.update_xaxes(title="recursion level n", dtick=1, showgrid=True, gridcolor="#eee")
+    fig.update_yaxes(title_text="error (log scale)", type="log", secondary_y=False,
+                     color=blue, showgrid=True, gridcolor="#eee")
+    fig.update_yaxes(title_text="word length (log scale)", type="log", secondary_y=True, color="#9a6b00")
+    fig.add_annotation(x=3, y=0, yref="paper", showarrow=False, yanchor="bottom",
+        text="length exponent  log 5 / log(3/2) ≈ 3.97  (honest; not log 5/log 2)",
+        font=dict(size=11, color="#444"))
+    fig.update_layout(
+        title="D8 Fig. 3 — Quantitative Solovay–Kitaev recursion: error contraction vs length growth",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        height=500, width=900, margin=dict(l=80, r=80, t=110, b=60),
+        plot_bgcolor="white",
+    )
+    return fig
+
+
 if __name__ == "__main__":
     main()

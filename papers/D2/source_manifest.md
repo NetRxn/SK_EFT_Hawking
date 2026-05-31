@@ -1,6 +1,6 @@
 # Bundle D2 — Source Manifest
 
-**Auto-generated:** 2026-05-12
+**Auto-generated:** 2026-05-31
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D2`
@@ -13,8 +13,8 @@
 | `_phase6n_W1b_lean_only` | §3 | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W2a_lean_only` | §3 | (unspecified) | (see mapping) | (missing) |
 | `paper10_modular_generation` | §2 | Lift-letter | (see mapping) | 2026-05-12T12:35:56Z |
-| `paper7_chirality_formal` | §4 | Lift-section | (see mapping) | 2026-05-12T12:45:02Z |
-| `paper8_chirality_master` | §4 | Lift-section | (see mapping) | 2026-05-12T12:44:58Z |
+| `paper7_chirality_formal` | §4 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
+| `paper8_chirality_master` | §4 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
 | `paper9_sm_anomaly_drinfeld` | §3 | Lift-section | (see mapping) | 2026-05-12T12:41:04Z |
 
 ## Coverage notes

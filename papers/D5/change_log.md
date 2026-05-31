@@ -2,6 +2,15 @@
 
 _Initial bookkeeping created 2026-05-01T04:18:23Z by `scripts/bundle_source_manifest.py`. Append history accumulates as `scripts/bundle_append.py` invocations land._
 
+## 2026-05-31 — Stage-13 finding remediation: 🔴 RED → 🟢 GREEN
+
+Closed the 2 pre-existing CRITICAL findings holding D5 at RED (both CountFreshness on the paper34 EquivalencePrinciple stakeholder notebook; never recorded in the supersession ledger — both were stale, i.e. already fixed in the notebook but never closed):
+
+- **`…paper34_equivalence_principle:1.1` (CountFreshness critical):** FIXED (stale) — notebook cell now reads "24 machine-checked Lean theorems", matching `grep -cE '^theorem ' lean/SKEFTHawking/EquivalencePrinciple.lean = 24`. The prior "25" claim is gone (grep confirms zero matches).
+- **`…paper34_equivalence_principle:1.2` (CountFreshness critical):** FIXED (stale) — §7 cell now reads "24 theorems (12 original + 12 strengthening)" = 24, matching the Lean count.
+
+Both closed via deterministic recheck in `docs/review_finding_supersessions.json`. Post-remediation: D5 open=5 (3 advisory + 2 minor), blockers=0 → 🟢 GREEN.
+
 ## 2026-05-01 — Lift-section from `paper17_dark_sector` (§2-§3)
 
 - Source title: Dark-sector connections

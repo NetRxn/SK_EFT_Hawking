@@ -1,0 +1,40 @@
+{
+  "bundle": "D8",
+  "figures": [
+    {
+      "name": "d8_fig1_alphabet_dimension_map",
+      "png": "d8_fig1_alphabet_dimension_map.png",
+      "caption": "Coverage map: 5 alphabets across SU(2)/SU(4)/SU(8); blue=sub-alphabet/per-qubit density route, amber=T-free CCZ-essential. 7 rows, 2-entry legend.",
+      "expected_properties": [
+        "SU(2)",
+        "SU(4)",
+        "SU(8)",
+        "Clifford+CCZ (literal)",
+        "Fibonacci"
+      ]
+    },
+    {
+      "name": "d8_fig2_su8_density_duality",
+      "png": "d8_fig2_su8_density_duality.png",
+      "caption": "Two SU(8) density mechanisms: Route A (T-based, CCZ over-complete, Phase 6y) vs Route B (T-free, CCZ-essential, Phase 6z); both dense in SU(8); converse banner (Clifford-alone finite).",
+      "expected_properties": [
+        "Route A",
+        "Route B",
+        "dense in SU(8)",
+        "CCZ essential",
+        "cliffordOnly_not_dense"
+      ]
+    },
+    {
+      "name": "d8_fig3_sk_recursion",
+      "png": "d8_fig3_sk_recursion.png",
+      "caption": "Dawson-Nielsen recursion: error contracts as eps0^((3/2)^n) (blue, log y-left) while word length grows N0*5^n (amber, log y-right); honest exponent log5/log(3/2)~3.97.",
+      "expected_properties": [
+        "recursion level",
+        "word length",
+        "error",
+        "3.97"
+      ]
+    }
+  ]
+}

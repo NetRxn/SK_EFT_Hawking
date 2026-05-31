@@ -1,6 +1,6 @@
 # Bundle D3 — Source Manifest
 
-**Auto-generated:** 2026-05-12
+**Auto-generated:** 2026-05-31
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D3`
@@ -33,7 +33,7 @@
 | `paper38_cfl` | §16 | Lift-section | (see mapping) | 2026-04-27T18:45:52Z |
 | `paper39_heat_kernel_expansion` | §17 | Lift-section | (see mapping) | 2026-04-28T01:58:15Z |
 | `paper3_gauge_erasure` | §3 | Lift-section | (see mapping) | 2026-04-25T07:44:43Z |
-| `paper40_higher_curvature` | §18 | Lift-section | (see mapping) | 2026-05-11T17:56:28Z |
+| `paper40_higher_curvature` | §18 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
 | `paper41_diff_invariance` | §19 | Lift-section | (see mapping) | 2026-04-28T12:49:18Z |
 | `paper42_nonlinear_efe` | §20 | Lift-section | (see mapping) | 2026-04-28T14:32:28Z |
 | `paper42b_cc_emergent` | §21 | Lift-section | (see mapping) | 2026-04-28T23:51:08Z |

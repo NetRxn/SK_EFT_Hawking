@@ -84,7 +84,7 @@ _TABLE_ROW_RE = re.compile(
 # (e.g., "(ships first wave with L1)") are parenthetical context and
 # must be excluded — Wave 7.2 fix per bundle_migration L1/L3 collision.
 _DEST_BUNDLE_RE = re.compile(
-    r"\*\*(F|D[1-5]|L[1-3]|I[1-3]|E[1-2])"
+    r"\*\*(F|D[1-8]|L[1-3]|I[1-3]|E[1-2])"
     r"(?:\s*[§:]\s*(?P<hint>[^*]+?))?\*\*"
 )
 

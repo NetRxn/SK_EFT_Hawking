@@ -108,9 +108,9 @@
     },
     {
       "date": "2026-05-23T18:00:00Z",
-      "source_paper": "(authored fresh — Stage 10.E manual prose)",
+      "source_paper": "(authored fresh \u2014 Stage 10.E manual prose)",
       "lift_action": "Stage10E-prose-authoring",
-      "bundle_section_inserted": "§9 (Fibonacci-anyon density and quantitative Solovay-Kitaev compilation)",
+      "bundle_section_inserted": "\u00a79 (Fibonacci-anyon density and quantitative Solovay-Kitaev compilation)",
       "lean_modules_referenced": [
         "SU2BCHBracketClosure",
         "FibSU2LieBundle",
@@ -127,7 +127,18 @@
       "citation_count_added": 3,
       "stage13_redo_required": true,
       "agent_run_id": "stage10E-authoring-2026-05-23T18:00:00Z",
-      "notes": "Stage 10.E manual prose authoring (user-authorized 2026-05-23): unified §9 'Fibonacci-anyon density and quantitative Solovay-Kitaev compilation' authored fresh as synthesis-driven new composition (~5 subsections, ~3500 words LaTeX) replacing two post-bibliography D.4 sourceless skeletons (lines 947-969). §9 inserted BEFORE bibliography in conventional position; original skeletons reduced to bookkeeping audit pointers. Cross-bridges to §8 Synthesis 'Open problems' / 'What this paper is not' explicit (§9 supersedes the Fibonacci-universality bullets). Added 3 bibitems: AharonovArad2017, DawsonNielsen2006, KitaevShenVyalyi2002. LaTeX compile clean (27pp / 368224B; only cosmetic Overfull hbox warnings). pdftotext confirms §9 prose present including 'Dawson-Nielsen', 'F.21', 'skApproxC', 'log 5 / log(3/2)', 'gapped_interface_axiom'."
+      "notes": "Stage 10.E manual prose authoring (user-authorized 2026-05-23): unified \u00a79 'Fibonacci-anyon density and quantitative Solovay-Kitaev compilation' authored fresh as synthesis-driven new composition (~5 subsections, ~3500 words LaTeX) replacing two post-bibliography D.4 sourceless skeletons (lines 947-969). \u00a79 inserted BEFORE bibliography in conventional position; original skeletons reduced to bookkeeping audit pointers. Cross-bridges to \u00a78 Synthesis 'Open problems' / 'What this paper is not' explicit (\u00a79 supersedes the Fibonacci-universality bullets). Added 3 bibitems: AharonovArad2017, DawsonNielsen2006, KitaevShenVyalyi2002. LaTeX compile clean (27pp / 368224B; only cosmetic Overfull hbox warnings). pdftotext confirms \u00a79 prose present including 'Dawson-Nielsen', 'F.21', 'skApproxC', 'log 5 / log(3/2)', 'gapped_interface_axiom'."
+    },
+    {
+      "date": "2026-05-31T15:37:22Z",
+      "source_paper": "(none \u2014 bookkeeping)",
+      "lift_action": "Inline-absorption-record",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-bookkeeping-2026-05-31T15:37:22Z",
+      "notes": "D8 cross-bridge absorption 2026-05-31: D4 paper_draft.tex edited to re-point/cross-reference the new D8 bundle (verified-quantum-compilation corpus). D4 retains Fibonacci/topological anchor; D6 consumes D8's SK primitive. Scoped adversarial re-check of the new cross-bridge paragraph only (additive cross-ref to already-GREEN D8)."
     }
   ]
 }

@@ -1,12 +1,12 @@
 # Bundle D1 — Source Manifest
 
-**Auto-generated:** 2026-05-12
+**Auto-generated:** 2026-05-31
 **Tool:** `scripts/bundle_source_manifest.py`
 **Source mapping:** `docs/PAPER_DRAFT_MAPPING.md`
 **Bundle anchor list:** `docs/agents/claims-reviewer-bundle-prompts.md` §`D1`
 **Schema:** `docs/BUNDLE_DIRECTORY_SCHEMA.md`
 
-## Contributing source papers (9)
+## Contributing source papers (12)
 
 | Source paper | Bundle section | Lift action | Phase / Wave | Last source modification |
 |---|---|---|---|---|
@@ -14,11 +14,14 @@
 | `_phase6n_W2b_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
 | `_phase6n_W2c_lean_only` | §5 | (unspecified) | (see mapping) | (missing) |
 | `_phase6o_W1a_lean_only` | §6 | (unspecified) | (see mapping) | (missing) |
-| `paper12_polariton` | §6 | Lift-companion | (see mapping) | 2026-05-11T17:56:28Z |
+| `_phase6w_W1_lean_only` | §9.1 | (unspecified) | (see mapping) | (missing) |
+| `_phase6w_W3_lean_only` | §"LDP-controlled classical-simulability" cross-bridge | (unspecified) | (see mapping) | (missing) |
+| `_phase6w_W6_lean_only` | §"quantum-advantage demarcation" | (unspecified) | (see mapping) | (missing) |
+| `paper12_polariton` | §6 | Lift-companion | (see mapping) | 2026-05-29T08:08:20Z |
 | `paper16_graphene_sk_eft` | §7 | Lift-companion | (see mapping) | 2026-05-12T12:42:35Z |
-| `paper1_first_order` | §2 | Lift-section | (see mapping) | 2026-05-12T12:33:23Z |
-| `paper2_second_order` | §3 | Lift-section | (see mapping) | 2026-05-12T12:33:17Z |
-| `paper4_wkb_connection` | §4 | Lift-section | (see mapping) | 2026-05-11T17:56:28Z |
+| `paper1_first_order` | §2 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
+| `paper2_second_order` | §3 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
+| `paper4_wkb_connection` | §4 | Lift-section | (see mapping) | 2026-05-29T08:08:20Z |
 
 ## Coverage notes
 

@@ -1,0 +1,25 @@
+SK-EFT Hawking Validation Report
+Generated: 20260531T172640Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] bundle_source_freshness
+  + summary — 17 sub-findings: 0 FAIL / 0 WARN / 17 PASS
+  + bundle:D1 — fresh: all 12 source paper(s) older than last_lift (2026-05-31)
+  + bundle:D2 — fresh: all 6 source paper(s) older than last_lift (2026-05-31)
+  + bundle:D3 — fresh: all 31 source paper(s) older than last_lift (2026-05-31)
+  + bundle:D4 — fresh: all 12 source paper(s) older than last_lift (2026-05-31)
+  + bundle:D5 — fresh: all 9 source paper(s) older than last_lift (2026-05-12)
+  + bundle:D6 — fresh: all 3 source paper(s) older than last_lift (2026-05-31)
+  + bundle:D7 — fresh: all 1 source paper(s) older than last_lift (2026-05-26)
+  + bundle:D8 — fresh: all 9 source paper(s) older than last_lift (2026-05-31)
+  + bundle:E1 — fresh: all 5 source paper(s) older than last_lift (2026-05-31)
+  + bundle:E2 — fresh: all 4 source paper(s) older than last_lift (2026-05-12)
+  + bundle:F — fresh: all 59 source paper(s) older than last_lift (2026-05-31)
+  + bundle:I1 — fresh: all 8 source paper(s) older than last_lift (2026-05-31)
+  + bundle:I2 — fresh: all 1 source paper(s) older than last_lift (2026-05-06)
+  + bundle:I3 — fresh: all 1 source paper(s) older than last_lift (2026-05-06)
+  + bundle:L1 — fresh: all 2 source paper(s) older than last_lift (2026-05-06)
+  + bundle:L2 — fresh: all 1 source paper(s) older than last_lift (2026-05-12)
+  + bundle:L3 — fresh: all 4 source paper(s) older than last_lift (2026-05-06)
+
+Overall: 1/1 passed

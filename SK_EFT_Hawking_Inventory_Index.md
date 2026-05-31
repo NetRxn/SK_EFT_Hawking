@@ -2,7 +2,7 @@
 
 **Purpose.** LLM-friendly comprehensive index for the SK-EFT Hawking project. **This file is pointers only — no embedded content.** Every entry is `file path + one-line summary`. For full content read the pointed-to file. For comprehensive prose see `SK_EFT_Hawking_Inventory.md`. For live counts read `docs/counts.json`.
 
-**Last synced:** 2026-05-29 (Phase 6z COMPLETE — literal Clifford+CCZ no-`T` **dense in SU(8)**, `cliffordCCZLiteral_dense` + `cliffordCCZLiteral_H_of_G_eq_top`, `bb9aae0`; 10 new `lean/SKEFTHawking/FKLW/CliffordCCZSU8{GenLift,LineTransport,Transport,ConjClosure,PauliWords,KronK8Closure,Irreducible,OrbitWitness,OrbitProps,Density}.lean`; Stage-13 review GREEN-no-findings). Full build clean **8926 jobs**, 0 axioms, 0 sorries, all headlines kernel-pure. **Sync source:** `docs/counts.json` regen in flight (will tick from 658 modules / 9100 theorems). NOTE: this index's per-family module map below predates several phases (last full reconcile 2026-05-26); `docs/counts.json` field `lean.module_names` is the canonical current list.
+**Last synced:** 2026-05-31 (verified-quantum-compilation arc COMPLETE — Phases 6u→6x→6x′→6y→6z; counts from `docs/counts.json` regenerated 2026-05-30). Highlights: Phase 6z literal Clifford+CCZ no-`T` **dense in SU(8)** (`cliffordCCZLiteral_dense`, `bb9aae0`); Phase 6y **first kernel-verified Solovay-Kitaev at arbitrary SU(d)** (`solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight` + concrete-radius `matrixMercatorLog`); Phase 6x′ **unconditional Toffoli lower bound** `channelSde2_le_toffoliCost` + `cliffordOnly_not_dense` (Mukhopadhyay 2401.08950). Full build clean, **0 axioms, 0 sorries**, all headlines kernel-pure. Publication: corpus consolidated into new Tier-1 bundle **D8** (authorized 2026-05-31; `PAPER_STRATEGY.md` §2.2 — 17 bundle targets). **Sync source:** `docs/counts.json` (2026-05-30). NOTE: this index's per-family module map below predates several phases (last full reconcile 2026-05-26); `docs/counts.json` field `lean.module_names` is the canonical current module list (751 modules).
 
 **Size discipline.** Target ~50–80 KB. Keep under 100 KB so future LLM bootstraps can read it in a single `Read` call (the harness truncates files >256 KB and may skip files much smaller than that). When this file approaches 100 KB, prune narrative — move it to `SK_EFT_Hawking_Inventory.md` or `temporary/working-docs/`. Do NOT inline session logs, wave-history, or per-commit detail; those belong in `temporary/working-docs/` or the prose inventory.
 
@@ -10,7 +10,7 @@
 - `README.MD` — project framing (public-facing).
 - `CLAUDE.md` (workspace) and `CLAUDE.md` (project) — agent guidance and conventions.
 - `docs/WAVE_EXECUTION_PIPELINE.md` — 14-stage wave protocol and 15 pipeline invariants.
-- `docs/PAPER_STRATEGY.md` — 14-bundle publication architecture.
+- `docs/PAPER_STRATEGY.md` — 17-bundle publication architecture (D8 added 2026-05-31).
 - `docs/PERMANENT_TRACKED_HYPOTHESES.md` — load-bearing tracked Props.
 - `docs/BUNDLE_READINESS_HEATMAP.md` — per-bundle Stage-13 readiness.
 - `SK_EFT_Hawking_Inventory.md` — full prose inventory (the upstream this index summarizes).
@@ -19,30 +19,30 @@
 
 ## 1. One-page state snapshot
 
-**Counts (from `docs/counts.json` regenerated 2026-05-26 post-Round-3-remediation):**
+**Counts (from `docs/counts.json` regenerated 2026-05-30, post-Phase-6x′):**
 
 | Metric | Value |
 |---|---:|
-| Lean theorems (total) | 7713 |
-| Lean theorems (substantive) | 7688 |
+| Lean theorems (total) | 9944 |
+| Lean theorems (substantive) | 9919 |
 | Lean theorems (placeholder `True := trivial`) | 25 |
-| Lean modules | 445 |
-| Lean total declarations | 14285 |
-| Lean definitions | 5775 |
-| Lean structures | 266 |
-| Lean instances | 442 |
-| Lean inductives | 89 |
+| Lean modules | 751 |
+| Lean total declarations | 17511 |
+| Lean definitions | 6697 |
+| Lean structures | 287 |
+| Lean instances | 489 |
+| Lean inductives | 94 |
 | Lean axioms | **0** (project-local) |
 | Lean sorries | **0** |
 | Aristotle-proved theorems | 322 |
 | Aristotle runs | 44 |
-| Python source modules | 131 |
-| Test files | 101 |
-| Pytest cases | 4220 |
+| Python source modules | 132 |
+| Test files | 109 |
+| Pytest cases | 4475 |
 | Figures (PNG) | 156 |
 | Notebooks | 89 |
 | Papers (drafts) | 42 |
-| Publication bundles (per PAPER_STRATEGY) | 14 |
+| Publication bundles (per PAPER_STRATEGY) | 17 |
 | **Phase 6r SymTFT modules** | 18 (~2,650 LoC, originally shipped 2026-05-25 Session 1) |
 | **Phase 6r-prime ADDITIONAL modules** | 20+ (Sessions 1–5 substantive substrate; M1–M5 + A1–A5 + B1–B12) |
 | **Phase 6r/6r' total SymTFT+CrossBridges+APSEta-asymmetry LoC** | ~9,910 lines |
@@ -55,6 +55,11 @@
 - Rust: PyO3 abi3-forward-compat (`rust/`).
 
 **Recent ships (newest first):**
+- **2026-05-31 (Stakeholder + strategy doc sync; D8 bundle authorized)** — Verified-quantum-compilation arc (6u→6z) consolidated into new Tier-1 bundle **D8** "Kernel-Verified Universal Quantum Gate Compilation" (`PAPER_STRATEGY.md` §2.2; 16→17 targets). `PAPER_DRAFT_MAPPING.md` re-points 6p/6t from D4 §9.x into D8 + adds 6u/6v/6x/6x′/6y/6z rows. New consolidated stakeholder pair `docs/stakeholder/Phase6x-6z_VerifiedQuantumCompilation_{Implications,Strategic_Positioning}.md`. Inventory + companion-guide counts refreshed to 9944 thm / 751 modules. No Lean change. Next op step: `papers/D8/` skeleton + Stage-9/10/13 triple per `BUNDLE_LIFT_PROCEDURE.md`.
+- **2026-05-30 (Phase 6x′ COMPLETE — Mukhopadhyay channel-rep, Stage-13 GREEN)** — `lean/SKEFTHawking/FKLW/Mukhopadhyay*.lean` family. Phase 1 capstone `cliffordOnly_not_dense` (`838d96ff`): ⟨H,S,CNOT⟩ finite (channel-rep → signed-permutation morphism) → NOT dense in SU(8), the 6z CCZ-essentiality converse. Phase 2 full discharge → UNCONDITIONAL `channelSde2_le_toffoliCost` (`T^of(U) ≥ sde₂(Û)`): `MukhopadhyayMatrixSde2` (sde2ℂ/matrixSde2/channelSde2) + Theorem 3.8 `channelRep_CCZ_isHalfInt` + Lemma 3.10 `channelRep_interp_isRat` (dyadic entries). Build **9944 thm / 0 axiom / 0 sorry / 751 modules**, kernel-pure, zero new native_decide, no maxHeartbeats. Full MITM minimality (Conj 4.8) permanently OUT.
+- **2026-05-30 (Phase 6y COMPLETE — first kernel-verified SU(d) Solovay-Kitaev, Stage-13 GREEN)** — `lean/SKEFTHawking/FKLW/GenericSUd*.lean` + `TrappedIonSU4.lean` + `CliffordCCZSU8.lean` family. Generic headline `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight` (arbitrary d≥2). Existential-radius regime blocker ELIMINATED via concrete-radius matrix logarithm `matrixMercatorLog`/`exp_matrixMercatorLog` (Mathlib-PR-quality). Length-exponent corrected to honest `log 5/log(3/2)`, `SkLengthPolylogBound_sud_holds` discharged. Instances `trappedIonSU4_solovayKitaev_headline_unconditional` (SU(4) MS, Brylinski-Brylinski) + `cliffordCCZSU8_solovayKitaev_headline_unconditional` (SU(8) Clifford+T, CCZ over-complete). M-S Mathlib tracks alias-only. ~115 commits, kernel-pure.
+- **2026-05-29 (Phase 6z COMPLETE — first T-free CCZ-essential SU(8) density, Stage-13 GREEN-no-findings)** — 10 new `lean/SKEFTHawking/FKLW/CliffordCCZSU8{GenLift,LineTransport,Transport,ConjClosure,PauliWords,KronK8Closure,Irreducible,OrbitWitness,OrbitProps,Density}.lean` + `CliffordCCZSU8LiteralHeadline.lean`. Literal ⟨H,S,CNOT,CCZ⟩ (no T) **dense in SU(8)**: `cliffordCCZLiteral_dense` + `cliffordCCZLiteral_H_of_G_eq_top` + `cliffordCCZLiteral_solovayKitaev_headline_unconditional` (`bb9aae0`). Mechanism: seed `CCZ·(H⊗H⊗H)` trace 1/√2∉𝒪 (infinite-order) + von-Neumann first flow + Clifford-conjugation irreducibility (`clifford_irreducible_spans`/`cliffOrbit_spans_su8`). Build 8926 jobs, kernel-pure; CCZ confirmed load-bearing.
+- **2026-05-25 (Phase 6u COMPLETE — alphabet-agnostic SK substrate + Clifford+T UNCONDITIONAL)** — generic `GeneratingSet`-parametrized Solovay-Kitaev substrate (Waves 1–6 + Wave 4b) + Track T-S Clifford+T: `cliffordT_density_unconditional` (⟨H,T⟩ dense via Niven, `CliffordTInfiniteOrder.lean`) + headline `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional`. CP1+CP2 GREEN. ~3,900 LoC / 15+ modules. (Phase 6x Read-Rezayi k5/k7 + alphabet substrates + Mathlib M.1/M.2/M.4 tracks shipped 2026-05-26.)
 - **2026-05-26 PM (Phase 6w Wave 6w.1 KZM-Unruh bridge foundation SHIPPED)** — New module `lean/SKEFTHawking/KibbleZurekUnruh.lean` (+1 module, +6 substantive theorems + 2 lemmas) encoding the Kibble-Zurek-Unruh correspondence. Headline `surface_gravity_bounds_kzm_exponent` combines (i) universal KZM scaling exponent `μ = νz/(1+νz) ∈ (0,1)` (substantively bounded via `kzmScalingExponent_pos` + `kzmScalingExponent_lt_one`), (ii) WKB modified-unitarity spectral budget `1 - δ_k > 0`, and (iii) surface-gravity positivity `κ > 0` (from `WKBConnection.ExactWKBParams`) into the load-bearing strict inequality `μ·κ·(1-δ_k) < κ·(1-δ_k)`. Companion lemmas: `hawking_occupation_strictly_below_alpha` (β² < α² under low dissipation, uses `b.unitarity` substantively); `kzm_defect_rate_strictly_below_horizon_rate` (bare form μ·κ < κ); `kzm_unruh_thermal_matches_hawking` (substantive `2π·T_H = κ` via `field_simp`, NOT rfl-trivial); `kzmScalingExponent_1d_tfim_eq_one_half` (Zurek 1996 ν=z=1 → μ=1/2 numerical witness). Primary source `TindallMelloFishmanStoudenmireSels2026Science392` (Science 392, 868 (2026), DOI 10.1126/science.adx2728, arXiv:2503.05693) cached at `Lit-Search/Phase-6w/primary-sources/` (3.8MB PDF + Crossref JSON + abstract.txt). Bundle citation passes: D1 §9.1 NEW subsection "Independent cross-check: Kibble-Zurek-Unruh universality"; E1 §6 paragraph; E2 §7 paragraph; all three papers LaTeX-compile clean with no undefined references. Build clean **8707 jobs** (+1 from 8706); zero new project-local axioms; zero sorries. Preemptive-strengthening 5-question audit applied; 2 P5 candidates eliminated proactively (deleted `kappaToInverseQuenchRate_pos`; strengthened `kzm_unruh_thermal_matches_hawking` to substantive `2π·T_H = κ`). `validate.py --check citation_primary_sources_present` PASS. Stage 13 adversarial review deferred to Wave 6w.7 consolidated Phase-6w sweep.
 - **2026-05-26 (Round-3 adversarial-review remediation post Session 5)** — Two REQUIRED findings shipped from a fresh adversarial review pass: (R-1) `RP4_isPinPlusObstruction` rfl-by-design P5 anti-pattern remediated by shipping the substantive Karoubi 1968 §5 mod-2 binomial computation as three new theorems in `StiefelWhitney.lean`: `karoubi_RP4_w2_eq_zero_mod_2` (the bare `Nat.choose 5 2 % 2 = 0` arithmetic), `karoubi_RP4_w_values` (the full 5-coefficient table), `karoubi_RP4_instance_consistent` (the instance ↔ binomial-computation bridge); the substantive content is now visible at the Lean-theorem level rather than hidden in instance data. (R-2) `Phase6rPrimeClose.lean` conjunct #66 P2 redundancy remediated by replacing the prior 4-sub-conjunct algebra-data bundle (which exactly duplicated conjuncts #52/#53/#55/#56) with the substantive Karoubi binomial computation. Build clean **8693 jobs**; counts regen via `update_counts.py`: 445 modules / 7713 theorems / 0 axioms / 0 sorries / 5775 defs / 442 instances. Substantive content now visible at both file level + closure level.
 - **2026-05-26 (Phase 6r-prime Session 5 close)** — Cross-iso `electric_squared_iso_vacuum` SUBSTANTIVELY SHIPPED in `lean/SKEFTHawking/SymTFT/A5VacuumPlusElectric.lean`. First object-level Z₂ fusion-rule lemma `e ⊗ e ≅ 𝟙` in `Center (VecG_Cat k G2)`. Half-braiding equality `electric_tensor_electric_β_hom_eq_vacuum` proven via 5-step chain: `Center.tensor_β` unfold → `signHalfBraiding` substitution → `whiskerLeft_comp`/`comp_whiskerRight` distribution → `congr 2` prefix → `sign_factors_cancel` helper (associator-inv-naturality + comp_whiskerRight + braiding_naturality_right + `signEndo_sq` + id_whiskerRight). `Phase6rPrimeClose.lean` closure extended **66 → 68 conjuncts**. Dual-phase 6r + 6r-prime Round 2 adversarial review GREEN: 0 BLOCKER + 0 REQUIRED + 3 ADVISORY (ADV-1 bundle-absorption pre-draft alignment [HELD for unified event]; ADV-2 optional consumer η-refactor; ADV-3 MonObj/ComonObj axiom-instance follow-on on `unitPlusElectricObj`, naturally Mathlib-PR-quality strengthening). Build clean **8693 jobs**. Zero sorries; zero new axioms; project axiom count UNCHANGED at 0. 2 legitimate tracked Props (KT 1990 + DMNO 2010). Files: `A5VacuumPlusElectric.lean` (+110 LoC), `Phase6rPrimeClose.lean` (+#67+#68), `temporary/working-docs/phase6r-prime/dual_phase_adversarial_review_round2.md` (new).

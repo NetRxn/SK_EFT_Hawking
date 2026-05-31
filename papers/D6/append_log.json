@@ -1,0 +1,16 @@
+{
+  "bundle_target": "D6",
+  "events": [
+    {
+      "date": "2026-05-31T15:37:22Z",
+      "source_paper": "(none \u2014 bookkeeping)",
+      "lift_action": "Inline-absorption-record",
+      "bundle_section_inserted": "(n/a \u2014 bookkeeping)",
+      "lean_modules_referenced": [],
+      "citation_count_added": 0,
+      "stage13_redo_required": false,
+      "agent_run_id": "bundle_append-bookkeeping-2026-05-31T15:37:22Z",
+      "notes": "D8 cross-bridge absorption 2026-05-31: D6 paper_draft.tex edited to re-point/cross-reference the new D8 bundle (verified-quantum-compilation corpus). D4 retains Fibonacci/topological anchor; D6 consumes D8's SK primitive. Scoped adversarial re-check of the new cross-bridge paragraph only (additive cross-ref to already-GREEN D8)."
+    }
+  ]
+}
