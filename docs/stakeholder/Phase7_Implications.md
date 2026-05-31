@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-Phase 7 is the project's *publication phase*. It takes the 32+ per-wave drafts in `papers/paperN_*/` and consolidates them into 14 publication-target bundles per `PAPER_STRATEGY.md` (1 flagship + 5 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure + 2 Tier-4 experimental). Each bundle gets a `papers/<bundle>/paper_draft.tex`, figures, tables, sentence-level provenance, audit log, plus per-bundle Stage-13 closure on a fresh-context adversarial review.
+Phase 7 is the project's *publication phase*. It takes the 32+ per-wave drafts in `papers/paperN_*/` and consolidates them into publication-target bundles per `PAPER_STRATEGY.md` — **17 targets as of 2026-05-31** (1 flagship + 8 Tier-1 deep + 3 Tier-2 PRL + 3 Tier-3 infrastructure + 2 Tier-4 experimental; the architecture grew from its original 14 by the quantum-computation additions D6/D7/D8). Each bundle gets a `papers/<bundle>/paper_draft.tex`, figures, tables, sentence-level provenance, audit log, plus per-bundle Stage-13 closure on a fresh-context adversarial review.
 
 The substantive Phase 7 deliverables to date are:
 
