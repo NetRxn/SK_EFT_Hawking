@@ -1,10 +1,21 @@
 # Architecture Scope — Three-Layer Predictive Boundary
 
-**Last updated:** 2026-04-30 (Phase 6m closure — Lean formalization scope)
+**Last updated:** 2026-05-31 (boundary reaffirmed through the verified-quantum-compilation arc, Phases 6u–6z — see "Formalization depth vs predictive scope" below). Core boundary set at Phase 6m closure (2026-04-30).
 
 This document defines the **predictive scope** of the SK-EFT Hawking
 research program's three-layer architecture — what the architecture
 commits to predicting, and what is explicitly outside its tested scope.
+
+> **For newcomers.** The program investigates whether the mathematics of
+> exotic matter (superfluids, topological order) can reproduce fundamental
+> physics — and it is deliberately honest about where that idea *stops*.
+> In short: **Standard-Model + General-Relativity emergent physics is in
+> scope** (and actively tested against lab platforms); **dark energy is
+> out of scope** under every mechanism the program has tested (the program
+> *proves* the obstruction rather than ignoring it). Separately, the
+> project's large body of verified *quantum-computation* mathematics
+> (Phases 6u–6z) is a formal-methods contribution that sits alongside,
+> not inside, this physics-prediction boundary.
 
 ---
 
@@ -37,9 +48,9 @@ emergent physics** under the tested mechanisms:
   (Phases 4, 5w, 5y; H4 structural content)
 
 Layer-3 predictions in this sector are falsifiable, formalized
-(currently ~3728 Lean theorems, zero sorry, 1 axiom), and actively
-tested against laboratory platforms (BEC, polariton, graphene Dirac
-fluid) in phases 5u/5w/5d.
+(the whole library now carries 9,944 Lean theorems, zero sorry, zero
+axioms), and actively tested against laboratory platforms (BEC,
+polariton, graphene Dirac fluid) in phases 5u/5w/5d.
 
 ### Dark-sector physics (OUT OF SCOPE under tested mechanisms)
 
@@ -221,6 +232,34 @@ downgrade from biconditional to one-way implication preserves the
 substrate-physics content while correctly attributing to the
 forward-only source argument. Architecture remains scoped: Layer 3
 SM+GR-emergent IN; dark-sector OUT under all tested mechanism families.
+
+---
+
+## Formalization depth vs predictive scope (Phases 6n–6z)
+
+The work since Phase 6m has been overwhelmingly **formalization depth**,
+not predictive-scope change. This distinction is load-bearing and is
+stated here explicitly so the scope boundary is not misread:
+
+- **The SM + GR predictive boundary above is unchanged.** Phases 6n/6o
+  (math substrate, SymTFT audit, APS-η, double-copy), 6r/6r-prime
+  (SymTFT substrate-to-bulk), and the entire **verified-quantum-
+  compilation arc 6u–6z** (universal compilation D8, fault-tolerant-QC
+  substrate D6, classical-simulability demarcation D7) add verified
+  *methods* and *quantum-computation foundations*. None of them extends
+  or retracts the Layer-3 physics-prediction scope.
+- **The quantum-computation arc is a CS-facing dimension** — a machine-
+  checked theory of universal gate compilation, fault-tolerance resource
+  bounds, and the classical-simulability/quantum-advantage boundary. It
+  is durable, citable mathematics in its own right (the program's largest
+  single body of verified content), but it is *orthogonal* to "what
+  fluid substrates predict about fundamental physics." A reader assessing
+  the program's physics claims should weigh it as evidence of method
+  rigor, not as new physics scope.
+- **Axiom posture unchanged and strengthened.** The arc added zero new
+  axioms and zero new tracked Props; the project carries **0 project-local
+  axioms** (the last, the 4+1D gapped-interface conjecture, became the
+  tracked Prop `TPFConjecture` on 2026-05-19).
 
 ---
 

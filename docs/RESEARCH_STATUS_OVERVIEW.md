@@ -2,11 +2,11 @@
 
 **Purpose:** Plain-language, rigorous assessment of all proven chains, their implications, gaps, and strategic situation. Written for the principal investigator and future collaborators.
 
-**Last updated:** 2026-05-25 (Phase 6q strengthening close + B.1/B.2/B.3 substantive lifts + adversarial-review remediation)
+**Last updated:** 2026-05-31 (verified-quantum-compilation arc 6u→6x→6x′→6y→6z complete + Phase 6v fault-tolerant QC + Phase 6w tensor-network demarcation; D6/D7/D8 bundles authorized)
 
-**Prior update:** 2026-05-07 (Phase 6e–6o + Phase 7 bundle architecture sync)
+**Prior update:** 2026-05-25 (Phase 6q strengthening close + B.1/B.2/B.3 substantive lifts + adversarial-review remediation)
 
-**Current build:** **390 Lean modules, 7,339 theorems** (7,314 substantive + 25 placeholder), **0 axioms project-wide** (`gapped_interface_axiom` was refactored to tracked-Prop `TPFConjecture` on 2026-05-19 in Phase 5h Wave 1, eliminating the project's last load-bearing axiom), **0 sorry project-wide**. 131 Python modules across 19+ sub-packages (Phase 6q added `dkm_bootstrap/` for the CHHK MIR-bound numerical companion, alongside `bh_thermodynamics/`, `bbn/`, `strong_cp_de/`, `equivalence_principle/`, `qec_holography/`, `center_symmetry/`, `chiral_ssb/`, `cfl/`, `gravitational_waves/`, `dark_sector/`, `graphene/`, `fermi_hubbard/`, `adw/`, `wkb/`, `vestigial/`, `chirality/`, `fracton/`, `experimental/`, `resurgence/`, and others). 101 test files (4,220 pytest cases — 4,152 default-run + 68 slow-deselected; fast-pass in ~3 s + slow-marked extras), 156 figures, 89 notebooks, 42 paper drafts (none submitted). 322 theorems Aristotle-proved across 44 runs (no Aristotle calls in Phase 6 — all interactive-MCP closure). **Synced 2026-05-25** — counts refreshed from `docs/counts.json` (2026-05-25T08:12). Phase 6q DKM transport bootstrap added 11 new Lean modules under `lean/SKEFTHawking/DKMBootstrap/` (~2,716 LoC) + the Python companion at `src/dkm_bootstrap/` shipping the substantive graphene MIR constant `(2·β_2/(4π))^(1/3) ≈ 0.0756`; Stage-13 adversarial review surfaced and resolved 20 findings (1 BLOCKER + 12 REQUIRED + 7 RECOMMENDED).
+**Current build:** **751 Lean modules, 9,944 theorems** (9,919 substantive + 25 placeholder), **0 axioms project-wide** (`gapped_interface_axiom` was refactored to tracked-Prop `TPFConjecture` on 2026-05-19 in Phase 5h Wave 1, eliminating the project's last load-bearing axiom), **0 sorry project-wide**. 132 Python modules across 20+ sub-packages (Phase 6q added `dkm_bootstrap/` for the CHHK MIR-bound numerical companion, alongside `bh_thermodynamics/`, `bbn/`, `strong_cp_de/`, `equivalence_principle/`, `qec_holography/`, `center_symmetry/`, `chiral_ssb/`, `cfl/`, `gravitational_waves/`, `dark_sector/`, `graphene/`, `fermi_hubbard/`, `adw/`, `wkb/`, `vestigial/`, `chirality/`, `fracton/`, `experimental/`, `resurgence/`, and others). 109 test files (4,475 pytest cases; fast-pass default + slow-marked extras), 156 figures, 89 notebooks, 42 paper drafts (none submitted). 322 theorems Aristotle-proved across 44 runs (no Aristotle calls in Phase 6 — all interactive-MCP closure). **Synced 2026-05-31** — counts refreshed from `docs/counts.json` (2026-05-30). Phase 6q DKM transport bootstrap added 11 new Lean modules under `lean/SKEFTHawking/DKMBootstrap/` (~2,716 LoC) + the Python companion at `src/dkm_bootstrap/` shipping the substantive graphene MIR constant `(2·β_2/(4π))^(1/3) ≈ 0.0756`; Stage-13 adversarial review surfaced and resolved 20 findings (1 BLOCKER + 12 REQUIRED + 7 RECOMMENDED).
 
 The **`gaussianSaddleAsymptotic` axiom was retired** in Phase 6a Wave 7 via a project-local Laplace-method derivation (`LaplaceMethod.lean`), bringing the axiom count from 2 → 1. **Default test-suite runtime dropped from 9 m 26 s to 2.14 s (264× speedup)** with the introduction of a `slow` pytest marker that defers the three Lean-walking suites (`test_extract_lean_deps`, `test_build_graph`, `test_graph_integrity`) to opt-in runs (`-m ''`). The seven Phase 6 papers (paper29, paper32, paper34, paper35, paper36, paper37, paper38, note_rt_ch_bounds) now drive their abstract / formalization-section counts entirely through `\input{counts.tex}` macros, eliminating count-literal drift permanently for those papers.
 
@@ -18,7 +18,7 @@ Representative formal-verification firsts across the library — each phase has 
 
 The project asks: **Can the mathematical structures of exotic matter also describe fundamental physics, and where does that idea break down?**
 
-Ten proof chains address different aspects of this question. Chains 1–6 are the original programmes — dissipative Hawking radiation, the generation constraint, Onsager → quantum groups → MTC → TQFT → Fibonacci universality, the chirality wall, ADW emergent gravity, and Monte-Carlo vestigial gravity. Chains 7–9 — the Fermi-Hubbard doublon geometric gate, the graphene Dirac-fluid Hawking platform, and dark-sector connections — sit alongside them as peers rather than as extensions. Chain 10 is the **Phase 6 cosmology / strong-coupling / horizon-thermodynamics push** (Phases 6a / 6b / 6c / 6d / 6f), in which the SK-EFT + ADW + vestigial-gravity machinery is exercised against published constraints from BBN, the strong-CP problem, the equivalence principle, holographic-QEC structural bounds, RT / Casini–Huerta entanglement bounds, confinement / chiral-symmetry-breaking / CFL color-flavor-locking, gravitational-wave dispersion (GW170817), Bekenstein–Hawking entropy + four-laws thermodynamics, and the four energy conditions. Each chain is assessed for:
+Twelve proof chains address different aspects of this question. Chains 1–6 are the original programmes — dissipative Hawking radiation, the generation constraint, Onsager → quantum groups → MTC → TQFT → Fibonacci universality, the chirality wall, ADW emergent gravity, and Monte-Carlo vestigial gravity. Chains 7–9 — the Fermi-Hubbard doublon geometric gate, the graphene Dirac-fluid Hawking platform, and dark-sector connections — sit alongside them as peers rather than as extensions. Chain 10 is the **Phase 6 cosmology / strong-coupling / horizon-thermodynamics push** (Phases 6a / 6b / 6c / 6d / 6f), in which the SK-EFT + ADW + vestigial-gravity machinery is exercised against published constraints from BBN, the strong-CP problem, the equivalence principle, holographic-QEC structural bounds, RT / Casini–Huerta entanglement bounds, confinement / chiral-symmetry-breaking / CFL color-flavor-locking, gravitational-wave dispersion (GW170817), Bekenstein–Hawking entropy + four-laws thermodynamics, and the four energy conditions. **Chains 11–12 are the verified-quantum-computation arc** that grew the library from ~7,300 to ~9,900 theorems: Chain 11 is the machine-checked theory of *universal quantum compilation* (Phases 6t–6z, bundle D8 — the project's largest single body of verified mathematics), and Chain 12 covers *fault-tolerant quantum computation* and the *classical-simulability ↔ quantum-advantage boundary* (Phases 6v / 6w, bundles D6 / D7). Each chain is assessed for:
 - **Solidity** — what is machine-checked vs. conjectured vs. open
 - **Gaps** — what's missing and whether the gaps are technical or fundamental
 - **Implications** — what follows if the chain holds or breaks
@@ -379,6 +379,49 @@ Phase 6o is also research-only (no per-wave drafts; all output is sourceless lif
 
 ---
 
+## Chain 11: Universal Quantum Compilation (Phases 6t–6z, bundle D8)
+
+**Status: SOLID. Fully machine-verified, kernel-pure, zero new axioms or tracked Props. The project's largest single body of verified mathematics.**
+
+A quantum computer with a small fixed gate set ("an alphabet") needs a *compiler* to approximate any target operation; the Solovay–Kitaev theorem guarantees this is possible with provably-bounded error and circuit length. Over Phases 6t→6z this went from a single result into a complete, self-contained, *alphabet-agnostic* and *dimension-agnostic* theory — the clearest example yet of the program's method producing durable, citable, field-relevant mathematics that stands on its own.
+
+**Proven (kernel-verified).**
+- **First kernel-verified quantitative Solovay–Kitaev in any proof assistant** (Fibonacci, Phase 6t): a constructive Dawson–Nielsen compiler with error `≤ ε` and length `polylog(1/ε)` *bundled at the same compile level*, UNCONDITIONAL for `ε ∈ (0, ε₀]`.
+- **Alphabet-agnostic substrate** (Phase 6u): the Lie-algebraic core packaged behind a generic `GeneratingSet` abstraction — future gate sets *instantiate* rather than re-derive. Validated by the **Clifford + T** instance (the canonical fault-tolerant set), discharged UNCONDITIONAL via a Niven algebraic-integer obstruction on `√2·sin(π/8)` — the first machine-verified ⟨H, T⟩ density in SU(2).
+- **First kernel-verified Solovay–Kitaev at arbitrary dimension SU(d)** (Phase 6y, `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight`) — not just single-qubit. The lone existential-radius obstruction was removed by constructing a **concrete-radius matrix logarithm** (`matrixMercatorLog`, module `FKLW/GenericSUdMatrixMercatorLog`), a Banach-algebra logarithm with a named convergence radius that **Mathlib itself lacks** — the cleanest upstream-PR candidate in the program. The word-length exponent was corrected to the honest `log 5/log(3/2) ≈ 3.97` and discharged. Multi-qubit instances ship unconditional: trapped-ion Mølmer–Sørensen SU(4) and Clifford+T SU(8).
+- **First T-free, CCZ-essential density in SU(8)** (Phase 6z, `cliffordCCZLiteral_dense`): literal ⟨H, S, CNOT, CCZ⟩ — *no T gate* — is dense, via an infinite-order `CCZ·(H⊗H⊗H)` seed and Clifford-conjugation irreducibility. The converse `cliffordOnly_not_dense` (Phase 6x′) proves Clifford-alone generates only a finite group, so **CCZ is genuinely essential** — two phases, two directions, one settled result.
+- **First unconditional machine-checked Toffoli-count lower bound** (Phase 6x′, `channelSde2_le_toffoliCost`, `T^of(U) ≥ sde₂(Û)`, following Mukhopadhyay 2024) — directly usable in magic-state-distillation resource accounting.
+- **Read–Rezayi `SU(2)_5` / `SU(2)_7`** unconditional headlines (Phase 6x) join Fibonacci on equal formal footing via Chebyshev-`T₇` and triple-angle Niven obstructions, demonstrating the substrate spans the universal-anyon family.
+
+**Honest residuals (recorded, not shipped as gaps).** Ross–Selinger optimal `ℤ[ω][1/√2]` synthesis — the length-optimal *runnable* refinement — is deferred (Mathlib lacks the algebraic number theory); full Toffoli minimality (Mukhopadhyay Conjecture 4.8, the matching upper bound) is out of scope, the *lower* bound stands; additional alphabets are now instantiation problems sequenced by demand. A clean **public/engineering seam** is load-bearing here: D8 publishes the verified-existence / universality / lower-bound *theory*, while the runnable, vendor-tuned, length-optimal compiler *implementation* is a deliberately separate deliverable.
+
+**Implications.** This arc moves the program's center of gravity in quantum computation from "we formalized some topological-QC foundations" (Chain 3) to "we hold the verified theory of universal gate compilation" — a stronger, more externally-legible position. It is also the program's largest Mathlib-upstream contribution surface, led by the concrete-radius matrix logarithm.
+
+---
+
+## Chain 12: Fault-Tolerant QC and the Classical-Simulability Boundary (Phases 6v / 6w, bundles D6 / D7)
+
+**Status: SOLID. Machine-verified, kernel-pure. Two complementary deliverables.**
+
+Where Chain 11 settles *what a quantum computer can compute and at what gate-cost*, Chain 12 addresses the two adjacent questions: *what does it take to run those gates fault-tolerantly* (D6), and *when can a classical method simulate the dynamics, so that a quantum processor's advantage is genuine* (D7).
+
+**The fault-tolerance substrate (Phase 6v, bundle D6).** Four 2025–2026 FT-QC-frontier results lifted into one kernel-verified substrate, tracing the path from "I want to factor" to "how many T-gates do I need":
+- **Williamson–Yoder gauging-QEC overhead** (`FaultTolerance/GaugingQEC`): auxiliary-qubit count `W·polylog(W)` for weight-`W` logical-operator measurement, with the falsifier `quadraticOverhead_not_linear` proving the polylog factor is unavoidable — a genuine class-separation, not a constant-factor improvement.
+- **Shor ECC-256 T-gate count** (`FaultTolerance/ShorTGateCount`): 630 M (1200-qubit) / 490 M (1450-qubit) T-gates, both inside the natural 1-gigagate envelope — first kernel-verified end-to-end.
+- **APM-LDPC hashing bound** (`FaultTolerance/APMLdpcHashingBound`): the QuEra/Harvard/MIT `[[1152, 580]]` code's rate `> 1/2`, non-vacuously witnessed against the rate-exactly-1/2 falsifier class.
+- **W-state QFT in `Q(ζ_N)`** (`FaultTolerance/WStateQFT`): exponential-vs-polynomial (`n` vs `2^n`) basis separation at the project's cyclotomic sizes — plus the AGP threshold theorem and the **NbRe noncentrosymmetric triplet superconductor**, whose Fu–Kane TRIM-product Pfaffian `Z₂` invariant places it in the same Rokhlin period-16 structure that anchors the SM `Z₁₆` anomaly classification (Chain 2) — a material bridge from the topological-qubit substrate back to particle physics.
+
+**The classical-simulability boundary (Phase 6w, bundle D7).** A formally verified demarcation theorem (`analog_hawking_quantum_advantage_demarcation`) distinguishing classically-simulable analog-Hawking regimes from genuine quantum-advantage regimes:
+- **Kibble–Zurek–Unruh bridge** (`KibbleZurekUnruh`, `surface_gravity_bounds_kzm_exponent`): ties the SK-EFT surface gravity κ to the universal KZM exponent that the Tindall–Sels D-Wave experiment (*Science* 392, 868, 2026) measures — the project's first formal bridge between an analog-Hawking quantity and a quantum-processor benchmark.
+- **Belief propagation** (`BeliefPropagation`, `BPLDPSimulability`): the first complete Lean formalization of belief propagation in any proof assistant; the convergence biconditional `bp_convergence_iff_ldp_below_threshold` is the LDP-controlled simulability criterion.
+- **Categorical-Chern ↔ real-space-Chern bridge** (`ChernBridge`): the first kernel-verified bridge of its kind, with substantively distinct crystalline (`c₀+c₁`) vs quasicrystalline (`c₀−c₁`) limits.
+
+**Gaps.** D7's demarcation predicate is generic; the per-platform (BEC / polariton / graphene Dirac-fluid) instantiation bridges are explicitly deferred to bundle absorption.
+
+**Implications.** D6 and D7 are complementary — resource-cost accounting vs. the simulability boundary — and both lean on the Chain 11 compiler primitive and the SK-EFT substrate. D6's NbRe anchor is the clearest instance of the program's deepest structural motif: a single object (Pin⁺ bordism / the number 16) linking quantum-information hardware to the Standard Model's particle content.
+
+---
+
 ## Architectural Scope (Phase 6m post-closure)
 
 The three-layer architecture (Layer 1 lattice / Layer 2 SK-EFT / Layer 3 emergent SM + GR) is now scope-explicit for what it predicts and what it does *not* predict, with the boundary tightened by Phases 5y, 6m, and 6o W4a.
@@ -394,18 +437,22 @@ The three-layer architecture (Layer 1 lattice / Layer 2 SK-EFT / Layer 3 emergen
 
 **Implication:** Phase 6m / 6o close the *negative* boundary on the program's predictive scope while preserving Track C's positive survivors. The architecture is no weaker for SM + GR; it is *more honest* about which dark-energy mechanism families are accessible from condensed-matter substrates and which are not. Full scope-ledger is in `docs/ARCHITECTURE_SCOPE.md`.
 
+**Note on the verified-quantum-computation arc (Chains 11–12).** Phases 6u–6z add formalization *depth* — a verified theory of universal compilation, a fault-tolerant substrate, a classical-simulability boundary — but do **not** extend the Layer-3 physics-prediction scope. They are a CS-facing dimension (verified methods + quantum-computation foundations) orthogonal to the SM + GR predictive boundary above; the scope statement is unchanged by them.
+
 ---
 
 ## Paper Strategy / Phase 7 Bundle Architecture
 
-Phase 6i Wave 7 introduced a fourteen-target publication architecture that supersedes the per-wave-paper convention for *external* communication. The 32+ existing per-wave drafts in `papers/paperN_*/` continue as internal source material that is *consolidated* into the bundles defined here. Authoritative documents:
-- `docs/PAPER_STRATEGY.md` — canonical bundle architecture (1 flagship + 5 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure + 2 Tier 4 experimental = 14)
+Phase 6i Wave 7 introduced a publication-bundle architecture that supersedes the per-wave-paper convention for *external* communication; it has since grown to **seventeen targets**. The 32+ existing per-wave drafts in `papers/paperN_*/` continue as internal source material that is *consolidated* into the bundles defined here. Authoritative documents:
+- `docs/PAPER_STRATEGY.md` — canonical bundle architecture (1 flagship + 8 Tier 1 deep + 3 Tier 2 PRL + 3 Tier 3 infrastructure + 2 Tier 4 experimental = 17)
 - `docs/PAPER_DRAFT_MAPPING.md` — per-existing-draft → per-bundle assignment table
-- `docs/BUNDLE_LIFT_PROCEDURE.md` — frozen 14-step lift workflow (Stages I1, I2, D1–D5, L1–L3, F, E1, E2)
+- `docs/BUNDLE_LIFT_PROCEDURE.md` — frozen 14-step lift workflow
 - `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` — frozen Stage A–G protocol for absorbing future Phase 6X waves into already-drafted bundles (D.1/D.2/D.3/D.4 branches)
-- `docs/BUNDLE_READINESS_HEATMAP.md` — auto-generated N-gate × 14-bundle Stage-13 readiness summary
+- `docs/BUNDLE_READINESS_HEATMAP.md` — auto-generated gate × 17-bundle Stage-13 readiness summary
 
-**The 14 publication targets:**
+The architecture grew from its original 14 by three quantum-computation additions: **D6** (fault-tolerant QC substrate, Phase 6v), **D7** (classical-simulability demarcation, Phase 6w), and **D8** (universal quantum compilation, authorized 2026-05-31).
+
+**The 17 publication targets:**
 
 | Tier | Bundle | Title (working) |
 |---|---|---|
@@ -415,6 +462,9 @@ Phase 6i Wave 7 introduced a fourteen-target publication architecture that super
 | 1 | **D3** | Emergent Gravity from Microscopy — Linearized EFE through BH Thermodynamics |
 | 1 | **D4** | Topological Quantum Computation — First Machine-Verified Foundations |
 | 1 | **D5** | The Dark Sector under Substrate Constraints |
+| 1 | **D6** | Formally Verified Fault-Tolerant Quantum Computation Substrate |
+| 1 | **D7** | Classical Simulability and Quantum Advantage via Tensor Networks |
+| 1 | **D8** | Kernel-Verified Universal Quantum Gate Compilation |
 | 2 | **L1** | GW170817 Falsifies the Vestigial-Second-Sound Graviton Identification by 7 × 10¹⁴ |
 | 2 | **L2** | Three Generations of SM Fermions from Modular Invariance — Machine-Checked |
 | 2 | **L3** | Bardeen–Carter–Hawking Four Laws Partitioned by Regime in an Emergent-Gravity Substrate |
@@ -424,7 +474,7 @@ Phase 6i Wave 7 introduced a fourteen-target publication architecture that super
 | 4 | **E1** | Falsifiable Hawking Spectrum for Polariton Microcavities at Paris-LKB Device Parameters |
 | 4 | **E2** | Falsifiable Hawking Noise Spectrum for Graphene Dirac-Fluid at Dean-Kim-Lucas Device Parameters |
 
-**Readiness:** As of 2026-05-06, **all 14 bundles are GREEN** in `BUNDLE_READINESS_HEATMAP.md` (0 blockers; F has 1 minor advisory and D3 has 1 minor advisory; all others have no open findings). I3 is the youngest bundle and reached GREEN at Phase 6n Session 4 close.
+**Readiness:** As of 2026-05-31, **all 17 bundles are GREEN** in `BUNDLE_READINESS_HEATMAP.md` (0 blockers post-supersession). The heatmap aggregates existing per-paper findings; a fresh-context bundle Stage-13 sweep is user-triggered, and D8's dedicated reviewer triple (stand up `papers/D8/`, run Stage 9/10/13) is the next operational step. D6/D7/D8 are the post-freeze quantum-computation additions.
 
 **Phase 7 absorption status (as of 2026-05-08):** Phase 7 (Phase 6n + 6o → bundles) absorption is in flight across multiple sessions:
 - **Session 1 (2026-05-06):** Stages A→E COMPLETE + all 3 D.3 user-auth gates COMPLETE (GATE 1 I1 §3 Glorioso–Liu projection reframing; GATE 2 D3 §17.5 + L3 Sakharov ↔ horizon-Crooks unification; GATE 3 D2 §2.7 + L2 paired-splash Schellekens-chain reframing).
@@ -440,9 +490,9 @@ Phase 6i Wave 7 introduced a fourteen-target publication architecture that super
 
 ## Axioms
 
-The project's axiom count is **1**: `gapped_interface_axiom` (`SPTClassification.lean`, eliminability: hard) — the 4+1D gapped interface conjecture. This is the single load-bearing assumption in the entire codebase that is not a standard textbook result.
+The project's axiom count is **0**. The last load-bearing axiom, `gapped_interface_axiom` (`SPTClassification.lean`) — the 4+1D gapped-interface conjecture — was refactored on 2026-05-19 (Phase 5h Wave 2) into the tracked `Prop` `TPFConjecture`, which now propagates explicitly through the type signature of every consumer rather than living as a global axiom. The verified-quantum-compilation arc (Chains 11–12, Phases 6u–6z) added **zero** new axioms and **zero** new tracked Props.
 
-**Retired:** `gaussianSaddleAsymptotic` was retired in Phase 6a Wave 7 (`LaplaceMethod.lean`) via a project-local Laplace-method derivation; `BHEntropyMicroscopic §2`'s `verlindeEntropy_SU2k` is now a concrete Laplace-saddle-limit construction, and the corresponding axiom is now a theorem.
+**Retired:** `gaussianSaddleAsymptotic` was retired earlier in Phase 6a Wave 7 (`LaplaceMethod.lean`) via a project-local Laplace-method derivation; `BHEntropyMicroscopic §2`'s `verlindeEntropy_SU2k` is now a concrete Laplace-saddle-limit construction, and the corresponding axiom is now a theorem. The project's posture: **axioms are temporary scaffolding, not permanent commitments** (Pipeline Invariant #15); load-bearing research-grade assumptions are carried as explicit tracked `Prop`s instead — see `docs/PERMANENT_TRACKED_HYPOTHESES.md`.
 
 ---
 
@@ -528,7 +578,7 @@ External constraints:
 
 ---
 
-## Module Inventory (187 active Lean modules)
+## Module Inventory (representative map — 751 modules total; see `docs/counts.json`)
 
 **Phase 1–2 (foundational SK-EFT):** `AcousticMetric`, `SKDoubling`, `HawkingUniversality`, `SecondOrderSK`, `WKBAnalysis`, `CGLTransform`, `Basic`.
 **Phase 3 (emergent geometry & first results):** `ThirdOrderSK`, `GaugeErasure`, `WKBConnection`, `ADWMechanism`, `ChiralityWall`, `VestigialGravity`.
@@ -567,9 +617,16 @@ External constraints:
 **Phase 6m (dark-energy three-track closure — May 2026):** `CausalSetDarkEnergy` (Track A), `EntropicGravityDarkEnergy` (Track B — first complete-mechanism-family unanimous NO-GO), `JacobsonThermoGRDarkEnergy` (Track C — highest-survival 5+ R5; M3 EGJ f(R) Exp+ArcTanh strongest CLEARED-R5; Phase 6o W4a verdict-(B) Sakharov-extension shipped here), `DarkSectorClassificationExtension` (Wave 4 — 7-class GD taxonomy + 3-tier applicability gradient).
 **Phase 6n (mathematical substrate — April–May 2026, no per-wave drafts; sourceless Lean lifts into D1/D2/D3/D4/D5/I1/I2/I3/L3):** `GloriosoLiu/Axioms` + `SecondOrderProjection`; `QuantumCrooks/SKEFTConnection` + `ReservoirCoupled` + `HigherDimensional` + `ConcreteComplex`; `CrooksAnalogHawking/LDPLinearResponse` + `HorizonDetailedBalance` + `SKEFTGallavottiCohen` (with abstract `IsLDPRateFunction` typeclass + 3 instances); `SKEFTHorizonBridge` (Sakharov ↔ horizon-Crooks at `β_H` with Verlinde-vs-Jacobson distinction); `SymTFTAudit/WittClass` + `DrinfeldCenter` (DMNO 2010 + braided strengthening) + `FreeKLinearCategory` + `FreeKLinearMonoidal` + `DeligneTensor` + `PseudoUnitary` + `CrossBridges`.
 **Phase 6o (soft theorems / classical double-copy / APS-η / Schellekens / ETH refutation / Itô + LDP — May 2026, no per-wave drafts):** `SoftTheorems/Boostless` + `Carrollian` + `EmergentGraviton` + `DissipativeNoGo` + `NoiseFloorPrediction`; `KerrSchild/PetrovD` + `SingleCopy` + `WeylSpinor` + `BCJNoGo` + `PolaritonCrossBridge` (first explicit classical double-copy on analog gravity); `APSEta/Predicate` + `BECAcoustic` + `ADWHorizon` + `He3A` + `SymTFTBridge` + `RegimePartition` (first systematic substrate-side APS-η identification on a chirally-asymmetric analog Hawking horizon); `Schellekens/SpinBordism` + `AnomalyPolynomial` + `ModularInvariance` + `NiemeierLattice` + `HolomorphicVOAc24` + `Chain`; `ETH/Predicates` + `ConcreteWitness` + `RefutationTableau`; **I3 Itô + LDP substrate** — `Itô/StochasticIntegral` + `QuadraticVariation` + `Semimartingale` + `ItoIsometry` + `ItoLemma` + `Novikov` + `LDP/CramerIID` + `Sanov` + `Contraction` + `CramerLowerBound` + `Varadhan` + `LDPCompatibleSKEFT` typeclass.
+**Phase 6u (alphabet-agnostic Solovay–Kitaev substrate + Clifford+T — May 2026; bundle D8):** the generic `FKLW/GenericSolovayKitaev*` substrate (`GeneratingSet`-parametrized) + `FKLW/CliffordT*` unconditional Clifford+T instance + `FKLW/CliffordTInfiniteOrder` (⟨H,T⟩ density via Niven).
+**Phase 6y (arbitrary-dimension SU(d) Solovay–Kitaev — May 2026; bundle D8):** the `FKLW/GenericSUd*` family (104 modules), headlined by `GenericSUdSkHeadlineCascadeConcrete` and the concrete-radius matrix logarithm `GenericSUdMatrixMercatorLog`; instances `FKLW/TrappedIonSU4*` (Mølmer–Sørensen SU(4)) and the SU(8) Clifford+T track.
+**Phase 6z (T-free CCZ-essential SU(8) density — May 2026; bundle D8):** the `FKLW/CliffordCCZSU8*` family (45 modules), headlined by `CliffordCCZSU8LiteralHeadline` (`cliffordCCZLiteral_dense`).
+**Phase 6x / 6x′ (Read–Rezayi alphabets + Mukhopadhyay resource bounds — May 2026; bundle D8):** `FKLW/ReadRezayiK5*` + `ReadRezayiK7*` (SU(2)_5 / SU(2)_7 headlines) and `FKLW/Mukhopadhyay*` (`MukhopadhyayCliffordNotDense` → CCZ-essential; `MukhopadhyayToffoliUnconditional` → Toffoli lower bound).
+**Phase 6v (fault-tolerant QC substrate — May 2026; bundle D6):** `FaultTolerance/GaugingQEC`, `ShorTGateCount`, `APMLdpcHashingBound`, `WStateQFT`, `NoiseModel`, plus the AGP threshold and NbRe noncentrosymmetric triplet-superconductor modules.
+**Phase 6w (KZM–Unruh + tensor-network classical-simulability demarcation — May 2026; bundle D7):** `KibbleZurekUnruh`, `BeliefPropagation`, `BPLDPSimulability`, `ChebyshevTN`, `AperiodicLattice`, `ChernBridge`, `AnalogHawkingDemarcation`.
+**Phase 6r / 6r-prime (SymTFT substrate-to-bulk — May 2026):** the `SymTFT/` family (38 modules) + `CrossBridges/SMMatterAsSymTFTBoundary` + `APSEta/SubstrateBulkAsymmetry`.
 **Infrastructure (cross-phase):** `ExtractDeps` (environment-walker for axiom-dependency extraction; see Pipeline Invariant #10 exception clause).
 
-> **Note (2026-05-07):** Module-count and theorem-count totals in this document's header reflect the 2026-04-28 snapshot. Phase 6e/6f/6g/6m/6n/6o additions have *not* been propagated into the count macros at the top of this file (other agents handle that pass). The narrative additions above are the substantive update; see `SK_EFT_Hawking_Inventory.md` and `BUNDLE_READINESS_HEATMAP.md` for current authoritative counts.
+> **Note (2026-05-31):** Header counts are now refreshed to the current `docs/counts.json` (2026-05-30): **751 modules, 9,944 theorems, 0 axioms, 0 sorry**. The per-phase module list above is a curated representative map, not the full 751-module enumeration — `docs/counts.json` field `lean.module_names` is the canonical complete list, and `SK_EFT_Hawking_Inventory_Index.md` is the LLM-friendly module index.
 
 ---
 

@@ -11,6 +11,8 @@
 
 **Sensitivity.** internal-and-publishable — this doc IS appropriate for external publication alongside any paper that consumes one of these tracked Props.
 
+**Last synced:** 2026-05-31. This ledger is substantively complete through the verified-quantum-compilation arc: **Phases 6u–6z (bundles D6/D7/D8) introduced zero new tracked Props and zero new axioms** — every headline in that arc is kernel-pure. The most recent substantive change to this catalogue was the post-Phase-6r-prime audit (2026-05-26), which reduced the Phase-6r SymTFT tracked-Prop set to its legitimate core. Project axiom count remains **0** (`docs/counts.json`).
+
 ---
 
 ## 1. `H_VestigialModeIsGraviton` — KEEP_AS_TRACKED

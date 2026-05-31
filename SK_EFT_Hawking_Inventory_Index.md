@@ -8,7 +8,7 @@
 
 **Sibling docs (read on bootstrap):**
 - `README.MD` — project framing (public-facing).
-- `CLAUDE.md` (workspace) and `CLAUDE.md` (project) — agent guidance and conventions.
+- `../CLAUDE.md` (workspace root) — agent guidance and conventions; project-level guidance for SK_EFT_Hawking lives here (there is no separate per-repo `CLAUDE.md`).
 - `docs/WAVE_EXECUTION_PIPELINE.md` — 14-stage wave protocol and 15 pipeline invariants.
 - `docs/PAPER_STRATEGY.md` — 17-bundle publication architecture (D8 added 2026-05-31).
 - `docs/PERMANENT_TRACKED_HYPOTHESES.md` — load-bearing tracked Props.
@@ -68,9 +68,9 @@
 - **2026-05-25 (Phase 6r SymTFT formalization SUBSTANTIVELY CLOSED)** — All 8 Waves shipped + strengthening + 2-round adversarial review GREEN in single autonomous-loop session. 18 new Lean modules under `lean/SKEFTHawking/SymTFT/` + `CrossBridges/SMMatterAsSymTFTBoundary.lean` + `APSEta/SubstrateBulkAsymmetry.lean` (~2,650 LoC; commit `a7ea1bf`). Primary anchor Bhardwaj-Copetti-Pajer-Schäfer-Nameki arXiv:2409.02166 *"Boundary SymTFT"*. 12 tracked Props introduced at predicate-substrate level (subsequently consolidated to 2 legitimate post-Phase-6r-prime audit). Citation corrections shipped: `2207.04050` → `2207.10700` (Davighi-Gripaios-Lohitsiri), `1610.07478` → `1610.07010` (Tachikawa-Yonekura), Pin⁺ bordism dimension correction (`Ω_4^{Pin⁺}≅ℤ/16` + `TP_5(Pin⁺)≅ℤ/16` per Kirby-Taylor 1990 + Freed-Hopkins arXiv:1604.06527; `Ω_5^{Pin⁺}=0`). Bundle absorption HELD for unified user-authorized event (2-of-4 GO conditions trip for D.3 absorption per `Wave 2b.3 + Wave 3b.2 + Wave 3b.3`).
 - **2026-05-25** Phase 6q strengthening close + 3 substantive deferred-item lifts SHIPPED — §A 20-item resolution (5 deletions, 3 abbrev demotions, A.6 conjunct cleanup, A.3 substantive companion, A.4/A.7 docstring strengthening) + B.1 Python graphene MIR companion (substantive `(2·β_2/(4π))^(1/3) ≈ 0.0756`; the Lean substrate-level `1/2` placeholder is a safe upper bound) + B.2 reverse-direction LDP biconditional + B.3 BEC Bogoliubov substantive unbounded-norm proof (new module `BECBogoliubovBosonicGrowth.lean` with witnessed concrete `(2κ)!` sequence; both halves of bimodal outcome now witnessed by distinct concrete substrates). All headlines kernel-only; lake build 8638 jobs clean; pytest 4220 total / 4152 default-run / 68 slow-deselected, 0 failures; zero new axioms. See `docs/roadmaps/Phase6q_Roadmap.md` Sessions log Session 2.
 - **2026-05-23 PM** Phase 6q DKM transport bootstrap SUBSTANTIVELY CLOSED — all 5 Waves shipped in single autonomous-loop session; 10 new Lean modules under `lean/SKEFTHawking/DKMBootstrap/` (~2,375 LoC Session 1; zero sorries, zero new axioms); bimodal outcome BOTH halves shipped substantively (positive uniqueness on graphene + sharpened NO-GO on super-factorial-unbounded substrates). Bundle placement BOTH L2 + D5. See `temporary/working-docs/phase6q/wave_2c_positioning.md` for full closing positioning.
-- **2026-05-23** Phase 6t Path A Option C ship — `SkApproxCSuperQuadraticBound_holds` + unconditional tight-ε strict headline `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight` in `lean/SKEFTHawking/FKLW/SolovayKitaevPathA.lean`. Kernel-only. See `docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`.
+- **2026-05-23** Phase 6t Path A Option C ship — `SkApproxCSuperQuadraticBound_holds` + unconditional tight-ε strict headline `solovayKitaev_dawson_nielsen_quantitative_fibonacci_strict_constructive_tight` in `lean/SKEFTHawking/FKLW/SolovayKitaevPathA.lean`. Kernel-only. See `temporary/working-docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`.
 - **2026-05-23** D4 bundle closed at GREEN-with-advisories (Stage 9/10/13 round-2 cycle). 10/14 bundles GREEN. See `docs/BUNDLE_READINESS_HEATMAP.md`.
-- **2026-05-22** Phase 5 Step 13 — `fibonacci_density_F21_unconditional` discharged kernel-only in `lean/SKEFTHawking/FKLW/SU2BCHBracketClosure.lean`. See `docs/PHASE5_STEP13_COMPLETE.md`.
+- **2026-05-22** Phase 5 Step 13 — `fibonacci_density_F21_unconditional` discharged kernel-only in `lean/SKEFTHawking/FKLW/SU2BCHBracketClosure.lean`. See `temporary/working-docs/PHASE5_STEP13_COMPLETE.md`.
 - **2026-05-19** Phase 5h Wave 2 — `axiom gapped_interface_axiom` retired into `TPFConjecture` tracked Prop; project axiom count 1 → 0.
 
 **Build state (as of 2026-05-26 AM, post Phase 6r-prime Session 5 cross-iso ship):**
@@ -96,14 +96,14 @@ For the public narrative of what the project does, see `README.MD`. Key story ar
 
 ## 3. Lean module map
 
-**445 Lean modules** (post Phase 6r-prime Session 5 + Round-3 remediation; was 378 at 2026-05-23 PM Phase 6q close → +18 Phase 6r → +49 Phase 6r-prime Sessions 1–5; per fresh `docs/counts.json` regen 2026-05-26) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
+**751 Lean modules** (per `docs/counts.json` regen 2026-05-30; the jump from the 445 at 2026-05-26 Phase 6r-prime close is the verified-quantum-compilation arc — `FKLW/GenericSUd*` ×104, `CliffordCCZSU8*` ×45, `TrappedIonSU4*` ×27, `ReadRezayiK5/K7*` ×16, `Mukhopadhyay*` ×13 — plus the `FaultTolerance/` D6 substrate and the Phase-6w tensor-network modules) under `lean/SKEFTHawking/`. Grouped by subdirectory or topical family. For full per-module theorem counts + key results, see `SK_EFT_Hawking_Inventory.md` Section 2. For the canonical module-name list, see `docs/counts.json` field `lean.module_names`.
 
 ### 3.1 Subdirectory families (sub-packages)
 
 | Subdirectory | Purpose | Pointer |
 |---|---|---|
-| `lean/SKEFTHawking/FKLW/` | Freedman-Kitaev-Larsen-Wang Fibonacci SU(2) density program (Phase 6p R5.4 + Phase 6t quantitative Solovay-Kitaev). Includes `SolovayKitaevPathA.lean` (2565 LoC, Path A Option C tight-ε ship). | `ls lean/SKEFTHawking/FKLW/` |
-| `lean/SKEFTHawking/FaultTolerance/` | Fault-tolerance noise-model substrate. | `ls lean/SKEFTHawking/FaultTolerance/` |
+| `lean/SKEFTHawking/FKLW/` | Freedman-Kitaev-Larsen-Wang density program **and the full verified-quantum-compilation arc (bundle D8)**: Fibonacci SU(2) density (Phase 6p/6t) + alphabet-agnostic SK substrate + Clifford+T (6u) + arbitrary-dimension SU(d) SK with `GenericSUdMatrixMercatorLog` (6y) + T-free CCZ-essential SU(8) `CliffordCCZSU8LiteralHeadline` (6z) + Mukhopadhyay Toffoli bounds (6x′) + Read-Rezayi alphabets + trapped-ion SU(4) (6x/6y). | `ls lean/SKEFTHawking/FKLW/` |
+| `lean/SKEFTHawking/FaultTolerance/` | **Bundle D6 fault-tolerant-QC substrate** (Phase 6v): Williamson-Yoder gauging-QEC overhead, Shor ECC-256 T-counts, APM-LDPC hashing bound, W-state QFT, AGP threshold, plus the noise-model substrate. | `ls lean/SKEFTHawking/FaultTolerance/` |
 | `lean/SKEFTHawking/CrooksAnalogHawking/` | Sakharov-horizon Crooks bridge; SK-EFT entropy current + Gallavotti-Cohen. | `ls lean/SKEFTHawking/CrooksAnalogHawking/` |
 | `lean/SKEFTHawking/GloriosoLiu/` | Glorioso-Liu SK-EFT axiomatic skeleton + Onsager reciprocity + KMS. | `ls lean/SKEFTHawking/GloriosoLiu/` |
 | `lean/SKEFTHawking/QuantumCrooks/` | Quantum Crooks no-go (Perarnau-Llobet) + Tasaki / Åberg / Kafri-Deffner / Kirkwood-Dirac variants. | `ls lean/SKEFTHawking/QuantumCrooks/` |
@@ -141,6 +141,7 @@ For each topical area below, modules live directly under `lean/SKEFTHawking/`. B
 - **Statistical estimators** — `VerifiedStatistics.lean`, `VerifiedJackknife.lean`.
 - **Lattice / MC support** — `HubbardStratonovichRHMC.lean`, `WetterichNJL.lean`, `SU2PseudoReality.lean`, `SO4Weingarten.lean`, `QuaternionGauge.lean`, `WaveEquation1D.lean`.
 - **Fermi-Hubbard** — `FermiHubbardDimer.lean`.
+- **Classical-simulability / tensor-network demarcation (Phase 6w, bundle D7)** — `KibbleZurekUnruh.lean` (KZM-Unruh bridge), `BeliefPropagation.lean`, `BPLDPSimulability.lean`, `ChebyshevTN.lean`, `AperiodicLattice.lean`, `ChernBridge.lean`, `AnalogHawkingDemarcation.lean`.
 - **Infrastructure / utilities** — `Basic.lean`, `ArrayHelpers.lean`, `ExtractDeps.lean` (environment walker), `BundleRiemannAux.lean`, `RiccatiComparison.lean`, `LaplaceMethod.lean`, `MatrixBCH.lean`, `MatrixBCHCubic.lean`, `MatrixTaylor.lean`, `FermiHubbardDimer.lean`, `RouabahExplicit.lean`.
 
 For a fully alphabetized list, see `docs/counts.json` field `lean.module_names` (378 entries).
@@ -161,6 +162,29 @@ Load-bearing top-level theorems. Each row: fully-qualified name + module path + 
 | `solovayKitaev_dawson_nielsen_quantitative_fibonacci` | `FKLW/SolovayKitaevQuantitative.lean` | First kernel-verified quantitative Solovay-Kitaev length bound (conditional on `SolovayKitaevQuantitativeContract`). |
 | `bridge_FKLW_unitary_hom` | `FKLW/AharonovAradBridgeIteration.lean` | Aharonov-Arad bridge from accumulation-at-1 to closure-equals-univ. |
 | `H_Fib_v4_witness_unconditional` | `FKLW/OneParameterSubgroupSU2.lean` | Unconditional v4 anchor for Phase 5 Step 13. |
+
+### 4.1b Verified universal quantum compilation (Phase 6u–6z, bundle D8)
+
+| Theorem | Module | One-line |
+|---|---|---|
+| `solovayKitaev_dawson_nielsen_quantitative_cliffordT_strict_constructive_tight_unconditional` | `FKLW/CliffordT*.lean` | UNCONDITIONAL Clifford+T quantitative SK; first machine-verified ⟨H,T⟩ density in SU(2) (Niven). Phase 6u. |
+| `solovayKitaev_dawson_nielsen_quantitative_generic_sud_strict_constructive_tight` | `FKLW/GenericSUdSkHeadlineCascadeConcrete.lean` | First kernel-verified Solovay-Kitaev at **arbitrary dimension SU(d)**. Phase 6y. |
+| `matrixMercatorLog` / `exp_matrixMercatorLog` | `FKLW/GenericSUdMatrixMercatorLog.lean` | Concrete-radius matrix logarithm (named convergence radius) — removes the existential blocker; Mathlib-PR candidate. Phase 6y. |
+| `cliffordCCZLiteral_dense` | `FKLW/CliffordCCZSU8LiteralHeadline.lean` | First **T-free, CCZ-essential** density in SU(8): literal ⟨H,S,CNOT,CCZ⟩ dense, no T gate. Phase 6z. |
+| `cliffordOnly_not_dense` | `FKLW/MukhopadhyayCliffordNotDense.lean` | Clifford-alone generates a finite group ⟹ CCZ essential (converse of 6z). Phase 6x′. |
+| `channelSde2_le_toffoliCost` | `FKLW/MukhopadhyayToffoliUnconditional.lean` | First **unconditional** machine-checked Toffoli-count lower bound `T^of(U) ≥ sde₂(Û)` (Mukhopadhyay 2024). Phase 6x′. |
+| Read-Rezayi `SU(2)_5` / `SU(2)_7` headlines | `FKLW/ReadRezayiK5ClosureDenseWitness.lean`, `ReadRezayiK7ClosureDenseWitness.lean` | Unconditional SK headlines for two more universal anyon alphabets. Phase 6x. |
+| `trappedIonSU4_solovayKitaev_headline_unconditional` | `FKLW/TrappedIonSU4FullHeadlineForm.lean` | SU(4) Mølmer-Sørensen instance of the SU(d) headline. Phase 6y. |
+
+### 4.1c Fault-tolerant QC + classical-simulability (Phase 6v / 6w, bundles D6 / D7)
+
+| Theorem | Module | One-line |
+|---|---|---|
+| Williamson-Yoder overhead + `quadraticOverhead_not_linear` | `FaultTolerance/GaugingQEC.lean` | `W·polylog(W)` gauging-QEC auxiliary-qubit count; polylog factor provably unavoidable (class-separation). |
+| Shor ECC-256 T-count bound | `FaultTolerance/ShorTGateCount.lean` | 630M / 490M T-gates (1200 / 1450-qubit configs), inside the 1-gigagate envelope. First kernel-verified end-to-end. |
+| APM-LDPC hashing-bound predicate | `FaultTolerance/APMLdpcHashingBound.lean` | `[[1152,580]]` rate > 1/2 vs rate-exactly-1/2 falsifier class; hashing bound non-vacuously witnessed. |
+| `analog_hawking_quantum_advantage_demarcation` | `AnalogHawkingDemarcation.lean` | Classical-simulability ↔ quantum-advantage demarcation (belief-propagation + categorical-Chern bridge). |
+| `surface_gravity_bounds_kzm_exponent` | `KibbleZurekUnruh.lean` | KZM-Unruh bridge: SK-EFT surface gravity κ bounds the universal KZM exponent (D-Wave-measurable). |
 
 ### 4.2 Standard-Model anomaly / chirality / Z₁₆
 
@@ -321,18 +345,23 @@ Authority: `docs/WAVE_EXECUTION_PIPELINE.md` §"Pipeline Invariants". One-line s
 
 ---
 
-## 7. Bundle status (14 publication targets)
+## 7. Bundle status (17 publication targets)
 
 Authority: `docs/PAPER_STRATEGY.md` (architecture) + `docs/PAPER_DRAFT_MAPPING.md` (per-draft → per-bundle assignment) + `docs/BUNDLE_READINESS_HEATMAP.md` (per-bundle Stage-13 readiness, auto-regen via `scripts/bundle_readiness.py --heatmap`).
 
-| Bundle | Tier | Title | Status (2026-05-23) |
+Per the auto-generated heatmap (2026-05-31), **all 17 bundles show 0 blockers (🟢 GREEN) post-supersession.** The heatmap aggregates existing per-paper findings; a fresh-context bundle Stage-13 sweep is user-triggered, and D8's dedicated reviewer triple is the next operational step.
+
+| Bundle | Tier | Title | Status (2026-05-31) |
 |---|---:|---|:---:|
-| **F** | 0 (flagship review) | "Fluid-Based Approaches to Fundamental Physics — A Formally Verified Survey" | 🔴 RED (8 blockers; ships last). |
+| **F** | 0 (flagship review) | "Fluid-Based Approaches to Fundamental Physics — A Formally Verified Survey" | 🟢 GREEN. |
 | **D1** | 1 (deep) | Formally Verified Analog Hawking Radiation Across Three Platforms | 🟢 GREEN. |
 | **D2** | 1 (deep) | Anomaly Constraints on Standard-Model Particle Content | 🟢 GREEN. |
-| **D3** | 1 (deep) | Emergent Gravity from Microscopy — Linearized EFE through BH Thermodynamics | 🔴 RED (5 blockers). |
-| **D4** | 1 (deep) | Topological Quantum Computation — First Machine-Verified Foundations | 🔴 RED (1 blocker; closed at GREEN-with-advisories 2026-05-23). |
-| **D5** | 1 (deep) | The Dark Sector under Substrate Constraints | 🔴 RED (2 blockers). |
+| **D3** | 1 (deep) | Emergent Gravity from Microscopy — Linearized EFE through BH Thermodynamics | 🟢 GREEN. |
+| **D4** | 1 (deep) | Topological Quantum Computation — First Machine-Verified Foundations | 🟢 GREEN. |
+| **D5** | 1 (deep) | The Dark Sector under Substrate Constraints | 🟢 GREEN. |
+| **D6** | 1 (deep) | Formally Verified Fault-Tolerant Quantum Computation Substrate | 🟢 GREEN. |
+| **D7** | 1 (deep) | Classical Simulability and Quantum Advantage via Tensor Networks | 🟢 GREEN. |
+| **D8** | 1 (deep) | Kernel-Verified Universal Quantum Gate Compilation | 🟢 GREEN (content complete; bundle-paper lift pending). |
 | **L1** | 2 (PRL letter) | GW170817 vs Vestigial-Graviton — 7×10¹⁴ Falsification | 🟢 GREEN. |
 | **L2** | 2 (PRL letter) | Three Generations from Modular Invariance | 🟢 GREEN. |
 | **L3** | 2 (PRL letter) | BCH Four Laws by Regime | 🟢 GREEN. |
@@ -340,15 +369,15 @@ Authority: `docs/PAPER_STRATEGY.md` (architecture) + `docs/PAPER_DRAFT_MAPPING.m
 | **I2** | 3 (infrastructure) | Sentence-Level Paper Provenance Pipeline | 🟢 GREEN. |
 | **I3** | 3 (infrastructure) | Verified Stochastic Calculus for Mathlib4 | 🟢 GREEN. |
 | **E1** | 4 (experimental letter) | Paris-LKB Polariton Analog-Hawking Detection Path | 🟢 GREEN. |
-| **E2** | 4 (experimental letter) | Dean-Kim-Lucas Graphene Bilayer Sonic Horizon | 🟢 GREEN (1 minor advisory). |
+| **E2** | 4 (experimental letter) | Dean-Kim-Lucas Graphene Bilayer Sonic Horizon | 🟢 GREEN. |
 
-**Bundle directories:** `papers/{F,D1,D2,D3,D4,D5,L1,L2,L3,I1,I2,I3,E1,E2}/`. Bundle architecture canon: `docs/PAPER_STRATEGY.md` (14 targets); `docs/PAPER_DRAFT_MAPPING.md` (per-existing-draft → bundle table); `docs/BUNDLE_LIFT_PROCEDURE.md` (14-step lift workflow); `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (absorbing late-phase waves into already-drafted bundles).
+**Bundle directories:** `papers/{F,D1,D2,D3,D4,D5,D6,D7,D8,L1,L2,L3,I1,I2,I3,E1,E2}/`. Bundle architecture canon: `docs/PAPER_STRATEGY.md` (17 targets); `docs/PAPER_DRAFT_MAPPING.md` (per-existing-draft → bundle table); `docs/BUNDLE_LIFT_PROCEDURE.md` (14-step lift workflow); `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` (absorbing late-phase waves into already-drafted bundles).
 
 ---
 
 ## 8. Python source modules
 
-130 Python modules under `src/`. Grouped by sector. For per-module docstrings + signatures, browse `src/<sector>/` directly or read `SK_EFT_Hawking_Inventory.md` Section 1.
+132 Python modules under `src/`. Grouped by sector. For per-module docstrings + signatures, browse `src/<sector>/` directly or read `SK_EFT_Hawking_Inventory.md` Section 1.
 
 ### 8.1 Core (canonical singletons)
 
@@ -456,11 +485,11 @@ Authority: `docs/PAPER_STRATEGY.md` (architecture) + `docs/PAPER_DRAFT_MAPPING.m
 | `docs/KNOWLEDGE_GRAPH.md` | Project knowledge-graph schema + Postgres+AGE setup. |
 | `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` | Stage A–G protocol for absorbing late-phase waves into already-drafted bundles. |
 | `docs/PAPER_DRAFT_MAPPING.md` | Per-existing-draft → per-bundle assignment table. |
-| `docs/PAPER_STRATEGY.md` | 14-bundle publication architecture (canonical). |
+| `docs/PAPER_STRATEGY.md` | 17-bundle publication architecture (canonical). |
 | `docs/PAPER_TABLES_STATUS.md` | Per-paper LaTeX table generation status. |
 | `docs/PERMANENT_TRACKED_HYPOTHESES.md` | 5-Prop catalogue (tracked-Prop posture, status, discharge LoE). |
-| `docs/PHASE5_STEP13_COMPLETE.md` | Phase 5 Step 13 (F.21 unconditional) ship summary. |
-| `docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md` | Phase 6t quantitative Solovay-Kitaev ship summary. |
+| `temporary/working-docs/PHASE5_STEP13_COMPLETE.md` | Phase 5 Step 13 (F.21 unconditional) ship summary. |
+| `temporary/working-docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md` | Phase 6t quantitative Solovay-Kitaev ship summary. |
 | `docs/QI_REGISTER.md` | Stage 14 quality-improvement register (auto-regen + manually-curated). |
 | `docs/READINESS_GATES.md` | Per-paper Stage-13 readiness companion to bundle heatmap. |
 | `docs/RESEARCH_STATUS_OVERVIEW.md` | High-level research-status overview. |

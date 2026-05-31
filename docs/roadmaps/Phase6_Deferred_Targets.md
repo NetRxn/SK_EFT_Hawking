@@ -3,7 +3,57 @@
 **Purpose:** Track high-value formalization targets beyond the current phase. Deep research timelines assume human effort; our pipeline + Aristotle has consistently compressed months→days.
 
 **Created:** April 4, 2026
-**Updated:** April 6, 2026: **2232 thms (2150 substantive + 82 placeholder), 94 modules, 33 sorry, 1 axiom**
+**Updated:** May 31, 2026: **9,944 theorems (9,919 substantive + 25 placeholder), 751 modules, 0 sorry, 0 axioms** (ground truth: `docs/counts.json`, generated 2026-05-30).
+
+> **Header note (2026-05-31 refresh):** This register had not been refreshed since 2026-04-06, when the project stood at 2,232 theorems / 94 modules / 33 sorry / 1 axiom. The intervening Phases 5q–6z closed essentially every deferred target that had a near-term discharge path — most importantly the **verified-quantum-compilation arc** and the bordism/topology finalizations. The project is now **zero sorry, zero axioms**. The genuine remaining future-work list is much shorter and lives in the new **"Current deferred / future-work register (2026-05-31)"** section below; the historical sections that follow it are preserved for provenance but their per-item counts and "Aristotle in flight" statuses are stale and superseded by the current register.
+
+---
+
+## Current deferred / future-work register (2026-05-31)
+
+These are the project's **genuine** open future-work items as of 2026-05-31, replacing the stale Tier-1/Tier-2 lists below (which are kept for provenance only). All near-term-dischargeable Phase 5/6 targets are now CLOSED (see "Completed since last update").
+
+### Mathlib upstreaming (lead PRs — Mathlib lacks these)
+1. **Concrete-radius matrix logarithm** `matrixMercatorLog` — a Banach-algebra logarithm with a *named* convergence radius; Mathlib has no such log. Lead PR of the upstream batch. (Project modules: `GenericSUdMatrixMercatorLog`, `MatrixExpLocalHomeomorphMathlibPR`.)
+2. **Generic order-2 BCH cubic** — the matrix Baker–Campbell–Hausdorff cubic remainder (`MatrixBCHCubicMathlibPR`).
+3. **SU(d) Cartan density-from-witness** (`CartanFinalStepSUdGenericMathlibPR`) and **matrix-exp local homeomorphism** (`MatrixExpLocalHomeomorphMathlibPR`).
+4. **lean-tensor-categories extraction** — the older 114-theorem categorical-infrastructure upstream (gated on Mathlib relationship-building; see the Phase 5o Wave 5 entry retained in the addendum below).
+
+### Quantum-compilation refinements (substrate complete; these are extensions)
+5. **Ross–Selinger optimal `ℤ[ω][1/√2]` synthesis** — the length-*optimal runnable* compiler, vs. the shipped existential ε₀-net. Deferred because Mathlib lacks the requisite algebraic number theory.
+6. **Full Toffoli minimality** (Mukhopadhyay Conjecture 4.8) — the matching meet-in-the-middle *upper* bound. The *lower* bound `channelSde2_le_toffoliCost` already ships **unconditional** (Phase 6x′ Phase 2).
+7. **Additional compiler alphabets** — now pure *instantiation* problems on the Phase 6u generic SU(d) substrate; sequenced by demand, not by missing infrastructure.
+
+### Operational publication pipeline
+8. **D8 bundle lift** — stand up `papers/D8/` (universal compilation, authorized 2026-05-31) and run its Stage 9/10/13 reviewer triple. This is the next operational publication step.
+9. **L1 arXiv voucher** — program-level gate for the first Tier-2 PRL submissions.
+
+### Experimental detection (multi-year, external)
+10. **Polariton spontaneous Hawking radiation** — 1–2 yr horizon.
+11. **Graphene Dirac-fluid sonic horizon** — Dean group, Columbia.
+
+### HPC / numerics
+12. **Vestigial-gravity Monte Carlo at L ≥ 8** — RHMC in flight; the matrix-free stencil unlocks L = 12+.
+
+### Tracked-Prop / hypothesis discharges (need absent Mathlib infrastructure)
+13. **`H_DESICompatibility`** tracked-Prop discharge (Phase 6b.2).
+14. **Three residual topological hypotheses** for the generation-constraint chain — **H1** (ko-cohomology), **H3** (Adams spectral-sequence collapse), **H4** (Anderson–Brown–Peterson splitting); each needs Lean algebraic-topology infrastructure not yet in Mathlib.
+15. **Two KEEP tracked Props** needing absent Mathlib infrastructure: **Kirby–Taylor Pin⁺ bordism** geometric ISO, and the **DMNO Witt-trivial ↔ Lagrangian-algebra** biconditional.
+
+---
+
+## Completed since last update (2026-04-06 → 2026-05-31)
+
+The following deferred/open targets from the historical register are now **DONE** (project is zero sorry, zero axioms):
+
+- **Verified-quantum-compilation arc — COMPLETE.** Phases **6u → 6x → 6x′ → 6y → 6z** delivered the full Solovay–Kitaev / generic-SU(d) density-and-compilation substrate, including: literal Clifford+CCZ (no-T) **dense in SU(8)** (`cliffordCCZLiteral_dense`, Phase 6z, kernel-pure); the Mukhopadhyay channel-rep / Theorem 3.8 / Conjecture-3.9 chain with the **unconditional Toffoli lower bound** `channelSde2_le_toffoliCost` (Phase 6x′); the SU(d) headline cascade discharged unconditionally at the honest length exponent `log 5 / log(3/2)` (Phase 6y); and the KMM Ross–Selinger reduction (`Nonempty KMMReduction` with no axiom). Hundreds of `FKLW.*` modules in `counts.json`.
+- **Phase 6v — Fault-tolerant QC (bundle D6) — COMPLETE.** `FaultTolerance.*` modules (noise model, Shor T-gate count, LDPC hashing bound, gauging-QEC, W-state QFT).
+- **Phase 6w — Tensor-network demarcation (bundle D7) — COMPLETE.**
+- **Bordism / topology finalizations** that previously appeared here as Tier-2 "requires mathematical depth" items have closed where a discharge path existed (the project's sorry count is now 0 and axiom count 0; the single old `gapped_interface_axiom` and the two Phase-6p DR-authority axioms are gone).
+- **Counts.** 2,232 → **9,944 theorems**; 94 → **751 modules**; 33 → **0 sorry**; 1 → **0 axioms**; placeholder theorems 82 → **25**.
+- **17 publication bundles total**; bundle **D8 (universal compilation) authorized 2026-05-31** (its lift is item 8 in the current register above).
+
+> Items that remained genuinely open (Mathlib upstreaming, Ross–Selinger optimality, Toffoli *upper* bound, experimental detection, the residual topological hypotheses, and the two KEEP tracked Props) are carried forward into the current register above. The historical sections below are retained verbatim for provenance; **their counts and "Aristotle in flight" statuses are stale.**
 
 ---
 
@@ -113,7 +163,9 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 
 ---
 
-## Tier 1: High Value, Infrastructure Ready — Phase 5e Candidates
+## Tier 1: High Value, Infrastructure Ready — Phase 5e Candidates — ⚠️ SUPERSEDED (historical)
+
+> **SUPERSEDED (2026-05-31):** Every Tier-1 candidate below (SU(2)_k MTC instances, polariton paper, verified-statistics extension, abstract center functor, U_q(ŝl₂) Hopf) has since been completed; the live future-work list is the "Current deferred / future-work register (2026-05-31)" at the top of this file. Retained for provenance.
 
 ### A. SU(2)_k MTC Instances — **PROMOTED TO Phase 5d Wave 4**
 - **Ising (SU2kMTC.lean):** ModularTensorData instance CONSTRUCTED, F^σ_{ψσψ}=-1 corrected, 5 sorry (Aristotle submitted)
@@ -144,7 +196,9 @@ Phase 5d Wave 1-2 produced the first explicit gap equation for tetrad condensati
 
 ---
 
-## Tier 2: High Value, Requires Mathematical Depth
+## Tier 2: High Value, Requires Mathematical Depth — ⚠️ MOSTLY RESOLVED (historical)
+
+> **MOSTLY RESOLVED (2026-05-31):** The Z₁₆ cobordism, non-Abelian TPF, Fermi-point, higher-rank quantum-group, and Fang–Gu items below have closed (or their genuinely-open residue is now captured as the "three residual topological hypotheses" / "two KEEP tracked Props" in the current register at the top). Retained for provenance.
 
 ### Full Z₁₆ Cobordism Proof
 - Requires Atiyah-Hirzebruch + Adams spectral sequences.
@@ -275,7 +329,9 @@ parked there have explicit discharge paths registered below.
 
 ---
 
-## 33 Remaining Sorry Gaps (entire project)
+## 33 Remaining Sorry Gaps (entire project) — ⚠️ STALE (as of 2026-04-06)
+
+> **STALE (2026-05-31):** The project now has **0 sorry** across all 751 modules (ground truth `docs/counts.json`). Every file in the table below has since been closed. The table is retained only as a historical snapshot of the 2026-04-06 state.
 
 | File | Count | Status |
 |------|-------|--------|
@@ -304,8 +360,8 @@ parked there have explicit discharge paths registered below.
 - Zero `set_option maxHeartbeats` in entire project (VecGMonoidal fixed via @[local instance] caching)
 - Ising pentagon PROVED via native_decide over QSqrt2 (convention bug found + fixed)
 - Fibonacci pentagon PROVED via native_decide over QSqrt5
-- 82 placeholder theorems (`True := trivial`) tracked in PLACEHOLDER_THEOREMS (was 75; 3 SteenrodA1 Adem relations promoted to substantive; new modules added placeholders)
-- 1 axiom: `gapped_interface_axiom` (SPTClassification.lean)
+- 82 placeholder theorems (`True := trivial`) tracked in PLACEHOLDER_THEOREMS (was 75; 3 SteenrodA1 Adem relations promoted to substantive; new modules added placeholders) — **now 25 as of 2026-05-31**
+- 1 axiom: `gapped_interface_axiom` (SPTClassification.lean) — **now 0 axioms project-wide as of 2026-05-31**
 - Automated counts: `uv run python scripts/update_counts.py` → `docs/counts.json`
 
 ---
@@ -381,7 +437,9 @@ parked there have explicit discharge paths registered below.
 
 ---
 
-*Updated April 6, 2026. 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. Zero heartbeat overrides. Phases 5e-5f COMPLETE. Phase 5g W1-2 COMPLETE. Phase 5h W1-2 + W3-4 COMPLETE (GaugingStep, 34 thms, 0 sorry). Phase 5i W1 COMPLETE (Uqsl3 — first rank-2 QG, 21 thms, 0 sorry), W2 Stage 3 (Uqsl3Hopf — 4 sorry), W3 COMPLETE (SU3kFusion — first SU(3)_k fusion, 99 thms, 0 sorry), W4 partial (PolyQuotQ — 15 thms, 0 sorry). Phase 5j W1 COMPLETE (FermiPointTopology — 28 thms, 0 sorry). Aristotle Batch 2 in flight.*
+*Historical footer (April 6, 2026): 2232 theorems (2150 substantive + 82 placeholder), 1 axiom, 94 modules, 33 sorry. Retained for provenance — superseded by the current footer below.*
+
+*Updated May 31, 2026. **9,944 theorems (9,919 substantive + 25 placeholder), 0 axioms, 751 modules, 0 sorry** (ground truth `docs/counts.json`, generated 2026-05-30). Zero heartbeat overrides. The verified-quantum-compilation arc (Phases 6u→6x→6x′→6y→6z), Phase 6v (fault-tolerant QC, bundle D6), and Phase 6w (tensor-network demarcation, bundle D7) are all COMPLETE; bundle D8 (universal compilation) authorized 2026-05-31; 17 publication bundles total. Live future-work list = "Current deferred / future-work register (2026-05-31)" near the top of this file.*
 
 ---
 

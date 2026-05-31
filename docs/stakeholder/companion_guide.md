@@ -87,7 +87,7 @@ A quantum computer with a small fixed set of gates ("an alphabet") needs a *comp
 
 Every result passes through three independent checks:
 
-1. **Python computation** — numerical calculations with real experimental parameters, validated by 2,800+ automated tests.
+1. **Python computation** — numerical calculations with real experimental parameters, validated by 4,475 automated tests.
 2. **Lean 4 formal proofs** — machine-checked theorems ensuring logical correctness.
 3. **Aristotle automated prover** — an AI system that filled 322 theorems across 44 runs where interactive proving was impractical.
 
