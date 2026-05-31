@@ -50,7 +50,7 @@ inductive VestigialPhase where
 theorem phase_count :
     (List.length [VestigialPhase.pre_geometric,
                   VestigialPhase.vestigial,
-                  VestigialPhase.full_tetrad]) = 3 := by native_decide
+                  VestigialPhase.full_tetrad]) = 3 := by decide
 
 /-!
 ## Phase Properties
@@ -135,7 +135,7 @@ def phase_order : VestigialPhase → Nat
 theorem phase_hierarchy :
     phase_order VestigialPhase.pre_geometric < phase_order VestigialPhase.vestigial ∧
     phase_order VestigialPhase.vestigial < phase_order VestigialPhase.full_tetrad := by
-  constructor <;> native_decide
+  constructor <;> decide
 
 /-- Each phase has more structure than the previous one:
     if a property holds at level n, it also holds at level n+1.
@@ -161,14 +161,14 @@ theorem tetrad_only_in_full (p : VestigialPhase) :
 def metric_components (d : Nat) : Nat := d * (d + 1) / 2
 
 /-- In 4D: 10 independent metric components. -/
-theorem metric_components_4d : metric_components 4 = 10 := by native_decide
+theorem metric_components_4d : metric_components 4 = 10 := by decide
 
 /-- The vestigial metric inherits the parent group signature.
     In the ADW mechanism with SO(3,1), the metric is Lorentzian. -/
 def lorentzian_signature_4d : List Int := [1, -1, -1, -1]
 
 /-- Lorentzian signature has exactly 4 eigenvalues in 4D. -/
-theorem lorentzian_has_4_eigenvalues : lorentzian_signature_4d.length = 4 := by native_decide
+theorem lorentzian_has_4_eigenvalues : lorentzian_signature_4d.length = 4 := by decide
 
 /-!
 ## Equivalence Principle Violation
@@ -295,7 +295,7 @@ inductive Z4Generator where
 theorem z4_has_four_elements :
     (List.length [Z4Generator.e, Z4Generator.i_hat,
                   Z4Generator.i_hat_sq, Z4Generator.i_hat_cu]) = 4 :=
-  by native_decide
+  by decide
 
 /-- **W6-VG1 — Z4 generators are all distinct.**
 

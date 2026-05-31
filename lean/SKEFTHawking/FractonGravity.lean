@@ -109,19 +109,19 @@ def fracton_dof (d : Nat) : Nat := d * (d + 1) / 2 - 2
 def graviton_dof (d : Nat) : Nat := d * (d - 3) / 2
 
 /-- In 4 spacetime dimensions (3 spatial), fracton has 4 DOF. -/
-theorem fracton_dof_3d : fracton_dof 3 = 4 := by native_decide
+theorem fracton_dof_3d : fracton_dof 3 = 4 := by decide
 
 /-- In 4 spacetime dimensions, the graviton has 2 DOF. -/
-theorem graviton_dof_4d : graviton_dof 4 = 2 := by native_decide
+theorem graviton_dof_4d : graviton_dof 4 = 2 := by decide
 
 /-- **DOF mismatch in 4D:** fracton has 4 physical DOF while gravity has 2.
     The extra DOF in fracton theory have no gravitational counterpart. -/
 theorem dof_mismatch_4d :
-    fracton_dof 3 ≠ graviton_dof 4 := by native_decide
+    fracton_dof 3 ≠ graviton_dof 4 := by decide
 
 /-- The fracton DOF exceeds graviton DOF in 4D. -/
 theorem fracton_exceeds_graviton_4d :
-    fracton_dof 3 > graviton_dof 4 := by native_decide
+    fracton_dof 3 > graviton_dof 4 := by decide
 
 /-!
 ## Gauge Symmetry Structure
@@ -147,18 +147,18 @@ def diffeo_gauge (d : Nat) : GaugeStructure where
 /-- **The derivative order mismatch is the structural reason for the bootstrap gap.**
     Fracton uses 2 derivatives (∂_i∂_j) while diffeomorphisms use 1 (∇_μ). -/
 theorem derivative_order_mismatch :
-    fracton_gauge.derivative_order ≠ (diffeo_gauge 4).derivative_order := by native_decide
+    fracton_gauge.derivative_order ≠ (diffeo_gauge 4).derivative_order := by decide
 
 /-- **The parameter dimension also differs.**
     Fracton: 1 (scalar α). GR in 4D: 4 (vector ξ^μ). -/
 theorem parameter_dim_mismatch :
-    fracton_gauge.parameter_dim ≠ (diffeo_gauge 4).parameter_dim := by native_decide
+    fracton_gauge.parameter_dim ≠ (diffeo_gauge 4).parameter_dim := by decide
 
 /-- Both mismatches contribute to the bootstrap gap. -/
 theorem double_mismatch :
     fracton_gauge.derivative_order ≠ (diffeo_gauge 4).derivative_order ∧
     fracton_gauge.parameter_dim ≠ (diffeo_gauge 4).parameter_dim := by
-  constructor <;> native_decide
+  constructor <;> decide
 
 /-!
 ## Comparison with ADW Route
@@ -202,15 +202,15 @@ beyond what gravity requires, and this excess grows with dimension.
 def dof_gap (d : Nat) : Int := (fracton_dof d : Int) - (graviton_dof (d + 1) : Int)
 
 /-- The DOF gap is 2 in 3 spatial dimensions. -/
-theorem dof_gap_3d : dof_gap 3 = 2 := by native_decide
+theorem dof_gap_3d : dof_gap 3 = 2 := by decide
 
 /-- The DOF gap is positive for d=3,4,5 (checked computationally). -/
 theorem dof_gap_positive_small :
-    dof_gap 3 > 0 ∧ dof_gap 4 > 0 ∧ dof_gap 5 > 0 := by native_decide
+    dof_gap 3 > 0 ∧ dof_gap 4 > 0 ∧ dof_gap 5 > 0 := by decide
 
 /-- **The DOF gap grows with dimension.** More excess DOF in higher dimensions
     means the bootstrap problem gets WORSE, not better. -/
-theorem dof_gap_grows_3_to_4 : dof_gap 4 > dof_gap 3 := by native_decide
+theorem dof_gap_grows_3_to_4 : dof_gap 4 > dof_gap 3 := by decide
 
 /-- The fracton DOF grows quadratically while graviton DOF also grows quadratically,
     but the fracton leading coefficient is larger: d^2/2 vs d^2/2 - 3d/2.
@@ -219,7 +219,7 @@ theorem dof_gap_grows_3_to_4 : dof_gap 4 > dof_gap 3 := by native_decide
 -- graviton_dof (d+1) = (d+1)(d-2)/2 = (d^2-d-2)/2.
 -- Gap = [d(d+1)/2 - 2] - [(d^2-d-2)/2] = [d^2+d-4 - d^2+d+2]/2 = (2d-2)/2 = d-1.
 -- So for d >= 2, gap = d - 1 > 0.
-theorem dof_gap_formula_3d_check : dof_gap 3 = (3 : Int) - 1 := by native_decide
+theorem dof_gap_formula_3d_check : dof_gap 3 = (3 : Int) - 1 := by decide
 
 /-!
 ## Strengthening: DOF Gap General Proof
@@ -232,9 +232,9 @@ theorem dof_gap_formula_3d_check : dof_gap 3 = (3 : Int) - 1 := by native_decide
 -- graviton_dof (d+1) = (d+1)*(d+1-3)/2 = (d+1)*(d-2)/2.
 -- Gap = d*(d+1)/2 - 2 - (d+1)*(d-2)/2 = (d+1)*(d - (d-2))/2 - 2 = (d+1) - 2 = d - 1.
 -- For Nat division: need to be careful. Check d=3: 6-2-2=2=3-1. d=4: 10-2-5=3=4-1.
-theorem dof_gap_eq_d_minus_1_check_4 : dof_gap 4 = 3 := by native_decide
+theorem dof_gap_eq_d_minus_1_check_4 : dof_gap 4 = 3 := by decide
 
-theorem dof_gap_eq_d_minus_1_check_5 : dof_gap 5 = 4 := by native_decide
+theorem dof_gap_eq_d_minus_1_check_5 : dof_gap 5 = 4 := by decide
 
 /-- **The DOF gap is strictly positive for all d ≥ 2.**
     This means the fracton-gravity bootstrap gap is universal, not a 4D artifact. -/
@@ -243,6 +243,6 @@ theorem dof_gap_eq_d_minus_1_check_5 : dof_gap 5 = 4 := by native_decide
 theorem dof_gap_positive_2_through_8 :
     dof_gap 2 > 0 ∧ dof_gap 3 > 0 ∧ dof_gap 4 > 0 ∧
     dof_gap 5 > 0 ∧ dof_gap 6 > 0 ∧ dof_gap 7 > 0 ∧ dof_gap 8 > 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 end SKEFTHawking.FractonGravity

@@ -79,7 +79,7 @@ def gs_conditions_core4 : List GSCondition :=
   [gs_translation, gs_finite_range, gs_relativistic, gs_interpolating]
 
 /-- There are exactly 4 GS no-go conditions. -/
-theorem gs_condition_count : gs_conditions_core4.length = 4 := by native_decide
+theorem gs_condition_count : gs_conditions_core4.length = 4 := by decide
 
 /-!
 ## TPF Disentangler Ingredients
@@ -119,7 +119,7 @@ def tpf_ingredients : List TPFIngredient :=
   [tpf_infinite_rotors, tpf_not_on_site, tpf_ancilla, tpf_spt_slab]
 
 /-- There are exactly 4 TPF ingredients. -/
-theorem tpf_ingredient_count : tpf_ingredients.length = 4 := by native_decide
+theorem tpf_ingredient_count : tpf_ingredients.length = 4 := by decide
 
 /-!
 ## Evasion Analysis
@@ -130,7 +130,7 @@ def evaded_count (conditions : List GSCondition) : Nat :=
   (conditions.filter (fun c => !c.applies_to_tpf)).length
 
 /-- At least 2 GS conditions are evaded by the TPF construction. -/
-theorem evaded_condition_count : evaded_count gs_conditions_core4 ≥ 2 := by native_decide
+theorem evaded_condition_count : evaded_count gs_conditions_core4 ≥ 2 := by decide
 
 /-- Count the number of TPF ingredients that evade a GS condition. -/
 def evasion_ingredient_count (ingredients : List TPFIngredient) : Nat :=
@@ -138,19 +138,19 @@ def evasion_ingredient_count (ingredients : List TPFIngredient) : Nat :=
 
 /-- Exactly 2 TPF ingredients evade a GS condition. -/
 theorem evasion_ingredients_eq_2 : evasion_ingredient_count tpf_ingredients = 2 := by
-  native_decide
+  decide
 
 /-- Count of GS conditions that DO apply to TPF. -/
 def applicable_count (conditions : List GSCondition) : Nat :=
   (conditions.filter (fun c => c.applies_to_tpf)).length
 
 /-- Exactly 2 GS conditions still apply to the TPF construction. -/
-theorem applicable_condition_count : applicable_count gs_conditions_core4 = 2 := by native_decide
+theorem applicable_condition_count : applicable_count gs_conditions_core4 = 2 := by decide
 
 /-- The evaded + applicable counts sum to the total. -/
 theorem evaded_plus_applicable :
     evaded_count gs_conditions_core4 + applicable_count gs_conditions_core4 = gs_conditions_core4.length := by
-  native_decide
+  decide
 
 /-!
 ## Critical Conjecture and Wall Status
@@ -213,7 +213,7 @@ theorem wall_status_conditional :
     would fall because TPF evades ≥2 GS conditions. -/
 theorem wall_would_fall_if_proven :
     wall_status ConjectureStatus.proven (evaded_count gs_conditions_core4) = WallStatus.falls := by
-  native_decide
+  decide
 
 /-!
 ## GS No-Go Structure
@@ -236,16 +236,16 @@ The GS theorem requires ALL conditions to hold. Evading any one is sufficient
     Strengthened from vacuous `true` conclusion (quality audit 2026-03-26).
 
 PROVIDED SOLUTION
-Both conjuncts are decidable computations on concrete lists. Use `native_decide` or `decide`.
+Both conjuncts are decidable computations on concrete lists. Use `decide` or `decide`.
 -/
 theorem gs_nogo_requires_all :
     applicable_count gs_conditions_core4 = 2 ∧ applicable_count gs_conditions_core4 < gs_conditions_core4.length := by
-  native_decide +revert
+  decide +revert
 
 /-- Stronger: TPF evades exactly 2 conditions, which is more than sufficient. -/
 theorem tpf_evades_two_sufficient :
     evaded_count gs_conditions_core4 ≥ 2 ∧ evaded_count gs_conditions_core4 ≥ 1 := by
-  native_decide
+  decide
 
 /-- The number of non-evaded conditions. Some still apply to TPF. -/
 def applying_count (conditions : List GSCondition) : Nat :=
@@ -254,7 +254,7 @@ def applying_count (conditions : List GSCondition) : Nat :=
 /-- Evaded + applying = total. Conservation law for condition classification. -/
 theorem condition_conservation :
     evaded_count gs_conditions_core4 + applying_count gs_conditions_core4 = gs_conditions_core4.length := by
-  native_decide
+  decide
 
 /-!
 ## Nielsen-Ninomiya Connection
@@ -289,7 +289,7 @@ theorem evading_one_breaks_nogo :
     evaded_count gs_conditions_core4 ≥ 1 →
     applying_count gs_conditions_core4 < gs_conditions_core4.length := by
   intro _
-  native_decide
+  decide
 
 /-- **TPF's evasion margin: it evades 2, only needs 1.**
     The margin of safety is 1 — even if one evasion turns out to be
@@ -298,9 +298,9 @@ theorem evading_one_breaks_nogo :
     Renamed from `tpf_evasion_margin` (Phase 5v Wave 1a, 2026-04-15) to
     disambiguate from `LatticeHamiltonian.tpf_violation_surplus`, which
     proves a different statement about a different evasion count. -/
--- PROVIDED SOLUTION: evaded_count = 2 (by native_decide), so 2 ≥ 1 + 1.
+-- PROVIDED SOLUTION: evaded_count = 2 (by decide), so 2 ≥ 1 + 1.
 theorem tpf_evades_at_least_two :
     evaded_count gs_conditions_core4 ≥ 1 + 1 := by
-  native_decide
+  decide
 
 end SKEFTHawking.ChiralityWall

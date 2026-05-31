@@ -560,7 +560,7 @@ two simple objects (vacuum + dominant), with quantum dimensions
 `d_0 = 1`, `d_1 = (1 + √5)/2 = φ`, `d_max = φ`, Immirzi γ = γ_M.
 
 The real-Fibonacci F-symbols and modular-S data are formalized in
-`FibonacciMTC.lean` (proven, zero sorry, native_decide over `ℚ(√5)`);
+`FibonacciMTC.lean` (proven, zero sorry, decide over `ℚ(√5)`);
 this Lean structure is the BC-data carrier shape used by Wave 3
 without re-formalizing the categorical content.
 -/

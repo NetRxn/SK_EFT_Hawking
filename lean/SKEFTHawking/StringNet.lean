@@ -113,7 +113,7 @@ theorem sn_fib_fusion_comm : ∀ (i j k : Fin 2),
 
 /-- Fibonacci τ⊗τ contains τ: τ appears in its own fusion product. -/
 theorem sn_fib_tau_self_fusion :
-    fibStringNet.fusionAdmissible (1 : Fin 2) (1 : Fin 2) (1 : Fin 2) = true := by native_decide
+    fibStringNet.fusionAdmissible (1 : Fin 2) (1 : Fin 2) (1 : Fin 2) = true := by decide
 
 /-- Fibonacci GSD on torus = 4 = |Irr(Z(Fib))| = 2 × 2. -/
 theorem sn_fib_center_dim : (2 : ℕ) * 2 = 4 := by norm_num

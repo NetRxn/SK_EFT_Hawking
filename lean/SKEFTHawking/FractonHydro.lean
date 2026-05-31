@@ -60,7 +60,7 @@ abbrev MultipoleOrder := Nat
 def conserved_charges_standard (d : Nat) : Nat := d + 2
 
 /-- In 3 spatial dimensions, standard hydro has 5 conserved charges. -/
-theorem standard_charges_3d : conserved_charges_standard 3 = 5 := by native_decide
+theorem standard_charges_3d : conserved_charges_standard 3 = 5 := by decide
 
 /-- Binomial coefficient C(n, k) for computing fracton charges. -/
 def binomial : Nat → Nat → Nat
@@ -81,13 +81,13 @@ theorem binomial_zero (n : Nat) : binomial n 0 = 1 := by
 def conserved_charges_fracton (d n : Nat) : Nat := binomial (n + d) d
 
 /-- At multipole order 1 in 3D: C(4, 3) = 4 charges (charge + 3 dipole components). -/
-theorem fracton_charges_3d_order1 : conserved_charges_fracton 3 1 = 4 := by native_decide
+theorem fracton_charges_3d_order1 : conserved_charges_fracton 3 1 = 4 := by decide
 
 /-- At multipole order 2 in 3D: C(5, 3) = 10 charges. -/
-theorem fracton_charges_3d_order2 : conserved_charges_fracton 3 2 = 10 := by native_decide
+theorem fracton_charges_3d_order2 : conserved_charges_fracton 3 2 = 10 := by decide
 
 /-- At multipole order 3 in 3D: C(6, 3) = 20 charges. -/
-theorem fracton_charges_3d_order3 : conserved_charges_fracton 3 3 = 20 := by native_decide
+theorem fracton_charges_3d_order3 : conserved_charges_fracton 3 3 = 20 := by decide
 
 /-!
 ## Fracton vs Standard Comparison
@@ -96,11 +96,11 @@ theorem fracton_charges_3d_order3 : conserved_charges_fracton 3 3 = 20 := by nat
 /-- **Fracton hydro at order ≥ 2 always exceeds standard hydro in conserved charges.**
     In 3D: standard has 5, fracton at order 2 has 10. -/
 theorem fracton_exceeds_standard_3d_order2 :
-    conserved_charges_fracton 3 2 > conserved_charges_standard 3 := by native_decide
+    conserved_charges_fracton 3 2 > conserved_charges_standard 3 := by decide
 
 /-- **Fracton hydro at order ≥ 3 in 3D exceeds standard by a factor ≥ 4.** -/
 theorem fracton_quadruples_standard_3d :
-    conserved_charges_fracton 3 3 ≥ 4 * conserved_charges_standard 3 := by native_decide
+    conserved_charges_fracton 3 3 ≥ 4 * conserved_charges_standard 3 := by decide
 
 /-- Fracton charges are monotonically increasing in multipole order.
     More conserved charges means more UV information retained. -/
@@ -199,7 +199,7 @@ theorem fracton_advantage_despite_erasure :
     conserved_charges_fracton 3 2 > conserved_charges_standard 3 := by
   constructor
   · rfl
-  · native_decide
+  · decide
 
 /-!
 ## Strengthening: Charge Growth Rate
@@ -236,7 +236,7 @@ theorem fracton_exceeds_standard_general (d : Nat) (hd : d ≥ 2) :
 -- Check: d=2, n=4: C(6,2)=15 > 2·4=8. d=3, n=5: C(8,3)=56 > 2·5=10.
 theorem fracton_ratio_grows_3d :
     conserved_charges_fracton 3 5 > 2 * conserved_charges_standard 3 := by
-  native_decide
+  decide
 
 /-
 PROBLEM

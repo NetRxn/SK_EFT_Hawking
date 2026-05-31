@@ -190,11 +190,11 @@ def surgeryTrefoilComplement : SurgeryPresentation where
 
 theorem trefoilComplement_framing0 :
     surgeryTrefoilComplement.framing ⟨0, by decide⟩ = -2 := by
-  native_decide
+  decide
 
 theorem trefoilComplement_framing1 :
     surgeryTrefoilComplement.framing ⟨1, by decide⟩ = -3 := by
-  native_decide
+  decide
 
 /-- Destabilization: ±1-framed unknots give S³. -/
 theorem lens_pm1_is_S3_type :

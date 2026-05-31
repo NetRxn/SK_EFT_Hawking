@@ -481,7 +481,7 @@ PROVIDED SOLUTION
 Unfold and compute: fracton_propagating_dof_spacetime 4 = 4*5/2 - 2 = 10 - 2 = 8.
 -/
 theorem fracton_dof_4d_spacetime : fracton_propagating_dof_spacetime 4 = 8 := by
-  native_decide +revert
+  decide +revert
 
 /-
 **Graviton DOF in 4D spacetime: 2.**
@@ -497,7 +497,7 @@ theorem graviton_dof_4d_is_2 : graviton_dof 4 = 2 := by
     Source: gravity_connection.py, LinearizedEquivalence.extra_dof_count (line 148-150)
 -/
 theorem extra_dof_4d : fracton_propagating_dof_spacetime 4 - graviton_dof 4 = 6 := by
-  native_decide
+  decide
 
 /-
 PROBLEM
@@ -621,7 +621,7 @@ theorem commutator_order_mismatch :
 -/
 theorem commutator_order_ratio :
     fracton_commutator_order = 2 * ym_commutator_order := by
-  native_decide +revert
+  decide +revert
 
 /-
 **Gauge parameter dimension gap grows quadratically with N.**
@@ -656,7 +656,7 @@ theorem ym_four_independent_obstructions :
     gauge_derivative_order_fracton ≠ gauge_derivative_order_ym ∧
     gauge_field_rank_fracton ≠ gauge_field_rank_ym ∧
     gauge_param_dim_fracton ≠ gauge_param_dim_ym 2 := by
-  exact ⟨ rfl, by native_decide, by native_decide, by native_decide ⟩
+  exact ⟨ rfl, by decide, by decide, by decide ⟩
 
 /-
 **No non-Abelian fracton construction achieves YM compatibility.**
@@ -708,7 +708,7 @@ theorem dispersion_matches_charge_scaling :
     Source: cross-check between gravity_connection.py and FractonGravity.lean
 -/
 theorem dof_gap_cross_check : dof_gap 3 = 2 := by
-  native_decide
+  decide
 
 /-
 **Obstruction count consistent with FractonNonAbelian.**

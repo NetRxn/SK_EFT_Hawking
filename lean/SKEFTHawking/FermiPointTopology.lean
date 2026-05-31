@@ -232,22 +232,22 @@ structure ChargeSplitting where
 def n2_split_1_1 : ChargeSplitting where
   original_charge := 2
   split_charges := [1, 1]
-  charge_conserved := by native_decide
-  nontrivial := by native_decide
+  charge_conserved := by decide
+  nontrivial := by decide
 
 /-- N=2 can also split into 1+1+1+(-1) (total = 2 conserved). -/
 def n2_split_3_minus_1 : ChargeSplitting where
   original_charge := 2
   split_charges := [1, 1, 1, -1]
-  charge_conserved := by native_decide
-  nontrivial := by native_decide
+  charge_conserved := by decide
+  nontrivial := by decide
 
 /-- N=3 splits into 1+1+1. -/
 def n3_split_1_1_1 : ChargeSplitting where
   original_charge := 3
   split_charges := [1, 1, 1]
-  charge_conserved := by native_decide
-  nontrivial := by native_decide
+  charge_conserved := by decide
+  nontrivial := by decide
 
 /-! ## 8. Multi-Weyl Semimetal Classification (Wave 2) -/
 
@@ -330,33 +330,33 @@ def su2_emergence_chain : List EmergenceStep := [
 ]
 
 /-- The chain has exactly 6 steps. -/
-theorem su2_chain_length : su2_emergence_chain.length = 6 := by native_decide
+theorem su2_chain_length : su2_emergence_chain.length = 6 := by decide
 
 /-- Steps 1-3 are theorems, step 4-5 are heuristic, step 6 is speculative. -/
 theorem su2_chain_rigor_first_three :
     (su2_emergence_chain.get ⟨0, by decide⟩).rigor = .theorem ∧
     (su2_emergence_chain.get ⟨1, by decide⟩).rigor = .theorem ∧
     (su2_emergence_chain.get ⟨2, by decide⟩).rigor = .theorem := by
-  native_decide
+  decide
 
 theorem su2_chain_rigor_heuristic :
     (su2_emergence_chain.get ⟨3, by decide⟩).rigor = .heuristic ∧
     (su2_emergence_chain.get ⟨4, by decide⟩).rigor = .heuristic := by
-  native_decide
+  decide
 
 theorem su2_chain_rigor_speculative :
     (su2_emergence_chain.get ⟨5, by decide⟩).rigor = .speculative := by
-  native_decide
+  decide
 
 /-- Number of theorem-level steps in the SU(2) chain. -/
 theorem su2_chain_theorem_count :
     (su2_emergence_chain.filter (fun s => s.rigor == .theorem)).length = 3 := by
-  native_decide
+  decide
 
 /-- Number of heuristic steps. -/
 theorem su2_chain_heuristic_count :
     (su2_emergence_chain.filter (fun s => s.rigor == .heuristic)).length = 2 := by
-  native_decide
+  decide
 
 /-! ## 10. |N|=3 → SU(3) Assessment (Wave 3) -/
 
@@ -383,18 +383,18 @@ def su3_emergence_chain : List EmergenceStep := [
     meaning there is no ³He-like system to provide even partial evidence. -/
 theorem su3_chain_theorem_count :
     (su3_emergence_chain.filter (fun s => s.rigor == .theorem)).length = 2 := by
-  native_decide
+  decide
 
 theorem su3_chain_speculative_count :
     (su3_emergence_chain.filter (fun s => s.rigor == .speculative)).length = 2 := by
-  native_decide
+  decide
 
 /-- SU(3) is strictly more speculative than SU(2): fewer theorem steps,
     more speculative steps, zero heuristic validation. -/
 theorem su3_more_speculative_than_su2 :
     (su3_emergence_chain.filter (fun s => s.rigor == .speculative)).length >
     (su2_emergence_chain.filter (fun s => s.rigor == .speculative)).length := by
-  native_decide
+  decide
 
 /-! ## 11. Vierbein Decomposition (Wave 2) -/
 
@@ -514,6 +514,6 @@ Wave 2-3 (this extension):
   - Vierbein decomposition: matrix-valued → real + gauge + spin connection
   - Full emergence chain: Fermi point → ... → Einstein-Cartan (status tracked)
   - Bridge theorems: EmergentGravityBounds, GaugingStep, SPTClassification
-  - ALL proved by native_decide/decide/rfl/norm_num — zero sorry, zero axioms
+  - ALL proved by decide/decide/rfl/norm_num — zero sorry, zero axioms
 -/
 end SKEFTHawking

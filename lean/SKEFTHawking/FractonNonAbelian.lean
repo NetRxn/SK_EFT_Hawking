@@ -101,7 +101,7 @@ def obstructions : List Obstruction :=
    Obstruction.gauge_parameter, Obstruction.mobility_constraint]
 
 /-- **There are exactly 4 structural obstructions.** -/
-theorem obstruction_count : obstructions.length = 4 := by native_decide
+theorem obstruction_count : obstructions.length = 4 := by decide
 
 /-!
 ## Derivative Order Mismatch (Obstruction 1)
@@ -116,11 +116,11 @@ def gauge_derivative_order_ym : Nat := 1
 
 /-- **Derivative order mismatch:** fracton uses 2, YM uses 1. -/
 theorem derivative_order_mismatch :
-    gauge_derivative_order_fracton ≠ gauge_derivative_order_ym := by native_decide
+    gauge_derivative_order_fracton ≠ gauge_derivative_order_ym := by decide
 
 /-- Fracton uses strictly more derivatives than YM. -/
 theorem fracton_higher_derivative :
-    gauge_derivative_order_fracton > gauge_derivative_order_ym := by native_decide
+    gauge_derivative_order_fracton > gauge_derivative_order_ym := by decide
 
 /-!
 ## Tensor Rank Mismatch (Obstruction 2)
@@ -132,7 +132,7 @@ def gauge_field_rank_ym : Nat := 1
 
 /-- **Tensor rank mismatch:** fracton A_ij is rank 2, YM A_μ is rank 1. -/
 theorem tensor_rank_mismatch :
-    gauge_field_rank_fracton ≠ gauge_field_rank_ym := by native_decide
+    gauge_field_rank_fracton ≠ gauge_field_rank_ym := by decide
 
 /-!
 ## Gauge Parameter Dimension (Obstruction 3)
@@ -143,18 +143,18 @@ def gauge_param_dim_fracton : Nat := 1      -- scalar α
 def gauge_param_dim_ym (N : Nat) : Nat := N * N - 1  -- dim of SU(N) Lie algebra
 
 /-- For SU(2): gauge parameter has 3 components. -/
-theorem ym_param_dim_su2 : gauge_param_dim_ym 2 = 3 := by native_decide
+theorem ym_param_dim_su2 : gauge_param_dim_ym 2 = 3 := by decide
 
 /-- For SU(3): gauge parameter has 8 components. -/
-theorem ym_param_dim_su3 : gauge_param_dim_ym 3 = 8 := by native_decide
+theorem ym_param_dim_su3 : gauge_param_dim_ym 3 = 8 := by decide
 
 /-- **Gauge parameter mismatch for SU(2):** fracton has 1, YM has 3. -/
 theorem gauge_param_mismatch_su2 :
-    gauge_param_dim_fracton ≠ gauge_param_dim_ym 2 := by native_decide
+    gauge_param_dim_fracton ≠ gauge_param_dim_ym 2 := by decide
 
 /-- **Gauge parameter mismatch for SU(3):** fracton has 1, YM has 8. -/
 theorem gauge_param_mismatch_su3 :
-    gauge_param_dim_fracton ≠ gauge_param_dim_ym 3 := by native_decide
+    gauge_param_dim_fracton ≠ gauge_param_dim_ym 3 := by decide
 
 /-!
 ## Summary: All Obstructions are Independent
@@ -169,7 +169,7 @@ theorem all_obstructions_hold :
     gauge_field_rank_fracton ≠ gauge_field_rank_ym ∧
     gauge_param_dim_fracton ≠ gauge_param_dim_ym 2 ∧
     gauge_param_dim_fracton ≠ gauge_param_dim_ym 3 := by
-  refine ⟨?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_⟩ <;> decide
 
 /-!
 ## Strengthening: Obstruction Independence
@@ -179,7 +179,7 @@ theorem all_obstructions_hold :
     to prevent YM compatibility, and they arise from different mathematical
     structures (derivatives, rank, parameters, algebra). -/
 -- PROVIDED SOLUTION: Each obstruction is a ≠ statement on different fields.
--- They can all be proved by native_decide individually.
+-- They can all be proved by decide individually.
 theorem obstructions_individually_sufficient :
     -- Derivative order alone prevents compatibility
     (gauge_derivative_order_fracton ≠ gauge_derivative_order_ym) ∧
@@ -187,7 +187,7 @@ theorem obstructions_individually_sufficient :
     (gauge_field_rank_fracton ≠ gauge_field_rank_ym) ∧
     -- Parameter dimension alone prevents compatibility (for SU(2))
     (gauge_param_dim_fracton ≠ gauge_param_dim_ym 2) := by
-  refine ⟨?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_⟩ <;> decide
 
 /-- **The parameter dimension gap grows with N for SU(N).**
     Fracton has 1 scalar parameter; SU(N) has N^2-1 parameters.
@@ -198,6 +198,6 @@ theorem obstructions_individually_sufficient :
 theorem param_gap_grows :
     gauge_param_dim_ym 3 > gauge_param_dim_ym 2 ∧
     gauge_param_dim_ym 4 > gauge_param_dim_ym 3 := by
-  constructor <;> native_decide
+  constructor <;> decide
 
 end SKEFTHawking.FractonNonAbelian

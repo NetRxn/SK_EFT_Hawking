@@ -53,7 +53,7 @@ always hold, so the default is unreachable and the lemma reduces
 identically to the safe-indexed variant.
 
 **Why this matters:** the `SKEFTHawking.PolyQuotQ.mulReduce` machinery
-uses `(Array.ofFn ... )[k.val]!` for performance (`native_decide`
+uses `(Array.ofFn ... )[k.val]!` for performance (`decide`
 compatibility — `getD`-based access would inhibit decidable evaluation).
 Without this lemma, `simp` can't unfold past the bang access, blocking
 abstract ring-axiom proofs.

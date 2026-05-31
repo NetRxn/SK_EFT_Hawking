@@ -47,7 +47,7 @@ def charge3450 : ChargeData 4 where
   qA := ![3, 4, -5, 0]
 
 /-- The 3450 model is anomaly-free in 1+1D. -/
-theorem charge3450_anomaly_free : charge3450.mixedAnomaly = 0 := by native_decide
+theorem charge3450_anomaly_free : charge3450.mixedAnomaly = 0 := by decide
 
 /-- The Pythagorean identity: 3² + 4² = 5². -/
 theorem pythagorean_345 : (3 : ℤ)^2 + 4^2 = 5^2 := by norm_num
@@ -56,7 +56,7 @@ theorem pythagorean_345 : (3 : ℤ)^2 + 4^2 = 5^2 := by norm_num
 theorem charge3450_balanced : (3 : ℤ)^2 + 4^2 = 5^2 + 0^2 := by norm_num
 
 /-- The 3450 is NOT anomaly-free in 3+1D (cubic condition). -/
-theorem charge3450_cubic_anomalous : charge3450.cubicAnomaly ≠ 0 := by native_decide
+theorem charge3450_cubic_anomalous : charge3450.cubicAnomaly ≠ 0 := by decide
 
 /-! ## 2. Depth-2 Circuit Structure
 
@@ -91,7 +91,7 @@ def ChargeData.isChiral {N : ℕ} (c : ChargeData N) : Prop :=
   ∃ α : Fin N, c.qA α ≠ 0
 
 /-- The 3450 model is chiral (has nonzero axial charges). -/
-theorem charge3450_is_chiral : charge3450.isChiral := ⟨0, by native_decide⟩
+theorem charge3450_is_chiral : charge3450.isChiral := ⟨0, by decide⟩
 
 /-- A vectorlike model (all qA = 0) is trivially anomaly-free. -/
 theorem vectorlike_anomaly_free_2 (N : ℕ) (qV : Fin N → ℤ) :
@@ -103,7 +103,7 @@ def charge11 : ChargeData 2 where
   qV := ![1, 1]
   qA := ![1, -1]
 
-theorem charge11_anomaly_free : charge11.mixedAnomaly = 0 := by native_decide
+theorem charge11_anomaly_free : charge11.mixedAnomaly = 0 := by decide
 
 /-- A single left-mover (charge q) has anomaly q².
     Nonzero q → anomalous → no disentangler possible. -/
@@ -138,7 +138,7 @@ def onn3450 : ONNCharge 4 where
   qR := ![0, 0, 5, 0]
 
 /-- The 3450 charge is lightlike (Lorentzian norm = 0). -/
-theorem onn3450_lightlike : onn3450.lorentzianNorm = 0 := by native_decide
+theorem onn3450_lightlike : onn3450.lorentzianNorm = 0 := by decide
 
 /-- Lightlike ↔ anomaly-free: the two formulations are equivalent. -/
 theorem lightlike_iff_anomaly_free (N : ℕ) (c : ONNCharge N) :
@@ -152,7 +152,7 @@ theorem lightlike_iff_anomaly_free (N : ℕ) (c : ONNCharge N) :
 
 TPFDisentangler module: algebraic skeleton of the TPF construction.
   - ChargeData with mixed anomaly and cubic anomaly
-  - charge3450 anomaly-free: PROVED (native_decide)
+  - charge3450 anomaly-free: PROVED (decide)
   - Pythagorean identity 3²+4²=5²: PROVED
   - 3450 NOT cubic-free (1+1D only): PROVED
   - Depth-2 circuit: even/odd partition of edges PROVED

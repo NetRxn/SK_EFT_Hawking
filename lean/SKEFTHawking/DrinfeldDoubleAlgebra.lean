@@ -93,7 +93,7 @@ through chain depth, exactly like the PolyQuotQ.mulReduce bug
 multiplication use `simp`/`rw`/`ring`, which rewrite symbolically and
 do not evaluate. The lazy closure never runs.
 
-**When this would bite:** If a future theorem uses `native_decide` on
+**When this would bite:** If a future theorem uses `decide` on
 a chained D(G) product (e.g., verifying D(S₃) modular data by explicit
 computation), the cascade would hit exactly as it did for QCyc15. To
 fix: materialize the output before wrapping in the struct. For
@@ -106,7 +106,7 @@ fix: materialize the output before wrapping in the struct. For
     fun p => (values.find? (fun kv => kv.1 = p)).elim 0 Prod.snd
 
 Defer the materialization refactor to the first wave that needs
-`native_decide` on D(G); do NOT change the lazy definition
+`decide` on D(G); do NOT change the lazy definition
 preemptively, as the abstract `simp [ddAlgMul]` proofs depend on
 the current symbolic form.
 -/

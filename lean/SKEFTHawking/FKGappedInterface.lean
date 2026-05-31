@@ -62,12 +62,12 @@ def W : Matrix Idx Idx ℤ := Matrix.of fun k i =>
 /-! ## 2. Minimal Polynomial Verification
 
 W³ + 12W² - 28W = 0 proves eigenvalues ∈ {-14, 0, +2} (roots of x³+12x²-28x).
-This is a single native_decide check on 16×16 integer matrix arithmetic. -/
+This is a single decide check on 16×16 integer matrix arithmetic. -/
 
 /-- The minimal polynomial of W: W³ + 12W² - 28W = 0.
     Roots: x(x-2)(x+14) = 0, so eigenvalues ∈ {-14, 0, +2}. -/
 theorem W_minimal_poly :
-    W * W * W + 12 • (W * W) - 28 • W = (0 : Matrix Idx Idx ℤ) := by native_decide
+    W * W * W + 12 • (W * W) - 28 • W = (0 : Matrix Idx Idx ℤ) := by decide
 
 /-! ## 3. Trace Conditions (determine multiplicities uniquely)
 
@@ -77,11 +77,11 @@ Tr(W) = 0 and Tr(W²) = 224. Combined with the minimal polynomial:
   m₁ + m₂ + m₃ = 16           (dimension)
 Solving: m₁ = 1, m₂ = 8, m₃ = 7. -/
 
-theorem W_trace : Matrix.trace W = 0 := by native_decide
+theorem W_trace : Matrix.trace W = 0 := by decide
 
-theorem W_frobenius : Matrix.trace (W * W) = 224 := by native_decide
+theorem W_frobenius : Matrix.trace (W * W) = 224 := by decide
 
-theorem W_symmetric : W.transpose = W := by native_decide
+theorem W_symmetric : W.transpose = W := by decide
 
 /-- Multiplicity system: unique solution m₁=1, m₂=8, m₃=7. -/
 theorem multiplicity_system :
@@ -100,7 +100,7 @@ Verified: W · v = -14 · v. -/
 def gs_vec : Fin 16 → ℤ := fun k =>
   match k.val with | 0 => 1 | 15 => -1 | _ => 0
 
-theorem eigenvalue_ground : W.mulVec gs_vec = (-14 : ℤ) • gs_vec := by native_decide
+theorem eigenvalue_ground : W.mulVec gs_vec = (-14 : ℤ) • gs_vec := by decide
 
 theorem gs_vec_nonzero : gs_vec ≠ 0 := by
   intro h; have := congr_fun h ⟨0, by omega⟩; simp [gs_vec] at this
@@ -118,12 +118,12 @@ def parity : Matrix Idx Idx ℤ := Matrix.of fun k i =>
   | 8, 8 => -1 | 11, 11 => -1 | 13, 13 => -1 | 14, 14 => -1
   | _, _ => 0
 
-theorem W_commutes_parity : W * parity = parity * W := by native_decide
+theorem W_commutes_parity : W * parity = parity * W := by decide
 
 /-- Ground state has even fermion parity: (-1)^F |GS⟩ = +|GS⟩. -/
 theorem gs_even_parity :
     (fun k => parity k 0 * gs_vec 0 + parity k ⟨15, by omega⟩ * gs_vec ⟨15, by omega⟩) =
-    gs_vec := by native_decide
+    gs_vec := by decide
 
 /-! ## 6. Spectral Gap -/
 

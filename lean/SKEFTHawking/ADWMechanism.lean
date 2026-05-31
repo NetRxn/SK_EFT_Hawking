@@ -53,7 +53,7 @@ namespace SKEFTHawking.ADWMechanism
 def lorentz_dim (d : ℕ) : ℕ := d * (d - 1) / 2
 
 /-- In 4 spacetime dimensions, SO(3,1) has dimension 6. -/
-theorem lorentz_dim_4 : lorentz_dim 4 = 6 := by native_decide
+theorem lorentz_dim_4 : lorentz_dim 4 = 6 := by decide
 
 /-- The Lorentz group dimension is always non-negative.
     **Audit note:** This is trivially true for any `ℕ`-valued function
@@ -71,7 +71,7 @@ The symmetry breaking L_c × L_s → L_J produces broken generators.
 def broken_generators (d : ℕ) : ℕ := lorentz_dim d
 
 /-- In 4D, there are 6 broken generators. -/
-theorem broken_generators_4d : broken_generators 4 = 6 := by native_decide
+theorem broken_generators_4d : broken_generators 4 = 6 := by decide
 
 /-- The full symmetry group has twice the Lorentz dimension. -/
 def full_symmetry_dim (d : ℕ) : ℕ := 2 * lorentz_dim d
@@ -90,13 +90,13 @@ theorem broken_eq_full_minus_residual (d : ℕ) :
 def tetrad_components (d : ℕ) : ℕ := d * d
 
 /-- In 4D, the tetrad has 16 components. -/
-theorem tetrad_components_4d : tetrad_components 4 = 16 := by native_decide
+theorem tetrad_components_4d : tetrad_components 4 = 16 := by decide
 
 /-- Number of physical DOF in the tetrad after removing local Lorentz gauge. -/
 def tetrad_physical_dof (d : ℕ) : ℕ := tetrad_components d - lorentz_dim d
 
 /-- In 4D: 16 - 6 = 10 physical tetrad DOF. -/
-theorem tetrad_physical_dof_4d : tetrad_physical_dof 4 = 10 := by native_decide
+theorem tetrad_physical_dof_4d : tetrad_physical_dof 4 = 10 := by decide
 
 /-!
 ## Graviton Polarization Count
@@ -108,13 +108,13 @@ theorem tetrad_physical_dof_4d : tetrad_physical_dof 4 = 10 := by native_decide
 def graviton_polarizations (d : ℕ) : ℕ := d * (d - 3) / 2
 
 /-- In 4D: 2 graviton polarizations. -/
-theorem graviton_pol_4d : graviton_polarizations 4 = 2 := by native_decide
+theorem graviton_pol_4d : graviton_polarizations 4 = 2 := by decide
 
 /-- In 3D: 0 graviton polarizations (no gravitational waves). -/
-theorem graviton_pol_3d : graviton_polarizations 3 = 0 := by native_decide
+theorem graviton_pol_3d : graviton_polarizations 3 = 0 := by decide
 
 /-- In 5D: 5 graviton polarizations. -/
-theorem graviton_pol_5d : graviton_polarizations 5 = 5 := by native_decide
+theorem graviton_pol_5d : graviton_polarizations 5 = 5 := by decide
 
 /-!
 ## Vergeles Mode Counting
@@ -134,21 +134,21 @@ def massive_modes (d : ℕ) : ℕ :=
   tetrad_components d - absorbed_modes d - diffeo_gauge_modes d - graviton_polarizations d
 
 /-- In 4D: 4 massive modes. -/
-theorem massive_modes_4d : massive_modes 4 = 4 := by native_decide
+theorem massive_modes_4d : massive_modes 4 = 4 := by decide
 
 /-- **Vergeles mode counting theorem (4D).**
     Total modes = absorbed + diffeo gauge + graviton + massive.
     16 = 6 + 4 + 2 + 4. -/
 theorem vergeles_mode_count :
     absorbed_modes 4 + diffeo_gauge_modes 4 + graviton_polarizations 4 + massive_modes 4
-    = tetrad_components 4 := by native_decide
+    = tetrad_components 4 := by decide
 
 /-- Number of physical (propagating) modes = graviton + massive. -/
 def physical_modes (d : ℕ) : ℕ :=
   tetrad_components d - absorbed_modes d - diffeo_gauge_modes d
 
 /-- In 4D: 6 physical modes. -/
-theorem physical_modes_4d : physical_modes 4 = 6 := by native_decide
+theorem physical_modes_4d : physical_modes 4 = 6 := by decide
 
 /-!
 ## Critical Coupling and Gap Equation
@@ -262,7 +262,7 @@ theorem structural_obstacle_count :
                   StructuralObstacle.grassmann_bosonic,
                   StructuralObstacle.nielsen_ninomiya,
                   StructuralObstacle.cosmological_constant]) = 4 := by
-  native_decide
+  decide
 
 /-!
 ## Nielsen-Ninomiya Doubling
@@ -272,13 +272,13 @@ theorem structural_obstacle_count :
 def weyl_species (d : ℕ) : ℕ := 2 ^ d
 
 /-- In 3 spatial dimensions: 8 Weyl species. -/
-theorem weyl_species_3d : weyl_species 3 = 8 := by native_decide
+theorem weyl_species_3d : weyl_species 3 = 8 := by decide
 
 /-- Number of Dirac fermion species: 2^(d-1). -/
 def dirac_species (d : ℕ) : ℕ := 2 ^ (d - 1)
 
 /-- In 3 spatial dimensions: 4 Dirac fermions. -/
-theorem dirac_species_3d : dirac_species 3 = 4 := by native_decide
+theorem dirac_species_3d : dirac_species 3 = 4 := by decide
 
 /-- Weyl = 2 × Dirac for d ≥ 1. -/
 theorem weyl_eq_double_dirac (d : ℕ) (hd : 1 ≤ d) :

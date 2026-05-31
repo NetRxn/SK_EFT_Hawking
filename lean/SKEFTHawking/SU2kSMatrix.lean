@@ -181,8 +181,8 @@ def unitarityK5 : Matrix (Fin 6) (Fin 6) ℤ := Matrix.of fun i j =>
   charSumVal (↑i.val - ↑j.val) 7 - charSumVal (↑i.val + ↑j.val + 2) 7
 
 /-- SU(2)₅ S-matrix unitarity: 7·SS^T = 7·I (over ℤ).
-    Verified by native_decide on 36 integer entries. -/
-theorem su2k5_unitarity : unitarityK5 = 7 • (1 : Matrix (Fin 6) (Fin 6) ℤ) := by native_decide
+    Verified by decide on 36 integer entries. -/
+theorem su2k5_unitarity : unitarityK5 = 7 • (1 : Matrix (Fin 6) (Fin 6) ℤ) := by decide
 
 end Level5
 
