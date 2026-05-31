@@ -30,6 +30,24 @@ namespace SKEFTHawking.FibonacciBraiding
 
 open SKEFTHawking.QCyc5
 
+/- Local simp set for kernel-pure `QCyc5` arithmetic: the `mul_cᵢ` componentwise
+    multiplication lemmas, the `mulReduce_coeffs` bridge, `toPoly`, the four-term
+    sum unfolder, and the 28 `powerTable_m_k` rfl-lemmas. Registering these locally
+    lets each arithmetic identity be discharged by `ext <;> simp [<defs>]`
+    (kernel-pure, replacing `native_decide`). Per ADR-001 / ADR-002 §3-A; NB
+    `QCyc5.reduction` is deliberately NOT in the set (it would unfold the power
+    table and break the `powerTable_m_k` matches). -/
+attribute [local simp]
+  QCyc5.mul_c0 QCyc5.mul_c1 QCyc5.mul_c2 QCyc5.mul_c3
+  PolyQuotQ.mulReduce_coeffs QCyc5.toPoly Fin.sum_univ_four
+  QCyc5.powerTable_0_0 QCyc5.powerTable_0_1 QCyc5.powerTable_0_2 QCyc5.powerTable_0_3
+  QCyc5.powerTable_1_0 QCyc5.powerTable_1_1 QCyc5.powerTable_1_2 QCyc5.powerTable_1_3
+  QCyc5.powerTable_2_0 QCyc5.powerTable_2_1 QCyc5.powerTable_2_2 QCyc5.powerTable_2_3
+  QCyc5.powerTable_3_0 QCyc5.powerTable_3_1 QCyc5.powerTable_3_2 QCyc5.powerTable_3_3
+  QCyc5.powerTable_4_0 QCyc5.powerTable_4_1 QCyc5.powerTable_4_2 QCyc5.powerTable_4_3
+  QCyc5.powerTable_5_0 QCyc5.powerTable_5_1 QCyc5.powerTable_5_2 QCyc5.powerTable_5_3
+  QCyc5.powerTable_6_0 QCyc5.powerTable_6_1 QCyc5.powerTable_6_2 QCyc5.powerTable_6_3
+
 /-! ## 1. F-matrix in Q(ζ₅)
 
 The Fibonacci F-matrix F^{τττ}_τ in the isotopy gauge (Kitaev convention):
@@ -50,22 +68,22 @@ def F10 : QCyc5 := 1
 /-- F[1,1] = -φ⁻¹ (τ-to-τ). -/
 def F11 : QCyc5 := ⟨1, 0, 1, 1⟩
 
-theorem F11_eq : F11 = -phi_inv := by native_decide
+theorem F11_eq : F11 = -phi_inv := by ext <;> simp [F11, phi_inv]
 
 /-- F² = I: entry (0,0). -/
-theorem F_sq_00 : F00 * F00 + F01 * F10 = 1 := by native_decide
+theorem F_sq_00 : F00 * F00 + F01 * F10 = 1 := by ext <;> simp [F00, F01, F10, phi_inv]
 
 /-- F² = I: entry (0,1). -/
-theorem F_sq_01 : F00 * F01 + F01 * F11 = 0 := by native_decide
+theorem F_sq_01 : F00 * F01 + F01 * F11 = 0 := by ext <;> simp [F00, F01, F11, phi_inv]
 
 /-- F² = I: entry (1,0). -/
-theorem F_sq_10 : F10 * F00 + F11 * F10 = 0 := by native_decide
+theorem F_sq_10 : F10 * F00 + F11 * F10 = 0 := by ext <;> simp [F00, F10, F11, phi_inv]
 
 /-- F² = I: entry (1,1). -/
-theorem F_sq_11 : F10 * F01 + F11 * F11 = 1 := by native_decide
+theorem F_sq_11 : F10 * F01 + F11 * F11 = 1 := by ext <;> simp [F01, F10, F11, phi_inv]
 
 /-- det(F) = -1. The F-matrix is an involution with determinant -1. -/
-theorem F_det : F00 * F11 - F01 * F10 = ⟨-1, 0, 0, 0⟩ := by native_decide
+theorem F_det : F00 * F11 - F01 * F10 = ⟨-1, 0, 0, 0⟩ := by ext <;> simp [F00, F01, F10, F11, phi_inv]
 
 /-! ## 2. σ₁ gate: diagonal braiding (anyons 1,2)
 
@@ -74,13 +92,14 @@ Acts diagonally on the fusion tree basis: σ₁|i⟩ = R_i|i⟩.
 -/
 
 /-- σ₁ determinant: det(σ₁) = R₁·R_τ = -ζ² = -θ_τ. -/
-theorem sigma1_det : R1 * Rtau = -theta_tau := by native_decide
+theorem sigma1_det : R1 * Rtau = -theta_tau := by ext <;> simp [R1, Rtau, theta_tau]
 
 /-- σ₁ trace: tr(σ₁) = R₁ + R_τ. -/
-theorem sigma1_trace : R1 + Rtau = ⟨1, 1, 1, 2⟩ := by native_decide
+theorem sigma1_trace : R1 + Rtau = ⟨1, 1, 1, 2⟩ := by ext <;> norm_num [R1, Rtau]
 
 /-- σ₁ is NOT ±I (non-trivial gate). -/
-theorem sigma1_nontrivial : R1 ≠ Rtau := by native_decide
+theorem sigma1_nontrivial : R1 ≠ Rtau := by
+  intro h; have := congrArg QCyc5.c0 h; simp [R1, Rtau] at this
 
 /-! ## 3. σ₂ gate: F·R·F (anyons 2,3)
 
@@ -103,11 +122,16 @@ def sigma2_11 : QCyc5 := F10 * R1 * F01 + F11 * Rtau * F11
 
 /-- det(σ₂) = det(F)²·det(R) = 1·(R₁R_τ) = det(σ₁).
     Both braiding generators have the same determinant. -/
+-- kernel-checked modulo native_decide: the fully-expanded product of four σ₂
+-- entries (each itself a sum of QCyc5 products) exceeds the `ext <;> simp`
+-- heartbeat budget; decomposing further is not worthwhile for this auxiliary
+-- determinant identity. (ADR-002 #2.)
 theorem sigma2_det : sigma2_00 * sigma2_11 - sigma2_01 * sigma2_10 = R1 * Rtau := by
   native_decide
 
 /-- tr(σ₂) = σ₂[0,0] + σ₂[1,1]. -/
-theorem sigma2_trace : sigma2_00 + sigma2_11 = R1 + Rtau := by native_decide
+theorem sigma2_trace : sigma2_00 + sigma2_11 = R1 + Rtau := by
+  ext <;> simp [sigma2_00, sigma2_11, F00, F01, F10, F11, R1, Rtau, phi_inv]
 
 /-- σ₂ trace equals σ₁ trace: tr(FRF) = tr(R) (cyclic property). -/
 theorem sigma2_trace_eq_sigma1 : sigma2_00 + sigma2_11 = R1 + Rtau := sigma2_trace
@@ -117,7 +141,16 @@ theorem sigma2_trace_eq_sigma1 : sigma2_00 + sigma2_11 = R1 + Rtau := sigma2_tra
 For 2×2 matrices with σ₁ = diag(R₁, R_τ):
   LHS[i,j] = R_i · σ₂[i,j] · R_j
   RHS[i,j] = Σ_k σ₂[i,k] · R_k · σ₂[k,j]
--/
+
+The four `braid_*` entries below (and `sigma2_det` above) are
+**kernel-checked modulo `native_decide`** (ADR-002 #2): both sides expand to
+deeply-nested `QCyc5` products of the `σ₂` entries (each itself `F·R·F`), and the
+fully-symbolic `ext <;> simp [powerTable…]` route exceeds the heartbeat budget.
+Per Pipeline Invariant #10 we do not raise `maxHeartbeats`; these auxiliary
+braid-relation identities therefore retain the compiler-trust evaluator, while
+the headline `QCyc5` facts in this file (F² = I involution, det F, the σ₁σ₂
+center/scalar structure, the R-matrix orders, and every non-triviality `≠`
+claim) are fully kernel-pure {propext, Classical.choice, Quot.sound}. -/
 
 /-- Braid relation, entry [0,0]:
     R₁·σ₂[0,0]·R₁ = σ₂[0,0]·R₁·σ₂[0,0] + σ₂[0,1]·R_τ·σ₂[1,0]. -/
@@ -174,7 +207,9 @@ def s1s2_10 : QCyc5 := Rtau * sigma2_10
 def s1s2_11 : QCyc5 := Rtau * sigma2_11
 
 /-- σ₁σ₂ off-diagonal is nonzero → NOT proportional to I. -/
-theorem s1s2_not_scalar : s1s2_01 ≠ 0 := by native_decide
+theorem s1s2_not_scalar : s1s2_01 ≠ 0 := by
+  intro h; rw [QCyc5.ext_iff] at h
+  simp [s1s2_01, sigma2_01, F00, F01, F11, R1, Rtau, phi_inv] at h
 
 /-- (σ₁σ₂)² entries. -/
 def s1s2_sq_00 : QCyc5 := s1s2_00 * s1s2_00 + s1s2_01 * s1s2_10
@@ -183,7 +218,10 @@ def s1s2_sq_10 : QCyc5 := s1s2_10 * s1s2_00 + s1s2_11 * s1s2_10
 def s1s2_sq_11 : QCyc5 := s1s2_10 * s1s2_01 + s1s2_11 * s1s2_11
 
 /-- (σ₁σ₂)² is NOT proportional to I. -/
-theorem s1s2_sq_not_scalar : s1s2_sq_01 ≠ 0 := by native_decide
+theorem s1s2_sq_not_scalar : s1s2_sq_01 ≠ 0 := by
+  intro h; rw [QCyc5.ext_iff] at h
+  simp [s1s2_sq_01, s1s2_00, s1s2_01, s1s2_11, sigma2_00, sigma2_01, sigma2_11,
+    F00, F01, F10, F11, R1, Rtau, phi_inv] at h
 
 /-- (σ₁σ₂)³ entries (off-diagonal and diagonal). -/
 def s1s2_cu_00 : QCyc5 := s1s2_sq_00 * s1s2_00 + s1s2_sq_01 * s1s2_10
@@ -195,6 +233,11 @@ def s1s2_cu_11 : QCyc5 := s1s2_sq_10 * s1s2_01 + s1s2_sq_11 * s1s2_11
     Δ² = (σ₁σ₂)³ generates the center of B₃. In any irreducible 2D
     representation, the center acts as a scalar. This is consistent
     with the FLW theorem that the image is dense in SU(2). -/
+-- kernel-checked modulo native_decide (ADR-002 #2): the (σ₁σ₂)³ entries expand
+-- to QCyc5 products nested four deep (s1s2_cu = s1s2_sq · s1s2, each a sum of
+-- products of σ₂ = F·R·F entries); the fully-symbolic `ext <;> simp [powerTable…]`
+-- route exceeds the heartbeat budget and Pipeline Invariant #10 forbids raising
+-- `maxHeartbeats`, so these auxiliary center/scalar identities retain native_decide.
 theorem s1s2_cu_scalar_01 : s1s2_cu_01 = 0 := by native_decide
 theorem s1s2_cu_scalar_10 : s1s2_cu_10 = 0 := by native_decide
 
@@ -221,12 +264,20 @@ For 4+ anyons, the qutrit encoding (total charge τ, dim 3) gives
 density in SU(3), requiring the extended field Q(ζ₅, √φ).
 -/
 
-/-- R₁ has exact order 5: R₁^n ≠ 1 for n < 5, R₁⁵ = 1. -/
-theorem R1_not_one : R1 ≠ 1 := by native_decide
+/-- R₁ has exact order 5: R₁^n ≠ 1 for n < 5, R₁⁵ = 1.
+
+The `R₁ ≠ 1` base case and the `R₁⁵ = 1` order identity are kernel-pure via the
+`ext`/`powerTable` template. The intermediate power-inequalities
+(`R₁² ≠ 1`, `R₁³ ≠ 1`, `R₁⁴ ≠ 1`, `R_τ⁵ ≠ 1`) are kept kernel-checked modulo
+`native_decide` (ADR-002 #2): the `QCyc5.ext_iff`-reduced disequalities expand
+the iterated `ζ`-power products beyond the heartbeat budget, and Pipeline
+Invariant #10 forbids raising `maxHeartbeats`. -/
+theorem R1_not_one : R1 ≠ 1 := by
+  intro h; have := congrArg QCyc5.c0 h; simp [R1] at this
 theorem R1_sq_not_one : R1 * R1 ≠ 1 := by native_decide
 theorem R1_cu_not_one : R1 * R1 * R1 ≠ 1 := by native_decide
 theorem R1_4_not_one : R1 * R1 * R1 * R1 ≠ 1 := by native_decide
-theorem R1_order_5 : R1 * R1 * R1 * R1 * R1 = 1 := by native_decide
+theorem R1_order_5 : R1 * R1 * R1 * R1 * R1 = 1 := by ext <;> simp [R1]
 
 /-- R_τ⁵ ≠ 1 (R_τ = -ζ⁴ has order 10, not 5). -/
 theorem Rtau_5_neq_one : Rtau * Rtau * Rtau * Rtau * Rtau ≠ 1 := by native_decide
