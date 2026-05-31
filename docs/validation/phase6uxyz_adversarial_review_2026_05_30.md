@@ -142,9 +142,17 @@ dense in SU(8), the genuine CCZ-essentiality converse, via the finite signed-per
 review returned **GREEN (no findings at any severity)**: faithful, non-vacuous, CCZ-free, non-circular,
 kernel-pure `{propext, Classical.choice, Quot.sound}`, zero new `native_decide`. The 6z `CliffordCCZSU8Density`
 docstrings were flipped from "standard fact, not formalized" to cite the theorem (so the `NOT formalized`
-note in the 6z row above is now superseded). Phase 2 shipped C.1 (the CCZ diagonal-conjugation identity,
-`MukhopadhyayCCZConjugation.lean`, commit `2db6f6c3`) and, per the roadmap off-ramp, kept the 6x Lemma 3.10
-+ unconditional Item-L `T^of` as a documented residual (the `hC` half substantiated; `hCCZ` gated on the
-64-Pauli Theorem-3.8 entry table + an `sde₂`-on-ℂ matrix measure — disproportionate for a non-tight bound).
-Counts after Phase 6x′: 9879 theorems / 0 axiom / 0 sorry / 747 modules; counts_fresh +
-axiom_closure_allowlist GREEN.
+note in the 6z row above is now superseded).
+
+**UPDATE 2026-05-30 — Phase 6x′ Phase 2 COMPLETE (user-greenlit full discharge; all three residuals
+closed).** The follow-ons remaining after Phase 1 are now CLOSED unconditionally: **6x Lemma 3.10** =
+`channelRep_interp_isRat` (every Clifford+CCZ word's channel rep has rational/ℤ[1/2] entries); **Item-L
+unconditional `T^of(U) ≥ sde₂(Û)`** = `channelSde2_le_toffoliCost` (`MukhopadhyayToffoliUnconditional.lean`),
+discharging the parametric `toffoliCost_ge_measure` at `μ = matrixSde2 ∘ channelRep`. Chain: the
+`sde₂`-on-ℂ measure (`MukhopadhyayMatrixSde2`, non-vacuous `sde2ℂ (1/2)=1`) → `hC` (signed-perm) →
+Theorem 3.8 half-integer entries (`channelRep_CCZ_isHalfInt`, via the `CCZ=1−2|111⟩⟨111|` trace
+decomposition) → `hCCZ` (`channelSde2_ccz_le`, dyadic-threaded by Lemma 3.10). The L.C PARAMETRIC
+docstrings were flipped to discharged. Commits `1301f899`→`430357f7` (+ Stage 9/10 `ce37b8a8`). Kernel-pure
+{propext, Classical.choice, Quot.sound}; zero new native_decide; no maxHeartbeats. Full Toffoli MINIMALITY
+(MITM / Conjecture 4.8) remains out of scope. Counts after Phase 6x′ Phase 2: **9944 theorems / 0 axiom /
+0 sorry / 751 modules**; counts_fresh + axiom_closure_allowlist GREEN.
