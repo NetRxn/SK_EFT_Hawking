@@ -254,10 +254,10 @@ theorem transport_coefficient_count (N : ℕ) :
     PROVIDED SOLUTION
     This is a concrete finite computation. The set Finset.Icc (0,0) (2,2) has 9
     elements; filtering by sum=2 and even first component leaves {(0,2),(2,0)}.
-    Use native_decide or decide. -/
+    Use decide or decide. -/
 theorem firstOrder_count :
     Finset.card (Finset.filter (fun p : ℕ × ℕ => p.1 + p.2 = 2 ∧ p.1 % 2 = 0)
-      (Finset.Icc (0, 0) (2, 2))) = 2 := by native_decide
+      (Finset.Icc (0, 0) (2, 2))) = 2 := by decide
   -- Proved by Aristotle (run d61290fd, 2026-03-24)
 
 /-- At order 2 (second dissipative correction), there are exactly 2 new
@@ -266,10 +266,10 @@ theorem firstOrder_count :
     PROVIDED SOLUTION
     Concrete finite computation. Finset.Icc (0,0) (3,3) has 16 elements;
     filtering by sum=3 and even first component leaves {(0,3),(2,1)}.
-    Use native_decide or decide. -/
+    Use decide or decide. -/
 theorem secondOrder_count :
     Finset.card (Finset.filter (fun p : ℕ × ℕ => p.1 + p.2 = 3 ∧ p.1 % 2 = 0)
-      (Finset.Icc (0, 0) (3, 3))) = 2 := by native_decide
+      (Finset.Icc (0, 0) (3, 3))) = 2 := by decide
   -- Proved by Aristotle (run d61290fd, 2026-03-24)
 
 /-- With spatial parity (requiring BOTH m and n even), there are ZERO new
@@ -278,11 +278,11 @@ theorem secondOrder_count :
 
     PROVIDED SOLUTION
     Concrete finite computation. No pair (m,n) with m+n=3 can have both m and n
-    even (since 3 is odd). The filter is empty. Use native_decide or decide. -/
+    even (since 3 is odd). The filter is empty. Use decide or decide. -/
 theorem secondOrder_count_with_parity :
     Finset.card (Finset.filter (fun p : ℕ × ℕ =>
       p.1 + p.2 = 3 ∧ p.1 % 2 = 0 ∧ p.2 % 2 = 0)
-      (Finset.Icc (0, 0) (3, 3))) = 0 := by native_decide
+      (Finset.Icc (0, 0) (3, 3))) = 0 := by decide
   -- Proved by Aristotle (run d61290fd, 2026-03-24)
 
 /-!
@@ -934,7 +934,7 @@ And at third order, how does positivity constrain the new parameters?
     positivity proof). -/
 theorem thirdOrder_count :
     Finset.card (Finset.filter (fun p : ℕ × ℕ => p.1 + p.2 = 3 + 1 ∧ p.1 % 2 = 0)
-      (Finset.Icc (0, 0) (3 + 1, 3 + 1))) = (3 + 1) / 2 + 1 := by native_decide
+      (Finset.Icc (0, 0) (3 + 1, 3 + 1))) = (3 + 1) / 2 + 1 := by decide
 
 /-- Verify the count formula gives the expected numeric value: count(3) = 3.
     (3+1)/2 + 1 = 2 + 1 = 3. -/

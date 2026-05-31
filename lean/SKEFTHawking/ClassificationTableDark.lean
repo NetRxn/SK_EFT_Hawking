@@ -159,7 +159,7 @@ theorem num_mechanisms_six :
     (List.length [DarkMechanism.qtheoryFourForm, DarkMechanism.qtheoryTwoBrane,
                   DarkMechanism.qtheoryFermionicCrystal, DarkMechanism.qtheoryUnimodular,
                   DarkMechanism.vestigialGravity, DarkMechanism.secondSoundGraviton]) = 6 :=
-  by native_decide
+  by decide
 
 /-- **CTD2 — All four q-theory realizations have Gibbs-Duhem locked.**
 
@@ -194,7 +194,7 @@ theorem no_mechanism_fully_viable :
     isFullyViable DarkMechanism.qtheoryUnimodular = false ∧
     isFullyViable DarkMechanism.vestigialGravity = false ∧
     isFullyViable DarkMechanism.secondSoundGraviton = false := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> native_decide
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;> decide
 
 /-- **CTD5 — All DESI columns are `no`.**
 

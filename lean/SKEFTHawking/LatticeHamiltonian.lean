@@ -118,14 +118,14 @@ inductive GSImplicitCondition where
   deriving DecidableEq, Repr, Fintype
 
 /-- There are exactly 6 explicit conditions. -/
-theorem gs_explicit_count : Fintype.card GSExplicitCondition = 6 := by native_decide
+theorem gs_explicit_count : Fintype.card GSExplicitCondition = 6 := by decide
 
 /-- There are exactly 3 implicit conditions. -/
-theorem gs_implicit_count : Fintype.card GSImplicitCondition = 3 := by native_decide
+theorem gs_implicit_count : Fintype.card GSImplicitCondition = 3 := by decide
 
 /-- **Total GS conditions: 6 + 3 = 9.** -/
 theorem gs_total_conditions :
-    Fintype.card GSExplicitCondition + Fintype.card GSImplicitCondition = 9 := by native_decide
+    Fintype.card GSExplicitCondition + Fintype.card GSImplicitCondition = 9 := by decide
 
 /-!
 ## TPF Violations
@@ -141,7 +141,7 @@ inductive TPFViolation where
   deriving DecidableEq, Repr, Fintype
 
 /-- TPF violates exactly 3 GS conditions. -/
-theorem tpf_violation_count : Fintype.card TPFViolation = 3 := by native_decide
+theorem tpf_violation_count : Fintype.card TPFViolation = 3 := by decide
 
 /-- **The no-go is a conjunction: ALL 9 conditions are required.**
     Violating k ≥ 1 condition out of 9 leaves at most 8 holding.
@@ -152,7 +152,7 @@ theorem gs_nogo_structure (n_violated n_total : ℕ) (h_total : n_total = 9)
 
 /-- **TPF violates 3 conditions, but needs only 1 to escape the no-go.** -/
 theorem tpf_evasion_sufficient :
-    Fintype.card TPFViolation ≥ 1 := by native_decide
+    Fintype.card TPFViolation ≥ 1 := by decide
 
 /-- **Evasion margin: TPF violates 3, needs 1 → margin of 2.**
 
@@ -160,12 +160,12 @@ theorem tpf_evasion_sufficient :
     disambiguate from `ChiralityWall.tpf_evades_at_least_two`, which proves
     a related-but-distinct statement about the 4-condition formulation. -/
 theorem tpf_violation_surplus :
-    Fintype.card TPFViolation - 1 = 2 := by native_decide
+    Fintype.card TPFViolation - 1 = 2 := by decide
 
 /-- **Applicable conditions: 9 - 3 = 6 conditions still hold for TPF.** -/
 theorem tpf_applicable_count :
     Fintype.card GSExplicitCondition + Fintype.card GSImplicitCondition -
-    Fintype.card TPFViolation = 6 := by native_decide
+    Fintype.card TPFViolation = 6 := by decide
 
 /-!
 ## Lattice Hamiltonian Properties

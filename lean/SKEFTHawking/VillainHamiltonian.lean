@@ -79,13 +79,13 @@ def k3450 : Matrix (Fin 4) (Fin 4) ℤ :=
      0, 0, 0, -1]
 
 /-- K² = I for this diagonal K-matrix (K is its own inverse). -/
-theorem k3450_sq_eq_one : k3450 * k3450 = 1 := by native_decide
+theorem k3450_sq_eq_one : k3450 * k3450 = 1 := by decide
 
 /-- |det K| = 1 (unimodular). -/
-theorem k3450_det_one : k3450.det = 1 := by native_decide
+theorem k3450_det_one : k3450.det = 1 := by decide
 
 /-- sig(K) = 0 (vanishing signature = zero chiral central charge). -/
-theorem k3450_trace_zero : Matrix.trace k3450 = 0 := by native_decide
+theorem k3450_trace_zero : Matrix.trace k3450 = 0 := by decide
 
 /-- First null vector: Λ₁ = (3, 4, 5, 0) — the charge vector itself. -/
 def nullVec1 : Fin 4 → ℤ := ![3, 4, 5, 0]
@@ -95,19 +95,19 @@ def nullVec2 : Fin 4 → ℤ := ![4, -3, 0, 5]
 
 /-- Λ₁ is a null vector: Λ₁ᵀ K Λ₁ = 3²+4²-5²-0² = 0. -/
 theorem nullVec1_is_null :
-    (∑ i : Fin 4, nullVec1 i * (k3450.mulVec nullVec1) i) = 0 := by native_decide
+    (∑ i : Fin 4, nullVec1 i * (k3450.mulVec nullVec1) i) = 0 := by decide
 
 /-- Λ₂ is a null vector: Λ₂ᵀ K Λ₂ = 4²+9-0-25 = 0. -/
 theorem nullVec2_is_null :
-    (∑ i : Fin 4, nullVec2 i * (k3450.mulVec nullVec2) i) = 0 := by native_decide
+    (∑ i : Fin 4, nullVec2 i * (k3450.mulVec nullVec2) i) = 0 := by decide
 
 /-- Λ₁ and Λ₂ are mutually local: Λ₁ᵀ K Λ₂ = 12-12-0-0 = 0. -/
 theorem null_vectors_mutually_local :
-    (∑ i : Fin 4, nullVec1 i * (k3450.mulVec nullVec2) i) = 0 := by native_decide
+    (∑ i : Fin 4, nullVec1 i * (k3450.mulVec nullVec2) i) = 0 := by decide
 
 /-- Λ₁ and Λ₂ are linearly independent. -/
 theorem null_vectors_independent :
-    nullVec1 ≠ nullVec2 := by native_decide
+    nullVec1 ≠ nullVec2 := by decide
 
 /-- **Gappability theorem:** The 3450 model admits null vectors satisfying
     all conditions for mirror-sector gapping:
@@ -130,7 +130,7 @@ theorem gauged_species_decomposition : (4 : ℕ) = 2 + 2 := by norm_num
     Specifically, charges (3,4,5,0) have exactly 3 nonzero entries —
     the zero charge corresponds to the decoupled species. -/
 theorem charge_nonzero_count :
-    (List.filter (· ≠ 0) [3, 4, 5, (0 : ℤ)]).length = 3 := by native_decide
+    (List.filter (· ≠ 0) [3, 4, 5, (0 : ℤ)]).length = 3 := by decide
 
 /-! ## 5. Symmetry Disentangler Properties -/
 

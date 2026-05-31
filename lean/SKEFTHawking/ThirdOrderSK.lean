@@ -238,25 +238,25 @@ theorem parity_breaking_at_even_order (N : ℕ) (hN : N % 2 = 0) :
 theorem thirdOrder_parity_count :
     Finset.card (Finset.filter (fun p : ℕ × ℕ =>
       p.1 + p.2 = 3 + 1 ∧ p.1 % 2 = 0 ∧ p.2 % 2 = 0)
-      (Finset.Icc (0, 0) (3 + 1, 3 + 1))) = 3 := by native_decide
+      (Finset.Icc (0, 0) (3 + 1, 3 + 1))) = 3 := by decide
 
 /-- Contrast: at N=2, count with parity = 0. -/
 theorem secondOrder_parity_count_zero :
     Finset.card (Finset.filter (fun p : ℕ × ℕ =>
       p.1 + p.2 = 2 + 1 ∧ p.1 % 2 = 0 ∧ p.2 % 2 = 0)
-      (Finset.Icc (0, 0) (2 + 1, 2 + 1))) = 0 := by native_decide
+      (Finset.Icc (0, 0) (2 + 1, 2 + 1))) = 0 := by decide
 
 /-- Contrast: at N=4, count with parity = 0 (even order, parity-breaking). -/
 theorem fourthOrder_parity_count_zero :
     Finset.card (Finset.filter (fun p : ℕ × ℕ =>
       p.1 + p.2 = 4 + 1 ∧ p.1 % 2 = 0 ∧ p.2 % 2 = 0)
-      (Finset.Icc (0, 0) (4 + 1, 4 + 1))) = 0 := by native_decide
+      (Finset.Icc (0, 0) (4 + 1, 4 + 1))) = 0 := by decide
 
 /-- At N=5 (odd), all monomials are again parity-preserving: count = 4. -/
 theorem fifthOrder_parity_count :
     Finset.card (Finset.filter (fun p : ℕ × ℕ =>
       p.1 + p.2 = 5 + 1 ∧ p.1 % 2 = 0 ∧ p.2 % 2 = 0)
-      (Finset.Icc (0, 0) (5 + 1, 5 + 1))) = (5 + 1) / 2 + 1 := by native_decide
+      (Finset.Icc (0, 0) (5 + 1, 5 + 1))) = (5 + 1) / 2 + 1 := by decide
 
 /-!
 ## Third-Order Monomial Structure

@@ -95,7 +95,7 @@ inductive QRealization where
 theorem num_realizations_four :
     (List.length [QRealization.fourForm, QRealization.twoBrane,
                   QRealization.fermionicCrystal, QRealization.unimodular]) = 4 :=
-  by native_decide
+  by decide
 
 /-- **QNG2 — Realizations are distinct.** Each of the four is a separate
     physical construction; they cannot be conflated. -/

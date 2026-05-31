@@ -65,10 +65,10 @@ def theory3450 : ChiralTheory1D where
   chargesRight := ![5, 0]
 
 /-- 3450 left anomaly: 3² + 4² = 25. -/
-theorem theory3450_anomalyLeft : theory3450.anomalyLeft = 25 := by native_decide
+theorem theory3450_anomalyLeft : theory3450.anomalyLeft = 25 := by decide
 
 /-- 3450 right anomaly: 5² + 0² = 25. -/
-theorem theory3450_anomalyRight : theory3450.anomalyRight = 25 := by native_decide
+theorem theory3450_anomalyRight : theory3450.anomalyRight = 25 := by decide
 
 /-- **The 3450 model is anomaly-free.** -/
 theorem theory3450_anomalyFree : theory3450.anomalyFree := by
@@ -109,7 +109,7 @@ def kmatrixTrivial : KMatrixData where
   symmetric := by ext i j; fin_cases i <;> fin_cases j <;> rfl
 
 /-- K = (1) is trivial: det = 1, one anyon type. -/
-theorem kmatrixTrivial_det : kmatrixTrivial.K.det = 1 := by native_decide
+theorem kmatrixTrivial_det : kmatrixTrivial.K.det = 1 := by decide
 
 /-- The 3450 K-matrix: K = diag(9, 16) - diag(25, 0) encoding.
     More precisely, the K-matrix for the 3450 theory is
@@ -122,7 +122,7 @@ def kmatrix3450 : KMatrixData where
     Matrix.cons_val_one, Matrix.head_cons, Matrix.vecHead, Matrix.vecTail]
 
 /-- The 3450 K-matrix determinant. -/
-theorem kmatrix3450_det : kmatrix3450.K.det = 0 := by native_decide
+theorem kmatrix3450_det : kmatrix3450.K.det = 0 := by decide
 
 /-- det = 0 means the theory has a null vector — consistent with anomaly cancellation
     (the anomaly-free subspace is non-trivial). -/

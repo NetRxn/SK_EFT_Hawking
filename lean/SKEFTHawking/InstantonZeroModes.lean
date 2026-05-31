@@ -34,7 +34,7 @@ namespace SKEFTHawking.Instanton
 The 4D gamma matrices Γ¹...Γ⁴ decompose as tensor products of 2D gammas.
 This is the algebraic foundation for separation of variables.
 
-We verify the Clifford relation {Γ^μ, Γ^ν} = 2δ^{μν}·I₄ via native_decide.
+We verify the Clifford relation {Γ^μ, Γ^ν} = 2δ^{μν}·I₄ via decide.
 Since the gamma matrices involve i (from σ_y), we work over ℤ×ℤ representing
 the real and imaginary parts separately. The anticommutator is real (entries in ℤ),
 so we verify {Γ^μ, Γ^ν} as real integer matrices. -/
@@ -47,7 +47,7 @@ def chirality_S2 : Matrix (Fin 4) (Fin 4) ℤ := Matrix.of fun k i =>
   | _, _ => 0
 
 /-- chirality² = I (it's an involution). -/
-theorem chirality_sq : chirality_S2 * chirality_S2 = 1 := by native_decide
+theorem chirality_sq : chirality_S2 * chirality_S2 = 1 := by decide
 
 /-! ## Step 3: Angular Zero-Mode Counting
 
@@ -78,7 +78,7 @@ theorem angular_zero_modes_q1 :
     D2_angular_q1 0 0 = 0 ∧ D2_angular_q1 1 1 = 0
     -- The remaining four are nonzero (excited states)
     ∧ D2_angular_q1 2 2 ≠ 0 ∧ D2_angular_q1 3 3 ≠ 0
-    ∧ D2_angular_q1 4 4 ≠ 0 ∧ D2_angular_q1 5 5 ≠ 0 := by native_decide
+    ∧ D2_angular_q1 4 4 ≠ 0 ∧ D2_angular_q1 5 5 ≠ 0 := by decide
 
 /-- The angular zero-mode count is 2|q| = 2 for q = 1. -/
 theorem angular_count_q1 : 2 * 1 = (2 : ℕ) := by norm_num
@@ -90,7 +90,7 @@ The dimension of this polynomial space is |n|. This is the trivial fact
 that the set {0, 1, ..., n-1} has n elements. -/
 
 /-- The radial zero-mode count is |n| = 2 for n = 2. -/
-theorem radial_count_n2 : Fintype.card (Fin 2) = 2 := by native_decide
+theorem radial_count_n2 : Fintype.card (Fin 2) = 2 := by decide
 
 /-! ## Step 5: Product Formula
 
@@ -143,10 +143,10 @@ theorem separation_identity :
 The instanton zero-mode count 2|qn| = 4 (for q=1, n=2) is machine-checked
 WITHOUT using any index theorem. The proof chain:
 
-  Clifford Cl(4) ≅ Cl(2) ⊗̂ Cl(2)     [chirality_sq: native_decide on 4×4 ℤ]
+  Clifford Cl(4) ≅ Cl(2) ⊗̂ Cl(2)     [chirality_sq: decide on 4×4 ℤ]
   → Separation: D² = D²_{S²} ⊗ 1 + 1 ⊗ D²_{R²}  [algebraic, from Clifford]
-  → Angular: 2|q| = 2 zero modes      [angular_zero_modes_q1: native_decide on 6×6 ℤ]
-  → Radial: |n| = 2 zero modes         [radial_count_n2: native_decide on Fin 2]
+  → Angular: 2|q| = 2 zero modes      [angular_zero_modes_q1: decide on 6×6 ℤ]
+  → Radial: |n| = 2 zero modes         [radial_count_n2: decide on Fin 2]
   → Total: 2 × 2 = 4 per flavor        [total_zero_modes_q1_n2: norm_num]
   → N_f = 4: 16 zero modes → 8-fermion vertex  [adw_vertex_fermion_count: norm_num]
 

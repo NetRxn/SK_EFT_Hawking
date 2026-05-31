@@ -158,7 +158,7 @@ theorem twenty_four_factorization :
     (24 : ℕ) = 8 * 3 ∧ 8 * 3 = Nat.lcm 8 3 := by
   constructor
   · norm_num
-  · native_decide
+  · decide
 
 /-! ## 5. Physical Interpretation -/
 

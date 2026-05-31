@@ -4,7 +4,7 @@ Phase 5s Track B: S-matrix Non-degeneracy → Muger Center Triviality (General T
 Direction 1 of the Muger modularity equivalence: det(S) ≠ 0 → Z₂(C) = Vec.
 This is pure linear algebra — an invertible matrix cannot have two proportional rows.
 
-Replaces 3 case-by-case native_decide proofs (Ising, Fibonacci, toric code)
+Replaces 3 case-by-case decide proofs (Ising, Fibonacci, toric code)
 with ONE abstract theorem applicable to ALL finite modular tensor categories.
 
 The proof uses Mathlib's Matrix.det_zero_of_row_eq (equal rows → zero det)

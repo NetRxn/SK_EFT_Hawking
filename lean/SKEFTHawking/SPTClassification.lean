@@ -110,7 +110,7 @@ theorem spt_one_generation_anomaly_free :
 Anomaly index of one generation is 0.
 -/
 theorem spt_one_generation_index :
-    (spt_4plus1d 16).anomaly_index = 0 := by native_decide
+    (spt_4plus1d 16).anomaly_index = 0 := by decide
 
 /--
 Three generations: 48 Majorana, still anomaly-free.
@@ -235,7 +235,7 @@ Evidence (machine-checked dimensional ladder — see
   - 1+1D analog: `VillainHamiltonian.lean` (3450 model, K-matrix
     gappability — det K = 1 + two mutually-local null vectors) [TPF §4]
   - 2+1D analog: `FKGappedInterface.lean` (FK 16×16 Hamiltonian,
-    spectral gap Δ = 14, parity-preserving ground state, native_decide)
+    spectral gap Δ = 14, parity-preserving ground state, decide)
   - 3+1D / 4+1D: `TPFConjecture` (still conjectural — 4+1D Hilbert
     spaces are too large for any computer; no counterexample known;
     "plausible but unproven" per TPF's own assessment)
@@ -406,7 +406,7 @@ independent evidence for the higher-dimensional conjecture:
 - **3+1D / 4+1D:** `TPFConjecture` (still conjectural / tracked-Prop —
   4+1D is numerically intractable; no counterexample known).
 
-Both witnesses are `native_decide`-verified on finite matrix data.
+Both witnesses are `decide`-verified on finite matrix data.
 The use of two **independent** frameworks (K-matrix vs Cayley) is the
 load-bearing strengthening: it rules out framework-specific artifacts
 as the source of gappability and supports the conjecture's
@@ -465,18 +465,18 @@ def model3450 : Model3450 where
 
 /-- Left anomaly coefficient: Σ q_L² = 3² + 4² = 25. -/
 theorem model3450_left_anomaly :
-    (model3450.leftCharges 0) ^ 2 + (model3450.leftCharges 1) ^ 2 = 25 := by native_decide
+    (model3450.leftCharges 0) ^ 2 + (model3450.leftCharges 1) ^ 2 = 25 := by decide
 
 /-- Right anomaly coefficient: Σ q_R² = 5² + 0² = 25. -/
 theorem model3450_right_anomaly :
-    (model3450.rightCharges 0) ^ 2 + (model3450.rightCharges 1) ^ 2 = 25 := by native_decide
+    (model3450.rightCharges 0) ^ 2 + (model3450.rightCharges 1) ^ 2 = 25 := by decide
 
 /-- **Anomaly cancellation**: left = right (gauge anomaly vanishes).
     This is the necessary condition for a consistent chiral gauge theory.
     In the K-matrix formalism, it means a Lagrangian sublattice exists. -/
 theorem model3450_anomaly_cancellation :
     (model3450.leftCharges 0) ^ 2 + (model3450.leftCharges 1) ^ 2 =
-    (model3450.rightCharges 0) ^ 2 + (model3450.rightCharges 1) ^ 2 := by native_decide
+    (model3450.rightCharges 0) ^ 2 + (model3450.rightCharges 1) ^ 2 := by decide
 
 /-- Equal number of left and right movers. -/
 theorem model3450_equal_species : (2 : ℕ) = 2 := rfl
@@ -506,7 +506,7 @@ theorem wave1_summary :
     (spt_4plus1d 16).classification_order = 16 ∧
     (spt_4plus1d 48).anomaly_free := by
   refine ⟨?_, rfl, ?_⟩
-  · native_decide
+  · decide
   · exact ⟨3, by ring⟩
 
 end SKEFTHawking
