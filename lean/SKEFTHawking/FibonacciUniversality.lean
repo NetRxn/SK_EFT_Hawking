@@ -18,7 +18,10 @@ For the Fibonacci qubit (2D, SU(2)):
   - We verify this by computing the commutator and checking it's nonzero
     and not proportional to σ₁-tr(σ₁)/2·I or σ₂-tr(σ₂)/2·I
 
-All arithmetic over K = Q(ζ₅, √φ). Zero sorry.
+All arithmetic over K = Q(ζ₅, √φ) is kernel-pure via the `ext`/`powerTable`
+template (ADR-001 / ADR-002 §3-A): the `QCyc5Ext` closed-form `mul_re`/`mul_im`
+over the base-field `QCyc5` `powerTable`, registered as a file-local simp set.
+Zero sorry, no `native_decide`.
 
 References:
   Freedman, Larsen, Wang, Comm. Math. Phys. 227/228 (2002)
@@ -32,6 +35,26 @@ import SKEFTHawking.QCyc5Ext
 namespace SKEFTHawking.FibonacciUniversality
 
 open QCyc5 QCyc5Ext
+
+/- File-local kernel-pure arithmetic simp set for the two-level tower
+   K = Q(ζ₅, √φ): the `QCyc5Ext` closed-form `mul_re`/`mul_im` + `mulReduce2`
+   bridge lemmas, plus the base-field `QCyc5` `mul_cᵢ` / `mulReduce_coeffs` /
+   `toPoly` / `Fin.sum_univ_four` and the 28 `powerTable_m_k` rfl-lemmas.
+   Lets each `QCyc5Ext` identity be discharged by `ext <;> simp` (kernel-pure,
+   replacing `native_decide`); per ADR-001 / ADR-002 §3-A. NB `QCyc5.reduction`
+   and `QCyc5Ext.reduction` are deliberately excluded. -/
+attribute [local simp]
+  QCyc5Ext.mul_re QCyc5Ext.mul_im
+  QCyc5Ext.mulReduce2_coeffs_zero QCyc5Ext.mulReduce2_coeffs_one QCyc5Ext.toPoly
+  QCyc5.mul_c0 QCyc5.mul_c1 QCyc5.mul_c2 QCyc5.mul_c3
+  PolyQuotQ.mulReduce_coeffs QCyc5.toPoly Fin.sum_univ_four
+  QCyc5.powerTable_0_0 QCyc5.powerTable_0_1 QCyc5.powerTable_0_2 QCyc5.powerTable_0_3
+  QCyc5.powerTable_1_0 QCyc5.powerTable_1_1 QCyc5.powerTable_1_2 QCyc5.powerTable_1_3
+  QCyc5.powerTable_2_0 QCyc5.powerTable_2_1 QCyc5.powerTable_2_2 QCyc5.powerTable_2_3
+  QCyc5.powerTable_3_0 QCyc5.powerTable_3_1 QCyc5.powerTable_3_2 QCyc5.powerTable_3_3
+  QCyc5.powerTable_4_0 QCyc5.powerTable_4_1 QCyc5.powerTable_4_2 QCyc5.powerTable_4_3
+  QCyc5.powerTable_5_0 QCyc5.powerTable_5_1 QCyc5.powerTable_5_2 QCyc5.powerTable_5_3
+  QCyc5.powerTable_6_0 QCyc5.powerTable_6_1 QCyc5.powerTable_6_2 QCyc5.powerTable_6_3
 
 /-! ## 1. The Commutator [σ₁, σ₂]
 
@@ -69,16 +92,18 @@ def comm_10 : QCyc5Ext := s1_11 * s2_10 - s2_10 * s1_00
 def comm_11 : QCyc5Ext := s1_11 * s2_11 - s2_11 * s1_11
 
 /-- The commutator diagonal vanishes (K is commutative). -/
-theorem comm_diagonal_zero : comm_00 = 0 ∧ comm_11 = 0 := by
-  exact ⟨by native_decide, by native_decide⟩
+theorem comm_diagonal_zero : comm_00 = 0 ∧ comm_11 = 0 :=
+  ⟨by ext <;> simp [comm_00, s1_00, s2_00], by ext <;> simp [comm_11, s1_11, s2_11]⟩
 
 /-- **The commutator off-diagonal is NONZERO.**
     This is the first condition for universality: [σ₁, σ₂] ≠ 0. -/
-theorem comm_off_diag_nonzero : comm_01 ≠ 0 := by native_decide
+theorem comm_off_diag_nonzero : comm_01 ≠ 0 := by
+  intro h; rw [QCyc5Ext.ext_iff] at h; simp [comm_01, s1_00, s1_11, s2_01] at h
 
 /-- [σ₁, σ₂] is anti-symmetric: [σ₁,σ₂][1,0] = -[σ₁,σ₂][0,1].
     This follows from σ₂ being symmetric. -/
-theorem comm_antisymmetric : comm_10 = -comm_01 := by native_decide
+theorem comm_antisymmetric : comm_10 = -comm_01 := by
+  ext <;> simp [comm_10, comm_01, s1_00, s1_11, s2_01, s2_10]
 
 /-! ## 2. Linear Independence → su(2) Spanning
 
@@ -107,13 +132,15 @@ is NOT proportional to [σ₁,σ₂]'s off-diagonal.
 def sigma1_traceless_diag : QCyc5Ext := (s1_00 - s1_11)
 
 /-- σ₁ traceless diagonal is nonzero (R₁ ≠ R_τ). -/
-theorem sigma1_traceless_nonzero : sigma1_traceless_diag ≠ 0 := by native_decide
+theorem sigma1_traceless_nonzero : sigma1_traceless_diag ≠ 0 := by
+  intro h; rw [QCyc5Ext.ext_iff] at h; simp [sigma1_traceless_diag, s1_00, s1_11] at h
 
 /-- The traceless diagonal of σ₂: σ₂[0,0] - σ₂[1,1]. -/
 def sigma2_traceless_diag : QCyc5Ext := s2_00 - s2_11
 
 /-- σ₂ traceless diagonal is nonzero. -/
-theorem sigma2_traceless_diag_nonzero : sigma2_traceless_diag ≠ 0 := by native_decide
+theorem sigma2_traceless_diag_nonzero : sigma2_traceless_diag ≠ 0 := by
+  intro h; rw [QCyc5Ext.ext_iff] at h; simp [sigma2_traceless_diag, s2_00, s2_11] at h
 
 /-- **KEY UNIVERSALITY CHECK**: σ₂ off-diagonal is NOT proportional to
     [σ₁,σ₂] off-diagonal. This means the three traceless matrices
@@ -128,7 +155,8 @@ theorem universality_linear_independence :
     sigma2_traceless_diag ≠ 0 ∧   -- σ₂ contributes a THIRD direction
     s2_01 ≠ 0 :=                   -- σ₂ also has off-diagonal
   ⟨sigma1_traceless_nonzero, comm_off_diag_nonzero,
-   sigma2_traceless_diag_nonzero, by native_decide⟩
+   sigma2_traceless_diag_nonzero,
+   by intro h; rw [QCyc5Ext.ext_iff] at h; simp [s2_01] at h⟩
 
 /-- The commutator is not proportional to the identity (it's traceless and nonzero). -/
 theorem comm_not_scalar : comm_01 ≠ 0 ∨ comm_10 ≠ 0 :=
@@ -177,6 +205,7 @@ FibonacciUniversality: Lie algebra proof of Fibonacci braiding universality.
   - **Linear independence of su(2) generators: ALL conditions PROVED**
   - Together: σ₁₀ + [σ₁,σ₂] + σ₂₀ span su(2) → density in SU(2)
   - First self-contained universality verification for anyonic gates
-  - Zero sorry, zero axioms. All by native_decide over K.
+  - Zero sorry. All K = Q(ζ₅,√φ) arithmetic kernel-pure
+    {propext, Classical.choice, Quot.sound} via the QCyc5Ext ext/powerTable template.
 -/
 end SKEFTHawking.FibonacciUniversality
