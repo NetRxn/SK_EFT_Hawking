@@ -1910,6 +1910,10 @@ import SKEFTHawking.FKLW.MukhopadhyayToffoliUnconditional
 -- factorizations (kronK8 v)₇₇ = ∏(σ_vᵢ)₁₁ and (P_r P_s)₇₇ = ∏(σ_rᵢ σ_sᵢ)₁₁, and the Hermitian
 -- conjugate-swap (σ_b σ_a)₁₁ = conj((σ_a σ_b)₁₁). The half-integer headline follows.
 import SKEFTHawking.FKLW.MukhopadhyayCCZChannelRep
+-- Phase 6x′ Phase 2 (D) (2026-05-30): hCCZ — channelSde2_ccz_le: one CCZ raises the channel-rep sde₂
+-- by ≤1 (dyadic-conditional), via the sde2ℂ arithmetic layer (integer-scaling/addition/÷2/finite-sum)
+-- + Theorem 3.8's half-integer entries. Toward the unconditional T^of bound.
+import SKEFTHawking.FKLW.MukhopadhyayHCCZ
 -- Phase 6y Track S.6 substrate (2026-05-27): SK compile-with-polylog-length-bound
 -- data structure for SU(d). Defines `SKCompileWithBounds_FreeGroup` +
 -- `SKCompileWithBounds_SUd` structures bundling (ε₀, c, compile, error, length)
