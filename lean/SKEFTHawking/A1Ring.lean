@@ -4,7 +4,7 @@ Phase 5q Wave 2: A(1) Multiplication Verification via Left Regular Representatio
 A(1) = ⟨Sq¹, Sq²⟩ is the 8-dimensional sub-Hopf algebra of the mod 2 Steenrod
 algebra (Milnor basis). This file verifies the multiplication table by encoding
 each basis element's left-multiplication as an 8×8 matrix over F₂ and checking
-algebraic identities via native_decide.
+algebraic identities via decide.
 
 Key results:
   - Sq(1)² = 0
@@ -34,7 +34,7 @@ abbrev Idx := Fin 8
 
 Each basis element a of A(1) acts on A(1) by left multiplication.
 (L_a)_{k,i} = 1 iff e_k appears in a · e_i (over F₂).
-Encoded as functions Idx → Idx → F2 for native_decide compatibility. -/
+Encoded as functions Idx → Idx → F2 for decide compatibility. -/
 
 /-- L₀ = identity (multiplication by unit 1 = Sq(0,0)) -/
 def L0 : Matrix Idx Idx F2 := Matrix.of fun i j => if i = j then 1 else 0
@@ -88,16 +88,16 @@ def Lmat : Idx → Matrix Idx Idx F2
 /-! ## 2. Adem Relations (machine-checked) -/
 
 /-- Sq(1)² = 0 — the fundamental Adem relation. -/
-theorem sq1_squared : L1 * L1 = (0 : Matrix Idx Idx F2) := by native_decide
+theorem sq1_squared : L1 * L1 = (0 : Matrix Idx Idx F2) := by decide
 
 /-- Sq(2)² = Sq(1,1) (Adem: Sq²Sq² = Sq³Sq¹). -/
-theorem sq2_squared : L2 * L2 = L5 := by native_decide
+theorem sq2_squared : L2 * L2 = L5 := by decide
 
 /-- Q₁² = 0 (Milnor primitive is nilpotent). -/
-theorem q1_squared : L4 * L4 = (0 : Matrix Idx Idx F2) := by native_decide
+theorem q1_squared : L4 * L4 = (0 : Matrix Idx Idx F2) := by decide
 
 /-- Top element is absorbing: Sq(3,1) · x = 0 for all x ≠ 1. -/
-theorem top_absorbing : L7 * L1 = (0 : Matrix Idx Idx F2) := by native_decide
+theorem top_absorbing : L7 * L1 = (0 : Matrix Idx Idx F2) := by decide
 
 /-! ## 3. Associativity (machine-checked for critical triples)
 
@@ -105,16 +105,16 @@ Full associativity over 512 triples is verified in Python
 (scripts/generate_a1_resolution.py). Here we verify the critical
 triples that were the source of bugs in development. -/
 
-theorem assoc_1_2_2 : L1 * L2 * L2 = L1 * (L2 * L2) := by native_decide
-theorem assoc_2_1_2 : L2 * L1 * L2 = L2 * (L1 * L2) := by native_decide
-theorem assoc_2_2_1 : L2 * L2 * L1 = L2 * (L2 * L1) := by native_decide
-theorem assoc_1_2_1 : L1 * L2 * L1 = L1 * (L2 * L1) := by native_decide
-theorem assoc_4_1_2 : L4 * L1 * L2 = L4 * (L1 * L2) := by native_decide
-theorem assoc_3_3_1 : L3 * L3 * L1 = L3 * (L3 * L1) := by native_decide
+theorem assoc_1_2_2 : L1 * L2 * L2 = L1 * (L2 * L2) := by decide
+theorem assoc_2_1_2 : L2 * L1 * L2 = L2 * (L1 * L2) := by decide
+theorem assoc_2_2_1 : L2 * L2 * L1 = L2 * (L2 * L1) := by decide
+theorem assoc_1_2_1 : L1 * L2 * L1 = L1 * (L2 * L1) := by decide
+theorem assoc_4_1_2 : L4 * L1 * L2 = L4 * (L1 * L2) := by decide
+theorem assoc_3_3_1 : L3 * L3 * L1 = L3 * (L3 * L1) := by decide
 
 /-! ## 4. Unit Laws -/
 
-theorem L0_eq_one : L0 = (1 : Matrix Idx Idx F2) := by native_decide
+theorem L0_eq_one : L0 = (1 : Matrix Idx Idx F2) := by decide
 
 theorem L0_mul (M : Matrix Idx Idx F2) : L0 * M = M := by rw [L0_eq_one, one_mul]
 

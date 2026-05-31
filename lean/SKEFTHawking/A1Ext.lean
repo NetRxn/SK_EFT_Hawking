@@ -47,24 +47,24 @@ For our encoding: d_n(0, j) = 0 for all j (first A(1) copy),
 d_n(8, j) = 0 for all j (second copy), etc. -/
 
 /-- d₁ is minimal: row 0 (unit component of P₀) is zero. -/
-theorem d1_minimal : ∀ j : Fin 16, d1 0 j = 0 := by native_decide
+theorem d1_minimal : ∀ j : Fin 16, d1 0 j = 0 := by decide
 
 /-- d₂ is minimal: rows 0 and 8 (unit components of P₁) are zero. -/
 theorem d2_minimal : (∀ j : Fin 16, d2 0 j = 0) ∧ (∀ j : Fin 16, d2 8 j = 0) := by
-  exact ⟨by native_decide, by native_decide⟩
+  exact ⟨by decide, by decide⟩
 
 /-- d₃ is minimal: rows 0 and 8 (unit components of P₂) are zero. -/
 theorem d3_minimal : (∀ j : Fin 16, d3 0 j = 0) ∧ (∀ j : Fin 16, d3 8 j = 0) := by
-  exact ⟨by native_decide, by native_decide⟩
+  exact ⟨by decide, by decide⟩
 
 /-- d₄ is minimal: rows 0 and 8 (unit components of P₃) are zero. -/
 theorem d4_minimal : (∀ j : Fin 24, d4 0 j = 0) ∧ (∀ j : Fin 24, d4 8 j = 0) := by
-  exact ⟨by native_decide, by native_decide⟩
+  exact ⟨by decide, by decide⟩
 
 /-- d₅ is minimal: rows 0, 8, and 16 (unit components of P₄) are zero. -/
 theorem d5_minimal : (∀ j : Fin 32, d5 0 j = 0) ∧ (∀ j : Fin 32, d5 8 j = 0)
     ∧ (∀ j : Fin 32, d5 16 j = 0) := by
-  exact ⟨by native_decide, by native_decide, by native_decide⟩
+  exact ⟨by decide, by decide, by decide⟩
 
 /-! ## 2. Ext Dimensions
 
@@ -85,22 +85,22 @@ The ranks are read off from the resolution construction:
 
 /-- dim Ext⁰ = rank(P₀) = cols(d₁)/8 = 8/8 = 1.
     The rank is computed from the resolution matrix dimensions. -/
-theorem ext_dim_0 : (Fintype.card (Fin 8)) / 8 = 1 := by native_decide
+theorem ext_dim_0 : (Fintype.card (Fin 8)) / 8 = 1 := by decide
 
 /-- dim Ext¹ = rank(P₁) = cols(d₁)/8 = 16/8 = 2 (generators: h₀, h₁). -/
-theorem ext_dim_1 : (Fintype.card (Fin 16)) / 8 = 2 := by native_decide
+theorem ext_dim_1 : (Fintype.card (Fin 16)) / 8 = 2 := by decide
 
 /-- dim Ext² = rank(P₂) = cols(d₂)/8 = 16/8 = 2 (generators: h₀², h₁²). -/
-theorem ext_dim_2 : (Fintype.card (Fin 16)) / 8 = 2 := by native_decide
+theorem ext_dim_2 : (Fintype.card (Fin 16)) / 8 = 2 := by decide
 
 /-- dim Ext³ = rank(P₃) = cols(d₃)/8 = 16/8 = 2 (generators: h₀³, v). -/
-theorem ext_dim_3 : (Fintype.card (Fin 16)) / 8 = 2 := by native_decide
+theorem ext_dim_3 : (Fintype.card (Fin 16)) / 8 = 2 := by decide
 
 /-- dim Ext⁴ = rank(P₄) = cols(d₄)/8 = 24/8 = 3 (generators: h₀⁴, h₀v, w₁). -/
-theorem ext_dim_4 : (Fintype.card (Fin 24)) / 8 = 3 := by native_decide
+theorem ext_dim_4 : (Fintype.card (Fin 24)) / 8 = 3 := by decide
 
 /-- dim Ext⁵ = rank(P₅) = cols(d₅)/8 = 32/8 = 4 (generators: h₀⁵, h₀²v, h₀w₁, h₁w₁). -/
-theorem ext_dim_5 : (Fintype.card (Fin 32)) / 8 = 4 := by native_decide
+theorem ext_dim_5 : (Fintype.card (Fin 32)) / 8 = 4 := by decide
 
 /-- Total Ext dimension through degree 5: 1+2+2+2+3+4 = 14 basis elements. -/
 theorem ext_total_dim : 1 + 2 + 2 + 2 + 3 + 4 = 14 := by norm_num

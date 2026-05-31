@@ -54,7 +54,7 @@ inductive A1Basis where
 /--
 A(1) is 8-dimensional over F₂.
 -/
-theorem a1_dim : Fintype.card A1Basis = 8 := by native_decide
+theorem a1_dim : Fintype.card A1Basis = 8 := by decide
 
 /--
 The degree (cohomological grading) of each basis element.
@@ -174,13 +174,13 @@ theorem a1_mul_one_right (x : A1Basis) : a1_mul x .one = some x := by
 /-! ## 3b. Adem Relations (verified via multiplication table) -/
 
 /-- Sq¹Sq¹ = 0 in A(1) (Sq¹ has order 2). -/
-theorem adem_sq1_sq1 : a1_mul .sq1 .sq1 = none := by native_decide
+theorem adem_sq1_sq1 : a1_mul .sq1 .sq1 = none := by decide
 
 /-- Sq¹Sq² = Sq³ in A(1) (defines Sq³). -/
-theorem adem_sq1_sq2 : a1_mul .sq1 .sq2 = some .sq3 := by native_decide
+theorem adem_sq1_sq2 : a1_mul .sq1 .sq2 = some .sq3 := by decide
 
 /-- Sq²Sq² = Sq³Sq¹ in A(1) (the non-trivial Adem relation). -/
-theorem adem_sq2_sq2 : a1_mul .sq2 .sq2 = some .sq3sq1 := by native_decide
+theorem adem_sq2_sq2 : a1_mul .sq2 .sq2 = some .sq3sq1 := by decide
 
 /-! ## 4. Hopf Algebra Structure -/
 
