@@ -24,17 +24,20 @@ PUBLIC math layer only.
 -/
 
 import SKEFTHawking.FKLW.MukhopadhyayCCZConjugation
+import SKEFTHawking.FKLW.MukhopadhyayChannelRep
 import SKEFTHawking.FKLW.CliffordCCZSU8CNOTConj
 
 set_option autoImplicit false
 set_option linter.unusedSectionVars false
 set_option linter.unusedSimpArgs false
+set_option linter.unnecessarySeqFocus false
 
 namespace SKEFTHawking.FKLW.MukhopadhyayCCZ
 
 open scoped Matrix
 open SKEFTHawking.FKLW.CliffordCCZSU8
 open SKEFTHawking.FKLW.TrappedIonSU4
+open SKEFTHawking.FKLW.CliffordCCZ (CCZ_mat)
 
 /-! ## C.1 — entry factorization at the `|111⟩` index `7` -/
 
@@ -153,5 +156,121 @@ theorem kronK8_77_int (v : Fin 4 × Fin 4 × Fin 4) : ∃ k : ℤ, kronK8 v 7 7 
   obtain ⟨k2, h2⟩ := pauli4_11_int v.2.1
   obtain ⟨k3, h3⟩ := pauli4_11_int v.2.2
   exact ⟨k1 * k2 * k3, by rw [kronK8_apply_77, h1, h2, h3]; push_cast; ring⟩
+
+/-! ## C.5 — the closed form: `channelRep CCZ r s` is a half-integer -/
+
+/-- An indicator-weighted sum over `Fin 8` collapses to the value at `7`. -/
+theorem sum_indicator_collapse (f : Fin 8 → ℂ) :
+    (∑ i, (if i = 7 then (1 : ℂ) else 0) * f i) = f 7 := by
+  rw [Finset.sum_eq_single (7 : Fin 8)]
+  · rw [if_pos rfl, one_mul]
+  · intro b _ hb; rw [if_neg hb, zero_mul]
+  · intro h; exact absurd (Finset.mem_univ _) h
+
+/-- `cczDiag i = 1 − 2·𝟙[i = 7]`. -/
+theorem cczDiag_eq (i : Fin 8) : cczDiag i = 1 - 2 * (if i = 7 then (1 : ℂ) else 0) := by
+  unfold cczDiag
+  by_cases h : i = 7 <;> simp [h] <;> norm_num
+
+/-- `CCZ_mat` is Hermitian (real diagonal). -/
+theorem CCZ_mat_conjTranspose : (CCZ_mat)ᴴ = CCZ_mat := by
+  rw [CCZ_mat_eq_diagonal, Matrix.diagonal_conjTranspose]
+  congr 1
+  funext i
+  simp only [Pi.star_apply, cczDiag]
+  split <;> simp
+
+/-- `(P_s · P_r)₇₇ = conj((P_r · P_s)₇₇)` — the conjugate symmetry from Hermiticity. -/
+theorem kronK8_mul_77_conj_swap (r s : Fin 4 × Fin 4 × Fin 4) :
+    (kronK8 s * kronK8 r) 7 7 = (starRingEnd ℂ) ((kronK8 r * kronK8 s) 7 7) := by
+  rw [kronK8_mul_apply_77 s r, kronK8_mul_apply_77 r s, pauliProd11_conj_swap r.1 s.1,
+    pauliProd11_conj_swap r.2.1 s.2.1, pauliProd11_conj_swap r.2.2 s.2.2, map_mul, map_mul]
+
+/-- Linearity of the double sum over a `(1, −2, −2, +4)` combination (abstract; avoids `mul_sum`
+over-pulling when applied to indicator summands). -/
+theorem sum_sum_linear_comb (a b c d : Fin 8 → Fin 8 → ℂ) :
+    (∑ i, ∑ j, (a i j - 2 * b i j - 2 * c i j + 4 * d i j))
+      = (∑ i, ∑ j, a i j) - 2 * (∑ i, ∑ j, b i j) - 2 * (∑ i, ∑ j, c i j)
+          + 4 * (∑ i, ∑ j, d i j) := by
+  simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.mul_sum]
+
+/-- **The CCZ channel-rep trace decomposition.** Expanding `CCZ = 1 − 2|111⟩⟨111|` entrywise gives the
+trace as `8·𝟙[r=s] − 2(P_r P_s)₇₇ − 2(P_s P_r)₇₇ + 4(P_r)₇₇(P_s)₇₇`. -/
+theorem trace_kronK8_CCZ_conj (r s : Fin 4 × Fin 4 × Fin 4) :
+    (kronK8 r * (CCZ_mat * kronK8 s * CCZ_mat)).trace
+      = 8 * (if r = s then 1 else 0) - 2 * (kronK8 r * kronK8 s) 7 7
+        - 2 * (kronK8 s * kronK8 r) 7 7 + 4 * (kronK8 r 7 7 * kronK8 s 7 7) := by
+  have hLHS : (kronK8 r * (CCZ_mat * kronK8 s * CCZ_mat)).trace
+      = ∑ i, ∑ j, kronK8 r i j * cczDiag j * cczDiag i * kronK8 s j i := by
+    rw [Matrix.trace]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [Matrix.diag_apply, Matrix.mul_apply]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    rw [CCZ_mat_conj_apply]; ring
+  -- the four indicator double-sum identities (value = double sum)
+  have e8 : (∑ i, ∑ j, kronK8 r i j * kronK8 s j i) = 8 * (if r = s then 1 else 0) := by
+    have h : (∑ i, ∑ j, kronK8 r i j * kronK8 s j i) = (kronK8 r * kronK8 s).trace := by
+      rw [Matrix.trace]; refine Finset.sum_congr rfl fun i _ => ?_; rw [Matrix.diag_apply,
+        Matrix.mul_apply]
+    rw [h, kronK8_mul_trace]; by_cases h : r = s <;> simp [h]
+  have ez : (∑ i, ∑ j, (if i = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))
+      = (kronK8 r * kronK8 s) 7 7 := by
+    have hin : ∀ i, (∑ j, (if i = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))
+        = (if i = 7 then (1 : ℂ) else 0) * ∑ j, kronK8 r i j * kronK8 s j i :=
+      fun i => by rw [← Finset.mul_sum]
+    rw [Finset.sum_congr rfl fun i _ => hin i,
+      sum_indicator_collapse fun i => ∑ j, kronK8 r i j * kronK8 s j i, Matrix.mul_apply]
+  have ez' : (∑ i, ∑ j, (if j = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))
+      = (kronK8 s * kronK8 r) 7 7 := by
+    rw [Finset.sum_congr rfl fun i _ =>
+      sum_indicator_collapse fun j => kronK8 r i j * kronK8 s j i, Matrix.mul_apply]
+    exact Finset.sum_congr rfl fun i _ => by ring
+  have eg : (∑ i, ∑ j, (if i = 7 then (1 : ℂ) else 0)
+        * ((if j = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i)))
+      = kronK8 r 7 7 * kronK8 s 7 7 := by
+    have hin : ∀ i, (∑ j, (if i = 7 then (1 : ℂ) else 0)
+          * ((if j = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i)))
+        = (if i = 7 then (1 : ℂ) else 0) * (kronK8 r i 7 * kronK8 s 7 i) :=
+      fun i => by rw [← Finset.mul_sum, sum_indicator_collapse fun j => kronK8 r i j * kronK8 s j i]
+    rw [Finset.sum_congr rfl fun i _ => hin i,
+      sum_indicator_collapse fun i => kronK8 r i 7 * kronK8 s 7 i]
+  rw [hLHS,
+    show (∑ i, ∑ j, kronK8 r i j * cczDiag j * cczDiag i * kronK8 s j i)
+        = ∑ i, ∑ j, (kronK8 r i j * kronK8 s j i
+          - 2 * ((if i = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))
+          - 2 * ((if j = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))
+          + 4 * ((if i = 7 then (1 : ℂ) else 0)
+              * ((if j = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))))
+      from Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => by
+        rw [cczDiag_eq i, cczDiag_eq j]; ring,
+    sum_sum_linear_comb (fun i j => kronK8 r i j * kronK8 s j i)
+      (fun i j => (if i = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))
+      (fun i j => (if j = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))
+      (fun i j => (if i = 7 then (1 : ℂ) else 0)
+        * ((if j = 7 then (1 : ℂ) else 0) * (kronK8 r i j * kronK8 s j i))),
+    e8, ez, ez', eg]
+
+/-- **Theorem 3.8 (the form `hCCZ` needs): `channelRep CCZ` has half-integer entries.** Every entry of
+`Ĉ_CCZ` is `(integer)/2`. -/
+theorem channelRep_CCZ_isHalfInt (r s : Fin 4 × Fin 4 × Fin 4) :
+    ∃ a : ℤ, channelRep CCZ_mat r s = (a : ℂ) / 2 := by
+  obtain ⟨m, hm⟩ := isGaussianInt_re_int (kronK8_mul_77_isGaussianInt r s)
+  obtain ⟨gr, hgr⟩ := kronK8_77_int r
+  obtain ⟨gs, hgs⟩ := kronK8_77_int s
+  refine ⟨2 * (if r = s then 1 else 0) - m + gr * gs, ?_⟩
+  have htr : channelRep CCZ_mat r s = (8⁻¹ : ℂ) *
+      (kronK8 r * (CCZ_mat * kronK8 s * CCZ_mat)).trace := by
+    rw [channelRep_eq_trace, CCZ_mat_conjTranspose]
+  rw [htr, trace_kronK8_CCZ_conj, kronK8_mul_77_conj_swap r s]
+  -- z + conj z = 2·Re z = 2m, so conj z = 2m − z
+  have hconj : (kronK8 r * kronK8 s) 7 7 + (starRingEnd ℂ) ((kronK8 r * kronK8 s) 7 7)
+      = 2 * (m : ℂ) := by
+    rw [Complex.add_conj, hm]; push_cast; ring
+  have hcz : (starRingEnd ℂ) ((kronK8 r * kronK8 s) 7 7)
+      = 2 * (m : ℂ) - (kronK8 r * kronK8 s) 7 7 :=
+    eq_sub_of_add_eq (by rw [add_comm]; exact hconj)
+  rw [hgr, hgs, hcz]
+  push_cast
+  ring
 
 end SKEFTHawking.FKLW.MukhopadhyayCCZ
