@@ -14,7 +14,9 @@ Quantum dimension d_τ = φ = (1+√5)/2. Total D² = 2+φ.
 In the isotopy gauge, the non-trivial F-symbols lie in Q(√5):
   F^τ_{τττ} = [[φ⁻¹, φ⁻¹], [1, -φ⁻¹]]
 
-Pentagon and all arithmetic verified via native_decide over QSqrt5.
+Pentagon and the QSqrt5 F-symbol arithmetic are kernel-checked modulo
+`native_decide` over QSqrt5 (ADR-002 #2; QSqrt5 is not powerTable-equipped for
+the ext template). The Fin/Nat fusion fact `fib_tau_sq` is kernel `decide`.
 
 ## F-symbol Convention (Kitaev 2006)
 
