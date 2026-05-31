@@ -1,0 +1,8 @@
+SK-EFT Hawking Validation Report
+Generated: 20260531T033344Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] axiom_closure_allowlist
+  + axiom_audit_run — SKIPPED — AxiomAudit exited 1: 
+
+Overall: 1/1 passed

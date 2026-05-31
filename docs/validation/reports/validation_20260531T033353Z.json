@@ -1,0 +1,23 @@
+{
+  "timestamp": "20260531T033353Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "axiom_closure_allowlist": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "axiom_audit_run",
+          "passed": true,
+          "message": "SKIPPED \u2014 AxiomAudit exited 1: ",
+          "warning": true
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}
