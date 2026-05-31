@@ -228,6 +228,51 @@ theorem buildPowerTable_getElem!_step (r : Fin n → ℚ)
   congr 1
   rw [show state.size - 1 = n + j from by omega]
 
+/-! ## `buildPowerTable` boundary row (the `j = -1` companion to `_step`) -/
+
+/--
+`push_getElem!_at_size`: accessing a pushed array `a.push x` at the index equal to
+`a.size` returns the appended element `x`. Helper for `buildPowerTable_getElem!_boundary`.
+-/
+theorem push_getElem!_at_size {α : Type*} [Inhabited α] (a : Array α) (x : α)
+    (i : ℕ) (hi : i = a.size) : (a.push x)[i]! = x := by
+  subst hi; rw [getElem!_pos _ _ (by simp)]; simp
+
+/--
+**Boundary recurrence — the `j = -1` companion to `buildPowerTable_getElem!_step`.**
+At the first fold-output row `m = n`, the row equals `shiftByXArr r` of row `n - 1`.
+Row `n` is covered by neither `buildPowerTable_getElem!_lt` (`m < n`) nor
+`buildPowerTable_getElem!_step` (`m = n + j + 1`, i.e. `m ≥ n + 1`); this lemma closes
+that gap, completing a fully recursive characterisation of every table row.
+
+Mechanism: it rewrites the fold via `Nat.fold_push_preserve` (truncating to a single
+push step), so the only definitional unfold is DEPTH 1. Chaining `_step` down to this
+boundary and then `_lt` evaluates any entry `(buildPowerTable r)[m]![k]!` by propositional
+`rw` (never unfolding `Nat.fold`), staying kernel-pure and under the heartbeat budget where
+a `show`-based O(row)-depth `isDefEq` unfold blows up past degree ~4. (ADR-002 path (ii).)
+-/
+theorem buildPowerTable_getElem!_boundary (r : Fin n → ℚ) (hn : 2 ≤ n) :
+    (PolyQuotQ.buildPowerTable r)[n]! =
+      shiftByXArr r ((PolyQuotQ.buildPowerTable r)[n - 1]!) := by
+  unfold PolyQuotQ.buildPowerTable
+  set base : Array (Array ℚ) := Array.ofFn (n := n) (fun m : Fin n =>
+      Array.ofFn (fun ki : Fin n => if ki.val = m.val then 1 else 0)) with hbase
+  have hbase_size : base.size = n := by simp [base]
+  have h_partial_size : ∀ k, (Nat.fold k (fun _ _ acc =>
+      acc.push (shiftByXArr r (acc[acc.size - 1]!))) base).size = n + k := by
+    intro k
+    induction k with
+    | zero => simp [Nat.fold, hbase_size]
+    | succ p ih => simp [Nat.fold, ih]; try omega
+  rw [Nat.fold_push_preserve base 1 (n - 1) (by omega) _ n (by rw [h_partial_size]; omega)]
+  rw [Nat.fold_push_preserve base 0 (n - 1) (Nat.zero_le _) _ (n - 1)
+      (by rw [show Nat.fold 0 (fun _ _ acc =>
+            acc.push (shiftByXArr r (acc[acc.size - 1]!))) base = base from rfl,
+          hbase_size]; omega)]
+  show (base.push (shiftByXArr r (base[base.size - 1]!)))[n]! = shiftByXArr r base[n - 1]!
+  rw [push_getElem!_at_size base _ n hbase_size.symm]
+  rw [show base.size - 1 = n - 1 from by rw [hbase_size]]
+
 /-! ## Outer-layer characterisation: `mulReduce` coefficient as explicit double sum
 
 The bridge from `(mulReduce n r x y).coeffs k` to a `Σ_p Σ_q` expression. This
