@@ -202,4 +202,40 @@ theorem traceNorm_hermitian_eq {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermit
   · rw [max_eq_left h, abs_of_nonneg h]; ring
   · rw [max_eq_right h, abs_of_nonpos h]; ring
 
+/-- The matrix continuous functional calculus is identity on `id`: `cfc(x ↦ x) M = M`. -/
+theorem cfc_id {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    hM.cfc (fun x => x) = M := by
+  rw [Matrix.IsHermitian.cfc,
+    show (RCLike.ofReal ∘ (fun x => x) ∘ hM.eigenvalues : Fin n → ℂ)
+      = (RCLike.ofReal ∘ hM.eigenvalues) from rfl, ← hM.spectral_theorem]
+
+/-- The matrix continuous functional calculus is multiplicative:
+`cfc f M · cfc g M = cfc (f·g) M`. -/
+theorem cfc_mul {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) (f g : ℝ → ℝ) :
+    hM.cfc f * hM.cfc g = hM.cfc (fun x => f x * g x) := by
+  have hfun : (fun i => (RCLike.ofReal ∘ f ∘ hM.eigenvalues) i
+        * (RCLike.ofReal ∘ g ∘ hM.eigenvalues) i)
+      = (RCLike.ofReal ∘ (fun x => f x * g x) ∘ hM.eigenvalues : Fin n → ℂ) := by
+    funext i; simp only [Function.comp_apply]; push_cast; ring
+  rw [Matrix.IsHermitian.cfc, Matrix.IsHermitian.cfc, Matrix.IsHermitian.cfc, ← map_mul,
+    diagonal_mul_diagonal, hfun]
+
+/-- **Achievement:** `∑ positive eigenvalues = Re tr(P·H)` where `P = cfc(𝟙_{x>0})H`
+is the positive-eigenvalue projection (since `𝟙_{x>0}(x)·x = max(x,0)` on the spectrum). -/
+theorem eigPosSum_eq_re_trace_posProj {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    eigPosSum hM = (((hM.cfc fun x => if 0 < x then (1:ℝ) else 0) * M).trace).re := by
+  have hPM : (hM.cfc fun x => if 0 < x then (1:ℝ) else 0) * M
+      = hM.cfc (fun x => max x 0) := by
+    have h1 : hM.cfc (fun x => max x 0)
+        = (hM.cfc fun x => if 0 < x then (1:ℝ) else 0) * hM.cfc (fun x => x) := by
+      rw [cfc_mul hM]
+      congr 1
+      funext x
+      by_cases h : 0 < x
+      · simp [h, max_eq_left h.le]
+      · simp [h, max_eq_right (not_lt.mp h)]
+    rw [h1, cfc_id hM]
+  rw [hPM, trace_cfc, eigPosSum, Complex.re_sum]
+  exact Finset.sum_congr rfl fun i _ => (Complex.ofReal_re _).symm
+
 end SKEFTHawking.QuantumNetwork
