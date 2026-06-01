@@ -527,7 +527,8 @@ fiber-loss factor numerically. Kernel-only; zero new project-local axioms.
 
 \paragraph{Phase~6AC extensions (operational metrics: key rate, multipartite, teleportation).}
 Three operational network metrics are layered on the fidelity substrate, all
-kernel-only. (i)~\emph{BB84 secret-key rate:} \verb|bb84KeyRate| $r(e)=1-2h_2(e)$ with
+kernel-only. (i)~\emph{BB84 secret-key rate} (Shor--Preskill, Phys.\ Rev.\ Lett.\ \textbf{85}, 441 (2000)):
+\verb|bb84KeyRate| $r(e)=1-2h_2(e)$ with
 the bits-renormalized binary entropy $h_2(p)=\mathrm{binEntropy}(p)/\log 2$ (Mathlib's
 \verb|binEntropy| is in nats), so $r(0)=1$. The positive-key crossover is
 \emph{proven, not hardcoded}: \verb|bb84KeyRate_pos_iff_binEntropy_lt| states positivity as

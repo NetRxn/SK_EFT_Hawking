@@ -92,7 +92,7 @@ Three operational network metrics are layered on the fidelity substrate, all
 kernel-only and still in the real-parameter representation.
 
 - **BB84 secret-key rate (`SecretKeyRate.lean`).** The Shor–Preskill asymptotic
-  rate `bb84KeyRate e = 1 − 2·h₂(e)`, with the bits-renormalized binary entropy
+  rate `bb84KeyRate e = 1 − 2·h₂(e)` (Shor & Preskill, Phys. Rev. Lett. 85, 441 (2000)), with the bits-renormalized binary entropy
   `binEntropyBit p = binEntropy p / log 2` (Mathlib's `Real.binEntropy` is in nats),
   so `r(0)=1`. The positive-key crossover is **proven, not hardcoded**:
   `bb84KeyRate_pos_iff_binEntropy_lt` states positivity as `h₂(e) < 1/2`,

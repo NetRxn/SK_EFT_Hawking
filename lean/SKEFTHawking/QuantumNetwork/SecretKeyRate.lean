@@ -6,7 +6,8 @@ import SKEFTHawking.QuantumNetwork.RepeaterChain
 # BB84 secret-key rate over a repeater chain (Phase 6AC, Wave 1)
 
 The Shor–Preskill asymptotic secret-key rate of BB84 against the depolarizing
-(symmetric) channel is `r(e) = 1 − 2·h₂(e)`, where `h₂` is the **base-2** binary
+(symmetric) channel (Shor & Preskill, Phys. Rev. Lett. 85, 441 (2000)) is
+`r(e) = 1 − 2·h₂(e)`, where `h₂` is the **base-2** binary
 entropy and `e` is the quantum bit-error rate (QBER). Mathlib's `Real.binEntropy`
 is in *nats* (natural log), so the bits version is `h₂(p) = binEntropy p / log 2`;
 in this normalization `h₂(1/2) = 1` and the perfect channel gives `r(0) = 1`.
