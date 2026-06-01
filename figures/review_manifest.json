@@ -1,5 +1,5 @@
 {
-  "generated": "2026-05-23T08:15:22.117869+00:00",
+  "generated": "2026-06-01T19:09:13.622490+00:00",
   "project": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
   "figures_dir": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures",
   "figures": [
@@ -1881,8 +1881,8 @@
       "name": "fig_fk_dimensional_ladder",
       "function": "fig_fk_dimensional_ladder",
       "caption": "Phase 5s Wave 4 bridge theorem: dimensional-ladder evidence for gapped_interface_axiom (1+1D and 2+1D PROVED, 3+1D AXIOMATIZED).",
-      "png_path": null,
-      "html_path": null,
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fk_dimensional_ladder.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_fk_dimensional_ladder.html",
       "expected_traces": 0,
       "expected_axes": {},
       "physics_checks": [],
@@ -3169,6 +3169,85 @@
         "steel_blue",
         "amber",
         "sage"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_qnet_bb84_key_rate",
+      "function": "fig_qnet_bb84_key_rate",
+      "caption": "D6 \u00a76 (Phase 6AC) \u2014 BB84 Shor\u2013Preskill secret-key rate r(e)=1\u22122\u00b7h\u2082(e) vs end-to-end QBER, with the positive-key crossover e*\u22480.11 located as the proven root of h\u2082(e)=1/2 (not hardcoded). Lean: SecretKeyRate.lean.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_bb84_key_rate.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_bb84_key_rate.html",
+      "expected_traces": 2,
+      "expected_axes": {
+        "xaxis": "QBER",
+        "yaxis": "secret-key rate"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_qnet_swap_chain_envelope",
+      "function": "fig_qnet_swap_chain_envelope",
+      "caption": "D6 \u00a76 (Phase 6AA/6AB) \u2014 end-to-end fidelity of a k-swap Werner chain vs chain length for several per-link fidelities, inside the kernel-proven [1/4,1] envelope (swapChain_fidelity_envelope). Lean: Envelope.lean.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_swap_chain_envelope.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_swap_chain_envelope.html",
+      "expected_traces": 4,
+      "expected_axes": {
+        "xaxis": "swaps",
+        "yaxis": "fidelity"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber",
+        "cross"
+      ],
+      "review_criteria": [
+        "Axes labels readable and correct",
+        "Legend entries present and clear",
+        "Data ranges physically reasonable",
+        "Color palette consistent with project conventions",
+        "No rendering artifacts or clipping",
+        "Caption accurately describes content",
+        "Experimental points correctly positioned"
+      ]
+    },
+    {
+      "name": "fig_qnet_w_vs_ghz",
+      "function": "fig_qnet_w_vs_ghz",
+      "caption": "D6 \u00a76 (Phase 6AC) \u2014 Fortescue\u2013Lo W\u2083 random-pair finite-round yield D/(D+1) vs rounds, surpassing the specified-pair bound 2/3 for D\u22653 and approaching the GHZ\u2083 rate 1. Lean: WStateRate.lean, MultipartiteComparison.lean.",
+      "png_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_w_vs_ghz.png",
+      "html_path": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/figures/fig_qnet_w_vs_ghz.html",
+      "expected_traces": 3,
+      "expected_axes": {
+        "xaxis": "rounds",
+        "yaxis": "EPR pairs"
+      },
+      "physics_checks": [],
+      "color_keys": [
+        "steel_blue",
+        "amber"
       ],
       "review_criteria": [
         "Axes labels readable and correct",

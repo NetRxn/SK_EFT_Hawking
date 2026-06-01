@@ -2931,6 +2931,108 @@ def check_bibitem_title_primary_source() -> CheckResult:
 
 
 # ═══════════════════════════════════════════════════════════════════════
+# CHECK: Quantum-network substrate Python ↔ Lean cross-validation
+# ═══════════════════════════════════════════════════════════════════════
+
+@register_check("quantum_network",
+                "QN Python formulas satisfy the QuantumNetwork Lean theorem identities")
+def check_quantum_network() -> CheckResult:
+    """Cross-checks the `src/core/formulas.py` quantum-network mirror against the
+    closed-form identities/bounds proven in `lean/SKEFTHawking/QuantumNetwork/*.lean`
+    (Phases 6AA–6AD), and confirms the referenced Lean theorem names exist in that
+    subdirectory (CHECK 1 only globs the top-level package)."""
+    from src.core import formulas as F
+
+    details: List[Detail] = []
+    all_pass = True
+
+    def check(name: str, cond: bool, msg: str = ""):
+        nonlocal all_pass
+        details.append(Detail(name, cond, msg))
+        if not cond:
+            all_pass = False
+
+    # Werner swap multiplicative in the Werner parameter (wernerParam_swap)
+    F1, F2 = 0.83, 0.71
+    check("wernerParam_swap_multiplicative",
+          abs(F.werner_param(F.werner_swap_fidelity(F1, F2))
+              - F.werner_param(F1) * F.werner_param(F2)) < 1e-12)
+
+    # End-to-end one-more-link recurrence (endToEndFidelity_succ)
+    check("endToEndFidelity_succ",
+          all(abs(F.end_to_end_fidelity(0.9, k + 1)
+                  - F.werner_swap_fidelity(F.end_to_end_fidelity(0.9, k), 0.9)) < 1e-12
+              for k in range(6)))
+
+    # Envelope ∈ [1/4,1] (swapChain_fidelity_envelope)
+    check("swapChain_fidelity_envelope",
+          all(0.25 - 1e-12 <= F.end_to_end_fidelity(Fl, k) <= 1.0 + 1e-12
+              for Fl in (0.25, 0.5, 0.9, 1.0) for k in range(9)))
+
+    # BBPSSW strict increase on (1/2,1) (bbpsswRecurrence_gt)
+    check("bbpsswRecurrence_gt",
+          all(F.bbpssw_recurrence(Fl) > Fl for Fl in (0.51, 0.6, 0.75, 0.9, 0.99)))
+
+    # DEJMPS phase-flip-only increase + verified single-step decrease witness
+    check("dejmps_increase_phaseFlipOnly",
+          all(F.dejmps_out_a(A, (1 - A) / 2, (1 - A) / 2, 0.0) > A for A in (0.55, 0.7, 0.9)))
+    check("dejmps_single_step_can_decrease",
+          abs(F.dejmps_out_a(0.6, 0, 0, 0.4) - 13 / 25) < 1e-12
+          and F.dejmps_out_a(0.6, 0, 0, 0.4) < 0.6)
+
+    # Fortescue–Lo finite-round yield (fortescueLoYield_gt_two_thirds, _lt_one)
+    check("fortescueLoYield_gt_two_thirds",
+          all(2 / 3 < F.fortescue_lo_yield(D) < 1.0 for D in (3, 5, 12)))
+
+    # BB84 crossover proven, not hardcoded (bb84_crossover_exists, strictAntiOn)
+    check("bb84KeyRate_zero", abs(F.bb84_key_rate(0.0) - 1.0) < 1e-12)
+    check("bb84_crossover_sign_change",
+          F.bb84_key_rate(0.10) > 0.0 and F.bb84_key_rate(0.12) < 0.0)
+
+    # H₂(1/3) < 1 (w3_asymptotic_specified_lt_one)
+    check("w3_asymptotic_specified_lt_one", 0.0 < F.bin_entropy_bit(1 / 3) < 1.0)
+
+    # Horodecki teleportation (teleportAvgFidelity_horodecki, teleport_beats_classical_iff)
+    check("teleport_horodecki_formula",
+          all(abs(F.teleport_avg_fidelity(Fl) - (2 * Fl + 1) / 3) < 1e-12
+              for Fl in (0.5, 0.7, 1.0)))
+    check("teleport_beats_classical_iff",
+          F.teleport_avg_fidelity(0.6) > 2 / 3 and F.teleport_avg_fidelity(0.4) < 2 / 3)
+    check("haarPauliConstant_eq_third", abs(F.HAAR_PAULI_CONSTANT - 1 / 3) < 1e-15)
+
+    # Tier-1 anchors (bsmSuccessProb_*, linkRate_*)
+    check("bsmSuccessProb_bounds",
+          F.bsm_success_prob(2) == 0.5 and F.bsm_success_prob(4) == 1.0)
+    check("linkRate_monotonicity",
+          F.link_rate(1000, 2e8, 0.5) > F.link_rate(1000, 2e8, 0.9)
+          and F.link_rate(2000, 2e8, 0.5) > F.link_rate(1000, 2e8, 0.5))
+
+    # Referenced QN Lean theorem names exist in the QuantumNetwork subdirectory
+    qn_dir = Path(__file__).parent.parent / "lean" / "SKEFTHawking" / "QuantumNetwork"
+    expected = [
+        "wernerParam_swap", "endToEndFidelity_succ", "swapChain_fidelity_envelope",
+        "bbpsswRecurrence_gt", "dejmps_increase_phaseFlipOnly", "dejmps_single_step_can_decrease",
+        "fortescueLoYield_gt_two_thirds", "bb84_crossover_exists",
+        "teleportAvgFidelity_horodecki_unconditional", "haarPauliZSqAverage_eq",
+        "bsmSuccessProb_le_half_of_linearOptics", "linkRate_antitone_success",
+    ]
+    if qn_dir.exists():
+        names = set()
+        for lf in qn_dir.glob("*.lean"):
+            for line in lf.read_text().splitlines():
+                s = line.strip()
+                if s.startswith("theorem ") or s.startswith("lemma "):
+                    names.add(s.split()[1].split("(")[0].split(":")[0].strip())
+        missing = [t for t in expected if t not in names]
+        check("qn_lean_theorems_exist", not missing,
+              f"missing: {missing}" if missing else f"{len(expected)} QN theorems found")
+    else:
+        check("qn_lean_theorems_exist", False, "QuantumNetwork dir not found")
+
+    return CheckResult(passed=all_pass, details=details)
+
+
+# ═══════════════════════════════════════════════════════════════════════
 # CLI
 # ═══════════════════════════════════════════════════════════════════════
 

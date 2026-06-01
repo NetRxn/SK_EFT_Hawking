@@ -1797,6 +1797,45 @@ FIGURE_REGISTRY: list[FigureSpec] = [
         physics_checks=[],
         color_keys=["steel_blue", "amber", "sage"],
     ),
+    FigureSpec(
+        name="fig_qnet_bb84_key_rate",
+        function="fig_qnet_bb84_key_rate",
+        caption=(
+            "D6 §6 (Phase 6AC) — BB84 Shor–Preskill secret-key rate r(e)=1−2·h₂(e) "
+            "vs end-to-end QBER, with the positive-key crossover e*≈0.11 located as "
+            "the proven root of h₂(e)=1/2 (not hardcoded). Lean: SecretKeyRate.lean."
+        ),
+        needs_experiments=False, expected_traces=2,
+        expected_axes={"xaxis": "QBER", "yaxis": "secret-key rate"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
+    FigureSpec(
+        name="fig_qnet_swap_chain_envelope",
+        function="fig_qnet_swap_chain_envelope",
+        caption=(
+            "D6 §6 (Phase 6AA/6AB) — end-to-end fidelity of a k-swap Werner chain vs "
+            "chain length for several per-link fidelities, inside the kernel-proven "
+            "[1/4,1] envelope (swapChain_fidelity_envelope). Lean: Envelope.lean."
+        ),
+        needs_experiments=False, expected_traces=4,
+        expected_axes={"xaxis": "swaps", "yaxis": "fidelity"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber", "cross"],
+    ),
+    FigureSpec(
+        name="fig_qnet_w_vs_ghz",
+        function="fig_qnet_w_vs_ghz",
+        caption=(
+            "D6 §6 (Phase 6AC) — Fortescue–Lo W₃ random-pair finite-round yield "
+            "D/(D+1) vs rounds, surpassing the specified-pair bound 2/3 for D≥3 and "
+            "approaching the GHZ₃ rate 1. Lean: WStateRate.lean, MultipartiteComparison.lean."
+        ),
+        needs_experiments=False, expected_traces=3,
+        expected_axes={"xaxis": "rounds", "yaxis": "EPR pairs"},
+        physics_checks=[],
+        color_keys=["steel_blue", "amber"],
+    ),
 ]
 
 
@@ -1960,6 +1999,7 @@ def generate_figures() -> dict[str, Path]:
         # Phase 6t Wave 8 Stage 8 — Quantitative Solovay-Kitaev
         fig_sk_length_bound_curve,
         fig_fibonacci_braid_word_t_gate_example,
+        fig_qnet_bb84_key_rate, fig_qnet_swap_chain_envelope, fig_qnet_w_vs_ghz,
     )
     from src.core.transonic_background import (
         steinhauer_Rb87, heidelberg_K39, trento_spin_sonic,
@@ -2123,6 +2163,10 @@ def generate_figures() -> dict[str, Path]:
         "fig_sk_length_bound_curve": fig_sk_length_bound_curve,
         "fig_fibonacci_braid_word_t_gate_example":
             fig_fibonacci_braid_word_t_gate_example,
+        # Phase 6AA–6AD — quantum-network substrate (D6 §6)
+        "fig_qnet_bb84_key_rate": fig_qnet_bb84_key_rate,
+        "fig_qnet_swap_chain_envelope": fig_qnet_swap_chain_envelope,
+        "fig_qnet_w_vs_ghz": fig_qnet_w_vs_ghz,
     }
 
     paths = {}
@@ -2320,6 +2364,7 @@ def run_structural_checks() -> list[CheckIssue]:
         # Phase 6t Wave 8 Stage 8 — Quantitative Solovay-Kitaev
         fig_sk_length_bound_curve,
         fig_fibonacci_braid_word_t_gate_example,
+        fig_qnet_bb84_key_rate, fig_qnet_swap_chain_envelope, fig_qnet_w_vs_ghz,
         COLORS,
     )
     from src.core.transonic_background import (
@@ -2481,6 +2526,10 @@ def run_structural_checks() -> list[CheckIssue]:
         "fig_sk_length_bound_curve": fig_sk_length_bound_curve,
         "fig_fibonacci_braid_word_t_gate_example":
             fig_fibonacci_braid_word_t_gate_example,
+        # Phase 6AA–6AD — quantum-network substrate (D6 §6)
+        "fig_qnet_bb84_key_rate": fig_qnet_bb84_key_rate,
+        "fig_qnet_swap_chain_envelope": fig_qnet_swap_chain_envelope,
+        "fig_qnet_w_vs_ghz": fig_qnet_w_vs_ghz,
     }
 
     issues: list[CheckIssue] = []

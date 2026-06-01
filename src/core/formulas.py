@@ -10804,3 +10804,169 @@ def graphene_mir_constant_mpmath(dps=30):
         V_1 = 2 * pi
         beta_2 = (1 / pi) * (V_1 / (2 * pi)**2) * (1 - pi / 4) / 4
         return mpmath.cbrt(2 * beta_2 / (4 * pi))
+
+
+# ════════════════════════════════════════════════════════════════════
+# Quantum-network substrate (QuantumNetwork/*.lean — Phases 6AA–6AD)
+#
+# Python numeric mirror of the kernel-verified Lean closed forms for
+# entanglement-based quantum-network protocols (Werner/Bell-diagonal
+# real-parameter representation). Each function is the SINGLE SOURCE OF
+# TRUTH for its formula and names the Lean theorem(s) that verify it.
+# Fidelities/probabilities are dimensionless; link_rate is in seconds
+# when L is in metres and c in m/s.
+# ════════════════════════════════════════════════════════════════════
+
+def werner_swap_fidelity(F1: float, F2: float) -> float:
+    """
+    Entanglement-swap output fidelity for two Werner links.
+
+    F_out = F1·F2 + (1 − F1)(1 − F2)/3
+
+    Lean: wernerSwapFidelity, wernerSwapFidelity_comm, wernerSwapFidelity_mono_left
+    Source: Zang et al. arXiv:2305.14573 Eq. (2); Briegel–Dür–Cirac–Zoller PRA 59, 169 (1999) §IV
+    """
+    return F1 * F2 + (1.0 - F1) * (1.0 - F2) / 3.0
+
+
+def werner_param(F: float) -> float:
+    """
+    Werner parameter w = (4F − 1)/3 (∈ [0,1] for F ∈ [1/4,1]).
+
+    The entanglement swap is multiplicative in w: w(F1 ⋈ F2) = w(F1)·w(F2).
+
+    Lean: wernerParam, wernerParam_swap, wernerParam_injective
+    Source: Sangouard et al. RMP 83, 33 (2011) §III.D
+    """
+    return (4.0 * F - 1.0) / 3.0
+
+
+def end_to_end_fidelity(F: float, k: int) -> float:
+    """
+    Werner-iterated end-to-end fidelity of a k-swap chain of per-link fidelity F.
+
+    F_e2e^(k) = (1 + 3·w^k)/4,  w = (4F − 1)/3
+
+    Lean: endToEndFidelity, endToEndFidelity_param, endToEndFidelity_succ,
+          swapChain_fidelity_envelope (∈ [1/4,1] for F ∈ [1/4,1])
+    Source: iteration of the Werner swap; Sangouard et al. RMP 83, 33 (2011)
+    """
+    return (1.0 + 3.0 * werner_param(F) ** k) / 4.0
+
+
+def end_to_end_qber(F: float, k: int) -> float:
+    """
+    End-to-end quantum bit-error rate QBER = 1 − F_e2e^(k).
+
+    Lean: endToEndQBER, endToEndQBER_mem, endToEndQBER_monotone_length
+    """
+    return 1.0 - end_to_end_fidelity(F, k)
+
+
+def bbpssw_recurrence(F: float) -> float:
+    """
+    BBPSSW recurrence output fidelity for two identical Werner copies.
+
+    F' = (F² + ((1−F)/3)²) / (F² + 2F(1−F)/3 + 5((1−F)/3)²)
+
+    F' > F ⟺ (1−F)(2F−1)(4F−1) > 0 ⟺ F ∈ (1/2,1).
+
+    Lean: bbpsswRecurrence, bbpsswRecurrence_gt, bbpsswSuccessProb_pos
+    Source: Dür–Briegel review arXiv:0705.4165 Eq. (18); PRL 76, 722 (1996)
+    """
+    q = (1.0 - F) / 3.0
+    return (F * F + q * q) / (F * F + 2.0 * F * (1.0 - F) / 3.0 + 5.0 * q * q)
+
+
+def dejmps_out_a(A: float, B: float, C: float, D: float) -> float:
+    """
+    DEJMPS output target-fidelity component A' = (A²+D²)/N,
+    N = (A+D)² + (B+C)²  (corrected diagonal (00,11)=(I,Y) pairing).
+
+    Lean: dejmpsOutA, dejmpsNorm, dejmps_werner_fidelity_increase,
+          dejmps_increase_phaseFlipOnly, dejmps_single_step_can_decrease
+    Source: Dür–Briegel review arXiv:0705.4165 Eq. (19); Macchiavello PLA 246, 385 (1998)
+    """
+    return (A * A + D * D) / ((A + D) ** 2 + (B + C) ** 2)
+
+
+def fortescue_lo_yield(D: int) -> float:
+    """
+    Fortescue–Lo finite-round random-pair W₃ distillation yield ⟨E_D⟩ = D/(D+1).
+
+    Surpasses the single-copy specified-pair bound 2/3 for D ≥ 3; → 1 as D → ∞
+    (optimality of 1 is an open conjecture, not claimed).
+
+    Lean: fortescueLoYield, fortescueLoYield_gt_two_thirds, fortescueLoYield_lt_one,
+          fortescueLoYield_tendsto_one
+    Source: Fortescue–Lo PRL 98, 260501 (2007) Eq. (13)
+    """
+    return D / (D + 1.0)
+
+
+def bin_entropy_bit(p: float) -> float:
+    """
+    Base-2 binary (Shannon) entropy h₂(p) = −p·log₂ p − (1−p)·log₂(1−p), h₂(1/2)=1.
+
+    Mirror of the Lean nats-renormalized binEntropyBit = binEntropy/log 2.
+
+    Lean: binEntropyBit, binEntropyBit_two_inv
+    Source: Shannon; cf. Mathlib Real.binEntropy
+    """
+    if p <= 0.0 or p >= 1.0:
+        return 0.0
+    return -(p * np.log2(p) + (1.0 - p) * np.log2(1.0 - p))
+
+
+def bb84_key_rate(e: float) -> float:
+    """
+    Shor–Preskill BB84 asymptotic secret-key rate r(e) = 1 − 2·h₂(e).
+
+    r(0) = 1; positive iff h₂(e) < 1/2 (crossover e* ≈ 0.11, the implicit root of
+    h₂(e)=1/2 — never hardcoded in the Lean development).
+
+    Lean: bb84KeyRate, bb84KeyRate_zero, bb84KeyRate_pos_iff_binEntropy_lt,
+          bb84_crossover_exists, bb84_positiveKey_fidelity_threshold
+    Source: Shor & Preskill, Phys. Rev. Lett. 85, 441 (2000)
+    """
+    return 1.0 - 2.0 * bin_entropy_bit(e)
+
+
+def teleport_avg_fidelity(F: float, c: float = 1.0 / 3.0) -> float:
+    """
+    Horodecki average teleportation fidelity f_avg = F + (1−F)·c; with the
+    Haar–Pauli constant c = 1/3 this is (2F+1)/3. Beats the classical 2/3 iff F > 1/2.
+
+    Lean: teleportAvgFidelity, teleportAvgFidelity_horodecki_unconditional,
+          teleport_beats_classical_iff_unconditional, haarPauliZSqAverage_eq
+    Source: Horodecki PRA 60, 1888 (1999) Eq. (24); Massar–Popescu PRL 74, 1259 (1995)
+    """
+    return F + (1.0 - F) * c
+
+
+def bsm_success_prob(d: int) -> float:
+    """
+    Bell-state-measurement success probability resolving d of the 4 outcomes = d/4.
+    Linear optics resolves at most d=2 (≤1/2, Calsamiglia–Lütkenhaus); a complete
+    deterministic BSM resolves d=4 (=1).
+
+    Lean: bsmSuccessProb, bsmSuccessProb_le_half_of_linearOptics, bsmSuccessProb_complete
+    Source: Calsamiglia & Lütkenhaus, Appl. Phys. B 72, 67 (2001)
+    """
+    return d / 4.0
+
+
+def link_rate(L: float, c: float, p: float) -> float:
+    """
+    Physics-only elementary-link entanglement-generation time τ = L/(c·p_link) [s]
+    = one-way latency (L/c) × expected number of heralded attempts (1/p_link).
+
+    Lean: linkRate, linkRate_eq_latency_mul_attempts, linkRate_antitone_success,
+          geometric_expected_attempts
+    Source: geometric expectation; Sangouard et al. RMP 83, 33 (2011)
+    """
+    return L / (c * p)
+
+
+# Haar–Pauli quadratic integral ∫_{S²}(⟨ψ|σ_k|ψ⟩)² dμ = 1/3 (Lean: haarPauliZSqAverage_eq).
+HAAR_PAULI_CONSTANT: float = 1.0 / 3.0

@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-05-23T08:15:25.877677+00:00",
+  "timestamp": "2026-06-01T19:09:17.432582+00:00",
   "issues": [
     {
       "figure": "fig51_vestigial_binder_crossing",
@@ -126,12 +126,6 @@
       "severity": "warning",
       "check": "axis_label",
       "message": "xaxis title '' missing expected 'anyon'"
-    },
-    {
-      "figure": "fig_fk_dimensional_ladder",
-      "severity": "error",
-      "check": "generation",
-      "message": "Failed to generate: 'TRACKED_PROP'"
     },
     {
       "figure": "fig_phase5x_candidate_viability_matrix",
@@ -273,7 +267,7 @@
     }
   ],
   "summary": {
-    "errors": 1,
+    "errors": 0,
     "warnings": 44
   }
 }

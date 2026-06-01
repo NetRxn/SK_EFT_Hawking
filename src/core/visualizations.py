@@ -14540,3 +14540,93 @@ def fig_d8_sk_recursion() -> go.Figure:
 
 if __name__ == "__main__":
     main()
+
+
+# ════════════════════════════════════════════════════════════════════
+# Quantum-network substrate figures (QuantumNetwork/*.lean, Phases 6AA–6AD)
+# ════════════════════════════════════════════════════════════════════
+
+def fig_qnet_bb84_key_rate() -> go.Figure:
+    """BB84 secret-key rate r(e)=1−2h₂(e) vs QBER, with the proven positive-key
+    crossover (r=0 at e*≈0.11, the root of h₂(e)=1/2 — not hardcoded)."""
+    from src.core import formulas as F
+    blue, amber = COLORS["steel_blue"], COLORS["amber"]
+    e = np.linspace(0.0, 0.25, 400)
+    r = np.array([F.bb84_key_rate(x) for x in e])
+    # crossover (sign change) by bisection on the proven monotone branch
+    lo, hi = 0.0, 0.5
+    for _ in range(60):
+        mid = 0.5 * (lo + hi)
+        if F.bb84_key_rate(mid) > 0:
+            lo = mid
+        else:
+            hi = mid
+    e_star = 0.5 * (lo + hi)
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=e, y=r, mode="lines", name="r(e) = 1 − 2·h₂(e)",
+                             line=dict(color=blue, width=3)))
+    fig.add_hline(y=0.0, line=dict(color=COLORS["horizon"], width=1, dash="dot"))
+    fig.add_trace(go.Scatter(x=[e_star], y=[0.0], mode="markers+text",
+                             name=f"crossover e* ≈ {e_star:.3f}",
+                             marker=dict(color=amber, size=11, symbol="x"),
+                             text=[f"  e* ≈ {e_star:.3f}"], textposition="top right",
+                             textfont=dict(color="#9a6b00")))
+    fig.update_xaxes(title="end-to-end QBER  e", showgrid=True, gridcolor="#eee")
+    fig.update_yaxes(title="secret-key rate  r(e)  [bits/sifted bit]",
+                     showgrid=True, gridcolor="#eee")
+    fig.update_layout(
+        title="D6 §6 — BB84 secret-key rate vs QBER (crossover proven, not hardcoded)",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        height=500, width=900, margin=dict(l=80, r=40, t=110, b=60), plot_bgcolor="white")
+    return fig
+
+
+def fig_qnet_swap_chain_envelope() -> go.Figure:
+    """End-to-end fidelity of a k-swap Werner chain vs chain length, for several
+    per-link fidelities, inside the kernel-proven [1/4, 1] envelope band."""
+    from src.core import formulas as F
+    blue, amber, grey = COLORS["steel_blue"], COLORS["amber"], COLORS["cross"]
+    ks = list(range(0, 9))
+    fig = go.Figure()
+    # envelope band [1/4, 1] (swapChain_fidelity_envelope)
+    fig.add_trace(go.Scatter(x=ks + ks[::-1], y=[1.0] * len(ks) + [0.25] * len(ks),
+                             fill="toself", fillcolor="rgba(141,153,174,0.15)",
+                             line=dict(width=0), name="proven envelope [1/4, 1]",
+                             hoverinfo="skip"))
+    for Fl, col, dash in [(0.95, blue, "solid"), (0.85, amber, "dot"), (0.75, grey, "dash")]:
+        y = [F.end_to_end_fidelity(Fl, k) for k in ks]
+        fig.add_trace(go.Scatter(x=ks, y=y, mode="lines+markers",
+                                 name=f"F_link = {Fl}", line=dict(color=col, width=3, dash=dash),
+                                 marker=dict(size=6, color=col)))
+    fig.add_hline(y=0.25, line=dict(color=COLORS["horizon"], width=1, dash="dot"))
+    fig.add_hline(y=1.0, line=dict(color=COLORS["horizon"], width=1, dash="dot"))
+    fig.update_xaxes(title="number of entanglement swaps  k", dtick=1, showgrid=True, gridcolor="#eee")
+    fig.update_yaxes(title="end-to-end fidelity  F_e2e", range=[0.2, 1.05], showgrid=True, gridcolor="#eee")
+    fig.update_layout(
+        title="D6 §6 — Swap-chain end-to-end fidelity within the proven [1/4,1] envelope",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        height=500, width=900, margin=dict(l=80, r=40, t=110, b=60), plot_bgcolor="white")
+    return fig
+
+
+def fig_qnet_w_vs_ghz() -> go.Figure:
+    """Fortescue–Lo W₃ random-pair finite-round yield D/(D+1) vs rounds, surpassing
+    the specified-pair single-copy bound 2/3 (D≥3) and approaching the GHZ₃ rate 1."""
+    from src.core import formulas as F
+    blue, amber = COLORS["steel_blue"], COLORS["amber"]
+    Ds = list(range(1, 13))
+    y = [F.fortescue_lo_yield(D) for D in Ds]
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=Ds, y=y, mode="lines+markers", name="W₃ random-pair yield  D/(D+1)",
+                             line=dict(color=blue, width=3), marker=dict(size=7, color=blue)))
+    fig.add_trace(go.Scatter(x=Ds, y=[1.0] * len(Ds), mode="lines",
+                             name="GHZ₃ rate = 1", line=dict(color=COLORS["horizon"], width=1.5, dash="dash")))
+    fig.add_trace(go.Scatter(x=Ds, y=[2.0 / 3.0] * len(Ds), mode="lines",
+                             name="specified-pair bound 2/3", line=dict(color=amber, width=2, dash="dot")))
+    fig.update_xaxes(title="distillation rounds  D", dtick=1, showgrid=True, gridcolor="#eee")
+    fig.update_yaxes(title="EPR pairs per |W₃⟩", range=[0.4, 1.05], showgrid=True, gridcolor="#eee")
+    fig.update_layout(
+        title="D6 §6 — W₃ random-party distillation: surpasses 2/3 (D≥3), → GHZ₃ rate 1",
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        height=500, width=900, margin=dict(l=80, r=40, t=110, b=60), plot_bgcolor="white")
+    return fig
