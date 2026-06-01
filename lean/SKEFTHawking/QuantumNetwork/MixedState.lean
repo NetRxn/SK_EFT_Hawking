@@ -238,4 +238,36 @@ theorem eigPosSum_eq_re_trace_posProj {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.I
   rw [hPM, trace_cfc, eigPosSum, Complex.re_sum]
   exact Finset.sum_congr rfl fun i _ => (Complex.ofReal_re _).symm
 
+/-- `cfc f M` is Hermitian for a real function `f` (real diagonal conjugated by a unitary). -/
+theorem cfc_isHermitian {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) (f : ℝ → ℝ) :
+    (hM.cfc f).IsHermitian := by
+  have hD : star (Matrix.diagonal (RCLike.ofReal ∘ f ∘ hM.eigenvalues : Fin n → ℂ))
+      = Matrix.diagonal (RCLike.ofReal ∘ f ∘ hM.eigenvalues : Fin n → ℂ) := by
+    rw [Matrix.star_eq_conjTranspose, Matrix.diagonal_conjTranspose]
+    simp [Function.comp_def, Complex.conj_ofReal]
+  rw [Matrix.IsHermitian, ← Matrix.star_eq_conjTranspose, Matrix.IsHermitian.cfc, ← map_star, hD]
+
+/-- `cfc f M` is positive-semidefinite when `f ≥ 0` on the spectrum (real diagonal of
+nonnegative entries, conjugated by a unitary). -/
+theorem cfc_posSemidef {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) {f : ℝ → ℝ}
+    (hf : ∀ i, 0 ≤ f (hM.eigenvalues i)) : (hM.cfc f).PosSemidef := by
+  rw [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply]
+  have hd : (Matrix.diagonal (RCLike.ofReal ∘ f ∘ hM.eigenvalues : Fin n → ℂ)).PosSemidef := by
+    refine Matrix.PosSemidef.diagonal fun i => ?_
+    simp only [Pi.zero_apply, Function.comp_apply]
+    exact Complex.zero_le_real.mpr (hf i)
+  have h := hd.conjTranspose_mul_mul_same
+    ((hM.eigenvectorUnitary : Matrix (Fin n) (Fin n) ℂ)ᴴ)
+  simpa [Matrix.conjTranspose_conjTranspose, ← Matrix.star_eq_conjTranspose, mul_assoc] using h
+
+/-- **Re tr(Q·S) ≥ 0** for a Hermitian idempotent (projection) `Q` and positive-
+semidefinite `S`: `tr(Q·S) = tr(Qᴴ·S·Q)` (cyclic + `Q²=Q`), and `Qᴴ·S·Q` is PSD. -/
+theorem re_trace_proj_mul_posSemidef_nonneg {Q S : Matrix (Fin n) (Fin n) ℂ}
+    (hQh : Q.IsHermitian) (hQi : Q * Q = Q) (hS : S.PosSemidef) :
+    0 ≤ (Q * S).trace.re := by
+  have htr : (Qᴴ * S * Q).trace = (Q * S).trace := by
+    rw [hQh.eq, Matrix.trace_mul_comm, ← Matrix.mul_assoc, hQi]
+  rw [← htr]
+  exact (Complex.le_def.mp (hS.conjTranspose_mul_mul_same Q).trace_nonneg).1
+
 end SKEFTHawking.QuantumNetwork
