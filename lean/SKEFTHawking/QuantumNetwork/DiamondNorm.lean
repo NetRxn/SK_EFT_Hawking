@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import SKEFTHawking.QuantumNetwork.MixedState
+import SKEFTHawking.QuantumNetwork.CPTPChannel
 
 /-!
 # Channel structure for the diamond norm (Phase 6AE-B)
@@ -62,33 +63,63 @@ noncomputable def choiMatrix (Φ : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n)
   ext p q; simp [choiMatrix]
 
 /-
-## DEFERRED FRONTIER (6AE-A steps 3–5 + 6AE-B diamond-norm properties)
+## STATUS (updated 2026-06-01 after Phase 6AF)
 
-These rest on analytic machinery that Mathlib at our pin (v4.29.1/`5e932f97`) does
-NOT provide, verified absent by direct grep 2026-06-01: **no von Neumann trace
-inequality, no Ky Fan inequality, no matrix polar decomposition, no Schatten/nuclear
-norm**. Building them from scratch is a multi-week formalization, beyond this phase's
-budget; fenced honestly (no sorry, no axiom) per the phase discipline.
+Most of the analytic frontier that 6AE deferred has since been PROVEN in Phase 6AF — the
+6AE blocker note ("no von Neumann / Ky Fan / polar / Schatten") was bypassed by a
+positive-part + Hermitian-dilation + charpoly route that needs none of them:
 
-* **Step 3 — trace-norm triangle** `‖A+B‖₁ ≤ ‖A‖₁ + ‖B‖₁`. Standard route is the dual
-  characterization `‖A‖₁ = sup_{‖U‖≤1} |tr(UᴴA)|`, which needs polar decomposition +
-  the von Neumann trace inequality (both absent). For the Hermitian case (sufficient
-  for `traceDist`), a spectral-theorem route via `‖H‖₁ = sup_{−I ≤ U ≤ I} tr(HU)` is
-  plausible on the shipped `spectral_theorem` substrate but still a multi-lemma build.
-* **Step 2 (remainder) — `traceDist ρ σ ∈ [0,1]` upper bound** and the metric triangle:
-  depend on Step 3.
-* **Step 4 — Uhlmann fidelity + Fuchs–van de Graaf**: need `cfc √` of operator products
-  and the FvdG inequalities (analytic).
-* **Step 5 — CPTP contractivity** `D(Φρ,Φσ) ≤ D(ρ,σ)` (data processing): needs Step 3 +
-  Kraus/Stinespring-style contractivity.
-* **Step 6 — `diamondNorm`** `‖Φ‖_◇ = sup_ρ ‖(Φ⊗id)ρ‖₁` and its norm axioms /
-  submultiplicativity / Choi characterization: the *sup* needs boundedness +
-  the tensor channel `Φ⊗id`, and the norm axioms rest on Step 3. The concrete
-  `partialTrace` and `choiMatrix` above are the channel–state-duality substrate it
-  builds on.
+* **Step 3 — trace-norm triangle**: ✅ DONE (`MixedState.traceNorm_hermitian_triangle`,
+  and the *general* non-Hermitian `traceNorm_triangle` via the Hermitian dilation).
+* **Step 2 — `traceDist ∈ [0,1]` + metric triangle**: ✅ DONE (`traceDist_triangle`,
+  `traceDist_mem_Icc`).
+* **Step 4 — Uhlmann fidelity**: ✅ FOUNDATION DONE (`sqrtFidelity`/`fidelity`, `=1` on the
+  diagonal, symmetric, Uhlmann form verified). The quantitative **Fuchs–van de Graaf**
+  bounds + `F ≤ 1` remain fenced (need Schatten-2 / matrix Hölder — see `MixedState.lean`).
+* **Step 5 — CPTP contractivity** `D(Φρ,Φσ) ≤ D(ρ,σ)`: ✅ DONE (`CPTPChannel.lean`,
+  `traceDist_krausMap_le`).
+* **Step 6 — `diamondNorm`** `‖Φ‖_◇ = sup_ρ ‖(Φ⊗id)ρ‖₁`: the **Choi positivity**
+  half of the channel–state duality is proven below (`choiMatrix_krausMap_posSemidef`).
+  The full diamond *norm* (the supremum over states + its boundedness/attainment, the
+  tensor channel `Φ⊗id` over the product index, and the norm axioms) remains the
+  DEFERRED FRONTIER — see the dedicated note after the Choi theorem below.
+-/
 
-PROVEN so far (6AE-A): `traceNorm`/`traceDist` + structural properties;
-`traceNorm_posSemidef` (the PSD→trace bridge, step 1 linchpin); `traceNorm_density_eq_one`.
+/-- **Choi positivity (channel–state duality, 6AF-5)**: the Choi matrix of a Kraus channel
+`Φ(ρ) = ∑ₖ Kₖ ρ Kₖᴴ` is positive semidefinite. This is the "easy" (⟹) direction of Choi's
+theorem — complete positivity implies a PSD Choi matrix — proven concretely: the Choi matrix
+is `∑ₖ wₖ wₖᴴ` with `wₖ(p) = Kₖ(p.2, p.1)`, a sum of rank-one PSD outer products. -/
+theorem choiMatrix_krausMap_posSemidef (K : Fin m → Matrix (Fin n) (Fin n) ℂ) :
+    (choiMatrix (krausMap K)).PosSemidef := by
+  have key : choiMatrix (krausMap K)
+      = ∑ k, (Matrix.of fun (p : Fin n × Fin n) (_ : Fin 1) => K k p.2 p.1)
+          * (Matrix.of fun (p : Fin n × Fin n) (_ : Fin 1) => K k p.2 p.1)ᴴ := by
+    ext p q
+    simp only [choiMatrix, krausMap, Matrix.sum_apply, Matrix.mul_apply, Matrix.single_apply,
+      Matrix.conjTranspose_apply, Matrix.of_apply, Finset.univ_unique, Finset.sum_singleton]
+    refine Finset.sum_congr rfl fun k _ => ?_
+    simp only [ite_and, mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
+      Finset.mem_univ, if_true]
+  rw [key]
+  exact Matrix.posSemidef_sum _ fun k _ => Matrix.posSemidef_self_mul_conjTranspose _
+
+/-
+## DEFERRED FRONTIER — the diamond norm proper (6AF-5)
+
+`choiMatrix_krausMap_posSemidef` above gives the channel–state-duality positivity. The full
+**diamond norm** `‖Φ‖_◇ = sup_ρ ‖(Φ ⊗ id)ρ‖₁` remains fenced (no sorry, no axiom):
+
+* the supremum over the (infinite) set of density operators needs **boundedness +
+  attainment** — i.e. compactness of the density-operator set together with continuity of
+  the tensored trace norm — for which Mathlib at pin has no concrete-matrix substrate;
+* the stabilizing **tensor channel `Φ ⊗ id`** lives over the product index `Fin n × Fin n'`,
+  while the trace-norm theory (`MixedState.lean`) is built over `Fin n`; bridging them needs
+  either a general-Fintype-index refactor of the trace norm or a `Fin n × Fin n' ≃ Fin (n·n')`
+  reindexing layer;
+* the **norm axioms / submultiplicativity** then rest on those two.
+
+Each is a multi-week build; fenced per the phase discipline. The trace-distance + CPTP
+contractivity core (6AF-1→4) is the load-bearing certification substrate and is fully shipped.
 -/
 
 end SKEFTHawking.QuantumNetwork
