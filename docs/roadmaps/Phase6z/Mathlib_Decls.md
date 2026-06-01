@@ -1,4 +1,4 @@
-# Phase 6z — Mathlib4 declarations + gotchas (verified at pin `8850ed93`, Lean v4.29.1)
+# Phase 6z — Mathlib4 declarations + gotchas (verified at pin `5e932f97`, Lean v4.29.1)
 
 *Progressive-disclosure detail doc for `Phase6z_Roadmap.md`. Source: DR2 (`Lit-Search/Phase-6y/Phase 6y :
 SK_EFT_Hawking Irrational-Angle Seed for Density of ⟨H, S, CNOT, CCZ⟩ in SU(8).md`), which verified each
