@@ -556,12 +556,35 @@ over the chain in \verb|teleport_useful_over_chain|. Kernel-only; \emph{zero} ne
 \label{sec:conclusion}
 
 The D6 substrate sits at the convergence of four 2025--2026
-fault-tolerant-quantum-computation results. The present skeleton
-draft anchors the bundle at Wave 6v.1 ship (the Williamson-Yoder
-gauging-QEC overhead bound) with \textsection~\ref{sec:gaugingQEC}
-fully populated; the remaining sections await Waves~6v.2, 6v.5,
-6v.6. Stage~13 adversarial review is deferred to the Phase~6v close
-per the consolidated-review-pass protocol.
+fault-tolerant-quantum-computation results, all now populated and
+kernel-verified: the Williamson--Yoder gauging-QEC overhead bound
+(\textsection~\ref{sec:gaugingQEC}, Wave~6v.1), the Shor T-gate counts
+for ECC-256 (\textsection~\ref{sec:shor}, Wave~6v.2), the APM-LDPC
+hashing bound (\textsection~\ref{sec:apmldpc}, Wave~6v.5), and the
+W-state QFT cyclotomic measurement primitive (\textsection~\ref{sec:wstate},
+Wave~6v.6). The last of these is extended in
+\textsection~\ref{sec:wstate:envelope} into a protocol-level
+\emph{verified quantum-network substrate} (Phases~6AA--6AD): a
+model-independent end-to-end fidelity envelope for entanglement-swap
+chains, generalized to memory decoherence and general Bell-diagonal
+inputs, together with the operational metrics network operators
+care about --- the BB84 secret-key rate (with the positive-key
+crossover proven, not hardcoded), the multipartite W$_3$-versus-GHZ$_3$
+randomization advantage, and the Horodecki teleportation fidelity whose
+sole analytic input (the Haar--Pauli integral $\int_{S^2}(\langle\psi|
+\sigma_k|\psi\rangle)^2\,d\mu=1/3$) is itself discharged, leaving that
+result unconditional and axiom-free. Every contribution is verified with
+axioms $\subseteq\{$\texttt{propext}, \texttt{Classical.choice},
+\texttt{Quot.sound}$\}$, with no \texttt{native\_decide} and no
+project-local axioms; the Python numerics, figures, and a
+cross-validation gate (\texttt{scripts/validate.py --check
+quantum\_network}) mirror the Lean closed forms. The genuinely remaining
+extensions are the full asymptotic DEJMPS convergence basin (Macchiavello's
+non-monotone argument) and a general density-matrix/diamond-norm layer for
+arbitrary-state certification, neither required for the protocol-level
+results here. A bundle-level Stage~13 adversarial review has been run on
+the quantum-network substrate; a consolidated full-bundle review across all
+four headline results remains the final pre-submission gate.
 
 %% ════════════════════════════════════════════════════════════════════
 \begin{thebibliography}{99}

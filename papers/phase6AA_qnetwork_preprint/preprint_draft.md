@@ -1,8 +1,16 @@
-# Formally Verified Fidelity Envelopes for Entanglement-Based Quantum Networks
+# Formally Verified Fidelity Envelopes and Operational Metrics for Entanglement-Based Quantum Networks
 
-**Bridging preprint draft — Phase 6AA (SK_EFT_Hawking / bundle D6 §6).**
-*Status: draft. Kernel-only Lean 4 / Mathlib4 substrate; all theorems verified
-with axioms ⊆ {propext, Classical.choice, Quot.sound}.*
+**John G. Roehm**
+*NetRxn Foundation*
+`jgroehm@gmail.com`
+
+**Bridging preprint draft — SK_EFT_Hawking bundle D6 §6 (Phases 6AA–6AD).**
+*Status: draft. Kernel-only Lean 4 / Mathlib4 substrate (pin `leanprover/lean4:v4.29.1`,
+Mathlib `5e932f97`); all theorems verified with axioms ⊆ {propext, Classical.choice,
+Quot.sound} — no `native_decide`, no project-local axioms. Source:
+`lean/SKEFTHawking/QuantumNetwork/`. Numerics, figures, and a cross-validation gate:
+`src/core/formulas.py`, `src/core/visualizations.py`, `scripts/validate.py --check
+quantum_network`.*
 
 ## Abstract
 
@@ -16,7 +24,13 @@ axioms. The headline is `swapChain_fidelity_envelope`: for a chain of `k`
 entanglement swaps of Werner links with per-link fidelity `F ∈ [1/4, 1]`, the
 end-to-end fidelity provably lies in `[1/4, 1]`, monotone in `F` and antitone in
 chain length. To our knowledge this is the first formally verified protocol-level
-fidelity bound for quantum networks.
+fidelity bound for quantum networks. On this substrate we further verify the
+operational network metrics — the BB84 secret-key rate (with the positive-key
+crossover proven via the intermediate-value theorem rather than hardcoded), the
+multipartite W₃-versus-GHZ₃ randomization advantage, and the Horodecki teleportation
+fidelity `(2F+1)/3` whose sole analytic input, the Haar–Pauli integral
+`∫_{S²}(⟨ψ|σ_k|ψ⟩)² dμ = 1/3`, is itself proven in the Bloch picture — so the
+teleportation results are unconditional and axiom-free.
 
 ## 1. Motivation
 
@@ -30,7 +44,7 @@ reference: any computed end-to-end fidelity falling outside the proven interval 
 provably inconsistent with the Werner-swap-chain model. This complements the
 exact W-state QFT measurement primitive of bundle D6 §6, on which it builds.
 
-## 2. Substrate (`lean/SKEFTHawking/QuantumNetwork/`, 8 kernel-only modules)
+## 2. Substrate (`lean/SKEFTHawking/QuantumNetwork/`, 14 kernel-only modules)
 
 - **Channels.** `fiberTransmission_eq_exp_neg_attenuationNp`: the
   dB↔Np attenuation identity `10^(−α_dB·L/10) = exp(−α_Np·L)`,
@@ -109,22 +123,88 @@ kernel-only and still in the real-parameter representation.
   (via Mathlib's `binEntropy_lt_log_two`); and `fortescueLoYield_tendsto_one`
   (`D/(D+1) → 1`) matches the GHZ₃ rate asymptotically (optimality of `1` is the open
   Fortescue–Lo conjecture and is *not* claimed).
-- **Horodecki teleportation (`Teleportation.lean`, probe-gated).** Mathlib at our pin
-  provides the sphere-Haar machinery but not the Pauli-quadratic integral
-  `∫_{S²}(⟨ψ|σ_k|ψ⟩)² dμ = 1/3`. Rather than introduce a project-local axiom we carry the
-  value as the explicit hypothesis `HaarPauliConstant` and prove the algebra around it:
-  `teleportAvgFidelity F c = F + (1−F)·c` is the structural skeleton,
-  `teleportAvgFidelity_horodecki` recovers `(2F+1)/3` under the hypothesis, and the
-  entanglement-utility threshold `teleport_beats_classical_iff` (`f_avg > 2/3 ⟺ F > 1/2`,
-  Massar–Popescu) is composed over the chain in `teleport_useful_over_chain`. **Zero** new
-  project-local axioms.
+- **Horodecki teleportation (`Teleportation.lean`).** `teleportAvgFidelity F c = F + (1−F)·c`
+  is the structural skeleton; the entanglement-utility threshold `teleport_beats_classical_iff`
+  (`f_avg > 2/3 ⟺ F > 1/2`, Massar–Popescu) composes over the chain in `teleport_useful_over_chain`.
 
-## 4. Relation to D6 and outlook
+## 3c. Phase 6AD extensions (Haar integral discharged; Tier-1 anchors; general DEJMPS)
+
+The Horodecki proof's one analytic step — the Haar–Pauli quadratic integral — is now
+**proven**, and three reference-richness items are added, all kernel-only.
+
+- **Haar–Pauli integral discharged (`HaarPauli.lean`).** Working in the Bloch picture
+  (an explicit `Fin 2 → ℂ` spinor and `2×2` Pauli matrix, no density matrices), we prove
+  the spinor identity `⟨ψ|σ_z|ψ⟩ = cos θ` (`pauliExpZ_blochKet`) and the spherical integral
+  `∫_{S²}(⟨ψ|σ_z|ψ⟩)² dμ = 1/3` (`haarPauliZSqAverage_eq`, via the fundamental theorem of
+  calculus on `∫₀^π cos²θ·sinθ = 2/3` and the solid-angle normalization). Mathlib at our pin
+  lacks this integral; we prove it rather than assume it. Consequently the Horodecki theorems
+  become **unconditional** — `teleportAvgFidelity_horodecki_unconditional` (`f_avg = (2F+1)/3`)
+  and `teleport_beats_classical_iff_unconditional` hold with **no hypothesis and no axiom**.
+- **W1′ Tier-1 anchors (`Rate.lean`).** The Calsamiglia–Lütkenhaus linear-optics Bell-state-
+  measurement bound (`bsmSuccessProb_le_half_of_linearOptics`, success `≤ 1/2` vs the
+  deterministic-BSM `= 1`) and the physics-only elementary-link rate `τ = L/(c·p_link)`
+  (`linkRate`), with the expected-attempts factor `1/p` *derived* as the geometric-distribution
+  mean (`geometric_expected_attempts`). Both are model-independent; handshake-inclusive link
+  times remain model-dependent (Tier-3) and are deliberately not bounded.
+- **General Bell-diagonal DEJMPS (`DEJMPSConvergence.lean`).** The full Klein-4 map with
+  normalization, nonnegativity, and the pure-target fixed point; a monotone single-step increase
+  on the phase-flip-only sub-basin (`dejmps_increase_phaseFlipOnly`); and a verified
+  non-monotonicity witness (`dejmps_single_step_can_decrease`, `(3/5,0,0,2/5) → 13/25 < 3/5`)
+  showing that `λ₀₀ > 1/2` does *not* guarantee a single-step increase — the full asymptotic
+  basin rests on Macchiavello's (non-monotone) argument and is cited, not formalized.
+
+## 4. Figures
+
+Three figures (generated by `src/core/visualizations.py`, regression-checked by
+`scripts/review_figures.py`) summarize the operational metrics:
+
+- **Fig. 1** (`fig_qnet_bb84_key_rate`) — the BB84 secret-key rate `r(e) = 1 − 2·h₂(e)`
+  versus end-to-end QBER, with the positive-key crossover `e* ≈ 0.11` located as the
+  proven root of `h₂(e) = 1/2` (not hardcoded).
+- **Fig. 2** (`fig_qnet_swap_chain_envelope`) — end-to-end fidelity of a `k`-swap Werner
+  chain for several per-link fidelities, inside the kernel-proven `[1/4, 1]` envelope band.
+- **Fig. 3** (`fig_qnet_w_vs_ghz`) — the Fortescue–Lo W₃ random-pair yield `D/(D+1)`,
+  surpassing the specified-pair bound `2/3` for `D ≥ 3` and approaching the GHZ₃ rate `1`.
+
+## 5. Relation to D6 and outlook
 
 This substrate is absorbed into bundle D6 §6 (W-state QFT) as the protocol-level
-extension of the exact cyclotomic W-state measurement primitive. Natural
-extensions (deferred): the fidelity-under-continuous-decay envelope (composing the
-transcendental loss bounds with the swap chain), the general Bell-diagonal Klein-4
-swap map, and the Horodecki teleportation fidelity (which requires a Haar-integral
-lemma). The substrate is finite-dimensional and Bell-diagonal by design; arbitrary
-mixed-state certification would require the general density-matrix layer.
+extension of the exact cyclotomic W-state measurement primitive. The decay-inclusive
+envelope, the general Bell-diagonal Klein-4 swap map, the repeater-recursion/QBER
+breadth, the BB84 secret-key rate, the multipartite comparison, and the Horodecki
+teleportation fidelity (with its Haar integral discharged) are all now in hand. The
+substrate is finite-dimensional and Bell-diagonal by design; the genuinely remaining
+extensions are (i) the full asymptotic DEJMPS convergence basin (Macchiavello's
+non-monotone argument), and (ii) a general density-matrix / trace-distance / diamond-norm
+layer for arbitrary-state certification — neither needed for the protocol-level fidelity
+envelopes presented here.
+
+## References
+
+1. K. Chung, M. Hajdušek, R. Van Meter et al., "Quantum network simulator
+   cross-validation," arXiv:2504.01290 (2025).
+2. C. Zang, X. Chen, A. Kolar, A. Chung, M. Suchara, T. Zhong, R. Kettimuthu,
+   "Entanglement distribution in quantum repeaters with optimized buffer time,"
+   arXiv:2305.14573 (2023).
+3. W. Dür and H. J. Briegel, "Entanglement purification and quantum error correction,"
+   Rep. Prog. Phys. **70**, 1381 (2007) [arXiv:0705.4165].
+4. C. H. Bennett, G. Brassard, S. Popescu, B. Schumacher, J. A. Smolin, W. K. Wootters,
+   "Purification of noisy entanglement and faithful teleportation via noisy channels,"
+   Phys. Rev. Lett. **76**, 722 (1996).
+5. D. Deutsch, A. Ekert, R. Jozsa, C. Macchiavello, S. Popescu, A. Sanpera, "Quantum
+   privacy amplification and the security of quantum cryptography over noisy channels,"
+   Phys. Rev. Lett. **77**, 2818 (1996).
+6. C. Macchiavello, "On the analytical convergence of the QPA procedure," Phys. Lett. A
+   **246**, 385 (1998).
+7. S. Fortescue and H.-K. Lo, "Random-party entanglement distillation in multiparty
+   states," Phys. Rev. Lett. **98**, 260501 (2007); Phys. Rev. A **78**, 012348 (2008).
+8. M. Horodecki, P. Horodecki, R. Horodecki, "General teleportation channel, singlet
+   fraction and quasi-distillation," Phys. Rev. A **60**, 1888 (1999).
+9. S. Massar and S. Popescu, "Optimal extraction of information from finite quantum
+   ensembles," Phys. Rev. Lett. **74**, 1259 (1995).
+10. P. W. Shor and J. Preskill, "Simple proof of security of the BB84 quantum key
+    distribution protocol," Phys. Rev. Lett. **85**, 441 (2000).
+11. J. Calsamiglia and N. Lütkenhaus, "Maximum efficiency of a linear-optical Bell-state
+    analyzer," Appl. Phys. B **72**, 67 (2001).
+12. N. Sangouard, C. Simon, H. de Riedmatten, N. Gisin, "Quantum repeaters based on atomic
+    ensembles and linear optics," Rev. Mod. Phys. **83**, 33 (2011).
