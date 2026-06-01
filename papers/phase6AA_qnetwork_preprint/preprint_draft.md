@@ -153,7 +153,7 @@ The Horodecki proof's one analytic step — the Haar–Pauli quadratic integral 
   showing that `λ₀₀ > 1/2` does *not* guarantee a single-step increase — the full asymptotic
   basin rests on Macchiavello's (non-monotone) argument and is cited, not formalized.
 
-## 3d. Phase 6AE: a general mixed-state / channel layer (in progress)
+## 3d. Phase 6AE–6AF: a general mixed-state / channel layer
 
 Beyond the Bell-diagonal/Werner protocol class, we have begun the general
 density-matrix layer for *arbitrary-state* certification, built concretely on
@@ -173,13 +173,31 @@ density-matrix layer for *arbitrary-state* certification, built concretely on
   `trace_partialTrace`: `tr(partialTrace M) = tr M`) and the `choiMatrix`
   (Choi/Jamiołkowski channel–state duality) — the substrate the diamond norm builds on.
 
-**Deferred frontier (honestly documented, no axioms).** The trace-norm triangle
-inequality, the metric `traceDist ∈ [0,1]` bound, the Uhlmann fidelity / Fuchs–van de
-Graaf inequalities, CPTP trace-distance contractivity, and the diamond norm's sup
-definition and norm axioms all rest on analytic machinery absent from Mathlib at our
-pin (no von Neumann trace inequality, Ky Fan inequality, matrix polar decomposition, or
-Schatten norm). These are a substantial from-scratch development and are left as a
-documented research frontier (`Phase6AE_Roadmap.md`), not formalized here.
+**Phase 6AF: the analytic core, discharged (kernel-pure).** The metric, fidelity, and
+data-processing layer 6AE deferred is now proven — bypassing the machinery the 6AE note
+flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
+
+- **Trace-norm triangle.** `traceNorm_hermitian_triangle` (Hermitian case, via the
+  positive-eigenvalue-sum decomposition `‖H‖₁ = 2·∑max(λᵢ,0) − tr H` plus a projection
+  bound) and the *general* non-Hermitian `traceNorm_triangle` (via the Hermitian dilation
+  `[[0,A],[Aᴴ,0]]` reindexed to `Fin(n+n)`, whose singular values double `A`'s — proven
+  through the fact that the trace norm is a function of the characteristic polynomial alone).
+  Hence `traceDist` is a genuine **metric** (`traceDist_triangle`) in `[0,1]` (`traceDist_mem_Icc`).
+- **Operator modulus.** `absOp A = √(AᴴA)` with `‖A‖₁ = tr|A|` (`traceNorm_eq_trace_absOp`).
+- **Uhlmann fidelity.** `sqrtFidelity ρ σ = ‖√σ·√ρ‖₁ = tr√(√ρ σ √ρ)` (the trace-norm form
+  proven equal to the literal Uhlmann expression), with `F(ρ,ρ)=1` and symmetry.
+- **CPTP data processing (`CPTPChannel.lean`).** For a Kraus channel `Φ(ρ)=∑ₖ Kₖ ρ Kₖᴴ`
+  with `∑ₖ Kₖᴴ Kₖ = 1`: trace-norm contractivity `‖Φ(A)‖₁ ≤ ‖A‖₁` and **trace-distance
+  contractivity** `D(Φρ,Φσ) ≤ D(ρ,σ)` (`traceDist_krausMap_le`, via the positive/negative-part
+  split, no dual norm), plus density-operator preservation.
+- **Choi positivity.** `choiMatrix_krausMap_posSemidef`: the Choi matrix of a Kraus channel
+  is positive semidefinite (the channel–state-duality direction of Choi's theorem).
+
+**Remaining frontier (honestly documented, no `sorry`/axiom).** Two quantitative items:
+the **Fuchs–van de Graaf** bounds `1−F ≤ D ≤ √(1−F²)` and the range `F ≤ 1` (which need a
+Schatten-2 / matrix-Hölder layer Mathlib lacks), and the full **diamond norm**
+`‖Φ‖_◇ = sup_ρ ‖(Φ⊗id)ρ‖₁` (the supremum's boundedness/attainment and the tensor channel
+over the product index). Documented in `Phase6AF_Roadmap.md`.
 
 ## 4. Figures
 
@@ -201,11 +219,12 @@ extension of the exact cyclotomic W-state measurement primitive. The decay-inclu
 envelope, the general Bell-diagonal Klein-4 swap map, the repeater-recursion/QBER
 breadth, the BB84 secret-key rate, the multipartite comparison, and the Horodecki
 teleportation fidelity (with its Haar integral discharged) are all now in hand. The
-substrate is finite-dimensional and Bell-diagonal by design; the genuinely remaining
-extensions are (i) the full asymptotic DEJMPS convergence basin (Macchiavello's
-non-monotone argument), and (ii) a general density-matrix / trace-distance / diamond-norm
-layer for arbitrary-state certification — neither needed for the protocol-level fidelity
-envelopes presented here.
+general density-matrix / trace-distance layer for arbitrary-state certification has since
+been built (Phase 6AF, §3d): the trace-distance metric, operator modulus, Uhlmann fidelity,
+and CPTP trace-distance contractivity are all proven kernel-pure. The genuinely remaining
+extensions are (i) the full asymptotic DEJMPS convergence basin (Macchiavello's non-monotone
+argument), and (ii) two quantitative analytic items — the Fuchs–van de Graaf bounds and the
+diamond-norm supremum — none needed for the protocol-level fidelity envelopes presented here.
 
 ## References
 
