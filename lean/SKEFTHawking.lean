@@ -2638,6 +2638,8 @@ import SKEFTHawking.QuantumNetwork.SecretKeyRate
 import SKEFTHawking.QuantumNetwork.MultipartiteComparison
 -- Phase 6AC (2026-06-01): Horodecki teleportation fidelity (Haar value = tracked hypothesis).
 import SKEFTHawking.QuantumNetwork.Teleportation
+-- Bucket 3.1 (2026-06-01): Haar–Pauli integral discharged → teleportation unconditional.
+import SKEFTHawking.QuantumNetwork.HaarPauli
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
