@@ -270,4 +270,131 @@ theorem re_trace_proj_mul_posSemidef_nonneg {Q S : Matrix (Fin n) (Fin n) ℂ}
   rw [← htr]
   exact (Complex.le_def.mp (hS.conjTranspose_mul_mul_same Q).trace_nonneg).1
 
+/-- The matrix cfc is subtractive: `cfc f M − cfc g M = cfc (f−g) M`. -/
+theorem cfc_sub {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) (f g : ℝ → ℝ) :
+    hM.cfc f - hM.cfc g = hM.cfc (fun x => f x - g x) := by
+  have hfun : (fun i => (RCLike.ofReal ∘ f ∘ hM.eigenvalues) i
+        - (RCLike.ofReal ∘ g ∘ hM.eigenvalues) i)
+      = (RCLike.ofReal ∘ (fun x => f x - g x) ∘ hM.eigenvalues : Fin n → ℂ) := by
+    funext i; simp only [Function.comp_apply]; push_cast; ring
+  rw [Matrix.IsHermitian.cfc, Matrix.IsHermitian.cfc, Matrix.IsHermitian.cfc, ← map_sub,
+    diagonal_sub, hfun]
+
+/-- Positive part of a Hermitian matrix, `cfc(max(·,0))M` (positive-semidefinite). -/
+noncomputable def posPart {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    Matrix (Fin n) (Fin n) ℂ := hM.cfc (fun x => max x 0)
+
+/-- Negative part of a Hermitian matrix, `cfc(max(−·,0))M` (positive-semidefinite). -/
+noncomputable def negPart {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    Matrix (Fin n) (Fin n) ℂ := hM.cfc (fun x => max (-x) 0)
+
+theorem posPart_posSemidef {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    (posPart hM).PosSemidef := cfc_posSemidef hM fun _ => le_max_right _ _
+
+theorem negPart_posSemidef {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    (negPart hM).PosSemidef := cfc_posSemidef hM fun _ => le_max_right _ _
+
+/-- **`M = posPart M − negPart M`** (`max(x,0) − max(−x,0) = x`). -/
+theorem self_eq_posPart_sub_negPart {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    M = posPart hM - negPart hM := by
+  rw [posPart, negPart, cfc_sub]
+  conv_lhs => rw [← cfc_id hM]
+  congr 1
+  funext x
+  rcases le_total 0 x with h | h
+  · rw [max_eq_left h, max_eq_right (neg_nonpos.mpr h), sub_zero]
+  · rw [max_eq_right h, max_eq_left (neg_nonneg.mpr h), sub_neg_eq_add, zero_add]
+
+/-- `∑ positive eigenvalues = Re tr(posPart M)`. -/
+theorem eigPosSum_eq_re_trace_posPart {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    eigPosSum hM = (posPart hM).trace.re := by
+  rw [posPart, trace_cfc, eigPosSum, Complex.re_sum]
+  exact Finset.sum_congr rfl fun i _ => (Complex.ofReal_re _).symm
+
+/-- Positive-eigenvalue projection `cfc(𝟙_{x>0})M`. -/
+noncomputable def posProj {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    Matrix (Fin n) (Fin n) ℂ := hM.cfc (fun x => if 0 < x then (1:ℝ) else 0)
+
+theorem posProj_isHermitian {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    (posProj hM).IsHermitian := cfc_isHermitian hM _
+
+theorem posProj_idem {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    posProj hM * posProj hM = posProj hM := by
+  rw [posProj, cfc_mul]
+  congr 1
+  funext x
+  by_cases h : 0 < x <;> simp [h]
+
+theorem one_sub_posProj_idem {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    (1 - posProj hM) * (1 - posProj hM) = 1 - posProj hM := by
+  rw [sub_mul, one_mul, mul_sub, mul_one, posProj_idem, sub_self, sub_zero]
+
+/-- **The projection bound:** `Re tr(P·A) ≤ ∑ positive eigenvalues(A)` for any projection
+`P` and Hermitian `A`. The positive-eigenvalue projection maximizes `Re tr(P·A)`. -/
+theorem re_trace_proj_mul_le_eigPosSum {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian)
+    {P : Matrix (Fin n) (Fin n) ℂ} (hPh : P.IsHermitian) (hPi : P * P = P) :
+    (P * A).trace.re ≤ eigPosSum hA := by
+  rw [eigPosSum_eq_re_trace_posPart hA]
+  have hPA : (P * A).trace.re
+      = (P * posPart hA).trace.re - (P * negPart hA).trace.re := by
+    rw [show P * A = P * posPart hA - P * negPart hA from by
+        rw [← mul_sub, ← self_eq_posPart_sub_negPart hA], trace_sub, Complex.sub_re]
+  have h1P_herm : (1 - P).IsHermitian := Matrix.isHermitian_one.sub hPh
+  have h1P_idem : (1 - P) * (1 - P) = 1 - P := by
+    rw [sub_mul, one_mul, mul_sub, mul_one, hPi, sub_self, sub_zero]
+  have h1' : ((1 - P) * posPart hA).trace.re
+      = (posPart hA).trace.re - (P * posPart hA).trace.re := by
+    rw [sub_mul, one_mul, trace_sub, Complex.sub_re]
+  have h1 := re_trace_proj_mul_posSemidef_nonneg h1P_herm h1P_idem (posPart_posSemidef hA)
+  have h2 := re_trace_proj_mul_posSemidef_nonneg hPh hPi (negPart_posSemidef hA)
+  rw [h1'] at h1
+  linarith
+
+/-- **Subadditivity of the positive-eigenvalue sum** (the Ky-Fan-style heart of the
+trace-norm triangle): `eigPosSum(A+B) ≤ eigPosSum A + eigPosSum B`. -/
+theorem eigPosSum_add_le {A B : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian)
+    (hB : B.IsHermitian) (hAB : (A + B).IsHermitian) :
+    eigPosSum hAB ≤ eigPosSum hA + eigPosSum hB := by
+  have hPh := posProj_isHermitian hAB
+  have hPi := posProj_idem hAB
+  have hach : eigPosSum hAB = (posProj hAB * (A + B)).trace.re :=
+    eigPosSum_eq_re_trace_posProj hAB
+  have hsplit : (posProj hAB * (A + B)).trace.re
+      = (posProj hAB * A).trace.re + (posProj hAB * B).trace.re := by
+    rw [mul_add, trace_add, Complex.add_re]
+  rw [hach, hsplit]
+  have bA := re_trace_proj_mul_le_eigPosSum hA hPh hPi
+  have bB := re_trace_proj_mul_le_eigPosSum hB hPh hPi
+  linarith
+
+/-- **Trace-norm triangle inequality for Hermitian matrices** (6AF-1):
+`‖A+B‖₁ ≤ ‖A‖₁ + ‖B‖₁`. -/
+theorem traceNorm_hermitian_triangle {A B : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian)
+    (hB : B.IsHermitian) : traceNorm (A + B) ≤ traceNorm A + traceNorm B := by
+  have hAB : (A + B).IsHermitian := hA.add hB
+  rw [traceNorm_hermitian_eq hA, traceNorm_hermitian_eq hB, traceNorm_hermitian_eq hAB,
+    Matrix.trace_add, Complex.add_re]
+  have := eigPosSum_add_le hA hB hAB
+  linarith
+
+/-- **The trace distance satisfies the triangle inequality** — it is a genuine metric. -/
+theorem traceDist_triangle (ρ σ τ : Matrix (Fin n) (Fin n) ℂ)
+    (hρ : ρ.IsHermitian) (hσ : σ.IsHermitian) (hτ : τ.IsHermitian) :
+    traceDist ρ τ ≤ traceDist ρ σ + traceDist σ τ := by
+  unfold traceDist
+  have h := traceNorm_hermitian_triangle (hρ.sub hσ) (hσ.sub hτ)
+  rw [show ρ - σ + (σ - τ) = ρ - τ by abel] at h
+  linarith
+
+/-- **The trace distance between density operators lies in `[0,1]`** (6AF-1, step 2 finish):
+`0 ≤ D(ρ,σ) ≤ 1`, via the triangle inequality and `‖ρ‖₁ = ‖σ‖₁ = 1`. -/
+theorem traceDist_mem_Icc {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : IsDensityOperator ρ)
+    (hσ : IsDensityOperator σ) : traceDist ρ σ ∈ Set.Icc (0:ℝ) 1 := by
+  refine ⟨traceDist_nonneg ρ σ, ?_⟩
+  unfold traceDist
+  have h := traceNorm_hermitian_triangle hρ.1.isHermitian hσ.1.isHermitian.neg
+  rw [show ρ + -σ = ρ - σ by abel, traceNorm_neg, traceNorm_density_eq_one hρ,
+    traceNorm_density_eq_one hσ] at h
+  linarith
+
 end SKEFTHawking.QuantumNetwork
