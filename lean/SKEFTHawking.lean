@@ -2648,6 +2648,8 @@ import SKEFTHawking.QuantumNetwork.DEJMPSConvergence
 import SKEFTHawking.QuantumNetwork.MixedState
 -- Phase 6AE-B (2026-06-01): channel structure for the diamond norm (partial trace, Choi matrix).
 import SKEFTHawking.QuantumNetwork.DiamondNorm
+-- Phase 6AF-4 (2026-06-01): CPTP Kraus channel + trace-distance contractivity (data processing).
+import SKEFTHawking.QuantumNetwork.CPTPChannel
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
