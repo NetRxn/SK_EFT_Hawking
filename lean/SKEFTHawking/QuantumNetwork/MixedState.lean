@@ -117,27 +117,51 @@ theorem isHermitian_mul_self_eq_cfc_sq {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.
   conv_lhs => rw [hM.spectral_theorem]
   rw [← map_mul, diagonal_mul_diagonal, hfun]
 
-/-
-## IN PROGRESS (step 1 bridge) — `traceNorm (PosSemidef A) = A.trace.re`
+/-- The eigenvalue multiset of `AᴴA` (Hermitian `A`) is the multiset of squared
+eigenvalues of `A`, obtained by matching characteristic polynomials through the
+cfc squaring identity (concrete; no CFC instance). -/
+theorem map_eigenvalues_conjTranspose_mul_self {A : Matrix (Fin n) (Fin n) ℂ}
+    (hA : A.IsHermitian) :
+    Multiset.map (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues
+        Finset.univ.val
+      = Multiset.map (fun i => hA.eigenvalues i ^ 2) Finset.univ.val := by
+  have hofReal : Function.Injective (RCLike.ofReal : ℝ → ℂ) := Complex.ofReal_injective
+  apply Multiset.map_injective hofReal
+  rw [Multiset.map_map, Multiset.map_map,
+    ← (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.roots_charpoly_eq_eigenvalues,
+    hA.eq, isHermitian_mul_self_eq_cfc_sq, ← hA.cfc_eq, hA.charpoly_cfc_eq,
+    Finset.prod_eq_multiset_prod]
+  rw [show (fun i => Polynomial.X - Polynomial.C (RCLike.ofReal (hA.eigenvalues i ^ 2) : ℂ))
+        = (fun a => Polynomial.X - Polynomial.C a) ∘ fun i => (RCLike.ofReal (hA.eigenvalues i ^ 2) : ℂ)
+      from rfl, ← Multiset.map_map, Polynomial.roots_multiset_prod_X_sub_C]
+  rfl
+  · exact hA
 
-Two workhorses are PROVEN above: `trace_cfc` and `isHermitian_mul_self_eq_cfc_sq`
-(`A·A = cfc(·²)A`, concrete, no CFC instance). The remaining assembly is the
-**root-multiset transfer**, mechanically:
+/-- **Bridge (step 1, linchpin):** the trace norm of a positive-semidefinite matrix
+equals its trace. In particular a density operator has trace norm `1`. -/
+theorem traceNorm_posSemidef {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.PosSemidef) :
+    traceNorm A = A.trace.re := by
+  have hms := map_eigenvalues_conjTranspose_mul_self hA.isHermitian
+  have hsum : Multiset.map (fun i =>
+        Real.sqrt ((Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues i))
+          Finset.univ.val
+      = Multiset.map hA.isHermitian.eigenvalues Finset.univ.val := by
+    rw [show (fun i => Real.sqrt
+          ((Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues i))
+        = Real.sqrt ∘ (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues
+      from rfl, ← Multiset.map_map, hms, Multiset.map_map]
+    refine Multiset.map_congr rfl fun i _ => ?_
+    simp only [Function.comp_apply]
+    exact Real.sqrt_sq (hA.eigenvalues_nonneg i)
+  have hr : A.trace.re = ∑ i, hA.isHermitian.eigenvalues i := by
+    rw [hA.isHermitian.trace_eq_sum_eigenvalues, Complex.re_sum]
+    exact Finset.sum_congr rfl fun i _ => Complex.ofReal_re _
+  unfold traceNorm traceNormOf
+  rw [hr, Finset.sum_eq_multiset_sum, Finset.sum_eq_multiset_sum, hsum]
 
-1. `map_eigenvalues_conjTranspose_mul_self`: `{eigenvalues(AᴴA)} = {(eigenvalues A)²}`
-   (real multisets). Route: `(AᴴA).charpoly = (A·A).charpoly = (cfc(·²)A).charpoly
-   = ∏ᵢ (X − C((eigᵢ)²))` via `cfc_eq` + `charpoly_cfc_eq`; then its `.roots` via
-   `Finset.prod_eq_multiset_prod` + `Polynomial.roots_multiset_prod_X_sub_C` (this avoids
-   the `∏ ≠ 0` side-goal that `Polynomial.roots_prod` generates and that fought the
-   `C (x²) = (C x)²` simp-normalization); match with `roots_charpoly_eq_eigenvalues`
-   and strip `RCLike.ofReal` (injective).
-2. map `Real.sqrt` over the multiset equality, use `Real.sqrt_sq` (PSD ⇒ eigenvalues ≥ 0)
-   to get `{√eigenvalues(AᴴA)} = {eigenvalues A}`, sum both sides
-   (`Finset.sum_eq_multiset_sum`), and combine with `trace_eq_sum_eigenvalues`.
-
-BLOCKER (precise): the polynomial `roots`-of-product normalization (`roots_prod` side-goal +
-`C`/`ofReal` `map_pow` reassociation). NEXT: switch to `roots_multiset_prod_X_sub_C`. Held per
-the fence-don't-fake discipline (no sorry/axiom); workhorses landed.
--/
+/-- **A density operator has trace norm `1`** (step 2): `tr|ρ| = tr ρ = 1`. -/
+theorem traceNorm_density_eq_one {ρ : Matrix (Fin n) (Fin n) ℂ} (hρ : IsDensityOperator ρ) :
+    traceNorm ρ = 1 := by
+  rw [traceNorm_posSemidef hρ.1, hρ.2, Complex.one_re]
 
 end SKEFTHawking.QuantumNetwork
