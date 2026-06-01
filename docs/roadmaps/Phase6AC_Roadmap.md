@@ -8,7 +8,7 @@
 | Wave | Content | Status |
 |---|---|---|
 | **W1** | BB84 secret-key rate: `binEntropyBit` (bits renormalization of Mathlib nats `binEntropy`) + `bb84KeyRate r(e)=1−2h₂(e)`; perfect-channel `r(0)=1`; **crossover proven not hardcoded** — `bb84KeyRate_pos_iff_binEntropy_lt` (positive ⇔ `binEntropy e < log 2/2`), `bb84KeyRate_strictAntiOn` (rate ↓ in error), `bb84_crossover_exists` (IVT: `e*∈(0,1/2)` with `r(e*)=0`), `bb84KeyRate_pos_iff_lt_crossover` (positive ⇔ `e<e*`), and `bb84_positiveKey_fidelity_threshold` (network: positive key ⇔ `F_e2e > 1−e*`) | ✅ DONE (`SecretKeyRate.lean`, kernel-pure {propext,Classical.choice,Quot.sound}) |
-| **W2** | Multipartite GHZ-vs-W random-party rate: GHZ₃ rate + Fortescue–Lo Thm 3.5 (`W₃ rate ≥ GHZ₃`, strict under loss); composes with shipped `fortescueLoYield` | ⏳ PENDING |
+| **W2** | Multipartite GHZ-vs-W random-party rate: GHZ₃ rate + Fortescue–Lo Thm 3.5 (`W₃ rate ≥ GHZ₃`, strict under loss); composes with shipped `fortescueLoYield` | ✅ DONE (`MultipartiteComparison.lean`, kernel-pure) |
 | **W3** | Teleportation (PROBE-GATED): Mathlib Haar lemma `∫_{S²}(⟨ψ|σ_k|ψ⟩)²dμ=1/3`? If tractable → Horodecki `f_avg=(2F+1)/3` + `F>1/2` utility threshold. If hard → algebraic skeleton + Haar fact as a TRACKED HYPOTHESIS (Prop arg), NOT a project axiom | ⏳ PENDING |
 | **W4** | Packaging: D6 §6 + preprint extended with W1–W3 + fresh-context Stage-13 → FULLY CLEAN | ⏳ PENDING |
 
@@ -23,4 +23,5 @@
 - Preemptive-strengthening checklist applied before each theorem statement.
 
 ## Progress log
+- **W2 — DONE** (`MultipartiteComparison.lean`, kernel-pure): `w3SpecifiedSingleCopyBound` (2/3), `ghz3RandomizationAdvantage` (0, cited modeling input), `w3RandomizationAdvantage`, `w3RandomizationAdvantage_pos`, **`w3_beats_ghz_randomization_advantage`** (Thm 3.5: W₃ strictly beats GHZ₃), `w3AsymptoticSpecifiedRate` (= `binEntropyBit (1/3)` = H₂(1/3)), `w3_asymptotic_specified_lt_one` (H₂(1/3)<1 via `binEntropy_lt_log_two`), `w3_asymptotic_specified_pos`, `fortescueLoYield_tendsto_one` (D/(D+1)→1 = GHZ rate). Reuses W1's `binEntropyBit` + Phase-6AA `fortescueLoYield`. Root-imported; counts 764 mod / 10018 thm.
 - **W1 — DONE** (`SecretKeyRate.lean`, kernel-pure): 9 declarations (`binEntropyBit`, `log_two_pos`, `binEntropyBit_two_inv`, `bb84KeyRate`, `bb84KeyRate_zero`, `bb84KeyRate_two_inv`, `bb84KeyRate_pos_iff_binEntropy_lt`, `bb84KeyRate_strictAntiOn`, `bb84KeyRate_continuous`, `bb84_crossover_exists`, `bb84KeyRate_pos_iff_lt_crossover`, `bb84_positiveKey_fidelity_threshold`). Root-imported into `SKEFTHawking.lean`; counts regenerated (Stage-9).

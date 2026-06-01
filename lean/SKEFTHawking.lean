@@ -2634,6 +2634,8 @@ import SKEFTHawking.QuantumNetwork.BellDiagonalSwap
 import SKEFTHawking.QuantumNetwork.RepeaterChain
 -- Phase 6AC (2026-06-01): BB84 secret-key rate (Shor–Preskill, crossover proven not hardcoded).
 import SKEFTHawking.QuantumNetwork.SecretKeyRate
+-- Phase 6AC (2026-06-01): multipartite W₃-vs-GHZ₃ randomization-advantage comparison.
+import SKEFTHawking.QuantumNetwork.MultipartiteComparison
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
