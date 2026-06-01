@@ -20,41 +20,45 @@ namespace SKEFTHawking.QuantumNetwork
 open Matrix
 open scoped ComplexOrder
 
-variable {m n : ℕ}
+variable {m : ℕ} {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- A **Kraus channel** `Φ(ρ) = ∑ₖ Kₖ ρ Kₖᴴ`. Completely positive by construction. -/
-noncomputable def krausMap (K : Fin m → Matrix (Fin n) (Fin n) ℂ)
-    (ρ : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
+noncomputable def krausMap (K : Fin m → Matrix ι ι ℂ)
+    (ρ : Matrix ι ι ℂ) : Matrix ι ι ℂ :=
   ∑ k, K k * ρ * (K k)ᴴ
 
 /-- The **trace-preservation** condition `∑ₖ Kₖᴴ Kₖ = 1` (CPTP). -/
-def IsKrausChannel (K : Fin m → Matrix (Fin n) (Fin n) ℂ) : Prop :=
+def IsKrausChannel (K : Fin m → Matrix ι ι ℂ) : Prop :=
   ∑ k, (K k)ᴴ * (K k) = 1
 
+omit [DecidableEq ι] in
 /-- The channel is additive (linear in the input state). -/
-theorem krausMap_add (K : Fin m → Matrix (Fin n) (Fin n) ℂ) (ρ σ : Matrix (Fin n) (Fin n) ℂ) :
+theorem krausMap_add (K : Fin m → Matrix ι ι ℂ) (ρ σ : Matrix ι ι ℂ) :
     krausMap K (ρ + σ) = krausMap K ρ + krausMap K σ := by
   unfold krausMap
   rw [← Finset.sum_add_distrib]
   exact Finset.sum_congr rfl fun k _ => by rw [Matrix.mul_add, Matrix.add_mul]
 
+omit [DecidableEq ι] in
 /-- The channel respects subtraction. -/
-theorem krausMap_sub (K : Fin m → Matrix (Fin n) (Fin n) ℂ) (ρ σ : Matrix (Fin n) (Fin n) ℂ) :
+theorem krausMap_sub (K : Fin m → Matrix ι ι ℂ) (ρ σ : Matrix ι ι ℂ) :
     krausMap K (ρ - σ) = krausMap K ρ - krausMap K σ := by
   unfold krausMap
   rw [← Finset.sum_sub_distrib]
   exact Finset.sum_congr rfl fun k _ => by rw [Matrix.mul_sub, Matrix.sub_mul]
 
+omit [DecidableEq ι] in
 /-- The channel preserves positive semidefiniteness (each `Kₖ ρ Kₖᴴ` is PSD). -/
-theorem krausMap_posSemidef (K : Fin m → Matrix (Fin n) (Fin n) ℂ) {ρ : Matrix (Fin n) (Fin n) ℂ}
+theorem krausMap_posSemidef (K : Fin m → Matrix ι ι ℂ) {ρ : Matrix ι ι ℂ}
     (hρ : ρ.PosSemidef) : (krausMap K ρ).PosSemidef := by
   apply Matrix.posSemidef_sum
   intro k _
   have h := hρ.conjTranspose_mul_mul_same ((K k)ᴴ)
   simpa [Matrix.conjTranspose_conjTranspose] using h
 
+omit [DecidableEq ι] in
 /-- The channel preserves Hermitian matrices. -/
-theorem krausMap_isHermitian (K : Fin m → Matrix (Fin n) (Fin n) ℂ) {ρ : Matrix (Fin n) (Fin n) ℂ}
+theorem krausMap_isHermitian (K : Fin m → Matrix ι ι ℂ) {ρ : Matrix ι ι ℂ}
     (hρ : ρ.IsHermitian) : (krausMap K ρ).IsHermitian := by
   unfold krausMap Matrix.IsHermitian
   rw [Matrix.conjTranspose_sum]
@@ -62,8 +66,8 @@ theorem krausMap_isHermitian (K : Fin m → Matrix (Fin n) (Fin n) ℂ) {ρ : Ma
     simp [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, hρ.eq, Matrix.mul_assoc]
 
 /-- **Trace preservation**: `tr Φ(ρ) = tr ρ` for a Kraus channel (`∑ₖ Kₖᴴ Kₖ = 1`). -/
-theorem trace_krausMap {K : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK : IsKrausChannel K)
-    (ρ : Matrix (Fin n) (Fin n) ℂ) : (krausMap K ρ).trace = ρ.trace := by
+theorem trace_krausMap {K : Fin m → Matrix ι ι ℂ} (hK : IsKrausChannel K)
+    (ρ : Matrix ι ι ℂ) : (krausMap K ρ).trace = ρ.trace := by
   unfold krausMap
   rw [Matrix.trace_sum]
   have hcyc : ∀ k, (K k * ρ * (K k)ᴴ).trace = ((K k)ᴴ * (K k) * ρ).trace :=
@@ -72,14 +76,14 @@ theorem trace_krausMap {K : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK : IsKrausC
   rw [← Matrix.trace_sum, ← Finset.sum_mul, hK, Matrix.one_mul]
 
 /-- A Kraus channel maps **density operators to density operators**. -/
-theorem krausMap_isDensityOperator {K : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK : IsKrausChannel K)
-    {ρ : Matrix (Fin n) (Fin n) ℂ} (hρ : IsDensityOperator ρ) :
+theorem krausMap_isDensityOperator {K : Fin m → Matrix ι ι ℂ} (hK : IsKrausChannel K)
+    {ρ : Matrix ι ι ℂ} (hρ : IsDensityOperator ρ) :
     IsDensityOperator (krausMap K ρ) :=
   ⟨krausMap_posSemidef K hρ.1, by rw [trace_krausMap hK, hρ.2]⟩
 
 /-- **`‖A‖₁ = tr A⁺ + tr A⁻`** for Hermitian `A` — the trace norm splits over the
 positive/negative parts (`|x| = max(x,0) + max(−x,0)`). -/
-theorem traceNorm_hermitian_eq_pos_add_neg {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian) :
+theorem traceNorm_hermitian_eq_pos_add_neg {A : Matrix ι ι ℂ} (hA : A.IsHermitian) :
     traceNorm A = (posPart hA).trace.re + (negPart hA).trace.re := by
   have hpos : (posPart hA).trace.re = ∑ i, max (hA.eigenvalues i) 0 :=
     (eigPosSum_eq_re_trace_posPart hA).symm
@@ -94,8 +98,8 @@ theorem traceNorm_hermitian_eq_pos_add_neg {A : Matrix (Fin n) (Fin n) ℂ} (hA 
 
 /-- **Trace-norm contractivity (data processing)**: `‖Φ(A)‖₁ ≤ ‖A‖₁` for a CPTP Kraus channel
 `Φ` and Hermitian `A`. Proof via the positive/negative-part split — no dual-norm needed. -/
-theorem traceNorm_krausMap_le {K : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK : IsKrausChannel K)
-    {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian) :
+theorem traceNorm_krausMap_le {K : Fin m → Matrix ι ι ℂ} (hK : IsKrausChannel K)
+    {A : Matrix ι ι ℂ} (hA : A.IsHermitian) :
     traceNorm (krausMap K A) ≤ traceNorm A := by
   have hsplit : krausMap K A = krausMap K (posPart hA) - krausMap K (negPart hA) := by
     conv_lhs => rw [self_eq_posPart_sub_negPart hA]
@@ -115,8 +119,8 @@ theorem traceNorm_krausMap_le {K : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK : I
 
 /-- **Trace-distance contractivity** `D(Φρ, Φσ) ≤ D(ρ, σ)` — the data-processing inequality for
 the trace distance under any CPTP channel. -/
-theorem traceDist_krausMap_le {K : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK : IsKrausChannel K)
-    {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.IsHermitian) (hσ : σ.IsHermitian) :
+theorem traceDist_krausMap_le {K : Fin m → Matrix ι ι ℂ} (hK : IsKrausChannel K)
+    {ρ σ : Matrix ι ι ℂ} (hρ : ρ.IsHermitian) (hσ : σ.IsHermitian) :
     traceDist (krausMap K ρ) (krausMap K σ) ≤ traceDist ρ σ := by
   unfold traceDist
   rw [← krausMap_sub]
