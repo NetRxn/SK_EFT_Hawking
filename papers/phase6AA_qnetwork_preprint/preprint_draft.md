@@ -86,6 +86,39 @@ real-parameter representation:
 A representative tight transcendental bound (`expNeg046_tight`, degree-5 Taylor
 squeeze) certifies the fiber-loss factor numerically, kernel-only.
 
+## 3b. Phase 6AC extensions (operational metrics: key rate, multipartite, teleportation)
+
+Three operational network metrics are layered on the fidelity substrate, all
+kernel-only and still in the real-parameter representation.
+
+- **BB84 secret-key rate (`SecretKeyRate.lean`).** The Shor–Preskill asymptotic
+  rate `bb84KeyRate e = 1 − 2·h₂(e)`, with the bits-renormalized binary entropy
+  `binEntropyBit p = binEntropy p / log 2` (Mathlib's `Real.binEntropy` is in nats),
+  so `r(0)=1`. The positive-key crossover is **proven, not hardcoded**:
+  `bb84KeyRate_pos_iff_binEntropy_lt` states positivity as `h₂(e) < 1/2`,
+  `bb84KeyRate_strictAntiOn` gives strict decrease in the error rate,
+  `bb84_crossover_exists` produces a genuine `e* ∈ (0,1/2)` with `r(e*)=0` via the
+  intermediate-value theorem, and `bb84_positiveKey_fidelity_threshold` composes this
+  with the Phase-6AB end-to-end QBER (positive key iff `F_e2e > 1−e*`). The decimal
+  `e* ≈ 0.11` is never asserted — it is the implicit root of `h₂(e)=1/2`.
+- **Multipartite GHZ-vs-W (`MultipartiteComparison.lean`, Fortescue–Lo Thm 3.5).**
+  `w3_beats_ghz_randomization_advantage` proves the W₃ randomization advantage over its
+  specified-pair single-copy bound `2/3` is strictly positive (reducing to the shipped
+  `fortescueLoYield_gt_two_thirds`), whereas GHZ₃'s is the cited modeling input `0`;
+  `w3_asymptotic_specified_lt_one` shows the W₃ asymptotic specified rate `H₂(1/3) < 1`
+  (via Mathlib's `binEntropy_lt_log_two`); and `fortescueLoYield_tendsto_one`
+  (`D/(D+1) → 1`) matches the GHZ₃ rate asymptotically (optimality of `1` is the open
+  Fortescue–Lo conjecture and is *not* claimed).
+- **Horodecki teleportation (`Teleportation.lean`, probe-gated).** Mathlib at our pin
+  provides the sphere-Haar machinery but not the Pauli-quadratic integral
+  `∫_{S²}(⟨ψ|σ_k|ψ⟩)² dμ = 1/3`. Rather than introduce a project-local axiom we carry the
+  value as the explicit hypothesis `HaarPauliConstant` and prove the algebra around it:
+  `teleportAvgFidelity F c = F + (1−F)·c` is the structural skeleton,
+  `teleportAvgFidelity_horodecki` recovers `(2F+1)/3` under the hypothesis, and the
+  entanglement-utility threshold `teleport_beats_classical_iff` (`f_avg > 2/3 ⟺ F > 1/2`,
+  Massar–Popescu) is composed over the chain in `teleport_useful_over_chain`. **Zero** new
+  project-local axioms.
+
 ## 4. Relation to D6 and outlook
 
 This substrate is absorbed into bundle D6 §6 (W-state QFT) as the protocol-level

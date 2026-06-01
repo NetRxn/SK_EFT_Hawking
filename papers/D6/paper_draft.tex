@@ -525,6 +525,31 @@ teleportation-usefulness threshold \verb|endToEnd_teleportation_useful|
 transcendental bound (\verb|expNeg046_tight|, degree-5 Taylor squeeze) certifies the
 fiber-loss factor numerically. Kernel-only; zero new project-local axioms.
 
+\paragraph{Phase~6AC extensions (operational metrics: key rate, multipartite, teleportation).}
+Three operational network metrics are layered on the fidelity substrate, all
+kernel-only. (i)~\emph{BB84 secret-key rate:} \verb|bb84KeyRate| $r(e)=1-2h_2(e)$ with
+the bits-renormalized binary entropy $h_2(p)=\mathrm{binEntropy}(p)/\log 2$ (Mathlib's
+\verb|binEntropy| is in nats), so $r(0)=1$. The positive-key crossover is
+\emph{proven, not hardcoded}: \verb|bb84KeyRate_pos_iff_binEntropy_lt| states positivity as
+$h_2(e)<1/2$, \verb|bb84KeyRate_strictAntiOn| gives strict decrease in the error rate,
+\verb|bb84_crossover_exists| produces a genuine crossover $e^\ast\in(0,1/2)$ with $r(e^\ast)=0$
+via the intermediate-value theorem, and \verb|bb84_positiveKey_fidelity_threshold| composes
+this with the Phase-6AB end-to-end QBER (positive key iff $F_{e2e}>1-e^\ast$). The decimal
+$e^\ast\approx 0.11$ is never asserted---it is the implicit root of $h_2(e)=1/2$.
+(ii)~\emph{Multipartite GHZ-vs-W (Fortescue--Lo Thm 3.5):}
+\verb|w3_beats_ghz_randomization_advantage| proves W$_3$'s randomization advantage over its
+specified-pair single-copy bound ($2/3$) is strictly positive (reducing to the shipped
+\verb|fortescueLoYield_gt_two_thirds|), whereas GHZ$_3$'s is the cited modeling input $0$;
+\verb|w3_asymptotic_specified_lt_one| shows the W$_3$ asymptotic specified rate $H_2(1/3)<1$
+(via Mathlib's \verb|binEntropy_lt_log_two|), and \verb|fortescueLoYield_tendsto_one|
+($D/(D+1)\to 1$) matches the GHZ$_3$ rate asymptotically. (iii)~\emph{Horodecki teleportation:}
+probe-gated on the Haar--Pauli integral $\int_{S^2}(\langle\psi|\sigma_k|\psi\rangle)^2\,d\mu=1/3$,
+which Mathlib at our pin lacks; rather than introduce an axiom we carry the value as the explicit
+hypothesis \verb|HaarPauliConstant| and prove the algebra around it: \verb|teleportAvgFidelity_horodecki|
+($f_{avg}=(2F+1)/3$ under the hypothesis) and the entanglement-utility threshold
+\verb|teleport_beats_classical_iff| ($f_{avg}>2/3\Leftrightarrow F>1/2$, Massar--Popescu), composed
+over the chain in \verb|teleport_useful_over_chain|. Kernel-only; \emph{zero} new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}
