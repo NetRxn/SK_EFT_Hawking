@@ -164,4 +164,42 @@ theorem traceNorm_density_eq_one {ρ : Matrix (Fin n) (Fin n) ℂ} (hρ : IsDens
     traceNorm ρ = 1 := by
   rw [traceNorm_posSemidef hρ.1, hρ.2, Complex.one_re]
 
+/-- **Trace norm of a Hermitian matrix is the sum of `|eigenvalues|`** (Phase 6AF). The
+abs-eigenvalue form every Hermitian trace-norm argument uses; via the shipped
+`map_eigenvalues_conjTranspose_mul_self` + `Real.sqrt_sq_eq_abs`. -/
+theorem traceNorm_hermitian {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian) :
+    traceNorm A = ∑ i, |hA.eigenvalues i| := by
+  have hms := map_eigenvalues_conjTranspose_mul_self hA
+  have hsum : Multiset.map (fun i =>
+        Real.sqrt ((Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues i))
+          Finset.univ.val
+      = Multiset.map (fun i => |hA.eigenvalues i|) Finset.univ.val := by
+    rw [show (fun i => Real.sqrt
+          ((Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues i))
+        = Real.sqrt ∘ (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues
+      from rfl, ← Multiset.map_map, hms, Multiset.map_map]
+    refine Multiset.map_congr rfl fun i _ => ?_
+    simp only [Function.comp_apply]
+    exact Real.sqrt_sq_eq_abs _
+  unfold traceNorm traceNormOf
+  rw [Finset.sum_eq_multiset_sum, Finset.sum_eq_multiset_sum, hsum]
+
+/-- Sum of the positive parts of the eigenvalues of a Hermitian matrix
+(`∑ max(λᵢ, 0)`). The trace-norm triangle reduces to subadditivity of this. -/
+noncomputable def eigPosSum {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian) : ℝ :=
+  ∑ i, max (hA.eigenvalues i) 0
+
+/-- **`‖H‖₁ = 2·(∑ positive eigenvalues) − tr H`** for Hermitian `H` (from
+`|x| = 2·max(x,0) − x`). Reduces the trace-norm triangle to subadditivity of `eigPosSum`. -/
+theorem traceNorm_hermitian_eq {A : Matrix (Fin n) (Fin n) ℂ} (hA : A.IsHermitian) :
+    traceNorm A = 2 * eigPosSum hA - A.trace.re := by
+  have hr : A.trace.re = ∑ i, hA.eigenvalues i := by
+    rw [hA.trace_eq_sum_eigenvalues, Complex.re_sum]
+    exact Finset.sum_congr rfl fun i _ => Complex.ofReal_re _
+  rw [traceNorm_hermitian hA, hr, eigPosSum, Finset.mul_sum, ← Finset.sum_sub_distrib]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rcases le_total 0 (hA.eigenvalues i) with h | h
+  · rw [max_eq_left h, abs_of_nonneg h]; ring
+  · rw [max_eq_right h, abs_of_nonpos h]; ring
+
 end SKEFTHawking.QuantumNetwork
