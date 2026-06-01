@@ -2631,6 +2631,7 @@ import SKEFTHawking.QuantumNetwork.WStateRate
 -- Phase 6AB (2026-06-01): decay-inclusive envelope + general Bell-diagonal swap (new leaf modules).
 import SKEFTHawking.QuantumNetwork.DecayEnvelope
 import SKEFTHawking.QuantumNetwork.BellDiagonalSwap
+import SKEFTHawking.QuantumNetwork.RepeaterChain
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
