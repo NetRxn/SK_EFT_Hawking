@@ -35,6 +35,12 @@
 
 **Stage-13.** Bundle-level adversarial review runs after W5 (last D6-contributing wave); precedes any D6 preprint refresh.
 
+## Progress log
+
+- **W0 — DONE** (`79fa74b5`): roadmap + `QuantumNetwork/Basic.lean` skeleton.
+- **W1 channel models — substantially DONE** (`QuantumNetwork/Channels.lean`, kernel-pure, 7 decls): dB↔Np consistency identity `fiberTransmission_eq_exp_neg_attenuationNp` (`c715aec3`, the Tier-1 first theorem); fiber range + monotone-loss `fiberTransmission_{pos,le_one,antitone_length}` (`005dc4aa`); memory coherence `memoryCoherence{,_pos,_le_one,_antitone_time}` (`69965cc0`).
+- **NEXT (pending):** W1′ remaining Tier-1 anchors — physics-only link rate `τ = L/(c·p_link)` (geometric expectation) and the BSM linear-optics 50% bound (formalize honestly as a documented modeling constant/hypothesis, NOT a tautological `≤ 1/2 := by norm_num` — Calsamiglia-Lütkenhaus is a physics result, not a Lean-provable algebra identity; per the preemptive-strengthening checklist). Then W2 (`NumericalBounds` Taylor-squeeze), W3 (fidelity-composition core: Werner swap + BBPSSW cubic + DEJMPS + W-state lower-bound).
+
 ## Invariants (Phase 6AA)
 - Kernel-pure; zero sorry; zero new project-local axioms; no `maxHeartbeats` in proof bodies (decompose instead).
 - All metrics carry explicit physical units; every numerical bound is `norm_num`-backed and falsifiable.
