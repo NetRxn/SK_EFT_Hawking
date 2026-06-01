@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.Analysis.Matrix.PosDef
+import Mathlib.Analysis.Matrix.HermitianFunctionalCalculus
 
 /-!
 # General mixed-state certification layer (Phase 6AE-A, foundation)
@@ -90,5 +91,31 @@ theorem traceDist_comm (ρ σ : Matrix (Fin n) (Fin n) ℂ) : traceDist ρ σ = 
 @[simp] theorem traceDist_self (ρ : Matrix (Fin n) (Fin n) ℂ) : traceDist ρ ρ = 0 := by
   unfold traceDist
   rw [sub_self, traceNorm_zero, mul_zero]
+
+/-! ### Bridge to the trace (step 1): trace norm of a density operator -/
+
+/-- **Trace of a continuous-functional-calculus image** `tr(cfc f H) = ∑ f(λᵢ)`
+(unitary conjugation preserves trace; the diagonal contributes `∑ f(eigenvalues)`). -/
+theorem trace_cfc {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) (f : ℝ → ℝ) :
+    (hM.cfc f).trace = ∑ i, ((f (hM.eigenvalues i) : ℝ) : ℂ) := by
+  rw [Matrix.IsHermitian.cfc, Unitary.conjStarAlgAut_apply, trace_mul_cycle,
+    Unitary.coe_star_mul_self, one_mul, trace_diagonal]
+  simp [Function.comp]
+
+/-
+## DEFERRED (documented frontier — step 1 bridge): `traceNorm (PosSemidef A) = A.trace.re`
+
+The clean route is `traceNorm A = (trace (CFC.abs A)).re` (via `trace_cfc` with `M = AᴴA`,
+`f = √`) followed by `CFC.abs A = A` for PSD `A` (`CFC.abs_of_nonneg`). BLOCKER: the generic
+`CFC.abs`/`cfc` over `Matrix (Fin n) (Fin n) ℂ` requires the instance
+`NonUnitalContinuousFunctionalCalculus ℝ (Matrix (Fin n) (Fin n) ℂ) IsSelfAdjoint`, which does
+NOT synthesize at our pin even with `open scoped Matrix.Norms.L2Operator` (the scoped C*-operator-
+norm structure) — a Mathlib instance-plumbing gap. The purely-concrete alternative (via
+`IsHermitian.cfc` only, which `trace_cfc` shows works) reduces to the spectral mapping
+`eigenvalues(AᴴA) i = (eigenvalues A i)²` for PSD `A`, whose pointwise form needs an
+antitone-sort-uniqueness argument (squaring preserves order only on the nonneg PSD spectrum)
+not available off-the-shelf. `trace_cfc` (above) is the proven workhorse for whichever route
+closes first; the bridge is held here per the phase's fence-don't-fake discipline.
+-/
 
 end SKEFTHawking.QuantumNetwork
