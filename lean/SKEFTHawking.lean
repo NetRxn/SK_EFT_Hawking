@@ -2620,6 +2620,14 @@ import SKEFTHawking.FaultTolerance.APMLdpcHashingBound
 -- n = 5 (QCyc5), n = 8 (QCyc16), n = 40 (QCyc40) project-substrate
 -- sizes. Lifts into D6 §6.
 import SKEFTHawking.FaultTolerance.WStateQFT
+-- Phase 6AA (2026-06-01): Verified Quantum-Network Substrate (bundle D6 §6).
+-- The import DAG is a tree rooted at Basic with leaves Envelope (→EndToEnd→Swapping),
+-- NumericalBounds (→Channels), Distillation, WStateRate — import all leaves to cover
+-- all 8 modules.
+import SKEFTHawking.QuantumNetwork.Envelope
+import SKEFTHawking.QuantumNetwork.NumericalBounds
+import SKEFTHawking.QuantumNetwork.Distillation
+import SKEFTHawking.QuantumNetwork.WStateRate
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast

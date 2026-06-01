@@ -1,16 +1,16 @@
 {
-  "generated": "2026-05-30T20:33:05.217125",
+  "generated": "2026-06-01T10:51:59.398443",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 17511,
-    "theorems_total": 9944,
-    "theorems_substantive": 9919,
-    "theorems_placeholder": 25,
+    "total_declarations": 17565,
+    "theorems_total": 9987,
+    "theorems_substantive": 9961,
+    "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 751,
+    "modules": 759,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -618,6 +618,14 @@
       "SKEFTHawking.QuantumGroupHopf",
       "SKEFTHawking.QuantumGroupInstantiation",
       "SKEFTHawking.QuantumGroupMeta",
+      "SKEFTHawking.QuantumNetwork.Basic",
+      "SKEFTHawking.QuantumNetwork.Channels",
+      "SKEFTHawking.QuantumNetwork.Distillation",
+      "SKEFTHawking.QuantumNetwork.EndToEnd",
+      "SKEFTHawking.QuantumNetwork.Envelope",
+      "SKEFTHawking.QuantumNetwork.NumericalBounds",
+      "SKEFTHawking.QuantumNetwork.Swapping",
+      "SKEFTHawking.QuantumNetwork.WStateRate",
       "SKEFTHawking.QuarkRungMajoranaChannel",
       "SKEFTHawking.QuarkRungScalarChannel",
       "SKEFTHawking.QuasiOneDReduction",
@@ -764,7 +772,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6697,
+    "definitions": 6708,
     "structures": 287,
     "instances": 489,
     "inductives": 94
@@ -775,7 +783,7 @@
     "pytest_cases": 4475,
     "notebooks": 89,
     "papers": 42,
-    "figures": 156
+    "figures": 159
   },
   "aristotle": {
     "aristotle_proved": 322,
