@@ -397,4 +397,127 @@ theorem traceDist_mem_Icc {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : IsDensityO
     traceNorm_density_eq_one hσ] at h
   linarith
 
+/-! ## Phase 6AF-2 — the operator modulus `|A| = √(AᴴA)`
+
+The positive-semidefinite operator `|A|` whose eigenvalues are the singular values
+of `A`; the trace norm is its trace, `‖A‖₁ = tr|A|`. This is the bridge from the
+general (non-Hermitian) trace norm to a PSD operator's trace, and the substrate the
+Uhlmann fidelity (6AF-3) is built on (`cfc √` of operator products). -/
+
+/-- The **operator modulus** `|A| = √(AᴴA)`, via the matrix continuous functional
+calculus of `Real.sqrt` on the positive-semidefinite `AᴴA`. -/
+noncomputable def absOp (A : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
+  (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.cfc Real.sqrt
+
+/-- `|A|` is Hermitian. -/
+theorem absOp_isHermitian (A : Matrix (Fin n) (Fin n) ℂ) : (absOp A).IsHermitian :=
+  cfc_isHermitian _ Real.sqrt
+
+/-- `|A|` is positive semidefinite (`√ ≥ 0` on the spectrum). -/
+theorem absOp_posSemidef (A : Matrix (Fin n) (Fin n) ℂ) : (absOp A).PosSemidef :=
+  cfc_posSemidef _ fun _ => Real.sqrt_nonneg _
+
+/-- **`‖A‖₁ = (tr|A|).re`** — the trace norm is the trace of the operator modulus. -/
+theorem traceNorm_eq_trace_absOp (A : Matrix (Fin n) (Fin n) ℂ) :
+    traceNorm A = (absOp A).trace.re := by
+  rw [absOp, trace_cfc, Complex.re_sum]
+  unfold traceNorm traceNormOf
+  exact Finset.sum_congr rfl fun i _ => (Complex.ofReal_re _).symm
+
+/-- **`‖|A|‖₁ = ‖A‖₁`** — the modulus is trace-norm-isometric (its own singular values
+are `A`'s singular values; being PSD, its trace norm is its trace). -/
+theorem traceNorm_absOp (A : Matrix (Fin n) (Fin n) ℂ) : traceNorm (absOp A) = traceNorm A := by
+  rw [traceNorm_posSemidef (absOp_posSemidef A), ← traceNorm_eq_trace_absOp]
+
+/-! ## Phase 6AF-2 — general (non-Hermitian) trace-norm triangle via the Hermitian dilation
+
+The trace norm of a positive-semidefinite matrix is the sum of `√` of its
+characteristic-polynomial roots; this makes the trace norm a function of the
+charpoly alone, which is what powers the Hermitian-dilation reduction of the
+general triangle inequality to the (already-proven) Hermitian one. -/
+
+/-- Sum of `√(Re z)` over the (complex) roots of a polynomial. For the charpoly of a
+positive-semidefinite matrix the roots are exactly the (nonnegative real) eigenvalues,
+so this equals the singular-value sum `∑ √eigᵢ`. -/
+noncomputable def sqrtRootSum (p : Polynomial ℂ) : ℝ :=
+  (p.roots.map (fun z => Real.sqrt z.re)).sum
+
+/-- **`traceNormOf` is a function of the characteristic polynomial alone**: it is the
+sum of `√` over the charpoly roots. -/
+theorem traceNormOf_eq_sqrtRootSum {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.PosSemidef) :
+    traceNormOf hM = sqrtRootSum M.charpoly := by
+  unfold traceNormOf sqrtRootSum
+  rw [hM.isHermitian.roots_charpoly_eq_eigenvalues, Multiset.map_map, Finset.sum_eq_multiset_sum]
+  refine congrArg Multiset.sum (Multiset.map_congr rfl fun i _ => ?_)
+  simp [Function.comp_apply, Complex.ofReal_re]
+
+/-- **`‖A‖₁ = sqrtRootSum (AᴴA).charpoly`** — the trace norm via the singular charpoly. -/
+theorem traceNorm_eq_sqrtRootSum (A : Matrix (Fin n) (Fin n) ℂ) :
+    traceNorm A = sqrtRootSum (Aᴴ * A).charpoly := by
+  rw [traceNorm, traceNormOf_eq_sqrtRootSum]
+
+/-- **`sqrtRootSum (p²) = 2·sqrtRootSum p`** — squaring the polynomial doubles each root's
+multiplicity. The arithmetic heart of `traceNorm(dilation) = 2·traceNorm`. -/
+theorem sqrtRootSum_pow_two (p : Polynomial ℂ) : sqrtRootSum (p ^ 2) = 2 * sqrtRootSum p := by
+  unfold sqrtRootSum
+  rw [Polynomial.roots_pow, Multiset.map_nsmul, Multiset.sum_nsmul, nsmul_eq_mul]
+  norm_num
+
+/-- The **Hermitian dilation** `[[0, X], [Xᴴ, 0]]` of `X`, reindexed to `Fin (n+n)`. It is
+Hermitian, linear in `X`, and its singular values are `X`'s singular values each appearing
+twice — so `‖dilate X‖₁ = 2‖X‖₁`. This is the device that reduces the general trace-norm
+triangle to the (proven) Hermitian one. -/
+noncomputable def dilate (X : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin (n + n)) (Fin (n + n)) ℂ :=
+  Matrix.reindex finSumFinEquiv finSumFinEquiv (Matrix.fromBlocks 0 X Xᴴ 0)
+
+/-- The dilation is Hermitian. -/
+theorem dilate_isHermitian (X : Matrix (Fin n) (Fin n) ℂ) : (dilate X).IsHermitian := by
+  have hB : (Matrix.fromBlocks 0 X Xᴴ 0).IsHermitian := by
+    rw [Matrix.IsHermitian, Matrix.fromBlocks_conjTranspose]
+    simp
+  exact hB.reindex finSumFinEquiv
+
+/-- The dilation is additive (linear in `X`). -/
+theorem dilate_add (A B : Matrix (Fin n) (Fin n) ℂ) : dilate (A + B) = dilate A + dilate B := by
+  unfold dilate
+  rw [Matrix.conjTranspose_add,
+    show Matrix.fromBlocks 0 (A + B) (Aᴴ + Bᴴ) 0
+        = Matrix.fromBlocks 0 A Aᴴ 0 + Matrix.fromBlocks 0 B Bᴴ 0 by
+      rw [Matrix.fromBlocks_add]; simp]
+  ext i j
+  simp [Matrix.reindex_apply, Matrix.submatrix_apply, Matrix.add_apply]
+
+/-- Characteristic polynomial of `Bᴴ·B` for the raw block dilation `B = [[0,X],[Xᴴ,0]]`
+equals `((XᴴX).charpoly)²` — the block product is `diag(XXᴴ, XᴴX)`, and `XXᴴ`, `XᴴX` are
+cospectral (`charpoly_mul_comm`). -/
+theorem charpoly_dilate_block (X : Matrix (Fin n) (Fin n) ℂ) :
+    ((Matrix.fromBlocks 0 X Xᴴ 0 : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) ℂ)ᴴ *
+        Matrix.fromBlocks 0 X Xᴴ 0).charpoly = ((Xᴴ * X).charpoly) ^ 2 := by
+  rw [Matrix.fromBlocks_conjTranspose]
+  simp only [Matrix.conjTranspose_zero, Matrix.conjTranspose_conjTranspose,
+    Matrix.fromBlocks_multiply, Matrix.mul_zero, Matrix.zero_mul, zero_add, add_zero]
+  rw [Matrix.charpoly_fromBlocks_zero₁₂, Matrix.charpoly_mul_comm X Xᴴ, sq]
+
+/-- **`‖dilate X‖₁ = 2‖X‖₁`** — the dilation doubles the trace norm. -/
+theorem traceNorm_dilate (X : Matrix (Fin n) (Fin n) ℂ) :
+    traceNorm (dilate X) = 2 * traceNorm X := by
+  rw [traceNorm_eq_sqrtRootSum (dilate X), traceNorm_eq_sqrtRootSum X, ← sqrtRootSum_pow_two]
+  congr 1
+  have hc : (dilate X)ᴴ * dilate X
+      = Matrix.reindex finSumFinEquiv finSumFinEquiv
+          ((Matrix.fromBlocks 0 X Xᴴ 0 : Matrix (Fin n ⊕ Fin n) (Fin n ⊕ Fin n) ℂ)ᴴ *
+            Matrix.fromBlocks 0 X Xᴴ 0) := by
+    simp only [dilate, Matrix.reindex_apply, Matrix.conjTranspose_submatrix,
+      Matrix.submatrix_mul_equiv]
+  rw [hc, Matrix.charpoly_reindex, charpoly_dilate_block]
+
+/-- **The trace norm satisfies the triangle inequality** (general, non-Hermitian):
+`‖A + B‖₁ ≤ ‖A‖₁ + ‖B‖₁`. Proven by the Hermitian dilation: `2‖A+B‖₁ = ‖dilate(A+B)‖₁ =
+‖dilate A + dilate B‖₁ ≤ ‖dilate A‖₁ + ‖dilate B‖₁ = 2‖A‖₁ + 2‖B‖₁`. -/
+theorem traceNorm_triangle (A B : Matrix (Fin n) (Fin n) ℂ) :
+    traceNorm (A + B) ≤ traceNorm A + traceNorm B := by
+  have h := traceNorm_hermitian_triangle (dilate_isHermitian A) (dilate_isHermitian B)
+  rw [← dilate_add, traceNorm_dilate, traceNorm_dilate, traceNorm_dilate] at h
+  linarith
+
 end SKEFTHawking.QuantumNetwork
