@@ -102,20 +102,42 @@ theorem trace_cfc {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) (f : ℝ
     Unitary.coe_star_mul_self, one_mul, trace_diagonal]
   simp [Function.comp]
 
-/-
-## DEFERRED (documented frontier — step 1 bridge): `traceNorm (PosSemidef A) = A.trace.re`
+/-- For Hermitian `A`, `A·A` is the continuous-functional-calculus image of squaring
+(`A·A = cfc(·²)A`). Proven concretely via the spectral theorem and
+`diagonal_mul_diagonal`, avoiding the generic CFC instance. -/
+theorem isHermitian_mul_self_eq_cfc_sq {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) :
+    M * M = hM.cfc (fun x => x ^ 2) := by
+  have hfun : (fun i => (RCLike.ofReal ∘ hM.eigenvalues) i * (RCLike.ofReal ∘ hM.eigenvalues) i)
+      = (RCLike.ofReal ∘ (fun x => x ^ 2) ∘ hM.eigenvalues : Fin n → ℂ) := by
+    funext i
+    simp only [Function.comp_apply]
+    push_cast
+    ring
+  rw [Matrix.IsHermitian.cfc]
+  conv_lhs => rw [hM.spectral_theorem]
+  rw [← map_mul, diagonal_mul_diagonal, hfun]
 
-The clean route is `traceNorm A = (trace (CFC.abs A)).re` (via `trace_cfc` with `M = AᴴA`,
-`f = √`) followed by `CFC.abs A = A` for PSD `A` (`CFC.abs_of_nonneg`). BLOCKER: the generic
-`CFC.abs`/`cfc` over `Matrix (Fin n) (Fin n) ℂ` requires the instance
-`NonUnitalContinuousFunctionalCalculus ℝ (Matrix (Fin n) (Fin n) ℂ) IsSelfAdjoint`, which does
-NOT synthesize at our pin even with `open scoped Matrix.Norms.L2Operator` (the scoped C*-operator-
-norm structure) — a Mathlib instance-plumbing gap. The purely-concrete alternative (via
-`IsHermitian.cfc` only, which `trace_cfc` shows works) reduces to the spectral mapping
-`eigenvalues(AᴴA) i = (eigenvalues A i)²` for PSD `A`, whose pointwise form needs an
-antitone-sort-uniqueness argument (squaring preserves order only on the nonneg PSD spectrum)
-not available off-the-shelf. `trace_cfc` (above) is the proven workhorse for whichever route
-closes first; the bridge is held here per the phase's fence-don't-fake discipline.
+/-
+## IN PROGRESS (step 1 bridge) — `traceNorm (PosSemidef A) = A.trace.re`
+
+Two workhorses are PROVEN above: `trace_cfc` and `isHermitian_mul_self_eq_cfc_sq`
+(`A·A = cfc(·²)A`, concrete, no CFC instance). The remaining assembly is the
+**root-multiset transfer**, mechanically:
+
+1. `map_eigenvalues_conjTranspose_mul_self`: `{eigenvalues(AᴴA)} = {(eigenvalues A)²}`
+   (real multisets). Route: `(AᴴA).charpoly = (A·A).charpoly = (cfc(·²)A).charpoly
+   = ∏ᵢ (X − C((eigᵢ)²))` via `cfc_eq` + `charpoly_cfc_eq`; then its `.roots` via
+   `Finset.prod_eq_multiset_prod` + `Polynomial.roots_multiset_prod_X_sub_C` (this avoids
+   the `∏ ≠ 0` side-goal that `Polynomial.roots_prod` generates and that fought the
+   `C (x²) = (C x)²` simp-normalization); match with `roots_charpoly_eq_eigenvalues`
+   and strip `RCLike.ofReal` (injective).
+2. map `Real.sqrt` over the multiset equality, use `Real.sqrt_sq` (PSD ⇒ eigenvalues ≥ 0)
+   to get `{√eigenvalues(AᴴA)} = {eigenvalues A}`, sum both sides
+   (`Finset.sum_eq_multiset_sum`), and combine with `trace_eq_sum_eigenvalues`.
+
+BLOCKER (precise): the polynomial `roots`-of-product normalization (`roots_prod` side-goal +
+`C`/`ofReal` `map_pow` reassociation). NEXT: switch to `roots_multiset_prod_X_sub_C`. Held per
+the fence-don't-fake discipline (no sorry/axiom); workhorses landed.
 -/
 
 end SKEFTHawking.QuantumNetwork
