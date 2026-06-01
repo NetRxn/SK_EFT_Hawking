@@ -8,10 +8,12 @@
 | Wave | Content | Status |
 |---|---|---|
 | **W2 (FLAGSHIP)** | Decay-inclusive end-to-end envelope: `memoryDegradedFidelity` + `memoryDegraded_wernerParam` (multiplies Werner param by e^(−2t/τ)) + range + `decayInclusive_fidelity_envelope` (k-swap chain of memory-degraded links, F∈[1/4,1], t≥0, τ>0 ⟹ end-to-end ∈[1/4,1]) + antitone-in-t | ✅ DONE (`3518344f`, `DecayEnvelope.lean`, kernel-pure; counts 760 mod / 9992 thm) |
-| **W1** | NumericalBounds macro layer: exp_squeeze/log_squeeze over Real.exp_bound/expNear + precision table (DR-INT §3) → arbitrary-operating-point exp(−x) bounds in 1–3 LoC | PENDING |
-| **W3** | General Bell-diagonal: Klein-4 (ℤ₂×ℤ₂) convolution swap map (exact-formulas DR S1.2a–d) + fidelity/range envelope beyond Werner | PENDING |
-| **W4** | Repeater breadth: BDCZ nested recursion at explicit N + secret-key-rate-style lower bound (real-parameter only) | PENDING |
-| **W5** | Packaging: extend D6 §6 `sec:wstate:envelope` (LaTeX compile gate) + update preprint + fresh-context Stage-13 review → FULLY CLEAN | PENDING |
+| **W1** | NumericalBounds tight Taylor-squeeze: `expNeg046_tight` via degree-5 `Real.exp_bound` + precision-table pattern (DR-INT §3) | ✅ DONE (`2b706dcb`) |
+| **W3** | General Bell-diagonal Klein-4 swap map (`bellDiagSwapA/B/C/D`) + normalization + nonneg + `bellDiagSwapA_mem` envelope + `bellDiagSwapA_werner` bridge | ✅ DONE (`3332b438`, `BellDiagonalSwap.lean`) |
+| **W4** | Repeater breadth: `endToEndFidelity_nest_double` (BDCZ) + `endToEnd_teleportation_useful` (F_e2e>1/2 ⟺ w^k>1/3) + `endToEndQBER` range/monotonicity (SKR threshold parametric) | ✅ DONE (`ca2a80c6`, `RepeaterChain.lean`) |
+| **W5** | Packaging: extend D6 §6 `sec:wstate:envelope` (LaTeX compile gate) + update preprint + fresh-context Stage-13 review → FULLY CLEAN | IN PROGRESS |
+
+**Counts after W1–W4:** 762 modules / 10,001 theorems / 0 sorry (11 QuantumNetwork modules, all kernel-pure).
 
 **OUT (not required for DONE):** Horodecki teleportation (Haar-integral lemma, research risk — optional W6); general density-matrix/trace-distance/diamond-norm layer (pre-demand: do NOT build); any private/product content (PUBLIC only).
 

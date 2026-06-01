@@ -63,6 +63,29 @@ length. The proof is pure real analysis on the Werner parameter `w ∈ [0,1]`
 (`wᵏ ∈ [0,1]`), with no density matrices, partial trace, trace norm, or diamond
 norm — none of which are needed for the Bell-diagonal protocol class.
 
+## 3a. Phase 6AB extensions (decay-inclusive + breadth)
+
+The envelope is generalized along three kernel-only axes, all still in the
+real-parameter representation:
+
+- **Decay-inclusive envelope (`DecayEnvelope.lean`).** `memoryDegradedFidelity`
+  applies the SeQUeNCe depolarizing memory model `F(t)=F·e^(−2t/τ)+(1−e^(−2t/τ))/4`,
+  which **multiplies the Werner parameter by `e^(−2t/τ)`**; `decayInclusive_fidelity_envelope`
+  then bounds the end-to-end fidelity of a `k`-swap chain of memory-degraded links in
+  `[1/4,1]` for `F∈[1/4,1]`, `t≥0`, `τ>0` — the realistic-network generalization.
+- **General Bell-diagonal swap (`BellDiagonalSwap.lean`).** The Klein-4
+  (`ℤ₂×ℤ₂`) convolution map `bellDiagSwapA–D` with normalization (state→state),
+  nonnegativity, the `[0,1]` target-fidelity envelope, and the `bellDiagSwapA_werner`
+  bridge to the Werner swap.
+- **Repeater breadth (`RepeaterChain.lean`).** The BDCZ nesting-doubling identity
+  `endToEndFidelity_nest_double`; the teleportation-usefulness threshold
+  `endToEnd_teleportation_useful` (`F_e2e>1/2 ⟺ wᵏ>1/3`, Horodecki); and the
+  end-to-end QBER with monotone growth in chain length (the positive-key region left
+  parametric — no hardcoded binary-entropy crossover).
+
+A representative tight transcendental bound (`expNeg046_tight`, degree-5 Taylor
+squeeze) certifies the fiber-loss factor numerically, kernel-only.
+
 ## 4. Relation to D6 and outlook
 
 This substrate is absorbed into bundle D6 §6 (W-state QFT) as the protocol-level
