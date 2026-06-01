@@ -466,6 +466,44 @@ substrate connection thus reads: D6 §\ref{sec:wstate} ships the
 exact decomposition primitive; D6 §\ref{sec:sk} ships the
 finite-gate-set approximation bound.
 
+\subsection{Protocol-level extension: a verified network-fidelity envelope
+(Phase~6AA)}
+\label{sec:wstate:envelope}
+
+Building on the W-state measurement primitive above, Phase~6AA ships a
+self-contained verified substrate for entanglement-based quantum-network
+protocols under \verb|lean/SKEFTHawking/QuantumNetwork/| (8 kernel-only
+modules). Working in the Bell-diagonal / Werner fidelity-parameter
+representation — explicit real-parameter expressions rather than density
+matrices — it proves the load-bearing fidelity-composition identities and a
+model-independent end-to-end \emph{fidelity envelope}:
+\begin{itemize}
+\item \verb|fiberTransmission_eq_exp_neg_attenuationNp| — the
+  dB$\leftrightarrow$Np attenuation-convention identity
+  $10^{-\alpha_{\mathrm{dB}}L/10} = e^{-\alpha_{\mathrm{Np}}L}$ with
+  $\alpha_{\mathrm{Np}} = \alpha_{\mathrm{dB}}\ln 10/10$ (resolving the
+  literature ``0.046'' convention: Np/km, not dB/km).
+\item \verb|wernerSwapFidelity| $F_{\mathrm{out}} = F_1F_2 + (1-F_1)(1-F_2)/3$
+  (Briegel--D\"ur--Cirac--Zoller) with monotone composition.
+\item \verb|bbpsswRecurrence_gt| — the BBPSSW distillability flagship: on
+  $F \in (1/2,1)$ purification strictly increases fidelity, the entire
+  statement collapsing to the single cubic $(1-F)(2F-1)(4F-1) > 0$;
+  \verb|dejmps_werner_fidelity_increase| is the DEJMPS analogue (with the
+  diagonal $(00,11)$ Pauli-error pairing).
+\item \verb|fortescueLoYield| — the Fortescue--Lo finite-round W-state
+  random-pair yield $D/(D+1)$, proved to surpass the single-copy
+  specified-pair bound $2/3$ for $D \geq 3$ (the $=1$ asymptotic equality is
+  an open conjecture and is \emph{not} claimed).
+\item \verb|endToEndFidelity| $= (1 + 3w^k)/4$ with $w = (4F-1)/3$, shown to
+  satisfy the one-more-link swap recurrence, culminating in the capstone
+  \verb|swapChain_fidelity_envelope|: for a $k$-swap Werner chain with
+  per-link fidelity $F \in [1/4,1]$, the end-to-end fidelity provably lies in
+  $[1/4,1]$, monotone in $F$ and antitone in chain length.
+\end{itemize}
+The envelope is \emph{model-independent} — a property of the fidelity (on which
+the standard network simulators agree) rather than of connection-model-dependent
+timing. Kernel-only; zero new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}

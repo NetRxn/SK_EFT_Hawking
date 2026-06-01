@@ -7,7 +7,7 @@
   "stage9_status": "not_started",
   "stage10_status": "skeleton",
   "stage13_status": "not_started",
-  "stage13_redo_required": false,
+  "stage13_redo_required": true,
   "freshness_stale": false,
   "source_manifest_last_regen": "2026-05-31T15:37:22Z",
   "last_lift": "2026-05-31T15:37:22Z",
