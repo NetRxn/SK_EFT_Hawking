@@ -4,7 +4,7 @@
 **Reviewer:** fresh-context adversarial agent (read-only)
 **Scope:** 8 `lean/SKEFTHawking/QuantumNetwork/` modules; D6 §6 absorption (`papers/D6/paper_draft.tex`, `sec:wstate:envelope`); bridging preprint (`papers/phase6AA_qnetwork_preprint/preprint_draft.md`); roadmap.
 
-## Verdict: GREEN (1 REQUIRED remediated; 1 advisory fixed; 1 advisory deferred)
+## Verdict: GREEN — FULLY CLEAN (1 REQUIRED remediated; both advisories fixed)
 
 ### Checks PASSED
 1. **No fabricated references** — all 11 cited declaration names verified present in source.
@@ -18,5 +18,5 @@ The 8 QuantumNetwork modules were not imported in `lean/SKEFTHawking.lean`, so E
 
 ### ADVISORY-1 — roadmap decl-count drift → **FIXED 2026-06-01** (roadmap counts updated to the counts.json delta).
 
-### ADVISORY-2 — D6 paper missing `\cite` → **DEFERRED** (tracked pre-external-review item).
-`papers/D6/paper_draft.tex` `sec:wstate:envelope` asserts "the standard network simulators agree" without an inline `\cite`. The **preprint carries the citation correctly**, and D6 is a skeleton bundle not going to external review imminently. Add a `\bibitem{ChungHajdusekVanMeter2025}` + inline `\cite` before D6 external submission. Not a Stage-13 blocker for Phase 6AA.
+### ADVISORY-2 — D6 paper missing `\cite` → **RESOLVED 2026-06-01**.
+Added `\bibitem{ChungHajdusekVanMeter2025QNetSimXval}` (Cross-validating quantum network simulators, arXiv:2504.01290) + the inline `\cite` at the "standard network simulators agree" claim in `sec:wstate:envelope`. LaTeX recompiled clean (latexmk `-g`); citation resolves (2 aux references, zero undefined-citation warnings).
