@@ -44,7 +44,7 @@ reference: any computed end-to-end fidelity falling outside the proven interval 
 provably inconsistent with the Werner-swap-chain model. This complements the
 exact W-state QFT measurement primitive of bundle D6 §6, on which it builds.
 
-## 2. Substrate (`lean/SKEFTHawking/QuantumNetwork/`, 14 kernel-only modules)
+## 2. Substrate (`lean/SKEFTHawking/QuantumNetwork/`, 17 kernel-only modules)
 
 - **Channels.** `fiberTransmission_eq_exp_neg_attenuationNp`: the
   dB↔Np attenuation identity `10^(−α_dB·L/10) = exp(−α_Np·L)`,

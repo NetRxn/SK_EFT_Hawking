@@ -83,11 +83,12 @@ document at \verb|docs/PAPER_STRATEGY.md|) as a Tier~1 deep-paper
 sibling to D4
 (``Topological Quantum Computation --- First Machine-Verified
 Foundations''). D4 retains its Fibonacci-anyon / topological-foundations
-focus; D6 covers the fault-tolerant-computation substrate. The
-present draft is generated at Phase~6v Wave~6v.1 ship (2026-05-26) and
-serves as the bundle skeleton; subsequent waves
-(\textsection\textsection~\ref{sec:sk}--\ref{sec:wstate}) populate as
-the Phase~6v programme proceeds.
+focus; D6 covers the fault-tolerant-computation substrate. All four
+headline sections (\textsection\textsection~\ref{sec:gaugingQEC},
+\ref{sec:apmldpc}, \ref{sec:shor}, \ref{sec:wstate}) are populated and
+kernel-verified, and \textsection~\ref{sec:wstate} is extended into a
+protocol-level verified quantum-network substrate
+(\textsection~\ref{sec:wstate:envelope}, Phases~6AA--6AD).
 
 %% ════════════════════════════════════════════════════════════════════
 \section{The Solovay--Kitaev compilation primitive
@@ -470,9 +471,9 @@ finite-gate-set approximation bound.
 (Phase~6AA)}
 \label{sec:wstate:envelope}
 
-Building on the W-state measurement primitive above, Phase~6AA ships a
+Building on the W-state measurement primitive above, Phases~6AA--6AD ship a
 self-contained verified substrate for entanglement-based quantum-network
-protocols under \verb|lean/SKEFTHawking/QuantumNetwork/| (8 kernel-only
+protocols under \verb|lean/SKEFTHawking/QuantumNetwork/| (17 kernel-only
 modules). Working in the Bell-diagonal / Werner fidelity-parameter
 representation — explicit real-parameter expressions rather than density
 matrices — it proves the load-bearing fidelity-composition identities and a
@@ -550,6 +551,34 @@ hypothesis \verb|HaarPauliConstant| and prove the algebra around it: \verb|telep
 ($f_{avg}=(2F+1)/3$ under the hypothesis) and the entanglement-utility threshold
 \verb|teleport_beats_classical_iff| ($f_{avg}>2/3\Leftrightarrow F>1/2$, Massar--Popescu), composed
 over the chain in \verb|teleport_useful_over_chain|. Kernel-only; \emph{zero} new project-local axioms.
+
+\paragraph{Phase~6AD extensions (Haar integral discharged; Tier-1 anchors; general DEJMPS).}
+The Horodecki proof's one analytic step is now \emph{proven}, removing the Phase-6AC
+tracked hypothesis, and three reference-richness items are added, all kernel-only.
+(i)~\emph{Haar--Pauli integral} (\verb|HaarPauli.lean|). In the Bloch picture (an explicit
+two-component complex spinor and $2\times2$ Pauli matrix, no density matrices) we prove the
+spinor identity $\langle\psi|\sigma_z|\psi\rangle=\cos\theta$ (\verb|pauliExpZ_blochKet|)
+and the spherical integral $\int_{S^2}(\langle\psi|\sigma_z|\psi\rangle)^2\,d\mu=1/3$
+(\verb|haarPauliZSqAverage_eq|, via the fundamental theorem of calculus on
+$\int_0^\pi\cos^2\theta\,\sin\theta\,d\theta=2/3$ and the solid-angle normalization).
+Consequently the Horodecki theorems become \emph{unconditional}:
+\verb|teleportAvgFidelity_horodecki_unconditional| ($f_{avg}=(2F+1)/3$) and
+\verb|teleport_beats_classical_iff_unconditional| hold with no hypothesis and no axiom.
+(ii)~\emph{W1$'$ Tier-1 anchors} (\verb|Rate.lean|). The Calsamiglia--Lütkenhaus
+linear-optics Bell-state-measurement bound (\verb|bsmSuccessProb_le_half_of_linearOptics|,
+$\le 1/2$ vs the deterministic-BSM $1$) and the physics-only elementary-link rate
+$\tau=L/(c\,p_{\mathrm{link}})$ (\verb|linkRate|), with the expected-attempts factor $1/p$
+\emph{derived} as the geometric-distribution mean (\verb|geometric_expected_attempts|);
+handshake-inclusive link times remain model-dependent (Tier-3) and are not bounded.
+(iii)~\emph{General Bell-diagonal DEJMPS} (\verb|DEJMPSConvergence.lean|). The full Klein-4
+map with normalization, nonnegativity, and pure-target fixed point; a monotone single-step
+increase on the phase-flip-only sub-basin (\verb|dejmps_increase_phaseFlipOnly|); and a
+verified non-monotonicity witness (\verb|dejmps_single_step_can_decrease|,
+$(3/5,0,0,2/5)\mapsto 13/25<3/5$) showing that $\lambda_{00}>1/2$ does not guarantee a
+single-step increase --- the full asymptotic basin rests on Macchiavello's non-monotone
+argument and is cited, not formalized. A Python numeric mirror, three figures, and a
+cross-validation gate (\verb|scripts/validate.py --check quantum_network|) accompany the
+Lean substrate. Kernel-only; \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
