@@ -1,8 +1,20 @@
 # Fluid-Based Approach to Fundamental Physics: Consolidated Critical Review v3
 
+> **📌 Snapshot notice.** This review captures the program state as of ~2026-05-07 (through Phase 6e/6m). It is preserved as a historical assessment — a deliberate temporal boundary on the gap analysis and structural-obstruction verdicts recorded below. For the current project state see [`docs/stakeholder/companion_guide.md`](stakeholder/companion_guide.md) (2026-05-31) and [`README.md`](../README.MD). Since this snapshot the program completed the **verified-quantum-compilation arc** (Phases 6u–6z → bundles D6/D7/D8) and grew to **9,944 theorems / 751 modules / 0 axioms / 0 sorry**. The core verdicts below stand; several items marked "Open" have since been resolved — see the "Resolved since this snapshot" note.
+
 ## Gap Analysis, Structural Obstructions, Hybrid Architecture Assessment, and Defensible Research Directions
 
 *Synthesized from two deep-research rounds, parallel agent cross-validation, four Tier 1 research studies, three Tier 2 hybrid architecture assessments, and four Tier 2 follow-up investigations — March 2026*
+
+## Resolved since this snapshot (as of 2026-05-31)
+
+The obstructions and open items catalogued below have since been advanced as follows. These bullets are updates only — the original ledger and verdicts below are preserved unchanged.
+
+- **ADW mean-field gap equation** — now solved: a nontrivial Lorentzian-signature solution exists (Paper 5 full Wen-lattice → ADW → Coleman-Weinberg → gap-equation calculation). Previously listed Open/Partial.
+- **Chirality wall** — now formally verified for the first time in the lattice-chiral-fermion literature (`GaugingStep.lean`, Phase 5e; the three-pillar master synthesis), and the symmetric-mass-generation route demonstrated at the 16-Weyl threshold. Previously "cracking/open".
+- **Non-Abelian gauge structure** — now a *structural theorem* (gauge erasure): non-Abelian symmetry cannot survive the fluid layer; it must enter from topological order. Previously "open/blocked".
+- **Verified-quantum-compilation arc (new since snapshot)** — first kernel-verified Solovay–Kitaev at arbitrary dimension SU(d), T-free CCZ-essential SU(8) density, unconditional Toffoli lower bound; a complete fault-tolerant-QC substrate (D6) and a classical-simulability demarcation (D7). Bundle D8 published as the program's largest body of verified mathematics.
+- **Axiom posture** — the project now carries **0 project-local axioms** (the last one, the 4+1D gapped-interface conjecture, was refactored to the tracked Prop `TPFConjecture` on 2026-05-19). Where this document cites "1 axiom" or "~5,855 theorems", current figures are 0 axioms / 9,944 theorems.
 
 ---
 

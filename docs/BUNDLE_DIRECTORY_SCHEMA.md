@@ -181,7 +181,7 @@ Phase 7b sub-wave 7b.1.1: Lift paper17 SFDM cluster-merger content into D5 §2-�
 
 - `docs/BUNDLE_LIFT_PROCEDURE.md` — 14-step canonical lift workflow that consumes this schema
 - `docs/LATE_PHASE6_ABSORPTION_PROTOCOL.md` — robustness protocol (Stages A-G)
-- `docs/PAPER_STRATEGY.md` — 13-bundle architecture; defines tier + title + target_journal
+- `docs/PAPER_STRATEGY.md` — 17-bundle architecture; defines tier + title + target_journal
 - `docs/PAPER_DRAFT_MAPPING.md` — per-source → per-bundle assignment table
 - `docs/agents/claims-reviewer-bundle-prompts.md` — per-bundle Stage-13 anchor list
 - `scripts/sentence_state.py` — `_VALID_BUNDLE_TARGETS` enum (the sole source of truth for bundle codes)

@@ -9,7 +9,7 @@
 
 ## Phase 7's Strategic Value
 
-Phase 7 is the project's *publication phase*. It takes the 32+ per-wave drafts in `papers/paperN_*/` and consolidates them into 14 publication-target bundles per `PAPER_STRATEGY.md`. The bundle architecture is the program's external-communication strategy made concrete: the per-wave drafting cadence has been extremely effective as an *internal* discipline, but its 32+ output drafts are inward-facing (buried headlines, NO-GOs distributed across many drafts losing first-class status, methodology invisible to physicists). Phase 7 fixes all three.
+Phase 7 is the project's *publication phase*. It takes the 32+ per-wave drafts in `papers/paperN_*/` and consolidates them into publication-target bundles per `PAPER_STRATEGY.md` — **17 targets as of 2026-05-31** (grown from the original 14 by the quantum-computation additions D6/D7/D8). The bundle architecture is the program's external-communication strategy made concrete: the per-wave drafting cadence has been extremely effective as an *internal* discipline, but its 32+ output drafts are inward-facing (buried headlines, NO-GOs distributed across many drafts losing first-class status, methodology invisible to physicists). Phase 7 fixes all three.
 
 User direction (2026-04-30): *"we'll write everything up together before anything is submitted."* Phase 7 is **drafting-ordered**, not submission-ordered. Submission sequencing is a Phase 8 (post-Phase-7) concern; Phase 7 produces 14 bundles each at submission-ready state.
 
@@ -114,7 +114,7 @@ Sub-phase status:
 | 7g | F (flagship) + cross-bundle final + pre-submission Stage-13 sweep | scoped |
 
 Total Phase 7 numbers (to date):
-- 14 publication-target bundles, all 🟢 GREEN.
+- 17 publication-target bundles, all 🟢 GREEN.
 - 3 D.3 user-auth gates closed substantively.
 - 1 honest verdict-(B) downgrade closure (Phase 6o W4a Sakharov biconditional retirement).
 - 1 standing project-policy adoption (primary-source WebFetch + verify).

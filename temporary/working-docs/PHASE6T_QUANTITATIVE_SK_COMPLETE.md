@@ -200,7 +200,7 @@ Recommended primary-source cache files for the 3 new bibitems (`back_fill_primar
 
 - Roadmap: `SK_EFT_Hawking/temporary/working-docs/proof-state/phase6t-solovay-kitaev-dawson-nielsen-roadmap.md`
 - DR landscape scan: `Lit-Search/Phase-6t/Phase 6t Solovay-Kitaev Formal-Verification Landscape Scan.md`
-- Predecessor milestone: `SK_EFT_Hawking/docs/PHASE5_STEP13_COMPLETE.md`
+- Predecessor milestone: `SK_EFT_Hawking/temporary/working-docs/PHASE5_STEP13_COMPLETE.md`
 - Registry (private, off-tree): substrate-deferred-registry Item #21 (cross-repo tracker — workspace-level)
 - Memory entries:
   - `~/.claude/.../memory/project_phase6t_dawson_nielsen_active_2026_05_22.md` (Wave 1-7 substrate ship)

@@ -278,7 +278,7 @@ The following protocol stages may require explicit user authorization before pro
 
 - `docs/BUNDLE_LIFT_PROCEDURE.md` — canonical lift workflow (Stages F / G re-use §8 / §9 / §10 / §11 / §13 from there)
 - `docs/BUNDLE_DIRECTORY_SCHEMA.md` — `bundle_metadata.json` schema; `append_log.json` schema
-- `docs/PAPER_STRATEGY.md` — 13-bundle architecture; defines bundles eligible for late absorption
+- `docs/PAPER_STRATEGY.md` — 17-bundle architecture; defines bundles eligible for late absorption
 - `docs/PAPER_DRAFT_MAPPING.md` — per-source → per-bundle assignment table; modified during Stage B
 - `docs/agents/claims-reviewer-bundle-prompts.md` — per-bundle Stage-13 anchor list (consumed by Stage F)
 - `scripts/bundle_source_manifest.py` — Stage C automation

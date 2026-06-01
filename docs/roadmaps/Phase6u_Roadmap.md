@@ -952,7 +952,7 @@ needed at conditional stage since CP1 already covered it).
 ## Cross-references
 
 - **Phase 6t roadmap** (`docs/roadmaps/Phase6t_Roadmap.md`) — Fibonacci-specific predecessor; W1-W6 of Phase 6u abstract its Wave 1-6.
-- **Phase 6t close memo** (`docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`) — canonical narrative + numbers (K_proof ≤ 788, margin ~236, K_compose = 1024).
+- **Phase 6t close memo** (`temporary/working-docs/PHASE6T_QUANTITATIVE_SK_COMPLETE.md`) — canonical narrative + numbers (K_proof ≤ 788, margin ~236, K_compose = 1024).
 - **Lit-Search Phase 6t landscape scan** (`Lit-Search/Phase-6t/...`) — confirms no prior kernel-verified quantitative SK formalization.
 - **BCH bracket closure substrate** (`lean/SKEFTHawking/FKLW/SU2BCHBracketClosure.lean`) — Phase 5 Step 13 + Phase 6t reuse base.
 - **Aharonov-Arad bridge** (`lean/SKEFTHawking/FKLW/AharonovAradBridgeIteration.lean`) — abstract density framework, already alphabet-agnostic.
