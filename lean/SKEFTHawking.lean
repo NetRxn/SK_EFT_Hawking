@@ -2642,6 +2642,8 @@ import SKEFTHawking.QuantumNetwork.Teleportation
 import SKEFTHawking.QuantumNetwork.HaarPauli
 -- Bucket 3.2 (2026-06-01): W1′ Tier-1 anchors (linear-optics BSM bound + physics link rate).
 import SKEFTHawking.QuantumNetwork.Rate
+-- Bucket 3.3 (2026-06-01): DEJMPS general-Bell-diagonal map structure + sub-basin convergence.
+import SKEFTHawking.QuantumNetwork.DEJMPSConvergence
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
