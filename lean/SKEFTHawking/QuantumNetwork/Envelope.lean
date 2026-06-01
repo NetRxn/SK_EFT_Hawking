@@ -7,9 +7,9 @@ import SKEFTHawking.QuantumNetwork.EndToEnd
 The capstone of the model-independent FIDELITY envelope: for the reference
 scenario of a chain of `k` entanglement swaps of Werner links with per-link
 fidelity `F ∈ [1/4, 1]`, the end-to-end fidelity provably lies in a certified
-interval. This is the verified envelope a cross-validation oracle adjudicates
-against — **any computed end-to-end fidelity outside it is provably wrong** — and
-it is model-independent (fidelity, not the connection-model-dependent time).
+interval. It is a verified envelope: **any computed end-to-end fidelity outside it
+is provably inconsistent with the Werner-swap-chain model**, and it is
+model-independent (fidelity, not the connection-model-dependent generation time).
 
 Invariants (Phase 6AA): kernel-pure, zero sorry, no project-local axioms,
 no `maxHeartbeats`.
@@ -25,7 +25,7 @@ theorem wernerParam_mem_Icc {F : ℝ} (hlo : 1 / 4 ≤ F) (hhi : F ≤ 1) :
 /-- **W5 capstone — swap-chain fidelity envelope.** For a chain of `k` entanglement
 swaps of Werner links each with per-link fidelity `F ∈ [1/4, 1]`, the end-to-end
 fidelity provably lies in `[1/4, 1]`. Model-independent: any computed end-to-end
-fidelity outside this interval is provably wrong (the verified bug-detector). -/
+fidelity outside this interval is provably inconsistent with the model. -/
 theorem swapChain_fidelity_envelope (F : ℝ) (k : ℕ) (hlo : 1 / 4 ≤ F) (hhi : F ≤ 1) :
     1 / 4 ≤ endToEndFidelity F k ∧ endToEndFidelity F k ≤ 1 := by
   obtain ⟨hw0, hw1⟩ := wernerParam_mem_Icc hlo hhi
