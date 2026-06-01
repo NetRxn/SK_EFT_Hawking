@@ -11,9 +11,12 @@
 | **W1** | NumericalBounds tight Taylor-squeeze: `expNeg046_tight` via degree-5 `Real.exp_bound` + precision-table pattern (DR-INT §3) | ✅ DONE (`2b706dcb`) |
 | **W3** | General Bell-diagonal Klein-4 swap map (`bellDiagSwapA/B/C/D`) + normalization + nonneg + `bellDiagSwapA_mem` envelope + `bellDiagSwapA_werner` bridge | ✅ DONE (`3332b438`, `BellDiagonalSwap.lean`) |
 | **W4** | Repeater breadth: `endToEndFidelity_nest_double` (BDCZ) + `endToEnd_teleportation_useful` (F_e2e>1/2 ⟺ w^k>1/3) + `endToEndQBER` range/monotonicity (SKR threshold parametric) | ✅ DONE (`ca2a80c6`, `RepeaterChain.lean`) |
-| **W5** | Packaging: extend D6 §6 `sec:wstate:envelope` (LaTeX compile gate) + update preprint + fresh-context Stage-13 review → FULLY CLEAN | IN PROGRESS |
+| **W5** | Packaging: D6 §6 extended (compile-clean) + preprint §3a + fresh-context Stage-13 → FULLY CLEAN (`bbaf7d8a`; review `docs/audits/stage13_phase6AB_2026-06-01.md`) | ✅ DONE |
 
-**Counts after W1–W4:** 762 modules / 10,001 theorems / 0 sorry (11 QuantumNetwork modules, all kernel-pure).
+**Counts:** 762 modules / 10,001 theorems / 0 sorry (11 QuantumNetwork modules, all kernel-pure).
+
+## 🎯🎯 PHASE 6AB DONE (2026-06-01)
+All DONE gates met: W1–W5 shipped kernel-clean; decay-inclusive envelope (`decayInclusive_fidelity_envelope`) + general-Bell-diagonal envelope (`bellDiagSwapA_mem`) + repeater-recursion/QBER (`endToEndFidelity_nest_double`, `endToEnd_teleportation_useful`, `endToEndQBER_*`) proven; all new modules root-imported + counts regenerated; D6 §6 extended (LaTeX compile-clean) + preprint updated; **Stage-13 GREEN — FULLY CLEAN, no findings**. Held-out (not required): Horodecki teleportation (Haar lemma), general density-matrix layer.
 
 **OUT (not required for DONE):** Horodecki teleportation (Haar-integral lemma, research risk — optional W6); general density-matrix/trace-distance/diamond-norm layer (pre-demand: do NOT build); any private/product content (PUBLIC only).
 
