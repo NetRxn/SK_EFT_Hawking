@@ -62,4 +62,31 @@ theorem fiberTransmission_antitone_length (αdB : ℝ) (hα : 0 ≤ αdB) {L₁ 
   apply Real.rpow_le_rpow_of_exponent_le (by norm_num)
   nlinarith [mul_nonneg hα (sub_nonneg.mpr h)]
 
+/-! ## Memory-decoherence coherence factor
+
+The bare Bell-state coherence factor `exp(−t/T₂)` (the channel-level primitive;
+the *fidelity* composition under the depolarising / dephasing / QuISP-discrete
+models is the model-parameterized content of Wave 4). -/
+
+/-- Memory coherence factor over storage time `t` with dephasing time `T₂`. -/
+noncomputable def memoryCoherence (t T₂ : ℝ) : ℝ := Real.exp (-t / T₂)
+
+/-- The coherence factor is strictly positive. -/
+theorem memoryCoherence_pos (t T₂ : ℝ) : 0 < memoryCoherence t T₂ :=
+  Real.exp_pos _
+
+/-- Over physical parameters (`t ≥ 0`, `T₂ > 0`) the coherence factor is at most 1. -/
+theorem memoryCoherence_le_one (t T₂ : ℝ) (ht : 0 ≤ t) (hT₂ : 0 < T₂) :
+    memoryCoherence t T₂ ≤ 1 := by
+  unfold memoryCoherence
+  rw [Real.exp_le_one_iff]
+  exact div_nonpos_of_nonpos_of_nonneg (by linarith) (le_of_lt hT₂)
+
+/-- **Monotone decoherence:** coherence is antitone in storage time for `T₂ > 0`. -/
+theorem memoryCoherence_antitone_time (T₂ : ℝ) (hT₂ : 0 < T₂) {t₁ t₂ : ℝ}
+    (h : t₁ ≤ t₂) : memoryCoherence t₂ T₂ ≤ memoryCoherence t₁ T₂ := by
+  unfold memoryCoherence
+  rw [Real.exp_le_exp]
+  gcongr
+
 end SKEFTHawking.QuantumNetwork
