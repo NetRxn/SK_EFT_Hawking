@@ -520,4 +520,113 @@ theorem traceNorm_triangle (A B : Matrix (Fin n) (Fin n) ℂ) :
   rw [← dilate_add, traceNorm_dilate, traceNorm_dilate, traceNorm_dilate] at h
   linarith
 
+/-! ## Phase 6AF-3 — Uhlmann fidelity
+
+The (root) fidelity `F(ρ,σ) = tr√(√ρ σ √ρ)`. Writing `√ρ σ √ρ = (√σ·√ρ)ᴴ(√σ·√ρ)`
+(using `√σ·√σ = σ`), its operator square root has trace `‖√σ·√ρ‖₁`, so the fidelity is the
+trace norm of `√σ·√ρ` — computable on the already-built `traceNorm` with no new operator
+square root of a product. -/
+
+/-- The matrix cfc depends only on the values of `f` on the spectrum: if `f` and `g` agree
+on every eigenvalue, `cfc f M = cfc g M`. -/
+theorem cfc_congr_eig {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.IsHermitian) {f g : ℝ → ℝ}
+    (h : ∀ i, f (hM.eigenvalues i) = g (hM.eigenvalues i)) : hM.cfc f = hM.cfc g := by
+  rw [Matrix.IsHermitian.cfc, Matrix.IsHermitian.cfc]
+  congr 2
+  funext i
+  simp only [Function.comp_apply, h i]
+
+/-- The **positive square root** `√M` of a positive-semidefinite matrix, `cfc Real.sqrt M`. -/
+noncomputable def psdSqrt {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.PosSemidef) :
+    Matrix (Fin n) (Fin n) ℂ := hM.isHermitian.cfc Real.sqrt
+
+/-- `√M` is positive semidefinite. -/
+theorem psdSqrt_posSemidef {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.PosSemidef) :
+    (psdSqrt hM).PosSemidef := cfc_posSemidef _ fun _ => Real.sqrt_nonneg _
+
+/-- `√M` is Hermitian. -/
+theorem psdSqrt_isHermitian {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.PosSemidef) :
+    (psdSqrt hM).IsHermitian := cfc_isHermitian _ _
+
+/-- **`√M · √M = M`** for positive semidefinite `M` (`√x·√x = x` on the nonnegative spectrum). -/
+theorem psdSqrt_mul_self {M : Matrix (Fin n) (Fin n) ℂ} (hM : M.PosSemidef) :
+    psdSqrt hM * psdSqrt hM = M := by
+  rw [psdSqrt, cfc_mul,
+    cfc_congr_eig hM.isHermitian (g := fun x => x)
+      fun i => Real.mul_self_sqrt (hM.eigenvalues_nonneg i)]
+  exact cfc_id hM.isHermitian
+
+/-- The **(root) Uhlmann fidelity** `F(ρ,σ) = tr√(√ρ σ √ρ) = ‖√σ·√ρ‖₁`. -/
+noncomputable def sqrtFidelity {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.PosSemidef)
+    (hσ : σ.PosSemidef) : ℝ := traceNorm (psdSqrt hσ * psdSqrt hρ)
+
+/-- **Jozsa fidelity** `F(ρ,σ)² = (tr√(√ρ σ √ρ))²`. -/
+noncomputable def fidelity {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.PosSemidef)
+    (hσ : σ.PosSemidef) : ℝ := (sqrtFidelity hρ hσ) ^ 2
+
+theorem sqrtFidelity_nonneg {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.PosSemidef)
+    (hσ : σ.PosSemidef) : 0 ≤ sqrtFidelity hρ hσ := traceNorm_nonneg _
+
+theorem fidelity_nonneg {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.PosSemidef)
+    (hσ : σ.PosSemidef) : 0 ≤ fidelity hρ hσ := sq_nonneg _
+
+/-- **The defined fidelity is the Uhlmann fidelity**: `‖√σ·√ρ‖₁ = (tr√(√ρ σ √ρ)).re`, where
+`√(√ρ σ √ρ) = |√σ·√ρ|` is the operator modulus, since `(√σ·√ρ)ᴴ(√σ·√ρ) = √ρ σ √ρ`. -/
+theorem sqrtFidelity_eq_trace_sqrt {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.PosSemidef)
+    (hσ : σ.PosSemidef) :
+    sqrtFidelity hρ hσ = (Matrix.trace (absOp (psdSqrt hσ * psdSqrt hρ))).re :=
+  traceNorm_eq_trace_absOp _
+
+/-- **`(√σ·√ρ)ᴴ(√σ·√ρ) = √ρ · σ · √ρ`** — the operator under the Uhlmann square root. -/
+theorem conjTranspose_mul_self_sqrtFidelity {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.PosSemidef)
+    (hσ : σ.PosSemidef) :
+    (psdSqrt hσ * psdSqrt hρ)ᴴ * (psdSqrt hσ * psdSqrt hρ)
+      = psdSqrt hρ * σ * psdSqrt hρ := by
+  rw [Matrix.conjTranspose_mul, (psdSqrt_isHermitian hσ).eq, (psdSqrt_isHermitian hρ).eq,
+    Matrix.mul_assoc, ← Matrix.mul_assoc (psdSqrt hσ), psdSqrt_mul_self hσ, ← Matrix.mul_assoc]
+
+/-- **`F(ρ,ρ) = 1`** for a density operator (`√ρ·√ρ = ρ`, `‖ρ‖₁ = 1`). -/
+theorem sqrtFidelity_self {ρ : Matrix (Fin n) (Fin n) ℂ} (hρ : IsDensityOperator ρ) :
+    sqrtFidelity hρ.1 hρ.1 = 1 := by
+  rw [sqrtFidelity, psdSqrt_mul_self hρ.1, traceNorm_density_eq_one hρ]
+
+theorem fidelity_self {ρ : Matrix (Fin n) (Fin n) ℂ} (hρ : IsDensityOperator ρ) :
+    fidelity hρ.1 hρ.1 = 1 := by rw [fidelity, sqrtFidelity_self hρ]; norm_num
+
+/-- **`‖Aᴴ‖₁ = ‖A‖₁`** — the trace norm is conjugation-transpose invariant (`AAᴴ` and `AᴴA`
+are cospectral via `charpoly_mul_comm`). -/
+theorem traceNorm_conjTranspose (A : Matrix (Fin n) (Fin n) ℂ) : traceNorm Aᴴ = traceNorm A := by
+  rw [traceNorm_eq_sqrtRootSum, traceNorm_eq_sqrtRootSum A]
+  congr 1
+  rw [Matrix.conjTranspose_conjTranspose]
+  exact Matrix.charpoly_mul_comm A Aᴴ
+
+/-- **The fidelity is symmetric**: `F(ρ,σ) = F(σ,ρ)` (since `√ρ·√σ = (√σ·√ρ)ᴴ` and the trace
+norm is conjugation-transpose invariant). -/
+theorem sqrtFidelity_comm {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef) :
+    sqrtFidelity hρ hσ = sqrtFidelity hσ hρ := by
+  rw [sqrtFidelity, sqrtFidelity, ← traceNorm_conjTranspose (psdSqrt hσ * psdSqrt hρ)]
+  congr 1
+  rw [Matrix.conjTranspose_mul, (psdSqrt_isHermitian hρ).eq, (psdSqrt_isHermitian hσ).eq]
+
+theorem fidelity_comm {ρ σ : Matrix (Fin n) (Fin n) ℂ} (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef) :
+    fidelity hρ hσ = fidelity hσ hρ := by rw [fidelity, fidelity, sqrtFidelity_comm hρ hσ]
+
+/-! ### Deferred frontier (6AF-3): the Fuchs–van de Graaf quantitative bounds
+
+The fidelity *definition* matching Uhlmann (`sqrtFidelity_eq_trace_sqrt`,
+`conjTranspose_mul_self_sqrtFidelity`), nonnegativity, `F(ρ,ρ)=1`, and symmetry are proven
+above. The remaining quantitative content — the **Fuchs–van de Graaf inequalities**
+`1 − F(ρ,σ) ≤ D(ρ,σ) ≤ √(1 − F(ρ,σ)²)` and the upper range bound `F ≤ 1` (i.e.
+`‖√σ·√ρ‖₁ ≤ 1`) — is a **documented deferred lemma** (no `sorry`, no axiom):
+
+PRECISE BLOCKER (grep-verified at pin v4.29.1 / Mathlib `5e932f97`): both require machinery
+Mathlib lacks. `F ≤ 1` is the Hölder/Cauchy–Schwarz bound `‖AB‖₁ ≤ ‖A‖₂‖B‖₂` for Schatten
+norms (no Schatten-2 norm and no matrix Hölder inequality in-library). The FvdG bounds
+additionally need the spectral relationship between trace distance and fidelity — classically
+proven via Uhlmann's purification theorem or a joint spectral argument over the two states —
+neither of which has any concrete-matrix substrate in Mathlib. Each is a multi-week
+from-scratch build (the Schatten-2 layer alone), tracked in `Phase6AF_Roadmap.md`. Everything
+not depending on them (the entire fidelity layer above) is shipped. -/
+
 end SKEFTHawking.QuantumNetwork
