@@ -2640,6 +2640,8 @@ import SKEFTHawking.QuantumNetwork.MultipartiteComparison
 import SKEFTHawking.QuantumNetwork.Teleportation
 -- Bucket 3.1 (2026-06-01): Haar–Pauli integral discharged → teleportation unconditional.
 import SKEFTHawking.QuantumNetwork.HaarPauli
+-- Bucket 3.2 (2026-06-01): W1′ Tier-1 anchors (linear-optics BSM bound + physics link rate).
+import SKEFTHawking.QuantumNetwork.Rate
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
