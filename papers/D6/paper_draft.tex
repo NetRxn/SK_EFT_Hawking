@@ -580,6 +580,23 @@ argument and is cited, not formalized. A Python numeric mirror, three figures, a
 cross-validation gate (\verb|scripts/validate.py --check quantum_network|) accompany the
 Lean substrate. Kernel-only; \emph{zero} new project-local axioms.
 
+\paragraph{Phase~6AE (in progress): a general mixed-state / channel layer.}
+Beyond the Bell-diagonal protocol class we have begun the general density-matrix layer
+for arbitrary-state certification, built concretely on $\mathrm{Matrix}\,(\mathrm{Fin}\,n)\,
+(\mathrm{Fin}\,n)\,\mathbb{C}$ (no Stinespring, no abstract C\*-algebra). \verb|MixedState.lean|
+defines the trace norm $\|A\|_1=\sum\sqrt{\mathrm{eig}(A^{\dagger}A)}$ (Schatten-1) and trace
+distance $D(\rho,\sigma)=\tfrac12\|\rho-\sigma\|_1$ with their structural properties, and proves
+the \emph{linchpin} bridge \verb|traceNorm_posSemidef| ($\|A\|_1=\mathrm{tr}\,A$ for
+positive-semidefinite $A$) kernel-pure with no continuous-functional-calculus instance, via a
+characteristic-polynomial / root-multiset argument; hence \verb|traceNorm_density_eq_one|.
+\verb|DiamondNorm.lean| adds the explicit \verb|partialTrace| (with $\mathrm{tr}(\mathrm{ptr}\,M)
+=\mathrm{tr}\,M$) and the \verb|choiMatrix| (channel--state duality). The remaining analytic core ---
+the trace-norm triangle inequality, Uhlmann fidelity / Fuchs--van de Graaf, CPTP trace-distance
+contractivity, and the diamond-norm sup and its norm axioms --- rests on machinery absent from
+Mathlib at our pin (no von Neumann trace inequality, Ky Fan inequality, matrix polar decomposition,
+or Schatten norm) and is left as a documented research frontier (\verb|Phase6AE_Roadmap.md|), not
+formalized here. Kernel-only; \emph{zero} new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}
