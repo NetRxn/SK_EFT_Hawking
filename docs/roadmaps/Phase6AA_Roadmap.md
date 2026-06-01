@@ -43,8 +43,13 @@
 - **W4 end-to-end — DONE** (`EndToEnd.lean`, `4aac05ef`): `wernerParam` + injectivity; `wernerParam_swap` (swap multiplicative in Werner param); `endToEndFidelity` `(1+3wᵏ)/4` + `_param` + `_succ` (satisfies the one-more-link swap recurrence). Pure algebra, avoids absent `traceNorm`.
 - **W2 numerical bounds — DONE (representative)** (`NumericalBounds.lean`, `2fc50e8e`): `expNeg046_enclosure` `0.54 ≤ exp(−0.46) ≤ 1/1.46` via Bernoulli envelopes — kernel-only, no `native_decide`/LeanCert. Tighter Taylor-squeeze targets documented as the extension.
 - **W5 envelope — DONE (DONE centerpiece)** (`Envelope.lean`, `04067f04`, leak-scrub `06533970`): **`swapChain_fidelity_envelope`** — k-swap Werner chain with per-link F∈[1/4,1] has end-to-end fidelity provably ∈[1/4,1] (model-independent) + monotone-in-fidelity + antitone-in-length.
-- **🎯 LEAN SUBSTRATE COMPLETE:** 8 modules, 26 decls, all kernel-pure `{propext,Classical.choice,Quot.sound}` (axiom-scanned), builds clean (3291 jobs). W0–W5 + the swap-fidelity envelope theorem shipped.
-- **REMAINING for DONE (packaging/review, not Lean):** D6 §6 absorption (bundle docs); Stage-13 adversarial review GREEN; bridging arXiv preprint draft in `papers/` (leak-clean). Lower-priority Lean leftovers (NOT required for DONE): Bell-diagonal Klein-4 general swap map; W1′ link-rate / BSM-modeling-constant anchors.
+- **🎯🎯 PHASE 6AA DONE (2026-06-01).** All DONE-condition gates met:
+  - **Lean substrate W0–W5 COMPLETE:** 8 modules (`QuantumNetwork/`), kernel-pure `{propext,Classical.choice,Quot.sound}`; counts.json **759 modules / 9987 theorems / 0 sorry** (+8 modules, +26 theorems from Phase 6AA; ExtractDeps-tracked).
+  - **Envelope theorem** for the swap-fidelity reference scenario: `swapChain_fidelity_envelope` (`04067f04`).
+  - **D6 §6 absorbed** (`4c9ebba5`): subsection `sec:wstate:envelope`, LaTeX compile gate PASS.
+  - **Stage-13 GREEN** (`docs/audits/stage13_phase6AA_2026-06-01.md`): 5/5 checks PASS; the 1 REQUIRED (root-import disconnection) remediated (`c1b38fae`, counts regenerated); ADVISORY-1 fixed; ADVISORY-2 (D6 `\cite`) deferred to pre-external-review.
+  - **Bridging preprint** draft in `papers/phase6AA_qnetwork_preprint/` (leak-clean).
+- **Deferred (NOT required for DONE):** Bell-diagonal Klein-4 general swap map; W1′ link-rate / BSM-modeling-constant anchors; fidelity-under-continuous-decay envelope; Horodecki teleportation (W6, needs Haar lemma); D6 §6 `\cite` (ADVISORY-2).
 
 ## Invariants (Phase 6AA)
 - Kernel-pure; zero sorry; zero new project-local axioms; no `maxHeartbeats` in proof bodies (decompose instead).
