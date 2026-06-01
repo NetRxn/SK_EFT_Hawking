@@ -41,4 +41,25 @@ theorem fiberTransmission_eq_exp_neg_attenuationNp (αdB L : ℝ) :
   congr 1
   ring
 
+/-- Fiber transmission is strictly positive (a probability lower bound the
+envelope can rely on unconditionally). -/
+theorem fiberTransmission_pos (αdB L : ℝ) : 0 < fiberTransmission αdB L :=
+  Real.rpow_pos_of_pos (by norm_num) _
+
+/-- Over physical parameters (`αdB, L ≥ 0`) transmission is at most 1. -/
+theorem fiberTransmission_le_one (αdB L : ℝ) (hα : 0 ≤ αdB) (hL : 0 ≤ L) :
+    fiberTransmission αdB L ≤ 1 := by
+  unfold fiberTransmission
+  apply Real.rpow_le_one_of_one_le_of_nonpos (by norm_num)
+  nlinarith [mul_nonneg hα hL]
+
+/-- **Monotone loss:** longer fiber transmits no more. Antitone in length for
+`αdB ≥ 0` — the load-bearing fact for propagating an end-to-end fidelity-decay
+bound through a link. -/
+theorem fiberTransmission_antitone_length (αdB : ℝ) (hα : 0 ≤ αdB) {L₁ L₂ : ℝ}
+    (h : L₁ ≤ L₂) : fiberTransmission αdB L₂ ≤ fiberTransmission αdB L₁ := by
+  unfold fiberTransmission
+  apply Real.rpow_le_rpow_of_exponent_le (by norm_num)
+  nlinarith [mul_nonneg hα (sub_nonneg.mpr h)]
+
 end SKEFTHawking.QuantumNetwork
