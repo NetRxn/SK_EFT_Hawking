@@ -632,11 +632,20 @@ $1-F\le D$ (\verb|one_sub_sqrtFidelity_le_traceDist|, a Powers--St\o rmer argume
 matrix dual-norm bound $\mathrm{Re}\,\mathrm{tr}(HR)\le\|H\|_1$ for the sign operator $\mathrm{sgn}(S)$
 and the positive/negative-part identity $\mathrm{tr}(\sqrt{\rho}\,P)\ge\mathrm{tr}\,P^2$ --- with
 the non-commuting $|S|\le\sqrt{\rho}+\sqrt{\sigma}$ Loewner step \emph{removed}, not assumed).
+\emph{(viii)} \textbf{diamond-distance attainment}: the supremum is \emph{achieved} by an optimal
+input density operator (\verb|exists_diamondDist_eq|) --- so $\mathrm{diamondDist}$ is a genuine
+maximum, not merely a least upper bound. The binding ingredient is \textbf{continuity of the
+trace norm} (\verb|continuous_traceNorm|), obtained not from per-eigenvalue continuity (individual
+eigenvalues are discontinuous at crossings) but from the elementary Lipschitz bound
+$\bigl|\|A\|_1-\|B\|_1\bigr|\le\|A-B\|_1\le\sqrt{n}\,\|A-B\|_F$ (reverse triangle plus
+Cauchy--Schwarz on the singular values, $\sum\sigma_i\le\sqrt n\,\sqrt{\sum\sigma_i^2}$ with
+$\sum\sigma_i^2=\mathrm{tr}(A^{\dagger}A)=\|A\|_F^2$); the density-operator set is closed and
+bounded, hence compact in the finite-dimensional Frobenius normed space, and the extreme value
+theorem delivers the optimizer.
 The remaining documented frontier (\verb|Phase6AF_Roadmap.md|), no \verb|sorry| or axiom: the
 Fuchs--van de Graaf \textbf{upper} bound $D\le\sqrt{1-F^2}$ (every route needs Uhlmann's purification
-theorem, grep-verified absent from Mathlib), and, for the diamond distance, sup \textbf{attainment}
-(continuity of the singular-value sum) and the Choi-SDP characterization. Kernel-only; \emph{zero}
-new project-local axioms.
+theorem, grep-verified absent from Mathlib), and the diamond-norm Choi-SDP (Watrous duality)
+characterization. Kernel-only; \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
@@ -669,12 +678,12 @@ quantum\_network}) mirror the Lean closed forms. The general density-matrix laye
 (Phase~6AF, \textsection~\ref{sec:wstate:envelope}): the trace-distance metric, the operator
 modulus, the Uhlmann fidelity, CPTP trace-distance contractivity (data processing), the
 diamond distance $\tfrac12\|\Phi_1-\Phi_2\|_\diamond$ (a genuine metric, triangle inequality
-included), the fidelity range $F\le1$, and the Fuchs--van de Graaf \emph{lower} bound $1-F\le D$ are
-all proven kernel-pure. The genuinely remaining extensions are the full asymptotic DEJMPS
-convergence basin (Macchiavello's non-monotone argument) and two quantitative analytic items --- the
-Fuchs--van de Graaf \emph{upper} bound $D\le\sqrt{1-F^2}$ (needs Uhlmann purification) and the
-diamond-distance attainment/SDP characterization --- none required for the
-protocol-level results here. A bundle-level Stage~13 adversarial review has been run on
+included, with its supremum proven \emph{attained} by an optimal input state), the fidelity range
+$F\le1$, and the Fuchs--van de Graaf \emph{lower} bound $1-F\le D$ are all proven kernel-pure. The
+genuinely remaining extensions are the full asymptotic DEJMPS convergence basin (Macchiavello's
+non-monotone argument) and two quantitative analytic items --- the Fuchs--van de Graaf \emph{upper}
+bound $D\le\sqrt{1-F^2}$ (needs Uhlmann purification) and the diamond-norm Choi-SDP (Watrous)
+characterization --- none required for the protocol-level results here. A bundle-level Stage~13 adversarial review has been run on
 the quantum-network substrate; a consolidated full-bundle review across all
 four headline results remains the final pre-submission gate.
 

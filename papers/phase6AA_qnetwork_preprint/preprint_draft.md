@@ -207,10 +207,18 @@ flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
   bound `Re tr(H·R) ≤ ‖H‖₁` for the sign operator and the positive/negative-part identity
   `tr(√ρ·P) ≥ tr P²` — the non-commuting `|S| ≤ √ρ+√σ` Loewner step *removed*, not assumed).
 
+- **Diamond-distance attainment (`DiamondNormAttainment.lean`).** The `diamondDist` supremum is
+  proven **attained** by an optimal input density operator (`exists_diamondDist_eq`) — a genuine
+  maximum. The binding ingredient is **trace-norm continuity** (`continuous_traceNorm`), via the
+  Lipschitz bound `|‖A‖₁−‖B‖₁| ≤ ‖A−B‖₁ ≤ √n·‖A−B‖_F` (reverse triangle + Cauchy–Schwarz on the
+  singular values, sidestepping the discontinuity of individual eigenvalues); the density-operator
+  set is closed + bounded, hence compact in the finite-dimensional Frobenius normed space, and the
+  extreme value theorem (`IsCompact.exists_sSup_image_eq`) delivers the optimizer.
+
 **Remaining frontier (honestly documented, no `sorry`/axiom).** The Fuchs–van de Graaf **upper**
 bound `D ≤ √(1−F²)` (every route needs Uhlmann's purification theorem, grep-verified absent from
-Mathlib), and — for the diamond distance — sup **attainment** (continuity of the singular-value sum)
-and the Choi-SDP characterization. Documented in `Phase6AF_Roadmap.md`.
+Mathlib), and the diamond-norm Choi-SDP (Watrous) characterization. Documented in
+`Phase6AF_Roadmap.md`.
 
 ## 4. Figures
 
