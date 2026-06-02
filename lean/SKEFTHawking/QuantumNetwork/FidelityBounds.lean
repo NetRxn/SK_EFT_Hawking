@@ -123,4 +123,39 @@ theorem re_trace_mul_le_of_one_sub_posSemidef {σ Q : Matrix ι ι ℂ} (hσ : �
   simp only [Complex.sub_re, Complex.zero_re] at hre
   linarith
 
+/-- **`Uᴴ M U = diagonal(eigenvalues)`** for the eigenvector unitary `U` of a Hermitian `M`
+(the spectral theorem in conjugated form). -/
+theorem eigenvectorUnitary_conj_eq_diagonal {M : Matrix ι ι ℂ} (hM : M.IsHermitian) :
+    (↑hM.eigenvectorUnitary : Matrix ι ι ℂ)ᴴ * M * (↑hM.eigenvectorUnitary : Matrix ι ι ℂ)
+      = diagonal (fun i => (hM.eigenvalues i : ℂ)) := by
+  have h0 := hM.conjStarAlgAut_star_eigenvectorUnitary
+  rw [Unitary.conjStarAlgAut_apply] at h0
+  simpa [Matrix.star_eq_conjTranspose, Function.comp] using h0
+
+/-! ### Pointwise `√`-inverse arithmetic (for the normalized column matrix `Ĉ = C · D⁺`) -/
+
+/-- `(√x)⁻¹ · x = √x` for `x ≥ 0` (with `(√0)⁻¹ = 0`). -/
+theorem inv_sqrt_mul_self {x : ℝ} (hx : 0 ≤ x) : (Real.sqrt x)⁻¹ * x = Real.sqrt x := by
+  rcases eq_or_lt_of_le hx with h | h
+  · simp [← h]
+  · have hx' : Real.sqrt x ≠ 0 := Real.sqrt_ne_zero'.mpr h
+    calc (Real.sqrt x)⁻¹ * x
+        = (Real.sqrt x)⁻¹ * (Real.sqrt x * Real.sqrt x) := by rw [Real.mul_self_sqrt hx]
+      _ = Real.sqrt x := by rw [← mul_assoc, inv_mul_cancel₀ hx', one_mul]
+
+/-- `√x · (√x)⁻¹` is idempotent (`= 0` or `1`). -/
+theorem sqrt_mul_inv_idem {x : ℝ} :
+    (Real.sqrt x * (Real.sqrt x)⁻¹) * (Real.sqrt x * (Real.sqrt x)⁻¹)
+      = Real.sqrt x * (Real.sqrt x)⁻¹ := by
+  rcases eq_or_ne (Real.sqrt x) 0 with h | h
+  · simp [h]
+  · rw [mul_inv_cancel₀ h, mul_one]
+
+/-- `(√x)⁻¹ · (√x · (√x)⁻¹) = (√x)⁻¹`. -/
+theorem inv_sqrt_mul_sqrt_mul_inv {x : ℝ} :
+    (Real.sqrt x)⁻¹ * (Real.sqrt x * (Real.sqrt x)⁻¹) = (Real.sqrt x)⁻¹ := by
+  rcases eq_or_ne (Real.sqrt x) 0 with h | h
+  · simp [h]
+  · rw [mul_inv_cancel₀ h, mul_one]
+
 end SKEFTHawking.QuantumNetwork
