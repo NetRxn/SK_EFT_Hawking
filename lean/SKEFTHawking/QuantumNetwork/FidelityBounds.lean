@@ -501,6 +501,91 @@ theorem posPart_mul_negPart_eq_zero {S : Matrix ι ι ℂ} (hS : S.IsHermitian) 
     · rw [max_eq_right h, zero_mul]
     · rw [max_eq_right (neg_nonpos.mpr h), mul_zero]
 
+/-- **Fuchs–van de Graaf LOWER bound `1 − F(ρ,σ) ≤ D(ρ,σ)`** for density operators, via the
+Powers–Størmer inequality. Let `S = √ρ−√σ = P−Q` (`P=posPart,Q=negPart`, `PQ=0`), `T=√ρ+√σ`.
+Then `tr((ρ−σ)·sgn(S)) = tr(T·|S|) ≥ tr(S²)` (the posPart/negPart bound `tr(√ρ·P)≥tr(P²)`,
+`tr(Q·√σ)≥tr(Q²)`; no `|S|≤T` needed), and `tr(S²) = 2−2tr(√σ√ρ)`. The dual-norm keystone
+gives `tr((ρ−σ)·sgn(S)).re ≤ ‖ρ−σ‖₁ = 2D`, so `1−tr(√σ√ρ).re ≤ D`; and `tr(√σ√ρ).re ≤ F`
+(`re_trace_le_traceNorm`), whence `1−F ≤ D`. -/
+theorem one_sub_sqrtFidelity_le_traceDist {ρ σ : Matrix ι ι ℂ}
+    (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef) (htρ : ρ.trace = 1) (htσ : σ.trace = 1) :
+    1 - sqrtFidelity hρ hσ ≤ traceDist ρ σ := by
+  set rt := psdSqrt hρ with hrt
+  set st := psdSqrt hσ with hst
+  have hrtP : rt.PosSemidef := psdSqrt_posSemidef hρ
+  have hstP : st.PosSemidef := psdSqrt_posSemidef hσ
+  set S := rt - st with hSdef
+  have hSh : S.IsHermitian := (psdSqrt_isHermitian hρ).sub (psdSqrt_isHermitian hσ)
+  set P := posPart hSh with hPdef
+  set Q := negPart hSh with hQdef
+  have hPP : P.PosSemidef := posPart_posSemidef hSh
+  have hQP : Q.PosSemidef := negPart_posSemidef hSh
+  have hrr : rt * rt = ρ := by rw [hrt, psdSqrt_mul_self hρ]
+  have hss : st * st = σ := by rw [hst, psdSqrt_mul_self hσ]
+  have hPQ0 : (P * Q).trace = 0 := by rw [hPdef, hQdef, posPart_mul_negPart_eq_zero hSh, trace_zero]
+  have hQP0 : (Q * P).trace = 0 := by rw [Matrix.trace_mul_comm, hPdef, hQdef,
+    posPart_mul_negPart_eq_zero hSh, trace_zero]
+  have hSpq : S = P - Q := self_eq_posPart_sub_negPart hSh
+  have heq : rt - st = P - Q := by rw [← hSdef]; exact hSpq
+  -- (1) ρ − σ = rt*S + S*st
+  have hρσ : ρ - σ = rt * S + S * st := by
+    rw [hSdef, mul_sub, sub_mul, hrr, hss]; abel
+  -- (2) trace identity: tr((ρ−σ)·sgn S) = tr(rt·(P+Q)) + tr((P+Q)·st)
+  have hterm1 : (rt * S * signOp hSh).trace = (rt * (P + Q)).trace := by
+    rw [Matrix.mul_assoc, self_mul_signOp hSh, ← hPdef, ← hQdef]
+  have hterm2 : (S * st * signOp hSh).trace = ((P + Q) * st).trace := by
+    rw [Matrix.trace_mul_comm (S * st) (signOp hSh), ← Matrix.mul_assoc, signOp_mul_self hSh,
+      ← hPdef, ← hQdef]
+  have htr_eq : ((ρ - σ) * signOp hSh).trace
+      = (rt * (P + Q)).trace + ((P + Q) * st).trace := by
+    rw [hρσ, add_mul, Matrix.trace_add, hterm1, hterm2]
+  -- (3) Powers–Størmer core: tr(S²) ≤ tr((ρ−σ)·sgn S)
+  have hAP : (P * P).trace.re ≤ (rt * P).trace.re := by
+    have hAdecomp : rt = st + P - Q := by linear_combination (norm := abel) heq
+    have hexp : (rt * P).trace = (st * P).trace + (P * P).trace - (Q * P).trace := by
+      rw [hAdecomp, sub_mul, add_mul, Matrix.trace_sub, Matrix.trace_add]
+    rw [hexp, hQP0, sub_zero, Complex.add_re]
+    have := (Complex.le_def.mp (trace_mul_nonneg hstP hPP)).1; simp only [Complex.zero_re] at this
+    linarith
+  have hQB : (Q * Q).trace.re ≤ (Q * st).trace.re := by
+    have hBdecomp : st = rt - P + Q := by linear_combination (norm := abel) -heq
+    have hexp : (Q * st).trace = (Q * rt).trace - (Q * P).trace + (Q * Q).trace := by
+      rw [hBdecomp, Matrix.mul_add, Matrix.mul_sub, Matrix.trace_add, Matrix.trace_sub]
+    rw [hexp, hQP0, sub_zero, Complex.add_re]
+    have := (Complex.le_def.mp (trace_mul_nonneg hQP hrtP)).1; simp only [Complex.zero_re] at this
+    linarith
+  have hps : (S * S).trace.re ≤ ((ρ - σ) * signOp hSh).trace.re := by
+    rw [htr_eq, Complex.add_re, Matrix.mul_add, Matrix.add_mul, Matrix.trace_add, Matrix.trace_add,
+      Complex.add_re, Complex.add_re]
+    have hAQ := (Complex.le_def.mp (trace_mul_nonneg hrtP hQP)).1
+    have hPB := (Complex.le_def.mp (trace_mul_nonneg hPP hstP)).1
+    simp only [Complex.zero_re] at hAQ hPB
+    have hSS : (S * S).trace.re = (P * P).trace.re + (Q * Q).trace.re := by
+      have : S * S = P * P - P * Q - Q * P + Q * Q := by rw [hSpq]; noncomm_ring
+      rw [this, Matrix.trace_add, Matrix.trace_sub, Matrix.trace_sub, hPQ0, hQP0]
+      simp [Complex.add_re]
+    rw [hSS]; linarith
+  -- (4) tr(S²) = 2 − 2·tr(√σ√ρ)
+  have hSsq : (S * S).trace.re = 2 - 2 * (st * rt).trace.re := by
+    have hSS : S * S = ρ - rt * st - st * rt + σ := by
+      rw [hSdef, sub_mul, mul_sub, mul_sub, hrr, hss]; abel
+    rw [hSS, Matrix.trace_add, Matrix.trace_sub, Matrix.trace_sub, htρ, htσ,
+      Matrix.trace_mul_comm rt st]
+    simp only [Complex.add_re, Complex.sub_re, Complex.one_re]; ring
+  -- (5) assemble
+  have hkey : ((ρ - σ) * signOp hSh).trace.re ≤ traceNorm (ρ - σ) :=
+    re_trace_mul_le_traceNorm_hermitian (hρ.isHermitian.sub hσ.isHermitian)
+      (one_sub_signOp_posSemidef hSh) (one_add_signOp_posSemidef hSh)
+  have hF : (st * rt).trace.re ≤ sqrtFidelity hρ hσ := by
+    rw [sqrtFidelity, hst, hrt]; exact re_trace_le_traceNorm _
+  rw [traceDist]
+  have h2D : 2 - 2 * (st * rt).trace.re ≤ traceNorm (ρ - σ) := by
+    calc 2 - 2 * (st * rt).trace.re = (S * S).trace.re := hSsq.symm
+      _ ≤ ((ρ - σ) * signOp hSh).trace.re := hps
+      _ ≤ traceNorm (ρ - σ) := hkey
+  rw [hst, hrt] at hF
+  nlinarith [hF, h2D]
+
 /-
 ## Fuchs–van de Graaf bounds (6AF-7 remainder) — status after the FENCE-GATE sweep (2026-06-01)
 
@@ -515,20 +600,23 @@ fresh 2-agent toehold sweep + roadmap re-read, per the fence discipline):
   and there is no commuting/qubit shortcut for non-commuting `ρ, σ`. Building a purification layer
   is a genuine multi-week analytic phase; fenced with that precise blocker.
 
-* **`1 − F ≤ D` (lower) — IN PROGRESS, piece (B) DONE.** Route: Powers–Størmer
-  `2(1 − tr(√ρ√σ)) = ‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁ = 2D`, with sub-pieces
-  (A) the PS inequality `‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁` (reduces to `|√ρ−√σ| ≤ √ρ+√σ` in Loewner order +
-  `trace_mul_nonneg`), and (B) `tr(√σ√ρ) ≤ F`, i.e. the general `Re tr A ≤ ‖A‖₁`.
-  ✅ **Piece (B) PROVEN** as `re_trace_le_traceNorm` above — and the whnf "wall" was an INEFFICIENCY,
-  not an intrinsic limit: the `set`-bound eigenvector unitary `U`/`B` were reducible, so per-entry
-  access (`B i i` in `single_le_sum`) forced the spectral construction to whnf-explode. FIX (no
-  `maxHeartbeats`): (1) prove the diagonal bound `‖Mᵢᵢ‖² ≤ Re(MᴴM)ᵢᵢ` as a generic lemma over an
-  ABSTRACT `M` (`normSq_diag_le_re_conjTranspose_mul_self`), so `single_le_sum` runs with nothing
-  heavy in scope, then apply to `B` (syntactic `M := B`, no entry whnf); (2) `clear_value B U` after
-  deriving `htr`/`hBB`, freezing the heavy terms opaque. The `∑√eig = ‖A‖₁` step uses the proven
-  `traceNorm_eq_sqrtRootSum` + `roots_charpoly_eq_eigenvalues` rewrites. **Lesson: "spectral whnf
-  timeout" ⟹ abstract the heavy term (generic lemma / `clear_value`), do NOT bump heartbeats.**
-  REMAINING for FvdG-lower: piece (A) Powers–Størmer, then assemble. Then 6AF-8/9.
+* **`1 − F ≤ D` (lower) — ✅ PROVEN** as `one_sub_sqrtFidelity_le_traceDist` above (kernel-pure,
+  no `maxHeartbeats`). The Powers–Størmer route, but with the `|S| ≤ T` Loewner step REMOVED (it is
+  non-trivial / possibly false for non-commuting `√ρ, √σ`). Instead, with `S = √ρ−√σ = P−Q`
+  (`P = posPart, Q = negPart`, `PQ = 0`), `T = √ρ+√σ`:
+  - `tr((ρ−σ)·sgn(S)) = tr(T·|S|)` via `S·sgn(S) = sgn(S)·S = |S| = P+Q` (`self_mul_signOp` /
+    `signOp_mul_self`) and `ρ−σ = √ρ·S + S·√σ`;
+  - `tr(T·|S|) ≥ tr(S²)` directly from `√ρ = √σ + P − Q` ⟹ `tr(√ρ·P) = tr(√σ·P) + tr(P²) ≥ tr(P²)`
+    and `tr(Q·√σ) ≥ tr(Q²)` (`trace_mul_nonneg`), dropping the nonneg cross terms — NO `|S|≤T`;
+  - `tr((ρ−σ)·sgn(S)).re ≤ ‖ρ−σ‖₁` by the dual-norm-Hermitian keystone
+    `re_trace_mul_le_traceNorm_hermitian` (`−1 ≤ sgn(S) ≤ 1` via `one_sub/​one_add_signOp_posSemidef`);
+  - `tr(S²) = 2 − 2 tr(√σ√ρ)` and `tr(√σ√ρ).re ≤ F` (`re_trace_le_traceNorm`) ⟹ `1 − F ≤ D`.
+  The whnf "wall" hit while proving `re_trace_le_traceNorm` (piece B) was an INEFFICIENCY, not an
+  intrinsic limit: `set`-bound eigenvector unitaries are reducible, so per-entry access forces a
+  spectral whnf-explosion. FIX (no `maxHeartbeats`): prove the diagonal bound as a generic lemma over
+  an ABSTRACT `M` (`normSq_diag_le_re_conjTranspose_mul_self`) + `clear_value`. **Lesson: "spectral
+  whnf timeout" ⟹ abstract the heavy term, do NOT bump heartbeats.** Only the FvdG-UPPER bound
+  remains fenced (Uhlmann purification, above).
 -/
 
 end SKEFTHawking.QuantumNetwork
