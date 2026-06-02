@@ -77,4 +77,39 @@ theorem traceNorm_le_card_mul_l2opNorm {ι : Type*} [Fintype ι] [DecidableEq ι
     _ = (Fintype.card ι : ℝ) * ‖M‖ := by
         rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
 
+variable {m n : ℕ}
+
+/-- **Choi matrix of a Kraus channel, entrywise.**
+`choiMatrix (krausMap K) (a,y) (b,y') = ∑ₖ Kₖ y a · conj(Kₖ y' b)`. -/
+theorem choiMatrix_krausMap_apply (K : Fin m → Matrix (Fin n) (Fin n) ℂ) (a y b y' : Fin n) :
+    choiMatrix (krausMap K) (a, y) (b, y')
+      = ∑ k, K k y a * (starRingEnd ℂ) (K k y' b) := by
+  simp only [choiMatrix, krausMap, Matrix.sum_apply, Matrix.mul_apply,
+    Matrix.conjTranspose_apply, Matrix.single_apply]
+  refine Finset.sum_congr rfl (fun k _ => ?_)
+  simp only [ite_and, Finset.sum_ite_eq, Finset.mem_univ, if_true, ite_mul, zero_mul,
+    mul_ite, mul_zero, starRingEnd_apply]
+  rw [mul_one]
+
+/-- **Step 1 — vectorization (entrywise).** The stabilized output `(Φ⊗id)ρ` expressed
+through the Choi matrix `C = choiMatrix (krausMap K)`:
+`(krausMap (tensorKraus K) ρ) (y,α) (y',β) = ∑_{a,b} C (a,y) (b,y') · ρ (a,α) (b,β)`. -/
+theorem krausMap_tensorKraus_apply (K : Fin m → Matrix (Fin n) (Fin n) ℂ)
+    (ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) (y α y' β : Fin n) :
+    krausMap (tensorKraus K) ρ (y, α) (y', β)
+      = ∑ a, ∑ b, choiMatrix (krausMap K) (a, y) (b, y') * ρ (a, α) (b, β) := by
+  simp_rw [choiMatrix_krausMap_apply]
+  simp only [krausMap, tensorKraus, Matrix.sum_apply, Matrix.mul_apply,
+    Matrix.conjTranspose_apply, Matrix.kroneckerMap_apply, Matrix.one_apply,
+    Fintype.sum_prod_type]
+  simp only [mul_ite, mul_one, mul_zero, ite_mul, zero_mul, Finset.sum_ite_eq,
+    Finset.mem_univ, if_true, starRingEnd_apply]
+  simp only [apply_ite (star : ℂ → ℂ), star_zero, mul_ite, mul_zero, Finset.sum_ite_eq,
+    Finset.mem_univ, if_true]
+  simp only [Finset.sum_mul]
+  rw [Finset.sum_comm, Finset.sum_congr rfl (fun b _ => Finset.sum_comm), Finset.sum_comm]
+  refine Finset.sum_congr rfl fun a _ => Finset.sum_congr rfl fun b _ =>
+    Finset.sum_congr rfl fun k _ => ?_
+  ring
+
 end SKEFTHawking.QuantumNetwork
