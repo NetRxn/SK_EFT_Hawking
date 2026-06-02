@@ -160,4 +160,63 @@ theorem isCompact_isDensityOperator :
   rw [Metric.mem_closedBall, dist_zero_right]
   exact norm_le_one_of_isDensityOperator hρ
 
+omit [DecidableEq ι] in
+/-- The Kraus map `ρ ↦ ∑ₖ Kₖ ρ Kₖᴴ` is continuous (a finite sum of two-sided multiplications,
+each continuous in finite dimension). -/
+theorem continuous_krausMap {m : ℕ} (K : Fin m → Matrix ι ι ℂ) :
+    Continuous (krausMap K) := by
+  unfold krausMap
+  exact continuous_finset_sum _ fun k _ => by fun_prop
+
+/-- The **maximally mixed state** `(card ι)⁻¹ • 1` is a density operator (when the index is
+nonempty), giving a witness that the density-operator set is nonempty. -/
+theorem isDensityOperator_maximallyMixed [Nonempty ι] :
+    IsDensityOperator (((Fintype.card ι : ℂ))⁻¹ • (1 : Matrix ι ι ℂ)) := by
+  have hcard : (Fintype.card ι : ℂ) ≠ 0 := by
+    exact_mod_cast (Fintype.card_ne_zero (α := ι))
+  have hdiag : ((Fintype.card ι : ℂ))⁻¹ • (1 : Matrix ι ι ℂ)
+      = diagonal (fun _ => ((Fintype.card ι : ℂ))⁻¹) := by
+    ext i j; by_cases h : i = j <;> simp [Matrix.smul_apply, h]
+  have hpos : (0 : ℂ) ≤ ((Fintype.card ι : ℂ))⁻¹ := by
+    rw [show ((Fintype.card ι : ℂ))⁻¹ = (((Fintype.card ι : ℝ))⁻¹ : ℝ) by push_cast; ring,
+      Complex.zero_le_real]
+    positivity
+  refine ⟨?_, ?_⟩
+  · rw [hdiag]
+    exact Matrix.PosSemidef.diagonal fun _ => hpos
+  · rw [hdiag, Matrix.trace_diagonal, Finset.sum_const, Finset.card_univ, nsmul_eq_mul,
+      mul_inv_cancel₀ hcard]
+
+/-- **Diamond-distance attainment** — the supremum defining `diamondDist` is achieved by an
+optimal input density operator `ρ` (so the `sSup` is a genuine maximum). Combines compactness of
+the density-operator set with continuity of `ρ ↦ D((Φ₁⊗id)ρ,(Φ₂⊗id)ρ)`, via the extreme value
+theorem `IsCompact.exists_sSup_image_eq`. -/
+theorem exists_diamondDist_eq {m n : ℕ} [Nonempty (Fin n)]
+    {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ} :
+    ∃ ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ, IsDensityOperator ρ ∧
+      diamondDist K₁ K₂
+        = traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₂) ρ) := by
+  set f : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ → ℝ :=
+    fun ρ => traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₂) ρ) with hf
+  have hcont : Continuous f := by
+    have : f = fun ρ => (1 / 2 : ℝ) *
+        traceNorm (krausMap (tensorKraus K₁) ρ - krausMap (tensorKraus K₂) ρ) := by
+      funext ρ; simp only [hf, traceDist]
+    rw [this]
+    exact continuous_const.mul (continuous_traceNorm.comp
+      ((continuous_krausMap _).sub (continuous_krausMap _)))
+  have hne : {ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ | IsDensityOperator ρ}.Nonempty :=
+    ⟨_, isDensityOperator_maximallyMixed⟩
+  obtain ⟨ρ, hρ, hsup⟩ := isCompact_isDensityOperator.exists_sSup_image_eq hne hcont.continuousOn
+  refine ⟨ρ, hρ, ?_⟩
+  have hset : {d | ∃ σ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ, IsDensityOperator σ ∧
+      d = traceDist (krausMap (tensorKraus K₁) σ) (krausMap (tensorKraus K₂) σ)}
+      = f '' {σ | IsDensityOperator σ} := by
+    ext d
+    simp only [Set.mem_image, Set.mem_setOf_eq, hf]
+    constructor
+    · rintro ⟨σ, hσ, rfl⟩; exact ⟨σ, hσ, rfl⟩
+    · rintro ⟨σ, hσ, rfl⟩; exact ⟨σ, hσ, rfl⟩
+  rw [diamondDist, hset, hsup]
+
 end SKEFTHawking.QuantumNetwork
