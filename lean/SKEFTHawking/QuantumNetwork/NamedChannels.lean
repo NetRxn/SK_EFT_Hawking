@@ -115,4 +115,20 @@ theorem isKrausChannel_depolarizingKraus {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1)
     ← Complex.ofReal_add, ← Complex.ofReal_add, ← Complex.ofReal_add,
     show (1 - p + p / 3 + p / 3 + p / 3 : ℝ) = 1 by ring, Complex.ofReal_one, one_smul]
 
+/-- The **identity channel** with `m+1` Kraus operators (`I` plus `m` zeros), padded so its Kraus
+count can be matched to a named channel's for `diamondDist`. -/
+noncomputable def idKrausPad (m n : ℕ) : Fin (m + 1) → Matrix (Fin n) (Fin n) ℂ :=
+  fun i => if i = 0 then 1 else 0
+
+theorem isKrausChannel_idKrausPad (m n : ℕ) : IsKrausChannel (idKrausPad m n) := by
+  unfold IsKrausChannel idKrausPad
+  rw [Finset.sum_eq_single (0 : Fin (m + 1)) (fun b _ hb => by simp [hb]) (by simp)]
+  simp
+
+theorem krausMap_idKrausPad (m n : ℕ) (ρ : Matrix (Fin n) (Fin n) ℂ) :
+    krausMap (idKrausPad m n) ρ = ρ := by
+  unfold krausMap idKrausPad
+  rw [Finset.sum_eq_single (0 : Fin (m + 1)) (fun b _ hb => by simp [hb]) (by simp)]
+  simp
+
 end SKEFTHawking.QuantumNetwork
