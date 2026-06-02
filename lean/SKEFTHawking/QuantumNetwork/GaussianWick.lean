@@ -76,4 +76,42 @@ theorem moment_three : ∫ t : ℝ, t ^ 3 * Real.exp (-t ^ 2 / 2) = 0 := by
 theorem moment_four : ∫ t : ℝ, t ^ 4 * Real.exp (-t ^ 2 / 2) = 3 * Real.sqrt (2 * π) :=
   integral_pow_four_mul_gaussian
 
+/-! ### Wick-weight factorisation -/
+
+/-- The Wick weight `w(m) = Jₘ / √(2π)`: `w(0) = w(2) = 1`, `w(1) = w(3) = 0`, `w(4) = 3`. Only
+the values `m ≤ 4` occur in a degree-4 monomial. -/
+def wval : ℕ → ℝ
+  | 0 => 1 | 1 => 0 | 2 => 1 | 3 => 0 | 4 => 3 | _ => 0
+
+/-- Each 1-D moment factors as `Jₘ = √(2π)·w(m)` for `m ≤ 4`. -/
+theorem moment_eq_wval (m : ℕ) (hm : m ≤ 4) :
+    (∫ t : ℝ, t ^ m * Real.exp (-t ^ 2 / 2)) = Real.sqrt (2 * π) * wval m := by
+  interval_cases m
+  · rw [moment_zero, wval]; ring
+  · rw [moment_one, wval]; ring
+  · rw [moment_two, wval]; ring
+  · rw [moment_three, wval]; ring
+  · rw [moment_four, wval]; ring
+
+/-! ### Coordinate multiplicity of a degree-4 monomial -/
+
+/-- The multiplicity of coordinate `e` in the monomial `x_a x_b x_c x_d`. -/
+def coordMult {N : ℕ} (a b c d e : Fin N) : ℕ :=
+  (if e = a then 1 else 0) + (if e = b then 1 else 0)
+    + (if e = c then 1 else 0) + (if e = d then 1 else 0)
+
+/-- Coordinate multiplicity in a degree-4 monomial never exceeds `4`. -/
+theorem coordMult_le_four {N : ℕ} (a b c d e : Fin N) : coordMult a b c d e ≤ 4 := by
+  unfold coordMult
+  split_ifs <;> omega
+
+/-- **Degree-4 coordinate monomial as a power product.** `x_a x_b x_c x_d = ∏_e (x e)^{mult e}`,
+the algebraic input to the `gaussInt_monomial` factorisation. -/
+theorem monomial_coord_pow {N : ℕ} (x : EuclideanSpace ℝ (Fin N)) (a b c d : Fin N) :
+    x a * x b * x c * x d = ∏ e, (x e) ^ (coordMult a b c d e) := by
+  unfold coordMult
+  simp_rw [pow_add, Finset.prod_mul_distrib, pow_ite, pow_one, pow_zero,
+           Finset.prod_ite_eq' Finset.univ _ (fun e => x e)]
+  simp
+
 end SKEFTHawking.QuantumNetwork
