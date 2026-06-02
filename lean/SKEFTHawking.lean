@@ -2664,6 +2664,8 @@ import SKEFTHawking.QuantumNetwork.FidelityUpperBound
 import SKEFTHawking.QuantumNetwork.TraceNormCauchySchwarz
 -- Phase 6AF-11 (2026-06-02): diamond-norm Choi operator-norm UPPER bound (Watrous sandwich).
 import SKEFTHawking.QuantumNetwork.DiamondNormChoiUpper
+-- Phase 6AG (2026-06-02): operational QN layer — general-state network data-processing monotonicity.
+import SKEFTHawking.QuantumNetwork.GeneralStateNetwork
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
