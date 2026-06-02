@@ -73,4 +73,15 @@ theorem diamondDist_ge_maxEntangled [NeZero n]
       ≤ diamondDist K₁ K₂ :=
   le_diamondDist hK₁ hK₂ isDensityOperator_maxEntangled
 
+/-- **Trace norm is invariant under reindexing rows and columns by the same bijection.**
+`‖M.submatrix e e‖₁ = ‖M‖₁` — the trace norm depends only on the singular charpoly, which is
+preserved by simultaneous row/column reindexing (`charpoly_reindex`). -/
+theorem traceNorm_submatrix_equiv {ι : Type*} [Fintype ι] [DecidableEq ι] (e : ι ≃ ι)
+    (M : Matrix ι ι ℂ) : traceNorm (M.submatrix e e) = traceNorm M := by
+  rw [traceNorm_eq_sqrtRootSum, traceNorm_eq_sqrtRootSum, Matrix.conjTranspose_submatrix,
+    Matrix.submatrix_mul_equiv]
+  congr 1
+  rw [show (Mᴴ * M).submatrix (⇑e) (⇑e) = Matrix.reindex e.symm e.symm (Mᴴ * M) by
+        simp [Matrix.reindex_apply], Matrix.charpoly_reindex]
+
 end SKEFTHawking.QuantumNetwork
