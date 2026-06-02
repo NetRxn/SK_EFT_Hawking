@@ -8,10 +8,22 @@ proofs route through Uhlmann's purification theorem (absent from Mathlib at pin)
 the **purification-free Holevo–Helstrom + classical-Fuchs–van de Graaf** route (Watrous Thm 3.39 /
 Ex. 3.6), reusing the shipped trace-distance / `eigPosSum` / `posProj` substrate.
 
-Build order: (1) the Helstrom value `D(ρ,σ) = eigPosSum(ρ−σ)` and its measurement form; (2) the
-**classical** Fuchs–van de Graaf inequality on probability pairs (pure ℝ); (3) fidelity
-data-processing under the binary measurement channel; (4) assembly. This file accumulates the
-pieces incrementally.
+Build order: (1) ✅ the Helstrom value `D(ρ,σ) = eigPosSum(ρ−σ)` (`traceDist_eq_eigPosSum`);
+(2) ✅ the **classical** Fuchs–van de Graaf inequality on probability pairs (`classical_fvdg`,
+pure ℝ); (3) the fidelity↔Bhattacharyya bound `F(ρ,σ) ≤ √(tr Pσ · tr Pρ) + √(tr P'σ · tr P'ρ)`
+for the binary measurement `{P, 1−P}` (fidelity data-processing); (4) assembly.
+
+**Remaining-crux note (2026-06-02).** Step (3) reduces — via the shipped matrix-CS keystone
+`re_trace_conjTranspose_mul_sq_le` — to the single Schatten-2 bound
+`traceNorm(√σ · P · √ρ) ≤ √(tr Pσ) · √(tr Pρ)`. Through the keystone this needs the **trace-norm
+dual characterization** `‖M‖₁ = sup_{U unitary} Re tr(U M)` (the EASY direction `Re tr(UM) ≤ ‖M‖₁`
+follows from `re_trace_le_traceNorm` + trace-norm unitary-invariance; the HARD direction needs a
+**polar unitary** `M = U|M|`). Mathlib at pin has NO trace-norm-dual / polar-decomposition lemma
+(grep-verified, consistent with the Phase-6AF DR's absent-brick inventory), so this is a genuine
+from-scratch ~6–8-lemma sub-build (eigendecomposition of `|M| = absOp M` → achieving unitary; the
+singular-`M` partial-isometry→unitary extension is the delicate step, possibly via the shipped
+`continuous_traceNorm` + an invertible-perturbation limit). Steps (1),(2) are shipped; (3),(4) are
+the next increments.
 
 Invariants: kernel-pure, zero sorry, zero project-local axioms, no `maxHeartbeats`.
 -/
