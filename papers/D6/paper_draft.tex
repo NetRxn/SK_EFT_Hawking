@@ -650,11 +650,21 @@ evaluating the least-upper-bound property \verb|le_diamondDist| at it gives
 $\mathrm{diamondDist}(\Phi_1,\Phi_2)\ge D\bigl((\Phi_1\otimes\mathrm{id})\Omega,(\Phi_2\otimes
 \mathrm{id})\Omega\bigr)$ --- the primal (one-sided) half of the Watrous Choi-SDP characterization,
 at its canonical primal feasible point, with no SDP duality required.
+\emph{(x)} the \textbf{Fuchs--van de Graaf UPPER bound} $D(\rho,\sigma)\le\sqrt{1-F(\rho,\sigma)^2}$
+(\verb|traceDist_le_sqrt_one_sub_sqrtFidelity_sq|) --- proven \emph{purification-free} via the
+Holevo--Helstrom + classical-Fuchs--van de Graaf route, sidestepping Uhlmann's purification theorem
+(absent from Mathlib). The engine is the sharp \textbf{Schatten-2 Cauchy--Schwarz}
+$\|A\,B\|_1\le\|A\|_F\|B\|_F$ (\verb|traceNorm_mul_le|), itself built without Schatten/polar/SVD
+infrastructure: a determinant-based polar unitary for invertible matrices feeds the shipped
+matrix-Cauchy--Schwarz keystone, then a charpoly-roots perturbation $A+\tfrac1k\mathbf 1$ extends it
+to all matrices by continuity. At the optimal Helstrom projector $P$, the fidelity is dominated by
+the measured Bhattacharyya coefficient ($F\le\sqrt{p_0q_0}+\sqrt{p_1q_1}$,
+\verb|sqrtFidelity_le_proj_bc|) and the classical inequality $D^2+\mathrm{BC}^2\le1$ closes
+$D^2\le1-F^2$. Both Fuchs--van de Graaf bounds and $F\le1$ are now proven.
 The remaining documented frontier (\verb|Phase6AF_Roadmap.md|), no \verb|sorry| or axiom: the
-Fuchs--van de Graaf \textbf{upper} bound $D\le\sqrt{1-F^2}$ (every route needs Uhlmann's purification
-theorem, grep-verified absent from Mathlib), and the \emph{full} primal$=$dual Choi-SDP (Watrous)
-identity (needs conic/SDP strong duality --- Mathlib has cone-dual definitions but no
-zero-gap/Slater theorem at pin). Kernel-only; \emph{zero} new project-local axioms.
+\emph{full} primal$=$dual Choi-SDP (Watrous) identity (needs conic/SDP strong duality --- Mathlib has
+cone-dual definitions but no zero-gap/Slater theorem at pin; the primal one-sided bound is proven).
+Kernel-only; \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
@@ -688,10 +698,10 @@ quantum\_network}) mirror the Lean closed forms. The general density-matrix laye
 modulus, the Uhlmann fidelity, CPTP trace-distance contractivity (data processing), the
 diamond distance $\tfrac12\|\Phi_1-\Phi_2\|_\diamond$ (a genuine metric, triangle inequality
 included, with its supremum proven \emph{attained} by an optimal input state), the fidelity range
-$F\le1$, and the Fuchs--van de Graaf \emph{lower} bound $1-F\le D$ are all proven kernel-pure. The
-genuinely remaining extensions are the full asymptotic DEJMPS convergence basin (Macchiavello's
-non-monotone argument) and two quantitative analytic items --- the Fuchs--van de Graaf \emph{upper}
-bound $D\le\sqrt{1-F^2}$ (needs Uhlmann purification) and the \emph{full} primal$=$dual diamond-norm
+$F\le1$, and \emph{both} Fuchs--van de Graaf bounds $1-F\le D\le\sqrt{1-F^2}$ (the upper bound
+proven purification-free via Holevo--Helstrom) are all proven kernel-pure. The
+genuinely remaining extension is the full asymptotic DEJMPS convergence basin (Macchiavello's
+non-monotone argument) and one quantitative analytic item --- the \emph{full} primal$=$dual diamond-norm
 Choi-SDP (Watrous) identity (needs conic strong duality; the primal one-sided bound is proven) ---
 none required for the protocol-level results here. A bundle-level Stage~13 adversarial review has been run on
 the quantum-network substrate; a consolidated full-bundle review across all

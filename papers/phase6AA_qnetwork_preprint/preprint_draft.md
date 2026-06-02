@@ -221,11 +221,18 @@ flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
   D((Φ₁⊗id)Ω,(Φ₂⊗id)Ω)` — the primal (one-sided) half of the Watrous Choi-SDP characterization, at
   its canonical primal feasible point, no SDP duality required.
 
-**Remaining frontier (honestly documented, no `sorry`/axiom).** The Fuchs–van de Graaf **upper**
-bound `D ≤ √(1−F²)` (every route needs Uhlmann's purification theorem, grep-verified absent from
-Mathlib), and the **full** primal=dual diamond-norm Choi-SDP (Watrous) identity (needs conic strong
-duality; Mathlib has cone-dual definitions but no zero-gap/Slater theorem at pin — the primal
-one-sided bound above is proven). Documented in `Phase6AF_Roadmap.md`.
+- **Fuchs–van de Graaf UPPER bound (`FidelityUpperBound.lean`).** `traceDist_le_sqrt_one_sub_sqrtFidelity_sq`:
+  `D ≤ √(1−F²)`, proven **purification-free** via Holevo–Helstrom + classical FvdG (no Uhlmann
+  purification). The engine is the sharp **Schatten-2 Cauchy–Schwarz** `‖A·B‖₁ ≤ ‖A‖_F·‖B‖_F`
+  (`traceNorm_mul_le`) — built with no Schatten/polar/SVD: a determinant-based polar unitary for
+  invertible matrices + the matrix-CS keystone, extended to all matrices by a charpoly-roots
+  perturbation. At the optimal Helstrom projector, `F ≤ √(p₀q₀)+√(p₁q₁)` (`sqrtFidelity_le_proj_bc`)
+  and the classical `D²+BC²≤1` close `D²≤1−F²`. Both FvdG bounds + `F≤1` are now proven.
+
+**Remaining frontier (honestly documented, no `sorry`/axiom).** The **full** primal=dual diamond-norm
+Choi-SDP (Watrous) identity (needs conic strong duality; Mathlib has cone-dual definitions but no
+zero-gap/Slater theorem at pin — the primal one-sided bound above is proven). Documented in
+`Phase6AF_Roadmap.md`.
 
 ## 4. Figures
 
