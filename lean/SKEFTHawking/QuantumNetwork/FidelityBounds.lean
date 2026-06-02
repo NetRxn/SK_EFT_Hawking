@@ -282,6 +282,7 @@ theorem sqrtFidelity_mem_Icc {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator
     (hσ : IsDensityOperator σ) : sqrtFidelity hρ.1 hσ.1 ∈ Set.Icc (0 : ℝ) 1 :=
   ⟨sqrtFidelity_nonneg hρ.1 hσ.1, sqrtFidelity_le_one hρ hσ⟩
 
+omit [DecidableEq ι] in
 /-- A **diagonal entry is bounded by its column's sum of squares**: `‖Mᵢᵢ‖² ≤ Re (MᴴM)ᵢᵢ`. Stated
 for an ABSTRACT `M` so the `single_le_sum` step never forces evaluation of a heavy concrete `M`
 (this is the key to keeping the `Re tr ≤ ‖·‖₁` proof off the spectral-`whnf` wall). -/
