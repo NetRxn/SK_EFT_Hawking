@@ -191,10 +191,11 @@ theorem traceNorm_dephasingChoiBase : traceNorm dephasingChoiBase = 4 := by
   rw [traceNorm_eq_trace_absOp, habs, Matrix.trace_smul, dephasingChoiDiag_trace, smul_eq_mul]
   norm_num
 
-/-- **Dephasing channel diamond-distance lower bound (exact value):**
-`diamondDist (dephasingKraus γ) (id) ≥ γ` for `0 ≤ γ ≤ 1`. This is the *exact* diamond distance
-to the identity — the maximally-entangled (Choi) input is optimal — obtained from the quantitative
-Choi trace-norm lower bound (`diamondDist_ge_choi_traceNorm`) since `‖J(Φ_γ) − J(id)‖₁ = 4γ`. -/
+/-- **Dephasing channel diamond-distance lower bound:** `diamondDist (dephasingKraus γ) (id) ≥ γ`
+for `0 ≤ γ ≤ 1`, obtained from the quantitative Choi trace-norm lower bound
+(`diamondDist_ge_choi_traceNorm`) since `‖J(Φ_γ) − J(id)‖₁ = 4γ`. The bound is tight — `γ` is the exact
+diamond distance because the maximally-entangled (Choi) input is optimal for this Pauli-covariant
+channel — but only the lower bound `≥ γ` is formalized here (Choi-input optimality is not). -/
 theorem diamondDist_dephasing_ge {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
     γ ≤ diamondDist (dephasingKraus γ) (idKrausPad 1 2) := by
   have hbound := diamondDist_ge_choi_traceNorm
@@ -285,10 +286,11 @@ theorem traceNorm_depolarizingChoiBase : traceNorm depolarizingChoiBase = 4 := b
     depolarizingChoiBase_trace, Matrix.trace_one, smul_zero, sub_zero]
   simp
 
-/-- **Depolarizing channel diamond-distance lower bound (exact value):**
-`diamondDist (depolarizingKraus p) (id) ≥ p` for `0 ≤ p ≤ 1`. This is the *exact* diamond distance
-to the identity (maximally-entangled input optimal), via the Choi trace-norm lower bound
-(`diamondDist_ge_choi_traceNorm`) since `‖J(Φ_p) − J(id)‖₁ = 4p`. -/
+/-- **Depolarizing channel diamond-distance lower bound:** `diamondDist (depolarizingKraus p) (id) ≥ p`
+for `0 ≤ p ≤ 1`, via the Choi trace-norm lower bound (`diamondDist_ge_choi_traceNorm`) since
+`‖J(Φ_p) − J(id)‖₁ = 4p`. The bound is tight — `p` is in fact the exact diamond distance because the
+maximally-entangled input is optimal for this Pauli-covariant channel — but only the lower bound `≥ p`
+is formalized here (the matching upper bound / Choi-input optimality is not). -/
 theorem diamondDist_depolarizing_ge {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1) :
     p ≤ diamondDist (depolarizingKraus p) (idKrausPad 3 2) := by
   have hbound := diamondDist_ge_choi_traceNorm
