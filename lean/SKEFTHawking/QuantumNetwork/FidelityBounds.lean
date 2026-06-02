@@ -92,4 +92,35 @@ theorem re_trace_conjTranspose_mul_sq_le (W V : Matrix ι ι ℂ) :
   simp only [discrim] at hdisc
   nlinarith [hdisc]
 
+/-- **`0 ≤ tr(σ R)`** for positive-semidefinite `σ, R` (`tr(σR) = tr(√σ R √σ)`, a PSD trace). -/
+theorem trace_mul_nonneg {σ R : Matrix ι ι ℂ} (hσ : σ.PosSemidef) (hR : R.PosSemidef) :
+    0 ≤ (σ * R).trace := by
+  have hPSD : (psdSqrt hσ * R * psdSqrt hσ).PosSemidef := by
+    have h := hR.conjTranspose_mul_mul_same (psdSqrt hσ)
+    rwa [(psdSqrt_isHermitian hσ).eq] at h
+  have heq : (σ * R).trace = (psdSqrt hσ * R * psdSqrt hσ).trace := by
+    conv_lhs => rw [← psdSqrt_mul_self hσ]
+    rw [Matrix.mul_assoc, Matrix.trace_mul_comm]
+  rw [heq]; exact hPSD.trace_nonneg
+
+/-- **A Hermitian idempotent (projection) is `≤ 1`**: `1 − Q` is positive semidefinite, since
+`1 − Q = (1−Q)ᴴ(1−Q)`. -/
+theorem one_sub_posSemidef_of_projection {Q : Matrix ι ι ℂ} (hQh : Q.IsHermitian)
+    (hQi : Q * Q = Q) : (1 - Q).PosSemidef := by
+  have h : (1 - Q) = (1 - Q)ᴴ * (1 - Q) := by
+    rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_one, hQh.eq]
+    simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.one_mul, Matrix.mul_one, hQi]
+    abel
+  rw [h]; exact Matrix.posSemidef_conjTranspose_mul_self _
+
+/-- **Trace is monotone against a `≤ 1` factor**: if `σ` is PSD and `1 − Q` is PSD, then
+`Re tr(σ Q) ≤ Re tr σ`. -/
+theorem re_trace_mul_le_of_one_sub_posSemidef {σ Q : Matrix ι ι ℂ} (hσ : σ.PosSemidef)
+    (hQ : (1 - Q).PosSemidef) : (σ * Q).trace.re ≤ σ.trace.re := by
+  have h := trace_mul_nonneg hσ hQ
+  rw [Matrix.mul_sub, Matrix.mul_one, Matrix.trace_sub] at h
+  have hre := (Complex.le_def.mp h).1
+  simp only [Complex.sub_re, Complex.zero_re] at hre
+  linarith
+
 end SKEFTHawking.QuantumNetwork
