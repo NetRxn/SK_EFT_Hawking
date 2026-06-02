@@ -66,7 +66,7 @@ noncomputable def diamondDist (K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ)
   sSup {d | ∃ ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ, IsDensityOperator ρ ∧
     d = traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₂) ρ)}
 
-variable {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+variable {K₁ K₂ K₃ : Fin m → Matrix (Fin n) (Fin n) ℂ}
 
 /-- The diamond distance is nonnegative. -/
 theorem diamondDist_nonneg : 0 ≤ diamondDist K₁ K₂ := by
@@ -120,23 +120,44 @@ theorem diamondDist_self (K : Fin m → Matrix (Fin n) (Fin n) ℂ) : diamondDis
     rintro d ⟨ρ, _, rfl⟩
     rw [traceDist_self]
 
+/-- **The diamond distance satisfies the triangle inequality** — so it is a genuine
+`[0,1]`-valued metric on CPTP channels. Pointwise: for every input `ρ`, the trace-distance
+triangle gives `D(Φ₁ρ̃,Φ₃ρ̃) ≤ D(Φ₁ρ̃,Φ₂ρ̃) + D(Φ₂ρ̃,Φ₃ρ̃) ≤ diamondDist Φ₁ Φ₂ + diamondDist Φ₂ Φ₃`
+(via `le_diamondDist`), and taking the supremum preserves the bound. Notably this needs **no**
+sup-attainment — only the pointwise `le_diamondDist` upper bound and `Real.sSup_le`. -/
+theorem diamondDist_triangle (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    (hK₃ : IsKrausChannel K₃) :
+    diamondDist K₁ K₃ ≤ diamondDist K₁ K₂ + diamondDist K₂ K₃ := by
+  apply Real.sSup_le _ (add_nonneg diamondDist_nonneg diamondDist_nonneg)
+  rintro d ⟨ρ, hρ, rfl⟩
+  have h₁ := (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₁) hρ).1.isHermitian
+  have h₂ := (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₂) hρ).1.isHermitian
+  have h₃ := (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₃) hρ).1.isHermitian
+  calc traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₃) ρ)
+      ≤ traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₂) ρ)
+        + traceDist (krausMap (tensorKraus K₂) ρ) (krausMap (tensorKraus K₃) ρ) :=
+        traceDist_triangle _ _ _ h₁ h₂ h₃
+    _ ≤ diamondDist K₁ K₂ + diamondDist K₂ K₃ :=
+        add_le_add (le_diamondDist hK₁ hK₂ hρ) (le_diamondDist hK₂ hK₃ hρ)
+
 /-
 ## DEFERRED FRONTIER — attainment and the SDP characterization (6AF-6)
 
-The diamond distance is now DEFINED and shown to be a `[0,1]`-valued, symmetric, reflexive
-distinguishability measure, using only boundedness of the supremum (`Real.sSup`). What remains
-documented-deferred (no sorry, no axiom):
+The diamond distance is now a genuine `[0,1]`-valued **metric** on CPTP channels — nonnegative,
+symmetric, reflexive (`diamondDist_self`), and satisfying the triangle inequality
+(`diamondDist_triangle`), with the least-upper-bound property `le_diamondDist` — all using only
+boundedness of the supremum (`Real.sSup`), no attainment. What remains documented-deferred
+(no sorry, no axiom):
 
-* **Attainment** — that the supremum is achieved by some optimal `ρ`. The compactness half is
-  available (finite-dim ⇒ `ProperSpace`; EVT via `IsCompact.exists_sSup_image_eq`), but the
-  binding gap is **continuity of `ρ ↦ ‖(Φ⊗id)ρ‖₁` in the matrix entries** — i.e. continuity of
-  the singular-value sum — for which Mathlib at pin has no concrete-matrix substrate (no
-  continuity of eigenvalues/singular values as functions of the entries).
-* **The triangle inequality** `diamondDist Φ₁ Φ₃ ≤ diamondDist Φ₁ Φ₂ + diamondDist Φ₂ Φ₃`
-  (making it a genuine metric on channels) — would follow from the trace-distance triangle plus
-  a supremum-subadditivity argument; deferred pending the attainment infrastructure.
-* **The Choi-matrix SDP characterization** of the diamond norm (Watrous) — a deep theorem with
-  no SDP substrate in Mathlib.
+* **Attainment** — that the supremum is achieved by some optimal `ρ` (so the `sSup` is a genuine
+  `max`). The compactness half is available (finite-dim ⇒ `ProperSpace`; EVT via
+  `IsCompact.exists_sSup_image_eq`), but the binding gap is **continuity of `ρ ↦ ‖(Φ⊗id)ρ‖₁` in
+  the matrix entries** — i.e. continuity of the singular-value sum — for which Mathlib at pin has
+  no concrete-matrix substrate (no continuity of eigenvalues/singular values as functions of the
+  entries). The metric properties above do NOT depend on this; only "the worst case is realized"
+  does.
+* **The Choi-matrix SDP characterization** of the diamond norm (Watrous duality) — a deep theorem
+  with no SDP substrate in Mathlib.
 -/
 
 end SKEFTHawking.QuantumNetwork
