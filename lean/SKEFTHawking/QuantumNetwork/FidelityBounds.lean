@@ -282,5 +282,26 @@ theorem sqrtFidelity_mem_Icc {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator
     (hσ : IsDensityOperator σ) : sqrtFidelity hρ.1 hσ.1 ∈ Set.Icc (0 : ℝ) 1 :=
   ⟨sqrtFidelity_nonneg hρ.1 hσ.1, sqrtFidelity_le_one hρ hσ⟩
 
+/-
+## Fuchs–van de Graaf bounds (6AF-7 remainder) — status after the FENCE-GATE sweep (2026-06-01)
+
+`F ≤ 1` is proven above. The two FvdG bounds `1 − F ≤ D ≤ √(1 − F²)` split (verified by a
+fresh 2-agent toehold sweep + roadmap re-read, per the fence discipline):
+
+* **`D ≤ √(1 − F²)` (upper) — DEFERRED FRONTIER (no sorry, no axiom).** Every known proof routes
+  through **Uhlmann's purification theorem** (`F = max |⟨ψ|φ⟩|` over purifications) plus fidelity
+  monotonicity under partial trace, or the equivalent joint-purification spectral argument. The
+  required substrate — existence of an optimal purification and fidelity data-processing under
+  partial trace — is **grep-verified ABSENT** from Mathlib (no `purif`, `Uhlmann`, `Stinespring`),
+  and there is no commuting/qubit shortcut for non-commuting `ρ, σ`. Building a purification layer
+  is a genuine multi-week analytic phase; fenced with that precise blocker.
+
+* **`1 − F ≤ D` (lower) — REACHABLE, the next build target (not fenced).** The Powers–Størmer
+  route (`2(1 − tr(√ρ√σ)) = ‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁ = 2D`, with `F ≥ tr(√ρ√σ)`) or the
+  measurement-monotonicity route (`F ≤ F_measured`, then the classical `1 − F_cl ≤ D_cl ≤ D`) is
+  buildable from the project's own double-Cauchy–Schwarz machinery (`re_trace_conjTranspose_mul_sq_le`)
+  with no absent Mathlib dependency — a ~6–10 sub-lemma build. Tracked in `Phase6AF_Roadmap.md`.
+-/
+
 end SKEFTHawking.QuantumNetwork
 
