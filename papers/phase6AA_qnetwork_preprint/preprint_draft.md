@@ -265,9 +265,23 @@ The 6AE/6AF layer supplies functional-analytic *bricks*; Phase 6AG makes them *o
 
 - **Named single-qubit noise channels (`NamedChannels.lean`).** Kraus representations + CPTP proofs
   (`IsKrausChannel`) for the depolarizing, dephasing, and amplitude-damping channels operators
-  benchmark against, plus a verified diamond-norm bound: `diamondDist (dephasingKraus γ) (id) ≥ γ`,
-  the *exact* dephasing diamond distance (the maximally-entangled input is optimal), obtained from
-  the two-sided sandwich via `‖J(Φ_γ)−J(id)‖₁ = 4γ`.
+  benchmark against, with diamond-norm bounds to the identity for all three. For the
+  Pauli-covariant channels the maximally-entangled input is optimal and the bound is *exact*:
+  `diamondDist (dephasingKraus γ) (id) ≥ γ` (from `‖J(Φ_γ)−J(id)‖₁ = 4γ`) and
+  `diamondDist (depolarizingKraus p) (id) ≥ p` (Choi-difference singular values `{2/3,2/3,2/3,2}`
+  via the minimal-polynomial identity `B² = (4/3)(1−B)` ⟹ `|B| = 1 − ½B = ½·1 + (3/8)·BᴴB`,
+  manifestly PSD, so `‖J−J‖₁ = 4p`). Amplitude damping is *not* Pauli-covariant, so the Choi input
+  is not optimal; `diamondDist (ampDampKraus γ) (id) ≥ γ/2` is the certified lower bound from the
+  Hermitian dual-norm keystone with a diagonal Loewner contraction aligned with the `±γ` diagonal
+  Choi entries (`‖J−J‖₁ ≥ 2γ`).
+
+- **Fidelity ↔ diamond-distance bridges (`GateFidelityBridge.lean`).** Composing the shipped
+  Fuchs–van de Graaf state bound with the diamond least-upper-bound property:
+  `1 − √F((Φ₁⊗id)ρ, (Φ₂⊗id)ρ) ≤ diamondDist(Φ₁,Φ₂)` for every stabilized input ρ — a small diamond
+  distance certifies uniformly high input–output fidelity, and conversely. (The general-`d`
+  average-gate = `(d·F_e+1)/(d+1)` entanglement-fidelity identity is deferred: it requires
+  Weingarten / unitary-2-design moment formulas absent from the pinned Mathlib; the single-qubit
+  instance is already populated via `teleportAvgFidelity_horodecki_unconditional`.)
 
 ## 4. Figures
 

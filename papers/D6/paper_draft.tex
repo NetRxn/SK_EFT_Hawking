@@ -696,9 +696,24 @@ trace-norm-invariant tensor-factor swap), with a reusable PSD-square-root unique
 density-matrix states the end-to-end trace distance to a target does not increase under any chain of
 CPTP channel steps (data processing lifted to the network), removing the uniform-Werner restriction.
 \emph{(iii)} \textbf{named single-qubit channels} (\verb|NamedChannels.lean|): Kraus representations
-$+$ CPTP proofs for depolarizing, dephasing, amplitude-damping, plus the \emph{exact} dephasing
-diamond bound \verb|diamondDist_dephasing_ge| ($\mathrm{diamondDist}(\Phi_\gamma,\mathrm{id})\ge\gamma$
-from $\|J(\Phi_\gamma)-J(\mathrm{id})\|_1=4\gamma$). Kernel-only; \emph{zero} new project-local axioms.
+$+$ CPTP proofs for depolarizing, dephasing, amplitude-damping, with diamond-distance bounds to the
+identity for all three. For the Pauli-covariant channels the maximally-entangled input is optimal and
+the bound is \emph{exact}: dephasing \verb|diamondDist_dephasing_ge|
+($\mathrm{diamondDist}(\Phi_\gamma,\mathrm{id})\ge\gamma$ from $\|J(\Phi_\gamma)-J(\mathrm{id})\|_1=4\gamma$)
+and depolarizing \verb|diamondDist_depolarizing_ge| ($\ge p$; the Choi-difference singular values
+$\{2/3,2/3,2/3,2\}$ are obtained from the minimal-polynomial identity $B^2=\tfrac43(\mathbf 1-B)$ giving
+$|B|=\mathbf 1-\tfrac12 B=\tfrac12\mathbf 1+\tfrac38 B^\dagger B$, manifestly PSD, so
+$\|J(\Phi_p)-J(\mathrm{id})\|_1=4p$). Amplitude damping is \emph{not} Pauli-covariant, so the
+maximally-entangled input is not optimal; the certified lower bound \verb|diamondDist_ampDamp_ge|
+($\ge\gamma/2$) follows from the Hermitian dual-norm keystone with a diagonal Loewner contraction
+aligned with the $\pm\gamma$ diagonal Choi entries ($\|J(\Phi_\gamma)-J(\mathrm{id})\|_1\ge2\gamma$).
+\emph{(iv)} \textbf{fidelity\,$\leftrightarrow$\,diamond bridges} (\verb|GateFidelityBridge.lean|):
+composing the shipped Fuchs--van de Graaf state bound with the diamond least-upper-bound property gives,
+for every stabilized input, $1-\sqrt{F\!\big((\Phi_1\otimes\mathrm{id})\rho,(\Phi_2\otimes\mathrm{id})\rho\big)}\le\mathrm{diamondDist}(\Phi_1,\Phi_2)$ --- a small diamond distance certifies uniformly
+high input--output fidelity. (The general-$d$ average-gate\,$=$\,$(dF_e+1)/(d+1)$ entanglement-fidelity
+identity is deferred: it requires Weingarten / unitary-$2$-design moment formulas absent from the pinned
+\textsf{Mathlib}; the single-qubit instance is already populated.) Kernel-only; \emph{zero} new
+project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
