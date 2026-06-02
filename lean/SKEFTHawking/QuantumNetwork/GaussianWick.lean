@@ -114,4 +114,93 @@ theorem monomial_coord_pow {N : ℕ} (x : EuclideanSpace ℝ (Fin N)) (a b c d :
            Finset.prod_ite_eq' Finset.univ _ (fun e => x e)]
   simp
 
+/-! ### The Wick (Isserlis) coefficient and the degree-4 real moment tensor -/
+
+/-- The degree-4 Wick/Isserlis coefficient: the sum over the three perfect matchings of `{a,b,c,d}`,
+`δ_ab δ_cd + δ_ac δ_bd + δ_ad δ_bc`. Equal to `3` when all four indices coincide, `1` for a genuine
+two-pair pattern, and `0` otherwise. -/
+def realWick {N : ℕ} (a b c d : Fin N) : ℝ :=
+  (if a = b then 1 else 0) * (if c = d then 1 else 0)
+    + (if a = c then 1 else 0) * (if b = d then 1 else 0)
+    + (if a = d then 1 else 0) * (if b = c then 1 else 0)
+
+/-- If every coordinate multiplicity is even (`0` or `2`), the Wick-weight product is `1`. -/
+theorem prod_wval_eq_one {N : ℕ} (a b c d : Fin N)
+    (h : ∀ e, coordMult a b c d e = 0 ∨ coordMult a b c d e = 2) :
+    ∏ e, wval (coordMult a b c d e) = 1 := by
+  apply Finset.prod_eq_one; intro e _; rcases h e with h | h <;> rw [h] <;> rfl
+
+/-- When all four indices coincide, the Wick-weight product is `3` (`w(4) = 3`, rest `w(0) = 1`). -/
+theorem prod_wval_allEqual {N : ℕ} (a : Fin N) :
+    ∏ e, wval (coordMult a a a a e) = 3 := by
+  rw [Finset.prod_eq_single a]
+  · simp [coordMult, wval]
+  · intro e _ hne; simp [coordMult, hne, wval]
+  · intro h; exact absurd (Finset.mem_univ a) h
+
+/-- **The Wick-weight product equals the Isserlis coefficient:** `∏_e w(mult e) = δδ + δδ + δδ`.
+The full case analysis on the equality pattern of `(a,b,c,d)`: an odd multiplicity forces a
+vanishing factor (`prod_eq_zero`), a two-pair pattern gives all-even multiplicities (`prod_eq_one`),
+and a total coincidence gives the single `w(4) = 3` factor (`prod_eq_single`). -/
+theorem prod_wval_coordMult {N : ℕ} (a b c d : Fin N) :
+    ∏ e, wval (coordMult a b c d e) = realWick a b c d := by
+  by_cases hab : a = b
+  · subst hab
+    by_cases hcd : c = d
+    · subst hcd
+      by_cases hac : a = c
+      · subst hac; rw [prod_wval_allEqual]; norm_num [realWick]
+      · rw [prod_wval_eq_one a a c c (by
+          intro e; unfold coordMult
+          by_cases hea : e = a <;> by_cases hec : e = c <;> simp_all)]
+        simp [realWick, hac]
+    · rw [Finset.prod_eq_zero (Finset.mem_univ c)
+          (by by_cases hca : c = a <;> simp_all [coordMult, wval])]
+      simp only [realWick, if_neg hcd]
+      by_cases hac : a = c <;> by_cases had : a = d <;> simp_all
+  · by_cases hac : a = c
+    · subst hac
+      by_cases hbd : b = d
+      · subst hbd
+        rw [prod_wval_eq_one a b a b (by
+          intro e; unfold coordMult
+          by_cases hea : e = a <;> by_cases heb : e = b <;> simp_all)]
+        simp [realWick, hab]
+      · have hdb : ¬ d = b := fun h => hbd h.symm
+        have hba : ¬ b = a := fun h => hab h.symm
+        rw [Finset.prod_eq_zero (Finset.mem_univ d)
+            (by by_cases hda : d = a <;> simp [coordMult, hda, hdb, hab, wval])]
+        simp [realWick, hab, hbd, hba]
+    · by_cases had : a = d
+      · subst had
+        by_cases hbc : b = c
+        · subst hbc
+          rw [prod_wval_eq_one a b b a (by
+            intro e; unfold coordMult
+            by_cases hea : e = a <;> by_cases heb : e = b <;> simp_all)]
+          simp [realWick, hab]
+        · have hba : ¬ b = a := fun h => hab h.symm
+          rw [Finset.prod_eq_zero (Finset.mem_univ b)
+              (by simp [coordMult, hba, hbc, wval])]
+          simp [realWick, hab, hac, hbc]
+      · rw [Finset.prod_eq_zero (Finset.mem_univ a)
+            (by simp [coordMult, hab, hac, had, wval])]
+        simp [realWick, hab, hac, had]
+
+/-- **Degree-4 real Gaussian moment tensor (Wick/Isserlis).** For the standard Gaussian weight on
+`EuclideanSpace ℝ (Fin N)`,
+`∫ (x_a x_b x_c x_d)·exp(-‖x‖²/2) = (δ_ab δ_cd + δ_ac δ_bd + δ_ad δ_bc)·(√(2π))^N`.
+The unnormalised fourth-moment tensor; dividing by the `N`-fold normalisation `(√(2π))^N` gives the
+familiar dimensionless Isserlis numbers `{0, 1, 3}`. -/
+theorem gaussRealFourTensor {N : ℕ} (a b c d : Fin N) :
+    ∫ x : EuclideanSpace ℝ (Fin N), (x a * x b * x c * x d) * Real.exp (-‖x‖ ^ 2 / 2)
+      = realWick a b c d * Real.sqrt (2 * π) ^ N := by
+  simp_rw [monomial_coord_pow]
+  rw [gaussInt_monomial N (coordMult a b c d),
+      Finset.prod_congr rfl (fun i _ =>
+        moment_eq_wval (coordMult a b c d i) (coordMult_le_four a b c d i)),
+      Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin,
+      prod_wval_coordMult]
+  ring
+
 end SKEFTHawking.QuantumNetwork
