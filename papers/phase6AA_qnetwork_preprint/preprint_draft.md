@@ -215,10 +215,17 @@ flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
   set is closed + bounded, hence compact in the finite-dimensional Frobenius normed space, and the
   extreme value theorem (`IsCompact.exists_sSup_image_eq`) delivers the optimizer.
 
+- **Choi / maximally-entangled primal bound (`DiamondNormChoi.lean`).** `diamondDist_ge_maxEntangled`:
+  the maximally-entangled (Choi) state `Ω = (1/n)|Ω⟩⟨Ω|` is a density operator
+  (`isDensityOperator_maxEntangled`), and `le_diamondDist` at it gives `diamondDist Φ₁ Φ₂ ≥
+  D((Φ₁⊗id)Ω,(Φ₂⊗id)Ω)` — the primal (one-sided) half of the Watrous Choi-SDP characterization, at
+  its canonical primal feasible point, no SDP duality required.
+
 **Remaining frontier (honestly documented, no `sorry`/axiom).** The Fuchs–van de Graaf **upper**
 bound `D ≤ √(1−F²)` (every route needs Uhlmann's purification theorem, grep-verified absent from
-Mathlib), and the diamond-norm Choi-SDP (Watrous) characterization. Documented in
-`Phase6AF_Roadmap.md`.
+Mathlib), and the **full** primal=dual diamond-norm Choi-SDP (Watrous) identity (needs conic strong
+duality; Mathlib has cone-dual definitions but no zero-gap/Slater theorem at pin — the primal
+one-sided bound above is proven). Documented in `Phase6AF_Roadmap.md`.
 
 ## 4. Figures
 

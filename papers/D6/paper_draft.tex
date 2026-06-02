@@ -642,10 +642,19 @@ Cauchy--Schwarz on the singular values, $\sum\sigma_i\le\sqrt n\,\sqrt{\sum\sigm
 $\sum\sigma_i^2=\mathrm{tr}(A^{\dagger}A)=\|A\|_F^2$); the density-operator set is closed and
 bounded, hence compact in the finite-dimensional Frobenius normed space, and the extreme value
 theorem delivers the optimizer.
+\emph{(ix)} the \textbf{Choi / maximally-entangled primal bound} on the diamond norm
+(\verb|diamondDist_ge_maxEntangled|): the maximally-entangled (Choi) state
+$\Omega=\tfrac1n|\Omega\rangle\langle\Omega|$ is a density operator
+(\verb|isDensityOperator_maxEntangled|, a rank-one PSD outer product with $\mathrm{tr}=1$), and
+evaluating the least-upper-bound property \verb|le_diamondDist| at it gives
+$\mathrm{diamondDist}(\Phi_1,\Phi_2)\ge D\bigl((\Phi_1\otimes\mathrm{id})\Omega,(\Phi_2\otimes
+\mathrm{id})\Omega\bigr)$ --- the primal (one-sided) half of the Watrous Choi-SDP characterization,
+at its canonical primal feasible point, with no SDP duality required.
 The remaining documented frontier (\verb|Phase6AF_Roadmap.md|), no \verb|sorry| or axiom: the
 Fuchs--van de Graaf \textbf{upper} bound $D\le\sqrt{1-F^2}$ (every route needs Uhlmann's purification
-theorem, grep-verified absent from Mathlib), and the diamond-norm Choi-SDP (Watrous duality)
-characterization. Kernel-only; \emph{zero} new project-local axioms.
+theorem, grep-verified absent from Mathlib), and the \emph{full} primal$=$dual Choi-SDP (Watrous)
+identity (needs conic/SDP strong duality --- Mathlib has cone-dual definitions but no
+zero-gap/Slater theorem at pin). Kernel-only; \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
@@ -682,8 +691,9 @@ included, with its supremum proven \emph{attained} by an optimal input state), t
 $F\le1$, and the Fuchs--van de Graaf \emph{lower} bound $1-F\le D$ are all proven kernel-pure. The
 genuinely remaining extensions are the full asymptotic DEJMPS convergence basin (Macchiavello's
 non-monotone argument) and two quantitative analytic items --- the Fuchs--van de Graaf \emph{upper}
-bound $D\le\sqrt{1-F^2}$ (needs Uhlmann purification) and the diamond-norm Choi-SDP (Watrous)
-characterization --- none required for the protocol-level results here. A bundle-level Stage~13 adversarial review has been run on
+bound $D\le\sqrt{1-F^2}$ (needs Uhlmann purification) and the \emph{full} primal$=$dual diamond-norm
+Choi-SDP (Watrous) identity (needs conic strong duality; the primal one-sided bound is proven) ---
+none required for the protocol-level results here. A bundle-level Stage~13 adversarial review has been run on
 the quantum-network substrate; a consolidated full-bundle review across all
 four headline results remains the final pre-submission gate.
 
