@@ -712,8 +712,22 @@ composing the shipped Fuchs--van de Graaf state bound with the diamond least-upp
 for every stabilized input, $1-\sqrt{F\!\big((\Phi_1\otimes\mathrm{id})\rho,(\Phi_2\otimes\mathrm{id})\rho\big)}\le\mathrm{diamondDist}(\Phi_1,\Phi_2)$ --- a small diamond distance certifies uniformly
 high input--output fidelity. (The general-$d$ average-gate\,$=$\,$(dF_e+1)/(d+1)$ entanglement-fidelity
 identity is deferred: it requires Weingarten / unitary-$2$-design moment formulas absent from the pinned
-\textsf{Mathlib}; the single-qubit instance is already populated.) Kernel-only; \emph{zero} new
-project-local axioms.
+\textsf{Mathlib}; the single-qubit instance is already populated.) \emph{(v)} \textbf{the Watrous
+weak-dual upper bound} (\verb|DiamondNormDual.lean|, \verb|diamondDist_le_dual_witness|): for any
+witness $W\succeq0$ with $W\succeq J(\Phi_1)-J(\Phi_2)$ (L\"owner order),
+$\mathrm{diamondDist}(\Phi_1,\Phi_2)\le\|\mathrm{Tr}_2 W\|_\infty$. Crucially this is the \emph{weak}-duality
+direction of the Watrous SDP, which --- unlike the primal\,$=$\,dual \emph{strong}-duality form --- needs
+\emph{no} conic strong duality (no Slater point, minimax, or Fenchel conjugate): any feasible $W$ bounds
+the diamond distance. The previously-shipped $n\|J_1-J_2\|_\infty$ bound is recovered as the trivial
+witness $W=\|C\|\,\mathbf1$ (then $\mathrm{Tr}_2W=n\|C\|\,\mathbf1$), so this strictly generalizes it; a
+non-trivial witness is strictly tighter. Instantiating the \emph{optimal} witness closes the envelope to
+the \emph{exact} diamond distance for the Pauli-covariant channels, with no twirl machinery:
+\verb|diamondDist_dephasing_eq| ($=\gamma$, witness $\gamma\,vv^{\!\top}$, $v=e_{00}-e_{11}$) and
+\verb|diamondDist_depolarizing_eq| ($=p$, witness the positive-part projector $C_+=(2p/3)P_+$); both give
+$\mathrm{Tr}_2W=\gamma\,\mathbf1$ resp.\ $p\,\mathbf1$. For amplitude damping (non-covariant) a clean
+non-optimal witness yields the correct-direction two-sided bracket
+$\gamma/2\le\mathrm{diamondDist}(\Phi_\gamma,\mathrm{id})\le\gamma+1-\sqrt{1-\gamma}$
+(\verb|diamondDist_ampDamp_le|). Kernel-only; \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
