@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-02T13:50:15.686284",
+  "generated": "2026-06-02T15:35:07.434278",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 17947,
-    "theorems_total": 10301,
-    "theorems_substantive": 10275,
+    "total_declarations": 17995,
+    "theorems_total": 10338,
+    "theorems_substantive": 10312,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 781,
+    "modules": 783,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -628,6 +628,7 @@
       "SKEFTHawking.QuantumNetwork.DiamondNormAttainment",
       "SKEFTHawking.QuantumNetwork.DiamondNormChoi",
       "SKEFTHawking.QuantumNetwork.DiamondNormChoiUpper",
+      "SKEFTHawking.QuantumNetwork.DiamondNormDual",
       "SKEFTHawking.QuantumNetwork.DiamondNormSup",
       "SKEFTHawking.QuantumNetwork.Distillation",
       "SKEFTHawking.QuantumNetwork.EndToEnd",
@@ -639,6 +640,7 @@
       "SKEFTHawking.QuantumNetwork.HaarPauli",
       "SKEFTHawking.QuantumNetwork.MixedState",
       "SKEFTHawking.QuantumNetwork.MultipartiteComparison",
+      "SKEFTHawking.QuantumNetwork.NamedChannelDiamondExact",
       "SKEFTHawking.QuantumNetwork.NamedChannels",
       "SKEFTHawking.QuantumNetwork.NumericalBounds",
       "SKEFTHawking.QuantumNetwork.Rate",
@@ -794,7 +796,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6775,
+    "definitions": 6786,
     "structures": 288,
     "instances": 489,
     "inductives": 94
