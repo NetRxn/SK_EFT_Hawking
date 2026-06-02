@@ -184,4 +184,33 @@ theorem trace_mul_krausMap_tensorKraus (K : Fin m → Matrix (Fin n) (Fin n) ℂ
       right_inv := by rintro ⟨⟨⟨⟨⟨p, q⟩, r⟩, s⟩, t⟩, u⟩; rfl }
     _ _ (by rintro ⟨⟨⟨⟨⟨p, q⟩, r⟩, s⟩, t⟩, u⟩; dsimp only [Equiv.coe_fn_mk]; ring)
 
+/-- **Partial trace over the first tensor factor**: `(ptrace1 ρ) α β = ∑ b, ρ (b,α) (b,β)`. -/
+noncomputable def ptrace1 (ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    Matrix (Fin n) (Fin n) ℂ := fun α β => ∑ b, ρ (b, α) (b, β)
+
+/-- The isometric embedding `α ↦ (b, α)` of the second factor, as a matrix. -/
+noncomputable def embed1 (b : Fin n) : Matrix (Fin n × Fin n) (Fin n) ℂ :=
+  fun p α => if p = (b, α) then 1 else 0
+
+/-- `ptrace1 ρ = ∑ b, (embed1 b)ᴴ · ρ · (embed1 b)` — a sum of conjugations of `ρ`. -/
+theorem ptrace1_eq_sum_conj (ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    ptrace1 ρ = ∑ b, (embed1 b)ᴴ * ρ * (embed1 b) := by
+  ext α β
+  simp only [ptrace1, Matrix.sum_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, embed1]
+  refine Finset.sum_congr rfl (fun b _ => ?_)
+  simp only [apply_ite (star : ℂ → ℂ), star_one, star_zero, ite_mul, one_mul, zero_mul,
+    Finset.sum_ite_eq', Finset.mem_univ, if_true, mul_ite, mul_one, mul_zero]
+
+/-- The partial trace over the first factor preserves positive-semidefiniteness. -/
+theorem ptrace1_posSemidef {ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ}
+    (hρ : ρ.PosSemidef) : (ptrace1 ρ).PosSemidef := by
+  rw [ptrace1_eq_sum_conj]
+  exact Matrix.posSemidef_sum _ fun b _ => hρ.conjTranspose_mul_mul_same (embed1 b)
+
+/-- The partial trace over the first factor preserves the trace. -/
+theorem trace_ptrace1 (ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    (ptrace1 ρ).trace = ρ.trace := by
+  simp only [ptrace1, Matrix.trace, Matrix.diag_apply]
+  rw [Fintype.sum_prod_type, Finset.sum_comm]
+
 end SKEFTHawking.QuantumNetwork
