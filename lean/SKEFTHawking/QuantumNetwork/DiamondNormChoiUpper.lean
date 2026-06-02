@@ -1,4 +1,5 @@
 import SKEFTHawking.QuantumNetwork.DiamondNormChoi
+import SKEFTHawking.QuantumNetwork.FidelityBounds
 import Mathlib.Analysis.CStarAlgebra.Matrix
 import Mathlib.Analysis.Matrix.Spectrum
 
@@ -76,6 +77,48 @@ theorem traceNorm_le_card_mul_l2opNorm {ι : Type*} [Fintype ι] [DecidableEq ι
     _ ≤ ∑ _i : ι, ‖M‖ := Finset.sum_le_sum (fun i _ => hbound i)
     _ = (Fintype.card ι : ℝ) * ‖M‖ := by
         rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+
+/-- The custom matrix cfc of a constant function is the scalar matrix `c • 1`. -/
+theorem cfc_const {ι : Type*} [Fintype ι] [DecidableEq ι] {M : Matrix ι ι ℂ}
+    (hM : M.IsHermitian) (c : ℝ) : hM.cfc (fun _ => c) = (c : ℂ) • 1 := by
+  have hd : Matrix.diagonal (RCLike.ofReal ∘ (fun _ : ℝ => c) ∘ hM.eigenvalues : ι → ℂ)
+      = (c : ℂ) • (1 : Matrix ι ι ℂ) := by
+    ext i j
+    rw [Matrix.diagonal_apply, Matrix.smul_apply, Matrix.one_apply, smul_eq_mul]
+    by_cases h : i = j <;> simp [h]
+  rw [Matrix.IsHermitian.cfc, hd, map_smul, map_one]
+
+/-- Eigenvalues of a Hermitian matrix are bounded by its ℓ²-operator norm. -/
+theorem eigenvalue_le_l2opNorm {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {A : Matrix ι ι ℂ} (hA : A.IsHermitian) (i : ι) : hA.eigenvalues i ≤ ‖A‖ := by
+  have h := spectrum.norm_le_norm_of_mem (hA.eigenvalues_mem_spectrum_real i)
+  rw [Real.norm_eq_abs] at h
+  exact le_trans (le_abs_self _) h
+
+/-- **Loewner bound `A ≤ ‖A‖ • 1`**: for Hermitian `A`, `‖A‖ • 1 − A` is positive semidefinite
+(its eigenvalues `‖A‖ − λᵢ` are nonnegative since `λᵢ ≤ ‖A‖`). -/
+theorem norm_smul_one_sub_self_posSemidef {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {A : Matrix ι ι ℂ} (hA : A.IsHermitian) : (((‖A‖ : ℂ) • 1) - A).PosSemidef := by
+  have hcfc : hA.cfc (fun x => ‖A‖ - x) = ((‖A‖ : ℂ) • 1) - A := by
+    rw [← cfc_sub hA (fun _ => ‖A‖) (fun x => x), cfc_const hA, cfc_id hA]
+  rw [← hcfc]
+  exact cfc_posSemidef hA (fun i => by have := eigenvalue_le_l2opNorm hA i; linarith)
+
+/-- **Brick 2 — `tr(A·B) ≤ ‖A‖ · tr B`** (real parts) for Hermitian `A` and PSD `B`.
+Since `‖A‖•1 − A ≥ 0` and `B ≥ 0`, `tr((‖A‖•1 − A)·B) ≥ 0` (`trace_mul_nonneg`), which rearranges
+to the bound. -/
+theorem re_trace_mul_le_l2opNorm_mul_trace {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB : B.PosSemidef) :
+    (A * B).trace.re ≤ ‖A‖ * (B.trace).re := by
+  have hnn : 0 ≤ ((((‖A‖ : ℂ) • 1) - A) * B).trace.re := by
+    have := (Complex.le_def.mp
+      (trace_mul_nonneg (norm_smul_one_sub_self_posSemidef hA) hB)).1
+    simpa using this
+  have hexp : ((((‖A‖ : ℂ) • 1) - A) * B).trace = (‖A‖ : ℂ) * B.trace - (A * B).trace := by
+    rw [sub_mul, smul_mul_assoc, one_mul, Matrix.trace_sub, Matrix.trace_smul, smul_eq_mul]
+  rw [hexp, Complex.sub_re, Complex.mul_re] at hnn
+  simp only [Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero] at hnn
+  linarith
 
 variable {m n : ℕ}
 
