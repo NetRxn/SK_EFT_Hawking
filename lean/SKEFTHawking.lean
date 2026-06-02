@@ -2650,6 +2650,8 @@ import SKEFTHawking.QuantumNetwork.MixedState
 import SKEFTHawking.QuantumNetwork.DiamondNorm
 -- Phase 6AF-4 (2026-06-01): CPTP Kraus channel + trace-distance contractivity (data processing).
 import SKEFTHawking.QuantumNetwork.CPTPChannel
+-- Phase 6AF-6 (2026-06-01): the diamond distance ½‖Φ₁−Φ₂‖_◇ (tensor channel + bounded sSup).
+import SKEFTHawking.QuantumNetwork.DiamondNormSup
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast

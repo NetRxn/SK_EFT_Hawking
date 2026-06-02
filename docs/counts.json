@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-01T18:49:05.734817",
+  "generated": "2026-06-01T19:01:16.245947",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 17763,
-    "theorems_total": 10143,
-    "theorems_substantive": 10117,
+    "total_declarations": 17771,
+    "theorems_total": 10149,
+    "theorems_substantive": 10123,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 771,
+    "modules": 772,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -625,6 +625,7 @@
       "SKEFTHawking.QuantumNetwork.DEJMPSConvergence",
       "SKEFTHawking.QuantumNetwork.DecayEnvelope",
       "SKEFTHawking.QuantumNetwork.DiamondNorm",
+      "SKEFTHawking.QuantumNetwork.DiamondNormSup",
       "SKEFTHawking.QuantumNetwork.Distillation",
       "SKEFTHawking.QuantumNetwork.EndToEnd",
       "SKEFTHawking.QuantumNetwork.Envelope",
@@ -784,7 +785,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6750,
+    "definitions": 6752,
     "structures": 287,
     "instances": 489,
     "inductives": 94

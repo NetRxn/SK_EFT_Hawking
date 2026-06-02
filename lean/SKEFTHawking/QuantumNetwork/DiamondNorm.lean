@@ -104,22 +104,26 @@ theorem choiMatrix_krausMap_posSemidef (K : Fin m → Matrix (Fin n) (Fin n) ℂ
   exact Matrix.posSemidef_sum _ fun k _ => Matrix.posSemidef_self_mul_conjTranspose _
 
 /-
-## DEFERRED FRONTIER — the diamond norm proper (6AF-5)
+## STATUS — the diamond norm (updated 2026-06-01, Phase 6AF-6)
 
-`choiMatrix_krausMap_posSemidef` above gives the channel–state-duality positivity. The full
-**diamond norm** `‖Φ‖_◇ = sup_ρ ‖(Φ ⊗ id)ρ‖₁` remains fenced (no sorry, no axiom):
+`choiMatrix_krausMap_posSemidef` above gives the channel–state-duality positivity. The diamond
+norm itself has since been BUILT in `DiamondNormSup.lean`, in its operational trace-distance form
+`diamondDist Φ₁ Φ₂ = sup_ρ D((Φ₁⊗id)ρ, (Φ₂⊗id)ρ) = ½‖Φ₁−Φ₂‖_◇`:
 
-* the supremum over the (infinite) set of density operators needs **boundedness +
-  attainment** — i.e. compactness of the density-operator set together with continuity of
-  the tensored trace norm — for which Mathlib at pin has no concrete-matrix substrate;
-* the stabilizing **tensor channel `Φ ⊗ id`** lives over the product index `Fin n × Fin n'`,
-  while the trace-norm theory (`MixedState.lean`) is built over `Fin n`; bridging them needs
-  either a general-Fintype-index refactor of the trace norm or a `Fin n × Fin n' ≃ Fin (n·n')`
-  reindexing layer;
-* the **norm axioms / submultiplicativity** then rest on those two.
+* the two earlier blockers dissolved — the **tensor channel `Φ⊗id`** is now a CPTP Kraus channel
+  (`isKrausChannel_tensorKraus`, via the Kronecker mixed-product lemmas), and the **product-index**
+  obstruction vanished once the trace-norm / CPTP theory was generalized from `Fin n` to an
+  arbitrary `[Fintype ι][DecidableEq ι]` (Phase 6AF-6a), instantiated here at `Fin n × Fin n`;
+* the **supremum** is well-defined via `Real.sSup` from **boundedness alone** (every term is in
+  `[0,1]` since the stabilized outputs are density operators) — attainment is *not* needed to
+  define it or to prove its properties: `diamondDist` is proven nonnegative, `≤ 1`, symmetric,
+  and zero on the diagonal.
 
-Each is a multi-week build; fenced per the phase discipline. The trace-distance + CPTP
-contractivity core (6AF-1→4) is the load-bearing certification substrate and is fully shipped.
+Still documented-deferred in `DiamondNormSup.lean` (no sorry, no axiom): **attainment** of the
+sup (blocked on continuity of the singular-value sum in the matrix entries — genuinely absent at
+pin), the **triangle inequality** making `diamondDist` a metric on channels, and the **Choi-SDP
+characterization** (Watrous). The load-bearing certification core (6AF-1→4) plus this diamond
+distance are shipped.
 -/
 
 end SKEFTHawking.QuantumNetwork
