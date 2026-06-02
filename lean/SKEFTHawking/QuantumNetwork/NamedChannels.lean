@@ -131,4 +131,23 @@ theorem krausMap_idKrausPad (m n : ℕ) (ρ : Matrix (Fin n) (Fin n) ℂ) :
   rw [Finset.sum_eq_single (0 : Fin (m + 1)) (fun b _ hb => by simp [hb]) (by simp)]
   simp
 
+/-- The (γ-independent) structure matrix of the dephasing Choi difference: `−2` at the two
+off-diagonal coherence positions `((0,0),(1,1))` and `((1,1),(0,0))`, zero elsewhere. -/
+noncomputable def dephasingChoiBase : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  fun p q => if (p = (0, 0) ∧ q = (1, 1)) ∨ (p = (1, 1) ∧ q = (0, 0)) then -2 else 0
+
+/-- The Choi difference of the dephasing channel and the identity is `γ · dephasingChoiBase`. -/
+theorem dephasing_choi_diff {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    choiMatrix (krausMap (dephasingKraus γ)) - choiMatrix (krausMap (idKrausPad 1 2))
+      = (γ : ℂ) • dephasingChoiBase := by
+  ext p q
+  obtain ⟨a, y⟩ := p
+  obtain ⟨b, y'⟩ := q
+  simp only [Matrix.sub_apply, choiMatrix_krausMap_apply, Fin.sum_univ_two, dephasingKraus,
+    idKrausPad, dephasingChoiBase, Matrix.smul_apply, Matrix.one_apply, pauliZ, smul_eq_mul]
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [Complex.conj_ofReal, ← Complex.ofReal_mul, Real.mul_self_sqrt h0,
+      Real.mul_self_sqrt (show (0:ℝ) ≤ 1 - γ by linarith)] <;>
+    ring_nf
+
 end SKEFTHawking.QuantumNetwork
