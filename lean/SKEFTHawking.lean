@@ -2680,6 +2680,7 @@ import SKEFTHawking.QuantumNetwork.GaussianWick
 import SKEFTHawking.QuantumNetwork.GaussianPolar
 import SKEFTHawking.QuantumNetwork.GaussianSphere
 import SKEFTHawking.QuantumNetwork.GaussianComplexMoment
+import SKEFTHawking.QuantumNetwork.GaussianComplexTensor
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
