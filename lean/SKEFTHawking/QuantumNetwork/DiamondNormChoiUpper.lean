@@ -112,4 +112,33 @@ theorem krausMap_tensorKraus_apply (K : Fin m → Matrix (Fin n) (Fin n) ℂ)
     Finset.sum_congr rfl fun k _ => ?_
   ring
 
+/-- **The Choi contraction `M(W,ρ)`** dual to the stabilized channel: the matrix on the doubled
+space with `M(W,ρ) (b,y') (a,y) = ∑_{α,β} W (y',β) (y,α) · ρ (a,α) (b,β)`. It is the partner of
+`W` under the trace–contraction identity `tr(W·(Φ⊗id)ρ) = tr(J(Φ)·M(W,ρ))`. -/
+noncomputable def choiContraction (W ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ :=
+  fun p q => ∑ α, ∑ β, W (p.2, β) (q.2, α) * ρ (q.1, α) (p.1, β)
+
+/-- **Step 2 — the trace–contraction identity.** For any `W` on the doubled space,
+`tr(W · (Φ⊗id)ρ) = tr(J(Φ) · M(W,ρ))`, moving the pairing from the (large) output side to the
+Choi matrix paired against the contraction `M(W,ρ)`. -/
+theorem trace_mul_krausMap_tensorKraus (K : Fin m → Matrix (Fin n) (Fin n) ℂ)
+    (W ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    (W * krausMap (tensorKraus K) ρ).trace
+      = (choiMatrix (krausMap K) * choiContraction W ρ).trace := by
+  simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply, choiContraction,
+    Fintype.sum_prod_type]
+  simp_rw [krausMap_tensorKraus_apply]
+  simp only [Finset.mul_sum]
+  rw [← Fintype.sum_prod_type', ← Fintype.sum_prod_type', ← Fintype.sum_prod_type',
+    ← Fintype.sum_prod_type', ← Fintype.sum_prod_type']
+  rw [← Fintype.sum_prod_type', ← Fintype.sum_prod_type', ← Fintype.sum_prod_type',
+    ← Fintype.sum_prod_type', ← Fintype.sum_prod_type']
+  exact Fintype.sum_equiv
+    { toFun := fun x => (((((x.1.2, x.1.1.1.2), x.2), x.1.1.1.1.1), x.1.1.2), x.1.1.1.1.2),
+      invFun := fun w => (((((w.1.1.2, w.2), w.1.1.1.1.2), w.1.2), w.1.1.1.1.1), w.1.1.1.2),
+      left_inv := by rintro ⟨⟨⟨⟨⟨p, q⟩, r⟩, s⟩, t⟩, u⟩; rfl,
+      right_inv := by rintro ⟨⟨⟨⟨⟨p, q⟩, r⟩, s⟩, t⟩, u⟩; rfl }
+    _ _ (by rintro ⟨⟨⟨⟨⟨p, q⟩, r⟩, s⟩, t⟩, u⟩; dsimp only [Equiv.coe_fn_mk]; ring)
+
 end SKEFTHawking.QuantumNetwork
