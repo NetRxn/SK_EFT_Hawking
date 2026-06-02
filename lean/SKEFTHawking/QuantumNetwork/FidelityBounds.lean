@@ -593,18 +593,16 @@ theorem one_sub_sqrtFidelity_le_traceDist {ρ σ : Matrix ι ι ℂ}
 `F ≤ 1` is proven above. The two FvdG bounds `1 − F ≤ D ≤ √(1 − F²)` split (verified by a
 fresh 2-agent toehold sweep + roadmap re-read, per the fence discipline):
 
-* **`D ≤ √(1 − F²)` (upper) — DEFERRED but REACHABLE (route known; no sorry, no axiom).**
-  ⚠️ **FENCE-WAS-TOO-WIDE CATCH (2026-06-02, DR `Lit-Search/Phase-6AF/…Blueprints…Phase 6AF.md`):**
-  the earlier note claimed "every route needs Uhlmann purification (absent), hence multi-week."
-  Uhlmann IS absent — but that does NOT make the bound unreachable: the DR found a **purification-FREE**
-  finite-dim route via **Holevo–Helstrom + classical Fuchs–van de Graaf**, reusing the shipped
-  trace-distance / `eigPosSum` / `posProj` / `re_trace_proj_mul_le_eigPosSum` / matrix-CS substrate.
-  Sketch: (1) Helstrom rep `D(ρ,σ) = max_{0≤E≤1} (tr(E(ρ−σ))).re`, attained at `E = posProj(ρ−σ)`
-  (project substrate nearly in hand); (2) classical FvdG on reals `(½‖p−q‖₁)² + (∑√(pᵢqᵢ))² ≤ 1`
-  (AM-GM, pure ℝ); (3) the crux `fidelity_monotone_under_kraus` (fidelity data-processing, the dual
-  of the shipped `traceDist_krausMap_le`, ~8 lemmas via the matrix-CS keystone). LOE ≈ 18–25 lemmas
-  (the `fidelity_monotone_under_kraus` sub-build is the hardest). Deferred as a dedicated follow-on
-  sub-wave, NOT blocked — the "needs Uhlmann" framing was the over-wide fence.
+* **`D ≤ √(1 − F²)` (upper) — ✅ PROVEN 2026-06-02** as `traceDist_le_sqrt_one_sub_sqrtFidelity_sq`
+  in `FidelityUpperBound.lean` (kernel-pure, no `maxHeartbeats`). The earlier "needs Uhlmann
+  purification (absent), multi-week" fence was TOO WIDE: a toehold hunt (3 agents) + the Phase-6AF DR
+  found a **purification-FREE** Holevo–Helstrom + classical-FvdG route. Discharged via: (1) the sharp
+  **Schatten-2 Cauchy–Schwarz** `traceNorm(A·B) ≤ √(tr AᴴA)·√(tr BᴴB)` (`TraceNormCauchySchwarz.lean`,
+  invertible polar via det + the matrix-CS keystone + a `ge_of_tendsto'` perturbation — NOT SVD,
+  NOT the absent fidelity-data-processing); (2) `sqrtFidelity_le_proj_bc` (`F ≤ BC`, the measured
+  Bhattacharyya, via trace-norm triangle + the projection-block CS); (3) at the optimal Helstrom
+  `P = posProj(ρ−σ)`: `D = p₀−q₀` (Helstrom value `traceDist_eq_eigPosSum`), `classical_fvdg`
+  (`D²+BC²≤1`), and `F ≤ BC` + `F ≤ 1` ⟹ `D² ≤ 1−F²`. Both FvdG bounds (and `F ≤ 1`) now PROVEN.
 
 * **`1 − F ≤ D` (lower) — ✅ PROVEN** as `one_sub_sqrtFidelity_le_traceDist` above (kernel-pure,
   no `maxHeartbeats`). The Powers–Størmer route, but with the `|S| ≤ T` Loewner step REMOVED (it is
