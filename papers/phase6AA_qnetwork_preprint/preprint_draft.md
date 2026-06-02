@@ -198,14 +198,19 @@ flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
   channel `Φ⊗id` is again CPTP (`isKrausChannel_tensorKraus`, via the Kronecker mixed-product
   identities), the supremum is well-defined from **boundedness alone** (`Real.sSup` needs no
   attainment; each term ∈ `[0,1]` since the stabilized outputs are density operators). Proven
-  nonnegative, `≤ 1`, symmetric, and zero on the diagonal — a genuine `[0,1]` distinguishability
-  measure.
+  nonnegative, `≤ 1`, symmetric, zero on the diagonal, **and satisfying the triangle inequality**
+  (`diamondDist_triangle`) — hence a genuine `[0,1]`-valued distinguishability *metric* on channels.
+- **Fidelity range and Fuchs–van de Graaf lower bound (`FidelityBounds.lean`).** `F ≤ 1`
+  (`sqrtFidelity_le_one`, an elementary double-Cauchy–Schwarz column assembly bypassing the absent
+  Schatten-2 / matrix-Hölder layer) and the **Fuchs–van de Graaf lower bound** `1−F ≤ D`
+  (`one_sub_sqrtFidelity_le_traceDist`, a Powers–Størmer argument routed through a matrix dual-norm
+  bound `Re tr(H·R) ≤ ‖H‖₁` for the sign operator and the positive/negative-part identity
+  `tr(√ρ·P) ≥ tr P²` — the non-commuting `|S| ≤ √ρ+√σ` Loewner step *removed*, not assumed).
 
-**Remaining frontier (honestly documented, no `sorry`/axiom).** The **Fuchs–van de Graaf**
-bounds `1−F ≤ D ≤ √(1−F²)` and the range `F ≤ 1` (which need a Schatten-2 / matrix-Hölder layer
-Mathlib lacks), and — for the diamond distance — sup **attainment** (continuity of the
-singular-value sum), the triangle inequality, and the Choi-SDP characterization. Documented in
-`Phase6AF_Roadmap.md`.
+**Remaining frontier (honestly documented, no `sorry`/axiom).** The Fuchs–van de Graaf **upper**
+bound `D ≤ √(1−F²)` (every route needs Uhlmann's purification theorem, grep-verified absent from
+Mathlib), and — for the diamond distance — sup **attainment** (continuity of the singular-value sum)
+and the Choi-SDP characterization. Documented in `Phase6AF_Roadmap.md`.
 
 ## 4. Figures
 

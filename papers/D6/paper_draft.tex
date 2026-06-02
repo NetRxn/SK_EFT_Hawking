@@ -621,14 +621,22 @@ the doubled space $\mathrm{Fin}\,n\times\mathrm{Fin}\,n$ for free) and proving t
 channel $\Phi\otimes\mathrm{id}$ is again CPTP (\verb|isKrausChannel_tensorKraus|, via the
 Kronecker mixed-product identities), the supremum is well defined from boundedness alone
 (\texttt{Real.sSup} needs no attainment, every term lying in $[0,1]$ as the stabilized outputs are
-density operators); it is proven nonnegative, $\le 1$, symmetric, and zero on the diagonal --- a
-genuine $[0,1]$-valued distinguishability measure (\verb|diamondDist_nonneg|,
-\verb|diamondDist_le_one|, \verb|diamondDist_comm|, \verb|diamondDist_self|).
+density operators); it is proven nonnegative, $\le 1$, symmetric, zero on the diagonal, and
+\textbf{satisfying the triangle inequality} --- hence a genuine $[0,1]$-valued distinguishability
+\emph{metric} on channels (\verb|diamondDist_nonneg|, \verb|diamondDist_le_one|,
+\verb|diamondDist_comm|, \verb|diamondDist_self|, \verb|diamondDist_triangle|).
+\emph{(vii)} the \textbf{fidelity range and the Fuchs--van de Graaf lower bound}: $F(\rho,\sigma)\le1$
+(\verb|sqrtFidelity_le_one|, via an elementary double-Cauchy--Schwarz column assembly that bypasses
+the absent Schatten-2 / matrix-H\"older layer), and the \textbf{Fuchs--van de Graaf lower bound}
+$1-F\le D$ (\verb|one_sub_sqrtFidelity_le_traceDist|, a Powers--St\o rmer argument routed through a
+matrix dual-norm bound $\mathrm{Re}\,\mathrm{tr}(HR)\le\|H\|_1$ for the sign operator $\mathrm{sgn}(S)$
+and the positive/negative-part identity $\mathrm{tr}(\sqrt{\rho}\,P)\ge\mathrm{tr}\,P^2$ --- with
+the non-commuting $|S|\le\sqrt{\rho}+\sqrt{\sigma}$ Loewner step \emph{removed}, not assumed).
 The remaining documented frontier (\verb|Phase6AF_Roadmap.md|), no \verb|sorry| or axiom: the
-\textbf{Fuchs--van de Graaf} bounds $1-F\le D\le\sqrt{1-F^2}$ with the range $F\le1$ (needing a
-Schatten-2 / matrix-H\"older layer Mathlib lacks), and, for the diamond distance, sup
-\textbf{attainment} (continuity of the singular-value sum), the triangle inequality, and the
-Choi-SDP characterization. Kernel-only; \emph{zero} new project-local axioms.
+Fuchs--van de Graaf \textbf{upper} bound $D\le\sqrt{1-F^2}$ (every route needs Uhlmann's purification
+theorem, grep-verified absent from Mathlib), and, for the diamond distance, sup \textbf{attainment}
+(continuity of the singular-value sum) and the Choi-SDP characterization. Kernel-only; \emph{zero}
+new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
@@ -659,11 +667,13 @@ project-local axioms; the Python numerics, figures, and a
 cross-validation gate (\texttt{scripts/validate.py --check
 quantum\_network}) mirror the Lean closed forms. The general density-matrix layer for arbitrary-state certification has since been built
 (Phase~6AF, \textsection~\ref{sec:wstate:envelope}): the trace-distance metric, the operator
-modulus, the Uhlmann fidelity, CPTP trace-distance contractivity (data processing), and the
-diamond distance $\tfrac12\|\Phi_1-\Phi_2\|_\diamond$ are all proven kernel-pure. The genuinely
-remaining extensions are the full asymptotic DEJMPS convergence basin (Macchiavello's non-monotone
-argument) and a few quantitative analytic items --- the Fuchs--van de Graaf bounds and the
-attainment/triangle/SDP properties of the diamond distance --- none required for the
+modulus, the Uhlmann fidelity, CPTP trace-distance contractivity (data processing), the
+diamond distance $\tfrac12\|\Phi_1-\Phi_2\|_\diamond$ (a genuine metric, triangle inequality
+included), the fidelity range $F\le1$, and the Fuchs--van de Graaf \emph{lower} bound $1-F\le D$ are
+all proven kernel-pure. The genuinely remaining extensions are the full asymptotic DEJMPS
+convergence basin (Macchiavello's non-monotone argument) and two quantitative analytic items --- the
+Fuchs--van de Graaf \emph{upper} bound $D\le\sqrt{1-F^2}$ (needs Uhlmann purification) and the
+diamond-distance attainment/SDP characterization --- none required for the
 protocol-level results here. A bundle-level Stage~13 adversarial review has been run on
 the quantum-network substrate; a consolidated full-bundle review across all
 four headline results remains the final pre-submission gate.
