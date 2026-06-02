@@ -72,4 +72,59 @@ theorem diamondDist_dephasing_eq {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
   rwa [ptrace2_dephasingWitness, norm_smul, norm_one, mul_one, Complex.norm_real,
     Real.norm_of_nonneg h0] at hub
 
+/-! ## Depolarizing channel: exact diamond distance `= p` -/
+
+/-- Bloch indicators for the two off-diagonal `+2/3` eigenvectors `e₀₁, e₁₀`. -/
+def s01Dep : Fin 2 × Fin 2 → ℝ := fun p => if p = (0, 1) then 1 else 0
+def s10Dep : Fin 2 × Fin 2 → ℝ := fun p => if p = (1, 0) then 1 else 0
+
+/-- The optimal dual witness for depolarizing: the positive part `C₊ = (2p/3)·P₊`, written as the
+sum of the three rank-one projectors onto the `+2/3` eigenspace `{e₀₁, e₁₀, (e₀₀−e₁₁)/√2}`. -/
+noncomputable def depolarizingWitness (p : ℝ) : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  (Matrix.of fun a b => ((2 * p / 3 : ℝ) : ℂ) * (s01Dep a : ℂ) * (s01Dep b : ℂ))
+  + (Matrix.of fun a b => ((2 * p / 3 : ℝ) : ℂ) * (s10Dep a : ℂ) * (s10Dep b : ℂ))
+  + (Matrix.of fun a b => ((p / 3 : ℝ) : ℂ) * (sDeph a : ℂ) * (sDeph b : ℂ))
+
+theorem depolarizingWitness_posSemidef {p : ℝ} (hp : 0 ≤ p) : (depolarizingWitness p).PosSemidef := by
+  have h23 : (0 : ℝ) ≤ 2 * p / 3 := by linarith
+  have h3 : (0 : ℝ) ≤ p / 3 := by linarith
+  exact ((posSemidef_smul_outer h23 s01Dep).add (posSemidef_smul_outer h23 s10Dep)).add
+    (posSemidef_smul_outer h3 sDeph)
+
+theorem ptrace2_depolarizingWitness (p : ℝ) :
+    ptrace2 (depolarizingWitness p) = (p : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  ext a b
+  fin_cases a <;> fin_cases b <;>
+    simp [ptrace2, depolarizingWitness, s01Dep, s10Dep, sDeph, Matrix.add_apply, Matrix.smul_apply,
+      Fin.sum_univ_two] <;> ring
+
+theorem depolarizingWitness_sub_choi_posSemidef {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1) :
+    (depolarizingWitness p - (choiMatrix (krausMap (depolarizingKraus p))
+      - choiMatrix (krausMap (idKrausPad 3 2)))).PosSemidef := by
+  rw [depolarizing_choi_diff h0 h1]
+  have heq : depolarizingWitness p - (p : ℂ) • depolarizingChoiBase
+      = Matrix.of fun a b => (p : ℂ)
+          * ((if a = (0, 0) then 1 else if a = (1, 1) then 1 else 0 : ℝ) : ℂ)
+          * ((if b = (0, 0) then 1 else if b = (1, 1) then 1 else 0 : ℝ) : ℂ) := by
+    ext q r; obtain ⟨a, y⟩ := q; obtain ⟨b, y'⟩ := r
+    fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+      simp only [depolarizingWitness, s01Dep, s10Dep, sDeph, depolarizingChoiBase, Matrix.sub_apply,
+        Matrix.add_apply, Matrix.of_apply, Matrix.smul_apply, smul_eq_mul, Prod.mk.injEq,
+        Fin.isValue] <;>
+      norm_num <;> ring
+  rw [heq]
+  exact posSemidef_smul_outer h0 (fun p => if p = (0, 0) then 1 else if p = (1, 1) then 1 else 0)
+
+/-- **Exact depolarizing diamond distance:** `diamondDist (depolarizingKraus p) (id) = p` for
+`0 ≤ p ≤ 1`. Lower bound `diamondDist_depolarizing_ge`; upper bound at the positive-part dual
+witness (`ptrace₂ W = p·1`). Two-sided exact value for the second named channel. -/
+theorem diamondDist_depolarizing_eq {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1) :
+    diamondDist (depolarizingKraus p) (idKrausPad 3 2) = p := by
+  refine le_antisymm ?_ (diamondDist_depolarizing_ge h0 h1)
+  have hub := diamondDist_le_dual_witness (isKrausChannel_depolarizingKraus h0 h1)
+    (isKrausChannel_idKrausPad 3 2) (depolarizingWitness_posSemidef h0)
+    (depolarizingWitness_sub_choi_posSemidef h0 h1)
+  rwa [ptrace2_depolarizingWitness, norm_smul, norm_one, mul_one, Complex.norm_real,
+    Real.norm_of_nonneg h0] at hub
+
 end SKEFTHawking.QuantumNetwork
