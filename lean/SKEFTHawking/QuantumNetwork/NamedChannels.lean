@@ -1,4 +1,5 @@
 import SKEFTHawking.QuantumNetwork.DiamondNormChoiUpper
+import SKEFTHawking.QuantumNetwork.HaarPauli
 
 /-!
 # Named single-qubit noise channels (Phase 6AG, Ask 1)
@@ -13,9 +14,6 @@ Invariants: kernel-pure, zero sorry, zero project-local axioms, no `maxHeartbeat
 namespace SKEFTHawking.QuantumNetwork
 
 open Matrix
-
-/-- The Pauli `Z` matrix. -/
-def pauliZ : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -1]
 
 theorem pauliZ_conjTranspose : pauliZᴴ = pauliZ := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [pauliZ]
