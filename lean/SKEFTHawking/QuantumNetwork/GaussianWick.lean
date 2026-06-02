@@ -30,10 +30,10 @@ open MeasureTheory ProbabilityTheory Real Set Finset
 monomial over `EuclideanSpace ℝ (Fin N)` factorises into the product of the 1-D moments
 `Jₘᵢ = ∫ t^{mᵢ}·exp(-t²/2)`:
 `∫ (∏ᵢ xᵢ^{mᵢ})·exp(-‖x‖²/2) = ∏ᵢ ∫ t^{mᵢ}·exp(-t²/2)`. -/
-theorem gaussInt_monomial (N : ℕ) (m : Fin N → ℕ) :
-    ∫ x : EuclideanSpace ℝ (Fin N), (∏ i, (x i) ^ (m i)) * Real.exp (-‖x‖ ^ 2 / 2)
+theorem gaussInt_monomial {ι : Type*} [Fintype ι] (m : ι → ℕ) :
+    ∫ x : EuclideanSpace ℝ ι, (∏ i, (x i) ^ (m i)) * Real.exp (-‖x‖ ^ 2 / 2)
       = ∏ i, ∫ t : ℝ, t ^ (m i) * Real.exp (-t ^ 2 / 2) := by
-  have hw : ∀ x : EuclideanSpace ℝ (Fin N),
+  have hw : ∀ x : EuclideanSpace ℝ ι,
       (∏ i, (x i) ^ (m i)) * Real.exp (-‖x‖ ^ 2 / 2)
         = ∏ i, ((x i) ^ (m i) * Real.exp (-(x i) ^ 2 / 2)) := by
     intro x
@@ -44,8 +44,8 @@ theorem gaussInt_monomial (N : ℕ) (m : Fin N → ℕ) :
           congr 1; apply Finset.sum_congr rfl; intro i _; rw [Real.norm_eq_abs, sq_abs],
         ← Finset.prod_mul_distrib]
   simp_rw [hw]
-  rw [← (PiLp.volume_preserving_toLp (ι := Fin N)).integral_comp
-        (MeasurableEquiv.toLp 2 (Fin N → ℝ)).measurableEmbedding]
+  rw [← (PiLp.volume_preserving_toLp (ι := ι)).integral_comp
+        (MeasurableEquiv.toLp 2 (ι → ℝ)).measurableEmbedding]
   rw [integral_fintype_prod_volume_eq_prod (fun i t => t ^ (m i) * Real.exp (-t ^ 2 / 2))]
 
 /-! ### Per-coordinate 1-D moment values
@@ -96,18 +96,20 @@ theorem moment_eq_wval (m : ℕ) (hm : m ≤ 4) :
 /-! ### Coordinate multiplicity of a degree-4 monomial -/
 
 /-- The multiplicity of coordinate `e` in the monomial `x_a x_b x_c x_d`. -/
-def coordMult {N : ℕ} (a b c d e : Fin N) : ℕ :=
+def coordMult {ι : Type*} [DecidableEq ι] (a b c d e : ι) : ℕ :=
   (if e = a then 1 else 0) + (if e = b then 1 else 0)
     + (if e = c then 1 else 0) + (if e = d then 1 else 0)
 
 /-- Coordinate multiplicity in a degree-4 monomial never exceeds `4`. -/
-theorem coordMult_le_four {N : ℕ} (a b c d e : Fin N) : coordMult a b c d e ≤ 4 := by
+theorem coordMult_le_four {ι : Type*} [DecidableEq ι] (a b c d e : ι) :
+    coordMult a b c d e ≤ 4 := by
   unfold coordMult
   split_ifs <;> omega
 
 /-- **Degree-4 coordinate monomial as a power product.** `x_a x_b x_c x_d = ∏_e (x e)^{mult e}`,
 the algebraic input to the `gaussInt_monomial` factorisation. -/
-theorem monomial_coord_pow {N : ℕ} (x : EuclideanSpace ℝ (Fin N)) (a b c d : Fin N) :
+theorem monomial_coord_pow {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (x : EuclideanSpace ℝ ι) (a b c d : ι) :
     x a * x b * x c * x d = ∏ e, (x e) ^ (coordMult a b c d e) := by
   unfold coordMult
   simp_rw [pow_add, Finset.prod_mul_distrib, pow_ite, pow_one, pow_zero,
@@ -119,19 +121,19 @@ theorem monomial_coord_pow {N : ℕ} (x : EuclideanSpace ℝ (Fin N)) (a b c d :
 /-- The degree-4 Wick/Isserlis coefficient: the sum over the three perfect matchings of `{a,b,c,d}`,
 `δ_ab δ_cd + δ_ac δ_bd + δ_ad δ_bc`. Equal to `3` when all four indices coincide, `1` for a genuine
 two-pair pattern, and `0` otherwise. -/
-def realWick {N : ℕ} (a b c d : Fin N) : ℝ :=
+def realWick {ι : Type*} [DecidableEq ι] (a b c d : ι) : ℝ :=
   (if a = b then 1 else 0) * (if c = d then 1 else 0)
     + (if a = c then 1 else 0) * (if b = d then 1 else 0)
     + (if a = d then 1 else 0) * (if b = c then 1 else 0)
 
 /-- If every coordinate multiplicity is even (`0` or `2`), the Wick-weight product is `1`. -/
-theorem prod_wval_eq_one {N : ℕ} (a b c d : Fin N)
+theorem prod_wval_eq_one {ι : Type*} [Fintype ι] [DecidableEq ι] (a b c d : ι)
     (h : ∀ e, coordMult a b c d e = 0 ∨ coordMult a b c d e = 2) :
     ∏ e, wval (coordMult a b c d e) = 1 := by
   apply Finset.prod_eq_one; intro e _; rcases h e with h | h <;> rw [h] <;> rfl
 
 /-- When all four indices coincide, the Wick-weight product is `3` (`w(4) = 3`, rest `w(0) = 1`). -/
-theorem prod_wval_allEqual {N : ℕ} (a : Fin N) :
+theorem prod_wval_allEqual {ι : Type*} [Fintype ι] [DecidableEq ι] (a : ι) :
     ∏ e, wval (coordMult a a a a e) = 3 := by
   rw [Finset.prod_eq_single a]
   · simp [coordMult, wval]
@@ -142,7 +144,7 @@ theorem prod_wval_allEqual {N : ℕ} (a : Fin N) :
 The full case analysis on the equality pattern of `(a,b,c,d)`: an odd multiplicity forces a
 vanishing factor (`prod_eq_zero`), a two-pair pattern gives all-even multiplicities (`prod_eq_one`),
 and a total coincidence gives the single `w(4) = 3` factor (`prod_eq_single`). -/
-theorem prod_wval_coordMult {N : ℕ} (a b c d : Fin N) :
+theorem prod_wval_coordMult {ι : Type*} [Fintype ι] [DecidableEq ι] (a b c d : ι) :
     ∏ e, wval (coordMult a b c d e) = realWick a b c d := by
   by_cases hab : a = b
   · subst hab
@@ -188,18 +190,18 @@ theorem prod_wval_coordMult {N : ℕ} (a b c d : Fin N) :
         simp [realWick, hab, hac, had]
 
 /-- **Degree-4 real Gaussian moment tensor (Wick/Isserlis).** For the standard Gaussian weight on
-`EuclideanSpace ℝ (Fin N)`,
-`∫ (x_a x_b x_c x_d)·exp(-‖x‖²/2) = (δ_ab δ_cd + δ_ac δ_bd + δ_ad δ_bc)·(√(2π))^N`.
-The unnormalised fourth-moment tensor; dividing by the `N`-fold normalisation `(√(2π))^N` gives the
+`EuclideanSpace ℝ ι`,
+`∫ (x_a x_b x_c x_d)·exp(-‖x‖²/2) = (δ_ab δ_cd + δ_ac δ_bd + δ_ad δ_bc)·(√(2π))^{card ι}`.
+The unnormalised fourth-moment tensor; dividing by the normalisation `(√(2π))^{card ι}` gives the
 familiar dimensionless Isserlis numbers `{0, 1, 3}`. -/
-theorem gaussRealFourTensor {N : ℕ} (a b c d : Fin N) :
-    ∫ x : EuclideanSpace ℝ (Fin N), (x a * x b * x c * x d) * Real.exp (-‖x‖ ^ 2 / 2)
-      = realWick a b c d * Real.sqrt (2 * π) ^ N := by
+theorem gaussRealFourTensor {ι : Type*} [Fintype ι] [DecidableEq ι] (a b c d : ι) :
+    ∫ x : EuclideanSpace ℝ ι, (x a * x b * x c * x d) * Real.exp (-‖x‖ ^ 2 / 2)
+      = realWick a b c d * Real.sqrt (2 * π) ^ Fintype.card ι := by
   simp_rw [monomial_coord_pow]
-  rw [gaussInt_monomial N (coordMult a b c d),
+  rw [gaussInt_monomial (coordMult a b c d),
       Finset.prod_congr rfl (fun i _ =>
         moment_eq_wval (coordMult a b c d i) (coordMult_le_four a b c d i)),
-      Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin,
+      Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ,
       prod_wval_coordMult]
   ring
 
