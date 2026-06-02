@@ -213,4 +213,22 @@ theorem trace_ptrace1 (ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
   simp only [ptrace1, Matrix.trace, Matrix.diag_apply]
   rw [Fintype.sum_prod_type, Finset.sum_comm]
 
+open scoped Kronecker in
+/-- **Step 4 (trace identity).** `tr M(W,ρ) = tr(W · (1 ⊗ ρ̃))` with `ρ̃ = ptrace1 ρ`: the
+diagonal pairing of the Choi contraction is the trace of `W` against `1 ⊗ ρ̃`. -/
+theorem trace_choiContraction (W ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    (choiContraction W ρ).trace = (W * (1 ⊗ₖ ptrace1 ρ)).trace := by
+  simp only [Matrix.trace, Matrix.diag_apply, choiContraction, Matrix.mul_apply,
+    Matrix.kroneckerMap_apply, Matrix.one_apply, ptrace1, Fintype.sum_prod_type]
+  simp only [ite_mul, one_mul, zero_mul, mul_ite, mul_zero, Finset.sum_ite_irrel,
+    Finset.sum_const_zero, Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.mul_sum]
+  rw [← Fintype.sum_prod_type', ← Fintype.sum_prod_type', ← Fintype.sum_prod_type']
+  rw [← Fintype.sum_prod_type', ← Fintype.sum_prod_type', ← Fintype.sum_prod_type']
+  exact Fintype.sum_equiv
+    { toFun := fun z => (((z.1.1.2, z.2), z.1.2), z.1.1.1),
+      invFun := fun w => (((w.2, w.1.1.1), w.1.2), w.1.1.2),
+      left_inv := by rintro ⟨⟨⟨b, y'⟩, α⟩, β⟩; rfl,
+      right_inv := by rintro ⟨⟨⟨y', β⟩, α⟩, b⟩; rfl }
+    _ _ (by rintro ⟨⟨⟨b, y'⟩, α⟩, β⟩; rfl)
+
 end SKEFTHawking.QuantumNetwork
