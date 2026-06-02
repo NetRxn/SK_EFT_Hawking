@@ -416,6 +416,73 @@ theorem re_trace_mul_le_traceNorm_hermitian {H R : Matrix ι ι ℂ} (hH : H.IsH
   rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
   nlinarith [hGub i, hGlb i, le_abs_self (hH.eigenvalues i), neg_abs_le (hH.eigenvalues i)]
 
+/-! ### The sign operator `sgn(S)` and `S·sgn(S) = |S|` (FvdG-lower, Powers–Størmer pieces) -/
+
+/-- The matrix cfc is additive: `cfc f M + cfc g M = cfc (f+g) M`. -/
+theorem cfc_add {M : Matrix ι ι ℂ} (hM : M.IsHermitian) (f g : ℝ → ℝ) :
+    hM.cfc f + hM.cfc g = hM.cfc (fun x => f x + g x) := by
+  have hfun : (fun i => (RCLike.ofReal ∘ f ∘ hM.eigenvalues) i
+        + (RCLike.ofReal ∘ g ∘ hM.eigenvalues) i)
+      = (RCLike.ofReal ∘ (fun x => f x + g x) ∘ hM.eigenvalues : ι → ℂ) := by
+    funext i; simp only [Function.comp_apply]; push_cast; ring
+  rw [Matrix.IsHermitian.cfc, Matrix.IsHermitian.cfc, Matrix.IsHermitian.cfc, ← map_add,
+    Matrix.diagonal_add, hfun]
+
+/-- `cfc(const 1) M = 1` (the cfc is a unital star-algebra map: `diagonal 1 ↦ 1`). -/
+theorem cfc_one {M : Matrix ι ι ℂ} (hM : M.IsHermitian) :
+    hM.cfc (fun _ => (1:ℝ)) = 1 := by
+  have hfun : (RCLike.ofReal ∘ (fun _ => (1:ℝ)) ∘ hM.eigenvalues : ι → ℂ) = 1 := by
+    funext i; simp
+  rw [Matrix.IsHermitian.cfc, hfun, show (Matrix.diagonal (1 : ι → ℂ)) = 1 from
+    Matrix.diagonal_one, map_one]
+
+/-- The **sign operator** of a Hermitian matrix, `cfc(sgn)S` with `sgn(x) = 1, 0, −1` for
+`x >, =, < 0`. The keystone's Loewner contraction in the Powers–Størmer argument. -/
+noncomputable def signOp {S : Matrix ι ι ℂ} (hS : S.IsHermitian) : Matrix ι ι ℂ :=
+  hS.cfc (fun x => if 0 < x then (1:ℝ) else if x < 0 then -1 else 0)
+
+theorem signOp_isHermitian {S : Matrix ι ι ℂ} (hS : S.IsHermitian) :
+    (signOp hS).IsHermitian := cfc_isHermitian hS _
+
+/-- `1 − sgn(S)` is PSD (`1 − sgn(x) ∈ {0,1,2} ≥ 0`). -/
+theorem one_sub_signOp_posSemidef {S : Matrix ι ι ℂ} (hS : S.IsHermitian) :
+    (1 - signOp hS).PosSemidef := by
+  rw [signOp, ← cfc_one hS, cfc_sub]
+  exact cfc_posSemidef hS fun i => by split_ifs <;> norm_num
+
+/-- `1 + sgn(S)` is PSD (`1 + sgn(x) ∈ {0,1,2} ≥ 0`). -/
+theorem one_add_signOp_posSemidef {S : Matrix ι ι ℂ} (hS : S.IsHermitian) :
+    (1 + signOp hS).PosSemidef := by
+  rw [signOp, ← cfc_one hS, cfc_add]
+  exact cfc_posSemidef hS fun i => by split_ifs <;> norm_num
+
+/-- **`S · sgn(S) = |S| = posPart S + negPart S`** — the operator modulus, via `cfc_mul`
+(`x · sgn(x) = |x| = max(x,0) + max(−x,0)`). -/
+theorem self_mul_signOp {S : Matrix ι ι ℂ} (hS : S.IsHermitian) :
+    S * signOp hS = posPart hS + negPart hS := by
+  have h := cfc_mul hS (fun x => x) (fun x => if 0 < x then (1:ℝ) else if x < 0 then -1 else 0)
+  rw [cfc_id hS] at h
+  rw [signOp, h, posPart, negPart, cfc_add]
+  exact cfc_congr_eig hS fun i => by
+    rcases lt_trichotomy (hS.eigenvalues i) 0 with hlt | heq | hgt
+    · rw [if_neg (not_lt.mpr hlt.le), if_pos hlt, max_eq_right hlt.le,
+        max_eq_left (neg_nonneg.mpr hlt.le)]; ring
+    · simp [heq]
+    · rw [if_pos hgt, max_eq_left hgt.le, max_eq_right (by linarith : -hS.eigenvalues i ≤ 0)]; ring
+
+/-- **`sgn(S) · S = |S|`** — the modulus from the other side (cfc commutes). -/
+theorem signOp_mul_self {S : Matrix ι ι ℂ} (hS : S.IsHermitian) :
+    signOp hS * S = posPart hS + negPart hS := by
+  have h := cfc_mul hS (fun x => if 0 < x then (1:ℝ) else if x < 0 then -1 else 0) (fun x => x)
+  rw [cfc_id hS] at h
+  rw [signOp, h, posPart, negPart, cfc_add]
+  exact cfc_congr_eig hS fun i => by
+    rcases lt_trichotomy (hS.eigenvalues i) 0 with hlt | heq | hgt
+    · rw [if_neg (not_lt.mpr hlt.le), if_pos hlt, max_eq_right hlt.le,
+        max_eq_left (neg_nonneg.mpr hlt.le)]; ring
+    · simp [heq]
+    · rw [if_pos hgt, max_eq_left hgt.le, max_eq_right (by linarith : -hS.eigenvalues i ≤ 0)]; ring
+
 /-
 ## Fuchs–van de Graaf bounds (6AF-7 remainder) — status after the FENCE-GATE sweep (2026-06-01)
 
