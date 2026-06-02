@@ -2672,6 +2672,8 @@ import SKEFTHawking.QuantumNetwork.NamedChannels
 import SKEFTHawking.QuantumNetwork.GateFidelityBridge
 -- Phase 6AG (2026-06-02): Watrous weak-dual upper bound on the diamond distance (tight, Ask 2).
 import SKEFTHawking.QuantumNetwork.DiamondNormDual
+-- Phase 6AG (2026-06-02): exact named-channel diamond distance via the optimal dual witness.
+import SKEFTHawking.QuantumNetwork.NamedChannelDiamondExact
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
