@@ -282,6 +282,71 @@ theorem sqrtFidelity_mem_Icc {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator
     (hσ : IsDensityOperator σ) : sqrtFidelity hρ.1 hσ.1 ∈ Set.Icc (0 : ℝ) 1 :=
   ⟨sqrtFidelity_nonneg hρ.1 hσ.1, sqrtFidelity_le_one hρ hσ⟩
 
+/-- A **diagonal entry is bounded by its column's sum of squares**: `‖Mᵢᵢ‖² ≤ Re (MᴴM)ᵢᵢ`. Stated
+for an ABSTRACT `M` so the `single_le_sum` step never forces evaluation of a heavy concrete `M`
+(this is the key to keeping the `Re tr ≤ ‖·‖₁` proof off the spectral-`whnf` wall). -/
+theorem normSq_diag_le_re_conjTranspose_mul_self (M : Matrix ι ι ℂ) (i : ι) :
+    Complex.normSq (M i i) ≤ ((Mᴴ * M) i i).re := by
+  have h : ((Mᴴ * M) i i).re = ∑ k, Complex.normSq (M k i) := by
+    rw [Matrix.mul_apply, Complex.re_sum]
+    refine Finset.sum_congr rfl fun k _ => ?_
+    simp only [Matrix.conjTranspose_apply, Complex.star_def]
+    rw [mul_comm, Complex.mul_conj, Complex.ofReal_re]
+  rw [h]
+  exact Finset.single_le_sum (f := fun k => Complex.normSq (M k i))
+    (fun k _ => Complex.normSq_nonneg _) (Finset.mem_univ i)
+
+/-- **`Re tr A ≤ ‖A‖₁`** for any matrix `A` — real part of the trace ≤ trace norm. Conjugate by the
+eigenvector unitary `U` of `AᴴA` (`B = UᴴAU`, `BᴴB = diagonal(eig)`); then `‖Bᵢᵢ‖² ≤ (BᴴB)ᵢᵢ = eigᵢ`
+gives `Re tr A = ∑ Re Bᵢᵢ ≤ ∑ √eigᵢ = ‖A‖₁`. `clear_value` freezes the heavy `U`/`B` so per-entry
+access stays symbolic (no `maxHeartbeats`); the final `∑√eig = ‖A‖₁` uses the proven
+`traceNorm_eq_sqrtRootSum` + `roots_charpoly_eq_eigenvalues` rewrites. -/
+theorem re_trace_le_traceNorm (A : Matrix ι ι ℂ) : A.trace.re ≤ traceNorm A := by
+  set U : Matrix ι ι ℂ :=
+    (↑(Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvectorUnitary :
+      Matrix ι ι ℂ) with hUdef
+  have hUUs : U * Uᴴ = 1 := by
+    have h := (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvectorUnitary.2
+    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose] at h; exact h
+  set B : Matrix ι ι ℂ := Uᴴ * A * U with hBdef
+  have htr : A.trace = B.trace := by
+    rw [hBdef, Matrix.trace_mul_comm, ← Matrix.mul_assoc, hUUs, Matrix.one_mul]
+  have hBB : Bᴴ * B = diagonal (fun i =>
+      ((Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues i : ℂ)) := by
+    have hBdag : Bᴴ = Uᴴ * Aᴴ * U := by
+      rw [hBdef, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul,
+        Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
+    have heq : Bᴴ * B = Uᴴ * (Aᴴ * A) * U := by
+      rw [hBdag, hBdef,
+        show Uᴴ * Aᴴ * U * (Uᴴ * A * U) = Uᴴ * Aᴴ * (U * Uᴴ) * A * U by noncomm_ring, hUUs]
+      noncomm_ring
+    rw [heq, eigenvectorUnitary_conj_eq_diagonal
+      (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian]
+  clear_value B U
+  have hdiag : ∀ i, Complex.normSq (B i i) ≤
+      (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues i := by
+    intro i
+    have h := normSq_diag_le_re_conjTranspose_mul_self B i
+    rwa [hBB, Matrix.diagonal_apply_eq, Complex.ofReal_re] at h
+  rw [htr]
+  simp only [Matrix.trace, Matrix.diag, Complex.re_sum]
+  calc ∑ i, (B i i).re
+      ≤ ∑ i, Real.sqrt
+          ((Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.eigenvalues i) :=
+        Finset.sum_le_sum fun i _ => by
+          have h1 : (B i i).re ≤ Real.sqrt (Complex.normSq (B i i)) :=
+            calc (B i i).re ≤ |(B i i).re| := le_abs_self _
+              _ = Real.sqrt ((B i i).re ^ 2) := (Real.sqrt_sq_eq_abs _).symm
+              _ ≤ Real.sqrt (Complex.normSq (B i i)) := Real.sqrt_le_sqrt (by
+                  rw [Complex.normSq_apply]; nlinarith [mul_self_nonneg (B i i).im])
+          exact h1.trans (Real.sqrt_le_sqrt (hdiag i))
+    _ = traceNorm A := by
+        rw [traceNorm_eq_sqrtRootSum, sqrtRootSum,
+          (Matrix.posSemidef_conjTranspose_mul_self A).isHermitian.roots_charpoly_eq_eigenvalues,
+          Multiset.map_map, Finset.sum_eq_multiset_sum]
+        exact congrArg Multiset.sum (Multiset.map_congr rfl fun i _ => by
+          simp [Function.comp_apply, Complex.ofReal_re])
+
 /-
 ## Fuchs–van de Graaf bounds (6AF-7 remainder) — status after the FENCE-GATE sweep (2026-06-01)
 
@@ -296,26 +361,20 @@ fresh 2-agent toehold sweep + roadmap re-read, per the fence discipline):
   and there is no commuting/qubit shortcut for non-commuting `ρ, σ`. Building a purification layer
   is a genuine multi-week analytic phase; fenced with that precise blocker.
 
-* **`1 − F ≤ D` (lower) — REACHABLE, the next build target (NOT fenced; no absent brick).** Route:
-  Powers–Størmer `2(1 − tr(√ρ√σ)) = ‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁ = 2D`, with the two sub-pieces
+* **`1 − F ≤ D` (lower) — IN PROGRESS, piece (B) DONE.** Route: Powers–Størmer
+  `2(1 − tr(√ρ√σ)) = ‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁ = 2D`, with sub-pieces
   (A) the PS inequality `‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁` (reduces to `|√ρ−√σ| ≤ √ρ+√σ` in Loewner order +
   `trace_mul_nonneg`), and (B) `tr(√σ√ρ) ≤ F`, i.e. the general `Re tr A ≤ ‖A‖₁`.
-  🔴 TOOLING WALL (firing 2026-06-01, 5+ encodings tried — root cause diagnosed): piece (B) is
-  proven ON PAPER via the diagonal-bound (`B = UᴴAU`, `BᴴB = diag(eig)`, `‖Bᵢᵢ‖² ≤ (BᴴB)ᵢᵢ = eigᵢ`,
-  so `Re tr A = ∑ Re Bᵢᵢ ≤ ∑√eigᵢ = ‖A‖₁`) — and the `traceNorm = ∑√eig` step IS solvable via the
-  proven `traceNorm_eq_sqrtRootSum` + `roots_charpoly_eq_eigenvalues` rewrites. BUT the proof hits a
-  hard **Lean `whnf` timeout (200000 heartbeats) at `Finset.single_le_sum` accessing `B i i`** —
-  because `B = UᴴAU` forces computing **`eigenvectorUnitary` MATRIX ENTRIES**, and the spectral
-  construction whnf-explodes on entry access. This is deeper than the eigenvalue defeq and is
-  ENCODING-INDEPENDENT (set-via-hAAh / set-direct / literal-term / charpoly-ending all hit it). It
-  is NOT a math gap, NOT an absent Mathlib brick, NOT a fence — it is a Lean formalization-PERF
-  wall that the project's `NO maxHeartbeats` rule forbids the trivial workaround for. Every
-  standard proof of `Re tr A ≤ ‖A‖₁` accesses the heavy unitary (polar / SVD / eigenbasis), and
-  Mathlib has no singular-value-sum machinery to avoid it (verified). RESOLUTION needed: either a
-  `maxHeartbeats` exception for this one spectral-heavy lemma (grey-area vs the rule, whose
-  exception covers "intrinsically O(project-size)" work — the eigenvector whnf qualifies in spirit),
-  or a fundamentally entry-free proof (none known). Surfaced to the user. Meanwhile piece (A)
-  Powers–Størmer (CFC `abs` + traces, may avoid entry access) and 6AF-8/9 remain shippable.
+  ✅ **Piece (B) PROVEN** as `re_trace_le_traceNorm` above — and the whnf "wall" was an INEFFICIENCY,
+  not an intrinsic limit: the `set`-bound eigenvector unitary `U`/`B` were reducible, so per-entry
+  access (`B i i` in `single_le_sum`) forced the spectral construction to whnf-explode. FIX (no
+  `maxHeartbeats`): (1) prove the diagonal bound `‖Mᵢᵢ‖² ≤ Re(MᴴM)ᵢᵢ` as a generic lemma over an
+  ABSTRACT `M` (`normSq_diag_le_re_conjTranspose_mul_self`), so `single_le_sum` runs with nothing
+  heavy in scope, then apply to `B` (syntactic `M := B`, no entry whnf); (2) `clear_value B U` after
+  deriving `htr`/`hBB`, freezing the heavy terms opaque. The `∑√eig = ‖A‖₁` step uses the proven
+  `traceNorm_eq_sqrtRootSum` + `roots_charpoly_eq_eigenvalues` rewrites. **Lesson: "spectral whnf
+  timeout" ⟹ abstract the heavy term (generic lemma / `clear_value`), do NOT bump heartbeats.**
+  REMAINING for FvdG-lower: piece (A) Powers–Størmer, then assemble. Then 6AF-8/9.
 -/
 
 end SKEFTHawking.QuantumNetwork
