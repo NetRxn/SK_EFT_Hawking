@@ -2662,6 +2662,8 @@ import SKEFTHawking.QuantumNetwork.DiamondNormChoi
 import SKEFTHawking.QuantumNetwork.FidelityUpperBound
 -- Phase 6AF-10 (2026-06-02): Schatten-2 Cauchy–Schwarz (traceNorm(A·B) ≤ ‖A‖_F·‖B‖_F).
 import SKEFTHawking.QuantumNetwork.TraceNormCauchySchwarz
+-- Phase 6AF-11 (2026-06-02): diamond-norm Choi operator-norm UPPER bound (Watrous sandwich).
+import SKEFTHawking.QuantumNetwork.DiamondNormChoiUpper
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
