@@ -483,6 +483,24 @@ theorem signOp_mul_self {S : Matrix ι ι ℂ} (hS : S.IsHermitian) :
     · simp [heq]
     · rw [if_pos hgt, max_eq_left hgt.le, max_eq_right (by linarith : -hS.eigenvalues i ≤ 0)]; ring
 
+/-- `cfc(const 0) M = 0` (the cfc maps `diagonal 0 ↦ 0`). -/
+theorem cfc_zero {M : Matrix ι ι ℂ} (hM : M.IsHermitian) :
+    hM.cfc (fun _ => (0:ℝ)) = 0 := by
+  have hfun : (RCLike.ofReal ∘ (fun _ => (0:ℝ)) ∘ hM.eigenvalues : ι → ℂ) = 0 := by
+    funext i; simp
+  rw [Matrix.IsHermitian.cfc, hfun, show (Matrix.diagonal (0 : ι → ℂ)) = 0 from
+    Matrix.diagonal_zero, map_zero]
+
+/-- **`posPart S · negPart S = 0`** — the positive and negative parts are orthogonal
+(`max(x,0)·max(−x,0) = 0` pointwise). -/
+theorem posPart_mul_negPart_eq_zero {S : Matrix ι ι ℂ} (hS : S.IsHermitian) :
+    posPart hS * negPart hS = 0 := by
+  rw [posPart, negPart, cfc_mul, ← cfc_zero hS]
+  exact cfc_congr_eig hS fun i => by
+    rcases le_total (hS.eigenvalues i) 0 with h | h
+    · rw [max_eq_right h, zero_mul]
+    · rw [max_eq_right (neg_nonpos.mpr h), mul_zero]
+
 /-
 ## Fuchs–van de Graaf bounds (6AF-7 remainder) — status after the FENCE-GATE sweep (2026-06-01)
 
