@@ -279,4 +279,34 @@ theorem choiContraction_posSemidef {W ρ : Matrix (Fin n × Fin n) (Fin n × Fin
     rw [Finset.sum_comm]
   rw [hfac]; exact Matrix.posSemidef_self_mul_conjTranspose _
 
+open scoped Kronecker in
+/-- **Step 4 — `tr M(P,ρ) ≤ n`** for a projection `P` (`P ≥ 0`, `1 − P ≥ 0`) and a density `ρ`:
+`tr M(P,ρ) = tr(P·(1⊗ρ̃)) ≤ tr(1⊗ρ̃) = n` since `tr((1−P)·(1⊗ρ̃)) ≥ 0`. -/
+theorem trace_choiContraction_proj_le [NeZero n]
+    {P ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ}
+    (hP1 : (1 - P).PosSemidef) (hρ : IsDensityOperator ρ) :
+    (choiContraction P ρ).trace.re ≤ (n : ℝ) := by
+  rw [trace_choiContraction]
+  set S := ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ ptrace1 ρ) with hSdef
+  have hS : S.PosSemidef :=
+    (Matrix.PosSemidef.one (n := Fin n) (R := ℂ)).kronecker (ptrace1_posSemidef hρ.1)
+  have htr : S.trace = (n : ℂ) := by
+    rw [hSdef, Matrix.trace_kronecker, trace_ptrace1, Matrix.trace_one (n := Fin n), hρ.2, mul_one,
+      Fintype.card_fin]
+  have hnn : 0 ≤ ((1 - P) * S).trace.re := by
+    have := (Complex.le_def.mp (trace_mul_nonneg hP1 hS)).1; simpa using this
+  have hexp : ((1 - P) * S).trace = S.trace - (P * S).trace := by
+    rw [sub_mul, one_mul, Matrix.trace_sub]
+  rw [hexp, htr, Complex.sub_re, Complex.natCast_re] at hnn
+  linarith
+
+/-- The trace–contraction identity, lifted to the **difference of two channels** by linearity:
+`tr(W·(Φ₁⊗id ρ − Φ₂⊗id ρ)) = tr((J₁ − J₂)·M(W,ρ))`. -/
+theorem trace_mul_krausMap_sub (K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ)
+    (W ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    (W * (krausMap (tensorKraus K₁) ρ - krausMap (tensorKraus K₂) ρ)).trace
+      = ((choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) * choiContraction W ρ).trace := by
+  rw [mul_sub, Matrix.trace_sub, trace_mul_krausMap_tensorKraus,
+    trace_mul_krausMap_tensorKraus, sub_mul, Matrix.trace_sub]
+
 end SKEFTHawking.QuantumNetwork
