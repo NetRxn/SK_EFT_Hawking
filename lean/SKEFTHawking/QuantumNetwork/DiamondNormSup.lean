@@ -83,6 +83,26 @@ theorem diamondDist_le_one (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel
   exact (traceDist_mem_Icc (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₁) hρ)
     (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₂) hρ)).2
 
+/-- The distinguishability set is bounded above by `1` (each stabilized output is a density
+operator). -/
+theorem diamondDist_bddAbove (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    BddAbove {d | ∃ ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ, IsDensityOperator ρ ∧
+      d = traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₂) ρ)} := by
+  refine ⟨1, ?_⟩
+  rintro d ⟨ρ, hρ, rfl⟩
+  exact (traceDist_mem_Icc (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₁) hρ)
+    (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₂) hρ)).2
+
+/-- **The diamond distance dominates every achievable distinguishability** — for any input
+density operator `ρ`, `D((Φ₁⊗id)ρ, (Φ₂⊗id)ρ) ≤ diamondDist Φ₁ Φ₂`. This is the defining
+upper-bound property: the sup is a genuine least upper bound over realized distinguishabilities,
+not a vacuous constant. -/
+theorem le_diamondDist (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    {ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hρ : IsDensityOperator ρ) :
+    traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₂) ρ)
+      ≤ diamondDist K₁ K₂ :=
+  le_csSup (diamondDist_bddAbove hK₁ hK₂) ⟨ρ, hρ, rfl⟩
+
 /-- The diamond distance is symmetric. -/
 theorem diamondDist_comm : diamondDist K₁ K₂ = diamondDist K₂ K₁ := by
   unfold diamondDist
