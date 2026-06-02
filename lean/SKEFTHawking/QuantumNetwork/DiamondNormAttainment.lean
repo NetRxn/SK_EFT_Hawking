@@ -99,4 +99,65 @@ theorem lipschitzWith_traceNorm :
 theorem continuous_traceNorm : Continuous (traceNorm : Matrix ι ι ℂ → ℝ) :=
   lipschitzWith_traceNorm.continuous
 
+/-- `{z : ℂ | 0 ≤ z}` is closed (`0 ≤ z ↔ z.re ≥ 0 ∧ z.im = 0`, an intersection of closed sets). -/
+theorem isClosed_complex_nonneg : IsClosed {z : ℂ | 0 ≤ z} := by
+  have : {z : ℂ | 0 ≤ z} = {z | 0 ≤ z.re} ∩ {z | z.im = 0} := by
+    ext z; simp [Complex.le_def, Complex.zero_re, Complex.zero_im, eq_comm]
+  rw [this]
+  exact (isClosed_le continuous_const Complex.continuous_re).inter
+    (isClosed_eq Complex.continuous_im continuous_const)
+
+omit [DecidableEq ι] in
+/-- **The density-operator set is closed** (Frobenius topology): an intersection of the closed
+Hermitian condition, the closed quadratic-form-nonneg conditions, and the closed trace-`1`
+condition. -/
+theorem isClosed_isDensityOperator :
+    IsClosed {ρ : Matrix ι ι ℂ | IsDensityOperator ρ} := by
+  have key : {ρ : Matrix ι ι ℂ | IsDensityOperator ρ}
+      = ({ρ | ρᴴ = ρ} ∩ ⋂ x : ι → ℂ, {ρ | 0 ≤ star x ⬝ᵥ ρ.mulVec x}) ∩ {ρ | ρ.trace = 1} := by
+    ext ρ
+    simp only [IsDensityOperator, Matrix.posSemidef_iff_dotProduct_mulVec, Matrix.IsHermitian,
+      Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+  rw [key]
+  refine IsClosed.inter (IsClosed.inter ?_ ?_) ?_
+  · exact isClosed_eq (by fun_prop) continuous_id
+  · refine isClosed_iInter fun x => ?_
+    exact isClosed_complex_nonneg.preimage (by fun_prop)
+  · exact isClosed_eq (Matrix.traceLinearMap ι ℂ ℂ).continuous_of_finiteDimensional continuous_const
+
+/-- **The Frobenius norm is dominated by the trace norm**: `‖A‖_F ≤ ‖A‖₁` (since
+`‖A‖²_F = ∑σᵢ² ≤ (∑σᵢ)² = ‖A‖₁²`). -/
+theorem frobenius_le_traceNorm (A : Matrix ι ι ℂ) : ‖A‖ ≤ traceNorm A := by
+  have hPSD := Matrix.posSemidef_conjTranspose_mul_self A
+  set lam := hPSD.isHermitian.eigenvalues with hlam
+  have hlamnn : ∀ i, 0 ≤ lam i := fun i => hPSD.eigenvalues_nonneg i
+  have hfrob : ‖A‖ ^ 2 = ∑ i, lam i := by
+    rw [← re_trace_conjTranspose_mul_self_eq_frobenius_sq A,
+      hPSD.isHermitian.trace_eq_sum_eigenvalues, Complex.re_sum]
+    exact Finset.sum_congr rfl fun i _ => Complex.ofReal_re _
+  have hsq : ‖A‖ ^ 2 ≤ (traceNorm A) ^ 2 := by
+    rw [hfrob, show traceNorm A = ∑ i, Real.sqrt (lam i) from rfl]
+    refine le_trans (le_of_eq ?_)
+      (Finset.sum_sq_le_sq_sum_of_nonneg fun i _ => Real.sqrt_nonneg (lam i))
+    exact Finset.sum_congr rfl fun i _ => (Real.sq_sqrt (hlamnn i)).symm
+  calc ‖A‖ = Real.sqrt (‖A‖ ^ 2) := (Real.sqrt_sq (norm_nonneg A)).symm
+    _ ≤ Real.sqrt ((traceNorm A) ^ 2) := Real.sqrt_le_sqrt hsq
+    _ = traceNorm A := Real.sqrt_sq (traceNorm_nonneg A)
+
+/-- A density operator has Frobenius norm `≤ 1` (`‖ρ‖_F ≤ ‖ρ‖₁ = tr ρ = 1`). -/
+theorem norm_le_one_of_isDensityOperator {ρ : Matrix ι ι ℂ} (hρ : IsDensityOperator ρ) :
+    ‖ρ‖ ≤ 1 :=
+  calc ‖ρ‖ ≤ traceNorm ρ := frobenius_le_traceNorm ρ
+    _ = ρ.trace.re := traceNorm_posSemidef hρ.1
+    _ = 1 := by rw [hρ.2, Complex.one_re]
+
+/-- **The density-operator set is compact** (finite-dimensional ⇒ proper; closed + bounded). -/
+theorem isCompact_isDensityOperator :
+    IsCompact {ρ : Matrix ι ι ℂ | IsDensityOperator ρ} := by
+  haveI : ProperSpace (Matrix ι ι ℂ) := FiniteDimensional.proper ℂ _
+  refine Metric.isCompact_of_isClosed_isBounded isClosed_isDensityOperator ?_
+  refine (Metric.isBounded_iff_subset_closedBall 0).mpr ⟨1, fun ρ hρ => ?_⟩
+  rw [Metric.mem_closedBall, dist_zero_right]
+  exact norm_le_one_of_isDensityOperator hρ
+
 end SKEFTHawking.QuantumNetwork
