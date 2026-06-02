@@ -229,9 +229,19 @@ flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
   perturbation. At the optimal Helstrom projector, `F ≤ √(p₀q₀)+√(p₁q₁)` (`sqrtFidelity_le_proj_bc`)
   and the classical `D²+BC²≤1` close `D²≤1−F²`. Both FvdG bounds + `F≤1` are now proven.
 
+- **Choi operator-norm UPPER bound (`DiamondNormChoiUpper.lean`).** `diamondDist_le_choi_opNorm`:
+  `diamondDist Φ₁ Φ₂ ≤ n·‖J(Φ₁)−J(Φ₂)‖_∞` (sharp constant `d=n`, the ℓ²-operator norm). With the
+  primal lower bound this **sandwiches** the diamond distance by the Choi matrix — the formalizable
+  content of the Watrous Choi-SDP characterization, no conic strong duality. Purification- and
+  SDP-free: the difference output `T=(Δ⊗id)ρ` is **traceless** (trace-preservation of both channels),
+  so `‖T‖₁ = 2·eigPosSum(T) = 2·tr(P₊T)`; a **vectorization identity** `tr(W·T)=tr(J·M(W,ρ))` moves
+  the pairing onto the Choi matrix against a dual contraction `M(W,ρ)` (PSD via an explicit `N·Nᴴ`
+  factorization through the PSD square roots of `W,ρ`), with `tr M(P₊,ρ)=tr(P₊(1⊗ρ_X)) ≤ n`; the
+  operator-norm step `tr(J·M)≤‖J‖_∞·tr M` uses only the Loewner bound `J ≤ ‖J‖_∞·1`.
+
 **Remaining frontier (honestly documented, no `sorry`/axiom).** The **full** primal=dual diamond-norm
-Choi-SDP (Watrous) identity (needs conic strong duality; Mathlib has cone-dual definitions but no
-zero-gap/Slater theorem at pin — the primal one-sided bound above is proven). Documented in
+Choi-SDP (Watrous) **equality** (needs conic strong duality; Mathlib has cone-dual definitions but no
+zero-gap/Slater theorem at pin — both one-sided sandwiching bounds above are proven). Documented in
 `Phase6AF_Roadmap.md`.
 
 ## 4. Figures

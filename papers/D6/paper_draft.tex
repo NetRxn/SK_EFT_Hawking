@@ -661,9 +661,25 @@ to all matrices by continuity. At the optimal Helstrom projector $P$, the fideli
 the measured Bhattacharyya coefficient ($F\le\sqrt{p_0q_0}+\sqrt{p_1q_1}$,
 \verb|sqrtFidelity_le_proj_bc|) and the classical inequality $D^2+\mathrm{BC}^2\le1$ closes
 $D^2\le1-F^2$. Both Fuchs--van de Graaf bounds and $F\le1$ are now proven.
+\emph{(xi)} the \textbf{Choi operator-norm UPPER bound} on the diamond distance
+(\verb|diamondDist_le_choi_opNorm|): $\mathrm{diamondDist}(\Phi_1,\Phi_2)\le
+n\,\|J(\Phi_1)-J(\Phi_2)\|_\infty$ (sharp constant $d=n$, the $\ell^2$-operator norm).
+Together with the primal lower bound (ix) this \emph{sandwiches} the diamond distance by the
+Choi matrix --- the formalizable content of the Watrous Choi-SDP characterization, needing no
+conic strong duality. The proof is purification- and SDP-free: for the (Hermiticity-preserving,
+trace-annihilating) difference $\Delta=\Phi_1-\Phi_2$ the output $T=(\Delta\otimes\mathrm{id})\rho$
+is traceless, so $\|T\|_1=2\,\mathrm{eigPosSum}(T)=2\,\mathrm{tr}(P_+T)$ for the positive
+eigenprojection $P_+$; the \emph{vectorization identity}
+$(\Phi\otimes\mathrm{id})\rho$'s pairing $\mathrm{tr}(W\,T)=\mathrm{tr}(J\cdot M(W,\rho))$ moves the
+pairing onto the Choi matrix against a dual contraction $M(W,\rho)$ (shown positive semidefinite by
+an explicit $N N^{\!H}$ factorization through the PSD square roots of $W,\rho$), and
+$\mathrm{tr}\,M(P_+,\rho)=\mathrm{tr}(P_+(\mathbf1\otimes\rho_X))\le n$. The operator-norm bound
+$\mathrm{tr}(J\cdot M)\le\|J\|_\infty\,\mathrm{tr}\,M$ uses only the Loewner bound
+$J\le\|J\|_\infty\mathbf1$ (\verb|norm_smul_one_sub_self_posSemidef|).
 The remaining documented frontier (\verb|Phase6AF_Roadmap.md|), no \verb|sorry| or axiom: the
-\emph{full} primal$=$dual Choi-SDP (Watrous) identity (needs conic/SDP strong duality --- Mathlib has
-cone-dual definitions but no zero-gap/Slater theorem at pin; the primal one-sided bound is proven).
+\emph{full} primal$=$dual Choi-SDP (Watrous) \emph{equality} (needs conic/SDP strong duality ---
+Mathlib has cone-dual definitions but no zero-gap/Slater theorem at pin; both one-sided
+sandwiching bounds are proven).
 Kernel-only; \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
