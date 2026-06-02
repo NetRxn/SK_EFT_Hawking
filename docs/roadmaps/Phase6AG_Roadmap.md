@@ -18,6 +18,12 @@ Quot.sound}`; NO sorry / new project-local axiom / `maxHeartbeats` / `native_dec
 increment (root-import + ExtractDeps + `update_counts.py`); preemptive-strengthening checklist
 (load-bearing, non-tautological statements); lean-lsp MCP loop, not edit→`lake build`.
 
+## PROGRESS (2026-06-02)
+- ✅ **6AG-1 / Candidate B DONE** (`diamondDist_ge_choi_traceNorm`, `DiamondNormChoiUpper.lean`, commit `5b103dd9`, kernel-pure `{propext,Classical.choice,Quot.sound}` fresh-process-verified): `diamondDist K₁ K₂ ≥ (1/2n)·‖J₁−J₂‖₁` — two-sided Choi sandwich CLOSED. Supporting (in `DiamondNormChoi.lean`, commit `6AG-1(a,b)`): `traceNorm_submatrix_equiv` (reindex-invariance), `posSemidef_eq_of_mul_self_eq` (PSD-sqrt uniqueness, elementary trace argument), `traceNorm_smul_nonneg`; + `krausMap_smul` + `krausMap_tensorKraus_omegaVec` (ω↔Choi = J reindexed by `prodComm`).
+- ✅ **6AG-3 / Ask 3 DONE** (`GeneralStateNetwork.lean`, kernel-pure): `IsChannelStep`, `isChannelStep_krausMap`, `applyChain`, `traceDist_applyChain_le` (arbitrary-density-matrix network data-processing monotonicity). Root-imported.
+- 🚧 **6AG-2 / Ask 1 (🔴 gating) NEXT**: named-channel diamond bounds. NOTE (tractability finding): Candidate B's lower bound has constant 1/2n, so for these channels it gives a BRACKET (e.g. dephasing ≥ γ/2) not the exact value (γ); the EXACT closed form needs the maxEntangled-optimal/covariance argument (a real theorem) — bracket via diamondDist_ge_choi_traceNorm (lower) + diamondDist_le_choi_opNorm (upper) is the acceptable first cut per spec. Explicit 4×4 eigenvalue/traceNorm computations are the fiddly part.
+- ⏳ 6AG-4 / Ask 4: gate-fidelity↔diamond bridges (last).
+
 ## Build order (each kernel-pure, committed incrementally, root-imported)
 
 ### 1. Candidate B / Ask 2 increment — quantitative Choi TRACE-NORM lower bound
