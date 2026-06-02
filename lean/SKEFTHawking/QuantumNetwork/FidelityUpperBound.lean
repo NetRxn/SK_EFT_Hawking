@@ -14,17 +14,14 @@ Build order: (1) ✅ the Helstrom value `D(ρ,σ) = eigPosSum(ρ−σ)` (`traceD
 pure ℝ); (3) the fidelity↔Bhattacharyya bound `F(ρ,σ) ≤ √(tr Pσ · tr Pρ) + √(tr P'σ · tr P'ρ)`
 for the binary measurement `{P, 1−P}` (fidelity data-processing); (4) assembly.
 
-**Remaining-crux note (2026-06-02).** Step (3) reduces — via the shipped matrix-CS keystone
-`re_trace_conjTranspose_mul_sq_le` — to the single Schatten-2 bound
-`traceNorm(√σ · P · √ρ) ≤ √(tr Pσ) · √(tr Pρ)`. Through the keystone this needs the **trace-norm
-dual characterization** `‖M‖₁ = sup_{U unitary} Re tr(U M)` (the EASY direction `Re tr(UM) ≤ ‖M‖₁`
-follows from `re_trace_le_traceNorm` + trace-norm unitary-invariance; the HARD direction needs a
-**polar unitary** `M = U|M|`). Mathlib at pin has NO trace-norm-dual / polar-decomposition lemma
-(grep-verified, consistent with the Phase-6AF DR's absent-brick inventory), so this is a genuine
-from-scratch ~6–8-lemma sub-build (eigendecomposition of `|M| = absOp M` → achieving unitary; the
-singular-`M` partial-isometry→unitary extension is the delicate step, possibly via the shipped
-`continuous_traceNorm` + an invertible-perturbation limit). Steps (1),(2) are shipped; (3),(4) are
-the next increments.
+**ALL FOUR STEPS COMPLETE (2026-06-02).** Step (3) reduces — via the shipped matrix-CS keystone
+`re_trace_conjTranspose_mul_sq_le` — to the Schatten-2 bound `traceNorm(√σ·P·√ρ) ≤ √(tr Pσ)·√(tr Pρ)`
+(`traceNorm_sqrtMul_proj_le`), itself a corollary of the general Schatten-2 CS `traceNorm_mul_le`
+(`TraceNormCauchySchwarz.lean`): the trace-norm/polar layer Mathlib lacks was built from scratch via
+a **determinant-based polar unitary** for invertible `M` (NO partial-isometry/SVD) plus a
+**charpoly-roots perturbation** extending to all matrices by `continuous_traceNorm`. The headline
+`traceDist_le_sqrt_one_sub_sqrtFidelity_sq` is PROVEN; the prior "needs trace-norm-dual / multi-week"
+note was the over-wide fence, now discharged.
 
 Invariants: kernel-pure, zero sorry, zero project-local axioms, no `maxHeartbeats`.
 -/
@@ -49,7 +46,7 @@ theorem traceDist_eq_eigPosSum {ρ σ : Matrix ι ι ℂ} (hρ : ρ.PosSemidef) 
 
 /-- **Classical Fuchs–van de Graaf** on a probability pair: for `p₀,p₁,q₀,q₁ ≥ 0` with
 `p₀+p₁ = 1 = q₀+q₁`, the total-variation distance and Bhattacharyya coefficient satisfy
-`(½(|p₀−q₀|+|p₁−q₁|))² + (√(p₀q₀)+√(q₁q₁))² ≤ 1`. Pure-ℝ, via AM–GM `|a−b| ≥ (√a−√b)²` and
+`(½(|p₀−q₀|+|p₁−q₁|))² + (√(p₀q₀)+√(p₁q₁))² ≤ 1`. Pure-ℝ, via AM–GM `|a−b| ≥ (√a−√b)²` and
 Cauchy–Schwarz. -/
 theorem classical_fvdg {p0 p1 q0 q1 : ℝ} (hp0 : 0 ≤ p0) (hp1 : 0 ≤ p1) (hq0 : 0 ≤ q0)
     (hq1 : 0 ≤ q1) (hp : p0 + p1 = 1) (hq : q0 + q1 = 1) :
