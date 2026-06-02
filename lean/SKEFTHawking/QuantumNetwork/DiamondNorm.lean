@@ -74,8 +74,10 @@ positive-part + Hermitian-dilation + charpoly route that needs none of them:
 * **Step 2 — `traceDist ∈ [0,1]` + metric triangle**: ✅ DONE (`traceDist_triangle`,
   `traceDist_mem_Icc`).
 * **Step 4 — Uhlmann fidelity**: ✅ FOUNDATION DONE (`sqrtFidelity`/`fidelity`, `=1` on the
-  diagonal, symmetric, Uhlmann form verified). The quantitative **Fuchs–van de Graaf**
-  bounds + `F ≤ 1` remain fenced (need Schatten-2 / matrix Hölder — see `MixedState.lean`).
+  diagonal, symmetric, Uhlmann form verified). `F ≤ 1` (`sqrtFidelity_le_one`) and the
+  Fuchs–van de Graaf **lower** bound `1−F ≤ D` (`one_sub_sqrtFidelity_le_traceDist`) are now PROVEN
+  (Phase 6AF-7, `FidelityBounds.lean`); only the FvdG **upper** bound `D ≤ √(1−F²)` remains fenced
+  (Uhlmann purification, grep-verified absent).
 * **Step 5 — CPTP contractivity** `D(Φρ,Φσ) ≤ D(ρ,σ)`: ✅ DONE (`CPTPChannel.lean`,
   `traceDist_krausMap_le`).
 * **Step 6 — `diamondNorm`** `‖Φ‖_◇ = sup_ρ ‖(Φ⊗id)ρ‖₁`: the **Choi positivity**
@@ -119,11 +121,16 @@ norm itself has since been BUILT in `DiamondNormSup.lean`, in its operational tr
   define it or to prove its properties: `diamondDist` is proven nonnegative, `≤ 1`, symmetric,
   and zero on the diagonal.
 
-Still documented-deferred in `DiamondNormSup.lean` (no sorry, no axiom): **attainment** of the
-sup (blocked on continuity of the singular-value sum in the matrix entries — genuinely absent at
-pin), the **triangle inequality** making `diamondDist` a metric on channels, and the **Choi-SDP
-characterization** (Watrous). The load-bearing certification core (6AF-1→4) plus this diamond
-distance are shipped.
+Since then (Phase 6AF-7/8, 2026-06-02) the **triangle inequality** (`diamondDist_triangle`, in
+`DiamondNormSup.lean`) and **attainment** of the sup (`exists_diamondDist_eq`, in
+`DiamondNormAttainment.lean`, via trace-norm continuity + compactness of the density set + EVT)
+are both PROVEN — so `diamondDist` is a genuine `[0,1]`-valued metric whose supremum is a maximum.
+The only remaining documented-deferred item (no sorry, no axiom) is the **Choi-SDP / Watrous
+duality** characterization of the diamond norm: the full primal=dual SDP identity needs a
+convex-duality substrate (`ProperCone`/`PointedCone`, conic strong duality) absent at pin. A
+**primal (one-sided) lower bound** `diamondDist Φ₁ Φ₂ ≥ (1/2n)·‖J(Φ₁)−J(Φ₂)‖₁` is reachable
+WITHOUT SDP duality — it is `le_diamondDist` evaluated at the maximally-entangled feasible point,
+using `(Φ⊗id)(Ω/n) = (1/n)·choiMatrix(Φ)` — and is the next increment.
 -/
 
 end SKEFTHawking.QuantumNetwork
