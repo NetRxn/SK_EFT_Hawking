@@ -14,6 +14,7 @@ Invariants: kernel-pure, zero sorry, zero project-local axioms, no `maxHeartbeat
 namespace SKEFTHawking.QuantumNetwork
 
 open Matrix
+open scoped ComplexOrder
 
 theorem pauliZ_conjTranspose : pauliZᴴ = pauliZ := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [pauliZ]
@@ -149,5 +150,57 @@ theorem dephasing_choi_diff {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
     simp [Complex.conj_ofReal, ← Complex.ofReal_mul, Real.mul_self_sqrt h0,
       Real.mul_self_sqrt (show (0:ℝ) ≤ 1 - γ by linarith)] <;>
     ring_nf
+
+/-- `B²` for `B = dephasingChoiBase`: the diagonal matrix with `4` at `(0,0)` and `(1,1)`. -/
+noncomputable def dephasingChoiDiag : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  fun p q => if (p = (0, 0) ∧ q = (0, 0)) ∨ (p = (1, 1) ∧ q = (1, 1)) then 4 else 0
+
+theorem dephasingChoiBase_conjTranspose : dephasingChoiBaseᴴ = dephasingChoiBase := by
+  ext p q; obtain ⟨a, y⟩ := p; obtain ⟨b, y'⟩ := q
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [dephasingChoiBase, Matrix.conjTranspose_apply]
+
+theorem dephasingChoiBase_mul_self :
+    dephasingChoiBase * dephasingChoiBase = dephasingChoiDiag := by
+  ext p q; obtain ⟨a, y⟩ := p; obtain ⟨b, y'⟩ := q
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [dephasingChoiBase, dephasingChoiDiag, Matrix.mul_apply] <;> ring_nf
+
+theorem dephasingChoiDiag_mul_self : dephasingChoiDiag * dephasingChoiDiag = (4 : ℂ) • dephasingChoiDiag := by
+  ext p q; obtain ⟨a, y⟩ := p; obtain ⟨b, y'⟩ := q
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [dephasingChoiDiag, Matrix.mul_apply, Matrix.smul_apply]
+
+theorem dephasingChoiDiag_trace : dephasingChoiDiag.trace = 8 := by
+  simp [Matrix.trace, Matrix.diag_apply, dephasingChoiDiag, Fintype.sum_prod_type,
+    Fin.sum_univ_two]
+  norm_num
+
+/-- **`traceNorm dephasingChoiBase = 4`** — its singular values are `2, 2, 0, 0`. -/
+theorem traceNorm_dephasingChoiBase : traceNorm dephasingChoiBase = 4 := by
+  have hBh := dephasingChoiBase_conjTranspose
+  have hDpsd : dephasingChoiDiag.PosSemidef := by
+    rw [← dephasingChoiBase_mul_self]; nth_rewrite 1 [← hBh]
+    exact Matrix.posSemidef_conjTranspose_mul_self _
+  have hc : (0 : ℂ) ≤ (1 / 2 : ℂ) := by rw [Complex.le_def]; norm_num
+  have habs : absOp dephasingChoiBase = (1 / 2 : ℂ) • dephasingChoiDiag := by
+    refine posSemidef_eq_of_mul_self_eq (absOp_posSemidef _) (hDpsd.smul hc) ?_
+    rw [absOp_mul_self, hBh, dephasingChoiBase_mul_self, smul_mul_smul,
+      dephasingChoiDiag_mul_self, smul_smul, show ((1 / 2 : ℂ) * (1 / 2) * 4) = 1 by norm_num,
+      one_smul]
+  rw [traceNorm_eq_trace_absOp, habs, Matrix.trace_smul, dephasingChoiDiag_trace, smul_eq_mul]
+  norm_num
+
+/-- **Dephasing channel diamond-distance lower bound (exact value):**
+`diamondDist (dephasingKraus γ) (id) ≥ γ` for `0 ≤ γ ≤ 1`. This is the *exact* diamond distance
+to the identity — the maximally-entangled (Choi) input is optimal — obtained from the quantitative
+Choi trace-norm lower bound (`diamondDist_ge_choi_traceNorm`) since `‖J(Φ_γ) − J(id)‖₁ = 4γ`. -/
+theorem diamondDist_dephasing_ge {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    γ ≤ diamondDist (dephasingKraus γ) (idKrausPad 1 2) := by
+  have hbound := diamondDist_ge_choi_traceNorm
+    (isKrausChannel_dephasingKraus h0 h1) (isKrausChannel_idKrausPad 1 2)
+  rw [dephasing_choi_diff h0 h1, traceNorm_smul_nonneg h0, traceNorm_dephasingChoiBase] at hbound
+  calc γ = (1 : ℝ) / (2 * (2 : ℕ)) * (γ * 4) := by push_cast; ring
+    _ ≤ _ := hbound
 
 end SKEFTHawking.QuantumNetwork
