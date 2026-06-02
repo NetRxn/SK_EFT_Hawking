@@ -158,4 +158,129 @@ theorem inv_sqrt_mul_sqrt_mul_inv {x : ℝ} :
   · simp [h]
   · rw [mul_inv_cancel₀ h, mul_one]
 
+/-- ℂ-cast version of `inv_sqrt_mul_self`. -/
+theorem inv_sqrt_mul_self_C {x : ℝ} (hx : 0 ≤ x) :
+    ((Real.sqrt x : ℂ))⁻¹ * (x : ℂ) = (Real.sqrt x : ℂ) := by
+  rw [← Complex.ofReal_inv, ← Complex.ofReal_mul, inv_sqrt_mul_self hx]
+
+/-- ℂ-cast version of `inv_sqrt_mul_sqrt_mul_inv`. -/
+theorem inv_sqrt_mul_sqrt_mul_inv_C {x : ℝ} :
+    ((Real.sqrt x : ℂ))⁻¹ * ((Real.sqrt x : ℂ) * ((Real.sqrt x : ℂ))⁻¹) = ((Real.sqrt x : ℂ))⁻¹ := by
+  rw [← Complex.ofReal_inv, ← Complex.ofReal_mul, ← Complex.ofReal_mul, inv_sqrt_mul_sqrt_mul_inv]
+
+/-- **`F ≤ 1`** — the root fidelity of two density operators is at most `1`. Proven by the
+column-assembly double-Cauchy-Schwarz: with `M = √ρ σ √ρ` (eigenvalues `f`, eigenvector unitary
+`U`), `C = √σ√ρ U` has `CᴴC = diagonal f`; the normalized `Ĉ = C·D⁺` (`D⁺ = diagonal √(fᵢ)⁻¹`)
+gives `W = √σ Ĉ`, `V = √ρ U` with `tr(WᴴV) = ∑√fᵢ = F`, `tr(VᴴV) = tr ρ = 1`, and
+`tr(WᴴW) = tr(σ ĈĈᴴ) ≤ tr σ = 1` (`ĈĈᴴ` a projection). Matrix Cauchy–Schwarz then gives
+`F² ≤ 1·1`. -/
+theorem sqrtFidelity_le_one {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator ρ)
+    (hσ : IsDensityOperator σ) : sqrtFidelity hρ.1 hσ.1 ≤ 1 := by
+  obtain ⟨hρp, hρt⟩ := hρ
+  obtain ⟨hσp, hσt⟩ := hσ
+  set p := psdSqrt hρp with hp
+  set s := psdSqrt hσp with hs
+  have hpH : pᴴ = p := (psdSqrt_isHermitian hρp).eq
+  have hsH : sᴴ = s := (psdSqrt_isHermitian hσp).eq
+  have hpp : p * p = ρ := psdSqrt_mul_self hρp
+  have hss : s * s = σ := psdSqrt_mul_self hσp
+  set hM := posSemidef_sqrt_mul_mid_mul_sqrt hρp hσp with hMdef
+  set hMh := hM.isHermitian with hMhdef
+  set f := hMh.eigenvalues with hfdef
+  have hfnn : ∀ i, 0 ≤ f i := hM.eigenvalues_nonneg
+  set U : Matrix ι ι ℂ := (↑hMh.eigenvectorUnitary : Matrix ι ι ℂ) with hUdef
+  have hUsU : Uᴴ * U = 1 := by
+    have h := hMh.eigenvectorUnitary.2
+    rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose] at h
+    exact h
+  have hUUs : U * Uᴴ = 1 := by
+    have h := hMh.eigenvectorUnitary.2
+    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose] at h
+    exact h
+  have hspec : Uᴴ * (p * σ * p) * U = diagonal (fun i => (f i : ℂ)) :=
+    eigenvectorUnitary_conj_eq_diagonal hMh
+  -- C = √σ√ρ U, CᴴC = diagonal f
+  set C : Matrix ι ι ℂ := s * p * U with hCdef
+  have hCC : Cᴴ * C = diagonal (fun i => (f i : ℂ)) := by
+    have key : Cᴴ * C = Uᴴ * (p * σ * p) * U := by
+      rw [hCdef, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, hpH, hsH, ← hss]
+      noncomm_ring
+    rw [key, hspec]
+  set Dp : Matrix ι ι ℂ := diagonal (fun i => ((Real.sqrt (f i))⁻¹ : ℂ)) with hDpdef
+  have hDpH : Dpᴴ = Dp := by
+    rw [hDpdef, Matrix.diagonal_conjTranspose]; simp
+  set Chat : Matrix ι ι ℂ := C * Dp with hChatdef
+  set V : Matrix ι ι ℂ := p * U with hVdef
+  set W : Matrix ι ι ℂ := s * Chat with hWdef
+  -- (1) tr(WᴴV) = ∑ √f = F
+  have hWV : (Wᴴ * V).trace = ∑ i, (Real.sqrt (f i) : ℂ) := by
+    have hWeq : Wᴴ = Dp * Cᴴ * s := by
+      rw [hWdef, hChatdef, Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, hsH, hDpH]
+    have e : Wᴴ * V = diagonal (fun i => (Real.sqrt (f i) : ℂ)) := by
+      rw [hWeq, hVdef, show Dp * Cᴴ * s * (p * U) = Dp * (Cᴴ * (s * p * U)) by noncomm_ring,
+        ← hCdef, hCC, hDpdef, Matrix.diagonal_mul_diagonal]
+      congr 1; funext i
+      rw [← Complex.ofReal_inv, ← Complex.ofReal_mul, inv_sqrt_mul_self (hfnn i)]
+    rw [e, Matrix.trace_diagonal]
+  -- (2) tr(VᴴV).re = tr ρ = 1
+  have hVV : (Vᴴ * V).trace.re = 1 := by
+    have e : Vᴴ * V = Uᴴ * ρ * U := by
+      rw [hVdef, Matrix.conjTranspose_mul, hpH, ← hpp]; noncomm_ring
+    rw [e, Matrix.trace_mul_comm, ← Matrix.mul_assoc, hUUs, Matrix.one_mul, hρt, Complex.one_re]
+  -- ĈĈᴴ is a Hermitian projection ⟹ ≤ 1
+  have hCCdiag : Chatᴴ * Chat
+      = diagonal (fun i => (Real.sqrt (f i) : ℂ) * ((Real.sqrt (f i) : ℂ))⁻¹) := by
+    rw [hChatdef, Matrix.conjTranspose_mul, hDpH,
+      show Dp * Cᴴ * (C * Dp) = Dp * (Cᴴ * C) * Dp by noncomm_ring, hCC, hDpdef,
+      Matrix.diagonal_mul_diagonal, Matrix.diagonal_mul_diagonal]
+    congr 1; funext i
+    rw [inv_sqrt_mul_self_C (hfnn i)]
+  have hChatProj : Chat * (Chatᴴ * Chat) = Chat := by
+    have hDpPi : Dp * (Chatᴴ * Chat) = Dp := by
+      rw [hCCdiag, hDpdef, Matrix.diagonal_mul_diagonal]
+      congr 1; funext i
+      rw [inv_sqrt_mul_sqrt_mul_inv_C]
+    calc Chat * (Chatᴴ * Chat)
+        = C * (Dp * (Chatᴴ * Chat)) := by nth_rewrite 1 [hChatdef]; rw [Matrix.mul_assoc]
+      _ = C * Dp := by rw [hDpPi]
+      _ = Chat := hChatdef.symm
+  have hPidem : (Chat * Chatᴴ) * (Chat * Chatᴴ) = Chat * Chatᴴ := by
+    rw [show (Chat * Chatᴴ) * (Chat * Chatᴴ) = (Chat * (Chatᴴ * Chat)) * Chatᴴ by noncomm_ring,
+      hChatProj]
+  have hPherm : (Chat * Chatᴴ).IsHermitian := (Matrix.posSemidef_self_mul_conjTranspose Chat).1
+  have hP1 : (1 - Chat * Chatᴴ).PosSemidef := one_sub_posSemidef_of_projection hPherm hPidem
+  -- (3) tr(WᴴW).re = tr(σ ĈĈᴴ).re ≤ tr σ = 1
+  have hWW : (Wᴴ * W).trace.re ≤ 1 := by
+    have e : (Wᴴ * W).trace = (σ * (Chat * Chatᴴ)).trace := by
+      rw [hWdef, Matrix.conjTranspose_mul, hsH,
+        show Chatᴴ * s * (s * Chat) = Chatᴴ * (σ * Chat) by rw [← hss]; noncomm_ring,
+        Matrix.trace_mul_comm, Matrix.mul_assoc]
+    rw [e]
+    have hb := re_trace_mul_le_of_one_sub_posSemidef hσp hP1
+    rwa [hσt, Complex.one_re] at hb
+  -- conclude via matrix Cauchy–Schwarz
+  have hF : sqrtFidelity hρp hσp = (Wᴴ * V).trace.re := by
+    rw [sqrtFidelity_eq_sum_sqrt_eig hρp hσp, hWV, Complex.re_sum]
+    exact Finset.sum_congr rfl fun i _ => (Complex.ofReal_re _).symm
+  have hX : 0 ≤ (Wᴴ * V).trace.re := hF ▸ sqrtFidelity_nonneg hρp hσp
+  have hcs := re_trace_conjTranspose_mul_sq_le W V
+  rw [hVV, mul_one] at hcs
+  rw [hF]
+  nlinarith [hcs, hWW, hX]
+
+/-- **The Jozsa fidelity lies in `[0,1]`**: `0 ≤ F(ρ,σ)² ≤ 1` for density operators. -/
+theorem fidelity_le_one {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator ρ)
+    (hσ : IsDensityOperator σ) : fidelity hρ.1 hσ.1 ≤ 1 := by
+  have h := sqrtFidelity_le_one hρ hσ
+  have h0 := sqrtFidelity_nonneg hρ.1 hσ.1
+  rw [fidelity]
+  nlinarith [h, h0]
+
+/-- **`F(ρ,σ) ∈ [0,1]`** — the root fidelity of two density operators is a `[0,1]`-valued
+quantity (combines `sqrtFidelity_nonneg` and `sqrtFidelity_le_one`). -/
+theorem sqrtFidelity_mem_Icc {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator ρ)
+    (hσ : IsDensityOperator σ) : sqrtFidelity hρ.1 hσ.1 ∈ Set.Icc (0 : ℝ) 1 :=
+  ⟨sqrtFidelity_nonneg hρ.1 hσ.1, sqrtFidelity_le_one hρ hσ⟩
+
 end SKEFTHawking.QuantumNetwork
+
