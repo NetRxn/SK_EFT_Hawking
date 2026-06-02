@@ -2670,6 +2670,8 @@ import SKEFTHawking.QuantumNetwork.GeneralStateNetwork
 import SKEFTHawking.QuantumNetwork.NamedChannels
 -- Phase 6AG (2026-06-02): fidelity ↔ diamond-distance bridges (Fuchs–van de Graaf ∘ diamond LUB).
 import SKEFTHawking.QuantumNetwork.GateFidelityBridge
+-- Phase 6AG (2026-06-02): Watrous weak-dual upper bound on the diamond distance (tight, Ask 2).
+import SKEFTHawking.QuantumNetwork.DiamondNormDual
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
