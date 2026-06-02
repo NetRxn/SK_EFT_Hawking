@@ -2652,6 +2652,8 @@ import SKEFTHawking.QuantumNetwork.DiamondNorm
 import SKEFTHawking.QuantumNetwork.CPTPChannel
 -- Phase 6AF-6 (2026-06-01): the diamond distance ½‖Φ₁−Φ₂‖_◇ (tensor channel + bounded sSup).
 import SKEFTHawking.QuantumNetwork.DiamondNormSup
+-- Phase 6AF-7 (2026-06-01): fidelity bounds (F≤1 / Fuchs–van de Graaf) — entry point + blueprint.
+import SKEFTHawking.QuantumNetwork.FidelityBounds
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
