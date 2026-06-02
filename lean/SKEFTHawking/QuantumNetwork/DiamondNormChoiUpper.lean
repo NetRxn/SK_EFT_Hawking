@@ -353,4 +353,60 @@ theorem diamondDist_le_choi_opNorm [NeZero n]
   rw [show (1 : ℝ) / 2 * (2 * eigPosSum hTh) = eigPosSum hTh by ring, mul_comm]
   exact hkey
 
+/-- `krausMap` is homogeneous in the input state. -/
+theorem krausMap_smul {ι : Type*} [Fintype ι] (K : Fin m → Matrix ι ι ℂ) (c : ℂ)
+    (ρ : Matrix ι ι ℂ) : krausMap K (c • ρ) = c • krausMap K ρ := by
+  unfold krausMap
+  rw [Finset.smul_sum]
+  exact Finset.sum_congr rfl fun k _ => by rw [Matrix.mul_smul, Matrix.smul_mul]
+
+/-- **ω↔Choi identity**: the stabilized output of the unnormalized maximally-entangled state is
+the Choi matrix, reindexed by the tensor-factor swap. -/
+theorem krausMap_tensorKraus_omegaVec (K : Fin m → Matrix (Fin n) (Fin n) ℂ) :
+    krausMap (tensorKraus K) (omegaVec n * (omegaVec n)ᴴ)
+      = (choiMatrix (krausMap K)).submatrix (Equiv.prodComm (Fin n) (Fin n))
+          (Equiv.prodComm (Fin n) (Fin n)) := by
+  ext p q
+  obtain ⟨y, α⟩ := p
+  obtain ⟨y', β⟩ := q
+  rw [krausMap_tensorKraus_apply]
+  simp only [Matrix.submatrix_apply, Equiv.prodComm_apply, Prod.swap_prod_mk, Matrix.mul_apply,
+    Matrix.conjTranspose_apply, omegaVec, Finset.univ_unique, Finset.sum_singleton]
+  simp only [apply_ite (star : ℂ → ℂ), star_one, star_zero, mul_ite, mul_one, mul_zero,
+    Finset.sum_ite_eq', Finset.mem_univ, if_true]
+
+/-- **6AG-1 / Candidate B — the quantitative Choi TRACE-NORM lower bound on the diamond distance**,
+`diamondDist K₁ K₂ ≥ (1/(2n))·‖J(Φ₁) − J(Φ₂)‖₁`. With the operator-norm upper bound
+`diamondDist_le_choi_opNorm` this sandwiches the diamond distance by the Choi matrix in BOTH the
+trace-norm (lower) and operator-norm (upper) directions. The lower bound is the maximally-entangled
+primal feasible point evaluated explicitly: `(Φᵢ⊗id)Ω = (1/n)·J(Φᵢ)` (up to the trace-norm-invariant
+tensor-factor swap), so its trace distance is exactly `(1/2n)·‖J(Φ₁)−J(Φ₂)‖₁`. -/
+theorem diamondDist_ge_choi_traceNorm [NeZero n]
+    {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    (1 / (2 * n)) * traceNorm (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂))
+      ≤ diamondDist K₁ K₂ := by
+  have hout : ∀ K : Fin m → Matrix (Fin n) (Fin n) ℂ,
+      krausMap (tensorKraus K) (maxEntangled n)
+        = (n : ℂ)⁻¹ • (choiMatrix (krausMap K)).submatrix
+            (Equiv.prodComm (Fin n) (Fin n)) (Equiv.prodComm (Fin n) (Fin n)) := fun K => by
+    rw [maxEntangled, krausMap_smul, krausMap_tensorKraus_omegaVec]
+  have hkey : traceDist (krausMap (tensorKraus K₁) (maxEntangled n))
+        (krausMap (tensorKraus K₂) (maxEntangled n))
+      = (1 / (2 * n)) * traceNorm (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) := by
+    have hsub : (choiMatrix (krausMap K₁)).submatrix (Equiv.prodComm (Fin n) (Fin n))
+            (Equiv.prodComm (Fin n) (Fin n))
+          - (choiMatrix (krausMap K₂)).submatrix (Equiv.prodComm (Fin n) (Fin n))
+            (Equiv.prodComm (Fin n) (Fin n))
+        = (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)).submatrix
+            (Equiv.prodComm (Fin n) (Fin n)) (Equiv.prodComm (Fin n) (Fin n)) := by
+      ext i j; simp [Matrix.submatrix_apply, Matrix.sub_apply]
+    unfold traceDist
+    rw [hout K₁, hout K₂, ← smul_sub, hsub,
+      show ((n : ℂ)⁻¹) = (((n : ℝ)⁻¹ : ℝ) : ℂ) by push_cast; ring,
+      traceNorm_smul_nonneg (by positivity), traceNorm_submatrix_equiv]
+    ring
+  rw [← hkey]
+  exact diamondDist_ge_maxEntangled hK₁ hK₂
+
 end SKEFTHawking.QuantumNetwork
