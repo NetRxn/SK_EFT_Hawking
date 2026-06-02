@@ -62,4 +62,34 @@ theorem sqrtFidelity_eq_sum_sqrt_eig {ρ σ : Matrix ι ι ℂ} (hρ : ρ.PosSem
       = ∑ i, Real.sqrt ((posSemidef_sqrt_mul_mid_mul_sqrt hρ hσ).isHermitian.eigenvalues i) :=
   sqrtFidelity_eq_traceNormOf hρ hσ (posSemidef_sqrt_mul_mid_mul_sqrt hρ hσ)
 
+omit [DecidableEq ι] in
+/-- **Matrix Cauchy–Schwarz for the trace (Hilbert–Schmidt) pairing**, discriminant form:
+`(Re tr(WᴴV))² ≤ Re tr(WᴴW) · Re tr(VᴴV)`. Proven from the nonnegativity of the quadratic
+`t ↦ tr((W − tV)ᴴ(W − tV)) ≥ 0` (a PSD trace) via `discrim_le_zero` — no Schatten/inner-product
+instance needed. The keystone of the `F ≤ 1` bound. -/
+theorem re_trace_conjTranspose_mul_sq_le (W V : Matrix ι ι ℂ) :
+    (Wᴴ * V).trace.re ^ 2 ≤ (Wᴴ * W).trace.re * (Vᴴ * V).trace.re := by
+  have hcross : (Vᴴ * W).trace.re = (Wᴴ * V).trace.re := by
+    have h : Vᴴ * W = (Wᴴ * V)ᴴ := by
+      rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose]
+    rw [h, Matrix.trace_conjTranspose]
+    simp
+  have key : ∀ t : ℝ,
+      0 ≤ (Vᴴ * V).trace.re * (t * t) + (-2 * (Wᴴ * V).trace.re) * t + (Wᴴ * W).trace.re := by
+    intro t
+    have hps : (((W - (t : ℂ) • V)ᴴ * (W - (t : ℂ) • V)).trace).re
+        = (Vᴴ * V).trace.re * (t * t) + (-2 * (Wᴴ * V).trace.re) * t + (Wᴴ * W).trace.re := by
+      rw [Matrix.conjTranspose_sub, Matrix.conjTranspose_smul, Complex.star_def,
+        Complex.conj_ofReal]
+      simp only [Matrix.sub_mul, Matrix.mul_sub, Matrix.smul_mul, Matrix.mul_smul,
+        Matrix.trace_sub, Matrix.trace_smul, smul_eq_mul, Complex.sub_re,
+        Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, sub_zero, zero_mul]
+      rw [hcross]
+      ring
+    rw [← hps]
+    exact (Complex.le_def.mp (Matrix.posSemidef_conjTranspose_mul_self _).trace_nonneg).1
+  have hdisc := discrim_le_zero key
+  simp only [discrim] at hdisc
+  nlinarith [hdisc]
+
 end SKEFTHawking.QuantumNetwork
