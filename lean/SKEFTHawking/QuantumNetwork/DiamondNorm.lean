@@ -127,10 +127,12 @@ Since then (Phase 6AF-7/8, 2026-06-02) the **triangle inequality** (`diamondDist
 are both PROVEN — so `diamondDist` is a genuine `[0,1]`-valued metric whose supremum is a maximum.
 The only remaining documented-deferred item (no sorry, no axiom) is the **Choi-SDP / Watrous
 duality** characterization of the diamond norm: the full primal=dual SDP identity needs a
-convex-duality substrate (`ProperCone`/`PointedCone`, conic strong duality) absent at pin. A
-**primal (one-sided) lower bound** `diamondDist Φ₁ Φ₂ ≥ (1/2n)·‖J(Φ₁)−J(Φ₂)‖₁` is reachable
-WITHOUT SDP duality — it is `le_diamondDist` evaluated at the maximally-entangled feasible point,
-using `(Φ⊗id)(Ω/n) = (1/n)·choiMatrix(Φ)` — and is the next increment.
+convex-duality substrate (`ProperCone`/`PointedCone`, conic strong duality) absent at pin. The
+**primal (one-sided) lower bound** is PROVEN in `DiamondNormChoi.lean`
+(`diamondDist_ge_maxEntangled`): `le_diamondDist` evaluated at the maximally-entangled (Choi)
+feasible point gives `diamondDist Φ₁ Φ₂ ≥ D((Φ₁⊗id)Ω, (Φ₂⊗id)Ω)` with no SDP duality. (Its
+quantitative Choi-matrix form `≥ (1/2n)·‖J(Φ₁)−J(Φ₂)‖₁` would additionally need the identity
+`(Φ⊗id)Ω = (1/n)·choiMatrix(Φ)` — an optional refinement, not shipped.)
 -/
 
 end SKEFTHawking.QuantumNetwork
