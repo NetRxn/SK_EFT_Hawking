@@ -282,6 +282,7 @@ theorem sqrtFidelity_mem_Icc {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator
     (hσ : IsDensityOperator σ) : sqrtFidelity hρ.1 hσ.1 ∈ Set.Icc (0 : ℝ) 1 :=
   ⟨sqrtFidelity_nonneg hρ.1 hσ.1, sqrtFidelity_le_one hρ hσ⟩
 
+
 /-
 ## Fuchs–van de Graaf bounds (6AF-7 remainder) — status after the FENCE-GATE sweep (2026-06-01)
 
@@ -296,11 +297,19 @@ fresh 2-agent toehold sweep + roadmap re-read, per the fence discipline):
   and there is no commuting/qubit shortcut for non-commuting `ρ, σ`. Building a purification layer
   is a genuine multi-week analytic phase; fenced with that precise blocker.
 
-* **`1 − F ≤ D` (lower) — REACHABLE, the next build target (not fenced).** The Powers–Størmer
-  route (`2(1 − tr(√ρ√σ)) = ‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁ = 2D`, with `F ≥ tr(√ρ√σ)`) or the
-  measurement-monotonicity route (`F ≤ F_measured`, then the classical `1 − F_cl ≤ D_cl ≤ D`) is
-  buildable from the project's own double-Cauchy–Schwarz machinery (`re_trace_conjTranspose_mul_sq_le`)
-  with no absent Mathlib dependency — a ~6–10 sub-lemma build. Tracked in `Phase6AF_Roadmap.md`.
+* **`1 − F ≤ D` (lower) — REACHABLE, the next build target (NOT fenced; no absent brick).** Route:
+  Powers–Størmer `2(1 − tr(√ρ√σ)) = ‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁ = 2D`, with the two sub-pieces
+  (A) the PS inequality `‖√ρ − √σ‖²_F ≤ ‖ρ − σ‖₁` (reduces to `|√ρ−√σ| ≤ √ρ+√σ` in Loewner order +
+  `trace_mul_nonneg`), and (B) `tr(√σ√ρ) ≤ F`, i.e. the general `Re tr A ≤ ‖A‖₁`.
+  ⚙️ ENCODING NOTE (firing 2026-06-01): piece (B) was proven on paper via the diagonal-bound
+  (`B = UᴴAU`, `BᴴB = diag(μ)`, `‖Bᵢᵢ‖² ≤ (BᴴB)ᵢᵢ = μᵢ`, so `Re tr A = ∑ Re Bᵢᵢ ≤ ∑√μᵢ = ‖A‖₁`)
+  and ALL steps elaborated EXCEPT the final `traceNorm A = ∑√μᵢ` step, which hits a Lean `whnf`
+  timeout — the `traceNorm`↔`IsHermitian.eigenvalues` defeq forces reduction of the spectrum/sort
+  machinery (independent of `set`/`rfl`/`simp`; NOT a math gap, NOT an absent brick). FIX for next
+  firing: route through the PROVEN rewrite `traceNorm_eq_sqrtRootSum` (charpoly) instead of the
+  eigenvalue-sum defeq — `charpoly(AᴴA) = charpoly(UᴴAᴴAU) = charpoly(diag μ)` via
+  `Matrix.charpoly_units_conj'`, then `sqrtRootSum(charpoly(diag μ)) = ∑√μ` via `charpoly` of a
+  diagonal + `roots_prod_X_sub_C`. This sidesteps the eigenvalue defeq entirely.
 -/
 
 end SKEFTHawking.QuantumNetwork
