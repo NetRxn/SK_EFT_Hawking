@@ -309,4 +309,48 @@ theorem trace_mul_krausMap_sub (K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ
   rw [mul_sub, Matrix.trace_sub, trace_mul_krausMap_tensorKraus,
     trace_mul_krausMap_tensorKraus, sub_mul, Matrix.trace_sub]
 
+/-- **6AF-11 — the Choi operator-norm upper bound on the diamond distance.**
+`diamondDist Φ₁ Φ₂ ≤ n · ‖J(Φ₁) − J(Φ₂)‖_∞` (sharp constant `d = n`, the ℓ²-operator norm).
+With the maximally-entangled primal *lower* bound `diamondDist_ge_maxEntangled` this sandwiches
+the diamond distance by the Choi matrix — the formalizable content of the Watrous Choi-SDP
+characterization, requiring no conic strong duality. -/
+theorem diamondDist_le_choi_opNorm [NeZero n]
+    {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    diamondDist K₁ K₂
+      ≤ (n : ℝ) * ‖choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)‖ := by
+  set C := choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂) with hCdef
+  have hCh : C.IsHermitian :=
+    (choiMatrix_krausMap_posSemidef K₁).isHermitian.sub
+      (choiMatrix_krausMap_posSemidef K₂).isHermitian
+  refine Real.sSup_le ?_ (by positivity)
+  rintro d ⟨ρ, hρ, rfl⟩
+  set T := krausMap (tensorKraus K₁) ρ - krausMap (tensorKraus K₂) ρ with hTdef
+  have hTh : T.IsHermitian :=
+    (krausMap_isHermitian _ hρ.1.isHermitian).sub (krausMap_isHermitian _ hρ.1.isHermitian)
+  have hT0 : T.trace.re = 0 := by
+    rw [hTdef, Matrix.trace_sub, trace_krausMap (isKrausChannel_tensorKraus hK₁),
+      trace_krausMap (isKrausChannel_tensorKraus hK₂), sub_self, Complex.zero_re]
+  set P := hTh.cfc (fun x => if 0 < x then (1 : ℝ) else 0) with hPdef
+  have hPpsd : P.PosSemidef :=
+    cfc_posSemidef hTh fun i => by by_cases h : 0 < hTh.eigenvalues i <;> simp [h]
+  have hP1 : ((1 : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) - P).PosSemidef := by
+    have hc1 : hTh.cfc (fun _ => (1 : ℝ)) = 1 := by rw [cfc_const]; simp
+    have h1 : (1 : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) - P
+        = hTh.cfc (fun x => 1 - if 0 < x then (1 : ℝ) else 0) := by
+      rw [hPdef, ← hc1, cfc_sub hTh]
+    rw [h1]
+    exact cfc_posSemidef hTh fun i => by by_cases h : 0 < hTh.eigenvalues i <;> simp [h]
+  have hkey : eigPosSum hTh ≤ ‖C‖ * (n : ℝ) := by
+    rw [eigPosSum_eq_re_trace_posProj, ← hPdef, hTdef, trace_mul_krausMap_sub, ← hCdef]
+    calc (C * choiContraction P ρ).trace.re
+        ≤ ‖C‖ * (choiContraction P ρ).trace.re :=
+          re_trace_mul_le_l2opNorm_mul_trace hCh (choiContraction_posSemidef hPpsd hρ.1)
+      _ ≤ ‖C‖ * (n : ℝ) :=
+          mul_le_mul_of_nonneg_left (trace_choiContraction_proj_le hP1 hρ) (norm_nonneg _)
+  unfold traceDist
+  rw [← hTdef, traceNorm_hermitian_eq hTh, hT0, sub_zero]
+  rw [show (1 : ℝ) / 2 * (2 * eigPosSum hTh) = eigPosSum hTh by ring, mul_comm]
+  exact hkey
+
 end SKEFTHawking.QuantumNetwork
