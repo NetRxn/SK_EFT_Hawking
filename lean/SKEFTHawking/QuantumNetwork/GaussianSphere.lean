@@ -153,4 +153,18 @@ theorem sphere_moment_real {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty 
     linear_combination h1
   exact (mul_right_cancel₀ (ne_of_gt hM0) key).symm
 
+/-- **Normalised real degree-4 sphere moment:** dividing `sphere_moment_real` by the (nonzero)
+factor `n(n+2)` (`n = card ι`),
+`∫_S x_a x_b x_c x_d dσ = realWick(a,b,c,d)·(toSphere.real univ)/(n(n+2))`. -/
+theorem sphere_moment_norm {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι] (a b c d : ι) :
+    (∫ ω : sphere (0 : EuclideanSpace ℝ ι) 1,
+        (ω : EuclideanSpace ℝ ι) a * (ω : EuclideanSpace ℝ ι) b
+          * (ω : EuclideanSpace ℝ ι) c * (ω : EuclideanSpace ℝ ι) d ∂volume.toSphere)
+      = realWick a b c d * (volume.toSphere (E := EuclideanSpace ℝ ι)).real univ
+          / ((Fintype.card ι : ℝ) * ((Fintype.card ι : ℝ) + 2)) := by
+  have hn : (0 : ℝ) < Fintype.card ι := by exact_mod_cast Fintype.card_pos
+  have hne : (Fintype.card ι : ℝ) * ((Fintype.card ι : ℝ) + 2) ≠ 0 := by positivity
+  rw [eq_div_iff hne]
+  linear_combination (sphere_moment_real a b c d)
+
 end SKEFTHawking.QuantumNetwork
