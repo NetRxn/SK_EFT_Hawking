@@ -347,6 +347,75 @@ theorem re_trace_le_traceNorm (A : Matrix ι ι ℂ) : A.trace.re ≤ traceNorm 
         exact congrArg Multiset.sum (Multiset.map_congr rfl fun i _ => by
           simp [Function.comp_apply, Complex.ofReal_re])
 
+/-- **Hermitian dual-norm bound `Re tr(H·R) ≤ ‖H‖₁`** for Hermitian `H` and a Loewner contraction
+`−1 ≤ R ≤ 1` (`1−R` and `1+R` PSD). Diagonalize `H = U diag(λ) Uᴴ`; then
+`Re tr(HR) = ∑ λᵢ Re(UᴴRU)ᵢᵢ` with `Re(UᴴRU)ᵢᵢ ∈ [−1,1]` (diagonal of the PSD `Uᴴ(1∓R)U`), so
+`≤ ∑ |λᵢ| = ‖H‖₁`. The keystone of the Powers–Størmer / FvdG-lower argument. -/
+theorem re_trace_mul_le_traceNorm_hermitian {H R : Matrix ι ι ℂ} (hH : H.IsHermitian)
+    (hR1 : (1 - R).PosSemidef) (hR2 : (1 + R).PosSemidef) :
+    (H * R).trace.re ≤ traceNorm H := by
+  set U : Matrix ι ι ℂ := (↑hH.eigenvectorUnitary : Matrix ι ι ℂ) with hUdef
+  have hUUs : U * Uᴴ = 1 := by
+    have h := hH.eigenvectorUnitary.2
+    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose] at h; exact h
+  have hUsU : Uᴴ * U = 1 := by
+    have h := hH.eigenvectorUnitary.2
+    rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose] at h; exact h
+  set G : Matrix ι ι ℂ := Uᴴ * R * U with hGdef
+  -- spectral form
+  have hHspec : H = U * diagonal (fun i => (hH.eigenvalues i : ℂ)) * Uᴴ := by
+    have hd := eigenvectorUnitary_conj_eq_diagonal hH
+    calc H = U * (Uᴴ * H * U) * Uᴴ := by
+              rw [show U * (Uᴴ * H * U) * Uᴴ = (U * Uᴴ) * H * (U * Uᴴ) by noncomm_ring, hUUs,
+                Matrix.one_mul, Matrix.mul_one]
+      _ = U * diagonal (fun i => (hH.eigenvalues i : ℂ)) * Uᴴ := by rw [hd]
+  -- G's diagonal real part lies in [-1, 1]
+  have hGub : ∀ i, (G i i).re ≤ 1 := by
+    intro i
+    have hP : (Uᴴ * (1 - R) * U).PosSemidef := by
+      have h := hR1.conjTranspose_mul_mul_same U
+      simpa [Matrix.conjTranspose_conjTranspose] using h
+    have hdg : (0 : ℂ) ≤ (Uᴴ * (1 - R) * U) i i := hP.diag_nonneg
+    have he : (Uᴴ * (1 - R) * U) i i = 1 - G i i := by
+      rw [hGdef]
+      rw [show Uᴴ * (1 - R) * U = Uᴴ * U - Uᴴ * R * U by noncomm_ring, hUsU]
+      simp [Matrix.sub_apply, Matrix.one_apply_eq]
+    rw [he] at hdg
+    have := (Complex.le_def.mp hdg).1
+    simp only [Complex.sub_re, Complex.one_re, Complex.zero_re] at this
+    linarith
+  have hGlb : ∀ i, -1 ≤ (G i i).re := by
+    intro i
+    have hP : (Uᴴ * (1 + R) * U).PosSemidef := by
+      have h := hR2.conjTranspose_mul_mul_same U
+      simpa [Matrix.conjTranspose_conjTranspose] using h
+    have hdg : (0 : ℂ) ≤ (Uᴴ * (1 + R) * U) i i := hP.diag_nonneg
+    have he : (Uᴴ * (1 + R) * U) i i = 1 + G i i := by
+      rw [hGdef]
+      rw [show Uᴴ * (1 + R) * U = Uᴴ * U + Uᴴ * R * U by noncomm_ring, hUsU]
+      simp [Matrix.add_apply, Matrix.one_apply_eq]
+    rw [he] at hdg
+    have := (Complex.le_def.mp hdg).1
+    simp only [Complex.add_re, Complex.one_re, Complex.zero_re] at this
+    linarith
+  -- trace identity
+  have htr : (H * R).trace = ∑ i, (hH.eigenvalues i : ℂ) * G i i := by
+    have h1 : (H * R).trace = (diagonal (fun i => (hH.eigenvalues i : ℂ)) * G).trace := by
+      conv_lhs => rw [hHspec]
+      rw [show U * diagonal (fun i => (hH.eigenvalues i : ℂ)) * Uᴴ * R
+            = U * (diagonal (fun i => (hH.eigenvalues i : ℂ)) * Uᴴ * R) by noncomm_ring,
+        Matrix.trace_mul_comm,
+        show diagonal (fun i => (hH.eigenvalues i : ℂ)) * Uᴴ * R * U
+            = diagonal (fun i => (hH.eigenvalues i : ℂ)) * G by rw [hGdef]; noncomm_ring]
+    rw [h1, Matrix.trace]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    simp only [Matrix.diag_apply, Matrix.mul_apply, Matrix.diagonal_apply, ite_mul, zero_mul,
+      Finset.sum_ite_eq, Finset.mem_univ, if_true]
+  rw [htr, Complex.re_sum, traceNorm_hermitian hH]
+  refine Finset.sum_le_sum fun i _ => ?_
+  rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
+  nlinarith [hGub i, hGlb i, le_abs_self (hH.eigenvalues i), neg_abs_le (hH.eigenvalues i)]
+
 /-
 ## Fuchs–van de Graaf bounds (6AF-7 remainder) — status after the FENCE-GATE sweep (2026-06-01)
 
