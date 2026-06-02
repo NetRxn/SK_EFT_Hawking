@@ -682,6 +682,24 @@ Mathlib has cone-dual definitions but no zero-gap/Slater theorem at pin; both on
 sandwiching bounds are proven).
 Kernel-only; \emph{zero} new project-local axioms.
 
+\paragraph{Phase~6AG: the operational certification layer.} The 6AE/6AF layer supplies
+functional-analytic bricks; Phase~6AG makes them operational. \emph{(i)} the \textbf{two-sided Choi
+sandwich} (\verb|diamondDist_ge_choi_traceNorm|): $\mathrm{diamondDist}(\Phi_1,\Phi_2)\ge
+\tfrac{1}{2n}\|J(\Phi_1)-J(\Phi_2)\|_1$, which paired with the operator-norm upper bound (xi)
+brackets the diamond distance by the Choi matrix in both directions,
+$\tfrac{1}{2n}\|J_1-J_2\|_1\le\|\cdot\|_\diamond\le n\|J_1-J_2\|_\infty$ --- the formalizable content
+of the Watrous Choi-SDP characterization, needing no conic strong duality. Proven from the
+maximally-entangled primal point ($(\Phi_i\otimes\mathrm{id})\Omega=\tfrac1n J(\Phi_i)$ up to the
+trace-norm-invariant tensor-factor swap), with a reusable PSD-square-root uniqueness lemma
+(elementary trace argument, no CFC instance) and trace-norm homogeneity. \emph{(ii)}
+\textbf{general-state network monotonicity} (\verb|traceDist_applyChain_le|): for arbitrary
+density-matrix states the end-to-end trace distance to a target does not increase under any chain of
+CPTP channel steps (data processing lifted to the network), removing the uniform-Werner restriction.
+\emph{(iii)} \textbf{named single-qubit channels} (\verb|NamedChannels.lean|): Kraus representations
+$+$ CPTP proofs for depolarizing, dephasing, amplitude-damping, plus the \emph{exact} dephasing
+diamond bound \verb|diamondDist_dephasing_ge| ($\mathrm{diamondDist}(\Phi_\gamma,\mathrm{id})\ge\gamma$
+from $\|J(\Phi_\gamma)-J(\mathrm{id})\|_1=4\gamma$). Kernel-only; \emph{zero} new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}
