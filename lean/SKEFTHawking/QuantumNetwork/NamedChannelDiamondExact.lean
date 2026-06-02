@@ -127,4 +127,68 @@ theorem diamondDist_depolarizing_eq {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1) :
   rwa [ptrace2_depolarizingWitness, norm_smul, norm_one, mul_one, Complex.norm_real,
     Real.norm_of_nonneg h0] at hub
 
+/-! ## Amplitude-damping channel: two-sided bracket (non-covariant, clean upper bound) -/
+
+/-- Standard-basis indicators at `(0,0)` and `(1,1)`. -/
+def s00Dep : Fin 2 × Fin 2 → ℝ := fun p => if p = (0, 0) then 1 else 0
+def s11Dep : Fin 2 × Fin 2 → ℝ := fun p => if p = (1, 1) then 1 else 0
+
+/-- A dual witness for amplitude damping (not optimal, but clean): `γ·|e₀₁⟩⟨e₀₁| + γ·|e₁₀⟩⟨e₁₀| +
+(1−√(1−γ))·|v⟩⟨v|` with `v = e₀₀−e₁₁`. Gives `W − C` diagonal-PSD and `ptrace₂ W` scalar. -/
+noncomputable def ampDampWitness (γ : ℝ) : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  (Matrix.of fun a b => (γ : ℂ) * (s01Dep a : ℂ) * (s01Dep b : ℂ))
+  + (Matrix.of fun a b => (γ : ℂ) * (s10Dep a : ℂ) * (s10Dep b : ℂ))
+  + (Matrix.of fun a b => ((1 - Real.sqrt (1 - γ) : ℝ) : ℂ) * (sDeph a : ℂ) * (sDeph b : ℂ))
+
+theorem one_sub_sqrt_nonneg {γ : ℝ} (h0 : 0 ≤ γ) : (0 : ℝ) ≤ 1 - Real.sqrt (1 - γ) := by
+  have hle : Real.sqrt (1 - γ) ≤ 1 :=
+    calc Real.sqrt (1 - γ) ≤ Real.sqrt 1 := Real.sqrt_le_sqrt (by linarith)
+      _ = 1 := Real.sqrt_one
+  linarith
+
+theorem ampDampWitness_posSemidef {γ : ℝ} (h0 : 0 ≤ γ) : (ampDampWitness γ).PosSemidef :=
+  ((posSemidef_smul_outer h0 s01Dep).add (posSemidef_smul_outer h0 s10Dep)).add
+    (posSemidef_smul_outer (one_sub_sqrt_nonneg h0) sDeph)
+
+theorem ptrace2_ampDampWitness (γ : ℝ) :
+    ptrace2 (ampDampWitness γ)
+      = ((γ + (1 - Real.sqrt (1 - γ)) : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  ext a b
+  fin_cases a <;> fin_cases b <;>
+    simp [ptrace2, ampDampWitness, s01Dep, s10Dep, sDeph, Matrix.add_apply, Matrix.smul_apply,
+      Fin.sum_univ_two] <;> push_cast <;> ring
+
+theorem ampDampWitness_sub_choi_posSemidef {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    (ampDampWitness γ - (choiMatrix (krausMap (ampDampKraus γ))
+      - choiMatrix (krausMap (idKrausPad 1 2)))).PosSemidef := by
+  rw [ampDamp_choi_diff h0 h1]
+  have heq : ampDampWitness γ - ampDampChoiDiff γ
+      = (Matrix.of fun a b => ((1 - Real.sqrt (1 - γ) : ℝ) : ℂ) * (s00Dep a : ℂ) * (s00Dep b : ℂ))
+        + (Matrix.of fun a b => (γ : ℂ) * (s01Dep a : ℂ) * (s01Dep b : ℂ))
+        + (Matrix.of fun a b => ((1 - Real.sqrt (1 - γ) + γ : ℝ) : ℂ)
+            * (s11Dep a : ℂ) * (s11Dep b : ℂ)) := by
+    ext q r; obtain ⟨a, y⟩ := q; obtain ⟨b, y'⟩ := r
+    fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+      simp [ampDampWitness, ampDampChoiDiff, s00Dep, s01Dep, s10Dep, s11Dep, sDeph,
+        Matrix.sub_apply, Matrix.add_apply, Matrix.of_apply, Prod.mk.injEq] <;>
+      push_cast <;> ring
+  rw [heq]
+  exact ((posSemidef_smul_outer (one_sub_sqrt_nonneg h0) s00Dep).add
+      (posSemidef_smul_outer h0 s01Dep)).add
+    (posSemidef_smul_outer (by have := one_sub_sqrt_nonneg h0; linarith) s11Dep)
+
+/-- **Amplitude-damping two-sided diamond bracket:** `γ/2 ≤ diamondDist (ampDampKraus γ) (id) ≤
+γ + 1 − √(1−γ)` for `0 ≤ γ ≤ 1`. The upper bound (the direction the channel is benchmarked in)
+comes from `diamondDist_le_dual_witness` at a clean — non-optimal — dual witness; amplitude damping
+is not Pauli-covariant so the Choi input is not optimal and the bracket is not tight (exact value
+needs the `√(1−γ)`-dependent eigenvector witness). -/
+theorem diamondDist_ampDamp_le {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    diamondDist (ampDampKraus γ) (idKrausPad 1 2) ≤ γ + 1 - Real.sqrt (1 - γ) := by
+  have hub := diamondDist_le_dual_witness (isKrausChannel_ampDampKraus h0 h1)
+    (isKrausChannel_idKrausPad 1 2) (ampDampWitness_posSemidef h0)
+    (ampDampWitness_sub_choi_posSemidef h0 h1)
+  rw [ptrace2_ampDampWitness, norm_smul, norm_one, mul_one, Complex.norm_real,
+    Real.norm_of_nonneg (by have := one_sub_sqrt_nonneg h0; linarith)] at hub
+  linarith
+
 end SKEFTHawking.QuantumNetwork
