@@ -297,4 +297,81 @@ theorem diamondDist_depolarizing_ge {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1) :
   calc p = (1 : ℝ) / (2 * (2 : ℕ)) * (p * 4) := by push_cast; ring
     _ ≤ _ := hbound
 
+/-- Choi difference matrix of the amplitude-damping channel and the identity. Unlike the Pauli
+channels this is **not** a scalar multiple of a `γ`-independent matrix (the entries `√(1−γ)−1` are
+nonlinear in `γ`), reflecting that amplitude damping is not Pauli-covariant — so the
+maximally-entangled (Choi) input is not optimal and Candidate B gives a lower bound, not the exact
+diamond distance. -/
+noncomputable def ampDampChoiDiff (γ : ℝ) : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  fun r c =>
+    if (r = (0, 0) ∧ c = (1, 1)) ∨ (r = (1, 1) ∧ c = (0, 0)) then ((Real.sqrt (1 - γ) : ℂ) - 1)
+    else if r = (1, 1) ∧ c = (1, 1) then (-(γ : ℂ))
+    else if r = (1, 0) ∧ c = (1, 0) then (γ : ℂ)
+    else 0
+
+theorem ampDamp_choi_diff {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    choiMatrix (krausMap (ampDampKraus γ)) - choiMatrix (krausMap (idKrausPad 1 2))
+      = ampDampChoiDiff γ := by
+  ext r c
+  obtain ⟨a, y⟩ := r
+  obtain ⟨b, y'⟩ := c
+  simp only [Matrix.sub_apply, choiMatrix_krausMap_apply, Fin.sum_univ_two, ampDampKraus,
+    idKrausPad, ampDampChoiDiff]
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [Complex.conj_ofReal, ← Complex.ofReal_mul,
+      Real.mul_self_sqrt (show (0 : ℝ) ≤ 1 - γ by linarith), Real.mul_self_sqrt h0]
+
+theorem ampDampChoiDiff_isHermitian {γ : ℝ} : (ampDampChoiDiff γ).IsHermitian := by
+  ext r c; obtain ⟨a, y⟩ := r; obtain ⟨b, y'⟩ := c
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [ampDampChoiDiff, Matrix.conjTranspose_apply, Complex.conj_ofReal]
+
+/-- Diagonal Loewner contraction `−1 ≤ R ≤ 1` aligned with the two `±γ` diagonal entries of the
+amplitude-damping Choi difference: `+1` at `(1,0)` (where the entry is `+γ`) and `−1` at `(1,1)`
+(where it is `−γ`), so `Re tr(Δ·R) = 2γ`. -/
+noncomputable def ampDampTestR : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  Matrix.diagonal (fun i => if i = (1, 0) then 1 else if i = (1, 1) then -1 else 0)
+
+theorem ampDampTestR_one_sub_posSemidef :
+    ((1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) - ampDampTestR).PosSemidef := by
+  rw [ampDampTestR, ← Matrix.diagonal_one, Matrix.diagonal_sub]
+  refine Matrix.posSemidef_diagonal_iff.mpr fun i => ?_
+  fin_cases i <;> simp <;> rw [Complex.le_def] <;> norm_num
+
+theorem ampDampTestR_one_add_posSemidef :
+    ((1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) + ampDampTestR).PosSemidef := by
+  rw [ampDampTestR, ← Matrix.diagonal_one, Matrix.diagonal_add]
+  refine Matrix.posSemidef_diagonal_iff.mpr fun i => ?_
+  fin_cases i <;> simp <;> rw [Complex.le_def] <;> norm_num
+
+theorem ampDamp_trace_diff_mul_R {γ : ℝ} :
+    ((ampDampChoiDiff γ * ampDampTestR).trace).re = 2 * γ := by
+  simp [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply, ampDampChoiDiff, ampDampTestR,
+    Matrix.diagonal, Fintype.sum_prod_type, Fin.sum_univ_two]
+  ring
+
+/-- **`2γ ≤ traceNorm(amp-damp Choi difference)`** via the Hermitian dual-norm keystone with the
+diagonal contraction `ampDampTestR`. -/
+theorem two_mul_le_traceNorm_ampDampChoiDiff {γ : ℝ} :
+    2 * γ ≤ traceNorm (ampDampChoiDiff γ) := by
+  have h := re_trace_mul_le_traceNorm_hermitian (ampDampChoiDiff_isHermitian (γ := γ))
+    ampDampTestR_one_sub_posSemidef ampDampTestR_one_add_posSemidef
+  rwa [ampDamp_trace_diff_mul_R] at h
+
+/-- **Amplitude-damping channel diamond-distance lower bound:**
+`diamondDist (ampDampKraus γ) (id) ≥ γ/2` for `0 ≤ γ ≤ 1`. Amplitude damping is not Pauli-covariant,
+so the Choi (maximally-entangled) input is not optimal; this is the certified lower bound from the
+quantitative Choi trace-norm bound (`diamondDist_ge_choi_traceNorm`) since `‖J(Φ_γ) − J(id)‖₁ ≥ 2γ`
+(exhibited by a diagonal Loewner contraction aligned with the `±γ` diagonal Choi entries). -/
+theorem diamondDist_ampDamp_ge {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    γ / 2 ≤ diamondDist (ampDampKraus γ) (idKrausPad 1 2) := by
+  have hbound := diamondDist_ge_choi_traceNorm
+    (isKrausChannel_ampDampKraus h0 h1) (isKrausChannel_idKrausPad 1 2)
+  rw [ampDamp_choi_diff h0 h1] at hbound
+  have htn := two_mul_le_traceNorm_ampDampChoiDiff (γ := γ)
+  calc γ / 2 = (1 : ℝ) / (2 * (2 : ℕ)) * (2 * γ) := by push_cast; ring
+    _ ≤ (1 : ℝ) / (2 * (2 : ℕ)) * traceNorm (ampDampChoiDiff γ) := by
+        apply mul_le_mul_of_nonneg_left htn; positivity
+    _ ≤ _ := hbound
+
 end SKEFTHawking.QuantumNetwork
