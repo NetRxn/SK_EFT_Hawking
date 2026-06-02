@@ -104,4 +104,82 @@ theorem traceNorm_mul_le_of_isUnit {A B : Matrix ι ι ℂ} (hA : IsUnit A) (hB 
   calc (W * M).trace.re = Real.sqrt ((W * M).trace.re ^ 2) := (Real.sqrt_sq hge).symm
     _ ≤ Real.sqrt ((Aᴴ * A).trace.re * (Bᴴ * B).trace.re) := Real.sqrt_le_sqrt hkey
 
+/-- **The shift `A + diagonal(c)` is invertible for cofinitely many `k`** (`c = (k+1)⁻¹`) — the
+non-invertible shifts are roots of `(-A).charpoly` (via `Matrix.eval_charpoly`), a finite set, and
+the shift sequence is injective. (Uses `diagonal` rather than `c•1` to keep the downstream
+perturbation off the Frobenius-`NormedSpace` `smul`-whnf wall.) -/
+theorem eventually_isUnit_perturb (A : Matrix ι ι ℂ) :
+    ∀ᶠ k : ℕ in Filter.atTop,
+      IsUnit (A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹)) := by
+  have hpne : (-A).charpoly ≠ 0 := (Matrix.charpoly_monic (-A)).ne_zero
+  have hbad : {z : ℂ | (-A).charpoly.IsRoot z}.Finite := Polynomial.finite_setOf_isRoot hpne
+  have hinj : Function.Injective (fun k : ℕ => ((k : ℂ) + 1)⁻¹) := by
+    intro a b hab
+    have h1 : (a : ℂ) + 1 = (b : ℂ) + 1 := inv_injective hab
+    exact_mod_cast add_right_cancel h1
+  rw [← Nat.cofinite_eq_atTop, Filter.eventually_cofinite]
+  refine Set.Finite.subset (hbad.preimage hinj.injOn) ?_
+  intro k hk
+  simp only [Set.mem_setOf_eq] at hk
+  simp only [Set.mem_preimage, Set.mem_setOf_eq]
+  rw [Matrix.isUnit_iff_isUnit_det, isUnit_iff_ne_zero, not_not] at hk
+  rw [Polynomial.IsRoot.def, Matrix.eval_charpoly, sub_neg_eq_add, Matrix.scalar_apply, add_comm]
+  exact hk
+
+attribute [local instance] Matrix.frobeniusNormedAddCommGroup Matrix.frobeniusNormedSpace
+
+/-- **Schatten-2 Cauchy–Schwarz (general)**: `traceNorm(A·B) ≤ √(tr AᴴA)·√(tr BᴴB)` for ALL
+matrices — the invertible case extended to singular `A, B` by perturbing `A,B ↦ A+(1/k)•1` (each
+invertible cofinitely) and taking `k → ∞`, using `continuous_traceNorm` + `le_of_tendsto_of_tendsto'`. -/
+theorem traceNorm_mul_le (A B : Matrix ι ι ℂ) :
+    traceNorm (A * B) ≤ Real.sqrt ((Aᴴ * A).trace.re) * Real.sqrt ((Bᴴ * B).trace.re) := by
+  -- single-variable continuity (no product type, to stay off the Frobenius-instance whnf wall)
+  have htr_re : Continuous fun X : Matrix ι ι ℂ => (Xᴴ * X).trace.re := by
+    have h1 : Continuous fun X : Matrix ι ι ℂ => Xᴴ * X :=
+      (continuous_id.matrix_conjTranspose).matrix_mul continuous_id
+    exact Complex.continuous_re.comp h1.matrix_trace
+  have hrootc : Continuous fun X : Matrix ι ι ℂ => Real.sqrt ((Xᴴ * X).trace.re) :=
+    Real.continuous_sqrt.comp htr_re
+  -- the perturbation `diagonal(cₖ) → 0` (no `smul`, to dodge the Frobenius-instance whnf wall)
+  have hc : Filter.Tendsto (fun k : ℕ => ((k : ℂ) + 1)⁻¹) Filter.atTop (nhds 0) := by
+    have hr : Filter.Tendsto (fun n : ℕ => 1 / ((n : ℝ) + 1)) Filter.atTop (nhds 0) :=
+      tendsto_one_div_add_atTop_nhds_zero_nat
+    have h2 := (Complex.continuous_ofReal.tendsto (0 : ℝ)).comp hr
+    simp only [Function.comp_def, Complex.ofReal_zero] at h2
+    exact Filter.Tendsto.congr (fun n => by push_cast; rw [one_div]) h2
+  have hdiagc : Continuous fun z : ℂ => Matrix.diagonal (fun _ : ι => z) :=
+    Continuous.matrix_diagonal (continuous_pi fun _ => continuous_id)
+  have hc0 : Filter.Tendsto (fun k : ℕ => Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))
+      Filter.atTop (nhds 0) := by
+    have := (hdiagc.tendsto 0).comp hc
+    simpa using this
+  have hAk : Filter.Tendsto (fun k : ℕ => A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))
+      Filter.atTop (nhds A) := by simpa using tendsto_const_nhds.add hc0
+  have hBk : Filter.Tendsto (fun k : ℕ => B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))
+      Filter.atTop (nhds B) := by simpa using tendsto_const_nhds.add hc0
+  have hABk : Filter.Tendsto (fun k : ℕ => (A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))
+      * (B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))) Filter.atTop (nhds (A * B)) :=
+    hAk.mul hBk
+  have hev : ∀ᶠ k : ℕ in Filter.atTop,
+      traceNorm ((A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))
+          * (B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹)))
+        ≤ Real.sqrt (((A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))ᴴ
+              * (A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))).trace.re)
+          * Real.sqrt (((B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))ᴴ
+              * (B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))).trace.re) := by
+    filter_upwards [eventually_isUnit_perturb A, eventually_isUnit_perturb B] with k hUA hUB
+    exact traceNorm_mul_le_of_isUnit hUA hUB
+  have hLHS : Filter.Tendsto (fun k : ℕ =>
+      traceNorm ((A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))
+        * (B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹)))) Filter.atTop
+      (nhds (traceNorm (A * B))) := (continuous_traceNorm.tendsto (A * B)).comp hABk
+  have hRHS : Filter.Tendsto (fun k : ℕ =>
+      Real.sqrt (((A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))ᴴ
+            * (A + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))).trace.re)
+        * Real.sqrt (((B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))ᴴ
+            * (B + Matrix.diagonal (fun _ : ι => ((k : ℂ) + 1)⁻¹))).trace.re)) Filter.atTop
+      (nhds (Real.sqrt ((Aᴴ * A).trace.re) * Real.sqrt ((Bᴴ * B).trace.re))) :=
+    ((hrootc.tendsto A).comp hAk).mul ((hrootc.tendsto B).comp hBk)
+  exact le_of_tendsto_of_tendsto hLHS hRHS hev
+
 end SKEFTHawking.QuantumNetwork
