@@ -192,12 +192,20 @@ flagged as absent (no von Neumann / Ky Fan / polar decomposition needed):
   split, no dual norm), plus density-operator preservation.
 - **Choi positivity.** `choiMatrix_krausMap_posSemidef`: the Choi matrix of a Kraus channel
   is positive semidefinite (the channel–state-duality direction of Choi's theorem).
+- **Diamond distance (`DiamondNormSup.lean`).** `diamondDist Φ₁ Φ₂ = sup_ρ D((Φ₁⊗id)ρ,(Φ₂⊗id)ρ)
+  = ½‖Φ₁−Φ₂‖_◇`. After generalizing the trace-norm/CPTP layer to an arbitrary finite index
+  (so it instantiates on the doubled space `Fin n × Fin n` for free) and proving the stabilized
+  channel `Φ⊗id` is again CPTP (`isKrausChannel_tensorKraus`, via the Kronecker mixed-product
+  identities), the supremum is well-defined from **boundedness alone** (`Real.sSup` needs no
+  attainment; each term ∈ `[0,1]` since the stabilized outputs are density operators). Proven
+  nonnegative, `≤ 1`, symmetric, and zero on the diagonal — a genuine `[0,1]` distinguishability
+  measure.
 
-**Remaining frontier (honestly documented, no `sorry`/axiom).** Two quantitative items:
-the **Fuchs–van de Graaf** bounds `1−F ≤ D ≤ √(1−F²)` and the range `F ≤ 1` (which need a
-Schatten-2 / matrix-Hölder layer Mathlib lacks), and the full **diamond norm**
-`‖Φ‖_◇ = sup_ρ ‖(Φ⊗id)ρ‖₁` (the supremum's boundedness/attainment and the tensor channel
-over the product index). Documented in `Phase6AF_Roadmap.md`.
+**Remaining frontier (honestly documented, no `sorry`/axiom).** The **Fuchs–van de Graaf**
+bounds `1−F ≤ D ≤ √(1−F²)` and the range `F ≤ 1` (which need a Schatten-2 / matrix-Hölder layer
+Mathlib lacks), and — for the diamond distance — sup **attainment** (continuity of the
+singular-value sum), the triangle inequality, and the Choi-SDP characterization. Documented in
+`Phase6AF_Roadmap.md`.
 
 ## 4. Figures
 
@@ -221,10 +229,11 @@ breadth, the BB84 secret-key rate, the multipartite comparison, and the Horodeck
 teleportation fidelity (with its Haar integral discharged) are all now in hand. The
 general density-matrix / trace-distance layer for arbitrary-state certification has since
 been built (Phase 6AF, §3d): the trace-distance metric, operator modulus, Uhlmann fidelity,
-and CPTP trace-distance contractivity are all proven kernel-pure. The genuinely remaining
-extensions are (i) the full asymptotic DEJMPS convergence basin (Macchiavello's non-monotone
-argument), and (ii) two quantitative analytic items — the Fuchs–van de Graaf bounds and the
-diamond-norm supremum — none needed for the protocol-level fidelity envelopes presented here.
+CPTP trace-distance contractivity, and the diamond distance `½‖Φ₁−Φ₂‖_◇` are all proven
+kernel-pure. The genuinely remaining extensions are (i) the full asymptotic DEJMPS convergence
+basin (Macchiavello's non-monotone argument), and (ii) a few quantitative analytic items — the
+Fuchs–van de Graaf bounds and the attainment/triangle/SDP properties of the diamond distance —
+none needed for the protocol-level fidelity envelopes presented here.
 
 ## References
 

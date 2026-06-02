@@ -614,12 +614,21 @@ with $\sum_kK_k^{\dagger}K_k=\mathbf 1$, trace-norm contractivity $\|\Phi(A)\|_1
 (\verb|traceDist_krausMap_le|, via the positive/negative-part split, no dual norm).
 \emph{(v)} \textbf{Choi positivity}: the Choi matrix of a Kraus channel is positive semidefinite
 (\verb|choiMatrix_krausMap_posSemidef|, the channel--state-duality direction of Choi's theorem).
-Two quantitative items remain a documented frontier (\verb|Phase6AF_Roadmap.md|), no \verb|sorry|
-or axiom: the \textbf{Fuchs--van de Graaf} bounds $1-F\le D\le\sqrt{1-F^2}$ together with the range
-$F\le1$ (which need a Schatten-2 / matrix-H\"older layer Mathlib lacks), and the full
-\textbf{diamond norm} $\|\Phi\|_\diamond=\sup_\rho\|(\Phi\otimes\mathrm{id})\rho\|_1$ (the supremum's
-boundedness/attainment and the tensor channel over the product index). Kernel-only; \emph{zero}
-new project-local axioms.
+\emph{(vi)} the \textbf{diamond distance} $\mathrm{diamondDist}(\Phi_1,\Phi_2)=\sup_\rho
+D((\Phi_1\otimes\mathrm{id})\rho,(\Phi_2\otimes\mathrm{id})\rho)=\tfrac12\|\Phi_1-\Phi_2\|_\diamond$:
+after generalizing the trace-norm/CPTP layer to an arbitrary finite index (so it instantiates on
+the doubled space $\mathrm{Fin}\,n\times\mathrm{Fin}\,n$ for free) and proving the stabilized
+channel $\Phi\otimes\mathrm{id}$ is again CPTP (\verb|isKrausChannel_tensorKraus|, via the
+Kronecker mixed-product identities), the supremum is well defined from boundedness alone
+(\texttt{Real.sSup} needs no attainment, every term lying in $[0,1]$ as the stabilized outputs are
+density operators); it is proven nonnegative, $\le 1$, symmetric, and zero on the diagonal --- a
+genuine $[0,1]$-valued distinguishability measure (\verb|diamondDist_nonneg|,
+\verb|diamondDist_le_one|, \verb|diamondDist_comm|, \verb|diamondDist_self|).
+The remaining documented frontier (\verb|Phase6AF_Roadmap.md|), no \verb|sorry| or axiom: the
+\textbf{Fuchs--van de Graaf} bounds $1-F\le D\le\sqrt{1-F^2}$ with the range $F\le1$ (needing a
+Schatten-2 / matrix-H\"older layer Mathlib lacks), and, for the diamond distance, sup
+\textbf{attainment} (continuity of the singular-value sum), the triangle inequality, and the
+Choi-SDP characterization. Kernel-only; \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
@@ -650,10 +659,11 @@ project-local axioms; the Python numerics, figures, and a
 cross-validation gate (\texttt{scripts/validate.py --check
 quantum\_network}) mirror the Lean closed forms. The general density-matrix layer for arbitrary-state certification has since been built
 (Phase~6AF, \textsection~\ref{sec:wstate:envelope}): the trace-distance metric, the operator
-modulus, the Uhlmann fidelity, and CPTP trace-distance contractivity (data processing) are all
-proven kernel-pure. The genuinely remaining extensions are the full asymptotic DEJMPS
-convergence basin (Macchiavello's non-monotone argument) and two quantitative analytic items ---
-the Fuchs--van de Graaf bounds and the diamond-norm supremum --- none required for the
+modulus, the Uhlmann fidelity, CPTP trace-distance contractivity (data processing), and the
+diamond distance $\tfrac12\|\Phi_1-\Phi_2\|_\diamond$ are all proven kernel-pure. The genuinely
+remaining extensions are the full asymptotic DEJMPS convergence basin (Macchiavello's non-monotone
+argument) and a few quantitative analytic items --- the Fuchs--van de Graaf bounds and the
+attainment/triangle/SDP properties of the diamond distance --- none required for the
 protocol-level results here. A bundle-level Stage~13 adversarial review has been run on
 the quantum-network substrate; a consolidated full-bundle review across all
 four headline results remains the final pre-submission gate.
