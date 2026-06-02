@@ -203,4 +203,98 @@ theorem diamondDist_dephasing_ge {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
   calc γ = (1 : ℝ) / (2 * (2 : ℕ)) * (γ * 4) := by push_cast; ring
     _ ≤ _ := hbound
 
+/-- The (`p`-independent) structure matrix of the depolarizing Choi difference. Entry at
+`((a,y),(b,y'))` equals `−4/3·[y=a ∧ y'=b] + 2/3·[a=b ∧ y=y']`; its eigenvalues are
+`{2/3, 2/3, 2/3, −2}`. -/
+noncomputable def depolarizingChoiBase : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  fun r c => (if r.2 = r.1 ∧ c.2 = c.1 then (-(4 : ℂ) / 3) else 0)
+              + (if r.1 = c.1 ∧ r.2 = c.2 then ((2 : ℂ) / 3) else 0)
+
+/-- The Choi difference of the depolarizing channel and the identity is `p · depolarizingChoiBase`. -/
+theorem depolarizing_choi_diff {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1) :
+    choiMatrix (krausMap (depolarizingKraus p)) - choiMatrix (krausMap (idKrausPad 3 2))
+      = (p : ℂ) • depolarizingChoiBase := by
+  have hss : Real.sqrt (p / 3) * Real.sqrt (p / 3) = p / 3 :=
+    Real.mul_self_sqrt (by linarith)
+  have htt : Real.sqrt (1 - p) * Real.sqrt (1 - p) = 1 - p :=
+    Real.mul_self_sqrt (by linarith)
+  have hs2 : (↑(Real.sqrt (p / 3)) : ℂ) ^ 2 = (↑p : ℂ) / 3 := by
+    rw [sq, ← Complex.ofReal_mul, hss]; push_cast; ring
+  ext r c
+  obtain ⟨a, y⟩ := r
+  obtain ⟨b, y'⟩ := c
+  simp only [Matrix.sub_apply, choiMatrix_krausMap_apply, Fin.sum_univ_four, depolarizingKraus,
+    idKrausPad, depolarizingChoiBase, Matrix.smul_apply, Matrix.one_apply, pauliX, pauliY, pauliZ,
+    smul_eq_mul]
+  set s := Real.sqrt (p / 3)
+  set t := Real.sqrt (1 - p)
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [Complex.conj_ofReal, ← Complex.ofReal_mul, hss, htt, Complex.conj_I,
+      Fin.sum_univ_four, Matrix.zero_apply] <;>
+    ring_nf <;>
+    simp only [hs2, Complex.I_sq] <;>
+    ring_nf
+
+theorem depolarizingChoiBase_conjTranspose : depolarizingChoiBaseᴴ = depolarizingChoiBase := by
+  ext r c; obtain ⟨a, y⟩ := r; obtain ⟨b, y'⟩ := c
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [depolarizingChoiBase, Matrix.conjTranspose_apply]
+
+/-- The candidate for `|B|`: `1 − ½B`. Its square equals `B²` (minimal polynomial
+`B² = (4/3)(1 − B)`), so by PSD-square uniqueness it is `absOp B`. -/
+theorem depolarizing_candidate_mul_self :
+    ((1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) - (1 / 2 : ℂ) • depolarizingChoiBase) *
+        ((1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) - (1 / 2 : ℂ) • depolarizingChoiBase)
+      = depolarizingChoiBase * depolarizingChoiBase := by
+  ext r c; obtain ⟨a, y⟩ := r; obtain ⟨b, y'⟩ := c
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [depolarizingChoiBase, Matrix.mul_apply, Matrix.sub_apply, Matrix.smul_apply,
+      Matrix.one_apply, Fintype.sum_prod_type, Fin.sum_univ_two, smul_eq_mul] <;> norm_num
+
+/-- PSD-exhibiting form of the candidate: `1 − ½B = ½·1 + (3/8)·BᴴB`, a sum of two PSD matrices. -/
+theorem depolarizing_candidate_psd_form :
+    (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) - (1 / 2 : ℂ) • depolarizingChoiBase
+      = (1 / 2 : ℂ) • (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ)
+        + (3 / 8 : ℂ) • (depolarizingChoiBaseᴴ * depolarizingChoiBase) := by
+  rw [depolarizingChoiBase_conjTranspose]
+  ext r c; obtain ⟨a, y⟩ := r; obtain ⟨b, y'⟩ := c
+  fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+    simp [depolarizingChoiBase, Matrix.mul_apply, Matrix.sub_apply, Matrix.add_apply,
+      Matrix.smul_apply, Fintype.sum_prod_type,
+      Fin.sum_univ_two, smul_eq_mul] <;> norm_num
+
+theorem depolarizingChoiBase_trace : depolarizingChoiBase.trace = 0 := by
+  simp [Matrix.trace, Matrix.diag_apply, depolarizingChoiBase, Fintype.sum_prod_type,
+    Fin.sum_univ_two]
+  norm_num
+
+/-- **`traceNorm depolarizingChoiBase = 4`** — its singular values are `2/3, 2/3, 2/3, 2`. -/
+theorem traceNorm_depolarizingChoiBase : traceNorm depolarizingChoiBase = 4 := by
+  have hc12 : (0 : ℂ) ≤ (1 / 2 : ℂ) := by rw [Complex.le_def]; norm_num
+  have hc38 : (0 : ℂ) ≤ (3 / 8 : ℂ) := by rw [Complex.le_def]; norm_num
+  have hQpsd : ((1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) -
+      (1 / 2 : ℂ) • depolarizingChoiBase).PosSemidef := by
+    rw [depolarizing_candidate_psd_form]
+    exact (Matrix.PosSemidef.one.smul hc12).add
+      ((Matrix.posSemidef_conjTranspose_mul_self _).smul hc38)
+  have habs : absOp depolarizingChoiBase =
+      (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) - (1 / 2 : ℂ) • depolarizingChoiBase := by
+    refine posSemidef_eq_of_mul_self_eq (absOp_posSemidef _) hQpsd ?_
+    rw [absOp_mul_self, depolarizingChoiBase_conjTranspose, depolarizing_candidate_mul_self]
+  rw [traceNorm_eq_trace_absOp, habs, Matrix.trace_sub, Matrix.trace_smul,
+    depolarizingChoiBase_trace, Matrix.trace_one, smul_zero, sub_zero]
+  simp
+
+/-- **Depolarizing channel diamond-distance lower bound (exact value):**
+`diamondDist (depolarizingKraus p) (id) ≥ p` for `0 ≤ p ≤ 1`. This is the *exact* diamond distance
+to the identity (maximally-entangled input optimal), via the Choi trace-norm lower bound
+(`diamondDist_ge_choi_traceNorm`) since `‖J(Φ_p) − J(id)‖₁ = 4p`. -/
+theorem diamondDist_depolarizing_ge {p : ℝ} (h0 : 0 ≤ p) (h1 : p ≤ 1) :
+    p ≤ diamondDist (depolarizingKraus p) (idKrausPad 3 2) := by
+  have hbound := diamondDist_ge_choi_traceNorm
+    (isKrausChannel_depolarizingKraus h0 h1) (isKrausChannel_idKrausPad 3 2)
+  rw [depolarizing_choi_diff h0 h1, traceNorm_smul_nonneg h0, traceNorm_depolarizingChoiBase] at hbound
+  calc p = (1 : ℝ) / (2 * (2 : ℕ)) * (p * 4) := by push_cast; ring
+    _ ≤ _ := hbound
+
 end SKEFTHawking.QuantumNetwork
