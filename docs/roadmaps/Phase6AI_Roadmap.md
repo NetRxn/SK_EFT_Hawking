@@ -215,3 +215,34 @@ membership → `relative_hyperplane_separation`, handling `ProperCone.map`=closu
   bespoke build (attainment + separation). Infrastructure (brick 1 InnerProductSpace) + `≤` + attainment
   foundations are committed kernel-pure; the separation/complementary-slackness core remains. NOT fenced
   (reachable, no axiom); NOT the holding antipattern (continuous committed increments).
+
+## OUTCOME UPDATE (2026-06-03, autonomous /goal) — 4 Farkas bricks SHIPPED + DECISIVE negative finding
+New file `DiamondSDPDuality.lean`, kernel-pure, root-imported:
+- brick A `mem_innerDual_psdProperCone` (`e019b7a6`): PSD-cone Frobenius **self-duality** (rank-1 `vvᴴ`
+  test + `posSemidef_iff_dotProduct_mulVec` + Mathlib Hermitian-reality `im_star_dotProduct_mulVec_self`;
+  `trace_mul_nonneg` for `←`). Import `Mathlib.Analysis.Convex.Cone.InnerDual`.
+- brick B `trace_ptrace2_mul` (`cf4c1821`): `Tr₂` adjoint identity `tr(Tr₂W·Y)=tr(W·(Y⊗ₖ1))`.
+- brick C′ `re_trace_mul_le_l2opNorm_ptrace2_mul_trace` (`d0e39ad2`): primal-side weak duality
+  `Re tr(C·X) ≤ ‖Tr₂W‖·Re tr σ` for `X⪯σ⊗1`.
+- brick C″ `choiContraction_le_inMarginal_kron_one` (`80334e4f`): primal feasibility `M(Q,ρ)⪯inMarginal(ρ)⊗1`.
+
+⚠️⚠️ **DECISIVE FINDING (verified):** the line-197 plan — naive conic Farkas on the DUAL-feasibility
+system `{W⪰0,W⪰C,‖Tr₂W‖≤δ}`, "gap ⇒ sublevel empty ⇒ separate" — is a **DEAD-END for the `≥`
+direction**: it only RE-PROVES WEAK duality. The Farkas separator `(ρ̃⪰0,Y₂⪰0,ρ̃⪯Y₂⊗1,
+Re tr(Cρ̃)>δ·tr Y₂)` is bounded by brick C′ as `Re tr(Cρ̃) ≤ choiDualValue·tr Y₂`, and
+`choiDualValue ≥ diamondDist = δ`, so there is NO contradiction (it is consistent with the gap).
+STRIKE the line-197/line-64-handoff "separation of the dual-sublevel" route.
+
+🔴 **CORRECT ROUTES (genuine Watrous strong-duality content; no Mathlib gap, no axiom, harder):**
+- (a) prove the diamond-SDP **primal value = diamondDist**, primal `= sup{Re tr(C·X): X⪰0, ∃σ density,
+  X⪯σ⊗1}`. `≥`: brick C″ + `traceDist_eq_re_trace_choiContraction_posProj` (M(P*,ρ*) feasible,
+  value = traceDist). `≤` (THE HARD HALF, true analytic content): every feasible X has
+  `Re tr(C·X) ≤ diamondDist` — needs Watrous "pure-input suffices" / construct input ρ from X;
+  NOT the elementary chain (that gives choiDualValue). Then primal = choiDualValue via correct
+  primal/dual SDP separation.
+- (b) complementary-slackness: explicit optimal dual `W*` from attained `(ρ*,P*)` (`exists_diamondDist_eq`)
+  with `‖Tr₂W*‖=diamondDist`, then `choiDualValue_le_of_witness`. Watrous explicit witness = literature.
+- **Deep-research dispatched:** `Lit-Search/tasks/DR_6AI_diamond_SDP_strong_duality.md` (explicit `W*`
+  formula and/or the `primal ≤ diamondDist` construction). Resumption prompt:
+  `~/.claude/.../memory/next_session_6AI_full_delivery_goal.md` (CORRECTED to reflect this finding).
+Bricks A/B/C′/C″ feed routes (a)/(b) regardless and are committed kernel-pure infrastructure.
