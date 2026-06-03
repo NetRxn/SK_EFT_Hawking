@@ -111,11 +111,13 @@ for the mixed-unitary case.
    family are UNUSABLE on `Matrix ι ι ℂ` (verified in isolation via `lean_run_code`). The `spectrum`
    route (`spectrum.norm_le_norm_of_mem`, used by the shipped `eigenvalue_le_l2opNorm`) works but is
    the wrong direction.
-4. **`‖K‖ ≤ 1` from `KKᴴ ⪯ 1` — build via the EuclideanLin CLM bridge (avoids CStarAlgebra):**
-   `Matrix.l2_opNorm_def : ‖A‖ = ‖toEuclideanCLM A‖`; `ContinuousLinearMap.opNorm_le_iff` /
-   `opNorm_le_bound` reduce `‖K‖≤1` to `∀v, ‖K v‖ ≤ ‖v‖`; and `‖Kᴴv‖² = ⟪KKᴴv, v⟫ ≤ ⟪v,v⟫ = ‖v‖²`
-   from `KKᴴ ⪯ 1` (translate Loewner to the Euclidean inner-product form via `Matrix.PosSemidef` ⟹
-   `0 ≤ ⟪(1−KKᴴ)v, v⟫`). Then `‖K‖=‖Kᴴ‖`. **Then forward bound** `re_trace_block_le_sqrtFidelity`:
+4. **`‖K‖ ≤ 1` from `KKᴴ ⪯ 1` — EuclideanLin CLM bridge (avoids CStarAlgebra), CLEAN lemmas:**
+   `Matrix.isPositive_toEuclideanLin_iff : (toEuclideanLin A).IsPositive ↔ A.PosSemidef` gives
+   `(toEuclideanLin (1−KKᴴ)).IsPositive` ⟹ `0 ≤ re⟪v,(1−KKᴴ)v⟫` ⟹ `‖Kᴴv‖²=re⟪v,KKᴴv⟫ ≤ ‖v‖²` (adjoint
+   `toEuclideanLin Kᴴ` of `toEuclideanLin K`); then `Matrix.cstar_nnnorm_def : ‖A‖₊=‖toEuclideanCLM A‖₊`
+   + `ContinuousLinearMap.opNNNorm_le_iff : ‖f‖₊≤C ↔ ∀x,‖f x‖₊≤C‖x‖₊` gives `‖Kᴴ‖≤1`, then `‖K‖=‖Kᴴ‖`
+   (`norm_star`). `toEuclideanCLM A x = (WithLp.equiv 2 _).symm (A.mulVec ((WithLp.equiv 2 _) x))`.
+   **Then forward bound** `re_trace_block_le_sqrtFidelity`:
    `Re tr X = Re tr(K√σ√ρ) ≤ ‖K‖·‖√σ√ρ‖₁ ≤ F` (brick 3b + `re_trace_le_traceNorm` SHIPPED + cyclic).
    Perturb singular `ρ,σ` via the shipped `+1/k•1` + `continuous_traceNorm`.
 5. `sqrtFidelity_attained` : feasible `X* = √ρ·V·√σ` (polar `V` of `√σ√ρ`, project's invertible-case
