@@ -76,6 +76,55 @@ theorem sqrtFidelity_krausMap_ge {K : Fin m → Matrix ι ι ℂ} {ρ σ : Matri
   have hbound := re_trace_block_le_sqrtFidelity hΦρ hΦσ hΦblock
   rwa [show (krausMap K X).trace.re = X.trace.re from by rw [trace_krausMap hK], hXtr] at hbound
 
+omit [DecidableEq ι] [Nonempty ι] in
+/-- **Positive-definiteness preservation for unital-faithful Kraus channels.** If the channel's
+"unital part" `∑ₖ Kₖ Kₖᴴ` is positive definite, then `Φ(ρ) = ∑ₖ Kₖ ρ Kₖᴴ` is positive definite for
+positive-definite `ρ`. (A general trace-preserving channel can be rank-reducing; this is the broad
+sufficient condition — it holds for mixed-unitary channels, where `∑ᵢ pᵢ Uᵢ Uᵢᴴ = 1`.)
+
+Proof: in the quadratic form `⟨v, Φ(ρ) v⟩ = ∑ₖ ⟨Kₖᴴv, ρ (Kₖᴴv)⟩` every term is `≥ 0` (`ρ` PSD); if
+*all* `Kₖᴴ v = 0` then `⟨v, (∑ₖ Kₖ Kₖᴴ) v⟩ = ∑ₖ ‖Kₖᴴv‖² = 0`, contradicting `(∑ₖ Kₖ Kₖᴴ)` positive
+definite at `v ≠ 0`; so some `Kₖᴴ v ≠ 0`, making that term — hence the sum — strictly positive. -/
+theorem posDef_krausMap_of_sum (K : Fin m → Matrix ι ι ℂ) {ρ : Matrix ι ι ℂ}
+    (hρ : ρ.PosDef) (hKK : (∑ k, K k * (K k)ᴴ).PosDef) :
+    (krausMap K ρ).PosDef := by
+  refine Matrix.PosDef.of_dotProduct_mulVec_pos (krausMap_isHermitian K hρ.isHermitian) ?_
+  intro v hv
+  set w : Fin m → (ι → ℂ) := fun k => (K k)ᴴ *ᵥ v with hw
+  have hexpand : star v ⬝ᵥ (krausMap K ρ) *ᵥ v = ∑ k, star (w k) ⬝ᵥ ρ *ᵥ (w k) := by
+    unfold krausMap
+    rw [Matrix.sum_mulVec, dotProduct_sum]
+    refine Finset.sum_congr rfl fun k _ => ?_
+    rw [show K k * ρ * (K k)ᴴ = K k * (ρ * (K k)ᴴ) by rw [Matrix.mul_assoc],
+      ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec,
+      Matrix.star_mulVec, Matrix.conjTranspose_conjTranspose]
+  rw [hexpand]
+  have hnn : ∀ k, (0 : ℂ) ≤ star (w k) ⬝ᵥ ρ *ᵥ (w k) := fun k =>
+    hρ.posSemidef.dotProduct_mulVec_nonneg _
+  have hex : ∃ k, w k ≠ 0 := by
+    by_contra hcon
+    simp only [not_exists, ne_eq, not_not] at hcon
+    have hzero : star v ⬝ᵥ (∑ k, K k * (K k)ᴴ) *ᵥ v = 0 := by
+      rw [Matrix.sum_mulVec, dotProduct_sum]
+      refine Finset.sum_eq_zero fun k _ => ?_
+      rw [← Matrix.mulVec_mulVec, show (K k)ᴴ *ᵥ v = w k from rfl, hcon k]
+      simp
+    exact absurd hzero (ne_of_gt (hKK.dotProduct_mulVec_pos hv))
+  obtain ⟨k₀, hk₀⟩ := hex
+  exact Finset.sum_pos' (fun k _ => hnn k) ⟨k₀, Finset.mem_univ k₀, hρ.dotProduct_mulVec_pos hk₀⟩
+
+/-- **General-CPTP fidelity DP, unital-faithful form (no output hypothesis).** For a trace-preserving
+Kraus channel whose unital part `∑ₖ Kₖ Kₖᴴ` is positive definite, `F(Φρ, Φσ) ≥ F(ρ, σ)` for
+positive-definite `ρ, σ` — the output positive-definiteness is discharged automatically. -/
+theorem sqrtFidelity_krausMap_ge' {K : Fin m → Matrix ι ι ℂ} {ρ σ : Matrix ι ι ℂ}
+    (hρ : ρ.PosDef) (hσ : σ.PosDef) (hK : IsKrausChannel K)
+    (hKK : (∑ k, K k * (K k)ᴴ).PosDef) :
+    sqrtFidelity hρ.posSemidef hσ.posSemidef
+      ≤ sqrtFidelity (posDef_krausMap_of_sum K hρ hKK).posSemidef
+          (posDef_krausMap_of_sum K hσ hKK).posSemidef :=
+  sqrtFidelity_krausMap_ge hρ hσ hK (posDef_krausMap_of_sum K hρ hKK)
+    (posDef_krausMap_of_sum K hσ hKK)
+
 /-! ## Joint concavity of the (root) fidelity
 
 `(ρ,σ) ↦ F(ρ,σ)` is jointly concave — a direct consequence of the Alberti variational form
@@ -156,6 +205,12 @@ theorem isFidelityStep_krausMap {m : ℕ} {K : Fin m → Matrix ι ι ℂ} (hK :
     IsFidelityStep (krausMap K) where
   posDef := hpres
   monotone hρ hσ := sqrtFidelity_krausMap_ge hρ hσ hK (hpres hρ) (hpres hσ)
+
+/-- A trace-preserving Kraus channel whose unital part `∑ₖ Kₖ Kₖᴴ` is positive definite is a fidelity
+step (no separate preservation hypothesis — discharged by `posDef_krausMap_of_sum`). -/
+theorem isFidelityStep_krausMap' {m : ℕ} {K : Fin m → Matrix ι ι ℂ} (hK : IsKrausChannel K)
+    (hKK : (∑ k, K k * (K k)ᴴ).PosDef) : IsFidelityStep (krausMap K) :=
+  isFidelityStep_krausMap hK fun hρ => posDef_krausMap_of_sum K hρ hKK
 
 omit [Nonempty ι] in
 /-- A chain of fidelity steps preserves positive-definiteness. -/
