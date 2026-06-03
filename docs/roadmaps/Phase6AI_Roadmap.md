@@ -447,3 +447,20 @@ apply `ProperCone.hyperplane_separation` / `relative_hyperplane_separation` to e
 certificate `(X,σ)` with `Re tr(C·X) ≥ δ`. Mathlib has Farkas but NOT packaged cone-program duality,
 so the SDP-alternatives reduction is built by hand (the substantial brick). Then assemble headline:
 `choiDualValue ≤ primalSDPValue ≤ diamondDist ≤ choiDualValue`.
+
+### PIECE 2 — executable separation design (scaffolding already in `DiamondSDPCone.lean`: `psdProperCone`, `dualFeasSublevel`+closedness, `convex_psdSet`, `traceDist_eq_re_trace_choiContraction_posProj`; tool `geometric_hahn_banach_compact_closed`)
+Target `choiDualValue ≤ diamondDist`. Suffices `∀ δ, diamondDist < δ → choiDualValue ≤ δ`; show
+∃ feasible `W` (`W⪰0,W⪰C`) with `‖Tr₂W‖≤δ` (⟹ `csInf_le`). By contradiction (dual infeasible at δ):
+1. `A := {Tr₂W : W⪰0 ∧ W⪰C} ⊆ Herm(X)` convex+closed; `Bδ := {M:‖M‖≤δ}` compact convex; `A∩Bδ=∅`.
+2. Separate (`geometric_hahn_banach_compact_closed`, Frobenius functional `M↦Re tr(Y·M)` on HermCarrier):
+   ∃ Hermitian `Y`, `u<v`, `Re tr(Y·M)<u` ∀M∈Bδ, `Re tr(Y·Tr₂W)>v` ∀ feasible W.
+3. `sup_{‖M‖≤δ} Re tr(Y·M) = δ·‖Y‖₁` (BUILD dual-norm identity) ⟹ `δ‖Y‖₁ ≤ u`.
+4. `Re tr(Y·Tr₂W)=Re tr((Y⊗1)·W)` (`trace_ptrace2_mul`); over feasible W reassemble `Y`(rescale/sign)
+   into a primal pt with `Re tr(C·X) > δ` via `traceDist_eq_re_trace_choiContraction_posProj` +
+   `choiContraction_posSemidef` + `choiContraction_le_inMarginal_kron_one`; contradict piece 3
+   (`primalSDPValue ≤ diamondDist < δ`).
+Sub-bricks (kernel-pure, standalone): (i) A convex+closed; (ii) op-norm ball compact convex;
+(iii) `sup Re tr(Y·M) over ‖M‖≤δ = δ‖Y‖₁`; (iv) separation→`Y`; (v) `Y`→primal pt + value bound;
+(vi) `choiDualValue ≤ diamondDist`; (vii) `le_antisymm` ⟹ unconditional `diamondDist_eq_choiSDP`.
+OPTIONAL by-product (NOT on critical path): `diamondDist ≤ primalSDPValue` via `exists_diamondDist_eq`
++ choiContraction feasibility ⟹ `primalSDPValue = diamondDist`.
