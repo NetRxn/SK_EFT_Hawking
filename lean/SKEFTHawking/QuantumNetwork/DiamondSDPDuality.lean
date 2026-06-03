@@ -638,4 +638,27 @@ theorem opNorm_ptrace2_diamondWitness_le [NeZero n] {σ : Matrix (Fin n) (Fin n)
     rwa [halg] at hcong
   exact l2opNorm_le_of_loewner hd hTrPsd hLoew1
 
+open scoped Matrix.Norms.L2Operator in
+/-- **Headline modulo the variational inequality.** `diamondDist = choiDualValue` follows from a
+*single* operator inequality at some PosDef input `σ`: `Tr₂(posPart M) ⪯ diamondDist · σ`
+(`M = (√σ⊗1)C(√σ⊗1)`). Assembles the witness feasibility (`diamondWitness_posSemidef`,
+`diamondWitness_sub_posSemidef`) + the congruence reduction (`opNorm_ptrace2_diamondWitness_le`) +
+the conditional headline. This isolates ALL remaining 6AI content into the Watrous first-order
+optimality fact that the optimal input `σ*` makes this Loewner inequality hold (the trace version
+`tr(M₊) ≤ diamondDist` is shipped unconditionally; upgrading to the operator inequality at `σ*` is
+the sole remaining kernel). -/
+theorem diamondDist_eq_choiSDP_of_loewner [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    (hwit : ∃ (σ : Matrix (Fin n) (Fin n) ℂ) (hσ : σ.PosDef),
+      ((diamondDist K₁ K₂ : ℂ) • σ
+        - ptrace2 (posPart (contractedChoi_isHermitian hσ.posSemidef
+            (choiDiff_isHermitian K₁ K₂)))).PosSemidef) :
+    diamondDist K₁ K₂ = choiDualValue K₁ K₂ := by
+  obtain ⟨σ, hσ, hLoew⟩ := hwit
+  exact diamondDist_eq_choiSDP_of_witness hK₁ hK₂
+    ⟨diamondWitness hσ.posSemidef (choiDiff_isHermitian K₁ K₂),
+     diamondWitness_posSemidef hσ.posSemidef (choiDiff_isHermitian K₁ K₂),
+     diamondWitness_sub_posSemidef hσ (choiDiff_isHermitian K₁ K₂),
+     opNorm_ptrace2_diamondWitness_le hσ (choiDiff_isHermitian K₁ K₂) diamondDist_nonneg hLoew⟩
+
 end SKEFTHawking.QuantumNetwork
