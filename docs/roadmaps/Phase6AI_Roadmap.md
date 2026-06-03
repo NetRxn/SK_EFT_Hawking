@@ -517,3 +517,29 @@ lift `Tr₂` to a continuous ℝ-linear carrier map; `S` convex+closed `Set (Her
 ⇒ `φ,u,v`; Riesz `φ↦Y`; ball side `M=δ•1⇒δ·tr Y≤u`; S side `Y⪰0` + `W₀=diamondWitness σ` value
 `≤ tr Y·diamondDist` (SHIPPED `re_trace_kron_one_mul_diamondWitness_le`) ⇒ contradiction ⇒
 `choiDualValue ≤ diamondDist`; headline by `le_antisymm` with W1.
+
+## OUTCOME UPDATE 14 (2026-06-03) — piece-2 separation bricks (i)(ii)(iii) SHIPPED; final assembly skeleton
+SHIPPED kernel-pure (commits after `05e91026`): `achievableTr2` (S) + `convex_achievableTr2` (i);
+`re_trace_sq_le_sq_re_trace` + `HermCarrier.norm_le_re_trace` + `isClosed_achievableTr2` (ii, the
+closedness crux via bounded-witness `tendsto_subseq` — NO recession theory, just `trace_ptrace2` bound);
+`HermCarrier.toMatₗ_injective` + `opBall`/`opBall_eq_preimage`/`convex_opBall`/`isCompact_opBall` (iii,
+op-ball compact via `LinearMap.isClosedEmbedding_of_injective.isProperMap.isCompact_preimage`).
+**FINAL ASSEMBLY (brick iv-vii), executable skeleton — the last brick, completes 6AI:**
+`choiDualValue_le_diamondDist`: by_contra `diamondDist < choiDualValue`; `δ := (dd+cdv)/2`,
+`diamondDist<δ<choiDualValue`. `dual_infeasible_of_lt_choiDualValue hδ2` ⟹ no feasible W with
+`‖ptrace2 W‖≤δ` ⟹ `Disjoint (opBall δ) (achievableTr2 C)` (a Y in both gives matrix witness W.toSA.1
+contradicting infeasibility). `geometric_hahn_banach_compact_closed (convex_opBall)(isCompact_opBall)
+(convex_achievableTr2)(isClosed_achievableTr2) hdisj` ⟹ `φ:StrongDual, u<v, φ<u on opBall, φ>v on S`.
+Riesz `Y₀ := (InnerProductSpace.toDual ℝ _).symm φ`, `φ x = ⟪Y₀,x⟫ = Re tr(Y₀.toSA·x.toSA)`.
+- BALL: `Z_δ` = carrier of `(δ:ℂ)•1` (selfadjoint), `‖δ•1‖_op=δ` so `Z_δ∈opBall`; `φ(Z_δ)=δ·Re tr Y₀ < u`.
+- `Y₀⪰0`: else neg eigvec u of Y₀.toSA; `W_t = t•(|u⟩⟨u|⊗|0⟩⟨0|)+posPart C` feasible (⪰0, ⪰C),
+  `Tr₂W_t∈S`, `φ(Tr₂W_t)=t⟨u,Y₀u⟩+const→−∞` contradicts `>v`.
+- S side: `σ=Y₀.toSA/tr Y₀` (PosDef-perturb σ_ε if singular); `W₀=diamondWitness σ_ε` feasible,
+  `Tr₂W₀∈S` (carrier-lift); `φ(Tr₂W₀)=Re tr((Y₀⊗1)W₀)=tr Y₀·Re tr((σ_ε⊗1)W₀)≤tr Y₀·diamondDist/(1−ε)`
+  (SHIPPED `re_trace_kron_one_mul_diamondWitness_le`+`trace_ptrace2_mul`+piece-3 (1−ε) bound). `φ>v`.
+- COMBINE: `δ·tr Y₀ ≤ u < v < tr Y₀·diamondDist/(1−ε)`; `tr Y₀>0` (else Y₀=0 ⟹ 0<u∧v<0∧u<v⊥);
+  `ε→0` ⟹ `δ<diamondDist` ⊥. ⟹ `choiDualValue ≤ diamondDist`.
+Then `diamondDist_eq_choiSDP := le_antisymm diamondDist_le_choiDualValue choiDualValue_le_diamondDist`.
+Carrier-lift helper needed: `M.PosSemidef → ∃ Y:HermCarrier, Y.toSA.1=M` (via `equivSA.symm ⟨M,herm⟩`)
++ `Tr₂(carrier of W)∈achievableTr2`. ALL value/feasibility/compactness ingredients SHIPPED; only this
+wiring (~100 LoC) remains, no missing Mathlib, no axiom, no fence.
