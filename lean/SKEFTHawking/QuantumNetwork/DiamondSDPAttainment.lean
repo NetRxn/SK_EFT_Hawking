@@ -66,6 +66,20 @@ theorem opNorm_le_of_mul_conjTranspose_le_sq {ι : Type*} [Fintype ι] [Decidabl
     _ = c * ‖x‖ := by
         rw [Real.sqrt_mul (by positivity), Real.sqrt_sq hc, Real.sqrt_sq (norm_nonneg _)]
 
+/-- **The positive-semidefinite set is closed** (Frobenius topology): an intersection of the
+closed Hermitian condition and the closed quadratic-form-nonneg conditions. Mirrors
+`isClosed_isDensityOperator` without the trace-`1` constraint. -/
+theorem isClosed_posSemidef {ι : Type*} [Fintype ι] [DecidableEq ι] :
+    IsClosed {W : Matrix ι ι ℂ | W.PosSemidef} := by
+  have key : {W : Matrix ι ι ℂ | W.PosSemidef}
+      = {W | Wᴴ = W} ∩ ⋂ x : ι → ℂ, {W | 0 ≤ star x ⬝ᵥ W.mulVec x} := by
+    ext W
+    simp only [Matrix.posSemidef_iff_dotProduct_mulVec, Matrix.IsHermitian,
+      Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+  rw [key]
+  refine IsClosed.inter (isClosed_eq (by fun_prop) continuous_id) (isClosed_iInter fun x => ?_)
+  exact isClosed_complex_nonneg.preimage (by fun_prop)
+
 /-- **Operator norm of a PSD matrix is bounded by its trace norm:** `‖W‖ ≤ traceNorm W` for
 `W ⪰ 0` (the largest eigenvalue is at most the eigenvalue sum). Built from the Loewner bound
 `W*W ⪯ (traceNorm W)²•1` (eigenvalues `λᵢ² ≤ (∑ⱼ λⱼ)²` since `0 ≤ λᵢ ≤ ∑ⱼ λⱼ`, via CFC) and
@@ -124,5 +138,57 @@ theorem l2opNorm_bound_of_dual_feasible [NeZero n]
     _ ≤ (Fintype.card (Fin n) : ℝ) * ‖ptrace2 W‖ := dualObjective_trace_bound hW
     _ ≤ (Fintype.card (Fin n) : ℝ) * B := by
         apply mul_le_mul_of_nonneg_left hB (by positivity)
+
+/-- **The second-factor partial trace is continuous** (each output entry is a finite sum of input
+coordinate projections). -/
+theorem continuous_ptrace2 :
+    Continuous (ptrace2 : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ) := by
+  apply continuous_matrix
+  intro a b
+  simp only [ptrace2]
+  exact continuous_finset_sum _ fun x _ => continuous_apply_apply (a, x) (b, x)
+
+/-- **The Choi-SDP dual infimum is attained.** There is a dual-feasible witness `W*` (`W* ⪰ 0`,
+`W* ⪰ C`) whose objective `‖Tr₂ W*‖` equals `choiDualValue`. The dual sublevel
+`{W ⪰ 0, W ⪰ C, ‖Tr₂ W‖ ≤ ‖Tr₂ C₊‖}` is closed (PSD-set closedness + continuity of `‖Tr₂ ·‖`),
+bounded (`l2opNorm_bound_of_dual_feasible`), hence compact; the continuous objective attains its
+minimum there, and that minimum is the infimum over all feasible witnesses. -/
+theorem exists_choiDualValue_eq {m : ℕ} [NeZero n] (K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ) :
+    ∃ W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ, W.PosSemidef ∧
+      (W - (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂))).PosSemidef ∧
+      ‖ptrace2 W‖ = choiDualValue K₁ K₂ := by
+  set C := choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂) with hC
+  set Cp := posPart (choiDiff_isHermitian K₁ K₂) with hCp
+  have hCp_psd : Cp.PosSemidef := posPart_posSemidef _
+  have hCp_feas : (Cp - C).PosSemidef := posPart_choiDiff_sub_posSemidef K₁ K₂
+  set B₀ := ‖ptrace2 Cp‖ with hB₀
+  -- the dual sublevel
+  set S : Set (Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :=
+    {W | W.PosSemidef ∧ (W - C).PosSemidef ∧ ‖ptrace2 W‖ ≤ B₀} with hS
+  have hCpS : Cp ∈ S := ⟨hCp_psd, hCp_feas, le_refl _⟩
+  have hSne : S.Nonempty := ⟨Cp, hCpS⟩
+  have hS_closed : IsClosed S := by
+    have heq : S = ({W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ | W.PosSemidef}
+        ∩ {W | (W - C).PosSemidef}) ∩ {W | ‖ptrace2 W‖ ≤ B₀} := by
+      ext W; simp only [hS, Set.mem_inter_iff, Set.mem_setOf_eq, and_assoc]
+    rw [heq]
+    exact ((isClosed_posSemidef).inter (isClosed_posSemidef.preimage (by fun_prop))).inter
+      (isClosed_le continuous_ptrace2.norm continuous_const)
+  have hS_bdd : Bornology.IsBounded S := by
+    refine (Metric.isBounded_iff_subset_closedBall 0).mpr
+      ⟨(Fintype.card (Fin n) : ℝ) * B₀, fun W hW => ?_⟩
+    rw [Metric.mem_closedBall, dist_zero_right]
+    exact l2opNorm_bound_of_dual_feasible hW.1 hW.2.2
+  have hS_compact : IsCompact S := Metric.isCompact_of_isClosed_isBounded hS_closed hS_bdd
+  obtain ⟨W, hWS, hWmin⟩ :=
+    hS_compact.exists_isMinOn hSne (Continuous.continuousOn continuous_ptrace2.norm)
+  refine ⟨W, hWS.1, hWS.2.1, le_antisymm ?_ ?_⟩
+  · refine le_csInf (choiDualValue_set_nonempty K₁ K₂) ?_
+    rintro r ⟨V, hV, hVC, rfl⟩
+    by_cases hVB : ‖ptrace2 V‖ ≤ B₀
+    · exact isMinOn_iff.mp hWmin V ⟨hV, hVC, hVB⟩
+    · exact hWS.2.2.trans (not_le.mp hVB).le
+  · exact csInf_le ⟨0, by rintro r ⟨V, _, _, rfl⟩; exact norm_nonneg _⟩
+      ⟨W, hWS.1, hWS.2.1, rfl⟩
 
 end SKEFTHawking.QuantumNetwork
