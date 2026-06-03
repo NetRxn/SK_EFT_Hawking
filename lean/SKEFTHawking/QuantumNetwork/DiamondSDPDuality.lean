@@ -228,4 +228,31 @@ theorem diamondDist_eq_choiSDP_of_witness [NeZero n] {K₁ K₂ : Fin m → Matr
     diamondDist K₁ K₂ = choiDualValue K₁ K₂ :=
   le_antisymm (diamondDist_le_choiDualValue hK₁ hK₂) (choiDualValue_le_of_witness hwit)
 
+/-- `Tr₂` is additive on differences (it is a finite sum of entries). -/
+theorem ptrace2_sub (A B : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    ptrace2 (A - B) = ptrace2 A - ptrace2 B := by
+  ext a b; simp only [ptrace2, Matrix.sub_apply, Matrix.sub_apply, Finset.sum_sub_distrib]
+
+/-- **Input marginal of a Kraus channel's Choi matrix is the identity** (trace preservation).
+`(Tr₂ J(Φ))(a,b) = Σ_x J(Φ)((a,x),(b,x)) = tr(Φ(E_{ab})) = tr(E_{ab}) = δ_{ab}`, using
+`trace_krausMap` (CPTP ⟹ trace-preserving) and `trace_single`. The Choi convention here is
+input-factor-first, so `Tr₂` (tracing the second/output factor) is the input marginal. -/
+theorem ptrace2_choiMatrix_krausMap {K : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK : IsKrausChannel K) :
+    ptrace2 (choiMatrix (krausMap K)) = 1 := by
+  ext a b
+  have htr : ptrace2 (choiMatrix (krausMap K)) a b = (krausMap K (Matrix.single a b 1)).trace := by
+    simp only [ptrace2, choiMatrix, Matrix.trace, Matrix.diag_apply]
+  rw [htr, trace_krausMap hK, Matrix.one_apply]
+  rcases eq_or_ne a b with h | h
+  · subst h; simp
+  · simp [h]
+
+/-- **The Choi difference is trace-annihilated:** `Tr₂ C = 0` for `C = J(Φ₁) − J(Φ₂)` with both
+trace-preserving — the input marginals are both `1_X` and cancel. (DR F1; used in the optimal-witness
+attainment computation, Stage 5.) -/
+theorem ptrace2_choiDiff_eq_zero {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    ptrace2 (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) = 0 := by
+  rw [ptrace2_sub, ptrace2_choiMatrix_krausMap hK₁, ptrace2_choiMatrix_krausMap hK₂, sub_self]
+
 end SKEFTHawking.QuantumNetwork
