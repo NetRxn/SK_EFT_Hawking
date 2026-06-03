@@ -120,7 +120,18 @@ for the mixed-unitary case.
    **Then forward bound** `re_trace_block_le_sqrtFidelity`:
    `Re tr X = Re tr(K√σ√ρ) ≤ ‖K‖·‖√σ√ρ‖₁ ≤ F` (brick 3b + `re_trace_le_traceNorm` SHIPPED + cyclic).
    Perturb singular `ρ,σ` via the shipped `+1/k•1` + `continuous_traceNorm`.
-5. `sqrtFidelity_attained` : feasible `X* = √ρ·V·√σ` (polar `V` of `√σ√ρ`, project's invertible-case
-   polar) with `Re tr X* = ‖√σ√ρ‖₁ = sqrtFidelity`.
-6. Headline `sqrtFidelity_mixedUnitary_ge` = transport (brick 2) ∘ attainment (5) ∘ forward (4);
-   joint-concavity corollary; general CPTP via a project-side Stinespring dilation (larger). NO axiom.
+4a. ✅ **DONE** `opNorm_le_one_of_mul_conjTranspose_le_one` (`OpNormHolder.lean`, commit `125958f1`):
+   `‖K‖≤1` from `KKᴴ⪯1` via the EuclideanLin CLM route (`cstar_nnnorm_def`+`opNNNorm_le_iff`+
+   `isPositive_toEuclideanLin_iff`+adjoint), AVOIDING the matrix-CStarAlgebra whnf-wall. Infra built.
+4. ✅ **DONE** `re_trace_block_le_sqrtFidelity` (`FidelityForwardBound.lean`, commit `f2bd646a`):
+   PosDef `ρ,σ`, block-PSD ⟹ `Re tr X ≤ F`. `isUnit_psdSqrt` + Schur ⟹ `X=√ρK√σ`,
+   `1−KKᴴ=√ρ⁻¹(ρ−Xσ⁻¹Xᴴ)√ρ⁻¹⪰0`, then brick4a + brick3b + cyclic trace.
+5. **NEXT — `exists_block_re_trace_eq_sqrtFidelity` (attainment):** `X* = √ρ·W·√σ`, `W=|√σ√ρ|⁻¹(√σ√ρ)ᴴ`
+   the polar unitary (project's `traceNorm_mul_le_of_isUnit` internal construction — EXPOSE it as a
+   standalone `traceNorm M = Re tr(W·M)`, `W` unitary, invertible M). Block-PSD via Schur (`ρ−X*σ⁻¹X*ᴴ
+   = ρ−√ρ W Wᴴ √ρ = 0 ⪰0`); `Re tr X* = Re tr(W·√σ√ρ) = ‖√σ√ρ‖₁ = F`.
+6. **Headline `sqrtFidelity_mixedUnitary_ge`** = forward (brick 4 at `(Φρ,Φσ)`) on the transported
+   optimizer (brick 2) ∘ attainment (brick 5): `F(Φρ,Φσ) ≥ Re tr(∑pᵢUᵢX*Uᵢᴴ) = Re tr X* = F(ρ,σ)`.
+   Sub-needs: (a) `Φ` preserves PosDef (convex combo of PosDef conjugations); (b) transport preserves
+   trace (`tr(∑pᵢUᵢX*Uᵢᴴ)=tr X*`, `∑pᵢ=1`, Uᵢ unitary). Then joint-concavity corollary; general CPTP
+   via a project-side Stinespring dilation (larger). NO axiom.
