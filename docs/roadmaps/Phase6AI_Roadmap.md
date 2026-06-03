@@ -405,3 +405,27 @@ identity Route 1 was trying to avoid." The first DR's explicit `W*` formula was 
   "Mathlib NO minimax/Fenchel/Slater/zero-gap-SDP/Bauer"). The 6AI explicit-witness arc successfully
   reduced the ENTIRE strong-duality theorem to this ONE inequality and proved everything else kernel-pure
   — a real achievement — but the final inequality is the irreducible conic-duality core, not a transcription.
+
+## OUTCOME UPDATE 9 (2026-06-03) — ROUTE RECOVERED: conic Farkas IS in Mathlib v4.29.1; pivot off the (★) path
+**Context-loss correction (user-prompted "from one lemma to multi-week usually means lost context").** The
+`diamondWitness`/(★) reduction was a DEAD-END SIDE-PATH, not the intended route. The (★) operator inequality
+at a single PosDef σ is genuinely unsatisfiable for singular-optimum channels (id-vs-reset: optimal σ* =
+|1⟩⟨1| is rank-1; (★) violated at every PosDef σ), so `diamondDist_eq_choiSDP_of_loewner` can't be
+discharged — but that capstone was never needed.
+**THE INTENDED ROUTE (written in the codebase's own docstrings, `primalSDPValue` / `dual_infeasible_of_lt_choiDualValue`):**
+`diamondDist = choiDualValue` via the SDP-value chain
+`choiDualValue ≤ primalSDPValue ≤ diamondDist ≤ choiDualValue`:
+- **Piece 2** `choiDualValue ≤ primalSDPValue` — conic Farkas / theorem-of-alternatives. Dual sublevel
+  empty at δ<choiDualValue (shipped `dual_infeasible_of_lt_choiDualValue`) ⟹ primal-feasible X with
+  Re tr(C·X) ≥ δ ⟹ primalSDPValue ≥ δ; sup over δ ⟹ piece 2.
+- **Piece 3** `primalSDPValue ≤ diamondDist` — Watrous primal→operational reduction (each SDP-feasible
+  X gives an operational distinguishability ≤ diamondDist).
+- Shipped weak directions: `diamondDist_le_choiDualValue` (W1), `primalSDPValue_le_choiDualValue` (W2).
+**🟢 BLOCKER CLEARED:** Mathlib v4.29.1 HAS `ProperCone.hyperplane_separation`,
+`hyperplane_separation_point`, and `relative_hyperplane_separation` (Farkas for proper cones, via
+Hahn–Banach) in `Mathlib/Analysis/Convex/Cone/{Dual,InnerDual}.lean`. The PSD proper cone
+(`psdProperCone`), its self-duality (`mem_innerDual_psdProperCone`), and Slater
+(`exists_dual_strictly_feasible`) are ALREADY shipped. The prior "conic duality absent" memory is STALE
+for this pin. **Numerically VERIFIED** (cvxpy, three asymmetric pairs incl. singular-optimum id-vs-reset):
+`primalSDPValue = choiDualValue = diamondDist` exactly (1.0 / 0.5 / 0.6). Route is tractable
+Mathlib-style work, in scope for the goal loop. NO axiom, NO fence. Building pieces 2 + 3.
