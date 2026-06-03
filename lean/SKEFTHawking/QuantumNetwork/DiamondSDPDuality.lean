@@ -1178,4 +1178,14 @@ theorem ptrace2_kronecker_eq (M N : Matrix (Fin n) (Fin n) ℂ) :
   rw [← Finset.mul_sum, mul_comm]
   rfl
 
+open scoped Kronecker in
+/-- The Kronecker product of PSD matrices is PSD (`M⊗N = (√M⊗√N)ᴴ(√M⊗√N)`). -/
+theorem posSemidef_kronecker {M N : Matrix (Fin n) (Fin n) ℂ} (hM : M.PosSemidef)
+    (hN : N.PosSemidef) : (M ⊗ₖ N).PosSemidef := by
+  have h := Matrix.posSemidef_conjTranspose_mul_self (psdSqrt hM ⊗ₖ psdSqrt hN)
+  have he : (psdSqrt hM ⊗ₖ psdSqrt hN)ᴴ * (psdSqrt hM ⊗ₖ psdSqrt hN) = M ⊗ₖ N := by
+    rw [Matrix.conjTranspose_kronecker, (psdSqrt_isHermitian hM).eq, (psdSqrt_isHermitian hN).eq,
+      ← Matrix.mul_kronecker_mul, psdSqrt_mul_self hM, psdSqrt_mul_self hN]
+  rwa [he] at h
+
 end SKEFTHawking.QuantumNetwork
