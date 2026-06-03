@@ -120,4 +120,33 @@ theorem traceDist_eq_re_trace_choiContraction_posProj {m n : ℕ} [NeZero n]
     show (1 : ℝ) / 2 * (2 * eigPosSum hTh) = eigPosSum hTh by ring]
   exact hchain
 
+namespace HermCarrier
+
+variable {n : ℕ}
+
+/-- The **dual-feasible objective-sublevel** on the carrier: feasible witnesses (`W ⪰ 0`, `W ⪰ C`)
+whose objective `‖Tr₂ W‖` is at most `δ`. The set route-(a) geometric Hahn–Banach separates the
+primal optimum from. -/
+def dualFeasSublevel (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) (δ : ℝ) :
+    Set (HermCarrier (Fin n × Fin n)) :=
+  {W | W.toSA.1.PosSemidef ∧ (W.toSA.1 - C).PosSemidef ∧ ‖ptrace2 W.toSA.1‖ ≤ δ}
+
+/-- The dual-feasible sublevel is closed (PSD conditions + the continuous objective `‖Tr₂ ·‖`,
+all pulled back through the continuous carrier injection `toMat`). -/
+theorem isClosed_dualFeasSublevel (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) (δ : ℝ) :
+    IsClosed (dualFeasSublevel C δ) := by
+  have h1 : IsClosed {W : HermCarrier (Fin n × Fin n) | W.toSA.1.PosSemidef} :=
+    isClosed_posSemidef.preimage continuous_toMat
+  have h2 : IsClosed {W : HermCarrier (Fin n × Fin n) | (W.toSA.1 - C).PosSemidef} :=
+    isClosed_posSemidef.preimage (continuous_toMat.sub continuous_const)
+  have h3 : IsClosed {W : HermCarrier (Fin n × Fin n) | ‖ptrace2 W.toSA.1‖ ≤ δ} :=
+    isClosed_le ((continuous_ptrace2.comp continuous_toMat).norm) continuous_const
+  have heq : dualFeasSublevel C δ
+      = ({W : HermCarrier (Fin n × Fin n) | W.toSA.1.PosSemidef}
+          ∩ {W | (W.toSA.1 - C).PosSemidef}) ∩ {W | ‖ptrace2 W.toSA.1‖ ≤ δ} := by
+    ext W; simp only [dualFeasSublevel, Set.mem_inter_iff, Set.mem_setOf_eq, and_assoc]
+  rw [heq]; exact (h1.inter h2).inter h3
+
+end HermCarrier
+
 end SKEFTHawking.QuantumNetwork
