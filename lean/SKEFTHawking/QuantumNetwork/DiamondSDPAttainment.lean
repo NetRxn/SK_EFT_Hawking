@@ -211,4 +211,17 @@ theorem inMarginal_le_one [NeZero n] {ρ : Matrix (Fin n × Fin n) (Fin n × Fin
   exact cfc_posSemidef hHerm fun i => by
     have := (eigenvalue_le_l2opNorm hHerm i).trans hnorm; linarith
 
+/-- **Strong-duality reduction.** The zero-gap `≥` direction `choiDualValue ≤ diamondDist` reduces
+to exhibiting a *single* dual-feasible witness `W` whose objective is below the diamond distance
+(`csInf_le`, the value set bounded below by `0`). This isolates the entire remaining content of
+`diamondDist_eq_choiSDP` into the Watrous optimal-witness existence. -/
+theorem choiDualValue_le_of_witness {m : ℕ} [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hW : ∃ W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ, W.PosSemidef ∧
+      (W - (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂))).PosSemidef ∧
+      ‖ptrace2 W‖ ≤ diamondDist K₁ K₂) :
+    choiDualValue K₁ K₂ ≤ diamondDist K₁ K₂ := by
+  obtain ⟨W, hWpsd, hWC, hWle⟩ := hW
+  exact le_trans (csInf_le ⟨0, by rintro r ⟨V, _, _, rfl⟩; exact norm_nonneg _⟩
+    ⟨W, hWpsd, hWC, rfl⟩) hWle
+
 end SKEFTHawking.QuantumNetwork
