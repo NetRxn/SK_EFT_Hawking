@@ -85,4 +85,22 @@ theorem mem_innerDual_psdProperCone {Y : HermCarrier ι} :
 
 end HermCarrier
 
+open scoped Kronecker
+
+variable {n : ℕ}
+
+/-- **`Tr₂` adjoint identity (Farkas brick B):** `tr((Tr₂ W)·Y) = tr(W·(Y ⊗ 1))`. The Hilbert–Schmidt
+adjoint of the second-factor partial trace is tensoring with the identity on the traced-out factor.
+Used to decode the conic Farkas separator: the dual-feasibility constraint `Y₁ + Tr₂†(Y₂) ⪰ 0`
+becomes `Y₂ ⊗ 1 − ρ̃ ⪰ 0`. -/
+theorem trace_ptrace2_mul (W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ)
+    (Y : Matrix (Fin n) (Fin n) ℂ) :
+    (ptrace2 W * Y).trace = (W * (Y ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))).trace := by
+  simp only [Matrix.trace, Matrix.diag_apply, Matrix.mul_apply, ptrace2, Fintype.sum_prod_type,
+    Matrix.kroneckerMap_apply, Matrix.one_apply, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq',
+    Finset.mem_univ, if_true]
+  refine Finset.sum_congr rfl fun a _ => ?_
+  simp_rw [Finset.sum_mul]
+  rw [Finset.sum_comm]
+
 end SKEFTHawking.QuantumNetwork
