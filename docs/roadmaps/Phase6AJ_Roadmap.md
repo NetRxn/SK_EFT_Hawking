@@ -101,10 +101,23 @@ for the mixed-unitary case.
    direct `psdSqrt`-monotone lemma) on the conjugation `Mᴴ(KᴴK)M ⪯ ‖K‖²MᴴM` (from `KᴴK ⪯ ‖K‖²·1`
    + `conjTranspose_mul_mul_same` Loewner-monotone), then `tr|KM| ≤ ‖K‖ tr|M|` (trace-monotone).
    The contraction `‖K‖ ≤ 1` from `KKᴴ ⪯ 1` is `eigenvalue_le_l2opNorm` / L2Operator.
-4. **Forward bound** `re_trace_block_le_sqrtFidelity` : `Re tr X ≤ sqrtFidelity` via brick 1
-   (`X=√ρK√σ`, `‖K‖≤1`) + `re_trace_le_traceNorm` (SHIPPED, FidelityBounds:305) + cyclic trace +
-   brick 3: `Re tr X = Re tr(K√σ√ρ) ≤ ‖K√σ√ρ‖₁ ≤ ‖K‖·‖√σ√ρ‖₁ ≤ F`. (Perturb singular `ρ,σ` via the
-   shipped `+1/k•1` continuity trick — `continuous_traceNorm`.)
+3a. ✅ **DONE** `re_trace_antiHermitian_mul_posSemidef` + `re_trace_mul_le_opNorm_mul_trace`
+   (`OpNormHolder.lean`, commit `03059518`): general `Re tr(C·P) ≤ ‖C‖·tr P` (arbitrary C, PSD P),
+   CFC-free via the Hermitian-part split + shipped Hermitian keystone.
+3b. ✅ **DONE** `re_trace_mul_le_opNorm_mul_traceNorm` (commit `6db70cc6`): `Re tr(K·M) ≤ ‖K‖·‖M‖₁`
+   for invertible M, via polar `M=U|M|` + 3a + unitary `‖U‖=1` (`CStarRing.norm_star_mul_self`).
+   ⚠️ **CONFIRMED BLOCKER for `‖K‖≤1`:** the matrix `CStarAlgebra` instance whnf-times-out (200k
+   heartbeats) — `CStarAlgebra.norm_le_one_iff_of_nonneg`, `norm_cfc_le`, and the whole isometric-CFC
+   family are UNUSABLE on `Matrix ι ι ℂ` (verified in isolation via `lean_run_code`). The `spectrum`
+   route (`spectrum.norm_le_norm_of_mem`, used by the shipped `eigenvalue_le_l2opNorm`) works but is
+   the wrong direction.
+4. **`‖K‖ ≤ 1` from `KKᴴ ⪯ 1` — build via the EuclideanLin CLM bridge (avoids CStarAlgebra):**
+   `Matrix.l2_opNorm_def : ‖A‖ = ‖toEuclideanCLM A‖`; `ContinuousLinearMap.opNorm_le_iff` /
+   `opNorm_le_bound` reduce `‖K‖≤1` to `∀v, ‖K v‖ ≤ ‖v‖`; and `‖Kᴴv‖² = ⟪KKᴴv, v⟫ ≤ ⟪v,v⟫ = ‖v‖²`
+   from `KKᴴ ⪯ 1` (translate Loewner to the Euclidean inner-product form via `Matrix.PosSemidef` ⟹
+   `0 ≤ ⟪(1−KKᴴ)v, v⟫`). Then `‖K‖=‖Kᴴ‖`. **Then forward bound** `re_trace_block_le_sqrtFidelity`:
+   `Re tr X = Re tr(K√σ√ρ) ≤ ‖K‖·‖√σ√ρ‖₁ ≤ F` (brick 3b + `re_trace_le_traceNorm` SHIPPED + cyclic).
+   Perturb singular `ρ,σ` via the shipped `+1/k•1` + `continuous_traceNorm`.
 5. `sqrtFidelity_attained` : feasible `X* = √ρ·V·√σ` (polar `V` of `√σ√ρ`, project's invertible-case
    polar) with `Re tr X* = ‖√σ√ρ‖₁ = sqrtFidelity`.
 6. Headline `sqrtFidelity_mixedUnitary_ge` = transport (brick 2) ∘ attainment (5) ∘ forward (4);
