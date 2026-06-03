@@ -362,4 +362,20 @@ theorem ptrace2_kron_one_conj (A : Matrix (Fin n) (Fin n) ℂ)
   refine Finset.sum_congr rfl fun y _ => ?_
   rw [Finset.sum_comm]
 
+open scoped Kronecker in
+/-- **The contracted Choi is traceless** when `Tr₂ C = 0`: `tr M = tr((√σ⊗1)C(√σ⊗1))
+= tr(C·(σ⊗1)) = tr((Tr₂ C)·σ) = tr(0·σ) = 0` (trace-cyclicity, `(√σ⊗1)² = σ⊗1`, the `Tr₂` adjoint
+brick B, and `ptrace2 C = 0`). Since `M` is Hermitian and traceless, `tr(M₊) = ½‖M‖₁` — the bridge
+from the witness objective to the trace distance (Stage 5). -/
+theorem trace_contractedChoi_eq_zero {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSemidef)
+    {C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hC2 : ptrace2 C = 0) :
+    (contractedChoi hσ C).trace = 0 := by
+  have hsq : (psdSqrt hσ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+        * (psdSqrt hσ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+      = σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) := by
+    rw [← Matrix.mul_kronecker_mul, psdSqrt_mul_self hσ, Matrix.mul_one]
+  unfold contractedChoi
+  rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc, hsq, Matrix.trace_mul_comm,
+    ← trace_ptrace2_mul, hC2, Matrix.zero_mul, Matrix.trace_zero]
+
 end SKEFTHawking.QuantumNetwork
