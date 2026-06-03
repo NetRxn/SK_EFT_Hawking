@@ -464,3 +464,28 @@ Sub-bricks (kernel-pure, standalone): (i) A convex+closed; (ii) op-norm ball com
 (vi) `choiDualValue ≤ diamondDist`; (vii) `le_antisymm` ⟹ unconditional `diamondDist_eq_choiSDP`.
 OPTIONAL by-product (NOT on critical path): `diamondDist ≤ primalSDPValue` via `exists_diamondDist_eq`
 + choiContraction feasibility ⟹ `primalSDPValue = diamondDist`.
+
+## OUTCOME UPDATE 11 (2026-06-03) — piece-2 reassembly bricks shipped; refined (cleaner) separation design
+Shipped kernel-pure (commits after `05e91026`): `primalSDPValue_eq_diamondDist` (= via piece 3 +
+`diamondDist_le_primalSDPValue` attainment); and the piece-2 reassembly chain:
+`kron_sqrtInv_conj_kron_self` (`(√σ⁻¹⊗1)(σ⊗1)(√σ⁻¹⊗1)=1`), `trace_kron_one_mul_diamondWitness`
+(`tr((σ⊗1)·W*)=tr(M₊)`, the saddle-value identity, `W*=diamondWitness` is the optimal dual witness
+against its own input), `re_trace_kron_one_mul_diamondWitness_le` (`Re tr((σ⊗1)·W*) ≤ diamondDist`).
+**Sion minimax is NOT in Mathlib v4.29.1** (checked) ⇒ raw Hahn–Banach (route a) confirmed.
+**REFINED separation design (cleaner than Update-10's; no full dual-norm identity needed):** to show
+`choiDualValue ≤ diamondDist`, by_contra `diamondDist < δ < choiDualValue`; `dual_infeasible_…` ⟹
+`S ∩ ballδ = ∅` where `S := {Tr₂W : W⪰0∧W⪰C} ⊆ HermCarrier(Fin n)`, `ballδ := {M : ‖M‖≤δ}`.
+`geometric_hahn_banach_compact_closed` (s=ballδ COMPACT, t=S CLOSED) ⟹ functional `φ`, `u<v`,
+`φ<u` on ballδ, `φ>v` on S. Riesz (`InnerProductSpace.toDual`) ⟹ Hermitian `Y`, `φ(M)=Re tr(Y·M)`.
+- BALL side: plug `M = δ•(1:HermCarrier)` (‖1‖=1) ⟹ `δ·tr Y ≤ u` (NO dual-norm identity; just M=δ1).
+- S side: `Y⪰0` (else `W=C+t·P`, `t→∞`, `Re tr((Y⊗1)W)→−∞` contradicts `>v`). For `σ=Y/tr Y`
+  (PosDef case) `W₀=diamondWitness σ` is feasible (shipped feasibility), `Tr₂W₀∈S`, and
+  `φ(Tr₂W₀)=Re tr(Y·Tr₂W₀)=tr Y·Re tr((σ⊗1)W₀)=tr Y·tr(M₊)≤tr Y·diamondDist` (SHIPPED
+  `re_trace_kron_one_mul_diamondWitness_le` + `trace_ptrace2_mul`). Singular `Y/tr Y`: `(1−ε)`-perturb
+  `σ_ε` (as in piece 3) ⟹ `≤ tr Y·diamondDist/(1−ε)`, `ε→0`. Then `δ·tr Y ≤ u < v < tr Y·diamondDist`
+  ⟹ `δ < diamondDist`, contradiction. ⟹ `choiDualValue ≤ diamondDist`.
+REMAINING piece-2 sub-bricks (need `HermitianCarrier.lean` API): `S` as HermCarrier set + convex +
+closed (Tr₂ continuous/linear, feasible set closed); `ballδ` compact convex; Hahn–Banach + Riesz→`Y`;
+`Y⪰0` from the S-lower-bound (explicit `t`); assemble. Then headline `diamondDist_eq_choiSDP` by
+`le_antisymm` (W1 `diamondDist_le_choiDualValue` + this). Reassembly VALUE bricks are DONE; the
+HermCarrier separation plumbing is the remaining build.
