@@ -771,4 +771,86 @@ theorem re_trace_choiDiff_mul_le_diamondDist_of_posDef [NeZero n]
     _ ≤ diamondDist K₁ K₂ :=
         trace_posPart_contractedChoi_le_diamondDist hK₁ hK₂ ⟨hσ.posSemidef, hσ1⟩
 
+open scoped Kronecker Matrix.Norms.L2Operator in
+/-- **SDP-primal per-point bound at ANY density (piece 3).** Drops the PosDef hypothesis of
+`re_trace_choiDiff_mul_le_diamondDist_of_posDef` via a `(1−ε)`-regularization: for `σ` a (possibly
+singular) density and feasible `X`, the perturbed pair `(σ_ε, X_ε) = ((1−ε)σ + (ε/n)·1, (1−ε)X)` is
+feasible with `σ_ε ≻ 0`, giving `(1−ε)·Re tr(C·X) ≤ diamondDist` for all `ε ∈ (0,1)`; the algebraic
+choice `ε₀ = (t−d)/(2t)` then forces `Re tr(C·X) ≤ diamondDist` (no limit needed). -/
+theorem re_trace_choiDiff_mul_le_diamondDist [NeZero n]
+    {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : IsDensityOperator σ)
+    {X : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hX : X.PosSemidef)
+    (hle : (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - X).PosSemidef) :
+    ((choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) * X).trace.re ≤ diamondDist K₁ K₂ := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero (NeZero.ne n)⟩⟩
+  set C := choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂) with hCdef
+  set t := (C * X).trace.re with ht
+  have hd : (0 : ℝ) ≤ diamondDist K₁ K₂ := diamondDist_nonneg
+  have hcard : (Fintype.card (Fin n) : ℂ) = (n : ℂ) := by simp
+  have hn0 : (0 : ℝ) < n := by exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne n)
+  have hnC : (n : ℂ) ≠ 0 := by exact_mod_cast NeZero.ne n
+  have key : ∀ ε : ℝ, 0 < ε → ε < 1 → (1 - ε) * t ≤ diamondDist K₁ K₂ := by
+    intro ε hε0 hε1
+    have h1ε : (0 : ℝ) ≤ 1 - ε := by linarith
+    have hεn : (0 : ℝ) < ε / n := div_pos hε0 hn0
+    have hc1 : (0 : ℂ) ≤ ((1 - ε : ℝ) : ℂ) := Complex.zero_le_real.mpr h1ε
+    have hc2 : (0 : ℂ) < ((ε / n : ℝ) : ℂ) := by
+      rw [Complex.lt_def, Complex.ofReal_re, Complex.ofReal_im, Complex.zero_re, Complex.zero_im]
+      exact ⟨hεn, rfl⟩
+    set σε := ((1 - ε : ℝ) : ℂ) • σ + ((ε / n : ℝ) : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ) with hσε
+    have hσεpd : σε.PosDef := by
+      rw [hσε, add_comm]
+      exact ((Matrix.PosDef.one).smul hc2).add_posSemidef (hσ.1.smul hc1)
+    have hσεtr : σε.trace = 1 := by
+      rw [hσε, Matrix.trace_add, Matrix.trace_smul, Matrix.trace_smul, Matrix.trace_one, hσ.2,
+        smul_eq_mul, smul_eq_mul, hcard]
+      push_cast
+      field_simp
+      ring
+    set Xε := ((1 - ε : ℝ) : ℂ) • X with hXε
+    have hXεpsd : Xε.PosSemidef := hX.smul hc1
+    have hXεle : (σε ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - Xε).PosSemidef := by
+      have heq : σε ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - Xε
+          = ((1 - ε : ℝ) : ℂ) • (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - X)
+            + ((ε / n : ℝ) : ℂ) • (1 : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) := by
+        rw [hσε, hXε, Matrix.add_kronecker, Matrix.smul_kronecker, Matrix.smul_kronecker,
+          Matrix.one_kronecker_one, smul_sub]
+        abel
+      rw [heq]
+      exact (hle.smul hc1).add ((Matrix.PosSemidef.one).smul hc2.le)
+    have hbound := re_trace_choiDiff_mul_le_diamondDist_of_posDef hK₁ hK₂ hσεpd hσεtr hXεpsd hXεle
+    have heval : (C * Xε).trace.re = (1 - ε) * t := by
+      rw [hXε, Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul]
+      simp only [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero]
+      rw [ht]
+    rwa [heval] at hbound
+  by_contra hlt
+  rw [not_le] at hlt
+  have ht0 : 0 < t := lt_of_le_of_lt hd hlt
+  set ε₀ := (t - diamondDist K₁ K₂) / (2 * t) with hε₀
+  have hε0 : 0 < ε₀ := div_pos (by linarith) (by linarith)
+  have hε1 : ε₀ < 1 := by rw [hε₀, div_lt_one (by linarith)]; linarith
+  have hb := key ε₀ hε0 hε1
+  have hcomp : (1 - ε₀) * t = (t + diamondDist K₁ K₂) / 2 := by
+    rw [hε₀]; field_simp; ring
+  rw [hcomp] at hb
+  linarith
+
+open scoped Kronecker Matrix.Norms.L2Operator in
+/-- **Piece 3 — `primalSDPValue ≤ diamondDist` (Watrous primal reduction).** The SDP-primal value is at
+most the operational diamond distance: every feasible `(X, σ)` gives `Re tr(C·X) ≤ diamondDist`
+(`re_trace_choiDiff_mul_le_diamondDist`), so the supremum is bounded. Together with the conic-Farkas
+direction `choiDualValue ≤ primalSDPValue` (piece 2) and the shipped weak directions, this collapses
+`diamondDist = choiDualValue`. -/
+theorem primalSDPValue_le_diamondDist [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    primalSDPValue K₁ K₂ ≤ diamondDist K₁ K₂ := by
+  apply csSup_le
+  · exact ⟨0, 0, _, Matrix.PosSemidef.zero, isDensityOperator_maximallyMixed,
+      by rw [sub_zero]; exact (isDensityOperator_maximallyMixed.1).kronecker Matrix.PosSemidef.one,
+      by simp⟩
+  · rintro r ⟨X, σ, hX, hσ, hle, rfl⟩
+    exact re_trace_choiDiff_mul_le_diamondDist hK₁ hK₂ hσ hX hle
+
 end SKEFTHawking.QuantumNetwork
