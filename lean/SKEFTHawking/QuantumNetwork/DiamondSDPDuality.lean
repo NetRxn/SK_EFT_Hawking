@@ -378,4 +378,16 @@ theorem trace_contractedChoi_eq_zero {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ
   rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc, hsq, Matrix.trace_mul_comm,
     ← trace_ptrace2_mul, hC2, Matrix.zero_mul, Matrix.trace_zero]
 
+/-- **Trace of the positive part of a traceless Hermitian operator is half its trace norm:**
+`tr(M₊) = ½‖M‖₁` when `tr M = 0`. From `‖M‖₁ = tr M₊ + tr M₋` and `tr M = tr M₊ − tr M₋ = 0`
+(so `tr M₊ = tr M₋`). The Stage-5 step turning `tr(M₊)` into `½‖M‖₁ = traceDist`. -/
+theorem trace_posPart_eq_half_traceNorm {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {M : Matrix ι ι ℂ} (hM : M.IsHermitian) (h0 : M.trace.re = 0) :
+    (posPart hM).trace.re = (1 / 2 : ℝ) * traceNorm M := by
+  have htr : M.trace.re = (posPart hM).trace.re - (negPart hM).trace.re := by
+    conv_lhs => rw [self_eq_posPart_sub_negPart hM]
+    rw [Matrix.trace_sub, Complex.sub_re]
+  have heq : (posPart hM).trace.re = (negPart hM).trace.re := by rw [h0] at htr; linarith
+  rw [traceNorm_hermitian_eq_pos_add_neg hM, ← heq]; ring
+
 end SKEFTHawking.QuantumNetwork
