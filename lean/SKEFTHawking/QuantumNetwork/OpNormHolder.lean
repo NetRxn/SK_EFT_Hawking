@@ -1,6 +1,8 @@
 import SKEFTHawking.QuantumNetwork.DiamondNormChoiUpper
 import SKEFTHawking.QuantumNetwork.TraceNormCauchySchwarz
 import Mathlib.Analysis.CStarAlgebra.Matrix
+import Mathlib.Analysis.InnerProductSpace.Positive
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # General operator-norm trace bound (Phase 6AJ continuation, brick 3)
@@ -105,5 +107,34 @@ theorem re_trace_mul_le_opNorm_mul_traceNorm {K M : Matrix ι ι ℂ} (hM : IsUn
     _ ≤ ‖K * U‖ * (P.trace).re := re_trace_mul_le_opNorm_mul_trace hPpsd
     _ ≤ ‖K‖ * (P.trace).re := mul_le_mul_of_nonneg_right hKU hPtrnn
     _ = ‖K‖ * traceNorm M := by rw [traceNorm_eq_trace_absOp]
+
+/-- **`‖K‖ ≤ 1` from the Loewner contraction `K·Kᴴ ⪯ 1`** (`1 − K·Kᴴ ⪰ 0`). Proved via the
+EuclideanLin operator picture (NOT the matrix `CStarAlgebra` instance, which whnf-times-out):
+`‖K‖ = ‖Kᴴ‖ = ‖toEuclideanCLM Kᴴ‖`, and `ContinuousLinearMap.opNNNorm_le_iff` reduces to
+`∀ x, ‖toEuclideanCLM Kᴴ x‖ ≤ ‖x‖`; the bound `‖toEuclideanCLM Kᴴ x‖² = re⟪x, (KKᴴ) x⟫ ≤ ‖x‖²` follows
+from `Matrix.isPositive_toEuclideanLin_iff` applied to `1 − KKᴴ` (adjoint `toEuclideanCLM K`). -/
+theorem opNorm_le_one_of_mul_conjTranspose_le_one {K : Matrix ι ι ℂ}
+    (h : ((1 : Matrix ι ι ℂ) - K * Kᴴ).PosSemidef) : ‖K‖ ≤ 1 := by
+  have hKstar : ‖K‖ = ‖Kᴴ‖ := by rw [← Matrix.star_eq_conjTranspose, norm_star]
+  rw [hKstar, ← NNReal.coe_one, ← coe_nnnorm, NNReal.coe_le_coe, Matrix.cstar_nnnorm_def,
+    ContinuousLinearMap.opNNNorm_le_iff]
+  intro x
+  rw [one_mul, ← NNReal.coe_le_coe, coe_nnnorm, coe_nnnorm]
+  set S := Matrix.toEuclideanCLM (𝕜 := ℂ) Kᴴ with hS
+  have hadj : ContinuousLinearMap.adjoint S = Matrix.toEuclideanCLM (𝕜 := ℂ) K := by
+    rw [hS, ← ContinuousLinearMap.star_eq_adjoint, ← map_star]
+    congr 1; rw [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_conjTranspose]
+  have hmul : (toEuclideanLin (K * Kᴴ)) x = (ContinuousLinearMap.adjoint S) (S x) := by
+    rw [hadj, hS]
+    show (Matrix.toEuclideanCLM (𝕜 := ℂ) (K * Kᴴ)) x = _
+    rw [map_mul, ContinuousLinearMap.mul_apply]
+  have hpos := (Matrix.isPositive_toEuclideanLin_iff (A := 1 - K * Kᴴ)).mpr h
+  have h0 := hpos.2 x
+  rw [map_sub, LinearMap.sub_apply, inner_sub_left, hmul, ContinuousLinearMap.adjoint_inner_left,
+    show (toEuclideanLin (1 : Matrix ι ι ℂ)) x = x from by simp, map_sub,
+    inner_self_eq_norm_sq, inner_self_eq_norm_sq] at h0
+  calc ‖S x‖ = Real.sqrt (‖S x‖ ^ 2) := (Real.sqrt_sq (norm_nonneg _)).symm
+    _ ≤ Real.sqrt (‖x‖ ^ 2) := Real.sqrt_le_sqrt (by linarith [h0])
+    _ = ‖x‖ := Real.sqrt_sq (norm_nonneg _)
 
 end SKEFTHawking.QuantumNetwork
