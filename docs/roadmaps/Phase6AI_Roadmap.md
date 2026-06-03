@@ -246,3 +246,25 @@ STRIKE the line-197/line-64-handoff "separation of the dual-sublevel" route.
   formula and/or the `primal ≤ diamondDist` construction). Resumption prompt:
   `~/.claude/.../memory/next_session_6AI_full_delivery_goal.md` (CORRECTED to reflect this finding).
 Bricks A/B/C′/C″ feed routes (a)/(b) regardless and are committed kernel-pure infrastructure.
+
+## OUTCOME UPDATE 2 (2026-06-03) — DEEP RESEARCH LANDED; explicit-witness route confirmed (route b)
+DR note: `Lit-Search/Phase-6AI/Strong Duality for the Diamond-Norm SDP- A Constructive,
+Formalization-Ready Note.md` (read directly). **Decisive: NO Slater/Sion/conic-closure needed.**
+The headline closes by EXPLICIT optimal-witness construction:
+- **W\*** (DR D1, **must verify by direct calculation — DR's closed form is internally muddled on
+  `C` vs the contracted Choi `(√ρ*⊗1)C(√ρ*⊗1)`, and is explicitly flagged "verify, do not cite"**):
+  `W* = (√ρ*⊗1)·Π*·C·Π*·(√ρ*⊗1)`, `Π*` = positive spectral projector of `(√ρ*⊗1)C(√ρ*⊗1)`,
+  `ρ*` = optimal input (`exists_diamondDist_eq`). Prove `W*⪰0`, `W*⪰C` (claim `W*−C=(T_proj)₋⪰0`),
+  `‖Tr₂W*‖ ≤ diamondDist` ⟹ `diamondDist_eq_choiSDP_of_witness` (SHIPPED `122da9a9`) closes it.
+- **Staged plan (DR §Recommendations):** S1 SDP primitives (✅ `ptrace2_choiDiff_eq_zero`,
+  `ptrace2_choiMatrix_krausMap` `1d58d63d`; remaining: vec-J purification identity D2
+  `(Φ⊗id)(ψ_σ)=(1⊗√σ)J(Φ)(1⊗√σ)` — the linchpin) → S2 weak duality (✅) → S3 `primal ≤ diamondDist`
+  (F5 analytic half: Schur `X=(√σ⊗1)K(√σ⊗1)`,`‖K‖≤1` + Hölder, via `Matrix.PosSemidef.schur_complement`
+  + shipped `traceNorm_mul_le`) → S4 construct `W*`/`Π*` (`Matrix.IsHermitian.spectralTheorem`, select
+  `λ>0`) → S5 attainment `‖Tr₂W*‖≤diamondDist` (DR-flagged hardest) → S6 `le_antisymm`.
+- **DR decision-thresholds:** if S3 > ~1500 lines, consider Bhatia Schur-lemma as axiom (USER SIGN-OFF
+  REQUIRED); if S5 intractable, alternative route via max-output-fidelity SDP (1207.5726 §2.3 Thm 5).
+- Convention swap `σ:X⊗Y→Y⊗X` (one `Matrix.reindex`/`swap_kronecker` lemma) is the single conversion point.
+- **⚠️ The earlier naive dual-Farkas route is a confirmed DEAD-END (reproves only weak duality) — STRUCK.**
+  S3 alone does NOT close the headline; the witness (S4+S5) is the headline-critical core (via the
+  shipped conditional `diamondDist_eq_choiSDP_of_witness`).
