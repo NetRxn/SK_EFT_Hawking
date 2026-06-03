@@ -1188,4 +1188,187 @@ theorem posSemidef_kronecker {M N : Matrix (Fin n) (Fin n) ℂ} (hM : M.PosSemid
       ← Matrix.mul_kronecker_mul, psdSqrt_mul_self hM, psdSqrt_mul_self hN]
   rwa [he] at h
 
+/-- `Tr₂` commutes with complex scalar multiplication. -/
+theorem ptrace2_smul (c : ℂ) (A : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    ptrace2 (c • A) = c • ptrace2 A := by
+  ext a b
+  simp only [ptrace2, Matrix.smul_apply, smul_eq_mul]
+  rw [Finset.mul_sum]
+
+open scoped Matrix.Norms.L2Operator Kronecker Topology ComplexOrder in
+/-- **Piece 2 — strong duality `choiDualValue ≤ diamondDist`** via geometric Hahn–Banach separation. -/
+theorem choiDualValue_le_diamondDist [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    choiDualValue K₁ K₂ ≤ diamondDist K₁ K₂ := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero (NeZero.ne n)⟩⟩
+  set C := choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂) with hCdef
+  have hCh : C.IsHermitian := choiDiff_isHermitian K₁ K₂
+  by_contra hcon
+  rw [not_le] at hcon
+  set δ := (diamondDist K₁ K₂ + choiDualValue K₁ K₂) / 2 with hδdef
+  have hddnn : (0 : ℝ) ≤ diamondDist K₁ K₂ := diamondDist_nonneg
+  have hδ1 : diamondDist K₁ K₂ < δ := by rw [hδdef]; linarith
+  have hδ2 : δ < choiDualValue K₁ K₂ := by rw [hδdef]; linarith
+  have hδnn : (0 : ℝ) ≤ δ := le_trans hddnn hδ1.le
+  have hinfeas := dual_infeasible_of_lt_choiDualValue (K₁ := K₁) (K₂ := K₂) hδ2
+  have hdisj : Disjoint (opBall (n := n) δ) (achievableTr2 C) := by
+    rw [Set.disjoint_left]
+    rintro Y hYball ⟨W, hWp, hWC, hYeq⟩
+    exact hinfeas ⟨W.toSA.1, hWp, hWC, by rw [← hYeq]; exact hYball⟩
+  obtain ⟨φ, u, v, hball, huv, hS⟩ := geometric_hahn_banach_compact_closed
+    (convex_opBall δ) (isCompact_opBall δ) (convex_achievableTr2 C) (isClosed_achievableTr2 C) hdisj
+  set Y₀ := (InnerProductSpace.toDual ℝ (HermCarrier (Fin n))).symm φ with hY₀def
+  have hφeq : ∀ x, φ x = (Y₀.toSA.1 * x.toSA.1).trace.re := by
+    intro x
+    have hxx : φ x = (inner ℝ Y₀ x : ℝ) :=
+      congrArg (· x) ((InnerProductSpace.toDual ℝ _).apply_symm_apply φ).symm
+    rw [hxx, HermCarrier.inner_eq]
+  set T := (Y₀.toSA.1.trace).re with hTdef
+  have hPp : (posPart hCh).PosSemidef := posPart_posSemidef hCh
+  have hPpC : (posPart hCh - C).PosSemidef := by
+    rw [posPart_sub_self_eq_negPart hCh]; exact negPart_posSemidef hCh
+  have hY₀psd : Y₀.toSA.1.PosSemidef := by
+    rw [← HermCarrier.mem_innerDual_psdProperCone, ProperCone.mem_innerDual]
+    intro X hX
+    rw [SetLike.mem_coe, HermCarrier.mem_psdProperCone] at hX
+    rw [HermCarrier.inner_eq, Matrix.trace_mul_comm]
+    set M := X.toSA.1 with hMdef
+    set N := ((n : ℂ)⁻¹) • (1 : Matrix (Fin n) (Fin n) ℂ) with hNdef
+    have hNpsd : N.PosSemidef := by
+      apply Matrix.PosSemidef.one.smul
+      rw [show ((n : ℂ))⁻¹ = (((n : ℝ)⁻¹ : ℝ) : ℂ) from by
+        rw [Complex.ofReal_inv, Complex.ofReal_natCast], Complex.zero_le_real]
+      positivity
+    have hNtr : N.trace = 1 := by
+      rw [hNdef, Matrix.trace_smul, Matrix.trace_one, Fintype.card_fin, smul_eq_mul,
+        inv_mul_cancel₀ (show (n : ℂ) ≠ 0 by exact_mod_cast NeZero.ne n)]
+    set B := (Y₀.toSA.1 * M).trace.re with hBdef
+    set A := (Y₀.toSA.1 * ptrace2 (posPart hCh)).trace.re with hAdef
+    have key : ∀ t : ℝ, 0 ≤ t → v < A + t * B := by
+      intro t ht
+      have htc : (0 : ℂ) ≤ (t : ℂ) := by
+        rw [Complex.le_def]; exact ⟨by simpa using ht, by simp⟩
+      have hMN : ((t : ℂ) • (M ⊗ₖ N)).PosSemidef := (posSemidef_kronecker hX hNpsd).smul htc
+      have hWp : (posPart hCh + (t : ℂ) • (M ⊗ₖ N)).PosSemidef := hPp.add hMN
+      have hWC : (posPart hCh + (t : ℂ) • (M ⊗ₖ N) - C).PosSemidef := by
+        rw [add_sub_right_comm]; exact hPpC.add hMN
+      have hmem := mem_achievableTr2_of_matrix (C := C) hWp.isHermitian hWp hWC
+      have hlt := hS _ hmem
+      rw [hφeq, HermCarrier.ofMat_toSA] at hlt
+      have hpt : ptrace2 (posPart hCh + (t : ℂ) • (M ⊗ₖ N))
+          = ptrace2 (posPart hCh) + (t : ℂ) • M := by
+        rw [ptrace2_add, ptrace2_smul, ptrace2_kronecker_eq, hNtr, one_smul]
+      rw [hpt, Matrix.mul_add, Matrix.trace_add, Complex.add_re, Matrix.mul_smul,
+        Matrix.trace_smul, smul_eq_mul, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
+        zero_mul, sub_zero] at hlt
+      rw [hAdef, hBdef]; exact hlt
+    by_contra hBneg
+    rw [not_le] at hBneg
+    have hBne : B ≠ 0 := ne_of_lt hBneg
+    have hABv : v < A := by simpa using key 0 le_rfl
+    have hnB : (0 : ℝ) < -B := by linarith
+    have ht0 : (0 : ℝ) ≤ (A - v) / (-B) + 1 :=
+      add_nonneg (div_nonneg (by linarith) hnB.le) zero_le_one
+    have hk := key _ ht0
+    have hcomp : A + ((A - v) / (-B) + 1) * B = v + B := by field_simp [hBne]; ring
+    rw [hcomp] at hk
+    linarith
+  have hTnn : (0 : ℝ) ≤ T := (Complex.le_def.mp hY₀psd.trace_nonneg).1
+  have hballbound : δ * T ≤ u := by
+    have hδherm : ((δ : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ)).IsHermitian := by
+      rw [Matrix.IsHermitian, Matrix.conjTranspose_smul, Matrix.conjTranspose_one,
+        Complex.star_def, Complex.conj_ofReal]
+    have hZmem : HermCarrier.ofMat hδherm ∈ opBall (n := n) δ := by
+      show ‖(HermCarrier.ofMat hδherm).toSA.1‖ ≤ δ
+      rw [HermCarrier.ofMat_toSA]
+      exact le_of_eq (by
+        rw [norm_smul, norm_one, mul_one, Complex.norm_real, Real.norm_of_nonneg hδnn])
+    have hlt := hball _ hZmem
+    rw [hφeq, HermCarrier.ofMat_toSA] at hlt
+    have heq : (Y₀.toSA.1 * ((δ : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ))).trace.re = δ * T := by
+      rw [Matrix.mul_smul, Matrix.mul_one, Matrix.trace_smul, smul_eq_mul, Complex.mul_re,
+        Complex.ofReal_re, Complex.ofReal_im, hTdef]; ring
+    rw [heq] at hlt
+    linarith
+  have hnpos : (0 : ℝ) < n := by exact_mod_cast Nat.pos_of_ne_zero (NeZero.ne n)
+  have htr_real : Y₀.toSA.1.trace = (T : ℂ) := by
+    have him : (Y₀.toSA.1.trace).im = 0 := by
+      have h := Matrix.trace_conjTranspose Y₀.toSA.1
+      rw [hY₀psd.isHermitian.eq] at h
+      have h2 := congrArg Complex.im h
+      simp only [Complex.star_def, Complex.conj_im] at h2
+      linarith
+    rw [Complex.ext_iff, Complex.ofReal_re, Complex.ofReal_im, hTdef]
+    exact ⟨rfl, him⟩
+  have hSbound : v ≤ T * diamondDist K₁ K₂ := by
+    have key : ∀ ε : ℝ, 0 < ε → v < (T + ε * n) * diamondDist K₁ K₂ := by
+      intro ε hε
+      have hTεpos : (0 : ℝ) < T + ε * n := by positivity
+      have hTεne : ((↑(T + ε * n) : ℂ)) ≠ 0 := by
+        rw [Ne, Complex.ofReal_eq_zero]; exact ne_of_gt hTεpos
+      have hεc : (0 : ℂ) < (ε : ℂ) := by rw [Complex.lt_def]; exact ⟨by simpa using hε, by simp⟩
+      have hρε : (Y₀.toSA.1 + (ε : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ)).PosDef := by
+        rw [add_comm]; exact (Matrix.PosDef.one.smul hεc).add_posSemidef hY₀psd
+      set σε := ((↑(T + ε * n) : ℂ)⁻¹) •
+        (Y₀.toSA.1 + (ε : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ)) with hσεdef
+      have hσεpd : σε.PosDef := by
+        apply hρε.smul
+        rw [Complex.lt_def, Complex.inv_re, Complex.inv_im]
+        rw [show Complex.normSq (↑(T + ε * n)) = (T + ε * n) ^ 2 from by
+          rw [Complex.normSq_ofReal]; ring]
+        refine ⟨by positivity, by simp⟩
+      have hσεtr : σε.trace = 1 := by
+        rw [hσεdef, Matrix.trace_smul, Matrix.trace_add, htr_real, Matrix.trace_smul,
+          Matrix.trace_one, Fintype.card_fin, smul_eq_mul, smul_eq_mul,
+          show ((T : ℂ) + (ε : ℂ) * (n : ℂ)) = ((T + ε * n : ℝ) : ℂ) from by push_cast; ring,
+          inv_mul_cancel₀ hTεne]
+      have hW₀p := diamondWitness_posSemidef hσεpd.posSemidef hCh
+      have hW₀C := diamondWitness_sub_posSemidef hσεpd hCh
+      have hmem := mem_achievableTr2_of_matrix (C := C) hW₀p.isHermitian hW₀p hW₀C
+      have hlt := hS _ hmem
+      rw [hφeq, HermCarrier.ofMat_toSA] at hlt
+      have hYeq : Y₀.toSA.1
+          = (↑(T + ε * n) : ℂ) • σε - (ε : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ) := by
+        rw [hσεdef, smul_smul, mul_inv_cancel₀ hTεne, one_smul]; abel
+      have hbound : (Y₀.toSA.1 *
+          ptrace2 (diamondWitness hσεpd.posSemidef hCh)).trace.re
+          ≤ (T + ε * n) * diamondDist K₁ K₂ := by
+        set W₀ := diamondWitness hσεpd.posSemidef hCh with hW₀def
+        have hle : (σε * ptrace2 W₀).trace.re ≤ diamondDist K₁ K₂ := by
+          rw [Matrix.trace_mul_comm, trace_ptrace2_mul, Matrix.trace_mul_comm]
+          exact re_trace_kron_one_mul_diamondWitness_le hK₁ hK₂ hσεpd hσεtr
+        have hterm1 : (((↑(T + ε * n) : ℂ) • σε) * ptrace2 W₀).trace.re
+            ≤ (T + ε * n) * diamondDist K₁ K₂ := by
+          rw [Matrix.smul_mul, Matrix.trace_smul, smul_eq_mul, Complex.mul_re, Complex.ofReal_re,
+            Complex.ofReal_im, zero_mul, sub_zero]
+          exact mul_le_mul_of_nonneg_left hle hTεpos.le
+        have hterm2 : (0 : ℝ) ≤
+            (((ε : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ)) * ptrace2 W₀).trace.re := by
+          rw [Matrix.smul_mul, Matrix.one_mul, Matrix.trace_smul, smul_eq_mul, Complex.mul_re,
+            Complex.ofReal_re, Complex.ofReal_im, zero_mul, sub_zero, trace_ptrace2]
+          have hW₀tr : (0 : ℝ) ≤ (W₀.trace).re := (Complex.le_def.mp hW₀p.trace_nonneg).1
+          positivity
+        rw [hYeq, sub_mul, Matrix.trace_sub, Complex.sub_re]
+        linarith [hterm1, hterm2]
+      linarith [hlt, hbound]
+    refine le_of_forall_pos_le_add fun η hη => ?_
+    have hk := key (η / (n * diamondDist K₁ K₂ + 1)) (div_pos hη (by positivity))
+    have hbnd : η / (n * diamondDist K₁ K₂ + 1) * n * diamondDist K₁ K₂ ≤ η := by
+      rw [div_mul_eq_mul_div, div_mul_eq_mul_div, div_le_iff₀ (by positivity)]
+      nlinarith [diamondDist_nonneg (K₁ := K₁) (K₂ := K₂), hη.le, mul_nonneg hnpos.le
+        (diamondDist_nonneg (K₁ := K₁) (K₂ := K₂))]
+    nlinarith [hk, hbnd]
+  nlinarith [hballbound, huv, hSbound, hTnn, mul_le_mul_of_nonneg_left hδ1.le hTnn]
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Watrous diamond-norm SDP strong duality (unconditional).**
+`diamondDist Φ₁ Φ₂ = choiDualValue Φ₁ Φ₂ = inf{‖Tr₂ W‖ : W ⪰ 0, W ⪰ J(Φ₁)−J(Φ₂)}`. Combines weak
+duality (`diamondDist_le_choiDualValue`) with the conic-Farkas/Hahn–Banach separation strong-duality
+direction (`choiDualValue_le_diamondDist`). The Phase-6AI headline, proven kernel-pure with no
+project-local axiom. -/
+theorem diamondDist_eq_choiSDP [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    diamondDist K₁ K₂ = choiDualValue K₁ K₂ :=
+  le_antisymm (diamondDist_le_choiDualValue hK₁ hK₂) (choiDualValue_le_diamondDist hK₁ hK₂)
+
 end SKEFTHawking.QuantumNetwork
