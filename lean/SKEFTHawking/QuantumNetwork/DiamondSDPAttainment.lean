@@ -191,4 +191,24 @@ theorem exists_choiDualValue_eq {m : ℕ} [NeZero n] (K₁ K₂ : Fin m → Matr
   · exact csInf_le ⟨0, by rintro r ⟨V, _, _, rfl⟩; exact norm_nonneg _⟩
       ⟨W, hWS.1, hWS.2.1, rfl⟩
 
+/-- **The input marginal of a density operator is Loewner-bounded by `1`:** `inMarginal ρ ⪯ 1`
+for `IsDensityOperator ρ`. Its eigenvalues are at most `‖inMarginal ρ‖ ≤ traceNorm = tr ρ = 1`
+(`l2opNorm_le_traceNorm_psd`), so `1 − inMarginal ρ = cfc(1 − x)` is PSD. Feeds the dual-feasibility
+brick of the strong-duality `≥` direction (the Hölder step's tightness witness). -/
+theorem inMarginal_le_one [NeZero n] {ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ}
+    (hρ : IsDensityOperator ρ) :
+    ((1 : Matrix (Fin n) (Fin n) ℂ) - inMarginal ρ).PosSemidef := by
+  have hpsd : (inMarginal ρ).PosSemidef := inMarginal_posSemidef hρ.1
+  have hHerm := hpsd.isHermitian
+  have hnorm : ‖inMarginal ρ‖ ≤ 1 := by
+    calc ‖inMarginal ρ‖ ≤ traceNorm (inMarginal ρ) := l2opNorm_le_traceNorm_psd hpsd
+      _ = (inMarginal ρ).trace.re := traceNorm_posSemidef hpsd
+      _ = 1 := by rw [trace_inMarginal, hρ.2, Complex.one_re]
+  have hc : hHerm.cfc (fun x => 1 - x) = (1 : Matrix (Fin n) (Fin n) ℂ) - inMarginal ρ := by
+    rw [← cfc_sub hHerm (fun _ => (1 : ℝ)) (fun x => x), cfc_id hHerm, cfc_const hHerm 1,
+      Complex.ofReal_one, one_smul]
+  rw [← hc]
+  exact cfc_posSemidef hHerm fun i => by
+    have := (eigenvalue_le_l2opNorm hHerm i).trans hnorm; linarith
+
 end SKEFTHawking.QuantumNetwork
