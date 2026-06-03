@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-03T01:54:21.378277",
+  "generated": "2026-06-03T02:13:30.111745",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 18178,
-    "theorems_total": 10493,
-    "theorems_substantive": 10467,
+    "total_declarations": 18185,
+    "theorems_total": 10496,
+    "theorems_substantive": 10470,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 798,
+    "modules": 800,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1Resolution",
@@ -632,6 +632,7 @@
       "SKEFTHawking.QuantumNetwork.DiamondNormDual",
       "SKEFTHawking.QuantumNetwork.DiamondNormSup",
       "SKEFTHawking.QuantumNetwork.DiamondNormWitness",
+      "SKEFTHawking.QuantumNetwork.DiamondSDP",
       "SKEFTHawking.QuantumNetwork.Distillation",
       "SKEFTHawking.QuantumNetwork.EndToEnd",
       "SKEFTHawking.QuantumNetwork.Envelope",
@@ -661,6 +662,7 @@
       "SKEFTHawking.QuantumNetwork.Rate",
       "SKEFTHawking.QuantumNetwork.RepeaterChain",
       "SKEFTHawking.QuantumNetwork.SecretKeyRate",
+      "SKEFTHawking.QuantumNetwork.SelfAdjointInnerProduct",
       "SKEFTHawking.QuantumNetwork.Swapping",
       "SKEFTHawking.QuantumNetwork.Teleportation",
       "SKEFTHawking.QuantumNetwork.TraceNormCauchySchwarz",
@@ -811,7 +813,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6814,
+    "definitions": 6818,
     "structures": 288,
     "instances": 489,
     "inductives": 94
