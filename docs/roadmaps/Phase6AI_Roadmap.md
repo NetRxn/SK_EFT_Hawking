@@ -504,3 +504,16 @@ the headline `choiDualValue ≤ diamondDist` reduces to `‖Tr₂W^♯‖ ≤ di
 (A) or (B), build the HermCarrier separation/CS plumbing (S-image or `W^♯`-CS), assemble headline.
 STATE: route fully recovered; piece 3 + `primalSDPValue=diamondDist` + all reassembly VALUE bricks
 SHIPPED kernel-pure; only the separation/CS plumbing remains (≈100–150 LoC, well-scoped).
+
+## OUTCOME UPDATE 13 (2026-06-03) — closedness UNBLOCKED; piece-2 close (B) fully tractable, no missing Mathlib
+Feared crux (S = {Tr₂W : W⪰0, W⪰C} closed) does NOT need recession-cone theory (absent in Mathlib).
+LEVER (shipped `l2opNorm_le_re_trace_ptrace2`): every witness `W` for `M=Tr₂W` has
+`‖W‖ ≤ Re tr(Tr₂W) = Re tr M`. So `Mₖ→M` in S lifts to a BOUNDED witness sequence ⇒ subconverges to
+feasible `W` (F closed) ⇒ `M∈S`. CLOSED, elementary. ⇒ **close (B) needs NO missing Mathlib**
+(Sion/recession/KKT all avoided): `geometric_hahn_banach_compact_closed`, `InnerProductSpace.toDual`
+(Riesz), trace bounds all present. REMAINING (HermCarrier plumbing, ~120-180 LoC, no fence/axiom):
+lift `Tr₂` to a continuous ℝ-linear carrier map; `S` convex+closed `Set (HermCarrier (Fin n))`;
+`ballδ` compact; `S∩ballδ=∅ ⟺ dual infeasible` (`dual_infeasible_of_lt_choiDualValue`); Hahn–Banach
+⇒ `φ,u,v`; Riesz `φ↦Y`; ball side `M=δ•1⇒δ·tr Y≤u`; S side `Y⪰0` + `W₀=diamondWitness σ` value
+`≤ tr Y·diamondDist` (SHIPPED `re_trace_kron_one_mul_diamondWitness_le`) ⇒ contradiction ⇒
+`choiDualValue ≤ diamondDist`; headline by `le_antisymm` with W1.
