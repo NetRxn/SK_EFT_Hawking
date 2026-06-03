@@ -158,9 +158,10 @@ The two items previously deferred here are now PROVEN (this comment is kept as a
 * **The Choi characterization.** Both one-sided bounds of the Watrous sandwich
   `(1/2n)‖J₁−J₂‖₁ ≤ diamondDist ≤ n‖J₁−J₂‖∞` are proven (`diamondDist_ge_choi_traceNorm`,
   `diamondDist_le_choi_opNorm`, `DiamondNormChoi{,Upper}.lean`), and the Watrous weak-dual witness
-  bound `diamondDist_le_dual_witness` (`DiamondNormDual.lean`). The ONLY remaining frontier is the
-  primal=dual SDP **equality** (conic strong duality — no Slater/minimax/Fenchel substrate at pin);
-  it is the sole documented-deferred item, with no sorry and no axiom.
+  bound `diamondDist_le_dual_witness` (`DiamondNormDual.lean`). primal=dual SDP **equality** (`diamondDist_eq_choiSDP`, `DiamondSDPDuality.lean`) is now PROVEN
+  unconditionally and kernel-pure (Phase 6AI, via geometric Hahn–Banach / conic Farkas
+  `geometric_hahn_banach_compact_closed`); the former no-Slater/minimax/Fenchel fence was stale
+  (Mathlib v4.29.1 ships the conic Farkas lemma). No documented-deferred QI-analytic item remains.
 -/
 
 end SKEFTHawking.QuantumNetwork

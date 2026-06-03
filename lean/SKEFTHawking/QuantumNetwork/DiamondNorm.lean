@@ -125,9 +125,11 @@ Since then (Phase 6AF-7/8, 2026-06-02) the **triangle inequality** (`diamondDist
 `DiamondNormSup.lean`) and **attainment** of the sup (`exists_diamondDist_eq`, in
 `DiamondNormAttainment.lean`, via trace-norm continuity + compactness of the density set + EVT)
 are both PROVEN — so `diamondDist` is a genuine `[0,1]`-valued metric whose supremum is a maximum.
-The only remaining documented-deferred item (no sorry, no axiom) is the **Choi-SDP / Watrous
-duality** characterization of the diamond norm: the full primal=dual SDP identity needs a
-convex-duality substrate (`ProperCone`/`PointedCone`, conic strong duality) absent at pin. The
+The **Choi-SDP / Watrous duality** characterization — the full primal=dual SDP identity
+`diamondDist_eq_choiSDP` — is now PROVEN unconditionally and kernel-pure (Phase 6AI,
+`DiamondSDPDuality.lean`, via the geometric Hahn–Banach / conic Farkas lemma
+`geometric_hahn_banach_compact_closed`); the former "convex-duality substrate absent at pin" fence
+was stale (Mathlib v4.29.1 ships conic Farkas). No documented-deferred QI-analytic item remains. The
 **primal (one-sided) lower bound** is PROVEN in `DiamondNormChoi.lean`
 (`diamondDist_ge_maxEntangled`): `le_diamondDist` evaluated at the maximally-entangled (Choi)
 feasible point gives `diamondDist Φ₁ Φ₂ ≥ D((Φ₁⊗id)Ω, (Φ₂⊗id)Ω)` with no SDP duality. (Its
