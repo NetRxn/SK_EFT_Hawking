@@ -203,4 +203,20 @@ theorem sqrtFidelity_maxEntangled {n : ℕ} [NeZero n]
           = (omegaVec n)ᴴ * (psdSqrt hρ * psdSqrt hρ) * omegaVec n by simp only [Matrix.mul_assoc],
       psdSqrt_mul_self]
 
+/-- **The output–maximally-entangled root fidelity is `√F_e`.** For a CPTP channel `Φ` with Kraus
+operators `K`, `√F((Φ⊗id)Ω, Ω) = √(F_e(Φ))` — the entanglement fidelity is the Choi-state overlap. -/
+theorem sqrtFidelity_output_eq {K : Fin m → Matrix (Fin n) (Fin n) ℂ} [NeZero n]
+    (hK : IsKrausChannel K) :
+    sqrtFidelity (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK)
+        isDensityOperator_maxEntangled).1 isDensityOperator_maxEntangled.1
+      = Real.sqrt (entanglementFidelity K) := by
+  rw [sqrtFidelity_maxEntangled, omega_overlap_scalar, entanglementFidelity]
+  have hre : (((n : ℂ)⁻¹ * ∑ k, ((Complex.normSq ((K k).trace) : ℝ) : ℂ))).re
+      = (n : ℝ)⁻¹ * ∑ k, Complex.normSq ((K k).trace) := by
+    rw [← Complex.ofReal_sum, show ((n : ℂ)⁻¹) = (((n : ℝ)⁻¹ : ℝ) : ℂ) by push_cast; ring,
+      ← Complex.ofReal_mul, Complex.ofReal_re]
+  rw [hre, ← Real.sqrt_mul (by positivity)]
+  congr 1
+  field_simp
+
 end SKEFTHawking.QuantumNetwork
