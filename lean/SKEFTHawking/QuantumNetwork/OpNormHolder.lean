@@ -1,4 +1,6 @@
 import SKEFTHawking.QuantumNetwork.DiamondNormChoiUpper
+import SKEFTHawking.QuantumNetwork.TraceNormCauchySchwarz
+import Mathlib.Analysis.CStarAlgebra.Matrix
 
 /-!
 # General operator-norm trace bound (Phase 6AJ continuation, brick 3)
@@ -66,5 +68,42 @@ theorem re_trace_mul_le_opNorm_mul_trace {C P : Matrix ι ι ℂ} (hP : P.PosSem
           _ ≤ 2⁻¹ * (‖C‖ + ‖Cᴴ‖) := by
               apply mul_le_mul_of_nonneg_left (norm_add_le _ _) (by norm_num)
           _ = ‖C‖ := by rw [← Matrix.star_eq_conjTranspose, norm_star]; ring
+
+/-- **Op-norm/trace-norm Hölder bound (invertible case):** `Re tr(K·M) ≤ ‖K‖ · ‖M‖₁` for invertible
+`M`. Via the polar `M = U·|M|` (`U = M·|M|⁻¹` unitary), `Re tr(K·M) = Re tr((K·U)·|M|) ≤ ‖K·U‖·tr|M|`
+(`re_trace_mul_le_opNorm_mul_trace`, `|M|` PSD) `≤ ‖K‖·‖U‖·‖M‖₁ ≤ ‖K‖·‖M‖₁` (`‖U‖ ≤ 1`). -/
+theorem re_trace_mul_le_opNorm_mul_traceNorm {K M : Matrix ι ι ℂ} (hM : IsUnit M) :
+    (K * M).trace.re ≤ ‖K‖ * traceNorm M := by
+  have hPh := absOp_isHermitian M
+  have hPpsd := absOp_posSemidef M
+  have hPd : IsUnit (absOp M).det := (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_absOp hM)
+  set P := absOp M with hPdef
+  have hPiP : P⁻¹ * P = 1 := Matrix.nonsing_inv_mul P hPd
+  have hPih : (P⁻¹)ᴴ = P⁻¹ := by rw [Matrix.conjTranspose_nonsing_inv, hPh.eq]
+  have hPP : P * P = Mᴴ * M := absOp_mul_self M
+  set U := M * P⁻¹ with hUdef
+  have hMUP : U * P = M := by rw [hUdef, Matrix.mul_assoc, hPiP, Matrix.mul_one]
+  have hUU : Uᴴ * U = 1 := by
+    rw [hUdef, Matrix.conjTranspose_mul, hPih]
+    calc P⁻¹ * Mᴴ * (M * P⁻¹) = P⁻¹ * (Mᴴ * M) * P⁻¹ := by noncomm_ring
+      _ = P⁻¹ * (P * P) * P⁻¹ := by rw [hPP]
+      _ = 1 := by
+          rw [show P⁻¹ * (P * P) * P⁻¹ = (P⁻¹ * P) * (P * P⁻¹) by noncomm_ring, hPiP,
+            Matrix.mul_nonsing_inv P hPd, Matrix.one_mul]
+  have hUunit : U ∈ Matrix.unitaryGroup ι ℂ := by
+    rw [Matrix.mem_unitaryGroup_iff', Matrix.star_eq_conjTranspose]; exact hUU
+  have hUle : ‖U‖ ≤ 1 := by
+    have h2 : ‖U‖ * ‖U‖ = 1 := by
+      rw [← CStarRing.norm_star_mul_self, Matrix.star_eq_conjTranspose, hUU, norm_one]
+    nlinarith [norm_nonneg U]
+  have hKU : ‖K * U‖ ≤ ‖K‖ := by
+    calc ‖K * U‖ ≤ ‖K‖ * ‖U‖ := norm_mul_le K U
+      _ ≤ ‖K‖ * 1 := by gcongr
+      _ = ‖K‖ := mul_one _
+  have hPtrnn : 0 ≤ (P.trace).re := (Complex.le_def.mp hPpsd.trace_nonneg).1.trans_eq' (by simp)
+  calc (K * M).trace.re = ((K * U) * P).trace.re := by rw [← hMUP, ← Matrix.mul_assoc]
+    _ ≤ ‖K * U‖ * (P.trace).re := re_trace_mul_le_opNorm_mul_trace hPpsd
+    _ ≤ ‖K‖ * (P.trace).re := mul_le_mul_of_nonneg_right hKU hPtrnn
+    _ = ‖K‖ * traceNorm M := by rw [traceNorm_eq_trace_absOp]
 
 end SKEFTHawking.QuantumNetwork
