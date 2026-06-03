@@ -367,3 +367,41 @@ construction + both feasibility conditions + the trace bound + all reductions ar
 the attained `ρ*` (`exists_diamondDist_eq`) — genuinely substantial (matrix-function differentiation /
 envelope; non-smooth posPart, √σ; Mathlib matrix-derivative support is limited). Plus the non-invertible-σ
 `+ε·1` limit (DR D4). This is the multi-session analytic frontier; everything around it is proven.
+
+## OUTCOME UPDATE 8 (2026-06-03) — BOTH DR SHORTCUTS REFUTED; KERNEL CONFIRMED AS THE CONIC-DUALITY CORE
+Second DR returned (`Lit-Search/Phase-6AI/Operator-Inequality Lemma for the Diamond-Norm SDP-
+Formalization-Ready Note.md`). Its headline recommendation — "Route 1 with **σ = 1_X/dim(X)**, no
+ε-regularization, cleanest proof; (★) holds for EVERY PosDef σ" — is **MATHEMATICALLY FALSE**. With
+σ = 1/d the kernel collapses to `Tr₂(posPart C) ⪯ diamondDist·1` (since √σ = (1/√d)1 ⟹ M = C/d ⟹
+posPart M = posPart C/d). But `posPart C` is itself a *dual-feasible* witness (`posPart C ⪰ 0`,
+`posPart C ⪰ C`), so weak duality forces `‖Tr₂(posPart C)‖ ≥ diamondDist`; equality would require
+`posPart C` to be dual-OPTIMAL, which is generically false.
+**Numerical refutation (verified):** Φ₁ = id, Φ₂ = reset-to-|0⟩ (asymmetric pair) on a qubit gives
+`eig(C) = {−1, −0.618, 0, 1.618}`, `Tr₂(posPart C) = diag(0.447, 1.171)`, so
+`‖Tr₂(posPart C)‖ = 1.171 > 1 = diamondDist(id, reset)`. (★) at σ = 1/d is FALSE. ⇒ never transcribe it.
+The DR's §2 derivation (Steps 1–5) is itself CORRECT but presupposes a dual-optimal `W^♯` attaining
+`‖Tr₂ W^♯‖ = diamondDist` — i.e. it assumes strong duality (the hard direction) to prove (★). The DR's
+own finding #2 concedes this: the un-conjugated `H = Tr₂((1⊗P*)C) ⪯ diamondDist·1` (derivative-free,
+non-circular, TRUE) does NOT bridge to the √σ-conjugated (★) "without the same complementary-slackness
+identity Route 1 was trying to avoid." The first DR's explicit `W*` formula was also wrong (corrected to
+`diamondWitness` earlier this arc). **Both DRs failed to crack the kernel.**
+
+**First-principles verdict (confirmed against the actual primal infra `DiamondNormSup`/`DiamondNormAttainment`):**
+- The genuinely NON-CIRCULAR, derivative-free handle that IS reachable: for the FIXED optimal output
+  projector `Q*`, the *adjoint-channel* operator `G = Δ*(Q*)` (Δ = (Φ₁−Φ₂)⊗id) satisfies
+  `G ⪯ diamondDist·1` on the doubled space, because `tr(Gρ) = tr(Q*·Δρ) ≤ traceDist ≤ diamondDist` for
+  every density ρ (linear in ρ — no √σ, no derivative; closes via the shipped
+  `posSemidef_smul_one_sub_of_quadratic_le`). **But G lives on X⊗X′ and is NOT σ-conjugated; bridging it to
+  (★)'s `Tr₂(posPart M(σ*)) ⪯ diamondDist·σ*` on X requires the stationarity/complementary-slackness
+  EQUALITY at the optimum** — which is precisely the conic-duality content.
+- Key bridge identity (shipped infra): `Δ(ρ_σ) = M(σ).submatrix(swap)` via
+  `krausMap_tensorKraus_weighted_omega` + `contractedChoi_submatrix_swap`; this is why the TRACE bound
+  `tr(posPart M(σ)) ≤ diamondDist ∀σ` (`trace_posPart_contractedChoi_le_diamondDist`) was provable. The
+  trace→operator upgrade is the irreducible step.
+- **Mathlib v4.29.1 genuinely lacks** every tool that would discharge it: Sion/von-Neumann minimax,
+  Fenchel/conic strong duality, zero-gap SDP, and the matrix-square-root Fréchet derivative
+  (Sylvester-equation form) needed for the envelope/perturbation route. This MATCHES the project's
+  repeated prior fence findings (memory: "primal=dual Choi-SDP equality — conic duality absent";
+  "Mathlib NO minimax/Fenchel/Slater/zero-gap-SDP/Bauer"). The 6AI explicit-witness arc successfully
+  reduced the ENTIRE strong-duality theorem to this ONE inequality and proved everything else kernel-pure
+  — a real achievement — but the final inequality is the irreducible conic-duality core, not a transcription.
