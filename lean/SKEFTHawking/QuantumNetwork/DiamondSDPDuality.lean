@@ -390,4 +390,45 @@ theorem trace_posPart_eq_half_traceNorm {ι : Type*} [Fintype ι] [DecidableEq �
   have heq : (posPart hM).trace.re = (negPart hM).trace.re := by rw [h0] at htr; linarith
   rw [traceNorm_hermitian_eq_pos_add_neg hM, ← heq]; ring
 
+open scoped Kronecker in
+/-- **`(1⊗A)` pulls through the stabilized channel** (Stage-5b core): for Hermitian `A`,
+`(Φ⊗id)((1⊗A)·ρ·(1⊗A)) = (1⊗A)·(Φ⊗id)(ρ)·(1⊗A)`. The ancilla-side operator `1⊗A` commutes with
+each Kraus operator `Kₖ⊗1` (different tensor factors), so it factors out of `krausMap (tensorKraus K)`.
+With the `ω↔Choi` identity this yields the σ-weighted vec-J identity relating the output difference
+at the purification input `(1⊗√σ)|Ω⟩` to the contracted Choi `M = (√σ⊗1)C(√σ⊗1)`. -/
+theorem krausMap_tensorKraus_conj_kron_one (K : Fin m → Matrix (Fin n) (Fin n) ℂ)
+    (A : Matrix (Fin n) (Fin n) ℂ)
+    (ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    krausMap (tensorKraus K) (((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) * ρ
+        * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A))
+      = ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) * krausMap (tensorKraus K) ρ
+          * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) := by
+  unfold krausMap tensorKraus
+  rw [Finset.mul_sum, Finset.sum_mul]
+  refine Finset.sum_congr rfl fun k _ => ?_
+  have hcomm : (K k ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A)
+      = ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) * (K k ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) := by
+    rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul, Matrix.mul_one, Matrix.one_mul,
+      Matrix.mul_one, Matrix.one_mul]
+  have hKh : (K k ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))ᴴ
+      = (K k)ᴴ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) := by
+    rw [Matrix.conjTranspose_kronecker, Matrix.conjTranspose_one]
+  have hcomm2 : ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) * ((K k)ᴴ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+      = ((K k)ᴴ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) := by
+    rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul, Matrix.mul_one, Matrix.one_mul,
+      Matrix.mul_one, Matrix.one_mul]
+  rw [hKh,
+    show (K k ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+        * (((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) * ρ * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A))
+        * ((K k)ᴴ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+      = (K k ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) * ρ
+          * (((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) * ((K k)ᴴ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)))
+        from by noncomm_ring,
+    hcomm, hcomm2,
+    show ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) * (K k ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * ρ
+          * (((K k)ᴴ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A))
+      = ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A)
+          * ((K k ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * ρ * ((K k)ᴴ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)))
+          * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) from by noncomm_ring]
+
 end SKEFTHawking.QuantumNetwork
