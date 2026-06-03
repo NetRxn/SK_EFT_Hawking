@@ -1,8 +1,16 @@
 # Phase 6AJ — Fidelity-domain data processing (MOONSHOT E, public)
 
-**Status:** PLANNED (opened 2026-06-02). Public-only. Lifts the general-state network monotonicity
-from the trace-distance domain (shipped: `traceDist_applyChain_le`) into the **fidelity** domain, so
-a downstream chain certificate can live in fidelity, not only trace distance.
+**Status:** ✅ **COMPLETE (2026-06-03)** — all primary deliverables PROVEN kernel-pure, no fence, no
+axiom; the optional rank-deficient-output strengthening also discharged (OUTCOME 2 + 2b below).
+Public-only. Lifts the general-state network monotonicity from the trace-distance domain (shipped:
+`traceDist_applyChain_le`) into the **fidelity** domain, so a downstream chain certificate can live in
+fidelity, not only trace distance.
+
+**Closure summary (what to read):** the mixed-unitary headline (OUTCOME, `7ac93fe0`) → general-CPTP +
+joint-concavity + chain (OUTCOME 2, `fecc5341`→`cf1b8c55`) → fully-general rank-deficient-output DP
+(OUTCOME 2b, `655260a8`). Single-step fidelity DP `sqrtFidelity_krausMap_ge_psd` is now fully general
+(any trace-preserving Kraus channel, PosDef inputs, *arbitrary* outputs). Files: `FidelityBlockForm`,
+`FidelityForwardBound`, `OpNormHolder`, `FidelityKrausDP`, `FidelityForwardBoundPSD`.
 
 **The target.** Uhlmann's monotonicity / data-processing inequality for fidelity: for any CPTP map
 `Φ` and density operators `ρ, σ`,
