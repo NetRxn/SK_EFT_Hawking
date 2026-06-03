@@ -1,5 +1,6 @@
 import SKEFTHawking.QuantumNetwork.FidelityForwardBound
 import SKEFTHawking.QuantumNetwork.CPTPChannel
+import SKEFTHawking.QuantumNetwork.GeneralStateNetwork
 
 /-!
 # General-CPTP fidelity data processing (Phase 6AJ — general Kraus generalization)
@@ -129,5 +130,69 @@ theorem sqrtFidelity_jointly_concave {ρ₁ σ₁ ρ₂ σ₂ : Matrix ι ι ℂ
     rw [Matrix.trace_add, Matrix.trace_smul, Matrix.trace_smul]; simp [Complex.add_re, smul_eq_mul]
   rw [htr, hX₁t, hX₂t] at hbound
   exact hbound
+
+/-! ## Fidelity-domain network monotonicity (chain corollary)
+
+The fidelity analogue of the shipped trace-distance chain monotonicity `traceDist_applyChain_le`.
+A repeater/swap network is a chain of CPTP steps; the root fidelity to a target reference is
+*non-decreasing* along the chain — the opposite monotone direction from the trace distance
+(`D ↓`, `F ↑`), consistent with Fuchs–van de Graaf. -/
+
+/-- A **fidelity channel step**: it preserves positive-definiteness and does not *decrease* the root
+fidelity (Uhlmann data processing). The fidelity-domain analogue of the trace-distance-contractive
+`IsChannelStep`. -/
+structure IsFidelityStep (Φ : Matrix ι ι ℂ → Matrix ι ι ℂ) : Prop where
+  posDef : ∀ {ρ : Matrix ι ι ℂ}, ρ.PosDef → (Φ ρ).PosDef
+  monotone : ∀ {ρ σ : Matrix ι ι ℂ} (hρ : ρ.PosDef) (hσ : σ.PosDef),
+    sqrtFidelity hρ.posSemidef hσ.posSemidef
+      ≤ sqrtFidelity (posDef hρ).posSemidef (posDef hσ).posSemidef
+
+/-- A trace-preserving Kraus channel `Φ(·) = ∑ₖ Kₖ · Kₖᴴ` that preserves positive-definiteness is a
+fidelity step (the monotonicity is `sqrtFidelity_krausMap_ge`). The positive-definiteness
+preservation is the regularity needed for the Schur-complement forward bound; it holds in particular
+when the channel's "unital part" `∑ₖ Kₖ Kₖᴴ` is positive definite (e.g. mixed-unitary channels). -/
+theorem isFidelityStep_krausMap {m : ℕ} {K : Fin m → Matrix ι ι ℂ} (hK : IsKrausChannel K)
+    (hpres : ∀ {ρ : Matrix ι ι ℂ}, ρ.PosDef → (krausMap K ρ).PosDef) :
+    IsFidelityStep (krausMap K) where
+  posDef := hpres
+  monotone hρ hσ := sqrtFidelity_krausMap_ge hρ hσ hK (hpres hρ) (hpres hσ)
+
+omit [Nonempty ι] in
+/-- A chain of fidelity steps preserves positive-definiteness. -/
+theorem applyChain_posDef {Φs : List (Matrix ι ι ℂ → Matrix ι ι ℂ)}
+    (hΦs : ∀ Φ ∈ Φs, IsFidelityStep Φ) {ρ : Matrix ι ι ℂ} (hρ : ρ.PosDef) :
+    (applyChain Φs ρ).PosDef := by
+  induction Φs with
+  | nil => simpa using hρ
+  | cons Φ rest ih =>
+    rw [applyChain_cons]
+    exact (hΦs Φ List.mem_cons_self).posDef (ih fun Φ' h => hΦs Φ' (List.mem_cons_of_mem _ h))
+
+omit [Nonempty ι] in
+/-- **Fidelity-domain network data-processing monotonicity.** For positive-definite states and any
+chain of fidelity steps (CPTP entanglement swaps / LOCC distillation / memory channels that preserve
+positive-definiteness), the root fidelity to a target reference is non-decreasing along the chain:
+`F(applyChain Φs ρ, applyChain Φs σ) ≥ F(ρ, σ)`. The mirror of `traceDist_applyChain_le`, in the
+opposite monotone direction. -/
+theorem sqrtFidelity_applyChain_ge {Φs : List (Matrix ι ι ℂ → Matrix ι ι ℂ)}
+    (hΦs : ∀ Φ ∈ Φs, IsFidelityStep Φ) {ρ σ : Matrix ι ι ℂ} (hρ : ρ.PosDef) (hσ : σ.PosDef) :
+    sqrtFidelity hρ.posSemidef hσ.posSemidef
+      ≤ sqrtFidelity (applyChain_posDef hΦs hρ).posSemidef
+          (applyChain_posDef hΦs hσ).posSemidef := by
+  induction Φs with
+  | nil => exact le_of_eq rfl
+  | cons Φ rest ih =>
+    have hrest : ∀ Φ' ∈ rest, IsFidelityStep Φ' := fun Φ' h => hΦs Φ' (List.mem_cons_of_mem _ h)
+    exact le_trans (ih hrest)
+      ((hΦs Φ List.mem_cons_self).monotone (applyChain_posDef hrest hρ) (applyChain_posDef hrest hσ))
+
+omit [Nonempty ι] in
+/-- **Single fidelity step** (the chain-of-one specialization): one CPTP segment that preserves
+positive-definiteness does not decrease the root fidelity to the target. -/
+theorem sqrtFidelity_step_ge {Φ : Matrix ι ι ℂ → Matrix ι ι ℂ} (hΦ : IsFidelityStep Φ)
+    {ρ σ : Matrix ι ι ℂ} (hρ : ρ.PosDef) (hσ : σ.PosDef) :
+    sqrtFidelity hρ.posSemidef hσ.posSemidef
+      ≤ sqrtFidelity (hΦ.posDef hρ).posSemidef (hΦ.posDef hσ).posSemidef :=
+  hΦ.monotone hρ hσ
 
 end SKEFTHawking.QuantumNetwork
