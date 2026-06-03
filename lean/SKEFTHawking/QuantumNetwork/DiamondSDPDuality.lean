@@ -1028,4 +1028,32 @@ theorem convex_achievableTr2 (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) 
         selfAdjoint.val_smul, selfAdjoint.val_smul]
     rw [hvalY, hY₁, hY₂, hvalW, ptrace2_add, ptrace2_real_smul, ptrace2_real_smul]
 
+section FrobeniusBound
+attribute [local instance] Matrix.frobeniusNormedAddCommGroup Matrix.frobeniusNormedSpace
+
+/-- **`Re tr(M²) ≤ (Re tr M)²` for PSD `M`** (`∑λ² ≤ (∑λ)²`). Via Frobenius: `Re tr(M²) =
+Re tr(Mᴴ·M) = ‖M‖_F²` (`M` Hermitian) and `‖M‖_F ≤ traceNorm M = Re tr M` (PSD). -/
+theorem re_trace_sq_le_sq_re_trace {ι : Type*} [Fintype ι] [DecidableEq ι] {M : Matrix ι ι ℂ}
+    (hM : M.PosSemidef) : (M * M).trace.re ≤ ((M.trace).re) ^ 2 := by
+  have h1 : (M * M).trace.re = ‖M‖ ^ 2 := by
+    rw [← re_trace_conjTranspose_mul_self_eq_frobenius_sq, hM.isHermitian.eq]
+  have h2 : ‖M‖ ≤ (M.trace).re :=
+    le_trans (frobenius_le_traceNorm M) (le_of_eq (traceNorm_posSemidef hM))
+  rw [h1]
+  nlinarith [h2, norm_nonneg M]
+
+end FrobeniusBound
+
+/-- **Carrier-norm witness bound: `‖W‖ ≤ Re tr(W.toSA)` when `W` is PSD.** The Hermitian-carrier norm
+(`= √(Re tr(W²))`) is bounded by the trace; combined with `tr(Tr₂ W) = tr W`, this bounds every
+witness for a fixed `Tr₂ W = M` by `Re tr M`, making `achievableTr2` closed by bounded sequential
+compactness. -/
+theorem HermCarrier.norm_le_re_trace {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {W : HermCarrier ι} (hW : W.toSA.1.PosSemidef) : ‖W‖ ≤ (W.toSA.1.trace).re := by
+  have hns : (0 : ℝ) ≤ (W.toSA.1.trace).re := (Complex.le_def.mp hW.trace_nonneg).1
+  have hsq : ‖W‖ ^ 2 ≤ ((W.toSA.1.trace).re) ^ 2 := by
+    rw [← real_inner_self_eq_norm_sq, HermCarrier.inner_eq]
+    exact re_trace_sq_le_sq_re_trace hW
+  nlinarith [hsq, norm_nonneg W, hns]
+
 end SKEFTHawking.QuantumNetwork
