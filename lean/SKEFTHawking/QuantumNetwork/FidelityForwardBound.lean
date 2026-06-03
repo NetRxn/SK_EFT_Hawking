@@ -74,4 +74,55 @@ theorem re_trace_block_le_sqrtFidelity {ρ X σ : Matrix ι ι ℂ} (hρ : ρ.Po
           (traceNorm_nonneg _)
     _ = traceNorm (rσ * rρ) := one_mul _
 
+/-- `√σ · σ⁻¹ · √σ = 1` for positive-definite `σ`. -/
+theorem sqrt_mul_inv_mul_sqrt {σ : Matrix ι ι ℂ} (hσ : σ.PosDef) :
+    psdSqrt hσ.posSemidef * σ⁻¹ * psdSqrt hσ.posSemidef = 1 := by
+  have hd : IsUnit (psdSqrt hσ.posSemidef).det :=
+    (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_psdSqrt _ hσ.isUnit)
+  have hi : (psdSqrt hσ.posSemidef)⁻¹ * psdSqrt hσ.posSemidef = 1 := Matrix.nonsing_inv_mul _ hd
+  have hi' : psdSqrt hσ.posSemidef * (psdSqrt hσ.posSemidef)⁻¹ = 1 := Matrix.mul_nonsing_inv _ hd
+  have hσinv : (psdSqrt hσ.posSemidef)⁻¹ * (psdSqrt hσ.posSemidef)⁻¹ = σ⁻¹ := by
+    rw [← Matrix.mul_inv_rev, psdSqrt_mul_self]
+  rw [← hσinv, show psdSqrt hσ.posSemidef * ((psdSqrt hσ.posSemidef)⁻¹ * (psdSqrt hσ.posSemidef)⁻¹)
+      * psdSqrt hσ.posSemidef
+      = (psdSqrt hσ.posSemidef * (psdSqrt hσ.posSemidef)⁻¹)
+        * ((psdSqrt hσ.posSemidef)⁻¹ * psdSqrt hσ.posSemidef) by noncomm_ring, hi, hi', Matrix.one_mul]
+
+/-- The polar witness `X* = √ρ·W·√σ` has Schur complement `ρ` (so the block is PSD): for a unitary
+`W` (`W Wᴴ = 1`), `(√ρ W √σ)·σ⁻¹·(√ρ W √σ)ᴴ = √ρ·(W Wᴴ)·√ρ = ρ`. -/
+theorem polar_witness_schur_eq {ρ σ W : Matrix ι ι ℂ} (hρ : ρ.PosDef) (hσ : σ.PosDef)
+    (hWWr : W * Wᴴ = 1) :
+    (psdSqrt hρ.posSemidef * W * psdSqrt hσ.posSemidef) * σ⁻¹
+      * (psdSqrt hρ.posSemidef * W * psdSqrt hσ.posSemidef)ᴴ = ρ := by
+  rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_mul, (psdSqrt_isHermitian _).eq,
+    (psdSqrt_isHermitian _).eq,
+    show psdSqrt hρ.posSemidef * W * psdSqrt hσ.posSemidef * σ⁻¹
+        * (psdSqrt hσ.posSemidef * (Wᴴ * psdSqrt hρ.posSemidef))
+      = psdSqrt hρ.posSemidef * W * (psdSqrt hσ.posSemidef * σ⁻¹ * psdSqrt hσ.posSemidef) * Wᴴ
+        * psdSqrt hρ.posSemidef by noncomm_ring,
+    sqrt_mul_inv_mul_sqrt hσ, Matrix.mul_one,
+    show psdSqrt hρ.posSemidef * W * Wᴴ * psdSqrt hρ.posSemidef
+      = psdSqrt hρ.posSemidef * (W * Wᴴ) * psdSqrt hρ.posSemidef by noncomm_ring,
+    hWWr, Matrix.mul_one, psdSqrt_mul_self]
+
+/-- **Attainment of the Alberti maximum.** For positive-definite `ρ,σ` the polar witness
+`X* = √ρ·W·√σ` (`W` the polar unitary of `√σ√ρ`) is block-feasible with `Re tr X* = F(ρ,σ)`. -/
+theorem exists_block_re_trace_eq_sqrtFidelity {ρ σ : Matrix ι ι ℂ} (hρ : ρ.PosDef) (hσ : σ.PosDef) :
+    ∃ X, (fidelityBlock ρ X σ).PosSemidef
+      ∧ X.trace.re = sqrtFidelity hρ.posSemidef hσ.posSemidef := by
+  obtain ⟨W, hWW, hWtr⟩ := exists_unitary_traceNorm_eq_re_trace
+    ((isUnit_psdSqrt _ hσ.isUnit).mul (isUnit_psdSqrt _ hρ.isUnit))
+  have hWWr : W * Wᴴ = 1 := Matrix.mul_eq_one_comm.mp hWW
+  refine ⟨psdSqrt hρ.posSemidef * W * psdSqrt hσ.posSemidef, ?_, ?_⟩
+  · rw [fidelityBlock_posDef_schur hσ, polar_witness_schur_eq hρ hσ hWWr, sub_self]
+    exact Matrix.PosSemidef.zero
+  · rw [sqrtFidelity, hWtr,
+      show (psdSqrt hρ.posSemidef * W * psdSqrt hσ.posSemidef).trace
+        = (W * (psdSqrt hσ.posSemidef * psdSqrt hρ.posSemidef)).trace from by
+        rw [show psdSqrt hρ.posSemidef * W * psdSqrt hσ.posSemidef
+            = psdSqrt hρ.posSemidef * (W * psdSqrt hσ.posSemidef) by noncomm_ring,
+          Matrix.trace_mul_comm,
+          show W * psdSqrt hσ.posSemidef * psdSqrt hρ.posSemidef
+            = W * (psdSqrt hσ.posSemidef * psdSqrt hρ.posSemidef) by noncomm_ring]]
+
 end SKEFTHawking.QuantumNetwork
