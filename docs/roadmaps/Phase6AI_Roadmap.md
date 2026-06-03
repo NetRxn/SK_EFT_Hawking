@@ -189,11 +189,13 @@ membership → `relative_hyperplane_separation`, handling `ProperCone.map`=closu
   `example`s); `CompleteSpace` follows from `FiniteDimensional` (next). 🔑 smul_left needs `Matrix.smul_apply`+`Finset.mul_sum`
   (the ℝ-on-ℂ `Matrix.trace_smul` rw doesn't match the Module-smul instance); `definite` via `equivSA.injective`+`zero_toSA`.
   This is the brick that collapsed the design agent's "multi-week" — the blocker was a fixable instance diamond, not missing math.
-- 🔧 **REMAINING (concrete conic-duality bricks on `HermCarrier`, NO fence/axiom):** (i) `FiniteDimensional ℝ (HermCarrier ι)`
-  (via `equivSA` + `Module.Finite ℝ ℂ` — needs the right import) ⟹ `CompleteSpace`; (ii) transport SDP data (PSD cone,
-  `ptrace2`, `W↦W−C`, objective) onto `HermCarrier`; (iii) PSD-as-`ProperCone ℝ (HermCarrier)` from `isClosed_posSemidef`;
-  (iv) encode dual feasibility as a cone-image membership, apply `relative_hyperplane_separation`, discharge the
-  `ProperCone.map`=closure via finite-dim closed-image; (v) extract the witness → `choiDualValue_le_of_witness` → `le_antisymm` → **`diamondDist_eq_choiSDP`**.
+- ✅ `FiniteDimensional ℝ (HermCarrier ι)` (`266e670d`, `Module.Finite.of_injective`, import `Mathlib.LinearAlgebra.Complex.FiniteDimensional`) ⟹ `CompleteSpace`. All 3 engine instances resolve.
+- ✅✅ **PSD ProperCone DONE (`6417c24e`, `DiamondSDPCone.lean`):** `psdProperCone : ProperCone ℝ (HermCarrier ι)` (`toMatₗ`+`continuous_toMat` finite-dim continuity; `isClosed_psdCarrierCone` via shipped `isClosed_posSemidef`; `psdCarrierCone` pointed-cone; `convex_psdSet`). Import `Mathlib.Analysis.Convex.Cone.Dual` (ProperCone + `hyperplane_separation`). **ROUTE (a) geometric Hahn–Banach confirmed** over (b) `relative_hyperplane_separation` — `ProperCone.map`=closure ⟹ cone-image closedness obligation (cone images NOT closed in general even finite-dim); route (a) separates the closed PSD set from a compact set, no image cone.
+- ✅ VERIFIED-COMPILING (prototyping agent, integrate when reached): separation→Riesz skeleton (`geometric_hahn_banach_compact_closed` + `InnerProductSpace.toDual` on the carrier) + the conditional headline glue `diamondDist_eq_choiSDP (hwit) := le_antisymm (diamondDist_le_choiDualValue …) (choiDualValue_le_of_witness hwit)`.
+- 🔴 **REMAINING = the Watrous complementary-slackness analytic core (sub-lemmas 3+4, NO Mathlib gap, NO axiom):**
+  (3) `primal_value_eq : (C * choiContraction (posProj T*) ρ*).trace.re = diamondDist` (transcribe `DiamondNormDual.lean:174-185` chain in reverse, from `exists_diamondDist_eq` + `eigPosSum_eq_re_trace_posProj` + `trace_mul_krausMap_sub`) — moderate;
+  (4) gap ⇒ separate the primal-optimum carrier-lift from the dual-feasible objective-sublevel `t` (closed+convex via `convex_psdSet`+`continuous_ptrace2`) via `geometric_hahn_banach_compact_closed`; the separating vector `v⪰0` + complementary slackness (reuse `re_trace_mul_le_of_loewner` for tightness) ⟹ a feasible `W` with `‖ptrace2 W‖ ≤ diamondDist`, contradicting `δ<choiDualValue` — the genuine SDP-duality content, multi-session but UNBLOCKED.
+  THEN `choiDualValue_le_of_witness` → `le_antisymm` → **`diamondDist_eq_choiSDP`**. All scaffolding (carrier, cone, separation skeleton, both attainments, weak-dual, glue) shipped + verified.
 - (history) Bricks 2 (define `W*`) + 4 (`W*−C⪰0` + tightness) = the deep crux. `W* = C₊` works ONLY for Pauli-covariant
   (max-entangled `ρ*`); GENERAL non-covariant (amp-damp: product-state `ρ*`) needs the `ρ*`-aligned witness — the
   genuine Watrous §3.3.2 dual-optimal construction (per-channel exacts in `NamedChannelDiamondExact.lean` are the
