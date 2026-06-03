@@ -125,4 +125,54 @@ theorem exists_block_re_trace_eq_sqrtFidelity {ρ σ : Matrix ι ι ℂ} (hρ : 
           show W * psdSqrt hσ.posSemidef * psdSqrt hρ.posSemidef
             = W * (psdSqrt hσ.posSemidef * psdSqrt hρ.posSemidef) by noncomm_ring]]
 
+/-! ## Mixed-unitary channel: PosDef preservation, trace preservation, and the monotonicity headline -/
+
+/-- A mixed-unitary channel `Φ(ρ) = ∑ᵢ pᵢ Uᵢ ρ Uᵢᴴ` (convex `p`, unitary `Uᵢ`) preserves positive
+definiteness: one term `pⱼ Uⱼ ρ Uⱼᴴ` (`pⱼ > 0`) is positive definite, the rest positive semidefinite. -/
+theorem posDef_mixedUnitary {n : ℕ} {p : Fin n → ℝ} {U : Fin n → Matrix ι ι ℂ} {ρ : Matrix ι ι ℂ}
+    (hρ : ρ.PosDef) (hp : ∀ i, 0 ≤ p i) (hsum : ∑ i, p i = 1) (hU : ∀ i, (U i)ᴴ * U i = 1) :
+    (∑ i, (p i : ℂ) • (U i * ρ * (U i)ᴴ)).PosDef := by
+  obtain ⟨j, -, hj⟩ : ∃ j ∈ Finset.univ, 0 < p j := by
+    by_contra hcon
+    push_neg at hcon
+    exact absurd hsum (by rw [Finset.sum_eq_zero fun i hi => le_antisymm (hcon i hi) (hp i)]; norm_num)
+  have hconj : ∀ i, (U i * ρ * (U i)ᴴ).PosSemidef := fun i => posSemidef_unitary_conj _ hρ.posSemidef
+  rw [← Finset.add_sum_erase _ _ (Finset.mem_univ j)]
+  refine Matrix.PosDef.add_posSemidef ?_ ?_
+  · refine Matrix.PosDef.smul ?_ (by exact_mod_cast hj)
+    have hUj : IsUnit (U j) := ⟨⟨U j, (U j)ᴴ, Matrix.mul_eq_one_comm.mp (hU j), hU j⟩, rfl⟩
+    rw [show U j * ρ * (U j)ᴴ = U j * ρ * star (U j) by rw [Matrix.star_eq_conjTranspose]]
+    exact (Matrix.IsUnit.posDef_star_right_conjugate_iff hUj).mpr hρ
+  · exact Matrix.posSemidef_sum _ fun i _ => (hconj i).smul (by exact_mod_cast hp i)
+
+/-- A mixed-unitary channel preserves the trace: `tr(∑ᵢ pᵢ Uᵢ X Uᵢᴴ) = tr X` (`∑pᵢ=1`, `Uᵢ` unitary). -/
+theorem trace_mixedUnitary {n : ℕ} {p : Fin n → ℝ} {U : Fin n → Matrix ι ι ℂ} {X : Matrix ι ι ℂ}
+    (hsum : ∑ i, p i = 1) (hU : ∀ i, (U i)ᴴ * U i = 1) :
+    (∑ i, (p i : ℂ) • (U i * X * (U i)ᴴ)).trace = X.trace := by
+  rw [Matrix.trace_sum]
+  have : ∀ i, (((p i : ℂ) • (U i * X * (U i)ᴴ)).trace) = (p i : ℂ) • X.trace := by
+    intro i
+    rw [Matrix.trace_smul]
+    congr 1
+    rw [Matrix.trace_mul_comm (U i * X) (U i)ᴴ, ← Matrix.mul_assoc, hU i, Matrix.one_mul]
+  rw [Finset.sum_congr rfl fun i _ => this i, ← Finset.sum_smul, ← Complex.ofReal_sum, hsum]
+  simp
+
+/-- **Mixed-unitary Uhlmann monotonicity:** `F(Φρ, Φσ) ≥ F(ρ, σ)` for `Φ(·) = ∑ᵢ pᵢ Uᵢ · Uᵢᴴ`
+(convex `p`, unitary `Uᵢ`) and positive-definite `ρ, σ`. The optimal Alberti witness `X*` for `(ρ,σ)`
+(attainment) transports to a feasible witness for `(Φρ,Φσ)` with the same trace; the forward bound at
+`(Φρ,Φσ)` then gives `F(Φρ,Φσ) ≥ Re tr(ΦX*) = Re tr X* = F(ρ,σ)`. -/
+theorem sqrtFidelity_mixedUnitary_ge {n : ℕ} {p : Fin n → ℝ} {U : Fin n → Matrix ι ι ℂ}
+    {ρ σ : Matrix ι ι ℂ} (hρ : ρ.PosDef) (hσ : σ.PosDef)
+    (hp : ∀ i, 0 ≤ p i) (hsum : ∑ i, p i = 1) (hU : ∀ i, (U i)ᴴ * U i = 1) :
+    sqrtFidelity hρ.posSemidef hσ.posSemidef
+      ≤ sqrtFidelity (posDef_mixedUnitary hρ hp hsum hU).posSemidef
+          (posDef_mixedUnitary hσ hp hsum hU).posSemidef := by
+  obtain ⟨X, hXblock, hXtr⟩ := exists_block_re_trace_eq_sqrtFidelity hρ hσ
+  have hΦblock := fidelityBlock_mixedUnitary_posSemidef p U ρ X σ hp hXblock
+  have hbound := re_trace_block_le_sqrtFidelity (posDef_mixedUnitary hρ hp hsum hU)
+    (posDef_mixedUnitary hσ hp hsum hU) hΦblock
+  rwa [show (∑ i, (p i : ℂ) • (U i * X * (U i)ᴴ)).trace.re = X.trace.re from by
+    rw [trace_mixedUnitary hsum hU], hXtr] at hbound
+
 end SKEFTHawking.QuantumNetwork

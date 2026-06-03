@@ -126,7 +126,7 @@ for the mixed-unitary case.
 4. ✅ **DONE** `re_trace_block_le_sqrtFidelity` (`FidelityForwardBound.lean`, commit `f2bd646a`):
    PosDef `ρ,σ`, block-PSD ⟹ `Re tr X ≤ F`. `isUnit_psdSqrt` + Schur ⟹ `X=√ρK√σ`,
    `1−KKᴴ=√ρ⁻¹(ρ−Xσ⁻¹Xᴴ)√ρ⁻¹⪰0`, then brick4a + brick3b + cyclic trace.
-5. **NEXT — `exists_block_re_trace_eq_sqrtFidelity` (attainment):** `X* = √ρ·W·√σ`, `W=|√σ√ρ|⁻¹(√σ√ρ)ᴴ`
+5. ✅ **DONE** `exists_block_re_trace_eq_sqrtFidelity` (attainment, commit `6150284a`; decomposed via `sqrt_mul_inv_mul_sqrt`+`polar_witness_schur_eq` to dodge heartbeat walls). **The full Alberti characterization F=max{Re tr X} is now formalized (forward+attainment).** Original plan: `X* = √ρ·W·√σ`, `W=|√σ√ρ|⁻¹(√σ√ρ)ᴴ`
    the polar unitary (project's `traceNorm_mul_le_of_isUnit` internal construction — EXPOSE it as a
    standalone `traceNorm M = Re tr(W·M)`, `W` unitary, invertible M). Block-PSD via Schur (`ρ−X*σ⁻¹X*ᴴ
    = ρ−√ρ W Wᴴ √ρ = 0 ⪰0`); `Re tr X* = Re tr(W·√σ√ρ) = ‖√σ√ρ‖₁ = F`.
