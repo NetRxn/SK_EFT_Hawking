@@ -1142,4 +1142,28 @@ theorem isCompact_opBall (δ : ℝ) : IsCompact (opBall (n := n) δ) := by
     (LinearMap.ker_eq_bot.mpr HermCarrier.toMatₗ_injective)).isProperMap.isCompact_preimage
     (isCompact_closedBall 0 δ)
 
+/-- `Tr₂` preserves Hermiticity. -/
+theorem ptrace2_isHermitian {W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hW : W.IsHermitian) :
+    (ptrace2 W).IsHermitian := by
+  show (ptrace2 W)ᴴ = ptrace2 W
+  ext a b
+  rw [Matrix.conjTranspose_apply, ptrace2, ptrace2, star_sum]
+  refine Finset.sum_congr rfl fun x _ => ?_
+  rw [show star (W (b, x) (a, x)) = Wᴴ (a, x) (b, x) from (Matrix.conjTranspose_apply W _ _).symm, hW]
+
+/-- Lift a Hermitian matrix to the Hermitian carrier. -/
+def HermCarrier.ofMat {ι : Type*} [Fintype ι] [DecidableEq ι] {M : Matrix ι ι ℂ}
+    (hM : M.IsHermitian) : HermCarrier ι :=
+  ⟨⟨M, by show star M = M; rw [Matrix.star_eq_conjTranspose]; exact hM⟩⟩
+
+@[simp] theorem HermCarrier.ofMat_toSA {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {M : Matrix ι ι ℂ} (hM : M.IsHermitian) : (HermCarrier.ofMat hM).toSA.1 = M := rfl
+
+/-- A feasible matrix witness `W` (`W ⪰ 0`, `W ⪰ C`) places `Tr₂ W` in the achievable set `S`. -/
+theorem mem_achievableTr2_of_matrix {C W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ}
+    (hWh : W.IsHermitian) (hW : W.PosSemidef) (hWC : (W - C).PosSemidef) :
+    HermCarrier.ofMat (ptrace2_isHermitian hWh) ∈ achievableTr2 C :=
+  ⟨HermCarrier.ofMat hWh, by rw [HermCarrier.ofMat_toSA]; exact hW,
+    by rw [HermCarrier.ofMat_toSA]; exact hWC, by rw [HermCarrier.ofMat_toSA, HermCarrier.ofMat_toSA]⟩
+
 end SKEFTHawking.QuantumNetwork
