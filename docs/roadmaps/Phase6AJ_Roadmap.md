@@ -62,6 +62,37 @@ axiom without sign-off. Counts/docs/memory synced.
 
 ---
 
+## ✅✅ OUTCOME 2 (2026-06-03, autonomous /goal) — GENERAL-CPTP UHLMANN MONOTONICITY + JOINT CONCAVITY + CHAIN **PROVEN** (`FidelityKrausDP.lean`, commits `fecc5341`→`cf1b8c55`)
+
+**ALL FOUR PRIMARY DELIVERABLES CLOSED, kernel-pure `{propext, Classical.choice, Quot.sound}`, NO
+axiom, NO fence.** The roadmap's fear that "general CPTP needs Stinespring/Choi/Lieb — larger" was
+WRONG (the 6AI lesson again): the mixed-unitary proof GENERALIZED directly because
+`diagDil_conj_fidelityBlock` already holds for an *arbitrary* matrix, not just a unitary.
+
+1. **General-CPTP fidelity DP** `sqrtFidelity_krausMap_ge`: `F(Φρ,Φσ) ≥ F(ρ,σ)` for an arbitrary
+   trace-preserving Kraus channel `Φ(·)=∑ₖKₖ·Kₖᴴ` (`∑ₖKₖᴴKₖ=1`), PosDef inputs whose outputs are
+   PosDef. Bricks: `fidelityBlock_sum` (finite additivity) + `fidelityBlock_krausMap_posSemidef`
+   (block-PSD transport via the sum of `(Kₖ⊕Kₖ)`-congruences) + `trace_krausMap` (TP) ∘ the shipped
+   Alberti forward bound + attainment. **No Stinespring/Choi/Lieb.**
+2. **Output-PosDef discharged for the broad unital-faithful class** `posDef_krausMap_of_sum`: if the
+   channel's unital part `∑ₖKₖKₖᴴ` is PosDef then `Φ` preserves PosDef (quadratic-form argument via
+   `posDef_iff_dotProduct_mulVec`; some `Kₖᴴv≠0` forced by the unital-part PosDef). Hypothesis-free
+   corollary `sqrtFidelity_krausMap_ge'`. Subsumes mixed-unitary (`∑pᵢUᵢUᵢᴴ=1`).
+3. **Joint concavity** `sqrtFidelity_jointly_concave`: `t·F₁+(1−t)·F₂ ≤ F(combo,combo)` — drops out of
+   the Alberti max-of-linear form (`fidelityBlock_smul_add_smul` + `posDef_convex`).
+4. **Fidelity-domain network chain** `sqrtFidelity_applyChain_ge` (mirror of `traceDist_applyChain_le`,
+   opposite monotone direction — `D↓`, `F↑`, FvdG-consistent): `IsFidelityStep` abstraction
+   (preserves PosDef + fidelity-monotone) + `isFidelityStep_krausMap`/`isFidelityStep_krausMap'`
+   (Kraus constructors) + `applyChain_posDef` + `sqrtFidelity_step_ge`. The dependent PosDef proofs in
+   `sqrtFidelity` are absorbed by proof irrelevance in the `le_trans` induction.
+
+**Remaining (optional, NOT a fence):** fully general arbitrary-PSD-output DP (drop the output-PosDef
+regularity entirely) would need `sqrtFidelity` continuity + ε-regularization of the Schur-based forward
+bound — a measure-zero boundary case handled by continuity in the standard treatment; not required for
+the operational chain certificate (states are full-rank generically). New file: `FidelityKrausDP.lean`.
+
+---
+
 ## ✅ OUTCOME (2026-06-03, autonomous /goal) — MIXED-UNITARY UHLMANN MONOTONICITY **PROVEN** (`sqrtFidelity_mixedUnitary_ge`, commit `7ac93fe0`)
 
 **HEADLINE CLOSED:** `F(Φρ,Φσ) ≥ F(ρ,σ)` for mixed-unitary `Φ(·)=∑pᵢUᵢ·Uᵢᴴ`, PosDef `ρ,σ`, kernel-pure.
