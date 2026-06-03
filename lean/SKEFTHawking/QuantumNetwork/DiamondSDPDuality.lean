@@ -1056,4 +1056,55 @@ theorem HermCarrier.norm_le_re_trace {ι : Type*} [Fintype ι] [DecidableEq ι]
     exact re_trace_sq_le_sq_re_trace hW
   nlinarith [hsq, norm_nonneg W, hns]
 
+open scoped Kronecker Topology in
+/-- **`achievableTr2 C` is closed.** Every witness `W` for a point `M = Tr₂ W` is norm-bounded by
+`Re tr M` (`HermCarrier.norm_le_re_trace` + `trace_ptrace2`); for a convergent `Yₖ → Y` in `S` the
+trace bound is uniform, so the witnesses live in a compact PSD ball, a convergent subsequence
+`W_{φ k} → W*` is feasible (PSD and `⪰ C` are closed), and `Tr₂` continuity gives
+`Y.toSA = Tr₂ W*`. -/
+theorem isClosed_achievableTr2 [NeZero n] (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    IsClosed (achievableTr2 C) := by
+  rw [← isSeqClosed_iff_isClosed]
+  intro Yseq Y hmem hconv
+  choose W hW hWC hYeq using hmem
+  have hcontTr : Continuous fun Z : HermCarrier (Fin n) => (Z.toSA.1.trace).re :=
+    Complex.continuous_re.comp <| continuous_finset_sum _ fun i _ =>
+      ((continuous_apply i).comp (continuous_apply i)).comp HermCarrier.continuous_toMat
+  have htends : Filter.Tendsto (fun k => ((Yseq k).toSA.1.trace).re) Filter.atTop
+      (𝓝 ((Y.toSA.1.trace).re)) := (hcontTr.tendsto Y).comp hconv
+  obtain ⟨B, hB⟩ := htends.bddAbove_range
+  have hbd : ∀ k, ‖W k‖ ≤ B := by
+    intro k
+    have h := HermCarrier.norm_le_re_trace (hW k)
+    have heq : ((W k).toSA.1.trace).re = ((Yseq k).toSA.1.trace).re := by
+      rw [hYeq k, trace_ptrace2]
+    rw [heq] at h
+    exact le_trans h (hB ⟨k, rfl⟩)
+  set K : Set (HermCarrier (Fin n × Fin n)) := {Z | Z.toSA.1.PosSemidef ∧ ‖Z‖ ≤ B} with hKdef
+  have hKclosed : IsClosed K := by
+    refine IsClosed.inter (isClosed_posSemidef.preimage HermCarrier.continuous_toMat) ?_
+    exact isClosed_le continuous_norm continuous_const
+  have hKcompact : IsCompact K :=
+    Metric.isCompact_of_isClosed_isBounded hKclosed
+      ((Metric.isBounded_iff_subset_closedBall 0).2 ⟨B, fun Z hZ => by
+        simpa [Metric.mem_closedBall, dist_zero_right] using hZ.2⟩)
+  have hWK : ∀ k, W k ∈ K := fun k => ⟨hW k, hbd k⟩
+  obtain ⟨Wstar, _hWstarK, φ, hφ, hWφ⟩ := hKcompact.tendsto_subseq hWK
+  refine ⟨Wstar, ?_, ?_, ?_⟩
+  · have hcl : IsClosed {Z : HermCarrier (Fin n × Fin n) | Z.toSA.1.PosSemidef} :=
+      isClosed_posSemidef.preimage HermCarrier.continuous_toMat
+    exact hcl.mem_of_tendsto hWφ (Filter.Eventually.of_forall fun k => hW (φ k))
+  · have hcl : IsClosed {Z : HermCarrier (Fin n × Fin n) | (Z.toSA.1 - C).PosSemidef} :=
+      isClosed_posSemidef.preimage (HermCarrier.continuous_toMat.sub continuous_const)
+    exact hcl.mem_of_tendsto hWφ (Filter.Eventually.of_forall fun k => hWC (φ k))
+  · have h1 : Filter.Tendsto (fun k => (Yseq (φ k)).toSA.1) Filter.atTop (𝓝 (Y.toSA.1)) :=
+      (HermCarrier.continuous_toMat.tendsto Y).comp (hconv.comp hφ.tendsto_atTop)
+    have h2 : Filter.Tendsto (fun k => ptrace2 (W (φ k)).toSA.1) Filter.atTop
+        (𝓝 (ptrace2 Wstar.toSA.1)) :=
+      ((continuous_ptrace2.comp HermCarrier.continuous_toMat).tendsto Wstar).comp hWφ
+    have h3 : (fun k => (Yseq (φ k)).toSA.1) = fun k => ptrace2 (W (φ k)).toSA.1 := by
+      funext k; exact hYeq (φ k)
+    rw [h3] at h1
+    exact tendsto_nhds_unique h1 h2
+
 end SKEFTHawking.QuantumNetwork
