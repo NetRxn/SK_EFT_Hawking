@@ -2690,6 +2690,7 @@ import SKEFTHawking.QuantumNetwork.FidelityDataProcessing
 import SKEFTHawking.QuantumNetwork.FidelityBlockForm
 import SKEFTHawking.QuantumNetwork.OpNormHolder
 import SKEFTHawking.QuantumNetwork.FidelityForwardBound
+import SKEFTHawking.QuantumNetwork.FidelityKrausDP
 import SKEFTHawking.QuantumNetwork.SelfAdjointInnerProduct
 import SKEFTHawking.QuantumNetwork.HermitianCarrier
 import SKEFTHawking.QuantumNetwork.DiamondSDPCone
