@@ -1,5 +1,6 @@
 import SKEFTHawking.QuantumNetwork.FidelityForwardBound
 import SKEFTHawking.QuantumNetwork.FidelityForwardBoundPSD
+import SKEFTHawking.QuantumNetwork.FidelityAttainmentPSD
 import SKEFTHawking.QuantumNetwork.CPTPChannel
 import SKEFTHawking.QuantumNetwork.GeneralStateNetwork
 
@@ -144,6 +145,58 @@ theorem sqrtFidelity_krausMap_ge_psd {K : Fin m → Matrix ι ι ℂ} {ρ σ : M
     (krausMap_posSemidef K hσ.posSemidef) hΦblock
   rwa [show (krausMap K X).trace.re = X.trace.re from by rw [trace_krausMap hK], hXtr] at hbound
 
+/-! ## Fully unconditional fidelity DP (all density operators) + Loewner monotonicity -/
+
+/-- **Fully unconditional Uhlmann data processing.** For *any* positive-semidefinite states `ρ, σ`
+(no full-rank assumption on inputs *or* outputs) and *any* trace-preserving Kraus channel,
+`F(Φρ, Φσ) ≥ F(ρ, σ)` — the textbook Uhlmann monotonicity for arbitrary density operators. Both halves
+of the Alberti characterization are now positive-semidefinite-valid (`re_trace_block_le_sqrtFidelity_psd`
+forward, `exists_block_re_trace_eq_sqrtFidelity_psd` attainment), so the proof needs no regularity at
+all: attain the optimal witness at `(ρ,σ)`, transport it, and apply the forward bound at the PSD
+outputs. -/
+theorem sqrtFidelity_krausMap_ge_psd_inputs {K : Fin m → Matrix ι ι ℂ} {ρ σ : Matrix ι ι ℂ}
+    (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef) (hK : IsKrausChannel K) :
+    sqrtFidelity hρ hσ
+      ≤ sqrtFidelity (krausMap_posSemidef K hρ) (krausMap_posSemidef K hσ) := by
+  obtain ⟨X, hXblock, hXtr⟩ := exists_block_re_trace_eq_sqrtFidelity_psd hρ hσ
+  have hΦblock := fidelityBlock_krausMap_posSemidef K ρ X σ hXblock
+  have hbound := re_trace_block_le_sqrtFidelity_psd (krausMap_posSemidef K hρ)
+    (krausMap_posSemidef K hσ) hΦblock
+  rwa [show (krausMap K X).trace.re = X.trace.re from by rw [trace_krausMap hK], hXtr] at hbound
+
+omit [Nonempty ι] in
+/-- `[[A,0],[0,0]] ⪰ 0` for `A ⪰ 0` (block diagonal `A ⊕ 0`), via `B·Bᴴ` with `B = [[√A,0],[0,0]]`. -/
+theorem posSemidef_fromBlocks_topLeft {A : Matrix ι ι ℂ} (hA : A.PosSemidef) :
+    (fromBlocks A 0 0 (0 : Matrix ι ι ℂ)).PosSemidef := by
+  have hfac : (fromBlocks A 0 0 (0 : Matrix ι ι ℂ))
+      = (fromBlocks (psdSqrt hA) 0 0 0) * (fromBlocks (psdSqrt hA) 0 0 0)ᴴ := by
+    rw [Matrix.fromBlocks_conjTranspose, Matrix.fromBlocks_multiply]
+    simp only [Matrix.conjTranspose_zero, Matrix.mul_zero, Matrix.zero_mul, add_zero,
+      (psdSqrt_isHermitian hA).eq, psdSqrt_mul_self]
+  rw [hfac]; exact Matrix.posSemidef_self_mul_conjTranspose _
+
+/-- **Loewner monotonicity of the root fidelity (left).** `ρ ⪯ ρ' ⟹ F(ρ,σ) ≤ F(ρ',σ)`: the optimal
+Alberti witness for `(ρ,σ)` stays feasible for `(ρ',σ)` (the block gains `[[ρ'−ρ,0],[0,0]] ⪰ 0`), and
+its trace already equals `F(ρ,σ)`. -/
+theorem sqrtFidelity_mono_left {ρ ρ' σ : Matrix ι ι ℂ} (hρ : ρ.PosSemidef) (hρ' : ρ'.PosSemidef)
+    (hσ : σ.PosSemidef) (hle : (ρ' - ρ).PosSemidef) :
+    sqrtFidelity hρ hσ ≤ sqrtFidelity hρ' hσ := by
+  obtain ⟨X, hXblock, hXtr⟩ := exists_block_re_trace_eq_sqrtFidelity_psd hρ hσ
+  have hblock' : (fidelityBlock ρ' X σ).PosSemidef := by
+    have heq : fidelityBlock ρ' X σ = fidelityBlock ρ X σ + fromBlocks (ρ' - ρ) 0 0 0 := by
+      unfold fidelityBlock
+      rw [Matrix.fromBlocks_add]; simp [add_sub_cancel]
+    rw [heq]; exact hXblock.add (posSemidef_fromBlocks_topLeft hle)
+  have hbound := re_trace_block_le_sqrtFidelity_psd hρ' hσ hblock'
+  rwa [hXtr] at hbound
+
+/-- **Loewner monotonicity (right):** `σ ⪯ σ' ⟹ F(ρ,σ) ≤ F(ρ,σ')`, by symmetry `F(ρ,σ)=F(σ,ρ)`. -/
+theorem sqrtFidelity_mono_right {ρ σ σ' : Matrix ι ι ℂ} (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef)
+    (hσ' : σ'.PosSemidef) (hle : (σ' - σ).PosSemidef) :
+    sqrtFidelity hρ hσ ≤ sqrtFidelity hρ hσ' := by
+  rw [sqrtFidelity_comm hρ hσ, sqrtFidelity_comm hρ hσ']
+  exact sqrtFidelity_mono_left hσ hσ' hρ hle
+
 /-! ## Joint concavity of the (root) fidelity
 
 `(ρ,σ) ↦ F(ρ,σ)` is jointly concave — a direct consequence of the Alberti variational form
@@ -268,5 +321,57 @@ theorem sqrtFidelity_step_ge {Φ : Matrix ι ι ℂ → Matrix ι ι ℂ} (hΦ :
     sqrtFidelity hρ.posSemidef hσ.posSemidef
       ≤ sqrtFidelity (hΦ.posDef hρ).posSemidef (hΦ.posDef hσ).posSemidef :=
   hΦ.monotone hρ hσ
+
+/-! ## Unconditional fidelity-domain network chain (any CPTP chain, all density operators)
+
+The PSD analogue of the chain above: since the unconditional single-step DP
+(`sqrtFidelity_krausMap_ge_psd_inputs`) needs no full-rank hypothesis and `krausMap` always preserves
+positive-semidefiniteness, the chain monotonicity holds for *any* chain of trace-preserving Kraus
+channels and *all* density operators, with no PosDef-preservation side condition. -/
+
+/-- A **PSD fidelity channel step**: preserves positive-semidefiniteness and does not decrease the root
+fidelity. Unlike `IsFidelityStep` it needs no full-rank preservation — every Kraus channel is one
+unconditionally (`isFidelityStepPSD_krausMap`). -/
+structure IsFidelityStepPSD (Φ : Matrix ι ι ℂ → Matrix ι ι ℂ) : Prop where
+  posSemidef : ∀ {ρ : Matrix ι ι ℂ}, ρ.PosSemidef → (Φ ρ).PosSemidef
+  monotone : ∀ {ρ σ : Matrix ι ι ℂ} (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef),
+    sqrtFidelity hρ hσ ≤ sqrtFidelity (posSemidef hρ) (posSemidef hσ)
+
+/-- **Every trace-preserving Kraus channel is a PSD fidelity step, unconditionally** (no full-rank
+side condition) — `krausMap_posSemidef` preserves PSD and `sqrtFidelity_krausMap_ge_psd_inputs` is the
+hypothesis-free monotonicity. -/
+theorem isFidelityStepPSD_krausMap {m : ℕ} {K : Fin m → Matrix ι ι ℂ} (hK : IsKrausChannel K) :
+    IsFidelityStepPSD (krausMap K) where
+  posSemidef h := krausMap_posSemidef K h
+  monotone hρ hσ := sqrtFidelity_krausMap_ge_psd_inputs hρ hσ hK
+
+omit [Nonempty ι] in
+/-- A chain of PSD fidelity steps preserves positive-semidefiniteness. -/
+theorem applyChain_posSemidef {Φs : List (Matrix ι ι ℂ → Matrix ι ι ℂ)}
+    (hΦs : ∀ Φ ∈ Φs, IsFidelityStepPSD Φ) {ρ : Matrix ι ι ℂ} (hρ : ρ.PosSemidef) :
+    (applyChain Φs ρ).PosSemidef := by
+  induction Φs with
+  | nil => simpa using hρ
+  | cons Φ rest ih =>
+    rw [applyChain_cons]
+    exact (hΦs Φ List.mem_cons_self).posSemidef (ih fun Φ' h => hΦs Φ' (List.mem_cons_of_mem _ h))
+
+omit [Nonempty ι] in
+/-- **Unconditional fidelity-domain network data processing.** For *all* density operators and *any*
+chain of trace-preserving Kraus channels, the root fidelity to a target reference is non-decreasing
+along the chain: `F(applyChain Φs ρ, applyChain Φs σ) ≥ F(ρ, σ)`. The fully general mirror of
+`traceDist_applyChain_le` — no full-rank hypothesis anywhere. -/
+theorem sqrtFidelity_applyChain_ge_psd {Φs : List (Matrix ι ι ℂ → Matrix ι ι ℂ)}
+    (hΦs : ∀ Φ ∈ Φs, IsFidelityStepPSD Φ) {ρ σ : Matrix ι ι ℂ}
+    (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef) :
+    sqrtFidelity hρ hσ
+      ≤ sqrtFidelity (applyChain_posSemidef hΦs hρ) (applyChain_posSemidef hΦs hσ) := by
+  induction Φs with
+  | nil => exact le_of_eq rfl
+  | cons Φ rest ih =>
+    have hrest : ∀ Φ' ∈ rest, IsFidelityStepPSD Φ' := fun Φ' h => hΦs Φ' (List.mem_cons_of_mem _ h)
+    exact le_trans (ih hrest)
+      ((hΦs Φ List.mem_cons_self).monotone (applyChain_posSemidef hrest hρ)
+        (applyChain_posSemidef hrest hσ))
 
 end SKEFTHawking.QuantumNetwork
