@@ -345,4 +345,21 @@ theorem diamondWitness_sub_posSemidef [NeZero n] {σ : Matrix (Fin n) (Fin n) �
   have h := (negPart_posSemidef (contractedChoi_isHermitian hσ.posSemidef hC)).mul_mul_conjTranspose_same B
   rwa [hBh] at h
 
+open scoped Kronecker in
+/-- **Partial trace of a first-factor conjugation:** `Tr₂((A⊗1)·Z·(A⊗1)) = A·(Tr₂ Z)·A`. Pushing the
+first-factor operator `A` through the second-factor partial trace. The Stage-5 step that turns
+`Tr₂ W* = Tr₂((√σ⁻¹⊗1)·M₊·(√σ⁻¹⊗1))` into `√σ⁻¹·(Tr₂ M₊)·√σ⁻¹`. -/
+theorem ptrace2_kron_one_conj (A : Matrix (Fin n) (Fin n) ℂ)
+    (Z : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    ptrace2 ((A ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * Z * (A ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)))
+      = A * ptrace2 Z * A := by
+  ext a b
+  simp only [ptrace2, Matrix.mul_apply, Matrix.kroneckerMap_apply, Matrix.one_apply,
+    Fintype.sum_prod_type, mul_ite, ite_mul, mul_one, mul_zero, zero_mul,
+    Finset.sum_ite_eq', Finset.mem_univ, if_true, Finset.sum_ite_eq, Finset.mul_sum,
+    Finset.sum_mul]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun y _ => ?_
+  rw [Finset.sum_comm]
+
 end SKEFTHawking.QuantumNetwork
