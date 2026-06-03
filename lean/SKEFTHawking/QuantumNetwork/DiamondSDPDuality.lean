@@ -556,4 +556,15 @@ theorem trace_posPart_contractedChoi_le_diamondDist [NeZero n]
   rw [trace_posPart_eq_half_traceNorm _ hM0, ← htd]
   exact le_diamondDist hK₁ hK₂ (isDensityOperator_weighted_omega hσ)
 
+open scoped Kronecker in
+/-- **`Tr₂` of the witness:** `Tr₂ W* = √σ⁻¹·(Tr₂ M₊)·√σ⁻¹` — pushing the first-factor `√σ⁻¹` of
+`W* = (√σ⁻¹⊗1)·M₊·(√σ⁻¹⊗1)` through the second-factor partial trace (`ptrace2_kron_one_conj`).
+The witness objective `‖Tr₂ W*‖` is the operator norm of this; the Stage-5c attainment bounds it by
+`diamondDist` at the optimal input. -/
+theorem ptrace2_diamondWitness {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSemidef)
+    {C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hC : C.IsHermitian) :
+    ptrace2 (diamondWitness hσ hC)
+      = (psdSqrt hσ)⁻¹ * ptrace2 (posPart (contractedChoi_isHermitian hσ hC)) * (psdSqrt hσ)⁻¹ := by
+  rw [diamondWitness, ptrace2_kron_one_conj]
+
 end SKEFTHawking.QuantumNetwork
