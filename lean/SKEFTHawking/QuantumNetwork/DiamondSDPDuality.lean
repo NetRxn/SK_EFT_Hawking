@@ -195,4 +195,21 @@ theorem primalSDPValue_le_choiDualValue [NeZero n] (K₁ K₂ : Fin m → Matrix
     have h := re_trace_mul_le_l2opNorm_ptrace2_mul_trace hW hWC hX hσ.1 hle
     rwa [hσ.2, Complex.one_re, mul_one] at h
 
+open scoped Matrix.Norms.L2Operator in
+/-- **Dual infeasibility below the optimum (piece 2, alternatives precondition).** For any
+`δ < choiDualValue`, no dual witness `W` (`W ⪰ 0`, `W ⪰ C`) achieves objective `‖Tr₂ W‖ ≤ δ` — the
+dual-feasible objective-sublevel at level `δ` is empty. This is the infeasibility hypothesis fed to
+the conic theorem-of-alternatives (Slater ⟹ exact certificate): an infeasible dual system at level
+`δ` yields a primal-feasible `X` with `Re tr(C·X) ≥ δ`, so `primalSDPValue ≥ δ`; letting
+`δ → choiDualValue` gives `choiDualValue ≤ primalSDPValue`. -/
+theorem dual_infeasible_of_lt_choiDualValue [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    {δ : ℝ} (hδ : δ < choiDualValue K₁ K₂) :
+    ¬ ∃ W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ, W.PosSemidef ∧
+      (W - (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂))).PosSemidef ∧
+      ‖ptrace2 W‖ ≤ δ := by
+  rintro ⟨W, hW, hWC, hle⟩
+  have hge : choiDualValue K₁ K₂ ≤ ‖ptrace2 W‖ :=
+    csInf_le ⟨0, by rintro r ⟨V, _, _, rfl⟩; exact norm_nonneg _⟩ ⟨W, hW, hWC, rfl⟩
+  linarith
+
 end SKEFTHawking.QuantumNetwork
