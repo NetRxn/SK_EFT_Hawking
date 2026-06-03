@@ -22,7 +22,7 @@ no `maxHeartbeats`; no `native_decide`.
 namespace SKEFTHawking.QuantumNetwork
 
 open Matrix
-open scoped ComplexOrder
+open scoped ComplexOrder Matrix.Norms.L2Operator
 
 /-- The four single-qubit Pauli operators, indexed `0↦I, 1↦X, 2↦Y, 3↦Z`. -/
 noncomputable def pauliOp : Fin 4 → Matrix (Fin 2) (Fin 2) ℂ
@@ -221,5 +221,71 @@ theorem diamondDist_pauliKraus_ge {p : Fin 4 → ℝ} (h0 : ∀ i, 0 ≤ p i) (h
   rw [traceNorm_pauli_choi_diff h0 h1 hsum] at hbound
   calc 1 - p 0 = (1 : ℝ) / (2 * (2 : ℕ)) * (4 * (1 - p 0)) := by push_cast; ring
     _ ≤ _ := hbound
+
+/-! ## Optimal dual witness and the exact diamond distance -/
+
+/-- The **optimal dual witness** for the Pauli channel: the positive part of the Choi difference,
+`W = ∑_{i≥1} pᵢ Bᵢ`. -/
+noncomputable def pauliWitness (p : Fin 4 → ℝ) : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  ∑ i, ((if i = 0 then 0 else p i : ℝ) : ℂ) • bellBlock i
+
+theorem pauliWitness_posSemidef {p : Fin 4 → ℝ} (h0 : ∀ i, 0 ≤ p i) :
+    (pauliWitness p).PosSemidef := by
+  refine Matrix.posSemidef_sum _ fun i _ => (bellBlock_posSemidef i).smul ?_
+  rw [Complex.le_def]; refine ⟨?_, ?_⟩ <;> simp only [Complex.ofReal_re, Complex.ofReal_im,
+    Complex.zero_re, Complex.zero_im] <;> split_ifs <;> simp [h0]
+
+/-- `Tr₂ W = (1 − p₀)·1` (each `Tr₂ Bᵢ = 1`, and `∑_{i≥1} pᵢ = 1 − p₀`). -/
+theorem ptrace2_pauliWitness {p : Fin 4 → ℝ} (hsum : ∑ i, p i = 1) :
+    ptrace2 (pauliWitness p) = ((1 - p 0 : ℝ) : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have hlin : ptrace2 (pauliWitness p)
+      = ∑ i, ((if i = 0 then 0 else p i : ℝ) : ℂ) • ptrace2 (bellBlock i) := by
+    ext a b
+    simp only [ptrace2, pauliWitness, Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul,
+      Finset.mul_sum]
+    rw [Finset.sum_comm]
+  rw [hlin]; simp_rw [ptrace2_bellBlock]; rw [← Finset.sum_smul]
+  have hw : ∑ i, ((if i = 0 then 0 else p i : ℝ) : ℂ) = ((1 - p 0 : ℝ) : ℂ) := by
+    rw [← Complex.ofReal_sum]; congr 1
+    rw [Fin.sum_univ_four]; simp only [Fin.isValue, Fin.reduceEq, ↓reduceIte]
+    have hs : p 0 + p 1 + p 2 + p 3 = 1 := by rw [← Fin.sum_univ_four]; exact hsum
+    linarith
+  rw [hw]
+
+/-- `W ⪰ Δ` in the Loewner order: `W − (J(Φ_p) − J(id)) = (1 − p₀)·B₀ ⪰ 0`. -/
+theorem pauliWitness_sub_choi_posSemidef {p : Fin 4 → ℝ} (h0 : ∀ i, 0 ≤ p i) (h1 : p 0 ≤ 1) :
+    (pauliWitness p - (choiMatrix (krausMap (pauliKraus p))
+      - choiMatrix (krausMap (idKrausPad 3 2)))).PosSemidef := by
+  rw [pauli_choi_diff h0, pauliWitness, ← Finset.sum_sub_distrib]
+  rw [show (∑ i, (((if i = 0 then 0 else p i : ℝ) : ℂ) • bellBlock i
+            - ((p i - if i = 0 then 1 else 0 : ℝ) : ℂ) • bellBlock i))
+        = ((1 - p 0 : ℝ) : ℂ) • bellBlock 0 by
+      rw [Finset.sum_eq_single (0 : Fin 4)]
+      · rw [← sub_smul]; norm_num
+      · intro b _ hb; rw [← sub_smul, if_neg hb, if_neg hb]; norm_num
+      · simp]
+  exact (bellBlock_posSemidef 0).smul (by rw [Complex.le_def]; exact ⟨by simp; linarith, by simp⟩)
+
+/-- **Exact diamond distance of a general single-qubit Pauli channel:**
+`diamondDist (pauliKraus p) (id) = 1 − p₀` (total error probability) for nonnegative weights summing
+to `1`. Lower bound from the Choi trace-norm; upper bound from the positive-part dual witness with
+`Tr₂ W = (1−p₀)·1`. Two-sided exact, with no twirl machinery. -/
+theorem diamondDist_pauliKraus_eq {p : Fin 4 → ℝ} (h0 : ∀ i, 0 ≤ p i) (h1 : p 0 ≤ 1)
+    (hsum : ∑ i, p i = 1) :
+    diamondDist (pauliKraus p) (idKrausPad 3 2) = 1 - p 0 := by
+  refine le_antisymm ?_ (diamondDist_pauliKraus_ge h0 h1 hsum)
+  have hub := diamondDist_le_dual_witness (isKrausChannel_pauliKraus h0 hsum)
+    (isKrausChannel_idKrausPad 3 2) (pauliWitness_posSemidef h0)
+    (pauliWitness_sub_choi_posSemidef h0 h1)
+  rwa [ptrace2_pauliWitness hsum, norm_smul, norm_one, mul_one, Complex.norm_real,
+    Real.norm_of_nonneg (by linarith)] at hub
+
+/-! ## Subsumption
+
+`diamondDist_pauliKraus_eq` subsumes the named single-qubit Pauli channels as special weight choices:
+the dephasing channel is the weights `(1−γ, 0, 0, γ)` (giving `1 − (1−γ) = γ`, matching
+`diamondDist_dephasing_eq`), and the (Pauli-error) depolarizing channel is `(1−p, p/3, p/3, p/3)`
+(giving `1 − (1−p) = p`, matching `diamondDist_depolarizing_eq`) — both instances of the general
+total-error-probability formula `1 − p₀`. -/
 
 end SKEFTHawking.QuantumNetwork
