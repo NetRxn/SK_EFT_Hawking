@@ -124,6 +124,45 @@ attainment needs full-rank intermediates; the single-step DP is now fully genera
 
 ---
 
+## Wave 6AJ.4 — UNCONDITIONAL fidelity DP (PLANNED) — remove the two remaining full-rank hypotheses
+
+**Goal:** make the fidelity DP hold for *all density operators / all CPTP networks* — i.e. drop (1) the
+PosDef-**input** hypothesis on the single-step law and (2) the PosDef-**preserving-step** hypothesis on
+the chain. Then "kernel-verified fidelity data processing" is the *unconditional* (textbook) statement,
+not a conditional one. Two hypotheses ⟹ but they **both cascade from a single linchpin brick**.
+
+**LINCHPIN — PSD-input attainment.** Relax `exists_block_re_trace_eq_sqrtFidelity`
+(`FidelityForwardBound.lean`) from PosDef to **PosSemidef** `ρ,σ`. Today the optimal witness
+`X*=√ρ·W·√σ` uses `W` = polar **unitary** of `√σ√ρ` (needs `√σ√ρ` invertible, via
+`exists_unitary_traceNorm_eq_re_trace`). For PSD inputs `√σ√ρ` may be singular ⟹ `W` is a **partial
+isometry** (`‖W‖≤1`, not unitary). Reachable route:
+- **(a) general polar witness** `∀ M, ∃ W, ‖W‖≤1 ∧ traceNorm M = Re tr(W·M)`: ε-perturb `M` to
+  invertible (shipped `eventually_isUnit_perturb`), get unitary `W_ε`; the closed unit ball `{‖W‖≤1}`
+  is **compact** (finite dim) ⟹ extract a convergent subseq `W_ε→W` (mirror `DiamondNormAttainment`'s
+  EVT/compactness + `IsCompact.tendsto_subseq`), limit has `‖W‖≤1 ∧ traceNorm M = Re tr(W·M)` by
+  `continuous_traceNorm`.
+- **(b) block-PSD of `[[1,W],[Wᴴ,1]]` from `‖W‖≤1`**: Schur on the **(1,1)=1 invertible** corner ⟹
+  `1−WᴴW⪰0 ↔ WᴴW⪯1` (the `‖W‖≤1⟹WᴴW⪯1` converse of `opNorm_le_one_of_mul_conjTranspose_le_one`,
+  EuclideanLin route).
+- **(c) congruence form (no Schur on `ρ,σ`)**: `[[ρ,√ρW√σ],[(√ρW√σ)ᴴ,σ]]
+  = diag(√ρ,√σ)·[[1,W],[Wᴴ,1]]·diag(√ρ,√σ)ᴴ` ⟹ PSD via `PosSemidef.conjTranspose_mul_mul_same`;
+  `Re tr X* = Re tr(W·√σ√ρ) = ‖√σ√ρ‖₁ = F` from (a).
+
+**Cascade (once attainment is PSD-valid — forward bound already is):**
+- `exists_block_re_trace_eq_sqrtFidelity_psd` ⟹ drop PosDef-input from single-step:
+  `sqrtFidelity_krausMap_ge` for PosSemidef inputs = **textbook Uhlmann DP, all density operators**.
+- **Loewner monotonicity** bonus `sqrtFidelity_mono_left/right` (`ρ⪯ρ' ⟹ F(ρ,σ)≤F(ρ',σ)`): drops out
+  of Alberti — `X*` feasible for `(ρ,σ)` stays feasible for `(ρ',σ)` (block gains `[[ρ'−ρ,0],[0,0]]⪰0`).
+- Chain: replace `IsFidelityStep.posDef`/`applyChain_posDef` with PSD-only (`krausMap_posSemidef`
+  always preserves PSD) ⟹ `sqrtFidelity_applyChain_ge` **unconditional** (any CPTP chain).
+- Consolidate: counts, OUTCOME 3, D6 §6 + preprint §3f (flip "full-rank" caveats → "all density
+  operators"), Stage-13.
+
+**Exit:** unconditional single-step + chain fidelity DP PROVEN kernel-pure, OR an
+interactive-lean4-verified honest fence on the one genuinely-blocked sub-brick.
+
+---
+
 ## ✅ OUTCOME (2026-06-03, autonomous /goal) — MIXED-UNITARY UHLMANN MONOTONICITY **PROVEN** (`sqrtFidelity_mixedUnitary_ge`, commit `7ac93fe0`)
 
 **HEADLINE CLOSED:** `F(Φρ,Φσ) ≥ F(ρ,σ)` for mixed-unitary `Φ(·)=∑pᵢUᵢ·Uᵢᴴ`, PosDef `ρ,σ`, kernel-pure.
