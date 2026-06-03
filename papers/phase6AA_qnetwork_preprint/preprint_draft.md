@@ -330,10 +330,14 @@ The 6AE/6AF layer supplies functional-analytic *bricks*; Phase 6AG makes them *o
   `F(ρ,σ) = max{Re tr X : [[ρ,X],[Xᴴ,σ]] ⪰ 0}` (forward bound `re_trace_block_le_sqrtFidelity` +
   attainment `exists_block_re_trace_eq_sqrtFidelity`, both Stinespring-/purification-/Lieb-free):
   (i) **Uhlmann monotonicity for an arbitrary trace-preserving Kraus channel**
-  (`sqrtFidelity_krausMap_ge`): `F(Φρ,Φσ) ≥ F(ρ,σ)`, the optimal witness transported by the sum of
-  `(Kₖ⊕Kₖ)`-congruences of the block (valid for arbitrary matrices, not just unitaries), trace
-  preserved by `∑ₖKₖᴴKₖ=1`; output positive-definiteness discharged for the unital-faithful class
-  `∑ₖKₖKₖᴴ⪰0` (`posDef_krausMap_of_sum`, `sqrtFidelity_krausMap_ge'`, subsuming mixed-unitary).
+  (`sqrtFidelity_krausMap_ge_psd`): `F(Φρ,Φσ) ≥ F(ρ,σ)` for PosDef inputs and *any* trace-preserving Φ,
+  with **no restriction on the outputs** (they may be rank-deficient — e.g. a reset channel); the
+  textbook data-processing inequality. The optimal witness is transported by the sum of `(Kₖ⊕Kₖ)`-
+  congruences of the block (valid for arbitrary matrices, not just unitaries), trace preserved by
+  `∑ₖKₖᴴKₖ=1`, and applied at the PSD outputs via a singular-state forward bound
+  (`re_trace_block_le_sqrtFidelity_psd`) proved by ε-regularization along the **commuting** ray
+  `ρ+ε·1` — where the eigenbasis is fixed, so `√(ρ+ε·1)=U·diag(√(λᵢ+ε))·Uᴴ` by sqrt-uniqueness and the
+  ε→0 limit is elementary (no CFC on the bare matrix algebra needed).
   (ii) **joint concavity** of `(ρ,σ)↦F` (`sqrtFidelity_jointly_concave`), from the max-of-linear form.
   (iii) the **fidelity-domain network chain** (`sqrtFidelity_applyChain_ge`): root fidelity to a target
   is non-decreasing along any chain of CPTP steps — the mirror of `traceDist_applyChain_le` in the

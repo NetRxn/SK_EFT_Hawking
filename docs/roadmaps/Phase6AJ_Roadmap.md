@@ -91,6 +91,29 @@ regularity entirely) would need `sqrtFidelity` continuity + ε-regularization of
 bound — a measure-zero boundary case handled by continuity in the standard treatment; not required for
 the operational chain certificate (states are full-rank generically). New file: `FidelityKrausDP.lean`.
 
+### ✅ OUTCOME 2b (2026-06-03, same /goal) — output-PosDef regularity DISCHARGED (`FidelityForwardBoundPSD.lean`, commit `655260a8`)
+
+The "optional remaining" item above is now **DONE**, kernel-pure. `re_trace_block_le_sqrtFidelity_psd`
+relaxes the forward Alberti bound from positive-DEFINITE to positive-SEMIdefinite `ρ,σ`, so
+`sqrtFidelity_krausMap_ge_psd` gives the **textbook Uhlmann DP** `F(Φρ,Φσ) ≥ F(ρ,σ)` for PosDef inputs
+and an **arbitrary** trace-preserving Kraus channel — *outputs may be rank-deficient* (e.g. a reset
+channel); no output hypothesis at all.
+
+🔑 **The toehold that cracked it (3-agent fan-out, then a route the scouts missed):** the obvious
+ε-regularization needs `sqrtFidelity`-continuity = `psdSqrt`-continuity, and the direct Mathlib route
+(`CFC.continuousOn_sqrt`) is **blocked** — the non-unital isometric CFC instance genuinely does not
+resolve on bare `Matrix ι ι ℂ` (verified by direct probe; would need a `CStarMatrix` detour). The
+winning move: do continuity only **along the commuting ray** `ρ+ε·1`, where the eigenbasis is *fixed*
+(`ρ+ε·1` shares `ρ`'s eigenvectors), so by PSD-square-root **uniqueness** (`posSemidef_eq_of_mul_self_eq`)
+`psdSqrt(ρ+ε·1) = U·diag(√(λᵢ+ε))·Uᴴ` with `U` constant — continuity in `ε` then reduces to continuity
+of the diagonal map `c ↦ diag(√(λᵢ+c))`. No CFC continuity, no `CStarMatrix`, no Powers–Størmer. Bricks:
+`psdSqrt_eq_conj_diag` / `psdSqrt_eq_conj_diag0` (uniqueness, fixed `U` from `eigenvectorUnitary_conj_eq_diagonal`)
+→ `tendsto_psdSqrt_perturb` (ray continuity) → `fidelityBlock_add_smul_one` → the ε-limit via
+`continuous_traceNorm` + `ge_of_tendsto` (the `traceNorm_mul_le` perturbation pattern).
+
+Note the *chain* corollary still requires PosDef-preserving steps (`IsFidelityStep.posDef`) — chaining
+attainment needs full-rank intermediates; the single-step DP is now fully general.
+
 ---
 
 ## ✅ OUTCOME (2026-06-03, autonomous /goal) — MIXED-UNITARY UHLMANN MONOTONICITY **PROVEN** (`sqrtFidelity_mixedUnitary_ge`, commit `7ac93fe0`)

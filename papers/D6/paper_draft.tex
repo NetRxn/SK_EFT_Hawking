@@ -764,12 +764,18 @@ $F(\rho,\sigma)=\max\{\mathrm{Re}\,\mathrm{tr}\,X:\big[\begin{smallmatrix}\rho&X
 complement $X=\sqrt\rho\,K\sqrt\sigma$ with $\|K\|\le1$, attainment
 \verb|exists_block_re_trace_eq_sqrtFidelity| via the polar witness), both proven without
 Stinespring, purification, or Lieb concavity. From it: \emph{(i)} \textbf{Uhlmann monotonicity for an
-arbitrary trace-preserving Kraus channel} (\verb|sqrtFidelity_krausMap_ge|): $F(\Phi\rho,\Phi\sigma)\ge
-F(\rho,\sigma)$, the optimal Alberti witness transported by the sum of $(K_k\!\oplus\!K_k)$-congruences
-of the block (a feasibility transport that holds for arbitrary matrices, not just unitaries) with the
-trace preserved by $\sum_kK_k^\dagger K_k=\mathbf1$; the output positive-definiteness is discharged for
-the broad unital-faithful class $\sum_kK_kK_k^\dagger\succ0$ (\verb|posDef_krausMap_of_sum|,
-\verb|sqrtFidelity_krausMap_ge'|), subsuming the mixed-unitary case. \emph{(ii)} \textbf{joint concavity}
+arbitrary trace-preserving Kraus channel} (\verb|sqrtFidelity_krausMap_ge_psd|):
+$F(\Phi\rho,\Phi\sigma)\ge F(\rho,\sigma)$ for positive-definite inputs and \emph{any}
+trace-preserving $\Phi$, with \emph{no} restriction on the outputs (they may be rank-deficient, e.g.\
+a reset channel) --- the textbook data-processing inequality. The optimal Alberti witness is
+transported by the sum of $(K_k\!\oplus\!K_k)$-congruences of the block (a feasibility transport that
+holds for arbitrary matrices, not just unitaries) with the trace preserved by
+$\sum_kK_k^\dagger K_k=\mathbf1$, and the bound is applied at the positive-\emph{semi}definite outputs
+via a forward Alberti bound (\verb|re_trace_block_le_sqrtFidelity_psd|) proved for singular states by
+$\varepsilon$-regularization along the \emph{commuting} ray $\rho+\varepsilon\mathbf1$: there the
+eigenbasis is fixed, so $\sqrt{\rho+\varepsilon\mathbf1}=U\,\mathrm{diag}(\sqrt{\lambda_i+\varepsilon})
+\,U^\dagger$ by square-root uniqueness, making the $\varepsilon\to0$ limit elementary (no continuous
+functional calculus on the bare matrix algebra is required). \emph{(ii)} \textbf{joint concavity}
 of $(\rho,\sigma)\mapsto F$ (\verb|sqrtFidelity_jointly_concave|), a direct consequence of the
 max-of-linear Alberti form. \emph{(iii)} the \textbf{fidelity-domain network chain}
 (\verb|sqrtFidelity_applyChain_ge|): the root fidelity to a target reference is non-decreasing along any
