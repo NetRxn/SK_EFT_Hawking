@@ -940,4 +940,19 @@ theorem trace_kron_one_mul_diamondWitness [NeZero n] {σ : Matrix (Fin n) (Fin n
       = (B * (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * B) * Mp from by noncomm_ring]
   rw [hBdef, kron_sqrtInv_conj_kron_self hσ, Matrix.one_mul]
 
+open scoped Kronecker in
+/-- **Optimal-witness saddle value ≤ diamondDist.** For a PosDef density `σ`,
+`Re tr((σ⊗1)·diamondWitness) = tr(M₊) ≤ diamondDist` (`trace_kron_one_mul_diamondWitness` +
+`trace_posPart_contractedChoi_le_diamondDist`). Since `Re tr((σ⊗1)·W) = Re tr(σ·Tr₂W)`, this is the
+S-side value bound for the conic-Farkas separation: the achievable point `Tr₂(diamondWitness σ) ∈ S`
+pairs with `σ` to at most `diamondDist`. -/
+theorem re_trace_kron_one_mul_diamondWitness_le [NeZero n]
+    {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosDef) (hσ1 : σ.trace = 1) :
+    ((σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+        * diamondWitness hσ.posSemidef (choiDiff_isHermitian K₁ K₂)).trace.re
+      ≤ diamondDist K₁ K₂ := by
+  rw [trace_kron_one_mul_diamondWitness hσ (choiDiff_isHermitian K₁ K₂)]
+  exact trace_posPart_contractedChoi_le_diamondDist hK₁ hK₂ ⟨hσ.posSemidef, hσ1⟩
+
 end SKEFTHawking.QuantumNetwork
