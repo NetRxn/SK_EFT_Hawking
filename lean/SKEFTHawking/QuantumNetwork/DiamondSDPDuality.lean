@@ -853,4 +853,52 @@ theorem primalSDPValue_le_diamondDist [NeZero n] {K₁ K₂ : Fin m → Matrix (
   · rintro r ⟨X, σ, hX, hσ, hle, rfl⟩
     exact re_trace_choiDiff_mul_le_diamondDist hK₁ hK₂ hσ hX hle
 
+open scoped Kronecker Matrix.Norms.L2Operator in
+/-- **`diamondDist ≤ primalSDPValue` (primal attainment side).** The optimal input `ρ`
+(`exists_diamondDist_eq`) together with the positive-eigenspace projector `P = posProj` of its output
+difference yields a primal-feasible point `X = choiContraction P ρ` (`choiContraction_posSemidef` +
+`choiContraction_le_inMarginal_kron_one`, with `σ = inMarginal ρ` a density) whose objective
+`Re tr(C·X)` equals `traceDist(Φ₁ρ,Φ₂ρ) = diamondDist`
+(`traceDist_eq_re_trace_choiContraction_posProj`). Hence the diamond distance is attained inside the
+primal-feasible set, so `primalSDPValue ≥ diamondDist`. With `primalSDPValue_le_diamondDist`
+(piece 3) this gives `primalSDPValue = diamondDist`; the `choiContraction`→primal-point bridge is the
+reassembly step reused by the conic-Farkas direction (piece 2). -/
+theorem diamondDist_le_primalSDPValue [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    diamondDist K₁ K₂ ≤ primalSDPValue K₁ K₂ := by
+  obtain ⟨ρ, hρ, hdd⟩ := exists_diamondDist_eq (K₁ := K₁) (K₂ := K₂)
+  have hTh : (krausMap (tensorKraus K₁) ρ - krausMap (tensorKraus K₂) ρ).IsHermitian :=
+    (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₁) hρ).1.isHermitian.sub
+      (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₂) hρ).1.isHermitian
+  have hPpsd : (posProj hTh).PosSemidef := by
+    have h := Matrix.posSemidef_conjTranspose_mul_self (posProj hTh)
+    rwa [(posProj_isHermitian hTh).eq, posProj_idem hTh] at h
+  have h1P : ((1 : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) - posProj hTh).PosSemidef := by
+    have h := Matrix.posSemidef_conjTranspose_mul_self
+      ((1 : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) - posProj hTh)
+    rwa [Matrix.conjTranspose_sub, Matrix.conjTranspose_one, (posProj_isHermitian hTh).eq,
+      one_sub_posProj_idem hTh] at h
+  set X := choiContraction (posProj hTh) ρ with hX
+  have hXpsd : X.PosSemidef := choiContraction_posSemidef hPpsd hρ.1
+  have hσdens : IsDensityOperator (inMarginal ρ) :=
+    ⟨inMarginal_posSemidef hρ.1, by rw [trace_inMarginal, hρ.2]⟩
+  have hXle : (inMarginal ρ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - X).PosSemidef :=
+    choiContraction_le_inMarginal_kron_one h1P hρ.1
+  have hval : diamondDist K₁ K₂
+      = ((choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) * X).trace.re := by
+    rw [hdd, hX]; exact traceDist_eq_re_trace_choiContraction_posProj hK₁ hK₂ ρ hTh
+  rw [hval]
+  refine le_csSup ⟨diamondDist K₁ K₂, ?_⟩ ⟨X, inMarginal ρ, hXpsd, hσdens, hXle, rfl⟩
+  rintro r ⟨X', σ', hX', hσ', hle', rfl⟩
+  exact re_trace_choiDiff_mul_le_diamondDist hK₁ hK₂ hσ' hX' hle'
+
+/-- **`primalSDPValue = diamondDist`** — the diamond-SDP primal value equals the operational diamond
+distance (Watrous primal characterization), combining `primalSDPValue_le_diamondDist` (piece 3) and
+`diamondDist_le_primalSDPValue` (attainment). The headline `diamondDist = choiDualValue` then needs
+only `choiDualValue ≤ primalSDPValue` (piece 2, conic Farkas). -/
+theorem primalSDPValue_eq_diamondDist [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    primalSDPValue K₁ K₂ = diamondDist K₁ K₂ :=
+  le_antisymm (primalSDPValue_le_diamondDist hK₁ hK₂) (diamondDist_le_primalSDPValue hK₁ hK₂)
+
 end SKEFTHawking.QuantumNetwork
