@@ -1,0 +1,129 @@
+# Phase 6AK — Physical-limit & impossibility substrate (public)
+
+**Status:** DRAFT (opened 2026-06-03). Public-only (`SKEFTHawking.QuantumNetwork.*`). Follows the
+6AA→6AJ QuantumNetwork certification arc. Where 6AA–6AH shipped *consistency* substrate (bounds a
+quantity must satisfy), this phase ships **physical-limit substrate**: closed-form ceilings/floors
+that an achievable quantity provably *cannot cross*. Downstream these enable "a claim that beats this
+limit is physically impossible" certificates — but, per leak-discipline, the public side states only
+the neutral mathematical bound.
+
+**Hygiene / leak-discipline (hard):** pure QI / measure-theory / QEC math. All theorems are neutral
+objects (fidelity ceilings, channel-distance values, rate bounds, code-distance error relations).
+Docstrings/naming stay neutral pure-math — **no product/positioning/"impossibility-certificate"
+prose, no downstream-application naming.** Downstream consumers reference results by FQN only.
+
+**Invariants (hard):** kernel-pure `{propext, Classical.choice, Quot.sound}`; **no new project-local
+axiom without explicit user sign-off** (Pipeline Invariant #15); no `sorry`/`maxHeartbeats`/
+`native_decide`. Each wave headline committed on `main` (not pushed); counts regenerated
+(`scripts/update_counts.py`); D6/preprint prose synced; preemptive-strengthening checklist per theorem.
+Mathlib scouting via the **interactive lean4 MCP loop** (`lean_leansearch`/`lean_loogle`/`lean_goal`/
+`lean_multi_attempt`), NOT deep research. Fence only with a grep-verified written blocker + a 2–4
+agent fan-out (FENCE-DISCIPLINE), never a hand-wave.
+
+**Sequencing (value × certainty, lowest-risk first):**
+6AK.1 coherence-limited fidelity ceiling → 6AK.3 two-qubit/crosstalk diamond → 6AK.4 thermal/leakage
+channels → 6AK.5 code-distance error relation (QEC, IP-bounded) → 6AK.2 repeaterless rate bound
+(moonshot) → 6AK.6 SPAM / process-fidelity completeness.
+
+---
+
+## Wave 6AK.1 — coherence-limited average-gate-fidelity ceiling 🎯 (LOW risk, do first)
+
+**Goal:** a public closed-form **upper bound on `avgGateFidelity`** for a gate of duration `t` on a
+qubit with relaxation/dephasing characterized by `T1`, `T2` (i.e. the best fidelity physics permits
+given decoherence). Concretely, for the coherence-limited channel `Φ_{t}` (amplitude damping with
+`γ = 1 − e^{−t/T1}` composed with dephasing `p = (1 − e^{−t/T2})/2`, both already defined in
+`NamedChannels`/6AH), prove
+
+  `avgGateFidelity (Φ_t) = (d·F_e + 1)/(d+1)`  with `F_e` the (computable) entanglement fidelity of
+  `Φ_t`,  hence  `avgGateFidelity (Φ_t) ≤ G(t, T1, T2)` for an explicit decreasing `G`.
+
+**Chain:** `Φ_t` is a fixed Kraus channel → its `entanglementFidelity` is a closed form in the Kraus
+traces (`avgGateFidelity_eq` / `kraus_normSq_sum`, both shipped 6AG) → bound below by monotonicity in
+`γ, p`. The simplest shippable form: `avgGateFidelity (ampDampKraus γ) ≤ 1 − γ/(something)`; generalize
+to the composed coherence channel. Reuse `GateFidelity.lean`, `NamedChannels.lean`.
+**Acceptance:** a kernel-pure theorem giving an explicit `avgGateFidelity ≤ G(t,T1,T2)` (or the
+exact `avgGateFidelity` of the coherence channel as a closed form, from which the ceiling follows by
+`exp` monotonicity); D6/preprint note. **Risk:** LOW (all machinery shipped in 6AG/6AH).
+
+---
+
+## Wave 6AK.3 — two-qubit / general n-qubit Pauli-channel diamond distance 🎯 (LOW–MED risk)
+
+**Goal:** generalize 6AH.2 (`diamondDist_pauliKraus_eq = 1 − p₀`, single-qubit) to the **two-qubit
+Pauli channel** (16 Pauli weights), proving `diamondDist (twoQubitPauliKraus p) id = 1 − p₀₀` (total
+error probability). This covers the dominant real-device error (two-qubit gate / crosstalk).
+**Chain:** the single-qubit proof in `PauliChannel.lean` is weight-general over the 4 Bell blocks via
+orthogonality `BᵢBⱼ = 2δᵢⱼBᵢ`; the two-qubit case is the Kronecker square — 16 Bell blocks, same
+orthogonality + positive-part dual witness. Reuse `PauliChannel.lean` machinery; index `Fin 4 × Fin 4`.
+**Acceptance:** kernel-pure `diamondDist (twoQubitPauliKraus p) (idKrausPad 15 4) = 1 − p 0`; the
+single-qubit result re-derived as the `d=2` factor. **Risk:** LOW–MED (16-way orthogonality bookkeeping;
+the `2d` Kronecker-of-Bell-blocks structure is mechanical but larger).
+
+---
+
+## Wave 6AK.4 — thermal (generalized amplitude damping) + leakage channels (MED risk)
+
+**Goal:** exact or two-sided-bracket diamond distances for two more physically-important named
+channels: **generalized amplitude damping** (finite-temperature relaxation, params `γ, N`) and a
+**leakage channel** (qubit → a third level; qutrit Kraus). Each `diamondDist(·, id)` as a closed form.
+**Chain:** GAD is the amp-damp template (`NamedChannelDiamondExact.lean`) with a thermal mixing weight;
+leakage needs a `Fin 3` carrier + an `idKrausPad`-style embedding. **Acceptance:** kernel-pure exact
+value or honest two-sided bracket per channel + docstring hedge if bracket. **Risk:** MED (leakage
+qutrit Choi/witness is new; GAD is close to amp-damp).
+
+---
+
+## Wave 6AK.5 — code-distance physical→logical error relation (QEC; IP-BOUNDED) (MED risk)
+
+**Goal:** a public, **general** stabilizer-QEC relation between physical error rate `p` and logical
+error rate `p_L` for a distance-`d` code — the standard suppression form
+`p_L ≤ A·(p/p_th)^{⌊(d+1)/2⌋}` (or the threshold-existence statement), as neutral QEC math.
+**⚠️ IP boundary (critical):** keep this **general code-capacity / threshold-form math only**. Do NOT
+import, restate, or mirror any compiler/accuracy-threshold-specific result that lives in a downstream
+private project — scope this wave to the textbook code-distance suppression bound and STOP. If it would
+overlap existing non-public substrate, **shrink the wave to just the combinatorial suppression
+inequality** (a `norm_num`/`Nat`-power statement) and flag it.
+**Acceptance:** a kernel-pure suppression/threshold inequality for an abstract `(p, p_th, d)`; no
+device/compiler-specific content. **Risk:** MED (and bounded deliberately to stay general + IP-clean).
+
+---
+
+## Wave 6AK.2 — repeaterless secret-key / entanglement rate bound (PLOB-type) 🌙 (HIGH risk, moonshot)
+
+**Goal:** a public upper bound on the two-way-assisted secret-key/entanglement rate of a lossy channel
+of transmissivity `η` — the repeaterless (PLOB-type) limit `rate ≤ −log₂(1 − η)`, or a tractable
+formalizable surrogate.
+**Wave 6AK.2.0 = interactive lean4 Mathlib scout** (bosonic channels? relative-entropy of
+entanglement? channel capacity? log-negativity? — almost certainly absent). Decide route:
+(a) a **discrete/finite** no-go surrogate (e.g. a data-processing/no-signaling rate inequality that
+captures the loss penalty) that IS formalizable, or (b) the relative-entropy-of-entanglement upper
+bound restricted to a tractable family, or (c) **FENCE** with a grep-verified written blocker + fan-out.
+**Acceptance:** EITHER a kernel-pure rate bound (even a restricted/surrogate form, honestly labeled) OR
+a fenced, documented blocker (no axiom without sign-off). **Risk:** HIGH (continuous-variable capacity
+theory is far from Mathlib; treat as a genuine research wave, scout before committing time).
+
+---
+
+## Wave 6AK.6 — SPAM / measurement-error & process-fidelity completeness (LOW–MED risk)
+
+**Goal:** round out the device-claim substrate: (a) a **measurement (SPAM) error** channel-distance
+bound, and (b) confirm/expose `process fidelity = entanglement fidelity` as a named lemma so process-
+fidelity claims bind directly. **Chain:** SPAM as a classical-ish bit-flip POVM distance; process-
+fidelity is definitional from `entanglementFidelity` (6AG). **Acceptance:** kernel-pure bounds/lemmas.
+**Risk:** LOW–MED.
+
+---
+
+## Out of scope (keeps 6AK closeable)
+- Any downstream-application naming or product/positioning prose.
+- Any device/compiler-specific accuracy-threshold result that belongs to a non-public project (6AK.5
+  stays general QEC math only).
+- New project-local axioms without explicit user sign-off.
+
+## Notes for the executing agent
+Read the Mandatory References + the 6AG/6AH/6AI/6AJ roadmaps for the shipped substrate this builds on
+(`avgGateFidelity_eq`, `kraus_normSq_sum`, `diamondDist_pauliKraus_eq`, `NamedChannelDiamondExact`,
+`diamondDist_ampDamp_eq`, the dual-witness `diamondDist_le_dual_witness`). The coherence ceiling (6AK.1)
+and two-qubit Pauli (6AK.3) are the highest value-per-effort and should go first; PLOB (6AK.2) is a
+scout-first moonshot.
