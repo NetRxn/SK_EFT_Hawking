@@ -137,4 +137,28 @@ theorem opNorm_le_one_of_mul_conjTranspose_le_one {K : Matrix ι ι ℂ}
     _ ≤ Real.sqrt (‖x‖ ^ 2) := Real.sqrt_le_sqrt (by linarith [h0])
     _ = ‖x‖ := Real.sqrt_sq (norm_nonneg _)
 
+/-- **The polar unitary realizes the trace norm:** for invertible `M` there is a unitary `W`
+(`Wᴴ W = 1`) with `‖M‖₁ = Re tr(W·M)` — the maximizer of `Re tr(·M)` over contractions. `W = |M|⁻¹ Mᴴ`
+and `W·M = |M|`. -/
+theorem exists_unitary_traceNorm_eq_re_trace {M : Matrix ι ι ℂ} (hM : IsUnit M) :
+    ∃ W : Matrix ι ι ℂ, Wᴴ * W = 1 ∧ traceNorm M = (W * M).trace.re := by
+  have hPh := absOp_isHermitian M
+  have hPd : IsUnit (absOp M).det := (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_absOp hM)
+  set P := absOp M with hPdef
+  have hPiP : P⁻¹ * P = 1 := Matrix.nonsing_inv_mul P hPd
+  have hPih : (P⁻¹)ᴴ = P⁻¹ := by rw [Matrix.conjTranspose_nonsing_inv, hPh.eq]
+  have hPP : P * P = Mᴴ * M := absOp_mul_self M
+  have hMd : IsUnit M.det := (Matrix.isUnit_iff_isUnit_det _).mp hM
+  have hMdH : IsUnit (Mᴴ).det := by rw [Matrix.det_conjTranspose]; exact hMd.star
+  refine ⟨P⁻¹ * Mᴴ, ?_, ?_⟩
+  · rw [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, hPih]
+    calc M * P⁻¹ * (P⁻¹ * Mᴴ) = M * (P⁻¹ * P⁻¹) * Mᴴ := by noncomm_ring
+      _ = M * (Mᴴ * M)⁻¹ * Mᴴ := by rw [← Matrix.mul_inv_rev, hPP]
+      _ = 1 := by
+          rw [Matrix.mul_inv_rev,
+            show M * (M⁻¹ * Mᴴ⁻¹) * Mᴴ = (M * M⁻¹) * (Mᴴ⁻¹ * Mᴴ) by noncomm_ring,
+            Matrix.mul_nonsing_inv M hMd, Matrix.nonsing_inv_mul Mᴴ hMdH, Matrix.mul_one]
+  · rw [traceNorm_eq_trace_absOp]; congr 1
+    rw [Matrix.mul_assoc, ← hPP, ← Matrix.mul_assoc, hPiP, Matrix.one_mul]
+
 end SKEFTHawking.QuantumNetwork
