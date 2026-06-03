@@ -429,3 +429,21 @@ Hahn–Banach) in `Mathlib/Analysis/Convex/Cone/{Dual,InnerDual}.lean`. The PSD 
 for this pin. **Numerically VERIFIED** (cvxpy, three asymmetric pairs incl. singular-optimum id-vs-reset):
 `primalSDPValue = choiDualValue = diamondDist` exactly (1.0 / 0.5 / 0.6). Route is tractable
 Mathlib-style work, in scope for the goal loop. NO axiom, NO fence. Building pieces 2 + 3.
+
+## OUTCOME UPDATE 10 (2026-06-03) — PIECE 3 SHIPPED (`primalSDPValue ≤ diamondDist`), kernel-pure
+4 new kernel-pure lemmas in `DiamondSDPDuality.lean` (commits after `2bf696cf`):
+- `re_trace_mul_le_trace_posPart` — Helstrom bound `Re tr(M·Q) ≤ tr(M₊)` for `0⪯Q⪯1`.
+- `re_trace_choiDiff_mul_le_diamondDist_of_posDef` — per-point bound at PosDef σ via `√σ⁻¹`-conjugation
+  `X=(√σ⊗1)Q′(√σ⊗1)` (`0⪯Q′⪯1`) → `Re tr(C·X)=Re tr(M(σ)·Q′) ≤ tr(M(σ)₊) ≤ diamondDist` (shipped trace bound).
+- `re_trace_choiDiff_mul_le_diamondDist` — general density σ via `(1−ε)`-perturbation
+  `(σ_ε,X_ε)=((1−ε)σ+(ε/n)1,(1−ε)X)` PosDef-feasible, algebraic `ε₀=(t−d)/(2t)` conclusion (no limits).
+- `primalSDPValue_le_diamondDist` — `csSup_le` over the feasible set. **PIECE 3 = DONE.**
+Uses ℂ-cast scalars for `PosDef.smul`/`PosSemidef.smul` (ℝ-smul lacks `PosSMulMono ℝ ℂ` instance).
+**Remaining: PIECE 2** `choiDualValue ≤ primalSDPValue` (conic Farkas / theorem-of-alternatives) — the
+hard brick. Plan: `∀ δ < choiDualValue, δ ≤ primalSDPValue` (then `le_of_forall_lt`-style). Per
+`dual_infeasible_of_lt_choiDualValue` (shipped): δ<choiDualValue ⟹ the dual sublevel system
+{W⪰0, W⪰C, δ1−Tr₂W⪰0, δ1+Tr₂W⪰0} is infeasible. Encode this as a PSD-product-cone feasibility and
+apply `ProperCone.hyperplane_separation` / `relative_hyperplane_separation` to extract a primal
+certificate `(X,σ)` with `Re tr(C·X) ≥ δ`. Mathlib has Farkas but NOT packaged cone-program duality,
+so the SDP-alternatives reduction is built by hand (the substantial brick). Then assemble headline:
+`choiDualValue ≤ primalSDPValue ≤ diamondDist ≤ choiDualValue`.
