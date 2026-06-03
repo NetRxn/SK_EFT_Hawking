@@ -34,6 +34,17 @@ contraction identities below. -/
 noncomputable def sphereTotal (d : ℕ) : ℝ :=
   (volume.toSphere (E := EuclideanSpace ℝ (Fin d ⊕ Fin d))).real univ
 
+/-- The total sphere measure is nonzero (the surface area of `S^{2d-1}` is positive for `d ≥ 1`). -/
+theorem sphereTotal_ne_zero [NeZero d] : sphereTotal d ≠ 0 := by
+  haveI : Nontrivial (EuclideanSpace ℝ (Fin d ⊕ Fin d)) := by
+    have : Nonempty (Fin d ⊕ Fin d) := ⟨Sum.inl ⟨0, Nat.pos_of_ne_zero (NeZero.ne d)⟩⟩
+    infer_instance
+  unfold sphereTotal Measure.real
+  rw [ENNReal.toReal_ne_zero]
+  refine ⟨(Measure.measure_univ_eq_zero.not).mpr (Measure.toSphere_ne_zero volume), ?_⟩
+  rw [Measure.toSphere_apply_univ]
+  exact ENNReal.mul_ne_top (ENNReal.natCast_ne_top _) measure_ball_lt_top.ne
+
 @[fun_prop]
 theorem continuous_psiC (p : Fin d) :
     Continuous (fun ω : sphere (0 : EuclideanSpace ℝ (Fin d ⊕ Fin d)) 1 =>
@@ -180,5 +191,70 @@ theorem sphere_braKet_normSq [NeZero d] (K : Matrix (Fin d) (Fin d) ℂ) :
   rw [hC]; push_cast
   simp only [apply_ite (Complex.ofReal), Complex.ofReal_one, Complex.ofReal_zero]
   ring
+
+/-- The bra-ket overlap `⟨ψ|M|ψ⟩ = ∑_{pq} conj(ψ_p) M_pq ψ_q` for the pure state `ψ = psiC ω`. -/
+noncomputable def braKet (M : Matrix (Fin d) (Fin d) ℂ)
+    (ω : EuclideanSpace ℝ (Fin d ⊕ Fin d)) : ℂ :=
+  ∑ p, ∑ q, (starRingEnd ℂ) (psiC ω p) * M p q * psiC ω q
+
+/-- **Entanglement fidelity** of a Kraus channel `Φ(ρ) = ∑ₖ Kₖ ρ Kₖᴴ`:
+`F_e(Φ) = (1/d²) ∑ₖ |tr Kₖ|²`. This is the standard basis-independent entanglement fidelity
+`⟨Ω|(Φ⊗id)(|Ω⟩⟨Ω|)|Ω⟩` for the maximally entangled state `Ω`, expressed in Kraus form. -/
+noncomputable def entanglementFidelity {m : ℕ} (K : Fin m → Matrix (Fin d) (Fin d) ℂ) : ℝ :=
+  (1 / (d : ℝ) ^ 2) * ∑ k, Complex.normSq (Matrix.trace (K k))
+
+/-- **Average gate fidelity**: the Haar-average over pure input states `ψ` of the output overlap
+`⟨ψ|Φ(|ψ⟩⟨ψ|)|ψ⟩ = ∑ₖ |⟨ψ|Kₖ|ψ⟩|²`, normalised by the total sphere measure. -/
+noncomputable def avgGateFidelity {m : ℕ} (K : Fin m → Matrix (Fin d) (Fin d) ℂ) : ℝ :=
+  (∫ ω : sphere (0 : EuclideanSpace ℝ (Fin d ⊕ Fin d)) 1,
+      ∑ k, Complex.normSq (braKet (K k) (ω : EuclideanSpace ℝ (Fin d ⊕ Fin d)))
+      ∂volume.toSphere) / sphereTotal d
+
+/-- **Trace-preservation gives `∑ₖ tr(Kₖᴴ Kₖ) = d`.** The Hilbert–Schmidt norms of the Kraus
+operators sum to the dimension: `∑ₖ ∑_{pq} |Kₖ,pq|² = d`. -/
+theorem kraus_normSq_sum {m : ℕ} (K : Fin m → Matrix (Fin d) (Fin d) ℂ) (hK : IsKrausChannel K) :
+    (∑ k, ∑ p, ∑ q, Complex.normSq (K k p q)) = (d : ℝ) := by
+  have hK' : (∑ k, (K k)ᴴ * (K k)) = 1 := hK
+  have key : ((∑ k, ∑ p, ∑ q, Complex.normSq (K k p q) : ℝ) : ℂ) = (d : ℂ) := by
+    push_cast
+    have hexp : ∀ k, (∑ p, ∑ q, (Complex.normSq (K k p q) : ℂ)) = Matrix.trace ((K k)ᴴ * (K k)) := by
+      intro k
+      simp_rw [← Complex.mul_conj]
+      rw [Matrix.trace]
+      simp only [Matrix.diag_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, starRingEnd_apply]
+      rw [Finset.sum_comm]
+      exact Finset.sum_congr rfl fun p _ => Finset.sum_congr rfl fun q _ => by ring
+    simp_rw [hexp, ← Matrix.trace_sum, hK', Matrix.trace_one]
+    simp
+  exact_mod_cast key
+
+/-- **Average gate fidelity ↔ entanglement fidelity (general qudit dimension `d`).** For a CPTP
+(Kraus) channel `Φ` on a `d`-dimensional system, `F_avg(Φ) = (d · F_e(Φ) + 1)/(d + 1)`. This is the
+bench-data→worst-case bridge: it converts an averaged benchmark (e.g. randomized-benchmarking
+fidelity) into the entanglement fidelity that feeds the diamond-distance certificate. Proven
+constructively from the degree-4 complex sphere moment, with no Weingarten / unitary-2-design
+machinery. -/
+theorem avgGateFidelity_eq {m : ℕ} [NeZero d] (K : Fin m → Matrix (Fin d) (Fin d) ℂ)
+    (hK : IsKrausChannel K) :
+    avgGateFidelity K = ((d : ℝ) * entanglementFidelity K + 1) / ((d : ℝ) + 1) := by
+  have hd : (d : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne d)
+  have hS : sphereTotal d ≠ 0 := sphereTotal_ne_zero
+  have hInt : ∀ k, Integrable (fun ω : sphere (0 : EuclideanSpace ℝ (Fin d ⊕ Fin d)) 1 =>
+      Complex.normSq (braKet (K k) (ω : EuclideanSpace ℝ (Fin d ⊕ Fin d)))) volume.toSphere := by
+    intro k
+    apply Continuous.integrable_of_hasCompactSupport _ (HasCompactSupport.of_compactSpace _)
+    unfold braKet; fun_prop
+  have hterm : ∀ k, (∫ ω : sphere (0 : EuclideanSpace ℝ (Fin d ⊕ Fin d)) 1,
+        Complex.normSq (braKet (K k) (ω : EuclideanSpace ℝ (Fin d ⊕ Fin d))) ∂volume.toSphere)
+      = (Complex.normSq (Matrix.trace (K k)) + ∑ p, ∑ q, Complex.normSq (K k p q))
+          * (sphereTotal d / ((d : ℝ) * ((d : ℝ) + 1))) := by
+    intro k
+    rw [show Matrix.trace (K k) = ∑ p, (K k) p p from rfl]
+    exact sphere_braKet_normSq (K k)
+  unfold avgGateFidelity entanglementFidelity
+  rw [integral_finset_sum _ (fun k _ => hInt k)]
+  simp_rw [hterm]
+  rw [← Finset.sum_mul, Finset.sum_add_distrib, kraus_normSq_sum K hK]
+  field_simp
 
 end SKEFTHawking.QuantumNetwork
