@@ -689,4 +689,28 @@ theorem posSemidef_smul_one_sub_of_quadratic_le {ι : Type*} [Fintype ι] [Decid
     nlinarith [h v, hvv]
   · simp [Complex.sub_im, Complex.mul_im, hvv, hHv]
 
+/-- **Helstrom-type measurement bound: `Re tr(M·Q) ≤ tr(M₊)` for `0 ⪯ Q ⪯ 1`** (`M` Hermitian).
+Split `M = M₊ − M₋`: `Re tr(M₋·Q) ≥ 0` (PSD·PSD, `trace_mul_nonneg`) and `Re tr(M₊·Q) ≤ Re tr(M₊·1)
+= tr(M₊)` (since `M₊ ⪰ 0` and `1 − Q ⪰ 0`). The optimal measurement is the positive-eigenspace
+projector; any sub-unit-interval `Q` does no better than the positive part. Feeds the SDP-primal
+reduction (piece 3): `Re tr(C·X) = Re tr(M(σ)·Q′) ≤ tr(M(σ)₊)`. -/
+theorem re_trace_mul_le_trace_posPart {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {M Q : Matrix ι ι ℂ} (hM : M.IsHermitian) (hQ : Q.PosSemidef)
+    (hQ1 : ((1 : Matrix ι ι ℂ) - Q).PosSemidef) :
+    (M * Q).trace.re ≤ (posPart hM).trace.re := by
+  have hsplit : M * Q = posPart hM * Q - negPart hM * Q := by
+    rw [← Matrix.sub_mul, ← self_eq_posPart_sub_negPart hM]
+  have hneg : (0 : ℝ) ≤ (negPart hM * Q).trace.re := by
+    have := (Complex.le_def.mp (trace_mul_nonneg (negPart_posSemidef hM) hQ)).1; simpa using this
+  have hpos : (posPart hM * Q).trace.re ≤ (posPart hM).trace.re := by
+    have h := (Complex.le_def.mp (trace_mul_nonneg (posPart_posSemidef hM) hQ1)).1
+    have he : (posPart hM * ((1 : Matrix ι ι ℂ) - Q)).trace
+        = (posPart hM).trace - (posPart hM * Q).trace := by
+      rw [Matrix.mul_sub, Matrix.mul_one, Matrix.trace_sub]
+    rw [he] at h
+    simp only [Complex.sub_re, Complex.zero_re] at h
+    linarith [h]
+  rw [hsplit, Matrix.trace_sub, Complex.sub_re]
+  linarith
+
 end SKEFTHawking.QuantumNetwork
