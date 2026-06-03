@@ -787,6 +787,25 @@ reference is non-decreasing along the chain --- the fully general mirror of \ver
 in the \emph{opposite} monotone direction ($D\downarrow$, $F\uparrow$), consistent with
 Fuchs--van de Graaf. Kernel-only; \emph{zero} new project-local axioms.
 
+\paragraph{Phase~6AK: the coherence-limited fidelity ceiling.} Where 6AG--6AJ certify
+\emph{consistency} (bounds a channel quantity must satisfy), Phase~6AK adds \emph{physical-limit}
+substrate: closed-form ceilings an achievable quantity provably cannot cross. The first
+(\verb|CoherenceFidelity.lean|) computes the average gate fidelity of the \textbf{coherence channel}
+$\Phi_t=\mathcal A_\gamma\circ\mathcal D_p$ --- amplitude damping with $\gamma=1-e^{-t/T_1}$ composed
+after dephasing with $p=(1-e^{-t/T_2})/2$, the standard $T_1/T_2$ model of a duration-$t$ qubit gate.
+Contracting the four Kraus traces and feeding the result through the 6AG identity
+\verb|avgGateFidelity_eq| collapses both fidelities to a \textbf{sum of decaying exponentials}
+(\verb|entanglementFidelity_coherenceChannel|, \verb|avgGateFidelity_coherenceChannel|):
+\[
+  F_e(\Phi_t)=\tfrac14\!\left(1+e^{-t/T_1}+2\,e^{-t/(2T_1)-t/T_2}\right),\qquad
+  F_{\mathrm{avg}}(\Phi_t)=\tfrac12+\tfrac16\,e^{-t/T_1}+\tfrac13\,e^{-t/(2T_1)-t/T_2}.
+\]
+Because every term is a decaying exponential, $F_{\mathrm{avg}}(\Phi_t)$ is \textbf{monotone
+decreasing} in the gate duration (\verb|avgGateFidelity_coherenceChannel_antitone|), with the
+exact endpoints $F_{\mathrm{avg}}=1$ at $t=0$ and floor $\tfrac12$ as $t\to\infty$
+(\verb|_le_one|, \verb|_ge_half|): a longer gate on fixed-coherence hardware cannot achieve higher
+average gate fidelity. Kernel-only; \emph{zero} new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}
