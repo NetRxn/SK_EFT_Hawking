@@ -163,7 +163,38 @@ gap). Route A reuses the already-proven primal analysis.
 Then `‖Tr₂ W*‖ = diamondDist` ⟹ `csInf_le` ⟹ `choiDualValue ≤ diamondDist` ⟹ `le_antisymm` ⟹ **`diamondDist_eq_choiSDP`**.
 - Brick 0 (csInf reduction), 1 (extract ρ*/P, transcribe primal-value identity), 6 (assemble): ROUTINE.
 - Brick 3 (`W*⪰0`), 5 (objective `≤ diamondDist`): MODERATE. R3 (`inMarginal_le_one`): DONE.
-- 🔴 **Bricks 2 (define `W*`) + 4 (`W*−C⪰0` + tightness) = THE deep crux.** `W* = C₊` works ONLY for Pauli-covariant
+### ⚡ BLOCKER PINPOINTED (prototyping agent, 2026-06-03) — topology instance diamond, not "multi-week"
+**Avenue 1 (explicit `W*`) is a general dead-end** (verified): no closed-form `W*(ρ*,P,C)` satisfies the 3
+complementary-slackness conditions for non-covariant channels; the per-channel witnesses exploit Pauli-covariance
+(`ptrace2 W = c·1` scalar). General `≥` genuinely needs conic strong duality (avenue 2/3).
+**Avenues 2/3 (Hahn–Banach / ProperCone) are reachable — Mathlib HAS the engine** (`ProperCone.relative_hyperplane_separation`
+= Farkas, `geometric_hahn_banach_compact_closed`, both verified present) — **blocked ONLY by a topology instance diamond:**
+`selfAdjoint (Matrix ι ι ℂ)` carries TWO non-defeq topologies — `instTopologicalSpaceSubtype` (global default) vs the
+metric topology from `selfAdjointNormedAddCommGroup` (`InnerProductSpace.ofCore`). `rfl` fails between them ⟹
+`ContinuousSMul ℝ` / `CompleteSpace` / `LocallyConvexSpace` (all REQUIRED by the separation lemmas) fail to synthesize.
+`FiniteDimensional ℝ` IS provable but doesn't repair the diamond; `local instance` / type-alias `def` don't override the
+subtype topology (all verified by the agent in `lean_run_code`).
+**FIX (the linchpin brick) — single-topology carrier.** Either (a) `EuclideanSpace ℝ (Fin d)` (d = real-dim = card²)
+via a `LinearIsometryEquiv` from the Hermitian matrices [all instances verified clean; transport PSD cone + `ptrace2` +
+`W↦W−C` = medium-high index bookkeeping], OR (b) a single-field `structure SAW where val : selfAdjoint …` [verified no
+leaking topology; re-derive AddCommGroup/Module ℝ/Core = medium mechanical]. **Then:** PSD-as-`ProperCone ℝ E`
+(`ProperCone = ClosedSubmodule {0≤·}`; build from `isClosed_posSemidef`) → encode dual feasibility as a cone-image
+membership → `relative_hyperplane_separation`, handling `ProperCone.map`=closure via finite-dim closed-image
+(`isClosed_posSemidef` + the `DiamondSDPAttainment` compactness). **Several-hundred-line multi-brick build, NO fence, NO axiom.**
+- ✅ SHIPPED (`8d524ba0`): `choiDualValue_le_of_witness` — reduces the whole `≥` to one feasible-witness existence (`csInf_le`).
+- ✅✅ **LINCHPIN SOLVED (`9fef193d`): the topology diamond is gone.** `HermCarrier ι` (`HermitianCarrier.lean`) — a fresh
+  one-field `structure` wrapping `selfAdjoint (Matrix ι ι ℂ)`, with AddCommGroup/Module ℝ transported via `equivSA`
+  and the Frobenius `InnerProductSpace ℝ` via `ofCore`. Because it's a FRESH type (no `instTopologicalSpaceSubtype`),
+  `ofCore` gives the only topology, so **`ContinuousSMul ℝ` + `LocallyConvexSpace ℝ` resolve** (verified by in-file
+  `example`s); `CompleteSpace` follows from `FiniteDimensional` (next). 🔑 smul_left needs `Matrix.smul_apply`+`Finset.mul_sum`
+  (the ℝ-on-ℂ `Matrix.trace_smul` rw doesn't match the Module-smul instance); `definite` via `equivSA.injective`+`zero_toSA`.
+  This is the brick that collapsed the design agent's "multi-week" — the blocker was a fixable instance diamond, not missing math.
+- 🔧 **REMAINING (concrete conic-duality bricks on `HermCarrier`, NO fence/axiom):** (i) `FiniteDimensional ℝ (HermCarrier ι)`
+  (via `equivSA` + `Module.Finite ℝ ℂ` — needs the right import) ⟹ `CompleteSpace`; (ii) transport SDP data (PSD cone,
+  `ptrace2`, `W↦W−C`, objective) onto `HermCarrier`; (iii) PSD-as-`ProperCone ℝ (HermCarrier)` from `isClosed_posSemidef`;
+  (iv) encode dual feasibility as a cone-image membership, apply `relative_hyperplane_separation`, discharge the
+  `ProperCone.map`=closure via finite-dim closed-image; (v) extract the witness → `choiDualValue_le_of_witness` → `le_antisymm` → **`diamondDist_eq_choiSDP`**.
+- (history) Bricks 2 (define `W*`) + 4 (`W*−C⪰0` + tightness) = the deep crux. `W* = C₊` works ONLY for Pauli-covariant
   (max-entangled `ρ*`); GENERAL non-covariant (amp-damp: product-state `ρ*`) needs the `ρ*`-aligned witness — the
   genuine Watrous §3.3.2 dual-optimal construction (per-channel exacts in `NamedChannelDiamondExact.lean` are the
   validation templates). NOT a Mathlib gap — genuine QI-math derivation. The single hardest piece; all surrounding

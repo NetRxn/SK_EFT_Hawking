@@ -1,6 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Analysis.Matrix.Order
+import Mathlib.LinearAlgebra.Complex.FiniteDimensional
 
 /-!
 # Diamond-SDP carrier: a single-topology Hilbert space of self-adjoint matrices (Phase 6AI)
@@ -82,10 +83,19 @@ noncomputable instance : InnerProductSpace ℝ (HermCarrier ι) := InnerProductS
 theorem inner_eq (A B : HermCarrier ι) :
     (inner ℝ A B : ℝ) = ((A.toSA.1 * B.toSA.1).trace).re := rfl
 
--- The topology diamond is gone: the separation-engine instances now resolve on the fresh carrier
--- (without `FiniteDimensional`, which is only needed for `CompleteSpace` at the Farkas step).
+/-- **The carrier is finite-dimensional over `ℝ`** (injects ℝ-linearly into the finite-dimensional
+`Matrix ι ι ℂ` via `A ↦ A.toSA.1`). Supplies `CompleteSpace` for the cone-separation engine. -/
+noncomputable instance : FiniteDimensional ℝ (HermCarrier ι) := by
+  haveI : Module.Finite ℝ (Matrix ι ι ℂ) := Module.Finite.trans ℂ (Matrix ι ι ℂ)
+  exact Module.Finite.of_injective
+    ({ toFun := fun A => A.toSA.1, map_add' := fun _ _ => rfl, map_smul' := fun _ _ => rfl } :
+      HermCarrier ι →ₗ[ℝ] Matrix ι ι ℂ)
+    (fun A B h => equivSA.injective (Subtype.ext h))
+
+-- The topology diamond is gone: ALL separation-engine instances now resolve on the fresh carrier.
 example : ContinuousSMul ℝ (HermCarrier ι) := inferInstance
 example : LocallyConvexSpace ℝ (HermCarrier ι) := inferInstance
+example : CompleteSpace (HermCarrier ι) := inferInstance
 
 end HermCarrier
 
