@@ -1,16 +1,17 @@
 # Phase 6AJ — Fidelity-domain data processing (MOONSHOT E, public)
 
-**Status:** ✅ **COMPLETE (2026-06-03)** — all primary deliverables PROVEN kernel-pure, no fence, no
-axiom; the optional rank-deficient-output strengthening also discharged (OUTCOME 2 + 2b below).
-Public-only. Lifts the general-state network monotonicity from the trace-distance domain (shipped:
-`traceDist_applyChain_le`) into the **fidelity** domain, so a downstream chain certificate can live in
-fidelity, not only trace distance.
+**Status:** ✅✅✅ **FULLY UNCONDITIONAL (2026-06-03)** — fidelity data processing PROVEN kernel-pure for
+**all density operators / any CPTP network**, every full-rank hypothesis removed (OUTCOME 3 below). No
+fence, no axiom. Public-only. Lifts the general-state network monotonicity from the trace-distance
+domain (shipped: `traceDist_applyChain_le`) into the **fidelity** domain.
 
-**Closure summary (what to read):** the mixed-unitary headline (OUTCOME, `7ac93fe0`) → general-CPTP +
-joint-concavity + chain (OUTCOME 2, `fecc5341`→`cf1b8c55`) → fully-general rank-deficient-output DP
-(OUTCOME 2b, `655260a8`). Single-step fidelity DP `sqrtFidelity_krausMap_ge_psd` is now fully general
-(any trace-preserving Kraus channel, PosDef inputs, *arbitrary* outputs). Files: `FidelityBlockForm`,
-`FidelityForwardBound`, `OpNormHolder`, `FidelityKrausDP`, `FidelityForwardBoundPSD`.
+**Closure summary (what to read):** mixed-unitary (OUTCOME, `7ac93fe0`) → general-CPTP + joint-concavity
++ chain (OUTCOME 2, `fecc5341`→`cf1b8c55`) → rank-deficient outputs (OUTCOME 2b, `655260a8`) → **fully
+unconditional, all density operators** (OUTCOME 3, `9a32473f`→`eff0c528`). Canonical headlines:
+`sqrtFidelity_krausMap_ge_psd_inputs` (single-step Uhlmann DP) and `sqrtFidelity_applyChain_ge_psd`
+(chain), both PSD-only; plus `sqrtFidelity_mono_left`/`_right` (Loewner monotonicity). Files:
+`FidelityBlockForm`, `FidelityForwardBound`, `OpNormHolder`, `FidelityForwardBoundPSD`,
+`FidelityAttainmentPSD`, `FidelityKrausDP`.
 
 **The target.** Uhlmann's monotonicity / data-processing inequality for fidelity: for any CPTP map
 `Φ` and density operators `ρ, σ`,
@@ -160,6 +161,32 @@ isometry** (`‖W‖≤1`, not unitary). Reachable route:
 
 **Exit:** unconditional single-step + chain fidelity DP PROVEN kernel-pure, OR an
 interactive-lean4-verified honest fence on the one genuinely-blocked sub-brick.
+
+### ✅✅✅ OUTCOME 3 (2026-06-03, autonomous /goal) — FULLY UNCONDITIONAL fidelity DP **PROVEN** kernel-pure (`FidelityAttainmentPSD.lean` + `FidelityKrausDP.lean`, commits `9a32473f`→`eff0c528`)
+
+**ALL full-rank hypotheses REMOVED.** Fidelity data processing now holds for **all density operators /
+any CPTP network**, no regularity anywhere. The Wave 6AJ.4 plan executed exactly as scoped — the single
+linchpin (PSD-input attainment) cracked, and the cascade fell out.
+
+- **LINCHPIN** `exists_block_re_trace_eq_sqrtFidelity_psd` (PosDef→PosSemidef attainment). Built via:
+  `exists_unitary_traceNorm_eq_re_trace_general` (general **unitary** polar witness for any `M` — the
+  singular-`M` partial isometry *extends* to a unitary, obtained as a **compactness limit** of the
+  invertible-case polar unitaries over the closed+bounded unitary set, `IsCompact.tendsto_subseq` +
+  `continuous_traceNorm`); `fidelityBlock_one_unitary_posSemidef` (`[[1,W],[Wᴴ,1]]⪰0` from `WᴴW=1` via
+  the `A·Aᴴ` factorization); `diagBlock_conj_fidelityBlock` (the `diag(√ρ,√σ)` congruence — **no Schur,
+  no invertibility on ρ,σ**).
+- **CASCADE** (`FidelityKrausDP.lean`): `sqrtFidelity_krausMap_ge_psd_inputs` (textbook Uhlmann DP, all
+  density operators) · `sqrtFidelity_mono_left`/`_right` (Loewner monotonicity, via
+  `posSemidef_fromBlocks_topLeft`) · `IsFidelityStepPSD` + `isFidelityStepPSD_krausMap` (**every** Kraus
+  channel is a fidelity step, no side condition) + `applyChain_posSemidef` +
+  `sqrtFidelity_applyChain_ge_psd` (unconditional chain).
+
+🔑 The CFC-continuity wall (OUTCOME 2b) is fully behind us: the unconditional result needed *no* new
+continuity — just the **compactness** of the unitary set (same EVT pattern the repo uses for
+diamond-norm attainment) and PSD-square-root **uniqueness**. The earlier "full-rank-intermediate" caveat
+on the chain is GONE: `IsFidelityStepPSD` requires only PSD-preservation, which `krausMap` gives for free.
+Kernel-pure `{propext, Classical.choice, Quot.sound}`, no axiom. **"Kernel-verified fidelity data
+processing" is now the unconditional, textbook statement.**
 
 ---
 

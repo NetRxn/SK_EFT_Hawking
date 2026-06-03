@@ -764,24 +764,28 @@ $F(\rho,\sigma)=\max\{\mathrm{Re}\,\mathrm{tr}\,X:\big[\begin{smallmatrix}\rho&X
 complement $X=\sqrt\rho\,K\sqrt\sigma$ with $\|K\|\le1$, attainment
 \verb|exists_block_re_trace_eq_sqrtFidelity| via the polar witness), both proven without
 Stinespring, purification, or Lieb concavity. From it: \emph{(i)} \textbf{Uhlmann monotonicity for an
-arbitrary trace-preserving Kraus channel} (\verb|sqrtFidelity_krausMap_ge_psd|):
-$F(\Phi\rho,\Phi\sigma)\ge F(\rho,\sigma)$ for positive-definite inputs and \emph{any}
-trace-preserving $\Phi$, with \emph{no} restriction on the outputs (they may be rank-deficient, e.g.\
-a reset channel) --- the textbook data-processing inequality. The optimal Alberti witness is
-transported by the sum of $(K_k\!\oplus\!K_k)$-congruences of the block (a feasibility transport that
-holds for arbitrary matrices, not just unitaries) with the trace preserved by
-$\sum_kK_k^\dagger K_k=\mathbf1$, and the bound is applied at the positive-\emph{semi}definite outputs
-via a forward Alberti bound (\verb|re_trace_block_le_sqrtFidelity_psd|) proved for singular states by
-$\varepsilon$-regularization along the \emph{commuting} ray $\rho+\varepsilon\mathbf1$: there the
-eigenbasis is fixed, so $\sqrt{\rho+\varepsilon\mathbf1}=U\,\mathrm{diag}(\sqrt{\lambda_i+\varepsilon})
-\,U^\dagger$ by square-root uniqueness, making the $\varepsilon\to0$ limit elementary (no continuous
-functional calculus on the bare matrix algebra is required). \emph{(ii)} \textbf{joint concavity}
-of $(\rho,\sigma)\mapsto F$ (\verb|sqrtFidelity_jointly_concave|), a direct consequence of the
-max-of-linear Alberti form. \emph{(iii)} the \textbf{fidelity-domain network chain}
-(\verb|sqrtFidelity_applyChain_ge|): the root fidelity to a target reference is non-decreasing along any
-chain of CPTP steps --- the mirror of \verb|traceDist_applyChain_le| in the \emph{opposite} monotone
-direction ($D\downarrow$, $F\uparrow$), consistent with Fuchs--van de Graaf. Kernel-only; \emph{zero}
-new project-local axioms.
+arbitrary trace-preserving Kraus channel} (\verb|sqrtFidelity_krausMap_ge_psd_inputs|):
+$F(\Phi\rho,\Phi\sigma)\ge F(\rho,\sigma)$ for \emph{all} density operators (no full-rank assumption on
+inputs \emph{or} outputs) and \emph{any} trace-preserving $\Phi$ --- the textbook data-processing
+inequality in full generality. Both halves of the Alberti characterization are positive-semidefinite
+valid: the forward bound (\verb|re_trace_block_le_sqrtFidelity_psd|) by $\varepsilon$-regularization
+along the \emph{commuting} ray $\rho+\varepsilon\mathbf1$ (fixed eigenbasis $\Rightarrow$
+$\sqrt{\rho+\varepsilon\mathbf1}=U\,\mathrm{diag}(\sqrt{\lambda_i+\varepsilon})\,U^\dagger$ by
+square-root uniqueness, no functional calculus on the bare matrix algebra), and the attainment
+(\verb|exists_block_re_trace_eq_sqrtFidelity_psd|) via a \emph{general unitary polar witness} obtained as
+a compactness limit of the invertible-case polar unitaries (the singular polar partial isometry extends
+to a unitary), the block feasibility coming from the $\mathrm{diag}(\sqrt\rho,\sqrt\sigma)$ congruence of
+$\big[\begin{smallmatrix}\mathbf1&W\\W^\dagger&\mathbf1\end{smallmatrix}\big]\succeq0$ --- no Schur
+complement, no invertibility. The optimal witness is transported to the channel outputs by the sum of
+$(K_k\!\oplus\!K_k)$-congruences of the block with the trace preserved by $\sum_kK_k^\dagger K_k=\mathbf1$.
+\emph{(ii)} \textbf{joint concavity} of $(\rho,\sigma)\mapsto F$ (\verb|sqrtFidelity_jointly_concave|)
+and \textbf{L\"owner monotonicity} $\rho\preceq\rho'\Rightarrow F(\rho,\sigma)\le F(\rho',\sigma)$
+(\verb|sqrtFidelity_mono_left|), both direct consequences of the max-of-linear Alberti form. \emph{(iii)}
+the \textbf{fidelity-domain network chain} (\verb|sqrtFidelity_applyChain_ge_psd|): for \emph{all}
+density operators and \emph{any} chain of trace-preserving Kraus channels, the root fidelity to a target
+reference is non-decreasing along the chain --- the fully general mirror of \verb|traceDist_applyChain_le|
+in the \emph{opposite} monotone direction ($D\downarrow$, $F\uparrow$), consistent with
+Fuchs--van de Graaf. Kernel-only; \emph{zero} new project-local axioms.
 
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
@@ -819,9 +823,11 @@ $F\le1$, and \emph{both} Fuchs--van de Graaf bounds $1-F\le D\le\sqrt{1-F^2}$ (t
 proven purification-free via Holevo--Helstrom) are all proven kernel-pure. The diamond-norm
 Choi-SDP (Watrous) primal$=$dual \emph{strong-duality identity} has since been proven unconditionally
 (Phase~6AI, \verb|diamondDist_eq_choiSDP|, via the geometric Hahn--Banach / conic-Farkas separation),
-and fidelity-domain data processing --- Uhlmann monotonicity for an arbitrary trace-preserving Kraus
-channel, joint concavity, and the fidelity-domain network chain --- has been added (Phase~6AJ,
-\verb|sqrtFidelity_krausMap_ge|, \verb|sqrtFidelity_applyChain_ge|). The genuinely remaining extension
+and \textbf{fully unconditional} fidelity-domain data processing --- Uhlmann monotonicity
+$F(\Phi\rho,\Phi\sigma)\ge F(\rho,\sigma)$ for \emph{all} density operators and \emph{any} CPTP channel,
+joint concavity, L\"owner monotonicity, and the unconditional fidelity-domain network chain --- has been
+added (Phase~6AJ, \verb|sqrtFidelity_krausMap_ge_psd_inputs|, \verb|sqrtFidelity_applyChain_ge_psd|). The
+genuinely remaining extension
 is the full asymptotic DEJMPS convergence basin (Macchiavello's non-monotone argument), not required
 for the protocol-level results here. A bundle-level Stage~13 adversarial review has been run on
 the quantum-network substrate; a consolidated full-bundle review across all

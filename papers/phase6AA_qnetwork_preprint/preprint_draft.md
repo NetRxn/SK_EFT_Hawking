@@ -329,19 +329,23 @@ The 6AE/6AF layer supplies functional-analytic *bricks*; Phase 6AG makes them *o
   (`traceDist_applyChain_le`) is lifted to the **fidelity** domain via the **Alberti SDP form**
   `F(ρ,σ) = max{Re tr X : [[ρ,X],[Xᴴ,σ]] ⪰ 0}` (forward bound `re_trace_block_le_sqrtFidelity` +
   attainment `exists_block_re_trace_eq_sqrtFidelity`, both Stinespring-/purification-/Lieb-free):
-  (i) **Uhlmann monotonicity for an arbitrary trace-preserving Kraus channel**
-  (`sqrtFidelity_krausMap_ge_psd`): `F(Φρ,Φσ) ≥ F(ρ,σ)` for PosDef inputs and *any* trace-preserving Φ,
-  with **no restriction on the outputs** (they may be rank-deficient — e.g. a reset channel); the
-  textbook data-processing inequality. The optimal witness is transported by the sum of `(Kₖ⊕Kₖ)`-
-  congruences of the block (valid for arbitrary matrices, not just unitaries), trace preserved by
-  `∑ₖKₖᴴKₖ=1`, and applied at the PSD outputs via a singular-state forward bound
-  (`re_trace_block_le_sqrtFidelity_psd`) proved by ε-regularization along the **commuting** ray
-  `ρ+ε·1` — where the eigenbasis is fixed, so `√(ρ+ε·1)=U·diag(√(λᵢ+ε))·Uᴴ` by sqrt-uniqueness and the
-  ε→0 limit is elementary (no CFC on the bare matrix algebra needed).
-  (ii) **joint concavity** of `(ρ,σ)↦F` (`sqrtFidelity_jointly_concave`), from the max-of-linear form.
-  (iii) the **fidelity-domain network chain** (`sqrtFidelity_applyChain_ge`): root fidelity to a target
-  is non-decreasing along any chain of CPTP steps — the mirror of `traceDist_applyChain_le` in the
-  opposite monotone direction (`D↓`, `F↑`, FvdG-consistent). Kernel-only; zero new project-local axioms.
+  (i) **Uhlmann monotonicity for an arbitrary trace-preserving Kraus channel, fully unconditional**
+  (`sqrtFidelity_krausMap_ge_psd_inputs`): `F(Φρ,Φσ) ≥ F(ρ,σ)` for **all density operators** (no
+  full-rank assumption on inputs *or* outputs) and *any* trace-preserving Φ — the textbook
+  data-processing inequality in full generality. Both Alberti halves are PSD-valid: the forward bound
+  (`re_trace_block_le_sqrtFidelity_psd`) by ε-regularization along the **commuting** ray `ρ+ε·1`
+  (fixed eigenbasis ⟹ `√(ρ+ε·1)=U·diag(√(λᵢ+ε))·Uᴴ` by sqrt-uniqueness, no CFC on the bare matrix
+  algebra), and the **attainment** (`exists_block_re_trace_eq_sqrtFidelity_psd`) via a *general unitary
+  polar witness* obtained as a compactness limit of the invertible-case polar unitaries (singular polar
+  partial isometry extends to a unitary), with block feasibility from the `diag(√ρ,√σ)` congruence of
+  `[[1,W],[Wᴴ,1]]⪰0` — no Schur, no invertibility. The witness transports to the outputs by `(Kₖ⊕Kₖ)`-
+  congruences, trace preserved by `∑ₖKₖᴴKₖ=1`.
+  (ii) **joint concavity** of `(ρ,σ)↦F` (`sqrtFidelity_jointly_concave`) and **Löwner monotonicity**
+  `ρ⪯ρ' ⟹ F(ρ,σ)≤F(ρ',σ)` (`sqrtFidelity_mono_left`), both from the max-of-linear Alberti form.
+  (iii) the **unconditional fidelity-domain network chain** (`sqrtFidelity_applyChain_ge_psd`): for all
+  density operators and any chain of trace-preserving Kraus channels, root fidelity to a target is
+  non-decreasing along the chain — the fully general mirror of `traceDist_applyChain_le` in the opposite
+  monotone direction (`D↓`, `F↑`, FvdG-consistent). Kernel-only; zero new project-local axioms.
 
 ## 4. Figures
 
@@ -368,9 +372,10 @@ been built (Phase 6AF, §3d): the trace-distance metric, operator modulus, Uhlma
 CPTP trace-distance contractivity, and the diamond distance `½‖Φ₁−Φ₂‖_◇` are all proven
 kernel-pure. The diamond-norm analytic core is now complete: both Fuchs–van de Graaf bounds, the
 diamond-distance metric/attainment/triangle properties, the **full** Watrous Choi-SDP strong-duality
-identity (Phase 6AI, §3f), and **fidelity-domain data processing** — Uhlmann monotonicity for an
-arbitrary trace-preserving Kraus channel, joint concavity, and the fidelity-domain network chain
-(Phase 6AJ, §3f) — are all proven kernel-pure. The genuinely remaining extension is the full
+identity (Phase 6AI, §3f), and **fully unconditional fidelity-domain data processing** — Uhlmann
+monotonicity for *all* density operators and *any* CPTP channel, joint concavity, Löwner monotonicity,
+and the unconditional fidelity-domain network chain (Phase 6AJ, §3f) — are all proven kernel-pure. The
+genuinely remaining extension is the full
 asymptotic DEJMPS convergence basin (Macchiavello's non-monotone argument), not needed for the
 protocol-level fidelity envelopes presented here.
 
