@@ -287,3 +287,22 @@ the `(√σ⁻¹⊗1)(√σ⊗1)=1` cancellation; then `W*⪰0`/`W*⪰C` are sho
 a `+ε·1` limiting argument or the pure-input reduction — the remaining wrinkle. CONVENTION: our
 `diamondDist` sups over doubled-space ρ; `σ` is the single-factor input — the ρ↔σ bridge
 (pure-input-suffices, Watrous Thm 3.53) is the other prerequisite for the S5 diamondDist connection.
+
+## OUTCOME UPDATE 4 (2026-06-03) — STAGE 4 COMPLETE (witness dual-feasible); STAGE 5 underway
+Shipped (kernel-pure, `DiamondSDPDuality.lean`):
+- `diamondWitness` def + `diamondWitness_posSemidef` (**W*⪰0**, `21bce19e`) + `diamondWitness_sub_posSemidef`
+  (**W*⪰C** for PosDef σ, `70393737`). **Stage 4 (witness dual-feasibility) DONE.**
+- `ptrace2_kron_one_conj` (`Tr₂((A⊗1)Z(A⊗1))=A(Tr₂Z)A`, `8ca2a147`) ⟹ `Tr₂W* = √σ⁻¹(Tr₂M₊)√σ⁻¹`.
+- `trace_contractedChoi_eq_zero` (**tr M = 0**, `557cee2a`) ⟹ `tr(M₊)=½‖M‖₁` (M Hermitian+traceless).
+REMAINING for headline (Stage 5 + convention, the hardest analytic stretch; all mapped, no conceptual
+unknown):
+- (S5a) `tr(M₊) = ½‖M‖₁`: from `tr M = 0` + `posPart` trace identity `tr(posPart hM) = ½(‖M‖₁ + tr M)`
+  (need/derive this posPart-trace lemma).
+- (S5b) `½‖M‖₁ = traceDist` at the σ-purification input: the **vec-J identity** (DR D2,
+  `(Φ⊗id)(ψ_σ)=(1⊗√σ)J(Φ)(1⊗√σ)`) relating `M=(√σ⊗1)C(√σ⊗1)` to the output difference — needs
+  `maxEntangled`/`omegaVec` purification machinery (in `DiamondNormChoi.lean`).
+- (S5c) **operator-norm** attainment `‖Tr₂W*‖ ≤ diamondDist` (NOT just the trace bound): via CS3
+  (ρ* on top eigenspace of Tr₂W*) — the optimal-input eigenvector argument.
+- (Conv) pure-input-suffices (Watrous Thm 3.53: optimal ρ* purifiable) + non-invertible-σ `+ε·1` limit.
+Then `‖Tr₂W*‖ ≤ diamondDist` feeds `diamondWitness_posSemidef`+`diamondWitness_sub_posSemidef` into the
+shipped `diamondDist_eq_choiSDP_of_witness` ⟹ headline.
