@@ -278,10 +278,23 @@ The 6AE/6AF layer supplies functional-analytic *bricks*; Phase 6AG makes them *o
 - **Fidelity ↔ diamond-distance bridges (`GateFidelityBridge.lean`).** Composing the shipped
   Fuchs–van de Graaf state bound with the diamond least-upper-bound property:
   `1 − √F((Φ₁⊗id)ρ, (Φ₂⊗id)ρ) ≤ diamondDist(Φ₁,Φ₂)` for every stabilized input ρ — a small diamond
-  distance certifies uniformly high input–output fidelity, and conversely. (The general-`d`
-  average-gate = `(d·F_e+1)/(d+1)` entanglement-fidelity identity is deferred: it requires
-  Weingarten / unitary-2-design moment formulas absent from the pinned Mathlib; the single-qubit
-  instance is already populated via `teleportAvgFidelity_horodecki_unconditional`.)
+  distance certifies uniformly high input–output fidelity, and conversely.
+
+- **General-`d` average-gate = entanglement-fidelity identity (`GateFidelity.lean`).**
+  `avgGateFidelity_eq`: for every CPTP (Kraus) channel `Φ` on a `d`-dimensional system,
+  `F_avg(Φ) = (d·F_e(Φ) + 1)/(d+1)`, where `F_avg = (1/|S^{2d−1}|)∫_S ∑ₖ|⟨ψ|Kₖ|ψ⟩|² dσ` is the
+  Haar-average pure-state overlap and `F_e = (1/d²)∑ₖ|tr Kₖ|²` is the entanglement fidelity. This is the
+  bench-data→worst-case bridge: it converts an averaged benchmark (e.g. a randomized-benchmarking
+  fidelity) into the entanglement fidelity feeding the diamond-distance certificate above. Previously
+  flagged as deferred pending Weingarten / unitary-2-design moment formulas absent from the pinned
+  Mathlib, it is instead proven **constructively** — no twirl machinery — by computing the degree-(2,2)
+  complex sphere moment `∫_S ψ̄_p ψ_q ψ̄_r ψ_s dσ = (δ_pq δ_rs + δ_ps δ_qr)·|S^{2d−1}|/(d(d+1))`
+  (`complexSphereTensor`) along the Gaussian→sphere route (1-D Gaussian moments → multivariate
+  Wick/Isserlis tensor → homogeneous polar reduction → `ℂ^d ≅ ℝ^{2d}` realification), contracting it
+  against the Kraus matrices (`sphere_braKet_normSq`), and collapsing the dimension factor through trace
+  preservation `∑ₖ tr(KₖᴴKₖ) = d` (`kraus_normSq_sum`). The unitary-2-design second moment is obtained
+  as a theorem rather than imported; the single-qubit instance
+  (`teleportAvgFidelity_horodecki_unconditional`) is recovered as the `d = 2` case.
 
 - **Watrous weak-dual upper bound (`DiamondNormDual.lean`).** `diamondDist_le_dual_witness`: for any
   Hermitian witness `W ≥ 0` with `W ≥ J(Φ₁)−J(Φ₂)` (Loewner order),

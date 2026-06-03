@@ -710,9 +710,26 @@ aligned with the $\pm\gamma$ diagonal Choi entries ($\|J(\Phi_\gamma)-J(\mathrm{
 \emph{(iv)} \textbf{fidelity\,$\leftrightarrow$\,diamond bridges} (\verb|GateFidelityBridge.lean|):
 composing the shipped Fuchs--van de Graaf state bound with the diamond least-upper-bound property gives,
 for every stabilized input, $1-\sqrt{F\!\big((\Phi_1\otimes\mathrm{id})\rho,(\Phi_2\otimes\mathrm{id})\rho\big)}\le\mathrm{diamondDist}(\Phi_1,\Phi_2)$ --- a small diamond distance certifies uniformly
-high input--output fidelity. (The general-$d$ average-gate\,$=$\,$(dF_e+1)/(d+1)$ entanglement-fidelity
-identity is deferred: it requires Weingarten / unitary-$2$-design moment formulas absent from the pinned
-\textsf{Mathlib}; the single-qubit instance is already populated.) \emph{(v)} \textbf{the Watrous
+high input--output fidelity. \emph{(iv$'$)} \textbf{the general-$d$ average-gate $=$ entanglement-fidelity
+identity} (\verb|GateFidelity.lean|, \verb|avgGateFidelity_eq|): for every CPTP (Kraus) channel $\Phi$ on a
+$d$-dimensional system,
+\[
+  F_{\mathrm{avg}}(\Phi)=\frac{d\,F_e(\Phi)+1}{d+1},\qquad
+  F_{\mathrm{avg}}(\Phi)=\frac{1}{|S^{2d-1}|}\!\int_{S^{2d-1}}\!\!\sum_k|\langle\psi|K_k|\psi\rangle|^2\,d\sigma(\psi),\quad
+  F_e(\Phi)=\frac1{d^2}\sum_k|\operatorname{tr}K_k|^2 .
+\]
+This is the bench-data$\to$worst-case bridge --- it converts an averaged benchmark (e.g.\ a
+randomized-benchmarking fidelity) into the entanglement fidelity that feeds the diamond-distance
+certificate of \emph{(iv)}. We had previously flagged this as deferred pending Weingarten /
+unitary-$2$-design moment formulas absent from the pinned \textsf{Mathlib}; it is instead proven
+\emph{constructively}, with no twirl machinery, by computing the degree-$(2,2)$ complex sphere moment
+$\int_{S^{2d-1}}\bar\psi_p\psi_q\bar\psi_r\psi_s\,d\sigma=(\delta_{pq}\delta_{rs}+\delta_{ps}\delta_{qr})\,|S^{2d-1}|/(d(d+1))$
+(\verb|complexSphereTensor|) along the Gaussian$\to$sphere route --- one-dimensional Gaussian moments,
+the multivariate Wick/Isserlis tensor, a homogeneous polar reduction, and the
+$\mathbb C^d\cong\mathbb R^{2d}$ realification --- then contracting it against the Kraus matrices
+(\verb|sphere_braKet_normSq|) and collapsing the dimension factor through trace preservation
+$\sum_k\operatorname{tr}(K_k^\dagger K_k)=d$ (\verb|kraus_normSq_sum|). The unitary-$2$-design second moment
+is thus obtained as a theorem rather than imported. \emph{(v)} \textbf{the Watrous
 weak-dual upper bound} (\verb|DiamondNormDual.lean|, \verb|diamondDist_le_dual_witness|): for any
 witness $W\succeq0$ with $W\succeq J(\Phi_1)-J(\Phi_2)$ (L\"owner order),
 $\mathrm{diamondDist}(\Phi_1,\Phi_2)\le\|\mathrm{Tr}_2 W\|_\infty$. Crucially this is the \emph{weak}-duality
