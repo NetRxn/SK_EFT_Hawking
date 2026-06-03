@@ -59,3 +59,28 @@ EITHER (a) general (or honestly-scoped restricted) fidelity DP `sqrtFidelity_kra
 corollary, PROVEN kernel-pure; OR (b) a fence with an interactive-lean4-verified written blocker and
 the partial deliverable (e.g. joint concavity, or the restricted-subclass DP) clearly labeled. NO
 axiom without sign-off. Counts/docs/memory synced.
+
+---
+
+## OUTCOME (2026-06-02, autonomous /goal) — PARTIAL: reversible-channel fidelity DP SHIPPED + general CPTP FENCED
+
+**Wave 6AJ.0 scout (interactive lean4 on Mathlib v4.29.1).** PRESENT: operator-monotone
+`CFC.monotone_sqrt`. ABSENT (verified — leansearch/loogle): joint concavity of fidelity, operator
+convexity of `t⁻¹` (Choi's inequality), Lieb concavity, purification / Stinespring dilation. ⟹ the
+general-CPTP and mixed-unitary Uhlmann-monotonicity routes all lack a ready theorem.
+
+**SHIPPED (constructive, the reachable toehold):** `FidelityDataProcessing.lean` (root-imported,
+kernel-pure) — fidelity is exactly invariant under unitary conjugation, i.e. data processing for the
+*reversible* (unitary-channel) subclass as an EQUALITY:
+- `posSemidef_unitary_conj`: `U M Uᴴ ⪰ 0`.
+- `psdSqrt_unitary_conj`: `√(U M Uᴴ) = U √M Uᴴ` (via `posSemidef_eq_of_mul_self_eq` — NO CFC
+  conjugation lemma needed, dodging the Mathlib gap).
+- `absOp_unitary_conj`: `|U A Uᴴ| = U |A| Uᴴ`.
+- `traceNorm_unitary_conj`: `‖U A Uᴴ‖₁ = ‖A‖₁` (modulus conjugation + trace cyclicity).
+- `sqrtFidelity_unitary_conj`: **`F(UρUᴴ, UσUᴴ) = F(ρ, σ)`** — the headline reversible-channel DP.
+
+**FENCED (no axiom):** the general CPTP Uhlmann monotonicity `F(Φρ,Φσ) ≥ F(ρ,σ)` and the
+mixed-unitary subclass — blocked at this pin without joint concavity / operator-convex inverse /
+purification. Recommendation for a future phase: formalize joint concavity of fidelity (unlocks
+mixed-unitary directly from the shipped unitary case), or operator-convexity of `t⁻¹` + the
+variational form `F = inf_X ½(tr Xρ + tr X⁻¹σ)` (the elementary route to full CPTP monotonicity).
