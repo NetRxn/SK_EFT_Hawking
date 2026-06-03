@@ -155,4 +155,52 @@ theorem omega_overlap_scalar (K : Fin m → Matrix (Fin n) (Fin n) ℂ) :
   rw [Matrix.trace_conjTranspose]
   exact Complex.mul_conj _
 
+/-! ## Fidelity against the maximally-entangled (pure) state -/
+
+/-- `⟨Ω|Ω⟩ = n` (the `n` diagonal terms of `∑_p ⟦p.1=p.2⟧`). -/
+theorem omega_norm (n : ℕ) : ((omegaVec n)ᴴ * omegaVec n) 0 0 = (n : ℂ) := by
+  simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, omegaVec, Fintype.sum_prod_type,
+    apply_ite star, star_one, star_zero, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq,
+    Finset.mem_univ, if_true, Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul,
+    mul_one]
+
+/-- The maximally-entangled state is a projector: `Ω² = Ω`. -/
+theorem maxEntangled_projector (n : ℕ) [NeZero n] :
+    maxEntangled n * maxEntangled n = maxEntangled n := by
+  have hn : (n : ℂ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne n)
+  rw [maxEntangled, Matrix.smul_mul, Matrix.mul_smul, smul_smul, outer_sq, omega_norm, smul_smul]
+  congr 1; field_simp
+
+/-- `√Ω = Ω` (the square root of a projector is itself). -/
+theorem psdSqrt_maxEntangled (n : ℕ) [NeZero n] :
+    psdSqrt (isDensityOperator_maxEntangled (n := n)).1 = maxEntangled n := by
+  refine posSemidef_eq_of_mul_self_eq (psdSqrt_posSemidef _) (isDensityOperator_maxEntangled).1 ?_
+  rw [psdSqrt_mul_self, maxEntangled_projector]
+
+/-- **Fidelity against the maximally-entangled pure state.** For any density operator `ρ`,
+`√F(ρ, Ω) = √(1/n)·√(⟨Ω|ρ|Ω⟩)` — fidelity at a pure target is the overlap, evaluated via the rank-one
+trace norm `‖Ω·√ρ‖₁ = ‖(1/n)·Ω⟩‖·‖√ρ·Ω⟩‖`. -/
+theorem sqrtFidelity_maxEntangled {n : ℕ} [NeZero n]
+    {ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hρ : ρ.PosSemidef) :
+    sqrtFidelity hρ (isDensityOperator_maxEntangled).1
+      = Real.sqrt (1 / n) * Real.sqrt (((omegaVec n)ᴴ * ρ * omegaVec n) 0 0).re := by
+  rw [sqrtFidelity, psdSqrt_maxEntangled]
+  have huv : maxEntangled n * psdSqrt hρ
+      = ((n : ℂ)⁻¹ • omegaVec n) * (psdSqrt hρ * omegaVec n)ᴴ := by
+    rw [maxEntangled, Matrix.conjTranspose_mul, (psdSqrt_isHermitian hρ).eq, Matrix.smul_mul,
+      Matrix.smul_mul, Matrix.mul_assoc]
+  rw [huv, traceNorm_outer]
+  congr 1
+  · congr 1
+    rw [Matrix.conjTranspose_smul, Matrix.smul_mul, Matrix.mul_smul, smul_smul, Matrix.smul_apply,
+      smul_eq_mul, omega_norm]
+    rw [show star ((n : ℂ)⁻¹) * (n : ℂ)⁻¹ * (n : ℂ) = ((1 / n : ℝ) : ℂ) by
+      rw [Complex.star_def, Complex.conj_inv, Complex.conj_natCast]; push_cast; field_simp]
+    rw [Complex.ofReal_re]
+  · congr 2
+    rw [Matrix.conjTranspose_mul, (psdSqrt_isHermitian hρ).eq,
+      show (omegaVec n)ᴴ * psdSqrt hρ * (psdSqrt hρ * omegaVec n)
+          = (omegaVec n)ᴴ * (psdSqrt hρ * psdSqrt hρ) * omegaVec n by simp only [Matrix.mul_assoc],
+      psdSqrt_mul_self]
+
 end SKEFTHawking.QuantumNetwork
