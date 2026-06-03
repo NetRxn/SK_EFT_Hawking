@@ -597,4 +597,45 @@ theorem l2opNorm_le_of_loewner {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonem
     rw [e2, smul_sub, smul_smul, sq]; abel
   rw [hsum]; exact (hle.smul hcc).add hP2
 
+open scoped Matrix.Norms.L2Operator in
+/-- **S5c congruence reduction:** the witness operator-norm bound `‖Tr₂ W*‖ ≤ d` follows from the
+Loewner inequality `Tr₂(posPart M) ⪯ d·σ` (for PosDef `σ`, `d ≥ 0`). Congruence by the Hermitian
+`√σ⁻¹` sends `d·σ − Tr₂M₊ ⪰ 0` to `d·1 − Tr₂W* ⪰ 0` (using `√σ⁻¹·σ·√σ⁻¹ = 1` and
+`ptrace2_diamondWitness`), then `l2opNorm_le_of_loewner`. This isolates the headline to the single
+inequality `Tr₂(posPart M) ⪯ diamondDist·σ` at the optimal input (the variational kernel). -/
+theorem opNorm_ptrace2_diamondWitness_le [NeZero n] {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosDef)
+    {C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hC : C.IsHermitian) {d : ℝ} (hd : 0 ≤ d)
+    (hLoew : ((d : ℂ) • σ
+        - ptrace2 (posPart (contractedChoi_isHermitian hσ.posSemidef hC))).PosSemidef) :
+    ‖ptrace2 (diamondWitness hσ.posSemidef hC)‖ ≤ d := by
+  have hsdet : IsUnit (psdSqrt hσ.posSemidef).det :=
+    (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_psdSqrt _ hσ.isUnit)
+  have hsih : ((psdSqrt hσ.posSemidef)⁻¹)ᴴ = (psdSqrt hσ.posSemidef)⁻¹ := by
+    rw [Matrix.conjTranspose_nonsing_inv, (psdSqrt_isHermitian hσ.posSemidef).eq]
+  have hss : psdSqrt hσ.posSemidef * psdSqrt hσ.posSemidef = σ := psdSqrt_mul_self hσ.posSemidef
+  have h1 : ((psdSqrt hσ.posSemidef)⁻¹ * psdSqrt hσ.posSemidef)
+        * (psdSqrt hσ.posSemidef * (psdSqrt hσ.posSemidef)⁻¹)
+      = (psdSqrt hσ.posSemidef)⁻¹ * σ * (psdSqrt hσ.posSemidef)⁻¹ := by
+    rw [show ((psdSqrt hσ.posSemidef)⁻¹ * psdSqrt hσ.posSemidef)
+          * (psdSqrt hσ.posSemidef * (psdSqrt hσ.posSemidef)⁻¹)
+        = (psdSqrt hσ.posSemidef)⁻¹ * (psdSqrt hσ.posSemidef * psdSqrt hσ.posSemidef)
+          * (psdSqrt hσ.posSemidef)⁻¹ from by noncomm_ring, hss]
+  have hinvσ : (psdSqrt hσ.posSemidef)⁻¹ * σ * (psdSqrt hσ.posSemidef)⁻¹ = 1 := by
+    rw [← h1, Matrix.nonsing_inv_mul _ hsdet, Matrix.mul_nonsing_inv _ hsdet, Matrix.one_mul]
+  have hTrPsd : (ptrace2 (diamondWitness hσ.posSemidef hC)).PosSemidef :=
+    ptrace2_posSemidef (diamondWitness_posSemidef hσ.posSemidef hC)
+  have hLoew1 : ((d : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ)
+      - ptrace2 (diamondWitness hσ.posSemidef hC)).PosSemidef := by
+    have hcong := hLoew.mul_mul_conjTranspose_same (psdSqrt hσ.posSemidef)⁻¹
+    rw [hsih] at hcong
+    have halg : (psdSqrt hσ.posSemidef)⁻¹ * ((d : ℂ) • σ
+          - ptrace2 (posPart (contractedChoi_isHermitian hσ.posSemidef hC)))
+          * (psdSqrt hσ.posSemidef)⁻¹
+        = (d : ℂ) • (1 : Matrix (Fin n) (Fin n) ℂ)
+          - ptrace2 (diamondWitness hσ.posSemidef hC) := by
+      rw [Matrix.mul_sub, Matrix.sub_mul, mul_smul_comm, smul_mul_assoc, hinvσ,
+        ← ptrace2_diamondWitness]
+    rwa [halg] at hcong
+  exact l2opNorm_le_of_loewner hd hTrPsd hLoew1
+
 end SKEFTHawking.QuantumNetwork
