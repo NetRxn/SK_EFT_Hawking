@@ -89,13 +89,23 @@ With the block characterization, mixed-unitary monotonicity is immediate (conjug
 `∑ pᵢ Uᵢ`, same trace) and joint concavity drops out. NO joint concavity / Lieb / Stinespring needed
 for the mixed-unitary case.
 
-**Brick sequence (continuation):**
-1. `block_psd_factor` (forward): `fromBlocks ρ X Xᴴ σ ⪰ 0 ⟹ X = √ρ · K · √σ` with `‖K‖ ≤ 1`
-   (Schur `fromBlocks₂₂` on `σ + ε`, perturb singular `σ` via the shipped `+1/k•1` trick).
-2. **The one new brick** `re_trace_le_sqrtFidelity` : block-feasible `X ⟹ (tr X).re ≤ sqrtFidelity`
-   (`Re tr(√ρ K √σ) = Re tr(K √σ√ρ) ≤ ‖√σ√ρ‖₁` via shipped `traceNorm_mul_le` / dual-norm keystone).
-3. `sqrtFidelity_attained` : feasible `X* = √ρ·V·√σ` (polar `V` of `√σ√ρ`) with `Re tr X* = sqrtFidelity`.
-4. `fidelityBlock_conj_psd` : `(∑ᵢ √pᵢ Uᵢ ⊕ √pᵢ Uᵢ)`-conjugation preserves block-PSD and trace ⇒
-   feasible-X transport.
-5. Headline `sqrtFidelity_mixedUnitary_ge` (then joint concavity corollary; general CPTP via a
-   project-side Stinespring dilation, larger). NO axiom.
+**Brick sequence (continuation — precisely pinned):**
+1. ✅ **DONE** `fidelityBlock_posDef_schur` (`FidelityBlockForm.lean`, commit `6e19aae1`): for `σ`
+   PosDef, `[[ρ,X],[Xᴴ,σ]] ⪰ 0 ↔ ρ − X σ⁻¹ Xᴴ ⪰ 0` (wraps Mathlib `PosDef.fromBlocks₂₂`,
+   `PosDef.isUnit` for invertibility). Exhibits `X = √ρ K √σ`, `KKᴴ = ρ^{-½}(Xσ⁻¹Xᴴ)ρ^{-½} ⪯ 1`.
+2. ✅ **DONE** `fidelityBlock_mixedUnitary_posSemidef` (TRANSPORT, commit `676791f9`): feasible `X`
+   for `(ρ,σ)` ⟹ `∑pᵢUᵢXUᵢᴴ` feasible for `(Φρ,Φσ)`, via `diagDil`/`fidelityBlock_sum_smul`.
+3. **NEXT — op-norm/trace-norm Hölder `‖K·M‖₁ ≤ ‖K‖ · ‖M‖₁`** (the genuine new analytic brick).
+   ROUTE (verified reachable, NO SVD): `|KM| = √(Mᴴ(KᴴK)M) ⪯ √(‖K‖²·MᴴM) = ‖K‖·|M|` by
+   **operator-monotone √** (Mathlib `CFC.monotone_sqrt`, bridged to the project's `psdSqrt` — or a
+   direct `psdSqrt`-monotone lemma) on the conjugation `Mᴴ(KᴴK)M ⪯ ‖K‖²MᴴM` (from `KᴴK ⪯ ‖K‖²·1`
+   + `conjTranspose_mul_mul_same` Loewner-monotone), then `tr|KM| ≤ ‖K‖ tr|M|` (trace-monotone).
+   The contraction `‖K‖ ≤ 1` from `KKᴴ ⪯ 1` is `eigenvalue_le_l2opNorm` / L2Operator.
+4. **Forward bound** `re_trace_block_le_sqrtFidelity` : `Re tr X ≤ sqrtFidelity` via brick 1
+   (`X=√ρK√σ`, `‖K‖≤1`) + `re_trace_le_traceNorm` (SHIPPED, FidelityBounds:305) + cyclic trace +
+   brick 3: `Re tr X = Re tr(K√σ√ρ) ≤ ‖K√σ√ρ‖₁ ≤ ‖K‖·‖√σ√ρ‖₁ ≤ F`. (Perturb singular `ρ,σ` via the
+   shipped `+1/k•1` continuity trick — `continuous_traceNorm`.)
+5. `sqrtFidelity_attained` : feasible `X* = √ρ·V·√σ` (polar `V` of `√σ√ρ`, project's invertible-case
+   polar) with `Re tr X* = ‖√σ√ρ‖₁ = sqrtFidelity`.
+6. Headline `sqrtFidelity_mixedUnitary_ge` = transport (brick 2) ∘ attainment (5) ∘ forward (4);
+   joint-concavity corollary; general CPTP via a project-side Stinespring dilation (larger). NO axiom.
