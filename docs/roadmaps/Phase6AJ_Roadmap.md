@@ -62,7 +62,22 @@ axiom without sign-off. Counts/docs/memory synced.
 
 ---
 
-## OUTCOME (2026-06-02, autonomous /goal) — reversible-channel fidelity DP SHIPPED; general/mixed-unitary ROUTE MAPPED (continuation, not fenced)
+## ✅ OUTCOME (2026-06-03, autonomous /goal) — MIXED-UNITARY UHLMANN MONOTONICITY **PROVEN** (`sqrtFidelity_mixedUnitary_ge`, commit `7ac93fe0`)
+
+**HEADLINE CLOSED:** `F(Φρ,Φσ) ≥ F(ρ,σ)` for mixed-unitary `Φ(·)=∑pᵢUᵢ·Uᵢᴴ`, PosDef `ρ,σ`, kernel-pure.
+Built end-to-end from scratch: the full **Alberti SDP characterization** `F(ρ,σ)=max{Re tr X :
+[[ρ,X],[Xᴴ,σ]]⪰0}` (forward bound `re_trace_block_le_sqrtFidelity` + attainment
+`exists_block_re_trace_eq_sqrtFidelity`) + the **op-norm/trace-norm Hölder machinery**
+(`re_trace_mul_le_opNorm_mul_trace`/`…_traceNorm`) + the **EuclideanLin `‖K‖≤1` infra**
+(`opNorm_le_one_of_mul_conjTranspose_le_one`, routing around the matrix-`CStarAlgebra` instance
+whnf-wall via `isPositive_toEuclideanLin_iff`+`opNNNorm_le_iff`). `posDef_mixedUnitary` +
+`trace_mixedUnitary` close the channel-preservation steps. NO axiom. Modules: `OpNormHolder.lean`,
+`FidelityBlockForm.lean`, `FidelityForwardBound.lean`. **Remaining (larger, optional):** joint-concavity
+corollary (drops out of the Alberti form); general CPTP via a project-side Stinespring/Choi dilation.
+
+---
+
+### (superseded) earlier outcome — reversible-channel fidelity DP SHIPPED; general/mixed-unitary route mapped
 
 **Wave 6AJ.0 scout (interactive lean4 on Mathlib v4.29.1).** PRESENT: operator-monotone
 `CFC.monotone_sqrt`. ABSENT (verified — leansearch/loogle): joint concavity of fidelity, operator
