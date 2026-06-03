@@ -255,4 +255,26 @@ theorem ptrace2_choiDiff_eq_zero {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) �
     ptrace2 (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) = 0 := by
   rw [ptrace2_sub, ptrace2_choiMatrix_krausMap hK₁, ptrace2_choiMatrix_krausMap hK₂, sub_self]
 
+open scoped Kronecker in
+/-- **The contracted Choi operator** `M = (√σ ⊗ 1)·C·(√σ ⊗ 1)` (DR F4 Step 3, project convention:
+`√σ` on the input/first factor). For the optimal input `σ = ρ*`, the positive-eigenspace projector
+`Π* = posProj` of this operator is the spectral data defining the optimal dual witness
+`W* = (√σ⊗1)·Π*·C·Π*·(√σ⊗1)`. Its Jordan–Hahn decomposition (`posPart`/`negPart`, both PSD with
+`posPart − M = negPart ⪰ 0`) is the substrate of the witness construction (Stage 4). -/
+noncomputable def contractedChoi {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSemidef)
+    (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ :=
+  (psdSqrt hσ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * C * (psdSqrt hσ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+
+open scoped Kronecker in
+/-- The contracted Choi operator is Hermitian (conjugation of the Hermitian `C` by the Hermitian
+`√σ ⊗ 1`), so its `posProj`/`posPart`/`negPart` Jordan–Hahn data is well-defined. -/
+theorem contractedChoi_isHermitian {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSemidef)
+    {C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hC : C.IsHermitian) :
+    (contractedChoi hσ C).IsHermitian := by
+  have hB : (psdSqrt hσ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))ᴴ
+      = psdSqrt hσ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) := by
+    rw [Matrix.conjTranspose_kronecker, (psdSqrt_isHermitian hσ).eq, Matrix.conjTranspose_one]
+  have h := isHermitian_mul_mul_conjTranspose (psdSqrt hσ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) hC
+  rwa [hB] at h
+
 end SKEFTHawking.QuantumNetwork
