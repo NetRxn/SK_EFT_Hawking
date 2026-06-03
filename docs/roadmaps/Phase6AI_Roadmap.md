@@ -489,3 +489,18 @@ closed (Tr₂ continuous/linear, feasible set closed); `ballδ` compact convex; 
 `Y⪰0` from the S-lower-bound (explicit `t`); assemble. Then headline `diamondDist_eq_choiSDP` by
 `le_antisymm` (W1 `diamondDist_le_choiDualValue` + this). Reassembly VALUE bricks are DONE; the
 HermCarrier separation plumbing is the remaining build.
+
+## OUTCOME UPDATE 12 (2026-06-03) — separation crux identified + compactness lever found
+The separation core's genuine subtlety: `{W : W⪰0, W⪰C}` is UNBOUNDED, so naive "separate the empty
+sublevel" doesn't apply. LEVER: the codebase already ships `exists_choiDualValue_eq` (dual inf ATTAINED)
+via `dualObjective_trace_bound` (`tr W ≤ card·‖Tr₂W‖`); with `W⪰0 ⟹ ‖W‖ ≤ tr W`, the set
+`dualFeasSublevel C δ` (`W⪰0, W⪰C, ‖Tr₂W‖≤δ`) is BOUNDED hence COMPACT (closedness already shipped:
+`isClosed_dualFeasSublevel`). So the dual optimum `W^♯` EXISTS with `‖Tr₂W^♯‖ = choiDualValue`.
+**Cleanest finish (avoids the empty-set separation entirely):** with `W^♯` the attained dual optimum,
+the headline `choiDualValue ≤ diamondDist` reduces to `‖Tr₂W^♯‖ ≤ diamondDist`. Two viable closes:
+(A) complementary slackness at `W^♯` against the attained primal optimum `ρ*` (`exists_diamondDist_eq`)
++ the saddle-value bricks just shipped; (B) the value-function/separation argument with the COMPACT
+`dualFeasSublevel` as the compact set in `geometric_hahn_banach_compact_closed`. Next-turn focus: pick
+(A) or (B), build the HermCarrier separation/CS plumbing (S-image or `W^♯`-CS), assemble headline.
+STATE: route fully recovered; piece 3 + `primalSDPValue=diamondDist` + all reassembly VALUE bricks
+SHIPPED kernel-pure; only the separation/CS plumbing remains (≈100–150 LoC, well-scoped).
