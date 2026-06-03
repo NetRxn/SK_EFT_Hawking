@@ -277,4 +277,31 @@ theorem contractedChoi_isHermitian {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.P
   have h := isHermitian_mul_mul_conjTranspose (psdSqrt hσ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) hC
   rwa [hB] at h
 
+open scoped Kronecker in
+/-- **The optimal dual witness** `W* = (√σ⁻¹ ⊗ 1)·M₊·(√σ⁻¹ ⊗ 1)`, where `M₊ = posPart` of the
+contracted Choi `M = (√σ⊗1)C(√σ⊗1)`. (Corrected form: the conjugating factor is `√σ⁻¹`, not the
+`√σ` of the DR's stated formula, which fails `W*⪰C`.) For PosDef `σ` it is the optimal Watrous dual
+witness; `W*⪰0` holds for any PosSemidef `σ` (conjugation of the PSD positive part). -/
+noncomputable def diamondWitness {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSemidef)
+    {C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hC : C.IsHermitian) :
+    Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ :=
+  ((psdSqrt hσ)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) *
+      posPart (contractedChoi_isHermitian hσ hC) *
+    ((psdSqrt hσ)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+
+open scoped Kronecker in
+/-- **`W* ⪰ 0`** — the witness is positive semidefinite (conjugation of the PSD `posPart M₊` by the
+Hermitian `√σ⁻¹ ⊗ 1`). Holds for any PosSemidef `σ`. -/
+theorem diamondWitness_posSemidef {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSemidef)
+    {C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hC : C.IsHermitian) :
+    (diamondWitness hσ hC).PosSemidef := by
+  have hBh : ((psdSqrt hσ)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))ᴴ
+      = (psdSqrt hσ)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) := by
+    rw [Matrix.conjTranspose_kronecker, Matrix.conjTranspose_one,
+      Matrix.conjTranspose_nonsing_inv, (psdSqrt_isHermitian hσ).eq]
+  have h := (posPart_posSemidef (contractedChoi_isHermitian hσ hC)).mul_mul_conjTranspose_same
+    ((psdSqrt hσ)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+  rw [hBh] at h
+  exact h
+
 end SKEFTHawking.QuantumNetwork
