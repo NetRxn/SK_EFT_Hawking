@@ -125,3 +125,41 @@ the ℝ-module `selfAdjoint.instModule…`). NO Sion minimax / Fenchel needed (a
    `g(W*) = diamondDist`. Headline `diamondDist_eq_choiSDP`.
 The constructive `C₊` upper bound + per-channel covariant exact strong duality are already shipped;
 this continuation closes the general equality. NO axiom.
+
+### Continuation progress (2026-06-03, autonomous /goal "complete 6AI without fencing")
+- ✅ **`≤` direction DONE** (`4ca541e9`, `DiamondSDP.lean`): `choiDualValue` def + `diamondDist_le_choiDualValue` (weak duality).
+- ✅ **Dual-attainment foundational lemmas DONE** (`a8d7a291`, `DiamondSDPAttainment.lean`, kernel-pure,
+  root-imported): `trace_ptrace2` (`tr(Tr₂ W) = tr W`); `dualObjective_trace_bound`
+  (PSD `W ⇒ Re tr W ≤ card·‖Tr₂ W‖`, the boundedness seed — composes `traceNorm_posSemidef` +
+  shipped `traceNorm_le_card_mul_l2opNorm`).
+- ✅ **op≤trace bridge + boundedness DONE** (`70f1b453`, `DiamondSDPAttainment.lean`): `opNorm_le_of_mul_conjTranspose_le_sq`
+  (`‖K‖ ≤ c` from `c²•1 − K·Kᴴ ⪰ 0`; generalized the `c=1` EuclideanLin `opNorm_le_one`, 🔑 tail coercion fix
+  `show ((c^2:ℝ):ℂ) = RCLike.ofReal (c^2) from rfl` bridges Complex.ofReal→RCLike.ofReal so
+  `RCLike.re_ofReal_mul` fires) → `l2opNorm_le_traceNorm_psd` (`‖W‖ ≤ traceNorm W` for PSD W, via CFC Loewner
+  `W·W ⪯ (traceNorm W)²•1` using `isHermitian_mul_self_eq_cfc_sq`+`cfc_const`+`cfc_sub`+`cfc_posSemidef` and
+  `IsHermitian.trace_eq_sum_eigenvalues`+`Finset.single_le_sum` for eigenvalue ≤ trace) → `l2opNorm_bound_of_dual_feasible`
+  (PSD dual witness with `‖Tr₂ W‖ ≤ B` has `‖W‖ ≤ card·B`).
+- ✅ **DUAL ATTAINMENT DONE** (`e164ea96`): `isClosed_posSemidef` (PSD set closed, mirrors `isClosed_isDensityOperator`) +
+  `continuous_ptrace2` → **`exists_choiDualValue_eq`**: the dual sublevel `{W⪰0, W⪰C, ‖Tr₂ W‖ ≤ ‖Tr₂ C₊‖}` is compact
+  (`Metric.isCompact_of_isClosed_isBounded`), the continuous objective `‖Tr₂ ·‖` attains its min there via
+  `IsCompact.exists_isMinOn`, and that min = `choiDualValue` (inf over all feasible). Gives an EXPLICIT optimal dual
+  witness `W*` with `‖Tr₂ W*‖ = choiDualValue`. 🔑 the `L2Operator`-scoped-instance topology cooperates with the
+  Frobenius-proved closedness lemmas (finite-dim, no instance pollution).
+- 🔴 **REMAINING = the SEPARATION / complementary-slackness core** (Watrous zero-gap): show `choiDualValue ≤ diamondDist`
+  (`‖Tr₂ W*‖ ≤ diamondDist`) using the attained `W*` + primal-attained `ρ*` (`exists_diamondDist_eq`) +
+  `selfAdjointInnerProductSpace` + `ProperCone.hyperplane_separation`. THEN `le_antisymm` with `diamondDist_le_choiDualValue`
+  ⇒ `diamondDist_eq_choiSDP`. This is the last (hardest, bespoke) brick — all infrastructure now in place.
+- (superseded) NEXT concrete brick (brick 4a): `l2opNorm_le_traceNorm` for PSD `W` (`‖W‖_{L2op} ≤ traceNorm W`,
+  i.e. max eigenvalue ≤ trace) — the bridge bounding `‖W‖` itself in the AMBIENT L2-op metric (the
+  shipped `frobenius_le_traceNorm` is in the *Frobenius* instance, won't unify under `L2Operator` open).
+  ROUTE: `W ⪯ (tr W)•1` (PSD eigenvalues ≤ trace) ⇒ generalize the 6AJ EuclideanLin
+  `opNorm_le_one_of_mul_conjTranspose_le_one` pattern to `opNorm_le_of_loewner_smul_one`. ⚠️ EuclideanLin
+  CLM route (the whnf-wall-avoiding one), not the CStarAlgebra CFC instance (200k-heartbeat whnf wall).
+  THEN: closedness of `{W⪰0, W⪰C}` (PSD conditions closed) + `‖Tr₂·‖≤B` sublevel bounded (via brick 4a +
+  `dualObjective_trace_bound`) ⇒ `Metric.isCompact_of_isClosed_isBounded` ⇒ `IsCompact.exists_isMinOn`
+  of continuous `W↦‖Tr₂ W‖` ⇒ dual inf ATTAINED. THEN brick 5 (Hahn–Banach separation +
+  complementary slackness) = the larger creative core ⇒ `≥` direction ⇒ `le_antisymm` headline.
+- **HONEST SCOPE:** the `≥` direction is Watrous diamond-SDP strong duality — a large multi-increment
+  bespoke build (attainment + separation). Infrastructure (brick 1 InnerProductSpace) + `≤` + attainment
+  foundations are committed kernel-pure; the separation/complementary-slackness core remains. NOT fenced
+  (reachable, no axiom); NOT the holding antipattern (continuous committed increments).
