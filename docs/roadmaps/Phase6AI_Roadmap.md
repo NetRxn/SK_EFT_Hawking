@@ -543,3 +543,27 @@ Then `diamondDist_eq_choiSDP := le_antisymm diamondDist_le_choiDualValue choiDua
 Carrier-lift helper needed: `M.PosSemidef → ∃ Y:HermCarrier, Y.toSA.1=M` (via `equivSA.symm ⟨M,herm⟩`)
 + `Tr₂(carrier of W)∈achievableTr2`. ALL value/feasibility/compactness ingredients SHIPPED; only this
 wiring (~100 LoC) remains, no missing Mathlib, no axiom, no fence.
+
+## ✅ OUTCOME UPDATE 15 (2026-06-03) — 6AI COMPLETE: `diamondDist_eq_choiSDP` PROVEN UNCONDITIONAL, kernel-pure
+**The headline is a theorem.** `SKEFTHawking.QuantumNetwork.diamondDist_eq_choiSDP :
+diamondDist K₁ K₂ = choiDualValue K₁ K₂` (Watrous diamond-norm SDP strong duality) is proven
+UNCONDITIONALLY, kernel-pure (`lean_verify`: axioms `{propext, Classical.choice, Quot.sound}`),
+ZERO sorry, ZERO project-local axiom, NO fence. Full library + ExtractDeps build clean (9053 jobs);
+counts: 10583 thm / 0 axiom / 0 sorry / 804 mod.
+**Route (the user's "context was lost, regain tractable position" call was correct):** both DR
+shortcuts were refuted (σ=1/d numerically false); the real route is the SDP-value chain
+`choiDualValue ≤ primalSDPValue=diamondDist ≤ choiDualValue` — Mathlib v4.29.1 HAS the conic Farkas
+(`geometric_hahn_banach_compact_closed`) the stale memory claimed absent. Pieces:
+- **Piece 3** `primalSDPValue ≤ diamondDist` (Watrous primal reduction; Helstrom bound + √σ⁻¹
+  conjugation + (1−ε) perturbation) + `primalSDPValue_eq_diamondDist`.
+- **Piece 2** `choiDualValue ≤ diamondDist` (conic Farkas / geometric Hahn–Banach): achievable set
+  `S={Tr₂W:W⪰0,W⪰C}` convex + CLOSED (bounded-witness `tendsto_subseq`, `‖W‖≤Re tr(Tr₂W)` lever —
+  no recession theory); op-ball compact (`isClosedEmbedding.isProperMap.isCompact_preimage`);
+  separate; Riesz `Y₀`; `Y₀⪰0` (PSD-cone-translate in S + `mem_innerDual_psdProperCone`,
+  `Tr₂(M⊗N)=tr N•M` lever); ball-plug `δ·tr Y₀≤u`; ε-regularized `diamondWitness σ_ε`
+  (`re_trace_kron_one_mul_diamondWitness_le` + saddle-value identity) gives `v≤tr Y₀·diamondDist`;
+  combine ⟹ `δ≤diamondDist` ⊥.
+- Headline = `le_antisymm` of weak (`diamondDist_le_choiDualValue`) + strong.
+~24 new kernel-pure declarations this arc. The "only remaining QI analytic fence" (primal=dual
+Choi-SDP equality) is CLOSED. REMAINING close-out: Inventory sync, D6 §6 / preprint §3e prose,
+fresh-context Stage-13.
