@@ -131,4 +131,18 @@ theorem re_trace_mul_le_l2opNorm_ptrace2_mul_trace [NeZero n]
     _ = ((ptrace2 W) * σ).trace.re := by rw [← trace_ptrace2_mul W σ]
     _ ≤ ‖ptrace2 W‖ * σ.trace.re := h4
 
+/-- **Primal feasibility of the Choi contraction (Farkas brick C″).** For an effect `Q` (`0 ⪯ Q ⪯ 1`)
+and a state `ρ ⪰ 0`, the Choi contraction `M(Q,ρ) = choiContraction Q ρ` is dominated by
+`(inMarginal ρ) ⊗ 1`: `M(Q,ρ) ⪯ (inMarginal ρ) ⊗ 1`. Together with `choiContraction_posSemidef`
+this shows every `M(Q,ρ)` is a feasible point of the diamond-SDP primal `{X ⪰ 0, X ⪯ σ ⊗ 1}`
+with `σ = inMarginal ρ` (a density when `ρ` is). Since `Re tr(C · M(P,ρ))` equals `traceDist` at
+input `ρ` (`traceDist_eq_re_trace_choiContraction_posProj`), this is the `primal ≥ diamondDist`
+support: the diamond distance is attained inside the primal-feasible set. -/
+theorem choiContraction_le_inMarginal_kron_one
+    {Q ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ}
+    (hQ1 : ((1 : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) - Q).PosSemidef) (hρ : ρ.PosSemidef) :
+    (inMarginal ρ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - choiContraction Q ρ).PosSemidef := by
+  rw [← choiContraction_one_eq, ← choiContraction_sub]
+  exact choiContraction_posSemidef hQ1 hρ
+
 end SKEFTHawking.QuantumNetwork
