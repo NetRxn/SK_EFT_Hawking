@@ -661,4 +661,32 @@ theorem diamondDist_eq_choiSDP_of_loewner [NeZero n] {K₁ K₂ : Fin m → Matr
      diamondWitness_sub_posSemidef hσ (choiDiff_isHermitian K₁ K₂),
      opNorm_ptrace2_diamondWitness_le hσ (choiDiff_isHermitian K₁ K₂) diamondDist_nonneg hLoew⟩
 
+/-- **Loewner bound from a quadratic-form bound:** for Hermitian `H`, if `Re⟨v,H v⟩ ≤ d·Re⟨v,v⟩` for
+every `v`, then `H ⪯ d·1` (`d·1 − H ⪰ 0`). The mechanism behind the non-perturbative route to the
+variational kernel: the optimal-projector operator `H_{P*}` satisfies `Re⟨v,H_{P*}v⟩ ≤ traceDist ≤
+diamondDist·Re⟨v,v⟩`, giving `H_{P*} ⪯ diamondDist·1` with no derivatives. -/
+theorem posSemidef_smul_one_sub_of_quadratic_le {ι : Type*} [Fintype ι] [DecidableEq ι]
+    {H : Matrix ι ι ℂ} (hH : H.IsHermitian) {d : ℝ}
+    (h : ∀ v : ι → ℂ, (star v ⬝ᵥ (H *ᵥ v)).re ≤ d * (star v ⬝ᵥ v).re) :
+    ((d : ℂ) • (1 : Matrix ι ι ℂ) - H).PosSemidef := by
+  have hHerm : ((d : ℂ) • (1 : Matrix ι ι ℂ) - H).IsHermitian := by
+    rw [Matrix.IsHermitian, Matrix.conjTranspose_sub, hH.eq, Matrix.conjTranspose_smul,
+      Matrix.conjTranspose_one, Complex.star_def, Complex.conj_ofReal]
+  rw [Matrix.posSemidef_iff_dotProduct_mulVec]
+  refine ⟨hHerm, fun v => ?_⟩
+  have hval : star v ⬝ᵥ (((d : ℂ) • (1 : Matrix ι ι ℂ) - H) *ᵥ v)
+      = (d : ℂ) * (star v ⬝ᵥ v) - star v ⬝ᵥ (H *ᵥ v) := by
+    rw [Matrix.sub_mulVec, Matrix.smul_mulVec, Matrix.one_mulVec, dotProduct_sub,
+      dotProduct_smul, smul_eq_mul]
+  have hvv : (star v ⬝ᵥ v).im = 0 := by
+    have := HermCarrier.im_dotProduct_mulVec_hermitian (Matrix.isHermitian_one (n := ι)) v
+    rwa [Matrix.one_mulVec] at this
+  have hHv : (star v ⬝ᵥ (H *ᵥ v)).im = 0 := HermCarrier.im_dotProduct_mulVec_hermitian hH v
+  rw [hval, Complex.le_def]
+  refine ⟨?_, ?_⟩
+  · simp only [Complex.zero_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
+      Complex.ofReal_im, zero_mul, sub_zero]
+    nlinarith [h v, hvv]
+  · simp [Complex.sub_im, Complex.mul_im, hvv, hHv]
+
 end SKEFTHawking.QuantumNetwork
