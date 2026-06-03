@@ -191,4 +191,124 @@ theorem diamondDist_ampDamp_le {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
     Real.norm_of_nonneg (by have := one_sub_sqrt_nonneg h0; linarith)] at hub
   linarith
 
+/-! ## Amplitude damping: EXACT diamond distance `= γ` (product-state worst case)
+
+Amplitude damping is *not* Pauli-covariant, so the maximally entangled (Choi) input is not optimal
+and the `diamondDist_ampDamp_le` bracket is loose. The true worst-case input is the **unentangled
+product state** `|1⟩⟨1| ⊗ |1⟩⟨1|`: on it the output–input difference is the real-diagonal matrix
+`γ·E_{(0,1)} − γ·E_{(1,1)}` with trace norm `2γ`, giving `traceDist = γ`. The matching upper bound
+uses the optimal **diagonal** witness `γ·E_{(0,0)} + γ·E_{(1,0)}` — cleaner than the loose
+`ampDampWitness` — whose `ptrace₂ = γ·1`, and `W − C ⪰ 0` because the residual `{(0,0),(1,1)}`
+block `[[γ, t],[t, γ]]` (`t = 1 − √(1−γ)`) is PSD since `γ ≥ t` (equivalently `√(1−γ)·(1−√(1−γ)) ≥ 0`).
+This upgrades the two-sided bracket to the **exact** value `γ`, the third named channel closed exactly
+(after dephasing and depolarizing) with no twirl or SDP-duality machinery. -/
+
+/-- The amplitude-damping worst-case input: the product state `|1⟩⟨1| ⊗ |1⟩⟨1|`. -/
+noncomputable def ampDampInput : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  Matrix.diagonal (fun i => if i = (1, 1) then 1 else 0)
+
+theorem ampDampInput_isDensityOperator : IsDensityOperator ampDampInput := by
+  refine ⟨Matrix.posSemidef_diagonal_iff.mpr fun i => ?_, ?_⟩
+  · fin_cases i <;> simp
+  · simp [ampDampInput, Matrix.trace_diagonal]
+
+/-- The output–input difference on `ampDampInput`: `γ·E_{(0,1)} − γ·E_{(1,1)}`. -/
+noncomputable def ampDampOutDiff (γ : ℝ) : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  Matrix.diagonal (fun i => if i = (0, 1) then (γ : ℂ) else if i = (1, 1) then -(γ : ℂ) else 0)
+
+/-- The PSD square root `|Δ|` of the output difference: `γ·E_{(0,1)} + γ·E_{(1,1)}`. -/
+noncomputable def ampDampOutAbs (γ : ℝ) : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  Matrix.diagonal (fun i => if i = (0, 1) then (γ : ℂ) else if i = (1, 1) then (γ : ℂ) else 0)
+
+/-- The stabilized output difference on the product input collapses to the diagonal `γ·E_{(0,1)} −
+γ·E_{(1,1)}` (the single populated Choi column `(1, ·)` filtered through the `(1,1)` input). -/
+theorem ampDamp_out_diff {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    krausMap (tensorKraus (ampDampKraus γ)) ampDampInput
+      - krausMap (tensorKraus (idKrausPad 1 2)) ampDampInput = ampDampOutDiff γ := by
+  ext p q; obtain ⟨y, α⟩ := p; obtain ⟨y', β⟩ := q
+  rw [Matrix.sub_apply, krausMap_tensorKraus_apply, krausMap_tensorKraus_apply]
+  have hC : ∀ a b : Fin 2,
+      choiMatrix (krausMap (ampDampKraus γ)) (a, y) (b, y') * ampDampInput (a, α) (b, β)
+        - choiMatrix (krausMap (idKrausPad 1 2)) (a, y) (b, y') * ampDampInput (a, α) (b, β)
+        = ampDampChoiDiff γ (a, y) (b, y') * ampDampInput (a, α) (b, β) := by
+    intro a b
+    rw [← sub_mul, ← Matrix.sub_apply,
+      congrFun (congrFun (ampDamp_choi_diff h0 h1) (a, y)) (b, y')]
+  simp_rw [← Finset.sum_sub_distrib, hC]
+  fin_cases y <;> fin_cases α <;> fin_cases y' <;> fin_cases β <;>
+    simp [ampDampChoiDiff, ampDampInput, ampDampOutDiff, Matrix.diagonal_apply, Prod.ext_iff]
+
+theorem traceNorm_ampDampOutDiff {γ : ℝ} (h0 : 0 ≤ γ) :
+    traceNorm (ampDampOutDiff γ) = 2 * γ := by
+  have habs : absOp (ampDampOutDiff γ) = ampDampOutAbs γ := by
+    refine posSemidef_eq_of_mul_self_eq (absOp_posSemidef _)
+      (Matrix.posSemidef_diagonal_iff.mpr fun i => ?_) ?_
+    · fin_cases i <;> simp <;> exact h0
+    · rw [absOp_mul_self]
+      ext p q; obtain ⟨a, y⟩ := p; obtain ⟨b, y'⟩ := q
+      fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+        simp [ampDampOutAbs, ampDampOutDiff, Matrix.mul_apply, Matrix.diagonal_apply,
+          Fintype.sum_prod_type, Fin.sum_univ_two, Prod.ext_iff]
+  rw [traceNorm_eq_trace_absOp, habs, ampDampOutAbs, Matrix.trace_diagonal, Fintype.sum_prod_type]
+  simp only [Fin.sum_univ_two, Prod.mk.injEq, Complex.add_re]
+  norm_num
+  ring
+
+/-- The **optimal** amplitude-damping dual witness: the diagonal `γ·E_{(0,0)} + γ·E_{(1,0)}`. -/
+noncomputable def ampDampWitnessOpt (γ : ℝ) : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ :=
+  Matrix.diagonal (fun i => if i = (0, 0) then (γ : ℂ) else if i = (1, 0) then (γ : ℂ) else 0)
+
+theorem ampDampWitnessOpt_posSemidef {γ : ℝ} (h0 : 0 ≤ γ) : (ampDampWitnessOpt γ).PosSemidef := by
+  refine Matrix.posSemidef_diagonal_iff.mpr fun i => ?_
+  fin_cases i <;> simp <;> exact h0
+
+theorem ptrace2_ampDampWitnessOpt (γ : ℝ) :
+    ptrace2 (ampDampWitnessOpt γ) = (γ : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  ext a b
+  fin_cases a <;> fin_cases b <;>
+    simp [ptrace2, ampDampWitnessOpt, Matrix.smul_apply]
+
+theorem ampDampWitnessOpt_sub_choi_posSemidef {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    (ampDampWitnessOpt γ - (choiMatrix (krausMap (ampDampKraus γ))
+      - choiMatrix (krausMap (idKrausPad 1 2)))).PosSemidef := by
+  rw [ampDamp_choi_diff h0 h1]
+  have heq : ampDampWitnessOpt γ - ampDampChoiDiff γ
+      = (Matrix.of fun a b => ((1 - Real.sqrt (1 - γ) : ℝ) : ℂ)
+          * ((if a = (0, 0) then 1 else if a = (1, 1) then 1 else 0 : ℝ) : ℂ)
+          * ((if b = (0, 0) then 1 else if b = (1, 1) then 1 else 0 : ℝ) : ℂ))
+        + (Matrix.of fun a b => ((γ - (1 - Real.sqrt (1 - γ)) : ℝ) : ℂ)
+            * (s00Dep a : ℂ) * (s00Dep b : ℂ))
+        + (Matrix.of fun a b => ((γ - (1 - Real.sqrt (1 - γ)) : ℝ) : ℂ)
+            * (s11Dep a : ℂ) * (s11Dep b : ℂ)) := by
+    ext p q; obtain ⟨a, y⟩ := p; obtain ⟨b, y'⟩ := q
+    fin_cases a <;> fin_cases y <;> fin_cases b <;> fin_cases y' <;>
+      simp [ampDampWitnessOpt, ampDampChoiDiff, s00Dep, s11Dep,
+        Matrix.sub_apply, Matrix.add_apply, Matrix.of_apply, Prod.ext_iff]
+  rw [heq]
+  have ht : (0 : ℝ) ≤ 1 - Real.sqrt (1 - γ) := one_sub_sqrt_nonneg h0
+  have htγ : (0 : ℝ) ≤ γ - (1 - Real.sqrt (1 - γ)) := by
+    have hw0 : (0 : ℝ) ≤ Real.sqrt (1 - γ) := Real.sqrt_nonneg _
+    have hsq : Real.sqrt (1 - γ) * Real.sqrt (1 - γ) = 1 - γ :=
+      Real.mul_self_sqrt (by linarith)
+    nlinarith [mul_nonneg hw0 ht, hsq]
+  exact ((posSemidef_smul_outer ht (fun p => if p = (0, 0) then 1 else if p = (1, 1) then 1 else 0)).add
+      (posSemidef_smul_outer htγ s00Dep)).add (posSemidef_smul_outer htγ s11Dep)
+
+/-- **Exact amplitude-damping diamond distance:** `diamondDist (ampDampKraus γ) (id) = γ` for
+`0 ≤ γ ≤ 1`. Upper bound via the optimal diagonal dual witness (`ptrace₂ W = γ·1`); matching lower
+bound via the product input `|1⟩⟨1|⊗|1⟩⟨1|` (`traceDist = ½·2γ = γ`). This is sharp — the loose
+`diamondDist_ampDamp_le` bracket `γ ≤ ◇ ≤ γ+1−√(1−γ)` collapses to the exact value `γ`. -/
+theorem diamondDist_ampDamp_eq {γ : ℝ} (h0 : 0 ≤ γ) (h1 : γ ≤ 1) :
+    diamondDist (ampDampKraus γ) (idKrausPad 1 2) = γ := by
+  refine le_antisymm ?_ ?_
+  · have hub := diamondDist_le_dual_witness (isKrausChannel_ampDampKraus h0 h1)
+      (isKrausChannel_idKrausPad 1 2) (ampDampWitnessOpt_posSemidef h0)
+      (ampDampWitnessOpt_sub_choi_posSemidef h0 h1)
+    rwa [ptrace2_ampDampWitnessOpt, norm_smul, norm_one, mul_one, Complex.norm_real,
+      Real.norm_of_nonneg h0] at hub
+  · have hlb := le_diamondDist (isKrausChannel_ampDampKraus h0 h1) (isKrausChannel_idKrausPad 1 2)
+      ampDampInput_isDensityOperator
+    rw [traceDist, ampDamp_out_diff h0 h1, traceNorm_ampDampOutDiff h0] at hlb
+    linarith
+
 end SKEFTHawking.QuantumNetwork
