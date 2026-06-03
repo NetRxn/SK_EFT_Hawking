@@ -306,3 +306,21 @@ unknown):
 - (Conv) pure-input-suffices (Watrous Thm 3.53: optimal ρ* purifiable) + non-invertible-σ `+ε·1` limit.
 Then `‖Tr₂W*‖ ≤ diamondDist` feeds `diamondWitness_posSemidef`+`diamondWitness_sub_posSemidef` into the
 shipped `diamondDist_eq_choiSDP_of_witness` ⟹ headline.
+
+## OUTCOME UPDATE 5 (2026-06-03) — S5b core shipped; pure-input-suffices NOT needed (de-risk)
+- Shipped `trace_posPart_eq_half_traceNorm` (S5a, `5b6c9f18`: `tr(M₊)=½‖M‖₁` for traceless Herm) +
+  `krausMap_tensorKraus_conj_kron_one` (S5b core, `b45b5574`: `(Φ⊗id)((1⊗A)ρ(1⊗A))=(1⊗A)(Φ⊗id)(ρ)(1⊗A)`).
+- 🔑 **KEY DE-RISK:** **pure-input-suffices (Watrous Thm 3.53) is NOT needed.** The σ-weighted
+  maximally-entangled state `ψ_σ ψ_σ* = (1⊗√σ)·(ωωᴴ)·(1⊗√σ)` (normalized) IS a valid doubled-space
+  density, so `traceDist(ψ_σ) ≤ diamondDist` is *direct* via `le_diamondDist` — no optimal-input-is-pure
+  reduction required.
+- **S5b-combine (tractable, few bricks):** `krausMap_tensorKraus_conj_kron_one` (A=√σ) + the shipped
+  `krausMap_tensorKraus_omegaVec` (ω↔Choi swap) ⟹ output difference at `ψ_σ` = `(1⊗√σ)·(C swap)·(1⊗√σ)`;
+  then `traceNorm_submatrix_equiv` (trace-norm swap-invariance, shipped) ⟹ `‖that‖₁ = ‖(√σ⊗1)C(√σ⊗1)‖₁
+  = ‖M‖₁`; and `½‖output diff‖₁ = traceDist(ψ_σ) ≤ diamondDist` (`le_diamondDist`, needs ψ_σ normalized
+  density). ⟹ `tr(M₊) = ½‖M‖₁ ≤ diamondDist` for ALL σ.
+- **S5c (the one genuinely hard piece left):** the **operator-norm** attainment `‖Tr₂W*(σ)‖ ≤ diamondDist`
+  (vs the trace bound `tr(M₊) ≤ diamondDist`). `Tr₂W* = √σ⁻¹(Tr₂M₊)√σ⁻¹` — need its top eigenvalue ≤
+  diamondDist, which holds at the OPTIMAL σ via CS3 (the optimal input on the top eigenspace). This is
+  the Watrous optimality step; no Mathlib gap, but the real analytic core that still needs construction.
+- Non-invertible-σ `+ε·1` limit (DR D4) folds into S5c's optimal-σ handling.
