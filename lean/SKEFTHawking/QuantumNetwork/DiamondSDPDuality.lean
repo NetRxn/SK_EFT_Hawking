@@ -212,4 +212,20 @@ theorem dual_infeasible_of_lt_choiDualValue [NeZero n] {K₁ K₂ : Fin m → Ma
     csInf_le ⟨0, by rintro r ⟨V, _, _, rfl⟩; exact norm_nonneg _⟩ ⟨W, hW, hWC, rfl⟩
   linarith
 
+open scoped Matrix.Norms.L2Operator in
+/-- **Conditional strong-duality headline (`diamondDist_eq_choiSDP` modulo the optimal witness).**
+The diamond-SDP strong-duality equality `diamondDist = choiDualValue` follows from the existence of
+a *single* dual witness `W` (`W ⪰ 0`, `W ⪰ C`) whose objective meets the diamond distance,
+`‖Tr₂ W‖ ≤ diamondDist`: weak duality (`diamondDist_le_choiDualValue`) gives `≤`, and the witness
+(`choiDualValue_le_of_witness`) gives `≥`. This isolates the entire remaining content of 6AI into
+the Watrous optimal-witness construction (the Jordan–Hahn `W*` of the Choi-mapped optimal state) —
+discharge `hwit` and the headline closes by `le_antisymm`. -/
+theorem diamondDist_eq_choiSDP_of_witness [NeZero n] {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ}
+    (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    (hwit : ∃ W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ, W.PosSemidef ∧
+      (W - (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂))).PosSemidef ∧
+      ‖ptrace2 W‖ ≤ diamondDist K₁ K₂) :
+    diamondDist K₁ K₂ = choiDualValue K₁ K₂ :=
+  le_antisymm (diamondDist_le_choiDualValue hK₁ hK₂) (choiDualValue_le_of_witness hwit)
+
 end SKEFTHawking.QuantumNetwork
