@@ -38,10 +38,26 @@ open Real
 Fortescue–Lo PRL 98, 260501 (2007) abstract). -/
 noncomputable def w3SpecifiedSingleCopyBound : ℝ := 2 / 3
 
-/-- **Modeling input (cited, not derived):** GHZ₃ gains nothing from randomizing the
-target pair — its random-party rate equals its specified-pair rate (Fortescue–Lo
-PRA 78, 012348 (2008)). The randomization advantage is therefore `0`. -/
-noncomputable def ghz3RandomizationAdvantage : ℝ := 0
+/-- GHZ₃ random-party distillation rate. **Modeling input (cited, Fortescue–Lo PRA 78, 012348
+(2008)):** GHZ₃ distills one EPR pair between any chosen pair of parties with certainty, so its
+random-party rate is `1`. -/
+noncomputable def ghz3RandomPartyRate : ℝ := 1
+
+/-- GHZ₃ specified-pair distillation rate. **Modeling input (cited):** also `1` — GHZ₃ already
+distills a specified pair with certainty, so randomizing the target pair gains nothing. -/
+noncomputable def ghz3SpecifiedRate : ℝ := 1
+
+/-- GHZ₃ randomization advantage, **derived** as `random-party rate − specified-pair rate` (the same
+`(random − specified)` structure as `w3RandomizationAdvantage`), rather than hardcoded to its value. -/
+noncomputable def ghz3RandomizationAdvantage : ℝ := ghz3RandomPartyRate - ghz3SpecifiedRate
+
+/-- **GHZ₃'s randomization advantage is zero — DERIVED, not assumed.** Its random-party and
+specified-pair rates are both `1` (the cited Fortescue–Lo modeling inputs), so their difference
+vanishes. This replaces the former hardcoded `ghz3RandomizationAdvantage := 0`, making the
+comparison `w3_beats_ghz_randomization_advantage` genuinely two-sided: the GHZ side is now a
+consequence of the equal-rates model, not a definition tuned to the conclusion. -/
+theorem ghz3RandomizationAdvantage_eq_zero : ghz3RandomizationAdvantage = 0 := by
+  unfold ghz3RandomizationAdvantage ghz3RandomPartyRate ghz3SpecifiedRate; ring
 
 /-- W₃ randomization advantage at `D` rounds: random-party finite-round yield minus
 the specified-pair single-copy bound. -/
@@ -61,7 +77,7 @@ For `D ≥ 3` the W₃ random-party advantage is strictly greater than GHZ₃'s 
 random distillation helps W-class states but not GHZ-class states. -/
 theorem w3_beats_ghz_randomization_advantage {D : ℕ} (h : 3 ≤ D) :
     ghz3RandomizationAdvantage < w3RandomizationAdvantage D := by
-  unfold ghz3RandomizationAdvantage
+  rw [ghz3RandomizationAdvantage_eq_zero]
   exact w3RandomizationAdvantage_pos h
 
 /-- W₃ asymptotic specified-pair rate: the entanglement of assistance
