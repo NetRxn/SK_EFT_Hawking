@@ -293,8 +293,10 @@ The 6AE/6AF layer supplies functional-analytic *bricks*; Phase 6AG makes them *o
   Wick/Isserlis tensor → homogeneous polar reduction → `ℂ^d ≅ ℝ^{2d}` realification), contracting it
   against the Kraus matrices (`sphere_braKet_normSq`), and collapsing the dimension factor through trace
   preservation `∑ₖ tr(KₖᴴKₖ) = d` (`kraus_normSq_sum`). The unitary-2-design second moment is obtained
-  as a theorem rather than imported; the single-qubit instance
-  (`teleportAvgFidelity_horodecki_unconditional`) is recovered as the `d = 2` case.
+  as a theorem rather than imported. At `d = 2` the identity reduces to the single-qubit form
+  `F_avg = (2·F_e + 1)/3`, consistent with — though not formally derived from — the separately-shipped
+  teleportation result `teleportAvgFidelity_horodecki_unconditional` (which carries the same `(2x+1)/3`
+  shape for the teleportation singlet fidelity, a distinct quantity).
 
 - **Watrous weak-dual upper bound (`DiamondNormDual.lean`).** `diamondDist_le_dual_witness`: for any
   Hermitian witness `W ≥ 0` with `W ≥ J(Φ₁)−J(Φ₂)` (Loewner order),
