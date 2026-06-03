@@ -2,6 +2,7 @@ import SKEFTHawking.QuantumNetwork.GateFidelity
 import SKEFTHawking.QuantumNetwork.GateFidelityBridge
 import SKEFTHawking.QuantumNetwork.DiamondNormChoi
 import SKEFTHawking.QuantumNetwork.NamedChannelDiamondExact
+import SKEFTHawking.QuantumNetwork.FidelityUpperBound
 
 /-!
 # RB-fidelity → entanglement-fidelity → diamond certificate (Phase 6AH, Wave 6AH.1)
@@ -253,5 +254,61 @@ theorem avgGateFidelity_diamondDist_bound {m n : ℕ} [NeZero n]
     have hn : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne n)
     field_simp at he ⊢; linarith [he]
   rw [← hinv]; exact hbridge
+
+/-! ## Two-sided RB→diamond: the Choi-state distinguishability bracket (Wave 6AH.5) -/
+
+/-- **Two-sided Fuchs–van de Graaf bracket for the entanglement (Choi-state) distinguishability.**
+The trace distance between the stabilized output `(Φ⊗id)Ω` and the ideal `Ω` is bracketed by the
+entanglement fidelity on *both* sides: `1 − √F_e ≤ D((Φ⊗id)Ω, Ω) ≤ √(1 − F_e)`. The lower bound is
+FvdG-lower (`one_sub_sqrtFidelity_le_traceDist`) and the upper bound is FvdG-upper
+(`traceDist_le_sqrt_one_sub_sqrtFidelity_sq`), both at the maximally-entangled input with
+`√F((Φ⊗id)Ω, Ω) = √F_e` (`sqrtFidelity_output_eq`). -/
+theorem entanglementDistinguishability_fvdg_bracket {K : Fin m → Matrix (Fin n) (Fin n) ℂ} [NeZero n]
+    (hK : IsKrausChannel K) :
+    1 - Real.sqrt (entanglementFidelity K)
+        ≤ traceDist (krausMap (tensorKraus K) (maxEntangled n)) (maxEntangled n)
+      ∧ traceDist (krausMap (tensorKraus K) (maxEntangled n)) (maxEntangled n)
+        ≤ Real.sqrt (1 - entanglementFidelity K) := by
+  have hFe : (0 : ℝ) ≤ entanglementFidelity K := by
+    unfold entanglementFidelity
+    exact mul_nonneg (by positivity) (Finset.sum_nonneg fun k _ => Complex.normSq_nonneg _)
+  refine ⟨?_, ?_⟩
+  · have hlow := one_sub_sqrtFidelity_le_traceDist
+      (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK) isDensityOperator_maxEntangled).1
+      isDensityOperator_maxEntangled.1
+      (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK) isDensityOperator_maxEntangled).2
+      isDensityOperator_maxEntangled.2
+    rwa [sqrtFidelity_output_eq hK] at hlow
+  · have hup := traceDist_le_sqrt_one_sub_sqrtFidelity_sq
+      (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK) isDensityOperator_maxEntangled).1
+      isDensityOperator_maxEntangled.1
+      (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK) isDensityOperator_maxEntangled).2
+      isDensityOperator_maxEntangled.2
+    rwa [sqrtFidelity_output_eq hK, Real.sq_sqrt hFe] at hup
+
+/-- **Two-sided average-fidelity → diamond certificate.** The averaged benchmark `F_avg` both lower-
+and upper-bounds the realizable Choi-state distinguishability `D_Ω = D((Φ⊗id)Ω, Ω)`, which in turn
+lower-bounds the worst-case diamond distance: with `g = ((n+1)·F_avg − 1)/n = F_e`,
+`1 − √g ≤ D_Ω ≤ √(1 − g)` and `D_Ω ≤ diamondDist(Φ, id)`. The single benchmark thus brackets the
+average↔worst-case relationship from both ends — completing the one-sided
+`avgGateFidelity_diamondDist_bound`. -/
+theorem avgGateFidelity_diamondDist_two_sided {m n : ℕ} [NeZero n]
+    {K : Fin (m + 1) → Matrix (Fin n) (Fin n) ℂ} (hK : IsKrausChannel K) :
+    1 - Real.sqrt (((n + 1) * avgGateFidelity K - 1) / n)
+        ≤ traceDist (krausMap (tensorKraus K) (maxEntangled n)) (maxEntangled n)
+      ∧ traceDist (krausMap (tensorKraus K) (maxEntangled n)) (maxEntangled n)
+        ≤ Real.sqrt (1 - ((n + 1) * avgGateFidelity K - 1) / n)
+      ∧ traceDist (krausMap (tensorKraus K) (maxEntangled n)) (maxEntangled n)
+        ≤ diamondDist K (idKrausPad m n) := by
+  have hinv : entanglementFidelity K = ((n + 1) * avgGateFidelity K - 1) / n := by
+    have he := avgGateFidelity_eq K hK
+    have hn : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne n)
+    field_simp at he ⊢; linarith [he]
+  obtain ⟨hlow, hup⟩ := entanglementDistinguishability_fvdg_bracket hK
+  rw [hinv] at hlow hup
+  refine ⟨hlow, hup, ?_⟩
+  have hdd := le_diamondDist hK (isKrausChannel_idKrausPad m n)
+    (isDensityOperator_maxEntangled (n := n))
+  rwa [krausMap_tensorKraus_idKrausPad m n] at hdd
 
 end SKEFTHawking.QuantumNetwork
