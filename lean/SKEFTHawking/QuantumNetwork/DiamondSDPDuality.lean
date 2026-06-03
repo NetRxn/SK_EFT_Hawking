@@ -517,4 +517,43 @@ theorem isDensityOperator_weighted_omega [NeZero n] {σ : Matrix (Fin n) (Fin n)
       Finset.sum_ite_eq', Finset.mem_univ, if_true]
     exact hσ.2
 
+open scoped Kronecker in
+/-- **Stage-5b capstone — the witness contracted-Choi trace bound:** `tr(M₊) ≤ diamondDist` for any
+input density `σ`, `M = (√σ⊗1)·C·(√σ⊗1)` the contracted Choi. Proof: the σ-weighted
+maximally-entangled state `ρ_σ` is a valid density (`isDensityOperator_weighted_omega`), its output
+difference is `(1⊗√σ)·(C swap)·(1⊗√σ)` (σ-weighted ω↔Choi, factored), so
+`traceDist(ρ_σ) = ½‖(1⊗√σ)(C swap)(1⊗√σ)‖₁ = ½‖M‖₁ = tr(M₊)` (`traceNorm_kron_one_conj_swap` + `tr M=0`
++ `trace_posPart_eq_half_traceNorm`), and `traceDist(ρ_σ) ≤ diamondDist` directly (`le_diamondDist`).
+This is `tr(σ·Tr₂W*) = tr(M₊) ≤ diamondDist`, the weighted-average-eigenvalue bound feeding S5c. -/
+theorem trace_posPart_contractedChoi_le_diamondDist [NeZero n]
+    {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : IsDensityOperator σ) :
+    (posPart (contractedChoi_isHermitian hσ.1 (choiDiff_isHermitian K₁ K₂))).trace.re
+      ≤ diamondDist K₁ K₂ := by
+  set ρσ := ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1) * (omegaVec n * (omegaVec n)ᴴ)
+    * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1) with hρσ
+  have hT : krausMap (tensorKraus K₁) ρσ - krausMap (tensorKraus K₂) ρσ
+      = ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1)
+          * (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)).submatrix
+              (Equiv.prodComm (Fin n) (Fin n)) (Equiv.prodComm (Fin n) (Fin n))
+          * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1) := by
+    have hsub : (choiMatrix (krausMap K₁)).submatrix (Equiv.prodComm (Fin n) (Fin n))
+            (Equiv.prodComm (Fin n) (Fin n))
+          - (choiMatrix (krausMap K₂)).submatrix (Equiv.prodComm (Fin n) (Fin n))
+            (Equiv.prodComm (Fin n) (Fin n))
+        = (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)).submatrix
+            (Equiv.prodComm (Fin n) (Fin n)) (Equiv.prodComm (Fin n) (Fin n)) := by
+      ext p q; simp [Matrix.submatrix_apply, Matrix.sub_apply]
+    rw [hρσ, krausMap_tensorKraus_weighted_omega, krausMap_tensorKraus_weighted_omega,
+      ← Matrix.sub_mul, ← Matrix.mul_sub, hsub]
+  have hM0 : (contractedChoi hσ.1
+      (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂))).trace.re = 0 := by
+    rw [trace_contractedChoi_eq_zero hσ.1 (ptrace2_choiDiff_eq_zero hK₁ hK₂), Complex.zero_re]
+  have htd : traceDist (krausMap (tensorKraus K₁) ρσ) (krausMap (tensorKraus K₂) ρσ)
+      = (1 / 2 : ℝ) * traceNorm (contractedChoi hσ.1
+          (choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂))) := by
+    rw [traceDist, hT, traceNorm_kron_one_conj_swap]
+  rw [trace_posPart_eq_half_traceNorm _ hM0, ← htd]
+  exact le_diamondDist hK₁ hK₂ (isDensityOperator_weighted_omega hσ)
+
 end SKEFTHawking.QuantumNetwork
