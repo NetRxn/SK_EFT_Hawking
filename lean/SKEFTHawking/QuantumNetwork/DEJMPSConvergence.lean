@@ -90,4 +90,40 @@ theorem dejmps_single_step_can_decrease : dejmpsOutA (3 / 5) 0 0 (2 / 5) < 3 / 5
   simp only [dejmpsOutA, dejmpsNorm]
   norm_num
 
+/-! ## The diagonal-pairing correction is load-bearing (Wave 6AH.6)
+
+The shipped DEJMPS theorems use the symmetric **Werner** input `(F, (1−F)/3, (1−F)/3, (1−F)/3)`,
+on which `B = D` so the corrected diagonal pairing `A²+D²` and the naive adjacent pairing `A²+B²`
+*coincide* — no theorem there witnesses the correction. The lemmas below close that gap on an
+**asymmetric** Bell-diagonal input where `B ≠ D`. -/
+
+/-- The *naive* (incorrect) adjacent-pairing target output `(A²+B²)/N`, for contrast with the
+corrected diagonal pairing `dejmpsOutA = (A²+D²)/N`. -/
+noncomputable def dejmpsOutA_naive (A B C D : ℝ) : ℝ := (A ^ 2 + B ^ 2) / dejmpsNorm A B C D
+
+/-- **The two pairings differ on an asymmetric input.** On `(1/2, 3/10, 1/10, 1/10)` — a normalized
+Bell-diagonal state (`1/2+3/10+1/10+1/10 = 1`) with `B = 3/10 ≠ 1/10 = D`, so *not* Werner — the
+corrected diagonal pairing gives `A' = 1/2` while the naive adjacent pairing gives `17/26 ≠ 1/2`.
+The `(00,11)=(I,Y)` pairing choice is therefore load-bearing, not a vacuous relabeling. -/
+theorem dejmps_diagonal_pairing_distinguishes :
+    dejmpsOutA (1 / 2) (3 / 10) (1 / 10) (1 / 10) = 1 / 2
+      ∧ dejmpsOutA_naive (1 / 2) (3 / 10) (1 / 10) (1 / 10) = 17 / 26 := by
+  constructor <;> simp only [dejmpsOutA, dejmpsOutA_naive, dejmpsNorm] <;> norm_num
+
+/-- **Only the diagonal pairing yields a valid state.** On the same asymmetric input the four DEJMPS
+outputs with the corrected diagonal pairing sum to `1` (a normalized Bell-diagonal state), whereas
+substituting the naive adjacent pairing breaks normalization (the sum `≠ 1`). This is the physical
+reason the diagonal pairing is the correct one: the recurrence must map states to states. -/
+theorem dejmps_naive_pairing_breaks_normalization :
+    dejmpsOutA (1 / 2) (3 / 10) (1 / 10) (1 / 10) + dejmpsOutB (1 / 2) (3 / 10) (1 / 10) (1 / 10)
+        + dejmpsOutC (1 / 2) (3 / 10) (1 / 10) (1 / 10) + dejmpsOutD (1 / 2) (3 / 10) (1 / 10) (1 / 10)
+        = 1
+      ∧ dejmpsOutA_naive (1 / 2) (3 / 10) (1 / 10) (1 / 10)
+          + dejmpsOutB (1 / 2) (3 / 10) (1 / 10) (1 / 10)
+          + dejmpsOutC (1 / 2) (3 / 10) (1 / 10) (1 / 10)
+          + dejmpsOutD (1 / 2) (3 / 10) (1 / 10) (1 / 10) ≠ 1 := by
+  constructor <;>
+    simp only [dejmpsOutA, dejmpsOutA_naive, dejmpsOutB, dejmpsOutC, dejmpsOutD, dejmpsNorm] <;>
+    norm_num
+
 end SKEFTHawking.QuantumNetwork
