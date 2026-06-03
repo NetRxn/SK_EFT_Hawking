@@ -487,4 +487,34 @@ theorem traceNorm_kron_one_conj_swap {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ
       = traceNorm (contractedChoi hσ C) := by
   rw [← contractedChoi_submatrix_swap, traceNorm_submatrix_equiv]
 
+open scoped Kronecker in
+/-- **The σ-weighted maximally-entangled state is a density** (for `σ` a density): `ρ_σ =
+(1⊗√σ)·ωωᴴ·(1⊗√σ) = ψ_σψ_σᴴ` is PSD (conjugation of the rank-one `ωωᴴ`), and `tr ρ_σ = tr σ = 1`
+(`tr((1⊗σ)ωωᴴ) = tr σ`). A valid doubled-space input, so `traceDist(ρ_σ) ≤ diamondDist` directly. -/
+theorem isDensityOperator_weighted_omega [NeZero n] {σ : Matrix (Fin n) (Fin n) ℂ}
+    (hσ : IsDensityOperator σ) :
+    IsDensityOperator (((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1)
+        * (omegaVec n * (omegaVec n)ᴴ) * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1)) := by
+  have hBh : ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1)ᴴ
+      = (1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1 := by
+    rw [Matrix.conjTranspose_kronecker, Matrix.conjTranspose_one, (psdSqrt_isHermitian hσ.1).eq]
+  have hBB : ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1)
+        * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1)
+      = (1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ σ := by
+    rw [← Matrix.mul_kronecker_mul, Matrix.mul_one, psdSqrt_mul_self hσ.1]
+  refine ⟨?_, ?_⟩
+  · have hP := (Matrix.posSemidef_self_mul_conjTranspose (omegaVec n)).mul_mul_conjTranspose_same
+      ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ.1)
+    rwa [hBh] at hP
+  · rw [Matrix.trace_mul_comm, ← Matrix.mul_assoc, hBB]
+    -- tr((1⊗σ) * (ω ωᴴ)) = tr σ
+    rw [Matrix.trace_mul_comm, Matrix.trace]
+    simp only [Matrix.diag_apply, Matrix.mul_apply, Matrix.conjTranspose_apply, omegaVec,
+      Matrix.kroneckerMap_apply, Matrix.one_apply, Finset.univ_unique, Finset.sum_singleton,
+      Fintype.sum_prod_type]
+    simp only [apply_ite (star : ℂ → ℂ), star_one, star_zero, mul_ite, ite_mul, mul_one, one_mul,
+      mul_zero, zero_mul, Finset.sum_const_zero, Finset.sum_ite_irrel, Finset.sum_ite_eq,
+      Finset.sum_ite_eq', Finset.mem_univ, if_true]
+    exact hσ.2
+
 end SKEFTHawking.QuantumNetwork
