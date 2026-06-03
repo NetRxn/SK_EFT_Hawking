@@ -1,4 +1,5 @@
 import SKEFTHawking.QuantumNetwork.DiamondSDPCone
+import SKEFTHawking.QuantumNetwork.DiamondSDPAttainment
 import SKEFTHawking.QuantumNetwork.FidelityBounds
 import Mathlib.Analysis.Convex.Cone.InnerDual
 
@@ -164,5 +165,34 @@ theorem exists_dual_strictly_feasible {ι : Type*} [Fintype ι] [DecidableEq ι]
     rw [he]; exact Matrix.PosDef.posSemidef_add hcomp Matrix.PosDef.one
   · have he : ((‖C‖ : ℂ) • 1 + C + 1 : Matrix ι ι ℂ) - C = (‖C‖ : ℂ) • 1 + 1 := by abel
     rw [he]; exact Matrix.PosDef.posSemidef_add hsmul Matrix.PosDef.one
+
+variable {m : ℕ}
+
+/-- **The diamond-SDP primal value.** `primalSDPValue K₁ K₂ = sup{ Re tr(C·X) : X ⪰ 0, X ⪯ σ⊗1,
+`σ` a density }`, `C = J(Φ₁) − J(Φ₂)`. This is the object the strong-duality `≥` direction is
+built around: `choiDualValue ≤ primalSDPValue` is the conic-Farkas / Slater strong-duality direction
+(piece 2), and `primalSDPValue ≤ diamondDist` is the Watrous primal reduction (piece 3); together
+with the shipped weak directions they collapse `diamondDist = choiDualValue`. -/
+noncomputable def primalSDPValue (K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ) : ℝ :=
+  sSup {r | ∃ (X : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) (σ : Matrix (Fin n) (Fin n) ℂ),
+    X.PosSemidef ∧ IsDensityOperator σ ∧ (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - X).PosSemidef ∧
+    r = ((choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) * X).trace.re}
+
+open scoped Matrix.Norms.L2Operator in
+/-- **Primal ≤ dual (weak duality on the SDP values).** Every diamond-SDP primal value is at most
+the dual value: `primalSDPValue ≤ choiDualValue`. Each feasible primal point `(X ⪯ σ⊗1, σ density)`
+is bounded by every dual-feasible objective via brick C′ (`Re tr(C·X) ≤ ‖Tr₂ W‖·tr σ = ‖Tr₂ W‖`),
+hence by the dual infimum. (The matching `≥` is the Slater strong-duality direction, piece 2.) -/
+theorem primalSDPValue_le_choiDualValue [NeZero n] (K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ) :
+    primalSDPValue K₁ K₂ ≤ choiDualValue K₁ K₂ := by
+  apply csSup_le
+  · exact ⟨0, 0, _, Matrix.PosSemidef.zero, isDensityOperator_maximallyMixed,
+      by rw [sub_zero]; exact (isDensityOperator_maximallyMixed.1).kronecker Matrix.PosSemidef.one,
+      by simp⟩
+  · rintro r ⟨X, σ, hX, hσ, hle, rfl⟩
+    refine le_csInf (choiDualValue_set_nonempty K₁ K₂) ?_
+    rintro s ⟨W, hW, hWC, rfl⟩
+    have h := re_trace_mul_le_l2opNorm_ptrace2_mul_trace hW hWC hX hσ.1 hle
+    rwa [hσ.2, Complex.one_re, mul_one] at h
 
 end SKEFTHawking.QuantumNetwork
