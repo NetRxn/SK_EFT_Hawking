@@ -2691,6 +2691,7 @@ import SKEFTHawking.QuantumNetwork.FidelityBlockForm
 import SKEFTHawking.QuantumNetwork.OpNormHolder
 import SKEFTHawking.QuantumNetwork.FidelityForwardBound
 import SKEFTHawking.QuantumNetwork.FidelityForwardBoundPSD
+import SKEFTHawking.QuantumNetwork.FidelityAttainmentPSD
 import SKEFTHawking.QuantumNetwork.FidelityKrausDP
 import SKEFTHawking.QuantumNetwork.SelfAdjointInnerProduct
 import SKEFTHawking.QuantumNetwork.HermitianCarrier
