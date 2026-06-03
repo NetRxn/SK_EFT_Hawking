@@ -141,23 +141,26 @@ theorem diamondDist_triangle (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChann
         add_le_add (le_diamondDist hK₁ hK₂ hρ) (le_diamondDist hK₂ hK₃ hρ)
 
 /-
-## DEFERRED FRONTIER — attainment and the SDP characterization (6AF-6)
+## Status — metric, attainment, and the Choi characterization
 
-The diamond distance is now a genuine `[0,1]`-valued **metric** on CPTP channels — nonnegative,
+The diamond distance is a genuine `[0,1]`-valued **metric** on CPTP channels — nonnegative,
 symmetric, reflexive (`diamondDist_self`), and satisfying the triangle inequality
 (`diamondDist_triangle`), with the least-upper-bound property `le_diamondDist` — all using only
-boundedness of the supremum (`Real.sSup`), no attainment. What remains documented-deferred
-(no sorry, no axiom):
+boundedness of the supremum (`Real.sSup`), no attainment.
 
-* **Attainment** — that the supremum is achieved by some optimal `ρ` (so the `sSup` is a genuine
-  `max`). The compactness half is available (finite-dim ⇒ `ProperSpace`; EVT via
-  `IsCompact.exists_sSup_image_eq`), but the binding gap is **continuity of `ρ ↦ ‖(Φ⊗id)ρ‖₁` in
-  the matrix entries** — i.e. continuity of the singular-value sum — for which Mathlib at pin has
-  no concrete-matrix substrate (no continuity of eigenvalues/singular values as functions of the
-  entries). The metric properties above do NOT depend on this; only "the worst case is realized"
-  does.
-* **The Choi-matrix SDP characterization** of the diamond norm (Watrous duality) — a deep theorem
-  with no SDP substrate in Mathlib.
+The two items previously deferred here are now PROVEN (this comment is kept as a pointer):
+
+* **Attainment** — `exists_diamondDist_eq` in `DiamondNormAttainment.lean`: the supremum IS achieved
+  by an optimal `ρ`. The earlier "binding gap" (continuity of the singular-value sum in the matrix
+  entries, for which Mathlib has no eigenvalue-continuity substrate) was **sidestepped**: the
+  objective `ρ ↦ ‖(Φ⊗id)ρ‖₁` is Lipschitz via the Frobenius bound `‖A‖₁ ≤ √card·‖A‖_F` (not
+  per-eigenvalue continuity), and EVT closes it on the compact density set.
+* **The Choi characterization.** Both one-sided bounds of the Watrous sandwich
+  `(1/2n)‖J₁−J₂‖₁ ≤ diamondDist ≤ n‖J₁−J₂‖∞` are proven (`diamondDist_ge_choi_traceNorm`,
+  `diamondDist_le_choi_opNorm`, `DiamondNormChoi{,Upper}.lean`), and the Watrous weak-dual witness
+  bound `diamondDist_le_dual_witness` (`DiamondNormDual.lean`). The ONLY remaining frontier is the
+  primal=dual SDP **equality** (conic strong duality — no Slater/minimax/Fenchel substrate at pin);
+  it is the sole documented-deferred item, with no sorry and no axiom.
 -/
 
 end SKEFTHawking.QuantumNetwork
