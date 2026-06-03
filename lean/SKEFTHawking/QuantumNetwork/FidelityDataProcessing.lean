@@ -16,13 +16,20 @@ Everything routes through the PSD-square-root-uniqueness workhorse `posSemidef_e
 `|U A Uᴴ| = U |A| Uᴴ` both follow because both sides are PSD with equal squares, and the trace norm
 is then unitarily invariant by trace cyclicity.
 
-**Fence (verified, Wave 6AJ.0 scout, interactive lean4 on Mathlib v4.29.1).** The *general* CPTP
-Uhlmann monotonicity is NOT shipped. Mathlib provides operator-monotone `CFC.monotone_sqrt`, but it
-does NOT provide joint concavity of fidelity, operator convexity of `t⁻¹` (Choi's inequality), Lieb
-concavity, or purification / Stinespring dilation — the standard ingredients of the general proof.
-The mixed-unitary subclass (`Φ(ρ) = ∑ pᵢ Uᵢ ρ Uᵢᴴ`) is reachable from the unitary case *plus* joint
-concavity, so it too is blocked at this pin. Per the project's no-axiom policy the general case is
-FENCED, not axiomatized; the reversible-channel equality below is the shipped deliverable.
+**Status of general CPTP monotonicity (route mapped — Wave 6AJ.0 scout + Explore fan-out, interactive
+lean4 on Mathlib v4.29.1).** The *general* / mixed-unitary Uhlmann monotonicity is the target of an
+in-progress continuation, NOT a permanent fence. The most reachable route is the **block-PSD / Alberti
+SDP characterization** `F(ρ,σ) = max{ Re tr X : [[ρ, X],[Xᴴ, σ]] ⪰ 0 }`, for which Mathlib ships the
+Schur-complement support (`Matrix.PosDef.fromBlocks₂₂` / `fromBlocks₁₁`,
+`Matrix/LinearAlgebra/Matrix/PosDef.lean`) and the conjugation-monotonicity bricks
+(`star_left_conjugate_le_conjugate`, `conjugate_le_conjugate_of_nonneg`, `Matrix.PosSemidef.kronecker`).
+With the block characterization in hand, mixed-unitary monotonicity is immediate — the feasible `X` for
+`(ρ,σ)`, conjugated by `∑ pᵢ Uᵢ`, is feasible for `(Φρ,Φσ)` with the same trace — and joint concavity
+drops out as a corollary. The one genuinely new brick is a `traceNorm` Cauchy–Schwarz bound
+`Re tr(√ρ · K · √σ) ≤ ‖√σ √ρ‖₁` (provable from the shipped `traceNorm_mul_le` + `psdSqrt` primitives).
+Operator-monotone `CFC.monotone_sqrt` is present; Sion minimax / Lieb concavity / Stinespring are
+absent but the block route does not need them. NO axiom is shipped; the reversible-channel equality
+below is the in-hand deliverable.
 
 Invariants: kernel-pure `{propext, Classical.choice, Quot.sound}`; no project-local axioms;
 no `maxHeartbeats`; no `native_decide`.

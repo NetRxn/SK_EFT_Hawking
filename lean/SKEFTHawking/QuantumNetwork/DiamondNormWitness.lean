@@ -22,18 +22,22 @@ Pauli / dephasing / depolarizing family, whose shipped exact witnesses *are* thi
 generally loose for non-Pauli-covariant channels (e.g. amplitude damping, whose worst-case input is
 an unentangled product state, so its optimal witness is *not* `C₊`).
 
-**Fence (verified, Wave 6AI.0 scout, interactive lean4 on Mathlib v4.29.1).** The fully-general
-strong-duality EQUALITY `diamondDist = inf{ ‖Tr₂ W‖ : W ⪰ 0, W ⪰ C }` is NOT shipped: it requires
-the *existence* of an optimal witness for every channel pair, i.e. SDP zero-gap. The pinned Mathlib
-provides the separation substrate (`geometric_hahn_banach_compact_closed`, `ProperCone.hyperplane_separation`,
-`ProperCone.innerDual` + bipolar `innerDual_innerDual`) and the order-theoretic saddle-point lemma
-(`isSaddlePointOn_value`) with the easy minimax inequality (`iSup₂_iInf₂_le_iInf₂_iSup₂`), but it does
-NOT provide an analytic Sion / von Neumann minimax for concave–convex real functions, Fenchel
-conjugate biconjugate duality, or any conic / SDP / LP strong-duality (Slater zero-gap) theorem.
-Assembling zero-gap for this operator-norm-objective LMI from raw Hahn–Banach separation is a genuine
-multi-week formalization (re-deriving conic duality for this program). Per the project's no-axiom
-policy this is FENCED, not axiomatized — the general constructive *upper* bound below is the shipped
-deliverable, with per-channel exact strong duality already constructive elsewhere.
+**Status of the general strong-duality EQUALITY (route mapped — Wave 6AI.0 scout + Explore fan-out,
+interactive lean4 on Mathlib v4.29.1).** The fully-general equality
+`diamondDist = inf{ ‖Tr₂ W‖ : W ⪰ 0, W ⪰ C }` (SDP zero-gap, existence of an optimal witness for every
+pair) is the target of an in-progress continuation, NOT a permanent fence. The pinned Mathlib *does*
+ship genuine conic strong-duality machinery: `ProperCone.hyperplane_separation` and
+`ProperCone.relative_hyperplane_separation` (`Mathlib/Analysis/Convex/Cone/InnerDual.lean`) are exactly
+the Farkas/cone-image strong-duality equivalence, with bipolar `innerDual_innerDual` and
+`geometric_hahn_banach_compact_closed`. The single concrete missing object is a **real Frobenius
+`InnerProductSpace ℝ` on the self-adjoint matrices** (`⟪A,B⟫ = re (A·B).trace`); Mathlib's only matrix
+inner products are `𝕜`/ℂ-valued and PSD-weighted. With that instance built (`InnerProductSpace.ofCore`
+on `selfAdjoint (Matrix … ℂ)`, which already carries the ℝ-module structure), the Slater point
+`W = (‖C‖+1)·1`, finite-dimensional compactness of a sublevel feasible set, and
+`hyperplane_separation` close the gap — every other lemma is shipped. No analytic Sion minimax /
+Fenchel biconjugate is needed (those are absent but not required). NO axiom is shipped; the general
+constructive *upper* bound below is the in-hand deliverable, and per-channel exact strong duality is
+already constructive elsewhere.
 
 Invariants: kernel-pure `{propext, Classical.choice, Quot.sound}`; no project-local axioms;
 no `maxHeartbeats`; no `native_decide`.

@@ -62,7 +62,7 @@ axiom without sign-off. Counts/docs/memory synced.
 
 ---
 
-## OUTCOME (2026-06-02, autonomous /goal) — PARTIAL: reversible-channel fidelity DP SHIPPED + general CPTP FENCED
+## OUTCOME (2026-06-02, autonomous /goal) — reversible-channel fidelity DP SHIPPED; general/mixed-unitary ROUTE MAPPED (continuation, not fenced)
 
 **Wave 6AJ.0 scout (interactive lean4 on Mathlib v4.29.1).** PRESENT: operator-monotone
 `CFC.monotone_sqrt`. ABSENT (verified — leansearch/loogle): joint concavity of fidelity, operator
@@ -79,8 +79,23 @@ kernel-pure) — fidelity is exactly invariant under unitary conjugation, i.e. d
 - `traceNorm_unitary_conj`: `‖U A Uᴴ‖₁ = ‖A‖₁` (modulus conjugation + trace cyclicity).
 - `sqrtFidelity_unitary_conj`: **`F(UρUᴴ, UσUᴴ) = F(ρ, σ)`** — the headline reversible-channel DP.
 
-**FENCED (no axiom):** the general CPTP Uhlmann monotonicity `F(Φρ,Φσ) ≥ F(ρ,σ)` and the
-mixed-unitary subclass — blocked at this pin without joint concavity / operator-convex inverse /
-purification. Recommendation for a future phase: formalize joint concavity of fidelity (unlocks
-mixed-unitary directly from the shipped unitary case), or operator-convexity of `t⁻¹` + the
-variational form `F = inf_X ½(tr Xρ + tr X⁻¹σ)` (the elementary route to full CPTP monotonicity).
+**ROUTE MAPPED — general/mixed-unitary monotonicity is an in-progress continuation, NOT a fence
+(Explore fan-out 2026-06-02).** The most reachable route is the **block-PSD / Alberti SDP form**
+`F(ρ,σ) = max{ Re tr X : [[ρ, X],[Xᴴ, σ]] ⪰ 0 }`. Mathlib ships the Schur-complement support
+(`Matrix.PosDef.fromBlocks₂₂` / `fromBlocks₁₁`, `schur_complement_eq₁₁/₂₂`,
+`LinearAlgebra/Matrix/PosDef.lean` + `…/Hermitian.lean`) and the conjugation-monotonicity bricks
+(`star_left_conjugate_le_conjugate`, `conjugate_le_conjugate_of_nonneg`, `Matrix.PosSemidef.kronecker`).
+With the block characterization, mixed-unitary monotonicity is immediate (conjugate the feasible `X` by
+`∑ pᵢ Uᵢ`, same trace) and joint concavity drops out. NO joint concavity / Lieb / Stinespring needed
+for the mixed-unitary case.
+
+**Brick sequence (continuation):**
+1. `block_psd_factor` (forward): `fromBlocks ρ X Xᴴ σ ⪰ 0 ⟹ X = √ρ · K · √σ` with `‖K‖ ≤ 1`
+   (Schur `fromBlocks₂₂` on `σ + ε`, perturb singular `σ` via the shipped `+1/k•1` trick).
+2. **The one new brick** `re_trace_le_sqrtFidelity` : block-feasible `X ⟹ (tr X).re ≤ sqrtFidelity`
+   (`Re tr(√ρ K √σ) = Re tr(K √σ√ρ) ≤ ‖√σ√ρ‖₁` via shipped `traceNorm_mul_le` / dual-norm keystone).
+3. `sqrtFidelity_attained` : feasible `X* = √ρ·V·√σ` (polar `V` of `√σ√ρ`) with `Re tr X* = sqrtFidelity`.
+4. `fidelityBlock_conj_psd` : `(∑ᵢ √pᵢ Uᵢ ⊕ √pᵢ Uᵢ)`-conjugation preserves block-PSD and trace ⇒
+   feasible-X transport.
+5. Headline `sqrtFidelity_mixedUnitary_ge` (then joint concavity corollary; general CPTP via a
+   project-side Stinespring dilation, larger). NO axiom.

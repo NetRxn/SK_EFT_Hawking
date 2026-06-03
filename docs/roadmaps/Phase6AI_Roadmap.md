@@ -76,7 +76,7 @@ to the user. NO axiom shipped without explicit sign-off. Counts/docs/memory sync
 
 ---
 
-## OUTCOME (2026-06-02, autonomous /goal) — PARTIAL: general constructive witness SHIPPED + equality FENCED
+## OUTCOME (2026-06-02, autonomous /goal) — general constructive witness SHIPPED; strong-duality equality ROUTE MAPPED (continuation, not fenced)
 
 **Wave 6AI.0 scout (interactive lean4 on Mathlib v4.29.1).** PRESENT: geometric Hahn–Banach
 separation (`geometric_hahn_banach_compact_closed`, `RCLike.geometric_hahn_banach_*`,
@@ -98,10 +98,27 @@ proof-dependent-motive `rw`). Generalizes `diamondDist_le_choi_opNorm` and unifi
 optimal witnesses (it IS `C₊` for the covariant Pauli/dephasing/depolarizing family; loose for
 amplitude damping whose worst-case input is a product state, not max-entangled).
 
-**FENCED (no axiom, per policy):** the fully-general strong-duality EQUALITY
-`diamondDist = inf{‖Tr₂ W‖ : W ⪰ 0, W ⪰ C}` — needs SDP zero-gap (existence of an optimal witness for
-every pair), unreachable at this Mathlib pin without the multi-week conic-duality formalization.
-The constructive equality already holds per-channel for the covariant family (shipped). Recommendation
-for a future phase: either (i) formalize conic LP duality from `ProperCone.hyperplane_separation`
-(multi-week, standalone value), or (ii) characterize the covariant class abstractly and prove
-`C₊`-optimality there (narrower but reachable).
+**ROUTE MAPPED — strong-duality EQUALITY is an in-progress continuation, NOT a fence (Explore fan-out
+2026-06-02).** The general equality `diamondDist = inf{‖Tr₂ W‖ : W ⪰ 0, W ⪰ C}` IS reachable at this
+pin. Mathlib ships genuine conic strong duality: `ProperCone.hyperplane_separation` /
+`ProperCone.relative_hyperplane_separation` / `hyperplane_separation_of_notMem` (`Cone/InnerDual.lean`)
+= the Farkas / cone-image strong-duality equivalence; bipolar `innerDual_innerDual`;
+`geometric_hahn_banach_compact_closed` (`LocallyConvex/Separation.lean`). The ONLY concrete missing
+object is a **real Frobenius `InnerProductSpace ℝ` on self-adjoint matrices** (`⟪A,B⟫ = re (A·B).trace`);
+Mathlib's matrix inner products are ℂ-valued + PSD-weighted (private), so this one instance must be
+built (`InnerProductSpace.ofCore` on `selfAdjoint (Matrix (Fin d) (Fin d) ℂ)`, which already carries
+the ℝ-module `selfAdjoint.instModule…`). NO Sion minimax / Fenchel needed (absent but unused).
+
+**Brick sequence (continuation):**
+1. `InnerProductSpace ℝ (selfAdjoint (Matrix (Fin n²) (Fin n²) ℂ))` via `ofCore`, `⟪A,B⟫ = re (A·B).tr`
+   (symmetry from `trace_conjTranspose`+self-adjoint; positivity/definiteness from
+   `posSemidef_conjTranspose_mul_self` + `trace…eq_zero_iff`; completeness from finite-dim).
+2. `ProperCone.positive ℝ E` for the PSD cone; closedness from finite-dim PSD-closed conditions.
+3. Slater point `W₀ = (‖C‖+1)·1` (PosDef, strictly dominates `C`).
+4. Compactness of `S_R = {W ⪰ 0, W ⪰ C, ‖W‖ ≤ R}` via `Metric.isCompact_of_isClosed_isBounded`
+   (finite-dim ProperSpace) ⇒ dual inf ATTAINED (`IsCompact.exists_isMinOn`).
+5. `hyperplane_separation` on the primal-optimal point ⇒ separating functional = optimal primal
+   density (via `InnerProductSpace.toDual`); complementary slackness `⟪W*−C, Y⟫ = 0` ⇒
+   `g(W*) = diamondDist`. Headline `diamondDist_eq_choiSDP`.
+The constructive `C₊` upper bound + per-channel covariant exact strong duality are already shipped;
+this continuation closes the general equality. NO axiom.
