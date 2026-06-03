@@ -324,3 +324,25 @@ shipped `diamondDist_eq_choiSDP_of_witness` ⟹ headline.
   diamondDist, which holds at the OPTIMAL σ via CS3 (the optimal input on the top eigenspace). This is
   the Watrous optimality step; no Mathlib gap, but the real analytic core that still needs construction.
 - Non-invertible-σ `+ε·1` limit (DR D4) folds into S5c's optimal-σ handling.
+
+## OUTCOME UPDATE 6 (2026-06-03) — S5b COMPLETE; S5c reduced to a single operator inequality
+S5b-finish SHIPPED (`0fb7b30f`): `trace_posPart_contractedChoi_le_diamondDist` —
+`tr(M₊) ≤ diamondDist` for ALL input densities `σ` (ρ_σ density + σ-weighted ω↔Choi + trace-norm
+swap + tr M=0 + S5a). Supporting bricks: `isDensityOperator_weighted_omega`, `krausMap_tensorKraus_
+weighted_omega`, `traceNorm_kron_one_conj_swap`, `kron_one_submatrix_prodComm`, `contractedChoi_
+submatrix_swap`. Witness Tr₂ formula SHIPPED (`44c8fb3f`): `ptrace2_diamondWitness :
+Tr₂ W* = √σ⁻¹·(Tr₂ M₊)·√σ⁻¹`.
+**S5c now reduces (congruence by √σ) to a SINGLE operator inequality:**
+```
+    ‖Tr₂ W*(σ)‖ ≤ diamondDist   ⟺   Tr₂(posPart M) ⪯ diamondDist · σ      (M = (√σ⊗1)C(√σ⊗1))
+```
+because `√σ⁻¹·(diamondDist·σ − Tr₂M₊)·√σ⁻¹ = diamondDist·1 − Tr₂W*` and congruence preserves PSD.
+Reduction plumbing (concrete, next): `l2opNorm_le_of_loewner` (PSD `A ⪯ c·1 ⟹ ‖A‖≤c`, CFC route:
+`c²·1−A² = cfc(c²−x²)`, eigenvalues in `[0,c]`) + the congruence step.
+🔴 **THE IRREDUCIBLE KERNEL — `Tr₂(posPart M) ⪯ diamondDist·σ` at the OPTIMAL `σ*`** — is the
+genuine Watrous first-order-optimality content (the DR's "hardest single step"). The weighted-average
+`tr(σ*·Tr₂W*) = tr(M₊) ≤ diamondDist` is shipped (S5b); upgrading to the operator inequality needs:
+`σ*` maximizes `traceDist` over densities ⟹ no eigenvector of `Tr₂W*` exceeds `diamondDist` (else
+perturb the input toward it, contradicting maximality). Needs the variational/perturbation argument on
+the attained `ρ*` (`exists_diamondDist_eq`). This is the SOLE remaining mathematical content; all
+construction + feasibility + the trace bound are done (~24 kernel-pure increments this arc).
