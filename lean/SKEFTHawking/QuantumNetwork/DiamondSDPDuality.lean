@@ -1107,4 +1107,39 @@ theorem isClosed_achievableTr2 [NeZero n] (C : Matrix (Fin n × Fin n) (Fin n ×
     rw [h3] at h1
     exact tendsto_nhds_unique h1 h2
 
+/-- `HermCarrier.toMatₗ` is injective (the carrier embeds into matrices). -/
+theorem HermCarrier.toMatₗ_injective {ι : Type*} [Fintype ι] [DecidableEq ι] :
+    Function.Injective (HermCarrier.toMatₗ (ι := ι)) := by
+  intro A B hAB
+  have : A.toSA = B.toSA := Subtype.ext hAB
+  exact HermCarrier.equivSA.injective this
+
+open scoped Matrix.Norms.L2Operator in
+/-- The operator-norm `δ`-ball in the Hermitian carrier — the compact convex set the conic-Farkas
+separation pairs against the achievable set `S`. -/
+def opBall (δ : ℝ) : Set (HermCarrier (Fin n)) := {Y | ‖Y.toSA.1‖ ≤ δ}
+
+open scoped Matrix.Norms.L2Operator in
+theorem opBall_eq_preimage (δ : ℝ) :
+    opBall (n := n) δ
+      = HermCarrier.toMatₗ ⁻¹' Metric.closedBall (0 : Matrix (Fin n) (Fin n) ℂ) δ := by
+  ext Y
+  simp only [opBall, Set.mem_setOf_eq, Set.mem_preimage, Metric.mem_closedBall, dist_zero_right]
+  rfl
+
+open scoped Matrix.Norms.L2Operator in
+/-- The op-norm ball is convex (linear preimage of a metric ball). -/
+theorem convex_opBall (δ : ℝ) : Convex ℝ (opBall (n := n) δ) := by
+  rw [opBall_eq_preimage]
+  exact (convex_closedBall (0 : Matrix (Fin n) (Fin n) ℂ) δ).linear_preimage HermCarrier.toMatₗ
+
+open scoped Matrix.Norms.L2Operator in
+/-- The op-norm ball is compact: it is the preimage of a (compact) closed ball under the proper
+closed embedding `toMatₗ` (injective ℝ-linear out of a finite-dimensional space). -/
+theorem isCompact_opBall (δ : ℝ) : IsCompact (opBall (n := n) δ) := by
+  rw [opBall_eq_preimage]
+  exact (LinearMap.isClosedEmbedding_of_injective
+    (LinearMap.ker_eq_bot.mpr HermCarrier.toMatₗ_injective)).isProperMap.isCompact_preimage
+    (isCompact_closedBall 0 δ)
+
 end SKEFTHawking.QuantumNetwork
