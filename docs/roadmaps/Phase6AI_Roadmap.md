@@ -145,10 +145,29 @@ this continuation closes the general equality. NO axiom.
   `IsCompact.exists_isMinOn`, and that min = `choiDualValue` (inf over all feasible). Gives an EXPLICIT optimal dual
   witness `W*` with `‖Tr₂ W*‖ = choiDualValue`. 🔑 the `L2Operator`-scoped-instance topology cooperates with the
   Frobenius-proved closedness lemmas (finite-dim, no instance pollution).
-- 🔴 **REMAINING = the SEPARATION / complementary-slackness core** (Watrous zero-gap): show `choiDualValue ≤ diamondDist`
-  (`‖Tr₂ W*‖ ≤ diamondDist`) using the attained `W*` + primal-attained `ρ*` (`exists_diamondDist_eq`) +
-  `selfAdjointInnerProductSpace` + `ProperCone.hyperplane_separation`. THEN `le_antisymm` with `diamondDist_le_choiDualValue`
-  ⇒ `diamondDist_eq_choiSDP`. This is the last (hardest, bespoke) brick — all infrastructure now in place.
+- ✅ **R3 helper DONE** (`0bd63b5f`): `inMarginal_le_one` (`1 − inMarginal ρ ⪰ 0` for `IsDensityOperator ρ`,
+  via `l2opNorm_le_traceNorm_psd` ⟹ `‖inMarginal ρ‖ ≤ tr = 1` + `cfc(1−x)`). Feeds dual feasibility.
+
+### FINAL BRICK fully mapped (zero-gap `≥`, opus design-agent + weak-dual-chain analysis 2026-06-03)
+**Route decision: A (constructive Watrous primal→dual witness), NOT B (abstract cone).** Route B verified-blocked at
+pin: NO PSD-matrix `ProperCone` / NO `PartialOrder (selfAdjoint (Matrix …))` in Mathlib, and `ProperCone.map` is a
+*topological closure* so `relative_hyperplane_separation` gives feasibility only up-to-closure (residual closed-image
+gap). Route A reuses the already-proven primal analysis.
+
+**The weak-dual chain (`diamondDist_le_dual_witness`, DiamondNormDual.lean:174-185) IS the map.** For attained `ρ*`
+(`exists_diamondDist_eq`), `T = (Φ₁⊗id−Φ₂⊗id)ρ*`, `P = posProj T`:
+`diamondDist = eigPosSum T = Re tr(C·M(P,ρ*)) ≤ Re tr(W·M(P,ρ*)) ≤ Re tr(W·M(1,ρ*)) = Re tr(Tr₂W·inMarginal ρ*) ≤ ‖Tr₂W‖·tr(inMarginal ρ*) = ‖Tr₂W‖`
+(`M = choiContraction`). The `≥` needs a feasible `W*` making ALL THREE `≤` tight:
+  (i) `tr((W*−C)·M(P,ρ*)) = 0` (complementary slackness, `W*−C⪰0 ⟂ M(P,ρ*)⪰0`);
+  (ii) `tr(W*·M(1−P,ρ*)) = 0`; (iii) Hölder tight: `Tr₂W*` aligns with `inMarginal ρ*` (scalar on its support).
+Then `‖Tr₂ W*‖ = diamondDist` ⟹ `csInf_le` ⟹ `choiDualValue ≤ diamondDist` ⟹ `le_antisymm` ⟹ **`diamondDist_eq_choiSDP`**.
+- Brick 0 (csInf reduction), 1 (extract ρ*/P, transcribe primal-value identity), 6 (assemble): ROUTINE.
+- Brick 3 (`W*⪰0`), 5 (objective `≤ diamondDist`): MODERATE. R3 (`inMarginal_le_one`): DONE.
+- 🔴 **Bricks 2 (define `W*`) + 4 (`W*−C⪰0` + tightness) = THE deep crux.** `W* = C₊` works ONLY for Pauli-covariant
+  (max-entangled `ρ*`); GENERAL non-covariant (amp-damp: product-state `ρ*`) needs the `ρ*`-aligned witness — the
+  genuine Watrous §3.3.2 dual-optimal construction (per-channel exacts in `NamedChannelDiamondExact.lean` are the
+  validation templates). NOT a Mathlib gap — genuine QI-math derivation. The single hardest piece; all surrounding
+  infra (weak-dual ≤, InnerProductSpace, both attainments, op≤trace, R3) is in place. NO fence, NO axiom.
 - (superseded) NEXT concrete brick (brick 4a): `l2opNorm_le_traceNorm` for PSD `W` (`‖W‖_{L2op} ≤ traceNorm W`,
   i.e. max eigenvalue ≤ trace) — the bridge bounding `‖W‖` itself in the AMBIENT L2-op metric (the
   shipped `frobenius_le_traceNorm` is in the *Frobenius* instance, won't unify under `L2Operator` open).
