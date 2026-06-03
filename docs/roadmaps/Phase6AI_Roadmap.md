@@ -73,3 +73,35 @@ EITHER (a) `diamondDist_eq_choiSDP` PROVEN kernel-pure (no new axiom) — the fr
 (b) a genuinely-blocked FENCE with an interactive-lean4-verified written blocker (exact missing
 Mathlib lemmas) + a documented argument that no constructive route is feasible at this pin, presented
 to the user. NO axiom shipped without explicit sign-off. Counts/docs/memory synced either way.
+
+---
+
+## OUTCOME (2026-06-02, autonomous /goal) — PARTIAL: general constructive witness SHIPPED + equality FENCED
+
+**Wave 6AI.0 scout (interactive lean4 on Mathlib v4.29.1).** PRESENT: geometric Hahn–Banach
+separation (`geometric_hahn_banach_compact_closed`, `RCLike.geometric_hahn_banach_*`,
+`geometric_hahn_banach_point_closed`), cone separation `ProperCone.hyperplane_separation`,
+`ProperCone.innerDual` + bipolar `ProperCone.innerDual_innerDual`, order-theoretic saddle point
+`isSaddlePointOn_value` + easy minimax `iSup₂_iInf₂_le_iInf₂_iSup₂` (Mathlib.Order.SaddlePoint),
+Krein–Milman. **ABSENT** (verified — searched leansearch/loogle/local): analytic Sion / von Neumann
+minimax for concave–convex real functions; Fenchel conjugate biconjugate duality theorem; any conic /
+SDP / LP strong-duality (Slater zero-gap) theorem; KKT. ⟹ both abstract routes (6AI.1 minimax,
+Fenchel) lack a ready theorem; raw-Hahn–Banach zero-gap assembly for the operator-norm-objective LMI
+is multi-week.
+
+**SHIPPED (Wave 6AI.2, constructive, the reachable toehold):** `DiamondNormWitness.lean` (root-imported,
+kernel-pure) — `diamondDist_le_ptrace2_posPart`: for ANY channel pair, the positive part
+`C₊ = (J(Φ₁)−J(Φ₂))₊` is an explicit dual-feasible witness (`posPart_choiDiff_sub_posSemidef`:
+`C₊ − C = C₋ ⪰ 0`), giving the general constructive upper bound `diamondDist ≤ ‖Tr₂ C₊‖`. Helper
+`posPart_sub_self_eq_negPart` (general `C₊ − M = C₋`, via `sub_sub_cancel` to dodge the
+proof-dependent-motive `rw`). Generalizes `diamondDist_le_choi_opNorm` and unifies the per-channel
+optimal witnesses (it IS `C₊` for the covariant Pauli/dephasing/depolarizing family; loose for
+amplitude damping whose worst-case input is a product state, not max-entangled).
+
+**FENCED (no axiom, per policy):** the fully-general strong-duality EQUALITY
+`diamondDist = inf{‖Tr₂ W‖ : W ⪰ 0, W ⪰ C}` — needs SDP zero-gap (existence of an optimal witness for
+every pair), unreachable at this Mathlib pin without the multi-week conic-duality formalization.
+The constructive equality already holds per-channel for the covariant family (shipped). Recommendation
+for a future phase: either (i) formalize conic LP duality from `ProperCone.hyperplane_separation`
+(multi-week, standalone value), or (ii) characterize the covariant class abstractly and prove
+`C₊`-optimality there (narrower but reachable).
