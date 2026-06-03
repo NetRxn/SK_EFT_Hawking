@@ -346,3 +346,24 @@ genuine Watrous first-order-optimality content (the DR's "hardest single step").
 perturb the input toward it, contradicting maximality). Needs the variational/perturbation argument on
 the attained `ρ*` (`exists_diamondDist_eq`). This is the SOLE remaining mathematical content; all
 construction + feasibility + the trace bound are done (~24 kernel-pure increments this arc).
+
+## OUTCOME UPDATE 7 (2026-06-03) — 6AI REDUCED TO ONE VARIATIONAL INEQUALITY (everything else SHIPPED)
+S5c plumbing SHIPPED (kernel-pure): `l2opNorm_le_of_loewner` (`242ae029`: PSD `A⪯c·1 ⟹ ‖A‖≤c` via
+`c²·1−A² = c·(c·1−A)+√A·(c·1−A)·√A`, no eigenvalues/cfc-commute) + `opNorm_ptrace2_diamondWitness_le`
+(`9cfa3dd5`: `‖Tr₂W*‖≤d` from `Tr₂M₊ ⪯ d·σ` via √σ⁻¹-congruence).
+**HEADLINE-MODULO-KERNEL SHIPPED** (`f82ec77b`): `diamondDist_eq_choiSDP_of_loewner` —
+`diamondDist = choiDualValue` follows from a SINGLE hypothesis:
+```
+    ∃ σ : Matrix (Fin n)(Fin n) ℂ, ∃ hσ : σ.PosDef,
+      ((diamondDist K₁ K₂ : ℂ)•σ − Tr₂(posPart (contractedChoi … (choiDiff_isHermitian K₁ K₂)))).PosSemidef
+```
+(assembles `diamondWitness_posSemidef` + `diamondWitness_sub_posSemidef` + `opNorm_ptrace2_diamondWitness_le`
++ `diamondDist_eq_choiSDP_of_witness`). **~29 kernel-pure increments this arc; the ENTIRE explicit-witness
+construction + both feasibility conditions + the trace bound + all reductions are DONE.**
+🔴 **THE SOLE REMAINING KERNEL:** discharge that hypothesis — exhibit the optimal PosDef `σ*` with
+`Tr₂(posPart M(σ*)) ⪯ diamondDist·σ*`. This is the Watrous first-order-optimality fact: `σ*` maximizes
+`tr(posPart M(σ)) = traceDist(ρ_σ)` over densities (the trace bound `tr(M₊)≤diamondDist` is shipped
+∀σ), and the maximality upgrades to the operator inequality. Needs first-order/perturbation machinery on
+the attained `ρ*` (`exists_diamondDist_eq`) — genuinely substantial (matrix-function differentiation /
+envelope; non-smooth posPart, √σ; Mathlib matrix-derivative support is limited). Plus the non-invertible-σ
+`+ε·1` limit (DR D4). This is the multi-session analytic frontier; everything around it is proven.
