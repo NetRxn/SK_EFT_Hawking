@@ -92,7 +92,7 @@ variable {n : ℕ}
 /-- **`Tr₂` adjoint identity (Farkas brick B):** `tr((Tr₂ W)·Y) = tr(W·(Y ⊗ 1))`. The Hilbert–Schmidt
 adjoint of the second-factor partial trace is tensoring with the identity on the traced-out factor.
 Used to decode the conic Farkas separator: the dual-feasibility constraint `Y₁ + Tr₂†(Y₂) ⪰ 0`
-becomes `Y₂ ⊗ 1 − ρ̃ ⪰ 0`. -/
+becomes `Y₂ ⊗ 1 − X ⪰ 0`. -/
 theorem trace_ptrace2_mul (W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ)
     (Y : Matrix (Fin n) (Fin n) ℂ) :
     (ptrace2 W * Y).trace = (W * (Y ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))).trace := by
@@ -102,5 +102,33 @@ theorem trace_ptrace2_mul (W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ)
   refine Finset.sum_congr rfl fun a _ => ?_
   simp_rw [Finset.sum_mul]
   rw [Finset.sum_comm]
+
+open scoped Matrix.Norms.L2Operator ComplexOrder in
+/-- **Primal-side weak duality (Farkas brick C′).** For a dual-feasible witness `W` (`W ⪰ 0`,
+`W ⪰ C`) and a primal-feasible `X` (`X ⪰ 0`, `X ⪯ σ ⊗ 1` with `σ ⪰ 0`):
+`Re tr(C·X) ≤ ‖Tr₂ W‖ · Re tr σ`. The chain `Re tr(C X) ≤ Re tr(W X) ≤ Re tr(W (σ⊗1))
+= Re tr((Tr₂ W) σ) ≤ ‖Tr₂ W‖ · Re tr σ` (Loewner monotonicity ×2 via `trace_mul_nonneg`, the
+`Tr₂` adjoint identity brick B, and the operator-norm trace bound). Taking the dual infimum over
+`W` gives `Re tr(C X) ≤ choiDualValue · Re tr σ` — the primal weak-duality bound that any feasible
+primal point obeys. (Strong duality strengthens `choiDualValue` to `diamondDist`.) -/
+theorem re_trace_mul_le_l2opNorm_ptrace2_mul_trace [NeZero n]
+    {C W X : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hW : W.PosSemidef)
+    (hWC : (W - C).PosSemidef) (hX : X.PosSemidef) {σ : Matrix (Fin n) (Fin n) ℂ}
+    (hσ : σ.PosSemidef) (hle : (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - X).PosSemidef) :
+    (C * X).trace.re ≤ ‖ptrace2 W‖ * σ.trace.re := by
+  have h1 : (C * X).trace.re ≤ (W * X).trace.re := by
+    have h := (Complex.le_def.mp (trace_mul_nonneg hWC hX)).1
+    rw [Matrix.sub_mul, Matrix.trace_sub, Complex.sub_re] at h
+    simp only [Complex.zero_re] at h; linarith
+  have h2 : (W * X).trace.re ≤ (W * (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))).trace.re := by
+    have h := (Complex.le_def.mp (trace_mul_nonneg hW hle)).1
+    rw [Matrix.mul_sub, Matrix.trace_sub, Complex.sub_re] at h
+    simp only [Complex.zero_re] at h; linarith
+  have h4 : ((ptrace2 W) * σ).trace.re ≤ ‖ptrace2 W‖ * σ.trace.re :=
+    re_trace_mul_le_l2opNorm_mul_trace (ptrace2_posSemidef hW).isHermitian hσ
+  calc (C * X).trace.re ≤ (W * X).trace.re := h1
+    _ ≤ (W * (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))).trace.re := h2
+    _ = ((ptrace2 W) * σ).trace.re := by rw [← trace_ptrace2_mul W σ]
+    _ ≤ ‖ptrace2 W‖ * σ.trace.re := h4
 
 end SKEFTHawking.QuantumNetwork
