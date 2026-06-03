@@ -145,4 +145,24 @@ theorem choiContraction_le_inMarginal_kron_one
   rw [← choiContraction_one_eq, ← choiContraction_sub]
   exact choiContraction_posSemidef hQ1 hρ
 
+open scoped Matrix.Norms.L2Operator ComplexOrder in
+/-- **Slater strict feasibility of the diamond-SDP dual (brick D).** For any Hermitian `C`, the dual
+feasible region `{W : W ⪰ 0, W ⪰ C}` has a strictly-interior point: `W = ‖C‖•1 + C + 1` is
+positive-DEFINITE and `W − C = ‖C‖•1 + 1 ≻ 0`. (Uses `C ⪰ −‖C‖•1`, i.e. `‖C‖•1 + C ⪰ 0`, the
+companion of `norm_smul_one_sub_self_posSemidef`.) Slater's constraint qualification — the input to
+finite-dimensional conic strong duality (zero gap), hence `choiDualValue ≤ diamondDist`. -/
+theorem exists_dual_strictly_feasible {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {C : Matrix ι ι ℂ} (hC : C.IsHermitian) :
+    ∃ W : Matrix ι ι ℂ, W.PosDef ∧ (W - C).PosDef := by
+  have hcomp : (((‖C‖ : ℂ)) • (1 : Matrix ι ι ℂ) + C).PosSemidef := by
+    have h := norm_smul_one_sub_self_posSemidef hC.neg
+    rwa [norm_neg, sub_neg_eq_add] at h
+  have hsmul : (((‖C‖ : ℂ)) • (1 : Matrix ι ι ℂ)).PosSemidef :=
+    Matrix.PosSemidef.one.smul (by rw [Complex.zero_le_real]; exact norm_nonneg C)
+  refine ⟨(‖C‖ : ℂ) • 1 + C + 1, ?_, ?_⟩
+  · have he : ((‖C‖ : ℂ) • 1 + C + 1 : Matrix ι ι ℂ) = ((‖C‖ : ℂ) • 1 + C) + 1 := by abel
+    rw [he]; exact Matrix.PosDef.posSemidef_add hcomp Matrix.PosDef.one
+  · have he : ((‖C‖ : ℂ) • 1 + C + 1 : Matrix ι ι ℂ) - C = (‖C‖ : ℂ) • 1 + 1 := by abel
+    rw [he]; exact Matrix.PosDef.posSemidef_add hsmul Matrix.PosDef.one
+
 end SKEFTHawking.QuantumNetwork
