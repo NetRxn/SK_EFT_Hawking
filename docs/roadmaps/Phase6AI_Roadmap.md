@@ -110,9 +110,12 @@ built (`InnerProductSpace.ofCore` on `selfAdjoint (Matrix (Fin d) (Fin d) ℂ)`,
 the ℝ-module `selfAdjoint.instModule…`). NO Sion minimax / Fenchel needed (absent but unused).
 
 **Brick sequence (continuation):**
-1. `InnerProductSpace ℝ (selfAdjoint (Matrix (Fin n²) (Fin n²) ℂ))` via `ofCore`, `⟪A,B⟫ = re (A·B).tr`
-   (symmetry from `trace_conjTranspose`+self-adjoint; positivity/definiteness from
-   `posSemidef_conjTranspose_mul_self` + `trace…eq_zero_iff`; completeness from finite-dim).
+1. ✅ **DONE (2026-06-03, commit `f1b08b69`, `SelfAdjointInnerProduct.lean`, kernel-pure, root-imported,
+   full build 9048 jobs no instance pollution):** `selfAdjointInnerProductSpace :
+   InnerProductSpace ℝ (selfAdjoint (Matrix (Fin d) (Fin d) ℂ))`, `⟪A,B⟫ = Re tr(A·B)`, via
+   `InnerProductSpace.ofCore` (Core fields: symmetry=`trace_mul_comm`; nonneg/definite=
+   `posSemidef_conjTranspose_mul_self`+`PosSemidef.trace_eq_zero_iff`+`conjTranspose_mul_self_eq_zero`;
+   `selfAdjoint_inner_eq` computes by `rfl`). The SDP linchpin — cone-duality engine now applies.
 2. `ProperCone.positive ℝ E` for the PSD cone; closedness from finite-dim PSD-closed conditions.
 3. Slater point `W₀ = (‖C‖+1)·1` (PosDef, strictly dominates `C`).
 4. Compactness of `S_R = {W ⪰ 0, W ⪰ C, ‖W‖ ≤ R}` via `Metric.isCompact_of_isClosed_isBounded`
