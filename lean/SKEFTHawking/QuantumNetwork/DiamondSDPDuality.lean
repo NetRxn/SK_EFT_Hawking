@@ -971,4 +971,61 @@ theorem l2opNorm_le_re_trace_ptrace2 [NeZero n] {W : Matrix (Fin n × Fin n) (Fi
     _ = (W.trace).re := traceNorm_posSemidef hW
     _ = (ptrace2 W).trace.re := by rw [trace_ptrace2]
 
+/-- `Tr₂` is additive. -/
+theorem ptrace2_add (A B : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    ptrace2 (A + B) = ptrace2 A + ptrace2 B := by
+  ext a b; simp only [ptrace2, Matrix.add_apply, Matrix.add_apply, Finset.sum_add_distrib]
+
+/-- `Tr₂` commutes with real scalar multiplication. -/
+theorem ptrace2_real_smul (r : ℝ) (A : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    ptrace2 (r • A) = r • ptrace2 A := by
+  ext a b
+  simp only [ptrace2, Matrix.smul_apply, Complex.real_smul]
+  rw [Finset.mul_sum]
+
+/-- **The achievable partial-trace set** `S = {Tr₂ W : W ⪰ 0, W ⪰ C}` as a set in the Hermitian
+carrier — the convex set the conic-Farkas separation pairs against the operator-norm ball. -/
+def achievableTr2 (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) : Set (HermCarrier (Fin n)) :=
+  {Y | ∃ W : HermCarrier (Fin n × Fin n), W.toSA.1.PosSemidef ∧ (W.toSA.1 - C).PosSemidef ∧
+    Y.toSA.1 = ptrace2 W.toSA.1}
+
+open scoped ComplexOrder in
+/-- **`achievableTr2 C` is convex** (linear image of the convex dual-feasible set under `Tr₂`). -/
+theorem convex_achievableTr2 (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    Convex ℝ (achievableTr2 C) := by
+  rintro Y₁ ⟨W₁, hW₁, hW₁C, hY₁⟩ Y₂ ⟨W₂, hW₂, hW₂C, hY₂⟩ a b ha hb hab
+  refine ⟨a • W₁ + b • W₂, ?_, ?_, ?_⟩
+  · have hval : (a • W₁ + b • W₂).toSA.1 = a • W₁.toSA.1 + b • W₂.toSA.1 := by
+      rw [HermCarrier.add_toSA, HermCarrier.smul_toSA, HermCarrier.smul_toSA, AddSubgroup.coe_add,
+        selfAdjoint.val_smul, selfAdjoint.val_smul]
+    rw [hval]
+    have e1 : a • W₁.toSA.1 = ((a : ℂ)) • W₁.toSA.1 := by
+      ext i j; simp [Matrix.smul_apply, Complex.real_smul]
+    have e2 : b • W₂.toSA.1 = ((b : ℂ)) • W₂.toSA.1 := by
+      ext i j; simp [Matrix.smul_apply, Complex.real_smul]
+    rw [e1, e2]
+    exact (hW₁.smul (by rw [Complex.zero_le_real]; exact ha)).add
+      (hW₂.smul (by rw [Complex.zero_le_real]; exact hb))
+  · have hval0 : (a • W₁ + b • W₂).toSA.1 = a • W₁.toSA.1 + b • W₂.toSA.1 := by
+      rw [HermCarrier.add_toSA, HermCarrier.smul_toSA, HermCarrier.smul_toSA, AddSubgroup.coe_add,
+        selfAdjoint.val_smul, selfAdjoint.val_smul]
+    have hb1 : b = 1 - a := by linarith
+    have hval : (a • W₁ + b • W₂).toSA.1 - C = a • (W₁.toSA.1 - C) + b • (W₂.toSA.1 - C) := by
+      rw [hval0, hb1]; module
+    rw [hval]
+    have e1 : a • (W₁.toSA.1 - C) = ((a : ℂ)) • (W₁.toSA.1 - C) := by
+      ext i j; simp [Matrix.smul_apply, Complex.real_smul]
+    have e2 : b • (W₂.toSA.1 - C) = ((b : ℂ)) • (W₂.toSA.1 - C) := by
+      ext i j; simp [Matrix.smul_apply, Complex.real_smul]
+    rw [e1, e2]
+    exact (hW₁C.smul (by rw [Complex.zero_le_real]; exact ha)).add
+      (hW₂C.smul (by rw [Complex.zero_le_real]; exact hb))
+  · have hvalY : (a • Y₁ + b • Y₂).toSA.1 = a • Y₁.toSA.1 + b • Y₂.toSA.1 := by
+      rw [HermCarrier.add_toSA, HermCarrier.smul_toSA, HermCarrier.smul_toSA, AddSubgroup.coe_add,
+        selfAdjoint.val_smul, selfAdjoint.val_smul]
+    have hvalW : (a • W₁ + b • W₂).toSA.1 = a • W₁.toSA.1 + b • W₂.toSA.1 := by
+      rw [HermCarrier.add_toSA, HermCarrier.smul_toSA, HermCarrier.smul_toSA, AddSubgroup.coe_add,
+        selfAdjoint.val_smul, selfAdjoint.val_smul]
+    rw [hvalY, hY₁, hY₂, hvalW, ptrace2_add, ptrace2_real_smul, ptrace2_real_smul]
+
 end SKEFTHawking.QuantumNetwork
