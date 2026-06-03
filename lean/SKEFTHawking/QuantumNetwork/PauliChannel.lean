@@ -153,4 +153,73 @@ theorem pauli_choi_diff {p : Fin 4 → ℝ} (h0 : ∀ i, 0 ≤ p i) :
   rw [← sub_smul]; congr 1
   split_ifs <;> push_cast <;> ring
 
+/-! ## Trace norm of the Choi difference and the diamond distance -/
+
+/-- **Bell-combination product:** `(∑ᵢ aᵢ Bᵢ)(∑ⱼ bⱼ Bⱼ) = ∑ᵢ 2 aᵢ bᵢ Bᵢ` (from orthogonality). -/
+theorem bellCombo_mul (a b : Fin 4 → ℂ) :
+    (∑ i, a i • bellBlock i) * (∑ j, b j • bellBlock j) = ∑ i, (2 * a i * b i) • bellBlock i := by
+  rw [Finset.sum_mul_sum]
+  rw [show (∑ i, ∑ j, (a i • bellBlock i) * (b j • bellBlock j))
+        = ∑ i, ∑ j, (a i * b j) • (if i = j then (2 : ℂ) else 0) • bellBlock i by
+      refine Finset.sum_congr rfl fun i _ => Finset.sum_congr rfl fun j _ => ?_
+      rw [Matrix.smul_mul, Matrix.mul_smul, bellBlock_mul, smul_smul]]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  rw [Finset.sum_eq_single i (fun j _ hj => by rw [if_neg (Ne.symm hj), zero_smul, smul_zero])
+    (by simp)]
+  rw [if_pos rfl, smul_smul]; congr 1; ring
+
+/-- **Trace norm of a real Bell combination:** `‖∑ᵢ cᵢ Bᵢ‖₁ = 2·∑ᵢ |cᵢ|`. The candidate `∑ᵢ |cᵢ| Bᵢ`
+is PSD and squares to `(∑ᵢ cᵢ Bᵢ)²`, hence equals `|∑ᵢ cᵢ Bᵢ|` by PSD-square uniqueness. -/
+theorem traceNorm_bellCombo (c : Fin 4 → ℝ) :
+    traceNorm (∑ i, (c i : ℂ) • bellBlock i) = 2 * ∑ i, |c i| := by
+  set Δ := ∑ i, (c i : ℂ) • bellBlock i with hΔ
+  have hHerm : Δᴴ = Δ := by
+    rw [hΔ, Matrix.conjTranspose_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    rw [Matrix.conjTranspose_smul, (bellBlock_isHermitian i).eq,
+      show star (↑(c i) : ℂ) = ↑(c i) from Complex.conj_ofReal (c i)]
+  have hQpsd : (∑ i, ((|c i| : ℝ) : ℂ) • bellBlock i).PosSemidef := by
+    refine Matrix.posSemidef_sum _ fun i _ => (bellBlock_posSemidef i).smul ?_
+    rw [Complex.le_def]; exact ⟨by simp [abs_nonneg], by simp⟩
+  have habs : absOp Δ = ∑ i, ((|c i| : ℝ) : ℂ) • bellBlock i := by
+    refine posSemidef_eq_of_mul_self_eq (absOp_posSemidef Δ) hQpsd ?_
+    rw [absOp_mul_self, hHerm, hΔ, bellCombo_mul, bellCombo_mul]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    congr 1
+    rw [mul_assoc, mul_assoc, ← Complex.ofReal_mul, ← Complex.ofReal_mul, abs_mul_abs_self]
+  rw [traceNorm_eq_trace_absOp, habs, Matrix.trace_sum]
+  simp_rw [Matrix.trace_smul, bellBlock_trace, smul_eq_mul]
+  rw [← Finset.sum_mul, ← Complex.ofReal_sum,
+    show (2 : ℂ) = ((2 : ℝ) : ℂ) by norm_num, ← Complex.ofReal_mul, Complex.ofReal_re]
+  ring
+
+/-- **Partial trace of a Bell block is the identity:** `Tr₂ Bᵢ = 1` (each `σᵢ` is unitary). -/
+theorem ptrace2_bellBlock (i : Fin 4) : ptrace2 (bellBlock i) = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  ext a b
+  fin_cases i <;> fin_cases a <;> fin_cases b <;>
+    simp [ptrace2, bellBlock_apply, pauliOp, pauliX, pauliY, pauliZ, Matrix.one_apply,
+      Fin.sum_univ_two]
+
+/-- **Trace norm of the Pauli Choi difference** `‖J(Φ_p) − J(id)‖₁ = 4(1 − p₀)`. -/
+theorem traceNorm_pauli_choi_diff {p : Fin 4 → ℝ} (h0 : ∀ i, 0 ≤ p i) (h1 : p 0 ≤ 1)
+    (hsum : ∑ i, p i = 1) :
+    traceNorm (choiMatrix (krausMap (pauliKraus p)) - choiMatrix (krausMap (idKrausPad 3 2)))
+      = 4 * (1 - p 0) := by
+  rw [pauli_choi_diff h0, traceNorm_bellCombo, Fin.sum_univ_four]
+  simp only [Fin.isValue, Fin.reduceEq, ↓reduceIte, sub_zero]
+  rw [abs_of_nonpos (by linarith), abs_of_nonneg (h0 1), abs_of_nonneg (h0 2), abs_of_nonneg (h0 3)]
+  have hs : p 0 + p 1 + p 2 + p 3 = 1 := by rw [← Fin.sum_univ_four]; exact hsum
+  linarith
+
+/-- **Pauli-channel diamond-distance lower bound** `diamondDist (pauliKraus p) (id) ≥ 1 − p₀`, from
+the Choi trace-norm lower bound and `‖J(Φ_p) − J(id)‖₁ = 4(1−p₀)`. -/
+theorem diamondDist_pauliKraus_ge {p : Fin 4 → ℝ} (h0 : ∀ i, 0 ≤ p i) (h1 : p 0 ≤ 1)
+    (hsum : ∑ i, p i = 1) :
+    1 - p 0 ≤ diamondDist (pauliKraus p) (idKrausPad 3 2) := by
+  have hbound := diamondDist_ge_choi_traceNorm (isKrausChannel_pauliKraus h0 hsum)
+    (isKrausChannel_idKrausPad 3 2)
+  rw [traceNorm_pauli_choi_diff h0 h1 hsum] at hbound
+  calc 1 - p 0 = (1 : ℝ) / (2 * (2 : ℕ)) * (4 * (1 - p 0)) := by push_cast; ring
+    _ ≤ _ := hbound
+
 end SKEFTHawking.QuantumNetwork
