@@ -1166,4 +1166,16 @@ theorem mem_achievableTr2_of_matrix {C W : Matrix (Fin n × Fin n) (Fin n × Fin
   ⟨HermCarrier.ofMat hWh, by rw [HermCarrier.ofMat_toSA]; exact hW,
     by rw [HermCarrier.ofMat_toSA]; exact hWC, by rw [HermCarrier.ofMat_toSA, HermCarrier.ofMat_toSA]⟩
 
+open scoped Kronecker in
+/-- **`Tr₂(M ⊗ N) = (tr N) • M`** — partial-tracing the second factor of a Kronecker product. With
+`N` a trace-1 output state, `Tr₂(M ⊗ N) = M`, so `Tr₂` is surjective onto Hermitian matrices: the
+lever for `Y₀ ⪰ 0` in the separation (the achievable set `S` contains the full PSD-cone translate
+`Tr₂(posPart C) + M`, so a separating functional bounded below on `S` is nonnegative on the PSD cone). -/
+theorem ptrace2_kronecker_eq (M N : Matrix (Fin n) (Fin n) ℂ) :
+    ptrace2 (M ⊗ₖ N) = N.trace • M := by
+  ext a b
+  simp only [ptrace2, Matrix.kroneckerMap_apply, Matrix.smul_apply, smul_eq_mul]
+  rw [← Finset.mul_sum, mul_comm]
+  rfl
+
 end SKEFTHawking.QuantumNetwork
