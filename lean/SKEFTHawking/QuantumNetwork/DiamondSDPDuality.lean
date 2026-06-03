@@ -456,6 +456,35 @@ theorem kron_one_submatrix_prodComm (s : Matrix (Fin n) (Fin n) ℂ) :
   ext p q
   simp only [Matrix.submatrix_apply, Equiv.prodComm_apply, Matrix.kroneckerMap_apply,
     Matrix.one_apply, Prod.fst_swap, Prod.snd_swap]
-  ring
+  exact mul_comm _ _
+
+open scoped Kronecker in
+/-- **Contracted Choi under the tensor-factor swap:** `M.submatrix swap swap = (1⊗√σ)·(C
+swap)·(1⊗√σ)`. Moving the `√σ` factor from the input slot (`√σ⊗1` in `M`) to the ancilla slot
+(`1⊗√σ`), matching the purification-input output difference. Hence (next lemma)
+`‖(1⊗√σ)(C swap)(1⊗√σ)‖₁ = ‖M‖₁`. -/
+theorem contractedChoi_submatrix_swap {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSemidef)
+    (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    (contractedChoi hσ C).submatrix (Equiv.prodComm (Fin n) (Fin n))
+        (Equiv.prodComm (Fin n) (Fin n))
+      = ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ)
+          * C.submatrix (Equiv.prodComm (Fin n) (Fin n)) (Equiv.prodComm (Fin n) (Fin n))
+          * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ) := by
+  unfold contractedChoi
+  rw [← Matrix.submatrix_mul_equiv (e₂ := Equiv.prodComm (Fin n) (Fin n)),
+    ← Matrix.submatrix_mul_equiv (e₂ := Equiv.prodComm (Fin n) (Fin n)),
+    kron_one_submatrix_prodComm]
+
+open scoped Kronecker in
+/-- **Trace-norm of the purification-input output equals the contracted-Choi trace norm:**
+`‖(1⊗√σ)·(C swap)·(1⊗√σ)‖₁ = ‖M‖₁` (`M = contractedChoi`). Via `contractedChoi_submatrix_swap` +
+trace-norm swap-invariance. -/
+theorem traceNorm_kron_one_conj_swap {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSemidef)
+    (C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    traceNorm (((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ)
+        * C.submatrix (Equiv.prodComm (Fin n) (Fin n)) (Equiv.prodComm (Fin n) (Fin n))
+        * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ psdSqrt hσ))
+      = traceNorm (contractedChoi hσ C) := by
+  rw [← contractedChoi_submatrix_swap, traceNorm_submatrix_equiv]
 
 end SKEFTHawking.QuantumNetwork
