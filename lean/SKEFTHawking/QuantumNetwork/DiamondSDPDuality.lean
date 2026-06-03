@@ -955,4 +955,20 @@ theorem re_trace_kron_one_mul_diamondWitness_le [NeZero n]
   rw [trace_kron_one_mul_diamondWitness hσ (choiDiff_isHermitian K₁ K₂)]
   exact trace_posPart_contractedChoi_le_diamondDist hK₁ hK₂ ⟨hσ.posSemidef, hσ1⟩
 
+open scoped Matrix.Norms.L2Operator in
+/-- **Witness norm bounded by its partial-trace trace:** `‖W‖ ≤ Re tr(Tr₂ W)` for `W ⪰ 0`. Since
+`Tr₂ W` has the same trace as `W` (`trace_ptrace2`) and `‖W‖ ≤ traceNorm W = Re tr W` for PSD `W`
+(`l2opNorm_le_traceNorm_psd` + `traceNorm_posSemidef`). **This is the closedness lever for the
+achievable set `S = {Tr₂ W : W⪰0, W⪰C}`:** every witness for a given `M = Tr₂ W` has `‖W‖ ≤ Re tr M`
+(uniformly bounded), so a convergent `Mₖ → M` lifts to a bounded — hence subconvergent — witness
+sequence, giving `M ∈ S`. No recession-cone theory needed; the partial-trace trace identity bounds
+the witnesses automatically. -/
+theorem l2opNorm_le_re_trace_ptrace2 [NeZero n] {W : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ}
+    (hW : W.PosSemidef) : ‖W‖ ≤ (ptrace2 W).trace.re := by
+  haveI : Nonempty (Fin n × Fin n) :=
+    ⟨(⟨0, Nat.pos_of_ne_zero (NeZero.ne n)⟩, ⟨0, Nat.pos_of_ne_zero (NeZero.ne n)⟩)⟩
+  calc ‖W‖ ≤ traceNorm W := l2opNorm_le_traceNorm_psd hW
+    _ = (W.trace).re := traceNorm_posSemidef hW
+    _ = (ptrace2 W).trace.re := by rw [trace_ptrace2]
+
 end SKEFTHawking.QuantumNetwork
