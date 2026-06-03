@@ -901,4 +901,43 @@ theorem primalSDPValue_eq_diamondDist [NeZero n] {K₁ K₂ : Fin m → Matrix (
     primalSDPValue K₁ K₂ = diamondDist K₁ K₂ :=
   le_antisymm (primalSDPValue_le_diamondDist hK₁ hK₂) (diamondDist_le_primalSDPValue hK₁ hK₂)
 
+open scoped Kronecker in
+/-- `(√σ⁻¹⊗1)·(σ⊗1)·(√σ⁻¹⊗1) = 1` for PosDef `σ` (the `√σ`-cancellation, first-factor). -/
+theorem kron_sqrtInv_conj_kron_self [NeZero n] {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosDef) :
+    ((psdSqrt hσ.posSemidef)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+        * (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
+        * ((psdSqrt hσ.posSemidef)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) = 1 := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero (NeZero.ne n)⟩⟩
+  have hsdet : IsUnit (psdSqrt hσ.posSemidef).det :=
+    (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_psdSqrt _ hσ.isUnit)
+  set s := psdSqrt hσ.posSemidef with hs
+  have hss : s⁻¹ * σ * s⁻¹ = 1 := by
+    rw [← psdSqrt_mul_self hσ.posSemidef, ← hs,
+      show s⁻¹ * (s * s) * s⁻¹ = (s⁻¹ * s) * (s * s⁻¹) from by noncomm_ring,
+      Matrix.nonsing_inv_mul _ hsdet, Matrix.mul_nonsing_inv _ hsdet, Matrix.one_mul]
+  rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul, Matrix.mul_one, Matrix.one_mul, hss,
+    Matrix.one_kronecker_one]
+
+open scoped Kronecker in
+/-- **The witness objective against its own input: `tr((σ⊗1)·W*) = tr(M₊)`** for PosDef `σ`,
+`W* = diamondWitness = (√σ⁻¹⊗1)·M₊·(√σ⁻¹⊗1)`. By cyclicity `tr((σ⊗1)·W*) =
+tr((√σ⁻¹⊗1)(σ⊗1)(√σ⁻¹⊗1)·M₊) = tr(1·M₊) = tr(M₊)` (`kron_sqrtInv_conj_kron_self`). This is the
+saddle-value identity: paired with `trace_posPart_contractedChoi_le_diamondDist` it gives the optimal
+witness `W*` objective `tr((σ⊗1)·W*) ≤ diamondDist`, the reassembly value bound for the conic-Farkas
+direction (piece 2). -/
+theorem trace_kron_one_mul_diamondWitness [NeZero n] {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosDef)
+    {C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hC : C.IsHermitian) :
+    ((σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * diamondWitness hσ.posSemidef hC).trace
+      = (posPart (contractedChoi_isHermitian hσ.posSemidef hC)).trace := by
+  set B := (psdSqrt hσ.posSemidef)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) with hBdef
+  set Mp := posPart (contractedChoi_isHermitian hσ.posSemidef hC) with hMp
+  have hWdef : diamondWitness hσ.posSemidef hC = B * Mp * B := rfl
+  rw [hWdef]
+  rw [show (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * (B * Mp * B)
+      = (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * B * Mp * B from by noncomm_ring]
+  rw [Matrix.trace_mul_comm]
+  rw [show B * ((σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * B * Mp)
+      = (B * (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * B) * Mp from by noncomm_ring]
+  rw [hBdef, kron_sqrtInv_conj_kron_self hσ, Matrix.one_mul]
+
 end SKEFTHawking.QuantumNetwork
