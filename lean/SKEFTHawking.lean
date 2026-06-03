@@ -2688,6 +2688,7 @@ import SKEFTHawking.QuantumNetwork.DiamondBudget
 import SKEFTHawking.QuantumNetwork.DiamondNormWitness
 import SKEFTHawking.QuantumNetwork.FidelityDataProcessing
 import SKEFTHawking.QuantumNetwork.FidelityBlockForm
+import SKEFTHawking.QuantumNetwork.OpNormHolder
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
