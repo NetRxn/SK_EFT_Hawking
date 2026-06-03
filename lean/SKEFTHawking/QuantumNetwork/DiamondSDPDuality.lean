@@ -1,6 +1,7 @@
 import SKEFTHawking.QuantumNetwork.DiamondSDPCone
 import SKEFTHawking.QuantumNetwork.DiamondSDPAttainment
 import SKEFTHawking.QuantumNetwork.FidelityBounds
+import SKEFTHawking.QuantumNetwork.FidelityForwardBound
 import Mathlib.Analysis.Convex.Cone.InnerDual
 
 /-!
@@ -303,5 +304,45 @@ theorem diamondWitness_posSemidef {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.Po
     ((psdSqrt hσ)⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ))
   rw [hBh] at h
   exact h
+
+open scoped Kronecker in
+/-- **`W* ⪰ C`** — the witness is dual-feasible. With `M = contractedChoi = (√σ⊗1)C(√σ⊗1)` and
+`B = √σ⁻¹⊗1`, the cancellation `B·(√σ⊗1) = (√σ⊗1)·B = 1` (PosDef ⟹ `√σ` invertible) gives
+`C = B·M·B`, so `W* − C = B·(M₊ − M)·B = B·negPart(M)·B ⪰ 0`. Requires PosDef `σ`. -/
+theorem diamondWitness_sub_posSemidef [NeZero n] {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosDef)
+    {C : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hC : C.IsHermitian) :
+    (diamondWitness hσ.posSemidef hC - C).PosSemidef := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero (NeZero.ne n)⟩⟩
+  have hsdet : IsUnit (psdSqrt hσ.posSemidef).det :=
+    (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_psdSqrt _ hσ.isUnit)
+  set s := psdSqrt hσ.posSemidef with hs
+  set B := s⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) with hBdef
+  set A := s ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) with hAdef
+  have hBA : B * A = 1 := by
+    rw [hBdef, hAdef, ← Matrix.mul_kronecker_mul, Matrix.nonsing_inv_mul _ hsdet, Matrix.mul_one,
+      Matrix.one_kronecker_one]
+  have hAB : A * B = 1 := by
+    rw [hBdef, hAdef, ← Matrix.mul_kronecker_mul, Matrix.mul_nonsing_inv _ hsdet, Matrix.mul_one,
+      Matrix.one_kronecker_one]
+  have hWdef : diamondWitness hσ.posSemidef hC
+      = B * posPart (contractedChoi_isHermitian hσ.posSemidef hC) * B := rfl
+  have hMdef : contractedChoi hσ.posSemidef C = A * C * A := rfl
+  have hCeq : C = B * contractedChoi hσ.posSemidef C * B := by
+    rw [hMdef]
+    have h1 : B * (A * C * A) * B = B * A * C * (A * B) := by noncomm_ring
+    rw [h1, hBA, hAB, Matrix.one_mul, Matrix.mul_one]
+  have hsub : diamondWitness hσ.posSemidef hC - C
+      = B * negPart (contractedChoi_isHermitian hσ.posSemidef hC) * B := by
+    rw [hWdef]
+    have hneg : negPart (contractedChoi_isHermitian hσ.posSemidef hC)
+        = posPart (contractedChoi_isHermitian hσ.posSemidef hC) - contractedChoi hσ.posSemidef C :=
+      (posPart_sub_self_eq_negPart _).symm
+    rw [hneg, Matrix.mul_sub, Matrix.sub_mul, ← hCeq]
+  rw [hsub]
+  have hBh : Bᴴ = B := by
+    rw [hBdef, Matrix.conjTranspose_kronecker, Matrix.conjTranspose_one,
+      Matrix.conjTranspose_nonsing_inv, (psdSqrt_isHermitian hσ.posSemidef).eq]
+  have h := (negPart_posSemidef (contractedChoi_isHermitian hσ.posSemidef hC)).mul_mul_conjTranspose_same B
+  rwa [hBh] at h
 
 end SKEFTHawking.QuantumNetwork
