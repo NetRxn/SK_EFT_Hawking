@@ -73,4 +73,14 @@ theorem fidelityBlock_mixedUnitary_posSemidef {n : ℕ} (p : Fin n → ℝ) (U :
     rwa [Matrix.conjTranspose_conjTranspose] at h
   exact hconj.smul (by exact_mod_cast hp i)
 
+/-- **Schur-complement characterization of the fidelity block (brick 1).** When `σ` is positive
+*definite* (hence invertible), the fidelity block `[[ρ, X],[Xᴴ, σ]]` is PSD iff the Schur complement
+`ρ − X σ⁻¹ Xᴴ` is PSD. This is the entry point for the forward Alberti bound: it exhibits the feasible
+`X` as `X = √ρ · K · √σ` with `‖K‖ ≤ 1` (the contraction `K = ρ^{-1/2} X σ^{-1/2}` satisfies
+`KKᴴ = ρ^{-1/2}(X σ⁻¹ Xᴴ)ρ^{-1/2} ⪯ 1` exactly when the Schur complement is PSD). -/
+theorem fidelityBlock_posDef_schur {ρ X σ : Matrix ι ι ℂ} (hσ : σ.PosDef) :
+    (fidelityBlock ρ X σ).PosSemidef ↔ (ρ - X * σ⁻¹ * Xᴴ).PosSemidef := by
+  letI : Invertible σ := hσ.isUnit.invertible
+  exact Matrix.PosDef.fromBlocks₂₂ ρ X hσ
+
 end SKEFTHawking.QuantumNetwork
