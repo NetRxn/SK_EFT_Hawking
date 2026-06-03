@@ -446,4 +446,16 @@ theorem krausMap_tensorKraus_weighted_omega (K : Fin m → Matrix (Fin n) (Fin n
           * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ s) := by
   rw [krausMap_tensorKraus_conj_kron_one, krausMap_tensorKraus_omegaVec]
 
+open scoped Kronecker in
+/-- **Kronecker tensor-factor swap:** `(s ⊗ 1).submatrix swap swap = 1 ⊗ s`. Swapping both index
+factors of `s ⊗ 1` moves the operator to the other tensor slot. -/
+theorem kron_one_submatrix_prodComm (s : Matrix (Fin n) (Fin n) ℂ) :
+    (s ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)).submatrix (Equiv.prodComm (Fin n) (Fin n))
+        (Equiv.prodComm (Fin n) (Fin n))
+      = (1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ s := by
+  ext p q
+  simp only [Matrix.submatrix_apply, Equiv.prodComm_apply, Matrix.kroneckerMap_apply,
+    Matrix.one_apply, Prod.fst_swap, Prod.snd_swap]
+  ring
+
 end SKEFTHawking.QuantumNetwork
