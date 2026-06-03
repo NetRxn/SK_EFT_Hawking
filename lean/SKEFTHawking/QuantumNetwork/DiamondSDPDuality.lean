@@ -431,4 +431,19 @@ theorem krausMap_tensorKraus_conj_kron_one (K : Fin m → Matrix (Fin n) (Fin n)
           * ((K k ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * ρ * ((K k)ᴴ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)))
           * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ A) from by noncomm_ring]
 
+open scoped Kronecker in
+/-- **σ-weighted ω↔Choi identity** (Stage-5b): the stabilized output at the weighted
+maximally-entangled vector `(1⊗s)|Ω⟩` is the `(1⊗s)`-conjugated (swapped) Choi matrix.
+Composes the `(1⊗s)` pull-through with the shipped `krausMap_tensorKraus_omegaVec`. With `s = √σ`
+this is the purification-input output, whose trace norm equals `‖(√σ⊗1)C(√σ⊗1)‖₁ = ‖M‖₁`. -/
+theorem krausMap_tensorKraus_weighted_omega (K : Fin m → Matrix (Fin n) (Fin n) ℂ)
+    (s : Matrix (Fin n) (Fin n) ℂ) :
+    krausMap (tensorKraus K) (((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ s)
+        * (omegaVec n * (omegaVec n)ᴴ) * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ s))
+      = ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ s)
+          * (choiMatrix (krausMap K)).submatrix (Equiv.prodComm (Fin n) (Fin n))
+              (Equiv.prodComm (Fin n) (Fin n))
+          * ((1 : Matrix (Fin n) (Fin n) ℂ) ⊗ₖ s) := by
+  rw [krausMap_tensorKraus_conj_kron_one, krausMap_tensorKraus_omegaVec]
+
 end SKEFTHawking.QuantumNetwork
