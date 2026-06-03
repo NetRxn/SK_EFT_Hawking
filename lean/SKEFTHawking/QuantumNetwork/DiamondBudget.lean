@@ -16,7 +16,7 @@ no `maxHeartbeats`; no `native_decide`.
 namespace SKEFTHawking.QuantumNetwork
 
 open Matrix
-open scoped ComplexOrder
+open scoped ComplexOrder Kronecker
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι] {a b : ℕ}
 
@@ -49,5 +49,67 @@ theorem isKrausChannel_composeKraus {L : Fin b → Matrix ι ι ℂ} {K : Fin a 
       = (K i)ᴴ * ((L j)ᴴ * L j) * K i from fun j => by simp only [Matrix.mul_assoc]]
     rw [← Finset.sum_mul, ← Matrix.mul_sum, hL, Matrix.mul_one]
   rw [Finset.sum_comm]; simp_rw [hcol]; exact hK
+
+/-! ## Diamond data processing and the composition error budget -/
+
+section Diamond
+variable {n : ℕ}
+
+/-- Tensoring distributes over composition: `(L∘K)⊗id = (L⊗id)∘(K⊗id)`, since `(A⊗1)(B⊗1)=(AB)⊗1`. -/
+theorem tensorKraus_composeKraus (L : Fin b → Matrix (Fin n) (Fin n) ℂ)
+    (K : Fin a → Matrix (Fin n) (Fin n) ℂ) :
+    tensorKraus (composeKraus L K) = composeKraus (tensorKraus L) (tensorKraus K) := by
+  funext idx
+  simp only [tensorKraus, composeKraus]
+  rw [← Matrix.mul_kronecker_mul, Matrix.one_mul]
+
+/-- **Diamond data processing (pre-channel fixed).** Composing with a fixed CPTP channel `L` on the
+output contracts the diamond distance: `diamondDist(L∘K₁, L∘K₂) ≤ diamondDist(K₁, K₂)`. -/
+theorem diamondDist_composeKraus_left {L : Fin b → Matrix (Fin n) (Fin n) ℂ}
+    {K₁ K₂ : Fin a → Matrix (Fin n) (Fin n) ℂ}
+    (hL : IsKrausChannel L) (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂) :
+    diamondDist (composeKraus L K₁) (composeKraus L K₂) ≤ diamondDist K₁ K₂ := by
+  apply Real.sSup_le _ diamondDist_nonneg
+  rintro d ⟨ρ, hρ, rfl⟩
+  rw [tensorKraus_composeKraus, tensorKraus_composeKraus, krausMap_composeKraus,
+    krausMap_composeKraus]
+  calc _ ≤ traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₂) ρ) :=
+        traceDist_krausMap_le (isKrausChannel_tensorKraus hL)
+          (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₁) hρ).1.isHermitian
+          (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK₂) hρ).1.isHermitian
+    _ ≤ diamondDist K₁ K₂ := le_diamondDist hK₁ hK₂ hρ
+
+/-- **Diamond data processing (post-channel fixed).** Pre-composing with a fixed CPTP channel `K`
+contracts: `diamondDist(L₁∘K, L₂∘K) ≤ diamondDist(L₁, L₂)`. -/
+theorem diamondDist_composeKraus_right {L₁ L₂ : Fin b → Matrix (Fin n) (Fin n) ℂ}
+    {K : Fin a → Matrix (Fin n) (Fin n) ℂ}
+    (hL₁ : IsKrausChannel L₁) (hL₂ : IsKrausChannel L₂) (hK : IsKrausChannel K) :
+    diamondDist (composeKraus L₁ K) (composeKraus L₂ K) ≤ diamondDist L₁ L₂ := by
+  apply Real.sSup_le _ diamondDist_nonneg
+  rintro d ⟨ρ, hρ, rfl⟩
+  rw [tensorKraus_composeKraus, tensorKraus_composeKraus, krausMap_composeKraus,
+    krausMap_composeKraus]
+  exact le_diamondDist hL₁ hL₂ (krausMap_isDensityOperator (isKrausChannel_tensorKraus hK) hρ)
+
+/-- **Diamond sub-additivity under composition (the error budget for one stage):**
+`‖Φ_{L₁}∘Φ_{K₁} − Φ_{L₂}∘Φ_{K₂}‖_◇ ≤ ‖Φ_{L₁}−Φ_{L₂}‖_◇ + ‖Φ_{K₁}−Φ_{K₂}‖_◇`. Triangle plus the two
+data-processing inequalities; iterating gives the N-segment worst-case error budget
+`total ≤ ∑ per-segment diamond errors`. -/
+theorem diamondDist_composeKraus_le {L₁ L₂ : Fin b → Matrix (Fin n) (Fin n) ℂ}
+    {K₁ K₂ : Fin a → Matrix (Fin n) (Fin n) ℂ}
+    (hL₁ : IsKrausChannel L₁) (hL₂ : IsKrausChannel L₂) (hK₁ : IsKrausChannel K₁)
+    (hK₂ : IsKrausChannel K₂) :
+    diamondDist (composeKraus L₁ K₁) (composeKraus L₂ K₂)
+      ≤ diamondDist L₁ L₂ + diamondDist K₁ K₂ :=
+  calc diamondDist (composeKraus L₁ K₁) (composeKraus L₂ K₂)
+      ≤ diamondDist (composeKraus L₁ K₁) (composeKraus L₂ K₁)
+        + diamondDist (composeKraus L₂ K₁) (composeKraus L₂ K₂) :=
+        diamondDist_triangle (isKrausChannel_composeKraus hL₁ hK₁)
+          (isKrausChannel_composeKraus hL₂ hK₁) (isKrausChannel_composeKraus hL₂ hK₂)
+    _ ≤ diamondDist L₁ L₂ + diamondDist K₁ K₂ :=
+        add_le_add (diamondDist_composeKraus_right hL₁ hL₂ hK₁)
+          (diamondDist_composeKraus_left hL₂ hK₁ hK₂)
+
+end Diamond
 
 end SKEFTHawking.QuantumNetwork
