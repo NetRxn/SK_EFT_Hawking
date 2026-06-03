@@ -90,4 +90,34 @@ theorem convex_psdSet : Convex ℝ {A : HermCarrier ι | A.toSA.1.PosSemidef} :=
 
 end HermCarrier
 
+open scoped Matrix.Norms.L2Operator
+
+/-- **Primal value as a Choi pairing.** For ANY input density `ρ`, the output trace distance equals
+the real-trace pairing of the Choi difference `C` with the contraction of the optimal output
+projector `P = posProj T` (`T` = output difference): `traceDist(Φ₁ρ, Φ₂ρ) = Re tr(C · M(P,ρ))`.
+This is the head of the weak-duality chain (`diamondDist_le_dual_witness`) extracted as a reusable
+identity — the bridge from the diamond distance to the Choi/`choiContraction` quantities the
+strong-duality separation argument pairs against. -/
+theorem traceDist_eq_re_trace_choiContraction_posProj {m n : ℕ} [NeZero n]
+    {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    (ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ)
+    (hTh : (krausMap (tensorKraus K₁) ρ - krausMap (tensorKraus K₂) ρ).IsHermitian) :
+    traceDist (krausMap (tensorKraus K₁) ρ) (krausMap (tensorKraus K₂) ρ)
+      = ((choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) *
+          choiContraction (posProj hTh) ρ).trace.re := by
+  have hT0 : (krausMap (tensorKraus K₁) ρ - krausMap (tensorKraus K₂) ρ).trace.re = 0 := by
+    rw [Matrix.trace_sub, trace_krausMap (isKrausChannel_tensorKraus hK₁),
+      trace_krausMap (isKrausChannel_tensorKraus hK₂), sub_self, Complex.zero_re]
+  have hchain : eigPosSum hTh
+      = ((choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) *
+          choiContraction (posProj hTh) ρ).trace.re := by
+    rw [eigPosSum_eq_re_trace_posProj]
+    show (((posProj hTh) *
+        (krausMap (tensorKraus K₁) ρ - krausMap (tensorKraus K₂) ρ)).trace).re = _
+    rw [trace_mul_krausMap_sub]
+  unfold traceDist
+  rw [traceNorm_hermitian_eq hTh, hT0, sub_zero,
+    show (1 : ℝ) / 2 * (2 * eigPosSum hTh) = eigPosSum hTh by ring]
+  exact hchain
+
 end SKEFTHawking.QuantumNetwork
