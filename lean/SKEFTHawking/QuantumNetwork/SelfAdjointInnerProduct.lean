@@ -6,8 +6,9 @@ import Mathlib.Analysis.Matrix.Order
 # Real Frobenius inner product on self-adjoint matrices (Phase 6AI — diamond-SDP linchpin, brick 1)
 
 The single object the diamond-norm SDP strong-duality argument is gated on: a genuine real
-`InnerProductSpace ℝ` on the self-adjoint matrices `selfAdjoint (Matrix (Fin d) (Fin d) ℂ)`, with the
-Frobenius / Hilbert–Schmidt inner product `⟪A, B⟫ = Re tr(A·B)` (real because `A,B` are Hermitian).
+`InnerProductSpace ℝ` on the self-adjoint matrices `selfAdjoint (Matrix ι ι ℂ)` (any finite index
+type `ι` — in particular the doubled space `Fin n × Fin n` where the diamond-SDP cone program lives),
+with the Frobenius / Hilbert–Schmidt inner product `⟪A, B⟫ = Re tr(A·B)` (real because `A,B` Hermitian).
 Mathlib's matrix inner products are `𝕜`-valued and PSD-weighted, so this is built from
 `InnerProductSpace.ofCore`. With this instance the cone-duality engine
 (`ProperCone.hyperplane_separation`, `geometric_hahn_banach_compact_closed`) applies to the
@@ -22,13 +23,13 @@ namespace SKEFTHawking.QuantumNetwork
 open Matrix
 open scoped ComplexOrder
 
-variable {d : ℕ}
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The real Frobenius inner-product core on self-adjoint complex matrices: `⟪A,B⟫ = Re tr(A·B)`.
 Symmetry is trace cyclicity; positivity/definiteness come from `Aᴴ A ⪰ 0` and
 `tr(AᴴA) = 0 ↔ A = 0`. -/
 noncomputable instance selfAdjointCore :
-    InnerProductSpace.Core ℝ (selfAdjoint (Matrix (Fin d) (Fin d) ℂ)) where
+    InnerProductSpace.Core ℝ (selfAdjoint (Matrix ι ι ℂ)) where
   inner A B := ((A.1 * B.1).trace).re
   conj_inner_symm A B := by simp only [RCLike.conj_to_real]; rw [Matrix.trace_mul_comm]
   re_inner_nonneg A := by
@@ -49,16 +50,16 @@ noncomputable instance selfAdjointCore :
 
 /-- The norm induced by the Frobenius inner product on self-adjoint matrices. -/
 noncomputable instance selfAdjointNormedAddCommGroup :
-    NormedAddCommGroup (selfAdjoint (Matrix (Fin d) (Fin d) ℂ)) :=
-  (selfAdjointCore (d := d)).toNormedAddCommGroup
+    NormedAddCommGroup (selfAdjoint (Matrix ι ι ℂ)) :=
+  (selfAdjointCore (ι := ι)).toNormedAddCommGroup
 
 /-- **The real Frobenius `InnerProductSpace ℝ` on self-adjoint matrices** (the 6AI linchpin). -/
 noncomputable instance selfAdjointInnerProductSpace :
-    InnerProductSpace ℝ (selfAdjoint (Matrix (Fin d) (Fin d) ℂ)) :=
+    InnerProductSpace ℝ (selfAdjoint (Matrix ι ι ℂ)) :=
   InnerProductSpace.ofCore inferInstance
 
 /-- The inner product unfolds to the real part of the trace of the product: `⟪A,B⟫ = Re tr(A·B)`. -/
-theorem selfAdjoint_inner_eq (A B : selfAdjoint (Matrix (Fin d) (Fin d) ℂ)) :
+theorem selfAdjoint_inner_eq (A B : selfAdjoint (Matrix ι ι ℂ)) :
     (inner ℝ A B : ℝ) = ((A.1 * B.1).trace).re := rfl
 
 end SKEFTHawking.QuantumNetwork
