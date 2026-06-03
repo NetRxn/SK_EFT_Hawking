@@ -268,3 +268,22 @@ The headline closes by EXPLICIT optimal-witness construction:
 - **⚠️ The earlier naive dual-Farkas route is a confirmed DEAD-END (reproves only weak duality) — STRUCK.**
   S3 alone does NOT close the headline; the witness (S4+S5) is the headline-critical core (via the
   shipped conditional `diamondDist_eq_choiSDP_of_witness`).
+
+## OUTCOME UPDATE 3 (2026-06-03) — CORRECTED W* derived (DR formula was wrong); substrate shipped
+Working the DR "verify-by-calc, do not cite" caveat: the DR's `W* = (√σ⊗1)Π*CΠ*(√σ⊗1)` is WRONG
+(fails `W*⪰C`). **Derived correct form** (for PosDef `σ`, `M := contractedChoi = (√σ⊗1)C(√σ⊗1)`,
+Jordan–Hahn `M = M₊ − M₋`):
+```
+    W* = (√σ⁻¹ ⊗ 1) · M₊ · (√σ⁻¹ ⊗ 1)        [M₊ = posPart M ; note σ⁻¹, NOT √σ]
+```
+- `W*⪰0`: conjugation of PSD `M₊` by Hermitian `(√σ⁻¹⊗1)` (`PosSemidef.mul_mul_conjTranspose_same`).
+- `W*⪰C`: since `C = (√σ⁻¹⊗1)·M·(√σ⁻¹⊗1)` (from `M=(√σ⊗1)C(√σ⊗1)` + `(√σ⁻¹⊗1)(√σ⊗1)=1`),
+  `W*−C = (√σ⁻¹⊗1)·(M₊−M)·(√σ⁻¹⊗1) = (√σ⁻¹⊗1)·M₋·(√σ⁻¹⊗1) ⪰ 0` (`posPart_sub_self_eq_negPart`).
+- `‖Tr₂W*‖ ≤ diamondDist` (S5, hardest): `Tr₂W* = √σ⁻¹·(Tr₂ M₊)·√σ⁻¹`; bound via `tr(σ·Tr₂W*) =
+  tr(M₊) = diamondDist` (CS3) + the operator-norm-from-trace step.
+SHIPPED substrate: `contractedChoi` + `contractedChoi_isHermitian` (`a5648909`); `Π* := posProj
+(contractedChoi_isHermitian …)`. NEEDS: σ PosDef ⟹ `psdSqrt` is a unit (`isUnit_psdSqrt`) for `√σ⁻¹`;
+the `(√σ⁻¹⊗1)(√σ⊗1)=1` cancellation; then `W*⪰0`/`W*⪰C` are short. ⚠️ σ non-invertible (DR D4) needs
+a `+ε·1` limiting argument or the pure-input reduction — the remaining wrinkle. CONVENTION: our
+`diamondDist` sups over doubled-space ρ; `σ` is the single-factor input — the ρ↔σ bridge
+(pure-input-suffices, Watrous Thm 3.53) is the other prerequisite for the S5 diamondDist connection.
