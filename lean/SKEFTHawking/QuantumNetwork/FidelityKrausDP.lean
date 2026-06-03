@@ -75,4 +75,59 @@ theorem sqrtFidelity_krausMap_ge {K : Fin m → Matrix ι ι ℂ} {ρ σ : Matri
   have hbound := re_trace_block_le_sqrtFidelity hΦρ hΦσ hΦblock
   rwa [show (krausMap K X).trace.re = X.trace.re from by rw [trace_krausMap hK], hXtr] at hbound
 
+/-! ## Joint concavity of the (root) fidelity
+
+`(ρ,σ) ↦ F(ρ,σ)` is jointly concave — a direct consequence of the Alberti variational form
+`F = max{Re tr X : block PSD}`: the convex combination of the two optimal witnesses is feasible for
+the combined pair (the combined block is a nonneg-weighted sum of PSD blocks), and `Re tr` of it is
+the convex combination of the optimal values. -/
+
+omit [Fintype ι] [DecidableEq ι] [Nonempty ι] in
+/-- Real-bilinear combination of two fidelity blocks: `a•[[ρ₁,X₁,σ₁]] + b•[[ρ₂,X₂,σ₂]]` is the
+fidelity block of the entrywise `a,b`-combinations (real scalars commute with the off-diagonal `ᴴ`). -/
+theorem fidelityBlock_smul_add_smul (a b : ℝ) (ρ₁ X₁ σ₁ ρ₂ X₂ σ₂ : Matrix ι ι ℂ) :
+    (a : ℂ) • fidelityBlock ρ₁ X₁ σ₁ + (b : ℂ) • fidelityBlock ρ₂ X₂ σ₂
+      = fidelityBlock ((a : ℂ) • ρ₁ + (b : ℂ) • ρ₂) ((a : ℂ) • X₁ + (b : ℂ) • X₂)
+          ((a : ℂ) • σ₁ + (b : ℂ) • σ₂) := by
+  have hX : ((a : ℂ) • X₁ + (b : ℂ) • X₂)ᴴ = (a : ℂ) • X₁ᴴ + (b : ℂ) • X₂ᴴ := by
+    rw [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_smul]; simp
+  unfold fidelityBlock
+  rw [hX, Matrix.fromBlocks_smul, Matrix.fromBlocks_smul, ← Matrix.fromBlocks_add]
+
+omit [Fintype ι] [DecidableEq ι] [Nonempty ι] in
+/-- A convex combination of positive-definite matrices is positive definite (`t ∈ [0,1]`). -/
+theorem posDef_convex {A B : Matrix ι ι ℂ} (hA : A.PosDef) (hB : B.PosDef) {t : ℝ}
+    (ht0 : 0 ≤ t) (ht1 : t ≤ 1) : ((t : ℂ) • A + ((1 - t : ℝ) : ℂ) • B).PosDef := by
+  rcases eq_or_lt_of_le ht0 with h0 | h0
+  · rw [← h0]; simpa using hB
+  · refine (Matrix.PosDef.smul hA (by exact_mod_cast h0)).add_posSemidef ?_
+    exact hB.posSemidef.smul (by exact_mod_cast (sub_nonneg.mpr ht1))
+
+/-- **Joint concavity of the root fidelity.** For positive-definite `ρ₁,σ₁,ρ₂,σ₂` and `t ∈ [0,1]`,
+`t·F(ρ₁,σ₁) + (1−t)·F(ρ₂,σ₂) ≤ F(t·ρ₁+(1−t)·ρ₂, t·σ₁+(1−t)·σ₂)`. The optimal Alberti witnesses
+`X₁, X₂` combine to a feasible witness `t·X₁+(1−t)·X₂` for the convex-combined pair, whose `Re tr`
+equals `t·F₁+(1−t)·F₂`; the forward bound at the combined pair closes it. -/
+theorem sqrtFidelity_jointly_concave {ρ₁ σ₁ ρ₂ σ₂ : Matrix ι ι ℂ}
+    (hρ₁ : ρ₁.PosDef) (hσ₁ : σ₁.PosDef) (hρ₂ : ρ₂.PosDef) (hσ₂ : σ₂.PosDef)
+    {t : ℝ} (ht0 : 0 ≤ t) (ht1 : t ≤ 1) :
+    t * sqrtFidelity hρ₁.posSemidef hσ₁.posSemidef
+        + (1 - t) * sqrtFidelity hρ₂.posSemidef hσ₂.posSemidef
+      ≤ sqrtFidelity (posDef_convex hρ₁ hρ₂ ht0 ht1).posSemidef
+          (posDef_convex hσ₁ hσ₂ ht0 ht1).posSemidef := by
+  obtain ⟨X₁, hX₁b, hX₁t⟩ := exists_block_re_trace_eq_sqrtFidelity hρ₁ hσ₁
+  obtain ⟨X₂, hX₂b, hX₂t⟩ := exists_block_re_trace_eq_sqrtFidelity hρ₂ hσ₂
+  have hblock : (fidelityBlock ((t : ℂ) • ρ₁ + ((1 - t : ℝ) : ℂ) • ρ₂)
+      ((t : ℂ) • X₁ + ((1 - t : ℝ) : ℂ) • X₂)
+      ((t : ℂ) • σ₁ + ((1 - t : ℝ) : ℂ) • σ₂)).PosSemidef := by
+    rw [← fidelityBlock_smul_add_smul]
+    exact (hX₁b.smul (by exact_mod_cast ht0)).add
+      (hX₂b.smul (by exact_mod_cast (sub_nonneg.mpr ht1)))
+  have hbound := re_trace_block_le_sqrtFidelity (posDef_convex hρ₁ hρ₂ ht0 ht1)
+    (posDef_convex hσ₁ hσ₂ ht0 ht1) hblock
+  have htr : ((t : ℂ) • X₁ + ((1 - t : ℝ) : ℂ) • X₂).trace.re
+      = t * X₁.trace.re + (1 - t) * X₂.trace.re := by
+    rw [Matrix.trace_add, Matrix.trace_smul, Matrix.trace_smul]; simp [Complex.add_re, smul_eq_mul]
+  rw [htr, hX₁t, hX₂t] at hbound
+  exact hbound
+
 end SKEFTHawking.QuantumNetwork
