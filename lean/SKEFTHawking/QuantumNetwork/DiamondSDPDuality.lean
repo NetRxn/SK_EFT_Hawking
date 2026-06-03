@@ -567,4 +567,34 @@ theorem ptrace2_diamondWitness {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosSe
       = (psdSqrt hσ)⁻¹ * ptrace2 (posPart (contractedChoi_isHermitian hσ hC)) * (psdSqrt hσ)⁻¹ := by
   rw [diamondWitness, ptrace2_kron_one_conj]
 
+open scoped Matrix.Norms.L2Operator in
+/-- **Operator norm from a Loewner bound:** for PSD `A` with `A ⪯ c·1` (`c ≥ 0`), `‖A‖ ≤ c`.
+Proof avoids eigenvalue extraction and cfc-commuting: `c²·1 − A² = c·(c·1−A) + √A·(c·1−A)·√A`, a sum
+of two PSD operators (the second is `(c·1−A)` conjugated by the Hermitian `√A`, using
+`√A·A·√A = A²`), then `opNorm_le_of_mul_conjTranspose_le_sq`. -/
+theorem l2opNorm_le_of_loewner {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {A : Matrix ι ι ℂ} {c : ℝ} (hc : 0 ≤ c) (hA : A.PosSemidef)
+    (hle : ((c : ℂ) • (1 : Matrix ι ι ℂ) - A).PosSemidef) : ‖A‖ ≤ c := by
+  apply opNorm_le_of_mul_conjTranspose_le_sq hc
+  rw [hA.isHermitian.eq]
+  have hcc : (0 : ℂ) ≤ (c : ℂ) := by rw [Complex.zero_le_real]; exact hc
+  have hsqA : psdSqrt hA * A * psdSqrt hA = A * A := by
+    have h1 : psdSqrt hA * A * psdSqrt hA
+        = psdSqrt hA * (psdSqrt hA * psdSqrt hA) * psdSqrt hA := by rw [psdSqrt_mul_self hA]
+    have h2 : psdSqrt hA * (psdSqrt hA * psdSqrt hA) * psdSqrt hA
+        = (psdSqrt hA * psdSqrt hA) * (psdSqrt hA * psdSqrt hA) := by noncomm_ring
+    rw [h1, h2]; simp only [psdSqrt_mul_self hA]
+  have hP2 : (psdSqrt hA * ((c : ℂ) • (1 : Matrix ι ι ℂ) - A) * psdSqrt hA).PosSemidef := by
+    have h := hle.mul_mul_conjTranspose_same (psdSqrt hA)
+    rwa [(psdSqrt_isHermitian hA).eq] at h
+  have hsum : ((c : ℂ) ^ 2) • (1 : Matrix ι ι ℂ) - A * A
+      = (c : ℂ) • ((c : ℂ) • (1 : Matrix ι ι ℂ) - A)
+        + psdSqrt hA * ((c : ℂ) • (1 : Matrix ι ι ℂ) - A) * psdSqrt hA := by
+    have e2 : psdSqrt hA * ((c : ℂ) • (1 : Matrix ι ι ℂ) - A) * psdSqrt hA
+        = (c : ℂ) • A - A * A := by
+      rw [Matrix.mul_sub, Matrix.sub_mul, hsqA, mul_smul_comm, smul_mul_assoc, Matrix.mul_one,
+        psdSqrt_mul_self hA]
+    rw [e2, smul_sub, smul_smul, sq]; abel
+  rw [hsum]; exact (hle.smul hcc).add hP2
+
 end SKEFTHawking.QuantumNetwork
