@@ -713,4 +713,62 @@ theorem re_trace_mul_le_trace_posPart {ι : Type*} [Fintype ι] [DecidableEq ι]
   rw [hsplit, Matrix.trace_sub, Complex.sub_re]
   linarith
 
+open scoped Kronecker Matrix.Norms.L2Operator in
+/-- **SDP-primal per-point bound at a PosDef input (piece 3, core).** For a positive-DEFINITE density
+`σ` and SDP-feasible `X` (`X ⪰ 0`, `σ⊗1 − X ⪰ 0`), `Re tr(C·X) ≤ diamondDist` (`C = J(Φ₁)−J(Φ₂)`).
+Conjugating by `√σ⁻¹⊗1` writes `X = (√σ⊗1)·Q′·(√σ⊗1)` with `0 ⪯ Q′ ⪯ 1`
+(`Q′ = (√σ⁻¹⊗1)·X·(√σ⁻¹⊗1)`, and `(√σ⁻¹⊗1)(σ⊗1)(√σ⁻¹⊗1) = 1`), so by trace-cyclicity
+`Re tr(C·X) = Re tr(M(σ)·Q′) ≤ tr(M(σ)₊)` (Helstrom bound) `≤ diamondDist` (shipped
+`trace_posPart_contractedChoi_le_diamondDist`). -/
+theorem re_trace_choiDiff_mul_le_diamondDist_of_posDef [NeZero n]
+    {K₁ K₂ : Fin m → Matrix (Fin n) (Fin n) ℂ} (hK₁ : IsKrausChannel K₁) (hK₂ : IsKrausChannel K₂)
+    {σ : Matrix (Fin n) (Fin n) ℂ} (hσ : σ.PosDef) (hσ1 : σ.trace = 1)
+    {X : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ} (hX : X.PosSemidef)
+    (hle : (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) - X).PosSemidef) :
+    ((choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂)) * X).trace.re ≤ diamondDist K₁ K₂ := by
+  haveI : Nonempty (Fin n) := ⟨⟨0, Nat.pos_of_ne_zero (NeZero.ne n)⟩⟩
+  set C := choiMatrix (krausMap K₁) - choiMatrix (krausMap K₂) with hCdef
+  have hC : C.IsHermitian := choiDiff_isHermitian K₁ K₂
+  have hsdet : IsUnit (psdSqrt hσ.posSemidef).det :=
+    (Matrix.isUnit_iff_isUnit_det _).mp (isUnit_psdSqrt _ hσ.isUnit)
+  set s := psdSqrt hσ.posSemidef with hs
+  set B := s⁻¹ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) with hBdef
+  set A := s ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ) with hAdef
+  have hBA : B * A = 1 := by
+    rw [hBdef, hAdef, ← Matrix.mul_kronecker_mul, Matrix.nonsing_inv_mul _ hsdet, Matrix.mul_one,
+      Matrix.one_kronecker_one]
+  have hAB : A * B = 1 := by
+    rw [hBdef, hAdef, ← Matrix.mul_kronecker_mul, Matrix.mul_nonsing_inv _ hsdet, Matrix.mul_one,
+      Matrix.one_kronecker_one]
+  have hBh : Bᴴ = B := by
+    rw [hBdef, Matrix.conjTranspose_kronecker, Matrix.conjTranspose_one,
+      Matrix.conjTranspose_nonsing_inv, (psdSqrt_isHermitian hσ.posSemidef).eq]
+  set Q' := B * X * B with hQ'def
+  have hQ'psd : Q'.PosSemidef := by
+    have h := hX.mul_mul_conjTranspose_same B; rwa [hBh] at h
+  have hBσB : B * (σ ⊗ₖ (1 : Matrix (Fin n) (Fin n) ℂ)) * B = 1 := by
+    have hss : s⁻¹ * σ * s⁻¹ = 1 := by
+      rw [← psdSqrt_mul_self hσ.posSemidef, ← hs,
+        show s⁻¹ * (s * s) * s⁻¹ = (s⁻¹ * s) * (s * s⁻¹) from by noncomm_ring,
+        Matrix.nonsing_inv_mul _ hsdet, Matrix.mul_nonsing_inv _ hsdet, Matrix.one_mul]
+    rw [hBdef, ← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul, Matrix.mul_one,
+      Matrix.one_mul, hss, Matrix.one_kronecker_one]
+  have hQ'1 : ((1 : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) - Q').PosSemidef := by
+    have h := hle.mul_mul_conjTranspose_same B
+    rw [hBh, Matrix.mul_sub, Matrix.sub_mul, hBσB] at h
+    rwa [← hQ'def] at h
+  have hACA : A * C * A = contractedChoi hσ.posSemidef C := by rw [hAdef, hs]; rfl
+  have hXeq : X = A * Q' * A := by
+    rw [hQ'def, show A * (B * X * B) * A = (A * B) * X * (B * A) from by noncomm_ring, hAB, hBA,
+      Matrix.one_mul, Matrix.mul_one]
+  have htr : (C * X).trace = (contractedChoi hσ.posSemidef C * Q').trace := by
+    rw [hXeq, show C * (A * Q' * A) = (C * A * Q') * A from by noncomm_ring, Matrix.trace_mul_comm,
+      show A * (C * A * Q') = (A * C * A) * Q' from by noncomm_ring, hACA]
+  rw [htr]
+  calc (contractedChoi hσ.posSemidef C * Q').trace.re
+      ≤ (posPart (contractedChoi_isHermitian hσ.posSemidef hC)).trace.re :=
+        re_trace_mul_le_trace_posPart (contractedChoi_isHermitian hσ.posSemidef hC) hQ'psd hQ'1
+    _ ≤ diamondDist K₁ K₂ :=
+        trace_posPart_contractedChoi_le_diamondDist hK₁ hK₂ ⟨hσ.posSemidef, hσ1⟩
+
 end SKEFTHawking.QuantumNetwork
