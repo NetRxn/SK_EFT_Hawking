@@ -1,6 +1,7 @@
 import SKEFTHawking.QuantumNetwork.GateFidelity
 import SKEFTHawking.QuantumNetwork.GateFidelityBridge
 import SKEFTHawking.QuantumNetwork.DiamondNormChoi
+import SKEFTHawking.QuantumNetwork.NamedChannelDiamondExact
 
 /-!
 # RB-fidelity → entanglement-fidelity → diamond certificate (Phase 6AH, Wave 6AH.1)
@@ -218,5 +219,39 @@ theorem sqrtFidelity_output_eq {K : Fin m → Matrix (Fin n) (Fin n) ℂ} [NeZer
   rw [hre, ← Real.sqrt_mul (by positivity)]
   congr 1
   field_simp
+
+/-! ## The bench-data → worst-case certificate -/
+
+/-- The identity channel `idKrausPad` tensored with `id` fixes the maximally-entangled state. -/
+theorem krausMap_tensorKraus_idKrausPad (j n : ℕ)
+    (ρ : Matrix (Fin n × Fin n) (Fin n × Fin n) ℂ) :
+    krausMap (tensorKraus (idKrausPad j n)) ρ = ρ := by
+  unfold krausMap tensorKraus idKrausPad
+  rw [Finset.sum_eq_single (0 : Fin (j + 1)) (fun b _ hb => by simp [hb]) (by simp)]; simp
+
+/-- Root fidelity depends only on the matrices, not the positive-semidefinite proofs. -/
+theorem sqrtFidelity_congr {ι : Type*} [Fintype ι] [DecidableEq ι] {ρ σ σ' : Matrix ι ι ℂ}
+    (hρ : ρ.PosSemidef) (hσ : σ.PosSemidef) (hσ' : σ'.PosSemidef) (h : σ = σ') :
+    sqrtFidelity hρ hσ = sqrtFidelity hρ hσ' := by subst h; rfl
+
+/-- **Average-fidelity → worst-case diamond bound.** For a CPTP channel `Φ` on an `n`-dimensional
+system, its average gate fidelity bounds the diamond distance to the identity below:
+`diamondDist(Φ, id) ≥ 1 − √(((n+1)·F_avg(Φ) − 1)/n)`. Composes the Horodecki identity
+(`avgGateFidelity_eq`, inverted to `F_e = ((n+1)·F_avg − 1)/n`), the entanglement-fidelity↔Choi-overlap
+identity (`sqrtFidelity_output_eq`, `√F((Φ⊗id)Ω,Ω) = √F_e`), and the Fuchs–van de Graaf↔diamond bridge
+at the maximally-entangled input. The averaged benchmark certifies a worst-case error guarantee. -/
+theorem avgGateFidelity_diamondDist_bound {m n : ℕ} [NeZero n]
+    {K : Fin (m + 1) → Matrix (Fin n) (Fin n) ℂ} (hK : IsKrausChannel K) :
+    1 - Real.sqrt (((n + 1) * avgGateFidelity K - 1) / n) ≤ diamondDist K (idKrausPad m n) := by
+  have hbridge := one_sub_sqrtFidelity_output_le_diamondDist hK (isKrausChannel_idKrausPad m n)
+    (isDensityOperator_maxEntangled (n := n))
+  rw [sqrtFidelity_congr _ _ isDensityOperator_maxEntangled.1
+      (krausMap_tensorKraus_idKrausPad m n _),
+    sqrtFidelity_output_eq hK] at hbridge
+  have hinv : entanglementFidelity K = ((n + 1) * avgGateFidelity K - 1) / n := by
+    have he := avgGateFidelity_eq K hK
+    have hn : (n : ℝ) ≠ 0 := Nat.cast_ne_zero.2 (NeZero.ne n)
+    field_simp at he ⊢; linarith [he]
+  rw [← hinv]; exact hbridge
 
 end SKEFTHawking.QuantumNetwork
