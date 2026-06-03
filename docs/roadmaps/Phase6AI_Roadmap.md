@@ -1,8 +1,16 @@
-# Phase 6AI — Strong-duality SDP equality for the diamond norm (MOONSHOT D, public)
+# Phase 6AI — Constructive diamond-norm optimal witness (MOONSHOT D, public)
 
-**Status:** PLANNED (opened 2026-06-02). Public-only. The arc's last analytic frontier: prove the
-**primal = dual** equality for the diamond distance, closing the Watrous SDP characterization that
-6AF/6AG left as the sole documented-deferred item.
+**Status:** PLANNED (opened 2026-06-02). Public-only. The arc's last analytic frontier — but
+**reframed**: the primary target is a *constructive* optimal-witness extractor, not the abstract
+`diamondDist = dual-optimum` equality.
+
+**Why constructive, not abstract.** The directly-useful object is: *given any channel pair, produce
+the dual witness `W*` that achieves the diamond distance* (so the exact value is `‖Tr₂ W*‖_∞` for an
+explicit `W*`). This is strictly better than the abstract equality on BOTH axes — (i) more reachable,
+because it sidesteps general conic duality entirely (it's an explicit construction + the already-shipped
+weak-dual bound, not a Slater/minimax/Fenchel argument), and (ii) more usable, because a downstream
+numeric routine can run the construction and the Lean theorem backs the exact value. The abstract
+equality `diamondDist_eq_choiSDP` then follows as a corollary (an attained witness ⟹ primal=dual).
 
 **The fence we are attacking.** 6AF/6AG proved BOTH one-sided bounds of the Watrous Choi sandwich and
 the weak-dual witness bound `diamondDist_le_dual_witness` (any feasible dual witness ⟹ upper bound).

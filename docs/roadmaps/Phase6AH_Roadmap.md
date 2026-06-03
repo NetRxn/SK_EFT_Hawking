@@ -1,103 +1,105 @@
 # Phase 6AH — Operational-layer strengthening & consolidation (public)
 
 **Status:** ACTIVE (opened 2026-06-02). Public-only (`SKEFTHawking.QuantumNetwork.*`). Follows the
-6AA→6AG QuantumNetwork certification arc. This phase ships the high-certainty *additive* value and
-closes the two rigor gaps surfaced by the cross-phase adversarial Stage-13 sweep. The two genuine
-analytic frontiers (strong-duality SDP equality; fidelity-domain data processing) are scoped as their
-own full phases **6AI** and **6AJ**.
+6AA→6AG QuantumNetwork certification arc. This phase ships high-certainty *additive* channel-distance
+and fidelity substrate and closes the two rigor gaps surfaced by the cross-phase adversarial Stage-13
+sweep. The two deeper analytic frontiers (constructive diamond-SDP optimal witness; fidelity-domain
+data processing) are their own full phases **6AI** and **6AJ**.
 
-**IP boundary:** everything here is public substrate. Where a result is meant for a downstream
-private consumer (Vector M certification oracle), we ship it public and *recommend* the private side
-consume it by FQN — we never scope private dev into this phase.
+**Hygiene / leak-discipline:** this is pure QI / measure-theory substrate. All theorems are neutral
+mathematical objects (channel-distance bounds, fidelity identities, duality). Docstrings and naming
+stay neutral pure-math — no product/positioning prose. Downstream consumers reference results by FQN;
+the public side does not name or describe any downstream application.
 
 **Invariants (hard):** kernel-pure `{propext, Classical.choice, Quot.sound}`; no new project-local
 axiom (user sign-off required for any); no `sorry`/`maxHeartbeats`/`native_decide`. Each wave's
 headline committed on main (not pushed); counts regenerated; D6/preprint prose kept in sync;
 preemptive-strengthening checklist applied per theorem.
 
----
-
-## Wave 6AH.1 — RB-fidelity → entanglement-fidelity → diamond certificate (item A) 🎯 HIGHEST VALUE
-
-**Goal:** compose the three separately-shipped pieces into ONE public theorem: *a measured average
-gate fidelity (e.g. from randomized benchmarking) certifies a worst-case diamond distance to the
-ideal channel.* This is the bench-data→worst-case bridge as a single object — the piece the private
-Vector M oracle is about to build around; shipping it public lets the private side consume it by FQN.
-
-**Chain:** `avgGateFidelity_eq` (6AG) ⟹ invert to `F_e = ((d+1)·F_avg − 1)/d`; then
-`entanglementFidelity` (Kraus-trace form) = the maximally-entangled overlap `⟨Ω|(Φ⊗id)Ω|Ω⟩`
-= `sqrtFidelity((Φ⊗id)Ω, Ω)²` (since `Ω` is pure); then the bridge
-`one_sub_sqrtFidelity_output_le_diamondDist` at `ρ = maxEntangled` gives
-`1 − √F_e ≤ diamondDist(Φ, id)`. Substituting F_e yields the certificate.
-
-**Bricks (each kernel-pure, committed, root-imported):**
-1. **`entanglementFidelity_eq_maxEntangled_overlap`** — `entanglementFidelity K = ⟨Ω|(Φ⊗id)Ω|Ω⟩`
-   (the Kraus-trace `(1/d²)∑|tr Kₖ|²` equals the maximally-entangled Choi overlap). Uses the noted-but-
-   unshipped identity `(Φ⊗id)Ω = (1/n)·choiMatrix(Φ)` (`DiamondNorm.lean:135`) + `tensorKraus`.
-2. **`maxEntangled_overlap_eq_sqrtFidelity_sq`** — fidelity at a pure target: `⟨Ω|ρ|Ω⟩ = sqrtFidelity(ρ,Ω)²`
-   for pure `Ω` (Mathlib `Matrix`/spectral; `√(√Ω ρ √Ω)` collapses when `Ω = |ω⟩⟨ω|`).
-3. **`entanglementFidelity_inverts_avgGateFidelity`** — `F_e = ((d+1)·F_avg − 1)/d` from `avgGateFidelity_eq`
-   (pure algebra; `field_simp`).
-4. **HEADLINE `avgGateFidelity_certifies_diamondDist`** — for a CPTP `Φ` on `d` dims,
-   `diamondDist(Φ, id) ≥ 1 − √(((d+1)·avgGateFidelity Φ − 1)/d)`. Compose bricks 1–3 with the bridge.
-5. Optional contrapositive (`avgGateFidelity` lower bound from a diamond upper bound) for symmetry.
-
-**Risk:** LOW. All inputs shipped; brick 1 is the only real work (the Choi-overlap identity).
-**Done:** headline proven kernel-pure; D6 §6 + preprint §3e note the composed certificate; Stage-13.
+**Sequencing** (value × certainty, hardening the operational substrate earliest):
+6AH.1 RB→diamond compose → 6AH.2 general-Pauli diamond → 6AH.3 diamond error budget →
+6AH.4 amp-damp exact → 6AH.5 two-sided RB→diamond → 6AH.6 DEJMPS witness → 6AH.7 GHZ baseline.
 
 ---
 
-## Wave 6AH.2 — Amplitude-damping exact diamond distance (item C)
+## Wave 6AH.1 — average-fidelity → entanglement-fidelity → diamond bound (compose) 🎯
 
-**Goal:** upgrade `diamondDist_ampDamp` from the bracket `γ/2 ≤ ◇ ≤ γ+1−√(1−γ)` to an EXACT closed
-form, removing the lone non-exact named channel. (Recommendation to private side: bind the exact
-value, not the bracket.)
+**Goal:** compose three separately-shipped pieces into ONE public theorem: an average gate fidelity
+`F_avg` (an averaged benchmark — e.g. a randomized-benchmarking fidelity) bounds the worst-case
+diamond distance of a channel to the ideal. Pure-math composition of Horodecki (`avgGateFidelity_eq`)
++ Fuchs–van de Graaf (`GateFidelityBridge`) + the maximally-entangled overlap.
 
-**Approach:** amplitude damping is non-Pauli-covariant, so the maximally-entangled input is NOT
-optimal — the optimal input is a `γ`-dependent state and the optimal dual witness is
-`√(1−γ)`-dependent. Determine the exact `diamondDist(ampDamp_γ, id)` (literature value), then prove it
-two-sided: lower via an explicit optimal *input* in the `sSup`, upper via the matching optimal
-*dual witness* (`diamondDist_le_dual_witness`). Mathlib scouting (interactive lean4 skill) for any
-needed `2×2`/`4×4` eigenvalue closed forms.
+**Chain:** invert `avgGateFidelity_eq` to `F_e = ((d+1)·F_avg − 1)/d`; identify
+`entanglementFidelity K = ⟨Ω̂|(Φ⊗id)Ω|Ω̂⟩ = sqrtFidelity((Φ⊗id)Ω, Ω)²` (pure target); the bridge
+`one_sub_sqrtFidelity_output_le_diamondDist` at `ρ = maxEntangled` gives `1 − √F_e ≤ diamondDist(Φ,id)`.
 
-**Risk:** MEDIUM (the optimal pair is fiddly; may need a `Real.sqrt` enclosure). If the exact value
-resists, ship the *tightened* bracket and document. **Done:** `diamondDist_ampDamp_eq` (or a strictly
-tighter two-sided bracket), kernel-pure; D6/preprint updated; Stage-13.
+**Status / bricks:**
+- ✅ **FOUNDATION SHIPPED** (`RBCertificate.lean`, commit `4530baa5`, kernel-pure, not root-imported
+  yet): `omega_ricochet` (`⟨Ω|(A⊗1)|Ω⟩=(tr A)·1`), `kron_one_conjTranspose`, `omega_overlap_krausMap`
+  (`⟨Ω|(K⊗id)Ω|Ω⟩=(n⁻¹∑ₖ tr Kₖ·tr Kₖᴴ)·1`), `omega_overlap_scalar` (`= n⁻¹∑ₖ|tr Kₖ|²`).
+- 🔜 **fidelity-at-pure-state** `sqrtFidelity(ρ, maxEntangled n) = √⟨Ω̂|ρ|Ω̂⟩` — the deep brick (needs
+  rank-1 trace norm `‖|u⟩⟨v|‖₁=‖u‖‖v‖` + `√(pure projector)=itself`; no reusable lemma exists).
+- 🔜 `entanglementFidelity K = ⟨Ω̂|(K⊗id)Ω|Ω̂⟩` (from `omega_overlap_scalar`, `n=d`); `(id⊗id)Ω=Ω`;
+  inversion algebra; HEADLINE `avgGateFidelity_diamondDist_bound`; root-import; D6/preprint; Stage-13.
+**Risk:** LOW–MED (only the rank-1 trace-norm lemma is real work).
 
----
+## Wave 6AH.2 — general single-qubit Pauli-channel diamond distance (NEW, Tier 1) ⭐ value/risk
 
-## Wave 6AH.3 — DEJMPS asymmetric-input pairing witness (item B, rigor)
+**Goal:** `diamondDist(PauliChannel p, id) = 1 − p_I` (total error probability) for a Pauli channel
+`Φ(ρ)=∑ᵢ pᵢ σᵢ ρ σᵢᴴ`. The Choi is Bell-diagonal, so by the same covariance argument as the named
+channels the diamond distance to identity is exact. **Subsumes** dephasing (`1−(1−γ)=γ`) and
+depolarizing (`1−(1−p)=p`) as special cases, covering essentially all single-qubit Pauli noise in one
+exact theorem.
 
-**Goal:** close the adversarial-review gap — the roadmap markets the corrected diagonal `A²+D²` DEJMPS
-pairing, but the only shipped theorem uses the symmetric Werner input where the diagonal and naive
-`A²+B²` pairings COINCIDE, so no theorem witnesses the correction.
+**Bricks:** `pauliChannel : (Fin 4 → ℝ) → Kraus tuple` (weights `p`, operators `{I,X,Y,Z}`,
+`∑pᵢ=1`); `IsKrausChannel`; Choi Bell-diagonality; optimal dual witness on the `+`-eigenspace +
+matching primal lower bound; `diamondDist_pauliChannel_eq` via `le_antisymm`
+(`diamondDist_le_dual_witness` + a max-entangled/primal lower bound). Re-derive dephasing/depolarizing
+exacts as corollaries. **Templates:** `NamedChannelDiamondExact.lean` (witnesses `γ·vvᵀ`, `(2p/3)P₊`).
+**Risk:** LOW (same machinery as the shipped named-channel exacts, general weights).
 
-**Brick:** `dejmps_diagonal_pairing_distinguishes` — exhibit a concrete *asymmetric* Bell-diagonal
-input `(A,B,C,D)` with `B ≠ D` on which the diagonal-pairing output `dejmpsOutA` differs from the
-naive-adjacent-pairing output, and the diagonal one is the correct/fidelity-increasing one
-(`norm_num`/`nlinarith` on the explicit rationals). Makes the convention correction a *theorem*, not
-just a definition.
+## Wave 6AH.3 — diamond-norm network error budget (NEW) 🌐
 
-**Risk:** LOW. **Done:** witness theorem kernel-pure; soften/ground the 6AA roadmap DEJMPS wording.
+**Goal:** the worst-case (diamond) analogue of the shipped trace-distance chain bound. Sub-additivity
+under composition `‖Φ₁∘Φ₂ − Ψ₁∘Ψ₂‖_◇ ≤ ‖Φ₁−Ψ₁‖_◇ + ‖Φ₂−Ψ₂‖_◇`, plus diamond data-processing,
+telescoping to an **N-segment budget: total worst-case error ≤ ∑ per-segment diamond errors** — the
+end-to-end worst-case guarantee for a composed channel network.
 
----
+**Bricks:** diamond composition sub-additivity (scout the triangle/DP primitives — `diamondDist`
+metric + `le_diamondDist` + `tensorKraus` are present); `diamondDist_applyChain_le` mirroring
+`traceDist_applyChain_le`. **Risk:** MED (needs a diamond-level data-processing step; interactive
+lean4 scout for the composition primitive first).
 
-## Wave 6AH.4 — GHZ randomization baseline, two-sided (item F, rigor)
+## Wave 6AH.4 — amplitude-damping exact diamond distance
 
-**Goal:** close the 6AC defining-the-conclusion gap — `ghz3RandomizationAdvantage := 0` is asserted
-as a cited modeling input, making `w3_beats_ghz_randomization_advantage` one-sided.
+Upgrade `diamondDist_ampDamp` from the bracket `γ/2 ≤ ◇ ≤ γ+1−√(1−γ)` to an EXACT closed form
+(optimal `γ`-dependent input + `√(1−γ)`-dependent witness; amp-damp is non-Pauli-covariant so the
+max-entangled input is not optimal). If exact resists, ship a strictly-tighter bracket + document.
+**Risk:** MED.
 
-**Brick:** derive the GHZ₃ randomization advantage `= 0` from an explicit GHZ-state local-randomization
-model (the GHZ measurement statistics are randomization-invariant), so that
-`w3_beats_ghz_randomization_advantage` becomes a genuine two-sided comparison `(W₃ adv > 0) ∧ (GHZ adv = 0)`
-with BOTH sides derived. If the model genuinely reduces to a cited Fortescue–Lo input that cannot be
-derived in-substrate, document precisely and leave as honest cited-input (no false strengthening).
+## Wave 6AH.5 — two-sided RB→diamond (NEW, completes 6AH.1)
 
-**Risk:** LOW–MED. **Done:** two-sided theorem OR a precise honest-input note; Stage-13.
+Pair 6AH.1 with the opposite-direction bound (via `diamondDist_ge_maxEntangled` composed with the
+`F_e` relation) so the average-fidelity→diamond certificate is **two-sided** — catching both ends of
+the average↔worst-case relationship, not only one. **Risk:** LOW (reuses 6AH.1 + 6AH.5 scaffolding).
+
+## Wave 6AH.6 — DEJMPS asymmetric-input pairing witness (rigor)
+
+Close the adversarial-review gap: the only shipped DEJMPS theorem uses the symmetric Werner input
+where the corrected diagonal `A²+D²` pairing COINCIDES with the naive `A²+B²`, so no theorem witnesses
+the correction. `dejmps_diagonal_pairing_distinguishes` — a concrete asymmetric Bell-diagonal input
+(`B ≠ D`) on which they differ and the diagonal one is correct (`norm_num`). Defensive/credibility
+value. **Risk:** LOW.
+
+## Wave 6AH.7 — GHZ randomization baseline, two-sided (rigor)
+
+Close the 6AC defining-the-conclusion gap: derive the GHZ₃ randomization advantage `= 0` from an
+explicit local-randomization model so `w3_beats_ghz_randomization_advantage` is genuinely two-sided,
+or document a precise honest cited-input. Defensive/credibility value. **Risk:** LOW–MED.
 
 ---
 
 ## Phase exit
-All four waves shipped (or honestly documented where a sub-item is a genuine cited input), counts
+All waves shipped (or honestly documented where a sub-item is a genuine cited input), counts
 regenerated, D6 §6 + preprint §3e synced, memory + Inventory updated, fresh-context Stage-13 GREEN.
-Then proceed to the moonshot phases 6AI (strong-duality SDP) and 6AJ (fidelity-domain DP).
+Then proceed to 6AI (constructive diamond-SDP witness) and 6AJ (fidelity-domain DP).
