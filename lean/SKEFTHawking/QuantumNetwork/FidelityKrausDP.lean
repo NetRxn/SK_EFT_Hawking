@@ -1,4 +1,5 @@
 import SKEFTHawking.QuantumNetwork.FidelityForwardBound
+import SKEFTHawking.QuantumNetwork.FidelityForwardBoundPSD
 import SKEFTHawking.QuantumNetwork.CPTPChannel
 import SKEFTHawking.QuantumNetwork.GeneralStateNetwork
 
@@ -124,6 +125,24 @@ theorem sqrtFidelity_krausMap_ge' {K : Fin m → Matrix ι ι ℂ} {ρ σ : Matr
           (posDef_krausMap_of_sum K hσ hKK).posSemidef :=
   sqrtFidelity_krausMap_ge hρ hσ hK (posDef_krausMap_of_sum K hρ hKK)
     (posDef_krausMap_of_sum K hσ hKK)
+
+/-- **General-CPTP fidelity DP, fully general form (no output hypothesis at all).** For *any*
+trace-preserving Kraus channel `Φ(·) = ∑ₖ Kₖ · Kₖᴴ` and positive-definite inputs `ρ, σ`,
+`F(Φρ, Φσ) ≥ F(ρ, σ)` — the channel outputs need not be positive definite (they may be
+rank-deficient, e.g. a reset channel). This is the textbook Uhlmann data-processing inequality for
+positive-definite inputs, with no full-rank-output regularity: it uses the positive-*semidefinite*
+forward Alberti bound `re_trace_block_le_sqrtFidelity_psd` (ε-regularized along the commuting ray) at
+the PSD outputs `Φρ, Φσ`. -/
+theorem sqrtFidelity_krausMap_ge_psd {K : Fin m → Matrix ι ι ℂ} {ρ σ : Matrix ι ι ℂ}
+    (hρ : ρ.PosDef) (hσ : σ.PosDef) (hK : IsKrausChannel K) :
+    sqrtFidelity hρ.posSemidef hσ.posSemidef
+      ≤ sqrtFidelity (krausMap_posSemidef K hρ.posSemidef)
+          (krausMap_posSemidef K hσ.posSemidef) := by
+  obtain ⟨X, hXblock, hXtr⟩ := exists_block_re_trace_eq_sqrtFidelity hρ hσ
+  have hΦblock := fidelityBlock_krausMap_posSemidef K ρ X σ hXblock
+  have hbound := re_trace_block_le_sqrtFidelity_psd (krausMap_posSemidef K hρ.posSemidef)
+    (krausMap_posSemidef K hσ.posSemidef) hΦblock
+  rwa [show (krausMap K X).trace.re = X.trace.re from by rw [trace_krausMap hK], hXtr] at hbound
 
 /-! ## Joint concavity of the (root) fidelity
 
