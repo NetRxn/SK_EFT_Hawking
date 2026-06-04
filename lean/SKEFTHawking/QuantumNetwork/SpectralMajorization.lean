@@ -86,4 +86,39 @@ theorem sum_mul_le_sum_top {N : ℕ} (μ : Fin N → ℝ) (hμ : Antitone μ) (p
         simp only [hind, if_neg h]; linarith [hp0 i]
       exact mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr hμc) hpind
 
+variable {ι : Type*} [Fintype ι] [DecidableEq ι]
+
+omit [DecidableEq ι] in
+/-- A diagonal entry of an orthogonal projection (Hermitian idempotent) equals its squared column norm
+`∑ₗ |Qₗⱼ|²`. -/
+theorem proj_diag_eq_sum_normSq {Q : Matrix ι ι ℂ} (hQh : Q.IsHermitian) (hQ : Q * Q = Q) (j : ι) :
+    Q j j = ((∑ l, Complex.normSq (Q l j) : ℝ) : ℂ) := by
+  conv_lhs => rw [← hQ]
+  rw [Matrix.mul_apply, Complex.ofReal_sum]
+  refine Finset.sum_congr rfl fun l _ => ?_
+  have hjl : Q j l = star (Q l j) := by conv_lhs => rw [← hQh, Matrix.conjTranspose_apply]
+  rw [hjl]
+  exact Complex.normSq_eq_conj_mul_self.symm
+
+omit [DecidableEq ι] in
+/-- The diagonal entries of an orthogonal projection lie in `[0, 1]` (as reals); these are the weights
+`pⱼ = ⟨eⱼ|P|eⱼ⟩` fed into the Ky Fan rearrangement inequality. -/
+theorem proj_diag_re_mem_Icc {Q : Matrix ι ι ℂ} (hQh : Q.IsHermitian) (hQ : Q * Q = Q) (j : ι) :
+    (Q j j).re ∈ Set.Icc (0 : ℝ) 1 := by
+  have hsum := proj_diag_eq_sum_normSq hQh hQ j
+  have hre : (Q j j).re = ∑ l, Complex.normSq (Q l j) := by rw [hsum, Complex.ofReal_re]
+  have hnn : 0 ≤ (Q j j).re := by
+    rw [hre]; exact Finset.sum_nonneg fun l _ => Complex.normSq_nonneg _
+  refine ⟨hnn, ?_⟩
+  have him : (Q j j).im = 0 := by
+    have hjj : star (Q j j) = Q j j := by conv_rhs => rw [← hQh, Matrix.conjTranspose_apply]
+    exact Complex.conj_eq_iff_im.mp hjj
+  have hjterm : Complex.normSq (Q j j) = (Q j j).re ^ 2 := by
+    rw [Complex.normSq_apply, him]; ring
+  have hjle : Complex.normSq (Q j j) ≤ ∑ l, Complex.normSq (Q l j) :=
+    Finset.single_le_sum (f := fun l => Complex.normSq (Q l j))
+      (fun l _ => Complex.normSq_nonneg _) (Finset.mem_univ j)
+  rw [← hre, hjterm] at hjle
+  nlinarith [hjle, hnn]
+
 end SKEFTHawking.QuantumNetwork
