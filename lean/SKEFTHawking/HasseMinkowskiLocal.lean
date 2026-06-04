@@ -362,4 +362,18 @@ theorem solvable_canonical_of_sq_mul {K : Type*} [Field K] {A B a' b' s u : K}
   rw [hA, hB]
   exact ((solvable_canonical_congr_sq hs).trans (solvable_canonical_congr_sq_right hu)).symm
 
+/-- **Quaternary isotropy from a common represented value (rank-4 reduction, easy direction).** Over a field,
+if `⟨a,b⟩` and `⟨c,d⟩` both represent the same nonzero value `t`, then the quaternary
+`a x² + b y² = c z² + d w²` has a nontrivial solution (take the two representations). Reduces rank-4 isotropy
+to the existence of a common value — the part where weak approximation / Hilbert reciprocity is needed is
+*producing* that global common value; this lemma is the trivial assembly once it exists. -/
+theorem quaternary_isotropic_of_common_value {K : Type*} [Field K] {a b c d t : K} (ht : t ≠ 0)
+    (h1 : ∃ u v : K, a * u ^ 2 + b * v ^ 2 = t) (h2 : ∃ p q : K, c * p ^ 2 + d * q ^ 2 = t) :
+    ∃ x y z w : K, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      a * x ^ 2 + b * y ^ 2 = c * z ^ 2 + d * w ^ 2 := by
+  obtain ⟨u, v, h1⟩ := h1
+  obtain ⟨p, q, h2⟩ := h2
+  refine ⟨u, v, p, q, fun hc => ?_, by rw [h1, h2]⟩
+  exact ht (by rw [← h1, hc.1, hc.2.1]; ring)
+
 end SKEFTHawking
