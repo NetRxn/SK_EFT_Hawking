@@ -1075,4 +1075,24 @@ theorem solvable_scale {a b' w : ℤ} {x y z : ℤ} (hy : y ≠ 0)
     ∃ X Y Z : ℤ, Y ≠ 0 ∧ Z ^ 2 = a * X ^ 2 + (b' * w ^ 2) * Y ^ 2 := by
   exact ⟨w * x, y, w * z, hy, by linear_combination w ^ 2 * hsol⟩
 
+/-- **Diagonal form normalization to squarefree integer coefficients.** Any diagonal form `∑ wᵢ xᵢ²` over ℚ
+with all `wᵢ ≠ 0` is isotropic iff the form `∑ sᵢ xᵢ²` with *squarefree integer* coefficients `sᵢ` is, where
+`wᵢ = sᵢ·tᵢ²` (`exists_squarefree_sq_mul_rat`) and the equivalence is the square-class invariance
+`exists_diag_isotropic_congr_sq` (scale `xᵢ` by `1/tᵢ`). The normalization opening Legendre's theorem /
+ternary Hasse–Minkowski for the diagonalized integer Gram form. -/
+theorem exists_squarefree_diag_isotropic {ι : Type*} [Fintype ι] (w : ι → ℚ) (hw : ∀ i, w i ≠ 0) :
+    ∃ s : ι → ℤ, (∀ i, Squarefree (s i)) ∧ (∀ i, s i ≠ 0) ∧
+      ((∃ x : ι → ℚ, x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0) ↔
+       (∃ x : ι → ℚ, x ≠ 0 ∧ ∑ i, (s i : ℚ) * x i ^ 2 = 0)) := by
+  choose s t hs0 ht0 hsf hwst using fun i => exists_squarefree_sq_mul_rat (hw i)
+  refine ⟨s, hsf, hs0, ?_⟩
+  have hc : ∀ i, (1 / t i : ℚ) ≠ 0 := fun i => one_div_ne_zero (ht0 i)
+  have heq : ∀ i, w i * (1 / t i) ^ 2 = (s i : ℚ) := by
+    intro i
+    have htt : t i ^ 2 * (1 / t i) ^ 2 = 1 := by
+      rw [div_pow, one_pow, mul_one_div, div_self (pow_ne_zero 2 (ht0 i))]
+    rw [hwst i, mul_assoc, htt, mul_one]
+  rw [exists_diag_isotropic_congr_sq w (fun i => 1 / t i) hc]
+  simp_rw [heq]
+
 end SKEFTHawking
