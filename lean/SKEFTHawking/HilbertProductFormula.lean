@@ -86,4 +86,29 @@ theorem hilbertPrime_comm (p : ℕ) (a b : ℤ) : hilbertPrime p a b = hilbertPr
   · letI := Fact.mk hp; exact hilbertPadicInt_comm p a b
   · rfl
 
+/-- **The place symbol has finite support.** For nonzero `a, b`, `hilbertPrime p a b = 1` for all but finitely
+many `p` (only primes dividing `2ab` can be nontrivial), so the product over all places is a finite product. -/
+theorem hilbertPrime_mulSupport_finite {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    (Function.mulSupport (fun p => hilbertPrime p a b)).Finite := by
+  apply Set.Finite.subset (Nat.divisors (2 * a.natAbs * b.natAbs)).finite_toSet
+  intro p hp
+  simp only [Function.mem_mulSupport] at hp
+  have hm0 : 2 * a.natAbs * b.natAbs ≠ 0 := by
+    simp [Int.natAbs_eq_zero, ha, hb]
+  rw [Finset.mem_coe, Nat.mem_divisors]
+  refine ⟨?_, hm0⟩
+  by_cases hpp : p.Prime
+  · by_cases h2 : p = 2
+    · exact h2 ▸ ⟨a.natAbs * b.natAbs, by ring⟩
+    · by_contra hnd
+      apply hp
+      refine hilbertPrime_units hpp h2 ?_ ?_
+      · intro hda
+        have hpa : p ∣ a.natAbs := Int.natCast_dvd_natCast.mp ((Int.dvd_natAbs).mpr hda)
+        exact hnd ((hpa.mul_left 2).mul_right b.natAbs)
+      · intro hdb
+        have hpb : p ∣ b.natAbs := Int.natCast_dvd_natCast.mp ((Int.dvd_natAbs).mpr hdb)
+        exact hnd (hpb.mul_left (2 * a.natAbs))
+  · exact absurd (hilbertPrime_of_not_prime hpp a b) hp
+
 end SKEFTHawking.HilbertSymbol
