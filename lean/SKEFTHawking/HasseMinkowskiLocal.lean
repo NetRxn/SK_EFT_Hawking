@@ -117,4 +117,16 @@ theorem indefinite_repr_zero {V : Type*} [AddCommGroup V] [Module ℝ V] [Finite
   rw [hw_eq, QuadraticMap.map_neg, Q.map_smul, smul_eq_mul] at hQw
   nlinarith [mul_nonneg (mul_self_nonneg r) hQu.le]
 
+/-- **[HM-ℝ], matrix form.** An indefinite real symmetric matrix form represents zero nontrivially:
+`∃ x ≠ 0, xᵀ A x = 0`. This is the shape consumed by the [HM] application (the isotropic vector is for the
+bilinear value `x ⬝ᵥ A *ᵥ x`). -/
+theorem indefinite_matrix_repr_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
+    (hp : 0 < sigPos A.toQuadraticMap') (hn : 0 < sigNeg A.toQuadraticMap') :
+    ∃ x : Fin n → ℝ, x ≠ 0 ∧ x ⬝ᵥ A *ᵥ x = 0 := by
+  obtain ⟨x, hx0, hQx⟩ := indefinite_repr_zero A.toQuadraticMap' hp hn
+  refine ⟨x, hx0, ?_⟩
+  have happ : A.toQuadraticMap' x = x ⬝ᵥ A *ᵥ x := by
+    simp [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
+  rwa [happ] at hQx
+
 end SKEFTHawking
