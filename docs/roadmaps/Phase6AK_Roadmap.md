@@ -1,6 +1,18 @@
 # Phase 6AK — Physical-limit & impossibility substrate (public)
 
-**Status:** DRAFT (opened 2026-06-03). Public-only (`SKEFTHawking.QuantumNetwork.*`). Follows the
+**Status:** ✅ COMPLETE (2026-06-03). All 6 waves shipped kernel-pure, Stage-13 GREEN, NO fences,
+NO new axioms. Final counts 10721 thm / 0 axiom / 0 sorry / 814 mod. Commits on `main` (not pushed):
+6AK.1 `fb8a77f4` (CoherenceFidelity — coherence-limited avgGateFidelity = ½+⅙e^{−t/T1}+⅓e^{−t/(2T1)−t/T2},
+antitone ceiling) · 6AK.3 `5d893c61` (ErrorBasisDiamond — dimension-general unitary-error-basis exact
+diamond distance 1−p₀; instances: single-qubit Pauli re-derived as n=2, two-qubit Pauli n=4) ·
+6AK.6 `4d0fa74b` (SpamProcessFidelity — SPAM bit-flip diamond=q, process=entanglement fidelity bridge) ·
+6AK.5 `cc29f5d8` (QECSuppression — abstract code-distance threshold theorem, IP-clean) ·
+6AK.2 `da8f6470` (PLOBRateBound — repeaterless rate-bound function + loss-penalty properties, honestly
+labeled surrogate) · 6AK.4 `e70dc6ea` (GeneralizedAmpDamp — thermal GAD two-sided bracket
+(1−N)γ ≤ ◇ ≤ 1, lower exact-achievable). Leakage (qutrit) noted as a natural extension via the GAD
+technique (deferred). D6 §6 + preprint §3g synced (D6 LaTeX compile-clean) for every wave.
+
+**Original plan (DRAFT, opened 2026-06-03):** Public-only (`SKEFTHawking.QuantumNetwork.*`). Follows the
 6AA→6AJ QuantumNetwork certification arc. Where 6AA–6AH shipped *consistency* substrate (bounds a
 quantity must satisfy), this phase ships **physical-limit substrate**: closed-form ceilings/floors
 that an achievable quantity provably *cannot cross*. Downstream these enable "a claim that beats this
