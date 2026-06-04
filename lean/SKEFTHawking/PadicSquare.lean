@@ -1459,7 +1459,7 @@ theorem ternary_solvable_of_local {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
 a field, for `c ≠ 0`, `∃ x y, a x² + b y² = c` iff `∃ x y z, z ≠ 0 ∧ a x² + b y² = c z²` (take `z = 1`
 forward; `x/z, y/z` backward). The link between *representation* of a value by a binary form and *isotropy*
 of the associated ternary — the algebraic core of the rank-reduction step `n → n−1` of Hasse–Minkowski. -/
-theorem represents_iff_homog {K : Type*} [Field K] {a b c : K} (hc : c ≠ 0) :
+theorem represents_iff_homog {K : Type*} [Field K] {a b c : K} :
     (∃ x y : K, a * x ^ 2 + b * y ^ 2 = c) ↔
     (∃ x y z : K, z ≠ 0 ∧ a * x ^ 2 + b * y ^ 2 = c * z ^ 2) := by
   constructor
