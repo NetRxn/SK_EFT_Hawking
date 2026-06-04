@@ -994,4 +994,25 @@ theorem exists_squarefree_sq_mul_rat {q : ℚ} (hq : q ≠ 0) :
       _ = (s : ℚ) * (c : ℚ) ^ 2 := e1
   rw [div_pow, ← mul_div_assoc, ← key, mul_div_assoc, div_self (pow_ne_zero 2 hdenℚ), mul_one]
 
+/-- **Norm-form composition identity in `R[√a]` (the engine of Legendre descent).** The pure ring identity
+`(z² − a x²)(t² − a) = (z·t + a·x)² − a·(z + t·x)²` — i.e. `N(α)·N(β) = N(αβ)` for `α = z + x√a`,
+`β = t + √a` with norm `N(u + v√a) = u² − a v²`. This is the algebraic heart of the ternary descent. -/
+theorem norm_form_comp_identity {R : Type*} [CommRing R] (a t x z : R) :
+    (z ^ 2 - a * x ^ 2) * (t ^ 2 - a) = (z * t + a * x) ^ 2 - a * (z + t * x) ^ 2 := by ring
+
+/-- **Solvability transfer down to a smaller coefficient (Legendre descent step).** If `t² − a = b·b''`
+and `z² = a x² + b'' y²` has a solution with `y ≠ 0`, then `Z² = a X² + b Y²` has one with `Y ≠ 0`, namely
+`(X,Y,Z) = (z + t x, b''·y, z t + a x)`. (Multiply `z² − a x² = b'' y²` by `t² − a = b·b''` and apply
+`norm_form_comp_identity`: the left side becomes `b·(b'' y)²`.) This moves a canonical ternary
+`z² = a x² + b y²` to the smaller coefficient `b''`, the inductive engine of Legendre's theorem. -/
+theorem solvable_transfer {a b b'' t : ℤ} (hb'' : b'' ≠ 0) (hfac : t ^ 2 - a = b * b'')
+    {x y z : ℤ} (hy : y ≠ 0) (hsol : z ^ 2 = a * x ^ 2 + b'' * y ^ 2) :
+    ∃ X Y Z : ℤ, Y ≠ 0 ∧ Z ^ 2 = a * X ^ 2 + b * Y ^ 2 := by
+  refine ⟨z + t * x, b'' * y, z * t + a * x, mul_ne_zero hb'' hy, ?_⟩
+  have e1 : z ^ 2 - a * x ^ 2 = b'' * y ^ 2 := by linarith [hsol]
+  calc (z * t + a * x) ^ 2
+      = a * (z + t * x) ^ 2 + (z ^ 2 - a * x ^ 2) * (t ^ 2 - a) := by ring
+    _ = a * (z + t * x) ^ 2 + b'' * y ^ 2 * (b * b'') := by rw [e1, hfac]
+    _ = a * (z + t * x) ^ 2 + b * (b'' * y) ^ 2 := by ring
+
 end SKEFTHawking
