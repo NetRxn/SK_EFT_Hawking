@@ -62,4 +62,33 @@ theorem diag_conj_self_eq_eigenvalue {A : Matrix ι ι ℂ} (hA : A.IsHermitian)
         from by rw [hU]; noncomm_ring, hUU, one_mul, mul_one]
   rw [hdiag, Matrix.diagonal_apply_eq, Function.comp_apply, RCLike.ofReal_eq_complex_ofReal]
 
+/-- **Doubly-stochastic eigenvalue relation (the core of Lidskii–Wielandt):** for `A = B + C` Hermitian,
+each eigenvalue of `A` is a doubly-stochastic combination of `B`'s eigenvalues plus one of `C`'s:
+`λᵢ(A) = ∑ⱼ |M^Bᵢⱼ|² λⱼ(B) + ∑ⱼ |M^Cᵢⱼ|² λⱼ(C)`, `M^B = U_Aᴴ U_B`, `M^C = U_Aᴴ U_C`. -/
+theorem eigenvalue_eq_doublyStochastic_combination {A B : Matrix ι ι ℂ} (hA : A.IsHermitian)
+    (hB : B.IsHermitian) (hC : (A - B).IsHermitian) (i : ι) :
+    hA.eigenvalues i
+      = (∑ j, Complex.normSq
+          ((star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * (↑hB.eigenvectorUnitary : Matrix ι ι ℂ)) i j)
+          * hB.eigenvalues j)
+        + ∑ j, Complex.normSq
+          ((star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * (↑hC.eigenvectorUnitary : Matrix ι ι ℂ)) i j)
+          * hC.eigenvalues j := by
+  have hAc : A = B + (A - B) := by abel
+  have key : ((hA.eigenvalues i : ℝ) : ℂ)
+      = ((∑ j, Complex.normSq
+          ((star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * (↑hB.eigenvectorUnitary : Matrix ι ι ℂ)) i j)
+          * hB.eigenvalues j : ℝ) : ℂ)
+        + ((∑ j, Complex.normSq
+          ((star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * (↑hC.eigenvectorUnitary : Matrix ι ι ℂ)) i j)
+          * hC.eigenvalues j : ℝ) : ℂ) := by
+    rw [← diag_conj_eq_sum_normSq hA.eigenvectorUnitary hB i,
+      ← diag_conj_eq_sum_normSq hA.eigenvectorUnitary hC i,
+      ← diag_conj_self_eq_eigenvalue hA i, ← Matrix.add_apply]
+    congr 1
+    rw [← Matrix.add_mul, ← Matrix.mul_add]
+    congr 2
+    abel
+  exact_mod_cast key
+
 end SKEFTHawking.QuantumNetwork
