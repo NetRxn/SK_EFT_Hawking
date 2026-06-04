@@ -1343,4 +1343,15 @@ theorem exists_dvd_sq_sub_of_locally_solvable {a b : ℤ} (hsf : Squarefree b.na
   haveI : Fact p.Prime := ⟨hp⟩
   exact isSquare_residue_of_solvable_padic hp2 hsf hpa hpb (hloc p hp2 hpb hpa)
 
+/-- **Base case of the ternary descent: a square coefficient ⟹ ℚ-solvable.** If `a` or `b` is a perfect
+square (integer) then `z² = a x² + b y²` has a nontrivial rational solution (`(1,0,√a)` resp. `(0,1,√b)`).
+The terminating case of the Legendre/Hasse–Minkowski descent over ℚ. -/
+theorem ratSol_of_isSquare {a b : ℤ} (h : IsSquare a ∨ IsSquare b) :
+    ∃ x y z : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 := by
+  rcases h with ⟨r, hr⟩ | ⟨r, hr⟩
+  · exact ⟨1, 0, (r : ℚ), fun hc => one_ne_zero hc.1, by
+      rw [show (a : ℚ) = (r : ℚ) * (r : ℚ) by exact_mod_cast hr]; ring⟩
+  · exact ⟨0, 1, (r : ℚ), fun hc => one_ne_zero hc.2.1, by
+      rw [show (b : ℚ) = (r : ℚ) * (r : ℚ) by exact_mod_cast hr]; ring⟩
+
 end SKEFTHawking
