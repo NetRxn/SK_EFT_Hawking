@@ -2791,6 +2791,9 @@ import SKEFTHawking.QuantumNetwork.QuantumKlein
 -- and the Gibbs variational principle / free-energy bound (D) — both Klein corollaries.
 import SKEFTHawking.QuantumNetwork.EntropyConcavity
 import SKEFTHawking.QuantumNetwork.GibbsVariational
+-- Phase 6AL Wave 2 (2026-06-04): negativity convexity N(∑pᵢρᵢ)≤∑pᵢN(ρᵢ) (B) + general-density
+-- strengthening (E): ‖A‖₁≥|tr A|, general negativity≥0, logNegativity_add without the ≠0 side-condition.
+import SKEFTHawking.QuantumNetwork.NegativityGeneral
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
