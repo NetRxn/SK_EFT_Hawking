@@ -1542,7 +1542,7 @@ theorem binary_represents_of_local {a b t : ℚ} (ha : a ≠ 0) (hb : b ≠ 0) (
   have hiso := diag_ternary_solvable_of_local (a := a) (b := b) (c := -t) ha hb
     (neg_ne_zero.mpr ht) ?hR' ?hloc'
   · obtain ⟨x, y, z, hnz, he⟩ := hiso
-    exact represents_of_ternary_isotropic ha hb ⟨x, y, z, hnz, by push_cast at he ⊢; linarith [he]⟩
+    exact represents_of_ternary_isotropic ha hb ⟨x, y, z, hnz, by linarith [he]⟩
   case hR' =>
     obtain ⟨u, v, he⟩ := hR
     exact ⟨u, v, 1, by simp, by push_cast; linarith [he]⟩
