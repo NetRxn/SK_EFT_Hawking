@@ -138,6 +138,33 @@ theorem exists_subspace_re_inner_ge {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [No
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hmem
     exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact Nat.lt_succ_iff.mp hmem)
 
+/-- **Dual Courant–Fischer "≤" subspace (single eigenvalue).** There is an `(n−m)`-dimensional subspace on
+which the Rayleigh form is everywhere `≤ λ↓ₘ ‖·‖²` — namely the span of the bottom `n−m` eigenvectors. The
+mirror of `exists_subspace_re_inner_ge`; the regularity input for the *upper* Weyl perturbation bound. -/
+theorem exists_subspace_re_inner_le {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ}
+    (hT : T.IsSymmetric) (hn : Module.finrank 𝕜 E = n) {m : ℕ} (hm : m < n) :
+    ∃ V : Submodule 𝕜 E, Module.finrank 𝕜 V = n - m ∧
+      ∀ v ∈ V, RCLike.re (inner 𝕜 v (T v)) ≤ hT.eigenvalues hn ⟨m, hm⟩ * ‖v‖ ^ 2 := by
+  refine ⟨Submodule.span 𝕜 (⇑(hT.eigenvectorBasis hn) ''
+    ((Finset.univ.filter (fun i : Fin n => m ≤ (i : ℕ))) : Set (Fin n))), ?_, fun v hv => ?_⟩
+  · rw [finrank_eigenspace_span]
+    have h := Finset.filter_card_add_filter_neg_card_eq_card (s := (Finset.univ : Finset (Fin n)))
+      (p := fun i : Fin n => m ≤ (i : ℕ))
+    rw [Finset.card_univ, Fintype.card_fin] at h
+    have hneg : (Finset.univ.filter (fun i : Fin n => ¬ m ≤ (i : ℕ))).card = m := by
+      have heq : (Finset.univ.filter (fun i : Fin n => ¬ m ≤ (i : ℕ)))
+          = Finset.univ.filter (fun i : Fin n => (i : ℕ) < m) :=
+        Finset.filter_congr (fun i _ => by simp)
+      rw [heq, Fin.card_filter_val_lt]; omega
+    omega
+  · refine isSymmetric_re_inner_le hT hn v (hT.eigenvalues hn ⟨m, hm⟩) (fun i hrepr => ?_)
+    have hmem : i ∈ Finset.univ.filter (fun i : Fin n => m ≤ (i : ℕ)) := by
+      by_contra hi
+      exact hrepr (repr_eq_zero_of_not_mem hT hn hv (Finset.mem_coe.not.mpr hi))
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hmem
+    exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact hmem)
+
 /-- **Courant–Fischer, "≤" direction (single eigenvalue).** Every `(m+1)`-dimensional subspace contains a
 nonzero vector with Rayleigh form `≤ λ↓ₘ ‖·‖²` — it meets the span of the bottom `n−m` eigenvectors. -/
 theorem exists_mem_re_inner_le {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
@@ -155,7 +182,7 @@ theorem exists_mem_re_inner_le {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedA
     have hneg : (Finset.univ.filter (fun i : Fin n => ¬ m ≤ (i : ℕ))).card = m := by
       have heq : (Finset.univ.filter (fun i : Fin n => ¬ m ≤ (i : ℕ)))
           = Finset.univ.filter (fun i : Fin n => (i : ℕ) < m) :=
-        Finset.filter_congr (fun i _ => by simp [Nat.not_le])
+        Finset.filter_congr (fun i _ => by simp)
       rw [heq, Fin.card_filter_val_lt]
       omega
     omega
@@ -290,6 +317,53 @@ theorem weyl_diff_ge {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGrou
     {i : ℕ} (hi : i < n) :
     hAB.eigenvalues hn ⟨n - 1, by omega⟩ ≤ hA.eigenvalues hn ⟨i, hi⟩ - hB.eigenvalues hn ⟨i, hi⟩ := by
   have h := weyl_single_lower_of_eq hn hA hB hAB (by abel) hi
+  linarith
+
+/-- **Weyl single-eigenvalue bound, upper general form** (`T = S + R`): `λ↓ᵢ(T) ≤ λ↓ᵢ(S) + λ↓₀(R)`, where
+`λ↓₀(R)` is the largest eigenvalue of `R`. Dual of `weyl_single_lower_of_eq`: on `S`'s bottom-`(n−i)`
+eigenspace the `S`-Rayleigh quotient is `≤ λ↓ᵢ(S)‖·‖²` and `R`'s is `≤ λ↓₀(R)‖·‖²` everywhere
+(`exists_subspace_re_inner_le`, `isSymmetric_re_inner_le`); that subspace meets `T`'s top-`(i+1)` eigenspace
+(dimensions `(n−i)+(i+1) = n+1 > n`), where the `T`-Rayleigh is `≥ λ↓ᵢ(T)‖·‖²`. -/
+theorem weyl_single_upper_of_eq {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] {n : ℕ} (hn : Module.finrank 𝕜 E = n)
+    {T S R : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.IsSymmetric) (hR : R.IsSymmetric)
+    (hTeq : T = S + R) {i : ℕ} (hi : i < n) :
+    hT.eigenvalues hn ⟨i, hi⟩ ≤ hS.eigenvalues hn ⟨i, hi⟩ + hR.eigenvalues hn ⟨0, by omega⟩ := by
+  obtain ⟨V, hVdim, hVle⟩ := exists_subspace_re_inner_le hS hn hi
+  have hRle : ∀ v : E,
+      RCLike.re (inner 𝕜 v (R v)) ≤ hR.eigenvalues hn ⟨0, by omega⟩ * ‖v‖ ^ 2 := by
+    intro v
+    refine isSymmetric_re_inner_le hR hn v _ (fun j _ => ?_)
+    refine hR.eigenvalues_antitone hn ?_
+    rw [Fin.le_def]; exact Nat.zero_le _
+  obtain ⟨W, hWdim, hWge⟩ := exists_subspace_re_inner_ge hT hn hi
+  have hgt : Module.finrank 𝕜 E < Module.finrank 𝕜 W + Module.finrank 𝕜 V := by
+    rw [hWdim, hVdim, hn]; omega
+  obtain ⟨x, hx, hx0⟩ := exists_mem_inf_ne_zero W V hgt
+  have h1 := hWge x hx.1
+  have h2 := hVle x hx.2
+  have h3 := hRle x
+  have hTx : RCLike.re (inner 𝕜 x (T x))
+      = RCLike.re (inner 𝕜 x (S x)) + RCLike.re (inner 𝕜 x (R x)) := by
+    rw [hTeq, LinearMap.add_apply, inner_add_right, map_add]
+  rw [hTx] at h1
+  have hxnorm : (0 : ℝ) < ‖x‖ ^ 2 := pow_pos (norm_pos_iff.mpr hx0) 2
+  have hcomb : hT.eigenvalues hn ⟨i, hi⟩ * ‖x‖ ^ 2
+      ≤ (hS.eigenvalues hn ⟨i, hi⟩ + hR.eigenvalues hn ⟨0, by omega⟩) * ‖x‖ ^ 2 := by
+    rw [add_mul]; linarith
+  exact le_of_mul_le_mul_right hcomb hxnorm
+
+/-- **Weyl eigenvalue-difference bound (two-sided upper form):** the largest eigenvalue of `A−B` bounds the
+per-index eigenvalue difference from above, `λ↓ᵢ(A) − λ↓ᵢ(B) ≤ λ↓₀(A−B)`. Immediate from
+`weyl_single_upper_of_eq` with `A = B + (A−B)`. Together with `weyl_diff_ge` this is the full two-sided Weyl
+sandwich `λ↓ₙ₋₁(A−B) ≤ λ↓ᵢ(A) − λ↓ᵢ(B) ≤ λ↓₀(A−B)` — the per-eigenvalue perturbation theorem and the
+regularity input (P1) for the eigenvalue-path proof of Lidskii. -/
+theorem weyl_diff_le {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [FiniteDimensional 𝕜 E] {n : ℕ} (hn : Module.finrank 𝕜 E = n)
+    {A B : E →ₗ[𝕜] E} (hA : A.IsSymmetric) (hB : B.IsSymmetric) (hAB : (A - B).IsSymmetric)
+    {i : ℕ} (hi : i < n) :
+    hA.eigenvalues hn ⟨i, hi⟩ - hB.eigenvalues hn ⟨i, hi⟩ ≤ hAB.eigenvalues hn ⟨0, by omega⟩ := by
+  have h := weyl_single_upper_of_eq hn hA hB hAB (by abel) hi
   linarith
 
 /-- **Max-min Lidskii–Wielandt, assembled (staging the frame-existence step (3)).** Given an orthonormal
