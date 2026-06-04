@@ -305,4 +305,42 @@ theorem exists_three_same_parity {n : ℕ} (hn : 5 ≤ n) (g : Fin n → ZMod 2)
   simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha hb hc
   exact ⟨a, b, c, hab, hac, hbc, ha.trans hb.symm, hb.trans hc.symm⟩
 
+/-- **Rank-≥5 odd-`p` local workhorse over `ℚ_[p]`.** Any diagonal form `∑ wᵢ xᵢ²` of rank `n ≥ 5` over
+`ℚ_[p]` (odd `p`) with all coefficients nonzero is isotropic. By the parity pigeonhole, three coordinates
+share a valuation parity; their ternary sub-block is isotropic
+(`exists_ternary_zero_same_parity_padic`); pad the rest with `0`. This discharges every odd-`p` local
+condition for forms of rank ≥ 5 (in particular every `ℤ_p`-unimodular form, regardless of coefficient
+valuations). -/
+theorem exists_diag_nary_zero_odd_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {n : ℕ} (hn : 5 ≤ n)
+    (w : Fin n → ℚ_[p]) (hw : ∀ i, w i ≠ 0) :
+    ∃ x : Fin n → ℚ_[p], x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0 := by
+  obtain ⟨i0, i1, i2, d01, d02, d12, hg01, hg12⟩ :=
+    exists_three_same_parity hn (fun i => ((w i).valuation : ZMod 2))
+  have hpar01 : (w i0).valuation % 2 = (w i1).valuation % 2 :=
+    (ZMod.intCast_eq_intCast_iff _ _ _).mp hg01
+  have hpar12 : (w i1).valuation % 2 = (w i2).valuation % 2 :=
+    (ZMod.intCast_eq_intCast_iff _ _ _).mp hg12
+  obtain ⟨x0, x1, x2, hnz, hzero⟩ :=
+    exists_ternary_zero_same_parity_padic hp (hw i0) (hw i1) (hw i2) hpar01 hpar12
+  set x : Fin n → ℚ_[p] :=
+    fun i => if i = i0 then x0 else if i = i1 then x1 else if i = i2 then x2 else 0 with hx
+  have vx0 : x i0 = x0 := by rw [hx]; simp
+  have vx1 : x i1 = x1 := by rw [hx]; simp [d01.symm]
+  have vx2 : x i2 = x2 := by rw [hx]; simp [d02.symm, d12.symm]
+  have vxo : ∀ i, i ≠ i0 → i ≠ i1 → i ≠ i2 → x i = 0 := by
+    intro i h0 h1 h2; rw [hx]; simp [h0, h1, h2]
+  refine ⟨x, ?_, ?_⟩
+  · intro hxz
+    refine hnz ⟨?_, ?_, ?_⟩
+    · rw [← vx0, hxz]; rfl
+    · rw [← vx1, hxz]; rfl
+    · rw [← vx2, hxz]; rfl
+  · rw [← Finset.sum_subset (Finset.subset_univ {i0, i1, i2})]
+    · rw [Finset.sum_insert (by simp [d01, d02]), Finset.sum_insert (by simp [d12]),
+        Finset.sum_singleton, vx0, vx1, vx2]
+      linear_combination hzero
+    · intro i _ hi
+      simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hi
+      rw [vxo i hi.1 hi.2.1 hi.2.2]; ring
+
 end SKEFTHawking
