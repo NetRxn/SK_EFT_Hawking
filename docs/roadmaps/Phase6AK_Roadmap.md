@@ -274,24 +274,46 @@ tiebreaker does NOT fire on already-textbook substrate.
   Frobenius `‖·‖` is a LOCAL instance, NOT the `L2Operator`/`Matrix` scope). D6/preprint prose; Stage-13.
   (The full *log*-negativity Fannes continuity — log-Lipschitz away from 0 — is a thin add-on for
   density ops where `‖ρ^Γ‖₁ ≥ 1`; the trace-norm/negativity version above is the substantive content.)
-- **FU-6 — regularized-rate corollary** 🔨 SUBSTRATE SHIPPED 2026-06-04, full corollary deferred.
-  Honest re-scope (decompose corrected the "LOW" label): the per-`n` rate needs `ρ^⊗n` tensor powers +
-  a max-entangled target + fidelity-to-target — a multi-module assembly, with a **general-dimensional
-  partial transpose** underneath (my `pt2` was hardwired to `Fin 2 × Fin 2`). The gating substrate is now
-  shipped: `PartialTransposeGeneral.lean` — `ptB` on `Fin dA × Fin dB`, `norm_ptB` (Frobenius preserved,
-  general dim, via the index-involution `ptBSwap` + `Fintype.sum_equiv`), `traceNorm_ptB_le`
-  (`‖ρ^Γ‖₁ ≤ √(dA·dB)·‖ρ‖₁`). Kernel-pure. This also unblocks FU-7 (Choi state is bipartite). **Remaining
-  for the full corollary:** generalize FU-3 monotonicity + FU-4 additivity to `ptB`, then the `ρ^⊗n` +
-  target-fidelity + `k/n → E_N` assembly. The *operational content* (a low-negativity state can't be
-  distilled to a Bell pair by local ops) is already shipped as FU-3's one-shot no-go + FU-5's continuity.
-- **FU-7 — finite-dim repeaterless ENTANGLEMENT-distribution bound** (MED, the genuinely-new target).
-  `entanglement-rate ≤ log-negativity(Choi state)` via FU-3 monotone + a finite **channel-simulation layer**
-  (channel = teleport over Choi; textbook Bennett/Pirandola, absent but buildable). Distinct from the
-  secret-key PLOB bound (which is doubly-gapped). Bricks public; productized repeaterless cert = private FQN-consumer.
-- **FU-8 — von Neumann entropy / quantum relative entropy / REE** (HIGH/large, foundational). `−tr(ρ log ρ)`
-  via CFC matrix-log; quantum relative entropy; REE. The Gap #1 substrate that unlocks the *secret-key*
-  family. Genuinely absent in Mathlib (verified); Mathlib-upstream-grade. The `−log₂(1−η)` secret-key value
-  additionally needs Gap #2 (Gaussian/CV states) and is likely never worth it — 6AK.2 stays its honest form.
+- **FU-6 — regularized-rate corollary** ✅ COMPLETE 2026-06-04 (autonomous /goal, scope kept). Shipped as
+  bricks 3–6b: `KroneckerPower.lean` (n-fold via representative, `22bc522b`), `MaxEntNegativity.lean`
+  (`E_N(Φ_d)=log₂d`, `b06edc70`), `DistillationRateBound.lean` (single-copy `log₂k≤E_N(ρ)`, `45577262`),
+  **party-generalization** of the ptB/monotone/logNegB layer to arbitrary `{A B : Type*}` (`4b670324`),
+  and `NCopyRateBound.lean` (`2f2c88c7`): cross-type reindex `traceNorm_reindex_cross`, grouped tensor
+  `gtensor`/`ptB_gtensor`, the grouped n-copy `ncopy`, **`logNegB_ncopy : E_N(ρ^⊗n)=n·E_N(ρ)` on the
+  actual grouped state**, and the **regularized rate bound `logNegB_ncopy_localKraus_le :
+  E_N(Λ(ρ^⊗n)) ≤ n·E_N(ρ)`** (Λ = first-party A-side Kraus channel; with `E_N(Φ_k)=log₂k` this is the
+  per-n reading `log₂k ≤ n·E_N(ρ)` of `E_D ≤ E_N`). All kernel-pure, no new axioms; prose `c0b2f777`
+  (D6 §6 + preprint §3g, D6 LaTeX clean) + Stage-13 GREEN-after-remediation `73b89a32`.
+- **FU-7 — finite-dim repeaterless ENTANGLEMENT-distribution bound** (MED) — 📋 SCOUT-DOCUMENTED 2026-06-04.
+  Substrate now present: Choi state `Ω` (`DiamondNormChoi.lean`), general `ptB`/`logNegB`/monotone on any
+  bipartite party (`4b670324`), grouped tensor + `ncopy` (`2f2c88c7`). **What is reachable kernel-pure
+  decompose-first):** the repeaterless bound's textbook proof (Pirandola teleportation-stretching) has
+  two ingredients — (a) **local-operation monotonicity of negativity, iterated/`n`-link additive** —
+  *already shipped* (brick-1 `traceNorm_ptB_localKraus_le` / brick-2 monotone + `logNegB_ncopy`); and (b)
+  the **teleportation-simulation identity** `Φ(ρ) = Λ(ρ ⊗ Ω_Φ)` rewriting a channel as a Bell-measurement-
+  plus-correction **LOCC** on its Choi state. Ingredient (b) is the genuinely-new content AND the **genuine
+  wall**: the Bell-measurement / classical-communication / conditional-correction LOCC is exactly the LOCC
+  framework Mathlib lacks (verified) — the *same* gap that fences the PLOB secret-key rate (6AK.2). Even the
+  "teleportation-simulable class" (Pauli/erasure/dephasing) still needs that Bell-measurement LOCC to realize
+  the simulation, so it does NOT route around (b) (my first scout note overstated this — corrected). **What
+  is GAPPED (do NOT claim):** the channel→Choi *rate-ceiling* `E_N(output) ≤ E_N(Ω_Φ)` for any channel.
+  **Conclusion:** the honest kernel-pure content of FU-7 (negativity monotone under a repeaterless line of
+  local operations, `n`-link additive) is already delivered by FU-3/FU-6; the channel→Choi ceiling is
+  LOCC-gapped (Mathlib-upstream-grade, not in 6AK scope, no axiom to paper over it). Productized repeaterless
+  cert = private FQN-consumer over the shipped monotone/additive bricks.
+- **FU-8 — von Neumann entropy / quantum relative entropy / REE** (HIGH/large, foundational) —
+  📋 SCOUT-DOCUMENTED 2026-06-04: GENUINE WALL for the headline (document-don't-sink). Decomposition:
+  (i) `S(ρ) = −tr(ρ log ρ)` is *buildable* as substrate via Mathlib CFC matrix-log (`Matrix.IsHermitian`
+  eigenvalue functional calculus) — a real but sizeable module, Mathlib-upstream-grade; (ii) quantum
+  relative entropy `S(ρ‖σ) = tr(ρ(log ρ − log σ))` and its data-processing/joint-convexity — substantially
+  harder (Lieb concavity / operator-convexity of log, largely absent in Mathlib, verified); (iii) REE
+  `E_R(ρ) = inf_{σ∈SEP} S(ρ‖σ)` — needs (ii) PLUS an optimization over the separable set (LOCC/convex-set
+  infimum), the **Gap #1 LOCC wall**. The secret-key `−log₂(1−η)` value additionally needs Gap #2
+  (Gaussian/CV states). CONCLUSION: (i) is a worthwhile standalone future substrate brick if entropy is
+  needed elsewhere; (ii)+(iii) are a multi-person-year Mathlib-grade effort gated on operator-convexity
+  machinery that does not exist — NOT in scope for 6AK. 6AK.2 stays its honest surrogate form; the
+  log-negativity ladder (FU-2..FU-7) is the project's tractable entanglement-measure track and is the
+  right one. No axiom would be shipped to paper over this.
 
 ---
 
