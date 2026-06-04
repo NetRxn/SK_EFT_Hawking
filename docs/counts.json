@@ -1,16 +1,16 @@
 {
-  "generated": "2026-06-04T08:37:17.966818",
+  "generated": "2026-06-04T09:17:24.645984",
   "lean_deps_source": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking/lean/lean_deps.json",
   "lean": {
-    "total_declarations": 18850,
-    "theorems_total": 11019,
-    "theorems_substantive": 10993,
+    "total_declarations": 18871,
+    "theorems_total": 11039,
+    "theorems_substantive": 11013,
     "theorems_placeholder": 26,
     "axioms": 0,
     "axiom_names": [],
     "sorry_declarations": 0,
     "sorry_theorems": 0,
-    "modules": 851,
+    "modules": 853,
     "module_names": [
       "SKEFTHawking.A1Ext",
       "SKEFTHawking.A1ExtSubstantive",
@@ -28,6 +28,7 @@
       "SKEFTHawking.AcousticMetric",
       "SKEFTHawking.AlgebraicRokhlin",
       "SKEFTHawking.AnalogHawkingDemarcation",
+      "SKEFTHawking.AnisotropicGaussianFT",
       "SKEFTHawking.AperiodicLattice",
       "SKEFTHawking.AreaTheorem",
       "SKEFTHawking.AreaTheoremCurveTheoretic",
@@ -699,6 +700,7 @@
       "SKEFTHawking.QuantumNetwork.PauliChannel",
       "SKEFTHawking.QuantumNetwork.PauliChoiNegativity",
       "SKEFTHawking.QuantumNetwork.QECSuppression",
+      "SKEFTHawking.QuantumNetwork.QuantumKlein",
       "SKEFTHawking.QuantumNetwork.QuantumRelativeEntropy",
       "SKEFTHawking.QuantumNetwork.QutritWeyl",
       "SKEFTHawking.QuantumNetwork.RBCertificate",
@@ -864,7 +866,7 @@
       "SKEFTHawking.Z16AnomalyForcesThetaBar",
       "SKEFTHawking.Z16Classification"
     ],
-    "definitions": 6948,
+    "definitions": 6949,
     "structures": 293,
     "instances": 496,
     "inductives": 94
