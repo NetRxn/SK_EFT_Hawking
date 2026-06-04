@@ -47,4 +47,19 @@ theorem diag_conj_eq_sum_normSq (U : ↥(unitary (Matrix ι ι ℂ))) {B : Matri
   · intro k _ hk; rw [hD, Matrix.diagonal_apply_ne _ hk, mul_zero, zero_mul]
   · intro h; exact absurd (Finset.mem_univ j) h
 
+/-- Conjugating a Hermitian `A` into its OWN eigenbasis is the eigenvalue diagonal: `(U_Aᴴ·A·U_A)ᵢᵢ = λᵢ(A)`. -/
+theorem diag_conj_self_eq_eigenvalue {A : Matrix ι ι ℂ} (hA : A.IsHermitian) (i : ι) :
+    (star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * A * (↑hA.eigenvectorUnitary : Matrix ι ι ℂ)) i i
+      = ((hA.eigenvalues i : ℝ) : ℂ) := by
+  set U : Matrix ι ι ℂ := (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) with hU
+  have hUU : star U * U = 1 := (Unitary.mem_iff.mp hA.eigenvectorUnitary.2).1
+  have hdiag : star U * A * U = Matrix.diagonal (RCLike.ofReal ∘ hA.eigenvalues) := by
+    conv_lhs => rw [hA.spectral_theorem, Unitary.conjStarAlgAut_apply]
+    rw [show star U * ((↑hA.eigenvectorUnitary : Matrix ι ι ℂ)
+          * Matrix.diagonal (RCLike.ofReal ∘ hA.eigenvalues)
+          * star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ)) * U
+        = (star U * U) * Matrix.diagonal (RCLike.ofReal ∘ hA.eigenvalues) * (star U * U)
+        from by rw [hU]; noncomm_ring, hUU, one_mul, mul_one]
+  rw [hdiag, Matrix.diagonal_apply_eq, Function.comp_apply, RCLike.ofReal_eq_complex_ofReal]
+
 end SKEFTHawking.QuantumNetwork
