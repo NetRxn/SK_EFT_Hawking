@@ -568,4 +568,65 @@ theorem no_padic_sol_unit_pUnit {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]} (hv : I
       z ^ 2 = (u : ℚ_[p]) * x ^ 2 + (p : ℚ_[p]) * v * y ^ 2 :=
   fun hsol => no_padicInt_sol_unit_pUnit hv hunsq (exists_padicInt_ternary_of_padic hsol)
 
+/-! ## Generic primitive-solution extraction for the symmetric diagonal ternary `a x² + b y² + c z² = 0`
+
+Reusable across all coefficient cases (odd `p` mixed/non-unit, `p = 2`): a `ℚ_[p]` solution scales to a
+*primitive* `ℤ_[p]` solution, after which a case-specific mod-`p` argument supplies the contradiction. -/
+
+/-- Generic descent step: if all coordinates of a `ℤ_[p]` solution of `a x² + b y² + c z² = 0` are divisible
+by `p`, dividing through by `p` yields a solution of the same form. -/
+theorem diag_ternary_descent_step {p : ℕ} [Fact p.Prime] {a b c X Y Z : ℤ_[p]}
+    (hX : (p : ℤ_[p]) ∣ X) (hY : (p : ℤ_[p]) ∣ Y) (hZ : (p : ℤ_[p]) ∣ Z)
+    (h : a * X ^ 2 + b * Y ^ 2 + c * Z ^ 2 = 0) :
+    ∃ X' Y' Z' : ℤ_[p], X = (p : ℤ_[p]) * X' ∧ Y = (p : ℤ_[p]) * Y' ∧ Z = (p : ℤ_[p]) * Z' ∧
+      a * X' ^ 2 + b * Y' ^ 2 + c * Z' ^ 2 = 0 := by
+  obtain ⟨X', rfl⟩ := hX
+  obtain ⟨Y', rfl⟩ := hY
+  obtain ⟨Z', rfl⟩ := hZ
+  refine ⟨X', Y', Z', rfl, rfl, rfl, ?_⟩
+  have hp2 : (p : ℤ_[p]) ^ 2 ≠ 0 :=
+    pow_ne_zero 2 (by exact_mod_cast (Fact.out : p.Prime).ne_zero)
+  apply mul_left_cancel₀ hp2
+  linear_combination h
+
+/-- Generic denominator clearing: a `ℚ_[p]` solution of `a x² + b y² + c z² = 0` (coefficients in `ℤ_[p]`)
+scales to a `ℤ_[p]` solution (multiply by `p^N`; degree-2 homogeneous). -/
+theorem exists_padicInt_diag_ternary_of_padic {p : ℕ} [Fact p.Prime] {a b c : ℤ_[p]}
+    (hsol : ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 + (c : ℚ_[p]) * z ^ 2 = 0) :
+    ∃ X Y Z : ℤ_[p], ¬(X = 0 ∧ Y = 0 ∧ Z = 0) ∧ a * X ^ 2 + b * Y ^ 2 + c * Z ^ 2 = 0 := by
+  obtain ⟨x, y, z, hnz, h⟩ := hsol
+  have hp1 : (1 : ℝ) < (p : ℝ) := by exact_mod_cast (Fact.out : p.Prime).one_lt
+  have hppos : (0 : ℝ) < (p : ℝ) := lt_trans zero_lt_one hp1
+  have hpne : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  obtain ⟨Nx, hNx⟩ := pow_unbounded_of_one_lt ‖x‖ hp1
+  obtain ⟨Ny, hNy⟩ := pow_unbounded_of_one_lt ‖y‖ hp1
+  obtain ⟨Nz, hNz⟩ := pow_unbounded_of_one_lt ‖z‖ hp1
+  set N := max Nx (max Ny Nz) with hNdef
+  have hmono : ∀ M, M ≤ N → ∀ w : ℚ_[p], ‖w‖ < (p : ℝ) ^ M → ‖(p : ℚ_[p]) ^ N * w‖ ≤ 1 := by
+    intro M hM w hw
+    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow, inv_mul_le_iff₀ (pow_pos hppos N), mul_one]
+    exact le_trans hw.le (pow_le_pow_right₀ hp1.le hM)
+  have hx' := hmono Nx (le_max_left _ _) x hNx
+  have hy' := hmono Ny (le_trans (le_max_left _ _) (le_max_right _ _)) y hNy
+  have hz' := hmono Nz (le_trans (le_max_right _ _) (le_max_right _ _)) z hNz
+  have hpN : (p : ℚ_[p]) ^ N ≠ 0 := pow_ne_zero N hpne
+  refine ⟨⟨(p : ℚ_[p]) ^ N * x, hx'⟩, ⟨(p : ℚ_[p]) ^ N * y, hy'⟩, ⟨(p : ℚ_[p]) ^ N * z, hz'⟩, ?_, ?_⟩
+  · rintro ⟨hX0, hY0, hZ0⟩
+    apply hnz
+    refine ⟨?_, ?_, ?_⟩
+    · have h1 : (p : ℚ_[p]) ^ N * x = 0 := by
+        have := congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) hX0; simpa using this
+      exact (mul_eq_zero.mp h1).resolve_left hpN
+    · have h1 : (p : ℚ_[p]) ^ N * y = 0 := by
+        have := congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) hY0; simpa using this
+      exact (mul_eq_zero.mp h1).resolve_left hpN
+    · have h1 : (p : ℚ_[p]) ^ N * z = 0 := by
+        have := congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) hZ0; simpa using this
+      exact (mul_eq_zero.mp h1).resolve_left hpN
+  · rw [← sub_eq_zero]
+    apply PadicInt.coe_eq_zero.mp
+    push_cast
+    linear_combination ((p : ℚ_[p]) ^ N) ^ 2 * h
+
 end SKEFTHawking
