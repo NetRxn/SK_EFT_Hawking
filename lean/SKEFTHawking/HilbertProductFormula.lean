@@ -254,4 +254,50 @@ theorem hilbertGlobalProd_two_prime (q : ℕ) [Fact q.Prime] (hq : q ≠ 2) :
         hqnd2 ((ZMod.intCast_zmod_eq_zero_iff_dvd 2 q).mp h)) with h | h <;>
     · rw [h]; ring
 
+/-- **Product formula, generator `(p, q)` for distinct odd primes — the quadratic-reciprocity core:**
+`∏_v (p,q)_v = 1`. Three places contribute: the dyadic factor `χ₂(ε(p)·ε(q)) = (-1)^{(p/2)(q/2)}`, and the
+`p`- and `q`-adic factors `legendreSym p q` and `legendreSym q p` whose product is `(-1)^{(p/2)(q/2)}` by
+quadratic reciprocity. The two equal `(-1)^{(p/2)(q/2)}` cancel. -/
+theorem hilbertGlobalProd_odd_primes (p q : ℕ) [Fact p.Prime] [Fact q.Prime]
+    (hp : p ≠ 2) (hq : q ≠ 2) (hpq : p ≠ q) :
+    hilbertGlobalProd (p : ℤ) (q : ℤ) = 1 := by
+  have hpoddN : ¬ 2 ∣ p := by have := Nat.odd_iff.mp ((Fact.out : p.Prime).odd_of_ne_two hp); omega
+  have hqoddN : ¬ 2 ∣ q := by have := Nat.odd_iff.mp ((Fact.out : q.Prime).odd_of_ne_two hq); omega
+  have hpodd : ¬ (2 : ℤ) ∣ (p : ℤ) := fun h => hpoddN (by exact_mod_cast h)
+  have hqodd : ¬ (2 : ℤ) ∣ (q : ℤ) := fun h => hqoddN (by exact_mod_cast h)
+  have hpndq : ¬ (p : ℤ) ∣ (q : ℤ) := fun h =>
+    hpq ((Nat.prime_dvd_prime_iff_eq Fact.out Fact.out).mp (Int.natCast_dvd_natCast.mp (by exact_mod_cast h)))
+  have hqndp : ¬ (q : ℤ) ∣ (p : ℤ) := fun h =>
+    hpq ((Nat.prime_dvd_prime_iff_eq Fact.out Fact.out).mp (Int.natCast_dvd_natCast.mp (by exact_mod_cast h))).symm
+  have hsub : Function.mulSupport (fun x => hilbertPrime x (p : ℤ) (q : ℤ)) ⊆ ↑({2, p, q} : Finset ℕ) := by
+    intro x hx
+    simp only [Function.mem_mulSupport] at hx
+    simp only [Finset.coe_insert, Finset.coe_singleton, Set.mem_insert_iff, Set.mem_singleton_iff]
+    by_contra hxne
+    push_neg at hxne
+    apply hx
+    by_cases hxp : x.Prime
+    · refine hilbertPrime_units hxp hxne.1 ?_ ?_
+      · intro h
+        exact hxne.2.1 ((Nat.prime_dvd_prime_iff_eq hxp Fact.out).mp
+          (Int.natCast_dvd_natCast.mp (by exact_mod_cast h)))
+      · intro h
+        exact hxne.2.2 ((Nat.prime_dvd_prime_iff_eq hxp Fact.out).mp
+          (Int.natCast_dvd_natCast.mp (by exact_mod_cast h)))
+    · exact hilbertPrime_of_not_prime hxp _ _
+  unfold hilbertGlobalProd
+  rw [finprod_eq_finset_prod_of_mulSupport_subset _ hsub,
+    Finset.prod_insert (by simp [Ne.symm hp, Ne.symm hq]), Finset.prod_insert (by simp [hpq]),
+    Finset.prod_singleton, hilbertPrime_two, hilbertPrime_odd Fact.out hp, hilbertPrime_odd Fact.out hq,
+    hilbert2Int_odd_odd hpodd hqodd, @Int.cast_natCast (ZMod 8) _ p, @Int.cast_natCast (ZMod 8) _ q,
+    chi2_eps2_mul ((Fact.out : p.Prime).odd_of_ne_two hp) ((Fact.out : q.Prime).odd_of_ne_two hq),
+    hilbertPadicInt_comm p (p : ℤ) (q : ℤ), hilbertPadicInt_eq_legendre p hpndq,
+    hilbertPadicInt_eq_legendre q hqndp,
+    show ((p : ℤ) : ℝ) = (p : ℝ) from by push_cast; ring,
+    hilbertReal_of_nonneg_left (by positivity : (0 : ℝ) ≤ (p : ℝ)),
+    show legendreSym p (q : ℤ) * legendreSym q (p : ℤ) = (-1 : ℤ) ^ (p / 2 * (q / 2)) from by
+      rw [mul_comm]; exact legendreSym.quadratic_reciprocity hp hq hpq]
+  rw [one_mul, ← pow_add]
+  exact Even.neg_one_pow ⟨_, rfl⟩
+
 end SKEFTHawking.HilbertSymbol
