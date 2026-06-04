@@ -2742,6 +2742,9 @@ import SKEFTHawking.QuantumNetwork.KroneckerPower
 -- Phase 6AK Wave FU-6 brick 4 (2026-06-04): log-negativity of the maximally entangled state
 -- (swapMat SWAP permutation, |SWAP|=1 ⟹ ‖SWAP‖₁=d²; logNegB_maxEntState E_N(Φ_d)=log₂d) — distillation target.
 import SKEFTHawking.QuantumNetwork.MaxEntNegativity
+-- Phase 6AK Wave FU-6 brick 5 (2026-06-04): single-copy distillation rate bound
+-- (distillation_single_copy_bound: local op → Φ_k ⟹ log₂k ≤ E_N(ρ); brick-1 monotone ∘ brick-4 target).
+import SKEFTHawking.QuantumNetwork.DistillationRateBound
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
