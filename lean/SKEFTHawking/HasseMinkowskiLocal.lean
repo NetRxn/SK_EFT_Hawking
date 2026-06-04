@@ -233,4 +233,18 @@ theorem exists_binary_zero_iff {K : Type*} [Field K] {a b : K} (ha : a ≠ 0) :
   · rintro ⟨s, hs⟩
     exact ⟨s, a, fun h => ha h.2, by linear_combination -a * hs⟩
 
+/-- **Sufficient conditions for ternary solvability** (the isotropic cases of `z² = a x² + b y²`). Over any
+field, the equation has a nontrivial solution if `a` is a square (take `(1,0,√a)`), or `b` is a square
+(`(0,1,√b)`), or (with `a ≠ 0`) `-(a·b)` is a square (the binary part `a x² + b y² = 0` already vanishes, so
+`z = 0`). These are the "easy" directions of the symbol ⟺ solvability bridge; the converses (anisotropy when
+none holds) are the substantive `p`-adic descent. -/
+theorem solvable_ternary_of_sufficient {K : Type*} [Field K] {a b : K}
+    (h : IsSquare a ∨ IsSquare b ∨ (a ≠ 0 ∧ IsSquare (-(a * b)))) :
+    ∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2 := by
+  rcases h with ⟨w, hw⟩ | ⟨w, hw⟩ | ⟨ha, hsq⟩
+  · exact ⟨1, 0, w, by simp, by rw [hw]; ring⟩
+  · exact ⟨0, 1, w, by simp, by rw [hw]; ring⟩
+  · obtain ⟨x, y, hxy, h0⟩ := (exists_binary_zero_iff ha).mpr hsq
+    exact ⟨x, y, 0, fun hc => hxy ⟨hc.1, hc.2.1⟩, by linear_combination -h0⟩
+
 end SKEFTHawking
