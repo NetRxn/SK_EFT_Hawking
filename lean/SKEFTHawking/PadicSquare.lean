@@ -1468,4 +1468,33 @@ theorem represents_iff_homog {K : Type*} [Field K] {a b c : K} :
   · rintro ⟨x, y, z, hz, h⟩
     exact ⟨x / z, y / z, by field_simp; linear_combination h⟩
 
+/-- **Ternary Hasse–Minkowski, canonical form with rational coefficients.** Extends
+`ternary_solvable_of_local` from squarefree-integer to arbitrary nonzero *rational* coefficients `A, B`:
+`z² = A x² + B y²` solvable over ℝ and every ℚ_p ⟹ solvable over ℚ. (Write `A = a'·s²`, `B = b'·u²` with
+`a', b'` squarefree integers via `exists_squarefree_sq_mul_rat`, reduce at every place via
+`solvable_canonical_of_sq_mul`, apply the integer ternary HM.) The form directly consumable after
+`isotropic_diag_ternary_iff_canonical` turns a diagonal ternary into canonical shape. -/
+theorem ternary_canonical_solvable_of_local_rat {A B : ℚ} (hA : A ≠ 0) (hB : B ≠ 0)
+    (hR : ∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (A : ℝ) * x ^ 2 + (B : ℝ) * y ^ 2)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (A : ℚ_[p]) * x ^ 2 + (B : ℚ_[p]) * y ^ 2) :
+    ∃ x y z : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (A : ℚ) * x ^ 2 + (B : ℚ) * y ^ 2 := by
+  obtain ⟨a', s, ha'0, hs0, ha'sf, hAeq⟩ := exists_squarefree_sq_mul_rat hA
+  obtain ⟨b', u, hb'0, hu0, hb'sf, hBeq⟩ := exists_squarefree_sq_mul_rat hB
+  have hR' : ∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = ((a' : ℤ) : ℝ) * x ^ 2 + ((b' : ℤ) : ℝ) * y ^ 2 :=
+    (solvable_canonical_of_sq_mul (K := ℝ) (s := ((s : ℚ) : ℝ)) (u := ((u : ℚ) : ℝ))
+      (by exact_mod_cast hs0) (by exact_mod_cast hu0) (by exact_mod_cast hAeq)
+      (by exact_mod_cast hBeq)).mp hR
+  have hloc' : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = ((a' : ℤ) : ℚ_[p]) * x ^ 2 + ((b' : ℤ) : ℚ_[p]) * y ^ 2 := by
+    intro p _
+    exact (solvable_canonical_of_sq_mul (K := ℚ_[p]) (s := ((s : ℚ) : ℚ_[p])) (u := ((u : ℚ) : ℚ_[p]))
+      (by exact_mod_cast hs0) (by exact_mod_cast hu0) (by exact_mod_cast hAeq)
+      (by exact_mod_cast hBeq)).mp (hloc p)
+  have key := ternary_solvable_of_local ha'0 hb'0 (Int.squarefree_natAbs.mpr ha'sf)
+    (Int.squarefree_natAbs.mpr hb'sf) hR' hloc'
+  exact (solvable_canonical_of_sq_mul (K := ℚ) (s := (s : ℚ)) (u := (u : ℚ))
+    hs0 hu0 hAeq hBeq).mpr key
+
 end SKEFTHawking
