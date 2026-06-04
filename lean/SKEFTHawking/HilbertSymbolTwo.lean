@@ -14,6 +14,7 @@ Part of the from-scratch Hasse–Minkowski development ([HM-LG]); companion to `
 -/
 
 import Mathlib
+import SKEFTHawking.HilbertSymbolPadic
 
 namespace SKEFTHawking.HilbertSymbol
 
@@ -120,6 +121,49 @@ theorem hilbert2Nat_mul_right {a b₁ b₂ : ℕ} (hb₁ : b₁ ≠ 0) (hb₂ : 
 /-- **Symmetry of the dyadic symbol:** `(a,b)_2 = (b,a)_2`. -/
 theorem hilbert2Nat_comm (a b : ℕ) : hilbert2Nat a b = hilbert2Nat b a := by
   unfold hilbert2Nat
+  rw [mul_comm (eps2 _) (eps2 _)]
+  ring_nf
+
+/-- The **signed (ℤ) dyadic Hilbert symbol** via the explicit ε/ω formula on the signed 2-free parts
+(`pfreeInt 2`); the residue mod 8 absorbs the sign. Extends `hilbert2Nat` to all nonzero integers. -/
+def hilbert2Int (a b : ℤ) : ℤ :=
+  chi2 (eps2 ((pfreeInt 2 a : ℤ) : ZMod 8) * eps2 ((pfreeInt 2 b : ℤ) : ZMod 8)
+    + (padicValInt 2 a : ZMod 2) * omega2 ((pfreeInt 2 b : ℤ) : ZMod 8)
+    + (padicValInt 2 b : ZMod 2) * omega2 ((pfreeInt 2 a : ℤ) : ZMod 8))
+
+/-- The signed dyadic symbol is `{±1}`-valued. -/
+theorem hilbert2Int_mem (a b : ℤ) : hilbert2Int a b = 1 ∨ hilbert2Int a b = -1 :=
+  chi2_mem _
+
+/-- **Bimultiplicativity of the signed dyadic symbol in the first argument** (nonzero arguments). -/
+theorem hilbert2Int_mul_left {a₁ a₂ b : ℤ} (ha₁ : a₁ ≠ 0) (ha₂ : a₂ ≠ 0) :
+    hilbert2Int (a₁ * a₂) b = hilbert2Int a₁ b * hilbert2Int a₂ b := by
+  unfold hilbert2Int
+  rw [← chi2_add]
+  congr 1
+  rw [pfreeInt_mul 2 ha₁ ha₂, Int.cast_mul,
+    eps2_mul (isUnit_intCast_zmod8 (not_dvd_pfreeInt 2 ha₁)) (isUnit_intCast_zmod8 (not_dvd_pfreeInt 2 ha₂)),
+    omega2_mul (isUnit_intCast_zmod8 (not_dvd_pfreeInt 2 ha₁)) (isUnit_intCast_zmod8 (not_dvd_pfreeInt 2 ha₂)),
+    padicValInt.mul ha₁ ha₂]
+  push_cast
+  ring
+
+/-- **Bimultiplicativity of the signed dyadic symbol in the second argument** (nonzero arguments). -/
+theorem hilbert2Int_mul_right {a b₁ b₂ : ℤ} (hb₁ : b₁ ≠ 0) (hb₂ : b₂ ≠ 0) :
+    hilbert2Int a (b₁ * b₂) = hilbert2Int a b₁ * hilbert2Int a b₂ := by
+  unfold hilbert2Int
+  rw [← chi2_add]
+  congr 1
+  rw [pfreeInt_mul 2 hb₁ hb₂, Int.cast_mul,
+    eps2_mul (isUnit_intCast_zmod8 (not_dvd_pfreeInt 2 hb₁)) (isUnit_intCast_zmod8 (not_dvd_pfreeInt 2 hb₂)),
+    omega2_mul (isUnit_intCast_zmod8 (not_dvd_pfreeInt 2 hb₁)) (isUnit_intCast_zmod8 (not_dvd_pfreeInt 2 hb₂)),
+    padicValInt.mul hb₁ hb₂]
+  push_cast
+  ring
+
+/-- **Symmetry of the signed dyadic symbol:** `(a,b)_2 = (b,a)_2`. -/
+theorem hilbert2Int_comm (a b : ℤ) : hilbert2Int a b = hilbert2Int b a := by
+  unfold hilbert2Int
   rw [mul_comm (eps2 _) (eps2 _)]
   ring_nf
 
