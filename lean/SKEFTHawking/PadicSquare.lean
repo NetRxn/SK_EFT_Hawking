@@ -931,4 +931,22 @@ theorem isSquare_rat_of_isSquare_padic {q : ℚ} (hq : 0 ≤ q)
     · exact ⟨a0, by rw [h1]; ring⟩
     · exfalso; nlinarith [sq_nonneg a0, hdenpos]
 
+/-- **Rational-square local–global, as an iff (Hasse–Minkowski n = 2 base case).** A rational is a square
+iff it is a square at the real place (`0 ≤ q`) and at every finite place (`IsSquare (q : ℚ_[p])`). Forward:
+squares are nonnegative in the ordered field ℚ and map to squares under the ring homs `ℚ → ℚ_[p]`. Backward
+is `isSquare_rat_of_isSquare_padic`. This is exactly the local–global principle for binary forms: combined
+with `exists_binary_zero_iff` (`a x² + b y² = 0` nontrivial ⟺ `IsSquare (-(a·b))`), a binary form over ℚ is
+isotropic iff it is isotropic over ℝ and over every ℚ_p. -/
+theorem isSquare_rat_iff_local {q : ℚ} :
+    IsSquare q ↔ 0 ≤ q ∧ ∀ (p : ℕ) [Fact p.Prime], IsSquare ((q : ℚ_[p])) := by
+  constructor
+  · intro hsq
+    refine ⟨?_, ?_⟩
+    · obtain ⟨r, hr⟩ := hsq; rw [hr]; exact mul_self_nonneg r
+    · intro p inst
+      haveI := inst
+      have hmap := hsq.map (Rat.castHom ℚ_[p])
+      simpa using hmap
+  · rintro ⟨hq, h⟩; exact isSquare_rat_of_isSquare_padic hq h
+
 end SKEFTHawking
