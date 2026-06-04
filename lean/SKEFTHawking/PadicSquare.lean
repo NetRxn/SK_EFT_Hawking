@@ -1095,4 +1095,19 @@ theorem exists_squarefree_diag_isotropic {ι : Type*} [Fintype ι] (w : ι → �
   rw [exists_diag_isotropic_congr_sq w (fun i => 1 / t i) hc]
   simp_rw [heq]
 
+/-- **`t² − a` is always a norm value (the descent invariant's source).** The canonical ternary
+`z² = a x² + (t² − a) y²` is *unconditionally* solvable with `y ≠ 0`: `(x,y,z) = (1,1,t)`. (This is why the
+descent preserves local solvability: `t² − a = b·b''`, so at every place `(a,b)_v·(a,b'')_v = (a,t²−a)_v = 1`.) -/
+theorem solvable_norm_value (a t : ℤ) :
+    ∃ x y z : ℤ, y ≠ 0 ∧ z ^ 2 = a * x ^ 2 + (t ^ 2 - a) * y ^ 2 :=
+  ⟨1, 1, t, one_ne_zero, by ring⟩
+
+/-- **Symmetry of the canonical ternary in its two coefficients.** `z² = a x² + b y²` is solvable iff
+`z² = b x² + a y²` is (swap `x ↔ y`). Lets the Legendre descent assume `|a| ≤ |b|` without loss. -/
+theorem solvable_canonical_symm {a b : ℤ}
+    (h : ∃ x y z : ℤ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2) :
+    ∃ x y z : ℤ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = b * x ^ 2 + a * y ^ 2 := by
+  obtain ⟨x, y, z, hnz, he⟩ := h
+  exact ⟨y, x, z, fun hc => hnz ⟨hc.2.1, hc.1, hc.2.2⟩, by linarith [he]⟩
+
 end SKEFTHawking
