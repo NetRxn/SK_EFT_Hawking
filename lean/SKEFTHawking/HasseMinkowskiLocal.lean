@@ -314,4 +314,41 @@ theorem isotropic_diag_ternary_iff_canonical {K : Type*} [Field K] {a b c : K} (
     field_simp at h
     linear_combination h
 
+/-- **Canonical form: solvability is a square-class invariant of the first coefficient (field-generic).** Over
+a field, for `s ≠ 0`, `z² = a x² + b y²` is solvable iff `z² = (a·s²) x² + b y²` is (scale `x ↦ x/s`). The
+field-generic version of `solvable_canonical_congr_sq_left` — used to renormalize the rational canonical
+coefficients (from `isotropic_diag_ternary_iff_canonical`) to squarefree integers at every place `ℝ`/`ℚ_p`/`ℚ`
+before invoking the integer ternary Hasse–Minkowski. -/
+theorem solvable_canonical_congr_sq {K : Type*} [Field K] {a b s : K} (hs : s ≠ 0) :
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2) ↔
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * s ^ 2 * x ^ 2 + b * y ^ 2) := by
+  constructor
+  · rintro ⟨x, y, z, hnz, he⟩
+    refine ⟨x / s, y, z, fun hc => hnz ⟨?_, hc.2.1, hc.2.2⟩, ?_⟩
+    · rcases div_eq_zero_iff.mp hc.1 with h | h
+      exacts [h, absurd h hs]
+    · field_simp; linear_combination he
+  · rintro ⟨x, y, z, hnz, he⟩
+    refine ⟨s * x, y, z, fun hc => hnz ⟨?_, hc.2.1, hc.2.2⟩, ?_⟩
+    · rcases mul_eq_zero.mp hc.1 with h | h
+      exacts [absurd h hs, h]
+    · linear_combination he
+
+/-- **Canonical form: solvability is a square-class invariant of the second coefficient (field-generic).**
+Symmetric companion of `solvable_canonical_congr_sq` for the `b`-coefficient (scale `y ↦ y/s`). -/
+theorem solvable_canonical_congr_sq_right {K : Type*} [Field K] {a b s : K} (hs : s ≠ 0) :
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2) ↔
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * s ^ 2 * y ^ 2) := by
+  constructor
+  · rintro ⟨x, y, z, hnz, he⟩
+    refine ⟨x, y / s, z, fun hc => hnz ⟨hc.1, ?_, hc.2.2⟩, ?_⟩
+    · rcases div_eq_zero_iff.mp hc.2.1 with h | h
+      exacts [h, absurd h hs]
+    · field_simp; linear_combination he
+  · rintro ⟨x, y, z, hnz, he⟩
+    refine ⟨x, s * y, z, fun hc => hnz ⟨hc.1, ?_, hc.2.2⟩, ?_⟩
+    · rcases mul_eq_zero.mp hc.2.1 with h | h
+      exacts [absurd h hs, h]
+    · linear_combination he
+
 end SKEFTHawking
