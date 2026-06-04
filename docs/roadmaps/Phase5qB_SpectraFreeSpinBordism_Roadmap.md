@@ -253,6 +253,31 @@ hyperbolic/represented value), via the ℚ ternary HM; (ii) apply to the diagona
 isotropic vector (`exists_int_isotropic_of_rat`) ⟹ `HasWeakIsotropicVectorHyp`; (iii) wire `RokhlinBridge` (drop
 `h_rokhlin`), update D2/L2 + HYPOTHESIS_REGISTRY, dispatch closure reviewer.
 
+**UPDATE 2026-06-04 (cont.) — [HM] RANK-REDUCTION STACK COMPLETE THROUGH n≤4-reduction; SOLE KEYSTONE = weak
+approximation.** Beyond the ternary theorem, the following are now kernel-pure (project-gate green):
+- **n=2 base** `binary_solvable_of_local` (binary form isotropic /ℚ ⟺ /ℝ and every ℚ_p; via
+  `exists_binary_zero_iff` + `isSquare_rat_iff_local`, the square local–global).
+- **n=3 base** `diag_ternary_solvable_of_local` (diagonal ternary `a x²+b y²+c z²=0` /ℚ ⟺ locally everywhere;
+  via `isotropic_diag_ternary_iff_canonical` + `ternary_canonical_solvable_of_local_rat`, the latter extending
+  the integer ternary theorem to rational canonical coefficients through `solvable_canonical_of_sq_mul`).
+- **value representation** `binary_represents_of_local` (a binary form represents a value /ℚ ⟺ locally
+  everywhere) + `represents_of_ternary_isotropic` + `binary_isotropic_universal`.
+- **n=4 reduction (both directions)** `quaternary_isotropic_of_common_value` + `common_value_of_quaternary_isotropic`
+  (rank-4 isotropy ⟺ the two binary parts share a common represented value).
+- **matrix→diagonal** `exists_diag_weights_iff_matrix` (Gram form ⟺ diagonal via
+  `equivalent_weightedSumSquares`); ℚ→ℤ clearing `exists_int_isotropic_of_rat` (already present).
+
+**THE SOLE REMAINING MATHEMATICAL KEYSTONE = WEAK APPROXIMATION for ℚ (Dirichlet-free, CRT-based).** It produces
+a *global* common value from local ones (find `t ∈ ℚˣ` in prescribed square classes at finitely many places —
+realizable by `Nat.chineseRemainderOfList` + sign, NO Dirichlet). This finishes n=4; n≥5 follows by induction on
+the complete n≤3 bases. After it: establish even-unimodular ℚ_p local isotropy (ℤ_p-diagonalization plumbing) ⟹
+`HasWeakIsotropicVectorHyp` ⟹ wire `RokhlinBridge` (drop `h_rokhlin`) + D2/L2 + HYPOTHESIS_REGISTRY + closure
+reviewer. (Alternative Dirichlet-free n=4 route reusing the completed `hilbertGlobalProd_eq_one`:
+quaternion-algebra-split-everywhere ⟹ split via Hilbert reciprocity ⟹ norm form isotropic — needs Hasse-invariant
+↔ isotropy machinery, not yet scoped.) **The crux (ternary HM) and the entire rank-reduction/value-representation/
+plumbing stack are done; only the weak-approximation keystone and the even-unimodular local-isotropy plumbing
+remain before wiring.**
+
 **UPDATE 2026-06-04 (cont.) — [HM] foundation: HILBERT'S PRODUCT FORMULA COMPLETE (major gating sub-result).**
 The full scalar Hilbert-symbol arithmetic layer for `[HM]`/Hasse–Minkowski is now a kernel-pure, axiom-clean
 fact, built entirely from scratch (Mathlib has NONE of it):
