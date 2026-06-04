@@ -121,4 +121,14 @@ theorem proj_diag_re_mem_Icc {Q : Matrix ι ι ℂ} (hQh : Q.IsHermitian) (hQ : 
   rw [← hre, hjterm] at hjle
   nlinarith [hjle, hnn]
 
+/-- Reindexing a function over the (index-`ι`) eigenvalues equals the sum over the sorted-descending
+eigenvalues `eigenvalues₀ : Fin (card ι) → ℝ`. Bridges the two eigenvalue enumerations. -/
+theorem sum_eigenvalues_eq_sum_eigenvalues₀ {A : Matrix ι ι ℂ} (hA : A.IsHermitian) (f : ℝ → ℝ) :
+    ∑ i, f (hA.eigenvalues i) = ∑ k, f (hA.eigenvalues₀ k) := by
+  rw [Finset.sum_congr rfl (fun i _ =>
+    (rfl : f (hA.eigenvalues i)
+      = (fun k => f (hA.eigenvalues₀ k)) ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i)))]
+  exact Equiv.sum_comp (Fintype.equivOfCardEq (Fintype.card_fin _)).symm
+    (fun k => f (hA.eigenvalues₀ k))
+
 end SKEFTHawking.QuantumNetwork
