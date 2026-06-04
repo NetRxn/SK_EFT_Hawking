@@ -40,4 +40,26 @@ theorem omega2_mul {x y : ZMod 8} (hx : IsUnit x) (hy : IsUnit y) :
     omega2 (x * y) = omega2 x + omega2 y := by
   revert hx hy; revert x y; decide
 
+/-- The `±1`-valued character of `ZMod 2`: `χ₂ 0 = 1`, `χ₂ 1 = -1`. Converts the additive `ZMod 2` exponent
+of the dyadic Hilbert symbol into its multiplicative `{±1}` value. -/
+def chi2 (e : ZMod 2) : ℤ := (-1) ^ e.val
+
+@[simp] theorem chi2_zero : chi2 0 = 1 := by decide
+@[simp] theorem chi2_one : chi2 1 = -1 := by decide
+
+/-- `χ₂` turns addition into multiplication: `χ₂(e+f) = χ₂ e · χ₂ f`. -/
+theorem chi2_add (e f : ZMod 2) : chi2 (e + f) = chi2 e * chi2 f := by
+  revert e f; decide
+
+theorem chi2_mem (e : ZMod 2) : chi2 e = 1 ∨ chi2 e = -1 := by revert e; decide
+
+/-- The `2`-free part of a nonzero natural, cast to `ZMod 8`, is a **unit** (it is odd, hence coprime to 8). -/
+theorem isUnit_cast_ordCompl_two {n : ℕ} (hn : n ≠ 0) :
+    IsUnit ((ordCompl[2] n : ℕ) : ZMod 8) := by
+  rw [ZMod.isUnit_iff_coprime]
+  have hodd : ¬ (2 : ℕ) ∣ ordCompl[2] n := Nat.not_dvd_ordCompl Nat.prime_two hn
+  have hcop2 : Nat.Coprime (ordCompl[2] n) 2 :=
+    (Nat.coprime_comm.mp ((Nat.prime_two.coprime_iff_not_dvd).mpr hodd))
+  simpa using hcop2.pow_right 3
+
 end SKEFTHawking.HilbertSymbol
