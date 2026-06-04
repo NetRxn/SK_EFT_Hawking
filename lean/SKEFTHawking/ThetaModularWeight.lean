@@ -146,4 +146,12 @@ theorem latticeTheta_I_ne_zero {d : ℕ} (M : Matrix (Fin d) (Fin d) ℝ) (hpd :
   rw [hL, ne_eq, Complex.ofReal_eq_zero]
   exact ne_of_gt (hsumR.tsum_pos (fun v => (Real.exp_pos _).le) 0 (Real.exp_pos _))
 
+/-- The upper half-plane is preserved by `τ ↦ -1/τ`: `0 < τ.im → 0 < (-1/τ).im`
+(`(-1/τ).im = τ.im / |τ|²`). -/
+theorem neg_inv_im_pos {τ : ℂ} (hτ : 0 < τ.im) : 0 < (-1 / τ).im := by
+  have hτ0 : τ ≠ 0 := fun h => by rw [h] at hτ; simp at hτ
+  have heq : (-1 / τ).im = τ.im / Complex.normSq τ := by
+    rw [neg_div, one_div, Complex.neg_im, Complex.inv_im]; ring
+  rw [heq]; exact div_pos hτ (Complex.normSq_pos.mpr hτ0)
+
 end SKEFTHawking
