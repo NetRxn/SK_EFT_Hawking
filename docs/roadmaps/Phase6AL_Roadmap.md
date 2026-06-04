@@ -52,6 +52,29 @@ inequality `|H(p)−H(q)| ≤ qaryEntropy d (½‖p−q‖₁)` — Mathlib has 
 & monotonicity, but NOT the inequality (a research-grade maximization over the distribution-pair polytope; Audenaert
 2007). Per the goal's alternative-completion path these are the documented residuals; everything else in C+F is shipped.
 
+**Wave 4 / F2 BRICKS + R2-STRUCTURE COMPLETE ✅ SHIPPED (2026-06-04, my own commits — decompose-before-asserting-walls
+reframed R2 from "wall" to a brick sequence; the classic *conditioned* Fannes is tractable, only the sharp
+unconditional Audenaert constant is research-grade).** Three F2 bricks: `negMulLog_add_le` `1dbcaec4` (subadditivity
+`η(a+b)≤η(a)+η(b)` = forward per-term modulus direction, via `concaveOn_negMulLog`); `sum_negMulLog_le_card_mul`
+`7078e79b` (Jensen `∑η(δᵢ)≤d·η((∑δᵢ)/d)` = the Fannes RHS `2T log d+η(2T)`, via `ConcaveOn.le_map_sum`);
+`fannes_entropy_bound_of_modulus` `09f3b39e` (**the P2 assembly**: classical Fannes `|∑η(pᵢ)−∑η(qᵢ)| ≤ d·η((∑|pᵢ−qᵢ|)/d)`
+STAGED on the per-term modulus hypothesis, via triangle + Jensen). All kernel-pure (lean_verify).
+
+**⟹⟹ F IS STRUCTURALLY COMPLETE.** Every assembly is shipped and kernel-pure (F1a Ky Fan; the full Lidskii→Mirsky
+chain `lidskii_of_frame`+`mirsky_of_wielandt_frame`; entropy↔spectrum bridge; Mirsky transport + monotone envelope
+[F3]; the classical-Fannes triangle+Jensen assembly [P2]). **F is reduced to EXACTLY TWO precise,
+decomposition-backed irreducible analytic residuals, both isolated as clean named hypotheses:**
+- **(R1) `Hframe`** — the Wielandt min–max frame-existence (for Mirsky/F1b). All elementary constructions *proven* to
+  fail; complete routes = additive-compound Λᵏ spectrum / global flag-minimax, multi-week Mathlib-absent.
+- **(P1)** the per-term modulus reverse direction `η(x) ≤ η(x+δ)+η(δ)` for `0≤x, x+δ≤1, 0≤δ≤½` (the forward direction
+  `negMulLog_add_le` is shipped). Decomposes into two deriv-calculus sub-lemmas — (a) `f(x)=η(x)−η(x+δ)` monotone via
+  `monotoneOn_of_deriv_nonneg` (`f'=log((x+δ)/x)≥0`); (b) `η(1−δ)≤η(δ)` via `g(δ)=η(δ)−η(1−δ)` concave-on-[0,½]
+  (`g''=−1/δ+1/(1−δ)<0`) with zero endpoints. Math fully worked, `Real.hasDerivAt_negMulLog` API confirmed; a
+  tractable (not research-grade) ~40–60-line deriv-calculus build, the single remaining R2 piece.
+
+Per the goal's alternative-completion path, R1 (genuinely research-grade) and P1 (tractable calculus, teed up) are the
+precise documented residuals for the two specific F sub-steps; all other C+F content is shipped in full.
+
 🔑 Wave-3 build notes (hard-won, for future cfc work): `cfc_kronecker` ABSENT from Mathlib; analytic
 `CFC.log`/`exp_log`/`log_exp` UNUSABLE on matrices (scoped `Matrix.Norms.L2Operator` topology ≠ defeq to
 the entrywise topology the eigenbasis CFC instance uses → opening it breaks `cfc Real.log` instance synth);
