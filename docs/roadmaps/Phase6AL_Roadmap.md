@@ -123,6 +123,16 @@ a.e. eigenvalue-derivative.
   **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
   gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
 
+**✅✅ CLOSURE-REVIEWER VERDICT: PASS (2026-06-04, adversarial fresh-context review).** Items C and F are genuinely
+shipped modulo the single honestly-staged `hB3` residual. Verified: `mutualInformation_nonneg`,
+`vonNeumannEntropy_subadditive`, `matrixLog_kronecker`, `fannes_entropy_bound`, `quantum_fannes_bound` all
+kernel-pure `{propext,Classical.choice,Quot.sound}`, zero sorry/axiom/native_decide/maxHeartbeats; build clean
+(3388 jobs). `hB3` is load-bearing (consumed in `lidskii_of_frame`'s closing `linarith`), non-vacuous, the ONLY
+undischarged hypothesis — no hidden second residual. **KEY: `quantum_fannes_bound` (spectral form
+`|S(ρ)−S(σ)| ≤ d·η(∑|λ↓ₖ(ρ)−λ↓ₖ(σ)|/d)`) and `fannes_entropy_bound` (classical) are UNCONDITIONAL** — only the
+stronger *trace-distance* refinement `quantum_fannes_audenaert_of_mirsky` is gated on `hB3` (via Mirsky). So item F's
+entropy-continuity headline is already shipped unconditionally in spectral form; `hB3` gates only the ½‖ρ−σ‖₁ sharpening.
+
 **🔻 DEEP RESEARCH LANDED (2026-06-04, `Lit-Search/Phase-6AL/Formalizing Arbitrary-Subset Lidskii (H)...md`) →
 PIVOT OFF (P2): use Route Q1(a) = Wielandt frame via `lidskii_of_frame`'s `hB3`, NOT the eigenvalue-path.** The DR
 verdict: (P2)/eigenvalue-path is the heavy trap (needs measurable eigenvector field + Hellmann–Feynman a.e. deriv,
