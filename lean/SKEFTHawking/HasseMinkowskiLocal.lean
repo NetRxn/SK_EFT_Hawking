@@ -351,4 +351,15 @@ theorem solvable_canonical_congr_sq_right {K : Type*} [Field K] {a b s : K} (hs 
       exacts [absurd h hs, h]
     · linear_combination he
 
+/-- **Reduce canonical solvability to squarefree representatives (field-generic).** If `A = a'·s²` and
+`B = b'·u²` (`s, u ≠ 0`), then `z² = A x² + B y²` is solvable iff `z² = a' x² + b' y²` is. Folds the two
+square-class invariances; applied at each place it lets a canonical form with *rational* coefficients be
+solved via the *squarefree-integer* ternary Hasse–Minkowski. -/
+theorem solvable_canonical_of_sq_mul {K : Type*} [Field K] {A B a' b' s u : K}
+    (hs : s ≠ 0) (hu : u ≠ 0) (hA : A = a' * s ^ 2) (hB : B = b' * u ^ 2) :
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = A * x ^ 2 + B * y ^ 2) ↔
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a' * x ^ 2 + b' * y ^ 2) := by
+  rw [hA, hB]
+  exact ((solvable_canonical_congr_sq hs).trans (solvable_canonical_congr_sq_right hu)).symm
+
 end SKEFTHawking
