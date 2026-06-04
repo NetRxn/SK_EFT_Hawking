@@ -629,4 +629,66 @@ theorem exists_padicInt_diag_ternary_of_padic {p : ℕ} [Fact p.Prime] {a b c : 
     push_cast
     linear_combination ((p : ℚ_[p]) ^ N) ^ 2 * h
 
+/-- **Generic primitive-solution extraction.** A `ℚ_[p]` solution of `a x² + b y² + c z² = 0` yields a
+*primitive* `ℤ_[p]` solution (some coordinate a unit). Clearing denominators then iterating the descent step
+(while all coordinates are non-units), by strong induction on a witness coordinate's `PadicInt.valuation`. The
+reusable bridge: each coefficient case then needs only a mod-`p` argument on the primitive solution. -/
+theorem exists_primitive_diag_ternary {p : ℕ} [Fact p.Prime] {a b c : ℤ_[p]}
+    (hsol : ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 + (c : ℚ_[p]) * z ^ 2 = 0) :
+    ∃ X Y Z : ℤ_[p], (IsUnit X ∨ IsUnit Y ∨ IsUnit Z) ∧ a * X ^ 2 + b * Y ^ 2 + c * Z ^ 2 = 0 := by
+  obtain ⟨X₀, Y₀, Z₀, hnz, heq₀⟩ := exists_padicInt_diag_ternary_of_padic hsol
+  have hdvd : ∀ w : ℤ_[p], ¬ IsUnit w → (p : ℤ_[p]) ∣ w := by
+    intro w hw
+    rw [← PadicInt.norm_lt_one_iff_dvd]
+    rcases lt_or_eq_of_le (PadicInt.norm_le_one w) with hlt | heq
+    · exact hlt
+    · exact absurd (PadicInt.isUnit_iff.mpr heq) hw
+  have hunit : ∀ w : ℤ_[p], w ≠ 0 → w.valuation = 0 → IsUnit w := by
+    intro w hw0 hwv
+    rw [PadicInt.isUnit_iff, PadicInt.norm_eq_zpow_neg_valuation hw0, hwv]; simp
+  have main : ∀ n : ℕ, ∀ X Y Z : ℤ_[p],
+      ((X ≠ 0 ∧ X.valuation ≤ n) ∨ (Y ≠ 0 ∧ Y.valuation ≤ n) ∨ (Z ≠ 0 ∧ Z.valuation ≤ n)) →
+      a * X ^ 2 + b * Y ^ 2 + c * Z ^ 2 = 0 →
+      ∃ X' Y' Z' : ℤ_[p], (IsUnit X' ∨ IsUnit Y' ∨ IsUnit Z') ∧
+        a * X' ^ 2 + b * Y' ^ 2 + c * Z' ^ 2 = 0 := by
+    intro n
+    induction n with
+    | zero =>
+      intro X Y Z hwit heq
+      refine ⟨X, Y, Z, ?_, heq⟩
+      rcases hwit with ⟨h0, hv0⟩ | ⟨h0, hv0⟩ | ⟨h0, hv0⟩
+      · exact Or.inl (hunit X h0 (Nat.le_zero.mp hv0))
+      · exact Or.inr (Or.inl (hunit Y h0 (Nat.le_zero.mp hv0)))
+      · exact Or.inr (Or.inr (hunit Z h0 (Nat.le_zero.mp hv0)))
+    | succ k ih =>
+      intro X Y Z hwit heq
+      by_cases hprim : IsUnit X ∨ IsUnit Y ∨ IsUnit Z
+      · exact ⟨X, Y, Z, hprim, heq⟩
+      · simp only [not_or] at hprim
+        obtain ⟨X'', Y'', Z'', hXX, hYY, hZZ, heq'⟩ :=
+          diag_ternary_descent_step (hdvd X hprim.1) (hdvd Y hprim.2.1) (hdvd Z hprim.2.2) heq
+        refine ih X'' Y'' Z'' ?_ heq'
+        have hvshift : ∀ w w' : ℤ_[p], w = (p : ℤ_[p]) * w' → w ≠ 0 →
+            w' ≠ 0 ∧ w'.valuation = w.valuation - 1 := by
+          intro w w' hww hw0
+          have hw'0 : w' ≠ 0 := fun h => hw0 (by rw [hww, h, mul_zero])
+          refine ⟨hw'0, ?_⟩
+          have : w.valuation = 1 + w'.valuation := by
+            rw [hww, show (p : ℤ_[p]) * w' = (p : ℤ_[p]) ^ 1 * w' from by ring,
+              PadicInt.valuation_p_pow_mul 1 w' hw'0]
+          omega
+        rcases hwit with ⟨h0, hvle⟩ | ⟨h0, hvle⟩ | ⟨h0, hvle⟩
+        · obtain ⟨h0', hv'⟩ := hvshift X X'' hXX h0
+          exact Or.inl ⟨h0', by omega⟩
+        · obtain ⟨h0', hv'⟩ := hvshift Y Y'' hYY h0
+          exact Or.inr (Or.inl ⟨h0', by omega⟩)
+        · obtain ⟨h0', hv'⟩ := hvshift Z Z'' hZZ h0
+          exact Or.inr (Or.inr ⟨h0', by omega⟩)
+  by_cases hX : X₀ = 0
+  · by_cases hY : Y₀ = 0
+    · exact main Z₀.valuation X₀ Y₀ Z₀ (Or.inr (Or.inr ⟨fun h => hnz ⟨hX, hY, h⟩, le_refl _⟩)) heq₀
+    · exact main Y₀.valuation X₀ Y₀ Z₀ (Or.inr (Or.inl ⟨hY, le_refl _⟩)) heq₀
+  · exact main X₀.valuation X₀ Y₀ Z₀ (Or.inl ⟨hX, le_refl _⟩) heq₀
+
 end SKEFTHawking
