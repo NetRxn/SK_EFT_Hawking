@@ -1354,4 +1354,105 @@ theorem ratSol_of_isSquare {a b : ℤ} (h : IsSquare a ∨ IsSquare b) :
   · exact ⟨0, 1, (r : ℚ), fun hc => one_ne_zero hc.2.1, by
       rw [show (b : ℚ) = (r : ℚ) * (r : ℚ) by exact_mod_cast hr]; ring⟩
 
+/-- **Ternary Hasse–Minkowski (canonical form, Legendre's theorem).** For nonzero squarefree integers `a, b`,
+if `z² = a x² + b y²` has a nontrivial solution over `ℝ` and over every `ℚ_[p]`, then it has one over `ℚ`.
+Proof by infinite descent (Legendre): strong induction on `|a| + |b|`; the base case is a square coefficient
+(`ratSol_of_isSquare`); the step extracts "`a` square mod `b`" from local solvability
+(`exists_dvd_sq_sub_of_locally_solvable`), reduces the larger coefficient (`descent_construct` +
+`exists_squarefree_sq_mul_int`), preserves local solvability at every place
+(`solvable_descent_or_isSquare_field`), recurses, and lifts the rational solution back
+(`solvable_scale_field` + `solvable_transfer_field`). Coprimality-free; no Dirichlet, no Hilbert symbols. -/
+theorem ternary_solvable_of_local {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
+    (hasf : Squarefree a.natAbs) (hbsf : Squarefree b.natAbs)
+    (hR : ∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) :
+    ∃ x y z : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 := by
+  suffices H : ∀ n : ℕ, ∀ a b : ℤ, a.natAbs + b.natAbs ≤ n → a ≠ 0 → b ≠ 0 →
+      Squarefree a.natAbs → Squarefree b.natAbs →
+      (∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2) →
+      (∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+        z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) →
+      ∃ x y z : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 by
+    exact H _ a b le_rfl ha hb hasf hbsf hR hloc
+  intro n
+  induction n with
+  | zero =>
+    intro a b hle ha _ _ _ _ _
+    exact absurd (Int.natAbs_eq_zero.mp (by omega)) ha
+  | succ n IH =>
+    -- ordered descent: assume a.natAbs ≤ b.natAbs
+    have step : ∀ a b : ℤ, a.natAbs + b.natAbs ≤ n + 1 → a.natAbs ≤ b.natAbs → a ≠ 0 → b ≠ 0 →
+        Squarefree a.natAbs → Squarefree b.natAbs →
+        (∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2) →
+        (∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+          z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) →
+        ∃ x y z : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 := by
+      intro a b hle hab ha hb hasf hbsf hR hloc
+      by_cases hsq : IsSquare a ∨ IsSquare b
+      · exact ratSol_of_isSquare hsq
+      · push_neg at hsq
+        obtain ⟨hnsa, hnsb⟩ := hsq
+        have hreal : ¬(a < 0 ∧ b < 0) := by
+          rw [← solvable_real_canonical_iff ha hb]
+          obtain ⟨x, y, z, hnz, he⟩ := hR
+          exact ⟨x, y, z, fun h => hnz (by rw [Prod.mk_eq_zero, Prod.mk_eq_zero] at h; exact h), he⟩
+        have hb2 : 2 ≤ b.natAbs := by
+          by_contra hc
+          push_neg at hc
+          have hb1 : b.natAbs = 1 := by
+            have := Int.natAbs_pos.mpr hb; omega
+          rcases Int.natAbs_eq_iff.mp hb1 with hbv | hbv
+          · exact hnsb (by rw [hbv]; exact ⟨1, by ring⟩)
+          · have ha1 : a.natAbs = 1 := by
+              have := Int.natAbs_pos.mpr ha; omega
+            rcases Int.natAbs_eq_iff.mp ha1 with hav | hav
+            · exact hnsa (by rw [hav]; exact ⟨1, by ring⟩)
+            · exact hreal ⟨by rw [hav]; norm_num, by rw [hbv]; norm_num⟩
+        have hext : ∃ t : ℤ, b ∣ (t ^ 2 - a) :=
+          exists_dvd_sq_sub_of_locally_solvable hbsf (fun p _ _ _ _ => hloc p)
+        obtain ⟨t, b'', hb''0, hb''eq, hb''lt⟩ := descent_construct hnsa hb2 hab hext
+        obtain ⟨s, c, hs0, hc0, hssf, hsc⟩ := exists_squarefree_sq_mul_int hb''0
+        have hfacZ : t ^ 2 - a = b * (s * c ^ 2) := by rw [hb''eq, hsc]
+        have hsle : s.natAbs ≤ b''.natAbs :=
+          Nat.le_of_dvd (Int.natAbs_pos.mpr hb''0) (Int.natAbs_dvd_natAbs.mpr ⟨c ^ 2, hsc⟩)
+        have hmeas : a.natAbs + s.natAbs ≤ n := by omega
+        have hsnatsf : Squarefree s.natAbs := Int.squarefree_natAbs.mpr hssf
+        have hR' : ∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+            z ^ 2 = (a : ℝ) * x ^ 2 + (s : ℝ) * y ^ 2 := by
+          have hfacR : (t : ℝ) ^ 2 - (a : ℝ) = (b : ℝ) * ((s : ℝ) * (c : ℝ) ^ 2) := by
+            exact_mod_cast hfacZ
+          exact solvable_descent_or_isSquare_field (Int.cast_ne_zero.mpr hb)
+            (Int.cast_ne_zero.mpr hc0) hfacR hR
+        have hloc' : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+            z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (s : ℚ_[p]) * y ^ 2 := by
+          intro p _
+          have hfacp : (t : ℚ_[p]) ^ 2 - (a : ℚ_[p]) = (b : ℚ_[p]) * ((s : ℚ_[p]) * (c : ℚ_[p]) ^ 2) := by
+            exact_mod_cast hfacZ
+          exact solvable_descent_or_isSquare_field (Int.cast_ne_zero.mpr hb)
+            (Int.cast_ne_zero.mpr hc0) hfacp (hloc p)
+        have hrat' := IH a s hmeas ha hs0 hasf hsnatsf hR' hloc'
+        -- lift back RatSol(a,s) → RatSol(a,b)
+        by_cases haq : IsSquare (a : ℚ)
+        · obtain ⟨r, hr⟩ := haq
+          exact ⟨1, 0, r, fun hc => one_ne_zero hc.1, by rw [hr]; ring⟩
+        · obtain ⟨x', y', z', hnz', he'⟩ := hrat'
+          obtain ⟨X, Y, Z, hY, heY⟩ := exists_y_ne_zero_of_not_isSquare haq hnz' he'
+          obtain ⟨X2, Y2, Z2, hY2, he2⟩ := solvable_scale_field (w := (c : ℚ)) hY heY
+          have hb''q : (s : ℚ) * (c : ℚ) ^ 2 ≠ 0 :=
+            mul_ne_zero (Int.cast_ne_zero.mpr hs0) (pow_ne_zero 2 (Int.cast_ne_zero.mpr hc0))
+          have hfacQ : (t : ℚ) ^ 2 - a = (b : ℚ) * ((s : ℚ) * (c : ℚ) ^ 2) := by exact_mod_cast hfacZ
+          obtain ⟨X3, Y3, Z3, hY3, he3⟩ := solvable_transfer_field hb''q hfacQ hY2 he2
+          exact ⟨X3, Y3, Z3, fun hc => hY3 hc.2.1, he3⟩
+    -- dispatch via le_total
+    intro a b hle ha hb hasf hbsf hR hloc
+    rcases le_total a.natAbs b.natAbs with hab | hab
+    · exact step a b hle hab ha hb hasf hbsf hR hloc
+    · have hRs : ∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+          z ^ 2 = (b : ℝ) * x ^ 2 + (a : ℝ) * y ^ 2 := solvable_canonical_symm hR
+      have hlocs : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+          z ^ 2 = (b : ℚ_[p]) * x ^ 2 + (a : ℚ_[p]) * y ^ 2 := fun p => solvable_canonical_symm (hloc p)
+      exact solvable_canonical_symm
+        (step b a (by omega) hab hb ha hbsf hasf hRs hlocs)
+
 end SKEFTHawking
