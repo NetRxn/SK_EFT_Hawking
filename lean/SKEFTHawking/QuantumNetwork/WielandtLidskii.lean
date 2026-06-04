@@ -366,6 +366,42 @@ theorem weyl_diff_le {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGrou
   have h := weyl_single_upper_of_eq hn hA hB hAB (by abel) hi
   linarith
 
+/-- **Eigenvalue bounded by operator norm.** Every eigenvalue of a symmetric operator is bounded in absolute
+value by its operator norm: `|λ↓ⱼ(T)| ≤ ‖T‖`. Take norms of the eigen-relation `T u = λⱼ • u` on the unit
+eigenvector `u` (`‖T u‖ = |λⱼ|`) and combine with `‖T u‖ ≤ ‖T‖‖u‖ = ‖T‖`. -/
+theorem abs_eigenvalues_le_opNorm {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ}
+    (hT : T.IsSymmetric) (hn : Module.finrank 𝕜 E = n) (j : Fin n) :
+    |hT.eigenvalues hn j| ≤ ‖LinearMap.toContinuousLinearMap T‖ := by
+  have hu : ‖(hT.eigenvectorBasis hn) j‖ = 1 := (hT.eigenvectorBasis hn).orthonormal.1 j
+  have hnorm : ‖T ((hT.eigenvectorBasis hn) j)‖ = |hT.eigenvalues hn j| := by
+    rw [hT.apply_eigenvectorBasis hn j, norm_smul, RCLike.norm_ofReal, hu, mul_one]
+  have hle := (LinearMap.toContinuousLinearMap T).le_opNorm ((hT.eigenvectorBasis hn) j)
+  rw [hu, mul_one] at hle
+  have hcoe : (LinearMap.toContinuousLinearMap T) ((hT.eigenvectorBasis hn) j)
+      = T ((hT.eigenvectorBasis hn) j) := rfl
+  rw [hcoe, hnorm] at hle
+  exact hle
+
+/-- **Weyl's eigenvalue-Lipschitz theorem.** Sorted eigenvalues are `1`-Lipschitz in the operator norm:
+`|λ↓ᵢ(A) − λ↓ᵢ(B)| ≤ ‖A − B‖`. Combines the two-sided Weyl sandwich
+(`weyl_diff_ge`/`weyl_diff_le`: `λ↓ₙ₋₁(A−B) ≤ λ↓ᵢ(A)−λ↓ᵢ(B) ≤ λ↓₀(A−B)`) with
+`abs_eigenvalues_le_opNorm` (`|λ↓₀(A−B)|, |λ↓ₙ₋₁(A−B)| ≤ ‖A−B‖`). This is the complete (P1) regularity layer:
+along a path `M(t) = B + tC` it gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s| ‖C‖`, the Lipschitz continuity that
+makes `t ↦ λ↓ᵢ(M(t))` absolutely continuous for the eigenvalue-path proof of Lidskii. -/
+theorem weyl_lipschitz {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [FiniteDimensional 𝕜 E] {n : ℕ} (hn : Module.finrank 𝕜 E = n)
+    {A B : E →ₗ[𝕜] E} (hA : A.IsSymmetric) (hB : B.IsSymmetric) (hAB : (A - B).IsSymmetric)
+    {i : ℕ} (hi : i < n) :
+    |hA.eigenvalues hn ⟨i, hi⟩ - hB.eigenvalues hn ⟨i, hi⟩|
+      ≤ ‖LinearMap.toContinuousLinearMap (A - B)‖ := by
+  have hlo := weyl_diff_ge hn hA hB hAB hi
+  have hhi := weyl_diff_le hn hA hB hAB hi
+  have hb0 := abs_le.mp (abs_eigenvalues_le_opNorm hAB hn ⟨0, by omega⟩)
+  have hbn := abs_le.mp (abs_eigenvalues_le_opNorm hAB hn ⟨n - 1, by omega⟩)
+  rw [abs_le]
+  exact ⟨by linarith [hbn.1], by linarith [hb0.2]⟩
+
 /-- **Max-min Lidskii–Wielandt, assembled (staging the frame-existence step (3)).** Given an orthonormal
 frame `{wᵣ}` in `A`'s eigen-flag (`wᵣ ∈ span top sᵣ+1 A-eigenvectors`) with low `B`-Rayleigh-sum (hypothesis
 `hB3` = step (3)), the arbitrary-subset Lidskii inequality follows:
