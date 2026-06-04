@@ -60,4 +60,30 @@ theorem hilbertPrime_units {p : ℕ} (hp : p.Prime) (hodd : p ≠ 2)
   letI := Fact.mk hp
   exact hilbertPadicInt_units p ha hb
 
+/-- **Bimultiplicativity of the place symbol in the first argument** (nonzero arguments). -/
+theorem hilbertPrime_mul_left {p : ℕ} {a₁ a₂ b : ℤ} (ha₁ : a₁ ≠ 0) (ha₂ : a₂ ≠ 0) :
+    hilbertPrime p (a₁ * a₂) b = hilbertPrime p a₁ b * hilbertPrime p a₂ b := by
+  unfold hilbertPrime
+  split_ifs with hp h2
+  · letI := Fact.mk hp; exact hilbert2Int_mul_left ha₁ ha₂
+  · letI := Fact.mk hp; exact hilbertPadicInt_mul_left p ha₁ ha₂
+  · ring
+
+/-- **Bimultiplicativity of the place symbol in the second argument** (nonzero arguments). -/
+theorem hilbertPrime_mul_right {p : ℕ} {a b₁ b₂ : ℤ} (hb₁ : b₁ ≠ 0) (hb₂ : b₂ ≠ 0) :
+    hilbertPrime p a (b₁ * b₂) = hilbertPrime p a b₁ * hilbertPrime p a b₂ := by
+  unfold hilbertPrime
+  split_ifs with hp h2
+  · letI := Fact.mk hp; exact hilbert2Int_mul_right hb₁ hb₂
+  · letI := Fact.mk hp; exact hilbertPadicInt_mul_right p hb₁ hb₂
+  · ring
+
+/-- **Symmetry of the place symbol.** -/
+theorem hilbertPrime_comm (p : ℕ) (a b : ℤ) : hilbertPrime p a b = hilbertPrime p b a := by
+  unfold hilbertPrime
+  split_ifs with hp h2
+  · letI := Fact.mk hp; exact hilbert2Int_comm a b
+  · letI := Fact.mk hp; exact hilbertPadicInt_comm p a b
+  · rfl
+
 end SKEFTHawking.HilbertSymbol
