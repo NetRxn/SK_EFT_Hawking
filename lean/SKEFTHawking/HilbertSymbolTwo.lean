@@ -179,6 +179,21 @@ theorem hilbert2Int_one_left (b : ℤ) : hilbert2Int 1 b = 1 := by
 theorem hilbert2Int_one_right (a : ℤ) : hilbert2Int a 1 = 1 := by
   rw [hilbert2Int_comm]; exact hilbert2Int_one_left a
 
+/-- **Dyadic ↔ Legendre supplementary law for `-1`:** for an odd prime `q`, `χ₂(ε(q)) = (q | -1)` — i.e. the
+dyadic exponent `ε(q)` matches `legendreSym q (-1) = χ₄ q`. Proved by a finite check over the units of
+`ZMod 8` plus cast compatibility `ZMod 8 → ZMod 4`. -/
+theorem chi2_eps2_eq_legendre_neg_one (q : ℕ) [Fact q.Prime] (hq : q ≠ 2) :
+    chi2 (eps2 (q : ZMod 8)) = legendreSym q (-1) := by
+  rw [legendreSym.at_neg_one hq]
+  have hu : IsUnit ((q : ℕ) : ZMod 8) := by
+    rw [ZMod.isUnit_iff_coprime]
+    exact (Nat.coprime_primes Fact.out Nat.prime_two |>.mpr hq).pow_right 3
+  have key : ∀ x : ZMod 8, IsUnit x →
+      chi2 (eps2 x) = ZMod.χ₄ (ZMod.castHom (by norm_num : (4 : ℕ) ∣ 8) (ZMod 4) x) := by decide
+  rw [key _ hu]
+  congr 1
+  exact map_natCast _ q
+
 /-- `(-1, -1)_2 = -1`: both odd parts are `-1 ≡ 7 mod 8`, `ε(7)=1`, so the exponent is `ε(7)·ε(7)=1` and
 `χ₂(1) = -1`. This is the dyadic contribution that cancels the real `(-1,-1)_∞ = -1` in the product formula. -/
 theorem hilbert2Int_neg_one_neg_one : hilbert2Int (-1) (-1) = -1 := by
