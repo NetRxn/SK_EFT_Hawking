@@ -85,11 +85,24 @@ subadditivity + reverse); `fannes_entropy_bound` (**UNCONDITIONAL** classical Fa
 d·η((∑|pᵢ−qᵢ|)/d) = 2T log d+η(2T)` for [0,1]-distributions, per-coord gap ≤½). Kernel-pure. Honest scope: Fannes
 constant `log d`, NOT sharp Audenaert `log(d−1)` (the sharp constant needs an absent maximization — documented).
 
-**⟹ F2 DONE. The ONLY remaining residual is R1 (`Hframe` = Wielandt min–max frame-existence) for Mirsky/F1b** —
-the genuine research-grade irreducible residual (additive-compound Λᵏ / global flag-minimax, multi-week
-Mathlib-absent; all elementary constructions proven to fail). decompose-before-asserting-walls vindicated: R2
-was NOT a wall (built it), only R1 is genuinely irreducible. F is now: C ✓ · F1a ✓ · F1b staged-on-R1 ·
-F2 ✓(unconditional) · F3 ✓(staged on Mirsky). R1 is the single precise decomposition-backed residual.
+**⟹ F2 DONE. The ONLY remaining residual is R1 for Mirsky/F1b.** F is now: C ✓ · F1a ✓ · F1b staged-on-R1 ·
+F2 ✓(unconditional) · F3 ✓(staged on Mirsky).
+
+**R1 RE-CHARACTERIZED (2026-06-04 fan-out — substrate map + Mathlib MCP). The cleanest residual is NOT the matrix
+Wielandt-frame `Hframe`; it is a self-contained pure-real-vector lemma, via the goal-hinted DOUBLY-STOCHASTIC/HLP
+route.** The substrate already has the Karamata/HLP toolkit (`eigenvalue_eq_doublyStochastic_combination`,
+`topkSum_doublyStochastic_mulVec_le` [Birkhoff dir], `subset_sum_le_topkSum`, `sum_top_subadditive`,
+`abs_sum_le_of_prefix` [Karamata ℓ¹, done]); Mathlib adds `exists_eq_sum_perm_of_mem_doublyStochastic` (Birkhoff) +
+`Order.Rearrangement`. Route to **unconditional** Mirsky (no `Hframe`): `mirsky_of_subset_diff ⟸ H ⟸
+[subset_sum_le_topkSum] topkSum(λ↓A−λ↓B)≤∑_{<k}λ↓C ⟸` **STEP I** `topkSum(diag_A C)≤∑_{<k}λ↓C` (CLEAN — `diag_A C = S·λC`,
+`S` doubly-stochastic, via `topkSum_doublyStochastic_mulVec_le`) **+ STEP II** `topkSum(λ↓A−λ↓B) ≤ topkSum(λ↓A − diag_A B)`.
+**STEP II is the precise residual: a pure-vector lemma `topkSum(a−b) ≤ topkSum(a−d)` for `a,b` sorted-desc, `d ≺ b`**
+(decomposes into rearrangement-aligns-to-minimize + majorization-monotonicity). ⚠️ Mathlib has **no majorization API**
+(only `Monovary` for ∑-products, doesn't bridge `topkSum`-of-differences), so STEP II's monotonicity half is a
+from-scratch build — a **real effort, not days-trivial**, but a far cleaner/citable target than matrix `Hframe`.
+decompose-before-walls applied in BOTH directions: R2 was not a wall (built it); R1's framing improved but its core
+(STEP II) is genuinely irreducible-for-now. Next-session F1b plan: ship STEP I (reusable Schur–Horn) → build STEP II
+from scratch → unconditional Mirsky discharges R1 and the F-headline.
 
 🔑 Wave-3 build notes (hard-won, for future cfc work): `cfc_kronecker` ABSENT from Mathlib; analytic
 `CFC.log`/`exp_log`/`log_exp` UNUSABLE on matrices (scoped `Matrix.Norms.L2Operator` topology ≠ defeq to
