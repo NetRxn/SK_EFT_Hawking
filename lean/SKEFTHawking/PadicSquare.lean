@@ -877,4 +877,19 @@ theorem isSquare_nat_of_isSquare_padic {a : ℕ} (h : ∀ (p : ℕ) [Fact p.Prim
   rw [hsq, mul_one] at hab
   exact ⟨b, by rw [← hab]; ring⟩
 
+/-- **Integer-square local–global.** A nonnegative integer that is a square in every `ℚ_[p]` is a square
+(reduce to `natAbs` via `isSquare_nat_of_isSquare_padic`). The full n = 2 Hasse–Minkowski ingredient over ℤ:
+combined with `Real.isSquare_iff` (square in ℝ ⟺ `0 ≤ ·`) this is "square in every completion ⟹ square in ℤ". -/
+theorem isSquare_int_of_isSquare_padic {n : ℤ} (hn : 0 ≤ n)
+    (h : ∀ (p : ℕ) [Fact p.Prime], IsSquare ((n : ℚ_[p]))) : IsSquare n := by
+  have hnat : ∀ (p : ℕ) [Fact p.Prime], IsSquare ((n.natAbs : ℚ_[p])) := by
+    intro p inst
+    haveI := inst
+    have hc : ((n.natAbs : ℕ) : ℚ_[p]) = (n : ℚ_[p]) := by
+      rw [← Int.cast_natCast (R := ℚ_[p]), Int.natAbs_of_nonneg hn]
+    rw [hc]; exact h p
+  obtain ⟨k, hk⟩ := isSquare_nat_of_isSquare_padic hnat
+  refine ⟨(k : ℤ), ?_⟩
+  rw [← Int.natAbs_of_nonneg hn, hk]; push_cast; ring
+
 end SKEFTHawking
