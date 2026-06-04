@@ -1268,4 +1268,28 @@ theorem exists_dvd_sq_sub_of_odd_residue {a b : ℤ} (hb : Squarefree b.natAbs)
     · exact ⟨0, by rw [(ZMod.intCast_zmod_eq_zero_iff_dvd a p).mpr hpa]; ring⟩
     · exact h p hp hp2 hpbz hpa
 
+/-- **Local solvability at an odd prime ⟹ residue square (squarefree coefficient).** For `b` squarefree
+with odd prime `p ∣ b` and `p ∤ a`, if `z² = a x² + b y²` is solvable over `ℚ_[p]` then `a` is a square mod
+`p`. (Write `b = p·c` with `p ∤ c` from squarefreeness, match the `(u, p·v)` shape of
+`solvable_padic_odd_iff_residue`.) The per-prime input to `exists_dvd_sq_sub_of_odd_residue` inside the
+descent recursion. -/
+theorem isSquare_residue_of_solvable_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b : ℤ}
+    (hsf : Squarefree b.natAbs) (hpa : ¬ (p : ℤ) ∣ a) (hpb : (p : ℤ) ∣ b)
+    (hsol : ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) :
+    IsSquare ((a : ZMod p)) := by
+  obtain ⟨c, hc⟩ := hpb
+  have hpc : ¬ (p : ℤ) ∣ c := by
+    rintro ⟨d, hd⟩
+    have hb2 : b = (p : ℤ) * (p : ℤ) * d := by rw [hc, hd]; ring
+    have hdvd : (p * p : ℕ) ∣ b.natAbs := by
+      refine ⟨d.natAbs, ?_⟩
+      rw [hb2]; simp [Int.natAbs_mul, Int.natAbs_natCast, Nat.mul_assoc]
+    have := hsf p (by exact_mod_cast hdvd)
+    rw [Nat.isUnit_iff] at this
+    exact (Fact.out : p.Prime).one_lt.ne' this
+  have hcoeff : (b : ℚ_[p]) = (p : ℚ_[p]) * (c : ℚ_[p]) := by rw [hc]; push_cast; ring
+  rw [hcoeff] at hsol
+  exact (solvable_padic_odd_iff_residue hp hpa hpc).mp hsol
+
 end SKEFTHawking
