@@ -251,6 +251,30 @@ a finite channel-simulation layer (the bricks public; any productized certificat
 private-side concern). NB the *secret-key* `−log₂(1−η)` value stays doubly-gapped (von Neumann
 entropy/REE absent even finite-dim, AND Gaussian/CV machinery absent) — 6AK.2 remains its honest form.
 
+### Remaining follow-on ladder (open TODOs) — all PUBLIC disposition (textbook, §101-non-patentable)
+
+The `E_D ≤ E_N` decomposition + the negativity/entanglement programme leave these open, in build order.
+All are textbook/published math → **public** (defensive-pub; any productized certification is a separate
+private-side concern that consumes these by FQN). Disposition rule: math public; the "if-in-doubt-private"
+tiebreaker does NOT fire on already-textbook substrate.
+
+- **FU-4 — tensor additivity of negativity** `N(ρ⊗σ) = N(ρ) + N(σ)` (LOW risk, do first). PT distributes
+  over `⊗` (`(ρ⊗σ)^Γ = ρ^Γ ⊗ σ^Γ`) + trace-norm multiplicative under Kronecker + `log` of a product.
+  Elementary; reuses FU-2 `pt2` + a Kronecker-trace-norm lemma. The next brick toward `E_D ≤ E_N`.
+- **FU-5 — asymptotic (Fannes-type) continuity of log-negativity** (MED risk). The one genuinely-analytic
+  nub: `|E_N(τ) − E_N(σ)| ≤ f(‖τ−σ‖₁)` finite-dim. Needs a real-analysis continuity bound; Mathlib-PR-grade.
+- **FU-6 — regularized-rate corollary** (LOW once FU-4/FU-5 land). The per-`n` universal statement
+  `Λ(ρ^⊗n) ≈ Φ_k ⟹ k ≤ n·E_N(ρ) + δ(ε)` (no LOCC abstraction needed — quantify over finite local-op
+  compositions, FU-3 class) → `E_D ≤ E_N` as a one-line limit corollary.
+- **FU-7 — finite-dim repeaterless ENTANGLEMENT-distribution bound** (MED, the genuinely-new target).
+  `entanglement-rate ≤ log-negativity(Choi state)` via FU-3 monotone + a finite **channel-simulation layer**
+  (channel = teleport over Choi; textbook Bennett/Pirandola, absent but buildable). Distinct from the
+  secret-key PLOB bound (which is doubly-gapped). Bricks public; productized repeaterless cert = private FQN-consumer.
+- **FU-8 — von Neumann entropy / quantum relative entropy / REE** (HIGH/large, foundational). `−tr(ρ log ρ)`
+  via CFC matrix-log; quantum relative entropy; REE. The Gap #1 substrate that unlocks the *secret-key*
+  family. Genuinely absent in Mathlib (verified); Mathlib-upstream-grade. The `−log₂(1−η)` secret-key value
+  additionally needs Gap #2 (Gaussian/CV states) and is likely never worth it — 6AK.2 stays its honest form.
+
 ---
 
 ## Out of scope (keeps 6AK closeable)
