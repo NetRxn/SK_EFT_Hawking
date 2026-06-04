@@ -138,4 +138,27 @@ theorem integral_cexp_neg_quadratic_form {d : ℕ} {G : Matrix (Fin d) (Fin d) �
       Fintype.card_fin]
   rw [← key, Complex.real_smul, ← mul_assoc, inv_mul_cancel₀ (Complex.ofReal_ne_zero.mpr hdne), one_mul]
 
+/-- The exponent quadratic form of `integral_cexp_neg_quadratic_form` is the inverse form `cᵀ G⁻¹ c`:
+`∑ᵢ (c ᵥ* (√G)⁻¹_ℂ)ᵢ² = c ⬝ᵥ (G⁻¹_ℂ) *ᵥ c`, using `(√G)⁻¹` symmetric and `(√G)⁻¹(√G)⁻¹ = G⁻¹`
+(`mul_inv_rev` + `CFC.sqrt_mul_sqrt_self`). Recognises the [Θ2] Gaussian integral's exponent in the form the
+theta S-transformation `Θ_G(-1/τ) ∝ Θ_{G⁻¹}(τ)` consumes. -/
+theorem sum_sq_vecMul_sqrtInv_eq {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef) (c : Fin d → ℂ) :
+    ∑ i, (c ᵥ* ((CFC.sqrt G)⁻¹.map (Complex.ofReal))) i ^ 2
+      = c ⬝ᵥ (G⁻¹.map (Complex.ofReal)) *ᵥ c := by
+  have hsqrtsym : (CFC.sqrt G)ᵀ = CFC.sqrt G := by
+    have hH : (CFC.sqrt G).IsHermitian := (CFC.sqrt_nonneg G).isSelfAdjoint
+    rwa [Matrix.IsHermitian, Matrix.conjTranspose_eq_transpose_of_trivial] at hH
+  have hreal : (CFC.sqrt G)⁻¹ * (CFC.sqrt G)⁻¹ = G⁻¹ := by
+    rw [← Matrix.mul_inv_rev, CFC.sqrt_mul_sqrt_self G hG.posSemidef.nonneg]
+  set M := (CFC.sqrt G)⁻¹.map (Complex.ofReal) with hM
+  have hMsym : Mᵀ = M := by
+    rw [hM, ← Matrix.transpose_map, Matrix.transpose_nonsing_inv, hsqrtsym]
+  have hMM : M * M = G⁻¹.map (Complex.ofReal) := by
+    rw [hM, ← hreal]
+    ext i j
+    simp [Matrix.mul_apply, Matrix.map_apply, Complex.ofReal_sum, Complex.ofReal_mul]
+  have hsum : ∑ i, (c ᵥ* M) i ^ 2 = (c ᵥ* M) ⬝ᵥ (c ᵥ* M) := by
+    simp only [dotProduct, pow_two]
+  rw [hsum, ← Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hMsym, Matrix.mulVec_mulVec, hMM]
+
 end SKEFTHawking
