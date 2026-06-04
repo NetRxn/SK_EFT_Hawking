@@ -120,4 +120,21 @@ theorem finrank_eigenspace_span {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [Normed
   rw [Set.image_eq_range, finrank_span_eq_card hli, ← Set.toFinset_card]
   simp
 
+/-- **Courant–Fischer, "≥" direction (single eigenvalue).** There is an `(m+1)`-dimensional subspace on
+which the Rayleigh form is everywhere `≥ λ↓ₘ ‖·‖²` — namely the span of the top `m+1` eigenvectors. -/
+theorem exists_subspace_re_inner_ge {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ}
+    (hT : T.IsSymmetric) (hn : Module.finrank 𝕜 E = n) {m : ℕ} (hm : m < n) :
+    ∃ V : Submodule 𝕜 E, Module.finrank 𝕜 V = m + 1 ∧
+      ∀ v ∈ V, hT.eigenvalues hn ⟨m, hm⟩ * ‖v‖ ^ 2 ≤ RCLike.re (inner 𝕜 v (T v)) := by
+  refine ⟨Submodule.span 𝕜 (⇑(hT.eigenvectorBasis hn) ''
+    ((Finset.univ.filter (fun i : Fin n => (i : ℕ) < m + 1)) : Set (Fin n))), ?_, fun v hv => ?_⟩
+  · rw [finrank_eigenspace_span, Fin.card_filter_val_lt]; omega
+  · refine isSymmetric_re_inner_ge hT hn v (hT.eigenvalues hn ⟨m, hm⟩) (fun i hrepr => ?_)
+    have hmem : i ∈ Finset.univ.filter (fun i : Fin n => (i : ℕ) < m + 1) := by
+      by_contra hi
+      exact hrepr (repr_eq_zero_of_not_mem hT hn hv (Finset.mem_coe.not.mpr hi))
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hmem
+    exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact Nat.lt_succ_iff.mp hmem)
+
 end SKEFTHawking.QuantumNetwork
