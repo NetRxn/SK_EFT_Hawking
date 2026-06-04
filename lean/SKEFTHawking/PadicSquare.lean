@@ -437,4 +437,22 @@ theorem no_primitive_sol_unit_pUnit {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]} (hv
     field_simp
     linear_combination -hred
 
+/-- **Descent step for the mixed ternary.** If every coordinate of a `ℤ_[p]` solution of `Z² = u X² + p v Y²`
+is divisible by `p`, dividing through by `p` yields a solution of the *same* form: `(Z/p)² = u(X/p)² +
+p v (Y/p)²`. Iterating this (until some coordinate is a unit) extracts a primitive solution from any `ℤ_[p]`
+solution — the bridge from `ℚ_[p]` solvability (after clearing denominators) to `no_primitive_sol_unit_pUnit`. -/
+theorem ternary_descent_step {p : ℕ} [Fact p.Prime] {u v X Y Z : ℤ_[p]}
+    (hX : (p : ℤ_[p]) ∣ X) (hY : (p : ℤ_[p]) ∣ Y) (hZ : (p : ℤ_[p]) ∣ Z)
+    (h : Z ^ 2 = u * X ^ 2 + (p : ℤ_[p]) * v * Y ^ 2) :
+    ∃ X' Y' Z' : ℤ_[p], X = (p : ℤ_[p]) * X' ∧ Y = (p : ℤ_[p]) * Y' ∧ Z = (p : ℤ_[p]) * Z' ∧
+      Z' ^ 2 = u * X' ^ 2 + (p : ℤ_[p]) * v * Y' ^ 2 := by
+  obtain ⟨X', rfl⟩ := hX
+  obtain ⟨Y', rfl⟩ := hY
+  obtain ⟨Z', rfl⟩ := hZ
+  refine ⟨X', Y', Z', rfl, rfl, rfl, ?_⟩
+  have hp2 : (p : ℤ_[p]) ^ 2 ≠ 0 :=
+    pow_ne_zero 2 (by exact_mod_cast (Fact.out : p.Prime).ne_zero)
+  apply mul_left_cancel₀ hp2
+  linear_combination h
+
 end SKEFTHawking
