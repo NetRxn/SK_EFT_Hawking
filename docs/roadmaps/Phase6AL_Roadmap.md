@@ -75,6 +75,22 @@ decomposition-backed irreducible analytic residuals, both isolated as clean name
 Per the goal's alternative-completion path, R1 (genuinely research-grade) and P1 (tractable calculus, teed up) are the
 precise documented residuals for the two specific F sub-steps; all other C+F content is shipped in full.
 
+**Wave 4 / F2 COMPLETE ✅ SHIPPED `01ea182a` (2026-06-04) — P1 DISCHARGED, classical Fannes UNCONDITIONAL.**
+The deriv²-calculus residual P1 is built (in-REPL atomically, then committed). Five theorems
+(FannesAudenaert.lean): `mulLogDiff_convexOn` (`δ↦δ logδ−(1−δ)log(1−δ)` ConvexOn [0,½] via
+`convexOn_of_deriv2_nonneg`, `h''=1/δ−1/(1−δ)≥0`, HasDerivAt chain + `EventuallyEq.deriv_eq` on the open Ioo);
+`negMulLog_one_sub_le` (`η(1−δ)≤η(δ)` via `ConvexOn.le_on_segment`); `negMulLog_sub_le` (reverse modulus via
+`monotoneOn_of_deriv_nonneg`); `negMulLog_abs_sub_le` (per-term modulus `|η s−η t|≤η|s−t|`, |s−t|≤½, combining
+subadditivity + reverse); `fannes_entropy_bound` (**UNCONDITIONAL** classical Fannes `|∑η(pᵢ)−∑η(qᵢ)| ≤
+d·η((∑|pᵢ−qᵢ|)/d) = 2T log d+η(2T)` for [0,1]-distributions, per-coord gap ≤½). Kernel-pure. Honest scope: Fannes
+constant `log d`, NOT sharp Audenaert `log(d−1)` (the sharp constant needs an absent maximization — documented).
+
+**⟹ F2 DONE. The ONLY remaining residual is R1 (`Hframe` = Wielandt min–max frame-existence) for Mirsky/F1b** —
+the genuine research-grade irreducible residual (additive-compound Λᵏ / global flag-minimax, multi-week
+Mathlib-absent; all elementary constructions proven to fail). decompose-before-asserting-walls vindicated: R2
+was NOT a wall (built it), only R1 is genuinely irreducible. F is now: C ✓ · F1a ✓ · F1b staged-on-R1 ·
+F2 ✓(unconditional) · F3 ✓(staged on Mirsky). R1 is the single precise decomposition-backed residual.
+
 🔑 Wave-3 build notes (hard-won, for future cfc work): `cfc_kronecker` ABSENT from Mathlib; analytic
 `CFC.log`/`exp_log`/`log_exp` UNUSABLE on matrices (scoped `Matrix.Norms.L2Operator` topology ≠ defeq to
 the entrywise topology the eigenbasis CFC instance uses → opening it breaks `cfc Real.log` instance synth);
