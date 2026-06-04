@@ -149,4 +149,39 @@ theorem summable_lattice_gaussian {d : ℕ} {c : ℝ} (hc : 0 < c) :
   refine (summable_real_diagonal_gaussian hc).congr (fun v => ?_)
   simp only [Function.comp_apply, LinearEquiv.coe_toEquiv, coe_zlatticeBasis_equivFun_symm]
 
+/-- **Quadratic-form lower bound for a translate**: for `x` in a ball `∑xᵢ² ≤ R²` and any lattice
+vector `γ`, `(x+γ)ᵀG(x+γ) ≥ (λ/2)·∑γᵢ² − 2λR²` (`λ` from coercivity). Via coercivity, Cauchy–Schwarz
+`(∑xᵢγᵢ)² ≤ (∑xᵢ²)(∑γᵢ²)`, and `(√Sγ − 2R)² ≥ 0`. The uniform-in-`x` Gaussian decay that makes the
+lattice translates summable (hF). -/
+theorem quadform_translate_lower {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} {lam R : ℝ} (hlam : 0 ≤ lam)
+    (hR : 0 ≤ R) (hcoe : ∀ y : Fin d → ℝ, lam * ∑ i, (y i) ^ 2 ≤ y ⬝ᵥ G *ᵥ y)
+    {x : Fin d → ℝ} (hx : ∑ i, (x i) ^ 2 ≤ R ^ 2) (γ : Fin d → ℝ) :
+    lam / 2 * (∑ i, (γ i) ^ 2) - 2 * lam * R ^ 2 ≤ (x + γ) ⬝ᵥ G *ᵥ (x + γ) := by
+  have hexp : ∑ i, (x + γ) i ^ 2
+      = (∑ i, (x i) ^ 2) + 2 * (∑ i, x i * γ i) + ∑ i, (γ i) ^ 2 := by
+    rw [Finset.mul_sum, ← Finset.sum_add_distrib, ← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    simp only [Pi.add_apply]; ring
+  have hSxnn : 0 ≤ ∑ i, (x i) ^ 2 := Finset.sum_nonneg fun i _ => sq_nonneg _
+  have hSγnn : 0 ≤ ∑ i, (γ i) ^ 2 := Finset.sum_nonneg fun i _ => sq_nonneg _
+  set s := Real.sqrt (∑ i, (γ i) ^ 2) with hs
+  have hs2 : s ^ 2 = ∑ i, (γ i) ^ 2 := Real.sq_sqrt hSγnn
+  have hsnn : 0 ≤ s := Real.sqrt_nonneg _
+  have hsqrtSx : Real.sqrt (∑ i, (x i) ^ 2) ≤ R := by
+    rw [← Real.sqrt_sq hR]; exact Real.sqrt_le_sqrt hx
+  -- `∑ xᵢγᵢ ≥ -R·√Sγ` (Cauchy–Schwarz applied to `-x`)
+  have hPge : -(R * s) ≤ ∑ i, x i * γ i := by
+    have h := Real.sum_mul_le_sqrt_mul_sqrt Finset.univ (fun i => -(x i)) γ
+    simp only [neg_mul, neg_sq, Finset.sum_neg_distrib] at h
+    have h2 : Real.sqrt (∑ i, (x i) ^ 2) * s ≤ R * s :=
+      mul_le_mul_of_nonneg_right hsqrtSx hsnn
+    rw [hs]; linarith
+  have hPRs : 0 ≤ (∑ i, x i * γ i) + R * s := by linarith
+  have hcoeγ := hcoe (x + γ)
+  have hlow : lam / 2 * (∑ i, (γ i) ^ 2) - 2 * lam * R ^ 2 ≤ lam * (∑ i, (x + γ) i ^ 2) := by
+    rw [hexp, ← hs2]
+    nlinarith [mul_nonneg hlam hSxnn, mul_nonneg hlam hPRs,
+      mul_nonneg hlam (sq_nonneg (s - 2 * R)), hlam]
+  exact hlow.trans hcoeγ
+
 end SKEFTHawking
