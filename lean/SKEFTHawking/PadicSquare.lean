@@ -742,4 +742,20 @@ theorem no_padic_sol_pUnit_pUnit {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]} (hv : 
         ((-1 : ℤ_[p]) : ℚ_[p]) * z ^ 2 = 0 :=
   fun hsol => no_primitive_sol_pUnit_pUnit hv hunsq (exists_primitive_diag_ternary hsol)
 
+/-- **Solvability criterion for `z² = u x² + p v y²` (odd `p`, `u, v` units).** The complete `(u, p·v)`
+symbol case as an iff: solvable over `ℚ_[p]` ⟺ `ū` is a square mod `p`. Forward = converse of
+`no_padic_sol_unit_pUnit`; backward = `u` square ⟹ the `a`-coefficient is a square ⟹
+`solvable_ternary_of_sufficient`. This is the form the Hasse–Minkowski local condition consumes. -/
+theorem solvable_unit_pUnit_iff {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : ℤ_[p]} (hu : IsUnit u)
+    (hv : IsUnit v) :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (u : ℚ_[p]) * x ^ 2 + (p : ℚ_[p]) * v * y ^ 2) ↔ IsSquare (PadicInt.toZMod u) := by
+  constructor
+  · intro hsolv
+    by_contra hns
+    exact no_padic_sol_unit_pUnit hv hns hsolv
+  · intro hsq
+    obtain ⟨w, hw⟩ := isSquare_of_isSquare_toZMod hp hu hsq
+    exact solvable_ternary_of_sufficient (Or.inl ⟨(w : ℚ_[p]), by rw [hw]; push_cast; ring⟩)
+
 end SKEFTHawking
