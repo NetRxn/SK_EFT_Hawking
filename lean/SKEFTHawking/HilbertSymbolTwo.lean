@@ -54,6 +54,25 @@ theorem chi2_add (e f : ZMod 2) : chi2 (e + f) = chi2 e * chi2 f := by
 
 theorem chi2_mem (e : ZMod 2) : chi2 e = 1 ∨ chi2 e = -1 := by revert e; decide
 
+/-- `χ₂(↑n) = (-1)^n` for `n : ℕ`. -/
+theorem chi2_natCast (n : ℕ) : chi2 ((n : ℕ) : ZMod 2) = (-1 : ℤ) ^ n := by
+  unfold chi2
+  rw [ZMod.val_natCast, ← neg_one_pow_eq_pow_mod_two]
+
+/-- For odd `p`, the dyadic character `ε(p)` is `p/2 mod 2`. -/
+theorem eps2_natCast_odd {p : ℕ} (hp : Odd p) : eps2 (p : ZMod 8) = ((p / 2 : ℕ) : ZMod 2) := by
+  have hp2 : p % 2 = 1 := Nat.odd_iff.mp hp
+  unfold eps2
+  rw [ZMod.val_natCast, ZMod.natCast_eq_natCast_iff]
+  unfold Nat.ModEq
+  omega
+
+/-- **The dyadic cross term equals the reciprocity sign:** for odd `p, q`,
+`χ₂(ε(p)·ε(q)) = (-1)^{(p/2)(q/2)}` — exactly the right-hand side of quadratic reciprocity. -/
+theorem chi2_eps2_mul {p q : ℕ} (hp : Odd p) (hq : Odd q) :
+    chi2 (eps2 (p : ZMod 8) * eps2 (q : ZMod 8)) = (-1 : ℤ) ^ (p / 2 * (q / 2)) := by
+  rw [eps2_natCast_odd hp, eps2_natCast_odd hq, ← Nat.cast_mul, chi2_natCast]
+
 /-- The `2`-free part of a nonzero natural, cast to `ZMod 8`, is a **unit** (it is odd, hence coprime to 8). -/
 theorem isUnit_cast_ordCompl_two {n : ℕ} (hn : n ≠ 0) :
     IsUnit ((ordCompl[2] n : ℕ) : ZMod 8) := by
