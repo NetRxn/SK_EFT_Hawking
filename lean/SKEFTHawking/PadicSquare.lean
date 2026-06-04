@@ -45,11 +45,49 @@ theorem isSquare_of_isSquare_toZMod {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u :
   have hFe : ∀ x : ℤ_[p], F.aeval x = x ^ 2 - u := fun x => by simp [hF]
   have hFda : F.derivative.aeval a = 2 * a := by
     simp only [hF, derivative_sub, derivative_X_pow, derivative_C, sub_zero, map_mul, map_pow,
-      aeval_C, aeval_X, Nat.cast_ofNat, map_ofNat]
+      aeval_X, Nat.cast_ofNat, map_ofNat]
     norm_num
   have hnorm : ‖F.aeval a‖ < ‖F.derivative.aeval a‖ ^ 2 := by
     rw [hFe, hFda, norm_mul, h2, ha1]; simpa using hau
   obtain ⟨z, hz, _⟩ := hensels_lemma (F := F) (a := a) hnorm
+  rw [hFe] at hz
+  exact ⟨z, by linear_combination -hz⟩
+
+/-- The easy direction: a square in `ℤ_[p]` has a square residue (`toZMod` is a ring hom). -/
+theorem isSquare_toZMod_of_isSquare {p : ℕ} [Fact p.Prime] {u : ℤ_[p]} (h : IsSquare u) :
+    IsSquare (PadicInt.toZMod u) := h.map PadicInt.toZMod
+
+/-- **p-adic unit square criterion** (odd `p`): a `p`-adic unit is a square iff its residue mod `p` is. -/
+theorem isSquare_iff_isSquare_toZMod {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u : ℤ_[p]}
+    (hu : IsUnit u) : IsSquare u ↔ IsSquare (PadicInt.toZMod u) :=
+  ⟨isSquare_toZMod_of_isSquare, isSquare_of_isSquare_toZMod hp hu⟩
+
+/-- `toZModPow n x = 0 ↔ ‖x‖ ≤ p^(-n)` — the residue/norm bridge at higher level (kernel `= span{pⁿ}`). -/
+theorem toZModPow_eq_zero_iff_norm_le {p : ℕ} [Fact p.Prime] (n : ℕ) (x : ℤ_[p]) :
+    PadicInt.toZModPow n x = 0 ↔ ‖x‖ ≤ (p : ℝ) ^ (-(n : ℤ)) := by
+  rw [← RingHom.mem_ker, PadicInt.ker_toZModPow]
+  exact (PadicInt.norm_le_pow_iff_mem_span_pow x n).symm
+
+/-- **2-adic square criterion (forward):** a `2`-adic integer `≡ 1 (mod 8)` is a square. The dyadic
+analog of `isSquare_of_isSquare_toZMod`: Hensel on `X² - u` at `a = 1` needs `‖1-u‖ < ‖2‖² = 1/4`,
+and `u ≡ 1 (mod 8)` gives `‖1-u‖ ≤ 1/8`. -/
+theorem isSquare_of_toZModPow_three_eq_one {u : ℤ_[2]} (h8 : PadicInt.toZModPow 3 u = 1) :
+    IsSquare u := by
+  have hnorm8 := (toZModPow_eq_zero_iff_norm_le 3 ((1 : ℤ_[2]) - u)).mp (by
+    simp only [map_sub, map_one, h8, sub_self])
+  have h2 : ‖(2 : ℤ_[2])‖ = (2 : ℝ)⁻¹ := by
+    rw [show (2 : ℤ_[2]) = ((2 : ℕ) : ℤ_[2]) by norm_num]
+    exact_mod_cast PadicInt.norm_p (p := 2)
+  set F : ℤ_[2][X] := X ^ 2 - C u with hF
+  have hFe : ∀ x : ℤ_[2], F.aeval x = x ^ 2 - u := fun x => by simp [hF]
+  have hFda : F.derivative.aeval (1 : ℤ_[2]) = 2 := by
+    simp only [hF, derivative_sub, derivative_X_pow, derivative_C, sub_zero, map_mul, map_pow,
+      aeval_X, Nat.cast_ofNat, map_ofNat, one_pow, mul_one]
+  have hnorm : ‖F.aeval (1 : ℤ_[2])‖ < ‖F.derivative.aeval (1 : ℤ_[2])‖ ^ 2 := by
+    rw [hFe, hFda, h2, one_pow]
+    calc ‖(1 : ℤ_[2]) - u‖ ≤ ((2 : ℕ) : ℝ) ^ (-(3 : ℤ)) := hnorm8
+      _ < (2⁻¹ : ℝ) ^ 2 := by norm_num
+  obtain ⟨z, hz, _⟩ := hensels_lemma (F := F) (a := (1 : ℤ_[2])) hnorm
   rw [hFe] at hz
   exact ⟨z, by linear_combination -hz⟩
 
