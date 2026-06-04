@@ -177,4 +177,15 @@ theorem hilbertPadicInt_units {a b : ℤ} (ha : ¬ (p : ℤ) ∣ a) (hb : ¬ (p 
   rw [padicValInt.eq_zero_of_not_dvd ha, padicValInt.eq_zero_of_not_dvd hb]
   simp
 
+/-- `(1, b)_p = 1` (the identity argument). -/
+theorem hilbertPadicInt_one_left (b : ℤ) : hilbertPadicInt p 1 b = 1 := by
+  have hv : padicValInt p 1 = 0 := by simp [padicValInt]
+  unfold hilbertPadicInt
+  rw [hv]
+  simp [pfreeInt, hv]
+
+/-- `(a, 1)_p = 1`. -/
+theorem hilbertPadicInt_one_right (a : ℤ) : hilbertPadicInt p a 1 = 1 := by
+  rw [hilbertPadicInt_comm]; exact hilbertPadicInt_one_left p a
+
 end SKEFTHawking.HilbertSymbol

@@ -140,4 +140,19 @@ theorem hilbertGlobalProd_mul_right {a b₁ b₂ : ℤ} (ha : a ≠ 0) (hb₁ : 
       (hilbertPrime_mulSupport_finite ha hb₂)]
   ring
 
+/-- `(1, b)_p = 1` at every place. -/
+theorem hilbertPrime_one_left (p : ℕ) (b : ℤ) : hilbertPrime p 1 b = 1 := by
+  unfold hilbertPrime
+  split_ifs with hp h2
+  · letI := Fact.mk hp; exact hilbert2Int_one_left b
+  · letI := Fact.mk hp; exact hilbertPadicInt_one_left p b
+  · rfl
+
+/-- **Product formula, base case:** `∏_v (1,b)_v = 1` (the identity argument; base of the multiplicative
+reduction of the product formula to generators). -/
+theorem hilbertGlobalProd_one_left (b : ℤ) : hilbertGlobalProd 1 b = 1 := by
+  unfold hilbertGlobalProd
+  rw [show ((1 : ℤ) : ℝ) = 1 from by norm_num, hilbertReal_one_left,
+    finprod_congr (fun p => hilbertPrime_one_left p b), finprod_one, one_mul]
+
 end SKEFTHawking.HilbertSymbol

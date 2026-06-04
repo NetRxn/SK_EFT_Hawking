@@ -167,4 +167,16 @@ theorem hilbert2Int_comm (a b : ℤ) : hilbert2Int a b = hilbert2Int b a := by
   rw [mul_comm (eps2 _) (eps2 _)]
   ring_nf
 
+/-- `(1, b)_2 = 1` (the identity argument): `ε(1)=ω(1)=0` and `v₂(1)=0` kill the exponent. -/
+theorem hilbert2Int_one_left (b : ℤ) : hilbert2Int 1 b = 1 := by
+  have hv : padicValInt 2 1 = 0 := by simp [padicValInt]
+  have hpf : pfreeInt 2 1 = 1 := by simp [pfreeInt, hv]
+  unfold hilbert2Int
+  rw [hv, hpf]
+  simp [Int.cast_one, eps2_one, omega2_one]
+
+/-- `(a, 1)_2 = 1`. -/
+theorem hilbert2Int_one_right (a : ℤ) : hilbert2Int a 1 = 1 := by
+  rw [hilbert2Int_comm]; exact hilbert2Int_one_left a
+
 end SKEFTHawking.HilbertSymbol
