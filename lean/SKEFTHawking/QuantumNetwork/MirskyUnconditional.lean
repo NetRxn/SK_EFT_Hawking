@@ -14,6 +14,11 @@ Key idea: with `M := B + C₊` (`C₊ = posPart (A−B)`), `A ⪯ M` and `B ⪯ 
 `λ↓ₖ(A) − λ↓ₖ(B) ≤ λ↓ₖ(M) − λ↓ₖ(B) =: eₖ ≥ 0`, and `∑ₖ eₖ = tr(M) − tr(B) = tr(C₊) = eigPosSum`. Summing the
 positive parts and applying the same to `B − A` closes Mirsky via `traceNorm_hermitian_eq`.
 
+This is the **Li–Mathias positive-part splitting** (C. K. Li & R. Mathias, "The Lidskii–Mirsky–Wielandt theorem
+— additive and multiplicative versions," *Numer. Math.* **81** (1999), 377–413, §2.1): the Lidskii–Mirsky family
+follows from Weyl monotonicity + trace alone, with no Wielandt minimax / interlacing / frame construction. (Phase
+6AL deep research independently corroborated this as the cheapest route, retiring the Wielandt `hB3` residual.)
+
 Invariants: kernel-pure `{propext, Classical.choice, Quot.sound}`; no project-local axioms; no `maxHeartbeats`.
 -/
 
@@ -136,5 +141,47 @@ theorem quantum_fannes_audenaert {ρ σ : Matrix ι ι ℂ} (hρ : ρ.IsHermitia
     |vonNeumannEntropy hρ - vonNeumannEntropy hσ|
       ≤ Real.qaryEntropy (Fintype.card ι) (traceNorm (ρ - σ) / 2) :=
   quantum_fannes_audenaert_of_mirsky hρ hσ hd hTV (mirsky_unconditional hρ hσ) hAud
+
+/-- `Real.negMulLog` is monotone increasing on `[0, e⁻¹]` (its derivative `−log x − 1 ≥ 0` there). -/
+theorem negMulLog_monotoneOn : MonotoneOn Real.negMulLog (Set.Icc 0 (Real.exp (-1))) := by
+  apply monotoneOn_of_deriv_nonneg (convex_Icc _ _) Real.continuous_negMulLog.continuousOn
+  · intro x hx
+    rw [interior_Icc] at hx
+    exact (Real.differentiableAt_negMulLog (ne_of_gt hx.1)).differentiableWithinAt
+  · intro x hx
+    rw [interior_Icc] at hx
+    rw [Real.deriv_negMulLog (ne_of_gt hx.1)]
+    have hlog : Real.log x < -1 := by
+      have := Real.log_lt_log hx.1 hx.2; rwa [Real.log_exp] at this
+    linarith
+
+/-- **Quantum Fannes entropy continuity in TRACE DISTANCE — fully unconditional (no `hB3`, no `hAud`).**
+For density operators `ρ, σ` with per-index spectral gap `≤ ½` and trace distance within the Fannes regime
+`‖ρ−σ‖₁ ≤ d/e`, the von Neumann entropies obey `|S(ρ) − S(σ)| ≤ d · η(‖ρ−σ‖₁ / d)` (`η = negMulLog`, the
+Fannes envelope `T·log d + η(T)` with `T = ‖ρ−σ‖₁`). The operationally-composable certificate: a trace-distance
+bound on the state directly bounds the entropy/entanglement deviation, with NO unproven residual — only the
+honest input/range hypotheses inherent to any Fannes-type estimate. Proof: the unconditional spectral form
+`quantum_fannes_bound` gives the bound at the spectral ℓ¹ distance `∑ₖ|λ↓ₖρ−λ↓ₖσ|`; `mirsky_unconditional`
+(Li–Mathias) shows that `≤ ‖ρ−σ‖₁`; and `negMulLog` is monotone on `[0, e⁻¹]` (`negMulLog_monotoneOn`), so the
+envelope transports from the spectral distance up to the trace distance. -/
+theorem quantum_fannes_trace_distance {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator ρ) (hσ : IsDensityOperator σ)
+    (hgap : ∀ k, |hρ.1.isHermitian.eigenvalues₀ k - hσ.1.isHermitian.eigenvalues₀ k| ≤ 1/2)
+    (hrange : traceNorm (ρ - σ) / Fintype.card ι ≤ Real.exp (-1)) :
+    |vonNeumannEntropy hρ.1.isHermitian - vonNeumannEntropy hσ.1.isHermitian|
+      ≤ (Fintype.card ι : ℝ) * Real.negMulLog (traceNorm (ρ - σ) / Fintype.card ι) := by
+  have hdpos : (0 : ℝ) < Fintype.card ι := by exact_mod_cast Fintype.card_pos
+  set a := (∑ k, |hρ.1.isHermitian.eigenvalues₀ k - hσ.1.isHermitian.eigenvalues₀ k|)
+    / Fintype.card ι with ha
+  set b := traceNorm (ρ - σ) / Fintype.card ι with hb
+  have hmirsky := mirsky_unconditional hρ.1.isHermitian hσ.1.isHermitian
+  have hsum_nonneg : 0 ≤ ∑ k, |hρ.1.isHermitian.eigenvalues₀ k - hσ.1.isHermitian.eigenvalues₀ k| :=
+    Finset.sum_nonneg fun k _ => abs_nonneg _
+  have hab : a ≤ b := by rw [ha, hb]; exact div_le_div_of_nonneg_right hmirsky hdpos.le
+  have ha_nonneg : 0 ≤ a := div_nonneg hsum_nonneg (le_of_lt hdpos)
+  have ha_mem : a ∈ Set.Icc (0 : ℝ) (Real.exp (-1)) := ⟨ha_nonneg, le_trans hab hrange⟩
+  have hb_mem : b ∈ Set.Icc (0 : ℝ) (Real.exp (-1)) := ⟨le_trans ha_nonneg hab, hrange⟩
+  refine (quantum_fannes_bound hρ hσ hgap).trans ?_
+  exact mul_le_mul_of_nonneg_left (negMulLog_monotoneOn ha_mem hb_mem hab) (le_of_lt hdpos)
 
 end SKEFTHawking.QuantumNetwork
