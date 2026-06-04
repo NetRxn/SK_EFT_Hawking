@@ -415,4 +415,55 @@ theorem hilbertGlobalProd_natCast : ∀ m : ℕ, 0 < m → ∀ n : ℕ, 0 < n �
     rw [Nat.cast_mul, hilbertGlobalProd_mul_left (by exact_mod_cast ha.ne')
         (by exact_mod_cast hb.ne') (by exact_mod_cast hn.ne'), iha ha n hn, ihb hb n hn, one_mul]
 
+/-- `∏_v (-1, n)_v = 1` for positive natural `n` (induction on the factorization of `n`). -/
+theorem hilbertGlobalProd_neg_one_natCast : ∀ n : ℕ, 0 < n → hilbertGlobalProd (-1) (n : ℤ) = 1 := by
+  intro n
+  induction n using Nat.recOnMul with
+  | zero => intro h; exact absurd h (lt_irrefl 0)
+  | one => intro _; rw [Nat.cast_one, hilbertGlobalProd_comm]; exact hilbertGlobalProd_one_left _
+  | prime p hp =>
+    intro _; haveI := Fact.mk hp
+    by_cases h2 : p = 2
+    · subst h2; exact hilbertGlobalProd_neg_one_two
+    · exact hilbertGlobalProd_neg_one_prime p h2
+  | mul a b iha ihb =>
+    intro hab
+    have ha : 0 < a := Nat.pos_of_ne_zero (left_ne_zero_of_mul hab.ne')
+    have hb : 0 < b := Nat.pos_of_ne_zero (right_ne_zero_of_mul hab.ne')
+    rw [Nat.cast_mul, hilbertGlobalProd_mul_right (by norm_num)
+        (by exact_mod_cast ha.ne') (by exact_mod_cast hb.ne'), iha ha, ihb hb, one_mul]
+
+/-- `∏_v (-1, b)_v = 1` for any nonzero `b` (split `b = sign(b)·|b|`). -/
+theorem hilbertGlobalProd_neg_one {b : ℤ} (hb : b ≠ 0) : hilbertGlobalProd (-1) b = 1 := by
+  conv_lhs => rw [← Int.sign_mul_natAbs b]
+  rw [hilbertGlobalProd_mul_right (by norm_num) (mt Int.sign_eq_zero_iff_zero.mp hb)
+      (by exact_mod_cast (Int.natAbs_pos.mpr hb).ne'),
+    hilbertGlobalProd_neg_one_natCast b.natAbs (Int.natAbs_pos.mpr hb), mul_one]
+  rcases lt_or_gt_of_ne hb with hneg | hpos
+  · rw [Int.sign_eq_neg_one_of_neg hneg]; exact hilbertGlobalProd_neg_one_neg_one
+  · rw [Int.sign_eq_one_of_pos hpos, hilbertGlobalProd_comm]; exact hilbertGlobalProd_one_left _
+
+/-- `∏_v (a, n)_v = 1` for nonzero `a` and positive natural `n` (split `a = sign(a)·|a|`). -/
+theorem hilbertGlobalProd_int_natCast {a : ℤ} (ha : a ≠ 0) (n : ℕ) (hn : 0 < n) :
+    hilbertGlobalProd a (n : ℤ) = 1 := by
+  conv_lhs => rw [← Int.sign_mul_natAbs a]
+  rw [hilbertGlobalProd_mul_left (mt Int.sign_eq_zero_iff_zero.mp ha)
+      (by exact_mod_cast (Int.natAbs_pos.mpr ha).ne') (by exact_mod_cast hn.ne'),
+    hilbertGlobalProd_natCast a.natAbs (Int.natAbs_pos.mpr ha) n hn, mul_one]
+  rcases lt_or_gt_of_ne ha with hneg | hpos
+  · rw [Int.sign_eq_neg_one_of_neg hneg]; exact hilbertGlobalProd_neg_one_natCast n hn
+  · rw [Int.sign_eq_one_of_pos hpos]; exact hilbertGlobalProd_one_left _
+
+/-- **Hilbert's product formula:** `∏_v (a,b)_v = 1` for all nonzero integers `a, b` — the real place times
+the (finitely supported) product over all primes equals `1`. The arithmetic core of Hasse–Minkowski,
+assembled from the bimultiplicative local symbols, quadratic reciprocity, and the supplementary laws. -/
+theorem hilbertGlobalProd_eq_one {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) : hilbertGlobalProd a b = 1 := by
+  conv_lhs => rw [← Int.sign_mul_natAbs b]
+  rw [hilbertGlobalProd_mul_right ha (mt Int.sign_eq_zero_iff_zero.mp hb)
+      (by exact_mod_cast (Int.natAbs_pos.mpr hb).ne'),
+    hilbertGlobalProd_int_natCast ha b.natAbs (Int.natAbs_pos.mpr hb), mul_one]
+  rcases lt_or_gt_of_ne hb with hneg | hpos
+  · rw [Int.sign_eq_neg_one_of_neg hneg, hilbertGlobalProd_comm]; exact hilbertGlobalProd_neg_one ha
+  · rw [Int.sign_eq_one_of_pos hpos, hilbertGlobalProd_comm]; exact hilbertGlobalProd_one_left _
+
 end SKEFTHawking.HilbertSymbol
