@@ -88,4 +88,17 @@ noncomputable def gaussianCM {d : ℕ} (σ : ℂ) (G : Matrix (Fin d) (Fin d) �
 @[simp] theorem gaussianCM_apply {d : ℕ} (σ : ℂ) (G : Matrix (Fin d) (Fin d) ℝ) (x : Fin d → ℝ) :
     gaussianCM σ G x = Complex.exp ((π : ℂ) * I * σ * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ)) := rfl
 
+/-- Measurability of the character × translated Gaussian (the `hmeas` hypothesis of `multivar_poisson` for
+`F = gaussianCM σ G`): the integrand is continuous in `x`, hence a.e.-strongly-measurable on the fundamental
+domain. -/
+theorem gaussian_translate_aesm {d : ℕ} (σ : ℂ) (G : Matrix (Fin d) (Fin d) ℝ) (n : Fin d → ℤ)
+    (γ : ↥(Submodule.span ℤ (Set.range ⇑(Pi.basisFun ℝ (Fin d))))) :
+    AEStronglyMeasurable
+      (fun x => Complex.exp (2 * (π : ℂ) * I * ((∑ i, (-(n i) : ℝ) * x i : ℝ) : ℂ))
+        * gaussianCM σ G (x + (γ : Fin d → ℝ)))
+      (volume.restrict (ZSpan.fundamentalDomain (Pi.basisFun ℝ (Fin d)))) := by
+  apply Continuous.aestronglyMeasurable
+  simp only [gaussianCM, ContinuousMap.coe_mk]
+  fun_prop
+
 end SKEFTHawking
