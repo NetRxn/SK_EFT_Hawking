@@ -279,6 +279,19 @@ theorem weyl_single_lower_of_eq {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [Normed
       ≤ hT.eigenvalues hn ⟨i, hi⟩ * ‖v‖ ^ 2 := by rw [add_mul]; linarith
   exact le_of_mul_le_mul_right hcomb hvnorm
 
+/-- **Weyl eigenvalue-difference bound (two-sided lower form):** the smallest eigenvalue of `A−B` bounds the
+per-index eigenvalue difference from below, `λ↓ₙ₋₁(A−B) ≤ λ↓ᵢ(A) − λ↓ᵢ(B)`. Immediate from
+`weyl_single_lower_of_eq` with `A = B + (A−B)`. Applying it to `B−A` as well gives the two-sided sandwich, and
+with the operator-norm/eigenvalue bound the Lipschitz continuity `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the regularity
+input (P1) for the eigenvalue-path proof of Lidskii. -/
+theorem weyl_diff_ge {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
+    [FiniteDimensional 𝕜 E] {n : ℕ} (hn : Module.finrank 𝕜 E = n)
+    {A B : E →ₗ[𝕜] E} (hA : A.IsSymmetric) (hB : B.IsSymmetric) (hAB : (A - B).IsSymmetric)
+    {i : ℕ} (hi : i < n) :
+    hAB.eigenvalues hn ⟨n - 1, by omega⟩ ≤ hA.eigenvalues hn ⟨i, hi⟩ - hB.eigenvalues hn ⟨i, hi⟩ := by
+  have h := weyl_single_lower_of_eq hn hA hB hAB (by abel) hi
+  linarith
+
 /-- **Max-min Lidskii–Wielandt, assembled (staging the frame-existence step (3)).** Given an orthonormal
 frame `{wᵣ}` in `A`'s eigen-flag (`wᵣ ∈ span top sᵣ+1 A-eigenvectors`) with low `B`-Rayleigh-sum (hypothesis
 `hB3` = step (3)), the arbitrary-subset Lidskii inequality follows:
