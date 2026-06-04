@@ -124,6 +124,24 @@ kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
   matrix-analysis + combinatorial-convexity build — NOT an axiom-needing wall (provable), but multi-brick.
   `traceNorm_hermitian=∑|λᵢ|` present. Build decompose-first; if a specific step provably needs absent
   machinery document THAT residual (never wholesale, never axiom).
+  **BUILD ORDER + CONFIRMED BLOCKS (next window starts here):**
+  (a) **Karamata** (pure, → `SpectralMajorization.lean`): `{a b : Fin N → ℝ}` both `Antitone`, prefix-major
+      `∀k, ∑_{i<k} a ≤ ∑_{i<k} b`, equal total `∑a=∑b`, `φ` `ConvexOn ℝ univ` ⟹ `∑φ(aᵢ) ≤ ∑φ(bᵢ)`.
+      BLOCKS CONFIRMED PRESENT: `ConvexOn.slope_mono_adjacent`/`ConvexOn.slope_mono` (slope monotone),
+      `Finset.sum_range_by_parts` (Abel summation). Approach: subgradient `gᵢ∈∂φ(aᵢ)` (gᵢ antitone since
+      a antitone+φ convex), `φ(bᵢ)−φ(aᵢ) ≥ gᵢ(bᵢ−aᵢ)`, Abel-sum `∑gᵢ(bᵢ−aᵢ) = ∑(gₖ−g_{k+1})(Bₖ−Aₖ) ≥ 0`
+      (gₖ−g_{k+1}≥0 antitone, Bₖ−Aₖ≥0 prefix-major). ⚠️ convert Fin N sums ↔ range via `Fin.sum_univ_eq_sum_range`;
+      handle ties (gᵢ via slope to a neighbor). ~80–100 lines, genuine but standard.
+  (b) **Lidskii–Wielandt** (operator, harder): sorted-difference weak majorization `∑_{i<k}(λ↓(A)−λ↓(B))↓ᵢ
+      ≤ ∑_{i<k}λ↓ᵢ(A−B)`. `sum_top_subadditive` gives the PREFIX (unsorted-d) bound; the sorted-d/subset
+      strengthening is the extra work (subset Ky Fan or the standard Lidskii argument).
+  (c) **Mirsky** = Karamata(φ=|·|, exact-major from b/c + trace equality) ⟹ `∑|λ↓(A)−λ↓(B)| ≤ ‖A−B‖₁`
+      (RHS = `traceNorm_eq_sum_abs_eigenvalues₀`, SHIPPED).
+  (d) **F2 classical FA** (independent, → `FannesAudenaert.lean`): the Audenaert inequality
+      `|∑negMulLog p−∑negMulLog q| ≤ T·log(d−1)+H₂(T)`, `∑|pᵢ−qᵢ|=2T`. Real-analysis, hard; `Real.binEntropy`
+      (`binEntropy_continuous`, `strictConcave_binEntropy`) + `negMulLog` concavity present.
+  (e) **F3 assembly**: `S=∑negMulLog(eigenvalues₀)` (via `sum_eigenvalues_eq_sum_eigenvalues₀`) + Mirsky (ℓ¹
+      spectra ≤ trace dist) + F2.
 - **F2 classical FA** `|∑negMulLog pᵢ−∑negMulLog qᵢ| ≤ T·log(d−1)+H₂(T)`, `∑|pᵢ−qᵢ|=2T`. Real analysis;
   `Real.binEntropy`/`negMulLog` concavity toe-holds present. Independent of F1.
 - **F3 assembly**: `S=∑negMulLog(eigenvalues₀)` (via `sum_eigenvalues_eq_sum_eigenvalues₀`) + F1b + F2.
