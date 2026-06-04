@@ -384,4 +384,35 @@ theorem hilbertGlobalProd_prime_prime (p q : ℕ) [Fact p.Prime] [Fact q.Prime] 
     · subst hpq; exact hilbertGlobalProd_prime_self p hp2
     · exact hilbertGlobalProd_odd_primes p q hp2 hq2 hpq
 
+/-- `∏_v (p, n)_v = 1` for a prime `p` and any positive natural `n` (induction on the factorization of `n`). -/
+theorem hilbertGlobalProd_prime_natCast (p : ℕ) (hp : p.Prime) :
+    ∀ n : ℕ, 0 < n → hilbertGlobalProd (p : ℤ) (n : ℤ) = 1 := by
+  haveI := Fact.mk hp
+  intro n
+  induction n using Nat.recOnMul with
+  | zero => intro h; exact absurd h (lt_irrefl 0)
+  | one => intro _; rw [Nat.cast_one, hilbertGlobalProd_comm]; exact hilbertGlobalProd_one_left _
+  | prime q hq => intro _; haveI := Fact.mk hq; exact hilbertGlobalProd_prime_prime p q
+  | mul a b iha ihb =>
+    intro hab
+    have ha : 0 < a := Nat.pos_of_ne_zero (left_ne_zero_of_mul hab.ne')
+    have hb : 0 < b := Nat.pos_of_ne_zero (right_ne_zero_of_mul hab.ne')
+    rw [Nat.cast_mul, hilbertGlobalProd_mul_right (by exact_mod_cast hp.pos.ne')
+        (by exact_mod_cast ha.ne') (by exact_mod_cast hb.ne'), iha ha, ihb hb, one_mul]
+
+/-- **Hilbert's product formula on positive naturals:** `∏_v (m,n)_v = 1` for positive `m, n`. -/
+theorem hilbertGlobalProd_natCast : ∀ m : ℕ, 0 < m → ∀ n : ℕ, 0 < n →
+    hilbertGlobalProd (m : ℤ) (n : ℤ) = 1 := by
+  intro m
+  induction m using Nat.recOnMul with
+  | zero => intro h; exact absurd h (lt_irrefl 0)
+  | one => intro _ n _; rw [Nat.cast_one]; exact hilbertGlobalProd_one_left _
+  | prime p hp => intro _ n hn; exact hilbertGlobalProd_prime_natCast p hp n hn
+  | mul a b iha ihb =>
+    intro hab n hn
+    have ha : 0 < a := Nat.pos_of_ne_zero (left_ne_zero_of_mul hab.ne')
+    have hb : 0 < b := Nat.pos_of_ne_zero (right_ne_zero_of_mul hab.ne')
+    rw [Nat.cast_mul, hilbertGlobalProd_mul_left (by exact_mod_cast ha.ne')
+        (by exact_mod_cast hb.ne') (by exact_mod_cast hn.ne'), iha ha n hn, ihb hb n hn, one_mul]
+
 end SKEFTHawking.HilbertSymbol
