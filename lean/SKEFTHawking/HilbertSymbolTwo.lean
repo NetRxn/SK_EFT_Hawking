@@ -203,4 +203,17 @@ theorem hilbert2Int_neg_one_neg_one : hilbert2Int (-1) (-1) = -1 := by
   rw [hv, hpf]
   decide
 
+/-- `(-1, q)_2 = χ₂(ε(q))` for odd `q`: the `a = -1` exponent collapses to `ε(-1)·ε(q) = ε(q)` (`ε(-1)=1`,
+both valuations zero). For prime `q` this equals `legendreSym q (-1)` via `chi2_eps2_eq_legendre_neg_one`. -/
+theorem hilbert2Int_neg_one_odd {q : ℤ} (hq : ¬ (2 : ℤ) ∣ q) :
+    hilbert2Int (-1) q = chi2 (eps2 (q : ZMod 8)) := by
+  have hv1 : padicValInt 2 (-1) = 0 := by simp [padicValInt]
+  have hvq : padicValInt 2 q = 0 := padicValInt.eq_zero_of_not_dvd hq
+  have hpf1 : pfreeInt 2 (-1) = -1 := by simp [pfreeInt, hv1]
+  have hpfq : pfreeInt 2 q = q := by simp [pfreeInt, hvq]
+  unfold hilbert2Int
+  rw [hv1, hvq, hpf1, hpfq]
+  simp only [Int.cast_neg, Int.cast_one, Nat.cast_zero, zero_mul, add_zero]
+  rw [show eps2 (-1 : ZMod 8) = 1 from by decide, one_mul]
+
 end SKEFTHawking.HilbertSymbol

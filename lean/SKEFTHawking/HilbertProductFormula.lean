@@ -179,4 +179,41 @@ theorem hilbertGlobalProd_neg_one_neg_one : hilbertGlobalProd (-1) (-1) = 1 := b
     show ((-1 : ℤ) : ℝ) = -1 from by norm_num, hilbertReal_neg_neg (by norm_num) (by norm_num)]
   ring
 
+/-- **Product formula, generator `(-1, q)` for an odd prime `q`:** `∏_v (-1,q)_v = 1`. Only the places `2`
+and `q` contribute; both equal `legendreSym q (-1)` (the dyadic value via the supplementary law, the `q`-adic
+value as the uniformizer Legendre symbol), so their product is `(legendreSym q (-1))² = 1`. -/
+theorem hilbertGlobalProd_neg_one_prime (q : ℕ) [Fact q.Prime] (hq : q ≠ 2) :
+    hilbertGlobalProd (-1) (q : ℤ) = 1 := by
+  have hqoddN : ¬ 2 ∣ q := by
+    have h1 : q % 2 = 1 := Nat.odd_iff.mp ((Fact.out : q.Prime).odd_of_ne_two hq); omega
+  have hqodd : ¬ (2 : ℤ) ∣ (q : ℤ) := fun h => hqoddN (by exact_mod_cast h)
+  have hqnd1 : ¬ (q : ℤ) ∣ (-1 : ℤ) := fun h =>
+    (Fact.out : q.Prime).ne_one (Nat.dvd_one.mp (by exact_mod_cast (dvd_neg.mp h)))
+  have hsub : Function.mulSupport (fun p => hilbertPrime p (-1) (q : ℤ)) ⊆ ↑({2, q} : Finset ℕ) := by
+    intro p hp
+    simp only [Function.mem_mulSupport] at hp
+    simp only [Finset.coe_insert, Finset.coe_singleton, Set.mem_insert_iff, Set.mem_singleton_iff]
+    by_contra hpne
+    push_neg at hpne
+    apply hp
+    by_cases hpp : p.Prime
+    · refine hilbertPrime_units hpp hpne.1 ?_ ?_
+      · intro h
+        exact hpp.ne_one (Nat.dvd_one.mp (by exact_mod_cast (dvd_neg.mp h)))
+      · intro hpd
+        exact hpne.2 ((Nat.prime_dvd_prime_iff_eq hpp Fact.out).mp
+          (Int.natCast_dvd_natCast.mp (by exact_mod_cast hpd)))
+    · exact hilbertPrime_of_not_prime hpp _ _
+  unfold hilbertGlobalProd
+  rw [finprod_eq_finset_prod_of_mulSupport_subset _ hsub,
+    Finset.prod_insert (by simp [Ne.symm hq]), Finset.prod_singleton,
+    hilbertPrime_two, hilbertPrime_odd Fact.out hq,
+    hilbert2Int_neg_one_odd hqodd, @Int.cast_natCast (ZMod 8) _ q, chi2_eps2_eq_legendre_neg_one q hq,
+    hilbertPadicInt_eq_legendre q hqnd1,
+    show ((-1 : ℤ) : ℝ) = -1 from by norm_num,
+    hilbertReal_of_nonneg_right _ (by positivity : (0 : ℝ) ≤ ((q : ℤ) : ℝ))]
+  rcases legendreSym.eq_one_or_neg_one q
+      (show ((-1 : ℤ) : ZMod q) ≠ 0 by push_cast; exact neg_ne_zero.mpr one_ne_zero) with h | h <;>
+    · rw [h]; ring
+
 end SKEFTHawking.HilbertSymbol
