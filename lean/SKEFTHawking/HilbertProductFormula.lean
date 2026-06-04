@@ -314,6 +314,39 @@ private theorem support_subset_two {a : ℤ} (ha : ∀ x : ℕ, x.Prime → x �
     exact hxne ((Nat.prime_dvd_prime_iff_eq hxp Nat.prime_two).mp (Int.natCast_dvd_natCast.mp (by exact_mod_cast h)))
   · exact hilbertPrime_of_not_prime hxp _ _
 
+/-- **Product formula, generator `(p, p)` for an odd prime `p`:** `∏_v (p,p)_v = 1`. The dyadic factor is
+`(-1)^{(p/2)²}` and the `p`-adic factor is `(-1)^{(p-1)/2}`; since `(p-1)/2 = p/2`, their product is
+`(-1)^{(p/2)(p/2+1)} = 1` (consecutive product is even). -/
+theorem hilbertGlobalProd_prime_self (p : ℕ) [Fact p.Prime] (hp : p ≠ 2) :
+    hilbertGlobalProd (p : ℤ) (p : ℤ) = 1 := by
+  have hpoddN : ¬ 2 ∣ p := by have := Nat.odd_iff.mp ((Fact.out : p.Prime).odd_of_ne_two hp); omega
+  have hpodd : ¬ (2 : ℤ) ∣ (p : ℤ) := fun h => hpoddN (by exact_mod_cast h)
+  have hsub : Function.mulSupport (fun x => hilbertPrime x (p : ℤ) (p : ℤ)) ⊆ ↑({2, p} : Finset ℕ) := by
+    intro x hx
+    simp only [Function.mem_mulSupport] at hx
+    simp only [Finset.coe_insert, Finset.coe_singleton, Set.mem_insert_iff, Set.mem_singleton_iff]
+    by_contra hxne
+    push_neg at hxne
+    apply hx
+    by_cases hxp : x.Prime
+    · refine hilbertPrime_units hxp hxne.1 ?_ ?_ <;>
+        · intro h
+          exact hxne.2 ((Nat.prime_dvd_prime_iff_eq hxp Fact.out).mp
+            (Int.natCast_dvd_natCast.mp (by exact_mod_cast h)))
+    · exact hilbertPrime_of_not_prime hxp _ _
+  unfold hilbertGlobalProd
+  rw [finprod_eq_finset_prod_of_mulSupport_subset _ hsub,
+    Finset.prod_insert (by simp [Ne.symm hp]), Finset.prod_singleton,
+    hilbertPrime_two, hilbertPrime_odd Fact.out hp,
+    hilbert2Int_odd_odd hpodd hpodd, @Int.cast_natCast (ZMod 8) _ p,
+    chi2_eps2_mul ((Fact.out : p.Prime).odd_of_ne_two hp) ((Fact.out : p.Prime).odd_of_ne_two hp),
+    hilbertPadicInt_diag,
+    show ((p : ℤ) : ℝ) = (p : ℝ) from by push_cast; ring,
+    hilbertReal_of_nonneg_left (by positivity : (0 : ℝ) ≤ (p : ℝ))]
+  have hpp : (p - 1) / 2 = p / 2 := by have := Nat.odd_iff.mp ((Fact.out : p.Prime).odd_of_ne_two hp); omega
+  rw [one_mul, ← pow_add, hpp, ← mul_add_one]
+  exact Even.neg_one_pow (Nat.even_mul_succ_self _)
+
 /-- **Product formula, generator `(-1, 2)`:** `∏_v (-1,2)_v = 1`. -/
 theorem hilbertGlobalProd_neg_one_two : hilbertGlobalProd (-1) 2 = 1 := by
   unfold hilbertGlobalProd

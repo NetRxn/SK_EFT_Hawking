@@ -188,6 +188,14 @@ theorem hilbertPadicInt_one_left (b : ℤ) : hilbertPadicInt p 1 b = 1 := by
 theorem hilbertPadicInt_one_right (a : ℤ) : hilbertPadicInt p a 1 = 1 := by
   rw [hilbertPadicInt_comm]; exact hilbertPadicInt_one_left p a
 
+/-- **Diagonal value:** `(p, p)_p = (-1)^{(p-1)/2}` (both valuations are `1`, the `p`-free parts are units). -/
+theorem hilbertPadicInt_diag : hilbertPadicInt p (p : ℤ) (p : ℤ) = (-1) ^ ((p - 1) / 2) := by
+  have hpne : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).pos.ne'
+  have hpf : pfreeInt p (p : ℤ) = 1 := by rw [pfreeInt, padicValInt_self, pow_one, Int.ediv_self hpne]
+  unfold hilbertPadicInt
+  rw [padicValInt_self, hpf]
+  simp
+
 /-- **Value against the uniformizer:** for `p ∤ a`, `(a, p)_p = (a | p)` (the Legendre symbol). This is the
 prime-place contribution of a generator in the product formula. -/
 theorem hilbertPadicInt_eq_legendre {a : ℤ} (ha : ¬ (p : ℤ) ∣ a) :
