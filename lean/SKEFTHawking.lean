@@ -2758,6 +2758,9 @@ import SKEFTHawking.QuantumNetwork.QuantumRelativeEntropy
 -- Phase 6AK Wave FU-7 (2026-06-04): Pauli-channel entanglement-generating capacity — the normalised
 -- Choi state ½J(Φ_p)=bellDiagState p, its negativity/log-negativity closed form, dephasing instance ½|2γ−1|.
 import SKEFTHawking.QuantumNetwork.PauliChoiNegativity
+-- Phase 6AK Wave FU-8 (2026-06-04): eigenvalues of a Kronecker product = products {λᵢμⱼ} (missing
+-- Mathlib infra, via charpoly matching) ⟹ von Neumann entropy additivity S(ρ⊗σ)=S(ρ)+S(σ).
+import SKEFTHawking.QuantumNetwork.KroneckerEntropy
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
