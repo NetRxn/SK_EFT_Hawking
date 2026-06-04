@@ -691,4 +691,55 @@ theorem exists_primitive_diag_ternary {p : ℕ} [Fact p.Prime] {a b c : ℤ_[p]}
     · exact main Y₀.valuation X₀ Y₀ Z₀ (Or.inr (Or.inl ⟨hY, le_refl _⟩)) heq₀
   · exact main X₀.valuation X₀ Y₀ Z₀ (Or.inl ⟨hX, le_refl _⟩) heq₀
 
+/-- **Anisotropy of `pu·X² + pv·Y² − Z² = 0` for `-uv` a non-square (primitive case).** Mod `p` forces
+`Z̄ = 0`; one descent (`Z = p Z'`, cancel `p`) gives `u X² + v Y² = p Z'²`, whose mod-`p` reduction
+`ū X̄² + v̄ Ȳ² = 0` makes `-ū v̄ = (v̄ Ȳ / X̄)²` a square unless `X̄ = 0` — then `Ȳ = 0` too, so all
+coordinates are non-units, contradicting primitivity. -/
+theorem no_primitive_sol_pUnit_pUnit {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]} (hv : IsUnit v)
+    (hunsq : ¬ IsSquare (PadicInt.toZMod (-(u * v)))) :
+    ¬ ∃ X Y Z : ℤ_[p], (IsUnit X ∨ IsUnit Y ∨ IsUnit Z) ∧
+      (p : ℤ_[p]) * u * X ^ 2 + (p : ℤ_[p]) * v * Y ^ 2 + (-1) * Z ^ 2 = 0 := by
+  rintro ⟨X, Y, Z, hprim, h⟩
+  have hp_zero : PadicInt.toZMod (p : ℤ_[p]) = 0 := by rw [map_natCast, ZMod.natCast_self]
+  have hpne : (p : ℤ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have hZbar : PadicInt.toZMod Z = 0 := by
+    have hh := congrArg PadicInt.toZMod h
+    simp only [map_add, map_mul, map_pow, map_neg, hp_zero, zero_mul, neg_mul, one_mul,
+      add_zero, zero_add, neg_eq_zero, map_zero] at hh
+    exact pow_eq_zero_iff (by norm_num) |>.mp hh
+  obtain ⟨Z', hZ'⟩ := (PadicInt.norm_lt_one_iff_dvd Z).mp ((toZMod_eq_zero_iff_norm_lt_one Z).mp hZbar)
+  have hin : u * X ^ 2 + v * Y ^ 2 = (p : ℤ_[p]) * Z' ^ 2 := by
+    apply mul_left_cancel₀ hpne
+    rw [hZ'] at h
+    linear_combination h
+  have hmod : PadicInt.toZMod u * PadicInt.toZMod X ^ 2 + PadicInt.toZMod v * PadicInt.toZMod Y ^ 2 = 0 := by
+    have := congrArg PadicInt.toZMod hin
+    simpa only [map_add, map_mul, map_pow, hp_zero, zero_mul] using this
+  have hvu : IsUnit (PadicInt.toZMod v) := hv.map _
+  have hXbar : PadicInt.toZMod X = 0 := by
+    by_contra hXne
+    apply hunsq
+    refine ⟨PadicInt.toZMod v * PadicInt.toZMod Y / PadicInt.toZMod X, ?_⟩
+    rw [map_neg, map_mul]
+    field_simp
+    linear_combination -PadicInt.toZMod v * hmod
+  have hYbar : PadicInt.toZMod Y = 0 := by
+    rw [hXbar] at hmod
+    have : PadicInt.toZMod v * PadicInt.toZMod Y ^ 2 = 0 := by linear_combination hmod
+    rcases mul_eq_zero.mp this with hh | hh
+    · exact absurd hh hvu.ne_zero
+    · exact pow_eq_zero_iff (by norm_num) |>.mp hh
+  exact hprim.elim (not_isUnit_of_toZMod_eq_zero hXbar)
+    (fun hh => hh.elim (not_isUnit_of_toZMod_eq_zero hYbar) (not_isUnit_of_toZMod_eq_zero hZbar))
+
+/-- **Anisotropy of `pu·x² + pv·y² − z² = 0` over `ℚ_[p]` (`-uv` non-square).** The full converse of the
+symbol ⟺ solvability bridge in the `(p·u, p·v)` case: generic extraction
+(`exists_primitive_diag_ternary`) ∘ the primitive anisotropy. -/
+theorem no_padic_sol_pUnit_pUnit {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]} (hv : IsUnit v)
+    (hunsq : ¬ IsSquare (PadicInt.toZMod (-(u * v)))) :
+    ¬ ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      ((p : ℤ_[p]) * u : ℚ_[p]) * x ^ 2 + ((p : ℤ_[p]) * v : ℚ_[p]) * y ^ 2 +
+        ((-1 : ℤ_[p]) : ℚ_[p]) * z ^ 2 = 0 :=
+  fun hsol => no_primitive_sol_pUnit_pUnit hv hunsq (exists_primitive_diag_ternary hsol)
+
 end SKEFTHawking
