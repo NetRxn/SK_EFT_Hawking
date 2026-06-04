@@ -791,4 +791,24 @@ theorem solvable_2adic_of_unit_sq {u : ℤ_[2]} (hu8 : PadicInt.toZModPow 3 u = 
   obtain ⟨w, hw⟩ := isSquare_of_toZModPow_three_eq_one hu8
   exact solvable_ternary_of_sufficient (Or.inl ⟨(w : ℚ_[2]), by rw [hw]; push_cast; ring⟩)
 
+/-- **Square in `ℚ_[p]` ⟺ square in `ℤ_[p]`, for a unit.** A `p`-adic *unit* `u` is a square in the field
+`ℚ_[p]` iff it is a square in the ring `ℤ_[p]` (a square root in `ℚ_[p]` has norm 1, hence lies in `ℤ_[p]`).
+With `isSquare_iff_isSquare_toZMod` this gives "square in `ℚ_[p]` ⟺ residue square" — the link from field
+squares to the residue criterion used in the rational-square local–global. -/
+theorem isSquare_padic_coe_iff {p : ℕ} [Fact p.Prime] {u : ℤ_[p]} (hu : IsUnit u) :
+    IsSquare ((u : ℚ_[p])) ↔ IsSquare u := by
+  constructor
+  · rintro ⟨w, hw⟩
+    have hun : ‖(u : ℚ_[p])‖ = 1 := PadicInt.isUnit_iff.mp hu
+    have hwn : ‖w‖ = 1 := by
+      have h1 : ‖w‖ * ‖w‖ = 1 := by rw [← norm_mul, ← hw]; exact hun
+      nlinarith [norm_nonneg w]
+    obtain ⟨wL, _, hwL⟩ := exists_padicInt_unit_of_norm_one hwn
+    refine ⟨wL, ?_⟩
+    have hsub : (u - wL * wL : ℤ_[p]) = 0 := by
+      rw [← PadicInt.coe_eq_zero]; push_cast [hwL]; rw [hw]; ring
+    exact sub_eq_zero.mp hsub
+  · rintro ⟨w, hw⟩
+    exact ⟨(w : ℚ_[p]), by rw [hw]; push_cast; ring⟩
+
 end SKEFTHawking
