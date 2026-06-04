@@ -154,4 +154,61 @@ theorem neg_inv_im_pos {τ : ℂ} (hτ : 0 < τ.im) : 0 < (-1 / τ).im := by
     rw [neg_div, one_div, Complex.neg_im, Complex.inv_im]; ring
   rw [heq]; exact div_pos hτ (Complex.normSq_pos.mpr hτ0)
 
+/-- Right-half-plane specialization of `mul_cpow_of_arg_mem`: if `0 < x.re` and `0 < y.re` then
+`(x·y)^s = x^s · y^s` (both args lie in `(-π/2, π/2)`, so their sum is in `(-π, π]`). -/
+theorem mul_cpow_of_re_pos {x y : ℂ} (s : ℂ) (hx : 0 < x.re) (hy : 0 < y.re) :
+    (x * y) ^ s = x ^ s * y ^ s := by
+  refine mul_cpow_of_arg_mem s (fun h => by simp [h] at hx) (fun h => by simp [h] at hy) ?_
+  rw [Set.mem_Ioc]
+  refine ⟨?_, ?_⟩
+  · have h1 := Complex.neg_pi_div_two_lt_arg_iff.mpr (Or.inl hx)
+    have h2 := Complex.neg_pi_div_two_lt_arg_iff.mpr (Or.inl hy)
+    linarith
+  · have h1 := Complex.arg_le_pi_div_two_iff.mpr (Or.inl hx.le)
+    have h2 := Complex.arg_le_pi_div_two_iff.mpr (Or.inl hy.le)
+    linarith
+
+/-- **[Θ4] — the rank of a positive-definite even unimodular lattice is divisible by 8.** For an even
+unimodular integer form `A` (`Aᵀ = A`, even diagonal, positive-definite cast), `8 ∣ d`. The theta function
+`Θ_M` satisfies the `S` self-transform `Θ_M(-1/τ) = (τ/i)^{d/2}Θ_M(τ)` and `T`-periodicity; iterating the
+combined `ST`-step three times around `(ST)³ = 1` (with `Θ_M(i) ≠ 0`) forces the automorphy factor
+`(-i)^{d/2} = 1`, i.e. `8 ∣ d`. -/
+theorem eight_dvd_rank {d : ℕ} (A : Matrix (Fin d) (Fin d) ℤ) (hsymm : Aᵀ = A)
+    (hunim : IsUnimodular A) (hpd : (A.map (Int.cast : ℤ → ℝ)).PosDef) (heven : ∀ i, 2 ∣ A i i) :
+    8 ∣ d := by
+  rw [← neg_I_cpow_eq_one_iff_eight_dvd]
+  have hIne : (I : ℂ) ≠ 0 := Complex.I_ne_zero
+  have hI1ne : (I + 1 : ℂ) ≠ 0 := by
+    intro h; have := congrArg Complex.im h; simp at this
+  have hIim : (0 : ℝ) < I.im := by simp
+  have hp1im : (0 : ℝ) < ((I - 1) / 2).im := by simp
+  have hp2im : (0 : ℝ) < (I - 1).im := by simp
+  have m1 : (-1 / (I + 1) : ℂ) = (I - 1) / 2 := by field_simp; linear_combination -Complex.I_sq
+  have m2 : (-1 / ((I - 1) / 2 + 1) : ℂ) = I - 1 := by
+    rw [show ((I - 1) / 2 + 1 : ℂ) = (I + 1) / 2 from by ring]
+    field_simp; linear_combination -Complex.I_sq
+  have m3 : (-1 / ((I - 1) + 1) : ℂ) = I := by field_simp; linear_combination -Complex.I_sq
+  have e1 := theta_ST A hsymm hunim hpd heven hIim
+  rw [m1] at e1
+  have e2 := theta_ST A hsymm hunim hpd heven hp1im
+  rw [m2] at e2
+  have e3 := theta_ST A hsymm hunim hpd heven hp2im
+  rw [m3, e2, e1] at e3
+  have hθ := latticeTheta_I_ne_zero (A.map (Int.cast : ℤ → ℝ)) hpd
+  have hK : (1 : ℂ) = ((I - 1 + 1) / I) ^ ((d : ℂ) / 2)
+      * (((I - 1) / 2 + 1) / I) ^ ((d : ℂ) / 2) * ((I + 1) / I) ^ ((d : ℂ) / 2) := by
+    refine mul_right_cancel₀ hθ ?_
+    rw [one_mul]; nth_rewrite 1 [e3]; ring
+  have hCre : (0 : ℝ) < ((I + 1) / I).re := by
+    rw [show (I + 1) / I = 1 - I from by field_simp; linear_combination Complex.I_sq]; simp
+  have hBre : (0 : ℝ) < (((I - 1) / 2 + 1) / I).re := by
+    rw [show ((I - 1) / 2 + 1) / I = (1 - I) / 2 from by field_simp; linear_combination Complex.I_sq]
+    simp
+  rw [show (I - 1 + 1) / I = 1 from by rw [show I - 1 + 1 = I from by ring]; exact div_self hIne,
+    Complex.one_cpow, one_mul, ← mul_cpow_of_re_pos ((d : ℂ) / 2) hBre hCre,
+    show ((I - 1) / 2 + 1) / I * ((I + 1) / I) = -I from by
+      field_simp; linear_combination (2 * I + 1) * Complex.I_sq]
+    at hK
+  exact hK.symm
+
 end SKEFTHawking
