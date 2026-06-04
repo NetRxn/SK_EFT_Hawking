@@ -27,6 +27,7 @@ no `maxHeartbeats`; no `native_decide`.
 namespace SKEFTHawking.QuantumNetwork
 
 open Matrix
+open scoped ComplexOrder
 
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
@@ -433,5 +434,43 @@ theorem quantum_fannes_audenaert_of_mirsky {ρ σ : Matrix ι ι ℂ} (hρ : ρ.
   have hTL_mem : TL ∈ Set.Icc (0 : ℝ) (1 - 1 / (Fintype.card ι : ℝ)) :=
     ⟨hTL_nonneg, le_trans hle hTV⟩
   exact (Real.qaryEntropy_strictMonoOn hd).monotoneOn hTL_mem hTs_mem hle
+
+/-- **Sorted eigenvalues of a density operator lie in `[0,1]`.** `λ↓ₖ(ρ) = λ_{e k}(ρ)` (the sorted spectrum
+reindexes the unsorted `eigenvalues` through `Fintype.equivOfCardEq`), so nonnegativity follows from
+`PosSemidef.eigenvalues_nonneg` and the upper bound `≤ ∑ⱼ λ↓ⱼ(ρ) = tr ρ = 1`. -/
+theorem eigenvalues₀_mem_Icc {ι : Type*} [Fintype ι] [DecidableEq ι] {ρ : Matrix ι ι ℂ}
+    (hρ : IsDensityOperator ρ) (k) : hρ.1.isHermitian.eigenvalues₀ k ∈ Set.Icc (0:ℝ) 1 := by
+  have hex : ∀ j, ∃ i, hρ.1.isHermitian.eigenvalues₀ j = hρ.1.isHermitian.eigenvalues i := fun j =>
+    ⟨Fintype.equivOfCardEq (Fintype.card_fin _) j, by
+      simp only [Matrix.IsHermitian.eigenvalues, Equiv.symm_apply_apply]⟩
+  have hnnAll : ∀ j, 0 ≤ hρ.1.isHermitian.eigenvalues₀ j := fun j => by
+    obtain ⟨i, hi⟩ := hex j; rw [hi]; exact hρ.1.eigenvalues_nonneg i
+  refine ⟨hnnAll k, ?_⟩
+  have hsum : ∑ j, hρ.1.isHermitian.eigenvalues₀ j = 1 := by
+    rw [sum_eigenvalues₀_eq_trace_re, hρ.2]; simp
+  calc hρ.1.isHermitian.eigenvalues₀ k
+      ≤ ∑ j, hρ.1.isHermitian.eigenvalues₀ j :=
+        Finset.single_le_sum (fun j _ => hnnAll j) (Finset.mem_univ k)
+    _ = 1 := hsum
+
+/-- **Quantum Fannes entropy-continuity bound (spectral form, fully discharged — no `Hframe` needed).**
+For density operators `ρ, σ` with sorted-spectrum gap `|λ↓ₖ(ρ) − λ↓ₖ(σ)| ≤ ½` per index, the von Neumann
+entropies obey `|S(ρ) − S(σ)| ≤ d · η((∑ₖ|λ↓ₖ(ρ)−λ↓ₖ(σ)|)/d)` (`d = dim`, `η = negMulLog`; with
+`∑ₖ|λ↓ₖ(ρ)−λ↓ₖ(σ)| = 2T_spec` the RHS is `2T_spec·log d + η(2T_spec)`). This is the unconditional classical
+Fannes bound (`fannes_entropy_bound`) applied to the sorted eigenvalue distributions via the entropy↔spectrum
+bridge — it needs only `eigenvalues₀ ∈ [0,1]` and the per-index gap, NOT the Wielandt frame-existence `Hframe`.
+The *trace-distance* form `|S(ρ)−S(σ)| ≤ d·η(½‖ρ−σ‖₁)` would additionally require the Mirsky bound
+(`∑ₖ|λ↓ₖ(ρ)−λ↓ₖ(σ)| ≤ ‖ρ−σ‖₁`), whose proof rests on the documented `Hframe` residual. -/
+theorem quantum_fannes_bound {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator ρ) (hσ : IsDensityOperator σ)
+    (hgap : ∀ k, |hρ.1.isHermitian.eigenvalues₀ k - hσ.1.isHermitian.eigenvalues₀ k| ≤ 1/2) :
+    |vonNeumannEntropy hρ.1.isHermitian - vonNeumannEntropy hσ.1.isHermitian|
+      ≤ (Fintype.card ι : ℝ) * Real.negMulLog
+          ((∑ k, |hρ.1.isHermitian.eigenvalues₀ k - hσ.1.isHermitian.eigenvalues₀ k|)
+            / Fintype.card ι) := by
+  rw [vonNeumannEntropy_eq_sum_negMulLog_eigenvalues₀,
+    vonNeumannEntropy_eq_sum_negMulLog_eigenvalues₀]
+  exact fannes_entropy_bound Fintype.card_pos _ _
+    (fun k => eigenvalues₀_mem_Icc hρ k) (fun k => eigenvalues₀_mem_Icc hσ k) hgap
 
 end SKEFTHawking.QuantumNetwork
