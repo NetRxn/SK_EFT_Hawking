@@ -201,4 +201,15 @@ theorem exists_diag_isotropic_congr_sq {K : Type*} [Field K] {ι : Type*} [Finty
       · simp [h1]
     · rw [← hsum]; exact Finset.sum_congr rfl fun i _ => by ring
 
+/-- **Whole-form scaling preserves diagonal isotropy.** Over a field, `∑ wᵢ xᵢ²` has a nonzero zero iff
+`∑ (a·wᵢ) xᵢ²` does, for any nonzero `a`. Complements `exists_diag_isotropic_congr_sq`: here `a` need not be a
+square — this is the "factor `p` out of a `p` × (unit form)" reduction at a `p`-adic place. -/
+theorem exists_diag_isotropic_smul {K : Type*} [Field K] {ι : Type*} [Fintype ι] (a : K) (ha : a ≠ 0)
+    (w : ι → K) :
+    (∃ x : ι → K, x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0) ↔
+    (∃ x : ι → K, x ≠ 0 ∧ ∑ i, (a * w i) * x i ^ 2 = 0) := by
+  have hfac : ∀ x : ι → K, ∑ i, (a * w i) * x i ^ 2 = a * ∑ i, w i * x i ^ 2 := fun x => by
+    rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun i _ => by ring
+  simp only [hfac, mul_eq_zero, ha, false_or]
+
 end SKEFTHawking
