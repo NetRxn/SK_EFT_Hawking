@@ -124,7 +124,20 @@ kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
   matrix-analysis + combinatorial-convexity build — NOT an axiom-needing wall (provable), but multi-brick.
   `traceNorm_hermitian=∑|λᵢ|` present. Build decompose-first; if a specific step provably needs absent
   machinery document THAT residual (never wholesale, never axiom).
-  **BUILD ORDER + CONFIRMED BLOCKS (next window starts here):**
+  **🔑 KARAMATA AVOIDED (insight 2026-06-04):** Mirsky's ℓ¹ does NOT need general Karamata. For sorted `d↓`
+  and `μ=λ↓(A−B)`: `∑|dᵢ| = 2∑max(dᵢ,0) − ∑dᵢ`; `∑max(d,0)=∑_{i<m}d` (m=#nonneg = a PREFIX since d antitone)
+  `≤ ∑_{i<m}μ` (prefix/LW) `≤ ∑max(μ,0)` (μᵢ≤max(μᵢ,0), max≥0 — elementary, NO sorting of μ needed); with
+  `∑d=∑μ` (trace eq) ⟹ `∑|d| ≤ 2∑max(μ,0)−∑μ = ∑|μ| = ‖A−B‖₁`. So the combinatorial part is the ELEMENTARY
+  `abs_sum_le_of_prefix : {d μ : Fin N→ℝ} (hd:Antitone d)(hpre:∀m,∑_{i<m}d≤∑_{i<m}μ)(htot:∑d=∑μ) ⊢
+  ∑|dᵢ|≤∑|μᵢ|`. ⚠️ the one fiddly sub-step = `Antitone d → {i|0≤dᵢ} is the prefix {i|i<m}` (down-set in
+  Fin N = initial segment); everything else is `max`-algebra + `Finset.sum_filter`. THIS REPLACES (a) Karamata.
+  **REVISED BUILD ORDER (next window):** (a′) `abs_sum_le_of_prefix` [elementary, ~50-70 lines]; (b) Lidskii–
+  Wielandt SORTED-d prefix `∑_{i<m}d↓ᵢ ≤ ∑_{i<m}λ↓ᵢ(A−B)` [the remaining OPERATOR brick — generalize
+  `exists_proj_trace_eq`/`sum_top_subadditive` from prefix-subset to the sorted-d/arbitrary-subset form; the
+  standard Lidskii argument]; (c) Mirsky = a′∘b + `traceNorm_eq_sum_abs_eigenvalues₀` (SHIPPED); (d) F2
+  Audenaert; (e) F3 assembly. (Karamata below is now OPTIONAL/superseded for Mirsky.)
+
+  **OPTIONAL (superseded for Mirsky — keep only if a future need arises):**
   (a) **Karamata** (pure, → `SpectralMajorization.lean`): `{a b : Fin N → ℝ}` both `Antitone`, prefix-major
       `∀k, ∑_{i<k} a ≤ ∑_{i<k} b`, equal total `∑a=∑b`, `φ` `ConvexOn ℝ univ` ⟹ `∑φ(aᵢ) ≤ ∑φ(bᵢ)`.
       BLOCKS CONFIRMED PRESENT: `ConvexOn.slope_mono_adjacent`/`ConvexOn.slope_mono` (slope monotone),
