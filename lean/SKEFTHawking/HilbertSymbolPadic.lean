@@ -76,6 +76,14 @@ theorem hilbertPadicNat_units {a b : ℕ} (ha : ¬ p ∣ a) (hb : ¬ p ∣ b) :
   rw [Nat.factorization_eq_zero_of_not_dvd ha, Nat.factorization_eq_zero_of_not_dvd hb]
   simp
 
+/-- `(1, b)_p = 1`. -/
+@[simp] theorem hilbertPadicNat_one_left (b : ℕ) : hilbertPadicNat p 1 b = 1 := by
+  unfold hilbertPadicNat; simp [Nat.factorization_one]
+
+/-- `(a, 1)_p = 1`. -/
+@[simp] theorem hilbertPadicNat_one_right (a : ℕ) : hilbertPadicNat p a 1 = 1 := by
+  rw [hilbertPadicNat_comm]; exact hilbertPadicNat_one_left p a
+
 /-- **Legendre connection:** for `p ∤ a`, `(a, p)_p = (a | p)` — the symbol against the uniformizer is
 the Legendre symbol. -/
 theorem hilbertPadicNat_eq_legendre {a : ℕ} (ha : ¬ p ∣ a) :
