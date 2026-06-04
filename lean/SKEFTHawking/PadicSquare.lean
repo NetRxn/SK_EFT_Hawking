@@ -783,4 +783,12 @@ theorem solvable_pUnit_pUnit_iff {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : 
       push_cast; ring, hw]
     push_cast; ring
 
+/-- **2-adic forward solvability.** If `u ≡ 1 (mod 8)` (a `2`-adic square) then `z² = u x² + b y²` is
+solvable over `ℚ_[2]` for any `b` (take `y = 0`, `z = √u · x`). The easy direction of the `p = 2` symbol
+case, via the 2-adic square criterion `isSquare_of_toZModPow_three_eq_one`. -/
+theorem solvable_2adic_of_unit_sq {u : ℤ_[2]} (hu8 : PadicInt.toZModPow 3 u = 1) (b : ℚ_[2]) :
+    ∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (u : ℚ_[2]) * x ^ 2 + b * y ^ 2 := by
+  obtain ⟨w, hw⟩ := isSquare_of_toZModPow_three_eq_one hu8
+  exact solvable_ternary_of_sufficient (Or.inl ⟨(w : ℚ_[2]), by rw [hw]; push_cast; ring⟩)
+
 end SKEFTHawking
