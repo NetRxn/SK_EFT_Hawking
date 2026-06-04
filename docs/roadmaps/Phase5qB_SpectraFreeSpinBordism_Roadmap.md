@@ -217,6 +217,23 @@ and remains the single narrow tracked hypothesis (= `Arf(q̄)=0`).
   Per decision A (grind, ≤50k LOC). Strategic note confirmed: NO Mathlib shortcut for Milgram OR Hasse–Minkowski;
   theta route is definite-only (indefinite theta diverges).
 
+**UPDATE 2026-06-04 (cont.) — GLOBAL HM ROUTE DECISION: route A = Legendre descent, NOT Dirichlet (B).**
+Two Explore toe-hold scans (Mathlib + repo) settled the global-reduction architecture:
+- **Mathlib has only `Nat.exists_prime_gt_modEq_one` / `infinite_setOf_prime_modEq_one` (primes ≡ 1 mod k) —
+  NOT full Dirichlet** (primes ≡ a mod n for coprime a,n). So Serre's HM ternary-via-Dirichlet route would force
+  formalizing full Dirichlet (Dirichlet L-functions + non-vanishing at s=1) — a mountain atop the mountain. REJECTED.
+- **Chosen: route A — Legendre's theorem via elementary infinite descent (no Dirichlet).** Serre Ch IV Thm 6
+  (Legendre, the ternary case) is an elementary descent on `|a|+|b|` with squarefree coprime coefficients;
+  Dirichlet only enters Serre's n≥4 reduction (Thm 8), which I will instead handle by rank-reduction off the
+  ternary + n≥5 universal p-adic isotropy. Mathlib `Int.sq_of_isCoprime`, `Nat.sq_mul_squarefree`,
+  `Int.squarefree_natAbs`, `legendreSym.eq_one_iff` (↔ `IsSquare (a:ZMod p)`), `ZMod.chineseRemainder`,
+  `legendreSym.card_sqrts` are the descent toe-holds; the local↔QR bridge reuses the shipped Hilbert machinery.
+- Also confirmed ABSENT (must stay built-from-scratch): Legendre three-square thm, Witt group, Hasse invariant,
+  p-adic QF isotropy. PRESENT and reused: full QR (`legendreSym.quadratic_reciprocity`), χ₄/χ₈, `Nat.sum_four_squares`.
+- **n=2 base SHIPPED (`PadicSquare.lean`, kernel-pure):** `isSquare_rat_of_isSquare_padic` (0≤q, square every ℚ_p
+  ⟹ IsSquare q), `isSquare_rat_iff_local` (the rank-2 local-global iff), `exists_squarefree_sq_mul_int`/`_rat`
+  (squarefree square-class representative — the diagonal-coefficient normalization). NEXT: ternary Legendre descent.
+
 **UPDATE 2026-06-04 (cont.) — [HM] foundation: HILBERT'S PRODUCT FORMULA COMPLETE (major gating sub-result).**
 The full scalar Hilbert-symbol arithmetic layer for `[HM]`/Hasse–Minkowski is now a kernel-pure, axiom-clean
 fact, built entirely from scratch (Mathlib has NONE of it):
