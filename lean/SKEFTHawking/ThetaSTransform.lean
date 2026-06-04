@@ -80,4 +80,12 @@ theorem integrable_gaussianChar {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG :
   apply Real.exp_le_exp.mpr
   nlinarith [Real.pi_pos, hσ, hlam, hcoe x]
 
+/-- The **Gaussian** `x ↦ exp(iπσ·xᵀGx)` bundled as a `ContinuousMap` — the `F : C(Fin d → ℝ, ℂ)` that
+`multivar_poisson` is applied to in the theta S-transformation. -/
+noncomputable def gaussianCM {d : ℕ} (σ : ℂ) (G : Matrix (Fin d) (Fin d) ℝ) : C(Fin d → ℝ, ℂ) :=
+  ⟨fun x => Complex.exp ((π : ℂ) * I * σ * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ)), by fun_prop⟩
+
+@[simp] theorem gaussianCM_apply {d : ℕ} (σ : ℂ) (G : Matrix (Fin d) (Fin d) ℝ) (x : Fin d → ℝ) :
+    gaussianCM σ G x = Complex.exp ((π : ℂ) * I * σ * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ)) := rfl
+
 end SKEFTHawking
