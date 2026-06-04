@@ -114,7 +114,52 @@ applied to the LW crux itself (a dedicated matrix-analysis strategy scout + two 
   `sum_top_subadditive`) does NOT imply the SORTED weak-maj `∑_{k largest}(λ↓(A)−λ↓(B))≤∑_{j<k}λ↓(C)` — abstract
   counterexample `a=(2,2),b=(2,0),c=(1,1)` (can't arise from a real `A=B+C`, which is exactly the matrix structure Lidskii
   needs). So brick-2 IS genuine Lidskii weak-maj, not reducible to Weyl.
-- **✅ ROUTE (b) — LIDSKII-via-SCHUR–HORN (pure vector majorization, NO subspaces/flags, reuses shipped DS relation):**
+- **❌❌ ROUTE (b) IS REFUTED (2026-06-04, VM-2 scout + verification) — its key step is FALSE.** The rearrangement
+  `sort(a)−sort(q) ≺_w a−β` is FALSE for doubly-stochastic-interior `β` (n=2 counterexample `a=(3,6),q=(6,−5),
+  β=(−2.70,3.70)`: `topkSum(sort a−sort q,1)=8 > topkSum(a−β,1)=5.70`; ~44% random-trial violation). Only the VERTEX
+  form `sort a−sort q ≺ a−(q∘π)` (π a PERMUTATION) is true — and it does NOT connect to `λ(C)` (the convex-combo
+  closure fails in BOTH directions: convexity gives `topkSum(d) ≤ ∑w topkSum(a−q∘π)`, an upper bound, never the
+  needed lower bound). So the intermediate `eig₀A−eig₀B ≺_w (C's A-basis diagonal d)` is FALSE even though real
+  Lidskii `eig₀A−eig₀B ≺_w λ(C)` holds — `d ≺ λ(C)` but `d` is "smaller" than the sorted difference, breaking
+  transitivity. **DS-image-of-C-diagonal is the WRONG intermediate.** ⚠️ ALL 4 shipped bricks remain CORRECT/reusable
+  (VM-0 `subset_sum_le_sorted_prefix`, topkSum infra `722fc0d9`, VM-1 `topkSum_doublyStochastic_mulVec_le` `ecc0f66f`
+  = the genuine Birkhoff TODO, `mirsky_of_subset_diff` `911e1699`); only the VM-2/VM-3 WIRING is dead. **`H` (the
+  arbitrary-subset Lidskii bound) is still TRUE and still the target; it just needs the Wielandt-minimax proof, not
+  route (b).** Genuine route = Wielandt minimax (flags + `Submodule.finrank_sup_add_finrank_inf_eq` subspace
+  intersection; API confirmed present) OR additive-compound (missing Mathlib substrate). Both heavy/multi-session.
+- **✅ ROUTE (d) — WIELANDT MIN-MAX (user-committed full build 2026-06-04; the CORRECT skeleton, no false steps).**
+  Valid proof of H found (supersedes all false routes a/b/c): with `i_r = s_r+1`,
+  `∑_r λ↓_{s_r}(A) = min_{flags V_1⊂…⊂V_k, dim V_r=i_r} max_{orthonormal {x_r}, x_r∈V_r} ∑_r⟨x_r,Ax_r⟩` (Wielandt).
+  Plug **B's eigen-flag** `V_r=span{v_0..v_{s_r}}` (min ≤ value-at-this-flag):
+  `∑_S λ↓(A) ≤ max_{frame∈B-flag} ∑⟨x_r,Ax_r⟩ = max ∑⟨x_r,(B+C)x_r⟩ ≤ max∑⟨x_r,Bx_r⟩ + max∑⟨x_r,Cx_r⟩`
+  `≤ ∑_S λ↓(B) + ∑_{j<k}λ↓(C)` = H. (B-term: B's OWN min-max attained at its eigen-flag `=∑_Sλ↓(B)`; C-term: Ky Fan
+  on an orthonormal k-frame, `≤∑_{<k}λ↓(C)`.) Uses `max(f+g)≤max f+max g` — NO single-frame-both-bounds (which is false).
+  **DECOMPOSITION (build order, EuclideanSpace/`LinearMap.IsSymmetric` land — Mathlib has only EXTREME-eigenvalue Rayleigh
+  sup/inf, NOT indexed Courant–Fischer; build from scratch):**
+  - **D1 (THE hard lemma): Wielandt min-max "≤" direction** — for ANY flag `{V_r}` (dim V_r=i_r), `∑_r λ↓_{s_r}(A) ≤
+    max over orthonormal frames {x_r∈V_r} of ∑⟨x_r,Ax_r⟩`. Equivalently: ∃ orthonormal frame in the flag with
+    `∑⟨x_r,Ax_r⟩ ≥ ∑_r λ↓_{s_r}(A)`. ⚠️ DIM-COUNT CAVEAT (must resolve): the naive `x_r ∈ V_r ∩ A-top_{s_r}` (A-top =
+    span A's top s_r+1 eigvecs, gives ⟨x_r,Ax_r⟩≥λ↓_{s_r}(A) termwise) has `dim(V_r∩A-top_{s_r}) ≥ 2s_r+2−n`, then
+    `∩ prev^⊥` (codim r−1) ≥ `2s_r+3−n−r` which is NOT ≥1 for small s_r — so the termwise-A-top construction FAILS.
+    The scout's "s_r−r+2≥1" count was for a different (unverified) setup. RE-DERIVE the correct construction (likely the
+    genuine min-max ≥ needs a global/induction argument, not termwise) — TEST candidates numerically (lean_run_code) and
+    with lean_multi_attempt before committing. This is the irreducible hard core.
+  - **D2: B-side attainment** — at B's eigen-flag, `max over frames ∑⟨x_r,Bx_r⟩ = ∑_r λ↓_{s_r}(B)` (frames in span of
+    B's top-i_r eigvecs; the max is the eigenframe x_r=v_{s_r}). Cleaner than D1 (eigenbasis-aligned).
+  - **D3: Ky-Fan-for-frames** — `∑⟨x_r,Cx_r⟩ ≤ ∑_{<k}λ↓(C)` for any orthonormal k-frame. HAVE in matrix form
+    (`trace_mul_proj_le` via P=∑x_rx_rᴴ); bridge to EuclideanSpace OR re-prove via `trace_eq_sum_inner`.
+  - **D4: assemble** D1+D2+D3 via `max(f+g)≤max f+max g` → H → shipped `mirsky_of_subset_diff` → Mirsky.
+  - **API (confirmed present):** `Matrix.IsHermitian.eigenvectorBasis : OrthonormalBasis n ℂ (EuclideanSpace ℂ n)`,
+    `mulVec_eigenvectorBasis`, `Submodule.finrank_sup_add_finrank_inf_eq`, `finrank_span_eq_card`,
+    `LinearMap.trace_eq_sum_inner`, `Matrix.isHermitian_iff_isSymmetric` (toEuclideanLin), `exists_mem_ne_zero_of_rank_pos`.
+    Mathlib min-max: ONLY `hasEigenvalue_iSup/iInf_of_finiteDimensional` (extreme only) — indexed Courant–Fischer ABSENT.
+  - **THEN F2 Audenaert** (classical, independent, non-trivial — Audenaert 2007 coupling proof; `qaryEntropy` RHS shape
+    present) + **F3** quantum assembly (`S=∑negMulLog(eig₀)` + Mirsky + F2).
+  **🔧 TOOLING (user steer 2026-06-04): drive this build with lean4 MCP tools — TEST statements/constructions directly
+  (lean_multi_attempt, lean_run_code numerics, lean_leansearch) BEFORE building. Subagent scouts over-claimed shortcuts
+  3×; use them only for breadth, verify every claim yourself.**
+  **(superseded — kept for the refutation record:)**
+- **~~ROUTE (b) — LIDSKII-via-SCHUR–HORN~~ (REFUTED above):**
   In A's eigenbasis: `C`'s diagonal `d = λ(A) − β` (β = B's diagonal there); BOTH `d ≺ λ(C)` and `β ≺ λ(B)` are
   **Schur–Horn = "a doubly-stochastic image is (weakly) majorized"** — the DS weights `|Mᵢⱼ|²` are exactly the shipped
   `eigenvalue_eq_doublyStochastic_combination` + `overlap_normSq_{row,col}_sum`. Then a **rearrangement lemma**
