@@ -86,11 +86,10 @@ theorem hilbertPrime_comm (p : ℕ) (a b : ℤ) : hilbertPrime p a b = hilbertPr
   · letI := Fact.mk hp; exact hilbertPadicInt_comm p a b
   · rfl
 
-/-- **The place symbol has finite support.** For nonzero `a, b`, `hilbertPrime p a b = 1` for all but finitely
-many `p` (only primes dividing `2ab` can be nontrivial), so the product over all places is a finite product. -/
-theorem hilbertPrime_mulSupport_finite {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
-    (Function.mulSupport (fun p => hilbertPrime p a b)).Finite := by
-  apply Set.Finite.subset (Nat.divisors (2 * a.natAbs * b.natAbs)).finite_toSet
+/-- **Support is contained in the divisors of `2ab`.** Only primes dividing `2ab` give a nontrivial place
+symbol. -/
+theorem hilbertPrime_mulSupport_subset {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    Function.mulSupport (fun p => hilbertPrime p a b) ⊆ ↑(Nat.divisors (2 * a.natAbs * b.natAbs)) := by
   intro p hp
   simp only [Function.mem_mulSupport] at hp
   have hm0 : 2 * a.natAbs * b.natAbs ≠ 0 := by
@@ -110,6 +109,12 @@ theorem hilbertPrime_mulSupport_finite {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
         have hpb : p ∣ b.natAbs := Int.natCast_dvd_natCast.mp ((Int.dvd_natAbs).mpr hdb)
         exact hnd (hpb.mul_left (2 * a.natAbs))
   · exact absurd (hilbertPrime_of_not_prime hpp a b) hp
+
+/-- **The place symbol has finite support.** So the product over all places is a finite product. -/
+theorem hilbertPrime_mulSupport_finite {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    (Function.mulSupport (fun p => hilbertPrime p a b)).Finite :=
+  Set.Finite.subset (Nat.divisors (2 * a.natAbs * b.natAbs)).finite_toSet
+    (hilbertPrime_mulSupport_subset ha hb)
 
 /-- The **global Hilbert product** `∏_v (a,b)_v = (a,b)_∞ · ∏_p (a,b)_p` over all places (the real place
 times the finitely-supported product over primes). The **product formula** is the theorem that this equals
@@ -154,5 +159,14 @@ theorem hilbertGlobalProd_one_left (b : ℤ) : hilbertGlobalProd 1 b = 1 := by
   unfold hilbertGlobalProd
   rw [show ((1 : ℤ) : ℝ) = 1 from by norm_num, hilbertReal_one_left,
     finprod_congr (fun p => hilbertPrime_one_left p b), finprod_one, one_mul]
+
+/-- **Concrete evaluation of the global product.** The finitely-supported product over primes collapses to a
+finite `Finset` product over the divisors of `2ab` — the form used to evaluate `∏_v (a,b)_v` on generators. -/
+theorem hilbertGlobalProd_eq_finset_prod {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    hilbertGlobalProd a b
+      = hilbertReal (a : ℝ) (b : ℝ)
+        * ∏ p ∈ Nat.divisors (2 * a.natAbs * b.natAbs), hilbertPrime p a b := by
+  unfold hilbertGlobalProd
+  rw [finprod_eq_finset_prod_of_mulSupport_subset _ (hilbertPrime_mulSupport_subset ha hb)]
 
 end SKEFTHawking.HilbertSymbol
