@@ -167,11 +167,14 @@ residual (the Audenaert maximization absent from Mathlib), independent of the qu
 Fannes-constant form above is the standard certification-grade bound and is fully proven.
 
 **🔻 DR CORROBORATION (2026-06-04, updated `Lit-Search/Phase-6AL/Formalizing Arbitrary-Subset Lidskii (H)...md`):**
-The deep research independently identifies the **Li–Mathias 1999 positive-part splitting** (*Numer. Math.* 81,
-377–413, §2.1) as "the single most important finding / cheapest route overall, BYPASSES hB3" — Lidskii–Mirsky from
-"only Weyl monotonicity + trace, no Wielandt minimax, no interlacing, no induction." This is exactly
-`mirsky_unconditional` (independently rediscovered here via test-before-build). DR confirms Route (a)/Wielandt was
-the harder unnecessary path and that the t-construction / per-r membership / one-shot interlacing are all refuted.
+The deep research independently identifies the **Li–Mathias 1999 matrix-splitting** route (*Numer. Math.* **81**,
+377–413, DOI 10.1007/s002110050397 — bibliographic citation **independently web-verified**; the DR's precise
+"§2.1" sub-section pointer was NOT verified against the paper text, so it is dropped here) as "the cheapest route
+overall, BYPASSES hB3" — Lidskii–Mirsky from "only Weyl monotonicity + trace, no Wielandt minimax, no interlacing."
+This corroborates `mirsky_unconditional` (independently rediscovered here via test-before-build and established by
+machine-checked proof — the math stands on the kernel, not on the DR). DR's other claims (Route (a)/Wielandt as
+the harder path; t-construction / per-r membership / one-shot interlacing all refuted) are taken as hypotheses,
+not relied upon — we built none of them, since `mirsky_unconditional` already closes F1b.
 
 ---
 

@@ -14,10 +14,13 @@ Key idea: with `M := B + C₊` (`C₊ = posPart (A−B)`), `A ⪯ M` and `B ⪯ 
 `λ↓ₖ(A) − λ↓ₖ(B) ≤ λ↓ₖ(M) − λ↓ₖ(B) =: eₖ ≥ 0`, and `∑ₖ eₖ = tr(M) − tr(B) = tr(C₊) = eigPosSum`. Summing the
 positive parts and applying the same to `B − A` closes Mirsky via `traceNorm_hermitian_eq`.
 
-This is the **Li–Mathias positive-part splitting** (C. K. Li & R. Mathias, "The Lidskii–Mirsky–Wielandt theorem
-— additive and multiplicative versions," *Numer. Math.* **81** (1999), 377–413, §2.1): the Lidskii–Mirsky family
-follows from Weyl monotonicity + trace alone, with no Wielandt minimax / interlacing / frame construction. (Phase
-6AL deep research independently corroborated this as the cheapest route, retiring the Wielandt `hB3` residual.)
+This is a **positive-part / matrix-splitting** argument: the Lidskii–Mirsky family follows from Weyl monotonicity +
+trace alone (verified here by the kernel-pure proof below), with no Wielandt minimax / interlacing / frame
+construction. The matrix-splitting technique for an elementary proof of the Lidskii–Mirsky–Wielandt theorem is due
+to C. K. Li & R. Mathias, "The Lidskii–Mirsky–Wielandt theorem — additive and multiplicative versions," *Numer.
+Math.* **81** (1999), 377–413 (DOI 10.1007/s002110050397; citation independently verified). The specific
+Mirsky-trace-norm form proved here was rediscovered via numerical test-before-build and is established here by
+machine-checked proof, not by appeal to the reference.
 
 Invariants: kernel-pure `{propext, Classical.choice, Quot.sound}`; no project-local axioms; no `maxHeartbeats`.
 -/
