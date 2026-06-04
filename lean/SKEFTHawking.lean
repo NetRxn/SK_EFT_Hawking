@@ -2755,6 +2755,9 @@ import SKEFTHawking.QuantumNetwork.VonNeumannEntropy
 -- Phase 6AK Wave FU-8 (2026-06-04): matrix log (cfc Real.log), Re tr(ρ log ρ)=−S(ρ) bridge,
 -- and the quantum relative entropy S(ρ‖σ) = Re tr(ρ(log ρ − log σ)) with S(ρ‖ρ)=0.
 import SKEFTHawking.QuantumNetwork.QuantumRelativeEntropy
+-- Phase 6AK Wave FU-7 (2026-06-04): Pauli-channel entanglement-generating capacity — the normalised
+-- Choi state ½J(Φ_p)=bellDiagState p, its negativity/log-negativity closed form, dephasing instance ½|2γ−1|.
+import SKEFTHawking.QuantumNetwork.PauliChoiNegativity
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
