@@ -221,4 +221,30 @@ theorem isSymmetric_sum_re_inner_ge_flag {𝕜 : Type*} {E : Type*} [RCLike 𝕜
       exact hrepr (repr_eq_zero_of_not_mem hT hn (hw r) (by rw [Set.mem_setOf_eq]; exact hi))
     exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact hmem)
 
+/-- **Max-min Lidskii–Wielandt, assembled (staging the frame-existence step (3)).** Given an orthonormal
+frame `{wᵣ}` in `A`'s eigen-flag (`wᵣ ∈ span top sᵣ+1 A-eigenvectors`) with low `B`-Rayleigh-sum (hypothesis
+`hB3` = step (3)), the arbitrary-subset Lidskii inequality follows:
+`∑ᵣ λ↓_{sᵣ}(A) ≤ ∑ᵣ λ↓_{sᵣ}(B) + ∑_{j<k} λ↓ⱼ(A−B)`.
+Proof: `∑λ↓_{sᵣ}(A) ≤ ∑⟨wᵣ,Awᵣ⟩` (step 1) `= ∑⟨wᵣ,Bwᵣ⟩ + ∑⟨wᵣ,(A−B)wᵣ⟩` (linearity) `≤ ∑λ↓_{sᵣ}(B) +
+∑_{<k}λ↓(A−B)` (hypothesis hB3 + step 2 Ky Fan on `A−B`). Only the frame existence `hB3` remains to discharge. -/
+theorem lidskii_of_frame {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {A B : E →ₗ[𝕜] E} (hA : A.IsSymmetric) (hB : B.IsSymmetric)
+    [FiniteDimensional 𝕜 E] {n : ℕ} (hn : Module.finrank 𝕜 E = n) {k : ℕ} {s : Fin k → ℕ}
+    (hs : ∀ r, s r < n) {w : Fin k → E} (hw : Orthonormal 𝕜 w)
+    (hwflag : ∀ r, w r ∈ Submodule.span 𝕜
+      (⇑(hA.eigenvectorBasis hn) '' ({i : Fin n | (i : ℕ) ≤ s r} : Set (Fin n))))
+    (hB3 : ∑ r, RCLike.re (inner 𝕜 (w r) (B (w r))) ≤ ∑ r, hB.eigenvalues hn ⟨s r, hs r⟩) :
+    ∑ r, hA.eigenvalues hn ⟨s r, hs r⟩
+      ≤ ∑ r, hB.eigenvalues hn ⟨s r, hs r⟩
+        + ∑ i ∈ Finset.univ.filter (fun i : Fin n => (i : ℕ) < k), (hA.sub hB).eigenvalues hn i := by
+  have h1 := isSymmetric_sum_re_inner_ge_flag hA hn hs (fun r => hw.1 r) hwflag
+  have h2 := isSymmetric_sum_re_inner_le_top (hA.sub hB) hn hw
+  have hlin : ∑ r, RCLike.re (inner 𝕜 (w r) ((A - B) (w r)))
+      = ∑ r, RCLike.re (inner 𝕜 (w r) (A (w r)))
+        - ∑ r, RCLike.re (inner 𝕜 (w r) (B (w r))) := by
+    rw [← Finset.sum_sub_distrib]
+    refine Finset.sum_congr rfl (fun r _ => ?_)
+    rw [LinearMap.sub_apply, inner_sub_right, map_sub]
+  linarith [h1, h2, hB3, hlin.symm.le, hlin.le]
+
 end SKEFTHawking.QuantumNetwork
