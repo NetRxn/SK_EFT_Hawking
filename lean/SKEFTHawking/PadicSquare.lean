@@ -1159,4 +1159,25 @@ theorem solvable_real_canonical_iff {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
   · exact iff_of_false (by decide) (not_not.mpr (hcast.mp h))
   · exact iff_of_true rfl (hcast.not.mp h)
 
+/-- **`IsSquare` in a product is componentwise.** `IsSquare p ↔ IsSquare p.1 ∧ IsSquare p.2`. A CRT helper:
+under `ZMod.chineseRemainder` a residue is a square iff it is a square in each coprime factor. -/
+theorem isSquare_prod_iff {M N : Type*} [Monoid M] [Monoid N] {p : M × N} :
+    IsSquare p ↔ IsSquare p.1 ∧ IsSquare p.2 := by
+  constructor
+  · rintro ⟨s, hs⟩
+    exact ⟨⟨s.1, by rw [hs]; rfl⟩, ⟨s.2, by rw [hs]; rfl⟩⟩
+  · rintro ⟨⟨s, hs⟩, ⟨t, ht⟩⟩
+    exact ⟨(s, t), Prod.ext hs ht⟩
+
+/-- **`IsSquare` transfers across a multiplicative equivalence.** For `e : A ≃* B`,
+`IsSquare (e x) ↔ IsSquare x`. A CRT helper: `ZMod.chineseRemainder` is a `RingEquiv`, so squareness of a
+residue is preserved under the CRT isomorphism. -/
+theorem isSquare_mulEquiv {A B : Type*} [Monoid A] [Monoid B] (e : A ≃* B) {x : A} :
+    IsSquare (e x) ↔ IsSquare x := by
+  constructor
+  · rintro ⟨s, hs⟩
+    exact ⟨e.symm s, e.injective (by rw [map_mul, e.apply_symm_apply, hs])⟩
+  · rintro ⟨s, hs⟩
+    exact ⟨e s, by rw [hs, map_mul]⟩
+
 end SKEFTHawking
