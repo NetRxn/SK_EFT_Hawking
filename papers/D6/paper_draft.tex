@@ -895,7 +895,7 @@ log-negativity all hold at arbitrary party type (\verb|PartialTransposeGeneral.l
 \verb|NegativityMonotoneGeneral.lean|, \verb|LogNegativityGeneral.lean|). On the maximally entangled
 state $\Phi_d$ the partial transpose is $d^{-1}\,\mathrm{SWAP}$, and since $\mathrm{SWAP}$ is Hermitian
 and involutive, $|\mathrm{SWAP}|=\mathbf1$ and $\|\mathrm{SWAP}\|_1=d^2$, giving the maximal value
-$E_N(\Phi_d)=\log_2 d$ (\verb|MaxEntNegativity.lean|, \verb|logNegB_maxEntState|). Combining the monotone
+$E_N(\Phi_d)=\log_2 d$ for $d\ge1$ (\verb|MaxEntNegativity.lean|, \verb|logNegB_maxEntState|). Combining the monotone
 with this target gives the \textbf{single-copy distillation bound} $\log_2 k\le E_N(\rho)$: a local
 operation on one copy of $\rho$ producing $\Phi_k$ requires $E_N(\rho)\ge\log_2 k$
 (\verb|distillation_single_copy_bound|). The asymptotic statement is built on the \emph{actual grouped
@@ -905,8 +905,9 @@ distributes over the grouped tensor product (\verb|ptB_gtensor|) and the trace n
 across it (via cross-type reindex invariance \verb|traceNorm_reindex_cross| together with
 \verb|traceNorm_kronecker|), so $E_N(\rho^{\otimes n})=n\,E_N(\rho)$ on the grouped state
 (\verb|logNegB_ncopy|). Monotonicity then yields the \textbf{regularized rate bound}
-$E_N(\Lambda(\rho^{\otimes n}))\le n\,E_N(\rho)$ for any local operation $\Lambda$
-(\verb|logNegB_ncopy_localKraus_le|); with $E_N(\Phi_k)=\log_2 k$ this is the per-$n$ reading
+$E_N(\Lambda(\rho^{\otimes n}))\le n\,E_N(\rho)$ for a local operation $\Lambda$ on the first party (an
+$A$-side Kraus channel $M\otimes\mathbf1$, with the grouped input Hermitian and its partial transpose
+non-vanishing) (\verb|logNegB_ncopy_localKraus_le|); with $E_N(\Phi_k)=\log_2 k$ this is the per-$n$ reading
 $\log_2 k\le n\,E_N(\rho)$ of the entanglement-distillation bound $E_D\le E_N$. Kernel-only;
 \emph{zero} new project-local axioms.
 

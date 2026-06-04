@@ -438,7 +438,7 @@ partial transpose `ptB` (`PartialTransposeGeneral.lean`), the monotone-under-loc
 additive log-negativity (`NegativityMonotoneGeneral.lean`, `LogNegativityGeneral.lean`) all hold at
 arbitrary party type. On the maximally entangled state `Φ_d` the partial transpose is `d⁻¹·SWAP`, and
 since `SWAP` is Hermitian and involutive, `|SWAP| = 1` and `‖SWAP‖₁ = d²`, giving the maximal value
-`E_N(Φ_d) = log₂ d` (`MaxEntNegativity.lean`, `logNegB_maxEntState`). Combining the monotone with this
+`E_N(Φ_d) = log₂ d` for `d ≥ 1` (`MaxEntNegativity.lean`, `logNegB_maxEntState`). Combining the monotone with this
 target yields the **single-copy distillation bound** `log₂ k ≤ E_N(ρ)`: a local operation on one copy
 of `ρ` producing `Φ_k` requires `E_N(ρ) ≥ log₂ k` (`DistillationRateBound.lean`,
 `distillation_single_copy_bound`). The asymptotic statement is built on the *actual grouped `n`-copy
@@ -446,8 +446,9 @@ state* `ρ^⊗n` on `(KronIdx (Fin dA) n) × (KronIdx (Fin dB) n)` (`NCopyRateBo
 transpose distributes over the grouped tensor product (`ptB_gtensor`), trace norm is multiplicative
 across it (via cross-type reindex invariance `traceNorm_reindex_cross` and `traceNorm_kronecker`), so
 `E_N(ρ^⊗n) = n·E_N(ρ)` on the grouped state (`logNegB_ncopy`). Monotonicity then gives the
-**regularized rate bound** `E_N(Λ(ρ^⊗n)) ≤ n·E_N(ρ)` for any local operation `Λ`
-(`logNegB_ncopy_localKraus_le`) — with `E_N(Φ_k) = log₂ k` this is the per-`n` reading
+**regularized rate bound** `E_N(Λ(ρ^⊗n)) ≤ n·E_N(ρ)` for a local operation `Λ` on the first party (an
+`A`-side Kraus channel `M ⊗ 1`, with the grouped input Hermitian and its partial transpose
+non-vanishing) (`logNegB_ncopy_localKraus_le`) — with `E_N(Φ_k) = log₂ k` this is the per-`n` reading
 `log₂ k ≤ n·E_N(ρ)` of the entanglement-distillation bound `E_D ≤ E_N`. Kernel-only; zero new
 project-local axioms.
 
