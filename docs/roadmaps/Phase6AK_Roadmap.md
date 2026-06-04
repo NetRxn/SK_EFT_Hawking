@@ -174,7 +174,36 @@ no heavy `IsPrimitiveRoot` machinery. `op_zero` = `1` (a=b=0). `op_unitary` uses
 `1+ω+ω²=0`). **Acceptance:** kernel-pure `diamondDist_weylKraus_eq = 1 − p₀` + a named leakage instance.
 **Risk:** MED (the ω-sum + the `i = j + a` cyclic-`Fin 3` bookkeeping; everything downstream is free).
 
-### FU-2 — PLOB as a genuine discrete-family rate inequality (EXPLORATORY, scout-first)
+### FU-2 — PLOB as a genuine discrete-family rate inequality 🔭 SCOUTED 2026-06-03 → DEFER (no clean target)
+
+**Scout outcome (2026-06-03): no clean non-trivial kernel-pure *quantum* rate inequality is reachable
+without major new substrate whose load-bearing step is unformalizable in current Mathlib. FU-2 stays
+deferred; the 6AK.2 surrogate stands on its own.** Findings:
+
+- **Roadmap premise was wrong.** This section assumed a "partial-transpose + trace-norm substrate
+  already shipped in 6AE/6AF." A full-tree scan finds **no `partialTranspose` / `negativity` /
+  `logNegativity` / distillable-entanglement / Bell-diagonal *density-matrix* definition anywhere** in
+  the Lean codebase. `traceNorm` exists (`MixedState.lean`); `BellDiagonalSwap.lean` is **pure
+  `(a,b,c,d)`-coefficient real algebra with no density operators**. So option (b) would have to build,
+  from scratch: a `4×4` Bell-diagonal density matrix in the Pauli basis, the partial-transpose
+  operation, its eigenvalues, and the trace-norm of the partial transpose.
+- **Option (b) is blocked at the monotonicity step.** Even after building the negativity machinery, a
+  genuine *rate* bound needs LOCC-monotonicity `E_D ≤ E_N` (log-negativity an upper bound on
+  distillable entanglement) — a deep result absent from Mathlib that would require a project-local
+  **axiom** (disallowed without sign-off, Invariant #15). Without it, the strongest honest deliverable
+  is a *surrogate* "`negativity(ρ(p)) = f(p)`" trace-norm computation — no better in kind than 6AK.2,
+  at a large substrate cost.
+- **Option (a) collapses to a classical triviality.** The only *elementary, axiom-free* content of the
+  erasure-link bound is `E[Binomial(N, η)] = N·η` (linearity of expectation) — a classical fact, not a
+  quantum-network rate bound. The genuine quantum `rate ≤ η` reading needs the same missing
+  entanglement-monotone machinery as (b).
+
+**Decision:** document and stop (the handoff's second acceptance branch). If a future wave builds a real
+negativity substrate (partial transpose + a kernel-provable distillability bound on a finite family),
+FU-2 becomes a genuine target then. Until then 6AK.2 (rate-bound *function* properties) is the honest
+formalization.
+
+### FU-2 (original spec, for reference) — PLOB as a genuine discrete-family rate inequality (EXPLORATORY, scout-first)
 
 **Goal.** Upgrade 6AK.2 from "properties of the bound *function*" to a theorem that actually bounds a
 *rate quantity* — i.e. `someRate(model) ≤ f(η)` rather than facts about `f` alone. **Scout decides the
