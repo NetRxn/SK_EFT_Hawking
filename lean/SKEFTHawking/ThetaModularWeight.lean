@@ -53,4 +53,31 @@ theorem latticeTheta_inv_eq {d : ℕ} (A : Matrix (Fin d) (Fin d) ℤ) (hsymm : 
   congr 1
   rw [← Matrix.transpose_map, hAinvT, hLI, Matrix.one_mul]
 
+/-- **The theta S self-transformation** for an even unimodular integer form `A` (`Aᵀ = A`, positive-definite
+cast, hence `det A = 1`): with `M = A.map ℤ→ℝ` and `Im τ > 0`,
+> `Θ_M(-1/τ) = (τ/i)^{d/2} · Θ_M(τ)`.
+From `latticeTheta_S` (`det M = 1` kills the `(det)^{-1/2}`; `π/(-iπσ) = i/σ`), `latticeTheta_inv_eq`
+(`Θ_{M⁻¹} = Θ_M`), and the substitution `σ = -1/τ`. The automorphy multiplier whose `SL₂(ℤ)`-consistency
+forces `8 ∣ d`. -/
+theorem latticeTheta_S_self {d : ℕ} (A : Matrix (Fin d) (Fin d) ℤ) (hsymm : Aᵀ = A)
+    (hunim : IsUnimodular A) (hpd : (A.map (Int.cast : ℤ → ℝ)).PosDef) {τ : ℂ} (hτ : 0 < τ.im) :
+    latticeTheta (A.map (Int.cast : ℤ → ℝ)) (-1 / τ)
+      = (τ / I) ^ ((d : ℂ) / 2) * latticeTheta (A.map (Int.cast : ℤ → ℝ)) τ := by
+  have hAdet : A.det = 1 := posDef_unimodular_det_one A hunim hpd
+  have hunit : IsUnit A.det := by rw [hAdet]; exact isUnit_one
+  have hdet1 : (A.map (Int.cast : ℤ → ℝ)).det = 1 := by rw [← Int.cast_det, hAdet, Int.cast_one]
+  have hτ0 : τ ≠ 0 := fun h => by rw [h] at hτ; simp at hτ
+  have hπ : (π : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr Real.pi_ne_zero
+  have hσim : 0 < (-1 / τ).im := by
+    have heq : (-1 / τ).im = τ.im / Complex.normSq τ := by
+      rw [neg_div, one_div, Complex.neg_im, Complex.inv_im]; ring
+    rw [heq]; exact div_pos hτ (Complex.normSq_pos.mpr hτ0)
+  have hS := latticeTheta_S hpd hσim
+  rw [hdet1, Real.sqrt_one, Complex.ofReal_one, inv_one, one_mul,
+    latticeTheta_inv_eq A hsymm hunit, show (-1 / (-1 / τ)) = τ from by field_simp] at hS
+  rw [hS]
+  congr 2
+  rw [div_eq_div_iff (by simp [hπ, hτ0, Complex.I_ne_zero]) Complex.I_ne_zero]
+  field_simp
+
 end SKEFTHawking
