@@ -2733,6 +2733,9 @@ import SKEFTHawking.QuantumNetwork.PartialTransposeGeneral
 -- Phase 6AK Wave FU-6 brick 1 (2026-06-04): negativity monotone under local ops, general bipartite dim
 -- (ptB commutes with a local A-channel; trace-norm contractivity) — generalizes FU-3.
 import SKEFTHawking.QuantumNetwork.NegativityMonotoneGeneral
+-- Phase 6AK Wave FU-6 brick 2 (2026-06-04): log-negativity at general bipartite dim — monotone + additive
+-- (logNegB monotone under local ops, logNegB_add over tensor products).
+import SKEFTHawking.QuantumNetwork.LogNegativityGeneral
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
