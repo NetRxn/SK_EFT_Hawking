@@ -1551,4 +1551,24 @@ theorem binary_represents_of_local {a b t : ℚ} (ha : a ≠ 0) (hb : b ≠ 0) (
     obtain ⟨u, v, he⟩ := hloc p
     exact ⟨u, v, 1, by simp, by push_cast; linear_combination he⟩
 
+/-- **Binary Hasse–Minkowski (n = 2 base case).** For `a ≠ 0` (any `b`), the binary form `a x² + b y² = 0`
+has a nontrivial zero over ℚ iff over ℝ and every ℚ_p. (`exists_binary_zero_iff` turns isotropy into
+`IsSquare (-(a·b))`, and `isSquare_rat_iff_local` is the square local–global.) The `n = 2` base case of the
+Hasse–Minkowski rank reduction, parallel to `diag_ternary_solvable_of_local`. -/
+theorem binary_solvable_of_local {a b : ℚ} (ha : a ≠ 0)
+    (hR : ∃ x y : ℝ, ¬(x = 0 ∧ y = 0) ∧ (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2 = 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x y : ℚ_[p], ¬(x = 0 ∧ y = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 = 0) :
+    ∃ x y : ℚ, ¬(x = 0 ∧ y = 0) ∧ (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 = 0 := by
+  rw [exists_binary_zero_iff ha, isSquare_rat_iff_local]
+  refine ⟨?_, fun p _ => ?_⟩
+  · have har : (a : ℝ) ≠ 0 := by exact_mod_cast ha
+    have h := Real.isSquare_iff.mp ((exists_binary_zero_iff har).mp hR)
+    have hc : (0 : ℝ) ≤ ((-(a * b) : ℚ) : ℝ) := by push_cast; linarith [h]
+    exact_mod_cast hc
+  · have hap : (a : ℚ_[p]) ≠ 0 := by exact_mod_cast ha
+    have h := (exists_binary_zero_iff hap).mp (hloc p)
+    have hcast : ((-(a * b) : ℚ) : ℚ_[p]) = -((a : ℚ_[p]) * (b : ℚ_[p])) := by push_cast; ring
+    rw [hcast]; exact h
+
 end SKEFTHawking
