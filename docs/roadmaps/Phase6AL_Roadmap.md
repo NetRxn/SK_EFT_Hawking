@@ -13,6 +13,9 @@ never push to remote.
 All items below were assessed via the proven method (first principles + decomposition + Explore fan-out +
 Mathlib MCP search). Reachability verdicts and the genuine walls are recorded honestly per item.
 
+**PROGRESS:** Wave 1 ✅ SHIPPED `6c089896` (`EntropyConcavity.lean` + `GibbsVariational.lean`). Wave 2 ✅
+SHIPPED `1887803e` (`NegativityGeneral.lean`). Axiom gate GREEN; all kernel-pure. Waves 3–4 remain.
+
 ---
 
 ## Wave 1 — Klein corollaries (quick wins)
@@ -59,6 +62,13 @@ Mathlib MCP search). Reachability verdicts and the genuine walls are recorded ho
     in `KroneckerEntropy.lean` (`map_eigenvalues_kronecker`, `charpoly_kronecker_eq`) + the cfc/conjugation
     forms used in `QuantumKlein.lean` (`spectral_theorem`, `conjStarAlgAut`). The full-rank hypothesis is
     essential — the identity FAILS at zero eigenvalues (same lesson as FU-8b additivity).
+    🔑 **TOE-HOLD FOUND (scout 2026-06-04):** `StarAlgHomClass.map_cfc` (Mathlib) — a star-algebra hom
+    commutes with `cfc`, and `Unitary.conjStarAlgAut V` is a `StarAlgEquiv`. Path: `A⊗B = conjStarAlgAut V
+    (diagonal d)` (V = U_A⊗U_B unitary, d the products, from the `charpoly_kronecker_eq` `hdecomp` — extract
+    it as a reusable `kronecker_eq_conj_diagonal`) → `map_cfc` gives `cfc log (conjStarAlgAut V (diag d)) =
+    conjStarAlgAut V (cfc log (diag d))` → cfc-of-diagonal `cfc f (diagonal d) = diagonal (f∘d)` → split
+    `log(λᵢμⱼ)=log λᵢ+log μⱼ` (full-rank) → `matrixLog A ⊗ 1 + 1 ⊗ matrixLog B`. Then subadditivity needs
+    `ptrace1` (the `1⊗G` partner of the present `trace_mul_kronecker_one`/`ptrace2`).
   - **C2 — partial-trace/trace compatibility**: `trace_mul_kronecker_one` (`tr(W·(G⊗1)) = tr(ptrace2 W · G)`)
     is **already present** in `DiamondNormDual.lean`; need the symmetric `1⊗G` version (`ptrace1`) if absent.
   - **C3 — assembly**: `relativeEntropy ρ_AB (ρ_A ⊗ ρ_B) ≥ 0` (Klein, `ρ_A⊗ρ_B` PosDef) +
