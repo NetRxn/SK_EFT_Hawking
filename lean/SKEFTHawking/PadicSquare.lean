@@ -850,4 +850,31 @@ theorem squarefree_eq_one_of_isSquare_padic {a : ℕ} (ha : Squarefree a)
   rw [hval1] at heven
   norm_num at heven
 
+/-- **Integer-square local–global (natural numbers).** A natural number that is a square in every `ℚ_[p]`
+is a square. Write `a = b²·s` with `s` squarefree (`Nat.sq_mul_squarefree`); `a` square ⟹ `s` square in
+every `ℚ_[p]` ⟹ `s = 1` (`squarefree_eq_one_of_isSquare_padic`) ⟹ `a = b²`. The n = 2 Hasse–Minkowski
+ingredient over ℕ. -/
+theorem isSquare_nat_of_isSquare_padic {a : ℕ} (h : ∀ (p : ℕ) [Fact p.Prime], IsSquare ((a : ℚ_[p]))) :
+    IsSquare a := by
+  rcases eq_or_ne a 0 with rfl | ha0
+  · exact ⟨0, rfl⟩
+  obtain ⟨s, b, hab, hsf⟩ := Nat.sq_mul_squarefree a
+  have hb0 : b ≠ 0 := by rintro rfl; rw [zero_pow (by norm_num), zero_mul] at hab; exact ha0 hab.symm
+  have hsq : s = 1 := by
+    apply squarefree_eq_one_of_isSquare_padic hsf
+    intro p inst
+    haveI := inst
+    obtain ⟨w, hw⟩ := h p
+    have hbne : (b : ℚ_[p]) ≠ 0 := by exact_mod_cast hb0
+    refine ⟨w / (b : ℚ_[p]), ?_⟩
+    have hcast : (b : ℚ_[p]) ^ 2 * (s : ℚ_[p]) = w * w := by
+      have hh := hw
+      rw [← hab] at hh
+      push_cast at hh
+      linear_combination hh
+    field_simp
+    linear_combination hcast
+  rw [hsq, mul_one] at hab
+  exact ⟨b, by rw [← hab]; ring⟩
+
 end SKEFTHawking
