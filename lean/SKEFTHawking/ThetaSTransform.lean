@@ -378,4 +378,34 @@ theorem gaussian_hsum {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG 
     (integrable_gaussianChar hG hσ (fun i => -(n i : ℝ))) (fun γ => gaussian_translate_aesm σ G n γ)
     (gaussian_hLsum hG hσ n)).symm
 
+/-- **[Θ3] — the theta S-transformation** for a positive-definite Gram matrix `G` (`Im σ > 0`):
+
+> `Θ_G(σ) = (det G)^{-1/2} · (π / (-iπσ))^{d/2} · Θ_{G⁻¹}(-1/σ)`.
+
+Assembled from multivariate Poisson summation (`multivar_poisson`, all six hypotheses discharged for the
+Gaussian `gaussianCM σ G`), the lattice-sum reindexing (`latticeTheta_eq_lattice_sum`), and the Fourier-integral
+evaluation (`latFourier_gaussianCM_eq`). For an even unimodular `G` (`det G = 1`, `G⁻¹ ≅ G`) this is the
+self-transformation `Θ_G(-1/τ) = (τ/i)^{d/2} Θ_G(τ)` that forces `8 ∣ d` (next: [Θ4]). -/
+theorem latticeTheta_S {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef) (hσ : 0 < σ.im) :
+    latticeTheta G σ
+      = ((Real.sqrt G.det : ℂ)⁻¹ * ((π : ℂ) / (-((π : ℂ) * I * σ))) ^ ((d : ℂ) / 2))
+        * latticeTheta G⁻¹ (-1 / σ) := by
+  have hpoisson := multivar_poisson (gaussianCM σ G)
+    (torusDescent_continuous (gaussianCM σ G) (gaussian_hF hG hσ))
+    (gaussian_hF hG hσ)
+    (gaussian_hsum hG hσ (torusDescent_continuous (gaussianCM σ G) (gaussian_hF hG hσ)))
+    (fun n => integrable_gaussianChar hG hσ (fun i => -(n i : ℝ)))
+    (fun n γ => gaussian_translate_aesm σ G n γ)
+    (fun n => gaussian_hLsum hG hσ n)
+  have hLHS : (∑' γ : ↥(Submodule.span ℤ (Set.range ⇑(Pi.basisFun ℝ (Fin d)))),
+      (gaussianCM σ G : (Fin d → ℝ) → ℂ) (γ : Fin d → ℝ)) = latticeTheta G σ := by
+    rw [← latticeTheta_eq_lattice_sum G σ]
+    exact tsum_congr fun γ => gaussianCM_apply σ G _
+  have hRHS : (∑' n : Fin d → ℤ, latFourier (gaussianCM σ G : (Fin d → ℝ) → ℂ) n)
+      = ((Real.sqrt G.det : ℂ)⁻¹ * ((π : ℂ) / (-((π : ℂ) * I * σ))) ^ ((d : ℂ) / 2))
+        * latticeTheta G⁻¹ (-1 / σ) := by
+    rw [latticeTheta, ← tsum_mul_left]
+    exact tsum_congr fun n => latFourier_gaussianCM_eq hG hσ n
+  rw [← hLHS, hpoisson, hRHS]
+
 end SKEFTHawking
