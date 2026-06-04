@@ -91,4 +91,22 @@ theorem isSquare_of_toZModPow_three_eq_one {u : ℤ_[2]} (h8 : PadicInt.toZModPo
   rw [hFe] at hz
   exact ⟨z, by linear_combination -hz⟩
 
+/-- **2-adic square criterion (converse):** a `2`-adic *unit* square is `≡ 1 (mod 8)`. The only square
+in `(ZMod 8)ˣ` is `1`. -/
+theorem toZModPow_three_eq_one_of_isSquare {u : ℤ_[2]} (hu : IsUnit u) (h : IsSquare u) :
+    PadicInt.toZModPow 3 u = 1 := by
+  obtain ⟨v, rfl⟩ := h
+  have hv : IsUnit v := isUnit_of_mul_isUnit_left hu
+  have hw : IsUnit (PadicInt.toZModPow 3 v) := hv.map _
+  rw [map_mul]
+  revert hw
+  generalize PadicInt.toZModPow 3 v = w
+  revert w
+  decide
+
+/-- **2-adic unit square criterion:** a `2`-adic unit is a square iff it is `≡ 1 (mod 8)`. -/
+theorem isSquare_iff_toZModPow_three_eq_one {u : ℤ_[2]} (hu : IsUnit u) :
+    IsSquare u ↔ PadicInt.toZModPow 3 u = 1 :=
+  ⟨toZModPow_three_eq_one_of_isSquare hu, isSquare_of_toZModPow_three_eq_one⟩
+
 end SKEFTHawking
