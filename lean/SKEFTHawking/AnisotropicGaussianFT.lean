@@ -52,4 +52,26 @@ theorem dotProduct_mulVec_eq_sqrt {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG
   conv_lhs => rw [← CFC.sqrt_mul_sqrt_self G hG.nonneg]
   rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hsym]
 
+/-- **Change of variables `x ↦ (√G)⁻¹ u` with the Gaussian Jacobian** (positive-definite `G`). For measurable
+`g`, `∫ u, g ((√G)⁻¹ *ᵥ u) = √(det G) • ∫ y, g y`. The Jacobian `√(det G)` is `|det (√G)⁻¹|⁻¹ = (det √G) =
+√(det G)` via `Matrix.PosSemidef.det_sqrt`. Applied to `g(x) = exp(-b·xᵀGx + linear)`, the substitution turns
+`xᵀGx` into `‖u‖²` (brick `dotProduct_mulVec_eq_sqrt` with `√G·(√G)⁻¹ = 1`), reducing the anisotropic
+Gaussian to the separable isotropic one `integral_cexp_neg_mul_sum_add`. -/
+theorem integral_comp_sqrtInv {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef)
+    {g : (Fin d → ℝ) → ℂ} (hg : Measurable g) :
+    ∫ u, g ((CFC.sqrt G)⁻¹ *ᵥ u) = Real.sqrt G.det • ∫ y, g y := by
+  have hdetpos : 0 < G.det := hG.det_pos
+  have hsqrtdet : (CFC.sqrt G).det = Real.sqrt G.det := by
+    rw [Matrix.PosSemidef.det_sqrt hG.posSemidef, RCLike.sqrt_of_nonneg hdetpos.le]
+    simp
+  have hMdet : ((CFC.sqrt G)⁻¹).det = (Real.sqrt G.det)⁻¹ := by
+    rw [Matrix.det_nonsing_inv, hsqrtdet, Ring.inverse_eq_inv']
+  have hf : LinearMap.det (Matrix.toLin' ((CFC.sqrt G)⁻¹)) ≠ 0 := by
+    rw [LinearMap.det_toLin', hMdet]
+    exact inv_ne_zero (Real.sqrt_pos.mpr hdetpos).ne'
+  have hcv := integral_comp_linearMap_volume hf hg
+  simp only [Matrix.toLin'_apply, LinearMap.det_toLin', hMdet, inv_inv,
+    abs_of_nonneg (Real.sqrt_nonneg G.det)] at hcv
+  exact hcv
+
 end SKEFTHawking
