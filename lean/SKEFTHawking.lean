@@ -2739,6 +2739,9 @@ import SKEFTHawking.QuantumNetwork.LogNegativityGeneral
 -- Phase 6AK Wave FU-6 brick 3 (2026-06-04): Kronecker power A^⊗n + n-fold log-negativity additivity
 -- (traceNorm_kronPow ‖A^⊗n‖₁=‖A‖₁ⁿ; logNegB_kronPow E_N(ρ^⊗n)=n·E_N(ρ)) — the n-copy step of E_D ≤ E_N.
 import SKEFTHawking.QuantumNetwork.KroneckerPower
+-- Phase 6AK Wave FU-6 brick 4 (2026-06-04): log-negativity of the maximally entangled state
+-- (swapMat SWAP permutation, |SWAP|=1 ⟹ ‖SWAP‖₁=d²; logNegB_maxEntState E_N(Φ_d)=log₂d) — distillation target.
+import SKEFTHawking.QuantumNetwork.MaxEntNegativity
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
