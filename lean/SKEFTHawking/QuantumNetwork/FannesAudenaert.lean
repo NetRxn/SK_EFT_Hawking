@@ -229,6 +229,28 @@ theorem sum_negMulLog_le_card_mul {d : ℕ} (hd : 0 < d) (δ : Fin d → ℝ) (h
   have h2 := mul_le_mul_of_nonneg_left hJ (le_of_lt hdR)
   rwa [← mul_assoc, mul_one_div, div_self (ne_of_gt hdR), one_mul] at h2
 
+/-- **Classical Fannes entropy-continuity bound, reduced to the per-term modulus (the F2/P2 assembly).**
+Given the per-term modulus `|η(pᵢ)−η(qᵢ)| ≤ η(|pᵢ−qᵢ|)` (which holds whenever `|pᵢ−qᵢ| ≤ 1/2`; `η = negMulLog`),
+the Shannon-entropy difference is bounded by the Jensen envelope:
+`|∑ᵢ η(pᵢ) − ∑ᵢ η(qᵢ)| ≤ d · η((∑ᵢ|pᵢ−qᵢ|)/d)`. With `∑ᵢ|pᵢ−qᵢ| = 2T` the right-hand side equals
+`2T·log d + η(2T)` — the classical Fannes bound. Proof: linearity of the sum, the triangle inequality
+(`Finset.abs_sum_le_sum_abs`), the per-term modulus hypothesis, then the shipped Jensen step
+`sum_negMulLog_le_card_mul`. This stages the entire classical Fannes inequality on the single analytic
+residual `hmod` (the per-term modulus of `negMulLog`), whose forward direction is `negMulLog_add_le` and whose
+reverse direction is a `|pᵢ−qᵢ| ≤ 1/2` calculus lemma. -/
+theorem fannes_entropy_bound_of_modulus {d : ℕ} (hd : 0 < d) (p q : Fin d → ℝ)
+    (hmod : ∀ i, |Real.negMulLog (p i) - Real.negMulLog (q i)| ≤ Real.negMulLog (|p i - q i|)) :
+    |∑ i, Real.negMulLog (p i) - ∑ i, Real.negMulLog (q i)|
+      ≤ (d : ℝ) * Real.negMulLog ((∑ i, |p i - q i|) / d) := by
+  have hstep1 : |∑ i, Real.negMulLog (p i) - ∑ i, Real.negMulLog (q i)|
+      = |∑ i, (Real.negMulLog (p i) - Real.negMulLog (q i))| := by rw [Finset.sum_sub_distrib]
+  rw [hstep1]
+  calc |∑ i, (Real.negMulLog (p i) - Real.negMulLog (q i))|
+      ≤ ∑ i, |Real.negMulLog (p i) - Real.negMulLog (q i)| := Finset.abs_sum_le_sum_abs _ _
+    _ ≤ ∑ i, Real.negMulLog (|p i - q i|) := Finset.sum_le_sum (fun i _ => hmod i)
+    _ ≤ (d : ℝ) * Real.negMulLog ((∑ i, |p i - q i|) / d) :=
+        sum_negMulLog_le_card_mul hd (fun i => |p i - q i|) (fun i => abs_nonneg _)
+
 /-- **Von Neumann entropy as the Shannon entropy of the sorted spectrum:**
 `S(ρ) = ∑ₖ negMulLog(λ↓ₖ(ρ))`. Since `negMulLog`-sums are permutation-invariant, the entropy (defined over
 the unsorted eigenvalues) equals the sum over the descending-sorted `eigenvalues₀`. This is the bridge that
