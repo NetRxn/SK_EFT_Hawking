@@ -301,12 +301,13 @@ tiebreaker does NOT fire on already-textbook substrate.
   local operations, `n`-link additive) is already delivered by FU-3/FU-6; the channel→Choi ceiling is
   LOCC-gapped (Mathlib-upstream-grade, not in 6AK scope, no axiom to paper over it). Productized repeaterless
   cert = private FQN-consumer over the shipped monotone/additive bricks.
-  **REACHABLE-NEXT (toe-hold hunt 2026-06-04, NOT a wall — only the rate-*ceiling* above is):** the
-  *channel entanglement MEASURE* — the Choi state of a Pauli channel is Bell-diagonal (`pauli_choiMatrix`
-  `J(Φ_p)=∑ᵢ pᵢ Bᵢ`), so its negativity/log-negativity is computable in closed form from the existing
-  `negativityBellDiag_eq` / `traceNorm_bellCombo` bricks. This gives `E_N(Ω_Φ)` explicitly for the
-  teleportation-covariant class — a real shippable FU-7 brick (the channel's entanglement-generating
-  capacity), distinct from (and not requiring) the LOCC-gapped output≤Choi ceiling. Buildable next.
+  **REACHABLE-NEXT — ✅ SHIPPED 2026-06-04 (`PauliChoiNegativity.lean`, commit `ea5d2a5f`):** the
+  *channel entanglement MEASURE*. The normalised Pauli-channel Choi state `½J(Φ_p) = bellDiagState p`
+  (`pauliChannelChoiState_eq_bellDiagState`), so its negativity/log-negativity are the shipped Bell-diagonal
+  closed forms: `pauliChannelChoi_negativity`, **`pauliChannelChoi_logNegativity_eq` (E_N(Ω_Φ)=log₂∑ⱼ|μⱼ|,
+  the entanglement-generating capacity)**, `pauliChannelChoi_separable_iff` (PPT⟺∀j μⱼ≥0), and the worked
+  **`dephasingChoi_negativity` = ½|2γ−1|** (entanglement-breaking at γ=½). Kernel-pure, no axioms. Distinct
+  from (and not requiring) the LOCC-gapped output≤Choi ceiling, which remains the only genuine FU-7 wall.
 - **FU-8 — von Neumann entropy / quantum relative entropy / REE** (HIGH/large, foundational) —
   ⚠️ EARLIER "GENUINE WALL" SCOUT NOTE WAS WRONG (assert-a-wall reflex; user-flagged). After Explore
   fan-out + Mathlib MCP the toe-holds were rich and **substantial content SHIPPED 2026-06-04**:
@@ -320,16 +321,24 @@ tiebreaker does NOT fire on already-textbook substrate.
     `mul_matrixLog` (ρ·log ρ = cfc(x·log x)ρ via `cfc_mul`+`cfc_id`), **`re_trace_mul_matrixLog`
     (Re tr(ρ log ρ) = −S(ρ))**, `relativeEntropy` def + `relativeEntropy_self`=0, and **`classical_gibbs`
     (0 ≤ ∑ pᵢ(log pᵢ−log qᵢ), classical KL≥0)** via `Real.log_le_sub_one_of_pos` — the math core of Klein.
-  REACHABLE-NEXT (decomposed, NOT walls): (a) **full quantum Klein `S(ρ‖σ)≥0`** = `classical_gibbs`
-  applied to ρ's spectrum + the doubly-stochastic image `rᵢ=∑ⱼ|⟨eᵢ|fⱼ⟩|²qⱼ`; the one remaining crux is
-  the **two-eigenbasis spectral expansion** `tr(ρ log σ)=∑ᵢⱼ pᵢ|⟨eᵢ|fⱼ⟩|² log qⱼ` (uses both
-  `eigenvectorUnitary`s + `|⟨eᵢ|fⱼ⟩|²` doubly-stochastic) + Jensen per row — sizeable but reachable.
-  (b) **additivity `S(ρ⊗σ)=S(ρ)+S(σ)`** via `log(ρ⊗σ)=log ρ⊗1+1⊗log σ` (kronecker-eigenvalue product →
-  log distributes) — moderate. IRREDUCIBLE RESIDUAL (genuine wall, no axiom): **REE
-  `E_R(ρ)=inf_{σ∈SEP} S(ρ‖σ)`** needs the separable-set/convex-optimization infimum framework Mathlib
-  lacks; and the secret-key `−log₂(1−η)` additionally needs Gaussian/CV (Gap #2). The entropy/rel-entropy
-  track is now a SHIPPED companion to the negativity ladder; only the REE optimization is genuinely out
-  of reach.
+  ✅ **BOTH REACHABLE-NEXT BRICKS NOW SHIPPED 2026-06-04 (full decomposition, NO axioms):**
+  - (b) **additivity `S(ρ⊗σ)=S(ρ)+S(σ)`** — `KroneckerEntropy.lean` (commit `cc2a0e79`). The missing
+    Mathlib infra (eigenvalues of a Kronecker product = products `{λᵢμⱼ}`) BUILT via charpoly-root matching
+    (`charpoly_kronecker_eq` using `spectral_theorem`+`mul_kronecker_mul`+`charpoly_units_conj`;
+    `map_eigenvalues_kronecker`; `sum_negMulLog_eigenvalues_kronecker`), then `vonNeumannEntropy_kronecker_add`
+    via `Real.negMulLog_mul` + the density normalisations. (NB the operator identity `log(ρ⊗σ)=logρ⊗1+1⊗logσ`
+    FAILS at zero eigenvalues — the eigenvalue-sum route is the correct one; misframe corrected.)
+  - (a) **full quantum Klein `S(ρ‖σ)≥0`** — `QuantumKlein.lean` (commit `4f0b97db`). The two-eigenbasis
+    spectral-expansion crux `Re tr(ρ log σ)=∑ⱼ∑ᵢ pᵢ|Mᵢⱼ|² log qⱼ` (`re_trace_mul_matrixLog_cross`, via
+    `trace_conjTranspose_diag_mul_diag` + a `spectral_theorem`/cyclic-trace reduction with `M=U_ρᴴU_σ`),
+    the doubly-stochastic `Pᵢⱼ=|Mᵢⱼ|²` (`sum_normSq_row`/`sum_normSq_col` from `MMᴴ=MᴴM=1`), `overlap_jensen`
+    (Jensen for concave log), and the shipped `classical_gibbs` ⟹ **`relativeEntropy_nonneg`**
+    (ρ density, σ pos-def trace-1). Kernel-pure {propext, Classical.choice, Quot.sound} by `lean_verify`.
+  IRREDUCIBLE RESIDUAL (genuine wall, no axiom): **REE `E_R(ρ)=inf_{σ∈SEP} S(ρ‖σ)`** needs the
+  separable-set/convex-optimization infimum framework Mathlib lacks; and the secret-key `−log₂(1−η)`
+  additionally needs Gaussian/CV (Gap #2). **FU-8 is now COMPLETE** as a shipped companion to the negativity
+  ladder (entropy ≥0/≤log d + additivity + matrix log + relative entropy + Klein); only the REE optimization
+  is genuinely out of reach.
 
 ---
 
