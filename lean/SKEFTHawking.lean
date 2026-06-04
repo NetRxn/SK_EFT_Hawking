@@ -2783,6 +2783,9 @@ import SKEFTHawking.QuantumNetwork.PauliChoiNegativity
 -- Phase 6AK Wave FU-8 (2026-06-04): eigenvalues of a Kronecker product = products {λᵢμⱼ} (missing
 -- Mathlib infra, via charpoly matching) ⟹ von Neumann entropy additivity S(ρ⊗σ)=S(ρ)+S(σ).
 import SKEFTHawking.QuantumNetwork.KroneckerEntropy
+-- Phase 6AK Wave FU-8 (2026-06-04): Klein's inequality S(ρ‖σ)≥0 (quantum relative-entropy
+-- nonnegativity) via two-eigenbasis spectral expansion + doubly-stochastic overlap + Jensen + Gibbs.
+import SKEFTHawking.QuantumNetwork.QuantumKlein
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
