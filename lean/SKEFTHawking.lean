@@ -647,6 +647,7 @@ import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.LatticeContent
 import SKEFTHawking.MultivarPoisson
 import SKEFTHawking.MultivarPoissonDescent
+import SKEFTHawking.AnisotropicGaussianFT
 import SKEFTHawking.LatticeTheta
 import SKEFTHawking.RokhlinClassification
 import SKEFTHawking.SpinRokhlinInterface
