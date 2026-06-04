@@ -123,8 +123,49 @@ a.e. eigenvalue-derivative.
   **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
   gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
 
-**✅✅ CLOSURE-REVIEWER VERDICT: PASS (2026-06-04, adversarial fresh-context review).** Items C and F are genuinely
-shipped modulo the single honestly-staged `hB3` residual. Verified: `mutualInformation_nonneg`,
+## ⚖️ HONEST COMPLETION STATUS (2026-06-04) — F is NOT "in full"; one operational keystone is staged
+
+**Plain statement of where F stands, so no future reader over-reads the closure PASS:**
+- **C — COMPLETE in full** (unconditional, kernel-pure). No caveats.
+- **F1a (Ky Fan), F2 (classical Fannes), F3 spectral-form (`quantum_fannes_bound`) — COMPLETE in full** (unconditional).
+- **F1b (Lidskii→Mirsky) — NOT complete.** Blocked on the single undischarged hypothesis `hB3` (Wielandt minimax
+  achievability). Mirsky `∑ₖ|λ↓ₖ(A)−λ↓ₖ(B)| ≤ ‖A−B‖₁` is therefore staged, not proven.
+- **F3 trace-distance form (`quantum_fannes_audenaert_of_mirsky`) — STAGED, not shipped** (consumes the Mirsky/`hB3`
+  hypothesis). So the *operationally standard* Fannes–Audenaert (`|S(ρ)−S(σ)| ≤ T·log(d−1)+H₂(T)`, `T=½‖ρ−σ‖₁`)
+  is a theorem-with-a-hypothesis, not an unconditional guarantee.
+
+The closure-reviewer PASS (below) certifies the shipped pieces are sound and `hB3` is honestly staged & load-bearing —
+it does **not** assert F is complete "in full." Per the goal's stopping clause this is the *documented-residual*
+outcome, a legitimate research state — explicitly **distinct** from "C and F both shipped in full."
+
+### Why `hB3` matters operationally — spectral metric vs. trace distance (impact of closing vs. leaving open)
+
+The whole F chain delivers **entropy continuity**: a bound on `|S(ρ)−S(σ)|` (how much von Neumann entropy / entanglement
+can move between two states) in terms of how *close* the states are. The fork is **which distance metric**:
+- **SHIPPED (unconditional):** continuity in the **spectral ℓ¹ distance** `∑ₖ|λ↓ₖ(ρ)−λ↓ₖ(σ)|`. True and useful, but
+  NOT operational — evaluating it requires both full sorted spectra.
+- **GATED on `hB3`:** continuity in the **trace distance** `‖ρ−σ‖₁` — the *operational* distinguishability metric
+  (Helstrom optimal-distinguishing advantage), and the metric the ENTIRE rest of the 6A-series substrate
+  (diamond norm, fidelity, Fuchs–van de Graaf, channel certification — 6AE…6AK) is built around.
+- **`hB3` IS the bridge:** Mirsky `∑ₖ|λ↓ₖ(ρ)−λ↓ₖ(σ)| ≤ ‖ρ−σ‖₁` converts spectral-ℓ¹ → trace distance. `hB3`
+  (Wielandt frame existence) is the one missing lemma in Mirsky.
+
+**If CLOSED:** (1) the textbook operational Fannes–Audenaert is machine-verified end-to-end; (2) entropy continuity
+**composes directly** with the trace-distance certification stack — a kernel-pure certificate
+`‖ρ_exp − ρ_ideal‖₁ ≤ ε ⟹ |S − S_ideal| ≤ f(ε)` becomes available (the form any downstream consumer actually wants,
+since protocols bound trace distance, not spectra); (3) Mirsky + arbitrary-subset Lidskii become reusable foundational
+eigenvalue-perturbation bricks for the whole substrate and are genuine **Mathlib-contribution candidates** (both absent
+upstream). **If LEFT OPEN:** entropy continuity exists only in the awkward spectral metric; every downstream consumer
+wanting the operational form re-hits the same gap; the trace-distance entropy/entanglement certificate stays
+conditional; the foundational Mirsky/Lidskii bricks remain unbuilt. **Magnitude:** one lemma in scope, but at the
+load-bearing spectral→operational junction. The headline (entropy continuity) is shipped; what's gated is its
+operationally-composable form. Closing it = formalizing the Wielandt minimax achievability (a known theorem, NO axiom),
+pending the corrected construction (follow-up research dispatched).
+
+---
+
+**✅✅ CLOSURE-REVIEWER VERDICT: PASS (2026-06-04, adversarial fresh-context review).** Items C and F's *shipped* pieces
+are genuinely sound modulo the single honestly-staged `hB3` residual (this is NOT a claim that F is complete "in full"). Verified: `mutualInformation_nonneg`,
 `vonNeumannEntropy_subadditive`, `matrixLog_kronecker`, `fannes_entropy_bound`, `quantum_fannes_bound` all
 kernel-pure `{propext,Classical.choice,Quot.sound}`, zero sorry/axiom/native_decide/maxHeartbeats; build clean
 (3388 jobs). `hB3` is load-bearing (consumed in `lidskii_of_frame`'s closing `linarith`), non-vacuous, the ONLY
