@@ -221,6 +221,37 @@ theorem isSymmetric_sum_re_inner_ge_flag {𝕜 : Type*} {E : Type*} [RCLike 𝕜
       exact hrepr (repr_eq_zero_of_not_mem hT hn (hw r) (by rw [Set.mem_setOf_eq]; exact hi))
     exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact hmem)
 
+/-- **Weyl's single-eigenvalue perturbation bound (lower form):** `λ↓ᵢ(S+R) ≥ λ↓ᵢ(S) + λ↓ₙ₋₁(R)`, where
+`λ↓ₙ₋₁(R)` is the smallest eigenvalue of `R`. Courant–Fischer "max–min": on `S`'s top-`(i+1)` eigenspace `V`
+the Rayleigh quotient of `S+R` is `≥ λ↓ᵢ(S) + λ↓ₙ₋₁(R)` (since `⟪v,Sv⟫ ≥ λ↓ᵢ(S)‖v‖²` on `V` and
+`⟪v,Rv⟫ ≥ λ↓ₙ₋₁(R)‖v‖²` everywhere), and any `(i+1)`-dim subspace contains a vector with `S+R`-Rayleigh
+`≤ λ↓ᵢ(S+R)` (`exists_mem_re_inner_le`). Applying this twice (with `R ↦ −R`) yields the full Weyl two-sided
+bound and the Lipschitz continuity `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖`, the regularity input (P1) for the
+eigenvalue-path proof of Lidskii. Reusable; absent from Mathlib. -/
+theorem weyl_single_lower {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] {n : ℕ} (hn : Module.finrank 𝕜 E = n)
+    {S R : E →ₗ[𝕜] E} (hS : S.IsSymmetric) (hR : R.IsSymmetric) {i : ℕ} (hi : i < n) :
+    hS.eigenvalues hn ⟨i, hi⟩ + hR.eigenvalues hn ⟨n - 1, by omega⟩
+      ≤ (hS.add hR).eigenvalues hn ⟨i, hi⟩ := by
+  obtain ⟨V, hVdim, hVge⟩ := exists_subspace_re_inner_ge hS hn hi
+  have hRge : ∀ v : E,
+      hR.eigenvalues hn ⟨n - 1, by omega⟩ * ‖v‖ ^ 2 ≤ RCLike.re (inner 𝕜 v (R v)) := by
+    intro v
+    refine isSymmetric_re_inner_ge hR hn v _ (fun j _ => ?_)
+    refine hR.eigenvalues_antitone hn ?_
+    rw [Fin.le_def]; show (j : ℕ) ≤ n - 1; have := j.isLt; omega
+  obtain ⟨v, hvV, hv0, hvle⟩ := exists_mem_re_inner_le (hS.add hR) hn hi V hVdim
+  have h1 := hVge v hvV
+  have h2 := hRge v
+  have hadd : RCLike.re (inner 𝕜 v ((S + R) v))
+      = RCLike.re (inner 𝕜 v (S v)) + RCLike.re (inner 𝕜 v (R v)) := by
+    rw [LinearMap.add_apply, inner_add_right, map_add]
+  rw [hadd] at hvle
+  have hvnorm : (0 : ℝ) < ‖v‖ ^ 2 := pow_pos (norm_pos_iff.mpr hv0) 2
+  have hcomb : (hS.eigenvalues hn ⟨i, hi⟩ + hR.eigenvalues hn ⟨n - 1, by omega⟩) * ‖v‖ ^ 2
+      ≤ (hS.add hR).eigenvalues hn ⟨i, hi⟩ * ‖v‖ ^ 2 := by rw [add_mul]; linarith
+  exact le_of_mul_le_mul_right hcomb hvnorm
+
 /-- **Max-min Lidskii–Wielandt, assembled (staging the frame-existence step (3)).** Given an orthonormal
 frame `{wᵣ}` in `A`'s eigen-flag (`wᵣ ∈ span top sᵣ+1 A-eigenvectors`) with low `B`-Rayleigh-sum (hypothesis
 `hB3` = step (3)), the arbitrary-subset Lidskii inequality follows:
