@@ -1066,4 +1066,13 @@ theorem descent_construct {a b : ℤ} (ha : ¬ IsSquare a) (hb2 : 2 ≤ b.natAbs
     have hlt : (b''.natAbs : ℤ) < (m : ℤ) := lt_of_mul_lt_mul_left this (by positivity)
     exact_mod_cast hlt
 
+/-- **Square-factor scaling of the coefficient.** If `z² = a x² + b' y²` has a solution with `y ≠ 0`, then
+`z² = a x² + (b'·w²) y²` does too (scale `(x,z)` by `w`: `(wz)² = a(wx)² + b'·w²·y²`). With `b'' = b'·w²`
+(the squarefree decomposition of `b''`) this lifts a solution at the squarefree part `b'` back up to `b''`,
+the middle link of the descent chain `b' → b'' → b`. -/
+theorem solvable_scale {a b' w : ℤ} {x y z : ℤ} (hy : y ≠ 0)
+    (hsol : z ^ 2 = a * x ^ 2 + b' * y ^ 2) :
+    ∃ X Y Z : ℤ, Y ≠ 0 ∧ Z ^ 2 = a * X ^ 2 + (b' * w ^ 2) * Y ^ 2 := by
+  exact ⟨w * x, y, w * z, hy, by linear_combination w ^ 2 * hsol⟩
+
 end SKEFTHawking
