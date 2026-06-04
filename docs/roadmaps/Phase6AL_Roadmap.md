@@ -169,10 +169,14 @@ kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
       via QuantumKlein `sum_normSq_row`/`sum_normSq_col`; → Birkhoff → majorization → sorted-d prefix.
       **✅ BOTH diag-conj bricks SHIPPED** (`LidskiiWielandt.lean`): `diag_conj_eq_sum_normSq` `7a572bed`
       (the `∑ⱼ|Mᵢⱼ|²λⱼ` expansion) + `diag_conj_self_eq_eigenvalue` `c5dd66e8` (`(U_AᴴA U_A)ᵢᵢ=λᵢ(A)`).
-      REMAINING LW: (i) combine via `A=B+(A−B)` [`mul_add`/`Matrix.add_apply`] into `λᵢ(A)=∑ⱼ Dᵢⱼλⱼ(B)+
-      ∑ⱼ Eᵢⱼλⱼ(C)`, D,E doubly-stochastic [`sum_normSq_row`/`col`]; (ii) majorization assembly: this relation +
-      Birkhoff (`exists_eq_sum_perm_of_mem_doublyStochastic`) ⟹ sorted-d prefix `∑_{i<m}d↓ ≤ ∑_{i<m}λ↓(C)`.
-      (ii) is the genuine remaining ~80-120 lines (doubly-stochastic⟹majorization + prefix extraction).
+      REMAINING LW: (i) ✅ SHIPPED `eigenvalue_eq_doublyStochastic_combination` `1762e82a` — the relation
+      `λᵢ(A)=∑ⱼ|M^Bᵢⱼ|²λⱼ(B)+∑ⱼ|M^Cᵢⱼ|²λⱼ(C)`, combining the two diag-conj bricks via `A=B+(A−B)`. (ii) the
+      majorization EXTRACTION (the genuine remaining hard core, ~80-120 lines): from (i) + the doubly-stochastic
+      weights (`|M^Bᵢⱼ|²` row/col sums = 1 via `sum_normSq_row`/`col`) + Birkhoff
+      (`exists_eq_sum_perm_of_mem_doublyStochastic`) derive the sorted-d weak majorization
+      `∑_{i<m}(λ↓(A)−λ↓(B))↓ ≤ ∑_{i<m}λ↓(A−B)`. ⚠️ this is the actual Lidskii argument — NOT immediate from (i)
+      (a doubly-stochastic image is majorized, `Dλ(B)≺λ(B)`, but the SUM `Dλ(B)+Eλ(C)` needs the careful
+      Lidskii/Wielandt-minimax handling). Genuinely hard; reachable, no axiom.
   (c) **Mirsky** = `abs_sum_le_of_prefix` ∘ LW-(ii) + `traceNorm_eq_sum_abs_eigenvalues₀` (both SHIPPED)
       ⟹ `∑|λ↓(A)−λ↓(B)| ≤ ‖A−B‖₁`
       (RHS = `traceNorm_eq_sum_abs_eigenvalues₀`, SHIPPED).
