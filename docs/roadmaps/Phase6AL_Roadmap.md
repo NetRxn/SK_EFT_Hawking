@@ -107,18 +107,31 @@ applied to the LW crux itself (a dedicated matrix-analysis strategy scout + two 
 - **❌ exterior/additive-compound route** (`D_k(A)` has subset-sum spectrum, linear in A → Weyl on `D_k`) needs additive-compound
   spectral theory **absent from Mathlib** (`ExteriorPower` exists but NO spectrum-of-compound result). 8–12 lemmas + missing
   substrate. Skip.
-- **✅ ROUTE (c) — WIELANDT FRAME-REUSE (4–5 lemmas, no axiom):**
-  1. **Ky-Fan-for-frames** ≈ HAVE — repackage `trace_mul_proj_le`: orthonormal k-frame `{wᵣ}` (⟺ rank-k proj `P=∑wᵣwᵣᴴ`)
-     ⟹ `∑ᵣ⟨wᵣ,Xwᵣ⟩ = tr(PX).re ≤ ∑_{j<k}λ↓ⱼ(X)`.
-  2. **Projection/frame-existence (THE one hard brick):** for k-subset `S`, ∃ rank-k orthogonal projection `P` with
-     `tr(PA).re ≥ ∑_{i∈S}λ↓ᵢ(A)` AND `tr(PB).re ≤ ∑_{i∈S}λ↓ᵢ(B)`, via a `finrank` subspace-intersection count
-     (`Submodule.finrank_sup_add_finrank_inf_eq` — `dim(U⊓V) ≥ dim U + dim V − n`) on A's top-eigenspace ∩ B's complement family.
-  3. **Assembly:** `∑_S λ↓(A) − ∑_S λ↓(B) ≤ tr(PC).re ≤ ∑_{j<k}λ↓(C)` (brick-1 Ky Fan on C); then `max over S` gives
-     `∑_{i<k}(λ↓(A)−λ↓(B))↓ ≤ ∑_{i<k}λ↓(C)` (GOAL/weak-majorization); feed shipped `abs_sum_le_of_prefix` → **Mirsky**.
-  ⚠️ **Quantify over ALL subsets S** (don't pre-commit to S=top-k of δ) — `∑_{i<k}δ↓ = max_{|S|=k}∑_{i∈S}δ`, RHS S-independent.
-  **High-leverage API check IN FLIGHT:** whether Mathlib eigenvector `OrthonormalBasis`+`finrank` lets brick-2's intersection
-  frame be CONSTRUCTED concretely (Gram–Schmidt in a known subspace) vs an abstract intersection lemma. Determines brick-2 cost.
-  Strategist rates brick-2 the only genuinely hard lemma; everything else is facts 1/3 + max-over-S + shipped Mirsky-reduction.
+- **⚠️ ROUTE (c) Wielandt-frame-reuse SUPERSEDED — single-frame existence is PROVABLY FALSE.** A construction scout
+  refuted it: `n=3, S={0,2}` forces `w_1=u_0, w_2=v_2` with `⟨u_0,v_2⟩≠0` — no orthonormal frame in `A_r∩B_r` exists, and
+  no single rank-k `P` gives both `tr(PA)≥∑_Sλ↓(A)` ∧ `tr(PB)≤∑_Sλ↓(B)`. Same scout ALSO over-claimed a "reduce to Weyl
+  position-prefix" shortcut — **FALSE** (caught here): Weyl-prefix `∑_{j<k}λ↓(A)−∑_{j<k}λ↓(B)≤∑_{j<k}λ↓(C)` (= shipped
+  `sum_top_subadditive`) does NOT imply the SORTED weak-maj `∑_{k largest}(λ↓(A)−λ↓(B))≤∑_{j<k}λ↓(C)` — abstract
+  counterexample `a=(2,2),b=(2,0),c=(1,1)` (can't arise from a real `A=B+C`, which is exactly the matrix structure Lidskii
+  needs). So brick-2 IS genuine Lidskii weak-maj, not reducible to Weyl.
+- **✅ ROUTE (b) — LIDSKII-via-SCHUR–HORN (pure vector majorization, NO subspaces/flags, reuses shipped DS relation):**
+  In A's eigenbasis: `C`'s diagonal `d = λ(A) − β` (β = B's diagonal there); BOTH `d ≺ λ(C)` and `β ≺ λ(B)` are
+  **Schur–Horn = "a doubly-stochastic image is (weakly) majorized"** — the DS weights `|Mᵢⱼ|²` are exactly the shipped
+  `eigenvalue_eq_doublyStochastic_combination` + `overlap_normSq_{row,col}_sum`. Then a **rearrangement lemma**
+  `sort(a)−sort(q) ≺_w a−β` (similarly-sorted minimizes the difference's majorization; needs `β ≺ q`) gives
+  `λ↓(A)−λ↓(B) ≺_w d ≺ λ(C)` = the weak-maj H. Decomposition (all VECTOR majorization, tractable, no axiom):
+  - **VM-0 (foundational, BUILD FIRST):** `sortDesc` + `subset_sum_le_sorted_prefix` — `∑_{i∈S}x ≤ ∑_{i<|S|}(x∘sortDesc x)`
+    (subset sum ≤ sum of `|S|` largest). Mathlib LACKS this (leansearch-confirmed). Proof via threshold `c=(x∘σ)(k−1)`,
+    symmetric-difference card equality. ~50–70 lines.
+  - **VM-1 = the Mathlib TODO (`Birkhoff.lean:30`):** "a doubly-stochastic image is weakly majorized" — `topkSum(D·y,k) ≤
+    topkSum(y,k)` via Birkhoff (`exists_eq_sum_perm_of_mem_doublyStochastic`) + `topkSum` convexity + perm-invariance. Gives
+    Schur–Horn `d ≺ λ(C)`, `β ≺ λ(B)` directly from the shipped DS weights. ~100 lines.
+  - **VM-2 rearrangement:** `sort(a)−sort(q) ≺_w a−β` for `β ≺ q` (similarly-sorted minimizes difference majorization).
+  - **VM-3 transitivity + assembly:** `≺_w` transitive ⟹ `λ↓(A)−λ↓(B) ≺_w λ(C)` = H (subset form, via VM-0) → feed shipped
+    `mirsky_of_subset_diff` → **Mirsky**. (Sanity-checked VM-2 on several vectors; holds.)
+  This SUPERSEDES Wielandt-minimax (which needed subspace/flag machinery): route (b) is pure `Fin N → ℝ` majorization +
+  the DS relation already shipped. Strategist's "circular" objection to DS routes does NOT apply — we use Schur–Horn
+  (DS-image-majorized, genuinely have the weights), NOT an exhibited single-D for the sorted difference.
 - **F2 toehold UPGRADE:** Mathlib `Real.qaryEntropy q p = p·log(q−1)+binEntropy p` with `strictConcaveOn_qaryEntropy` +
   `qaryEntropy_continuous` is EXACTLY the FA RHS shape `T·log(d−1)+H₂(T)` — materially de-risks F2. Plus `dist_eq_of_L1` (total var).
 

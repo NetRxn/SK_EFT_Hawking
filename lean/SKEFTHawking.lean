@@ -2819,6 +2819,10 @@ import SKEFTHawking.QuantumNetwork.FannesAudenaert
 -- Hermitian conjugated into another eigenbasis is a doubly-stochastic combination of its eigenvalues
 -- (∑ⱼ|Mᵢⱼ|²λⱼ); the operator core of the sorted-difference majorization (the sole remaining Mirsky brick).
 import SKEFTHawking.QuantumNetwork.LidskiiWielandt
+-- Phase 6AL Wave 4 (2026-06-04): vector-majorization layer (route (b) Lidskii-via-Schur–Horn).
+-- subset_sum_le_sorted_prefix — subset sum ≤ sum of the |S| largest entries (sortDesc); foundational
+-- for weak majorization. Mathlib lacks the majorization predicate (Birkhoff.lean TODO).
+import SKEFTHawking.QuantumNetwork.VectorMajorization
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
