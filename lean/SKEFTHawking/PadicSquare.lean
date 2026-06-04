@@ -558,4 +558,14 @@ theorem no_padicInt_sol_unit_pUnit {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]} (hv 
     · exact main Y.valuation X Y Z (Or.inr (Or.inl ⟨hY, le_refl _⟩)) heq
   · exact main X.valuation X Y Z (Or.inl ⟨hX, le_refl _⟩) heq
 
+/-- **Anisotropy of `z² = u x² + p v y²` over the field `ℚ_[p]` (non-square unit `u`, odd implicit via `v`
+unit).** The full converse direction of the symbol ⟺ solvability bridge in the `(u, p·v)` case: clearing
+denominators (`exists_padicInt_ternary_of_padic`) reduces any `ℚ_[p]` solution to a `ℤ_[p]` one, excluded by
+the descent (`no_padicInt_sol_unit_pUnit`). -/
+theorem no_padic_sol_unit_pUnit {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]} (hv : IsUnit v)
+    (hunsq : ¬ IsSquare (PadicInt.toZMod u)) :
+    ¬ ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (u : ℚ_[p]) * x ^ 2 + (p : ℚ_[p]) * v * y ^ 2 :=
+  fun hsol => no_padicInt_sol_unit_pUnit hv hunsq (exists_padicInt_ternary_of_padic hsol)
+
 end SKEFTHawking
