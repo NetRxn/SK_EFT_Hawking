@@ -1455,4 +1455,17 @@ theorem ternary_solvable_of_local {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
       exact solvable_canonical_symm
         (step b a (by omega) hab hb ha hbsf hasf hRs hlocs)
 
+/-- **Homogenization: a binary form represents `c` iff the ternary equation is solvable with `z ≠ 0`.** Over
+a field, for `c ≠ 0`, `∃ x y, a x² + b y² = c` iff `∃ x y z, z ≠ 0 ∧ a x² + b y² = c z²` (take `z = 1`
+forward; `x/z, y/z` backward). The link between *representation* of a value by a binary form and *isotropy*
+of the associated ternary — the algebraic core of the rank-reduction step `n → n−1` of Hasse–Minkowski. -/
+theorem represents_iff_homog {K : Type*} [Field K] {a b c : K} (hc : c ≠ 0) :
+    (∃ x y : K, a * x ^ 2 + b * y ^ 2 = c) ↔
+    (∃ x y z : K, z ≠ 0 ∧ a * x ^ 2 + b * y ^ 2 = c * z ^ 2) := by
+  constructor
+  · rintro ⟨x, y, h⟩
+    exact ⟨x, y, 1, one_ne_zero, by rw [h]; ring⟩
+  · rintro ⟨x, y, z, hz, h⟩
+    exact ⟨x / z, y / z, by field_simp; linear_combination h⟩
+
 end SKEFTHawking
