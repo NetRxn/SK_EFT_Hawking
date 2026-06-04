@@ -86,6 +86,53 @@ theorem sum_mul_le_sum_top {N : ℕ} (μ : Fin N → ℝ) (hμ : Antitone μ) (p
         simp only [hind, if_neg h]; linarith [hp0 i]
       exact mul_nonpos_of_nonpos_of_nonneg (sub_nonpos.mpr hμc) hpind
 
+/-- **Elementary majorization → ℓ¹ inequality (the Karamata-free core of Mirsky):** for an antitone `d`
+with prefix sums dominated by `μ`'s and equal total, `∑ᵢ|dᵢ| ≤ ∑ᵢ|μᵢ|`. Proof: `∑|f| = 2∑max(f,0) − ∑f`,
+the nonnegatives of antitone `d` form a prefix, and `∑max(d,0)=∑_{i<m}d ≤ ∑_{i<m}μ ≤ ∑max(μ,0)`. -/
+theorem abs_sum_le_of_prefix {N : ℕ} {d μ : Fin N → ℝ} (hd : Antitone d)
+    (hpre : ∀ m : ℕ, ∑ i ∈ Finset.univ.filter (fun i : Fin N => (i : ℕ) < m), d i
+                   ≤ ∑ i ∈ Finset.univ.filter (fun i : Fin N => (i : ℕ) < m), μ i)
+    (htot : ∑ i, d i = ∑ i, μ i) :
+    ∑ i, |d i| ≤ ∑ i, |μ i| := by
+  have key : ∀ f : Fin N → ℝ, ∑ i, |f i| = 2 * (∑ i, max (f i) 0) - ∑ i, f i := by
+    intro f
+    rw [Finset.mul_sum, ← Finset.sum_sub_distrib]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    by_cases h : 0 ≤ f i
+    · rw [abs_of_nonneg h, max_eq_left h]; ring
+    · rw [abs_of_nonpos (not_le.mp h).le, max_eq_right (not_le.mp h).le]; ring
+  set T : Finset (Fin N) := Finset.univ.filter (fun i : Fin N => 0 ≤ d i) with hT
+  -- nonnegatives of an antitone sequence form a prefix
+  have hlt : ∀ i ∈ T, (i : ℕ) < T.card := by
+    intro i hi
+    rw [hT, Finset.mem_filter] at hi
+    have hsub : Finset.Iic i ⊆ T := by
+      intro j hj
+      rw [Finset.mem_Iic] at hj
+      rw [hT, Finset.mem_filter]
+      exact ⟨Finset.mem_univ j, le_trans hi.2 (hd hj)⟩
+    have hc : (Finset.Iic i).card ≤ T.card := Finset.card_le_card hsub
+    rw [Fin.card_Iic] at hc
+    omega
+  have hTeq : T = Finset.univ.filter (fun i : Fin N => (i : ℕ) < T.card) := by
+    refine Finset.eq_of_subset_of_card_le (fun i hi => ?_) ?_
+    · rw [Finset.mem_filter]; exact ⟨Finset.mem_univ i, hlt i hi⟩
+    · rw [Fin.card_filter_val_lt]; exact min_le_right _ _
+  have hmaxd : ∑ i, max (d i) 0 = ∑ i ∈ T, d i := by
+    rw [hT, Finset.sum_filter]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    by_cases h : 0 ≤ d i
+    · rw [if_pos h, max_eq_left h]
+    · rw [if_neg h, max_eq_right (not_le.mp h).le]
+  have hmax : ∑ i, max (d i) 0 ≤ ∑ i, max (μ i) 0 := by
+    rw [hmaxd, hTeq]
+    refine le_trans (hpre T.card)
+      (le_trans (Finset.sum_le_sum fun i _ => le_max_left (μ i) 0) ?_)
+    exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.subset_univ _)
+      (fun i _ _ => le_max_right (μ i) 0)
+  rw [key d, key μ, htot]
+  linarith [hmax]
+
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 omit [DecidableEq ι] in
