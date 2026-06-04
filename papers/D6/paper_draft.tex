@@ -877,6 +877,17 @@ $E_N(\rho\otimes\sigma)=E_N(\rho)+E_N(\sigma)$ (\verb|logNegativity_add|, with t
 corollary \verb|logNegativity_bellDiag_add| where $\|\rho^\Gamma\|_1\ge1$ removes the side condition).
 Kernel-only; \emph{zero} new project-local axioms.
 
+A continuity follow-on (\verb|NegativityContinuity.lean|) shows the negativity is \textbf{Lipschitz in
+trace distance}. The partial transpose, while not trace-norm-preserving, is trace-norm \emph{bounded}:
+$\|X^\Gamma\|_1\le 2\|X\|_1$ (\verb|traceNorm_pt2_le|). This decomposes into already-shipped bounds plus
+one elementary lemma --- $T_B$ permutes matrix entries, hence preserves the Frobenius norm
+(\verb|norm_pt2|), so $\|X^\Gamma\|_1\le\sqrt{\mathrm{card}}\,\|X^\Gamma\|_F=2\|X\|_F\le2\|X\|_1$ via
+\verb|traceNorm_le_sqrt_card_mul_norm| and \verb|frobenius_le_traceNorm| ($\mathrm{card}=4$, $\sqrt4=2$).
+With the reverse triangle inequality this gives
+$|\,\|\rho^\Gamma\|_1-\|\sigma^\Gamma\|_1\,|\le 4\,D(\rho,\sigma)$
+(\verb|abs_traceNorm_pt2_sub_le_traceDist|) --- the negativity is $2$-Lipschitz in the trace distance
+$D=\tfrac12\|\rho-\sigma\|_1$. Kernel-only; \emph{zero} new project-local axioms.
+
 The third 6AK result (\verb|SpamProcessFidelity.lean|) completes the device-characterisation substrate.
 The state-preparation-and-measurement (SPAM) readout bit-flip channel $\Phi_q(\rho)=(1-q)\rho+qX\rho X$
 is the Pauli channel with weights $(1-q,q,0,0)$, so its diamond distance to the identity is exactly the

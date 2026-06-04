@@ -423,6 +423,15 @@ gives additivity `E_N(ρ⊗σ) = E_N(ρ) + E_N(σ)` (`logNegativity_add`; Bell-d
 `logNegativity_bellDiag_add` where `‖ρ^Γ‖₁ ≥ 1` removes the side condition). Kernel-only; zero new
 project-local axioms.
 
+A continuity follow-on (`NegativityContinuity.lean`) shows the negativity is **Lipschitz in trace
+distance**. The partial transpose, while not trace-norm-preserving, is trace-norm *bounded*:
+`‖X^Γ‖₁ ≤ 2‖X‖₁` (`traceNorm_pt2_le`) — decomposing into already-shipped bounds plus one elementary
+lemma: `T_B` permutes matrix entries, hence preserves the Frobenius norm (`norm_pt2`), so
+`‖X^Γ‖₁ ≤ √card·‖X^Γ‖_F = 2‖X‖_F ≤ 2‖X‖₁` via `traceNorm_le_sqrt_card_mul_norm` + `frobenius_le_traceNorm`
+(card=4, √4=2). With the reverse triangle inequality, `|‖ρ^Γ‖₁ − ‖σ^Γ‖₁| ≤ 4·D(ρ,σ)`
+(`abs_traceNorm_pt2_sub_le_traceDist`) — the negativity is 2-Lipschitz in the trace distance
+`D = ½‖ρ−σ‖₁`. Kernel-only; zero new project-local axioms.
+
 The third 6AK result (`SpamProcessFidelity.lean`) completes the device-characterisation substrate. The
 SPAM readout bit-flip channel `Φ_q(ρ) = (1−q)ρ + q·XρX` is the Pauli channel with weights `(1−q,q,0,0)`,
 so its diamond distance to the identity is exactly the readout error probability

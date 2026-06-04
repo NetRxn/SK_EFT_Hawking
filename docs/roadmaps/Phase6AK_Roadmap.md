@@ -264,8 +264,16 @@ tiebreaker does NOT fire on already-textbook substrate.
   `|A⊗B|=|A|⊗|B|` from PSD-sqrt uniqueness + `tr(P⊗Q)=trP·trQ`). Then `logNegativity_add`
   (`E_N(ρ⊗σ)=E_N(ρ)+E_N(σ)`) + Bell-diagonal corollary `logNegativity_bellDiag_add` (`‖ρ^Γ‖₁≥1` kills
   the side condition). Kernel-pure, NO axioms; D6/preprint prose; Stage-13 GREEN.
-- **FU-5 — asymptotic (Fannes-type) continuity of log-negativity** (MED risk). The one genuinely-analytic
-  nub: `|E_N(τ) − E_N(σ)| ≤ f(‖τ−σ‖₁)` finite-dim. Needs a real-analysis continuity bound; Mathlib-PR-grade.
+- **FU-5 — negativity continuity** ✅ SHIPPED 2026-06-04 (`NegativityContinuity.lean`). Scout corrected
+  the "genuinely-hard analytic nub" label: the negativity is **2-Lipschitz in trace distance** and the
+  crux `traceNorm_pt2_le : ‖X^Γ‖₁ ≤ 2‖X‖₁` decomposes into *existing* bounds + ONE elementary lemma
+  `norm_pt2` (pt2 preserves the Frobenius norm — it permutes entries; brute-force trace-equality `ring`).
+  Then `‖X^Γ‖₁ ≤ √card·‖X^Γ‖_F = 2‖X‖_F ≤ 2‖X‖₁` (`traceNorm_le_sqrt_card_mul_norm` +
+  `frobenius_le_traceNorm`, card=4) + reverse-triangle ⟹ `abs_traceNorm_pt2_sub_le_traceDist`
+  (`|‖ρ^Γ‖₁−‖σ^Γ‖₁| ≤ 4·D(ρ,σ)`). Kernel-pure, NO axioms. NB: `open scoped Matrix.Norms.Frobenius` (the
+  Frobenius `‖·‖` is a LOCAL instance, NOT the `L2Operator`/`Matrix` scope). D6/preprint prose; Stage-13.
+  (The full *log*-negativity Fannes continuity — log-Lipschitz away from 0 — is a thin add-on for
+  density ops where `‖ρ^Γ‖₁ ≥ 1`; the trace-norm/negativity version above is the substantive content.)
 - **FU-6 — regularized-rate corollary** (LOW once FU-4/FU-5 land). The per-`n` universal statement
   `Λ(ρ^⊗n) ≈ Φ_k ⟹ k ≤ n·E_N(ρ) + δ(ε)` (no LOCC abstraction needed — quantify over finite local-op
   compositions, FU-3 class) → `E_D ≤ E_N` as a one-line limit corollary.
