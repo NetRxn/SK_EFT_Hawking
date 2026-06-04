@@ -658,6 +658,7 @@ import SKEFTHawking.HilbertSymbolPadic
 import SKEFTHawking.RokhlinFromHM
 import SKEFTHawking.RokhlinClassification
 import SKEFTHawking.SpinRokhlinInterface
+import SKEFTHawking.RokhlinManifoldFromHM
 import SKEFTHawking.ExtBordismBridge
 import SKEFTHawking.ChangeOfRings
 import SKEFTHawking.FKGappedInterface
