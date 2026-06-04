@@ -1131,4 +1131,16 @@ theorem solvable_padic_odd_iff_residue {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {
   rw [PadicInt.coe_intCast, PadicInt.coe_intCast] at key
   exact key
 
+/-- **`a` a square mod `|b|` ⟹ the divisibility `descent_construct` consumes.** If `a` is a square in
+`ZMod |b|` then `∃ t, b ∣ t² − a` (lift the square root `s = ↑t` and reduce `t² − a ≡ 0`). The interface
+turning the residue/CRT square condition into the input of the Legendre descent step. -/
+theorem exists_dvd_sq_sub_of_isSquare_zmod {a b : ℤ} (h : IsSquare ((a : ZMod b.natAbs))) :
+    ∃ t : ℤ, b ∣ (t ^ 2 - a) := by
+  obtain ⟨s, hs⟩ := h
+  obtain ⟨t, rfl⟩ := ZMod.intCast_surjective s
+  refine ⟨t, ?_⟩
+  rw [← Int.natAbs_dvd, ← ZMod.intCast_zmod_eq_zero_iff_dvd]
+  push_cast
+  rw [hs]; ring
+
 end SKEFTHawking
