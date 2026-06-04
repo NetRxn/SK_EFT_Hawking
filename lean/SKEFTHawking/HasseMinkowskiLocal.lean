@@ -212,4 +212,25 @@ theorem exists_diag_isotropic_smul {K : Type*} [Field K] {ι : Type*} [Fintype �
     rw [Finset.mul_sum]; exact Finset.sum_congr rfl fun i _ => by ring
   simp only [hfac, mul_eq_zero, ha, false_or]
 
+/-- **Binary isotropy criterion over a field.** For nonzero `a` (and any `b`), the form `a x² + b y² = 0`
+has a nontrivial zero iff `-(a·b)` is a square. This is the rank-2 local condition (and the rank-2 base of
+the Hasse–Minkowski induction): `(s, a)` solves it when `s² = -(a·b)`, and conversely a nontrivial zero forces
+`-(a·b) = (a·x/y)²`. -/
+theorem exists_binary_zero_iff {K : Type*} [Field K] {a b : K} (ha : a ≠ 0) :
+    (∃ x y : K, ¬(x = 0 ∧ y = 0) ∧ a * x ^ 2 + b * y ^ 2 = 0) ↔ IsSquare (-(a * b)) := by
+  constructor
+  · rintro ⟨x, y, hxy, h⟩
+    have hy : y ≠ 0 := by
+      rintro rfl
+      refine hxy ⟨?_, rfl⟩
+      have hx2 : a * x ^ 2 = 0 := by linear_combination h
+      rcases mul_eq_zero.mp hx2 with h1 | h1
+      · exact absurd h1 ha
+      · exact pow_eq_zero_iff (by norm_num) |>.mp h1
+    refine ⟨a * x / y, ?_⟩
+    field_simp
+    linear_combination -h
+  · rintro ⟨s, hs⟩
+    exact ⟨s, a, fun h => ha h.2, by linear_combination -a * hs⟩
+
 end SKEFTHawking
