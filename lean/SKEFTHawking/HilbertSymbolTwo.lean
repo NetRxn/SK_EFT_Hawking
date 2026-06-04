@@ -241,4 +241,15 @@ theorem hilbert2Int_two_odd {q : ℤ} (hq : ¬ (2 : ℤ) ∣ q) :
   simp only [Int.cast_one, Nat.cast_one, Nat.cast_zero, one_mul, zero_mul, add_zero]
   rw [show eps2 (1 : ZMod 8) = 0 from by decide, zero_mul, zero_add]
 
+/-- `(p, q)_2 = χ₂(ε(p)·ε(q))` for odd `p, q`: both valuations vanish, so the exponent is just `ε(p)·ε(q)`. -/
+theorem hilbert2Int_odd_odd {p q : ℤ} (hp : ¬ (2 : ℤ) ∣ p) (hq : ¬ (2 : ℤ) ∣ q) :
+    hilbert2Int p q = chi2 (eps2 (p : ZMod 8) * eps2 (q : ZMod 8)) := by
+  have hvp : padicValInt 2 p = 0 := padicValInt.eq_zero_of_not_dvd hp
+  have hvq : padicValInt 2 q = 0 := padicValInt.eq_zero_of_not_dvd hq
+  have hpfp : pfreeInt 2 p = p := by simp [pfreeInt, hvp]
+  have hpfq : pfreeInt 2 q = q := by simp [pfreeInt, hvq]
+  unfold hilbert2Int
+  rw [hvp, hvq, hpfp, hpfq]
+  simp only [Nat.cast_zero, zero_mul, add_zero]
+
 end SKEFTHawking.HilbertSymbol
