@@ -4,6 +4,8 @@ import Mathlib.Data.Fintype.Fin
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
 import Mathlib.Algebra.BigOperators.Ring.Finset
+import Mathlib.Analysis.Convex.Birkhoff
+import Mathlib.LinearAlgebra.Matrix.Permutation
 
 /-!
 # Vector majorization layer (Phase 6AL, Wave 4, route (b) toward Lidskii–Wielandt / Mirsky)
@@ -188,5 +190,32 @@ theorem topkSum_sum_le {N : ℕ} {ι : Type*} (s : Finset ι) (w : ι → ℝ) (
         refine mul_le_mul_of_nonneg_left ?_ (hw a ha)
         calc ∑ j ∈ T, z a j ≤ topkSum (z a) T.card := subset_sum_le_topkSum (z a) T
           _ = topkSum (z a) k := by rw [hTcard]; exact topkSum_min_left _ _
+
+open Matrix in
+/-- **A doubly-stochastic image is weakly majorized (Schur–Horn / Hardy–Littlewood–Pólya direction).**
+For doubly-stochastic `Nmat`, `topkSum (Nmat ·ᵥ y) k ≤ topkSum y k`. This is the `Mathlib/Analysis/Convex/
+Birkhoff.lean` `## TODO`: Birkhoff decomposes `Nmat = ∑_σ wσ • permMatrix σ`, then `topkSum` sublinearity
+(`topkSum_sum_le`) + permutation-invariance (`topkSum_comp_perm`) + `∑wσ = 1` give the bound. -/
+theorem topkSum_doublyStochastic_mulVec_le {n : ℕ} {Nmat : Matrix (Fin n) (Fin n) ℝ}
+    (hN : Nmat ∈ doublyStochastic ℝ (Fin n)) (y : Fin n → ℝ) (k : ℕ) :
+    topkSum (Nmat.mulVec y) k ≤ topkSum y k := by
+  obtain ⟨w, hw0, hwsum, hwN⟩ := exists_eq_sum_perm_of_mem_doublyStochastic hN
+  have hrw : Nmat.mulVec y = fun i => ∑ σ : Equiv.Perm (Fin n), w σ * y (σ i) := by
+    conv_lhs => rw [← hwN]
+    rw [Matrix.sum_mulVec]
+    funext i
+    rw [Finset.sum_apply]
+    refine Finset.sum_congr rfl (fun σ _ => ?_)
+    simp only [Matrix.smul_mulVec, Matrix.permMatrix_mulVec, Pi.smul_apply,
+      Function.comp_apply, smul_eq_mul]
+  rw [hrw]
+  calc topkSum (fun i => ∑ σ : Equiv.Perm (Fin n), w σ * y (σ i)) k
+      ≤ ∑ σ : Equiv.Perm (Fin n), w σ * topkSum (fun i => y (σ i)) k :=
+        topkSum_sum_le Finset.univ w (fun σ _ => hw0 σ) (fun σ i => y (σ i)) k
+    _ = ∑ σ : Equiv.Perm (Fin n), w σ * topkSum y k := by
+        refine Finset.sum_congr rfl (fun σ _ => ?_)
+        rw [topkSum_comp_perm]
+    _ = (∑ σ : Equiv.Perm (Fin n), w σ) * topkSum y k := by rw [← Finset.sum_mul]
+    _ = topkSum y k := by rw [hwsum, one_mul]
 
 end SKEFTHawking.QuantumNetwork
