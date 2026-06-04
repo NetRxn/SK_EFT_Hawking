@@ -84,6 +84,24 @@ theorem hilbertPadicNat_units {a b : ℕ} (ha : ¬ p ∣ a) (hb : ¬ p ∣ b) :
 @[simp] theorem hilbertPadicNat_one_right (a : ℕ) : hilbertPadicNat p a 1 = 1 := by
   rw [hilbertPadicNat_comm]; exact hilbertPadicNat_one_left p a
 
+/-- The **`p`-free part of a nonzero integer** `a = p^{v_p(a)} · pfreeInt a`. -/
+def pfreeInt (a : ℤ) : ℤ := a / (p : ℤ) ^ padicValInt p a
+
+omit [Fact p.Prime] in
+/-- `a = p^{v_p(a)} · pfreeInt a` (exact, since `p^{v_p(a)} ∣ a`). -/
+theorem pfreeInt_spec (a : ℤ) : a = (p : ℤ) ^ padicValInt p a * pfreeInt p a :=
+  (Int.mul_ediv_cancel' (padicValInt_dvd a)).symm
+
+/-- **Multiplicativity of the `p`-free part:** `pfreeInt (a·b) = pfreeInt a · pfreeInt b` (nonzero `a, b`). -/
+theorem pfreeInt_mul {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    pfreeInt p (a * b) = pfreeInt p a * pfreeInt p b := by
+  have hpne : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).pos.ne'
+  have hkey : a * b = pfreeInt p a * pfreeInt p b * ((p : ℤ) ^ padicValInt p a * (p : ℤ) ^ padicValInt p b) := by
+    conv_lhs => rw [pfreeInt_spec p a, pfreeInt_spec p b]
+    ring
+  rw [pfreeInt, padicValInt.mul ha hb, pow_add,
+    Int.ediv_eq_of_eq_mul_left (mul_ne_zero (pow_ne_zero _ hpne) (pow_ne_zero _ hpne)) hkey]
+
 /-- **Legendre connection:** for `p ∤ a`, `(a, p)_p = (a | p)` — the symbol against the uniformizer is
 the Legendre symbol. -/
 theorem hilbertPadicNat_eq_legendre {a : ℕ} (ha : ¬ p ∣ a) :
