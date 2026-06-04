@@ -131,4 +131,27 @@ theorem sum_eigenvalues_eq_sum_eigenvalues₀ {A : Matrix ι ι ℂ} (hA : A.IsH
   exact Equiv.sum_comp (Fintype.equivOfCardEq (Fintype.card_fin _)).symm
     (fun k => f (hA.eigenvalues₀ k))
 
+open Matrix
+
+/-- Conjugating a Hermitian projection by a unitary preserves Hermiticity. -/
+theorem conj_proj_isHermitian (U : ↥(unitary (Matrix ι ι ℂ))) {P : Matrix ι ι ℂ}
+    (hPh : P.IsHermitian) :
+    (star (↑U : Matrix ι ι ℂ) * P * (↑U : Matrix ι ι ℂ)).IsHermitian := by
+  set u : Matrix ι ι ℂ := (↑U : Matrix ι ι ℂ) with hu
+  show star (star u * P * u) = star u * P * u
+  rw [StarMul.star_mul, StarMul.star_mul, star_star, Matrix.star_eq_conjTranspose P, hPh, mul_assoc]
+
+/-- Conjugating an idempotent by a unitary preserves idempotency. -/
+theorem conj_proj_idempotent (U : ↥(unitary (Matrix ι ι ℂ))) {P : Matrix ι ι ℂ}
+    (hP : P * P = P) :
+    (star (↑U : Matrix ι ι ℂ) * P * (↑U : Matrix ι ι ℂ))
+        * (star (↑U : Matrix ι ι ℂ) * P * (↑U : Matrix ι ι ℂ))
+      = star (↑U : Matrix ι ι ℂ) * P * (↑U : Matrix ι ι ℂ) := by
+  set u : Matrix ι ι ℂ := (↑U : Matrix ι ι ℂ) with hu
+  have hUU : u * star u = 1 := (Unitary.mem_iff.mp U.2).2
+  calc (star u * P * u) * (star u * P * u)
+      = star u * P * (u * star u) * P * u := by noncomm_ring
+    _ = star u * (P * P) * u := by rw [hUU]; noncomm_ring
+    _ = star u * P * u := by rw [hP]
+
 end SKEFTHawking.QuantumNetwork
