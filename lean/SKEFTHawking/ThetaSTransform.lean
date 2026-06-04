@@ -109,4 +109,33 @@ theorem norm_gaussianCM {d : ℕ} (σ : ℂ) (G : Matrix (Fin d) (Fin d) ℝ) (y
   congr 1
   simp [Complex.mul_re, Complex.mul_im]
 
+/-- **Real multivariate Gaussian summability over `ℤᵈ`**: `∑_{v∈ℤᵈ} exp(-c·∑ᵢvᵢ²)` is summable for `c > 0`.
+(Take `τ = (c/π)·I`: each `‖exp(iπτ·n²)‖ = exp(-c·n²)`, and `summable_normprod_pi` lifts the 1-D Jacobi-theta
+summability `summable_gaussian_coord` to the `d`-fold product.) The dominating series for the lattice-translate
+summability hF. -/
+theorem summable_real_diagonal_gaussian {d : ℕ} {c : ℝ} (hc : 0 < c) :
+    Summable (fun v : Fin d → ℤ => Real.exp (-(c * ∑ i, (v i : ℝ) ^ 2))) := by
+  have hτ : 0 < (((c / π : ℝ) : ℂ) * I).im := by
+    simp only [Complex.mul_im, Complex.ofReal_re, Complex.I_im, mul_one, Complex.ofReal_im,
+      Complex.I_re, mul_zero, add_zero]
+    positivity
+  have hsum := summable_normprod_pi
+    (fun _ : Fin d => fun n : ℤ => Complex.exp (π * I * (n : ℂ) ^ 2 * (((c / π : ℝ) : ℂ) * I)))
+    (fun _ => summable_gaussian_coord (((c / π : ℝ) : ℂ) * I) hτ)
+  refine hsum.congr (fun v => ?_)
+  simp only [Complex.norm_exp]
+  rw [← Real.exp_sum]
+  congr 1
+  rw [Finset.mul_sum, ← Finset.sum_neg_distrib]
+  refine Finset.sum_congr rfl fun i _ => ?_
+  have hre : ((v i : ℂ) ^ 2).re = (v i : ℝ) ^ 2 := by
+    rw [← Complex.ofReal_intCast, ← Complex.ofReal_pow, Complex.ofReal_re]
+  have him : ((v i : ℂ) ^ 2).im = 0 := by
+    rw [← Complex.ofReal_intCast, ← Complex.ofReal_pow, Complex.ofReal_im]
+  simp only [Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im, Complex.I_re,
+    Complex.I_im, hre, him]
+  have hπ : (π : ℝ) ≠ 0 := Real.pi_ne_zero
+  field_simp
+  ring
+
 end SKEFTHawking
