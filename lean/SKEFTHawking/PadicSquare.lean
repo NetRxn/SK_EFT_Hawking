@@ -171,4 +171,39 @@ theorem exists_diag_ternary_zero_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a 
   rw [hw] at e1
   linear_combination e1
 
+/-- **Odd-`p` higher-rank local isotropy:** a diagonal form `∑ aᵢ xᵢ²` of rank `n ≥ 3` over `ℚ_p`
+(odd `p`) with all coefficients units is isotropic. Reduces to the ternary sub-block on the first
+three coordinates (`exists_diag_ternary_zero_odd`), padding the remaining coordinates with `0`. -/
+theorem exists_diag_nary_zero_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {n : ℕ} (hn : 3 ≤ n)
+    (a : Fin n → ℤ_[p]) (ha : ∀ i, IsUnit (a i)) :
+    ∃ x : Fin n → ℤ_[p], x ≠ 0 ∧ ∑ i, a i * x i ^ 2 = 0 := by
+  set i0 : Fin n := ⟨0, by omega⟩ with hi0
+  set i1 : Fin n := ⟨1, by omega⟩ with hi1
+  set i2 : Fin n := ⟨2, by omega⟩ with hi2
+  have d01 : i0 ≠ i1 := Fin.ne_of_val_ne (by simp [hi0, hi1])
+  have d02 : i0 ≠ i2 := Fin.ne_of_val_ne (by simp [hi0, hi2])
+  have d12 : i1 ≠ i2 := Fin.ne_of_val_ne (by simp [hi1, hi2])
+  obtain ⟨x0, y0, z0, hnz, hzero⟩ :=
+    exists_diag_ternary_zero_odd hp (ha i0) (ha i1) (ha i2)
+  set x : Fin n → ℤ_[p] :=
+    fun i => if i = i0 then x0 else if i = i1 then y0 else if i = i2 then z0 else 0 with hx
+  have vx0 : x i0 = x0 := by rw [hx]; simp
+  have vx1 : x i1 = y0 := by rw [hx]; simp [d01.symm]
+  have vx2 : x i2 = z0 := by rw [hx]; simp [d02.symm, d12.symm]
+  have vxo : ∀ i, i ≠ i0 → i ≠ i1 → i ≠ i2 → x i = 0 := by
+    intro i h0 h1 h2; rw [hx]; simp [h0, h1, h2]
+  refine ⟨x, ?_, ?_⟩
+  · intro hxz
+    refine hnz ⟨?_, ?_, ?_⟩
+    · rw [← vx0, hxz]; rfl
+    · rw [← vx1, hxz]; rfl
+    · rw [← vx2, hxz]; rfl
+  · rw [← Finset.sum_subset (Finset.subset_univ {i0, i1, i2})]
+    · rw [Finset.sum_insert (by simp [d01, d02]), Finset.sum_insert (by simp [d12]),
+        Finset.sum_singleton, vx0, vx1, vx2]
+      linear_combination hzero
+    · intro i _ hi
+      simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hi
+      rw [vxo i hi.1 hi.2.1 hi.2.2]; ring
+
 end SKEFTHawking
