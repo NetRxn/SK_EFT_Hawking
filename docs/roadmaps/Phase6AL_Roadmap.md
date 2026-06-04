@@ -104,6 +104,18 @@ decompose-before-walls applied in BOTH directions: R2 was not a wall (built it);
 (STEP II) is genuinely irreducible-for-now. Next-session F1b plan: ship STEP I (reusable Schur–Horn) → build STEP II
 from scratch → unconditional Mirsky discharges R1 and the F-headline.
 
+**⛔ DOUBLY-STOCHASTIC ROUTE REFUTED + (P1) BRICK SHIPPED (2026-06-04, test-before-build).** Numerics (40000 random
+Hermitian, `uv run`): the diagonal sandwich `topkSum(λ↓A−λ↓B) ≤ topkSum(diag_A C) ≤ topkSum(λ↓C)` has TRUE right
+(Schur–Horn 0/40000) but **FALSE left (≈3%, 1253/40000)** — `diag_A(C)` can be smaller than the sorted difference, so
+it cannot upper-bound H. The DS route is DEAD (do not re-attempt). R1/Lidskii genuinely needs the hard machinery.
+**Live route = EIGENVALUE-PATH:** `∑_I(λ↓A−λ↓B) = ∫₀¹ ∑_I⟨uᵢ,Cuᵢ⟩dt ≤ ∫ ∑_top-k λ↓C = ∑_top-k λ↓C` (Ky-Fan integrand
+**HAVE** = P3; FTC = Mathlib = P4). Decomposes to: **(P1)** Lipschitz of sorted eigenvalues — ✅ FOUNDATION SHIPPED
+`5b4f8a3c` `weyl_single_lower` `λ↓ᵢ(S+R) ≥ λ↓ᵢ(S)+λ↓ₙ₋₁(R)` (Courant–Fischer, kernel-pure; two-sided + Lipschitz follow);
+**(P2)** the a.e. eigenvalue-derivative `dλ↓ᵢ/dt=⟨uᵢ,Cuᵢ⟩` through crossings (Rellich) = the genuine hard core. Deep-
+research dispatched (NON-BLOCKING, `Lit-Search/tasks/in-progress/lidskii_arbitrary_subset_lean_formalizable_proof.md`)
+asking whether (P2) is avoidable via Lipschitz+convexity. ⚠️ "absorb" = BUILD to completion (not document-and-stop).
+Build order: P1-full (two-sided Weyl + Lipschitz, needs op-norm-eigenvalue bound + operator congruence) → attack P2.
+
 🔑 Wave-3 build notes (hard-won, for future cfc work): `cfc_kronecker` ABSENT from Mathlib; analytic
 `CFC.log`/`exp_log`/`log_exp` UNUSABLE on matrices (scoped `Matrix.Norms.L2Operator` topology ≠ defeq to
 the entrywise topology the eigenbasis CFC instance uses → opening it breaks `cfc Real.log` instance synth);
