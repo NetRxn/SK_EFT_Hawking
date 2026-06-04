@@ -188,4 +188,12 @@ theorem hilbertPadicInt_one_left (b : ℤ) : hilbertPadicInt p 1 b = 1 := by
 theorem hilbertPadicInt_one_right (a : ℤ) : hilbertPadicInt p a 1 = 1 := by
   rw [hilbertPadicInt_comm]; exact hilbertPadicInt_one_left p a
 
+/-- **Value against the uniformizer:** for `p ∤ a`, `(a, p)_p = (a | p)` (the Legendre symbol). This is the
+prime-place contribution of a generator in the product formula. -/
+theorem hilbertPadicInt_eq_legendre {a : ℤ} (ha : ¬ (p : ℤ) ∣ a) :
+    hilbertPadicInt p a p = legendreSym p a := by
+  unfold hilbertPadicInt
+  rw [padicValInt.eq_zero_of_not_dvd ha, padicValInt_self]
+  simp [pfreeInt, padicValInt.eq_zero_of_not_dvd ha]
+
 end SKEFTHawking.HilbertSymbol
