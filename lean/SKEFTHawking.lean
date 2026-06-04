@@ -2715,6 +2715,9 @@ import SKEFTHawking.QuantumNetwork.GeneralizedAmpDamp
 -- Phase 6AK Wave FU-1 (2026-06-03): qutrit Weyl–Heisenberg leakage channel exact diamond distance
 -- (n = 3 instance of the unitary-error-basis theorem).
 import SKEFTHawking.QuantumNetwork.QutritWeyl
+-- Phase 6AK Wave FU-2 (2026-06-03): two-qubit Bell-diagonal negativity + PPT criterion
+-- (partial transpose on the Bell-block substrate; Werner threshold at F = ½).
+import SKEFTHawking.QuantumNetwork.BellNegativity
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast

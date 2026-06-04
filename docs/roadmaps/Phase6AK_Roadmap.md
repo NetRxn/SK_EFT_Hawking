@@ -174,32 +174,36 @@ no heavy `IsPrimitiveRoot` machinery. `op_zero` = `1` (a=b=0). `op_unitary` uses
 `1+ω+ω²=0`). **Acceptance:** kernel-pure `diamondDist_weylKraus_eq = 1 − p₀` + a named leakage instance.
 **Risk:** MED (the ω-sum + the `i = j + a` cyclic-`Fin 3` bookkeeping; everything downstream is free).
 
-### FU-2 — PLOB as a genuine discrete-family rate inequality 🔭 SCOUTED 2026-06-03 → DEFER (no clean target)
+### FU-2 — entanglement negativity + PPT criterion (Bell-diagonal / Werner) ✅ SHIPPED 2026-06-03 (scout-corrected)
 
-**Scout outcome (2026-06-03): no clean non-trivial kernel-pure *quantum* rate inequality is reachable
-without major new substrate whose load-bearing step is unformalizable in current Mathlib. FU-2 stays
-deferred; the 6AK.2 surrogate stands on its own.** Findings:
+**Status: SHIPPED, kernel-pure, NO new axioms.** New module `BellNegativity.lean`. The original PLOB
+*rate-inequality* target stays genuinely blocked (CV Gaussian-capacity theory + LOCC-monotonicity
+`E_D ≤ E_N`, unformalizable without an axiom) — BUT a first deeper scout had wrongly called the whole
+area "no substrate / unformalizable." A **thorough re-search (Mathlib MCP + Explore fan-out over the
+full Lean tree, `Lit-Search`, docs)** corrected that: the honest, buildable target is the **entanglement
+measure itself** (negativity + the PPT criterion), with the operational rate reading left as a citation
+— exactly the project's standard posture (compute the measure; cite its meaning). And the substrate was
+*already present*: `PauliChannel.lean` ships the Bell projectors `bellBlock i` (`BᵢBⱼ=2δᵢⱼBᵢ`, `trBᵢ=2`)
+and the combination trace norm `traceNorm_bellCombo` (`‖∑cᵢBᵢ‖₁=2∑|cᵢ|`). Shipped:
+- `pt2` partial transpose (second-factor index swap) + `pt2_bellBlock`: `Tᵦ(Bᵢ)=Bᵢ−½yᵢ∑ⱼyⱼBⱼ`
+  (`y=(−1,1,−1,1)` the `Y⊗Y` parity — the **only real proof**, a 64-case `fin_cases`+`ring`; the
+  `½−pᵢ` first guess was a convention error, corrected to `pt2(B₀)=SWAP=½(B₀+B₁−B₂+B₃)`).
+- `pt2_bellCombo` / `pt2_bellDiagState`: PT eigenvalues `μⱼ(p)=pⱼ−½yⱼ∑ᵢyᵢpᵢ`.
+- `traceNorm_pt2_bellDiagState`: `‖ρ(p)^Γ‖₁=∑ⱼ|μⱼ|`; `negativityBellDiag_eq`: `N=½(∑|μⱼ|−1)`;
+  `negativityBellDiag_nonneg`; **`ppt_bellDiagState_iff`** (`N=0 ↔ ∀j μⱼ≥0` — the PPT criterion).
+- Werner: `negativityBellDiag_werner = (2F−1)/2` (F≥½) and `ppt_werner_iff` (PPT ⟺ `F≤½`) — the same
+  `½` threshold as the BBPSSW/DEJMPS distillability cutoff. All `{propext,Classical.choice,Quot.sound}`.
 
-- **Roadmap premise was wrong.** This section assumed a "partial-transpose + trace-norm substrate
-  already shipped in 6AE/6AF." A full-tree scan finds **no `partialTranspose` / `negativity` /
-  `logNegativity` / distillable-entanglement / Bell-diagonal *density-matrix* definition anywhere** in
-  the Lean codebase. `traceNorm` exists (`MixedState.lean`); `BellDiagonalSwap.lean` is **pure
-  `(a,b,c,d)`-coefficient real algebra with no density operators**. So option (b) would have to build,
-  from scratch: a `4×4` Bell-diagonal density matrix in the Pauli basis, the partial-transpose
-  operation, its eigenvalues, and the trace-norm of the partial transpose.
-- **Option (b) is blocked at the monotonicity step.** Even after building the negativity machinery, a
-  genuine *rate* bound needs LOCC-monotonicity `E_D ≤ E_N` (log-negativity an upper bound on
-  distillable entanglement) — a deep result absent from Mathlib that would require a project-local
-  **axiom** (disallowed without sign-off, Invariant #15). Without it, the strongest honest deliverable
-  is a *surrogate* "`negativity(ρ(p)) = f(p)`" trace-norm computation — no better in kind than 6AK.2,
-  at a large substrate cost.
-- **Option (a) collapses to a classical triviality.** The only *elementary, axiom-free* content of the
-  erasure-link bound is `E[Binomial(N, η)] = N·η` (linearity of expectation) — a classical fact, not a
-  quantum-network rate bound. The genuine quantum `rate ≤ η` reading needs the same missing
-  entanglement-monotone machinery as (b).
+**Lesson (logged): a repo `grep` is NOT a substrate search.** The first defer rested on a couple of
+`grep`s of `lean/SKEFTHawking/QuantumNetwork/` only; "negativity" matched `nonnegativity` substrings and
+the real Bell-block tooling in `PauliChannel.lean` was missed. Always run the goal's intractability
+protocol (Mathlib MCP + Explore fan-out over ALL prior work product) before declaring infeasibility.
 
-**Decision:** document and stop (the handoff's second acceptance branch). If a future wave builds a real
-negativity substrate (partial transpose + a kernel-provable distillability bound on a finite family),
+**Note on the genuinely-blocked piece.** A literal `rate ≤ f(η)` quantum inequality still needs
+LOCC-monotonicity (axiom-only in current Mathlib); option (a)'s elementary core is the classical
+triviality `E[Binomial(N,η)]=Nη`. So the PLOB *function* surrogate (6AK.2) remains the honest form of
+that specific claim; FU-2's shipped negativity/PPT result is the substantive entanglement-measure win.
+If a future wave builds a kernel-provable distillability bound on a finite family,
 FU-2 becomes a genuine target then. Until then 6AK.2 (rate-bound *function* properties) is the honest
 formalization.
 

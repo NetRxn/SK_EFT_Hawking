@@ -835,6 +835,22 @@ computational level to the next) with probability $q$ --- has diamond distance t
 equal to the leakage probability $q$ (\verb|diamondDist_shiftLeakage_eq|), the population leaving any
 fixed level. Kernel-only; \emph{zero} new project-local axioms.
 
+A companion result (\verb|BellNegativity.lean|) constructs the first \emph{entanglement measure} on an
+actual two-qubit density matrix. The partial transpose on the second qubit
+$(T_B\rho)_{(a,b),(c,d)}=\rho_{(a,d),(c,b)}$ acts on the Bell projectors (the same $B_i$ blocks) as
+$T_B(B_i)=B_i-\tfrac12 y_i\sum_j y_j B_j$, where $y=(-1,1,-1,1)$ is the $\sigma_Y\otimes\sigma_Y$ parity
+of the four Bell states (\verb|pt2_bellBlock|). Hence a Bell-diagonal state $\rho(p)=\sum_i p_i P_i$
+($P_i=\tfrac12 B_i$) has partial-transpose eigenvalues $\mu_j(p)=p_j-\tfrac12 y_j\sum_i y_i p_i$, trace
+norm $\|\rho(p)^\Gamma\|_1=\sum_j|\mu_j|$, and \textbf{negativity}
+$N(\rho)=\tfrac12(\sum_j|\mu_j|-1)$ (\verb|negativityBellDiag_eq|), which is nonnegative and vanishes
+exactly when every $\mu_j\ge0$ --- the \textbf{PPT (positive-partial-transpose) separability criterion}
+(\verb|ppt_bellDiagState_iff|). For the Werner state of singlet fraction $F$ the negativity is
+$(2F-1)/2$ for $F\ge\tfrac12$ (\verb|negativityBellDiag_werner|) and the state is PPT exactly at
+$F\le\tfrac12$ (\verb|ppt_werner_iff|) --- the same $\tfrac12$ threshold as the BBPSSW/DEJMPS
+distillability cutoff. The operational reading (negativity upper-bounds the distillable entanglement and
+two-way key rate) is the standard Vidal--Werner citation; the Lean content is the \emph{exact computed
+measure}. Kernel-only; \emph{zero} new project-local axioms.
+
 The third 6AK result (\verb|SpamProcessFidelity.lean|) completes the device-characterisation substrate.
 The state-preparation-and-measurement (SPAM) readout bit-flip channel $\Phi_q(\rho)=(1-q)\rho+qX\rho X$
 is the Pauli channel with weights $(1-q,q,0,0)$, so its diamond distance to the identity is exactly the

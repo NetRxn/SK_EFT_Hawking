@@ -390,6 +390,18 @@ the pure cyclic-shift leakage channel — identity with probability `1 − q`, s
 level → the next) with probability `q` — has diamond distance to the identity exactly the leakage
 probability `q` (`diamondDist_shiftLeakage_eq`). Kernel-only; zero new project-local axioms.
 
+A companion result (`BellNegativity.lean`) builds the first entanglement *measure* on an actual two-qubit
+density matrix. The second-qubit partial transpose `(T_B ρ)_{(a,b),(c,d)} = ρ_{(a,d),(c,b)}` acts on the
+Bell projectors as `T_B(Bᵢ) = Bᵢ − ½ yᵢ ∑ⱼ yⱼ Bⱼ` (`y = (−1,1,−1,1)` the `Y⊗Y` parity), so a
+Bell-diagonal state `ρ(p) = ∑ᵢ pᵢ Pᵢ` has partial-transpose eigenvalues `μⱼ = pⱼ − ½ yⱼ ∑ᵢ yᵢ pᵢ`,
+trace norm `‖ρ^Γ‖₁ = ∑ⱼ|μⱼ|`, and **negativity** `N = ½(∑ⱼ|μⱼ| − 1)` (`negativityBellDiag_eq`) that
+vanishes exactly when all `μⱼ ≥ 0` — the **PPT separability criterion** (`ppt_bellDiagState_iff`). For
+the Werner state of singlet fraction `F`, `N = (2F−1)/2` for `F ≥ ½` (`negativityBellDiag_werner`) and the
+state is PPT exactly at `F ≤ ½` (`ppt_werner_iff`) — the same threshold as the BBPSSW/DEJMPS
+distillability cutoff. The operational reading (negativity upper-bounds distillable entanglement and the
+two-way key rate) is the standard Vidal–Werner citation; the Lean content is the exact computed measure.
+Kernel-only; zero new project-local axioms.
+
 The third 6AK result (`SpamProcessFidelity.lean`) completes the device-characterisation substrate. The
 SPAM readout bit-flip channel `Φ_q(ρ) = (1−q)ρ + q·XρX` is the Pauli channel with weights `(1−q,q,0,0)`,
 so its diamond distance to the identity is exactly the readout error probability
