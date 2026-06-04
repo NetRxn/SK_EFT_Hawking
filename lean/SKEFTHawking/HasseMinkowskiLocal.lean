@@ -376,4 +376,25 @@ theorem quaternary_isotropic_of_common_value {K : Type*} [Field K] {a b c d t : 
   refine ⟨u, v, p, q, fun hc => ?_, by rw [h1, h2]⟩
   exact ht (by rw [← h1, hc.1, hc.2.1]; ring)
 
+/-- **A common represented value from quaternary isotropy (rank-4 reduction, hard-extraction direction).**
+Over a field with `Invertible 2` and `a, b, c, d ≠ 0`: if `a x² + b y² = c z² + d w²` has a nontrivial
+solution, then `⟨a,b⟩` and `⟨c,d⟩` represent a common nonzero value. (If the common value `t = a x² + b y²`
+is nonzero, done directly; if `t = 0`, one binary part is isotropic hence universal
+[`binary_isotropic_universal`] and represents whatever the other does.) Converts *local isotropy* of the
+quaternary into *local common values*, the input to the weak-approximation search for a global common value. -/
+theorem common_value_of_quaternary_isotropic {K : Type*} [Field K] [Invertible (2 : K)]
+    {a b c d : K} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (h : ∃ x y z w : K, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      a * x ^ 2 + b * y ^ 2 = c * z ^ 2 + d * w ^ 2) :
+    ∃ t : K, t ≠ 0 ∧ (∃ u v, a * u ^ 2 + b * v ^ 2 = t) ∧ (∃ p q, c * p ^ 2 + d * q ^ 2 = t) := by
+  obtain ⟨x, y, z, w, hnz, he⟩ := h
+  by_cases ht : a * x ^ 2 + b * y ^ 2 = 0
+  · have hcd0 : c * z ^ 2 + d * w ^ 2 = 0 := by rw [← he]; exact ht
+    by_cases hxy : x = 0 ∧ y = 0
+    · obtain ⟨hx, hy⟩ := hxy
+      have hzw : ¬(z = 0 ∧ w = 0) := fun hc' => hnz ⟨hx, hy, hc'.1, hc'.2⟩
+      exact ⟨a, ha, ⟨1, 0, by ring⟩, binary_isotropic_universal hc hd ⟨z, w, hzw, hcd0⟩ a⟩
+    · exact ⟨c, hc, binary_isotropic_universal ha hb ⟨x, y, hxy, ht⟩ c, ⟨1, 0, by ring⟩⟩
+  · exact ⟨a * x ^ 2 + b * y ^ 2, ht, ⟨x, y, rfl⟩, ⟨z, w, he.symm⟩⟩
+
 end SKEFTHawking
