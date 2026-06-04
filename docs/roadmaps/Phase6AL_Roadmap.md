@@ -127,7 +127,29 @@ applied to the LW crux itself (a dedicated matrix-analysis strategy scout + two 
   arbitrary-subset Lidskii bound) is still TRUE and still the target; it just needs the Wielandt-minimax proof, not
   route (b).** Genuine route = Wielandt minimax (flags + `Submodule.finrank_sup_add_finrank_inf_eq` subspace
   intersection; API confirmed present) OR additive-compound (missing Mathlib substrate). Both heavy/multi-session.
-- **✅✅ ROUTE (e) — t-PARAMETRIZED CONSTRUCTION (numerically VALIDATED 2026-06-04, matrix-native, supersedes route d's flag-minimax).**
+- **🎯 ROUTE DECISION (user 2026-06-04: GRIND ∃P, one sub-component per turn, lean-tools+numpy, no scouts).**
+  Building the genuine arbitrary-index Lidskii–Wielandt `∃P` (single-frame existence) → feeds shipped `mirsky_of_proj_exists`
+  → Mirsky. **CHOSEN ROUTE = WIELANDT MIN-MAX** (the standard complete Lidskii proof). Ruled out (do NOT pursue):
+  - ❌ **additive-compound has a REAL GAP:** `∑_Sλ↓(A)=λ↓_{p_A}(D_k(A))`, single Weyl on `D_k(A)=D_k(B)+D_k(C)` gives
+    `∑_Sλ↓(A) ≤ λ↓_{p_A}(D_k(B)) + ∑_{<k}λ↓(C)`, needs `p_A≥p_B` (rank of S's subset-sum in A's spectrum ≥ in B's) to
+    conclude `≤ ∑_Sλ↓(B)+…`. `p_A≥p_B` FAILS for n≥4 (subset-sum order not position-determined: `{0,3}` vs `{1,2}` is
+    value-dependent). Plus needs ExteriorPower `D_k` spectrum (heavy). NOT clean.
+  - ❌ **convexity-crossing (route e) is CIRCULAR:** `L ⟺ ∃P ⟺ theorem` (`g(t)=∑_{<k}λ↓(A−tB)≥tr(P_{W₀}(A−tB))` uses the
+    both-bounds `W₀`=∃P itself). Real but not a proof.
+  **BUILD ORDER (Wielandt min-max, EuclideanSpace/`Matrix.IsHermitian`; new file `WielandtLidskii.lean`):**
+  - **W1 Courant–Fischer max-min (single eigenvalue, FOUNDATION, reusable, Mathlib-absent — has only extreme via
+    `hasEigenvalue_iSup/iInf`):** `λ↓_m(A) = ⨆ over (m+1)-dim subspaces V of ⨅_{x∈V,x≠0} Rayleigh(A,x)`. API:
+    `Matrix.IsHermitian.spectral_theorem`, `eigenvalues_eq` (`λᵢ = re(star(eigvec i)⬝ᵥ A.mulVec(eigvec i))` — Rayleigh form),
+    `eigenvectorBasis : OrthonormalBasis n ℂ (EuclideanSpace ℂ n)`, `Submodule.finrank_sup_add_finrank_inf_eq` (intersection
+    dim ≥ 1 when dims add past n). "≥": V=A-top_m, inner-min = λ↓_m. "≤": any (m+1)-dim V meets A-bottom-(n-m) (dim ≥1),
+    that x has Rayleigh ≤ λ↓_m.
+  - **W2 Wielandt sum min-max / ∃P existence (THE hard step):** ∃ rank-k W with `tr(P_W A)≥∑_Sλ↓(A)` ∧ `tr(P_W B)≤∑_Sλ↓(B)`.
+    Numerically TRUE (0/300). Construct via the flag + subspace-intersection dim count (the genuine Wielandt argument; the
+    naive A-top∩B-bottom termwise frame FAILS — needs the global min-max). May need Cauchy interlacing (also Mathlib-absent)
+    as a sub-brick. **TEST each candidate construction numerically (numpy) BEFORE Lean.** This is the multi-session core.
+  - **W3 assemble:** ∃P → `mirsky_of_proj_exists` [SHIPPED] → Mirsky. Then F2 Audenaert + F3.
+  **(numerical route-validation below kept for reference:)**
+- **✅✅ ROUTE (e) — t-PARAMETRIZED CONSTRUCTION (numerically VALIDATED 2026-06-04, matrix-native).**
   Three facts, each 0 failures over thousands of random Hermitian trials (numpy, `/tmp/wtest*.py`):
   1. **Single-frame existence is TRUE** (0/300): ∃ rank-k `W` with `tr(P_W A) ≥ ∑_S λ↓(A)` ∧ `tr(P_W B) ≤ ∑_S λ↓(B)`.
      ⟹ the prior construction-scout's "single-frame is false (n=3 S={0,2})" was WRONG — that was ONE construction failing
