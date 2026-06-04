@@ -851,6 +851,21 @@ distillability cutoff. The operational reading (negativity upper-bounds the dist
 two-way key rate) is the standard Vidal--Werner citation; the Lean content is the \emph{exact computed
 measure}. Kernel-only; \emph{zero} new project-local axioms.
 
+A follow-on (\verb|NegativityMonotone.lean|) promotes the negativity from a computed number to a proven
+\textbf{entanglement monotone}. The second-qubit partial transpose commutes with a local operation on the
+first qubit --- $T_B((M\otimes\mathbf1)\rho(M\otimes\mathbf1)^\dagger)=(M\otimes\mathbf1)T_B(\rho)
+(M\otimes\mathbf1)^\dagger$ (\verb|pt2_conj_kronOne|), since $M$ acts only on the $A$ indices and $T_B$
+permutes only the $B$ indices --- so a local $A$-channel commutes with $T_B$ (\verb|pt2_krausMap_localA|).
+Composing this with the already-established trace-norm contractivity under any CPTP channel
+($\|\Phi(X)\|_1\le\|X\|_1$, \verb|traceNorm_krausMap_le|) gives
+$\|(\Phi_A\otimes\mathrm{id})\rho)^\Gamma\|_1\le\|\rho^\Gamma\|_1$ (\verb|traceNorm_pt2_localKraus_le|):
+the negativity cannot increase under a local operation on one party. With the exact Bell-pair value
+$\|(\Phi^+)^\Gamma\|_1=2$ this yields a genuine \textbf{one-shot distillation no-go}: a state with
+$\|\rho^\Gamma\|_1<2$ (negativity below the Bell-pair value $\tfrac12$) cannot be converted into a Bell
+pair by any local operation on one party (\verb|no_local_distillation_to_bellPair|) --- the honest,
+axiom-free operational content of ``local operations cannot create entanglement,'' with no LOCC
+abstraction and no asymptotic machinery. Kernel-only; \emph{zero} new project-local axioms.
+
 The third 6AK result (\verb|SpamProcessFidelity.lean|) completes the device-characterisation substrate.
 The state-preparation-and-measurement (SPAM) readout bit-flip channel $\Phi_q(\rho)=(1-q)\rho+qX\rho X$
 is the Pauli channel with weights $(1-q,q,0,0)$, so its diamond distance to the identity is exactly the

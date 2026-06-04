@@ -222,6 +222,35 @@ target** (genuinely open):
 that no clean non-trivial target is reachable without new substrate. **Risk:** HIGH/uncertain — and the
 6AK.2 surrogate already stands on its own, so this is genuinely optional. Do FU-1 first.
 
+### FU-3 — negativity is an entanglement monotone under local operations ✅ SHIPPED 2026-06-04
+
+**Status: SHIPPED, kernel-pure, NO new axioms.** New module `NegativityMonotone.lean`. Promotes the
+FU-2 negativity from a *computed number* to a proven **entanglement monotone**, and ships a one-shot
+distillation no-go — the first two rungs of the decomposition of the Vidal–Werner `E_D ≤ E_N` bound
+that AVOIDS formalising full LOCC theory. The only new ingredient is `pt2_conj_kronOne`: the
+second-qubit partial transpose commutes with a local `A`-channel (`M⊗1`), since `M` touches only the
+`A` indices and `T_B` only the `B` indices (a 64-case entrywise `fin_cases`). Composed with the
+*already-shipped* CPTP trace-norm contractivity (`traceNorm_krausMap_le`, 6AF-4), this gives:
+- `traceNorm_pt2_localKraus_le`: `‖((Φ_A⊗id)ρ)^Γ‖₁ ≤ ‖ρ^Γ‖₁` — negativity is non-increasing under a
+  local operation on one party (the monotone property);
+- `no_local_distillation_to_bellPair`: `‖ρ^Γ‖₁ < 2 ⟹` no local `A`-op converts `ρ` to a Bell pair —
+  a genuine one-shot no-go (axiom-free; no LOCC abstraction, no asymptotics).
+
+All `{propext, Classical.choice, Quot.sound}`. D6 §6 + preprint §3g prose; D6 compiles (11pp);
+axiom_closure GREEN; fresh-context Stage-13 GREEN.
+
+**Decomposition lesson (logged):** my first read called the `E_D ≤ E_N` monotonicity "needs the whole
+LOCC theory" — wrong (the assert-a-wall reflex). It decomposes into P5a (CPTP trace-norm contractivity,
+already shipped) + P5b (the partial-transpose/local-op commutation, one elementary lemma) + convexity +
+local-unitary invariance. The genuinely-hard residual shrinks to a single Fannes-type continuity lemma
+(rung 4) for the asymptotic `E_D ≤ E_N`; even that has a one-shot rung below it that needs none of it.
+**Open ladder (all public-disposition, textbook):** rung 3 tensor additivity `N(ρ⊗σ)=N(ρ)+N(σ)`;
+rung 4 asymptotic continuity of log-negativity; rung 5 regularized-rate corollary; and the genuinely-new
+target — a finite-dim repeaterless ENTANGLEMENT-distribution bound via Choi-state log-negativity +
+a finite channel-simulation layer (the bricks public; any productized certification is a separate
+private-side concern). NB the *secret-key* `−log₂(1−η)` value stays doubly-gapped (von Neumann
+entropy/REE absent even finite-dim, AND Gaussian/CV machinery absent) — 6AK.2 remains its honest form.
+
 ---
 
 ## Out of scope (keeps 6AK closeable)

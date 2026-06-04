@@ -402,6 +402,18 @@ distillability cutoff. The operational reading (negativity upper-bounds distilla
 two-way key rate) is the standard Vidal–Werner citation; the Lean content is the exact computed measure.
 Kernel-only; zero new project-local axioms.
 
+A follow-on (`NegativityMonotone.lean`) promotes the negativity to a proven **entanglement monotone**. The
+second-qubit partial transpose commutes with a local operation on the first qubit —
+`T_B((M⊗1)ρ(M⊗1)ᴴ) = (M⊗1)T_B(ρ)(M⊗1)ᴴ` (`pt2_conj_kronOne`), since `M` touches only the `A` indices and
+`T_B` permutes only the `B` indices — so a local `A`-channel commutes with `T_B` (`pt2_krausMap_localA`).
+Composing with the existing CPTP trace-norm contractivity (`‖Φ(X)‖₁ ≤ ‖X‖₁`, `traceNorm_krausMap_le`)
+gives `‖((Φ_A⊗id)ρ)^Γ‖₁ ≤ ‖ρ^Γ‖₁` (`traceNorm_pt2_localKraus_le`): negativity cannot increase under a
+local operation on one party. With the exact Bell-pair value `‖(Φ⁺)^Γ‖₁ = 2`, this gives a genuine
+**one-shot distillation no-go** — a state with `‖ρ^Γ‖₁ < 2` (negativity below the Bell-pair value `½`)
+cannot be converted to a Bell pair by any local operation on one party (`no_local_distillation_to_bellPair`)
+— the axiom-free operational content of "local operations cannot create entanglement," with no LOCC
+abstraction and no asymptotics. Kernel-only; zero new project-local axioms.
+
 The third 6AK result (`SpamProcessFidelity.lean`) completes the device-characterisation substrate. The
 SPAM readout bit-flip channel `Φ_q(ρ) = (1−q)ρ + q·XρX` is the Pauli channel with weights `(1−q,q,0,0)`,
 so its diamond distance to the identity is exactly the readout error probability

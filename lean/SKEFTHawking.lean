@@ -2718,6 +2718,9 @@ import SKEFTHawking.QuantumNetwork.QutritWeyl
 -- Phase 6AK Wave FU-2 (2026-06-03): two-qubit Bell-diagonal negativity + PPT criterion
 -- (partial transpose on the Bell-block substrate; Werner threshold at F = ½).
 import SKEFTHawking.QuantumNetwork.BellNegativity
+-- Phase 6AK Wave FU-3 (2026-06-04): negativity is an entanglement monotone under local operations
+-- (partial transpose commutes with a local channel; trace-norm contractivity) + one-shot no-go.
+import SKEFTHawking.QuantumNetwork.NegativityMonotone
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
