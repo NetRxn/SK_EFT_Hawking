@@ -131,7 +131,8 @@ kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
   `abs_sum_le_of_prefix : {d μ : Fin N→ℝ} (hd:Antitone d)(hpre:∀m,∑_{i<m}d≤∑_{i<m}μ)(htot:∑d=∑μ) ⊢
   ∑|dᵢ|≤∑|μᵢ|`. ⚠️ the one fiddly sub-step = `Antitone d → {i|0≤dᵢ} is the prefix {i|i<m}` (down-set in
   Fin N = initial segment); everything else is `max`-algebra + `Finset.sum_filter`. THIS REPLACES (a) Karamata.
-  **REVISED BUILD ORDER (next window):** (a′) `abs_sum_le_of_prefix` [elementary, ~50-70 lines]; (b) Lidskii–
+  **✅ `abs_sum_le_of_prefix` SHIPPED `f93f13e2`** (kernel-pure). So Mirsky now needs ONLY brick (b) below.
+  **REVISED BUILD ORDER (next window):** (a′) `abs_sum_le_of_prefix` [✅ DONE]; (b) Lidskii–
   Wielandt SORTED-d prefix `∑_{i<m}d↓ᵢ ≤ ∑_{i<m}λ↓ᵢ(A−B)` [the remaining OPERATOR brick — generalize
   `exists_proj_trace_eq`/`sum_top_subadditive` from prefix-subset to the sorted-d/arbitrary-subset form; the
   standard Lidskii argument]; (c) Mirsky = a′∘b + `traceNorm_eq_sum_abs_eigenvalues₀` (SHIPPED); (d) F2
