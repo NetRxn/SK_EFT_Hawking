@@ -5,6 +5,8 @@ import SKEFTHawking.QuantumNetwork.VonNeumannEntropy
 import Mathlib.Data.Fin.Tuple.Sort
 import Mathlib.Data.Finset.Sort
 import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
+import Mathlib.Analysis.Convex.SpecificFunctions.Deriv
+import Mathlib.Analysis.Calculus.MeanValue
 
 /-!
 # Toward Fannes–Audenaert entropy continuity (Phase 6AL, Wave 4, items F1b/F2/F3)
@@ -208,6 +210,128 @@ theorem negMulLog_add_le {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
         = Real.negMulLog (a + b) := by rw [← add_mul, hsum, one_mul]
     linarith [hca, hcb, hfac]
 
+/-- **Auxiliary convexity:** `δ ↦ δ·log δ − (1−δ)·log(1−δ)` is convex on `[0, ½]`. The second derivative
+`1/δ − 1/(1−δ)` is `≥ 0` there (since `δ ≤ 1−δ`). Used to prove the asymmetric entropy comparison
+`η(1−δ) ≤ η(δ)`. -/
+theorem mulLogDiff_convexOn :
+    ConvexOn ℝ (Set.Icc (0:ℝ) (1/2)) (fun δ => δ * Real.log δ - (1-δ) * Real.log (1-δ)) := by
+  set h : ℝ → ℝ := fun δ => δ * Real.log δ - (1-δ) * Real.log (1-δ) with hh
+  have hcont : Continuous h := by
+    rw [hh]
+    exact Real.continuous_mul_log.sub (Real.continuous_mul_log.comp (continuous_const.sub continuous_id))
+  have hHD : ∀ x : ℝ, 0 < x → x < 1 → HasDerivAt h (Real.log x + Real.log (1-x) + 2) x := by
+    intro x hx0 hx1
+    have hxne : x ≠ 0 := ne_of_gt hx0
+    have h1xne : (1 - x) ≠ 0 := by intro hh'; nlinarith
+    have hA : HasDerivAt (fun δ => δ * Real.log δ) (Real.log x + 1) x := Real.hasDerivAt_mul_log hxne
+    have hsub : HasDerivAt (fun δ : ℝ => 1 - δ) (-1) x := by simpa using (hasDerivAt_id x).const_sub 1
+    have hB : HasDerivAt (fun δ => (1 - δ) * Real.log (1 - δ)) ((Real.log (1-x) + 1) * (-1)) x :=
+      (Real.hasDerivAt_mul_log h1xne).comp x hsub
+    rw [hh]; convert hA.sub hB using 1; ring
+  have hHD' : ∀ x : ℝ, 0 < x → x < 1 →
+      HasDerivAt (fun δ => Real.log δ + Real.log (1-δ) + 2) (1/x - 1/(1-x)) x := by
+    intro x hx0 hx1
+    have hxne : x ≠ 0 := ne_of_gt hx0
+    have h1xne : (1 - x) ≠ 0 := by intro hh'; nlinarith
+    have hA : HasDerivAt (fun δ => Real.log δ) (1/x) x := by simpa using Real.hasDerivAt_log hxne
+    have hsub : HasDerivAt (fun δ : ℝ => 1 - δ) (-1) x := by simpa using (hasDerivAt_id x).const_sub 1
+    have hB : HasDerivAt (fun δ => Real.log (1 - δ)) ((1-x)⁻¹ * (-1)) x :=
+      (Real.hasDerivAt_log h1xne).comp x hsub
+    have hC : HasDerivAt (fun _ : ℝ => (2:ℝ)) 0 x := hasDerivAt_const x 2
+    convert (hA.add hB).add hC using 1; field_simp; ring
+  have hint : interior (Set.Icc (0:ℝ) (1/2)) = Set.Ioo 0 (1/2) := interior_Icc
+  have hderiv_eq : Set.EqOn (deriv h) (fun δ => Real.log δ + Real.log (1-δ) + 2) (Set.Ioo 0 (1/2)) :=
+    fun x hx => (hHD x hx.1 (by linarith [hx.2])).deriv
+  apply convexOn_of_deriv2_nonneg (convex_Icc _ _) hcont.continuousOn
+  · rw [hint]; exact fun x hx => (hHD x hx.1 (by linarith [hx.2])).differentiableAt.differentiableWithinAt
+  · rw [hint]
+    apply DifferentiableOn.congr (f := fun δ => Real.log δ + Real.log (1-δ) + 2)
+    · exact fun x hx => (hHD' x hx.1 (by linarith [hx.2])).differentiableAt.differentiableWithinAt
+    · exact fun x hx => hderiv_eq hx
+  · intro x hx
+    rw [hint] at hx
+    have heq2 : deriv^[2] h x = deriv (fun δ => Real.log δ + Real.log (1-δ) + 2) x := by
+      have hee : deriv h =ᶠ[nhds x] (fun δ => Real.log δ + Real.log (1-δ) + 2) := by
+        filter_upwards [isOpen_Ioo.mem_nhds hx] with y hy using hderiv_eq hy
+      simp only [Function.iterate_succ, Function.iterate_zero, Function.comp_apply, id]
+      exact hee.deriv_eq
+    rw [heq2, (hHD' x hx.1 (by linarith [hx.2])).deriv]
+    have hle : 1/(1-x) ≤ 1/x := one_div_le_one_div_of_le hx.1 (by linarith [hx.2])
+    linarith
+
+/-- **Asymmetric entropy comparison:** `η(1−δ) ≤ η(δ)` for `0 ≤ δ ≤ ½` (`η = negMulLog`). Equivalent to
+`h δ ≤ 0` where `h` is the convex `mulLogDiff_convexOn` function with `h(0)=h(½)=0`, so the convex `h` is
+`≤ max` of its endpoint values `= 0` on the segment `[0,½]`. -/
+theorem negMulLog_one_sub_le {δ : ℝ} (hδ0 : 0 ≤ δ) (hδ2 : δ ≤ 1/2) :
+    Real.negMulLog (1 - δ) ≤ Real.negMulLog δ := by
+  have hseg : δ ∈ segment ℝ (0:ℝ) (1/2) := by rw [segment_eq_Icc (by norm_num)]; exact ⟨hδ0, hδ2⟩
+  have hle := mulLogDiff_convexOn.le_on_segment (⟨le_refl 0, by norm_num⟩) (⟨by norm_num, le_refl _⟩) hseg
+  norm_num [Real.log_one] at hle
+  simp only [Real.negMulLog_def]
+  nlinarith [hle]
+
+/-- **Reverse modulus of `negMulLog`:** `η(x) − η(x+δ) ≤ η(δ)` for `0 ≤ x`, `x+δ ≤ 1`, `0 ≤ δ ≤ ½`. The
+map `y ↦ η(y) − η(y+δ)` has derivative `log(y+δ) − log y ≥ 0`, hence is monotone on `[0, 1−δ]`, so it is
+`≤` its value at `1−δ`, which is `η(1−δ) ≤ η(δ)` by `negMulLog_one_sub_le`. The companion of the
+unconditional subadditivity `negMulLog_add_le`; together they bound the entropy modulus of continuity. -/
+theorem negMulLog_sub_le {x δ : ℝ} (hx : 0 ≤ x) (hδ : 0 ≤ δ) (hxδ : x + δ ≤ 1) (hδ2 : δ ≤ 1/2) :
+    Real.negMulLog x - Real.negMulLog (x + δ) ≤ Real.negMulLog δ := by
+  set f : ℝ → ℝ := fun y => Real.negMulLog y - Real.negMulLog (y + δ) with hf
+  have hcont : Continuous f := by
+    rw [hf]
+    exact Real.continuous_negMulLog.sub
+      (Real.continuous_negMulLog.comp (continuous_id.add continuous_const))
+  have hHD : ∀ y : ℝ, 0 < y → 0 < y + δ → HasDerivAt f (Real.log (y+δ) - Real.log y) y := by
+    intro y hy0 hyδ0
+    have hyne : y ≠ 0 := ne_of_gt hy0
+    have hyδne : (y + δ) ≠ 0 := ne_of_gt hyδ0
+    have hA : HasDerivAt Real.negMulLog (-Real.log y - 1) y := Real.hasDerivAt_negMulLog hyne
+    have hadd : HasDerivAt (fun y : ℝ => y + δ) 1 y := by simpa using (hasDerivAt_id y).add_const δ
+    have hB := (Real.hasDerivAt_negMulLog hyδne).comp y hadd
+    rw [hf]; convert hA.sub hB using 1; ring
+  have hmono : MonotoneOn f (Set.Icc 0 (1 - δ)) := by
+    apply monotoneOn_of_deriv_nonneg (convex_Icc _ _) hcont.continuousOn
+    · rw [interior_Icc]
+      exact fun y hy => (hHD y hy.1 (by linarith [hy.1])).differentiableAt.differentiableWithinAt
+    · rw [interior_Icc]
+      intro y hy
+      rw [(hHD y hy.1 (by linarith [hy.1])).deriv]
+      have hlog : Real.log y ≤ Real.log (y + δ) := Real.log_le_log hy.1 (by linarith)
+      linarith
+  have hfle := hmono ⟨hx, by linarith⟩ ⟨by linarith, le_refl _⟩ (by linarith)
+  have hf1δ : f (1 - δ) = Real.negMulLog (1 - δ) := by
+    simp only [hf]
+    rw [show (1 - δ) + δ = (1:ℝ) by ring, Real.negMulLog_one, sub_zero]
+  rw [hf1δ] at hfle
+  exact hfle.trans (negMulLog_one_sub_le hδ hδ2)
+
+/-- **Entropy modulus of continuity (the per-term Fannes bound):** `|η(s) − η(t)| ≤ η(|s−t|)` for
+`s, t ∈ [0,1]` with `|s − t| ≤ ½` (`η = negMulLog`). Combines the unconditional subadditivity
+`negMulLog_add_le` (one sign) with the reverse modulus `negMulLog_sub_le` (the other). This is the per-term
+input `hmod` that discharges `fannes_entropy_bound_of_modulus`. -/
+theorem negMulLog_abs_sub_le {s t : ℝ} (hs : 0 ≤ s) (ht : 0 ≤ t) (hs1 : s ≤ 1) (ht1 : t ≤ 1)
+    (hst : |s - t| ≤ 1/2) :
+    |Real.negMulLog s - Real.negMulLog t| ≤ Real.negMulLog (|s - t|) := by
+  rcases le_total s t with h | h
+  · have habs : |s - t| = t - s := by rw [abs_of_nonpos (by linarith)]; ring
+    rw [habs] at hst ⊢
+    set δ := t - s with hδdef
+    have hδ0 : 0 ≤ δ := by rw [hδdef]; linarith
+    have hts : t = s + δ := by rw [hδdef]; ring
+    rw [hts, abs_le]
+    refine ⟨?_, ?_⟩
+    · have hadd := negMulLog_add_le hs hδ0; linarith
+    · exact negMulLog_sub_le hs hδ0 (by rw [← hts]; exact ht1) hst
+  · have habs : |s - t| = s - t := by rw [abs_of_nonneg (by linarith)]
+    rw [habs] at hst ⊢
+    set δ := s - t with hδdef
+    have hδ0 : 0 ≤ δ := by rw [hδdef]; linarith
+    have hst' : s = t + δ := by rw [hδdef]; ring
+    rw [hst', abs_le]
+    refine ⟨?_, ?_⟩
+    · have hsub := negMulLog_sub_le ht hδ0 (by rw [← hst']; exact hs1) hst; linarith
+    · have hadd := negMulLog_add_le ht hδ0; linarith
+
 /-- **Jensen bound for `negMulLog` (the Fannes concavity step):** `∑ᵢ η(δᵢ) ≤ d · η((∑ᵢ δᵢ)/d)` for
 `δᵢ ≥ 0`, `η = negMulLog`. Concavity of `negMulLog` (`ConcaveOn.le_map_sum` with uniform weights `1/d`)
 caps the entropy of the difference-magnitudes by the value at their mean. With `∑ᵢ δᵢ = 2T` this gives
@@ -250,6 +374,20 @@ theorem fannes_entropy_bound_of_modulus {d : ℕ} (hd : 0 < d) (p q : Fin d → 
     _ ≤ ∑ i, Real.negMulLog (|p i - q i|) := Finset.sum_le_sum (fun i _ => hmod i)
     _ ≤ (d : ℝ) * Real.negMulLog ((∑ i, |p i - q i|) / d) :=
         sum_negMulLog_le_card_mul hd (fun i => |p i - q i|) (fun i => abs_nonneg _)
+
+/-- **Classical Fannes entropy-continuity bound (unconditional, `[0,1]` distributions).** For
+`p, q : Fin d → [0,1]` with per-coordinate gap `|pᵢ − qᵢ| ≤ ½`, the Shannon-entropy difference obeys
+`|∑ᵢ η(pᵢ) − ∑ᵢ η(qᵢ)| ≤ d · η((∑ᵢ|pᵢ−qᵢ|)/d)`, the classical Fannes bound (`η = negMulLog`; with
+`∑ᵢ|pᵢ−qᵢ| = 2T` the RHS is `2T·log d + η(2T)`). The per-coordinate modulus `negMulLog_abs_sub_le`
+discharges the `hmod` hypothesis of `fannes_entropy_bound_of_modulus`; no hypothesis remains. This is the
+honest (Fannes, weaker constant `log d`) classical continuity estimate — distinct from the sharp Audenaert
+constant `log(d−1)`, which requires a maximization absent from Mathlib. -/
+theorem fannes_entropy_bound {d : ℕ} (hd : 0 < d) (p q : Fin d → ℝ)
+    (hp : ∀ i, 0 ≤ p i ∧ p i ≤ 1) (hq : ∀ i, 0 ≤ q i ∧ q i ≤ 1) (hdiff : ∀ i, |p i - q i| ≤ 1/2) :
+    |∑ i, Real.negMulLog (p i) - ∑ i, Real.negMulLog (q i)|
+      ≤ (d : ℝ) * Real.negMulLog ((∑ i, |p i - q i|) / d) :=
+  fannes_entropy_bound_of_modulus hd p q
+    (fun i => negMulLog_abs_sub_le (hp i).1 (hq i).1 (hp i).2 (hq i).2 (hdiff i))
 
 /-- **Von Neumann entropy as the Shannon entropy of the sorted spectrum:**
 `S(ρ) = ∑ₖ negMulLog(λ↓ₖ(ρ))`. Since `negMulLog`-sums are permutation-invariant, the entropy (defined over
