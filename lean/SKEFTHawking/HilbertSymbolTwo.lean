@@ -62,6 +62,22 @@ theorem isUnit_cast_ordCompl_two {n : ℕ} (hn : n ≠ 0) :
     (Nat.coprime_comm.mp ((Nat.prime_two.coprime_iff_not_dvd).mpr hodd))
   simpa using hcop2.pow_right 3
 
+/-- An **odd integer**, cast to `ZMod 8`, is a **unit** (coprime to `8 = 2³`). The signed (ℤ) version of
+`isUnit_cast_ordCompl_two`, for the signed dyadic Hilbert symbol. -/
+theorem isUnit_intCast_zmod8 {z : ℤ} (h : ¬ (2 : ℤ) ∣ z) : IsUnit ((z : ℤ) : ZMod 8) := by
+  have hcop : IsCoprime z (8 : ℤ) := by
+    have hz2 : IsCoprime z (2 : ℤ) := ((Int.prime_two.coprime_iff_not_dvd).mpr h).symm
+    rw [show (8 : ℤ) = 2 ^ 3 from by norm_num]
+    exact hz2.pow_right
+  obtain ⟨a, b, hab⟩ := hcop
+  refine IsUnit.of_mul_eq_one ((a : ℤ) : ZMod 8) ?_
+  have key : ((z : ℤ) : ZMod 8) * ((a : ℤ) : ZMod 8) = ((a * z : ℤ) : ZMod 8) := by
+    push_cast; ring
+  rw [key, show (a * z : ℤ) = 1 - b * 8 from by linear_combination hab]
+  push_cast
+  rw [show (8 : ZMod 8) = 0 from by decide]
+  ring
+
 /-- The **dyadic (`p = 2`) Hilbert symbol** on positive naturals, via the explicit ε/ω formula:
 `(a,b)_2 = (-1)^{ε(u)ε(v) + α·ω(v) + β·ω(u)}` with `α,β = v₂`, `u,v = ` odd parts (`ordCompl[2]`). -/
 def hilbert2Nat (a b : ℕ) : ℤ :=
