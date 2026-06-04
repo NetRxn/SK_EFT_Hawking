@@ -2795,6 +2795,10 @@ import SKEFTHawking.QuantumNetwork.GibbsVariational
 -- Phase 6AL Wave 2 (2026-06-04): negativity convexity N(∑pᵢρᵢ)≤∑pᵢN(ρᵢ) (B) + general-density
 -- strengthening (E): ‖A‖₁≥|tr A|, general negativity≥0, logNegativity_add without the ≠0 side-condition.
 import SKEFTHawking.QuantumNetwork.NegativityGeneral
+-- Phase 6AL Wave 3 (2026-06-04): subadditivity S(ρ_AB)≤S(ρ_A)+S(ρ_B) + mutual information I(A:B)≥0 (C),
+-- via the operator-log tensor identity log(ρ_A⊗ρ_B)=log ρ_A⊗1+1⊗log ρ_B (cfc_diagonal built here,
+-- cfc_kronecker absent from Mathlib) + Klein's inequality on the product reference.
+import SKEFTHawking.QuantumNetwork.EntropySubadditivity
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
