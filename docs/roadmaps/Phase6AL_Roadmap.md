@@ -91,6 +91,36 @@ OUT (unfolds `kronUnitary`'s proof) → use explicit `(continuous_const.mul cont
 
 ---
 
+## Wave 4 PROGRESS (2026-06-04)
+
+**Scout DONE** (anti-fencing protocol): Mathlib HAS `eigenvalues₀` (sorted-descending,
+`eigenvalues₀_antitone`), `binEntropy` (`binEntropy_continuous`, `strictConcave_binEntropy` on `Icc 0 1`),
+`trace_eq_sum_eigenvalues`, `Fin.card_filter_val_lt`. Mathlib has **NO** Ky Fan / Lidskii / Mirsky /
+eigenvalue-majorization / top-k machinery (grep-confirmed) — F is from-scratch, reachable, NO axiom.
+
+**F1a-core SHIPPED `5933d29d`** (`SpectralMajorization.lean`): `sum_mul_le_sum_top` — the rearrangement /
+fractional-knapsack inequality `∑ μᵢ pᵢ ≤ ∑_{i<k} μᵢ` for antitone `μ : Fin N → ℝ`, weights `pᵢ∈[0,1]`,
+`∑pᵢ=(k:ℝ)`. Kernel-pure. Proof: threshold `c=μ_{k-1}`, `∑μp−∑_{i<k}μ = ∑(μᵢ−c)(pᵢ−[i<k])`, each term ≤0,
+cross-term killed by `∑(pᵢ−[i<k])=0`. (`Finset.sum_boole`+`Fin.card_filter_val_lt`+`min_eq_right` for the
+indicator sum; `Fin.le_def`+`omega` for antitone-threshold comparisons.)
+
+**REMAINING (precise, for next context):**
+- **F1a-projection brick** (next): `proj_diag_re_mem_Icc` — diagonal entries of a Hermitian idempotent `Q`
+  (`Q*Q=Q`, `Qᴴ=Q`) lie in `[0,1]` (real). Key: `Q j j = ∑ₗ |Qₗⱼ|²` (via `← hQ`, `mul_apply`,
+  `hQh.apply j l`); `re ≥ 0` immediate; `re ≤ 1` from `re ≥ |Q j j|² = re²` (diag real). ⚠️ LESSON: `hQh.apply
+  j l : Q j l = star (Q l j)` uses `star` but `Complex.normSq_eq_conj_mul_self` uses `starRingEnd`/`conj` —
+  defeq but `rw` fails on the atom mismatch; close per-term with `simp [Complex.normSq_eq_conj_mul_self, …]`
+  not bare `rw`, and get diag-real via `Complex.star_re/star_im` (NOT `conj_re/conj_im`).
+- **F1a Ky Fan**: `tr(P·A) ≤ ∑_{i<k} λ↓ᵢ(A)` for rank-k projection P. `A=U diag(λ) Uᴴ` (spectral_theorem);
+  `tr(PA)=tr(UᴴPU·diag λ)=∑ⱼ (UᴴPU)ⱼⱼ·λⱼ`; `Q:=UᴴPU` is a projection (proj_diag brick gives weights∈[0,1],
+  ∑=tr P=k); feed `sum_mul_le_sum_top`. ⚠️ must relate `hA.eigenvalues` (unsorted) to `eigenvalues₀` (sorted)
+  via the sorting permutation — likely the fiddliest sub-step; OR restate Ky Fan directly with `eigenvalues₀`.
+- **F1b Lidskii→Mirsky**: `∑ᵢ|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖₁`. From Ky Fan get `λ↓(A)−λ↓(B) ≺ λ(A−B)`, then
+  convex-majorization (`∑|·|` is a sum of convex fns of the majorized vector). `traceNorm_hermitian=∑|λᵢ|` present.
+- **F2 classical Fannes–Audenaert**: `|∑negMulLog(pᵢ)−∑negMulLog(qᵢ)| ≤ T·log(d−1)+H₂(T)`, `∑|pᵢ−qᵢ|=2T`.
+  Pure real analysis; `binEntropy`/`negMulLog` concavity toe-holds present.
+- **F3 quantum assembly**: `S=∑negMulLog(eigenvalues)` + sorted spectra + F1b + F2.
+
 ## Wave 4 — Fannes–Audenaert continuity (upstream-infra BUILD wave)
 
 - **F — Fannes–Audenaert entropy continuity** `|S(ρ) − S(σ)| ≤ T·log(d−1) + H₂(T)`, `T = ½‖ρ−σ‖₁`.
