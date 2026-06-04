@@ -806,6 +806,20 @@ exact endpoints $F_{\mathrm{avg}}=1$ at $t=0$ and floor $\tfrac12$ as $t\to\inft
 (\verb|_le_one|, \verb|_ge_half|): a longer gate on fixed-coherence hardware cannot achieve higher
 average gate fidelity. Kernel-only; \emph{zero} new project-local axioms.
 
+The second 6AK result (\verb|ErrorBasisDiamond.lean|) lifts the single-qubit Pauli exact diamond
+distance (6AH.2) to a \textbf{dimension-general unitary-error-basis} theorem. For any family
+$\{U_i\}_{i=0}^{M}$ of unitaries on $\mathbb C^n$ with $U_0=\mathbf1$ and Hilbert--Schmidt
+orthogonality $\mathrm{tr}(U_i^\dagger U_j)=n\,\delta_{ij}$, the channel
+$\Phi_p(\rho)=\sum_i p_i\,U_i\rho U_i^\dagger$ has exact diamond distance to the identity equal to its
+total error probability, \verb|diamondDist_errorBasisKraus_eq|:
+$\|\Phi_p-\mathrm{id}\|_\diamond = 1-p_0$. The proof is the $n$-general Bell-block argument
+($B_iB_j=n\delta_{ij}B_i$, $\mathrm{tr}\,B_i=n$, optimal dual witness $W=\sum_{i\ge1}p_iB_i$ with
+$\mathrm{Tr}_2W=(1-p_0)\mathbf1$). Two instances are shipped: the single-qubit Pauli channel is the
+$n=2$ case (\verb|diamondDist_pauliKraus_eq_of_errorBasis|, re-deriving 6AH.2), and the
+\textbf{two-qubit Pauli channel} ($16$ weights $\sigma_i\otimes\sigma_j$) is the $n=4$ case
+(\verb|diamondDist_twoQubitPauliKraus_eq|): $\|\Phi_p-\mathrm{id}\|_\diamond = 1-p_{00}$, covering the
+dominant two-qubit-gate / crosstalk error model. Kernel-only; \emph{zero} new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}

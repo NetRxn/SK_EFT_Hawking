@@ -628,6 +628,7 @@ import SKEFTHawking.MugerCenter
 import SKEFTHawking.A1Ring
 import SKEFTHawking.A1Resolution
 import SKEFTHawking.A1Ext
+import SKEFTHawking.A1ExtSubstantive
 import SKEFTHawking.ExtBordismBridge
 import SKEFTHawking.ChangeOfRings
 import SKEFTHawking.FKGappedInterface
@@ -2701,6 +2702,8 @@ import SKEFTHawking.QuantumNetwork.DiamondSDPAttainment
 import SKEFTHawking.QuantumNetwork.DiamondSDPDuality
 -- Phase 6AK Wave 6AK.1 (2026-06-03): coherence-limited average-gate-fidelity ceiling.
 import SKEFTHawking.QuantumNetwork.CoherenceFidelity
+-- Phase 6AK Wave 6AK.3 (2026-06-03): unitary-error-basis exact diamond distance (two-qubit Pauli).
+import SKEFTHawking.QuantumNetwork.ErrorBasisDiamond
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
