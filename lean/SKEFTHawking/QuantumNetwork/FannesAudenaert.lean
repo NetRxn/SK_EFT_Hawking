@@ -1,8 +1,10 @@
 import SKEFTHawking.QuantumNetwork.SpectralMajorization
 import SKEFTHawking.QuantumNetwork.MixedState
 import SKEFTHawking.QuantumNetwork.WielandtLidskii
+import SKEFTHawking.QuantumNetwork.VonNeumannEntropy
 import Mathlib.Data.Fin.Tuple.Sort
 import Mathlib.Data.Finset.Sort
+import Mathlib.Analysis.SpecialFunctions.BinaryEntropy
 
 /-!
 # Toward Fannes–Audenaert entropy continuity (Phase 6AL, Wave 4, items F1b/F2/F3)
@@ -179,5 +181,50 @@ theorem mirsky_of_wielandt_frame {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (
       = (∑ i ∈ S, hA.eigenvalues₀ i) - ∑ i ∈ S, hB.eigenvalues₀ i := by rw [Finset.sum_sub_distrib]
     _ ≤ ∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < S.card),
           hC.eigenvalues₀ i := by linarith [key]
+
+/-- **Von Neumann entropy as the Shannon entropy of the sorted spectrum:**
+`S(ρ) = ∑ₖ negMulLog(λ↓ₖ(ρ))`. Since `negMulLog`-sums are permutation-invariant, the entropy (defined over
+the unsorted eigenvalues) equals the sum over the descending-sorted `eigenvalues₀`. This is the bridge that
+lets the classical Fannes–Audenaert bound — applied to the eigenvalue *distributions* — read directly as a
+statement about `vonNeumannEntropy`. -/
+theorem vonNeumannEntropy_eq_sum_negMulLog_eigenvalues₀ {ρ : Matrix ι ι ℂ} (hρ : ρ.IsHermitian) :
+    vonNeumannEntropy hρ = ∑ k, Real.negMulLog (hρ.eigenvalues₀ k) := by
+  rw [vonNeumannEntropy]
+  exact sum_eigenvalues_eq_sum_eigenvalues₀ hρ Real.negMulLog
+
+/-- **Quantum Fannes–Audenaert continuity, reduced to Mirsky + classical Fannes–Audenaert (F3 assembly).**
+Given (i) the Mirsky trace-norm spectral bound `∑ₖ|λ↓ₖ(ρ)−λ↓ₖ(σ)| ≤ ‖ρ−σ‖₁` (the F1b content, staged on the
+Wielandt frame-existence hypothesis `Hframe` via `mirsky_of_wielandt_frame`), and (ii) the classical
+Fannes–Audenaert inequality applied to the two eigenvalue distributions — `|S(ρ)−S(σ)| ≤ H_d(Tλ)` where
+`Tλ = ½∑ₖ|λ↓ₖ(ρ)−λ↓ₖ(σ)|` is the spectral total-variation distance and `H_d = Real.qaryEntropy d` is the
+Audenaert envelope `T·log(d−1)+h(T)` (the F2 content) — the quantum continuity bound in *trace distance*
+follows: `|S(ρ)−S(σ)| ≤ H_d(½‖ρ−σ‖₁)`.
+
+The coupling is the strict monotonicity of `qaryEntropy` on `[0, 1−1/d]` (`qaryEntropy_strictMonoOn`): Mirsky
+gives `Tλ ≤ ½‖ρ−σ‖₁`, and on the increasing branch the bound transports from the (smaller) spectral
+total-variation to the (larger) trace distance. The hypothesis `½‖ρ−σ‖₁ ≤ 1−1/d` keeps both distances on that
+branch (outside it the trivial `|S(ρ)−S(σ)| ≤ log d` ceiling already applies). This stages F3 entirely on the
+two precise, decomposition-backed F-residuals (`Hframe` for Mirsky, the classical Audenaert inequality for F2),
+both isolated as named hypotheses; all assembly — entropy↔spectrum bridge, Mirsky transport, monotone
+envelope — is discharged here. -/
+theorem quantum_fannes_audenaert_of_mirsky {ρ σ : Matrix ι ι ℂ} (hρ : ρ.IsHermitian) (hσ : σ.IsHermitian)
+    (hd : 2 ≤ Fintype.card ι)
+    (hTV : traceNorm (ρ - σ) / 2 ≤ 1 - 1 / (Fintype.card ι : ℝ))
+    (hMirsky : ∑ k, |hρ.eigenvalues₀ k - hσ.eigenvalues₀ k| ≤ traceNorm (ρ - σ))
+    (hAud : |vonNeumannEntropy hρ - vonNeumannEntropy hσ|
+              ≤ Real.qaryEntropy (Fintype.card ι)
+                  ((∑ k, |hρ.eigenvalues₀ k - hσ.eigenvalues₀ k|) / 2)) :
+    |vonNeumannEntropy hρ - vonNeumannEntropy hσ|
+      ≤ Real.qaryEntropy (Fintype.card ι) (traceNorm (ρ - σ) / 2) := by
+  refine hAud.trans ?_
+  set TL := (∑ k, |hρ.eigenvalues₀ k - hσ.eigenvalues₀ k|) / 2 with hTL
+  set Ts := traceNorm (ρ - σ) / 2 with hTs
+  have hTL_nonneg : 0 ≤ TL := by rw [hTL]; positivity
+  have hle : TL ≤ Ts := by rw [hTL, hTs]; linarith [hMirsky]
+  have hTs_mem : Ts ∈ Set.Icc (0 : ℝ) (1 - 1 / (Fintype.card ι : ℝ)) :=
+    ⟨le_trans hTL_nonneg hle, hTV⟩
+  have hTL_mem : TL ∈ Set.Icc (0 : ℝ) (1 - 1 / (Fintype.card ι : ℝ)) :=
+    ⟨hTL_nonneg, le_trans hle hTV⟩
+  exact (Real.qaryEntropy_strictMonoOn hd).monotoneOn hTL_mem hTs_mem hle
 
 end SKEFTHawking.QuantumNetwork
