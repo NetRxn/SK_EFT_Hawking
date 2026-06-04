@@ -24,7 +24,7 @@ import SKEFTHawking.MultivarPoissonDescent
 namespace SKEFTHawking
 
 open Matrix Complex MeasureTheory
-open scoped Real
+open scoped Real MatrixOrder
 
 /-- Coordinates of the standard integer lattice: the underlying vector of `(basisFun.restrictScalars ℤ).equivFun.symm v`
 is `fun i => (v i : ℝ)`. (Each `v ↦ ∑ᵢ vᵢ • basisFun i = fun j => (v j : ℝ)`.) -/
@@ -280,5 +280,36 @@ theorem gaussian_hLsum {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG
   rw [← ENNReal.ofReal_tsum_of_nonneg (fun γ => by positivity)
     ((summable_lattice_gaussian hcpos).mul_left _)]
   exact ENNReal.ofReal_ne_top
+
+/-- **The Gaussian's lattice-Fourier integral via [Θ2]** (the keystone of the S-transform): with `b = -iπσ`
+(`b.re = π Im σ > 0`) and character coefficient `cᵢ = 2πi(-nᵢ)`, the lattice-Fourier integral of `gaussianCM σ G`
+is the anisotropic Gaussian integral `integral_cexp_neg_quadratic_form`. -/
+theorem latFourier_gaussianCM {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef)
+    (hσ : 0 < σ.im) (n : Fin d → ℤ) :
+    latFourier (gaussianCM σ G) n
+      = (Real.sqrt G.det : ℂ)⁻¹ * (((Real.pi : ℂ) / (-((π : ℂ) * I * σ))) ^ ((d : ℂ) / 2)
+        * Complex.exp ((∑ i, ((fun j => 2 * (π : ℂ) * I * ((-(n j) : ℝ) : ℂ)) ᵥ*
+            ((CFC.sqrt G)⁻¹.map (Complex.ofReal))) i ^ 2) / (4 * (-((π : ℂ) * I * σ))))) := by
+  have hbre : 0 < (-((π : ℂ) * I * σ)).re := by
+    simp only [neg_re, Complex.mul_re, Complex.mul_im, Complex.ofReal_re, Complex.ofReal_im,
+      Complex.I_re, Complex.I_im]
+    have := Real.pi_pos
+    nlinarith [this, hσ]
+  rw [latFourier]
+  have hcongr : (fun x : Fin d → ℝ => Complex.exp (2 * (π : ℂ) * I * ((∑ i, (-(n i) : ℝ) * x i : ℝ) : ℂ))
+        * gaussianCM σ G x)
+      = (fun x : Fin d → ℝ => Complex.exp (-(-((π : ℂ) * I * σ)) * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ)
+          + ∑ i, (fun j => 2 * (π : ℂ) * I * ((-(n j) : ℝ) : ℂ)) i * (x i : ℂ))) := by
+    funext x
+    rw [gaussianCM_apply, ← Complex.exp_add]
+    congr 1
+    have hchar : 2 * (π : ℂ) * I * ((∑ i, (-(n i) : ℝ) * x i : ℝ) : ℂ)
+        = ∑ i, (2 * (π : ℂ) * I * ((-(n i) : ℝ) : ℂ)) * (x i : ℂ) := by
+      rw [Complex.ofReal_sum, Finset.mul_sum]
+      refine Finset.sum_congr rfl fun i _ => ?_
+      push_cast; ring
+    rw [hchar]; ring
+  rw [hcongr]
+  exact integral_cexp_neg_quadratic_form hG hbre (fun j => 2 * (π : ℂ) * I * ((-(n j) : ℝ) : ℂ))
 
 end SKEFTHawking
