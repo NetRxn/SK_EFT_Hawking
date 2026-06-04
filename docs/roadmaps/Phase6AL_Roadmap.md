@@ -93,6 +93,35 @@ OUT (unfolds `kronUnitary`'s proof) → use explicit `(continuous_const.mul cont
 
 ## Wave 4 PROGRESS (2026-06-04)
 
+### 🧭 ROUTE DECISION (2026-06-04 session 2, post-compaction — two proof-strategy + API scouts)
+**The Mirsky bridge `λ↓(A)−λ↓(B) ≺_w λ(C)` is settled to ONE route after eliminating three.** Decompose-before-walls
+applied to the LW crux itself (a dedicated matrix-analysis strategy scout + two Mathlib API scouts):
+- **❌ fact-2 / doubly-stochastic-kernel route is a STRUCTURAL dead-end for the bridge.** `eigenvalue_eq_doublyStochastic_combination`
+  controls `(a−b)` where `a=λ(A)` in EIGENVECTOR order and `b=`B smeared onto A's diagonal (`b≺λ(B)`); **sorting breaks
+  the stochastic kernel**, so no choice of subset reaches the *sorted* difference. Proves only a Schur–Horn-flavored bound.
+  ⟹ A new lemma `subset_sum_diag_diff_le` (the arbitrary-subset DS-image bound `∑_{i∈S}(aᵢ−bᵢ)≤∑topk(C)`) was BUILT this
+  session (compiles, kernel-pure) but is **OFF the critical path** — held UNCOMMITTED pending whether route (c) consumes it;
+  keep only as Schur–Horn infra if genuinely reused, else drop (no orphan ships).
+- **❌ single-D "holy grail" (`λ↓(A)−λ↓(B)=D·λ(C)`, D doubly stochastic) is CIRCULAR** — D exists only via converse-HLP /
+  T-transforms, which are *downstream* of the majorization we want. No natural D from matrix structure. Skip.
+- **❌ exterior/additive-compound route** (`D_k(A)` has subset-sum spectrum, linear in A → Weyl on `D_k`) needs additive-compound
+  spectral theory **absent from Mathlib** (`ExteriorPower` exists but NO spectrum-of-compound result). 8–12 lemmas + missing
+  substrate. Skip.
+- **✅ ROUTE (c) — WIELANDT FRAME-REUSE (4–5 lemmas, no axiom):**
+  1. **Ky-Fan-for-frames** ≈ HAVE — repackage `trace_mul_proj_le`: orthonormal k-frame `{wᵣ}` (⟺ rank-k proj `P=∑wᵣwᵣᴴ`)
+     ⟹ `∑ᵣ⟨wᵣ,Xwᵣ⟩ = tr(PX).re ≤ ∑_{j<k}λ↓ⱼ(X)`.
+  2. **Projection/frame-existence (THE one hard brick):** for k-subset `S`, ∃ rank-k orthogonal projection `P` with
+     `tr(PA).re ≥ ∑_{i∈S}λ↓ᵢ(A)` AND `tr(PB).re ≤ ∑_{i∈S}λ↓ᵢ(B)`, via a `finrank` subspace-intersection count
+     (`Submodule.finrank_sup_add_finrank_inf_eq` — `dim(U⊓V) ≥ dim U + dim V − n`) on A's top-eigenspace ∩ B's complement family.
+  3. **Assembly:** `∑_S λ↓(A) − ∑_S λ↓(B) ≤ tr(PC).re ≤ ∑_{j<k}λ↓(C)` (brick-1 Ky Fan on C); then `max over S` gives
+     `∑_{i<k}(λ↓(A)−λ↓(B))↓ ≤ ∑_{i<k}λ↓(C)` (GOAL/weak-majorization); feed shipped `abs_sum_le_of_prefix` → **Mirsky**.
+  ⚠️ **Quantify over ALL subsets S** (don't pre-commit to S=top-k of δ) — `∑_{i<k}δ↓ = max_{|S|=k}∑_{i∈S}δ`, RHS S-independent.
+  **High-leverage API check IN FLIGHT:** whether Mathlib eigenvector `OrthonormalBasis`+`finrank` lets brick-2's intersection
+  frame be CONSTRUCTED concretely (Gram–Schmidt in a known subspace) vs an abstract intersection lemma. Determines brick-2 cost.
+  Strategist rates brick-2 the only genuinely hard lemma; everything else is facts 1/3 + max-over-S + shipped Mirsky-reduction.
+- **F2 toehold UPGRADE:** Mathlib `Real.qaryEntropy q p = p·log(q−1)+binEntropy p` with `strictConcaveOn_qaryEntropy` +
+  `qaryEntropy_continuous` is EXACTLY the FA RHS shape `T·log(d−1)+H₂(T)` — materially de-risks F2. Plus `dist_eq_of_L1` (total var).
+
 **Scout DONE** (anti-fencing protocol): Mathlib HAS `eigenvalues₀` (sorted-descending,
 `eigenvalues₀_antitone`), `binEntropy` (`binEntropy_continuous`, `strictConcave_binEntropy` on `Icc 0 1`),
 `trace_eq_sum_eigenvalues`, `Fin.card_filter_val_lt`. Mathlib has **NO** Ky Fan / Lidskii / Mirsky /
