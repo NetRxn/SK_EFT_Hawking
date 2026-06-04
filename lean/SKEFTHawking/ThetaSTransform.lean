@@ -101,4 +101,12 @@ theorem gaussian_translate_aesm {d : ℕ} (σ : ℂ) (G : Matrix (Fin d) (Fin d)
   simp only [gaussianCM, ContinuousMap.coe_mk]
   fun_prop
 
+/-- **Norm of the Gaussian**: `‖exp(iπσ·yᵀGy)‖ = exp(-π·Im σ·yᵀGy)`. The decay rate underpinning the
+summability of the Gaussian's lattice translates (hF/hsum). -/
+theorem norm_gaussianCM {d : ℕ} (σ : ℂ) (G : Matrix (Fin d) (Fin d) ℝ) (y : Fin d → ℝ) :
+    ‖gaussianCM σ G y‖ = Real.exp (-(π * σ.im * (y ⬝ᵥ G *ᵥ y))) := by
+  rw [gaussianCM_apply, Complex.norm_exp]
+  congr 1
+  simp [Complex.mul_re, Complex.mul_im]
+
 end SKEFTHawking
