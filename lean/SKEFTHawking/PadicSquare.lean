@@ -213,9 +213,9 @@ theorem exists_diag_nary_zero_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {n : �
 `k = x.valuation` and `‖u‖ = 1` (so `u` is a unit of the value ring `ℤ_[p]`). The starting point for
 normalizing a diagonal form's weights to square-class representatives `unit` / `p · unit` at a `p`-adic place. -/
 theorem padic_valuation_decomp {p : ℕ} [Fact p.Prime] {x : ℚ_[p]} (hx : x ≠ 0) :
-    ∃ (k : ℤ) (u : ℚ_[p]), ‖u‖ = 1 ∧ x = (p : ℚ_[p]) ^ k * u := by
+    ∃ u : ℚ_[p], ‖u‖ = 1 ∧ x = (p : ℚ_[p]) ^ x.valuation * u := by
   have hp0 : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
-  refine ⟨x.valuation, x * (p : ℚ_[p]) ^ (-x.valuation), ?_, ?_⟩
+  refine ⟨x * (p : ℚ_[p]) ^ (-x.valuation), ?_, ?_⟩
   · rw [norm_mul, norm_zpow, Padic.norm_p, Padic.norm_eq_zpow_neg_valuation hx, inv_zpow]
     exact mul_inv_cancel₀ (zpow_ne_zero _ (by exact_mod_cast (Fact.out : p.Prime).ne_zero))
   · rw [mul_comm ((p : ℚ_[p]) ^ x.valuation) (x * (p : ℚ_[p]) ^ (-x.valuation)), mul_assoc,
@@ -248,6 +248,50 @@ theorem exists_diag_ternary_zero_odd_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 
     push_cast at h
     rw [ha', hb', hc'] at h
     exact h
+
+/-- **Same-valuation-parity ternary isotropy over `ℚ_[p]` (odd `p`).** Three nonzero coefficients whose
+`p`-adic valuations share a parity give an isotropic ternary form. Normalize each `wᵢ = p^vᵢ·uᵢ` by the
+square substitution `xᵢ ↦ p^(−vᵢ/2)·yᵢ`, sending its valuation to `vᵢ % 2 = ε` (common by parity); factor the
+constant `p^ε`; the residual unit ternary is isotropic (`exists_diag_ternary_zero_odd_padic`). -/
+theorem exists_ternary_zero_same_parity_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b c : ℚ_[p]}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hab : a.valuation % 2 = b.valuation % 2)
+    (hbc : b.valuation % 2 = c.valuation % 2) :
+    ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ a * x ^ 2 + b * y ^ 2 + c * z ^ 2 = 0 := by
+  have hp0 : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  obtain ⟨ua, hua, hae⟩ := padic_valuation_decomp ha
+  obtain ⟨ub, hub, hbe⟩ := padic_valuation_decomp hb
+  obtain ⟨uc, huc, hce⟩ := padic_valuation_decomp hc
+  obtain ⟨y0, y1, y2, hnz, hzero⟩ := exists_diag_ternary_zero_odd_padic hp hua hub huc
+  have key : ∀ (v : ℤ) (u yv : ℚ_[p]),
+      ((p : ℚ_[p]) ^ v * u) * ((p : ℚ_[p]) ^ (-(v / 2)) * yv) ^ 2
+        = (p : ℚ_[p]) ^ (v % 2) * (u * yv ^ 2) := by
+    intro v u yv
+    have hvd : v + (-(v / 2) + -(v / 2)) = v % 2 := by omega
+    have h2 : ((p : ℚ_[p]) ^ (-(v / 2)) * yv) ^ 2
+        = (p : ℚ_[p]) ^ (-(v / 2) + -(v / 2)) * yv ^ 2 := by
+      rw [mul_pow, pow_two, ← zpow_add₀ hp0]
+    have hL : (p : ℚ_[p]) ^ (v + (-(v / 2) + -(v / 2))) * (u * yv ^ 2)
+        = (p : ℚ_[p]) ^ v * u * ((p : ℚ_[p]) ^ (-(v / 2) + -(v / 2)) * yv ^ 2) := by
+      rw [zpow_add₀ hp0]; ring
+    rw [h2, ← hL, hvd]
+  set va := a.valuation with hva
+  set vb := b.valuation with hvb
+  set vc := c.valuation with hvc
+  refine ⟨(p : ℚ_[p]) ^ (-(va / 2)) * y0, (p : ℚ_[p]) ^ (-(vb / 2)) * y1,
+          (p : ℚ_[p]) ^ (-(vc / 2)) * y2, ?_, ?_⟩
+  · rintro ⟨hx0, hy0, hz0⟩
+    refine hnz ⟨?_, ?_, ?_⟩
+    · rcases mul_eq_zero.mp hx0 with h | h
+      · exact absurd h (zpow_ne_zero _ hp0)
+      · exact h
+    · rcases mul_eq_zero.mp hy0 with h | h
+      · exact absurd h (zpow_ne_zero _ hp0)
+      · exact h
+    · rcases mul_eq_zero.mp hz0 with h | h
+      · exact absurd h (zpow_ne_zero _ hp0)
+      · exact h
+  · rw [hae, hbe, hce, key va ua y0, key vb ub y1, key vc uc y2, ← hab, ← hab.trans hbc,
+      ← mul_add, ← mul_add, hzero, mul_zero]
 
 /-- **Parity pigeonhole.** Among `n ≥ 5` indices each assigned a parity in `ZMod 2`, three distinct ones
 share the same parity (`2·2 = 4 < 5 ≤ n`). Used to find a same-valuation-parity ternary sub-block in a
