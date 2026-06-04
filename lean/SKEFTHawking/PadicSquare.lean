@@ -1292,4 +1292,17 @@ theorem isSquare_residue_of_solvable_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 
   rw [hcoeff] at hsol
   exact (solvable_padic_odd_iff_residue hp hpa hpc).mp hsol
 
+/-- **`∃ t, b ∣ t² − a` from local solvability at the odd primes (squarefree `b`).** Composes
+`isSquare_residue_of_solvable_padic` (per odd prime) with `exists_dvd_sq_sub_of_odd_residue` (CRT). This is
+the exact input `descent_construct` requires, derived from the descent's local-solvability invariant. -/
+theorem exists_dvd_sq_sub_of_locally_solvable {a b : ℤ} (hsf : Squarefree b.natAbs)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], p ≠ 2 → (p : ℤ) ∣ b → ¬ (p : ℤ) ∣ a →
+      ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+        z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) :
+    ∃ t : ℤ, b ∣ (t ^ 2 - a) := by
+  apply exists_dvd_sq_sub_of_odd_residue hsf
+  intro p hp hp2 hpb hpa
+  haveI : Fact p.Prime := ⟨hp⟩
+  exact isSquare_residue_of_solvable_padic hp2 hsf hpa hpb (hloc p hp2 hpb hpa)
+
 end SKEFTHawking
