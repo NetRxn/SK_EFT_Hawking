@@ -154,4 +154,61 @@ theorem conj_proj_idempotent (U : ↥(unitary (Matrix ι ι ℂ))) {P : Matrix �
     _ = star u * (P * P) * u := by rw [hUU]; noncomm_ring
     _ = star u * P * u := by rw [hP]
 
+/-- **Ky Fan maximum principle (≤ direction):** for a Hermitian `A` and a rank-`k` orthogonal projection
+`P` (`P*P=P`, `Pᴴ=P`, `tr P = k`), `tr(P·A) ≤ ∑_{i<k} λ↓ᵢ(A)` (the sum of the `k` largest eigenvalues).
+The eigenprojection achieves equality, so this is the `max`; we only need the bound for Fannes–Audenaert. -/
+theorem trace_mul_proj_le {A : Matrix ι ι ℂ} (hA : A.IsHermitian) {P : Matrix ι ι ℂ}
+    (hPh : P.IsHermitian) (hP : P * P = P) (k : ℕ) (hPk : P.trace.re = (k : ℝ)) :
+    (P * A).trace.re ≤ ∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < k),
+        hA.eigenvalues₀ i := by
+  set U := hA.eigenvectorUnitary with hU
+  set Q : Matrix ι ι ℂ := star (↑U : Matrix ι ι ℂ) * P * (↑U : Matrix ι ι ℂ) with hQ
+  have hQh : Q.IsHermitian := conj_proj_isHermitian U hPh
+  have hQidem : Q * Q = Q := conj_proj_idempotent U hP
+  set w : ι → ℝ := fun j => (Q j j).re with hw
+  have hw0 : ∀ j, 0 ≤ w j := fun j => (proj_diag_re_mem_Icc hQh hQidem j).1
+  have hw1 : ∀ j, w j ≤ 1 := fun j => (proj_diag_re_mem_Icc hQh hQidem j).2
+  -- tr Q = tr P (cyclicity + unitarity)
+  have hQtr : Q.trace = P.trace := by
+    rw [hQ, Matrix.trace_mul_comm, ← mul_assoc, (Unitary.mem_iff.mp U.2).2, one_mul]
+  have hwsum : ∑ j, w j = (k : ℝ) := by
+    have : (∑ j, w j : ℝ) = (∑ j, Q j j).re := by rw [hw, Complex.re_sum]
+    rw [this, show (∑ j, Q j j) = Q.trace from rfl, hQtr, hPk]
+  -- spectral expansion: tr(P A).re = ∑ⱼ wⱼ λⱼ
+  set D : Matrix ι ι ℂ := Matrix.diagonal (RCLike.ofReal ∘ hA.eigenvalues) with hD
+  have hAspec : A = (↑U : Matrix ι ι ℂ) * D * star (↑U : Matrix ι ι ℂ) := by
+    rw [hD, hU]
+    conv_lhs => rw [hA.spectral_theorem]
+    rw [Unitary.conjStarAlgAut_apply]
+  have hPA : (P * A).trace.re = ∑ j, w j * hA.eigenvalues j := by
+    conv_lhs => rw [hAspec]
+    have hcyc : (P * ((↑U : Matrix ι ι ℂ) * D * star (↑U : Matrix ι ι ℂ))).trace
+        = (Q * D).trace := by
+      rw [hQ, show P * ((↑U : Matrix ι ι ℂ) * D * star (↑U : Matrix ι ι ℂ))
+          = (P * ↑U * D) * star (↑U : Matrix ι ι ℂ) from by noncomm_ring,
+        Matrix.trace_mul_comm]
+      congr 1; noncomm_ring
+    rw [hcyc, Matrix.trace, Complex.re_sum]
+    refine Finset.sum_congr rfl fun j _ => ?_
+    rw [Matrix.diag_apply, hD, Matrix.mul_diagonal, Function.comp_apply,
+      RCLike.ofReal_eq_complex_ofReal, Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im,
+      mul_zero, sub_zero]
+  -- reindex to the sorted (antitone) eigenvalues and apply the rearrangement inequality
+  set e : Fin (Fintype.card ι) ≃ ι := Fintype.equivOfCardEq (Fintype.card_fin _) with he
+  have heigE : ∀ kk, hA.eigenvalues (e kk) = hA.eigenvalues₀ kk := by
+    intro kk
+    show hA.eigenvalues₀ ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm (e kk))
+      = hA.eigenvalues₀ kk
+    rw [he, Equiv.symm_apply_apply]
+  have hreidx : ∑ j, w j * hA.eigenvalues j
+      = ∑ kk, hA.eigenvalues₀ kk * w (e kk) := by
+    rw [← Equiv.sum_comp e (fun j => w j * hA.eigenvalues j)]
+    refine Finset.sum_congr rfl fun kk _ => ?_
+    rw [heigE kk]; ring
+  have hpsum : ∑ kk, w (e kk) = (k : ℝ) := by
+    rw [Equiv.sum_comp e w]; exact hwsum
+  rw [hPA, hreidx]
+  exact sum_mul_le_sum_top hA.eigenvalues₀ (hA.eigenvalues₀_antitone) (fun kk => w (e kk))
+    (fun kk => hw0 (e kk)) (fun kk => hw1 (e kk)) k hpsum
+
 end SKEFTHawking.QuantumNetwork
