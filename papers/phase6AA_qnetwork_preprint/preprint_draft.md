@@ -395,6 +395,15 @@ strictly below threshold (`p < p_th`) it tends to `0` as the distance grows
 (`logicalErrorBound_tendsto_zero`) — the threshold theorem in abstract code-capacity form. Neutral QEC
 mathematics; kernel-only; zero new project-local axioms.
 
+A further 6AK result (`GeneralizedAmpDamp.lean`) treats the **generalized (thermal) amplitude-damping**
+channel — qubit relaxation toward a finite-temperature bath with excited-state population `N` and
+damping `γ` (`N=0` recovers ordinary amplitude damping). It is not covariant, so we prove a kernel-pure
+two-sided diamond bracket (`diamondDist_genAmpDamp_bracket`): `(1−N)γ ≤ ‖Φ_{γ,N}−id‖_◇ ≤ 1`. The lower
+bound is exact and achievable (the thermal de-excitation flux, via the excited product input; recovers
+`γ` at `N=0`); the upper bound is the CPTP channel-distance cap (the exact value needs the
+`√(1−γ)`-dependent eigenvector witness, as for amplitude damping). Kernel-only; zero new project-local
+axioms.
+
 The fifth 6AK result (`PLOBRateBound.lean`) treats the PLOB repeaterless secret-key rate bound
 `−log₂(1−η)` for a lossy channel of transmissivity `η`. The full theorem rests on continuous-variable
 channel-capacity theory (relative entropy of entanglement of bosonic Gaussian channels) absent from

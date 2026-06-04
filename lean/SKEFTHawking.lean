@@ -2710,6 +2710,8 @@ import SKEFTHawking.QuantumNetwork.SpamProcessFidelity
 import SKEFTHawking.QuantumNetwork.QECSuppression
 -- Phase 6AK Wave 6AK.2 (2026-06-03): repeaterless (PLOB) rate-bound function + loss-penalty properties.
 import SKEFTHawking.QuantumNetwork.PLOBRateBound
+-- Phase 6AK Wave 6AK.4 (2026-06-03): generalized (thermal) amplitude-damping two-sided diamond bracket.
+import SKEFTHawking.QuantumNetwork.GeneralizedAmpDamp
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast

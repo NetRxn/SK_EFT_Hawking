@@ -839,6 +839,18 @@ the code distance (\verb|logicalErrorBound_antitone_distance|), and strictly bel
 threshold theorem in its abstract code-capacity form. Neutral QEC mathematics; kernel-only;
 \emph{zero} new project-local axioms.
 
+A further 6AK result (\verb|GeneralizedAmpDamp.lean|) treats the \textbf{generalized (thermal)
+amplitude-damping} channel, modelling qubit relaxation toward a finite-temperature bath with
+excited-state population $N$ and damping $\gamma$ (four Kraus operators; $N=0$ recovers ordinary
+amplitude damping). Unlike the Pauli channels it is \emph{not} covariant, so we prove a kernel-pure
+two-sided diamond bracket (\verb|diamondDist_genAmpDamp_bracket|):
+$(1-N)\gamma \le \|\Phi_{\gamma,N}-\mathrm{id}\|_\diamond \le 1$. The lower bound is exact and achievable
+--- on the unentangled excited product input the output difference is the real diagonal
+$(1-N)\gamma\,(E_{(0,1)}-E_{(1,1)})$ with trace norm $2(1-N)\gamma$, the thermal de-excitation flux ---
+and recovers the amplitude-damping value $\gamma$ at $N=0$; the upper bound is the CPTP channel-distance
+cap (the exact value, as for amplitude damping, needs the $\sqrt{1-\gamma}$-dependent eigenvector
+witness). Kernel-only; \emph{zero} new project-local axioms.
+
 The fifth 6AK result (\verb|PLOBRateBound.lean|) treats the Pirandola--Laurenza--Ottaviani--Banchi
 repeaterless secret-key rate bound $-\log_2(1-\eta)$ for a lossy channel of transmissivity $\eta$. The
 full PLOB theorem rests on continuous-variable channel-capacity theory (relative entropy of
