@@ -1391,7 +1391,7 @@ theorem ternary_solvable_of_local {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
       intro a b hle hab ha hb hasf hbsf hR hloc
       by_cases hsq : IsSquare a ∨ IsSquare b
       · exact ratSol_of_isSquare hsq
-      · push_neg at hsq
+      · rw [not_or] at hsq
         obtain ⟨hnsa, hnsb⟩ := hsq
         have hreal : ¬(a < 0 ∧ b < 0) := by
           rw [← solvable_real_canonical_iff ha hb]
@@ -1399,7 +1399,7 @@ theorem ternary_solvable_of_local {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
           exact ⟨x, y, z, fun h => hnz (by rw [Prod.mk_eq_zero, Prod.mk_eq_zero] at h; exact h), he⟩
         have hb2 : 2 ≤ b.natAbs := by
           by_contra hc
-          push_neg at hc
+          rw [not_le] at hc
           have hb1 : b.natAbs = 1 := by
             have := Int.natAbs_pos.mpr hb; omega
           rcases Int.natAbs_eq_iff.mp hb1 with hbv | hbv
