@@ -184,4 +184,35 @@ theorem quadform_translate_lower {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} {lam
       mul_nonneg hlam (sq_nonneg (s - 2 * R)), hlam]
   exact hlow.trans hcoeγ
 
+/-- **hF: locally-uniform summability of the Gaussian's lattice translates.** For each compact `K`, the
+sup-norms `‖(gaussianCM σ G)(·+↑γ)|_K‖` are summable over the lattice `Λ`. On `K` (bounded, `∑xᵢ²≤R²`) the
+translate decays as `exp(-π Im σ·(x+↑γ)ᵀG(x+↑γ)) ≤ C·exp(-c·∑(↑γ)ᵢ²)` (quadform_translate_lower + norm_gaussianCM),
+dominated by `summable_lattice_gaussian`. This is the `hF` hypothesis of `multivar_poisson` for the Gaussian. -/
+theorem gaussian_hF {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef) (hσ : 0 < σ.im) :
+    ∀ K : TopologicalSpace.Compacts (Fin d → ℝ),
+      Summable (fun γ : ↥(Submodule.span ℤ (Set.range ⇑(Pi.basisFun ℝ (Fin d)))) =>
+        ‖((gaussianCM σ G).comp (ContinuousMap.addRight (γ : Fin d → ℝ))).restrict K‖) := by
+  intro K
+  obtain ⟨lam, hlam, hcoe⟩ := posDef_coercive G hG
+  obtain ⟨M, hM⟩ : ∃ M, ∀ x ∈ K, ∑ i, (x i) ^ 2 ≤ M := by
+    obtain ⟨M, hMub⟩ := K.isCompact.bddAbove_image
+      (f := fun x : Fin d → ℝ => ∑ i, (x i) ^ 2) (by fun_prop)
+    exact ⟨M, fun x hx => hMub (Set.mem_image_of_mem _ hx)⟩
+  have hR : (0 : ℝ) ≤ Real.sqrt (max M 0) := Real.sqrt_nonneg _
+  have hR2 : ∀ x ∈ K, ∑ i, (x i) ^ 2 ≤ (Real.sqrt (max M 0)) ^ 2 := by
+    intro x hx
+    rw [Real.sq_sqrt (le_max_right M 0)]
+    exact (hM x hx).trans (le_max_left M 0)
+  have hcpos : 0 < π * σ.im * lam / 2 := by positivity
+  refine Summable.of_nonneg_of_le (fun γ => norm_nonneg _) (fun γ => ?_)
+    ((summable_lattice_gaussian hcpos).mul_left (Real.exp (2 * π * σ.im * lam * (Real.sqrt (max M 0)) ^ 2)))
+  refine (ContinuousMap.norm_le _ (by positivity)).mpr (fun p => ?_)
+  rw [ContinuousMap.restrict_apply, ContinuousMap.comp_apply]
+  show ‖gaussianCM σ G ((p : Fin d → ℝ) + (γ : Fin d → ℝ))‖ ≤ _
+  rw [norm_gaussianCM, ← Real.exp_add]
+  apply Real.exp_le_exp.mpr
+  have hq := quadform_translate_lower hlam.le hR hcoe (hR2 (p : Fin d → ℝ) p.2) (γ : Fin d → ℝ)
+  have hscale := mul_le_mul_of_nonneg_left hq (by positivity : (0 : ℝ) ≤ π * σ.im)
+  nlinarith [hscale]
+
 end SKEFTHawking
