@@ -148,7 +148,15 @@ kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
       handle ties (gᵢ via slope to a neighbor). ~80–100 lines, genuine but standard.
   (b) **Lidskii–Wielandt** (operator, harder): sorted-difference weak majorization `∑_{i<k}(λ↓(A)−λ↓(B))↓ᵢ
       ≤ ∑_{i<k}λ↓ᵢ(A−B)`. `sum_top_subadditive` gives the PREFIX (unsorted-d) bound; the sorted-d/subset
-      strengthening is the extra work (subset Ky Fan or the standard Lidskii argument).
+      strengthening is the extra work. ⚠️ NOTE (verified 2026-06-04): the subset-projection route gives only
+      WEYL (`∑_{i∈S}λ↓(A) ≤ ∑_{i<m}λ↓(B)+∑_{i<m}λ↓(A−B)`), NOT the tighter Lidskii (Lidskii needs the SAME
+      index set for A and B's sorted values, which the A-eigenprojection can't capture). The genuine LW
+      needs the **doubly-stochastic eigenvalue relation** — and Mathlib HAS the machinery:
+      `doublyStochastic`, `exists_eq_sum_perm_of_mem_doublyStochastic`, `doublyStochastic_eq_convexHull_permMatrix`
+      (`Mathlib/Analysis/Convex/{Birkhoff,DoublyStochasticMatrix}.lean`). LW path: build the Schur-Horn-type
+      overlap relation (the eigenvector-overlap matrix `Dᵢⱼ=|⟨eᵢ^A|eⱼ^{A−B}⟩|²`-style is doubly stochastic,
+      cf. `re_trace_mul_matrixLog_cross` in QuantumKlein) → Birkhoff → majorization. Large (~150-250 lines)
+      but not a wall.
   (c) **Mirsky** = Karamata(φ=|·|, exact-major from b/c + trace equality) ⟹ `∑|λ↓(A)−λ↓(B)| ≤ ‖A−B‖₁`
       (RHS = `traceNorm_eq_sum_abs_eigenvalues₀`, SHIPPED).
   (d) **F2 classical FA** (independent, → `FannesAudenaert.lean`): the Audenaert inequality
