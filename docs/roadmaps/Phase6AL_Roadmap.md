@@ -157,6 +157,16 @@ kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
       overlap relation (the eigenvector-overlap matrix `Dᵢⱼ=|⟨eᵢ^A|eⱼ^{A−B}⟩|²`-style is doubly stochastic,
       cf. `re_trace_mul_matrixLog_cross` in QuantumKlein) → Birkhoff → majorization. Large (~150-250 lines)
       but not a wall.
+      **CONCRETE FIRST SUB-BRICK (math verified 2026-06-04, plumbing-only blocker; attempted+removed, redo):**
+      `diag_conj_eq_sum_normSq (U:unitary)(hB:B.IsHermitian)(i) : (star↑U * B * ↑U) i i =
+      ↑(∑ⱼ Complex.normSq (Mᵢⱼ)·λⱼ(B))`, `M := star↑U * ↑hB.eigenvectorUnitary`. PROOF: `star↑U*B*↑U =
+      M·diag(↑λ)·star M` [`hB.spectral_theorem`+`Unitary.conjStarAlgAut_apply`; `star M = star↑U_B·↑U`];
+      `(M·diag·star M)ᵢᵢ = ∑ⱼ Mᵢⱼ·↑λⱼ·conj Mᵢⱼ = ∑ⱼ|Mᵢⱼ|²↑λⱼ` [`mul_apply`×2 + `Finset.sum_eq_single` on the
+      diagonal + `normSq_eq_conj_mul_self` + `push_cast[RCLike.ofReal_eq_complex_ofReal]`]. ⚠️ ONLY blocker
+      = plumbing: annotate EVERY `↑U` as `(↑U:Matrix ι ι ℂ)` (bare `*↑U` → coercion/HMul-unitary error);
+      `star (↑U:Matrix)` displays as `(↑U)ᴴ`, so normalize star↔conjTranspose (e.g. `set u:=(↑U:Matrix) with hu`)
+      BEFORE `noncomm_ring`. Then `A=B+(A−B)` ⟹ `λ(A)ᵢ = ∑ⱼ|M^Bᵢⱼ|²λⱼ(B)+∑ⱼ|M^Cᵢⱼ|²λⱼ(C)`; doubly-stochastic
+      via QuantumKlein `sum_normSq_row`/`sum_normSq_col`; → Birkhoff → majorization → sorted-d prefix.
   (c) **Mirsky** = Karamata(φ=|·|, exact-major from b/c + trace equality) ⟹ `∑|λ↓(A)−λ↓(B)| ≤ ‖A−B‖₁`
       (RHS = `traceNorm_eq_sum_abs_eigenvalues₀`, SHIPPED).
   (d) **F2 classical FA** (independent, → `FannesAudenaert.lean`): the Audenaert inequality
