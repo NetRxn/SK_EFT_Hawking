@@ -203,4 +203,22 @@ theorem isSymmetric_sum_re_inner_le_top {𝕜 : Type*} {E : Type*} [RCLike 𝕜]
     simp [hw.1]
   exact sum_mul_le_sum_top (hT.eigenvalues hn) (hT.eigenvalues_antitone hn) p hp0 hp1 k hpsum
 
+/-- **Flag Rayleigh lower bound (step 1).** For an orthonormal frame `{wᵣ}` with each `wᵣ` in the span of
+the top `sᵣ+1` eigenvectors (A's eigen-flag), the Rayleigh sum is bounded below by the flag eigenvalues:
+`∑ᵣ λ↓_{sᵣ}(T) ≤ ∑ᵣ re⟪wᵣ, T wᵣ⟫`. Each term is `isSymmetric_re_inner_ge` with `c = λ↓_{sᵣ}`. -/
+theorem isSymmetric_sum_re_inner_ge_flag {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ}
+    (hT : T.IsSymmetric) (hn : Module.finrank 𝕜 E = n) {k : ℕ} {s : Fin k → ℕ} (hs : ∀ r, s r < n)
+    {w : Fin k → E} (hwn : ∀ r, ‖w r‖ = 1)
+    (hw : ∀ r, w r ∈ Submodule.span 𝕜
+      (⇑(hT.eigenvectorBasis hn) '' ({i : Fin n | (i : ℕ) ≤ s r} : Set (Fin n)))) :
+    ∑ r, hT.eigenvalues hn ⟨s r, hs r⟩ ≤ ∑ r, RCLike.re (inner 𝕜 (w r) (T (w r))) := by
+  refine Finset.sum_le_sum (fun r _ => ?_)
+  have hge := isSymmetric_re_inner_ge hT hn (w r) (hT.eigenvalues hn ⟨s r, hs r⟩) (fun i hrepr => ?_)
+  · rw [hwn r] at hge; simpa using hge
+  · have hmem : (i : ℕ) ≤ s r := by
+      by_contra hi
+      exact hrepr (repr_eq_zero_of_not_mem hT hn (hw r) (by rw [Set.mem_setOf_eq]; exact hi))
+    exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact hmem)
+
 end SKEFTHawking.QuantumNetwork
