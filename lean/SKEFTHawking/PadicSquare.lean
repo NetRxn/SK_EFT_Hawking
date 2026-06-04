@@ -343,4 +343,35 @@ theorem exists_diag_nary_zero_odd_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) 
       simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hi
       rw [vxo i hi.1 hi.2.1 hi.2.2]; ring
 
+/-! ## The Hilbert canonical form `z² = a x² + b y²` (toward the symbol ⟺ solvability bridge) -/
+
+/-- **Canonical Hilbert ternary, odd-`p` unit case.** For an odd prime and `p`-adic units `a, b`, the
+equation `z² = a x² + b y²` (the form whose solvability `(a,b)_p = 1` encodes) has a nontrivial solution.
+This is the `(a,b)_p = 1` content for units, the base of the symbol ⟺ solvability bridge. -/
+theorem solvable_canonical_ternary_odd_units {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b : ℚ_[p]}
+    (ha : ‖a‖ = 1) (hb : ‖b‖ = 1) :
+    ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2 := by
+  obtain ⟨x, y, z, hnz, h⟩ :=
+    exists_diag_ternary_zero_odd_padic hp ha hb (by rw [norm_neg, norm_one] : ‖(-1 : ℚ_[p])‖ = 1)
+  exact ⟨x, y, z, hnz, by linear_combination -h⟩
+
+/-- **Solvability of `z² = a x² + b y²` depends only on the square classes of `a, b`.** Scaling a
+coefficient by a nonzero square `s²` preserves solvability (substitute `x ↦ x / s`). This mirrors the
+square-class dependence of the Hilbert symbol `(a,b)_p = (a s², b)_p` and feeds the general (non-unit)
+reduction of the symbol ⟺ solvability bridge. -/
+theorem solvable_canonical_congr_sq_left {p : ℕ} [Fact p.Prime] {a b s : ℚ_[p]} (hs : s ≠ 0) :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2) ↔
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (a * s ^ 2) * x ^ 2 + b * y ^ 2) := by
+  constructor
+  · rintro ⟨x, y, z, hnz, h⟩
+    refine ⟨x / s, y, z, ?_, ?_⟩
+    · rintro ⟨hx0, hy0, hz0⟩
+      exact hnz ⟨by rw [div_eq_zero_iff] at hx0; exact hx0.resolve_right hs, hy0, hz0⟩
+    · rw [h]; field_simp
+  · rintro ⟨x, y, z, hnz, h⟩
+    refine ⟨s * x, y, z, ?_, ?_⟩
+    · rintro ⟨hx0, hy0, hz0⟩
+      exact hnz ⟨(mul_eq_zero.mp hx0).resolve_left hs, hy0, hz0⟩
+    · rw [h]; ring
+
 end SKEFTHawking
