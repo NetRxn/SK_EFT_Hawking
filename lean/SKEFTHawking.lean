@@ -2727,6 +2727,9 @@ import SKEFTHawking.QuantumNetwork.LogNegativity
 -- Phase 6AK Wave FU-5 (2026-06-04): negativity is 2-Lipschitz in trace distance
 -- (partial transpose is trace-norm-bounded: ‖X^Γ‖₁ ≤ 2‖X‖₁ via Frobenius preservation).
 import SKEFTHawking.QuantumNetwork.NegativityContinuity
+-- Phase 6AK Wave FU-6 substrate (2026-06-04): general-dimensional partial transpose on Fin dA × Fin dB
+-- (‖ρ^Γ‖_F preserved, ‖ρ^Γ‖₁ ≤ √(dA·dB)·‖ρ‖₁) — foundation for the n-copy rate + Choi-state bounds.
+import SKEFTHawking.QuantumNetwork.PartialTransposeGeneral
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast

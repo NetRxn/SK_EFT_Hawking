@@ -274,9 +274,16 @@ tiebreaker does NOT fire on already-textbook substrate.
   Frobenius `‖·‖` is a LOCAL instance, NOT the `L2Operator`/`Matrix` scope). D6/preprint prose; Stage-13.
   (The full *log*-negativity Fannes continuity — log-Lipschitz away from 0 — is a thin add-on for
   density ops where `‖ρ^Γ‖₁ ≥ 1`; the trace-norm/negativity version above is the substantive content.)
-- **FU-6 — regularized-rate corollary** (LOW once FU-4/FU-5 land). The per-`n` universal statement
-  `Λ(ρ^⊗n) ≈ Φ_k ⟹ k ≤ n·E_N(ρ) + δ(ε)` (no LOCC abstraction needed — quantify over finite local-op
-  compositions, FU-3 class) → `E_D ≤ E_N` as a one-line limit corollary.
+- **FU-6 — regularized-rate corollary** 🔨 SUBSTRATE SHIPPED 2026-06-04, full corollary deferred.
+  Honest re-scope (decompose corrected the "LOW" label): the per-`n` rate needs `ρ^⊗n` tensor powers +
+  a max-entangled target + fidelity-to-target — a multi-module assembly, with a **general-dimensional
+  partial transpose** underneath (my `pt2` was hardwired to `Fin 2 × Fin 2`). The gating substrate is now
+  shipped: `PartialTransposeGeneral.lean` — `ptB` on `Fin dA × Fin dB`, `norm_ptB` (Frobenius preserved,
+  general dim, via the index-involution `ptBSwap` + `Fintype.sum_equiv`), `traceNorm_ptB_le`
+  (`‖ρ^Γ‖₁ ≤ √(dA·dB)·‖ρ‖₁`). Kernel-pure. This also unblocks FU-7 (Choi state is bipartite). **Remaining
+  for the full corollary:** generalize FU-3 monotonicity + FU-4 additivity to `ptB`, then the `ρ^⊗n` +
+  target-fidelity + `k/n → E_N` assembly. The *operational content* (a low-negativity state can't be
+  distilled to a Bell pair by local ops) is already shipped as FU-3's one-shot no-go + FU-5's continuity.
 - **FU-7 — finite-dim repeaterless ENTANGLEMENT-distribution bound** (MED, the genuinely-new target).
   `entanglement-rate ≤ log-negativity(Choi state)` via FU-3 monotone + a finite **channel-simulation layer**
   (channel = teleport over Choi; textbook Bennett/Pirandola, absent but buildable). Distinct from the
