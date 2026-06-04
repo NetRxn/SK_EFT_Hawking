@@ -80,4 +80,26 @@ theorem latticeTheta_S_self {d : ℕ} (A : Matrix (Fin d) (Fin d) ℤ) (hsymm : 
   rw [div_eq_div_iff (by simp [hπ, hτ0, Complex.I_ne_zero]) Complex.I_ne_zero]
   field_simp
 
+/-- **The S-multiplier consistency**: `(-i)^{d/2} = 1 ⟺ 8 ∣ d`. Since `(-i)^{d/2} = exp(-iπd/4)`, it is `1`
+exactly when `8 ∣ d`. This is the arithmetic core of the modular-weight constraint: the `(ST)³`-relation
+forces the theta automorphy factor `(-i)^{d/2}` to be `1`, hence `8 ∣ d`. -/
+theorem neg_I_cpow_eq_one_iff_eight_dvd {d : ℕ} :
+    (-I) ^ ((d : ℂ) / 2) = 1 ↔ 8 ∣ d := by
+  have hval : (-I) ^ ((d : ℂ) / 2) = Complex.exp (-((π : ℂ) * d / 4) * I) := by
+    rw [Complex.cpow_def_of_ne_zero (by simp), Complex.log_neg_I]; ring_nf
+  rw [hval, Complex.exp_eq_one_iff]
+  constructor
+  · rintro ⟨n, hn⟩
+    have hcancel : -((π : ℂ) * d / 4) = (n : ℂ) * 2 * π := by
+      have h1 : -((π : ℂ) * d / 4) * I = ((n : ℂ) * 2 * π) * I := by rw [hn]; ring
+      exact mul_right_cancel₀ Complex.I_ne_zero h1
+    have hπc : (π : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr Real.pi_ne_zero
+    field_simp at hcancel
+    have hdℤ : (d : ℤ) = -8 * n := by
+      have hc : (d : ℂ) = -8 * (n : ℂ) := by linear_combination -hcancel
+      exact_mod_cast hc
+    omega
+  · rintro ⟨k, rfl⟩
+    exact ⟨-(k : ℤ), by push_cast; ring⟩
+
 end SKEFTHawking
