@@ -27,7 +27,7 @@ import Mathlib
 
 namespace SKEFTHawking
 
-open Matrix MvPolynomial
+open Matrix MvPolynomial QuadraticMap
 
 /-- **A symmetric form over a finite field in `≥ 3` variables is isotropic.** For a finite field `K` and a
 matrix `A` over `K` with `3 ≤ n`, there is a nonzero `x` with `xᵀ A x = 0`. Proof via Chevalley–Warning: the
@@ -76,5 +76,45 @@ theorem finite_field_form_isotropic {K : Type*} [Field K] [Fintype K] {n : ℕ} 
   refine ⟨y, ?_, ?_⟩
   · intro hy0; exact hne (by subst hy0; rfl)
   · rw [← heval]; exact hy
+
+/-- **[HM-ℝ] — an indefinite real quadratic form represents zero nontrivially.** If both inertia indices are
+positive, pick `u` with `Q u > 0` and `w` with `Q w < 0`; then `Q(r•u + w) = Qu·r² + polar·r + Qw` is a real
+quadratic in `r` with discriminant `polar² - 4·Qu·Qw > 0` (since `Qu·Qw < 0`), so it has a real root, giving a
+nonzero isotropic vector. Elementary; the real-place input of Hasse–Minkowski [HM]. -/
+theorem indefinite_repr_zero {V : Type*} [AddCommGroup V] [Module ℝ V] [FiniteDimensional ℝ V]
+    (Q : QuadraticForm ℝ V) (hp : 0 < sigPos Q) (hn : 0 < sigNeg Q) :
+    ∃ x : V, x ≠ 0 ∧ Q x = 0 := by
+  obtain ⟨Vp, hVp, hVppos⟩ := exists_finrank_eq_sigPos_and_posDef Q
+  have hVpne : Vp ≠ ⊥ := fun h => by rw [h, finrank_bot] at hVp; omega
+  obtain ⟨u, huVp, hu0⟩ := Vp.exists_mem_ne_zero_of_ne_bot hVpne
+  have hQu : 0 < Q u := by
+    have := hVppos ⟨u, huVp⟩ (by simpa [Subtype.ext_iff] using hu0)
+    rwa [restrict_apply] at this
+  obtain ⟨Vn, hVn, hVnpos⟩ := exists_finrank_eq_sigPos_and_posDef (-Q)
+  have hVnne : Vn ≠ ⊥ := fun h => by rw [h, finrank_bot] at hVn; rw [sigNeg] at hn; omega
+  obtain ⟨w, hwVn, hw0⟩ := Vn.exists_mem_ne_zero_of_ne_bot hVnne
+  have hQw : Q w < 0 := by
+    have := hVnpos ⟨w, hwVn⟩ (by simpa [Subtype.ext_iff] using hw0)
+    rw [restrict_apply, QuadraticMap.neg_apply] at this; linarith
+  set b := polar (⇑Q) u w with hb
+  have hD : 0 ≤ b ^ 2 - 4 * Q u * Q w := by nlinarith [mul_pos hQu (neg_pos.mpr hQw)]
+  set r := (-b + Real.sqrt (b ^ 2 - 4 * Q u * Q w)) / (2 * Q u) with hr
+  have hexp : Q (r • u + w) = Q u * r ^ 2 + b * r + Q w := by
+    have h1 : Q (r • u + w) = polar (⇑Q) (r • u) w + Q (r • u) + Q w := by
+      simp only [polar]; ring
+    rw [h1, Q.map_smul, polar_smul_left, hb]
+    simp only [smul_eq_mul]; ring
+  have hQune : Q u ≠ 0 := ne_of_gt hQu
+  have hroot : Q (r • u + w) = 0 := by
+    rw [hexp, hr]
+    set s := Real.sqrt (b ^ 2 - 4 * Q u * Q w) with hsdef
+    have hs : s ^ 2 = b ^ 2 - 4 * Q u * Q w := by rw [hsdef]; exact Real.sq_sqrt hD
+    field_simp
+    linear_combination hs
+  refine ⟨r • u + w, ?_, hroot⟩
+  intro hzero
+  have hw_eq : w = -(r • u) := eq_neg_of_add_eq_zero_right hzero
+  rw [hw_eq, QuadraticMap.map_neg, Q.map_smul, smul_eq_mul] at hQw
+  nlinarith [mul_nonneg (mul_self_nonneg r) hQu.le]
 
 end SKEFTHawking
