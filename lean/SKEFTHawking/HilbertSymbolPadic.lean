@@ -169,4 +169,12 @@ theorem hilbertPadicInt_comm (a b : ℤ) : hilbertPadicInt p a b = hilbertPadicI
   rw [Nat.mul_comm (padicValInt p a) (padicValInt p b)]
   ring
 
+/-- **Finiteness of support:** `(a,b)_p = 1` whenever `p` divides neither `a` nor `b` (both valuations
+vanish). At all but finitely many primes the signed symbol is trivial — the basis of the product formula. -/
+theorem hilbertPadicInt_units {a b : ℤ} (ha : ¬ (p : ℤ) ∣ a) (hb : ¬ (p : ℤ) ∣ b) :
+    hilbertPadicInt p a b = 1 := by
+  unfold hilbertPadicInt
+  rw [padicValInt.eq_zero_of_not_dvd ha, padicValInt.eq_zero_of_not_dvd hb]
+  simp
+
 end SKEFTHawking.HilbertSymbol
