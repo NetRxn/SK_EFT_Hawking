@@ -3,6 +3,7 @@ import Mathlib.Algebra.Order.BigOperators.Group.Finset
 import Mathlib.Data.Fintype.Fin
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Linarith
+import Mathlib.Algebra.BigOperators.Ring.Finset
 
 /-!
 # Vector majorization layer (Phase 6AL, Wave 4, route (b) toward Lidskii–Wielandt / Mirsky)
@@ -114,5 +115,78 @@ theorem subset_sum_le_sorted_prefix {N : ℕ} (x : Fin N → ℝ) (S : Finset (F
       _ ≤ ∑ i ∈ S ∩ T, x i + ∑ i ∈ T \ S, x i := by linarith [hTdiff]
       _ = ∑ i ∈ T ∩ S, x i + ∑ i ∈ T \ S, x i := by rw [Finset.inter_comm]
       _ = ∑ i ∈ T, x i := hdecomp T S
+
+/-- The sum of the `k` largest entries of `x` (`= ∑_{i<k}` of `x` sorted descending). -/
+noncomputable def topkSum {N : ℕ} (x : Fin N → ℝ) (k : ℕ) : ℝ :=
+  ∑ i ∈ Finset.univ.filter (fun i : Fin N => (i : ℕ) < k), x (sortDesc x i)
+
+/-- `topkSum x k` is the sum of `x` over its top-`k` index set `T = (top-k positions) ∘ sortDesc`. -/
+theorem topkSum_eq_image_sum {N : ℕ} (x : Fin N → ℝ) (k : ℕ) :
+    topkSum x k
+      = ∑ j ∈ (Finset.univ.filter (fun i : Fin N => (i : ℕ) < k)).image (sortDesc x), x j := by
+  rw [topkSum, Finset.sum_image (fun a _ b _ h => (sortDesc x).injective h)]
+
+/-- The image index set realizing `topkSum x k` has cardinality `min N k`. -/
+theorem image_sortDesc_card {N : ℕ} (x : Fin N → ℝ) (k : ℕ) :
+    ((Finset.univ.filter (fun i : Fin N => (i : ℕ) < k)).image (sortDesc x)).card = min N k := by
+  rw [Finset.card_image_of_injective _ (sortDesc x).injective, Fin.card_filter_val_lt]
+
+/-- Any subset sum is at most `topkSum`. -/
+theorem subset_sum_le_topkSum {N : ℕ} (x : Fin N → ℝ) (S : Finset (Fin N)) :
+    ∑ i ∈ S, x i ≤ topkSum x S.card :=
+  subset_sum_le_sorted_prefix x S
+
+/-- `topkSum` saturates at `N`: `topkSum z (min N k) = topkSum z k`. -/
+theorem topkSum_min_left {N : ℕ} (z : Fin N → ℝ) (k : ℕ) : topkSum z (min N k) = topkSum z k := by
+  unfold topkSum
+  congr 1
+  ext i
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+  have := i.isLt
+  omega
+
+/-- **`topkSum` is permutation-invariant** (the `k` largest values depend only on the multiset). -/
+theorem topkSum_comp_perm {N : ℕ} (x : Fin N → ℝ) (τ : Equiv.Perm (Fin N)) (k : ℕ) :
+    topkSum (fun i => x (τ i)) k = topkSum x k := by
+  -- top-k set of `x∘τ` maps under τ to a `min N k`-subset of `x`, and vice versa; bound both ways
+  refine le_antisymm ?_ ?_
+  · rw [topkSum_eq_image_sum]
+    set Timg := (Finset.univ.filter (fun i : Fin N => (i : ℕ) < k)).image (sortDesc (fun i => x (τ i)))
+      with hTimg
+    have hcard : (Timg.image τ).card = min N k := by
+      rw [Finset.card_image_of_injective _ τ.injective, hTimg, image_sortDesc_card]
+    calc ∑ j ∈ Timg, x (τ j)
+        = ∑ j ∈ Timg.image τ, x j := (Finset.sum_image (fun a _ b _ h => τ.injective h)).symm
+      _ ≤ topkSum x (Timg.image τ).card := subset_sum_le_topkSum x _
+      _ = topkSum x k := by rw [hcard]; exact topkSum_min_left _ _
+  · rw [topkSum_eq_image_sum]
+    set Timg := (Finset.univ.filter (fun i : Fin N => (i : ℕ) < k)).image (sortDesc x) with hTimg
+    have hcard : (Timg.image τ.symm).card = min N k := by
+      rw [Finset.card_image_of_injective _ τ.symm.injective, hTimg, image_sortDesc_card]
+    calc ∑ j ∈ Timg, x j
+        = ∑ j ∈ Timg.image τ.symm, x (τ j) := by
+          rw [Finset.sum_image (fun a _ b _ h => τ.symm.injective h)]
+          exact Finset.sum_congr rfl (fun j _ => by rw [Equiv.apply_symm_apply])
+      _ ≤ topkSum (fun i => x (τ i)) (Timg.image τ.symm).card := subset_sum_le_topkSum _ _
+      _ = topkSum (fun i => x (τ i)) k := by rw [hcard]; exact topkSum_min_left _ _
+
+/-- **`topkSum` is sublinear over nonnegative combinations** (it is a max of linear functionals, hence
+convex): `topkSum (∑ₐ wₐ zₐ) k ≤ ∑ₐ wₐ · topkSum zₐ k` for `wₐ ≥ 0`. -/
+theorem topkSum_sum_le {N : ℕ} {ι : Type*} (s : Finset ι) (w : ι → ℝ) (hw : ∀ a ∈ s, 0 ≤ w a)
+    (z : ι → Fin N → ℝ) (k : ℕ) :
+    topkSum (fun i => ∑ a ∈ s, w a * z a i) k ≤ ∑ a ∈ s, w a * topkSum (z a) k := by
+  rw [topkSum_eq_image_sum]
+  set T := (Finset.univ.filter (fun i : Fin N => (i : ℕ) < k)).image
+    (sortDesc (fun i => ∑ a ∈ s, w a * z a i)) with hT
+  have hTcard : T.card = min N k := by rw [hT]; exact image_sortDesc_card _ _
+  calc ∑ j ∈ T, ∑ a ∈ s, w a * z a j
+      = ∑ a ∈ s, w a * ∑ j ∈ T, z a j := by
+        rw [Finset.sum_comm]
+        exact Finset.sum_congr rfl (fun a _ => (Finset.mul_sum _ _ _).symm)
+    _ ≤ ∑ a ∈ s, w a * topkSum (z a) k := by
+        refine Finset.sum_le_sum (fun a ha => ?_)
+        refine mul_le_mul_of_nonneg_left ?_ (hw a ha)
+        calc ∑ j ∈ T, z a j ≤ topkSum (z a) T.card := subset_sum_le_topkSum (z a) T
+          _ = topkSum (z a) k := by rw [hTcard]; exact topkSum_min_left _ _
 
 end SKEFTHawking.QuantumNetwork
