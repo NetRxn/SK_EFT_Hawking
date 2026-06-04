@@ -62,4 +62,49 @@ theorem isUnit_cast_ordCompl_two {n : ℕ} (hn : n ≠ 0) :
     (Nat.coprime_comm.mp ((Nat.prime_two.coprime_iff_not_dvd).mpr hodd))
   simpa using hcop2.pow_right 3
 
+/-- The **dyadic (`p = 2`) Hilbert symbol** on positive naturals, via the explicit ε/ω formula:
+`(a,b)_2 = (-1)^{ε(u)ε(v) + α·ω(v) + β·ω(u)}` with `α,β = v₂`, `u,v = ` odd parts (`ordCompl[2]`). -/
+def hilbert2Nat (a b : ℕ) : ℤ :=
+  chi2 (eps2 ((ordCompl[2] a : ℕ) : ZMod 8) * eps2 ((ordCompl[2] b : ℕ) : ZMod 8)
+    + (a.factorization 2 : ZMod 2) * omega2 ((ordCompl[2] b : ℕ) : ZMod 8)
+    + (b.factorization 2 : ZMod 2) * omega2 ((ordCompl[2] a : ℕ) : ZMod 8))
+
+/-- The dyadic symbol is `{±1}`-valued. -/
+theorem hilbert2Nat_mem (a b : ℕ) : hilbert2Nat a b = 1 ∨ hilbert2Nat a b = -1 :=
+  chi2_mem _
+
+/-- **Bimultiplicativity of the dyadic symbol in the first argument** (nonzero arguments): the exponent is
+additive (`eps2_mul`/`omega2_mul` supplementary laws + valuation additivity), and `χ₂` turns the sum into a
+product. -/
+theorem hilbert2Nat_mul_left {a₁ a₂ b : ℕ} (ha₁ : a₁ ≠ 0) (ha₂ : a₂ ≠ 0) :
+    hilbert2Nat (a₁ * a₂) b = hilbert2Nat a₁ b * hilbert2Nat a₂ b := by
+  unfold hilbert2Nat
+  rw [← chi2_add]
+  congr 1
+  rw [Nat.ordCompl_mul, Nat.cast_mul,
+    eps2_mul (isUnit_cast_ordCompl_two ha₁) (isUnit_cast_ordCompl_two ha₂),
+    omega2_mul (isUnit_cast_ordCompl_two ha₁) (isUnit_cast_ordCompl_two ha₂),
+    Nat.factorization_mul ha₁ ha₂, Finsupp.add_apply]
+  push_cast
+  ring
+
+/-- **Bimultiplicativity of the dyadic symbol in the second argument** (nonzero arguments). -/
+theorem hilbert2Nat_mul_right {a b₁ b₂ : ℕ} (hb₁ : b₁ ≠ 0) (hb₂ : b₂ ≠ 0) :
+    hilbert2Nat a (b₁ * b₂) = hilbert2Nat a b₁ * hilbert2Nat a b₂ := by
+  unfold hilbert2Nat
+  rw [← chi2_add]
+  congr 1
+  rw [Nat.ordCompl_mul, Nat.cast_mul,
+    eps2_mul (isUnit_cast_ordCompl_two hb₁) (isUnit_cast_ordCompl_two hb₂),
+    omega2_mul (isUnit_cast_ordCompl_two hb₁) (isUnit_cast_ordCompl_two hb₂),
+    Nat.factorization_mul hb₁ hb₂, Finsupp.add_apply]
+  push_cast
+  ring
+
+/-- **Symmetry of the dyadic symbol:** `(a,b)_2 = (b,a)_2`. -/
+theorem hilbert2Nat_comm (a b : ℕ) : hilbert2Nat a b = hilbert2Nat b a := by
+  unfold hilbert2Nat
+  rw [mul_comm (eps2 _) (eps2 _)]
+  ring_nf
+
 end SKEFTHawking.HilbertSymbol
