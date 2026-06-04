@@ -2809,6 +2809,9 @@ import SKEFTHawking.QuantumNetwork.EntropySubadditivity
 -- (∑μᵢpᵢ ≤ ∑_{i<k}μᵢ for antitone μ, weights pᵢ∈[0,1] summing to k), heart of the Ky Fan maximum
 -- principle. Mathlib has no Ky Fan/Lidskii/Mirsky/majorization machinery — built from scratch.
 import SKEFTHawking.QuantumNetwork.SpectralMajorization
+-- Phase 6AL Wave 4 (2026-06-04): Fannes–Audenaert assembly module. So far the trace-norm ↔ sorted-
+-- eigenvalue bridge ‖A‖₁ = ∑ₖ|λ↓ₖ(A)|. Mirsky ℓ¹ + classical FA remain (Phase6AL roadmap Wave-4).
+import SKEFTHawking.QuantumNetwork.FannesAudenaert
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
