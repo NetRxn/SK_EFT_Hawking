@@ -167,7 +167,14 @@ kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
       `star (↑U:Matrix)` displays as `(↑U)ᴴ`, so normalize star↔conjTranspose (e.g. `set u:=(↑U:Matrix) with hu`)
       BEFORE `noncomm_ring`. Then `A=B+(A−B)` ⟹ `λ(A)ᵢ = ∑ⱼ|M^Bᵢⱼ|²λⱼ(B)+∑ⱼ|M^Cᵢⱼ|²λⱼ(C)`; doubly-stochastic
       via QuantumKlein `sum_normSq_row`/`sum_normSq_col`; → Birkhoff → majorization → sorted-d prefix.
-  (c) **Mirsky** = Karamata(φ=|·|, exact-major from b/c + trace equality) ⟹ `∑|λ↓(A)−λ↓(B)| ≤ ‖A−B‖₁`
+      **✅ BOTH diag-conj bricks SHIPPED** (`LidskiiWielandt.lean`): `diag_conj_eq_sum_normSq` `7a572bed`
+      (the `∑ⱼ|Mᵢⱼ|²λⱼ` expansion) + `diag_conj_self_eq_eigenvalue` `c5dd66e8` (`(U_AᴴA U_A)ᵢᵢ=λᵢ(A)`).
+      REMAINING LW: (i) combine via `A=B+(A−B)` [`mul_add`/`Matrix.add_apply`] into `λᵢ(A)=∑ⱼ Dᵢⱼλⱼ(B)+
+      ∑ⱼ Eᵢⱼλⱼ(C)`, D,E doubly-stochastic [`sum_normSq_row`/`col`]; (ii) majorization assembly: this relation +
+      Birkhoff (`exists_eq_sum_perm_of_mem_doublyStochastic`) ⟹ sorted-d prefix `∑_{i<m}d↓ ≤ ∑_{i<m}λ↓(C)`.
+      (ii) is the genuine remaining ~80-120 lines (doubly-stochastic⟹majorization + prefix extraction).
+  (c) **Mirsky** = `abs_sum_le_of_prefix` ∘ LW-(ii) + `traceNorm_eq_sum_abs_eigenvalues₀` (both SHIPPED)
+      ⟹ `∑|λ↓(A)−λ↓(B)| ≤ ‖A−B‖₁`
       (RHS = `traceNorm_eq_sum_abs_eigenvalues₀`, SHIPPED).
   (d) **F2 classical FA** (independent, → `FannesAudenaert.lean`): the Audenaert inequality
       `|∑negMulLog p−∑negMulLog q| ≤ T·log(d−1)+H₂(T)`, `∑|pᵢ−qᵢ|=2T`. Real-analysis, hard; `Real.binEntropy`
