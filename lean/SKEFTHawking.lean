@@ -2752,6 +2752,9 @@ import SKEFTHawking.QuantumNetwork.NCopyRateBound
 -- Phase 6AK Wave FU-8 (2026-06-04): von Neumann entropy S(ρ)=∑negMulLog(λᵢ) (eigenvalue sum, no matrix log)
 -- with 0 ≤ S(ρ) ≤ log(dim) (nonnegativity + max-entropy bound via negMulLog concavity).
 import SKEFTHawking.QuantumNetwork.VonNeumannEntropy
+-- Phase 6AK Wave FU-8 (2026-06-04): matrix log (cfc Real.log), Re tr(ρ log ρ)=−S(ρ) bridge,
+-- and the quantum relative entropy S(ρ‖σ) = Re tr(ρ(log ρ − log σ)) with S(ρ‖ρ)=0.
+import SKEFTHawking.QuantumNetwork.QuantumRelativeEntropy
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
