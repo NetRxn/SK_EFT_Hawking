@@ -1233,4 +1233,26 @@ theorem isSquare_zmod_of_forall_prime {a : ℤ} : ∀ {m : ℕ}, Squarefree m �
       rw [← hk, ← isSquare_mulEquiv e, hca, isSquare_prod_iff]
       exact ⟨h p hp hpm, IH k hklt hksf fun q hq hqk => h q hq (hqk.trans hkm)⟩
 
+/-- **Everything is a square mod 2.** `ZMod 2 = {0, 1}` and `0 = 0²`, `1 = 1²`. So the `p = 2` factor of the
+CRT square condition is automatic — no `2`-adic solvability bridge is needed for the descent. -/
+theorem isSquare_zmod_two : ∀ x : ZMod 2, IsSquare x := by decide
+
+/-- **"`a` square mod `b`" from the odd-prime residue conditions.** For `b` squarefree, if `a` is a square
+mod every odd prime `p ∣ b` with `p ∤ a`, then `∃ t, b ∣ t² − a`. (At `p = 2` and at odd `p ∣ a` the residue
+square is automatic — `isSquare_zmod_two`, resp. `a ≡ 0`; the CRT `isSquare_zmod_of_forall_prime` assembles
+`a` square mod `|b|`, then `exists_dvd_sq_sub_of_isSquare_zmod`.) This is the input `descent_construct`
+consumes, derived from the local solvability of `z² = a x² + b y²` (via `solvable_padic_odd_iff_residue`). -/
+theorem exists_dvd_sq_sub_of_odd_residue {a b : ℤ} (hb : Squarefree b.natAbs)
+    (h : ∀ p : ℕ, p.Prime → p ≠ 2 → (p : ℤ) ∣ b → ¬ (p : ℤ) ∣ a → IsSquare ((a : ZMod p))) :
+    ∃ t : ℤ, b ∣ (t ^ 2 - a) := by
+  apply exists_dvd_sq_sub_of_isSquare_zmod
+  apply isSquare_zmod_of_forall_prime hb
+  intro p hp hpb
+  have hpbz : (p : ℤ) ∣ b := Int.dvd_natAbs.mp (Int.natCast_dvd_natCast.mpr hpb)
+  rcases eq_or_ne p 2 with rfl | hp2
+  · exact isSquare_zmod_two _
+  · rcases em ((p : ℤ) ∣ a) with hpa | hpa
+    · exact ⟨0, by rw [(ZMod.intCast_zmod_eq_zero_iff_dvd a p).mpr hpa]; ring⟩
+    · exact h p hp hp2 hpbz hpa
+
 end SKEFTHawking
