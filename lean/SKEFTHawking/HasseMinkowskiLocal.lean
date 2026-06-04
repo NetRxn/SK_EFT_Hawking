@@ -162,4 +162,16 @@ theorem exists_ne_zero_isotropic_congr {R M₁ M₂ N : Type*} [CommRing R] [Add
       rw [f.apply_symm_apply] at key
       rw [← key]; exact hQ
 
+/-- **Matrix isotropy ⟺ diagonal isotropy.** Given a diagonalization equivalence
+`B.toQuadraticMap' ≃ weightedSumSquares K w` (supplied by `equivalent_weightedSumSquares` over any field with
+`Invertible 2`), the Gram form `x ⬝ᵥ B *ᵥ x` has a nonzero zero iff the diagonal form `∑ wᵢ xᵢ²` does. The
+impedance-matcher between the Gram-matrix isotropy shape and the diagonal local-solvability lemmas. -/
+theorem matrix_isotropic_iff_weighted {K : Type*} [Field K] [Invertible 2] {m : ℕ} {ι : Type*}
+    [Fintype ι] (B : Matrix (Fin m) (Fin m) K) (w : ι → K)
+    (hQ : (B.toQuadraticMap').Equivalent (QuadraticMap.weightedSumSquares K w)) :
+    (∃ x : Fin m → K, x ≠ 0 ∧ x ⬝ᵥ B *ᵥ x = 0) ↔ (∃ x : ι → K, x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0) := by
+  simp only [← toQuadraticMap'_apply]
+  rw [exists_ne_zero_isotropic_congr hQ]
+  simp only [QuadraticMap.weightedSumSquares_apply, smul_eq_mul, ← pow_two]
+
 end SKEFTHawking
