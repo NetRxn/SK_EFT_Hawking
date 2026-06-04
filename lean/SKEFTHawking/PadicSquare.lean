@@ -949,4 +949,49 @@ theorem isSquare_rat_iff_local {q : ℚ} :
       simpa using hmap
   · rintro ⟨hq, h⟩; exact isSquare_rat_of_isSquare_padic hq h
 
+/-- **Squarefree representative of an integer square class.** Every nonzero integer equals a *squarefree*
+integer times a perfect square: `n = s · c²` with `s` squarefree, `s ≠ 0`, `c ≠ 0`. (Factor
+`n.natAbs = b²·a` with `a` squarefree by `Nat.sq_mul_squarefree`, set `s = sign(n)·a`, `c = b`.) -/
+theorem exists_squarefree_sq_mul_int {n : ℤ} (hn : n ≠ 0) :
+    ∃ (s c : ℤ), s ≠ 0 ∧ c ≠ 0 ∧ Squarefree s ∧ n = s * c ^ 2 := by
+  obtain ⟨a, b, hab, hsf⟩ := Nat.sq_mul_squarefree n.natAbs
+  have hb0 : b ≠ 0 := by
+    rintro rfl
+    rw [zero_pow (by norm_num), zero_mul] at hab
+    exact hn (Int.natAbs_eq_zero.mp hab.symm)
+  have ha0 : a ≠ 0 := by
+    rintro rfl
+    rw [mul_zero] at hab
+    exact hn (Int.natAbs_eq_zero.mp hab.symm)
+  refine ⟨n.sign * (a : ℤ), (b : ℤ), ?_, ?_, ?_, ?_⟩
+  · exact mul_ne_zero (by rw [Ne, Int.sign_eq_zero_iff_zero]; exact hn) (by exact_mod_cast ha0)
+  · exact_mod_cast hb0
+  · rw [← Int.squarefree_natAbs, Int.natAbs_mul, Int.natAbs_sign_of_ne_zero hn, one_mul,
+      Int.natAbs_natCast]
+    exact hsf
+  · have hb2a : (n.natAbs : ℤ) = (b : ℤ) ^ 2 * (a : ℤ) := by exact_mod_cast hab.symm
+    rw [show n.sign * (a : ℤ) * (b : ℤ) ^ 2 = n.sign * ((b : ℤ) ^ 2 * (a : ℤ)) by ring, ← hb2a]
+    exact (Int.sign_mul_natAbs n).symm
+
+/-- **Squarefree representative of a rational square class.** Every nonzero rational equals a *squarefree*
+integer times a rational square: `q = s · t²` with `s` squarefree, `s ≠ 0`, `t ≠ 0`. (`q.num·q.den = s·c²`
+by `exists_squarefree_sq_mul_int`, so `q = (s·c²)/q.den² = s·(c/q.den)²`.) This is the diagonal-coefficient
+normalization that opens Legendre's theorem / the ternary Hasse–Minkowski descent: combined with
+`exists_diag_isotropic_congr_sq` it reduces a diagonal form over ℚ to one with squarefree integer
+coefficients. -/
+theorem exists_squarefree_sq_mul_rat {q : ℚ} (hq : q ≠ 0) :
+    ∃ (s : ℤ) (t : ℚ), s ≠ 0 ∧ t ≠ 0 ∧ Squarefree s ∧ q = (s : ℚ) * t ^ 2 := by
+  have hnum : q.num ≠ 0 := Rat.num_ne_zero.mpr hq
+  have hdenℤ : (q.den : ℤ) ≠ 0 := by exact_mod_cast q.den_nz
+  have hdenℚ : (q.den : ℚ) ≠ 0 := by exact_mod_cast q.den_nz
+  obtain ⟨s, c, hs0, hc0, hsf, hsc⟩ := exists_squarefree_sq_mul_int (mul_ne_zero hnum hdenℤ)
+  refine ⟨s, (c : ℚ) / (q.den : ℚ), hs0, div_ne_zero (by exact_mod_cast hc0) hdenℚ, hsf, ?_⟩
+  have hqd : (q.num : ℚ) = q * (q.den : ℚ) := (div_eq_iff hdenℚ).mp (Rat.num_div_den q)
+  have e1 : (q.num : ℚ) * (q.den : ℚ) = (s : ℚ) * (c : ℚ) ^ 2 := by exact_mod_cast hsc
+  have key : q * (q.den : ℚ) ^ 2 = (s : ℚ) * (c : ℚ) ^ 2 := by
+    calc q * (q.den : ℚ) ^ 2 = q * (q.den : ℚ) * (q.den : ℚ) := by ring
+      _ = (q.num : ℚ) * (q.den : ℚ) := by rw [← hqd]
+      _ = (s : ℚ) * (c : ℚ) ^ 2 := e1
+  rw [div_pow, ← mul_div_assoc, ← key, mul_div_assoc, div_self (pow_ne_zero 2 hdenℚ), mul_one]
+
 end SKEFTHawking
