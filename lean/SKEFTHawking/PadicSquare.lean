@@ -1180,4 +1180,39 @@ theorem isSquare_mulEquiv {A B : Type*} [Monoid A] [Monoid B] (e : A ≃* B) {x 
   · rintro ⟨s, hs⟩
     exact ⟨e s, by rw [hs, map_mul]⟩
 
+/-- **CRT bridge: square mod each prime ⟹ square mod the squarefree product.** For squarefree `m`, if `a` is
+a square mod every prime `p ∣ m`, then `a` is a square mod `m`. (Strong induction: split off a prime `p`,
+`m = p·k` with `p, k` coprime, transport `IsSquare` across `ZMod.chineseRemainder` and `isSquare_prod_iff`.)
+Combines the per-prime local conditions into the global "`a` square mod `|b|`" that drives the descent. -/
+theorem isSquare_zmod_of_forall_prime {a : ℤ} : ∀ {m : ℕ}, Squarefree m →
+    (∀ p : ℕ, p.Prime → p ∣ m → IsSquare ((a : ZMod p))) → IsSquare ((a : ZMod m)) := by
+  intro m
+  induction m using Nat.strong_induction_on with
+  | _ m IH =>
+    intro hm h
+    rcases eq_or_ne m 1 with rfl | hm1
+    · exact ⟨0, Subsingleton.elim _ _⟩
+    · obtain ⟨p, hp, hpm⟩ := Nat.exists_prime_and_dvd hm1
+      set k := m / p with hkdef
+      have hk : p * k = m := Nat.mul_div_cancel' hpm
+      have hkm : k ∣ m := ⟨p, by rw [← hk, Nat.mul_comm]⟩
+      have hpos : 0 < m := Nat.pos_of_ne_zero hm.ne_zero
+      have hklt : k < m := by rw [hkdef]; exact Nat.div_lt_self hpos hp.one_lt
+      have hpk : ¬ p ∣ k := by
+        intro hdvd
+        obtain ⟨c, hc⟩ := hdvd
+        have hpp : p * p ∣ m := ⟨c, by rw [← hk, hc]; ring⟩
+        have := hm p hpp
+        rw [Nat.isUnit_iff] at this
+        have := hp.one_lt
+        omega
+      have hcop : Nat.Coprime p k := hp.coprime_iff_not_dvd.mpr hpk
+      have hksf : Squarefree k := hm.squarefree_of_dvd hkm
+      set e : ZMod (p * k) ≃* ZMod p × ZMod k := (ZMod.chineseRemainder hcop).toMulEquiv with he
+      have hca : e (a : ZMod (p * k)) = ((a : ZMod p), (a : ZMod k)) := by
+        show (ZMod.chineseRemainder hcop) (a : ZMod (p * k)) = _
+        rw [map_intCast]; rfl
+      rw [← hk, ← isSquare_mulEquiv e, hca, isSquare_prod_iff]
+      exact ⟨h p hp hpm, IH k hklt hksf fun q hq hqk => h q hq (hqk.trans hkm)⟩
+
 end SKEFTHawking
