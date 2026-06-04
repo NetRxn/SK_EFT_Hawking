@@ -109,4 +109,50 @@ theorem isSquare_iff_toZModPow_three_eq_one {u : ℤ_[2]} (hu : IsUnit u) :
     IsSquare u ↔ PadicInt.toZModPow 3 u = 1 :=
   ⟨toZModPow_three_eq_one_of_isSquare hu, isSquare_of_toZModPow_three_eq_one⟩
 
+/-! ## Local isotropy of the unit ternary form (good-reduction case of `(a,b)_p = 1`) -/
+
+/-- A `p`-adic unit has nonzero residue mod `p`. -/
+theorem toZMod_ne_zero_of_isUnit {p : ℕ} [Fact p.Prime] {a : ℤ_[p]} (ha : IsUnit a) :
+    PadicInt.toZMod a ≠ 0 := by
+  rw [Ne, toZMod_eq_zero_iff_norm_lt_one, PadicInt.isUnit_iff.mp ha]; exact lt_irrefl 1
+
+/-- **Local isotropy of the unit ternary form (odd `p`):** for an odd prime `p` and `p`-adic units
+`a, b`, the form `a X² + b Y² = Z²` has a solution with `Z` a unit (hence a nontrivial isotropic
+vector). This is the good-reduction case `(a,b)_p = 1`: at residue level the binary form `a X² + b Y²`
+is universal over `𝔽_p` (`FiniteField.exists_root_sum_quadratic`), representing `1 = 1²`; then Hensel
+(`isSquare_of_isSquare_toZMod`) lifts `a X² + b Y² ≡ 1 (mod p)` to an exact square `Z²`. -/
+theorem exists_ternary_isotropic_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b : ℤ_[p]}
+    (ha : IsUnit a) (hb : IsUnit b) :
+    ∃ X Y Z : ℤ_[p], IsUnit Z ∧ a * X ^ 2 + b * Y ^ 2 = Z ^ 2 := by
+  have haz : PadicInt.toZMod a ≠ 0 := toZMod_ne_zero_of_isUnit ha
+  have hbz : PadicInt.toZMod b ≠ 0 := toZMod_ne_zero_of_isUnit hb
+  have hgdeg : (C (PadicInt.toZMod b) * X ^ 2 - C 1).degree = 2 := by
+    have hlt : (C (1 : ZMod p)).degree < (C (PadicInt.toZMod b) * X ^ 2).degree := by
+      rw [Polynomial.degree_C_mul_X_pow 2 hbz]
+      exact lt_of_le_of_lt Polynomial.degree_C_le (by decide)
+    rw [Polynomial.degree_sub_eq_left_of_degree_lt hlt, Polynomial.degree_C_mul_X_pow 2 hbz]
+    rfl
+  have hcard : Fintype.card (ZMod p) % 2 = 1 := by
+    rw [ZMod.card]; exact Nat.odd_iff.mp ((Fact.out : p.Prime).odd_of_ne_two hp)
+  obtain ⟨xb, yb, hxy⟩ := FiniteField.exists_root_sum_quadratic
+    (f := C (PadicInt.toZMod a) * X ^ 2) (g := C (PadicInt.toZMod b) * X ^ 2 - C 1)
+    (Polynomial.degree_C_mul_X_pow 2 haz) hgdeg hcard
+  simp only [Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow, Polynomial.eval_X,
+    Polynomial.eval_sub] at hxy
+  have hres : PadicInt.toZMod a * xb ^ 2 + PadicInt.toZMod b * yb ^ 2 = 1 := by
+    linear_combination hxy
+  obtain ⟨X, hX⟩ := ZMod.ringHom_surjective PadicInt.toZMod xb
+  obtain ⟨Y, hY⟩ := ZMod.ringHom_surjective PadicInt.toZMod yb
+  have hcz : PadicInt.toZMod (a * X ^ 2 + b * Y ^ 2) = 1 := by
+    simp only [map_add, map_mul, map_pow, hX, hY]; exact hres
+  have hcunit : IsUnit (a * X ^ 2 + b * Y ^ 2) := by
+    rw [PadicInt.isUnit_iff]
+    rcases lt_or_eq_of_le (PadicInt.norm_le_one (a * X ^ 2 + b * Y ^ 2)) with h | h
+    · exact absurd ((toZMod_eq_zero_iff_norm_lt_one _).mpr h) (by rw [hcz]; exact one_ne_zero)
+    · exact h
+  obtain ⟨Z, hZ⟩ := isSquare_of_isSquare_toZMod hp hcunit (by rw [hcz]; exact ⟨1, by ring⟩)
+  refine ⟨X, Y, Z, ?_, ?_⟩
+  · rw [hZ] at hcunit; exact isUnit_of_mul_isUnit_left hcunit
+  · rw [hZ]; ring
+
 end SKEFTHawking
