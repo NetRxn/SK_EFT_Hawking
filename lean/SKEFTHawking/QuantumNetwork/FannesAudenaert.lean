@@ -182,6 +182,32 @@ theorem mirsky_of_wielandt_frame {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (
     _ ≤ ∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < S.card),
           hC.eigenvalues₀ i := by linarith [key]
 
+/-- **Subadditivity of `negMulLog`:** `η(a+b) ≤ η(a) + η(b)` for `a, b ≥ 0`, where `η = negMulLog`.
+A concave function on `[0,∞)` vanishing at `0` is subadditive (`η(a) ≥ (a/(a+b))·η(a+b)` and symmetrically,
+summed). This is the easy (unconditional) direction of the per-term Fannes modulus
+`|η(s)−η(t)| ≤ η(|s−t|)` and a reusable building block for the classical Fannes entropy-continuity bound
+`|H(p)−H(q)| ≤ 2T·log d + η(2T)` (the reverse direction additionally needs `|s−t| ≤ 1/2`). -/
+theorem negMulLog_add_le {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
+    Real.negMulLog (a + b) ≤ Real.negMulLog a + Real.negMulLog b := by
+  rcases eq_or_lt_of_le (add_nonneg ha hb) with h0 | hpos
+  · have ha0 : a = 0 := le_antisymm (by linarith) ha
+    have hb0 : b = 0 := le_antisymm (by linarith) hb
+    simp [ha0, hb0, Real.negMulLog_zero]
+  · have hne : a + b ≠ 0 := ne_of_gt hpos
+    have hsmem : (a + b) ∈ Set.Ici (0:ℝ) := Set.mem_Ici.mpr (le_of_lt hpos)
+    have h0mem : (0:ℝ) ∈ Set.Ici (0:ℝ) := Set.mem_Ici.mpr (le_refl 0)
+    have hpa : 0 ≤ a / (a + b) := div_nonneg ha (le_of_lt hpos)
+    have hpb : 0 ≤ b / (a + b) := div_nonneg hb (le_of_lt hpos)
+    have hsum : a / (a + b) + b / (a + b) = 1 := by field_simp
+    have hca := Real.concaveOn_negMulLog.2 hsmem h0mem hpa hpb hsum
+    have hcb := Real.concaveOn_negMulLog.2 hsmem h0mem hpb hpa (by rw [add_comm]; exact hsum)
+    simp only [Real.negMulLog_zero, mul_zero, add_zero, smul_eq_mul] at hca hcb
+    rw [div_mul_cancel₀ a hne] at hca
+    rw [div_mul_cancel₀ b hne] at hcb
+    have hfac : a / (a + b) * Real.negMulLog (a + b) + b / (a + b) * Real.negMulLog (a + b)
+        = Real.negMulLog (a + b) := by rw [← add_mul, hsum, one_mul]
+    linarith [hca, hcb, hfac]
+
 /-- **Von Neumann entropy as the Shannon entropy of the sorted spectrum:**
 `S(ρ) = ∑ₖ negMulLog(λ↓ₖ(ρ))`. Since `negMulLog`-sums are permutation-invariant, the entropy (defined over
 the unsorted eigenvalues) equals the sum over the descending-sorted `eigenvalues₀`. This is the bridge that
