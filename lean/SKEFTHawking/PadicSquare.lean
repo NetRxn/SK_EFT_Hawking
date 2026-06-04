@@ -374,4 +374,20 @@ theorem solvable_canonical_congr_sq_left {p : ℕ} [Fact p.Prime] {a b s : ℚ_[
       exact hnz ⟨(mul_eq_zero.mp hx0).resolve_left hs, hy0, hz0⟩
     · rw [h]; ring
 
+/-- **Square-class normal form of a `ℚ_[p]` coefficient.** Every nonzero `a : ℚ_[p]` is, up to a nonzero
+square factor, either a unit or `p` × a unit (according to the parity of its valuation): `a = u·s²` or
+`a = (p·u)·s²` with `‖u‖ = 1`, `s ≠ 0`. With `solvable_canonical_congr_sq_left` this reduces the Hilbert
+ternary `z² = a x² + b y²` to the four canonical cases (`unit`/`p·unit` in each coefficient). -/
+theorem exists_unit_or_pUnit_sq {p : ℕ} [Fact p.Prime] {a : ℚ_[p]} (ha : a ≠ 0) :
+    ∃ u s : ℚ_[p], ‖u‖ = 1 ∧ s ≠ 0 ∧ (a = u * s ^ 2 ∨ a = (p : ℚ_[p]) * u * s ^ 2) := by
+  have hp0 : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  obtain ⟨ua, hua, hae⟩ := padic_valuation_decomp ha
+  set va := a.valuation with hva
+  rcases Int.even_or_odd va with ⟨k, hk⟩ | ⟨k, hk⟩
+  · refine ⟨ua, (p : ℚ_[p]) ^ k, hua, zpow_ne_zero _ hp0, Or.inl ?_⟩
+    rw [hae, hk, zpow_add₀ hp0]; ring
+  · refine ⟨ua, (p : ℚ_[p]) ^ k, hua, zpow_ne_zero _ hp0, Or.inr ?_⟩
+    rw [hae, hk, show (2 * k + 1 : ℤ) = k + k + 1 from by ring, zpow_add₀ hp0, zpow_add₀ hp0,
+      zpow_one]; ring
+
 end SKEFTHawking
