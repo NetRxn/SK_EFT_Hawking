@@ -74,4 +74,32 @@ theorem integral_comp_sqrtInv {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G
     abs_of_nonneg (Real.sqrt_nonneg G.det)] at hcv
   exact hcv
 
+/-- `IsUnit (√G).det` for positive-definite `G` (det `√G = √(det G) > 0`). -/
+theorem isUnit_det_sqrt {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef) :
+    IsUnit (CFC.sqrt G).det := by
+  have h : (CFC.sqrt G).det = Real.sqrt G.det := by
+    rw [Matrix.PosSemidef.det_sqrt hG.posSemidef, RCLike.sqrt_of_nonneg hG.det_pos.le]; simp
+  rw [h]; exact (Real.sqrt_pos.mpr hG.det_pos).ne'.isUnit
+
+/-- The change of variables `u ↦ (√G)⁻¹ u` sends the quadratic form `G` to the standard one:
+`((√G)⁻¹ u)ᵀ G ((√G)⁻¹ u) = ∑ᵢ uᵢ²` (using `dotProduct_mulVec_eq_sqrt` and `√G·(√G)⁻¹ = 1`). -/
+theorem sqrtInv_quadratic {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef) (u : Fin d → ℝ) :
+    ((CFC.sqrt G)⁻¹ *ᵥ u) ⬝ᵥ G *ᵥ ((CFC.sqrt G)⁻¹ *ᵥ u) = ∑ i, (u i) ^ 2 := by
+  rw [dotProduct_mulVec_eq_sqrt hG.posSemidef, Matrix.mulVec_mulVec,
+    Matrix.mul_nonsing_inv _ (isUnit_det_sqrt hG), Matrix.one_mulVec, dotProduct]
+  exact Finset.sum_congr rfl fun i _ => (sq (u i)).symm
+
+/-- The linear term transforms under `u ↦ (√G)⁻¹ u` as a `vecMul` (over the ℝ→ℂ cast):
+`∑ᵢ cᵢ ((√G)⁻¹ u)ᵢ = ∑ⱼ (c ᵥ* (√G)⁻¹_ℂ)ⱼ uⱼ` where `(√G)⁻¹_ℂ = ((√G)⁻¹).map (↑)`. Via the
+`dotProduct`/`vecMul` adjunction `(c ᵥ* M) ⬝ᵥ u = c ⬝ᵥ (M *ᵥ u)` and commutation of the cast with `mulVec`. -/
+theorem sqrtInv_linear {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (c : Fin d → ℂ) (u : Fin d → ℝ) :
+    ∑ i, c i * (((CFC.sqrt G)⁻¹ *ᵥ u) i : ℂ)
+      = ∑ j, (c ᵥ* ((CFC.sqrt G)⁻¹.map (Complex.ofReal))) j * (u j : ℂ) := by
+  have hcast : ∀ i, (((CFC.sqrt G)⁻¹ *ᵥ u) i : ℂ)
+      = (((CFC.sqrt G)⁻¹.map (Complex.ofReal)) *ᵥ (fun k => (u k : ℂ))) i := by
+    intro i
+    simp [Matrix.mulVec, dotProduct]
+  simp only [hcast]
+  exact Matrix.dotProduct_mulVec c ((CFC.sqrt G)⁻¹.map (Complex.ofReal)) (fun k => (u k : ℂ))
+
 end SKEFTHawking
