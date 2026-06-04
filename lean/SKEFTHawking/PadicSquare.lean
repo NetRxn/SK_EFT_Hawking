@@ -1015,4 +1015,55 @@ theorem solvable_transfer {a b b'' t : ℤ} (hb'' : b'' ≠ 0) (hfac : t ^ 2 - a
     _ = a * (z + t * x) ^ 2 + b'' * y ^ 2 * (b * b'') := by rw [e1, hfac]
     _ = a * (z + t * x) ^ 2 + b * (b'' * y) ^ 2 := by ring
 
+/-- **Descent construction step (size reduction).** If `a` is not a perfect square, `|b| ≥ 2`,
+`|a| ≤ |b|`, and `a` is a square mod `b` (`∃ t₀, b ∣ t₀² − a`), then choosing the *balanced* residue
+`t = t₀.bmod |b|` (so `|t| ≤ |b|/2`) yields `b'' ≠ 0` with `t² − a = b·b''` and `|b''| < |b|`. (Balanced
+residue gives `4t² ≤ b²`, so `|t² − a| ≤ b²/4 + |b| < b²`, forcing `|b''| < |b|`.) The size-reducing half
+of Legendre's descent: it feeds `solvable_transfer` to move the canonical ternary to a strictly smaller
+coefficient. -/
+theorem descent_construct {a b : ℤ} (ha : ¬ IsSquare a) (hb2 : 2 ≤ b.natAbs)
+    (hab : a.natAbs ≤ b.natAbs) (hQR : ∃ t : ℤ, b ∣ (t ^ 2 - a)) :
+    ∃ (t b'' : ℤ), b'' ≠ 0 ∧ t ^ 2 - a = b * b'' ∧ b''.natAbs < b.natAbs := by
+  obtain ⟨t₀, ht₀⟩ := hQR
+  set m := b.natAbs with hm
+  have hbpos : 0 < m := by omega
+  set t := t₀.bmod m with ht
+  have hmod : t ≡ t₀ [ZMOD (m : ℤ)] := Int.bmod_emod
+  have hbdvd : b ∣ (t - t₀) := by
+    have hmdvd : (m : ℤ) ∣ (t - t₀) := (Int.modEq_iff_dvd.mp hmod.symm)
+    rwa [hm, Int.natAbs_dvd] at hmdvd
+  have hcong : b ∣ (t ^ 2 - a) := by
+    have h1 : b ∣ (t ^ 2 - t₀ ^ 2) := by
+      have he : t ^ 2 - t₀ ^ 2 = (t - t₀) * (t + t₀) := by ring
+      rw [he]; exact hbdvd.mul_right _
+    have hsum := dvd_add h1 ht₀
+    have he2 : (t ^ 2 - t₀ ^ 2) + (t₀ ^ 2 - a) = t ^ 2 - a := by ring
+    rwa [he2] at hsum
+  obtain ⟨b'', hb''⟩ := hcong
+  -- balanced bounds: 4 t² ≤ m²
+  have h_lo := Int.le_bmod (x := t₀) hbpos
+  have h_hi := Int.bmod_lt (x := t₀) hbpos
+  have ht2 : -(m : ℤ) ≤ 2 * t ∧ 2 * t ≤ (m : ℤ) := by rw [← ht] at h_lo h_hi; omega
+  have h4t : 4 * t ^ 2 ≤ (m : ℤ) ^ 2 := by nlinarith [ht2.1, ht2.2]
+  -- |a| ≤ m as integer bounds
+  have ha_le : |a| ≤ (m : ℤ) := by rw [Int.abs_eq_natAbs]; exact_mod_cast hab
+  have ha_bd := abs_le.mp ha_le
+  refine ⟨t, b'', ?_, hb'', ?_⟩
+  · intro h0
+    rw [h0, mul_zero] at hb''
+    exact ha ⟨t, by linarith [hb'', sq t]⟩
+  · -- |b''| < |b| via |t² - a| < m²
+    have hsize : |t ^ 2 - a| < (m : ℤ) ^ 2 := by
+      rw [abs_lt]
+      constructor
+      · nlinarith [sq_nonneg t, ha_bd.2, hb2]
+      · nlinarith [h4t, ha_bd.1, hb2]
+    have hprod : (m : ℤ) * (b''.natAbs : ℤ) = |t ^ 2 - a| := by
+      rw [hb'', abs_mul, Int.abs_eq_natAbs b, ← hm, Int.abs_eq_natAbs b'']
+    have : (m : ℤ) * (b''.natAbs : ℤ) < (m : ℤ) * (m : ℤ) := by
+      rw [hprod]; calc |t ^ 2 - a| < (m : ℤ) ^ 2 := hsize
+        _ = (m : ℤ) * (m : ℤ) := by ring
+    have hlt : (b''.natAbs : ℤ) < (m : ℤ) := lt_of_mul_lt_mul_left this (by positivity)
+    exact_mod_cast hlt
+
 end SKEFTHawking
