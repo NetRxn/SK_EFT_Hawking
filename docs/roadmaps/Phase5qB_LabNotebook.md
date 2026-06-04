@@ -230,9 +230,23 @@ Alternative unified spine to keep in mind: characteristic vectors (`c² ≡ c'²
    (1-D Gaussian Poisson `Complex.tsum_exp_neg_quadratic`/`tsum_exp_neg_mul_int_sq`), `ModularForms/Basic`+
    `LevelOne` (`levelOne_neg_weight_eq_zero`, `levelOne_weight_zero_const`, `levelOne_weight_zero_rank_one`),
    `jacobiTheta_S_smul` (PROVEN via Poisson). So the two legs are NOT walls — they DECOMPOSE:
-   - **[Θ] definite even unimodular ⟹ `8∣rank` — REACHABLE, DE-RISKED to a concrete lemma-by-lemma plan
-     (`ThetaModularity.lean`, 2026-06-04; toeholds VERIFIED in Mathlib):** ✅✅ **[Θ1] n-dim Poisson summation
-     DONE** (`MultivarPoissonDescent.multivar_poisson`, kernel-pure, 2026-06-04): `∑_{γ∈ℤᵈ} F(↑γ) =
+   - **[Θ] definite even unimodular ⟹ `8∣σ` — ✅✅✅ FULLY DONE & DISCHARGED (2026-06-04).** The full chain
+     [Θ1]→[Θ2]→[Θ3]→[Θ4] is complete and the [Θ] hypothesis of `eight_dvd_latticeSig_of_HM_of_Theta` is now a
+     THEOREM, not an assumption:
+     * **[Θ3] S-transform DONE** (`ThetaSTransform.latticeTheta_S`, `ThetaModularWeight.latticeTheta_S_self`:
+       `Θ_M(-1/τ)=(τ/i)^{d/2}Θ_M(τ)` for even unimodular, via `multivar_poisson` + `integral_cexp_neg_quadratic_form`
+       + det=1 + `latticeTheta_inv_eq`).
+     * **[Θ4] weight ⟹ `8∣d` DONE** (`ThetaModularWeight.eight_dvd_rank`): the `(ST)³`-orbit assembly at τ=I —
+       three `theta_ST` steps around `(ST)³·I=I`, `Θ_M(I)≠0` (`latticeTheta_I_ne_zero`) divides out the
+       automorphy factors, `mul_cpow_of_re_pos` collapses them to `(-I)^{d/2}=1 ⟺ 8∣d`
+       (`neg_I_cpow_eq_one_iff_eight_dvd`). Helpers: `mul_cpow_of_arg_mem`, `neg_inv_im_pos`.
+     * **[Θ-discharge] DONE** (`ThetaDefiniteDischarge.eight_dvd_latticeSig_of_definite`): `(sigPos=0 ∨ sigNeg=0)`
+       even unimodular ⟹ `8∣latticeSig`. Bridge `sigNeg=0 ⟹ PosDef` via `posDef_of_sigPos_eq_finrank`
+       (max positive subspace=⊤) + `nondeg_radical_eq_bot` (unimodular⟹nondegenerate) + Sylvester
+       `sigPos_add_sigNeg_add_radical`; then `eight_dvd_rank` (PosDef σ=rank; sigPos=0 = neg-def mirror via `-A`).
+     ALL kernel-pure [propext, Classical.choice, Quot.sound], no new axioms. **The definite case of `8∣σ` is
+     UNCONDITIONAL.** Historical build trail below.
+     ✅✅ **[Θ1] n-dim Poisson summation DONE** (`MultivarPoissonDescent.multivar_poisson`, kernel-pure, 2026-06-04): `∑_{γ∈ℤᵈ} F(↑γ) =
      ∑_{n∈ℤᵈ} latFourier F n`, under integrability/measurability/L¹-summability/coeff-summability side
      conditions (Schwartz-dischargeable). Built the whole RHS+continuity+Tonelli torus-free, then the torus
      descent + the `Ioc`↔`Ico` cube reconciliation. **✅✅ [Θ2] COMPLETE** (`AnisotropicGaussianFT.lean`,
