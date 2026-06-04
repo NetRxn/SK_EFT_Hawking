@@ -1,0 +1,23 @@
+SK-EFT Hawking Validation Report
+Generated: 20260601T231824Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] quantum_network
+  + wernerParam_swap_multiplicative
+  + endToEndFidelity_succ
+  + swapChain_fidelity_envelope
+  + bbpsswRecurrence_gt
+  + dejmps_increase_phaseFlipOnly
+  + dejmps_single_step_can_decrease
+  + fortescueLoYield_gt_two_thirds
+  + bb84KeyRate_zero
+  + bb84_crossover_sign_change
+  + w3_asymptotic_specified_lt_one
+  + teleport_horodecki_formula
+  + teleport_beats_classical_iff
+  + haarPauliConstant_eq_third
+  + bsmSuccessProb_bounds
+  + linkRate_monotonicity
+  + qn_lean_theorems_exist — 12 QN theorems found
+
+Overall: 1/1 passed

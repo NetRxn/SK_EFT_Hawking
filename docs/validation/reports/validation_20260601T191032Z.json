@@ -1,0 +1,59 @@
+{
+  "timestamp": "20260601T191032Z",
+  "project_root": "/Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking",
+  "checks": {
+    "identities": {
+      "passed": true,
+      "error": null,
+      "details": [
+        {
+          "name": "count(1)==2",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "count(2)==2",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "count(3)==3",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "disp(0)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "1st_order(0,kappa)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "Gamma(k,w,cs,0,0,0,0)==0",
+          "passed": true,
+          "message": "",
+          "warning": false
+        },
+        {
+          "name": "delta2_acoustic_vanishes",
+          "passed": true,
+          "message": "value=0.000e+00",
+          "warning": false
+        }
+      ]
+    }
+  },
+  "summary": {
+    "total": 1,
+    "passed": 1,
+    "failed": 0
+  }
+}

@@ -1,0 +1,10 @@
+SK-EFT Hawking Validation Report
+Generated: 20260604T082213Z
+Project: /Users/johnroehm/Programming/PythonEnvironments/Physics/Fluid-Based-Physics-Research/SK_EFT_Hawking
+
+[PASS] axiom_closure_allowlist
+  + allowlist_size — 13 allow-listed axioms (3 core + 10 AXIOM_METADATA)
+  + native_decide — 587 declaration(s) transitively use `native_decide` (compiler-trust axiom) — accepted Lean mechanism, flagged for visibility (counts.json 'Axioms: 0' counts only declared `axiom`s)
+  + allowlist — no declaration carries a non-allow-listed, non-native_decide axiom (Invariant #15 backstop clean)
+
+Overall: 1/1 passed
