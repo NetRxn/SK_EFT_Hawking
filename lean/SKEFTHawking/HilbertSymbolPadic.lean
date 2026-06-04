@@ -102,6 +102,19 @@ theorem pfreeInt_mul {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
   rw [pfreeInt, padicValInt.mul ha hb, pow_add,
     Int.ediv_eq_of_eq_mul_left (mul_ne_zero (pow_ne_zero _ hpne) (pow_ne_zero _ hpne)) hkey]
 
+/-- The `p`-free part is **coprime to `p`** (`p ∤ pfreeInt a`), so its Legendre symbol is `±1`. -/
+theorem not_dvd_pfreeInt {a : ℤ} (ha : a ≠ 0) : ¬ (p : ℤ) ∣ pfreeInt p a := by
+  intro hdvd
+  have hmax : ¬ p ^ (padicValInt p a + 1) ∣ a.natAbs :=
+    pow_succ_padicValNat_not_dvd (p := p) (Int.natAbs_ne_zero.mpr ha)
+  obtain ⟨k, hk⟩ := hdvd
+  have hdvdInt : (p : ℤ) ^ (padicValInt p a + 1) ∣ a := by
+    refine ⟨k, ?_⟩
+    conv_lhs => rw [pfreeInt_spec p a, hk]
+    ring
+  apply hmax
+  simpa [Int.natAbs_pow] using Int.natAbs_dvd_natAbs.mpr hdvdInt
+
 /-- **Legendre connection:** for `p ∤ a`, `(a, p)_p = (a | p)` — the symbol against the uniformizer is
 the Legendre symbol. -/
 theorem hilbertPadicNat_eq_legendre {a : ℕ} (ha : ¬ p ∣ a) :
