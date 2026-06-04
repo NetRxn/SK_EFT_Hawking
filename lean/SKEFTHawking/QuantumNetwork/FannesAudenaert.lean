@@ -1,6 +1,8 @@
 import SKEFTHawking.QuantumNetwork.SpectralMajorization
 import SKEFTHawking.QuantumNetwork.MixedState
+import SKEFTHawking.QuantumNetwork.WielandtLidskii
 import Mathlib.Data.Fin.Tuple.Sort
+import Mathlib.Data.Finset.Sort
 
 /-!
 # Toward Fannes–Audenaert entropy continuity (Phase 6AL, Wave 4, items F1b/F2/F3)
@@ -121,5 +123,61 @@ theorem mirsky_of_proj_exists {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB 
     _ = (P * (A - B)).trace.re := hsplit.symm
     _ ≤ ∑ j ∈ Finset.univ.filter (fun j : Fin (Fintype.card ι) => (j : ℕ) < S.card),
           hC.eigenvalues₀ j := trace_mul_proj_le hC hPh hPP S.card hPk
+
+/-- **Mirsky's inequality, reduced to Wielandt frame-existence (the single remaining Lidskii–Wielandt core).**
+Given that for every position tuple `s` there is an orthonormal frame `{wᵣ}` lying in `A`'s eigen-flag —
+`wᵣ ∈ span` of the top-`sᵣ` eigenvectors of `toEuclideanLin A` — whose `B`-Rayleigh sum is bounded by the
+corresponding sorted `B`-eigenvalues (`∑ᵣ ⟪wᵣ, B wᵣ⟫ ≤ ∑ᵣ λ↓_{sᵣ}(B)`), the trace-norm Mirsky bound
+`∑ₖ |λ↓ₖ(A)−λ↓ₖ(B)| ≤ ‖A−B‖₁` follows.
+
+This stages the **entire** Lidskii→Mirsky chain on the one research-grade hypothesis `Hframe` (the Wielandt
+min–max "≤" direction). Everything downstream is discharged here: `lidskii_of_frame` supplies the per-tuple
+inequality `∑ᵣ λ↓_{sᵣ}(A) ≤ ∑ᵣ λ↓_{sᵣ}(B) + ∑_{j<k} λ↓ⱼ(A−B)`; the matrix `eigenvalues₀` ↔ `LinearMap`
+`IsSymmetric.eigenvalues (toEuclideanLin ·)` identification is definitional; the `A−B` operator term is
+bridged by `congr` (over `toEuclideanLin (A−B) = toEuclideanLin A − toEuclideanLin B`); and the `Finset`↔tuple
+positions are reindexed through the sorted order-embedding `S.orderEmbOfFin`. Composing with the shipped
+`mirsky_of_subset_diff` gives the trace-norm conclusion. The remaining `Hframe` brick — numerically validated
+for all random Hermitian pairs, with explicit witness the top-`|S|` eigenspace of `A − t B` — is the genuine
+Wielandt frame-existence content (absent from Mathlib). -/
+theorem mirsky_of_wielandt_frame {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB : B.IsHermitian)
+    (hC : (A - B).IsHermitian)
+    (Hframe : ∀ {k : ℕ} (s : Fin k → ℕ) (hs : ∀ r, s r < Fintype.card ι),
+      ∃ w : Fin k → EuclideanSpace ℂ ι, Orthonormal ℂ w ∧
+        (∀ r, w r ∈ Submodule.span ℂ
+          (⇑((isHermitian_iff_isSymmetric.1 hA).eigenvectorBasis finrank_euclideanSpace) ''
+            ({i : Fin (Fintype.card ι) | (i : ℕ) ≤ s r} : Set (Fin (Fintype.card ι))))) ∧
+        ∑ r, RCLike.re (inner ℂ (w r) (toEuclideanLin B (w r)))
+          ≤ ∑ r, hB.eigenvalues₀ ⟨s r, hs r⟩) :
+    ∑ k, |hA.eigenvalues₀ k - hB.eigenvalues₀ k| ≤ traceNorm (A - B) := by
+  refine mirsky_of_subset_diff hA hB hC (fun S => ?_)
+  set s : Fin S.card → ℕ :=
+    fun r => ((S.orderEmbOfFin (rfl : S.card = S.card)) r : Fin (Fintype.card ι)).val with hs_def
+  have hs : ∀ r, s r < Fintype.card ι := fun r => (S.orderEmbOfFin rfl r).isLt
+  obtain ⟨w, hw, hwflag, hB3⟩ := Hframe s hs
+  have hLid := lidskii_of_frame (isHermitian_iff_isSymmetric.1 hA) (isHermitian_iff_isSymmetric.1 hB)
+    finrank_euclideanSpace hs hw hwflag hB3
+  -- positions reindex: a sum over the sorted tuple `s` = a sum over the subset `S`
+  have reidx : ∀ (g : Fin (Fintype.card ι) → ℝ),
+      (∑ r : Fin S.card, g ⟨s r, hs r⟩) = ∑ i ∈ S, g i := by
+    intro g
+    conv_rhs => rw [← Finset.map_orderEmbOfFin_univ S (rfl : S.card = S.card)]
+    rw [Finset.sum_map]
+    rfl
+  -- the `A − B` operator term: `eigenvalues (toEuclideanLin A − toEuclideanLin B) = λ↓(A−B)`
+  have hCbridge : ((isHermitian_iff_isSymmetric.1 hA).sub (isHermitian_iff_isSymmetric.1 hB)).eigenvalues
+      finrank_euclideanSpace = hC.eigenvalues₀ := by
+    show ((isHermitian_iff_isSymmetric.1 hA).sub (isHermitian_iff_isSymmetric.1 hB)).eigenvalues
+        finrank_euclideanSpace = (isHermitian_iff_isSymmetric.1 hC).eigenvalues finrank_euclideanSpace
+    congr 1
+    rw [map_sub]
+  have key : ∑ i ∈ S, hA.eigenvalues₀ i
+      ≤ ∑ i ∈ S, hB.eigenvalues₀ i
+        + ∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < S.card), hC.eigenvalues₀ i := by
+    rw [← reidx hA.eigenvalues₀, ← reidx hB.eigenvalues₀, ← hCbridge]
+    exact hLid
+  calc ∑ i ∈ S, (hA.eigenvalues₀ i - hB.eigenvalues₀ i)
+      = (∑ i ∈ S, hA.eigenvalues₀ i) - ∑ i ∈ S, hB.eigenvalues₀ i := by rw [Finset.sum_sub_distrib]
+    _ ≤ ∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < S.card),
+          hC.eigenvalues₀ i := by linarith [key]
 
 end SKEFTHawking.QuantumNetwork
