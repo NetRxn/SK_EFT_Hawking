@@ -432,6 +432,25 @@ lemma: `T_B` permutes matrix entries, hence preserves the Frobenius norm (`norm_
 (`abs_traceNorm_pt2_sub_le_traceDist`) — the negativity is 2-Lipschitz in the trace distance
 `D = ½‖ρ−σ‖₁`. Kernel-only; zero new project-local axioms.
 
+A capstone follow-on lifts the two-qubit negativity machinery to an **arbitrary bipartite system**
+`A × B` (any finite parties) and assembles a **regularized distillation rate bound**. The general
+partial transpose `ptB` (`PartialTransposeGeneral.lean`), the monotone-under-local-operations and the
+additive log-negativity (`NegativityMonotoneGeneral.lean`, `LogNegativityGeneral.lean`) all hold at
+arbitrary party type. On the maximally entangled state `Φ_d` the partial transpose is `d⁻¹·SWAP`, and
+since `SWAP` is Hermitian and involutive, `|SWAP| = 1` and `‖SWAP‖₁ = d²`, giving the maximal value
+`E_N(Φ_d) = log₂ d` (`MaxEntNegativity.lean`, `logNegB_maxEntState`). Combining the monotone with this
+target yields the **single-copy distillation bound** `log₂ k ≤ E_N(ρ)`: a local operation on one copy
+of `ρ` producing `Φ_k` requires `E_N(ρ) ≥ log₂ k` (`DistillationRateBound.lean`,
+`distillation_single_copy_bound`). The asymptotic statement is built on the *actual grouped `n`-copy
+state* `ρ^⊗n` on `(KronIdx (Fin dA) n) × (KronIdx (Fin dB) n)` (`NCopyRateBound.lean`): the partial
+transpose distributes over the grouped tensor product (`ptB_gtensor`), trace norm is multiplicative
+across it (via cross-type reindex invariance `traceNorm_reindex_cross` and `traceNorm_kronecker`), so
+`E_N(ρ^⊗n) = n·E_N(ρ)` on the grouped state (`logNegB_ncopy`). Monotonicity then gives the
+**regularized rate bound** `E_N(Λ(ρ^⊗n)) ≤ n·E_N(ρ)` for any local operation `Λ`
+(`logNegB_ncopy_localKraus_le`) — with `E_N(Φ_k) = log₂ k` this is the per-`n` reading
+`log₂ k ≤ n·E_N(ρ)` of the entanglement-distillation bound `E_D ≤ E_N`. Kernel-only; zero new
+project-local axioms.
+
 The third 6AK result (`SpamProcessFidelity.lean`) completes the device-characterisation substrate. The
 SPAM readout bit-flip channel `Φ_q(ρ) = (1−q)ρ + q·XρX` is the Pauli channel with weights `(1−q,q,0,0)`,
 so its diamond distance to the identity is exactly the readout error probability

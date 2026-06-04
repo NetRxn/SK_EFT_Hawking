@@ -888,6 +888,28 @@ $|\,\|\rho^\Gamma\|_1-\|\sigma^\Gamma\|_1\,|\le 4\,D(\rho,\sigma)$
 (\verb|abs_traceNorm_pt2_sub_le_traceDist|) --- the negativity is $2$-Lipschitz in the trace distance
 $D=\tfrac12\|\rho-\sigma\|_1$. Kernel-only; \emph{zero} new project-local axioms.
 
+A capstone follow-on lifts the two-qubit negativity machinery to an \textbf{arbitrary bipartite system}
+$A\times B$ (any finite parties) and assembles a \textbf{regularized distillation rate bound}. The
+general partial transpose \verb|ptB|, the monotonicity under local operations, and the additive
+log-negativity all hold at arbitrary party type (\verb|PartialTransposeGeneral.lean|,
+\verb|NegativityMonotoneGeneral.lean|, \verb|LogNegativityGeneral.lean|). On the maximally entangled
+state $\Phi_d$ the partial transpose is $d^{-1}\,\mathrm{SWAP}$, and since $\mathrm{SWAP}$ is Hermitian
+and involutive, $|\mathrm{SWAP}|=\mathbf1$ and $\|\mathrm{SWAP}\|_1=d^2$, giving the maximal value
+$E_N(\Phi_d)=\log_2 d$ (\verb|MaxEntNegativity.lean|, \verb|logNegB_maxEntState|). Combining the monotone
+with this target gives the \textbf{single-copy distillation bound} $\log_2 k\le E_N(\rho)$: a local
+operation on one copy of $\rho$ producing $\Phi_k$ requires $E_N(\rho)\ge\log_2 k$
+(\verb|distillation_single_copy_bound|). The asymptotic statement is built on the \emph{actual grouped
+$n$-copy state} $\rho^{\otimes n}$ on $(\mathrm{KronIdx}\,(\mathrm{Fin}\,d_A)\,n)\times
+(\mathrm{KronIdx}\,(\mathrm{Fin}\,d_B)\,n)$ (\verb|NCopyRateBound.lean|): the partial transpose
+distributes over the grouped tensor product (\verb|ptB_gtensor|) and the trace norm is multiplicative
+across it (via cross-type reindex invariance \verb|traceNorm_reindex_cross| together with
+\verb|traceNorm_kronecker|), so $E_N(\rho^{\otimes n})=n\,E_N(\rho)$ on the grouped state
+(\verb|logNegB_ncopy|). Monotonicity then yields the \textbf{regularized rate bound}
+$E_N(\Lambda(\rho^{\otimes n}))\le n\,E_N(\rho)$ for any local operation $\Lambda$
+(\verb|logNegB_ncopy_localKraus_le|); with $E_N(\Phi_k)=\log_2 k$ this is the per-$n$ reading
+$\log_2 k\le n\,E_N(\rho)$ of the entanglement-distillation bound $E_D\le E_N$. Kernel-only;
+\emph{zero} new project-local axioms.
+
 The third 6AK result (\verb|SpamProcessFidelity.lean|) completes the device-characterisation substrate.
 The state-preparation-and-measurement (SPAM) readout bit-flip channel $\Phi_q(\rho)=(1-q)\rho+qX\rho X$
 is the Pauli channel with weights $(1-q,q,0,0)$, so its diamond distance to the identity is exactly the
