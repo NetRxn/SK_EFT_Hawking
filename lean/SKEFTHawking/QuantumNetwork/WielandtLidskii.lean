@@ -252,6 +252,33 @@ theorem weyl_single_lower {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCom
       ≤ (hS.add hR).eigenvalues hn ⟨i, hi⟩ * ‖v‖ ^ 2 := by rw [add_mul]; linarith
   exact le_of_mul_le_mul_right hcomb hvnorm
 
+/-- **Weyl single-eigenvalue bound, general form** (`T = S + R` as a hypothesis, avoiding operator-congruence
+at use sites — e.g. along a perturbation path `M(t) = M(s) + (t−s)C`): `λ↓ᵢ(T) ≥ λ↓ᵢ(S) + λ↓ₙ₋₁(R)`. Same
+Courant–Fischer proof as `weyl_single_lower`, reading `⟪v,Tv⟫ = ⟪v,Sv⟫ + ⟪v,Rv⟫` through `T = S+R`. -/
+theorem weyl_single_lower_of_eq {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] [FiniteDimensional 𝕜 E] {n : ℕ} (hn : Module.finrank 𝕜 E = n)
+    {T S R : E →ₗ[𝕜] E} (hT : T.IsSymmetric) (hS : S.IsSymmetric) (hR : R.IsSymmetric)
+    (hTeq : T = S + R) {i : ℕ} (hi : i < n) :
+    hS.eigenvalues hn ⟨i, hi⟩ + hR.eigenvalues hn ⟨n - 1, by omega⟩ ≤ hT.eigenvalues hn ⟨i, hi⟩ := by
+  obtain ⟨V, hVdim, hVge⟩ := exists_subspace_re_inner_ge hS hn hi
+  have hRge : ∀ v : E,
+      hR.eigenvalues hn ⟨n - 1, by omega⟩ * ‖v‖ ^ 2 ≤ RCLike.re (inner 𝕜 v (R v)) := by
+    intro v
+    refine isSymmetric_re_inner_ge hR hn v _ (fun j _ => ?_)
+    refine hR.eigenvalues_antitone hn ?_
+    rw [Fin.le_def]; show (j : ℕ) ≤ n - 1; have := j.isLt; omega
+  obtain ⟨v, hvV, hv0, hvle⟩ := exists_mem_re_inner_le hT hn hi V hVdim
+  have hTv : RCLike.re (inner 𝕜 v (T v))
+      = RCLike.re (inner 𝕜 v (S v)) + RCLike.re (inner 𝕜 v (R v)) := by
+    rw [hTeq, LinearMap.add_apply, inner_add_right, map_add]
+  rw [hTv] at hvle
+  have h1 := hVge v hvV
+  have h2 := hRge v
+  have hvnorm : (0 : ℝ) < ‖v‖ ^ 2 := pow_pos (norm_pos_iff.mpr hv0) 2
+  have hcomb : (hS.eigenvalues hn ⟨i, hi⟩ + hR.eigenvalues hn ⟨n - 1, by omega⟩) * ‖v‖ ^ 2
+      ≤ hT.eigenvalues hn ⟨i, hi⟩ * ‖v‖ ^ 2 := by rw [add_mul]; linarith
+  exact le_of_mul_le_mul_right hcomb hvnorm
+
 /-- **Max-min Lidskii–Wielandt, assembled (staging the frame-existence step (3)).** Given an orthonormal
 frame `{wᵣ}` in `A`'s eigen-flag (`wᵣ ∈ span top sᵣ+1 A-eigenvectors`) with low `B`-Rayleigh-sum (hypothesis
 `hB3` = step (3)), the arbitrary-subset Lidskii inequality follows:
