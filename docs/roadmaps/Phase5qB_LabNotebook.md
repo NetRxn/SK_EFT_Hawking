@@ -235,7 +235,17 @@ Alternative unified spine to keep in mind: characteristic vectors (`c² ≡ c'²
      DONE** (`MultivarPoissonDescent.multivar_poisson`, kernel-pure, 2026-06-04): `∑_{γ∈ℤᵈ} F(↑γ) =
      ∑_{n∈ℤᵈ} latFourier F n`, under integrability/measurability/L¹-summability/coeff-summability side
      conditions (Schwartz-dischargeable). Built the whole RHS+continuity+Tonelli torus-free, then the torus
-     descent + the `Ioc`↔`Ico` cube reconciliation. **NEXT = [Θ2]** anisotropic Gaussian FT `𝓕(exp(−π vᵀAv))=(det A)^{−1/2}
+     descent + the `Ioc`↔`Ico` cube reconciliation. **[Θ2] IN PROGRESS** (`AnisotropicGaussianFT.lean`,
+     kernel-pure, commits `2d6539d2`+`4d033402`): ✅ brick 1 `integral_comp_linearMap_volume`
+     (`∫ g(f x)=|（det f)⁻¹|•∫ g` for invertible linear f, via `Measure.map_linearMap_addHaar_eq_smul_addHaar`+
+     `integral_map`+`integral_smul_measure`); ✅ brick 2 `dotProduct_mulVec_eq_sqrt` (`xᵀGx=‖√G·x‖²` for PSD G,
+     via `CFC.sqrt_mul_sqrt_self`+`(CFC.sqrt_nonneg).isSelfAdjoint`+`conjTranspose_eq_transpose_of_trivial`;
+     needs `open scoped MatrixOrder`). 🔑 Jacobian `det √G=√(det G)`=`Matrix.PosSemidef.det_sqrt`; isotropic
+     core=`integral_cexp_neg_mul_sq_norm_add` (inner-product space V). **NEXT BRICKS:** [Θ2c]
+     `Fin d→ℝ`(volume)↔`EuclideanSpace ℝ (Fin d)`(volume) measure-preserving bridge
+     (`EuclideanSpace.volume_preserving_measurableEquiv`) so the isotropic lemma applies; [Θ2d] assemble
+     `∫ exp(-b·xᵀGx+2πi cᵀx)=(det G)^{-1/2}(π/b)^{d/2}exp(-π²cᵀG⁻¹c/b)` (bricks 1+2+3+det_sqrt; b=-iπτ,
+     `b.re=π Im τ>0`). Then [Θ3]/[Θ4]. (Original target form:) anisotropic Gaussian FT `𝓕(exp(−π vᵀAv))=(det A)^{−1/2}
      exp(−π wᵀA⁻¹w)` from isotropic `fourier_gaussian_innerProductSpace` via change-of-vars `x↦A^{1/2}x`. [Θ3]
      S-transform `Θ_A(−1/τ)=(τ/i)^{n/2}Θ_A(τ)` (det A=1 [✅`posDef_unimodular_det_one`]; A⁻¹≅A ⟹ `Θ_{A⁻¹}=Θ_A`
      [`latticeTheta_congr`]). [Θ4] Θ_A nonzero level-1 weight-n/2 modular form (T=`latticeTheta_T_int`,
