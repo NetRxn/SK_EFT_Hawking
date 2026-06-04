@@ -656,6 +656,7 @@ import SKEFTHawking.HilbertSymbolReal
 import SKEFTHawking.PadicUnitResidue
 import SKEFTHawking.HilbertSymbolPadic
 import SKEFTHawking.HilbertSymbolTwo
+import SKEFTHawking.HilbertProductFormula
 import SKEFTHawking.RokhlinFromHM
 import SKEFTHawking.RokhlinClassification
 import SKEFTHawking.SpinRokhlinInterface
