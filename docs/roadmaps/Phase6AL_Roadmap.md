@@ -31,6 +31,27 @@ once it compiles). **⟹ `Hframe` (Wielandt min–max "≤") is now the SOLE rem
 + F3 (quantum assembly) still open and independent. Each plumbing piece was de-risked in-REPL (`lean_run_code`) before
 assembly, per the test-before-build discipline.
 
+**Wave 4 / F3 ASSEMBLY ✅ SHIPPED (2026-06-04; folded into `c728480e` — parallel agent's `git commit -a` swept my
+staged `FannesAudenaert.lean`; work preserved + builds clean + kernel-pure).** Two theorems:
+(1) `vonNeumannEntropy_eq_sum_negMulLog_eigenvalues₀` — `S(ρ) = ∑ₖ negMulLog(λ↓ₖ(ρ))` entropy↔sorted-spectrum bridge
+(`negMulLog`-sum permutation-invariance via `sum_eigenvalues_eq_sum_eigenvalues₀`);
+(2) `quantum_fannes_audenaert_of_mirsky` — the **F3 assembly**: GIVEN Mirsky `∑ₖ|λ↓ₖ(ρ)−λ↓ₖ(σ)| ≤ ‖ρ−σ‖₁` (F1b,
+staged on `Hframe`) AND classical Fannes–Audenaert on the eigenvalue distributions `|S(ρ)−S(σ)| ≤ qaryEntropy d Tλ`
+(F2; `Real.qaryEntropy d T = binEntropy T + T·log(d−1)` = the Audenaert envelope, nats), conclude the trace-distance
+continuity `|S(ρ)−S(σ)| ≤ qaryEntropy d (½‖ρ−σ‖₁)`. Coupling = `Real.qaryEntropy_strictMonoOn` on `[0,1−1/d]`: Mirsky
+gives `Tλ ≤ ½‖ρ−σ‖₁`, monotone branch transports the bound (hyp `½‖ρ−σ‖₁ ≤ 1−1/d` keeps both on-branch; outside it
+the trivial `≤ log d` ceiling applies). Kernel-pure (lean_verify).
+
+**⟹ F STRUCTURE NOW COMPLETE.** Shipped: F1a (Ky Fan), the entire Lidskii→Mirsky chain (`lidskii_of_frame` +
+`mirsky_of_wielandt_frame`), the entropy↔spectrum bridge, the Mirsky transport, and the monotone envelope (F3).
+**Exactly TWO precise, decomposition-backed irreducible analytic residuals remain, both isolated as named hypotheses:**
+(R1) `Hframe` = the Wielandt min–max "≤" frame-existence (for Mirsky/F1b) — all elementary constructions provably fail
+(termwise/greedy/matching/induction-both-ends/compression-recursion-bottoms-out); live routes = additive-compound Λᵏ
+spectrum / global flag-minimax / Cauchy-interlacing+more, all Mathlib-absent. (R2) the classical Fannes–Audenaert
+inequality `|H(p)−H(q)| ≤ qaryEntropy d (½‖p−q‖₁)` — Mathlib has the RHS function (`Real.qaryEntropy`) + its continuity
+& monotonicity, but NOT the inequality (a research-grade maximization over the distribution-pair polytope; Audenaert
+2007). Per the goal's alternative-completion path these are the documented residuals; everything else in C+F is shipped.
+
 🔑 Wave-3 build notes (hard-won, for future cfc work): `cfc_kronecker` ABSENT from Mathlib; analytic
 `CFC.log`/`exp_log`/`log_exp` UNUSABLE on matrices (scoped `Matrix.Norms.L2Operator` topology ≠ defeq to
 the entrywise topology the eigenbasis CFC instance uses → opening it breaks `cfc Real.log` instance synth);
