@@ -62,4 +62,27 @@ theorem hilbertPadicNat_mul_right {a b₁ b₂ : ℕ} (hb₁ : b₁ ≠ 0) (hb�
   simp only [Finsupp.coe_add, Pi.add_apply, Nat.cast_mul, legendreSym.mul, mul_add, pow_add, mul_pow]
   ring
 
+/-- **Symmetry:** `(a,b)_p = (b,a)_p`. -/
+theorem hilbertPadicNat_comm (a b : ℕ) : hilbertPadicNat p a b = hilbertPadicNat p b a := by
+  unfold hilbertPadicNat
+  rw [Nat.mul_comm (a.factorization p) (b.factorization p)]
+  ring
+
+/-- **Unit forms are locally isotropic:** if `p` divides neither `a` nor `b`, then `(a,b)_p = 1`
+(both valuations vanish, so the formula collapses to `(-1)^0 · _^0 · _^0`). -/
+theorem hilbertPadicNat_units {a b : ℕ} (ha : ¬ p ∣ a) (hb : ¬ p ∣ b) :
+    hilbertPadicNat p a b = 1 := by
+  unfold hilbertPadicNat
+  rw [Nat.factorization_eq_zero_of_not_dvd ha, Nat.factorization_eq_zero_of_not_dvd hb]
+  simp
+
+/-- **Legendre connection:** for `p ∤ a`, `(a, p)_p = (a | p)` — the symbol against the uniformizer is
+the Legendre symbol. -/
+theorem hilbertPadicNat_eq_legendre {a : ℕ} (ha : ¬ p ∣ a) :
+    hilbertPadicNat p a p = legendreSym p (a : ℤ) := by
+  have hp : p.Prime := Fact.out
+  unfold hilbertPadicNat
+  rw [Nat.factorization_eq_zero_of_not_dvd ha, hp.factorization_self]
+  simp
+
 end SKEFTHawking.HilbertSymbol
