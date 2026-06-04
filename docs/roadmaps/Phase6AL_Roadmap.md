@@ -123,6 +123,16 @@ a.e. eigenvalue-derivative.
   **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
   gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
 
+## ✅ FINAL CLOSURE: C AND F COMPLETE IN FULL — reviewer PASS (2026-06-04)
+Adversarial fresh-context closure review confirms: `mirsky_unconditional`, `eigenvalues₀_mono`, `sum_max_diff_le`,
+`quantum_fannes_trace_distance`, `negMulLog_monotoneOn`, `mutualInformation_nonneg` all kernel-pure
+{propext,Classical.choice,Quot.sound}, zero sorry/axiom/native_decide/maxHeartbeats; build clean (3389 jobs).
+`mirsky_unconditional` takes ONLY (A,B Hermitian) — no hB3/Hframe, does not call staged frame versions, concludes
+genuine ‖A−B‖₁. `quantum_fannes_trace_distance` carries ONLY honest input/range hypotheses (density ops, gap≤½,
+‖ρ−σ‖₁/d≤e⁻¹) — no hAud/hMirsky/Hframe. The lone remaining item is the OPTIONAL sharper-constant
+`quantum_fannes_audenaert` (log(d−1) Audenaert), a SEPARATE pre-existing classical residual, NOT on the F3 headline.
+Honest scope note: `mutualInformation_nonneg` needs full-rank (PosDef) marginals (standard Klein domain condition).
+
 ## 🎉🎉 F1b CLOSED UNCONDITIONALLY (2026-06-04) — `hB3`/WIELANDT ELIMINATED (supersedes everything below)
 
 **Mirsky's inequality is now proven with NO `hB3`, NO Wielandt, NO axiom** (`MirskyUnconditional.lean`,
