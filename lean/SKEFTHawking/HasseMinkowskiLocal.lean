@@ -259,6 +259,27 @@ theorem solvable_ternary_of_sufficient {K : Type*} [Field K] {a b : K}
   · obtain ⟨x, y, hxy, h0⟩ := (exists_binary_zero_iff ha).mpr hsq
     exact ⟨x, y, 0, fun hc => hxy ⟨hc.1, hc.2.1⟩, by linear_combination -h0⟩
 
+/-- **An isotropic nondegenerate binary form is universal.** Over a field with `Invertible 2`, if `a, b ≠ 0`
+and `a x² + b y²` has a nontrivial zero, then it represents *every* value `t` (the form is `≅` a hyperbolic
+plane: `-(a·b) = s²`, so `a u² + b v²` factors and `(u,v) = ((at+1)/2a, (at−1)/2s)` hits `t`). The `z = 0`
+branch of the rank-reduction step `⟨a,b,−t⟩` isotropic ⟹ `⟨a,b⟩` represents `t`. -/
+theorem binary_isotropic_universal {K : Type*} [Field K] [Invertible (2 : K)] {a b : K}
+    (ha : a ≠ 0) (hb : b ≠ 0)
+    (hiso : ∃ x y : K, ¬(x = 0 ∧ y = 0) ∧ a * x ^ 2 + b * y ^ 2 = 0) (t : K) :
+    ∃ x y : K, a * x ^ 2 + b * y ^ 2 = t := by
+  rw [exists_binary_zero_iff ha] at hiso
+  obtain ⟨s, hs⟩ := hiso
+  have hab : a * b = -(s * s) := by linear_combination -hs
+  have hs0 : s ≠ 0 := by
+    rintro rfl
+    rw [mul_zero, neg_zero] at hab
+    rcases mul_eq_zero.mp hab with h | h
+    exacts [ha h, hb h]
+  have h2 : (2 : K) ≠ 0 := two_ne_zero
+  refine ⟨(a * t + 1) / (2 * a), (a * t - 1) / (2 * s), ?_⟩
+  have hbv : b = -(s * s) / a := by rw [eq_div_iff ha]; linear_combination hab
+  rw [hbv]; field_simp; ring
+
 /-- **Ternary normalization to canonical Hilbert form.** Over a field with `c ≠ 0`, the symmetric diagonal
 ternary `a x² + b y² + c z² = 0` has a nontrivial zero iff the canonical form `z² = (-a/c) x² + (-b/c) y²`
 does (same witness, divide by `-c`). The algebraic first step of the ternary Hasse–Minkowski: it moves a
