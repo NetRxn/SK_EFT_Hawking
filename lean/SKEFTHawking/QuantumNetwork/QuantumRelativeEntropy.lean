@@ -61,4 +61,36 @@ theorem relativeEntropy_eq_neg_entropy_sub {ρ σ : Matrix ι ι ℂ} (hρ : ρ.
     relativeEntropy hρ hσ = -vonNeumannEntropy hρ - (ρ * matrixLog hσ).trace.re := by
   rw [relativeEntropy, re_trace_mul_matrixLog]
 
+omit [DecidableEq ι] in
+/-- **Classical Gibbs inequality (nonnegativity of the classical KL divergence):**
+`0 ≤ ∑ᵢ pᵢ (log pᵢ − log qᵢ)` for probability vectors `p` (nonnegative) and `q` (strictly positive),
+each summing to `1`. This is the mathematical core of Klein's inequality (quantum relative entropy
+nonnegativity): the quantum statement follows by applying it to the eigenvalue distribution of `ρ` and
+the doubly-stochastic image `rᵢ = ∑ⱼ |⟨eᵢ|fⱼ⟩|² qⱼ` of `σ`'s spectrum. Proof: `log x ≤ x − 1`. -/
+theorem classical_gibbs {p q : ι → ℝ} (hp : ∀ i, 0 ≤ p i) (hq : ∀ i, 0 < q i)
+    (hps : ∑ i, p i = 1) (hqs : ∑ i, q i = 1) :
+    0 ≤ ∑ i, p i * (Real.log (p i) - Real.log (q i)) := by
+  have key : ∑ i, p i * (Real.log (q i) - Real.log (p i)) ≤ 0 := by
+    calc ∑ i, p i * (Real.log (q i) - Real.log (p i))
+        ≤ ∑ i, (q i - p i) := by
+          apply Finset.sum_le_sum
+          intro i _
+          rcases eq_or_lt_of_le (hp i) with h | h
+          · rw [show p i = 0 from h.symm]
+            simp only [zero_mul, sub_zero]
+            linarith [hq i]
+          · rw [show Real.log (q i) - Real.log (p i) = Real.log (q i / p i) from
+                (Real.log_div (ne_of_gt (hq i)) (ne_of_gt h)).symm]
+            calc p i * Real.log (q i / p i)
+                ≤ p i * (q i / p i - 1) :=
+                  mul_le_mul_of_nonneg_left (Real.log_le_sub_one_of_pos (div_pos (hq i) h)) (le_of_lt h)
+              _ = q i - p i := by field_simp
+      _ = 0 := by rw [Finset.sum_sub_distrib, hqs, hps, sub_self]
+  have hneg : ∑ i, p i * (Real.log (p i) - Real.log (q i))
+      = -∑ i, p i * (Real.log (q i) - Real.log (p i)) := by
+    rw [← Finset.sum_neg_distrib]
+    exact Finset.sum_congr rfl fun i _ => by ring
+  rw [hneg]
+  linarith
+
 end SKEFTHawking.QuantumNetwork
