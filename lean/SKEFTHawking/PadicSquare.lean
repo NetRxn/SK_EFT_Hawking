@@ -1529,4 +1529,26 @@ theorem diag_ternary_solvable_of_local {a b c : ℚ} (ha : a ≠ 0) (hb : b ≠ 
     field_simp
     linear_combination he
 
+/-- **Value representation is a local property (binary forms over ℚ).** A binary form `⟨a,b⟩` (`a, b ≠ 0`)
+represents a nonzero rational `t` iff it does over ℝ and every ℚ_p. (`⟨a,b⟩` represents `t` ⟺ the ternary
+`a x² + b y² + (−t) z² = 0` is isotropic [witness `z = 1`, resp. `represents_of_ternary_isotropic`]; the
+ternary local–global is `diag_ternary_solvable_of_local`.) The value-representation engine of the
+Hasse–Minkowski rank-reduction step `n → n−1`. -/
+theorem binary_represents_of_local {a b t : ℚ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0)
+    (hR : ∃ u v : ℝ, (a : ℝ) * u ^ 2 + (b : ℝ) * v ^ 2 = t)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = t) :
+    ∃ u v : ℚ, (a : ℚ) * u ^ 2 + (b : ℚ) * v ^ 2 = t := by
+  haveI : Invertible (2 : ℚ) := invertibleOfNonzero (by norm_num)
+  have hiso := diag_ternary_solvable_of_local (a := a) (b := b) (c := -t) ha hb
+    (neg_ne_zero.mpr ht) ?hR' ?hloc'
+  · obtain ⟨x, y, z, hnz, he⟩ := hiso
+    exact represents_of_ternary_isotropic ha hb ⟨x, y, z, hnz, by push_cast at he ⊢; linarith [he]⟩
+  case hR' =>
+    obtain ⟨u, v, he⟩ := hR
+    exact ⟨u, v, 1, by simp, by push_cast; linarith [he]⟩
+  case hloc' =>
+    intro p _
+    obtain ⟨u, v, he⟩ := hloc p
+    exact ⟨u, v, 1, by simp, by push_cast; linear_combination he⟩
+
 end SKEFTHawking
