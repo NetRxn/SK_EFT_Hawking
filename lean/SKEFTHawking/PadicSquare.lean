@@ -455,4 +455,46 @@ theorem ternary_descent_step {p : ℕ} [Fact p.Prime] {u v X Y Z : ℤ_[p]}
   apply mul_left_cancel₀ hp2
   linear_combination h
 
+/-- **Clearing denominators for the mixed ternary.** A `ℚ_[p]` solution of `z² = u x² + p v y²`
+(coefficients in `ℤ_[p]`) scales to a `ℤ_[p]` solution: multiply through by `p^N` for `N` large enough that
+each coordinate has norm `≤ 1` (so lands in `ℤ_[p]`); the equation is homogeneous of degree 2. -/
+theorem exists_padicInt_ternary_of_padic {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]}
+    (hsol : ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (u : ℚ_[p]) * x ^ 2 + (p : ℚ_[p]) * v * y ^ 2) :
+    ∃ X Y Z : ℤ_[p], ¬(X = 0 ∧ Y = 0 ∧ Z = 0) ∧
+      Z ^ 2 = u * X ^ 2 + (p : ℤ_[p]) * v * Y ^ 2 := by
+  obtain ⟨x, y, z, hnz, h⟩ := hsol
+  have hp1 : (1 : ℝ) < (p : ℝ) := by exact_mod_cast (Fact.out : p.Prime).one_lt
+  have hppos : (0 : ℝ) < (p : ℝ) := lt_trans zero_lt_one hp1
+  have hpne : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  obtain ⟨Nx, hNx⟩ := pow_unbounded_of_one_lt ‖x‖ hp1
+  obtain ⟨Ny, hNy⟩ := pow_unbounded_of_one_lt ‖y‖ hp1
+  obtain ⟨Nz, hNz⟩ := pow_unbounded_of_one_lt ‖z‖ hp1
+  set N := max Nx (max Ny Nz) with hNdef
+  have hmono : ∀ M, M ≤ N → ∀ w : ℚ_[p], ‖w‖ < (p : ℝ) ^ M → ‖(p : ℚ_[p]) ^ N * w‖ ≤ 1 := by
+    intro M hM w hw
+    rw [norm_mul, norm_pow, Padic.norm_p, inv_pow, inv_mul_le_iff₀ (pow_pos hppos N), mul_one]
+    exact le_trans hw.le (pow_le_pow_right₀ hp1.le hM)
+  have hx' := hmono Nx (le_max_left _ _) x hNx
+  have hy' := hmono Ny (le_trans (le_max_left _ _) (le_max_right _ _)) y hNy
+  have hz' := hmono Nz (le_trans (le_max_right _ _) (le_max_right _ _)) z hNz
+  refine ⟨⟨(p : ℚ_[p]) ^ N * x, hx'⟩, ⟨(p : ℚ_[p]) ^ N * y, hy'⟩, ⟨(p : ℚ_[p]) ^ N * z, hz'⟩, ?_, ?_⟩
+  · rintro ⟨hX0, hY0, hZ0⟩
+    apply hnz
+    have hpN : (p : ℚ_[p]) ^ N ≠ 0 := pow_ne_zero N hpne
+    refine ⟨?_, ?_, ?_⟩
+    · have h1 : (p : ℚ_[p]) ^ N * x = 0 := by
+        have := congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) hX0; simpa using this
+      exact (mul_eq_zero.mp h1).resolve_left hpN
+    · have h1 : (p : ℚ_[p]) ^ N * y = 0 := by
+        have := congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) hY0; simpa using this
+      exact (mul_eq_zero.mp h1).resolve_left hpN
+    · have h1 : (p : ℚ_[p]) ^ N * z = 0 := by
+        have := congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) hZ0; simpa using this
+      exact (mul_eq_zero.mp h1).resolve_left hpN
+  · rw [← sub_eq_zero]
+    apply PadicInt.coe_eq_zero.mp
+    push_cast
+    linear_combination ((p : ℚ_[p]) ^ N) ^ 2 * h
+
 end SKEFTHawking
