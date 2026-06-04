@@ -2799,6 +2799,11 @@ import SKEFTHawking.QuantumNetwork.NegativityGeneral
 -- via the operator-log tensor identity log(ρ_A⊗ρ_B)=log ρ_A⊗1+1⊗log ρ_B (cfc_diagonal built here,
 -- cfc_kronecker absent from Mathlib) + Klein's inequality on the product reference.
 import SKEFTHawking.QuantumNetwork.EntropySubadditivity
+-- Phase 6AL Wave 4 (2026-06-04): spectral-majorization infrastructure toward Fannes–Audenaert
+-- continuity (F). `sum_mul_le_sum_top` — the rearrangement/fractional-knapsack inequality
+-- (∑μᵢpᵢ ≤ ∑_{i<k}μᵢ for antitone μ, weights pᵢ∈[0,1] summing to k), heart of the Ky Fan maximum
+-- principle. Mathlib has no Ky Fan/Lidskii/Mirsky/majorization machinery — built from scratch.
+import SKEFTHawking.QuantumNetwork.SpectralMajorization
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
