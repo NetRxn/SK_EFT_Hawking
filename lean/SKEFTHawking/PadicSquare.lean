@@ -220,4 +220,13 @@ theorem padic_valuation_decomp {p : ℕ} [Fact p.Prime] {x : ℚ_[p]} (hx : x �
   · rw [mul_comm ((p : ℚ_[p]) ^ x.valuation) (x * (p : ℚ_[p]) ^ (-x.valuation)), mul_assoc,
       ← zpow_add₀ hp0, neg_add_cancel, zpow_zero, mul_one]
 
+/-- **A norm-1 element of `ℚ_[p]` lifts to a `ℤ_[p]` unit.** If `‖u‖ = 1` then `u` is the image of a unit of
+the ring of integers `ℤ_[p]`. This carries the unit-coefficient diagonal lemmas (stated over `ℤ_[p]`) to a
+diagonalized form over the field `ℚ_[p]`. -/
+theorem exists_padicInt_unit_of_norm_one {p : ℕ} [Fact p.Prime] {u : ℚ_[p]} (hu : ‖u‖ = 1) :
+    ∃ u' : ℤ_[p], IsUnit u' ∧ (u' : ℚ_[p]) = u := by
+  refine ⟨⟨u, le_of_eq hu⟩, ?_, rfl⟩
+  rw [PadicInt.isUnit_iff]
+  exact hu
+
 end SKEFTHawking
