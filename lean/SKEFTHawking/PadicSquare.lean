@@ -1497,4 +1497,36 @@ theorem ternary_canonical_solvable_of_local_rat {A B : ℚ} (hA : A ≠ 0) (hB :
   exact (solvable_canonical_of_sq_mul (K := ℚ) (s := (s : ℚ)) (u := (u : ℚ))
     hs0 hu0 hAeq hBeq).mpr key
 
+/-- **Ternary Hasse–Minkowski for a diagonal form (rational coefficients).** For nonzero rationals
+`a, b, c`, the diagonal ternary `a x² + b y² + c z² = 0` is solvable nontrivially over ℚ iff over ℝ and
+every ℚ_p. (Normalize to canonical `z² = (−a/c) x² + (−b/c) y²` at every place via
+`isotropic_diag_ternary_iff_canonical`, then `ternary_canonical_solvable_of_local_rat`.) The `n = 3` base
+case of the Hasse–Minkowski rank reduction, directly consumable by the matrix→diagonal application. -/
+theorem diag_ternary_solvable_of_local {a b c : ℚ} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0)
+    (hR : ∃ x y z : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2 + (c : ℝ) * z ^ 2 = 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 + (c : ℚ_[p]) * z ^ 2 = 0) :
+    ∃ x y z : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 + (c : ℚ) * z ^ 2 = 0 := by
+  rw [isotropic_diag_ternary_iff_canonical hc]
+  have hAne : -a / c ≠ 0 := div_ne_zero (neg_ne_zero.mpr ha) hc
+  have hBne : -b / c ≠ 0 := div_ne_zero (neg_ne_zero.mpr hb) hc
+  refine ternary_canonical_solvable_of_local_rat hAne hBne ?_ ?_
+  · have hcR : (c : ℝ) ≠ 0 := by exact_mod_cast hc
+    obtain ⟨x, y, z, hnz, he⟩ := hR
+    refine ⟨x, y, z, hnz, ?_⟩
+    rw [show ((-a / c : ℚ) : ℝ) = -(a : ℝ) / (c : ℝ) by push_cast; ring,
+       show ((-b / c : ℚ) : ℝ) = -(b : ℝ) / (c : ℝ) by push_cast; ring]
+    field_simp
+    linear_combination he
+  · intro p _
+    have hcp : (c : ℚ_[p]) ≠ 0 := by exact_mod_cast hc
+    obtain ⟨x, y, z, hnz, he⟩ := hloc p
+    refine ⟨x, y, z, hnz, ?_⟩
+    rw [show ((-a / c : ℚ) : ℚ_[p]) = -(a : ℚ_[p]) / (c : ℚ_[p]) by push_cast; ring,
+       show ((-b / c : ℚ) : ℚ_[p]) = -(b : ℚ_[p]) / (c : ℚ_[p]) by push_cast; ring]
+    field_simp
+    linear_combination he
+
 end SKEFTHawking
