@@ -820,6 +820,16 @@ $n=2$ case (\verb|diamondDist_pauliKraus_eq_of_errorBasis|, re-deriving 6AH.2), 
 (\verb|diamondDist_twoQubitPauliKraus_eq|): $\|\Phi_p-\mathrm{id}\|_\diamond = 1-p_{00}$, covering the
 dominant two-qubit-gate / crosstalk error model. Kernel-only; \emph{zero} new project-local axioms.
 
+The third 6AK result (\verb|SpamProcessFidelity.lean|) completes the device-characterisation substrate.
+The state-preparation-and-measurement (SPAM) readout bit-flip channel $\Phi_q(\rho)=(1-q)\rho+qX\rho X$
+is the Pauli channel with weights $(1-q,q,0,0)$, so its diamond distance to the identity is exactly the
+readout error probability (\verb|diamondDist_spamBitFlip_eq|): $\|\Phi_q-\mathrm{id}\|_\diamond = q$.
+The process (entanglement) fidelity $F_{\mathrm{pro}}(\Phi)=\tfrac1{d^2}\sum_k|\mathrm{tr}\,K_k|^2$ is
+exposed as a named quantity (\verb|processFidelity|) and the 6AG identity is restated for it,
+$F_{\mathrm{avg}}(\Phi)=(d\,F_{\mathrm{pro}}(\Phi)+1)/(d+1)$
+(\verb|avgGateFidelity_eq_processFidelity|); for the SPAM channel $F_{\mathrm{pro}}=1-q$. Kernel-only;
+\emph{zero} new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}

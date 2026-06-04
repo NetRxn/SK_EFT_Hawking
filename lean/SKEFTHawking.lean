@@ -2704,6 +2704,8 @@ import SKEFTHawking.QuantumNetwork.DiamondSDPDuality
 import SKEFTHawking.QuantumNetwork.CoherenceFidelity
 -- Phase 6AK Wave 6AK.3 (2026-06-03): unitary-error-basis exact diamond distance (two-qubit Pauli).
 import SKEFTHawking.QuantumNetwork.ErrorBasisDiamond
+-- Phase 6AK Wave 6AK.6 (2026-06-03): SPAM bit-flip diamond distance + process fidelity.
+import SKEFTHawking.QuantumNetwork.SpamProcessFidelity
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
