@@ -215,4 +215,70 @@ theorem gaussian_hF {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : 
   have hscale := mul_le_mul_of_nonneg_left hq (by positivity : (0 : ℝ) ≤ π * σ.im)
   nlinarith [hscale]
 
+/-- **hLsum: `L¹`-summability over the lattice of the fundamental-domain integrals** (the `hLsum` hypothesis
+of `multivar_poisson` for the Gaussian). On `[0,1)ᵈ` (`∑xᵢ²≤d`, volume 1) the integrand is bounded by
+`C·exp(-c·∑(↑γ)ᵢ²)`, so each `∫⁻ ≤ ofReal(C·exp(-c·∑(↑γ)ᵢ²))`, and the lattice sum is `ofReal` of a
+convergent series (`summable_lattice_gaussian`), hence `≠ ⊤`. -/
+theorem gaussian_hLsum {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef) (hσ : 0 < σ.im)
+    (n : Fin d → ℤ) :
+    ∑' γ : ↥(Submodule.span ℤ (Set.range ⇑(Pi.basisFun ℝ (Fin d)))),
+      ∫⁻ x in ZSpan.fundamentalDomain (Pi.basisFun ℝ (Fin d)),
+        ‖Complex.exp (2 * (π : ℂ) * I * ((∑ i, (-(n i) : ℝ) * x i : ℝ) : ℂ))
+          * gaussianCM σ G (x + (γ : Fin d → ℝ))‖ₑ ≠ ⊤ := by
+  obtain ⟨lam, hlam, hcoe⟩ := posDef_coercive G hG
+  have hcpos : 0 < π * σ.im * lam / 2 := by positivity
+  have hRdnn : (0 : ℝ) ≤ Real.sqrt d := Real.sqrt_nonneg _
+  have hvol : volume (ZSpan.fundamentalDomain (Pi.basisFun ℝ (Fin d))) = 1 := by
+    rw [ZSpan.volume_fundamentalDomain]
+    have hid : (Matrix.of ⇑(Pi.basisFun ℝ (Fin d))) = (1 : Matrix (Fin d) (Fin d) ℝ) := by
+      ext i j
+      simp [Matrix.one_apply, Pi.basisFun_apply, Pi.single_apply, eq_comm]
+    rw [hid, Matrix.det_one, abs_one, ENNReal.ofReal_one]
+  have hRd : ∀ x ∈ ZSpan.fundamentalDomain (Pi.basisFun ℝ (Fin d)),
+      ∑ i, (x i) ^ 2 ≤ (Real.sqrt d) ^ 2 := by
+    intro x hx
+    rw [Real.sq_sqrt (by positivity : (0 : ℝ) ≤ (d : ℝ))]
+    rw [ZSpan.fundamentalDomain_pi_basisFun, Set.mem_pi] at hx
+    calc ∑ i, (x i) ^ 2 ≤ ∑ _i : Fin d, (1 : ℝ) := by
+          refine Finset.sum_le_sum fun i _ => ?_
+          have := hx i (Set.mem_univ i)
+          rw [Set.mem_Ico] at this
+          nlinarith [this.1, this.2]
+      _ = (d : ℝ) := by simp
+  have hbound : ∀ γ : ↥(Submodule.span ℤ (Set.range ⇑(Pi.basisFun ℝ (Fin d)))),
+      (∫⁻ x in ZSpan.fundamentalDomain (Pi.basisFun ℝ (Fin d)),
+        ‖Complex.exp (2 * (π : ℂ) * I * ((∑ i, (-(n i) : ℝ) * x i : ℝ) : ℂ))
+          * gaussianCM σ G (x + (γ : Fin d → ℝ))‖ₑ)
+      ≤ ENNReal.ofReal (Real.exp (2 * π * σ.im * lam * (Real.sqrt d) ^ 2)
+          * Real.exp (-(π * σ.im * lam / 2 * ∑ i, ((γ : Fin d → ℝ) i) ^ 2))) := by
+    intro γ
+    calc (∫⁻ x in ZSpan.fundamentalDomain (Pi.basisFun ℝ (Fin d)),
+            ‖Complex.exp (2 * (π : ℂ) * I * ((∑ i, (-(n i) : ℝ) * x i : ℝ) : ℂ))
+              * gaussianCM σ G (x + (γ : Fin d → ℝ))‖ₑ)
+        ≤ ∫⁻ _ in ZSpan.fundamentalDomain (Pi.basisFun ℝ (Fin d)),
+            ENNReal.ofReal (Real.exp (2 * π * σ.im * lam * (Real.sqrt d) ^ 2)
+              * Real.exp (-(π * σ.im * lam / 2 * ∑ i, ((γ : Fin d → ℝ) i) ^ 2))) := by
+          refine lintegral_mono_ae ?_
+          refine (ae_restrict_iff' (ZSpan.fundamentalDomain_measurableSet _)).mpr ?_
+          filter_upwards with x hx
+          rw [← ofReal_norm_eq_enorm]
+          refine ENNReal.ofReal_le_ofReal ?_
+          rw [norm_mul]
+          have hchar : ‖Complex.exp (2 * (π : ℂ) * I * ((∑ i, (-(n i) : ℝ) * x i : ℝ) : ℂ))‖ = 1 := by
+            rw [Complex.norm_exp]; simp [Complex.mul_re, Complex.mul_im]
+          rw [hchar, one_mul]
+          show ‖gaussianCM σ G (x + (γ : Fin d → ℝ))‖ ≤ _
+          rw [norm_gaussianCM, ← Real.exp_add]
+          apply Real.exp_le_exp.mpr
+          have hq := quadform_translate_lower hlam.le hRdnn hcoe (hRd x hx) (γ : Fin d → ℝ)
+          have hscale := mul_le_mul_of_nonneg_left hq (by positivity : (0 : ℝ) ≤ π * σ.im)
+          nlinarith [hscale]
+      _ = ENNReal.ofReal _ * volume (ZSpan.fundamentalDomain (Pi.basisFun ℝ (Fin d))) :=
+          setLIntegral_const _ _
+      _ = ENNReal.ofReal _ := by rw [hvol, mul_one]
+  refine ne_top_of_le_ne_top ?_ (ENNReal.tsum_le_tsum hbound)
+  rw [← ENNReal.ofReal_tsum_of_nonneg (fun γ => by positivity)
+    ((summable_lattice_gaussian hcpos).mul_left _)]
+  exact ENNReal.ofReal_ne_top
+
 end SKEFTHawking
