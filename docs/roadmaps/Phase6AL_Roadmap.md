@@ -19,6 +19,18 @@ SHIPPED `1887803e` (`NegativityGeneral.lean`). Wave 3 ✅ SHIPPED `8d56d522` (`E
 kernel-pure (lean_verify); Wave-3 full-lib axiom gate DEFERRED (parallel agent's mid-edit
 `ThetaModularWeight.lean` breaks the full ExtractDeps build — module built standalone). Wave 4 (F) remains.
 
+**Wave 4 / F1b CAPSTONE ✅ SHIPPED `e959066d` (2026-06-04): `mirsky_of_wielandt_frame` (FannesAudenaert.lean).**
+The ENTIRE Lidskii→Mirsky chain is now staged on the SINGLE hypothesis `Hframe` (= the Wielandt frame-existence
+step (3)): given for every position tuple `s` an orthonormal frame in `A`'s eigen-flag whose `B`-Rayleigh sum is
+`≤ ∑ᵣ λ↓_{sᵣ}(B)`, conclude `∑ₖ|λ↓ₖ(A)−λ↓ₖ(B)| ≤ ‖A−B‖₁`. Discharges all downstream plumbing — `lidskii_of_frame`
+(per-tuple), matrix `eigenvalues₀`↔LinearMap `eigenvalues (toEuclideanLin ·)` (DEFINITIONAL rfl), `A−B` operator
+bridge (`congr 1; rw [map_sub]`), `Finset`↔tuple reindex via `S.orderEmbOfFin` (`map_orderEmbOfFin_univ`+`sum_map`),
+and `mirsky_of_subset_diff`. Kernel-pure (lean_verify); module builds clean; full-lib ExtractDeps axiom gate DEFERRED
+(parallel agent's mid-edit `PadicSquare.lean` breaks the full build — re-run `validate.py --check axiom_closure_allowlist`
+once it compiles). **⟹ `Hframe` (Wielandt min–max "≤") is now the SOLE remaining brick for Mirsky/F1b**; F2 (Audenaert)
++ F3 (quantum assembly) still open and independent. Each plumbing piece was de-risked in-REPL (`lean_run_code`) before
+assembly, per the test-before-build discipline.
+
 🔑 Wave-3 build notes (hard-won, for future cfc work): `cfc_kronecker` ABSENT from Mathlib; analytic
 `CFC.log`/`exp_log`/`log_exp` UNUSABLE on matrices (scoped `Matrix.Norms.L2Operator` topology ≠ defeq to
 the entrywise topology the eigenbasis CFC instance uses → opening it breaks `cfc Real.log` instance synth);
