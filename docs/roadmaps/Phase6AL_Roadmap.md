@@ -123,7 +123,33 @@ a.e. eigenvalue-derivative.
   **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
   gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
 
-**(P2) = the genuine irreducible residual** (a.e. eigenvalue-derivative `dλ↓ᵢ/dt=⟨uᵢ,Cuᵢ⟩` through crossings, Rellich).
+**🔻 DEEP RESEARCH LANDED (2026-06-04, `Lit-Search/Phase-6AL/Formalizing Arbitrary-Subset Lidskii (H)...md`) →
+PIVOT OFF (P2): use Route Q1(a) = Wielandt frame via `lidskii_of_frame`'s `hB3`, NOT the eigenvalue-path.** The DR
+verdict: (P2)/eigenvalue-path is the heavy trap (needs measurable eigenvector field + Hellmann–Feynman a.e. deriv,
+absent from Mathlib); the convexity shortcut gives only top-k; route-e/DS are circular/flaky. So the (P1) Weyl layer
+(5 bricks, shipped) is a valuable STANDALONE result (Weyl Lipschitz) but is **off F1b's critical path**.
+
+**⚠️ TEST-BEFORE-BUILD CORRECTED THE DR (2026-06-04, `temporary/working-docs/lidskii_wielandt_frame_probe.py`, 300
+random trials + the n=3 S={0,2} case). "Advice not source truth" paid off:**
+- ✅ **`hB3` is TRUE and tight**: `min` over orthonormal frames `{wᵣ}` with `wᵣ ∈ Vᵣᴬ` (A-top-(sᵣ+1) flag) of
+  `∑⟨wᵣ,Bwᵣ⟩  ≤  ∑λ↓_{sᵣ}(B)` — 300/300, worst `(min − target) = 1.3e-15`. So `lidskii_of_frame` + this frame ⟹ H.
+- ❌ **The DR's SPECIFIC construction is mathematically impossible** (its `dim Sᵣ ≥ k−r+1` while `Sᵣ ⊆ Vᵣᴬ∩B-bottom`
+  with `dim ≥ 1` is self-inconsistent). The naive per-r intersection `wᵣ ∈ Vᵣᴬ ∩ B-bottom-(n−sᵣ)` forces, for n=3
+  S={0,2}: `w₀=±u_A[0]`, `w₁=±u_B[2]` (each intersection is 1-dim) — generically NON-orthogonal. **The true frame
+  has NO per-r B-membership; the B-sum bound is GLOBAL.** (Resolves the prior `feedback`/memory "single-frame
+  provably false" vs DR contradiction IN FAVOR of the memory's caution.)
+- ❌ **Route-e (W = top-k eigvecs of A−tB, projection-trace form) is flaky** (246/300 on a t-sweep) — not clean.
+- ✅ **Base case k=1 IS provable from substrate**: `min` over unit `w ∈ Vᵣᴬ` (dim sᵣ+1) of `⟨w,Bw⟩ ≤ λ↓_{sᵣ}(B)` is
+  exactly `exists_mem_re_inner_le` (any (m+1)-dim subspace has a vector with Rayleigh ≤ λ↓ₘ). The obstruction is
+  the per-step orthogonality cost in extending to k>1 — the genuine Wielandt content.
+
+**⟹ F1b reduced to ONE precise CONFIRMED-TRUE lemma `hB3`** (`min` A-flag frame B-sum ≤ `∑λ↓_{sᵣ}(B)`), whose correct
+proof is a **global compression/interlacing eigenvalue argument** (Cauchy interlacing on `B|_{Vₖᴬ}` + Courant–Fischer),
+NOT the DR's refuted per-r frame chain. NEXT: derive/verify the global construction numerically, then formalize →
+`hB3` → `lidskii_of_frame` → `mirsky_of_subset_diff` → unconditional Mirsky → F-headline. A sharper follow-up research
+question (the exact compression argument) may help; the current DR over-claimed the construction's cleanliness.
+
+**(Superseded) (P2) — the eigenvalue-path residual** (a.e. eigenvalue-derivative `dλ↓ᵢ/dt=⟨uᵢ,Cuᵢ⟩` through crossings, Rellich).
 **Mathlib-search re-confirmed ABSENT 2026-06-04 in BOTH directions** (decompose-before-asserting-wall discipline):
 (i) no sorted-eigenvalue/analytic-perturbation differentiability — only `spectrum.hasDerivAt_resolvent` (the Kato
 contour-integral *building block*, not the eigenvalue derivative); (ii) no majorization/Wielandt-minimax API. The
