@@ -17,6 +17,7 @@ Dependency graph (anti-circularity): `eight_dvd_rank` (theta-modularity, no Rokh
 import Mathlib
 import SKEFTHawking.VanDerBlijReduction
 import SKEFTHawking.ThetaDefiniteDischarge
+import SKEFTHawking.LatticeContent
 
 namespace SKEFTHawking
 
@@ -29,6 +30,23 @@ abbrev HasIsotropicVectorHyp : Prop :=
     0 < sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
     0 < sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
     ∃ v : Fin m → ℤ, IsPrimitiveVec v ∧ v ⬝ᵥ A *ᵥ v = 0
+
+/-- The **weak** [HM] hypothesis (the natural Hasse–Minkowski output): every indefinite even unimodular form
+has a *nonzero* (not necessarily primitive) integer isotropic vector. -/
+abbrev HasWeakIsotropicVectorHyp : Prop :=
+  ∀ {m : ℕ} (A : Matrix (Fin m) (Fin m) ℤ), IsEvenUnimodular A →
+    0 < sigPos (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
+    0 < sigNeg (A.map (Int.cast : ℤ → ℝ)).toQuadraticMap' →
+    ∃ v : Fin m → ℤ, v ≠ 0 ∧ v ⬝ᵥ A *ᵥ v = 0
+
+/-- **Weak ⟹ strong [HM].** The Hasse–Minkowski output (a nonzero integer isotropic vector) is upgraded to a
+*primitive* one by content extraction (`exists_primitive_isotropic_of_isotropic`). So discharging the weak
+hypothesis (the actual goal of the Hilbert-symbol / Hasse–Minkowski build) immediately discharges the strong
+form consumed by the capstone — and hence the whole `16 ∣ σ` chain. -/
+theorem hasIsotropic_of_weak (hw : HasWeakIsotropicVectorHyp) : HasIsotropicVectorHyp := by
+  intro m A hA hsp hsn
+  obtain ⟨v, hv0, hviso⟩ := hw A hA hsp hsn
+  exact exists_primitive_isotropic_of_isotropic A v hv0 hviso
 
 /-- **`8 ∣ σ` for even unimodular forms, with [Θ] discharged.** Given only the [HM] input, every even
 unimodular integer form has `8 ∣ latticeSig`. The definite branch is supplied unconditionally by
