@@ -211,4 +211,95 @@ theorem trace_mul_proj_le {A : Matrix ι ι ℂ} (hA : A.IsHermitian) {P : Matri
   exact sum_mul_le_sum_top hA.eigenvalues₀ (hA.eigenvalues₀_antitone) (fun kk => w (e kk))
     (fun kk => hw0 (e kk)) (fun kk => hw1 (e kk)) k hpsum
 
+/-- **Ky Fan achievement direction:** for `k ≤ dim`, the top-`k` eigenprojection is a rank-`k` orthogonal
+projection `P` attaining `tr(P·A) = ∑_{i<k} λ↓ᵢ(A)`. With `trace_mul_proj_le` this realises the Ky Fan
+maximum and yields top-`k` subadditivity. -/
+theorem exists_proj_trace_eq {A : Matrix ι ι ℂ} (hA : A.IsHermitian) (k : ℕ)
+    (hk : k ≤ Fintype.card ι) :
+    ∃ P : Matrix ι ι ℂ, P.IsHermitian ∧ P * P = P ∧ P.trace.re = (k : ℝ) ∧
+      (P * A).trace.re
+        = ∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < k),
+            hA.eigenvalues₀ i := by
+  set U := hA.eigenvectorUnitary with hU
+  set e : Fin (Fintype.card ι) ≃ ι := Fintype.equivOfCardEq (Fintype.card_fin _) with he
+  set ind : ι → ℝ := fun j => if ((e.symm j : Fin (Fintype.card ι)) : ℕ) < k then 1 else 0 with hind
+  set Dind : Matrix ι ι ℂ := Matrix.diagonal (fun j => ((ind j : ℝ) : ℂ)) with hDind
+  set DL : Matrix ι ι ℂ := Matrix.diagonal (RCLike.ofReal ∘ hA.eigenvalues) with hDL
+  set P : Matrix ι ι ℂ := (↑U : Matrix ι ι ℂ) * Dind * star (↑U : Matrix ι ι ℂ) with hP
+  have hDindH : Dind.IsHermitian := by
+    rw [hDind, Matrix.IsHermitian, Matrix.diagonal_conjTranspose]
+    congr 1; funext j; simp [Complex.conj_ofReal]
+  have hUss : star (↑U : Matrix ι ι ℂ) * (↑U : Matrix ι ι ℂ) = 1 := (Unitary.mem_iff.mp U.2).1
+  have hUss' : (↑U : Matrix ι ι ℂ) * star (↑U : Matrix ι ι ℂ) = 1 := (Unitary.mem_iff.mp U.2).2
+  have hPh : P.IsHermitian := by
+    show star P = P
+    rw [hP, StarMul.star_mul, StarMul.star_mul, star_star, Matrix.star_eq_conjTranspose Dind,
+      hDindH, mul_assoc]
+  have hDind2 : Dind * Dind = Dind := by
+    rw [hDind, Matrix.diagonal_mul_diagonal]
+    congr 1; funext j
+    rw [hind]; by_cases h : ((e.symm j : Fin (Fintype.card ι)) : ℕ) < k <;> simp [h]
+  have hPP : P * P = P := by
+    calc P * P = (↑U : Matrix ι ι ℂ) * Dind * (star (↑U : Matrix ι ι ℂ) * ↑U) * Dind
+          * star (↑U : Matrix ι ι ℂ) := by rw [hP]; noncomm_ring
+      _ = (↑U : Matrix ι ι ℂ) * (Dind * Dind) * star (↑U : Matrix ι ι ℂ) := by rw [hUss]; noncomm_ring
+      _ = P := by rw [hDind2, hP]
+  have hindE : (fun kk => ind (e kk))
+      = fun kk : Fin (Fintype.card ι) => if (kk : ℕ) < k then (1 : ℝ) else 0 := by
+    funext kk; rw [hind, he]; simp
+  refine ⟨P, hPh, hPP, ?_, ?_⟩
+  · have htr : P.trace = Dind.trace := by
+      rw [hP, Matrix.trace_mul_comm, ← mul_assoc, hUss, one_mul]
+    rw [htr, hDind, Matrix.trace_diagonal, ← Complex.ofReal_sum, Complex.ofReal_re,
+      ← Equiv.sum_comp e ind, hindE, Finset.sum_boole, Fin.card_filter_val_lt, min_eq_right hk]
+  · have hAspec : A = (↑U : Matrix ι ι ℂ) * DL * star (↑U : Matrix ι ι ℂ) := by
+      rw [hDL, hU]
+      conv_lhs => rw [hA.spectral_theorem]
+      rw [Unitary.conjStarAlgAut_apply]
+    have hPAtr : (P * A).trace = (Dind * DL).trace := by
+      rw [hP]
+      conv_lhs => rw [hAspec]
+      rw [show ((↑U : Matrix ι ι ℂ) * Dind * star (↑U : Matrix ι ι ℂ))
+            * ((↑U : Matrix ι ι ℂ) * DL * star (↑U : Matrix ι ι ℂ))
+          = (↑U : Matrix ι ι ℂ) * (Dind * (star (↑U : Matrix ι ι ℂ) * ↑U) * DL)
+            * star (↑U : Matrix ι ι ℂ) from by noncomm_ring, hUss,
+        show (↑U : Matrix ι ι ℂ) * (Dind * 1 * DL) * star (↑U : Matrix ι ι ℂ)
+          = (↑U : Matrix ι ι ℂ) * (Dind * DL) * star (↑U : Matrix ι ι ℂ) from by noncomm_ring,
+        Matrix.trace_mul_comm, ← mul_assoc, hUss, one_mul]
+    rw [hPAtr, hDind, hDL, Matrix.diagonal_mul_diagonal, Matrix.trace_diagonal, Complex.re_sum]
+    rw [show (∑ j, ((fun j => ((ind j : ℝ) : ℂ)) j * (RCLike.ofReal ∘ hA.eigenvalues) j).re)
+        = ∑ j, ind j * hA.eigenvalues j from by
+      refine Finset.sum_congr rfl fun j _ => ?_
+      rw [Function.comp_apply, RCLike.ofReal_eq_complex_ofReal, Complex.mul_re]
+      simp [Complex.ofReal_re, Complex.ofReal_im]]
+    rw [← Equiv.sum_comp e (fun j => ind j * hA.eigenvalues j)]
+    rw [show (fun kk => ind (e kk) * hA.eigenvalues (e kk))
+        = fun kk : Fin (Fintype.card ι) => (if (kk : ℕ) < k then (1:ℝ) else 0) * hA.eigenvalues₀ kk from by
+      funext kk
+      rw [show ind (e kk) = if (kk:ℕ) < k then (1:ℝ) else 0 from by
+        have := congrFun hindE kk; simpa using this]
+      congr 1
+      show hA.eigenvalues (e kk) = hA.eigenvalues₀ kk
+      show hA.eigenvalues₀ ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm (e kk))
+        = hA.eigenvalues₀ kk
+      rw [he, Equiv.symm_apply_apply]]
+    rw [Finset.sum_filter]
+    refine Finset.sum_congr rfl fun kk _ => ?_
+    split_ifs <;> simp
+
+/-- **Top-`k` eigenvalue-sum subadditivity** (Ky Fan corollary): `∑_{i<k} λ↓ᵢ(A) ≤ ∑_{i<k} λ↓ᵢ(B) +
+∑_{i<k} λ↓ᵢ(A−B)`. The achiever for `A` is a single projection scored against both `B` and `A−B`. -/
+theorem sum_top_subadditive {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB : B.IsHermitian)
+    (hAB : (A - B).IsHermitian) (k : ℕ) (hk : k ≤ Fintype.card ι) :
+    (∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < k), hA.eigenvalues₀ i)
+      ≤ (∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < k), hB.eigenvalues₀ i)
+        + ∑ i ∈ Finset.univ.filter (fun i : Fin (Fintype.card ι) => (i : ℕ) < k), hAB.eigenvalues₀ i := by
+  obtain ⟨P, hPh, hPP, hPk, hPA⟩ := exists_proj_trace_eq hA k hk
+  rw [← hPA]
+  have hsplit : (P * A).trace.re = (P * B).trace.re + (P * (A - B)).trace.re := by
+    conv_lhs => rw [show A = B + (A - B) from by abel]
+    rw [mul_add, Matrix.trace_add, Complex.add_re]
+  rw [hsplit]
+  exact add_le_add (trace_mul_proj_le hB hPh hPP k hPk) (trace_mul_proj_le hAB hPh hPP k hPk)
+
 end SKEFTHawking.QuantumNetwork
