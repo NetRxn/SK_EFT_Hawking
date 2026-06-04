@@ -114,14 +114,16 @@ eigenprojection attains ∑top-k, k≤dim) + `sum_top_subadditive` (`∑top-k(A)
 kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
 
 **REMAINING (precise): F1b Mirsky ℓ¹ step, F2 classical FA, F3 assembly.**
-- **F1b Mirsky ℓ¹ step** `∑ᵢ|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖₁`. The operator-theoretic foundation is DONE
-  (`sum_top_subadditive` gives weak majorization: partial sums of d:=λ↓(A)−λ↓(B) dominated by partial sums of
-  λ↓(A−B)). REMAINING = the pure majorization→ℓ¹ convex step (Hardy–Littlewood–Pólya/Karamata for the convex
-  symmetric gauge ∑|·|): from `∑_{i<k} dᵢ ≤ ∑_{i<k} λ↓ᵢ(A−B)` (and the symmetric B↔A version) conclude
-  `∑ᵢ|dᵢ| ≤ ∑ᵢ|λᵢ(A−B)| = ‖A−B‖₁`. ⚠️ Mathlib lacks majorization→convex-sum (scout: grep returned only the
-  asymptotics `Majorized`); this is a from-scratch combinatorial-convexity brick. `traceNorm_hermitian=∑|λᵢ|`
-  present. If a specific step provably needs absent machinery, document THAT precise residual (never wholesale,
-  never axiom).
+- **F1b Mirsky ℓ¹ step** `∑ᵢ|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖₁`. ⚠️ REFINED DIFFICULTY (2026-06-04): `sum_top_subadditive`
+  gives ONLY the *prefix* bound `∑_{i<k} dᵢ ≤ ∑_{i<k} λ↓ᵢ(A−B)` with `dᵢ=λ↓ᵢ(A)−λ↓ᵢ(B)` in the GIVEN
+  (sorted-A,B) order. The ℓ¹/Mirsky needs the bound for the SORTED d (`∑_{i<k} d↓ᵢ ≤ ∑_{i<k}λ↓ᵢ(A−B)`, i.e.
+  genuine WEAK MAJORIZATION) — strictly stronger, = Lidskii–Wielandt. Closing the gap needs the subset/sorted
+  form (sum over arbitrary k-index sets), then the HLP convex step for ∑|·|. BOTH the Lidskii–Wielandt
+  majorization AND the HLP→convex-sum are absent from Mathlib (confirmed: only asymptotics `Majorized`; has
+  `Monovary` rearrangement + `Jensen`, NOT weak-majorization→symmetric-gauge). This is a LARGE from-scratch
+  matrix-analysis + combinatorial-convexity build — NOT an axiom-needing wall (provable), but multi-brick.
+  `traceNorm_hermitian=∑|λᵢ|` present. Build decompose-first; if a specific step provably needs absent
+  machinery document THAT residual (never wholesale, never axiom).
 - **F2 classical FA** `|∑negMulLog pᵢ−∑negMulLog qᵢ| ≤ T·log(d−1)+H₂(T)`, `∑|pᵢ−qᵢ|=2T`. Real analysis;
   `Real.binEntropy`/`negMulLog` concavity toe-holds present. Independent of F1.
 - **F3 assembly**: `S=∑negMulLog(eigenvalues₀)` (via `sum_eigenvalues_eq_sum_eigenvalues₀`) + F1b + F2.
