@@ -300,6 +300,11 @@ theorem hilbertGlobalProd_odd_primes (p q : ℕ) [Fact p.Prime] [Fact q.Prime]
   rw [one_mul, ← pow_add]
   exact Even.neg_one_pow ⟨_, rfl⟩
 
+/-- **Symmetry of the global product:** `hilbertGlobalProd a b = hilbertGlobalProd b a`. -/
+theorem hilbertGlobalProd_comm (a b : ℤ) : hilbertGlobalProd a b = hilbertGlobalProd b a := by
+  unfold hilbertGlobalProd
+  rw [hilbertReal_comm, finprod_congr (fun p => hilbertPrime_comm p a b)]
+
 /-- Support of `x ↦ hilbertPrime x a 2` is `⊆ {2}` when `a ∈ {-1, 2}` (only the prime `2` divides `2·|a|·2`). -/
 private theorem support_subset_two {a : ℤ} (ha : ∀ x : ℕ, x.Prime → x ≠ 2 → ¬ (x : ℤ) ∣ a) :
     Function.mulSupport (fun x => hilbertPrime x a 2) ⊆ ↑({2} : Finset ℕ) := by
@@ -366,5 +371,17 @@ theorem hilbertGlobalProd_two_two : hilbertGlobalProd 2 2 = 1 := by
     Finset.prod_singleton, hilbertPrime_two, hilbert2Int_two_two,
     show ((2 : ℤ) : ℝ) = 2 from by norm_num, hilbertReal_of_nonneg_left (by norm_num : (0 : ℝ) ≤ 2)]
   ring
+
+/-- **Product formula on a pair of primes:** `∏_v (p,q)_v = 1` for any primes `p, q` (dispatching the four
+generator cases `(2,2)`, `(2,q)`, `(p,2)`, `(p,q)`/`(p,p)`). -/
+theorem hilbertGlobalProd_prime_prime (p q : ℕ) [Fact p.Prime] [Fact q.Prime] :
+    hilbertGlobalProd (p : ℤ) (q : ℤ) = 1 := by
+  by_cases hp2 : p = 2 <;> by_cases hq2 : q = 2
+  · subst hp2; subst hq2; exact hilbertGlobalProd_two_two
+  · subst hp2; exact hilbertGlobalProd_two_prime q hq2
+  · subst hq2; rw [hilbertGlobalProd_comm]; exact hilbertGlobalProd_two_prime p hp2
+  · by_cases hpq : p = q
+    · subst hpq; exact hilbertGlobalProd_prime_self p hp2
+    · exact hilbertGlobalProd_odd_primes p q hp2 hq2 hpq
 
 end SKEFTHawking.HilbertSymbol
