@@ -129,4 +129,37 @@ theorem indefinite_matrix_repr_zero {n : ℕ} (A : Matrix (Fin n) (Fin n) ℝ)
     simp [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
   rwa [happ] at hQx
 
+/-! ## Diagonalization scaffold: matrix ↔ quadratic-map and isotropy transfer
+
+These connect the Gram-matrix isotropy shape `x ⬝ᵥ M *ᵥ x = 0` (consumed by the [HM] application) to the
+abstract `QuadraticMap` API, so that Mathlib's diagonalization (`equivalent_weightedSumSquares`, over any
+field with `Invertible 2`) can be applied at each completion `ℝ`/`ℚ_p` and the resulting diagonal isotropy
+transported back. -/
+
+/-- **Matrix quadratic-map apply.** `M.toQuadraticMap' x = x ⬝ᵥ M *ᵥ x` (the bilinear value). -/
+theorem toQuadraticMap'_apply {R : Type*} [CommRing R] {n : Type*} [Fintype n] [DecidableEq n]
+    (M : Matrix n n R) (x : n → R) : M.toQuadraticMap' x = x ⬝ᵥ M *ᵥ x := by
+  simp [Matrix.toQuadraticMap', LinearMap.BilinMap.toQuadraticMap_apply, Matrix.toLinearMap₂'_apply']
+
+/-- **Isotropy transfers across an isometric equivalence.** Equivalent quadratic maps are simultaneously
+isotropic: `(∃ x ≠ 0, Q₁ x = 0) ↔ (∃ x ≠ 0, Q₂ x = 0)`. The workhorse for transporting a diagonalized
+form's isotropy back to the original Gram form. -/
+theorem exists_ne_zero_isotropic_congr {R M₁ M₂ N : Type*} [CommRing R] [AddCommMonoid M₁]
+    [AddCommMonoid M₂] [AddCommMonoid N] [Module R M₁] [Module R M₂] [Module R N]
+    {Q₁ : QuadraticMap R M₁ N} {Q₂ : QuadraticMap R M₂ N} (h : Q₁.Equivalent Q₂) :
+    (∃ x : M₁, x ≠ 0 ∧ Q₁ x = 0) ↔ (∃ x : M₂, x ≠ 0 ∧ Q₂ x = 0) := by
+  obtain ⟨f⟩ := h
+  constructor
+  · rintro ⟨x, hx, hQ⟩
+    refine ⟨f x, ?_, by rw [f.map_app]; exact hQ⟩
+    intro hfx; apply hx; have : f x = f 0 := by rw [hfx, map_zero]
+    exact EquivLike.injective f this
+  · rintro ⟨y, hy, hQ⟩
+    refine ⟨f.symm y, ?_, ?_⟩
+    · intro hfy; apply hy; have : f.symm y = f.symm 0 := by rw [hfy, map_zero]
+      exact EquivLike.injective f.symm this
+    · have key := f.map_app (f.symm y)
+      rw [f.apply_symm_apply] at key
+      rw [← key]; exact hQ
+
 end SKEFTHawking
