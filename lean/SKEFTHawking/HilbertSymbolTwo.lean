@@ -260,6 +260,22 @@ theorem hilbert2Int_two_odd {q : ℤ} (hq : ¬ (2 : ℤ) ∣ q) :
   simp only [Int.cast_one, Nat.cast_one, Nat.cast_zero, one_mul, zero_mul, add_zero]
   rw [show eps2 (1 : ZMod 8) = 0 from by decide, zero_mul, zero_add]
 
+/-- `(-1, 2)_2 = 1`. -/
+theorem hilbert2Int_neg_one_two : hilbert2Int (-1) 2 = 1 := by
+  have h1 : padicValInt 2 (-1) = 0 := by simp [padicValInt]
+  have h2 : padicValInt 2 2 = 1 := padicValInt_self
+  have hp1 : pfreeInt 2 (-1) = -1 := by simp [pfreeInt, h1]
+  have hp2 : pfreeInt 2 2 = 1 := by simp [pfreeInt, h2]
+  unfold hilbert2Int
+  rw [h1, h2, hp1, hp2]; decide
+
+/-- `(2, 2)_2 = 1`. -/
+theorem hilbert2Int_two_two : hilbert2Int 2 2 = 1 := by
+  have h2 : padicValInt 2 2 = 1 := padicValInt_self
+  have hp2 : pfreeInt 2 2 = 1 := by simp [pfreeInt, h2]
+  unfold hilbert2Int
+  rw [h2, hp2]; decide
+
 /-- `(p, q)_2 = χ₂(ε(p)·ε(q))` for odd `p, q`: both valuations vanish, so the exponent is just `ε(p)·ε(q)`. -/
 theorem hilbert2Int_odd_odd {p q : ℤ} (hp : ¬ (2 : ℤ) ∣ p) (hq : ¬ (2 : ℤ) ∣ q) :
     hilbert2Int p q = chi2 (eps2 (p : ZMod 8) * eps2 (q : ZMod 8)) := by

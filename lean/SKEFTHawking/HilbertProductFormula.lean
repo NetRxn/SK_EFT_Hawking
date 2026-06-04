@@ -300,4 +300,38 @@ theorem hilbertGlobalProd_odd_primes (p q : ℕ) [Fact p.Prime] [Fact q.Prime]
   rw [one_mul, ← pow_add]
   exact Even.neg_one_pow ⟨_, rfl⟩
 
+/-- Support of `x ↦ hilbertPrime x a 2` is `⊆ {2}` when `a ∈ {-1, 2}` (only the prime `2` divides `2·|a|·2`). -/
+private theorem support_subset_two {a : ℤ} (ha : ∀ x : ℕ, x.Prime → x ≠ 2 → ¬ (x : ℤ) ∣ a) :
+    Function.mulSupport (fun x => hilbertPrime x a 2) ⊆ ↑({2} : Finset ℕ) := by
+  intro x hx
+  simp only [Function.mem_mulSupport] at hx
+  simp only [Finset.coe_singleton, Set.mem_singleton_iff]
+  by_contra hxne
+  apply hx
+  by_cases hxp : x.Prime
+  · refine hilbertPrime_units hxp hxne (ha x hxp hxne) ?_
+    intro h
+    exact hxne ((Nat.prime_dvd_prime_iff_eq hxp Nat.prime_two).mp (Int.natCast_dvd_natCast.mp (by exact_mod_cast h)))
+  · exact hilbertPrime_of_not_prime hxp _ _
+
+/-- **Product formula, generator `(-1, 2)`:** `∏_v (-1,2)_v = 1`. -/
+theorem hilbertGlobalProd_neg_one_two : hilbertGlobalProd (-1) 2 = 1 := by
+  unfold hilbertGlobalProd
+  rw [finprod_eq_finset_prod_of_mulSupport_subset _
+      (support_subset_two (fun x hxp _ h => hxp.ne_one (Nat.dvd_one.mp (by exact_mod_cast (dvd_neg.mp h))))),
+    Finset.prod_singleton, hilbertPrime_two, hilbert2Int_neg_one_two,
+    show ((-1 : ℤ) : ℝ) = -1 from by norm_num, show ((2 : ℤ) : ℝ) = 2 from by norm_num,
+    hilbertReal_of_nonneg_right _ (by norm_num : (0 : ℝ) ≤ 2)]
+  ring
+
+/-- **Product formula, generator `(2, 2)`:** `∏_v (2,2)_v = 1`. -/
+theorem hilbertGlobalProd_two_two : hilbertGlobalProd 2 2 = 1 := by
+  unfold hilbertGlobalProd
+  rw [finprod_eq_finset_prod_of_mulSupport_subset _
+      (support_subset_two (fun x hxp hx2 h =>
+        hx2 ((Nat.prime_dvd_prime_iff_eq hxp Nat.prime_two).mp (Int.natCast_dvd_natCast.mp (by exact_mod_cast h))))),
+    Finset.prod_singleton, hilbertPrime_two, hilbert2Int_two_two,
+    show ((2 : ℤ) : ℝ) = 2 from by norm_num, hilbertReal_of_nonneg_left (by norm_num : (0 : ℝ) ≤ 2)]
+  ring
+
 end SKEFTHawking.HilbertSymbol
