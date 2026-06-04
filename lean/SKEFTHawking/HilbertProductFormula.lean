@@ -169,4 +169,14 @@ theorem hilbertGlobalProd_eq_finset_prod {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 
   unfold hilbertGlobalProd
   rw [finprod_eq_finset_prod_of_mulSupport_subset _ (hilbertPrime_mulSupport_subset ha hb)]
 
+/-- **Product formula, generator `(-1,-1)`:** `∏_v (-1,-1)_v = 1`. The real place and the dyadic place each
+contribute `-1` (both `-1` are negative; `ε(-1)=1`), and these cancel; all odd places are trivial. -/
+theorem hilbertGlobalProd_neg_one_neg_one : hilbertGlobalProd (-1) (-1) = 1 := by
+  rw [hilbertGlobalProd_eq_finset_prod (by norm_num) (by norm_num),
+    show Nat.divisors (2 * (-1 : ℤ).natAbs * (-1 : ℤ).natAbs) = {1, 2} from by decide,
+    Finset.prod_insert (by decide), Finset.prod_singleton,
+    hilbertPrime_of_not_prime (by decide), hilbertPrime_two, hilbert2Int_neg_one_neg_one,
+    show ((-1 : ℤ) : ℝ) = -1 from by norm_num, hilbertReal_neg_neg (by norm_num) (by norm_num)]
+  ring
+
 end SKEFTHawking.HilbertSymbol

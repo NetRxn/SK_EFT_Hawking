@@ -179,4 +179,13 @@ theorem hilbert2Int_one_left (b : ℤ) : hilbert2Int 1 b = 1 := by
 theorem hilbert2Int_one_right (a : ℤ) : hilbert2Int a 1 = 1 := by
   rw [hilbert2Int_comm]; exact hilbert2Int_one_left a
 
+/-- `(-1, -1)_2 = -1`: both odd parts are `-1 ≡ 7 mod 8`, `ε(7)=1`, so the exponent is `ε(7)·ε(7)=1` and
+`χ₂(1) = -1`. This is the dyadic contribution that cancels the real `(-1,-1)_∞ = -1` in the product formula. -/
+theorem hilbert2Int_neg_one_neg_one : hilbert2Int (-1) (-1) = -1 := by
+  have hv : padicValInt 2 (-1) = 0 := by simp [padicValInt]
+  have hpf : pfreeInt 2 (-1) = -1 := by simp [pfreeInt, hv]
+  unfold hilbert2Int
+  rw [hv, hpf]
+  decide
+
 end SKEFTHawking.HilbertSymbol
