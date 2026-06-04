@@ -229,4 +229,23 @@ theorem exists_padicInt_unit_of_norm_one {p : ℕ} [Fact p.Prime] {u : ℚ_[p]} 
   rw [PadicInt.isUnit_iff]
   exact hu
 
+/-- **Odd-`p` unit ternary isotropy over the field `ℚ_[p]`.** For an odd prime `p` and norm-1 coefficients
+`a, b, c : ℚ_[p]`, the form `a x² + b y² + c z² = 0` has a nontrivial zero. Lift the coefficients to `ℤ_[p]`
+units (`exists_padicInt_unit_of_norm_one`), solve over `ℤ_[p]` (`exists_diag_ternary_zero_odd`), cast the
+solution back. This is the field-level shape produced by diagonalizing a `ℤ_p`-unimodular form. -/
+theorem exists_diag_ternary_zero_odd_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b c : ℚ_[p]}
+    (ha : ‖a‖ = 1) (hb : ‖b‖ = 1) (hc : ‖c‖ = 1) :
+    ∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ a * x ^ 2 + b * y ^ 2 + c * z ^ 2 = 0 := by
+  obtain ⟨a', ha'u, ha'⟩ := exists_padicInt_unit_of_norm_one ha
+  obtain ⟨b', hb'u, hb'⟩ := exists_padicInt_unit_of_norm_one hb
+  obtain ⟨c', hc'u, hc'⟩ := exists_padicInt_unit_of_norm_one hc
+  obtain ⟨x', y', z', hnz, hzero⟩ := exists_diag_ternary_zero_odd hp ha'u hb'u hc'u
+  refine ⟨(x' : ℚ_[p]), (y' : ℚ_[p]), (z' : ℚ_[p]), ?_, ?_⟩
+  · rintro ⟨hx0, hy0, hz0⟩
+    exact hnz ⟨PadicInt.coe_eq_zero.mp hx0, PadicInt.coe_eq_zero.mp hy0, PadicInt.coe_eq_zero.mp hz0⟩
+  · have h := congrArg (fun t : ℤ_[p] => (t : ℚ_[p])) hzero
+    push_cast at h
+    rw [ha', hb', hc'] at h
+    exact h
+
 end SKEFTHawking
