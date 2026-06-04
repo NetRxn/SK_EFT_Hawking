@@ -100,4 +100,41 @@ theorem eight_dvd_latticeSig_of_HMweak_of_Theta
   obtain ⟨v, hv0, hviso⟩ := hHM A hA hsp hsn
   exact exists_primitive_isotropic_of_isotropic A v hv0 hviso
 
+/-- **Denominator clearing: rational isotropy ⟹ integer isotropy.** A nonzero *rational* isotropic vector of
+an integer Gram matrix `M` scales (by a common denominator from `IsLocalization.exist_integer_multiples`) to a
+nonzero *integer* isotropic vector. This is the elementary `ℚ → ℤ` step turning the Hasse–Minkowski rational
+output into the integer vector required by `HasWeakIsotropicVectorHyp` — isotropy `x ⬝ᵥ M *ᵥ x` is homogeneous
+of degree 2, so scaling by the (nonzero) common denominator preserves it. -/
+theorem exists_int_isotropic_of_rat {n : ℕ} (M : Matrix (Fin n) (Fin n) ℤ)
+    (h : ∃ v : Fin n → ℚ, v ≠ 0 ∧ v ⬝ᵥ (M.map (Int.cast : ℤ → ℚ)) *ᵥ v = 0) :
+    ∃ v : Fin n → ℤ, v ≠ 0 ∧ v ⬝ᵥ M *ᵥ v = 0 := by
+  obtain ⟨v, hv0, hviso⟩ := h
+  obtain ⟨b, hb⟩ := IsLocalization.exist_integer_multiples (nonZeroDivisors ℤ) Finset.univ v
+  choose w hw using fun i => RingHom.mem_range.mp (hb i (Finset.mem_univ i))
+  have hbne : ((b : ℤ) : ℚ) ≠ 0 := by exact_mod_cast nonZeroDivisors.coe_ne_zero b
+  have hcast : ∀ i, ((w i : ℤ) : ℚ) = ((b : ℤ) : ℚ) * v i := by
+    intro i; simpa [Algebra.smul_def] using hw i
+  have hcw : (fun i => ((w i : ℤ) : ℚ)) = ((b : ℤ) : ℚ) • v := by
+    funext i; rw [hcast i]; simp [Pi.smul_apply, smul_eq_mul]
+  refine ⟨w, ?_, ?_⟩
+  · intro hwz
+    apply hv0
+    funext i
+    have h0 : ((w i : ℤ) : ℚ) = 0 := by rw [show w i = 0 from congrFun hwz i]; simp
+    rw [hcast i] at h0
+    rcases mul_eq_zero.mp h0 with hb0 | hvi
+    · exact absurd hb0 hbne
+    · simp [hvi]
+  · have key : ((w ⬝ᵥ M *ᵥ w : ℤ) : ℚ) = 0 := by
+      have e1 : ((w ⬝ᵥ M *ᵥ w : ℤ) : ℚ)
+          = (fun i => ((w i : ℤ) : ℚ)) ⬝ᵥ (M.map (Int.cast : ℤ → ℚ)) *ᵥ (fun i => ((w i : ℤ) : ℚ)) := by
+        rw [show ((w ⬝ᵥ M *ᵥ w : ℤ) : ℚ) = (Int.castRingHom ℚ) (w ⬝ᵥ M *ᵥ w) from rfl,
+            RingHom.map_dotProduct]
+        congr 1
+        funext i
+        exact RingHom.map_mulVec (Int.castRingHom ℚ) M w i
+      rw [e1, hcw, Matrix.mulVec_smul, dotProduct_smul, smul_dotProduct, hviso]
+      simp
+    exact_mod_cast key
+
 end SKEFTHawking
