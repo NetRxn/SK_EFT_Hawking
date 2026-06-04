@@ -280,6 +280,23 @@ theorem binary_isotropic_universal {K : Type*} [Field K] [Invertible (2 : K)] {a
   have hbv : b = -(s * s) / a := by rw [eq_div_iff ha]; linear_combination hab
   rw [hbv]; field_simp; ring
 
+/-- **Ternary isotropy ⟹ binary represents the value (rank-reduction core).** Over a field with
+`Invertible 2`, `a, b ≠ 0`: if the ternary `a x² + b y² = t z²` has a nontrivial solution, then `⟨a,b⟩`
+represents `t` (`∃ u v, a u² + b v² = t`). If `z ≠ 0`, scale by `1/z`; if `z = 0`, the binary form is
+isotropic, hence universal (`binary_isotropic_universal`). The algebraic heart of the Hasse–Minkowski
+rank-reduction step `n → n−1` (paired with the ternary local–global to make "represents `t`" a local
+property). -/
+theorem represents_of_ternary_isotropic {K : Type*} [Field K] [Invertible (2 : K)] {a b t : K}
+    (ha : a ≠ 0) (hb : b ≠ 0)
+    (h : ∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ a * x ^ 2 + b * y ^ 2 = t * z ^ 2) :
+    ∃ x y : K, a * x ^ 2 + b * y ^ 2 = t := by
+  obtain ⟨x, y, z, hnz, he⟩ := h
+  by_cases hz : z = 0
+  · subst hz
+    exact binary_isotropic_universal ha hb
+      ⟨x, y, fun hc => hnz ⟨hc.1, hc.2, rfl⟩, by rw [he]; ring⟩ t
+  · exact ⟨x / z, y / z, by field_simp; linear_combination he⟩
+
 /-- **Ternary normalization to canonical Hilbert form.** Over a field with `c ≠ 0`, the symmetric diagonal
 ternary `a x² + b y² + c z² = 0` has a nontrivial zero iff the canonical form `z² = (-a/c) x² + (-b/c) y²`
 does (same witness, divide by `-c`). The algebraic first step of the ternary Hasse–Minkowski: it moves a
