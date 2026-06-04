@@ -111,4 +111,33 @@ theorem hilbertPrime_mulSupport_finite {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
         exact hnd (hpb.mul_left (2 * a.natAbs))
   · exact absurd (hilbertPrime_of_not_prime hpp a b) hp
 
+/-- The **global Hilbert product** `∏_v (a,b)_v = (a,b)_∞ · ∏_p (a,b)_p` over all places (the real place
+times the finitely-supported product over primes). The **product formula** is the theorem that this equals
+`1`; it is the arithmetic heart of Hasse–Minkowski. -/
+noncomputable def hilbertGlobalProd (a b : ℤ) : ℤ :=
+  hilbertReal (a : ℝ) (b : ℝ) * ∏ᶠ p : ℕ, hilbertPrime p a b
+
+/-- **Bimultiplicativity of the global product in the first argument** (nonzero arguments): each place factor
+is bimultiplicative and the finitely-supported products distribute. -/
+theorem hilbertGlobalProd_mul_left {a₁ a₂ b : ℤ} (ha₁ : a₁ ≠ 0) (ha₂ : a₂ ≠ 0) (hb : b ≠ 0) :
+    hilbertGlobalProd (a₁ * a₂) b = hilbertGlobalProd a₁ b * hilbertGlobalProd a₂ b := by
+  unfold hilbertGlobalProd
+  rw [show ((a₁ * a₂ : ℤ) : ℝ) = (a₁ : ℝ) * (a₂ : ℝ) from by push_cast; ring,
+    hilbertReal_mul_left (Int.cast_ne_zero.mpr ha₁) (Int.cast_ne_zero.mpr ha₂),
+    finprod_congr (fun p => hilbertPrime_mul_left (p := p) ha₁ ha₂),
+    finprod_mul_distrib (hilbertPrime_mulSupport_finite ha₁ hb)
+      (hilbertPrime_mulSupport_finite ha₂ hb)]
+  ring
+
+/-- **Bimultiplicativity of the global product in the second argument** (nonzero arguments). -/
+theorem hilbertGlobalProd_mul_right {a b₁ b₂ : ℤ} (ha : a ≠ 0) (hb₁ : b₁ ≠ 0) (hb₂ : b₂ ≠ 0) :
+    hilbertGlobalProd a (b₁ * b₂) = hilbertGlobalProd a b₁ * hilbertGlobalProd a b₂ := by
+  unfold hilbertGlobalProd
+  rw [show ((b₁ * b₂ : ℤ) : ℝ) = (b₁ : ℝ) * (b₂ : ℝ) from by push_cast; ring,
+    hilbertReal_mul_right (Int.cast_ne_zero.mpr hb₁) (Int.cast_ne_zero.mpr hb₂),
+    finprod_congr (fun p => hilbertPrime_mul_right (p := p) hb₁ hb₂),
+    finprod_mul_distrib (hilbertPrime_mulSupport_finite ha hb₁)
+      (hilbertPrime_mulSupport_finite ha hb₂)]
+  ring
+
 end SKEFTHawking.HilbertSymbol
