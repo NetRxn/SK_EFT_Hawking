@@ -137,4 +137,36 @@ theorem exists_subspace_re_inner_ge {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [No
     simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hmem
     exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact Nat.lt_succ_iff.mp hmem)
 
+/-- **Courant–Fischer, "≤" direction (single eigenvalue).** Every `(m+1)`-dimensional subspace contains a
+nonzero vector with Rayleigh form `≤ λ↓ₘ ‖·‖²` — it meets the span of the bottom `n−m` eigenvectors. -/
+theorem exists_mem_re_inner_le {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ}
+    (hT : T.IsSymmetric) (hn : Module.finrank 𝕜 E = n) {m : ℕ} (hm : m < n)
+    (V : Submodule 𝕜 E) (hV : Module.finrank 𝕜 V = m + 1) :
+    ∃ v ∈ V, v ≠ 0 ∧ RCLike.re (inner 𝕜 v (T v)) ≤ hT.eigenvalues hn ⟨m, hm⟩ * ‖v‖ ^ 2 := by
+  set Wbot := Submodule.span 𝕜 (⇑(hT.eigenvectorBasis hn) ''
+    ((Finset.univ.filter (fun i : Fin n => m ≤ (i : ℕ))) : Set (Fin n))) with hWbot
+  have hWdim : Module.finrank 𝕜 Wbot = n - m := by
+    rw [hWbot, finrank_eigenspace_span]
+    have h := Finset.filter_card_add_filter_neg_card_eq_card (s := (Finset.univ : Finset (Fin n)))
+      (p := fun i : Fin n => m ≤ (i : ℕ))
+    rw [Finset.card_univ, Fintype.card_fin] at h
+    have hneg : (Finset.univ.filter (fun i : Fin n => ¬ m ≤ (i : ℕ))).card = m := by
+      have heq : (Finset.univ.filter (fun i : Fin n => ¬ m ≤ (i : ℕ)))
+          = Finset.univ.filter (fun i : Fin n => (i : ℕ) < m) :=
+        Finset.filter_congr (fun i _ => by simp [Nat.not_le])
+      rw [heq, Fin.card_filter_val_lt]
+      omega
+    omega
+  have hgt : Module.finrank 𝕜 E < Module.finrank 𝕜 V + Module.finrank 𝕜 Wbot := by
+    rw [hV, hWdim, hn]; omega
+  obtain ⟨x, hx, hx0⟩ := exists_mem_inf_ne_zero V Wbot hgt
+  refine ⟨x, hx.1, hx0, ?_⟩
+  refine isSymmetric_re_inner_le hT hn x (hT.eigenvalues hn ⟨m, hm⟩) (fun i hrepr => ?_)
+  have hmem : i ∈ Finset.univ.filter (fun i : Fin n => m ≤ (i : ℕ)) := by
+    by_contra hi
+    exact hrepr (repr_eq_zero_of_not_mem hT hn hx.2 (Finset.mem_coe.not.mpr hi))
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hmem
+  exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact hmem)
+
 end SKEFTHawking.QuantumNetwork
