@@ -155,4 +155,20 @@ theorem exists_ternary_isotropic_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a 
   · rw [hZ] at hcunit; exact isUnit_of_mul_isUnit_left hcunit
   · rw [hZ]; ring
 
+/-- **Symmetric diagonal ternary isotropy (odd `p`):** for an odd prime and `p`-adic units `a, b, c`,
+the diagonal form `a x² + b y² + c z² = 0` has a nontrivial zero. Derived from
+`exists_ternary_isotropic_odd` by scaling the `Z²` term by the unit `-c`. -/
+theorem exists_diag_ternary_zero_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b c : ℤ_[p]}
+    (ha : IsUnit a) (hb : IsUnit b) (hc : IsUnit c) :
+    ∃ x y z : ℤ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ a * x ^ 2 + b * y ^ 2 + c * z ^ 2 = 0 := by
+  obtain ⟨w, hw⟩ := hc.neg
+  obtain ⟨X, Y, Z, hZ, hXYZ⟩ :=
+    exists_ternary_isotropic_odd hp (ha.mul (w⁻¹).isUnit) (hb.mul (w⁻¹).isUnit)
+  refine ⟨X, Y, Z, fun h => hZ.ne_zero h.2.2, ?_⟩
+  have hww : (w : ℤ_[p]) * ↑w⁻¹ = 1 := Units.mul_inv w
+  have e1 : a * X ^ 2 + b * Y ^ 2 = (w : ℤ_[p]) * Z ^ 2 := by
+    linear_combination (w : ℤ_[p]) * hXYZ - (a * X ^ 2 + b * Y ^ 2) * hww
+  rw [hw] at e1
+  linear_combination e1
+
 end SKEFTHawking
