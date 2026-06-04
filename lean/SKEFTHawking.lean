@@ -2816,6 +2816,10 @@ import SKEFTHawking.QuantumNetwork.SpectralMajorization
 -- Phase 6AL Wave 4 (2026-06-04): Fannes–Audenaert assembly module. So far the trace-norm ↔ sorted-
 -- eigenvalue bridge ‖A‖₁ = ∑ₖ|λ↓ₖ(A)|. Mirsky ℓ¹ + classical FA remain (Phase6AL roadmap Wave-4).
 import SKEFTHawking.QuantumNetwork.FannesAudenaert
+-- Phase 6AL Wave 4 (2026-06-04): Mirsky UNCONDITIONAL (no hB3/Wielandt). mirsky_unconditional —
+-- ∑ₖ|λ↓ₖ(A)−λ↓ₖ(B)| ≤ ‖A−B‖₁ via Weyl monotonicity + positive/negative-part split; discharges hMirsky,
+-- making quantum_fannes_audenaert (trace-distance form) rest only on the separate classical-Audenaert residual.
+import SKEFTHawking.QuantumNetwork.MirskyUnconditional
 -- Phase 6AL Wave 4 (2026-06-04): toward Lidskii–Wielandt. diag_conj_eq_sum_normSq — the diagonal of a
 -- Hermitian conjugated into another eigenbasis is a doubly-stochastic combination of its eigenvalues
 -- (∑ⱼ|Mᵢⱼ|²λⱼ); the operator core of the sorted-difference majorization (the sole remaining Mirsky brick).
