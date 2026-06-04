@@ -14,7 +14,20 @@ All items below were assessed via the proven method (first principles + decompos
 Mathlib MCP search). Reachability verdicts and the genuine walls are recorded honestly per item.
 
 **PROGRESS:** Wave 1 ✅ SHIPPED `6c089896` (`EntropyConcavity.lean` + `GibbsVariational.lean`). Wave 2 ✅
-SHIPPED `1887803e` (`NegativityGeneral.lean`). Axiom gate GREEN; all kernel-pure. Waves 3–4 remain.
+SHIPPED `1887803e` (`NegativityGeneral.lean`). Wave 3 ✅ SHIPPED `8d56d522` (`EntropySubadditivity.lean`:
+`cfc_diagonal`, `matrixLog_kronecker`, `vonNeumannEntropy_subadditive`, `mutualInformation_nonneg`). All
+kernel-pure (lean_verify); Wave-3 full-lib axiom gate DEFERRED (parallel agent's mid-edit
+`ThetaModularWeight.lean` breaks the full ExtractDeps build — module built standalone). Wave 4 (F) remains.
+
+🔑 Wave-3 build notes (hard-won, for future cfc work): `cfc_kronecker` ABSENT from Mathlib; analytic
+`CFC.log`/`exp_log`/`log_exp` UNUSABLE on matrices (scoped `Matrix.Norms.L2Operator` topology ≠ defeq to
+the entrywise topology the eigenbasis CFC instance uses → opening it breaks `cfc Real.log` instance synth);
+NO Pi-CFC instance in Mathlib (`ContinuousFunctionalCalculus ℝ (ι→ℂ)` only assumed, never provided). So
+the route is the eigenbasis/`cfc_diagonal` one: `cfc_diagonal` built via `cfcHom_eq_of_continuous_of_map_id`
+(finite spectrum ⟹ `Matrix.finite_real_spectrum.continuousOn`); `matrixLog_kronecker` via `kronUnitary` +
+`conjStarAlgAut_kronecker` + `StarAlgHomClass.map_cfc`; subadditivity via `relativeEntropy_nonneg` (Klein) on
+`ρ_A⊗ρ_B` with abstract marginal-pairing hypotheses. Perf: `fun_prop` on `conjStarAlgAut Vu` continuity TIMES
+OUT (unfolds `kronUnitary`'s proof) → use explicit `(continuous_const.mul continuous_id).mul continuous_const`.
 
 ---
 
