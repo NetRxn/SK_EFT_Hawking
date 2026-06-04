@@ -123,4 +123,27 @@ theorem mul_cpow_of_arg_mem {x y : ℂ} (s : ℂ) (hx : x ≠ 0) (hy : y ≠ 0)
     Complex.cpow_def_of_ne_zero hy, ← Complex.exp_add, ← add_mul,
     (Complex.log_mul_eq_add_log_iff hx hy).mpr harg]
 
+/-- `Θ_M(i) ≠ 0` for positive-definite `M`: at `τ = i` the lattice theta is the sum of the *positive reals*
+`exp(-π·vᵀMv)` (real part `≥ 1` from the `v = 0` term), hence nonzero. Provides the `θ(τ) ≠ 0` needed to divide
+out of the `(ST)³` automorphy identity. -/
+theorem latticeTheta_I_ne_zero {d : ℕ} (M : Matrix (Fin d) (Fin d) ℝ) (hpd : M.PosDef) :
+    latticeTheta M I ≠ 0 := by
+  have hsummand : ∀ v : Fin d → ℤ,
+      Complex.exp (π * I * I * (((fun i => (v i : ℝ)) ⬝ᵥ M *ᵥ (fun i => (v i : ℝ)) : ℝ) : ℂ))
+        = Complex.ofReal (Real.exp (-(π * ((fun i => (v i : ℝ)) ⬝ᵥ M *ᵥ (fun i => (v i : ℝ)))))) := by
+    intro v
+    rw [mul_assoc (π : ℂ) I I, Complex.I_mul_I, Complex.ofReal_exp]
+    congr 1
+    push_cast; ring
+  have hsumR : Summable (fun v : Fin d → ℤ =>
+      Real.exp (-(π * ((fun i => (v i : ℝ)) ⬝ᵥ M *ᵥ (fun i => (v i : ℝ)))))) :=
+    Complex.summable_ofReal.mp ((summable_gram_gaussian M hpd I (by simp)).congr hsummand)
+  have hL : latticeTheta M I
+      = Complex.ofReal (∑' v : Fin d → ℤ,
+          Real.exp (-(π * ((fun i => (v i : ℝ)) ⬝ᵥ M *ᵥ (fun i => (v i : ℝ)))))) := by
+    rw [latticeTheta, Complex.ofReal_tsum]
+    exact tsum_congr hsummand
+  rw [hL, ne_eq, Complex.ofReal_eq_zero]
+  exact ne_of_gt (hsumR.tsum_pos (fun v => (Real.exp_pos _).le) 0 (Real.exp_pos _))
+
 end SKEFTHawking
