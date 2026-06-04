@@ -811,4 +811,21 @@ theorem isSquare_padic_coe_iff {p : ℕ} [Fact p.Prime] {u : ℤ_[p]} (hu : IsUn
   · rintro ⟨w, hw⟩
     exact ⟨(w : ℚ_[p]), by rw [hw]; push_cast; ring⟩
 
+/-- **Squares in `ℚ_[p]` have even valuation.** If `x ≠ 0` is a square then `x.valuation` is even
+(`valuation (w*w) = 2 · valuation w`). One direction of the field-square characterization, and the
+local condition feeding the rational-square local–global. -/
+theorem isSquare_valuation_even {p : ℕ} [Fact p.Prime] {x : ℚ_[p]} (hx : x ≠ 0) (h : IsSquare x) :
+    Even x.valuation := by
+  obtain ⟨w, hw⟩ := h
+  have hwne : w ≠ 0 := fun hw0 => hx (by rw [hw, hw0, mul_zero])
+  rw [hw, Padic.valuation_mul hwne hwne]
+  exact ⟨w.valuation, rfl⟩
+
+/-- **Odd-`p` field-square criterion (unit case).** A `p`-adic unit is a square in the field `ℚ_[p]` iff its
+residue mod `p` is a square — the computable criterion assembled from `isSquare_padic_coe_iff` and
+`isSquare_iff_isSquare_toZMod`. -/
+theorem isSquare_padic_unit_iff_residue {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u : ℤ_[p]}
+    (hu : IsUnit u) : IsSquare ((u : ℚ_[p])) ↔ IsSquare (PadicInt.toZMod u) :=
+  (isSquare_padic_coe_iff hu).trans (isSquare_iff_isSquare_toZMod hp hu)
+
 end SKEFTHawking
