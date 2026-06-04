@@ -153,10 +153,12 @@ theorem genAmpDamp_out_diff {γ N : ℝ} (hγ0 : 0 ≤ γ) (hγ1 : γ ≤ 1) (hN
 
 /-- **Generalized (thermal) amplitude-damping two-sided diamond bracket:**
 `(1−N)γ ≤ diamondDist (genAmpDampKraus γ N) (id) ≤ 1`. The lower bound is the exact achievable thermal
-de-excitation flux (worst-case unentangled excited input); the upper bound is the trivial CPTP
-channel-distance cap (GAD is not covariant, so the exact value needs the `√(1−γ)`-dependent eigenvector
-witness, as for amplitude damping). For `N = 0` the lower bound recovers the amplitude-damping value
-`γ`. -/
+de-excitation flux (worst-case unentangled excited input). The upper bound `≤ 1` is the *trivial* CPTP
+channel-distance cap (`diamondDist_le_one`) and carries no GAD-specific information: a tight upper bound
+is left to the dual-witness route (`diamondDist_le_dual_witness`, Phase 6AI), since GAD is not covariant
+and its exact value needs the `√(1−γ)`-dependent eigenvector witness, as for amplitude damping. For
+`N = 0` the lower bound recovers the amplitude-damping value `γ`. The substantive, verified content here
+is the exact-achievable lower bound; the `≤ 1` conjunct is only the always-true cap. -/
 theorem diamondDist_genAmpDamp_bracket {γ N : ℝ} (hγ0 : 0 ≤ γ) (hγ1 : γ ≤ 1) (hN0 : 0 ≤ N)
     (hN1 : N ≤ 1) :
     (1 - N) * γ ≤ diamondDist (genAmpDampKraus γ N) (idKrausPad 3 2) ∧

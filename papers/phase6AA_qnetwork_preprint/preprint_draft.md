@@ -365,8 +365,10 @@ F_avg(Φ_t) = ½ + ⅙ e^{−t/T₁} + ⅓ e^{−t/(2T₁) − t/T₂}
 (`entanglementFidelity_coherenceChannel`, `avgGateFidelity_coherenceChannel`). Because every term is a
 decaying exponential, `F_avg(Φ_t)` is **monotone decreasing** in the gate duration
 (`avgGateFidelity_coherenceChannel_antitone`), with exact endpoints `F_avg = 1` at `t = 0` and floor
-`½` as `t → ∞` (`_le_one`, `_ge_half`): a longer gate on fixed-coherence hardware cannot achieve higher
-average gate fidelity. Kernel-only; zero new project-local axioms.
+`½` as `t → ∞` (`_le_one`, `_ge_half`). These are exact statements **about the model channel**
+`Φ_t = 𝒜_γ ∘ 𝒟_p`; reading `F_avg(Φ_t)` as an upper bound on a *physical* gate's average fidelity is a
+separate modelling assumption (realised noise is at least the coherence-limited model) and is not part
+of the theorems. Kernel-only; zero new project-local axioms.
 
 The second 6AK result (`ErrorBasisDiamond.lean`) lifts the single-qubit Pauli exact diamond distance
 (6AH.2) to a **dimension-general unitary-error-basis** theorem. For any family `{Uᵢ}` of unitaries on

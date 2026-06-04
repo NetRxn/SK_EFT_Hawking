@@ -14,8 +14,17 @@ collapse to a **sum of decaying exponentials**,
 `F_avg(Φ_t) = ½ + ⅙ e^{−t/T₁} + ⅓ e^{−t/(2T₁) − t/T₂}`,
 
 via the general identity `avgGateFidelity_eq : F_avg = (d·F_e + 1)/(d+1)` (Phase 6AG). Each term is
-antitone in `t`, so `F_avg(Φ_t)` is a decreasing ceiling: it equals `1` at `t = 0` and decreases
-monotonically to the floor `½` as `t → ∞`.
+antitone in `t`, so `F_avg(Φ_t)` decreases monotonically from `1` at `t = 0` to the floor `½` as
+`t → ∞`.
+
+**Scope (what is and is not proven).** Every theorem here is an *exact equality (or its consequence)
+for the specific model channel* `Φ_t = 𝒜_γ ∘ 𝒟_p` with the stated `γ(t,T₁)`, `p(t,T₂)`. Reading
+`F_avg(Φ_t)` as an *upper bound on a physical gate's* average fidelity is a separate modelling
+assumption — namely that the realised noise is at least as strong as the coherence-limited model
+(`𝒜_γ ∘ 𝒟_p` is the best case) — and is **not** part of any theorem below. The Lean-verified asset is
+the closed form and its monotonicity for the model channel; the "physical-gate ceiling" reading is a
+stated assumption layered on top. (Convention: dephasing `𝒟_p` is applied first, then amplitude
+damping `𝒜_γ`; `γ = 1 − e^{−t/T₁}`, `p = (1 − e^{−t/T₂})/2`.)
 
 Invariants: kernel-pure `{propext, Classical.choice, Quot.sound}`; no project-local axioms;
 no `maxHeartbeats`; no `native_decide`.
@@ -129,8 +138,9 @@ theorem entanglementFidelity_coherenceChannel {t T1 T2 : ℝ} (ht : 0 ≤ t) (hT
   linear_combination (1 / 4 : ℝ) * hE2 + (1 / 2 : ℝ) * hEu
 
 /-- **Exact average gate fidelity of the time-dependent coherence channel** — a sum of decaying
-exponentials with floor `½`: `F_avg(Φ_t) = ½ + ⅙ e^{−t/T₁} + ⅓ e^{−t/(2T₁) − t/T₂}`. Combined with
-`exp` monotonicity this is the explicit coherence-limited fidelity ceiling. -/
+exponentials with floor `½`: `F_avg(Φ_t) = ½ + ⅙ e^{−t/T₁} + ⅓ e^{−t/(2T₁) − t/T₂}`. This is an exact
+equality for the model channel `Φ_t = 𝒜_γ ∘ 𝒟_p`; see the module header on what is (and is not) implied
+about a physical gate. -/
 theorem avgGateFidelity_coherenceChannel {t T1 T2 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1) (hT2 : 0 < T2) :
     avgGateFidelity (coherenceChannel t T1 T2)
       = 1 / 2 + (1 / 6) * Real.exp (-t / T1) + (1 / 3) * Real.exp (-t / (2 * T1) - t / T2) := by
@@ -138,10 +148,11 @@ theorem avgGateFidelity_coherenceChannel {t T1 T2 : ℝ} (ht : 0 ≤ t) (hT1 : 0
     entanglementFidelity_coherenceChannel ht hT2]
   ring
 
-/-! ## The coherence-limited ceiling: monotone decay and endpoints -/
+/-! ## Monotone decay and endpoints of the model channel's average gate fidelity -/
 
-/-- **The coherence-limited fidelity ceiling is monotone decreasing in gate duration.** Longer gates
-on fixed coherence hardware cannot achieve higher average gate fidelity. -/
+/-- **The model channel's average gate fidelity is monotone decreasing in gate duration `t`** (each
+exponential term is antitone). Interpreting this as an upper bound on a physical gate's fidelity is the
+modelling assumption noted in the module header — it is not part of this theorem. -/
 theorem avgGateFidelity_coherenceChannel_antitone {T1 T2 : ℝ} (hT1 : 0 < T1) (hT2 : 0 < T2)
     {t t' : ℝ} (ht : 0 ≤ t) (htt : t ≤ t') :
     avgGateFidelity (coherenceChannel t' T1 T2) ≤ avgGateFidelity (coherenceChannel t T1 T2) := by
@@ -158,8 +169,8 @@ theorem avgGateFidelity_coherenceChannel_antitone {T1 T2 : ℝ} (hT1 : 0 < T1) (
     linarith
   linarith
 
-/-- **Floor of the ceiling:** the coherence-limited average gate fidelity never drops below `½`
-(the fully-decohered qubit value). -/
+/-- **Floor:** the model channel's average gate fidelity never drops below `½` (the fully-decohered
+qubit value). -/
 theorem avgGateFidelity_coherenceChannel_ge_half {t T1 T2 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1)
     (hT2 : 0 < T2) : 1 / 2 ≤ avgGateFidelity (coherenceChannel t T1 T2) := by
   rw [avgGateFidelity_coherenceChannel ht hT1 hT2]
@@ -167,8 +178,8 @@ theorem avgGateFidelity_coherenceChannel_ge_half {t T1 T2 : ℝ} (ht : 0 ≤ t) 
   have h2 := (Real.exp_pos (-t / (2 * T1) - t / T2)).le
   linarith
 
-/-- **The fidelity ceiling is a genuine ceiling:** the coherence-limited average gate fidelity never
-exceeds `1` (the zero-duration value). -/
+/-- **Ceiling:** the model channel's average gate fidelity never exceeds `1` (the zero-duration
+value). -/
 theorem avgGateFidelity_coherenceChannel_le_one {t T1 T2 : ℝ} (ht : 0 ≤ t) (hT1 : 0 < T1)
     (hT2 : 0 < T2) : avgGateFidelity (coherenceChannel t T1 T2) ≤ 1 := by
   rw [avgGateFidelity_coherenceChannel ht hT1 hT2]

@@ -803,8 +803,11 @@ Contracting the four Kraus traces and feeding the result through the 6AG identit
 Because every term is a decaying exponential, $F_{\mathrm{avg}}(\Phi_t)$ is \textbf{monotone
 decreasing} in the gate duration (\verb|avgGateFidelity_coherenceChannel_antitone|), with the
 exact endpoints $F_{\mathrm{avg}}=1$ at $t=0$ and floor $\tfrac12$ as $t\to\infty$
-(\verb|_le_one|, \verb|_ge_half|): a longer gate on fixed-coherence hardware cannot achieve higher
-average gate fidelity. Kernel-only; \emph{zero} new project-local axioms.
+(\verb|_le_one|, \verb|_ge_half|). These are exact statements \emph{about the model channel}
+$\Phi_t=\mathcal A_\gamma\circ\mathcal D_p$; reading $F_{\mathrm{avg}}(\Phi_t)$ as an \emph{upper bound
+on a physical gate's} average fidelity is a separate modelling assumption (the realised noise is at
+least as strong as the coherence-limited model) and is not part of the theorems. Kernel-only;
+\emph{zero} new project-local axioms.
 
 The second 6AK result (\verb|ErrorBasisDiamond.lean|) lifts the single-qubit Pauli exact diamond
 distance (6AH.2) to a \textbf{dimension-general unitary-error-basis} theorem. For any family

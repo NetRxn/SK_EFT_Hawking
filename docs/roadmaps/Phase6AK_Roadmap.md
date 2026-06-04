@@ -12,6 +12,17 @@ labeled surrogate) · 6AK.4 `e70dc6ea` (GeneralizedAmpDamp — thermal GAD two-s
 (1−N)γ ≤ ◇ ≤ 1, lower exact-achievable). Leakage (qutrit) noted as a natural extension via the GAD
 technique (deferred). D6 §6 + preprint §3g synced (D6 LaTeX compile-clean) for every wave.
 
+**Precision notes (delivery boundaries — exactly what is and is not Lean-verified):**
+- *6AK.1 is an equality, not a physical-gate ceiling.* `avgGateFidelity_coherenceChannel = …` is exact
+  for the model channel `𝒜_γ∘𝒟_p`. Treating it as an upper bound on a real gate's `F_avg` is a
+  modelling assumption (coherence-limited noise = best case), NOT in the theorem. Docstrings + D6/
+  preprint prose now state this explicitly.
+- *6AK.4's `◇ ≤ 1` upper is the trivial CPTP cap* (`diamondDist_le_one`), carrying no GAD-specific
+  information; the substantive verified content is the exact-achievable lower `(1−N)γ`. A tight GAD
+  upper is intentionally left to the dual-witness route (`diamondDist_le_dual_witness`, Phase 6AI) — the
+  eigenvector-witness exact (à la the amp-damp exact in `NamedChannelDiamondExact`) is deliberately not
+  pursued here.
+
 **Original plan (DRAFT, opened 2026-06-03):** Public-only (`SKEFTHawking.QuantumNetwork.*`). Follows the
 6AA→6AJ QuantumNetwork certification arc. Where 6AA–6AH shipped *consistency* substrate (bounds a
 quantity must satisfy), this phase ships **physical-limit substrate**: closed-form ceilings/floors
