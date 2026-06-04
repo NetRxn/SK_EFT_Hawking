@@ -143,9 +143,23 @@ fidelity is definitional from `entanglementFidelity` (6AG). **Acceptance:** kern
 Two genuine new-theorem items deferred from the main phase. Neither blocks anything; both are honest
 extensions, not fence-repairs. Tracked here so they are explicit rather than implicit "deferreds".
 
-### FU-1 — Qutrit Weyl-Heisenberg leakage channel: exact diamond distance (MED, do first) 🎯
+### FU-1 — Qutrit Weyl-Heisenberg leakage channel: exact diamond distance ✅ COMPLETE 2026-06-03
 
-**Goal.** Instantiate the 6AK.3 `UnitaryErrorBasis` framework at `n = 3` with the 9 qutrit
+**Status: SHIPPED, kernel-pure, NO new axioms, Stage-13 GREEN.** New module `QutritWeyl.lean`
+(`SKEFTHawking.QuantumNetwork`). Headline `diamondDist_weylKraus_eq : diamondDist (weylKraus p)
+(idKrausPad 8 3) = 1 − p 0` (the `n = 3` instance of `diamondDist_errorBasisKraus_eq`, dropped out free
+once the `weyl3UEB : UnitaryErrorBasis 3 8` instance was built). Named instance
+`diamondDist_shiftLeakage_eq : diamondDist (weylKraus (shiftLeakageWeights q)) (idKrausPad 8 3) = q`
+(pure cyclic-shift `X = W_{1,0}` leakage, diamond distance = leakage probability `q`). Both verified
+`{propext, Classical.choice, Quot.sound}` only. The entry-formula `weylOp a b = Matrix.of (fun i j =>
+if i = j + a then ω^(b·j) else 0)` de-risked it exactly as planned: the only real proof was
+`weyl_trace_orthonormal` via the cube-root sum `weyl_phase_sum` (`∑_x conj(ω^{bx})·ω^{dx} = 3·⟦b=d⟧`,
+reduced to `ω^{(2b+d)x}` + `3∣(2b+d) ⟺ b=d` by `omega`). Reusable bricks: `omega3_conj`
+(`conj ω = ω²` via `RCLike.mul_conj` + `ω³=1` cancellation), `cube_geom_zero` (any `ζ³=1, ζ≠1 ⟹
+1+ζ+ζ²=0`). D6 §6 + preprint §3g prose added; D6 LaTeX compile-clean (11 pp). Counts/validate
+(axiom_closure_allowlist + graph_integrity) GREEN.
+
+**Original goal (for reference).** Instantiate the 6AK.3 `UnitaryErrorBasis` framework at `n = 3` with the 9 qutrit
 Weyl–Heisenberg (clock–shift) operators, yielding `diamondDist (weylKraus p) (idKrausPad 8 3) = 1 − p₀`
 **for free** from `diamondDist_errorBasisKraus_eq`. A qutrit **leakage** channel (population escaping the
 qubit `{0,1}` subspace into level `2`) is then a specific weight choice, with diamond distance = total

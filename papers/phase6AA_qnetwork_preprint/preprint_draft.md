@@ -381,6 +381,15 @@ re-deriving 6AH.2), and the **two-qubit Pauli channel** (16 weights `σᵢ ⊗ �
 (`diamondDist_twoQubitPauliKraus_eq`: `1 − p₀₀`), covering the dominant two-qubit-gate / crosstalk
 error model. Kernel-only; zero new project-local axioms.
 
+A third instance (`QutritWeyl.lean`) realizes the `n = 3` case from the nine qutrit Weyl–Heisenberg
+(generalised-Pauli, clock–shift) operators `W_{a,b} = Xᵃ Zᵇ`, with `Z = diag(1, ω, ω²)`
+(`ω = e^{2πi/3}`) and `X` the cyclic shift. Their Choi-block orthogonality follows from the cube-root
+geometric identity `∑_{x<3} ω^{e·x} = 3·⟦3 ∣ e⟧`, yielding a unitary error basis on `ℂ³` and hence
+`1 − p₀₀` for any qutrit generalised-Pauli channel (`diamondDist_weylKraus_eq`). As a named instance,
+the pure cyclic-shift leakage channel — identity with probability `1 − q`, shift `X = W_{1,0}` (each
+level → the next) with probability `q` — has diamond distance to the identity exactly the leakage
+probability `q` (`diamondDist_shiftLeakage_eq`). Kernel-only; zero new project-local axioms.
+
 The third 6AK result (`SpamProcessFidelity.lean`) completes the device-characterisation substrate. The
 SPAM readout bit-flip channel `Φ_q(ρ) = (1−q)ρ + q·XρX` is the Pauli channel with weights `(1−q,q,0,0)`,
 so its diamond distance to the identity is exactly the readout error probability

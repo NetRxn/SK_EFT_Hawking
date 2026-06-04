@@ -823,6 +823,18 @@ $n=2$ case (\verb|diamondDist_pauliKraus_eq_of_errorBasis|, re-deriving 6AH.2), 
 (\verb|diamondDist_twoQubitPauliKraus_eq|): $\|\Phi_p-\mathrm{id}\|_\diamond = 1-p_{00}$, covering the
 dominant two-qubit-gate / crosstalk error model. Kernel-only; \emph{zero} new project-local axioms.
 
+A third instance (\verb|QutritWeyl.lean|) realizes the $n=3$ case from the nine qutrit
+Weyl--Heisenberg (generalised-Pauli, clock--shift) operators $W_{a,b}=X^aZ^b$, with $Z$ the diagonal
+clock operator $\mathrm{diag}(1,\omega,\omega^2)$ ($\omega=e^{2\pi i/3}$) and $X$ the cyclic shift.
+Their Choi-block orthogonality follows from the cube-root geometric identity
+$\sum_{x<3}\omega^{e x}=3\,[\,3\mid e\,]$, giving a unitary error basis on $\mathbb C^3$ and hence, for any
+qutrit generalised-Pauli channel with nonnegative weights summing to one,
+$\|\Phi_p-\mathrm{id}\|_\diamond = 1-p_{00}$ (\verb|diamondDist_weylKraus_eq|). As a named instance, the
+pure cyclic-shift leakage channel --- identity with probability $1-q$, shift $X=W_{1,0}$ (mapping each
+computational level to the next) with probability $q$ --- has diamond distance to the identity exactly
+equal to the leakage probability $q$ (\verb|diamondDist_shiftLeakage_eq|), the population leaving any
+fixed level. Kernel-only; \emph{zero} new project-local axioms.
+
 The third 6AK result (\verb|SpamProcessFidelity.lean|) completes the device-characterisation substrate.
 The state-preparation-and-measurement (SPAM) readout bit-flip channel $\Phi_q(\rho)=(1-q)\rho+qX\rho X$
 is the Pauli channel with weights $(1-q,q,0,0)$, so its diamond distance to the identity is exactly the
