@@ -397,4 +397,41 @@ theorem common_value_of_quaternary_isotropic {K : Type*} [Field K] [Invertible (
     · exact ⟨c, hc, binary_isotropic_universal ha hb ⟨x, y, hxy, ht⟩ c, ⟨1, 0, by ring⟩⟩
   · exact ⟨a * x ^ 2 + b * y ^ 2, ht, ⟨x, y, rfl⟩, ⟨z, w, he.symm⟩⟩
 
+/-- **Quaternion norm form isotropic ⟺ ternary isotropic (field-generic).** The rank-4 "norm form"
+`x₀² − α x₁² − β x₂² + αβ x₃²` (norm of the quaternion algebra `(α,β)`) has a nontrivial zero iff the ternary
+`z² = α x² + β y²` does (i.e. the quaternion splits). Forward: `(z,x,y,0)`. Backward: norm-multiplicativity in
+`K(√α)` — if `N₂ = x₂² − α x₃² ≠ 0`, then `(x₀x₂+αx₁x₃)² = α(x₀x₃+x₁x₂)² + β·N₂²` (via
+`norm_form_comp_identity`-style product of norms); if `N₂ = 0`, then `α` is a square so the ternary is
+isotropic. This is the algebraic heart of the square-discriminant rank-4 → ternary Hasse–Minkowski reduction,
+holding over ℚ and every completion simultaneously (a *global* isometry, no weak approximation / Dirichlet). -/
+theorem norm_form_iso_iff_ternary {K : Type*} [Field K] {α β : K} :
+    (∃ x₀ x₁ x₂ x₃ : K, ¬(x₀ = 0 ∧ x₁ = 0 ∧ x₂ = 0 ∧ x₃ = 0) ∧
+      x₀ ^ 2 - α * x₁ ^ 2 - β * x₂ ^ 2 + α * β * x₃ ^ 2 = 0) ↔
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = α * x ^ 2 + β * y ^ 2) := by
+  constructor
+  · rintro ⟨x₀, x₁, x₂, x₃, hnz, he⟩
+    by_cases hN2 : x₂ ^ 2 - α * x₃ ^ 2 = 0
+    · by_cases hx3 : x₃ = 0
+      · have hx2 : x₂ = 0 := by
+          have : x₂ ^ 2 = 0 := by rw [hx3] at hN2; simpa using hN2
+          exact pow_eq_zero_iff (by norm_num) |>.mp this
+        by_cases hx1 : x₁ = 0
+        · exfalso; apply hnz
+          have hx0 : x₀ = 0 := by
+            have : x₀ ^ 2 = 0 := by rw [hx1, hx2, hx3] at he; linear_combination he
+            exact pow_eq_zero_iff (by norm_num) |>.mp this
+          exact ⟨hx0, hx1, hx2, hx3⟩
+        · refine ⟨1, 0, x₀ / x₁, fun hc => one_ne_zero hc.1, ?_⟩
+          have hαsq : α = (x₀ / x₁) ^ 2 := by
+            rw [hx2, hx3] at he; field_simp; linear_combination -he
+          rw [hαsq]; ring
+      · refine ⟨1, 0, x₂ / x₃, fun hc => one_ne_zero hc.1, ?_⟩
+        have hαsq : α = (x₂ / x₃) ^ 2 := by field_simp; linear_combination -hN2
+        rw [hαsq]; ring
+    · refine ⟨x₀ * x₃ + x₁ * x₂, x₂ ^ 2 - α * x₃ ^ 2, x₀ * x₂ + α * x₁ * x₃,
+        fun hc => hN2 hc.2.1, ?_⟩
+      linear_combination (x₂ ^ 2 - α * x₃ ^ 2) * he
+  · rintro ⟨x, y, z, hnz, he⟩
+    exact ⟨z, x, y, 0, fun hc => hnz ⟨hc.2.1, hc.2.2.1, hc.1⟩, by linear_combination he⟩
+
 end SKEFTHawking
