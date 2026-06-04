@@ -301,19 +301,35 @@ tiebreaker does NOT fire on already-textbook substrate.
   local operations, `n`-link additive) is already delivered by FU-3/FU-6; the channel→Choi ceiling is
   LOCC-gapped (Mathlib-upstream-grade, not in 6AK scope, no axiom to paper over it). Productized repeaterless
   cert = private FQN-consumer over the shipped monotone/additive bricks.
+  **REACHABLE-NEXT (toe-hold hunt 2026-06-04, NOT a wall — only the rate-*ceiling* above is):** the
+  *channel entanglement MEASURE* — the Choi state of a Pauli channel is Bell-diagonal (`pauli_choiMatrix`
+  `J(Φ_p)=∑ᵢ pᵢ Bᵢ`), so its negativity/log-negativity is computable in closed form from the existing
+  `negativityBellDiag_eq` / `traceNorm_bellCombo` bricks. This gives `E_N(Ω_Φ)` explicitly for the
+  teleportation-covariant class — a real shippable FU-7 brick (the channel's entanglement-generating
+  capacity), distinct from (and not requiring) the LOCC-gapped output≤Choi ceiling. Buildable next.
 - **FU-8 — von Neumann entropy / quantum relative entropy / REE** (HIGH/large, foundational) —
-  📋 SCOUT-DOCUMENTED 2026-06-04: GENUINE WALL for the headline (document-don't-sink). Decomposition:
-  (i) `S(ρ) = −tr(ρ log ρ)` is *buildable* as substrate via Mathlib CFC matrix-log (`Matrix.IsHermitian`
-  eigenvalue functional calculus) — a real but sizeable module, Mathlib-upstream-grade; (ii) quantum
-  relative entropy `S(ρ‖σ) = tr(ρ(log ρ − log σ))` and its data-processing/joint-convexity — substantially
-  harder (Lieb concavity / operator-convexity of log, largely absent in Mathlib, verified); (iii) REE
-  `E_R(ρ) = inf_{σ∈SEP} S(ρ‖σ)` — needs (ii) PLUS an optimization over the separable set (LOCC/convex-set
-  infimum), the **Gap #1 LOCC wall**. The secret-key `−log₂(1−η)` value additionally needs Gap #2
-  (Gaussian/CV states). CONCLUSION: (i) is a worthwhile standalone future substrate brick if entropy is
-  needed elsewhere; (ii)+(iii) are a multi-person-year Mathlib-grade effort gated on operator-convexity
-  machinery that does not exist — NOT in scope for 6AK. 6AK.2 stays its honest surrogate form; the
-  log-negativity ladder (FU-2..FU-7) is the project's tractable entanglement-measure track and is the
-  right one. No axiom would be shipped to paper over this.
+  ⚠️ EARLIER "GENUINE WALL" SCOUT NOTE WAS WRONG (assert-a-wall reflex; user-flagged). After Explore
+  fan-out + Mathlib MCP the toe-holds were rich and **substantial content SHIPPED 2026-06-04**:
+  - **`VonNeumannEntropy.lean` `9be3dd0e`** — `S(ρ)=∑ᵢ negMulLog(λᵢ)` via the eigenvalue spectrum (NO
+    matrix log needed — that was the key misframe; entropy is an eigenvalue sum). `vonNeumannEntropy`,
+    `sum_eigenvalues_density`, `eigenvalue_mem_Icc`, **`vonNeumannEntropy_nonneg` (S≥0)**, and
+    **`vonNeumannEntropy_le_log_card` (S ≤ log d, max-entropy)** via `concaveOn_negMulLog` + Jensen
+    `ConcaveOn.le_map_sum`. 🔑 reusable: `Matrix.IsHermitian.trace_eq_sum_eigenvalues`, `Real.negMulLog`
+    + `negMulLog_nonneg` + `concaveOn_negMulLog`, `PosSemidef.eigenvalues_nonneg`.
+  - **`QuantumRelativeEntropy.lean` `be11fc23`+`2ef4a622`** — `matrixLog` (`cfc Real.log`),
+    `mul_matrixLog` (ρ·log ρ = cfc(x·log x)ρ via `cfc_mul`+`cfc_id`), **`re_trace_mul_matrixLog`
+    (Re tr(ρ log ρ) = −S(ρ))**, `relativeEntropy` def + `relativeEntropy_self`=0, and **`classical_gibbs`
+    (0 ≤ ∑ pᵢ(log pᵢ−log qᵢ), classical KL≥0)** via `Real.log_le_sub_one_of_pos` — the math core of Klein.
+  REACHABLE-NEXT (decomposed, NOT walls): (a) **full quantum Klein `S(ρ‖σ)≥0`** = `classical_gibbs`
+  applied to ρ's spectrum + the doubly-stochastic image `rᵢ=∑ⱼ|⟨eᵢ|fⱼ⟩|²qⱼ`; the one remaining crux is
+  the **two-eigenbasis spectral expansion** `tr(ρ log σ)=∑ᵢⱼ pᵢ|⟨eᵢ|fⱼ⟩|² log qⱼ` (uses both
+  `eigenvectorUnitary`s + `|⟨eᵢ|fⱼ⟩|²` doubly-stochastic) + Jensen per row — sizeable but reachable.
+  (b) **additivity `S(ρ⊗σ)=S(ρ)+S(σ)`** via `log(ρ⊗σ)=log ρ⊗1+1⊗log σ` (kronecker-eigenvalue product →
+  log distributes) — moderate. IRREDUCIBLE RESIDUAL (genuine wall, no axiom): **REE
+  `E_R(ρ)=inf_{σ∈SEP} S(ρ‖σ)`** needs the separable-set/convex-optimization infimum framework Mathlib
+  lacks; and the secret-key `−log₂(1−η)` additionally needs Gaussian/CV (Gap #2). The entropy/rel-entropy
+  track is now a SHIPPED companion to the negativity ladder; only the REE optimization is genuinely out
+  of reach.
 
 ---
 
