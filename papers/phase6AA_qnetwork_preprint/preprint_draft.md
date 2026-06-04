@@ -414,6 +414,15 @@ cannot be converted to a Bell pair by any local operation on one party (`no_loca
 — the axiom-free operational content of "local operations cannot create entanglement," with no LOCC
 abstraction and no asymptotics. Kernel-only; zero new project-local axioms.
 
+A further follow-on (`LogNegativity.lean`) adds the additive cousin, the **log-negativity**
+`E_N(ρ) = log₂‖ρ^Γ‖₁`, whose substantive content is the dimension-general **trace-norm multiplicativity
+under tensor products** `‖A⊗B‖₁ = ‖A‖₁·‖B‖₁` (`traceNorm_kronecker`) — proved from `|A⊗B| = |A|⊗|B|`
+(absolute value distributes over Kronecker, via PSD-square-root uniqueness on `(A⊗B)ᴴ(A⊗B) = AᴴA⊗BᴴB`)
+and `tr(P⊗Q) = tr P · tr Q`. Since the partial transpose distributes over `⊗`, `log₂` of the product
+gives additivity `E_N(ρ⊗σ) = E_N(ρ) + E_N(σ)` (`logNegativity_add`; Bell-diagonal corollary
+`logNegativity_bellDiag_add` where `‖ρ^Γ‖₁ ≥ 1` removes the side condition). Kernel-only; zero new
+project-local axioms.
+
 The third 6AK result (`SpamProcessFidelity.lean`) completes the device-characterisation substrate. The
 SPAM readout bit-flip channel `Φ_q(ρ) = (1−q)ρ + q·XρX` is the Pauli channel with weights `(1−q,q,0,0)`,
 so its diamond distance to the identity is exactly the readout error probability

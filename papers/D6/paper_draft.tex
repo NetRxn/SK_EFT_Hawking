@@ -866,6 +866,17 @@ pair by any local operation on one party (\verb|no_local_distillation_to_bellPai
 axiom-free operational content of ``local operations cannot create entanglement,'' with no LOCC
 abstraction and no asymptotic machinery. Kernel-only; \emph{zero} new project-local axioms.
 
+A further follow-on (\verb|LogNegativity.lean|) adds the additive cousin, the \textbf{log-negativity}
+$E_N(\rho)=\log_2\|\rho^\Gamma\|_1$, whose substantive content is the dimension-general
+\textbf{trace-norm multiplicativity under tensor products} $\|A\otimes B\|_1=\|A\|_1\,\|B\|_1$
+(\verb|traceNorm_kronecker|), proved from $|A\otimes B|=|A|\otimes|B|$ (the absolute value distributes
+over the Kronecker product, by PSD-square-root uniqueness applied to $(A\otimes B)^\dagger(A\otimes B)
+=A^\dagger A\otimes B^\dagger B$) and $\mathrm{tr}(P\otimes Q)=\mathrm{tr}\,P\cdot\mathrm{tr}\,Q$. Since
+the partial transpose distributes over the tensor product, $\log_2$ of the product gives additivity
+$E_N(\rho\otimes\sigma)=E_N(\rho)+E_N(\sigma)$ (\verb|logNegativity_add|, with the Bell-diagonal
+corollary \verb|logNegativity_bellDiag_add| where $\|\rho^\Gamma\|_1\ge1$ removes the side condition).
+Kernel-only; \emph{zero} new project-local axioms.
+
 The third 6AK result (\verb|SpamProcessFidelity.lean|) completes the device-characterisation substrate.
 The state-preparation-and-measurement (SPAM) readout bit-flip channel $\Phi_q(\rho)=(1-q)\rho+qX\rho X$
 is the Pauli channel with weights $(1-q,q,0,0)$, so its diamond distance to the identity is exactly the

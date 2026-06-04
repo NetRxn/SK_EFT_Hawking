@@ -258,9 +258,12 @@ All are textbook/published math → **public** (defensive-pub; any productized c
 private-side concern that consumes these by FQN). Disposition rule: math public; the "if-in-doubt-private"
 tiebreaker does NOT fire on already-textbook substrate.
 
-- **FU-4 — tensor additivity of negativity** `N(ρ⊗σ) = N(ρ) + N(σ)` (LOW risk, do first). PT distributes
-  over `⊗` (`(ρ⊗σ)^Γ = ρ^Γ ⊗ σ^Γ`) + trace-norm multiplicative under Kronecker + `log` of a product.
-  Elementary; reuses FU-2 `pt2` + a Kronecker-trace-norm lemma. The next brick toward `E_D ≤ E_N`.
+- **FU-4 — log-negativity additivity** ✅ SHIPPED 2026-06-04 (`LogNegativity.lean`). Correction: the
+  *negativity* `N` is NOT additive — *log-negativity* `E_N = log₂‖ρ^Γ‖₁` is. Substantive core =
+  dimension-general **`traceNorm_kronecker : ‖A⊗B‖₁ = ‖A‖₁·‖B‖₁`** (reusable; via `absOp_kronecker`
+  `|A⊗B|=|A|⊗|B|` from PSD-sqrt uniqueness + `tr(P⊗Q)=trP·trQ`). Then `logNegativity_add`
+  (`E_N(ρ⊗σ)=E_N(ρ)+E_N(σ)`) + Bell-diagonal corollary `logNegativity_bellDiag_add` (`‖ρ^Γ‖₁≥1` kills
+  the side condition). Kernel-pure, NO axioms; D6/preprint prose; Stage-13 GREEN.
 - **FU-5 — asymptotic (Fannes-type) continuity of log-negativity** (MED risk). The one genuinely-analytic
   nub: `|E_N(τ) − E_N(σ)| ≤ f(‖τ−σ‖₁)` finite-dim. Needs a real-analysis continuity bound; Mathlib-PR-grade.
 - **FU-6 — regularized-rate corollary** (LOW once FU-4/FU-5 land). The per-`n` universal statement
