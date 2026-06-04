@@ -121,4 +121,20 @@ theorem mirsky_unconditional {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB :
     linarith [e1, e2, e3, e4]
   rw [htn]; linarith [h1, h2]
 
+/-- **Quantum Fannes–Audenaert continuity in trace distance — `hMirsky` discharged (no `hB3`/Wielandt).**
+The Mirsky hypothesis of `quantum_fannes_audenaert_of_mirsky` is now supplied unconditionally by
+`mirsky_unconditional`, so the trace-distance entropy-continuity bound `|S(ρ)−S(σ)| ≤ H_d(½‖ρ−σ‖₁)` rests
+*only* on the classical sharp-Audenaert envelope `hAud` (the `log(d−1)` constant, a maximization absent from
+Mathlib — a residual entirely separate from, and smaller than, the eliminated Wielandt frame-existence `hB3`).
+The Fannes-constant (`log d`) spectral form `quantum_fannes_bound` is already fully unconditional. -/
+theorem quantum_fannes_audenaert {ρ σ : Matrix ι ι ℂ} (hρ : ρ.IsHermitian) (hσ : σ.IsHermitian)
+    (hd : 2 ≤ Fintype.card ι)
+    (hTV : traceNorm (ρ - σ) / 2 ≤ 1 - 1 / (Fintype.card ι : ℝ))
+    (hAud : |vonNeumannEntropy hρ - vonNeumannEntropy hσ|
+              ≤ Real.qaryEntropy (Fintype.card ι)
+                  ((∑ k, |hρ.eigenvalues₀ k - hσ.eigenvalues₀ k|) / 2)) :
+    |vonNeumannEntropy hρ - vonNeumannEntropy hσ|
+      ≤ Real.qaryEntropy (Fintype.card ι) (traceNorm (ρ - σ) / 2) :=
+  quantum_fannes_audenaert_of_mirsky hρ hσ hd hTV (mirsky_unconditional hρ hσ) hAud
+
 end SKEFTHawking.QuantumNetwork
