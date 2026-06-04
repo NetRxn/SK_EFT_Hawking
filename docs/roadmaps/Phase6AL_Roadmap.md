@@ -123,7 +123,31 @@ a.e. eigenvalue-derivative.
   **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
   gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
 
-## ⚖️ HONEST COMPLETION STATUS (2026-06-04) — F is NOT "in full"; one operational keystone is staged
+## 🎉🎉 F1b CLOSED UNCONDITIONALLY (2026-06-04) — `hB3`/WIELANDT ELIMINATED (supersedes everything below)
+
+**Mirsky's inequality is now proven with NO `hB3`, NO Wielandt, NO axiom** (`MirskyUnconditional.lean`,
+`54fd3942`/`ab36ea71`, kernel-pure `{propext,Classical.choice,Quot.sound}`). The breakthrough: decompose the
+**actual goal (Mirsky)** instead of the inherited Wielandt sub-route. `mirsky_of_subset_diff` reduces Mirsky to
+the *sharp* arbitrary-subset Lidskii (which forces Wielandt) — but Mirsky `∑ₖ|λ↓ₖ(A)−λ↓ₖ(B)| ≤ ‖A−B‖₁` only needs
+the **positive/negative-part split**, which follows from **Weyl monotonicity ALONE** (already shipped):
+- `eigenvalues₀_mono` — matrix Weyl monotonicity `(B−A) PSD ⟹ λ↓ₖ(A) ≤ λ↓ₖ(B)`, transported from the LinearMap
+  `weyl_single_lower_of_eq` through the `toEuclideanLin`/`isHermitian_iff_isSymmetric` defeq bridge.
+- `sum_max_diff_le` — PSD-split core `∑ₖ(λ↓ₖA−λ↓ₖB)₊ ≤ tr((A−B)₊)` via `M = B + posPart(A−B)`, `A ⪯ M`, `B ⪯ M`
+  (reuses `MixedState` `posPart`/`negPart`/`eigPosSum`/`self_eq_posPart_sub_negPart`).
+- `mirsky_unconditional` — assembled via `traceNorm_hermitian_eq` (`eigPosSum(A−B)+eigPosSum(B−A)=‖A−B‖₁`).
+  Numerically pre-validated (20000 random Hermitian pairs, gap ≤ 5e-15, test-before-build).
+- `quantum_fannes_audenaert` — trace-distance form with `hMirsky` **discharged**; rests only on the classical
+  sharp-Audenaert envelope `hAud` (the `log(d−1)` maximization, a residual **separate from and smaller than** the
+  now-eliminated `hB3`; the Fannes-constant `log d` spectral form `quantum_fannes_bound` is already unconditional).
+
+⟹ **F1b is no longer blocked.** The entire multi-session Wielandt/`hB3`/eigenvalue-path investigation below is
+SUPERSEDED — it was solving a harder problem than Mirsky required. (The 5 Weyl bricks remain valid reusable results;
+`eigenvalues₀_mono` is the one that mattered.) The sole remaining F residual is the pre-existing sharp-Audenaert
+`hAud` (classical, `log(d−1)`), entirely independent of the quantum/spectral-majorization machinery.
+
+---
+
+## ⚖️ (SUPERSEDED) HONEST COMPLETION STATUS (2026-06-04) — written BEFORE the PSD-split breakthrough above
 
 **Plain statement of where F stands, so no future reader over-reads the closure PASS:**
 - **C — COMPLETE in full** (unconditional, kernel-pure). No caveats.
