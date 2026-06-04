@@ -11,6 +11,7 @@ Mathlib has no p-adic square theory, so this is built from raw `hensels_lemma`. 
 -/
 
 import Mathlib
+import SKEFTHawking.HasseMinkowskiLocal
 
 namespace SKEFTHawking
 
@@ -247,5 +248,17 @@ theorem exists_diag_ternary_zero_odd_padic {p : ℕ} [Fact p.Prime] (hp : p ≠ 
     push_cast at h
     rw [ha', hb', hc'] at h
     exact h
+
+/-- **Parity pigeonhole.** Among `n ≥ 5` indices each assigned a parity in `ZMod 2`, three distinct ones
+share the same parity (`2·2 = 4 < 5 ≤ n`). Used to find a same-valuation-parity ternary sub-block in a
+rank-≥5 diagonal form over `ℚ_[p]`. -/
+theorem exists_three_same_parity {n : ℕ} (hn : 5 ≤ n) (g : Fin n → ZMod 2) :
+    ∃ i j k : Fin n, i ≠ j ∧ i ≠ k ∧ j ≠ k ∧ g i = g j ∧ g j = g k := by
+  have hcard : Fintype.card (ZMod 2) * 2 < Fintype.card (Fin n) := by
+    simp only [ZMod.card, Fintype.card_fin]; omega
+  obtain ⟨y, hy⟩ := Fintype.exists_lt_card_fiber_of_mul_lt_card g hcard
+  obtain ⟨a, b, c, ha, hb, hc, hab, hac, hbc⟩ := Finset.two_lt_card_iff.mp hy
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and] at ha hb hc
+  exact ⟨a, b, c, hab, hac, hbc, ha.trans hb.symm, hb.trans hc.symm⟩
 
 end SKEFTHawking
