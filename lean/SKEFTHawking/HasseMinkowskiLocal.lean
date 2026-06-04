@@ -247,4 +247,21 @@ theorem solvable_ternary_of_sufficient {K : Type*} [Field K] {a b : K}
   · obtain ⟨x, y, hxy, h0⟩ := (exists_binary_zero_iff ha).mpr hsq
     exact ⟨x, y, 0, fun hc => hxy ⟨hc.1, hc.2.1⟩, by linear_combination -h0⟩
 
+/-- **Ternary normalization to canonical Hilbert form.** Over a field with `c ≠ 0`, the symmetric diagonal
+ternary `a x² + b y² + c z² = 0` has a nontrivial zero iff the canonical form `z² = (-a/c) x² + (-b/c) y²`
+does (same witness, divide by `-c`). The algebraic first step of the ternary Hasse–Minkowski: it moves a
+general ternary into the `z² = A x² + B y²` shape where the Hilbert symbol / local-solvability criteria live. -/
+theorem isotropic_diag_ternary_iff_canonical {K : Type*} [Field K] {a b c : K} (hc : c ≠ 0) :
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ a * x ^ 2 + b * y ^ 2 + c * z ^ 2 = 0) ↔
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = (-a / c) * x ^ 2 + (-b / c) * y ^ 2) := by
+  constructor
+  · rintro ⟨x, y, z, hnz, h⟩
+    refine ⟨x, y, z, hnz, ?_⟩
+    field_simp
+    linear_combination h
+  · rintro ⟨x, y, z, hnz, h⟩
+    refine ⟨x, y, z, hnz, ?_⟩
+    field_simp at h
+    linear_combination h
+
 end SKEFTHawking
