@@ -1162,6 +1162,24 @@ theorem exists_y_ne_zero_of_not_isSquare {K : Type*} [Field K] {a b : K} (ha : �
     · exact ha ⟨z / x, by field_simp; linear_combination -he'⟩
   · exact ⟨x, y, z, hy, he⟩
 
+/-- **One descent step preserves nontrivial local solvability at every place (field-generic).** Over any
+field, given the descent factorization `t² − a = b·(b'·w²)` (`b ≠ 0`, `w ≠ 0`), a nontrivial solution of
+`z² = a x² + b y²` yields a nontrivial solution of `z² = a x² + b' y²`. (If `a` is a square in `K`, the
+target is solvable directly by `(1, 0, √a)`; otherwise convert to a `y ≠ 0` solution
+[`exists_y_ne_zero_of_not_isSquare`] and apply `solvable_descent_field`.) This is exactly the invariant
+preservation of the Hasse–Minkowski descent at each place `ℝ`, `ℚ_p` — uniform, coprimality-free. -/
+theorem solvable_descent_or_isSquare_field {K : Type*} [Field K] {a b b' w t : K}
+    (hb : b ≠ 0) (hw : w ≠ 0) (hfac : t ^ 2 - a = b * (b' * w ^ 2))
+    (h : ∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2) :
+    ∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b' * y ^ 2 := by
+  by_cases ha : IsSquare a
+  · obtain ⟨r, hr⟩ := ha
+    exact ⟨1, 0, r, fun hc => one_ne_zero hc.1, by rw [hr]; ring⟩
+  · obtain ⟨x, y, z, hnz, hsol⟩ := h
+    obtain ⟨X, Y, Z, hY, hsol'⟩ := exists_y_ne_zero_of_not_isSquare ha hnz hsol
+    obtain ⟨X', Y', Z', hY', hsol''⟩ := solvable_descent_field hb hw hfac hY hsol'
+    exact ⟨X', Y', Z', fun hc => hY' hc.2.1, hsol''⟩
+
 /-- **Odd-`p` per-place bridge from global integers to the residue square condition.** For an odd prime `p`
 and integers `a, c` with `p ∤ a`, `p ∤ c`, the canonical ternary `z² = a x² + (p·c) y²` over `ℚ_[p]` is
 solvable iff `a` is a square mod `p`. (Cast `a, c` to `ℤ_[p]` units via `norm_intCast_eq_one_iff`, match the
