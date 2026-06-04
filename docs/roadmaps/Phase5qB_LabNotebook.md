@@ -344,3 +344,75 @@ Alternative unified spine to keep in mind: characteristic vectors (`c² ≡ c'²
      left is the classification EXISTENCE.
    NEXT BRICK = [E1] (primitive vectors + dual lemma). Alternatively start [Θ]'s multidim-Poisson if the
    analytic route looks more tractable. Either way: long multi-session; ship kernel-pure bricks continuously.
+
+---
+
+## 2026-06-04 — ROUTE PIVOT to Hasse–Minkowski + [Θ] FULLY DISCHARGED; [HM-LG] local-solvability layer underway
+
+**Strategic update.** The full classification route (above) decomposes `8∣σ` for even unimodular into two
+classical inputs (van der Blij): **[Θ]** definite ⟹ `8∣σ`, and **[HM]** indefinite ⟹ primitive isotropic
+vector. The classification-existence `≅ E₈^a⊕(−E₈)^b⊕H^c` itself reduces to exactly these two
+(Hasse–Minkowski for indefinite; theta-modularity for definite) — there is **no elementary dodge** (re-confirmed
+2026-06-04 by Explore fan-out across the whole corpus: no `H^a⊕E8^b` shortcut, no Eichler/strong-approx escape).
+So the work is: discharge [Θ] (DONE) + grind [HM] = Hasse–Minkowski from scratch (Mathlib has zero substrate).
+
+### ✅ [Θ] DEFINITE CASE — FULLY DISCHARGED (unconditional theorem)
+- `ThetaModularWeight.eight_dvd_rank`: PosDef even unimodular ⟹ `8∣d`, via the `(ST)³`-orbit of the lattice
+  theta at `τ=I` (`latticeTheta_I_ne_zero` divides out automorphy factors; `(-I)^{d/2}=1 ⟺ 8∣d`).
+- `ThetaDefiniteDischarge.eight_dvd_latticeSig_of_definite`: `(sigPos=0 ∨ sigNeg=0)` even unimodular ⟹ `8∣σ`
+  — the EXACT [Θ] hypothesis of `eight_dvd_latticeSig_of_HM_of_Theta`, now a theorem.
+
+### ✅ GOAL WIRING (structure complete modulo [HM])
+- `RokhlinFromHM.{eight_dvd_latticeSig_of_HM, sixteen_dvd_latticeSig_of_HM_of_topo}` feed the discharged [Θ]
+  in, so even-unimodular `8∣σ`/`16∣σ` now need ONLY [HM] (+topo for the 16).
+- `RokhlinManifoldFromHM.sixteen_convergence_of_HM` derives `16∣σ(M)` from the manifold's genuine
+  `even_unimod`+`topo`+[HM]. ⟹ once [HM] is a theorem, drop the `eight_dvd`/`charSq` field ⟹ fully
+  unconditional bridge. **Target shape of [HM]** (`HasWeakIsotropicVectorHyp`): for a symmetric integer Gram
+  matrix `A`, `IsEvenUnimodular A` + `0<sigPos` + `0<sigNeg` ⟹ `∃ v:Fin m→ℤ, v≠0 ∧ v ⬝ᵥ A *ᵥ v = 0`. The
+  weak (nonzero) output upgrades to primitive via `hasIsotropic_of_weak` (content extraction). Downstream
+  consumers of a primitive isotropic vector already exist: `LatticePrimitive.exists_hyperbolic_pair`,
+  `SplitHyperbolic.latticeSig_split`.
+
+### [HM] decomposition (anti-circular — no ABP/Rokhlin input)
+[HM-ℝ] ✓ (`HasseMinkowskiLocal.indefinite_repr_zero`/`indefinite_matrix_repr_zero`, discriminant root) ·
+[HM-ℤ primitivization] ✓ (`LatticeContent.exists_primitive_isotropic_of_isotropic`) ·
+weak⟹strong ✓ (`RokhlinFromHM.hasIsotropic_of_weak`) ·
+**[HM-LG] = the frontier** (local solvability everywhere + Hasse–Minkowski local–global rank-induction).
+
+### ✅ Hilbert-symbol arithmetic FOUNDATION (all kernel-pure, root-imported)
+- `HilbertSymbolReal` (∞), `HilbertSymbolPadic` (odd p, signed ℤ), `HilbertSymbolTwo` (p=2, signed ℤ),
+  `PadicUnitResidue` — all four local symbols bimultiplicative.
+- **`HilbertProductFormula.hilbertGlobalProd_eq_one` ✓ MAJOR MILESTONE**: `∏_v (a,b)_v = 1` for all nonzero
+  integers `a,b` (≡ quadratic reciprocity + supplementary laws). Built via unified `hilbertPrime` place symbol,
+  finiteness-of-support, all generators (`(−1,−1)`, `(−1,q)`, `(2,q)`, QR-core `(p,q)`), multiplicative
+  reduction by nested `Nat.recOnMul`, sign extension. Mathlib had none of this.
+
+### ✅ p-adic LOCAL-SOLVABILITY layer — odd-p complete (2026-06-04, all in `PadicSquare.lean`)
+- **p-adic square classes at every prime:** odd p `isSquare_iff_isSquare_toZMod` (square ⟺ residue mod p
+  square, via Hensel on `X²-u`); p=2 `isSquare_iff_toZModPow_three_eq_one` (square ⟺ `≡1 mod 8`); bridge
+  `toZModPow_eq_zero_iff_norm_le`.
+- **`exists_ternary_isotropic_odd`** (units a,b, odd p ⟹ `aX²+bY²=Z²`, Z unit) via
+  `FiniteField.exists_root_sum_quadratic` (binary form universal over 𝔽_p, represents `1=1²`) + Hensel lift.
+- **`exists_diag_ternary_zero_odd`** (symmetric `ax²+by²+cz²=0`) + **`exists_diag_nary_zero_odd`**
+  (rank n≥3 unit diagonal form isotropic). ⟹ ALL odd-p local conditions discharged for unit-coeff diagonal
+  forms. ⚠️ **p=2 ternary isotropy is NOT unconditional** (depends on `(a,b)_2`; `x²+y²+z²=0` anisotropic over
+  ℚ₂) — p=2 forces the symbol↔solvability bridge, not a free lemma.
+
+### ✅ Diagonalization scaffold (`HasseMinkowskiLocal.lean`, 2026-06-04)
+- **`toQuadraticMap'_apply`** (`M.toQuadraticMap' x = x ⬝ᵥ M *ᵥ x`) + **`exists_ne_zero_isotropic_congr`**
+  (isotropy transfers across `QuadraticMap.Equivalent`, via `IsometryEquiv.map_app`). These connect the
+  Gram-matrix isotropy shape to Mathlib's diagonalization `equivalent_weightedSumSquares` (any field,
+  `Invertible 2`) so the diagonal local lemmas above can be applied at each completion and transported back.
+
+### NEXT bricks (critical path; THE BULK remains — multi-session)
+(i) p=2 square-class → symbol↔solvability bridge `(a,b)_p=1 ⟺ z²=ax²+by² solvable over ℚ_p` (general a,b via
+bimult reduction to unit / p·unit cases); (ii) full diagonalization-over-ℚ_p bridge: scale `weightedSumSquares`
+weights to `unit×pᵏ`, group by valuation parity (= local classification / Hasse invariant); (iii) "rank≥5 ⟹
+isotropic over ℚ_p (any p)" workhorse [rank 2 ELEMENTARY via binary discriminant; rank 4 = quaternary HM crux];
+(iv) Hasse–Minkowski local-global rank-induction (3/4 via the completed product formula + Mathlib's Dirichlet;
+n≥5 by reduction); (v) apply to indefinite even unimodular ⟹ `HasWeakIsotropicVectorHyp` ⟹ drop the field ⟹
+unconditional bridge + update D2/L2 + HYPOTHESIS_REGISTRY + dispatch closure reviewer.
+
+**Standing rules unchanged:** kernel-pure (standard axioms only), no `native_decide`/`maxHeartbeats`/axiom;
+file-gate per brick, project-gate (`ExtractDeps`) at wave close; commit brick-by-brick to `main`, NEVER push;
+PadicSquare/HasseMinkowskiLocal are root-imported but appending theorems needs no root edit (no bordism dance).
