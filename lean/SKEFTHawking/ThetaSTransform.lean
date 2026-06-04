@@ -23,7 +23,7 @@ import SKEFTHawking.MultivarPoissonDescent
 
 namespace SKEFTHawking
 
-open Matrix Complex MeasureTheory
+open Matrix Complex MeasureTheory UnitAddTorus
 open scoped Real MatrixOrder
 
 /-- Coordinates of the standard integer lattice: the underlying vector of `(basisFun.restrictScalars ℤ).equivFun.symm v`
@@ -344,5 +344,38 @@ theorem gaussianCM_exponent_eq {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) 
   rw [hkey, div_eq_iff hden]
   field_simp
   linear_combination (-Q) * Complex.I_sq
+
+/-- **The Gaussian Fourier coefficient as the dual lattice-theta summand**: combining
+`latFourier_gaussianCM` and `gaussianCM_exponent_eq`,
+`latFourier (gaussianCM σ G) n = K(σ,G) · exp(π·i·(-1/σ)·nᵀG⁻¹n)`,
+`K = (det G)^{-1/2}·(π/(-iπσ))^{d/2}`. The right side is `K` times the `n`-th summand of `latticeTheta G⁻¹ (-1/σ)`. -/
+theorem latFourier_gaussianCM_eq {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef)
+    (hσ : 0 < σ.im) (n : Fin d → ℤ) :
+    latFourier (gaussianCM σ G) n
+      = ((Real.sqrt G.det : ℂ)⁻¹ * ((π : ℂ) / (-((π : ℂ) * I * σ))) ^ ((d : ℂ) / 2))
+        * Complex.exp ((π : ℂ) * I * (-1 / σ)
+            * (((fun i => (n i : ℝ)) ⬝ᵥ G⁻¹ *ᵥ (fun i => (n i : ℝ)) : ℝ) : ℂ)) := by
+  rw [latFourier_gaussianCM hG hσ, gaussianCM_exponent_eq hG hσ]
+  ring
+
+/-- **hsum: summability of the descent's Fourier coefficients** (the last `multivar_poisson` hypothesis for
+the Gaussian). `mFourierCoeff (torusDescent (gaussianCM σ G) hc) n = latFourier (gaussianCM σ G) n`
+(`mFourierCoeff_torusDescent`, discharging hFint/hmeas/hLsum) `= K·exp(π i(-1/σ)·nᵀG⁻¹n)`
+(`latFourier_gaussianCM_eq`), summable since `G⁻¹` is positive-definite (`summable_gram_gaussian`, `Im(-1/σ)>0`). -/
+theorem gaussian_hsum {d : ℕ} {σ : ℂ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef) (hσ : 0 < σ.im)
+    (hc : Continuous (periodisationCM (gaussianCM σ G) ∘ torusRep)) :
+    Summable (mFourierCoeff (torusDescent (gaussianCM σ G) hc)) := by
+  have hσ0 : σ ≠ 0 := fun h => by rw [h] at hσ; simp at hσ
+  have hτ' : 0 < (-1 / σ).im := by
+    have heq : (-1 / σ).im = σ.im / Complex.normSq σ := by
+      rw [neg_div, one_div, Complex.neg_im, Complex.inv_im]; ring
+    rw [heq]; exact div_pos hσ (Complex.normSq_pos.mpr hσ0)
+  have hsummable : Summable (fun n : Fin d → ℤ => latFourier (gaussianCM σ G) n) := by
+    refine Summable.congr ?_ (fun n => (latFourier_gaussianCM_eq hG hσ n).symm)
+    exact (summable_gram_gaussian G⁻¹ hG.inv (-1 / σ) hτ').mul_left _
+  refine hsummable.congr (fun n => ?_)
+  exact (mFourierCoeff_torusDescent (gaussianCM σ G) hc (gaussian_hF hG hσ) n
+    (integrable_gaussianChar hG hσ (fun i => -(n i : ℝ))) (fun γ => gaussian_translate_aesm σ G n γ)
+    (gaussian_hLsum hG hσ n)).symm
 
 end SKEFTHawking
