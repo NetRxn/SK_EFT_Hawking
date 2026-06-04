@@ -839,6 +839,19 @@ the code distance (\verb|logicalErrorBound_antitone_distance|), and strictly bel
 threshold theorem in its abstract code-capacity form. Neutral QEC mathematics; kernel-only;
 \emph{zero} new project-local axioms.
 
+The fifth 6AK result (\verb|PLOBRateBound.lean|) treats the Pirandola--Laurenza--Ottaviani--Banchi
+repeaterless secret-key rate bound $-\log_2(1-\eta)$ for a lossy channel of transmissivity $\eta$. The
+full PLOB theorem rests on continuous-variable channel-capacity theory (relative entropy of
+entanglement of bosonic Gaussian channels) absent from current Mathlib; we therefore formalize the
+\emph{rate-bound function} $\mathrm{plobBound}(\eta)=-\log_2(1-\eta)$ and its rigorous loss-penalty
+properties --- the tractable surrogate that captures the physical content of the no-go. We prove the cap
+vanishes at total loss ($\mathrm{plobBound}(0)=0$), is strictly increasing in transmissivity
+(\verb|plobBound_strictMonoOn|), is bounded below by the linear loss penalty $\eta/\ln 2$
+(\verb|linear_le_plobBound|), and decays to $0$ along a fiber whose transmissivity falls exponentially
+with distance (\verb|plobBound_tendsto_zero_of_exp_decay|). This is the analytic behaviour of the bound
+itself, honestly scoped --- not a derivation of the PLOB theorem from quantum mechanics. Kernel-only;
+\emph{zero} new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}

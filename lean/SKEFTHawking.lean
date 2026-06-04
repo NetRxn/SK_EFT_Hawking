@@ -2708,6 +2708,8 @@ import SKEFTHawking.QuantumNetwork.ErrorBasisDiamond
 import SKEFTHawking.QuantumNetwork.SpamProcessFidelity
 -- Phase 6AK Wave 6AK.5 (2026-06-03): code-distance error-suppression / threshold theorem (abstract QEC).
 import SKEFTHawking.QuantumNetwork.QECSuppression
+-- Phase 6AK Wave 6AK.2 (2026-06-03): repeaterless (PLOB) rate-bound function + loss-penalty properties.
+import SKEFTHawking.QuantumNetwork.PLOBRateBound
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
