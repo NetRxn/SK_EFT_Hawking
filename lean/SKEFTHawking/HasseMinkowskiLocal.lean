@@ -174,4 +174,31 @@ theorem matrix_isotropic_iff_weighted {K : Type*} [Field K] [Invertible 2] {m : 
   rw [exists_ne_zero_isotropic_congr hQ]
   simp only [QuadraticMap.weightedSumSquares_apply, smul_eq_mul, ← pow_two]
 
+/-- **Diagonal isotropy is a square-class invariant of the weights.** Over a field, the diagonal form
+`∑ wᵢ xᵢ²` has a nonzero zero iff `∑ (wᵢ cᵢ²) xᵢ²` does, for any nonzero scalings `cᵢ`. This is the
+normalization step that reduces each `ℚ_p` weight to its square-class representative (a unit or `p` × unit)
+and matches a unit-coefficient diagonal form against the local-isotropy lemmas. -/
+theorem exists_diag_isotropic_congr_sq {K : Type*} [Field K] {ι : Type*} [Fintype ι]
+    (w c : ι → K) (hc : ∀ i, c i ≠ 0) :
+    (∃ x : ι → K, x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0) ↔
+    (∃ x : ι → K, x ≠ 0 ∧ ∑ i, (w i * c i ^ 2) * x i ^ 2 = 0) := by
+  constructor
+  · rintro ⟨x, hx, hsum⟩
+    refine ⟨fun i => x i / c i, ?_, ?_⟩
+    · intro h; apply hx; funext i
+      have hi : x i / c i = 0 := congrFun h i
+      rw [div_eq_zero_iff] at hi
+      rcases hi with h1 | h1
+      · simp [h1]
+      · exact absurd h1 (hc i)
+    · rw [← hsum]; exact Finset.sum_congr rfl fun i _ => by field_simp [hc i]
+  · rintro ⟨x, hx, hsum⟩
+    refine ⟨fun i => c i * x i, ?_, ?_⟩
+    · intro h; apply hx; funext i
+      have hi : c i * x i = 0 := congrFun h i
+      rcases mul_eq_zero.mp hi with h1 | h1
+      · exact absurd h1 (hc i)
+      · simp [h1]
+    · rw [← hsum]; exact Finset.sum_congr rfl fun i _ => by ring
+
 end SKEFTHawking
