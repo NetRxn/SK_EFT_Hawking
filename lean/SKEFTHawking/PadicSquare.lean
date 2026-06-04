@@ -758,4 +758,29 @@ theorem solvable_unit_pUnit_iff {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : �
     obtain ⟨w, hw⟩ := isSquare_of_isSquare_toZMod hp hu hsq
     exact solvable_ternary_of_sufficient (Or.inl ⟨(w : ℚ_[p]), by rw [hw]; push_cast; ring⟩)
 
+/-- **Solvability criterion for `z² = pu x² + pv y²` (odd `p`, `u, v` units).** The complete `(p·u, p·v)`
+symbol case as an iff: solvable over `ℚ_[p]` ⟺ `-uv` is a square mod `p`. Forward = converse of
+`no_padic_sol_pUnit_pUnit`; backward = `-uv` square ⟹ `-(pu·pv) = (p·w)²` ⟹ `solvable_ternary_of_sufficient`
+(binary part vanishes). The Hasse–Minkowski local condition in the both-`p·unit` case. -/
+theorem solvable_pUnit_pUnit_iff {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : ℤ_[p]} (hu : IsUnit u)
+    (hv : IsUnit v) :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (p : ℚ_[p]) * u * x ^ 2 + (p : ℚ_[p]) * v * y ^ 2) ↔
+      IsSquare (PadicInt.toZMod (-(u * v))) := by
+  have hpne : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  constructor
+  · intro hsolv
+    by_contra hns
+    refine no_padic_sol_pUnit_pUnit hv hns ?_
+    obtain ⟨x, y, z, hxyz, he⟩ := hsolv
+    exact ⟨x, y, z, hxyz, by push_cast; linear_combination -he⟩
+  · intro hsq
+    obtain ⟨w, hw⟩ := isSquare_of_isSquare_toZMod hp (hu.mul hv).neg hsq
+    refine solvable_ternary_of_sufficient
+      (Or.inr (Or.inr ⟨mul_ne_zero hpne (by rw [Ne, PadicInt.coe_eq_zero]; exact hu.ne_zero),
+        ⟨(p : ℚ_[p]) * w, ?_⟩⟩))
+    rw [show -((p : ℚ_[p]) * u * ((p : ℚ_[p]) * v)) = (p : ℚ_[p]) ^ 2 * ((-(u * v) : ℤ_[p]) : ℚ_[p]) from by
+      push_cast; ring, hw]
+    push_cast; ring
+
 end SKEFTHawking
