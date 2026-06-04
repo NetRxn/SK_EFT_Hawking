@@ -2205,17 +2205,49 @@ PLACEHOLDER_CONTENT_COUNT = sum(
 HYPOTHESIS_REGISTRY: dict[str, dict] = {
     'rokhlin_sigma_mod_16': {
         'statement': 'For any closed smooth spin 4-manifold M, 16 | σ(M)',
-        'status': 'active',
+        'status': 'decomposed',  # Phase 5q.B: opaque hypothesis replaced by a wired theorem over a narrow interface
         'eliminability': 'very_hard',
-        'elimination_path': 'Requires either: (a) Atiyah-Singer index theorem + quaternionic spinor structure, or (b) Adams spectral sequence computation of Ω^Spin_4, or (c) Freedman-Kirby characteristic surface argument. All require differential topology not in Mathlib.',
+        'elimination_path': 'Phase 5q.B (Route B) DECOMPOSED this opaque hypothesis into the narrow '
+            'SmoothSpinManifold4 interface (SpinRokhlinInterface.lean) and PROVED 16|σ as a kernel-pure '
+            'theorem over it: SmoothSpinManifold4.rokhlin, via even-unimodular + 8|σ composed with 2|σ/8 '
+            '(sixteen_dvd_latticeSig_of_eight_dvd_of_topo = rokhlin_from_serre_plus_topology on latticeSig). '
+            'INTERFACE REWIRED (2026-06-04): the signature is now the GENUINE latticeSig of the intersection '
+            'form (sig := latticeSig form, closing the prior free-unconnected-integer gap), and the algebraic '
+            'residual is carried as the PRECISE field eight_dvd : 8 | latticeSig form (the isolated van der '
+            'Blij wall), replacing the opaque charSq/CharacteristicSquareModEight. Remaining interface inputs: '
+            '(i) even_unimod [Wu formula, topological], (ii) eight_dvd : 8|latticeSig form [van der Blij, the '
+            'Wave-B1 ALGEBRAIC target], (iii) topo : 2|σ/8 [Â-genus even / Arf(q-bar)=0 — the single '
+            'IRREDUCIBLE topological input, Atiyah-Singer / Freedman-Kirby]. '
+            'USER DECISION 2026-06-04: GO FULL via the CLASSIFICATION route (E8^a (+) (-E8)^b (+) H^c), '
+            'zero-axiom. SIGNATURE CALCULUS COMPLETE this session (all kernel-pure, ExtractDeps baseline '
+            'green 9073 jobs): E8Signature (sigma(E8)=8, sigma(-E8)=-8 via the integer-Cholesky C8^T C8 = '
+            '4.E8lit decide-over-Z route), LatticeSignatureCongr (latticeSig_congr = Sylvester congruence '
+            'invariance; sigma(H)=0), BlockSignature (sigma(A (+) B)=sigma A+sigma B; nondeg bridge), '
+            'GeneratorNondeg (generator nondegeneracy), LatticeSigBlock (latticeSigOf on any index + block '
+            'additivity + reindex invariance), RokhlinClassification (the [E3] assembly: generators 8|sigma, '
+            'block-sum/congruence/reindex closure, and the bridge sixteen_dvd_latticeSig_of_eight_dvd_of_topo). '
+            'CLASSIFICATION SCAFFOLDING: [E1] primitive vectors + dual (LatticePrimitive); [E2]-partial '
+            'exists_hyperbolic_pair ({v,w-prime} Gram = H) + even_form_dvd; [E3] assembly DONE. The signature '
+            'side is CLOSED: any normal form E8^a (+) (-E8)^b (+) H^c gives latticeSig = 8(a-b), hence 8|sigma. '
+            'REMAINING to discharge eight_dvd from even_unimod = the classification EXISTENCE statement only: '
+            '[E2] basis-completion (extend {v,w-prime} to a Z-basis via Smith Normal Form / the H-duality '
+            'splitting; substrate scouted), then the two irreducible research inputs [HM] Hasse-Minkowski '
+            '(indefinite represents 0) and [Theta] theta-modularity (definite 8|rank) — both confirmed with no '
+            'Mathlib substrate. sixteen_convergence_unconditional is the companion to sixteen_convergence_full '
+            'with the 16|σ conjunct now a theorem (modulo the single eight_dvd interface field), not an '
+            'assumed h_rokhlin. Full living decomposition: docs/roadmaps/Phase5qB_LabNotebook.md.',
         'dependent_theorems': [
+            'SKEFTHawking.SmoothSpinManifold4.rokhlin',
+            'SKEFTHawking.SmoothSpinManifold4.eight_dvd_sig',
+            'SKEFTHawking.sixteen_dvd_latticeSig_of_eight_dvd_of_topo',
+            'SKEFTHawking.sixteen_convergence_unconditional',
             'SKEFTHawking.sixteen_convergence_full',
             'SKEFTHawking.z16_anomaly_without_nu_R',
         ],
-        'module': 'RokhlinBridge',
-        'source': 'Rokhlin, Dokl. Akad. Nauk SSSR 84, 221 (1952)',
+        'module': 'SpinRokhlinInterface (Phase 5q.B, rewired to latticeSig); E8Signature + LatticeSignatureCongr + BlockSignature + GeneratorNondeg + LatticeSigBlock + RokhlinClassification (signature calculus, classification route); LatticePrimitive + EvenLatticeForm (classification scaffolding [E1]/[E2]); LatticeSignature (latticeSig); RokhlinBridge (legacy hypothesis form)',
+        'source': 'Rokhlin, Dokl. Akad. Nauk SSSR 84, 221 (1952); van der Blij, Math. Z. 74, 18 (1960); Freedman-Kirby (1978)',
         'risk': 'Extremely low — proved 1952, independently confirmed by Atiyah-Singer (1963), Freedman-Kirby (1978). As solid as any result in topology.',
-        'circularity_note': 'None for the hypothesis itself. But the proposed 2-axiom bordism ALTERNATIVE (Ω^Spin_4 ≅ Z) has circularity: ABP (1966) used Rokhlin-equivalent facts in their computation.',
+        'circularity_note': 'Anti-circularity verified: the wired derivation routes even-unimodular + van der Blij ⟹ 8|σ, plus 2|σ/8 ⟹ 16|σ; it does NOT use Anderson-Brown-Peterson or Rokhlin''s theorem as input (Rokhlin''s theorem IS the conclusion). The 2-axiom bordism alternative (Ω^Spin_4 ≅ Z) WOULD be circular (ABP used Rokhlin-equivalent facts) — deliberately NOT used.',
     },
     'modular_invariance_framing': {
         'statement': 'The framing anomaly requires e^{2πic/24} = 1 for a consistent TQFT, i.e., 24 | c₋',
@@ -2246,13 +2278,23 @@ HYPOTHESIS_REGISTRY: dict[str, dict] = {
     },
     'characteristic_square_mod_8': {
         'statement': 'For any unimodular symmetric bilinear form and any characteristic vector c, c^T M c ≡ σ(M) mod 8',
-        'status': 'active',
+        'status': 'superseded_on_wiring_path',  # Phase 5q.B 2026-06-04: the SmoothSpinManifold4 interface no longer routes through this; it carries the precise 8|latticeSig form directly (classification route). Retained as a valid alternate algebraic formulation.
         'eliminability': 'hard',
-        'elimination_path': 'Requires classification of indefinite unimodular forms (Hasse-Minkowski theorem) or van der Blij lemma via Gauss sums. Neither is in Mathlib.',
+        'elimination_path': 'SUPERSEDED ON THE WIRING PATH (2026-06-04): the rewired SmoothSpinManifold4 '
+            'interface no longer consumes this characteristic-vector formulation (serre_even_unimodular_mod8 '
+            'used it only at c=0, i.e. only to extract 8|σ). The interface now carries the precise residual '
+            'eight_dvd : 8 | latticeSig form directly, whose discharge target is the even-unimodular '
+            'CLASSIFICATION (E8^a (+) (-E8)^b (+) H^c), with the signature calculus already complete '
+            '(RokhlinClassification et al.) and only the classification existence ([E2] Smith-Normal-Form '
+            'basis-completion + [HM] Hasse-Minkowski + [Theta] theta-modularity) remaining. This entry is '
+            'retained as a valid ALTERNATE algebraic formulation (Serre/van der Blij characteristic-vector '
+            'route); it still requires the classification of indefinite unimodular forms (Hasse-Minkowski) or '
+            'the van der Blij Gauss-sum lemma, neither in Mathlib. serre_even_unimodular_mod8 and '
+            'CharacteristicSquareModEight remain defined and valid in AlgebraicRokhlin.lean.',
         'dependent_theorems': [
             'SKEFTHawking.serre_even_unimodular_mod8',
         ],
-        'module': 'AlgebraicRokhlin',
+        'module': 'AlgebraicRokhlin (alternate route; no longer on the SpinRokhlinInterface wiring path)',
         'source': 'Serre, "A Course in Arithmetic" (1973), Ch. V; van der Blij, Math. Z. 74, 18 (1960)',
         'risk': 'Extremely low — proved independently by Serre (1973) and van der Blij (1960). Textbook result.',
         'circularity_note': 'None. Purely algebraic result about bilinear forms, independent of topology.',

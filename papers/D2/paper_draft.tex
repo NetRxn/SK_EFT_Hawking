@@ -321,6 +321,69 @@ strengthening $16 \nmid 8$ (i.e., that the joint Z16-plus-Rokhlin
 bound exceeds the algebraic $8 \mid \sigma$ alone) is the content
 of \texttt{RokhlinBridge.rokhlin\_strictly\_stronger}.
 
+\paragraph{From assumed hypothesis to a wired theorem (spectra-free route).}
+Rather than carry $16 \mid \sigma$ as an opaque hypothesis, we expose its
+content through a narrow interface. The structure
+\texttt{SpinRokhlinInterface.SmoothSpinManifold4} records a closed smooth
+spin 4-manifold's even-unimodular intersection form (even and unimodular by
+Wu's formula and Poincar\'e duality), the algebraic signature bound
+$8\mid\sigma$, and the topological factor of two $2 \mid \sigma/8$. Its
+signature is the \emph{genuine} signature of the intersection form,
+$\sigma := \mathrm{latticeSig}\,(\text{form})$ (\texttt{LatticeSignature.lean}),
+not a free parameter; the algebraic residual is carried as the precise field
+\texttt{eight\_dvd}~$:~8\mid\mathrm{latticeSig}\,(\text{form})$, the isolated
+van der Blij bound. From these,
+\texttt{SmoothSpinManifold4.rokhlin}~$:~16 \mid \sigma$ is a kernel-pure
+theorem (standard axioms only; no global Rokhlin hypothesis, no new
+\texttt{axiom}), obtained via
+\texttt{RokhlinClassification.sixteen\_dvd\_latticeSig\_of\_eight\_dvd\_of\_topo}
+(the composition $8\mid\mathrm{latticeSig}$ with $2\mid\mathrm{latticeSig}/8
+\Rightarrow 16\mid\mathrm{latticeSig}$, in turn
+\texttt{rokhlin\_from\_serre\_plus\_topology} on \texttt{latticeSig}); the companion
+\texttt{sixteen\_convergence\_unconditional} reruns the four-16 enumeration
+with the $16\mid\sigma$ conjunct now a theorem rather than an assumed input.
+The dependency graph routes
+\emph{even-unimodular} $+$ \emph{van der Blij} $\Rightarrow 8\mid\sigma$,
+together with $2\mid\sigma/8 \Rightarrow 16\mid\sigma$, and so does
+\emph{not} pass through Anderson--Brown--Peterson or Rokhlin's theorem
+itself (which is the conclusion), avoiding the circularity of the
+$\Omega^{\mathrm{Spin}}_4 \cong \mathbb{Z}$ bordism alternative.
+This isolates the irreducible content exactly as Finashin--Kharlamov--Viro
+describe. The algebraic half $8\mid\sigma$ is van der Blij's lemma on even
+unimodular forms; its zero-axiom discharge is pursued through the
+\emph{classification of even unimodular lattices} ($L\cong E_8^{\,a}\oplus
+(-E_8)^{\,b}\oplus H^{\,c}$, whence $\sigma=8(a-b)$). The \emph{signature
+calculus} for that route is machine-checked and complete (all kernel-pure;
+\texttt{ExtractDeps} baseline green): the signature is grounded in Mathlib as
+$\mathrm{latticeSig}\,G=\mathrm{sig}^{+}-\mathrm{sig}^{-}$ of the real
+quadratic form (\texttt{LatticeSignature.lean}); the generators are evaluated
+($\sigma(E_8)=8$ via an integer-Cholesky positive-definiteness certificate
+$C^{\mathsf T}C=4\,E_8$ decidable over $\mathbb{Z}$, $\sigma(-E_8)=-8$,
+$\sigma(H)=0$; \texttt{E8Signature.lean}, \texttt{LatticeSignatureCongr.lean});
+congruence invariance (Sylvester, \texttt{latticeSig\_congr}), block-sum
+additivity $\sigma(A\oplus B)=\sigma(A)+\sigma(B)$ for nondegenerate blocks
+(\texttt{BlockSignature.lean}, \texttt{GeneratorNondeg.lean}), and the
+index-general signature with reindexing invariance (\texttt{LatticeSigBlock.lean})
+are all established, so any normal form yields $\mathrm{latticeSig}=8(a-b)$ and
+hence $8\mid\sigma$ (\texttt{RokhlinClassification.lean}). The remaining input
+is solely the classification's \emph{existence} statement: the elementary
+hyperbolic-plane splitting from a primitive isotropic vector is in hand
+(\texttt{LatticePrimitive.lean}: \texttt{exists\_hyperbolic\_pair}, on the
+parity lemma \texttt{even\_form\_dvd}), reducing it to a Smith-normal-form
+basis completion, together with the two classical inputs with no current
+Mathlib substrate --- Hasse--Minkowski (an indefinite form represents zero)
+and the level-one theta-modularity giving $8\mid\mathrm{rank}=\sigma$ in the
+definite case, for which the \texttt{LatticeTheta.lean} substrate (convergence,
+$T$/$T^2$-invariance, isometry-class invariance, cusp normalisation, and the
+diagonal $S$-transform) is assembled pending multivariate Poisson summation. The char-2 Arf / Gauss-sum machinery of \texttt{ArfInvariant.lean}
+and \texttt{EvenLatticeForm.lean} --- the genus-$g$ Milgram--Arf identity
+$\sum_x (-1)^{q(x)} = 2^{g}(-1)^{\mathrm{Arf}}$ and the lattice quadratic
+refinement $\bar q(x)=b(x,x)/2$ --- belongs not here but to the \emph{second}
+factor of two: $\sigma/8 \bmod 2 = \mathrm{Arf}(\bar q)$. That last factor
+$2\mid\sigma/8$, equivalently $\mathrm{Arf}(\bar q)=0$ (the $\hat A$-genus
+evenness), is the genuinely smooth-topological input that Freedman's $E_8$
+manifold shows cannot be reduced to algebra.
+
 \subsection{Machine-checked $\mathrm{Ext}^n_{A(1)}$ computation through degree 5}
 
 The algebraic core of the Z$_{16}$ classification is the structure

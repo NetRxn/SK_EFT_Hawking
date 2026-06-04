@@ -1,0 +1,321 @@
+# Phase 5q.B Lab Notebook — zero-axiom van der Blij `8 ∣ σ` (FULL classification route)
+
+**Authoritative living tracker for the extended research-grade attempt.** Re-read on every bootstrap
+/ after every compact (the memory note `next_session_phase5qB_resume` points here). Update CONTINUOUSLY.
+
+## North star + standing decision (USER, 2026-06-04)
+
+**GO FULL: prove van der Blij `IsEvenUnimodular M → 8 ∣ latticeSig M` ZERO-AXIOM, ZERO-CITATION**, via
+the classification of even unimodular lattices. This discharges `charSq` in `SmoothSpinManifold4`,
+making `16 ∣ σ` unconditional + wired into `RokhlinBridge.sixteen_convergence_full`. The cited
+geometric inputs `even_unimod` (Wu) and `topo` (Â-parity) legitimately remain — they are irreducible
+manifold topology; only the *algebraic* `8 ∣ σ` is in scope here.
+
+**Operating rules (do not violate):** (1) NO revisiting scope/estimates — we don't know how long, we
+just work it. (2) NO axiom, NO `native_decide`, NO `maxHeartbeats`; kernel-pure
+(propext/Classical.choice/Quot.sound). (3) Decompose hard → tractable sub-steps. (4) Raid unrelated
+codebase corners for reusable substrate. (5) Log tried-and-FAILED so we never repeat post-compact. (6)
+Have fun. We turn "multi-year" into tractable here regularly.
+
+## DONE (proven, kernel-pure, file:name)
+
+- `LatticeSignature.lean`: `latticeSig` (= sigPos−sigNeg of ℝ-cast form), `latticeSig_neg`,
+  `latticeSig_le/ge`, `abs_latticeSig_le`, `latticeSig_of_posDef` (=rank), `latticeSig_of_negDef` (=−rank),
+  `sigPos_eq_finrank_of_posDef`, `sigNeg_eq_zero_of_posDef`.
+- `E8Literal.lean`: `E8lit` (literal E₈), `E8inv` (its integer inverse), `e8lit_mul_inv` (E8lit·E8inv=1
+  by decide — inverse-exhibition, dodges 8×8 det), `e8lit_symm`, `e8lit_even`, `e8lit_unimodular`,
+  `e8lit_even_unimodular`. **Kernel-pure, no native_decide.**
+- `SignatureAdditivity.lean` (the engine): `prodSubEquiv`, `finrank_prodSub`, `le_sigPos_prod`,
+  `le_sigNeg_prod`, `neg_prod`, `radical_prod_eq_bot`, `sigPos_prod_of_nondeg`, `sigNeg_prod_of_nondeg`,
+  `posDef_radical_eq_bot`, `negDef_radical_eq_bot`. Full signature additivity over ⊕ for nondegenerate forms.
+- `LatticeTheta.lean` (23 thms): definite-case theta modular machinery (convergence, T/T²/S-transform for
+  standard lattice via jacobiTheta, congruence-invariance, cusp normalization, Fubini/product-tsum,
+  jacobiTheta₂ slice). [Built for the analytic route; may feed the DEFINITE case of van der Blij.]
+- `ArfInvariant.lean`, `EvenLatticeForm.lean`: the 8→16 layer (σ/8 mod 2 = Arf), NOT van der Blij itself.
+- **`E8Signature.lean` (NEW, [A1] DONE, kernel-pure, root-imported, file-gate green): `C8` (integer
+  `2×roots`), `c8_eq` (`C8ᵀ·C8 = 4•E8lit` by `decide` over ℤ), `E8r`/`C8r` (ℝ casts), `c8r_eq`
+  (`C8rᴴ·C8r = 4•E8r`), `e8r_posDef` (E₈ posdef over ℝ), `e8lit_latticeSig` (`σ(E₈)=8`),
+  `neg_e8lit_latticeSig` (`σ(−E₈)=−8`).** Verified axioms = {propext, Classical.choice, Quot.sound}.
+- **`LatticeSignatureCongr.lean` (NEW, kernel-pure, root-imported, file-gate green) — the Sylvester engine:**
+  `toQuadraticMap'_congr` (`(Bᵀ·A·B).toQuadraticMap' = A.tQM'.comp (mulVecLin B)`), **`latticeSig_congr`**
+  (`IsUnit P.det → latticeSig (Pᵀ·M·P) = latticeSig M` — congruence invariance, the tool that reads σ off the
+  classification normal form), `Hyp`/`hyp_symm`/`hyp_even`/`hyp_unimodular`, **`hyp_latticeSig` (`σ(H)=0`)**
+  via `H ≅ −H` (`Pflip=diag(1,−1)`). Axioms clean. ⚠️ **Mathlib ALREADY HAS the isometry-invariance**
+  `QuadraticMap.Equivalent.sigPos_eq`/`sigNeg_eq` (Signature.lean) — used directly (first cut hand-rolled
+  `sigPos_isom` etc., then deleted as redundant). `QuadraticMap.Equivalent Q Q' = Nonempty (IsometryEquiv)`.
+- **`BlockSignature.lean` (NEW, kernel-pure, root-imported, file-gate + project-gate green): the block-diagonal
+  signature calculus.** `fromBlocks_tQM_elim` (`Q_{A⊕B}(x⊕y)=Q_A x+Q_B y`), `fromBlocksEquivProd`
+  (`(fromBlocks A 0 0 B).tQM' ≃ A.tQM'.prod B.tQM'` via `sumArrowLequivProdArrow`), **`sigPos_fromBlocks`/
+  `sigNeg_fromBlocks`** (`σ(A⊕B)=σA+σB` for nondegenerate A,B — radical=⊥), **`nondeg_radical_eq_bot`** (general
+  symmetric `Nondegenerate ⟹ radical=⊥` via `radical_eq_ker_polarBilin` + polar formula). Axioms clean.
+- **`GeneratorNondeg.lean` (NEW, kernel-pure, root-imported, project-gate green): generators are nondegenerate.**
+  `cast_nondegenerate` (int det≠0 ⟹ real-cast nondeg), `e8r_radical` (E₈ via posDef), `negE8_radical`,
+  `hyp_radical`. Axioms = [] (fully axiom-free).
+- **`LatticeSigBlock.lean` (NEW, kernel-pure, root-imported, project-gate green): signature on arbitrary index +
+  block additivity + reindex-invariance.** `latticeSigOf {ι}[Fintype][DecidableEq]`, `latticeSigOf_fin`
+  (=latticeSig on Fin n, rfl), **`latticeSigOf_fromBlocks`** (integer-matrix block additivity), `reindexFormEquiv`,
+  **`latticeSigOf_reindex`**. ⟹ signature calculus closed end-to-end: normal form `E₈^a⊕(−E₈)^b⊕H^c ↦ 8(a−b)`.
+- **`LatticePrimitive.lean` (NEW, kernel-pure, root-imported, project-gate green) — [E1] + most of [E2].**
+  `IsPrimitiveVec`, `isPrimitiveVec_iff_exists_dot` (Bezout-for-tuples), `exists_vecMul_dot_eq_one` (primitive
+  covector through unimodular ⟹ pairs to 1), **`exists_hyperbolic_pair`** (primitive isotropic `v` ⟹ `{v,w'}`
+  Gram = H). Axioms clean. (Imports `EvenLatticeForm` for `even_form_dvd`.)
+- **`EvenLatticeForm.lean` += `even_form_dvd`** (`2∣wᵀMw` for even symmetric integer M, via the mod-2 bridge to
+  `redBilin_self_eq_zero`). Kernel-pure.
+- **`SplitHyperbolic.lean` (NEW, kernel-pure, root-imported, ExtractDeps green 9092) — [E2] COMPLETE.**
+  `gramB_eq` (Gram of M in `hypFullBasis` = `fromBlocks Hyp 0 0 residGram`); **`latticeSig_split`** (even
+  unimodular M rank≥2 + hyperbolic pair ⟹ **`latticeSig M = latticeSigOf residGram`**, the split-off-H inductive
+  step — unimodular change-of-basis P from the combined basis + `latticeSig_congr` + block additivity);
+  **`residGram_det`** (`det residGram = −det M`) + **`residGram_evenUnimodular`** (residGram is EVEN UNIMODULAR
+  — the recursion induction invariant). Axioms clean. ⟹ split-off-H FULLY characterized: peel H ⟹ residGram even
+  unimodular rank n−2 with `latticeSig M = latticeSigOf residGram`.
+- **`VanDerBlijReduction.lean` (NEW, kernel-pure, root-imported, ExtractDeps green 9093) — 🎯 CAPSTONE.**
+  **`eight_dvd_latticeSig_of_HM_of_Theta`**: for ALL even unimodular `M`, `8 ∣ latticeSig M`, GIVEN only the
+  two precisely-isolated classical inputs [HM] (indefinite ⟹ primitive isotropic vector) and [Θ] (definite ⟹
+  `8∣σ`). Strong induction on rank: definite → [Θ]; indefinite → [HM] + `exists_hyperbolic_pair` →
+  `latticeSig_split` (peel H) → `residGram_evenUnimodular` (rank n−2) → IH. **Everything between [HM]/[Θ] and
+  van der Blij is now machine-checked kernel-pure.** The residual van der Blij content is EXACTLY two named
+  classical theorems (neither in Mathlib): local-global Hasse–Minkowski + theta-modularity.
+  Also **`sixteen_dvd_latticeSig_of_HM_of_Theta_of_topo`**: `16 ∣ latticeSig M` from even-unimodular + `2∣σ/8`
+  + [HM] + [Θ] (composes the capstone with the Rokhlin bridge) — the Rokhlin conclusion with NO opaque
+  algebraic hypothesis; inputs are exactly geometric (Wu even-unimod, Â-even `2∣σ/8`) + the 2 classical theorems.
+- **`ThetaModularity.lean` (NEW, kernel-pure, root-imported, ExtractDeps green 9094) — [Θ] build + de-risked plan.**
+  `posDef_unimodular_det_one` (posdef unimodular ⟹ det=1), `latticeSig_posDef_eq_rank` (posdef ⟹ latticeSig=n).
+  Docstring = the executable [Θ1]–[Θ4] decomposition with VERIFIED Mathlib toeholds (`UnitAddTorus`,
+  `fourier_gaussian_innerProductSpace`, `LevelOne`). [Θ1] n-dim Poisson + [Θ2] anisotropic Gaussian FT remain.
+- **`MultivarPoisson.lean` (NEW, kernel-pure, root-imported, ExtractDeps green 9097) — [Θ1] engine + first brick.**
+  ⚠️ NAME CORRECTION: the d-torus Fourier engine is `UnitAddTorus.hasSum_mFourier_series_apply_of_summable` (the
+  FILE is `AddCircleMulti.lean`, the NAMESPACE is `UnitAddTorus`) — the prior `AddCircleMulti.*` name was wrong.
+  Shipped: `mFourier_eval_zero` (`mFourier i 0 = ∏ fourier _ 0 = 1`), **`hasSum_mFourierCoeff_at_zero`** (Σ of
+  Fourier coeffs of a summable-coeff torus fn = its value at origin — the Poisson RHS-collapse), `tsum_…`. Verified
+  API in docstring: `UnitAddTorus d := d→UnitAddCircle`, `mFourier n x = ∏ fourier(nᵢ)(xᵢ)`, `mFourierCoeff f n =
+  ∫ mFourier(-n)•f`, `mFourierCoeff_eq_integral`/`integral_preimage` (fundamental-domain integral). REMAINING [Θ1]
+  crux = periodisation Fourier coeff = ℝᵈ Fourier integral (d-dim analog of `Real.fourierCoeff_tsum_comp_add`) +
+  summability side conditions — the substantial analytic build. ✅ **RECIPE STEP 3 SHIPPED:
+  `integral_eq_tsum_zspan`** (`∫_ℝᵈ f = ∑'_{g:Λ} ∫_{[0,1)ᵈ} f(↑g+x)`, integrable f) via
+  `IsAddFundamentalDomain.integral_eq_tsum` + `ZSpan.isAddFundamentalDomain` + `setIntegral_image_emb`; resolved a
+  `VAdd` TC diamond by passing `MeasurableConstVAdd`/`VAddInvariantMeasure` positionally.
+- **`MultivarPoissonDescent.lean` (kernel-pure, root-imported) — ✅✅ [Θ1] MULTIVARIATE POISSON COMPLETE
+  (2026-06-04).** The LHS steps 1+2 + final assembly landed: **`mFourierCoeff_torusDescent`**
+  (`mFourierCoeff (torusDescent F hc) n = latFourier F n`) and **`multivar_poisson`**
+  (`∑_{γ∈ℤᵈ} F(↑γ) = ∑_{n∈ℤᵈ} latFourier F n`), both `[propext, Classical.choice, Quot.sound]`.
+  🔑 The fiddly remaining piece — the `Ioc`-cube (from `mFourierCoeff_eq_integral`, `{x|∀i,xᵢ∈Ioc 0 1}`) vs
+  `Ico`-cube (`ZSpan.fundamentalDomain (Pi.basisFun) = ∏[0,1)`) reconciliation — cracked cleanly:
+  `{x|∀i,xᵢ∈Ioc 0 1} = Set.pi univ Ioc` (ext + `Set.mem_univ_pi`), `rw [volume_pi]`,
+  `Measure.ae_eq_set_pi (fun i _ => Ico_ae_eq_Ioc.symm)` (1-D `MeasureTheory.Ico_ae_eq_Ioc` lifted to the
+  product — the boundary diff is a finite union of null coordinate hyperplanes), then `setIntegral_congr_set`.
+  Integrand bridge `fun i => ↑(xᵢ)` ↔ `Pi.map (fun _ => ↑) x` handled by a `show` (defeq); then
+  `mFourier_q_eq_char` + `torusDescent_comp` + `periodisationCM_apply` + `smul_eq_mul` + `periodisation`.
+  Side conditions (`hFint`/`hmeas`/`hLsum`/`hsum`) are the honest analytic hypotheses, discharged from
+  Schwartz/Gaussian decay at application time. **[Θ1] DONE → next analytic brick is [Θ2] anisotropic
+  Gaussian FT** (`𝓕(exp(−π vᵀAv)) = (det A)^{−1/2} exp(−π wᵀA⁻¹w)` from isotropic
+  `fourier_gaussian_innerProductSpace` via change-of-vars `x ↦ A^{1/2}x`), then [Θ3] S-transform (Poisson on
+  the Gaussian) + [Θ4] level-1 weight-n/2 ⟹ `8∣rank`.
+- **`HasseMinkowskiLocal.lean` (NEW, kernel-pure, root-imported, ExtractDeps green 9095) — [HM] build + de-risked
+  plan.** **`finite_field_form_isotropic`** (symmetric form over a finite field in ≥3 vars is isotropic, via
+  Mathlib Chevalley–Warning `char_dvd_card_solutions`) — the residue-field core of [HM-p] at odd primes.
+  Docstring = the [HM-ℝ]/[HM-p]/[HM-LG]/[HM-ℤ] decomposition; [HM-LG] local-global is the remaining frontier.
+- **`LatticeContent.lean` (NEW, kernel-pure, root-imported, ExtractDeps green 9096) — [HM-ℤ] content extraction +
+  weakened capstone.** `exists_primitive_isotropic_of_isotropic` (a NONZERO integer isotropic vector yields a
+  PRIMITIVE one, dividing by the content = generator of `span ℤ (range v)`; isotropy is homogeneous degree 2 so
+  `v⬝Mv = g²·(w⬝Mw)`). `eight_dvd_latticeSig_of_HMweak_of_Theta` = van der Blij from [HM-weak] (merely a NONZERO
+  isotropic vector — the form local-global delivers) + [Θ]; primitivity recovered internally. 🔑 Mathlib bricks:
+  `Submodule.IsPrincipal.generator`/`generator_mem`/`span_singleton_generator`, `Submodule.mem_span_singleton`,
+  `Submodule.mem_span_range_iff_exists_fun ℤ`, `smul_dotProduct`/`dotProduct_smul` (ROOT ns, not `Matrix.`),
+  `Matrix.mulVec_smul`, `Int.mul_ediv_cancel'`. So [HM] is now reduced to just [HM-LG] producing ANY nonzero
+  ℚ/ℤ isotropic vector (the [HM-ℝ]+[HM-p]+[HM-LG] local-global core).
+- **`RokhlinClassification.lean` (NEW, kernel-pure, root-imported, project-gate green) — [E3] assembly +
+  Rokhlin bridge.** `eight_dvd_latticeSig_e8lit`/`_neg_e8lit`/`_hyp`, `eight_dvd_latticeSigOf_fromBlocks` (step),
+  `eight_dvd_latticeSig_congr`, `eight_dvd_latticeSigOf_reindex`, **`sixteen_dvd_latticeSig_of_eight_dvd_of_topo`**
+  (`8∣latticeSig M` + `2∣latticeSig M/8` ⟹ `16∣latticeSig M`, kernel-pure — the bridge to the Rokhlin
+  conclusion in latticeSig terms). Remaining for unconditional `8∣σ` = classification EXISTENCE only.
+- **DELIVERABLE DOCS SYNCED (2026-06-04, per goal mandate "as gating sub-results land, D2/L2 + HYPOTHESIS_REGISTRY
+  updated to match"):** `src/core/constants.py` `HYPOTHESIS_REGISTRY['rokhlin_sigma_mod_16']` rewritten to the
+  CLASSIFICATION route + rewired interface + complete signature calculus (dependent_theorems += `eight_dvd_sig`,
+  `sixteen_dvd_latticeSig_of_eight_dvd_of_topo`; module list updated; imports clean); `['characteristic_square_mod_8']`
+  marked `superseded_on_wiring_path`. D2 `papers/D2/paper_draft.tex` "spectra-free route" paragraphs rewritten
+  (interface now `sig:=latticeSig form` + precise `eight_dvd`; discharge via classification with the signature
+  calculus complete + remaining = classification existence) — **compiles clean (10pp, pdflatex exit 0)**. L2
+  confirmed accurate as-is (high-level Rokhlin mentions, no charSq/discharge claims).
+- **`SpinRokhlinInterface.lean` REWIRED (kernel-pure, project-gate green): `SmoothSpinManifold4` now connects
+  `sig := latticeSig form` (closes the "sig was a free unconnected ℤ" gap), carries the PRECISE residual
+  `eight_dvd : 8 ∣ latticeSig form` (= the isolated van der Blij wall, replacing the opaque `charSq`/
+  `CharacteristicSquareModEight`), and `topo : 2 ∣ latticeSig form / 8`; `.rokhlin : 16 ∣ latticeSig form`
+  kernel-pure via `sixteen_dvd_latticeSig_of_eight_dvd_of_topo`; `sixteen_convergence_unconditional` updated.**
+  The 16∣σ derivation is now wired through the new signature machinery; the SINGLE remaining input is the
+  classification existence (`even_unimod ⟹ 8 ∣ latticeSig form`).
+
+## DECOMPOSITION TREE (van der Blij `8 ∣ σ`, FULL)
+
+The signature is analytic (eigenvalue signs); `8∣σ` is arithmetic. Bridge = classification OR theta OR
+Hasse–Minkowski (all equivalent depth). FULL route splits by definiteness:
+
+- **[A] DEFINITE case** (`σ = ±rank`, need `8 ∣ rank`): θ_L is a level-1 modular form of weight rank/2
+  ⟹ `8 ∣ rank`. Substrate: `LatticeTheta.lean`. GAP: general (non-separable) S-transform = multivariate
+  Poisson; the modular-forms weight argument.
+  - [A1] generators σ values: σ(E₈)=8 ⟸ E₈ posdef (LDL `E8lit = L·D·Lᵀ`, D>0 — computed, see SCRATCH). σ(H)=0.
+  - [A2] multivariate Poisson (ℤᵈ) — `AddCircleMulti` engine + torus↔ℝᵈ unfold bridge.
+- **[B] INDEFINITE case** (`σ = 8(a−b)` via classification `≅ E₈^a⊕(−E₈)^b⊕H^c`):
+  - [B1] indefinite even unimodular represents 0 (isotropic vector) — Meyer / Hasse–Minkowski.
+  - [B2] isotropic vector ⟹ splits off H; induct on rank.
+  - [B3] signature additivity over ⊕ — **DONE** (`SignatureAdditivity.lean`).
+- **[C] WIRE**: discharge `charSq` (`SpinRokhlinInterface`), rewire `RokhlinBridge.sixteen_convergence_full`,
+  update D2/L2 + registry.
+
+Alternative unified spine to keep in mind: characteristic vectors (`c² ≡ c'² mod 8` ELEMENTARY — provable;
+`c² ≡ σ mod 8` needs the odd indefinite classification ⟨1⟩^p⊕⟨−1⟩^q = HM-level).
+
+## TRIED & FAILED (do not repeat)
+
+- `decide` / `simp [det_succ_row_zero]` on 8×8 `det(E₈)` → recursion/step blowup. (Use inverse-exhibition instead — works.)
+- `#eval`/`logInfo` of Mathlib `CartanMatrix.E₈` entries → deep recursion (E₈ is recursively built from E₆/E₇);
+  need `--tstack` for `lake env lean #eval`, and work with a LITERAL copy `E8lit`, not Mathlib's E₈.
+- Anisotropic Gaussian INTEGRAL/FT for the theta S-transform → NOT needed if using geometric/isotropic
+  formulation; but the even-unimodular case is non-separable ⟹ genuine multivariate Poisson required.
+- Mathlib has NO: Hilbert symbol, Witt group of quadratic forms, Hasse–Minkowski, p-adic quadratic forms,
+  Siegel–Narain, multidim/lattice Poisson, lattice theta. (Confirmed by MCP semantic search + grep, 2026-06-03/04.)
+- **`decide` on ℚ matrix identity (the LDLᵀ `E8lit.map ℚ = Lq·diag dq·Lqᵀ`) → STUCK** ("Decidable did
+  not reduce", Rat.num kernel match). **`ext + fin_cases i<;>fin_cases j<;> simp+norm_num` over 64 ℚ
+  entries → heartbeat TIMEOUT.** ⟹ rational LDL is a dead end in-kernel. **WINNER: integer route.**
+  `2·E₈ ⊂ ℤ⁸` ⟹ integer `C8` with `C8ᵀ·C8 = 4•E8lit`, which `decide` reduces cleanly over ℤ; posdef via
+  `conjTranspose_mul_self` + invertibility (det²=4⁸·(±1), no 8×8 det) + `PosDef.smul (1/4)`. [A1] DONE.
+
+## REUSABLE SUBSTRATE (found across repo / Mathlib)
+
+- Mathlib: `QuadraticForm/Signature` (`sigPos`/`sigNeg`, `sigPos_add_sigNeg_add_radical`,
+  `exists_finrank_eq_sigPos_and_posDef`, `le_sigPos_of_posDef`), `QuadraticMap.prod`/`prod_apply`/`polar_prod`,
+  `nondegenerate_iff_radical_eq_bot`, `Matrix.nondegenerate_iff_det_ne_zero`, `AddCircleMulti` (multivar torus
+  Fourier `hasSum_mFourier_series_of_summable`), `jacobiTheta`/`jacobiTheta₂_functional_equation`, real spectral
+  theorem `Matrix.IsHermitian.spectral_theorem`, `Module.finrank_prod`, `finrank_bot`.
+- Project: `AlgebraicRokhlin` (`serre_even_unimodular_mod8` conditional on charSq; `rokhlin_from_serre_plus_topology`).
+- **Mathlib gems found this session (REUSE, don't reinvent):** `QuadraticMap.Equivalent.sigPos_eq`/`sigNeg_eq`
+  (Sylvester invariance — `Equivalent Q Q' = Nonempty (Q.IsometryEquiv Q')`); `isometryEquivOfCompLinearEquiv
+  Q e : Q.IsometryEquiv (Q.comp ↑e)`; `Matrix.toLinearEquiv' P (Invertible P)` with `toLinearEquiv'_apply :
+  ↑(toLinearEquiv') = toLin' P`; `Matrix.invertibleOfIsUnitDet`; `Int.cast_det : ↑M.det = (M.map cast).det`;
+  `Matrix.det_smul`, `Matrix.det_conjTranspose`; `RingHom.isUnit_map`; `Matrix.posDef_iff_eq_conjTranspose_
+  mul_self` (DEPRECATED → use `Matrix.PosDef.conjTranspose_mul_self A (Function.Injective A.mulVec)`);
+  `Matrix.mulVecLin_injective_of_isUnit`/`mulVec_injective_of_isUnit`; `Matrix.PosDef.smul (hx) (0<a)`;
+  `Matrix.conjTranspose_eq_transpose_of_trivial` (ℝ); `Matrix.map_mul`/`transpose_map` (need `⇑ringHom`);
+  `LinearEquiv.finrank_map_eq`; `Matrix.nondegenerate_toBilin'_iff`/`nondegenerate_iff_det_ne_zero`.
+
+## E₈ LDL (computed, for σ(E₈)=8 = [A1])
+
+`E8lit = L · D · Lᵀ` (L lower-unitriangular, D positive-diagonal, over ℚ; verified `L D Lᵀ = E₈`, all D>0):
+- `D = diag(2, 2, 3/2, 5/6, 4/5, 3/4, 2/3, 1/2)` (all > 0 ⟹ positive definite).
+- `L` (lower-unitri) nonzero off-diagonal entries: L[2,0]=−1/2, L[3,1]=−1/2, L[3,2]=−2/3, L[4,3]=−6/5,
+  L[5,4]=−5/4, L[6,5]=−4/3, L[7,6]=−3/2.
+- ⟹ σ(E₈)=8 via congruence to D (sigPos invariant under `Equivalent`) OR `Matrix.PosDef` congruence + `latticeSig_of_posDef`.
+
+## NEXT ACTIONS
+
+1. ✅ **[A1] σ(E₈)=8, σ(−E₈)=−8 — DONE** (`E8Signature.lean`, kernel-pure, file-gate green, axioms clean).
+   Integer-Cholesky route (not LDL): `C8ᵀ·C8 = 4•E8lit` decide-over-ℤ → posdef → `latticeSig_of_posDef`.
+2. ✅ **σ(H)=0 — DONE** (`LatticeSignatureCongr.lean`, `hyp_latticeSig`), via `H ≅ −H` + congruence-invariance.
+3. ✅ **Congruence-invariance `latticeSig_congr` — DONE** (Sylvester; the σ-readoff tool). Plus the reusable
+   `sigPos_isom`/`sigNeg_isom`.
+4. ✅✅ **[B3] SIGNATURE CALCULUS — FULLY DONE end-to-end** (all kernel-pure, project-gate green):
+   - `BlockSignature.lean`: `sigPos_fromBlocks`/`sigNeg_fromBlocks` (`σ(A⊕B)=σA+σB`, Sum-indexed real form) +
+     `nondeg_radical_eq_bot` (general symmetric-`Nondegenerate ⟹ radical=⊥` via `radical_eq_ker_polarBilin`).
+   - `GeneratorNondeg.lean`: `cast_nondegenerate`, `e8r_radical`, `negE8_radical`, `hyp_radical` (all 3 generators
+     nondeg; E₈ via posDef, −E₈/H via det≠0). Axioms clean (E₈/−E₈/H = []).
+   - `LatticeSigBlock.lean`: **`latticeSigOf {ι}`** (index-general signature) + `latticeSigOf_fin` (=latticeSig
+     on Fin n, rfl) + **`latticeSigOf_fromBlocks`** (`σ(A⊕B)=σA+σB` on integer matrices) + `reindexFormEquiv` +
+     **`latticeSigOf_reindex`** (relabel-invariance, via `funCongrLeft`).
+   ⟹ **For ANY normal form `E₈^a⊕(−E₈)^b⊕H^c` (nested `fromBlocks`, reindexed to Fin n): `latticeSig = 8a−8b+0
+   = 8(a−b)`, manifestly `8∣σ`.** The signature side is COMPLETE; only the classification theorem (#5) remains.
+5. **van der Blij `8∣σ` — REORIENTED 2026-06-04 (user pushback: "multi-year" was slipping/parroting stale DR).
+   FRESH Mathlib scout CORRECTS the stale "zero substrate" claim — the analytic substrate EXISTS:**
+   `Analysis/Fourier/PoissonSummation.lean` (`Real.tsum_eq_tsum_fourier`, **`SchwartzMap.tsum_eq_tsum_fourier`**
+   = general Poisson), `Analysis/SpecialFunctions/Gaussian/FourierTransform.lean` (**`fourier_gaussian_
+   innerProductSpace`** = MULTIVARIATE Gaussian FT on an inner-product space), `Gaussian/PoissonSummation.lean`
+   (1-D Gaussian Poisson `Complex.tsum_exp_neg_quadratic`/`tsum_exp_neg_mul_int_sq`), `ModularForms/Basic`+
+   `LevelOne` (`levelOne_neg_weight_eq_zero`, `levelOne_weight_zero_const`, `levelOne_weight_zero_rank_one`),
+   `jacobiTheta_S_smul` (PROVEN via Poisson). So the two legs are NOT walls — they DECOMPOSE:
+   - **[Θ] definite even unimodular ⟹ `8∣rank` — REACHABLE, DE-RISKED to a concrete lemma-by-lemma plan
+     (`ThetaModularity.lean`, 2026-06-04; toeholds VERIFIED in Mathlib):** ✅✅ **[Θ1] n-dim Poisson summation
+     DONE** (`MultivarPoissonDescent.multivar_poisson`, kernel-pure, 2026-06-04): `∑_{γ∈ℤᵈ} F(↑γ) =
+     ∑_{n∈ℤᵈ} latFourier F n`, under integrability/measurability/L¹-summability/coeff-summability side
+     conditions (Schwartz-dischargeable). Built the whole RHS+continuity+Tonelli torus-free, then the torus
+     descent + the `Ioc`↔`Ico` cube reconciliation. **NEXT = [Θ2]** anisotropic Gaussian FT `𝓕(exp(−π vᵀAv))=(det A)^{−1/2}
+     exp(−π wᵀA⁻¹w)` from isotropic `fourier_gaussian_innerProductSpace` via change-of-vars `x↦A^{1/2}x`. [Θ3]
+     S-transform `Θ_A(−1/τ)=(τ/i)^{n/2}Θ_A(τ)` (det A=1 [✅`posDef_unimodular_det_one`]; A⁻¹≅A ⟹ `Θ_{A⁻¹}=Θ_A`
+     [`latticeTheta_congr`]). [Θ4] Θ_A nonzero level-1 weight-n/2 modular form (T=`latticeTheta_T_int`,
+     S=[Θ3], nonzero=`latticeTheta_eq_one_add`) ⟹ `8∣n` (`LevelOne`). ✅ shipped `posDef_unimodular_det_one`,
+     `latticeSig_posDef_eq_rank`. [Θ1]/[Θ2] = the substantial analytic builds remaining. NOT multi-year.
+   - **[HM] indefinite even unimodular has a primitive isotropic vector** — DE-RISKED + first brick shipped
+     (`HasseMinkowskiLocal.lean`, 2026-06-04). Decomposition: [HM-ℝ] indefinite⟹represents 0 over ℝ (elementary);
+     [HM-p] unimodular rank≥3 represents 0 over ℚ_p ∀p — ✅ **`finite_field_form_isotropic`** (residue-field core:
+     symmetric form over a FINITE FIELD in ≥3 vars is isotropic, via Mathlib `char_dvd_card_solutions`
+     [Chevalley–Warning] — kernel-pure, axioms clean), then Hensel-lift to ℤ_p (Mathlib `Hensel`); p=2 via even
+     unimodular ℤ_2 ⊃ U; [HM-LG] local-global Hasse–Minkowski (THE frontier — needs Hilbert symbol + product
+     formula + Dirichlet/AP for rank 3,4, not in Mathlib); [HM-ℤ] ℚ-isotropic + unimodular ⟹ primitive ℤ-isotropic
+     (elementary). NOT a monolith — [HM-ℝ]/[HM-p, odd]/[HM-ℤ] are reachable; [HM-LG] is the genuine remaining frontier.
+   **Elementary scaffolding that ISOLATES [HM] and [Θ] (attackable now, pure algebra — but Mathlib has NO
+   primitive-vector substrate, so build from scratch):**
+   - ✅ **[E1] DONE** (`LatticePrimitive.lean`, kernel-pure, project-gate green): `IsPrimitiveVec v :=
+     1∈span_ℤ(range v)`; `isPrimitiveVec_iff_exists_dot` (`IsPrimitiveVec v ↔ ∃w, v⬝ᵥw=1`, Bezout via
+     `Finsupp.mem_span_range_iff_exists_finsupp`); **`exists_vecMul_dot_eq_one`** (unimodular `M` + primitive
+     `v` ⟹ `∃w, (v ᵥ* M)⬝ᵥw=1` via `M⁻¹`, `mul_nonsing_inv`) — the isotropic vector's hyperbolic partner.
+   - [E2] **split-off-H**: even unimodular `M` + primitive isotropic `v` ⟹ `∃ P∈GL(ℤ), PᵀMP = H ⊕ M'`
+     (M' even unimodular rank −2). PARTIAL: ✅ partner `w` with `vᵀMw=1` (`exists_vecMul_dot_eq_one`, [E1]);
+     ✅ **`even_form_dvd`** (`EvenLatticeForm.lean`: `2∣wᵀMw` for even symmetric M, via `redBilin_self_eq_zero`);
+     ✅ **`exists_hyperbolic_pair`** (`LatticePrimitive.lean`: primitive isotropic `v` ⟹ `∃w'`, `{v,w'}` Gram = H,
+     i.e. `vᵀMv=0 ∧ vᵀMw'=1 ∧ w'ᵀMw'=0`, via the `w':=w−(wᵀMw/2)v` adjustment). 🎯 **[E2] now reduces PURELY to
+     the basis-completion** (last hard *elementary* piece). SUBSTRATE SCOUTED (2026-06-04): over ℤ (PID),
+     `Module.Basis.extend`/`Submodule.exists_isCompl` are DIVISION-RING-ONLY; the ℤ tool is **Smith Normal Form**
+     (`Submodule.smithNormalForm`, `Module.Basis.SmithNormalForm`, `Mathlib.LinearAlgebra.FreeModule.PID`).
+     CLEANER CONCRETE ROUTE: H-duality splitting `π:ℤⁿ→ℤ², π(x)=(w'ᵀMx, vᵀMx)`, section `s(a,b)=a•v+b•w'`
+     (`π(v)=(1,0)`, `π(w')=(0,1)` from H Gram) ⟹ `π∘s=id` ⟹ `ℤⁿ = K ⊕ ker π`, `K^⊥=ker π`. ✅ **projection
+     `q(x)=x−(w'ᵀMx)•v−(vᵀMx)•w'` SHIPPED** (`LatticePrimitive.hyperbolic_proj_ortho`: `q(x)∈K^⊥`) + ✅
+     **`hyperbolic_proj_idem`** (onto-`K` projector idempotent). ✅ **`hypPerp` + `hyperbolic_isCompl` SHIPPED**:
+     the direct-sum splitting **`IsCompl (span ℤ {v,w'}) (hypPerp M v w')`** = `ℤⁿ = K ⊕ K^⊥` (disjoint via the
+     H-Gram pairing forcing `a=b=0`; codisjoint via `p(x)+q(x)` with `hyperbolic_proj_ortho`). All kernel-pure.
+     ✅ **`hyperbolic_linearIndependent`** ({v,w'} lin. indep. ⟹ basis of K, finrank K=2) + ✅ **`hypPerp_finrank`**
+     (`finrank K^⊥ = n−2` via `prodEquivOfIsCompl`+`finrank_prod`; note `finrank_sup_add_finrank_inf_eq` is
+     DIVISION-RING-ONLY, use the prod-equiv over ℤ). All kernel-pure. RESIDUAL = a concrete ℤ-basis of
+     `K^⊥=hypPerp` (free rank n−2, established) ⟹ assemble `P = [v | w' | basis]`, prove `P` unimodular +
+     `PᵀMP=H⊕M'` ⟹ consume `latticeSigOf_fromBlocks`/`_reindex`/`latticeSig_congr`. NEXT BRICK: obtain
+     `Module.Free.chooseBasis`/SNF basis `b` of `hypPerp`, form `P` (cols v,w',b), show `P.det = ±1` and the
+     congruence. (Alternative: recurse at the real-form level via `sigPos`/`sigNeg` orthogonal-additivity over
+     the `IsCompl` real decomposition, `latticeSig M = σ(H)+σ(M|K^⊥)`.) ✅ **`hypPerpBasis`** (concrete `Fin (n−2)`
+     ℤ-basis of `K^⊥`, via `Module.finBasis`+`finCongr hfr`; `Module.Free ℤ hypPerp` is automatic) + ✅
+     **`hypPerpBasis_ortho`** (each basis vector ⊥ `v,w'` through `M`, from `hypPerp` membership). REMAINING [E2]:
+     combine `![v,w']` ⊕ `hypPerpBasis` into a `Basis (Fin n) ℤ (Fin n→ℤ)` (via `Basis.prod`/`prodEquivOfIsCompl`
+     + `finSumFinEquiv`, n=2+(n−2)), form change-of-basis `P` (unimodular: basis ⟹ `IsUnit P.det`), Gram in this
+     basis = `fromBlocks H 0 0 M'` (off-diag 0 by `hypPerpBasis_ortho` + symmetry) ⟹ `latticeSig M = σ(H)+
+     latticeSigOf M' = latticeSigOf M'` via `latticeSig_congr`+`latticeSigOf_fromBlocks`+`_reindex`.
+     ✅ **`hypFullBasis` SHIPPED**: the combined `Basis (Fin 2 ⊕ Fin (n−2)) ℤ (Fin n→ℤ)` adapted to `K ⊕ K^⊥`
+     (`bK.prod hypPerpBasis` mapped through `prodEquivOfIsCompl`; `bK` = `Basis.span hindep` transported across
+     the `span{v,w'}=span(range![v,w'])` equality via `LinearEquiv.ofEq`). NEXT BRICK: the change-of-basis matrix
+     `P := hypFullBasis.toMatrix (Pi.basisFun)` (or its inverse) is unimodular (`Basis.toMatrix` ∈ GL ⟹
+     `IsUnit P.det`); Gram-in-basis `B i j = (hypFullBasis i)⬝ᵥM*ᵥ(hypFullBasis j) = (Pᵀ·M·P) reindexed`; show
+     it `= fromBlocks H 0 0 M'` (diagonal blocks H/M', off-diag 0 via ortho); then `latticeSig_congr`+
+     `latticeSigOf_fromBlocks`+`_reindex` ⟹ `latticeSig M = latticeSigOf M'` (the inductive split-off-H step).
+     ✅ **`residGram` (M' = Gram of M on hypPerpBasis) + `residGram_symm` + `residGram_even` SHIPPED**: M' is even
+     symmetric (induction invariant maintained; M' unimodular follows from the unimodular change of basis = the
+     remaining assembly). NEXT BRICK: P := change-of-basis matrix of `hypFullBasis.reindex (finSumFinEquiv∘
+     finCongr)`; `IsUnit P.det` (it is a basis); `Pᵀ·M·P = reindex (fromBlocks H 0 0 (residGram))` (entries:
+     inl/inl=H via hypFullBasis(inl)=v,w'; inl/inr=0 via hypPerpBasis_ortho; inr/inr=residGram) ⟹ chain to
+     `latticeSig M = latticeSigOf residGram`. ✅ **`hypFullBasis_inl`** (`B(inl k)=![v,w'] k`) + **`hypFullBasis_inr`**
+     (`B(inr i)=hypPerpBasis i`) SHIPPED (via `Basis.map_apply`/`prod_apply`/`span_apply` + `prodEquivOfIsCompl`
+     pair-eval `(a,b)↦↑a+↑b`; key: `Module.Basis.*` qualified in-file). NEXT BRICK: `GramB s t := (hypFullBasis s)
+     ⬝ᵥ M *ᵥ (hypFullBasis t) = fromBlocks Hyp 0 0 residGram` (case-split s,t on inl/inr using the two
+     evaluations + `hypPerpBasis_ortho`; inl/inl gives Hyp by `decide`/`Fin.cases` on the 2×2 `![v,w'] k ⬝ᵥ M *ᵥ
+     ![v,w'] l` = hv0/hvw/hwv/hw0), then the change-of-basis matrix P + `Pᵀ M P = reindex GramB` + `latticeSig_congr`.
+     ✅ **`gramB_eq` SHIPPED** (`SplitHyperbolic.lean`): Gram in combined basis = `fromBlocks Hyp 0 0 residGram`.
+     ✅✅ **[E2] COMPLETE — `latticeSig_split` SHIPPED** (`SplitHyperbolic.lean`, kernel-pure, project-gate +
+     ExtractDeps green 9092): for even unimodular `M` (rank ≥ 2) with a hyperbolic pair `{v,w'}`,
+     **`latticeSig M = latticeSigOf (residGram M v w' hfr)`** — the split-off-H inductive step. Proof: `P :=
+     (Pi.basisFun).toMatrix hypFullBasis` (unimodular: `Basis.toMatrix_mul_toMatrix_flip` ⟹ `IsUnit P.det`);
+     `Pᵀ M P = reindex e e (of GramB)` (central identity via `Basis.toMatrix_apply`+`Pi.basisFun_repr`+
+     `Finset.sum_comm`); `= reindex (fromBlocks Hyp 0 0 residGram)` (`gramB_eq`); `residGram` nondeg from
+     `det residGram = ±det M = ±1` (via `det_reindex_self`+`det_fromBlocks_zero₂₁`); chain `latticeSig_congr` +
+     `latticeSigOf_fromBlocks`(`hyp_radical`,`hRG`) + `_reindex` + `hyp_latticeSig`(σ(H)=0). 🔑 reusable:
+     `Basis.toMatrix_mul_toMatrix_flip`, `det_fromBlocks_zero₂₁`, `det_reindex_self`, `Pi.basisFun_repr`.
+   - ✅ **[E3] INDUCTIVE CONTENT DONE** (`RokhlinClassification.lean`, kernel-pure, project-gate green):
+     `eight_dvd_latticeSig_e8lit`/`_neg_e8lit`/`_hyp` (generators `8∣σ`), `eight_dvd_latticeSigOf_fromBlocks`
+     (block-sum step), `eight_dvd_latticeSig_congr` + `eight_dvd_latticeSigOf_reindex` (`8∣σ` invariant under
+     congruence/reindex). ⟹ `8∣latticeSig(any block sum of generators)` follows by structural induction at the
+     point of use — NO packaged recursive `normalForm` def needed. The assembly is COMPLETE; the only content
+     left is the classification EXISTENCE.
+   NEXT BRICK = [E1] (primitive vectors + dual lemma). Alternatively start [Θ]'s multidim-Poisson if the
+   analytic route looks more tractable. Either way: long multi-session; ship kernel-pure bricks continuously.

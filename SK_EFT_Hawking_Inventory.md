@@ -486,6 +486,12 @@ Historical (2026-05-25 snapshot): Current scale: **7339 theorems** (7314 substan
 | RibbonCategory | ~200 | 4 | 0 | 5c | BalancedCategory, RibbonCategory, MTC definitions (FIRST in any proof assistant) (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | E8Lattice | ~200 | 19 | 0 | 5c | E8 Cartan: det=1, even unimodular, Rokhlin gap σ=8, Serre bound, classification (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | AlgebraicRokhlin | ~200 | 10 | 0 | 5c | Algebraic Serre theorem σ≡0 mod 8 for even unimodular forms, characteristic vectors, E8 bridge (**ALL PROVED, zero sorry**) |
+| ArfInvariant | ~270 | ~13 | 0 | 5q.B | Genus-g Milgram–Arf finite Gauss sum `gaussSum_genus_g=2^g(-1)^{∑Arf}` (the 8→16 layer) (**ALL PROVED, zero sorry, kernel-pure**) |
+| EvenLatticeForm | ~160 | ~12 | 0 | 5q.B | Even-lattice mod-2 reduction: `redBilin` alternating, `redQuad` refines symplectic b̄ (**ALL PROVED, zero sorry, kernel-pure**) |
+| LatticeSignature | ~95 | 8 | 0 | 5q.B | First Mathlib-grounded signature `latticeSig=sigPos−sigNeg`; orientation `latticeSig_neg`, `\|latticeSig\|≤rank`, `=±rank` for definite (**ALL PROVED, zero sorry, kernel-pure**) |
+| LatticeTheta | ~340 | 18 | 0 | 5q.B | Lattice theta `Θ_G(τ)=∑exp(iπτ·vᵀGv)`: convergence (PD coercivity), T/T²-invariance, congruence-invariance, cusp normalization, Fubini split — Route-C van der Blij substrate, S-transform pending (**ALL PROVED, zero sorry, kernel-pure**) |
+| SpinRokhlinInterface | ~75 | 3 | 0 | 5q.B | `SmoothSpinManifold4` interface + wired `16∣σ` (`.rokhlin`, conditional on `charSq` van der Blij) (**ALL PROVED, zero sorry, kernel-pure**) |
+| A1ExtSubstantive | ~270 | ~9 | 0 | 5q.T | Genuine `Ext` dims via dual-coboundary vanishing; real `finrank` ext-dims (generation-constraint chain) (**ALL PROVED, zero sorry, kernel-pure**) |
 | SpinBordism | ~150 | 8 | 0 | 5c | Spin bordism → Rokhlin → Wang chain: SpinBordismData structure, anomaly with/without ν_R, full Wang chain (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | VerifiedJackknife | ~200 | 5 | 0 | 5c | First verified statistical estimators: jackknife variance, autocorrelation, intAutocorrTime (**ALL PROVED, zero sorry**, Aristotle `78dcc5f4`) |
 | TetradGapEquation | ~300 | 20 | 0 | 5d | **First tetrad gap equation**: NJL-type gap, criticalCoupling, IVT existence, Banach uniqueness, bifurcation, vestigial connection (**ALL PROVED**, Aristotle `79e07d55`) |
