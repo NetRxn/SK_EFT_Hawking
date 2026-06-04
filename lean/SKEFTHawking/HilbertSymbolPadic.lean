@@ -124,4 +124,49 @@ theorem hilbertPadicNat_eq_legendre {a : ℕ} (ha : ¬ p ∣ a) :
   rw [Nat.factorization_eq_zero_of_not_dvd ha, hp.factorization_self]
   simp
 
+/-- The **signed (ℤ) odd-`p` Hilbert symbol** via the explicit Legendre formula on the `p`-free parts; the
+Legendre symbol absorbs the sign. Extends `hilbertPadicNat` to all nonzero integers, as the product formula
+over `ℚˣ` requires. -/
+def hilbertPadicInt (a b : ℤ) : ℤ :=
+  (-1) ^ (padicValInt p a * padicValInt p b * ((p - 1) / 2)) *
+      legendreSym p (pfreeInt p a) ^ padicValInt p b *
+    legendreSym p (pfreeInt p b) ^ padicValInt p a
+
+/-- The `p`-free part, cast to `ZMod p`, is nonzero. -/
+theorem cast_pfreeInt_ne_zero {a : ℤ} (ha : a ≠ 0) : ((pfreeInt p a : ℤ) : ZMod p) ≠ 0 := by
+  rw [Ne, ZMod.intCast_zmod_eq_zero_iff_dvd]; exact not_dvd_pfreeInt p ha
+
+/-- The signed symbol is `{±1}`-valued (nonzero arguments): a product of units. -/
+theorem hilbertPadicInt_mem {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    hilbertPadicInt p a b = 1 ∨ hilbertPadicInt p a b = -1 := by
+  rw [← Int.isUnit_iff]
+  have hu1 : IsUnit (legendreSym p (pfreeInt p a)) :=
+    Int.isUnit_iff.mpr (legendreSym.eq_one_or_neg_one p (cast_pfreeInt_ne_zero p ha))
+  have hu2 : IsUnit (legendreSym p (pfreeInt p b)) :=
+    Int.isUnit_iff.mpr (legendreSym.eq_one_or_neg_one p (cast_pfreeInt_ne_zero p hb))
+  unfold hilbertPadicInt
+  exact (((IsUnit.neg isUnit_one).pow _).mul (hu1.pow _)).mul (hu2.pow _)
+
+/-- **Bimultiplicativity of the signed symbol in the first argument** (nonzero arguments). -/
+theorem hilbertPadicInt_mul_left {a₁ a₂ b : ℤ} (ha₁ : a₁ ≠ 0) (ha₂ : a₂ ≠ 0) :
+    hilbertPadicInt p (a₁ * a₂) b = hilbertPadicInt p a₁ b * hilbertPadicInt p a₂ b := by
+  unfold hilbertPadicInt
+  rw [pfreeInt_mul p ha₁ ha₂, padicValInt.mul ha₁ ha₂, legendreSym.mul]
+  simp only [add_mul, pow_add, mul_pow]
+  ring
+
+/-- **Bimultiplicativity of the signed symbol in the second argument** (nonzero arguments). -/
+theorem hilbertPadicInt_mul_right {a b₁ b₂ : ℤ} (hb₁ : b₁ ≠ 0) (hb₂ : b₂ ≠ 0) :
+    hilbertPadicInt p a (b₁ * b₂) = hilbertPadicInt p a b₁ * hilbertPadicInt p a b₂ := by
+  unfold hilbertPadicInt
+  rw [pfreeInt_mul p hb₁ hb₂, padicValInt.mul hb₁ hb₂, legendreSym.mul]
+  simp only [mul_add, pow_add, mul_pow]
+  ring
+
+/-- **Symmetry of the signed symbol:** `(a,b)_p = (b,a)_p`. -/
+theorem hilbertPadicInt_comm (a b : ℤ) : hilbertPadicInt p a b = hilbertPadicInt p b a := by
+  unfold hilbertPadicInt
+  rw [Nat.mul_comm (padicValInt p a) (padicValInt p b)]
+  ring
+
 end SKEFTHawking.HilbertSymbol
