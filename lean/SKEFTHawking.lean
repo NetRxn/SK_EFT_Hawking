@@ -2824,6 +2824,10 @@ import SKEFTHawking.QuantumNetwork.LidskiiWielandt
 -- subset_sum_le_sorted_prefix — subset sum ≤ sum of the |S| largest entries (sortDesc); foundational
 -- for weak majorization. Mathlib lacks the majorization predicate (Birkhoff.lean TODO).
 import SKEFTHawking.QuantumNetwork.VectorMajorization
+-- Phase 6AL Wave 4 (2026-06-04): Wielandt min-max toward arbitrary-index Lidskii (F1b core ∃P).
+-- exists_mem_inf_ne_zero — subspace-intersection dim lemma (two subspaces summing past ambient dim
+-- meet nonzero); the counting step of Courant–Fischer min-max + the Wielandt frame construction.
+import SKEFTHawking.QuantumNetwork.WielandtLidskii
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
