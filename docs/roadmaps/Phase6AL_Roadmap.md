@@ -109,12 +109,33 @@ Hermitian, `uv run`): the diagonal sandwich `topkSum(λ↓A−λ↓B) ≤ topkSu
 (Schur–Horn 0/40000) but **FALSE left (≈3%, 1253/40000)** — `diag_A(C)` can be smaller than the sorted difference, so
 it cannot upper-bound H. The DS route is DEAD (do not re-attempt). R1/Lidskii genuinely needs the hard machinery.
 **Live route = EIGENVALUE-PATH:** `∑_I(λ↓A−λ↓B) = ∫₀¹ ∑_I⟨uᵢ,Cuᵢ⟩dt ≤ ∫ ∑_top-k λ↓C = ∑_top-k λ↓C` (Ky-Fan integrand
-**HAVE** = P3; FTC = Mathlib = P4). Decomposes to: **(P1)** Lipschitz of sorted eigenvalues — ✅ FOUNDATION SHIPPED
-`5b4f8a3c` `weyl_single_lower` `λ↓ᵢ(S+R) ≥ λ↓ᵢ(S)+λ↓ₙ₋₁(R)` (Courant–Fischer, kernel-pure; two-sided + Lipschitz follow);
-**(P2)** the a.e. eigenvalue-derivative `dλ↓ᵢ/dt=⟨uᵢ,Cuᵢ⟩` through crossings (Rellich) = the genuine hard core. Deep-
-research dispatched (NON-BLOCKING, `Lit-Search/tasks/in-progress/lidskii_arbitrary_subset_lean_formalizable_proof.md`)
-asking whether (P2) is avoidable via Lipschitz+convexity. ⚠️ "absorb" = BUILD to completion (not document-and-stop).
-Build order: P1-full (two-sided Weyl + Lipschitz, needs op-norm-eigenvalue bound + operator congruence) → attack P2.
+**HAVE** = P3; FTC = Mathlib = P4). Decomposes to: **(P1)** Lipschitz of sorted eigenvalues and **(P2)** the
+a.e. eigenvalue-derivative.
+
+**✅ (P1) REGULARITY LAYER COMPLETE — 5 bricks shipped (2026-06-04, all kernel-pure `{propext,Classical.choice,Quot.sound}`),
+`WielandtLidskii.lean`:**
+- `5b4f8a3c` `weyl_single_lower` `λ↓ᵢ(S+R) ≥ λ↓ᵢ(S)+λ↓ₙ₋₁(R)` (Courant–Fischer max–min).
+- `1d9fa04c` `weyl_single_lower_of_eq` — general-`T` form (`T=S+R` hyp, avoids operator-congruence along a path).
+- `ece56265` `weyl_diff_ge` `λ↓ₙ₋₁(A−B) ≤ λ↓ᵢ(A)−λ↓ᵢ(B)` (two-sided lower).
+- `56c1b1ad` `weyl_single_upper_of_eq` + `weyl_diff_le` `λ↓ᵢ(A)−λ↓ᵢ(B) ≤ λ↓₀(A−B)` (dual Courant–Fischer via new
+  `exists_subspace_re_inner_le` on S's bottom-(n−i) eigenspace) ⟹ **two-sided Weyl sandwich** complete.
+- `3073e904` `abs_eigenvalues_le_opNorm` (`|λ↓ⱼ(T)| ≤ ‖T‖`, by taking norms of `T u = λ•u`) + `weyl_lipschitz`
+  **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
+  gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
+
+**(P2) = the genuine irreducible residual** (a.e. eigenvalue-derivative `dλ↓ᵢ/dt=⟨uᵢ,Cuᵢ⟩` through crossings, Rellich).
+**Mathlib-search re-confirmed ABSENT 2026-06-04 in BOTH directions** (decompose-before-asserting-wall discipline):
+(i) no sorted-eigenvalue/analytic-perturbation differentiability — only `spectrum.hasDerivAt_resolvent` (the Kato
+contour-integral *building block*, not the eigenvalue derivative); (ii) no majorization/Wielandt-minimax API. The
+arbitrary-subset target is genuinely needed (re-derived: `g_I(t)=∑_{i∈I}λ↓ᵢ(M(t))` over a fixed position set is
+NOT convex for arbitrary `I`, so the convexity-of-top-k route gives only the position-prefix case I already have; the
+direct derivative-upper-bound is circular — only the eigenvector identification (P2) breaks circularity).
+Deep research dispatched (NON-BLOCKING, `Lit-Search/tasks/in-progress/lidskii_arbitrary_subset_lean_formalizable_proof.md`),
+targeting both the cleanest P2 construction (Kato resolvent route) and the alternative Wielandt-frame construction
+(`lidskii_of_frame`'s `hB3`). **No further research-independent F1b increment remains** — P1 is the buildable ceiling
+without the dispatched construction; improvising Kato/Wielandt risks correctness on a kernel-pure substrate (against
+the Quality Standard). NEXT: when the research lands, build P2 (or hB3) → `mirsky_of_subset_diff` → unconditional
+Mirsky → discharge R1 → F-headline.
 
 🔑 Wave-3 build notes (hard-won, for future cfc work): `cfc_kronecker` ABSENT from Mathlib; analytic
 `CFC.log`/`exp_log`/`log_exp` UNUSABLE on matrices (scoped `Matrix.Norms.L2Operator` topology ≠ defeq to
