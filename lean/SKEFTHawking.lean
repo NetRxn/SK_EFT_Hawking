@@ -2730,6 +2730,9 @@ import SKEFTHawking.QuantumNetwork.NegativityContinuity
 -- Phase 6AK Wave FU-6 substrate (2026-06-04): general-dimensional partial transpose on Fin dA × Fin dB
 -- (‖ρ^Γ‖_F preserved, ‖ρ^Γ‖₁ ≤ √(dA·dB)·‖ρ‖₁) — foundation for the n-copy rate + Choi-state bounds.
 import SKEFTHawking.QuantumNetwork.PartialTransposeGeneral
+-- Phase 6AK Wave FU-6 brick 1 (2026-06-04): negativity monotone under local ops, general bipartite dim
+-- (ptB commutes with a local A-channel; trace-norm contractivity) — generalizes FU-3.
+import SKEFTHawking.QuantumNetwork.NegativityMonotoneGeneral
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
