@@ -97,4 +97,29 @@ theorem mirsky_of_subset_diff {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB 
   rw [traceNorm_eq_sum_abs_eigenvalues₀ hC, ← habs]
   exact hkey
 
+/-- **Mirsky's inequality, reduced to single-frame existence (the Lidskii–Wielandt core).** Given that for
+every subset `S` there is a rank-`|S|` orthogonal projection `P` simultaneously high for `A`
+(`∑_{i∈S}λ↓ᵢ(A) ≤ tr(PA)`) and low for `B` (`tr(PB) ≤ ∑_{i∈S}λ↓ᵢ(B)`), the trace-norm Mirsky bound follows:
+`∑_{i∈S}(λ↓(A)−λ↓(B)) ≤ tr(PA)−tr(PB) = tr(P(A−B)) ≤ ∑_{j<|S|}λ↓ⱼ(A−B)` (shipped Ky Fan `trace_mul_proj_le`),
+which is the interface `H` consumed by `mirsky_of_subset_diff`. Numerically validated (single-frame existence
+holds for all random Hermitian pairs); the explicit witness is the top-`|S|` eigenspace of `A − tB` for a
+suitable `t ≥ 0`. -/
+theorem mirsky_of_proj_exists {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB : B.IsHermitian)
+    (hC : (A - B).IsHermitian)
+    (Hproj : ∀ S : Finset (Fin (Fintype.card ι)), ∃ P : Matrix ι ι ℂ,
+      P.IsHermitian ∧ P * P = P ∧ P.trace.re = (S.card : ℝ) ∧
+      (∑ i ∈ S, hA.eigenvalues₀ i) ≤ (P * A).trace.re ∧
+      (P * B).trace.re ≤ ∑ i ∈ S, hB.eigenvalues₀ i) :
+    ∑ k, |hA.eigenvalues₀ k - hB.eigenvalues₀ k| ≤ traceNorm (A - B) := by
+  refine mirsky_of_subset_diff hA hB hC (fun S => ?_)
+  obtain ⟨P, hPh, hPP, hPk, hPA, hPB⟩ := Hproj S
+  have hsplit : (P * (A - B)).trace.re = (P * A).trace.re - (P * B).trace.re := by
+    rw [Matrix.mul_sub, Matrix.trace_sub, Complex.sub_re]
+  calc ∑ i ∈ S, (hA.eigenvalues₀ i - hB.eigenvalues₀ i)
+      = (∑ i ∈ S, hA.eigenvalues₀ i) - (∑ i ∈ S, hB.eigenvalues₀ i) := by rw [Finset.sum_sub_distrib]
+    _ ≤ (P * A).trace.re - (P * B).trace.re := by linarith [hPA, hPB]
+    _ = (P * (A - B)).trace.re := hsplit.symm
+    _ ≤ ∑ j ∈ Finset.univ.filter (fun j : Fin (Fintype.card ι) => (j : ℕ) < S.card),
+          hC.eigenvalues₀ j := trace_mul_proj_le hC hPh hPP S.card hPk
+
 end SKEFTHawking.QuantumNetwork

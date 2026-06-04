@@ -127,7 +127,28 @@ applied to the LW crux itself (a dedicated matrix-analysis strategy scout + two 
   arbitrary-subset Lidskii bound) is still TRUE and still the target; it just needs the Wielandt-minimax proof, not
   route (b).** Genuine route = Wielandt minimax (flags + `Submodule.finrank_sup_add_finrank_inf_eq` subspace
   intersection; API confirmed present) OR additive-compound (missing Mathlib substrate). Both heavy/multi-session.
-- **✅ ROUTE (d) — WIELANDT MIN-MAX (user-committed full build 2026-06-04; the CORRECT skeleton, no false steps).**
+- **✅✅ ROUTE (e) — t-PARAMETRIZED CONSTRUCTION (numerically VALIDATED 2026-06-04, matrix-native, supersedes route d's flag-minimax).**
+  Three facts, each 0 failures over thousands of random Hermitian trials (numpy, `/tmp/wtest*.py`):
+  1. **Single-frame existence is TRUE** (0/300): ∃ rank-k `W` with `tr(P_W A) ≥ ∑_S λ↓(A)` ∧ `tr(P_W B) ≤ ∑_S λ↓(B)`.
+     ⟹ the prior construction-scout's "single-frame is false (n=3 S={0,2})" was WRONG — that was ONE construction failing
+     (`A-top∩B-bottom`), NOT existence. So the brick-2 interface (∃P) is CORRECT & provable, and H follows: `∑_Sλ↓(A)−∑_Sλ↓(B)
+     ≤ tr(P_W C) ≤ ∑_{<k}λ↓(C)` via SHIPPED Ky Fan `trace_mul_proj_le`.
+  2. **Explicit witness** (0/2000): `W = top-k eigenspace of (A − t·B)` satisfies both bounds for the right `t ≥ 0`.
+     MATRIX-NATIVE (no EuclideanSpace flags). At t=0: W=topk(A), `tr(P_W A)=∑_{<k}λ↓(A)≥∑_Sλ↓(A)` ✓ (A-bound). At t=∞:
+     W=botk(B), `tr(P_W B)=∑smallest-k(B)≤∑_Sλ↓(B)` ✓ (B-bound). Crossing in between.
+  3. **The crux = lemma L** (0/4000): `∑_{j<k}λ↓(A−tB) ≥ ∑_Sλ↓(A) − t·∑_Sλ↓(B)` ∀t≥0. **L at t=1 IS H** (`∑_{<k}λ↓(A−B)=∑_{<k}λ↓(C)`).
+  **CROSSING ARGUMENT (the assembly, matrix-native):** `g(t):=∑_{<k}λ↓(A−tB)` is CONVEX in t (max of linear `tr(P_W(A−tB))`);
+  `ψ(t):=tr(P_{W(t)}B)=−g'(t)` non-increasing (g convex); `φ(t):=tr(P_{W(t)}A)=g(t)+tψ(t)`, `φ'=tψ'≤0` non-increasing.
+  `φ(0)=∑_{<k}λ↓(A)≥∑_Sλ↓(A)` ✓; `ψ(∞)=∑smallk(B)≤∑_Sλ↓(B)` ✓. At `t_ψ:=inf{t:ψ(t)≤targetB}`, `φ(t_ψ)≥targetA ⟺ L(t_ψ)`.
+  **⚠️ L is genuinely the Wielandt content (no elementary proof found):** SHIPPED `sum_top_subadditive` gives only the TOP-K
+  version `g(t)≥∑_{<k}λ↓(A)−t∑_{<k}λ↓(B)` (Ky Fan subadd with A=(A−tB)+tB) — too weak (topk-sums not S-sums; binds only
+  for small t). Per-eigenvalue Weyl `λ↓_{s_r}(A−tB)≥λ↓_{s_r}(A)−tλ↓_0(B)` loses B's S-structure (gives `−tk·λ↓_0(B)`). L is
+  equivalent (convex duality / minimax) to the single-frame existence = the theorem itself. **NEXT INCREMENT = prove L** (most
+  promising: (a) the convexity/crossing analysis above — needs `g(t)` convex + `ψ` monotone + IVT on eigenvalue functions in t,
+  real-analysis but matrix-native; OR (b) a direct single-frame W-existence via Cauchy-interlacing-style dim argument — Mathlib
+  lacks interlacing too). Build the H←(∃W)←Ky-Fan assembly FIRST (clean, takes ∃W as hypothesis, like `mirsky_of_subset_diff`),
+  then discharge ∃W via L. 🔧 numerical scripts validated the route — KEEP test-before-build.
+- **~~ROUTE (d) — WIELANDT MIN-MAX~~ (max-frame direction was WRONG — numerically refuted: max-frame(B-flag)<target 22%; superseded by route e):**
   Valid proof of H found (supersedes all false routes a/b/c): with `i_r = s_r+1`,
   `∑_r λ↓_{s_r}(A) = min_{flags V_1⊂…⊂V_k, dim V_r=i_r} max_{orthonormal {x_r}, x_r∈V_r} ∑_r⟨x_r,Ax_r⟩` (Wielandt).
   Plug **B's eigen-flag** `V_r=span{v_0..v_{s_r}}` (min ≤ value-at-this-flag):
