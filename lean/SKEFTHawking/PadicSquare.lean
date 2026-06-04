@@ -206,4 +206,18 @@ theorem exists_diag_nary_zero_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {n : �
       simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hi
       rw [vxo i hi.1 hi.2.1 hi.2.2]; ring
 
+/-! ## p-adic valuation decomposition over the field `ℚ_[p]` (toward the rank-≥5 local workhorse) -/
+
+/-- **p-adic valuation decomposition over `ℚ_[p]`.** Every nonzero `x : ℚ_[p]` factors as `x = p^k · u` with
+`k = x.valuation` and `‖u‖ = 1` (so `u` is a unit of the value ring `ℤ_[p]`). The starting point for
+normalizing a diagonal form's weights to square-class representatives `unit` / `p · unit` at a `p`-adic place. -/
+theorem padic_valuation_decomp {p : ℕ} [Fact p.Prime] {x : ℚ_[p]} (hx : x ≠ 0) :
+    ∃ (k : ℤ) (u : ℚ_[p]), ‖u‖ = 1 ∧ x = (p : ℚ_[p]) ^ k * u := by
+  have hp0 : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  refine ⟨x.valuation, x * (p : ℚ_[p]) ^ (-x.valuation), ?_, ?_⟩
+  · rw [norm_mul, norm_zpow, Padic.norm_p, Padic.norm_eq_zpow_neg_valuation hx, inv_zpow]
+    exact mul_inv_cancel₀ (zpow_ne_zero _ (by exact_mod_cast (Fact.out : p.Prime).ne_zero))
+  · rw [mul_comm ((p : ℚ_[p]) ^ x.valuation) (x * (p : ℚ_[p]) ^ (-x.valuation)), mul_assoc,
+      ← zpow_add₀ hp0, neg_add_cancel, zpow_zero, mul_one]
+
 end SKEFTHawking
