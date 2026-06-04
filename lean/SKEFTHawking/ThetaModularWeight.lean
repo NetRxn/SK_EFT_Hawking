@@ -102,4 +102,14 @@ theorem neg_I_cpow_eq_one_iff_eight_dvd {d : ℕ} :
   · rintro ⟨k, rfl⟩
     exact ⟨-(k : ℤ), by push_cast; ring⟩
 
+/-- The combined `ST`-step of the theta automorphy: `θ_M(-1/(w+1)) = ((w+1)/i)^{d/2}·θ_M(w)` for `w ∈ UHP`.
+(S self-transform at `w+1 ∈ UHP`, then `T`-periodicity `θ_M(w+1) = θ_M(w)`.) Iterating this three times around
+the relation `(ST)³ = 1` yields the `8 ∣ d` constraint. -/
+theorem theta_ST {d : ℕ} (A : Matrix (Fin d) (Fin d) ℤ) (hsymm : Aᵀ = A) (hunim : IsUnimodular A)
+    (hpd : (A.map (Int.cast : ℤ → ℝ)).PosDef) (heven : ∀ i, 2 ∣ A i i) {w : ℂ} (hw : 0 < w.im) :
+    latticeTheta (A.map (Int.cast : ℤ → ℝ)) (-1 / (w + 1))
+      = ((w + 1) / I) ^ ((d : ℂ) / 2) * latticeTheta (A.map (Int.cast : ℤ → ℝ)) w := by
+  have hw1 : 0 < (w + 1).im := by simpa using hw
+  rw [latticeTheta_S_self A hsymm hunim hpd hw1, latticeTheta_T_int A hsymm heven]
+
 end SKEFTHawking
