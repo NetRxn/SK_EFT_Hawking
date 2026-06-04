@@ -112,4 +112,15 @@ theorem theta_ST {d : ℕ} (A : Matrix (Fin d) (Fin d) ℤ) (hsymm : Aᵀ = A) (
   have hw1 : 0 < (w + 1).im := by simpa using hw
   rw [latticeTheta_S_self A hsymm hunim hpd hw1, latticeTheta_T_int A hsymm heven]
 
+/-- **Complex-power base multiplicativity under the principal-branch arg condition**:
+`(x·y)^s = x^s · y^s` when `arg x + arg y ∈ (-π, π]` (and `x, y ≠ 0`). From `log(x·y) = log x + log y`
+(`Complex.log_mul_eq_add_log_iff`) and `cpow_def`. The tool for combining the three `(·/i)^{d/2}` automorphy
+factors of the `(ST)³` relation. -/
+theorem mul_cpow_of_arg_mem {x y : ℂ} (s : ℂ) (hx : x ≠ 0) (hy : y ≠ 0)
+    (harg : x.arg + y.arg ∈ Set.Ioc (-π) π) :
+    (x * y) ^ s = x ^ s * y ^ s := by
+  rw [Complex.cpow_def_of_ne_zero (mul_ne_zero hx hy), Complex.cpow_def_of_ne_zero hx,
+    Complex.cpow_def_of_ne_zero hy, ← Complex.exp_add, ← add_mul,
+    (Complex.log_mul_eq_add_log_iff hx hy).mpr harg]
+
 end SKEFTHawking
