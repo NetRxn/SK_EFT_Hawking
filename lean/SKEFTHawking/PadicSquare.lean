@@ -892,4 +892,43 @@ theorem isSquare_int_of_isSquare_padic {n : ℤ} (hn : 0 ≤ n)
   refine ⟨(k : ℤ), ?_⟩
   rw [← Int.natAbs_of_nonneg hn, hk]; push_cast; ring
 
+/-- **Rational-square local–global.** A nonnegative rational that is a square in every `ℚ_[p]` is a square.
+Via `Rat.isSquare_iff` (`IsSquare q ↔ IsSquare q.num ∧ IsSquare q.den`): the product `q.num · q.den =
+q · q.den²` is a square in every `ℚ_[p]` (square × square) and nonnegative, hence an integer square
+(`isSquare_int_of_isSquare_padic`); then `Int.sq_of_isCoprime` (with `q.num`, `q.den` coprime) splits the
+product square into `q.num` and `q.den` each square (sign forced by `0 ≤ q.num`, `0 < q.den`). The n = 2
+Hasse–Minkowski ingredient over ℚ. -/
+theorem isSquare_rat_of_isSquare_padic {q : ℚ} (hq : 0 ≤ q)
+    (h : ∀ (p : ℕ) [Fact p.Prime], IsSquare ((q : ℚ_[p]))) : IsSquare q := by
+  have hnum_nonneg : 0 ≤ q.num := Rat.num_nonneg.mpr hq
+  have hdenpos : 0 < (q.den : ℤ) := by exact_mod_cast q.den_pos
+  have hprod_padic : ∀ (p : ℕ) [Fact p.Prime], IsSquare ((q.num * (q.den : ℤ) : ℤ) : ℚ_[p]) := by
+    intro p inst
+    haveI := inst
+    have hdne : (q.den : ℚ_[p]) ≠ 0 := by
+      have hd : (q.den : ℕ) ≠ 0 := q.den_nz
+      exact_mod_cast hd
+    have key : ((q.num * (q.den : ℤ) : ℤ) : ℚ_[p]) = (q : ℚ_[p]) * (q.den : ℚ_[p]) ^ 2 := by
+      rw [Rat.cast_def]
+      push_cast
+      field_simp
+    rw [key]
+    exact (h p).mul ⟨(q.den : ℚ_[p]), by ring⟩
+  have hprod_nonneg : 0 ≤ q.num * (q.den : ℤ) := mul_nonneg hnum_nonneg (le_of_lt hdenpos)
+  obtain ⟨c, hc⟩ := isSquare_int_of_isSquare_padic hprod_nonneg hprod_padic
+  have hcop : IsCoprime q.num (q.den : ℤ) := by
+    rw [Int.isCoprime_iff_gcd_eq_one]; exact q.reduced
+  rw [Rat.isSquare_iff]
+  refine ⟨?_, ?_⟩
+  · obtain ⟨a0, ha0⟩ := Int.sq_of_isCoprime hcop (by rw [hc]; ring)
+    rcases ha0 with h1 | h1
+    · exact ⟨a0, by rw [h1]; ring⟩
+    · have hz : q.num = 0 := le_antisymm (by rw [h1]; nlinarith [sq_nonneg a0]) hnum_nonneg
+      exact ⟨0, by rw [hz]; ring⟩
+  · rw [← Int.isSquare_natCast_iff]
+    obtain ⟨a0, ha0⟩ := Int.sq_of_isCoprime hcop.symm (by rw [mul_comm, hc]; ring)
+    rcases ha0 with h1 | h1
+    · exact ⟨a0, by rw [h1]; ring⟩
+    · exfalso; nlinarith [sq_nonneg a0, hdenpos]
+
 end SKEFTHawking
