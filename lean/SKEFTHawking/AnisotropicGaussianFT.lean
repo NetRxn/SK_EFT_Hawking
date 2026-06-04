@@ -102,4 +102,40 @@ theorem sqrtInv_linear {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (c : Fin d →
   simp only [hcast]
   exact Matrix.dotProduct_mulVec c ((CFC.sqrt G)⁻¹.map (Complex.ofReal)) (fun k => (u k : ℂ))
 
+/-- **The anisotropic multivariate Gaussian integral with a linear character** ([Θ2]). For positive-definite
+real `G`, `b : ℂ` with `0 < b.re`, and any complex coefficient vector `c`:
+
+> `∫_{ℝᵈ} exp(-b·xᵀGx + ∑ᵢ cᵢ xᵢ) dx = (det G)^{-1/2} · (π/b)^{d/2} · exp((∑ᵢ (c ᵥ* (√G)⁻¹_ℂ)ᵢ²)/(4b))`
+
+where `(√G)⁻¹_ℂ = ((√G)⁻¹).map ofReal`. (For the theta route the linear coefficient is the character
+`cᵢ = -2πI·nᵢ`, `b = -iπτ` with `b.re = π·Im τ > 0`, and `∑(c ᵥ* (√G)⁻¹_ℂ)ᵢ² = cᵀG⁻¹c`.) Assembled from the
+change of variables `x ↦ (√G)⁻¹ u` (`integral_comp_sqrtInv`, Jacobian `√(det G)`), the substitution lemmas
+`sqrtInv_quadratic`/`sqrtInv_linear`, and Mathlib's separable isotropic Gaussian `integral_cexp_neg_mul_sum_add`. -/
+theorem integral_cexp_neg_quadratic_form {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef)
+    {b : ℂ} (hb : 0 < b.re) (c : Fin d → ℂ) :
+    ∫ x : Fin d → ℝ, Complex.exp (-b * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ) + ∑ i, c i * (x i : ℂ))
+      = ((Real.sqrt G.det : ℂ))⁻¹ * (((Real.pi : ℂ) / b) ^ ((d : ℂ) / 2)
+        * Complex.exp ((∑ i, (c ᵥ* ((CFC.sqrt G)⁻¹.map (Complex.ofReal))) i ^ 2) / (4 * b))) := by
+  have hmeas : Measurable (fun x : Fin d → ℝ =>
+      Complex.exp (-b * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ) + ∑ i, c i * (x i : ℂ))) := by fun_prop
+  have hdne : Real.sqrt G.det ≠ 0 := (Real.sqrt_pos.mpr hG.det_pos).ne'
+  have hpt : ∀ u : Fin d → ℝ,
+      Complex.exp (-b * ((((CFC.sqrt G)⁻¹ *ᵥ u) ⬝ᵥ G *ᵥ ((CFC.sqrt G)⁻¹ *ᵥ u) : ℝ) : ℂ)
+          + ∑ i, c i * (((CFC.sqrt G)⁻¹ *ᵥ u) i : ℂ))
+        = Complex.exp (-b * ∑ i, ((u i : ℂ)) ^ 2
+          + ∑ i, (c ᵥ* ((CFC.sqrt G)⁻¹.map (Complex.ofReal))) i * (u i : ℂ)) := by
+    intro u
+    rw [sqrtInv_quadratic hG u, sqrtInv_linear c u]
+    push_cast
+    ring_nf
+  have key : Real.sqrt G.det • (∫ x : Fin d → ℝ,
+        Complex.exp (-b * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ) + ∑ i, c i * (x i : ℂ)))
+      = ((Real.pi : ℂ) / b) ^ ((d : ℂ) / 2)
+        * Complex.exp ((∑ i, (c ᵥ* ((CFC.sqrt G)⁻¹.map (Complex.ofReal))) i ^ 2) / (4 * b)) := by
+    rw [← integral_comp_sqrtInv hG hmeas]
+    simp only [hpt]
+    rw [GaussianFourier.integral_cexp_neg_mul_sum_add hb (c ᵥ* ((CFC.sqrt G)⁻¹.map (Complex.ofReal))),
+      Fintype.card_fin]
+  rw [← key, Complex.real_smul, ← mul_assoc, inv_mul_cancel₀ (Complex.ofReal_ne_zero.mpr hdne), one_mul]
+
 end SKEFTHawking
