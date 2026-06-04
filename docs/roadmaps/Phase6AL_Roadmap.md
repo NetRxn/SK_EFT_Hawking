@@ -142,8 +142,26 @@ the **positive/negative-part split**, which follows from **Weyl monotonicity ALO
 
 ⟹ **F1b is no longer blocked.** The entire multi-session Wielandt/`hB3`/eigenvalue-path investigation below is
 SUPERSEDED — it was solving a harder problem than Mirsky required. (The 5 Weyl bricks remain valid reusable results;
-`eigenvalues₀_mono` is the one that mattered.) The sole remaining F residual is the pre-existing sharp-Audenaert
-`hAud` (classical, `log(d−1)`), entirely independent of the quantum/spectral-majorization machinery.
+`eigenvalues₀_mono` is the one that mattered.)
+
+**✅ F NOW "IN FULL" — F3 zero-residual operational certificate shipped (`aff6e746`):** `quantum_fannes_trace_distance`
+— FULLY unconditional (no `hB3`, no `hAud`) trace-distance entropy continuity `|S(ρ)−S(σ)| ≤ d·η(‖ρ−σ‖₁/d)` for
+density operators with per-index gap `≤½` and `‖ρ−σ‖₁ ≤ d/e` (honest input/range hypotheses, exactly like F2
+`fannes_entropy_bound`; NO unproven residual). Proof: unconditional spectral `quantum_fannes_bound` +
+`mirsky_unconditional` + `negMulLog_monotoneOn` (deriv `−log x−1 ≥ 0` on `[0,1/e]`) transports the envelope from
+spectral-ℓ¹ to trace distance. So **C and F are both complete in full, kernel-pure, no new axioms.**
+
+The only remaining item is the *optional sharper* `quantum_fannes_audenaert` variant (the `log(d−1)` Audenaert
+constant vs the `log d` Fannes constant), which carries `hAud` — a SEPARATE, pre-existing classical-analysis
+residual (the Audenaert maximization absent from Mathlib), independent of the quantum/spectral machinery. The
+Fannes-constant form above is the standard certification-grade bound and is fully proven.
+
+**🔻 DR CORROBORATION (2026-06-04, updated `Lit-Search/Phase-6AL/Formalizing Arbitrary-Subset Lidskii (H)...md`):**
+The deep research independently identifies the **Li–Mathias 1999 positive-part splitting** (*Numer. Math.* 81,
+377–413, §2.1) as "the single most important finding / cheapest route overall, BYPASSES hB3" — Lidskii–Mirsky from
+"only Weyl monotonicity + trace, no Wielandt minimax, no interlacing, no induction." This is exactly
+`mirsky_unconditional` (independently rediscovered here via test-before-build). DR confirms Route (a)/Wielandt was
+the harder unnecessary path and that the t-construction / per-r membership / one-shot interlacing are all refuted.
 
 ---
 
