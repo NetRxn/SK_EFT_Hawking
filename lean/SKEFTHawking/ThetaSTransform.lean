@@ -23,7 +23,7 @@ import SKEFTHawking.MultivarPoissonDescent
 
 namespace SKEFTHawking
 
-open Matrix Complex
+open Matrix Complex MeasureTheory
 open scoped Real
 
 /-- Coordinates of the standard integer lattice: the underlying vector of `(basisFun.restrictScalars ℤ).equivFun.symm v`
@@ -48,5 +48,36 @@ theorem latticeTheta_eq_lattice_sum {d : ℕ} (G : Matrix (Fin d) (Fin d) ℝ) (
     ((Pi.basisFun ℝ (Fin d)).restrictScalars ℤ).equivFun.symm.toEquiv]
   refine tsum_congr fun v => ?_
   rw [LinearEquiv.coe_toEquiv, coe_zlatticeBasis_equivFun_symm]
+
+/-- **Integrability of the character × Gaussian** (the `hFint` hypothesis of `multivar_poisson` for the
+Gaussian `F(x) = exp(iπσ·xᵀGx)`). For positive-definite `G` and `Im σ > 0`, `x ↦ exp(2πi·∑cᵢxᵢ)·exp(iπσ·xᵀGx)`
+is integrable: its norm is `exp(-π·Im σ·xᵀGx) ≤ exp(-π·Im σ·λ·∑xᵢ²)` by coercivity (`posDef_coercive`), and the
+diagonal Gaussian dominator is integrable (`GaussianFourier.integrable_cexp_neg_mul_sum_add`). -/
+theorem integrable_gaussianChar {d : ℕ} {G : Matrix (Fin d) (Fin d) ℝ} (hG : G.PosDef) {σ : ℂ}
+    (hσ : 0 < σ.im) (c : Fin d → ℝ) :
+    Integrable (fun x : Fin d → ℝ =>
+      Complex.exp (2 * (π : ℂ) * I * ((∑ i, c i * x i : ℝ) : ℂ)) *
+        Complex.exp ((π : ℂ) * I * σ * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ))) := by
+  obtain ⟨lam, hlam, hcoe⟩ := posDef_coercive G hG
+  have hb : (0 : ℝ) < π * σ.im * lam := by positivity
+  have hdom : Integrable (fun x : Fin d → ℝ =>
+      Complex.exp (-((π * σ.im * lam : ℝ) : ℂ) * ∑ i, ((x i : ℂ)) ^ 2)) := by
+    have h := GaussianFourier.integrable_cexp_neg_mul_sum_add (b := ((π * σ.im * lam : ℝ) : ℂ))
+      (by simpa using hb) (fun _ : Fin d => (0 : ℂ))
+    simpa using h
+  refine Integrable.mono' hdom.norm (by fun_prop) ?_
+  filter_upwards with x
+  rw [norm_mul, Complex.norm_exp, Complex.norm_exp, Complex.norm_exp]
+  have him : (2 * (π : ℂ) * I * ((∑ i, c i * x i : ℝ) : ℂ)).re = 0 := by
+    simp [Complex.mul_re, Complex.mul_im]
+  have hre : ((π : ℂ) * I * σ * ((x ⬝ᵥ G *ᵥ x : ℝ) : ℂ)).re = -(π * σ.im * (x ⬝ᵥ G *ᵥ x)) := by
+    simp [Complex.mul_re, Complex.mul_im]
+  have hScast : ∑ i, ((x i : ℂ)) ^ 2 = ((∑ i, (x i) ^ 2 : ℝ) : ℂ) := by push_cast; ring
+  have hdomre : (-((π * σ.im * lam : ℝ) : ℂ) * ∑ i, ((x i : ℂ)) ^ 2).re
+      = -(π * σ.im * lam * ∑ i, (x i) ^ 2) := by
+    rw [hScast, ← Complex.ofReal_neg, ← Complex.ofReal_mul, Complex.ofReal_re]; ring
+  rw [him, hre, hdomre, Real.exp_zero, one_mul]
+  apply Real.exp_le_exp.mpr
+  nlinarith [Real.pi_pos, hσ, hlam, hcoe x]
 
 end SKEFTHawking
