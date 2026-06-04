@@ -390,4 +390,51 @@ theorem exists_unit_or_pUnit_sq {p : ℕ} [Fact p.Prime] {a : ℚ_[p]} (ha : a �
     rw [hae, hk, show (2 * k + 1 : ℤ) = k + k + 1 from by ring, zpow_add₀ hp0, zpow_add₀ hp0,
       zpow_one]; ring
 
+/-! ## Anisotropy of the mixed ternary `z² = u x² + p v y²` (the descent converse) -/
+
+/-- A `p`-adic integer with zero residue is a non-unit. -/
+theorem not_isUnit_of_toZMod_eq_zero {p : ℕ} [Fact p.Prime] {x : ℤ_[p]}
+    (hx : PadicInt.toZMod x = 0) : ¬ IsUnit x := by
+  rw [PadicInt.isUnit_iff]
+  exact ne_of_lt ((toZMod_eq_zero_iff_norm_lt_one x).mp hx)
+
+/-- **Anisotropy of `z² = u x² + p v y²` for a non-square unit `u` (odd `p`).** There is no *primitive*
+`ℤ_[p]` solution: reducing mod `p` gives `z̄² = ū x̄²`, so either `x̄ ≠ 0` makes `ū = (z̄/x̄)²` a square
+(contradiction), or `x̄ = 0` forces `z̄ = 0`, and a mod-`p²` descent (`p ∣ x, z ⟹ v y² = p(z₁²-u x₁²) ⟹
+ȳ = 0`) makes all coordinates non-units, contradicting primitivity. The converse direction of the symbol
+⟺ solvability bridge in the `(u, p·v)` case. -/
+theorem no_primitive_sol_unit_pUnit {p : ℕ} [Fact p.Prime] {u v : ℤ_[p]} (hv : IsUnit v)
+    (hunsq : ¬ IsSquare (PadicInt.toZMod u)) :
+    ¬ ∃ x y z : ℤ_[p], (IsUnit x ∨ IsUnit y ∨ IsUnit z) ∧
+      z ^ 2 = u * x ^ 2 + (p : ℤ_[p]) * v * y ^ 2 := by
+  rintro ⟨x, y, z, hprim, h⟩
+  have hp_zero : PadicInt.toZMod (p : ℤ_[p]) = 0 := by rw [map_natCast, ZMod.natCast_self]
+  have hpne : (p : ℤ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have hred : PadicInt.toZMod z ^ 2 = PadicInt.toZMod u * PadicInt.toZMod x ^ 2 := by
+    have hh := congrArg PadicInt.toZMod h
+    simpa only [map_pow, map_add, map_mul, hp_zero, zero_mul, add_zero] using hh
+  by_cases hx : PadicInt.toZMod x = 0
+  · have hz : PadicInt.toZMod z = 0 := by
+      have hz2 : PadicInt.toZMod z ^ 2 = 0 := by rw [hred, hx]; ring
+      exact pow_eq_zero_iff (by norm_num) |>.mp hz2
+    obtain ⟨x1, hx1⟩ := (PadicInt.norm_lt_one_iff_dvd x).mp ((toZMod_eq_zero_iff_norm_lt_one x).mp hx)
+    obtain ⟨z1, hz1⟩ := (PadicInt.norm_lt_one_iff_dvd z).mp ((toZMod_eq_zero_iff_norm_lt_one z).mp hz)
+    have hvy : v * y ^ 2 = (p : ℤ_[p]) * (z1 ^ 2 - u * x1 ^ 2) := by
+      apply mul_left_cancel₀ hpne
+      rw [hx1, hz1] at h
+      linear_combination -h
+    have hyz : PadicInt.toZMod y = 0 := by
+      have h2 : PadicInt.toZMod v * PadicInt.toZMod y ^ 2 = 0 := by
+        have := congrArg PadicInt.toZMod hvy
+        simpa only [map_mul, map_pow, hp_zero, zero_mul] using this
+      rcases mul_eq_zero.mp h2 with hh | hh
+      · exact absurd hh (hv.map _).ne_zero
+      · exact pow_eq_zero_iff (by norm_num) |>.mp hh
+    exact hprim.elim (not_isUnit_of_toZMod_eq_zero hx)
+      (fun hh => hh.elim (not_isUnit_of_toZMod_eq_zero hyz) (not_isUnit_of_toZMod_eq_zero hz))
+  · apply hunsq
+    refine ⟨PadicInt.toZMod z / PadicInt.toZMod x, ?_⟩
+    field_simp
+    linear_combination -hred
+
 end SKEFTHawking
