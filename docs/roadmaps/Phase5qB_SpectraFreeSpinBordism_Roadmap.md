@@ -196,9 +196,26 @@ module header.
 **Anti-circularity:** the derivation routes even-unimodular + van-der-Blij ⟹ `8∣σ`, plus `2∣σ/8` ⟹ `16∣σ`;
 it does NOT use ABP or Rokhlin's theorem as input (Rokhlin's theorem *is* the conclusion). ✓
 
-**Remaining to FULL unconditional:** discharge `charSq` (van der Blij) algebraically from `even_unimod` via the
-Wave-B1 Arf/Gauss-sum/Brown machinery (then it drops as a field), and update D2/L2 + HYPOTHESIS_REGISTRY. The
-`topo` field is irreducibly topological and remains the single narrow tracked hypothesis (= `Arf(q̄)=0`).
+**Remaining to FULL unconditional:** discharge `eight_dvd` (van der Blij) algebraically from `even_unimod`,
+then it drops as a field, and update D2/L2 + HYPOTHESIS_REGISTRY. The `topo` field is irreducibly topological
+and remains the single narrow tracked hypothesis (= `Arf(q̄)=0`).
+
+**UPDATE 2026-06-04 — `eight_dvd` discharge: [Θ] DONE, wiring DONE, [HM] is the sole remaining gap.**
+- **[Θ] (definite `8∣σ`) DISCHARGED unconditionally** via theta-modularity: `ThetaModularWeight.eight_dvd_rank`
+  (PosDef even unimodular ⟹ `8∣rank`, by the `(ST)³`-orbit `(-I)^{d/2}=1`) → `ThetaDefiniteDischarge.
+  eight_dvd_latticeSig_of_definite` (`sigPos=0 ∨ sigNeg=0` ⟹ `8∣latticeSig`). Kernel-pure, no axioms.
+- **Wiring DONE:** `RokhlinFromHM.{eight_dvd_latticeSig_of_HM, sixteen_dvd_latticeSig_of_HM_of_topo}` compose
+  [Θ] into `eight_dvd_latticeSig_of_HM_of_Theta`, so even-unimodular `8∣σ`/`16∣σ` need ONLY [HM]+topo;
+  `RokhlinManifoldFromHM.{SmoothSpinManifold4.rokhlin_of_HM, sixteen_convergence_of_HM}` derive `16∣σ(M)` from
+  the manifold's GENUINE `even_unimod`+`topo`+[HM], NOT the assumed `eight_dvd` field. ⟹ **`16∣σ(M) = [HM]
+  applied to (even_unimod+topo)`; once [HM] is a theorem the `eight_dvd` field + `hHM` param drop ⟹ fully
+  unconditional.**
+- **[HM] (indefinite even unimodular ⟹ primitive isotropic vector) = the SOLE remaining gap = Hasse–Minkowski.**
+  Foundation bricks B1–B3 landed: `HilbertSymbolReal` (real place), `PadicUnitResidue`, `HilbertSymbolPadic`
+  (odd-`p` symbol, bimultiplicative). Path: sign/ℚ extension → `p=2` → product formula (≡ quad recip) → local
+  classification → HM rank-induction → apply (locally isotropic everywhere [B3 `_units`+[HM-p]+[HM-ℝ]] ⟹ global).
+  Per decision A (grind, ≤50k LOC). Strategic note confirmed: NO Mathlib shortcut for Milgram OR Hasse–Minkowski;
+  theta route is definite-only (indefinite theta diverges).
 
 ### Wave B5 — The genuine lattice signature `latticeSig`  [SHIPPED 2026-06-03]
 
