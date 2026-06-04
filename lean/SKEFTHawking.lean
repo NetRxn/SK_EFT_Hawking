@@ -2745,6 +2745,10 @@ import SKEFTHawking.QuantumNetwork.MaxEntNegativity
 -- Phase 6AK Wave FU-6 brick 5 (2026-06-04): single-copy distillation rate bound
 -- (distillation_single_copy_bound: local op → Φ_k ⟹ log₂k ≤ E_N(ρ); brick-1 monotone ∘ brick-4 target).
 import SKEFTHawking.QuantumNetwork.DistillationRateBound
+-- Phase 6AK Wave FU-6 brick 6b (2026-06-04): regularized n-copy distillation rate bound
+-- (ncopy grouped n-copy on KronIdx parties; logNegB_ncopy E_N(ρ^⊗n)=n·E_N(ρ) on the ACTUAL grouped
+--  state; logNegB_ncopy_localKraus_le E_N(Λ(ρ^⊗n))≤n·E_N(ρ) — the regularized E_D ≤ E_N rate).
+import SKEFTHawking.QuantumNetwork.NCopyRateBound
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
