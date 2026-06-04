@@ -97,4 +97,27 @@ theorem isSymmetric_re_inner_le {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [Normed
   · simp [h0]
   · exact mul_le_mul_of_nonneg_right (hc i h0) (sq_nonneg _)
 
+/-- A vector in the span of an eigenvector subset has vanishing coordinates outside the subset. -/
+theorem repr_eq_zero_of_not_mem {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ}
+    (hT : T.IsSymmetric) (hn : Module.finrank 𝕜 E = n) {s : Set (Fin n)} {v : E}
+    (hv : v ∈ Submodule.span 𝕜 (⇑(hT.eigenvectorBasis hn) '' s)) {i : Fin n} (hi : i ∉ s) :
+    (hT.eigenvectorBasis hn).repr v i = 0 := by
+  set b := hT.eigenvectorBasis hn with hb
+  rw [show (⇑b '' s) = (⇑b.toBasis '' s) by rw [OrthonormalBasis.coe_toBasis]] at hv
+  have hsupp := Module.Basis.repr_support_subset_of_mem_span b.toBasis s hv
+  have hni : (b.toBasis.repr v) i = 0 := Finsupp.notMem_support_iff.mp (fun h => hi (hsupp h))
+  rwa [OrthonormalBasis.coe_toBasis_repr_apply] at hni
+
+/-- The span of an eigenvector subset has dimension equal to the subset cardinality. -/
+theorem finrank_eigenspace_span {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ}
+    (hT : T.IsSymmetric) (hn : Module.finrank 𝕜 E = n) (s : Finset (Fin n)) :
+    Module.finrank 𝕜 (Submodule.span 𝕜 (⇑(hT.eigenvectorBasis hn) '' (s : Set (Fin n)))) = s.card := by
+  set b := hT.eigenvectorBasis hn with hb
+  have hli : LinearIndependent 𝕜 (fun i : (s : Set (Fin n)) => b i) :=
+    (b.orthonormal.comp _ Subtype.val_injective).linearIndependent
+  rw [Set.image_eq_range, finrank_span_eq_card hli, ← Set.toFinset_card]
+  simp
+
 end SKEFTHawking.QuantumNetwork
