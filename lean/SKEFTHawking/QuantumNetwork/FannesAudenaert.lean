@@ -208,6 +208,27 @@ theorem negMulLog_add_le {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) :
         = Real.negMulLog (a + b) := by rw [← add_mul, hsum, one_mul]
     linarith [hca, hcb, hfac]
 
+/-- **Jensen bound for `negMulLog` (the Fannes concavity step):** `∑ᵢ η(δᵢ) ≤ d · η((∑ᵢ δᵢ)/d)` for
+`δᵢ ≥ 0`, `η = negMulLog`. Concavity of `negMulLog` (`ConcaveOn.le_map_sum` with uniform weights `1/d`)
+caps the entropy of the difference-magnitudes by the value at their mean. With `∑ᵢ δᵢ = 2T` this gives
+`∑ᵢ η(δᵢ) ≤ d·η(2T/d) = 2T·log d + η(2T)` — the right-hand side of the classical Fannes bound. -/
+theorem sum_negMulLog_le_card_mul {d : ℕ} (hd : 0 < d) (δ : Fin d → ℝ) (hδ : ∀ i, 0 ≤ δ i) :
+    ∑ i, Real.negMulLog (δ i) ≤ (d : ℝ) * Real.negMulLog ((∑ i, δ i) / d) := by
+  have hdR : (0:ℝ) < d := by exact_mod_cast hd
+  have hw0 : ∀ i ∈ (Finset.univ : Finset (Fin d)), (0:ℝ) ≤ (1 / d : ℝ) := fun i _ => by positivity
+  have hw1 : ∑ _i : Fin d, (1 / d : ℝ) = 1 := by
+    rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul, mul_one_div,
+      div_self (ne_of_gt hdR)]
+  have hmem : ∀ i ∈ (Finset.univ : Finset (Fin d)), δ i ∈ Set.Ici (0:ℝ) :=
+    fun i _ => Set.mem_Ici.mpr (hδ i)
+  have hJ := Real.concaveOn_negMulLog.le_map_sum hw0 hw1 hmem
+  simp only [smul_eq_mul] at hJ
+  rw [← Finset.mul_sum, ← Finset.mul_sum] at hJ
+  have harg : (1 / d : ℝ) * ∑ i, δ i = (∑ i, δ i) / d := by ring
+  rw [harg] at hJ
+  have h2 := mul_le_mul_of_nonneg_left hJ (le_of_lt hdR)
+  rwa [← mul_assoc, mul_one_div, div_self (ne_of_gt hdR), one_mul] at h2
+
 /-- **Von Neumann entropy as the Shannon entropy of the sorted spectrum:**
 `S(ρ) = ∑ₖ negMulLog(λ↓ₖ(ρ))`. Since `negMulLog`-sums are permutation-invariant, the entropy (defined over
 the unsorted eigenvalues) equals the sum over the descending-sorted `eigenvalues₀`. This is the bridge that
