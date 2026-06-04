@@ -194,6 +194,18 @@ theorem chi2_eps2_eq_legendre_neg_one (q : ℕ) [Fact q.Prime] (hq : q ≠ 2) :
   congr 1
   exact map_natCast _ q
 
+/-- **Dyadic ↔ Legendre supplementary law for `2`:** for an odd prime `q`, `χ₂(ω(q)) = (q | 2)` — i.e. the
+dyadic exponent `ω(q)` matches `legendreSym q 2 = χ₈ q`. Both live on `ZMod 8`, so this is a direct finite
+check over its units. -/
+theorem chi2_omega2_eq_legendre_two (q : ℕ) [Fact q.Prime] (hq : q ≠ 2) :
+    chi2 (omega2 (q : ZMod 8)) = legendreSym q 2 := by
+  rw [legendreSym.at_two hq]
+  have hu : IsUnit ((q : ℕ) : ZMod 8) := by
+    rw [ZMod.isUnit_iff_coprime]
+    exact (Nat.coprime_primes Fact.out Nat.prime_two |>.mpr hq).pow_right 3
+  have key : ∀ x : ZMod 8, IsUnit x → chi2 (omega2 x) = ZMod.χ₈ x := by decide
+  exact key _ hu
+
 /-- `(-1, -1)_2 = -1`: both odd parts are `-1 ≡ 7 mod 8`, `ε(7)=1`, so the exponent is `ε(7)·ε(7)=1` and
 `χ₂(1) = -1`. This is the dyadic contribution that cancels the real `(-1,-1)_∞ = -1` in the product formula. -/
 theorem hilbert2Int_neg_one_neg_one : hilbert2Int (-1) (-1) = -1 := by
@@ -215,5 +227,18 @@ theorem hilbert2Int_neg_one_odd {q : ℤ} (hq : ¬ (2 : ℤ) ∣ q) :
   rw [hv1, hvq, hpf1, hpfq]
   simp only [Int.cast_neg, Int.cast_one, Nat.cast_zero, zero_mul, add_zero]
   rw [show eps2 (-1 : ZMod 8) = 1 from by decide, one_mul]
+
+/-- `(2, q)_2 = χ₂(ω(q))` for odd `q`: the `a = 2` exponent collapses to `v₂(2)·ω(q) = ω(q)` (`ε(1)=0`,
+`v₂(2)=1`). For prime `q` this equals `legendreSym q 2` via `chi2_omega2_eq_legendre_two`. -/
+theorem hilbert2Int_two_odd {q : ℤ} (hq : ¬ (2 : ℤ) ∣ q) :
+    hilbert2Int 2 q = chi2 (omega2 (q : ZMod 8)) := by
+  have hv2 : padicValInt 2 2 = 1 := padicValInt_self
+  have hvq : padicValInt 2 q = 0 := padicValInt.eq_zero_of_not_dvd hq
+  have hpf2 : pfreeInt 2 2 = 1 := by simp [pfreeInt, hv2]
+  have hpfq : pfreeInt 2 q = q := by simp [pfreeInt, hvq]
+  unfold hilbert2Int
+  rw [hv2, hvq, hpf2, hpfq]
+  simp only [Int.cast_one, Nat.cast_one, Nat.cast_zero, one_mul, zero_mul, add_zero]
+  rw [show eps2 (1 : ZMod 8) = 0 from by decide, zero_mul, zero_add]
 
 end SKEFTHawking.HilbertSymbol
