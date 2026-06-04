@@ -138,4 +138,15 @@ theorem summable_real_diagonal_gaussian {d : ℕ} {c : ℝ} (hc : 0 < c) :
   field_simp
   ring
 
+/-- The real Gaussian summability transported to the **standard integer lattice** (submodule-indexed):
+`∑_{γ∈Λ} exp(-c·∑ᵢ(↑γ)ᵢ²)` is summable for `c > 0`. Reindex `Λ ≃ ℤᵈ` (`coe_zlatticeBasis_equivFun_symm`)
+and apply `summable_real_diagonal_gaussian`. This is the dominating series for hF. -/
+theorem summable_lattice_gaussian {d : ℕ} {c : ℝ} (hc : 0 < c) :
+    Summable (fun γ : ↥(Submodule.span ℤ (Set.range ⇑(Pi.basisFun ℝ (Fin d)))) =>
+      Real.exp (-(c * ∑ i, ((γ : Fin d → ℝ) i) ^ 2))) := by
+  apply (Equiv.summable_iff
+    ((Pi.basisFun ℝ (Fin d)).restrictScalars ℤ).equivFun.symm.toEquiv).mp
+  refine (summable_real_diagonal_gaussian hc).congr (fun v => ?_)
+  simp only [Function.comp_apply, LinearEquiv.coe_toEquiv, coe_zlatticeBasis_equivFun_symm]
+
 end SKEFTHawking
