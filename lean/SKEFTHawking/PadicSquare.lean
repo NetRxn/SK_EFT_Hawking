@@ -1134,13 +1134,33 @@ theorem solvable_norm_value (a t : ℤ) :
     ∃ x y z : ℤ, y ≠ 0 ∧ z ^ 2 = a * x ^ 2 + (t ^ 2 - a) * y ^ 2 :=
   ⟨1, 1, t, one_ne_zero, by ring⟩
 
-/-- **Symmetry of the canonical ternary in its two coefficients.** `z² = a x² + b y²` is solvable iff
-`z² = b x² + a y²` is (swap `x ↔ y`). Lets the Legendre descent assume `|a| ≤ |b|` without loss. -/
-theorem solvable_canonical_symm {a b : ℤ}
-    (h : ∃ x y z : ℤ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2) :
-    ∃ x y z : ℤ, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = b * x ^ 2 + a * y ^ 2 := by
+/-- **Symmetry of the canonical ternary in its two coefficients** (over any commutative ring). `z² = a x² +
+b y²` solvable ⟹ `z² = b x² + a y²` solvable (swap `x ↔ y`). Lets the Legendre/Hasse–Minkowski descent
+assume `|a| ≤ |b|` without loss, over ℤ, ℚ, and each ℚ_v. -/
+theorem solvable_canonical_symm {R : Type*} [CommRing R] {a b : R}
+    (h : ∃ x y z : R, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = a * x ^ 2 + b * y ^ 2) :
+    ∃ x y z : R, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = b * x ^ 2 + a * y ^ 2 := by
   obtain ⟨x, y, z, hnz, he⟩ := h
-  exact ⟨y, x, z, fun hc => hnz ⟨hc.2.1, hc.1, hc.2.2⟩, by linarith [he]⟩
+  exact ⟨y, x, z, fun hc => hnz ⟨hc.2.1, hc.1, hc.2.2⟩, by linear_combination he⟩
+
+/-- **Nontrivial solution ⟹ solution with `y ≠ 0`, when `a` is not a square (over a field).** If `a` is not
+a square in `K` and `z² = a x² + b y²` has a nontrivial solution, then it has one with `y ≠ 0`. (A solution
+with `y = 0` forces `z² = a x²`; `x ≠ 0` would make `a = (z/x)²` a square, and `x = 0` makes it trivial.)
+Converts the "nontrivial" local-solvability hypothesis into the `y ≠ 0` shape the field transfer lemmas need,
+at places where `a` is a non-square. -/
+theorem exists_y_ne_zero_of_not_isSquare {K : Type*} [Field K] {a b : K} (ha : ¬ IsSquare a)
+    {x y z : K} (hnz : ¬(x = 0 ∧ y = 0 ∧ z = 0)) (he : z ^ 2 = a * x ^ 2 + b * y ^ 2) :
+    ∃ X Y Z : K, Y ≠ 0 ∧ Z ^ 2 = a * X ^ 2 + b * Y ^ 2 := by
+  by_cases hy : y = 0
+  · exfalso
+    subst hy
+    have he' : z ^ 2 = a * x ^ 2 := by rw [he]; ring
+    by_cases hx : x = 0
+    · subst hx
+      have hz : z ^ 2 = 0 := by rw [he']; ring
+      exact hnz ⟨rfl, rfl, pow_eq_zero_iff (by norm_num) |>.mp hz⟩
+    · exact ha ⟨z / x, by field_simp; linear_combination -he'⟩
+  · exact ⟨x, y, z, hy, he⟩
 
 /-- **Odd-`p` per-place bridge from global integers to the residue square condition.** For an odd prime `p`
 and integers `a, c` with `p ∤ a`, `p ∤ c`, the canonical ternary `z² = a x² + (p·c) y²` over `ℚ_[p]` is
