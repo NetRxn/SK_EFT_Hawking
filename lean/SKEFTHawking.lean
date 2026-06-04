@@ -650,6 +650,7 @@ import SKEFTHawking.MultivarPoissonDescent
 import SKEFTHawking.AnisotropicGaussianFT
 import SKEFTHawking.LatticeTheta
 import SKEFTHawking.ThetaSTransform
+import SKEFTHawking.ThetaModularWeight
 import SKEFTHawking.RokhlinClassification
 import SKEFTHawking.SpinRokhlinInterface
 import SKEFTHawking.ExtBordismBridge
