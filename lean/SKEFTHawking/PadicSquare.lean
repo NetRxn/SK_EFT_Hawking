@@ -828,4 +828,26 @@ theorem isSquare_padic_unit_iff_residue {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) 
     (hu : IsUnit u) : IsSquare ((u : ℚ_[p])) ↔ IsSquare (PadicInt.toZMod u) :=
   (isSquare_padic_coe_iff hu).trans (isSquare_iff_isSquare_toZMod hp hu)
 
+/-- **A squarefree natural that is a square in every `ℚ_[p]` equals 1.** Any prime divisor `p` of a
+squarefree `a > 1` gives `padicValNat p a = 1` (squarefree ⟹ ≤ 1, divides ⟹ ≥ 1), so `(a : ℚ_[p])` has odd
+valuation and is not a square — contradicting `isSquare_valuation_even`. The squarefree core of the
+integer/rational-square local–global (n = 2 Hasse–Minkowski). -/
+theorem squarefree_eq_one_of_isSquare_padic {a : ℕ} (ha : Squarefree a)
+    (h : ∀ (p : ℕ) [Fact p.Prime], IsSquare ((a : ℚ_[p]))) : a = 1 := by
+  by_contra hne
+  obtain ⟨p, hp, hpa⟩ := Nat.exists_prime_and_dvd hne
+  haveI : Fact p.Prime := ⟨hp⟩
+  have ha0 : a ≠ 0 := ha.ne_zero
+  have hane : (a : ℚ_[p]) ≠ 0 := by exact_mod_cast ha0
+  have heven : Even ((a : ℚ_[p]).valuation) := isSquare_valuation_even hane (h p)
+  rw [Padic.valuation_natCast] at heven
+  have hval1 : padicValNat p a = 1 := by
+    have hle : a.factorization p ≤ 1 := (Nat.squarefree_iff_factorization_le_one ha0).mp ha p
+    have hge : 1 ≤ a.factorization p := by
+      rw [← Nat.Prime.dvd_iff_one_le_factorization hp ha0]; exact hpa
+    have hfp : a.factorization p = 1 := le_antisymm hle hge
+    rwa [Nat.factorization_def a hp] at hfp
+  rw [hval1] at heven
+  norm_num at heven
+
 end SKEFTHawking
