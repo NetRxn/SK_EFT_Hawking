@@ -138,6 +138,45 @@ fidelity is definitional from `entanglementFidelity` (6AG). **Acceptance:** kern
 
 ---
 
+## Follow-on backlog (post-6AK; opened 2026-06-03, NOT yet built)
+
+Two genuine new-theorem items deferred from the main phase. Neither blocks anything; both are honest
+extensions, not fence-repairs. Tracked here so they are explicit rather than implicit "deferreds".
+
+### FU-1 — Qutrit Weyl-Heisenberg leakage channel: exact diamond distance (MED, do first) 🎯
+
+**Goal.** Instantiate the 6AK.3 `UnitaryErrorBasis` framework at `n = 3` with the 9 qutrit
+Weyl–Heisenberg (clock–shift) operators, yielding `diamondDist (weylKraus p) (idKrausPad 8 3) = 1 − p₀`
+**for free** from `diamondDist_errorBasisKraus_eq`. A qutrit **leakage** channel (population escaping the
+qubit `{0,1}` subspace into level `2`) is then a specific weight choice, with diamond distance = total
+leakage probability. This is the "leakage" half of Wave 6AK.4, delivered exactly (not bracketed).
+
+**Key simplification (de-risks the whole thing).** Define the basis operators by their **entry formula**
+— `weylOp a b = Matrix.of (fun i j => if i = j + a then ω^(b·j) else 0)`, `ω = e^{2πi/3}` — so the three
+`UnitaryErrorBasis` fields reduce to direct `∑`-over-`Fin 3` computations with **no matrix powers** and
+no heavy `IsPrimitiveRoot` machinery. `op_zero` = `1` (a=b=0). `op_unitary` uses `|ω|=1`. `op_orthonormal`
+`tr((weylOp a b)ᴴ (weylOp c d)) = 3·δ_{ac}δ_{bd}` reduces to `δ_{ac} · ∑_{i:Fin 3} ω^{(d−b)i}`, and the
+**only nontrivial fact** is the cube-root geometric sum `∑_{i<3} ω^{ki} = 3·⟦3∣k⟧` (from `ω³=1`,
+`1+ω+ω²=0`). **Acceptance:** kernel-pure `diamondDist_weylKraus_eq = 1 − p₀` + a named leakage instance.
+**Risk:** MED (the ω-sum + the `i = j + a` cyclic-`Fin 3` bookkeeping; everything downstream is free).
+
+### FU-2 — PLOB as a genuine discrete-family rate inequality (EXPLORATORY, scout-first)
+
+**Goal.** Upgrade 6AK.2 from "properties of the bound *function*" to a theorem that actually bounds a
+*rate quantity* — i.e. `someRate(model) ≤ f(η)` rather than facts about `f` alone. **Scout decides the
+target** (genuinely open):
+- (a) **classical erasure-link bound:** an elementary finite/expectation bound — the expected number of
+  symbols transmitted through `N` uses of an erasure channel (parameter `η`) is `η·N`, so any extracted
+  message/key rate `≤ η` (linear loss penalty). Formalizable, honest, but weak.
+- (b) **log-negativity on a Bell-diagonal family:** `E_N(ρ) = log₂‖ρ^{Γ}‖₁` using the **already-shipped**
+  partial-transpose + trace-norm substrate (6AE/6AF) — prove the distillable bound on a tractable finite
+  family. Stronger and reuses substrate, but the LOCC-monotonicity step may be absent from Mathlib.
+**Acceptance:** EITHER a kernel-pure rate inequality (honestly labelled) OR a documented scout finding
+that no clean non-trivial target is reachable without new substrate. **Risk:** HIGH/uncertain — and the
+6AK.2 surrogate already stands on its own, so this is genuinely optional. Do FU-1 first.
+
+---
+
 ## Out of scope (keeps 6AK closeable)
 - Any downstream-application naming or product/positioning prose.
 - Any device/compiler-specific accuracy-threshold result that belongs to a non-public project (6AK.5
