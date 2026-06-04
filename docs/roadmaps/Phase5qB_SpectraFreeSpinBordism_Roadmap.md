@@ -217,6 +217,25 @@ and remains the single narrow tracked hypothesis (= `Arf(q̄)=0`).
   Per decision A (grind, ≤50k LOC). Strategic note confirmed: NO Mathlib shortcut for Milgram OR Hasse–Minkowski;
   theta route is definite-only (indefinite theta diverges).
 
+**UPDATE 2026-06-04 (cont.) — [HM] foundation: HILBERT'S PRODUCT FORMULA COMPLETE (major gating sub-result).**
+The full scalar Hilbert-symbol arithmetic layer for `[HM]`/Hasse–Minkowski is now a kernel-pure, axiom-clean
+fact, built entirely from scratch (Mathlib has NONE of it):
+- **All four signed local Hilbert symbols** (`HilbertSymbolReal` ∞, `HilbertSymbolPadic` odd-`p`/signed-ℤ,
+  `HilbertSymbolTwo` `p=2`), each `{±1}`-valued and bimultiplicative, with the supplementary laws
+  (`chi2_eps2_eq_legendre_neg_one`, `chi2_omega2_eq_legendre_two`, `chi2_eps2_mul`) tying the dyadic ε/ω
+  characters to Mathlib's `legendreSym`/`χ₄`/`χ₈`.
+- **`HilbertProductFormula.hilbertGlobalProd_eq_one : ∏_v (a,b)_v = 1`** for all nonzero `a,b : ℤ` — assembled
+  from quadratic reciprocity (`legendreSym.quadratic_reciprocity`) + supplementary laws over all generators
+  `{(1,b),(-1,±1/q),(2,q/2),(p,q),(p,p)}`, then the multiplicative reduction (nested `Nat.recOnMul` over prime
+  factorizations + `Int.sign_mul_natAbs` sign extension). Kernel-pure `[propext,Classical.choice,Quot.sound]`.
+- **REMAINING for [HM] = the form-level p-adic theory (the bulk; Mathlib lacks it entirely — only residue-field
+  `IsSquare` + Hensel exist):** (i) connect the *combinatorial* `(a,b)_p` to actual local solvability of
+  `z²=ax²+by²` over ℚ_p (p-adic square classes via Hensel on `X²-u`); (ii) Hasse invariant of forms over ℚ_p +
+  Witt local classification; (iii) the Hasse–Minkowski local–global rank induction (ternary/quaternary via the
+  product formula + Dirichlet, n≥5 by reduction); (iv) apply to indefinite even unimodular (locally split ⟹
+  globally isotropic) ⟹ `HasWeakIsotropicVectorHyp` ⟹ drop `eight_dvd` + `hHM`. This is a multi-session
+  from-scratch p-adic-quadratic-forms library; grind continues per decision A.
+
 ### Wave B5 — The genuine lattice signature `latticeSig`  [SHIPPED 2026-06-03]
 
 `lean/SKEFTHawking/LatticeSignature.lean` (kernel-pure, root-imported, file-gate + axiom-check green):
