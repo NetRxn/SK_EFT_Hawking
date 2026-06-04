@@ -1076,6 +1076,24 @@ theorem solvable_scale {a b' w : ℤ} {x y z : ℤ} (hy : y ≠ 0)
     ∃ X Y Z : ℤ, Y ≠ 0 ∧ Z ^ 2 = a * X ^ 2 + (b' * w ^ 2) * Y ^ 2 := by
   exact ⟨w * x, y, w * z, hy, by linear_combination w ^ 2 * hsol⟩
 
+/-- **Field-generic solvability transfer (local-preservation engine).** Over any field, if `t² − a = b·b''`
+and `z² = a x² + b'' y²` has a solution with `y ≠ 0`, then `z² = a x² + b y²` does. Same witnesses as
+`solvable_transfer`, but over a field (e.g. `ℚ_[p]`, `ℝ`) — used to preserve *local* solvability across the
+descent `b → b''` (and, by `b ↔ b''` symmetry of the factorization, `b'' → b`). -/
+theorem solvable_transfer_field {K : Type*} [Field K] {a b b'' t : K} (hb'' : b'' ≠ 0)
+    (hfac : t ^ 2 - a = b * b'') {x y z : K} (hy : y ≠ 0) (hsol : z ^ 2 = a * x ^ 2 + b'' * y ^ 2) :
+    ∃ X Y Z : K, Y ≠ 0 ∧ Z ^ 2 = a * X ^ 2 + b * Y ^ 2 :=
+  ⟨z + t * x, b'' * y, z * t + a * x, mul_ne_zero hb'' hy, by
+    linear_combination (t ^ 2 - a) * hsol + b'' * y ^ 2 * hfac⟩
+
+/-- **Field-generic square-factor scaling (local-preservation engine).** Over any field, `z² = a x² + b' y²`
+solvable (`y ≠ 0`) ⟹ `z² = a x² + (b'·w²) y²` solvable (`y ≠ 0`). The field analogue of `solvable_scale`,
+for transporting local solvability between a coefficient and its square multiples. -/
+theorem solvable_scale_field {K : Type*} [Field K] {a b' w : K} {x y z : K} (hy : y ≠ 0)
+    (hsol : z ^ 2 = a * x ^ 2 + b' * y ^ 2) :
+    ∃ X Y Z : K, Y ≠ 0 ∧ Z ^ 2 = a * X ^ 2 + (b' * w ^ 2) * Y ^ 2 :=
+  ⟨w * x, y, w * z, hy, by linear_combination w ^ 2 * hsol⟩
+
 /-- **Diagonal form normalization to squarefree integer coefficients.** Any diagonal form `∑ wᵢ xᵢ²` over ℚ
 with all `wᵢ ≠ 0` is isotropic iff the form `∑ sᵢ xᵢ²` with *squarefree integer* coefficients `sᵢ` is, where
 `wᵢ = sᵢ·tᵢ²` (`exists_squarefree_sq_mul_rat`) and the equivalence is the square-class invariance
