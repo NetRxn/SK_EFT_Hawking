@@ -1,6 +1,7 @@
 import Mathlib.Analysis.Matrix.Spectrum
 import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 import Mathlib.Analysis.InnerProductSpace.Spectrum
+import SKEFTHawking.QuantumNetwork.SpectralMajorization
 
 /-!
 # Wielandt min-max toward arbitrary-index Lidskii (Phase 6AL, Wave 4, item F1b core ∃P)
@@ -168,5 +169,38 @@ theorem exists_mem_re_inner_le {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedA
     exact hrepr (repr_eq_zero_of_not_mem hT hn hx.2 (Finset.mem_coe.not.mpr hi))
   simp only [Finset.mem_filter, Finset.mem_univ, true_and] at hmem
   exact hT.eigenvalues_antitone hn (by rw [Fin.le_def]; exact hmem)
+
+/-- **Ky Fan frame inequality (step 2).** For any orthonormal `k`-frame `{wᵣ}`, the Rayleigh sum
+`∑ᵣ re⟪wᵣ, T wᵣ⟫ ≤ ∑_{j<k} λ↓ⱼ(T)` (sum of the `k` largest eigenvalues). Via the quadratic-form expansion,
+the Bessel weights `pᵢ = ∑ᵣ ‖cᵢ(wᵣ)‖² ∈ [0,1]` (summing to `k`), and the shipped rearrangement
+`sum_mul_le_sum_top`. -/
+theorem isSymmetric_sum_re_inner_le_top {𝕜 : Type*} {E : Type*} [RCLike 𝕜] [NormedAddCommGroup E]
+    [InnerProductSpace 𝕜 E] {T : E →ₗ[𝕜] E} [FiniteDimensional 𝕜 E] {n : ℕ}
+    (hT : T.IsSymmetric) (hn : Module.finrank 𝕜 E = n) {k : ℕ} {w : Fin k → E}
+    (hw : Orthonormal 𝕜 w) :
+    ∑ r, RCLike.re (inner 𝕜 (w r) (T (w r)))
+      ≤ ∑ i ∈ Finset.univ.filter (fun i : Fin n => (i : ℕ) < k), hT.eigenvalues hn i := by
+  set b := hT.eigenvectorBasis hn with hb
+  have hexp : ∑ r, RCLike.re (inner 𝕜 (w r) (T (w r)))
+      = ∑ i, hT.eigenvalues hn i * ∑ r, ‖b.repr (w r) i‖ ^ 2 := by
+    rw [Finset.sum_congr rfl (fun r _ => isSymmetric_re_inner_self_eq_sum hT hn (w r)),
+      Finset.sum_comm]
+    exact Finset.sum_congr rfl (fun i _ => (Finset.mul_sum _ _ _).symm)
+  rw [hexp]
+  set p : Fin n → ℝ := fun i => ∑ r, ‖b.repr (w r) i‖ ^ 2 with hp
+  have hp0 : ∀ i, 0 ≤ p i := fun i => Finset.sum_nonneg fun r _ => sq_nonneg _
+  have hp1 : ∀ i, p i ≤ 1 := by
+    intro i
+    have hb1 : ‖b i‖ ^ 2 = 1 := by rw [b.orthonormal.1 i]; norm_num
+    have hbes := hw.sum_inner_products_le (b i) (s := Finset.univ)
+    rw [hb1] at hbes
+    refine le_trans (le_of_eq ?_) hbes
+    refine Finset.sum_congr rfl (fun r _ => ?_)
+    rw [b.repr_apply_apply, ← inner_conj_symm, RCLike.norm_conj]
+  have hpsum : ∑ i, p i = (k : ℝ) := by
+    rw [hp, Finset.sum_comm,
+      Finset.sum_congr rfl (fun r _ => (eigenvectorBasis_norm_sq_eq_sum hT hn (w r)).symm)]
+    simp [hw.1]
+  exact sum_mul_le_sum_top (hT.eigenvalues hn) (hT.eigenvalues_antitone hn) p hp0 hp1 k hpsum
 
 end SKEFTHawking.QuantumNetwork
