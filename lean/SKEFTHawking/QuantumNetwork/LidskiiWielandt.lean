@@ -1,4 +1,5 @@
 import SKEFTHawking.QuantumNetwork.SpectralMajorization
+import SKEFTHawking.QuantumNetwork.QuantumKlein
 
 /-!
 # Toward Lidskii–Wielandt (Phase 6AL, Wave 4, item F1b)
@@ -90,5 +91,23 @@ theorem eigenvalue_eq_doublyStochastic_combination {A B : Matrix ι ι ℂ} (hA 
     congr 2
     abel
   exact_mod_cast key
+
+/-- The eigenbasis-overlap weights `Dᵢⱼ = |Mᵢⱼ|²` (`M = U_Aᴴ U_B`) are **doubly stochastic** — row sums. -/
+theorem overlap_normSq_row_sum {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB : B.IsHermitian) (i : ι) :
+    ∑ j, Complex.normSq
+        ((star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * (↑hB.eigenvectorUnitary : Matrix ι ι ℂ)) i j)
+      = 1 := by
+  have hM : (star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * (↑hB.eigenvectorUnitary : Matrix ι ι ℂ))
+      = overlapUnitary hA hB := by rw [overlapUnitary, Unitary.coe_star]
+  rw [hM]; exact sum_normSq_row (overlapUnitary_mul_conjTranspose hA hB) i
+
+/-- The eigenbasis-overlap weights are **doubly stochastic** — column sums. -/
+theorem overlap_normSq_col_sum {A B : Matrix ι ι ℂ} (hA : A.IsHermitian) (hB : B.IsHermitian) (j : ι) :
+    ∑ i, Complex.normSq
+        ((star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * (↑hB.eigenvectorUnitary : Matrix ι ι ℂ)) i j)
+      = 1 := by
+  have hM : (star (↑hA.eigenvectorUnitary : Matrix ι ι ℂ) * (↑hB.eigenvectorUnitary : Matrix ι ι ℂ))
+      = overlapUnitary hA hB := by rw [overlapUnitary, Unitary.coe_star]
+  rw [hM]; exact sum_normSq_col (overlapUnitary_conjTranspose_mul hA hB) j
 
 end SKEFTHawking.QuantumNetwork
