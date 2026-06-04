@@ -830,6 +830,15 @@ $F_{\mathrm{avg}}(\Phi)=(d\,F_{\mathrm{pro}}(\Phi)+1)/(d+1)$
 (\verb|avgGateFidelity_eq_processFidelity|); for the SPAM channel $F_{\mathrm{pro}}=1-q$. Kernel-only;
 \emph{zero} new project-local axioms.
 
+The fourth 6AK result (\verb|QECSuppression.lean|) formalizes the abstract code-distance error-suppression
+relation underlying fault tolerance. For a physical error rate $p$, threshold $p_{th}$, and prefactor
+$A$, the distance-$d$ logical error bound $A\,(p/p_{th})^{\lfloor(d+1)/2\rfloor}$ has the two
+load-bearing threshold properties: below threshold ($p\le p_{th}$) it is monotone \emph{decreasing} in
+the code distance (\verb|logicalErrorBound_antitone_distance|), and strictly below threshold
+($p<p_{th}$) it tends to $0$ as the distance grows (\verb|logicalErrorBound_tendsto_zero|) --- the
+threshold theorem in its abstract code-capacity form. Neutral QEC mathematics; kernel-only;
+\emph{zero} new project-local axioms.
+
 %% ════════════════════════════════════════════════════════════════════
 \section{Conclusion and outlook}
 \label{sec:conclusion}

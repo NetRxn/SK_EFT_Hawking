@@ -2706,6 +2706,8 @@ import SKEFTHawking.QuantumNetwork.CoherenceFidelity
 import SKEFTHawking.QuantumNetwork.ErrorBasisDiamond
 -- Phase 6AK Wave 6AK.6 (2026-06-03): SPAM bit-flip diamond distance + process fidelity.
 import SKEFTHawking.QuantumNetwork.SpamProcessFidelity
+-- Phase 6AK Wave 6AK.5 (2026-06-03): code-distance error-suppression / threshold theorem (abstract QEC).
+import SKEFTHawking.QuantumNetwork.QECSuppression
 -- Phase 6v Wave 6v.8 (2026-05-26): NbRe noncentrosymmetric triplet
 -- superconductor substrate (Colangelo et al. PRL 135, 226002 (2025)).
 -- DIII-class topological-superconductor predicate + substantive contrast
