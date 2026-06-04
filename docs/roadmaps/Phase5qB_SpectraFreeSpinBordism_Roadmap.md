@@ -232,7 +232,26 @@ Two Explore toe-hold scans (Mathlib + repo) settled the global-reduction archite
   p-adic QF isotropy. PRESENT and reused: full QR (`legendreSym.quadratic_reciprocity`), χ₄/χ₈, `Nat.sum_four_squares`.
 - **n=2 base SHIPPED (`PadicSquare.lean`, kernel-pure):** `isSquare_rat_of_isSquare_padic` (0≤q, square every ℚ_p
   ⟹ IsSquare q), `isSquare_rat_iff_local` (the rank-2 local-global iff), `exists_squarefree_sq_mul_int`/`_rat`
-  (squarefree square-class representative — the diagonal-coefficient normalization). NEXT: ternary Legendre descent.
+  (squarefree square-class representative — the diagonal-coefficient normalization).
+
+**UPDATE 2026-06-04 (cont.) — ★ TERNARY HASSE–MINKOWSKI (Legendre's theorem) PROVEN, kernel-pure (`PadicSquare.lean`).**
+`ternary_solvable_of_local` : for nonzero squarefree `a, b : ℤ`, `z² = a x² + b y²` solvable over ℝ and every
+ℚ_p ⟹ solvable over ℚ. Proof by infinite descent (Serre Ch IV Thm 6, route A — NO Dirichlet, NO Hilbert
+symbols, coprimality-free). Axioms `[propext, Classical.choice, Quot.sound]` only. The full ingredient stack
+(all kernel-pure, ~28 commits): descent engine (`norm_form_comp_identity`, `solvable_transfer`/`_field`,
+`solvable_scale`/`_field`, `solvable_descent_field`, `solvable_descent_or_isSquare_field`), size-reduction
+(`descent_construct` via `Int.bmod`), normalization (`exists_squarefree_sq_mul_int`/`_rat`,
+`exists_squarefree_diag_isotropic`), per-place + CRT bridges (`solvable_padic_odd_iff_residue`,
+`solvable_real_canonical_iff`, `isSquare_zmod_of_forall_prime`, `isSquare_residue_of_solvable_padic`,
+`exists_dvd_sq_sub_of_locally_solvable`), base case (`ratSol_of_isSquare`), helpers (`solvable_norm_value`,
+`solvable_canonical_symm`, `exists_y_ne_zero_of_not_isSquare`). **Key insight:** the descent's local-solvability
+invariant is *field-generic* (over each ℚ_v, "solvable ⟺ b is a norm of ℚ_v(√a)"; norms form a group containing
+`t²−a`), so it preserves cleanly per place with no Hilbert-symbol bookkeeping. **REMAINING to `HasWeakIsotropicVectorHyp`:**
+(i) **rank-reduction** general diagonal form (rank n) → ternary (n=3) + n=4 quaternary + n≥5 (split off a
+hyperbolic/represented value), via the ℚ ternary HM; (ii) apply to the diagonalized even-unimodular Gram form
+(locally isotropic everywhere: ℝ indefinite, odd-p unimodular rank≥3, p=2 even-unimod ⊃ U) ⟹ nonzero ℚ then ℤ
+isotropic vector (`exists_int_isotropic_of_rat`) ⟹ `HasWeakIsotropicVectorHyp`; (iii) wire `RokhlinBridge` (drop
+`h_rokhlin`), update D2/L2 + HYPOTHESIS_REGISTRY, dispatch closure reviewer.
 
 **UPDATE 2026-06-04 (cont.) — [HM] foundation: HILBERT'S PRODUCT FORMULA COMPLETE (major gating sub-result).**
 The full scalar Hilbert-symbol arithmetic layer for `[HM]`/Hasse–Minkowski is now a kernel-pure, axiom-clean
