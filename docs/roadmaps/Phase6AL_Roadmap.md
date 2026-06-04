@@ -109,14 +109,19 @@ indicator sum; `Fin.le_def`+`omega` for antitone-threshold comparisons.)
 `dda064b9`, `conj_proj_isHermitian`+`conj_proj_idempotent` `ddf4928e`, **`trace_mul_proj_le` (Ky Fan ≤
 direction) `e315d315`** — `tr(P·A) ≤ ∑_{i<k} λ↓ᵢ(A)` for rank-k projection P. All kernel-pure.
 
-**REMAINING (precise): F1b Mirsky, F2 classical FA, F3 assembly.**
-- **F1b Lidskii→Mirsky** `∑ᵢ|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖₁`. Needs: (i) Ky Fan ACHIEVEMENT direction
-  `∑_{i<k}λ↓ᵢ(A) = tr(P_A·A)` for the top-k eigenprojection P_A (build P_A = ∑_{i<k}|eᵢ⟩⟨eᵢ| via
-  eigenvectorBasis, show rank/trace=k + tr(P_A A)=∑top-k); (ii) top-k subadditivity
-  `∑top-k(A) ≤ ∑top-k(B)+∑top-k(A−B)` [=tr(P_A B)+tr(P_A(A−B)) ≤ via `trace_mul_proj_le`×2]; (iii) the
-  majorization→ℓ¹ convex step (Karamata/HLP — Mathlib lacks; build). `traceNorm_hermitian=∑|λᵢ|` present.
-  ⚠️ this is the LARGEST remaining sub-build; if a specific step provably needs absent machinery, document
-  THAT precise residual (never F1b wholesale, never axiom).
+**F1a-achievement + subadditivity SHIPPED `92d88a63`:** `exists_proj_trace_eq` (Ky Fan achievement: top-k
+eigenprojection attains ∑top-k, k≤dim) + `sum_top_subadditive` (`∑top-k(A) ≤ ∑top-k(B)+∑top-k(A−B)`). Both
+kernel-pure. **Ky Fan COMPLETE (both directions + subadditivity).**
+
+**REMAINING (precise): F1b Mirsky ℓ¹ step, F2 classical FA, F3 assembly.**
+- **F1b Mirsky ℓ¹ step** `∑ᵢ|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖₁`. The operator-theoretic foundation is DONE
+  (`sum_top_subadditive` gives weak majorization: partial sums of d:=λ↓(A)−λ↓(B) dominated by partial sums of
+  λ↓(A−B)). REMAINING = the pure majorization→ℓ¹ convex step (Hardy–Littlewood–Pólya/Karamata for the convex
+  symmetric gauge ∑|·|): from `∑_{i<k} dᵢ ≤ ∑_{i<k} λ↓ᵢ(A−B)` (and the symmetric B↔A version) conclude
+  `∑ᵢ|dᵢ| ≤ ∑ᵢ|λᵢ(A−B)| = ‖A−B‖₁`. ⚠️ Mathlib lacks majorization→convex-sum (scout: grep returned only the
+  asymptotics `Majorized`); this is a from-scratch combinatorial-convexity brick. `traceNorm_hermitian=∑|λᵢ|`
+  present. If a specific step provably needs absent machinery, document THAT precise residual (never wholesale,
+  never axiom).
 - **F2 classical FA** `|∑negMulLog pᵢ−∑negMulLog qᵢ| ≤ T·log(d−1)+H₂(T)`, `∑|pᵢ−qᵢ|=2T`. Real analysis;
   `Real.binEntropy`/`negMulLog` concavity toe-holds present. Independent of F1.
 - **F3 assembly**: `S=∑negMulLog(eigenvalues₀)` (via `sum_eigenvalues_eq_sum_eigenvalues₀`) + F1b + F2.
