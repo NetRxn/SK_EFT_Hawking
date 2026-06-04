@@ -12,6 +12,7 @@ Mathlib has no p-adic square theory, so this is built from raw `hensels_lemma`. 
 
 import Mathlib
 import SKEFTHawking.HasseMinkowskiLocal
+import SKEFTHawking.HilbertSymbolReal
 
 namespace SKEFTHawking
 
@@ -1142,5 +1143,20 @@ theorem exists_dvd_sq_sub_of_isSquare_zmod {a b : ℤ} (h : IsSquare ((a : ZMod 
   rw [← Int.natAbs_dvd, ← ZMod.intCast_zmod_eq_zero_iff_dvd]
   push_cast
   rw [hs]; ring
+
+/-- **Real-place bridge for the canonical ternary.** For nonzero integers `a, b`, the form
+`z² = a x² + b y²` is solvable over ℝ iff `a, b` are not both negative. (Immediate from
+`HilbertSymbolReal.hilbertReal_eq_one_iff` and `hilbertReal = -1 ⟺ both negative`.) The archimedean local
+condition of Hasse–Minkowski for the canonical ternary. -/
+theorem solvable_real_canonical_iff {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    (∃ x y z : ℝ, (x, y, z) ≠ 0 ∧ z ^ 2 = (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2) ↔ ¬ (a < 0 ∧ b < 0) := by
+  have har : (a : ℝ) ≠ 0 := Int.cast_ne_zero.mpr ha
+  have hbr : (b : ℝ) ≠ 0 := Int.cast_ne_zero.mpr hb
+  rw [← HilbertSymbol.hilbertReal_eq_one_iff har hbr, HilbertSymbol.hilbertReal]
+  have hcast : ((a : ℝ) < 0 ∧ (b : ℝ) < 0) ↔ (a < 0 ∧ b < 0) := by
+    rw [Int.cast_lt_zero, Int.cast_lt_zero]
+  split_ifs with h
+  · exact iff_of_false (by decide) (not_not.mpr (hcast.mp h))
+  · exact iff_of_true rfl (hcast.not.mp h)
 
 end SKEFTHawking
