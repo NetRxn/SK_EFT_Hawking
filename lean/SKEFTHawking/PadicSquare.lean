@@ -1110,4 +1110,25 @@ theorem solvable_canonical_symm {a b : ℤ}
   obtain ⟨x, y, z, hnz, he⟩ := h
   exact ⟨y, x, z, fun hc => hnz ⟨hc.2.1, hc.1, hc.2.2⟩, by linarith [he]⟩
 
+/-- **Odd-`p` per-place bridge from global integers to the residue square condition.** For an odd prime `p`
+and integers `a, c` with `p ∤ a`, `p ∤ c`, the canonical ternary `z² = a x² + (p·c) y²` over `ℚ_[p]` is
+solvable iff `a` is a square mod `p`. (Cast `a, c` to `ℤ_[p]` units via `norm_intCast_eq_one_iff`, match the
+`(u, p·v)` shape of `solvable_unit_pUnit_iff`, and identify `toZMod ↑a = (a : ZMod p)`.) This connects a
+*global* squarefree coefficient `b = p·c` (exact `p`-valuation 1) to the elementary congruence "`a` QR mod
+`p`" that drives the Legendre descent / Hasse–Minkowski local conditions. -/
+theorem solvable_padic_odd_iff_residue {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a c : ℤ}
+    (ha : ¬ (p : ℤ) ∣ a) (hc : ¬ (p : ℤ) ∣ c) :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (p : ℚ_[p]) * (c : ℚ_[p]) * y ^ 2) ↔ IsSquare ((a : ZMod p)) := by
+  have hpp : Prime ((p : ℤ)) := Nat.prime_iff_prime_int.mp Fact.out
+  have hcop_a : IsCoprime (a : ℤ) (p : ℤ) := (hpp.coprime_iff_not_dvd.mpr ha).symm
+  have hcop_c : IsCoprime (c : ℤ) (p : ℤ) := (hpp.coprime_iff_not_dvd.mpr hc).symm
+  have hua : IsUnit ((a : ℤ_[p])) := PadicInt.isUnit_iff.mpr (PadicInt.norm_intCast_eq_one_iff.mpr hcop_a)
+  have huc : IsUnit ((c : ℤ_[p])) := PadicInt.isUnit_iff.mpr (PadicInt.norm_intCast_eq_one_iff.mpr hcop_c)
+  have hres : PadicInt.toZMod ((a : ℤ_[p])) = (a : ZMod p) := map_intCast _ a
+  rw [← hres]
+  have key := solvable_unit_pUnit_iff hp hua huc
+  rw [PadicInt.coe_intCast, PadicInt.coe_intCast] at key
+  exact key
+
 end SKEFTHawking
