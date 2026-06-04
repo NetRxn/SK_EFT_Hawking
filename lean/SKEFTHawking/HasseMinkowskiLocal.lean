@@ -166,13 +166,25 @@ theorem exists_ne_zero_isotropic_congr {R M₁ M₂ N : Type*} [CommRing R] [Add
 `B.toQuadraticMap' ≃ weightedSumSquares K w` (supplied by `equivalent_weightedSumSquares` over any field with
 `Invertible 2`), the Gram form `x ⬝ᵥ B *ᵥ x` has a nonzero zero iff the diagonal form `∑ wᵢ xᵢ²` does. The
 impedance-matcher between the Gram-matrix isotropy shape and the diagonal local-solvability lemmas. -/
-theorem matrix_isotropic_iff_weighted {K : Type*} [Field K] [Invertible 2] {m : ℕ} {ι : Type*}
+theorem matrix_isotropic_iff_weighted {K : Type*} [Field K] [Invertible (2 : K)] {m : ℕ} {ι : Type*}
     [Fintype ι] (B : Matrix (Fin m) (Fin m) K) (w : ι → K)
     (hQ : (B.toQuadraticMap').Equivalent (QuadraticMap.weightedSumSquares K w)) :
     (∃ x : Fin m → K, x ≠ 0 ∧ x ⬝ᵥ B *ᵥ x = 0) ↔ (∃ x : ι → K, x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0) := by
   simp only [← toQuadraticMap'_apply]
   rw [exists_ne_zero_isotropic_congr hQ]
   simp only [QuadraticMap.weightedSumSquares_apply, smul_eq_mul, ← pow_two]
+
+/-- **Every matrix Gram form over a field diagonalizes.** For `B : Matrix (Fin m) (Fin m) K` over a field
+with `Invertible 2`, there exist weights `w` such that `x ⬝ᵥ B *ᵥ x` is isotropic iff the diagonal form
+`∑ wᵢ xᵢ²` is (`QuadraticForm.equivalent_weightedSumSquares` + `matrix_isotropic_iff_weighted`). The
+matrix→diagonal step of the Hasse–Minkowski application, applicable at each completion `ℝ`/`ℚ_p`/`ℚ`. -/
+theorem exists_diag_weights_iff_matrix {K : Type*} [Field K] [Invertible (2 : K)] {m : ℕ}
+    (B : Matrix (Fin m) (Fin m) K) :
+    ∃ w : Fin (Module.finrank K (Fin m → K)) → K,
+      ((∃ x : Fin m → K, x ≠ 0 ∧ x ⬝ᵥ B *ᵥ x = 0) ↔
+       (∃ x : Fin (Module.finrank K (Fin m → K)) → K, x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0)) := by
+  obtain ⟨w, hw⟩ := QuadraticForm.equivalent_weightedSumSquares B.toQuadraticMap'
+  exact ⟨w, matrix_isotropic_iff_weighted B w hw⟩
 
 /-- **Diagonal isotropy is a square-class invariant of the weights.** Over a field, the diagonal form
 `∑ wᵢ xᵢ²` has a nonzero zero iff `∑ (wᵢ cᵢ²) xᵢ²` does, for any nonzero scalings `cᵢ`. This is the
