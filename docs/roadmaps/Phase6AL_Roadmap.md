@@ -123,11 +123,14 @@ a.e. eigenvalue-derivative.
   **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
   gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
 
-## 🔌 EXTERNAL-DEPENDENCY INTEL — PhysLean `QuantumInfo` (2026-06-04; for Phase 6AM dependency pull-in)
+## 🔌 EXTERNAL-DEPENDENCY INTEL — PhysLib `QuantumInfo` (2026-06-04) → PINNED; see Phase6AM for adoption plan
 
-Checked the physics Lean project (HEPLean/PhysLean, repo "physlib", branch `master`) for an easy button.
-It contains a substantial `QuantumInfo/` library (von Neumann/relative/Rényi entropy, DPI, SSA, fidelity, trace
-distance, CPTP channels). **Validated against the filenames (don't trust at face value):**
+**⚠️ Repo correction:** the library we pinned is **`leanprover-community/physlib`** (formerly Lean-QuantumInfo,
+arXiv:2510.08672) — NOT HEPLean/PhysLean (a different physics repo also nicknamed "physlib"; ignore it). Pinned in
+`lean/lakefile.toml` at `69197c54` (commit `f7a0add4`), Mathlib `5e932f97` / toolchain `v4.29.1` = ours, no bump.
+The full adoption plan (Kraus↔MState bridge, DPI/SSA/REE consumption) lives in **`Phase6AM_Roadmap.md`**.
+It contains a substantial `QuantumInfo/Finite/` library (von Neumann/relative/Rényi entropy, DPI, SSA, fidelity,
+trace distance, CPTP channels, free-state/REE). **Validated against the filenames (don't trust at face value):**
 - **Gap 1 (sharp Fannes–Audenaert): NOT present.** `Entropy/VonNeumann.lean` has only qualitative
   `Sᵥₙ_continuous`; no quantitative Audenaert/Fannes bound, no Fannes file. **No easy button for Gap 1** — keep the
   dispatched DR + dedicated build plan.

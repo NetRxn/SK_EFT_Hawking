@@ -32,12 +32,34 @@ SSA, and the free-state/separable framework already. The remaining content is **
 The existing in-repo QI substrate (`QuantumNetwork/*`: diamond/fidelity/entropy/negativity) is built on raw
 **Kraus families** (`Fin m → Matrix`); PhysLib is built on `MState` / `CPTPMap`. The work is to connect them.
 
-### Wave 1 — add PhysLib as a project dependency
-- Add `require Physlib` to `lean/lakefile.toml` (git `leanprover-community/physlib`). It is already on the
-  Mathlib v4.29.1 / 5e932f97 pin, so there is **no toolchain/pin conflict** — do NOT bump the pin.
-- `lake build` clean with PhysLib available. Confirm `#print axioms` on a sample PhysLib DPI theorem is
-  kernel-pure `{propext, Classical.choice, Quot.sound}`.
-- **Gate:** PhysLib imports resolve; library builds clean.
+### Wave 1 — add PhysLib as a project dependency  ✅ DONE (2026-06-04, commit `f7a0add4`)
+- ✅ Added `[[require]] Physlib` to `lean/lakefile.toml`, pinned to `69197c5449929b4949d1ec2326fb6a5c3f04eac5`
+  (git `leanprover-community/physlib`). **Validated** before adding: that commit's `lake-manifest` Mathlib rev ==
+  `5e932f97…` and toolchain == `leanprover/lean4:v4.29.1` — **identical to ours**, so NO toolchain/pin bump.
+- ✅ `lake update Physlib` resolved cleanly: core dep revs (mathlib `5e932f97`, batteries `756e3321`, aesop
+  `7152850e`, Qq `707efb56`, proofwidgets `4dd0959c`) **UNCHANGED**; only `Physlib` + its doc-gen4 transitive deps
+  (doc-gen4, leansqlite, Cli, UnicodeBasic, BibtexQuery, MD4Lean) added to the manifest. Our build still resolves
+  (`SKEFTHawking.QuantumNetwork.MirskyUnconditional`, 3364 jobs). Apache-2.0.
+- ⏳ **REMAINING gate (not yet run):** nothing imports PhysLib yet, so it hasn't been *built*. Before relying on
+  any PhysLib theorem, `lake build` a PhysLib target and run `#print axioms` on the DPI/SSA headlines to confirm
+  kernel-pure `{propext, Classical.choice, Quot.sound}` AT THIS COMMIT (the 0-sorry/0-axiom counts in the table
+  above were read from the GitHub tree / a sibling copy — re-verify against `69197c54` locally). Module paths at
+  this commit: `QuantumInfo/Finite/Entropy/{DPI,SSA,Relative,VonNeumann}.lean`,
+  `QuantumInfo/Finite/Distance/{Fidelity,TraceDistance}.lean`.
+
+### ⚠️ What PhysLib does NOT provide — Fannes–Audenaert (6AL Gap 1, sharp `log(d−1)`)
+PhysLib has von Neumann entropy + **qualitative** continuity (`Sᵥₙ_continuous`) but **NO quantitative
+Fannes–Audenaert bound** (`|S(ρ)−S(σ)| ≤ T·log(d−1)+h(T)`); there is no Fannes/Audenaert file in the pinned tree.
+So adopting PhysLib does **not** close 6AL Gap 1 (the sharp-Audenaert constant `hAud` in
+`quantum_fannes_audenaert_of_mirsky`). That remains a separate, **research-grade-by-infrastructure** item — deep
+research (`Lit-Search/Phase-6AL/Formalizing the Sharp (Audenaert) Classical Fannes Bound…md`) found the proof is
+mathematically elementary (essentially **Fano's inequality** via maximal coupling) but every route needs one piece
+Mathlib lacks: a finite-alphabet **Fano inequality** / discrete conditional-entropy layer (or a majorization API).
+Recommended route if pursued: maximal-coupling + Fano-grouping (Zhang 2007 / Sason 2013); staged as (1) in-reach
+"spreading" estimate + `qaryEntropy` monotone packaging, then (2) a reusable finite Fano-grouping lemma (the crux,
+~300–700 LoC). Meanwhile the **unconditional `log d` Fannes certificate** (`quantum_fannes_certificate` /
+`quantum_fannes_trace_distance`, 6AL) is the shipped operational bound. Treat the DR as a hypothesis to validate
+(test-before-build + machine-check), not trust.
 
 ### Wave 2 — Kraus ↔ MState bridge *(the real LOE)*
 - Provide the translation between the repo's Kraus-family channels / density matrices and PhysLib's
