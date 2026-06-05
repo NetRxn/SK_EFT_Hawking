@@ -36,6 +36,18 @@ name = "repl"
 git = "https://github.com/leanprover-community/repl.git"
 rev = "v4.29.0"
 
+# PhysLib (formerly Lean-QuantumInfo, arXiv:2510.08672; leanprover-community ownership; Apache 2.0).
+# QuantumInfo substrate: CPTPMap, HermitianMat tower, MState, TraceNorm, von Neumann / relative / Rényi
+# entropy, data-processing inequality (DPI), strong subadditivity (SSA), fidelity, trace distance.
+# Pinned to a commit whose Mathlib pin == ours (v4.29.1 tag, 5e932f97) and toolchain == ours (v4.29.1):
+# adding it requires NO Mathlib/toolchain bump. Do NOT advance to a higher physlib commit on a newer
+# Mathlib (e.g. v4.30.0) without a coordinated project-wide toolchain bump. Consuming its results
+# requires a HermitianMat/MState ↔ Matrix.IsHermitian/IsDensityOperator bridge; axiom-check before use.
+[[require]]
+name = "Physlib"
+git = "https://github.com/leanprover-community/physlib.git"
+rev = "69197c5449929b4949d1ec2326fb6a5c3f04eac5"
+
 [[lean_lib]]
 name = "SKEFTHawking"
 
