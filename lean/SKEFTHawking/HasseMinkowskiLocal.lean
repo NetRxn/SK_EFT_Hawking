@@ -434,4 +434,51 @@ theorem norm_form_iso_iff_ternary {K : Type*} [Field K] {α β : K} :
   · rintro ⟨x, y, z, hnz, he⟩
     exact ⟨z, x, y, 0, fun hc => hnz ⟨hc.2.1, hc.2.2.1, hc.1⟩, by linear_combination he⟩
 
+/-- **Square-discriminant rank-4 ⟺ ternary (field-generic).** When `a·b·c·d = s²` (square discriminant), the
+quaternary `a x² + b y² − c z² − d w² = 0` has a nontrivial zero iff the ternary `z² = −ab·x² + ac·y²` does.
+The bridge is the explicit identity `N(ax, y, z, wd/s) = a·(a x² + b y² − c z² − d w²)` where `N` is the
+quaternion `(−ab, ac)` norm form, plus `norm_form_iso_iff_ternary`. Holds over ℚ and every completion with the
+*same* `s` (cast), so square-disc rank-4 Hasse–Minkowski follows from the ternary theorem with NO weak
+approximation and NO Dirichlet. -/
+theorem quaternary_sqdisc_iso_iff_ternary {K : Type*} [Field K] {a b c d s : K}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0) (hsq : a * b * c * d = s ^ 2) :
+    (∃ x y z w : K, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      a * x ^ 2 + b * y ^ 2 - c * z ^ 2 - d * w ^ 2 = 0) ↔
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = -(a * b) * x ^ 2 + a * c * y ^ 2) := by
+  have habcd : a * b * c * d ≠ 0 :=
+    mul_ne_zero (mul_ne_zero (mul_ne_zero ha hb) hc) hd
+  have hs : s ≠ 0 := by intro h; exact habcd (by rw [hsq, h]; ring)
+  rw [← norm_form_iso_iff_ternary]
+  constructor
+  · rintro ⟨x, y, z, w, hnz, he⟩
+    refine ⟨a * x, y, z, w * d / s, fun hcon => hnz ⟨?_, hcon.2.1, hcon.2.2.1, ?_⟩, ?_⟩
+    · exact (mul_eq_zero.mp hcon.1).resolve_left ha
+    · have hw := hcon.2.2.2
+      rw [div_eq_zero_iff] at hw
+      rcases hw with hw | hw
+      · exact (mul_eq_zero.mp hw).resolve_right hd
+      · exact absurd hw hs
+    · have key : (a * x) ^ 2 - -(a * b) * y ^ 2 - a * c * z ^ 2 + -(a * b) * (a * c) * (w * d / s) ^ 2
+          = a * (a * x ^ 2 + b * y ^ 2 - c * z ^ 2 - d * w ^ 2) := by
+        field_simp
+        linear_combination (-(d * w ^ 2)) * hsq
+      rw [key, he, mul_zero]
+  · rintro ⟨x₀, x₁, x₂, x₃, hnz, he⟩
+    refine ⟨x₀ / a, x₁, x₂, x₃ * s / d, fun hcon => hnz ⟨?_, hcon.2.1, hcon.2.2.1, ?_⟩, ?_⟩
+    · have hx := hcon.1
+      rw [div_eq_zero_iff] at hx
+      exact hx.resolve_right ha
+    · have hx := hcon.2.2.2
+      rw [div_eq_zero_iff] at hx
+      rcases hx with hx | hx
+      · exact (mul_eq_zero.mp hx).resolve_right hs
+      · exact absurd hx hd
+    · have key : a * (a * (x₀ / a) ^ 2 + b * x₁ ^ 2 - c * x₂ ^ 2 - d * (x₃ * s / d) ^ 2)
+          = x₀ ^ 2 - -(a * b) * x₁ ^ 2 - a * c * x₂ ^ 2 + -(a * b) * (a * c) * x₃ ^ 2 := by
+        field_simp
+        linear_combination (a * x₃ ^ 2) * hsq
+      have hN : a * (a * (x₀ / a) ^ 2 + b * x₁ ^ 2 - c * x₂ ^ 2 - d * (x₃ * s / d) ^ 2) = 0 := by
+        rw [key]; linear_combination he
+      exact (mul_eq_zero.mp hN).resolve_left ha
+
 end SKEFTHawking
