@@ -1651,4 +1651,23 @@ theorem binary_represents_padic_of_units {p : ℕ} [Fact p.Prime] (hp : p ≠ 2)
     exists_diag_ternary_zero_odd_padic hp ha hb (show ‖(-t : ℚ_[p])‖ = 1 by rw [norm_neg]; exact ht)
   exact represents_of_ternary_isotropic ha0 hb0 ⟨x, y, z, hnz, by linear_combination he⟩
 
+/-- **Even-valuation values are represented at a good odd prime.** Over `ℚ_[p]` with `p` odd and unit
+coefficients `‖a‖ = ‖b‖ = 1`, the binary form `⟨a,b⟩` represents every nonzero `t` whose `p`-adic valuation
+is even. (Write `t = u · (p^k)²` with `u` a unit via `padic_valuation_decomp`; representability is a
+square-class invariant `binary_represents_congr_sq`, and units are represented by
+`binary_represents_padic_of_units`.) So at a good odd prime, the *only* obstruction to representing a value
+is odd valuation — the characterization that bounds the Dirichlet search in the rank-4 / rank-≥5 step. -/
+theorem binary_represents_padic_even_val {p : ℕ} [Fact p.Prime] (hp : p ≠ 2)
+    {a b t : ℚ_[p]} (ha : ‖a‖ = 1) (hb : ‖b‖ = 1) (ht : t ≠ 0) (hv : Even t.valuation) :
+    ∃ u v : ℚ_[p], a * u ^ 2 + b * v ^ 2 = t := by
+  have hp0 : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  obtain ⟨k, hk⟩ := hv
+  obtain ⟨w, hw, hwe⟩ := padic_valuation_decomp ht
+  have hs : (p : ℚ_[p]) ^ k ≠ 0 := zpow_ne_zero _ hp0
+  have hts : t = w * ((p : ℚ_[p]) ^ k) ^ 2 := by
+    rw [hwe, hk, zpow_add₀ hp0]; ring
+  obtain ⟨u, v, h⟩ := (binary_represents_congr_sq (a := a) (b := b) (t := w) hs).mp
+    (binary_represents_padic_of_units hp ha hb hw)
+  exact ⟨u, v, by rw [hts]; exact h⟩
+
 end SKEFTHawking
