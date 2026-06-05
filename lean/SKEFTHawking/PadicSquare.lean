@@ -2510,6 +2510,30 @@ theorem represents_padic_iff_symbol_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) 
     · field_simp
       push_cast at he; linear_combination -he
 
+/-- **Binary representability ⟺ Hilbert symbol over ℚ₂.** `⟨a,b⟩` represents `t` over ℚ₂ iff
+`hilbert2Int (a·t) (b·t) = 1`. Same `×t`-scaling as the odd-`p` case: `⟨a,b⟩` represents `t` iff the
+ternary `⟨a·t, b·t, −1⟩` is isotropic, which `solvable_2adic_iff_hilbert2Int` reads off. The 2-adic
+factor of the global represents⟺symbol product. -/
+theorem represents_2adic_iff_symbol {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    (∃ u v : ℚ_[2], (a : ℚ_[2]) * u ^ 2 + (b : ℚ_[2]) * v ^ 2 = (t : ℚ_[2])) ↔
+    HilbertSymbol.hilbert2Int (a * t) (b * t) = 1 := by
+  haveI : Invertible (2 : ℚ_[2]) := invertibleOfNonzero two_ne_zero
+  rw [← solvable_2adic_iff_hilbert2Int (mul_ne_zero ha ht) (mul_ne_zero hb ht)]
+  have htQ : (t : ℚ_[2]) ≠ 0 := by exact_mod_cast ht
+  constructor
+  · rintro ⟨u, v, he⟩
+    refine ⟨u, v, (t : ℚ_[2]), fun hc => htQ hc.2.2, ?_⟩
+    push_cast; linear_combination (-(t : ℚ_[2])) * he
+  · rintro ⟨x, y, z, hnz, he⟩
+    have ha0 : (a : ℚ_[2]) ≠ 0 := by exact_mod_cast ha
+    have hb0 : (b : ℚ_[2]) ≠ 0 := by exact_mod_cast hb
+    refine represents_of_ternary_isotropic ha0 hb0 ⟨x, y, z / (t : ℚ_[2]), ?_, ?_⟩
+    · rintro ⟨hx, hy, hz⟩
+      refine hnz ⟨hx, hy, ?_⟩
+      rw [div_eq_zero_iff] at hz; exact hz.resolve_right htQ
+    · field_simp
+      push_cast at he; linear_combination -he
+
 /-- **Binary representability ⟺ Hilbert symbol over ℝ.** `⟨a,b⟩` represents `t` over ℝ iff
 `hilbertReal (a·t) (b·t) = 1`. (`real_binary_represents_iff`: representable ⟺ `0 ≤ a·t ∨ 0 ≤ b·t`;
 `hilbertReal (at)(bt) = 1 ⟺ ¬(at < 0 ∧ bt < 0)`.) The archimedean represents⟺symbol. -/
