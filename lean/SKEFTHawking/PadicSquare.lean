@@ -14,6 +14,7 @@ import Mathlib
 import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.HilbertSymbolReal
 import SKEFTHawking.HilbertSymbolPadic
+import SKEFTHawking.HilbertSymbolTwo
 
 namespace SKEFTHawking
 
@@ -849,6 +850,15 @@ theorem solvable_2adic_imp_mod8 {u v : ℤ_[2]}
   · have hc := congrArg (PadicInt.toZModPow 3) heq
     simp only [map_add, map_mul, map_pow, map_neg, map_one, map_zero] at hc
     linear_combination -hc
+
+/-- **2-adic unit/unit solvability ⟺ symbol condition, at the residue level (finite `decide`).** For odd
+residues `u, v : ZMod 8`, the form `Z² = u X² + v Y²` has a nontrivial (unit-coordinate) solution mod 8 iff
+`eps2 u · eps2 v = 0` (i.e. `u ≡ 1` or `v ≡ 1 mod 4`) — the mod-8 content of `(u,v)_2 = 1`. Pure `decide` over
+`ZMod 8` (no `native_decide`). The combinatorial heart of the `p = 2` unit/unit symbol↔solvability bridge. -/
+theorem padic2_unit_sol_mod8_iff : ∀ u v : ZMod 8, u.val % 2 = 1 → v.val % 2 = 1 →
+    ((∃ X Y Z : ZMod 8, (X.val % 2 = 1 ∨ Y.val % 2 = 1 ∨ Z.val % 2 = 1) ∧
+        Z ^ 2 = u * X ^ 2 + v * Y ^ 2) ↔
+      HilbertSymbol.eps2 u * HilbertSymbol.eps2 v = 0) := by decide
 
 /-- **Square in `ℚ_[p]` ⟺ square in `ℤ_[p]`, for a unit.** A `p`-adic *unit* `u` is a square in the field
 `ℚ_[p]` iff it is a square in the ring `ℤ_[p]` (a square root in `ℚ_[p]` has norm 1, hence lies in `ℤ_[p]`).
