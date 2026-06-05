@@ -2175,6 +2175,24 @@ theorem binary_represents_good_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b 
   binary_represents_padic_of_units hp (padic_norm_intCast_eq_one ha) (padic_norm_intCast_eq_one hb)
     (padic_norm_intCast_eq_one ht)
 
+/-- **Good-prime symbol conditions are automatic.** At an odd prime `p` dividing none of `a, b, c, d, t`,
+the linear-symbol conditions `(t, −ab)_p = (a,b)_p` and `(t, −cd)_p = (c,d)_p` hold trivially — both sides are
+`1` (`hilbertPadicInt_units`, since all coordinates are `p`-adic units). This is why the global common-value
+construction only has to control the symbols at the finite bad set `2abcd`: every other place is free. -/
+theorem good_prime_symbol_auto {p : ℕ} [Fact p.Prime] {a b c d t : ℤ}
+    (ha : ¬ (p : ℤ) ∣ a) (hb : ¬ (p : ℤ) ∣ b) (hc : ¬ (p : ℤ) ∣ c) (hd : ¬ (p : ℤ) ∣ d)
+    (ht : ¬ (p : ℤ) ∣ t) :
+    HilbertSymbol.hilbertPadicInt p t (-(a * b)) = HilbertSymbol.hilbertPadicInt p a b ∧
+      HilbertSymbol.hilbertPadicInt p t (-(c * d)) = HilbertSymbol.hilbertPadicInt p c d := by
+  have hpp : Prime (p : ℤ) := Nat.prime_iff_prime_int.mp Fact.out
+  have hab : ¬ (p : ℤ) ∣ (a * b) := fun h => (hpp.dvd_or_dvd h).elim ha hb
+  have hcd : ¬ (p : ℤ) ∣ (c * d) := fun h => (hpp.dvd_or_dvd h).elim hc hd
+  refine ⟨?_, ?_⟩
+  · rw [HilbertSymbol.hilbertPadicInt_units p ht (by rwa [dvd_neg]),
+        HilbertSymbol.hilbertPadicInt_units p ha hb]
+  · rw [HilbertSymbol.hilbertPadicInt_units p ht (by rwa [dvd_neg]),
+        HilbertSymbol.hilbertPadicInt_units p hc hd]
+
 /-- **Symbol↔solvability bridge, unit/unit case.** For `p ∤ a`, `p ∤ b` (odd `p`): `z² = a x² + b y²` is
 solvable over `ℚ_[p]` iff `(a,b)_p = 1` — both hold (unit ternary is isotropic; `hilbertPadicInt_units`). -/
 theorem solvable_padic_iff_hilbert_uu {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b : ℤ}
