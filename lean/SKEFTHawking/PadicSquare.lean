@@ -1843,4 +1843,25 @@ theorem exists_sign_for_real_common {a b c d : ℝ}
       · exact Or.inl (by nlinarith)
       · exact Or.inr (by nlinarith)
 
+/-- **Rank-4 isotropy from the common-value keystone (top-level reduction).** If there is a single nonzero
+rational `t` that is represented by `⟨a,b⟩` *and* by `⟨c,d⟩` over ℝ and over every ℚ_p, then the quaternary
+`a x² + b y² = c z² + d w²` has a nontrivial rational solution. (Two applications of the value-local–global
+`binary_represents_of_local` make both binaries represent `t` over ℚ; `quaternary_isotropic_of_common_value`
+assembles.) This isolates the entire remaining content of the n=4 non-square-disc Hasse–Minkowski case into a
+single keystone: *the existence of such a global `t`* (the weak-approximation / Dirichlet construction
+`t = ε·q`). Everything downstream of the keystone is now a theorem. -/
+theorem quaternary_isotropic_of_keystone {a b c d : ℚ} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0)
+    (hd : d ≠ 0)
+    (hkey : ∃ t : ℚ, t ≠ 0 ∧
+      (∃ u v : ℝ, (a : ℝ) * u ^ 2 + (b : ℝ) * v ^ 2 = (t : ℝ)) ∧
+      (∀ (p : ℕ) [Fact p.Prime], ∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p])) ∧
+      (∃ u v : ℝ, (c : ℝ) * u ^ 2 + (d : ℝ) * v ^ 2 = (t : ℝ)) ∧
+      (∀ (p : ℕ) [Fact p.Prime], ∃ u v : ℚ_[p], (c : ℚ_[p]) * u ^ 2 + (d : ℚ_[p]) * v ^ 2 = (t : ℚ_[p]))) :
+    ∃ x y z w : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      a * x ^ 2 + b * y ^ 2 = c * z ^ 2 + d * w ^ 2 := by
+  obtain ⟨t, ht, hRab, hlocab, hRcd, hloccd⟩ := hkey
+  have h1 : ∃ u v : ℚ, a * u ^ 2 + b * v ^ 2 = t := binary_represents_of_local ha hb ht hRab hlocab
+  have h2 : ∃ u v : ℚ, c * u ^ 2 + d * v ^ 2 = t := binary_represents_of_local hc hd ht hRcd hloccd
+  exact quaternary_isotropic_of_common_value ht h1 h2
+
 end SKEFTHawking
