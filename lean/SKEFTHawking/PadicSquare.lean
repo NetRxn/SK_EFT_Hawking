@@ -2387,6 +2387,30 @@ theorem isSquare_padic_div_units {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : 
     rw [map_mul, hres, ← map_mul, hvinv, map_one]
   rw [htz]; exact ⟨1, by ring⟩
 
+/-- **A `ℤ_[p]` unit's square class has an integer representative (odd `p`).** For any unit `u : ℤ_[p]`, there
+is an integer `n` with `(n : ℤ_[p])` a unit and `(u : ℚ_[p]) / n` a square. (Lift the residue `r = toZMod u`
+to the integer `r.val`, a unit with the same residue, so `u / r.val` is a square by `isSquare_padic_div_units`.)
+The *unit* half of the realizability bridge: every `ℚ_[p]`-square class of a unit is hit by an integer, so a
+local common value's unit part can be matched by an integer coefficient. -/
+theorem exists_int_unit_sq_ratio_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u : ℤ_[p]} (hu : IsUnit u) :
+    ∃ n : ℤ, IsUnit ((n : ℤ_[p])) ∧ IsSquare ((u : ℚ_[p]) / (((n : ℤ_[p])) : ℚ_[p])) := by
+  haveI : NeZero p := ⟨(Fact.out : p.Prime).ne_zero⟩
+  set r : ZMod p := PadicInt.toZMod u with hr
+  have hune : ‖u‖ = 1 := PadicInt.isUnit_iff.mp hu
+  have hrne : r ≠ 0 := by
+    intro hc
+    have hlt := (toZMod_eq_zero_iff_norm_lt_one u).mp (hr ▸ hc)
+    rw [hune] at hlt; exact lt_irrefl 1 hlt
+  have hres : PadicInt.toZMod ((r.val : ℤ) : ℤ_[p]) = r := by
+    rw [map_intCast, Int.cast_natCast, ZMod.natCast_rightInverse r]
+  have hnu : IsUnit ((r.val : ℤ) : ℤ_[p]) := by
+    rw [PadicInt.isUnit_iff]
+    by_contra hne
+    have hlt : ‖((r.val : ℤ) : ℤ_[p])‖ < 1 := lt_of_le_of_ne (PadicInt.norm_le_one _) hne
+    have hz := (toZMod_eq_zero_iff_norm_lt_one _).mpr hlt
+    rw [hres] at hz; exact hrne hz
+  exact ⟨(r.val : ℤ), hnu, isSquare_padic_div_units hp hu hnu (by rw [← hr, hres])⟩
+
 /-- `hilbertPadicInt` invariant under a square factor (right), via `_left` + `comm`. -/
 theorem hilbertPadicInt_mul_sq_right {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
     (hs : s ≠ 0) :
