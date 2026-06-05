@@ -963,6 +963,63 @@ theorem hilbert2Int_2unit_unit_eq_one_iff {u v : ℤ} (hu : ¬ (2 : ℤ) ∣ u) 
   simp only [Nat.cast_one, one_mul, Nat.cast_zero, zero_mul, add_zero]
   exact chi2_eq_one_iff _
 
+/-- **`hilbert2Int (2u)(2w)` value (both `2·unit`).** Both valuations `1`, both `ω` terms active:
+`hilbert2Int (2u)(2w) = χ₂(eps2 ū·eps2 w̄ + omega2 ū + omega2 w̄)`. -/
+theorem hilbert2Int_2unit_2unit_eq {u w : ℤ} (hu : ¬ (2 : ℤ) ∣ u) (hw : ¬ (2 : ℤ) ∣ w) :
+    HilbertSymbol.hilbert2Int (2 * u) (2 * w) =
+      HilbertSymbol.chi2 (HilbertSymbol.eps2 ((u : ℤ) : ZMod 8) * HilbertSymbol.eps2 ((w : ℤ) : ZMod 8)
+        + HilbertSymbol.omega2 ((u : ℤ) : ZMod 8) + HilbertSymbol.omega2 ((w : ℤ) : ZMod 8)) := by
+  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  have hu0 : u ≠ 0 := fun h => hu (h ▸ dvd_zero _)
+  have hw0 : w ≠ 0 := fun h => hw (h ▸ dvd_zero _)
+  have hvu : padicValInt 2 (2 * u) = 1 := by
+    rw [padicValInt.mul (by norm_num) hu0, padicValInt.eq_zero_of_not_dvd hu, add_zero]
+    exact padicValInt_self
+  have hvw : padicValInt 2 (2 * w) = 1 := by
+    rw [padicValInt.mul (by norm_num) hw0, padicValInt.eq_zero_of_not_dvd hw, add_zero]
+    exact padicValInt_self
+  have hpu : HilbertSymbol.pfreeInt 2 (2 * u) = u := by
+    rw [HilbertSymbol.pfreeInt, hvu, pow_one]; push_cast; omega
+  have hpw : HilbertSymbol.pfreeInt 2 (2 * w) = w := by
+    rw [HilbertSymbol.pfreeInt, hvw, pow_one]; push_cast; omega
+  rw [HilbertSymbol.hilbert2Int, hpu, hpw, hvu, hvw]
+  simp only [Nat.cast_one, one_mul]
+  congr 1; ring
+
+/-- Steinberg `ZMod 8` decide: for odd `u`, `eps2 u·eps2(-u) + omega2 u + omega2(-u) = 0`. -/
+theorem padic2_steinberg_decide : ∀ u : ZMod 8, u.val % 2 = 1 →
+    HilbertSymbol.eps2 u * HilbertSymbol.eps2 (-u) + HilbertSymbol.omega2 u
+      + HilbertSymbol.omega2 (-u) = 0 := by decide
+
+/-- **Steinberg for the dyadic symbol at `2·unit`:** `hilbert2Int (2u) (-(2u)) = 1` (odd `u`). -/
+theorem hilbert2Int_2unit_neg2unit_eq_one {u : ℤ} (hu : ¬ (2 : ℤ) ∣ u) :
+    HilbertSymbol.hilbert2Int (2 * u) (-(2 * u)) = 1 := by
+  have hnu : ¬ (2 : ℤ) ∣ -u := fun h => hu (dvd_neg.mp h)
+  have hu8 : ((u : ℤ) : ZMod 8).val % 2 = 1 := by have h := @ZMod.val_intCast 8 u _; omega
+  rw [show -(2 * u) = 2 * (-u) by ring, hilbert2Int_2unit_2unit_eq hu hnu,
+      show ((-u : ℤ) : ZMod 8) = -((u : ℤ) : ZMod 8) by push_cast; ring, chi2_eq_one_iff]
+  exact padic2_steinberg_decide _ hu8
+
+/-- **Symbol identity:** `hilbert2Int (2u)(2v) = hilbert2Int (2u)(-(u·v))` (odd `u,v`). Product of the two
+is `hilbert2Int (2u)(-(2u)·v²) = (2u,-2u)·(2u,v²) = 1·1 = 1`; both are `±1`, so they are equal. -/
+theorem hilbert2Int_2unit_2unit_eq_neguv {u v : ℤ} (hu : ¬ (2 : ℤ) ∣ u) (hv : ¬ (2 : ℤ) ∣ v) :
+    HilbertSymbol.hilbert2Int (2 * u) (2 * v) = HilbertSymbol.hilbert2Int (2 * u) (-(u * v)) := by
+  have hv0 : v ≠ 0 := fun h => hv (h ▸ dvd_zero _)
+  have hu0 : u ≠ 0 := fun h => hu (h ▸ dvd_zero _)
+  have h2u0 : (2 * u : ℤ) ≠ 0 := mul_ne_zero (by norm_num) hu0
+  have hprod : HilbertSymbol.hilbert2Int (2 * u) (2 * v) *
+      HilbertSymbol.hilbert2Int (2 * u) (-(u * v)) = 1 := by
+    rw [← HilbertSymbol.hilbert2Int_mul_right (mul_ne_zero (by norm_num) hv0)
+          (neg_ne_zero.mpr (mul_ne_zero hu0 hv0)),
+        show 2 * v * -(u * v) = -(2 * u) * (v * v) by ring,
+        HilbertSymbol.hilbert2Int_mul_right (neg_ne_zero.mpr h2u0) (mul_ne_zero hv0 hv0),
+        hilbert2Int_2unit_neg2unit_eq_one hu,
+        HilbertSymbol.hilbert2Int_mul_right hv0 hv0]
+    rcases HilbertSymbol.hilbert2Int_mem (2 * u) v with h | h <;> rw [h] <;> ring
+  rcases HilbertSymbol.hilbert2Int_mem (2 * u) (2 * v) with h1 | h1 <;>
+    rcases HilbertSymbol.hilbert2Int_mem (2 * u) (-(u * v)) with h2 | h2 <;>
+    rw [h1, h2] at hprod ⊢ <;> simp_all
+
 /-- **p=2 unit/unit symbol↔solvability bridge.** For odd integers `u, v`, `z² = u x² + v y²` is solvable
 over `ℚ_[2]` iff `hilbert2Int u v = 1`. Assembled from the lift (`solvable_2adic_of_repr_sq`), descent
 (`solvable_2adic_imp_mod8`), the `ZMod 8` `decide`s (`padic2_unit_sol_mod8_iff`, `padic2_unit_repr_one`), and
