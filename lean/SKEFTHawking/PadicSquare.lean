@@ -808,6 +808,22 @@ theorem solvable_2adic_of_unit_sq {u : ℤ_[2]} (hu8 : PadicInt.toZModPow 3 u = 
   obtain ⟨w, hw⟩ := isSquare_of_toZModPow_three_eq_one hu8
   exact solvable_ternary_of_sufficient (Or.inl ⟨(w : ℚ_[2]), by rw [hw]; push_cast; ring⟩)
 
+/-- **2-adic solvability from a represented unit-square.** If `u X² + v Y²` is a `2`-adic unit-square
+(`toZModPow 3 (u X² + v Y²) = 1`), then `z² = u x² + v y²` is solvable over `ℚ_[2]` (take `z = √(u X²+v Y²)`,
+`x = X`, `y = Y`). The lifting half of the `p = 2` symbol↔solvability bridge: a primitive mod-8 representation
+of a square lifts to a genuine `ℚ_[2]` solution. -/
+theorem solvable_2adic_of_repr_sq {u v X Y : ℤ_[2]}
+    (h : PadicInt.toZModPow 3 (u * X ^ 2 + v * Y ^ 2) = 1) :
+    ∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (u : ℚ_[2]) * x ^ 2 + (v : ℚ_[2]) * y ^ 2 := by
+  obtain ⟨w, hw⟩ := isSquare_of_toZModPow_three_eq_one h
+  have hw0 : w ≠ 0 := by
+    rintro rfl; rw [mul_zero] at hw; rw [hw, map_zero] at h; exact absurd h (by decide)
+  refine ⟨(X : ℚ_[2]), (Y : ℚ_[2]), (w : ℚ_[2]), ?_, ?_⟩
+  · exact fun hc => hw0 (PadicInt.coe_eq_zero.mp hc.2.2)
+  · have heq : ((u * X ^ 2 + v * Y ^ 2 : ℤ_[2]) : ℚ_[2]) = ((w * w : ℤ_[2]) : ℚ_[2]) := by rw [hw]
+    push_cast at heq ⊢; linear_combination -heq
+
 /-- **Square in `ℚ_[p]` ⟺ square in `ℤ_[p]`, for a unit.** A `p`-adic *unit* `u` is a square in the field
 `ℚ_[p]` iff it is a square in the ring `ℤ_[p]` (a square root in `ℚ_[p]` has norm 1, hence lies in `ℤ_[p]`).
 With `isSquare_iff_isSquare_toZMod` this gives "square in `ℚ_[p]` ⟺ residue square" — the link from field
