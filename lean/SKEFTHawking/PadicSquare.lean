@@ -1818,4 +1818,29 @@ theorem exists_prime_gt_isSquare_pair (N : ℕ) {m n : ℤ} (hm : m ≠ 0) (hn :
   · exact isSquare_intCast_zmod_of_modEq hq8 (mkdvd hn (fun p' _ hpn => by
       rw [hM]; exact (Dvd.dvd.mul_left hpn (8 * m.natAbs))))
 
+/-- **Real-place sign selection for the common value.** Over ℝ, if `⟨a,b⟩` and `⟨c,d⟩` share a *nonzero*
+represented value (in the `real_binary_represents_iff` sign form `0 ≤ a·t ∨ 0 ≤ b·t`), then there is a
+sign `ε ∈ {1, −1}` with `0 ≤ a·ε ∨ 0 ≤ b·ε` and `0 ≤ c·ε ∨ 0 ≤ d·ε`. Since the representability sign
+condition for `ε·q` (`q > 0`) is exactly the sign condition for `ε`, this fixes the real sign of the global
+value `t = ε·q` in the rank-4 keystone so that both binaries represent it over ℝ. -/
+theorem exists_sign_for_real_common {a b c d : ℝ}
+    (h : ∃ t : ℝ, t ≠ 0 ∧ (0 ≤ a * t ∨ 0 ≤ b * t) ∧ (0 ≤ c * t ∨ 0 ≤ d * t)) :
+    ∃ ε : ℝ, (ε = 1 ∨ ε = -1) ∧ (0 ≤ a * ε ∨ 0 ≤ b * ε) ∧ (0 ≤ c * ε ∨ 0 ≤ d * ε) := by
+  obtain ⟨t, ht, hab, hcd⟩ := h
+  rcases lt_or_gt_of_ne ht with htneg | htpos
+  · refine ⟨-1, Or.inr rfl, ?_, ?_⟩
+    · rcases hab with h | h
+      · exact Or.inl (by nlinarith)
+      · exact Or.inr (by nlinarith)
+    · rcases hcd with h | h
+      · exact Or.inl (by nlinarith)
+      · exact Or.inr (by nlinarith)
+  · refine ⟨1, Or.inl rfl, ?_, ?_⟩
+    · rcases hab with h | h
+      · exact Or.inl (by nlinarith)
+      · exact Or.inr (by nlinarith)
+    · rcases hcd with h | h
+      · exact Or.inl (by nlinarith)
+      · exact Or.inr (by nlinarith)
+
 end SKEFTHawking
