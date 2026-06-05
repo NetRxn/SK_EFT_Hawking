@@ -1904,4 +1904,26 @@ theorem exists_int_residues (ps : List ℕ) (hps : ∀ p ∈ ps, p.Prime) (hd : 
   push_cast
   exact_mod_cast h2
 
+/-- **Equal residues ⟹ square ratio (odd `p`, unit case).** Two `ℤ_[p]` units `u, v` with the same residue
+mod `p` have `u/v` a square in `ℚ_[p]`. (`u·v⁻¹` is a unit with residue `1`, hence a square by
+`isSquare_iff_isSquare_toZMod`.) The valuation-`0` half of the square-class matching in the rank-4 keystone:
+combined with `binary_represents_of_isSquare_ratio` it transfers local representability of a unit common value
+to a constructed global value sharing its residue at a bad odd prime. -/
+theorem isSquare_padic_div_units {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : ℤ_[p]}
+    (hu : IsUnit u) (hv : IsUnit v) (hres : PadicInt.toZMod u = PadicInt.toZMod v) :
+    IsSquare ((u : ℚ_[p]) / (v : ℚ_[p])) := by
+  obtain ⟨vinv, hvinv⟩ := hv.exists_right_inv
+  have hvinvu : IsUnit vinv := IsUnit.of_mul_eq_one v (by rw [mul_comm]; exact hvinv)
+  have hw : IsUnit (u * vinv) := hu.mul hvinvu
+  have hvc : (v : ℚ_[p]) * (vinv : ℚ_[p]) = 1 := by
+    rw [← PadicInt.coe_mul, hvinv, PadicInt.coe_one]
+  have hvcoe : (v : ℚ_[p]) ≠ 0 := by rw [Ne, PadicInt.coe_eq_zero]; exact hv.ne_zero
+  have hdiv : ((u * vinv : ℤ_[p]) : ℚ_[p]) = (u : ℚ_[p]) / (v : ℚ_[p]) := by
+    rw [PadicInt.coe_mul, eq_div_iff hvcoe]; linear_combination (u : ℚ_[p]) * hvc
+  rw [← hdiv]
+  refine (isSquare_padic_unit_iff_residue hp hw).mpr ?_
+  have htz : PadicInt.toZMod (u * vinv) = 1 := by
+    rw [map_mul, hres, ← map_mul, hvinv, map_one]
+  rw [htz]; exact ⟨1, by ring⟩
+
 end SKEFTHawking
