@@ -2387,6 +2387,24 @@ theorem isSquare_padic_div_units {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : 
     rw [map_mul, hres, ← map_mul, hvinv, map_one]
   rw [htz]; exact ⟨1, by ring⟩
 
+/-- **Two `ℤ_2` units with the same residue mod 8 have square ratio over `ℚ_2`.** The `p = 2` analogue of
+`isSquare_padic_div_units`: if `toZModPow 3 u = toZModPow 3 v` (same class in `ZMod 8`) then `u/v ≡ 1 (mod 8)`
+is a square (`isSquare_of_toZModPow_three_eq_one`). -/
+theorem isSquare_2adic_div_units {u v : ℤ_[2]} (_hu : IsUnit u) (hv : IsUnit v)
+    (hres : PadicInt.toZModPow 3 u = PadicInt.toZModPow 3 v) :
+    IsSquare ((u : ℚ_[2]) / (v : ℚ_[2])) := by
+  obtain ⟨vinv, hvinv⟩ := hv.exists_right_inv
+  have hvc : (v : ℚ_[2]) * (vinv : ℚ_[2]) = 1 := by
+    rw [← PadicInt.coe_mul, hvinv, PadicInt.coe_one]
+  have hvcoe : (v : ℚ_[2]) ≠ 0 := by rw [Ne, PadicInt.coe_eq_zero]; exact hv.ne_zero
+  have hdiv : ((u * vinv : ℤ_[2]) : ℚ_[2]) = (u : ℚ_[2]) / (v : ℚ_[2]) := by
+    rw [PadicInt.coe_mul, eq_div_iff hvcoe]; linear_combination (u : ℚ_[2]) * hvc
+  rw [← hdiv]
+  obtain ⟨s, hs⟩ := isSquare_of_toZModPow_three_eq_one (u := u * vinv)
+    (by rw [map_mul, hres, ← map_mul, hvinv, map_one])
+  refine ⟨(s : ℚ_[2]), ?_⟩
+  rw [← PadicInt.coe_mul, ← hs]
+
 /-- **A `ℤ_[p]` unit's square class has an integer representative (odd `p`).** For any unit `u : ℤ_[p]`, there
 is an integer `n` with `(n : ℤ_[p])` a unit and `(u : ℚ_[p]) / n` a square. (Lift the residue `r = toZMod u`
 to the integer `r.val`, a unit with the same residue, so `u / r.val` is a square by `isSquare_padic_div_units`.)
