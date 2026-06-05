@@ -1699,4 +1699,26 @@ theorem real_binary_represents_iff {a b t : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) :
         rw [he]; exact div_nonneg h (mul_self_nonneg b)
       exact ⟨0, Real.sqrt (t / b), by rw [Real.sq_sqrt htb]; field_simp; ring⟩
 
+/-- **A binary form with `−ab` a square mod `p` is universal over `ℚ_[p]` (good prime).** Over `ℚ_[p]` with
+`p` odd and unit coefficients `a, b : ℤ_[p]`, if `−a·b` is a square mod `p`, then `⟨a,b⟩` represents *every*
+value over `ℚ_[p]` (regardless of valuation). (`−ab` square mod `p` ⟹ square in `ℚ_[p]`
+[`isSquare_of_isSquare_toZMod`] ⟹ `⟨a,b⟩` is isotropic [`exists_binary_zero_iff`] ⟹ universal
+[`binary_isotropic_universal`].) This is the *Dirichlet-controlled* clause of the rank-4 / rank-≥5
+common-value search: at the one extra prime `q` introduced by the global value, choosing `q` (via Dirichlet)
+so that `−ab` and `−cd` are both squares mod `q` makes both binary forms represent the value there,
+*including at odd valuation*. -/
+theorem binary_universal_padic_of_residue {p : ℕ} [Fact p.Prime] (hp : p ≠ 2)
+    {a b : ℤ_[p]} (ha : IsUnit a) (hb : IsUnit b)
+    (hres : IsSquare (PadicInt.toZMod (-(a * b)))) (t : ℚ_[p]) :
+    ∃ x y : ℚ_[p], (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 = t := by
+  haveI : Invertible (2 : ℚ_[p]) := invertibleOfNonzero two_ne_zero
+  obtain ⟨w, hw⟩ := isSquare_of_isSquare_toZMod hp (ha.mul hb).neg hres
+  have ha0 : (a : ℚ_[p]) ≠ 0 := by rw [Ne, PadicInt.coe_eq_zero]; exact ha.ne_zero
+  have hb0 : (b : ℚ_[p]) ≠ 0 := by rw [Ne, PadicInt.coe_eq_zero]; exact hb.ne_zero
+  have hsq : IsSquare (-((a : ℚ_[p]) * (b : ℚ_[p]))) := by
+    refine ⟨(w : ℚ_[p]), ?_⟩
+    have hcast : (-((a : ℚ_[p]) * (b : ℚ_[p]))) = (((-(a * b) : ℤ_[p])) : ℚ_[p]) := by push_cast; ring
+    rw [hcast, hw]; push_cast; ring
+  exact binary_isotropic_universal ha0 hb0 ((exists_binary_zero_iff ha0).mpr hsq) t
+
 end SKEFTHawking
