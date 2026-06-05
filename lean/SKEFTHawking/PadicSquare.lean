@@ -2485,4 +2485,29 @@ theorem solvable_2adic_iff_hilbert2Int {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
     · exact solvable_2adic_pUnit_unit_iff hca' hpcb
     · exact solvable_2adic_pUnit_pUnit_iff hca' hcb'
 
+/-- **Binary representability ⟺ Hilbert symbol over `ℚ_[p]` (odd `p`).** `⟨a,b⟩` represents `t` over `ℚ_[p]`
+iff `hilbertPadicInt p (a·t) (b·t) = 1`. (`⟨a,b⟩` represents `t` ⟺ `⟨a,b,−t⟩` isotropic ⟺ [×t, `Z = t·z`]
+`Z² = (at) x² + (bt) y²` solvable ⟺ [`solvable_padic_iff_hilbertPadicInt_one`] the symbol.) Converts the
+keystone's local representability conditions into the symbol conditions the product formula governs. -/
+theorem represents_padic_iff_symbol_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b t : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    (∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p])) ↔
+    HilbertSymbol.hilbertPadicInt p (a * t) (b * t) = 1 := by
+  haveI : Invertible (2 : ℚ_[p]) := invertibleOfNonzero two_ne_zero
+  rw [← solvable_padic_iff_hilbertPadicInt_one hp (mul_ne_zero ha ht) (mul_ne_zero hb ht)]
+  have htQ : (t : ℚ_[p]) ≠ 0 := by exact_mod_cast ht
+  constructor
+  · rintro ⟨u, v, he⟩
+    refine ⟨u, v, (t : ℚ_[p]), fun hc => htQ hc.2.2, ?_⟩
+    push_cast; linear_combination (-(t : ℚ_[p])) * he
+  · rintro ⟨x, y, z, hnz, he⟩
+    have ha0 : (a : ℚ_[p]) ≠ 0 := by exact_mod_cast ha
+    have hb0 : (b : ℚ_[p]) ≠ 0 := by exact_mod_cast hb
+    refine represents_of_ternary_isotropic ha0 hb0 ⟨x, y, z / (t : ℚ_[p]), ?_, ?_⟩
+    · rintro ⟨hx, hy, hz⟩
+      refine hnz ⟨hx, hy, ?_⟩
+      rw [div_eq_zero_iff] at hz; exact hz.resolve_right htQ
+    · field_simp
+      push_cast at he; linear_combination -he
+
 end SKEFTHawking
