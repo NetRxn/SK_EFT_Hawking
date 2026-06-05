@@ -860,6 +860,12 @@ theorem padic2_unit_sol_mod8_iff : ∀ u v : ZMod 8, u.val % 2 = 1 → v.val % 2
         Z ^ 2 = u * X ^ 2 + v * Y ^ 2) ↔
       HilbertSymbol.eps2 u * HilbertSymbol.eps2 v = 0) := by decide
 
+/-- **Forward p=2 decide:** if `eps2 u · eps2 v = 0` (odd `u, v : ZMod 8`) then `u X² + v Y² = 1` has a
+solution mod 8 — feeding `solvable_2adic_of_repr_sq` (`u X² + v Y² ≡ 1 ≡ square mod 8`). Pure `decide`. -/
+theorem padic2_unit_repr_one : ∀ u v : ZMod 8, u.val % 2 = 1 → v.val % 2 = 1 →
+    HilbertSymbol.eps2 u * HilbertSymbol.eps2 v = 0 → ∃ X Y : ZMod 8, u * X ^ 2 + v * Y ^ 2 = 1 := by
+  decide
+
 /-- **Square in `ℚ_[p]` ⟺ square in `ℤ_[p]`, for a unit.** A `p`-adic *unit* `u` is a square in the field
 `ℚ_[p]` iff it is a square in the ring `ℤ_[p]` (a square root in `ℚ_[p]` has norm 1, hence lies in `ℤ_[p]`).
 With `isSquare_iff_isSquare_toZMod` this gives "square in `ℚ_[p]` ⟺ residue square" — the link from field
