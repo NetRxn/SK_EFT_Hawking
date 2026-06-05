@@ -1721,4 +1721,101 @@ theorem binary_universal_padic_of_residue {p : ℕ} [Fact p.Prime] (hp : p ≠ 2
     rw [hcast, hw]; push_cast; ring
   exact binary_isotropic_universal ha0 hb0 ((exists_binary_zero_iff ha0).mpr hsq) t
 
+/-! ### Dirichlet-prime selection for the rank-4 common-value keystone
+
+The Serre rank-4 argument introduces a single extra prime `q` (outside the finite bad set) at which the
+global value has odd valuation; there both binary forms must still represent it. By
+`binary_universal_padic_of_residue`, it suffices that `−ab` and `−cd` are squares mod `q`. The following
+lemmas produce, via Dirichlet's theorem (`Nat.forall_exists_prime_gt_and_modEq`) + quadratic reciprocity,
+an arbitrarily large prime `q` at which two prescribed integers are *both* squares — the Dirichlet-controlled
+clause of the keystone. -/
+
+/-- **An odd prime `p` is a QR mod `q` when `q ≡ 1 mod 4` and `q ≡ 1 mod p`.** Pure quadratic reciprocity:
+`(q | p) = 1` from `q ≡ 1 (mod p)`, and the reciprocity sign is `+1` since `q ≡ 1 (mod 4)`. -/
+theorem isSquare_odd_prime_zmod {p q : ℕ} [Fact p.Prime] [Fact q.Prime]
+    (hp : p ≠ 2) (hq : q ≠ 2) (hpq : p ≠ q) (hq4 : q % 4 = 1)
+    (hqp : (q : ZMod p) = 1) : IsSquare ((p : ZMod q)) := by
+  have hpz : ((p : ℤ) : ZMod q) ≠ 0 := by
+    rw [Int.cast_natCast, Ne, CharP.cast_eq_zero_iff (ZMod q) q]
+    exact fun h => hpq ((Nat.prime_dvd_prime_iff_eq Fact.out Fact.out).mp h).symm
+  have hpq1 : legendreSym p q = 1 := by
+    rw [legendreSym.eq_one_iff p (by rw [Int.cast_natCast, hqp]; exact one_ne_zero)]
+    rw [Int.cast_natCast, hqp]; exact ⟨1, by ring⟩
+  have hqr := legendreSym.quadratic_reciprocity hp hq hpq
+  rw [hpq1, mul_one] at hqr
+  have heven : Even (p / 2 * (q / 2)) := (Nat.even_iff.mpr (by omega)).mul_left _
+  rw [heven.neg_one_pow] at hqr
+  exact by simpa using (legendreSym.eq_one_iff q hpz).mp hqr
+
+/-- **Multiplicative QR criterion (ℕ).** If `q ≡ 1 (mod 8)` and every prime factor `p` of `m` satisfies
+`q ≡ 1 (mod p)`, then `m` is a square mod `q`. Reduces over the factorisation of `m` (`Nat.recOnMul`):
+the prime case is `isSquare_odd_prime_zmod` (odd `p`) or `ZMod.exists_sq_eq_two_iff` (`p = 2`, using
+`q ≡ 1 mod 8`), and `IsSquare.mul` assembles. -/
+theorem isSquare_natCast_zmod_of_modEq {q : ℕ} [Fact q.Prime] (hq8 : q % 8 = 1) :
+    ∀ {m : ℕ}, (∀ p, p.Prime → p ∣ m → (q : ZMod p) = 1) → IsSquare ((m : ZMod q)) := by
+  have hq2 : q ≠ 2 := by omega
+  intro m
+  induction m using Nat.recOnMul with
+  | zero => intro _; exact ⟨0, by simp⟩
+  | one => intro _; exact ⟨1, by simp⟩
+  | prime p hp_prime =>
+      intro hyp
+      haveI := Fact.mk hp_prime
+      have h := hyp p hp_prime (dvd_refl p)
+      by_cases hp2 : p = 2
+      · subst hp2; simpa using (ZMod.exists_sq_eq_two_iff hq2).mpr (Or.inl hq8)
+      · exact isSquare_odd_prime_zmod hp2 hq2
+          (fun he => by subst he; rw [ZMod.natCast_self] at h; exact one_ne_zero h.symm)
+          (by omega) h
+  | mul a b iha ihb =>
+      intro hyp
+      have hypA : ∀ p, p.Prime → p ∣ a → (q : ZMod p) = 1 :=
+        fun p pp hpa => hyp p pp (hpa.mul_right b)
+      have hypB : ∀ p, p.Prime → p ∣ b → (q : ZMod p) = 1 :=
+        fun p pp hpb => hyp p pp (hpb.mul_left a)
+      rw [Nat.cast_mul]
+      exact (iha hypA).mul (ihb hypB)
+
+/-- **Multiplicative QR criterion (ℤ).** If `q ≡ 1 (mod 8)` and every prime factor of `|m|` satisfies
+`q ≡ 1 (mod p)`, then `m` is a square mod `q` (handle the sign: `−1` is a square since `q ≡ 1 mod 4`). -/
+theorem isSquare_intCast_zmod_of_modEq {q : ℕ} [Fact q.Prime] (hq8 : q % 8 = 1)
+    {m : ℤ} (hdvd : ∀ p, p.Prime → p ∣ m.natAbs → (q : ZMod p) = 1) :
+    IsSquare ((m : ZMod q)) := by
+  have hnat : IsSquare ((m.natAbs : ZMod q)) := isSquare_natCast_zmod_of_modEq hq8 hdvd
+  rcases Int.natAbs_eq m with he | he
+  · rw [he, Int.cast_natCast]; exact hnat
+  · rw [he, Int.cast_neg, Int.cast_natCast, neg_eq_neg_one_mul]
+    exact (ZMod.exists_sq_eq_neg_one_iff.mpr (by omega)).mul hnat
+
+/-- **Dirichlet-prime selection: a prime making two integers squares.** For nonzero `m, n : ℤ` and any
+bound `N`, there is a prime `q > N` with both `m` and `n` squares mod `q`. (Dirichlet supplies a prime
+`q ≡ 1 mod (8·|m|·|n|)`; then `isSquare_intCast_zmod_of_modEq` makes each of `m, n` a square mod `q`.) The
+Dirichlet-controlled clause of the rank-4 Hasse–Minkowski common-value keystone: take `m = −ab`, `n = −cd`,
+`N` past the bad set, and `binary_universal_padic_of_residue` makes both binaries universal at `q`. -/
+theorem exists_prime_gt_isSquare_pair (N : ℕ) {m n : ℤ} (hm : m ≠ 0) (hn : n ≠ 0) :
+    ∃ q : ℕ, q.Prime ∧ N < q ∧ IsSquare ((m : ZMod q)) ∧ IsSquare ((n : ZMod q)) := by
+  set M : ℕ := 8 * m.natAbs * n.natAbs with hM
+  have hMpos : M ≠ 0 := by
+    rw [hM]
+    exact mul_ne_zero (mul_ne_zero (by norm_num) (Int.natAbs_ne_zero.mpr hm))
+      (Int.natAbs_ne_zero.mpr hn)
+  obtain ⟨q, hqN, hqp, hqmod⟩ :=
+    Nat.forall_exists_prime_gt_and_modEq N (q := M) (a := 1) hMpos (Nat.coprime_one_left M)
+  haveI := Fact.mk hqp
+  have hq8 : q % 8 = 1 := by
+    have h8 : q ≡ 1 [MOD 8] := Nat.ModEq.of_dvd ⟨m.natAbs * n.natAbs, by rw [hM]; ring⟩ hqmod
+    have := h8; unfold Nat.ModEq at this; omega
+  have mkdvd : ∀ {k : ℤ}, k ≠ 0 → (∀ p', p'.Prime → p' ∣ k.natAbs → p' ∣ M) →
+      ∀ p, p.Prime → p ∣ k.natAbs → (q : ZMod p) = 1 := by
+    intro k _ hsub p pp hpk
+    haveI := Fact.mk pp
+    have hmod : q ≡ 1 [MOD p] := Nat.ModEq.of_dvd (hsub p pp hpk) hqmod
+    have h2 : ((q : ℕ) : ZMod p) = ((1 : ℕ) : ZMod p) := (ZMod.natCast_eq_natCast_iff q 1 p).mpr hmod
+    simpa using h2
+  refine ⟨q, hqp, hqN, ?_, ?_⟩
+  · exact isSquare_intCast_zmod_of_modEq hq8 (mkdvd hm (fun p' _ hpm => by
+      rw [hM]; exact (hpm.mul_left 8).mul_right n.natAbs))
+  · exact isSquare_intCast_zmod_of_modEq hq8 (mkdvd hn (fun p' _ hpn => by
+      rw [hM]; exact (Dvd.dvd.mul_left hpn (8 * m.natAbs))))
+
 end SKEFTHawking
