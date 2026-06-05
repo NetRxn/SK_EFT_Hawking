@@ -2525,6 +2525,52 @@ theorem hilbert2Int_self_neg {a : ℤ} (ha : a ≠ 0) :
   rw [← solvable_2adic_iff_hilbert2Int ha (neg_ne_zero.mpr ha)]
   exact ⟨1, 1, 0, fun h => one_ne_zero h.1, by push_cast; ring⟩
 
+/-- **Diagonal value `(a,a)_p = (a,−1)_p` over ℚ_p (odd p).** `(a,a) = (a,(−1)·(−a)) = (a,−1)·(a,−a) = (a,−1)`
+by bimultiplicativity + Steinberg. The reduction that makes the diagonal `(t,t)` term tractable in the
+bimultiplicative expansion of `(at,bt)`. -/
+theorem hilbertPadicInt_diag_eq_neg_one_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a : ℤ} (ha : a ≠ 0) :
+    HilbertSymbol.hilbertPadicInt p a a = HilbertSymbol.hilbertPadicInt p a (-1) := by
+  have h : HilbertSymbol.hilbertPadicInt p a ((-1) * (-a)) = HilbertSymbol.hilbertPadicInt p a (-1) := by
+    rw [HilbertSymbol.hilbertPadicInt_mul_right p (b₁ := -1) (b₂ := -a) (by norm_num)
+        (neg_ne_zero.mpr ha), hilbertPadicInt_self_neg_odd hp ha, mul_one]
+  rw [← h]; congr 1; ring
+
+/-- **Bimultiplicative cross identity `(at, bt)_p = (a,b)_p · (t, −ab)_p` over ℚ_p (odd p).** Expanding both
+arguments by bimultiplicativity: `(at,bt) = (a,b)(a,t)(t,b)(t,t)`, then `(t,t)=(t,−1)` (diag) and
+`(a,t)(t,b)=(t,a)(t,b)=(t,ab)` (comm), giving `(a,b)(t,ab)(t,−1)=(a,b)(t,−ab)`. This is the algebraic step
+that recasts the represents⟺symbol condition `(at,bt)=1` into the linear-in-`t` form `(t,−ab)=(a,b)` that
+Serre's Theorem 4 (global existence of `t` with prescribed Hilbert symbols) consumes. -/
+theorem hilbertPadicInt_cross_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b t : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    HilbertSymbol.hilbertPadicInt p (a * t) (b * t)
+      = HilbertSymbol.hilbertPadicInt p a b * HilbertSymbol.hilbertPadicInt p t (-(a * b)) := by
+  rw [HilbertSymbol.hilbertPadicInt_mul_left p (a₁ := a) (a₂ := t) ha ht,
+      HilbertSymbol.hilbertPadicInt_mul_right p (a := a) (b₁ := b) (b₂ := t) hb ht,
+      HilbertSymbol.hilbertPadicInt_mul_right p (a := t) (b₁ := b) (b₂ := t) hb ht,
+      hilbertPadicInt_diag_eq_neg_one_odd hp ht,
+      HilbertSymbol.hilbertPadicInt_comm p a t]
+  have key : HilbertSymbol.hilbertPadicInt p t (-(a * b))
+      = HilbertSymbol.hilbertPadicInt p t a * HilbertSymbol.hilbertPadicInt p t b
+        * HilbertSymbol.hilbertPadicInt p t (-1) := by
+    rw [← HilbertSymbol.hilbertPadicInt_mul_right p (a := t) (b₁ := a) (b₂ := b) ha hb,
+        ← HilbertSymbol.hilbertPadicInt_mul_right p (a := t) (b₁ := a * b) (b₂ := -1)
+          (mul_ne_zero ha hb) (by norm_num)]
+    congr 1; ring
+  rw [key]; ring
+
+/-- **Linear-in-`t` represents⟺symbol over ℚ_p (odd p).** `⟨a,b⟩` represents `t` over ℚ_p iff
+`(t, −ab)_p = (a,b)_p`. (From `represents_padic_iff_symbol_odd` [`(at,bt)=1`] + the cross identity
+`(at,bt)=(a,b)(t,−ab)`, using `(a,b)∈{±1}`.) This is the exact input shape of Serre Ch III §2.2 Theorem 4:
+the local condition on `t` is `(a_i, t)_v = ε_{i,v}` with `a₁ = −ab` fixed and `ε_v = (a,b)_v` prescribed —
+linear in the unknown `t`, so the global existence of `t` is a Hilbert-symbol prescription problem. -/
+theorem represents_padic_iff_symbol_linear_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b t : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    (∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p])) ↔
+    HilbertSymbol.hilbertPadicInt p t (-(a * b)) = HilbertSymbol.hilbertPadicInt p a b := by
+  rw [represents_padic_iff_symbol_odd hp ha hb ht, hilbertPadicInt_cross_odd hp ha hb ht]
+  rcases HilbertSymbol.hilbertPadicInt_mem p ha hb with hab | hab <;> rw [hab] <;>
+    constructor <;> intro h <;> omega
+
 /-- **Binary representability ⟺ Hilbert symbol over ℚ₂.** `⟨a,b⟩` represents `t` over ℚ₂ iff
 `hilbert2Int (a·t) (b·t) = 1`. Same `×t`-scaling as the odd-`p` case: `⟨a,b⟩` represents `t` iff the
 ternary `⟨a·t, b·t, −1⟩` is isotropic, which `solvable_2adic_iff_hilbert2Int` reads off. The 2-adic
