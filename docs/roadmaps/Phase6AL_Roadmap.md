@@ -123,6 +123,28 @@ a.e. eigenvalue-derivative.
   **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
   gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
 
+## 🎯 CUSTOMER-FACING GAP CLOSURE (2026-06-04, post-closure hardening)
+
+After C+F closure, assessed the three residual gaps from a real-customer/first-principles lens:
+- **Gap 3 (usability — single trace-distance hypothesis): ✅ CLOSED** (`quantum_fannes_certificate`, `451e0285`,
+  kernel-pure). HIGHEST customer value: a customer measures fidelity/trace distance, not a per-index spectral gap.
+  Now `‖ρ−σ‖₁ ≤ ½` (+ `d≥2`) alone ⟹ `|S(ρ)−S(σ)| ≤ d·η(‖ρ−σ‖₁/d)`; the per-index gap is discharged internally
+  (`eigenvalues₀_gap_le_traceNorm`: single term ≤ ∑ ≤ `‖·‖₁` by `mirsky_unconditional`) and the Fannes-regime
+  range follows from `½ ≤ 2e⁻¹ ≤ d·e⁻¹`. This is the operationally load-bearing certificate.
+- **Gap 1 (sharp Audenaert `log(d−1)` constant): RESEARCH-GRADE, DR dispatched.** MEDIUM–HIGH customer value
+  (tighter/standard bound for small `d`). Mathlib has `qaryEntropy` primitives (continuity, `StrictConcaveOn`,
+  `qaryEntropy q 1 = log(q−1)`) but NO entropy-difference bound; the sharp constant is Audenaert's simplex
+  optimization — no clean few-lemma proof in hand. NOT improvised (correctness risk). Deep-research prompt
+  dispatched: `Lit-Search/tasks/in-progress/sharp_fannes_audenaert_log_d_minus_1_lean.md`. The unconditional
+  `log d` Fannes form (`quantum_fannes_trace_distance`/`quantum_fannes_certificate`) remains the shipped certificate
+  meanwhile; `quantum_fannes_audenaert` stages the sharp constant as the named hypothesis `hAud`.
+- **Gap 2 (arbitrary-subset Lidskii `H` brick): bounded but DEFERRED.** LOW customer value (internal/foundational/
+  Mathlib-contribution; not on the certificate's critical path). Needs a from-scratch eigenvalue-shift lemma
+  `λ↓(A − t·1) = λ↓(A) − t` (absent from Mathlib) + Li–Mathias normalization. Reachable via the same PSD-split +
+  `eigenvalues₀_mono`; build when foundational/reputational value is prioritized.
+
+---
+
 ## ✅ FINAL CLOSURE: C AND F COMPLETE IN FULL — reviewer PASS (2026-06-04)
 Adversarial fresh-context closure review confirms: `mirsky_unconditional`, `eigenvalues₀_mono`, `sum_max_diff_le`,
 `quantum_fannes_trace_distance`, `negMulLog_monotoneOn`, `mutualInformation_nonneg` all kernel-pure
