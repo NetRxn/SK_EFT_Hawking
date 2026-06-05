@@ -1598,4 +1598,41 @@ theorem quaternary_sqdisc_solvable_of_local {a b c d s : ℚ}
       (by exact_mod_cast hb) (by exact_mod_cast hc) (by exact_mod_cast hd) (by exact_mod_cast hsq)).mp (hloc p)
     exact ⟨x, y, z, hnz, by push_cast at he ⊢; linear_combination he⟩
 
+/-- **Rank ≥ 3 unit diagonal form over `ℚ_[p]` (odd `p`) is isotropic.** Fills the rank-3,4 gap below
+`exists_diag_nary_zero_odd_padic` (rank ≥ 5): any diagonal form `∑ wᵢ xᵢ²` over `ℚ_[p]` with `p` odd and all
+`‖wᵢ‖ = 1` (units) and rank ≥ 3 has a nontrivial zero (ternary sub-block on `{0,1,2}` via
+`exists_diag_ternary_zero_odd_padic`, padded with zeros). The local-isotropy input for even unimodular forms
+at odd primes (where they diagonalize to units over `ℤ_p`). -/
+theorem exists_diag_nary_zero_odd_padic_unit {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {n : ℕ} (hn : 3 ≤ n)
+    (w : Fin n → ℚ_[p]) (hw : ∀ i, ‖w i‖ = 1) :
+    ∃ x : Fin n → ℚ_[p], x ≠ 0 ∧ ∑ i, w i * x i ^ 2 = 0 := by
+  set i0 : Fin n := ⟨0, by omega⟩ with hi0
+  set i1 : Fin n := ⟨1, by omega⟩ with hi1
+  set i2 : Fin n := ⟨2, by omega⟩ with hi2
+  have d01 : i0 ≠ i1 := Fin.ne_of_val_ne (by simp [hi0, hi1])
+  have d02 : i0 ≠ i2 := Fin.ne_of_val_ne (by simp [hi0, hi2])
+  have d12 : i1 ≠ i2 := Fin.ne_of_val_ne (by simp [hi1, hi2])
+  obtain ⟨x0, y0, z0, hnz, hzero⟩ :=
+    exists_diag_ternary_zero_odd_padic hp (hw i0) (hw i1) (hw i2)
+  set x : Fin n → ℚ_[p] :=
+    fun i => if i = i0 then x0 else if i = i1 then y0 else if i = i2 then z0 else 0 with hx
+  have vx0 : x i0 = x0 := by rw [hx]; simp
+  have vx1 : x i1 = y0 := by rw [hx]; simp [d01.symm]
+  have vx2 : x i2 = z0 := by rw [hx]; simp [d02.symm, d12.symm]
+  have vxo : ∀ i, i ≠ i0 → i ≠ i1 → i ≠ i2 → x i = 0 := by
+    intro i h0 h1 h2; rw [hx]; simp [h0, h1, h2]
+  refine ⟨x, ?_, ?_⟩
+  · intro hxz
+    refine hnz ⟨?_, ?_, ?_⟩
+    · rw [← vx0, hxz]; rfl
+    · rw [← vx1, hxz]; rfl
+    · rw [← vx2, hxz]; rfl
+  · rw [← Finset.sum_subset (Finset.subset_univ {i0, i1, i2})]
+    · rw [Finset.sum_insert (by simp [d01, d02]), Finset.sum_insert (by simp [d12]),
+        Finset.sum_singleton, vx0, vx1, vx2]
+      linear_combination hzero
+    · intro i _ hi
+      simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hi
+      rw [vxo i hi.1 hi.2.1 hi.2.2]; ring
+
 end SKEFTHawking
