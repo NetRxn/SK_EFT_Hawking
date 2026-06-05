@@ -2510,6 +2510,21 @@ theorem represents_padic_iff_symbol_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) 
     · field_simp
       push_cast at he; linear_combination -he
 
+/-- **Steinberg relation `(a, −a)_p = 1` over ℚ_p (odd p).** The defining Hilbert-symbol relation: the
+ternary `z² = a x² + (−a) y²` has the nontrivial zero `(x,y,z) = (1,1,0)`, so the symbol is `1`. (Via the
+solvability bridge `solvable_padic_iff_hilbertPadicInt_one`.) The algebraic engine of the bimultiplicative
+identity `(at,bt) = (a,b)(t,−ab)` that puts represents⟺symbol into Serre-Thm-4 linear-in-`t` form. -/
+theorem hilbertPadicInt_self_neg_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a : ℤ} (ha : a ≠ 0) :
+    HilbertSymbol.hilbertPadicInt p a (-a) = 1 := by
+  rw [← solvable_padic_iff_hilbertPadicInt_one hp ha (neg_ne_zero.mpr ha)]
+  exact ⟨1, 1, 0, fun h => one_ne_zero h.1, by push_cast; ring⟩
+
+/-- **Steinberg relation `(a, −a)₂ = 1` over ℚ₂.** Same witness `(1,1,0)` via `solvable_2adic_iff_hilbert2Int`. -/
+theorem hilbert2Int_self_neg {a : ℤ} (ha : a ≠ 0) :
+    HilbertSymbol.hilbert2Int a (-a) = 1 := by
+  rw [← solvable_2adic_iff_hilbert2Int ha (neg_ne_zero.mpr ha)]
+  exact ⟨1, 1, 0, fun h => one_ne_zero h.1, by push_cast; ring⟩
+
 /-- **Binary representability ⟺ Hilbert symbol over ℚ₂.** `⟨a,b⟩` represents `t` over ℚ₂ iff
 `hilbert2Int (a·t) (b·t) = 1`. Same `×t`-scaling as the odd-`p` case: `⟨a,b⟩` represents `t` iff the
 ternary `⟨a·t, b·t, −1⟩` is isotropic, which `solvable_2adic_iff_hilbert2Int` reads off. The 2-adic
