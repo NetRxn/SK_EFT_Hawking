@@ -1086,6 +1086,24 @@ theorem solvable_2adic_pUnit_unit_iff {u v : ℤ} (hu : ¬ (2 : ℤ) ∣ u) (hv 
     obtain ⟨x, y, z, hnz, he⟩ := solvable_2adic_of_repr_sq key
     exact ⟨x, y, z, hnz, by rw [← PadicInt.coe_intCast (2 * u), ← PadicInt.coe_intCast (v)]; exact he⟩
 
+/-- **p=2 (2·unit)/(2·unit) symbol↔solvability bridge.** For odd integers `u, v`, `z² = (2u) x² + (2v) y²`
+is solvable over `ℚ_[2]` iff `hilbert2Int (2u) (2v) = 1`. Via the symbol identity
+`hilbert2Int_2unit_2unit_eq_neguv` (→ `hilbert2Int (2u) (-(uv))`), the field-generic `two_two_reduce`
+(→ the `(2u, -(uv))` form), and `solvable_2adic_pUnit_unit_iff`. -/
+theorem solvable_2adic_pUnit_pUnit_iff {u v : ℤ} (hu : ¬ (2 : ℤ) ∣ u) (hv : ¬ (2 : ℤ) ∣ v) :
+    (∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = ((2 * u : ℤ) : ℚ_[2]) * x ^ 2 + ((2 * v : ℤ) : ℚ_[2]) * y ^ 2) ↔
+    HilbertSymbol.hilbert2Int (2 * u) (2 * v) = 1 := by
+  have hu0 : u ≠ 0 := fun h => hu (h ▸ dvd_zero _)
+  have huv : ¬ (2 : ℤ) ∣ (u * v) := fun h => (Int.prime_two.dvd_mul.mp h).elim hu hv
+  have hnuv : ¬ (2 : ℤ) ∣ (-(u * v)) := fun h => huv (dvd_neg.mp h)
+  have hconv2u : ((2 * u : ℤ) : ℚ_[2]) = 2 * (u : ℚ_[2]) := by push_cast; ring
+  have hconv2v : ((2 * v : ℤ) : ℚ_[2]) = 2 * (v : ℚ_[2]) := by push_cast; ring
+  have hconvuv : (((-(u * v)) : ℤ) : ℚ_[2]) = -((u : ℚ_[2]) * (v : ℚ_[2])) := by push_cast; ring
+  rw [hilbert2Int_2unit_2unit_eq_neguv hu hv, ← solvable_2adic_pUnit_unit_iff hu hnuv,
+      hconv2u, hconv2v, hconvuv]
+  exact two_two_reduce (by norm_num) (by exact_mod_cast hu0)
+
 /-- **Square in `ℚ_[p]` ⟺ square in `ℤ_[p]`, for a unit.** A `p`-adic *unit* `u` is a square in the field
 `ℚ_[p]` iff it is a square in the ring `ℤ_[p]` (a square root in `ℚ_[p]` has norm 1, hence lies in `ℤ_[p]`).
 With `isSquare_iff_isSquare_toZMod` this gives "square in `ℚ_[p]` ⟺ residue square" — the link from field
