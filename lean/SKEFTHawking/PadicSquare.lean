@@ -1874,6 +1874,31 @@ theorem hilbertPadicInt_pUnit_right {p : ℕ} [Fact p.Prime] {a b' : ℤ} (ha : 
       HilbertSymbol.hilbertPadicInt_eq_legendre (p := p) ha,
       HilbertSymbol.hilbertPadicInt_units (p := p) ha hb', mul_one]
 
+/-- **Symbol↔solvability bridge, unit/`p·unit` case.** For `p ∤ a`, `p ∤ b'` (odd `p`):
+`z² = a x² + (p·b') y²` solvable over `ℚ_[p]` iff `(a, p·b')_p = 1`. (`solvable_unit_pUnit_iff` ⟺
+`toZMod a` square; `hilbertPadicInt_pUnit_right` gives the symbol `= (a|p)`; `legendreSym.eq_one_iff`.) -/
+theorem solvable_padic_iff_hilbert_up {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b' : ℤ}
+    (ha : ¬ (p : ℤ) ∣ a) (hb' : ¬ (p : ℤ) ∣ b') :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (((p : ℤ) * b' : ℤ) : ℚ_[p]) * y ^ 2) ↔
+    HilbertSymbol.hilbertPadicInt p a ((p : ℤ) * b') = 1 := by
+  have hua : IsUnit ((a : ℤ_[p])) := by
+    rw [PadicInt.isUnit_iff, ← padic_norm_e_of_padicInt, PadicInt.coe_intCast]
+    exact padic_norm_intCast_eq_one ha
+  have hub : IsUnit ((b' : ℤ_[p])) := by
+    rw [PadicInt.isUnit_iff, ← padic_norm_e_of_padicInt, PadicInt.coe_intCast]
+    exact padic_norm_intCast_eq_one hb'
+  have haz : ((a : ℤ) : ZMod p) ≠ 0 := by
+    rw [Ne, ZMod.intCast_zmod_eq_zero_iff_dvd]; exact ha
+  have hform : (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (((p : ℤ) * b' : ℤ) : ℚ_[p]) * y ^ 2) ↔
+      (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = ((a : ℤ_[p]) : ℚ_[p]) * x ^ 2 + (p : ℚ_[p]) * ((b' : ℤ_[p]) : ℚ_[p]) * y ^ 2) := by
+    rw [PadicInt.coe_intCast]; push_cast; ring_nf
+  rw [hform, solvable_unit_pUnit_iff hp hua hub, hilbertPadicInt_pUnit_right ha hb',
+      show PadicInt.toZMod (a : ℤ_[p]) = ((a : ℤ) : ZMod p) from map_intCast PadicInt.toZMod a,
+      ← legendreSym.eq_one_iff p haz]
+
 /-- **Real-place sign selection for the common value.** Over ℝ, if `⟨a,b⟩` and `⟨c,d⟩` share a *nonzero*
 represented value (in the `real_binary_represents_iff` sign form `0 ≤ a·t ∨ 0 ≤ b·t`), then there is a
 sign `ε ∈ {1, −1}` with `0 ≤ a·ε ∨ 0 ≤ b·ε` and `0 ≤ c·ε ∨ 0 ≤ d·ε`. Since the representability sign
