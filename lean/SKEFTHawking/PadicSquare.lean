@@ -2777,4 +2777,21 @@ theorem represents_real_iff_symbol_linear {a b t : ℤ} (ha : a ≠ 0) (hb : b �
   rcases HilbertSymbol.hilbertReal_mem (a : ℝ) (b : ℝ) with hab | hab <;> rw [hab] <;>
     constructor <;> intro h <;> omega
 
+/-- **Local realizability at an odd place, symbol form (Serre condition 3).** If the quaternary form is
+isotropic over `ℚ_[p]` (odd `p`), there is an integer `t` simultaneously realizing the prescribed Hilbert
+symbols of both binary parts: `(t, −ab)_p = (a,b)_p` and `(t, −cd)_p = (c,d)_p`. (Integer common value
+`local_common_int_value_odd` + the linear criterion `represents_padic_iff_symbol_linear_odd`.) This is exactly
+Serre Ch III §2.2 Theorem 4's local-solvability hypothesis (3) at odd `p` for the two families
+`a₁ = −ab, a₂ = −cd`. -/
+theorem local_realizable_symbol_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 = (c : ℚ_[p]) * z ^ 2 + (d : ℚ_[p]) * w ^ 2) :
+    ∃ t : ℤ, t ≠ 0 ∧
+      HilbertSymbol.hilbertPadicInt p t (-(a * b)) = HilbertSymbol.hilbertPadicInt p a b ∧
+      HilbertSymbol.hilbertPadicInt p t (-(c * d)) = HilbertSymbol.hilbertPadicInt p c d := by
+  obtain ⟨t, ht, hab, hcd⟩ := local_common_int_value_odd hp ha hb hc hd hiso
+  exact ⟨t, ht, (represents_padic_iff_symbol_linear_odd hp ha hb ht).mp hab,
+    (represents_padic_iff_symbol_linear_odd hp hc hd ht).mp hcd⟩
+
 end SKEFTHawking
