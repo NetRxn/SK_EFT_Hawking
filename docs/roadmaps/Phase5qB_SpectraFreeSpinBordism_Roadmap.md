@@ -297,6 +297,36 @@ fact, built entirely from scratch (Mathlib has NONE of it):
   globally isotropic) ⟹ `HasWeakIsotropicVectorHyp` ⟹ drop `eight_dvd` + `hHM`. This is a multi-session
   from-scratch p-adic-quadratic-forms library; grind continues per decision A.
 
+**UPDATE 2026-06-04 (cont.) — ★ ROUTE PIVOT: FULL DIRICHLET IS IN MATHLIB; the n=4 non-square-disc "wall" is
+dissolved. Place-level + Dirichlet-selection layers SHIPPED.** The earlier "avoid Dirichlet (Route A descent)"
+premise was STALE: `Mathlib/NumberTheory/LSeries/PrimesInAP.lean` provides full Dirichlet —
+`Nat.forall_exists_prime_gt_and_zmodEq`/`_modEq`, `infinite_setOf_prime_and_eq_mod` (verified usable under
+`import Mathlib`, 2026-06-04). **User decision: PIVOT to the textbook Serre Ch IV §3.2 n=4 proof.** This makes
+the n=4 non-square-disc case "pure assembly" (scout-confirmed) rather than the abandoned Scharlau/number-field
+frontier. SHIPPED this session (all kernel-pure, build-clean, axioms `{propext,Classical.choice,Quot.sound}`):
+- **Place-level representability layer** (the bad-set-is-finite facts for Serre's common-value search):
+  `binary_represents_padic_of_units` (good odd p, unit value), `binary_represents_padic_even_val` (good odd p,
+  even valuation), `binary_universal_padic_of_residue` (odd p, `−ab` square mod p ⟹ ⟨a,b⟩ universal — the
+  Dirichlet-prime clause), `real_binary_represents_iff` (ℝ: represents t ⟺ `0≤a·t ∨ 0≤b·t`),
+  `binary_represents_congr_sq` (representability is square-class invariant, field-generic, HasseMinkowskiLocal).
+- **Dirichlet-prime selection** (the crux): `isSquare_odd_prime_zmod` (QR), `isSquare_natCast_zmod_of_modEq` +
+  `isSquare_intCast_zmod_of_modEq` (multiplicative QR criterion via `Nat.recOnMul`), and the headline
+  **`exists_prime_gt_isSquare_pair`** — ∀ N, nonzero `m,n:ℤ`, ∃ prime `q>N` with both `m,n` squares mod `q`
+  (Dirichlet `q≡1 mod 8|m||n|` + the QR criterion). Take `m=−ab, n=−cd`.
+- **KEYSTONE PLAN (single-prime construction, cleaner than general weak approximation):** the global common
+  value is `t = ε·q` for ONE Dirichlet prime `q`: `ε∈{±1}` chosen for the real sign (`real_binary_represents_iff`);
+  `q` chosen (one combined-modulus Dirichlet call) so that (a) `−ab,−cd` are squares mod `q` ⟹ both binaries
+  universal at `q` (`binary_universal_padic_of_residue`, handles `q`'s odd valuation), (b) `±q` lies in the
+  local square class matching the common value `c_p` at each bad odd `p∈S` and mod 8 at `p=2`. Good odd primes
+  `p∉S` are automatic (`binary_represents_padic_even_val`, since `v_p(±q)=0`). The joint satisfiability of the
+  bad-set residue conditions with the `−ab,−cd`-square conditions is guaranteed by the local isotropy everywhere
+  (the parity is exactly `hilbertGlobalProd_eq_one`). **REMAINING = the weak-approximation/consistency step**
+  (extract `c_p`; the combined Dirichlet with bad-set residue targets; product-formula consistency) → assemble
+  keystone → `quaternary_solvable_of_local` (n=4) → n≥5 Meyer reduction (weak-approx + ternary, NO further
+  Dirichlet; "rank≥5 over ℚ_p always isotropic" — odd-p have `exists_diag_nary_zero_odd_padic`, need p=2) →
+  even-unimodular ℚ_p local isotropy (⊃U over ℤ₂ at p=2) → `HasWeakIsotropicVectorHyp` → wire `RokhlinBridge`
+  (drop `h_rokhlin`/`eight_dvd`) + D2/L2 + HYPOTHESIS_REGISTRY + closure reviewer.
+
 ### Wave B5 — The genuine lattice signature `latticeSig`  [SHIPPED 2026-06-03]
 
 `lean/SKEFTHawking/LatticeSignature.lean` (kernel-pure, root-imported, file-gate + axiom-check green):
