@@ -866,6 +866,24 @@ theorem padic2_unit_repr_one : ∀ u v : ZMod 8, u.val % 2 = 1 → v.val % 2 = 1
     HilbertSymbol.eps2 u * HilbertSymbol.eps2 v = 0 → ∃ X Y : ZMod 8, u * X ^ 2 + v * Y ^ 2 = 1 := by
   decide
 
+/-- `chi2 e = 1 ↔ e = 0` (the dyadic character is `+1` exactly on `0 : ZMod 2`). -/
+theorem chi2_eq_one_iff (e : ZMod 2) : HilbertSymbol.chi2 e = 1 ↔ e = 0 := by revert e; decide
+
+/-- **`hilbert2Int` for odd integers ⟺ `eps2` condition.** For odd `u, v`, the dyadic Hilbert symbol's
+valuation (`ω`) terms vanish, so `hilbert2Int u v = χ₂(eps2 ū · eps2 v̄) = 1 ⟺ eps2 ū · eps2 v̄ = 0`. The
+connection from the combinatorial dyadic symbol to the `ZMod 8` `decide` condition. -/
+theorem hilbert2Int_odd_eq_one_iff {u v : ℤ} (hu : ¬ (2 : ℤ) ∣ u) (hv : ¬ (2 : ℤ) ∣ v) :
+    HilbertSymbol.hilbert2Int u v = 1 ↔
+    HilbertSymbol.eps2 ((u : ℤ) : ZMod 8) * HilbertSymbol.eps2 ((v : ℤ) : ZMod 8) = 0 := by
+  have hpu : HilbertSymbol.pfreeInt 2 u = u := by
+    rw [HilbertSymbol.pfreeInt, padicValInt.eq_zero_of_not_dvd hu, pow_zero, Int.ediv_one]
+  have hpv : HilbertSymbol.pfreeInt 2 v = v := by
+    rw [HilbertSymbol.pfreeInt, padicValInt.eq_zero_of_not_dvd hv, pow_zero, Int.ediv_one]
+  rw [HilbertSymbol.hilbert2Int, hpu, hpv, padicValInt.eq_zero_of_not_dvd hu,
+      padicValInt.eq_zero_of_not_dvd hv]
+  simp only [Nat.cast_zero, zero_mul, add_zero]
+  exact chi2_eq_one_iff _
+
 /-- **Square in `ℚ_[p]` ⟺ square in `ℤ_[p]`, for a unit.** A `p`-adic *unit* `u` is a square in the field
 `ℚ_[p]` iff it is a square in the ring `ℤ_[p]` (a square root in `ℚ_[p]` has norm 1, hence lies in `ℤ_[p]`).
 With `isSquare_iff_isSquare_toZMod` this gives "square in `ℚ_[p]` ⟺ residue square" — the link from field
