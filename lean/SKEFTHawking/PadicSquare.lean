@@ -2394,6 +2394,19 @@ theorem hilbertPadicInt_mul_sq_right {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha 
   rw [HilbertSymbol.hilbertPadicInt_comm p a (b * s ^ 2), hilbertPadicInt_mul_sq_left hb ha hs,
       HilbertSymbol.hilbertPadicInt_comm p b a]
 
+/-- `hilbert2Int` invariant under a square factor (left), via bimultiplicativity + `(±1)² = 1`. -/
+theorem hilbert2Int_mul_sq_left {a b s : ℤ} (ha : a ≠ 0) (_hb : b ≠ 0) (hs : s ≠ 0) :
+    HilbertSymbol.hilbert2Int (a * s ^ 2) b = HilbertSymbol.hilbert2Int a b := by
+  rw [show a * s ^ 2 = a * (s * s) by ring, HilbertSymbol.hilbert2Int_mul_left ha (mul_ne_zero hs hs),
+      HilbertSymbol.hilbert2Int_mul_left hs hs]
+  rcases HilbertSymbol.hilbert2Int_mem s b with h | h <;> rw [h] <;> ring
+
+/-- `hilbert2Int` invariant under a square factor (right). -/
+theorem hilbert2Int_mul_sq_right {a b s : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (hs : s ≠ 0) :
+    HilbertSymbol.hilbert2Int a (b * s ^ 2) = HilbertSymbol.hilbert2Int a b := by
+  rw [HilbertSymbol.hilbert2Int_comm a (b * s ^ 2), hilbert2Int_mul_sq_left hb ha hs,
+      HilbertSymbol.hilbert2Int_comm b a]
+
 /-- **Symbol↔solvability bridge over `ℚ_[p]` (odd `p`).** For nonzero integers `a, b` and odd `p`, the
 canonical Hilbert ternary `z² = a x² + b y²` is solvable over `ℚ_[p]` iff `(a,b)_p = 1`. Reduce `a, b` to
 their canonical (`unit`/`p·unit`) classes by factoring out squares (`exists_canonical_padic_factor`;
@@ -2430,5 +2443,46 @@ theorem solvable_padic_iff_hilbertPadicInt_one {p : ℕ} [Fact p.Prime] (hp : p 
   · rcases hcb with hpcb | ⟨cb', hcb', rfl⟩
     · exact solvable_padic_iff_hilbert_pu hp hca' hpcb
     · exact solvable_padic_iff_hilbert_pp hp hca' hcb'
+
+/-- **Symbol↔solvability bridge over `ℚ_[2]`.** For nonzero integers `a, b`, the canonical Hilbert ternary
+`z² = a x² + b y²` is solvable over `ℚ_[2]` iff `hilbert2Int a b = 1`. Reduce `a, b` to their canonical
+(`odd`/`2·odd`) classes by factoring out squares (`exists_canonical_padic_factor` at `p = 2`;
+`hilbert2Int_mul_sq_left`(`_right`) and `solvable_canonical_congr_sq`(`_right`) make both sides square-class
+invariant), then dispatch to the four canonical cases (`unit`/`2u-v`/`u-2v`[by symmetry]/`2u-2v`). -/
+theorem solvable_2adic_iff_hilbert2Int {a b : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    (∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[2]) * x ^ 2 + (b : ℚ_[2]) * y ^ 2) ↔
+    HilbertSymbol.hilbert2Int a b = 1 := by
+  haveI : Fact (Nat.Prime 2) := ⟨Nat.prime_two⟩
+  obtain ⟨ca, sa, hsa, hae, hca⟩ := exists_canonical_padic_factor (p := 2) ha
+  obtain ⟨cb, sb, hsb, hbe, hcb⟩ := exists_canonical_padic_factor (p := 2) hb
+  simp only [Nat.cast_ofNat] at hca hcb
+  have hca0 : ca ≠ 0 := by rintro rfl; rw [zero_mul] at hae; exact ha hae
+  have hcb0 : cb ≠ 0 := by rintro rfl; rw [zero_mul] at hbe; exact hb hbe
+  have hsaQ : (sa : ℚ_[2]) ≠ 0 := by exact_mod_cast hsa
+  have hsbQ : (sb : ℚ_[2]) ≠ 0 := by exact_mod_cast hsb
+  have hsol : (∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[2]) * x ^ 2 + (b : ℚ_[2]) * y ^ 2) ↔
+      (∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (ca : ℚ_[2]) * x ^ 2 + (cb : ℚ_[2]) * y ^ 2) := by
+    rw [show (a : ℚ_[2]) = (ca : ℚ_[2]) * (sa : ℚ_[2]) ^ 2 by rw [hae]; push_cast; ring,
+        show (b : ℚ_[2]) = (cb : ℚ_[2]) * (sb : ℚ_[2]) ^ 2 by rw [hbe]; push_cast; ring]
+    exact ((solvable_canonical_congr_sq hsaQ).trans (solvable_canonical_congr_sq_right hsbQ)).symm
+  have hsym : HilbertSymbol.hilbert2Int a b = HilbertSymbol.hilbert2Int ca cb := by
+    rw [hae, hbe, hilbert2Int_mul_sq_left hca0 (mul_ne_zero hcb0 (pow_ne_zero 2 hsb)) hsa,
+        hilbert2Int_mul_sq_right hca0 hcb0 hsb]
+  rw [hsol, hsym]
+  rcases hca with hpca | ⟨ca', hca', rfl⟩
+  · rcases hcb with hpcb | ⟨cb', hcb', rfl⟩
+    · exact solvable_2adic_unit_iff hpca hpcb
+    · rw [show (∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+            z ^ 2 = (ca : ℚ_[2]) * x ^ 2 + ((2 * cb' : ℤ) : ℚ_[2]) * y ^ 2) ↔
+          (∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+            z ^ 2 = ((2 * cb' : ℤ) : ℚ_[2]) * x ^ 2 + (ca : ℚ_[2]) * y ^ 2) from
+        ⟨solvable_canonical_symm, solvable_canonical_symm⟩,
+        solvable_2adic_pUnit_unit_iff hcb' hpca, HilbertSymbol.hilbert2Int_comm]
+  · rcases hcb with hpcb | ⟨cb', hcb', rfl⟩
+    · exact solvable_2adic_pUnit_unit_iff hca' hpcb
+    · exact solvable_2adic_pUnit_pUnit_iff hca' hcb'
 
 end SKEFTHawking
