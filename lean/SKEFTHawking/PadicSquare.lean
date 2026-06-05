@@ -2794,4 +2794,34 @@ theorem local_realizable_symbol_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b
   exact ⟨t, ht, (represents_padic_iff_symbol_linear_odd hp ha hb ht).mp hab,
     (represents_padic_iff_symbol_linear_odd hp hc hd ht).mp hcd⟩
 
+/-- **Local realizability at the real place, symbol form (Serre condition 3).** If the quaternary form is
+isotropic over ℝ, there is an integer `t ∈ {1,−1}` realizing the prescribed real Hilbert symbols of both
+binary parts. (`common_value_of_quaternary_isotropic` + `exists_sign_for_real_common` pick the sign; the real
+linear criterion gives the symbols.) Serre Ch III §2.2 Theorem 4's hypothesis (3) at `∞`. -/
+theorem local_realizable_symbol_real {a b c d : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2 = (c : ℝ) * z ^ 2 + (d : ℝ) * w ^ 2) :
+    ∃ t : ℤ, t ≠ 0 ∧
+      HilbertSymbol.hilbertReal (t : ℝ) ((-(a * b) : ℤ) : ℝ) = HilbertSymbol.hilbertReal (a : ℝ) (b : ℝ) ∧
+      HilbertSymbol.hilbertReal (t : ℝ) ((-(c * d) : ℤ) : ℝ) = HilbertSymbol.hilbertReal (c : ℝ) (d : ℝ) := by
+  haveI : Invertible (2 : ℝ) := invertibleOfNonzero two_ne_zero
+  have ha0 : (a : ℝ) ≠ 0 := by exact_mod_cast ha
+  have hb0 : (b : ℝ) ≠ 0 := by exact_mod_cast hb
+  have hc0 : (c : ℝ) ≠ 0 := by exact_mod_cast hc
+  have hd0 : (d : ℝ) ≠ 0 := by exact_mod_cast hd
+  obtain ⟨tv, htv, hab, hcd⟩ := common_value_of_quaternary_isotropic ha0 hb0 hc0 hd0 hiso
+  obtain ⟨ε, hε, habε, hcdε⟩ := exists_sign_for_real_common
+    ⟨tv, htv, (real_binary_represents_iff ha0 hb0).mp hab, (real_binary_represents_iff hc0 hd0).mp hcd⟩
+  rcases hε with hε1 | hε1
+  · refine ⟨1, one_ne_zero, ?_, ?_⟩
+    · refine (represents_real_iff_symbol_linear ha hb one_ne_zero).mp ?_
+      rw [Int.cast_one]; exact (real_binary_represents_iff ha0 hb0).mpr (hε1 ▸ habε)
+    · refine (represents_real_iff_symbol_linear hc hd one_ne_zero).mp ?_
+      rw [Int.cast_one]; exact (real_binary_represents_iff hc0 hd0).mpr (hε1 ▸ hcdε)
+  · refine ⟨-1, by norm_num, ?_, ?_⟩
+    · refine (represents_real_iff_symbol_linear ha hb (by norm_num)).mp ?_
+      rw [Int.cast_neg, Int.cast_one]; exact (real_binary_represents_iff ha0 hb0).mpr (hε1 ▸ habε)
+    · refine (represents_real_iff_symbol_linear hc hd (by norm_num)).mp ?_
+      rw [Int.cast_neg, Int.cast_one]; exact (real_binary_represents_iff hc0 hd0).mpr (hε1 ▸ hcdε)
+
 end SKEFTHawking
