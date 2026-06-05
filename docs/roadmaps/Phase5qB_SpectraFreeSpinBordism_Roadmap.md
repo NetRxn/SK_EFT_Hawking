@@ -327,6 +327,27 @@ frontier. SHIPPED this session (all kernel-pure, build-clean, axioms `{propext,C
   even-unimodular ℚ_p local isotropy (⊃U over ℤ₂ at p=2) → `HasWeakIsotropicVectorHyp` → wire `RokhlinBridge`
   (drop `h_rokhlin`/`eight_dvd`) + D2/L2 + HYPOTHESIS_REGISTRY + closure reviewer.
 
+**UPDATE 2026-06-04 (cont.) — ★ PER-PLACE represents⟺symbol LINEAR TRIO COMPLETE + global packaging (kernel-pure).**
+The full LOCAL input layer for Serre Thm 4 is now in repo:
+- **`PadicSquare.lean`:** `represents_{padic_odd, 2adic, real}_iff_symbol` (the `(at,bt)=1` form at each place via
+  the solvability bridges + ×t scaling); Steinberg `(a,−a)_v=1` (`hilbertPadicInt_self_neg_odd`,
+  `hilbert2Int_self_neg`); diagonal `(a,a)_v=(a,−1)_v` and the bimultiplicative cross `(at,bt)_v=(a,b)_v(t,−ab)_v`
+  at each place; and the headline **`represents_{padic_symbol_linear_odd, 2adic_iff_symbol_linear,
+  real_iff_symbol_linear}`** — at EVERY place `v`, `⟨a,b⟩` represents `t` over ℚ_v ⟺ `(t,−ab)_v = (a,b)_v`
+  (linear in `t`, the exact Serre-Thm-4 prescription shape; real factor matches `hilbertGlobalProd`'s
+  `hilbertReal (·:ℝ)(·:ℝ)`).
+- **NEW `HasseMinkowskiGlobal.lean`** (above `PadicSquare` + `HilbertProductFormula`; not root-imported yet):
+  `represents_padic_iff_hilbertPrime_linear` (unified finite-place criterion over `hilbertPrime`) +
+  **`represents_everywhere_iff_symbols`** (`⟨a,b⟩` represents integer `t` at every place ⟺ the prescription
+  `(t,−ab)_v=(a,b)_v` at every place). This is the bridge between the two faces of the keystone: LHS = the
+  everywhere-represented hypothesis `quaternary_isotropic_of_keystone` consumes; RHS = the prescribed-symbol
+  output of Serre Thm 4. **⟹ `n=4` HM now reduces to: (i) Serre Ch III §2.2 Thm 4 (global `t∈ℚˣ` with
+  prescribed symbols, given consistency = `hilbertGlobalProd_eq_one`); (ii) local realizability plumbing
+  (`common_value_of_quaternary_isotropic` gives `t_v∈ℚ_v` → integer rep in same ℚ_v-square class → integer
+  linear criterion). Then keystone → `quaternary_solvable_of_local` → n≥5 → p=2 even-unimod local isotropy →
+  `HasWeakIsotropicVectorHyp` → wire.** Serre Thm 4 is the multi-session hard core; the entire local theory
+  feeding it is now done.
+
 ### Wave B5 — The genuine lattice signature `latticeSig`  [SHIPPED 2026-06-03]
 
 `lean/SKEFTHawking/LatticeSignature.lean` (kernel-pure, root-imported, file-gate + axiom-check green):
