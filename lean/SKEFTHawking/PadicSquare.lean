@@ -835,6 +835,28 @@ theorem isUnit_zmod8_val_odd {z : ZMod 8} (h : IsUnit z) : z.val % 2 = 1 := by
     omega
   omega
 
+/-- **2-adic solvability for the both-`2·` case from a `2 × unit-square` representation.** If
+`a X² + b Y² = 2 c` with `c` a `2`-adic unit-square (`toZModPow 3 c = 1`), then `z² = 2a x² + 2b y²` is
+solvable over `ℚ_[2]` (take `z = 2√c`, `x = X`, `y = Y`: `z² = 4c = 2(aX²+bY²)`). The lifting half of the
+`(2·unit)/(2·unit)` p=2 case, where the represented value is even. -/
+theorem solvable_2adic_of_repr_two {a b X Y c : ℤ_[2]} (hc : a * X ^ 2 + b * Y ^ 2 = 2 * c)
+    (h : PadicInt.toZModPow 3 c = 1) :
+    ∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (2 : ℚ_[2]) * (a : ℚ_[2]) * x ^ 2 + (2 : ℚ_[2]) * (b : ℚ_[2]) * y ^ 2 := by
+  obtain ⟨w, hw⟩ := isSquare_of_toZModPow_three_eq_one h
+  have hw0 : w ≠ 0 := by rintro rfl; rw [mul_zero] at hw; rw [hw, map_zero] at h; exact absurd h (by decide)
+  refine ⟨(X : ℚ_[2]), (Y : ℚ_[2]), (2 : ℚ_[2]) * (w : ℚ_[2]), ?_, ?_⟩
+  · refine fun hcc => hw0 ?_
+    have h2w : (2 : ℚ_[2]) * (w : ℚ_[2]) = 0 := hcc.2.2
+    rcases mul_eq_zero.mp h2w with h2 | h2
+    · exact absurd h2 (by norm_num)
+    · exact PadicInt.coe_eq_zero.mp h2
+  · have h2c : ((2 : ℤ_[2]) : ℚ_[2]) = 2 := by norm_cast
+    have heq : ((a * X ^ 2 + b * Y ^ 2 : ℤ_[2]) : ℚ_[2]) = ((2 * c : ℤ_[2]) : ℚ_[2]) := by rw [hc]
+    have hcw : ((c : ℤ_[2]) : ℚ_[2]) = ((w : ℤ_[2]) : ℚ_[2]) ^ 2 := by rw [hw]; push_cast; ring
+    push_cast [h2c] at heq ⊢
+    linear_combination -2 * heq - 4 * hcw
+
 /-- **2-adic solvability reduces to a primitive mod-8 solution.** If `z² = u x² + v y²` is solvable over
 `ℚ_[2]`, then it has a solution modulo 8 with an *odd* (unit) coordinate (reduce a primitive `ℤ_[2]` solution
 via `toZModPow 3`; a unit coordinate stays a unit mod 8, hence odd). The descent half of the `p = 2`
