@@ -2165,6 +2165,16 @@ theorem padic_norm_intCast_eq_one {p : ℕ} [Fact p.Prime] {k : ℤ} (h : ¬ (p 
   rw [hc, padic_norm_e_of_padicInt, PadicInt.norm_intCast_eq_one_iff, isCoprime_comm]
   exact ((Nat.prime_iff_prime_int.mp Fact.out).coprime_iff_not_dvd).mpr h
 
+/-- **Representability at a good odd prime, integer-coprimality form.** Over `ℚ_[p]` with `p` odd, if `p`
+divides none of `a, b, t` (integers), then `⟨a,b⟩` represents `t`. (`padic_norm_intCast_eq_one` turns
+non-divisibility into unit norm, then `binary_represents_padic_of_units`.) The good-place fact powering the
+global common-value construction: outside the finite bad set `2abcd`, a chosen unit value is represented. -/
+theorem binary_represents_good_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b t : ℤ}
+    (ha : ¬ (p : ℤ) ∣ a) (hb : ¬ (p : ℤ) ∣ b) (ht : ¬ (p : ℤ) ∣ t) :
+    ∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p]) :=
+  binary_represents_padic_of_units hp (padic_norm_intCast_eq_one ha) (padic_norm_intCast_eq_one hb)
+    (padic_norm_intCast_eq_one ht)
+
 /-- **Symbol↔solvability bridge, unit/unit case.** For `p ∤ a`, `p ∤ b` (odd `p`): `z² = a x² + b y²` is
 solvable over `ℚ_[p]` iff `(a,b)_p = 1` — both hold (unit ternary is isotropic; `hilbertPadicInt_units`). -/
 theorem solvable_padic_iff_hilbert_uu {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b : ℤ}
