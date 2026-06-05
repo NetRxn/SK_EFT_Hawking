@@ -873,6 +873,18 @@ theorem padic2_unit_repr_one : ∀ u v : ZMod 8, u.val % 2 = 1 → v.val % 2 = 1
     HilbertSymbol.eps2 u * HilbertSymbol.eps2 v = 0 → ∃ X Y : ZMod 8, u * X ^ 2 + v * Y ^ 2 = 1 := by
   decide
 
+/-- **p=2 (2·unit)/unit decide** (descent): `Z² = 2u X² + v Y²` has a unit-coordinate solution mod 8 ⟺
+`eps2 u · eps2 v + omega2 v = 0`. Pure `decide`. -/
+theorem padic2_2unit_sol_mod8_iff : ∀ u v : ZMod 8, u.val % 2 = 1 → v.val % 2 = 1 →
+    ((∃ X Y Z : ZMod 8, (X.val % 2 = 1 ∨ Y.val % 2 = 1 ∨ Z.val % 2 = 1) ∧
+        Z ^ 2 = 2 * u * X ^ 2 + v * Y ^ 2) ↔
+      HilbertSymbol.eps2 u * HilbertSymbol.eps2 v + HilbertSymbol.omega2 v = 0) := by decide
+
+/-- **p=2 (2·unit)/unit decide** (forward): the symbol condition gives a mod-8 representation of `1`. -/
+theorem padic2_2unit_repr_one : ∀ u v : ZMod 8, u.val % 2 = 1 → v.val % 2 = 1 →
+    HilbertSymbol.eps2 u * HilbertSymbol.eps2 v + HilbertSymbol.omega2 v = 0 →
+    ∃ X Y : ZMod 8, 2 * u * X ^ 2 + v * Y ^ 2 = 1 := by decide
+
 /-- `chi2 e = 1 ↔ e = 0` (the dyadic character is `+1` exactly on `0 : ZMod 2`). -/
 theorem chi2_eq_one_iff (e : ZMod 2) : HilbertSymbol.chi2 e = 1 ↔ e = 0 := by revert e; decide
 
