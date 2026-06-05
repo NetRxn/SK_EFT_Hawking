@@ -1,4 +1,5 @@
 import SKEFTHawking.QuantumNetwork.FannesAudenaert
+import Mathlib.Analysis.Complex.ExponentialBounds
 
 /-!
 # Mirsky's inequality, UNCONDITIONAL (no Wielandt / no `hB3`)
@@ -186,5 +187,38 @@ theorem quantum_fannes_trace_distance {ι : Type*} [Fintype ι] [DecidableEq ι]
   have hb_mem : b ∈ Set.Icc (0 : ℝ) (Real.exp (-1)) := ⟨le_trans ha_nonneg hab, hrange⟩
   refine (quantum_fannes_bound hρ hσ hgap).trans ?_
   exact mul_le_mul_of_nonneg_left (negMulLog_monotoneOn ha_mem hb_mem hab) (le_of_lt hdpos)
+
+/-- **Per-index spectral gap ≤ trace distance.** `|λ↓ₖ(ρ) − λ↓ₖ(σ)| ≤ ‖ρ − σ‖₁`: a single sorted-eigenvalue
+difference is bounded by the sum of all of them, which is `≤ ‖ρ−σ‖₁` by `mirsky_unconditional`. -/
+theorem eigenvalues₀_gap_le_traceNorm {ρ σ : Matrix ι ι ℂ} (hρ : ρ.IsHermitian) (hσ : σ.IsHermitian)
+    (k : Fin (Fintype.card ι)) :
+    |hρ.eigenvalues₀ k - hσ.eigenvalues₀ k| ≤ traceNorm (ρ - σ) :=
+  le_trans (Finset.single_le_sum (f := fun j => |hρ.eigenvalues₀ j - hσ.eigenvalues₀ j|)
+    (fun _ _ => abs_nonneg _) (Finset.mem_univ k)) (mirsky_unconditional hρ hσ)
+
+/-- **Operational trace-distance entropy certificate — SINGLE trace-distance hypothesis.** This is the
+customer-facing form: from one measured/bounded trace distance `‖ρ−σ‖₁ ≤ ½` (and `d ≥ 2`), the von Neumann
+entropy deviation is certified, `|S(ρ) − S(σ)| ≤ d · η(‖ρ−σ‖₁ / d)` — with NO separate per-index-gap obligation
+(it is discharged internally via `eigenvalues₀_gap_le_traceNorm`) and NO range side-condition (the Fannes regime
+`‖ρ−σ‖₁/d ≤ e⁻¹` follows from `‖ρ−σ‖₁ ≤ ½ ≤ d·e⁻¹`). An experimentalist who bounds fidelity/trace distance gets
+the entropy/entanglement-degradation bound directly, as a single kernel-pure chain. -/
+theorem quantum_fannes_certificate {ι : Type*} [Fintype ι] [DecidableEq ι] [Nonempty ι]
+    {ρ σ : Matrix ι ι ℂ} (hρ : IsDensityOperator ρ) (hσ : IsDensityOperator σ)
+    (hd : 2 ≤ Fintype.card ι) (hT : traceNorm (ρ - σ) ≤ 1 / 2) :
+    |vonNeumannEntropy hρ.1.isHermitian - vonNeumannEntropy hσ.1.isHermitian|
+      ≤ (Fintype.card ι : ℝ) * Real.negMulLog (traceNorm (ρ - σ) / Fintype.card ι) := by
+  have hdpos : (0 : ℝ) < Fintype.card ι := by exact_mod_cast Fintype.card_pos
+  have hd2 : (2 : ℝ) ≤ Fintype.card ι := by exact_mod_cast hd
+  refine quantum_fannes_trace_distance hρ hσ (fun k => ?_) ?_
+  · exact le_trans (eigenvalues₀_gap_le_traceNorm hρ.1.isHermitian hσ.1.isHermitian k) hT
+  · -- range: ‖ρ−σ‖₁ / d ≤ e⁻¹, from ‖ρ−σ‖₁ ≤ ½ ≤ 2·e⁻¹ ≤ d·e⁻¹ (uses exp 1 < 4 and d ≥ 2)
+    rw [div_le_iff₀ hdpos]
+    have he1 : Real.exp 1 < 4 := by linarith [Real.exp_one_lt_three]
+    have hep : 0 < Real.exp 1 := Real.exp_pos 1
+    have hge : (1 : ℝ) / 2 ≤ Real.exp (-1) * 2 := by
+      rw [Real.exp_neg, mul_comm, ← div_eq_mul_inv, le_div_iff₀ hep]; linarith
+    have hmono : Real.exp (-1) * 2 ≤ Real.exp (-1) * Fintype.card ι :=
+      mul_le_mul_of_nonneg_left hd2 (le_of_lt (Real.exp_pos _))
+    linarith [hT, hge, hmono]
 
 end SKEFTHawking.QuantumNetwork
