@@ -48,4 +48,26 @@ theorem represents_padic_iff_hilbertPrime_linear {p : ℕ} [Fact p.Prime] {a b t
   · rw [hilbertPrime_odd hp h2, hilbertPrime_odd hp h2,
         represents_padic_iff_symbol_linear_odd h2 ha hb ht]
 
+/-- **Global represents⟺symbol packaging.** `⟨a,b⟩` represents the integer `t` at *every* place (ℝ and all
+ℚ_p) iff the linear Hilbert-symbol prescription `(t,−ab)_v = (a,b)_v` holds at every place. Just the
+conjunction of the per-place trio (`represents_real_iff_symbol_linear` at ∞,
+`represents_padic_iff_hilbertPrime_linear` at finite places). This is the bridge between the two faces of the
+`n = 4` keystone: the LHS is exactly the `everywhere-represented` hypothesis `quaternary_isotropic_of_keystone`
+consumes; the RHS is exactly the prescribed-Hilbert-symbol conclusion Serre Ch III §2.2 Theorem 4 produces.
+So once Serre Thm 4 is proven, a global `t` with the RHS symbols yields the LHS representability, hence the
+keystone, hence `n = 4` Hasse–Minkowski. -/
+theorem represents_everywhere_iff_symbols {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    ((∃ u v : ℝ, (a : ℝ) * u ^ 2 + (b : ℝ) * v ^ 2 = (t : ℝ)) ∧
+      (∀ (p : ℕ) [Fact p.Prime], ∃ u v : ℚ_[p],
+        (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p]))) ↔
+    (HilbertSymbol.hilbertReal (t : ℝ) ((-(a * b) : ℤ) : ℝ) = HilbertSymbol.hilbertReal (a : ℝ) (b : ℝ) ∧
+      (∀ (p : ℕ) [Fact p.Prime], hilbertPrime p t (-(a * b)) = hilbertPrime p a b)) := by
+  constructor
+  · rintro ⟨hR, hloc⟩
+    exact ⟨(represents_real_iff_symbol_linear ha hb ht).mp hR,
+      fun p _ => (represents_padic_iff_hilbertPrime_linear ha hb ht).mp (hloc p)⟩
+  · rintro ⟨hR, hsym⟩
+    exact ⟨(represents_real_iff_symbol_linear ha hb ht).mpr hR,
+      fun p _ => (represents_padic_iff_hilbertPrime_linear ha hb ht).mpr (hsym p)⟩
+
 end SKEFTHawking
