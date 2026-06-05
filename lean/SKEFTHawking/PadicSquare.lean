@@ -1845,6 +1845,17 @@ theorem hilbertPadicInt_mul_sq_left {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha :
       HilbertSymbol.hilbertPadicInt_mul_left (p := p) hs hs]
   rcases HilbertSymbol.hilbertPadicInt_mem (p := p) hs hb with h | h <;> rw [h] <;> ring
 
+/-- **`hilbertPadicInt` against a `p·unit` second argument** (`p ∤ a`, `p ∤ b'`): `(a, p·b')_p = (a | p)`
+(bimultiplicativity: `(a,p·b')=(a,p)·(a,b')=(a|p)·1`). Computes the symbol in the `unit`/`p·unit` bridge case. -/
+theorem hilbertPadicInt_pUnit_right {p : ℕ} [Fact p.Prime] {a b' : ℤ} (ha : ¬ (p : ℤ) ∣ a)
+    (hb' : ¬ (p : ℤ) ∣ b') :
+    HilbertSymbol.hilbertPadicInt p a ((p : ℤ) * b') = legendreSym p a := by
+  have hpne : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have hb0 : b' ≠ 0 := fun h => hb' (h ▸ dvd_zero _)
+  rw [HilbertSymbol.hilbertPadicInt_mul_right (p := p) hpne hb0,
+      HilbertSymbol.hilbertPadicInt_eq_legendre (p := p) ha,
+      HilbertSymbol.hilbertPadicInt_units (p := p) ha hb', mul_one]
+
 /-- **Real-place sign selection for the common value.** Over ℝ, if `⟨a,b⟩` and `⟨c,d⟩` share a *nonzero*
 represented value (in the `real_binary_represents_iff` sign form `0 ≤ a·t ∨ 0 ≤ b·t`), then there is a
 sign `ε ∈ {1, −1}` with `0 ≤ a·ε ∨ 0 ≤ b·ε` and `0 ≤ c·ε ∨ 0 ≤ d·ε`. Since the representability sign
