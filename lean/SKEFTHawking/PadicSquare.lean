@@ -891,6 +891,39 @@ theorem hilbert2Int_odd_eq_one_iff {u v : ℤ} (hu : ¬ (2 : ℤ) ∣ u) (hv : �
   simp only [Nat.cast_zero, zero_mul, add_zero]
   exact chi2_eq_one_iff _
 
+/-- **p=2 unit/unit symbol↔solvability bridge.** For odd integers `u, v`, `z² = u x² + v y²` is solvable
+over `ℚ_[2]` iff `hilbert2Int u v = 1`. Assembled from the lift (`solvable_2adic_of_repr_sq`), descent
+(`solvable_2adic_imp_mod8`), the `ZMod 8` `decide`s (`padic2_unit_sol_mod8_iff`, `padic2_unit_repr_one`), and
+the symbol connection (`hilbert2Int_odd_eq_one_iff`). -/
+theorem solvable_2adic_unit_iff {u v : ℤ} (hu : ¬ (2 : ℤ) ∣ u) (hv : ¬ (2 : ℤ) ∣ v) :
+    (∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (u : ℚ_[2]) * x ^ 2 + (v : ℚ_[2]) * y ^ 2) ↔
+    HilbertSymbol.hilbert2Int u v = 1 := by
+  have hu8 : ((u : ℤ) : ZMod 8).val % 2 = 1 := by have h := @ZMod.val_intCast 8 u _; omega
+  have hv8 : ((v : ℤ) : ZMod 8).val % 2 = 1 := by have h := @ZMod.val_intCast 8 v _; omega
+  rw [hilbert2Int_odd_eq_one_iff hu hv]
+  constructor
+  · intro hsol
+    have hsol2 : ∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+        z ^ 2 = ((u : ℤ_[2]) : ℚ_[2]) * x ^ 2 + ((v : ℤ_[2]) : ℚ_[2]) * y ^ 2 := by
+      obtain ⟨x, y, z, hnz, he⟩ := hsol
+      exact ⟨x, y, z, hnz, by rw [PadicInt.coe_intCast, PadicInt.coe_intCast]; exact he⟩
+    obtain ⟨X, Y, Z, hprim, heq⟩ := solvable_2adic_imp_mod8 hsol2
+    rw [show PadicInt.toZModPow 3 ((u : ℤ) : ℤ_[2]) = ((u : ℤ) : ZMod 8) from map_intCast _ u,
+        show PadicInt.toZModPow 3 ((v : ℤ) : ℤ_[2]) = ((v : ℤ) : ZMod 8) from map_intCast _ v] at heq
+    exact (padic2_unit_sol_mod8_iff _ _ hu8 hv8).mp ⟨X, Y, Z, hprim, heq⟩
+  · intro heps
+    obtain ⟨X, Y, hXY⟩ := padic2_unit_repr_one _ _ hu8 hv8 heps
+    have hlift : ∀ X : ZMod 8, PadicInt.toZModPow 3 ((X.val : ℤ_[2])) = X := by
+      intro X; rw [map_natCast, ZMod.natCast_val, ZMod.cast_id]
+    have key : PadicInt.toZModPow 3 ((u : ℤ_[2]) * (X.val : ℤ_[2]) ^ 2
+        + (v : ℤ_[2]) * (Y.val : ℤ_[2]) ^ 2) = 1 := by
+      rw [map_add, map_mul, map_mul, map_pow, map_pow, hlift, hlift, map_intCast, map_intCast]
+      exact hXY
+    have := solvable_2adic_of_repr_sq key
+    obtain ⟨x, y, z, hnz, he⟩ := this
+    exact ⟨x, y, z, hnz, by rw [← PadicInt.coe_intCast (u), ← PadicInt.coe_intCast (v)]; exact he⟩
+
 /-- **Square in `ℚ_[p]` ⟺ square in `ℤ_[p]`, for a unit.** A `p`-adic *unit* `u` is a square in the field
 `ℚ_[p]` iff it is a square in the ring `ℤ_[p]` (a square root in `ℚ_[p]` has norm 1, hence lies in `ℤ_[p]`).
 With `isSquare_iff_isSquare_toZMod` this gives "square in `ℚ_[p]` ⟺ residue square" — the link from field
