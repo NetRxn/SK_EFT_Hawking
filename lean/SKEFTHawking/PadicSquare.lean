@@ -2411,6 +2411,39 @@ theorem exists_int_unit_sq_ratio_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u 
     rw [hres] at hz; exact hrne hz
   exact ⟨(r.val : ℤ), hnu, isSquare_padic_div_units hp hu hnu (by rw [← hr, hres])⟩
 
+/-- **Every `ℚ_[p]`-square class has a nonzero integer representative (odd `p`).** For any `x : ℚ_[p]`,
+`x ≠ 0`, there is a nonzero integer `m` with `x / m` a square in `ℚ_[p]`. (Decompose `x = pᵏ·u`
+[`padic_valuation_decomp`]; the unit `u` is matched by an integer `n` [`exists_int_unit_sq_ratio_odd`]; the
+valuation parity contributes the integer factor `p^(k mod 2)`, the even part `p^(2⌊k/2⌋)` being a square.)
+The full local-realizability bridge: a local common value `t_v ∈ ℚ_v` of two binary forms is, up to a
+`ℚ_v`-square, an integer — so it can be matched by `binary_represents_of_isSquare_ratio` at that place. -/
+theorem exists_int_sq_ratio_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {x : ℚ_[p]} (hx : x ≠ 0) :
+    ∃ m : ℤ, m ≠ 0 ∧ IsSquare (x / (m : ℚ_[p])) := by
+  obtain ⟨u, hu1, hxeq⟩ := padic_valuation_decomp hx
+  obtain ⟨u', hu'unit, hu'eq⟩ := exists_padicInt_unit_of_norm_one hu1
+  obtain ⟨n, hnunit, s, hs⟩ := exists_int_unit_sq_ratio_odd hp hu'unit
+  have hpZne : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have hpne : (p : ℚ_[p]) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have hnZne : n ≠ 0 := by
+    rintro rfl; rw [Int.cast_zero] at hnunit; exact not_isUnit_zero hnunit
+  have hnne : ((n : ℤ_[p]) : ℚ_[p]) ≠ 0 := by rw [Ne, PadicInt.coe_eq_zero]; exact hnunit.ne_zero
+  set k := x.valuation with hk
+  set e : ℕ := (k % 2).toNat with he
+  have heZ : (e : ℤ) = k % 2 := Int.toNat_of_nonneg (Int.emod_nonneg k (by norm_num))
+  refine ⟨(p : ℤ) ^ e * n, mul_ne_zero (pow_ne_zero _ hpZne) hnZne, (p : ℚ_[p]) ^ (k / 2) * s, ?_⟩
+  -- u' = s * s * n   (from hs : (u':ℚ_p)/(n:ℚ_p) = s*s)
+  have hu'val : (u' : ℚ_[p]) = s * s * ((n : ℤ_[p]) : ℚ_[p]) := by
+    field_simp at hs; linear_combination hs
+  -- bridge the integer m's cast
+  have hmcast : (((p : ℤ) ^ e * n : ℤ) : ℚ_[p]) = (p : ℚ_[p]) ^ (e : ℤ) * ((n : ℤ_[p]) : ℚ_[p]) := by
+    push_cast [PadicInt.coe_intCast]; rw [zpow_natCast]
+  -- split pᵏ into the parity factor pᵉ and the square (p^⌊k/2⌋)²
+  have hpk : (p : ℚ_[p]) ^ k = (p : ℚ_[p]) ^ (e : ℤ) * ((p : ℚ_[p]) ^ (k / 2)) ^ (2 : ℕ) := by
+    rw [← zpow_natCast ((p : ℚ_[p]) ^ (k / 2)) 2, ← zpow_mul, ← zpow_add₀ hpne]
+    congr 1; omega
+  rw [hxeq, ← hu'eq, hu'val, hmcast, hpk]
+  field_simp
+
 /-- `hilbertPadicInt` invariant under a square factor (right), via `_left` + `comm`. -/
 theorem hilbertPadicInt_mul_sq_right {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
     (hs : s ≠ 0) :
