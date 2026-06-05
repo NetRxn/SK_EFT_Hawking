@@ -2405,6 +2405,29 @@ theorem isSquare_2adic_div_units {u v : ℤ_[2]} (_hu : IsUnit u) (hv : IsUnit v
   refine ⟨(s : ℚ_[2]), ?_⟩
   rw [← PadicInt.coe_mul, ← hs]
 
+/-- **A `ℤ_2` unit's square class has an integer representative.** For any unit `u : ℤ_2`, there is an integer
+`n` (the residue lift `(toZModPow 3 u).val ∈ {1,3,5,7}`) with `(n : ℤ_2)` a unit and `(u : ℚ_2)/n` a square
+(`isSquare_2adic_div_units`). The `p = 2` analogue of `exists_int_unit_sq_ratio_odd`. -/
+theorem exists_int_unit_sq_ratio_2 {u : ℤ_[2]} (hu : IsUnit u) :
+    ∃ n : ℤ, IsUnit ((n : ℤ_[2])) ∧ IsSquare ((u : ℚ_[2]) / (((n : ℤ_[2])) : ℚ_[2])) := by
+  have hru : IsUnit (PadicInt.toZModPow 3 u) := hu.map (PadicInt.toZModPow 3)
+  set r : ZMod 8 := PadicInt.toZModPow 3 u with hr
+  have hcop : Nat.Coprime r.val 8 := by
+    rw [← ZMod.isUnit_iff_coprime]; rwa [ZMod.natCast_val, ZMod.cast_id]
+  have hodd : ¬ (2 : ℤ) ∣ (r.val : ℤ) := by
+    intro h2
+    have h2n : (2 : ℕ) ∣ r.val := by exact_mod_cast h2
+    have : (2 : ℕ) ∣ 1 := hcop ▸ Nat.dvd_gcd h2n ⟨4, rfl⟩
+    norm_num at this
+  have hres : PadicInt.toZModPow 3 ((r.val : ℤ) : ℤ_[2]) = r := by
+    rw [map_intCast, Int.cast_natCast, ZMod.natCast_rightInverse r]
+  have hnu : IsUnit (((r.val : ℤ)) : ℤ_[2]) := by
+    rw [PadicInt.isUnit_iff]
+    rcases (PadicInt.norm_le_one (((r.val : ℤ)) : ℤ_[2])).lt_or_eq with h | h
+    · rw [PadicInt.norm_int_lt_one_iff_dvd] at h; exact absurd h hodd
+    · exact h
+  exact ⟨(r.val : ℤ), hnu, isSquare_2adic_div_units hu hnu (by rw [hres])⟩
+
 /-- **A `ℤ_[p]` unit's square class has an integer representative (odd `p`).** For any unit `u : ℤ_[p]`, there
 is an integer `n` with `(n : ℤ_[p])` a unit and `(u : ℚ_[p]) / n` a square. (Lift the residue `r = toZMod u`
 to the integer `r.val`, a unit with the same residue, so `u / r.val` is a square by `isSquare_padic_div_units`.)
