@@ -2485,6 +2485,35 @@ theorem exists_int_sq_ratio_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {x : ℚ
   rw [hxeq, ← hu'eq, hu'val, hmcast, hpk]
   field_simp
 
+/-- **Every `ℚ_2`-square class has a nonzero integer representative.** The `p = 2` analogue of
+`exists_int_sq_ratio_odd`: identical decomposition `x = 2ᵏ·u`, matching the unit by an integer via
+`exists_int_unit_sq_ratio_2`. -/
+theorem exists_int_sq_ratio_2 {x : ℚ_[2]} (hx : x ≠ 0) :
+    ∃ m : ℤ, m ≠ 0 ∧ IsSquare (x / (m : ℚ_[2])) := by
+  obtain ⟨u, hu1, hxeq⟩ := padic_valuation_decomp hx
+  obtain ⟨u', hu'unit, hu'eq⟩ := exists_padicInt_unit_of_norm_one hu1
+  obtain ⟨n, hnunit, s, hs⟩ := exists_int_unit_sq_ratio_2 hu'unit
+  have hpZne : (2 : ℤ) ≠ 0 := by norm_num
+  have hpne : ((2 : ℕ) : ℚ_[2]) ≠ 0 := by exact_mod_cast Nat.prime_two.ne_zero
+  have hnZne : n ≠ 0 := by
+    rintro rfl; rw [Int.cast_zero] at hnunit; exact not_isUnit_zero hnunit
+  have hnne : ((n : ℤ_[2]) : ℚ_[2]) ≠ 0 := by rw [Ne, PadicInt.coe_eq_zero]; exact hnunit.ne_zero
+  set k := x.valuation with hk
+  set e : ℕ := (k % 2).toNat with he
+  have heZ : (e : ℤ) = k % 2 := Int.toNat_of_nonneg (Int.emod_nonneg k (by norm_num))
+  refine ⟨(2 : ℤ) ^ e * n, mul_ne_zero (pow_ne_zero _ hpZne) hnZne,
+    ((2 : ℕ) : ℚ_[2]) ^ (k / 2) * s, ?_⟩
+  have hu'val : (u' : ℚ_[2]) = s * s * ((n : ℤ_[2]) : ℚ_[2]) := by
+    field_simp at hs; linear_combination hs
+  have hmcast : (((2 : ℤ) ^ e * n : ℤ) : ℚ_[2]) = ((2 : ℕ) : ℚ_[2]) ^ (e : ℤ) * ((n : ℤ_[2]) : ℚ_[2]) := by
+    push_cast [PadicInt.coe_intCast]; rw [zpow_natCast]
+  have hpk : ((2 : ℕ) : ℚ_[2]) ^ k =
+      ((2 : ℕ) : ℚ_[2]) ^ (e : ℤ) * (((2 : ℕ) : ℚ_[2]) ^ (k / 2)) ^ (2 : ℕ) := by
+    rw [← zpow_natCast (((2 : ℕ) : ℚ_[2]) ^ (k / 2)) 2, ← zpow_mul, ← zpow_add₀ hpne]
+    congr 1; omega
+  rw [hxeq, ← hu'eq, hu'val, hmcast, hpk]
+  field_simp
+
 /-- **Local realizability at an odd place: an integer common value.** If the quaternary form
 `a x² + b y² = c z² + d w²` is isotropic over `ℚ_[p]` (odd `p`), then `⟨a,b⟩` and `⟨c,d⟩` represent a common
 *integer* value over `ℚ_[p]`. (`common_value_of_quaternary_isotropic` gives a common `t_v ∈ ℚ_p`; its square
