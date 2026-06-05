@@ -1845,6 +1845,24 @@ theorem hilbertPadicInt_mul_sq_left {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha :
       HilbertSymbol.hilbertPadicInt_mul_left (p := p) hs hs]
   rcases HilbertSymbol.hilbertPadicInt_mem (p := p) hs hb with h | h <;> rw [h] <;> ring
 
+/-- **Norm of a `p`-free integer is `1` in `ℚ_[p]`.** -/
+theorem padic_norm_intCast_eq_one {p : ℕ} [Fact p.Prime] {k : ℤ} (h : ¬ (p : ℤ) ∣ k) :
+    ‖((k : ℤ) : ℚ_[p])‖ = 1 := by
+  have hc : ((k : ℤ) : ℚ_[p]) = ((k : ℤ_[p]) : ℚ_[p]) := by push_cast; ring
+  rw [hc, padic_norm_e_of_padicInt, PadicInt.norm_intCast_eq_one_iff, isCoprime_comm]
+  exact ((Nat.prime_iff_prime_int.mp Fact.out).coprime_iff_not_dvd).mpr h
+
+/-- **Symbol↔solvability bridge, unit/unit case.** For `p ∤ a`, `p ∤ b` (odd `p`): `z² = a x² + b y²` is
+solvable over `ℚ_[p]` iff `(a,b)_p = 1` — both hold (unit ternary is isotropic; `hilbertPadicInt_units`). -/
+theorem solvable_padic_iff_hilbert_uu {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b : ℤ}
+    (ha : ¬ (p : ℤ) ∣ a) (hb : ¬ (p : ℤ) ∣ b) :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) ↔
+    HilbertSymbol.hilbertPadicInt p a b = 1 := by
+  refine ⟨fun _ => HilbertSymbol.hilbertPadicInt_units (p := p) ha hb, fun _ => ?_⟩
+  exact solvable_canonical_ternary_odd_units hp (padic_norm_intCast_eq_one ha)
+    (padic_norm_intCast_eq_one hb)
+
 /-- **`hilbertPadicInt` against a `p·unit` second argument** (`p ∤ a`, `p ∤ b'`): `(a, p·b')_p = (a | p)`
 (bimultiplicativity: `(a,p·b')=(a,p)·(a,b')=(a|p)·1`). Computes the symbol in the `unit`/`p·unit` bridge case. -/
 theorem hilbertPadicInt_pUnit_right {p : ℕ} [Fact p.Prime] {a b' : ℤ} (ha : ¬ (p : ℤ) ∣ a)
