@@ -2444,6 +2444,35 @@ theorem exists_int_sq_ratio_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {x : ℚ
   rw [hxeq, ← hu'eq, hu'val, hmcast, hpk]
   field_simp
 
+/-- **Local realizability at an odd place: an integer common value.** If the quaternary form
+`a x² + b y² = c z² + d w²` is isotropic over `ℚ_[p]` (odd `p`), then `⟨a,b⟩` and `⟨c,d⟩` represent a common
+*integer* value over `ℚ_[p]`. (`common_value_of_quaternary_isotropic` gives a common `t_v ∈ ℚ_p`; its square
+class has an integer representative `m` [`exists_int_sq_ratio_odd`], and representability is square-class
+invariant [`binary_represents_congr_sq`].) This is Serre's local-solvability condition (3) at odd `p`, in the
+integer form the per-place linear criterion consumes. -/
+theorem local_common_int_value_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 = (c : ℚ_[p]) * z ^ 2 + (d : ℚ_[p]) * w ^ 2) :
+    ∃ t : ℤ, t ≠ 0 ∧ (∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p])) ∧
+      (∃ u v : ℚ_[p], (c : ℚ_[p]) * u ^ 2 + (d : ℚ_[p]) * v ^ 2 = (t : ℚ_[p])) := by
+  haveI : Invertible (2 : ℚ_[p]) := invertibleOfNonzero two_ne_zero
+  have ha0 : (a : ℚ_[p]) ≠ 0 := by exact_mod_cast ha
+  have hb0 : (b : ℚ_[p]) ≠ 0 := by exact_mod_cast hb
+  have hc0 : (c : ℚ_[p]) ≠ 0 := by exact_mod_cast hc
+  have hd0 : (d : ℚ_[p]) ≠ 0 := by exact_mod_cast hd
+  obtain ⟨tv, htv, hab, hcd⟩ := common_value_of_quaternary_isotropic ha0 hb0 hc0 hd0 hiso
+  obtain ⟨m, hm, s, hsq⟩ := exists_int_sq_ratio_odd hp htv
+  have hmne : (m : ℚ_[p]) ≠ 0 := by exact_mod_cast hm
+  have hsne : s ≠ 0 := by
+    rintro rfl
+    rw [mul_zero, div_eq_zero_iff] at hsq
+    exact htv (hsq.resolve_right hmne)
+  have htvm : tv = (m : ℚ_[p]) * s ^ 2 := by
+    field_simp at hsq; linear_combination hsq
+  rw [htvm] at hab hcd
+  exact ⟨m, hm, (binary_represents_congr_sq hsne).mpr hab, (binary_represents_congr_sq hsne).mpr hcd⟩
+
 /-- `hilbertPadicInt` invariant under a square factor (right), via `_left` + `comm`. -/
 theorem hilbertPadicInt_mul_sq_right {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
     (hs : s ≠ 0) :
