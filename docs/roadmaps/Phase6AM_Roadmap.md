@@ -47,19 +47,11 @@ The existing in-repo QI substrate (`QuantumNetwork/*`: diamond/fidelity/entropy/
   this commit: `QuantumInfo/Finite/Entropy/{DPI,SSA,Relative,VonNeumann}.lean`,
   `QuantumInfo/Finite/Distance/{Fidelity,TraceDistance}.lean`.
 
-### ⚠️ What PhysLib does NOT provide — Fannes–Audenaert (6AL Gap 1, sharp `log(d−1)`)
-PhysLib has von Neumann entropy + **qualitative** continuity (`Sᵥₙ_continuous`) but **NO quantitative
-Fannes–Audenaert bound** (`|S(ρ)−S(σ)| ≤ T·log(d−1)+h(T)`); there is no Fannes/Audenaert file in the pinned tree.
-So adopting PhysLib does **not** close 6AL Gap 1 (the sharp-Audenaert constant `hAud` in
-`quantum_fannes_audenaert_of_mirsky`). That remains a separate, **research-grade-by-infrastructure** item — deep
-research (`Lit-Search/Phase-6AL/Formalizing the Sharp (Audenaert) Classical Fannes Bound…md`) found the proof is
-mathematically elementary (essentially **Fano's inequality** via maximal coupling) but every route needs one piece
-Mathlib lacks: a finite-alphabet **Fano inequality** / discrete conditional-entropy layer (or a majorization API).
-Recommended route if pursued: maximal-coupling + Fano-grouping (Zhang 2007 / Sason 2013); staged as (1) in-reach
-"spreading" estimate + `qaryEntropy` monotone packaging, then (2) a reusable finite Fano-grouping lemma (the crux,
-~300–700 LoC). Meanwhile the **unconditional `log d` Fannes certificate** (`quantum_fannes_certificate` /
-`quantum_fannes_trace_distance`, 6AL) is the shipped operational bound. Treat the DR as a hypothesis to validate
-(test-before-build + machine-check), not trust.
+### ⚠️ Note: PhysLib does NOT close 6AL Gap 1 (sharp Fannes–Audenaert `log(d−1)`)
+PhysLib has only **qualitative** entropy continuity (`Sᵥₙ_continuous`), no quantitative Fannes–Audenaert bound, and
+no Fannes/Audenaert file in the pinned tree. So adoption does **not** discharge the sharp-Audenaert hypothesis
+`hAud`. That is a **6AL item** — full DR findings + the recommended Fano-grouping staged plan live in
+**`Phase6AL_Roadmap.md` (Gap 1)**; the unconditional `log d` Fannes certificate ships meanwhile.
 
 ### Wave 2 — Kraus ↔ MState bridge *(the real LOE)*
 - Provide the translation between the repo's Kraus-family channels / density matrices and PhysLib's

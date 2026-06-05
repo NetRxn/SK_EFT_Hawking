@@ -155,13 +155,25 @@ After C+F closure, assessed the three residual gaps from a real-customer/first-p
   Now `‖ρ−σ‖₁ ≤ ½` (+ `d≥2`) alone ⟹ `|S(ρ)−S(σ)| ≤ d·η(‖ρ−σ‖₁/d)`; the per-index gap is discharged internally
   (`eigenvalues₀_gap_le_traceNorm`: single term ≤ ∑ ≤ `‖·‖₁` by `mirsky_unconditional`) and the Fannes-regime
   range follows from `½ ≤ 2e⁻¹ ≤ d·e⁻¹`. This is the operationally load-bearing certificate.
-- **Gap 1 (sharp Audenaert `log(d−1)` constant): RESEARCH-GRADE, DR dispatched.** MEDIUM–HIGH customer value
-  (tighter/standard bound for small `d`). Mathlib has `qaryEntropy` primitives (continuity, `StrictConcaveOn`,
-  `qaryEntropy q 1 = log(q−1)`) but NO entropy-difference bound; the sharp constant is Audenaert's simplex
-  optimization — no clean few-lemma proof in hand. NOT improvised (correctness risk). Deep-research prompt
-  dispatched: `Lit-Search/tasks/in-progress/sharp_fannes_audenaert_log_d_minus_1_lean.md`. The unconditional
-  `log d` Fannes form (`quantum_fannes_trace_distance`/`quantum_fannes_certificate`) remains the shipped certificate
-  meanwhile; `quantum_fannes_audenaert` stages the sharp constant as the named hypothesis `hAud`.
+- **Gap 1 (sharp Audenaert `log(d−1)` constant): RESEARCH-GRADE BY INFRASTRUCTURE — DR returned, staged follow-on.**
+  MEDIUM–HIGH customer value (tighter/standard bound for small `d`). NOT in Mathlib (has `qaryEntropy` primitives —
+  continuity, `StrictConcaveOn`, `qaryEntropy q 1 = log(q−1)` — but NO entropy-difference bound) and NOT in PhysLib
+  (qualitative `Sᵥₙ_continuous` only). **DR returned** (`Lit-Search/Phase-6AL/Formalizing the Sharp (Audenaert)
+  Classical Fannes Bound…md`) and **corrected my earlier "simplex-optimization" framing**: the proof is
+  mathematically *elementary* — it is essentially **Fano's inequality** dressed in a maximal coupling
+  (`|H(p)−H(q)| ≤ H(X̂|Ŷ) ≤ T·log(d−1)+h(T)`, where `log(d−1)` comes from "given an error, d−1 candidate values").
+  The blocker is **Mathlib-infrastructure, not mathematics**: no finite-alphabet **Fano inequality** / discrete
+  conditional-entropy layer (Audenaert's own simplex case-analysis and Ho–Yeung's majorization route are the
+  *harder* paths — avoid them). **Recommended route (treat DR as hypothesis to validate):** maximal-coupling +
+  Fano-grouping (Zhang 2007 / Sason 2013), staged —
+  (S1, in-reach now) "spreading" estimate `H p ≤ (1−p₁)·log(d−1)+h(1−p₁)` via Jensen on the `d−1` tail
+  (`strictConcaveOn_negMulLog`) + `qaryEntropy` monotone packaging (Mathlib `qaryEntropy` strict-mono on `[0,1−q⁻¹]`);
+  (S2, the crux, ~300–700 LoC) a reusable `Fin`-indexed conditional-entropy layer + **Fano-by-grouping**
+  `H(X|Y) ≤ P(X≠Y)·log(|𝒜|−1)+h(P(X≠Y))`; (S3) assemble + WLOG/`abs` glue. Go/no-go gate: S1 lands cleanly
+  (reuses existing `negMulLog`/Jensen assets) → proceed; finite-Fano scaffolding > ~500 LoC or needing
+  measure-theoretic `measureEntropy` bridging → stop and keep the `log d` certificate. **Shipped meanwhile:** the
+  unconditional `log d` Fannes form (`quantum_fannes_trace_distance`/`quantum_fannes_certificate`) is the operational
+  certificate; `quantum_fannes_audenaert` stages the sharp constant as the named hypothesis `hAud`.
 - **Gap 2 (arbitrary-subset Lidskii `H` brick): bounded but DEFERRED.** LOW customer value (internal/foundational/
   Mathlib-contribution; not on the certificate's critical path). Needs a from-scratch eigenvalue-shift lemma
   `λ↓(A − t·1) = λ↓(A) − t` (absent from Mathlib) + Li–Mathias normalization. Reachable via the same PSD-split +
