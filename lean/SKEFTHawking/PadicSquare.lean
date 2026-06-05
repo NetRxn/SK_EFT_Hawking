@@ -1864,4 +1864,25 @@ theorem quaternary_isotropic_of_keystone {a b c d : ℚ} (ha : a ≠ 0) (hb : b 
   have h2 : ∃ u v : ℚ, c * u ^ 2 + d * v ^ 2 = t := binary_represents_of_local hc hd ht hRcd hloccd
   exact quaternary_isotropic_of_common_value ht h1 h2
 
+/-- **Representability transfers across a square ratio (field-generic).** If `⟨a,b⟩` represents `c ≠ 0` and
+`r / c` is a square, then `⟨a,b⟩` represents `r`. (Write `r = c·s²`; `binary_represents_congr_sq`.) This is the
+*square-class-matching* mechanism of the rank-4 keystone: once the global value `t` is constructed so that
+`t / c_p` is a `ℚ_p`-square at each bad place `p` (with `c_p` the local common value there), this transfers
+the local representability of `c_p` to `t`. -/
+theorem binary_represents_of_isSquare_ratio {K : Type*} [Field K] {a b c r : K} (hc : c ≠ 0)
+    (hrep : ∃ u v : K, a * u ^ 2 + b * v ^ 2 = c) (hsq : IsSquare (r / c)) :
+    ∃ u v : K, a * u ^ 2 + b * v ^ 2 = r := by
+  obtain ⟨s, hs⟩ := hsq
+  by_cases hr : r = 0
+  · exact ⟨0, 0, by rw [hr]; ring⟩
+  · have hs0 : s ≠ 0 := by
+      rintro rfl
+      rw [mul_zero] at hs
+      exact hr ((div_eq_zero_iff.mp hs).resolve_right hc)
+    have hrcs : r = c * s ^ 2 := by
+      have : r / c = s ^ 2 := by rw [hs]; ring
+      field_simp [hc] at this ⊢; linear_combination this
+    rw [hrcs]
+    exact (binary_represents_congr_sq hs0).mp hrep
+
 end SKEFTHawking
