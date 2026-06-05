@@ -1845,6 +1845,23 @@ theorem hilbertPadicInt_mul_sq_left {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha :
       HilbertSymbol.hilbertPadicInt_mul_left (p := p) hs hs]
   rcases HilbertSymbol.hilbertPadicInt_mem (p := p) hs hb with h | h <;> rw [h] <;> ring
 
+/-- **Integer canonical factorisation at `p`.** Every nonzero `a : ℤ` factors as `a = c · s²` with `s ≠ 0`
+and `c` either `p`-free or `p ×` a `p`-free integer (split `a = p^{v} · pfree` by the parity of `v`). This
+reduces the symbol↔solvability bridge to the four canonical cases. -/
+theorem exists_canonical_padic_factor {p : ℕ} [Fact p.Prime] {a : ℤ} (ha : a ≠ 0) :
+    ∃ c s : ℤ, s ≠ 0 ∧ a = c * s ^ 2 ∧
+      (¬ (p : ℤ) ∣ c ∨ ∃ c', ¬ (p : ℤ) ∣ c' ∧ c = (p : ℤ) * c') := by
+  have hpne : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have hu : ¬ (p : ℤ) ∣ HilbertSymbol.pfreeInt p a := HilbertSymbol.not_dvd_pfreeInt p ha
+  have hspec : a = (p : ℤ) ^ padicValInt p a * HilbertSymbol.pfreeInt p a :=
+    HilbertSymbol.pfreeInt_spec p a
+  rcases Nat.even_or_odd (padicValInt p a) with ⟨k, hk⟩ | ⟨k, hk⟩
+  · refine ⟨HilbertSymbol.pfreeInt p a, (p : ℤ) ^ k, pow_ne_zero _ hpne, ?_, Or.inl hu⟩
+    nth_rewrite 1 [hspec]; rw [hk, pow_add]; ring
+  · refine ⟨(p : ℤ) * HilbertSymbol.pfreeInt p a, (p : ℤ) ^ k, pow_ne_zero _ hpne, ?_,
+      Or.inr ⟨_, hu, rfl⟩⟩
+    nth_rewrite 1 [hspec]; rw [hk, show 2 * k + 1 = k + k + 1 by ring, pow_add, pow_add, pow_one]; ring
+
 /-- **Norm of a `p`-free integer is `1` in `ℚ_[p]`.** -/
 theorem padic_norm_intCast_eq_one {p : ℕ} [Fact p.Prime] {k : ℤ} (h : ¬ (p : ℤ) ∣ k) :
     ‖((k : ℤ) : ℚ_[p])‖ = 1 := by
@@ -2073,5 +2090,49 @@ theorem isSquare_padic_div_units {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : 
   have htz : PadicInt.toZMod (u * vinv) = 1 := by
     rw [map_mul, hres, ← map_mul, hvinv, map_one]
   rw [htz]; exact ⟨1, by ring⟩
+
+/-- `hilbertPadicInt` invariant under a square factor (right), via `_left` + `comm`. -/
+theorem hilbertPadicInt_mul_sq_right {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
+    (hs : s ≠ 0) :
+    HilbertSymbol.hilbertPadicInt p a (b * s ^ 2) = HilbertSymbol.hilbertPadicInt p a b := by
+  rw [HilbertSymbol.hilbertPadicInt_comm p a (b * s ^ 2), hilbertPadicInt_mul_sq_left hb ha hs,
+      HilbertSymbol.hilbertPadicInt_comm p b a]
+
+/-- **Symbol↔solvability bridge over `ℚ_[p]` (odd `p`).** For nonzero integers `a, b` and odd `p`, the
+canonical Hilbert ternary `z² = a x² + b y²` is solvable over `ℚ_[p]` iff `(a,b)_p = 1`. Reduce `a, b` to
+their canonical (`unit`/`p·unit`) classes by factoring out squares (`exists_canonical_padic_factor`;
+`solvable_canonical_congr_sq`(`_right`) and `hilbertPadicInt_mul_sq_left`(`_right`) make both sides
+square-class invariant), then dispatch to the four canonical cases (`_uu`/`_up`/`_pu`/`_pp`). This connects
+the *combinatorial* Hilbert symbol (whose product formula `hilbertGlobalProd_eq_one` is proven) to actual
+local solvability — the reframing that makes the rank-4 common-value consistency a corollary of reciprocity. -/
+theorem solvable_padic_iff_hilbertPadicInt_one {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) ↔
+    HilbertSymbol.hilbertPadicInt p a b = 1 := by
+  obtain ⟨ca, sa, hsa, hae, hca⟩ := exists_canonical_padic_factor (p := p) ha
+  obtain ⟨cb, sb, hsb, hbe, hcb⟩ := exists_canonical_padic_factor (p := p) hb
+  have hca0 : ca ≠ 0 := by rintro rfl; rw [zero_mul] at hae; exact ha hae
+  have hcb0 : cb ≠ 0 := by rintro rfl; rw [zero_mul] at hbe; exact hb hbe
+  have hsaQ : (sa : ℚ_[p]) ≠ 0 := by exact_mod_cast hsa
+  have hsbQ : (sb : ℚ_[p]) ≠ 0 := by exact_mod_cast hsb
+  have hsol : (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) ↔
+      (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (ca : ℚ_[p]) * x ^ 2 + (cb : ℚ_[p]) * y ^ 2) := by
+    rw [show (a : ℚ_[p]) = (ca : ℚ_[p]) * (sa : ℚ_[p]) ^ 2 by rw [hae]; push_cast; ring,
+        show (b : ℚ_[p]) = (cb : ℚ_[p]) * (sb : ℚ_[p]) ^ 2 by rw [hbe]; push_cast; ring]
+    exact ((solvable_canonical_congr_sq hsaQ).trans (solvable_canonical_congr_sq_right hsbQ)).symm
+  have hsym : HilbertSymbol.hilbertPadicInt p a b = HilbertSymbol.hilbertPadicInt p ca cb := by
+    rw [hae, hbe, hilbertPadicInt_mul_sq_left hca0 (mul_ne_zero hcb0 (pow_ne_zero 2 hsb)) hsa,
+        hilbertPadicInt_mul_sq_right hca0 hcb0 hsb]
+  rw [hsol, hsym]
+  rcases hca with hpca | ⟨ca', hca', rfl⟩
+  · rcases hcb with hpcb | ⟨cb', hcb', rfl⟩
+    · exact solvable_padic_iff_hilbert_uu hp hpca hpcb
+    · exact solvable_padic_iff_hilbert_up hp hpca hcb'
+  · rcases hcb with hpcb | ⟨cb', hcb', rfl⟩
+    · exact solvable_padic_iff_hilbert_pu hp hca' hpcb
+    · exact solvable_padic_iff_hilbert_pp hp hca' hcb'
 
 end SKEFTHawking
