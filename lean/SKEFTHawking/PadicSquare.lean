@@ -2543,6 +2543,31 @@ theorem local_common_int_value_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b 
   rw [htvm] at hab hcd
   exact ⟨m, hm, (binary_represents_congr_sq hsne).mpr hab, (binary_represents_congr_sq hsne).mpr hcd⟩
 
+/-- **Local realizability at `p = 2`: an integer common value.** The `p = 2` analogue of
+`local_common_int_value_odd`, using `exists_int_sq_ratio_2`. Serre's condition (3) at `p = 2`, integer form. -/
+theorem local_common_int_value_2 {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[2]) * x ^ 2 + (b : ℚ_[2]) * y ^ 2 = (c : ℚ_[2]) * z ^ 2 + (d : ℚ_[2]) * w ^ 2) :
+    ∃ t : ℤ, t ≠ 0 ∧ (∃ u v : ℚ_[2], (a : ℚ_[2]) * u ^ 2 + (b : ℚ_[2]) * v ^ 2 = (t : ℚ_[2])) ∧
+      (∃ u v : ℚ_[2], (c : ℚ_[2]) * u ^ 2 + (d : ℚ_[2]) * v ^ 2 = (t : ℚ_[2])) := by
+  haveI : Invertible (2 : ℚ_[2]) := invertibleOfNonzero two_ne_zero
+  have ha0 : (a : ℚ_[2]) ≠ 0 := by exact_mod_cast ha
+  have hb0 : (b : ℚ_[2]) ≠ 0 := by exact_mod_cast hb
+  have hc0 : (c : ℚ_[2]) ≠ 0 := by exact_mod_cast hc
+  have hd0 : (d : ℚ_[2]) ≠ 0 := by exact_mod_cast hd
+  obtain ⟨tv, htv, hab, hcd⟩ := common_value_of_quaternary_isotropic ha0 hb0 hc0 hd0 hiso
+  obtain ⟨m, hm, s, hsq⟩ := exists_int_sq_ratio_2 htv
+  have hmne : (m : ℚ_[2]) ≠ 0 := by exact_mod_cast hm
+  have hsne : s ≠ 0 := by
+    rintro rfl
+    rw [mul_zero, div_eq_zero_iff] at hsq
+    exact htv (hsq.resolve_right hmne)
+  have htvm : tv = (m : ℚ_[2]) * s ^ 2 := by
+    field_simp at hsq; linear_combination hsq
+  rw [htvm] at hab hcd
+  exact ⟨m, hm, (binary_represents_congr_sq hsne).mpr hab, (binary_represents_congr_sq hsne).mpr hcd⟩
+
 /-- `hilbertPadicInt` invariant under a square factor (right), via `_left` + `comm`. -/
 theorem hilbertPadicInt_mul_sq_right {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
     (hs : s ≠ 0) :
@@ -2863,6 +2888,21 @@ theorem local_realizable_symbol_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b
   obtain ⟨t, ht, hab, hcd⟩ := local_common_int_value_odd hp ha hb hc hd hiso
   exact ⟨t, ht, (represents_padic_iff_symbol_linear_odd hp ha hb ht).mp hab,
     (represents_padic_iff_symbol_linear_odd hp hc hd ht).mp hcd⟩
+
+/-- **Local realizability at `p = 2`, symbol form (Serre condition 3).** If the quaternary form is isotropic
+over `ℚ_2`, there is an integer `t` realizing the prescribed dyadic Hilbert symbols of both binary parts:
+`(t, −ab)₂ = (a,b)₂` and `(t, −cd)₂ = (c,d)₂`. (`local_common_int_value_2` + the p=2 linear criterion
+`represents_2adic_iff_symbol_linear`.) Serre Ch III §2.2 Theorem 4's hypothesis (3) at `p = 2`. -/
+theorem local_realizable_symbol_2adic {a b c d : ℤ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0)
+    (hiso : ∃ x y z w : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[2]) * x ^ 2 + (b : ℚ_[2]) * y ^ 2 = (c : ℚ_[2]) * z ^ 2 + (d : ℚ_[2]) * w ^ 2) :
+    ∃ t : ℤ, t ≠ 0 ∧
+      HilbertSymbol.hilbert2Int t (-(a * b)) = HilbertSymbol.hilbert2Int a b ∧
+      HilbertSymbol.hilbert2Int t (-(c * d)) = HilbertSymbol.hilbert2Int c d := by
+  obtain ⟨t, ht, hab, hcd⟩ := local_common_int_value_2 ha hb hc hd hiso
+  exact ⟨t, ht, (represents_2adic_iff_symbol_linear ha hb ht).mp hab,
+    (represents_2adic_iff_symbol_linear hc hd ht).mp hcd⟩
 
 /-- **Local realizability at the real place, symbol form (Serre condition 3).** If the quaternary form is
 isotropic over ℝ, there is an integer `t ∈ {1,−1}` realizing the prescribed real Hilbert symbols of both
