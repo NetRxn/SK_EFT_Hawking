@@ -2510,4 +2510,26 @@ theorem represents_padic_iff_symbol_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) 
     · field_simp
       push_cast at he; linear_combination -he
 
+/-- **Binary representability ⟺ Hilbert symbol over ℝ.** `⟨a,b⟩` represents `t` over ℝ iff
+`hilbertReal (a·t) (b·t) = 1`. (`real_binary_represents_iff`: representable ⟺ `0 ≤ a·t ∨ 0 ≤ b·t`;
+`hilbertReal (at)(bt) = 1 ⟺ ¬(at < 0 ∧ bt < 0)`.) The archimedean represents⟺symbol. -/
+theorem represents_real_iff_symbol {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (_ht : t ≠ 0) :
+    (∃ u v : ℝ, (a : ℝ) * u ^ 2 + (b : ℝ) * v ^ 2 = (t : ℝ)) ↔
+    HilbertSymbol.hilbertReal ((a * t : ℤ) : ℝ) ((b * t : ℤ) : ℝ) = 1 := by
+  have haR : (a : ℝ) ≠ 0 := by exact_mod_cast ha
+  have hbR : (b : ℝ) ≠ 0 := by exact_mod_cast hb
+  rw [real_binary_represents_iff haR hbR, HilbertSymbol.hilbertReal]
+  push_cast
+  split_ifs with h
+  · constructor
+    · rintro (h' | h') <;> linarith [h.1, h.2]
+    · intro h'; norm_num at h'
+  · rw [not_and, not_lt] at h
+    constructor
+    · intro _; rfl
+    · intro _
+      rcases lt_or_ge ((a : ℝ) * (t : ℝ)) 0 with hlt | hge
+      · exact Or.inr (h hlt)
+      · exact Or.inl hge
+
 end SKEFTHawking
