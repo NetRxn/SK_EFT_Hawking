@@ -824,6 +824,32 @@ theorem solvable_2adic_of_repr_sq {u v X Y : ℤ_[2]}
   · have heq : ((u * X ^ 2 + v * Y ^ 2 : ℤ_[2]) : ℚ_[2]) = ((w * w : ℤ_[2]) : ℚ_[2]) := by rw [hw]
     push_cast at heq ⊢; linear_combination -heq
 
+/-- **2-adic solvability reduces to a primitive mod-8 solution.** If `z² = u x² + v y²` is solvable over
+`ℚ_[2]`, then it has a nontrivial solution modulo 8 (reduce a primitive `ℤ_[2]` solution via `toZModPow 3`;
+a unit coordinate stays nonzero mod 8). The descent half of the `p = 2` symbol↔solvability bridge — pairs with
+`solvable_2adic_of_repr_sq` and makes the symbol comparison a finite `decide` over `ZMod 8`. -/
+theorem solvable_2adic_imp_mod8 {u v : ℤ_[2]}
+    (h : ∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (u : ℚ_[2]) * x ^ 2 + (v : ℚ_[2]) * y ^ 2) :
+    ∃ X Y Z : ZMod 8, ¬(X = 0 ∧ Y = 0 ∧ Z = 0) ∧
+      Z ^ 2 = PadicInt.toZModPow 3 u * X ^ 2 + PadicInt.toZModPow 3 v * Y ^ 2 := by
+  have hter : ∃ x y z : ℚ_[2], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      (u : ℚ_[2]) * x ^ 2 + (v : ℚ_[2]) * y ^ 2 + ((-1 : ℤ_[2]) : ℚ_[2]) * z ^ 2 = 0 := by
+    obtain ⟨x, y, z, hnz, he⟩ := h
+    exact ⟨x, y, z, hnz, by push_cast; linear_combination -he⟩
+  obtain ⟨X, Y, Z, hprim, heq⟩ := exists_primitive_diag_ternary (p := 2) (a := u) (b := v) (c := -1) hter
+  refine ⟨PadicInt.toZModPow 3 X, PadicInt.toZModPow 3 Y, PadicInt.toZModPow 3 Z, ?_, ?_⟩
+  · have hnz : ∀ w : ℤ_[2], IsUnit w → PadicInt.toZModPow 3 w ≠ 0 := by
+      intro w hwu hwz
+      rw [toZModPow_eq_zero_iff_norm_le, PadicInt.isUnit_iff.mp hwu] at hwz
+      norm_num at hwz
+    rintro ⟨hX, hY, hZ⟩
+    rcases hprim with hh | hh | hh
+    exacts [hnz X hh hX, hnz Y hh hY, hnz Z hh hZ]
+  · have hc := congrArg (PadicInt.toZModPow 3) heq
+    simp only [map_add, map_mul, map_pow, map_neg, map_one, map_zero] at hc
+    linear_combination -hc
+
 /-- **Square in `ℚ_[p]` ⟺ square in `ℤ_[p]`, for a unit.** A `p`-adic *unit* `u` is a square in the field
 `ℚ_[p]` iff it is a square in the ring `ℤ_[p]` (a square root in `ℚ_[p]` has norm 1, hence lies in `ℤ_[p]`).
 With `isSquare_iff_isSquare_toZMod` this gives "square in `ℚ_[p]` ⟺ residue square" — the link from field
