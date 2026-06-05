@@ -1885,4 +1885,23 @@ theorem binary_represents_of_isSquare_ratio {K : Type*} [Field K] {a b c r : K} 
     rw [hrcs]
     exact (binary_represents_congr_sq hs0).mp hrep
 
+/-- **CRT: an integer hitting prescribed residues at finitely many distinct primes.** For a `Nodup` list of
+primes `ps` and any target-residue function `r`, there is an integer `k` with `(k : ZMod p) = r p` for every
+`p ∈ ps` (`Nat.chineseRemainderOfList`, distinct primes pairwise coprime). The unit-residue–matching core of
+the rank-4 keystone's global-value construction `t = ε·q·∏p^{δ_p}`: it sets the unit part of `t` to the
+prescribed `ℚ_p`-square class at each bad odd prime simultaneously. -/
+theorem exists_int_residues (ps : List ℕ) (hps : ∀ p ∈ ps, p.Prime) (hd : ps.Nodup)
+    (r : ℕ → ℕ) : ∃ k : ℤ, ∀ p ∈ ps, (k : ZMod p) = (r p : ZMod p) := by
+  have hpw : List.Pairwise (Function.onFun Nat.Coprime id) ps := by
+    rw [List.pairwise_iff_get]
+    intro i j hij
+    have hne : ps.get i ≠ ps.get j := fun h => by
+      have := hd.get_inj_iff.mp h; omega
+    exact (Nat.coprime_primes (hps _ (List.get_mem _ _)) (hps _ (List.get_mem _ _))).mpr hne
+  obtain ⟨k, hk⟩ := Nat.chineseRemainderOfList r id ps hpw
+  refine ⟨(k : ℤ), fun p hp => ?_⟩
+  have h2 : (k : ZMod p) = (r p : ZMod p) := (ZMod.natCast_eq_natCast_iff _ _ _).mpr (hk p hp)
+  push_cast
+  exact_mod_cast h2
+
 end SKEFTHawking
