@@ -13,6 +13,7 @@ Mathlib has no p-adic square theory, so this is built from raw `hensels_lemma`. 
 import Mathlib
 import SKEFTHawking.HasseMinkowskiLocal
 import SKEFTHawking.HilbertSymbolReal
+import SKEFTHawking.HilbertSymbolPadic
 
 namespace SKEFTHawking
 
@@ -1832,6 +1833,17 @@ theorem exists_prime_gt_isSquare_pair (N : ℕ) {m n : ℤ} (hm : m ≠ 0) (hn :
       rw [hM]; exact (hpm.mul_left 8).mul_right n.natAbs))
   · exact isSquare_intCast_zmod_of_modEq hq8 (mkdvd hn (fun p' _ hpn => by
       rw [hM]; exact (Dvd.dvd.mul_left hpn (8 * m.natAbs))))
+
+/-- **`hilbertPadicInt` is invariant under a square factor (left).** `(a·s², b)_p = (a, b)_p`
+(bimultiplicativity + `(±1)² = 1`). The symbol-side analogue of `solvable_canonical_congr_sq_left`, reducing
+the symbol↔solvability bridge to the four `unit`/`p·unit` canonical cases. -/
+theorem hilbertPadicInt_mul_sq_left {p : ℕ} [Fact p.Prime] {a b s : ℤ} (ha : a ≠ 0) (hb : b ≠ 0)
+    (hs : s ≠ 0) :
+    HilbertSymbol.hilbertPadicInt p (a * s ^ 2) b = HilbertSymbol.hilbertPadicInt p a b := by
+  rw [show a * s ^ 2 = a * (s * s) by ring,
+      HilbertSymbol.hilbertPadicInt_mul_left (p := p) ha (mul_ne_zero hs hs),
+      HilbertSymbol.hilbertPadicInt_mul_left (p := p) hs hs]
+  rcases HilbertSymbol.hilbertPadicInt_mem (p := p) hs hb with h | h <;> rw [h] <;> ring
 
 /-- **Real-place sign selection for the common value.** Over ℝ, if `⟨a,b⟩` and `⟨c,d⟩` share a *nonzero*
 represented value (in the `real_binary_represents_iff` sign form `0 ≤ a·t ∨ 0 ≤ b·t`), then there is a
