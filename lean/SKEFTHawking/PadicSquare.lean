@@ -857,6 +857,24 @@ theorem solvable_2adic_of_repr_two {a b X Y c : ℤ_[2]} (hc : a * X ^ 2 + b * Y
     push_cast [h2c] at heq ⊢
     linear_combination -2 * heq - 4 * hcw
 
+/-- **Both-`2·` reduction (field-generic).** Over a field with `2 ≠ 0` and `u ≠ 0`, the form
+`z² = 2u x² + 2v y²` is solvable iff `z² = 2u x² + (-(u·v)) y²` is. (Forward: `(x,y,z) ↦ (z, 2y, 2u·x)`;
+backward: `(x,y,z) ↦ (z, u·y, 2u·x)`.) This is the algebraic identity behind the `(2·unit)/(2·unit)` p=2
+case: it sends it to the already-bridged `(2·unit)/unit` shape, dodging the mod-16 obstruction. -/
+theorem two_two_reduce {K : Type*} [Field K] (h2 : (2 : K) ≠ 0) {u v : K} (hu : u ≠ 0) :
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = 2 * u * x ^ 2 + 2 * v * y ^ 2) ↔
+    (∃ x y z : K, ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧ z ^ 2 = 2 * u * x ^ 2 + (-(u * v)) * y ^ 2) := by
+  have h2u : 2 * u ≠ 0 := mul_ne_zero h2 hu
+  constructor
+  · rintro ⟨x, y, z, hnz, he⟩
+    refine ⟨z, 2 * y, 2 * u * x, ?_, by linear_combination (-2 * u) * he⟩
+    rintro ⟨h1, h2', h3⟩
+    exact hnz ⟨(mul_eq_zero.mp h3).resolve_left h2u, (mul_eq_zero.mp h2').resolve_left h2, h1⟩
+  · rintro ⟨x, y, z, hnz, he⟩
+    refine ⟨z, u * y, 2 * u * x, ?_, by linear_combination (-2 * u) * he⟩
+    rintro ⟨h1, h2', h3⟩
+    exact hnz ⟨(mul_eq_zero.mp h3).resolve_left h2u, (mul_eq_zero.mp h2').resolve_left hu, h1⟩
+
 /-- **2-adic solvability reduces to a primitive mod-8 solution.** If `z² = u x² + v y²` is solvable over
 `ℚ_[2]`, then it has a solution modulo 8 with an *odd* (unit) coordinate (reduce a primitive `ℤ_[2]` solution
 via `toZModPow 3`; a unit coordinate stays a unit mod 8, hence odd). The descent half of the `p = 2`
