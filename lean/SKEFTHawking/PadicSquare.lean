@@ -1670,4 +1670,33 @@ theorem binary_represents_padic_even_val {p : ℕ} [Fact p.Prime] (hp : p ≠ 2)
     (binary_represents_padic_of_units hp ha hb hw)
   exact ⟨u, v, by rw [hts]; exact h⟩
 
+/-- **Real-place binary representability criterion.** Over ℝ, for `a, b ≠ 0`, the binary form `⟨a,b⟩`
+represents `t` iff `0 ≤ a·t ∨ 0 ≤ b·t`. (Forward: if `a·t < 0` and `b·t < 0` then `t² = a·t·u² + b·t·v² ≤ 0`,
+impossible for `t ≠ 0`. Backward: if `0 ≤ a·t` then `0 ≤ t/a`, so `(√(t/a), 0)` works; symmetrically for
+`b`.) The archimedean-place input to the Hasse–Minkowski rank-4 / rank-≥5 common-value search — a sign
+condition matched by the global value's sign. -/
+theorem real_binary_represents_iff {a b t : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) :
+    (∃ u v : ℝ, a * u ^ 2 + b * v ^ 2 = t) ↔ (0 ≤ a * t ∨ 0 ≤ b * t) := by
+  constructor
+  · rintro ⟨u, v, h⟩
+    by_contra hcon
+    rw [not_or, not_le, not_le] at hcon
+    obtain ⟨h1, h2⟩ := hcon
+    have ht : t ≠ 0 := by rintro rfl; simp at h1
+    have k1 : a * t * u ^ 2 ≤ 0 := mul_nonpos_of_nonpos_of_nonneg h1.le (sq_nonneg u)
+    have k2 : b * t * v ^ 2 ≤ 0 := mul_nonpos_of_nonpos_of_nonneg h2.le (sq_nonneg v)
+    have ht2 : t ^ 2 = a * t * u ^ 2 + b * t * v ^ 2 := by linear_combination (-t) * h
+    have htpos : 0 < t ^ 2 := lt_of_le_of_ne (sq_nonneg t) (Ne.symm (pow_ne_zero 2 ht))
+    linarith
+  · intro h
+    rcases h with h | h
+    · have hta : 0 ≤ t / a := by
+        have he : t / a = a * t / (a * a) := by field_simp
+        rw [he]; exact div_nonneg h (mul_self_nonneg a)
+      exact ⟨Real.sqrt (t / a), 0, by rw [Real.sq_sqrt hta]; field_simp; ring⟩
+    · have htb : 0 ≤ t / b := by
+        have he : t / b = b * t / (b * b) := by field_simp
+        rw [he]; exact div_nonneg h (mul_self_nonneg b)
+      exact ⟨0, Real.sqrt (t / b), by rw [Real.sq_sqrt htb]; field_simp; ring⟩
+
 end SKEFTHawking
