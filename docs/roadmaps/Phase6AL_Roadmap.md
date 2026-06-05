@@ -123,6 +123,27 @@ a.e. eigenvalue-derivative.
   **Weyl's eigenvalue-Lipschitz theorem** `|λ↓ᵢ(A)−λ↓ᵢ(B)| ≤ ‖A−B‖` — the named classical result; along `M(t)=B+tC`
   gives `|λ↓ᵢ(M(t))−λ↓ᵢ(M(s))| ≤ |t−s|‖C‖`, the absolute-continuity input for the path FTC. **(P1) is DONE.**
 
+## 🔌 EXTERNAL-DEPENDENCY INTEL — PhysLean `QuantumInfo` (2026-06-04; for Phase 6AM dependency pull-in)
+
+Checked the physics Lean project (HEPLean/PhysLean, repo "physlib", branch `master`) for an easy button.
+It contains a substantial `QuantumInfo/` library (von Neumann/relative/Rényi entropy, DPI, SSA, fidelity, trace
+distance, CPTP channels). **Validated against the filenames (don't trust at face value):**
+- **Gap 1 (sharp Fannes–Audenaert): NOT present.** `Entropy/VonNeumann.lean` has only qualitative
+  `Sᵥₙ_continuous`; no quantitative Audenaert/Fannes bound, no Fannes file. **No easy button for Gap 1** — keep the
+  dispatched DR + dedicated build plan.
+- **BONUS — may dissolve documented "walls" in 6AM+:** `Entropy/DPI.lean` (**0 sorry**) proves
+  `sandwichedRenyiEntropy_DPI` (relative-entropy data-processing, incl. α→1 — our documented "keystone wall");
+  `Entropy/SSA.lean` (**0 sorry**) proves `Sᵥₙ_strong_subadditivity` / `Sᵥₙ_subadditivity` / `Sᵥₙ_weak_monotonicity`
+  (our documented SSA wall).
+- **⚠️ Caveats before relying (must VALIDATE, not trust):** (1) different foundation — `MState d` /
+  `HermitianMat d 𝕜` / `CPTPMap`, NOT our `Matrix ι ι ℂ` / `Matrix.IsHermitian` / `IsDensityOperator`; consuming
+  results needs a **type-bridge** (real integration cost). (2) `Entropy/Relative.lean` has **2 sorries** (not
+  fully clean). (3) **Axiom hygiene UNVERIFIED** — 0-sorry confirmed via GitHub API, but `#print axioms` requires a
+  local build; could use `native_decide`/custom axioms. Run the kernel-purity gate before depending on any result.
+- **Action (6AM):** add PhysLean/QuantumInfo as a public Lake dependency when needed (user-approved), build a
+  `HermitianMat ↔ Matrix.IsHermitian` / `MState ↔ IsDensityOperator` bridge, axiom-check the target theorems, then
+  retire the corresponding "Genuine walls" (DPI, SSA) below if they pass. Gap 1 is NOT covered by this.
+
 ## 🎯 CUSTOMER-FACING GAP CLOSURE (2026-06-04, post-closure hardening)
 
 After C+F closure, assessed the three residual gaps from a real-customer/first-principles lens:
