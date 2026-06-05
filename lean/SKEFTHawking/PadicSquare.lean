@@ -1571,4 +1571,31 @@ theorem binary_solvable_of_local {a b : ℚ} (ha : a ≠ 0)
     have hcast : ((-(a * b) : ℚ) : ℚ_[p]) = -((a : ℚ_[p]) * (b : ℚ_[p])) := by push_cast; ring
     rw [hcast]; exact h
 
+/-- **Square-discriminant quaternary Hasse–Minkowski (over ℚ).** For nonzero rationals `a, b, c, d` with
+`a·b·c·d = s²` (square discriminant), `a x² + b y² − c z² − d w² = 0` is solvable nontrivially over ℚ iff
+over ℝ and every ℚ_p. (The square-disc isometry `quaternary_sqdisc_iso_iff_ternary` reduces it — at every
+place with the same `s` — to the ternary `z² = −ab x² + ac y²`, closed by
+`ternary_canonical_solvable_of_local_rat`.) The first complete n = 4 Hasse–Minkowski case, fully
+Dirichlet-free; covers the even-unimodular ranks with square discriminant (e.g. signature (2,2), (4,4)). -/
+theorem quaternary_sqdisc_solvable_of_local {a b c d s : ℚ}
+    (ha : a ≠ 0) (hb : b ≠ 0) (hc : c ≠ 0) (hd : d ≠ 0) (hsq : a * b * c * d = s ^ 2)
+    (hR : ∃ x y z w : ℝ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℝ) * x ^ 2 + (b : ℝ) * y ^ 2 - (c : ℝ) * z ^ 2 - (d : ℝ) * w ^ 2 = 0)
+    (hloc : ∀ (p : ℕ) [Fact p.Prime], ∃ x y z w : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2 - (c : ℚ_[p]) * z ^ 2 - (d : ℚ_[p]) * w ^ 2 = 0) :
+    ∃ x y z w : ℚ, ¬(x = 0 ∧ y = 0 ∧ z = 0 ∧ w = 0) ∧
+      (a : ℚ) * x ^ 2 + (b : ℚ) * y ^ 2 - (c : ℚ) * z ^ 2 - (d : ℚ) * w ^ 2 = 0 := by
+  rw [quaternary_sqdisc_iso_iff_ternary ha hb hc hd hsq]
+  refine ternary_canonical_solvable_of_local_rat (neg_ne_zero.mpr (mul_ne_zero ha hb))
+    (mul_ne_zero ha hc) ?_ ?_
+  · obtain ⟨x, y, z, hnz, he⟩ := (quaternary_sqdisc_iso_iff_ternary (a := (a : ℝ)) (b := (b : ℝ))
+      (c := (c : ℝ)) (d := (d : ℝ)) (s := (s : ℝ)) (by exact_mod_cast ha) (by exact_mod_cast hb)
+      (by exact_mod_cast hc) (by exact_mod_cast hd) (by exact_mod_cast hsq)).mp hR
+    exact ⟨x, y, z, hnz, by push_cast at he ⊢; linear_combination he⟩
+  · intro p _
+    obtain ⟨x, y, z, hnz, he⟩ := (quaternary_sqdisc_iso_iff_ternary (a := (a : ℚ_[p])) (b := (b : ℚ_[p]))
+      (c := (c : ℚ_[p])) (d := (d : ℚ_[p])) (s := (s : ℚ_[p])) (by exact_mod_cast ha)
+      (by exact_mod_cast hb) (by exact_mod_cast hc) (by exact_mod_cast hd) (by exact_mod_cast hsq)).mp (hloc p)
+    exact ⟨x, y, z, hnz, by push_cast at he ⊢; linear_combination he⟩
+
 end SKEFTHawking
