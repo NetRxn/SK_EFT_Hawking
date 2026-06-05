@@ -297,6 +297,20 @@ theorem represents_of_ternary_isotropic {K : Type*} [Field K] [Invertible (2 : K
       ⟨x, y, fun hc => hnz ⟨hc.1, hc.2, rfl⟩, by rw [he]; ring⟩ t
   · exact ⟨x / z, y / z, by field_simp; linear_combination he⟩
 
+/-- **Binary representability is a square-class invariant of the value (field-generic).** Over a field, for
+`s ≠ 0`, `⟨a,b⟩` represents `t` iff it represents `t·s²` (scale the witness by `s`, resp. `1/s`). The
+value-side analogue of `solvable_canonical_congr_sq`. Combined with `binary_represents_padic_of_units` it
+gives the *good-place* corollary "even `p`-adic valuation ⟹ represented": at an odd prime with unit
+coefficients, a binary form represents every value of even valuation, so only odd-valuation primes can be
+"bad" in the Hasse–Minkowski rank-4 / rank-≥5 search for a global common value. -/
+theorem binary_represents_congr_sq {K : Type*} [Field K] {a b t s : K} (hs : s ≠ 0) :
+    (∃ u v : K, a * u ^ 2 + b * v ^ 2 = t) ↔ (∃ u v : K, a * u ^ 2 + b * v ^ 2 = t * s ^ 2) := by
+  constructor
+  · rintro ⟨u, v, h⟩
+    exact ⟨u * s, v * s, by rw [← h]; ring⟩
+  · rintro ⟨u, v, h⟩
+    exact ⟨u / s, v / s, by field_simp; linear_combination h⟩
+
 /-- **Ternary normalization to canonical Hilbert form.** Over a field with `c ≠ 0`, the symmetric diagonal
 ternary `a x² + b y² + c z² = 0` has a nontrivial zero iff the canonical form `z² = (-a/c) x² + (-b/c) y²`
 does (same witness, divide by `-c`). The algebraic first step of the ternary Hasse–Minkowski: it moves a
