@@ -1874,6 +1874,22 @@ theorem hilbertPadicInt_pUnit_right {p : ℕ} [Fact p.Prime] {a b' : ℤ} (ha : 
       HilbertSymbol.hilbertPadicInt_eq_legendre (p := p) ha,
       HilbertSymbol.hilbertPadicInt_units (p := p) ha hb', mul_one]
 
+/-- **`hilbertPadicInt` against two `p·unit` arguments**: `(p·a', p·b')_p = (-1)^{(p-1)/2}·(a'|p)·(b'|p)`. -/
+theorem hilbertPadicInt_pUnit_pUnit {p : ℕ} [Fact p.Prime] {a' b' : ℤ} (ha' : ¬ (p : ℤ) ∣ a')
+    (hb' : ¬ (p : ℤ) ∣ b') :
+    HilbertSymbol.hilbertPadicInt p ((p : ℤ) * a') ((p : ℤ) * b') =
+      (-1) ^ ((p - 1) / 2) * legendreSym p a' * legendreSym p b' := by
+  have hpne : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have ha0 : a' ≠ 0 := fun h => ha' (h ▸ dvd_zero _)
+  have hb0 : b' ≠ 0 := fun h => hb' (h ▸ dvd_zero _)
+  rw [HilbertSymbol.hilbertPadicInt_mul_left (p := p) hpne ha0,
+      hilbertPadicInt_pUnit_right ha' hb',
+      HilbertSymbol.hilbertPadicInt_mul_right (p := p) hpne hb0,
+      HilbertSymbol.hilbertPadicInt_diag,
+      HilbertSymbol.hilbertPadicInt_comm p (p : ℤ) b',
+      HilbertSymbol.hilbertPadicInt_eq_legendre (p := p) hb']
+  ring
+
 /-- **Symbol↔solvability bridge, unit/`p·unit` case.** For `p ∤ a`, `p ∤ b'` (odd `p`):
 `z² = a x² + (p·b') y²` solvable over `ℚ_[p]` iff `(a, p·b')_p = 1`. (`solvable_unit_pUnit_iff` ⟺
 `toZMod a` square; `hilbertPadicInt_pUnit_right` gives the symbol `= (a|p)`; `legendreSym.eq_one_iff`.) -/
@@ -1898,6 +1914,57 @@ theorem solvable_padic_iff_hilbert_up {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a
   rw [hform, solvable_unit_pUnit_iff hp hua hub, hilbertPadicInt_pUnit_right ha hb',
       show PadicInt.toZMod (a : ℤ_[p]) = ((a : ℤ) : ZMod p) from map_intCast PadicInt.toZMod a,
       ← legendreSym.eq_one_iff p haz]
+
+/-- **Symbol↔solvability bridge, `p·unit`/unit case** (symmetric to `_up` via coefficient swap +
+`hilbertPadicInt_comm`). -/
+theorem solvable_padic_iff_hilbert_pu {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a' b : ℤ}
+    (ha' : ¬ (p : ℤ) ∣ a') (hb : ¬ (p : ℤ) ∣ b) :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (((p : ℤ) * a' : ℤ) : ℚ_[p]) * x ^ 2 + (b : ℚ_[p]) * y ^ 2) ↔
+    HilbertSymbol.hilbertPadicInt p ((p : ℤ) * a') b = 1 := by
+  rw [HilbertSymbol.hilbertPadicInt_comm p ((p : ℤ) * a') b, ← solvable_padic_iff_hilbert_up hp hb ha']
+  exact ⟨solvable_canonical_symm, solvable_canonical_symm⟩
+
+/-- `legendreSym p (-1) = (-1)^{(p-1)/2}` for an odd prime (`χ₄` ↔ the power, by `p mod 4`). -/
+theorem legendreSym_neg_one_eq_pow {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) :
+    legendreSym p (-1) = (-1 : ℤ) ^ ((p - 1) / 2) := by
+  have hodd : p % 2 = 1 := Nat.odd_iff.mp ((Fact.out : p.Prime).odd_of_ne_two hp)
+  rw [legendreSym.at_neg_one hp, ZMod.χ₄_nat_eq_if_mod_four, if_neg (by omega)]
+  rcases (show p % 4 = 1 ∨ p % 4 = 3 by omega) with h | h
+  · rw [if_pos h, eq_comm]; exact Even.neg_one_pow (Nat.even_iff.mpr (by omega))
+  · rw [if_neg (by omega), eq_comm]; exact Odd.neg_one_pow (Nat.odd_iff.mpr (by omega))
+
+/-- **Symbol↔solvability bridge, `p·unit`/`p·unit` case.** For `p ∤ a'`, `p ∤ b'` (odd `p`):
+`z² = (p·a') x² + (p·b') y²` solvable over `ℚ_[p]` iff `(p·a', p·b')_p = 1`. (`solvable_pUnit_pUnit_iff` ⟺
+`toZMod (-(a'·b'))` square; `hilbertPadicInt_pUnit_pUnit` gives the symbol; `legendreSym` multiplicativity +
+`legendreSym_neg_one_eq_pow`.) -/
+theorem solvable_padic_iff_hilbert_pp {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a' b' : ℤ}
+    (ha' : ¬ (p : ℤ) ∣ a') (hb' : ¬ (p : ℤ) ∣ b') :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (((p : ℤ) * a' : ℤ) : ℚ_[p]) * x ^ 2 + (((p : ℤ) * b' : ℤ) : ℚ_[p]) * y ^ 2) ↔
+    HilbertSymbol.hilbertPadicInt p ((p : ℤ) * a') ((p : ℤ) * b') = 1 := by
+  have hua' : IsUnit ((a' : ℤ_[p])) := by
+    rw [PadicInt.isUnit_iff, ← padic_norm_e_of_padicInt, PadicInt.coe_intCast]
+    exact padic_norm_intCast_eq_one ha'
+  have hub' : IsUnit ((b' : ℤ_[p])) := by
+    rw [PadicInt.isUnit_iff, ← padic_norm_e_of_padicInt, PadicInt.coe_intCast]
+    exact padic_norm_intCast_eq_one hb'
+  have haz : ((-(a' * b') : ℤ) : ZMod p) ≠ 0 := by
+    rw [Ne, ZMod.intCast_zmod_eq_zero_iff_dvd]
+    exact fun h => (((Nat.prime_iff_prime_int.mp Fact.out).dvd_mul.mp
+      ((dvd_neg).mp h)).elim ha' hb')
+  have hform : (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (((p : ℤ) * a' : ℤ) : ℚ_[p]) * x ^ 2 + (((p : ℤ) * b' : ℤ) : ℚ_[p]) * y ^ 2) ↔
+      (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (p : ℚ_[p]) * ((a' : ℤ_[p]) : ℚ_[p]) * x ^ 2
+        + (p : ℚ_[p]) * ((b' : ℤ_[p]) : ℚ_[p]) * y ^ 2) := by
+    rw [PadicInt.coe_intCast, PadicInt.coe_intCast]; push_cast; ring_nf
+  rw [hform, solvable_pUnit_pUnit_iff hp hua' hub', hilbertPadicInt_pUnit_pUnit ha' hb',
+      show PadicInt.toZMod (-((a' : ℤ_[p]) * (b' : ℤ_[p]))) = ((-(a' * b') : ℤ) : ZMod p) by
+        rw [map_neg, map_mul, map_intCast, map_intCast]; push_cast; ring,
+      ← legendreSym.eq_one_iff p haz,
+      show (-(a' * b') : ℤ) = (-1) * (a' * b') by ring, legendreSym.mul, legendreSym.mul,
+      legendreSym_neg_one_eq_pow hp, mul_assoc]
 
 /-- **Real-place sign selection for the common value.** Over ℝ, if `⟨a,b⟩` and `⟨c,d⟩` share a *nonzero*
 represented value (in the `real_binary_represents_iff` sign form `0 ≤ a·t ∨ 0 ≤ b·t`), then there is a
