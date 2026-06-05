@@ -2595,6 +2595,38 @@ theorem represents_2adic_iff_symbol {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) 
     · field_simp
       push_cast at he; linear_combination -he
 
+/-- **Diagonal value `(a,a)₂ = (a,−1)₂` over ℚ₂.** Bimultiplicativity + Steinberg, as at odd `p`. -/
+theorem hilbert2Int_diag_eq_neg_one {a : ℤ} (ha : a ≠ 0) :
+    HilbertSymbol.hilbert2Int a a = HilbertSymbol.hilbert2Int a (-1) := by
+  have h : HilbertSymbol.hilbert2Int a ((-1) * (-a)) = HilbertSymbol.hilbert2Int a (-1) := by
+    rw [HilbertSymbol.hilbert2Int_mul_right (b₁ := -1) (b₂ := -a) (by norm_num) (neg_ne_zero.mpr ha),
+        hilbert2Int_self_neg ha, mul_one]
+  rw [← h]; congr 1; ring
+
+/-- **Bimultiplicative cross identity `(at,bt)₂ = (a,b)₂·(t,−ab)₂` over ℚ₂.** Same derivation as odd `p`. -/
+theorem hilbert2Int_cross {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    HilbertSymbol.hilbert2Int (a * t) (b * t)
+      = HilbertSymbol.hilbert2Int a b * HilbertSymbol.hilbert2Int t (-(a * b)) := by
+  rw [HilbertSymbol.hilbert2Int_mul_left (a₁ := a) (a₂ := t) ha ht,
+      HilbertSymbol.hilbert2Int_mul_right (a := a) (b₁ := b) (b₂ := t) hb ht,
+      HilbertSymbol.hilbert2Int_mul_right (a := t) (b₁ := b) (b₂ := t) hb ht,
+      hilbert2Int_diag_eq_neg_one ht, HilbertSymbol.hilbert2Int_comm a t]
+  have key : HilbertSymbol.hilbert2Int t (-(a * b))
+      = HilbertSymbol.hilbert2Int t a * HilbertSymbol.hilbert2Int t b * HilbertSymbol.hilbert2Int t (-1) := by
+    rw [← HilbertSymbol.hilbert2Int_mul_right (a := t) (b₁ := a) (b₂ := b) ha hb,
+        ← HilbertSymbol.hilbert2Int_mul_right (a := t) (b₁ := a * b) (b₂ := -1)
+          (mul_ne_zero ha hb) (by norm_num)]
+    congr 1; ring
+  rw [key]; ring
+
+/-- **Linear-in-`t` represents⟺symbol over ℚ₂.** `⟨a,b⟩` represents `t` over ℚ₂ iff `(t,−ab)₂ = (a,b)₂`. -/
+theorem represents_2adic_iff_symbol_linear {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    (∃ u v : ℚ_[2], (a : ℚ_[2]) * u ^ 2 + (b : ℚ_[2]) * v ^ 2 = (t : ℚ_[2])) ↔
+    HilbertSymbol.hilbert2Int t (-(a * b)) = HilbertSymbol.hilbert2Int a b := by
+  rw [represents_2adic_iff_symbol ha hb ht, hilbert2Int_cross ha hb ht]
+  rcases HilbertSymbol.hilbert2Int_mem a b with hab | hab <;> rw [hab] <;>
+    constructor <;> intro h <;> omega
+
 /-- **Binary representability ⟺ Hilbert symbol over ℝ.** `⟨a,b⟩` represents `t` over ℝ iff
 `hilbertReal (a·t) (b·t) = 1`. (`real_binary_represents_iff`: representable ⟺ `0 ≤ a·t ∨ 0 ≤ b·t`;
 `hilbertReal (at)(bt) = 1 ⟺ ¬(at < 0 ∧ bt < 0)`.) The archimedean represents⟺symbol. -/
@@ -2616,5 +2648,47 @@ theorem represents_real_iff_symbol {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (
       rcases lt_or_ge ((a : ℝ) * (t : ℝ)) 0 with hlt | hge
       · exact Or.inr (h hlt)
       · exact Or.inl hge
+
+/-- **Diagonal value `(a,a)_∞ = (a,−1)_∞` over ℝ.** Bimultiplicativity + Steinberg, as at the finite places. -/
+theorem hilbertReal_diag_eq_neg_one {a : ℝ} (ha : a ≠ 0) :
+    HilbertSymbol.hilbertReal a a = HilbertSymbol.hilbertReal a (-1) := by
+  have h : HilbertSymbol.hilbertReal a ((-1) * (-a)) = HilbertSymbol.hilbertReal a (-1) := by
+    rw [HilbertSymbol.hilbertReal_mul_right (b₁ := -1) (b₂ := -a) (by norm_num) (neg_ne_zero.mpr ha),
+        HilbertSymbol.hilbertReal_self_neg ha, mul_one]
+  rw [← h]; congr 1; ring
+
+/-- **Bimultiplicative cross identity `(at,bt)_∞ = (a,b)_∞·(t,−ab)_∞` over ℝ.** Same derivation as the
+finite places. -/
+theorem hilbertReal_cross {a b t : ℝ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    HilbertSymbol.hilbertReal (a * t) (b * t)
+      = HilbertSymbol.hilbertReal a b * HilbertSymbol.hilbertReal t (-(a * b)) := by
+  rw [HilbertSymbol.hilbertReal_mul_left (a₁ := a) (a₂ := t) ha ht,
+      HilbertSymbol.hilbertReal_mul_right (a := a) (b₁ := b) (b₂ := t) hb ht,
+      HilbertSymbol.hilbertReal_mul_right (a := t) (b₁ := b) (b₂ := t) hb ht,
+      hilbertReal_diag_eq_neg_one ht, HilbertSymbol.hilbertReal_comm a t]
+  have key : HilbertSymbol.hilbertReal t (-(a * b))
+      = HilbertSymbol.hilbertReal t a * HilbertSymbol.hilbertReal t b * HilbertSymbol.hilbertReal t (-1) := by
+    rw [← HilbertSymbol.hilbertReal_mul_right (a := t) (b₁ := a) (b₂ := b) ha hb,
+        ← HilbertSymbol.hilbertReal_mul_right (a := t) (b₁ := a * b) (b₂ := -1)
+          (mul_ne_zero ha hb) (by norm_num)]
+    congr 1; ring
+  rw [key]; ring
+
+/-- **Linear-in-`t` represents⟺symbol over ℝ.** `⟨a,b⟩` represents `t` over ℝ iff `(t,−ab)_∞ = (a,b)_∞`,
+with arguments matching `hilbertGlobalProd`'s real factor `hilbertReal (·:ℝ) (·:ℝ)`. Completes the per-place
+trio (odd `p`, `p=2`, `∞`): `⟨a,b⟩` represents `t` at place `v` ⟺ `(t,−ab)_v = (a,b)_v`. -/
+theorem represents_real_iff_symbol_linear {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) :
+    (∃ u v : ℝ, (a : ℝ) * u ^ 2 + (b : ℝ) * v ^ 2 = (t : ℝ)) ↔
+    HilbertSymbol.hilbertReal (t : ℝ) ((-(a * b) : ℤ) : ℝ) = HilbertSymbol.hilbertReal (a : ℝ) (b : ℝ) := by
+  have haR : (a : ℝ) ≠ 0 := by exact_mod_cast ha
+  have hbR : (b : ℝ) ≠ 0 := by exact_mod_cast hb
+  have htR : (t : ℝ) ≠ 0 := by exact_mod_cast ht
+  rw [represents_real_iff_symbol ha hb ht,
+      show ((a * t : ℤ) : ℝ) = (a : ℝ) * (t : ℝ) by push_cast; ring,
+      show ((b * t : ℤ) : ℝ) = (b : ℝ) * (t : ℝ) by push_cast; ring,
+      hilbertReal_cross haR hbR htR,
+      show ((-(a * b) : ℤ) : ℝ) = -((a : ℝ) * (b : ℝ)) by push_cast; ring]
+  rcases HilbertSymbol.hilbertReal_mem (a : ℝ) (b : ℝ) with hab | hab <;> rw [hab] <;>
+    constructor <;> intro h <;> omega
 
 end SKEFTHawking
