@@ -1635,4 +1635,20 @@ theorem exists_diag_nary_zero_odd_padic_unit {p : ℕ} [Fact p.Prime] (hp : p �
       simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hi
       rw [vxo i hi.1 hi.2.1 hi.2.2]; ring
 
+/-- **Binary forms represent every unit value at a good odd prime.** Over `ℚ_[p]` with `p` an odd prime, if
+`a`, `b`, `t` are all `p`-adic units (`‖·‖ = 1`), then `⟨a,b⟩` represents `t`: `∃ u v, a u² + b v² = t`.
+(The ternary `a x² + b y² + (−t) z² = 0` has all-unit coefficients, hence is isotropic by
+`exists_diag_ternary_zero_odd_padic`; `represents_of_ternary_isotropic` extracts the representation.) This is
+the *good-place* fact that makes the bad set finite in the Hasse–Minkowski rank-4 / rank-≥5 argument: outside
+the finitely many primes dividing `2·a·b·t`, a binary form automatically represents a chosen unit value. -/
+theorem binary_represents_padic_of_units {p : ℕ} [Fact p.Prime] (hp : p ≠ 2)
+    {a b t : ℚ_[p]} (ha : ‖a‖ = 1) (hb : ‖b‖ = 1) (ht : ‖t‖ = 1) :
+    ∃ u v : ℚ_[p], a * u ^ 2 + b * v ^ 2 = t := by
+  haveI : Invertible (2 : ℚ_[p]) := invertibleOfNonzero two_ne_zero
+  have ha0 : a ≠ 0 := by rintro rfl; rw [norm_zero] at ha; exact one_ne_zero ha.symm
+  have hb0 : b ≠ 0 := by rintro rfl; rw [norm_zero] at hb; exact one_ne_zero hb.symm
+  obtain ⟨x, y, z, hnz, he⟩ :=
+    exists_diag_ternary_zero_odd_padic hp ha hb (show ‖(-t : ℚ_[p])‖ = 1 by rw [norm_neg]; exact ht)
+  exact represents_of_ternary_isotropic ha0 hb0 ⟨x, y, z, hnz, by linear_combination he⟩
+
 end SKEFTHawking
