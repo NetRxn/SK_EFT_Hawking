@@ -784,6 +784,21 @@ theorem solvable_pUnit_pUnit_iff {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : 
       push_cast; ring, hw]
     push_cast; ring
 
+/-- **Solvability criterion for `z² = p u x² + v y²` (odd `p`, `u, v` units).** The `(p·u, v)` symbol case
+(`p` on the *first* coefficient): solvable over `ℚ_[p]` ⟺ `v̄` is a square mod `p`. Swap to the
+`solvable_unit_pUnit_iff` form via `solvable_canonical_symm`. -/
+theorem solvable_pUnit_unit_iff {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {u v : ℤ_[p]} (hu : IsUnit u)
+    (hv : IsUnit v) :
+    (∃ x y z : ℚ_[p], ¬(x = 0 ∧ y = 0 ∧ z = 0) ∧
+      z ^ 2 = (p : ℚ_[p]) * u * x ^ 2 + (v : ℚ_[p]) * y ^ 2) ↔ IsSquare (PadicInt.toZMod v) := by
+  constructor
+  · rintro ⟨x, y, z, hnz, he⟩
+    exact (solvable_unit_pUnit_iff hp hv hu).mp
+      ⟨y, x, z, fun hc => hnz ⟨hc.2.1, hc.1, hc.2.2⟩, by linear_combination he⟩
+  · intro hsq
+    obtain ⟨x, y, z, hnz, he⟩ := (solvable_unit_pUnit_iff hp hv hu).mpr hsq
+    exact ⟨y, x, z, fun hc => hnz ⟨hc.2.1, hc.1, hc.2.2⟩, by linear_combination he⟩
+
 /-- **2-adic forward solvability.** If `u ≡ 1 (mod 8)` (a `2`-adic square) then `z² = u x² + b y²` is
 solvable over `ℚ_[2]` for any `b` (take `y = 0`, `z = √u · x`). The easy direction of the `p = 2` symbol
 case, via the 2-adic square criterion `isSquare_of_toZModPow_three_eq_one`. -/
