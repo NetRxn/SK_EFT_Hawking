@@ -2755,6 +2755,48 @@ theorem isSquare_2adic_div_int {x m Cx Cm : ℤ} {vx vm : ℕ}
   · rw [hmeq]; push_cast [zpow_natCast]; ring
   · rw [map_intCast, map_intCast]; exact_mod_cast hres
 
+/-- **Square ratio from a high-power congruence over `ℚ_2`.** If `k ≡ m (mod 2^{v₂(m)+3})` for nonzero
+integers `k, m`, then `k/m` is a square in `ℚ_2`. (Forces `v₂(k) = v₂(m)` exactly and the odd cofactors
+congruent mod 8, so `isSquare_2adic_div_int` applies.) The `p = 2` analogue of `isSquare_padic_div_of_modEq` —
+the dyadic weak-approximation bridge (`2 ∈ S` always): a prime-power-CRT integer `≡ t₂ (mod 2^{v+3})` shares
+`t₂`'s `ℚ_2`-square class. -/
+theorem isSquare_2adic_div_of_modEq {k m : ℤ}
+    (hk : k ≠ 0) (hm : m ≠ 0) (hcong : (2 : ℤ) ^ (padicValInt 2 m + 3) ∣ (k - m)) :
+    IsSquare ((k : ℚ_[2]) / (m : ℚ_[2])) := by
+  obtain ⟨Ck, hkeq, hCk⟩ := exists_int_factor_padicValInt (p := 2) hk
+  obtain ⟨Cm, hmeq, hCm⟩ := exists_int_factor_padicValInt (p := 2) hm
+  have hvk_ge : padicValInt 2 m ≤ padicValInt 2 k := by
+    have h1 : (2 : ℤ) ^ (padicValInt 2 m) ∣ (k - m) := dvd_trans (pow_dvd_pow _ (by omega)) hcong
+    have h2 : (2 : ℤ) ^ (padicValInt 2 m) ∣ m := ⟨Cm, hmeq⟩
+    have hkdv : (2 : ℤ) ^ (padicValInt 2 m) ∣ k := by have := h1.add h2; simpa using this
+    rcases (padicValInt_dvd_iff (padicValInt 2 m) k).mp hkdv with h | h
+    · exact absurd h hk
+    · exact h
+  have hvk_le : padicValInt 2 k ≤ padicValInt 2 m := by
+    by_contra hc
+    rw [not_le] at hc
+    have hkdvd : (2 : ℤ) ^ (padicValInt 2 m + 1) ∣ k :=
+      (padicValInt_dvd_iff (padicValInt 2 m + 1) k).mpr (Or.inr hc)
+    have hcong1 : (2 : ℤ) ^ (padicValInt 2 m + 1) ∣ (k - m) :=
+      dvd_trans (pow_dvd_pow _ (by omega)) hcong
+    have hmdvd : (2 : ℤ) ^ (padicValInt 2 m + 1) ∣ m := by have := hkdvd.sub hcong1; simpa using this
+    rcases (padicValInt_dvd_iff (padicValInt 2 m + 1) m).mp hmdvd with h | h
+    · exact hm h
+    · exact Nat.not_succ_le_self _ h
+  have hvkm : padicValInt 2 k = padicValInt 2 m := le_antisymm hvk_le hvk_ge
+  have hCcong : (Ck : ZMod 8) = (Cm : ZMod 8) := by
+    have hpow : (2 : ℤ) ^ (padicValInt 2 k) = (2 : ℤ) ^ (padicValInt 2 m) := by rw [hvkm]
+    have hkm : k - m = (2 : ℤ) ^ (padicValInt 2 m) * (Ck - Cm) := by
+      linear_combination hkeq - hmeq + Ck * hpow
+    rw [hkm, pow_add] at hcong
+    have hdvd : ((2 : ℤ) ^ 3) ∣ (Ck - Cm) :=
+      (mul_dvd_mul_iff_left (pow_ne_zero (padicValInt 2 m) (by norm_num : (2 : ℤ) ≠ 0))).mp hcong
+    have h8 : (8 : ℤ) ∣ (Ck - Cm) := by norm_num at hdvd ⊢; exact hdvd
+    have hz : ((Ck - Cm : ℤ) : ZMod 8) = 0 := by rwa [ZMod.intCast_zmod_eq_zero_iff_dvd]
+    rw [Int.cast_sub, sub_eq_zero] at hz
+    exact hz
+  exact isSquare_2adic_div_int hCk hCm hkeq hmeq (by rw [hvkm]; simp) hCcong
+
 /-- **A `ℤ_2` unit's square class has an integer representative.** For any unit `u : ℤ_2`, there is an integer
 `n` (the residue lift `(toZModPow 3 u).val ∈ {1,3,5,7}`) with `(n : ℤ_2)` a unit and `(u : ℚ_2)/n` a square
 (`isSquare_2adic_div_units`). The `p = 2` analogue of `exists_int_unit_sq_ratio_odd`. -/
