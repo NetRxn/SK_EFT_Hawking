@@ -614,6 +614,39 @@ Dirichlet (`exists_prime_gt_eq_mod`, shipped `b31ad43f`), with NO QR requirement
 build the global-`t` construction (CRT residue target + Dirichlet `q` + `t=(S-part)·q` with its
 supported-on-`S∪{q}` + `≡m_p` + sign properties), then `quaternary_solvable_of_local`, then the downstream chain.
 
+## 🎯🎯🎯 2026-06-08 — RANK-4 HASSE–MINKOWSKI DISCHARGED (`quaternary_solvable_of_local`, `f0bc7048`)
+
+**THE SUMMIT IS DONE.** `HasseMinkowskiGlobal.quaternary_solvable_of_local`: for nonzero integer `a,b,c,d`, if
+`a x²+b y²=c z²+d w²` is isotropic over ℝ and every ℚ_p, then it is isotropic over ℚ. Kernel-pure
+`{propext, Classical.choice, Quot.sound}`, NO new axioms. This is the previously-"never-formalized-via-this-route"
+core of indefinite even-unimodular `8∣σ`.
+
+**The clean construction (NO 𝔽₂ matrix) that did it:** `t = ε·(∏_{p∈S} p^{v_p(m_p)})·q`, `S = primes∣2abcd`,
+`m_p` = local common values (`hilbertPrime_pair_match_of_congr`), `ε` = real sign (`exists_sign_for_real_common`),
+`q` = ONE plain-Dirichlet prime (`exists_prime_prime_pow_residues`) whose residues set `t`'s unit part so
+`t ≡ m_p (mod p^{N_p})` at each bad prime (`exists_residue_smul_congr` hides the modular inverse). Symbols match at
+every place except `q` directly (bad: certificates; good: `hilbertPrime_pair_match_good` via support
+`not_dvd_sign_mul_prod_pow`; `∞`: sign); **`q` recovered FREE from the product formula
+(`quaternary_isotropic_of_symbol_except_q`)** — this is what dissolved the consistency obstruction.
+
+🔑 build lessons (file-vs-run_code): `lake env lean` uses STALE dep `.olean` — must `lake build` after editing an
+imported file; `rw [hmeq]` self-references `m` inside `padicValInt p m` → use `set e`/`linear_combination`/
+`Ring.inverse` (non-dependent, avoids `IsUnit.unit` motive errors); `ZMod.coe_int_isUnit_iff_isCoprime` wants
+`IsCoprime ↑D k` order (use `.pow_left`); double-cast `Int.cast∘Nat.cast` in a `List.map` blocks `ring` →
+`simp only [List.map_map, Function.comp_def, Int.cast_natCast]`.
+
+### REMAINING downstream chain (no more walls — standard HM machinery, n=4 base now in hand):
+1. **n≥5 Meyer reduction** — indefinite rank-≥5 forms reduce to the n=4 base (`quaternary_solvable_of_local`)
+   via the common-value step; rank-≥5 LOCAL isotropy is already Dirichlet-free (`exists_diag_nary_zero_odd_padic`).
+2. **p=2 even-unimodular local isotropy** — even unimodular over ℤ_2 contains U ⟹ isotropic over ℚ_2 (the `hloc`
+   input at p=2 for even unimodular forms).
+3. **`HasWeakIsotropicVectorHyp`** — matrix → ℚ-diagonalize → locally isotropic everywhere (1+2) → globally
+   isotropic (n=4/n≥5 HM) → `exists_int_isotropic_of_rat` (shipped) → integer vector. Feeds `RokhlinFromHM`.
+4. **Wire**: drop `eight_dvd`/`h_rokhlin` from `RokhlinBridge.sixteen_convergence_full`; update D2/L2 +
+   HYPOTHESIS_REGISTRY; dispatch closure reviewer.
+(rank-2 even-unimod = `H` square-disc elementary; rank-4 indefinite even-unimod = square-disc → `quaternary_sqdisc`
+DONE; general n=4 now also DONE.)
+
 ### REMAINING toward the keystone (`quaternary_isotropic_of_keystone` consumes a global `t`):
 With the engine in hand, the keystone existence (Serre Thm 4 for the two families `a₁=−ab, a₂=−cd`) now needs:
 (a) **the consistency brick** — construct the unit target `r:ZMod D` whose images encode the matching square
