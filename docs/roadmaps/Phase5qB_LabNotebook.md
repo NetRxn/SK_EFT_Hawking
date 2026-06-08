@@ -807,6 +807,42 @@ p-adic crux): (i) assemble `bad_prime_R_certificate` (N:=padicValInt p T + 1 odd
 (iii) strong-induction spine `diag_nary_zero_of_local`; (iv) p=2 rank-≥5 ℚ₂ isotropy; (v) matrix→ℚ-diagonalize
 → `HasWeakIsotropicVectorHyp`; (vi) wire RokhlinBridge + D2/L2 + registry + closure reviewer.
 
+### 2026-06-08 (cont.¹³) — 🎯🎯 RANK-≥5 [HM] DISCHARGE CHAIN COMPLETE (the substantive case is done)
+
+All in `RokhlinHMDischarge.lean`, kernel-pure `{propext, Classical.choice, Quot.sound}`, file-gate green,
+`main` NOT pushed:
+- `c844358a` `one_le_sigPos_of_pos_value` / `one_le_sigNeg_of_neg_value` (positive/negative value ⟹
+  `sigPos≥1`/`sigNeg≥1` via `le_sigPos_of_posDef` on the spanned line).
+- `0d4085c3` **`sigPos_cast_pos` / `sigNeg_cast_pos`** — ℝ→ℚ signature positivity transfer by DENSITY (ℚ^m
+  dense in ℝ^m + continuity of `y ⬝ᵥ B *ᵥ y` + the value-bricks). Mathlib has no signature scalar-extension
+  invariance, so this density route is the (only) analytic step. 🔑 `Set.nonempty_of_ncard_ne_zero hspq.ne'`
+  (omega can't reason through `Set.ncard`); `open QuadraticForm Matrix` (sigPos∈QuadraticForm); `fun_prop`
+  after `unfold dotProduct mulVec dotProduct`; `dense_pi`/`Rat.denseRange_cast`; cast-commute via `push_cast;rfl`.
+- `3aeae1b8` **`weakIsotropic_of_five_le`** 🎯 — **rank-≥5 indefinite integer Gram form has a nonzero integer
+  isotropic vector (even-unimodularity NOT needed).** Diagonalize over ℚ (`equivalent_weightedSumSquares`),
+  transfer indefiniteness (`sigPos/sigNeg_cast_pos` + `sigPos/sigNeg_of_equiv_weightedSumSquares` give
+  `∃ wᵢ>0, ∃ wⱼ<0`), then either a zero weight → trivial vector or `diag_indefinite_rat_zero` on the
+  cleared-denominator integers (`d i=(w i).num*(w i).den`, signs preserved) → `matrix_isotropic_iff_weighted`
+  → `exists_int_isotropic_of_rat`. 🔑 `diag_iso_rat_int` needs `simp only [Rat.cast_id]` (ℚ→ℚ cast).
+  **⟹ This is the ENTIRE substantive content of [HM]: indefinite even unimodular with σ≠0 has rank ≥10 ≥5,
+  fully covered. (σ=0 cases are the only ones at rank <10, and those recurse down through rank 4,2.)**
+
+**REMAINING to finish `HasWeakIsotropicVectorHyp` (∀ rank) + wire:**
+- **rank 2** (elementary, NEXT): even unimod indefinite ⟹ det A=−1 (2×2 indefinite ⟺ det<0) ⟹ even binary
+  `2(a x²+b xy+c y²)` has disc `b²−4ac=1` (perfect square) ⟹ explicit isotropic `(−b+1, 2a)` (or `(1,0)` if
+  a=0). Need: `sigPos>0 ∧ sigNeg>0 (2×2) ⟹ det(A_ℝ)<0` (signature→det-sign).
+- **rank 3 / any ODD rank** (vacuous): even unimodular ⟹ even rank (mod-2 form alternating nondegenerate ⟹
+  even rank; odd-dim alternating ⟹ det≡0 mod 2, contradicting unimodular). So odd-rank hypotheses are
+  contradictory — discharge by deriving `False`.
+- **rank 4** (the LONE sub-frontier): even unimod rank-4 indefinite (σ=0) isotropic. Local-global via
+  `diag_nary_zero_of_local` (handles n=4); hloc inputs: ℝ ✓ (sig transfer); odd p via matrix-direct
+  Chevalley–Warning (`finite_field_form_isotropic`, shipped) + multivariate Hensel (gradient `2Av`, p odd,
+  unimodular ⟹ ≢0) [NEW build]; **p=2 = even-unimod ℤ₂ rank-4 contains U** [the hard residual — 2-adic structure].
+- rank 0,1: indefinite impossible (`sigPos,sigNeg≥1 ⟹ m≥2`), discharge by deriving False.
+- Then assemble `HasWeakIsotropicVectorHyp` (rank case-split) → `hasIsotropic_of_weak` → drop `eight_dvd`/
+  Rokhlin hyp from `RokhlinBridge.sixteen_convergence_full`; D2/L2 + HYPOTHESIS_REGISTRY; root-import the new
+  files → ExtractDeps project-gate → closure reviewer.
+
 ### 2026-06-08 (cont.¹²) — HM-discharge ASSEMBLY started: rank-≥5 local-global wrapper shipped
 
 - `d01512eb` **`diag_indefinite_rat_zero`** (new file `RokhlinHMDischarge.lean`) — rank-≥5 indefinite
