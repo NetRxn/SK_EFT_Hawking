@@ -2275,6 +2275,18 @@ theorem binary_represents_good_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b 
   binary_represents_padic_of_units hp (padic_norm_intCast_eq_one ha) (padic_norm_intCast_eq_one hb)
     (padic_norm_intCast_eq_one ht)
 
+/-- **Representability at a good odd prime with even valuation, integer form.** Over `ℚ_[p]` with `p` odd,
+if `p` divides neither `a` nor `b` (so they are units) and the constructed value `t ≠ 0` has *even* `p`-adic
+valuation, then `⟨a,b⟩` represents `t`. (`padic_norm_intCast_eq_one` + `binary_represents_padic_even_val`.)
+The good-place verification for the rank-4 keystone's global value `t = ε·q·(∏T)`: at every odd prime outside
+the bad set `2abcd` and distinct from the Dirichlet prime `q`, `t` is a unit (valuation `0`, even), so both
+binaries represent it automatically. -/
+theorem binary_represents_padic_even_val_int {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a b t : ℤ}
+    (ha : ¬ (p : ℤ) ∣ a) (hb : ¬ (p : ℤ) ∣ b) (ht : t ≠ 0) (hv : Even ((t : ℚ_[p]).valuation)) :
+    ∃ u v : ℚ_[p], (a : ℚ_[p]) * u ^ 2 + (b : ℚ_[p]) * v ^ 2 = (t : ℚ_[p]) :=
+  binary_represents_padic_even_val hp (padic_norm_intCast_eq_one ha) (padic_norm_intCast_eq_one hb)
+    (by exact_mod_cast ht) hv
+
 /-- **Good-prime symbol conditions are automatic.** At an odd prime `p` dividing none of `a, b, c, d, t`,
 the linear-symbol conditions `(t, −ab)_p = (a,b)_p` and `(t, −cd)_p = (c,d)_p` hold trivially — both sides are
 `1` (`hilbertPadicInt_units`, since all coordinates are `p`-adic units). This is why the global common-value
