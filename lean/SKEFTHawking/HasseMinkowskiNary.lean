@@ -1,6 +1,7 @@
 import Mathlib
 import SKEFTHawking.PadicSquare
 import SKEFTHawking.HasseMinkowskiGlobal
+import SKEFTHawking.HasseMinkowskiLocal
 
 /-!
 # Hasse–Minkowski rank reduction (`n ≥ 5`) and the general `n`-ary diagonal local–global principle
@@ -267,6 +268,50 @@ theorem exists_peel_pair {n : ℕ} (hn : 5 ≤ n) (c : Fin n → ℝ) (hc : ∀ 
     exact ⟨p1, p2, d12,
       ⟨q, fun h => by rw [h] at hq; linarith [h1.2], fun h => by rw [h] at hq; linarith [h2.2], hq⟩,
       ⟨p3, d13.symm, d23.symm, h3.2⟩⟩
+
+/-- **Common value of the leading binary and the residual (per place).** Over a field with `Invertible 2`,
+if the diagonal form `⟨c₀, c₁, R⟩` (`R : Fin m → K`, `m ≥ 1`, all coefficients nonzero) is isotropic, then
+there is a nonzero `w` represented by the binary `⟨c₀, c₁⟩` with `−w` represented by `R`. (From a zero
+`(x₀, x₁, x')`: if the binary value `c₀x₀² + c₁x₁² ≠ 0` take it as `w`; otherwise the binary or `R` is
+isotropic, hence universal — `binary_isotropic_universal` / `represents_of_isotropic_diag` — and supplies the
+missing representation.) The per-place extraction feeding the Meyer descent: applied over each `ℚ_v` it yields
+the local common value `w_v` whose square class the global descent value must match. -/
+theorem exists_common_value_split {K : Type*} [Field K] [Invertible (2 : K)]
+    {m : ℕ} (hm : 0 < m) {c0 c1 : K} (R : Fin m → K) (hc0 : c0 ≠ 0) (hc1 : c1 ≠ 0) (hR : ∀ i, R i ≠ 0)
+    (hiso : ∃ x : Fin (m + 2) → K, x ≠ 0 ∧
+      ∑ i, (Fin.cons c0 (Fin.cons c1 R : Fin (m + 1) → K) : Fin (m + 2) → K) i * x i ^ 2 = 0) :
+    ∃ w : K, w ≠ 0 ∧ (∃ u0 u1 : K, c0 * u0 ^ 2 + c1 * u1 ^ 2 = w) ∧
+      (∃ y : Fin m → K, ∑ i, R i * y i ^ 2 = -w) := by
+  have h2 : (2 : K) ≠ 0 := Invertible.ne_zero 2
+  obtain ⟨x, hx0, he⟩ := hiso
+  rw [Fin.sum_univ_succ, Fin.sum_univ_succ] at he
+  simp only [Fin.cons_zero, Fin.cons_succ] at he
+  rw [Fin.succ_zero_eq_one] at he
+  set xR : Fin m → K := fun i => x i.succ.succ with hxR
+  have hsum : c0 * x 0 ^ 2 + c1 * x 1 ^ 2 + ∑ i, R i * xR i ^ 2 = 0 := by
+    rw [hxR]; linear_combination he
+  by_cases hB : c0 * x 0 ^ 2 + c1 * x 1 ^ 2 = 0
+  · have hRval : ∑ i, R i * xR i ^ 2 = 0 := by linear_combination hsum - hB
+    by_cases hxy : x 0 = 0 ∧ x 1 = 0
+    · have hxRne : xR ≠ 0 := by
+        intro hz
+        apply hx0; funext k
+        refine Fin.cases ?_ (fun k' => ?_) k
+        · exact hxy.1
+        · refine Fin.cases ?_ (fun j => ?_) k'
+          · exact hxy.2
+          · have := congrFun hz j; simpa [hxR] using this
+      obtain ⟨y, hy⟩ := represents_of_isotropic_diag h2 R hR ⟨xR, hxRne, hRval⟩ (-c0)
+      exact ⟨c0, hc0, ⟨1, 0, by ring⟩, ⟨y, by rw [hy]⟩⟩
+    · have hR0 : R ⟨0, hm⟩ ≠ 0 := hR _
+      have hBuniv := binary_isotropic_universal hc0 hc1 ⟨x 0, x 1, hxy, hB⟩ (-(R ⟨0, hm⟩))
+      refine ⟨-(R ⟨0, hm⟩), by simpa using hR0, hBuniv, ?_⟩
+      refine ⟨fun i => if i = ⟨0, hm⟩ then 1 else 0, ?_⟩
+      rw [Finset.sum_eq_single (⟨0, hm⟩ : Fin m)]
+      · simp
+      · intro b _ hb; simp [hb]
+      · intro h; exact absurd (Finset.mem_univ _) h
+  · exact ⟨c0 * x 0 ^ 2 + c1 * x 1 ^ 2, hB, ⟨x 0, x 1, rfl⟩, ⟨xR, by linear_combination hsum⟩⟩
 
 /-! ### `n ≤ 4` base cases in uniform `∑`-shape -/
 
