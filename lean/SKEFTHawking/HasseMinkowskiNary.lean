@@ -581,6 +581,26 @@ theorem exists_bad_prime_list {n : ℕ} (c : Fin n → ℤ) (hc : ∀ i, c i ≠
       have := Int.natAbs_dvd_natAbs.mpr hdvd; simpa using this
     exact hpN (dvd_trans hdvdAbs (Finset.dvd_prod_of_mem _ (Finset.mem_univ i)))
 
+/-- **Simultaneous integer CRT for two coordinate families.** Given a nodup list of primes `S` with per-prime
+exponents `N p` and residue targets `n0 p, n1 p`, there are integers `X₀, X₁` matching both target residues
+mod `p^{N p}` at every `p ∈ S`. (Two applications of `exists_int_prime_pow_residues` with `ZMod.val`
+residues.) The CRT step of the Meyer descent: it produces the global coordinates whose binary value
+`a = c₀X₀² + c₁X₁²` lands in each bad prime's prescribed square class. -/
+theorem exists_two_ints_matching (S : List ℕ) (hS : ∀ p ∈ S, p.Prime) (hd : S.Nodup)
+    (N : ℕ → ℕ) (n0 n1 : ℕ → ℤ) :
+    ∃ X0 X1 : ℤ, ∀ p ∈ S, (p : ℤ) ^ (N p) ∣ X0 - n0 p ∧ (p : ℤ) ^ (N p) ∣ X1 - n1 p := by
+  obtain ⟨X0, hX0⟩ := exists_int_prime_pow_residues S hS hd N (fun p => (n0 p : ZMod (p ^ N p)).val)
+  obtain ⟨X1, hX1⟩ := exists_int_prime_pow_residues S hS hd N (fun p => (n1 p : ZMod (p ^ N p)).val)
+  have conv : ∀ (p : ℕ), p ∈ S → ∀ (X n : ℤ),
+      (X : ZMod (p ^ N p)) = ((n : ZMod (p ^ N p)).val : ZMod (p ^ N p)) → (p : ℤ) ^ (N p) ∣ X - n := by
+    intro p hp X n h
+    haveI : NeZero (p ^ N p) := ⟨pow_ne_zero _ (hS p hp).ne_zero⟩
+    rw [ZMod.natCast_val, ZMod.cast_id] at h
+    have hz : ((X - n : ℤ) : ZMod (p ^ N p)) = 0 := by push_cast; rw [h]; ring
+    rw [ZMod.intCast_zmod_eq_zero_iff_dvd] at hz
+    exact_mod_cast hz
+  exact ⟨X0, X1, fun p hp => ⟨conv p hp X0 (n0 p) (hX0 p hp), conv p hp X1 (n1 p) (hX1 p hp)⟩⟩
+
 /-! ### Bad-prime descent certificate -/
 
 /-- **Bad-prime descent certificate (odd `p`).** If `⟨c₀, c₁, R⟩` (integer `c₀, c₁`; `R : Fin m → ℚ_[p]`,
