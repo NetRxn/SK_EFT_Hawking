@@ -520,4 +520,76 @@ theorem diag_quaternary_zero_of_local_rat (c : Fin 4 → ℚ) (hc : ∀ i, c i �
       (fun p _ => (diag_iso_rat_int (K := ℚ_[p]) c).mp (hloc p))
   exact (diag_iso_rat_int (K := ℚ) c).mpr key
 
+/-! ### Bad-prime descent certificate -/
+
+/-- **Bad-prime descent certificate (odd `p`).** If `⟨c₀, c₁, R⟩` (integer `c₀, c₁`; `R : Fin m → ℚ_[p]`,
+`m ≥ 1`) is isotropic over `ℚ_[p]`, there are integer residue targets `n₀, n₁` and a modulus exponent `N`
+such that for *every* integer pair `X₀ ≡ n₀, X₁ ≡ n₁ (mod p^N)`, the integer value `a = c₀X₀² + c₁X₁²` is
+nonzero and `R` represents `−a` over `ℚ_[p]`. This is the per-bad-prime input of the Meyer descent: the global
+value `a = B(X)` from integer CRT is automatically `B`-represented (free) and, at each bad prime, `R`-represents
+`−a` so the descended `⟨a, R⟩` is locally isotropic. (Chain: `exists_common_value_split` → `exists_int_sq_ratio_odd`
+→ `binary_represents_congr_sq` → `exists_padicInt_binary_rep` [integer target `T = mᵢ·p^{2M}`] →
+`diag_represents_*` [`R` reps `−T`] → `appr_bridge` [`a ≡ T mod p^N`, integer] → `isSquare_padic_div_of_modEq`
+[`a/T` square] → `R` reps `−a`. `N = padicValInt p T + 1` makes `p^N ∤ T`, forcing `a ≠ 0`.) -/
+theorem bad_prime_R_certificate_odd {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {m : ℕ} (hm : 0 < m)
+    {c0 c1 : ℤ} (hc0 : c0 ≠ 0) (hc1 : c1 ≠ 0) (Rq : Fin m → ℚ_[p]) (hRq : ∀ i, Rq i ≠ 0)
+    (hiso : ∃ x : Fin (m + 2) → ℚ_[p], x ≠ 0 ∧
+      ∑ i, (Fin.cons (c0 : ℚ_[p]) (Fin.cons (c1 : ℚ_[p]) Rq : Fin (m + 1) → ℚ_[p]) :
+        Fin (m + 2) → ℚ_[p]) i * x i ^ 2 = 0) :
+    ∃ (n0 n1 : ℤ) (N : ℕ), ∀ X0 X1 : ℤ, (p : ℤ) ^ N ∣ X0 - n0 → (p : ℤ) ^ N ∣ X1 - n1 →
+      c0 * X0 ^ 2 + c1 * X1 ^ 2 ≠ 0 ∧
+      ∃ y : Fin m → ℚ_[p], ∑ i, Rq i * y i ^ 2 = -((c0 * X0 ^ 2 + c1 * X1 ^ 2 : ℤ) : ℚ_[p]) := by
+  haveI : Invertible (2 : ℚ_[p]) := invertibleOfNonzero (by norm_num)
+  have hc0Q : (c0 : ℚ_[p]) ≠ 0 := by exact_mod_cast hc0
+  have hc1Q : (c1 : ℚ_[p]) ≠ 0 := by exact_mod_cast hc1
+  obtain ⟨w, hw0, hBw, hRw⟩ := exists_common_value_split hm Rq hc0Q hc1Q hRq hiso
+  obtain ⟨mi, hmi0, hsq⟩ := exists_int_sq_ratio_odd hp hw0
+  obtain ⟨s, hs⟩ := hsq
+  have hmiQ : (mi : ℚ_[p]) ≠ 0 := by exact_mod_cast hmi0
+  have hs0 : s ≠ 0 := by
+    rintro rfl; rw [mul_zero, div_eq_zero_iff] at hs; exact hw0 (hs.resolve_right hmiQ)
+  have hweq : w = (mi : ℚ_[p]) * s ^ 2 := by field_simp at hs; linear_combination hs
+  have hBm : ∃ u0 u1 : ℚ_[p], (c0 : ℚ_[p]) * u0 ^ 2 + (c1 : ℚ_[p]) * u1 ^ 2 = (mi : ℚ_[p]) := by
+    rw [binary_represents_congr_sq hs0]
+    obtain ⟨u0, u1, h⟩ := hBw; exact ⟨u0, u1, by rw [h, hweq]⟩
+  obtain ⟨M, v0, v1, hv⟩ := exists_padicInt_binary_rep hBm
+  set T : ℤ := mi * (p : ℤ) ^ (2 * M) with hTdef
+  have hpZ0 : (p : ℤ) ≠ 0 := by exact_mod_cast (Fact.out : p.Prime).ne_zero
+  have hT0 : T ≠ 0 := mul_ne_zero hmi0 (pow_ne_zero _ hpZ0)
+  have hTQ0 : ((T : ℤ) : ℚ_[p]) ≠ 0 := by exact_mod_cast hT0
+  have hTQ : ((T : ℤ) : ℚ_[p]) = (c0 : ℚ_[p]) * (v0 : ℚ_[p]) ^ 2 + (c1 : ℚ_[p]) * (v1 : ℚ_[p]) ^ 2 := by
+    rw [hv, hTdef]; push_cast; ring
+  have hsqr : IsSquare ((-(mi : ℚ_[p])) / (-w)) := by
+    rw [neg_div_neg_eq, hweq]; refine ⟨s⁻¹, ?_⟩; field_simp
+  have hRm : ∃ y : Fin m → ℚ_[p], ∑ i, Rq i * y i ^ 2 = -(mi : ℚ_[p]) :=
+    diag_represents_of_isSquare_ratio Rq (neg_ne_zero.mpr hw0) hsqr hRw
+  have hRT : ∃ y : Fin m → ℚ_[p], ∑ i, Rq i * y i ^ 2 = -((T : ℤ) : ℚ_[p]) := by
+    obtain ⟨y, hy⟩ := diag_represents_congr_sq Rq (s := (p : ℚ_[p]) ^ M) hRm
+    exact ⟨y, by rw [hy, hTdef]; push_cast; ring⟩
+  set N := padicValInt p T + 1 with hNdef
+  refine ⟨(v0.appr N : ℤ), (v1.appr N : ℤ), N, fun X0 X1 hX0 hX1 => ?_⟩
+  set a : ℤ := c0 * X0 ^ 2 + c1 * X1 ^ 2 with hadef
+  have hcong : (p : ℤ) ^ N ∣ a - T := by
+    have hbr := appr_bridge c0 c1 v0 v1 T N hTQ
+    have hd0 : (p : ℤ) ^ N ∣ X0 ^ 2 - (v0.appr N : ℤ) ^ 2 := by
+      rw [show X0 ^ 2 - (v0.appr N : ℤ) ^ 2 = (X0 - (v0.appr N : ℤ)) * (X0 + (v0.appr N : ℤ)) by ring]
+      exact Dvd.dvd.mul_right hX0 _
+    have hd1 : (p : ℤ) ^ N ∣ X1 ^ 2 - (v1.appr N : ℤ) ^ 2 := by
+      rw [show X1 ^ 2 - (v1.appr N : ℤ) ^ 2 = (X1 - (v1.appr N : ℤ)) * (X1 + (v1.appr N : ℤ)) by ring]
+      exact Dvd.dvd.mul_right hX1 _
+    have heq : a - T = (c0 * (X0 ^ 2 - (v0.appr N : ℤ) ^ 2) + c1 * (X1 ^ 2 - (v1.appr N : ℤ) ^ 2))
+        + ((c0 * (v0.appr N : ℤ) ^ 2 + c1 * (v1.appr N : ℤ) ^ 2) - T) := by rw [hadef]; ring
+    rw [heq]
+    exact dvd_add (dvd_add (Dvd.dvd.mul_left hd0 _) (Dvd.dvd.mul_left hd1 _)) hbr
+  have ha0 : a ≠ 0 := by
+    intro h
+    rw [h, zero_sub, dvd_neg, hNdef, padicValInt_dvd_iff] at hcong
+    rcases hcong with h' | h'
+    · exact hT0 h'
+    · omega
+  refine ⟨ha0, ?_⟩
+  have hsqaT : IsSquare ((a : ℚ_[p]) / (T : ℚ_[p])) := isSquare_padic_div_of_modEq hp ha0 hT0 hcong
+  exact diag_represents_of_isSquare_ratio Rq (neg_ne_zero.mpr hTQ0)
+    (by rw [neg_div_neg_eq]; exact hsqaT) hRT
+
 end SKEFTHawking
