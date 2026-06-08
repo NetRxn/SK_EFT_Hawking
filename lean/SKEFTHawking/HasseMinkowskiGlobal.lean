@@ -89,4 +89,34 @@ theorem hilbertReal_eq_of_hilbertPrime_eq {a b t : ℤ} (ha : a ≠ 0) (hb : b �
     intro h; rw [h, mul_zero] at h2; exact one_ne_zero h2.symm
   exact mul_right_cancel₀ hP (h1.trans h2.symm)
 
+/-- **Product-formula closure at a chosen finite place.** If the linear Hilbert-symbol prescription
+`(t,−ab)_p = (a,b)_p` holds at the real place and at *every finite place except one prime `q`*, then it holds
+at `q` too. This is the general distinguished-place mechanism of Serre Ch III §2.2 Theorem 4 (the companion of
+`hilbertReal_eq_of_hilbertPrime_eq`, which takes `∞` as the free place): both global products are `1`, so once
+all-but-`q` factors agree, the common (nonzero, ±1) cofactor cancels and the two `q`-factors are equal. Lets
+the construction designate *any* place as the one recovered for free — exactly the degree of freedom the
+product formula supplies. -/
+theorem hilbertPrime_eq_of_others {a b t : ℤ} (ha : a ≠ 0) (hb : b ≠ 0) (ht : t ≠ 0) (q : ℕ)
+    (hreal : hilbertReal ((t : ℤ) : ℝ) ((-(a * b) : ℤ) : ℝ) = hilbertReal ((a : ℤ) : ℝ) ((b : ℤ) : ℝ))
+    (hfin : ∀ p : ℕ, p ≠ q → hilbertPrime p t (-(a * b)) = hilbertPrime p a b) :
+    hilbertPrime q t (-(a * b)) = hilbertPrime q a b := by
+  have hab : -(a * b) ≠ 0 := neg_ne_zero.mpr (mul_ne_zero ha hb)
+  have h1 := hilbertGlobalProd_eq_one ht hab
+  have h2 := hilbertGlobalProd_eq_one ha hb
+  unfold hilbertGlobalProd at h1 h2
+  rw [← mul_finprod_cond_ne q (hilbertPrime_mulSupport_finite ht hab)] at h1
+  rw [← mul_finprod_cond_ne q (hilbertPrime_mulSupport_finite ha hb)] at h2
+  have hcond : (∏ᶠ (p : ℕ) (_ : p ≠ q), hilbertPrime p t (-(a * b)))
+      = ∏ᶠ (p : ℕ) (_ : p ≠ q), hilbertPrime p a b :=
+    finprod_congr (fun p => finprod_congr (fun hpq => hfin p hpq))
+  rw [hcond, hreal] at h1
+  have hKPg : hilbertReal ((a : ℤ) : ℝ) ((b : ℤ) : ℝ) * (∏ᶠ (p : ℕ) (_ : p ≠ q), hilbertPrime p a b) ≠ 0 := by
+    intro h
+    rw [show hilbertReal ((a : ℤ) : ℝ) ((b : ℤ) : ℝ) * (hilbertPrime q a b *
+        ∏ᶠ (p : ℕ) (_ : p ≠ q), hilbertPrime p a b)
+        = (hilbertReal ((a : ℤ) : ℝ) ((b : ℤ) : ℝ) *
+        ∏ᶠ (p : ℕ) (_ : p ≠ q), hilbertPrime p a b) * hilbertPrime q a b by ring, h, zero_mul] at h2
+    exact one_ne_zero h2.symm
+  exact mul_left_cancel₀ hKPg (by linear_combination h1.trans h2.symm)
+
 end SKEFTHawking
